@@ -1,3 +1,30 @@
+2013-05-04  Werner Lemberg  <wl@gnu.org>
+
+	Fix errors reported by clang's `sanitize' feature.
+
+	* include/freetype/internal/ftstream.h: Simplify and fix integer
+	extraction macros.
+	(FT_INT8_, FT_BYTE_I16, FT_BYTE_I32, FT_INT8_I16, FT_INT8_I32,
+	FT_INT8_I32, FT_INT8_U32): Removed.
+	(FT_PEEK_SHORT, FT_PEEK_LONG, FT_PEEK_OFF3, FT_PEEK_SHORT_LE,
+	FT_PEEK_LONG_LE, FT_PEEK_OFF3_LE): Use unsigned values for
+	computations and convert to signed as the last step.
+
+	* src/cff/cf2fixed.h (cf2_intToFixed, cf2_fixedToInt,
+	cf2_fracToFixed): Avoid shifts of negative values.
+	(cf2_intToFrac, cf2_fixedToFrac, cf2_fixedTo26Dot6): Removed,
+	unused.
+
+	* src/cff/cf2intrp.c (cf2_interpT2CharString) <cf2_cmdEXTENDEDNMBR,
+	default>: Use unsigned values for computations and convert to signed
+	as the last step.
+	Use proper types in tracing messages.
+
+	* src/cff/cffgload.c (cff_decoder_parse_charstrings): Use unsigned
+	values for computation of operands and convert to signed as the last
+	step.
+	Use proper type in tracing message.
+
 2013-05-03  Werner Lemberg  <wl@gnu.org>
 
 	* src/cff/cf2blues.c: Remove dead code.

@@ -1394,10 +1394,8 @@
           CF2_Int  v;
 
 
-          /* sign-extend first byte */
-          v   = (FT_Char)cf2_buf_readByte( charstring );
-          v <<= 8;
-          v  += cf2_buf_readByte( charstring );
+          v = (FT_Short)( ( cf2_buf_readByte( charstring ) << 8 ) |
+                            cf2_buf_readByte( charstring )        );
 
           FT_TRACE4(( " %d", v ));
 
@@ -1408,56 +1406,65 @@
       default:
         /* numbers */
         {
-          CF2_Int  v;
-
-
           if ( /* op1 >= 32 && */ op1 <= 246 )
           {
-            FT_TRACE4(( " %d", op1 - 139 ));
+            CF2_Int  v;
+
+
+            v = op1 - 139;
+
+            FT_TRACE4(( " %d", v ));
 
             /* -107 .. 107 */
-            cf2_stack_pushInt( opStack, op1 - 139 );
+            cf2_stack_pushInt( opStack, v );
           }
 
           else if ( /* op1 >= 247 && */ op1 <= 250 )
           {
+            CF2_Int  v;
+
+
             v  = op1;
             v -= 247;
             v *= 256;
             v += cf2_buf_readByte( charstring );
+            v += 108;
 
-            FT_TRACE4(( " %ld", v + 108 ));
+            FT_TRACE4(( " %d", v ));
 
             /* 108 .. 1131 */
-            cf2_stack_pushInt( opStack, v + 108 );
+            cf2_stack_pushInt( opStack, v );
           }
 
           else if ( /* op1 >= 251 && */ op1 <= 254 )
           {
+            CF2_Int  v;
+
+
             v  = op1;
             v -= 251;
             v *= 256;
             v += cf2_buf_readByte( charstring );
+            v  = -v - 108;
 
-            FT_TRACE4(( " %ld", -v - 108 ));
+            FT_TRACE4(( " %d", v ));
 
             /* -1131 .. -108 */
-            cf2_stack_pushInt( opStack, -v - 108 );
+            cf2_stack_pushInt( opStack, v );
           }
 
           else /* op1 == 255 */
           {
-            v  = cf2_buf_readByte( charstring );
-            v *= 256;
-            v += cf2_buf_readByte( charstring );
-            v *= 256;
-            v += cf2_buf_readByte( charstring );
-            v *= 256;
-            v += cf2_buf_readByte( charstring );
+            CF2_Fixed  v;
+
+
+            v = (CF2_Fixed)( ( cf2_buf_readByte( charstring ) << 24 ) |
+                             ( cf2_buf_readByte( charstring ) << 16 ) |
+                             ( cf2_buf_readByte( charstring ) <<  8 ) |
+                               cf2_buf_readByte( charstring )         );
 
             FT_TRACE4(( " %.2f", v / 65536.0 ));
 
-            /* interpret the value as a CF2_Fixed */
             cf2_stack_pushFixed( opStack, v );
           }
         }

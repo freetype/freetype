@@ -968,11 +968,14 @@
 
 
         /* this is an operand, push it on the stack */
+
+        /* if we use shifts, all computations are done with unsigned */
+        /* values; the conversion to a signed value is the last step */
         if ( v == 28 )
         {
           if ( ip + 1 >= limit )
             goto Syntax_Error;
-          val = (FT_Short)( ( (FT_Short)ip[0] << 8 ) | ip[1] );
+          val = (FT_Short)( ( (FT_UShort)ip[0] << 8 ) | ip[1] );
           ip += 2;
         }
         else if ( v < 247 )
@@ -993,10 +996,10 @@
         {
           if ( ip + 3 >= limit )
             goto Syntax_Error;
-          val = ( (FT_Int32)ip[0] << 24 ) |
-                ( (FT_Int32)ip[1] << 16 ) |
-                ( (FT_Int32)ip[2] <<  8 ) |
-                            ip[3];
+          val = (FT_Int32)( ( (FT_UInt32)ip[0] << 24 ) |
+                            ( (FT_UInt32)ip[1] << 16 ) |
+                            ( (FT_UInt32)ip[2] <<  8 ) |
+                              (FT_UInt32)ip[3] );
           ip    += 4;
           if ( charstring_type == 2 )
             shift = 0;
@@ -1004,12 +1007,12 @@
         if ( decoder->top - stack >= CFF_MAX_OPERANDS )
           goto Stack_Overflow;
 
-        val           <<= shift;
+        val             = (FT_Int32)( (FT_UInt32)val << shift );
         *decoder->top++ = val;
 
 #ifdef FT_DEBUG_LEVEL_TRACE
         if ( !( val & 0xFFFFL ) )
-          FT_TRACE4(( " %ld", (FT_Int32)( val >> 16 ) ));
+          FT_TRACE4(( " %hd", (FT_Short)( (FT_UInt32)val >> 16 ) ));
         else
           FT_TRACE4(( " %.2f", val / 65536.0 ));
 #endif

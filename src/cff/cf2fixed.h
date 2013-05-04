@@ -54,28 +54,26 @@ FT_BEGIN_HEADER
 #define CF2_FIXED_ONE      0x10000L
 #define CF2_FIXED_EPSILON  0x0001
 
-#define cf2_intToFixed( i )                                 \
-          ( (i) << 16 )
-#define cf2_fixedToInt( x )                                 \
-          ( ( (x) + 0x8000 ) >> 16 )
-#define cf2_fixedRound( x )                                 \
+  /* in C 89, left and right shift of negative numbers is  */
+  /* implementation specific behaviour in the general case */
+
+#define cf2_intToFixed( i )                                    \
+          ( (CF2_Fixed)( (FT_UInt32)(i) << 16 ) )
+#define cf2_fixedToInt( x )                                    \
+          ( (FT_Short)( ( (FT_UInt32)(x) + 0x8000U ) >> 16 ) )
+#define cf2_fixedRound( x )                                    \
           ( (CF2_Fixed)( ( (x) + 0x8000 ) & 0xFFFF0000L ) )
-#define cf2_floatToFixed( f )                               \
+#define cf2_floatToFixed( f )                                  \
           ( (CF2_Fixed)( (f) * 65536.0 + 0.5 ) )
-#define cf2_fixedAbs( x )                                   \
+#define cf2_fixedAbs( x )                                      \
           ( (x) < 0 ? -(x) : (x) )
-#define cf2_fixedFloor( x )                                 \
-          ( (CF2_Fixed)((x) & 0xFFFF0000L ) )
-#define cf2_fixedFraction( x )                              \
+#define cf2_fixedFloor( x )                                    \
+          ( (CF2_Fixed)( (x) & 0xFFFF0000L ) )
+#define cf2_fixedFraction( x )                                 \
           ( (x) - cf2_fixedFloor( x ) )
-#define cf2_fracToFixed( x )                                \
-          ( ( (x) + 0x2000 ) >> 14 )
-#define cf2_intToFrac( i )                                  \
-          ( (i) << 30 )
-#define cf2_fixedToFrac( x )                                \
-          ( (x) << 14 )
-#define cf2_fixedTo26Dot6( x )                              \
-          ( ( (x) + 0x200 ) >> 10 )
+#define cf2_fracToFixed( x )                                   \
+          ( (x) < 0 ? -( ( -(x) + 0x2000 ) >> 14 )             \
+                    :  ( (  (x) + 0x2000 ) >> 14 ) )
 
 
   /* signed numeric types */
