@@ -35,11 +35,6 @@
 #include FT_TRIGONOMETRY_H
 
 
-#ifdef FT_LONG64
-  typedef FT_INT64  FT_Int64;
-#endif
-
-
   /* the Cordic shrink factor 0.858785336480436 * 2^32 */
 #define FT_TRIG_SCALE      0xDBD95B16UL
 

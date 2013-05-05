@@ -1,5 +1,16 @@
 2013-05-05  Werner Lemberg  <wl@gnu.org>
 
+	Fix 64bit compilation issues.
+
+	* include/freetype/config/ftconfig.h [FT_LONG64]: Typedef
+	`FT_Int64' here.
+
+	* src/base/ftcalc.c: Remove typedef of `FT_Int64'.
+	(FT_DivFix): Fix cast.
+	* src/base/fttrigon.c: Remove typedef of `FT_Int64'.
+
+2013-05-05  Werner Lemberg  <wl@gnu.org>
+
 	[raster] Fix clang issues.
 
 	Fix suggested by <octoploid@yandex.com>.

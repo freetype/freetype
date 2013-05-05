@@ -43,13 +43,9 @@
 #undef FT_MulFix
 #endif
 
-/* we need to define a 64-bits data type here */
+/* we need to emulate a 64-bit data type if a real one isn't available */
 
-#ifdef FT_LONG64
-
-  typedef FT_INT64  FT_Int64;
-
-#else
+#ifndef FT_LONG64
 
   typedef struct  FT_Int64_
   {
@@ -58,7 +54,7 @@
 
   } FT_Int64;
 
-#endif /* FT_LONG64 */
+#endif /* !FT_LONG64 */
 
 
   /*************************************************************************/
@@ -302,7 +298,7 @@
       q = 0x7FFFFFFFL;
     else
       /* compute result directly */
-      q = (FT_UInt32)( ( ( (FT_UInt64)a << 16 ) + ( b >> 1 ) ) / b );
+      q = (FT_UInt32)( ( ( (FT_ULong)a << 16 ) + ( b >> 1 ) ) / b );
 
     return ( s < 0 ? -(FT_Long)q : (FT_Long)q );
   }
