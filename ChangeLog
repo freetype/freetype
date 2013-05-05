@@ -1,5 +1,11 @@
 2013-05-05  Werner Lemberg  <wl@gnu.org>
 
+	Fix compilation with C++.
+
+	* src/base/md5.c (body): Use proper cast.
+
+2013-05-05  Werner Lemberg  <wl@gnu.org>
+
 	Fix 64bit compilation issues.
 
 	* include/freetype/config/ftconfig.h [FT_LONG64]: Typedef
