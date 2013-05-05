@@ -1,3 +1,12 @@
+2013-05-05  Werner Lemberg  <wl@gnu.org>
+
+	[raster] Fix clang issues.
+
+	Fix suggested by <octoploid@yandex.com>.
+
+	* src/raster/ftraster.c (ULong): New typedef.
+	(SCALED): Add proper cast.
+
 2013-05-04  Werner Lemberg  <wl@gnu.org>
 
 	Fix clang fixes.

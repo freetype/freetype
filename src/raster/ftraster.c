@@ -310,6 +310,7 @@
   typedef short           Short;
   typedef unsigned short  UShort, *PUShort;
   typedef long            Long, *PLong;
+  typedef unsigned long   ULong;
 
   typedef unsigned char   Byte, *PByte;
   typedef char            Bool;
@@ -448,9 +449,9 @@
 
 #define FLOOR( x )    ( (x) & -ras.precision )
 #define CEILING( x )  ( ( (x) + ras.precision - 1 ) & -ras.precision )
-#define TRUNC( x )    ( (signed long)(x) >> ras.precision_bits )
+#define TRUNC( x )    ( (Long)(x) >> ras.precision_bits )
 #define FRAC( x )     ( (x) & ( ras.precision - 1 ) )
-#define SCALED( x )   ( ( (x) << ras.scale_shift ) - ras.precision_half )
+#define SCALED( x )   ( ( (ULong)(x) << ras.scale_shift ) - ras.precision_half )
 
 #define IS_BOTTOM_OVERSHOOT( x )  ( CEILING( x ) - x >= ras.precision_half )
 #define IS_TOP_OVERSHOOT( x )     ( x - FLOOR( x ) >= ras.precision_half )
