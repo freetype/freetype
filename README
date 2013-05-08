@@ -1,7 +1,13 @@
-  FreeType 2.4.11
+  FreeType 2.4.12
   ===============
 
   Homepage: http://www.freetype.org
+
+  FreeType is a freely available software library to render fonts.
+
+  It  is  written  in  C,  designed to  be  small,  efficient,  highly
+  customizable, and  portable while capable of  producing high-quality
+  output  (glyph  images) of  most  vector  and bitmap  font  formats.
 
   Please   read   the  docs/CHANGES   file,   it  contains   IMPORTANT
   INFORMATION.
@@ -18,9 +24,9 @@
 
   and download one of the following files.
 
-    freetype-doc-2.4.11.tar.bz2
-    freetype-doc-2.4.11.tar.gz
-    ftdoc2411.zip
+    freetype-doc-2.4.12.tar.bz2
+    freetype-doc-2.4.12.tar.gz
+    ftdoc2412.zip
 
   To view the documentation online, go to
 
