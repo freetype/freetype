@@ -743,7 +743,7 @@
 
           if ( delta2 < 32 )
             delta2 = 0;
-          else if ( delta < 48 )
+          else if ( delta2 < 48 )
             delta2 = 32;
           else
             delta2 = 64;

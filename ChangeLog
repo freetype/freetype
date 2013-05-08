@@ -1,3 +1,7 @@
+2013-05-08  Werner Lemberg  <wl@gnu.org>
+
+	* src/autofit/aflatin.c (af_latin_metrics_scale_dim): Typo.
+
 2013-05-05  Werner Lemberg  <wl@gnu.org>
 
 	Synchronize `ftconfig.h'.
