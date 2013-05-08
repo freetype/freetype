@@ -25,6 +25,25 @@ CHANGES BETWEEN 2.4.11 and 2.4.12
       The code has  a (mature) beta status; we encourage  all users to
       test it and report any problems.
 
+      In case you want to activate the new CFF engine unconditionally,
+      apply this patch:
+
+--- snip ---
+diff --git a/src/cff/cffobjs.c b/src/cff/cffobjs.c
+index ebcf189..3f2ce6b 100644
+--- a/src/cff/cffobjs.c
++++ b/src/cff/cffobjs.c
+@@ -1056,7 +1056,7 @@
+
+
+     /* set default property values */
+-    driver->hinting_engine    = FT_CFF_HINTING_FREETYPE;
++    driver->hinting_engine    = FT_CFF_HINTING_ADOBE;
+     driver->no_stem_darkening = FALSE;
+
+     return FT_Err_Ok;
+--- snip ---
+
     - The  macro FT_CONFIG_OPTION_OLD_INTERNALS  is no  longer set  by
       default.  In  the next  release, we  will completely  remove the
       associated code.   Please update your  programs in case  you are
@@ -43,6 +62,9 @@ CHANGES BETWEEN 2.4.11 and 2.4.12
 
     - Using the `H'  key, it is now possible to  select the CFF engine
       in both `ftview' and `ftdiff'.
+
+    - The new command line option `-H' for `ftbench' selects the Adobe
+      CFF engine.
 
     - It is  now possible  to directly select  the LCD  rendering mode
       with the keys `A'-`F' in  `ftview'.  The key mapping for cycling
