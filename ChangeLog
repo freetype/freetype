@@ -1,5 +1,13 @@
 2013-05-10  Werner Lemberg  <wl@gnu.org>
 
+	[sfnt] Clean up bitmap code.
+
+	* src/sfnt/ttsbit.c: Deleted.
+	* src/sfnt/ttsbit0.c: Renamed to `ttsbit.c'. 
+	* rules.mk (SFNT_DRV_H): Updated.
+
+2013-05-10  Werner Lemberg  <wl@gnu.org>
+
 	*/* [FT_CONFIG_OPTION_OLD_INTERNALS]: Remove macro and guarded code.
 
 2013-05-08  Werner Lemberg  <wl@gnu.org>
