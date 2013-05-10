@@ -486,9 +486,6 @@
     tt_slot_init,
     0,                       /* FT_Slot_DoneFunc */
 
-    ft_stub_set_char_sizes,  /* FT_CONFIG_OPTION_OLD_INTERNALS */
-    ft_stub_set_pixel_sizes, /* FT_CONFIG_OPTION_OLD_INTERNALS */
-
     tt_glyph_load,
 
     tt_get_kerning,

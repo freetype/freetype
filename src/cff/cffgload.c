@@ -2711,16 +2711,9 @@
                                                      &advance );
           glyph->root.linearHoriAdvance = advance;
 
-#ifdef FT_CONFIG_OPTION_OLD_INTERNALS
-          has_vertical_info = FT_BOOL(
-                                face->vertical_info                   &&
-                                face->vertical.number_Of_VMetrics > 0 &&
-                                face->vertical.long_metrics           );
-#else
           has_vertical_info = FT_BOOL(
                                 face->vertical_info                   &&
                                 face->vertical.number_Of_VMetrics > 0 );
-#endif
 
           /* get the vertical metrics from the vtmx table if we have one */
           if ( has_vertical_info )
@@ -2936,14 +2929,8 @@
         glyph->root.linearHoriAdvance           = decoder.glyph_width;
         glyph->root.internal->glyph_transformed = 0;
 
-#ifdef FT_CONFIG_OPTION_OLD_INTERNALS
-        has_vertical_info = FT_BOOL( face->vertical_info                   &&
-                                     face->vertical.number_Of_VMetrics > 0 &&
-                                     face->vertical.long_metrics           );
-#else
         has_vertical_info = FT_BOOL( face->vertical_info                   &&
                                      face->vertical.number_Of_VMetrics > 0 );
-#endif
 
         /* get the vertical metrics from the vtmx table if we have one */
         if ( has_vertical_info )

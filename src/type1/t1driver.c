@@ -708,10 +708,6 @@
     T1_GlyphSlot_Init,
     T1_GlyphSlot_Done,
 
-#ifdef FT_CONFIG_OPTION_OLD_INTERNALS
-    ft_stub_set_char_sizes,
-    ft_stub_set_pixel_sizes,
-#endif
     T1_Load_Glyph,
 
 #ifdef T1_CONFIG_OPTION_NO_AFM

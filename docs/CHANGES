@@ -1,7 +1,16 @@
 
-CHANGES BETWEEN 2.4.11 and 2.4.12
+CHANGES BETWEEN 2.4.12 and 2.5
 
   I. IMPORTANT CHANGES
+
+    - As announced in the previous release,  all code related to macro
+      FT_CONFIG_OPTION_OLD_INTERNALS  has been removed,  thus becoming
+      obsolete.
+
+
+======================================================================
+
+CHANGES BETWEEN 2.4.11 and 2.4.12
 
     - We have another CFF parsing and hinting engine!  Written by Dave
       Arnold <darnold@adobe.com>,  this work  has been  contributed by

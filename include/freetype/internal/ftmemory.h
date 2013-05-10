@@ -4,7 +4,7 @@
 /*                                                                         */
 /*    The FreeType memory management macros (specification).               */
 /*                                                                         */
-/*  Copyright 1996-2001, 2002, 2004, 2005, 2006, 2007, 2010 by             */
+/*  Copyright 1996-2002, 2004-2007, 2010, 2013 by                          */
 /*  David Turner, Robert Wilhelm, and Werner Lemberg                       */
 /*                                                                         */
 /*  This file is part of the FreeType project, and may only be used,       */
@@ -303,37 +303,6 @@ FT_BEGIN_HEADER
           FT_MEM_SET_ERROR( FT_MEM_RENEW_ARRAY( ptr, curcnt, newcnt ) )
 
 
-#ifdef FT_CONFIG_OPTION_OLD_INTERNALS
-
-  FT_BASE( FT_Error )
-  FT_Alloc( FT_Memory  memory,
-            FT_Long    size,
-            void*     *P );
-
-  FT_BASE( FT_Error )
-  FT_QAlloc( FT_Memory  memory,
-             FT_Long    size,
-             void*     *p );
-
-  FT_BASE( FT_Error )
-  FT_Realloc( FT_Memory  memory,
-              FT_Long    current,
-              FT_Long    size,
-              void*     *P );
-
-  FT_BASE( FT_Error )
-  FT_QRealloc( FT_Memory  memory,
-               FT_Long    current,
-               FT_Long    size,
-               void*     *p );
-
-  FT_BASE( void )
-  FT_Free( FT_Memory  memory,
-           void*     *P );
-
-#endif /* FT_CONFIG_OPTION_OLD_INTERNALS */
-
-
   FT_BASE( FT_Pointer )
   ft_mem_strdup( FT_Memory    memory,
                  const char*  str,
@@ -344,6 +313,7 @@ FT_BEGIN_HEADER
               const void*  address,
               FT_ULong     size,
               FT_Error    *p_error );
+
 
 #define FT_MEM_STRDUP( dst, str )                                            \
           (dst) = (char*)ft_mem_strdup( memory, (const char*)(str), &error )

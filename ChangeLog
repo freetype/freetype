@@ -1,3 +1,7 @@
+2013-05-10  Werner Lemberg  <wl@gnu.org>
+
+	*/* [FT_CONFIG_OPTION_OLD_INTERNALS]: Remove macro and guarded code.
+
 2013-05-08  Werner Lemberg  <wl@gnu.org>
 
 	* Version 2.4.12 released.

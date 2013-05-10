@@ -774,37 +774,10 @@ FT_BEGIN_HEADER
 
 
   /*
-   * Define this variable if you want to keep the layout of internal
-   * structures that was used prior to FreeType 2.2.  This also compiles in
-   * a few obsolete functions to avoid linking problems on typical Unix
-   * distributions.
-   *
-   * For embedded systems or building a new distribution from scratch, it
-   * is recommended to disable the macro since it reduces the library's code
-   * size and activates a few memory-saving optimizations as well.
+   *  This macro is obsolete.  Support has been removed in FreeType
+   *  version 2.5.
    */
 /* #define FT_CONFIG_OPTION_OLD_INTERNALS */
-
-
-  /*
-   *  To detect legacy cache-lookup call from a rogue client (<= 2.1.7),
-   *  we restrict the number of charmaps in a font.  The current API of
-   *  FTC_CMapCache_Lookup() takes cmap_index & charcode, but old API
-   *  takes charcode only.  To determine the passed value is for cmap_index
-   *  or charcode, the possible cmap_index is restricted not to exceed
-   *  the minimum possible charcode by a rogue client.  It is also very
-   *  unlikely that a rogue client is interested in Unicode values 0 to 15.
-   *
-   *  NOTE: The original threshold was 4 deduced from popular number of
-   *        cmap subtables in UCS-4 TrueType fonts, but now it is not
-   *        irregular for OpenType fonts to have more than 4 subtables,
-   *        because variation selector subtables are available for Apple
-   *        and Microsoft platforms.
-   */
-
-#ifdef FT_CONFIG_OPTION_OLD_INTERNALS
-#define FT_MAX_CHARMAP_CACHEABLE 15
-#endif
 
 
   /*

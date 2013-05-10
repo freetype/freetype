@@ -152,40 +152,6 @@
   }
 
 
-#ifdef FT_CONFIG_OPTION_OLD_INTERNALS
-
-  /* documentation is in ftcalc.h */
-
-  FT_EXPORT_DEF( FT_Int32 )
-  FT_Sqrt32( FT_Int32  x )
-  {
-    FT_UInt32  val, root, newroot, mask;
-
-
-    root = 0;
-    mask = (FT_UInt32)0x40000000UL;
-    val  = (FT_UInt32)x;
-
-    do
-    {
-      newroot = root + mask;
-      if ( newroot <= val )
-      {
-        val -= newroot;
-        root = newroot + mask;
-      }
-
-      root >>= 1;
-      mask >>= 2;
-
-    } while ( mask != 0 );
-
-    return root;
-  }
-
-#endif /* FT_CONFIG_OPTION_OLD_INTERNALS */
-
-
 #ifdef FT_LONG64
 
 

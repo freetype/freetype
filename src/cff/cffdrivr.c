@@ -765,9 +765,6 @@
     cff_slot_init,
     cff_slot_done,
 
-    ft_stub_set_char_sizes,  /* FT_CONFIG_OPTION_OLD_INTERNALS */
-    ft_stub_set_pixel_sizes, /* FT_CONFIG_OPTION_OLD_INTERNALS */
-
     cff_glyph_load,
 
     cff_get_kerning,
