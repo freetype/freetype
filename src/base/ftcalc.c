@@ -264,7 +264,7 @@
       q = 0x7FFFFFFFL;
     else
       /* compute result directly */
-      q = (FT_UInt32)( ( ( (FT_ULong)a << 16 ) + ( b >> 1 ) ) / b );
+      q = (FT_UInt32)( ( ( (FT_UInt64)a << 16 ) + ( b >> 1 ) ) / b );
 
     return ( s < 0 ? -(FT_Long)q : (FT_Long)q );
   }

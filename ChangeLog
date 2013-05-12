@@ -1,5 +1,11 @@
 2013-05-12  Werner Lemberg  <wl@gnu.org>
 
+	Fix Savannah bug #38967.
+
+	* src/base/ftcalc.c (FT_DivFix) [FT_LONG64]: Fix cast.
+
+2013-05-12  Werner Lemberg  <wl@gnu.org>
+
 	Introduce unsigned 64bit type (if available).
 
 	* include/freetype/config/ftconfig.h: Define FT_UINT64 if available.
