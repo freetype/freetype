@@ -1,3 +1,12 @@
+2013-05-12  Werner Lemberg  <wl@gnu.org>
+
+	Fix Savannah bug #38968.
+
+	* include/freetype/ftmodapi.h: Add `FT_EXPORT' to
+	FT_Property_{Set,Get}.
+	* src/base/ftobjs.c: Add `FT_EXPORT_DEF' to
+	FT_Property_{Set,Get}.
+
 2013-05-10  Werner Lemberg  <wl@gnu.org>
 
 	[sfnt] Clean up bitmap code.

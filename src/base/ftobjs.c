@@ -4516,7 +4516,7 @@
 
   /* documentation is in ftmodapi.h */
 
-  FT_Error
+  FT_EXPORT_DEF( FT_Error )
   FT_Property_Set( FT_Library        library,
                    const FT_String*  module_name,
                    const FT_String*  property_name,
@@ -4532,7 +4532,7 @@
 
   /* documentation is in ftmodapi.h */
 
-  FT_Error
+  FT_EXPORT_DEF( FT_Error )
   FT_Property_Get( FT_Library        library,
                    const FT_String*  module_name,
                    const FT_String*  property_name,

@@ -329,7 +329,7 @@ FT_BEGIN_HEADER
    *    2.4.11
    *
    */
-  FT_Error
+  FT_EXPORT( FT_Error )
   FT_Property_Set( FT_Library        library,
                    const FT_String*  module_name,
                    const FT_String*  property_name,
@@ -393,7 +393,7 @@ FT_BEGIN_HEADER
    *    2.4.11
    *
    */
-  FT_Error
+  FT_EXPORT( FT_Error )
   FT_Property_Get( FT_Library        library,
                    const FT_String*  module_name,
                    const FT_String*  property_name,
