@@ -1,5 +1,18 @@
 2013-05-12  Werner Lemberg  <wl@gnu.org>
 
+	[truetype] Add framework for TrueType properties.
+
+	* src/truetype/ttdrivr.c: Include FT_SERVICE_PROPERTIES_H.
+	(tt_property_set, tt_property_get): New functions, still empty.
+	Define `tt_service_properties' service.
+	Update `tt_services'.
+
+	* src/truetype/ttpic.h: Include FT_SERVICE_PROPERTIES_H.
+	(TT_SERVICE_PROPERTIES_GET): New macro.
+	(TTModulePIC): Add `tt_service_properties'.
+
+2013-05-12  Werner Lemberg  <wl@gnu.org>
+
 	Fix Savannah bug #38967.
 
 	* src/base/ftcalc.c (FT_DivFix) [FT_LONG64]: Fix cast.
@@ -289,13 +302,13 @@
 	New macro.
 
 	* src/cff/cffdrivr.c: Include FT_SERVICE_PROPERTIES_H.
-	(cff_property_set, cff_property_get): New function, still empty.
+	(cff_property_set, cff_property_get): New functions, still empty.
 	Define `cff_service_properties' service.
 	Update `cff_services'.
 
 	* src/cff/cffpic.h: Include FT_SERVICE_PROPERTIES_H.
 	(CFF_SERVICE_PROPERTIES_GET): New macro.
-	CffModulePIC: Add `cff_service_properties'.
+	(CffModulePIC): Add `cff_service_properties'.
 
 2013-04-03  Werner Lemberg  <wl@gnu.org>
 

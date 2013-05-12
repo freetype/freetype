@@ -29,6 +29,7 @@
 
 #include FT_SERVICE_TRUETYPE_ENGINE_H
 #include FT_SERVICE_TRUETYPE_GLYF_H
+#include FT_SERVICE_PROPERTIES_H
 
 #include "ttdriver.h"
 #include "ttgload.h"
@@ -50,6 +51,42 @@
   /*                                                                       */
 #undef  FT_COMPONENT
 #define FT_COMPONENT  trace_ttdriver
+
+
+  /*
+   *  PROPERTY SERVICE
+   *
+   */
+  static FT_Error
+  tt_property_set( FT_Module    module,         /* TT_Driver */
+                   const char*  property_name,
+                   const void*  value )
+  {
+    FT_Error   error  = FT_Err_Ok;
+    TT_Driver  driver = (TT_Driver)module;
+
+
+    return error;
+  }
+
+
+  static FT_Error
+  tt_property_get( FT_Module    module,         /* TT_Driver */
+                   const char*  property_name,
+                   const void*  value )
+  {
+    FT_Error   error  = FT_Err_Ok;
+    TT_Driver  driver = (TT_Driver)module;
+
+
+    return error;
+  }
+
+
+  FT_DEFINE_SERVICE_PROPERTIESREC(
+    tt_service_properties,
+    (FT_Properties_SetFunc)tt_property_set,
+    (FT_Properties_GetFunc)tt_property_get )
 
 
   /*************************************************************************/
@@ -384,18 +421,20 @@
     (TT_Glyf_GetLocationFunc)tt_face_get_location )
 
 #ifdef TT_CONFIG_OPTION_GX_VAR_SUPPORT
-  FT_DEFINE_SERVICEDESCREC4(
+  FT_DEFINE_SERVICEDESCREC5(
     tt_services,
     FT_SERVICE_ID_XF86_NAME,       FT_XF86_FORMAT_TRUETYPE,
     FT_SERVICE_ID_MULTI_MASTERS,   &TT_SERVICE_GX_MULTI_MASTERS_GET,
     FT_SERVICE_ID_TRUETYPE_ENGINE, &tt_service_truetype_engine,
-    FT_SERVICE_ID_TT_GLYF,         &TT_SERVICE_TRUETYPE_GLYF_GET )
+    FT_SERVICE_ID_TT_GLYF,         &TT_SERVICE_TRUETYPE_GLYF_GET,
+    FT_SERVICE_ID_PROPERTIES,      &TT_SERVICE_PROPERTIES_GET )
 #else
-  FT_DEFINE_SERVICEDESCREC3(
+  FT_DEFINE_SERVICEDESCREC4(
     tt_services,
     FT_SERVICE_ID_XF86_NAME,       FT_XF86_FORMAT_TRUETYPE,
     FT_SERVICE_ID_TRUETYPE_ENGINE, &tt_service_truetype_engine,
-    FT_SERVICE_ID_TT_GLYF,         &TT_SERVICE_TRUETYPE_GLYF_GET )
+    FT_SERVICE_ID_TT_GLYF,         &TT_SERVICE_TRUETYPE_GLYF_GET,
+    FT_SERVICE_ID_PROPERTIES,      &TT_SERVICE_PROPERTIES_GET )
 #endif
 
 
@@ -457,7 +496,8 @@
 #define TT_SIZE_SELECT  0
 #endif
 
-  FT_DEFINE_DRIVER( tt_driver_class,
+  FT_DEFINE_DRIVER(
+    tt_driver_class,
 
       FT_MODULE_FONT_DRIVER     |
       FT_MODULE_DRIVER_SCALABLE |
