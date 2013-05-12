@@ -1,5 +1,14 @@
 2013-05-12  Werner Lemberg  <wl@gnu.org>
 
+	Introduce unsigned 64bit type (if available).
+
+	* include/freetype/config/ftconfig.h: Define FT_UINT64 if available.
+	[FT_LONG64]: Provide FT_UInt64.
+
+	* builds/unix/ftconfig.in: Synchronized.
+
+2013-05-12  Werner Lemberg  <wl@gnu.org>
+
 	Fix Savannah bug #38968.
 
 	* include/freetype/ftmodapi.h: Add `FT_EXPORT' to
