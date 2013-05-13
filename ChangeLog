@@ -1,5 +1,12 @@
 2013-05-13  Werner Lemberg  <wl@gnu.org>
 
+	[truetype] Avoid empty source file.
+
+	* src/truetype/ttsubpix.c [!TT_CONFIG_OPTION_SUBPIXEL_HINTING]:
+	Provide dummy typedef.
+
+2013-05-13  Werner Lemberg  <wl@gnu.org>
+
 	* src/cff/cf2font.c (cf2_getGlyphWidth): Fix uninitialized variable.
 
 	Fix suggested by Vaibhav Nagarnaik <vnagarnaik@gmail.com>.

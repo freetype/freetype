@@ -1074,7 +1074,12 @@
     }
   }
 
-#endif /* TT_CONFIG_OPTION_SUBPIXEL_HINTING */
+#else /* !TT_CONFIG_OPTION_SUBPIXEL_HINTING */
+
+  /* ANSI C doesn't like empty source files */
+  typedef int  _tt_subpix_dummy;
+
+#endif /* !TT_CONFIG_OPTION_SUBPIXEL_HINTING */
 
 
 /* END */
