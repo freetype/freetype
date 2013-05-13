@@ -387,11 +387,11 @@
     /* finish storing client outline */
     cf2_outline_close( &font->outline );
 
+  exit:
     /* FreeType just wants the advance width; there is no translation */
     *glyphWidth = advWidth;
 
     /* free resources and collect errors from objects we've used */
-  exit:
     cf2_setError( &font->error, lastError );
 
     return font->error;
