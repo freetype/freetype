@@ -1,3 +1,11 @@
+2013-05-13  Brian Nixon  <bnixon@yahoo.com>
+
+	Fix Savannah bug #38970.
+
+	* src/base/ftdebug.c, builds/win32/ftdebug.c,
+	builds/wince/ftdebug.c, builds/amiga/src/base/ftdebug.c
+	(ft_debug_init): Don't read past the environment variable FT2_DEBUG.
+
 2013-05-12  Werner Lemberg  <wl@gnu.org>
 
 	[truetype] Add framework for TrueType properties.

@@ -184,6 +184,9 @@
         while ( *p && *p != ':' )
           p++;
 
+        if ( !*p )
+          break;
+
         if ( *p == ':' && p > q )
         {
           int  n, i, len = p - q;
@@ -212,7 +215,7 @@
           p++;
           if ( *p )
           {
-            level = *p++ - '0';
+            level = *p - '0';
             if ( level < 0 || level > 7 )
               level = -1;
           }
