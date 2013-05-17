@@ -1,3 +1,10 @@
+2013-05-17  Werner Lemberg  <wl@gnu.org>
+
+	Update more FT_Err_XXX macros using FT_ERR and FT_THROW;
+
+	* builds/amiga/src/base/ftsystem.c, builds/mac/ftmac.c,
+	builds/unix/ftsystem.c, builds/vms/ftsystem.c: Do it.
+
 2013-05-15  Werner Lemberg  <wl@gnu.org>
 
 	[truetype] Add `interpreter-version' property.
