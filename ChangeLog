@@ -5,6 +5,11 @@
 	This makes the option TT_CONFIG_OPTION_SUBPIXEL_HINTING controllable
 	at runtime.
 
+	* include/freetype/ftttdrv.h: New file.
+
+	* include/freetype/config/ftheader.h (FT_TRUETYPE_DRIVER_H): New
+	macro.
+
 	* src/truetype/ttdriver.c: Include FT_TRUETYPE_DRIVER_H.
 	(tt_property_set, tt_property_get): Fill templates.
 
