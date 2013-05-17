@@ -22,6 +22,7 @@
 #include FT_INTERNAL_SFNT_H
 #include FT_TRUETYPE_TAGS_H
 #include FT_OUTLINE_H
+#include FT_TRUETYPE_DRIVER_H
 
 #include "ttsubpix.h"
 
@@ -1027,9 +1028,9 @@
 
     if ( loader->exec->sph_tweak_flags & SPH_TWEAK_RASTERIZER_35 )
     {
-      if ( loader->exec->rasterizer_version != 35 )
+      if ( loader->exec->rasterizer_version != TT_INTERPRETER_VERSION_35 )
       {
-        loader->exec->rasterizer_version = 35;
+        loader->exec->rasterizer_version = TT_INTERPRETER_VERSION_35;
         loader->exec->size->cvt_ready    = FALSE;
 
         tt_size_ready_bytecode(
@@ -1037,7 +1038,7 @@
           FT_BOOL( loader->load_flags & FT_LOAD_PEDANTIC ) );
       }
       else
-        loader->exec->rasterizer_version = 35;
+        loader->exec->rasterizer_version = TT_INTERPRETER_VERSION_35;
     }
     else
     {

@@ -1,3 +1,32 @@
+2013-05-15  Werner Lemberg  <wl@gnu.org>
+
+	[truetype] Add `interpreter-version' property.
+
+	This makes the option TT_CONFIG_OPTION_SUBPIXEL_HINTING controllable
+	at runtime.
+
+	* src/truetype/ttdriver.c: Include FT_TRUETYPE_DRIVER_H.
+	(tt_property_set, tt_property_get): Fill templates.
+
+	* src/truetype/ttobjs.h (TT_DriverRec): Add `interpreter_version'
+	member.
+	Remove unused `extension_component' member.
+
+	* src/truetype/ttgload.c: Include FT_TRUETYPE_DRIVER_H.
+	(tt_get_metrics, TT_Hint_Glyph, TT_Process_Simple_Glyph,
+	compute_glyph_metrics, tt_loader_init): Use `interpreter_version'.
+
+	* src/truetype/ttinterp.c: Include FT_TRUETYPE_DRIVER_H.
+	(SUBPIXEL_HINTING): New macro to check `interpreter_version' flag.
+	Update all affected functions to use it.
+	Use TT_INTERPRETER_VERSION_XXX where appropriate.
+
+	* src/truetype/ttobjs.c: Include FT_TRUETYPE_DRIVER_H.
+	(tt_driver_init): Initialize `interpreter_version'.
+
+	* src/truetype/ttsubpix.c: Include FT_TRUETYPE_DRIVER_H.
+	Use TT_INTERPRETER_VERSION_XXX where appropriate.
+
 2013-05-13  Werner Lemberg  <wl@gnu.org>
 
 	[truetype] Avoid empty source file.

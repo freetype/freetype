@@ -30,6 +30,7 @@
 #include FT_SERVICE_TRUETYPE_ENGINE_H
 #include FT_SERVICE_TRUETYPE_GLYF_H
 #include FT_SERVICE_PROPERTIES_H
+#include FT_TRUETYPE_DRIVER_H
 
 #include "ttdriver.h"
 #include "ttgload.h"
@@ -66,7 +67,24 @@
     TT_Driver  driver = (TT_Driver)module;
 
 
-    return error;
+    if ( !ft_strcmp( property_name, "interpreter-version" ) )
+    {
+      FT_UInt*  interpreter_version = (FT_UInt*)value;
+
+
+#ifndef TT_CONFIG_OPTION_SUBPIXEL_HINTING
+      if ( *interpreter_version != TT_INTERPRETER_VERSION_35 )
+        error = FT_ERR( Unimplemented_Feature );
+      else
+#endif
+        driver->interpreter_version = *interpreter_version;
+
+      return error;
+    }
+
+    FT_TRACE0(( "tt_property_set: missing property `%s'\n",
+                property_name ));
+    return FT_THROW( Missing_Property );
   }
 
 
@@ -78,8 +96,22 @@
     FT_Error   error  = FT_Err_Ok;
     TT_Driver  driver = (TT_Driver)module;
 
+    FT_UInt  interpreter_version = driver->interpreter_version;
 
-    return error;
+
+    if ( !ft_strcmp( property_name, "interpreter-version" ) )
+    {
+      FT_UInt*  val = (FT_UInt*)value;
+
+
+      *val = interpreter_version;
+
+      return error;
+    }
+
+    FT_TRACE0(( "tt_property_get: missing property `%s'\n",
+                property_name ));
+    return FT_THROW( Missing_Property );
   }
 
 
