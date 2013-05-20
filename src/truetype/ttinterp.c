@@ -1849,9 +1849,8 @@
     FT_UNUSED_EXEC;
 
 #ifdef TT_CONFIG_OPTION_SUBPIXEL_HINTING
-    if ( !SUBPIXEL_HINTING                                      ||
-         ( !CUR.ignore_x_mode                                 ||
-           ( CUR.sph_tweak_flags & SPH_TWEAK_ALLOW_X_DMOVEX ) ) )
+    if ( !SUBPIXEL_HINTING  ||
+         !CUR.ignore_x_mode )
 #endif /* TT_CONFIG_OPTION_SUBPIXEL_HINTING */
       zone->cur[point].x += distance;
 
@@ -4474,7 +4473,7 @@
 
 #ifdef TT_CONFIG_OPTION_SUBPIXEL_HINTING
     /* arguments to opcodes are skipped by `SKIP_Code' */
-    FT_Byte    opcode_pattern[7][12] = {
+    FT_Byte    opcode_pattern[9][12] = {
                  /* #0 inline delta function 1 */
                  {
                    0x4B, /* PPEM    */
@@ -4552,10 +4551,23 @@
                    0x43, /* RS      */
                    0x58  /* IF      */
                  },
+                 /* #7 TypeMan Talk DiagEndCtrl function */
+                 {
+                   0x01, /* SVTCA_x */
+                   0x20, /* DUP     */
+                   0xB0, /* PUSHB_1 */
+                         /*   3     */
+                   0x25, /* CINDEX  */
+                 },
+                 /* #8 TypeMan Talk Align */
+                 {
+                   0x06, /* SPVTL   */
+                   0x7D, /* RDTG    */
+                 },
                };
-    FT_UShort  opcode_patterns   = 7;
-    FT_UShort  opcode_pointer[7] = {  0, 0, 0, 0, 0, 0, 0 };
-    FT_UShort  opcode_size[7]    = { 12, 8, 8, 6, 7, 4, 5 };
+    FT_UShort  opcode_patterns   = 9;
+    FT_UShort  opcode_pointer[9] = {  0, 0, 0, 0, 0, 0, 0, 0, 0 };
+    FT_UShort  opcode_size[9]    = { 12, 8, 8, 6, 7, 4, 5, 4, 2 };
     FT_UShort  i;
 #endif /* TT_CONFIG_OPTION_SUBPIXEL_HINTING */
 
@@ -4697,6 +4709,18 @@
                   CUR.face->sph_found_func_flags |= SPH_FDEF_SPACING_2;
                 }
                 break;
+
+               case 7:
+                 rec->sph_fdef_flags            |= SPH_FDEF_TYPEMAN_DIAGENDCTRL;
+                 CUR.face->sph_found_func_flags |= SPH_FDEF_TYPEMAN_DIAGENDCTRL;
+                 break;
+
+               case 8:
+#if 0
+                 rec->sph_fdef_flags            |= SPH_FDEF_TYPEMAN_DIAGENDCTRL;
+                 CUR.face->sph_found_func_flags |= SPH_FDEF_TYPEMAN_DIAGENDCTRL;
+#endif
+                 break;
               }
               opcode_pointer[i] = 0;
             }
@@ -4742,6 +4766,10 @@
 
     FT_UNUSED_ARG;
 
+
+#ifdef TT_CONFIG_OPTION_SUBPIXEL_HINTING
+    CUR.sph_in_func_flags = 0x0000;
+#endif /* TT_CONFIG_OPTION_SUBPIXEL_HINTING */
 
     if ( CUR.callTop <= 0 )     /* We encountered an ENDF without a call */
     {
@@ -4828,7 +4856,14 @@
       goto Fail;
 
 #ifdef TT_CONFIG_OPTION_SUBPIXEL_HINTING
-    CUR.sph_in_func_flags &= def->sph_fdef_flags;
+    if ( SUBPIXEL_HINTING                                              &&
+         CUR.ignore_x_mode                                             &&
+         ( ( CUR.iup_called                                        &&
+             ( CUR.sph_tweak_flags & SPH_TWEAK_NO_CALL_AFTER_IUP ) ) ||
+           ( def->sph_fdef_flags & SPH_FDEF_VACUFORM_ROUND_1 )       ) )
+      goto Fail;
+    else
+      CUR.sph_in_func_flags = def->sph_fdef_flags;
 #endif /* TT_CONFIG_OPTION_SUBPIXEL_HINTING */
 
     /* check the call stack */
@@ -4852,10 +4887,6 @@
                         def->start );
 
     CUR.step_ins = FALSE;
-
-#ifdef TT_CONFIG_OPTION_SUBPIXEL_HINTING
-    CUR.sph_in_func_flags &= !def->sph_fdef_flags;
-#endif /* TT_CONFIG_OPTION_SUBPIXEL_HINTING */
 
     return;
 
@@ -4914,7 +4945,12 @@
       goto Fail;
 
 #ifdef TT_CONFIG_OPTION_SUBPIXEL_HINTING
-    CUR.sph_in_func_flags &= def->sph_fdef_flags;
+    if ( SUBPIXEL_HINTING                                    &&
+         CUR.ignore_x_mode                                   &&
+         ( def->sph_fdef_flags & SPH_FDEF_VACUFORM_ROUND_1 ) )
+      goto Fail;
+    else
+      CUR.sph_in_func_flags = def->sph_fdef_flags;
 #endif /* TT_CONFIG_OPTION_SUBPIXEL_HINTING */
 
     /* check stack */
@@ -4940,10 +4976,6 @@
 
       CUR.step_ins = FALSE;
     }
-
-#ifdef TT_CONFIG_OPTION_SUBPIXEL_HINTING
-    CUR.sph_in_func_flags &= !def->sph_fdef_flags;
-#endif /* TT_CONFIG_OPTION_SUBPIXEL_HINTING */
 
     return;
 
@@ -5794,10 +5826,8 @@
     if ( CUR.GS.freeVector.x != 0 )
     {
 #ifdef TT_CONFIG_OPTION_SUBPIXEL_HINTING
-      if ( !SUBPIXEL_HINTING                                            ||
-           ( !CUR.ignore_x_mode                                       ||
-             ( CUR.ignore_x_mode                                    &&
-               ( CUR.sph_tweak_flags & SPH_TWEAK_ALLOW_X_MOVE_ZP2 ) ) ) )
+      if ( !SUBPIXEL_HINTING  ||
+           !CUR.ignore_x_mode )
 #endif /* TT_CONFIG_OPTION_SUBPIXEL_HINTING */
         CUR.zp2.cur[point].x += dx;
 
@@ -6048,13 +6078,16 @@
           else
             B1 = CUR.zp2.cur[point].x;
 
-          if ( CUR.GS.freeVector.y != 0                               &&
-               ( CUR.sph_tweak_flags & SPH_TWEAK_SKIP_INLINE_DELTAS ) )
-            goto Skip;
-
           if ( !CUR.face->sph_compatibility_mode &&
                CUR.GS.freeVector.y != 0          )
             MOVE_Zp2_Point( point, dx, dy, TRUE );
+
+          else if ( CUR.sph_in_func_flags & SPH_FDEF_TYPEMAN_DIAGENDCTRL )
+          {
+            MOVE_Zp2_Point( point, dx, dy, TRUE );
+            /* don't allow reversals */
+            goto Skip;
+          }
 
           else if ( CUR.face->sph_compatibility_mode )
           {
@@ -6063,6 +6096,12 @@
               dx = FT_PIX_ROUND( B1 + dx ) - B1;
               dy = FT_PIX_ROUND( B1 + dy ) - B1;
             }
+
+            /* skip post-iup deltas */
+            if ( CUR.iup_called                                          &&
+                 ( ( CUR.sph_in_func_flags & SPH_FDEF_INLINE_DELTA_1 ) ||
+                   ( CUR.sph_in_func_flags & SPH_FDEF_INLINE_DELTA_2 ) ) )
+              goto Skip;
 
             if ( !( CUR.sph_tweak_flags & SPH_TWEAK_ALWAYS_SKIP_DELTAP ) &&
                   ( ( CUR.is_composite && CUR.GS.freeVector.y != 0 ) ||
@@ -6253,6 +6292,7 @@
     if ( SUBPIXEL_HINTING                                  &&
          CUR.ignore_x_mode                                 &&
          CUR.GS.freeVector.x != 0                          &&
+         CUR.GS.freeVector.y == 0                          &&
          !( CUR.sph_tweak_flags & SPH_TWEAK_NORMAL_ROUND ) )
       control_value_cutin = 0;
 #endif /* TT_CONFIG_OPTION_SUBPIXEL_HINTING */
@@ -6527,13 +6567,6 @@
     else
       cvt_dist = CUR_Func_read_cvt( cvtEntry - 1 );
 
-#ifdef TT_CONFIG_OPTION_SUBPIXEL_HINTING
-    if ( SUBPIXEL_HINTING                                  &&
-         CUR.ignore_x_mode                                 &&
-         ( CUR.sph_tweak_flags & SPH_TWEAK_MIRP_CVT_ZERO ) )
-      cvt_dist = 0;
-#endif
-
     /* single width test */
 
     if ( FT_ABS( cvt_dist - CUR.GS.single_width_value ) <
@@ -6688,12 +6721,6 @@
              CUR.GS.freeVector.y != 0                                  &&
              ( B2 & 63 ) != 0                                          &&
              ( B1 & 63 ) != 0                                          )
-          reverse_move = TRUE;
-
-        if ( ( CUR.sph_tweak_flags                      &
-               SPH_TWEAK_DELTAP_SKIP_EXAGGERATED_VALUES ) &&
-             !reverse_move                                &&
-             FT_ABS( B1 - B2 ) >= 64                      )
           reverse_move = TRUE;
       }
 
@@ -7264,7 +7291,7 @@
     if ( SUBPIXEL_HINTING  &&
          CUR.ignore_x_mode )
     {
-      CUR.iup_called = 1;
+      CUR.iup_called = TRUE;
       if ( CUR.sph_tweak_flags & SPH_TWEAK_SKIP_IUP )
         return;
     }
@@ -7341,7 +7368,14 @@
     FT_Long    B;
 #ifdef TT_CONFIG_OPTION_SUBPIXEL_HINTING
     FT_UShort  B1, B2;
-#endif
+
+
+    if ( SUBPIXEL_HINTING                                        &&
+         CUR.ignore_x_mode                                       &&
+         CUR.iup_called                                          &&
+         ( CUR.sph_tweak_flags & SPH_TWEAK_NO_DELTAP_AFTER_IUP ) )
+      goto Fail;
+#endif /* TT_CONFIG_OPTION_SUBPIXEL_HINTING */
 
 
 #ifdef TT_CONFIG_OPTION_UNPATENTED_HINTING
@@ -7445,7 +7479,7 @@
               /* Standard Subpixel Hinting: Allow y move.       */
               /* This messes up dejavu and may not be needed... */
               if ( !CUR.face->sph_compatibility_mode &&
-                   CUR.GS.freeVector.y != 0           )
+                   CUR.GS.freeVector.y != 0          )
                 CUR_Func_move( &CUR.zp0, A, B );
               else
 #endif /* 0 */
@@ -7471,14 +7505,14 @@
               B2 = CUR.zp0.cur[A].y;
 
               /* Reverse this move if it results in a disallowed move */
-              if ( CUR.GS.freeVector.y != 0                    &&
-                   ( ( CUR.face->sph_compatibility_mode    &&
-                       ( B1 & 63 ) == 0                    &&
-                       ( B2 & 63 ) != 0                    ) ||
-                     ( ( CUR.sph_tweak_flags             &
-                         SPH_TWEAK_SKIP_NONPIXEL_Y_MOVES ) &&
-                       ( B1 & 63 ) != 0                    &&
-                       ( B2 & 63 ) != 0                    ) ) )
+              if ( CUR.GS.freeVector.y != 0                           &&
+                   ( ( CUR.face->sph_compatibility_mode           &&
+                       ( B1 & 63 ) == 0                           &&
+                       ( B2 & 63 ) != 0                           ) ||
+                     ( ( CUR.sph_tweak_flags                    &
+                         SPH_TWEAK_SKIP_NONPIXEL_Y_MOVES_DELTAP ) &&
+                       ( B1 & 63 ) != 0                           &&
+                       ( B2 & 63 ) != 0                           ) ) )
                 CUR_Func_move( &CUR.zp0, A, -B );
             }
           }
@@ -8098,6 +8132,20 @@
   {
     FT_Long  ins_counter = 0;  /* executed instructions counter */
 
+#ifdef TT_CONFIG_OPTION_SUBPIXEL_HINTING
+    FT_Byte    opcode_pattern[1][2] = {
+                  /* #8 TypeMan Talk Align */
+                  {
+                    0x06, /* SPVTL   */
+                    0x7D, /* RDTG    */
+                  },
+                };
+    FT_UShort  opcode_patterns   = 1;
+    FT_UShort  opcode_pointer[1] = { 0 };
+    FT_UShort  opcode_size[1]    = { 1 };
+    FT_UShort  i;
+#endif /* TT_CONFIG_OPTION_SUBPIXEL_HINTING */
+
 
 #ifdef TT_CONFIG_OPTION_STATIC_RASTER
     cur = *exc;
@@ -8153,9 +8201,6 @@
       /* One can also interpret it as the index of the last argument.    */
       if ( CUR.args < 0 )
       {
-        FT_UShort  i;
-
-
         if ( CUR.pedantic_hinting )
         {
           CUR.error = FT_THROW( Too_Few_Arguments );
@@ -8181,6 +8226,39 @@
 
       CUR.step_ins = TRUE;
       CUR.error    = FT_Err_Ok;
+
+#ifdef TT_CONFIG_OPTION_SUBPIXEL_HINTING
+
+      if ( SUBPIXEL_HINTING )
+      {
+        for ( i = 0; i < opcode_patterns; i++ )
+        {
+          if ( opcode_pointer[i] < opcode_size[i]                 &&
+               CUR.opcode == opcode_pattern[i][opcode_pointer[i]] )
+          {
+            opcode_pointer[i] += 1;
+
+            if ( opcode_pointer[i] == opcode_size[i] )
+            {
+              FT_TRACE7(( "sph: opcode ptrn: %d, %s %s\n",
+                          i,
+                          CUR.face->root.family_name,
+                          CUR.face->root.style_name ));
+
+              switch ( i )
+              {
+              case 0:
+                break;
+              }
+              opcode_pointer[i] = 0;
+            }
+          }
+          else
+            opcode_pointer[i] = 0;
+        }
+      }
+
+#endif /* TT_CONFIG_OPTION_SUBPIXEL_HINTING */
 
 #ifdef TT_CONFIG_OPTION_INTERPRETER_SWITCH
 
@@ -8378,15 +8456,7 @@
           break;
 
         case 0x2B:  /* CALL */
-#ifdef TT_CONFIG_OPTION_SUBPIXEL_HINTING
-          if ( !SUBPIXEL_HINTING                        ||
-               ( !CUR.ignore_x_mode                   ||
-                 !CUR.iup_called                      ||
-                 ( CUR.iup_called                   &&
-                   !( CUR.sph_tweak_flags         &
-                      SPH_TWEAK_NO_CALL_AFTER_IUP ) ) ) )
-#endif /* TT_CONFIG_OPTION_SUBPIXEL_HINTING */
-            Ins_CALL( EXEC_ARG_ args );
+          Ins_CALL( EXEC_ARG_ args );
           break;
 
         case 0x2C:  /* FDEF */
@@ -8404,12 +8474,6 @@
 
         case 0x30:  /* IUP */
         case 0x31:  /* IUP */
-#ifdef TT_CONFIG_OPTION_SUBPIXEL_HINTING
-          if ( SUBPIXEL_HINTING  &&
-               CUR.ignore_x_mode )
-            CUR.iup_called = TRUE;
-#endif /* TT_CONFIG_OPTION_SUBPIXEL_HINTING */
-
           Ins_IUP( EXEC_ARG_ args );
           break;
 
@@ -8569,15 +8633,7 @@
           break;
 
         case 0x5D:  /* DELTAP1 */
-#ifdef TT_CONFIG_OPTION_SUBPIXEL_HINTING
-          if ( !SUBPIXEL_HINTING                          ||
-               ( !CUR.ignore_x_mode                     ||
-                 !CUR.iup_called                        ||
-                 ( CUR.iup_called                     &&
-                   !( CUR.sph_tweak_flags           &
-                      SPH_TWEAK_NO_DELTAP_AFTER_IUP ) ) ) )
-#endif /* TT_CONFIG_OPTION_SUBPIXEL_HINTING */
-            Ins_DELTAP( EXEC_ARG_ args );
+          Ins_DELTAP( EXEC_ARG_ args );
           break;
 
         case 0x5E:  /* SDB */

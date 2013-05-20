@@ -1,3 +1,36 @@
+2013-05-20  Infinality  <infinality@infinality.net>
+
+	[truetype] Simplify and improve subpixel function detection.
+
+	Some small enhancements have allowed the removal of many macros and
+	the simplification of existing rules in `ttsubpix.c'.
+
+	* src/truetype/ttsubpix.h (SPH_TWEAK_ALLOW_X_DMOVEX,
+	SPH_TWEAK_ALLOW_X_MOVE_ZP2,
+	SPH_TWEAK_DELTAP_SKIP_EXAGGERATED_VALUES,
+	SPH_TWEAK_SKIP_INLINE_DELTAS, SPH_TWEAK_MIRP_CVT_ZERO): Removed.
+	(SPH_TWEAK_SKIP_NONPIXEL_Y_MOVES_DELTAP): New rule macro.
+
+	* src/truetype/ttsubpix.c: Updated affected rules.
+
+	* src/truetype/ttinterp.c (Direct_Move_X): Updated.
+	(INS_FDEF): Add additional function detection.
+	(INS_ENDF): Set runtime flag.
+	(Ins_CALL): Skip the call under certain conditions.
+	Remove bad code.
+	(Ins_LOOPCALL): Skip the call under certain conditions.
+	Remove bad code.
+	(Move_Zp2_Point): Updated.
+	(Ins_SHPIX): Updated.
+	Skip the move under some situations.
+	(Ins_MIAP): Improve conditions.
+	(Ins_MIRP): Updated.
+	(Ins_DELTAP): Skip move under certain conditions.
+	Simplify conditions.
+	(TT_RunIns): Updated.
+	Add code to handle new function detection.
+	Trace messages.
+
 2013-05-17  Werner Lemberg  <wl@gnu.org>
 
 	Update more FT_Err_XXX macros using FT_ERR and FT_THROW;
