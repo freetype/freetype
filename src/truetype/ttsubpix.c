@@ -322,7 +322,7 @@
     /* Cyrillic small letter I */
     { "Legacy Sans Fonts", 0, "", 0 },
     /* Fix artifacts with some Regular & Bold */
-    { "Verdana Clones", 17, "", 0 },
+    { "Verdana Clones", 0, "", 0 },
   };
 
 

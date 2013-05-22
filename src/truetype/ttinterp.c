@@ -6124,9 +6124,9 @@
               B2 = CUR.zp2.cur[point].y;
 
               /* reverse any disallowed moves */
-              if ( ( B1 & 63 ) == 0                 &&
-                   ( B2 & 63 ) != 0                 &&
-                   B1 != B2                         )
+              if ( ( B1 & 63 ) == 0 &&
+                   ( B2 & 63 ) != 0 &&
+                   B1 != B2         )
                 MOVE_Zp2_Point( point, 0, -dy, TRUE );
             }
           }
