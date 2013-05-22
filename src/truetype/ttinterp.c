@@ -5825,12 +5825,7 @@
 
     if ( CUR.GS.freeVector.x != 0 )
     {
-#ifdef TT_CONFIG_OPTION_SUBPIXEL_HINTING
-      if ( !SUBPIXEL_HINTING  ||
-           !CUR.ignore_x_mode )
-#endif /* TT_CONFIG_OPTION_SUBPIXEL_HINTING */
-        CUR.zp2.cur[point].x += dx;
-
+      CUR.zp2.cur[point].x += dx;
       if ( touch )
         CUR.zp2.tags[point] |= FT_CURVE_TAG_TOUCH_X;
     }
@@ -5887,6 +5882,13 @@
         }
       }
       else
+#ifdef TT_CONFIG_OPTION_SUBPIXEL_HINTING
+      /* doesn't follow Cleartype spec but produces better result */
+      if ( SUBPIXEL_HINTING  &&
+           CUR.ignore_x_mode )
+        MOVE_Zp2_Point( point, 0, dy, TRUE );
+      else
+#endif /* TT_CONFIG_OPTION_SUBPIXEL_HINTING */
         MOVE_Zp2_Point( point, dx, dy, TRUE );
 
       CUR.GS.loop--;
@@ -6080,15 +6082,22 @@
 
           if ( !CUR.face->sph_compatibility_mode &&
                CUR.GS.freeVector.y != 0          )
-            MOVE_Zp2_Point( point, dx, dy, TRUE );
-
-          else if ( CUR.sph_in_func_flags & SPH_FDEF_TYPEMAN_DIAGENDCTRL )
           {
             MOVE_Zp2_Point( point, dx, dy, TRUE );
-            /* don't allow reversals */
-            goto Skip;
-          }
 
+            /* save new point */
+            if ( CUR.GS.freeVector.y != 0 )
+            {
+              B2 = CUR.zp2.cur[point].y;
+
+              /* reverse any disallowed moves */
+              if ( ( CUR.sph_tweak_flags & SPH_TWEAK_SKIP_NONPIXEL_Y_MOVES ) &&
+                   ( B1 & 63 ) != 0                                          &&
+                   ( B2 & 63 ) != 0                                          &&
+                    B1 != B2                                                 )
+                MOVE_Zp2_Point( point, -dx, -dy, TRUE );
+            }
+          }
           else if ( CUR.face->sph_compatibility_mode )
           {
             if ( CUR.sph_tweak_flags & SPH_TWEAK_ROUND_NONPIXEL_Y_MOVES )
@@ -6107,27 +6116,22 @@
                   ( ( CUR.is_composite && CUR.GS.freeVector.y != 0 ) ||
                     ( CUR.zp2.tags[point] & FT_CURVE_TAG_TOUCH_Y )   ||
                     ( CUR.sph_tweak_flags & SPH_TWEAK_DO_SHPIX )     )   )
-              MOVE_Zp2_Point( point, dx, dy, TRUE );
+              MOVE_Zp2_Point( point, 0, dy, TRUE );
+
+            /* save new point */
+            if ( CUR.GS.freeVector.y != 0 )
+            {
+              B2 = CUR.zp2.cur[point].y;
+
+              /* reverse any disallowed moves */
+              if ( ( B1 & 63 ) == 0                 &&
+                   ( B2 & 63 ) != 0                 &&
+                   B1 != B2                         )
+                MOVE_Zp2_Point( point, 0, -dy, TRUE );
+            }
           }
-
-          /* save new point */
-          if ( CUR.GS.freeVector.y != 0 )
-            B2 = CUR.zp2.cur[point].y;
-          else
-            B2 = CUR.zp2.cur[point].x;
-
-          /* reverse any disallowed moves */
-          if ( ( ( CUR.sph_tweak_flags & SPH_TWEAK_SKIP_NONPIXEL_Y_MOVES ) &&
-                 CUR.GS.freeVector.y != 0                                  &&
-                 ( B1 & 63 ) != 0                                          &&
-                 ( B2 & 63 ) != 0                                          &&
-                 B1 != B2                                                  ) ||
-               ( CUR.face->sph_compatibility_mode                          &&
-                 CUR.GS.freeVector.y != 0                                  &&
-                 ( B1 & 63 ) == 0                                          &&
-                 ( B2 & 63 ) != 0                                          &&
-                 B1 != B2                                                  ) )
-            MOVE_Zp2_Point( point, -dx, -dy, TRUE );
+          else if ( CUR.sph_in_func_flags & SPH_FDEF_TYPEMAN_DIAGENDCTRL )
+            MOVE_Zp2_Point( point, dx, dy, TRUE );
         }
         else
           MOVE_Zp2_Point( point, dx, dy, TRUE );

@@ -1,3 +1,20 @@
+2013-05-22  Infinality  <infinality@infinality.net>
+
+	[truetype] Adjust subpixel zp2 moves and tweak rules.
+
+	These modifications fix thin diagonal stems in some legacy fonts.
+
+	* src/truetype/ttinterp.c (Direct_Move_X): Remove unused macro.
+	(Move_Zp2_Point): Don't always disable x moves for subpixel rendering.
+	(Ins_SHP): Disable x moves here for subpixel rendering.
+	(Ins_SHPIX): Only disable x moves in compatibility mode.
+	Split out zp2 move reversals and reorder conditional respectively.
+
+	* src/truetype/ttsubpix.c (SKIP_NONPIXEL_Y_MOVES_Rules): Fix oversight.
+	Only adjust Verdana clones for 17 ppem.
+	(SKIP_NONPIXEL_Y_MOVES_Rules_Exceptions): Add Courier New.
+	(ALWAYS_SKIP_DELTAP_Rules): Found additional cases for Arial `s'.
+
 2013-05-20  Infinality  <infinality@infinality.net>
 
 	[truetype] Simplify and improve subpixel function detection.

@@ -310,19 +310,19 @@
 
   /* Skip Y moves that start with a point that is not on a Y pixel         */
   /* boundary and don't move that point to a Y pixel boundary.             */
-#define SKIP_NONPIXEL_Y_MOVES_RULES_SIZE  5
+#define SKIP_NONPIXEL_Y_MOVES_RULES_SIZE  4
 
   const SPH_TweakRule  SKIP_NONPIXEL_Y_MOVES_Rules
                        [SKIP_NONPIXEL_Y_MOVES_RULES_SIZE] =
   {
     /* fix vwxyz thinness*/
-    { "Consolas", 0, "", 0 }, { "-", 0, "N", 0 },
+    { "Consolas", 0, "", 0 },
     /* Fix thin middle stems */
-    { "-Core MS Legacy Fonts", 0, "Regular/Bold Class", 0 },
+    { "Core MS Legacy Fonts", 0, "Regular", 0 },
     /* Cyrillic small letter I */
     { "Legacy Sans Fonts", 0, "", 0 },
     /* Fix artifacts with some Regular & Bold */
-    { "Verdana Clones", 0, "", 0 },
+    { "Verdana Clones", 17, "", 0 },
   };
 
 
@@ -331,7 +331,8 @@
   const SPH_TweakRule  SKIP_NONPIXEL_Y_MOVES_Rules_Exceptions
                        [SKIP_NONPIXEL_Y_MOVES_RULES_EXCEPTIONS_SIZE] =
   {
-    { "-", 0, "", 0 },
+    /* Fixes < and > */
+    { "Courier New", 0, "Regular", 0 },
   };
 
 
@@ -450,7 +451,7 @@
 
 
   /* Skip DELTAP instructions if matched.                                  */
-#define ALWAYS_SKIP_DELTAP_RULES_SIZE  18
+#define ALWAYS_SKIP_DELTAP_RULES_SIZE  23
 
   const SPH_TweakRule  ALWAYS_SKIP_DELTAP_Rules
                        [ALWAYS_SKIP_DELTAP_RULES_SIZE] =
@@ -473,10 +474,15 @@
     { "Arial", 10, "Regular", '6' },
     { "Arial", 0, "Bold/BoldItalic Class", 'a' },
     /* Make horizontal stems consistent with the rest */
-    { "Arial", 24, "Bold", 's' },
-    { "Arial", 25, "Bold", 's' },
     { "Arial", 24, "Bold", 'a' },
     { "Arial", 25, "Bold", 'a' },
+    { "Arial", 24, "Bold", 's' },
+    { "Arial", 25, "Bold", 's' },
+    { "Arial", 34, "Bold", 's' },
+    { "Arial", 35, "Bold", 's' },
+    { "Arial", 36, "Bold", 's' },
+    { "Arial", 25, "Regular", 's' },
+    { "Arial", 26, "Regular", 's' },
   };
 
 
