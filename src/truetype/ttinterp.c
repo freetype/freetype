@@ -8134,7 +8134,8 @@
   FT_EXPORT_DEF( FT_Error )
   TT_RunIns( TT_ExecContext  exc )
   {
-    FT_Long  ins_counter = 0;  /* executed instructions counter */
+    FT_Long    ins_counter = 0;  /* executed instructions counter */
+    FT_UShort  i;
 
 #ifdef TT_CONFIG_OPTION_SUBPIXEL_HINTING
     FT_Byte    opcode_pattern[1][2] = {
@@ -8147,7 +8148,6 @@
     FT_UShort  opcode_patterns   = 1;
     FT_UShort  opcode_pointer[1] = { 0 };
     FT_UShort  opcode_size[1]    = { 1 };
-    FT_UShort  i;
 #endif /* TT_CONFIG_OPTION_SUBPIXEL_HINTING */
 
 

@@ -1,3 +1,10 @@
+2013-05-23  Behdad Esfahbod  <behdad@behdad.org>
+
+	Compilation fix.
+
+	* src/truetype/ttinterp.c (TT_RunIns)
+	[!TT_CONFIG_OPTION_SUBPIXEL_HINTING]: Make it work.
+
 2013-05-22  Infinality  <infinality@infinality.net>
 
 	[truetype] Formatting and an additional subpixel tweak.
