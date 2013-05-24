@@ -1,3 +1,15 @@
+2013-05-24  Guenter  <info@gknw.net>
+
+	Apply Savannah patch #8055.
+
+	Make `apinames' create an import file for NetWare.
+
+	* src/tools/apinames.c (PROGRAM_VERSION): Set to 0.2.
+	(OutputFormat): Add `OUTPUT_NETWARE_IMP'.
+	(names_dump): Handle it.
+	(usage): Updated.
+	(main): Handle new command line flag `-wN'.
+
 2013-05-23  Behdad Esfahbod  <behdad@behdad.org>
 
 	Compilation fix.
