@@ -370,7 +370,7 @@ FT_BEGIN_HEADER
   /*    should never try to discard it yourself.                           */
   /*                                                                       */
   /*    The @FT_Face object doesn't necessarily have a current size object */
-  /*    (i.e., face->size can be 0).  If you need a specific `font size',  */
+  /*    (i.e., face->size can be~0).  If you need a specific `font size',  */
   /*    use @FTC_Manager_LookupSize instead.                               */
   /*                                                                       */
   /*    Never change the face's transformation matrix (i.e., never call    */
@@ -701,7 +701,7 @@ FT_BEGIN_HEADER
   /*    FTC_ImageCache                                                     */
   /*                                                                       */
   /* <Description>                                                         */
-  /*    A handle to an glyph image cache object.  They are designed to     */
+  /*    A handle to a glyph image cache object.  They are designed to      */
   /*    hold many distinct glyph images while not exceeding a certain      */
   /*    memory threshold.                                                  */
   /*                                                                       */
