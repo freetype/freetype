@@ -3,6 +3,24 @@ CHANGES BETWEEN 2.4.12 and 2.5
 
   I. IMPORTANT CHANGES
 
+    - Behdad Esfahbod  (on behalf  of Google) contributed  support for
+      color embedded bitmaps (eg. color emoji).
+
+      A  new  load  flag,  FT_LOAD_COLOR, makes  FreeType  load  color
+      embedded-bitmaps, following this draft specification
+
+        https://color-emoji.googlecode.com/git/specification/v1.html
+
+      which defines two new SFNT  tables, `CBDT' and `CBLC' (named and
+      modeled  after  `EBDT'  and `EBLC',  respectively).   The  color
+      bitmaps  are  stored in  the  new  FT_PIXEL_MODE_BGRA format  to
+      represent BGRA  pre-multiplied sRGB  images.  If PNG  support is
+      available,  PNG color  images as  defined in  the same  proposed
+      specification are supported also.
+
+      Note that  color bitmaps  are converted  to grayscale  if client
+      didn't ask for color.
+
     - As announced in the previous release,  all code related to macro
       FT_CONFIG_OPTION_OLD_INTERNALS  has been removed,  thus becoming
       obsolete.

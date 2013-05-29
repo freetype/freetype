@@ -2523,6 +2523,14 @@ FT_BEGIN_HEADER
    *   FT_LOAD_NO_AUTOHINT ::
    *     Disable auto-hinter.  See also the note below.
    *
+   *   FT_LOAD_COLOR ::
+   *     This flag is used to request loading of color embedded-bitmap
+   *     images.  The resulting color bitmaps, if available, will have the
+   *     @FT_PIXEL_MODE_BGRA format.  When the flag is not used and color
+   *     bitmaps are found, they will be converted to 256-level gray
+   *     bitmaps transparently.  Those bitmaps will be in the
+   *     @FT_PIXEL_MODE_GRAY format.
+   *
    * @note:
    *   By default, hinting is enabled and the font's native hinter (see
    *   @FT_FACE_FLAG_HINTER) is preferred over the auto-hinter.  You can
@@ -2560,6 +2568,8 @@ FT_BEGIN_HEADER
 #define FT_LOAD_MONOCHROME                   ( 1L << 12 )
 #define FT_LOAD_LINEAR_DESIGN                ( 1L << 13 )
 #define FT_LOAD_NO_AUTOHINT                  ( 1L << 15 )
+  /* Bits 16..19 are used by `FT_LOAD_TARGET_' */
+#define FT_LOAD_COLOR                        ( 1L << 20 )
 
   /* */
 

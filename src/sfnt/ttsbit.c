@@ -7,6 +7,9 @@
 /*  Copyright 2005-2009, 2013 by                                           */
 /*  David Turner, Robert Wilhelm, and Werner Lemberg.                      */
 /*                                                                         */
+/*  Copyright 2013 by Google, Inc.                                         */
+/*  Google Author(s): Behdad Esfahbod.                                     */
+/*                                                                         */
 /*  This file is part of the FreeType project, and may only be used,       */
 /*  modified, and distributed under the terms of the FreeType project      */
 /*  license, LICENSE.TXT.  By continuing to use, modify, or distribute     */
@@ -20,9 +23,12 @@
 #include FT_INTERNAL_DEBUG_H
 #include FT_INTERNAL_STREAM_H
 #include FT_TRUETYPE_TAGS_H
+#include FT_BITMAP_H
 #include "ttsbit.h"
 
 #include "sferrors.h"
+
+#include "pngshim.h"
 
 
   /*************************************************************************/
@@ -50,7 +56,9 @@
     face->sbit_num_strikes = 0;
 
     /* this table is optional */
-    error = face->goto_table( face, TTAG_EBLC, stream, &table_size );
+    error = face->goto_table( face, TTAG_CBLC, stream, &table_size );
+    if ( error )
+      error = face->goto_table( face, TTAG_EBLC, stream, &table_size );
     if ( error )
       error = face->goto_table( face, TTAG_bloc, stream, &table_size );
     if ( error )
@@ -185,7 +193,9 @@
     FT_ULong   ebdt_size;
 
 
-    error = face->goto_table( face, TTAG_EBDT, stream, &ebdt_size );
+    error = face->goto_table( face, TTAG_CBDT, stream, &ebdt_size );
+    if ( error )
+      error = face->goto_table( face, TTAG_EBDT, stream, &ebdt_size );
     if ( error )
       error = face->goto_table( face, TTAG_bdat, stream, &ebdt_size );
     if ( error )
@@ -243,7 +253,8 @@
 
 
   static FT_Error
-  tt_sbit_decoder_alloc_bitmap( TT_SBitDecoder  decoder )
+  tt_sbit_decoder_alloc_bitmap( TT_SBitDecoder  decoder,
+                                FT_UInt         load_flags )
   {
     FT_Error    error = FT_Err_Ok;
     FT_UInt     width, height;
@@ -268,21 +279,40 @@
     case 1:
       map->pixel_mode = FT_PIXEL_MODE_MONO;
       map->pitch      = ( map->width + 7 ) >> 3;
+      map->num_grays  = 2;
       break;
 
     case 2:
       map->pixel_mode = FT_PIXEL_MODE_GRAY2;
       map->pitch      = ( map->width + 3 ) >> 2;
+      map->num_grays  = 4;
       break;
 
     case 4:
       map->pixel_mode = FT_PIXEL_MODE_GRAY4;
       map->pitch      = ( map->width + 1 ) >> 1;
+      map->num_grays  = 16;
       break;
 
     case 8:
       map->pixel_mode = FT_PIXEL_MODE_GRAY;
       map->pitch      = map->width;
+      map->num_grays  = 256;
+      break;
+
+    case 32:
+      if ( load_flags & FT_LOAD_COLOR )
+      {
+        map->pixel_mode = FT_PIXEL_MODE_BGRA;
+        map->pitch      = map->width * 4;
+        map->num_grays  = 256;
+      }
+      else
+      {
+        map->pixel_mode = FT_PIXEL_MODE_GRAY;
+        map->pitch      = map->width;
+        map->num_grays  = 256;
+      }
       break;
 
     default:
@@ -351,11 +381,13 @@
   /* forward declaration */
   static FT_Error
   tt_sbit_decoder_load_image( TT_SBitDecoder  decoder,
+                              FT_UInt         load_flags,
                               FT_UInt         glyph_index,
                               FT_Int          x_pos,
                               FT_Int          y_pos );
 
   typedef FT_Error  (*TT_SBitDecoder_LoadFunc)( TT_SBitDecoder  decoder,
+                                                FT_UInt         load_flags,
                                                 FT_Byte*        p,
                                                 FT_Byte*        plimit,
                                                 FT_Int          x_pos,
@@ -364,6 +396,7 @@
 
   static FT_Error
   tt_sbit_decoder_load_byte_aligned( TT_SBitDecoder  decoder,
+                                     FT_UInt         load_flags,
                                      FT_Byte*        p,
                                      FT_Byte*        limit,
                                      FT_Int          x_pos,
@@ -374,13 +407,8 @@
     FT_Int      bit_height, bit_width, pitch, width, height, line_bits, h;
     FT_Bitmap*  bitmap;
 
+    FT_UNUSED( load_flags );
 
-    if ( !decoder->bitmap_allocated )
-    {
-      error = tt_sbit_decoder_alloc_bitmap( decoder );
-      if ( error )
-        goto Exit;
-    }
 
     /* check that we can write the glyph into the bitmap */
     bitmap     = decoder->bitmap;
@@ -415,35 +443,35 @@
     {
       for ( h = height; h > 0; h--, line += pitch )
       {
-        FT_Byte*  write = line;
+        FT_Byte*  pwrite = line;
         FT_Int    w;
 
 
         for ( w = line_bits; w >= 8; w -= 8 )
         {
-          write[0] = (FT_Byte)( write[0] | *p++ );
-          write   += 1;
+          pwrite[0] = (FT_Byte)( pwrite[0] | *p++ );
+          pwrite   += 1;
         }
 
         if ( w > 0 )
-          write[0] = (FT_Byte)( write[0] | ( *p++ & ( 0xFF00U >> w ) ) );
+          pwrite[0] = (FT_Byte)( pwrite[0] | ( *p++ & ( 0xFF00U >> w ) ) );
       }
     }
     else  /* x_pos > 0 */
     {
       for ( h = height; h > 0; h--, line += pitch )
       {
-        FT_Byte*  write = line;
+        FT_Byte*  pwrite = line;
         FT_Int    w;
         FT_UInt   wval = 0;
 
 
         for ( w = line_bits; w >= 8; w -= 8 )
         {
-          wval      = (FT_UInt)( wval | *p++ );
-          write[0]  = (FT_Byte)( write[0] | ( wval >> x_pos ) );
-          write    += 1;
-          wval    <<= 8;
+          wval       = (FT_UInt)( wval | *p++ );
+          pwrite[0]  = (FT_Byte)( pwrite[0] | ( wval >> x_pos ) );
+          pwrite    += 1;
+          wval     <<= 8;
         }
 
         if ( w > 0 )
@@ -451,13 +479,13 @@
 
         /* all bits read and there are `x_pos + w' bits to be written */
 
-        write[0] = (FT_Byte)( write[0] | ( wval >> x_pos ) );
+        pwrite[0] = (FT_Byte)( pwrite[0] | ( wval >> x_pos ) );
 
         if ( x_pos + w > 8 )
         {
-          write++;
-          wval   <<= 8;
-          write[0] = (FT_Byte)( write[0] | ( wval >> x_pos ) );
+          pwrite++;
+          wval     <<= 8;
+          pwrite[0]  = (FT_Byte)( pwrite[0] | ( wval >> x_pos ) );
         }
       }
     }
@@ -469,7 +497,7 @@
 
   /*
    * Load a bit-aligned bitmap (with pointer `p') into a line-aligned bitmap
-   * (with pointer `write').  In the example below, the width is 3 pixel,
+   * (with pointer `pwrite').  In the example below, the width is 3 pixel,
    * and `x_pos' is 1 pixel.
    *
    *       p                               p+1
@@ -484,26 +512,27 @@
    * |                               | .
    * | 7   6   5   4   3   2   1   0 | .
    * |                               | .
-   *   write               .           .
+   *   pwrite              .           .
    *                       .           .
    *                       v           .
    *                   +-------+       .
    *             |                               |
    *             | 7   6   5   4   3   2   1   0 |
    *             |                               |
-   *               write+1             .
+   *               pwrite+1            .
    *                                   .
    *                                   v
    *                               +-------+
    *                         |                               |
    *                         | 7   6   5   4   3   2   1   0 |
    *                         |                               |
-   *                           write+2
+   *                           pwrite+2
    *
    */
 
   static FT_Error
   tt_sbit_decoder_load_bit_aligned( TT_SBitDecoder  decoder,
+                                    FT_UInt         load_flags,
                                     FT_Byte*        p,
                                     FT_Byte*        limit,
                                     FT_Int          x_pos,
@@ -515,13 +544,8 @@
     FT_Bitmap*  bitmap;
     FT_UShort   rval;
 
+    FT_UNUSED( load_flags );
 
-    if ( !decoder->bitmap_allocated )
-    {
-      error = tt_sbit_decoder_alloc_bitmap( decoder );
-      if ( error )
-        goto Exit;
-    }
 
     /* check that we can write the glyph into the bitmap */
     bitmap     = decoder->bitmap;
@@ -560,8 +584,8 @@
 
     for ( h = height; h > 0; h--, line += pitch )
     {
-      FT_Byte*  write = line;
-      FT_Int    w     = line_bits;
+      FT_Byte*  pwrite = line;
+      FT_Int    w      = line_bits;
 
 
       /* handle initial byte (in target bitmap) specially if necessary */
@@ -586,9 +610,9 @@
           nbits  -= w;
         }
 
-        *write++ |= ( ( rval >> nbits ) & 0xFF ) &
-                    ( ~( 0xFF << w ) << ( 8 - w - x_pos ) );
-        rval    <<= 8;
+        *pwrite++ |= ( ( rval >> nbits ) & 0xFF ) &
+                     ( ~( 0xFF << w ) << ( 8 - w - x_pos ) );
+        rval     <<= 8;
 
         w = line_bits - w;
       }
@@ -596,8 +620,8 @@
       /* handle medial bytes */
       for ( ; w >= 8; w -= 8 )
       {
-        rval     |= *p++;
-        *write++ |= ( rval >> nbits ) & 0xFF;
+        rval      |= *p++;
+        *pwrite++ |= ( rval >> nbits ) & 0xFF;
 
         rval <<= 8;
       }
@@ -609,15 +633,15 @@
         {
           if ( p < limit )
             rval |= *p++;
-          *write |= ( ( rval >> nbits ) & 0xFF ) & ( 0xFF00U >> w );
-          nbits  += 8 - w;
+          *pwrite |= ( ( rval >> nbits ) & 0xFF ) & ( 0xFF00U >> w );
+          nbits   += 8 - w;
 
           rval <<= 8;
         }
         else
         {
-          *write |= ( ( rval >> nbits ) & 0xFF ) & ( 0xFF00U >> w );
-          nbits  -= w;
+          *pwrite |= ( ( rval >> nbits ) & 0xFF ) & ( 0xFF00U >> w );
+          nbits   -= w;
         }
       }
     }
@@ -629,6 +653,7 @@
 
   static FT_Error
   tt_sbit_decoder_load_compound( TT_SBitDecoder  decoder,
+                                 FT_UInt         load_flags,
                                  FT_Byte*        p,
                                  FT_Byte*        limit,
                                  FT_Int          x_pos,
@@ -652,13 +677,6 @@
     if ( p + 4 * num_components > limit )
       goto Fail;
 
-    if ( !decoder->bitmap_allocated )
-    {
-      error = tt_sbit_decoder_alloc_bitmap( decoder );
-      if ( error )
-        goto Exit;
-    }
-
     for ( nn = 0; nn < num_components; nn++ )
     {
       FT_UInt  gindex = FT_NEXT_USHORT( p );
@@ -667,7 +685,7 @@
 
 
       /* NB: a recursive call */
-      error = tt_sbit_decoder_load_image( decoder, gindex,
+      error = tt_sbit_decoder_load_image( decoder, load_flags, gindex,
                                           x_pos + dx, y_pos + dy );
       if ( error )
         break;
@@ -691,8 +709,54 @@
   }
 
 
+#ifdef FT_CONFIG_OPTION_USE_PNG
+
+  static FT_Error
+  tt_sbit_decoder_load_png( TT_SBitDecoder  decoder,
+                            FT_UInt         load_flags,
+                            FT_Byte*        p,
+                            FT_Byte*        limit,
+                            FT_Int          x_pos,
+                            FT_Int          y_pos )
+  {
+    FT_Error  error = FT_Err_Ok;
+    FT_ULong  png_len;
+
+    FT_UNUSED( load_flags );
+
+
+    if ( limit - p < 4 )
+    {
+      error = FT_THROW( Invalid_File_Format );
+      goto Exit;
+    }
+
+    png_len = FT_NEXT_ULONG( p );
+    if ( (FT_ULong)( limit - p ) < png_len )
+    {
+      error = FT_THROW( Invalid_File_Format );
+      goto Exit;
+    }
+
+    error = Load_SBit_Png( decoder->bitmap,
+                           x_pos,
+                           y_pos,
+                           decoder->bit_depth,
+                           decoder->metrics,
+                           decoder->stream->memory,
+                           p,
+                           png_len );
+
+  Exit:
+    return error;
+  }
+
+#endif /* FT_CONFIG_OPTION_USE_PNG */
+
+
   static FT_Error
   tt_sbit_decoder_load_bitmap( TT_SBitDecoder  decoder,
+                               FT_UInt         load_flags,
                                FT_UInt         glyph_format,
                                FT_ULong        glyph_start,
                                FT_ULong        glyph_size,
@@ -726,12 +790,14 @@
     case 1:
     case 2:
     case 8:
+    case 17:
       error = tt_sbit_decoder_load_metrics( decoder, &p, p_limit, 0 );
       break;
 
     case 6:
     case 7:
     case 9:
+    case 18:
       error = tt_sbit_decoder_load_metrics( decoder, &p, p_limit, 1 );
       break;
 
@@ -770,11 +836,77 @@
         loader = tt_sbit_decoder_load_compound;
         break;
 
+#ifdef FT_CONFIG_OPTION_USE_PNG
+      case 17: /* small metrics, PNG image data   */
+      case 18: /* big metrics, PNG image data     */
+      case 19: /* metrics in EBLC, PNG image data */
+        loader = tt_sbit_decoder_load_png;
+        break;
+#endif /* FT_CONFIG_OPTION_USE_PNG */
+
       default:
+        error = FT_THROW( Invalid_Table );
         goto Fail;
       }
 
-      error = loader( decoder, p, p_limit, x_pos, y_pos );
+      if ( !decoder->bitmap_allocated )
+      {
+        error = tt_sbit_decoder_alloc_bitmap( decoder, load_flags );
+        if ( error )
+          goto Fail;
+      }
+
+      if ( decoder->bit_depth == 32                          &&
+           decoder->bitmap->pixel_mode != FT_PIXEL_MODE_BGRA )
+      {
+        /* Flatten color bitmaps if color was not requested. */
+
+        FT_Library library = decoder->face->root.glyph->library;
+        FT_Memory  memory  = decoder->stream->memory;
+
+        FT_Bitmap color, *orig;
+
+
+        if ( decoder->bitmap->pixel_mode != FT_PIXEL_MODE_GRAY ||
+             x_pos != 0 || y_pos != 0                          )
+        {
+          /* Shouldn't happen. */
+          error = FT_THROW( Invalid_Table );
+          goto Fail;
+        }
+
+        FT_Bitmap_New( &color );
+
+        color.rows       = decoder->bitmap->rows;
+        color.width      = decoder->bitmap->width;
+        color.pitch      = color.width * 4;
+        color.pixel_mode = FT_PIXEL_MODE_BGRA;
+
+        if ( FT_ALLOC( color.buffer, color.rows * color.pitch ) )
+          goto Fail;
+
+        orig            = decoder->bitmap;
+        decoder->bitmap = &color;
+
+        error = loader( decoder, load_flags, p, p_limit, x_pos, y_pos );
+
+        decoder->bitmap = orig;
+
+        if ( error                                         ||
+             ( error = FT_Bitmap_Convert( library,
+                                          &color,
+                                          decoder->bitmap,
+                                          1 ) )            )
+        {
+          FT_Bitmap_Done( library, &color );
+          goto Fail;
+        }
+
+        FT_Bitmap_Done( library, &color );
+      }
+
+      else
+        error = loader( decoder, load_flags, p, p_limit, x_pos, y_pos );
     }
 
   Fail:
@@ -787,6 +919,7 @@
 
   static FT_Error
   tt_sbit_decoder_load_image( TT_SBitDecoder  decoder,
+                              FT_UInt         load_flags,
                               FT_UInt         glyph_index,
                               FT_Int          x_pos,
                               FT_Int          y_pos )
@@ -915,6 +1048,7 @@
       break;
 
     case 5: /* constant metrics with sparse glyph codes */
+    case 19:
       {
         FT_ULong  image_size, mm, num_glyphs;
 
@@ -961,6 +1095,7 @@
     image_start = image_offset + image_start;
 
     return tt_sbit_decoder_load_bitmap( decoder,
+                                        load_flags,
                                         image_format,
                                         image_start,
                                         image_end,
@@ -995,11 +1130,16 @@
     error = tt_sbit_decoder_init( decoder, face, strike_index, metrics );
     if ( !error )
     {
-      error = tt_sbit_decoder_load_image( decoder, glyph_index, 0, 0 );
+      error = tt_sbit_decoder_load_image( decoder,
+                                          load_flags,
+                                          glyph_index,
+                                          0,
+                                          0 );
       tt_sbit_decoder_done( decoder );
     }
 
     return error;
   }
+
 
 /* EOF */

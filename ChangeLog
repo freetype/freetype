@@ -1,3 +1,67 @@
+2013-05-23  Behdad Esfahbod  <behdad@google.com>
+
+	Add support for color embedded bitmaps (eg. color emoji).
+
+	A new load flag, FT_LOAD_COLOR, makes FreeType load color
+	embedded-bitmaps, following this draft specification
+
+	  https://color-emoji.googlecode.com/git/specification/v1.html
+
+	which defines two new SFNT tables, `CBDT' and `CBLC' (named and
+	modeled after `EBDT' and `EBLC', respectively).  The color bitmaps
+	are stored in the new FT_PIXEL_MODE_BGRA format to represent BGRA
+	pre-multiplied sRGB images.  If PNG support is available, PNG color
+	images as defined in the same proposed specification are supported
+	also.
+
+	Note that color bitmaps are converted to grayscale if client didn't
+	ask for color.
+
+	* builds/unix/configure.raw: Search for libpng.
+	Add `--without-png' option.
+
+	* devel/ftoption.h, include/freetype/config/ftoption.h
+	(FT_CONFIG_OPTION_USE_PNG): New macro.
+
+	* include/freetype/freetype.h (FT_LOAD_COLOR): New load flag.
+
+	* include/freetype/ftimage.h (FT_Pixel_Mode): Add
+	`FT_PIXEL_MODE_BGRA'.
+
+	* include/freetype/tttags.h (TTAG_CBDT, TTAG_CBLC): New tags.
+
+	* src/base/ftbitmap.c (FT_Bitmap_Embolden): Updated.
+	(ft_gray_for_premultiplied_srgb_bgra): New function.
+	(FT_Bitmap_Convert): Handle FT_PIXEL_MODE_BGRA.
+
+	* src/sfnt/pngshim.c, src/sfnt/pngshim.h: New files.
+
+	* src/sfnt/sfnt.c: Include `pngshim.c'.
+
+	* src/sfnt/ttsbit.c: Include FT_BITMAP_H and `pngshim.h'
+	(tt_face_load_eblc): Load `CBLC'.
+	(tt_sbit_decoder_init): Load `CBDT'.
+	(tt_sbit_decoder_alloc_bitmap): Pass load flags to select between
+	color and grayscale bitmaps.
+	Set `num_grays'.  This is used by `ftview' to choose the blending
+	algorithm.
+	(tt_sbit_decoder_load_byte_aligned,
+	tt_sbit_decoder_load_bit_aligned, tt_sbit_decoder_load_compound,
+	tt_sbit_decoder_load_image): Pass load flag.
+	s/write/pwrite/.
+	Don't call `tt_sbit_decoder_alloc_bitmap'.
+	Updated.
+	(tt_sbit_decoder_load_png) [FT_CONFIG_OPTION_USE_PNG]: New function.
+	(tt_sbit_decoder_load_bitmap): Pass load flag.
+	Handle new glyph formats 17, 18, and 19.
+	Call `tt_sbit_decoder_alloc_bitmap'.
+	Flatten color bitmaps if necessary.
+	(tt_face_load_sbit_image): Updated.
+
+	* src/sfnt/rules.mk (SFNT_DRV_SRC): Add `pngshim.c'.
+
+	* docs/CHANGES: Updated.
+
 2013-05-24  Guenter  <info@gknw.net>
 
 	Apply Savannah patch #8055.

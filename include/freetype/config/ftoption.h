@@ -216,6 +216,20 @@ FT_BEGIN_HEADER
 
   /*************************************************************************/
   /*                                                                       */
+  /*  PNG bitmap support.                                                  */
+  /*                                                                       */
+  /*   FreeType now handles loading color bitmap glyphs in the PNG format. */
+  /*   This requires help from the external libpng library.  Uncompressed  */
+  /*   color bitmaps do not need any external libraries and will be        */
+  /*   supported regardless of this configuration.                         */
+  /*                                                                       */
+  /*   Define this macro if you want to enable this `feature'.             */
+  /*                                                                       */
+/* #define FT_CONFIG_OPTION_USE_PNG */
+
+
+  /*************************************************************************/
+  /*                                                                       */
   /* DLL export compilation                                                */
   /*                                                                       */
   /*   When compiling FreeType as a DLL, some systems/compilers need a     */
