@@ -287,17 +287,17 @@ AC_ARG_WITH([png],
                  [do not support png compressed OpenType embedded bitmaps]))
 if test x$with_png != xno; then
   AC_MSG_CHECKING([for libpng])
-  if test -z "$LIBPNG_CFLAGS" -a -z "$LIBPNG_LIBS"; then
+  if test -z "$LIBPNG_CFLAGS" -a -z "$LIBPNG_LDFLAGS"; then
     if ! which libpng-config >/dev/null; then
       AC_MSG_ERROR([`libpng-config' not found;
-either set the LIBPNG_CFLAGS and LIBPNG_LIBS environment variables,
+either set the LIBPNG_CFLAGS and LIBPNG_LDFLAGS environment variables,
 or pass `--without-png' to the `configure' script.])
     fi
     LIBPNG_CFLAGS="`libpng-config --cflags`"
-    LIBPNG_LIBS="`libpng-config --libs`"
+    LIBPNG_LDFLAGS="`libpng-config --ldflags`"
   fi
   HAVE_LIBPNG=yes
-  AC_MSG_RESULT([$LIBPNG_LIBS])
+  AC_MSG_RESULT([$LIBPNG_LDFLAGS])
 fi
 
 
@@ -739,7 +739,7 @@ if test x$SYSTEM_LIBBZ2 = xyes; then
 fi
 if test x$HAVE_LIBPNG = xyes; then
   CFLAGS="$CFLAGS $LIBPNG_CFLAGS -DFT_CONFIG_OPTION_USE_PNG"
-  LDFLAGS="$LDFLAGS $LIBPNG_LIBS"
+  LDFLAGS="$LDFLAGS $LIBPNG_LDFLAGS"
 fi
 
 AC_SUBST([CFLAGS])

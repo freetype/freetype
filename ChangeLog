@@ -1,3 +1,10 @@
+2013-06-02  Werner Lemberg  <wl@gnu.org>
+
+	Fix PNG library handling.
+
+	* builds/unix/configure.raw: Don't use LIBPNG_LIBS but
+	LIBPNG_LDFLAGS.
+
 2013-05-23  Behdad Esfahbod  <behdad@google.com>
 
 	Add support for color embedded bitmaps (eg. color emoji).
