@@ -1,3 +1,21 @@
+2013-06-03  Werner Lemberg  <wl@gnu.org>
+
+	Add CFF_CONFIG_OPTION_OLD_ENGINE configuration option.
+
+	This controls whether the old FreeType CFF engine gets compiled into
+	FreeType.  It is now disabled by default.
+
+	* devel/ftoption.h, include/freetype/config/ftoption.h
+	(CFF_CONFIG_OPTION_OLD_ENGINE): New macro.
+
+	* src/cff/cffdrivr.c (cff_property_set), src/cff/cffgload.c
+	(CFF_Operator, cff_argument_counts, cff_builder_add_point,
+	cff_operator_seac, cff_decoder_parse_charstrings, cff_slot_load),
+	src/cff/cffgload.h, src/cff/cffobjs.c (cff_driver_init): Use
+	CFF_CONFIG_OPTION_OLD_ENGINE to guard the affected code.
+
+	* docs/CHANGES: Updated.
+
 2013-06-02  Werner Lemberg  <wl@gnu.org>
 
 	Fix PNG library handling.

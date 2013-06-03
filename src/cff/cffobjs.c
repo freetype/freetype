@@ -1056,7 +1056,11 @@
 
 
     /* set default property values */
+#ifdef CFF_CONFIG_OPTION_OLD_ENGINE
     driver->hinting_engine    = FT_CFF_HINTING_FREETYPE;
+#else
+    driver->hinting_engine    = FT_CFF_HINTING_ADOBE;
+#endif
     driver->no_stem_darkening = FALSE;
 
     return FT_Err_Ok;

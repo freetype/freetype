@@ -41,6 +41,8 @@
 #define FT_COMPONENT  trace_cffgload
 
 
+#ifdef CFF_CONFIG_OPTION_OLD_ENGINE
+
   typedef enum  CFF_Operator_
   {
     cff_op_unknown = 0,
@@ -210,6 +212,8 @@
     4, /* sbw */
     2  /* setcurrentpoint */
   };
+
+#endif /* CFF_CONFIG_OPTION_OLD_ENGINE */
 
 
   /*************************************************************************/
@@ -485,22 +489,24 @@
 
     if ( builder->load_points )
     {
-      CFF_Driver  driver  = (CFF_Driver)FT_FACE_DRIVER( builder->face );
-
       FT_Vector*  point   = outline->points + outline->n_points;
       FT_Byte*    control = (FT_Byte*)outline->tags + outline->n_points;
 
+#ifdef CFF_CONFIG_OPTION_OLD_ENGINE
+      CFF_Driver  driver  = (CFF_Driver)FT_FACE_DRIVER( builder->face );
 
-      if ( driver->hinting_engine == FT_CFF_HINTING_ADOBE )
+
+      if ( driver->hinting_engine == FT_CFF_HINTING_FREETYPE )
+      {
+        point->x = x >> 16;
+        point->y = y >> 16;
+      }
+      else
+#endif
       {
         /* cf2_decoder_parse_charstrings uses 16.16 coordinates */
         point->x = x >> 10;
         point->y = y >> 10;
-      }
-      else
-      {
-        point->x = x >> 16;
-        point->y = y >> 16;
       }
       *control = (FT_Byte)( flag ? FT_CURVE_TAG_ON : FT_CURVE_TAG_CUBIC );
     }
@@ -721,6 +727,8 @@
     }
   }
 
+
+#ifdef CFF_CONFIG_OPTION_OLD_ENGINE
 
   static FT_Error
   cff_operator_seac( CFF_Decoder*  decoder,
@@ -2518,6 +2526,8 @@
     return FT_THROW( Stack_Overflow );
   }
 
+#endif /* CFF_CONFIG_OPTION_OLD_ENGINE */
+
 
   /*************************************************************************/
   /*************************************************************************/
@@ -2794,7 +2804,10 @@
     glyph->root.format = FT_GLYPH_FORMAT_OUTLINE;  /* by default */
 
     {
+#ifdef CFF_CONFIG_OPTION_OLD_ENGINE
       CFF_Driver  driver = (CFF_Driver)FT_FACE_DRIVER( face );
+#endif
+
 
       FT_Byte*  charstring;
       FT_ULong  charstring_len;
@@ -2819,19 +2832,26 @@
       if ( error )
         goto Glyph_Build_Finished;
 
+#ifdef CFF_CONFIG_OPTION_OLD_ENGINE
       /* choose which CFF renderer to use */
-      if ( driver->hinting_engine == FT_CFF_HINTING_ADOBE )
+      if ( driver->hinting_engine == FT_CFF_HINTING_FREETYPE )
+        error = cff_decoder_parse_charstrings( &decoder,
+                                               charstring,
+                                               charstring_len );
+      else
+#endif
+      {
         error = cf2_decoder_parse_charstrings( &decoder,
                                                charstring,
                                                charstring_len );
 
-      /* Adobe's engine uses 16.16 numbers everywhere;              */
-      /* as a consequence, glyphs larger than 2000ppem get rejected */
-      if ( FT_ERR_EQ( error, Glyph_Too_Big )                 ||
-           driver->hinting_engine == FT_CFF_HINTING_FREETYPE )
-        error = cff_decoder_parse_charstrings( &decoder,
-                                               charstring,
-                                               charstring_len );
+        /* Adobe's engine uses 16.16 numbers everywhere;              */
+        /* as a consequence, glyphs larger than 2000ppem get rejected */
+        if ( FT_ERR_EQ( error, Glyph_Too_Big ) )
+        {
+          /* XXX to be implemented */
+        }
+      }
 
       cff_free_glyph_data( face, &charstring, charstring_len );
 
