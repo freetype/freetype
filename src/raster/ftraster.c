@@ -2532,7 +2532,6 @@
     if ( x2 - x1 < ras.precision )
     {
       Long  e1, e2;
-      Byte  f1;
 
 
       e1 = CEILING( x1 );
@@ -2540,6 +2539,7 @@
 
       if ( e1 == e2 )
       {
+        Byte   f1;
         PByte  bits;
 
 

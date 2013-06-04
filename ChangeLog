@@ -4,8 +4,18 @@
 
 	  http://cppcheck.sourceforge.net/
 
+	The call was (from the top-level of the FreeType tree):
+
+	  cppcheck --force \
+	           --enable=all \
+	           -I include \
+	           -I include/freetype/ \
+	           -I include/freetype/config/ \
+	           -I include/freetype/internal/ \
+	           . &> cppcheck.log
+
 	Note that the current version heavily chokes on FreeType, delivering
-	even wrong results.  I will report those issues to the cppcheck team
+	many wrong results.  I will report those issues to the cppcheck team
 	so that a newer version gives improved results hopefully.
 
 	*/* Improve variable scopes.

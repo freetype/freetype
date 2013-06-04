@@ -23,11 +23,10 @@
     for ( i = 0; i < FT_ANGLE_2PI; i += 0x10000 )
     {
       FT_Fixed  f1, f2;
-      double    d1, d2;
+      double    d2;
 
 
       f1 = FT_Cos(i);
-      d1 = f1/65536.0;
       d2 = cos( i*SPI );
       f2 = (FT_Fixed)(d2*65536.0);
 
@@ -50,11 +49,10 @@
     for ( i = 0; i < FT_ANGLE_2PI; i += 0x10000 )
     {
       FT_Fixed  f1, f2;
-      double    d1, d2;
+      double    d2;
 
 
       f1 = FT_Sin(i);
-      d1 = f1/65536.0;
       d2 = sin( i*SPI );
       f2 = (FT_Fixed)(d2*65536.0);
 
@@ -77,11 +75,10 @@
     for ( i = 0; i < FT_ANGLE_PI2-0x2000000; i += 0x10000 )
     {
       FT_Fixed  f1, f2;
-      double    d1, d2;
+      double    d2;
 
 
       f1 = FT_Tan(i);
-      d1 = f1/65536.0;
       d2 = tan( i*SPI );
       f2 = (FT_Fixed)(d2*65536.0);
 
@@ -211,7 +208,6 @@
         FT_Fixed   c2, s2, c4, s4;
         FT_Vector  v;
         double     l, a, c1, s1, c3, s3;
-        int        j;
 
 
         l  = 500.0;
