@@ -331,7 +331,7 @@
     FT_Vector  advancePoint;
 #endif
 
-    CF2_Fixed  advWidth;
+    CF2_Fixed  advWidth = 0;
     FT_Bool    needWinding;
 
 

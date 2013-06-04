@@ -1,5 +1,11 @@
 2013-06-04  Werner Lemberg  <wl@gnu.org>
 
+	* src/cff/cf2font.c (cf2_getGlyphWidth): Initialize `advWidth'.
+
+	Problem reported by Ingmar Sittl <ingmar.sittl@elektrobit.com>.
+
+2013-06-04  Werner Lemberg  <wl@gnu.org>
+
 	Apply fixes for cppcheck nitpicks.
 
 	  http://cppcheck.sourceforge.net/
