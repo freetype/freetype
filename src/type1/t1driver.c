@@ -69,13 +69,13 @@
   t1_get_name_index( T1_Face     face,
                      FT_String*  glyph_name )
   {
-    FT_Int      i;
-    FT_String*  gname;
+    FT_Int  i;
 
 
     for ( i = 0; i < face->type1.num_glyphs; i++ )
     {
-      gname = face->type1.glyph_names[i];
+      FT_String*  gname = face->type1.glyph_names[i];
+
 
       if ( !ft_strcmp( glyph_name, gname ) )
         return (FT_UInt)i;

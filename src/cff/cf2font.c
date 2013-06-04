@@ -143,7 +143,7 @@
     /* pointer to parsed font object */
     CFF_Decoder*  decoder = font->decoder;
 
-    FT_Bool  needExtraSetup = FALSE;
+    FT_Bool  needExtraSetup;
 
     /* character space units */
     CF2_Fixed  boldenX = font->syntheticEmboldeningAmountX;

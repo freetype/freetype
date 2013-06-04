@@ -520,7 +520,7 @@
                   unsigned long  *alen )
   {
     unsigned long  i, j;
-    char           *fp, *dp;
+    char*          dp;
 
 
     *alen = 0;
@@ -531,7 +531,9 @@
     dp = list->field[0];
     for ( i = j = 0; i < list->used; i++ )
     {
-      fp = list->field[i];
+      char*  fp = list->field[i];
+
+
       while ( *fp )
         dp[j++] = *fp++;
 

@@ -155,8 +155,6 @@ names_dump( FILE*         out,
 
     case OUTPUT_WATCOM_LBC:
       {
-        /* we must omit the .dll suffix from the library name */
-        char         temp[512];
         const char*  dot;
 
 
@@ -167,10 +165,12 @@ names_dump( FILE*         out,
           exit( 4 );
         }
 
+        /* we must omit the .dll suffix from the library name */
         dot = strchr( dll_name, '.' );
         if ( dot != NULL )
         {
-          int  len = dot - dll_name;
+          char  temp[512];
+          int   len = dot - dll_name;
 
 
           if ( len > (int)( sizeof ( temp ) - 1 ) )

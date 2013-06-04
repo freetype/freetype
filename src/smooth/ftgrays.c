@@ -630,7 +630,7 @@ typedef ptrdiff_t  FT_PtrDist;
                                  TPos    x2,
                                  TCoord  y2 )
   {
-    TCoord  ex1, ex2, fx1, fx2, delta, mod, lift, rem;
+    TCoord  ex1, ex2, fx1, fx2, delta, mod;
     long    p, first, dx;
     int     incr;
 
@@ -691,6 +691,9 @@ typedef ptrdiff_t  FT_PtrDist;
 
     if ( ex1 != ex2 )
     {
+      TCoord  lift, rem;
+
+
       p    = ONE_PIXEL * ( y2 - y1 + delta );
       lift = (TCoord)( p / dx );
       rem  = (TCoord)( p % dx );
@@ -1257,9 +1260,7 @@ typedef ptrdiff_t  FT_PtrDist;
                        TPos    area,
                        TCoord  acount )
   {
-    FT_Span*  span;
-    int       count;
-    int       coverage;
+    int  coverage;
 
 
     /* compute the coverage line's coverage, depending on the    */
@@ -1301,6 +1302,10 @@ typedef ptrdiff_t  FT_PtrDist;
 
     if ( coverage )
     {
+      FT_Span*  span;
+      int       count;
+
+
       /* see whether we can add this span to the current list */
       count = ras.num_gray_spans;
       span  = ras.gray_spans + count - 1;

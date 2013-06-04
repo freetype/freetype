@@ -1,3 +1,26 @@
+2013-06-04  Werner Lemberg  <wl@gnu.org>
+
+	Apply fixes for cppcheck nitpicks.
+
+	  http://cppcheck.sourceforge.net/
+
+	Note that the current version heavily chokes on FreeType, delivering
+	even wrong results.  I will report those issues to the cppcheck team
+	so that a newer version gives improved results hopefully.
+
+	*/* Improve variable scopes.
+	*/* Remove redundant initializations which get overwritten.
+
+	* src/base/ftmac.c ,builds/mac/ftmac.c (count_faces_scalable):
+	Remove unused variable.
+
+	* src/base/ftdbgmem.c (ft_mem_table_destroy): `table' can't be zero.
+
+	* src/gxvalid/gxvkern.c (gxv_kern_subtable_fmt1_entry_validate):
+	Remove functionless code.
+
+	* src/tools/ftrandom.c (main): Fix memory leak.
+
 2013-06-03  Werner Lemberg  <wl@gnu.org>
 
 	Add CFF_CONFIG_OPTION_OLD_ENGINE configuration option.
