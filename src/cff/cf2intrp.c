@@ -300,9 +300,9 @@
 
 
       stemhint.min  =
-      position     += cf2_stack_getReal( opStack, i );
+        position   += cf2_stack_getReal( opStack, i );
       stemhint.max  =
-      position     += cf2_stack_getReal( opStack, i + 1 );
+        position   += cf2_stack_getReal( opStack, i + 1 );
 
       stemhint.used  = FALSE;
       stemhint.maxDS =
