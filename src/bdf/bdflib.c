@@ -1170,6 +1170,8 @@
     FT_Memory    memory;
     FT_Error     error = FT_Err_Ok;
 
+    FT_UNUSED( lineno );        /* only used in debug mode */
+
 
     if ( font == 0 || font->name == 0 || font->name[0] == 0 )
     {
@@ -1302,6 +1304,8 @@
     bdf_property_t  *prop, *fp;
     FT_Memory       memory = font->memory;
     FT_Error        error  = FT_Err_Ok;
+
+    FT_UNUSED( lineno );        /* only used in debug mode */
 
 
     /* First, check whether the property already exists in the font. */

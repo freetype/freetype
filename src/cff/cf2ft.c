@@ -122,6 +122,8 @@
     CF2_Outline   outline = (CF2_Outline)callbacks;
     CFF_Builder*  builder;
 
+    (void)params;        /* only used in debug mode */
+
 
     FT_ASSERT( outline && outline->decoder );
     FT_ASSERT( params->op == CF2_PathOpMoveTo );

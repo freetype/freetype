@@ -60,7 +60,7 @@
 #undef free
 
 #if defined( _MSC_VER )
-#pragma warning( enable : 4244 )
+#pragma warning( default : 4244 )
 #endif
 
 #endif /* FT_DEBUG_LEVEL_TRACE */

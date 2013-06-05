@@ -1,3 +1,15 @@
+2013-06-05  Dave Arnold  <darnold@adobe.com>
+
+	Fix more MSVC Win32 compiler warnings.
+
+	* src/base/ftobjs.c: Fix typo in MS pragma.
+
+	* src/base/bdflib.c (_bdf_set_default_spacing, _bdf_add_property):
+	`lineno' is only used in debug mode.
+
+	* src/cff/cf2ft.c (cf2_builder_moveTo): `params' is only used in
+	debug mode.
+
 2013-06-05  Werner Lemberg  <wl@gnu.org>
 
 	Fix compiler warnings.
