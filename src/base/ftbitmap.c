@@ -424,7 +424,7 @@
      * So the formula is a * (1 - l).
      */
 
-    return FT_MulFix( 65535 - l, a ) >> 8;
+    return (FT_Byte)( FT_MulFix( 65535 - l, a ) >> 8 );
   }
 
 

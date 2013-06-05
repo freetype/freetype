@@ -789,7 +789,7 @@
 
       case cf2_cmdESC:
         {
-          FT_Byte  op2 = cf2_buf_readByte( charstring );
+          FT_Byte  op2 = (FT_Byte)cf2_buf_readByte( charstring );
 
 
           switch ( op2 )

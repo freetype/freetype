@@ -141,8 +141,10 @@ FT_BEGIN_HEADER
                const void*  P );
 
 
-#define FT_MEM_ALLOC( ptr, size )                                         \
-          FT_ASSIGNP_INNER( ptr, ft_mem_alloc( memory, (size), &error ) )
+#define FT_MEM_ALLOC( ptr, size )                               \
+          FT_ASSIGNP_INNER( ptr, ft_mem_alloc( memory,          \
+                                               (FT_Long)(size), \
+                                               &error ) )
 
 #define FT_MEM_FREE( ptr )                \
           FT_BEGIN_STMNT                  \
@@ -154,45 +156,60 @@ FT_BEGIN_HEADER
           FT_MEM_ALLOC( ptr, sizeof ( *(ptr) ) )
 
 #define FT_MEM_REALLOC( ptr, cursz, newsz )                        \
-          FT_ASSIGNP_INNER( ptr, ft_mem_realloc( memory, 1,        \
-                                                 (cursz), (newsz), \
-                                                 (ptr), &error ) )
+          FT_ASSIGNP_INNER( ptr, ft_mem_realloc( memory,           \
+                                                 1,                \
+                                                 (FT_Long)(cursz), \
+                                                 (FT_Long)(newsz), \
+                                                 (ptr),            \
+                                                 &error ) )
 
-#define FT_MEM_QALLOC( ptr, size )                                         \
-          FT_ASSIGNP_INNER( ptr, ft_mem_qalloc( memory, (size), &error ) )
+#define FT_MEM_QALLOC( ptr, size )                               \
+          FT_ASSIGNP_INNER( ptr, ft_mem_qalloc( memory,          \
+                                                (FT_Long)(size), \
+                                                &error ) )
 
 #define FT_MEM_QNEW( ptr )                        \
           FT_MEM_QALLOC( ptr, sizeof ( *(ptr) ) )
 
-#define FT_MEM_QREALLOC( ptr, cursz, newsz )                         \
-          FT_ASSIGNP_INNER( ptr, ft_mem_qrealloc( memory, 1,        \
-                                                  (cursz), (newsz), \
-                                                  (ptr), &error ) )
+#define FT_MEM_QREALLOC( ptr, cursz, newsz )                        \
+          FT_ASSIGNP_INNER( ptr, ft_mem_qrealloc( memory,           \
+                                                  1,                \
+                                                  (FT_Long)(cursz), \
+                                                  (FT_Long)(newsz), \
+                                                  (ptr),            \
+                                                  &error ) )
 
-#define FT_MEM_QRENEW_ARRAY( ptr, cursz, newsz )                             \
-          FT_ASSIGNP_INNER( ptr, ft_mem_qrealloc( memory, sizeof ( *(ptr) ), \
-                                                  (cursz), (newsz),          \
-                                                  (ptr), &error ) )
+#define FT_MEM_ALLOC_MULT( ptr, count, item_size )                     \
+          FT_ASSIGNP_INNER( ptr, ft_mem_realloc( memory,               \
+                                                 (FT_Long)(item_size), \
+                                                 0,                    \
+                                                 (FT_Long)(count),     \
+                                                 NULL,                 \
+                                                 &error ) )
 
-#define FT_MEM_ALLOC_MULT( ptr, count, item_size )                    \
-          FT_ASSIGNP_INNER( ptr, ft_mem_realloc( memory, (item_size), \
-                                                 0, (count),          \
-                                                 NULL, &error ) )
+#define FT_MEM_REALLOC_MULT( ptr, oldcnt, newcnt, itmsz )           \
+          FT_ASSIGNP_INNER( ptr, ft_mem_realloc( memory,            \
+                                                 (FT_Long)(itmsz),  \
+                                                 (FT_Long)(oldcnt), \
+                                                 (FT_Long)(newcnt), \
+                                                 (ptr),             \
+                                                 &error ) )
 
-#define FT_MEM_REALLOC_MULT( ptr, oldcnt, newcnt, itmsz )            \
-          FT_ASSIGNP_INNER( ptr, ft_mem_realloc( memory, (itmsz),    \
-                                                 (oldcnt), (newcnt), \
-                                                 (ptr), &error ) )
+#define FT_MEM_QALLOC_MULT( ptr, count, item_size )                     \
+          FT_ASSIGNP_INNER( ptr, ft_mem_qrealloc( memory,               \
+                                                  (FT_Long)(item_size), \
+                                                  0,                    \
+                                                  (FT_Long)(count),     \
+                                                  NULL,                 \
+                                                  &error ) )
 
-#define FT_MEM_QALLOC_MULT( ptr, count, item_size )                    \
-          FT_ASSIGNP_INNER( ptr, ft_mem_qrealloc( memory, (item_size), \
-                                                  0, (count),          \
-                                                  NULL, &error ) )
-
-#define FT_MEM_QREALLOC_MULT( ptr, oldcnt, newcnt, itmsz)             \
-          FT_ASSIGNP_INNER( ptr, ft_mem_qrealloc( memory, (itmsz),    \
-                                                  (oldcnt), (newcnt), \
-                                                  (ptr), &error ) )
+#define FT_MEM_QREALLOC_MULT( ptr, oldcnt, newcnt, itmsz)            \
+          FT_ASSIGNP_INNER( ptr, ft_mem_qrealloc( memory,            \
+                                                  (FT_Long)(itmsz),  \
+                                                  (FT_Long)(oldcnt), \
+                                                  (FT_Long)(newcnt), \
+                                                  (ptr),             \
+                                                  &error ) )
 
 
 #define FT_MEM_SET_ERROR( cond )  ( (cond), error != 0 )
@@ -236,26 +253,37 @@ FT_BEGIN_HEADER
   /* _typed_ in order to automatically compute array element sizes.        */
   /*                                                                       */
 
-#define FT_MEM_NEW_ARRAY( ptr, count )                                      \
-          FT_ASSIGNP_INNER( ptr, ft_mem_realloc( memory, sizeof ( *(ptr) ), \
-                                                 0, (count),                \
-                                                 NULL, &error ) )
+#define FT_MEM_NEW_ARRAY( ptr, count )                              \
+          FT_ASSIGNP_INNER( ptr, ft_mem_realloc( memory,            \
+                                                 sizeof ( *(ptr) ), \
+                                                 0,                 \
+                                                 (FT_Long)(count),  \
+                                                 NULL,              \
+                                                 &error ) )
 
-#define FT_MEM_RENEW_ARRAY( ptr, cursz, newsz )                             \
-          FT_ASSIGNP_INNER( ptr, ft_mem_realloc( memory, sizeof ( *(ptr) ), \
-                                                 (cursz), (newsz),          \
-                                                 (ptr), &error ) )
+#define FT_MEM_RENEW_ARRAY( ptr, cursz, newsz )                     \
+          FT_ASSIGNP_INNER( ptr, ft_mem_realloc( memory,            \
+                                                 sizeof ( *(ptr) ), \
+                                                 (FT_Long)(cursz),  \
+                                                 (FT_Long)(newsz),  \
+                                                 (ptr),             \
+                                                 &error ) )
 
-#define FT_MEM_QNEW_ARRAY( ptr, count )                                      \
-          FT_ASSIGNP_INNER( ptr, ft_mem_qrealloc( memory, sizeof ( *(ptr) ), \
-                                                  0, (count),                \
-                                                  NULL, &error ) )
+#define FT_MEM_QNEW_ARRAY( ptr, count )                              \
+          FT_ASSIGNP_INNER( ptr, ft_mem_qrealloc( memory,            \
+                                                  sizeof ( *(ptr) ), \
+                                                  0,                 \
+                                                  (FT_Long)(count),  \
+                                                  NULL,              \
+                                                  &error ) )
 
-#define FT_MEM_QRENEW_ARRAY( ptr, cursz, newsz )                             \
-          FT_ASSIGNP_INNER( ptr, ft_mem_qrealloc( memory, sizeof ( *(ptr) ), \
-                                                  (cursz), (newsz),          \
-                                                  (ptr), &error ) )
-
+#define FT_MEM_QRENEW_ARRAY( ptr, cursz, newsz )                     \
+          FT_ASSIGNP_INNER( ptr, ft_mem_qrealloc( memory,            \
+                                                  sizeof ( *(ptr) ), \
+                                                  (FT_Long)(cursz),  \
+                                                  (FT_Long)(newsz),  \
+                                                  (ptr),             \
+                                                  &error ) )
 
 #define FT_ALLOC( ptr, size )                           \
           FT_MEM_SET_ERROR( FT_MEM_ALLOC( ptr, size ) )

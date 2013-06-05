@@ -1,3 +1,33 @@
+2013-06-05  Werner Lemberg  <wl@gnu.org>
+
+	Fix compiler warnings.
+
+	* include/freetype/internal/ftmemory.h: Decorate memory allocation
+	macros with `FT_Long' where appropriate.
+	Remove duplicate of FT_MEM_QRENEW_ARRAY definition.
+
+	* src/base/ftbitmap.c (ft_gray_for_premultiplied_srgb_bgra): Use
+	cast.
+
+	* src/base/ftobjs.c: Add warning disabling pragma for MSVC while
+	including `md5.c'.
+
+	* src/cff/cf2intrp.c (cf2_interpT2CharString) <cf2_cmdESC>: Add
+	cast.
+
+	* src/sfnt/ttsbit.c (tt_sbit_decoder_load_compound): Fix casts.
+	(tt_sbit_decoder_load_bitmap): Beautification.
+
+	* src/smooth/ftsmooth.c (ft_smooth_render_generic): Initialize
+	variables (earlier).
+
+	* src/truetype/ttgload.c (TT_Process_Simple_Glyph): Pacify compiler.
+
+	* src/truetype/ttgxvar.c (TT_Get_MM_Var): Use unsigned constants
+	where appropriate.
+
+	* src/type1/t1load.c (T1_Get_MM_Var): Ditto.
+
 2013-06-04  Werner Lemberg  <wl@gnu.org>
 
 	* src/cff/cf2font.c (cf2_getGlyphWidth): Initialize `advWidth'.

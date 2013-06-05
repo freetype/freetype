@@ -697,8 +697,8 @@
     decoder->metrics->vertBearingX = vertBearingX;
     decoder->metrics->vertBearingY = vertBearingY;
     decoder->metrics->vertAdvance  = vertAdvance;
-    decoder->metrics->width        = (FT_UInt)decoder->bitmap->width;
-    decoder->metrics->height       = (FT_UInt)decoder->bitmap->rows;
+    decoder->metrics->width        = (FT_Byte)decoder->bitmap->width;
+    decoder->metrics->height       = (FT_Byte)decoder->bitmap->rows;
 
   Exit:
     return error;
@@ -892,11 +892,13 @@
 
         decoder->bitmap = orig;
 
-        if ( error                                         ||
+        /* explicitly test against FT_Err_Ok to avoid compiler warnings */
+        /* (we do an assignment within a conditional)                   */
+        if ( error                                           ||
              ( error = FT_Bitmap_Convert( library,
                                           &color,
                                           decoder->bitmap,
-                                          1 ) )            )
+                                          1 ) ) != FT_Err_Ok )
         {
           FT_Bitmap_Done( library, &color );
           goto Fail;

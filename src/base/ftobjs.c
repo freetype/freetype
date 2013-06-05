@@ -43,12 +43,27 @@
 
 
 #ifdef FT_DEBUG_LEVEL_TRACE
+
 #include FT_BITMAP_H
-#define free md5_free /* suppress a shadow warning */
+
+#if defined( _MSC_VER )      /* Visual C++ (and Intel C++)   */
+  /* We disable the warning `conversion from XXX to YYY,     */
+  /* possible loss of data' in order to compile cleanly with */
+  /* the maximum level of warnings: `md5.c' is non-FreeType  */
+  /* code, and it gets used during development builds only.  */
+#pragma warning( disable : 4244 )
+#endif /* _MSC_VER */
+
   /* it's easiest to include `md5.c' directly */
+#define free  md5_free /* suppress a shadow warning */
 #include "md5.c"
 #undef free
+
+#if defined( _MSC_VER )
+#pragma warning( enable : 4244 )
 #endif
+
+#endif /* FT_DEBUG_LEVEL_TRACE */
 
 
 #define GRID_FIT_METRICS

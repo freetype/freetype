@@ -932,8 +932,8 @@
       FT_Vector*  vec   = outline->points;
       FT_Vector*  limit = outline->points + n_points;
 
-      FT_Fixed  x_scale;
-      FT_Fixed  y_scale;
+      FT_Fixed  x_scale = 0; /* pacify compiler */
+      FT_Fixed  y_scale = 0;
 
       FT_Bool  do_scale = FALSE;
 

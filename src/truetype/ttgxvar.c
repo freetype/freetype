@@ -703,7 +703,7 @@
       mmvar->num_axis =
         fvar_head.axisCount;
       mmvar->num_designs =
-        ~0;                    /* meaningless in this context; each glyph */
+        ~0U;                   /* meaningless in this context; each glyph */
                                /* may have a different number of designs  */
                                /* (or tuples, as called by Apple)         */
       mmvar->num_namedstyles =
