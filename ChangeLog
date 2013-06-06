@@ -1,3 +1,41 @@
+2013-06-06  Werner Lemberg  <wl@gnu.org>
+
+	Next round of compiler fixes.
+
+	* builds/win32/ftdebug.c, builds/wince/ftdebug.c (ft_debug_init):
+	Add proper cast.
+
+	* include/freetype/internal/ftserv.h (FT_SERVICE_UNAVAILABLE): Fix
+	cast.
+	* include/freetype/internal/ftstream.h: Decorate stream and frame
+	macros with `FT_Long' and `FT_ULong' as appropriate.
+
+	* src/base/ftrfork.c (raccess_guess_darwin_hfsplus,
+	raccess_guess_darwin_newvfs): Use cast.
+
+	* src/bdf/bdflib.c (_bdf_set_default_spacing): Use cast.
+
+	* src/cache/ftcmanag.c (FTC_Manager_Check): Fix cast.
+	* src/cache/ftcmanag.h (FTC_ManagerRec): Ditto.
+
+	* src/cff/cf2arrst.c (cf2_arrstack_setNum_Elements): Use cast.
+	* src/cff/cf2ft.c (cf2_freeSeacComponent): Ditto.
+	* src/cff/cffobjs.c (remove_subset_prefix, remove_style): Ditto.
+
+	* src/cid/cidparse.c (cid_parser_new): Use cast.
+
+	* src/pcf/pcfdrivr.c (PCF_Glyph_Load): Use cast.
+
+	* src/psaux/psobjs.c (reallocate_t1_table): Fix argument type.
+
+	* src/raster/ftraster.c (ft_black_reset): Use cast.
+
+	* src/truetype/ttgxvar.c (FT_Stream_FTell): Use cast.
+	(ALL_POINTS): Fix cast.
+
+	* src/type1/t1driver.c (t1_ps_get_font_value): Add casts.
+	* src/type1/t1parse.c (T1_Get_Private_Dict): Add cast.
+
 2013-06-05  Dave Arnold  <darnold@adobe.com>
 
 	Fix more MSVC Win32 compiler warnings.

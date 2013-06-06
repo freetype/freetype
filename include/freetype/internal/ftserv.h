@@ -653,7 +653,9 @@ FT_BEGIN_HEADER
   /*
    *  A magic number used within the services cache.
    */
-#define FT_SERVICE_UNAVAILABLE  ((FT_Pointer)~1)  /* magic number */
+
+  /* ensure that value `1' has the same width as a pointer */
+#define FT_SERVICE_UNAVAILABLE  ((FT_Pointer)~(FT_PtrDist)1)
 
 
   /*

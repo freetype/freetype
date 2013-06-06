@@ -61,9 +61,9 @@
 
 
 #define FT_Stream_FTell( stream )  \
-          ( (stream)->cursor - (stream)->base )
+          (FT_ULong)( (stream)->cursor - (stream)->base )
 #define FT_Stream_SeekSet( stream, off ) \
-              ( (stream)->cursor = (stream)->base+(off) )
+          ( (stream)->cursor = (stream)->base + (off) )
 
 
   /*************************************************************************/
@@ -91,7 +91,9 @@
   /* indicates that there is a delta for every point without needing to    */
   /* enumerate all of them.                                                */
   /*                                                                       */
-#define ALL_POINTS  (FT_UShort*)( ~0 )
+
+  /* ensure that value `0' has the same width as a pointer */
+#define ALL_POINTS  (FT_UShort*)~(FT_PtrDist)0
 
 
 #define GX_PT_POINTS_ARE_WORDS      0x80

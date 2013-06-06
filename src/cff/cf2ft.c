@@ -563,7 +563,7 @@
 
     cff_free_glyph_data( decoder->builder.face,
                          (FT_Byte**)&buf->start,
-                         buf->end - buf->start );
+                         (FT_ULong)( buf->end - buf->start ) );
   }
 
 

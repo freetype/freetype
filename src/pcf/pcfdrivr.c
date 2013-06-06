@@ -532,7 +532,7 @@ THE SOFTWARE.
     /* XXX: to do: are there cases that need repadding the bitmap? */
     bytes = bitmap->pitch * bitmap->rows;
 
-    error = ft_glyphslot_alloc_bitmap( slot, bytes );
+    error = ft_glyphslot_alloc_bitmap( slot, (FT_ULong)bytes );
     if ( error )
       goto Exit;
 

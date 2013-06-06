@@ -1196,7 +1196,7 @@
 
     FT_MEM_COPY( name, font->name, len );
 
-    error = _bdf_list_split( &list, (char *)"-", name, len );
+    error = _bdf_list_split( &list, (char *)"-", name, (unsigned long)len );
     if ( error )
       goto Fail;
 

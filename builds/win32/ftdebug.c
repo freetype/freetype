@@ -171,7 +171,7 @@
 
         if ( *p == ':' && p > q )
         {
-          int  n, i, len = p - q;
+          int  n, i, len = (int)( p - q );
           int  level = -1, found = -1;
 
 
