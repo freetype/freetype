@@ -1,3 +1,26 @@
+2013-06-06  Dave Arnold  <darnold@adobe.com>
+
+	[cff] Add early exit feature for width-only calls.
+
+	This is for `FT_Get_Advance'.
+
+	There are 7 places where the spec says the width can be defined:
+
+	  hstem/hstemhm
+	  vstem/vstemhm
+	  cntrmask/hintmask
+	  hmoveto
+	  vmoveto
+	  rmoveto
+	  endchar
+
+	* src/cff/cf2intrp.c (cf2_doStems): Exit early for width-only calls,
+	if possible.
+
+	(cf2_interpT2CharString) <cf2_cmdHSTEM>, <cf2_cmdVSTEM>,
+	<cf2_cmdVMOVETO>, <cf2_cmdENDCHAR>, <cf2_cmdHINTMASK>,
+	<cf2_cmdRMOVETO>, <cf2_cmdHMOVETO>: Exit early for width-only calls.
+
 2013-06-06  Werner Lemberg  <wl@gnu.org>
 
 	Next round of compiler fixes.

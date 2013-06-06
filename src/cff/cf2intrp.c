@@ -292,6 +292,12 @@
     /* variable accumulates delta values from operand stack */
     CF2_Fixed  position = hintOffset;
 
+    if ( hasWidthArg && ! *haveWidth )
+      *width = cf2_stack_getReal( opStack, 0 ) +
+                 cf2_getNominalWidthX( font->decoder );
+
+    if ( font->decoder->width_only )
+      goto exit;
 
     for ( i = hasWidthArg ? 1 : 0; i < count; i += 2 )
     {
@@ -311,13 +317,11 @@
       cf2_arrstack_push( stemHintArray, &stemhint ); /* defer error check */
     }
 
-    if ( hasWidthArg && ! *haveWidth )
-      *width = cf2_stack_getReal( opStack, 0 ) +
-                 cf2_getNominalWidthX( font->decoder );
-
-    *haveWidth = TRUE;
-
     cf2_stack_clear( opStack );
+
+  exit:
+    /* cf2_doStems must define a width (may be default) */
+    *haveWidth = TRUE;
   }
 
 
@@ -507,6 +511,9 @@
      * What we implement here uses the first validly specified width, but
      * does not detect errors for specifying more than one width.
      *
+     * If one of the above operators occurs without explicitly specifying
+     * a width, we assume the default width.
+     *
      */
     haveWidth = FALSE;
     *width    = cf2_getDefaultWidthX( decoder );
@@ -595,6 +602,10 @@
                      width,
                      &haveWidth,
                      0 );
+
+        if ( font->decoder->width_only )
+            goto exit;
+
         break;
 
       case cf2_cmdVSTEMHM:
@@ -612,19 +623,28 @@
                      width,
                      &haveWidth,
                      0 );
+
+        if ( font->decoder->width_only )
+            goto exit;
+
         break;
 
       case cf2_cmdVMOVETO:
         FT_TRACE4(( " vmoveto\n" ));
 
+        if ( cf2_stack_count( opStack ) > 1 && !haveWidth )
+          *width = cf2_stack_getReal( opStack, 0 ) + nominalWidthX;
+
+        /* width is defined or default after this */
+        haveWidth = TRUE;
+
+        if ( font->decoder->width_only )
+            goto exit;
+
         curY += cf2_stack_popFixed( opStack );
 
         cf2_glyphpath_moveTo( &glyphPath, curX, curY );
 
-        if ( cf2_stack_count( opStack ) > 0 && !haveWidth )
-          *width = cf2_stack_popFixed( opStack ) + nominalWidthX;
-
-        haveWidth = TRUE;
         break;
 
       case cf2_cmdRLINETO:
@@ -1048,7 +1068,11 @@
             *width = cf2_stack_getReal( opStack, 0 ) + nominalWidthX;
         }
 
+        /* width is defined or default after this */
         haveWidth = TRUE;
+
+        if ( font->decoder->width_only )
+            goto exit;
 
         /* close path if still open */
         cf2_glyphpath_closeOpenPath( &glyphPath );
@@ -1133,6 +1157,9 @@
                      &haveWidth,
                      0 );
 
+        if ( font->decoder->width_only )
+            goto exit;
+
         if ( op1 == cf2_cmdHINTMASK )
         {
           /* consume the hint mask bytes which follow the operator */
@@ -1183,28 +1210,38 @@
       case cf2_cmdRMOVETO:
         FT_TRACE4(( " rmoveto\n" ));
 
+        if ( cf2_stack_count( opStack ) > 2 && !haveWidth )
+          *width = cf2_stack_getReal( opStack, 0 ) + nominalWidthX;
+
+        /* width is defined or default after this */
+        haveWidth = TRUE;
+
+        if ( font->decoder->width_only )
+            goto exit;
+
         curY += cf2_stack_popFixed( opStack );
         curX += cf2_stack_popFixed( opStack );
 
         cf2_glyphpath_moveTo( &glyphPath, curX, curY );
 
-        if ( cf2_stack_count( opStack ) > 0 && !haveWidth )
-          *width = cf2_stack_popFixed( opStack ) + nominalWidthX;
-
-        haveWidth = TRUE;
         break;
 
       case cf2_cmdHMOVETO:
         FT_TRACE4(( " hmoveto\n" ));
 
+        if ( cf2_stack_count( opStack ) > 1 && !haveWidth )
+          *width = cf2_stack_getReal( opStack, 0 ) + nominalWidthX;
+
+        /* width is defined or default after this */
+        haveWidth = TRUE;
+
+        if ( font->decoder->width_only )
+            goto exit;
+
         curX += cf2_stack_popFixed( opStack );
 
         cf2_glyphpath_moveTo( &glyphPath, curX, curY );
 
-        if ( cf2_stack_count( opStack ) > 0 && !haveWidth )
-          *width = cf2_stack_popFixed( opStack ) + nominalWidthX;
-
-        haveWidth = TRUE;
         break;
 
       case cf2_cmdRLINECURVE:
