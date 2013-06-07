@@ -51,6 +51,7 @@
   /* possible loss of data' in order to compile cleanly with */
   /* the maximum level of warnings: `md5.c' is non-FreeType  */
   /* code, and it gets used during development builds only.  */
+#pragma warning( push )
 #pragma warning( disable : 4244 )
 #endif /* _MSC_VER */
 
@@ -60,7 +61,7 @@
 #undef free
 
 #if defined( _MSC_VER )
-#pragma warning( default : 4244 )
+#pragma warning( pop )
 #endif
 
 #endif /* FT_DEBUG_LEVEL_TRACE */

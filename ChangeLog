@@ -1,5 +1,15 @@
 2013-06-07  Werner Lemberg  <wl@gnu.org>
 
+	Add and improve pragmas for MSVC compiler.
+
+	* include/freetype/internal/ftdebug.h: Remove pragmas.
+	* include/freetype/internal/ftserv.h: Use push and pop for pragmas.
+	* include/freetype/internal/ftvalid.h: Handle warning C4324.
+	* src/base/ftobjs.c: Use push and pop for pragmas.
+	* src/gzip/ftgzip.c: Handle warning C4244.
+
+2013-06-07  Werner Lemberg  <wl@gnu.org>
+
 	[cff] s/cf2_getGlyphWidth/cf2_getGlyphOutline/.
 
 	* src/cff/cf2font.c, src/cff/cf2font.h, src/cff/cf2ft.c: Do it.
