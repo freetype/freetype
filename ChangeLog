@@ -1,3 +1,9 @@
+2013-06-07  Werner Lemberg  <wl@gnu.org>
+
+	[cff] s/cf2_getGlyphWidth/cf2_getGlyphOutline/.
+
+	* src/cff/cf2font.c, src/cff/cf2font.h, src/cff/cf2ft.c: Do it.
+
 2013-06-06  Dave Arnold  <darnold@adobe.com>
 
 	[cff] Add early exit feature for width-only calls.

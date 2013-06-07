@@ -352,7 +352,7 @@
       if ( error2 )
         return error2;
 
-      error2 = cf2_getGlyphWidth( font, &buf, &transform, &glyphWidth );
+      error2 = cf2_getGlyphOutline( font, &buf, &transform, &glyphWidth );
       if ( error2 )
         return FT_ERR( Invalid_File_Format );
 
