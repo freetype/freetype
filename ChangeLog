@@ -1,3 +1,10 @@
+2013-06-10  Werner Lemberg  <wl@gnu.org>
+
+	Fix Savannah bug #39160.
+
+	* src/truetype/ttinterp.c (Ins_SDPVTL): Set projection vector too
+	for the degenerate case.
+
 2013-06-09  David Turner  <digit@google.com>
 
 	* src/cache/ftcmanag.c (FTC_Manager_Reset): Add missing cache flush.
