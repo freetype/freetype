@@ -1,3 +1,12 @@
+2013-06-09  David Turner  <digit@google.com>
+
+	* src/cache/ftcmanag.c (FTC_Manager_Reset): Add missing cache flush.
+
+	This code, present since eight(!) years in the unused `CACHE'
+	branch, has been forgotten to apply to the master branch.  It's
+	really amazing that noone has ever complained since
+	`FTC_Manager_Reset' is pretty useless without flushing the cache.
+
 2013-06-07  Werner Lemberg  <wl@gnu.org>
 
 	Add and improve pragmas for MSVC compiler.
