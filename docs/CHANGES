@@ -1,7 +1,13 @@
 
 CHANGES BETWEEN 2.4.12 and 2.5
 
-  I. IMPORTANT CHANGES
+  I. IMPORTANT BUG FIXES
+
+    - The cache manager function `FTC_Manager_Reset'  didn't flush the
+      cache.
+
+
+  II. IMPORTANT CHANGES
 
     - Behdad Esfahbod  (on behalf  of Google) contributed  support for
       color embedded bitmaps (eg. color emoji).
@@ -31,7 +37,7 @@ CHANGES BETWEEN 2.4.12 and 2.5
       obsolete.
 
 
-  II. MISCELLANEOUS
+  III. MISCELLANEOUS
 
     - The  property API  (`FT_Property_Get' and  `FT_Property_Set') is
       now declared as stable.

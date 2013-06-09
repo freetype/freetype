@@ -4,7 +4,7 @@
 /*                                                                         */
 /*    FreeType modules public interface (specification).                   */
 /*                                                                         */
-/*  Copyright 1996-2003, 2006, 2008-2010, 2012 by                          */
+/*  Copyright 1996-2003, 2006, 2008-2010, 2012, 2013 by                    */
 /*  David Turner, Robert Wilhelm, and Werner Lemberg.                      */
 /*                                                                         */
 /*  This file is part of the FreeType project, and may only be used,       */
@@ -322,8 +322,15 @@ FT_BEGIN_HEADER
    *      FT_Property_Set( library, "foo", "bar", &bar );
    *    }
    *
+   *    Note that the FreeType Cache sub-system doesn't recognize module
+   *    property changes.  To avoid glyph lookup confusion within the cache
+   *    you should call @FTC_Manager_Reset to completely flush the cache if
+   *    a module property gets changed after @FTC_Manager_New has been
+   *    called.
+   *
    *    It is not possible to set properties of the FreeType Cache
-   *    sub-system with FT_Property_Set; use @FTC_Property_Set instead.
+   *    sub-system itself with FT_Property_Set; use @FTC_Property_Set
+   *    instead.
    *
    *  @since:
    *    2.4.11
