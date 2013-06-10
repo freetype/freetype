@@ -2224,6 +2224,13 @@
           glyph->linearHoriAdvance = loader.linear;
           glyph->linearVertAdvance = loader.top_bearing + loader.bbox.yMax -
                                        loader.vadvance;
+
+          /* sanity check: if `horiAdvance' in the sbit metric */
+          /* structure isn't set, use `linearHoriAdvance'      */
+          if ( !glyph->metrics.horiAdvance && glyph->linearHoriAdvance )
+            glyph->metrics.horiAdvance =
+              FT_MulFix( glyph->linearHoriAdvance,
+                         size->root.metrics.x_scale );
         }
 
         return FT_Err_Ok;

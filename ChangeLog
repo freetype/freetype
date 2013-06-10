@@ -1,5 +1,14 @@
 2013-06-10  Werner Lemberg  <wl@gnu.org>
 
+	[truetype] Improve handling of broken sbit advance widths.
+
+	* src/truetype/ttgload.c (TT_Load_Glyph): Use the glyph's (scaled)
+	`linearHoriAdvance' if the sbit's `horiAdvance' value is zero.
+
+	Cf. font `Fixedsys Excelsior' v3.01 (FSEX300.ttf), glyph A, 16ppem.
+
+2013-06-10  Werner Lemberg  <wl@gnu.org>
+
 	[sfnt] Improve embedded bitmap tracing.
 
 	* src/base/ftobjs.c (FT_Request_Size): Move trace message regarding
