@@ -2541,6 +2541,8 @@
 
       if ( w == FT_PIX_ROUND( bsize->x_ppem ) || ignore_width )
       {
+        FT_TRACE3(( "FT_Match_Size: bitmap strike %d matches\n", i ));
+
         if ( size_index )
           *size_index = (FT_ULong)i;
 
@@ -2896,9 +2898,6 @@
       error = FT_Match_Size( face, req, 0, &strike_index );
       if ( error )
         return error;
-
-      FT_TRACE3(( "FT_Request_Size: bitmap strike %lu matched\n",
-                  strike_index ));
 
       return FT_Select_Size( face, (FT_Int)strike_index );
     }

@@ -374,6 +374,7 @@
     return FT_Err_Ok;
 
   Fail:
+    FT_TRACE1(( "tt_sbit_decoder_load_metrics: broken table" ));
     return FT_THROW( Invalid_Argument );
   }
 
@@ -425,12 +426,15 @@
     if ( x_pos < 0 || x_pos + width > bit_width   ||
          y_pos < 0 || y_pos + height > bit_height )
     {
+      FT_TRACE1(( "tt_sbit_decoder_load_byte_aligned:"
+                  " invalid bitmap dimensions\n" ));
       error = FT_THROW( Invalid_File_Format );
       goto Exit;
     }
 
     if ( p + ( ( line_bits + 7 ) >> 3 ) * height > limit )
     {
+      FT_TRACE1(( "tt_sbit_decoder_load_byte_aligned: broken bitmap\n" ));
       error = FT_THROW( Invalid_File_Format );
       goto Exit;
     }
@@ -491,6 +495,8 @@
     }
 
   Exit:
+    if ( !error )
+      FT_TRACE3(( "tt_sbit_decoder_load_byte_aligned: loaded\n" ));
     return error;
   }
 
@@ -562,12 +568,15 @@
     if ( x_pos < 0 || x_pos + width  > bit_width  ||
          y_pos < 0 || y_pos + height > bit_height )
     {
+      FT_TRACE1(( "tt_sbit_decoder_load_bit_aligned:"
+                  " invalid bitmap dimensions\n" ));
       error = FT_THROW( Invalid_File_Format );
       goto Exit;
     }
 
     if ( p + ( ( line_bits * height + 7 ) >> 3 ) > limit )
     {
+      FT_TRACE1(( "tt_sbit_decoder_load_bit_aligned: broken bitmap\n" ));
       error = FT_THROW( Invalid_File_Format );
       goto Exit;
     }
@@ -647,6 +656,8 @@
     }
 
   Exit:
+    if ( !error )
+      FT_TRACE3(( "tt_sbit_decoder_load_bit_aligned: loaded\n" ));
     return error;
   }
 
@@ -675,7 +686,13 @@
 
     num_components = FT_NEXT_USHORT( p );
     if ( p + 4 * num_components > limit )
+    {
+      FT_TRACE1(( "tt_sbit_decoder_load_compound: broken table\n" ));
       goto Fail;
+    }
+
+    FT_TRACE3(( "tt_sbit_decoder_load_compound: loading %d components\n",
+                num_components ));
 
     for ( nn = 0; nn < num_components; nn++ )
     {
@@ -690,6 +707,8 @@
       if ( error )
         break;
     }
+
+    FT_TRACE3(( "tt_sbit_decoder_load_compound: done\n" ));
 
     decoder->metrics->horiBearingX = horiBearingX;
     decoder->metrics->horiBearingY = horiBearingY;
@@ -727,6 +746,7 @@
 
     if ( limit - p < 4 )
     {
+      FT_TRACE1(( "tt_sbit_decoder_load_png: broken bitmap\n" ));
       error = FT_THROW( Invalid_File_Format );
       goto Exit;
     }
@@ -734,6 +754,7 @@
     png_len = FT_NEXT_ULONG( p );
     if ( (FT_ULong)( limit - p ) < png_len )
     {
+      FT_TRACE1(( "tt_sbit_decoder_load_png: broken bitmap\n" ));
       error = FT_THROW( Invalid_File_Format );
       goto Exit;
     }
@@ -748,6 +769,8 @@
                            png_len );
 
   Exit:
+    if ( !error )
+      FT_TRACE3(( "tt_sbit_decoder_load_png: loaded\n" ));
     return error;
   }
 
@@ -1096,6 +1119,10 @@
     image_end  -= image_start;
     image_start = image_offset + image_start;
 
+    FT_TRACE3(( "tt_sbit_decoder_load_image:"
+                " found sbit (format %d) for glyph index %d\n",
+                image_format, glyph_index ));
+
     return tt_sbit_decoder_load_bitmap( decoder,
                                         load_flags,
                                         image_format,
@@ -1108,6 +1135,9 @@
     return FT_THROW( Invalid_Table );
 
   NoBitmap:
+    FT_TRACE4(( "tt_sbit_decoder_load_image:"
+                " no sbit found for glyph index %d\n", glyph_index ));
+
     return FT_THROW( Invalid_Argument );
   }
 

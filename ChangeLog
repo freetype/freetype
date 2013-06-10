@@ -1,5 +1,18 @@
 2013-06-10  Werner Lemberg  <wl@gnu.org>
 
+	[sfnt] Improve embedded bitmap tracing.
+
+	* src/base/ftobjs.c (FT_Request_Size): Move trace message regarding
+	bitmap strike match to...
+	(FT_Match_Size): This function.
+
+	* src/sfnt/ttsbit.c (tt_sbit_decoder_load_metrics,
+	tt_sbit_decoder_load_byte_aligned, tt_sbit_decoder_load_bit_aligned,
+	tt_sbit_decoder_load_compound, tt_sbit_decoder_load_png,
+	tt_sbit_decoder_load_image): Decorate with tracing messages.
+
+2013-06-10  Werner Lemberg  <wl@gnu.org>
+
 	Fix Savannah bug #39160.
 
 	* src/truetype/ttinterp.c (Ins_SDPVTL): Set projection vector too
