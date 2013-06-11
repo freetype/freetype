@@ -334,7 +334,9 @@ FT_BEGIN_HEADER
   /*                                                                       */
   /* <Note>                                                                */
   /*    Library objects are normally created by @FT_Init_FreeType, and     */
-  /*    destroyed with @FT_Done_FreeType.                                  */
+  /*    destroyed with @FT_Done_FreeType.  If you need reference-counting  */
+  /*    (cf. @FT_Reference_Library), use @FT_New_Library and               */
+  /*    @FT_Done_Library.                                                  */
   /*                                                                       */
   typedef struct FT_LibraryRec_  *FT_Library;
 
@@ -1678,6 +1680,9 @@ FT_BEGIN_HEADER
   /*    For multi-threading applications each thread should have its own   */
   /*    FT_Library object.                                                 */
   /*                                                                       */
+  /*    If you need reference-counting (cf. @FT_Reference_Library), use    */
+  /*    @FT_New_Library and @FT_Done_Library.                              */
+  /*                                                                       */
   FT_EXPORT( FT_Error )
   FT_Init_FreeType( FT_Library  *alibrary );
 
@@ -1871,6 +1876,10 @@ FT_BEGIN_HEADER
   /*                                                                       */
   /* <Return>                                                              */
   /*    FreeType error code.  0~means success.                             */
+  /*                                                                       */
+  /* <Note>                                                                */
+  /*    Use @FT_Done_Face to destroy the created @FT_Face object (along    */
+  /*    with its slot and sizes).                                          */
   /*                                                                       */
   FT_EXPORT( FT_Error )
   FT_New_Face( FT_Library   library,
