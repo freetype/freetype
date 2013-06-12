@@ -1,3 +1,9 @@
+2013-06-12  Werner Lemberg  <wl@gnu.org>.
+
+	* include/freetype/internal/ftdebug.h: Disable MSVC warning C4127.
+
+	This partially undoes commit 3f6e0e0c.
+
 2013-06-12  Werner Lemberg  <wl@gnu.org>
 
 	More compiler warning fixes.
