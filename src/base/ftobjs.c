@@ -4513,9 +4513,9 @@
     service = (FT_Service_Properties)interface;
 
     if ( set )
-      missing_func = !service->set_property;
+      missing_func = (FT_Bool)( !service->set_property );
     else
-      missing_func = !service->get_property;
+      missing_func = (FT_Bool)( !service->get_property );
 
     if ( missing_func )
     {

@@ -453,8 +453,10 @@
 #define FRAC( x )     ( (x) & ( ras.precision - 1 ) )
 #define SCALED( x )   ( ( (ULong)(x) << ras.scale_shift ) - ras.precision_half )
 
-#define IS_BOTTOM_OVERSHOOT( x )  ( CEILING( x ) - x >= ras.precision_half )
-#define IS_TOP_OVERSHOOT( x )     ( x - FLOOR( x ) >= ras.precision_half )
+#define IS_BOTTOM_OVERSHOOT( x ) \
+          (Bool)( CEILING( x ) - x >= ras.precision_half )
+#define IS_TOP_OVERSHOOT( x )    \
+          (Bool)( x - FLOOR( x ) >= ras.precision_half )
 
   /* The most used variables are positioned at the top of the structure. */
   /* Thus, their offset can be coded with less opcodes, resulting in a   */

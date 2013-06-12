@@ -287,7 +287,7 @@
   {
     CF2_UInt  i;
     CF2_UInt  count       = cf2_stack_count( opStack );
-    FT_Bool   hasWidthArg = count & 1;
+    FT_Bool   hasWidthArg = (FT_Bool)( count & 1 );
 
     /* variable accumulates delta values from operand stack */
     CF2_Fixed  position = hintOffset;
@@ -357,8 +357,8 @@
 
     if ( doConditionalLastRead )
     {
-      FT_Bool    lastIsX = cf2_fixedAbs( vals[10] - *curX ) >
-                             cf2_fixedAbs( vals[11] - *curY );
+      FT_Bool    lastIsX = (FT_Bool)( cf2_fixedAbs( vals[10] - *curX ) >
+                                        cf2_fixedAbs( vals[11] - *curY ) );
       CF2_Fixed  lastVal = cf2_stack_getReal( opStack, index );
 
 
