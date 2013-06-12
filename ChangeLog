@@ -1,5 +1,15 @@
 2013-06-12  Werner Lemberg  <wl@gnu.org>.
 
+	Another try on pragmas.
+
+	* include/freetype/internal/ftdebug.h: Move pragmas to...
+	* include/freetype/internal/internal.h: ... this file since it gets
+	included by all source files.
+	* include/freetype/internal/ftserv.h: Remove pragma which has no
+	effect.
+
+2013-06-12  Werner Lemberg  <wl@gnu.org>.
+
 	* include/freetype/internal/ftdebug.h: Disable MSVC warning C4127.
 
 	This partially undoes commit 3f6e0e0c.
