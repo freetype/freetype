@@ -1,3 +1,11 @@
+2013-06-06  Dave Arnold  <darnold@adobe.com>
+	    Werner Lemberg  <wl@gnu.org>
+
+	[cff] Add code to Adobe's engine to handle ppem > 2000.
+
+	* src/cff/cffgload.c (cff_slot_load): If we get
+	FT_Err_Glyph_Too_Big, retry unhinted and scale up later on.
+
 2013-06-12  Werner Lemberg  <wl@gnu.org>.
 
 	Another try on pragmas.
@@ -8,7 +16,7 @@
 	* include/freetype/internal/ftserv.h: Remove pragma which has no
 	effect.
 
-2013-06-12  Werner Lemberg  <wl@gnu.org>.
+2013-06-12  Werner Lemberg  <wl@gnu.org>
 
 	* include/freetype/internal/ftdebug.h: Disable MSVC warning C4127.
 

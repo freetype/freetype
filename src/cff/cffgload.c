@@ -2849,7 +2849,16 @@
         /* as a consequence, glyphs larger than 2000ppem get rejected */
         if ( FT_ERR_EQ( error, Glyph_Too_Big ) )
         {
-          /* XXX to be implemented */
+          /* this time, we retry unhinted and scale up the glyph later on */
+          /* (the engine uses and sets the hardcoded value 0x10000 / 64 = */
+          /* 0x400 for both `x_scale' and `y_scale' in this case)         */
+          hinting       = FALSE;
+          force_scaling = TRUE;
+          glyph->hint   = hinting;
+
+          error = cf2_decoder_parse_charstrings( &decoder,
+                                                 charstring,
+                                                 charstring_len );
         }
       }
 
