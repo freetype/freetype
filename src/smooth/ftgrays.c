@@ -358,6 +358,14 @@ typedef ptrdiff_t  FT_PtrDist;
   } TCell;
 
 
+#if defined( _MSC_VER )      /* Visual C++ (and Intel C++) */
+  /* We disable the warning `structure was padded due to   */
+  /* __declspec(align())' in order to compile cleanly with */
+  /* the maximum level of warnings.                        */
+#pragma warning( push )
+#pragma warning( disable : 4324 )
+#endif /* _MSC_VER */
+
   typedef struct  gray_TWorker_
   {
     TCoord  ex, ey;
@@ -404,6 +412,10 @@ typedef ptrdiff_t  FT_PtrDist;
     TPos       ycount;
 
   } gray_TWorker, *gray_PWorker;
+
+#if defined( _MSC_VER )
+#pragma warning( pop )
+#endif
 
 
 #ifndef FT_STATIC_RASTER

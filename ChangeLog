@@ -1,3 +1,7 @@
+2013-06-14  Werner Lemberg  <wl@gnu.org>.
+
+	* src/smooth/ftgrays.c One final pragma to silence 64-bit MSVC.
+
 2013-06-06  Dave Arnold  <darnold@adobe.com>
 	    Werner Lemberg  <wl@gnu.org>
 
