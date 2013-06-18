@@ -1153,14 +1153,14 @@
     if ( FT_ALLOC( face, clazz->face_object_size ) )
       goto Fail;
 
+    face->driver = driver;
+    face->memory = memory;
+    face->stream = stream;
+
     if ( FT_NEW( internal ) )
       goto Fail;
 
     face->internal = internal;
-
-    face->driver   = driver;
-    face->memory   = memory;
-    face->stream   = stream;
 
 #ifdef FT_CONFIG_OPTION_INCREMENTAL
     {
@@ -2265,7 +2265,10 @@
     goto Exit;
 
   Fail:
-    FT_Done_Face( face );
+    if ( node )
+      FT_Done_Face( face );    /* face must be in the driver's list */
+    else if ( face )
+      destroy_face( memory, face, driver );
 
   Exit:
     FT_TRACE4(( "FT_Open_Face: Return %d\n", error ));
@@ -4308,7 +4311,8 @@
       FT_Renderer  renderer = FT_RENDERER( module );
 
 
-      if ( renderer->clazz->glyph_format == FT_GLYPH_FORMAT_OUTLINE &&
+      if ( renderer->clazz                                          &&
+           renderer->clazz->glyph_format == FT_GLYPH_FORMAT_OUTLINE &&
            renderer->raster                                         )
         renderer->clazz->raster_class->raster_done( renderer->raster );
     }

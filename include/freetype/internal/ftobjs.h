@@ -363,7 +363,7 @@ FT_BEGIN_HEADER
 #endif
 
     FT_Bool             ignore_unpatented_hinter;
-    FT_UInt             refcount;
+    FT_Int              refcount;
 
   } FT_Face_InternalRec;
 
@@ -883,7 +883,7 @@ FT_BEGIN_HEADER
     FT_PIC_Container   pic_container;
 #endif
 
-    FT_UInt            refcount;
+    FT_Int             refcount;
 
   } FT_LibraryRec;
 
