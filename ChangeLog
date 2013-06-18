@@ -1,3 +1,10 @@
+2013-06-18  Werner Lemberg  <wl@gnu.org>
+
+	Fix Savannah bug #39269.
+
+	* src/base/ftgloadr.c (FT_GlyphLoader_CheckPoints): Free memory in
+	case of reacollocation failures.
+
 2013-06-18  Andrew Church  <achurch+savannah@achurch.org>
 
 	Fix Savannah bug #39266.
