@@ -42,8 +42,13 @@ CHANGES BETWEEN 2.4.12 and 2.5
     - The  property API  (`FT_Property_Get' and  `FT_Property_Set') is
       now declared as stable.
 
-    - `ftview' has been updated to support color embedded bitmaps; it
-      can be toggled on and off with key `c'.
+      The  exception,   however,  are  the   experimental  auto-hinter
+      properties `glyph-to-script-map' and `fallback-script' which are
+      subject to change in a forthcoming release.
+
+    - `ftview' has been updated to  support color embedded bitmaps; it
+      can be toggled on and off  with key `c'.  The small cache toggle
+      is now key `K'.
 
     - It  is now  possible  to  control the  version  of the  TrueType
       hinting engine  using the new `interpreter-version'  property of
@@ -56,11 +61,17 @@ CHANGES BETWEEN 2.4.12 and 2.5
       program, command line option `-H'  has been extended to activate
       the non-default interpreter version.
 
+    - The `ttdebug' program has been further improved.  In particular,
+      it accepts a new command line  option `-H' to select the hinting
+      engine.
+
     - Another round of TrueType subpixel hinting fixes.
 
     - The `apinames' tool can now create an import file for NetWare.
 
     - 64bit compilation of the new CFF engine was buggy.
+
+    - Some fixes to improve robustness in memory-tight situations.
 
 
 ======================================================================
