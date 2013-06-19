@@ -1,5 +1,17 @@
 2013-06-19  Werner Lemberg  <wl@gnu.org>
 
+	* Version 2.5.0.1 released.
+	===========================
+
+
+	Tag sources with `VER-2-5-0-1'.
+
+	* include/freetype/config/ftoption.h: Undefine
+	CFF_CONFIG_OPTION_OLD_ENGINE.
+	* devel/ftoption.h: Define CFF_CONFIG_OPTION_OLD_ENGINE.
+
+2013-06-19  Werner Lemberg  <wl@gnu.org>
+
 	* builds/unix/install.mk (install): Don't create `cache' directory.
 
 	Found by Peter Breitenlohner <peb@mppmu.mpg.de>.

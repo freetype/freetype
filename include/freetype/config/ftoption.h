@@ -765,7 +765,7 @@ FT_BEGIN_HEADER
   /* switch between the two engines using the `hinting-engine' property of */
   /* the cff driver module.                                                */
   /*                                                                       */
-#define CFF_CONFIG_OPTION_OLD_ENGINE
+/* #define CFF_CONFIG_OPTION_OLD_ENGINE */
 
 
   /*************************************************************************/
