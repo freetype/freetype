@@ -1,3 +1,36 @@
+2013-06-19  Werner Lemberg  <wl@gnu.org>
+
+	* Version 2.5.0 released.
+	=========================
+
+
+	Tag sources with `VER-2-5-0'.
+
+	* docs/VERSION.DLL: Update documentation and bump version number to
+	2.5.0.
+
+	* README, Jamfile (RefDoc),
+	builds/win32/vc2005/freetype.vcproj, builds/win32/vc2005/index.html,
+	builds/win32/vc2008/freetype.vcproj, builds/win32/vc2008/index.html,
+	builds/win32/vc2010/freetype.vcxproj, builds/win32/vc2010/index.html,
+	builds/win32/visualc/freetype.dsp,
+	builds/win32/visualc/freetype.vcproj,
+	builds/win32/visualc/index.html, builds/win32/visualce/freetype.dsp,
+	builds/win32/visualce/freetype.vcproj,
+	builds/win32/visualce/index.html,
+	builds/wince/vc2005-ce/freetype.vcproj,
+	builds/wince/vc2005-ce/index.html,
+	builds/wince/vc2008-ce/freetype.vcproj,
+	builds/wince/vc2008-ce/index.html: s/2.4.12/2.5.0/, s/2412/250/.
+
+	* include/freetype/freetype.h (FREETYPE_MINOR): Set to 5.
+	(FREETYPE_PATCH): Set to 0.
+
+	* builds/unix/configure.raw (version_info): Set to 16:2:10.
+
+	* src/base/ftobjs.c (FT_Open_Face): Pacify compiler.
+	* src/truetype/ttinterp.c (Ins_MSIRP, Ins_MIRP): Ditto.
+
 2013-06-18  Werner Lemberg  <wl@gnu.org>
 
 	Fix Savannah bug #39269.

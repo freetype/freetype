@@ -2024,8 +2024,8 @@
                 FT_Face             *aface )
   {
     FT_Error     error;
-    FT_Driver    driver;
-    FT_Memory    memory;
+    FT_Driver    driver = NULL;
+    FT_Memory    memory = NULL;
     FT_Stream    stream = NULL;
     FT_Face      face   = NULL;
     FT_ListNode  node   = NULL;

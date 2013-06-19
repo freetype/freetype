@@ -6173,7 +6173,7 @@
     FT_F26Dot6  distance;
 
 #ifdef TT_CONFIG_OPTION_SUBPIXEL_HINTING
-    FT_F26Dot6  control_value_cutin;
+    FT_F26Dot6  control_value_cutin = 0; /* pacify compiler */
 
 
     if ( SUBPIXEL_HINTING )
@@ -6542,8 +6542,8 @@
                 control_value_cutin,
                 minimum_distance;
 #ifdef TT_CONFIG_OPTION_SUBPIXEL_HINTING
-    FT_Int      B1;
-    FT_Int      B2;
+    FT_Int      B1           = 0; /* pacify compiler */
+    FT_Int      B2           = 0;
     FT_Bool     reverse_move = FALSE;
 #endif /* TT_CONFIG_OPTION_SUBPIXEL_HINTING */
 
