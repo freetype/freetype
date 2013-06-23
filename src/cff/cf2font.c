@@ -98,10 +98,10 @@
        * The darkening amount is smaller for thicker stems.
        * It becomes zero when the stem is thicker than 2.333 pixels.
        *
-       * In Avalon rasterizer,
+       * By default, we use
        *
-       *   darkenAmount = 0.5 pixels   if scaledStem <= 0.5 pixels,
-       *   darkenAmount = 0.333 pixels if 1 <= scaledStem <= 1.667 pixels,
+       *   darkenAmount = 0.4 pixels   if scaledStem <= 0.5 pixels,
+       *   darkenAmount = 0.275 pixels if 1 <= scaledStem <= 1.667 pixels,
        *   darkenAmount = 0 pixel      if scaledStem >= 2.333 pixels,
        *
        * and piecewise linear in-between.
