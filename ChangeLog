@@ -1,5 +1,14 @@
 2013-06-25  Werner Lemberg  <wl@gnu.org>
 
+	[docmaker] Remove unused functions.
+
+	* src/tools/docmaker/content.py (DocMarkup.get_start,
+	DocBlock.get_markup_name): Removed.
+	* src/tools/docmaker/tohtml.py (html_quote0, dump_html_code,
+	HtmlFormatter.make_html_words): Removed.
+
+2013-06-25  Werner Lemberg  <wl@gnu.org>
+
 	* builds/freetype.mk (dll): Remove target.
 
 	Problem reported by Jörg Günnewig <joerg.guennewig@googlemail.com>.

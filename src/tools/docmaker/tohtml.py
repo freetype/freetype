@@ -210,25 +210,6 @@ def  html_quote( line ):
     return result
 
 
-# same as 'html_quote', but ignores left and right brackets
-def  html_quote0( line ):
-    return string.replace( line, "&", "&amp;" )
-
-
-def  dump_html_code( lines, prefix = "" ):
-    # clean the last empty lines
-    l = len( self.lines )
-    while l > 0 and string.strip( self.lines[l - 1] ) == "":
-        l = l - 1
-
-    # The code footer should be directly appended to the last code
-    # line to avoid an additional blank line.
-    print prefix + code_header,
-    for line in self.lines[0 : l + 1]:
-        print '\n' + prefix + html_quote( line ),
-    print prefix + code_footer,
-
-
 
 class  HtmlFormatter( Formatter ):
 
@@ -276,16 +257,6 @@ class  HtmlFormatter( Formatter ):
 
     def  make_block_url( self, block ):
         return self.make_section_url( block.section ) + "#" + block.name
-
-    def  make_html_words( self, words ):
-        """ convert a series of simple words into some HTML text """
-        line = ""
-        if words:
-            line = html_quote( words[0] )
-            for w in words[1:]:
-                line = line + " " + html_quote( w )
-
-        return line
 
     def  make_html_word( self, word ):
         """analyze a simple word to detect cross-references and styling"""
