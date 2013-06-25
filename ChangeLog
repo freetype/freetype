@@ -1,5 +1,28 @@
 2013-06-25  Werner Lemberg  <wl@gnu.org>
 
+	[cff] Add `darkening-parameters' property.
+
+	* include/freetype/ftcffdrv.h: Document it.
+
+	* src/cff/cffdrivr.c (cff_property_set, cff_property_get): Handle
+	`darkening-parameters' property.
+
+	* src/cff/cf2font.h (CF2_FontRec): Add `darkenParams' array.
+
+	* src/cff/cf2font.c (cf2_computeDarkening): Add `darkenParams'
+	argument and use it.
+	Update all callers.
+
+	* src/cff/cf2ft.c (cf2_decoder_parse_charstrings): Copy
+	`darken_params' values.
+
+	* src/cff/cffobjs.h (CFF_DriverRec): Add `darken_params' array.
+
+	* src/cff/cffobjs.c (cff_driver_init): Set default values for
+	`darken_params'.
+
+2013-06-25  Werner Lemberg  <wl@gnu.org>
+
 	[docmaker] Code shuffling.
 
 	* src/tools/docmaker/tohtml.py (re_url): Move regexp...

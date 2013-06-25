@@ -73,7 +73,6 @@ FT_BEGIN_HEADER
    *
    *   {
    *     FT_Library  library;
-   *     FT_Face     face;
    *     FT_UInt     hinting_engine = FT_CFF_HINTING_ADOBE;
    *
    *
@@ -124,7 +123,6 @@ FT_BEGIN_HEADER
    *
    *   {
    *     FT_Library  library;
-   *     FT_Face     face;
    *     FT_Bool     no_stem_darkening = TRUE;
    *
    *
@@ -133,6 +131,50 @@ FT_BEGIN_HEADER
    *     FT_Property_Set( library, "cff",
    *                               "no-stem-darkening", &no_stem_darkening );
    *   }
+   *
+   * @note:
+   *   This property can be used with @FT_Property_Get also.
+   *
+   */
+
+
+  /**************************************************************************
+   *
+   * @property:
+   *   darkening-parameters
+   *
+   * @description:
+   *   By default, the Adobe CFF engine darkens stems as follows (if the
+   *   `no-stem-darkening' property isn't set):
+   *
+   *   {
+   *     stem width <= 0.5px:   darkening amount = 0.4px
+   *     stem width  = 1px:     darkening amount = 0.275px
+   *     stem width  = 1.667px: darkening amount = 0.275px
+   *     stem width >= 2.333px: darkening amount = 0px
+   *   }
+   *
+   *   and piecewise linear in-between.  Using the `darkening-parameters'
+   *   property, these four control points can be changed, as the following
+   *   example demonstrates.
+   *
+   *   {
+   *     FT_Library  library;
+   *     FT_Int      darken_params[8] = {  500, 300,   // x1, y1
+   *                                      1000, 200,   // x2, y2
+   *                                      1500, 100,   // x3, y3
+   *                                      2000,   0 }; // x4, y4
+   *
+   *
+   *     FT_Init_FreeType( &library );
+   *
+   *     FT_Property_Set( library, "cff",
+   *                               "darkening-parameters", darken_params );
+   *   }
+   *
+   *   The x~values give the stem width, and the y~values the darkening
+   *   amount.  All coordinate values must be positive and monotonically
+   *   increasing along the x~axis; the unit is 1000th of pixels.
    *
    * @note:
    *   This property can be used with @FT_Property_Get also.
