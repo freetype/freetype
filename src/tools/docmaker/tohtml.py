@@ -1,11 +1,46 @@
-#  ToHTML (c) 2002, 2003, 2005, 2006, 2007, 2008
+#  ToHTML (c) 2002, 2003, 2005-2008, 2013
 #    David Turner <david@freetype.org>
 
 from sources import *
 from content import *
 from formatter import *
 
-import time
+import time, re
+
+
+# this regular expression code to identify an URL has been taken from
+#
+#   http://mail.python.org/pipermail/tutor/2002-September/017228.html
+#
+# (with slight modifications)
+
+urls = r'(?:https?|telnet|gopher|file|wais|ftp)'
+ltrs = r'\w'
+gunk = r'/#~:.?+=&%@!\-'
+punc = r'.:?\-'
+any  = "%(ltrs)s%(gunk)s%(punc)s" % { 'ltrs' : ltrs,
+                                      'gunk' : gunk,
+                                      'punc' : punc }
+url  = r"""
+         (
+           \b                    # start at word boundary
+           %(urls)s :            # need resource and a colon
+           [%(any)s] +?          # followed by one or more of any valid
+                                 # character, but be conservative and
+                                 # take only what you need to...
+           (?=                   # [look-ahead non-consumptive assertion]
+             [%(punc)s]*         # either 0 or more punctuation
+             (?:                 # [non-grouping parentheses]
+               [^%(any)s] | $    # followed by a non-url char
+                                 # or end of the string
+             )
+           )
+         )
+        """ % {'urls' : urls,
+               'any'  : any,
+               'punc' : punc }
+
+re_url = re.compile( url, re.VERBOSE | re.MULTILINE )
 
 
 # The following defines the HTML header used by all generated pages.
@@ -291,6 +326,8 @@ class  HtmlFormatter( Formatter ):
             line = self.make_html_word( words[0] )
             for word in words[1:]:
                 line = line + " " + self.make_html_word( word )
+            # handle hyperlinks
+            line = re_url.sub( r'<a href="\1">\1</a>', line )
             # convert `...' quotations into real left and right single quotes
             line = re.sub( r"(^|\W)`(.*?)'(\W|$)",  \
                            r'\1&lsquo;\2&rsquo;\3', \

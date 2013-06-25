@@ -1,3 +1,10 @@
+2013-06-25  Werner Lemberg  <wl@gnu.org>
+
+	[docmaker] Recognise URLs.
+
+	* src/tools/docmaker/tohtml.py (re_url): New regular expression.
+	(make_html_para): Use it.
+
 2013-06-19  Werner Lemberg  <wl@gnu.org>
 
 	* Version 2.5.0.1 released.
