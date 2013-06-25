@@ -3,7 +3,7 @@
 #
 
 
-# Copyright 1996-2000, 2001, 2002, 2003, 2004, 2005, 2006, 2008 by
+# Copyright 1996-2006, 2008, 2013 by
 # David Turner, Robert Wilhelm, and Werner Lemberg.
 #
 # This file is part of the FreeType project, and may only be used, modified,
@@ -260,8 +260,6 @@ endif
 objects: $(OBJECTS_LIST)
 
 library: $(PROJECT_LIBRARY)
-
-dll: $(PROJECT_LIBRARY) exported_symbols
 
 .c.$O:
 	$(FT_COMPILE) $T$(subst /,$(COMPILER_SEP),$@ $<)

@@ -1,5 +1,11 @@
 2013-06-25  Werner Lemberg  <wl@gnu.org>
 
+	* builds/freetype.mk (dll): Remove target.
+
+	Problem reported by Jörg Günnewig <joerg.guennewig@googlemail.com>.
+
+2013-06-25  Werner Lemberg  <wl@gnu.org>
+
 	[docmaker] Recognise URLs.
 
 	* src/tools/docmaker/tohtml.py (re_url): New regular expression.
