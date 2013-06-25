@@ -5,42 +5,7 @@ from sources import *
 from content import *
 from formatter import *
 
-import time, re
-
-
-# this regular expression code to identify an URL has been taken from
-#
-#   http://mail.python.org/pipermail/tutor/2002-September/017228.html
-#
-# (with slight modifications)
-
-urls = r'(?:https?|telnet|gopher|file|wais|ftp)'
-ltrs = r'\w'
-gunk = r'/#~:.?+=&%@!\-'
-punc = r'.:?\-'
-any  = "%(ltrs)s%(gunk)s%(punc)s" % { 'ltrs' : ltrs,
-                                      'gunk' : gunk,
-                                      'punc' : punc }
-url  = r"""
-         (
-           \b                    # start at word boundary
-           %(urls)s :            # need resource and a colon
-           [%(any)s] +?          # followed by one or more of any valid
-                                 # character, but be conservative and
-                                 # take only what you need to...
-           (?=                   # [look-ahead non-consumptive assertion]
-             [%(punc)s]*         # either 0 or more punctuation
-             (?:                 # [non-grouping parentheses]
-               [^%(any)s] | $    # followed by a non-url char
-                                 # or end of the string
-             )
-           )
-         )
-        """ % {'urls' : urls,
-               'any'  : any,
-               'punc' : punc }
-
-re_url = re.compile( url, re.VERBOSE | re.MULTILINE )
+import time
 
 
 # The following defines the HTML header used by all generated pages.

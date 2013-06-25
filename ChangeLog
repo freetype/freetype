@@ -1,5 +1,12 @@
 2013-06-25  Werner Lemberg  <wl@gnu.org>
 
+	[docmaker] Code shuffling.
+
+	* src/tools/docmaker/tohtml.py (re_url): Move regexp...
+	* src/tools/docmaker/sources.py: ... to this file.
+
+2013-06-25  Werner Lemberg  <wl@gnu.org>
+
 	[docmaker] Remove unused functions.
 
 	* src/tools/docmaker/content.py (DocMarkup.get_start,
