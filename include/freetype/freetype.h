@@ -552,11 +552,12 @@ FT_BEGIN_HEADER
   /*    FT_ENCODING_MS_SYMBOL ::                                           */
   /*      Corresponds to the Microsoft Symbol encoding, used to encode     */
   /*      mathematical symbols in the 32..255 character code range.  For   */
-  /*      more information, see `http://www.ceviz.net/symbol.htm'.         */
+  /*      more information, see                                            */
+  /*      `http://www.kostis.net/charsets/symbol.htm'.                     */
   /*                                                                       */
   /*    FT_ENCODING_SJIS ::                                                */
   /*      Corresponds to Japanese SJIS encoding.  More info at             */
-  /*      at `http://langsupport.japanreference.com/encoding.shtml'.       */
+  /*      at `http://en.wikipedia.org/wiki/Shift_JIS'.                     */
   /*      See note on multi-byte encodings below.                          */
   /*                                                                       */
   /*    FT_ENCODING_GB2312 ::                                              */
@@ -570,7 +571,7 @@ FT_BEGIN_HEADER
   /*    FT_ENCODING_WANSUNG ::                                             */
   /*      Corresponds to the Korean encoding system known as Wansung.      */
   /*      For more information see                                         */
-  /*      `http://www.microsoft.com/typography/unicode/949.txt'.           */
+  /*      `http://msdn.microsoft.com/en-US/goglobal/cc305154'.             */
   /*                                                                       */
   /*    FT_ENCODING_JOHAB ::                                               */
   /*      The Korean standard character set (KS~C 5601-1992), which        */
@@ -648,7 +649,7 @@ FT_BEGIN_HEADER
   /*    @FT_Get_CMap_Language_ID  to query the Mac language ID which may   */
   /*    be needed to be able to distinguish Apple encoding variants.  See  */
   /*                                                                       */
-  /*      http://www.unicode.org/Public/MAPPINGS/VENDORS/APPLE/README.TXT  */
+  /*      http://www.unicode.org/Public/MAPPINGS/VENDORS/APPLE/Readme.txt  */
   /*                                                                       */
   /*    to get an idea how to do that.  Basically, if the language ID      */
   /*    is~0, don't use it, otherwise subtract 1 from the language ID.     */
