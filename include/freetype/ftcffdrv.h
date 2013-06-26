@@ -173,8 +173,10 @@ FT_BEGIN_HEADER
    *   }
    *
    *   The x~values give the stem width, and the y~values the darkening
-   *   amount.  All coordinate values must be positive and monotonically
-   *   increasing along the x~axis; the unit is 1000th of pixels.
+   *   amount.  The unit is 1000th of pixels.  All coordinate values must be
+   *   positive; the x~values must be monotonically increasing, and the
+   *   y~values smaller than or equal to 500 (corresponding to half a
+   *   pixel).
    *
    * @note:
    *   This property can be used with @FT_Property_Get also.

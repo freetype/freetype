@@ -1,5 +1,11 @@
 2013-06-25  Werner Lemberg  <wl@gnu.org>
 
+	[cff] Add darkening limit to `darkening-parameters'.
+
+	* src/cff/cffdrivr.c (cff_property_set): Add check.
+
+2013-06-25  Werner Lemberg  <wl@gnu.org>
+
 	[cff] Add `darkening-parameters' property.
 
 	* include/freetype/ftcffdrv.h: Document it.

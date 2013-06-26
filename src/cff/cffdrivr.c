@@ -600,9 +600,10 @@
       FT_Int  y4 = darken_params[7];
 
 
-      if ( x1 < 0 || x2 < 0 || x3 < 0 || x4 < 0 ||
-           y1 < 0 || y2 < 0 || y3 < 0 || y4 < 0 ||
-           x1 > x2 || x2 > x3 || x3 > x4        )
+      if ( x1 < 0   || x2 < 0   || x3 < 0   || x4 < 0   ||
+           y1 < 0   || y2 < 0   || y3 < 0   || y4 < 0   ||
+           x1 > x2  || x2 > x3  || x3 > x4              ||
+           y1 > 500 || y2 > 500 || y3 > 500 || y4 > 500 )
         return FT_THROW( Invalid_Argument );
 
       driver->darken_params[0] = x1;
