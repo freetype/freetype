@@ -1,3 +1,18 @@
+CHANGES BETWEEN 2.5 and 2.5.1
+
+  I. IMPORTANT BUG FIXES
+
+    - For  some WinFNT  files,  the last  glyph  wasn't displayed  but
+      incorrectly marked as invalid.
+
+
+  II. MISCELLANEOUS
+
+    - The stem  darkening feature  of the  new CFF  engine can  now be
+      fine-tuned with the new `darkening-parameters' property.
+
+
+======================================================================
 
 CHANGES BETWEEN 2.4.12 and 2.5
 
