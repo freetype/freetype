@@ -11,6 +11,9 @@ CHANGES BETWEEN 2.5 and 2.5.1
     - The stem  darkening feature  of the  new CFF  engine can  now be
       fine-tuned with the new `darkening-parameters' property.
 
+    - `ftgrid' has been updated to toggle various engines with the `H'
+      key, similar to `ftview' and `ftdiff'.
+
 
 ======================================================================
 
