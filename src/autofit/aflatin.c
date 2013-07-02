@@ -200,12 +200,12 @@
   static const char af_latin_blue_chars[AF_LATIN_MAX_BLUES]
                                        [AF_LATIN_MAX_TEST_CHARACTERS + 1] =
   {
-    "THEZOCQS",
-    "HEZLOCUS",
-    "fijkdbh",
-    "xzroesc",
-    "xzroesc",
-    "pqgjy"
+    "THEZOCQS",  /* capital top    */
+    "HEZLOCUS",  /* capital bottom */
+    "fijkdbh",   /* small f top    */
+    "xzroesc",   /* small top      */
+    "xzroesc",   /* small bottom   */
+    "pqgjy"      /* small minor    */
   };
 
 
