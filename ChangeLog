@@ -1,5 +1,17 @@
 2013-07-16  David Turner  <digit@google.com>
 
+	[truetype] Add assembler code for TT_MulFix14 and TT_DotFix14.
+
+	This patch provides slightly optimized versions for ARM, x86, and
+	x86_64 CPUs if built with GCC.
+
+	Also remove some dead code.
+
+	* src/truetype/ttinterp.c (TT_MulFix14_arm, TT_MulFix14_long_long,
+	TT_DotFix14_long_long): New functions.
+
+2013-07-16  David Turner  <digit@google.com>
+
 	Optimize FT_MulFix for x86_64 GCC builds.
 
 	This patch provides an optimized `FT_MulFix' implementation for
