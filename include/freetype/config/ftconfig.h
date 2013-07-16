@@ -367,7 +367,8 @@ FT_BEGIN_HEADER
 
 #ifdef __GNUC__
 
-#if defined( __arm__ ) && !defined( __thumb__ )    && \
+#if defined( __arm__ )                                 && \
+    ( !defined( __thumb__ ) || defined( __thumb2__ ) ) && \
     !( defined( __CC_ARM ) || defined( __ARMCC__ ) )
 #define FT_MULFIX_ASSEMBLER  FT_MulFix_arm
 
@@ -394,7 +395,9 @@ FT_BEGIN_HEADER
     return a;
   }
 
-#endif /* __arm__ && !__thumb__ && !( __CC_ARM || __ARMCC__ ) */
+#endif /* __arm__                      && */
+       /* ( __thumb2__ || !__thumb__ ) && */
+       /* !( __CC_ARM || __ARMCC__ )      */
 
 #if defined( __i386__ )
 #define FT_MULFIX_ASSEMBLER  FT_MulFix_i386

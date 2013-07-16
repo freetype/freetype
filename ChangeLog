@@ -1,3 +1,56 @@
+2013-07-16  David Turner  <digit@google.com>
+
+	Speed up ARMv7 support.
+
+	When building for ARMv7 with thumb2 instructions, the optimized
+	`FT_MulFix_arm' assembly routine was not being used.
+
+	The reason for this is in the `ftconfig.h' header, namely:
+
+	- The assembly routine uses the `smull' instruction which is not
+	  available when generating Thumb-1 machine code.  It is available
+	  in Thumb-2 mode, though.
+
+	- The header was written a long time ago before Thumb-2 became
+	  widely popular (e.g. with Android).  So it simply doesn't use the
+	  assembly routine if the `__thumb__' built-in macro is defined.
+
+	- When compiling in Thumb-2 mode, the compiler will define both
+	  `__thumb__' and `__thumb2__'.
+
+	By checking for `(__thumb2__ || !__thumb__)', we ensure that the
+	assembly routine is only avoided when generating Thumb-1 code.
+
+	Given that this is performance-sensitive function, this improves
+	`ftbench' as follows on a Galaxy Nexus:
+
+	                           Before (us/op)   After (us/op)
+
+	  - loading Arial.ttf glyphs at 14 ppem [1]
+
+	      Load                   34.285          33.098
+
+	  - same operation with the light auto-hinter [2]
+
+	      Load                   31.317          29.590
+
+	  - same operation without hinting [3]
+
+	      Load                    6.143           5.376
+
+	  - loading Arial.ttf advances at 14 ppem [4]
+
+	      Load_Advances (normal) 34.216          33.016
+	      Load_Advances (fast)    0.176           0.176
+
+	  [1] ftbench -t 5 -p -s 14 -b a -f 0008 Arial.ttf
+	  [2] ftbench -t 5 -p -s 14 -b a -r 1 -f 0028 Arial.ttf
+	  [3] ftbench -t 5 -p -s 14 -b a -f 000a Arial.ttf
+	  [4] ftbench -t 5 -p -s 14 -b b -f 0008 Arial.ttf
+
+	* builds/unix/ftconfig.in, include/freetype/config/ftconfig.h
+	(FT_MULFIX_ASSEMBLER): Fix handling for ARMv7.
+
 2013-06-28  Werner Lemberg  <wl@gnu.org>
 
 	* docs/CHANGES: Updated.
