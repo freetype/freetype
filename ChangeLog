@@ -1,5 +1,47 @@
 2013-07-16  David Turner  <digit@google.com>
 
+	Optimize FT_MulFix for x86_64 GCC builds.
+
+	This patch provides an optimized `FT_MulFix' implementation for
+	x86_64 machines when FreeType is built with GCC, or compatible
+	compilers like Clang.
+
+	Example:
+	  bin/ftbench -p -t 5 -s 14 -f 0008 Arial.ttf
+
+	Before:
+
+	  Load                       4.863 us/op
+	  Load_Advances (Normal)     4.816 us/op
+	  Load_Advances (Fast)       0.028 us/op
+	  Render                     2.753 us/op
+	  Get_Glyph                  0.463 us/op
+	  Get_CBox                   0.077 us/op
+	  Get_Char_Index             0.023 us/op
+	  Iterate CMap              13.898 us/op
+	  New_Face                  12.368 us/op
+	  Embolden                   0.028 us/op
+	  Get_BBox                   0.302 us/op
+
+	After:
+
+	  Load                       4.617 us/op
+	  Load_Advances (Normal)     4.645 us/op
+	  Load_Advances (Fast)       0.027 us/op
+	  Render                     2.789 us/op
+	  Get_Glyph                  0.460 us/op
+	  Get_CBox                   0.077 us/op
+	  Get_Char_Index             0.024 us/op
+	  Iterate CMap              13.403 us/op
+	  New_Face                  12.278 us/op
+	  Embolden                   0.028 us/op
+	  Get_BBox                   0.301 us/op
+
+	* builds/unix/ftconfig.in, include/freetype/config/ftconfig.h
+	(FT_MulFix_x86_64): New function.
+
+2013-07-16  David Turner  <digit@google.com>
+
 	Speed up ARMv7 support.
 
 	When building for ARMv7 with thumb2 instructions, the optimized
