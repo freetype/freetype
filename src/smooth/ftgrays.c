@@ -310,7 +310,7 @@ typedef ptrdiff_t  FT_PtrDist;
 #endif
 
 
-  /* Compute `divident / divisor' and return both its quotient and     */
+  /* Compute `dividend / divisor' and return both its quotient and     */
   /* remainder, cast to a specific type.  This macro also ensures that */
   /* the remainder is always positive.                                 */
 #define FT_DIV_MOD( type, dividend, divisor, quotient, remainder ) \
@@ -633,10 +633,10 @@ typedef ptrdiff_t  FT_PtrDist;
       ras.cover = 0;
       ras.ex    = ex;
       ras.ey    = ey;
-
-      ras.invalid = ( (unsigned)ey >= (unsigned)ras.count_ey ||
-                                ex >= ras.count_ex           );
     }
+
+    ras.invalid = ( (unsigned)ey >= (unsigned)ras.count_ey ||
+                              ex >= ras.count_ex           );
   }
 
 

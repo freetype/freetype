@@ -1,3 +1,10 @@
+2013-07-16  Werner Lemberg  <wl@gnu.org>
+
+	[smooth] Fix segfault caused by previous commit.
+
+	* src/smooth/ftgrays.c (gray_set_cell): Always compute
+	`ras.invalid'.
+
 2013-07-16  David Turner  <digit@google.com>
 
 	[smooth] Improve performance.
