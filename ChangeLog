@@ -1,5 +1,21 @@
 2013-07-16  David Turner  <digit@google.com>
 
+	[smooth] Improve performance.
+
+	Provide a work-around for an ARM-specific performance bug in GCC. 
+	This speeds up the rasterizer by more than 5%.
+
+	Also slightly optimize `set_gray_cell' and `gray_record_cell' (which
+	also improves performance on other platforms by a tiny bit (<1%).
+
+	* src/smooth/ftgrays.c (FT_DIV_MOD): New macro.
+	Use it where appropriate.
+
+	(gray_record_cell, gray_set_cell, gray_move_to,
+	gray_convert_glyph_inner): Streamline condition handling.
+
+2013-07-16  David Turner  <digit@google.com>
+
 	[truetype] Add assembler code for TT_MulFix14 and TT_DotFix14.
 
 	This patch provides slightly optimized versions for ARM, x86, and
