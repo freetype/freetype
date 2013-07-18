@@ -1,3 +1,43 @@
+2013-07-18  Behdad Esfahbod  <behdad@google.com>
+
+	[sfnt] Add support for Apple's `sbix' color bitmap table.
+
+	* include/freetype/internal/tttypes.h (TT_SBit_MetricsRec): Widen
+	fields to FT_Short and FT_UShort, respectively.
+	(TT_SBitTableType): New enumeration.
+	(TT_FaceRec): Add `sbit_table_type' field.
+
+	* include/freetype/tttags.h (TTAG_sbix): New macro.
+
+	* src/sfnt/pngshim.c (Load_SBit_Png): Pass a more generic
+	FT_GlyphSlot argument instead FT_Bitmap.
+	Add flag to control map and metrics handling.
+	Update all users.
+
+	* src/sfnt/ttsbit.c: Include `ttmtx.h'.
+	(tt_face_load_eblc): Renamed to...
+	(tt_face_load_sbit): This.
+	Handlic `sbix' bitmaps.
+	(tt_face_free_eblc): Renamed to...
+	(tt_face_load_sbit): This.
+	Updated.
+	(tt_face_load_strike_metrics): Handle `sbix' bitmaps.
+	(tt_face_load_sbix_image): New function.
+	(tt_sbit_decoder_alloc_bitmap, tt_sbit_decoder_load_image,
+	tt_sbit_decoder_load_byte_aligned, tt_sbit_decoder_load_bit_aligned,
+	tt_sbit_decoder_load_compound, tt_sbit_decoder_load_png,
+	tt_sbit_decoder_load_image, tt_sbit_decoder_load_bitmap): Don't pass
+	and handle load flags.
+	(tt_sbit_decoder_load_bitmap) [!FT_CONFIG_OPTION_USE_PNG]: Better
+	handle formats 17-19.
+	Move color to grayscale conversion to...
+	(tt_face_load_sbit_image): Here.
+	Handle `sbix' bitmaps.
+
+	* src/sfnt/pngshim.h: Updated.
+	* src/sfnt/ttsbit.h: Updated.
+	* src/sfnt/sfdriver.c: Updated.
+
 2013-07-18  Werner Lemberg  <wl@gnu.org>
 
 	[sfnt] Ignore invalid magic number in `head' or `bhed'.

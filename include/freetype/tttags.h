@@ -88,6 +88,7 @@ FT_BEGIN_HEADER
 #define TTAG_post  FT_MAKE_TAG( 'p', 'o', 's', 't' )
 #define TTAG_prep  FT_MAKE_TAG( 'p', 'r', 'e', 'p' )
 #define TTAG_prop  FT_MAKE_TAG( 'p', 'r', 'o', 'p' )
+#define TTAG_sbix  FT_MAKE_TAG( 's', 'b', 'i', 'x' )
 #define TTAG_sfnt  FT_MAKE_TAG( 's', 'f', 'n', 't' )
 #define TTAG_SING  FT_MAKE_TAG( 'S', 'I', 'N', 'G' )
 #define TTAG_trak  FT_MAKE_TAG( 't', 'r', 'a', 'k' )

@@ -353,16 +353,16 @@ FT_BEGIN_HEADER
   /*                                                                       */
   typedef struct  TT_SBit_MetricsRec_
   {
-    FT_Byte  height;
-    FT_Byte  width;
+    FT_UShort  height;
+    FT_UShort  width;
 
-    FT_Char  horiBearingX;
-    FT_Char  horiBearingY;
-    FT_Byte  horiAdvance;
+    FT_Short   horiBearingX;
+    FT_Short   horiBearingY;
+    FT_UShort  horiAdvance;
 
-    FT_Char  vertBearingX;
-    FT_Char  vertBearingY;
-    FT_Byte  vertAdvance;
+    FT_Short   vertBearingX;
+    FT_Short   vertBearingY;
+    FT_UShort  vertAdvance;
 
   } TT_SBit_MetricsRec, *TT_SBit_Metrics;
 
@@ -979,6 +979,20 @@ FT_BEGIN_HEADER
   (*TT_Loader_EndGlyphFunc)( TT_Loader  loader );
 
 
+  typedef enum TT_SbitTableType_
+  {
+    TT_SBIT_TABLE_TYPE_NONE = 0,
+    TT_SBIT_TABLE_TYPE_EBLC, /* `EBLC' (Microsoft), */
+                             /* `bloc' (Apple), or  */
+                             /* `CBLC' (Google)     */
+    TT_SBIT_TABLE_TYPE_SBIX, /* `sbix' (Apple)      */
+
+    /* do not remove */
+    TT_SBIT_TABLE_TYPE_MAX
+
+  } TT_SbitTableType;
+
+
   /*************************************************************************/
   /*                                                                       */
   /*                         TrueType Face Type                            */
@@ -1089,13 +1103,6 @@ FT_BEGIN_HEADER
   /*                            TrueType/OpenType fonts.                   */
   /*                                                                       */
   /*    pclt                 :: The `pclt' SFNT table.                     */
-  /*                                                                       */
-  /*    num_sbit_strikes     :: The number of sbit strikes, i.e., bitmap   */
-  /*                            sizes, embedded in this font.              */
-  /*                                                                       */
-  /*    sbit_strikes         :: An array of sbit strikes embedded in this  */
-  /*                            font.  This table is optional in a         */
-  /*                            TrueType/OpenType font.                    */
   /*                                                                       */
   /*    num_sbit_scales      :: The number of sbit scales for this font.   */
   /*                                                                       */
@@ -1302,6 +1309,7 @@ FT_BEGIN_HEADER
 
     FT_Byte*              sbit_table;
     FT_ULong              sbit_table_size;
+    TT_SbitTableType      sbit_table_type;
     FT_UInt               sbit_num_strikes;
 
     FT_Byte*              kern_table;
