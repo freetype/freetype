@@ -236,7 +236,8 @@
          */
         if ( table.Length < 0x36 )
         {
-          FT_TRACE2(( "check_table_dir: `head' table too small\n" ));
+          FT_TRACE2(( "check_table_dir:"
+                      " `head' or `bhed' table too small\n" ));
           error = FT_THROW( Table_Missing );
           goto Exit;
         }
@@ -246,12 +247,8 @@
           goto Exit;
 
         if ( magic != 0x5F0F3CF5UL )
-        {
           FT_TRACE2(( "check_table_dir:"
-                      " no magic number found in `head' table\n"));
-          error = FT_THROW( Table_Missing );
-          goto Exit;
-        }
+                      " invalid magic number in `head' or `bhed' table\n"));
 
         if ( FT_STREAM_SEEK( offset + ( nn + 1 ) * 16 ) )
           goto Exit;

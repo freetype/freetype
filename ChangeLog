@@ -1,3 +1,13 @@
+2013-07-18  Werner Lemberg  <wl@gnu.org>
+
+	[sfnt] Ignore invalid magic number in `head' or `bhed'.
+
+	Other font engines seem to ignore it also.  Problem reported by
+	Hin-Tak Leung <htl10@users.sourceforge.net>.
+
+	* src/sfnt/ttload.c (check_table_dir): Don't abort but warn only if
+	we have an invalid magic number.
+
 2013-07-16  Werner Lemberg  <wl@gnu.org>
 
 	[smooth] Fix segfault caused by previous commit.
