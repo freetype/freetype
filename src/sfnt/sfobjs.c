@@ -555,6 +555,7 @@
 #endif
     FT_Bool       has_outline;
     FT_Bool       is_apple_sbit;
+    FT_Bool       is_apple_sbix;
     FT_Bool       ignore_preferred_family    = FALSE;
     FT_Bool       ignore_preferred_subfamily = FALSE;
 
@@ -608,6 +609,14 @@
 #endif
 
     is_apple_sbit = 0;
+    is_apple_sbix = !face->goto_table( face, TTAG_sbix, stream, 0 );
+
+    /* Apple 'sbix' color bitmaps are rendered scaled and then the 'glyf'
+     * outline rendered on top.  We don't support that yet, so just ignore
+     * the 'glyf' outline and advertise it as a bitmap-only font. */
+    if ( is_apple_sbix )
+      has_outline = FALSE;
+
 
     /* if this font doesn't contain outlines, we try to load */
     /* a `bhed' table                                        */
@@ -619,7 +628,7 @@
 
     /* load the font header (`head' table) if this isn't an Apple */
     /* sbit font file                                             */
-    if ( !is_apple_sbit )
+    if ( !is_apple_sbit || is_apple_sbix )
     {
       LOAD_( head );
       if ( error )

@@ -286,12 +286,12 @@
         metrics->x_ppem = ppem;
         metrics->y_ppem = ppem;
 
-        metrics->ascender    = ppem * hori->Ascender / upem;
-        metrics->descender   = ppem * hori->Descender / upem;
+        metrics->ascender    = ppem * hori->Ascender * 64 / upem;
+        metrics->descender   = ppem * hori->Descender * 64 / upem;
         metrics->height      = ppem * ( hori->Ascender -
                                         hori->Descender +
-                                        hori->Line_Gap ) / upem;
-        metrics->max_advance = ppem * hori->advance_Width_Max / upem;
+                                        hori->Line_Gap ) * 64 / upem;
+        metrics->max_advance = ppem * hori->advance_Width_Max * 64 / upem;
 
         return error;
       }
@@ -1322,7 +1322,7 @@
       metrics->horiBearingX = originOffsetX;
       metrics->horiBearingY = -originOffsetY + metrics->height;
       metrics->horiAdvance  = aadvance * face->root.size->metrics.x_ppem /
-                                face->root.units_per_EM;
+                                face->header.Units_Per_EM;
     }
 
     return error;
