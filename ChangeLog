@@ -1,4 +1,35 @@
-2013-07-18  Behdad Esfahbod  <behdad@google.com>
+2013-07-19  Werner Lemberg  <wl@gnu.org>
+
+	[autofit] Fix segment classification for blue zones.
+
+	The old code (essentially unchanged since the very beginning)
+	incorrectly handled this configuration
+
+	               x -o- x
+	                /   \
+	               /     \
+	              /       \
+	             o         o
+
+	as flat and this
+
+	                o               o
+	               /               /
+	             x|              x|
+	              |               |
+	              o---------------o
+
+	as round.  (`o' and `x' are on and off points, respectively). 
+
+	This is a major change which should improve the rendering results
+	enormously for many TrueType fonts, especially in the range approx. 
+	20-40ppem, fixing the appearance of many overshoots.
+
+	* src/autofit/aflatin.c (af_latin_metrics_init_blues): Look at the
+	first and last points of the segment, not the points right before
+	and after.
+
+2013-07-19  Behdad Esfahbod  <behdad@google.com>
 
 	[sfnt] `sbix' fix-ups.
 
