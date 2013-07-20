@@ -1,3 +1,10 @@
+2013-07-20  Behdad Esfahbod  <behdad@google.com>
+
+	[sfnt] Fix `sbix' table version handling.
+
+	* src/sfnt/ttsbit.c (tt_face_load_sbit) [TT_SBIT_TABLE_TYPE_SBIX]:
+	USHORT version numbers are to be considered as `minor'.
+
 2013-07-19  Werner Lemberg  <wl@gnu.org>
 
 	[autofit] Fix segment classification for blue zones.

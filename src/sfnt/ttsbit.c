@@ -141,7 +141,7 @@
 
         FT_FRAME_EXIT();
 
-        if ( version != 1 )
+        if ( version < 1 )
         {
           error = FT_THROW( Unknown_File_Format );
           goto Exit;
