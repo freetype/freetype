@@ -1,3 +1,7 @@
+2013-07-20  Werner Lemberg  <wl@gnu.org>
+
+	* docs/INSTALL.GNU: Updated.
+
 2013-07-20  Behdad Esfahbod  <behdad@google.com>
 
 	[sfnt] Fix `sbix' table version handling.

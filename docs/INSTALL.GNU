@@ -1,7 +1,7 @@
-This document contains instructions  how to build the FreeType library
-on non-Unix systems  with the help of GNU Make.  Note  that if you are
-running Cygwin or MSys in  Windows, you should follow the instructions
-in the file INSTALL.UNIX instead.
+This document contains instructions how  to build the FreeType library
+on non-Unix systems with  the help of GNU Make.  Note  that if you are
+running  Cygwin  or  MinGW/MSYS  in Windows,  you  should  follow  the
+instructions in the file `INSTALL.UNIX' instead.
 
 
   FreeType 2 includes a powerful and flexible build system that allows
@@ -138,15 +138,17 @@ in the file INSTALL.UNIX instead.
 
   Final note
 
-    The build  system builds a  statically linked library of  the font
-    engine in the  `objs' directory.  It does _not_  support the build
-    of  DLLs on  Windows and  OS/2.  If  you need  these, you  have to
-    either   use  an   IDE-specific  project   file,  or   follow  the
+    The above instructions build a  _statically_ linked library of the
+    font engine in the `objs' directory.   On Windows, you can build a
+    DLL  either  with  MinGW  (within an  MSYS  shell,  following  the
+    instructions in `INSTALL.UNIX'), or you  use one of the Visual C++
+    project  files; see  the  subdirectories  of `builds/win32'.   For
+    everything else,  you are on  your own,  and you might  follow the
     instructions in `INSTALL.ANY' to create your own Makefiles.
 
 ----------------------------------------------------------------------
 
-Copyright 2003, 2004, 2005, 2006, 2008 by
+Copyright 2003, 2004, 2005, 2006, 2008, 2013 by
 David Turner, Robert Wilhelm, and Werner Lemberg.
 
 This  file is  part of  the FreeType  project, and  may only  be used,
