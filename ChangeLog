@@ -1,3 +1,9 @@
+2013-07-24  suzuki toshiya  <mpsuzuki@hiroshima-u.ac.jp>
+
+	[sfnt] Fix for `make multi' target.
+
+	* src/sfnt/pngshim.c (Load_SBit_Png): Use FT_LOCAL_DEF().
+
 2013-07-20  Werner Lemberg  <wl@gnu.org>
 
 	* docs/INSTALL.GNU: Updated.
