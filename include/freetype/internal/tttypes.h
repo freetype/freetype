@@ -983,8 +983,8 @@ FT_BEGIN_HEADER
   {
     TT_SBIT_TABLE_TYPE_NONE = 0,
     TT_SBIT_TABLE_TYPE_EBLC, /* `EBLC' (Microsoft), */
-                             /* `bloc' (Apple), or  */
-                             /* `CBLC' (Google)     */
+                             /* `bloc' (Apple)      */
+    TT_SBIT_TABLE_TYPE_CBLC, /* `CBLC' (Google)     */
     TT_SBIT_TABLE_TYPE_SBIX, /* `sbix' (Apple)      */
 
     /* do not remove */

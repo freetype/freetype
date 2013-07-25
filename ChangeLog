@@ -1,3 +1,21 @@
+2013-07-25  Behdad Esfahbod  <behdad@google.com>
+
+	Add FT_FACE_FLAG_COLOR and FT_HAS_COLOR.
+
+	Also disambiguate Google's color bitmap tables.
+
+	* include/freetype/freetype.h (FT_FACE_FLAG_COLOR, FT_HAS_COLOR):
+	New macros.
+
+	* include/freetype/internal/tttypes.h (TT_SbitTableType): Add
+	TT_SBIT_TABLE_TYPE_CBLC.
+
+	* src/sfnt/sfobjs.c (sfnt_load_face): Handle FT_FACE_FLAG_COLOR.
+
+	* src/sfnt/ttsbit.c (tt_face_load_sbit,
+	tt_face_load_strike_metrics, tt_face_load_sbit_image): Handle
+	TT_SBIT_TABLE_TYPE_CBLC.
+
 2013-07-24  suzuki toshiya  <mpsuzuki@hiroshima-u.ac.jp>
 
 	[sfnt] Fix for `make multi' target.

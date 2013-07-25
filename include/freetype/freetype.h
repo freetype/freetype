@@ -98,7 +98,10 @@ FT_BEGIN_HEADER
   /*    FT_FACE_FLAG_FIXED_WIDTH                                           */
   /*    FT_FACE_FLAG_HORIZONTAL                                            */
   /*    FT_FACE_FLAG_VERTICAL                                              */
+  /*    FT_FACE_FLAG_COLOR                                                 */
   /*    FT_FACE_FLAG_SFNT                                                  */
+  /*    FT_FACE_FLAG_CID_KEYED                                             */
+  /*    FT_FACE_FLAG_TRICKY                                                */
   /*    FT_FACE_FLAG_KERNING                                               */
   /*    FT_FACE_FLAG_MULTIPLE_MASTERS                                      */
   /*    FT_FACE_FLAG_GLYPH_NAMES                                           */
@@ -1076,6 +1079,10 @@ FT_BEGIN_HEADER
   /*      Currently, there are about a dozen TrueType fonts in the list of */
   /*      tricky fonts; they are hard-coded in file `ttobjs.c'.            */
   /*                                                                       */
+  /*    FT_FACE_FLAG_COLOR ::                                              */
+  /*      Set if the font has color glyph tables.  To access color glyphs  */
+  /*      use @FT_LOAD_COLOR.                                              */
+  /*                                                                       */
 #define FT_FACE_FLAG_SCALABLE          ( 1L <<  0 )
 #define FT_FACE_FLAG_FIXED_SIZES       ( 1L <<  1 )
 #define FT_FACE_FLAG_FIXED_WIDTH       ( 1L <<  2 )
@@ -1090,6 +1097,7 @@ FT_BEGIN_HEADER
 #define FT_FACE_FLAG_HINTER            ( 1L << 11 )
 #define FT_FACE_FLAG_CID_KEYED         ( 1L << 12 )
 #define FT_FACE_FLAG_TRICKY            ( 1L << 13 )
+#define FT_FACE_FLAG_COLOR             ( 1L << 14 )
 
 
   /*************************************************************************
@@ -1272,6 +1280,20 @@ FT_BEGIN_HEADER
    */
 #define FT_IS_TRICKY( face ) \
           ( face->face_flags & FT_FACE_FLAG_TRICKY )
+
+
+  /*************************************************************************
+   *
+   * @macro:
+   *   FT_HAS_COLOR( face )
+   *
+   * @description:
+   *   A macro that returns true whenever a face object contains
+   *   tables for color glyphs.
+   *
+   */
+#define FT_HAS_COLOR( face ) \
+          ( face->face_flags & FT_FACE_FLAG_COLOR )
 
 
   /*************************************************************************/

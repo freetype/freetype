@@ -812,6 +812,10 @@
       /*                                                                   */
       /* Compute face flags.                                               */
       /*                                                                   */
+      if ( face->sbit_table_type == TT_SBIT_TABLE_TYPE_CBLC ||
+           face->sbit_table_type == TT_SBIT_TABLE_TYPE_SBIX )
+        flags |= FT_FACE_FLAG_COLOR;      /* color glyphs */
+
       if ( has_outline == TRUE )
         flags |= FT_FACE_FLAG_SCALABLE;   /* scalable outlines */
 

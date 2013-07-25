@@ -55,14 +55,17 @@
     face->sbit_table_type  = TT_SBIT_TABLE_TYPE_NONE;
     face->sbit_num_strikes = 0;
 
-    /* this table is optional */
     error = face->goto_table( face, TTAG_CBLC, stream, &table_size );
-    if ( error )
-      error = face->goto_table( face, TTAG_EBLC, stream, &table_size );
-    if ( error )
-      error = face->goto_table( face, TTAG_bloc, stream, &table_size );
     if ( !error )
-      face->sbit_table_type = TT_SBIT_TABLE_TYPE_EBLC;
+      face->sbit_table_type = TT_SBIT_TABLE_TYPE_CBLC;
+    else
+    {
+      error = face->goto_table( face, TTAG_EBLC, stream, &table_size );
+      if ( error )
+        error = face->goto_table( face, TTAG_bloc, stream, &table_size );
+      if ( !error )
+        face->sbit_table_type = TT_SBIT_TABLE_TYPE_EBLC;
+    }
 
     if ( error )
     {
@@ -83,6 +86,7 @@
     switch ( (FT_UInt)face->sbit_table_type )
     {
     case TT_SBIT_TABLE_TYPE_EBLC:
+    case TT_SBIT_TABLE_TYPE_CBLC:
       {
         FT_Byte*  p;
         FT_Fixed  version;
@@ -227,6 +231,7 @@
     switch ( (FT_UInt)face->sbit_table_type )
     {
     case TT_SBIT_TABLE_TYPE_EBLC:
+    case TT_SBIT_TABLE_TYPE_CBLC:
       {
         FT_Byte*  strike;
 
@@ -1343,6 +1348,7 @@
     switch ( (FT_UInt)face->sbit_table_type )
     {
     case TT_SBIT_TABLE_TYPE_EBLC:
+    case TT_SBIT_TABLE_TYPE_CBLC:
       {
         TT_SBitDecoderRec  decoder[1];
 
