@@ -1,3 +1,11 @@
+2013-07-30  suzuki toshiya  <mpsuzuki@hiroshima-u.ac.jp>
+
+	Ignore libpng-config under cross-building configuration,
+	because it will return the flags for the hosting environment.
+
+	* builds/unix/configure.raw: Ignore libpng-config when
+	`cross_compiling' == yes.
+
 2013-07-30  Behdad Esfahbod  <behdad@google.com>
 
 	Prevent division by zero by a transparent color.
