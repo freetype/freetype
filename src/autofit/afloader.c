@@ -180,10 +180,10 @@
 
       /* now load the slot image into the auto-outline and run the */
       /* automatic hinting process                                 */
-      if ( metrics->clazz->script_hints_apply )
-        metrics->clazz->script_hints_apply( hints,
-                                            &gloader->current.outline,
-                                            metrics );
+      if ( metrics->script_class->script_hints_apply )
+        metrics->script_class->script_hints_apply( hints,
+                                                   &gloader->current.outline,
+                                                   metrics );
 
       /* we now need to adjust the metrics according to the change in */
       /* width/positioning that occurred during the hinting process   */
@@ -534,18 +534,18 @@
       {
         loader->metrics = metrics;
 
-        if ( metrics->clazz->script_metrics_scale )
-          metrics->clazz->script_metrics_scale( metrics, &scaler );
+        if ( metrics->script_class->script_metrics_scale )
+          metrics->script_class->script_metrics_scale( metrics, &scaler );
         else
           metrics->scaler = scaler;
 
         load_flags |=  FT_LOAD_NO_SCALE | FT_LOAD_IGNORE_TRANSFORM;
         load_flags &= ~FT_LOAD_RENDER;
 
-        if ( metrics->clazz->script_hints_init )
+        if ( metrics->script_class->script_hints_init )
         {
-          error = metrics->clazz->script_hints_init( &loader->hints,
-                                                     metrics );
+          error = metrics->script_class->script_hints_init( &loader->hints,
+                                                            metrics );
           if ( error )
             goto Exit;
         }

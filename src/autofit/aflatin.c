@@ -76,13 +76,14 @@
       AF_Scaler           scaler = &dummy->root.scaler;
 
 
-      glyph_index = FT_Get_Char_Index( face,
-                                       metrics->root.clazz->standard_char );
+      glyph_index = FT_Get_Char_Index(
+                      face,
+                      metrics->root.script_class->standard_char );
       if ( glyph_index == 0 )
         goto Exit;
 
       FT_TRACE5(( "standard character: 0x%X (glyph index %d)\n",
-                  metrics->root.clazz->standard_char, glyph_index ));
+                  metrics->root.script_class->standard_char, glyph_index ));
 
       error = FT_Load_Glyph( face, glyph_index, FT_LOAD_NO_SCALE );
       if ( error || face->glyph->outline.n_points <= 0 )

@@ -250,7 +250,7 @@ extern void*  _af_debug_hints;
 
   typedef struct  AF_ScriptMetricsRec_
   {
-    AF_ScriptClass  clazz;
+    AF_ScriptClass  script_class;
     AF_ScalerRec    scaler;
     FT_Bool         digits_have_same_width;
 

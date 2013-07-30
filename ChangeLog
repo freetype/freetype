@@ -1,3 +1,11 @@
+2013-07-30  Werner Lemberg  <wl@gnu.org>
+
+	[autofit] Variable renaming.
+
+	* src/autofit/aftypes.h (AF_ScriptMetricsRec):
+	s/clazz/script_class/.
+	Update all users.
+
 2013-07-30  suzuki toshiya  <mpsuzuki@hiroshima-u.ac.jp>
 
 	Ignore libpng-config under cross-building configuration,

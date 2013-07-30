@@ -82,18 +82,20 @@
     /* scan each script in a Unicode charmap */
     for ( ss = 0; AF_SCRIPT_CLASSES_GET[ss]; ss++ )
     {
-      AF_ScriptClass      clazz = AF_SCRIPT_CLASSES_GET[ss];
+      AF_ScriptClass      script_class = AF_SCRIPT_CLASSES_GET[ss];
       AF_Script_UniRange  range;
 
 
-      if ( clazz->script_uni_ranges == NULL )
+      if ( script_class->script_uni_ranges == NULL )
         continue;
 
       /*
        *  Scan all Unicode points in the range and set the corresponding
        *  glyph script index.
        */
-      for ( range = clazz->script_uni_ranges; range->first != 0; range++ )
+      for ( range = script_class->script_uni_ranges;
+            range->first != 0;
+            range++ )
       {
         FT_ULong  charcode = range->first;
         FT_UInt   gindex;
@@ -204,13 +206,13 @@
       {
         if ( globals->metrics[nn] )
         {
-          AF_ScriptClass  clazz = AF_SCRIPT_CLASSES_GET[nn];
+          AF_ScriptClass  script_class = AF_SCRIPT_CLASSES_GET[nn];
 
 
-          FT_ASSERT( globals->metrics[nn]->clazz == clazz );
+          FT_ASSERT( globals->metrics[nn]->script_class == script_class );
 
-          if ( clazz->script_metrics_done )
-            clazz->script_metrics_done( globals->metrics[nn] );
+          if ( script_class->script_metrics_done )
+            script_class->script_metrics_done( globals->metrics[nn] );
 
           FT_FREE( globals->metrics[nn] );
         }
@@ -233,7 +235,7 @@
   {
     AF_ScriptMetrics  metrics = NULL;
     FT_UInt           gidx;
-    AF_ScriptClass    clazz;
+    AF_ScriptClass    script_class;
     FT_UInt           script     = options & 15;
     const FT_Offset   script_max = sizeof ( AF_SCRIPT_CLASSES_GET ) /
                                      sizeof ( AF_SCRIPT_CLASSES_GET[0] );
@@ -250,37 +252,37 @@
     if ( gidx == 0 || gidx + 1 >= script_max )
       gidx = globals->glyph_scripts[gindex] & AF_SCRIPT_NONE;
 
-    clazz = AF_SCRIPT_CLASSES_GET[gidx];
+    script_class = AF_SCRIPT_CLASSES_GET[gidx];
     if ( script == 0 )
-      script = clazz->script;
+      script = script_class->script;
 
-    metrics = globals->metrics[clazz->script];
+    metrics = globals->metrics[script_class->script];
     if ( metrics == NULL )
     {
       /* create the global metrics object if necessary */
       FT_Memory  memory = globals->face->memory;
 
 
-      if ( FT_ALLOC( metrics, clazz->script_metrics_size ) )
+      if ( FT_ALLOC( metrics, script_class->script_metrics_size ) )
         goto Exit;
 
-      metrics->clazz   = clazz;
-      metrics->globals = globals;
+      metrics->script_class = script_class;
+      metrics->globals      = globals;
 
-      if ( clazz->script_metrics_init )
+      if ( script_class->script_metrics_init )
       {
-        error = clazz->script_metrics_init( metrics, globals->face );
+        error = script_class->script_metrics_init( metrics, globals->face );
         if ( error )
         {
-          if ( clazz->script_metrics_done )
-            clazz->script_metrics_done( metrics );
+          if ( script_class->script_metrics_done )
+            script_class->script_metrics_done( metrics );
 
           FT_FREE( metrics );
           goto Exit;
         }
       }
 
-      globals->metrics[clazz->script] = metrics;
+      globals->metrics[script_class->script] = metrics;
     }
 
   Exit:
