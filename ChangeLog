@@ -1,3 +1,10 @@
+2013-07-30  Behdad Esfahbod  <behdad@google.com>
+
+	Prevent division by zero by a transparent color.
+
+	* src/base/ftbitmap.c (ft_gray_for_premultiplied_srgb_bgra):
+	Return 0 immediately, when alpha channel is zero.
+
 2013-07-25  Behdad Esfahbod  <behdad@google.com>
 
 	Add FT_FACE_FLAG_COLOR and FT_HAS_COLOR.
