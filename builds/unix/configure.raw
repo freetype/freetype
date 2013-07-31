@@ -293,8 +293,8 @@ if test x$with_png != xno; then
 either set the LIBPNG_CFLAGS and LIBPNG_LDFLAGS environment variables,
 or pass `--without-png' to the `configure' script.])
     elif test ${cross_compiling} = yes; then
-      AC_MSG_ERROR([`libpng-config' should not be used in cross-building,
-set the LIBPNG_CFLAGS and LIBPNG_LDFLAGS environment,
+      AC_MSG_ERROR([`libpng-config' should not be used in cross-building;
+either set the LIBPNG_CFLAGS and LIBPNG_LDFLAGS environment variables,
 or pass `--without-png' to the `configure' script.])
     fi
     LIBPNG_CFLAGS="`libpng-config --cflags`"

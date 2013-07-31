@@ -386,7 +386,7 @@
 
 
     /* Short-circuit transparent color to avoid div-by-zero. */
-    if (!a)
+    if ( !a )
       return 0;
 
     /*
