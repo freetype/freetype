@@ -100,27 +100,47 @@
 
     FT_Init_Class_af_service_properties( &container->af_service_properties );
 
-    for ( ss = 0 ; ss < AF_SCRIPT_CLASSES_REC_COUNT ; ss++ )
-    {
+    for ( ss = 0; ss < AF_WRITING_SYSTEM_CLASSES_REC_COUNT; ss++ )
+      container->af_writing_system_classes[ss] =
+        &container->af_writing_system_classes_rec[ss];
+    container->af_writing_system_classes
+      [AF_WRITING_SYSTEM_CLASSES_COUNT - 1] = NULL;
+
+    for ( ss = 0; ss < AF_SCRIPT_CLASSES_REC_COUNT; ss++ )
       container->af_script_classes[ss] =
         &container->af_script_classes_rec[ss];
-    }
-    container->af_script_classes[AF_SCRIPT_CLASSES_COUNT - 1] = NULL;
+    container->af_script_classes
+      [AF_SCRIPT_CLASSES_COUNT - 1] = NULL;
 
     /* add call to initialization function when you add new scripts */
+    /* or writing systems                                           */
     ss = 0;
-    FT_Init_Class_af_dummy_script_class(
+    FT_Init_Class_af_dummy_writing_system_class(
+      &container->af_writing_system_classes_rec[ss++] );
+    FT_Init_Class_af_latin_writing_system_class(
+      &container->af_writing_system_classes_rec[ss++] );
+    FT_Init_Class_af_cjk_writing_system_class(
+      &container->af_writing_system_classes_rec[ss++] );
+    FT_Init_Class_af_indic_writing_system_class(
+      &container->af_writing_system_classes_rec[ss++] );
+#ifdef FT_OPTION_AUTOFIT2
+    FT_Init_Class_af_latin2_writing_system_class(
+      &container->af_writing_system_classes_rec[ss++] );
+#endif
+
+    ss = 0;
+    FT_Init_Class_af_dflt_script_class(
+      &container->af_script_classes_rec[ss++] );
+    FT_Init_Class_af_latn_script_class(
+      &container->af_script_classes_rec[ss++] );
+    FT_Init_Class_af_hani_script_class(
+      &container->af_script_classes_rec[ss++] );
+    FT_Init_Class_af_deva_script_class(
       &container->af_script_classes_rec[ss++] );
 #ifdef FT_OPTION_AUTOFIT2
-    FT_Init_Class_af_latin2_script_class(
+    FT_Init_Class_af_ltn2_script_class(
       &container->af_script_classes_rec[ss++] );
 #endif
-    FT_Init_Class_af_latin_script_class(
-      &container->af_script_classes_rec[ss++] );
-    FT_Init_Class_af_cjk_script_class(
-      &container->af_script_classes_rec[ss++] );
-    FT_Init_Class_af_indic_script_class(
-      &container->af_script_classes_rec[ss++] );
 
     FT_Init_Class_af_autofitter_interface(
       library, &container->af_autofitter_interface );

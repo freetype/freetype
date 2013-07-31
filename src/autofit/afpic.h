@@ -4,7 +4,7 @@
 /*                                                                         */
 /*    The FreeType position independent code services for autofit module.  */
 /*                                                                         */
-/*  Copyright 2009, 2011-2012 by                                           */
+/*  Copyright 2009, 2011-2013 by                                           */
 /*  Oran Agra and Mickey Gabel.                                            */
 /*                                                                         */
 /*  This file is part of the FreeType project, and may only be used,       */
@@ -27,11 +27,12 @@ FT_BEGIN_HEADER
 
 #ifndef FT_CONFIG_OPTION_PIC
 
-#define AF_SERVICES_GET            af_services
-#define AF_SERVICE_PROPERTIES_GET  af_service_properties
+#define AF_SERVICES_GET                af_services
+#define AF_SERVICE_PROPERTIES_GET      af_service_properties
 
-#define AF_SCRIPT_CLASSES_GET      af_script_classes
-#define AF_INTERFACE_GET           af_autofitter_interface
+#define AF_WRITING_SYSTEM_CLASSES_GET  af_writing_system_classes
+#define AF_SCRIPT_CLASSES_GET          af_script_classes
+#define AF_INTERFACE_GET               af_autofitter_interface
 
 #else /* FT_CONFIG_OPTION_PIC */
 
@@ -40,15 +41,20 @@ FT_BEGIN_HEADER
 
 #include "aftypes.h"
 
-  /* increase these when you add new scripts, */
-  /* and update autofit_module_class_pic_init */
+  /* increase these when you add new scripts or writing systems, */
+  /* and update autofit_module_class_pic_init                    */
 #ifdef FT_OPTION_AUTOFIT2
-#define AF_SCRIPT_CLASSES_COUNT  6
+#define AF_WRITING_SYSTEM_CLASSES_COUNT  6
+#define AF_SCRIPT_CLASSES_COUNT          6
 #else
-#define AF_SCRIPT_CLASSES_COUNT  5
+#define AF_WRITING_SYSTEM_CLASSES_COUNT  5
+#define AF_SCRIPT_CLASSES_COUNT          5
 #endif
 
-#define AF_SCRIPT_CLASSES_REC_COUNT  ( AF_SCRIPT_CLASSES_COUNT - 1 )
+#define AF_SCRIPT_CLASSES_REC_COUNT  \
+          ( AF_SCRIPT_CLASSES_COUNT - 1 )
+#define AF_WRITING_SYSTEM_CLASSES_REC_COUNT  \
+          ( AF_WRITING_SYSTEM_CLASSES_COUNT - 1 )
 
 
   typedef struct  AFModulePIC_
@@ -56,8 +62,16 @@ FT_BEGIN_HEADER
     FT_ServiceDescRec*          af_services;
     FT_Service_PropertiesRec    af_service_properties;
 
-    AF_ScriptClass              af_script_classes[AF_SCRIPT_CLASSES_COUNT];
-    AF_ScriptClassRec           af_script_classes_rec[AF_SCRIPT_CLASSES_REC_COUNT];
+    AF_WritingSystemClass       af_writing_system_classes
+                                  [AF_WRITING_SYSTEM_CLASSES_COUNT];
+    AF_WritingSystemClassRec    af_writing_system_classes_rec
+                                  [AF_WRITING_SYSTEM_CLASSES_REC_COUNT];
+
+    AF_ScriptClass              af_script_classes
+                                  [AF_SCRIPT_CLASSES_COUNT];
+    AF_ScriptClassRec           af_script_classes_rec
+                                  [AF_SCRIPT_CLASSES_REC_COUNT];
+
     FT_AutoHinter_InterfaceRec  af_autofitter_interface;
 
   } AFModulePIC;
@@ -71,6 +85,8 @@ FT_BEGIN_HEADER
 #define AF_SERVICE_PROPERTIES_GET  \
           ( GET_PIC( library )->af_service_properties )
 
+#define AF_WRITING_SYSTEM_CLASSES_GET  \
+          ( GET_PIC( FT_FACE_LIBRARY( globals->face ) )->af_writing_system_classes )
 #define AF_SCRIPT_CLASSES_GET  \
           ( GET_PIC( FT_FACE_LIBRARY( globals->face ) )->af_script_classes )
 #define AF_INTERFACE_GET  \

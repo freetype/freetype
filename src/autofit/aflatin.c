@@ -2448,10 +2448,26 @@
   /*************************************************************************/
 
 
+  AF_DEFINE_WRITING_SYSTEM_CLASS(
+    af_latin_writing_system_class,
+
+    AF_WRITING_SYSTEM_LATIN,
+
+    sizeof ( AF_LatinMetricsRec ),
+
+    (AF_Script_InitMetricsFunc) af_latin_metrics_init,
+    (AF_Script_ScaleMetricsFunc)af_latin_metrics_scale,
+    (AF_Script_DoneMetricsFunc) NULL,
+
+    (AF_Script_InitHintsFunc)   af_latin_hints_init,
+    (AF_Script_ApplyHintsFunc)  af_latin_hints_apply
+  )
+
+
   /* XXX: this should probably fine tuned to differentiate better between */
   /*      scripts...                                                      */
 
-  static const AF_Script_UniRangeRec  af_latin_uniranges[] =
+  static const AF_Script_UniRangeRec  af_latn_uniranges[] =
   {
     AF_UNIRANGE_REC(  0x0020UL,  0x007FUL ),  /* Basic Latin (no control chars) */
     AF_UNIRANGE_REC(  0x00A0UL,  0x00FFUL ),  /* Latin-1 Supplement (no control chars) */
@@ -2485,19 +2501,14 @@
   };
 
 
-  AF_DEFINE_SCRIPT_CLASS( af_latin_script_class,
-    AF_SCRIPT_LATIN,
-    af_latin_uniranges,
-    'o',
+  AF_DEFINE_SCRIPT_CLASS(
+    af_latn_script_class,
 
-    sizeof ( AF_LatinMetricsRec ),
+    AF_SCRIPT_LATN,
+    AF_WRITING_SYSTEM_LATIN,
 
-    (AF_Script_InitMetricsFunc) af_latin_metrics_init,
-    (AF_Script_ScaleMetricsFunc)af_latin_metrics_scale,
-    (AF_Script_DoneMetricsFunc) NULL,
-
-    (AF_Script_InitHintsFunc)   af_latin_hints_init,
-    (AF_Script_ApplyHintsFunc)  af_latin_hints_apply
+    af_latn_uniranges,
+    'o'
   )
 
 

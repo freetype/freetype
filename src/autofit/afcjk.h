@@ -4,7 +4,7 @@
 /*                                                                         */
 /*    Auto-fitter hinting routines for CJK script (specification).         */
 /*                                                                         */
-/*  Copyright 2006, 2007, 2011, 2012 by                                    */
+/*  Copyright 2006, 2007, 2011-2013 by                                     */
 /*  David Turner, Robert Wilhelm, and Werner Lemberg.                      */
 /*                                                                         */
 /*  This file is part of the FreeType project, and may only be used,       */
@@ -26,9 +26,15 @@
 FT_BEGIN_HEADER
 
 
-  /* the CJK-specific script class */
+  /* the CJK-specific writing system */
 
-  AF_DECLARE_SCRIPT_CLASS( af_cjk_script_class )
+  AF_DECLARE_WRITING_SYSTEM_CLASS( af_cjk_writing_system_class )
+
+
+  /* the CJK-specific script classes */
+
+  AF_DECLARE_SCRIPT_CLASS( af_hani_script_class )
+
 
   /* CJK (global) metrics management */
 

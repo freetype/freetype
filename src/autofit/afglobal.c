@@ -31,19 +31,36 @@
 
 #ifndef FT_CONFIG_OPTION_PIC
 
+  /* when updating this table, don't forget to update                  */
+  /* AF_WRITING_SYSTEM_CLASSES_COUNT and autofit_module_class_pic_init */
+
+  /* populate this list when you add new writing systems */
+  static AF_WritingSystemClass const  af_writing_system_classes[] =
+  {
+    &af_dummy_writing_system_class,
+    &af_latin_writing_system_class,
+    &af_cjk_writing_system_class,
+    &af_indic_writing_system_class,
+#ifdef FT_OPTION_AUTOFIT2
+    &af_latin2_writing_system_class,
+#endif
+    NULL  /* do not remove */
+  };
+
+
   /* when updating this table, don't forget to update          */
   /* AF_SCRIPT_CLASSES_COUNT and autofit_module_class_pic_init */
 
   /* populate this list when you add new scripts */
   static AF_ScriptClass const  af_script_classes[] =
   {
-    &af_dummy_script_class,
+    &af_dflt_script_class, /* XXX */
+    &af_latn_script_class,
+    &af_hani_script_class,
+    &af_deva_script_class,
 #ifdef FT_OPTION_AUTOFIT2
-    &af_latin2_script_class,
+    &af_ltn2_script_class,
 #endif
-    &af_latin_script_class,
-    &af_cjk_script_class,
-    &af_indic_script_class,
     NULL  /* do not remove */
   };
 
@@ -206,13 +223,14 @@
       {
         if ( globals->metrics[nn] )
         {
-          AF_ScriptClass  script_class = AF_SCRIPT_CLASSES_GET[nn];
+          AF_ScriptClass         script_class =
+            AF_SCRIPT_CLASSES_GET[nn];
+          AF_WritingSystemClass  writing_system_class =
+            AF_WRITING_SYSTEM_CLASSES_GET[script_class->writing_system];
 
 
-          FT_ASSERT( globals->metrics[nn]->script_class == script_class );
-
-          if ( script_class->script_metrics_done )
-            script_class->script_metrics_done( globals->metrics[nn] );
+          if ( writing_system_class->script_metrics_done )
+            writing_system_class->script_metrics_done( globals->metrics[nn] );
 
           FT_FREE( globals->metrics[nn] );
         }
@@ -235,11 +253,14 @@
   {
     AF_ScriptMetrics  metrics = NULL;
     FT_UInt           gidx;
-    AF_ScriptClass    script_class;
-    FT_UInt           script     = options & 15;
-    const FT_Offset   script_max = sizeof ( AF_SCRIPT_CLASSES_GET ) /
-                                     sizeof ( AF_SCRIPT_CLASSES_GET[0] );
-    FT_Error          error      = FT_Err_Ok;
+
+    AF_WritingSystemClass  writing_system_class;
+    AF_ScriptClass         script_class;
+
+    FT_UInt          script     = options & 15;
+    const FT_Offset  script_max = sizeof ( AF_SCRIPT_CLASSES_GET ) /
+                                    sizeof ( AF_SCRIPT_CLASSES_GET[0] );
+    FT_Error         error      = FT_Err_Ok;
 
 
     if ( gindex >= (FT_ULong)globals->glyph_count )
@@ -252,7 +273,9 @@
     if ( gidx == 0 || gidx + 1 >= script_max )
       gidx = globals->glyph_scripts[gindex] & AF_SCRIPT_NONE;
 
-    script_class = AF_SCRIPT_CLASSES_GET[gidx];
+    script_class         = AF_SCRIPT_CLASSES_GET[gidx];
+    writing_system_class = AF_WRITING_SYSTEM_CLASSES_GET
+                             [script_class->writing_system];
     if ( script == 0 )
       script = script_class->script;
 
@@ -263,19 +286,20 @@
       FT_Memory  memory = globals->face->memory;
 
 
-      if ( FT_ALLOC( metrics, script_class->script_metrics_size ) )
+      if ( FT_ALLOC( metrics, writing_system_class->script_metrics_size ) )
         goto Exit;
 
       metrics->script_class = script_class;
       metrics->globals      = globals;
 
-      if ( script_class->script_metrics_init )
+      if ( writing_system_class->script_metrics_init )
       {
-        error = script_class->script_metrics_init( metrics, globals->face );
+        error = writing_system_class->script_metrics_init( metrics,
+                                                           globals->face );
         if ( error )
         {
-          if ( script_class->script_metrics_done )
-            script_class->script_metrics_done( metrics );
+          if ( writing_system_class->script_metrics_done )
+            writing_system_class->script_metrics_done( metrics );
 
           FT_FREE( metrics );
           goto Exit;

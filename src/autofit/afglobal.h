@@ -5,7 +5,7 @@
 /*    Auto-fitter routines to compute global hinting values                */
 /*    (specification).                                                     */
 /*                                                                         */
-/*  Copyright 2003-2005, 2007, 2009, 2011-2012 by                          */
+/*  Copyright 2003-2005, 2007, 2009, 2011-2013 by                          */
 /*  David Turner, Robert Wilhelm, and Werner Lemberg.                      */
 /*                                                                         */
 /*  This file is part of the FreeType project, and may only be used,       */
@@ -34,7 +34,11 @@ FT_BEGIN_HEADER
    */
 
   /* index of fallback script in `af_script_classes' */
-#define AF_SCRIPT_FALLBACK  2
+#ifdef AF_CONFIG_OPTION_CJK
+#define AF_SCRIPT_FALLBACK  2  /* hani */
+#else
+#define AF_SCRIPT_FALLBACK  0  /* dflt */
+#endif
   /* a bit mask indicating an uncovered glyph        */
 #define AF_SCRIPT_NONE      0x7F
   /* if this flag is set, we have an ASCII digit     */
@@ -55,8 +59,8 @@ FT_BEGIN_HEADER
 
 
   /*
-   *  Note that glyph_scripts[] is used to map each glyph into
-   *  an index into the `af_script_classes' array.
+   *  Note that glyph_scripts[] maps each glyph to an index into the
+   *  `af_script_classes' array.
    *
    */
   typedef struct  AF_FaceGlobalsRec_

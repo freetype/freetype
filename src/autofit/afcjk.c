@@ -2192,9 +2192,28 @@
   /*************************************************************************/
 
 
+  AF_DEFINE_WRITING_SYSTEM_CLASS(
+    af_cjk_writing_system_class,
+
+    AF_WRITING_SYSTEM_CJK,
+
+    sizeof ( AF_CJKMetricsRec ),
+
+    (AF_Script_InitMetricsFunc) af_cjk_metrics_init,
+    (AF_Script_ScaleMetricsFunc)af_cjk_metrics_scale,
+    (AF_Script_DoneMetricsFunc) NULL,
+
+    (AF_Script_InitHintsFunc)   af_cjk_hints_init,
+    (AF_Script_ApplyHintsFunc)  af_cjk_hints_apply
+  )
+
+
   /* this corresponds to Unicode 6.0 */
 
-  static const AF_Script_UniRangeRec  af_cjk_uniranges[] =
+  /* XXX: this should probably fine tuned to differentiate better between */
+  /*      scripts...                                                      */
+
+  static const AF_Script_UniRangeRec  af_hani_uniranges[] =
   {
     AF_UNIRANGE_REC(  0x1100UL,  0x11FFUL ),  /* Hangul Jamo                             */
     AF_UNIRANGE_REC(  0x2E80UL,  0x2EFFUL ),  /* CJK Radicals Supplement                 */
@@ -2232,33 +2251,12 @@
   };
 
 
-  AF_DEFINE_SCRIPT_CLASS( af_cjk_script_class,
-    AF_SCRIPT_CJK,
-    af_cjk_uniranges,
-    0x7530, /* 田 */
-
-    sizeof ( AF_CJKMetricsRec ),
-
-    (AF_Script_InitMetricsFunc) af_cjk_metrics_init,
-    (AF_Script_ScaleMetricsFunc)af_cjk_metrics_scale,
-    (AF_Script_DoneMetricsFunc) NULL,
-
-    (AF_Script_InitHintsFunc)   af_cjk_hints_init,
-    (AF_Script_ApplyHintsFunc)  af_cjk_hints_apply
-  )
-
 #else /* !AF_CONFIG_OPTION_CJK */
 
-  static const AF_Script_UniRangeRec  af_cjk_uniranges[] =
-  {
-    AF_UNIRANGE_REC( 0UL, 0UL )
-  };
+  AF_DEFINE_WRITING_SYSTEM_CLASS(
+    af_cjk_writing_system_class,
 
-
-  AF_DEFINE_SCRIPT_CLASS( af_cjk_script_class,
-    AF_SCRIPT_CJK,
-    af_cjk_uniranges,
-    0,
+    AF_WRITING_SYSTEM_CJK,
 
     sizeof ( AF_CJKMetricsRec ),
 
@@ -2270,7 +2268,24 @@
     (AF_Script_ApplyHintsFunc)  NULL
   )
 
+
+  static const AF_Script_UniRangeRec  af_hani_uniranges[] =
+  {
+    AF_UNIRANGE_REC( 0UL, 0UL )
+  };
+
 #endif /* !AF_CONFIG_OPTION_CJK */
+
+
+  AF_DEFINE_SCRIPT_CLASS(
+    af_hani_script_class,
+
+    AF_SCRIPT_HANI,
+    AF_WRITING_SYSTEM_CJK,
+
+    af_hani_uniranges,
+    0x7530 /* 田 */
+  )
 
 
 /* END */

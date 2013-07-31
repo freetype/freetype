@@ -1,5 +1,85 @@
 2013-07-30  Werner Lemberg  <wl@gnu.org>
 
+	[autofit] Introduce `writing systems'.
+
+	This patch adds a new top level to the auto-hinter's script class
+	hierarchy.  It defines `writing systems' which can contain multiple
+	scripts.
+
+	For example, the `latin' writing system (in file `aflatin.c') is
+	able to support scripts like Latin, Cyrillic, Armenian, etc., which
+	can be handled similarly.
+
+	Scripts are now named using four-letter OpenType tags.
+
+	* src/autofit/aftypes.h (AF_ScriptClassRec): Move relevant members
+	to...
+	(AF_WritingSystemClassRec): This new structure.  It holds pointers
+	to functions which can be shared among related scripts.
+	(AF_WritingSystem): New enumeration.
+	(AF_Script): Revised values using four-letter tags.
+	(AF_DEFINE_WRITING_SYSTEM_CLASS): New macro.
+	(AF_DEFINE_SCRIPT_CLASS): Updated.
+
+	* src/autofit/afglobal.c (af_writing_system_classes): New global,
+	constant array.
+	(af_script_classes): Updated.
+	(af_face_globals_free): Updated.
+	Remove assertion.
+	(af_face_globals_get_metrics): Updated.
+
+	* src/autofit/afglobal.h (AF_SCRIPT_FALLBACK)
+	[!AF_CONFIG_OPTION_CJK]: Handle this case.
+
+	* src/autofit/afloader.c (af_loader_load_g, af_loader_load_glyph):
+	Updated.
+
+	* src/autofit/afpic.c (autofit_module_class_pic_init): Updated;
+	initialize structures for both writing systems and scripts.
+	* src/autofit/afpic.h: Updated.
+	(AF_WRITING_SYSTEM_CLASSES_GET): New macro.
+
+	* src/autofit/afcjk.c (af_cjk_writing_system_class): New writing
+	system.
+	(af_cjk_uniranges): Renamed to...
+	(af_hani_uniranges): This.
+	(af_cjk_script_class): Reduced and renamed to...
+	(af_hani_script_class): This.
+	* src/autofit/afcjk.h: Updated.
+
+	* src/autofit/afdummy.c (af_dummy_writing_system_class): New writing
+	system.
+	(af_dummy_script_class): Reduced and renamed to...
+	(af_dflt_script_class): This.
+	* src/autofit/afdummy.h: Updated.
+
+	* src/autofit/afindic.c (af_indic_writing_system_class): New writing
+	system.
+	(af_indic_uniranges): Renamed to...
+	(af_deva_uniranges): This.
+	(af_indic_script_class): Reduced and renamed to...
+	(af_deva_script_class): This.
+	* src/autofit/afcjk.h: Updated.
+
+	* src/autofit/aflatin.c (af_latin_writing_system_class): New writing
+	system.
+	(af_latin_uniranges): Renamed to...
+	(af_latn_uniranges): This.
+	(af_latin_script_class): Reduced and renamed to...
+	(af_latn_script_class): This.
+	* src/autofit/aflatin.h: Updated.
+
+	* src/autofit/aflatin2.c (af_latin2_writing_system_class): New
+	writing system.
+	(af_latin2_uniranges): Renamed to...
+	(af_ltn2_uniranges): This.
+	Synchronize ranges with `latin'.
+	(af_latin2_script_class): Reduced and renamed to...
+	(af_ltn2_script_class): This.
+	* src/autofit/aflatin2.h: Updated.
+
+2013-07-30  Werner Lemberg  <wl@gnu.org>
+
 	[autofit] Variable renaming.
 
 	* src/autofit/aftypes.h (AF_ScriptMetricsRec):

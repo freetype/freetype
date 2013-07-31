@@ -43,10 +43,10 @@
   }
 
 
-  AF_DEFINE_SCRIPT_CLASS( af_dummy_script_class,
-    AF_SCRIPT_DUMMY,
-    NULL,
-    0,
+  AF_DEFINE_WRITING_SYSTEM_CLASS(
+    af_dummy_writing_system_class,
+
+    AF_WRITING_SYSTEM_DUMMY,
 
     sizeof ( AF_ScriptMetricsRec ),
 
@@ -56,6 +56,17 @@
 
     (AF_Script_InitHintsFunc)   af_dummy_hints_init,
     (AF_Script_ApplyHintsFunc)  af_dummy_hints_apply
+  )
+
+
+  AF_DEFINE_SCRIPT_CLASS(
+    af_dflt_script_class,
+
+    AF_SCRIPT_DFLT,
+    AF_WRITING_SYSTEM_DUMMY,
+
+    NULL,
+    '\0'
   )
 
 
