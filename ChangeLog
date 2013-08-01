@@ -1,3 +1,32 @@
+2013-08-01  Werner Lemberg  <wl@gnu.org>
+
+	Another round of cppcheck nitpicks.
+
+	The call was (from the top-level of the FreeType tree):
+
+	  cppcheck --force \
+	           --enable=all \
+	           -I /usr/include \
+	           -I /usr/local/include \
+	           -I /usr/lib/gcc/i586-suse-linux/4.7/include \
+	           -I include \
+	           -I include/freetype \
+	           -I include/freetype/config \
+	           -I include/freetype/internal \
+	           -DFT2_BUILD_LIBRARY \
+	           . &> cppcheck.log
+
+	using cppcheck git commit f7e93f99.
+
+	Note that cppcheck still can't handle `#include FOO' (with `FOO' a
+	macro).
+
+	*/* Improve variable scopes.
+	*/* Remove redundant initializations which get overwritten.
+
+	* src/gxvalid/*: Comment out redundant code or guard it with
+	FT_DEBUG_LEVEL_TRACE.
+
 2013-07-30  Werner Lemberg  <wl@gnu.org>
 
 	[autofit] Introduce `writing systems'.
@@ -723,7 +752,7 @@
 	*/* Improve variable scopes.
 	*/* Remove redundant initializations which get overwritten.
 
-	* src/base/ftmac.c ,builds/mac/ftmac.c (count_faces_scalable):
+	* src/base/ftmac.c, builds/mac/ftmac.c (count_faces_scalable):
 	Remove unused variable.
 
 	* src/base/ftdbgmem.c (ft_mem_table_destroy): `table' can't be zero.

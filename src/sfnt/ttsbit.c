@@ -46,7 +46,7 @@
   tt_face_load_sbit( TT_Face    face,
                      FT_Stream  stream )
   {
-    FT_Error  error = FT_Err_Ok;
+    FT_Error  error;
     FT_ULong  table_size;
 
 
@@ -260,7 +260,7 @@
         TT_HoriHeader  *hori;
         FT_ULong        table_size;
 
-        FT_Error  error = FT_Err_Ok;
+        FT_Error  error;
         FT_Byte*  p;
 
 
@@ -1224,7 +1224,7 @@
     FT_Tag      graphicType;
     FT_Int      recurse_depth = 0;
 
-    FT_Error  error = FT_Err_Ok;
+    FT_Error  error;
     FT_Byte*  p;
 
     FT_UNUSED( map );

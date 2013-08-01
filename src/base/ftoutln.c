@@ -576,11 +576,13 @@
       {
         char*  p = outline->tags + first;
         char*  q = outline->tags + last;
-        char   swap;
 
 
         while ( p < q )
         {
+          char  swap;
+
+
           swap = *p;
           *p   = *q;
           *q   = swap;
