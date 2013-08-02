@@ -42,9 +42,9 @@ FT_BEGIN_HEADER
 
   /* index of fallback script in `af_script_classes' */
 #ifdef AF_CONFIG_OPTION_CJK
-#define AF_SCRIPT_FALLBACK  2  /* hani */
+#define AF_SCRIPT_FALLBACK  AF_SCRIPT_HANI
 #else
-#define AF_SCRIPT_FALLBACK  0  /* dflt */
+#define AF_SCRIPT_FALLBACK  AF_SCRIPT_DFLT
 #endif
   /* a bit mask indicating an uncovered glyph        */
 #define AF_SCRIPT_NONE      0x7F

@@ -100,14 +100,12 @@
     for ( ss = 0; ss < AF_WRITING_SYSTEM_MAX - 1; ss++ )
       container->af_writing_system_classes[ss] =
         &container->af_writing_system_classes_rec[ss];
-    container->af_writing_system_classes
-      [AF_WRITING_SYSTEM_MAX - 1] = NULL;
+    container->af_writing_system_classes[AF_WRITING_SYSTEM_MAX - 1] = NULL;
 
-    for ( ss = 0; ss < AF_SCRIPT_CLASSES_REC_COUNT; ss++ )
+    for ( ss = 0; ss < AF_SCRIPT_MAX - 1; ss++ )
       container->af_script_classes[ss] =
         &container->af_script_classes_rec[ss];
-    container->af_script_classes
-      [AF_SCRIPT_CLASSES_COUNT - 1] = NULL;
+    container->af_script_classes[AF_SCRIPT_MAX - 1] = NULL;
 
 #undef  WRITING_SYSTEM
 #define WRITING_SYSTEM( ws, WS )                             \
@@ -115,22 +113,15 @@
           &container->af_writing_system_classes_rec[ss++] );
 
     ss = 0;
-
 #include "afwrtsys.h"
 
+#undef  SCRIPT
+#define SCRIPT( s, S )                               \
+        FT_Init_Class_af_ ## s ## _script_class(     \
+          &container->af_script_classes_rec[ss++] );
+
     ss = 0;
-    FT_Init_Class_af_dflt_script_class(
-      &container->af_script_classes_rec[ss++] );
-    FT_Init_Class_af_latn_script_class(
-      &container->af_script_classes_rec[ss++] );
-    FT_Init_Class_af_hani_script_class(
-      &container->af_script_classes_rec[ss++] );
-    FT_Init_Class_af_deva_script_class(
-      &container->af_script_classes_rec[ss++] );
-#ifdef FT_OPTION_AUTOFIT2
-    FT_Init_Class_af_ltn2_script_class(
-      &container->af_script_classes_rec[ss++] );
-#endif
+#include "afscript.h"
 
     FT_Init_Class_af_autofitter_interface(
       library, &container->af_autofitter_interface );

@@ -41,15 +41,6 @@ FT_BEGIN_HEADER
 
 #include "aftypes.h"
 
-#ifdef FT_OPTION_AUTOFIT2
-#define AF_SCRIPT_CLASSES_COUNT          6
-#else
-#define AF_SCRIPT_CLASSES_COUNT          5
-#endif
-
-#define AF_SCRIPT_CLASSES_REC_COUNT  \
-          ( AF_SCRIPT_CLASSES_COUNT - 1 )
-
 
   typedef struct  AFModulePIC_
   {
@@ -62,9 +53,9 @@ FT_BEGIN_HEADER
                                   [AF_WRITING_SYSTEM_MAX - 1];
 
     AF_ScriptClass              af_script_classes
-                                  [AF_SCRIPT_CLASSES_COUNT];
+                                  [AF_SCRIPT_MAX];
     AF_ScriptClassRec           af_script_classes_rec
-                                  [AF_SCRIPT_CLASSES_REC_COUNT];
+                                  [AF_SCRIPT_MAX - 1];
 
     FT_AutoHinter_InterfaceRec  af_autofitter_interface;
 

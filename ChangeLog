@@ -1,5 +1,30 @@
 2013-08-02  Werner Lemberg  <wl@gnu.org>
 
+	[autofit] Move declaration of scripts into separate file.
+
+	This has the benefit that we don't need to duplicate the data at
+	different places.
+
+	* src/autofit/afscript.h: New file.
+
+	* src/autofit/aftypes.h (AF_Script): Include `afscript.h' to define
+	the enumeration values.
+
+	* src/autofit/afglobal.c: Include `afscript.h' to get the script
+	specific header files.
+	(af_script_classes): Include `afscript.h' to fill this array.
+
+	* src/autofit/afpic.c: Include `afscript.h' to get the script
+	specific header files.
+	(autofit_module_class_pic_init): Include `afscript.h' for
+	initialization.
+	* src/autofit/afpic.h (AF_SCRIPT_CLASSES_COUNT,
+	AF_SCRIPT_CLASSES_REC_COUNT): Removed.  Use `AF_SCRIPT_MAX' instead.
+
+	* src/autofit/rules.mk (AUTOF_DRV_H): Updated.
+
+2013-08-02  Werner Lemberg  <wl@gnu.org>
+
 	[autofit] Move declaration of writing systems into separate file.
 
 	This has the benefit that we don't need to duplicate the data at

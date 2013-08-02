@@ -322,19 +322,15 @@ extern void*  _af_debug_hints;
    *  We use four-letter script tags from the OpenType specification.
    */
 
+#undef  SCRIPT
+#define SCRIPT(s, S ) \
+          AF_SCRIPT_ ## S,
+
   /* The list of known scripts. */
   typedef enum  AF_Script_
   {
-    AF_SCRIPT_DFLT = 0,
-    AF_SCRIPT_LATN = 1,
-    AF_SCRIPT_HANI = 2,
-    AF_SCRIPT_DEVA = 3,
-#ifdef FT_OPTION_AUTOFIT2
-    AF_SCRIPT_LTN2 = 4,
-#endif
 
-    /* Add new scripts here.  Don't forget to update */
-    /* the list in `afglobal.c'.                     */
+#include "afscript.h"
 
     AF_SCRIPT_MAX   /* do not remove */
 

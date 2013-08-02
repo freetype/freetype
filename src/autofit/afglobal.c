@@ -50,20 +50,16 @@
   };
 
 
-  /* when updating this table, don't forget to update          */
-  /* AF_SCRIPT_CLASSES_COUNT and autofit_module_class_pic_init */
+#undef  SCRIPT
+#define SCRIPT( s, S )                \
+          &af_ ## s ## _script_class,
 
-  /* populate this list when you add new scripts */
   FT_LOCAL_ARRAY_DEF( AF_ScriptClass )
   af_script_classes[] =
   {
-    &af_dflt_script_class, /* XXX */
-    &af_latn_script_class,
-    &af_hani_script_class,
-    &af_deva_script_class,
-#ifdef FT_OPTION_AUTOFIT2
-    &af_ltn2_script_class,
-#endif
+
+#include "afscript.h"
+
     NULL  /* do not remove */
   };
 

@@ -3,7 +3,7 @@
 #
 
 
-# Copyright 2003, 2004, 2005, 2006, 2007, 2011 by
+# Copyright 2003-2007, 2011, 2013 by
 # David Turner, Robert Wilhelm, and Werner Lemberg.
 #
 # This file is part of the FreeType project, and may only be used, modified,
@@ -41,7 +41,9 @@ AUTOF_DRV_SRC := $(AUTOF_DIR)/afangles.c \
 #
 AUTOF_DRV_H := $(AUTOF_DRV_SRC:%c=%h)  \
                $(AUTOF_DIR)/aferrors.h \
-               $(AUTOF_DIR)/aftypes.h
+               $(AUTOF_DIR)/afscript.h \
+               $(AUTOF_DIR)/aftypes.h  \
+               $(AUTOF_DIR)/afwrtsys.h
 
 
 # AUTOF driver object(s)
