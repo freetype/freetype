@@ -1,5 +1,12 @@
 2013-08-02  Werner Lemberg  <wl@gnu.org>
 
+	* include/freetype/ftcffdrv.h: Improve documentation.
+	This is based on blog entries from David Lemon and Dave Arnold (both
+	from Adobe) with kind permission.  Dave also helped in
+	proof-reading.
+
+2013-08-02  Werner Lemberg  <wl@gnu.org>
+
 	[autofit] Move declaration of scripts into separate file.
 
 	This has the benefit that we don't need to duplicate the data at
