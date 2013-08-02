@@ -24,11 +24,6 @@
 #include "afwrtsys.h"
 
 #include "aferrors.h"
-
-#ifdef FT_OPTION_AUTOFIT2
-#include "aflatin2.h"
-#endif
-
 #include "afpic.h"
 
 #ifndef FT_CONFIG_OPTION_PIC
