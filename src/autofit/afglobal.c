@@ -17,11 +17,11 @@
 
 
 #include "afglobal.h"
-#include "afdummy.h"
-#include "aflatin.h"
-#include "afcjk.h"
-#include "afindic.h"
-#include "afpic.h"
+
+  /* get writing system specific header files */
+#undef  WRITING_SYSTEM
+#define WRITING_SYSTEM( ws, WS )  /* empty */
+#include "afwrtsys.h"
 
 #include "aferrors.h"
 
@@ -29,22 +29,23 @@
 #include "aflatin2.h"
 #endif
 
+#include "afpic.h"
+
 #ifndef FT_CONFIG_OPTION_PIC
 
   /* when updating this table, don't forget to update                  */
   /* AF_WRITING_SYSTEM_CLASSES_COUNT and autofit_module_class_pic_init */
 
-  /* populate this list when you add new writing systems */
+#undef  WRITING_SYSTEM
+#define WRITING_SYSTEM( ws, WS )               \
+          &af_ ## ws ## _writing_system_class,
+
   FT_LOCAL_ARRAY_DEF( AF_WritingSystemClass )
   af_writing_system_classes[] =
   {
-    &af_dummy_writing_system_class,
-    &af_latin_writing_system_class,
-    &af_cjk_writing_system_class,
-    &af_indic_writing_system_class,
-#ifdef FT_OPTION_AUTOFIT2
-    &af_latin2_writing_system_class,
-#endif
+
+#include "afwrtsys.h"
+
     NULL  /* do not remove */
   };
 

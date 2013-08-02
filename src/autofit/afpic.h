@@ -41,20 +41,14 @@ FT_BEGIN_HEADER
 
 #include "aftypes.h"
 
-  /* increase these when you add new scripts or writing systems, */
-  /* and update autofit_module_class_pic_init                    */
 #ifdef FT_OPTION_AUTOFIT2
-#define AF_WRITING_SYSTEM_CLASSES_COUNT  6
 #define AF_SCRIPT_CLASSES_COUNT          6
 #else
-#define AF_WRITING_SYSTEM_CLASSES_COUNT  5
 #define AF_SCRIPT_CLASSES_COUNT          5
 #endif
 
 #define AF_SCRIPT_CLASSES_REC_COUNT  \
           ( AF_SCRIPT_CLASSES_COUNT - 1 )
-#define AF_WRITING_SYSTEM_CLASSES_REC_COUNT  \
-          ( AF_WRITING_SYSTEM_CLASSES_COUNT - 1 )
 
 
   typedef struct  AFModulePIC_
@@ -63,9 +57,9 @@ FT_BEGIN_HEADER
     FT_Service_PropertiesRec    af_service_properties;
 
     AF_WritingSystemClass       af_writing_system_classes
-                                  [AF_WRITING_SYSTEM_CLASSES_COUNT];
+                                  [AF_WRITING_SYSTEM_MAX];
     AF_WritingSystemClassRec    af_writing_system_classes_rec
-                                  [AF_WRITING_SYSTEM_CLASSES_REC_COUNT];
+                                  [AF_WRITING_SYSTEM_MAX - 1];
 
     AF_ScriptClass              af_script_classes
                                   [AF_SCRIPT_CLASSES_COUNT];

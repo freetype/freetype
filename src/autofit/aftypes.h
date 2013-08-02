@@ -273,23 +273,22 @@ extern void*  _af_debug_hints;
    *    outline according to the results of the glyph analyzer.
    */
 
+#define __AFWRTSYS_H__  /* don't load header files */
+#undef  WRITING_SYSTEM
+#define WRITING_SYSTEM( ws, WS )    \
+          AF_WRITING_SYSTEM_ ## WS,
+
   /* The list of known writing systems. */
   typedef enum  AF_WritingSystem_
   {
-    AF_WRITING_SYSTEM_DUMMY = 0,
-    AF_WRITING_SYSTEM_LATIN = 1,
-    AF_WRITING_SYSTEM_CJK   = 2,
-    AF_WRITING_SYSTEM_INDIC = 3,
-#ifdef FT_OPTION_AUTOFIT2
-    AF_WRITING_SYSTEM_LATIN2 = 4,
-#endif
 
-    /* Add new writing systems here.  Don't forget to update */
-    /* the list in `afglobal.c'.                             */
+#include "afwrtsys.h"
 
     AF_WRITING_SYSTEM_MAX   /* do not remove */
 
   } AF_WritingSystem;
+
+#undef  __AFWRTSYS_H__
 
 
   typedef struct  AF_WritingSystemClassRec_

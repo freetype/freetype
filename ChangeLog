@@ -1,5 +1,31 @@
 2013-08-02  Werner Lemberg  <wl@gnu.org>
 
+	[autofit] Move declaration of writing systems into separate file.
+
+	This has the benefit that we don't need to duplicate the data at
+	different places.
+
+	* src/autofit/afwrtsys.h: New file.
+
+	* src/autofit/aftypes.h (AF_WritingSystem): Include `afwrtsys.h' to
+	define the enumeration values.
+
+	* src/autofit/afglobal.c: Include `afwrtsys.h' to get the writing
+	system specific header files.
+	Include `afpic.h'.
+	(af_writing_system_classes): Include `afwrtsys.h' to fill this
+	array.
+
+	* src/autofit/afpic.c: Include `afwrtsys.h' to get the writing
+	system specific header files.
+	(autofit_module_class_pic_init): Include `afwrtsys.h' for
+	initialization.
+	* src/autofit/afpic.h (AF_WRITING_SYSTEM_CLASSES_COUNT,
+	AF_WRITING_SYSTEM_CLASSES_REC_COUNT): Removed.  Use
+	`AF_WRITING_SYSTEM_MAX' instead.
+
+2013-08-02  Werner Lemberg  <wl@gnu.org>
+
 	[sfnt] Fix compilation with g++.
 
 	* src/sfnt/pngshim.c (error_callback, read_data_from_FT_stream): Use
