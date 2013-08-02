@@ -122,7 +122,7 @@
   error_callback( png_structp      png,
                   png_const_charp  error_msg )
   {
-    FT_Error*  error = png_get_error_ptr( png );
+    FT_Error*  error = (FT_Error*)png_get_error_ptr( png );
 
     FT_UNUSED( error_msg );
 
@@ -159,7 +159,7 @@
 
     if ( FT_FRAME_ENTER( length ) )
     {
-      FT_Error*  e = png_get_error_ptr( png );
+      FT_Error*  e = (FT_Error*)png_get_error_ptr( png );
 
 
       *e = FT_THROW( Invalid_Stream_Read );
@@ -195,7 +195,7 @@
 
     int         bitdepth, color_type, interlace;
     FT_Int      i;
-    png_byte*  *rows;
+    png_byte*  *rows = NULL; /* pacify compiler */
 
 
     if ( x_offset < 0 ||

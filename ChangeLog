@@ -1,3 +1,11 @@
+2013-08-02  Werner Lemberg  <wl@gnu.org>
+
+	[sfnt] Fix compilation with g++.
+
+	* src/sfnt/pngshim.c (error_callback, read_data_from_FT_stream): Use
+	cast.
+	(Load_SBit_Png): Pacify compiler.
+
 2013-08-02  suzuki toshiya  <mpsuzuki@hiroshima-u.ac.jp>
             Werner Lemberg  <wl@gnu.org>
 
