@@ -35,7 +35,8 @@
   /* AF_WRITING_SYSTEM_CLASSES_COUNT and autofit_module_class_pic_init */
 
   /* populate this list when you add new writing systems */
-  static AF_WritingSystemClass const  af_writing_system_classes[] =
+  FT_LOCAL_ARRAY_DEF( AF_WritingSystemClass )
+  af_writing_system_classes[] =
   {
     &af_dummy_writing_system_class,
     &af_latin_writing_system_class,
@@ -52,7 +53,8 @@
   /* AF_SCRIPT_CLASSES_COUNT and autofit_module_class_pic_init */
 
   /* populate this list when you add new scripts */
-  static AF_ScriptClass const  af_script_classes[] =
+  FT_LOCAL_ARRAY_DEF( AF_ScriptClass )
+  af_script_classes[] =
   {
     &af_dflt_script_class, /* XXX */
     &af_latn_script_class,

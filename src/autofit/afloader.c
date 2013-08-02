@@ -21,6 +21,7 @@
 #include "afhints.h"
 #include "aferrors.h"
 #include "afmodule.h"
+#include "afpic.h"
 
 
   /* Initialize glyph loader. */

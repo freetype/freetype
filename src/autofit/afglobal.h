@@ -28,6 +28,13 @@
 FT_BEGIN_HEADER
 
 
+  FT_LOCAL_ARRAY( AF_WritingSystemClass )
+  af_writing_system_classes[];
+
+  FT_LOCAL_ARRAY( AF_ScriptClass )
+  af_script_classes[];
+
+
   /*
    *  Default values and flags for both autofitter globals (found in
    *  AF_ModuleRec) and face globals (in AF_FaceGlobalsRec).

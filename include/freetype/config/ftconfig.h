@@ -555,6 +555,9 @@ FT_BEGIN_HEADER
 
 #endif /* FT_MAKE_OPTION_SINGLE_OBJECT */
 
+#define FT_LOCAL_ARRAY( x )      extern const  x
+#define FT_LOCAL_ARRAY_DEF( x )  const  x
+
 
 #ifndef FT_BASE
 
