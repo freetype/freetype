@@ -1,5 +1,13 @@
 2013-08-05  Werner Lemberg  <wl@gnu.org>
 
+	Fix gcc pragmas.
+
+	* src/truetype/ttinterp.c (TT_MulFix14_long_long,
+	TT_DotFix14_long_long): Older gcc versions don't accept diagnostic
+	pragmas within a function body.
+
+2013-08-05  Werner Lemberg  <wl@gnu.org>
+
 	Fix Savannah bug #39700.
 
 	* builds/unix/ftconfig.h: Synchronize with
