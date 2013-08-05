@@ -772,13 +772,13 @@
 
               while ( point_ != first )
               {
-                AF_Point  prev_  = point_->prev;
+                AF_Point  prev_ = point_->prev;
 
                 FT_Pos  in_x_ = point_->fx - prev_->fx;
                 FT_Pos  in_y_ = point_->fy - prev_->fy;
 
 
-                if ( FT_ABS( in_x_ ) + FT_ABS( in_y_) >= near_limit )
+                if ( FT_ABS( in_x_ ) + FT_ABS( in_y_ ) >= near_limit )
                 {
                   last_good_in_x = in_x_;
                   last_good_in_y = in_y_;
@@ -828,8 +828,8 @@
           {
             if ( point->out_dir != AF_DIR_NONE )
             {
-              /* current point lies on a horizontal or   */
-              /* vertical segment (but doesn't start it) */
+              /* current point lies on a horizontal or          */
+              /* vertical segment (but doesn't start or end it) */
               goto Is_Weak_Point;
             }
 
