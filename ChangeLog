@@ -1,5 +1,16 @@
 2013-08-05  Werner Lemberg  <wl@gnu.org>
 
+	Fix Savannah bug #39700.
+
+	* builds/unix/ftconfig.h: Synchronize with
+	`include/freetype/config/ftconfig.h'.
+
+	* builds/vms/ftconfig.h: Ditto.
+	Make the differences to the master `ftconfig.h' file as small as
+	possible for easier maintainance.
+
+2013-08-05  Werner Lemberg  <wl@gnu.org>
+
 	[autofit] Improve handling of `near' points.
 
 	Points which are very near to each other are now marked as such.

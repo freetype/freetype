@@ -293,13 +293,15 @@ FT_BEGIN_HEADER
 
   /* FT_LONG64 must be defined if a 64-bit type is available */
 #define FT_LONG64
-#define FT_INT64  long
+#define FT_INT64   long
+#define FT_UINT64  unsigned long
 
 #elif defined( _MSC_VER ) && _MSC_VER >= 900  /* Visual C++ (and Intel C++) */
 
   /* this compiler provides the __int64 type */
 #define FT_LONG64
-#define FT_INT64  __int64
+#define FT_INT64   __int64
+#define FT_UINT64  unsigned __int64
 
 #elif defined( __BORLANDC__ )  /* Borland C++ */
 
@@ -308,7 +310,8 @@ FT_BEGIN_HEADER
 
   /* this compiler provides the __int64 type */
 #define FT_LONG64
-#define FT_INT64  __int64
+#define FT_INT64   __int64
+#define FT_UINT64  unsigned __int64
 
 #elif defined( __WATCOMC__ )   /* Watcom C++ */
 
@@ -317,13 +320,15 @@ FT_BEGIN_HEADER
 #elif defined( __MWERKS__ )    /* Metrowerks CodeWarrior */
 
 #define FT_LONG64
-#define FT_INT64  long long int
+#define FT_INT64   long long int
+#define FT_UINT64  unsigned long long int
 
 #elif defined( __GNUC__ )
 
   /* GCC provides the `long long' type */
 #define FT_LONG64
-#define FT_INT64  long long int
+#define FT_INT64   long long int
+#define FT_UINT64  unsigned long long int
 
 #endif /* FT_SIZEOF_LONG == 8 */
 
@@ -397,7 +402,7 @@ FT_BEGIN_HEADER
 #ifdef __GNUC__
 
 #if defined( __arm__ )                                 && \
-    ( defined( __thumb2__ ) || !defined( __thumb__ ) ) && \
+    ( !defined( __thumb__ ) || defined( __thumb2__ ) ) && \
     !( defined( __CC_ARM ) || defined( __ARMCC__ ) )
 
 #define FT_MULFIX_ASSEMBLER  FT_MulFix_arm
@@ -582,6 +587,9 @@ FT_BEGIN_HEADER
 #endif
 
 #endif /* FT_MAKE_OPTION_SINGLE_OBJECT */
+
+#define FT_LOCAL_ARRAY( x )      extern const  x
+#define FT_LOCAL_ARRAY_DEF( x )  const  x
 
 
 #ifndef FT_BASE
