@@ -946,7 +946,7 @@
 
 
     /* We approximate the Euclidean metric (sqrt(x^2 + y^2)) with */
-    /* the Taxicab metric (x + y), which can be computed much     */
+    /* the Taxicab metric (|x| + |y|), which can be computed much */
     /* faster.  If one of the two vectors is much longer than the */
     /* other one, the direction of the shorter vector doesn't     */
     /* influence the result any more.                             */
