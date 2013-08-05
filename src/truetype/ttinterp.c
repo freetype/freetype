@@ -1495,7 +1495,9 @@
 #define TT_MulFix14  TT_MulFix14_long_long
 
   /* Temporarily disable the warning that C90 doesn't support `long long'. */
+#if ( __GNUC__ * 100 + __GNUC_MINOR__ ) >= 406
 #pragma GCC diagnostic push
+#endif
 #pragma GCC diagnostic ignored "-Wlong-long"
 
   /* This is declared `noinline' because inlining the function results */
@@ -1520,7 +1522,9 @@
     return (FT_Int32)( ret >> 14 );
   }
 
+#if ( __GNUC__ * 100 + __GNUC_MINOR__ ) >= 406
 #pragma GCC diagnostic pop
+#endif
 
 #endif /* __GNUC__ && ( __i386__ || __x86_64__ ) */
 
@@ -1571,7 +1575,9 @@
 
 #define TT_DotFix14  TT_DotFix14_long_long
 
+#if ( __GNUC__ * 100 + __GNUC_MINOR__ ) >= 406
 #pragma GCC diagnostic push
+#endif
 #pragma GCC diagnostic ignored "-Wlong-long"
 
   static __attribute__(( pure )) FT_Int32
@@ -1595,7 +1601,9 @@
 
   }
 
+#if ( __GNUC__ * 100 + __GNUC_MINOR__ ) >= 406
 #pragma GCC diagnostic pop
+#endif
 
 #endif /* __GNUC__ && (__arm__ || __i386__ || __x86_64__) */
 

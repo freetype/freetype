@@ -1,5 +1,13 @@
 2013-08-05  Werner Lemberg  <wl@gnu.org>
 
+	Fix gcc pragmas, part 2.
+
+	* src/truetype/ttinterp.c (TT_MulFix14_long_long,
+	TT_DotFix14_long_long): `#pragma gcc diagnostic {push,pop}' has been
+	introduced with gcc version 4.6.
+
+2013-08-05  Werner Lemberg  <wl@gnu.org>
+
 	Fix gcc pragmas.
 
 	* src/truetype/ttinterp.c (TT_MulFix14_long_long,
