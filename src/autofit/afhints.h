@@ -236,7 +236,10 @@ FT_BEGIN_HEADER
     AF_FLAG_WEAK_INTERPOLATION = 1 << 8,
 
     /* all inflection points in the outline have this flag set */
-    AF_FLAG_INFLECTION = 1 << 9
+    AF_FLAG_INFLECTION = 1 << 9,
+
+    /* the current point is very near to another one */
+    AF_FLAG_NEAR = 1 << 10
 
   } AF_Flags;
 

@@ -1,3 +1,24 @@
+2013-08-05  Werner Lemberg  <wl@gnu.org>
+
+	[autofit] Improve handling of `near' points.
+
+	Points which are very near to each other are now marked as such.
+	The `weak' flag is then computed by using the `in' vector of the
+	first and the `out' vector of the last point of a group of near
+	points.
+
+	For example, this fixes the rendering of glyph `Oslash' in
+	`Roboto-Thin.ttf'.
+
+	* src/autofit/afhints.h (AF_Flags): New value `AF_FLAGS_NEAR'.
+
+	* src/autofit/afhints.c (af_glyph_hints_reload): Introduce
+	the heuristic value `near_limit' to decide whether the current point
+	is near to the previous one, then set `AF_FLAG_NEAR' accordingly.
+	Store good `in' vector (of last non-near point) in
+	`last_good_in_{x,y}' and use it as an argument to
+	`ft_corner_is_flat' if necessary.
+
 2013-08-02  Werner Lemberg  <wl@gnu.org>
 
 	* include/freetype/ftcffdrv.h: Improve documentation.

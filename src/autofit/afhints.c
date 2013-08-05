@@ -740,6 +740,12 @@
         FT_Pos        in_y   = 0;
         AF_Direction  in_dir = AF_DIR_NONE;
 
+        FT_Pos  last_good_in_x = 0;
+        FT_Pos  last_good_in_y = 0;
+
+        FT_UInt  units_per_em = hints->metrics->scaler.face->units_per_EM;
+        FT_Int   near_limit   = 20 * units_per_em / 2048;
+
 
         for ( point = points; point < point_limit; point++ )
         {
@@ -749,14 +755,58 @@
 
           if ( point == first )
           {
-            prev   = first->prev;
-            in_x   = first->fx - prev->fx;
-            in_y   = first->fy - prev->fy;
+            prev = first->prev;
+
+            in_x = first->fx - prev->fx;
+            in_y = first->fy - prev->fy;
+
+            last_good_in_x = in_x;
+            last_good_in_y = in_y;
+
+            if ( FT_ABS( in_x ) + FT_ABS( in_y ) < near_limit )
+            {
+              /* search first non-near point to get a good `in_dir' value */
+
+              AF_Point  point_ = prev;
+
+
+              while ( point_ != first )
+              {
+                AF_Point  prev_  = point_->prev;
+
+                FT_Pos  in_x_ = point_->fx - prev_->fx;
+                FT_Pos  in_y_ = point_->fy - prev_->fy;
+
+
+                if ( FT_ABS( in_x_ ) + FT_ABS( in_y_) >= near_limit )
+                {
+                  last_good_in_x = in_x_;
+                  last_good_in_y = in_y_;
+
+                  break;
+                }
+
+                point_ = prev_;
+              }
+            }
+
             in_dir = af_direction_compute( in_x, in_y );
             first  = prev + 1;
           }
 
           point->in_dir = (FT_Char)in_dir;
+
+          /* check whether the current point is near to the previous one */
+          /* (value 20 in `near_limit' is heuristic; we use Taxicab      */
+          /* metrics for the test)                                       */
+
+          if ( FT_ABS( in_x ) + FT_ABS( in_y ) < near_limit )
+            point->flags |= AF_FLAG_NEAR;
+          else
+          {
+            last_good_in_x = in_x;
+            last_good_in_y = in_y;
+          }
 
           next  = point->next;
           out_x = next->fx - point->fx;
@@ -765,23 +815,43 @@
           in_dir         = af_direction_compute( out_x, out_y );
           point->out_dir = (FT_Char)in_dir;
 
-          /* check for weak points */
+          /* Check for weak points.  The remaining points not collected */
+          /* in edges are then implicitly classified as strong points.  */
 
           if ( point->flags & AF_FLAG_CONTROL )
           {
+            /* control points are always weak */
           Is_Weak_Point:
             point->flags |= AF_FLAG_WEAK_INTERPOLATION;
           }
           else if ( point->out_dir == point->in_dir )
           {
             if ( point->out_dir != AF_DIR_NONE )
+            {
+              /* current point lies on a horizontal or   */
+              /* vertical segment (but doesn't start it) */
               goto Is_Weak_Point;
+            }
 
-            if ( ft_corner_is_flat( in_x, in_y, out_x, out_y ) )
+            /* test whether `in' and `out' direction is approximately */
+            /* the same (and use the last good `in' vector in case    */
+            /* the current point is near to the previous one)         */
+            if ( ft_corner_is_flat(
+                   point->flags & AF_FLAG_NEAR ? last_good_in_x : in_x,
+                   point->flags & AF_FLAG_NEAR ? last_good_in_y : in_y,
+                   out_x,
+                   out_y ) )
+            {
+              /* current point lies on a straight, diagonal line */
+              /* (more or less)                                  */
               goto Is_Weak_Point;
+            }
           }
           else if ( point->in_dir == -point->out_dir )
+          {
+            /* current point forms a spike */
             goto Is_Weak_Point;
+          }
 
           in_x = out_x;
           in_y = out_y;
