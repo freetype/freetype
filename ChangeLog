@@ -1,3 +1,12 @@
+2013-08-06  John Tytgat  <John.Tytgat@esko.com>
+
+	Fix Savannah bug #39702.
+
+	* src/cff/cffload.c (cff_index_get_pointers): Check for `cur_offset
+	!= 0'; this stronger test is mandated by the CFF specification.
+	Fix test for INDEX structures which have one or more empty entries
+	at the end.
+
 2013-08-05  Werner Lemberg  <wl@gnu.org>
 
 	Fix gcc pragmas, part 2.
