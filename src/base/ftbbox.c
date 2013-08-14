@@ -216,25 +216,16 @@
 
 #if 0
 
-  static void
-  BBox_Cubic_Check( FT_Pos   p1,
-                    FT_Pos   p2,
-                    FT_Pos   p3,
-                    FT_Pos   p4,
-                    FT_Pos*  min,
-                    FT_Pos*  max )
+  static FT_Pos
+  update_max( FT_Pos   q1,
+              FT_Pos   q2,
+              FT_Pos   q3,
+              FT_Pos   q4,
+              FT_Pos   max )
   {
-    FT_Pos  q1, q2, q3, q4;
-
-
-    q1 = p1;
-    q2 = p2;
-    q3 = p3;
-    q4 = p4;
-
     /* for a conic segment to possibly reach new maximum     */
     /* one of its off-points must be above the current value */
-    while ( q2 > *max || q3 > *max )
+    while ( q2 > max || q3 > max )
     {
       /* determine which half contains the maximum and split */
       if ( q1 + q2 > q3 + q4 ) /* first half */
@@ -263,61 +254,31 @@
       /* check if either end reached the maximum */
       if ( q1 == q2 && q1 >= q3 )
       {
-        *max = q1;
+        max = q1;
         break;
       }
       if ( q3 == q4 && q2 <= q4 )
       {
-        *max = q4;
+        max = q4;
         break;
       }
     }
 
-    q1 = p1;
-    q2 = p2;
-    q3 = p3;
-    q4 = p4;
+    return max;
+  }
 
-    /* for a conic segment to possibly reach new minimum     */
-    /* one of its off-points must be below the current value */
-    while ( q2 < *min || q3 < *min )
-    {
-      /* determine which half contains the minimum and split */
-      if ( q1 + q2 < q3 + q4 ) /* first half */
-      {
-        q4 = q4 + q3;
-        q3 = q3 + q2;
-        q2 = q2 + q1;
-        q4 = q4 + q3;
-        q3 = q3 + q2;
-        q4 = ( q4 + q3 ) / 8;
-        q3 = q3 / 4;
-        q2 = q2 / 2;
-      }
-      else                     /* second half */
-      {
-        q1 = q1 + q2;
-        q2 = q2 + q3;
-        q3 = q3 + q4;
-        q1 = q1 + q2;
-        q2 = q2 + q3;
-        q1 = ( q1 + q2 ) / 8;
-        q2 = q2 / 4;
-        q3 = q3 / 2;
-      }
+  static void
+  BBox_Cubic_Check( FT_Pos   p1,
+                    FT_Pos   p2,
+                    FT_Pos   p3,
+                    FT_Pos   p4,
+                    FT_Pos*  min,
+                    FT_Pos*  max )
+  {
+    *max =  update_max(  p1,  p2,  p3,  p4,  *max ); 
 
-      /* check if either end reached the minimum */
-      if ( q1 == q2 && q1 <= q3 )
-      {
-        *min = q1;
-        break;
-      }
-      if ( q3 == q4 && q2 >= q4 )
-      {
-        *min = q4;
-        break;
-      }
-    }
+    /* now flip the signs to update the minimum */
+    *min = -update_max( -p1, -p2, -p3, -p4, -*min ); 
   }
 
 #else
