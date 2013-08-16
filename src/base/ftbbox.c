@@ -275,10 +275,62 @@
                     FT_Pos*  min,
                     FT_Pos*  max )
   {
-    *max =  update_max(  p1,  p2,  p3,  p4,  *max ); 
+    FT_Pos nmin, nmax;
+    FT_Int shift;
+
+    /* This implementation relies on iterative bisection of the segment. */
+    /* The fixed-point arithmentic of bisection is inherently stable but */
+    /* may loose accuracy in the two lowest bits. To compensate, we      */
+    /* upscale the segment if there is room. Large values may need to be */
+    /* downscaled to avoid overflows during bisection bisection. This    */
+    /* function is only called when a control off-point is outside the   */
+    /* the bbox and, thus, has the top absolute value among arguments.   */
+
+    shift = 27 - FT_MSB( FT_ABS( p2 ) | FT_ABS( p3 ) );
+
+    if ( shift > 0 )
+    {
+      /* upscaling too much just wastes time */
+      if ( shift > 2 )
+        shift = 2;
+  
+      p1 <<=  shift;
+      p2 <<=  shift;
+      p3 <<=  shift;
+      p4 <<=  shift;
+      nmin = *min << shift;
+      nmax = *max << shift;
+    }
+    else 
+    {
+      p1 >>= -shift;
+      p2 >>= -shift;
+      p3 >>= -shift;
+      p4 >>= -shift;
+      nmin = *min >> -shift;
+      nmax = *max >> -shift;
+    }
+
+    nmax =  update_max(  p1,  p2,  p3,  p4,  nmax ); 
 
     /* now flip the signs to update the minimum */
-    *min = -update_max( -p1, -p2, -p3, -p4, -*min ); 
+    nmin = -update_max( -p1, -p2, -p3, -p4, -nmin );
+
+    if ( shift > 0 )
+    {
+      nmin >>=  shift;
+      nmax >>=  shift;
+    }
+    else
+    {
+      nmin <<= -shift;
+      nmax <<= -shift;
+    }
+
+    if ( nmin < *min )
+      *min = nmin;
+    if ( nmax > *max )
+      *max = nmax;
   }
 
 #else
@@ -482,8 +534,9 @@
                  FT_Vector*  to,
                  TBBox_Rec*  user )
   {
-    /* we don't need to check `to' since it is always an `on' point, thus */
-    /* within the bbox                                                    */
+    /* We don't need to check `to' since it is always an on-point,   */
+    /* thus within the bbox. Only segments with an off-point outside */
+    /* the bbox can possibly reach new extreme values.               */
 
     if ( CHECK_X( control1, user->bbox ) ||
          CHECK_X( control2, user->bbox ) )
