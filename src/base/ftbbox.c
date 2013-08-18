@@ -108,30 +108,19 @@
                     FT_Pos*  min,
                     FT_Pos*  max )
   {
-    if ( y1 <= y3 && y2 == y1 )     /* flat arc */
-      goto Suite;
+    /* This function is only called when a control off-point is outside  */
+    /* the bbox. This also means there must be a local extremum within   */
+    /* the segment with the value of (y1*y3 - y2*y2)/(y1 - 2*y2 + y3).   */
+    /* Offsetting from the closest point to the extermum, y2, we get     */
 
-    if ( y1 < y3 )
-    {
-      if ( y2 >= y1 && y2 <= y3 )   /* ascending arc */
-        goto Suite;
-    }
-    else
-    {
-      if ( y2 >= y3 && y2 <= y1 )   /* descending arc */
-      {
-        y2 = y1;
-        y1 = y3;
-        y3 = y2;
-        goto Suite;
-      }
-    }
+    y1 -= y2;
+    y3 -= y2;
+    y2 += FT_MulDiv( y1, y3, y1 + y3 );
 
-    y1 = y3 = y1 - FT_MulDiv( y2 - y1, y2 - y1, y1 - 2*y2 + y3 );
-
-  Suite:
-    if ( y1 < *min ) *min = y1;
-    if ( y3 > *max ) *max = y3;
+    if ( y2 < *min )
+      *min = y2;
+    if ( y2 > *max )
+      *max = y2;
   }
 
 

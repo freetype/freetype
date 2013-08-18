@@ -1,3 +1,11 @@
+2013-08-17  Alexei Podtelezhnikov  <apodtele@gmail.com>
+
+	[base] Clean up BBox_Conic_Check.
+
+	* src/base/ftbbox.c (BBox_Conic_Check): Remove redundant checks for
+	extremum at the segment ends, which are already within the bbox.
+	Slightly modify calculations. 
+
 2013-08-15  Alexei Podtelezhnikov  <apodtele@gmail.com>
 
 	[base] Finish experimental (disabled) BBox_Cubic_Check implementation.
