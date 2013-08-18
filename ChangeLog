@@ -1,5 +1,9 @@
 2013-08-18  Werner Lemberg  <wl@gnu.org>
 
+	* builds/unix/unix-def.in (freetype2.pc): Don't set executable bit.
+
+2013-08-18  Werner Lemberg  <wl@gnu.org>
+
 	Fix Savannah bug #39804.
 
 	* builds/unix/configure.raw (LIBPNG): Define and export.
