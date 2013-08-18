@@ -141,7 +141,7 @@ if test "$echo_cflags" = "yes" ; then
 fi
 
 if test "$echo_libs" = "yes" ; then
-  libs="-lfreetype %LIBZ% %LIBBZ2% %FT2_EXTRA_LIBS%"
+  libs="-lfreetype %LIBZ% %LIBBZ2% %LIBPNG% %FT2_EXTRA_LIBS%"
   if test "${SYSROOT}$libdir" != "/usr/lib"  &&
      test "${SYSROOT}$libdir" != "/usr/lib64"; then
     echo -L${SYSROOT}$libdir $libs

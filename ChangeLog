@@ -1,3 +1,11 @@
+2013-08-18  Werner Lemberg  <wl@gnu.org>
+
+	Fix Savannah bug #39804.
+
+	* builds/unix/configure.raw (LIBPNG): Define and export.
+	* builds/unix/freetype-config.in, builds/unix/freetype2.in: Handle
+	libpng.
+
 2013-08-17  Alexei Podtelezhnikov  <apodtele@gmail.com>
 
 	[base] Clean up BBox_Conic_Check.
