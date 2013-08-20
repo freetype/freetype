@@ -109,9 +109,9 @@
                     FT_Pos*  max )
   {
     /* This function is only called when a control off-point is outside  */
-    /* the bbox. This also means there must be a local extremum within   */
-    /* the segment with the value of (y1*y3 - y2*y2)/(y1 - 2*y2 + y3).   */
-    /* Offsetting from the closest point to the extermum, y2, we get     */
+    /* the bbox that contains all on-points. It finds a local extremum   */
+    /* within the segment, equal to (y1*y3 - y2*y2)/(y1 - 2*y2 + y3).    */
+    /* Or, offsetting from y2, we get                                    */
 
     y1 -= y2;
     y3 -= y2;
@@ -185,8 +185,8 @@
   /*                                                                       */
   /* <Description>                                                         */
   /*    Finds the extrema of a 1-dimensional cubic Bezier curve and        */
-  /*    updates a bounding range.  This version uses splitting because we  */
-  /*    don't want to use square roots and extra accuracy.                 */
+  /*    updates a bounding range.  This version uses iterative splitting   */
+  /*    because it is faster than the exact solution with square roots.    */
   /*                                                                       */
   /* <Input>                                                               */
   /*    p1  :: The start coordinate.                                       */
@@ -203,17 +203,15 @@
   /*    max :: The address of the current maximum.                         */
   /*                                                                       */
 
-#if 0
-
   static FT_Pos
-  update_max( FT_Pos   q1,
-              FT_Pos   q2,
-              FT_Pos   q3,
-              FT_Pos   q4,
-              FT_Pos   max )
+  update_cubic_max( FT_Pos   q1,
+                    FT_Pos   q2,
+                    FT_Pos   q3,
+                    FT_Pos   q4,
+                    FT_Pos   max )
   {
-    /* for a conic segment to possibly reach new maximum     */
-    /* one of its off-points must be above the current value */
+    /* for a cubic segment to possibly reach new maximum, at least */
+    /* one of its off-points must stay above the current value     */
     while ( q2 > max || q3 > max )
     {
       /* determine which half contains the maximum and split */
@@ -267,13 +265,15 @@
     FT_Pos nmin, nmax;
     FT_Int shift;
 
-    /* This implementation relies on iterative bisection of the segment. */
-    /* The fixed-point arithmentic of bisection is inherently stable but */
-    /* may loose accuracy in the two lowest bits. To compensate, we      */
-    /* upscale the segment if there is room. Large values may need to be */
-    /* downscaled to avoid overflows during bisection bisection. This    */
-    /* function is only called when a control off-point is outside the   */
-    /* the bbox and, thus, has the top absolute value among arguments.   */
+    /* This function is only called when a control off-point is outside  */
+    /* the bbox that contains all on-points. It finds a local extremum   */
+    /* within the segment using iterative bisection of the segment.      */
+    /* The fixed-point arithmentic of bisection is inherently stable     */
+    /* but may loose accuracy in the two lowest bits. To compensate,     */
+    /* we upscale the segment if there is room. Large values may need    */
+    /* to be downscaled to avoid overflows during bisection bisection.   */
+    /* The control off-point outside the bbox is likely to have the top  */
+    /* absolute value among arguments.                                   */
 
     shift = 27 - FT_MSB( FT_ABS( p2 ) | FT_ABS( p3 ) );
 
@@ -282,7 +282,7 @@
       /* upscaling too much just wastes time */
       if ( shift > 2 )
         shift = 2;
-  
+
       p1 <<=  shift;
       p2 <<=  shift;
       p3 <<=  shift;
@@ -290,7 +290,7 @@
       nmin = *min << shift;
       nmax = *max << shift;
     }
-    else 
+    else
     {
       p1 >>= -shift;
       p2 >>= -shift;
@@ -300,10 +300,10 @@
       nmax = *max >> -shift;
     }
 
-    nmax =  update_max(  p1,  p2,  p3,  p4,  nmax ); 
+    nmax =  update_cubic_max(  p1,  p2,  p3,  p4,  nmax );
 
     /* now flip the signs to update the minimum */
-    nmin = -update_max( -p1, -p2, -p3, -p4, -nmin );
+    nmin = -update_cubic_max( -p1, -p2, -p3, -p4, -nmin );
 
     if ( shift > 0 )
     {
@@ -321,172 +321,6 @@
     if ( nmax > *max )
       *max = nmax;
   }
-
-#else
-
-  static void
-  test_cubic_extrema( FT_Pos    y1,
-                      FT_Pos    y2,
-                      FT_Pos    y3,
-                      FT_Pos    y4,
-                      FT_Fixed  u,
-                      FT_Pos*   min,
-                      FT_Pos*   max )
-  {
- /* FT_Pos    a = y4 - 3*y3 + 3*y2 - y1; */
-    FT_Pos    b = y3 - 2*y2 + y1;
-    FT_Pos    c = y2 - y1;
-    FT_Pos    d = y1;
-    FT_Pos    y;
-    FT_Fixed  uu;
-
-    FT_UNUSED ( y4 );
-
-
-    /* The polynomial is                      */
-    /*                                        */
-    /*    P(x) = a*x^3 + 3b*x^2 + 3c*x + d  , */
-    /*                                        */
-    /*   dP/dx = 3a*x^2 + 6b*x + 3c         . */
-    /*                                        */
-    /* However, we also have                  */
-    /*                                        */
-    /*   dP/dx(u) = 0                       , */
-    /*                                        */
-    /* which implies by subtraction that      */
-    /*                                        */
-    /*   P(u) = b*u^2 + 2c*u + d            . */
-
-    if ( u > 0 && u < 0x10000L )
-    {
-      uu = FT_MulFix( u, u );
-      y  = d + FT_MulFix( c, 2*u ) + FT_MulFix( b, uu );
-
-      if ( y < *min ) *min = y;
-      if ( y > *max ) *max = y;
-    }
-  }
-
-
-  static void
-  BBox_Cubic_Check( FT_Pos   y1,
-                    FT_Pos   y2,
-                    FT_Pos   y3,
-                    FT_Pos   y4,
-                    FT_Pos*  min,
-                    FT_Pos*  max )
-  {
-    /* always compare first and last points */
-    if      ( y1 < *min )  *min = y1;
-    else if ( y1 > *max )  *max = y1;
-
-    if      ( y4 < *min )  *min = y4;
-    else if ( y4 > *max )  *max = y4;
-
-    /* now, try to see if there are split points here */
-    if ( y1 <= y4 )
-    {
-      /* flat or ascending arc test */
-      if ( y1 <= y2 && y2 <= y4 && y1 <= y3 && y3 <= y4 )
-        return;
-    }
-    else /* y1 > y4 */
-    {
-      /* descending arc test */
-      if ( y1 >= y2 && y2 >= y4 && y1 >= y3 && y3 >= y4 )
-        return;
-    }
-
-    /* There are some split points.  Find them.                        */
-    /* We already made sure that a, b, and c below cannot be all zero. */
-    {
-      FT_Pos    a = y4 - 3*y3 + 3*y2 - y1;
-      FT_Pos    b = y3 - 2*y2 + y1;
-      FT_Pos    c = y2 - y1;
-      FT_Pos    d;
-      FT_Fixed  t;
-      FT_Int    shift;
-
-
-      /* We need to solve `ax^2+2bx+c' here, without floating points!      */
-      /* The trick is to normalize to a different representation in order  */
-      /* to use our 16.16 fixed-point routines.                            */
-      /*                                                                   */
-      /* We compute FT_MulFix(b,b) and FT_MulFix(a,c) after normalization. */
-      /* These values must fit into a single 16.16 value.                  */
-      /*                                                                   */
-      /* We normalize a, b, and c to `8.16' fixed-point values to ensure   */
-      /* that their product is held in a `16.16' value including the sign. */
-      /* Necessarily, we need to shift `a', `b', and `c' so that the most  */
-      /* significant bit of their absolute values is at position 22.       */
-      /*                                                                   */
-      /* This also means that we are using 23 bits of precision to compute */
-      /* the zeros, independently of the range of the original polynomial  */
-      /* coefficients.                                                     */
-      /*                                                                   */
-      /* This algorithm should ensure reasonably accurate values for the   */
-      /* zeros.  Note that they are only expressed with 16 bits when       */
-      /* computing the extrema (the zeros need to be in 0..1 exclusive     */
-      /* to be considered part of the arc).                                */
-
-      shift = FT_MSB( FT_ABS( a ) | FT_ABS( b ) | FT_ABS( c ) );
-
-      if ( shift > 22 )
-      {
-        shift -= 22;
-
-        /* this loses some bits of precision, but we use 23 of them */
-        /* for the computation anyway                               */
-        a >>= shift;
-        b >>= shift;
-        c >>= shift;
-      }
-      else
-      {
-        shift = 22 - shift;
-
-        a <<= shift;
-        b <<= shift;
-        c <<= shift;
-      }
-
-      /* handle a == 0 */
-      if ( a == 0 )
-      {
-        if ( b != 0 )
-        {
-          t = - FT_DivFix( c, b ) / 2;
-          test_cubic_extrema( y1, y2, y3, y4, t, min, max );
-        }
-      }
-      else
-      {
-        /* solve the equation now */
-        d = FT_MulFix( b, b ) - FT_MulFix( a, c );
-        if ( d < 0 )
-          return;
-
-        if ( d == 0 )
-        {
-          /* there is a single split point at -b/a */
-          t = - FT_DivFix( b, a );
-          test_cubic_extrema( y1, y2, y3, y4, t, min, max );
-        }
-        else
-        {
-          /* there are two solutions; we need to filter them */
-          d = FT_SqrtFixed( (FT_Int32)d );
-          t = - FT_DivFix( b - d, a );
-          test_cubic_extrema( y1, y2, y3, y4, t, min, max );
-
-          t = - FT_DivFix( b + d, a );
-          test_cubic_extrema( y1, y2, y3, y4, t, min, max );
-        }
-      }
-    }
-  }
-
-#endif
 
 
   /*************************************************************************/
