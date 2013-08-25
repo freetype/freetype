@@ -1,5 +1,24 @@
 2013-08-25  Werner Lemberg  <wl@gnu.org>
 
+	[autofit] Make `latin' module use blue stringsets.
+
+	* src/autofit/aflatin.c (AF_LATIN_MAX_TEST_CHARACTERS): Removed.
+	(af_latin_blue_chars): Removed.
+	(af_latin_metrics_init_blues): Replace AF_LATIN_MAX_TEST_CHARACTERS
+	with AF_BLUE_STRING_MAX_LEN.
+	Change loops to use offsets (in file `afblue.h') into the new arrays
+	`af_blue_stringsets' and `af_blue_strings' (in file `afblue.c').
+	Use `AF_LATIN_IS_SMALL_TOP_BLUE' macro.
+
+	* src/autofit/aflatin.h: Remove old enumeration values superseded by
+	the new data in `afblue.h'.
+	(AF_LATIN_IS_TOP_BLUE): Updated definition.
+	(AF_LATIN_IS_SMALL_TOP_BLUE): New macro.
+	(AF_LATIN_MAX_BLUES): Remove.
+	(AF_LatinAxisRec): Updated.
+
+2013-08-25  Werner Lemberg  <wl@gnu.org>
+
 	[autofit] Add blue stringsets.
 
 	* src/autofit/aftypes.h: Include `afblue.h'.

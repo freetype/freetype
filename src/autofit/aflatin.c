@@ -194,22 +194,6 @@
   }
 
 
-
-#define AF_LATIN_MAX_TEST_CHARACTERS  12
-
-
-  static const char af_latin_blue_chars[AF_LATIN_MAX_BLUES]
-                                       [AF_LATIN_MAX_TEST_CHARACTERS + 1] =
-  {
-    "THEZOCQS",  /* capital top    */
-    "HEZLOCUS",  /* capital bottom */
-    "fijkdbh",   /* small f top    */
-    "xzroesc",   /* small top      */
-    "xzroesc",   /* small bottom   */
-    "pqgjy"      /* small minor    */
-  };
-
-
   /* Find all blue zones.  Flat segments give the reference points, */
   /* round segments the overshoot positions.                        */
 
@@ -217,39 +201,43 @@
   af_latin_metrics_init_blues( AF_LatinMetrics  metrics,
                                FT_Face          face )
   {
-    FT_Pos        flats [AF_LATIN_MAX_TEST_CHARACTERS];
-    FT_Pos        rounds[AF_LATIN_MAX_TEST_CHARACTERS];
+    FT_Pos        flats [AF_BLUE_STRING_MAX_LEN];
+    FT_Pos        rounds[AF_BLUE_STRING_MAX_LEN];
     FT_Int        num_flats;
     FT_Int        num_rounds;
-    FT_Int        bb;
     AF_LatinBlue  blue;
     FT_Error      error;
     AF_LatinAxis  axis  = &metrics->axis[AF_DIMENSION_VERT];
     FT_Outline    outline;
 
+    AF_Blue_Stringset         bss = metrics->root.script_class->blue_stringset;
+    const AF_Blue_StringRec*  bs  = &af_blue_stringsets[bss];
 
-    /* we compute the blues simply by loading each character from the    */
-    /* `af_latin_blue_chars[blues]' string, then finding its top-most or */
-    /* bottom-most points (depending on `AF_IS_TOP_BLUE')                */
+
+    /* we walk over the blue character strings as specified in the  */
+    /* script's entry in the `af_blue_stringset' array, finding its */
+    /* top-most or bottom-most points (depending on the string      */
+    /* properties)                                                  */
 
     FT_TRACE5(( "blue zones computation\n"
-                "======================\n\n" ));
+                "======================\n"
+                "\n" ));
 
-    for ( bb = 0; bb < AF_LATIN_BLUE_MAX; bb++ )
+    for ( ; bs->string != AF_BLUE_STRING_MAX; bs++ )
     {
-      const char*  p     = af_latin_blue_chars[bb];
-      const char*  limit = p + AF_LATIN_MAX_TEST_CHARACTERS;
+      const char*  p = &af_blue_strings[bs->string];
       FT_Pos*      blue_ref;
       FT_Pos*      blue_shoot;
 
 
-      FT_TRACE5(( "blue zone %d:\n", bb ));
+      FT_TRACE5(( "blue zone %d:\n", axis->blue_count ));
 
       num_flats  = 0;
       num_rounds = 0;
 
-      for ( ; p < limit && *p; p++ )
+      while ( *p )
       {
+        FT_ULong    ch;
         FT_UInt     glyph_index;
         FT_Pos      best_y;                            /* same as points.y */
         FT_Int      best_point, best_contour_first, best_contour_last;
@@ -257,8 +245,10 @@
         FT_Bool     round = 0;
 
 
+        GET_UTF8_CHAR( ch, p );
+
         /* load the character in the face -- skip unknown or empty ones */
-        glyph_index = FT_Get_Char_Index( face, (FT_UInt)*p );
+        glyph_index = FT_Get_Char_Index( face, ch );
         if ( glyph_index == 0 )
           continue;
 
@@ -294,7 +284,7 @@
             if ( last <= first )
               continue;
 
-            if ( AF_LATIN_IS_TOP_BLUE( bb ) )
+            if ( AF_LATIN_IS_TOP_BLUE( bs ) )
             {
               for ( pp = first; pp <= last; pp++ )
                 if ( best_point < 0 || points[pp].y > best_y )
@@ -480,7 +470,7 @@
         FT_Bool  over_ref = FT_BOOL( shoot > ref );
 
 
-        if ( AF_LATIN_IS_TOP_BLUE( bb ) ^ over_ref )
+        if ( AF_LATIN_IS_TOP_BLUE( bs ) ^ over_ref )
         {
           *blue_ref   =
           *blue_shoot = ( shoot + ref ) / 2;
@@ -491,7 +481,7 @@
       }
 
       blue->flags = 0;
-      if ( AF_LATIN_IS_TOP_BLUE( bb ) )
+      if ( AF_LATIN_IS_TOP_BLUE( bs ) )
         blue->flags |= AF_LATIN_BLUE_TOP;
 
       /*
@@ -499,7 +489,7 @@
        * in order to optimize the pixel grid alignment of the top of small
        * letters.
        */
-      if ( bb == AF_LATIN_BLUE_SMALL_TOP )
+      if ( AF_LATIN_IS_SMALL_TOP_BLUE( bs ) )
         blue->flags |= AF_LATIN_BLUE_ADJUSTMENT;
 
       FT_TRACE5(( "    -> reference = %ld\n"
