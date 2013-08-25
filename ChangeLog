@@ -1,5 +1,12 @@
 2013-08-25  Werner Lemberg  <wl@gnu.org>
 
+	[autofit] Typo.
+
+	* src/autofit/afblue.hin, src/autofit/afblue.c (GET_UTF8_CHAR): Use
+	cast.
+
+2013-08-25  Werner Lemberg  <wl@gnu.org>
+
 	[autofit] Synchronize `cjk' with `latin' module (and vice versa).
 
 	* src/autofit/afcjk.c (af_cjk_metrics_init_widths): Add tracing

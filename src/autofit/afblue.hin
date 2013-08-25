@@ -26,7 +26,7 @@ FT_BEGIN_HEADER
   /* an auxiliary macro to decode a UTF-8 character -- since we only use */
   /* hard-coded, self-converted data, no error checking is performed     */
 #define GET_UTF8_CHAR( ch, p )                    \
-          ch = *p++;                              \
+          ch = (unsigned char)*p++;               \
           if ( ch >= 0x80 )                       \
           {                                       \
             FT_UInt  len;                         \
