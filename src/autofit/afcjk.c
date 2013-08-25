@@ -207,252 +207,172 @@
   }
 
 
-#define AF_CJK_MAX_TEST_CHARACTERS  32
-
-
-  /* Each blue zone has two types of fill and unfill, this is, */
-  /* filling the entire glyph square or not.                   */
-
-  enum
-  {
-    AF_CJK_BLUE_TYPE_FILL,
-    AF_CJK_BLUE_TYPE_UNFILL,
-    AF_CJK_BLUE_TYPE_MAX
-  };
-
-
-  /* Put some common and representative Han Ideographs characters here. */
-  static const FT_ULong af_cjk_hani_blue_chars[AF_CJK_BLUE_MAX]
-                                              [AF_CJK_BLUE_TYPE_MAX]
-                                              [AF_CJK_MAX_TEST_CHARACTERS] =
-  {
-    {
-      {
-        0x4ED6, 0x4EEC, 0x4F60, 0x4F86, 0x5011, 0x5230, 0x548C, 0x5730,
-        0x5BF9, 0x5C0D, 0x5C31, 0x5E2D, 0x6211, 0x65F6, 0x6642, 0x6703,
-        0x6765, 0x70BA, 0x80FD, 0x8230, 0x8AAA, 0x8BF4, 0x8FD9, 0x9019,
-        0x9F4A /* top fill */
-      },
-      {
-        0x519B, 0x540C, 0x5DF2, 0x613F, 0x65E2, 0x661F, 0x662F, 0x666F,
-        0x6C11, 0x7167, 0x73B0, 0x73FE, 0x7406, 0x7528, 0x7F6E, 0x8981,
-        0x8ECD, 0x90A3, 0x914D, 0x91CC, 0x958B, 0x96F7, 0x9732, 0x9762,
-        0x987E /* top unfill */
-      }
-    },
-    {
-      {
-        0x4E2A, 0x4E3A, 0x4EBA, 0x4ED6, 0x4EE5, 0x4EEC, 0x4F60, 0x4F86,
-        0x500B, 0x5011, 0x5230, 0x548C, 0x5927, 0x5BF9, 0x5C0D, 0x5C31,
-        0x6211, 0x65F6, 0x6642, 0x6709, 0x6765, 0x70BA, 0x8981, 0x8AAA,
-        0x8BF4 /* bottom fill */
-      },
-      {
-        0x4E3B, 0x4E9B, 0x56E0, 0x5B83, 0x60F3, 0x610F, 0x7406, 0x751F,
-        0x7576, 0x770B, 0x7740, 0x7F6E, 0x8005, 0x81EA, 0x8457, 0x88E1,
-        0x8FC7, 0x8FD8, 0x8FDB, 0x9032, 0x904E, 0x9053, 0x9084, 0x91CC,
-        0x9762 /* bottom unfill */
-      }
-    },
-#ifndef AF_CONFIG_OPTION_CJK_BLUE_HANI_VERT
-      { {0x0000}, {0x0000} },
-      { {0x0000}, {0x0000} }
-#else
-    {
-      {
-        0x4E9B, 0x4EEC, 0x4F60, 0x4F86, 0x5011, 0x5230, 0x548C, 0x5730,
-        0x5979, 0x5C06, 0x5C07, 0x5C31, 0x5E74, 0x5F97, 0x60C5, 0x6700,
-        0x6837, 0x6A23, 0x7406, 0x80FD, 0x8AAA, 0x8BF4, 0x8FD9, 0x9019,
-        0x901A /* left fill */
-      },
-      {
-        0x5373, 0x5417, 0x5427, 0x542C, 0x5462, 0x54C1, 0x54CD, 0x55CE,
-        0x5E08, 0x5E2B, 0x6536, 0x65AD, 0x65B7, 0x660E, 0x773C, 0x9593,
-        0x95F4, 0x9645, 0x9648, 0x9650, 0x9664, 0x9673, 0x968F, 0x969B,
-        0x96A8 /* left unfill */
-      }
-    },
-    {
-      {
-        0x4E8B, 0x524D, 0x5B78, 0x5C06, 0x5C07, 0x60C5, 0x60F3, 0x6216,
-        0x653F, 0x65AF, 0x65B0, 0x6837, 0x6A23, 0x6C11, 0x6C92, 0x6CA1,
-        0x7136, 0x7279, 0x73B0, 0x73FE, 0x7403, 0x7B2C, 0x7D93, 0x8C01,
-        0x8D77 /* right fill */
-      },
-      {
-        0x4F8B, 0x5225, 0x522B, 0x5236, 0x52A8, 0x52D5, 0x5417, 0x55CE,
-        0x589E, 0x6307, 0x660E, 0x671D, 0x671F, 0x6784, 0x7269, 0x786E,
-        0x79CD, 0x8ABF, 0x8C03, 0x8CBB, 0x8D39, 0x90A3, 0x90FD, 0x9593,
-        0x95F4 /* right unfill */
-      }
-    }
-#endif /* AF_CONFIG_OPTION_CJK_BLUE_HANI_VERT */
-  };
-
-
-  /* Calculate blue zones for all the CJK_BLUE_XXX's. */
+  /* Find all blue zones. */
 
   static void
   af_cjk_metrics_init_blues( AF_CJKMetrics  metrics,
                              FT_Face        face )
   {
-    FT_Pos      fills[AF_CJK_MAX_TEST_CHARACTERS];
-    FT_Pos      flats[AF_CJK_MAX_TEST_CHARACTERS];
+    FT_Pos      fills[AF_BLUE_STRING_MAX_LEN];
+    FT_Pos      flats[AF_BLUE_STRING_MAX_LEN];
 
     FT_Int      num_fills;
     FT_Int      num_flats;
 
-    FT_Int      bb;
     AF_CJKBlue  blue;
     FT_Error    error;
     AF_CJKAxis  axis;
     FT_Outline  outline;
 
+    AF_Blue_Stringset         bss = metrics->root.script_class->blue_stringset;
+    const AF_Blue_StringRec*  bs  = &af_blue_stringsets[bss];
+
 #ifdef FT_DEBUG_LEVEL_TRACE
-    FT_String*  cjk_blue_name[AF_CJK_BLUE_MAX] = {
-      (FT_String*)"top",
-      (FT_String*)"bottom",
-      (FT_String*)"left",
-      (FT_String*)"right"
+    FT_String*  cjk_blue_name[4] =
+    {
+      (FT_String*)"bottom",    /* --   , --  */
+      (FT_String*)"top",       /* --   , TOP */
+      (FT_String*)"left",      /* HORIZ, --  */
+      (FT_String*)"right"      /* HORIZ, TOP */
     };
-    FT_String*  cjk_blue_type_name[AF_CJK_BLUE_TYPE_MAX] = {
-      (FT_String*)"filled",
-      (FT_String*)"unfilled"
+
+    FT_String*  cjk_blue_type_name[2] =
+    {
+      (FT_String*)"unfilled",  /* --   */
+      (FT_String*)"filled"     /* FILL */
     };
 #endif
 
 
-    /* We compute the blues simply by loading each character from the */
-    /* `blue_chars[blues]' string, then computing its extreme points  */
-    /* (depending blue zone type etc.).                               */
+    /* we walk over the blue character strings as specified in the    */
+    /* script's entry in the `af_blue_stringset' array, computing its */
+    /* extremum points (depending on the string properties)           */
 
     FT_TRACE5(( "cjk blue zones computation\n"
                 "==========================\n"
                 "\n" ));
 
-    for ( bb = 0; bb < AF_CJK_BLUE_MAX; bb++ )
+    for ( ; bs->string != AF_BLUE_STRING_MAX; bs++ )
     {
-      FT_Int   fill_type;
-      FT_Pos*  blue_ref;
-      FT_Pos*  blue_shoot;
+      const char*  p = &af_blue_strings[bs->string];
+      FT_Pos*      blue_ref;
+      FT_Pos*      blue_shoot;
 
+
+      FT_TRACE5(( "blue zone %d:\n", axis->blue_count ));
 
       num_fills = 0;
       num_flats = 0;
 
-      for ( fill_type = 0; fill_type < AF_CJK_BLUE_TYPE_MAX; fill_type++ )
+      FT_TRACE5(( "  cjk blue %s/%s\n",
+                  cjk_blue_name[AF_CJK_IS_HORIZ_BLUE( bs ) |
+                                AF_CJK_IS_TOP_BLUE( bs )   ],
+                  cjk_blue_type_name[!!AF_CJK_IS_FILLED_BLUE( bs )] ));
+
+      while ( *p )
       {
-        const FT_ULong*  p     = af_cjk_hani_blue_chars[bb][fill_type];
-        const FT_ULong*  limit = p + AF_CJK_MAX_TEST_CHARACTERS;
-        FT_Bool          fill  = FT_BOOL(
-                                   fill_type == AF_CJK_BLUE_TYPE_FILL );
+        FT_ULong    ch;
+        FT_UInt     glyph_index;
+        FT_Pos      best_pos;       /* same as points.y or points.x, resp. */
+        FT_Int      best_point;
+        FT_Vector*  points;
 
 
-        FT_TRACE5(( "cjk blue %s/%s\n", cjk_blue_name[bb],
-                                        cjk_blue_type_name[fill_type] ));
+        GET_UTF8_CHAR( ch, p );
 
-        for ( ; p < limit && *p; p++ )
+        FT_TRACE5(( "    U+%lX... ", ch ));
+
+        /* load the character in the face -- skip unknown or empty ones */
+        glyph_index = FT_Get_Char_Index( face, ch );
+        if ( glyph_index == 0 )
         {
-          FT_UInt     glyph_index;
-          FT_Pos      best_pos; /* same as points.y */
-          FT_Int      best_point;
-          FT_Vector*  points;
+          FT_TRACE5(( "unavailable\n" ));
+          continue;
+        }
+
+        error   = FT_Load_Glyph( face, glyph_index, FT_LOAD_NO_SCALE );
+        outline = face->glyph->outline;
+        if ( error || outline.n_points <= 0 )
+        {
+          FT_TRACE5(( "no outline\n" ));
+          continue;
+        }
+
+        /* now compute min or max point indices and coordinates */
+        points     = outline.points;
+        best_point = -1;
+        best_pos   = 0;  /* make compiler happy */
+
+        {
+          FT_Int  nn;
+          FT_Int  first = 0;
+          FT_Int  last  = -1;
 
 
-          FT_TRACE5(( "  U+%lX... ", *p ));
-
-          /* load the character in the face -- skip unknown or empty ones */
-          glyph_index = FT_Get_Char_Index( face, *p );
-          if ( glyph_index == 0 )
+          for ( nn = 0; nn < outline.n_contours; first = last + 1, nn++ )
           {
-            FT_TRACE5(( "unavailable\n" ));
-            continue;
-          }
-
-          error   = FT_Load_Glyph( face, glyph_index, FT_LOAD_NO_SCALE );
-          outline = face->glyph->outline;
-          if ( error || outline.n_points <= 0 )
-          {
-            FT_TRACE5(( "no outline\n" ));
-            continue;
-          }
-
-          /* now compute min or max point indices and coordinates */
-          points     = outline.points;
-          best_point = -1;
-          best_pos   = 0;  /* make compiler happy */
-
-          {
-            FT_Int  nn;
-            FT_Int  first = 0;
-            FT_Int  last  = -1;
+            FT_Int  pp;
 
 
-            for ( nn = 0; nn < outline.n_contours; first = last + 1, nn++ )
+            last = outline.contours[nn];
+
+            /* Avoid single-point contours since they are never rasterized. */
+            /* In some fonts, they correspond to mark attachment points     */
+            /* which are way outside of the glyph's real outline.           */
+            if ( last <= first )
+              continue;
+
+            if ( AF_CJK_IS_HORIZ_BLUE( bs ) )
             {
-              FT_Int  pp;
-
-
-              last = outline.contours[nn];
-
-              /* Avoid single-point contours since they are never       */
-              /* rasterized.  In some fonts, they correspond to mark    */
-              /* attachment points which are way outside of the glyph's */
-              /* real outline.                                          */
-              if ( last <= first )
-                continue;
-
-              switch ( bb )
+              if ( AF_CJK_IS_RIGHT_BLUE( bs ) )
               {
-              case AF_CJK_BLUE_TOP:
-                for ( pp = first; pp <= last; pp++ )
-                  if ( best_point < 0 || points[pp].y > best_pos )
-                  {
-                    best_point = pp;
-                    best_pos   = points[pp].y;
-                  }
-                break;
-
-              case AF_CJK_BLUE_BOTTOM:
-                for ( pp = first; pp <= last; pp++ )
-                  if ( best_point < 0 || points[pp].y < best_pos )
-                  {
-                    best_point = pp;
-                    best_pos   = points[pp].y;
-                  }
-                break;
-
-              case AF_CJK_BLUE_LEFT:
-                for ( pp = first; pp <= last; pp++ )
-                  if ( best_point < 0 || points[pp].x < best_pos )
-                  {
-                    best_point = pp;
-                    best_pos   = points[pp].x;
-                  }
-                break;
-
-              case AF_CJK_BLUE_RIGHT:
                 for ( pp = first; pp <= last; pp++ )
                   if ( best_point < 0 || points[pp].x > best_pos )
                   {
                     best_point = pp;
                     best_pos   = points[pp].x;
                   }
-                break;
-
-              default:
-                ;
+              }
+              else
+              {
+                for ( pp = first; pp <= last; pp++ )
+                  if ( best_point < 0 || points[pp].x < best_pos )
+                  {
+                    best_point = pp;
+                    best_pos   = points[pp].x;
+                  }
               }
             }
-
-            FT_TRACE5(( "best_pos = %5ld\n", best_pos ));
+            else
+            {
+              if ( AF_CJK_IS_TOP_BLUE( bs ) )
+              {
+                for ( pp = first; pp <= last; pp++ )
+                  if ( best_point < 0 || points[pp].y > best_pos )
+                  {
+                    best_point = pp;
+                    best_pos   = points[pp].y;
+                  }
+              }
+              else
+              {
+                for ( pp = first; pp <= last; pp++ )
+                  if ( best_point < 0 || points[pp].y < best_pos )
+                  {
+                    best_point = pp;
+                    best_pos   = points[pp].y;
+                  }
+              }
+            }
           }
 
-          if ( fill )
-            fills[num_fills++] = best_pos;
-          else
-            flats[num_flats++] = best_pos;
+          FT_TRACE5(( "best_pos = %5ld\n", best_pos ));
         }
+
+        if ( AF_CJK_IS_FILLED_BLUE( bs ) )
+          fills[num_fills++] = best_pos;
+        else
+          flats[num_flats++] = best_pos;
       }
 
       if ( num_flats == 0 && num_fills == 0 )
@@ -461,7 +381,7 @@
          *  we couldn't find a single glyph to compute this blue zone,
          *  we will simply ignore it then
          */
-        FT_TRACE5(( "  empty\n" ));
+        FT_TRACE5(( "    empty\n" ));
         continue;
       }
 
@@ -471,10 +391,10 @@
       af_sort_pos( num_flats, flats );
       af_sort_pos( num_fills, fills );
 
-      if ( AF_CJK_BLUE_TOP == bb || AF_CJK_BLUE_BOTTOM == bb )
-        axis = &metrics->axis[AF_DIMENSION_VERT];
-      else
+      if ( AF_CJK_IS_HORIZ_BLUE( bs ) )
         axis = &metrics->axis[AF_DIMENSION_HORZ];
+      else
+        axis = &metrics->axis[AF_DIMENSION_VERT];
 
       blue       = &axis->blues[axis->blue_count];
       blue_ref   = &blue->ref.org;
@@ -507,8 +427,8 @@
         FT_Bool  under_ref = FT_BOOL( shoot < ref );
 
 
-        if ( ( AF_CJK_BLUE_TOP == bb   ||
-               AF_CJK_BLUE_RIGHT == bb ) ^ under_ref )
+        /* AF_CJK_IS_TOP_BLUE covers `right' and `top' */
+        if ( AF_CJK_IS_TOP_BLUE( bs ) ^ under_ref )
         {
           *blue_ref   =
           *blue_shoot = ( shoot + ref ) / 2;
@@ -519,15 +439,12 @@
       }
 
       blue->flags = 0;
-      if ( AF_CJK_BLUE_TOP == bb )
-        blue->flags |= AF_CJK_BLUE_IS_TOP;
-      else if ( AF_CJK_BLUE_RIGHT == bb )
-        blue->flags |= AF_CJK_BLUE_IS_RIGHT;
+      if ( AF_CJK_IS_TOP_BLUE( bs ) )
+        blue->flags |= AF_CJK_BLUE_TOP;
 
-      FT_TRACE5(( "  cjk %s bluezone\n"
-                  "    -> reference = %ld\n"
+      FT_TRACE5(( "    -> reference = %ld\n"
                   "       overshoot = %ld\n",
-                  cjk_blue_name[bb], *blue_ref, *blue_shoot ));
+                  *blue_ref, *blue_shoot ));
     }
 
     FT_TRACE5(( "\n" ));
@@ -1269,10 +1186,8 @@
         /* zone, check for left edges                                      */
         /*                                                                 */
         /* of course, that's for TrueType                                  */
-        is_top_right_blue  =
-          FT_BOOL( ( ( blue->flags & AF_CJK_BLUE_IS_TOP )   != 0 ) ||
-                   ( ( blue->flags & AF_CJK_BLUE_IS_RIGHT ) != 0 ) );
-        is_major_dir = FT_BOOL( edge->dir == axis->major_dir );
+        is_top_right_blue = FT_BOOL( blue->flags & AF_CJK_BLUE_TOP );
+        is_major_dir      = FT_BOOL( edge->dir == axis->major_dir );
 
         /* if it is a top zone, the edge must be against the major    */
         /* direction; if it is a bottom zone, it must be in the major */

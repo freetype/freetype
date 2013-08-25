@@ -1,5 +1,30 @@
 2013-08-25  Werner Lemberg  <wl@gnu.org>
 
+	[autofit] Make `cjk' module use blue stringsets.
+
+	* src/autofit/afcjk.c (AF_CJK_MAX_TEST_CHARACTERS): Removed.
+	(af_cjk_hani_blue_chars): Removed.
+	(AF_CJK_BLUE_TYPE_*): Removed.
+	(af_cjk_metrics_init_blues): Replace AF_CJK_MAX_TEST_CHARACTERS with
+	AF_BLUE_STRING_MAX_LEN.
+	Change loops to use offsets (in file `afblue.h') into the new arrays
+	`af_blue_stringsets' and `af_blue_strings' (in file `afblue.c'). 
+	Instead of three dimensions (as used in the old blue string array)
+	we now use properties to do the same, saving one loop nesting level.
+
+	* src/autofit/afcjk.h: Remove old enumeration values superseded by
+	the new data in `afblue.h'.
+	(AF_CJK_IS_TOP_BLUE, AF_CJK_IS_HORIZ_BLUE, AF_CJK_IS_FILLED_BLUE,
+	AF_CJK_IS_RIGHT_BLUE): New macros, to be used in
+	`af_cjk_metrics_init_blues'.
+	(AF_CJK_BLUE_IS_RIGHT): Remove this now redundant enum value.
+	(AF_CJK_BLUE_IS_TOP): Renamed to...
+	(AF_CJK_BLUE_TOP): This.
+	(AF_CJK_MAX_BLUES): Remove.
+	(AF_CJKAxisRec): Updated.
+
+2013-08-25  Werner Lemberg  <wl@gnu.org>
+
 	[autofit] Typo.
 
 	* src/autofit/afblue.hin, src/autofit/afblue.c (GET_UTF8_CHAR): Use

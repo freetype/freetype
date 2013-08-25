@@ -61,8 +61,6 @@ FT_BEGIN_HEADER
    */
 
 
-  /* Latin (global) metrics management */
-
 #define AF_LATIN_IS_TOP_BLUE( b ) \
           ( (b)->properties & AF_BLUE_PROPERTY_LATIN_TOP )
 #define AF_LATIN_IS_SMALL_TOP_BLUE( b ) \
