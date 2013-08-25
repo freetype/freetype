@@ -63,6 +63,7 @@
     af_dflt_script_class,
 
     AF_SCRIPT_DFLT,
+    0,
     AF_WRITING_SYSTEM_DUMMY,
 
     NULL,

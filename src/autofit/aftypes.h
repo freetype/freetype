@@ -39,6 +39,8 @@
 #include FT_INTERNAL_OBJECTS_H
 #include FT_INTERNAL_DEBUG_H
 
+#include "afblue.h"
+
 
 FT_BEGIN_HEADER
 
@@ -351,8 +353,9 @@ extern void*  _af_debug_hints;
 
   typedef struct  AF_ScriptClassRec_
   {
-    AF_Script         script;
-    AF_WritingSystem  writing_system;
+    AF_Script          script;
+    AF_Blue_Stringset  blue_stringset;
+    AF_WritingSystem   writing_system;
 
     AF_Script_UniRange  script_uni_ranges; /* last must be { 0, 0 }        */
     FT_UInt32           standard_char;     /* for default width and height */
@@ -399,6 +402,7 @@ extern void*  _af_debug_hints;
 #define AF_DEFINE_SCRIPT_CLASS(           \
           script_class,                   \
           script_,                        \
+          blue_stringset_,                \
           writing_system_,                \
           ranges,                         \
           std_char )                      \
@@ -406,6 +410,7 @@ extern void*  _af_debug_hints;
   const AF_ScriptClassRec  script_class = \
   {                                       \
     script_,                              \
+    blue_stringset_,                      \
     writing_system_,                      \
     ranges,                               \
     std_char                              \
@@ -449,6 +454,7 @@ extern void*  _af_debug_hints;
 #define AF_DEFINE_SCRIPT_CLASS(                            \
           script_class,                                    \
           script_,                                         \
+          blue_string_set_,                                \
           writing_system_,                                 \
           ranges,                                          \
           std_char )                                       \
@@ -456,6 +462,7 @@ extern void*  _af_debug_hints;
   FT_Init_Class_ ## script_class( AF_ScriptClassRec*  ac ) \
   {                                                        \
     ac->script            = script_;                       \
+    ac->blue_stringset    = blue_stringset_;               \
     ac->writing_system    = writing_system_;               \
     ac->script_uni_ranges = ranges;                        \
     ac->standard_char     = std_char;                      \

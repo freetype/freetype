@@ -2281,6 +2281,7 @@
     af_hani_script_class,
 
     AF_SCRIPT_HANI,
+    AF_BLUE_STRINGSET_HANI,
     AF_WRITING_SYSTEM_CJK,
 
     af_hani_uniranges,

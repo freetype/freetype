@@ -2505,6 +2505,7 @@
     af_latn_script_class,
 
     AF_SCRIPT_LATN,
+    AF_BLUE_STRINGSET_LATN,
     AF_WRITING_SYSTEM_LATIN,
 
     af_latn_uniranges,

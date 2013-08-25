@@ -1,5 +1,23 @@
 2013-08-25  Werner Lemberg  <wl@gnu.org>
 
+	[autofit] Add blue stringsets.
+
+	* src/autofit/aftypes.h: Include `afblue.h'.
+	(AF_ScriptClassRec): Add `blue_stringset' field.
+	(AF_DEFINE_SCRIPT_CLASS): Updated.
+
+	* src/autofit/autofit.c: Include `afblue.c'.
+
+	* src/autofit/afcjk.c (af_hani_script_class), src/autofit/afdummy.c
+	(af_dflt_script_class), src/autofit/afindic.c
+	(af_deva_script_class), src/autofit/aflatin.c
+	(af_latn_script_class), src/autofit/aflatin2.c
+	(af_ltn2_script_class): Updated.
+
+	* src/autofit/rules.mk (AUTOF_DRV_SRC): Add `afblue.c'.
+
+2013-08-25  Werner Lemberg  <wl@gnu.org>
+
 	[autofit] Introduce data file for blue strings.
 
 	The idea is to have a central file which gets processed by a Perl

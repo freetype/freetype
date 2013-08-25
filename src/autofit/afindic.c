@@ -158,6 +158,7 @@
     af_deva_script_class,
 
     AF_SCRIPT_DEVA,
+    0, /* XXX */
     AF_WRITING_SYSTEM_INDIC,
 
     af_deva_uniranges,
