@@ -1,3 +1,29 @@
+2013-08-25  Werner Lemberg  <wl@gnu.org>
+
+	[autofit] Introduce data file for blue strings.
+
+	The idea is to have a central file which gets processed by a Perl
+	script to create proper `.c' and `.h' files using templates.  There
+	are two other reasons to do that:
+
+	  . The data file should be easily readable.  We use UTF-8 encoding
+	    which then gets converted to single bytes.
+
+	  . Since the number of supported scripts will increase soon, the
+	    current usage of blue string arrays is a waste of space.  Using
+	    the Perl script it is possible to imitate jagged arrays,
+	    defining enumeration constants as offsets into the arrays.
+
+	This commit only adds files without changing any functionality.
+
+	* src/autofit/afblue.dat: New data file.
+	* src/tools/afblue.pl: New Perl script for processing `afblue.dat'.
+
+	* src/autofit/afblue.cin, src/autofit/afblue.hin: New template files
+	for...
+	* src/autofit/afblue.c, src/autofit/afblue.c: New source files.
+	To avoid a dependency on Perl, we add them too.
+
 2013-08-19  Alexei Podtelezhnikov  <apodtele@gmail.com>
 
 	[base] Enable new algorithm for BBox_Cubic_Check.
