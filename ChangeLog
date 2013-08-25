@@ -1,5 +1,22 @@
 2013-08-25  Werner Lemberg  <wl@gnu.org>
 
+	[autofit] Synchronize `cjk' with `latin' module (and vice versa).
+
+	* src/autofit/afcjk.c (af_cjk_metrics_init_widths): Add tracing
+	messages.
+	(af_cjk_metrics_init_blues): Don't pass blue string array as
+	argument but use the global array directly.
+	Use `outline' directly.
+	Update and add tracing messages.
+	(af_cjk_metrics_init): Simplify code.
+	(af_cjk_metrics_scale_dim): Improve tracing message.
+	(af_cjk_metrics_scale): Synchronize.
+
+	* src/autofit/aflatin.c (af_latin_metrics_init_widths,
+	af_latin_metrics_init_blues): Improve and add tracing messages.
+
+2013-08-25  Werner Lemberg  <wl@gnu.org>
+
 	[autofit] Make `latin' module use blue stringsets.
 
 	* src/autofit/aflatin.c (AF_LATIN_MAX_TEST_CHARACTERS): Removed.

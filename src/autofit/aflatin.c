@@ -60,8 +60,9 @@
     AF_GlyphHintsRec  hints[1];
 
 
-    FT_TRACE5(( "standard widths computation\n"
-                "===========================\n\n" ));
+    FT_TRACE5(( "latin standard widths computation\n"
+                "=================================\n"
+                "\n" ));
 
     af_glyph_hints_init( hints, face->memory );
 
@@ -82,7 +83,7 @@
       if ( glyph_index == 0 )
         goto Exit;
 
-      FT_TRACE5(( "standard character: 0x%X (glyph index %d)\n",
+      FT_TRACE5(( "standard character: U+%04lX (glyph index %d)\n",
                   metrics->root.script_class->standard_char, glyph_index ));
 
       error = FT_Load_Glyph( face, glyph_index, FT_LOAD_NO_SCALE );
@@ -147,22 +148,21 @@
         }
 
         /* this also replaces multiple almost identical stem widths */
-        /* with a single one (the value 100 is heuristic) */
+        /* with a single one (the value 100 is heuristic)           */
         af_sort_and_quantize_widths( &num_widths, axis->widths,
                                      dummy->units_per_em / 100 );
         axis->width_count = num_widths;
       }
 
-  Exit:
+    Exit:
       for ( dim = 0; dim < AF_DIMENSION_MAX; dim++ )
       {
         AF_LatinAxis  axis = &metrics->axis[dim];
         FT_Pos        stdw;
 
 
-        stdw = ( axis->width_count > 0 )
-                 ? axis->widths[0].org
-                 : AF_LATIN_CONSTANT( metrics, 50 );
+        stdw = ( axis->width_count > 0 ) ? axis->widths[0].org
+                                         : AF_LATIN_CONSTANT( metrics, 50 );
 
         /* let's try 20% of the smallest width */
         axis->edge_distance_threshold = stdw / 5;
@@ -203,11 +203,13 @@
   {
     FT_Pos        flats [AF_BLUE_STRING_MAX_LEN];
     FT_Pos        rounds[AF_BLUE_STRING_MAX_LEN];
+
     FT_Int        num_flats;
     FT_Int        num_rounds;
+
     AF_LatinBlue  blue;
     FT_Error      error;
-    AF_LatinAxis  axis  = &metrics->axis[AF_DIMENSION_VERT];
+    AF_LatinAxis  axis = &metrics->axis[AF_DIMENSION_VERT];
     FT_Outline    outline;
 
     AF_Blue_Stringset         bss = metrics->root.script_class->blue_stringset;
@@ -219,8 +221,8 @@
     /* top-most or bottom-most points (depending on the string      */
     /* properties)                                                  */
 
-    FT_TRACE5(( "blue zones computation\n"
-                "======================\n"
+    FT_TRACE5(( "latin blue zones computation\n"
+                "============================\n"
                 "\n" ));
 
     for ( ; bs->string != AF_BLUE_STRING_MAX; bs++ )
@@ -247,15 +249,23 @@
 
         GET_UTF8_CHAR( ch, p );
 
+        FT_TRACE5(( "  U+%lX... ", ch ));
+
         /* load the character in the face -- skip unknown or empty ones */
         glyph_index = FT_Get_Char_Index( face, ch );
         if ( glyph_index == 0 )
+        {
+          FT_TRACE5(( "unavailable\n" ));
           continue;
+        }
 
         error   = FT_Load_Glyph( face, glyph_index, FT_LOAD_NO_SCALE );
         outline = face->glyph->outline;
         if ( error || outline.n_points <= 0 )
+        {
+          FT_TRACE5(( "no outline\n" ));
           continue;
+        }
 
         /* now compute min or max point indices and coordinates */
         points             = outline.points;
@@ -309,7 +319,8 @@
               best_contour_last  = last;
             }
           }
-          FT_TRACE5(( "  %c  %ld", *p, best_y ));
+
+          FT_TRACE5(( "best_y = %5ld\n", best_y ));
         }
 
         /* now check whether the point belongs to a straight or round   */
@@ -456,7 +467,7 @@
       }
       else
       {
-        *blue_ref   = flats[num_flats / 2];
+        *blue_ref   = flats [num_flats  / 2];
         *blue_shoot = rounds[num_rounds / 2];
       }
 
@@ -1662,8 +1673,8 @@
                                AF_Edge_Flags  base_flags,
                                AF_Edge_Flags  stem_flags )
   {
-    AF_LatinMetrics  metrics  = (AF_LatinMetrics) hints->metrics;
-    AF_LatinAxis     axis     = & metrics->axis[dim];
+    AF_LatinMetrics  metrics  = (AF_LatinMetrics)hints->metrics;
+    AF_LatinAxis     axis     = &metrics->axis[dim];
     FT_Pos           dist     = width;
     FT_Int           sign     = 0;
     FT_Int           vertical = ( dim == AF_DIMENSION_VERT );
@@ -2422,6 +2433,7 @@
         af_glyph_hints_align_weak_points( hints, (AF_Dimension)dim );
       }
     }
+
     af_glyph_hints_save( hints, outline );
 
   Exit:
