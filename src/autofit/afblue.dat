@@ -76,6 +76,13 @@ AF_BLUE_STRING_ENUM AF_BLUE_STRINGS_ARRAY AF_BLUE_STRING_MAX_LEN:
   AF_BLUE_STRING_LATIN_SMALL_MINOR
     "pqgjy"
 
+  AF_BLUE_STRING_HEBREW_TOP
+    "אבםפשדג"
+  AF_BLUE_STRING_HEBREW_BOTTOM
+    "אהחכמס"
+  AF_BLUE_STRING_HEBREW_DESCENDER
+    "קךןףץ"
+
 #ifdef AF_CONFIG_OPTION_CJK
 
   AF_BLUE_STRING_CJK_TOP_FILL
@@ -138,6 +145,12 @@ AF_BLUE_STRINGSET_ENUM AF_BLUE_STRINGSETS_ARRAY AF_BLUE_STRINGSET_MAX_LEN:
     { AF_BLUE_STRING_LATIN_SMALL,          0                                  }
     { AF_BLUE_STRING_LATIN_SMALL_MINOR,    0                                  }
     { AF_BLUE_STRING_MAX,                  0                                  }
+
+  AF_BLUE_STRINGSET_HEBR
+    { AF_BLUE_STRING_HEBREW_TOP,       AF_BLUE_PROPERTY_LATIN_TOP }
+    { AF_BLUE_STRING_HEBREW_BOTTOM,    0                          }
+    { AF_BLUE_STRING_HEBREW_DESCENDER, 0                          }
+    { AF_BLUE_STRING_MAX,              0                          }
 
 #ifdef AF_CONFIG_OPTION_CJK
 

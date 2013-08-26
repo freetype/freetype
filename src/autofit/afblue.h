@@ -79,7 +79,10 @@ FT_BEGIN_HEADER
     AF_BLUE_STRING_LATIN_SMALL_F_TOP = 18,
     AF_BLUE_STRING_LATIN_SMALL = 26,
     AF_BLUE_STRING_LATIN_SMALL_MINOR = 34,
-    af_blue_1_1 = 39,
+    AF_BLUE_STRING_HEBREW_TOP = 40,
+    AF_BLUE_STRING_HEBREW_BOTTOM = 55,
+    AF_BLUE_STRING_HEBREW_DESCENDER = 68,
+    af_blue_1_1 = 78,
 #ifdef AF_CONFIG_OPTION_CJK
     AF_BLUE_STRING_CJK_TOP_FILL = af_blue_1_1 + 1,
     AF_BLUE_STRING_CJK_TOP_UNFILL = af_blue_1_1 + 77,
@@ -141,7 +144,8 @@ FT_BEGIN_HEADER
   typedef enum  AF_Blue_Stringset_
   {
     AF_BLUE_STRINGSET_LATN = 0,
-    af_blue_2_1 = 7,
+    AF_BLUE_STRINGSET_HEBR = 7,
+    af_blue_2_1 = 11,
 #ifdef AF_CONFIG_OPTION_CJK
     AF_BLUE_STRINGSET_HANI = af_blue_2_1 + 0,
     af_blue_2_1_1 = af_blue_2_1 + 4,

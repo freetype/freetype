@@ -1,5 +1,16 @@
 2013-08-26  Werner Lemberg  <wl@gnu.org>
 
+	[autofit] Add support for Hebrew script.
+
+	* src/autofit/afblue.dat: Add blue strings for Hebrew.
+	* src/autofit/afblue.c, src/autofit/afblue.h: Regenerated.
+
+	* src/autofit/aflatin.c (af_hebr_uniranges): New array.
+	(af_hebr_script_class): New script.
+	* src/autofit/aflatin.h, src/autofit/afscript.h: Updated.
+
+2013-08-26  Werner Lemberg  <wl@gnu.org>
+
 	[autofit] Improve tracing messages.
 
 	* src/autofit/afcjk.c (af_cjk_metrics_init_widths): Mention script

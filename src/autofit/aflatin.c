@@ -2503,6 +2503,14 @@
   };
 
 
+  static const AF_Script_UniRangeRec  af_hebr_uniranges[] =
+  {
+    AF_UNIRANGE_REC(  0x0590UL,  0x05FFUL ),  /* Hebrew */
+    AF_UNIRANGE_REC(  0xFB1DUL,  0xFB4FUL ),  /* Alphab. Present. Forms (Hebrew) */
+    AF_UNIRANGE_REC(       0UL,       0UL )
+  };
+
+
   AF_DEFINE_SCRIPT_CLASS(
     af_latn_script_class,
 
@@ -2512,6 +2520,17 @@
 
     af_latn_uniranges,
     'o'
+  )
+
+  AF_DEFINE_SCRIPT_CLASS(
+    af_hebr_script_class,
+
+    AF_SCRIPT_HEBR,
+    AF_BLUE_STRINGSET_HEBR,
+    AF_WRITING_SYSTEM_LATIN,
+
+    af_hebr_uniranges,
+    0x5DD /* ם */
   )
 
 

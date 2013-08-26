@@ -25,6 +25,7 @@
   SCRIPT( deva, DEVA )
   SCRIPT( dflt, DFLT )
   SCRIPT( hani, HANI )
+  SCRIPT( hebr, HEBR )
   SCRIPT( latn, LATN )
 #ifdef FT_OPTION_AUTOFIT2
   SCRIPT( ltn2, LTN2 )
