@@ -73,9 +73,11 @@
     AF_GlyphHintsRec  hints[1];
 
 
-    FT_TRACE5(( "cjk standard widths computation\n"
-                "===============================\n"
-                "\n" ));
+    FT_TRACE5(( "\n"
+                "cjk standard widths computation (script %d)\n"
+                "===========================================\n"
+                "\n",
+                metrics->root.script_class->script ));
 
     af_glyph_hints_init( hints, face->memory );
 
@@ -259,6 +261,11 @@
       FT_Pos*      blue_shoot;
 
 
+      if ( AF_CJK_IS_HORIZ_BLUE( bs ) )
+        axis = &metrics->axis[AF_DIMENSION_HORZ];
+      else
+        axis = &metrics->axis[AF_DIMENSION_VERT];
+
       FT_TRACE5(( "blue zone %d:\n", axis->blue_count ));
 
       num_fills = 0;
@@ -280,13 +287,11 @@
 
         GET_UTF8_CHAR( ch, p );
 
-        FT_TRACE5(( "    U+%lX... ", ch ));
-
         /* load the character in the face -- skip unknown or empty ones */
         glyph_index = FT_Get_Char_Index( face, ch );
         if ( glyph_index == 0 )
         {
-          FT_TRACE5(( "unavailable\n" ));
+          FT_TRACE5(( "  U+%04lX unavailable\n", ch ));
           continue;
         }
 
@@ -294,7 +299,7 @@
         outline = face->glyph->outline;
         if ( error || outline.n_points <= 0 )
         {
-          FT_TRACE5(( "no outline\n" ));
+          FT_TRACE5(( "  U+%04lX contains no outlines\n", ch ));
           continue;
         }
 
@@ -366,7 +371,7 @@
             }
           }
 
-          FT_TRACE5(( "best_pos = %5ld\n", best_pos ));
+          FT_TRACE5(( "  U+%04lX: best_pos = %5ld\n", ch, best_pos ));
         }
 
         if ( AF_CJK_IS_FILLED_BLUE( bs ) )
@@ -390,11 +395,6 @@
       /* we simply take the median value after a simple sort             */
       af_sort_pos( num_flats, flats );
       af_sort_pos( num_fills, fills );
-
-      if ( AF_CJK_IS_HORIZ_BLUE( bs ) )
-        axis = &metrics->axis[AF_DIMENSION_HORZ];
-      else
-        axis = &metrics->axis[AF_DIMENSION_VERT];
 
       blue       = &axis->blues[axis->blue_count];
       blue_ref   = &blue->ref.org;
@@ -1660,9 +1660,13 @@
     FT_Bool       has_last_stem = FALSE;
     FT_Pos        last_stem_pos = 0;
 
+#ifdef FT_DEBUG_LEVEL_TRACE
+    FT_UInt       num_actions = 0;
+#endif
+
 
     /* we begin by aligning all stems relative to the blue zone */
-    FT_TRACE5(( "==== cjk hinting %s edges =====\n",
+    FT_TRACE5(( "cjk %s edge hinting\n",
           dim == AF_DIMENSION_HORZ ? "vertical" : "horizontal" ));
 
     if ( AF_HINTS_DO_BLUES( hints ) )
@@ -1694,10 +1698,14 @@
         if ( !edge1 )
           continue;
 
-        FT_TRACE5(( "CJKBLUE: edge %d @%d (opos=%.2f) snapped to (%.2f), "
-                 "was (%.2f)\n",
-                 edge1-edges, edge1->fpos, edge1->opos / 64.0, blue->fit / 64.0,
-                 edge1->pos / 64.0 ));
+#ifdef FT_DEBUG_LEVEL_TRACE
+        FT_TRACE5(( "  CJKBLUE: edge %d @%d (opos=%.2f) snapped to %.2f,"
+                    " was %.2f\n",
+                    edge1 - edges, edge1->fpos, edge1->opos / 64.0,
+                    blue->fit / 64.0, edge1->pos / 64.0 ));
+
+        num_actions++;
+#endif
 
         edge1->pos    = blue->fit;
         edge1->flags |= AF_EDGE_DONE;
@@ -1706,6 +1714,10 @@
         {
           af_cjk_align_linked_edge( hints, dim, edge1, edge2 );
           edge2->flags |= AF_EDGE_DONE;
+
+#ifdef FT_DEBUG_LEVEL_TRACE
+          num_actions++;
+#endif
         }
 
         if ( !anchor )
@@ -1747,6 +1759,7 @@
       }
 
       /* now align the stem */
+
       /* this should not happen, but it's better to be safe */
       if ( edge2->blue_edge )
       {
@@ -1754,6 +1767,11 @@
 
         af_cjk_align_linked_edge( hints, dim, edge2, edge );
         edge->flags |= AF_EDGE_DONE;
+
+#ifdef FT_DEBUG_LEVEL_TRACE
+        num_actions++;
+#endif
+
         continue;
       }
 
@@ -1761,6 +1779,11 @@
       {
         af_cjk_align_linked_edge( hints, dim, edge2, edge );
         edge->flags |= AF_EDGE_DONE;
+
+#ifdef FT_DEBUG_LEVEL_TRACE
+        num_actions++;
+#endif
+
         /* We rarely reaches here it seems;
          * usually the two edges belonging
          * to one stem are marked as DONE together
@@ -1928,7 +1951,7 @@
     }
 
     if ( !skipped )
-      return;
+      goto Exit;
 
     /*
      *  now hint the remaining edges (serifs and single) in order
@@ -1948,7 +1971,7 @@
     }
 
     if ( !skipped )
-      return;
+      goto Exit;
 
     for ( edge = edges; edge < edge_limit; edge++ )
     {
@@ -1986,6 +2009,16 @@
         }
       }
     }
+
+  Exit:
+
+#ifdef FT_DEBUG_LEVEL_TRACE
+    if ( !num_actions )
+      FT_TRACE5(( "  (none)\n" ));
+    FT_TRACE5(( "\n" ));
+#endif
+
+    return;
   }
 
 

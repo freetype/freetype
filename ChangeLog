@@ -1,5 +1,23 @@
 2013-08-26  Werner Lemberg  <wl@gnu.org>
 
+	[autofit] Improve tracing messages.
+
+	* src/autofit/afcjk.c (af_cjk_metrics_init_widths): Mention script
+	ID in tracing message.
+	(af_cjk_metrics_init_blues): Initialize `axis' outside of the inner
+	loop.
+	Improve tracing messages.
+	(af_cjk_hint_edges) [FT_DEBUG_LEVEL_TRACE]: New variable
+	`num_actions' to count hinting actions.
+	Improve tracing messages.
+
+	* src/autofit/aflatin.c (af_latin_metrics_init_widths): Mention
+	script ID in tracing message.
+	(af_latin_metrics_init_blues, af_latin_hint_edges): Improve tracing
+	messages.
+
+2013-08-26  Werner Lemberg  <wl@gnu.org>
+
 	Better tracing of loaded glyphs.
 
 	Previously, the loading of a glyph was traced at level 4, if at all. 

@@ -60,9 +60,11 @@
     AF_GlyphHintsRec  hints[1];
 
 
-    FT_TRACE5(( "latin standard widths computation\n"
-                "=================================\n"
-                "\n" ));
+    FT_TRACE5(( "\n"
+                "latin standard widths computation (script %d)\n"
+                "=============================================\n"
+                "\n",
+                metrics->root.script_class->script ));
 
     af_glyph_hints_init( hints, face->memory );
 
@@ -249,13 +251,11 @@
 
         GET_UTF8_CHAR( ch, p );
 
-        FT_TRACE5(( "  U+%lX... ", ch ));
-
         /* load the character in the face -- skip unknown or empty ones */
         glyph_index = FT_Get_Char_Index( face, ch );
         if ( glyph_index == 0 )
         {
-          FT_TRACE5(( "unavailable\n" ));
+          FT_TRACE5(( "  U+%04lX unavailable\n", ch ));
           continue;
         }
 
@@ -263,7 +263,7 @@
         outline = face->glyph->outline;
         if ( error || outline.n_points <= 0 )
         {
-          FT_TRACE5(( "no outline\n" ));
+          FT_TRACE5(( "  U+%04lX contains no outlines\n", ch ));
           continue;
         }
 
@@ -320,7 +320,7 @@
             }
           }
 
-          FT_TRACE5(( "best_y = %5ld\n", best_y ));
+          FT_TRACE5(( "  U+%04lX: best_y = %5ld", ch, best_y ));
         }
 
         /* now check whether the point belongs to a straight or round   */
@@ -1897,7 +1897,7 @@
 #endif
 
 
-    FT_TRACE5(( "%s edge hinting\n",
+    FT_TRACE5(( "latin %s edge hinting\n",
                 dim == AF_DIMENSION_VERT ? "horizontal" : "vertical" ));
 
     /* we begin by aligning all stems relative to the blue zone */
