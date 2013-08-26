@@ -1897,8 +1897,9 @@
 #endif
 
 
-    FT_TRACE5(( "latin %s edge hinting\n",
-                dim == AF_DIMENSION_VERT ? "horizontal" : "vertical" ));
+    FT_TRACE5(( "latin %s edge hinting (script %d)\n",
+                dim == AF_DIMENSION_VERT ? "horizontal" : "vertical",
+                hints->metrics->script_class->script ));
 
     /* we begin by aligning all stems relative to the blue zone */
     /* if needed -- that's only for horizontal edges            */

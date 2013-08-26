@@ -1665,9 +1665,11 @@
 #endif
 
 
+    FT_TRACE5(( "cjk %s edge hinting (script %d)\n",
+                dim == AF_DIMENSION_VERT ? "horizontal" : "vertical",
+                hints->metrics->script_class->script ));
+
     /* we begin by aligning all stems relative to the blue zone */
-    FT_TRACE5(( "cjk %s edge hinting\n",
-          dim == AF_DIMENSION_HORZ ? "vertical" : "horizontal" ));
 
     if ( AF_HINTS_DO_BLUES( hints ) )
     {

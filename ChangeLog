@@ -1,5 +1,12 @@
 2013-08-26  Werner Lemberg  <wl@gnu.org>
 
+	[autofit] Report used script while hinting a glyph.
+
+	* src/autofit/afcjk.c (af_cjk_hint_edges), src/autofit/aflatin.c
+	(af_latin_hint_edges): Implement it.
+
+2013-08-26  Werner Lemberg  <wl@gnu.org>
+
 	[autofit] Add support for Hebrew script.
 
 	* src/autofit/afblue.dat: Add blue strings for Hebrew.
