@@ -2204,6 +2204,8 @@
 
     error = FT_Err_Ok;
 
+    FT_TRACE1(( "TT_Load_Glyph: glyph index %d\n", glyph_index ));
+
 #ifdef TT_CONFIG_OPTION_EMBEDDED_BITMAPS
 
     /* try to load embedded bitmap if any              */

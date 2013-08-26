@@ -984,6 +984,8 @@
       goto Exit;
     }
 
+    FT_TRACE1(( "FNT_Load_Glyph: glyph index %d\n", glyph_index ));
+
     if ( glyph_index > 0 )
       glyph_index--;                           /* revert to real index */
     else

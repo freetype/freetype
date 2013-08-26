@@ -164,6 +164,8 @@
     if ( !slot )
       return FT_THROW( Invalid_Slot_Handle );
 
+    FT_TRACE1(( "cff_glyph_load: glyph index %d\n", glyph_index ));
+
     /* check whether we want a scaled outline or bitmap */
     if ( !size )
       load_flags |= FT_LOAD_NO_SCALE | FT_LOAD_NO_HINTING;

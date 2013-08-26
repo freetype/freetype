@@ -674,6 +674,8 @@ THE SOFTWARE.
       goto Exit;
     }
 
+    FT_TRACE1(( "BDF_Glyph_Load: glyph index %d\n", glyph_index ));
+
     /* index 0 is the undefined glyph */
     if ( glyph_index == 0 )
       glyph_index = bdf->default_glyph;

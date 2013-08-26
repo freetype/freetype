@@ -1,5 +1,27 @@
 2013-08-26  Werner Lemberg  <wl@gnu.org>
 
+	Better tracing of loaded glyphs.
+
+	Previously, the loading of a glyph was traced at level 4, if at all. 
+	With this change, all font loading routines emit a tracing message
+	at level 1, making it easier to select tracing output (for example
+	using F2_DEBUG="any:1 afhints:7 aflatin:7").
+
+	* src/bdf/bdfdrivr.c (BDF_Glyph_Load): Add tracing message.
+	* src/cff/cffdrivr.c (cff_glyph_load): Ditto.
+	* src/cff/cffgload.c (cff_decoder_prepare): Improve tracing
+	messages.
+	* src/cid/cidgload.c (cid_load_glyph): Use level 1 for tracing
+	message.
+	* src/pcf/pcfdrivr.c (PCF_Glyph_Load): Ditto.
+	* src/pfr/pfrobjs.c (pfr_slot_load): Add tracing message.
+	* src/truetype/ttgload.c (TT_Load_Glyph): Ditto.
+	* src/type1/t1gload.c (T1_Load_Glyph): Ditto.
+	* src/type42/t42objs.c (T42_GlyphSlot_Load): Ditto.
+	* src/winfonts/winfnt.c (FNT_Load_Glyph): Ditto.
+
+2013-08-26  Werner Lemberg  <wl@gnu.org>
+
 	[autofit] Fix script selection.
 
 	* src/autofit/afglobal.c (af_face_globals_get_metrics): Use

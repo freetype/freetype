@@ -481,7 +481,7 @@ THE SOFTWARE.
     FT_UNUSED( load_flags );
 
 
-    FT_TRACE4(( "load_glyph %d ---", glyph_index ));
+    FT_TRACE1(( "PCF_Glyph_Load: glyph index %d\n", glyph_index ));
 
     if ( !face || glyph_index >= (FT_UInt)face->root.num_glyphs )
     {
@@ -574,8 +574,6 @@ THE SOFTWARE.
     ft_synthesize_vertical_metrics( &slot->metrics,
                                     ( face->accel.fontAscent +
                                       face->accel.fontDescent ) << 6 );
-
-    FT_TRACE4(( " --- ok\n" ));
 
   Exit:
     return error;

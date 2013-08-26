@@ -648,6 +648,8 @@
     FT_Driver_Class  ttclazz = ((T42_Driver)glyph->face->driver)->ttclazz;
 
 
+    FT_TRACE1(( "T42_GlyphSlot_Load: glyph index %d\n", glyph_index ));
+
     t42_glyphslot_clear( t42slot->ttslot );
     error = ttclazz->load_glyph( t42slot->ttslot,
                                  t42size->ttsize,
