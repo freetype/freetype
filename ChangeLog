@@ -1,3 +1,11 @@
+2013-08-26  Werner Lemberg  <wl@gnu.org>
+
+	[autofit] Make `dummy' hinter work as expected.
+
+	* src/autofit/afdummy.c (af_dummy_hints_init): Properly set scaling
+	information.
+	(af_dummy_hints_apply): Scale the glyphs.
+
 2013-08-25  Werner Lemberg  <wl@gnu.org>
 
 	[autofit] Make `cjk' module use blue stringsets.
