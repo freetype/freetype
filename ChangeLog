@@ -1,5 +1,15 @@
 2013-08-26  Werner Lemberg  <wl@gnu.org>
 
+	[autofit] Fix script selection.
+
+	* src/autofit/afglobal.c (af_face_globals_get_metrics): Use
+	`AF_SCRIPT_DFLT', not value 0.
+	Simplify code.
+
+	* src/autofit/afscript.h: Sort by script name.
+
+2013-08-26  Werner Lemberg  <wl@gnu.org>
+
 	[autofit] Make `dummy' hinter work as expected.
 
 	* src/autofit/afdummy.c (af_dummy_hints_init): Properly set scaling

@@ -246,15 +246,12 @@
                                AF_ScriptMetrics  *ametrics )
   {
     AF_ScriptMetrics  metrics = NULL;
-    FT_UInt           gidx;
 
+    AF_Script              script = options & 15;
     AF_WritingSystemClass  writing_system_class;
     AF_ScriptClass         script_class;
 
-    FT_UInt          script     = options & 15;
-    const FT_Offset  script_max = sizeof ( AF_SCRIPT_CLASSES_GET ) /
-                                    sizeof ( AF_SCRIPT_CLASSES_GET[0] );
-    FT_Error         error      = FT_Err_Ok;
+    FT_Error  error = FT_Err_Ok;
 
 
     if ( gindex >= (FT_ULong)globals->glyph_count )
@@ -263,17 +260,16 @@
       goto Exit;
     }
 
-    gidx = script;
-    if ( gidx == 0 || gidx + 1 >= script_max )
-      gidx = globals->glyph_scripts[gindex] & AF_SCRIPT_NONE;
+    /* if we have a forced script (via `options'), use it, */
+    /* otherwise look into `glyph_scripts' array           */
+    if ( script == AF_SCRIPT_DFLT || script + 1 >= AF_SCRIPT_MAX )
+      script = globals->glyph_scripts[gindex] & AF_SCRIPT_NONE;
 
-    script_class         = AF_SCRIPT_CLASSES_GET[gidx];
+    script_class         = AF_SCRIPT_CLASSES_GET[script];
     writing_system_class = AF_WRITING_SYSTEM_CLASSES_GET
                              [script_class->writing_system];
-    if ( script == 0 )
-      script = script_class->script;
 
-    metrics = globals->metrics[script_class->script];
+    metrics = globals->metrics[script];
     if ( metrics == NULL )
     {
       /* create the global metrics object if necessary */
@@ -300,7 +296,7 @@
         }
       }
 
-      globals->metrics[script_class->script] = metrics;
+      globals->metrics[script] = metrics;
     }
 
   Exit:

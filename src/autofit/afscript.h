@@ -22,10 +22,10 @@
 
   /* Add new scripts here. */
 
-  SCRIPT( dflt, DFLT )
-  SCRIPT( latn, LATN )
-  SCRIPT( hani, HANI )
   SCRIPT( deva, DEVA )
+  SCRIPT( dflt, DFLT )
+  SCRIPT( hani, HANI )
+  SCRIPT( latn, LATN )
 #ifdef FT_OPTION_AUTOFIT2
   SCRIPT( ltn2, LTN2 )
 #endif
