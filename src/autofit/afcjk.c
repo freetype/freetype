@@ -74,10 +74,10 @@
 
 
     FT_TRACE5(( "\n"
-                "cjk standard widths computation (script %d)\n"
-                "===========================================\n"
+                "cjk standard widths computation (script `%s')\n"
+                "===============================================\n"
                 "\n",
-                metrics->root.script_class->script ));
+                af_script_names[metrics->root.script_class->script] ));
 
     af_glyph_hints_init( hints, face->memory );
 
@@ -1665,9 +1665,9 @@
 #endif
 
 
-    FT_TRACE5(( "cjk %s edge hinting (script %d)\n",
+    FT_TRACE5(( "cjk %s edge hinting (script `%s')\n",
                 dim == AF_DIMENSION_VERT ? "horizontal" : "vertical",
-                hints->metrics->script_class->script ));
+                af_script_names[hints->metrics->script_class->script] ));
 
     /* we begin by aligning all stems relative to the blue zone */
 

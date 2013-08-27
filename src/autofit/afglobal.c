@@ -61,6 +61,22 @@
 #endif /* !FT_CONFIG_OPTION_PIC */
 
 
+#ifdef FT_DEBUG_LEVEL_TRACE
+
+#undef  SCRIPT
+#define SCRIPT( s, S )  #s,
+
+  FT_LOCAL_ARRAY_DEF( char* )
+  af_script_names[] =
+  {
+
+#include "afscript.h"
+
+  };
+
+#endif /* FT_DEBUG_LEVEL_TRACE */
+
+
   /* Compute the script index of each glyph within a given face. */
 
   static FT_Error

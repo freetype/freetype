@@ -34,6 +34,10 @@ FT_BEGIN_HEADER
   FT_LOCAL_ARRAY( AF_ScriptClass )
   af_script_classes[];
 
+#ifdef FT_DEBUG_LEVEL_TRACE
+  FT_LOCAL_ARRAY( char* )
+  af_script_names[];
+#endif
 
   /*
    *  Default values and flags for both autofitter globals (found in

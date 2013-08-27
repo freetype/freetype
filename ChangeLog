@@ -1,3 +1,16 @@
+2013-08-27  Werner Lemberg  <wl@gnu.org>
+
+	[autofit] While tracing, report script names instead of ID values.
+
+	* src/autofit/afglobal.c (af_script_names) [FT_DEBUG_LEVEL_TRACE]:
+	New array.
+	* src/autofit/afglobal.h: Updated.
+
+	* src/autofit/afcjk.c (af_cjk_metrics_init_widths,
+	af_cjk_hint_edges): Use `af_script_names'.
+	* src/autofit/aflatin.c (af_latin_metrics_init_widths,
+	af_latin_hint_edges): Ditto.
+
 2013-08-26  Werner Lemberg  <wl@gnu.org>
 
 	[autofit] Report used script while hinting a glyph.
