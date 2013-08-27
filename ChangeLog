@@ -201,10 +201,11 @@
 
 2013-08-19  Alexei Podtelezhnikov  <apodtele@gmail.com>
 
-	[base] Enable new algorithm for BBox_Cubic_Check.
+	[base] Enable new algorithm for `BBox_Cubic_Check'.
 
-	* src/base/ftbbox.c: Enable new BBox_Cubic_Check algorithm, remove the
-	old one. Improve comments.
+	* src/base/ftbbox.c: Enable new BBox_Cubic_Check algorithm, remove
+	the old one.
+	Improve comments.
 
 2013-08-18  Werner Lemberg  <wl@gnu.org>
 

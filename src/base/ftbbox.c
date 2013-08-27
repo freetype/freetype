@@ -85,7 +85,7 @@
   /*    BBox_Conic_Check                                                   */
   /*                                                                       */
   /* <Description>                                                         */
-  /*    Finds the extrema of a 1-dimensional conic Bezier curve and update */
+  /*    Find the extrema of a 1-dimensional conic Bezier curve and update  */
   /*    a bounding range.  This version uses direct computation, as it     */
   /*    doesn't need square roots.                                         */
   /*                                                                       */
@@ -108,10 +108,10 @@
                     FT_Pos*  min,
                     FT_Pos*  max )
   {
-    /* This function is only called when a control off-point is outside  */
-    /* the bbox that contains all on-points. It finds a local extremum   */
-    /* within the segment, equal to (y1*y3 - y2*y2)/(y1 - 2*y2 + y3).    */
-    /* Or, offsetting from y2, we get                                    */
+    /* This function is only called when a control off-point is outside */
+    /* the bbox that contains all on-points.  It finds a local extremum */
+    /* within the segment, equal to (y1*y3 - y2*y2)/(y1 - 2*y2 + y3).   */
+    /* Or, offsetting from y2, we get                                   */
 
     y1 -= y2;
     y3 -= y2;
@@ -184,8 +184,8 @@
   /*    BBox_Cubic_Check                                                   */
   /*                                                                       */
   /* <Description>                                                         */
-  /*    Finds the extrema of a 1-dimensional cubic Bezier curve and        */
-  /*    updates a bounding range.  This version uses iterative splitting   */
+  /*    Find the extrema of a 1-dimensional cubic Bezier curve and         */
+  /*    update a bounding range.  This version uses iterative splitting    */
   /*    because it is faster than the exact solution with square roots.    */
   /*                                                                       */
   /* <Input>                                                               */
@@ -202,13 +202,12 @@
   /*                                                                       */
   /*    max :: The address of the current maximum.                         */
   /*                                                                       */
-
   static FT_Pos
-  update_cubic_max( FT_Pos   q1,
-                    FT_Pos   q2,
-                    FT_Pos   q3,
-                    FT_Pos   q4,
-                    FT_Pos   max )
+  update_cubic_max( FT_Pos  q1,
+                    FT_Pos  q2,
+                    FT_Pos  q3,
+                    FT_Pos  q4,
+                    FT_Pos  max )
   {
     /* for a cubic segment to possibly reach new maximum, at least */
     /* one of its off-points must stay above the current value     */
@@ -238,7 +237,7 @@
         q3 = q3 / 2;
       }
 
-      /* check if either end reached the maximum */
+      /* check whether either end reached the maximum */
       if ( q1 == q2 && q1 >= q3 )
       {
         max = q1;
@@ -254,6 +253,7 @@
     return max;
   }
 
+
   static void
   BBox_Cubic_Check( FT_Pos   p1,
                     FT_Pos   p2,
@@ -262,16 +262,17 @@
                     FT_Pos*  min,
                     FT_Pos*  max )
   {
-    FT_Pos nmin, nmax;
-    FT_Int shift;
+    FT_Pos  nmin, nmax;
+    FT_Int  shift;
+
 
     /* This function is only called when a control off-point is outside  */
-    /* the bbox that contains all on-points. It finds a local extremum   */
+    /* the bbox that contains all on-points.  It finds a local extremum  */
     /* within the segment using iterative bisection of the segment.      */
-    /* The fixed-point arithmentic of bisection is inherently stable     */
-    /* but may loose accuracy in the two lowest bits. To compensate,     */
-    /* we upscale the segment if there is room. Large values may need    */
-    /* to be downscaled to avoid overflows during bisection bisection.   */
+    /* The fixed-point arithmetic of bisection is inherently stable      */
+    /* but may loose accuracy in the two lowest bits.  To compensate,    */
+    /* we upscale the segment if there is room.  Large values may need   */
+    /* to be downscaled to avoid overflows during bisection.             */
     /* The control off-point outside the bbox is likely to have the top  */
     /* absolute value among arguments.                                   */
 
@@ -357,9 +358,9 @@
                  FT_Vector*  to,
                  TBBox_Rec*  user )
   {
-    /* We don't need to check `to' since it is always an on-point,   */
-    /* thus within the bbox. Only segments with an off-point outside */
-    /* the bbox can possibly reach new extreme values.               */
+    /* We don't need to check `to' since it is always an on-point,    */
+    /* thus within the bbox.  Only segments with an off-point outside */
+    /* the bbox can possibly reach new extreme values.                */
 
     if ( CHECK_X( control1, user->bbox ) ||
          CHECK_X( control2, user->bbox ) )
