@@ -1,5 +1,9 @@
 2013-08-27  Behdad Esfahbod  <behdad@google.com>
 
+	* src/sfnt/ttload.c (tt_face_load_font_dir): Fix sign typos.
+
+2013-08-27  Behdad Esfahbod  <behdad@google.com>
+
 	FT_Open_Face: Improve external stream handling.
 
 	If the font's `clazz->init_face' function wants to swap to new

@@ -391,8 +391,8 @@
     {
       entry->Tag      = FT_GET_TAG4();
       entry->CheckSum = FT_GET_ULONG();
-      entry->Offset   = FT_GET_LONG();
-      entry->Length   = FT_GET_LONG();
+      entry->Offset   = FT_GET_ULONG();
+      entry->Length   = FT_GET_ULONG();
 
       /* ignore invalid tables */
       if ( entry->Offset + entry->Length > stream->size )
