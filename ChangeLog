@@ -1,3 +1,17 @@
+2013-08-27  Behdad Esfahbod  <behdad@google.com>
+
+	FT_Open_Face: Improve external stream handling.
+
+	If the font's `clazz->init_face' function wants to swap to new
+	stream, handling of whether original stream was external could
+	result to either memory leak or double free.  Mark externality into
+	face flags before calling `init_face' such that the clazz can handle
+	external streams properly.
+
+	* src/base/ftobjs.c (FT_Open_Face): Move code to set
+	FT_FACE_FLAG_EXTERNAL_STREAM to...
+	(open_face): This function.
+
 2013-08-27  Werner Lemberg  <wl@gnu.org>
 
 	Remove `FT_SqrtFixed' function.

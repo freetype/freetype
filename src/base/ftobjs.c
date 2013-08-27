@@ -1134,6 +1134,7 @@
   static FT_Error
   open_face( FT_Driver      driver,
              FT_Stream      stream,
+             FT_Bool        external_stream,
              FT_Long        face_index,
              FT_Int         num_params,
              FT_Parameter*  params,
@@ -1156,6 +1157,11 @@
     face->driver = driver;
     face->memory = memory;
     face->stream = stream;
+
+    /* set the FT_FACE_FLAG_EXTERNAL_STREAM bit for FT_Done_Face */
+    if ( external_stream )
+      face->face_flags |= FT_FACE_FLAG_EXTERNAL_STREAM;
+
 
     if ( FT_NEW( internal ) )
       goto Fail;
@@ -2069,7 +2075,7 @@
           params     = args->params;
         }
 
-        error = open_face( driver, stream, face_index,
+        error = open_face( driver, stream, external_stream, face_index,
                            num_params, params, &face );
         if ( !error )
           goto Success;
@@ -2105,7 +2111,7 @@
             params     = args->params;
           }
 
-          error = open_face( driver, stream, face_index,
+          error = open_face( driver, stream, external_stream, face_index,
                              num_params, params, &face );
           if ( !error )
             goto Success;
@@ -2173,10 +2179,6 @@
 
   Success:
     FT_TRACE4(( "FT_Open_Face: New face object, adding to list\n" ));
-
-    /* set the FT_FACE_FLAG_EXTERNAL_STREAM bit for FT_Done_Face */
-    if ( external_stream )
-      face->face_flags |= FT_FACE_FLAG_EXTERNAL_STREAM;
 
     /* add the face object to its driver's list */
     if ( FT_NEW( node ) )
