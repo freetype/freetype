@@ -27,10 +27,12 @@
 FT_BEGIN_HEADER
 
 
+#if 0
+
   /*************************************************************************/
   /*                                                                       */
   /* <Function>                                                            */
-  /*    FT_FixedSqrt                                                       */
+  /*    FT_SqrtFixed                                                       */
   /*                                                                       */
   /* <Description>                                                         */
   /*    Computes the square root of a 16.16 fixed-point value.             */
@@ -46,6 +48,8 @@ FT_BEGIN_HEADER
   /*                                                                       */
   FT_BASE( FT_Int32 )
   FT_SqrtFixed( FT_Int32  x );
+
+#endif /* 0 */
 
 
   /*************************************************************************/

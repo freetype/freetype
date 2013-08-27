@@ -816,6 +816,8 @@
   }
 
 
+#if 0
+
   /* documentation is in ftcalc.h */
 
   FT_BASE_DEF( FT_Int32 )
@@ -849,6 +851,8 @@
 
     return (FT_Int32)root;
   }
+
+#endif /* 0 */
 
 
   /* documentation is in ftcalc.h */

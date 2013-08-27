@@ -1,5 +1,13 @@
 2013-08-27  Werner Lemberg  <wl@gnu.org>
 
+	Remove `FT_SqrtFixed' function.
+
+	It's no longer used.
+
+	* include/freetype/internal/ftcalc.h, src/base/ftcalc.c: Do it.
+
+2013-08-27  Werner Lemberg  <wl@gnu.org>
+
 	[autofit] While tracing, report script names instead of ID values.
 
 	* src/autofit/afglobal.c (af_script_names) [FT_DEBUG_LEVEL_TRACE]:
