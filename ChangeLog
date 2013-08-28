@@ -1,5 +1,13 @@
 2013-08-28  Werner Lemberg  <wl@gnu.org>
 
+	[autofit] Fix `make multi' compilation.
+
+	* src/autofit/afblue.cin, src/autofit/afblue.c: Don't include
+	`afblue.h' but `aftypes.h'.
+	* src/autofit/afcjk.c: Don't include `aftypes.h' but `afglobal.h'.
+
+2013-08-28  Werner Lemberg  <wl@gnu.org>
+
 	[autofit] Fix C++ compilation.
 
 	* src/autofit/afglobal.c (af_face_globals_get_metrics),

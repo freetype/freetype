@@ -19,7 +19,7 @@
 /***************************************************************************/
 
 
-#include "afblue.h"
+#include "aftypes.h"
 
 
   FT_LOCAL_ARRAY_DEF( char )

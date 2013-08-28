@@ -26,7 +26,7 @@
 #include FT_ADVANCES_H
 #include FT_INTERNAL_DEBUG_H
 
-#include "aftypes.h"
+#include "afglobal.h"
 #include "aflatin.h"
 
 
