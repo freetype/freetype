@@ -263,7 +263,7 @@
   {
     AF_ScriptMetrics  metrics = NULL;
 
-    AF_Script              script = options & 15;
+    AF_Script              script = (AF_Script)( options & 15 );
     AF_WritingSystemClass  writing_system_class;
     AF_ScriptClass         script_class;
 
@@ -279,7 +279,7 @@
     /* if we have a forced script (via `options'), use it, */
     /* otherwise look into `glyph_scripts' array           */
     if ( script == AF_SCRIPT_DFLT || script + 1 >= AF_SCRIPT_MAX )
-      script = globals->glyph_scripts[gindex] & AF_SCRIPT_NONE;
+      script = (AF_Script)( globals->glyph_scripts[gindex] & AF_SCRIPT_NONE );
 
     script_class         = AF_SCRIPT_CLASSES_GET[script];
     writing_system_class = AF_WRITING_SYSTEM_CLASSES_GET

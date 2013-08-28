@@ -1,3 +1,11 @@
+2013-08-28  Werner Lemberg  <wl@gnu.org>
+
+	[autofit] Fix C++ compilation.
+
+	* src/autofit/afglobal.c (af_face_globals_get_metrics),
+	src/autofit/afdummy.c (af_dflt_script_class), src/autofit/afindic.c
+	(af_deva_script_class): Use proper casts.
+
 2013-08-27  Behdad Esfahbod  <behdad@google.com>
 
 	* src/sfnt/ttload.c (tt_face_load_font_dir): Fix sign typos.
