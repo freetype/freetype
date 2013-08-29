@@ -1,4 +1,11 @@
-2013-08-28  Werner Lemberg  <wl@gnu.org>
+2013-08-28  Behdad Esfahbod  <behdad@google.com>
+
+	[sfnt] Fix frame access while reading WOFF table directory.
+
+	* src/sfnt/sfobjs.c (woff_open_font): Using single memory frame
+	while reading the directory entries for the whole loop.
+
+2013-08-29  Werner Lemberg  <wl@gnu.org>
             Behdad Esfahbod  <behdad@google.com>
 
 	Implement support for WOFF containers.

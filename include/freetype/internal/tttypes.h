@@ -189,6 +189,10 @@ FT_BEGIN_HEADER
   /*                                                                       */
   /*    CheckSum   :: The table checksum.  This value can be ignored.      */
   /*                                                                       */
+  /*    OrigOffset :: The uncompressed table file offset.  This value gets */
+  /*                  computed while constructing the (uncompressed) SFNT  */
+  /*                  header.  It is not contained in the WOFF file.       */
+  /*                                                                       */
   typedef struct  WOFF_TableRec_
   {
     FT_ULong  Tag;           /* table ID                  */

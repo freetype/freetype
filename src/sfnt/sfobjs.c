@@ -371,7 +371,7 @@
             *(p)++ = (v) >>  8; \
             *(p)++ = (v) >>  0; \
                                 \
-          } while (0)
+          } while ( 0 )
 
 
   static void
@@ -409,7 +409,7 @@
 
 
   /* Replace `face->root.stream' with a stream containing the extracted */
-  /* sfnt of a woff font.                                               */
+  /* SFNT of a WOFF font.                                               */
 
   static FT_Error
   woff_open_font( FT_Stream  stream,
@@ -462,7 +462,7 @@
     if ( FT_STREAM_READ_FIELDS( woff_header_fields, &woff ) )
       return error;
 
-    /* Make sure we don't recurse back here or hit ttc code. */
+    /* Make sure we don't recurse back here or hit TTC code. */
     if ( woff.flavor == TTAG_wOFF || woff.flavor == TTAG_ttcf )
       return FT_THROW( Invalid_Table );
 
@@ -520,22 +520,18 @@
                 "  tag    offset    compLen  origLen  checksum\n"
                 "  -------------------------------------------\n" ));
 
+    if ( FT_FRAME_ENTER( 20L * woff.num_tables ) )
+      goto Exit;
+
     for ( nn = 0; nn < woff.num_tables; nn++ )
     {
       WOFF_Table  table = tables + nn;
-
-
-      if ( FT_STREAM_SEEK( 44 + nn * 20 ) ||
-           FT_FRAME_ENTER( 20L )          )
-        goto Exit;
 
       table->Tag        = FT_GET_TAG4();
       table->Offset     = FT_GET_ULONG();
       table->CompLength = FT_GET_ULONG();
       table->OrigLength = FT_GET_ULONG();
       table->CheckSum   = FT_GET_ULONG();
-
-      FT_FRAME_EXIT();
 
       FT_TRACE2(( "  %c%c%c%c  %08lx  %08lx  %08lx  %08lx\n",
                   (FT_Char)( table->Tag >> 24 ),
@@ -549,6 +545,7 @@
 
       if ( table->Tag <= old_tag )
       {
+        FT_FRAME_EXIT();
         error = FT_THROW( Invalid_Table );
         goto Exit;
       }
@@ -556,6 +553,8 @@
       old_tag     = table->Tag;
       indices[nn] = table;
     }
+
+    FT_FRAME_EXIT();
 
     /* Sort by offset. */
 
@@ -699,7 +698,7 @@
       face->root.stream,
       ( face->root.face_flags & FT_FACE_FLAG_EXTERNAL_STREAM ) != 0 );
 
-    stream = face->root.stream = sfnt_stream;
+    face->root.stream = sfnt_stream;
 
     face->root.face_flags &= ~FT_FACE_FLAG_EXTERNAL_STREAM;
 
@@ -716,6 +715,7 @@
 
     return error;
   }
+
 
 #undef WRITE_BYTE
 #undef WRITE_USHORT
