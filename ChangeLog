@@ -1,5 +1,17 @@
 2013-08-28  Werner Lemberg  <wl@gnu.org>
 
+	[gzip] New function `FT_Gzip_Uncompress'.
+
+	This is modeled after zlib's `uncompress' function.  We need this
+	for WOFF support.
+
+	* include/freetype/ftgzip.h, src/gzip/ftgzip.c (FT_Gzip_Uncompress):
+	New function.
+
+	* src/gzip/rules.mk: Rewrite to better reflect dependencies.
+
+2013-08-28  Werner Lemberg  <wl@gnu.org>
+
 	[autofit] Fix `make multi' compilation.
 
 	* src/autofit/afblue.cin, src/autofit/afblue.c: Don't include
