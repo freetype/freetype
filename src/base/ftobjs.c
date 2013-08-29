@@ -1133,7 +1133,7 @@
   /*                                                                       */
   static FT_Error
   open_face( FT_Driver      driver,
-             FT_Stream      stream,
+             FT_Stream      *astream,
              FT_Bool        external_stream,
              FT_Long        face_index,
              FT_Int         num_params,
@@ -1142,9 +1142,10 @@
   {
     FT_Memory         memory;
     FT_Driver_Class   clazz;
-    FT_Face           face = 0;
-    FT_Error          error, error2;
+    FT_Face           face     = NULL;
     FT_Face_Internal  internal = NULL;
+
+    FT_Error          error, error2;
 
 
     clazz  = driver->clazz;
@@ -1156,12 +1157,11 @@
 
     face->driver = driver;
     face->memory = memory;
-    face->stream = stream;
+    face->stream = *astream;
 
     /* set the FT_FACE_FLAG_EXTERNAL_STREAM bit for FT_Done_Face */
     if ( external_stream )
       face->face_flags |= FT_FACE_FLAG_EXTERNAL_STREAM;
-
 
     if ( FT_NEW( internal ) )
       goto Fail;
@@ -1183,11 +1183,12 @@
 #endif
 
     if ( clazz->init_face )
-      error = clazz->init_face( stream,
+      error = clazz->init_face( *astream,
                                 face,
                                 (FT_Int)face_index,
                                 num_params,
                                 params );
+    *astream = face->stream; /* Stream may have been changed. */
     if ( error )
       goto Fail;
 
@@ -2075,7 +2076,7 @@
           params     = args->params;
         }
 
-        error = open_face( driver, stream, external_stream, face_index,
+        error = open_face( driver, &stream, external_stream, face_index,
                            num_params, params, &face );
         if ( !error )
           goto Success;
@@ -2111,7 +2112,7 @@
             params     = args->params;
           }
 
-          error = open_face( driver, stream, external_stream, face_index,
+          error = open_face( driver, &stream, external_stream, face_index,
                              num_params, params, &face );
           if ( !error )
             goto Success;

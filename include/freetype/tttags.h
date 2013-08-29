@@ -100,6 +100,7 @@ FT_BEGIN_HEADER
 #define TTAG_VDMX  FT_MAKE_TAG( 'V', 'D', 'M', 'X' )
 #define TTAG_vhea  FT_MAKE_TAG( 'v', 'h', 'e', 'a' )
 #define TTAG_vmtx  FT_MAKE_TAG( 'v', 'm', 't', 'x' )
+#define TTAG_wOFF  FT_MAKE_TAG( 'w', 'O', 'F', 'F' )
 
 
 FT_END_HEADER

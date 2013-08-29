@@ -1,4 +1,37 @@
 2013-08-28  Werner Lemberg  <wl@gnu.org>
+            Behdad Esfahbod  <behdad@google.com>
+
+	Implement support for WOFF containers.
+
+	We simply synthesize a SFNT from the WOFF, create a memory stream
+	for the new data, and load the SFNT as usual.
+
+	Does NOT add any API to access WOFF metadata or private blocks.
+
+	* include/freetype/internal/tttypes.h (WOFF_HeaderRec,
+	WOFF_TableRec): New structures.
+
+	* include/freetype/tttags.h (TTAG_wOFF): New macro.
+
+	* src/base/ftobjs.c (FT_Open_Face): Set `stream' after calling
+	`open_face'.
+
+	* src/sfnt/sfobjs.c [FT_CONFIG_OPTION_SYSTEM_ZLIB]: Include
+	`FT_GZIP_H'.
+	(WRITE_BYTE, WRITE_USHORT, WRITE_ULONG): New temporary macros for
+	writing to a stream.
+	(sfnt_stream_close, compare_offsets, woff_open_font): New functions.
+	(sfnt_open_font): Handle `TTAG_wOFF'.
+	(sfnt_init_face): Set `stream' after calling `sfnt_open_font'.
+
+	* src/truetype/ttobjs.c (tt_face_init): Set `stream' after calling
+	`sfnt->init_face'.
+
+	* src/base/ftobjs.c (open_face): Use a pointer to FT_Stream as an
+	argument so that a changed stream survives.
+	Update callers.
+
+2013-08-28  Werner Lemberg  <wl@gnu.org>
 
 	[gzip] New function `FT_Gzip_Uncompress'.
 

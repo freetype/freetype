@@ -140,6 +140,71 @@ FT_BEGIN_HEADER
   /*************************************************************************/
   /*                                                                       */
   /* <Struct>                                                              */
+  /*    WOFF_HeaderRec                                                     */
+  /*                                                                       */
+  /* <Description>                                                         */
+  /*    WOFF file format header.                                           */
+  /*                                                                       */
+  /* <Fields>                                                              */
+  /*    See                                                                */
+  /*                                                                       */
+  /*      http://www.w3.org/TR/WOFF/#WOFFHeader                            */
+  /*                                                                       */
+  typedef struct  WOFF_HeaderRec_
+  {
+    FT_ULong   signature;
+    FT_ULong   flavor;
+    FT_ULong   length;
+    FT_UShort  num_tables;
+    FT_UShort  reserved;
+    FT_ULong   totalSfntSize;
+    FT_UShort  majorVersion;
+    FT_UShort  minorVersion;
+    FT_ULong   metaOffset;
+    FT_ULong   metaLength;
+    FT_ULong   metaOrigLength;
+    FT_ULong   privOffset;
+    FT_ULong   privLength;
+
+  } WOFF_HeaderRec, *WOFF_Header;
+
+
+  /*************************************************************************/
+  /*                                                                       */
+  /* <Struct>                                                              */
+  /*    WOFF_TableRec                                                      */
+  /*                                                                       */
+  /* <Description>                                                         */
+  /*    This structure describes a given table of a WOFF font.             */
+  /*                                                                       */
+  /* <Fields>                                                              */
+  /*    Tag        :: A four-bytes tag describing the table.               */
+  /*                                                                       */
+  /*    Offset     :: The offset of the table from the start of the WOFF   */
+  /*                  font in its resource.                                */
+  /*                                                                       */
+  /*    CompLength :: Compressed table length (in bytes).                  */
+  /*                                                                       */
+  /*    OrigLength :: Unompressed table length (in bytes).                 */
+  /*                                                                       */
+  /*    CheckSum   :: The table checksum.  This value can be ignored.      */
+  /*                                                                       */
+  typedef struct  WOFF_TableRec_
+  {
+    FT_ULong  Tag;           /* table ID                  */
+    FT_ULong  Offset;        /* table file offset         */
+    FT_ULong  CompLength;    /* compressed table length   */
+    FT_ULong  OrigLength;    /* uncompressed table length */
+    FT_ULong  CheckSum;      /* uncompressed checksum     */
+
+    FT_ULong  OrigOffset;    /* uncompressed table file offset */
+                             /* (not in the WOFF file)         */
+  } WOFF_TableRec, *WOFF_Table;
+
+
+  /*************************************************************************/
+  /*                                                                       */
+  /* <Struct>                                                              */
   /*    TT_LongMetricsRec                                                  */
   /*                                                                       */
   /* <Description>                                                         */

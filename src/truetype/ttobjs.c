@@ -532,6 +532,10 @@
 
     /* check that we have a valid TrueType file */
     error = sfnt->init_face( stream, face, face_index, num_params, params );
+
+    /* Stream may have changed. */
+    stream = face->root.stream;
+
     if ( error )
       goto Exit;
 
