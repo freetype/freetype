@@ -5,7 +5,7 @@
 /*    Support for the FT_Outline type used to store glyph shapes of        */
 /*    most scalable font formats (specification).                          */
 /*                                                                         */
-/*  Copyright 1996-2003, 2005-2012 by                                      */
+/*  Copyright 1996-2003, 2005-2013 by                                      */
 /*  David Turner, Robert Wilhelm, and Werner Lemberg.                      */
 /*                                                                         */
 /*  This file is part of the FreeType project, and may only be used,       */
@@ -104,6 +104,13 @@ FT_BEGIN_HEADER
   /*                                                                       */
   /* <Return>                                                              */
   /*    FreeType error code.  0~means success.                             */
+  /*                                                                       */
+  /* <Note>                                                                */
+  /*    A contour that contains a single point only is represented by a    */
+  /*    `move to' operation followed by `line to' to the same point.  In   */
+  /*    most cases, it is best to filter this out before using the         */
+  /*    outline for stroking purposes (otherwise it would result in a      */
+  /*    visible dot when round caps are used).                             */
   /*                                                                       */
   FT_EXPORT( FT_Error )
   FT_Outline_Decompose( FT_Outline*              outline,
