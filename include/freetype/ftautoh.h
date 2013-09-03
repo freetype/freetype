@@ -79,7 +79,7 @@ FT_BEGIN_HEADER
    *   sense, see the @FT_AUTOHINTER_SCRIPT_XXX values) is stored as an
    *   array with `num_glyphs' elements, as found in the font's @FT_Face
    *   structure.  The `glyph-to-script-map' property returns a pointer to
-   *   this array which can be modified as needed.  Note that the
+   *   this array, which can be modified as needed.  Note that the
    *   modification should happen before the first glyph gets processed by
    *   the auto-hinter so that the global analysis of the font shapes
    *   actually uses the modified mapping.
@@ -282,7 +282,7 @@ FT_BEGIN_HEADER
    *   This property can be used with @FT_Property_Get also.
    *
    *   It's important to use the right timing for changing this value: The
-   *   creation of the glyph-to-script map which eventually uses the
+   *   creation of the glyph-to-script map that eventually uses the
    *   fallback script value gets triggered either by setting or reading a
    *   face-specific property like @glyph-to-script-map, or by auto-hinting
    *   any glyph from that face.  In particular, if you have already created

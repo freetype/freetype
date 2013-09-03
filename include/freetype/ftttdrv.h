@@ -61,7 +61,7 @@ FT_BEGIN_HEADER
    *   interpreter-version
    *
    * @description:
-   *   Currently, two versions are available which represent the bytecode
+   *   Currently, two versions are available, representing the bytecode
    *   interpreter with and without subpixel hinting support,
    *   respectively.  The default is subpixel support if
    *   TT_CONFIG_OPTION_SUBPIXEL_HINTING is defined, and no subpixel

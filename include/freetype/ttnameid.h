@@ -4,7 +4,7 @@
 /*                                                                         */
 /*    TrueType name ID definitions (specification only).                   */
 /*                                                                         */
-/*  Copyright 1996-2004, 2006-2008, 2012 by                                */
+/*  Copyright 1996-2004, 2006-2008, 2012, 2013 by                          */
 /*  David Turner, Robert Wilhelm, and Werner Lemberg.                      */
 /*                                                                         */
 /*  This file is part of the FreeType project, and may only be used,       */
@@ -1208,7 +1208,7 @@ FT_BEGIN_HEADER
   /*                                                                       */
   /* Here some alias #defines in order to be clearer.                      */
   /*                                                                       */
-  /* These are not always #defined to stay within the 31~character limit   */
+  /* These are not always #defined to stay within the 31~character limit,  */
   /* which some compilers have.                                            */
   /*                                                                       */
   /* Credits go to Dave Hoo <dhoo@flash.net> for pointing out that modern  */

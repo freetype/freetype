@@ -65,7 +65,7 @@ FT_BEGIN_HEADER
    *   There are two principles behind this approach.
    *
    *   1) No hinting in the horizontal direction: Unlike `superhinted'
-   *   TrueType which changes glyph widths to accommodate regular
+   *   TrueType, which changes glyph widths to accommodate regular
    *   inter-glyph spacing, Adobe's approach is `faithful to the design' in
    *   representing both the glyph width and the inter-glyph spacing
    *   designed for the font.  This makes the screen display as close as it

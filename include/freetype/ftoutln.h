@@ -97,7 +97,7 @@ FT_BEGIN_HEADER
   /*                      operations.                                      */
   /*                                                                       */
   /* <InOut>                                                               */
-  /*    user           :: A typeless pointer which is passed to each       */
+  /*    user           :: A typeless pointer that is passed to each        */
   /*                      emitter during the decomposition.  It can be     */
   /*                      used to store the state during the               */
   /*                      decomposition.                                   */
@@ -224,12 +224,12 @@ FT_BEGIN_HEADER
   /*    the outline's points, including Bézier control points.  Though it  */
   /*    coincides with the exact bounding box for most glyphs, it can be   */
   /*    slightly larger in some situations (like when rotating an outline  */
-  /*    which contains Bézier outside arcs).                               */
+  /*    that contains Bézier outside arcs).                                */
   /*                                                                       */
   /*    Computing the control box is very fast, while getting the bounding */
   /*    box can take much more time as it needs to walk over all segments  */
   /*    and arcs in the outline.  To get the latter, you can use the       */
-  /*    `ftbbox' component which is dedicated to this single task.         */
+  /*    `ftbbox' component, which is dedicated to this single task.        */
   /*                                                                       */
   /* <Input>                                                               */
   /*    outline :: A pointer to the source outline descriptor.             */

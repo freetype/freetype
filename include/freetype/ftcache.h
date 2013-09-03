@@ -156,7 +156,7 @@ FT_BEGIN_HEADER
    * @note:
    *   Never use NULL as a valid @FTC_FaceID.
    *
-   *   Face IDs are passed by the client to the cache manager, which calls,
+   *   Face IDs are passed by the client to the cache manager that calls,
    *   when needed, the @FTC_Face_Requester to translate them into new
    *   @FT_Face objects.
    *

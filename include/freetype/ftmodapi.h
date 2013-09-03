@@ -298,7 +298,7 @@ FT_BEGIN_HEADER
    *       Note that only a few modules have properties.
    *
    *    value ::
-   *       A generic pointer to a variable or structure which gives the new
+   *       A generic pointer to a variable or structure that gives the new
    *       value of the property.  The exact definition of `value' is
    *       dependent on the property; see the `Synopsis' subsection of the
    *       module's documentation.
@@ -364,7 +364,7 @@ FT_BEGIN_HEADER
    *
    * @inout:
    *    value ::
-   *       A generic pointer to a variable or structure which gives the
+   *       A generic pointer to a variable or structure that gives the
    *       value of the property.  The exact definition of `value' is
    *       dependent on the property; see the `Synopsis' subsection of the
    *       module's documentation.
@@ -418,7 +418,7 @@ FT_BEGIN_HEADER
   /*    @FT_Done_Library then only destroys a library if the counter is~1, */
   /*    otherwise it simply decrements the counter.                        */
   /*                                                                       */
-  /*    This function helps in managing life-cycles of structures which    */
+  /*    This function helps in managing life-cycles of structures that     */
   /*    reference @FT_Library objects.                                     */
   /*                                                                       */
   /* <Input>                                                               */
@@ -584,7 +584,7 @@ FT_BEGIN_HEADER
    *       The library implements a bytecode interpreter that doesn't
    *       support the patented operations of the TrueType virtual machine.
    *
-   *       Its main use is to load certain Asian fonts which position and
+   *       Its main use is to load certain Asian fonts that position and
    *       scale glyph components with bytecode instructions.  It produces
    *       bad output for most other fonts.
    *

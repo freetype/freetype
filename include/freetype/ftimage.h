@@ -555,7 +555,7 @@ FT_BEGIN_HEADER
   /* <Input>                                                               */
   /*    to   :: A pointer to the target point of the `move to'.            */
   /*                                                                       */
-  /*    user :: A typeless pointer which is passed from the caller of the  */
+  /*    user :: A typeless pointer, which is passed from the caller of the */
   /*            decomposition function.                                    */
   /*                                                                       */
   /* <Return>                                                              */
@@ -582,7 +582,7 @@ FT_BEGIN_HEADER
   /* <Input>                                                               */
   /*    to   :: A pointer to the target point of the `line to'.            */
   /*                                                                       */
-  /*    user :: A typeless pointer which is passed from the caller of the  */
+  /*    user :: A typeless pointer, which is passed from the caller of the */
   /*            decomposition function.                                    */
   /*                                                                       */
   /* <Return>                                                              */
@@ -613,7 +613,7 @@ FT_BEGIN_HEADER
   /*                                                                       */
   /*    to      :: A pointer to the target end point of the conic arc.     */
   /*                                                                       */
-  /*    user    :: A typeless pointer which is passed from the caller of   */
+  /*    user    :: A typeless pointer, which is passed from the caller of  */
   /*               the decomposition function.                             */
   /*                                                                       */
   /* <Return>                                                              */
@@ -645,7 +645,7 @@ FT_BEGIN_HEADER
   /*                                                                       */
   /*    to       :: A pointer to the target end point.                     */
   /*                                                                       */
-  /*    user     :: A typeless pointer which is passed from the caller of  */
+  /*    user     :: A typeless pointer, which is passed from the caller of */
   /*                the decomposition function.                            */
   /*                                                                       */
   /* <Return>                                                              */
@@ -891,8 +891,8 @@ FT_BEGIN_HEADER
   /*                                                                       */
   /* <Note>                                                                */
   /*    This structure is used by the span drawing callback type named     */
-  /*    @FT_SpanFunc which takes the y~coordinate of the span as a         */
-  /*    a parameter.                                                       */
+  /*    @FT_SpanFunc that takes the y~coordinate of the span as a          */
+  /*    parameter.                                                         */
   /*                                                                       */
   /*    The coverage value is always between 0 and 255.  If you want less  */
   /*    gray values, the callback function has to reduce them.             */
@@ -1265,7 +1265,7 @@ FT_BEGIN_HEADER
   /*    XXX: For now, the standard raster doesn't support direct           */
   /*         composition but this should change for the final release (see */
   /*         the files `demos/src/ftgrays.c' and `demos/src/ftgrays2.c'    */
-  /*         for examples of distinct implementations which support direct */
+  /*         for examples of distinct implementations that support direct  */
   /*         composition).                                                 */
   /*                                                                       */
   typedef int

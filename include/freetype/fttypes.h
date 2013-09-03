@@ -418,7 +418,7 @@ FT_BEGIN_HEADER
   /*    details of usage.                                                  */
   /*                                                                       */
   /* <Input>                                                               */
-  /*    The address of the FreeType object which is under finalization.    */
+  /*    The address of the FreeType object that is under finalization.     */
   /*    Its client data is accessed through its `generic' field.           */
   /*                                                                       */
   typedef void  (*FT_Generic_Finalizer)(void*  object);
@@ -466,8 +466,8 @@ FT_BEGIN_HEADER
   /*    FT_MAKE_TAG                                                        */
   /*                                                                       */
   /* <Description>                                                         */
-  /*    This macro converts four-letter tags which are used to label       */
-  /*    TrueType tables into an unsigned long to be used within FreeType.  */
+  /*    This macro converts four-letter tags that are used to label        */
+  /*    TrueType tables into an unsigned long, to be used within FreeType. */
   /*                                                                       */
   /* <Note>                                                                */
   /*    The produced values *must* be 32-bit integers.  Don't redefine     */
