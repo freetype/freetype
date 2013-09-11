@@ -98,6 +98,7 @@ FT_BEGIN_HEADER
   /* is a safe bet.                                                        */
 #define AF_BLUE_PROPERTY_LATIN_TOP        ( 1 << 0 )
 #define AF_BLUE_PROPERTY_LATIN_SMALL_TOP  ( 1 << 1 )
+#define AF_BLUE_PROPERTY_LATIN_LONG       ( 1 << 2 )
 
 #define AF_BLUE_PROPERTY_CJK_HORIZ  ( 1 << 0 )
 #define AF_BLUE_PROPERTY_CJK_TOP    ( 1 << 1 )

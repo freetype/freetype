@@ -219,9 +219,7 @@
 
 
     /* we walk over the blue character strings as specified in the  */
-    /* script's entry in the `af_blue_stringset' array, finding its */
-    /* top-most or bottom-most points (depending on the string      */
-    /* properties)                                                  */
+    /* script's entry in the `af_blue_stringset' array              */
 
     FT_TRACE5(( "latin blue zones computation\n"
                 "============================\n"
@@ -290,7 +288,7 @@
 
             /* Avoid single-point contours since they are never rasterized. */
             /* In some fonts, they correspond to mark attachment points     */
-            /* which are way outside of the glyph's real outline.           */
+            /* that are way outside of the glyph's real outline.            */
             if ( last <= first )
               continue;
 
@@ -319,8 +317,6 @@
               best_contour_last  = last;
             }
           }
-
-          FT_TRACE5(( "  U+%04lX: best_y = %5ld", ch, best_y ));
         }
 
         /* now check whether the point belongs to a straight or round   */
@@ -402,6 +398,178 @@
             }
 
           } while ( next != best_point );
+
+          if ( AF_LATIN_IS_LONG_BLUE( bs ) )
+          {
+            /* If this flag is set, we have an additional constraint to  */
+            /* get the blue zone distance: Find a segment of the topmost */
+            /* (or bottommost) contour that is longer than a heuristic   */
+            /* threshold.  This ensures that small bumps in the outline  */
+            /* are ignored (for example, the `vertical serifs' found in  */
+            /* many Hebrew glyph designs).                               */
+
+            /* If this segment is long enough, we are done.  Otherwise,  */
+            /* search the segment next to the extremum that is long      */
+            /* enough, has the same direction, and a not too large       */
+            /* vertical distance from the extremum.  Note that the       */
+            /* algorithm doesn't check whether the found segment is      */
+            /* actually the one (vertically) nearest to the extremum.    */
+
+            /* heuristic threshold value */
+            FT_Pos  length_threshold = metrics->units_per_em / 25;
+
+
+            dist = FT_ABS( points[best_segment_last].x -
+                             points[best_segment_first].x );
+
+            if ( dist < length_threshold                       &&
+                 best_segment_last - best_segment_first + 2 <=
+                   best_contour_last - best_contour_first      )
+            {
+              /* heuristic threshold value */
+              FT_Pos  height_threshold = metrics->units_per_em / 4;
+
+              FT_Int   first;
+              FT_Int   last;
+              FT_Bool  hit;
+
+              FT_Bool  left2right;
+
+
+              /* compute direction */
+              prev = best_point;
+
+              do
+              {
+                if ( prev > best_contour_first )
+                  prev--;
+                else
+                  prev = best_contour_last;
+
+                if ( points[prev].x != best_x )
+                  break;
+
+              } while ( prev != best_point );
+
+              /* skip glyph for the degenerate case */
+              if ( prev == best_point )
+                continue;
+
+              left2right = FT_BOOL( points[prev].x < points[best_point].x );
+
+              first = best_segment_last;
+              last  = first;
+              hit   = 0;
+
+              do
+              {
+                FT_Bool  l2r;
+                FT_Pos   d;
+                FT_Int   p_first, p_last;
+
+
+                if ( !hit )
+                {
+                  /* no hit; adjust first point */
+                  first = last;
+
+                  /* also adjust first and last on point */
+                  if ( FT_CURVE_TAG( outline.tags[first] ) ==
+                         FT_CURVE_TAG_ON )
+                  {
+                    p_first = first;
+                    p_last  = first;
+                  }
+                  else
+                  {
+                    p_first = -1;
+                    p_last  = -1;
+                  }
+
+                  hit = 1;
+                }
+
+                if ( last < best_contour_last )
+                  last++;
+                else
+                  last = best_contour_first;
+
+                if ( FT_ABS( best_y - points[first].y ) > height_threshold )
+                {
+                  /* vertical distance too large */
+                  hit = 0;
+                  continue;
+                }
+
+                /* same test as above */
+                dist = FT_ABS( points[last].y - points[first].y );
+                if ( dist > 5 )
+                  if ( FT_ABS( points[last].x - points[first].x ) <=
+                         20 * dist )
+                  {
+                    hit = 0;
+                    continue;
+                  }
+
+                if ( FT_CURVE_TAG( outline.tags[last] ) == FT_CURVE_TAG_ON )
+                {
+                  p_last = last;
+                  if ( p_first < 0 )
+                    p_first = last;
+                }
+
+                l2r = FT_BOOL( points[first].x < points[last].x );
+                d   = FT_ABS( points[last].x - points[first].x );
+
+                if ( l2r == left2right     &&
+                     d >= length_threshold )
+                {
+                  /* all constraints are met; update segment after finding */
+                  /* its end                                               */
+                  do
+                  {
+                    if ( last < best_contour_last )
+                      last++;
+                    else
+                      last = best_contour_first;
+
+                    d = FT_ABS( points[last].y - points[first].y );
+                    if ( d > 5 )
+                      if ( FT_ABS( points[next].x - points[first].x ) <=
+                             20 * dist )
+                      {
+                        last--;
+                        break;
+                      }
+
+                    p_last = last;
+
+                    if ( FT_CURVE_TAG( outline.tags[last] ) ==
+                           FT_CURVE_TAG_ON )
+                    {
+                      p_last = last;
+                      if ( p_first < 0 )
+                        p_first = last;
+                    }
+
+                  } while ( last != best_segment_first );
+
+                  best_y = points[first].y;
+
+                  best_segment_first = first;
+                  best_segment_last  = last;
+
+                  best_on_point_first = p_first;
+                  best_on_point_last  = p_last;
+
+                  break;
+                }
+
+              } while ( last != best_segment_first );
+            }
+          }
+
+          FT_TRACE5(( "  U+%04lX: best_y = %5ld", ch, best_y ));
 
           /* now set the `round' flag depending on the segment's kind: */
           /*                                                           */

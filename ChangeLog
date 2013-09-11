@@ -1,3 +1,23 @@
+2013-09-11  Werner Lemberg  <wl@gnu.org>
+
+	[autofit] Improve Hebrew rendering.
+
+	This change introduces a new blue zone property
+	`AF_BLUE_PROPERTY_LATIN_LONG' to make the auto-hinter ignore short
+	top segments.
+
+	* src/autofit/afblue.dat: Fix Hebrew blue strings.
+	Use AF_BLUE_PROPERTY_LATIN_LONG for AF_BLUE_STRING_HEBREW_TOP.
+
+	* src/autofit/afblue.hin (AF_BLUE_PROPERTY_LATIN_LONG): New macro.
+
+	* src/autofit/afblue.c, src/autofit/afblue.h: Updated.
+
+	* src/autofit/aflatin.c (af_latin_metrics_init_blues): Handle
+	`AF_LATIN_IS_LONG_BLUE'.
+
+	* src/autofit/aflatin.h (AF_LATIN_IS_LONG_BLUE): New macro.
+
 2013-08-28  Behdad Esfahbod  <behdad@google.com>
 
 	[sfnt] Fix frame access while reading WOFF table directory.

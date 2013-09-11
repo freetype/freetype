@@ -36,9 +36,9 @@
     '\0',
     'p', 'q', 'g', 'j', 'y',  /* pqgjy */
     '\0',
-    '\xD7', '\x90', '\xD7', '\x91', '\xD7', '\x9D', '\xD7', '\xA4', '\xD7', '\xA9', '\xD7', '\x93', '\xD7', '\x92',  /* אבםפשדג */
+    '\xD7', '\x91', '\xD7', '\x93', '\xD7', '\x94', '\xD7', '\x97', '\xD7', '\x9A', '\xD7', '\x9B', '\xD7', '\x9D', '\xD7', '\xA1',  /* בדהחךכםס */
     '\0',
-    '\xD7', '\x90', '\xD7', '\x94', '\xD7', '\x97', '\xD7', '\x9B', '\xD7', '\x9E', '\xD7', '\xA1',  /* אהחכמס */
+    '\xD7', '\x91', '\xD7', '\x98', '\xD7', '\x9B', '\xD7', '\x9D', '\xD7', '\xA1', '\xD7', '\xA6',  /* בטכםסצ */
     '\0',
     '\xD7', '\xA7', '\xD7', '\x9A', '\xD7', '\x9F', '\xD7', '\xA3', '\xD7', '\xA5',  /* קךןףץ */
 #ifdef AF_CONFIG_OPTION_CJK
@@ -103,10 +103,11 @@
     { AF_BLUE_STRING_LATIN_SMALL,          0                                  },
     { AF_BLUE_STRING_LATIN_SMALL_MINOR,    0                                  },
     { AF_BLUE_STRING_MAX,                  0                                  },
-    { AF_BLUE_STRING_HEBREW_TOP,       AF_BLUE_PROPERTY_LATIN_TOP },
-    { AF_BLUE_STRING_HEBREW_BOTTOM,    0                          },
-    { AF_BLUE_STRING_HEBREW_DESCENDER, 0                          },
-    { AF_BLUE_STRING_MAX,              0                          },
+    { AF_BLUE_STRING_HEBREW_TOP,       AF_BLUE_PROPERTY_LATIN_TOP  |
+                                       AF_BLUE_PROPERTY_LATIN_LONG   },
+    { AF_BLUE_STRING_HEBREW_BOTTOM,    0                             },
+    { AF_BLUE_STRING_HEBREW_DESCENDER, 0                             },
+    { AF_BLUE_STRING_MAX,              0                             },
 #ifdef AF_CONFIG_OPTION_CJK
     { AF_BLUE_STRING_CJK_TOP_FILL,      AF_BLUE_PROPERTY_CJK_TOP |
                                         AF_BLUE_PROPERTY_CJK_FILL    },

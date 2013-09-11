@@ -80,9 +80,9 @@ FT_BEGIN_HEADER
     AF_BLUE_STRING_LATIN_SMALL = 26,
     AF_BLUE_STRING_LATIN_SMALL_MINOR = 34,
     AF_BLUE_STRING_HEBREW_TOP = 40,
-    AF_BLUE_STRING_HEBREW_BOTTOM = 55,
-    AF_BLUE_STRING_HEBREW_DESCENDER = 68,
-    af_blue_1_1 = 78,
+    AF_BLUE_STRING_HEBREW_BOTTOM = 57,
+    AF_BLUE_STRING_HEBREW_DESCENDER = 70,
+    af_blue_1_1 = 80,
 #ifdef AF_CONFIG_OPTION_CJK
     AF_BLUE_STRING_CJK_TOP_FILL = af_blue_1_1 + 1,
     AF_BLUE_STRING_CJK_TOP_UNFILL = af_blue_1_1 + 77,
@@ -129,6 +129,7 @@ FT_BEGIN_HEADER
   /* is a safe bet.                                                        */
 #define AF_BLUE_PROPERTY_LATIN_TOP        ( 1 << 0 )
 #define AF_BLUE_PROPERTY_LATIN_SMALL_TOP  ( 1 << 1 )
+#define AF_BLUE_PROPERTY_LATIN_LONG       ( 1 << 2 )
 
 #define AF_BLUE_PROPERTY_CJK_HORIZ  ( 1 << 0 )
 #define AF_BLUE_PROPERTY_CJK_TOP    ( 1 << 1 )
