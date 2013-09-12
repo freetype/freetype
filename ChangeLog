@@ -1,3 +1,8 @@
+2013-09-11  Alexei Podtelezhnikov  <apodtele@gmail.com>
+
+	* include/freetype/ftoutln.h: Correct FT_Outline_Get_Orientation
+	algorithm description.
+
 2013-09-11  Werner Lemberg  <wl@gnu.org>
 
 	[autofit] Improve Hebrew rendering.
