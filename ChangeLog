@@ -1,3 +1,7 @@
+2013-09-20  Werner Lemberg  <wl@gnu.org>
+
+	* docs/CHANGES: Updated.
+
 2013-09-20  Behdad Esfahbod  <behdad@behdad.org>
 
 	Fix vertical size of emboldened glyphs.

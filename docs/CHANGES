@@ -5,14 +5,38 @@ CHANGES BETWEEN 2.5 and 2.5.1
     - For  some WinFNT  files,  the last  glyph  wasn't displayed  but
       incorrectly marked as invalid.
 
+    - The vertical size of glyphs was  incorrectly set after a call to
+      `FT_GlyphSlot_Embolden', resulting in clipped glyphs.
 
-  II. MISCELLANEOUS
+
+  II. IMPORTANT CHANGES
+
+    - WOFF support has been added.
+
+    - The auto-hinter now supports Hebrew.
+
+
+  III. MISCELLANEOUS
 
     - The stem  darkening feature  of the  new CFF  engine can  now be
       fine-tuned with the new `darkening-parameters' property.
 
     - `ftgrid' has been updated to toggle various engines with the `H'
       key, similar to `ftview' and `ftdiff'.
+
+    - Better support of ARMv7 and x86_64 processors.
+
+    - Apple's `sbix' color bitmap format is now supported.
+
+    - Improved   auto-hinter  rendering   for  many   TrueType  fonts,
+      especially in the range 20-40ppem.
+
+    - A  new face  flag  `FT_FACE_FLAG_COLOR' has  been  added (to  be
+      accessed with the macro `FT_HAS_COLOR').
+
+    - `FT_Gzip_Uncompress'   (modeled    after   zlib's   `uncompress'
+      function)  has been  added; this  is a  by-product of  the newly
+      added WOFF support.
 
 
 ======================================================================
