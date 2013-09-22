@@ -2647,23 +2647,17 @@
     AF_UNIRANGE_REC(  0x0250UL,  0x02AFUL ),  /* IPA Extensions */
     AF_UNIRANGE_REC(  0x02B0UL,  0x02FFUL ),  /* Spacing Modifier Letters */
     AF_UNIRANGE_REC(  0x0300UL,  0x036FUL ),  /* Combining Diacritical Marks */
-    AF_UNIRANGE_REC(  0x0370UL,  0x03FFUL ),  /* Greek and Coptic */
-    AF_UNIRANGE_REC(  0x0400UL,  0x04FFUL ),  /* Cyrillic */
-    AF_UNIRANGE_REC(  0x0500UL,  0x052FUL ),  /* Cyrillic Supplement */
     AF_UNIRANGE_REC(  0x1D00UL,  0x1D7FUL ),  /* Phonetic Extensions */
     AF_UNIRANGE_REC(  0x1D80UL,  0x1DBFUL ),  /* Phonetic Extensions Supplement */
     AF_UNIRANGE_REC(  0x1DC0UL,  0x1DFFUL ),  /* Combining Diacritical Marks Supplement */
     AF_UNIRANGE_REC(  0x1E00UL,  0x1EFFUL ),  /* Latin Extended Additional */
-    AF_UNIRANGE_REC(  0x1F00UL,  0x1FFFUL ),  /* Greek Extended */
     AF_UNIRANGE_REC(  0x2000UL,  0x206FUL ),  /* General Punctuation */
     AF_UNIRANGE_REC(  0x2070UL,  0x209FUL ),  /* Superscripts and Subscripts */
     AF_UNIRANGE_REC(  0x20A0UL,  0x20CFUL ),  /* Currency Symbols */
     AF_UNIRANGE_REC(  0x2150UL,  0x218FUL ),  /* Number Forms */
     AF_UNIRANGE_REC(  0x2460UL,  0x24FFUL ),  /* Enclosed Alphanumerics */
     AF_UNIRANGE_REC(  0x2C60UL,  0x2C7FUL ),  /* Latin Extended-C */
-    AF_UNIRANGE_REC(  0x2DE0UL,  0x2DFFUL ),  /* Cyrillic Extended-A */
     AF_UNIRANGE_REC(  0x2E00UL,  0x2E7FUL ),  /* Supplemental Punctuation */
-    AF_UNIRANGE_REC(  0xA640UL,  0xA69FUL ),  /* Cyrillic Extended-B */
     AF_UNIRANGE_REC(  0xA720UL,  0xA7FFUL ),  /* Latin Extended-D */
     AF_UNIRANGE_REC(  0xFB00UL,  0xFB06UL ),  /* Alphab. Present. Forms (Latin Ligs) */
     AF_UNIRANGE_REC( 0x1D400UL, 0x1D7FFUL ),  /* Mathematical Alphanumeric Symbols */
@@ -2671,6 +2665,19 @@
     AF_UNIRANGE_REC(       0UL,       0UL )
   };
 
+  static const AF_Script_UniRangeRec  af_grek_uniranges[] =
+  {
+    AF_UNIRANGE_REC(  0x0370UL,  0x03FFUL ),  /* Greek and Coptic */
+    AF_UNIRANGE_REC(  0x1F00UL,  0x1FFFUL ),  /* Greek Extended */
+  };
+
+  static const AF_Script_UniRangeRec  af_cyrl_uniranges[] =
+  {
+    AF_UNIRANGE_REC(  0x0400UL,  0x04FFUL ),  /* Cyrillic */
+    AF_UNIRANGE_REC(  0x0500UL,  0x052FUL ),  /* Cyrillic Supplement */
+    AF_UNIRANGE_REC(  0x2DE0UL,  0x2DFFUL ),  /* Cyrillic Extended-A */
+    AF_UNIRANGE_REC(  0xA640UL,  0xA69FUL ),  /* Cyrillic Extended-B */
+  };
 
   static const AF_Script_UniRangeRec  af_hebr_uniranges[] =
   {
@@ -2689,6 +2696,28 @@
 
     af_latn_uniranges,
     'o'
+  )
+
+  AF_DEFINE_SCRIPT_CLASS(
+    af_grek_script_class,
+
+    AF_SCRIPT_GREK,
+    AF_BLUE_STRINGSET_GREK,
+    AF_WRITING_SYSTEM_LATIN,
+
+    af_grek_uniranges,
+    0x3BF /* ο */
+  )
+
+  AF_DEFINE_SCRIPT_CLASS(
+    af_cyrl_script_class,
+
+    AF_SCRIPT_CYRL,
+    AF_BLUE_STRINGSET_CYRL,
+    AF_WRITING_SYSTEM_LATIN,
+
+    af_cyrl_uniranges,
+    0x43E /* о */
   )
 
   AF_DEFINE_SCRIPT_CLASS(

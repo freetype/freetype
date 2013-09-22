@@ -1,3 +1,19 @@
+2013-09-22  Werner Lemberg  <wl@gnu.org>
+
+	[autofit] Disunify Cyrillic and Greek handling from Latin.
+
+	* src/autofit/afscript.h: Add Cyrillic and Greek.
+
+	* src/autofit/afblue.dat (AF_BLUE_STRINGSET_GREK,
+	AF_BLUE_STRINGSET_CYRL): Add blue zones for Greek and Cyrillic.
+	(AF_BLUE_STRINGSET_LATN): Fix typo.
+	* src/autofit/afblue.c, src/autofit/afblue.h: Regenerated.
+
+	* src/autofit/aflatin.c (af_grek_uniranges, af_cyrl_uniranges): New
+	arrays.
+	(af_grek_script_class, af_cyrl_script_class): New scripts.
+	* src/autofit/aflatin.h: Updated.
+
 2013-09-20  Werner Lemberg  <wl@gnu.org>
 
 	* docs/CHANGES: Updated.

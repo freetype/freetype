@@ -22,8 +22,10 @@
 
   /* Add new scripts here. */
 
+  SCRIPT( cyrl, CYRL )
   SCRIPT( deva, DEVA )
   SCRIPT( dflt, DFLT )
+  SCRIPT( grek, GREK )
   SCRIPT( hani, HANI )
   SCRIPT( hebr, HEBR )
   SCRIPT( latn, LATN )

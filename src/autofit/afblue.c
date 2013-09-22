@@ -36,6 +36,24 @@
     '\0',
     'p', 'q', 'g', 'j', 'y',  /* pqgjy */
     '\0',
+    '\xCE', '\x93', '\xCE', '\x92', '\xCE', '\x95', '\xCE', '\x96', '\xCE', '\x98', '\xCE', '\x9F', '\xCE', '\xA9',  /* ΓΒΕΖΘΟΩ */
+    '\0',
+    '\xCE', '\x92', '\xCE', '\x94', '\xCE', '\x96', '\xCE', '\x9E', '\xCE', '\x98', '\xCE', '\x9F',  /* ΒΔΖΞΘΟ */
+    '\0',
+    '\xCE', '\xB2', '\xCE', '\xB8', '\xCE', '\xB4', '\xCE', '\xB6', '\xCE', '\xBB', '\xCE', '\xBE',  /* βθδζλξ */
+    '\0',
+    '\xCE', '\xB1', '\xCE', '\xB5', '\xCE', '\xB9', '\xCE', '\xBF', '\xCF', '\x80', '\xCF', '\x83', '\xCF', '\x84', '\xCF', '\x89',  /* αειοπστω */
+    '\0',
+    '\xCE', '\xB2', '\xCE', '\xB3', '\xCE', '\xB7', '\xCE', '\xBC', '\xCF', '\x81', '\xCF', '\x86', '\xCF', '\x87', '\xCF', '\x88',  /* βγημρφχψ */
+    '\0',
+    '\xD0', '\x91', '\xD0', '\x92', '\xD0', '\x95', '\xD0', '\x9F', '\xD0', '\x97', '\xD0', '\x9E', '\xD0', '\xA1', '\xD0', '\xAD',  /* БВЕПЗОСЭ */
+    '\0',
+    '\xD0', '\x91', '\xD0', '\x92', '\xD0', '\x95', '\xD0', '\xA8', '\xD0', '\x97', '\xD0', '\x9E', '\xD0', '\xA1', '\xD0', '\xAD',  /* БВЕШЗОСЭ */
+    '\0',
+    '\xD1', '\x85', '\xD0', '\xBF', '\xD0', '\xBD', '\xD1', '\x88', '\xD0', '\xB5', '\xD0', '\xB7', '\xD0', '\xBE', '\xD1', '\x81',  /* хпншезос */
+    '\0',
+    '\xD1', '\x80', '\xD1', '\x83', '\xD1', '\x84',  /* руф */
+    '\0',
     '\xD7', '\x91', '\xD7', '\x93', '\xD7', '\x94', '\xD7', '\x97', '\xD7', '\x9A', '\xD7', '\x9B', '\xD7', '\x9D', '\xD7', '\xA1',  /* בדהחךכםס */
     '\0',
     '\xD7', '\x91', '\xD7', '\x98', '\xD7', '\x9B', '\xD7', '\x9D', '\xD7', '\xA1', '\xD7', '\xA6',  /* בטכםסצ */
@@ -97,12 +115,27 @@
     /* */
     { AF_BLUE_STRING_LATIN_CAPITAL_TOP,    AF_BLUE_PROPERTY_LATIN_TOP         },
     { AF_BLUE_STRING_LATIN_CAPITAL_BOTTOM, 0                                  },
-    { AF_BLUE_STRING_LATIN_SMALL_F_TOP,    AF_BLUE_PROPERTY_LATIN_TOP       |
+    { AF_BLUE_STRING_LATIN_SMALL_F_TOP,    AF_BLUE_PROPERTY_LATIN_TOP         },
+    { AF_BLUE_STRING_LATIN_SMALL,          AF_BLUE_PROPERTY_LATIN_TOP       |
                                            AF_BLUE_PROPERTY_LATIN_SMALL_TOP   },
-    { AF_BLUE_STRING_LATIN_SMALL,          AF_BLUE_PROPERTY_LATIN_TOP         },
     { AF_BLUE_STRING_LATIN_SMALL,          0                                  },
     { AF_BLUE_STRING_LATIN_SMALL_MINOR,    0                                  },
     { AF_BLUE_STRING_MAX,                  0                                  },
+    { AF_BLUE_STRING_GREEK_CAPITAL_TOP,    AF_BLUE_PROPERTY_LATIN_TOP         },
+    { AF_BLUE_STRING_GREEK_CAPITAL_BOTTOM, 0                                  },
+    { AF_BLUE_STRING_GREEK_SMALL_BETA_TOP, AF_BLUE_PROPERTY_LATIN_TOP         },
+    { AF_BLUE_STRING_GREEK_SMALL,          AF_BLUE_PROPERTY_LATIN_TOP       |
+                                           AF_BLUE_PROPERTY_LATIN_SMALL_TOP   },
+    { AF_BLUE_STRING_GREEK_SMALL,          0                                  },
+    { AF_BLUE_STRING_GREEK_SMALL_MINOR,    0                                  },
+    { AF_BLUE_STRING_MAX,                  0                                  },
+    { AF_BLUE_STRING_CYRILLIC_CAPITAL_TOP,    AF_BLUE_PROPERTY_LATIN_TOP         },
+    { AF_BLUE_STRING_CYRILLIC_CAPITAL_BOTTOM, 0                                  },
+    { AF_BLUE_STRING_CYRILLIC_SMALL,          AF_BLUE_PROPERTY_LATIN_TOP       |
+                                              AF_BLUE_PROPERTY_LATIN_SMALL_TOP   },
+    { AF_BLUE_STRING_CYRILLIC_SMALL,          0                                  },
+    { AF_BLUE_STRING_CYRILLIC_SMALL_MINOR,    0                                  },
+    { AF_BLUE_STRING_MAX,                     0                                  },
     { AF_BLUE_STRING_HEBREW_TOP,       AF_BLUE_PROPERTY_LATIN_TOP  |
                                        AF_BLUE_PROPERTY_LATIN_LONG   },
     { AF_BLUE_STRING_HEBREW_BOTTOM,    0                             },

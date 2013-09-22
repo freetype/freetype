@@ -31,12 +31,12 @@ FT_BEGIN_HEADER
 
   /* the latin-specific script classes */
 
-  AF_DECLARE_SCRIPT_CLASS( af_latn_script_class )  /* XXX */
+  AF_DECLARE_SCRIPT_CLASS( af_cyrl_script_class )
+  AF_DECLARE_SCRIPT_CLASS( af_grek_script_class )
+  AF_DECLARE_SCRIPT_CLASS( af_latn_script_class )
   AF_DECLARE_SCRIPT_CLASS( af_hebr_script_class )
 #if 0
   AF_DECLARE_SCRIPT_CLASS( af_armn_script_class )
-  AF_DECLARE_SCRIPT_CLASS( af_cyrl_script_class )
-  AF_DECLARE_SCRIPT_CLASS( af_grek_script_class )
 #endif
 
 
