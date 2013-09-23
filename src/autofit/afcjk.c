@@ -625,9 +625,9 @@
   af_cjk_metrics_scale( AF_CJKMetrics  metrics,
                         AF_Scaler      scaler )
   {
-    metrics->root.scaler.render_mode = scaler->render_mode;
-    metrics->root.scaler.face        = scaler->face;
-    metrics->root.scaler.flags       = scaler->flags;
+    /* we copy the whole structure since the x and y scaling values */
+    /* are not modified, contrary to e.g. the `latin' auto-hinter   */
+    metrics->root.scaler = *scaler;
 
     af_cjk_metrics_scale_dim( metrics, scaler, AF_DIMENSION_HORZ );
     af_cjk_metrics_scale_dim( metrics, scaler, AF_DIMENSION_VERT );

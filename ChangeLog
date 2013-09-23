@@ -1,3 +1,10 @@
+2013-09-23  Werner Lemberg  <wl@gnu.org>
+
+	Fix Savannah bug #40090.
+
+	* src/autofit/afcjk.c (af_cjk_metrics_scale): Revert commit
+	306f8c5d (from 2013-08-25) affecting this function.
+
 2013-09-22  Werner Lemberg  <wl@gnu.org>
 
 	[autofit] Disunify Cyrillic and Greek handling from Latin.
