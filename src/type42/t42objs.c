@@ -171,7 +171,6 @@
 
     FT_UNUSED( num_params );
     FT_UNUSED( params );
-    FT_UNUSED( face_index );
     FT_UNUSED( stream );
 
 

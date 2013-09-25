@@ -267,7 +267,6 @@ THE SOFTWARE.
 
     FT_UNUSED( num_params );
     FT_UNUSED( params );
-    FT_UNUSED( face_index );
 
 
     FT_TRACE2(( "PCF driver\n" ));
@@ -344,6 +343,18 @@ THE SOFTWARE.
       goto Fail;
 
 #endif
+    }
+
+    /* PCF could not have multiple face in single font file.
+     * XXX: non-zero face_index is already invalid argument, but
+     *      Type1, Type42 driver has a convention to return
+     *      an invalid argument error when the font could be
+     *      opened by the specified driver.
+     */
+    if ( face_index > 0 ) {
+      FT_ERROR(( "PCF_Face_Init: invalid face index\n" ));
+      PCF_Face_Done( pcfface );
+      return FT_THROW( Invalid_Argument );
     }
 
     /* set up charmap */
