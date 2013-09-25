@@ -1,3 +1,7 @@
+2013-09-25  Werner Lemberg  <wl@gnu.org>
+
+	* src/autofit/aflatin.c (af_{grek,cyrl}_uniranges): Fix arrays.
+
 2013-09-25  suzuki toshiya  <mpsuzuki@hiroshima-u.ac.jp>
 
 	[bdf, pcf] Refuse non-zero face_index.
