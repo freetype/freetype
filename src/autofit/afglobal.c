@@ -26,10 +26,8 @@
 #include "aferrors.h"
 #include "afpic.h"
 
-#ifndef FT_CONFIG_OPTION_PIC
 
-  /* when updating this table, don't forget to update                  */
-  /* AF_WRITING_SYSTEM_CLASSES_COUNT and autofit_module_class_pic_init */
+#ifndef FT_CONFIG_OPTION_PIC
 
 #undef  WRITING_SYSTEM
 #define WRITING_SYSTEM( ws, WS )               \
