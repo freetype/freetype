@@ -1,3 +1,56 @@
+2013-09-29  Dave Arnold  <darnold@adobe.com>
+
+	Fix Savannah bug #39295.
+
+	The bug was caused by switching to the initial hintmap (the one in
+	effect when `moveto' executes) just before drawing the final element
+	in the charstring.  This ensured that the path was closed (in both
+	Character Space and Device Space).  But if the final element was a
+	curve and if the final hintmap was different enough from the initial
+	one, then the curve was visibly distorted.
+
+	The first part of the fix is to draw the final curve using the final
+	hintmap as specified by the charstring.  This corrects the
+	distortion but does not ensure closing in Device Space.  It may
+	require the rasterizer to automatically generate an extra closing
+	line.  Depending on the hintmap differences, this line could be from
+	zero to a couple pixels in length.
+
+	The second part of the fix covers the case where the charstring
+	subpath is closed with an explicit line.  We now modify that line's
+	end point to avoid the distortion.
+
+	Some glyphs in the bug report font (TexGyreHeros-Regular) that show
+	the change are:
+
+	  25ppem    S (98)
+	  24ppem    eight (52)
+	  25.5ppem  p (85)
+
+	Curves at the *end* of a subpath are no longer distorted.  However,
+	some of these glyphs have bad hint substitutions in the middle of a
+	subpath, and these are not affected.
+
+	The patch has been tested with a set of 106 fonts that shipped with
+	Adobe Creative Suite 4, together with 756 Open Source CFF fonts from
+	Google Fonts.  There are 1.5 million glyphs, of which some 20k are
+	changed with the fix.  A sampling of a few hundred of these changes
+	have been examined more closely, and the changes look good (or at
+	least acceptable).
+
+	* src/cff/cf2hints.h (CF2_GlyphPathRec): New element `pathIsClosing'
+	to indicate that we synthesize a closepath line.
+
+	* src/cff/cf2hints.c (cf2_glyphpath_init): Updated.
+	(cf2_glyphpath_pushPrevElem): If closing, use first hint map (for
+	`lineto' operator) and adjust hint zone.
+	For synthesized closing lines, use end point in first hint zone.
+	(cf2_glyphpath_lineTo): Take care of synthesized closing lines.  In
+	particular, shift the detection of zero-length lines from character
+	space to device space.
+	(cf2_glyphpath_closeOpenPath): Remove assertion.
+	Updated.
+
 2013-09-25  Werner Lemberg  <wl@gnu.org>
 
 	* src/autofit/aflatin.c (af_{grek,cyrl}_uniranges): Fix arrays.
@@ -226,7 +279,7 @@
 
 	Better tracing of loaded glyphs.
 
-	Previously, the loading of a glyph was traced at level 4, if at all. 
+	Previously, the loading of a glyph was traced at level 4, if at all.
 	With this change, all font loading routines emit a tracing message
 	at level 1, making it easier to select tracing output (for example
 	using F2_DEBUG="any:1 afhints:7 aflatin:7").
@@ -272,7 +325,7 @@
 	(af_cjk_metrics_init_blues): Replace AF_CJK_MAX_TEST_CHARACTERS with
 	AF_BLUE_STRING_MAX_LEN.
 	Change loops to use offsets (in file `afblue.h') into the new arrays
-	`af_blue_stringsets' and `af_blue_strings' (in file `afblue.c'). 
+	`af_blue_stringsets' and `af_blue_strings' (in file `afblue.c').
 	Instead of three dimensions (as used in the old blue string array)
 	we now use properties to do the same, saving one loop nesting level.
 
@@ -400,14 +453,14 @@
 
 	* src/base/ftbbox.c (BBox_Conic_Check): Remove redundant checks for
 	extremum at the segment ends, which are already within the bbox.
-	Slightly modify calculations. 
+	Slightly modify calculations.
 
 2013-08-15  Alexei Podtelezhnikov  <apodtele@gmail.com>
 
 	[base] Finish experimental (disabled) BBox_Cubic_Check implementation.
 
 	* src/base/ftbbox.c (BBox_Cubic_Check): Scale arguments to improve
-	accuracy and avoid overflows. 
+	accuracy and avoid overflows.
 
 2013-08-13  Alexei Podtelezhnikov  <apodtele@gmail.com>
 
@@ -742,10 +795,10 @@
 	              |               |
 	              o---------------o
 
-	as round.  (`o' and `x' are on and off points, respectively). 
+	as round.  (`o' and `x' are on and off points, respectively).
 
 	This is a major change which should improve the rendering results
-	enormously for many TrueType fonts, especially in the range approx. 
+	enormously for many TrueType fonts, especially in the range approx.
 	20-40ppem, fixing the appearance of many overshoots.
 
 	* src/autofit/aflatin.c (af_latin_metrics_init_blues): Look at the
@@ -826,7 +879,7 @@
 
 	[smooth] Improve performance.
 
-	Provide a work-around for an ARM-specific performance bug in GCC. 
+	Provide a work-around for an ARM-specific performance bug in GCC.
 	This speeds up the rasterizer by more than 5%.
 
 	Also slightly optimize `set_gray_cell' and `gray_record_cell' (which
@@ -1588,7 +1641,7 @@
 	[sfnt] Clean up bitmap code.
 
 	* src/sfnt/ttsbit.c: Deleted.
-	* src/sfnt/ttsbit0.c: Renamed to `ttsbit.c'. 
+	* src/sfnt/ttsbit0.c: Renamed to `ttsbit.c'.
 	* rules.mk (SFNT_DRV_H): Updated.
 
 2013-05-10  Werner Lemberg  <wl@gnu.org>
