@@ -1,3 +1,7 @@
+2013-10-02  Darrell Bellert  <darrell.bellert@hl.konicaminolta.us>
+
+	* src/sfnt/ttload.c (tt_face_load_pclt): Fix `pclt_fields'.
+
 2013-10-02  Dave Arnold  <darnold@adobe.com>
 
 	* src/cff/cf2font.c (cf2_computeDarkening): Initialize darkenAmount.

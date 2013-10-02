@@ -1161,6 +1161,7 @@
         FT_FRAME_USHORT( Style ),
         FT_FRAME_USHORT( TypeFamily ),
         FT_FRAME_USHORT( CapHeight ),
+        FT_FRAME_USHORT( SymbolSet ),
         FT_FRAME_BYTES ( TypeFace, 16 ),
         FT_FRAME_BYTES ( CharacterComplement, 8 ),
         FT_FRAME_BYTES ( FileName, 6 ),
