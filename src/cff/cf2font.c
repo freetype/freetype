@@ -101,6 +101,7 @@
     /* convenience.                                             */
     CF2_Fixed  stemWidthPer1000, scaledStem;
 
+    *darkenAmount = 0;
 
     if ( boldenAmount == 0 && !stemDarkened )
       return;

@@ -1,3 +1,13 @@
+2013-10-02  Dave Arnold  <darnold@adobe.com>
+
+	* src/cff/cf2font.c (cf2_computeDarkening): Initialize darkenAmount.
+
+	This line was lost in commit 89ca1fd6 (from 2013-06-25).  The effect
+	is to use a previous darkening amount when producing an unhinted,
+	unscaled outline.  This can cause autohint samples in ftgrid and
+	ftview to be based on darkened CFF outlines instead of unhinted,
+	undarkened ones.
+
 2013-09-29  Dave Arnold  <darnold@adobe.com>
 
 	Fix Savannah bug #39295.
