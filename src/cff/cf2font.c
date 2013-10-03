@@ -98,8 +98,14 @@
      */
 
     /* Internal calculations are done in units per thousand for */
-    /* convenience.                                             */
+    /* convenience. The x axis is scaled stem width in          */
+    /* thousandths of a pixel. That is, 1000 is 1 pixel.        */
+    /* The y axis is darkening amount in thousandths of a pixel.*/
+    /* In the code, below, dividing by ppem and                 */
+    /* adjusting for emRatio converts darkenAmount to character */
+    /* space (font units).                                      */
     CF2_Fixed  stemWidthPer1000, scaledStem;
+
 
     *darkenAmount = 0;
 
@@ -158,7 +164,7 @@
                            FT_DivFix( cf2_intToFixed( x1 ), ppem );
 
 
-        if ( !ydelta )
+        if ( !xdelta )
           goto Try_x3;
 
         *darkenAmount = FT_MulFix( x, FT_DivFix( ydelta, xdelta ) ) +
@@ -175,7 +181,7 @@
                              FT_DivFix( cf2_intToFixed( x2 ), ppem );
 
 
-          if ( !ydelta )
+          if ( !xdelta )
             goto Try_x4;
 
           *darkenAmount = FT_MulFix( x, FT_DivFix( ydelta, xdelta ) ) +
@@ -193,7 +199,7 @@
                              FT_DivFix( cf2_intToFixed( x3 ), ppem );
 
 
-          if ( !ydelta )
+          if ( !xdelta )
             goto Use_y4;
 
           *darkenAmount = FT_MulFix( x, FT_DivFix( ydelta, xdelta ) ) +
