@@ -8,12 +8,16 @@ CHANGES BETWEEN 2.5 and 2.5.1
     - The vertical size of glyphs was  incorrectly set after a call to
       `FT_GlyphSlot_Embolden', resulting in clipped glyphs.
 
+    - Many fields of the `PCLT' table in SFNT based fonts (if accessed
+      with `FT_Get_Sfnt_Table') were computed incorrectly.
+
 
   II. IMPORTANT CHANGES
 
     - WOFF support has been added.
 
-    - The auto-hinter now supports Hebrew.
+    - The auto-hinter now supports Hebrew.  Greek and Cyrillic support
+      has been improved.
 
 
   III. MISCELLANEOUS
