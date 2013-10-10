@@ -173,8 +173,9 @@ FT_BEGIN_HEADER
    *
    * @description:
    *   By default, the Adobe CFF engine darkens stems at smaller sizes,
-   *   regardless of hinting, to enhance contrast.  Setting this property,
-   *   stem darkening gets switched off.
+   *   regardless of hinting, to enhance contrast.  This feature requires
+   *   a rendering system with proper gamma correction.  Setting this
+   *   property, stem darkening gets switched off.
    *
    *   Note that stem darkening is never applied if @FT_LOAD_NO_SCALE is set.
    *
@@ -231,9 +232,10 @@ FT_BEGIN_HEADER
    *
    *   The x~values give the stem width, and the y~values the darkening
    *   amount.  The unit is 1000th of pixels.  All coordinate values must be
-   *   positive; the x~values must be monotonically increasing, and the
-   *   y~values smaller than or equal to 500 (corresponding to half a
-   *   pixel).
+   *   positive; the x~values must be monotonically increasing; the
+   *   y~values must be monotonically decreasing and smaller than or
+   *   equal to 500 (corresponding to half a pixel); the slope of each
+   *   linear piece must be shallower than -1 (e.g., -.4).
    *
    * @note:
    *   This property can be used with @FT_Property_Get also.
