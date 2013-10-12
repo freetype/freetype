@@ -232,7 +232,44 @@
       FT_Pos*      blue_shoot;
 
 
-      FT_TRACE5(( "blue zone %d:\n", axis->blue_count ));
+#ifdef FT_DEBUG_LEVEL_TRACE
+      {
+        FT_Bool  have_flag = 0;
+
+
+        FT_TRACE5(( "blue zone %d", axis->blue_count ));
+
+        if ( bs->properties )
+        {
+          FT_TRACE5(( " (" ));
+
+          if ( AF_LATIN_IS_TOP_BLUE( bs ) )
+          {
+            FT_TRACE5(( "top" ));
+            have_flag = 1;
+          }
+
+          if ( AF_LATIN_IS_SMALL_TOP_BLUE( bs ) )
+          {
+            if ( have_flag )
+              FT_TRACE5(( ", " ));
+            FT_TRACE5(( "small top" ));
+            have_flag = 1;
+          }
+
+          if ( AF_LATIN_IS_LONG_BLUE( bs ) )
+          {
+            if ( have_flag )
+              FT_TRACE5(( ", " ));
+            FT_TRACE5(( "long" ));
+          }
+
+          FT_TRACE5(( ")" ));
+        }
+
+        FT_TRACE5(( ":\n" ));
+      }
+#endif /* FT_DEBUG_LEVEL_TRACE */
 
       num_flats  = 0;
       num_rounds = 0;
@@ -837,7 +874,20 @@
           else
 #endif
           if ( dim == AF_DIMENSION_VERT )
+          {
             scale = FT_MulDiv( scale, fitted, scaled );
+
+            FT_TRACE5((
+              "af_latin_metrics_scale_dim:"
+              " x height alignment (script `%s'):\n"
+              "                           "
+              " vertical scaling changed from %.4f to %.4f (by %d%%)\n"
+              "\n",
+              af_script_names[metrics->root.script_class->script],
+              axis->org_scale / 65536.0,
+              scale / 65536.0,
+              ( fitted - scaled ) * 100 / scaled ));
+          }
         }
       }
     }
@@ -856,6 +906,10 @@
       metrics->root.scaler.y_delta = delta;
     }
 
+    FT_TRACE5(( "%s widths (script `%s')\n",
+                dim == AF_DIMENSION_HORZ ? "horizontal" : "vertical",
+                af_script_names[metrics->root.script_class->script] ));
+
     /* scale the widths */
     for ( nn = 0; nn < axis->width_count; nn++ )
     {
@@ -864,15 +918,30 @@
 
       width->cur = FT_MulFix( width->org, scale );
       width->fit = width->cur;
+
+      FT_TRACE5(( "  %d scaled to %.2f\n",
+                  width->org,
+                  width->cur / 64.0 ));
     }
+
+    FT_TRACE5(( "\n" ));
 
     /* an extra-light axis corresponds to a standard width that is */
     /* smaller than 5/8 pixels                                     */
     axis->extra_light =
       (FT_Bool)( FT_MulFix( axis->standard_width, scale ) < 32 + 8 );
 
+#ifdef FT_DEBUG_LEVEL_TRACE
+    if ( axis->extra_light )
+      FT_TRACE5(( "this font is extra light\n"
+                  "\n" ));
+#endif
+
     if ( dim == AF_DIMENSION_VERT )
     {
+      FT_TRACE5(( "blue zones (script `%s')\n",
+                  af_script_names[metrics->root.script_class->script] ));
+
       /* scale the blue zones */
       for ( nn = 0; nn < axis->blue_count; nn++ )
       {
@@ -944,6 +1013,19 @@
 #endif
 
           blue->flags |= AF_LATIN_BLUE_ACTIVE;
+
+          FT_TRACE5(( "  reference %d: %d scaled to %.2f%s\n"
+                      "  overshoot %d: %d scaled to %.2f%s\n",
+                      nn,
+                      blue->ref.org,
+                      blue->ref.fit / 64.0,
+                      blue->flags & AF_LATIN_BLUE_ACTIVE ? ""
+                                                         : " (inactive)",
+                      nn,
+                      blue->shoot.org,
+                      blue->shoot.fit / 64.0,
+                      blue->flags & AF_LATIN_BLUE_ACTIVE ? ""
+                                                         : " (inactive)" ));
         }
       }
     }

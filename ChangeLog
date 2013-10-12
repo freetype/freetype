@@ -1,3 +1,13 @@
+2013-10-12  Werner Lemberg  <wl@gnu.org>
+
+	[autofit] Improve tracing of `latin' hinter.
+
+	* src/autofit/aflatin.c (af_latin_metrics_init_blues): Report blue
+	zone types.
+	(af_latin_metrics_scale_dim): Report scaling changes due to x height
+	alignment.
+	Report scaled stroke width and blue zone values.
+
 2013-10-03  Dave Arnold  <darnold@adobe.com>
 
 	* src/cff/cf2font.c (cf2_computeDarkening): Avoid division by zero.
