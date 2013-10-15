@@ -1,3 +1,21 @@
+2013-10-15  Chongyu Zhu  <lembacon@gmail.com>
+
+	[arm] Fix thumb2 inline assembly under LLVM.
+
+	When using `ADD' with an immediate operand, the instruction is
+	actually `ADD Rd, Rn, #<imm12>', that is, the maximum of the
+	immediate operand cannot exceed 4095.  It will fail to compile with
+	LLVM.
+
+	However, in GCC, due to some legacy compatibility considerations,
+	`ADD.W' will be automatically emitted when the immediate operand is
+	larger than 4095.
+
+	* builds/unix/ftconfig.in, include/freetype/config/ftconfig.h
+	(FT_MulFix_arm) [__GNUC__]: Support clang compiler.
+
+	* src/truetype/ttinterp.c (TT_MulFix14_arm) [__GNUC__]: Ditto.
+
 2013-10-12  Werner Lemberg  <wl@gnu.org>
 
 	[autofit] Improve tracing of `latin' hinter.
