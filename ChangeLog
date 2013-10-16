@@ -1,3 +1,9 @@
+2013-10-16  Werner Lemberg  <wl@gnu.org>
+
+	[autofit] Improve tracing message for extra light flag.
+
+	* src/autofit/aflatin.c (af_latin_metrics_scale_dim): Do it.
+
 2013-10-15  Chongyu Zhu  <lembacon@gmail.com>
 
 	[arm] Fix thumb2 inline assembly under LLVM.

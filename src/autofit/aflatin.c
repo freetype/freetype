@@ -933,8 +933,9 @@
 
 #ifdef FT_DEBUG_LEVEL_TRACE
     if ( axis->extra_light )
-      FT_TRACE5(( "this font is extra light\n"
-                  "\n" ));
+      FT_TRACE5(( "`%s' script is extra light (at current resolution)\n"
+                  "\n",
+                  af_script_names[metrics->root.script_class->script] ));
 #endif
 
     if ( dim == AF_DIMENSION_VERT )
