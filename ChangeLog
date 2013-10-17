@@ -1,5 +1,15 @@
 2013-10-16  Werner Lemberg  <wl@gnu.org>
 
+	[autofit] Add description strings to script entries.
+
+	Currently, this is unused.
+
+	* src/autofit/afscript.h: Do it.
+	* src/autofit/afglobal.c, src/autofit/afpic.c,
+	src/autofit/aftypes.h: Updated.
+
+2013-10-16  Werner Lemberg  <wl@gnu.org>
+
 	[autofit] Improve tracing message for extra light flag.
 
 	* src/autofit/aflatin.c (af_latin_metrics_scale_dim): Do it.

@@ -116,7 +116,7 @@
 #include "afwrtsys.h"
 
 #undef  SCRIPT
-#define SCRIPT( s, S )                               \
+#define SCRIPT( s, S, d )                            \
         FT_Init_Class_af_ ## s ## _script_class(     \
           &container->af_script_classes_rec[ss++] );
 

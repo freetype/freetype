@@ -44,7 +44,7 @@
 
 
 #undef  SCRIPT
-#define SCRIPT( s, S )                \
+#define SCRIPT( s, S, d )             \
           &af_ ## s ## _script_class,
 
   FT_LOCAL_ARRAY_DEF( AF_ScriptClass )
@@ -62,7 +62,7 @@
 #ifdef FT_DEBUG_LEVEL_TRACE
 
 #undef  SCRIPT
-#define SCRIPT( s, S )  #s,
+#define SCRIPT( s, S, d )  #s,
 
   FT_LOCAL_ARRAY_DEF( char* )
   af_script_names[] =
