@@ -249,7 +249,7 @@
             have_flag = 1;
           }
 
-          if ( AF_LATIN_IS_SMALL_TOP_BLUE( bs ) )
+          if ( AF_LATIN_IS_X_HEIGHT_BLUE( bs ) )
           {
             if ( have_flag )
               FT_TRACE5(( ", " ));
@@ -705,7 +705,7 @@
        * in order to optimize the pixel grid alignment of the top of small
        * letters.
        */
-      if ( AF_LATIN_IS_SMALL_TOP_BLUE( bs ) )
+      if ( AF_LATIN_IS_X_HEIGHT_BLUE( bs ) )
         blue->flags |= AF_LATIN_BLUE_ADJUSTMENT;
 
       FT_TRACE5(( "    -> reference = %ld\n"

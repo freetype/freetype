@@ -410,11 +410,11 @@
         blue->flags |= AF_LATIN_BLUE_TOP;
 
       /*
-       * The following flags is used later to adjust the y and x scales
+       * The following flag is used later to adjust the y and x scales
        * in order to optimize the pixel grid alignment of the top of small
        * letters.
        */
-      if ( bb == AF_LATIN_BLUE_SMALL_TOP )
+      if ( AF_LATIN_IS_X_HEIGHT_BLUE( bb ) )
         blue->flags |= AF_LATIN_BLUE_ADJUSTMENT;
 
       FT_TRACE5(( "    -> reference = %ld\n"

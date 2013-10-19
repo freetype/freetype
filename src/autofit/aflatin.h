@@ -63,8 +63,8 @@ FT_BEGIN_HEADER
 
 #define AF_LATIN_IS_TOP_BLUE( b ) \
           ( (b)->properties & AF_BLUE_PROPERTY_LATIN_TOP )
-#define AF_LATIN_IS_SMALL_TOP_BLUE( b ) \
-          ( (b)->properties & AF_BLUE_PROPERTY_LATIN_SMALL_TOP )
+#define AF_LATIN_IS_X_HEIGHT_BLUE( b ) \
+          ( (b)->properties & AF_BLUE_PROPERTY_LATIN_X_HEIGHT )
 #define AF_LATIN_IS_LONG_BLUE( b ) \
           ( (b)->properties & AF_BLUE_PROPERTY_LATIN_LONG )
 
