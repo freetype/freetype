@@ -113,29 +113,29 @@
   af_blue_stringsets[] =
   {
     /* */
-    { AF_BLUE_STRING_LATIN_CAPITAL_TOP,    AF_BLUE_PROPERTY_LATIN_TOP         },
-    { AF_BLUE_STRING_LATIN_CAPITAL_BOTTOM, 0                                  },
-    { AF_BLUE_STRING_LATIN_SMALL_F_TOP,    AF_BLUE_PROPERTY_LATIN_TOP         },
-    { AF_BLUE_STRING_LATIN_SMALL,          AF_BLUE_PROPERTY_LATIN_TOP       |
-                                           AF_BLUE_PROPERTY_LATIN_SMALL_TOP   },
-    { AF_BLUE_STRING_LATIN_SMALL,          0                                  },
-    { AF_BLUE_STRING_LATIN_SMALL_MINOR,    0                                  },
-    { AF_BLUE_STRING_MAX,                  0                                  },
-    { AF_BLUE_STRING_GREEK_CAPITAL_TOP,    AF_BLUE_PROPERTY_LATIN_TOP         },
-    { AF_BLUE_STRING_GREEK_CAPITAL_BOTTOM, 0                                  },
-    { AF_BLUE_STRING_GREEK_SMALL_BETA_TOP, AF_BLUE_PROPERTY_LATIN_TOP         },
-    { AF_BLUE_STRING_GREEK_SMALL,          AF_BLUE_PROPERTY_LATIN_TOP       |
-                                           AF_BLUE_PROPERTY_LATIN_SMALL_TOP   },
-    { AF_BLUE_STRING_GREEK_SMALL,          0                                  },
-    { AF_BLUE_STRING_GREEK_SMALL_MINOR,    0                                  },
-    { AF_BLUE_STRING_MAX,                  0                                  },
-    { AF_BLUE_STRING_CYRILLIC_CAPITAL_TOP,    AF_BLUE_PROPERTY_LATIN_TOP         },
-    { AF_BLUE_STRING_CYRILLIC_CAPITAL_BOTTOM, 0                                  },
-    { AF_BLUE_STRING_CYRILLIC_SMALL,          AF_BLUE_PROPERTY_LATIN_TOP       |
-                                              AF_BLUE_PROPERTY_LATIN_SMALL_TOP   },
-    { AF_BLUE_STRING_CYRILLIC_SMALL,          0                                  },
-    { AF_BLUE_STRING_CYRILLIC_SMALL_MINOR,    0                                  },
-    { AF_BLUE_STRING_MAX,                     0                                  },
+    { AF_BLUE_STRING_LATIN_CAPITAL_TOP,     AF_BLUE_PROPERTY_LATIN_TOP         },
+    { AF_BLUE_STRING_LATIN_CAPITAL_BOTTOM,  0                                  },
+    { AF_BLUE_STRING_LATIN_SMALL_F_TOP,     AF_BLUE_PROPERTY_LATIN_TOP         },
+    { AF_BLUE_STRING_LATIN_SMALL,           AF_BLUE_PROPERTY_LATIN_TOP       |
+                                            AF_BLUE_PROPERTY_LATIN_SMALL_TOP   },
+    { AF_BLUE_STRING_LATIN_SMALL,           0                                  },
+    { AF_BLUE_STRING_LATIN_SMALL_DESCENDER, 0                                  },
+    { AF_BLUE_STRING_MAX,                   0                                  },
+    { AF_BLUE_STRING_GREEK_CAPITAL_TOP,     AF_BLUE_PROPERTY_LATIN_TOP         },
+    { AF_BLUE_STRING_GREEK_CAPITAL_BOTTOM,  0                                  },
+    { AF_BLUE_STRING_GREEK_SMALL_BETA_TOP,  AF_BLUE_PROPERTY_LATIN_TOP         },
+    { AF_BLUE_STRING_GREEK_SMALL,           AF_BLUE_PROPERTY_LATIN_TOP       |
+                                            AF_BLUE_PROPERTY_LATIN_SMALL_TOP   },
+    { AF_BLUE_STRING_GREEK_SMALL,           0                                  },
+    { AF_BLUE_STRING_GREEK_SMALL_DESCENDER, 0                                  },
+    { AF_BLUE_STRING_MAX,                   0                                  },
+    { AF_BLUE_STRING_CYRILLIC_CAPITAL_TOP,     AF_BLUE_PROPERTY_LATIN_TOP         },
+    { AF_BLUE_STRING_CYRILLIC_CAPITAL_BOTTOM,  0                                  },
+    { AF_BLUE_STRING_CYRILLIC_SMALL,           AF_BLUE_PROPERTY_LATIN_TOP       |
+                                               AF_BLUE_PROPERTY_LATIN_SMALL_TOP   },
+    { AF_BLUE_STRING_CYRILLIC_SMALL,           0                                  },
+    { AF_BLUE_STRING_CYRILLIC_SMALL_DESCENDER, 0                                  },
+    { AF_BLUE_STRING_MAX,                      0                                  },
     { AF_BLUE_STRING_HEBREW_TOP,       AF_BLUE_PROPERTY_LATIN_TOP  |
                                        AF_BLUE_PROPERTY_LATIN_LONG   },
     { AF_BLUE_STRING_HEBREW_BOTTOM,    0                             },
