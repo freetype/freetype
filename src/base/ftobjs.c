@@ -56,9 +56,7 @@
 #endif /* _MSC_VER */
 
   /* it's easiest to include `md5.c' directly */
-#define free  md5_free /* suppress a shadow warning */
 #include "md5.c"
-#undef free
 
 #if defined( _MSC_VER )
 #pragma warning( pop )
