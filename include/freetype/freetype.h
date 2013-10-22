@@ -1518,8 +1518,8 @@ FT_BEGIN_HEADER
   /*                                                                       */
   /*    advance           :: This shorthand is, depending on               */
   /*                         @FT_LOAD_IGNORE_TRANSFORM, the transformed    */
-  /*                         advance width for the glyph (in 26.6          */
-  /*                         fractional pixel format).  As specified with  */
+  /*                         (hinted) advance width for the glyph, in 26.6 */
+  /*                         fractional pixel format.  As specified with   */
   /*                         @FT_LOAD_VERTICAL_LAYOUT, it uses either the  */
   /*                         `horiAdvance' or the `vertAdvance' value of   */
   /*                         `metrics' field.                              */
