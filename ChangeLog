@@ -4,6 +4,12 @@
 
 	* src/base/ftobjs.c: Updated; `md5.c' no longer uses `free'.
 
+	The canonical URL to get updates for this file is
+
+	  http://cvsweb.openwall.com/cgi/cvsweb.cgi/Owl/packages/popa3d/popa3d/md5/
+
+	as the author told me in private communication.
+
 2013-10-19  Werner Lemberg  <wl@gnu.org>
 
 	[autofit] s/SMALL_TOP/X_HEIGHT/.
