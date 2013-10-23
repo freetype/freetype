@@ -54,8 +54,8 @@ instructions in the file `INSTALL.UNIX' instead.
 
         platform                     win32
         compiler                     gcc
-        configuration directory      .\builds\win32
-        configuration rules          .\builds\win32\w32-gcc.mk
+        configuration directory      .\builds\windows
+        configuration rules          .\builds\windows\w32-gcc.mk
 
       If this does not correspond to your system or settings please
       remove the file 'config.mk' from this directory then read the
@@ -142,7 +142,7 @@ instructions in the file `INSTALL.UNIX' instead.
     font engine in the `objs' directory.   On Windows, you can build a
     DLL  either  with  MinGW  (within an  MSYS  shell,  following  the
     instructions in `INSTALL.UNIX'), or you  use one of the Visual C++
-    project  files; see  the  subdirectories  of `builds/win32'.   For
+    project files; see  the  subdirectories  of `builds/windows'.  For
     everything else,  you are on  your own,  and you might  follow the
     instructions in `INSTALL.ANY' to create your own Makefiles.
 

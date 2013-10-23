@@ -1,9 +1,9 @@
 #
-# FreeType 2 configuration rules for Win32 + LCC
+# FreeType 2 Borland C++ on Win32 + debugging
 #
 
 
-# Copyright 1996-2000 by
+# Copyright 1996-2000, 2003, 2006, 2013 by
 # David Turner, Robert Wilhelm, and Werner Lemberg.
 #
 # This file is part of the FreeType project, and may only be used, modified,
@@ -13,12 +13,14 @@
 # fully.
 
 
-SEP := /
-include $(TOP_DIR)/builds/win32/win32-def.mk
-include $(TOP_DIR)/builds/compiler/win-lcc.mk
+DEVEL_DIR := $(TOP_DIR)/devel
+
+include $(TOP_DIR)/builds/windows/win32-def.mk
+
+include $(TOP_DIR)/builds/compiler/bcc-dev.mk
 
 # include linking instructions
 include $(TOP_DIR)/builds/link_dos.mk
 
-# EOF
 
+# EOF

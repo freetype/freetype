@@ -1,9 +1,9 @@
 #
-# FreeType 2 configuration rules for Win32 + IBM Visual Age C++
+# FreeType 2 Visual C++ on Win32
 #
 
 
-# Copyright 1996-2000, 2005 by
+# Copyright 1996-2000, 2003, 2005, 2013 by
 # David Turner, Robert Wilhelm, and Werner Lemberg.
 #
 # This file is part of the FreeType project, and may only be used, modified,
@@ -12,14 +12,14 @@
 # indicate that you have read the license and understand and accept it
 # fully.
 
-# default definitions of the export list
+# definitions of the export list
 #
 EXPORTS_LIST      = $(OBJ_DIR)/freetype.def
 EXPORTS_OPTIONS   = /DEF:$(EXPORTS_LIST)
 APINAMES_OPTIONS := -dfreetype.dll -w
 
-include $(TOP_DIR)/builds/win32/win32-def.mk
-include $(TOP_DIR)/builds/compiler/visualage.mk
+include $(TOP_DIR)/builds/windows/win32-def.mk
+include $(TOP_DIR)/builds/compiler/visualc.mk
 
 # include linking instructions
 include $(TOP_DIR)/builds/link_dos.mk

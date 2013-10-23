@@ -1,3 +1,16 @@
+2013-10-23  Kenneth Miller  <kennethadammiller@yahoo.com>
+	    Werner Lemberg  <wl@gnu.org>
+
+	Provide support for x64 builds in Visual C++ project files.
+
+	* src/builds/win32: Renamed to...
+	* src/builds/windows: This.
+
+	* src/builds/windows/vc2010/*: Updated to handle x64 target.
+
+	* src/builds/windows/*.mk, docs/INSTALL.GNU: s/win32/windows/ where
+	appropriate.
+
 2013-10-22  Werner Lemberg  <wl@gnu.org>
 
 	* src/base/md5.c, src/base/md5.h: Updated to recent version.
