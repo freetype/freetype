@@ -28,6 +28,9 @@ CHANGES BETWEEN 2.5 and 2.5.1
     - `ftgrid' has been updated to toggle various engines with the `H'
       key, similar to `ftview' and `ftdiff'.
 
+    - `ttdebug' now displays twilight data; key `t' shows the twilight
+      point table.
+
     - Better support of ARMv7 and x86_64 processors.
 
     - Apple's `sbix' color bitmap format is now supported.
@@ -41,6 +44,12 @@ CHANGES BETWEEN 2.5 and 2.5.1
     - `FT_Gzip_Uncompress'   (modeled    after   zlib's   `uncompress'
       function)  has been  added; this  is a  by-product of  the newly
       added WOFF support.
+
+    - Support for  a build with  `cmake' has been contributed  by John
+      Cary <cary@txcorp.com>.
+
+    - Support for x64  builds with Visual C++ has  been contributed by
+      Kenneth Miller <kennethadammiller@yahoo.com>
 
 
 ======================================================================

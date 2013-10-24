@@ -1,3 +1,7 @@
+2013-10-24  Werner Lemberg  <wl@gnu.org>
+
+	* README.git, docs/CHANGES, docs/INSTALL: Updated.
+
 2013-10-24  John Cary  <cary@txcorp.com>
 
 	Provide cmake support.
