@@ -1003,7 +1003,8 @@
       FT_FRAME_END
     };
 
-    static const FT_Frame_Field  os2_fields_extra[] =
+    /* `OS/2' version 1 and newer */
+    static const FT_Frame_Field  os2_fields_extra1[] =
     {
       FT_FRAME_START( 8 ),
         FT_FRAME_ULONG( ulCodePageRange1 ),
@@ -1011,6 +1012,7 @@
       FT_FRAME_END
     };
 
+    /* `OS/2' version 2 and newer */
     static const FT_Frame_Field  os2_fields_extra2[] =
     {
       FT_FRAME_START( 10 ),
@@ -1019,6 +1021,15 @@
         FT_FRAME_USHORT( usDefaultChar ),
         FT_FRAME_USHORT( usBreakChar ),
         FT_FRAME_USHORT( usMaxContext ),
+      FT_FRAME_END
+    };
+
+    /* `OS/2' version 5 and newer */
+    static const FT_Frame_Field  os2_fields_extra5[] =
+    {
+      FT_FRAME_START( 4 ),
+        FT_FRAME_USHORT( usLowerPointSize ),
+        FT_FRAME_USHORT( usUpperPointSize ),
       FT_FRAME_END
     };
 
@@ -1042,11 +1053,13 @@
     os2->usDefaultChar    = 0;
     os2->usBreakChar      = 0;
     os2->usMaxContext     = 0;
+    os2->usLowerPointSize = 0;
+    os2->usUpperPointSize = 0;
 
     if ( os2->version >= 0x0001 )
     {
       /* only version 1 tables */
-      if ( FT_STREAM_READ_FIELDS( os2_fields_extra, os2 ) )
+      if ( FT_STREAM_READ_FIELDS( os2_fields_extra1, os2 ) )
         goto Exit;
 
       if ( os2->version >= 0x0002 )
@@ -1054,6 +1067,13 @@
         /* only version 2 tables */
         if ( FT_STREAM_READ_FIELDS( os2_fields_extra2, os2 ) )
           goto Exit;
+
+        if ( os2->version >= 0x0005 )
+        {
+          /* only version 5 tables */
+          if ( FT_STREAM_READ_FIELDS( os2_fields_extra5, os2 ) )
+            goto Exit;
+        }
       }
     }
 

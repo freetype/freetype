@@ -340,8 +340,8 @@ FT_BEGIN_HEADER
   /*    TT_OS2                                                             */
   /*                                                                       */
   /* <Description>                                                         */
-  /*    A structure used to model a TrueType OS/2 table. This is the long  */
-  /*    table version.  All fields comply to the TrueType specification.   */
+  /*    A structure used to model a TrueType OS/2 table.  All fields       */
+  /*    comply to the OpenType specification.                              */
   /*                                                                       */
   /*    Note that we now support old Mac fonts that do not include an OS/2 */
   /*    table.  In this case, the `version' field is always set to 0xFFFF. */
@@ -395,6 +395,11 @@ FT_BEGIN_HEADER
     FT_UShort  usDefaultChar;
     FT_UShort  usBreakChar;
     FT_UShort  usMaxContext;
+
+    /* only version 5 tables: */
+
+    FT_UShort  usLowerPointSize;
+    FT_UShort  usUpperPointSize;
 
   } TT_OS2;
 

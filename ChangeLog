@@ -1,3 +1,22 @@
+2013-10-27  Werner Lemberg  <wl@gnu.org>
+
+	[sfnt] Implement support for `OS/2' table version 5.
+
+	See
+
+	  http://typedrawers.com/discussion/470/new-microsoft-size-specific-design-selection-mechanism
+
+	for the announcement.
+
+	* include/freetype/tttables.h (TT_OS2): Add fields
+	`usLowerPointSize' and `usUpperPointSize'.  Since FreeType returns
+	this structure only as a pointer through `FT_Get_Sfnt_Table', there
+	shouldn't be any ABI problems.
+
+	* src/sfnt/ttload.c (tt_face_load_os2): Implement it.
+
+	* docs/CHANGES: Updated.
+
 2013-10-24  Werner Lemberg  <wl@gnu.org>
 
 	* README.git, docs/CHANGES, docs/INSTALL: Updated.
