@@ -383,12 +383,12 @@ FT_BEGIN_HEADER
     FT_UShort  usWinAscent;
     FT_UShort  usWinDescent;
 
-    /* only version 1 tables: */
+    /* only version 1 and higher: */
 
     FT_ULong   ulCodePageRange1;       /* Bits 0-31   */
     FT_ULong   ulCodePageRange2;       /* Bits 32-63  */
 
-    /* only version 2 tables: */
+    /* only version 2 and higher: */
 
     FT_Short   sxHeight;
     FT_Short   sCapHeight;
@@ -396,10 +396,10 @@ FT_BEGIN_HEADER
     FT_UShort  usBreakChar;
     FT_UShort  usMaxContext;
 
-    /* only version 5 tables: */
+    /* only version 5 and higher: */
 
-    FT_UShort  usLowerPointSize;
-    FT_UShort  usUpperPointSize;
+    FT_UShort  usLowerPointSize;       /* in twips (1/20th points) */
+    FT_UShort  usUpperPointSize;       /* in twips (1/20th points) */
 
   } TT_OS2;
 
