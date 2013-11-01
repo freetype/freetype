@@ -3151,42 +3151,42 @@
   }
 
 
-#define DO_JROT                                                   \
-    if ( args[1] != 0 )                                           \
-    {                                                             \
-      if ( args[0] == 0 && CUR.args == 0 )                        \
-        CUR.error = FT_THROW( Bad_Argument );                     \
-      CUR.IP += args[0];                                          \
-      if ( CUR.IP < 0                                          || \
-           ( CUR.callTop > 0                                 &&   \
-             CUR.IP > CUR.callStack[CUR.callTop - 1].Cur_End ) )  \
-        CUR.error = FT_THROW( Bad_Argument );                     \
-      CUR.step_ins = FALSE;                                       \
+#define DO_JROT                                                    \
+    if ( args[1] != 0 )                                            \
+    {                                                              \
+      if ( args[0] == 0 && CUR.args == 0 )                         \
+        CUR.error = FT_THROW( Bad_Argument );                      \
+      CUR.IP += args[0];                                           \
+      if ( CUR.IP < 0                                           || \
+           ( CUR.callTop > 0                                  &&   \
+             CUR.IP > CUR.callStack[CUR.callTop - 1].Def->end ) )  \
+        CUR.error = FT_THROW( Bad_Argument );                      \
+      CUR.step_ins = FALSE;                                        \
     }
 
 
-#define DO_JMPR                                                 \
-    if ( args[0] == 0 && CUR.args == 0 )                        \
-      CUR.error = FT_THROW( Bad_Argument );                     \
-    CUR.IP += args[0];                                          \
-    if ( CUR.IP < 0                                          || \
-         ( CUR.callTop > 0                                 &&   \
-           CUR.IP > CUR.callStack[CUR.callTop - 1].Cur_End ) )  \
-      CUR.error = FT_THROW( Bad_Argument );                     \
+#define DO_JMPR                                                  \
+    if ( args[0] == 0 && CUR.args == 0 )                         \
+      CUR.error = FT_THROW( Bad_Argument );                      \
+    CUR.IP += args[0];                                           \
+    if ( CUR.IP < 0                                           || \
+         ( CUR.callTop > 0                                  &&   \
+           CUR.IP > CUR.callStack[CUR.callTop - 1].Def->end ) )  \
+      CUR.error = FT_THROW( Bad_Argument );                      \
     CUR.step_ins = FALSE;
 
 
-#define DO_JROF                                                   \
-    if ( args[1] == 0 )                                           \
-    {                                                             \
-      if ( args[0] == 0 && CUR.args == 0 )                        \
-        CUR.error = FT_THROW( Bad_Argument );                     \
-      CUR.IP += args[0];                                          \
-      if ( CUR.IP < 0                                          || \
-           ( CUR.callTop > 0                                 &&   \
-             CUR.IP > CUR.callStack[CUR.callTop - 1].Cur_End ) )  \
-        CUR.error = FT_THROW( Bad_Argument );                     \
-      CUR.step_ins = FALSE;                                       \
+#define DO_JROF                                                    \
+    if ( args[1] == 0 )                                            \
+    {                                                              \
+      if ( args[0] == 0 && CUR.args == 0 )                         \
+        CUR.error = FT_THROW( Bad_Argument );                      \
+      CUR.IP += args[0];                                           \
+      if ( CUR.IP < 0                                           || \
+           ( CUR.callTop > 0                                  &&   \
+             CUR.IP > CUR.callStack[CUR.callTop - 1].Def->end ) )  \
+        CUR.error = FT_THROW( Bad_Argument );                      \
+      CUR.step_ins = FALSE;                                        \
     }
 
 
@@ -4902,7 +4902,7 @@
     if ( pRec->Cur_Count > 0 )
     {
       CUR.callTop++;
-      CUR.IP = pRec->Cur_Restart;
+      CUR.IP = pRec->Def->start;
     }
     else
       /* Loop through the current function */
@@ -4992,8 +4992,7 @@
     pCrec->Caller_Range = CUR.curRange;
     pCrec->Caller_IP    = CUR.IP + 1;
     pCrec->Cur_Count    = 1;
-    pCrec->Cur_Restart  = def->start;
-    pCrec->Cur_End      = def->end;
+    pCrec->Def          = def;
 
     CUR.callTop++;
 
@@ -5081,8 +5080,7 @@
       pCrec->Caller_Range = CUR.curRange;
       pCrec->Caller_IP    = CUR.IP + 1;
       pCrec->Cur_Count    = (FT_Int)args[0];
-      pCrec->Cur_Restart  = def->start;
-      pCrec->Cur_End      = def->end;
+      pCrec->Def          = def;
 
       CUR.callTop++;
 
@@ -7917,8 +7915,7 @@
         call->Caller_Range = CUR.curRange;
         call->Caller_IP    = CUR.IP + 1;
         call->Cur_Count    = 1;
-        call->Cur_Restart  = def->start;
-        call->Cur_End      = def->end;
+        call->Def          = def;
 
         INS_Goto_CodeRange( def->range, def->start );
 
@@ -8974,8 +8971,7 @@
                 callrec->Caller_Range = CUR.curRange;
                 callrec->Caller_IP    = CUR.IP + 1;
                 callrec->Cur_Count    = 1;
-                callrec->Cur_Restart  = def->start;
-                callrec->Cur_End      = def->end;
+                callrec->Def          = def;
 
                 if ( INS_Goto_CodeRange( def->range, def->start ) == FAILURE )
                   goto LErrorLabel_;

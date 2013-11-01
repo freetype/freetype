@@ -1,3 +1,23 @@
+2013-11-01  Werner Lemberg  <wl@gnu.org>
+
+	[truetype] Minor code refactoring.
+
+	Two benefits: The allocated FDEF (and IDEF) array gets slightly
+	smaller, and the `ttdebug' demo program has access to function
+	numbers without additional costs.
+
+	Fortunately, no changes to FontForge are necessary – this is the
+	only external TrueType debugger I know of, but others may exist and
+	should check the code accordingly.
+
+	* src/truetype/ttinterp.h (TT_CallRec): Replace `Cur_Restart' and
+	`Cur_End' with a pointer to the corresponding `TT_DefRecord'
+	structure.
+
+	* src/truetype/ttinterp.c (DO_JROT, DO_JMPR, DO_JROF, Ins_ENDF,
+	Ins_CALL, Ins_LOOPCALL, Ins_UNKNOWN, TT_RunIns <Invalid_Opcode>):
+	Updated.
+
 2013-10-27  Werner Lemberg  <wl@gnu.org>
 
 	[sfnt] Implement support for `OS/2' table version 5.
