@@ -1265,7 +1265,7 @@
 
   /* Calculate the four phantom points.                     */
   /* The first two stand for horizontal origin and advance. */
-  /* The last two stand for vertical origin and advance.    */
+  /* The last two stand for vertical advance and origin.    */
 #define TT_LOADER_SET_PP( loader )                                          \
           do {                                                              \
             (loader)->pp1.x = (loader)->bbox.xMin - (loader)->left_bearing; \
