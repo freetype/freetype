@@ -31,12 +31,23 @@ CHANGES BETWEEN 2.5 and 2.5.1
     - `ftgrid' has been updated to toggle various engines with the `H'
       key, similar to `ftview' and `ftdiff'.
 
-    - Some keys  in `ttdebug' have  been reassigned from  lowercase to
-      their uppercase equivalents; for example `q' to quit the program
-      is now `Q'.
+    - The functionality of `ttdebug' has been greatly enhanced.
 
-    - `ttdebug' now displays  twilight and storage area  data; key `T'
-      shows the twilight point table, key `S' the storage data.
+      . It now displays twilight, storage, and control value data; key
+        `T' shows the twilight point  table, key `S' the storage data,
+        and key `C' the control value table.
+
+      . Some  keys  have  been  reassigned  from  lowercase  to  their
+        uppercase equivalents; for example `q'  to quit the program is
+        now `Q'.
+
+      . Key `f' finishes the current function.
+
+      . Key `R' restarts the debugger.
+
+      . Keys `b' and `p' set a breakpoint.
+
+      . Key `B' provides a function call backtrace.
 
     - Better support of ARMv7 and x86_64 processors.
 
@@ -57,6 +68,8 @@ CHANGES BETWEEN 2.5 and 2.5.1
 
     - Support for x64  builds with Visual C++ has  been contributed by
       Kenneth Miller <kennethadammiller@yahoo.com>
+
+    - Manual pages for most demo programs have been added.
 
 
 ======================================================================

@@ -1,5 +1,9 @@
 2013-11-01  Werner Lemberg  <wl@gnu.org>
 
+	* docs/CHANGES: Updated.
+
+2013-11-01  Werner Lemberg  <wl@gnu.org>
+
 	[truetype] Minor code refactoring.
 
 	Two benefits: The allocated FDEF (and IDEF) array gets slightly
