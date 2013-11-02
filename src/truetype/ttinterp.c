@@ -7828,18 +7828,15 @@
       if ( ( args[0] & 32 ) != 0 && CUR.grayscale_hinting )
         K |= 1 << 12;
 
-      /********************************/
-      /* HINTING FOR SUBPIXEL         */
-      /* Selector Bit:  6             */
-      /* Return Bit(s): 13            */
-      /*                              */
-      if ( ( args[0] & 64 ) != 0        &&
-           CUR.subpixel_hinting         &&
-           CUR.rasterizer_version >= 37 )
+      if ( CUR.rasterizer_version >= 37 )
       {
-        K |= 1 << 13;
-
-        /* the stuff below is irrelevant if subpixel_hinting is not set */
+        /********************************/
+        /* HINTING FOR SUBPIXEL         */
+        /* Selector Bit:  6             */
+        /* Return Bit(s): 13            */
+        /*                              */
+        if ( ( args[0] & 64 ) != 0 && CUR.subpixel_hinting )
+          K |= 1 << 13;
 
         /********************************/
         /* COMPATIBLE WIDTHS ENABLED    */

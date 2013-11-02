@@ -71,6 +71,11 @@ CHANGES BETWEEN 2.5 and 2.5.1
 
     - Manual pages for most demo programs have been added.
 
+    - The GETINFO bytecode instruction for TrueType fonts was buggy if
+      used to retrieve subpixel hinting information.  It was necessary
+      to set  selector bit 6  to get  results for selector  bits 7-10,
+      which is wrong.
+
 
 ======================================================================
 

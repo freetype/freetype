@@ -1,5 +1,14 @@
 2013-11-02  Werner Lemberg  <wl@gnu.org>
 
+	[truetype] Fix GETINFO opcode handling of subpixel hinting bits.
+
+	* src/truetype/ttinterp.c (Ins_GETINFO): Don't request bit 6 set to
+	get info on subpixel hinting.
+
+	* docs/CHANGES: Updated.
+
+2013-11-02  Werner Lemberg  <wl@gnu.org>
+
 	Fix Savannah bug #40451.
 
 	Simply apply the patch from the bug report.
