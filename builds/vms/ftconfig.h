@@ -456,8 +456,10 @@ FT_BEGIN_HEADER
   {
     /* Temporarily disable the warning that C90 doesn't support */
     /* `long long'.                                             */
+#if ( __GNUC__ > 4 ) || ( ( __GNUC__ == 4 ) && ( __GNUC_MINOR__ >= 6 ) )
 #pragma GCC diagnostic push
 #pragma GCC diagnostic ignored "-Wlong-long"
+#endif
 
 #if 1
     /* Technically not an assembly fragment, but GCC does a really good */
@@ -496,7 +498,9 @@ FT_BEGIN_HEADER
     return (FT_Int32)result;
 #endif
 
+#if ( __GNUC__ > 4 ) || ( ( __GNUC__ == 4 ) && ( __GNUC_MINOR__ >= 6 ) )
 #pragma GCC diagnostic pop
+#endif
   }
 
 #endif /* __GNUC__ && __x86_64__ */

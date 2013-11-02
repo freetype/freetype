@@ -1,3 +1,13 @@
+2013-11-02  Werner Lemberg  <wl@gnu.org>
+
+	Fix Savannah bug #40451.
+
+	Simply apply the patch from the bug report.
+
+	* builds/unix/ftconfig.in, builds/vms/ftconfig.h,
+	include/freetype/config/ftconfig.h: The used #pragma directives only
+	work with gcc versions 4.6 and higher.
+
 2013-11-01  Werner Lemberg  <wl@gnu.org>
 
 	* docs/CHANGES: Updated.
