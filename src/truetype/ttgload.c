@@ -1254,7 +1254,7 @@
 
     /* Some points are likely touched during execution of  */
     /* instructions on components.  So let's untouch them. */
-    for ( i = start_point; i < loader->zone.n_points; i++ )
+    for ( i = 0; i < loader->zone.n_points; i++ )
       loader->zone.tags[i] &= ~FT_CURVE_TAG_TOUCH_BOTH;
 
     loader->zone.n_points += 4;

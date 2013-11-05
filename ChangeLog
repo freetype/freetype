@@ -1,3 +1,10 @@
+2013-11-05  Werner Lemberg  <wl@gnu.org>
+
+	[truetype] Correctly reset point tags for glyph components.
+	Problem reported by Nigel Tao <nigeltao@golang.org>.
+
+	* src/truetype/ttgload.c (TT_Process_Composite_Glyph): Fix loop.
+
 2013-11-02  Werner Lemberg  <wl@gnu.org>
 
 	[truetype] Fix GETINFO opcode handling of subpixel hinting bits.
