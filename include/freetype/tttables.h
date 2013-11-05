@@ -676,6 +676,12 @@ FT_BEGIN_HEADER
   *       error = FT_Load_Sfnt_Table( face, tag, 0, buffer, &length );
   *       if ( error ) { ... could not load table ... }
   *     }
+  *
+  *   Note that structures like @TT_Header or @TT_OS2 can't be used with
+  *   this function; the are limited to @FT_Get_Sfnt_Table.  Reason is that
+  *   the size of those structures may vary depending on the processor
+  *   architecture (e.g. 32bit vs. 64bit or big endian vs. little endian).
+  *
   */
   FT_EXPORT( FT_Error )
   FT_Load_Sfnt_Table( FT_Face    face,
