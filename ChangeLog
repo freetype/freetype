@@ -1,5 +1,12 @@
 2013-11-05  Werner Lemberg  <wl@gnu.org>
 
+	* builds/windows/vc2010/freetype.vcxproj: s/v110/v100/.
+	PlatformToolSet version 110 is for VC2012.
+
+	Problem reported (with solution) by Dave Arnold <darnold@adobe.com>.
+
+2013-11-05  Werner Lemberg  <wl@gnu.org>
+
 	[truetype] Correctly reset point tags for glyph components.
 	Problem reported by Nigel Tao <nigeltao@golang.org>.
 
