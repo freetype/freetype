@@ -85,44 +85,29 @@
   /*************************************************************************/
   /*                                                                       */
   /* Return the vertical metrics in font units for a given glyph.          */
-  /* Greg Hitchcock from Microsoft told us that if there were no `vmtx'    */
-  /* table, typoAscender/Descender from the `OS/2' table would be used     */
-  /* instead, and if there were no `OS/2' table, use ascender/descender    */
-  /* from the `hhea' table.  But that is not what Microsoft's rasterizer   */
-  /* apparently does: It uses the ppem value as the advance height, and    */
-  /* sets the top side bearing to be zero.                                 */
+  /* See macro `TT_LOADER_SET_PP' below for explanations.                  */
   /*                                                                       */
   FT_LOCAL_DEF( void )
   TT_Get_VMetrics( TT_Face     face,
                    FT_UInt     idx,
+                   FT_Pos      yMax,
                    FT_Short*   tsb,
                    FT_UShort*  ah )
   {
     if ( face->vertical_info )
       ( (SFNT_Service)face->sfnt )->get_metrics( face, 1, idx, tsb, ah );
 
-#if 1             /* Empirically determined, at variance with what MS said */
-
-    else
-    {
-      *tsb = 0;
-      *ah  = face->root.units_per_EM;
-    }
-
-#else      /* This is what MS said to do.  It isn't what they do, however. */
-
     else if ( face->os2.version != 0xFFFFU )
     {
-      *tsb = face->os2.sTypoAscender;
+      *tsb = face->os2.sTypoAscender - yMax;
       *ah  = face->os2.sTypoAscender - face->os2.sTypoDescender;
     }
+
     else
     {
-      *tsb = face->horizontal.Ascender;
+      *tsb = face->horizontal.Ascender - yMax;
       *ah  = face->horizontal.Ascender - face->horizontal.Descender;
     }
-
-#endif
 
     FT_TRACE5(( "  advance height (font units): %d\n", *ah ));
     FT_TRACE5(( "  top side bearing (font units): %d\n", *tsb ));
@@ -146,6 +131,7 @@
                      &left_bearing,
                      &advance_width );
     TT_Get_VMetrics( face, glyph_index,
+                     loader->bbox.yMax,
                      &top_bearing,
                      &advance_height );
 
@@ -1263,18 +1249,78 @@
   }
 
 
-  /* Calculate the four phantom points.                     */
-  /* The first two stand for horizontal origin and advance. */
-  /* The last two stand for vertical advance and origin.    */
+  /*
+   * Calculate the phantom points
+   *
+   * Defining the right side bearing (rsb) as
+   *
+   *   rsb = aw - (lsb + xmax - xmin)
+   *
+   * (with `aw' the advance width, `lsb' the left side bearing, and `xmin'
+   * and `xmax' the glyph's minimum and maximum x value), the OpenType
+   * specification defines the initial position of horizontal phantom points
+   * as
+   *
+   *   pp1 = (xmin - lsb, 0)      ,
+   *   pp2 = (pp1 + aw, 0)        .
+   *
+   * However, the specification lacks the precise definition of vertical
+   * phantom points.  Greg Hitchcock provided the following explanation.
+   *
+   * - a `vmtx' table is present
+   *
+   *   For any glyph, the minimum and maximum y values (`ymin' and `ymax')
+   *   are given in the `glyf' table, the top side bearing (tsb) and advance
+   *   height (ah) are given in the `vmtx' table.  The bottom side bearing
+   *   (bsb) is then calculated as
+   *
+   *     bsb = ah - (tsb + ymax - ymin)       ,
+   *
+   *   and the initial position of vertical phantom points is
+   *
+   *     pp3 = (x, ymax + tsb)       ,
+   *     pp4 = (x, pp3 - ah)         .
+   *
+   *   See below for value `x'.
+   *
+   * - no `vmtx' table in the font
+   *
+   *   If there is an `OS/2' table, we set
+   *
+   *     DefaultAscender = sTypoAscender       ,
+   *     DefaultDescender = sTypoDescender     ,
+   *
+   *   otherwise we use data from the `hhea' table:
+   *
+   *     DefaultAscender = Ascender         ,
+   *     DefaultDescender = Descender       .
+   *
+   *   With these two variables we can now set
+   *
+   *     ah = DefaultAscender - sDefaultDescender    ,
+   *     tsb = DefaultAscender - yMax                ,
+   *
+   *   and proceed as if a `vmtx' table was present.
+   *
+   * Usually we have
+   *
+   *   x = aw / 2      ,
+   *
+   * but there is a compatibility case where it can be set to
+   *
+   *   x = -DefaultDescender -
+   *         ((DefaultAscender - DefaultDescender - aw) / 2)     .
+   *
+   */
 #define TT_LOADER_SET_PP( loader )                                          \
           do {                                                              \
             (loader)->pp1.x = (loader)->bbox.xMin - (loader)->left_bearing; \
             (loader)->pp1.y = 0;                                            \
             (loader)->pp2.x = (loader)->pp1.x + (loader)->advance;          \
             (loader)->pp2.y = 0;                                            \
-            (loader)->pp3.x = 0;                                            \
-            (loader)->pp3.y = (loader)->top_bearing + (loader)->bbox.yMax;  \
-            (loader)->pp4.x = 0;                                            \
+            (loader)->pp3.x = (loader)->advance / 2;                        \
+            (loader)->pp3.y = (loader)->bbox.yMax + (loader)->top_bearing;  \
+            (loader)->pp4.x = (loader)->advance / 2;                        \
             (loader)->pp4.y = (loader)->pp3.y - (loader)->vadvance;         \
           } while ( 0 )
 

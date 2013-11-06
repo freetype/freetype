@@ -1,3 +1,25 @@
+2013-11-06  Werner Lemberg  <wl@gnu.org>
+
+	[truetype] Improve emulation of vertical metrics.
+
+	This commit also improves the start values of vertical phantom
+	points.  Kudos to Greg Hitchcock for help.
+
+	* src/truetype/ttgload.c (TT_Get_VMetrics): Add parameter to pass
+	`yMax' value.  Replace code with fixed Microsoft definition.
+	(tt_get_metrics): Updated.
+	(TT_LOADER_SET_PP): Add explanation how to initialize phantom
+	points, taken from both the OpenType specification and private
+	communication with Greg (which will eventually be added to the
+	standard).
+	Fix horizontal position of `pp3' and `pp4'.
+
+	* src/truetype/ttgload.h: Updated.
+
+	* src/truetype/ttdriver.c (tt_get_advances): Updated.
+
+	* docs/CHANGES: Updated.
+
 2013-11-05  Werner Lemberg  <wl@gnu.org>
 
 	* builds/windows/vc2010/freetype.vcxproj: s/v110/v100/.

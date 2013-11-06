@@ -11,6 +11,10 @@ CHANGES BETWEEN 2.5 and 2.5.1
     - Many fields of the `PCLT' table in SFNT based fonts (if accessed
       with `FT_Get_Sfnt_Table') were computed incorrectly.
 
+    - In TrueType fonts,  hinting of composite glyphs  could sometimes
+      deliver  incorrect positions  of  components or  even  distorted
+      shapes.
+
 
   II. IMPORTANT CHANGES
 
@@ -75,6 +79,12 @@ CHANGES BETWEEN 2.5 and 2.5.1
       used to retrieve subpixel hinting information.  It was necessary
       to set  selector bit 6  to get  results for selector  bits 7-10,
       which is wrong.
+
+    - Improved computation  of emulated vertical metrics  for TrueType
+      fonts.
+
+    - Fixed horizontal start-up position of vertical phantom points in
+      TrueType bytecode.
 
 
 ======================================================================
