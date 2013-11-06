@@ -1387,8 +1387,6 @@
       y_scale = 0x10000L;
     }
 
-    tt_get_metrics( loader, glyph_index );
-
     /* Set `offset' to the start of the glyph relative to the start of */
     /* the `glyf' table, and `byte_len' to the length of the glyph in  */
     /* bytes.                                                          */
@@ -1448,7 +1446,15 @@
 
       /* read glyph header first */
       error = face->read_glyph_header( loader );
-      if ( error || header_only )
+      if ( error )
+        goto Exit;
+
+      /* the metrics must be computed after loading the glyph header */
+      /* since we need the glyph's `yMax' value in case the vertical */
+      /* metrics must be emulated                                    */
+      tt_get_metrics( loader, glyph_index );
+
+      if ( header_only )
         goto Exit;
     }
 
@@ -1458,6 +1464,8 @@
       loader->bbox.xMax = 0;
       loader->bbox.yMin = 0;
       loader->bbox.yMax = 0;
+
+      tt_get_metrics( loader, glyph_index );
 
       if ( header_only )
         goto Exit;

@@ -1,5 +1,15 @@
 2013-11-06  Werner Lemberg  <wl@gnu.org>
 
+	[truetype] Fix handling of phantom points in composite glyphs.
+	Problem reported by Nigel Tao <nigeltao@golang.org>.
+
+	This is a follow-up commit to the previous one.
+
+	* src/truetype/ttgload.c (load_truetype_glyph): Call
+	`tt_get_metrics' after loading the glyph header.
+
+2013-11-06  Werner Lemberg  <wl@gnu.org>
+
 	[truetype] Improve emulation of vertical metrics.
 
 	This commit also improves the start values of vertical phantom
