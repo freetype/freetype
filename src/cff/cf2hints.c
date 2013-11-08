@@ -596,22 +596,31 @@
     indexInsert = 0;
     for ( ; indexInsert < hintmap->count; indexInsert++ )
     {
-      if ( hintmap->edge[indexInsert].csCoord > firstHintEdge->csCoord )
+      if ( hintmap->edge[indexInsert].csCoord >= firstHintEdge->csCoord )
         break;
     }
 
     /*
-     * Discard any hints that overlap in character space.  Most often,
-     * this is while building the initial map, but in theory, it can also
-     * occur because of darkening.
+     * Discard any hints that overlap in character space.  Most often, this
+     * is while building the initial map, where captured hints from all
+     * zones are combined.  Define overlap to include hints that `touch'
+     * (overlap zero).  Hiragino Sans/Gothic fonts have numerous hints that
+     * touch.  Some fonts have non-ideographic glyphs that overlap our
+     * synthetic hints.
+     *
+     * Overlap also occurs when darkening stem hints that are close.
      *
      */
     if ( indexInsert < hintmap->count )
     {
-      /* we are inserting before an existing edge:              */
+      /* we are inserting before an existing edge:    */
+      /* verify that an existing edge is not the same */
+      if ( hintmap->edge[indexInsert].csCoord == firstHintEdge->csCoord )
+        return; /* ignore overlapping stem hint */
+
       /* verify that a new pair does not straddle the next edge */
-      if ( isPair                                                       &&
-           hintmap->edge[indexInsert].csCoord < secondHintEdge->csCoord )
+      if ( isPair                                                        &&
+           hintmap->edge[indexInsert].csCoord <= secondHintEdge->csCoord )
         return; /* ignore overlapping stem hint */
 
       /* verify that we are not inserting between paired edges */

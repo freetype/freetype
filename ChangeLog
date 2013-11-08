@@ -1,3 +1,10 @@
+2013-11-08  Dave Arnold  <darnold@adobe.com>
+
+	[cff] Fix for hints that touch.
+
+	* src/cff/cf2hints.c (cf2_hintmap_insertHint): Fix condition for
+	finding index value of insertion point.
+
 2013-11-06  Werner Lemberg  <wl@gnu.org>
 
 	[truetype] Fix handling of phantom points in composite glyphs.
