@@ -1,3 +1,7 @@
+2013-11-10  Werner Lemberg  <wl@gnu.org>
+
+	* docs/CMAKE: New dummy file.
+
 2013-11-08  Dave Arnold  <darnold@adobe.com>
 
 	[cff] Fix for hints that touch.
