@@ -114,7 +114,7 @@
   }
 
 
-  static void
+  static FT_Error
   tt_get_metrics( TT_Loader  loader,
                   FT_UInt    glyph_index )
   {
@@ -123,8 +123,15 @@
     TT_Driver  driver = (TT_Driver)FT_FACE_DRIVER( face );
 #endif
 
+    FT_Error   error;
+    FT_Stream  stream = loader->stream;
+
     FT_Short   left_bearing = 0, top_bearing = 0;
     FT_UShort  advance_width = 0, advance_height = 0;
+
+    /* we must preserve the stream position          */
+    /* (which gets altered by the metrics functions) */
+    FT_ULong  pos = FT_STREAM_POS();
 
 
     TT_Get_HMetrics( face, glyph_index,
@@ -134,6 +141,9 @@
                      loader->bbox.yMax,
                      &top_bearing,
                      &advance_height );
+
+    if ( FT_STREAM_SEEK( pos ) )
+      return error;
 
     loader->left_bearing = left_bearing;
     loader->advance      = advance_width;
@@ -157,6 +167,8 @@
       loader->linear_def = 1;
       loader->linear     = advance_width;
     }
+
+    return FT_Err_Ok;
   }
 
 
@@ -1452,7 +1464,9 @@
       /* the metrics must be computed after loading the glyph header */
       /* since we need the glyph's `yMax' value in case the vertical */
       /* metrics must be emulated                                    */
-      tt_get_metrics( loader, glyph_index );
+      error = tt_get_metrics( loader, glyph_index );
+      if ( error )
+        goto Exit;
 
       if ( header_only )
         goto Exit;
@@ -1465,7 +1479,9 @@
       loader->bbox.yMin = 0;
       loader->bbox.yMax = 0;
 
-      tt_get_metrics( loader, glyph_index );
+      error = tt_get_metrics( loader, glyph_index );
+      if ( error )
+        goto Exit;
 
       if ( header_only )
         goto Exit;

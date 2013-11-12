@@ -1,3 +1,11 @@
+2013-11-12  Werner Lemberg  <wl@gnu.org>
+
+	[truetype] Fix last `truetype' commit.
+
+	* src/truetype/ttgload.c (tt_get_metrics): Preserve stream position.
+	Return error value.
+	(load_truetype_glyph): Updated.
+
 2013-11-10  Werner Lemberg  <wl@gnu.org>
 
 	* docs/CMAKE: New dummy file.
