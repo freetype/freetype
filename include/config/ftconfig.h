@@ -27,11 +27,11 @@
   /* Note however that if some specific modifications are needed, we       */
   /* advise you to place a modified copy in your build directory.          */
   /*                                                                       */
-  /* The build directory is usually `freetype/builds/<system>', and        */
-  /* contains system-specific files that are always included first when    */
-  /* building the library.                                                 */
+  /* The build directory is usually `builds/<system>', and contains        */
+  /* system-specific files that are always included first when building    */
+  /* the library.                                                          */
   /*                                                                       */
-  /* This ANSI version should stay in `include/freetype/config'.           */
+  /* This ANSI version should stay in `include/config/'.                   */
   /*                                                                       */
   /*************************************************************************/
 
@@ -53,7 +53,7 @@ FT_BEGIN_HEADER
   /* These macros can be toggled to suit a specific system.  The current   */
   /* ones are defaults used to compile FreeType in an ANSI C environment   */
   /* (16bit compilers are also supported).  Copy this file to your own     */
-  /* `freetype/builds/<system>' directory, and edit it to port the engine. */
+  /* `builds/<system>' directory, and edit it to port the engine.          */
   /*                                                                       */
   /*************************************************************************/
 

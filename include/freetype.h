@@ -3027,7 +3027,7 @@ FT_BEGIN_HEADER
   /*                                                                       */
   /*    This function is not compiled within the library if the config     */
   /*    macro `FT_CONFIG_OPTION_NO_GLYPH_NAMES' is defined in              */
-  /*    `include/freetype/config/ftoptions.h'.                             */
+  /*    `ftoptions.h'.                                                     */
   /*                                                                       */
   FT_EXPORT( FT_Error )
   FT_Get_Glyph_Name( FT_Face     face,

@@ -7,7 +7,7 @@
 /*  Copyright 2003 by                                                      */
 /*  Masatake YAMATO, Redhat K.K.                                           */
 /*                                                                         */
-/*  Copyright 2003, 2008, 2009, 2012 by                                    */
+/*  Copyright 2003, 2008, 2009, 2012, 2013 by                              */
 /*  David Turner, Robert Wilhelm, and Werner Lemberg.                      */
 /*                                                                         */
 /*  This file is part of the FreeType project, and may only be used,       */
@@ -47,7 +47,7 @@ FT_BEGIN_HEADER
   /* <Fields>                                                              */
   /*    language ::                                                        */
   /*      The language ID used in Mac fonts.  Definitions of values are in */
-  /*      freetype/ttnameid.h.                                             */
+  /*      `ttnameid.h'.                                                    */
   /*                                                                       */
   /*    format ::                                                          */
   /*      The cmap format.  OpenType 1.5 defines the formats 0 (byte       */

@@ -92,7 +92,7 @@ LIB32=link.exe -lib
 # PROP Output_Dir "..\..\..\objs\debug_mt"
 # PROP Intermediate_Dir "..\..\..\objs\debug_mt"
 # PROP Target_Dir ""
-# ADD BASE CPP /nologo /Za /W3 /Gm /GX /ZI /Od /I "..\freetype\include\\" /D "_DEBUG" /D "WIN32" /D "_MBCS" /D "_LIB" /D "FT_FLAT_COMPILE" /YX /FD /GZ /c
+# ADD BASE CPP /nologo /Za /W3 /Gm /GX /ZI /Od /I "..\include\\" /D "_DEBUG" /D "WIN32" /D "_MBCS" /D "_LIB" /D "FT_FLAT_COMPILE" /YX /FD /GZ /c
 # SUBTRACT BASE CPP /X
 # ADD CPP /MTd /Za /W4 /GX /Z7 /Od /I "..\..\..\include" /D "_DEBUG" /D "FT_DEBUG_LEVEL_ERROR" /D "FT_DEBUG_LEVEL_TRACE" /D "WIN32" /D "_MBCS" /D "_LIB" /D "FT2_BUILD_LIBRARY" /FD /GZ /c
 # SUBTRACT CPP /nologo /X /YX
@@ -117,7 +117,7 @@ LIB32=link.exe -lib
 # PROP Output_Dir "..\..\..\objs\release_mt"
 # PROP Intermediate_Dir "..\..\..\objs\release_mt"
 # PROP Target_Dir ""
-# ADD BASE CPP /nologo /Za /W3 /GX /O2 /I "..\freetype\include\\" /D "NDEBUG" /D "WIN32" /D "_MBCS" /D "_LIB" /D "FT_FLAT_COMPILE" /YX /FD /c
+# ADD BASE CPP /nologo /Za /W3 /GX /O2 /I "..\include\\" /D "NDEBUG" /D "WIN32" /D "_MBCS" /D "_LIB" /D "FT_FLAT_COMPILE" /YX /FD /c
 # ADD CPP /MT /Za /W4 /GX /O2 /I "..\..\..\include" /D "NDEBUG" /D "WIN32" /D "_MBCS" /D "_LIB" /D "FT2_BUILD_LIBRARY" /FD /c
 # SUBTRACT CPP /nologo /Z<none> /YX
 # ADD BASE RSC /l 0x409 /d "NDEBUG"
@@ -377,23 +377,23 @@ SOURCE=..\..\..\include\ft2build.h
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\include\freetype\config\ftconfig.h
+SOURCE=..\..\..\include\config\ftconfig.h
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\include\freetype\config\ftheader.h
+SOURCE=..\..\..\include\config\ftheader.h
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\include\freetype\config\ftmodule.h
+SOURCE=..\..\..\include\config\ftmodule.h
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\include\freetype\config\ftoption.h
+SOURCE=..\..\..\include\config\ftoption.h
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\include\freetype\config\ftstdlib.h
+SOURCE=..\..\..\include\config\ftstdlib.h
 # End Source File
 # End Group
 # End Target

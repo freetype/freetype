@@ -1,7 +1,7 @@
 prefix="%prefix%"
 exec_prefix="%exec_prefix%"
 libdir="%libdir%"
-includedir="%includedir%"
+includedir="%includedir%/freetype2"
 
 Name: FreeType 2
 Description: A free, high-quality, and portable font engine.
@@ -9,4 +9,4 @@ Version: %ft_version%
 Requires:
 Libs: -L${libdir} -lfreetype
 Libs.private: %LIBZ% %LIBBZ2% %LIBPNG% %FT2_EXTRA_LIBS%
-Cflags: -I${includedir}/freetype2 -I${includedir}
+Cflags: -I${includedir}

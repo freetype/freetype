@@ -629,15 +629,15 @@
     <Filter Name="Header Files" Filter="h;hpp;hxx;hm;inl">
       <File RelativePath="..\..\..\include\ft2build.h">
       </File>
-      <File RelativePath="..\..\..\include\freetype\config\ftconfig.h">
+      <File RelativePath="..\..\..\include\config\ftconfig.h">
       </File>
-      <File RelativePath="..\..\..\include\freetype\config\ftheader.h">
+      <File RelativePath="..\..\..\include\config\ftheader.h">
       </File>
-      <File RelativePath="..\..\..\include\freetype\config\ftmodule.h">
+      <File RelativePath="..\..\..\include\config\ftmodule.h">
       </File>
-      <File RelativePath="..\..\..\include\freetype\config\ftoption.h">
+      <File RelativePath="..\..\..\include\config\ftoption.h">
       </File>
-      <File RelativePath="..\..\..\include\freetype\config\ftstdlib.h">
+      <File RelativePath="..\..\..\include\config\ftstdlib.h">
       </File>
     </Filter>
   </Files>

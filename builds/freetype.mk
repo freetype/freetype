@@ -97,7 +97,7 @@ BASE_DIR := $(SRC_DIR)/base
 
 # Other derived directories.
 #
-PUBLIC_DIR   := $(TOP_DIR)/include/freetype
+PUBLIC_DIR   := $(TOP_DIR)/include
 INTERNAL_DIR := $(PUBLIC_DIR)/internal
 SERVICES_DIR := $(INTERNAL_DIR)/services
 CONFIG_DIR   := $(PUBLIC_DIR)/config
@@ -116,8 +116,8 @@ PROJECT_LIBRARY := $(LIB_DIR)/$(LIBRARY).$A
 # IMPORTANT NOTE: The architecture-dependent directory must ALWAYS be placed
 #                 before the standard include list.  Porters are then able to
 #                 put their own version of some of the FreeType components
-#                 in the `freetype/builds/<system>' directory, as these
-#                 files will override the default sources.
+#                 in the `builds/<system>' directory, as these files will
+#                 override the default sources.
 #
 INCLUDES := $(subst /,$(COMPILER_SEP),$(OBJ_DIR) \
                                       $(DEVEL_DIR) \
@@ -178,7 +178,7 @@ PUBLIC_H   := $(wildcard $(PUBLIC_DIR)/*.h)
 INTERNAL_H := $(wildcard $(INTERNAL_DIR)/*.h) \
               $(wildcard $(SERVICES_DIR)/*.h)
 CONFIG_H   := $(wildcard $(CONFIG_DIR)/*.h) \
-              $(wildcard $(BUILD_DIR)/freetype/config/*.h) \
+              $(wildcard $(BUILD_DIR)/config/*.h) \
               $(FTMODULE_H) \
               $(FTOPTION_H)
 DEVEL_H    := $(wildcard $(TOP_DIR)/devel/*.h)

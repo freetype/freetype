@@ -13859,23 +13859,23 @@
 				>
 			</File>
 			<File
-				RelativePath="..\..\..\include\freetype\config\ftconfig.h"
+				RelativePath="..\..\..\include\config\ftconfig.h"
 				>
 			</File>
 			<File
-				RelativePath="..\..\..\include\freetype\config\ftheader.h"
+				RelativePath="..\..\..\include\config\ftheader.h"
 				>
 			</File>
 			<File
-				RelativePath="..\..\..\include\freetype\config\ftmodule.h"
+				RelativePath="..\..\..\include\config\ftmodule.h"
 				>
 			</File>
 			<File
-				RelativePath="..\..\..\include\freetype\config\ftoption.h"
+				RelativePath="..\..\..\include\config\ftoption.h"
 				>
 			</File>
 			<File
-				RelativePath="..\..\..\include\freetype\config\ftstdlib.h"
+				RelativePath="..\..\..\include\config\ftstdlib.h"
 				>
 			</File>
 		</Filter>

@@ -740,7 +740,7 @@ FT_BEGIN_HEADER
   /*                                                                       */
   /* <Description>                                                         */
   /*    Return TrueType/sfnt specific cmap language ID.  Definitions of    */
-  /*    language ID values are in `freetype/ttnameid.h'.                   */
+  /*    language ID values are in `ttnameid.h'.                            */
   /*                                                                       */
   /* <Input>                                                               */
   /*    charmap ::                                                         */

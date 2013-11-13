@@ -1,3 +1,38 @@
+2013-11-13  Werner Lemberg  <wl@gnu.org>
+
+	Simplify header file hierarchy.
+
+	This large patch changes the header file directory layout from
+	`include/freetype/...' to `include/...', effectively removing one
+	level.  Since the file `ft2build.h' is also located in `include'
+	(and it stays there even after installation), all FreeType header
+	files are now in a single directory.
+
+	Applications that use (a) `freetype-config' or FreeType's
+	`pkg-config' file to get the include directory for the compiler, and
+	(b) the documented way for header inclusion like
+
+	  #include <ft2build.h>
+	  #include FT_FREETYPE_H
+	  ...
+
+	don't need any change to the source code.
+
+	* include/freetype/*: Move up to...
+	* include/*: ... this directory.
+
+	* builds/amiga/include/freetype/*: Move up to...
+	* builds/amiga/include/*: ... this directory.
+
+	*/*: Essentially do `s@/freetype/@/@' where appropriate.
+
+	* CMakeList.txt: Simplify.
+	* builds/unix/freetype-config.in, builds/unix/freetype2.in: For
+	`--cflags', return a single directory.
+	* builds/unix/install.mk (install): No longer try to remove `cache'
+	and `internal' subdirectories; instead, remove the `freetype'
+	subdirectory.
+
 2013-11-12  Werner Lemberg  <wl@gnu.org>
 
 	[truetype] Fix last `truetype' commit.

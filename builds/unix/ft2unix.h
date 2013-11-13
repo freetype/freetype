@@ -25,27 +25,6 @@
   /* returned by the `freetype-config --cflags' or `pkg-config --cflags'   */
   /* command) is in your compilation include path.                         */
   /*                                                                       */
-  /* We don't need to do anything special in this release.  However, for   */
-  /* a future FreeType 2 release, the following installation changes will  */
-  /* be performed:                                                         */
-  /*                                                                       */
-  /*   - The contents of `freetype-2.x/include/freetype' will be installed */
-  /*     to `/usr/local/include/freetype2' instead of                      */
-  /*     `/usr/local/include/freetype2/freetype'.                          */
-  /*                                                                       */
-  /*   - This file will #include <freetype2/config/ftheader.h>, instead    */
-  /*     of <freetype/config/ftheader.h>.                                  */
-  /*                                                                       */
-  /*   - The contents of `ftheader.h' will be processed with `sed' to      */
-  /*     replace all `<freetype/xxx>' with `<freetype2/xxx>'.              */
-  /*                                                                       */
-  /*   - Adding `/usr/local/include/freetype2' to your compilation include */
-  /*     path will not be necessary anymore.                               */
-  /*                                                                       */
-  /* These changes will be transparent to client applications which use    */
-  /* freetype-config (or pkg-config).  No modifications will be necessary  */
-  /* to compile with the new scheme.                                       */
-  /*                                                                       */
   /*************************************************************************/
 
 
@@ -53,7 +32,7 @@
 #define __FT2_BUILD_UNIX_H__
 
   /* `<prefix>/include/freetype2' must be in your current inclusion path */
-#include <freetype/config/ftheader.h>
+#include <config/ftheader.h>
 
 #endif /* __FT2_BUILD_UNIX_H__ */
 

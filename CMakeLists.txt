@@ -49,7 +49,6 @@ add_definitions(-DFT2_BUILD_LIBRARY)
 
 # Specify library include directories
 include_directories("${PROJECT_SOURCE_DIR}/include")
-include_directories("${PROJECT_SOURCE_DIR}/include/freetype")
 
 # Create the configuration file
 message(STATUS "Creating directory, ${PROJECT_BINARY_DIR}/include.")
@@ -129,14 +128,8 @@ include_directories("src/psnames")
 add_library(freetype ${BASE_SRCS})
 
 # Installations
-install(FILES ${PROJECT_SOURCE_DIR}/include/ft2build.h
-  DESTINATION include
-)
-# Is this next needed?
-install(FILES ${PROJECT_BINARY_DIR}/include/ftconfig.h
-  DESTINATION include
-)
-install(DIRECTORY ${PROJECT_SOURCE_DIR}/include/freetype
+# Note the trailing slash in the argument to the `DIRECTORY' directive
+install(DIRECTORY ${PROJECT_SOURCE_DIR}/include/
   DESTINATION include/freetype2
   PATTERN "internal" EXCLUDE
 )

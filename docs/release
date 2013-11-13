@@ -1,7 +1,7 @@
 How to prepare a new release
 ----------------------------
 
-. include/freetype/freetype.h:  Update FREETYPE_MAJOR, FREETYPE_MINOR,
+. include/freetype.h:  Update FREETYPE_MAJOR, FREETYPE_MINOR,
   and FREETYPE_PATCH.
 
 . Update version numbers in all files where necessary (for example, do

@@ -24,8 +24,8 @@
   /*                                                                       */
   /* - copy `src/smooth/ftgrays.c' (this file) to your current directory   */
   /*                                                                       */
-  /* - copy `include/freetype/ftimage.h' and `src/smooth/ftgrays.h' to the */
-  /*   same directory                                                      */
+  /* - copy `include/ftimage.h' and `src/smooth/ftgrays.h' to the same     */
+  /*   directory                                                           */
   /*                                                                       */
   /* - compile `ftgrays' with the _STANDALONE_ macro defined, as in        */
   /*                                                                       */
