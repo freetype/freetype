@@ -48,8 +48,6 @@ install: $(PROJECT_LIBRARY)
 	-$(DELDIR) $(DESTDIR)$(includedir)/freetype2/freetype/config
 	-$(DELETE) $(DESTDIR)$(includedir)/freetype2/freetype/*
 	-$(DELDIR) $(DESTDIR)$(includedir)/freetype2/freetype
-	$(INSTALL_DATA) $(BUILD_DIR)/ft2unix.h \
-          $(DESTDIR)$(includedir)/ft2build.h
 	$(INSTALL_DATA) $(OBJ_BUILD)/ftconfig.h               \
           $(DESTDIR)$(includedir)/freetype2/config/ftconfig.h
 	$(INSTALL_DATA) $(OBJ_DIR)/ftmodule.h                 \

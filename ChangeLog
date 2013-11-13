@@ -1,5 +1,11 @@
 2013-11-13  Werner Lemberg  <wl@gnu.org>
 
+	* builds/unix/ft2unix.h: Remove.  No longer necessary.
+
+	* builds/unix/install.mk (install): Updated.
+
+2013-11-13  Werner Lemberg  <wl@gnu.org>
+
 	Simplify header file hierarchy.
 
 	This large patch changes the header file directory layout from
