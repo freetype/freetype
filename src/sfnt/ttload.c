@@ -1028,8 +1028,8 @@
     static const FT_Frame_Field  os2_fields_extra5[] =
     {
       FT_FRAME_START( 4 ),
-        FT_FRAME_USHORT( usLowerPointSize ),
-        FT_FRAME_USHORT( usUpperPointSize ),
+        FT_FRAME_USHORT( usLowerOpticalPointSize ),
+        FT_FRAME_USHORT( usUpperOpticalPointSize ),
       FT_FRAME_END
     };
 
@@ -1046,15 +1046,15 @@
     if ( FT_STREAM_READ_FIELDS( os2_fields, os2 ) )
       goto Exit;
 
-    os2->ulCodePageRange1 = 0;
-    os2->ulCodePageRange2 = 0;
-    os2->sxHeight         = 0;
-    os2->sCapHeight       = 0;
-    os2->usDefaultChar    = 0;
-    os2->usBreakChar      = 0;
-    os2->usMaxContext     = 0;
-    os2->usLowerPointSize = 0;
-    os2->usUpperPointSize = 0;
+    os2->ulCodePageRange1        = 0;
+    os2->ulCodePageRange2        = 0;
+    os2->sxHeight                = 0;
+    os2->sCapHeight              = 0;
+    os2->usDefaultChar           = 0;
+    os2->usBreakChar             = 0;
+    os2->usMaxContext            = 0;
+    os2->usLowerOpticalPointSize = 0;
+    os2->usUpperOpticalPointSize = 0xFFFF;
 
     if ( os2->version >= 0x0001 )
     {

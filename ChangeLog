@@ -1,3 +1,17 @@
+2013-11-16  Werner Lemberg  <wl@gnu.org>
+
+	[sfnt] Fix `OS/2' table version 5 support.
+
+	We now follow the `official' announcement from Microsoft (on the
+	OpenType mailing list, which unfortunately hasn't a public archive).
+
+	* include/freetype/tttables.h (TT_OS2):
+	s/usLowerPointSize/usLowerOpticalPointSize/,
+	s/usUpperPointSize/usUpperOpticalPointSize/.
+
+	* src/sfnt/ttload.c (tt_face_load_os2): Update, and set correct
+	default values.
+
 2013-11-13  Werner Lemberg  <wl@gnu.org>
 
 	* builds/unix/ft2unix.h: Remove.  No longer necessary.
