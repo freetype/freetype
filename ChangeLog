@@ -1,3 +1,20 @@
+2013-11-20  Werner Lemberg  <wl@gnu.org>
+
+	[truetype] Don't trust `maxp's `maxSizeOfInstructions'.
+
+	Problem reported by Hin-Tak Leung <htl10@users.sourceforge.net>; see
+
+	  http://lists.nongnu.org/archive/html/freetype-devel/2013-08/msg00005.html
+
+	for details.
+
+	* src/base/ftobjs.c (FT_Load_Glyph): Check size of `fpgm' and `prep'
+	tables also for setting `autohint'.
+
+	* src/truetype/ttgload.c (TT_Load_Simple_Glyph): Use code from
+	`TT_Process_Composite_Glyph' for handling unreliable values of
+	`maxSizeOfInstructions'.
+
 2013-11-16  Werner Lemberg  <wl@gnu.org>
 
 	[sfnt] Fix `OS/2' table version 5 support.

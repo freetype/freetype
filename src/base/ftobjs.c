@@ -665,11 +665,18 @@
 
         /* the check for `num_locations' assures that we actually    */
         /* test for instructions in a TTF and not in a CFF-based OTF */
+        /*                                                           */
+        /* since `maxSizeOfInstructions' might be unreliable, we     */
+        /* check the size of the `fpgm' and `prep' tables, too --    */
+        /* the assumption is that there don't exist real TTFs where  */
+        /* both `fpgm' and `prep' tables are missing                 */
         if ( mode == FT_RENDER_MODE_LIGHT                       ||
              face->internal->ignore_unpatented_hinter           ||
              ( FT_IS_SFNT( face )                             &&
                ttface->num_locations                          &&
-               ttface->max_profile.maxSizeOfInstructions == 0 ) )
+               ttface->max_profile.maxSizeOfInstructions == 0 &&
+               ttface->font_program_size == 0                 &&
+               ttface->cvt_program_size == 0                  ) )
           autohint = TRUE;
       }
     }

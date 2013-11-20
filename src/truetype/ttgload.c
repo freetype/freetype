@@ -349,8 +349,9 @@
     FT_Int          n_contours = load->n_contours;
     FT_Outline*     outline;
     TT_Face         face       = (TT_Face)load->face;
-    FT_UShort       n_ins;
+    FT_UShort       n_ins, max_ins;
     FT_Int          n_points;
+    FT_ULong        tmp;
 
     FT_Byte         *flag, *flag_limit;
     FT_Byte         c, count;
@@ -416,12 +417,29 @@
 
     FT_TRACE5(( "  Instructions size: %u\n", n_ins ));
 
-    if ( n_ins > face->max_profile.maxSizeOfInstructions )
+    /* check it */
+    max_ins = face->max_profile.maxSizeOfInstructions;
+    if ( n_ins > max_ins )
     {
-      FT_TRACE0(( "TT_Load_Simple_Glyph: too many instructions (%d)\n",
-                  n_ins ));
-      error = FT_THROW( Too_Many_Hints );
-      goto Fail;
+      /* don't trust `maxSizeOfInstructions'; */
+      /* only do a rough safety check         */
+      if ( (FT_Int)n_ins > load->byte_len )
+      {
+        FT_TRACE1(( "TT_Load_Simple_Glyph:"
+                    " too many instructions (%d) for glyph with length %d\n",
+                    n_ins, load->byte_len ));
+        return FT_THROW( Too_Many_Hints );
+      }
+
+      tmp = load->exec->glyphSize;
+      error = Update_Max( load->exec->memory,
+                          &tmp,
+                          sizeof ( FT_Byte ),
+                          (void*)&load->exec->glyphIns,
+                          n_ins );
+      load->exec->glyphSize = (FT_UShort)tmp;
+      if ( error )
+        return error;
     }
 
     if ( ( limit - p ) < n_ins )
@@ -743,8 +761,8 @@
 #ifdef TT_USE_BYTECODE_INTERPRETER
     if ( loader->glyph->control_len > 0xFFFFL )
     {
-      FT_TRACE1(( "TT_Hint_Glyph: too long instructions " ));
-      FT_TRACE1(( "(0x%lx byte) is truncated\n",
+      FT_TRACE1(( "TT_Hint_Glyph: too long instructions" ));
+      FT_TRACE1(( " (0x%lx byte) is truncated\n",
                  loader->glyph->control_len ));
     }
     n_ins = (FT_UInt)( loader->glyph->control_len );
@@ -1216,11 +1234,12 @@
       max_ins = ((TT_Face)loader->face)->max_profile.maxSizeOfInstructions;
       if ( n_ins > max_ins )
       {
-        /* acroread ignores this field, so we only do a rough safety check */
+        /* don't trust `maxSizeOfInstructions'; */
+        /* only do a rough safety check         */
         if ( (FT_Int)n_ins > loader->byte_len )
         {
-          FT_TRACE1(( "TT_Process_Composite_Glyph: "
-                      "too many instructions (%d) for glyph with length %d\n",
+          FT_TRACE1(( "TT_Process_Composite_Glyph:"
+                      " too many instructions (%d) for glyph with length %d\n",
                       n_ins, loader->byte_len ));
           return FT_THROW( Too_Many_Hints );
         }
