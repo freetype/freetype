@@ -969,7 +969,22 @@
       case 2:
       case 5:
       case 7:
-        loader = tt_sbit_decoder_load_bit_aligned;
+        {
+          /* Don't trust `glyph_format'.  For example, Apple's main Korean */
+          /* system font, `AppleMyungJo.ttf' (version 7.0d2e6), uses glyph */
+          /* format 7, but the data is format 6.  We check whether we have */
+          /* an excessive number of bytes in the image: If it is equal to  */
+          /* the value for a byte-aligned glyph, use the other loading     */
+          /* routine.                                                      */
+          FT_UInt  width = decoder->metrics->width;
+          FT_UInt  height= decoder->metrics->width;
+
+
+          if ( height * ( ( width + 7 ) >> 3 ) == (FT_UInt)( p_limit - p ) )
+            loader = tt_sbit_decoder_load_byte_aligned;
+          else
+            loader = tt_sbit_decoder_load_bit_aligned;
+        }
         break;
 
       case 8:

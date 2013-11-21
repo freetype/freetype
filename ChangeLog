@@ -1,3 +1,13 @@
+2013-11-21  Werner Lemberg  <wl@gnu.org>
+
+	[truetype] Improve handling of buggy embedded bitmap strikes.
+
+	We are now able to successfully load `AppleMyoungJo.ttf'.
+	Problem reported by Hin-Tak Leung <htl10@users.sourceforge.net>.
+
+	* src/sfnt/ttsbit.c (tt_sbit_decoder_load_bitmap): Don't trust glyph
+	format.
+
 2013-11-20  Werner Lemberg  <wl@gnu.org>
 
 	[truetype] Don't trust `maxp's `maxSizeOfInstructions'.
