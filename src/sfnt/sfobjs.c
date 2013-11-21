@@ -1339,7 +1339,7 @@
 
           if ( em_size == 0 || face->os2.version == 0xFFFFU )
           {
-            avgwidth = 0;
+            avgwidth = 1;
             em_size = 1;
           }
 

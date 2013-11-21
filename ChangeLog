@@ -1,5 +1,14 @@
 2013-11-21  Werner Lemberg  <wl@gnu.org>
 
+	[truetype] Typo.
+
+	Problem reported by Hin-Tak Leung <htl10@users.sourceforge.net>.
+
+	* src/sfnt/sfobjs.c (sfnt_load_face): Return correct `bsize->width'
+	value if the font lacks an `OS/2' table.
+
+2013-11-21  Werner Lemberg  <wl@gnu.org>
+
 	[truetype] Improve handling of buggy embedded bitmap strikes.
 
 	We are now able to successfully load `AppleMyoungJo.ttf'.
