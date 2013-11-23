@@ -1,5 +1,13 @@
 2013-11-23  Werner Lemberg  <wl@gnu.org>
 
+	[truetype]: Add tricky font names `hkscsiic.ttf' and `iicore.ttf'.
+
+	* src/truetype/ttobjs.c (TRICK_NAMES_MAX_CHARACTERS,
+	TRICK_NAMES_COUNT): Updated.
+	(trick_names): Add family name for the two fonts.
+
+2013-11-23  Werner Lemberg  <wl@gnu.org>
+
 	* src/sfnt/ttsbit.c (tt_sbit_decoder_load_bitmap): Typo.
 
 2013-11-21  Werner Lemberg  <wl@gnu.org>
