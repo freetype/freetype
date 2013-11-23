@@ -976,8 +976,8 @@
           /* an excessive number of bytes in the image: If it is equal to  */
           /* the value for a byte-aligned glyph, use the other loading     */
           /* routine.                                                      */
-          FT_UInt  width = decoder->metrics->width;
-          FT_UInt  height= decoder->metrics->width;
+          FT_UInt  width  = decoder->metrics->width;
+          FT_UInt  height = decoder->metrics->height;
 
 
           if ( height * ( ( width + 7 ) >> 3 ) == (FT_UInt)( p_limit - p ) )

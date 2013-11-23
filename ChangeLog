@@ -1,6 +1,10 @@
+2013-11-23  Werner Lemberg  <wl@gnu.org>
+
+	* src/sfnt/ttsbit.c (tt_sbit_decoder_load_bitmap): Typo.
+
 2013-11-21  Werner Lemberg  <wl@gnu.org>
 
-	[truetype] Typo.
+	[sfnt] Typo.
 
 	Problem reported by Hin-Tak Leung <htl10@users.sourceforge.net>.
 
