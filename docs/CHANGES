@@ -26,6 +26,19 @@ CHANGES BETWEEN 2.5 and 2.5.1
     - Support for the forthcoming `OS/2'  SFNT table version 5, as can
       be found e.g. in the `Sitka' font family for Windows 8.1.
 
+    - The header  file layout  has been changed.   After installation,
+      all files are now located in `<prefix>/include/freetype2'.
+
+      Applications  that  use   (a)  `freetype-config'  or  FreeType's
+      `pkg-config' file to get the include directory for the compiler,
+      and (b) the documented way for header inclusion like
+
+        #include <ft2build.h>
+        #include FT_FREETYPE_H
+        ...
+
+      don't need any change to the source code.
+
 
   III. MISCELLANEOUS
 
