@@ -1,3 +1,15 @@
+2013-11-27  Werner Lemberg  <wl@gnu.org>
+
+	[autofit] Fix use of dumping functions in `ftgrid' demo program.
+
+	* src/autofit/afhints.c (AF_DUMP) [FT_DEBUG_AUTOFIT]: New macro.
+	(af_glyph_hints_dump_points, af_glyph_hints_dump_segments,
+	af_glyph_hints_dump_edges) [FT_DEBUG_AUTOFIT]: Add parameter to
+	handle output to stdout.
+	Use AF_DUMP.
+	(af_glyph_hints_dump_points, af_glyph_hints_dump_segments,
+	af_glyph_hints_dump_edges) [!FT_DEBUG_AUTOFIT]: Removed.
+
 2013-11-25  Werner Lemberg  <wl@gnu.org>
 
 	* Version 2.5.1 released.
