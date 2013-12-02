@@ -348,8 +348,7 @@
     FT_GlyphLoader  gloader    = load->gloader;
     FT_Int          n_contours = load->n_contours;
     FT_Outline*     outline;
-    TT_Face         face       = (TT_Face)load->face;
-    FT_UShort       n_ins, max_ins;
+    FT_UShort       n_ins;
     FT_Int          n_points;
     FT_ULong        tmp;
 
@@ -418,30 +417,6 @@
     FT_TRACE5(( "  Instructions size: %u\n", n_ins ));
 
     /* check it */
-    max_ins = face->max_profile.maxSizeOfInstructions;
-    if ( n_ins > max_ins )
-    {
-      /* don't trust `maxSizeOfInstructions'; */
-      /* only do a rough safety check         */
-      if ( (FT_Int)n_ins > load->byte_len )
-      {
-        FT_TRACE1(( "TT_Load_Simple_Glyph:"
-                    " too many instructions (%d) for glyph with length %d\n",
-                    n_ins, load->byte_len ));
-        return FT_THROW( Too_Many_Hints );
-      }
-
-      tmp = load->exec->glyphSize;
-      error = Update_Max( load->exec->memory,
-                          &tmp,
-                          sizeof ( FT_Byte ),
-                          (void*)&load->exec->glyphIns,
-                          n_ins );
-      load->exec->glyphSize = (FT_UShort)tmp;
-      if ( error )
-        return error;
-    }
-
     if ( ( limit - p ) < n_ins )
     {
       FT_TRACE0(( "TT_Load_Simple_Glyph: instruction count mismatch\n" ));
@@ -453,6 +428,20 @@
 
     if ( IS_HINTED( load->load_flags ) )
     {
+      /* we don't trust `maxSizeOfInstructions' in the `maxp' table */
+      /* and thus update the bytecode array size by ourselves       */
+
+      tmp   = load->exec->glyphSize;
+      error = Update_Max( load->exec->memory,
+                          &tmp,
+                          sizeof ( FT_Byte ),
+                          (void*)&load->exec->glyphIns,
+                          n_ins );
+
+      load->exec->glyphSize = (FT_UShort)tmp;
+      if ( error )
+        return error;
+
       load->glyph->control_len  = n_ins;
       load->glyph->control_data = load->exec->glyphIns;
 
@@ -1244,12 +1233,13 @@
           return FT_THROW( Too_Many_Hints );
         }
 
-        tmp = loader->exec->glyphSize;
+        tmp   = loader->exec->glyphSize;
         error = Update_Max( loader->exec->memory,
                             &tmp,
                             sizeof ( FT_Byte ),
                             (void*)&loader->exec->glyphIns,
                             n_ins );
+
         loader->exec->glyphSize = (FT_UShort)tmp;
         if ( error )
           return error;

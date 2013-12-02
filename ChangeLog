@@ -1,3 +1,16 @@
+2013-12-02  Werner Lemberg  <wl@gnu.org>
+
+	[truetype] Fix change from 2013-11-20.
+
+	Problem reported by Akira Kakuto <kakuto@fuk.kindai.ac.jp>.
+
+	* src/truetype/ttgload.c (TT_Load_Simple_Glyph): Protect call to
+	`Update_Max' with both a TT_USE_BYTECODE_INTERPRETER guard and a
+	`IS_HINTED' clause.
+	Also remove redundant check using `maxSizeOfInstructions' – in
+	simple glyphs, the bytecode data comes before the outline data, and
+	a validity test for this is already present.
+
 2013-11-27  Werner Lemberg  <wl@gnu.org>
 
 	[autofit] Fix use of dumping functions in `ftgrid' demo program.
