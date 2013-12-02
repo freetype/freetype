@@ -899,7 +899,8 @@
 
 
 #define LOAD_( x )                                          \
-  do {                                                      \
+  do                                                        \
+  {                                                         \
     FT_TRACE2(( "`" #x "' " ));                             \
     FT_TRACE3(( "-->\n" ));                                 \
                                                             \
@@ -914,7 +915,8 @@
   } while ( 0 )
 
 #define LOADM_( x, vertical )                               \
-  do {                                                      \
+  do                                                        \
+  {                                                         \
     FT_TRACE2(( "`%s" #x "' ",                              \
                 vertical ? "vertical " : "" ));             \
     FT_TRACE3(( "-->\n" ));                                 \
@@ -930,7 +932,8 @@
   } while ( 0 )
 
 #define GET_NAME( id, field )                                   \
-  do {                                                          \
+  do                                                            \
+  {                                                             \
     error = tt_face_get_name( face, TT_NAME_ID_ ## id, field ); \
     if ( error )                                                \
       goto Exit;                                                \

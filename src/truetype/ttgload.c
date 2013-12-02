@@ -1334,7 +1334,8 @@
    *
    */
 #define TT_LOADER_SET_PP( loader )                                          \
-          do {                                                              \
+          do                                                                \
+          {                                                                 \
             (loader)->pp1.x = (loader)->bbox.xMin - (loader)->left_bearing; \
             (loader)->pp1.y = 0;                                            \
             (loader)->pp2.x = (loader)->pp1.x + (loader)->advance;          \

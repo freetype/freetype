@@ -317,7 +317,8 @@
       }
 
       total_read_count = 0;
-      do {
+      do
+      {
         ssize_t  read_count;
 
 

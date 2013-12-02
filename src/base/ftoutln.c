@@ -723,7 +723,8 @@
 #if 0
 
 #define FT_OUTLINE_GET_CONTOUR( outline, c, first, last )  \
-  do {                                                     \
+  do                                                       \
+  {                                                        \
     (first) = ( c > 0 ) ? (outline)->points +              \
                             (outline)->contours[c - 1] + 1 \
                         : (outline)->points;               \
