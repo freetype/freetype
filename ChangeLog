@@ -1,3 +1,15 @@
+2013-12-03  Werner Lemberg  <wl@gnu.org>
+
+	[truetype] Fix phantom point handling.
+
+	This is a further improvement to the changes from 2013-11-06.
+
+	* src/truetype/ttgload.c (TT_Hint_Glyph): Horizontal phantom points
+	are rounded horizontally, vertical ones are rounded vertically.
+	(TT_LOADER_SET_PP): The horizontal position of vertical phantom
+	points in pre-ClearType mode is zero, as shown in the OpenType
+	specification.
+
 2013-12-02  Werner Lemberg  <wl@gnu.org>
 
 	[truetype] Fix change from 2013-11-20.

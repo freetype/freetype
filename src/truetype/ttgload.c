@@ -788,9 +788,13 @@
     }
 #endif
 
-    /* round pp2 and pp4 */
+    /* round phantom points */
+    zone->cur[zone->n_points - 4].x =
+      FT_PIX_ROUND( zone->cur[zone->n_points - 4].x );
     zone->cur[zone->n_points - 3].x =
       FT_PIX_ROUND( zone->cur[zone->n_points - 3].x );
+    zone->cur[zone->n_points - 2].y =
+      FT_PIX_ROUND( zone->cur[zone->n_points - 2].y );
     zone->cur[zone->n_points - 1].y =
       FT_PIX_ROUND( zone->cur[zone->n_points - 1].y );
 
@@ -1282,8 +1286,11 @@
    * specification defines the initial position of horizontal phantom points
    * as
    *
-   *   pp1 = (xmin - lsb, 0)      ,
-   *   pp2 = (pp1 + aw, 0)        .
+   *   pp1 = (round(xmin - lsb), 0)      ,
+   *   pp2 = (round(pp1 + aw), 0)        .
+   *
+   * Note that the rounding to the grid is not documented currently in the
+   * specification.
    *
    * However, the specification lacks the precise definition of vertical
    * phantom points.  Greg Hitchcock provided the following explanation.
@@ -1299,8 +1306,8 @@
    *
    *   and the initial position of vertical phantom points is
    *
-   *     pp3 = (x, ymax + tsb)       ,
-   *     pp4 = (x, pp3 - ah)         .
+   *     pp3 = (x, round(ymax + tsb))       ,
+   *     pp4 = (x, round(pp3 - ah))         .
    *
    *   See below for value `x'.
    *
@@ -1332,7 +1339,33 @@
    *   x = -DefaultDescender -
    *         ((DefaultAscender - DefaultDescender - aw) / 2)     .
    *
+   * For (old) non-ClearType hinting, `x' is set to zero.
+   *
    */
+#ifdef TT_CONFIG_OPTION_SUBPIXEL_HINTING
+
+#define TT_LOADER_SET_PP( loader )                                          \
+          do                                                                \
+          {                                                                 \
+            TT_Face    face_      = (TT_Face)(loader)->face;                \
+            TT_Driver  driver_    = (TT_Driver)FT_FACE_DRIVER( face_ );     \
+            FT_Bool    is_ver_38_ = (FT_Bool)                               \
+                                      ( driver_->interpreter_version ==     \
+                                        TT_INTERPRETER_VERSION_38 );        \
+                                                                            \
+                                                                            \
+            (loader)->pp1.x = (loader)->bbox.xMin - (loader)->left_bearing; \
+            (loader)->pp1.y = 0;                                            \
+            (loader)->pp2.x = (loader)->pp1.x + (loader)->advance;          \
+            (loader)->pp2.y = 0;                                            \
+            (loader)->pp3.x = is_ver_38_ ? (loader)->advance / 2 : 0;       \
+            (loader)->pp3.y = (loader)->bbox.yMax + (loader)->top_bearing;  \
+            (loader)->pp4.x = is_ver_38_ ? (loader)->advance / 2 : 0;       \
+            (loader)->pp4.y = (loader)->pp3.y - (loader)->vadvance;         \
+          } while ( 0 )
+
+#else /* !TT_CONFIG_OPTION_SUBPIXEL_HINTING */
+
 #define TT_LOADER_SET_PP( loader )                                          \
           do                                                                \
           {                                                                 \
@@ -1340,11 +1373,13 @@
             (loader)->pp1.y = 0;                                            \
             (loader)->pp2.x = (loader)->pp1.x + (loader)->advance;          \
             (loader)->pp2.y = 0;                                            \
-            (loader)->pp3.x = (loader)->advance / 2;                        \
+            (loader)->pp3.x = 0;                                            \
             (loader)->pp3.y = (loader)->bbox.yMax + (loader)->top_bearing;  \
-            (loader)->pp4.x = (loader)->advance / 2;                        \
+            (loader)->pp4.x = 0;                                            \
             (loader)->pp4.y = (loader)->pp3.y - (loader)->vadvance;         \
           } while ( 0 )
+
+#endif /* !TT_CONFIG_OPTION_SUBPIXEL_HINTING */
 
 
   /*************************************************************************/
