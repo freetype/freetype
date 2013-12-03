@@ -1,5 +1,15 @@
 2013-12-03  Werner Lemberg  <wl@gnu.org>
 
+	[truetype] Remove dead code.
+
+	Reported by Nigel Tao <nigeltao@golang.org>.
+
+	* include/internal/tttypes.h (TT_LoaderRec): Remove unused
+	`preserve_pps' field.
+	* src/truetype/ttgload.c (TT_Hint_Glyph): Updated.
+
+2013-12-03  Werner Lemberg  <wl@gnu.org>
+
 	[truetype] Fix phantom point handling.
 
 	This is a further improvement to the changes from 2013-11-06.

@@ -1479,7 +1479,6 @@ FT_BEGIN_HEADER
     FT_Int           advance;
     FT_Int           linear;
     FT_Bool          linear_def;
-    FT_Bool          preserve_pps;
     FT_Vector        pp1;
     FT_Vector        pp2;
 

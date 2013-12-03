@@ -832,13 +832,10 @@
 #endif
 
     /* save glyph phantom points */
-    if ( !loader->preserve_pps )
-    {
-      loader->pp1 = zone->cur[zone->n_points - 4];
-      loader->pp2 = zone->cur[zone->n_points - 3];
-      loader->pp3 = zone->cur[zone->n_points - 2];
-      loader->pp4 = zone->cur[zone->n_points - 1];
-    }
+    loader->pp1 = zone->cur[zone->n_points - 4];
+    loader->pp2 = zone->cur[zone->n_points - 3];
+    loader->pp3 = zone->cur[zone->n_points - 2];
+    loader->pp4 = zone->cur[zone->n_points - 1];
 
 #ifdef TT_CONFIG_OPTION_SUBPIXEL_HINTING
     if ( driver->interpreter_version == TT_INTERPRETER_VERSION_38 )
