@@ -1,3 +1,13 @@
+2013-12-04  Werner Lemberg  <wl@gnu.org>
+
+	[sfnt] Fix handling of embedded bitmap strikes.
+
+	This corrects the commit from 2013-11-21.  Problem reported by
+	Andrey Panov <panov@canopus.iacp.dvo.ru>.
+
+	* src/sfnt/ttsbit.c (tt_sbit_decoder_load_bitmap): Fix logic to
+	detect excessive bytes for bit-aligned bitmaps.
+
 2013-12-03  Werner Lemberg  <wl@gnu.org>
 
 	[truetype] Remove dead code.
@@ -101,7 +111,7 @@
 
 2013-11-21  Werner Lemberg  <wl@gnu.org>
 
-	[truetype] Improve handling of buggy embedded bitmap strikes.
+	[sfnt] Improve handling of buggy embedded bitmap strikes.
 
 	We are now able to successfully load `AppleMyoungJo.ttf'.
 	Problem reported by Hin-Tak Leung <htl10@users.sourceforge.net>.

@@ -976,11 +976,21 @@
           /* an excessive number of bytes in the image: If it is equal to  */
           /* the value for a byte-aligned glyph, use the other loading     */
           /* routine.                                                      */
+          /*                                                               */
+          /* Note that for some (width,height) combinations, where the     */
+          /* width is not a multiple of 8, the sizes for bit- and          */
+          /* byte-aligned data are equal, for example (7,7) or (15,6).  We */
+          /* then prefer what `glyph_format' specifies.                    */
+
           FT_UInt  width  = decoder->metrics->width;
           FT_UInt  height = decoder->metrics->height;
 
+          FT_UInt  bit_size  = ( width * height + 7 ) >> 3;
+          FT_UInt  byte_size = height * ( ( width + 7 ) >> 3 );
 
-          if ( height * ( ( width + 7 ) >> 3 ) == (FT_UInt)( p_limit - p ) )
+
+          if ( bit_size < byte_size                  &&
+               byte_size == (FT_UInt)( p_limit - p ) )
             loader = tt_sbit_decoder_load_byte_aligned;
           else
             loader = tt_sbit_decoder_load_bit_aligned;
