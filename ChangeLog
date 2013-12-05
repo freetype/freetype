@@ -1,3 +1,7 @@
+2013-12-05  Werner Lemberg  <wl@gnu.org>
+
+	* builds/freetype.mk (FT_CC): Removed.  Unused.
+
 2013-12-04  Werner Lemberg  <wl@gnu.org>
 
 	[sfnt] Fix handling of embedded bitmap strikes.

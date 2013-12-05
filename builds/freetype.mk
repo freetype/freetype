@@ -147,13 +147,14 @@ ifneq ($(wildcard $(OBJ_DIR)/ftoption.h),)
   FTOPTION_FLAG := $DFT_CONFIG_OPTIONS_H="<ftoption.h>"
 endif
 
+# Note that a build with the `configure' script uses $(CFLAGS) only.
+#
 FT_CFLAGS  = $(CPPFLAGS) \
              $(INCLUDE_FLAGS) \
              $(CFLAGS) \
              $DFT2_BUILD_LIBRARY \
              $DFT_CONFIG_MODULES_H="<ftmodule.h>" \
              $(FTOPTION_FLAG)
-FT_CC      = $(CC) $(FT_CFLAGS)
 FT_COMPILE = $(CC) $(ANSIFLAGS) $(FT_CFLAGS)
 
 
