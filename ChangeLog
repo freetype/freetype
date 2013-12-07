@@ -1,3 +1,16 @@
+2013-12-07  Werner Lemberg  <wl@gnu.org>
+
+	[truetype] Next round in phantom point handling.
+
+	Greg Hitchcock provided very interesting insights into the
+	complicated history of the horizontal positions of the TSB and BSB
+	phantom points.
+
+	* src/truetype/ttgload.c (TT_LOADER_SET_PP)
+	[TT_CONFIG_OPTION_SUBPIXEL_HINTING]: Use `subpixel_hinting' and
+	`grayscale_hinting' flags as conditionals for the x position of TSB
+	and BSB.
+
 2013-12-05  Werner Lemberg  <wl@gnu.org>
 
 	* builds/freetype.mk (FT_CC): Removed.  Unused.

@@ -1329,14 +1329,30 @@
    *
    * Usually we have
    *
-   *   x = aw / 2      ,
+   *   x = aw / 2      ,                                                (1)
    *
-   * but there is a compatibility case where it can be set to
+   * but there is one compatibility case where it can be set to
    *
    *   x = -DefaultDescender -
-   *         ((DefaultAscender - DefaultDescender - aw) / 2)     .
+   *         ((DefaultAscender - DefaultDescender - aw) / 2)     .      (2)
    *
-   * For (old) non-ClearType hinting, `x' is set to zero.
+   * and another one with
+   *
+   *   x = 0     .                                                      (3)
+   *
+   * In Windows, the history of those values is quite complicated,
+   * depending on the hinting engine (that is, the graphics framework).
+   *
+   *   framework        from                 to       formula
+   *  ----------------------------------------------------------
+   *    GDI       Windows 98               current      (1)
+   *              (Windows 2000 for NT)
+   *    GDI+      Windows XP               Windows 7    (2)
+   *    GDI+      Windows 8                current      (3)
+   *    DWrite    Windows 7                current      (3)
+   *
+   * For simplicity, FreeType uses (1) for grayscale subpixel hinting and
+   * (3) for everything else.
    *
    */
 #ifdef TT_CONFIG_OPTION_SUBPIXEL_HINTING
@@ -1344,20 +1360,22 @@
 #define TT_LOADER_SET_PP( loader )                                          \
           do                                                                \
           {                                                                 \
-            TT_Face    face_      = (TT_Face)(loader)->face;                \
-            TT_Driver  driver_    = (TT_Driver)FT_FACE_DRIVER( face_ );     \
-            FT_Bool    is_ver_38_ = (FT_Bool)                               \
-                                      ( driver_->interpreter_version ==     \
-                                        TT_INTERPRETER_VERSION_38 );        \
+            FT_Bool  subpixel_  = loader->exec                              \
+                                    ? loader->exec->subpixel_hinting        \
+                                    : 0;                                    \
+            FT_Bool  grayscale_ = loader->exec                              \
+                                    ? loader->exec->grayscale_hinting       \
+                                    : 0;                                    \
+            FT_Bool  use_aw_2_  = (FT_Bool)( subpixel_ && grayscale_ );     \
                                                                             \
                                                                             \
             (loader)->pp1.x = (loader)->bbox.xMin - (loader)->left_bearing; \
             (loader)->pp1.y = 0;                                            \
             (loader)->pp2.x = (loader)->pp1.x + (loader)->advance;          \
             (loader)->pp2.y = 0;                                            \
-            (loader)->pp3.x = is_ver_38_ ? (loader)->advance / 2 : 0;       \
+            (loader)->pp3.x = use_aw_2_ ? (loader)->advance / 2 : 0;        \
             (loader)->pp3.y = (loader)->bbox.yMax + (loader)->top_bearing;  \
-            (loader)->pp4.x = is_ver_38_ ? (loader)->advance / 2 : 0;       \
+            (loader)->pp4.x = use_aw_2_ ? (loader)->advance / 2 : 0;        \
             (loader)->pp4.y = (loader)->pp3.y - (loader)->vadvance;         \
           } while ( 0 )
 
