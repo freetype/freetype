@@ -54,7 +54,7 @@ BSC32=bscmake.exe
 # ADD BSC32 /nologo
 LIB32=link.exe -lib
 # ADD BASE LIB32 /nologo
-# ADD LIB32 /nologo /out:"..\..\..\objs\freetype251.lib"
+# ADD LIB32 /nologo /out:"..\..\..\objs\freetype252.lib"
 
 !ELSEIF  "$(CFG)" == "freetype - Win32 Debug"
 
@@ -78,7 +78,7 @@ BSC32=bscmake.exe
 # ADD BSC32 /nologo
 LIB32=link.exe -lib
 # ADD BASE LIB32 /nologo
-# ADD LIB32 /nologo /out:"..\..\..\objs\freetype251_D.lib"
+# ADD LIB32 /nologo /out:"..\..\..\objs\freetype252_D.lib"
 
 !ELSEIF  "$(CFG)" == "freetype - Win32 Debug Multithreaded"
 
@@ -102,8 +102,8 @@ BSC32=bscmake.exe
 # ADD BASE BSC32 /nologo
 # ADD BSC32 /nologo
 LIB32=link.exe -lib
-# ADD BASE LIB32 /nologo /out:"lib\freetype251_D.lib"
-# ADD LIB32 /nologo /out:"..\..\..\objs\freetype251MT_D.lib"
+# ADD BASE LIB32 /nologo /out:"lib\freetype252_D.lib"
+# ADD LIB32 /nologo /out:"..\..\..\objs\freetype252MT_D.lib"
 
 !ELSEIF  "$(CFG)" == "freetype - Win32 Release Multithreaded"
 
@@ -126,8 +126,8 @@ BSC32=bscmake.exe
 # ADD BASE BSC32 /nologo
 # ADD BSC32 /nologo
 LIB32=link.exe -lib
-# ADD BASE LIB32 /nologo /out:"lib\freetype251.lib"
-# ADD LIB32 /nologo /out:"..\..\..\objs\freetype251MT.lib"
+# ADD BASE LIB32 /nologo /out:"lib\freetype252.lib"
+# ADD LIB32 /nologo /out:"..\..\..\objs\freetype252MT.lib"
 
 !ELSEIF  "$(CFG)" == "freetype - Win32 Release Singlethreaded"
 
@@ -151,8 +151,8 @@ BSC32=bscmake.exe
 # ADD BASE BSC32 /nologo
 # ADD BSC32 /nologo
 LIB32=link.exe -lib
-# ADD BASE LIB32 /nologo /out:"..\..\..\objs\freetype251.lib"
-# ADD LIB32 /out:"..\..\..\objs\freetype251ST.lib"
+# ADD BASE LIB32 /nologo /out:"..\..\..\objs\freetype252.lib"
+# ADD LIB32 /out:"..\..\..\objs\freetype252ST.lib"
 # SUBTRACT LIB32 /nologo
 
 !ELSEIF  "$(CFG)" == "freetype - Win32 Debug Singlethreaded"
@@ -177,8 +177,8 @@ BSC32=bscmake.exe
 # ADD BASE BSC32 /nologo
 # ADD BSC32 /nologo
 LIB32=link.exe -lib
-# ADD BASE LIB32 /nologo /out:"..\..\..\objs\freetype251_D.lib"
-# ADD LIB32 /nologo /out:"..\..\..\objs\freetype251ST_D.lib"
+# ADD BASE LIB32 /nologo /out:"..\..\..\objs\freetype252_D.lib"
+# ADD LIB32 /nologo /out:"..\..\..\objs\freetype252ST_D.lib"
 
 !ENDIF 
 

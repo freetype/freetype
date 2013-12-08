@@ -1,3 +1,28 @@
+
+CHANGES BETWEEN 2.5.1 and 2.5.2
+
+  I. IMPORTANT BUG FIXES
+
+    - Improving the display of some broken TrueType fonts introduced a
+      bug  that made  FreeType crash  on some  popular (but  not fully
+      conformant) fonts like `ahronbd.ttf'.
+
+    - Another round of improvements to correct positioning and hinting
+      of composite glyphs in TrueType fonts.
+
+
+  II. MISCELLANEOUS
+
+    - Version  2.5.1  introduced a  bug  in  handling embedded  bitmap
+      strikes of  TrueType fonts,  causing garbage display  under some
+      circumstances.
+
+    - The   `ftgrid'   demo   program    couldn't   be   compiled   in
+      non-development builds.
+
+
+======================================================================
+
 CHANGES BETWEEN 2.5 and 2.5.1
 
   I. IMPORTANT BUG FIXES
