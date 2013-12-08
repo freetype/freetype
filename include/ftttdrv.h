@@ -134,6 +134,26 @@ FT_BEGIN_HEADER
    *   FT_CONFIG_OPTION_SUBPIXEL_HINTING, selecting version~38 causes an
    *   `FT_Err_Unimplemented_Feature' error.
    *
+   *   Depending on the graphics framework, Microsoft uses different
+   *   bytecode engines.  As a consequence, the version numbers returned by
+   *   a call to the `GETINFO[1]' bytecode instruction are more convoluted
+   *   than desired.
+   *
+   *   {
+   *      framework   Windows version   result of GETINFO[1]
+   *     ----------------------------------------------------
+   *       GDI         before XP         35
+   *       GDI         XP and later      37
+   *       GDI+ old    before Vista      37
+   *       GDI+ old    Vista, 7          38
+   *       GDI+        after 7           40
+   *       DWrite      before 8          39
+   *       DWrite      8 and later       40
+   *   }
+   *
+   *   Since FreeType doesn't provide all capabilities of DWrite ClearType,
+   *   using version~38 seems justified.
+   *
    */
 #define TT_INTERPRETER_VERSION_35  35
 #define TT_INTERPRETER_VERSION_38  38
