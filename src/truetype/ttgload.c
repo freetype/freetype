@@ -1075,9 +1075,9 @@
       if ( !x && !y )
         return FT_Err_Ok;
 
-  /* Use a default value dependent on                                     */
-  /* TT_CONFIG_OPTION_COMPONENT_OFFSET_SCALED.  This is useful for old TT */
-  /* fonts which don't set the xxx_COMPONENT_OFFSET bit.                  */
+      /* Use a default value dependent on                                  */
+      /* TT_CONFIG_OPTION_COMPONENT_OFFSET_SCALED.  This is useful for old */
+      /* TT fonts which don't set the xxx_COMPONENT_OFFSET bit.            */
 
       if ( have_scale &&
 #ifdef TT_CONFIG_OPTION_COMPONENT_OFFSET_SCALED
@@ -1089,10 +1089,10 @@
 
 #if 0
 
-  /*************************************************************************/
-  /*                                                                       */
-  /* This algorithm is what Apple documents.  But it doesn't work.         */
-  /*                                                                       */
+        /*******************************************************************/
+        /*                                                                 */
+        /* This algorithm is what Apple documents.  But it doesn't work.   */
+        /*                                                                 */
         int  a = subglyph->transform.xx > 0 ?  subglyph->transform.xx
                                             : -subglyph->transform.xx;
         int  b = subglyph->transform.yx > 0 ?  subglyph->transform.yx
@@ -1112,12 +1112,12 @@
         x = FT_MulFix( x, m );
         y = FT_MulFix( y, n );
 
-#else /* 0 */
+#else /* 1 */
 
-  /*************************************************************************/
-  /*                                                                       */
-  /* This algorithm is a guess and works much better than the above.       */
-  /*                                                                       */
+        /*******************************************************************/
+        /*                                                                 */
+        /* This algorithm is a guess and works much better than the above. */
+        /*                                                                 */
         FT_Fixed  mac_xscale = FT_Hypot( subglyph->transform.xx,
                                          subglyph->transform.xy );
         FT_Fixed  mac_yscale = FT_Hypot( subglyph->transform.yy,
@@ -1127,7 +1127,7 @@
         x = FT_MulFix( x, mac_xscale );
         y = FT_MulFix( y, mac_yscale );
 
-#endif /* 0 */
+#endif /* 1 */
 
       }
 
@@ -1365,6 +1365,7 @@
             (loader)->pp1.y = 0;                                            \
             (loader)->pp2.x = (loader)->pp1.x + (loader)->advance;          \
             (loader)->pp2.y = 0;                                            \
+                                                                            \
             (loader)->pp3.x = use_aw_2_ ? (loader)->advance / 2 : 0;        \
             (loader)->pp3.y = (loader)->bbox.yMax + (loader)->top_bearing;  \
             (loader)->pp4.x = use_aw_2_ ? (loader)->advance / 2 : 0;        \
@@ -1380,6 +1381,7 @@
             (loader)->pp1.y = 0;                                            \
             (loader)->pp2.x = (loader)->pp1.x + (loader)->advance;          \
             (loader)->pp2.y = 0;                                            \
+                                                                            \
             (loader)->pp3.x = 0;                                            \
             (loader)->pp3.y = (loader)->bbox.yMax + (loader)->top_bearing;  \
             (loader)->pp4.x = 0;                                            \
@@ -1559,10 +1561,15 @@
         if ( error )
           goto Exit;
 
-        loader->pp1.x += deltas[0].x; loader->pp1.y += deltas[0].y;
-        loader->pp2.x += deltas[1].x; loader->pp2.y += deltas[1].y;
-        loader->pp3.x += deltas[2].x; loader->pp3.y += deltas[2].y;
-        loader->pp4.x += deltas[3].x; loader->pp4.y += deltas[3].y;
+        loader->pp1.x += deltas[0].x;
+        loader->pp1.y += deltas[0].y;
+        loader->pp2.x += deltas[1].x;
+        loader->pp2.y += deltas[1].y;
+
+        loader->pp3.x += deltas[2].x;
+        loader->pp3.y += deltas[2].y;
+        loader->pp4.x += deltas[3].x;
+        loader->pp4.y += deltas[3].y;
 
         FT_FREE( deltas );
       }
@@ -1581,8 +1588,8 @@
       goto Exit;
     }
 
-    /* must initialize points before (possibly) overriding */
-    /* glyph metrics from the incremental interface        */
+    /* must initialize phantom points before (possibly) overriding */
+    /* glyph metrics from the incremental interface                */
     TT_LOADER_SET_PP( loader );
 
 #ifdef FT_CONFIG_OPTION_INCREMENTAL
@@ -1655,7 +1662,7 @@
                          face,
                          glyph_index,
                          &deltas,
-                         gloader->current.num_subglyphs + 4 )) != 0 )
+                         gloader->current.num_subglyphs + 4 ) ) != 0 )
           goto Exit;
 
         subglyph = gloader->current.subglyphs + gloader->base.num_subglyphs;
@@ -1673,10 +1680,15 @@
           }
         }
 
-        loader->pp1.x += deltas[i + 0].x; loader->pp1.y += deltas[i + 0].y;
-        loader->pp2.x += deltas[i + 1].x; loader->pp2.y += deltas[i + 1].y;
-        loader->pp3.x += deltas[i + 2].x; loader->pp3.y += deltas[i + 2].y;
-        loader->pp4.x += deltas[i + 3].x; loader->pp4.y += deltas[i + 3].y;
+        loader->pp1.x += deltas[i + 0].x;
+        loader->pp1.y += deltas[i + 0].y;
+        loader->pp2.x += deltas[i + 1].x;
+        loader->pp2.y += deltas[i + 1].y;
+
+        loader->pp3.x += deltas[i + 2].x;
+        loader->pp3.y += deltas[i + 2].y;
+        loader->pp4.x += deltas[i + 3].x;
+        loader->pp4.y += deltas[i + 3].y;
 
         FT_FREE( deltas );
       }
@@ -1747,6 +1759,7 @@
           /* restore subglyph pointer */
           subglyph = gloader->base.subglyphs + num_base_subgs + n;
 
+          /* restore phantom points if necessary */
           if ( !( subglyph->flags & USE_MY_METRICS ) )
           {
             loader->pp1 = pp[0];
