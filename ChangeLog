@@ -1,3 +1,13 @@
+2013-12-10  Werner Lemberg  <wl@gnu.org>
+
+	[truetype] Fix positioning of composite glyphs.
+	Problem reported by Nigel Tao <nigeltao@golang.org>.
+
+	* src/truetype/ttgload.c (TT_Hint_Glyph): Remove code that shifts
+	the glyph (component) by a fractional value computed from the LSB
+	phantom point.  This is wrong, since the horizontal phantom points
+	get rounded horizontally later on.
+
 2013-12-08  Werner Lemberg  <wl@gnu.org>
 
 	* Version 2.5.2 released.

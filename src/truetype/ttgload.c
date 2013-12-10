@@ -738,7 +738,6 @@
 #endif
 
     TT_GlyphZone  zone = &loader->zone;
-    FT_Pos        origin;
 
 #ifdef TT_USE_BYTECODE_INTERPRETER
     FT_UInt       n_ins;
@@ -755,14 +754,7 @@
                  loader->glyph->control_len ));
     }
     n_ins = (FT_UInt)( loader->glyph->control_len );
-#endif
 
-    origin = zone->cur[zone->n_points - 4].x;
-    origin = FT_PIX_ROUND( origin ) - origin;
-    if ( origin )
-      translate_array( zone->n_points, zone->cur, origin, 0 );
-
-#ifdef TT_USE_BYTECODE_INTERPRETER
     /* save original point position in org */
     if ( n_ins > 0 )
       FT_ARRAY_COPY( zone->org, zone->cur, zone->n_points );
@@ -1286,8 +1278,8 @@
    *   pp1 = (round(xmin - lsb), 0)      ,
    *   pp2 = (round(pp1 + aw), 0)        .
    *
-   * Note that the rounding to the grid is not documented currently in the
-   * specification.
+   * Note that the rounding to the grid (in the device space) is not
+   * documented currently in the specification.
    *
    * However, the specification lacks the precise definition of vertical
    * phantom points.  Greg Hitchcock provided the following explanation.
