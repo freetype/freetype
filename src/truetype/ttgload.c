@@ -1574,13 +1574,19 @@
         FT_FREE( deltas );
       }
 
-#endif
+#endif /* TT_CONFIG_OPTION_GX_VAR_SUPPORT */
 
+      /* scale phantom points, if necessary; */
+      /* they get rounded in `TT_Hint_Glyph' */
       if ( ( loader->load_flags & FT_LOAD_NO_SCALE ) == 0 )
       {
         loader->pp1.x = FT_MulFix( loader->pp1.x, x_scale );
         loader->pp2.x = FT_MulFix( loader->pp2.x, x_scale );
+        /* pp1.y and pp2.y are always zero */
+
+        loader->pp3.x = FT_MulFix( loader->pp3.x, x_scale );
         loader->pp3.y = FT_MulFix( loader->pp3.y, y_scale );
+        loader->pp4.x = FT_MulFix( loader->pp4.x, x_scale );
         loader->pp4.y = FT_MulFix( loader->pp4.y, y_scale );
       }
 
@@ -1695,11 +1701,17 @@
 
 #endif /* TT_CONFIG_OPTION_GX_VAR_SUPPORT */
 
+      /* scale phantom points, if necessary; */
+      /* they get rounded in `TT_Hint_Glyph' */
       if ( ( loader->load_flags & FT_LOAD_NO_SCALE ) == 0 )
       {
         loader->pp1.x = FT_MulFix( loader->pp1.x, x_scale );
         loader->pp2.x = FT_MulFix( loader->pp2.x, x_scale );
+        /* pp1.y and pp2.y are always zero */
+
+        loader->pp3.x = FT_MulFix( loader->pp3.x, x_scale );
         loader->pp3.y = FT_MulFix( loader->pp3.y, y_scale );
+        loader->pp4.x = FT_MulFix( loader->pp4.x, x_scale );
         loader->pp4.y = FT_MulFix( loader->pp4.y, y_scale );
       }
 
