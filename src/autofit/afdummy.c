@@ -69,9 +69,9 @@
 
 
   AF_DEFINE_SCRIPT_CLASS(
-    af_dflt_script_class,
+    af_none_script_class,
 
-    AF_SCRIPT_DFLT,
+    AF_SCRIPT_NONE,
     (AF_Blue_Stringset)0,
     AF_WRITING_SYSTEM_DUMMY,
 

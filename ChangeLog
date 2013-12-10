@@ -1,5 +1,9 @@
 2013-12-10  Werner Lemberg  <wl@gnu.org>
 
+	[autofit] s/DFLT/NONE/, s/dflt/none/.
+
+2013-12-10  Werner Lemberg  <wl@gnu.org>
+
 	[autofit] s/AF_SCRIPT_NONE/AF_SCRIPT_UNASSIGNED/.
 
 2013-12-10  Werner Lemberg  <wl@gnu.org>

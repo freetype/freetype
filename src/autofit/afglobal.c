@@ -276,7 +276,7 @@
 
     /* if we have a forced script (via `options'), use it, */
     /* otherwise look into `glyph_scripts' array           */
-    if ( script == AF_SCRIPT_DFLT || script + 1 >= AF_SCRIPT_MAX )
+    if ( script == AF_SCRIPT_NONE || script + 1 >= AF_SCRIPT_MAX )
       script = (AF_Script)( globals->glyph_scripts[gindex] &
                             AF_SCRIPT_UNASSIGNED           );
 

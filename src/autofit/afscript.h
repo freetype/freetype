@@ -24,7 +24,7 @@
 
   SCRIPT( cyrl, CYRL, "Cyrillic" )
   SCRIPT( deva, DEVA, "Indic scripts" )
-  SCRIPT( dflt, DFLT, "no script" )
+  SCRIPT( none, NONE, "no script" )
   SCRIPT( grek, GREK, "Greek" )
   SCRIPT( hani, HANI, "CJKV ideographs" )
   SCRIPT( hebr, HEBR, "Hebrew" )

@@ -530,7 +530,7 @@
     if ( !error )
     {
       AF_ScriptMetrics  metrics;
-      FT_UInt           options = AF_SCRIPT_DFLT;
+      FT_UInt           options = AF_SCRIPT_NONE;
 
 
 #ifdef FT_OPTION_AUTOFIT2

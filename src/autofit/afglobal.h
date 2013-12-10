@@ -48,7 +48,7 @@ FT_BEGIN_HEADER
 #ifdef AF_CONFIG_OPTION_CJK
 #define AF_SCRIPT_FALLBACK  AF_SCRIPT_HANI
 #else
-#define AF_SCRIPT_FALLBACK  AF_SCRIPT_DFLT
+#define AF_SCRIPT_FALLBACK  AF_SCRIPT_NONE
 #endif
   /* a bit mask indicating an uncovered glyph        */
 #define AF_SCRIPT_UNASSIGNED  0x7F
