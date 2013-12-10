@@ -1,5 +1,9 @@
 2013-12-10  Werner Lemberg  <wl@gnu.org>
 
+	[autofit] s/AF_SCRIPT_NONE/AF_SCRIPT_UNASSIGNED/.
+
+2013-12-10  Werner Lemberg  <wl@gnu.org>
+
 	[truetype] Fix scaling of vertical phantom points.
 
 	* src/truetype/ttgload.c (load_truetype_glyph): Scale pp3.x and

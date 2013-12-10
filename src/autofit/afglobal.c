@@ -88,9 +88,9 @@
     FT_UInt     i;
 
 
-    /* the value AF_SCRIPT_NONE means `uncovered glyph' */
+    /* the value AF_SCRIPT_UNASSIGNED means `uncovered glyph' */
     FT_MEM_SET( globals->glyph_scripts,
-                AF_SCRIPT_NONE,
+                AF_SCRIPT_UNASSIGNED,
                 globals->glyph_count );
 
     error = FT_Select_Charmap( face, FT_ENCODING_UNICODE );
@@ -128,9 +128,9 @@
 
         gindex = FT_Get_Char_Index( face, charcode );
 
-        if ( gindex != 0                             &&
-             gindex < (FT_ULong)globals->glyph_count &&
-             gscripts[gindex] == AF_SCRIPT_NONE )
+        if ( gindex != 0                              &&
+             gindex < (FT_ULong)globals->glyph_count  &&
+             gscripts[gindex] == AF_SCRIPT_UNASSIGNED )
           gscripts[gindex] = (FT_Byte)ss;
 
         for (;;)
@@ -140,8 +140,8 @@
           if ( gindex == 0 || charcode > range->last )
             break;
 
-          if ( gindex < (FT_ULong)globals->glyph_count &&
-               gscripts[gindex] == AF_SCRIPT_NONE )
+          if ( gindex < (FT_ULong)globals->glyph_count  &&
+               gscripts[gindex] == AF_SCRIPT_UNASSIGNED )
             gscripts[gindex] = (FT_Byte)ss;
         }
       }
@@ -162,16 +162,16 @@
      *  By default, all uncovered glyphs are set to the fallback script.
      *  XXX: Shouldn't we disable hinting or do something similar?
      */
-    if ( globals->module->fallback_script != AF_SCRIPT_NONE )
+    if ( globals->module->fallback_script != AF_SCRIPT_UNASSIGNED )
     {
       FT_Long  nn;
 
 
       for ( nn = 0; nn < globals->glyph_count; nn++ )
       {
-        if ( ( gscripts[nn] & ~AF_DIGIT ) == AF_SCRIPT_NONE )
+        if ( ( gscripts[nn] & ~AF_DIGIT ) == AF_SCRIPT_UNASSIGNED )
         {
-          gscripts[nn] &= ~AF_SCRIPT_NONE;
+          gscripts[nn] &= ~AF_SCRIPT_UNASSIGNED;
           gscripts[nn] |= globals->module->fallback_script;
         }
       }
@@ -277,7 +277,8 @@
     /* if we have a forced script (via `options'), use it, */
     /* otherwise look into `glyph_scripts' array           */
     if ( script == AF_SCRIPT_DFLT || script + 1 >= AF_SCRIPT_MAX )
-      script = (AF_Script)( globals->glyph_scripts[gindex] & AF_SCRIPT_NONE );
+      script = (AF_Script)( globals->glyph_scripts[gindex] &
+                            AF_SCRIPT_UNASSIGNED           );
 
     script_class         = AF_SCRIPT_CLASSES_GET[script];
     writing_system_class = AF_WRITING_SYSTEM_CLASSES_GET
