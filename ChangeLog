@@ -1,3 +1,14 @@
+2013-12-11  Werner Lemberg  <wl@gnu.org>
+
+	[documentation] Add section how to include FreeType header files.
+	Problem reported by David Kastrup <dak@gnu.org>.
+
+	Surprisingly, a description how to do that was completely missing in
+	the API reference.
+
+	* include/freetype.h, include/ftchapters.h: New documentation
+	section `header_inclusion'.
+
 2013-12-10  Werner Lemberg  <wl@gnu.org>
 
 	[autofit] s/DFLT/NONE/, s/dflt/none/.
