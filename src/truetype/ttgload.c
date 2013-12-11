@@ -1352,12 +1352,10 @@
 #define TT_LOADER_SET_PP( loader )                                          \
           do                                                                \
           {                                                                 \
-            FT_Bool  subpixel_  = loader->exec                              \
-                                    ? loader->exec->subpixel_hinting        \
-                                    : 0;                                    \
-            FT_Bool  grayscale_ = loader->exec                              \
-                                    ? loader->exec->grayscale_hinting       \
-                                    : 0;                                    \
+            FT_Bool  subpixel_  = loader->exec ? loader->exec->subpixel     \
+                                               : 0;                         \
+            FT_Bool  grayscale_ = loader->exec ? loader->exec->grayscale    \
+                                               : 0;                         \
             FT_Bool  use_aw_2_  = (FT_Bool)( subpixel_ && grayscale_ );     \
                                                                             \
                                                                             \
@@ -2108,8 +2106,7 @@
 #ifdef TT_CONFIG_OPTION_SUBPIXEL_HINTING
       TT_Driver  driver = (TT_Driver)FT_FACE_DRIVER( face );
 
-      FT_Bool  subpixel_hinting  = FALSE;
-      FT_Bool  grayscale_hinting = TRUE;
+      FT_Bool  subpixel = FALSE;
 
 #if 0
       /* not used yet */
@@ -2142,24 +2139,24 @@
 
       if ( driver->interpreter_version == TT_INTERPRETER_VERSION_38 )
       {
-        subpixel_hinting = FT_BOOL( ( FT_LOAD_TARGET_MODE( load_flags )
-                                      != FT_RENDER_MODE_MONO )          &&
-                                    SPH_OPTION_SET_SUBPIXEL             );
+        subpixel = FT_BOOL( ( FT_LOAD_TARGET_MODE( load_flags ) !=
+                              FT_RENDER_MODE_MONO               )  &&
+                            SPH_OPTION_SET_SUBPIXEL                );
 
-        if ( subpixel_hinting )
-          grayscale = grayscale_hinting = FALSE;
+        if ( subpixel )
+          grayscale = FALSE;
         else if ( SPH_OPTION_SET_GRAYSCALE )
         {
-          grayscale = grayscale_hinting = TRUE;
-          subpixel_hinting              = FALSE;
+          grayscale = TRUE;
+          subpixel  = FALSE;
         }
         else
-          grayscale = grayscale_hinting = FALSE;
+          grayscale = FALSE;
 
         if ( FT_IS_TRICKY( glyph->face ) )
-          subpixel_hinting = grayscale_hinting = FALSE;
+          subpixel = FALSE;
 
-        exec->ignore_x_mode      = subpixel_hinting || grayscale_hinting;
+        exec->ignore_x_mode      = subpixel || grayscale;
         exec->rasterizer_version = SPH_OPTION_SET_RASTERIZER_VERSION;
         if ( exec->sph_tweak_flags & SPH_TWEAK_RASTERIZER_35 )
           exec->rasterizer_version = TT_INTERPRETER_VERSION_35;
@@ -2202,24 +2199,24 @@
       {
         /* a change from mono to subpixel rendering (and vice versa) */
         /* requires a re-execution of the CVT program                */
-        if ( subpixel_hinting != exec->subpixel_hinting )
+        if ( subpixel != exec->subpixel )
         {
           FT_TRACE4(( "tt_loader_init: subpixel hinting change,"
                       " re-executing `prep' table\n" ));
 
-          exec->subpixel_hinting = subpixel_hinting;
-          reexecute              = TRUE;
+          exec->subpixel = subpixel;
+          reexecute      = TRUE;
         }
 
         /* a change from mono to grayscale rendering (and vice versa) */
         /* requires a re-execution of the CVT program                 */
-        if ( grayscale != exec->grayscale_hinting )
+        if ( grayscale != exec->grayscale )
         {
           FT_TRACE4(( "tt_loader_init: grayscale hinting change,"
                       " re-executing `prep' table\n" ));
 
-          exec->grayscale_hinting = grayscale_hinting;
-          reexecute               = TRUE;
+          exec->grayscale = grayscale;
+          reexecute       = TRUE;
         }
       }
       else

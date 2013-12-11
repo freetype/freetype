@@ -7820,13 +7820,6 @@
          CUR.ignore_x_mode                                   &&
          CUR.rasterizer_version >= TT_INTERPRETER_VERSION_35 )
     {
-      /********************************/
-      /* HINTING FOR GRAYSCALE        */
-      /* Selector Bit:  5             */
-      /* Return Bit(s): 12            */
-      /*                              */
-      if ( ( args[0] & 32 ) != 0 && CUR.grayscale_hinting )
-        K |= 1 << 12;
 
       if ( CUR.rasterizer_version >= 37 )
       {
@@ -7835,7 +7828,7 @@
         /* Selector Bit:  6             */
         /* Return Bit(s): 13            */
         /*                              */
-        if ( ( args[0] & 64 ) != 0 && CUR.subpixel_hinting )
+        if ( ( args[0] & 64 ) != 0 && CUR.subpixel )
           K |= 1 << 13;
 
         /********************************/

@@ -1,3 +1,20 @@
+2013-12-11  Infinality  <infinality@infinality.net>
+
+	[truetype] Simplify logic of rendering modes.
+
+	This patch unifies the subpixel and non-subpixel cases.
+
+	* src/truetype/ttinterp.h (TT_ExecContextRec): Remove
+	`grayscale_hinting'; all code should refer to `grayscale' instead.
+	Remove unused `native_hinting' member.
+	Rename `subpixel_hinting' member to `subpixel.
+
+	* src/truetype/ttgload.c (TT_LOADER_SET_PP): Updated.
+	(tt_loader_init): Updated.
+
+	* src/truetype/ttinterp.c (Ins_GETINFO): Simplify.
+	Updated.
+
 2013-12-11  Werner Lemberg  <wl@gnu.org>
 
 	[documentation] Add section how to include FreeType header files.
