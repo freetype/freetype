@@ -227,25 +227,25 @@ extern void*  _af_debug_hints;
    *  a specific script.
    */
   typedef FT_Error
-  (*AF_Script_InitMetricsFunc)( AF_ScriptMetrics  metrics,
-                                FT_Face           face );
+  (*AF_WritingSystem_InitMetricsFunc)( AF_ScriptMetrics  metrics,
+                                       FT_Face           face );
 
   typedef void
-  (*AF_Script_ScaleMetricsFunc)( AF_ScriptMetrics  metrics,
-                                 AF_Scaler         scaler );
+  (*AF_WritingSystem_ScaleMetricsFunc)( AF_ScriptMetrics  metrics,
+                                        AF_Scaler         scaler );
 
   typedef void
-  (*AF_Script_DoneMetricsFunc)( AF_ScriptMetrics  metrics );
+  (*AF_WritingSystem_DoneMetricsFunc)( AF_ScriptMetrics  metrics );
 
 
   typedef FT_Error
-  (*AF_Script_InitHintsFunc)( AF_GlyphHints     hints,
-                              AF_ScriptMetrics  metrics );
+  (*AF_WritingSystem_InitHintsFunc)( AF_GlyphHints     hints,
+                                     AF_ScriptMetrics  metrics );
 
   typedef void
-  (*AF_Script_ApplyHintsFunc)( AF_GlyphHints     hints,
-                               FT_Outline*       outline,
-                               AF_ScriptMetrics  metrics );
+  (*AF_WritingSystem_ApplyHintsFunc)( AF_GlyphHints     hints,
+                                      FT_Outline*       outline,
+                                      AF_ScriptMetrics  metrics );
 
 
   /*************************************************************************/
@@ -297,13 +297,13 @@ extern void*  _af_debug_hints;
   {
     AF_WritingSystem  writing_system;
 
-    FT_Offset                   script_metrics_size;
-    AF_Script_InitMetricsFunc   script_metrics_init;
-    AF_Script_ScaleMetricsFunc  script_metrics_scale;
-    AF_Script_DoneMetricsFunc   script_metrics_done;
+    FT_Offset                          script_metrics_size;
+    AF_WritingSystem_InitMetricsFunc   script_metrics_init;
+    AF_WritingSystem_ScaleMetricsFunc  script_metrics_scale;
+    AF_WritingSystem_DoneMetricsFunc   script_metrics_done;
 
-    AF_Script_InitHintsFunc     script_hints_init;
-    AF_Script_ApplyHintsFunc    script_hints_apply;
+    AF_WritingSystem_InitHintsFunc     script_hints_init;
+    AF_WritingSystem_ApplyHintsFunc    script_hints_apply;
 
   } AF_WritingSystemClassRec;
 

@@ -1,3 +1,7 @@
+2013-12-17  Werner Lemberg  <wl@gnu.org>
+
+	[autofit] s/AF_Script_/AF_WritingSystem_/ where appropriate.
+
 2013-12-11  Infinality  <infinality@infinality.net>
 
 	[truetype] Simplify logic of rendering modes.

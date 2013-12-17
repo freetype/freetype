@@ -2709,12 +2709,12 @@
 
     sizeof ( AF_LatinMetricsRec ),
 
-    (AF_Script_InitMetricsFunc) af_latin_metrics_init,
-    (AF_Script_ScaleMetricsFunc)af_latin_metrics_scale,
-    (AF_Script_DoneMetricsFunc) NULL,
+    (AF_WritingSystem_InitMetricsFunc) af_latin_metrics_init,
+    (AF_WritingSystem_ScaleMetricsFunc)af_latin_metrics_scale,
+    (AF_WritingSystem_DoneMetricsFunc) NULL,
 
-    (AF_Script_InitHintsFunc)   af_latin_hints_init,
-    (AF_Script_ApplyHintsFunc)  af_latin_hints_apply
+    (AF_WritingSystem_InitHintsFunc)   af_latin_hints_init,
+    (AF_WritingSystem_ApplyHintsFunc)  af_latin_hints_apply
   )
 
 

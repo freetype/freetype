@@ -59,12 +59,12 @@
 
     sizeof ( AF_ScriptMetricsRec ),
 
-    (AF_Script_InitMetricsFunc) NULL,
-    (AF_Script_ScaleMetricsFunc)NULL,
-    (AF_Script_DoneMetricsFunc) NULL,
+    (AF_WritingSystem_InitMetricsFunc) NULL,
+    (AF_WritingSystem_ScaleMetricsFunc)NULL,
+    (AF_WritingSystem_DoneMetricsFunc) NULL,
 
-    (AF_Script_InitHintsFunc)   af_dummy_hints_init,
-    (AF_Script_ApplyHintsFunc)  af_dummy_hints_apply
+    (AF_WritingSystem_InitHintsFunc)   af_dummy_hints_init,
+    (AF_WritingSystem_ApplyHintsFunc)  af_dummy_hints_apply
   )
 
 
