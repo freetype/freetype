@@ -1,3 +1,11 @@
+2013-12-18  Werner Lemberg  <wl@gnu.org>
+
+	[autofit] s/glyph_scripts/glyph_styles/.
+
+	This is the first commit of a series to create a new top-level
+	structure (a `style') for handling scripts, writing_systems, and
+	soon-to-be-added coverages.
+
 2013-12-17  Werner Lemberg  <wl@gnu.org>
 
 	[autofit] s/AF_Script_/AF_WritingSystem_/ where appropriate.

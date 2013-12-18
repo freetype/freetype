@@ -134,7 +134,7 @@
 
       error = af_property_get_face_globals( prop->face, &globals, module );
       if ( !error )
-        prop->map = globals->glyph_scripts;
+        prop->map = globals->glyph_styles;
 
       return error;
     }

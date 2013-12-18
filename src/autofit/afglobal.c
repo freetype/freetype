@@ -83,13 +83,13 @@
     FT_Error    error;
     FT_Face     face        = globals->face;
     FT_CharMap  old_charmap = face->charmap;
-    FT_Byte*    gscripts    = globals->glyph_scripts;
+    FT_Byte*    gscripts    = globals->glyph_styles;
     FT_UInt     ss;
     FT_UInt     i;
 
 
     /* the value AF_SCRIPT_UNASSIGNED means `uncovered glyph' */
-    FT_MEM_SET( globals->glyph_scripts,
+    FT_MEM_SET( globals->glyph_styles,
                 AF_SCRIPT_UNASSIGNED,
                 globals->glyph_count );
 
@@ -198,10 +198,10 @@
                             face->num_glyphs * sizeof ( FT_Byte ) ) )
       goto Exit;
 
-    globals->face          = face;
-    globals->glyph_count   = face->num_glyphs;
-    globals->glyph_scripts = (FT_Byte*)( globals + 1 );
-    globals->module        = module;
+    globals->face         = face;
+    globals->glyph_count  = face->num_glyphs;
+    globals->glyph_styles = (FT_Byte*)( globals + 1 );
+    globals->module       = module;
 
     error = af_face_globals_compute_script_coverage( globals );
     if ( error )
@@ -244,9 +244,9 @@
         }
       }
 
-      globals->glyph_count   = 0;
-      globals->glyph_scripts = NULL;  /* no need to free this one! */
-      globals->face          = NULL;
+      globals->glyph_count  = 0;
+      globals->glyph_styles = NULL;  /* no need to free this one! */
+      globals->face         = NULL;
 
       FT_FREE( globals );
     }
@@ -275,10 +275,10 @@
     }
 
     /* if we have a forced script (via `options'), use it, */
-    /* otherwise look into `glyph_scripts' array           */
+    /* otherwise look into `glyph_styles' array            */
     if ( script == AF_SCRIPT_NONE || script + 1 >= AF_SCRIPT_MAX )
-      script = (AF_Script)( globals->glyph_scripts[gindex] &
-                            AF_SCRIPT_UNASSIGNED           );
+      script = (AF_Script)( globals->glyph_styles[gindex] &
+                            AF_SCRIPT_UNASSIGNED          );
 
     script_class         = AF_SCRIPT_CLASSES_GET[script];
     writing_system_class = AF_WRITING_SYSTEM_CLASSES_GET
@@ -326,7 +326,7 @@
                             FT_UInt         gindex )
   {
     if ( gindex < (FT_ULong)globals->glyph_count )
-      return (FT_Bool)( globals->glyph_scripts[gindex] & AF_DIGIT );
+      return (FT_Bool)( globals->glyph_styles[gindex] & AF_DIGIT );
 
     return (FT_Bool)0;
   }

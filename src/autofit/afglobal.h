@@ -70,7 +70,7 @@ FT_BEGIN_HEADER
 
 
   /*
-   *  Note that glyph_scripts[] maps each glyph to an index into the
+   *  Note that glyph_styles[] maps each glyph to an index into the
    *  `af_script_classes' array.
    *
    */
@@ -78,7 +78,7 @@ FT_BEGIN_HEADER
   {
     FT_Face           face;
     FT_Long           glyph_count;    /* same as face->num_glyphs */
-    FT_Byte*          glyph_scripts;
+    FT_Byte*          glyph_styles;
 
     /* per-face auto-hinter properties */
     FT_UInt           increase_x_height;
