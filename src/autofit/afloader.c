@@ -190,10 +190,10 @@
                                    [metrics->script_class->writing_system];
 
 
-        if ( writing_system_class->script_hints_apply )
-          writing_system_class->script_hints_apply( hints,
-                                                    &gloader->current.outline,
-                                                    metrics );
+        if ( writing_system_class->style_hints_apply )
+          writing_system_class->style_hints_apply( hints,
+                                                   &gloader->current.outline,
+                                                   metrics );
       }
 
       /* we now need to adjust the metrics according to the change in */
@@ -553,18 +553,18 @@
 
         loader->metrics = metrics;
 
-        if ( writing_system_class->script_metrics_scale )
-          writing_system_class->script_metrics_scale( metrics, &scaler );
+        if ( writing_system_class->style_metrics_scale )
+          writing_system_class->style_metrics_scale( metrics, &scaler );
         else
           metrics->scaler = scaler;
 
         load_flags |=  FT_LOAD_NO_SCALE | FT_LOAD_IGNORE_TRANSFORM;
         load_flags &= ~FT_LOAD_RENDER;
 
-        if ( writing_system_class->script_hints_init )
+        if ( writing_system_class->style_hints_init )
         {
-          error = writing_system_class->script_hints_init( &loader->hints,
-                                                           metrics );
+          error = writing_system_class->style_hints_init( &loader->hints,
+                                                          metrics );
           if ( error )
             goto Exit;
         }

@@ -237,8 +237,8 @@
             AF_WRITING_SYSTEM_CLASSES_GET[script_class->writing_system];
 
 
-          if ( writing_system_class->script_metrics_done )
-            writing_system_class->script_metrics_done( globals->metrics[nn] );
+          if ( writing_system_class->style_metrics_done )
+            writing_system_class->style_metrics_done( globals->metrics[nn] );
 
           FT_FREE( globals->metrics[nn] );
         }
@@ -291,20 +291,20 @@
       FT_Memory  memory = globals->face->memory;
 
 
-      if ( FT_ALLOC( metrics, writing_system_class->script_metrics_size ) )
+      if ( FT_ALLOC( metrics, writing_system_class->style_metrics_size ) )
         goto Exit;
 
       metrics->script_class = script_class;
       metrics->globals      = globals;
 
-      if ( writing_system_class->script_metrics_init )
+      if ( writing_system_class->style_metrics_init )
       {
-        error = writing_system_class->script_metrics_init( metrics,
-                                                           globals->face );
+        error = writing_system_class->style_metrics_init( metrics,
+                                                          globals->face );
         if ( error )
         {
-          if ( writing_system_class->script_metrics_done )
-            writing_system_class->script_metrics_done( metrics );
+          if ( writing_system_class->style_metrics_done )
+            writing_system_class->style_metrics_done( metrics );
 
           FT_FREE( metrics );
           goto Exit;

@@ -297,13 +297,13 @@ extern void*  _af_debug_hints;
   {
     AF_WritingSystem  writing_system;
 
-    FT_Offset                          script_metrics_size;
-    AF_WritingSystem_InitMetricsFunc   script_metrics_init;
-    AF_WritingSystem_ScaleMetricsFunc  script_metrics_scale;
-    AF_WritingSystem_DoneMetricsFunc   script_metrics_done;
+    FT_Offset                          style_metrics_size;
+    AF_WritingSystem_InitMetricsFunc   style_metrics_init;
+    AF_WritingSystem_ScaleMetricsFunc  style_metrics_scale;
+    AF_WritingSystem_DoneMetricsFunc   style_metrics_done;
 
-    AF_WritingSystem_InitHintsFunc     script_hints_init;
-    AF_WritingSystem_ApplyHintsFunc    script_hints_apply;
+    AF_WritingSystem_InitHintsFunc     style_hints_init;
+    AF_WritingSystem_ApplyHintsFunc    style_hints_apply;
 
   } AF_WritingSystemClassRec;
 
@@ -434,16 +434,16 @@ extern void*  _af_debug_hints;
   FT_LOCAL_DEF( void )                                                    \
   FT_Init_Class_ ## writing_system_class( AF_WritingSystemClassRec*  ac ) \
   {                                                                       \
-    ac->writing_system       = system;                                    \
+    ac->writing_system      = system;                                     \
                                                                           \
-    ac->script_metrics_size  = m_size;                                    \
+    ac->style_metrics_size  = m_size;                                     \
                                                                           \
-    ac->script_metrics_init  = m_init;                                    \
-    ac->script_metrics_scale = m_scale;                                   \
-    ac->script_metrics_done  = m_done;                                    \
+    ac->style_metrics_init  = m_init;                                     \
+    ac->style_metrics_scale = m_scale;                                    \
+    ac->style_metrics_done  = m_done;                                     \
                                                                           \
-    ac->script_hints_init    = h_init;                                    \
-    ac->script_hints_apply   = h_apply;                                   \
+    ac->style_hints_init    = h_init;                                     \
+    ac->style_hints_apply   = h_apply;                                    \
   }
 
 
