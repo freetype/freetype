@@ -200,17 +200,18 @@ extern void*  _af_debug_hints;
   /*************************************************************************/
   /*************************************************************************/
   /*****                                                               *****/
-  /*****                 S C R I P T   M E T R I C S                   *****/
+  /*****                   S T Y L E   M E T R I C S                   *****/
   /*****                                                               *****/
   /*************************************************************************/
   /*************************************************************************/
 
-  /* This is the main structure which combines writing systems and script */
-  /* data (for a given face object, see below).                           */
-
   typedef struct AF_WritingSystemClassRec_ const*  AF_WritingSystemClass;
   typedef struct AF_ScriptClassRec_ const*         AF_ScriptClass;
   typedef struct AF_FaceGlobalsRec_*               AF_FaceGlobals;
+
+  /* This is the main structure that combines everything.  Autofit modules */
+  /* specific to writing systems derive their structures from it, for      */
+  /* example `AF_LatinMetrics'.                                            */
 
   typedef struct  AF_StyleMetricsRec_
   {
@@ -257,14 +258,14 @@ extern void*  _af_debug_hints;
   /*************************************************************************/
 
   /*
-   *  In FreeType, a writing system consists of multiple scripts which can
+   *  In FreeType, a writing system consists of multiple scripts that can
    *  be handled similarly *in a typographical way*; the relationship is not
    *  based on history.  For example, both the Greek and the unrelated
    *  Armenian scripts share the same features like ascender, descender,
    *  x-height, etc.  Essentially, a writing system is covered by a
    *  submodule of the auto-fitter; it contains
    *
-   *  - a specific global analyzer which computes global metrics specific to
+   *  - a specific global analyzer that computes global metrics specific to
    *    the script (based on script-specific characters to identify ascender
    *    height, x-height, etc.),
    *
@@ -317,7 +318,7 @@ extern void*  _af_debug_hints;
   /*************************************************************************/
 
   /*
-   *  Each script is associated with a set of Unicode ranges which gets used
+   *  Each script is associated with a set of Unicode ranges that gets used
    *  to test whether the font face supports the script.  It also references
    *  the writing system it belongs to.
    *
