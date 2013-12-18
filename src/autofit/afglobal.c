@@ -83,7 +83,7 @@
     FT_Error    error;
     FT_Face     face        = globals->face;
     FT_CharMap  old_charmap = face->charmap;
-    FT_Byte*    gscripts    = globals->glyph_styles;
+    FT_Byte*    gstyles     = globals->glyph_styles;
     FT_UInt     ss;
     FT_UInt     i;
 
@@ -128,10 +128,10 @@
 
         gindex = FT_Get_Char_Index( face, charcode );
 
-        if ( gindex != 0                              &&
-             gindex < (FT_ULong)globals->glyph_count  &&
-             gscripts[gindex] == AF_SCRIPT_UNASSIGNED )
-          gscripts[gindex] = (FT_Byte)ss;
+        if ( gindex != 0                             &&
+             gindex < (FT_ULong)globals->glyph_count &&
+             gstyles[gindex] == AF_SCRIPT_UNASSIGNED )
+          gstyles[gindex] = (FT_Byte)ss;
 
         for (;;)
         {
@@ -140,9 +140,9 @@
           if ( gindex == 0 || charcode > range->last )
             break;
 
-          if ( gindex < (FT_ULong)globals->glyph_count  &&
-               gscripts[gindex] == AF_SCRIPT_UNASSIGNED )
-            gscripts[gindex] = (FT_Byte)ss;
+          if ( gindex < (FT_ULong)globals->glyph_count &&
+               gstyles[gindex] == AF_SCRIPT_UNASSIGNED )
+            gstyles[gindex] = (FT_Byte)ss;
         }
       }
     }
@@ -154,7 +154,7 @@
 
 
       if ( gindex != 0 && gindex < (FT_ULong)globals->glyph_count )
-        gscripts[gindex] |= AF_DIGIT;
+        gstyles[gindex] |= AF_DIGIT;
     }
 
   Exit:
@@ -169,10 +169,10 @@
 
       for ( nn = 0; nn < globals->glyph_count; nn++ )
       {
-        if ( ( gscripts[nn] & ~AF_DIGIT ) == AF_SCRIPT_UNASSIGNED )
+        if ( ( gstyles[nn] & ~AF_DIGIT ) == AF_SCRIPT_UNASSIGNED )
         {
-          gscripts[nn] &= ~AF_SCRIPT_UNASSIGNED;
-          gscripts[nn] |= globals->module->fallback_script;
+          gstyles[nn] &= ~AF_SCRIPT_UNASSIGNED;
+          gstyles[nn] |= globals->module->fallback_script;
         }
       }
     }

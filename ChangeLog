@@ -1,5 +1,9 @@
 2013-12-18  Werner Lemberg  <wl@gnu.org>
 
+	[autofit] s/gscripts/gstyles/.
+
+2013-12-18  Werner Lemberg  <wl@gnu.org>
+
 	[autofit] s/glyph_scripts/glyph_styles/.
 
 	This is the first commit of a series to create a new top-level
