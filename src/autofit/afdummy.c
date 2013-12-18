@@ -23,8 +23,8 @@
 
 
   static FT_Error
-  af_dummy_hints_init( AF_GlyphHints     hints,
-                       AF_ScriptMetrics  metrics )
+  af_dummy_hints_init( AF_GlyphHints    hints,
+                       AF_StyleMetrics  metrics )
   {
     af_glyph_hints_rescale( hints, metrics );
 
@@ -57,7 +57,7 @@
 
     AF_WRITING_SYSTEM_DUMMY,
 
-    sizeof ( AF_ScriptMetricsRec ),
+    sizeof ( AF_StyleMetricsRec ),
 
     (AF_WritingSystem_InitMetricsFunc) NULL,
     (AF_WritingSystem_ScaleMetricsFunc)NULL,

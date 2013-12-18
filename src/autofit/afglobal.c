@@ -254,12 +254,12 @@
 
 
   FT_LOCAL_DEF( FT_Error )
-  af_face_globals_get_metrics( AF_FaceGlobals     globals,
-                               FT_UInt            gindex,
-                               FT_UInt            options,
-                               AF_ScriptMetrics  *ametrics )
+  af_face_globals_get_metrics( AF_FaceGlobals    globals,
+                               FT_UInt           gindex,
+                               FT_UInt           options,
+                               AF_StyleMetrics  *ametrics )
   {
-    AF_ScriptMetrics  metrics = NULL;
+    AF_StyleMetrics  metrics = NULL;
 
     AF_Script              script = (AF_Script)( options & 15 );
     AF_WritingSystemClass  writing_system_class;

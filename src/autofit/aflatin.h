@@ -113,9 +113,9 @@ FT_BEGIN_HEADER
 
   typedef struct  AF_LatinMetricsRec_
   {
-    AF_ScriptMetricsRec  root;
-    FT_UInt              units_per_em;
-    AF_LatinAxisRec      axis[AF_DIMENSION_MAX];
+    AF_StyleMetricsRec  root;
+    FT_UInt             units_per_em;
+    AF_LatinAxisRec     axis[AF_DIMENSION_MAX];
 
   } AF_LatinMetricsRec, *AF_LatinMetrics;
 

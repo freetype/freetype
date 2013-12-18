@@ -533,8 +533,8 @@
   /* Reset metrics. */
 
   FT_LOCAL_DEF( void )
-  af_glyph_hints_rescale( AF_GlyphHints     hints,
-                          AF_ScriptMetrics  metrics )
+  af_glyph_hints_rescale( AF_GlyphHints    hints,
+                          AF_StyleMetrics  metrics )
   {
     hints->metrics      = metrics;
     hints->scaler_flags = metrics->scaler.flags;

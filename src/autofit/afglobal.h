@@ -76,16 +76,16 @@ FT_BEGIN_HEADER
    */
   typedef struct  AF_FaceGlobalsRec_
   {
-    FT_Face           face;
-    FT_Long           glyph_count;    /* same as face->num_glyphs */
-    FT_Byte*          glyph_styles;
+    FT_Face          face;
+    FT_Long          glyph_count;    /* same as face->num_glyphs */
+    FT_Byte*         glyph_styles;
 
     /* per-face auto-hinter properties */
-    FT_UInt           increase_x_height;
+    FT_UInt          increase_x_height;
 
-    AF_ScriptMetrics  metrics[AF_SCRIPT_MAX];
+    AF_StyleMetrics  metrics[AF_SCRIPT_MAX];
 
-    AF_Module         module;         /* to access global properties */
+    AF_Module        module;         /* to access global properties */
 
   } AF_FaceGlobalsRec;
 
@@ -101,10 +101,10 @@ FT_BEGIN_HEADER
                        AF_Module        module );
 
   FT_LOCAL( FT_Error )
-  af_face_globals_get_metrics( AF_FaceGlobals     globals,
-                               FT_UInt            gindex,
-                               FT_UInt            options,
-                               AF_ScriptMetrics  *ametrics );
+  af_face_globals_get_metrics( AF_FaceGlobals    globals,
+                               FT_UInt           gindex,
+                               FT_UInt           options,
+                               AF_StyleMetrics  *ametrics );
 
   FT_LOCAL( void )
   af_face_globals_free( AF_FaceGlobals  globals );

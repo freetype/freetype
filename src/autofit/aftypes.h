@@ -212,7 +212,7 @@ extern void*  _af_debug_hints;
   typedef struct AF_ScriptClassRec_ const*         AF_ScriptClass;
   typedef struct AF_FaceGlobalsRec_*               AF_FaceGlobals;
 
-  typedef struct  AF_ScriptMetricsRec_
+  typedef struct  AF_StyleMetricsRec_
   {
     AF_ScriptClass  script_class;
     AF_ScalerRec    scaler;
@@ -220,32 +220,32 @@ extern void*  _af_debug_hints;
 
     AF_FaceGlobals  globals;    /* to access properties */
 
-  } AF_ScriptMetricsRec, *AF_ScriptMetrics;
+  } AF_StyleMetricsRec, *AF_StyleMetrics;
 
 
   /*  This function parses an FT_Face to compute global metrics for
    *  a specific script.
    */
   typedef FT_Error
-  (*AF_WritingSystem_InitMetricsFunc)( AF_ScriptMetrics  metrics,
-                                       FT_Face           face );
+  (*AF_WritingSystem_InitMetricsFunc)( AF_StyleMetrics  metrics,
+                                       FT_Face          face );
 
   typedef void
-  (*AF_WritingSystem_ScaleMetricsFunc)( AF_ScriptMetrics  metrics,
-                                        AF_Scaler         scaler );
+  (*AF_WritingSystem_ScaleMetricsFunc)( AF_StyleMetrics  metrics,
+                                        AF_Scaler        scaler );
 
   typedef void
-  (*AF_WritingSystem_DoneMetricsFunc)( AF_ScriptMetrics  metrics );
+  (*AF_WritingSystem_DoneMetricsFunc)( AF_StyleMetrics  metrics );
 
 
   typedef FT_Error
-  (*AF_WritingSystem_InitHintsFunc)( AF_GlyphHints     hints,
-                                     AF_ScriptMetrics  metrics );
+  (*AF_WritingSystem_InitHintsFunc)( AF_GlyphHints    hints,
+                                     AF_StyleMetrics  metrics );
 
   typedef void
-  (*AF_WritingSystem_ApplyHintsFunc)( AF_GlyphHints     hints,
-                                      FT_Outline*       outline,
-                                      AF_ScriptMetrics  metrics );
+  (*AF_WritingSystem_ApplyHintsFunc)( AF_GlyphHints    hints,
+                                      FT_Outline*      outline,
+                                      AF_StyleMetrics  metrics );
 
 
   /*************************************************************************/

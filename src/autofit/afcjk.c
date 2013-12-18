@@ -118,7 +118,7 @@
       scaler->render_mode = FT_RENDER_MODE_NORMAL;
       scaler->flags       = 0;
 
-      af_glyph_hints_rescale( hints, (AF_ScriptMetrics)dummy );
+      af_glyph_hints_rescale( hints, (AF_StyleMetrics)dummy );
 
       error = af_glyph_hints_reload( hints, &face->glyph->outline );
       if ( error )
@@ -1234,7 +1234,7 @@
     FT_UInt32       scaler_flags, other_flags;
 
 
-    af_glyph_hints_rescale( hints, (AF_ScriptMetrics)metrics );
+    af_glyph_hints_rescale( hints, (AF_StyleMetrics)metrics );
 
     /*
      *  correct x_scale and y_scale when needed, since they may have

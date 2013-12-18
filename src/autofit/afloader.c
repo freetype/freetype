@@ -109,7 +109,7 @@
     FT_Error          error;
     FT_Face           face     = loader->face;
     FT_GlyphLoader    gloader  = loader->gloader;
-    AF_ScriptMetrics  metrics  = loader->metrics;
+    AF_StyleMetrics   metrics  = loader->metrics;
     AF_GlyphHints     hints    = &loader->hints;
     FT_GlyphSlot      slot     = face->glyph;
     FT_Slot_Internal  internal = slot->internal;
@@ -529,8 +529,8 @@
     error = af_loader_reset( module, face );
     if ( !error )
     {
-      AF_ScriptMetrics  metrics;
-      FT_UInt           options = AF_SCRIPT_NONE;
+      AF_StyleMetrics  metrics;
+      FT_UInt          options = AF_SCRIPT_NONE;
 
 
 #ifdef FT_OPTION_AUTOFIT2

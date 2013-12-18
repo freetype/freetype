@@ -1,5 +1,9 @@
 2013-12-18  Werner Lemberg  <wl@gnu.org>
 
+	[autofit] s/ScriptMetrics/StyleMetrics/.
+
+2013-12-18  Werner Lemberg  <wl@gnu.org>
+
 	[autofit] s/script_{metrics,hints}/style_{metrics,hints}/
 
 2013-12-18  Werner Lemberg  <wl@gnu.org>
