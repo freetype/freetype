@@ -1,5 +1,27 @@
 2013-12-18  Werner Lemberg  <wl@gnu.org>
 
+	[autofit] More code orthogonality.
+
+	* src/autofit/aftypes.h (AF_StyleMetrics): Replace `script_class'
+	pointer to an `AF_ScriptClass' structure with `script' index of type
+	`AF_Script'.
+	Move some code around.
+
+	* src/autofit/afcjk.c: Include `afpic.h'.
+	(af_cjk_metrics_init_widths, af_cjk_metrics_init_blues,
+	af_cjk_hint_edges): Updated.
+
+	* src/autofit/aflatin.c: Include `afpic.h'.
+	(af_latin_metrics_init_widths, af_latin_metrics_init_blues,
+	af_latin_metrics_scale_dim, af_latin_hint_edges): Updated.
+
+	* src/autofit/afglobal.c (af_face_globals_get_metrics): Updated.
+
+	* src/autofit/afloader.c (af_loader_load_g, af_loader_load_glyph):
+	Updated.
+
+2013-12-18  Werner Lemberg  <wl@gnu.org>
+
 	[autofit] s/ScriptMetrics/StyleMetrics/.
 
 2013-12-18  Werner Lemberg  <wl@gnu.org>

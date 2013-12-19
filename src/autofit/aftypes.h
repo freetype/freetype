@@ -197,32 +197,7 @@ extern void*  _af_debug_hints;
             (a)->y_delta == (b)->y_delta )
 
 
-  /*************************************************************************/
-  /*************************************************************************/
-  /*****                                                               *****/
-  /*****                   S T Y L E   M E T R I C S                   *****/
-  /*****                                                               *****/
-  /*************************************************************************/
-  /*************************************************************************/
-
-  typedef struct AF_WritingSystemClassRec_ const*  AF_WritingSystemClass;
-  typedef struct AF_ScriptClassRec_ const*         AF_ScriptClass;
-  typedef struct AF_FaceGlobalsRec_*               AF_FaceGlobals;
-
-  /* This is the main structure that combines everything.  Autofit modules */
-  /* specific to writing systems derive their structures from it, for      */
-  /* example `AF_LatinMetrics'.                                            */
-
-  typedef struct  AF_StyleMetricsRec_
-  {
-    AF_ScriptClass  script_class;
-    AF_ScalerRec    scaler;
-    FT_Bool         digits_have_same_width;
-
-    AF_FaceGlobals  globals;    /* to access properties */
-
-  } AF_StyleMetricsRec, *AF_StyleMetrics;
-
+  typedef struct AF_StyleMetricsRec_*  AF_StyleMetrics;
 
   /*  This function parses an FT_Face to compute global metrics for
    *  a specific script.
@@ -308,6 +283,8 @@ extern void*  _af_debug_hints;
 
   } AF_WritingSystemClassRec;
 
+  typedef const AF_WritingSystemClassRec*  AF_WritingSystemClass;
+
 
   /*************************************************************************/
   /*************************************************************************/
@@ -362,6 +339,33 @@ extern void*  _af_debug_hints;
     FT_UInt32           standard_char;     /* for default width and height */
 
   } AF_ScriptClassRec;
+
+  typedef const AF_ScriptClassRec*  AF_ScriptClass;
+
+
+  /*************************************************************************/
+  /*************************************************************************/
+  /*****                                                               *****/
+  /*****                   S T Y L E   M E T R I C S                   *****/
+  /*****                                                               *****/
+  /*************************************************************************/
+  /*************************************************************************/
+
+  typedef struct AF_FaceGlobalsRec_*  AF_FaceGlobals;
+
+  /* This is the main structure that combines everything.  Autofit modules */
+  /* specific to writing systems derive their structures from it, for      */
+  /* example `AF_LatinMetrics'.                                            */
+
+  typedef struct  AF_StyleMetricsRec_
+  {
+    AF_Script       script;
+    AF_ScalerRec    scaler;
+    FT_Bool         digits_have_same_width;
+
+    AF_FaceGlobals  globals;    /* to access properties */
+
+  } AF_StyleMetricsRec;
 
 
   /* Declare and define vtables for classes */

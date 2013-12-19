@@ -21,6 +21,7 @@
 #include FT_INTERNAL_DEBUG_H
 
 #include "afglobal.h"
+#include "afpic.h"
 #include "aflatin.h"
 #include "aferrors.h"
 
@@ -64,7 +65,7 @@
                 "latin standard widths computation (script `%s')\n"
                 "=================================================\n"
                 "\n",
-                af_script_names[metrics->root.script_class->script] ));
+                af_script_names[metrics->root.script] ));
 
     af_glyph_hints_init( hints, face->memory );
 
@@ -78,15 +79,16 @@
       AF_LatinMetricsRec  dummy[1];
       AF_Scaler           scaler = &dummy->root.scaler;
 
+      AF_ScriptClass      script_class =
+                            AF_SCRIPT_CLASSES_GET[metrics->root.script];
 
-      glyph_index = FT_Get_Char_Index(
-                      face,
-                      metrics->root.script_class->standard_char );
+
+      glyph_index = FT_Get_Char_Index( face, script_class->standard_char );
       if ( glyph_index == 0 )
         goto Exit;
 
       FT_TRACE5(( "standard character: U+%04lX (glyph index %d)\n",
-                  metrics->root.script_class->standard_char, glyph_index ));
+                  script_class->standard_char, glyph_index ));
 
       error = FT_Load_Glyph( face, glyph_index, FT_LOAD_NO_SCALE );
       if ( error || face->glyph->outline.n_points <= 0 )
@@ -214,7 +216,9 @@
     AF_LatinAxis  axis = &metrics->axis[AF_DIMENSION_VERT];
     FT_Outline    outline;
 
-    AF_Blue_Stringset         bss = metrics->root.script_class->blue_stringset;
+    AF_ScriptClass  sc = AF_SCRIPT_CLASSES_GET[metrics->root.script];
+
+    AF_Blue_Stringset         bss = sc->blue_stringset;
     const AF_Blue_StringRec*  bs  = &af_blue_stringsets[bss];
 
 
@@ -883,7 +887,7 @@
               "                           "
               " vertical scaling changed from %.4f to %.4f (by %d%%)\n"
               "\n",
-              af_script_names[metrics->root.script_class->script],
+              af_script_names[metrics->root.script],
               axis->org_scale / 65536.0,
               scale / 65536.0,
               ( fitted - scaled ) * 100 / scaled ));
@@ -908,7 +912,7 @@
 
     FT_TRACE5(( "%s widths (script `%s')\n",
                 dim == AF_DIMENSION_HORZ ? "horizontal" : "vertical",
-                af_script_names[metrics->root.script_class->script] ));
+                af_script_names[metrics->root.script] ));
 
     /* scale the widths */
     for ( nn = 0; nn < axis->width_count; nn++ )
@@ -935,13 +939,13 @@
     if ( axis->extra_light )
       FT_TRACE5(( "`%s' script is extra light (at current resolution)\n"
                   "\n",
-                  af_script_names[metrics->root.script_class->script] ));
+                  af_script_names[metrics->root.script] ));
 #endif
 
     if ( dim == AF_DIMENSION_VERT )
     {
       FT_TRACE5(( "blue zones (script `%s')\n",
-                  af_script_names[metrics->root.script_class->script] ));
+                  af_script_names[metrics->root.script] ));
 
       /* scale the blue zones */
       for ( nn = 0; nn < axis->blue_count; nn++ )
@@ -2150,7 +2154,7 @@
 
     FT_TRACE5(( "latin %s edge hinting (script `%s')\n",
                 dim == AF_DIMENSION_VERT ? "horizontal" : "vertical",
-                af_script_names[hints->metrics->script_class->script] ));
+                af_script_names[hints->metrics->script] ));
 
     /* we begin by aligning all stems relative to the blue zone */
     /* if needed -- that's only for horizontal edges            */

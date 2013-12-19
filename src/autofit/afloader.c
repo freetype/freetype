@@ -183,11 +183,12 @@
       /* automatic hinting process                                 */
       {
 #ifdef FT_CONFIG_OPTION_PIC
-        AF_FaceGlobals         globals              = loader->globals;
+        AF_FaceGlobals         globals = loader->globals;
 #endif
+        AF_ScriptClass         script_class =
+          AF_SCRIPT_CLASSES_GET[metrics->script];
         AF_WritingSystemClass  writing_system_class =
-                                 AF_WRITING_SYSTEM_CLASSES_GET
-                                   [metrics->script_class->writing_system];
+          AF_WRITING_SYSTEM_CLASSES_GET[script_class->writing_system];
 
 
         if ( writing_system_class->style_hints_apply )
@@ -544,11 +545,12 @@
       if ( !error )
       {
 #ifdef FT_CONFIG_OPTION_PIC
-        AF_FaceGlobals         globals              = loader->globals;
+        AF_FaceGlobals         globals = loader->globals;
 #endif
+        AF_ScriptClass         script_class =
+          AF_SCRIPT_CLASSES_GET[metrics->script];
         AF_WritingSystemClass  writing_system_class =
-                                 AF_WRITING_SYSTEM_CLASSES_GET
-                                   [metrics->script_class->writing_system];
+          AF_WRITING_SYSTEM_CLASSES_GET[script_class->writing_system];
 
 
         loader->metrics = metrics;

@@ -27,6 +27,7 @@
 #include FT_INTERNAL_DEBUG_H
 
 #include "afglobal.h"
+#include "afpic.h"
 #include "aflatin.h"
 
 
@@ -77,7 +78,7 @@
                 "cjk standard widths computation (script `%s')\n"
                 "===============================================\n"
                 "\n",
-                af_script_names[metrics->root.script_class->script] ));
+                af_script_names[metrics->root.script] ));
 
     af_glyph_hints_init( hints, face->memory );
 
@@ -91,15 +92,16 @@
       AF_CJKMetricsRec  dummy[1];
       AF_Scaler         scaler = &dummy->root.scaler;
 
+      AF_ScriptClass    script_class =
+                          AF_SCRIPT_CLASSES_GET[metrics->root.script];
 
-      glyph_index = FT_Get_Char_Index(
-                      face,
-                      metrics->root.script_class->standard_char );
+
+      glyph_index = FT_Get_Char_Index( face, script_class->standard_char );
       if ( glyph_index == 0 )
         goto Exit;
 
       FT_TRACE5(( "standard character: U+%04lX (glyph index %d)\n",
-                  metrics->root.script_class->standard_char, glyph_index ));
+                  script_class->standard_char, glyph_index ));
 
       error = FT_Load_Glyph( face, glyph_index, FT_LOAD_NO_SCALE );
       if ( error || face->glyph->outline.n_points <= 0 )
@@ -226,7 +228,9 @@
     AF_CJKAxis  axis;
     FT_Outline  outline;
 
-    AF_Blue_Stringset         bss = metrics->root.script_class->blue_stringset;
+    AF_ScriptClass  sc = AF_SCRIPT_CLASSES_GET[metrics->root.script];
+
+    AF_Blue_Stringset         bss = sc->blue_stringset;
     const AF_Blue_StringRec*  bs  = &af_blue_stringsets[bss];
 
 #ifdef FT_DEBUG_LEVEL_TRACE
@@ -1667,7 +1671,7 @@
 
     FT_TRACE5(( "cjk %s edge hinting (script `%s')\n",
                 dim == AF_DIMENSION_VERT ? "horizontal" : "vertical",
-                af_script_names[hints->metrics->script_class->script] ));
+                af_script_names[hints->metrics->script] ));
 
     /* we begin by aligning all stems relative to the blue zone */
 

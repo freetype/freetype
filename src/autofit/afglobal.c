@@ -294,8 +294,8 @@
       if ( FT_ALLOC( metrics, writing_system_class->style_metrics_size ) )
         goto Exit;
 
-      metrics->script_class = script_class;
-      metrics->globals      = globals;
+      metrics->script  = script;
+      metrics->globals = globals;
 
       if ( writing_system_class->style_metrics_init )
       {
