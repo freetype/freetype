@@ -2,7 +2,7 @@
 /*                                                                         */
 /*  afcjk.h                                                                */
 /*                                                                         */
-/*    Auto-fitter hinting routines for CJK script (specification).         */
+/*    Auto-fitter hinting routines for CJK writing system (specification). */
 /*                                                                         */
 /*  Copyright 2006, 2007, 2011-2013 by                                     */
 /*  David Turner, Robert Wilhelm, and Werner Lemberg.                      */

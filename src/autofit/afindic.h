@@ -2,7 +2,8 @@
 /*                                                                         */
 /*  afindic.h                                                              */
 /*                                                                         */
-/*    Auto-fitter hinting routines for Indic scripts (specification).      */
+/*    Auto-fitter hinting routines for Indic writing system                */
+/*    (specification).                                                     */
 /*                                                                         */
 /*  Copyright 2007, 2012, 2013 by                                          */
 /*  Rahul Bhalerao <rahul.bhalerao@redhat.com>, <b.rahul.pm@gmail.com>.    */

@@ -2,7 +2,8 @@
 /*                                                                         */
 /*  aflatin2.h                                                             */
 /*                                                                         */
-/*    Auto-fitter hinting routines for latin script (specification).       */
+/*    Auto-fitter hinting routines for latin writing system                */
+/*    (specification).                                                     */
 /*                                                                         */
 /*  Copyright 2003-2007, 2012, 2013 by                                     */
 /*  David Turner, Robert Wilhelm, and Werner Lemberg.                      */
