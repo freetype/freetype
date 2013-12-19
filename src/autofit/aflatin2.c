@@ -2433,16 +2433,4 @@
   };
 
 
-  AF_DEFINE_SCRIPT_CLASS(
-    af_ltn2_script_class,
-
-    AF_SCRIPT_LTN2,
-    AF_BLUE_STRINGSET_LATN,
-    AF_WRITING_SYSTEM_LATIN2,
-
-    af_ltn2_uniranges,
-    'o'
-  )
-
-
 /* END */

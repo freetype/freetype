@@ -1,11 +1,10 @@
 /***************************************************************************/
 /*                                                                         */
-/*  afdummy.h                                                              */
+/*  afranges.h                                                             */
 /*                                                                         */
-/*    Auto-fitter dummy routines to be used if no hinting should be        */
-/*    performed (specification).                                           */
+/*    Auto-fitter Unicode script ranges (specification).                   */
 /*                                                                         */
-/*  Copyright 2003-2005, 2011, 2013 by                                     */
+/*  Copyright 2013 by                                                      */
 /*  David Turner, Robert Wilhelm, and Werner Lemberg.                      */
 /*                                                                         */
 /*  This file is part of the FreeType project, and may only be used,       */
@@ -17,26 +16,26 @@
 /***************************************************************************/
 
 
-#ifndef __AFDUMMY_H__
-#define __AFDUMMY_H__
+#ifndef __AFRANGES_H__
+#define __AFRANGES_H__
+
 
 #include "aftypes.h"
 
 
 FT_BEGIN_HEADER
 
- /*  A dummy writing system and script class used when no hinting should be
-  *  performed.
-  */
+#undef  SCRIPT
+#define SCRIPT( s, S, d, ss, ws, dc ) \
+          extern const AF_Script_UniRangeRec  af_ ## s ## _uniranges[];
 
-  AF_DECLARE_WRITING_SYSTEM_CLASS( af_dummy_writing_system_class )
+#include "afscript.h"
 
-/* */
+ /* */
 
 FT_END_HEADER
 
-
-#endif /* __AFDUMMY_H__ */
+#endif /* __AFRANGES_H__ */
 
 
 /* END */

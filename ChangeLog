@@ -1,3 +1,30 @@
+2013-12-19  Werner Lemberg  <wl@gnu.org>
+
+	[autofit] Factor scripts and uniranges out of writing system files.
+
+	* src/autofit/afranges.c, src/autofit/afranges.h: New files.
+
+	* src/autofit/afscript.h: Extend `SCRIPT' macro with more
+	parameters, taking data from the writing system files.
+
+	* src/autofit/aftypes.h: Updated.
+
+	* src/autofit/afglobal.c: Include `afranges.h'.
+	Load `afscript.h' to call AF_DEFINE_SCRIPT_CLASS.
+	* src/autofit/afglobal.c: Include `afranges.h'.
+	Load `afscript.h' to call AF_DECLARE_SCRIPT_CLASS.
+
+	* src/autofit/afcjk.c, src/autofit/afcjk.h: Updated.
+	* src/autofit/afdummy.c, src/autofit/afdummy.h: Updated.
+	* src/autofit/afindic.c, src/autofit/afindic.h: Updated.
+	* src/autofit/aflatin.c, src/autofit/aflatin.h: Updated.
+	* src/autofit/aflatn2.c, src/autofit/aflatn2.h: Updated.
+
+	* src/autofit/afpic.c: Updated.
+
+	* src/autofir/autofit.c: Include `afranges.c'.
+	* src/autofit/rules.mk (AUTOF_DRV_SRC): Add `afranges.c'.
+
 2013-12-18  Werner Lemberg  <wl@gnu.org>
 
 	[autofit] More code orthogonality.

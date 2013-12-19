@@ -112,23 +112,9 @@
     (AF_WritingSystem_ApplyHintsFunc)  af_indic_hints_apply
   )
 
-  /* XXX: this should probably fine tuned to differentiate better between */
-  /*      scripts...                                                      */
-
-  static const AF_Script_UniRangeRec  af_deva_uniranges[] =
-  {
-    AF_UNIRANGE_REC(  0x0900UL,  0x0DFFUL ),  /* Indic Range  */
-    AF_UNIRANGE_REC(  0x0F00UL,  0x0FFFUL ),  /* Tibetan      */
-    AF_UNIRANGE_REC(  0x1900UL,  0x194FUL ),  /* Limbu        */
-    AF_UNIRANGE_REC(  0x1B80UL,  0x1BBFUL ),  /* Sundanese    */
-    AF_UNIRANGE_REC(  0x1C80UL,  0x1CDFUL ),  /* Meetei Mayak */
-    AF_UNIRANGE_REC(  0xA800UL,  0xA82FUL ),  /* Syloti Nagri */
-    AF_UNIRANGE_REC( 0x11800UL, 0x118DFUL ),  /* Sharada      */
-    AF_UNIRANGE_REC(       0UL,       0UL )
-  };
-
 
 #else /* !AF_CONFIG_OPTION_INDIC */
+
 
   AF_DEFINE_WRITING_SYSTEM_CLASS(
     af_indic_writing_system_class,
@@ -146,24 +132,7 @@
   )
 
 
-  static const AF_Script_UniRangeRec  af_deva_uniranges[] =
-  {
-    AF_UNIRANGE_REC( 0UL, 0UL )
-  };
-
 #endif /* !AF_CONFIG_OPTION_INDIC */
-
-
-  AF_DEFINE_SCRIPT_CLASS(
-    af_deva_script_class,
-
-    AF_SCRIPT_DEVA,
-    (AF_Blue_Stringset)0, /* XXX */
-    AF_WRITING_SYSTEM_INDIC,
-
-    af_deva_uniranges,
-    'o' /* XXX */
-  )
 
 
 /* END */

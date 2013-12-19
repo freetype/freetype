@@ -17,6 +17,7 @@
 
 
 #include "afglobal.h"
+#include "afranges.h"
 
   /* get writing system specific header files */
 #undef  WRITING_SYSTEM
@@ -44,7 +45,20 @@
 
 
 #undef  SCRIPT
-#define SCRIPT( s, S, d )             \
+#define SCRIPT( s, S, d, ss, ws, dc )  \
+          AF_DEFINE_SCRIPT_CLASS(      \
+            af_ ## s ## _script_class, \
+            AF_SCRIPT_ ## S,           \
+            ss,                        \
+            ws,                        \
+            af_ ## s ## _uniranges,    \
+            dc )
+
+#include "afscript.h"
+
+
+#undef  SCRIPT
+#define SCRIPT( s, S, d, ss, ws, dc ) \
           &af_ ## s ## _script_class,
 
   FT_LOCAL_ARRAY_DEF( AF_ScriptClass )
@@ -62,7 +76,7 @@
 #ifdef FT_DEBUG_LEVEL_TRACE
 
 #undef  SCRIPT
-#define SCRIPT( s, S, d )  #s,
+#define SCRIPT( s, S, d, ss, ws, dc )  #s,
 
   FT_LOCAL_ARRAY_DEF( char* )
   af_script_names[] =

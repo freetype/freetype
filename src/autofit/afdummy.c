@@ -68,16 +68,4 @@
   )
 
 
-  AF_DEFINE_SCRIPT_CLASS(
-    af_none_script_class,
-
-    AF_SCRIPT_NONE,
-    (AF_Blue_Stringset)0,
-    AF_WRITING_SYSTEM_DUMMY,
-
-    NULL,
-    '\0'
-  )
-
-
 /* END */

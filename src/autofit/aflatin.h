@@ -30,17 +30,6 @@ FT_BEGIN_HEADER
   AF_DECLARE_WRITING_SYSTEM_CLASS( af_latin_writing_system_class )
 
 
-  /* the latin-specific script classes */
-
-  AF_DECLARE_SCRIPT_CLASS( af_cyrl_script_class )
-  AF_DECLARE_SCRIPT_CLASS( af_grek_script_class )
-  AF_DECLARE_SCRIPT_CLASS( af_latn_script_class )
-  AF_DECLARE_SCRIPT_CLASS( af_hebr_script_class )
-#if 0
-  AF_DECLARE_SCRIPT_CLASS( af_armn_script_class )
-#endif
-
-
   /* constants are given with units_per_em == 2048 in mind */
 #define AF_LATIN_CONSTANT( metrics, c )                                      \
   ( ( (c) * (FT_Long)( (AF_LatinMetrics)(metrics) )->units_per_em ) / 2048 )
