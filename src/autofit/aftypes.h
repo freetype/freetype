@@ -513,13 +513,13 @@ extern void*  _af_debug_hints;
 
 #define AF_DEFINE_SCRIPT_CLASS(                            \
           script_class,                                    \
-          script,                                          \
+          script_,                                         \
           ranges,                                          \
           std_char )                                       \
   FT_LOCAL_DEF( void )                                     \
   FT_Init_Class_ ## script_class( AF_ScriptClassRec*  ac ) \
   {                                                        \
-    ac->script            = script;                        \
+    ac->script            = script_;                       \
     ac->script_uni_ranges = ranges;                        \
     ac->standard_char     = std_char;                      \
   }
@@ -531,17 +531,17 @@ extern void*  _af_debug_hints;
 
 #define AF_DEFINE_STYLE_CLASS(                           \
           style_class,                                   \
-          style,                                         \
-          writing_system,                                \
-          script,                                        \
-          blue_stringset )                               \
+          style_,                                        \
+          writing_system_,                               \
+          script_,                                       \
+          blue_stringset_ )                              \
   FT_LOCAL_DEF( void )                                   \
   FT_Init_Class_ ## style_class( AF_StyleClassRec*  ac ) \
   {                                                      \
-    ac->style          = style;                          \
-    ac->writing_system = writing_system;                 \
-    ac->script         = script;                         \
-    ac->blue_stringset = blue_stringset;                 \
+    ac->style          = style_;                         \
+    ac->writing_system = writing_system_;                \
+    ac->script         = script_;                        \
+    ac->blue_stringset = blue_stringset_;                \
   }
 
 #endif /* FT_CONFIG_OPTION_PIC */

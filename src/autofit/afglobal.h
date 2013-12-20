@@ -31,6 +31,7 @@ FT_BEGIN_HEADER
   FT_LOCAL_ARRAY( AF_WritingSystemClass )
   af_writing_system_classes[];
 
+
 #undef  SCRIPT
 #define SCRIPT( s, S, d, dc )                                  \
           AF_DECLARE_SCRIPT_CLASS( af_ ## s ## _script_class )

@@ -92,6 +92,10 @@
       AF_CJKMetricsRec  dummy[1];
       AF_Scaler         scaler = &dummy->root.scaler;
 
+#ifdef FT_CONFIG_OPTION_PIC
+      AF_FaceGlobals  globals = metrics->root.globals;
+#endif
+
       AF_StyleClass   style_class  = metrics->root.style_class;
       AF_ScriptClass  script_class = AF_SCRIPT_CLASSES_GET
                                        [style_class->script];

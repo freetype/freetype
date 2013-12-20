@@ -1,5 +1,23 @@
 2013-12-20  Werner Lemberg  <wl@gnu.org>
 
+	[autofit] Fix PIC compilation.
+
+	* src/autofit/afcjk.c (af_cjk_metrics_init_widths),
+	src/autofit/aflatin.c (af_latin_metrics_init_widths)
+	[FT_CONFIG_OPTION_PIC]: Declare `globals'.
+
+	* src/autofit/afglobal.c: Always call AF_DEFINE_SCRIPT_CLASS, and
+	AF_DEFINE_STYLE_CLASS.
+
+	* src/autofit/afpic.c: Include `afglobal.h'.
+	(autofit_module_class_pic_init): Typo.
+
+	* src/autofit/aftypes.h (AF_DEFINE_SCRIPT_CLASS,
+	AF_DEFINE_STYLE_CLASS): Don't use the same identifier for macro
+	parameter and structure member.
+
+2013-12-20  Werner Lemberg  <wl@gnu.org>
+
 	[autofit] Introduce `styles'.
 
 	This is the new top-level structure for handling glyph input data;

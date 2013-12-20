@@ -28,6 +28,29 @@
 #include "afpic.h"
 
 
+#undef  SCRIPT
+#define SCRIPT( s, S, d, dc )          \
+          AF_DEFINE_SCRIPT_CLASS(      \
+            af_ ## s ## _script_class, \
+            AF_SCRIPT_ ## S,           \
+            af_ ## s ## _uniranges,    \
+            dc )
+
+#include "afscript.h"
+
+
+#undef  STYLE
+#define STYLE( s, S, d, ws, sc, ss )  \
+          AF_DEFINE_STYLE_CLASS(      \
+            af_ ## s ## _style_class, \
+            AF_STYLE_ ## S,           \
+            ws,                       \
+            sc,                       \
+            ss )
+
+#include "afstyles.h"
+
+
 #ifndef FT_CONFIG_OPTION_PIC
 
 #undef  WRITING_SYSTEM
@@ -45,17 +68,6 @@
 
 
 #undef  SCRIPT
-#define SCRIPT( s, S, d, dc )          \
-          AF_DEFINE_SCRIPT_CLASS(      \
-            af_ ## s ## _script_class, \
-            AF_SCRIPT_ ## S,           \
-            af_ ## s ## _uniranges,    \
-            dc )
-
-#include "afscript.h"
-
-
-#undef  SCRIPT
 #define SCRIPT( s, S, d, dc )         \
           &af_ ## s ## _script_class,
 
@@ -67,18 +79,6 @@
 
     NULL  /* do not remove */
   };
-
-
-#undef  STYLE
-#define STYLE( s, S, d, ws, sc, ss )  \
-          AF_DEFINE_STYLE_CLASS(      \
-            af_ ## s ## _style_class, \
-            AF_STYLE_ ## S,           \
-            ws,                       \
-            sc,                       \
-            ss )
-
-#include "afstyles.h"
 
 
 #undef  STYLE

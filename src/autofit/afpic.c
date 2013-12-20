@@ -20,6 +20,7 @@
 #include FT_FREETYPE_H
 #include FT_INTERNAL_OBJECTS_H
 #include "afpic.h"
+#include "afglobal.h"
 #include "aferrors.h"
 
 
@@ -129,7 +130,7 @@
 #include "afscript.h"
 
 #undef  STYLE
-#define STYLE( s, S, d, ws, sc, ss )                \
+#define STYLE( s, S, d, ws, sc, bss )               \
         FT_Init_Class_af_ ## s ## _style_class(     \
           &container->af_style_classes_rec[ss++] );
 
