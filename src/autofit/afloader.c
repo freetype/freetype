@@ -185,10 +185,9 @@
 #ifdef FT_CONFIG_OPTION_PIC
         AF_FaceGlobals         globals = loader->globals;
 #endif
-        AF_ScriptClass         script_class =
-          AF_SCRIPT_CLASSES_GET[metrics->script];
+        AF_StyleClass          style_class = metrics->style_class;
         AF_WritingSystemClass  writing_system_class =
-          AF_WRITING_SYSTEM_CLASSES_GET[script_class->writing_system];
+          AF_WRITING_SYSTEM_CLASSES_GET[style_class->writing_system];
 
 
         if ( writing_system_class->style_hints_apply )
@@ -531,13 +530,13 @@
     if ( !error )
     {
       AF_StyleMetrics  metrics;
-      FT_UInt          options = AF_SCRIPT_NONE;
+      FT_UInt          options = AF_STYLE_NONE_DEFAULT;
 
 
 #ifdef FT_OPTION_AUTOFIT2
       /* XXX: undocumented hook to activate the latin2 writing system */
       if ( load_flags & ( 1UL << 20 ) )
-        options = AF_SCRIPT_LTN2;
+        options = AF_STYLE_LTN2_DEFAULT;
 #endif
 
       error = af_face_globals_get_metrics( loader->globals, gindex,
@@ -547,10 +546,9 @@
 #ifdef FT_CONFIG_OPTION_PIC
         AF_FaceGlobals         globals = loader->globals;
 #endif
-        AF_ScriptClass         script_class =
-          AF_SCRIPT_CLASSES_GET[metrics->script];
+        AF_StyleClass          style_class = metrics->style_class;
         AF_WritingSystemClass  writing_system_class =
-          AF_WRITING_SYSTEM_CLASSES_GET[script_class->writing_system];
+          AF_WRITING_SYSTEM_CLASSES_GET[style_class->writing_system];
 
 
         loader->metrics = metrics;

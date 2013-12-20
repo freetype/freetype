@@ -44,6 +44,7 @@ AUTOF_DRV_SRC := $(AUTOF_DIR)/afangles.c \
 AUTOF_DRV_H := $(AUTOF_DRV_SRC:%c=%h)  \
                $(AUTOF_DIR)/aferrors.h \
                $(AUTOF_DIR)/afscript.h \
+               $(AUTOF_DIR)/afstyles.h \
                $(AUTOF_DIR)/aftypes.h  \
                $(AUTOF_DIR)/afwrtsys.h
 

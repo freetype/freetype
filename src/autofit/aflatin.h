@@ -46,8 +46,8 @@ FT_BEGIN_HEADER
 
   /*
    *  The following declarations could be embedded in the file `aflatin.c';
-   *  they have been made semi-public to allow alternate script hinters to
-   *  re-use some of them.
+   *  they have been made semi-public to allow alternate writing system
+   *  hinters to re-use some of them.
    */
 
 
@@ -161,7 +161,7 @@ FT_BEGIN_HEADER
 
   /*
    *  The next functions shouldn't normally be exported.  However, other
-   *  scripts might like to use these functions as-is.
+   *  writing systems might like to use these functions as-is.
    */
   FT_LOCAL( FT_Error )
   af_latin_hints_compute_segments( AF_GlyphHints  hints,

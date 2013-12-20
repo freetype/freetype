@@ -45,12 +45,10 @@
 
 
 #undef  SCRIPT
-#define SCRIPT( s, S, d, ss, ws, dc )  \
+#define SCRIPT( s, S, d, dc )          \
           AF_DEFINE_SCRIPT_CLASS(      \
             af_ ## s ## _script_class, \
             AF_SCRIPT_ ## S,           \
-            ss,                        \
-            ws,                        \
             af_ ## s ## _uniranges,    \
             dc )
 
@@ -58,7 +56,7 @@
 
 
 #undef  SCRIPT
-#define SCRIPT( s, S, d, ss, ws, dc ) \
+#define SCRIPT( s, S, d, dc )         \
           &af_ ## s ## _script_class,
 
   FT_LOCAL_ARRAY_DEF( AF_ScriptClass )
@@ -70,29 +68,55 @@
     NULL  /* do not remove */
   };
 
+
+#undef  STYLE
+#define STYLE( s, S, d, ws, sc, ss )  \
+          AF_DEFINE_STYLE_CLASS(      \
+            af_ ## s ## _style_class, \
+            AF_STYLE_ ## S,           \
+            ws,                       \
+            sc,                       \
+            ss )
+
+#include "afstyles.h"
+
+
+#undef  STYLE
+#define STYLE( s, S, d, ws, sc, ss ) \
+          &af_ ## s ## _style_class,
+
+  FT_LOCAL_ARRAY_DEF( AF_StyleClass )
+  af_style_classes[] =
+  {
+
+#include "afstyles.h"
+
+    NULL  /* do not remove */
+  };
+
 #endif /* !FT_CONFIG_OPTION_PIC */
 
 
 #ifdef FT_DEBUG_LEVEL_TRACE
 
-#undef  SCRIPT
-#define SCRIPT( s, S, d, ss, ws, dc )  #s,
+#undef  STYLE
+#define STYLE( s, S, d, ws, sc, ss )  #s,
 
   FT_LOCAL_ARRAY_DEF( char* )
-  af_script_names[] =
+  af_style_names[] =
   {
 
-#include "afscript.h"
+#include "afstyles.h"
 
   };
 
 #endif /* FT_DEBUG_LEVEL_TRACE */
 
 
-  /* Compute the script index of each glyph within a given face. */
+  /* Compute the style index of each glyph within a given face. */
 
   static FT_Error
-  af_face_globals_compute_script_coverage( AF_FaceGlobals  globals )
+  af_face_globals_compute_style_coverage( AF_FaceGlobals  globals )
   {
     FT_Error    error;
     FT_Face     face        = globals->face;
@@ -102,9 +126,9 @@
     FT_UInt     i;
 
 
-    /* the value AF_SCRIPT_UNASSIGNED means `uncovered glyph' */
+    /* the value AF_STYLE_UNASSIGNED means `uncovered glyph' */
     FT_MEM_SET( globals->glyph_styles,
-                AF_SCRIPT_UNASSIGNED,
+                AF_STYLE_UNASSIGNED,
                 globals->glyph_count );
 
     error = FT_Select_Charmap( face, FT_ENCODING_UNICODE );
@@ -118,10 +142,13 @@
       goto Exit;
     }
 
-    /* scan each script in a Unicode charmap */
-    for ( ss = 0; AF_SCRIPT_CLASSES_GET[ss]; ss++ )
+    /* scan each style in a Unicode charmap */
+    for ( ss = 0; AF_STYLE_CLASSES_GET[ss]; ss++ )
     {
-      AF_ScriptClass      script_class = AF_SCRIPT_CLASSES_GET[ss];
+      AF_StyleClass       style_class =
+                            AF_STYLE_CLASSES_GET[ss];
+      AF_ScriptClass      script_class =
+                            AF_SCRIPT_CLASSES_GET[style_class->script];
       AF_Script_UniRange  range;
 
 
@@ -130,7 +157,7 @@
 
       /*
        *  Scan all Unicode points in the range and set the corresponding
-       *  glyph script index.
+       *  glyph style index.
        */
       for ( range = script_class->script_uni_ranges;
             range->first != 0;
@@ -144,7 +171,7 @@
 
         if ( gindex != 0                             &&
              gindex < (FT_ULong)globals->glyph_count &&
-             gstyles[gindex] == AF_SCRIPT_UNASSIGNED )
+             gstyles[gindex] == AF_STYLE_UNASSIGNED  )
           gstyles[gindex] = (FT_Byte)ss;
 
         for (;;)
@@ -155,7 +182,7 @@
             break;
 
           if ( gindex < (FT_ULong)globals->glyph_count &&
-               gstyles[gindex] == AF_SCRIPT_UNASSIGNED )
+               gstyles[gindex] == AF_STYLE_UNASSIGNED  )
             gstyles[gindex] = (FT_Byte)ss;
         }
       }
@@ -176,16 +203,16 @@
      *  By default, all uncovered glyphs are set to the fallback script.
      *  XXX: Shouldn't we disable hinting or do something similar?
      */
-    if ( globals->module->fallback_script != AF_SCRIPT_UNASSIGNED )
+    if ( globals->module->fallback_script != AF_STYLE_UNASSIGNED )
     {
       FT_Long  nn;
 
 
       for ( nn = 0; nn < globals->glyph_count; nn++ )
       {
-        if ( ( gstyles[nn] & ~AF_DIGIT ) == AF_SCRIPT_UNASSIGNED )
+        if ( ( gstyles[nn] & ~AF_DIGIT ) == AF_STYLE_UNASSIGNED )
         {
-          gstyles[nn] &= ~AF_SCRIPT_UNASSIGNED;
+          gstyles[nn] &= ~AF_STYLE_UNASSIGNED;
           gstyles[nn] |= globals->module->fallback_script;
         }
       }
@@ -217,7 +244,7 @@
     globals->glyph_styles = (FT_Byte*)( globals + 1 );
     globals->module       = module;
 
-    error = af_face_globals_compute_script_coverage( globals );
+    error = af_face_globals_compute_style_coverage( globals );
     if ( error )
     {
       af_face_globals_free( globals );
@@ -241,14 +268,14 @@
       FT_UInt    nn;
 
 
-      for ( nn = 0; nn < AF_SCRIPT_MAX; nn++ )
+      for ( nn = 0; nn < AF_STYLE_MAX; nn++ )
       {
         if ( globals->metrics[nn] )
         {
-          AF_ScriptClass         script_class =
-            AF_SCRIPT_CLASSES_GET[nn];
+          AF_StyleClass          style_class =
+            AF_STYLE_CLASSES_GET[nn];
           AF_WritingSystemClass  writing_system_class =
-            AF_WRITING_SYSTEM_CLASSES_GET[script_class->writing_system];
+            AF_WRITING_SYSTEM_CLASSES_GET[style_class->writing_system];
 
 
           if ( writing_system_class->style_metrics_done )
@@ -275,9 +302,9 @@
   {
     AF_StyleMetrics  metrics = NULL;
 
-    AF_Script              script = (AF_Script)( options & 15 );
+    AF_Style               style = (AF_Style)( options & 15 );
     AF_WritingSystemClass  writing_system_class;
-    AF_ScriptClass         script_class;
+    AF_StyleClass          style_class;
 
     FT_Error  error = FT_Err_Ok;
 
@@ -288,17 +315,17 @@
       goto Exit;
     }
 
-    /* if we have a forced script (via `options'), use it, */
-    /* otherwise look into `glyph_styles' array            */
-    if ( script == AF_SCRIPT_NONE || script + 1 >= AF_SCRIPT_MAX )
-      script = (AF_Script)( globals->glyph_styles[gindex] &
-                            AF_SCRIPT_UNASSIGNED          );
+    /* if we have a forced style (via `options'), use it, */
+    /* otherwise look into `glyph_styles' array           */
+    if ( style == AF_STYLE_NONE_DEFAULT || style + 1 >= AF_STYLE_MAX )
+      style = (AF_Style)( globals->glyph_styles[gindex] &
+                          AF_STYLE_UNASSIGNED           );
 
-    script_class         = AF_SCRIPT_CLASSES_GET[script];
+    style_class          = AF_STYLE_CLASSES_GET[style];
     writing_system_class = AF_WRITING_SYSTEM_CLASSES_GET
-                             [script_class->writing_system];
+                             [style_class->writing_system];
 
-    metrics = globals->metrics[script];
+    metrics = globals->metrics[style];
     if ( metrics == NULL )
     {
       /* create the global metrics object if necessary */
@@ -308,8 +335,8 @@
       if ( FT_ALLOC( metrics, writing_system_class->style_metrics_size ) )
         goto Exit;
 
-      metrics->script  = script;
-      metrics->globals = globals;
+      metrics->style_class = style_class;
+      metrics->globals     = globals;
 
       if ( writing_system_class->style_metrics_init )
       {
@@ -325,7 +352,7 @@
         }
       }
 
-      globals->metrics[script] = metrics;
+      globals->metrics[style] = metrics;
     }
 
   Exit:

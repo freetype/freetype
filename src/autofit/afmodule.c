@@ -60,8 +60,8 @@
     globals = (AF_FaceGlobals)face->autohint.data;
     if ( !globals )
     {
-      /* trigger computation of the global script data */
-      /* in case it hasn't been done yet               */
+      /* trigger computation of the global style data */
+      /* in case it hasn't been done yet              */
       error = af_face_globals_new( face, &globals, module );
       if ( !error )
       {

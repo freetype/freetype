@@ -75,10 +75,10 @@
 
 
     FT_TRACE5(( "\n"
-                "cjk standard widths computation (script `%s')\n"
+                "cjk standard widths computation (style `%s')\n"
                 "===============================================\n"
                 "\n",
-                af_script_names[metrics->root.script] ));
+                af_style_names[metrics->root.style_class->style] ));
 
     af_glyph_hints_init( hints, face->memory );
 
@@ -92,8 +92,9 @@
       AF_CJKMetricsRec  dummy[1];
       AF_Scaler         scaler = &dummy->root.scaler;
 
-      AF_ScriptClass    script_class =
-                          AF_SCRIPT_CLASSES_GET[metrics->root.script];
+      AF_StyleClass   style_class  = metrics->root.style_class;
+      AF_ScriptClass  script_class = AF_SCRIPT_CLASSES_GET
+                                       [style_class->script];
 
 
       glyph_index = FT_Get_Char_Index( face, script_class->standard_char );
@@ -228,7 +229,7 @@
     AF_CJKAxis  axis;
     FT_Outline  outline;
 
-    AF_ScriptClass  sc = AF_SCRIPT_CLASSES_GET[metrics->root.script];
+    AF_StyleClass  sc = metrics->root.style_class;
 
     AF_Blue_Stringset         bss = sc->blue_stringset;
     const AF_Blue_StringRec*  bs  = &af_blue_stringsets[bss];
@@ -250,9 +251,9 @@
 #endif
 
 
-    /* we walk over the blue character strings as specified in the    */
-    /* script's entry in the `af_blue_stringset' array, computing its */
-    /* extremum points (depending on the string properties)           */
+    /* we walk over the blue character strings as specified in the   */
+    /* style's entry in the `af_blue_stringset' array, computing its */
+    /* extremum points (depending on the string properties)          */
 
     FT_TRACE5(( "cjk blue zones computation\n"
                 "==========================\n"
@@ -1669,9 +1670,9 @@
 #endif
 
 
-    FT_TRACE5(( "cjk %s edge hinting (script `%s')\n",
+    FT_TRACE5(( "cjk %s edge hinting (style `%s')\n",
                 dim == AF_DIMENSION_VERT ? "horizontal" : "vertical",
-                af_script_names[hints->metrics->script] ));
+                af_style_names[hints->metrics->style_class->style] ));
 
     /* we begin by aligning all stems relative to the blue zone */
 

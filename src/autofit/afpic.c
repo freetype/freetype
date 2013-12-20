@@ -42,7 +42,7 @@
     FT_AutoHinter_InterfaceRec*  clazz );
 
 
-  /* forward declaration of PIC init functions from script classes */
+  /* forward declaration of PIC init functions from writing system classes */
 #undef  WRITING_SYSTEM
 #define WRITING_SYSTEM( ws, WS )  /* empty */
 
@@ -107,6 +107,11 @@
         &container->af_script_classes_rec[ss];
     container->af_script_classes[AF_SCRIPT_MAX - 1] = NULL;
 
+    for ( ss = 0; ss < AF_STYLE_MAX - 1; ss++ )
+      container->af_style_classes[ss] =
+        &container->af_style_classes_rec[ss];
+    container->af_style_classes[AF_STYLE_MAX - 1] = NULL;
+
 #undef  WRITING_SYSTEM
 #define WRITING_SYSTEM( ws, WS )                             \
         FT_Init_Class_af_ ## ws ## _writing_system_class(    \
@@ -116,12 +121,20 @@
 #include "afwrtsys.h"
 
 #undef  SCRIPT
-#define SCRIPT( s, S, d, ss, ws, dc )                \
+#define SCRIPT( s, S, d, dc )                        \
         FT_Init_Class_af_ ## s ## _script_class(     \
           &container->af_script_classes_rec[ss++] );
 
     ss = 0;
 #include "afscript.h"
+
+#undef  STYLE
+#define STYLE( s, S, d, ws, sc, ss )                \
+        FT_Init_Class_af_ ## s ## _style_class(     \
+          &container->af_style_classes_rec[ss++] );
+
+    ss = 0;
+#include "afstyles.h"
 
     FT_Init_Class_af_autofitter_interface(
       library, &container->af_autofitter_interface );

@@ -32,6 +32,7 @@ FT_BEGIN_HEADER
 
 #define AF_WRITING_SYSTEM_CLASSES_GET  af_writing_system_classes
 #define AF_SCRIPT_CLASSES_GET          af_script_classes
+#define AF_STYLE_CLASSES_GET           af_style_classes
 #define AF_INTERFACE_GET               af_autofitter_interface
 
 #else /* FT_CONFIG_OPTION_PIC */
@@ -57,6 +58,11 @@ FT_BEGIN_HEADER
     AF_ScriptClassRec           af_script_classes_rec
                                   [AF_SCRIPT_MAX - 1];
 
+    AF_StyleClass               af_style_classes
+                                  [AF_STYLE_MAX];
+    AF_StyleClassRec            af_style_classes_rec
+                                  [AF_STYLE_MAX - 1];
+
     FT_AutoHinter_InterfaceRec  af_autofitter_interface;
 
   } AFModulePIC;
@@ -74,6 +80,8 @@ FT_BEGIN_HEADER
           ( GET_PIC( FT_FACE_LIBRARY( globals->face ) )->af_writing_system_classes )
 #define AF_SCRIPT_CLASSES_GET  \
           ( GET_PIC( FT_FACE_LIBRARY( globals->face ) )->af_script_classes )
+#define AF_STYLE_CLASSES_GET  \
+          ( GET_PIC( FT_FACE_LIBRARY( globals->face ) )->af_style_classes )
 #define AF_INTERFACE_GET  \
           ( GET_PIC( library )->af_autofitter_interface )
 

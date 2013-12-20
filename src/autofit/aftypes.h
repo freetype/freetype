@@ -20,7 +20,7 @@
    *
    *  The auto-fitter is a complete rewrite of the old auto-hinter.
    *  Its main feature is the ability to differentiate between different
-   *  writing systems in order to apply script-specific rules.
+   *  writing systems and scripts in order to apply specific rules.
    *
    *  The code has also been compartmentized into several entities that
    *  should make algorithmic experimentation easier than with the old
@@ -200,7 +200,7 @@ extern void*  _af_debug_hints;
   typedef struct AF_StyleMetricsRec_*  AF_StyleMetrics;
 
   /*  This function parses an FT_Face to compute global metrics for
-   *  a specific script.
+   *  a specific style.
    */
   typedef FT_Error
   (*AF_WritingSystem_InitMetricsFunc)( AF_StyleMetrics  metrics,
@@ -296,14 +296,14 @@ extern void*  _af_debug_hints;
 
   /*
    *  Each script is associated with a set of Unicode ranges that gets used
-   *  to test whether the font face supports the script.  It also references
-   *  the writing system it belongs to.
+   *  to test whether the font face supports the script.
    *
-   *  We use four-letter script tags from the OpenType specification.
+   *  We use four-letter script tags from the OpenType specification,
+   *  extended by `NONE', which indicates `no script'.
    */
 
 #undef  SCRIPT
-#define SCRIPT( s, S, d, ss, ws, dc ) \
+#define SCRIPT( s, S, d, dc ) \
           AF_SCRIPT_ ## S,
 
   /* The list of known scripts. */
@@ -331,9 +331,7 @@ extern void*  _af_debug_hints;
 
   typedef struct  AF_ScriptClassRec_
   {
-    AF_Script          script;
-    AF_Blue_Stringset  blue_stringset;
-    AF_WritingSystem   writing_system;
+    AF_Script  script;
 
     AF_Script_UniRange  script_uni_ranges; /* last must be { 0, 0 }        */
     FT_UInt32           standard_char;     /* for default width and height */
@@ -341,6 +339,47 @@ extern void*  _af_debug_hints;
   } AF_ScriptClassRec;
 
   typedef const AF_ScriptClassRec*  AF_ScriptClass;
+
+
+  /*************************************************************************/
+  /*************************************************************************/
+  /*****                                                               *****/
+  /*****                         S T Y L E S                           *****/
+  /*****                                                               *****/
+  /*************************************************************************/
+  /*************************************************************************/
+
+  /*
+   *  The topmost structure for modelling the auto-hinter glyph input data
+   *  is a `style class', grouping everything together.
+   */
+
+#undef  STYLE
+#define STYLE( s, S, d, ws, sc, ss ) \
+          AF_STYLE_ ## S,
+
+  /* The list of known styles. */
+  typedef enum  AF_Style_
+  {
+
+#include "afstyles.h"
+
+    AF_STYLE_MAX   /* do not remove */
+
+  } AF_Style;
+
+
+  typedef struct  AF_StyleClassRec_
+  {
+    AF_Style  style;
+
+    AF_WritingSystem   writing_system;
+    AF_Script          script;
+    AF_Blue_Stringset  blue_stringset;
+
+  } AF_StyleClassRec;
+
+  typedef const AF_StyleClassRec*  AF_StyleClass;
 
 
   /*************************************************************************/
@@ -359,7 +398,7 @@ extern void*  _af_debug_hints;
 
   typedef struct  AF_StyleMetricsRec_
   {
-    AF_Script       script;
+    AF_StyleClass   style_class;
     AF_ScalerRec    scaler;
     FT_Bool         digits_have_same_width;
 
@@ -406,19 +445,35 @@ extern void*  _af_debug_hints;
 
 #define AF_DEFINE_SCRIPT_CLASS(           \
           script_class,                   \
-          script_,                        \
-          blue_stringset_,                \
-          writing_system_,                \
+          script,                         \
           ranges,                         \
           std_char )                      \
   FT_CALLBACK_TABLE_DEF                   \
   const AF_ScriptClassRec  script_class = \
   {                                       \
-    script_,                              \
-    blue_stringset_,                      \
-    writing_system_,                      \
+    script,                               \
     ranges,                               \
     std_char                              \
+  };
+
+
+#define AF_DECLARE_STYLE_CLASS( style_class ) \
+  FT_CALLBACK_TABLE const AF_StyleClassRec    \
+  style_class;
+
+#define AF_DEFINE_STYLE_CLASS(          \
+          style_class,                  \
+          style,                        \
+          writing_system,               \
+          script,                       \
+          blue_stringset )              \
+  FT_CALLBACK_TABLE_DEF                 \
+  const AF_StyleClassRec  style_class = \
+  {                                     \
+    style,                              \
+    writing_system,                     \
+    script,                             \
+    blue_stringset                      \
   };
 
 #else /* FT_CONFIG_OPTION_PIC */
@@ -458,19 +513,35 @@ extern void*  _af_debug_hints;
 
 #define AF_DEFINE_SCRIPT_CLASS(                            \
           script_class,                                    \
-          script_,                                         \
-          blue_string_set_,                                \
-          writing_system_,                                 \
+          script,                                          \
           ranges,                                          \
           std_char )                                       \
   FT_LOCAL_DEF( void )                                     \
   FT_Init_Class_ ## script_class( AF_ScriptClassRec*  ac ) \
   {                                                        \
-    ac->script            = script_;                       \
-    ac->blue_stringset    = blue_stringset_;               \
-    ac->writing_system    = writing_system_;               \
+    ac->script            = script;                        \
     ac->script_uni_ranges = ranges;                        \
     ac->standard_char     = std_char;                      \
+  }
+
+
+#define AF_DECLARE_STYLE_CLASS( style_class )             \
+  FT_LOCAL( void )                                        \
+  FT_Init_Class_ ## style_class( AF_StyleClassRec*  ac );
+
+#define AF_DEFINE_STYLE_CLASS(                           \
+          style_class,                                   \
+          style,                                         \
+          writing_system,                                \
+          script,                                        \
+          blue_stringset )                               \
+  FT_LOCAL_DEF( void )                                   \
+  FT_Init_Class_ ## style_class( AF_StyleClassRec*  ac ) \
+  {                                                      \
+    ac->style          = style;                          \
+    ac->writing_system = writing_system;                 \
+    ac->script         = script;                         \
+    ac->blue_stringset = blue_stringset;                 \
   }
 
 #endif /* FT_CONFIG_OPTION_PIC */

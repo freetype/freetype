@@ -27,7 +27,7 @@ FT_BEGIN_HEADER
 
   /*
    *  The definition of outline glyph hints.  These are shared by all
-   *  script analysis routines (until now).
+   *  writing system analysis routines (until now).
    */
 
   typedef enum  AF_Dimension_
@@ -361,9 +361,9 @@ FT_BEGIN_HEADER
 
     AF_AxisHintsRec  axis[AF_DIMENSION_MAX];
 
-    FT_UInt32        scaler_flags;  /* copy of scaler flags     */
-    FT_UInt32        other_flags;   /* free for script-specific */
-                                    /* implementations          */
+    FT_UInt32        scaler_flags;  /* copy of scaler flags    */
+    FT_UInt32        other_flags;   /* free for style-specific */
+                                    /* implementations         */
     AF_StyleMetrics  metrics;
 
     FT_Pos           xmin_delta;    /* used for warping */

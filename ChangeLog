@@ -1,3 +1,63 @@
+2013-12-20  Werner Lemberg  <wl@gnu.org>
+
+	[autofit] Introduce `styles'.
+
+	This is the new top-level structure for handling glyph input data;
+	scripts are now defined separately.
+
+	* src/autofit/aftypes.h (SCRIPT): Updated.
+	(AF_ScriptClassRec): Move `blue_stringset' and `writing_system'
+	members to ...
+	(AF_Style_ClassRec): ... this new structure.
+	(AF_Style): New enumeration.
+	(AF_StyleMetricsRec): Replace `script' enumeration with
+	`style_class' pointer.
+	(AF_DEFINE_SCRIPT_CLASS, AF_DECLARE_SCRIPT_CLASS): Updated.
+	(AF_DEFINE_STYLE_CLASS, AF_DECLARE_STYLE_CLASS): New macros.
+
+	* src/autofit/afstyles.h: New file, using data from `afscript.h'.
+	* src/autofit/afscript.h: Updated.
+
+	* src/autofit/afcjk.c (af_cjk_metrics_init_widths,
+	af_cjk_metrics_init_blues, af_cjk_hint_edges): Updated.
+
+	* src/autofit/afglobal.c (SCRIPT): Updated.
+	(STYLE): Redefine macro to load `afstyles.h'.
+	(af_script_names) [FT_DEBUG_LEVEL_TRACE]: Replace with...
+	(af_style_names): ... this array.
+	(af_face_globals_compute_script_coverage): Renamed to...
+	(af_face_globals_compute_style_coverage): ... this.
+	Updated.
+	(af_face_globals_new, af_face_globals_free,
+	af_face_globals_get_metrics): Updated.
+
+	* src/autofit/afglobal.h (SCRIPT): Updated.
+	(STYLE): Redefine macro to load `afstyles.h'.
+	(AF_SCRIPT_FALLBACK): Update definition.  This will get more
+	refinements with later on.
+	(AF_SCRIPT_UNASSIGNED): Replace with...
+	(AF_STYLE_UNASSIGNED): ... this macro.
+	(AF_FaceGlobalsRec): Updated.
+
+	* src/autofit/aflatin.c (af_latin_metrics_init_widths,
+	af_latin_metrics_init_blues, af_latin_metrics_scale_dim,
+	af_latin_hint_edges): Updated.
+
+	* src/autofit/aflatin2.c (af_latin2_metrics_init_widths): Updated.
+	(af_ltn2_uniranges): Removed.
+
+	* src/autofit/afloader.c (af_loader_load_g, af_loader_load_glyph):
+	Updated.
+
+	* src/autofit/afpic.c (autofit_module_class_pic_init): Updated.
+	* src/autofit/afpic.h (AF_STYLE_CLASSES_GET): New macro.
+	(AFModulePIC): Add `af_style_classes' and `af_style_classes_rec'
+	members.
+
+	* src/autofit/afranges.h: Updated.
+
+	* src/autofit/rules.mk (AUTOF_DRV_H): Add `afstyles.h'.
+
 2013-12-19  Werner Lemberg  <wl@gnu.org>
 
 	[autofit] Factor scripts and uniranges out of writing system files.
