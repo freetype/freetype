@@ -1,3 +1,10 @@
+2013-12-21  Werner Lemberg  <wl@gnu.org>
+
+	[base] Add missing dependencies to Makefile.
+
+	* src/base/rules.mk (BASE_SRC): Add `basepic.c' and `ftpic.c'.
+	(BASE_H): Add `basepic.h'.
+
 2013-12-20  Werner Lemberg  <wl@gnu.org>
 
 	[autofit] Fix PIC compilation.
