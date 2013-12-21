@@ -98,20 +98,20 @@
 
     FT_Init_Class_af_service_properties( &container->af_service_properties );
 
-    for ( ss = 0; ss < AF_WRITING_SYSTEM_MAX - 1; ss++ )
+    for ( ss = 0; ss < AF_WRITING_SYSTEM_MAX; ss++ )
       container->af_writing_system_classes[ss] =
         &container->af_writing_system_classes_rec[ss];
-    container->af_writing_system_classes[AF_WRITING_SYSTEM_MAX - 1] = NULL;
+    container->af_writing_system_classes[AF_WRITING_SYSTEM_MAX] = NULL;
 
-    for ( ss = 0; ss < AF_SCRIPT_MAX - 1; ss++ )
+    for ( ss = 0; ss < AF_SCRIPT_MAX; ss++ )
       container->af_script_classes[ss] =
         &container->af_script_classes_rec[ss];
-    container->af_script_classes[AF_SCRIPT_MAX - 1] = NULL;
+    container->af_script_classes[AF_SCRIPT_MAX] = NULL;
 
-    for ( ss = 0; ss < AF_STYLE_MAX - 1; ss++ )
+    for ( ss = 0; ss < AF_STYLE_MAX; ss++ )
       container->af_style_classes[ss] =
         &container->af_style_classes_rec[ss];
-    container->af_style_classes[AF_STYLE_MAX - 1] = NULL;
+    container->af_style_classes[AF_STYLE_MAX] = NULL;
 
 #undef  WRITING_SYSTEM
 #define WRITING_SYSTEM( ws, WS )                             \
