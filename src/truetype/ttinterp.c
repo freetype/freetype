@@ -7169,7 +7169,7 @@
         org_dist = CUR_fast_dualproj( &vec );
       }
 
-      cur_dist = CUR_Func_project ( &CUR.zp2.cur[point], cur_base );
+      cur_dist = CUR_Func_project( &CUR.zp2.cur[point], cur_base );
 
       if ( org_dist )
       {
@@ -7180,14 +7180,20 @@
           /* This is the same as what MS does for the invalid case:  */
           /*                                                         */
           /*   delta = (Original_Pt - Original_RP1) -                */
-          /*           (Current_Pt - Current_RP1)                    */
+          /*           (Current_Pt - Current_RP1)         ;          */
           /*                                                         */
           /* In FreeType speak:                                      */
           /*                                                         */
-          /*   new_dist = cur_dist -                                 */
-          /*              org_dist - cur_dist;                       */
+          /*   delta = org_dist - cur_dist          .                */
+          /*                                                         */
+          /* We move `point' by `new_dist - cur_dist' after leaving  */
+          /* this block, thus we have                                */
+          /*                                                         */
+          /*   new_dist - cur_dist = delta                   ,       */
+          /*   new_dist - cur_dist = org_dist - cur_dist     ,       */
+          /*              new_dist = org_dist                .       */
 
-          new_dist = -org_dist;
+          new_dist = org_dist;
         }
       }
       else

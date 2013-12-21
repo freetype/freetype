@@ -1,5 +1,12 @@
 2013-12-21  Werner Lemberg  <wl@gnu.org>
 
+	Fix Savannah bug #40975 (sort of).
+
+	* src/truetype/ttinterp.c (Ins_IP): Fix sign typo to make FreeType
+	behave the same as the Windows TrueType engine for the invalid case.
+
+2013-12-21  Werner Lemberg  <wl@gnu.org>
+
 	[autofit] Make PIC mode work actually.
 
 	* src/autofit/afpic.h (AFModulePIC): Fix array sizes to fit the
