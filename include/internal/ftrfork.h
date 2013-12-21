@@ -4,7 +4,7 @@
 /*                                                                         */
 /*    Embedded resource forks accessor (specification).                    */
 /*                                                                         */
-/*  Copyright 2004, 2006, 2007, 2012 by                                    */
+/*  Copyright 2004, 2006, 2007, 2012, 2013 by                              */
 /*  Masatake YAMATO and Redhat K.K.                                        */
 /*                                                                         */
 /*  This file is part of the FreeType project, and may only be used,       */
@@ -94,7 +94,7 @@ FT_BEGIN_HEADER
   /* this array is a function in PIC mode, so no ; is needed in END */
 #define CONST_FT_RFORK_RULE_ARRAY_BEGIN( name, type )  \
           void                                         \
-          FT_Init_ ## name( type*  storage )           \
+          FT_Init_Table_ ## name( type*  storage )     \
           {                                            \
             type*  local = storage;                    \
                                                        \

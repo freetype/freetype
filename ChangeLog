@@ -1,5 +1,21 @@
 2013-12-21  Werner Lemberg  <wl@gnu.org>
 
+	Fix PIC linking.
+
+	* include/internal/ftrfork.h (CONST_FT_RFORK_RULE_ARRAY_BEGIN): Fix
+	generated function name.
+
+	* src/base/basepic.c (FT_Init_Table_raccess_guess_table): Rename
+	to ...
+	(FT_Init_Table_ft_raccess_guess_table): ... this so that the
+	function name correctly corresponds to what the macro framework
+	expects.
+
+	* src/psnames/rules.mk (PSNAMES_DRV_SRC_S): Use correct file name so
+	that PIC functions are compiled also.
+
+2013-12-21  Werner Lemberg  <wl@gnu.org>
+
 	[base] Add missing dependencies to Makefile.
 
 	* src/base/rules.mk (BASE_SRC): Add `basepic.c' and `ftpic.c'.
