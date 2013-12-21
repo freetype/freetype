@@ -33,7 +33,7 @@ FT_BEGIN_HEADER
 
 
 #undef  SCRIPT
-#define SCRIPT( s, S, d, dc )                                  \
+#define SCRIPT( s, S, d, h, dc )                               \
           AF_DECLARE_SCRIPT_CLASS( af_ ## s ## _script_class )
 
 #include "afscript.h"
@@ -43,7 +43,7 @@ FT_BEGIN_HEADER
 
 
 #undef  STYLE
-#define STYLE( s, S, d, ws, sc, ss )                         \
+#define STYLE( s, S, d, ws, sc, ss, c )                      \
           AF_DECLARE_STYLE_CLASS( af_ ## s ## _style_class )
 
 #include "afstyles.h"
@@ -63,11 +63,11 @@ FT_BEGIN_HEADER
    *  AF_ModuleRec) and face globals (in AF_FaceGlobalsRec).
    */
 
-  /* index of fallback script in `af_style_classes' */
+  /* index of fallback style in `af_style_classes' */
 #ifdef AF_CONFIG_OPTION_CJK
-#define AF_SCRIPT_FALLBACK  AF_STYLE_HANI_DEFAULT
+#define AF_STYLE_FALLBACK  AF_STYLE_HANI_DEFAULT
 #else
-#define AF_SCRIPT_FALLBACK  AF_STYLE_NONE_DEFAULT
+#define AF_STYLE_FALLBACK  AF_STYLE_NONE_DEFAULT
 #endif
   /* a bit mask indicating an uncovered glyph        */
 #define AF_STYLE_UNASSIGNED  0x7F

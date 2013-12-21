@@ -126,6 +126,15 @@ INCLUDES := $(subst /,$(COMPILER_SEP),$(OBJ_DIR) \
 
 INCLUDE_FLAGS := $(INCLUDES:%=$I%)
 
+ifdef DEVEL_DIR
+  # We assume that all library dependencies for FreeType are fulfilled for a
+  # development build, so we directly access the necessary include directory
+  # information using `pkg-config'.
+  INCLUDE_FLAGS += $(shell pkg-config --cflags bzip2 \
+                                               libpng \
+                                               harfbuzz )
+endif
+
 
 # C flags used for the compilation of an object file.  This must include at
 # least the paths for the `base' and `builds/<system>' directories;

@@ -92,8 +92,31 @@
     {
       FT_UInt*  fallback_script = (FT_UInt*)value;
 
+      FT_UInt  ss;
 
-      module->fallback_script = *fallback_script;
+
+      /* We translate the fallback script to a fallback style that uses */
+      /* `fallback-script' as its script and `AF_COVERAGE_NONE' as its  */
+      /* coverage value.                                                */
+      for ( ss = 0; AF_STYLE_CLASSES_GET[ss]; ss++ )
+      {
+        AF_StyleClass  style_class = AF_STYLE_CLASSES_GET[ss];
+
+
+        if ( style_class->script == *fallback_script      &&
+             style_class->coverage == AF_COVERAGE_DEFAULT )
+        {
+          module->fallback_style = ss;
+          break;
+        }
+      }
+
+      if ( !AF_STYLE_CLASSES_GET[ss] )
+      {
+        FT_TRACE0(( "af_property_set: Invalid value %d for property `%s'\n",
+                    fallback_script, property_name ));
+        return FT_THROW( Invalid_Argument );
+      }
 
       return error;
     }
@@ -121,9 +144,9 @@
                    const char*  property_name,
                    void*        value )
   {
-    FT_Error   error           = FT_Err_Ok;
-    AF_Module  module          = (AF_Module)ft_module;
-    FT_UInt    fallback_script = module->fallback_script;
+    FT_Error   error          = FT_Err_Ok;
+    AF_Module  module         = (AF_Module)ft_module;
+    FT_UInt    fallback_style = module->fallback_style;
 
 
     if ( !ft_strcmp( property_name, "glyph-to-script-map" ) )
@@ -142,8 +165,10 @@
     {
       FT_UInt*  val = (FT_UInt*)value;
 
+      AF_StyleClass  style_class = AF_STYLE_CLASSES_GET[fallback_style];
 
-      *val = fallback_script;
+
+      *val = style_class->script;
 
       return error;
     }
@@ -206,7 +231,7 @@
     AF_Module  module = (AF_Module)ft_module;
 
 
-    module->fallback_script = AF_SCRIPT_FALLBACK;
+    module->fallback_style = AF_STYLE_FALLBACK;
 
     return af_loader_init( module );
   }

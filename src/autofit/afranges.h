@@ -26,7 +26,7 @@
 FT_BEGIN_HEADER
 
 #undef  SCRIPT
-#define SCRIPT( s, S, d, dc )                                           \
+#define SCRIPT( s, S, d, h, dc )                                        \
           extern const AF_Script_UniRangeRec  af_ ## s ## _uniranges[];
 
 #include "afscript.h"

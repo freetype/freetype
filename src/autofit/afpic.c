@@ -122,7 +122,7 @@
 #include "afwrtsys.h"
 
 #undef  SCRIPT
-#define SCRIPT( s, S, d, dc )                        \
+#define SCRIPT( s, S, d, h, dc )                     \
         FT_Init_Class_af_ ## s ## _script_class(     \
           &container->af_script_classes_rec[ss++] );
 
@@ -130,7 +130,7 @@
 #include "afscript.h"
 
 #undef  STYLE
-#define STYLE( s, S, d, ws, sc, bss )               \
+#define STYLE( s, S, d, ws, sc, bss, c )            \
         FT_Init_Class_af_ ## s ## _style_class(     \
           &container->af_style_classes_rec[ss++] );
 

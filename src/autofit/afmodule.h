@@ -40,7 +40,7 @@ FT_BEGIN_HEADER
   {
     FT_ModuleRec  root;
 
-    FT_UInt       fallback_script;
+    FT_UInt       fallback_style;
 
     AF_LoaderRec  loader[1];
 

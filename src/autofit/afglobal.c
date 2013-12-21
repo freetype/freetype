@@ -18,6 +18,7 @@
 
 #include "afglobal.h"
 #include "afranges.h"
+#include "hbshim.h"
 
   /* get writing system specific header files */
 #undef  WRITING_SYSTEM
@@ -29,7 +30,7 @@
 
 
 #undef  SCRIPT
-#define SCRIPT( s, S, d, dc )          \
+#define SCRIPT( s, S, d, h, dc )       \
           AF_DEFINE_SCRIPT_CLASS(      \
             af_ ## s ## _script_class, \
             AF_SCRIPT_ ## S,           \
@@ -40,13 +41,14 @@
 
 
 #undef  STYLE
-#define STYLE( s, S, d, ws, sc, ss )  \
-          AF_DEFINE_STYLE_CLASS(      \
-            af_ ## s ## _style_class, \
-            AF_STYLE_ ## S,           \
-            ws,                       \
-            sc,                       \
-            ss )
+#define STYLE( s, S, d, ws, sc, ss, c )  \
+          AF_DEFINE_STYLE_CLASS(         \
+            af_ ## s ## _style_class,    \
+            AF_STYLE_ ## S,              \
+            ws,                          \
+            sc,                          \
+            ss,                          \
+            c )
 
 #include "afstyles.h"
 
@@ -68,7 +70,7 @@
 
 
 #undef  SCRIPT
-#define SCRIPT( s, S, d, dc )         \
+#define SCRIPT( s, S, d, h, dc )      \
           &af_ ## s ## _script_class,
 
   FT_LOCAL_ARRAY_DEF( AF_ScriptClass )
@@ -82,7 +84,7 @@
 
 
 #undef  STYLE
-#define STYLE( s, S, d, ws, sc, ss ) \
+#define STYLE( s, S, d, ws, sc, ss, c ) \
           &af_ ## s ## _style_class,
 
   FT_LOCAL_ARRAY_DEF( AF_StyleClass )
@@ -100,7 +102,7 @@
 #ifdef FT_DEBUG_LEVEL_TRACE
 
 #undef  STYLE
-#define STYLE( s, S, d, ws, sc, ss )  #s,
+#define STYLE( s, S, d, ws, sc, ss, c )  #s,
 
   FT_LOCAL_ARRAY_DEF( char* )
   af_style_names[] =
@@ -135,7 +137,7 @@
     if ( error )
     {
      /*
-      *  Ignore this error; we simply use the fallback script.
+      *  Ignore this error; we simply use the fallback style.
       *  XXX: Shouldn't we rather disable hinting?
       */
       error = FT_Err_Ok;
@@ -186,6 +188,11 @@
             gstyles[gindex] = (FT_Byte)ss;
         }
       }
+
+#ifdef FT_CONFIG_OPTION_USE_HARFBUZZ
+      /* get glyphs not directly addressable by cmap */
+      af_get_coverage( face, style_class, gstyles );
+#endif
     }
 
     /* mark ASCII digits */
@@ -200,10 +207,10 @@
 
   Exit:
     /*
-     *  By default, all uncovered glyphs are set to the fallback script.
+     *  By default, all uncovered glyphs are set to the fallback style.
      *  XXX: Shouldn't we disable hinting or do something similar?
      */
-    if ( globals->module->fallback_script != AF_STYLE_UNASSIGNED )
+    if ( globals->module->fallback_style != AF_STYLE_UNASSIGNED )
     {
       FT_Long  nn;
 
@@ -213,7 +220,7 @@
         if ( ( gstyles[nn] & ~AF_DIGIT ) == AF_STYLE_UNASSIGNED )
         {
           gstyles[nn] &= ~AF_STYLE_UNASSIGNED;
-          gstyles[nn] |= globals->module->fallback_script;
+          gstyles[nn] |= globals->module->fallback_style;
         }
       }
     }

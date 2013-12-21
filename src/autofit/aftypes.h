@@ -303,7 +303,7 @@ extern void*  _af_debug_hints;
    */
 
 #undef  SCRIPT
-#define SCRIPT( s, S, d, dc ) \
+#define SCRIPT( s, S, d, h, dc ) \
           AF_SCRIPT_ ## S,
 
   /* The list of known scripts. */
@@ -344,6 +344,82 @@ extern void*  _af_debug_hints;
   /*************************************************************************/
   /*************************************************************************/
   /*****                                                               *****/
+  /*****                      C O V E R A G E S                        *****/
+  /*****                                                               *****/
+  /*************************************************************************/
+  /*************************************************************************/
+
+  /*
+   *  Usually, a font contains more glyphs than can be addressed by its
+   *  character map.
+   *
+   *  In the PostScript font world, encoding vectors specific to a given
+   *  task are used to select such glyphs, and these glyphs can be often
+   *  recognized by having a suffix in its glyph names.  For example, a
+   *  superscript glyph `A' might be called `A.sup'.  Unfortunately, this
+   *  naming scheme is not standardized and thus unusable for us.
+   *
+   *  In the OpenType world, a better solution was invented, namely
+   *  `features', which cleanly separate a character's input encoding from
+   *  the corresponding glyph's appearance, and which don't use glyph names
+   *  at all.  For our purposes, and slightly generalized, an OpenType
+   *  feature is a name of a mapping that maps character codes to
+   *  non-standard glyph indices (features get used for other things also).
+   *  For example, the `sups' feature provides superscript glyphs, thus
+   *  mapping character codes like `A' or `B' to superscript glyph
+   *  representation forms.  How this mapping happens is completely
+   *  uninteresting to us.
+   *
+   *  For the auto-hinter, a `coverage' represents all glyphs of one or more
+   *  OpenType features collected in a set (as listed below) that can be
+   *  hinted together.  To continue the above example, superscript glyphs
+   *  must not be hinted together with normal glyphs because the blue zones
+   *  completely differ.  On the other hand, superscripts and subscripts
+   *  don't overlap, so they can be combined into a single set.
+   *
+   *  Note that FreeType itself doesn't compute coverages; it only provides
+   *  the glyphs addressable by the default Unicode character map.  Instead,
+   *  we use the HarfBuzz library (if available), which has many functions
+   *  exactly for this purpose.
+   *
+   *  AF_COVERAGE_DEFAULT is special: It should cover everything that isn't
+   *  listed separately (including the glyphs addressable by the character
+   *  map).  In case HarfBuzz isn't available, it exactly covers the glyphs
+   *  addressable by the character map.
+   *
+   */
+
+#undef  COVERAGE_1
+#define COVERAGE_1( name, NAME, description,         \
+                    tag_a1, tag_a2, tag_a3, tag_a4 ) \
+          AF_COVERAGE_ ## NAME,
+
+#undef  COVERAGE_2
+#define COVERAGE_2( name, NAME, description,         \
+                    tag_a1, tag_a2, tag_a3, tag_a4,  \
+                    tag_b1, tag_b2, tag_b3, tag_b4 ) \
+          AF_COVERAGE_ ## NAME,
+
+#undef  COVERAGE_3
+#define COVERAGE_3( name, NAME, description,         \
+                    tag_a1, tag_a2, tag_a3, tag_a4,  \
+                    tag_b1, tag_b2, tag_b3, tag_b4,  \
+                    tag_c1, tag_c2, tag_c3, tag_c4 ) \
+          AF_COVERAGE_ ## NAME,
+
+
+  typedef enum  AF_Coverage_
+  {
+#include "afcover.h"
+
+    AF_COVERAGE_DEFAULT
+
+  } AF_Coverage;
+
+
+  /*************************************************************************/
+  /*************************************************************************/
+  /*****                                                               *****/
   /*****                         S T Y L E S                           *****/
   /*****                                                               *****/
   /*************************************************************************/
@@ -355,7 +431,7 @@ extern void*  _af_debug_hints;
    */
 
 #undef  STYLE
-#define STYLE( s, S, d, ws, sc, ss ) \
+#define STYLE( s, S, d, ws, sc, ss, c ) \
           AF_STYLE_ ## S,
 
   /* The list of known styles. */
@@ -376,6 +452,7 @@ extern void*  _af_debug_hints;
     AF_WritingSystem   writing_system;
     AF_Script          script;
     AF_Blue_Stringset  blue_stringset;
+    AF_Coverage        coverage;
 
   } AF_StyleClassRec;
 
@@ -466,14 +543,16 @@ extern void*  _af_debug_hints;
           style,                        \
           writing_system,               \
           script,                       \
-          blue_stringset )              \
+          blue_stringset,               \
+          coverage )                    \
   FT_CALLBACK_TABLE_DEF                 \
   const AF_StyleClassRec  style_class = \
   {                                     \
     style,                              \
     writing_system,                     \
     script,                             \
-    blue_stringset                      \
+    blue_stringset,                     \
+    coverage                            \
   };
 
 #else /* FT_CONFIG_OPTION_PIC */
@@ -534,7 +613,8 @@ extern void*  _af_debug_hints;
           style_,                                        \
           writing_system_,                               \
           script_,                                       \
-          blue_stringset_ )                              \
+          blue_stringset_,                               \
+          coverage_ )                                    \
   FT_LOCAL_DEF( void )                                   \
   FT_Init_Class_ ## style_class( AF_StyleClassRec*  ac ) \
   {                                                      \
@@ -542,6 +622,7 @@ extern void*  _af_debug_hints;
     ac->writing_system = writing_system_;                \
     ac->script         = script_;                        \
     ac->blue_stringset = blue_stringset_;                \
+    ac->coverage       = coverage_;                      \
   }
 
 #endif /* FT_CONFIG_OPTION_PIC */
