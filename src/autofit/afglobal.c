@@ -161,31 +161,34 @@
        *  Scan all Unicode points in the range and set the corresponding
        *  glyph style index.
        */
-      for ( range = script_class->script_uni_ranges;
-            range->first != 0;
-            range++ )
+      if ( style_class->coverage == AF_COVERAGE_DEFAULT )
       {
-        FT_ULong  charcode = range->first;
-        FT_UInt   gindex;
-
-
-        gindex = FT_Get_Char_Index( face, charcode );
-
-        if ( gindex != 0                             &&
-             gindex < (FT_ULong)globals->glyph_count &&
-             gstyles[gindex] == AF_STYLE_UNASSIGNED  )
-          gstyles[gindex] = (FT_Byte)ss;
-
-        for (;;)
+        for ( range = script_class->script_uni_ranges;
+              range->first != 0;
+              range++ )
         {
-          charcode = FT_Get_Next_Char( face, charcode, &gindex );
+          FT_ULong  charcode = range->first;
+          FT_UInt   gindex;
 
-          if ( gindex == 0 || charcode > range->last )
-            break;
 
-          if ( gindex < (FT_ULong)globals->glyph_count &&
+          gindex = FT_Get_Char_Index( face, charcode );
+
+          if ( gindex != 0                             &&
+               gindex < (FT_ULong)globals->glyph_count &&
                gstyles[gindex] == AF_STYLE_UNASSIGNED  )
             gstyles[gindex] = (FT_Byte)ss;
+
+          for (;;)
+          {
+            charcode = FT_Get_Next_Char( face, charcode, &gindex );
+
+            if ( gindex == 0 || charcode > range->last )
+              break;
+
+            if ( gindex < (FT_ULong)globals->glyph_count &&
+                 gstyles[gindex] == AF_STYLE_UNASSIGNED  )
+              gstyles[gindex] = (FT_Byte)ss;
+          }
         }
       }
 
