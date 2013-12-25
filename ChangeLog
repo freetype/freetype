@@ -1,3 +1,18 @@
+2013-12-25  Werner Lemberg  <wl@gnu.org>
+
+	Fix Savannah bug #40997.
+
+	* src/bdf/bdfdrivr.c (BDF_Face_Init): Only use OR operator to
+	adjust face flags since FT_FACE_FLAG_EXTERNAL_STREAM might already
+	be set.
+	* src/cff/cffobjs.c (cff_face_init): Ditto.
+	* src/cid/cidobjs.c (cid_face_init): Ditto.
+	* src/pcf/pcfread.c (pcf_load_font): Ditto.
+	* src/pfr/pfrobjs.c (pfr_face_init): Ditto.
+	* src/type1/t1objs.c (T1_Face_Init): Ditto.
+	* src/type42/t42objs.c (T42_Face_Init): Ditto.
+	* src/winfonts/winfnt.c (FNT_Face_Init): Ditto.
+
 2013-12-21  Werner Lemberg  <wl@gnu.org>
 
 	[autofit] Introduce `coverages'.
