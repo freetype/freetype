@@ -225,11 +225,11 @@ FT_BEGIN_HEADER
   /*      The resource tag.                                                */
   /*                                                                       */
   /*    sort_by_res_id ::                                                  */
-  /*      A Boolean to order the fragmented resource by their ids.         */
-  /*      The fragmented resources for POST resource should be sorted      */
-  /*      to restore Type1 font properly.  For snft resource, sorting      */
-  /*      may induce the different order of the faces in comparison with   */
-  /*      that by QuickDraw API.                                           */
+  /*      A Boolean to sort the fragmented resource by their ids.          */
+  /*      The fragmented resources for `POST' resource should be sorted    */
+  /*      to restore Type1 font properly.  For `snft' resources, sorting   */
+  /*      may induce a different order of the faces in comparison to that  */
+  /*      by QuickDraw API.                                                */
   /*                                                                       */
   /* <Output>                                                              */
   /*    offsets ::                                                         */

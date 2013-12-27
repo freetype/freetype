@@ -212,8 +212,9 @@
             goto Exit;
 
           ref[j].offset = temp & 0xFFFFFFL;
-          FT_TRACE3(( "             [%d]: resouce_id=0x%04x, offset=0x%08x\n",
-                       j, ref[j].res_id, ref[j].offset ));
+          FT_TRACE3(( "             [%d]:"
+                      " resource_id=0x%04x, offset=0x%08x\n",
+                      j, ref[j].res_id, ref[j].offset ));
         }
 
         if (sort_by_res_id)
@@ -224,8 +225,9 @@
 
           FT_TRACE3(( "             -- sort resources by their ids --\n" ));
           for ( j = 0; j < *count; ++ j ) {
-            FT_TRACE3(( "             [%d]: resouce_id=0x%04x, offset=0x%08x\n",
-                         j, ref[j].res_id, ref[j].offset ));
+            FT_TRACE3(( "             [%d]:"
+                        " resource_id=0x%04x, offset=0x%08x\n",
+                        j, ref[j].res_id, ref[j].offset ));
           }
         }
 
