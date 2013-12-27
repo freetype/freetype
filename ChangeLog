@@ -1,3 +1,24 @@
+2013-12-27  suzuki toshiya  <mpsuzuki@hiroshima-u.ac.jp>
+
+	[ftrfork] Fix the face order difference between POSIX and Carbon.
+
+	The fragmented resources in Suitcase and .dfont should be reordered
+	when post resource for Type1 is being restored, but reordering of
+	sfnt resources induces the different face order.  Now the ordering
+	is restricted to post resource only, to prevent the different order
+	issue  (e.g. the face index in the fontconfig cache generated with
+	Carbon framework is incompatible with that by FreeType2 without
+	Carbon framework.)  Found by Khaled Hosny and Hin-Tak Leung.
+	
+	http://lists.gnu.org/archive/html/freetype-devel/2013-02/msg00035.html
+	http://lists.gnu.org/archive/html/freetype-devel/2013-12/msg00027.html
+
+	* src/base/ftrfork.c (FT_Raccess_Get_DataOffsets): Add a switch
+	`sort_by_res_id' to control the fragmented resource ordering. 
+	* include/internal/ftrfork.h: Daclare new switch.
+	* src/base/ftobjs.c (IsMacResource): Enable the soring for post
+	resource, and disable the sorting for sfnt resource.
+
 2013-12-25  Werner Lemberg  <wl@gnu.org>
 
 	Fix Savannah bug #40997.

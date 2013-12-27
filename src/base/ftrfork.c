@@ -151,6 +151,7 @@
                               FT_Long     map_offset,
                               FT_Long     rdata_pos,
                               FT_Long     tag,
+                              FT_Bool     sort_by_res_id,
                               FT_Long   **offsets,
                               FT_Long    *count )
   {
@@ -163,6 +164,7 @@
     FT_RFork_Ref  *ref = NULL;
 
 
+    FT_TRACE3(( "\n" ));
     error = FT_Stream_Seek( stream, map_offset );
     if ( error )
       return error;
@@ -183,6 +185,8 @@
                   (char)( 0xff & ( tag_internal >> 16 ) ),
                   (char)( 0xff & ( tag_internal >>  8 ) ),
                   (char)( 0xff & ( tag_internal >>  0 ) ) ));
+      FT_TRACE3(( "             : subcount=%d, suboffset=0x%04x\n",
+                  subcnt, rpos ));
 
       if ( tag_internal == tag )
       {
@@ -208,11 +212,22 @@
             goto Exit;
 
           ref[j].offset = temp & 0xFFFFFFL;
+          FT_TRACE3(( "             [%d]: resouce_id=0x%04x, offset=0x%08x\n",
+                       j, ref[j].res_id, ref[j].offset ));
         }
 
-        ft_qsort( ref, *count, sizeof ( FT_RFork_Ref ),
-                  ( int(*)(const void*, const void*) )
-                  ft_raccess_sort_ref_by_id );
+        if (sort_by_res_id)
+        {
+          ft_qsort( ref, *count, sizeof ( FT_RFork_Ref ),
+                    ( int(*)(const void*, const void*) )
+                    ft_raccess_sort_ref_by_id );
+
+          FT_TRACE3(( "             -- sort resources by their ids --\n" ));
+          for ( j = 0; j < *count; ++ j ) {
+            FT_TRACE3(( "             [%d]: resouce_id=0x%04x, offset=0x%08x\n",
+                         j, ref[j].res_id, ref[j].offset ));
+          }
+        }
 
         if ( FT_NEW_ARRAY( offsets_internal, *count ) )
           goto Exit;

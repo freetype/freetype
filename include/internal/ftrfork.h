@@ -224,6 +224,13 @@ FT_BEGIN_HEADER
   /*    tag ::                                                             */
   /*      The resource tag.                                                */
   /*                                                                       */
+  /*    sort_by_res_id ::                                                  */
+  /*      A Boolean to order the fragmented resource by their ids.         */
+  /*      The fragmented resources for POST resource should be sorted      */
+  /*      to restore Type1 font properly.  For snft resource, sorting      */
+  /*      may induce the different order of the faces in comparison with   */
+  /*      that by QuickDraw API.                                           */
+  /*                                                                       */
   /* <Output>                                                              */
   /*    offsets ::                                                         */
   /*      The stream offsets for the resource data specified by `tag'.     */
@@ -246,6 +253,7 @@ FT_BEGIN_HEADER
                               FT_Long     map_offset,
                               FT_Long     rdata_pos,
                               FT_Long     tag,
+                              FT_Bool     sort_by_res_id,
                               FT_Long   **offsets,
                               FT_Long    *count );
 

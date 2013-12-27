@@ -1801,9 +1801,10 @@
     if ( error )
       return error;
 
+    /* POST resources must be sorted to concatenate properly */
     error = FT_Raccess_Get_DataOffsets( library, stream,
                                         map_offset, rdara_pos,
-                                        TTAG_POST,
+                                        TTAG_POST, TRUE,
                                         &data_offsets, &count );
     if ( !error )
     {
@@ -1816,9 +1817,11 @@
       return error;
     }
 
+    /* sfnt resources should not be sorted to preserve the face order by
+       QuickDraw API */
     error = FT_Raccess_Get_DataOffsets( library, stream,
                                         map_offset, rdara_pos,
-                                        TTAG_sfnt,
+                                        TTAG_sfnt, FALSE,
                                         &data_offsets, &count );
     if ( !error )
     {
