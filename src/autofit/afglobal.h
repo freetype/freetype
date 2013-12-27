@@ -69,6 +69,8 @@ FT_BEGIN_HEADER
 #else
 #define AF_STYLE_FALLBACK  AF_STYLE_NONE_DEFAULT
 #endif
+  /* default script for OpenType; ignored if HarfBuzz isn't used */
+#define AF_SCRIPT_DEFAULT  AF_SCRIPT_LATN
   /* a bit mask indicating an uncovered glyph        */
 #define AF_STYLE_UNASSIGNED  0x7F
   /* if this flag is set, we have an ASCII digit     */

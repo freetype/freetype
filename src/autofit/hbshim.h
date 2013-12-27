@@ -30,9 +30,9 @@
 FT_BEGIN_HEADER
 
   FT_Error
-  af_get_coverage( FT_Face        face,
-                   AF_StyleClass  style_class,
-                   FT_Byte*       gstyles );
+  af_get_coverage( AF_FaceGlobals  globals,
+                   AF_StyleClass   style_class,
+                   FT_Byte*        gstyles );
 
  /* */
 

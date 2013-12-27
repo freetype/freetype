@@ -120,6 +120,15 @@
 
       return error;
     }
+    else if ( !ft_strcmp( property_name, "default-script" ) )
+    {
+      FT_UInt*  default_script = (FT_UInt*)value;
+
+
+      module->default_script = *default_script;
+
+      return error;
+    }
     else if ( !ft_strcmp( property_name, "increase-x-height" ) )
     {
       FT_Prop_IncreaseXHeight*  prop = (FT_Prop_IncreaseXHeight*)value;
@@ -147,6 +156,7 @@
     FT_Error   error          = FT_Err_Ok;
     AF_Module  module         = (AF_Module)ft_module;
     FT_UInt    fallback_style = module->fallback_style;
+    FT_UInt    default_script = module->default_script;
 
 
     if ( !ft_strcmp( property_name, "glyph-to-script-map" ) )
@@ -169,6 +179,15 @@
 
 
       *val = style_class->script;
+
+      return error;
+    }
+    else if ( !ft_strcmp( property_name, "default-script" ) )
+    {
+      FT_UInt*  val = (FT_UInt*)value;
+
+
+      *val = default_script;
 
       return error;
     }
@@ -232,6 +251,7 @@
 
 
     module->fallback_style = AF_STYLE_FALLBACK;
+    module->default_script = AF_SCRIPT_DEFAULT;
 
     return af_loader_init( module );
   }

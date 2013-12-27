@@ -1,3 +1,28 @@
+2013-12-27  Werner Lemberg  <wl@gnu.org>
+
+	[autofit] Handle `DFLT' OpenType script for coverages.
+
+	* include/ftautoh.h: Document new `default-script' property.
+
+	* src/autofit/hbshim.c (af_get_coverage): Use `AF_FaceGlobals' for
+	type of first parameter.
+	(script_tags): Add one more element.
+	(af_get_coverage): Adjust `script_tags' to handle `DFLT' script tag.
+
+	* src/autofit/hbshim.h: Updated.
+
+	* src/autofit/afglobal.c (af_face_globals_compute_style_coverage):
+	Updated.
+
+	* src/autofit/afglobal.h (AF_SCRIPT_DEFAULT): New macro.
+
+	* src/autofit/afmodule.h (AF_ModuleRec): New `default_script'
+	member.
+
+	* src/autofit/afmodule.c (af_property_set, af_property_get): Handle
+	`default-script' property.
+	(af_autofitter_init): Updated.
+
 2013-12-27  suzuki toshiya  <mpsuzuki@hiroshima-u.ac.jp>
 
 	[ftrfork] Fix the face order difference between POSIX and Carbon.

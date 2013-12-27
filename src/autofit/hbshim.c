@@ -135,9 +135,9 @@
 
 
   FT_Error
-  af_get_coverage( FT_Face        ft_face,
-                   AF_StyleClass  style_class,
-                   FT_Byte*       gstyles )
+  af_get_coverage( AF_FaceGlobals  globals,
+                   AF_StyleClass   style_class,
+                   FT_Byte*        gstyles )
   {
     hb_face_t*  face;
 
@@ -148,6 +148,7 @@
     const hb_tag_t*  coverage_tags;
     hb_tag_t         script_tags[] = { HB_TAG_NONE,
                                        HB_TAG_NONE,
+                                       HB_TAG_NONE,
                                        HB_TAG_NONE };
 
     hb_codepoint_t  idx;
@@ -156,10 +157,10 @@
 #endif
 
 
-    if ( !ft_face || !style_class || !gstyles )
+    if ( !globals || !style_class || !gstyles )
       return FT_THROW( Invalid_Argument );
 
-    face = hb_ft_face_create( ft_face, NULL );
+    face = hb_ft_face_create( globals->face, NULL );
 
     lookups = hb_set_create();
     glyphs  = hb_set_create();
@@ -175,10 +176,26 @@
                             &script_tags[1] );
 
     /* `hb_ot_tags_from_script' usually returns HB_OT_TAG_DEFAULT_SCRIPT */
-    /* as the second tag.  We change that to HB_TAG_NONE since the       */
-    /* default script gets handled later on.                             */
-    if ( script_tags[1] == HB_OT_TAG_DEFAULT_SCRIPT )
-      script_tags[1] = HB_TAG_NONE;
+    /* as the second tag.  We change that to HB_TAG_NONE except for the  */
+    /* default script.                                                   */
+    if ( style_class->script == globals->module->default_script &&
+         style_class->coverage == AF_COVERAGE_DEFAULT           )
+    {
+      if ( script_tags[0] == HB_TAG_NONE )
+        script_tags[0] = HB_OT_TAG_DEFAULT_SCRIPT;
+      else
+      {
+        if ( script_tags[1] == HB_TAG_NONE )
+          script_tags[1] = HB_OT_TAG_DEFAULT_SCRIPT;
+        else if ( script_tags[1] != HB_OT_TAG_DEFAULT_SCRIPT )
+          script_tags[2] = HB_OT_TAG_DEFAULT_SCRIPT;
+      }
+    }
+    else
+    {
+      if ( script_tags[1] == HB_OT_TAG_DEFAULT_SCRIPT )
+        script_tags[1] = HB_TAG_NONE;
+    }
 
     hb_ot_layout_collect_lookups( face,
                                   HB_OT_TAG_GSUB,
