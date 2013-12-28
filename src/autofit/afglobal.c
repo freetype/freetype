@@ -20,6 +20,7 @@
 #include "afranges.h"
 #include "hbshim.h"
 
+
   /* get writing system specific header files */
 #undef  WRITING_SYSTEM
 #define WRITING_SYSTEM( ws, WS )  /* empty */
@@ -254,6 +255,10 @@
     globals->glyph_styles = (FT_Byte*)( globals + 1 );
     globals->module       = module;
 
+#ifdef FT_CONFIG_OPTION_USE_HARFBUZZ
+    globals->hb_font = hb_ft_font_create( face, NULL );
+#endif
+
     error = af_face_globals_compute_style_coverage( globals );
     if ( error )
     {
@@ -294,6 +299,11 @@
           FT_FREE( globals->metrics[nn] );
         }
       }
+
+#ifdef FT_CONFIG_OPTION_USE_HARFBUZZ
+      hb_font_destroy( globals->hb_font );
+      globals->hb_font = NULL;
+#endif
 
       globals->glyph_count  = 0;
       globals->glyph_styles = NULL;  /* no need to free this one! */

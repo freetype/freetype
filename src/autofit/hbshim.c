@@ -18,13 +18,9 @@
 
 #include <ft2build.h>
 #include FT_FREETYPE_H
-
+#include "hbshim.h"
 
 #ifdef FT_CONFIG_OPTION_USE_HARFBUZZ
-
-#include <hb.h>
-#include <hb-ot.h>
-#include <hb-ft.h>
 
 
   /*************************************************************************/
@@ -160,7 +156,7 @@
     if ( !globals || !style_class || !gstyles )
       return FT_THROW( Invalid_Argument );
 
-    face = hb_ft_face_create( globals->face, NULL );
+    face = hb_font_get_face( globals->hb_font );
 
     lookups = hb_set_create();
     glyphs  = hb_set_create();
@@ -266,8 +262,6 @@
 
     hb_set_destroy( lookups );
     hb_set_destroy( glyphs  );
-
-    hb_face_destroy( face );
 
     return FT_Err_Ok;
   }

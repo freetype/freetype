@@ -1,3 +1,25 @@
+2013-12-28  Werner Lemberg  <wl@gnu.org>
+
+	[autofit] Use `global' HarfBuzz font object.
+
+	We now use `hb_font' instead of `hb_face' since yet-to-come changes
+	need this.
+
+	* src/autofit/afglobal.h: Include `hbshim.h'.
+	(AF_FaceGlobalsRec) [FT_CONFIG_OPTION_USE_HARFBUZZ]: New member
+	`hb_font'.
+
+	* src/autofit/afglobal.c (af_face_globals_new)
+	[FT_CONFIG_OPTION_USE_HARFBUZZ]: Create `hb_font'.
+	(af_face_globals_free) [FT_CONFIG_OPTION_USE_HARFBUZZ]: Destroy
+	`hb_font'.
+
+	* src/autofit/hbshim.h: Include HarfBuzz headers.
+
+	* src/autofit/hbshim.c: Include `hbshim.h' instead of HarfBuzz
+	headers.
+	(af_get_coverage): Updated.
+
 2013-12-27  Werner Lemberg  <wl@gnu.org>
 
 	[autofit] Handle `DFLT' OpenType script for coverages.

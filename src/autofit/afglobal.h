@@ -23,6 +23,7 @@
 
 #include "aftypes.h"
 #include "afmodule.h"
+#include "hbshim.h"
 
 
 FT_BEGIN_HEADER
@@ -100,6 +101,10 @@ FT_BEGIN_HEADER
     FT_Face          face;
     FT_Long          glyph_count;    /* same as face->num_glyphs */
     FT_Byte*         glyph_styles;
+
+#ifdef FT_CONFIG_OPTION_USE_HARFBUZZ
+    hb_font_t*       hb_font;
+#endif
 
     /* per-face auto-hinter properties */
     FT_UInt          increase_x_height;
