@@ -34,9 +34,7 @@
 #include "afcjk.c"
 #include "afindic.c"
 
-#ifdef FT_CONFIG_OPTION_USE_HARFBUZZ
 #include "hbshim.c"
-#endif
 
 #include "afloader.c"
 #include "afmodule.c"

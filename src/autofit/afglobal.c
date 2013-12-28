@@ -193,10 +193,8 @@
         }
       }
 
-#ifdef FT_CONFIG_OPTION_USE_HARFBUZZ
       /* get glyphs not directly addressable by cmap */
       af_get_coverage( globals, style_class, gstyles );
-#endif
     }
 
     /* mark ASCII digits */

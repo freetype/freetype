@@ -30,6 +30,8 @@
 #include <hb-ot.h>
 #include <hb-ft.h>
 
+#endif
+
 
 FT_BEGIN_HEADER
 
@@ -45,15 +47,6 @@ FT_BEGIN_HEADER
  /* */
 
 FT_END_HEADER
-
-
-#else /* !FT_CONFIG_OPTION_USE_HARFBUZZ */
-
-  FT_UInt
-  af_get_char_index( AF_StyleMetrics  metrics,
-                     FT_ULong         charcode );
-
-#endif /* !FT_CONFIG_OPTION_USE_HARFBUZZ */
 
 #endif /* __HBSHIM_H__ */
 

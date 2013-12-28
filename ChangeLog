@@ -1,5 +1,20 @@
 2013-12-28  Werner Lemberg  <wl@gnu.org>
 
+	[autofit] Code shuffling to reduce use of cpp macros.
+
+	* src/autofit/afglobal.c (af_face_globals_compute_style_coverage):
+	Call `af_get_coverage' unconditionally.
+
+	* src/autofit/autofit.c: Include `hbshim.c' unconditionally.
+
+	* src/autofit/hbshim.c (af_get_coverage)
+	[!FT_CONFIG_OPTION_USE_HARFBUZZ]: Provide dummy function.
+
+	* src/autofit/hbshim.h: Provide function declarations
+	unconditionally.
+
+2013-12-28  Werner Lemberg  <wl@gnu.org>
+
 	[autofit] Add wrapper function for `FT_Get_Char_Index'.
 
 	Yet-to-come changes will provide HarfBuzz functionality for the new

@@ -294,6 +294,19 @@
 #else /* !FT_CONFIG_OPTION_USE_HARDBUZZ */
 
 
+  FT_Error
+  af_get_coverage( AF_FaceGlobals  globals,
+                   AF_StyleClass   style_class,
+                   FT_Byte*        gstyles )
+  {
+    FT_UNUSED( globals );
+    FT_UNUSED( style_class );
+    FT_UNUSED( gstyles );
+
+    return FT_Err_Ok;
+  }
+
+
   FT_UInt
   af_get_char_index( AF_StyleMetrics  metrics,
                      FT_ULong         charcode )
