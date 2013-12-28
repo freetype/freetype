@@ -267,6 +267,22 @@
   }
 
 
+  FT_UInt
+  af_get_char_index( AF_StyleMetrics  metrics,
+                     FT_ULong         charcode )
+  {
+    FT_Face  face;
+
+
+    if ( !metrics )
+      return FT_THROW( Invalid_Argument );
+
+    face = metrics->globals->face;
+
+    return FT_Get_Char_Index( face, charcode );
+  }
+
+
 #if 0
   /* to be always excluded */
   COVERAGE(nalt, 'n', 'a', 'l', 't'); /* Alternate Annotation Forms (?) */
@@ -274,7 +290,27 @@
   /* COVERAGE(ruby, 'r', 'u', 'b', 'y') */ /* (only for Japanese) */
 #endif
 
-#endif /* FT_CONFIG_OPTION_USE_HARFBUZZ */
+
+#else /* !FT_CONFIG_OPTION_USE_HARDBUZZ */
+
+
+  FT_UInt
+  af_get_char_index( AF_StyleMetrics  metrics,
+                     FT_ULong         charcode )
+  {
+    FT_Face  face;
+
+
+    if ( !metrics )
+      return FT_THROW( Invalid_Argument );
+
+    face = metrics->globals->face;
+
+    return FT_Get_Char_Index( face, charcode );
+  }
+
+
+#endif /* !FT_CONFIG_OPTION_USE_HARFBUZZ */
 
 
 /* END */

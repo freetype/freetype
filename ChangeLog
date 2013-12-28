@@ -1,5 +1,22 @@
 2013-12-28  Werner Lemberg  <wl@gnu.org>
 
+	[autofit] Add wrapper function for `FT_Get_Char_Index'.
+
+	Yet-to-come changes will provide HarfBuzz functionality for the new
+	function.
+
+	* src/autofit/hbshim.c (af_get_char_index): New function.
+	* src/autofit/hbshim.h: Updated.
+
+	* src/autofit/afcjk.c (af_cjk_metrics_init_widths,
+	af_cjk_metrics_init_blues, af_cjk_metrics_check_digits): Updated.
+
+	* src/autofit/aflatin.c (af_latin_metrics_init_widths,
+	af_latin_metrics_init_blues, af_latin_metrics_check_digits):
+	Updated.
+
+2013-12-28  Werner Lemberg  <wl@gnu.org>
+
 	[autofit] Use `global' HarfBuzz font object.
 
 	We now use `hb_font' instead of `hb_face' since yet-to-come changes

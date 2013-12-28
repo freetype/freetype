@@ -101,7 +101,8 @@
                                        [style_class->script];
 
 
-      glyph_index = FT_Get_Char_Index( face, script_class->standard_char );
+      glyph_index = af_get_char_index( &metrics->root,
+                                       script_class->standard_char );
       if ( glyph_index == 0 )
         goto Exit;
 
@@ -297,7 +298,7 @@
         GET_UTF8_CHAR( ch, p );
 
         /* load the character in the face -- skip unknown or empty ones */
-        glyph_index = FT_Get_Char_Index( face, ch );
+        glyph_index = af_get_char_index( &metrics->root, ch );
         if ( glyph_index == 0 )
         {
           FT_TRACE5(( "  U+%04lX unavailable\n", ch ));
@@ -479,7 +480,7 @@
       FT_UInt  glyph_index;
 
 
-      glyph_index = FT_Get_Char_Index( face, i );
+      glyph_index = af_get_char_index( &metrics->root, i );
       if ( glyph_index == 0 )
         continue;
 

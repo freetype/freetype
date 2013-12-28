@@ -38,12 +38,22 @@ FT_BEGIN_HEADER
                    AF_StyleClass   style_class,
                    FT_Byte*        gstyles );
 
+  FT_UInt
+  af_get_char_index( AF_StyleMetrics  metrics,
+                     FT_ULong         charcode );
+
  /* */
 
 FT_END_HEADER
 
 
-#endif /* FT_CONFIG_OPTION_USE_HARFBUZZ */
+#else /* !FT_CONFIG_OPTION_USE_HARFBUZZ */
+
+  FT_UInt
+  af_get_char_index( AF_StyleMetrics  metrics,
+                     FT_ULong         charcode );
+
+#endif /* !FT_CONFIG_OPTION_USE_HARFBUZZ */
 
 #endif /* __HBSHIM_H__ */
 
