@@ -38,10 +38,10 @@
    * usual mathematical meaning) to manage both lookups and glyph indices.
    *
    * 1. For each coverage, collect lookup IDs in a set.  Note that an
-   *    auto-hinter `coverage' is represented by one or more `feature's, and
-   *    a feature consists of an arbitrary number of (font specific)
-   *    `lookup's that actually do the mapping job.  Please check the
-   *    OpenType specification for more details on features and lookups.
+   *    auto-hinter `coverage' is represented by one `feature', and a
+   *    feature consists of an arbitrary number of (font specific) `lookup's
+   *    that actually do the mapping job.  Please check the OpenType
+   *    specification for more details on features and lookups.
    *
    * 2. Create glyph ID sets from the corresponding lookup sets.
    *
@@ -54,36 +54,12 @@
 
 
   /* load coverage tags */
-#undef  COVERAGE_1
-#define COVERAGE_1( name, NAME, description,           \
-                    tag_a1, tag_a2, tag_a3, tag_a4 )   \
+#undef  COVERAGE
+#define COVERAGE( name, NAME, description,             \
+                  tag1, tag2, tag3, tag4 )             \
           static const hb_tag_t  name ## _coverage[] = \
           {                                            \
-            HB_TAG( tag_a1, tag_a2, tag_a3, tag_a4 ),  \
-            HB_TAG_NONE                                \
-          };
-
-#undef  COVERAGE_2
-#define COVERAGE_2( name, NAME, description,           \
-                    tag_a1, tag_a2, tag_a3, tag_a4,    \
-                    tag_b1, tag_b2, tag_b3, tag_b4 )   \
-          static const hb_tag_t  name ## _coverage[] = \
-          {                                            \
-            HB_TAG( tag_a1, tag_a2, tag_a3, tag_a4 ),  \
-            HB_TAG( tag_b1, tag_b2, tag_b3, tag_b4 ),  \
-            HB_TAG_NONE                                \
-          };
-
-#undef  COVERAGE_3
-#define COVERAGE_3( name, NAME, description,           \
-                    tag_a1, tag_a2, tag_a3, tag_a4,    \
-                    tag_b1, tag_b2, tag_b3, tag_b4,    \
-                    tag_c1, tag_c2, tag_c3, tag_c4 )   \
-          static const hb_tag_t  name ## _coverage[] = \
-          {                                            \
-            HB_TAG( tag_a1, tag_a2, tag_a3, tag_a4 ),  \
-            HB_TAG( tag_b1, tag_b2, tag_b3, tag_b4 ),  \
-            HB_TAG( tag_c1, tag_c2, tag_c3, tag_c4 ),  \
+            HB_TAG( tag1, tag2, tag3, tag4 ),          \
             HB_TAG_NONE                                \
           };
 
@@ -92,22 +68,9 @@
 
 
   /* define mapping between coverage tags and AF_Coverage */
-#undef  COVERAGE_1
-#define COVERAGE_1( name, NAME, description,           \
-                    tag_a1, tag_a2, tag_a3, tag_a4 )   \
-          name ## _coverage,
-
-#undef  COVERAGE_2
-#define COVERAGE_2( name, NAME, description,           \
-                    tag_a1, tag_a2, tag_a3, tag_a4,    \
-                    tag_b1, tag_b2, tag_b3, tag_b4 )   \
-          name ## _coverage,
-
-#undef  COVERAGE_3
-#define COVERAGE_3( name, NAME, description,           \
-                    tag_a1, tag_a2, tag_a3, tag_a4,    \
-                    tag_b1, tag_b2, tag_b3, tag_b4,    \
-                    tag_c1, tag_c2, tag_c3, tag_c4 )   \
+#undef  COVERAGE
+#define COVERAGE( name, NAME, description, \
+                  tag1, tag2, tag3, tag4 ) \
           name ## _coverage,
 
 
@@ -281,14 +244,6 @@
 
     return FT_Get_Char_Index( face, charcode );
   }
-
-
-#if 0
-  /* to be always excluded */
-  COVERAGE(nalt, 'n', 'a', 'l', 't'); /* Alternate Annotation Forms (?) */
-  COVERAGE(ornm, 'o', 'r', 'n', 'm'); /* Ornaments (?) */
-  /* COVERAGE(ruby, 'r', 'u', 'b', 'y') */ /* (only for Japanese) */
-#endif
 
 
 #else /* !FT_CONFIG_OPTION_USE_HARDBUZZ */

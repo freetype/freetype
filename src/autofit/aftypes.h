@@ -370,12 +370,11 @@ extern void*  _af_debug_hints;
    *  representation forms.  How this mapping happens is completely
    *  uninteresting to us.
    *
-   *  For the auto-hinter, a `coverage' represents all glyphs of one or more
-   *  OpenType features collected in a set (as listed below) that can be
-   *  hinted together.  To continue the above example, superscript glyphs
-   *  must not be hinted together with normal glyphs because the blue zones
-   *  completely differ.  On the other hand, superscripts and subscripts
-   *  don't overlap, so they can be combined into a single set.
+   *  For the auto-hinter, a `coverage' represents all glyphs of an OpenType
+   *  feature collected in a set (as listed below) that can be hinted
+   *  together.  To continue the above example, superscript glyphs must not
+   *  be hinted together with normal glyphs because the blue zones
+   *  completely differ.
    *
    *  Note that FreeType itself doesn't compute coverages; it only provides
    *  the glyphs addressable by the default Unicode character map.  Instead,
@@ -389,22 +388,9 @@ extern void*  _af_debug_hints;
    *
    */
 
-#undef  COVERAGE_1
-#define COVERAGE_1( name, NAME, description,         \
-                    tag_a1, tag_a2, tag_a3, tag_a4 ) \
-          AF_COVERAGE_ ## NAME,
-
-#undef  COVERAGE_2
-#define COVERAGE_2( name, NAME, description,         \
-                    tag_a1, tag_a2, tag_a3, tag_a4,  \
-                    tag_b1, tag_b2, tag_b3, tag_b4 ) \
-          AF_COVERAGE_ ## NAME,
-
-#undef  COVERAGE_3
-#define COVERAGE_3( name, NAME, description,         \
-                    tag_a1, tag_a2, tag_a3, tag_a4,  \
-                    tag_b1, tag_b2, tag_b3, tag_b4,  \
-                    tag_c1, tag_c2, tag_c3, tag_c4 ) \
+#undef  COVERAGE
+#define COVERAGE( name, NAME, description, \
+                  tag1, tag2, tag3, tag4 ) \
           AF_COVERAGE_ ## NAME,
 
 

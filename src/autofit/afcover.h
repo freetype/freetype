@@ -17,50 +17,79 @@
 
 
   /* This header file can be included multiple times. */
-  /* Define `COVERAGE_{1,2,3}' as needed.             */
+  /* Define `COVERAGE' as needed.                     */
 
 
   /* Add new coverages here.  The first and second arguments are the   */
   /* coverage name in lowercase and uppercase, respectively, followed  */
-  /* by a description string.  The remaining arguments the             */
-  /* corresponding OpenType features (with four characters a feature). */
+  /* by a description string.  The last four arguments are the four    */
+  /* characters defining the corresponding OpenType feature.           */
 
-  COVERAGE_1( oldstyle_figures, OLDSTYLE_FIGURES,
-              "oldstyle figures",
-              'o', 'n', 'u', 'm' ) /* Oldstyle Figures */
+  COVERAGE( alternative_fractions, ALTERNATIVE_FRACTIONS,
+            "alternative fractions",
+            'a', 'f', 'r', 'c' )
 
-  COVERAGE_2( petite_capitals, PETITE_CAPITALS,
-              "petite capitals",
-              'c', '2', 'c', 'p',  /* Petite Capitals from Capitals */
-              'p', 'c', 'a', 'p' ) /* Petite Capitals               */
+  COVERAGE( petite_capitals_from_capitals, PETITE_CAPITALS_FROM_CAPITALS,
+            "petite capitals from capitals",
+            'c', '2', 'c', 'p' )
 
-  COVERAGE_2( small_capitals, SMALL_CAPITALS,
-              "small capitals",
-              'c', '2', 's', 'c',  /* Small Capitals from Capitals */
-              's', 'm', 'c', 'p' ) /* Small Capitals               */
+  COVERAGE( small_capitals_from_capitals, SMALL_CAPITALS_FROM_CAPITALS,
+            "small capitals from capitals",
+            'c', '2', 's', 'c' )
 
-  COVERAGE_1( titling, TITLING,
-              "titling",
-              't', 'i', 't', 'l' ) /* Titling */
+  COVERAGE( denominators, DENOMINATORS,
+            "denominators",
+            'd', 'n', 'o', 'm' )
 
-  COVERAGE_2( sub_superscript_1, SUB_SUPERSCRIPT_1,
-              "sub- and superscripts group 1",
-              's', 'u', 'b', 's',  /* Subscript   */
-              's', 'u', 'p', 's' ) /* Superscript */
+  COVERAGE( fractions, FRACTIONS,
+            "fractions",
+            'f', 'r', 'a', 'c' )
 
-  COVERAGE_2( sub_superscript_2, SUB_SUPERSCRIPT_2,
-              "sub- and superscripts group 2",
-              'o', 'r', 'd', 'n',  /* Ordinals             */
-              's', 'i', 'n', 'f' ) /* Scientific Inferiors */
+  COVERAGE( numerators, NUMERATORS,
+            "numerators",
+            'n', 'u', 'm', 'r' )
 
-  COVERAGE_3( fractions, FRACTIONS,
-              "fractions",
-              'd', 'n', 'o', 'm',  /* Denominators */
-              'f', 'r', 'a', 'c',  /* Fractions    */
-              'n', 'u', 'm', 'r' ) /* Numerators   */
+  COVERAGE( oldstyle_figures, OLDSTYLE_FIGURES,
+            "oldstyle figures",
+            'o', 'n', 'u', 'm' )
 
-  COVERAGE_1( alternative_fractions, ALTERNATIVE_FRACTIONS,
-              "alternative fractions",
-              'a', 'f', 'r', 'c' ) /* Alternative Fractions */
+  COVERAGE( ordinals, ORDINALS,
+            "ordinals",
+            'o', 'r', 'd', 'n' )
+
+  COVERAGE( petite_capitals, PETITE_CAPITALS,
+            "petite capitals",
+            'p', 'c', 'a', 'p' )
+
+  COVERAGE( ruby, RUBY,
+            "ruby",
+            'r', 'u', 'b', 'y' )
+
+  COVERAGE( scientific_inferiors, SCIENTIFIC_INFERIORS,
+            "scientific inferiors",
+            's', 'i', 'n', 'f' )
+
+  COVERAGE( small_capitals, SMALL_CAPITALS,
+            "small capitals",
+            's', 'm', 'c', 'p' )
+
+  COVERAGE( subscript, SUBSCRIPT,
+            "subscript",
+            's', 'u', 'b', 's' )
+
+  COVERAGE( superscript, SUPERSCRIPT,
+            "superscript",
+            's', 'u', 'p', 's' )
+
+  COVERAGE( titling, TITLING,
+            "titling",
+            't', 'i', 't', 'l' )
+
+#if 0
+  /* to be always excluded */
+  COVERAGE(nalt, 'n', 'a', 'l', 't'); /* Alternate Annotation Forms (?) */
+  COVERAGE(ornm, 'o', 'r', 'n', 'm'); /* Ornaments (?) */
+#endif
+
 
 /* END */
