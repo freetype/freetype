@@ -230,9 +230,11 @@
   }
 
 
-  FT_UInt
+  FT_Error
   af_get_char_index( AF_StyleMetrics  metrics,
-                     FT_ULong         charcode )
+                     FT_ULong         charcode,
+                     FT_ULong        *codepoint,
+                     FT_Long         *y_offset )
   {
     FT_Face  face;
 
@@ -242,7 +244,10 @@
 
     face = metrics->globals->face;
 
-    return FT_Get_Char_Index( face, charcode );
+    *codepoint = FT_Get_Char_Index( face, charcode );
+    *y_offset  = 0;
+
+    return FT_Err_Ok;
   }
 
 
@@ -262,9 +267,11 @@
   }
 
 
-  FT_UInt
+  FT_Error
   af_get_char_index( AF_StyleMetrics  metrics,
-                     FT_ULong         charcode )
+                     FT_ULong         charcode,
+                     FT_ULong        *codepoint,
+                     FT_Long         *y_offset )
   {
     FT_Face  face;
 
@@ -274,7 +281,10 @@
 
     face = metrics->globals->face;
 
-    return FT_Get_Char_Index( face, charcode );
+    *codepoint = FT_Get_Char_Index( face, charcode );
+    *y_offset  = 0;
+
+    return FT_Err_Ok;
   }
 
 

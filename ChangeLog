@@ -1,3 +1,13 @@
+2013-12-31  Werner Lemberg  <wl@gnu.org>
+
+	[autofit] Fix interface of `af_get_char_index'.
+
+	* src/autofit/hbshim.c (af_get_char_index): Return error value.
+	Add argument for y offset (to be used in a yet-to-come patch).
+
+	* src/autofit/hbshim.h, src/autofit/afcjk.c,
+	src/autofit/aflatin.c: Updated.
+
 2013-12-30  Werner Lemberg  <wl@gnu.org>
 
 	[autofit] Don't combine multiple features into one set.

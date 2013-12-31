@@ -40,9 +40,11 @@ FT_BEGIN_HEADER
                    AF_StyleClass   style_class,
                    FT_Byte*        gstyles );
 
-  FT_UInt
+  FT_Error
   af_get_char_index( AF_StyleMetrics  metrics,
-                     FT_ULong         charcode );
+                     FT_ULong         charcode,
+                     FT_ULong        *codepoint,
+                     FT_Long         *y_offset );
 
  /* */
 

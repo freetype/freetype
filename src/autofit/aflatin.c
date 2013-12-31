@@ -74,7 +74,8 @@
 
     {
       FT_Error            error;
-      FT_UInt             glyph_index;
+      FT_ULong            glyph_index;
+      FT_Long             y_offset;
       int                 dim;
       AF_LatinMetricsRec  dummy[1];
       AF_Scaler           scaler = &dummy->root.scaler;
@@ -88,8 +89,10 @@
                                        [style_class->script];
 
 
-      glyph_index = af_get_char_index( &metrics->root,
-                                       script_class->standard_char );
+      af_get_char_index( &metrics->root,
+                         script_class->standard_char,
+                         &glyph_index,
+                         &y_offset );
       if ( glyph_index == 0 )
         goto Exit;
 
@@ -287,7 +290,8 @@
       while ( *p )
       {
         FT_ULong    ch;
-        FT_UInt     glyph_index;
+        FT_ULong    glyph_index;
+        FT_Long     y_offset;
         FT_Pos      best_y;                            /* same as points.y */
         FT_Int      best_point, best_contour_first, best_contour_last;
         FT_Vector*  points;
@@ -297,7 +301,7 @@
         GET_UTF8_CHAR( ch, p );
 
         /* load the character in the face -- skip unknown or empty ones */
-        glyph_index = af_get_char_index( &metrics->root, ch );
+        af_get_char_index( &metrics->root, ch, &glyph_index, &y_offset );
         if ( glyph_index == 0 )
         {
           FT_TRACE5(( "  U+%04lX unavailable\n", ch ));
@@ -743,10 +747,11 @@
     /* digit `0' is 0x30 in all supported charmaps */
     for ( i = 0x30; i <= 0x39; i++ )
     {
-      FT_UInt  glyph_index;
+      FT_ULong  glyph_index;
+      FT_Long   y_offset;
 
 
-      glyph_index = af_get_char_index( &metrics->root, i );
+      af_get_char_index( &metrics->root, i, &glyph_index, &y_offset );
       if ( glyph_index == 0 )
         continue;
 
