@@ -530,13 +530,13 @@
     if ( !error )
     {
       AF_StyleMetrics  metrics;
-      FT_UInt          options = AF_STYLE_NONE_DEFAULT;
+      FT_UInt          options = AF_STYLE_NONE_DFLT;
 
 
 #ifdef FT_OPTION_AUTOFIT2
       /* XXX: undocumented hook to activate the latin2 writing system */
       if ( load_flags & ( 1UL << 20 ) )
-        options = AF_STYLE_LTN2_DEFAULT;
+        options = AF_STYLE_LTN2_DFLT;
 #endif
 
       error = af_face_globals_get_metrics( loader->globals, gindex,

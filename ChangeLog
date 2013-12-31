@@ -1,5 +1,9 @@
 2013-12-31  Werner Lemberg  <wl@gnu.org>
 
+	[autofit] s/AF_STYLE_...._DEFAULT/AF_STYLE_...._DFLT/i.
+
+2013-12-31  Werner Lemberg  <wl@gnu.org>
+
 	[autofit] Fix interface of `af_get_char_index'.
 
 	* src/autofit/hbshim.c (af_get_char_index): Return error value.

@@ -335,7 +335,7 @@
 
     /* if we have a forced style (via `options'), use it, */
     /* otherwise look into `glyph_styles' array           */
-    if ( style == AF_STYLE_NONE_DEFAULT || style + 1 >= AF_STYLE_MAX )
+    if ( style == AF_STYLE_NONE_DFLT || style + 1 >= AF_STYLE_MAX )
       style = (AF_Style)( globals->glyph_styles[gindex] &
                           AF_STYLE_UNASSIGNED           );
 

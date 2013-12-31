@@ -26,42 +26,42 @@
   /* corresponding writing system, script, blue stringset, and     */
   /* coverage.                                                     */
 
-  STYLE( cyrl_default, CYRL_DEFAULT,
+  STYLE( cyrl_dflt, CYRL_DFLT,
          "Cyrillic default style",
          AF_WRITING_SYSTEM_LATIN,
          AF_SCRIPT_CYRL,
          AF_BLUE_STRINGSET_CYRL,
          AF_COVERAGE_DEFAULT )
 
-  STYLE( deva_default, DEVA_DEFAULT,
+  STYLE( deva_dflt, DEVA_DFLT,
          "Indic scripts default style",
          AF_WRITING_SYSTEM_INDIC,
          AF_SCRIPT_DEVA,
          (AF_Blue_Stringset)0, /* XXX */
          AF_COVERAGE_DEFAULT )
 
-  STYLE( grek_default, GREK_DEFAULT,
+  STYLE( grek_dflt, GREK_DFLT,
          "Greek default style",
          AF_WRITING_SYSTEM_LATIN,
          AF_SCRIPT_GREK,
          AF_BLUE_STRINGSET_GREK,
          AF_COVERAGE_DEFAULT )
 
-  STYLE( hani_default, HANI_DEFAULT,
+  STYLE( hani_dflt, HANI_DFLT,
          "CJKV ideographs default style",
          AF_WRITING_SYSTEM_CJK,
          AF_SCRIPT_HANI,
          AF_BLUE_STRINGSET_HANI,
          AF_COVERAGE_DEFAULT )
 
-  STYLE( hebr_default, HEBR_DEFAULT,
+  STYLE( hebr_dflt, HEBR_DFLT,
          "Hebrew default style",
          AF_WRITING_SYSTEM_LATIN,
          AF_SCRIPT_HEBR,
          AF_BLUE_STRINGSET_HEBR,
          AF_COVERAGE_DEFAULT )
 
-  STYLE( latn_default, LATN_DEFAULT,
+  STYLE( latn_dflt, LATN_DFLT,
          "Latin default style",
          AF_WRITING_SYSTEM_LATIN,
          AF_SCRIPT_LATN,
@@ -69,7 +69,7 @@
          AF_COVERAGE_DEFAULT )
 
 #ifdef FT_OPTION_AUTOFIT2
-  STYLE( ltn2_default, LTN2_DEFAULT,
+  STYLE( ltn2_dflt, LTN2_DFLT,
          "Latin 2 default style",
          AF_WRITING_SYSTEM_LATIN2,
          AF_SCRIPT_LATN,
@@ -77,7 +77,7 @@
          AF_COVERAGE_DEFAULT )
 #endif
 
-  STYLE( none_default, NONE_DEFAULT,
+  STYLE( none_dflt, NONE_DFLT,
          "no style",
          AF_WRITING_SYSTEM_DUMMY,
          AF_SCRIPT_NONE,

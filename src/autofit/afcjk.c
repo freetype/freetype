@@ -76,7 +76,7 @@
 
     FT_TRACE5(( "\n"
                 "cjk standard widths computation (style `%s')\n"
-                "===============================================\n"
+                "===================================================\n"
                 "\n",
                 af_style_names[metrics->root.style_class->style] ));
 
