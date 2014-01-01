@@ -102,6 +102,8 @@
 
     hb_set_t*  gsub_lookups;  /* GSUB lookups for a given script */
     hb_set_t*  gsub_glyphs;   /* glyphs covered by GSUB lookups  */
+    hb_set_t*  gpos_lookups;  /* GPOS lookups for a given script */
+    hb_set_t*  gpos_glyphs;   /* glyphs covered by GPOS lookups  */
 
     hb_tag_t         script;
     const hb_tag_t*  coverage_tags;
@@ -123,6 +125,8 @@
 
     gsub_lookups = hb_set_create();
     gsub_glyphs  = hb_set_create();
+    gpos_lookups = hb_set_create();
+    gpos_glyphs  = hb_set_create();
 
     coverage_tags = coverages[style_class->coverage];
     script        = scripts[style_class->script];
@@ -162,6 +166,12 @@
                                   NULL,
                                   coverage_tags,
                                   gsub_lookups );
+    hb_ot_layout_collect_lookups( face,
+                                  HB_OT_TAG_GPOS,
+                                  script_tags,
+                                  NULL,
+                                  coverage_tags,
+                                  gpos_lookups );
 
     FT_TRACE4(( "GSUB lookups (style `%s'):\n"
                 " ",
@@ -178,6 +188,7 @@
       count++;
 #endif
 
+      /* get output coverage of GSUB feature */
       hb_ot_layout_lookup_collect_glyphs( face,
                                           HB_OT_TAG_GSUB,
                                           idx,
@@ -191,9 +202,84 @@
     if ( !count )
       FT_TRACE4(( " (none)" ));
     FT_TRACE4(( "\n\n" ));
+#endif
 
-    FT_TRACE4(( "  glyphs (`*' means already assigned)" ));
+    FT_TRACE4(( "GPOS lookups (style `%s'):\n"
+                " ",
+                af_style_names[style_class->style] ));
 
+#ifdef FT_DEBUG_LEVEL_TRACE
+    count = 0;
+#endif
+
+    for ( idx = -1; hb_set_next( gpos_lookups, &idx ); )
+    {
+#ifdef FT_DEBUG_LEVEL_TRACE
+      FT_TRACE4(( " %d", idx ));
+      count++;
+#endif
+
+      /* get input coverage of GPOS feature */
+      hb_ot_layout_lookup_collect_glyphs( face,
+                                          HB_OT_TAG_GPOS,
+                                          idx,
+                                          NULL,
+                                          gpos_glyphs,
+                                          NULL,
+                                          NULL );
+    }
+
+#ifdef FT_DEBUG_LEVEL_TRACE
+    if ( !count )
+      FT_TRACE4(( " (none)" ));
+    FT_TRACE4(( "\n\n" ));
+#endif
+
+    /*
+     * Various OpenType features might use the same glyphs at different
+     * vertical positions; for example, superscript and subscript glyphs
+     * could be the same.  However, FreeType's auto-hinting is completely
+     * agnostic of OpenType features after the feature analysis has been
+     * completed: FreeType then simply receives a glyph index and returns a
+     * hinted and usually rendered glyph.
+     *
+     * Consider the superscript feature of font `pala.ttf': Some of the
+     * glyphs are `real', this is, they have a zero vertical offset, but
+     * most of them are small caps glyphs shifted up to the superscript
+     * position (this is, the `sups' feature is present in both the GSUB and
+     * GPOS tables).  The code for blue zones computation actually uses a
+     * feature's y offset so that the `real' glyphs get correct hints.  But
+     * later on it is impossible to decide whether a glyph index belongs to,
+     * say, the small caps or superscript feature.
+     *
+     * For this reason, we don't assign a style to a glyph if the current
+     * feature covers the glyph in both the GSUB and the GPOS tables.  This
+     * is quite a broad condition, assuming that
+     *
+     *   (a) glyphs that get used in multiple features are present in a
+     *       feature without vertical shift,
+     *
+     * and
+     *
+     *   (b) a feature's GPOS data really moves the glyph vertically.
+     *
+     * Not fulfilling condition (a) makes a font larger; it would also
+     * reduce the number of glyphs that could be addressed directly without
+     * using OpenType features, so this assumption is rather strong.
+     *
+     * Condition (b) is much weaker, and there might be glyphs which get
+     * missed.  However, the OpenType features we are going to handle are
+     * primarily located in GSUB, and HarfBuzz doesn't provide an API to
+     * directly get the necessary information from the GPOS table.  A
+     * possible solution might be to directly parse the GPOS table to find
+     * out whether a glyph gets shifted vertically, but this is something I
+     * would like to avoid if not really necessary.
+     *
+     */
+    hb_set_subtract( gsub_glyphs, gpos_glyphs );
+
+#ifdef FT_DEBUG_LEVEL_TRACE
+    FT_TRACE4(( "  glyphs without GPOS data (`*' means already assigned)" ));
     count = 0;
 #endif
 
@@ -225,6 +311,8 @@
 
     hb_set_destroy( gsub_lookups );
     hb_set_destroy( gsub_glyphs  );
+    hb_set_destroy( gpos_lookups );
+    hb_set_destroy( gpos_glyphs  );
 
     return FT_Err_Ok;
   }

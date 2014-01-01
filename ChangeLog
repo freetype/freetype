@@ -1,5 +1,13 @@
 2014-01-01  Werner Lemberg  <wl@gnu.org>
 
+	[autofit] Fix style assignments to glyphs.
+
+	* src/autofit/hbshim.c (af_get_coverage)
+	[FT_CONFIG_OPTION_USE_HARFBUZZ]: Scan GPOS coverage of features also
+	so that we can skip glyphs that have both GSUB and GPOS data.
+
+2014-01-01  Werner Lemberg  <wl@gnu.org>
+
 	* src/autofit/hbshim.c: s/{lookups,glyphs}/gsub_{lookups,glyphs}/.
 
 2014-01-01  Werner Lemberg  <wl@gnu.org>
