@@ -1,5 +1,20 @@
 2014-01-01  Werner Lemberg  <wl@gnu.org>
 
+	[autofit] Add more styles.
+
+	* src/autofit/afstyles.h (STYLE_LATIN, META_STYLE_LATIN): New
+	auxiliary macros; use them to define styles for Cyrillic, Greek, and
+	Latin.
+
+	* src/autofit/afcover.h: Remove coverage for oldstyle figures.
+	Since those digits are used in combination with ordinary letters, it
+	makes no sense to handle them separately.
+
+	* src/autofit/afglobal.c (af_face_globals_get_metrics): Don't limit
+	`options' parameter to 4 bits.
+
+2014-01-01  Werner Lemberg  <wl@gnu.org>
+
 	[autofit] Fix style assignments to glyphs.
 
 	* src/autofit/hbshim.c (af_get_coverage)

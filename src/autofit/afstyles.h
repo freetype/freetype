@@ -4,7 +4,7 @@
 /*                                                                         */
 /*    Auto-fitter styles (specification only).                             */
 /*                                                                         */
-/*  Copyright 2013 by                                                      */
+/*  Copyright 2013, 2014 by                                                */
 /*  David Turner, Robert Wilhelm, and Werner Lemberg.                      */
 /*                                                                         */
 /*  This file is part of the FreeType project, and may only be used,       */
@@ -25,13 +25,74 @@
   /* by a description string.  The next arguments are the          */
   /* corresponding writing system, script, blue stringset, and     */
   /* coverage.                                                     */
+  /*                                                               */
+  /* Note that styles using `AF_COVERAGE_DEFAULT' should always    */
+  /* come after styles with other coverages.                       */
+  /*                                                               */
+  /* Example:                                                      */
+  /*                                                               */
+  /*   STYLE( cyrl_dflt, CYRL_DFLT,                                */
+  /*          "Cyrillic default style",                            */
+  /*          AF_WRITING_SYSTEM_LATIN,                             */
+  /*          AF_SCRIPT_CYRL,                                      */
+  /*          AF_BLUE_STRINGSET_CYRL,                              */
+  /*          AF_COVERAGE_DEFAULT )                                */
 
-  STYLE( cyrl_dflt, CYRL_DFLT,
-         "Cyrillic default style",
-         AF_WRITING_SYSTEM_LATIN,
-         AF_SCRIPT_CYRL,
-         AF_BLUE_STRINGSET_CYRL,
-         AF_COVERAGE_DEFAULT )
+#undef  STYLE_LATIN
+#define STYLE_LATIN( s, S, f, F, ds, df, C ) \
+          STYLE( s ## _ ## f, S ## _ ## F,   \
+                 ds " " df " style",         \
+                 AF_WRITING_SYSTEM_LATIN,    \
+                 AF_SCRIPT_ ## S,            \
+                 AF_BLUE_STRINGSET_ ## S,    \
+                 AF_COVERAGE_ ## C )
+
+#undef  META_STYLE_LATIN
+#define META_STYLE_LATIN( s, S, ds )                     \
+          STYLE_LATIN( s, S, afrc, AFRC, ds,             \
+                       "alternative fractions",          \
+                       ALTERNATIVE_FRACTIONS )           \
+          STYLE_LATIN( s, S, c2cp, C2CP, ds,             \
+                       "petite capticals from capitals", \
+                       PETITE_CAPITALS_FROM_CAPITALS )   \
+          STYLE_LATIN( s, S, c2sc, C2SC, ds,             \
+                       "small capticals from capitals",  \
+                       SMALL_CAPITALS_FROM_CAPITALS )    \
+          STYLE_LATIN( s, S, dnom, DNOM, ds,             \
+                       "denominators",                   \
+                       DENOMINATORS )                    \
+          STYLE_LATIN( s, S, frac, FRAC, ds,             \
+                       "fractions",                      \
+                       FRACTIONS )                       \
+          STYLE_LATIN( s, S, numr, NUMR, ds,             \
+                       "numerators",                     \
+                       NUMERATORS )                      \
+          STYLE_LATIN( s, S, ordn, ORDN, ds,             \
+                       "ordinals",                       \
+                       ORDINALS )                        \
+          STYLE_LATIN( s, S, pcap, PCAP, ds,             \
+                       "petite capitals",                \
+                       PETITE_CAPITALS )                 \
+          STYLE_LATIN( s, S, sinf, SINF, ds,             \
+                       "scientific inferiors",           \
+                       SCIENTIFIC_INFERIORS )            \
+          STYLE_LATIN( s, S, smcp, SMCP, ds,             \
+                       "small capitals",                 \
+                       SMALL_CAPITALS )                  \
+          STYLE_LATIN( s, S, subs, SUBS, ds,             \
+                       "subscript",                      \
+                       SUBSCRIPT )                       \
+          STYLE_LATIN( s, S, sups, SUPS, ds,             \
+                       "superscript",                    \
+                       SUPERSCRIPT )                     \
+          STYLE_LATIN( s, S, titl, TITL, ds,             \
+                       "titling",                        \
+                       TITLING )                         \
+          STYLE_LATIN( s, S, dflt, DFLT, ds,             \
+                       "default",                        \
+                       DEFAULT )
+
+  META_STYLE_LATIN( cyrl, CYRL, "Cyrillic" )
 
   STYLE( deva_dflt, DEVA_DFLT,
          "Indic scripts default style",
@@ -40,12 +101,7 @@
          (AF_Blue_Stringset)0, /* XXX */
          AF_COVERAGE_DEFAULT )
 
-  STYLE( grek_dflt, GREK_DFLT,
-         "Greek default style",
-         AF_WRITING_SYSTEM_LATIN,
-         AF_SCRIPT_GREK,
-         AF_BLUE_STRINGSET_GREK,
-         AF_COVERAGE_DEFAULT )
+  META_STYLE_LATIN( grek, GREK, "Greek" )
 
   STYLE( hani_dflt, HANI_DFLT,
          "CJKV ideographs default style",
@@ -61,12 +117,7 @@
          AF_BLUE_STRINGSET_HEBR,
          AF_COVERAGE_DEFAULT )
 
-  STYLE( latn_dflt, LATN_DFLT,
-         "Latin default style",
-         AF_WRITING_SYSTEM_LATIN,
-         AF_SCRIPT_LATN,
-         AF_BLUE_STRINGSET_LATN,
-         AF_COVERAGE_DEFAULT )
+  META_STYLE_LATIN( latn, LATN, "Latin" )
 
 #ifdef FT_OPTION_AUTOFIT2
   STYLE( ltn2_dflt, LTN2_DFLT,

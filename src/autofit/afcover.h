@@ -49,10 +49,6 @@
             "numerators",
             'n', 'u', 'm', 'r' )
 
-  COVERAGE( oldstyle_figures, OLDSTYLE_FIGURES,
-            "oldstyle figures",
-            'o', 'n', 'u', 'm' )
-
   COVERAGE( ordinals, ORDINALS,
             "ordinals",
             'o', 'r', 'd', 'n' )

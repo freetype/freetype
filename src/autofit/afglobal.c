@@ -4,7 +4,7 @@
 /*                                                                         */
 /*    Auto-fitter routines to compute global hinting values (body).        */
 /*                                                                         */
-/*  Copyright 2003-2013 by                                                 */
+/*  Copyright 2003-2014 by                                                 */
 /*  David Turner, Robert Wilhelm, and Werner Lemberg.                      */
 /*                                                                         */
 /*  This file is part of the FreeType project, and may only be used,       */
@@ -320,7 +320,7 @@
   {
     AF_StyleMetrics  metrics = NULL;
 
-    AF_Style               style = (AF_Style)( options & 15 );
+    AF_Style               style = (AF_Style)options;
     AF_WritingSystemClass  writing_system_class;
     AF_StyleClass          style_class;
 
