@@ -4,7 +4,7 @@
 /*                                                                         */
 /*    HarfBuzz interface for accessing OpenType features (body).           */
 /*                                                                         */
-/*  Copyright 2013 by                                                      */
+/*  Copyright 2013, 2014 by                                                */
 /*  David Turner, Robert Wilhelm, and Werner Lemberg.                      */
 /*                                                                         */
 /*  This file is part of the FreeType project, and may only be used,       */
@@ -230,22 +230,96 @@
   }
 
 
+  /* construct HarfBuzz features */
+#undef  COVERAGE
+#define COVERAGE( name, NAME, description,                \
+                  tag1, tag2, tag3, tag4 )                \
+          static const hb_feature_t  name ## _feature[] = \
+          {                                               \
+            {                                             \
+              HB_TAG( tag1, tag2, tag3, tag4 ),           \
+              1, 0, -1                                    \
+            }                                             \
+          };
+
+
+#include "afcover.h"
+
+
+  /* define mapping between HarfBuzz features and AF_Coverage */
+#undef  COVERAGE
+#define COVERAGE( name, NAME, description, \
+                  tag1, tag2, tag3, tag4 ) \
+          name ## _feature,
+
+
+  static const hb_feature_t*  features[] =
+  {
+#include "afcover.h"
+
+    NULL /* AF_COVERAGE_DEFAULT */
+  };
+
+
   FT_Error
   af_get_char_index( AF_StyleMetrics  metrics,
                      FT_ULong         charcode,
                      FT_ULong        *codepoint,
                      FT_Long         *y_offset )
   {
-    FT_Face  face;
+    AF_StyleClass  style_class;
+
+    const hb_feature_t*  feature;
 
 
     if ( !metrics )
       return FT_THROW( Invalid_Argument );
 
-    face = metrics->globals->face;
+    style_class = metrics->style_class;
 
-    *codepoint = FT_Get_Char_Index( face, charcode );
-    *y_offset  = 0;
+    feature = features[style_class->coverage];
+
+    if ( feature )
+    {
+      hb_font_t*    font = metrics->globals->hb_font;
+      hb_buffer_t*  buf  = hb_buffer_create();
+
+      uint32_t  c = (uint32_t)charcode;
+
+      hb_glyph_info_t*      ginfo;
+      hb_glyph_position_t*  gpos;
+      unsigned int          gcount;
+
+
+      /* XXX: is this sufficient for a single character of any script? */
+      hb_buffer_set_direction( buf, HB_DIRECTION_LTR );
+      hb_buffer_set_script( buf, scripts[style_class->script] );
+
+      /* we add one character to `buf' ... */
+      hb_buffer_add_utf32( buf, &c, 1, 0, 1 );
+
+      /* ... and apply one feature */
+      hb_shape( font, buf, feature, 1 );
+
+      ginfo = hb_buffer_get_glyph_infos( buf, &gcount );
+      gpos  = hb_buffer_get_glyph_positions( buf, &gcount );
+
+      *codepoint = ginfo[0].codepoint;
+      *y_offset  = gpos[0].y_offset;
+
+      hb_buffer_destroy( buf );
+
+#ifdef FT_DEBUG_LEVEL_TRACE
+      if ( gcount > 1 )
+        FT_TRACE1(( "af_get_char_index:"
+                    " input character mapped to multiple glyphs\n" ));
+#endif
+    }
+    else
+    {
+      *codepoint = FT_Get_Char_Index( metrics->globals->face, charcode );
+      *y_offset  = 0;
+    }
 
     return FT_Err_Ok;
   }

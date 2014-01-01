@@ -4,7 +4,7 @@
 /*                                                                         */
 /*    Auto-fitter hinting routines for latin writing system (body).        */
 /*                                                                         */
-/*  Copyright 2003-2013 by                                                 */
+/*  Copyright 2003-2014 by                                                 */
 /*  David Turner, Robert Wilhelm, and Werner Lemberg.                      */
 /*                                                                         */
 /*  This file is part of the FreeType project, and may only be used,       */
@@ -619,6 +619,12 @@
               } while ( last != best_segment_first );
             }
           }
+
+          /* for computing blue zones, we add the y offset as returned */
+          /* by the currently used OpenType feature -- for example,    */
+          /* superscript glyphs might be identical to subscript glyphs */
+          /* with a vertical shift                                     */
+          best_y += y_offset;
 
           FT_TRACE5(( "  U+%04lX: best_y = %5ld", ch, best_y ));
 

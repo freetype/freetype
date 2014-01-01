@@ -1,3 +1,14 @@
+2014-01-01  Werner Lemberg  <wl@gnu.org>
+
+	[autofit] Implement and use `af_get_char_index' with HarfBuzz.
+
+	* src/autofit/hbshim.c (COVERAGE) [FT_CONFIG_OPTION_USE_HARFBUZZ]:
+	Redefine to construct HarfBuzz features.
+	(af_get_char_index) [FT_CONFIG_OPTION_USE_HARFBUZZ]: Rewritten.
+
+	* src/autofit/aflatin.c (af_latin_metrics_init_blues): Use
+	`y_offset' to adjust `best_y'.
+
 2013-12-31  Werner Lemberg  <wl@gnu.org>
 
 	[autofit] s/AF_STYLE_...._DEFAULT/AF_STYLE_...._DFLT/i.
@@ -2595,7 +2606,7 @@
 
 ----------------------------------------------------------------------------
 
-Copyright 2013 by
+Copyright 2013-2014 by
 David Turner, Robert Wilhelm, and Werner Lemberg.
 
 This file is part of the FreeType project, and may only be used, modified,
