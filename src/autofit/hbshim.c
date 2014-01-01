@@ -100,8 +100,8 @@
   {
     hb_face_t*  face;
 
-    hb_set_t*  lookups;  /* lookups for a given script */
-    hb_set_t*  glyphs;   /* glyphs covered by lookups  */
+    hb_set_t*  gsub_lookups;  /* GSUB lookups for a given script */
+    hb_set_t*  gsub_glyphs;   /* glyphs covered by GSUB lookups  */
 
     hb_tag_t         script;
     const hb_tag_t*  coverage_tags;
@@ -121,8 +121,8 @@
 
     face = hb_font_get_face( globals->hb_font );
 
-    lookups = hb_set_create();
-    glyphs  = hb_set_create();
+    gsub_lookups = hb_set_create();
+    gsub_glyphs  = hb_set_create();
 
     coverage_tags = coverages[style_class->coverage];
     script        = scripts[style_class->script];
@@ -161,9 +161,9 @@
                                   script_tags,
                                   NULL,
                                   coverage_tags,
-                                  lookups );
+                                  gsub_lookups );
 
-    FT_TRACE4(( "lookups (style `%s'):\n"
+    FT_TRACE4(( "GSUB lookups (style `%s'):\n"
                 " ",
                 af_style_names[style_class->style] ));
 
@@ -171,7 +171,7 @@
     count = 0;
 #endif
 
-    for ( idx = -1; hb_set_next( lookups, &idx ); )
+    for ( idx = -1; hb_set_next( gsub_lookups, &idx ); )
     {
 #ifdef FT_DEBUG_LEVEL_TRACE
       FT_TRACE4(( " %d", idx ));
@@ -184,7 +184,7 @@
                                           NULL,
                                           NULL,
                                           NULL,
-                                          glyphs );
+                                          gsub_glyphs );
     }
 
 #ifdef FT_DEBUG_LEVEL_TRACE
@@ -197,7 +197,7 @@
     count = 0;
 #endif
 
-    for ( idx = -1; hb_set_next( glyphs, &idx ); )
+    for ( idx = -1; hb_set_next( gsub_glyphs, &idx ); )
     {
 #ifdef FT_DEBUG_LEVEL_TRACE
       if ( !( count % 10 ) )
@@ -223,8 +223,8 @@
     FT_TRACE4(( "\n\n" ));
 #endif
 
-    hb_set_destroy( lookups );
-    hb_set_destroy( glyphs  );
+    hb_set_destroy( gsub_lookups );
+    hb_set_destroy( gsub_glyphs  );
 
     return FT_Err_Ok;
   }

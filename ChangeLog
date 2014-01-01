@@ -1,5 +1,9 @@
 2014-01-01  Werner Lemberg  <wl@gnu.org>
 
+	* src/autofit/hbshim.c: s/{lookups,glyphs}/gsub_{lookups,glyphs}/.
+
+2014-01-01  Werner Lemberg  <wl@gnu.org>
+
 	[autofit] Implement and use `af_get_char_index' with HarfBuzz.
 
 	* src/autofit/hbshim.c (COVERAGE) [FT_CONFIG_OPTION_USE_HARFBUZZ]:
