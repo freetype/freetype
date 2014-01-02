@@ -49,24 +49,12 @@
 
 #undef  META_STYLE_LATIN
 #define META_STYLE_LATIN( s, S, ds )                     \
-          STYLE_LATIN( s, S, afrc, AFRC, ds,             \
-                       "alternative fractions",          \
-                       ALTERNATIVE_FRACTIONS )           \
           STYLE_LATIN( s, S, c2cp, C2CP, ds,             \
                        "petite capticals from capitals", \
                        PETITE_CAPITALS_FROM_CAPITALS )   \
           STYLE_LATIN( s, S, c2sc, C2SC, ds,             \
                        "small capticals from capitals",  \
                        SMALL_CAPITALS_FROM_CAPITALS )    \
-          STYLE_LATIN( s, S, dnom, DNOM, ds,             \
-                       "denominators",                   \
-                       DENOMINATORS )                    \
-          STYLE_LATIN( s, S, frac, FRAC, ds,             \
-                       "fractions",                      \
-                       FRACTIONS )                       \
-          STYLE_LATIN( s, S, numr, NUMR, ds,             \
-                       "numerators",                     \
-                       NUMERATORS )                      \
           STYLE_LATIN( s, S, ordn, ORDN, ds,             \
                        "ordinals",                       \
                        ORDINALS )                        \

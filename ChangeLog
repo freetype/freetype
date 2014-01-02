@@ -1,5 +1,14 @@
 2014-01-01  Werner Lemberg  <wl@gnu.org>
 
+	[autofit] Remove some styles.
+
+	* src/autofit/afcover.h: Remove coverages for alternative fractions,
+	denominators, numerators, and fractions.
+
+	* src/autofit/afstyles.h (META_STYLE_LATIN): Updated.
+
+2014-01-01  Werner Lemberg  <wl@gnu.org>
+
 	[autofit] Add more styles.
 
 	* src/autofit/afstyles.h (STYLE_LATIN, META_STYLE_LATIN): New

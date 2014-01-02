@@ -25,9 +25,12 @@
   /* by a description string.  The last four arguments are the four    */
   /* characters defining the corresponding OpenType feature.           */
 
+#if 0
+  /* XXX: It's not possible to define blue zone characters in advance. */
   COVERAGE( alternative_fractions, ALTERNATIVE_FRACTIONS,
             "alternative fractions",
             'a', 'f', 'r', 'c' )
+#endif
 
   COVERAGE( petite_capitals_from_capitals, PETITE_CAPITALS_FROM_CAPITALS,
             "petite capitals from capitals",
@@ -37,17 +40,28 @@
             "small capitals from capitals",
             'c', '2', 's', 'c' )
 
+#if 0
+  /* XXX: Only digits are in this coverage, however, both normal style */
+  /*      and oldstyle representation forms are possible.              */
   COVERAGE( denominators, DENOMINATORS,
             "denominators",
             'd', 'n', 'o', 'm' )
+#endif
 
+#if 0
+  /* XXX: It's not possible to define blue zone characters in advance. */
   COVERAGE( fractions, FRACTIONS,
             "fractions",
             'f', 'r', 'a', 'c' )
+#endif
 
+#if 0
+  /* XXX: Only digits are in this coverage, however, both normal style */
+  /*      and oldstyle representation forms are possible.              */
   COVERAGE( numerators, NUMERATORS,
             "numerators",
             'n', 'u', 'm', 'r' )
+#endif
 
   COVERAGE( ordinals, ORDINALS,
             "ordinals",
