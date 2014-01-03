@@ -127,6 +127,7 @@
     FT_Byte*    gstyles     = globals->glyph_styles;
     FT_UInt     ss;
     FT_UInt     i;
+    FT_UInt     dflt        = -1;
 
 
     /* the value AF_STYLE_UNASSIGNED means `uncovered glyph' */
@@ -164,6 +165,9 @@
        */
       if ( style_class->coverage == AF_COVERAGE_DEFAULT )
       {
+        if ( style_class->script == globals->module->default_script )
+          dflt = ss;
+
         for ( range = script_class->script_uni_ranges;
               range->first != 0;
               range++ )
@@ -192,9 +196,24 @@
           }
         }
       }
+      else
+      {
+        /* get glyphs not directly addressable by cmap */
+        af_get_coverage( globals, style_class, gstyles );
+      }
+    }
 
-      /* get glyphs not directly addressable by cmap */
-      af_get_coverage( globals, style_class, gstyles );
+    /* handle the default OpenType features of the default script ... */
+    af_get_coverage( globals, AF_STYLE_CLASSES_GET[dflt], gstyles );
+
+    /* ... and the remaining default OpenType features */
+    for ( ss = 0; AF_STYLE_CLASSES_GET[ss]; ss++ )
+    {
+      AF_StyleClass  style_class = AF_STYLE_CLASSES_GET[ss];
+
+
+      if ( ss != dflt && style_class->coverage == AF_COVERAGE_DEFAULT )
+        af_get_coverage( globals, style_class, gstyles );
     }
 
     /* mark ASCII digits */

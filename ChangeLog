@@ -1,5 +1,13 @@
 2014-01-03  Werner Lemberg  <wl@gnu.org>
 
+	[autofit] Fix handling of default coverages.
+
+	* src/autofit/afglobal.c (af_face_globals_compute_style_coverage):
+	First handle non-default coverages, then the default coverage of the
+	default script, and finally the other default coverages.
+
+2014-01-03  Werner Lemberg  <wl@gnu.org>
+
 	[autofit] Fix scaling of HarfBuzz shaping.
 
 	* src/autofit/hbshim.c (af_get_char_index): Scale to units per EM.
