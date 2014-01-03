@@ -1,5 +1,11 @@
 2014-01-03  Werner Lemberg  <wl@gnu.org>
 
+	[autofit] Fix scaling of HarfBuzz shaping.
+
+	* src/autofit/hbshim.c (af_get_char_index): Scale to units per EM.
+
+2014-01-03  Werner Lemberg  <wl@gnu.org>
+
 	[autofit] Better ftgrid support.
 
 	* src/autofit/afhints.c (af_glyph_hints_get_segment_offset): Add

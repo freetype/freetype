@@ -369,6 +369,8 @@
 
     if ( feature )
     {
+      FT_UInt  upem = metrics->globals->face->units_per_EM;
+
       hb_font_t*    font = metrics->globals->hb_font;
       hb_buffer_t*  buf  = hb_buffer_create();
 
@@ -378,6 +380,9 @@
       hb_glyph_position_t*  gpos;
       unsigned int          gcount;
 
+
+      /* we shape at a size of units per EM; this means font units */
+      hb_font_set_scale( font, upem, upem );
 
       /* XXX: is this sufficient for a single character of any script? */
       hb_buffer_set_direction( buf, HB_DIRECTION_LTR );
