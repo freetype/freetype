@@ -2,6 +2,18 @@
 
 	[autofit] Fix handling of default coverages.
 
+	With this commit, the implementation of coverage handling is
+	completed.
+
+	* src/autofit/hbshim.c (af_get_coverage): Exit early if nothing to
+	do.
+	Reject coverages which don't contain appropriate glyphs for blue
+	zones.
+
+2014-01-03  Werner Lemberg  <wl@gnu.org>
+
+	[autofit] Fix handling of default coverages.
+
 	* src/autofit/afglobal.c (af_face_globals_compute_style_coverage):
 	First handle non-default coverages, then the default coverage of the
 	default script, and finally the other default coverages.

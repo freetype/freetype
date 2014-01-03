@@ -166,6 +166,10 @@
                                   NULL,
                                   coverage_tags,
                                   gsub_lookups );
+
+    if ( hb_set_is_empty( gsub_lookups ) )
+      return FT_Err_Ok; /* nothing to do */
+
     hb_ot_layout_collect_lookups( face,
                                   HB_OT_TAG_GPOS,
                                   script_tags,
@@ -234,6 +238,53 @@
       FT_TRACE4(( " (none)" ));
     FT_TRACE4(( "\n\n" ));
 #endif
+
+    /*
+     * We now check whether we can construct blue zones, using glyphs
+     * covered by the feature only.  In case there is not a single zone
+     * (this is, not a single character is covered), we skip this coverage.
+     *
+     */
+    {
+      AF_Blue_Stringset         bss = style_class->blue_stringset;
+      const AF_Blue_StringRec*  bs  = &af_blue_stringsets[bss];
+
+      FT_Bool  found = 0;
+
+
+      for ( ; bs->string != AF_BLUE_STRING_MAX; bs++ )
+      {
+        const char*  p = &af_blue_strings[bs->string];
+
+
+        while ( *p )
+        {
+          hb_codepoint_t  ch;
+
+
+          GET_UTF8_CHAR( ch, p );
+
+          for ( idx = -1; hb_set_next( gsub_lookups, &idx ); )
+          {
+            hb_codepoint_t  gidx = FT_Get_Char_Index( globals->face, ch );
+
+
+            if ( hb_ot_layout_lookup_would_substitute( face, idx,
+                                                       &gidx, 1, 1 ) )
+            {
+              found = 1;
+              break;
+            }
+          }
+        }
+      }
+
+      if ( !found )
+      {
+        FT_TRACE4(( "  no blue characters found; style skipped\n" ));
+        return FT_Err_Ok;
+      }
+    }
 
     /*
      * Various OpenType features might use the same glyphs at different
