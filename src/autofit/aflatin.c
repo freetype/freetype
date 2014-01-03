@@ -89,6 +89,9 @@
                                        [style_class->script];
 
 
+      /* XXX: Extend this with a list of possible standard characters: */
+      /*      Especially in non-default coverages, a singe standard    */
+      /*      character may not be available.                          */
       af_get_char_index( &metrics->root,
                          script_class->standard_char,
                          &glyph_index,

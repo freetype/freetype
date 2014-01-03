@@ -1,5 +1,12 @@
 2014-01-03  Werner Lemberg  <wl@gnu.org>
 
+	[autofit] Thinko.
+
+	* src/autofit/hbshim.c (af_get_char_index): Similar to
+	`af_get_coverage', reject glyphs which are not substituted.
+
+2014-01-03  Werner Lemberg  <wl@gnu.org>
+
 	[autofit] Fix handling of default coverages.
 
 	With this commit, the implementation of coverage handling is
