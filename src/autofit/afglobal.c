@@ -137,10 +137,10 @@
     error = FT_Select_Charmap( face, FT_ENCODING_UNICODE );
     if ( error )
     {
-     /*
-      *  Ignore this error; we simply use the fallback style.
-      *  XXX: Shouldn't we rather disable hinting?
-      */
+      /*
+       * Ignore this error; we simply use the fallback style.
+       * XXX: Shouldn't we rather disable hinting?
+       */
       error = FT_Err_Ok;
       goto Exit;
     }
