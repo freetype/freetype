@@ -81,30 +81,13 @@
                        DEFAULT )
 
   META_STYLE_LATIN( cyrl, CYRL, "Cyrillic" )
-
-  STYLE( deva_dflt, DEVA_DFLT,
-         "Indic scripts default style",
-         AF_WRITING_SYSTEM_INDIC,
-         AF_SCRIPT_DEVA,
-         (AF_Blue_Stringset)0, /* XXX */
-         AF_COVERAGE_DEFAULT )
-
   META_STYLE_LATIN( grek, GREK, "Greek" )
-
-  STYLE( hani_dflt, HANI_DFLT,
-         "CJKV ideographs default style",
-         AF_WRITING_SYSTEM_CJK,
-         AF_SCRIPT_HANI,
-         AF_BLUE_STRINGSET_HANI,
-         AF_COVERAGE_DEFAULT )
-
   STYLE( hebr_dflt, HEBR_DFLT,
          "Hebrew default style",
          AF_WRITING_SYSTEM_LATIN,
          AF_SCRIPT_HEBR,
          AF_BLUE_STRINGSET_HEBR,
          AF_COVERAGE_DEFAULT )
-
   META_STYLE_LATIN( latn, LATN, "Latin" )
 
 #ifdef FT_OPTION_AUTOFIT2
@@ -122,6 +105,46 @@
          AF_SCRIPT_NONE,
          (AF_Blue_Stringset)0,
          AF_COVERAGE_DEFAULT )
+
+#ifdef AF_CONFIG_OPTION_INDIC
+
+  /* no blue stringset support for the Indic writing system yet */
+#undef  STYLE_DEFAULT_INDIC
+#define STYLE_DEFAULT_INDIC( s, S, d )    \
+          STYLE( s ## _dflt, S ## _DFLT,  \
+                 d " default style",      \
+                 AF_WRITING_SYSTEM_INDIC, \
+                 AF_SCRIPT_ ## S,         \
+                 (AF_Blue_Stringset)0,    \
+                 AF_COVERAGE_DEFAULT )
+
+  STYLE_DEFAULT_INDIC( beng, BENG, "Bengali" )
+  STYLE_DEFAULT_INDIC( deva, DEVA, "Devanagari" )
+  STYLE_DEFAULT_INDIC( gujr, GUJR, "Gujarati" )
+  STYLE_DEFAULT_INDIC( guru, GURU, "Gurmukhi" )
+  STYLE_DEFAULT_INDIC( knda, KNDA, "Kannada" )
+  STYLE_DEFAULT_INDIC( limb, LIMB, "Limbu" )
+  STYLE_DEFAULT_INDIC( mlym, MLYM, "Malayalam" )
+  STYLE_DEFAULT_INDIC( orya, ORYA, "Oriya" )
+  STYLE_DEFAULT_INDIC( sinh, SINH, "Sinhala" )
+  STYLE_DEFAULT_INDIC( sund, SUND, "Sundanese" )
+  STYLE_DEFAULT_INDIC( sylo, SYLO, "Syloti Nagri" )
+  STYLE_DEFAULT_INDIC( taml, TAML, "Tamil" )
+  STYLE_DEFAULT_INDIC( telu, TELU, "Telugu" )
+  STYLE_DEFAULT_INDIC( tibt, TIBT, "Tibetan" )
+
+#endif /* AF_CONFIG_OPTION_INDIC */
+
+#ifdef AF_CONFIG_OPTION_CJK
+
+  STYLE( hani_dflt, HANI_DFLT,
+         "CJKV ideographs default style",
+         AF_WRITING_SYSTEM_CJK,
+         AF_SCRIPT_HANI,
+         AF_BLUE_STRINGSET_HANI,
+         AF_COVERAGE_DEFAULT )
+
+#endif /* AF_CONFIG_OPTION_CJK */
 
 
 /* END */

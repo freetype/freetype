@@ -1,3 +1,27 @@
+2014-01-04  Werner Lemberg  <wl@gnu.org>
+
+	[autofit] Fix Indic scripts.
+
+	Split the single, incorrect Indic entry into separate scripts so
+	that the covered ranges are the same: Bengali, Devanagari, Gujarati,
+	Gurmukhi, Kannada, Limbu, Malayalam, Oriya, Sinhala, Sundanese,
+	Syloti Nagri, Tamil, Telugu, and Tibetan.  At the same time, remove
+	entries for Meetai Mayak and Sharada – the Unicode ranges were
+	incorrect (and nobody has complained about that), fonts are scarce
+	for those scripts, and the Indic auto-hinter support is rudimentary
+	anyways.
+
+	* src/autofit/afscript.h: Updated, using AF_CONFIG_OPTION_INDIC and
+	AF_CONFIG_OPTION_CJK.
+
+	* src/autofit/afstyles.h (STYLE_DEFAULT_INDIC): New auxiliary macro.
+	Use it, together with AF_CONFIG_OPTION_INDIC and
+	AF_CONFIG_OPTION_CJK, to update.
+
+	* src/autofit/afranges.c [AF_CONFIG_OPTION_INDIC]: Updated.
+	[!AF_CONFIG_OPTION_INDIC, !AF_CONFIG_OPTION_CJK]: Removed.
+	Sort entries by tags.
+
 2014-01-03  Werner Lemberg  <wl@gnu.org>
 
 	[autofit] Thinko.
