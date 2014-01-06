@@ -1,3 +1,13 @@
+2014-01-06  Werner Lemberg  <wl@gnu.org>
+
+	Add manual page for `freetype-config'.
+	Contributed by Nis Martensen <nis.martensen@web.de>.
+
+	* docs/freetype-config.1: New file.
+
+	* builds/unix/unix-def.in (mandir): Define.
+	* builds/unix/install.mk (install, uninstall): Handle manpage.
+
 2014-01-05  Werner Lemberg  <wl@gnu.org>
 
 	[autofit] Minor fixes for `afblue.pl'.
