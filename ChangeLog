@@ -1,3 +1,11 @@
+2014-01-08  Chongyu Zhu  <lembacon@gmail.com>
+
+	[arm] Fix Savannah bug #41138, part 2.
+
+	* builds/unix/ftconfig.in (FT_MulFix_arm), include/config/ftconfig.h
+	(FT_MulFix_arm), src/truetype/ttinterp.c (TT_MulFix14_arm): Fix
+	preprocessor conditionals for `add.w'.
+
 2014-01-08  Werner Lemberg  <wl@gnu.org>
 
 	[autofit] Fix Savannah bug #41138, part 1.
