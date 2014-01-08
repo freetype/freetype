@@ -109,7 +109,7 @@ FT_BEGIN_HEADER
 #endif /* AF_CONFIG_OPTION_CJK_BLUE_HANI_VERT */
     af_blue_1_2 = af_blue_1_1_2 + 0,
 #else
-    af_blue_1_2 = af_blue_1_1_2 + 0,
+    af_blue_1_2 = af_blue_1_1 + 0,
 #endif /* AF_CONFIG_OPTION_CJK                */
 
 
@@ -168,7 +168,7 @@ FT_BEGIN_HEADER
 #endif /* AF_CONFIG_OPTION_CJK_BLUE_HANI_VERT */
     af_blue_2_2 = af_blue_2_1_2 + 1,
 #else
-    af_blue_2_2 = af_blue_2_1_2 + 0,
+    af_blue_2_2 = af_blue_2_1 + 0,
 #endif /* AF_CONFIG_OPTION_CJK                */
 
 

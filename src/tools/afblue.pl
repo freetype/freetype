@@ -5,7 +5,7 @@
 #
 # Process a blue zone character data file.
 #
-# Copyright 2013 by
+# Copyright 2013, 2014 by
 # David Turner, Robert Wilhelm, and Werner Lemberg.
 #
 # This file is part of the FreeType project, and may only be used,
@@ -350,18 +350,20 @@ while (<DATA>)
         Die("unbalanced #endif") unless defined($prev_else);
 
         pop @name_stack;
-        $name_stack[$#name_stack]++;
 
         # If there is no else-clause for an if-clause, we add one.  This is
         # necessary to have correct offsets.
         if (!$prev_else)
         {
           # Use amount of whitespace from `endif'.
-          push @{$diversions{$curr_enum}}, enum_val_string(aux_name())
+          push @{$diversions{$curr_enum}}, enum_val_string(aux_name_next())
                                            . $1 . "else\n";
+          $last_aux = aux_name();
 
           $curr_offset = 0;
         }
+
+        $name_stack[$#name_stack]++;
 
         push @{$diversions{$curr_enum}}, enum_val_string(aux_name());
         $last_aux = aux_name();

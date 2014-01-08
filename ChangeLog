@@ -1,3 +1,12 @@
+2014-01-08  Werner Lemberg  <wl@gnu.org>
+
+	[autofit] Fix Savannah bug #41138, part 1.
+
+	* src/tools/afblue.pl <Handling #endif>: Produce correct auxiliary
+	enumeration names for generated `#else'.
+
+	* src/autofit/afblue.h: Regenerated.
+
 2014-01-06  Werner Lemberg  <wl@gnu.org>
 
 	Add manual page for `freetype-config'.
