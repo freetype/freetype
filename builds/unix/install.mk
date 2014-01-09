@@ -33,7 +33,8 @@ install: $(PROJECT_LIBRARY)
                          $(DESTDIR)$(libdir)/pkgconfig            \
                          $(DESTDIR)$(includedir)/freetype2/config \
                          $(DESTDIR)$(bindir)                      \
-                         $(DESTDIR)$(datadir)/aclocal
+                         $(DESTDIR)$(datadir)/aclocal             \
+                         $(DESTDIR)$(mandir)/man1
 	$(LIBTOOL) --mode=install $(INSTALL)                             \
                                   $(PROJECT_LIBRARY) $(DESTDIR)$(libdir)
 	-for P in $(PUBLIC_H) ; do                  \
