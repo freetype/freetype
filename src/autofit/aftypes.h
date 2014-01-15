@@ -4,7 +4,7 @@
 /*                                                                         */
 /*    Auto-fitter types (specification only).                              */
 /*                                                                         */
-/*  Copyright 2003-2009, 2011-2013 by                                      */
+/*  Copyright 2003-2009, 2011-2014 by                                      */
 /*  David Turner, Robert Wilhelm, and Werner Lemberg.                      */
 /*                                                                         */
 /*  This file is part of the FreeType project, and may only be used,       */
@@ -233,9 +233,9 @@ extern void*  _af_debug_hints;
   /*************************************************************************/
 
   /*
-   *  In FreeType, a writing system consists of multiple scripts that can
-   *  be handled similarly *in a typographical way*; the relationship is not
-   *  based on history.  For example, both the Greek and the unrelated
+   *  For the auto-hinter, a writing system consists of multiple scripts that
+   *  can be handled similarly *in a typographical way*; the relationship is
+   *  not based on history.  For example, both the Greek and the unrelated
    *  Armenian scripts share the same features like ascender, descender,
    *  x-height, etc.  Essentially, a writing system is covered by a
    *  submodule of the auto-fitter; it contains

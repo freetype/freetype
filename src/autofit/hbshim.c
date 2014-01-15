@@ -289,9 +289,9 @@
     /*
      * Various OpenType features might use the same glyphs at different
      * vertical positions; for example, superscript and subscript glyphs
-     * could be the same.  However, FreeType's auto-hinting is completely
+     * could be the same.  However, the auto-hinter is completely
      * agnostic of OpenType features after the feature analysis has been
-     * completed: FreeType then simply receives a glyph index and returns a
+     * completed: The engine then simply receives a glyph index and returns a
      * hinted and usually rendered glyph.
      *
      * Consider the superscript feature of font `pala.ttf': Some of the
@@ -485,7 +485,7 @@
   }
 
 
-#else /* !FT_CONFIG_OPTION_USE_HARDBUZZ */
+#else /* !FT_CONFIG_OPTION_USE_HARFBUZZ */
 
 
   FT_Error
