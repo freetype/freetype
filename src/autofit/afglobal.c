@@ -19,6 +19,17 @@
 #include "afglobal.h"
 #include "afranges.h"
 #include "hbshim.h"
+#include FT_INTERNAL_DEBUG_H
+
+
+  /*************************************************************************/
+  /*                                                                       */
+  /* The macro FT_COMPONENT is used in trace mode.  It is an implicit      */
+  /* parameter of the FT_TRACE() and FT_ERROR() macros, used to print/log  */
+  /* messages during execution.                                            */
+  /*                                                                       */
+#undef  FT_COMPONENT
+#define FT_COMPONENT  trace_afglobal
 
 
   /* get writing system specific header files */
@@ -245,6 +256,45 @@
         }
       }
     }
+
+#ifdef FT_DEBUG_LEVEL_TRACE
+
+    FT_TRACE4(( "\n"
+                "style coverage\n"
+                "==============\n"
+                "\n" ));
+
+    for ( ss = 0; AF_STYLE_CLASSES_GET[ss]; ss++ )
+    {
+      AF_StyleClass  style_class = AF_STYLE_CLASSES_GET[ss];
+      FT_UInt        count       = 0;
+      FT_Long        idx;
+
+
+      FT_TRACE4(( "%s:\n", af_style_names[style_class->style] ));
+
+      for ( idx = 0; idx < globals->glyph_count; idx++ )
+      {
+        if ( ( gstyles[idx] & ~AF_DIGIT ) == style_class->style )
+        {
+          if ( !( count % 10 ) )
+            FT_TRACE4(( " " ));
+
+          FT_TRACE4(( " %d", idx ));
+          count++;
+
+          if ( !( count % 10 ) )
+            FT_TRACE4(( "\n" ));
+        }
+      }
+
+      if ( !count )
+        FT_TRACE4(( "  (none)\n" ));
+      if ( count % 10 )
+        FT_TRACE4(( "\n" ));
+    }
+
+#endif /* FT_DEBUG_LEVEL_TRACE */
 
     FT_Set_Charmap( face, old_charmap );
     return error;

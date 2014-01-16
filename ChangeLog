@@ -1,3 +1,15 @@
+2014-01-16  Werner Lemberg  <wl@gnu.org>
+
+	[autofit] Improve tracing of style coverages.
+
+	* include/internal/fttrace.h: Add `afglobal' for tracing style
+	coverages.
+
+	* src/autofit/afglobal.c: Include FT_INTERNAL_DEBUG_H.
+	(FT_COMPONENT): Define.
+	(af_face_globals_compute_style_coverage): Trace `gstyles' array
+	data.
+
 2014-01-09  Werner Lemberg  <wl@gnu.org>
 
 	Fix Savannah bug #41158.
