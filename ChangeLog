@@ -1,5 +1,13 @@
 2014-01-23  Werner Lemberg  <wl@gnu.org>
 
+	Fix Savannah bug #41310.
+
+	* src/sfnt/ttsbit.c (tt_sbit_decoder_load_bitmap) <glyph_format==5>:
+	Don't check metrics, which this format doesn't have.
+	This is another correction to the commit from 2013-11-21.
+
+2014-01-23  Werner Lemberg  <wl@gnu.org>
+
 	Fix Savannah bug #41309.
 
 	* src/type1/t1load.c (t1_parse_font_matrix): Properly handle result

@@ -4,7 +4,7 @@
 /*                                                                         */
 /*    TrueType and OpenType embedded bitmap support (body).                */
 /*                                                                         */
-/*  Copyright 2005-2009, 2013 by                                           */
+/*  Copyright 2005-2009, 2013, 2014 by                                     */
 /*  David Turner, Robert Wilhelm, and Werner Lemberg.                      */
 /*                                                                         */
 /*  Copyright 2013 by Google, Inc.                                         */
@@ -967,7 +967,6 @@
         break;
 
       case 2:
-      case 5:
       case 7:
         {
           /* Don't trust `glyph_format'.  For example, Apple's main Korean */
@@ -995,6 +994,10 @@
           else
             loader = tt_sbit_decoder_load_bit_aligned;
         }
+        break;
+
+      case 5:
+        loader = tt_sbit_decoder_load_bit_aligned;
         break;
 
       case 8:
