@@ -4,7 +4,7 @@
 /*                                                                         */
 /*    Type 1 font loader (body).                                           */
 /*                                                                         */
-/*  Copyright 1996-2013 by                                                 */
+/*  Copyright 1996-2014 by                                                 */
 /*  David Turner, Robert Wilhelm, and Werner Lemberg.                      */
 /*                                                                         */
 /*  This file is part of the FreeType project, and may only be used,       */
@@ -1107,7 +1107,7 @@
 
     result = T1_ToFixedArray( parser, 6, temp, 3 );
 
-    if ( result < 0 )
+    if ( result < 6 )
     {
       parser->root.error = FT_THROW( Invalid_File_Format );
       return;

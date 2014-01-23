@@ -1,3 +1,20 @@
+2014-01-23  Werner Lemberg  <wl@gnu.org>
+
+	Fix Savannah bug #41309.
+
+	* src/type1/t1load.c (t1_parse_font_matrix): Properly handle result
+	of `T1_ToFixedArray'.
+
+	* src/cid/cidload.c (cid_parse_font_matrix): Synchronize with
+	`t1_parse_font_matrix'.
+
+	* src/type42/t42parse.c (t42_parse_font_matrix): Synchronize with
+	`t1_parse_font_matrix'.
+	(t42_parse_encoding): Synchronize with `t1_parse_encoding'.
+
+	* src/psaux/psobjs.c (ps_parser_load_field) <T1_FIELD_TYPE_BBOX>,
+	<T1_FIELD_TYPE_MMOX>: Properly handle result of `ps_tofixedarray'.
+
 2014-01-22  Werner Lemberg  <wl@gnu.org>
 
 	* src/autofit/hbshim.c (af_get_coverage): Fix memory leaks.
