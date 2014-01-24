@@ -1,3 +1,10 @@
+2014-01-24  Werner Lemberg  <wl@gnu.org>
+
+	Fix Savannah bug #41320.
+
+	* src/autofit/aflatin.c (af_latin_metrics_init_blues)
+	<AF_LATIN_IS_LONG_BLUE>: Avoid negative index of `last'.
+
 2014-01-23  Werner Lemberg  <wl@gnu.org>
 
 	Fix Savannah bug #41310.

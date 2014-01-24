@@ -592,7 +592,10 @@
                       if ( FT_ABS( points[next].x - points[first].x ) <=
                              20 * dist )
                       {
-                        last--;
+                        if ( last > best_contour_first )
+                          last--;
+                        else
+                          last = best_contour_last;
                         break;
                       }
 
