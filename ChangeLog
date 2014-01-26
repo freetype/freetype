@@ -1,3 +1,26 @@
+2014-01-26  Werner Lemberg  <wl@gnu.org>
+
+	[autofit] Introduce two more slots for standard characters.
+
+	This is useful for OpenType features like `c2sc' (caps to small
+	caps) that don't have lowercase letters by definition, or other
+	features that mainly operate on numerals.
+
+	* src/autofit/afscript.h: Add more standard characters.
+
+	* src/autofit/aftypes.h: Update use of `SCRIPT' macro.
+	(AF_ScriptClassRec): Add members to hold two more standard
+	characters.
+	(AF_DEFINE_SCRIPT_CLASS): Updated.
+
+	* src/autofit/afglobal.c, src/autofit/afglobal.h,
+	* src/autofit/afpic.c, src/autofit/afranges.h, src/autofit/hbshim.c:
+	Update use of `SCRIPT' macro.
+
+	* src/autofit/afcjk.c (af_cjk_metrics_init_widths),
+	src/autofit/aflatin.c (af_latin_metrics_init_widths): Scan two more
+	standard characters.
+
 2014-01-24  Werner Lemberg  <wl@gnu.org>
 
 	Fix Savannah bug #41320.

@@ -101,16 +101,46 @@
       AF_ScriptClass  script_class = AF_SCRIPT_CLASSES_GET
                                        [style_class->script];
 
+      FT_UInt32  standard_char;
+
 
       af_get_char_index( &metrics->root,
-                         script_class->standard_char,
+                         script_class->standard_char1,
                          &glyph_index,
                          &y_offset );
       if ( glyph_index == 0 )
-        goto Exit;
+      {
+        if ( script_class->standard_char2 )
+        {
+          af_get_char_index( &metrics->root,
+                             script_class->standard_char2,
+                             &glyph_index,
+                             &y_offset );
+          if ( glyph_index == 0 )
+          {
+            if ( script_class->standard_char3 )
+            {
+              af_get_char_index( &metrics->root,
+                                 script_class->standard_char3,
+                                 &glyph_index,
+                                 &y_offset );
+              if ( glyph_index == 0 )
+                goto Exit;
+              else
+                standard_char = script_class->standard_char3;
+            }
+          }
+          else
+            standard_char = script_class->standard_char2;
+        }
+        else
+          goto Exit;
+      }
+      else
+        standard_char = script_class->standard_char1;
 
       FT_TRACE5(( "standard character: U+%04lX (glyph index %d)\n",
-                  script_class->standard_char, glyph_index ));
+                  standard_char, glyph_index ));
 
       error = FT_Load_Glyph( face, glyph_index, FT_LOAD_NO_SCALE );
       if ( error || face->glyph->outline.n_points <= 0 )

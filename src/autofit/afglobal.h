@@ -5,7 +5,7 @@
 /*    Auto-fitter routines to compute global hinting values                */
 /*    (specification).                                                     */
 /*                                                                         */
-/*  Copyright 2003-2005, 2007, 2009, 2011-2013 by                          */
+/*  Copyright 2003-2005, 2007, 2009, 2011-2014 by                          */
 /*  David Turner, Robert Wilhelm, and Werner Lemberg.                      */
 /*                                                                         */
 /*  This file is part of the FreeType project, and may only be used,       */
@@ -34,7 +34,7 @@ FT_BEGIN_HEADER
 
 
 #undef  SCRIPT
-#define SCRIPT( s, S, d, h, dc )                               \
+#define SCRIPT( s, S, d, h, sc1, sc2, sc3 )                    \
           AF_DECLARE_SCRIPT_CLASS( af_ ## s ## _script_class )
 
 #include "afscript.h"
