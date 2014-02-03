@@ -61,7 +61,9 @@
 
     FT_ASSERT( unitsPerEm > 0 );
 
-    FT_ASSERT( transform->a > 0 && transform->d > 0 );
+    if ( transform->a <= 0 || transform->d <= 0 )
+      return FT_THROW( Invalid_Size_Handle );
+
     FT_ASSERT( transform->b == 0 && transform->c == 0 );
     FT_ASSERT( transform->tx == 0 && transform->ty == 0 );
 
@@ -357,9 +359,12 @@
       /* also get units per em to validate scale */
       font->unitsPerEm = (CF2_Int)cf2_getUnitsPerEm( decoder );
 
-      error2 = cf2_checkTransform( &transform, font->unitsPerEm );
-      if ( error2 )
-        return error2;
+      if ( scaled )
+      {
+        error2 = cf2_checkTransform( &transform, font->unitsPerEm );
+        if ( error2 )
+          return error2;
+      }
 
       error2 = cf2_getGlyphOutline( font, &buf, &transform, &glyphWidth );
       if ( error2 )
@@ -389,8 +394,16 @@
     FT_ASSERT( decoder                          &&
                decoder->builder.face            &&
                decoder->builder.face->root.size );
-    FT_ASSERT( decoder->builder.face->root.size->metrics.y_ppem );
 
+    /*
+     * Note that `y_ppem' can be zero if there wasn't a call to
+     * `FT_Set_Char_Size' or something similar.  However, this isn't a
+     * problem since we come to this place in the code only if
+     * FT_LOAD_NO_SCALE is set (the other case gets caught by
+     * `cf2_checkTransform').  The ppem value is needed to compute the stem
+     * darkening, which is disabled for getting the unscaled outline.
+     *
+     */
     return cf2_intToFixed(
              decoder->builder.face->root.size->metrics.y_ppem );
   }

@@ -1,3 +1,13 @@
+2014-02-03  Werner Lemberg  <wl@gnu.org>
+
+	[cff] Fix Savannah bug #41363.
+
+	* src/cff/cf2ft.c (cf2_checkTransform): Convert assertion into
+	parameter check.
+	(cf2_decoder_parse_charstrings): Call `cf2_checkTransform' only if
+	we are scaling the outline.
+	(cf2_getPpemY): Remove problematic assertion.
+
 2014-01-26  Werner Lemberg  <wl@gnu.org>
 
 	[autofit] Introduce two more slots for standard characters.
