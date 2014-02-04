@@ -1,3 +1,12 @@
+2014-02-04  Werner Lemberg  <wl@gnu.org>
+
+	[autofit] Minor fix.
+
+	* src/autofit/afcjk.c (af_cjk_metrics_init_widths),
+	src/autofit/aflatin.c (af_latin_metrics_init_widths): Fix handling
+	of alternative standard characters.
+	This also fixes a compilation warning in non-debug mode.
+
 2014-02-03  Werner Lemberg  <wl@gnu.org>
 
 	[cff] Fix Savannah bug #41363.

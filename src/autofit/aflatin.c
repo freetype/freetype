@@ -98,40 +98,39 @@
        * numerals.
        */
 
+      standard_char = script_class->standard_char1;
       af_get_char_index( &metrics->root,
-                         script_class->standard_char1,
+                         standard_char,
                          &glyph_index,
                          &y_offset );
-      if ( glyph_index == 0 )
+      if ( !glyph_index )
       {
         if ( script_class->standard_char2 )
         {
+          standard_char = script_class->standard_char2;
           af_get_char_index( &metrics->root,
-                             script_class->standard_char2,
+                             standard_char,
                              &glyph_index,
                              &y_offset );
-          if ( glyph_index == 0 )
+          if ( !glyph_index )
           {
             if ( script_class->standard_char3 )
             {
+              standard_char = script_class->standard_char3;
               af_get_char_index( &metrics->root,
-                                 script_class->standard_char3,
+                                 standard_char,
                                  &glyph_index,
                                  &y_offset );
-              if ( glyph_index == 0 )
+              if ( !glyph_index )
                 goto Exit;
-              else
-                standard_char = script_class->standard_char3;
             }
+            else
+              goto Exit;
           }
-          else
-            standard_char = script_class->standard_char2;
         }
         else
           goto Exit;
       }
-      else
-        standard_char = script_class->standard_char1;
 
       FT_TRACE5(( "standard character: U+%04lX (glyph index %d)\n",
                   standard_char, glyph_index ));
