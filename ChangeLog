@@ -1,5 +1,18 @@
 2014-02-04  Werner Lemberg  <wl@gnu.org>
 
+	Fix compilation with MinGW.
+
+	Right now, compilation out of the box with latest MinGW is broken
+	due to bugs in header files of mingwrt 4.0.3 in strict ANSI mode,
+	cf.
+
+	  https://sourceforge.net/p/mingw/bugs/2024/
+	  https://sourceforge.net/p/mingw/bugs/2046/
+
+	* builds/unix/configure.raw: Don't set `-ansi' flag for MinGW.
+
+2014-02-04  Werner Lemberg  <wl@gnu.org>
+
 	[autofit] Minor fix.
 
 	* src/autofit/afcjk.c (af_cjk_metrics_init_widths),

@@ -206,30 +206,49 @@ AC_CHECK_FUNCS([memcpy memmove])
 
 
 # get compiler flags right
-#  we try to make the compiler work for C89-strict source.
-#  even if C compiler is GCC and C89 flags are available,
-#  some system headers (e.g. Android Bionic libc) is broken
-#  in C89 mode. we have to check the compilation finishes
-#  successfully.
+#
+#   We try to make the compiler work for C89-strict source.  Even if the
+#   C compiler is gcc and C89 flags are available, some system headers
+#   (e.g., Android Bionic libc) are broken in C89 mode.  We have to check
+#   whether the compilation finishes successfully.
+#
+#   Due to bugs in mingwrt 4.0.3 we don't use `-ansi' for MinGW.
 #
 if test "x$GCC" = xyes; then
   XX_CFLAGS="-Wall"
-  XX_ANSIFLAGS=""
-  for a in -pedantic -ansi
-  do
-    AC_MSG_CHECKING([gcc compiler flag ${a} to assure ANSI C works correctly])
-    orig_CFLAGS="${CFLAGS}"
-    CFLAGS="${CFLAGS} ${XX_ANSIFLAGS} ${a}"
-    AC_COMPILE_IFELSE([
-        AC_LANG_PROGRAM([#include <stdio.h>],[{puts("");return 0;}])
-      ],[
-        AC_MSG_RESULT([ok, add it to XX_ANSIFLAGS])
-        XX_ANSIFLAGS="${XX_ANSIFLAGS} ${a}"
-      ],[
-        AC_MSG_RESULT([no])
-      ])
-    CFLAGS="${orig_CFLAGS}"
-  done
+  case "$host" in
+  *-*-mingw*)
+    XX_ANSIFLAGS="-pedantic"
+    ;;
+  *)
+    XX_ANSIFLAGS=""
+    for a in -pedantic -ansi
+    do
+      AC_MSG_CHECKING([gcc compiler flag ${a} to assure ANSI C works correctly])
+      orig_CFLAGS="${CFLAGS}"
+      CFLAGS="${CFLAGS} ${XX_ANSIFLAGS} ${a}"
+      AC_COMPILE_IFELSE([
+        AC_LANG_PROGRAM([
+
+#include <stdio.h>
+
+          ],
+          [
+
+            {
+              puts( "" );
+              return 0;
+            }
+
+          ])],
+        [AC_MSG_RESULT([ok, add it to XX_ANSIFLAGS])
+         XX_ANSIFLAGS="${XX_ANSIFLAGS} ${a}"
+        ],
+        [AC_MSG_RESULT([no])])
+      CFLAGS="${orig_CFLAGS}"
+    done
+    ;;
+  esac
 else
   case "$host" in
   *-dec-osf*)
