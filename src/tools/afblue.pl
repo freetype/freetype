@@ -71,7 +71,7 @@ my $whitespace_only_re = qr/ ^ \s* $ /x;
 
 # [<ws>] '"' <string> '"' [<ws>] '\n'  (<string> doesn't contain newlines)
 my $string_re = qr/ ^ \s*
-                       " ( (?: [^"\\]++ | \\. )*+ ) "
+                       " ( (?> (?: (?> [^"\\]+ ) | \\. )* ) ) "
                        \s* $ /x;
 
 # [<ws>] '{' <block> '}' [<ws>] '\n'  (<block> can contain newlines)
