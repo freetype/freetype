@@ -1,3 +1,10 @@
+2014-02-08  Eugen Sawin  <esawin@mozilla.com>
+
+	Fix Savannah bug #41507.
+
+	* src/sfnt/ttsbit.c (tt_sbit_decoder_load_bitmap)
+	[!FT_CONFIG_OPTION_USE_PNG] <17, 17, 19>: Fix error handling.
+
 2014-02-08  Dave Arnold  <darnold@adobe.com>
 
 	[cff] Fix minor performance bug.
