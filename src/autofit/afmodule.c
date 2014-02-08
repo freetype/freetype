@@ -4,7 +4,7 @@
 /*                                                                         */
 /*    Auto-fitter module implementation (body).                            */
 /*                                                                         */
-/*  Copyright 2003-2006, 2009, 2011-2013 by                                */
+/*  Copyright 2003-2006, 2009, 2011-2014 by                                */
 /*  David Turner, Robert Wilhelm, and Werner Lemberg.                      */
 /*                                                                         */
 /*  This file is part of the FreeType project, and may only be used,       */
@@ -45,7 +45,7 @@
 #define FT_COMPONENT  trace_afmodule
 
 
-  FT_Error
+  static FT_Error
   af_property_get_face_globals( FT_Face          face,
                                 AF_FaceGlobals*  aglobals,
                                 AF_Module        module )
@@ -79,7 +79,7 @@
   }
 
 
-  FT_Error
+  static FT_Error
   af_property_set( FT_Module    ft_module,
                    const char*  property_name,
                    const void*  value )
@@ -148,7 +148,7 @@
   }
 
 
-  FT_Error
+  static FT_Error
   af_property_get( FT_Module    ft_module,
                    const char*  property_name,
                    void*        value )

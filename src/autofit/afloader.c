@@ -4,7 +4,7 @@
 /*                                                                         */
 /*    Auto-fitter glyph loading routines (body).                           */
 /*                                                                         */
-/*  Copyright 2003-2009, 2011-2013 by                                      */
+/*  Copyright 2003-2009, 2011-2014 by                                      */
 /*  David Turner, Robert Wilhelm, and Werner Lemberg.                      */
 /*                                                                         */
 /*  This file is part of the FreeType project, and may only be used,       */
@@ -318,12 +318,7 @@
           /* recompute subglyph pointer */
           subglyph = gloader->base.subglyphs + num_base_subgs + nn;
 
-          if ( subglyph->flags & FT_SUBGLYPH_FLAG_USE_MY_METRICS )
-          {
-            pp1 = loader->pp1;
-            pp2 = loader->pp2;
-          }
-          else
+          if ( !( subglyph->flags & FT_SUBGLYPH_FLAG_USE_MY_METRICS ) )
           {
             loader->pp1 = pp1;
             loader->pp2 = pp2;

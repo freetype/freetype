@@ -1,3 +1,35 @@
+2014-02-08  Sean McBride  <sean@rogue-research.com>
+
+	Fix clang static analyzer and compiler warnings.
+
+	* src/autofit/afhints.c (af_glyph_hints_align_weak_points),
+	src/autofit/afloader (af_loader_load_g) <FT_GLYPH_FORMAT_COMPOSITE>,
+	src/base/ftcalc.c (FT_MSB), src/base/ftoutln.c
+	(FT_Outline_Decompose), src/bdf/bdfdrivr.c (bdf_interpret_style),
+	src/cff/cffparse.c (cff_parse_integer), src/cid/cidparse.c
+	(cid_parser_new), src/pfr/pfrload.c (pfr_phy_font_load),
+	src/raster/ftraster.c (Decompose_Curve), src/sfnt/sfdriver.c
+	(sfnt_get_ps_name), src/sfnt/ttcmap.c (tt_cmap12_next,
+	tt_cmap13_next), src/smooth/ftgrays.c (gray_hline): Remove dead
+	code.
+
+	* src/autofit/afmodule.c (af_property_get_face_globals,
+	af_property_set, af_property_get), src/base/ftbitmap.c
+	(ft_gray_for_premultiplied_srgb_bgra): Make functions static.
+
+	* src/base/ftobjs.c (ft_remove_renderer): Protect against
+	library == NULL.
+	(ft_property_do): Make function static.
+
+	* src/base/ftrfork.c: Include `ftbase.h'.
+
+	* src/sfnt/ttsbit.c (tt_face_load_sbix_image)
+	[!FT_CONFIG_OPTION_USE_PNG], src/type1/t1gload.c
+	(T1_Compute_Max_Advance): Avoid compiler warning.
+
+	* src/truetype/ttinterp.c (TT_New_Context): Reduce scope of
+	variable.
+
 2014-02-08  Werner Lemberg  <wl@gnu.org>
 
 	Fix Windows build directories.

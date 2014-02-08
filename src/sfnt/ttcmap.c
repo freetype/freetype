@@ -4,7 +4,7 @@
 /*                                                                         */
 /*    TrueType character mapping table (cmap) support (body).              */
 /*                                                                         */
-/*  Copyright 2002-2010, 2012, 2013 by                                     */
+/*  Copyright 2002-2010, 2012-2014 by                                      */
 /*  David Turner, Robert Wilhelm, and Werner Lemberg.                      */
 /*                                                                         */
 /*  This file is part of the FreeType project, and may only be used,       */
@@ -2110,8 +2110,6 @@
 
     char_code = cmap->cur_charcode + 1;
 
-    n = cmap->cur_group;
-
     for ( n = cmap->cur_group; n < cmap->num_groups; n++ )
     {
       p        = cmap->cmap.data + 16 + 12 * n;
@@ -2433,8 +2431,6 @@
       goto Fail;
 
     char_code = cmap->cur_charcode + 1;
-
-    n = cmap->cur_group;
 
     for ( n = cmap->cur_group; n < cmap->num_groups; n++ )
     {

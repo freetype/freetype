@@ -4,7 +4,7 @@
 /*                                                                         */
 /*    Embedded resource forks accessor (body).                             */
 /*                                                                         */
-/*  Copyright 2004-2010, 2013 by                                           */
+/*  Copyright 2004-2010, 2013, 2014 by                                     */
 /*  Masatake YAMATO and Redhat K.K.                                        */
 /*                                                                         */
 /*  FT_Raccess_Get_HeaderInfo() and raccess_guess_darwin_hfsplus() are     */
@@ -29,6 +29,7 @@
 #include FT_INTERNAL_STREAM_H
 #include FT_INTERNAL_RFORK_H
 #include "basepic.h"
+#include "ftbase.h"
 
 #undef  FT_COMPONENT
 #define FT_COMPONENT  trace_raccess

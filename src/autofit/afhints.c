@@ -1235,8 +1235,6 @@
       }
     }
 
-    point = points;
-
     for ( ; contour < contour_limit; contour++ )
     {
       AF_Point  first_touched, last_touched;
