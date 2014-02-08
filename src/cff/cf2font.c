@@ -4,7 +4,7 @@
 /*                                                                         */
 /*    Adobe's code for font instances (body).                              */
 /*                                                                         */
-/*  Copyright 2007-2013 Adobe Systems Incorporated.                        */
+/*  Copyright 2007-2014 Adobe Systems Incorporated.                        */
 /*                                                                         */
 /*  This software, and all works of authorship, whether in source or       */
 /*  object code form as indicated by the copyright notice(s) included      */
@@ -233,13 +233,14 @@
     /* pointer to parsed font object */
     CFF_Decoder*  decoder = font->decoder;
 
-    FT_Bool  needExtraSetup;
+    FT_Bool  needExtraSetup = FALSE;
 
     /* character space units */
     CF2_Fixed  boldenX = font->syntheticEmboldeningAmountX;
     CF2_Fixed  boldenY = font->syntheticEmboldeningAmountY;
 
-    CF2_Fixed  ppem;
+    CFF_SubFont  subFont;
+    CF2_Fixed    ppem;
 
 
     /* clear previous error */
@@ -247,8 +248,12 @@
 
     /* if a CID fontDict has changed, we need to recompute some cached */
     /* data                                                            */
-    needExtraSetup =
-      (FT_Bool)( font->lastSubfont != cf2_getSubfont( decoder ) );
+    subFont = cf2_getSubfont( decoder );
+    if ( font->lastSubfont != subFont )
+    {
+      font->lastSubfont = subFont;
+      needExtraSetup    = TRUE;
+    }
 
     /* if ppem has changed, we need to recompute some cached data         */
     /* note: because of CID font matrix concatenation, ppem and transform */

@@ -1,3 +1,10 @@
+2014-02-08  Dave Arnold  <darnold@adobe.com>
+
+	[cff] Fix minor performance bug.
+
+	* src/cff/cf2font.c (cf2_font_setup): Darkening amount and blue zone
+	calculations are now cached and not recomputed on each glyph.
+
 2014-02-05  Werner Lemberg  <wl@gnu.org>
 
 	Fix problems with perl 5.8.8 as distributed with current MinGW.
