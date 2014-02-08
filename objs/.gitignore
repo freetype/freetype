@@ -12,3 +12,4 @@ libfreetype.la
 debug*/
 release*/
 win32/
+win64/

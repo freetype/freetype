@@ -1,3 +1,17 @@
+2014-02-08  Werner Lemberg  <wl@gnu.org>
+
+	Fix Windows build directories.
+
+	The build target is now `windows' instead of `win32'.
+
+	Problem reported by Nickolas George <darknova.clan@gmail.com>.
+
+	* builds/modules.mk: Don't use `win32' and `win16' (!) but
+	`windows'.
+
+	* builds/windows/detect.mk, builds/windows/win32-def.mk:
+	s/win32/windows/.
+
 2014-02-08  Eugen Sawin  <esawin@mozilla.com>
 
 	Fix Savannah bug #41507.

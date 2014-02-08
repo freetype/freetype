@@ -50,7 +50,7 @@ ifeq ($(PLATFORM),ansi)
       ifeq ($(is_dos),)
         ifdef winbootdir
 #ifneq ($(OS),Windows_NT)
-          # If win32 is available, do not trigger this test.
+          # If windows is available, do not trigger this test.
           ifndef windir
             is_dos := $(findstring Windows,$(strip $(shell ver)))
           endif
