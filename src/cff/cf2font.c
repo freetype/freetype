@@ -167,7 +167,7 @@
         if ( !xdelta )
           goto Try_x3;
 
-        *darkenAmount = FT_MulFix( x, FT_DivFix( ydelta, xdelta ) ) +
+        *darkenAmount = FT_MulDiv( x, ydelta, xdelta ) +
                           FT_DivFix( cf2_intToFixed( y1 ), ppem );
       }
 
@@ -184,7 +184,7 @@
           if ( !xdelta )
             goto Try_x4;
 
-          *darkenAmount = FT_MulFix( x, FT_DivFix( ydelta, xdelta ) ) +
+          *darkenAmount = FT_MulDiv( x, ydelta, xdelta ) +
                             FT_DivFix( cf2_intToFixed( y2 ), ppem );
         }
       }
@@ -202,7 +202,7 @@
           if ( !xdelta )
             goto Use_y4;
 
-          *darkenAmount = FT_MulFix( x, FT_DivFix( ydelta, xdelta ) ) +
+          *darkenAmount = FT_MulDiv( x, ydelta, xdelta ) +
                             FT_DivFix( cf2_intToFixed( y3 ), ppem );
         }
       }
