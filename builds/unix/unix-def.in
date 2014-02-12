@@ -34,13 +34,14 @@ INSTALL_PROGRAM := @INSTALL_PROGRAM@
 INSTALL_SCRIPT  := @INSTALL_SCRIPT@
 MKINSTALLDIRS   := $(BUILD_DIR)/mkinstalldirs
 
+CLEAN += $(OBJ_BUILD)/freetype-config
+
 DISTCLEAN += $(OBJ_BUILD)/config.cache    \
              $(OBJ_BUILD)/config.log      \
              $(OBJ_BUILD)/config.status   \
              $(OBJ_BUILD)/unix-def.mk     \
              $(OBJ_BUILD)/unix-cc.mk      \
              $(OBJ_BUILD)/ftconfig.h      \
-             $(OBJ_BUILD)/freetype-config \
              $(OBJ_BUILD)/freetype2.pc    \
              $(LIBTOOL)                   \
              $(OBJ_BUILD)/Makefile

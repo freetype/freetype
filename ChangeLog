@@ -1,3 +1,10 @@
+2014-02-12  Werner Lemberg  <wl@gnu.org>
+
+	Fix Savannah bug #41465.
+
+	* builds/unix/unix-def.in (CLEAN): Add `freetype-config'.
+	(DISTCLEAN): Remove `freetype-config'.
+
 2014-02-08  Sean McBride  <sean@rogue-research.com>
 
 	Fix clang static analyzer and compiler warnings.
