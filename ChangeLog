@@ -2,7 +2,7 @@
 
 	[autofit] Fix `make multi' compilation.
 
-	* src/hbshim.c: Include `afglobal.h' and `aftypes.h'.
+	* src/autofit/hbshim.c: Include `afglobal.h' and `aftypes.h'.
 
 2014-02-12  Dave Arnold  <darnold@adobe.com>
 
