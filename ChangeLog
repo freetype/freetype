@@ -1,3 +1,9 @@
+2014-02-17  suzuki toshiya  <mpsuzuki@hiroshima-u.ac.jp>
+
+	[autofit] Fix `make multi' compilation.
+
+	* src/hbshim.c: Include `afglobal.h' and `aftypes.h'.
+
 2014-02-12  Dave Arnold  <darnold@adobe.com>
 
 	[cff] Optimize by using `FT_MulDiv'.
