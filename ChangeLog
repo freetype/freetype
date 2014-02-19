@@ -4,6 +4,21 @@
 
 	* src/autofit/hbshim.c: Include `afglobal.h' and `aftypes.h'.
 
+2014-02-19  Werner Lemberg  <wl@gnu.org>
+	    Simon Bünzli  <zeniko@gmail.com>
+
+	Fix Savannah bug #32902.
+
+	Patch taken from
+
+	  https://code.google.com/p/sumatrapdf/source/browse/trunk/ext/_patches/freetype2.patch?spec=svn8620&r=8620#87
+
+	with slight modifications.
+
+	* src/type1/t1parse.c (T1_Get_Private_Dict): Add heuristic test to
+	handle fonts that incorrectly use \r at the beginning of an eexec
+	block.
+
 2014-02-19  Simon Bünzli  <zeniko@gmail.com>
 
 	Fix Savannah bug #41590.
