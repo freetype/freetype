@@ -4,6 +4,13 @@
 
 	* src/autofit/hbshim.c: Include `afglobal.h' and `aftypes.h'.
 
+2014-02-19  Simon Bünzli  <zeniko@gmail.com>
+
+	Fix Savannah bug #41590.
+
+	* src/type1/t1load.c (parse_encoding): Protect against invalid
+	number.
+
 2014-02-12  Dave Arnold  <darnold@adobe.com>
 
 	[cff] Optimize by using `FT_MulDiv'.
