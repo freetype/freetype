@@ -1,5 +1,12 @@
 2014-02-26  Werner Lemberg  <wl@gnu.org>
 
+	[sfnt] Fix Savannah bug #41696.
+
+	* src/sfnt/ttcmap.c (tt_cmap0_validate, tt_cmap2_validate,
+	tt_cmap4_validate, tt_cmap14_validate): Fix limit tests.
+
+2014-02-26  Werner Lemberg  <wl@gnu.org>
+
 	[winfnt] Fix Savannah bug #41694.
 
 	* src/winfonts/winfnt.c (FNT_Load_Glyph): Check glyph offset.
