@@ -1,3 +1,21 @@
+2014-02-26  Wermer Lemberg  <wl@gnu.org>
+
+	[bdf] Fix Savannah bug #41692.
+
+	bdflib puts data from the input stream into a buffer in chunks of
+	1024 bytes.  The data itself gets then parsed line by line, simply
+	increasing the current pointer into the buffer; if the search for
+	the final newline character exceeds the buffer size, more data gets
+	read.
+
+	However, in case the current line's end is very near to the buffer
+	end, and the keyword to compare with is longer than the current
+	line's length, an out-of-bounds read might happen since `memcmp'
+	doesn't stop properly at the string end.
+
+	* src/bdf/bdflib.c: s/ft_memcmp/ft_strncmp/ to make comparisons
+	stop at string ends.
+
 2014-02-17  suzuki toshiya  <mpsuzuki@hiroshima-u.ac.jp>
 
 	[autofit] Fix `make multi' compilation.
