@@ -1,5 +1,11 @@
 2014-02-26  Wermer Lemberg  <wl@gnu.org>
 
+	[cff] Fix Savannah bug #41693.
+
+	* src/cff/cffload.c (CFF_Load_FD_Select): Reject empty array.
+
+2014-02-26  Wermer Lemberg  <wl@gnu.org>
+
 	[bdf] Fix Savannah bug #41692.
 
 	bdflib puts data from the input stream into a buffer in chunks of
