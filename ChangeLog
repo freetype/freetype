@@ -1,10 +1,16 @@
-2014-02-26  Wermer Lemberg  <wl@gnu.org>
+2014-02-26  Werner Lemberg  <wl@gnu.org>
+
+	[winfnt] Fix Savannah bug #41694.
+
+	* src/winfonts/winfnt.c (FNT_Load_Glyph): Check glyph offset.
+
+2014-02-26  Werner Lemberg  <wl@gnu.org>
 
 	[cff] Fix Savannah bug #41693.
 
 	* src/cff/cffload.c (CFF_Load_FD_Select): Reject empty array.
 
-2014-02-26  Wermer Lemberg  <wl@gnu.org>
+2014-02-26  Werner Lemberg  <wl@gnu.org>
 
 	[bdf] Fix Savannah bug #41692.
 
