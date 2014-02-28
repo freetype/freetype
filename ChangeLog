@@ -1,5 +1,14 @@
 2014-02-28  Dave Arnold  <darnold@adobe.com>
 
+	[cff] Fix Savannah bug #41697, part 2.
+
+	* src/cff/cf2ft.c (cf2_initLocalRegionBuffer,
+	cf2_initGlobalRegionBuffer): It is possible for a charstring to call
+	a subroutine if no subroutines exist.  This is an error but should
+	not trigger an assert.  Split the assert to account for this.
+
+2014-02-28  Dave Arnold  <darnold@adobe.com>
+
 	[cff] Fix Savannah bug #41697, part 1.
 
 	* src/cff/cf2hints.c (cf2_hintmap_build): Return when `hintMask' is
