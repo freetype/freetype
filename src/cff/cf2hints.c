@@ -781,6 +781,8 @@
       cf2_hintmask_setAll( hintMask,
                            cf2_arrstack_size( hStemHintArray ) +
                              cf2_arrstack_size( vStemHintArray ) );
+      if ( !cf2_hintmask_isValid( hintMask ) )
+          return;                   /* too many stem hints */
     }
 
     /* begin by clearing the map */

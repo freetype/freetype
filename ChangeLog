@@ -1,3 +1,12 @@
+2014-02-28  Dave Arnold  <darnold@adobe.com>
+
+	[cff] Fix Savannah bug #41697, part 1.
+
+	* src/cff/cf2hints.c (cf2_hintmap_build): Return when `hintMask' is
+	invalid.  In this case, it is not safe to use the length of
+	`hStemHintArray'; the exception has already been recorded in
+	`hintMask'.
+
 2014-02-26  Werner Lemberg  <wl@gnu.org>
 
 	[sfnt] Fix Savannah bug #41696.
