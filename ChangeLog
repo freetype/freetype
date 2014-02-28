@@ -1,3 +1,10 @@
+2014-02-28  Alexei Podtelezhnikov  <apodtele@gmail.com>
+
+	[cff] Math simplifications.
+
+	* src/cf2blues.c (cf2_blues_init): Use `FT_MulDiv'.
+	* src/cf2ft.c (cf2_getScaleAndHintFlag): Use simple division.
+
 2014-02-28  Dave Arnold  <darnold@adobe.com>
 
 	[cff] Fix Savannah bug #41697, part 2.
