@@ -1,5 +1,14 @@
 2014-03-01  Werner Lemberg  <wl@gnu.org>
 
+	Avoid `long long' warnings with older gcc compilers.
+	Problem reported by Hin-Tak Leung <htl10@users.sourceforge.net>.
+
+	* builds/unix/configure.raw: Don't use gcc's `-pedantic' flag for
+	versions < 4.6.  This is especially needed for Max OS X since this
+	OS runs a gcc variant (or emulation) based on version 4.2.1.
+
+2014-03-01  Werner Lemberg  <wl@gnu.org>
+
 	* docs/INSTALL.CROSS: Revised and updated.
 
 2014-03-01  Werner Lemberg  <wl@gnu.org>

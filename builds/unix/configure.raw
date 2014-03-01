@@ -216,6 +216,12 @@ AC_CHECK_FUNCS([memcpy memmove])
 #
 #   Due to bugs in mingwrt 4.0.3 we don't use `-ansi' for MinGW.
 #
+#   To avoid zillions of
+#
+#     ISO C90 does not support 'long long'
+#
+#   warnings, we disable `-pedantic' for gcc version < 4.6.
+#
 if test "x$GCC" = xyes; then
   XX_CFLAGS="-Wall"
   case "$host" in
@@ -223,8 +229,21 @@ if test "x$GCC" = xyes; then
     XX_ANSIFLAGS="-pedantic"
     ;;
   *)
+    GCC_VERSION=`$CC -dumpversion`
+    GCC_MAJOR=`echo "$GCC_VERSION" | sed 's/\([[^.]][[^.]]*\).*/\1/'`
+    GCC_MINOR=`echo "$GCC_VERSION" | sed 's/[[^.]][[^.]]*.\([[^.]][[^.]]*\).*/\1/'`
+
+    XX_PEDANTIC=-pedantic
+    if test $GCC_MAJOR -lt 4; then
+      XX_PEDANTIC=
+    else
+      if test $GCC_MAJOR -eq 4 -a $GCC_MINOR -lt 6; then
+        XX_PEDANTIC=
+      fi
+    fi
+
     XX_ANSIFLAGS=""
-    for a in -pedantic -ansi
+    for a in $XX_PEDANTIC -ansi
     do
       AC_MSG_CHECKING([gcc compiler flag ${a} to assure ANSI C works correctly])
       orig_CFLAGS="${CFLAGS}"
