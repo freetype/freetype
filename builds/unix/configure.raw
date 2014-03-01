@@ -2,7 +2,7 @@
 #
 # Process this file with autoconf to produce a configure script.
 #
-# Copyright 2001-2013 by
+# Copyright 2001-2014 by
 # David Turner, Robert Wilhelm, and Werner Lemberg.
 #
 # This file is part of the FreeType project, and may only be used, modified,
@@ -284,52 +284,62 @@ if test x$with_zlib != xno && test -n "$LIBZ"; then
 fi
 
 
+# All library tests below use `pkg-config'.  The `XXX_PKG' variables are for
+# the `Requires.private' field in `freetype2.pc'; we use the `HAVE_PKG' flag
+# to insert commas between the entries.
+HAVE_PKG=no
+
+
 # check for system libbz2
 
+HAVE_LIBBZIP2=no
 # don't quote AS_HELP_STRING!
 AC_ARG_WITH([bzip2],
   AS_HELP_STRING([--without-bzip2],
                  [do not support bzip2 compressed fonts]))
-if test x$with_bzip2 != xno && test -z "$LIBBZ2"; then
-  AC_CHECK_LIB([bz2],
-               [BZ2_bzDecompress],
-               [AC_CHECK_HEADER([bzlib.h], [LIBBZ2='-lbz2'])])
-fi
-if test x$with_bzip2 != xno && test -n "$LIBBZ2"; then
-  SYSTEM_LIBBZ2=yes
+if test x$with_bzip2 != xno; then
+  BZIP2_PKG="bzip2"
+  # as a side effect, this call sets and creates output variables
+  # BZIP2_CFLAGS and BZIP2_LIBS
+  PKG_CHECK_MODULES([BZIP2], [$BZIP2_PKG])
+  LIBBZIP2=`$PKG_CONFIG --libs-only-l "$BZIP2_PKG"`
+  HAVE_LIBBZIP2=yes
+  AC_MSG_RESULT([$BZIP2_LIBS])
+  if test $HAVE_PKG = no; then
+    HAVE_PKG=yes
+  else
+    BZIP2_PKG=", $BZIP2_PKG"
+  fi
 fi
 
 
 # check for system libpng
 
 HAVE_LIBPNG=no
+# don't quote AS_HELP_STRING!
 AC_ARG_WITH([png],
   AS_HELP_STRING([--without-png],
                  [do not support png compressed OpenType embedded bitmaps]))
 if test x$with_png != xno; then
-  AC_MSG_CHECKING([for libpng])
-  if test -z "$LIBPNG_CFLAGS" -a -z "$LIBPNG_LDFLAGS"; then
-    if ! which libpng-config >/dev/null; then
-      AC_MSG_ERROR([`libpng-config' not found;
-either set the LIBPNG_CFLAGS and LIBPNG_LDFLAGS environment variables,
-or pass `--without-png' to the `configure' script.])
-    elif test ${cross_compiling} = yes; then
-      AC_MSG_ERROR([`libpng-config' should not be used in cross-building;
-either set the LIBPNG_CFLAGS and LIBPNG_LDFLAGS environment variables,
-or pass `--without-png' to the `configure' script.])
-    fi
-    LIBPNG="`libpng-config --libs`"
-    LIBPNG_CFLAGS="`libpng-config --cflags`"
-    LIBPNG_LDFLAGS="`libpng-config --ldflags`"
-  fi
+  LIBPNG_PKG="libpng"
+  # as a side effect, this call sets and creates output variables
+  # LIBPNG_CFLAGS and LIBPNG_LIBS
+  PKG_CHECK_MODULES([LIBPNG], [$LIBPNG_PKG])
+  LIBPNG=`$PKG_CONFIG --libs-only-l "$LIBPNG_PKG"`
   HAVE_LIBPNG=yes
-  AC_MSG_RESULT([$LIBPNG_LDFLAGS])
+  AC_MSG_RESULT([$LIBPNG_LIBS])
+  if test $HAVE_PKG = no; then
+    HAVE_PKG=yes
+  else
+    LIBPNG_PKG=", $LIBPNG_PKG"
+  fi
 fi
 
 
 # check for system libharfbuzz
 
 HAVE_HARFBUZZ=no
+# don't quote AS_HELP_STRING!
 AC_ARG_WITH([harfbuzz],
   AS_HELP_STRING([--without-harfbuzz],
                  [do not use improved auto-hinting of OpenType fonts]))
@@ -338,10 +348,14 @@ if test x$with_harfbuzz != xno; then
   # as a side effect, this call sets and creates output variables
   # HARFBUZZ_CFLAGS and HARFBUZZ_LIBS
   PKG_CHECK_MODULES([HARFBUZZ], [$HARFBUZZ_PKG])
-  # directly create and set output variable LIBHARFBUZZ
-  _PKG_CONFIG([LIBHARFBUZZ], [libs-only-l], [$HARFBUZZ_PKG])
+  LIBHARFBUZZ=`$PKG_CONFIG --libs-only-l "$HARFBUZZ_PKG"`
   HAVE_LIBHARFBUZZ=yes
   AC_MSG_RESULT([$HARFBUZZ_LIBS])
+  if test $HAVE_PKG = no; then
+    HAVE_PKG=yes
+  else
+    HARFBUZZ_PKG=", $HARFBUZZ_PKG"
+  fi
 fi
 
 
@@ -760,12 +774,14 @@ esac
 
 AC_SUBST([ftmac_c])
 AC_SUBST([LIBZ])
-AC_SUBST([LIBBZ2])
+AC_SUBST([LIBBZIP2])
 AC_SUBST([LIBPNG])
-# LIBHARFBUZZ has already been substituted above
+AC_SUBST([LIBHARFBUZZ])
 AC_SUBST([FT2_EXTRA_LIBS])
 AC_SUBST([SYSTEM_ZLIB])
 
+AC_SUBST([BZIP2_PKG])
+AC_SUBST([LIBPNG_PKG])
 AC_SUBST([HARFBUZZ_PKG])
 
 LT_INIT(win32-dll)
@@ -776,18 +792,19 @@ AC_SUBST([build_libtool_libs])
 
 # changing LDFLAGS value should only be done after
 # lt_cv_prog_compiler_static_works test
+
 if test x$SYSTEM_ZLIB = xyes; then
   CFLAGS="$CFLAGS -DFT_CONFIG_OPTION_SYSTEM_ZLIB"
   LDFLAGS="$LDFLAGS $LIBZ"
 fi
 
-if test x$SYSTEM_LIBBZ2 = xyes; then
-  CFLAGS="$CFLAGS -DFT_CONFIG_OPTION_USE_BZIP2"
-  LDFLAGS="$LDFLAGS $LIBBZ2"
+if test x$HAVE_LIBBZIP2 = xyes; then
+  CFLAGS="$CFLAGS $LIBBZIP2_CFLAGS -DFT_CONFIG_OPTION_USE_BZIP2"
+  LDFLAGS="$LDFLAGS $LIBBZIP2_LIBS"
 fi
 if test x$HAVE_LIBPNG = xyes; then
   CFLAGS="$CFLAGS $LIBPNG_CFLAGS -DFT_CONFIG_OPTION_USE_PNG"
-  LDFLAGS="$LDFLAGS $LIBPNG_LDFLAGS"
+  LDFLAGS="$LDFLAGS $LIBPNG_LIBS"
 fi
 if test x$HAVE_LIBHARFBUZZ = xyes; then
   CFLAGS="$CFLAGS $HARFBUZZ_CFLAGS -DFT_CONFIG_OPTION_USE_HARFBUZZ"

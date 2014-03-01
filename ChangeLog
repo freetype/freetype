@@ -1,5 +1,18 @@
 2014-03-01  Werner Lemberg  <wl@gnu.org>
 
+	Use pkg-config for detecting libpng and libbz2 also.
+
+	* builds/unix/configure.raw (HAVE_PKG): New variable.
+	Search for libbz2 using `pkg-config'; s/BZ2/BZIP2/.
+	Search for libpng using `pkg-config'.
+	Fix definition of `LIBHARFBUZZ' variable.
+	* builds/unix/freetype-config.in ($libs): Updated.
+	* builds/unix/freetype2.in: Add `URL' field.
+	Update `Requires.private' and `Libs.private'.
+	* builds/unix/unix-def.in: Updated.
+
+2014-03-01  Werner Lemberg  <wl@gnu.org>
+
 	Add configure support for HarfBuzz.
 
 	* builds/unix/pkg.m4: New file.

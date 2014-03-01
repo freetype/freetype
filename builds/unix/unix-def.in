@@ -63,12 +63,14 @@ version_info := @version_info@
 # Variables needed for `freetype-config' and `freetype.pc'.
 #
 FT2_EXTRA_LIBS     := @FT2_EXTRA_LIBS@
-LIBBZ2             := @LIBBZ2@
 LIBZ               := @LIBZ@
+LIBBZIP2           := @LIBBZIP2@
 LIBPNG             := @LIBPNG@
 LIBHARFBUZZ        := @LIBHARFBUZZ@
 build_libtool_libs := @build_libtool_libs@
 ft_version         := @ft_version@
+BZIP2_PKG          := @BZIP2_PKG@
+LIBPNG_PKG         := @LIBPNG_PKG@
 HARFBUZZ_PKG       := @HARFBUZZ_PKG@
 
 # The directory where all library files are placed.
@@ -105,8 +107,8 @@ NO_OUTPUT := 2> /dev/null
 $(OBJ_BUILD)/freetype-config: $(TOP_DIR)/builds/unix/freetype-config.in
 	rm -f $@ $@.tmp
 	sed -e 's|%FT2_EXTRA_LIBS%|$(FT2_EXTRA_LIBS)|' \
-	    -e 's|%LIBBZ2%|$(LIBBZ2)|' \
 	    -e 's|%LIBZ%|$(LIBZ)|' \
+	    -e 's|%LIBBZIP2%|$(LIBBZIP2)|' \
 	    -e 's|%LIBPNG%|$(LIBPNG)|' \
 	    -e 's|%LIBHARFBUZZ%|$(LIBHARFBUZZ)|' \
 	    -e 's|%build_libtool_libs%|$(build_libtool_libs)|' \
@@ -124,9 +126,9 @@ $(OBJ_BUILD)/freetype-config: $(TOP_DIR)/builds/unix/freetype-config.in
 $(OBJ_BUILD)/freetype2.pc: $(TOP_DIR)/builds/unix/freetype2.in
 	rm -f $@ $@.tmp
 	sed -e 's|%FT2_EXTRA_LIBS%|$(FT2_EXTRA_LIBS)|' \
-	    -e 's|%LIBBZ2%|$(LIBBZ2)|' \
 	    -e 's|%LIBZ%|$(LIBZ)|' \
-	    -e 's|%LIBPNG%|$(LIBPNG)|' \
+	    -e 's|%BZIP2_PKG%|$(BZIP2_PKG)|' \
+	    -e 's|%LIBPNG_PKG%|$(LIBPNG_PKG)|' \
 	    -e 's|%HARFBUZZ_PKG%|$(HARFBUZZ_PKG)|' \
 	    -e 's|%build_libtool_libs%|$(build_libtool_libs)|' \
 	    -e 's|%exec_prefix%|$(exec_prefix)|' \
