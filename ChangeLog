@@ -1,5 +1,14 @@
 2014-03-01  Werner Lemberg  <wl@gnu.org>
 
+	Make `make clean' remove `freetype2.pc'.
+
+	This is a generated file at build time, not configure time.
+
+	* builds/unix/unix-def.in (DISTCLEAN): Move `freetype2.pc' to ...
+	(CLEAN): This variable.
+
+2014-03-01  Werner Lemberg  <wl@gnu.org>
+
 	Use pkg-config for detecting libpng and libbz2 also.
 
 	* builds/unix/configure.raw (HAVE_PKG): New variable.
