@@ -34,6 +34,8 @@ AC_PROG_CC
 AC_PROG_CPP
 AC_SUBST(EXEEXT)
 
+PKG_PROG_PKG_CONFIG([0.24])
+
 
 # checks for native programs to generate building tool
 
@@ -322,6 +324,24 @@ or pass `--without-png' to the `configure' script.])
   fi
   HAVE_LIBPNG=yes
   AC_MSG_RESULT([$LIBPNG_LDFLAGS])
+fi
+
+
+# check for system libharfbuzz
+
+HAVE_HARFBUZZ=no
+AC_ARG_WITH([harfbuzz],
+  AS_HELP_STRING([--without-harfbuzz],
+                 [do not use improved auto-hinting of OpenType fonts]))
+if test x$with_harfbuzz != xno; then
+  HARFBUZZ_PKG="harfbuzz >= 0.9.19"
+  # as a side effect, this call sets and creates output variables
+  # HARFBUZZ_CFLAGS and HARFBUZZ_LIBS
+  PKG_CHECK_MODULES([HARFBUZZ], [$HARFBUZZ_PKG])
+  # directly create and set output variable LIBHARFBUZZ
+  _PKG_CONFIG([LIBHARFBUZZ], [libs-only-l], [$HARFBUZZ_PKG])
+  HAVE_LIBHARFBUZZ=yes
+  AC_MSG_RESULT([$HARFBUZZ_LIBS])
 fi
 
 
@@ -742,8 +762,11 @@ AC_SUBST([ftmac_c])
 AC_SUBST([LIBZ])
 AC_SUBST([LIBBZ2])
 AC_SUBST([LIBPNG])
+# LIBHARFBUZZ has already been substituted above
 AC_SUBST([FT2_EXTRA_LIBS])
 AC_SUBST([SYSTEM_ZLIB])
+
+AC_SUBST([HARFBUZZ_PKG])
 
 LT_INIT(win32-dll)
 
@@ -765,6 +788,10 @@ fi
 if test x$HAVE_LIBPNG = xyes; then
   CFLAGS="$CFLAGS $LIBPNG_CFLAGS -DFT_CONFIG_OPTION_USE_PNG"
   LDFLAGS="$LDFLAGS $LIBPNG_LDFLAGS"
+fi
+if test x$HAVE_LIBHARFBUZZ = xyes; then
+  CFLAGS="$CFLAGS $HARFBUZZ_CFLAGS -DFT_CONFIG_OPTION_USE_HARFBUZZ"
+  LDFLAGS="$LDFLAGS $HARFBUZZ_LIBS"
 fi
 
 AC_SUBST([CFLAGS])

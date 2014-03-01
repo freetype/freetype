@@ -1,3 +1,18 @@
+2014-03-01  Werner Lemberg  <wl@gnu.org>
+
+	Add configure support for HarfBuzz.
+
+	* builds/unix/pkg.m4: New file.
+	* builds/unix/configure.raw: Search for libharfbuzz using
+	`pkg-config'.
+	Add `--without-harfbuzz' option.
+	* builds/unix/freetype-config.in, builds/unix/freetype2.in,
+	builds/unix/unix-def.in (freetype-config, freetype2.pc): Handle
+	HarfBuzz.
+
+	* docs/INSTALL.UNIX: Document interdependency of Freetype with
+	HarfBuzz.
+
 2014-02-28  Alexei Podtelezhnikov  <apodtele@gmail.com>
 
 	[cff] Math simplifications.

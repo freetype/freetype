@@ -7,6 +7,7 @@ Name: FreeType 2
 Description: A free, high-quality, and portable font engine.
 Version: %ft_version%
 Requires:
+Requires.private: %HARFBUZZ_PKG%
 Libs: -L${libdir} -lfreetype
 Libs.private: %LIBZ% %LIBBZ2% %LIBPNG% %FT2_EXTRA_LIBS%
 Cflags: -I${includedir}
