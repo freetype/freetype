@@ -90,13 +90,14 @@ or MSys on Win32:
     OpenType  fonts)  depends on  FreeType,  which  can be  solved  as
     follows in case HarfBuzz is not yet installed on your system.
 
-    1. Call     FreeType's     configure    script     with     option
+    1. Call    FreeType's     `configure'    script     with    option
        `--without-harfbuzz', then compile and install FreeType.
 
     2. Compile and install HarfBuzz.
 
-    3. Call    FreeType's    configure     script    without    option
-       `--without-harfbuzz', then compile and install FreeType again.
+    3. Call    FreeType's    `configure'   script    without    option
+       `--without-harfbuzz' (after  executing `make  distclean'), then
+       compile and install FreeType again.
 
 
 ----------------------------------------------------------------------
