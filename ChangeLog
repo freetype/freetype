@@ -1,3 +1,32 @@
+2014-03-03  Werner Lemberg  <wl@gnu.org>
+
+	Rewrite library option handling in `configure'.
+
+	o Introduce `auto' value for `--with-XXX' library options; this is
+	  now the default.
+
+	o First use `pkg-config' for library detection, then fall back to
+	  other tests.
+
+	* builds/unix/configure.raw (--with-zlib, --with-bzip2, --with-png,
+	--with-harfbuzz): Rewrite.
+	Use new `xxx_reqpriv', `xxx_libpriv', and `xxx_libstaticconf'
+	variables to collect data for `freetype2.pc' and `freetype-config'.
+	(FT2_EXTRA_LIBS): Renamed to ...
+	(ft2_extra_libs): This since it gets no longer substituted.
+	(REQUIRES_PRIVATE, LIBS_PRIVATE, LIBS_CONFIG, LIBSSTATIC_CONFIG):
+	New output variables, replacing `XXX_PKG' and `LIBXXX'.
+	Add notice at the end of `configure' showing the library
+	configuration.
+
+	* builds/unix/freetype-config.in (--static): New command line
+	option.
+	(libs): Updated.
+	(staticlibs): New variable, to be used if `--static' is given.
+	* builds/doc/freetype-config.1: Document `--static'.
+
+	* builds/unix/freetype2.in, builds/unix/unix-def.in: Updated.
+
 2014-03-01  Werner Lemberg  <wl@gnu.org>
 
 	Avoid `long long' warnings with older gcc compilers.

@@ -62,16 +62,12 @@ version_info := @version_info@
 
 # Variables needed for `freetype-config' and `freetype.pc'.
 #
-FT2_EXTRA_LIBS     := @FT2_EXTRA_LIBS@
-LIBZ               := @LIBZ@
-LIBBZIP2           := @LIBBZIP2@
-LIBPNG             := @LIBPNG@
-LIBHARFBUZZ        := @LIBHARFBUZZ@
+REQUIRES_PRIVATE   := @REQUIRES_PRIVATE@
+LIBS_PRIVATE       := @LIBS_PRIVATE@
+LIBS_CONFIG        := @LIBS_CONFIG@
+LIBSSTATIC_CONFIG  := @LIBSSTATIC_CONFIG@
 build_libtool_libs := @build_libtool_libs@
 ft_version         := @ft_version@
-BZIP2_PKG          := @BZIP2_PKG@
-LIBPNG_PKG         := @LIBPNG_PKG@
-HARFBUZZ_PKG       := @HARFBUZZ_PKG@
 
 # The directory where all library files are placed.
 #
@@ -106,18 +102,15 @@ NO_OUTPUT := 2> /dev/null
 
 $(OBJ_BUILD)/freetype-config: $(TOP_DIR)/builds/unix/freetype-config.in
 	rm -f $@ $@.tmp
-	sed -e 's|%FT2_EXTRA_LIBS%|$(FT2_EXTRA_LIBS)|' \
-	    -e 's|%LIBZ%|$(LIBZ)|' \
-	    -e 's|%LIBBZIP2%|$(LIBBZIP2)|' \
-	    -e 's|%LIBPNG%|$(LIBPNG)|' \
-	    -e 's|%LIBHARFBUZZ%|$(LIBHARFBUZZ)|' \
+	sed -e 's|%LIBS_CONFIG%|$(LIBS_CONFIG)|'               \
+	    -e 's|%LIBSSTATIC_CONFIG%|$(LIBSSTATIC_CONFIG)|'   \
 	    -e 's|%build_libtool_libs%|$(build_libtool_libs)|' \
-	    -e 's|%exec_prefix%|$(exec_prefix)|' \
-	    -e 's|%ft_version%|$(ft_version)|' \
-	    -e 's|%includedir%|$(includedir)|' \
-	    -e 's|%libdir%|$(libdir)|' \
-	    -e 's|%prefix%|$(prefix)|' \
-	    $< \
+	    -e 's|%exec_prefix%|$(exec_prefix)|'               \
+	    -e 's|%ft_version%|$(ft_version)|'                 \
+	    -e 's|%includedir%|$(includedir)|'                 \
+	    -e 's|%libdir%|$(libdir)|'                         \
+	    -e 's|%prefix%|$(prefix)|'                         \
+	    $<                                                 \
 	    > $@.tmp
 	chmod +x $@.tmp
 	chmod a-w $@.tmp
@@ -125,18 +118,15 @@ $(OBJ_BUILD)/freetype-config: $(TOP_DIR)/builds/unix/freetype-config.in
 
 $(OBJ_BUILD)/freetype2.pc: $(TOP_DIR)/builds/unix/freetype2.in
 	rm -f $@ $@.tmp
-	sed -e 's|%FT2_EXTRA_LIBS%|$(FT2_EXTRA_LIBS)|' \
-	    -e 's|%LIBZ%|$(LIBZ)|' \
-	    -e 's|%BZIP2_PKG%|$(BZIP2_PKG)|' \
-	    -e 's|%LIBPNG_PKG%|$(LIBPNG_PKG)|' \
-	    -e 's|%HARFBUZZ_PKG%|$(HARFBUZZ_PKG)|' \
+	sed -e 's|%REQUIRES_PRIVATE%|$(REQUIRES_PRIVATE)|'     \
+	    -e 's|%LIBS_PRIVATE%|$(LIBS_PRIVATE)|'             \
 	    -e 's|%build_libtool_libs%|$(build_libtool_libs)|' \
-	    -e 's|%exec_prefix%|$(exec_prefix)|' \
-	    -e 's|%ft_version%|$(ft_version)|' \
-	    -e 's|%includedir%|$(includedir)|' \
-	    -e 's|%libdir%|$(libdir)|' \
-	    -e 's|%prefix%|$(prefix)|' \
-	    $< \
+	    -e 's|%exec_prefix%|$(exec_prefix)|'               \
+	    -e 's|%ft_version%|$(ft_version)|'                 \
+	    -e 's|%includedir%|$(includedir)|'                 \
+	    -e 's|%libdir%|$(libdir)|'                         \
+	    -e 's|%prefix%|$(prefix)|'                         \
+	    $<                                                 \
 	    > $@.tmp
 	chmod a-w $@.tmp
 	mv $@.tmp $@
