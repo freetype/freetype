@@ -1,3 +1,12 @@
+2014-03-04  Werner Lemberg  <wl@gnu.org>
+
+	Minor fix for `make devel'.
+
+	* builds/freetype.mk (INCLUDE_FLAGS) [DEVEL_DIR]: Don't use
+	pkg-config for bzip2 since not all GNU/Linux distributions have
+	`bzip2.pc' (and the header file `bzlib.h' is located in /usr/include
+	normally).
+
 2014-03-04  Sean McBride  <sean@rogue-research.com>
 
 	Fix several clang static analyzer dead store warnings.

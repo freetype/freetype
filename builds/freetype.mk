@@ -3,7 +3,7 @@
 #
 
 
-# Copyright 1996-2006, 2008, 2013 by
+# Copyright 1996-2006, 2008, 2013, 2014 by
 # David Turner, Robert Wilhelm, and Werner Lemberg.
 #
 # This file is part of the FreeType project, and may only be used, modified,
@@ -130,8 +130,7 @@ ifdef DEVEL_DIR
   # We assume that all library dependencies for FreeType are fulfilled for a
   # development build, so we directly access the necessary include directory
   # information using `pkg-config'.
-  INCLUDE_FLAGS += $(shell pkg-config --cflags bzip2 \
-                                               libpng \
+  INCLUDE_FLAGS += $(shell pkg-config --cflags libpng \
                                                harfbuzz )
 endif
 
