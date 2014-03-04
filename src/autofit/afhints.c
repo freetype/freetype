@@ -821,7 +821,6 @@
 
           in_x = out_x;
           in_y = out_y;
-          prev = point;
         }
       }
     }
@@ -1257,7 +1256,6 @@
       }
 
       first_touched = point;
-      last_touched  = point;
 
       for (;;)
       {

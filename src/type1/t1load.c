@@ -377,8 +377,6 @@
     if ( blend && blend->num_axis == num_coords )
     {
       /* recompute the weight vector from the blend coordinates */
-      error = FT_Err_Ok;
-
       for ( n = 0; n < blend->num_designs; n++ )
       {
         FT_Fixed  result = 0x10000L;  /* 1.0 fixed */

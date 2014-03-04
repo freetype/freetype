@@ -1,3 +1,17 @@
+2014-03-04  Sean McBride  <sean@rogue-research.com>
+
+	Fix several clang static analyzer dead store warnings.
+
+	* src/autofit/afhints.c (af_glyph_hints_reload,
+	af_glyph_hints_align_weak_points): Remove unnecessary assignments.
+
+	* src/bdf/bdflib.c (bdf_font_load): Ditto.
+
+	* src/pshinter/pshalgo.c (psh_glyph_compute_extrema,
+	psh_glyph_interpolate_other_points): Ditto.
+
+	* src/type1/t1load.c (T1_Set_MM_Blend): Ditto.
+
 2014-03-03  Werner Lemberg  <wl@gnu.org>
 
 	Rewrite library option handling in `configure'.
