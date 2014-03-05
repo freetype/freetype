@@ -1,6 +1,11 @@
+2014-03-05  Werner Lemberg  <wl@gnu.org>
+
+	* builds/unix/configure.raw: Simplify.
+
 2014-03-05  suzuki toshiya  <mpsuzuki@hiroshima-u.ac.jp>
 
 	Fix a bug in configure in library dependency setting
+	Reported in https://bugs.freedesktop.org/show_bug.cgi?id=75652.
 
 	* builds/unix/configure.raw: Use `x"${xxx}" != xno' style.
 
