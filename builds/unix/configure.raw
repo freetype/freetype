@@ -982,20 +982,20 @@ AC_SUBST([build_libtool_libs])
 # changing LDFLAGS value should only be done after
 # lt_cv_prog_compiler_static_works test
 
-if test "$have_zlib" != no; then
+if test x"$have_zlib" != xno; then
   CFLAGS="$CFLAGS $ZLIB_CFLAGS -DFT_CONFIG_OPTION_SYSTEM_ZLIB"
   LDFLAGS="$LDFLAGS $ZLIB_LIBS"
 fi
 
-if test "$have_bzip2" != no; then
+if test x"$have_bzip2" != xno; then
   CFLAGS="$CFLAGS $BZIP2_CFLAGS -DFT_CONFIG_OPTION_USE_BZIP2"
   LDFLAGS="$LDFLAGS $BZIP2_LIBS"
 fi
-if test x"$have_libpng" != no; then
+if test x"$have_libpng" != xno; then
   CFLAGS="$CFLAGS $LIBPNG_CFLAGS -DFT_CONFIG_OPTION_USE_PNG"
   LDFLAGS="$LDFLAGS $LIBPNG_LIBS"
 fi
-if test x"$have_harfbuzz" != no; then
+if test x"$have_harfbuzz" != xno; then
   CFLAGS="$CFLAGS $HARFBUZZ_CFLAGS -DFT_CONFIG_OPTION_USE_HARFBUZZ"
   LDFLAGS="$LDFLAGS $HARFBUZZ_LIBS"
 fi
