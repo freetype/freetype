@@ -1,5 +1,39 @@
 2014-03-06  Werner Lemberg  <wl@gnu.org>
 
+	* Version 2.5.3 released.
+	=========================
+
+
+	Tag sources with `VER-2-5-3'.
+
+	* docs/VERSION.DLL: Update documentation and bump version number to
+	2.5.3.
+
+	* README, Jamfile (RefDoc), builds/windows/vc2005/freetype.vcproj,
+	builds/windows/vc2005/index.html,
+	builds/windows/vc2008/freetype.vcproj,
+	builds/windows/vc2008/index.html,
+	builds/windows/vc2010/freetype.vcxproj,
+	builds/windows/vc2010/index.html,
+	builds/windows/visualc/freetype.dsp,
+	builds/windows/visualc/freetype.vcproj,
+	builds/windows/visualc/index.html,
+	builds/windows/visualce/freetype.dsp,
+	builds/windows/visualce/freetype.vcproj,
+	builds/windows/visualce/index.html,
+	builds/wince/vc2005-ce/freetype.vcproj,
+	builds/wince/vc2005-ce/index.html,
+	builds/wince/vc2008-ce/freetype.vcproj,
+	builds/wince/vc2008-ce/index.html: s/2.5.2/2.5.3/, s/252/253/.
+
+	* include/freetype/freetype.h (FREETYPE_PATCH): Set to 3.
+
+	* builds/unix/configure.raw (version_info): Set to 17:2:11.
+	* CMakeLists.txt (VERSION_PATCH): Set to 3.
+	* docs/CHANGES: Updated.
+
+2014-03-06  Werner Lemberg  <wl@gnu.org>
+
 	Fixes for compilation with C++.
 
 	* src/autofit/hbshim.c (scripts): Change type to `hb_script_t'.
@@ -1037,9 +1071,10 @@
 	builds/wince/vc2008-ce/freetype.vcproj,
 	builds/wince/vc2008-ce/index.html: s/2.5.1/2.5.2/, s/251/252/.
 
-	* include/freetype/freetype.h (FREETYPE_PATCH): Set to 1.
+	* include/freetype/freetype.h (FREETYPE_PATCH): Set to 2.
 
 	* builds/unix/configure.raw (version_info): Set to 17:1:11.
+	* CMakeLists.txt (VERSION_PATCH): Set to 2.
 	* docs/CHANGES: Updated.
 
 2013-12-07  Werner Lemberg  <wl@gnu.org>
@@ -1147,7 +1182,7 @@
 	* include/freetype/freetype.h (FREETYPE_PATCH): Set to 1.
 
 	* builds/unix/configure.raw (version_info): Set to 17:0:11.
-	* CMakeLists.txt (VERSION_PATCH): Set to 2.
+	* CMakeLists.txt (VERSION_PATCH): Set to 1.
 	* docs/CHANGES, docs/release: Updated.
 
 2013-11-23  Werner Lemberg  <wl@gnu.org>
