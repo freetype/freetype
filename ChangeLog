@@ -1,3 +1,10 @@
+2014-03-06  Sean McBride  <sean@rogue-research.com>
+
+	Remove more clang analyzer warnings.
+
+	* src/bdf/bdflib.c (_bdf_readstream), src/truetype/ttgload.c
+	(TT_Load_Glyph): Remove dead stores.
+
 2014-03-05  Werner Lemberg  <wl@gnu.org>
 
 	* builds/unix/configure.raw: Simplify.

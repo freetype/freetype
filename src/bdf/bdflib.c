@@ -691,7 +691,6 @@
     lineno  = 1;
     buf[0]  = 0;
     start   = 0;
-    end     = 0;
     avail   = 0;
     cursor  = 0;
     refill  = 1;
