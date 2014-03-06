@@ -1,3 +1,11 @@
+2014-03-06  Werner Lemberg  <wl@gnu.org>
+
+	Fixes for compilation with C++.
+
+	* src/autofit/hbshim.c (scripts): Change type to `hb_script_t'.
+	(af_get_coverage): Updated.
+	(COVERAGE): Add cast.
+
 2014-03-06  Sean McBride  <sean@rogue-research.com>
 
 	Remove more clang analyzer warnings.
