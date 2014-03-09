@@ -1,3 +1,7 @@
+2014-03-09  Sean McBride  <sean@rogue-research.com>
+
+	* src/sfnt/ttcmap.c (tt_face_build_cmaps): Remove clang warning.
+
 2014-03-06  Werner Lemberg  <wl@gnu.org>
 
 	* Version 2.5.3 released.

@@ -3473,10 +3473,9 @@
     /* only recognize format 0 */
     if ( TT_NEXT_USHORT( p ) != 0 )
     {
-      p -= 2;
       FT_ERROR(( "tt_face_build_cmaps:"
                  " unsupported `cmap' table format = %d\n",
-                 TT_PEEK_USHORT( p ) ));
+                 TT_PEEK_USHORT( p - 2) ));
       return FT_THROW( Invalid_Table );
     }
 
