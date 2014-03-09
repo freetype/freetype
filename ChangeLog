@@ -1,3 +1,10 @@
+2014-03-09  Alan Coopersmith  <alan.coopersmith@oracle.com>
+
+	Fix cppcheck 1.64 warning.
+
+	* src/autofit/afglobal.c (af_face_globals_new): Catch NULL pointer
+	dereference in case of error.
+
 2014-03-09  Sean McBride  <sean@rogue-research.com>
 
 	* src/sfnt/ttcmap.c (tt_face_build_cmaps): Remove clang warning.

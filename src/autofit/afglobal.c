@@ -332,8 +332,8 @@
       af_face_globals_free( globals );
       globals = NULL;
     }
-
-    globals->increase_x_height = AF_PROP_INCREASE_X_HEIGHT_MAX;
+    else
+      globals->increase_x_height = AF_PROP_INCREASE_X_HEIGHT_MAX;
 
   Exit:
     *aglobals = globals;
