@@ -1,3 +1,7 @@
+2014-03-14  Werner Lemberg  <wl@gnu.org>
+
+	* builds/unix/configure.raw: Don't show error messages of `which'.
+
 2014-03-09  Alan Coopersmith  <alan.coopersmith@oracle.com>
 
 	Fix cppcheck 1.64 warning.

@@ -437,7 +437,7 @@ if test x"$with_png" = xyes -o x"$with_png" = xauto; then
     else
       # fall back to config script.
       AC_MSG_CHECKING([for libpng-config])
-      if which libpng-config > /dev/null; then
+      if which libpng-config > /dev/null 2>&1; then
         LIBPNG_CFLAGS=`libpng-config --cflags`
         LIBPNG_LIBS=`libpng-config --ldflags`
         libpng_libpriv=`libpng-config --static --ldflags`
@@ -656,7 +656,7 @@ else
 fi
 
 
-# Whether to use FileManager which is deprecated since Mac OS X 10.4.
+# Whether to use FileManager, which is deprecated since Mac OS X 10.4.
 
 AC_ARG_WITH([fsspec],
   AS_HELP_STRING([--with-fsspec],
@@ -765,7 +765,7 @@ elif test x$with_old_mac_fonts = xyes -a x$with_fsref != x; then
 fi
 
 
-# Whether to use QuickDraw API in ToolBox which is deprecated since
+# Whether to use QuickDraw API in ToolBox, which is deprecated since
 # Mac OS X 10.4.
 
 AC_ARG_WITH([quickdraw-toolbox],
@@ -807,7 +807,7 @@ elif test x$with_old_mac_fonts = xyes -a x$with_quickdraw_toolbox != x; then
 fi
 
 
-# Whether to use QuickDraw API in Carbon which is deprecated since
+# Whether to use QuickDraw API in Carbon, which is deprecated since
 # Mac OS X 10.4.
 
 AC_ARG_WITH([quickdraw-carbon],
