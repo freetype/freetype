@@ -1,11 +1,20 @@
+CHANGES BETWEEN 2.5.3 and 2.5.4
+
+  I. IMPORTANT BUG FIXES
+
+    - The new auto-hinter code using HarfBuzz crashed for some invalid
+      fonts.
+
+
+======================================================================
 
 CHANGES BETWEEN 2.5.2 and 2.5.3
 
   I. IMPORTANT BUG FIXES
 
-    - A vulnerability was  identified and fixed in the  new CFF driver
-      (cf. http://savannah.nongnu.org/bugs/?41697;  it doesn't  have a
-      CVE number yet).  All users should upgrade.
+    - A vulnerability (CVE-2014-2240) was  identified and fixed in the
+      new  CFF  driver  (cf.  http://savannah.nongnu.org/bugs/?41697).
+      All users should upgrade.
 
     - More  bug  fixes related  to  correct  positioning of  composite
       glyphs.

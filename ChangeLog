@@ -1,3 +1,15 @@
+2014-03-17  Werner Lemberg  <wl@gnu.org>
+
+	Fix Savannah bug #41869.
+
+	This works around a problem with HarfBuzz (<= 0.9.26), which doesn't
+	validate glyph indices returned by
+	`hb_ot_layout_lookup_collect_glyphs'.
+
+	* src/autofit/hbshim.c (af_get_coverage): Guard `idx'.
+
+	* docs/CHANGES: Updated.
+
 2014-03-14  Werner Lemberg  <wl@gnu.org>
 
 	* builds/unix/configure.raw: Don't show error messages of `which'.
