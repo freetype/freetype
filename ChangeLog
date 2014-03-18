@@ -1,3 +1,25 @@
+2014-03-18  Sean McBride  <sean@rogue-research.com>
+	    Werner Lemberg  <wl@gnu.org>
+
+	Fix clang warnings.
+
+	* src/autofit/aflatin.c (af_latin_metrics_init_blues): Initialize
+	some variables.
+
+	* src/base/ftcalc.c (FT_MulFix): Only use code if
+	`FT_MULFIX_INLINED' is not defined.
+
+	* src/bdf/bdfdrivr.c (bdf_cmap_class), src/cache/ftcbasic.c
+	(ftc_basic_image_family_class, ftc_basic_image_cache_class,
+	ftc_basic_sbit_family_class, ftc_basic_sbit_cache_class),
+	src/cache/ftccmap.c (ftc_cmap_cache_class), src/cache/ftcmanag.c
+	(ftc_size_list_class, ftc_face_list_class), src/pcf/pcfdrivr.c
+	(pcf_cmap_class), src/pfr/pfrdrivr.c (pfr_metrics_service_rec): Make
+	function static.
+
+	* src/type1/t1driver.c (t1_ps_get_font_value): Remove redundant
+	code.
+
 2014-03-17  Werner Lemberg  <wl@gnu.org>
 
 	Fix Savannah bug #41869.

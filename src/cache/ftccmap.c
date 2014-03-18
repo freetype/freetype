@@ -4,7 +4,7 @@
 /*                                                                         */
 /*    FreeType CharMap cache (body)                                        */
 /*                                                                         */
-/*  Copyright 2000-2013 by                                                 */
+/*  Copyright 2000-2014 by                                                 */
 /*  David Turner, Robert Wilhelm, and Werner Lemberg.                      */
 /*                                                                         */
 /*  This file is part of the FreeType project, and may only be used,       */
@@ -202,7 +202,7 @@
   /*************************************************************************/
 
 
-  FT_CALLBACK_TABLE_DEF
+  static
   const FTC_CacheClassRec  ftc_cmap_cache_class =
   {
     ftc_cmap_node_new,

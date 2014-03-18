@@ -4,7 +4,7 @@
 /*                                                                         */
 /*    FreeType Cache Manager (body).                                       */
 /*                                                                         */
-/*  Copyright 2000-2006, 2008-2010, 2013 by                                */
+/*  Copyright 2000-2006, 2008-2010, 2013, 2014 by                          */
 /*  David Turner, Robert Wilhelm, and Werner Lemberg.                      */
 /*                                                                         */
 /*  This file is part of the FreeType project, and may only be used,       */
@@ -151,7 +151,7 @@
   }
 
 
-  FT_CALLBACK_TABLE_DEF
+  static
   const FTC_MruListClassRec  ftc_size_list_class =
   {
     sizeof ( FTC_SizeNodeRec ),
@@ -290,7 +290,7 @@
   }
 
 
-  FT_CALLBACK_TABLE_DEF
+  static
   const FTC_MruListClassRec  ftc_face_list_class =
   {
     sizeof ( FTC_FaceNodeRec),

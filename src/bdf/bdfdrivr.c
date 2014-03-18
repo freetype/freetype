@@ -182,7 +182,7 @@ THE SOFTWARE.
   }
 
 
-  FT_CALLBACK_TABLE_DEF
+  static
   const FT_CMap_ClassRec  bdf_cmap_class =
   {
     sizeof ( BDF_CMapRec ),

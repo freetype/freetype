@@ -4,7 +4,7 @@
 /*                                                                         */
 /*    The FreeType basic cache interface (body).                           */
 /*                                                                         */
-/*  Copyright 2003-2007, 2009-2011, 2013 by                                */
+/*  Copyright 2003-2007, 2009-2011, 2013, 2014 by                          */
 /*  David Turner, Robert Wilhelm, and Werner Lemberg.                      */
 /*                                                                         */
 /*  This file is part of the FreeType project, and may only be used,       */
@@ -229,7 +229,7 @@
   *
   */
 
-  FT_CALLBACK_TABLE_DEF
+  static
   const FTC_IFamilyClassRec  ftc_basic_image_family_class =
   {
     {
@@ -243,7 +243,7 @@
   };
 
 
-  FT_CALLBACK_TABLE_DEF
+  static
   const FTC_GCacheClassRec  ftc_basic_image_cache_class =
   {
     {
@@ -415,7 +415,7 @@
    *
    */
 
-  FT_CALLBACK_TABLE_DEF
+  static
   const FTC_SFamilyClassRec  ftc_basic_sbit_family_class =
   {
     {
@@ -430,7 +430,7 @@
   };
 
 
-  FT_CALLBACK_TABLE_DEF
+  static
   const FTC_GCacheClassRec  ftc_basic_sbit_cache_class =
   {
     {
