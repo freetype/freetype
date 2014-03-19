@@ -1,3 +1,12 @@
+2014-03-19  Werner Lemberg  <wl@gnu.org>
+
+	Partially revert last commit.
+
+	Found by Alexei.
+
+	* src/autofit/aflatin.c (af_latin_metrics_init_blues): Initializing
+	those variables is plain wrong, since we are in a loop.
+
 2014-03-18  Sean McBride  <sean@rogue-research.com>
 	    Werner Lemberg  <wl@gnu.org>
 
