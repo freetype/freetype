@@ -48,19 +48,19 @@ set(PROJECT_VERSION ${VERSION_MAJOR}.${VERSION_MINOR}.${VERSION_PATCH})
 add_definitions(-DFT2_BUILD_LIBRARY)
 
 # Specify library include directories
-include_directories("${PROJECT_SOURCE_DIR}/include")
+include_directories("${PROJECT_SOURCE_DIR}/include/freetype2")
 
 # Create the configuration file
-message(STATUS "Creating directory, ${PROJECT_BINARY_DIR}/include.")
-file(MAKE_DIRECTORY ${PROJECT_BINARY_DIR}/include)
+message(STATUS "Creating directory, ${PROJECT_BINARY_DIR}/include/freetype2.")
+file(MAKE_DIRECTORY ${PROJECT_BINARY_DIR}/include/freetype2)
 
 # For the auto-generated ftconfig.h file
-include_directories("${PROJECT_BINARY_DIR}/include")
-message(STATUS "Creating ${PROJECT_BINARY_DIR}/include/ftconfig.h.")
+include_directories(BEFORE "${PROJECT_BINARY_DIR}/include/freetype2")
+message(STATUS "Creating ${PROJECT_BINARY_DIR}/include/freetype2/ftconfig.h.")
 execute_process(
   COMMAND sed -e "s/FT_CONFIG_OPTIONS_H/<ftoption.h>/" -e "s/FT_CONFIG_STANDARD_LIBRARY_H/<ftstdlib.h>/" -e "s?/undef ?#undef ?"
   INPUT_FILE ${PROJECT_SOURCE_DIR}/builds/unix/ftconfig.in
-  OUTPUT_FILE ${PROJECT_BINARY_DIR}/include/ftconfig.h
+  OUTPUT_FILE ${PROJECT_BINARY_DIR}/include/freetype2/ftconfig.h
 )
 
 set(BASE_SRCS
