@@ -1,3 +1,9 @@
+2014-03-20  Werner Lemberg  <wl@gnu.org>
+
+	CMakeLists.txt: Another fix for include directories.
+
+	Problem reported by Taylor Holberton <taylorcholberton@gmail.com>.
+
 2014-03-19  Werner Lemberg  <wl@gnu.org>
 
 	CMakeLists.txt: Fix include directories.

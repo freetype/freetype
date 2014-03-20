@@ -48,7 +48,7 @@ set(PROJECT_VERSION ${VERSION_MAJOR}.${VERSION_MINOR}.${VERSION_PATCH})
 add_definitions(-DFT2_BUILD_LIBRARY)
 
 # Specify library include directories
-include_directories("${PROJECT_SOURCE_DIR}/include/freetype2")
+include_directories("${PROJECT_SOURCE_DIR}/include")
 
 # Create the configuration file
 message(STATUS "Creating directory, ${PROJECT_BINARY_DIR}/include/freetype2.")
