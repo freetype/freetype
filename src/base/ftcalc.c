@@ -39,6 +39,9 @@
 #include FT_INTERNAL_DEBUG_H
 #include FT_INTERNAL_OBJECTS_H
 
+#ifdef FT_MULFIX_INLINED
+#undef FT_MulFix
+#endif
 
 /* we need to emulate a 64-bit data type if a real one isn't available */
 
@@ -200,8 +203,6 @@
 
   /* documentation is in freetype.h */
 
-#ifndef FT_MULFIX_INLINED
-
   FT_EXPORT_DEF( FT_Long )
   FT_MulFix( FT_Long  a,
              FT_Long  b )
@@ -234,8 +235,6 @@
 
 #endif /* FT_MULFIX_ASSEMBLER */
   }
-
-#endif /* FT_MULFIX_INLINED */
 
 
   /* documentation is in freetype.h */
@@ -448,8 +447,6 @@
 
   /* documentation is in freetype.h */
 
-#ifndef FT_MULFIX_INLINED
-
   FT_EXPORT_DEF( FT_Long )
   FT_MulFix( FT_Long  a,
              FT_Long  b )
@@ -547,8 +544,6 @@
 #endif /* 0 */
 
   }
-
-#endif /* FT_MULFIX_INLINED */
 
 
   /* documentation is in freetype.h */
