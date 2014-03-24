@@ -64,7 +64,6 @@ version_info := @version_info@
 #
 REQUIRES_PRIVATE   := @REQUIRES_PRIVATE@
 LIBS_PRIVATE       := @LIBS_PRIVATE@
-LIBS_CONFIG        := @LIBS_CONFIG@
 LIBSSTATIC_CONFIG  := @LIBSSTATIC_CONFIG@
 build_libtool_libs := @build_libtool_libs@
 ft_version         := @ft_version@
@@ -102,8 +101,7 @@ NO_OUTPUT := 2> /dev/null
 
 $(OBJ_BUILD)/freetype-config: $(TOP_DIR)/builds/unix/freetype-config.in
 	rm -f $@ $@.tmp
-	sed -e 's|%LIBS_CONFIG%|$(LIBS_CONFIG)|'               \
-	    -e 's|%LIBSSTATIC_CONFIG%|$(LIBSSTATIC_CONFIG)|'   \
+	sed -e 's|%LIBSSTATIC_CONFIG%|$(LIBSSTATIC_CONFIG)|'   \
 	    -e 's|%build_libtool_libs%|$(build_libtool_libs)|' \
 	    -e 's|%exec_prefix%|$(exec_prefix)|'               \
 	    -e 's|%ft_version%|$(ft_version)|'                 \
