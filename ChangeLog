@@ -1,3 +1,15 @@
+2014-03-27  Werner Lemberg  <wl@gnu.org>
+
+	Fix Savannah bug #38235.
+
+	Work around a bug in pkg-config version 0.28 and earlier: If a
+	variable value gets surrounded by doublequotes (in particular values
+	for the `prefix' variable), the prefix override mechanism fails.
+
+	* builds/unix/freetype2.in: Don't use doublequotes.
+	* builds/unix/unix-def.in (freetype.pc): Escape spaces in directory
+	names with backslashes.
+
 2014-03-24  Werner Lemberg  <wl@gnu.org>
 
 	Fix Savannah bug #41946.
