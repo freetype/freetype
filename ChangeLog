@@ -1,3 +1,12 @@
+2014-04-03  Werner Lemberg  <wl@gnu.org>
+
+	Don't require `gzip' module for `sfnt'.
+
+	Reported by Preet <prismatic.project@gmail.com>.
+
+	* src/sfnt/sfobjs.c (woff_open_font): Guard use of
+	FT_Gzip_Uncompress with FT_CONFIG_OPTION_USE_ZLIB.
+
 2014-03-27  Werner Lemberg  <wl@gnu.org>
 
 	Fix Savannah bug #38235.

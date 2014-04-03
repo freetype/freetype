@@ -4,7 +4,7 @@
 /*                                                                         */
 /*    SFNT object management (base).                                       */
 /*                                                                         */
-/*  Copyright 1996-2008, 2010-2013 by                                      */
+/*  Copyright 1996-2008, 2010-2014 by                                      */
 /*  David Turner, Robert Wilhelm, and Werner Lemberg.                      */
 /*                                                                         */
 /*  This file is part of the FreeType project, and may only be used,       */
@@ -661,6 +661,8 @@
       }
       else
       {
+#ifdef FT_CONFIG_OPTION_USE_ZLIB
+
         /* Uncompress with zlib. */
         FT_ULong  output_len = table->OrigLength;
 
@@ -675,6 +677,13 @@
           error = FT_THROW( Invalid_Table );
           goto Exit;
         }
+
+#else /* !FT_CONFIG_OPTION_USE_ZLIB */
+
+        error = FT_THROW( Unimplemented_Feature );
+        goto Exit;
+
+#endif /* !FT_CONFIG_OPTION_USE_ZLIB */
       }
 
       FT_FRAME_EXIT();
