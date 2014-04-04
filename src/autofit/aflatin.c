@@ -1355,6 +1355,7 @@
     if ( len_threshold == 0 )
       len_threshold = 1;
 
+    /* a heuristic value to weight lengths */
     len_score = AF_LATIN_CONSTANT( hints->metrics, 6000 );
 
     /* now compare each segment to the others */
@@ -1389,15 +1390,18 @@
             max = seg2->max_coord;
 
           /* compute maximum coordinate difference of the two segments */
+          /* (this is, how much they overlap)                          */
           len = max - min;
           if ( len >= len_threshold )
           {
-            /* small coordinate differences cause a higher score, and     */
-            /* segments with a greater distance cause a higher score also */
+            /* the score is the sum of two values indicating the       */
+            /* `quality' of a fit, measured along the segments' main   */
+            /* axis (`len_score / len') and orthogonal to it (`dist'): */
+            /* smaller overlappings cause a higher score, and segments */
+            /* with a greater distance cause a higher score also       */
             score = dist + len_score / len;
 
             /* and we search for the smallest score */
-            /* of the sum of the two values         */
             if ( score < seg1->score )
             {
               seg1->score = score;
