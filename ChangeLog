@@ -1,3 +1,26 @@
+2014-04-05  Werner Lemberg  <wl@gnu.org>
+
+	[autofit] Improve scoring algorithm for identifying stems.
+
+	Problem reported by Karsten Lücke <karsten.luecke@kltf.de>.
+
+	The new algorithm takes care of the width of stems: If the distance
+	between two segments is larger than the largest stem width, the
+	demerits quickly increase for larger distances.  This improves
+	hinting of slanted fonts (especially if the inner parts of serifs
+	have non-horizontal `shoulders'), avoiding false stem links.
+
+	* src/autofit/aflatin.c (af_latin_hints_link_segments): Use largest
+	stem width (if available) to compute better demerits for distances
+	between stems.
+	(af_latin_hints_detect_features): Pass stem width array and array
+	size.
+	(af_latin_metrics_init_widths): Updated to use original algorithm.
+	(af_latin_hints_apply): Updated to use new algorithm.
+
+	* src/autofit/aflatin.h: Updated.
+	* src/autofit/afcjk.c: Updated.
+
 2014-04-03  Werner Lemberg  <wl@gnu.org>
 
 	Don't require `gzip' module for `sfnt'.

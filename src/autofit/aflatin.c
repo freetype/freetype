@@ -171,7 +171,15 @@
         if ( error )
           goto Exit;
 
+        /*
+         *  We assume that the glyphs selected for the stem width
+         *  computation are `featureless' enough so that the linking
+         *  algorithm works fine without adjustments of its scoring
+         *  function.
+         */
         af_latin_hints_link_segments( hints,
+                                      0,
+                                      NULL,
                                       (AF_Dimension)dim );
 
         seg   = axhints->segments;
@@ -1338,25 +1346,39 @@
   }
 
 
-  /* Link segments to form stems and serifs. */
+  /* Link segments to form stems and serifs.  If `width_count' and      */
+  /* `widths' are non-zero, use them to fine-tune the scoring function. */
 
   FT_LOCAL_DEF( void )
   af_latin_hints_link_segments( AF_GlyphHints  hints,
+                                FT_UInt        width_count,
+                                AF_WidthRec*   widths,
                                 AF_Dimension   dim )
   {
     AF_AxisHints  axis          = &hints->axis[dim];
     AF_Segment    segments      = axis->segments;
     AF_Segment    segment_limit = segments + axis->num_segments;
-    FT_Pos        len_threshold, len_score;
+    FT_Pos        len_threshold, len_score, dist_score, max_width;
     AF_Segment    seg1, seg2;
 
 
+    if ( width_count )
+      max_width = widths[width_count - 1].org;
+    else
+      max_width = 0;
+
+    /* a heuristic value to set up a minimum value for overlapping */
     len_threshold = AF_LATIN_CONSTANT( hints->metrics, 8 );
     if ( len_threshold == 0 )
       len_threshold = 1;
 
     /* a heuristic value to weight lengths */
     len_score = AF_LATIN_CONSTANT( hints->metrics, 6000 );
+
+    /* a heuristic value to weight distances (no call to    */
+    /* AF_LATIN_CONSTANT needed, since we work on multiples */
+    /* of the stem width)                                   */
+    dist_score = 3000;
 
     /* now compare each segment to the others */
     for ( seg1 = segments; seg1 < segment_limit; seg1++ )
@@ -1377,10 +1399,9 @@
         if ( seg1->dir + seg2->dir == 0 && pos2 > pos1 )
         {
           /* compute distance between the two segments */
-          FT_Pos  dist = pos2 - pos1;
-          FT_Pos  min  = seg1->min_coord;
-          FT_Pos  max  = seg1->max_coord;
-          FT_Pos  len, score;
+          FT_Pos  min = seg1->min_coord;
+          FT_Pos  max = seg1->max_coord;
+          FT_Pos  len;
 
 
           if ( min < seg2->min_coord )
@@ -1394,12 +1415,43 @@
           len = max - min;
           if ( len >= len_threshold )
           {
-            /* the score is the sum of two values indicating the       */
-            /* `quality' of a fit, measured along the segments' main   */
-            /* axis (`len_score / len') and orthogonal to it (`dist'): */
-            /* smaller overlappings cause a higher score, and segments */
-            /* with a greater distance cause a higher score also       */
-            score = dist + len_score / len;
+            /*
+             *  The score is the sum of two demerits indicating the
+             *  `badness' of a fit, measured along the segments' main axis
+             *  and orthogonal to it, respectively.
+             *
+             *  o The less overlapping along the main axis, the worse it
+             *    is, causing a larger demerit.
+             *
+             *  o The nearer the orthogonal distance to a stem width, the
+             *    better it is, causing a smaller demerit.  For simplicity,
+             *    however, we only increase the demerit for values that
+             *    exceed the largest stem width.
+             */
+
+            FT_Pos  dist = pos2 - pos1;
+
+            FT_Pos  dist_demerit, score;
+
+
+            if ( max_width )
+            {
+              /* distance demerits are based on multiples of `max_width'; */
+              /* we scale by 1024 for getting more precision              */
+              FT_Pos  delta = ( dist << 10 ) / max_width - ( 1 << 10 );
+
+
+              if ( delta > 10000 )
+                dist_demerit = 32000;
+              else if ( delta > 0 )
+                dist_demerit = delta * delta / dist_score;
+              else
+                dist_demerit = 0;
+            }
+            else
+              dist_demerit = dist; /* default if no widths available */
+
+            score = dist_demerit + len_score / len;
 
             /* and we search for the smallest score */
             if ( score < seg1->score )
@@ -1733,6 +1785,8 @@
 
   FT_LOCAL_DEF( FT_Error )
   af_latin_hints_detect_features( AF_GlyphHints  hints,
+                                  FT_UInt        width_count,
+                                  AF_WidthRec*   widths,
                                   AF_Dimension   dim )
   {
     FT_Error  error;
@@ -1741,7 +1795,7 @@
     error = af_latin_hints_compute_segments( hints, dim );
     if ( !error )
     {
-      af_latin_hints_link_segments( hints, dim );
+      af_latin_hints_link_segments( hints, width_count, widths, dim );
 
       error = af_latin_hints_compute_edges( hints, dim );
     }
@@ -2694,6 +2748,8 @@
     FT_Error  error;
     int       dim;
 
+    AF_LatinAxis  axis;
+
 
     error = af_glyph_hints_reload( hints, outline );
     if ( error )
@@ -2707,14 +2763,22 @@
     if ( AF_HINTS_DO_HORIZONTAL( hints ) )
 #endif
     {
-      error = af_latin_hints_detect_features( hints, AF_DIMENSION_HORZ );
+      axis  = &metrics->axis[AF_DIMENSION_HORZ];
+      error = af_latin_hints_detect_features( hints,
+                                              axis->width_count,
+                                              axis->widths,
+                                              AF_DIMENSION_HORZ );
       if ( error )
         goto Exit;
     }
 
     if ( AF_HINTS_DO_VERTICAL( hints ) )
     {
-      error = af_latin_hints_detect_features( hints, AF_DIMENSION_VERT );
+      axis  = &metrics->axis[AF_DIMENSION_VERT];
+      error = af_latin_hints_detect_features( hints,
+                                              axis->width_count,
+                                              axis->widths,
+                                              AF_DIMENSION_VERT );
       if ( error )
         goto Exit;
 

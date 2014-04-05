@@ -5,7 +5,7 @@
 /*    Auto-fitter hinting routines for latin writing system                */
 /*    (specification).                                                     */
 /*                                                                         */
-/*  Copyright 2003-2007, 2009, 2011-2013 by                                */
+/*  Copyright 2003-2007, 2009, 2011-2014 by                                */
 /*  David Turner, Robert Wilhelm, and Werner Lemberg.                      */
 /*                                                                         */
 /*  This file is part of the FreeType project, and may only be used,       */
@@ -169,6 +169,8 @@ FT_BEGIN_HEADER
 
   FT_LOCAL( void )
   af_latin_hints_link_segments( AF_GlyphHints  hints,
+                                FT_UInt        width_count,
+                                AF_WidthRec*   widths,
                                 AF_Dimension   dim );
 
   FT_LOCAL( FT_Error )
@@ -177,6 +179,8 @@ FT_BEGIN_HEADER
 
   FT_LOCAL( FT_Error )
   af_latin_hints_detect_features( AF_GlyphHints  hints,
+                                  FT_UInt        width_count,
+                                  AF_WidthRec*   widths,
                                   AF_Dimension   dim );
 
 /* */
