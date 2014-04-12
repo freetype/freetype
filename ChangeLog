@@ -1,3 +1,41 @@
+2014-04-12  Werner Lemberg  <wl@gnu.org>
+
+	[autofit] Redesign the recognition algorithm of strong points.
+
+	In particular, local extrema without horizontal or vertical segments
+	are better recognized:
+
+	  + A                + D
+	   \                /
+	    \              /
+	     \            /
+	      \          /
+	       \        + C
+	        \    /
+	       B +/
+
+	If the distances AB and CD are large, point B wasn't previously
+	detected as an extremum since the `ft_corner_is_flat' function
+	`swallowed' BC regardless of its direction, tagging point B as weak.
+	The next iteration started at B and made `ft_corner_is_flat' swallow
+	point C, tagging it as weak also, et voilà.
+
+	To improve that, another pass gets now performed before calling
+	`ft_corner_is_flat' to improve the `topology' of an outline: A
+	sequence of non-horizontal or non-vertical vectors that point into
+	the same quadrant are handled as a single, large vector.
+
+	Additionally, distances of near points are now accumulated, which
+	makes the auto-hinter handle them as if they were prepended to the
+	next non-near vector.
+
+	This generally improves the auto-hinter's rendering results.
+
+	* src/autofit/afhints.c (af_glyph_hints_reload): Implement it.
+
+	* src/autofit/afhints.h (AF_FLAGS): Remove no longer used flag
+	`AF_FLAG_NEAR'.
+
 2014-04-05  Werner Lemberg  <wl@gnu.org>
 
 	[autofit] Improve scoring algorithm for identifying stems.
