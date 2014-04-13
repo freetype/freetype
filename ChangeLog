@@ -1,3 +1,9 @@
+2014-04-13  David Weber <weber.aulendorf@googlemail.com>
+
+	[smooth] Fix stand-alone compilation.
+
+	* src/smooth/ftgrays.c (FT_BEGIN_STMNT, FT_END_STMNT): Define.
+
 2014-04-12  Werner Lemberg  <wl@gnu.org>
 
 	[autofit] Redesign the recognition algorithm of strong points.

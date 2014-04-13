@@ -98,6 +98,9 @@
 #define FT_ERR_XCAT( x, y )  x ## y
 #define FT_ERR_CAT( x, y )   FT_ERR_XCAT( x, y )
 
+#define FT_BEGIN_STMNT  do {
+#define FT_END_STMNT    } while ( 0 )
+
 
   /* define this to dump debugging information */
 /* #define FT_DEBUG_LEVEL_TRACE */
