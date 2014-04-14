@@ -1,3 +1,11 @@
+2014-04-14  Werner Lemberg  <wl@gnu.org>
+
+	[autofit] Improve coverage handling.
+
+	* src/autofit/hbshim.c (af_get_coverage): Don't exclude glyphs
+	appearing in the GPOS table if we are processing the default
+	coverage.
+
 2014-04-13  David Weber <weber.aulendorf@googlemail.com>
 
 	[smooth] Fix stand-alone compilation.
