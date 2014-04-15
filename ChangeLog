@@ -1,3 +1,10 @@
+2014-04-15  Werner Lemberg  <wl@gnu.org>
+
+	[afblue.pl]: Minor improvements.
+
+	* src/tools/afblue.pl: Allow whitespace before comments.
+	Ignore whitespace in strings.
+
 2014-04-14  Werner Lemberg  <wl@gnu.org>
 
 	[autofit] Improve coverage handling.
