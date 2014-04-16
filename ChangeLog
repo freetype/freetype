@@ -1,3 +1,10 @@
+2014-04-17  Werner Lemberg  <wl@gnu.org>
+
+	Make `FT_Get_SubGlyph_Info' actually work.
+
+	* src/base/ftobjs.c (FT_Get_SubGlyph_Info): Return FT_Err_Ok
+	if there is no error.
+
 2014-04-15  Werner Lemberg  <wl@gnu.org>
 
 	[afblue.pl]: Minor improvements.

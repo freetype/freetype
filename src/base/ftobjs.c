@@ -4881,6 +4881,8 @@
       *p_arg1      = subg->arg1;
       *p_arg2      = subg->arg2;
       *p_transform = subg->transform;
+
+      error = FT_Err_Ok;
     }
 
     return error;
