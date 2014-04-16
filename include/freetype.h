@@ -2560,14 +2560,11 @@ FT_BEGIN_HEADER
    *     Ignored.  Deprecated.
    *
    *   FT_LOAD_NO_RECURSE ::
-   *     This flag is only used internally.  It merely indicates that the
-   *     font driver should not load composite glyphs recursively.  Instead,
-   *     it should set the `num_subglyph' and `subglyphs' values of the
-   *     glyph slot accordingly, and set `glyph->format' to
-   *     @FT_GLYPH_FORMAT_COMPOSITE.
-   *
-   *     The description of sub-glyphs is not available to client
-   *     applications for now.
+   *     Indicate that the font driver should not load composite glyphs
+   *     recursively.  Instead, it should set the `num_subglyph' and
+   *     `subglyphs' values of the glyph slot accordingly, and set
+   *     `glyph->format' to @FT_GLYPH_FORMAT_COMPOSITE.  The description of
+   *     subglyphs can then be accessed with @FT_Get_SubGlyph_Info.
    *
    *     This flag implies @FT_LOAD_NO_SCALE and @FT_LOAD_IGNORE_TRANSFORM.
    *
