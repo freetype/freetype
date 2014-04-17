@@ -1,5 +1,14 @@
 2014-04-17  Werner Lemberg  <wl@gnu.org>
 
+	[autofit] More coverage fixes for complex scripts.
+
+	* src/autofit/hbshim.c (af_get_coverage): Merge input glyph coverage
+	of GSUB lookups into output coverage.  Otherwise, ligatures are not
+	handled properly.
+	Don't check blue zone characters for default coverage.
+
+2014-04-17  Werner Lemberg  <wl@gnu.org>
+
 	Make `FT_Get_SubGlyph_Info' actually work.
 
 	* src/base/ftobjs.c (FT_Get_SubGlyph_Info): Return FT_Err_Ok
