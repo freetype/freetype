@@ -1,3 +1,46 @@
+2014-04-20  Werner Lemberg  <wl@gnu.org>
+
+	[autofit] Fix Savannah bug #42148.
+
+	The adaptation of the cjk auto-hinter module to blue stringsets in
+	2013-08-25 had three severe bugs.  Mea culpa.
+
+	1. Contrary to the latin auto-hinter, characters for reference and
+	   overshoot values of a blue zone are specified separately.  Due to
+	   the screwed-up change it didn't work at all.
+
+	2. A boolean comparison was erroneously replaced with a cast,
+	   causing invalid results with the `^' operator later on.  The
+	   visual artifact caused by this problem is the topic of the bug
+	   report.
+
+	3. Two flag values were inverted, causing incorrect assignment of
+	   reference and overshoot values.
+
+	* src/autofit/afblue.dat: Fix CJK bluestrings, introducing a new
+	syntax to have both reference and overshoot characters in a single
+	string.  This is error #1.
+	Add extensive comments.
+
+	* src/autofit/afblue.hin (AF_BLUE_PROPERTY_CJK_FILL): Removed, no
+	longer used.
+	(AF_BLUE_PROPERTY_CJK_TOP, AF_BLUE_PROPERTY_CJK_HORIZ): Fix values. 
+	This is error #3.
+
+	* src/autofit/afblue.c, src/autofit/afblue.h: Regenerated.
+
+	* src/autofit/afcjk.c (af_cjk_metrics_init_blues): Correct error #1.
+	Use character `|' to separate characters for reference and overshoot
+	values.
+	Improve tracing messages, synchronizing them with the latin
+	auto-hinter.
+	(af_cjk_hints_compute_blue_edges): Fix value of `is_top_right_blue'. 
+	This is error #2.
+	(af_cjk_align_linked_edge): Add tracing message.
+
+	* src/autofit/afcjk.h (AF_CJK_IS_FILLED_BLUE): Removed, no longer
+	used.
+
 2014-04-17  Werner Lemberg  <wl@gnu.org>
 
 	[autofit] More coverage fixes for complex scripts.

@@ -4,7 +4,7 @@
 /*                                                                         */
 /*    Auto-fitter data for blue strings (specification).                   */
 /*                                                                         */
-/*  Copyright 2013 by                                                      */
+/*  Copyright 2013, 2014 by                                                */
 /*  David Turner, Robert Wilhelm, and Werner Lemberg.                      */
 /*                                                                         */
 /*  This file is part of the FreeType project, and may only be used,       */
@@ -100,9 +100,8 @@ FT_BEGIN_HEADER
 #define AF_BLUE_PROPERTY_LATIN_X_HEIGHT  ( 1 << 1 )
 #define AF_BLUE_PROPERTY_LATIN_LONG      ( 1 << 2 )
 
-#define AF_BLUE_PROPERTY_CJK_HORIZ  ( 1 << 0 )
-#define AF_BLUE_PROPERTY_CJK_TOP    ( 1 << 1 )
-#define AF_BLUE_PROPERTY_CJK_FILL   ( 1 << 2 )
+#define AF_BLUE_PROPERTY_CJK_TOP    ( 1 << 0 )
+#define AF_BLUE_PROPERTY_CJK_HORIZ  ( 1 << 1 )
 #define AF_BLUE_PROPERTY_CJK_RIGHT  AF_BLUE_PROPERTY_CJK_TOP
 
 

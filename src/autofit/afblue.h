@@ -7,7 +7,7 @@
 /*                                                                         */
 /*    Auto-fitter data for blue strings (specification).                   */
 /*                                                                         */
-/*  Copyright 2013 by                                                      */
+/*  Copyright 2013, 2014 by                                                */
 /*  David Turner, Robert Wilhelm, and Werner Lemberg.                      */
 /*                                                                         */
 /*  This file is part of the FreeType project, and may only be used,       */
@@ -67,7 +67,7 @@ FT_BEGIN_HEADER
   /* At the bottommost level, we define strings for finding blue zones. */
 
 
-#define AF_BLUE_STRING_MAX_LEN  25
+#define AF_BLUE_STRING_MAX_LEN  51
 
   /* The AF_Blue_String enumeration values are offsets into the */
   /* `af_blue_strings' array.                                   */
@@ -93,16 +93,12 @@ FT_BEGIN_HEADER
     AF_BLUE_STRING_HEBREW_DESCENDER = 203,
     af_blue_1_1 = 213,
 #ifdef AF_CONFIG_OPTION_CJK
-    AF_BLUE_STRING_CJK_TOP_FILL = af_blue_1_1 + 1,
-    AF_BLUE_STRING_CJK_TOP_UNFILL = af_blue_1_1 + 77,
-    AF_BLUE_STRING_CJK_BOTTOM_FILL = af_blue_1_1 + 153,
-    AF_BLUE_STRING_CJK_BOTTOM_UNFILL = af_blue_1_1 + 229,
+    AF_BLUE_STRING_CJK_TOP = af_blue_1_1 + 1,
+    AF_BLUE_STRING_CJK_BOTTOM = af_blue_1_1 + 153,
     af_blue_1_1_1 = af_blue_1_1 + 304,
 #ifdef AF_CONFIG_OPTION_CJK_BLUE_HANI_VERT
-    AF_BLUE_STRING_CJK_LEFT_FILL = af_blue_1_1_1 + 1,
-    AF_BLUE_STRING_CJK_LEFT_UNFILL = af_blue_1_1_1 + 77,
-    AF_BLUE_STRING_CJK_RIGHT_FILL = af_blue_1_1_1 + 153,
-    AF_BLUE_STRING_CJK_RIGHT_UNFILL = af_blue_1_1_1 + 229,
+    AF_BLUE_STRING_CJK_LEFT = af_blue_1_1_1 + 1,
+    AF_BLUE_STRING_CJK_RIGHT = af_blue_1_1_1 + 153,
     af_blue_1_1_2 = af_blue_1_1_1 + 304,
 #else
     af_blue_1_1_2 = af_blue_1_1_1 + 0,
@@ -140,13 +136,12 @@ FT_BEGIN_HEADER
 #define AF_BLUE_PROPERTY_LATIN_X_HEIGHT  ( 1 << 1 )
 #define AF_BLUE_PROPERTY_LATIN_LONG      ( 1 << 2 )
 
-#define AF_BLUE_PROPERTY_CJK_HORIZ  ( 1 << 0 )
-#define AF_BLUE_PROPERTY_CJK_TOP    ( 1 << 1 )
-#define AF_BLUE_PROPERTY_CJK_FILL   ( 1 << 2 )
+#define AF_BLUE_PROPERTY_CJK_TOP    ( 1 << 0 )
+#define AF_BLUE_PROPERTY_CJK_HORIZ  ( 1 << 1 )
 #define AF_BLUE_PROPERTY_CJK_RIGHT  AF_BLUE_PROPERTY_CJK_TOP
 
 
-#define AF_BLUE_STRINGSET_MAX_LEN  9
+#define AF_BLUE_STRINGSET_MAX_LEN  7
 
   /* The AF_Blue_Stringset enumeration values are offsets into the */
   /* `af_blue_stringsets' array.                                   */
@@ -160,9 +155,9 @@ FT_BEGIN_HEADER
     af_blue_2_1 = 24,
 #ifdef AF_CONFIG_OPTION_CJK
     AF_BLUE_STRINGSET_HANI = af_blue_2_1 + 0,
-    af_blue_2_1_1 = af_blue_2_1 + 4,
+    af_blue_2_1_1 = af_blue_2_1 + 2,
 #ifdef AF_CONFIG_OPTION_CJK_BLUE_HANI_VERT
-    af_blue_2_1_2 = af_blue_2_1_1 + 4,
+    af_blue_2_1_2 = af_blue_2_1_1 + 2,
 #else
     af_blue_2_1_2 = af_blue_2_1_1 + 0,
 #endif /* AF_CONFIG_OPTION_CJK_BLUE_HANI_VERT */

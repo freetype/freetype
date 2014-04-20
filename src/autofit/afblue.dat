@@ -2,7 +2,7 @@
 //
 //    Auto-fitter data for blue strings.
 //
-//  Copyright 2013 by
+//  Copyright 2013, 2014 by
 //  David Turner, Robert Wilhelm, and Werner Lemberg.
 //
 //  This file is part of the FreeType project, and may only be used,
@@ -63,6 +63,8 @@
 // characters, not bytes.
 
 
+// The blue zone string data, to be used in the blue stringsets below.
+
 AF_BLUE_STRING_ENUM AF_BLUE_STRINGS_ARRAY AF_BLUE_STRING_MAX_LEN:
 
   AF_BLUE_STRING_LATIN_CAPITAL_TOP
@@ -105,22 +107,20 @@ AF_BLUE_STRING_ENUM AF_BLUE_STRINGS_ARRAY AF_BLUE_STRING_MAX_LEN:
 
 #ifdef AF_CONFIG_OPTION_CJK
 
-  AF_BLUE_STRING_CJK_TOP_FILL
+  AF_BLUE_STRING_CJK_TOP
     "他们你來們到和地"
     "对對就席我时時會"
     "来為能舰說说这這"
-    "齊"
-  AF_BLUE_STRING_CJK_TOP_UNFILL
+    "齊 |"
     "军同已愿既星是景"
     "民照现現理用置要"
     "軍那配里開雷露面"
     "顾"
-  AF_BLUE_STRING_CJK_BOTTOM_FILL
+  AF_BLUE_STRING_CJK_BOTTOM
     "个为人他以们你來"
     "個們到和大对對就"
     "我时時有来為要說"
-    "说"
-  AF_BLUE_STRING_CJK_BOTTOM_UNFILL
+    "说 |"
     "主些因它想意理生"
     "當看着置者自著裡"
     "过还进進過道還里"
@@ -128,22 +128,20 @@ AF_BLUE_STRING_ENUM AF_BLUE_STRINGS_ARRAY AF_BLUE_STRING_MAX_LEN:
 
 #ifdef AF_CONFIG_OPTION_CJK_BLUE_HANI_VERT
 
-  AF_BLUE_STRING_CJK_LEFT_FILL
+  AF_BLUE_STRING_CJK_LEFT
     "些们你來們到和地"
     "她将將就年得情最"
     "样樣理能說说这這"
-    "通"
-  AF_BLUE_STRING_CJK_LEFT_UNFILL
+    "通 |"
     "即吗吧听呢品响嗎"
     "师師收断斷明眼間"
     "间际陈限除陳随際"
     "隨"
-  AF_BLUE_STRING_CJK_RIGHT_FILL
+  AF_BLUE_STRING_CJK_RIGHT
     "事前學将將情想或"
     "政斯新样樣民沒没"
     "然特现現球第經谁"
-    "起"
-  AF_BLUE_STRING_CJK_RIGHT_UNFILL
+    "起 |"
     "例別别制动動吗嗎"
     "增指明朝期构物确"
     "种調调費费那都間"
@@ -152,6 +150,79 @@ AF_BLUE_STRING_ENUM AF_BLUE_STRINGS_ARRAY AF_BLUE_STRING_MAX_LEN:
 #endif /* AF_CONFIG_OPTION_CJK_BLUE_HANI_VERT */
 
 #endif /* AF_CONFIG_OPTION_CJK                */
+
+
+// The blue zone stringsets, as used in the script styles, cf. `afstyles.h'.
+//
+// The AF_BLUE_PROPERTY_XXX flags are defined in `afblue.h'; here some
+// explanations.
+//
+// A blue zone in general is defined by a reference and an overshoot line.
+// During the hinting process, all coordinate values between those two lines
+// are set equal to the reference value, provided that the blue zone is not
+// wider than 0.75 pixels (otherwise the blue zone gets ignored).  All
+// entries must have `AF_BLUE_STRING_MAX' as the final line.
+//
+//
+// latin auto-hinter
+// -----------------
+//
+// Characters in a blue string are automatically classified as having a flat
+// (reference) or a round (overshoot) extremum.  The blue zone is then set
+// up by the mean values of all flat extrema and all round extrema,
+// respectively.  Only horizontal blue zones (i.e., adjusting vertical
+// coordinate values) are supported.
+//
+// For the latin auto-hinter, the overshoot should be larger than the
+// reference for top zones, and vice versa for bottom zones.
+//
+//   LATIN_TOP
+//     Take the maximum flat and round coordinate values of the blue string
+//     characters.  If not set, take the minimum values.
+//
+//   LATIN_X_HEIGHT
+//     Scale all glyphs vertically from the corresponding script to make the
+//     reference line of this blue zone align on the grid.  The scaling
+//     takes place before all other blue zones get aligned to the grid.
+//     Only one blue character string of a script style can have this flag.
+//
+//   LATIN_LONG
+//     Apply an additional constraint for blue zone values: Don't
+//     necessarily use the extremum as-is but a segment of the topmost (or
+//     bottommost) contour that is longer than a heuristic threshold, and
+//     which is not too far away vertically from the real extremum.  This
+//     ensures that small bumps in the outline are ignored (for example, the
+//     `vertical serifs' found in many Hebrew glyph designs).
+//
+//     The segment must be at least EM/25 font units long, and the distance
+//     to the extremum must be smaller than EM/4.
+//
+//
+// cjk auto-hinter
+// ---------------
+//
+// Characters in a blue string are *not* automatically classified.  Instead,
+// first come the characters used for the overshoot value, then the
+// character `|', then the characters used for the reference value.  The
+// blue zone is then set up by the mean values of all reference values and
+// all overshoot values, respectively.  Both horizontal and vertical blue
+// zones (i.e., adjusting vertical and horizontal coordinate values,
+// respectively) are supported.
+//
+// For the cjk auto-hinter, the overshoot should be smaller than the
+// reference for top zones, and vice versa for bottom zones.
+//
+//   CJK_TOP
+//     Take the maximum flat and round coordinate values of the blue string
+//     characters.  If not set, take the minimum values.
+//
+//   CJK_RIGHT
+//     A synonym for CJK_TOP.  If CJK_HORIZ is set, this flag indicates the
+//     right blue zone, taking horizontal maximum values.
+//
+//   CJK_HORIZ
+//     Define a blue zone for horizontal hinting (i.e., vertical blue
+//     zones).  If not set, this is a blue zone for vertical hinting.
 
 
 AF_BLUE_STRINGSET_ENUM AF_BLUE_STRINGSETS_ARRAY AF_BLUE_STRINGSET_MAX_LEN:
@@ -195,22 +266,14 @@ AF_BLUE_STRINGSET_ENUM AF_BLUE_STRINGSETS_ARRAY AF_BLUE_STRINGSET_MAX_LEN:
 #ifdef AF_CONFIG_OPTION_CJK
 
   AF_BLUE_STRINGSET_HANI
-    { AF_BLUE_STRING_CJK_TOP_FILL,      AF_BLUE_PROPERTY_CJK_TOP |
-                                        AF_BLUE_PROPERTY_CJK_FILL    }
-    { AF_BLUE_STRING_CJK_TOP_UNFILL,    AF_BLUE_PROPERTY_CJK_TOP     }
-    { AF_BLUE_STRING_CJK_BOTTOM_FILL,   AF_BLUE_PROPERTY_CJK_FILL    }
-    { AF_BLUE_STRING_CJK_BOTTOM_UNFILL, 0                            }
+    { AF_BLUE_STRING_CJK_TOP,    AF_BLUE_PROPERTY_CJK_TOP     }
+    { AF_BLUE_STRING_CJK_BOTTOM, 0                            }
 #ifdef AF_CONFIG_OPTION_CJK_BLUE_HANI_VERT
-    { AF_BLUE_STRING_CJK_LEFT_FILL,     AF_BLUE_PROPERTY_CJK_HORIZ |
-                                        AF_BLUE_PROPERTY_CJK_FILL    }
-    { AF_BLUE_STRING_CJK_LEFT_UNFILL,   AF_BLUE_PROPERTY_CJK_HORIZ   }
-    { AF_BLUE_STRING_CJK_RIGHT_FILL,    AF_BLUE_PROPERTY_CJK_HORIZ |
-                                        AF_BLUE_PROPERTY_CJK_RIGHT |
-                                        AF_BLUE_PROPERTY_CJK_FILL    }
-    { AF_BLUE_STRING_CJK_RIGHT_UNFILL,  AF_BLUE_PROPERTY_CJK_HORIZ |
-                                        AF_BLUE_PROPERTY_CJK_RIGHT   }
+    { AF_BLUE_STRING_CJK_LEFT,   AF_BLUE_PROPERTY_CJK_HORIZ   }
+    { AF_BLUE_STRING_CJK_RIGHT,  AF_BLUE_PROPERTY_CJK_HORIZ |
+                                 AF_BLUE_PROPERTY_CJK_RIGHT   }
 #endif /* AF_CONFIG_OPTION_CJK_BLUE_HANI_VERT */
-    { AF_BLUE_STRING_MAX,               0                            }
+    { AF_BLUE_STRING_MAX,        0                            }
 
 #endif /* AF_CONFIG_OPTION_CJK                */
 

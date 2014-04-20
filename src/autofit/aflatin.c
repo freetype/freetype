@@ -2218,7 +2218,7 @@
 
     FT_TRACE5(( "  LINK: edge %d (opos=%.2f) linked to %.2f,"
                 " dist was %.2f, now %.2f\n",
-                stem_edge-hints->axis[dim].edges, stem_edge->opos / 64.0,
+                stem_edge - hints->axis[dim].edges, stem_edge->opos / 64.0,
                 stem_edge->pos / 64.0, dist / 64.0, fitted_width / 64.0 ));
   }
 

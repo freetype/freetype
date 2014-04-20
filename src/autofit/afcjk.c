@@ -263,6 +263,8 @@
     FT_Int      num_fills;
     FT_Int      num_flats;
 
+    FT_Bool     fill;
+
     AF_CJKBlue  blue;
     FT_Error    error;
     AF_CJKAxis  axis;
@@ -272,22 +274,6 @@
 
     AF_Blue_Stringset         bss = sc->blue_stringset;
     const AF_Blue_StringRec*  bs  = &af_blue_stringsets[bss];
-
-#ifdef FT_DEBUG_LEVEL_TRACE
-    FT_String*  cjk_blue_name[4] =
-    {
-      (FT_String*)"bottom",    /* --   , --  */
-      (FT_String*)"top",       /* --   , TOP */
-      (FT_String*)"left",      /* HORIZ, --  */
-      (FT_String*)"right"      /* HORIZ, TOP */
-    };
-
-    FT_String*  cjk_blue_type_name[2] =
-    {
-      (FT_String*)"unfilled",  /* --   */
-      (FT_String*)"filled"     /* FILL */
-    };
-#endif
 
 
     /* we walk over the blue character strings as specified in the   */
@@ -310,15 +296,29 @@
       else
         axis = &metrics->axis[AF_DIMENSION_VERT];
 
-      FT_TRACE5(( "blue zone %d:\n", axis->blue_count ));
+#ifdef FT_DEBUG_LEVEL_TRACE
+      {
+        FT_String*  cjk_blue_name[4] =
+        {
+          (FT_String*)"bottom",    /* --   , --  */
+          (FT_String*)"top",       /* --   , TOP */
+          (FT_String*)"left",      /* HORIZ, --  */
+          (FT_String*)"right"      /* HORIZ, TOP */
+        };
+
+
+        FT_TRACE5(( "blue zone %d (%s):\n",
+                    axis->blue_count,
+                    cjk_blue_name[AF_CJK_IS_HORIZ_BLUE( bs ) |
+                                  AF_CJK_IS_TOP_BLUE( bs )   ] ));
+      }
+#endif /* FT_DEBUG_LEVEL_TRACE */
 
       num_fills = 0;
       num_flats = 0;
 
-      FT_TRACE5(( "  cjk blue %s/%s\n",
-                  cjk_blue_name[AF_CJK_IS_HORIZ_BLUE( bs ) |
-                                AF_CJK_IS_TOP_BLUE( bs )   ],
-                  cjk_blue_type_name[!!AF_CJK_IS_FILLED_BLUE( bs )] ));
+      fill = 1;  /* start with characters that define fill values */
+      FT_TRACE5(( "  [overshoot values]\n" ));
 
       while ( *p )
       {
@@ -331,6 +331,14 @@
 
 
         GET_UTF8_CHAR( ch, p );
+
+        /* switch to characters that define flat values */
+        if ( ch == '|' )
+        {
+          fill = 0;
+          FT_TRACE5(( "  [reference values]\n" ));
+          continue;
+        }
 
         /* load the character in the face -- skip unknown or empty ones */
         af_get_char_index( &metrics->root, ch, &glyph_index, &y_offset );
@@ -419,7 +427,7 @@
           FT_TRACE5(( "  U+%04lX: best_pos = %5ld\n", ch, best_pos ));
         }
 
-        if ( AF_CJK_IS_FILLED_BLUE( bs ) )
+        if ( fill )
           fills[num_fills++] = best_pos;
         else
           flats[num_flats++] = best_pos;
@@ -431,15 +439,15 @@
          *  we couldn't find a single glyph to compute this blue zone,
          *  we will simply ignore it then
          */
-        FT_TRACE5(( "    empty\n" ));
+        FT_TRACE5(( "  empty\n" ));
         continue;
       }
 
-      /* we have computed the contents of the `fill' and `flats' tables, */
-      /* now determine the reference position of the blue zone --        */
-      /* we simply take the median value after a simple sort             */
-      af_sort_pos( num_flats, flats );
+      /* we have computed the contents of the `fill' and `flats' tables,   */
+      /* now determine the reference and overshoot position of the blue -- */
+      /* we simply take the median value after a simple sort               */
       af_sort_pos( num_fills, fills );
+      af_sort_pos( num_flats, flats );
 
       blue       = &axis->blues[axis->blue_count];
       blue_ref   = &blue->ref.org;
@@ -478,7 +486,7 @@
           *blue_ref   =
           *blue_shoot = ( shoot + ref ) / 2;
 
-          FT_TRACE5(( "  [overshoot smaller than reference,"
+          FT_TRACE5(( "  [reference smaller than overshoot,"
                       " taking mean value]\n" ));
         }
       }
@@ -1232,8 +1240,10 @@
         /* zone, check for left edges                                      */
         /*                                                                 */
         /* of course, that's for TrueType                                  */
-        is_top_right_blue = FT_BOOL( blue->flags & AF_CJK_BLUE_TOP );
-        is_major_dir      = FT_BOOL( edge->dir == axis->major_dir );
+        is_top_right_blue =
+          (FT_Byte)( ( blue->flags & AF_CJK_BLUE_TOP ) != 0 );
+        is_major_dir =
+          FT_BOOL( edge->dir == axis->major_dir );
 
         /* if it is a top zone, the edge must be against the major    */
         /* direction; if it is a bottom zone, it must be in the major */
@@ -1530,6 +1540,12 @@
 
 
     stem_edge->pos = base_edge->pos + fitted_width;
+
+    FT_TRACE5(( "  CJKLINK: edge %d @%d (opos=%.2f) linked to %.2f,"
+                " dist was %.2f, now %.2f\n",
+                stem_edge - hints->axis[dim].edges, stem_edge->fpos,
+                stem_edge->opos / 64.0, stem_edge->pos / 64.0,
+                dist / 64.0, fitted_width / 64.0 ));
   }
 
 
