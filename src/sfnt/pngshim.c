@@ -4,7 +4,7 @@
 /*                                                                         */
 /*    PNG Bitmap glyph support.                                            */
 /*                                                                         */
-/*  Copyright 2013 by Google, Inc.                                         */
+/*  Copyright 2013, 2014 by Google, Inc.                                   */
 /*  Written by Stuart Gill and Behdad Esfahbod.                            */
 /*                                                                         */
 /*  This file is part of the FreeType project, and may only be used,       */
@@ -129,7 +129,7 @@
 
     *error = FT_THROW( Out_Of_Memory );
 #ifdef PNG_SETJMP_SUPPORTED
-    longjmp( png_jmpbuf( png ), 1 );
+    ft_longjmp( png_jmpbuf( png ), 1 );
 #endif
     /* if we get here, then we have no choice but to abort ... */
   }

@@ -1,3 +1,7 @@
+2014-04-22  Werner Lemberg  <wl@gnu.org>
+
+	* src/sfnt/pngshim.c (error_callback): s/longjmp/ft_longjmp/.
+
 2014-04-20  Werner Lemberg  <wl@gnu.org>
 
 	[autofit] Fix Savannah bug #42148.
