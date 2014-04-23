@@ -1,3 +1,13 @@
+2014-04-23  Werner Lemberg  <wl@gnu.org>
+
+	* src/raster/ftraster.c (Vertical_Sweep_Span): Use drop-out mode.
+
+	This spot has been missed while introducing support for various
+	drop-out modes years ago (including no drop-out mode, which this
+	commit fixes).
+
+	Problem reported by Patrick Thomas <pthomas505@gmail.com>.
+
 2014-04-22  Werner Lemberg  <wl@gnu.org>
 
 	* src/sfnt/pngshim.c (error_callback): s/longjmp/ft_longjmp/.
