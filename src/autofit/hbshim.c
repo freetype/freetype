@@ -102,12 +102,10 @@
   {
     hb_face_t*  face;
 
-    hb_set_t*  gsub_lookups;    /* GSUB lookups for a given script */
-    hb_set_t*  gsub_glyphs_in;  /* glyphs covered by GSUB lookups  */
-    hb_set_t*  gsub_glyphs_out;
-
-    hb_set_t*  gpos_lookups;    /* GPOS lookups for a given script */
-    hb_set_t*  gpos_glyphs;     /* glyphs covered by GPOS lookups  */
+    hb_set_t*  gsub_lookups;  /* GSUB lookups for a given script */
+    hb_set_t*  gsub_glyphs;   /* glyphs covered by GSUB lookups  */
+    hb_set_t*  gpos_lookups;  /* GPOS lookups for a given script */
+    hb_set_t*  gpos_glyphs;   /* glyphs covered by GPOS lookups  */
 
     hb_script_t      script;
     const hb_tag_t*  coverage_tags;
@@ -127,11 +125,10 @@
 
     face = hb_font_get_face( globals->hb_font );
 
-    gsub_lookups    = hb_set_create();
-    gsub_glyphs_in  = hb_set_create();
-    gsub_glyphs_out = hb_set_create();
-    gpos_lookups    = hb_set_create();
-    gpos_glyphs     = hb_set_create();
+    gsub_lookups = hb_set_create();
+    gsub_glyphs  = hb_set_create();
+    gpos_lookups = hb_set_create();
+    gpos_glyphs  = hb_set_create();
 
     coverage_tags = coverages[style_class->coverage];
     script        = scripts[style_class->script];
@@ -202,9 +199,9 @@
                                           HB_OT_TAG_GSUB,
                                           idx,
                                           NULL,
-                                          gsub_glyphs_in,
                                           NULL,
-                                          gsub_glyphs_out );
+                                          NULL,
+                                          gsub_glyphs );
     }
 
 #ifdef FT_DEBUG_LEVEL_TRACE
@@ -292,9 +289,6 @@
       }
     }
 
-    /* merge in and out glyphs */
-    hb_set_union( gsub_glyphs_out, gsub_glyphs_in );
-
     /*
      * Various OpenType features might use the same glyphs at different
      * vertical positions; for example, superscript and subscript glyphs
@@ -343,14 +337,14 @@
      *
      */
     if ( style_class->coverage != AF_COVERAGE_DEFAULT )
-      hb_set_subtract( gsub_glyphs_out, gpos_glyphs );
+      hb_set_subtract( gsub_glyphs, gpos_glyphs );
 
 #ifdef FT_DEBUG_LEVEL_TRACE
     FT_TRACE4(( "  glyphs without GPOS data (`*' means already assigned)" ));
     count = 0;
 #endif
 
-    for ( idx = -1; hb_set_next( gsub_glyphs_out, &idx ); )
+    for ( idx = -1; hb_set_next( gsub_glyphs, &idx ); )
     {
 #ifdef FT_DEBUG_LEVEL_TRACE
       if ( !( count % 10 ) )
@@ -382,11 +376,10 @@
 #endif
 
   Exit:
-    hb_set_destroy( gsub_lookups    );
-    hb_set_destroy( gsub_glyphs_in  );
-    hb_set_destroy( gsub_glyphs_out );
-    hb_set_destroy( gpos_lookups    );
-    hb_set_destroy( gpos_glyphs     );
+    hb_set_destroy( gsub_lookups );
+    hb_set_destroy( gsub_glyphs  );
+    hb_set_destroy( gpos_lookups );
+    hb_set_destroy( gpos_glyphs  );
 
     return FT_Err_Ok;
   }

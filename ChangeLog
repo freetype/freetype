@@ -1,3 +1,12 @@
+2014-04-25  Werner Lemberg  <wl@gnu.org>
+
+	* src/autofit/hbshim.c: Partially revert commit from 2014-04-17.
+
+	Using input glyph coverage data is simply wrong.
+
+	Problem reported by Nikolaus Waxweiler <madigens@gmail.com> and
+	Mantas Mikulėnas <grawity@gmail.com>.
+
 2014-04-23  Werner Lemberg  <wl@gnu.org>
 
 	* src/raster/ftraster.c (Vertical_Sweep_Span): Use drop-out mode.
