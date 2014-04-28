@@ -34,11 +34,11 @@
 //   using C syntax.  There can be only one string per line, thus the
 //   starting and ending double quote must be the first and last character
 //   in the line, respectively, ignoring whitespace before and after the
-//   string.  If there are multiple strings (in multiple lines), they are
-//   concatenated to a single string.  In the output, a string gets
-//   represented as a series of singles bytes, followed by a zero byte.  The
-//   enumeration values simply hold byte offsets to the start of the
-//   corresponding strings.
+//   string.  Space characters within the string are ignored too.  If there
+//   are multiple strings (in multiple lines), they are concatenated to a
+//   single string.  In the output, a string gets represented as a series of
+//   singles bytes, followed by a zero byte.  The enumeration values simply
+//   hold byte offsets to the start of the corresponding strings.
 //
 // - Data blocks enclosed in balanced braces, which get copied verbatim and
 //   which can span multiple lines.  The opening brace of a block must be
@@ -163,6 +163,10 @@ AF_BLUE_STRING_ENUM AF_BLUE_STRINGS_ARRAY AF_BLUE_STRING_MAX_LEN:
 // wider than 0.75 pixels (otherwise the blue zone gets ignored).  All
 // entries must have `AF_BLUE_STRING_MAX' as the final line.
 //
+// During the glyph analysis, edges are sorted from bottom to top, and then
+// sequentially checked, edge by edge, against the blue zones in the order
+// given below.
+//
 //
 // latin auto-hinter
 // -----------------
@@ -178,7 +182,22 @@ AF_BLUE_STRING_ENUM AF_BLUE_STRINGS_ARRAY AF_BLUE_STRING_MAX_LEN:
 //
 //   LATIN_TOP
 //     Take the maximum flat and round coordinate values of the blue string
-//     characters.  If not set, take the minimum values.
+//     characters for computing the blue zone's reference and overshoot
+//     values.
+//
+//     If not set, take the minimum values.
+//
+//   LATIN_NEUTRAL
+//     Ignore round extrema and define the blue zone with flat values only.
+//     Both top and bottom of contours can match.  This is useful for
+//     scripts like Devanagari where vowel signs attach to the base
+//     character and are implemented as components of composite glyphs.
+//
+//     If not set, both round and flat extrema are taken into account.
+//     Additionally, only the top or the bottom of a contour can match,
+//     depending on the LATIN_TOP flag.
+//
+//     Neutral blue zones should always follow non-neutral blue zones.
 //
 //   LATIN_X_HEIGHT
 //     Scale all glyphs vertically from the corresponding script to make the

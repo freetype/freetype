@@ -1,3 +1,23 @@
+2014-04-28  Werner Lemberg  <wl@gnu.org>
+
+	[autofit] Introduce neutral blue zones to the latin module.
+
+	Such blue zones match either the top or the bottom of a contour.  We
+	need them for scripts where accent-like elements directly touch the
+	base character (for example, some vowel signs in Devanagari, cf.
+	U+0913 or U+0914).
+
+	* src/autofit/afblue.hin (AF_BLUE_PROPERTY_LATIN_NEUTRAL): New
+	property.
+
+	* src/autofit/afblue.h: Regenerated.
+
+	* src/autofit/aflatin.h (AF_LATIN_IS_NEUTRAL_BLUE): New macro.
+	(AF_LATIN_BLUE_NEUTRAL): New enumeration value.
+
+	* src/autofit/aflatin.c (af_latin_metrics_init_blues,
+	af_latin_hints_compute_blue_edges): Handle neutral blue zones.
+
 2014-04-25  Werner Lemberg  <wl@gnu.org>
 
 	* src/autofit/hbshim.c: Partially revert commit from 2014-04-17.
@@ -47,7 +67,7 @@
 
 	* src/autofit/afblue.hin (AF_BLUE_PROPERTY_CJK_FILL): Removed, no
 	longer used.
-	(AF_BLUE_PROPERTY_CJK_TOP, AF_BLUE_PROPERTY_CJK_HORIZ): Fix values. 
+	(AF_BLUE_PROPERTY_CJK_TOP, AF_BLUE_PROPERTY_CJK_HORIZ): Fix values.
 	This is error #3.
 
 	* src/autofit/afblue.c, src/autofit/afblue.h: Regenerated.
@@ -57,7 +77,7 @@
 	values.
 	Improve tracing messages, synchronizing them with the latin
 	auto-hinter.
-	(af_cjk_hints_compute_blue_edges): Fix value of `is_top_right_blue'. 
+	(af_cjk_hints_compute_blue_edges): Fix value of `is_top_right_blue'.
 	This is error #2.
 	(af_cjk_align_linked_edge): Add tracing message.
 

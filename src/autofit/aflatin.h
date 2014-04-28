@@ -53,6 +53,8 @@ FT_BEGIN_HEADER
 
 #define AF_LATIN_IS_TOP_BLUE( b ) \
           ( (b)->properties & AF_BLUE_PROPERTY_LATIN_TOP )
+#define AF_LATIN_IS_NEUTRAL_BLUE( b ) \
+          ( (b)->properties & AF_BLUE_PROPERTY_LATIN_NEUTRAL )
 #define AF_LATIN_IS_X_HEIGHT_BLUE( b ) \
           ( (b)->properties & AF_BLUE_PROPERTY_LATIN_X_HEIGHT )
 #define AF_LATIN_IS_LONG_BLUE( b ) \
@@ -63,10 +65,11 @@ FT_BEGIN_HEADER
 
   enum
   {
-    AF_LATIN_BLUE_ACTIVE     = 1 << 0,  /* set if zone height is <= 3/4px */
-    AF_LATIN_BLUE_TOP        = 1 << 1,  /* result of AF_LATIN_IS_TOP_BLUE */
-    AF_LATIN_BLUE_ADJUSTMENT = 1 << 2,  /* used for scale adjustment      */
-                                        /* optimization                   */
+    AF_LATIN_BLUE_ACTIVE     = 1 << 0, /* set if zone height is <= 3/4px   */
+    AF_LATIN_BLUE_TOP        = 1 << 1, /* set if we have a top blue zone   */
+    AF_LATIN_BLUE_NEUTRAL    = 1 << 2, /* set if we have neutral blue zone */
+    AF_LATIN_BLUE_ADJUSTMENT = 1 << 3, /* used for scale adjustment        */
+                                       /* optimization                     */
     AF_LATIN_BLUE_FLAG_MAX
   };
 
