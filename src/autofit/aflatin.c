@@ -1841,8 +1841,9 @@
     for ( ; edge < edge_limit; edge++ )
     {
       FT_UInt   bb;
-      AF_Width  best_blue = NULL;
-      FT_Pos    best_dist;  /* initial threshold */
+      AF_Width  best_blue            = NULL;
+      FT_Bool   best_blue_is_neutral = 0;
+      FT_Pos    best_dist;                 /* initial threshold */
 
 
       /* compute the initial threshold as a fraction of the EM size */
@@ -1856,7 +1857,7 @@
       for ( bb = 0; bb < latin->blue_count; bb++ )
       {
         AF_LatinBlue  blue = latin->blues + bb;
-        FT_Bool       is_top_blue, is_major_dir;
+        FT_Bool       is_top_blue, is_neutral_blue, is_major_dir;
 
 
         /* skip inactive blue zones (i.e., those that are too large) */
@@ -1867,12 +1868,15 @@
         /* direction); if it is a bottom zone, check for left edges (in  */
         /* the major direction) -- this assumes the TrueType convention  */
         /* for the orientation of contours                               */
-        is_top_blue  = (FT_Byte)( ( blue->flags & AF_LATIN_BLUE_TOP ) != 0 );
-        is_major_dir = FT_BOOL( edge->dir == axis->major_dir );
+        is_top_blue =
+          (FT_Byte)( ( blue->flags & AF_LATIN_BLUE_TOP ) != 0 );
+        is_neutral_blue =
+          (FT_Byte)( ( blue->flags & AF_LATIN_BLUE_NEUTRAL ) != 0);
+        is_major_dir =
+          FT_BOOL( edge->dir == axis->major_dir );
 
         /* neutral blue zones are handled for both directions */
-        if ( is_top_blue ^ is_major_dir          ||
-             blue->flags & AF_LATIN_BLUE_NEUTRAL )
+        if ( is_top_blue ^ is_major_dir || is_neutral_blue )
         {
           FT_Pos  dist;
 
@@ -1885,8 +1889,9 @@
           dist = FT_MulFix( dist, scale );
           if ( dist < best_dist )
           {
-            best_dist = dist;
-            best_blue = &blue->ref;
+            best_dist            = dist;
+            best_blue            = &blue->ref;
+            best_blue_is_neutral = is_neutral_blue;
           }
 
           /* now compare it to the overshoot position and check whether */
@@ -1894,9 +1899,9 @@
           /* reference position of a top zone, or under the reference   */
           /* position of a bottom zone (provided we don't have a        */
           /* neutral blue zone)                                         */
-          if ( edge->flags & AF_EDGE_ROUND              &&
-               dist != 0                                &&
-               !( blue->flags & AF_LATIN_BLUE_NEUTRAL ) )
+          if ( edge->flags & AF_EDGE_ROUND &&
+               dist != 0                   &&
+               !is_neutral_blue            )
           {
             FT_Bool  is_under_ref = FT_BOOL( edge->fpos < blue->ref.org );
 
@@ -1910,8 +1915,9 @@
               dist = FT_MulFix( dist, scale );
               if ( dist < best_dist )
               {
-                best_dist = dist;
-                best_blue = &blue->shoot;
+                best_dist            = dist;
+                best_blue            = &blue->shoot;
+                best_blue_is_neutral = is_neutral_blue;
               }
             }
           }
@@ -1919,7 +1925,11 @@
       }
 
       if ( best_blue )
+      {
         edge->blue_edge = best_blue;
+        if ( best_blue_is_neutral )
+          edge->flags |= AF_EDGE_NEUTRAL;
+      }
     }
   }
 
@@ -2304,14 +2314,41 @@
         if ( edge->flags & AF_EDGE_DONE )
           continue;
 
-        blue  = edge->blue_edge;
         edge1 = NULL;
         edge2 = edge->link;
 
+        /*
+         *  If a stem contains both a neutral and a non-neutral blue zone,
+         *  skip the neutral one.  Otherwise, outlines with different
+         *  directions might be incorrectly aligned at the same vertical
+         *  position.
+         *
+         *  If we have two neutral blue zones, skip one of them.
+         *
+         */
+        if ( edge->blue_edge && edge2 && edge2->blue_edge )
+        {
+          FT_Byte  neutral  = edge->flags  & AF_EDGE_NEUTRAL;
+          FT_Byte  neutral2 = edge2->flags & AF_EDGE_NEUTRAL;
+
+
+          if ( ( neutral && neutral2 ) || neutral2 )
+          {
+            edge2->blue_edge = NULL;
+            edge2->flags    &= ~AF_EDGE_NEUTRAL;
+          }
+          else if ( neutral )
+          {
+            edge->blue_edge = NULL;
+            edge->flags    &= ~AF_EDGE_NEUTRAL;
+          }
+        }
+
+        blue = edge->blue_edge;
         if ( blue )
           edge1 = edge;
 
-        /* flip edges if the other stem is aligned to a blue zone */
+        /* flip edges if the other edge is aligned to a blue zone */
         else if ( edge2 && edge2->blue_edge )
         {
           blue  = edge2->blue_edge;
@@ -2378,7 +2415,7 @@
       /* this should not happen, but it's better to be safe */
       if ( edge2->blue_edge )
       {
-        FT_TRACE5(( "  ASSERTION FAILED for edge %d\n", edge2-edges ));
+        FT_TRACE5(( "  ASSERTION FAILED for edge %d\n", edge2 - edges ));
 
         af_latin_align_linked_edge( hints, dim, edge2, edge );
         edge->flags |= AF_EDGE_DONE;

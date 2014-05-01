@@ -244,10 +244,11 @@ FT_BEGIN_HEADER
   /* edge hint flags */
   typedef enum  AF_Edge_Flags_
   {
-    AF_EDGE_NORMAL = 0,
-    AF_EDGE_ROUND  = 1 << 0,
-    AF_EDGE_SERIF  = 1 << 1,
-    AF_EDGE_DONE   = 1 << 2
+    AF_EDGE_NORMAL  = 0,
+    AF_EDGE_ROUND   = 1 << 0,
+    AF_EDGE_SERIF   = 1 << 1,
+    AF_EDGE_DONE    = 1 << 2,
+    AF_EDGE_NEUTRAL = 1 << 3  /* set if edge aligns to a neutral blue zone */
 
   } AF_Edge_Flags;
 
