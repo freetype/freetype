@@ -26,15 +26,21 @@
   af_blue_strings[] =
   {
     /* */
-    'T', 'H', 'E', 'Z', 'O', 'C', 'Q', 'S',  /* THEZOCQS */
+    '\xD0', '\x91', '\xD0', '\x92', '\xD0', '\x95', '\xD0', '\x9F', '\xD0', '\x97', '\xD0', '\x9E', '\xD0', '\xA1', '\xD0', '\xAD',  /* БВЕПЗОСЭ */
     '\0',
-    'H', 'E', 'Z', 'L', 'O', 'C', 'U', 'S',  /* HEZLOCUS */
+    '\xD0', '\x91', '\xD0', '\x92', '\xD0', '\x95', '\xD0', '\xA8', '\xD0', '\x97', '\xD0', '\x9E', '\xD0', '\xA1', '\xD0', '\xAD',  /* БВЕШЗОСЭ */
     '\0',
-    'f', 'i', 'j', 'k', 'd', 'b', 'h',  /* fijkdbh */
+    '\xD1', '\x85', '\xD0', '\xBF', '\xD0', '\xBD', '\xD1', '\x88', '\xD0', '\xB5', '\xD0', '\xB7', '\xD0', '\xBE', '\xD1', '\x81',  /* хпншезос */
     '\0',
-    'x', 'z', 'r', 'o', 'e', 's', 'c',  /* xzroesc */
+    '\xD1', '\x80', '\xD1', '\x83', '\xD1', '\x84',  /* руф */
     '\0',
-    'p', 'q', 'g', 'j', 'y',  /* pqgjy */
+    '\xE0', '\xA4', '\x95', '\xE0', '\xA4', '\xAE', '\xE0', '\xA4', '\x85', '\xE0', '\xA4', '\x86', '\xE0', '\xA4', '\xA5', '\xE0', '\xA4', '\xA7', '\xE0', '\xA4', '\xAD', '\xE0', '\xA4', '\xB6',  /* क म अ आ थ ध भ श */
+    '\0',
+    '\xE0', '\xA4', '\x88', '\xE0', '\xA4', '\x90', '\xE0', '\xA4', '\x93', '\xE0', '\xA4', '\x94', '\xE0', '\xA4', '\xBF', '\xE0', '\xA5', '\x80', '\xE0', '\xA5', '\x8B', '\xE0', '\xA5', '\x8C',  /* ई ऐ ओ औ ि ी ो ौ */
+    '\0',
+    '\xE0', '\xA4', '\x95', '\xE0', '\xA4', '\xAE', '\xE0', '\xA4', '\x85', '\xE0', '\xA4', '\x86', '\xE0', '\xA4', '\xA5', '\xE0', '\xA4', '\xA7', '\xE0', '\xA4', '\xAD', '\xE0', '\xA4', '\xB6',  /* क म अ आ थ ध भ श */
+    '\0',
+    '\xE0', '\xA5', '\x81', '\xE0', '\xA5', '\x83',  /* ु ृ */
     '\0',
     '\xCE', '\x93', '\xCE', '\x92', '\xCE', '\x95', '\xCE', '\x96', '\xCE', '\x98', '\xCE', '\x9F', '\xCE', '\xA9',  /* ΓΒΕΖΘΟΩ */
     '\0',
@@ -46,19 +52,21 @@
     '\0',
     '\xCE', '\xB2', '\xCE', '\xB3', '\xCE', '\xB7', '\xCE', '\xBC', '\xCF', '\x81', '\xCF', '\x86', '\xCF', '\x87', '\xCF', '\x88',  /* βγημρφχψ */
     '\0',
-    '\xD0', '\x91', '\xD0', '\x92', '\xD0', '\x95', '\xD0', '\x9F', '\xD0', '\x97', '\xD0', '\x9E', '\xD0', '\xA1', '\xD0', '\xAD',  /* БВЕПЗОСЭ */
-    '\0',
-    '\xD0', '\x91', '\xD0', '\x92', '\xD0', '\x95', '\xD0', '\xA8', '\xD0', '\x97', '\xD0', '\x9E', '\xD0', '\xA1', '\xD0', '\xAD',  /* БВЕШЗОСЭ */
-    '\0',
-    '\xD1', '\x85', '\xD0', '\xBF', '\xD0', '\xBD', '\xD1', '\x88', '\xD0', '\xB5', '\xD0', '\xB7', '\xD0', '\xBE', '\xD1', '\x81',  /* хпншезос */
-    '\0',
-    '\xD1', '\x80', '\xD1', '\x83', '\xD1', '\x84',  /* руф */
-    '\0',
     '\xD7', '\x91', '\xD7', '\x93', '\xD7', '\x94', '\xD7', '\x97', '\xD7', '\x9A', '\xD7', '\x9B', '\xD7', '\x9D', '\xD7', '\xA1',  /* בדהחךכםס */
     '\0',
     '\xD7', '\x91', '\xD7', '\x98', '\xD7', '\x9B', '\xD7', '\x9D', '\xD7', '\xA1', '\xD7', '\xA6',  /* בטכםסצ */
     '\0',
     '\xD7', '\xA7', '\xD7', '\x9A', '\xD7', '\x9F', '\xD7', '\xA3', '\xD7', '\xA5',  /* קךןףץ */
+    '\0',
+    'T', 'H', 'E', 'Z', 'O', 'C', 'Q', 'S',  /* THEZOCQS */
+    '\0',
+    'H', 'E', 'Z', 'L', 'O', 'C', 'U', 'S',  /* HEZLOCUS */
+    '\0',
+    'f', 'i', 'j', 'k', 'd', 'b', 'h',  /* fijkdbh */
+    '\0',
+    'x', 'z', 'r', 'o', 'e', 's', 'c',  /* xzroesc */
+    '\0',
+    'p', 'q', 'g', 'j', 'y',  /* pqgjy */
 #ifdef AF_CONFIG_OPTION_CJK
     '\0',
     '\xE4', '\xBB', '\x96', '\xE4', '\xBB', '\xAC', '\xE4', '\xBD', '\xA0', '\xE4', '\xBE', '\x86', '\xE5', '\x80', '\x91', '\xE5', '\x88', '\xB0', '\xE5', '\x92', '\x8C', '\xE5', '\x9C', '\xB0',  /* 他们你來們到和地 */
@@ -109,14 +117,21 @@
   af_blue_stringsets[] =
   {
     /* */
-    { AF_BLUE_STRING_LATIN_CAPITAL_TOP,     AF_BLUE_PROPERTY_LATIN_TOP        },
-    { AF_BLUE_STRING_LATIN_CAPITAL_BOTTOM,  0                                 },
-    { AF_BLUE_STRING_LATIN_SMALL_F_TOP,     AF_BLUE_PROPERTY_LATIN_TOP        },
-    { AF_BLUE_STRING_LATIN_SMALL,           AF_BLUE_PROPERTY_LATIN_TOP      |
-                                            AF_BLUE_PROPERTY_LATIN_X_HEIGHT   },
-    { AF_BLUE_STRING_LATIN_SMALL,           0                                 },
-    { AF_BLUE_STRING_LATIN_SMALL_DESCENDER, 0                                 },
-    { AF_BLUE_STRING_MAX,                   0                                 },
+    { AF_BLUE_STRING_CYRILLIC_CAPITAL_TOP,     AF_BLUE_PROPERTY_LATIN_TOP        },
+    { AF_BLUE_STRING_CYRILLIC_CAPITAL_BOTTOM,  0                                 },
+    { AF_BLUE_STRING_CYRILLIC_SMALL,           AF_BLUE_PROPERTY_LATIN_TOP      |
+                                               AF_BLUE_PROPERTY_LATIN_X_HEIGHT   },
+    { AF_BLUE_STRING_CYRILLIC_SMALL,           0                                 },
+    { AF_BLUE_STRING_CYRILLIC_SMALL_DESCENDER, 0                                 },
+    { AF_BLUE_STRING_MAX,                      0                                 },
+    { AF_BLUE_STRING_DEVANAGARI_TOP,    AF_BLUE_PROPERTY_LATIN_TOP        },
+    { AF_BLUE_STRING_DEVANAGARI_HEAD,   AF_BLUE_PROPERTY_LATIN_TOP        },
+    { AF_BLUE_STRING_DEVANAGARI_BASE,   AF_BLUE_PROPERTY_LATIN_TOP      |
+                                        AF_BLUE_PROPERTY_LATIN_NEUTRAL  |
+                                        AF_BLUE_PROPERTY_LATIN_X_HEIGHT   },
+    { AF_BLUE_STRING_DEVANAGARI_BASE,   0                                 },
+    { AF_BLUE_STRING_DEVANAGARI_BOTTOM, 0                                 },
+    { AF_BLUE_STRING_MAX,               0                                 },
     { AF_BLUE_STRING_GREEK_CAPITAL_TOP,     AF_BLUE_PROPERTY_LATIN_TOP        },
     { AF_BLUE_STRING_GREEK_CAPITAL_BOTTOM,  0                                 },
     { AF_BLUE_STRING_GREEK_SMALL_BETA_TOP,  AF_BLUE_PROPERTY_LATIN_TOP        },
@@ -125,18 +140,19 @@
     { AF_BLUE_STRING_GREEK_SMALL,           0                                 },
     { AF_BLUE_STRING_GREEK_SMALL_DESCENDER, 0                                 },
     { AF_BLUE_STRING_MAX,                   0                                 },
-    { AF_BLUE_STRING_CYRILLIC_CAPITAL_TOP,     AF_BLUE_PROPERTY_LATIN_TOP        },
-    { AF_BLUE_STRING_CYRILLIC_CAPITAL_BOTTOM,  0                                 },
-    { AF_BLUE_STRING_CYRILLIC_SMALL,           AF_BLUE_PROPERTY_LATIN_TOP      |
-                                               AF_BLUE_PROPERTY_LATIN_X_HEIGHT   },
-    { AF_BLUE_STRING_CYRILLIC_SMALL,           0                                 },
-    { AF_BLUE_STRING_CYRILLIC_SMALL_DESCENDER, 0                                 },
-    { AF_BLUE_STRING_MAX,                      0                                 },
     { AF_BLUE_STRING_HEBREW_TOP,       AF_BLUE_PROPERTY_LATIN_TOP  |
                                        AF_BLUE_PROPERTY_LATIN_LONG   },
     { AF_BLUE_STRING_HEBREW_BOTTOM,    0                             },
     { AF_BLUE_STRING_HEBREW_DESCENDER, 0                             },
     { AF_BLUE_STRING_MAX,              0                             },
+    { AF_BLUE_STRING_LATIN_CAPITAL_TOP,     AF_BLUE_PROPERTY_LATIN_TOP        },
+    { AF_BLUE_STRING_LATIN_CAPITAL_BOTTOM,  0                                 },
+    { AF_BLUE_STRING_LATIN_SMALL_F_TOP,     AF_BLUE_PROPERTY_LATIN_TOP        },
+    { AF_BLUE_STRING_LATIN_SMALL,           AF_BLUE_PROPERTY_LATIN_TOP      |
+                                            AF_BLUE_PROPERTY_LATIN_X_HEIGHT   },
+    { AF_BLUE_STRING_LATIN_SMALL,           0                                 },
+    { AF_BLUE_STRING_LATIN_SMALL_DESCENDER, 0                                 },
+    { AF_BLUE_STRING_MAX,                   0                                 },
 #ifdef AF_CONFIG_OPTION_CJK
     { AF_BLUE_STRING_CJK_TOP,    AF_BLUE_PROPERTY_CJK_TOP     },
     { AF_BLUE_STRING_CJK_BOTTOM, 0                            },

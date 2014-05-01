@@ -31,6 +31,11 @@
           HB_SCRIPT_CYRILLIC,
           0x43E, 0x41E, 0x0 ) /* оО */
 
+  SCRIPT( deva, DEVA,
+          "Devanagari",
+          HB_SCRIPT_DEVANAGARI,
+          0x920, 0x935, 0x91F ) /* ठ व ट */
+
   SCRIPT( grek, GREK,
           "Greek",
           HB_SCRIPT_GREEK,
@@ -56,11 +61,6 @@
   SCRIPT( beng, BENG,
           "Bengali",
           HB_SCRIPT_BENGALI,
-          'o', 0x0, 0x0 ) /* XXX */
-
-  SCRIPT( deva, DEVA,
-          "Devanagari",
-          HB_SCRIPT_DEVANAGARI,
           'o', 0x0, 0x0 ) /* XXX */
 
   SCRIPT( gujr, GUJR,

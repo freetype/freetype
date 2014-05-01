@@ -28,6 +28,13 @@
     AF_UNIRANGE_REC(       0UL,       0UL )
   };
 
+  const AF_Script_UniRangeRec  af_deva_uniranges[] =
+  {
+    AF_UNIRANGE_REC(  0x0900UL,  0x097FUL ),  /* Devanagari */
+    AF_UNIRANGE_REC(  0x20B9UL,  0x20B9UL ),  /* (new) Rupee sign */
+    AF_UNIRANGE_REC(       0UL,       0UL )
+  };
+
   const AF_Script_UniRangeRec  af_grek_uniranges[] =
   {
     AF_UNIRANGE_REC(  0x0370UL,  0x03FFUL ),  /* Greek and Coptic */
@@ -57,7 +64,8 @@
     AF_UNIRANGE_REC(  0x1E00UL,  0x1EFFUL ),  /* Latin Extended Additional */
     AF_UNIRANGE_REC(  0x2000UL,  0x206FUL ),  /* General Punctuation */
     AF_UNIRANGE_REC(  0x2070UL,  0x209FUL ),  /* Superscripts and Subscripts */
-    AF_UNIRANGE_REC(  0x20A0UL,  0x20CFUL ),  /* Currency Symbols */
+    AF_UNIRANGE_REC(  0x20A0UL,  0x20B8UL ),  /* Currency Symbols ...*/
+    AF_UNIRANGE_REC(  0x20BAUL,  0x20CFUL ),  /* ... except new Rupee sign */
     AF_UNIRANGE_REC(  0x2150UL,  0x218FUL ),  /* Number Forms */
     AF_UNIRANGE_REC(  0x2460UL,  0x24FFUL ),  /* Enclosed Alphanumerics */
     AF_UNIRANGE_REC(  0x2C60UL,  0x2C7FUL ),  /* Latin Extended-C */
@@ -79,12 +87,6 @@
   const AF_Script_UniRangeRec  af_beng_uniranges[] =
   {
     AF_UNIRANGE_REC(  0x0980UL,  0x09FFUL ),  /* Bengali */
-    AF_UNIRANGE_REC(       0UL,       0UL )
-  };
-
-  const AF_Script_UniRangeRec  af_deva_uniranges[] =
-  {
-    AF_UNIRANGE_REC(  0x0900UL,  0x097FUL ),  /* Devanagari */
     AF_UNIRANGE_REC(       0UL,       0UL )
   };
 

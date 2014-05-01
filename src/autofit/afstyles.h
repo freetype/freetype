@@ -81,7 +81,9 @@
                        DEFAULT )
 
   META_STYLE_LATIN( cyrl, CYRL, "Cyrillic" )
+
   META_STYLE_LATIN( grek, GREK, "Greek" )
+
   STYLE( hebr_dflt, HEBR_DFLT,
          "Hebrew default style",
          AF_WRITING_SYSTEM_LATIN,
@@ -89,6 +91,13 @@
          AF_BLUE_STRINGSET_HEBR,
          AF_COVERAGE_DEFAULT )
   META_STYLE_LATIN( latn, LATN, "Latin" )
+
+  STYLE( deva_dflt, DEVA_DFLT,
+         "Devanagari default style",
+         AF_WRITING_SYSTEM_LATIN,
+         AF_SCRIPT_DEVA,
+         AF_BLUE_STRINGSET_DEVA,
+         AF_COVERAGE_DEFAULT )
 
 #ifdef FT_OPTION_AUTOFIT2
   STYLE( ltn2_dflt, LTN2_DFLT,
@@ -119,7 +128,6 @@
                  AF_COVERAGE_DEFAULT )
 
   STYLE_DEFAULT_INDIC( beng, BENG, "Bengali" )
-  STYLE_DEFAULT_INDIC( deva, DEVA, "Devanagari" )
   STYLE_DEFAULT_INDIC( gujr, GUJR, "Gujarati" )
   STYLE_DEFAULT_INDIC( guru, GURU, "Gurmukhi" )
   STYLE_DEFAULT_INDIC( knda, KNDA, "Kannada" )

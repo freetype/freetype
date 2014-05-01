@@ -1,5 +1,27 @@
 2014-05-01  Werner Lemberg  <wl@gnu.org>
 
+	[autofit] Add blue-zone support for Devanagari.
+
+	This essentially moves the Devanagari script from the `Indic' hinter
+	to the `Latin' hinter.  Thanks to Girish Dalvi
+	<girish.dalvi@gmail.com> for guidance with blue zone characters!
+
+	* src/autofit/afblue.dat: Add blue zone data for Devanagari.
+
+	* src/autofit/afblue.c, src/autofit/afblue.h: Regenerated.
+
+	* src/autofit/afscript.h: Add Devanagari standard characters and
+	move data out of AF_CONFIG_OPTION_INDIC block.
+
+	* src/autofit/afranges.c: Move Devanagari data out of
+	AF_CONFIG_OPTION_INDIC block.
+	Move U+20B9, (new) Rupee sign, from Latin to Devanagari.
+
+	* src/autofit/afstyles.h: Update Devanagari data; in particular, use
+	AF_WRITING_SYSTEM_LATIN.
+
+2014-05-01  Werner Lemberg  <wl@gnu.org>
+
 	[autofit] Fix handling of neutral blue zones in stems.
 
 	* src/autofit/afhints.h (AF_Edge_Flags): New value
