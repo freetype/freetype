@@ -651,6 +651,9 @@
 
         for ( point = points; point < point_limit; point++, vec++, tag++ )
         {
+          point->in_dir  = (FT_Char)AF_DIR_NONE;
+          point->out_dir = (FT_Char)AF_DIR_NONE;
+
           point->fx = (FT_Short)vec->x;
           point->fy = (FT_Short)vec->y;
           point->ox = point->x = FT_MulFix( vec->x, x_scale ) + x_delta;

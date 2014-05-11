@@ -1,5 +1,12 @@
 2014-05-11  Werner Lemberg  <wl@gnu.org>
 
+	[autofit] Fix variable initializations.
+
+	* src/autofit/afhints.c (af_glyph_hints_reload): Assign default
+	values to `in_dir' and `out_dir' for all points.
+
+2014-05-11  Werner Lemberg  <wl@gnu.org>
+
 	[autofit] Fix crash with font `CabinSketch-Bold.ttf'.
 
 	Problem reported by Ralf S. Engelschall <rse@engelschall.com>.
