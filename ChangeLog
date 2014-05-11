@@ -1,3 +1,13 @@
+2014-05-11  Werner Lemberg  <wl@gnu.org>
+
+	[autofit] Fix crash with font `CabinSketch-Bold.ttf'.
+
+	Problem reported by Ralf S. Engelschall <rse@engelschall.com>.
+
+	* src/autofit/afhints.c (af_glyph_hints_reload): Fix threshold for
+	finding first non-near point.
+	Properly initialize non-near point deltas.
+
 2014-05-01  Werner Lemberg  <wl@gnu.org>
 
 	[autofit] Add blue-zone support for Devanagari.
