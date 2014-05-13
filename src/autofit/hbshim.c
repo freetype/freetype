@@ -355,8 +355,9 @@
       count++;
 #endif
 
-      /* HarfBuzz 0.9.26 and older doesn't validate glyph indices */
-      /* returned by `hb_ot_layout_lookup_collect_glyphs'...      */
+      /* glyph indices returned by `hb_ot_layout_lookup_collect_glyphs' */
+      /* can be arbitrary: some fonts use fake indices for processing   */
+      /* internal to GSUB or GPOS, which is fully valid                 */
       if ( idx >= (hb_codepoint_t)globals->glyph_count )
         continue;
 
