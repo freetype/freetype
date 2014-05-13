@@ -67,6 +67,7 @@ set(BASE_SRCS
   src/autofit/autofit.c
   src/base/ftadvanc.c
   src/base/ftbbox.c
+  src/base/ftbdf.c
   src/base/ftbitmap.c
   src/base/ftcalc.c
   src/base/ftcid.c

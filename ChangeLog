@@ -1,3 +1,7 @@
+2014-05-13  Pavel Koshevoy  <pkoshevoy@gmail.com>
+
+	* CMakeLists.txt (BASE_SRCS): Add missing `ftbdf.c'.
+
 2014-05-11  Werner Lemberg  <wl@gnu.org>
 
 	[autofit] Fix variable initializations.
