@@ -16,10 +16,15 @@
 #
 #   cmake CMakeLists.txt
 #
-# to create a Makefile that builds a static version of the library.  For a
-# dynamic library, use
+# to create a Makefile that builds a static version of the library.
+#
+# For a dynamic library, use
 #
 #   cmake CMakeLists.txt -DBUILD_SHARED_LIBS:BOOL=true
+#
+# For a framework on OS X, use
+#
+#   cmake CMakeLists.txt -DBUILD_FRAMEWORK:BOOL=true -G Xcode
 #
 # instead.  Please refer to the cmake manual for further options, in
 # particular, how to modify compilation and linking parameters.
@@ -38,6 +43,14 @@
 cmake_minimum_required(VERSION 2.6)
 
 project(freetype)
+
+if (BUILD_FRAMEWORK)
+  if (NOT "${CMAKE_GENERATOR}" STREQUAL "Xcode")
+    message(FATAL_ERROR "You should use Xcode generator with BUILD_FRAMEWORK enabled")
+  endif ()
+  set(CMAKE_OSX_ARCHITECTURES "$(ARCHS_STANDARD_32_64_BIT)")
+  set(BUILD_SHARED_LIBS ON)
+endif ()
 
 set(VERSION_MAJOR "2")
 set(VERSION_MINOR "5")
@@ -62,6 +75,10 @@ execute_process(
   INPUT_FILE ${PROJECT_SOURCE_DIR}/builds/unix/ftconfig.in
   OUTPUT_FILE ${PROJECT_BINARY_DIR}/include/freetype2/ftconfig.h
 )
+
+file(GLOB PUBLIC_HEADERS "include/*.h")
+file(GLOB PUBLIC_CONFIG_HEADERS "include/config/*.h")
+file(GLOB PRIVATE_HEADERS "include/internal/*.h")
 
 set(BASE_SRCS
   src/autofit/autofit.c
@@ -126,7 +143,31 @@ include_directories("src/raster")
 include_directories("src/psaux")
 include_directories("src/psnames")
 
-add_library(freetype ${BASE_SRCS})
+if (BUILD_FRAMEWORK)
+  set(BASE_SRCS
+    ${BASE_SRCS}
+    builds/mac/freetype-Info.plist
+  )
+endif ()
+
+add_library(freetype
+  ${PUBLIC_HEADERS}
+  ${PUBLIC_CONFIG_HEADERS}
+  ${PRIVATE_HEADERS}
+  ${BASE_SRCS}
+)
+
+if (BUILD_FRAMEWORK)
+  set_property(SOURCE ${PUBLIC_CONFIG_HEADERS}
+    PROPERTY MACOSX_PACKAGE_LOCATION Headers/config
+  )
+  set_target_properties(freetype PROPERTIES
+    FRAMEWORK TRUE
+    MACOSX_FRAMEWORK_INFO_PLIST builds/mac/freetype-Info.plist
+    PUBLIC_HEADER "${PUBLIC_HEADERS}"
+    XCODE_ATTRIBUTE_INSTALL_PATH "@rpath"
+  )
+endif ()
 
 # Installations
 # Note the trailing slash in the argument to the `DIRECTORY' directive
@@ -138,6 +179,7 @@ install(TARGETS freetype
   RUNTIME DESTINATION bin
   LIBRARY DESTINATION lib
   ARCHIVE DESTINATION lib
+  FRAMEWORK DESTINATION Library/Frameworks
 )
 
 # Packaging

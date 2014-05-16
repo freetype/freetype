@@ -1,3 +1,11 @@
+2014-05-16  Alexey Petruchik  <alexey.petruchik@gmail.com>
+
+	[cmake] Add option to build OS X framework.
+
+	* CMakeLists.txt: Update accordingly.
+
+	* builds/mac/freetype-Info.plist: New file.
+
 2014-05-13  Pavel Koshevoy  <pkoshevoy@gmail.com>
 
 	* CMakeLists.txt (BASE_SRCS): Add missing `ftbdf.c'.
