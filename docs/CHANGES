@@ -1,9 +1,29 @@
+
 CHANGES BETWEEN 2.5.3 and 2.5.4
 
   I. IMPORTANT BUG FIXES
 
     - The new auto-hinter code using HarfBuzz crashed for some invalid
       fonts.
+
+
+  II. IMPORTANT CHANGES
+
+    - Full auto-hinter support of the Devanagari script.
+
+
+  III. MISCELLANEOUS
+
+    - Improvements to the  auto-hinter's algorithm to  recognize stems
+      and local extrema.
+
+    - Function `FT_Get_SubGlyph_Info' always returned an error even in
+      case of success.
+
+    - Version 2.5.1  introduced  major  bugs in  the cjk  part of  the
+      auto-hinter, which are now fixed.
+
+    - `cmake' now supports a build of FreeType as an OS X framework.
 
 
 ======================================================================
@@ -269,6 +289,9 @@ CHANGES BETWEEN 2.4.12 and 2.5
     - The `ttdebug' program has been further improved.  In particular,
       it accepts a new command line  option `-H' to select the hinting
       engine.
+
+    - `ftdump's verbose option has been renamed to `-V'.  For all demo
+      programs, `-v' now shows version information.
 
     - Another round of TrueType subpixel hinting fixes.
 
