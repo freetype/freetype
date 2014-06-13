@@ -1353,7 +1353,7 @@
 
       tt_face_get_metrics( face, FALSE, glyph_index, &abearing, &aadvance );
 
-      metrics->horiBearingX = originOffsetX;
+      metrics->horiBearingX = (FT_Short)originOffsetX;
       metrics->horiBearingY = (FT_Short)( -originOffsetY + metrics->height );
       metrics->horiAdvance  = (FT_Short)( aadvance *
                                           face->root.size->metrics.x_ppem /
