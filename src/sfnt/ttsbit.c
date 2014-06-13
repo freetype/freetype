@@ -256,7 +256,8 @@
     case TT_SBIT_TABLE_TYPE_SBIX:
       {
         FT_Stream       stream = face->root.stream;
-        FT_UInt         offset, ppem, resolution, upem;
+        FT_UInt         offset, upem;
+        FT_UShort       ppem, resolution;
         TT_HoriHeader  *hori;
         FT_ULong        table_size;
 
@@ -800,12 +801,12 @@
     FT_Error  error = FT_Err_Ok;
     FT_UInt   num_components, nn;
 
-    FT_Char  horiBearingX = decoder->metrics->horiBearingX;
-    FT_Char  horiBearingY = decoder->metrics->horiBearingY;
-    FT_Byte  horiAdvance  = decoder->metrics->horiAdvance;
-    FT_Char  vertBearingX = decoder->metrics->vertBearingX;
-    FT_Char  vertBearingY = decoder->metrics->vertBearingY;
-    FT_Byte  vertAdvance  = decoder->metrics->vertAdvance;
+    FT_Char  horiBearingX = (FT_Char)decoder->metrics->horiBearingX;
+    FT_Char  horiBearingY = (FT_Char)decoder->metrics->horiBearingY;
+    FT_Byte  horiAdvance  = (FT_Byte)decoder->metrics->horiAdvance;
+    FT_Char  vertBearingX = (FT_Char)decoder->metrics->vertBearingX;
+    FT_Char  vertBearingY = (FT_Char)decoder->metrics->vertBearingY;
+    FT_Byte  vertAdvance  = (FT_Byte)decoder->metrics->vertAdvance;
 
 
     if ( p + 2 > limit )
@@ -1353,9 +1354,10 @@
       tt_face_get_metrics( face, FALSE, glyph_index, &abearing, &aadvance );
 
       metrics->horiBearingX = originOffsetX;
-      metrics->horiBearingY = -originOffsetY + metrics->height;
-      metrics->horiAdvance  = aadvance * face->root.size->metrics.x_ppem /
-                                face->header.Units_Per_EM;
+      metrics->horiBearingY = (FT_Short)( -originOffsetY + metrics->height );
+      metrics->horiAdvance  = (FT_Short)( aadvance *
+                                          face->root.size->metrics.x_ppem /
+                                          face->header.Units_Per_EM );
     }
 
     return error;

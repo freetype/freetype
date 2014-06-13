@@ -1,5 +1,18 @@
 2014-06-13  Werner Lemberg  <wl@gnu.org>
 
+	Fix more compiler warnings.
+	Reported by Wojciech Mamrak <wmamrak@gmail.com>.
+
+	* src/autofit/afglobal.c (af_face_globals_compute_style_coverage):
+	Make integer constant unsigned.
+
+	* src/sfnt/ttsbit.c (tt_face_load_strike_metrics)
+	<TT_SBIT_TABLE_TYPE_SBIX>: Fix types.
+	(tt_sbit_decoder_load_compound, tt_face_load_sbix_image): Add proper
+	casts.
+
+2014-06-13  Werner Lemberg  <wl@gnu.org>
+
 	Fix compiler warnings.
 	Reported by Wojciech Mamrak <wmamrak@gmail.com>.
 

@@ -138,7 +138,7 @@
     FT_Byte*    gstyles     = globals->glyph_styles;
     FT_UInt     ss;
     FT_UInt     i;
-    FT_UInt     dflt        = ~0; /* a non-valid value */
+    FT_UInt     dflt        = ~0U; /* a non-valid value */
 
 
     /* the value AF_STYLE_UNASSIGNED means `uncovered glyph' */
