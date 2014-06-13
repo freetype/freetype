@@ -138,7 +138,7 @@
     FT_Byte*    gstyles     = globals->glyph_styles;
     FT_UInt     ss;
     FT_UInt     i;
-    FT_UInt     dflt        = -1;
+    FT_UInt     dflt        = ~0; /* a non-valid value */
 
 
     /* the value AF_STYLE_UNASSIGNED means `uncovered glyph' */
@@ -176,7 +176,8 @@
        */
       if ( style_class->coverage == AF_COVERAGE_DEFAULT )
       {
-        if ( style_class->script == globals->module->default_script )
+        if ( (FT_UInt)style_class->script ==
+             globals->module->default_script )
           dflt = ss;
 
         for ( range = script_class->script_uni_ranges;

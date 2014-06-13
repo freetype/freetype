@@ -568,8 +568,8 @@
               {
                 FT_Bool  l2r;
                 FT_Pos   d;
-                FT_Int   p_first;
-                FT_Int   p_last;
+                FT_Int   p_first = 0; /* make compiler happy */
+                FT_Int   p_last  = 0;
 
 
                 if ( !hit )

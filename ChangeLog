@@ -1,3 +1,27 @@
+2014-06-13  Werner Lemberg  <wl@gnu.org>
+
+	Fix compiler warnings.
+	Reported by Wojciech Mamrak <wmamrak@gmail.com>.
+
+	* src/autofit/afglobal.c (af_face_globals_compute_style_coverage),
+	src/autofit/afmodule.c (af_property_set): Fix `signed' vs. 
+	`unsigned' issues.
+
+	* src/autofit/aflatin.c (af_latin_metrics_init_blues): Make compiler
+	happy.
+
+	* src/base/ftlcdfil.c (_ft_lcd_filter_fir): Use only four elements
+	for `fir'.
+	Fix `signed' vs. `unsigned' issues.
+
+	* src/sfnt/sfobjs.c (WRITE_BYTE): Removed, unused.
+	(WRITE_USHORT, WRITE_ULONG): Add proper casts.
+
+	* src/truetype/ttgload.c (TT_Get_VMetrics): Add proper casts.
+
+	* src/truetype/ttinterp.c (Ins_DELTAP): Add proper casts for `B1'
+	and `B2'.
+
 2014-05-16  Alexey Petruchik  <alexey.petruchik@gmail.com>
 
 	[cmake] Add option to build OS X framework.

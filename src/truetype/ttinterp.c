@@ -7596,9 +7596,9 @@
             else if ( CUR.ignore_x_mode )
             {
               if ( CUR.GS.freeVector.y != 0 )
-                B1 = CUR.zp0.cur[A].y;
+                B1 = (FT_UShort)CUR.zp0.cur[A].y;
               else
-                B1 = CUR.zp0.cur[A].x;
+                B1 = (FT_UShort)CUR.zp0.cur[A].x;
 
 #if 0
               /* Standard Subpixel Hinting: Allow y move.       */
@@ -7615,7 +7615,7 @@
                    !( CUR.sph_tweak_flags & SPH_TWEAK_ALWAYS_SKIP_DELTAP ) )
               {
                 /* save the y value of the point now; compare after move */
-                B1 = CUR.zp0.cur[A].y;
+                B1 = (FT_UShort)CUR.zp0.cur[A].y;
 
                 if ( CUR.sph_tweak_flags & SPH_TWEAK_ROUND_NONPIXEL_Y_MOVES )
                   B = FT_PIX_ROUND( B1 + B ) - B1;
@@ -7627,7 +7627,7 @@
                   CUR_Func_move( &CUR.zp0, A, B );
               }
 
-              B2 = CUR.zp0.cur[A].y;
+              B2 = (FT_UShort)CUR.zp0.cur[A].y;
 
               /* Reverse this move if it results in a disallowed move */
               if ( CUR.GS.freeVector.y != 0                           &&
