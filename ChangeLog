@@ -1,5 +1,12 @@
 2014-06-17  Werner Lemberg  <wl@gnu.org>
 
+	Partially revert commit from 2014-06-13.
+
+	* src/autofit/aflatin.c (af_latin_metrics_init_blues): Move
+	declaration of `p_first' and `p_last' out of the loop.
+
+2014-06-17  Werner Lemberg  <wl@gnu.org>
+
 	* builds/unix/freetype2.m4: s/AC_PATH_PROG/AC_PATH_TOOL/.
 
 	This simplifies cross-compiling.

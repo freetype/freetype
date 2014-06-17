@@ -536,6 +536,13 @@
               FT_Int   last;
               FT_Bool  hit;
 
+              /* we intentionally declare these two variables        */
+              /* outside of the loop since various compilers emit    */
+              /* incorrect warning messages otherwise, talking about */
+              /* `possibly uninitialized variables'                  */
+              FT_Int  p_first = 0;            /* make compiler happy */
+              FT_Int  p_last  = 0;
+
               FT_Bool  left2right;
 
 
@@ -568,8 +575,6 @@
               {
                 FT_Bool  l2r;
                 FT_Pos   d;
-                FT_Int   p_first = 0; /* make compiler happy */
-                FT_Int   p_last  = 0;
 
 
                 if ( !hit )
