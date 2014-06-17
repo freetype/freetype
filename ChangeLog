@@ -1,3 +1,9 @@
+2014-06-17  Werner Lemberg  <wl@gnu.org>
+
+	* builds/unix/freetype2.m4: s/AC_PATH_PROG/AC_PATH_TOOL/.
+
+	This simplifies cross-compiling.
+
 2014-06-13  Werner Lemberg  <wl@gnu.org>
 
 	Fix more compiler warnings.
