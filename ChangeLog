@@ -1,3 +1,10 @@
+2014-07-04  Alexei Podtelezhnikov  <apodtele@gmail.com>
+
+	[base] Small optimization of the ancient code.
+
+	* src/base/ftcalc.c (FT_MulDiv, FT_MulDiv_No_Round): Loosen up the
+	condition for direct 32-bit calculations.
+
 2014-06-27  Werner Lemberg  <wl@gnu.org>
 
 	Fix Apple standard glyph names.

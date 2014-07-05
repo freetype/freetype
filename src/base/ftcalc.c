@@ -363,15 +363,17 @@
   /*                                                                     */
   /*  we compute 'a*b+c/2', then divide it by 'c'. (positive values)     */
   /*                                                                     */
-  /*  46340 is FLOOR(SQRT(2^31-1)).                                      */
+  /*  A sufficient condition to avoid overflow is as follows.            */
   /*                                                                     */
-  /*  if ( a <= 46340 && b <= 46340 ) then ( a*b <= 0x7FFEA810 )         */
+  /*  a + b <= 2 * sqrt( X - c/2 )                                       */
   /*                                                                     */
-  /*  0x7FFFFFFF - 0x7FFEA810 = 0x157F0                                  */
+  /*  where X = 2^31 - 1. After Taylor expansion, we make it stronger    */
   /*                                                                     */
-  /*  if ( c < 0x157F0*2 ) then ( a*b+c/2 <= 0x7FFFFFFF )                */
+  /*  a + b <= 92681.9 - c / 92681.9                                     */
   /*                                                                     */
-  /*  and 2*0x157F0 = 176096                                             */
+  /*  with explicit 2*sqrt(X) = 92681.9. What we actually use is this    */
+  /*                                                                     */
+  /*  a + b <= 92681 - (c >> 16)                                         */
   /*                                                                     */
 
   FT_EXPORT_DEF( FT_Long )
@@ -390,7 +392,7 @@
     s ^= b; b = FT_ABS( b );
     s ^= c; c = FT_ABS( c );
 
-    if ( a <= 46340L && b <= 46340L && c <= 176095L && c > 0 )
+    if ( (FT_ULong)a + (FT_ULong)b <= 92681UL - ( c >> 16 ) && c > 0 )
       a = ( a * b + ( c >> 1 ) ) / c;
 
     else if ( (FT_Int32)c > 0 )
@@ -427,7 +429,7 @@
     s ^= b; b = FT_ABS( b );
     s ^= c; c = FT_ABS( c );
 
-    if ( a <= 46340L && b <= 46340L && c > 0 )
+    if ( (FT_ULong)a + (FT_ULong)b <= 92681UL && c > 0 )
       a = a * b / c;
 
     else if ( (FT_Int32)c > 0 )
