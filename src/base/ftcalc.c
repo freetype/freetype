@@ -358,20 +358,24 @@
   /* documentation is in freetype.h */
 
   /* The FT_MulDiv function has been optimized thanks to ideas from      */
-  /* Graham Asher.  The trick is to optimize computation when everything */
-  /* fits within 32-bits (a rather common case).                         */
+  /* Graham Asher and Alexei Podtelezhnikov.  The trick is to optimize   */
+  /* a rather common case when everything fits within 32-bits.           */
   /*                                                                     */
-  /*  we compute 'a*b+c/2', then divide it by 'c'. (positive values)     */
+  /*  We compute 'a*b+c/2', then divide it by 'c'. (positive values)     */
   /*                                                                     */
-  /*  A sufficient condition to avoid overflow is as follows.            */
+  /*  The product of two positive numbers never exceeds the square of    */
+  /*  their mean.  Therefore, we always avoid the overflow by imposing   */
   /*                                                                     */
-  /*  a + b <= 2 * sqrt( X - c/2 )                                       */
+  /*  ( a + b ) / 2 <= sqrt( X - c/2 )                                   */
   /*                                                                     */
-  /*  where X = 2^31 - 1. After Taylor expansion, we make it stronger    */
+  /*  where X = 2^31 - 1.  Now we replace sqrt with a linear function    */
+  /*  that is smaller or equal in the entire range of c from 0 to X;     */
+  /*  it should be equal to sqrt(X) and sqrt(X/2) at the range termini.  */
+  /*  Substituting the linear solution and explicit numbers we get       */
   /*                                                                     */
-  /*  a + b <= 92681.9 - c / 92681.9                                     */
+  /*  a + b <= 92681.9 - c / 79108.95                                    */
   /*                                                                     */
-  /*  with explicit 2*sqrt(X) = 92681.9. What we actually use is this    */
+  /*  In practice we use a faster and even stronger inequality           */
   /*                                                                     */
   /*  a + b <= 92681 - (c >> 16)                                         */
   /*                                                                     */
