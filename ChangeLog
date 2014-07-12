@@ -1,3 +1,8 @@
+2014-07-12  Werner Lemberg  <wl@gnu.org>
+
+	* builds/vms/ftconfig.h: Synchronize.
+	Problem reported by Alexei.
+
 2014-07-11  Alexei Podtelezhnikov  <apodtele@gmail.com>
 
 	[base] Clean up bitmap conversion.

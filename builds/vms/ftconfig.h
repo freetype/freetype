@@ -4,7 +4,7 @@
 /*                                                                         */
 /*    VMS-specific configuration file (specification only).                */
 /*                                                                         */
-/*  Copyright 1996-2004, 2006-2008, 2011, 2013 by                          */
+/*  Copyright 1996-2004, 2006-2008, 2011, 2013, 2014 by                    */
 /*  David Turner, Robert Wilhelm, and Werner Lemberg.                      */
 /*                                                                         */
 /*  This file is part of the FreeType project, and may only be used,       */
@@ -359,7 +359,11 @@ FT_BEGIN_HEADER
     __asm__ __volatile__ (
       "smull  %1, %2, %4, %3\n\t"       /* (lo=%1,hi=%2) = a*b */
       "mov    %0, %2, asr #31\n\t"      /* %0  = (hi >> 31) */
+#if defined( __clang__ ) && defined( __thumb2__ )
+      "add.w  %0, %0, #0x8000\n\t"      /* %0 += 0x8000 */
+#else
       "add    %0, %0, #0x8000\n\t"      /* %0 += 0x8000 */
+#endif
       "adds   %1, %1, %0\n\t"           /* %1 += %0 */
       "adc    %2, %2, #0\n\t"           /* %2 += carry */
       "mov    %0, %1, lsr #16\n\t"      /* %0  = %1 >> 16 */
