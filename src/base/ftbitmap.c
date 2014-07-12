@@ -401,10 +401,9 @@
      */
 
     /* Undo premultification, get the number in a 16.16 form. */
-    b = FT_MulDiv( b, 65536, a );
-    g = FT_MulDiv( g, 65536, a );
-    r = FT_MulDiv( r, 65536, a );
-    a = a * 256;
+    b = FT_DivFix( b, a );
+    g = FT_DivFix( g, a );
+    r = FT_DivFix( r, a );
 
     /* Apply gamma of 2.0 instead of 2.2. */
     b = FT_MulFix( b, b );
@@ -425,10 +424,10 @@
      * - If alpha is zero and luminosity is zero, we want 255.
      * - If alpha is zero and luminosity is one, we want 0.
      *
-     * So the formula is a * (1 - l).
+     * So the formula is a * (1 - l) = a - l * a.
      */
 
-    return (FT_Byte)( FT_MulFix( 65535 - l, a ) >> 8 );
+    return a - (FT_Byte)FT_MulFix( l, a );
   }
 
 
