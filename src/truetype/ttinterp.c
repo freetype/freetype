@@ -9035,10 +9035,13 @@
     /* If any errors have occurred, function tables may be broken. */
     /* Force a re-execution of `prep' and `fpgm' tables if no      */
     /* bytecode debugger is run.                                   */
-    if ( CUR.error && !CUR.instruction_trap )
+    if ( CUR.error
+         && !CUR.instruction_trap
+         && CUR.curRange == tt_coderange_glyph )
     {
       FT_TRACE1(( "  The interpreter returned error 0x%x\n", CUR.error ));
-      exc->size->cvt_ready      = FALSE;
+      exc->size->bytecode_ready = -1;
+      exc->size->cvt_ready      = -1;
     }
 
     return CUR.error;

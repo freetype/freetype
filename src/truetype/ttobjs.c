@@ -813,6 +813,8 @@
     else
       error = FT_Err_Ok;
 
+    size->bytecode_ready = error;
+
     if ( !error )
       TT_Save_Context( exec, size );
 
@@ -884,6 +886,8 @@
     else
       error = FT_Err_Ok;
 
+    size->cvt_ready = error;
+
     /* UNDOCUMENTED!  The MS rasterizer doesn't allow the following */
     /* graphics state variables to be modified by the CVT program.  */
 
@@ -912,10 +916,6 @@
     return error;
   }
 
-#endif /* TT_USE_BYTECODE_INTERPRETER */
-
-
-#ifdef TT_USE_BYTECODE_INTERPRETER
 
   static void
   tt_size_done_bytecode( FT_Size  ftsize )
@@ -953,8 +953,8 @@
     size->max_func = 0;
     size->max_ins  = 0;
 
-    size->bytecode_ready = 0;
-    size->cvt_ready      = 0;
+    size->bytecode_ready = -1;
+    size->cvt_ready      = -1;
   }
 
 
@@ -974,8 +974,8 @@
     TT_MaxProfile*  maxp = &face->max_profile;
 
 
-    size->bytecode_ready = 1;
-    size->cvt_ready      = 0;
+    size->bytecode_ready = -1;
+    size->cvt_ready      = -1;
 
     size->max_function_defs    = maxp->maxFunctionDefs;
     size->max_instruction_defs = maxp->maxInstructionDefs;
@@ -1052,15 +1052,14 @@
     FT_Error  error = FT_Err_Ok;
 
 
-    if ( !size->bytecode_ready )
-    {
+    if ( size->bytecode_ready < 0 )
       error = tt_size_init_bytecode( (FT_Size)size, pedantic );
-      if ( error )
-        goto Exit;
-    }
+
+    if ( error || size->bytecode_ready )
+      goto Exit;
 
     /* rescale CVT when needed */
-    if ( !size->cvt_ready )
+    if ( size->cvt_ready < 0 )
     {
       FT_UInt  i;
       TT_Face  face = (TT_Face)size->root.face;
@@ -1087,8 +1086,6 @@
       size->GS = tt_default_graphics_state;
 
       error = tt_size_run_prep( size, pedantic );
-      if ( !error )
-        size->cvt_ready = 1;
     }
 
   Exit:
@@ -1119,8 +1116,8 @@
     FT_Error  error = FT_Err_Ok;
 
 #ifdef TT_USE_BYTECODE_INTERPRETER
-    size->bytecode_ready = 0;
-    size->cvt_ready      = 0;
+    size->bytecode_ready = -1;
+    size->cvt_ready      = -1;
 #endif
 
     size->ttmetrics.valid = FALSE;
@@ -1148,7 +1145,7 @@
 
 
 #ifdef TT_USE_BYTECODE_INTERPRETER
-    if ( size->bytecode_ready )
+    if ( size->bytecode_ready >= 0 )
       tt_size_done_bytecode( ttsize );
 #endif
 
@@ -1229,7 +1226,7 @@
     }
 
 #ifdef TT_USE_BYTECODE_INTERPRETER
-    size->cvt_ready = 0;
+    size->cvt_ready = -1;
 #endif /* TT_USE_BYTECODE_INTERPRETER */
 
     if ( !error )

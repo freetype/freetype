@@ -956,7 +956,7 @@
       if ( loader->exec->rasterizer_version != TT_INTERPRETER_VERSION_35 )
       {
         loader->exec->rasterizer_version = TT_INTERPRETER_VERSION_35;
-        loader->exec->size->cvt_ready    = FALSE;
+        loader->exec->size->cvt_ready    = -1;
 
         tt_size_ready_bytecode(
           loader->exec->size,
@@ -971,7 +971,7 @@
            SPH_OPTION_SET_RASTERIZER_VERSION )
       {
         loader->exec->rasterizer_version = SPH_OPTION_SET_RASTERIZER_VERSION;
-        loader->exec->size->cvt_ready    = FALSE;
+        loader->exec->size->cvt_ready    = -1;
 
         tt_size_ready_bytecode(
           loader->exec->size,
