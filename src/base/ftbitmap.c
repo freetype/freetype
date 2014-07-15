@@ -378,11 +378,8 @@
   static FT_Byte
   ft_gray_for_premultiplied_srgb_bgra( const FT_Byte*  bgra )
   {
-    FT_Long  a = bgra[3];
-    FT_Long  b = bgra[0];
-    FT_Long  g = bgra[1];
-    FT_Long  r = bgra[2];
-    FT_Long  l;
+    FT_Byte   a = bgra[3];
+    FT_ULong  l;
 
 
     /* Short-circuit transparent color to avoid div-by-zero. */
@@ -397,25 +394,14 @@
      *
      * http://accessibility.kde.org/hsl-adjusted.php
      *
-     * We do the computation with integers only.
+     * We do the computation with integers only applying gamma of 2.0,
+     * The following will never overflow 32 bits. This is a scaled up
+     * luminosity with premultiplication not yet undone. 
      */
 
-    /* Undo premultification, get the number in a 16.16 form. */
-    b = FT_DivFix( b, a );
-    g = FT_DivFix( g, a );
-    r = FT_DivFix( r, a );
-
-    /* Apply gamma of 2.0 instead of 2.2. */
-    b = FT_MulFix( b, b );
-    g = FT_MulFix( g, g );
-    r = FT_MulFix( r, r );
-
-    /* Apply coefficients. */
-    b = FT_MulFix( b,  4731 /* 0.0722 * 65536 */ );
-    g = FT_MulFix( g, 46871 /* 0.7152 * 65536 */ );
-    r = FT_MulFix( r, 13933 /* 0.2126 * 65536 */ );
-
-    l = r + g + b;
+    l =  4731UL /* 0.0722 * 65536 */ * bgra[0] * bgra[0] +
+        46871UL /* 0.7152 * 65536 */ * bgra[1] * bgra[1] +
+        13933UL /* 0.2126 * 65536 */ * bgra[2] * bgra[2];
 
     /*
      * Final transparency can be determined this way:
@@ -425,9 +411,10 @@
      * - If alpha is zero and luminosity is one, we want 0.
      *
      * So the formula is a * (1 - l) = a - l * a.
+     * Undoing premultiplication and scaling back down we get
      */
 
-    return a - (FT_Byte)FT_MulFix( l, a );
+    return a - (FT_Byte)( ( l / a ) >> 16 );
   }
 
 
