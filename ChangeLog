@@ -1,5 +1,9 @@
 2014-07-15  Alexei Podtelezhnikov  <apodtele@gmail.com>
 
+	* src/base/ftcalc.c (FT_MSB): Utilize gcc builtins. 
+
+2014-07-15  Alexei Podtelezhnikov  <apodtele@gmail.com>
+
 	[base] Move assembler code back in the source file.
 
 	FT_MulFix assembler used to reside in ftcalc.c before f47d263f1b.

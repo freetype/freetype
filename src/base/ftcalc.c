@@ -243,6 +243,22 @@
 
 #endif /* __GNUC__ && __x86_64__ */
 
+#if defined( __GNUC__ )
+#if ( __GNUC__ > 3 ) || ( ( __GNUC__ == 3 ) && ( __GNUC_MINOR__ >= 4 ) )
+
+#if FT_SIZEOF_INT == 4
+
+#define FT_MSB_BUILTIN( x )  ( 31 - __builtin_clz( x ) )  
+
+#elif FT_SIZEOF_LONG == 4
+
+#define FT_MSB_BUILTIN( x )  ( 31 - __builtin_clzl( x ) )  
+
+#endif
+
+#endif
+#endif /* __GNUC__ */
+
 #endif /* !FT_CONFIG_OPTION_NO_ASSEMBLER */
 
 
@@ -316,6 +332,12 @@
   FT_BASE_DEF ( FT_Int )
   FT_MSB( FT_UInt32 z )
   {
+#ifdef FT_MSB_BUILTIN
+
+    return FT_MSB_BUILTIN( z );
+
+#else
+
     FT_Int shift = 0;
 
     /* determine msb bit index in `shift' */
@@ -346,6 +368,8 @@
     }
 
     return shift;
+
+#endif /* FT_MSB_BUILTIN */
   }
 
 
