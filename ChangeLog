@@ -1,4 +1,15 @@
-2014-07-11  Alexei Podtelezhnikov  <apodtele@gmail.com>
+2014-07-15  Alexei Podtelezhnikov  <apodtele@gmail.com>
+
+	[base] Move assembler code back in the source file.
+
+	FT_MulFix assembler used to reside in ftcalc.c before f47d263f1b.
+
+	* include/config/ftconfig.h, builds/unix/ftconfig.in,
+	builds/vms/ftconfig.h [FT_MULFIX_ASSEMBLER]: Move code from here...
+
+	* src/base/ftcalc.c [FT_MULFIX_ASSEMBLER]: ... to here.
+
+2014-07-14  Alexei Podtelezhnikov  <apodtele@gmail.com>
 
 	[base] Further clean up color bitmap conversion.
 
