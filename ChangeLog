@@ -1,3 +1,9 @@
+2014-07-17  Werner Lemberg  <wl@gnu.org>
+
+	Fix Savannah bug #42788.
+
+	* src/pfr/pfrobjs.c: Include `ftcalc.h'.
+
 2014-07-16  Alexei Podtelezhnikov  <apodtele@gmail.com>
 
 	Replace `ft_highpow2' function.

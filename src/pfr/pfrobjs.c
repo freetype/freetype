@@ -4,7 +4,7 @@
 /*                                                                         */
 /*    FreeType PFR object methods (body).                                  */
 /*                                                                         */
-/*  Copyright 2002-2008, 2010-2011, 2013 by                                */
+/*  Copyright 2002-2008, 2010-2011, 2013, 2014 by                          */
 /*  David Turner, Robert Wilhelm, and Werner Lemberg.                      */
 /*                                                                         */
 /*  This file is part of the FreeType project, and may only be used,       */
@@ -23,6 +23,7 @@
 #include "pfrsbit.h"
 #include FT_OUTLINE_H
 #include FT_INTERNAL_DEBUG_H
+#include FT_INTERNAL_CALC_H
 #include FT_TRUETYPE_IDS_H
 
 #include "pfrerror.h"
