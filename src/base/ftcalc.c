@@ -248,11 +248,11 @@
 
 #if FT_SIZEOF_INT == 4
 
-#define FT_MSB_BUILTIN( x )  ( 31 - __builtin_clz( x ) )  
+#define FT_MSB_BUILTIN( x )  ( 31 - __builtin_clz( x ) )
 
 #elif FT_SIZEOF_LONG == 4
 
-#define FT_MSB_BUILTIN( x )  ( 31 - __builtin_clzl( x ) )  
+#define FT_MSB_BUILTIN( x )  ( 31 - __builtin_clzl( x ) )
 
 #endif
 

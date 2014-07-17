@@ -10,7 +10,7 @@
 
 2014-07-15  Alexei Podtelezhnikov  <apodtele@gmail.com>
 
-	* src/base/ftcalc.c (FT_MSB): Utilize gcc builtins. 
+	* src/base/ftcalc.c (FT_MSB): Utilize gcc builtins.
 
 2014-07-15  Alexei Podtelezhnikov  <apodtele@gmail.com>
 
@@ -111,7 +111,7 @@
 	Reported by Wojciech Mamrak <wmamrak@gmail.com>.
 
 	* src/autofit/afglobal.c (af_face_globals_compute_style_coverage),
-	src/autofit/afmodule.c (af_property_set): Fix `signed' vs. 
+	src/autofit/afmodule.c (af_property_set): Fix `signed' vs.
 	`unsigned' issues.
 
 	* src/autofit/aflatin.c (af_latin_metrics_init_blues): Make compiler
