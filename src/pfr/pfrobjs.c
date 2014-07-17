@@ -515,7 +515,7 @@
       {
         FT_UInt    count       = item->pair_count;
         FT_UInt    size        = item->pair_size;
-        FT_UInt    power       = (FT_UInt)ft_highpow2( (FT_UInt32)count );
+        FT_UInt    power       = 1 << FT_MSB( count );
         FT_UInt    probe       = power * size;
         FT_UInt    extra       = count - power;
         FT_Byte*   base        = stream->cursor;

@@ -1,3 +1,13 @@
+2014-07-16  Alexei Podtelezhnikov  <apodtele@gmail.com>
+
+	Replace `ft_highpow2' function.
+
+	* src/pfr/pfrobjs.c (pfr_face_get_kerning): Use `FT_MSB' instead of
+	`ft_highpow2'.
+
+	* src/base/ftutil.c, include/internal/ftobjs.h (ft_highpow2): Remove
+	it.
+
 2014-07-15  Alexei Podtelezhnikov  <apodtele@gmail.com>
 
 	* src/base/ftcalc.c (FT_MSB): Utilize gcc builtins. 

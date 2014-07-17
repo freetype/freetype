@@ -411,26 +411,4 @@
   }
 
 
-  FT_BASE_DEF( FT_UInt32 )
-  ft_highpow2( FT_UInt32  value )
-  {
-    FT_UInt32  value2;
-
-
-    /*
-     *  We simply clear the lowest bit in each iteration.  When
-     *  we reach 0, we know that the previous value was our result.
-     */
-    for ( ;; )
-    {
-      value2 = value & (value - 1);  /* clear lowest bit */
-      if ( value2 == 0 )
-        break;
-
-      value = value2;
-    }
-    return value;
-  }
-
-
 /* END */
