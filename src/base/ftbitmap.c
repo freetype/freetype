@@ -394,9 +394,10 @@
      *
      * http://accessibility.kde.org/hsl-adjusted.php
      *
-     * We do the computation with integers only applying gamma of 2.0,
-     * The following will never overflow 32 bits. This is a scaled up
+     * We do the computation with integers only, applying a gamma of 2.0.
+     * The following will never overflow 32 bits; it is a scaled-up
      * luminosity with premultiplication not yet undone. 
+     *
      */
 
     l =  4731UL /* 0.0722 * 65536 */ * bgra[0] * bgra[0] +
@@ -404,14 +405,16 @@
         13933UL /* 0.2126 * 65536 */ * bgra[2] * bgra[2];
 
     /*
-     * Final transparency can be determined this way:
+     * Final transparency can be determined as follows.
      *
      * - If alpha is zero, we want 0.
      * - If alpha is zero and luminosity is zero, we want 255.
      * - If alpha is zero and luminosity is one, we want 0.
      *
      * So the formula is a * (1 - l) = a - l * a.
-     * Undoing premultiplication and scaling back down we get
+     *
+     * In the actual code, we undo premultiplication and scale down again.
+     *
      */
 
     return a - (FT_Byte)( ( l / a ) >> 16 );
