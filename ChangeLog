@@ -1,3 +1,12 @@
+2014-07-26  Werner Lemberg  <wl@gnu.org>
+
+	[cff] Fix typo.
+
+	* src/cff/cf2hints.c (cf2_glyphpath_computeOffset): Use correct
+	offsets in third quadrant.
+
+	Reported by maks <maksqwe1@ukr.net>.
+
 2014-07-17  Werner Lemberg  <wl@gnu.org>
 
 	Fix Savannah bug #42788.

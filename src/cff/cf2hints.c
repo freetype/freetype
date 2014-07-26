@@ -1560,7 +1560,7 @@
         {
           /* -y */
           *x = -glyphpath->xOffset;
-          *y = glyphpath->xOffset;
+          *y = glyphpath->yOffset;
         }
         else
         {
