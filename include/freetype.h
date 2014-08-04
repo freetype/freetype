@@ -3061,9 +3061,8 @@ FT_BEGIN_HEADER
   /*    glyph index~0 always corresponds to the `missing glyph' (called    */
   /*    `.notdef').                                                        */
   /*                                                                       */
-  /*    This function is not compiled within the library if the config     */
-  /*    macro `FT_CONFIG_OPTION_NO_GLYPH_NAMES' is defined in              */
-  /*    `ftoptions.h'.                                                     */
+  /*    This function always returns an error if the config macro          */
+  /*    `FT_CONFIG_OPTION_NO_GLYPH_NAMES' is not defined in `ftoptions.h'. */
   /*                                                                       */
   FT_EXPORT( FT_Error )
   FT_Get_Glyph_Name( FT_Face     face,
