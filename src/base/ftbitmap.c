@@ -378,8 +378,8 @@
   static FT_Byte
   ft_gray_for_premultiplied_srgb_bgra( const FT_Byte*  bgra )
   {
-    FT_Byte   a = bgra[3];
-    FT_ULong  l;
+    FT_UInt  a = bgra[3];
+    FT_UInt  l;
 
 
     /* Short-circuit transparent color to avoid div-by-zero. */
@@ -395,14 +395,14 @@
      * http://accessibility.kde.org/hsl-adjusted.php
      *
      * We do the computation with integers only, applying a gamma of 2.0.
-     * The following will never overflow 32 bits; it is a scaled-up
-     * luminosity with premultiplication not yet undone. 
+     * We guarantee 32-bit arithmetic to avoid overflow but the resulting
+     * luminosity fits into 16 bits. 
      *
      */
 
-    l =  4731UL /* 0.0722 * 65536 */ * bgra[0] * bgra[0] +
-        46871UL /* 0.7152 * 65536 */ * bgra[1] * bgra[1] +
-        13933UL /* 0.2126 * 65536 */ * bgra[2] * bgra[2];
+    l = (  4732UL /* 0.0722 * 65536 */ * bgra[0] * bgra[0] +
+          46871UL /* 0.7152 * 65536 */ * bgra[1] * bgra[1] +
+          13933UL /* 0.2126 * 65536 */ * bgra[2] * bgra[2] ) >> 16;
 
     /*
      * Final transparency can be determined as follows.
@@ -413,11 +413,11 @@
      *
      * So the formula is a * (1 - l) = a - l * a.
      *
-     * In the actual code, we undo premultiplication and scale down again.
+     * We still need to undo premultiplication by dividing l by a*a.
      *
      */
 
-    return a - (FT_Byte)( ( l / a ) >> 16 );
+    return (FT_Byte)( a - l / a );
   }
 
 
