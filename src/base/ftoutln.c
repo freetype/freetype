@@ -1045,6 +1045,10 @@
 
     FT_Outline_Get_CBox( outline, &cbox );
 
+    /* Handle collapsed outlines to avoid undefined FT_MSB. */
+    if ( cbox.xMin == cbox.xMax || cbox.yMin == cbox.yMax )
+      return FT_ORIENTATION_NONE;
+
     xshift = FT_MSB( FT_ABS( cbox.xMax ) | FT_ABS( cbox.xMin ) ) - 14;
     xshift = FT_MAX( xshift, 0 );
 
