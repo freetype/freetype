@@ -111,6 +111,7 @@
 #endif /* !FT_LONG64 */
 
 
+  /* undefined and never called for zero vector */  
   static FT_Int
   ft_trig_prenorm( FT_Vector*  vec )
   {
