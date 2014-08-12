@@ -1,3 +1,15 @@
+2014-08-11  Alexei Podtelezhnikov  <apodtele@gmail.com>
+
+	[base] Restore FT_MulFix inlining.
+
+	* include/freetype.h (FT_MulFix): Unconditionally defined.
+
+	* src/base/ftcalc.c [FT_MULFIX_ASSEMBLER]: Move code from here...
+
+	* include/internal/ftcalc.h [FT_MULFIX_ASSEMBLER]: ... to here,
+	which conditionally replaces the function with an inline version
+	through the macro.
+
 2014-08-08  Alexei Podtelezhnikov  <apodtele@gmail.com>
 
 	* src/base/ftbitmap.c (ft_gray_for_premultiplied_srgb_bgra): Refactor.

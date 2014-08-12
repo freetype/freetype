@@ -3762,12 +3762,6 @@ FT_BEGIN_HEADER
              FT_Long  c );
 
 
-  /* */
-
-  /* The following #if 0 ... #endif is for the documentation formatter, */
-  /* hiding the internal `FT_MULFIX_INLINED' macro.                     */
-
-#if 0
   /*************************************************************************/
   /*                                                                       */
   /* <Function>                                                            */
@@ -3800,17 +3794,6 @@ FT_BEGIN_HEADER
   FT_EXPORT( FT_Long )
   FT_MulFix( FT_Long  a,
              FT_Long  b );
-
-  /* */
-#endif
-
-#ifdef FT_MULFIX_INLINED
-#define FT_MulFix( a, b )  FT_MULFIX_INLINED( a, b )
-#else
-  FT_EXPORT( FT_Long )
-  FT_MulFix( FT_Long  a,
-             FT_Long  b );
-#endif
 
 
   /*************************************************************************/
