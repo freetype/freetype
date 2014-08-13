@@ -1,3 +1,11 @@
+2014-08-12  Alexei Podtelezhnikov  <apodtele@gmail.com>
+
+	[base] Avoid undefined FT_MSB in `BBox_Cubic_Check'.
+
+	* src/base/ftbbox.c (BBox_Cubic_Check): Update.
+	(update_cubic_max): Repalce with...
+	(cubic_peak): ... this, which now handles upscaling.
+
 2014-08-11  Alexei Podtelezhnikov  <apodtele@gmail.com>
 
 	[base] Handle collapsed outlines to avoid undefined FT_MSB.

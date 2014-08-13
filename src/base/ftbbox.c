@@ -203,15 +203,48 @@
   /*    max :: The address of the current maximum.                         */
   /*                                                                       */
   static FT_Pos
-  update_cubic_max( FT_Pos  q1,
-                    FT_Pos  q2,
-                    FT_Pos  q3,
-                    FT_Pos  q4,
-                    FT_Pos  max )
+  cubic_peak( FT_Pos  q1,
+              FT_Pos  q2,
+              FT_Pos  q3,
+              FT_Pos  q4 )
   {
+    FT_Pos  peak = 0;
+    FT_Int  shift;    
+
+    /* This function finds a peak of a cubic segment if it is above 0    */
+    /* using iterative bisection of the segment, or returns 0.           */
+    /* The fixed-point arithmetic of bisection is inherently stable      */
+    /* but may loose accuracy in the two lowest bits.  To compensate,    */
+    /* we upscale the segment if there is room.  Large values may need   */
+    /* to be downscaled to avoid overflows during bisection.             */
+    /* It is called with either q2 or q3 positive, which is necessary    */
+    /* for the peak to exist and avoids undefined FT_MSB.                */
+
+    shift = 27 -
+      FT_MSB( FT_ABS( q1 ) | FT_ABS( q2 ) | FT_ABS( q3 ) | FT_ABS( q4 ) );
+
+    if ( shift > 0 )
+    {
+      /* upscaling too much just wastes time */
+      if ( shift > 2 )
+        shift = 2;
+
+      q1 <<=  shift;
+      q2 <<=  shift;
+      q3 <<=  shift;
+      q4 <<=  shift;
+    }
+    else
+    {
+      q1 >>= -shift;
+      q2 >>= -shift;
+      q3 >>= -shift;
+      q4 >>= -shift;
+    }
+
     /* for a cubic segment to possibly reach new maximum, at least */
     /* one of its off-points must stay above the current value     */
-    while ( q2 > max || q3 > max )
+    while ( q2 > 0 || q3 > 0 )
     {
       /* determine which half contains the maximum and split */
       if ( q1 + q2 > q3 + q4 ) /* first half */
@@ -240,17 +273,22 @@
       /* check whether either end reached the maximum */
       if ( q1 == q2 && q1 >= q3 )
       {
-        max = q1;
+        peak = q1;
         break;
       }
       if ( q3 == q4 && q2 <= q4 )
       {
-        max = q4;
+        peak = q4;
         break;
       }
     }
 
-    return max;
+    if ( shift > 0 )
+      peak >>=  shift;
+    else
+      peak <<= -shift;
+
+    return peak;
   }
 
 
@@ -262,65 +300,18 @@
                     FT_Pos*  min,
                     FT_Pos*  max )
   {
-    FT_Pos  nmin, nmax;
-    FT_Int  shift;
-
-
     /* This function is only called when a control off-point is outside  */
-    /* the bbox that contains all on-points.  It finds a local extremum  */
-    /* within the segment using iterative bisection of the segment.      */
-    /* The fixed-point arithmetic of bisection is inherently stable      */
-    /* but may loose accuracy in the two lowest bits.  To compensate,    */
-    /* we upscale the segment if there is room.  Large values may need   */
-    /* to be downscaled to avoid overflows during bisection.             */
-    /* The control off-point outside the bbox is likely to have the top  */
-    /* absolute value among arguments.                                   */
+    /* the bbox that contains all on-points.  So at least one of the     */
+    /* conditions below holds and cubic_peak is called with at least one */
+    /* non-zero argument.                                                */
 
-    shift = 27 - FT_MSB( FT_ABS( p2 ) | FT_ABS( p3 ) );
-
-    if ( shift > 0 )
-    {
-      /* upscaling too much just wastes time */
-      if ( shift > 2 )
-        shift = 2;
-
-      p1 <<=  shift;
-      p2 <<=  shift;
-      p3 <<=  shift;
-      p4 <<=  shift;
-      nmin = *min << shift;
-      nmax = *max << shift;
-    }
-    else
-    {
-      p1 >>= -shift;
-      p2 >>= -shift;
-      p3 >>= -shift;
-      p4 >>= -shift;
-      nmin = *min >> -shift;
-      nmax = *max >> -shift;
-    }
-
-    nmax =  update_cubic_max(  p1,  p2,  p3,  p4,  nmax );
+    if ( p2 > *max || p3 > *max )
+      *max += cubic_peak( p1 - *max, p2 - *max, p3 - *max, p4 - *max );
 
     /* now flip the signs to update the minimum */
-    nmin = -update_cubic_max( -p1, -p2, -p3, -p4, -nmin );
+    if ( p2 < *min || p3 < *min )
+      *min -= cubic_peak( *min - p1, *min - p2, *min - p3, *min - p4 );
 
-    if ( shift > 0 )
-    {
-      nmin >>=  shift;
-      nmax >>=  shift;
-    }
-    else
-    {
-      nmin <<= -shift;
-      nmax <<= -shift;
-    }
-
-    if ( nmin < *min )
-      *min = nmin;
-    if ( nmax > *max )
-      *max = nmax;
   }
 
 
