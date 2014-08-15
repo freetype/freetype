@@ -209,7 +209,7 @@
               FT_Pos  q4 )
   {
     FT_Pos  peak = 0;
-    FT_Int  shift;    
+    FT_Int  shift;
 
     /* This function finds a peak of a cubic segment if it is above 0    */
     /* using iterative bisection of the segment, or returns 0.           */
@@ -242,8 +242,8 @@
       q4 >>= -shift;
     }
 
-    /* for a cubic segment to possibly reach new maximum, at least */
-    /* one of its off-points must stay above the current value     */
+    /* for a peak to exist above 0, the cubic segment must have */
+    /* at least one of its control off-points above 0.          */
     while ( q2 > 0 || q3 > 0 )
     {
       /* determine which half contains the maximum and split */
@@ -311,7 +311,6 @@
     /* now flip the signs to update the minimum */
     if ( p2 < *min || p3 < *min )
       *min -= cubic_peak( *min - p1, *min - p2, *min - p3, *min - p4 );
-
   }
 
 
