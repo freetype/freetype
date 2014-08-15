@@ -1,4 +1,10 @@
-2014-08-13  Alexei Podtelezhnikov  <apodtele@gmail.com>
+2014-08-14  Alexei Podtelezhnikov  <apodtele@gmail.com>
+
+	Minor refactoring.
+
+	* src/base/ftcalc.c (FT_MulDiv, FT_MulDiv_No_Round): Updated.
+
+2014-08-14  Alexei Podtelezhnikov  <apodtele@gmail.com>
 
 	Turn FT_MSB into a macro when using gcc builtins.
 

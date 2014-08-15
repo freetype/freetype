@@ -400,10 +400,13 @@
     s ^= b; b = FT_ABS( b );
     s ^= c; c = FT_ABS( c );
 
-    if ( (FT_ULong)a + (FT_ULong)b <= 92681UL - ( c >> 16 ) && c > 0 )
+    if ( c == 0 )
+      a = 0x7FFFFFFFL;
+
+    else if ( (FT_ULong)a + (FT_ULong)b <= 92681UL - ( c >> 16 ) )
       a = ( a * b + ( c >> 1 ) ) / c;
 
-    else if ( (FT_Int32)c > 0 )
+    else
     {
       FT_Int64  temp, temp2;
 
@@ -415,8 +418,6 @@
       FT_Add64( &temp, &temp2, &temp );
       a = ft_div64by32( temp.hi, temp.lo, (FT_Int32)c );
     }
-    else
-      a = 0x7FFFFFFFL;
 
     return ( s < 0 ? -a : a );
   }
@@ -437,10 +438,13 @@
     s ^= b; b = FT_ABS( b );
     s ^= c; c = FT_ABS( c );
 
-    if ( (FT_ULong)a + (FT_ULong)b <= 92681UL && c > 0 )
+    if ( c == 0 )
+      a = 0x7FFFFFFFL;
+
+    else if ( (FT_ULong)a + (FT_ULong)b <= 92681UL )
       a = a * b / c;
 
-    else if ( (FT_Int32)c > 0 )
+    else
     {
       FT_Int64  temp;
 
@@ -448,8 +452,6 @@
       ft_multo64( (FT_Int32)a, (FT_Int32)b, &temp );
       a = ft_div64by32( temp.hi, temp.lo, (FT_Int32)c );
     }
-    else
-      a = 0x7FFFFFFFL;
 
     return ( s < 0 ? -a : a );
   }
