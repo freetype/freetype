@@ -100,16 +100,11 @@
                       : -((-a) & ~0xFFFFL );
   }
 
+#ifndef FT_MSB
 
   FT_BASE_DEF ( FT_Int )
   FT_MSB( FT_UInt32 z )
   {
-#ifdef FT_MSB_BUILTIN
-
-    return FT_MSB_BUILTIN( z );
-
-#else
-
     FT_Int shift = 0;
 
     /* determine msb bit index in `shift' */
@@ -140,9 +135,9 @@
     }
 
     return shift;
-
-#endif /* FT_MSB_BUILTIN */
   }
+
+#endif /* !FT_MSB */
 
 
   /* documentation is in ftcalc.h */

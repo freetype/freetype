@@ -261,22 +261,6 @@ FT_BEGIN_HEADER
 
 #endif /* __GNUC__ && __x86_64__ */
 
-#if defined( __GNUC__ )
-#if ( __GNUC__ > 3 ) || ( ( __GNUC__ == 3 ) && ( __GNUC_MINOR__ >= 4 ) )
-
-#if FT_SIZEOF_INT == 4
-
-#define FT_MSB_BUILTIN( x )  ( 31 - __builtin_clz( x ) )
-
-#elif FT_SIZEOF_LONG == 4
-
-#define FT_MSB_BUILTIN( x )  ( 31 - __builtin_clzl( x ) )
-
-#endif
-
-#endif
-#endif /* __GNUC__ */
-
 #endif /* !FT_CONFIG_OPTION_NO_ASSEMBLER */
 
 
@@ -367,8 +351,31 @@ FT_BEGIN_HEADER
   /*
    *  Return the most significant bit index.
    */
+
+#ifndef  FT_CONFIG_OPTION_NO_ASSEMBLER
+#if defined( __GNUC__ )
+#if ( __GNUC__ > 3 ) || ( ( __GNUC__ == 3 ) && ( __GNUC_MINOR__ >= 4 ) )
+
+#if FT_SIZEOF_INT == 4
+
+#define FT_MSB( x )  ( 31 - __builtin_clz( x ) )
+
+#elif FT_SIZEOF_LONG == 4
+
+#define FT_MSB( x )  ( 31 - __builtin_clzl( x ) )
+
+#endif
+
+#endif
+#endif /* __GNUC__ */
+#endif /* !FT_CONFIG_OPTION_NO_ASSEMBLER */
+
+#ifndef FT_MSB
+
   FT_BASE( FT_Int )
   FT_MSB( FT_UInt32  z );
+
+#endif
 
 
   /*

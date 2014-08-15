@@ -1,3 +1,9 @@
+2014-08-13  Alexei Podtelezhnikov  <apodtele@gmail.com>
+
+	Turn FT_MSB into a macro when using gcc builtins.
+
+	* src/base/ftcalc.c, include/internal/ftcalc.h: Updated.
+
 2014-08-12  Alexei Podtelezhnikov  <apodtele@gmail.com>
 
 	[base] Avoid undefined FT_MSB in `BBox_Cubic_Check'.
