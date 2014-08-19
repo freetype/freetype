@@ -1,3 +1,9 @@
+2014-08-18  Alexei Podtelezhnikov  <apodtele@gmail.com>
+
+	[base] Remove truncation in `FT_DivFix'.
+
+	* src/base/ftcalc.c (FT_DivFix): Updated.
+
 2014-08-14  Alexei Podtelezhnikov  <apodtele@gmail.com>
 
 	Minor refactoring.

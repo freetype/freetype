@@ -247,11 +247,10 @@
   FT_DivFix( FT_Long  a,
              FT_Long  b )
   {
-    FT_Int32   s;
-    FT_UInt32  q;
+    FT_Int   s = 1;
+    FT_Long  q;
 
 
-    s = 1;
     if ( a < 0 )
     {
       a = -a;
@@ -268,9 +267,9 @@
       q = 0x7FFFFFFFL;
     else
       /* compute result directly */
-      q = (FT_UInt32)( ( ( (FT_UInt64)a << 16 ) + ( b >> 1 ) ) / b );
+      q = (FT_Long)( ( ( (FT_UInt64)a << 16 ) + ( b >> 1 ) ) / b );
 
-    return ( s < 0 ? -(FT_Long)q : (FT_Long)q );
+    return ( s < 0 ? -q : q );
   }
 
 
@@ -564,23 +563,23 @@
   FT_DivFix( FT_Long  a,
              FT_Long  b )
   {
-    FT_Int32   s;
-    FT_UInt32  q;
+    FT_Long  s;
+    FT_Long  q;
 
 
     /* XXX: this function does not allow 64-bit arguments */
-    s  = (FT_Int32)a; a = FT_ABS( a );
-    s ^= (FT_Int32)b; b = FT_ABS( b );
+    s  = a; a = FT_ABS( a );
+    s ^= b; b = FT_ABS( b );
 
-    if ( (FT_UInt32)b == 0 )
+    if ( b == 0 )
     {
       /* check for division by 0 */
-      q = (FT_UInt32)0x7FFFFFFFL;
+      q = 0x7FFFFFFFL;
     }
     else if ( ( a >> 16 ) == 0 )
     {
       /* compute result directly */
-      q = (FT_UInt32)( ( (FT_ULong)a << 16 ) + ( b >> 1 ) ) / (FT_UInt32)b;
+      q = (FT_Long)( ( ( (FT_ULong)a << 16 ) + ( b >> 1 ) ) / b );
     }
     else
     {
@@ -593,10 +592,10 @@
       temp2.hi = 0;
       temp2.lo = (FT_UInt32)( b >> 1 );
       FT_Add64( &temp, &temp2, &temp );
-      q = ft_div64by32( temp.hi, temp.lo, (FT_Int32)b );
+      q = (FT_Long)ft_div64by32( temp.hi, temp.lo, (FT_Int32)b );
     }
 
-    return ( s < 0 ? -(FT_Int32)q : (FT_Int32)q );
+    return ( s < 0 ? -q : q );
   }
 
 
