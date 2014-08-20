@@ -362,35 +362,37 @@
   /*  Graham Asher and Alexei Podtelezhnikov.  The trick is to optimize  */
   /*  a rather common case when everything fits within 32-bits.          */
   /*                                                                     */
-  /*  We compute 'a*b+c/2', then divide it by 'c'. (positive values)     */
+  /*  We compute 'a*b+c/2', then divide it by 'c' (all positive values). */
   /*                                                                     */
   /*  The product of two positive numbers never exceeds the square of    */
-  /*  their mean.  Therefore, we always avoid the overflow by imposing   */
+  /*  its mean values.  Therefore, we always avoid the overflow by       */
+  /*  imposing                                                           */
   /*                                                                     */
-  /*  ( a + b ) / 2 <= sqrt( X - c/2 )                                   */
+  /*    (a + b) / 2 <= sqrt(X - c/2)    ,                                */
   /*                                                                     */
-  /*  where X = 2^32 - 1, the maximun unsigned 32-bit value, and using   */
-  /*  unsigned arithmetic.  Now we replace sqrt with a linear function   */
-  /*  that is smaller or equal in the entire range of c from 0 to X/2;   */
-  /*  it should be equal to sqrt(X) and sqrt(3X/4) at the termini.       */
-  /*  Substituting the linear solution and explicit numbers we get       */
+  /*  where X = 2^32 - 1, the maximum unsigned 32-bit value, and using   */
+  /*  unsigned arithmetic.  Now we replace `sqrt' with a linear function */
+  /*  that is smaller or equal for all values of c in the interval       */
+  /*  [0;X/2]; it should be equal to sqrt(X) and sqrt(3X/4) at the       */
+  /*  endpoints.  Substituting the linear solution and explicit numbers  */
+  /*  we get                                                             */
   /*                                                                     */
-  /*  a + b <= 131071.99 - c / 122291.84                                 */
+  /*    a + b <= 131071.99 - c / 122291.84    .                          */
   /*                                                                     */
-  /*  In practice we should use a faster and even stronger inequality    */
+  /*  In practice, we should use a faster and even stronger inequality   */
   /*                                                                     */
-  /*  a + b <= 131071 - (c >> 16)                                        */
+  /*    a + b <= 131071 - (c >> 16)                                      */
   /*                                                                     */
   /*  or, alternatively,                                                 */
   /*                                                                     */
-  /*  a + b <= 129895 - (c >> 17)                                        */
+  /*    a + b <= 129895 - (c >> 17)    .                                 */
   /*                                                                     */
   /*  FT_MulFix, on the other hand, is optimized for a small value of    */
   /*  the first argument, when the second argument can be much larger.   */
   /*  This can be achieved by scaling the second argument and the limit  */
-  /*  in the above inequalities. For example,                            */
+  /*  in the above inequalities.  For example,                           */
   /*                                                                     */
-  /*  a + (b >> 8) <= (131071 >> 4)                                      */
+  /*    a + (b >> 8) <= (131071 >> 4)                                    */
   /*                                                                     */
   /*  should work well to avoid the overflow.                            */
   /*                                                                     */
