@@ -358,11 +358,9 @@
   }
 
 
-  /* documentation is in freetype.h */
-
-  /* The FT_MulDiv function has been optimized thanks to ideas from      */
-  /* Graham Asher and Alexei Podtelezhnikov.  The trick is to optimize   */
-  /* a rather common case when everything fits within 32-bits.           */
+  /*  The FT_MulDiv function has been optimized thanks to ideas from     */
+  /*  Graham Asher and Alexei Podtelezhnikov.  The trick is to optimize  */
+  /*  a rather common case when everything fits within 32-bits.          */
   /*                                                                     */
   /*  We compute 'a*b+c/2', then divide it by 'c'. (positive values)     */
   /*                                                                     */
@@ -371,17 +369,24 @@
   /*                                                                     */
   /*  ( a + b ) / 2 <= sqrt( X - c/2 )                                   */
   /*                                                                     */
-  /*  where X = 2^31 - 1.  Now we replace sqrt with a linear function    */
-  /*  that is smaller or equal in the entire range of c from 0 to X;     */
-  /*  it should be equal to sqrt(X) and sqrt(X/2) at the range termini.  */
+  /*  where X = 2^32 - 1, the maximun unsigned 32-bit value, and using   */
+  /*  unsigned arithmetic.  Now we replace sqrt with a linear function   */
+  /*  that is smaller or equal in the entire range of c from 0 to X/2;   */
+  /*  it should be equal to sqrt(X) and sqrt(3X/4) at the termini.       */
   /*  Substituting the linear solution and explicit numbers we get       */
   /*                                                                     */
-  /*  a + b <= 92681.9 - c / 79108.95                                    */
+  /*  a + b <= 131071.99 - c / 122291.84                                 */
   /*                                                                     */
-  /*  In practice we use a faster and even stronger inequality           */
+  /*  In practice we should use a faster and even stronger inequality    */
   /*                                                                     */
-  /*  a + b <= 92681 - (c >> 16)                                         */
+  /*  a + b <= 131071 - (c >> 16)                                        */
   /*                                                                     */
+  /*  or, alternatively,                                                 */
+  /*                                                                     */
+  /*  a + b <= 129895 - (c >> 17)                                        */
+  /*                                                                     */
+
+  /* documentation is in freetype.h */
 
   FT_EXPORT_DEF( FT_Long )
   FT_MulDiv( FT_Long  a,
@@ -402,8 +407,8 @@
     if ( c == 0 )
       a = 0x7FFFFFFFL;
 
-    else if ( (FT_ULong)a + (FT_ULong)b <= 92681UL - ( c >> 16 ) )
-      a = ( a * b + ( c >> 1 ) ) / c;
+    else if ( (FT_ULong)a + b <= 129895UL - ( c >> 17 ) )
+      a = ( (FT_ULong)a * b + ( c >> 1 ) ) / c;
 
     else
     {
@@ -440,8 +445,8 @@
     if ( c == 0 )
       a = 0x7FFFFFFFL;
 
-    else if ( (FT_ULong)a + (FT_ULong)b <= 92681UL )
-      a = a * b / c;
+    else if ( (FT_ULong)a + b <= 131071UL )
+      a = (FT_ULong)a * b / c;
 
     else
     {

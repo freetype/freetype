@@ -1,3 +1,9 @@
+2014-08-19  Alexei Podtelezhnikov  <apodtele@gmail.com>
+
+	[base] Use unsigned calculation in `FT_MulDiv'.
+
+	* src/base/ftcalc.c (FT_MulDiv): Updated to expand 32-bit range.
+
 2014-08-18  Alexei Podtelezhnikov  <apodtele@gmail.com>
 
 	[base] Remove truncation in `FT_DivFix'.
