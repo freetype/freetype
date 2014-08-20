@@ -385,6 +385,15 @@
   /*                                                                     */
   /*  a + b <= 129895 - (c >> 17)                                        */
   /*                                                                     */
+  /*  FT_MulFix, on the other hand, is optimized for a small value of    */
+  /*  the first argument, when the second argument can be much larger.   */
+  /*  This can be achieved by scaling the second argument and the limit  */
+  /*  in the above inequalities. For example,                            */
+  /*                                                                     */
+  /*  a + (b >> 8) <= (131071 >> 4)                                      */
+  /*                                                                     */
+  /*  should work well to avoid the overflow.                            */
+  /*                                                                     */
 
   /* documentation is in freetype.h */
 
@@ -513,7 +522,7 @@
     ua = (FT_ULong)a;
     ub = (FT_ULong)b;
 
-    if ( ua <= 2048 && ub <= 1048576L )
+    if ( ua + ( ub >> 8 ) <= 8191UL )
       ua = ( ua * ub + 0x8000U ) >> 16;
     else
     {
@@ -544,7 +553,7 @@
     ua = (FT_ULong)a;
     ub = (FT_ULong)b;
 
-    if ( ua <= 2048 && ub <= 1048576L )
+    if ( ua + ( ub >> 8 ) <= 8191UL )
       ua = ( ua * ub + 0x8000UL ) >> 16;
     else
     {

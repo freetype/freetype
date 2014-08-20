@@ -1,3 +1,10 @@
+2014-08-20  Alexei Podtelezhnikov  <apodtele@gmail.com>
+
+	[base] Small optimization of `FT_MulFix'.
+
+	* src/base/ftcalc.c (FT_MulFix): Loosen up the condition for direct
+	32-bit calculations.
+
 2014-08-19  Alexei Podtelezhnikov  <apodtele@gmail.com>
 
 	[base] Use unsigned calculation in `FT_MulDiv'.
