@@ -1,3 +1,11 @@
+2014-08-21  Alexei Podtelezhnikov  <apodtele@gmail.com>
+
+	Fix Savannah bug #43033.
+
+	* include/config/ftconfig.h, builds/unix/ftconfig.in,
+	builds/vms/ftconfig.h [FT_LONG64]: Do not disable the macro when
+	64-bit type is `long'.
+
 2014-08-20  Alexei Podtelezhnikov  <apodtele@gmail.com>
 
 	[base] Small optimization of `FT_MulFix'.
