@@ -1,3 +1,10 @@
+2014-08-24  Alexei Podtelezhnikov  <apodtele@gmail.com>
+
+	[truetype] Optimize DELTAP and DELTAC. 
+
+	* src/truetype/ttinterp.c (Ins_DELTAP, Ins_DELTAC): Move ppem
+	calculations outside of the loop.
+
 2014-08-21  Alexei Podtelezhnikov  <apodtele@gmail.com>
 
 	Fix Savannah bug #43033.

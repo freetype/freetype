@@ -7487,9 +7487,9 @@
   static void
   Ins_DELTAP( INS_ARG )
   {
-    FT_ULong   k, nump;
+    FT_ULong   nump, k;
     FT_UShort  A;
-    FT_ULong   C;
+    FT_ULong   C, P;
     FT_Long    B;
 #ifdef TT_CONFIG_OPTION_SUBPIXEL_HINTING
     FT_UShort  B1, B2;
@@ -7523,6 +7523,7 @@
     }
 #endif
 
+    P = (FT_ULong)CURRENT_Ppem();
     nump = (FT_ULong)args[0];   /* some points theoretically may occur more
                                    than once, thus UShort isn't enough */
 
@@ -7567,7 +7568,7 @@
 
         C += CUR.GS.delta_base;
 
-        if ( CURRENT_Ppem() == (FT_Long)C )
+        if ( P == C )
         {
           B = ( (FT_ULong)B & 0xF ) - 8;
           if ( B >= 0 )
@@ -7667,7 +7668,7 @@
   Ins_DELTAC( INS_ARG )
   {
     FT_ULong  nump, k;
-    FT_ULong  A, C;
+    FT_ULong  A, C, P;
     FT_Long   B;
 
 
@@ -7691,6 +7692,7 @@
     }
 #endif
 
+    P = (FT_ULong)CURRENT_Ppem();
     nump = (FT_ULong)args[0];
 
     for ( k = 1; k <= nump; k++ )
@@ -7736,7 +7738,7 @@
 
         C += CUR.GS.delta_base;
 
-        if ( CURRENT_Ppem() == (FT_Long)C )
+        if ( P == C )
         {
           B = ( (FT_ULong)B & 0xF ) - 8;
           if ( B >= 0 )
