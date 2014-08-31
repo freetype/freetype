@@ -347,7 +347,7 @@
             FT_Int64*  y,
             FT_Int64  *z )
   {
-    register FT_UInt32  lo, hi;
+    FT_UInt32  lo, hi;
 
 
     lo = x->lo + y->lo;

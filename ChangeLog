@@ -1,3 +1,11 @@
+2014-08-31  Behdad Esfahbod  <behdad@behdad.org>
+
+	Don't use `register' keyword.  Fixes compiler warnings.
+
+	* src/base/ftcalc.c (FT_Add64) [!FT_LONG64]: Do it.
+	* src/gzip/inftrees.c (huft_build): Ditto.
+	* src/truetype/ttinterp.c (TT_MulFix14_arm): Ditto.
+
 2014-08-24  Alexei Podtelezhnikov  <apodtele@gmail.com>
 
 	[truetype] Optimize DELTAP and DELTAC. 

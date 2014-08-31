@@ -1446,7 +1446,7 @@
   TT_MulFix14_arm( FT_Int32  a,
                    FT_Int    b )
   {
-    register FT_Int32  t, t2;
+    FT_Int32  t, t2;
 
 
 #if defined( __CC_ARM ) || defined( __ARMCC__ )
