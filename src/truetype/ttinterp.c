@@ -172,6 +172,9 @@
 #define CUR_Func_round( d, c ) \
           CUR.func_round( EXEC_ARG_ d, c )
 
+#define CUR_Func_cur_ppem() \
+          CUR.func_cur_ppem( EXEC_ARG )
+
 #define CUR_Func_read_cvt( index ) \
           CUR.func_read_cvt( EXEC_ARG_ index )
 
@@ -183,12 +186,6 @@
 
 #define CURRENT_Ratio() \
           Current_Ratio( EXEC_ARG )
-
-#define CURRENT_Ppem() \
-          Current_Ppem( EXEC_ARG )
-
-#define CUR_Ppem() \
-          Cur_PPEM( EXEC_ARG )
 
 #define INS_SxVTL( a, b, c, d ) \
           Ins_SxVTL( EXEC_ARG_ a, b, c, d )
@@ -1706,8 +1703,15 @@
   }
 
 
-  static FT_Long
+  FT_CALLBACK_DEF( FT_Long )
   Current_Ppem( EXEC_OP )
+  {
+    return CUR.tt_metrics.ppem;
+  }
+
+
+  FT_CALLBACK_DEF( FT_Long )
+  Current_Ppem_Stretched( EXEC_OP )
   {
     return FT_MulFix( CUR.tt_metrics.ppem, CURRENT_Ratio() );
   }
@@ -3089,7 +3093,7 @@
 
 
 #define DO_MPPEM              \
-    args[0] = CURRENT_Ppem();
+    args[0] = CUR_Func_cur_ppem();
 
 
   /* Note: The pointSize should be irrelevant in a given font program; */
@@ -3102,7 +3106,7 @@
 #else
 
 #define DO_MPS                \
-    args[0] = CURRENT_Ppem();
+    args[0] = CUR_Func_cur_ppem();
 
 #endif /* 0 */
 
@@ -7523,7 +7527,7 @@
     }
 #endif
 
-    P = (FT_ULong)CURRENT_Ppem();
+    P = (FT_ULong)CUR_Func_cur_ppem();
     nump = (FT_ULong)args[0];   /* some points theoretically may occur more
                                    than once, thus UShort isn't enough */
 
@@ -7692,7 +7696,7 @@
     }
 #endif
 
-    P = (FT_ULong)CURRENT_Ppem();
+    P = (FT_ULong)CUR_Func_cur_ppem();
     nump = (FT_ULong)args[0];
 
     for ( k = 1; k <= nump; k++ )
@@ -8271,11 +8275,12 @@
     CUR.iup_called = FALSE;
 #endif /* TT_CONFIG_OPTION_SUBPIXEL_HINTING */
 
-    /* set CVT functions */
+    /* set PPEM and CVT functions */
     CUR.tt_metrics.ratio = 0;
     if ( CUR.metrics.x_ppem != CUR.metrics.y_ppem )
     {
       /* non-square pixels, use the stretched routines */
+      CUR.func_cur_ppem  = Current_Ppem_Stretched;
       CUR.func_read_cvt  = Read_CVT_Stretched;
       CUR.func_write_cvt = Write_CVT_Stretched;
       CUR.func_move_cvt  = Move_CVT_Stretched;
@@ -8283,6 +8288,7 @@
     else
     {
       /* square pixels, use normal routines */
+      CUR.func_cur_ppem  = Current_Ppem;
       CUR.func_read_cvt  = Read_CVT;
       CUR.func_write_cvt = Write_CVT;
       CUR.func_move_cvt  = Move_CVT;

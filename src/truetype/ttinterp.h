@@ -4,7 +4,7 @@
 /*                                                                         */
 /*    TrueType bytecode interpreter (specification).                       */
 /*                                                                         */
-/*  Copyright 1996-2007, 2010, 2012-2013 by                                */
+/*  Copyright 1996-2007, 2010, 2012-2014 by                                */
 /*  David Turner, Robert Wilhelm, and Werner Lemberg.                      */
 /*                                                                         */
 /*  This file is part of the FreeType project, and may only be used,       */
@@ -80,6 +80,10 @@ FT_BEGIN_HEADER
   typedef FT_F26Dot6
   (*TT_Project_Func)( EXEC_OP_ FT_Pos   dx,
                                FT_Pos   dy );
+
+  /* getting current ppem.  Take care of non-square pixels if necessary */
+  typedef FT_Long
+  (*TT_Cur_Ppem_Func)( EXEC_OP );
 
   /* reading a cvt value.  Take care of non-square pixels if necessary */
   typedef FT_F26Dot6
@@ -228,11 +232,6 @@ FT_BEGIN_HEADER
     FT_F26Dot6         phase;      /* `SuperRounding'     */
     FT_F26Dot6         threshold;
 
-#if 0
-    /* this seems to be unused */
-    FT_Int             cur_ppem;   /* ppem along the current proj vector */
-#endif
-
     FT_Bool            instruction_trap; /* If `True', the interpreter will */
                                          /* exit after each instruction     */
 
@@ -253,6 +252,8 @@ FT_BEGIN_HEADER
 
     TT_Move_Func       func_move;      /* current point move function */
     TT_Move_Func       func_move_orig; /* move original position function */
+
+    TT_Cur_Ppem_Func   func_cur_ppem;  /* get current proj. ppem value  */
 
     TT_Get_CVT_Func    func_read_cvt;  /* read a cvt entry              */
     TT_Set_CVT_Func    func_write_cvt; /* write a cvt entry (in pixels) */

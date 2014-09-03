@@ -1,3 +1,15 @@
+2014-09-02  Alexei Podtelezhnikov  <apodtele@gmail.com>
+
+	[truetype] Shortcut ppem calculations for square pixels.
+
+	* src/truetype/ttinterp.h (TT_ExecContextRec): New field
+	`cur_ppem_func' with a function pointer.
+	* src/truetype/ttinterp.c (TT_RunIns): Initialize `cur_ppem_func'
+	depending on the pixel geometry to either...
+	(Current_Ppem_Stretched): ... this for stretched pixels.
+	(Current_Ppem): ... or this for square pixels.
+	(DO_MPPEM, DO_MPS, Ins_DELTAP, Ins_DELTAC): Use `cur_ppem_func'.
+
 2014-08-31  Behdad Esfahbod  <behdad@behdad.org>
 
 	Don't use `register' keyword.  Fixes compiler warnings.
@@ -8,7 +20,7 @@
 
 2014-08-24  Alexei Podtelezhnikov  <apodtele@gmail.com>
 
-	[truetype] Optimize DELTAP and DELTAC. 
+	[truetype] Optimize DELTAP and DELTAC.
 
 	* src/truetype/ttinterp.c (Ins_DELTAP, Ins_DELTAC): Move ppem
 	calculations outside of the loop.
