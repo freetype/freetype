@@ -1,3 +1,9 @@
+2014-09-03  Alexei Podtelezhnikov  <apodtele@gmail.com>
+
+	[base] Tighten the overflow check in `FT_MulFix'.
+
+	* src/base/ftcalc.c (FT_MulFix) [!FT_LONG64]: Updated.
+
 2014-09-02  Alexei Podtelezhnikov  <apodtele@gmail.com>
 
 	[truetype] Shortcut ppem calculations for square pixels.

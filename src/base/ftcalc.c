@@ -394,7 +394,8 @@
   /*                                                                     */
   /*    a + (b >> 8) <= (131071 >> 4)                                    */
   /*                                                                     */
-  /*  should work well to avoid the overflow.                            */
+  /*  covers the practical range of use. The actual test below is a bit  */
+  /*  tighter to avoid the border case overflows.                        */
   /*                                                                     */
 
   /* documentation is in freetype.h */
@@ -524,7 +525,7 @@
     ua = (FT_ULong)a;
     ub = (FT_ULong)b;
 
-    if ( ua + ( ub >> 8 ) <= 8191UL )
+    if ( ua + ( ub >> 8 ) <= 8190UL )
       ua = ( ua * ub + 0x8000U ) >> 16;
     else
     {
@@ -555,7 +556,7 @@
     ua = (FT_ULong)a;
     ub = (FT_ULong)b;
 
-    if ( ua + ( ub >> 8 ) <= 8191UL )
+    if ( ua + ( ub >> 8 ) <= 8190UL )
       ua = ( ua * ub + 0x8000UL ) >> 16;
     else
     {
