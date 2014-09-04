@@ -1,5 +1,16 @@
 2014-09-03  Alexei Podtelezhnikov  <apodtele@gmail.com>
 
+	[base] Tighten the overflow check in `FT_DivFix'.
+
+	This fixes a 13-year old bug. The original overflow check should have
+	been updated when rounding was introduced into this function
+	(c2cd00443b).
+
+	* src/base/ftcalc.c (FT_DivFix) [!FT_LONG64]: Updated.
+	* include/freetype.h (FT_DivFix): Updated documentation.
+
+2014-09-03  Alexei Podtelezhnikov  <apodtele@gmail.com>
+
 	[base] Tighten the overflow check in `FT_MulFix'.
 
 	* src/base/ftcalc.c (FT_MulFix) [!FT_LONG64]: Updated.

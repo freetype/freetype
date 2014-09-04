@@ -3807,17 +3807,11 @@ FT_BEGIN_HEADER
   /*    used to divide a given value by a 16.16 fixed-point factor.        */
   /*                                                                       */
   /* <Input>                                                               */
-  /*    a :: The first multiplier.                                         */
-  /*    b :: The second multiplier.  Use a 16.16 factor here whenever      */
-  /*         possible (see note below).                                    */
+  /*    a :: The numerator.                                                */
+  /*    b :: The denominator.  Use a 16.16 factor here.                    */
   /*                                                                       */
   /* <Return>                                                              */
   /*    The result of `(a*0x10000)/b'.                                     */
-  /*                                                                       */
-  /* <Note>                                                                */
-  /*    The optimization for FT_DivFix() is simple: If (a~<<~16) fits in   */
-  /*    32~bits, then the division is computed directly.  Otherwise, we    */
-  /*    use a specialized version of @FT_MulDiv.                           */
   /*                                                                       */
   FT_EXPORT( FT_Long )
   FT_DivFix( FT_Long  a,

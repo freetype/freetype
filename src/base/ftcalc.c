@@ -397,6 +397,13 @@
   /*  covers the practical range of use. The actual test below is a bit  */
   /*  tighter to avoid the border case overflows.                        */
   /*                                                                     */
+  /*  In the case of FT_DivFix, the direct overflow check                */
+  /*                                                                     */
+  /*    a << 16 <= X - c/2                                               */
+  /*                                                                     */
+  /*  is scaled down by 2^16 and we use                                  */
+  /*                                                                     */
+  /*    a <= 65535 - (c >> 17)    .                                      */
 
   /* documentation is in freetype.h */
 
@@ -593,7 +600,7 @@
       /* check for division by 0 */
       q = 0x7FFFFFFFL;
     }
-    else if ( ( a >> 16 ) == 0 )
+    else if ( a <= 65535L - ( b >> 17 ) )
     {
       /* compute result directly */
       q = (FT_Long)( ( ( (FT_ULong)a << 16 ) + ( b >> 1 ) ) / b );
