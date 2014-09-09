@@ -1,3 +1,10 @@
+2014-09-08  Alexei Podtelezhnikov  <apodtele@gmail.com>
+
+	Fix Savannah bug #43153.
+
+	* src/psaux/psconv.c (PS_Conv_ToFixed): Add protection against
+	overflow in `divider'. 
+
 2014-09-03  Alexei Podtelezhnikov  <apodtele@gmail.com>
 
 	[base] Tighten the overflow check in `FT_DivFix'.
