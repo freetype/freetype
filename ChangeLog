@@ -1,5 +1,11 @@
 2014-09-08  Alexei Podtelezhnikov  <apodtele@gmail.com>
 
+	[base] Tighten the overflow check in `FT_MulDiv'.
+
+	* src/base/ftcalc.c (FT_MulDiv) [!FT_LONG64]: Updated.
+
+2014-09-08  Alexei Podtelezhnikov  <apodtele@gmail.com>
+
 	Fix Savannah bug #43153.
 
 	* src/psaux/psconv.c (PS_Conv_ToFixed): Add protection against

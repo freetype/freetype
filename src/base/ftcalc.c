@@ -385,7 +385,7 @@
   /*                                                                     */
   /*  or, alternatively,                                                 */
   /*                                                                     */
-  /*    a + b <= 129895 - (c >> 17)    .                                 */
+  /*    a + b <= 129894 - (c >> 17)    .                                 */
   /*                                                                     */
   /*  FT_MulFix, on the other hand, is optimized for a small value of    */
   /*  the first argument, when the second argument can be much larger.   */
@@ -426,7 +426,7 @@
     if ( c == 0 )
       a = 0x7FFFFFFFL;
 
-    else if ( (FT_ULong)a + b <= 129895UL - ( c >> 17 ) )
+    else if ( (FT_ULong)a + b <= 129894UL - ( c >> 17 ) )
       a = ( (FT_ULong)a * b + ( c >> 1 ) ) / c;
 
     else
