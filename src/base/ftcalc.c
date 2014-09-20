@@ -166,11 +166,10 @@
              FT_Long  b,
              FT_Long  c )
   {
-    FT_Int   s;
+    FT_Int   s = 1;
     FT_Long  d;
 
 
-    s = 1;
     if ( a < 0 ) { a = -a; s = -1; }
     if ( b < 0 ) { b = -b; s = -s; }
     if ( c < 0 ) { c = -c; s = -s; }
@@ -189,11 +188,10 @@
                       FT_Long  b,
                       FT_Long  c )
   {
-    FT_Int   s;
+    FT_Int   s = 1;
     FT_Long  d;
 
 
-    s = 1;
     if ( a < 0 ) { a = -a; s = -1; }
     if ( b < 0 ) { b = -b; s = -s; }
     if ( c < 0 ) { c = -c; s = -s; }
@@ -221,17 +219,8 @@
     FT_Long  c;
 
 
-    if ( a < 0 )
-    {
-      a = -a;
-      s = -1;
-    }
-
-    if ( b < 0 )
-    {
-      b = -b;
-      s = -s;
-    }
+    if ( a < 0 ) { a = -a; s = -1; }
+    if ( b < 0 ) { b = -b; s = -s; }
 
     c = (FT_Long)( ( (FT_Int64)a * b + 0x8000L ) >> 16 );
 
@@ -251,23 +240,11 @@
     FT_Long  q;
 
 
-    if ( a < 0 )
-    {
-      a = -a;
-      s = -1;
-    }
-    if ( b < 0 )
-    {
-      b = -b;
-      s = -s;
-    }
+    if ( a < 0 ) { a = -a; s = -1; }
+    if ( b < 0 ) { b = -b; s = -s; }
 
-    if ( b == 0 )
-      /* check for division by 0 */
-      q = 0x7FFFFFFFL;
-    else
-      /* compute result directly */
-      q = (FT_Long)( ( ( (FT_UInt64)a << 16 ) + ( b >> 1 ) ) / b );
+    q = (FT_Long)( b > 0 ? ( ( (FT_UInt64)a << 16 ) + ( b >> 1 ) ) / b
+                         : 0x7FFFFFFFL );
 
     return ( s < 0 ? -q : q );
   }
@@ -412,16 +389,16 @@
              FT_Long  b,
              FT_Long  c )
   {
-    long  s;
+    FT_Int  s = 1;
 
 
     /* XXX: this function does not allow 64-bit arguments */
     if ( a == 0 || b == c )
       return a;
 
-    s  = a; a = FT_ABS( a );
-    s ^= b; b = FT_ABS( b );
-    s ^= c; c = FT_ABS( c );
+    if ( a < 0 ) { a = -a; s = -1; }
+    if ( b < 0 ) { b = -b; s = -s; }
+    if ( c < 0 ) { c = -c; s = -s; }
 
     if ( c == 0 )
       a = 0x7FFFFFFFL;
@@ -451,15 +428,15 @@
                       FT_Long  b,
                       FT_Long  c )
   {
-    long  s;
+    FT_Int  s = 1;
 
 
     if ( a == 0 || b == c )
       return a;
 
-    s  = a; a = FT_ABS( a );
-    s ^= b; b = FT_ABS( b );
-    s ^= c; c = FT_ABS( c );
+    if ( a < 0 ) { a = -a; s = -1; }
+    if ( b < 0 ) { b = -b; s = -s; }
+    if ( c < 0 ) { c = -c; s = -s; }
 
     if ( c == 0 )
       a = 0x7FFFFFFFL;
@@ -550,15 +527,15 @@
 
 #else /* 0 */
 
-    FT_Long   s;
+    FT_Int    s = 1;
     FT_ULong  ua, ub;
 
 
     if ( a == 0 || b == 0x10000L )
       return a;
 
-    s  = a; a = FT_ABS( a );
-    s ^= b; b = FT_ABS( b );
+    if ( a < 0 ) { a = -a; s = -1; }
+    if ( b < 0 ) { b = -b; s = -s; }
 
     ua = (FT_ULong)a;
     ub = (FT_ULong)b;
@@ -587,13 +564,13 @@
   FT_DivFix( FT_Long  a,
              FT_Long  b )
   {
-    FT_Long  s;
+    FT_Int   s = 1;
     FT_Long  q;
 
 
     /* XXX: this function does not allow 64-bit arguments */
-    s  = a; a = FT_ABS( a );
-    s ^= b; b = FT_ABS( b );
+    if ( a < 0 ) { a = -a; s = -1; }
+    if ( b < 0 ) { b = -b; s = -s; }
 
     if ( b == 0 )
     {

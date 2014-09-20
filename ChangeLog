@@ -1,4 +1,8 @@
-2014-09-08  Alexei Podtelezhnikov  <apodtele@gmail.com>
+2014-09-19  Alexei Podtelezhnikov  <apodtele@gmail.com>
+
+	* src/base/ftcalc.c: Harmonize code.
+
+2014-09-15  Alexei Podtelezhnikov  <apodtele@gmail.com>
 
 	[base] Tighten the overflow check in `FT_MulDiv'.
 
