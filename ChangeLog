@@ -1,3 +1,10 @@
+2014-09-22  Werner Lemberg  <wl@gnu.org>
+
+	[autofit] Minor code streamlining.
+
+	* src/autofit/afhints.c (af_axis_hints_new_edge): Remove redundant
+	initialization.
+
 2014-09-19  Alexei Podtelezhnikov  <apodtele@gmail.com>
 
 	* src/base/ftcalc.c: Harmonize code.

@@ -74,7 +74,8 @@
   }
 
 
-  /* Get new edge for given axis, direction, and position. */
+  /* Get new edge for given axis, direction, and position, */
+  /* without initializing the edge itself.                 */
 
   FT_LOCAL( FT_Error )
   af_axis_hints_new_edge( AF_AxisHints  axis,
@@ -129,10 +130,6 @@
     }
 
     axis->num_edges++;
-
-    FT_ZERO( edge );
-    edge->fpos = (FT_Short)fpos;
-    edge->dir  = (FT_Char)dir;
 
   Exit:
     *anedge = edge;
