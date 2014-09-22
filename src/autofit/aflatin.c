@@ -1293,17 +1293,19 @@
           /* this is the start of a new segment! */
           segment_dir = (AF_Direction)point->out_dir;
 
-          /* clear all segment fields */
           error = af_axis_hints_new_segment( axis, memory, &segment );
           if ( error )
             goto Exit;
 
-          segment[0]        = seg0;
+          /* clear all segment fields */
+          segment[0] = seg0;
+
           segment->dir      = (FT_Char)segment_dir;
           min_pos = max_pos = point->u;
           segment->first    = point;
           segment->last     = point;
-          on_edge           = 1;
+
+          on_edge = 1;
         }
 
         point = point->next;
