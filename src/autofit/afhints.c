@@ -201,7 +201,7 @@
 
     for ( point = points; point < limit; point++ )
       AF_DUMP(( "  [ %5d | %5d | %5d | %6.2f | %6.2f"
-                " | %5.2f | %5.2f | %c%c%c%c%c%c ]\n",
+                " | %5.2f | %5.2f | %c ]\n",
                 point - points,
                 point->fx,
                 point->fy,
@@ -209,12 +209,7 @@
                 point->oy / 64.0,
                 point->x / 64.0,
                 point->y / 64.0,
-                ( point->flags & AF_FLAG_WEAK_INTERPOLATION ) ? 'w' : ' ',
-                ( point->flags & AF_FLAG_INFLECTION )         ? 'i' : ' ',
-                ( point->flags & AF_FLAG_EXTREMA_X )          ? '<' : ' ',
-                ( point->flags & AF_FLAG_EXTREMA_Y )          ? 'v' : ' ',
-                ( point->flags & AF_FLAG_ROUND_X )            ? '(' : ' ',
-                ( point->flags & AF_FLAG_ROUND_Y )            ? 'u' : ' '));
+                ( point->flags & AF_FLAG_WEAK_INTERPOLATION ) ? 'w' : ' '));
     AF_DUMP(( "\n" ));
   }
 #ifdef __cplusplus
@@ -1076,8 +1071,7 @@
         /* if this point is candidate to weak interpolation, we       */
         /* interpolate it after all strong points have been processed */
 
-        if (  ( point->flags & AF_FLAG_WEAK_INTERPOLATION ) &&
-             !( point->flags & AF_FLAG_INFLECTION )         )
+        if ( ( point->flags & AF_FLAG_WEAK_INTERPOLATION ) )
           continue;
 
         if ( dim == AF_DIMENSION_VERT )
