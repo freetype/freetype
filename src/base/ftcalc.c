@@ -303,16 +303,14 @@
     i = 32;
     do
     {
-      r <<= 1;
       q <<= 1;
-      r  |= lo >> 31;
+      r   = ( r << 1 ) | ( lo >> 31 ); lo <<= 1;  /* left 64-bit shift */
 
       if ( r >= y )
       {
         r -= y;
         q |= 1;
       }
-      lo <<= 1;
     } while ( --i );
 
     return q;
@@ -416,7 +414,10 @@
       temp2.hi = 0;
       temp2.lo = (FT_UInt32)(c >> 1);
       FT_Add64( &temp, &temp2, &temp );
-      a = ft_div64by32( temp.hi, temp.lo, (FT_Int32)c );
+
+      /* last attempt to ditch long division */
+      a = temp.hi == 0 ? temp.lo / c
+                       : ft_div64by32( temp.hi, temp.lo, (FT_Int32)c );
     }
 
     return ( s < 0 ? -a : a );
@@ -450,7 +451,10 @@
 
 
       ft_multo64( (FT_Int32)a, (FT_Int32)b, &temp );
-      a = ft_div64by32( temp.hi, temp.lo, (FT_Int32)c );
+
+      /* last attempt to ditch long division */
+      a = temp.hi == 0 ? temp.lo / c
+                       : ft_div64by32( temp.hi, temp.lo, (FT_Int32)c );
     }
 
     return ( s < 0 ? -a : a );

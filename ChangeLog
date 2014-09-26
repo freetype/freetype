@@ -1,3 +1,14 @@
+2014-09-25  Alexei Podtelezhnikov  <apodtele@gmail.com>
+
+	[base] Avoid unnecessary long division.
+
+	This applies to `FT_MulDiv' but not to `FT_DivFix', where overflows or
+	lack thereof are predicted accurately.
+
+	* src/base/ftcalc.c (ft_div64by32): Improve readability.
+	(FT_MulDiv, FT_MulDiv_No_Round) [!FT_LONG64]: Use straight division
+	when multiplication stayed within 32 bits.
+
 2014-09-24  Werner Lemberg  <wl@gnu.org>
 
 	[autofit] Minor clean-ups.
