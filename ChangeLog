@@ -1,3 +1,10 @@
+2014-09-30  Alexei Podtelezhnikov  <apodtele@gmail.com>
+
+	[base] Clean up.
+
+	* src/base/ftcalc.c (FT_MOVE_SIGN): New macro for frequently used
+	code.
+
 2014-09-25  Alexei Podtelezhnikov  <apodtele@gmail.com>
 
 	[base] Avoid unnecessary long division.

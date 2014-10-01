@@ -68,6 +68,16 @@
 #define FT_COMPONENT  trace_calc
 
 
+  /* transfer sign leaving a positive number */
+#define FT_MOVE_SIGN( x, s ) \
+  FT_BEGIN_STMNT          \
+    if ( x < 0 )          \
+      {                   \
+        x = -x;           \
+        s = -s;           \
+      }                   \
+  FT_END_STMNT
+
   /* The following three functions are available regardless of whether */
   /* FT_LONG64 is defined.                                             */
 
@@ -170,9 +180,9 @@
     FT_Long  d;
 
 
-    if ( a < 0 ) { a = -a; s = -1; }
-    if ( b < 0 ) { b = -b; s = -s; }
-    if ( c < 0 ) { c = -c; s = -s; }
+    FT_MOVE_SIGN( a, s );
+    FT_MOVE_SIGN( b, s );
+    FT_MOVE_SIGN( c, s );
 
     d = (FT_Long)( c > 0 ? ( (FT_Int64)a * b + ( c >> 1 ) ) / c
                          : 0x7FFFFFFFL );
@@ -192,9 +202,9 @@
     FT_Long  d;
 
 
-    if ( a < 0 ) { a = -a; s = -1; }
-    if ( b < 0 ) { b = -b; s = -s; }
-    if ( c < 0 ) { c = -c; s = -s; }
+    FT_MOVE_SIGN( a, s );
+    FT_MOVE_SIGN( b, s );
+    FT_MOVE_SIGN( c, s );
 
     d = (FT_Long)( c > 0 ? (FT_Int64)a * b / c
                          : 0x7FFFFFFFL );
@@ -219,8 +229,8 @@
     FT_Long  c;
 
 
-    if ( a < 0 ) { a = -a; s = -1; }
-    if ( b < 0 ) { b = -b; s = -s; }
+    FT_MOVE_SIGN( a, s );
+    FT_MOVE_SIGN( b, s );
 
     c = (FT_Long)( ( (FT_Int64)a * b + 0x8000L ) >> 16 );
 
@@ -240,8 +250,8 @@
     FT_Long  q;
 
 
-    if ( a < 0 ) { a = -a; s = -1; }
-    if ( b < 0 ) { b = -b; s = -s; }
+    FT_MOVE_SIGN( a, s );
+    FT_MOVE_SIGN( b, s );
 
     q = (FT_Long)( b > 0 ? ( ( (FT_UInt64)a << 16 ) + ( b >> 1 ) ) / b
                          : 0x7FFFFFFFL );
@@ -394,9 +404,9 @@
     if ( a == 0 || b == c )
       return a;
 
-    if ( a < 0 ) { a = -a; s = -1; }
-    if ( b < 0 ) { b = -b; s = -s; }
-    if ( c < 0 ) { c = -c; s = -s; }
+    FT_MOVE_SIGN( a, s );
+    FT_MOVE_SIGN( b, s );
+    FT_MOVE_SIGN( c, s );
 
     if ( c == 0 )
       a = 0x7FFFFFFFL;
@@ -435,9 +445,9 @@
     if ( a == 0 || b == c )
       return a;
 
-    if ( a < 0 ) { a = -a; s = -1; }
-    if ( b < 0 ) { b = -b; s = -s; }
-    if ( c < 0 ) { c = -c; s = -s; }
+    FT_MOVE_SIGN( a, s );
+    FT_MOVE_SIGN( b, s );
+    FT_MOVE_SIGN( c, s );
 
     if ( c == 0 )
       a = 0x7FFFFFFFL;
@@ -538,8 +548,8 @@
     if ( a == 0 || b == 0x10000L )
       return a;
 
-    if ( a < 0 ) { a = -a; s = -1; }
-    if ( b < 0 ) { b = -b; s = -s; }
+    FT_MOVE_SIGN( a, s );
+    FT_MOVE_SIGN( b, s );
 
     ua = (FT_ULong)a;
     ub = (FT_ULong)b;
@@ -573,8 +583,9 @@
 
 
     /* XXX: this function does not allow 64-bit arguments */
-    if ( a < 0 ) { a = -a; s = -1; }
-    if ( b < 0 ) { b = -b; s = -s; }
+
+    FT_MOVE_SIGN( a, s );
+    FT_MOVE_SIGN( b, s );
 
     if ( b == 0 )
     {
