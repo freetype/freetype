@@ -118,27 +118,27 @@
     FT_Int shift = 0;
 
     /* determine msb bit index in `shift' */
-    if ( z >= ( 1L << 16 ) )
+    if ( z & 0xFFFF0000U )
     {
       z     >>= 16;
       shift  += 16;
     }
-    if ( z >= ( 1L << 8 ) )
+    if ( z & 0x0000FF00U )
     {
       z     >>= 8;
       shift  += 8;
     }
-    if ( z >= ( 1L << 4 ) )
+    if ( z & 0x000000F0U )
     {
       z     >>= 4;
       shift  += 4;
     }
-    if ( z >= ( 1L << 2 ) )
+    if ( z & 0x0000000CU )
     {
       z     >>= 2;
       shift  += 2;
     }
-    if ( z >= ( 1L << 1 ) )
+    if ( z & 0x00000002U )
     {
    /* z     >>= 1; */
       shift  += 1;
