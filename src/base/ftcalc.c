@@ -382,7 +382,7 @@
   /*  covers the practical range of use. The actual test below is a bit  */
   /*  tighter to avoid the border case overflows.                        */
   /*                                                                     */
-  /*  In the case of FT_DivFix, the direct overflow check                */
+  /*  In the case of FT_DivFix, the exact overflow check                 */
   /*                                                                     */
   /*    a << 16 <= X - c/2                                               */
   /*                                                                     */
@@ -419,15 +419,16 @@
       FT_Int64  temp, temp2;
 
 
-      ft_multo64( (FT_Int32)a, (FT_Int32)b, &temp );
+      ft_multo64( a, b, &temp );
 
       temp2.hi = 0;
-      temp2.lo = (FT_UInt32)(c >> 1);
+      temp2.lo = c >> 1;
+
       FT_Add64( &temp, &temp2, &temp );
 
       /* last attempt to ditch long division */
       a = temp.hi == 0 ? temp.lo / c
-                       : ft_div64by32( temp.hi, temp.lo, (FT_Int32)c );
+                       : ft_div64by32( temp.hi, temp.lo, c );
     }
 
     return ( s < 0 ? -a : a );
@@ -460,11 +461,11 @@
       FT_Int64  temp;
 
 
-      ft_multo64( (FT_Int32)a, (FT_Int32)b, &temp );
+      ft_multo64( a, b, &temp );
 
       /* last attempt to ditch long division */
       a = temp.hi == 0 ? temp.lo / c
-                       : ft_div64by32( temp.hi, temp.lo, (FT_Int32)c );
+                       : ft_div64by32( temp.hi, temp.lo, c );
     }
 
     return ( s < 0 ? -a : a );
@@ -603,12 +604,13 @@
       FT_Int64  temp, temp2;
 
 
-      temp.hi  = (FT_Int32)( a >> 16 );
-      temp.lo  = (FT_UInt32)a << 16;
+      temp.hi  = a >> 16; 
+      temp.lo  = a << 16;
       temp2.hi = 0;
-      temp2.lo = (FT_UInt32)( b >> 1 );
+      temp2.lo = b >> 1; 
+
       FT_Add64( &temp, &temp2, &temp );
-      q = (FT_Long)ft_div64by32( temp.hi, temp.lo, (FT_Int32)b );
+      q = (FT_Long)ft_div64by32( temp.hi, temp.lo, b );
     }
 
     return ( s < 0 ? -q : q );

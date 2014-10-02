@@ -1,5 +1,9 @@
 2014-10-01  Alexei Podtelezhnikov  <apodtele@gmail.com>
 
+	* src/base/ftcalc.c: Remove miscellaneous type casts.
+
+2014-10-01  Alexei Podtelezhnikov  <apodtele@gmail.com>
+
 	[base] Use more common `FT_MSB' implementation with masks.
 
 	* src/base/ftcalc.c (FT_MSB): Updated.
