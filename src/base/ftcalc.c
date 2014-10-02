@@ -70,12 +70,12 @@
 
   /* transfer sign leaving a positive number */
 #define FT_MOVE_SIGN( x, s ) \
-  FT_BEGIN_STMNT          \
-    if ( x < 0 )          \
-      {                   \
-        x = -x;           \
-        s = -s;           \
-      }                   \
+  FT_BEGIN_STMNT             \
+    if ( x < 0 )             \
+    {                        \
+      x = -x;                \
+      s = -s;                \
+    }                        \
   FT_END_STMNT
 
   /* The following three functions are available regardless of whether */
