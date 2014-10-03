@@ -304,17 +304,24 @@
     FT_Int     i;
 
 
-    q = 0;
-    r = hi;
-
-    if ( r >= y )
+    if ( hi >= y )
       return (FT_UInt32)0x7FFFFFFFL;
 
-    i = 32;
+    /* We shift as many bits as we can into the high register, perform     */ 
+    /* 32-bit division with modulo there, then work through the remaining  */
+    /* bits with long division. This optimization is especially noticeable */
+    /* for smaller dividends that barely use the high register.            */
+
+    i = 31 - FT_MSB( hi );
+    r = ( hi << i ) | ( lo >> ( 32 - i ) ); lo <<= i; /* left 64-bit shift */
+    q = r / y;
+    r -= q * y;   /* remainder */
+
+    i = 32 - i;   /* bits remaining in low register */
     do
     {
       q <<= 1;
-      r   = ( r << 1 ) | ( lo >> 31 ); lo <<= 1;  /* left 64-bit shift */
+      r   = ( r << 1 ) | ( lo >> 31 ); lo <<= 1;
 
       if ( r >= y )
       {
