@@ -42,6 +42,25 @@
   } TBBox_Rec;
 
 
+#define FT_UPDATE_BBOX(p, bbox)       \
+  FT_BEGIN_STMNT                      \
+    if ( p->x < bbox.xMin )           \
+      bbox.xMin = p->x;               \
+    if ( p->x > bbox.xMax )           \
+      bbox.xMax = p->x;               \
+    if ( p->y < bbox.yMin )           \
+      bbox.yMin = p->y;               \
+    if ( p->y > bbox.yMax )           \
+      bbox.yMax = p->y;               \
+  FT_END_STMNT
+
+#define CHECK_X( p, bbox )  \
+          ( p->x < bbox.xMin || p->x > bbox.xMax )
+
+#define CHECK_Y( p, bbox )  \
+          ( p->y < bbox.yMin || p->y > bbox.yMax )
+
+
   /*************************************************************************/
   /*                                                                       */
   /* <Function>                                                            */
@@ -70,13 +89,6 @@
 
     return 0;
   }
-
-
-#define CHECK_X( p, bbox )  \
-          ( p->x < bbox.xMin || p->x > bbox.xMax )
-
-#define CHECK_Y( p, bbox )  \
-          ( p->y < bbox.yMin || p->y > bbox.yMax )
 
 
   /*************************************************************************/
@@ -420,26 +432,10 @@ FT_DEFINE_OUTLINE_FUNCS(bbox_interface,
 
     for ( n = 1; n < outline->n_points; n++ )
     {
-      FT_Pos  x = vec->x;
-      FT_Pos  y = vec->y;
-
-
-      /* update control box */
-      if ( x < cbox.xMin ) cbox.xMin = x;
-      if ( x > cbox.xMax ) cbox.xMax = x;
-
-      if ( y < cbox.yMin ) cbox.yMin = y;
-      if ( y > cbox.yMax ) cbox.yMax = y;
+      FT_UPDATE_BBOX( vec, cbox);
 
       if ( FT_CURVE_TAG( outline->tags[n] ) == FT_CURVE_TAG_ON )
-      {
-        /* update bbox for `on' points only */
-        if ( x < bbox.xMin ) bbox.xMin = x;
-        if ( x > bbox.xMax ) bbox.xMax = x;
-
-        if ( y < bbox.yMin ) bbox.yMin = y;
-        if ( y > bbox.yMax ) bbox.yMax = y;
-      }
+        FT_UPDATE_BBOX( vec, bbox);
 
       vec++;
     }

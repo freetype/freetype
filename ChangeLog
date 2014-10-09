@@ -1,3 +1,10 @@
+2014-10-08  Alexei Podtelezhnikov  <apodtele@gmail.com>
+
+	[base] Introduce and use new macro `FT_UPDATE_BBOX'
+
+	* src/base/ftbbox.c (FT_UPDATE_BBOX): New macro.
+	(FT_Outline_Get_BBox): Use it here.
+
 2014-10-02  Alexei Podtelezhnikov  <apodtele@gmail.com>
 
 	[base] Significant optimization of `ft_div64by32'
