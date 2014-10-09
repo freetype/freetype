@@ -1,5 +1,13 @@
 2014-10-08  Alexei Podtelezhnikov  <apodtele@gmail.com>
 
+	[base] Fix Savannah bug #43356.
+
+	* src/base/ftbbox.c (BBox_Move_To, BBox_Conic_To): Update bbox in case
+	of implicit `to'. 
+	(BBox_Line_To): New emitter that does not update bbox.
+
+2014-10-08  Alexei Podtelezhnikov  <apodtele@gmail.com>
+
 	[base] Introduce and use new macro `FT_UPDATE_BBOX'
 
 	* src/base/ftbbox.c (FT_UPDATE_BBOX): New macro.

@@ -4,7 +4,7 @@
 /*                                                                         */
 /*    FreeType bbox computation (body).                                    */
 /*                                                                         */
-/*  Copyright 1996-2002, 2004, 2006, 2010, 2013 by                         */
+/*  Copyright 1996-2002, 2004, 2006, 2010, 2013, 2014 by                   */
 /*  David Turner, Robert Wilhelm, and Werner Lemberg.                      */
 /*                                                                         */
 /*  This file is part of the FreeType project, and may only be used        */
@@ -67,10 +67,10 @@
   /*    BBox_Move_To                                                       */
   /*                                                                       */
   /* <Description>                                                         */
-  /*    This function is used as a `move_to' and `line_to' emitter during  */
+  /*    This function is used as a `move_to' emitter during                */
   /*    FT_Outline_Decompose().  It simply records the destination point   */
-  /*    in `user->last'; no further computations are necessary since we    */
-  /*    use the cbox as the starting bbox which must be refined.           */
+  /*    in `user->last'. We also update bbox in case contour starts with   */
+  /*    an implicit `on' point.                                            */
   /*                                                                       */
   /* <Input>                                                               */
   /*    to   :: A pointer to the destination vector.                       */
@@ -83,6 +83,38 @@
   /*                                                                       */
   static int
   BBox_Move_To( FT_Vector*  to,
+                TBBox_Rec*  user )
+  {
+    FT_UPDATE_BBOX( to, user->bbox );
+ 
+    user->last = *to;
+
+    return 0;
+  }
+
+
+  /*************************************************************************/
+  /*                                                                       */
+  /* <Function>                                                            */
+  /*    BBox_Line_To                                                       */
+  /*                                                                       */
+  /* <Description>                                                         */
+  /*    This function is used as a `line_to' emitter during                */
+  /*    FT_Outline_Decompose().  It simply records the destination point   */
+  /*    in `user->last'; no further computations are necessary because     */
+  /*    bbox already contains both explicit ends of the line segment.      */
+  /*                                                                       */
+  /* <Input>                                                               */
+  /*    to   :: A pointer to the destination vector.                       */
+  /*                                                                       */
+  /* <InOut>                                                               */
+  /*    user :: A pointer to the current walk context.                     */
+  /*                                                                       */
+  /* <Return>                                                              */
+  /*    Always 0.  Needed for the interface only.                          */
+  /*                                                                       */
+  static int
+  BBox_Line_To( FT_Vector*  to,
                 TBBox_Rec*  user )
   {
     user->last = *to;
@@ -167,8 +199,8 @@
                  FT_Vector*  to,
                  TBBox_Rec*  user )
   {
-    /* we don't need to check `to' since it is always an `on' point, thus */
-    /* within the bbox                                                    */
+    /* in case `to' is implicit and not included in bbox yet */
+    FT_UPDATE_BBOX( to, user->bbox );
 
     if ( CHECK_X( control, user->bbox ) )
       BBox_Conic_Check( user->last.x,
@@ -389,7 +421,7 @@
 
 FT_DEFINE_OUTLINE_FUNCS(bbox_interface,
     (FT_Outline_MoveTo_Func) BBox_Move_To,
-    (FT_Outline_LineTo_Func) BBox_Move_To,
+    (FT_Outline_LineTo_Func) BBox_Line_To,
     (FT_Outline_ConicTo_Func)BBox_Conic_To,
     (FT_Outline_CubicTo_Func)BBox_Cubic_To,
     0, 0
