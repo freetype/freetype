@@ -1,3 +1,10 @@
+2014-10-11  Alexei Podtelezhnikov  <apodtele@gmail.com>
+
+	[base] Small bbox correction.
+
+	* src/base/ftbbox.c (FT_Outline_Get_BBox): Start from nonsense bbox
+	instead of initial point that could be `off' in conic outlines. 
+
 2014-10-08  Alexei Podtelezhnikov  <apodtele@gmail.com>
 
 	[base] Fix Savannah bug #43356.

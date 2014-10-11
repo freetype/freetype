@@ -433,8 +433,8 @@ FT_DEFINE_OUTLINE_FUNCS(bbox_interface,
   FT_Outline_Get_BBox( FT_Outline*  outline,
                        FT_BBox     *abbox )
   {
-    FT_BBox     cbox;
-    FT_BBox     bbox;
+    FT_BBox     cbox = { 0x7FFFFFFF, 0x7FFFFFFF, -0x7FFFFFFF, -0x7FFFFFFF };
+    FT_BBox     bbox = { 0x7FFFFFFF, 0x7FFFFFFF, -0x7FFFFFFF, -0x7FFFFFFF };
     FT_Vector*  vec;
     FT_UShort   n;
 
@@ -458,11 +458,8 @@ FT_DEFINE_OUTLINE_FUNCS(bbox_interface,
     /* coincide, we exit immediately.                             */
 
     vec = outline->points;
-    bbox.xMin = bbox.xMax = cbox.xMin = cbox.xMax = vec->x;
-    bbox.yMin = bbox.yMax = cbox.yMin = cbox.yMax = vec->y;
-    vec++;
 
-    for ( n = 1; n < outline->n_points; n++ )
+    for ( n = 0; n < outline->n_points; n++ )
     {
       FT_UPDATE_BBOX( vec, cbox);
 
