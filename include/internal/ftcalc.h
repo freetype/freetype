@@ -187,7 +187,7 @@ FT_BEGIN_HEADER
   {
     /* Temporarily disable the warning that C90 doesn't support */
     /* `long long'.                                             */
-#if ( __GNUC__ > 4 ) || ( ( __GNUC__ == 4 ) && ( __GNUC_MINOR__ >= 6 ) )
+#if __GNUC__ > 4 || ( __GNUC__ == 4 && __GNUC_MINOR__ >= 6 )
 #pragma GCC diagnostic push
 #pragma GCC diagnostic ignored "-Wlong-long"
 #endif
@@ -229,7 +229,7 @@ FT_BEGIN_HEADER
     return (FT_Int32)result;
 #endif
 
-#if ( __GNUC__ > 4 ) || ( ( __GNUC__ == 4 ) && ( __GNUC_MINOR__ >= 6 ) )
+#if __GNUC__ > 4 || ( __GNUC__ == 4 && __GNUC_MINOR__ >= 6 )
 #pragma GCC diagnostic pop
 #endif
   }
@@ -328,8 +328,8 @@ FT_BEGIN_HEADER
    */
 
 #ifndef  FT_CONFIG_OPTION_NO_ASSEMBLER
-#if defined( __GNUC__ )
-#if ( __GNUC__ > 3 ) || ( ( __GNUC__ == 3 ) && ( __GNUC_MINOR__ >= 4 ) )
+#if defined( __GNUC__ )                                          && \
+    ( __GNUC__ > 3 || ( __GNUC__ == 3 && __GNUC_MINOR__ >= 4 ) )
 
 #if FT_SIZEOF_INT == 4
 
@@ -341,7 +341,6 @@ FT_BEGIN_HEADER
 
 #endif
 
-#endif
 #endif /* __GNUC__ */
 #endif /* !FT_CONFIG_OPTION_NO_ASSEMBLER */
 
