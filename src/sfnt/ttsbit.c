@@ -505,6 +505,13 @@
 
       p += 3;
     }
+    else
+    {
+      /* avoid uninitialized data in case there is no vertical info -- */
+      metrics->vertBearingX = 0;
+      metrics->vertBearingY = 0;
+      metrics->vertAdvance  = metrics->width;
+    }
 
     decoder->metrics_loaded = 1;
     *pp = p;
