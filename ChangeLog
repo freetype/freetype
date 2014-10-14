@@ -1,3 +1,10 @@
+2014-10-14  David Weiß  <David.Weiss@ptvgroup.com>
+
+	[build] Better optimization settings for vc2010 solution file.
+
+	* builds/windows/vc2010/freetype.sln,
+	builds/windows/vc2010/freetype.vcxproj: Updated.
+
 2014-10-14  Werner Lemberg  <wl@gnu.org>
 
 	[autofit] Adjust Devenagari character range.
