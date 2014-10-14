@@ -1,3 +1,10 @@
+2014-10-14  Werner Lemberg  <wl@gnu.org>
+
+	[autofit] Adjust Devenagari character range.
+
+	* src/autofit/afranges.c (af_deva_uniranges): Omit characters that
+	are common to all other Indic scripts.
+
 2014-10-12  Werner Lemberg  <wl@gnu.org>
 
 	[sfnt] Fix Savannah bug #43392.

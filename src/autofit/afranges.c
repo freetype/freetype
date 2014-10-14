@@ -28,9 +28,19 @@
     AF_UNIRANGE_REC(       0UL,       0UL )
   };
 
+  /* there are some characters in the Devanagari Unicode block that are    */
+  /* generic to Indic scripts; we omit them so that their presence doesn't */
+  /* trigger Devanagari                                                    */
+
   const AF_Script_UniRangeRec  af_deva_uniranges[] =
   {
-    AF_UNIRANGE_REC(  0x0900UL,  0x097FUL ),  /* Devanagari       */
+    AF_UNIRANGE_REC(  0x0900UL,  0x093BUL ),  /* Devanagari       */
+    /* omitting U+093C nukta */
+    AF_UNIRANGE_REC(  0x093DUL,  0x0950UL ),
+    /* omitting U+0951 udatta, U+0952 anudatta */
+    AF_UNIRANGE_REC(  0x0953UL,  0x0963UL ),
+    /* omitting U+0964 danda, U+0965 double danda */
+    AF_UNIRANGE_REC(  0x0966UL,  0x097FUL ),
     AF_UNIRANGE_REC(  0x20B9UL,  0x20B9UL ),  /* (new) Rupee sign */
     AF_UNIRANGE_REC(       0UL,       0UL )
   };
