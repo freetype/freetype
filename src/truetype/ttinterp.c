@@ -3081,12 +3081,15 @@
     CUR.GS.auto_flip = FALSE;
 
 
-#define DO_SDB                             \
-    CUR.GS.delta_base = (FT_Short)args[0];
+#define DO_SDB                              \
+    CUR.GS.delta_base = (FT_UShort)args[0];
 
 
-#define DO_SDS                              \
-    CUR.GS.delta_shift = (FT_Short)args[0];
+#define DO_SDS                                 \
+    if ( (FT_ULong)args[0] > 6UL )             \
+      CUR.error = FT_THROW( Bad_Argument );    \
+    else                                       \
+      CUR.GS.delta_shift = (FT_UShort)args[0];
 
 
 #define DO_MD  /* nothing */
@@ -7577,7 +7580,7 @@
           B = ( (FT_ULong)B & 0xF ) - 8;
           if ( B >= 0 )
             B++;
-          B = B * 64 / ( 1L << CUR.GS.delta_shift );
+          B *= 1L << ( 6 - CUR.GS.delta_shift );
 
 #ifdef TT_CONFIG_OPTION_SUBPIXEL_HINTING
 
@@ -7747,7 +7750,7 @@
           B = ( (FT_ULong)B & 0xF ) - 8;
           if ( B >= 0 )
             B++;
-          B = B * 64 / ( 1L << CUR.GS.delta_shift );
+          B *= 1L << ( 6 - CUR.GS.delta_shift );
 
           CUR_Func_move_cvt( A, B );
         }

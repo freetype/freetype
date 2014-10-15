@@ -1,3 +1,16 @@
+2014-10-14  Alexei Podtelezhnikov  <apodtele@gmail.com>
+
+	[truetype] Limit delta shift range.
+
+	The legal range for delta shift is zero through six. Negative values
+	are illegal according to
+	  https://developer.apple.com/fonts/TrueType-Reference-Manual/RM04/Chap4.html#delta%20shift
+
+	* src/truetype/ttobjs.h (delta_shift, delta_base): Make unsigned.
+	* src/truetype/ttinterp.h (DO_SDS): Throw an error if delta_shift
+	out of range.
+	(Ins_DELTAP, Ins_DELTAC): Optimize for legal delta_shift.
+
 2014-10-14  David Weiß  <David.Weiss@ptvgroup.com>
 
 	[build] Better optimization settings for vc2010 solution file.
