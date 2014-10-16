@@ -2,21 +2,22 @@
 
 	[truetype] Limit delta shift range.
 
-	The legal range for delta shift is zero through six. Negative values
-	are illegal according to
+	The valid range for delta shift is zero through six.  Negative values
+	are invalid according to
+
 	  https://developer.apple.com/fonts/TrueType-Reference-Manual/RM04/Chap4.html#delta%20shift
 
 	* src/truetype/ttobjs.h (delta_shift, delta_base): Make unsigned.
-	* src/truetype/ttinterp.h (DO_SDS): Throw an error if delta_shift
-	out of range.
-	(Ins_DELTAP, Ins_DELTAC): Optimize for legal delta_shift.
+	* src/truetype/ttinterp.h (DO_SDS): Throw an error if `delta_shift'
+	is out of range.
+	(Ins_DELTAP, Ins_DELTAC): Optimize for valid `delta_shift'.
 
 2014-10-16  Werner Lemberg  <wl@gnu.org>
 
 	A better fix for Savannah bug #43392.
 	Suggested by Doug Felt <dougfelt@gmail.com>.
 
-	* src/sfnt/ttsbit.c (tt_sbit_decoder_load_metrics): Set 
+	* src/sfnt/ttsbit.c (tt_sbit_decoder_load_metrics): Set
 	`vertAdvance' to zero...
 
 	* src/truetype/ttgload.c (TT_Load_Glyph): ... and set here a default
@@ -51,14 +52,14 @@
 	[base] Small bbox correction.
 
 	* src/base/ftbbox.c (FT_Outline_Get_BBox): Start from nonsense bbox
-	instead of initial point that could be `off' in conic outlines. 
+	instead of initial point that could be `off' in conic outlines.
 
 2014-10-08  Alexei Podtelezhnikov  <apodtele@gmail.com>
 
 	[base] Fix Savannah bug #43356.
 
 	* src/base/ftbbox.c (BBox_Move_To, BBox_Conic_To): Update bbox in case
-	of implicit `to'. 
+	of implicit `to'.
 	(BBox_Line_To): New emitter that does not update bbox.
 
 2014-10-08  Alexei Podtelezhnikov  <apodtele@gmail.com>
