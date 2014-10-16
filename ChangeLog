@@ -11,6 +11,20 @@
 	out of range.
 	(Ins_DELTAP, Ins_DELTAC): Optimize for legal delta_shift.
 
+2014-10-16  Werner Lemberg  <wl@gnu.org>
+
+	A better fix for Savannah bug #43392.
+	Suggested by Doug Felt <dougfelt@gmail.com>.
+
+	* src/sfnt/ttsbit.c (tt_sbit_decoder_load_metrics): Set 
+	`vertAdvance' to zero...
+
+	* src/truetype/ttgload.c (TT_Load_Glyph): ... and set here a default
+	value for `vertAdvance' based on `linearVertAdvance' in case
+	`vertAdvance' is zero.  Note that the previous computed ad-hoc value
+	for `linearVertAdvance' was apparently not tested in a real-life
+	situation.
+
 2014-10-14  David Weiß  <David.Weiss@ptvgroup.com>
 
 	[build] Better optimization settings for vc2010 solution file.

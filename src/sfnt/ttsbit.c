@@ -510,7 +510,7 @@
       /* avoid uninitialized data in case there is no vertical info -- */
       metrics->vertBearingX = 0;
       metrics->vertBearingY = 0;
-      metrics->vertAdvance  = metrics->width;
+      metrics->vertAdvance  = 0;
     }
 
     decoder->metrics_loaded = 1;

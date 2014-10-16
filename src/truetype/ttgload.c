@@ -2373,15 +2373,18 @@
           (void)tt_loader_init( &loader, size, glyph, load_flags, TRUE );
           (void)load_truetype_glyph( &loader, glyph_index, 0, TRUE );
           glyph->linearHoriAdvance = loader.linear;
-          glyph->linearVertAdvance = loader.top_bearing + loader.bbox.yMax -
-                                       loader.vadvance;
+          glyph->linearVertAdvance = loader.vadvance;
 
-          /* sanity check: if `horiAdvance' in the sbit metric */
-          /* structure isn't set, use `linearHoriAdvance'      */
+          /* sanity checks: if `xxxAdvance' in the sbit metric */
+          /* structure isn't set, use `linearXXXAdvance'      */
           if ( !glyph->metrics.horiAdvance && glyph->linearHoriAdvance )
             glyph->metrics.horiAdvance =
               FT_MulFix( glyph->linearHoriAdvance,
                          size->root.metrics.x_scale );
+          if ( !glyph->metrics.vertAdvance && glyph->linearVertAdvance )
+            glyph->metrics.vertAdvance =
+              FT_MulFix( glyph->linearVertAdvance,
+                         size->root.metrics.y_scale );
         }
 
         return FT_Err_Ok;
