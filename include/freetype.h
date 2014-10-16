@@ -1570,15 +1570,15 @@ FT_BEGIN_HEADER
   /*                         change between calls of @FT_Load_Glyph and a  */
   /*                         few other functions.                          */
   /*                                                                       */
-  /*    bitmap_left       :: This is the bitmap's left bearing expressed   */
-  /*                         in integer pixels.  Of course, this is only   */
-  /*                         valid if the format is                        */
-  /*                         @FT_GLYPH_FORMAT_BITMAP.                      */
+  /*    bitmap_left       :: The bitmap's left bearing expressed in        */
+  /*                         integer pixels.  Only valid if the format is  */
+  /*                         @FT_GLYPH_FORMAT_BITMAP, this is, if the      */
+  /*                         glyph slot contains a bitmap.                 */
   /*                                                                       */
-  /*    bitmap_top        :: This is the bitmap's top bearing expressed in */
-  /*                         integer pixels.  Remember that this is the    */
-  /*                         distance from the baseline to the top-most    */
-  /*                         glyph scanline, upwards y~coordinates being   */
+  /*    bitmap_top        :: The bitmap's top bearing expressed in integer */
+  /*                         pixels.  Remember that this is the distance   */
+  /*                         from the baseline to the top-most glyph       */
+  /*                         scanline, upwards y~coordinates being         */
   /*                         *positive*.                                   */
   /*                                                                       */
   /*    outline           :: The outline descriptor for the current glyph  */
