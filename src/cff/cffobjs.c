@@ -1049,13 +1049,41 @@
   }
 
 
+#define SET_DARKENING_PARAMETERS_0( driver,                                \
+                                    x1, y1,                                \
+                                    x2, y2,                                \
+                                    x3, y3,                                \
+                                    x4, y4 )                               \
+          FT_BEGIN_STMNT                                                   \
+            /* checks copied from `cff_property_set' in `cffdrivr.c' */    \
+            typedef int  static_assert_darkening_parameters[               \
+              ( x1 < 0   || x2 < 0   || x3 < 0   || x4 < 0   ||            \
+                y1 < 0   || y2 < 0   || y3 < 0   || y4 < 0   ||            \
+                x1 > x2  || x2 > x3  || x3 > x4              ||            \
+                y1 > 500 || y2 > 500 || y3 > 500 || y4 > 500 ) ? -1 : +1]; \
+                                                                           \
+                                                                           \
+            driver->darken_params[0] = x1;                                 \
+            driver->darken_params[1] = y1;                                 \
+            driver->darken_params[2] = x2;                                 \
+            driver->darken_params[3] = y2;                                 \
+            driver->darken_params[4] = x3;                                 \
+            driver->darken_params[5] = y3;                                 \
+            driver->darken_params[6] = x4;                                 \
+            driver->darken_params[7] = y4;                                 \
+          FT_END_STMNT
+
+#define SET_DARKENING_PARAMETERS( driver, params )     \
+          SET_DARKENING_PARAMETERS_0( driver, params )
+
+
   FT_LOCAL_DEF( FT_Error )
   cff_driver_init( FT_Module  module )        /* CFF_Driver */
   {
     CFF_Driver  driver = (CFF_Driver)module;
 
 
-    /* set default property values, cf `ftcffdrv.h' */
+    /* set default property values, cf. `ftcffdrv.h' */
 #ifdef CFF_CONFIG_OPTION_OLD_ENGINE
     driver->hinting_engine    = FT_CFF_HINTING_FREETYPE;
 #else
@@ -1063,14 +1091,8 @@
 #endif
     driver->no_stem_darkening = FALSE;
 
-    driver->darken_params[0] =  500;
-    driver->darken_params[1] =  400;
-    driver->darken_params[2] = 1000;
-    driver->darken_params[3] =  275;
-    driver->darken_params[4] = 1667;
-    driver->darken_params[5] =  275;
-    driver->darken_params[6] = 2333;
-    driver->darken_params[7] =    0;
+    SET_DARKENING_PARAMETERS( driver,
+                              CFF_CONFIG_OPTION_DARKENING_PARAMETERS );
 
     return FT_Err_Ok;
   }

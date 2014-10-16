@@ -4,7 +4,7 @@
 /*                                                                         */
 /*    User-selectable configuration macros (specification only).           */
 /*                                                                         */
-/*  Copyright 1996-2013 by                                                 */
+/*  Copyright 1996-2014 by                                                 */
 /*  David Turner, Robert Wilhelm, and Werner Lemberg.                      */
 /*                                                                         */
 /*  This file is part of the FreeType project, and may only be used,       */
@@ -769,6 +769,23 @@ FT_BEGIN_HEADER
   /****                                                                 ****/
   /*************************************************************************/
   /*************************************************************************/
+
+
+  /*************************************************************************/
+  /*                                                                       */
+  /* Using CFF_CONFIG_OPTION_DARKENING_PARAMETERS it is possible to set up */
+  /* the default values of the four control points that define the stem    */
+  /* darkening behaviour of the (new) CFF engine.  For more details please */
+  /* read the documentation of the `darkening-parameters' property of the  */
+  /* cff driver module (file `ftcffdrv.h'), which allows the control at    */
+  /* run-time.                                                             */
+  /*                                                                       */
+  /* Do *not* undefine this macro!                                         */
+  /*                                                                       */
+#define CFF_CONFIG_OPTION_DARKENING_PARAMETERS   500, 400, \
+                                                1000, 275, \
+                                                1667, 275, \
+                                                2333,   0
 
 
   /*************************************************************************/

@@ -1,3 +1,15 @@
+2014-10-16  Behdad Esfahbod  <behdad@behdad.org>
+	    Werner Lemberg  <wl@gnu.org>
+
+	[cff] Add `CFF_CONFIG_OPTION_DARKENING_PARAMETERS' config macro.
+
+	* devel/ftoption.h, include/config/ftoption.h
+	(CFF_CONFIG_OPTION_DARKENING_PARAMETERS): New macro.
+
+	* src/cff/cffobjs.c (SET_DARKENING_PARAMETERS,
+	SET_DARKENING_PARAMETERS_0): New macros.
+	(cff_driver_init): Use new macros.
+
 2014-10-14  Alexei Podtelezhnikov  <apodtele@gmail.com>
 
 	[truetype] Limit delta shift range.

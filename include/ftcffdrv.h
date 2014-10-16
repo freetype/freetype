@@ -4,7 +4,7 @@
 /*                                                                         */
 /*    FreeType API for controlling the CFF driver (specification only).    */
 /*                                                                         */
-/*  Copyright 2013 by                                                      */
+/*  Copyright 2013, 2014 by                                                */
 /*  David Turner, Robert Wilhelm, and Werner Lemberg.                      */
 /*                                                                         */
 /*  This file is part of the FreeType project, and may only be used,       */
@@ -212,9 +212,11 @@ FT_BEGIN_HEADER
    *     stem width >= 2.333px: darkening amount = 0px
    *   }
    *
-   *   and piecewise linear in-between.  Using the `darkening-parameters'
-   *   property, these four control points can be changed, as the following
-   *   example demonstrates.
+   *   and piecewise linear in-between.  At configuration time, these four
+   *   control points can be set with the macro
+   *   `CFF_CONFIG_OPTION_DARKENING_PARAMETERS'.  At runtime, the control
+   *   points can be changed using the `darkening-parameters' property, as
+   *   the following example demonstrates.
    *
    *   {
    *     FT_Library  library;
