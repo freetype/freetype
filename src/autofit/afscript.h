@@ -56,6 +56,12 @@
           HB_SCRIPT_INVALID,
           0x0, 0x0, 0x0 )
 
+  /* there are no simple forms for letters; we thus use two digit shapes */
+  SCRIPT( telu, TELU,
+          "Telugu",
+          HB_SCRIPT_TELUGU,
+          0xC66, 0xC67, 0x0 ) /* ౦ ౧ */
+
 #ifdef AF_CONFIG_OPTION_INDIC
 
   SCRIPT( beng, BENG,
@@ -111,11 +117,6 @@
   SCRIPT( taml, TAML,
           "Tamil",
           HB_SCRIPT_TAMIL,
-          'o', 0x0, 0x0 ) /* XXX */
-
-  SCRIPT( telu, TELU,
-          "Telugu",
-          HB_SCRIPT_TELUGU,
           'o', 0x0, 0x0 ) /* XXX */
 
   SCRIPT( tibt, TIBT,

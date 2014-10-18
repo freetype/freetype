@@ -92,6 +92,12 @@
     AF_UNIRANGE_REC( 0UL, 0UL )
   };
 
+  const AF_Script_UniRangeRec  af_telu_uniranges[] =
+  {
+    AF_UNIRANGE_REC(  0x0C00UL,  0x0C7FUL ),  /* Telugu */
+    AF_UNIRANGE_REC(       0UL,       0UL )
+  };
+
 #ifdef AF_CONFIG_OPTION_INDIC
 
   const AF_Script_UniRangeRec  af_beng_uniranges[] =
@@ -157,12 +163,6 @@
   const AF_Script_UniRangeRec  af_taml_uniranges[] =
   {
     AF_UNIRANGE_REC(  0x0B80UL,  0x0BFFUL ),  /* Tamil */
-    AF_UNIRANGE_REC(       0UL,       0UL )
-  };
-
-  const AF_Script_UniRangeRec  af_telu_uniranges[] =
-  {
-    AF_UNIRANGE_REC(  0x0C00UL,  0x0C7FUL ),  /* Telugu */
     AF_UNIRANGE_REC(       0UL,       0UL )
   };
 

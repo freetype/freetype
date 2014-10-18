@@ -67,6 +67,10 @@
     'x', 'z', 'r', 'o', 'e', 's', 'c',  /* xzroesc */
     '\0',
     'p', 'q', 'g', 'j', 'y',  /* pqgjy */
+    '\0',
+    '\xE0', '\xB0', '\x87', '\xE0', '\xB0', '\x8C', '\xE0', '\xB0', '\x99', '\xE0', '\xB0', '\x9E', '\xE0', '\xB0', '\xA3', '\xE0', '\xB0', '\xB1', '\xE0', '\xB1', '\xAF',  /* ఇ ఌ ఙ ఞ ణ ఱ ౯ */
+    '\0',
+    '\xE0', '\xB0', '\x85', '\xE0', '\xB0', '\x95', '\xE0', '\xB0', '\x9A', '\xE0', '\xB0', '\xB0', '\xE0', '\xB0', '\xBD', '\xE0', '\xB1', '\xA8', '\xE0', '\xB1', '\xAC',  /* అ క చ ర ఽ ౨ ౬ */
 #ifdef AF_CONFIG_OPTION_CJK
     '\0',
     '\xE4', '\xBB', '\x96', '\xE4', '\xBB', '\xAC', '\xE4', '\xBD', '\xA0', '\xE4', '\xBE', '\x86', '\xE5', '\x80', '\x91', '\xE5', '\x88', '\xB0', '\xE5', '\x92', '\x8C', '\xE5', '\x9C', '\xB0',  /* 他们你來們到和地 */
@@ -153,6 +157,9 @@
     { AF_BLUE_STRING_LATIN_SMALL,           0                                 },
     { AF_BLUE_STRING_LATIN_SMALL_DESCENDER, 0                                 },
     { AF_BLUE_STRING_MAX,                   0                                 },
+    { AF_BLUE_STRING_TELUGU_TOP,    AF_BLUE_PROPERTY_LATIN_TOP },
+    { AF_BLUE_STRING_TELUGU_BOTTOM, 0                          },
+    { AF_BLUE_STRING_MAX,           0                          },
 #ifdef AF_CONFIG_OPTION_CJK
     { AF_BLUE_STRING_CJK_TOP,    AF_BLUE_PROPERTY_CJK_TOP     },
     { AF_BLUE_STRING_CJK_BOTTOM, 0                            },
