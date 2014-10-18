@@ -1,3 +1,9 @@
+2014-10-18  Alexei Podtelezhnikov  <apodtele@gmail.com>
+
+	[truetype] Unwrap engine compensation settings.
+
+	* src/truetype/ttobjs.c (tt_size_init_bytecode): Updated.
+
 2014-10-18  Werner Lemberg  <wl@gnu.org>
 
 	[autofit] Add blue-zone support for Telugu.

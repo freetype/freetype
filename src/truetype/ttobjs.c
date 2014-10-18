@@ -968,7 +968,6 @@
     TT_Size    size = (TT_Size)ftsize;
     TT_Face    face = (TT_Face)ftsize->face;
     FT_Memory  memory = face->root.memory;
-    FT_Int     i;
 
     FT_UShort       n_twilight;
     TT_MaxProfile*  maxp = &face->max_profile;
@@ -997,9 +996,11 @@
       metrics->rotated   = FALSE;
       metrics->stretched = FALSE;
 
-      /* set default compensation (all 0) */
-      for ( i = 0; i < 4; i++ )
-        metrics->compensations[i] = 0;
+      /* set default engine compensation */
+      metrics->compensations[0] = 0;   /* gray     */
+      metrics->compensations[1] = 0;   /* black    */
+      metrics->compensations[2] = 0;   /* white    */
+      metrics->compensations[3] = 0;   /* reserved */
     }
 
     /* allocate function defs, instruction defs, cvt, and storage area */
