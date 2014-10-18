@@ -26,8 +26,18 @@
 #
 #   cmake CMakeLists.txt -DBUILD_FRAMEWORK:BOOL=true -G Xcode
 #
-# instead.  Please refer to the cmake manual for further options, in
-# particular, how to modify compilation and linking parameters.
+# instead.
+#
+# For an iOS static library, use
+#
+#   cmake CMakeLists.txt -DIOS_PLATFORM=OS -G Xcode
+#
+# or
+#
+#   cmake CMakeLists.txt -DIOS_PLATFORM=SIMULATOR -G Xcode
+#
+# Please refer to the cmake manual for further options, in particular, how
+# to modify compilation and linking parameters.
 #
 # Some notes.
 #
@@ -42,11 +52,46 @@
 
 cmake_minimum_required(VERSION 2.6)
 
+# CMAKE_TOOLCHAIN_FILE must be set before `project' is called, which
+# configures the base build environment and references the toolchain file
+if (APPLE)
+  if (DEFINED IOS_PLATFORM)
+    if (NOT "${IOS_PLATFORM}" STREQUAL "OS"
+        AND NOT "${IOS_PLATFORM}" STREQUAL "SIMULATOR")
+      message(FATAL_ERROR
+        "IOS_PLATFORM must be set to either OS or SIMULATOR")
+    endif ()
+    if (NOT "${CMAKE_GENERATOR}" STREQUAL "Xcode")
+      message(AUTHOR_WARNING
+        "You should use Xcode generator with IOS_PLATFORM enabled to get Universal builds.")
+    endif ()
+    if (BUILD_SHARED_LIBS)
+      message(FATAL_ERROR
+        "BUILD_SHARED_LIBS can not be on with IOS_PLATFORM enabled")
+    endif ()
+    if (BUILD_FRAMEWORK)
+      message(FATAL_ERROR
+        "BUILD_FRAMEWORK can not be on with IOS_PLATFORM enabled")
+    endif ()
+
+    # iOS only uses static libraries
+    set(BUILD_SHARED_LIBS OFF)
+
+    set(CMAKE_TOOLCHAIN_FILE
+      ${PROJECT_SOURCE_DIR}/builds/cmake/iOS.cmake)
+  endif ()
+else ()
+  if (DEFINED IOS_PLATFORM)
+    message(FATAL_ERROR "IOS_PLATFORM is not supported on this platform")
+  endif ()
+endif ()
+
 project(freetype)
 
 if (BUILD_FRAMEWORK)
   if (NOT "${CMAKE_GENERATOR}" STREQUAL "Xcode")
-    message(FATAL_ERROR "You should use Xcode generator with BUILD_FRAMEWORK enabled")
+    message(FATAL_ERROR
+      "You should use Xcode generator with BUILD_FRAMEWORK enabled")
   endif ()
   set(CMAKE_OSX_ARCHITECTURES "$(ARCHS_STANDARD_32_64_BIT)")
   set(BUILD_SHARED_LIBS ON)

@@ -1,3 +1,14 @@
+2014-10-18  David Wimsey  <david@wimsey.us>
+
+	[cmake] Add iOS build support.
+
+	* builds/cmake/iOS.cmake: New file.  Universal binaries are built
+	with both 32 and 64 bit arm architectures.
+
+	* CMakeLists.txt (IOS_PLATFORM): New variable for running the iOS
+	toolchain.  Possible values are `OS' to build on iOS, or
+	`SIMULATOR' to build on APPLE.
+
 2014-10-16  Behdad Esfahbod  <behdad@behdad.org>
 	    Werner Lemberg  <wl@gnu.org>
 
