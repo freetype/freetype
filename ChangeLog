@@ -4,6 +4,20 @@
 
 	* src/truetype/ttobjs.c (tt_size_init_bytecode): Updated.
 
+2014-10-18  David Weiß  <David.Weiss@ptvgroup.com>
+
+	[build] Add property file to vc2010 project.
+
+	This simplifies custom build configurations, especially for
+	automated build environments.
+
+	* builds/windows/vc2010/freetype.user.props: New configuration file.
+
+	* builds/windows/vc2010/freetype.vcxproj: Include
+	`freetype.user.props' and use its data fields.
+
+	* builds/windows/vc2010/index.html: Updated.
+
 2014-10-18  Werner Lemberg  <wl@gnu.org>
 
 	[autofit] Add blue-zone support for Telugu.
