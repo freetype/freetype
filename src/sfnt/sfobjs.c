@@ -1016,7 +1016,6 @@
     if ( is_apple_sbix )
       has_outline = FALSE;
 
-
     /* if this font doesn't contain outlines, we try to load */
     /* a `bhed' table                                        */
     if ( !has_outline && sfnt->load_bhed )

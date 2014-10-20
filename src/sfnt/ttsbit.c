@@ -150,11 +150,24 @@
           error = FT_THROW( Unknown_File_Format );
           goto Exit;
         }
-        if ( flags != 0x0001 || num_strikes >= 0x10000UL )
+
+        /* Bit 0 must always be `1'.                            */
+        /* Bit 1 controls the overlay of bitmaps with outlines. */
+        /* All other bits should be zero.                       */
+        if ( !( flags == 1 || flags == 3 ) ||
+             num_strikes >= 0x10000UL      )
         {
           error = FT_THROW( Invalid_File_Format );
           goto Exit;
         }
+
+        /* we currently don't support bit 1; however, it is better to */
+        /* draw at least something...                                 */
+        if ( flags == 3 )
+          FT_TRACE1(( "tt_face_load_sbit_strikes:"
+                      " sbix overlay not supported yet\n"
+                      "                          "
+                      " expect bad rendering results\n" ));
 
         /*
          *  Count the number of strikes available in the table.  We are a bit
@@ -518,7 +531,7 @@
     return FT_Err_Ok;
 
   Fail:
-    FT_TRACE1(( "tt_sbit_decoder_load_metrics: broken table" ));
+    FT_TRACE1(( "tt_sbit_decoder_load_metrics: broken table\n" ));
     return FT_THROW( Invalid_Argument );
   }
 
@@ -1342,6 +1355,7 @@
 
     case FT_MAKE_TAG( 'j', 'p', 'g', ' ' ):
     case FT_MAKE_TAG( 't', 'i', 'f', 'f' ):
+    case FT_MAKE_TAG( 'r', 'g', 'b', 'l' ): /* used on iOS 7.1 */
       error = FT_THROW( Unknown_File_Format );
       break;
 

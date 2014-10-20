@@ -1,3 +1,14 @@
+2014-10-20  Werner Lemberg  <wl@gnu.org>
+
+	[sbit] Minor fixes.
+
+	* src/sfnt/ttsbit.c (tt_face_load_sbit) [TT_SBIT_TABLE_TYPE_SBIX]:
+	Accept overlay format also, but emit warning message in that case.
+	(tt_sbit_decoder_load_metrics): Add missing newline to error
+	message.
+	(tt_sbit_load_sbix_image): Add `rgbl' graphic type (as used on iOS
+	7.1) to the list of unsupported formats.
+
 2014-10-19  Alexei Podtelezhnikov  <apodtele@gmail.com>
 
 	[truetype] Clean up bytecode rounding.
