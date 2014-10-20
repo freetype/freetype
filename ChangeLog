@@ -1,3 +1,16 @@
+2014-10-19  Alexei Podtelezhnikov  <apodtele@gmail.com>
+
+	[truetype] Clean up bytecode rounding.
+
+	Zero distance does not have to be treated specially if you follow
+	specifications and check the sign as the very last step of rounding.
+
+	* src/truetype/ttinterp.c (Round_None, Round_To_Grid,
+	Round_Down_To_Grid, Round_Up_To_Grid, Round_To_Double_Grid): Use
+	macros when available, do not check for non-zero distance.
+	(Round_To_Half_Grid, Round_Super, Round_Super_45): Ditto, return phase
+	if sign changed.
+
 2014-10-18  Alexei Podtelezhnikov  <apodtele@gmail.com>
 
 	[truetype] Unwrap engine compensation settings.

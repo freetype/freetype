@@ -2051,7 +2051,7 @@
     if ( distance >= 0 )
     {
       val = distance + compensation;
-      if ( distance && val < 0 )
+      if ( val < 0 )
         val = 0;
     }
     else
@@ -2091,10 +2091,8 @@
 
     if ( distance >= 0 )
     {
-      val = distance + compensation + 32;
-      if ( distance && val > 0 )
-        val &= ~63;
-      else
+      val = FT_PIX_ROUND( distance + compensation );
+      if ( val < 0 )
         val = 0;
     }
     else
@@ -2136,14 +2134,14 @@
     if ( distance >= 0 )
     {
       val = FT_PIX_FLOOR( distance + compensation ) + 32;
-      if ( distance && val < 0 )
-        val = 0;
+      if ( val < 0 )
+        val = 32;
     }
     else
     {
       val = -( FT_PIX_FLOOR( compensation - distance ) + 32 );
       if ( val > 0 )
-        val = 0;
+        val = -32;
     }
 
     return val;
@@ -2177,15 +2175,13 @@
 
     if ( distance >= 0 )
     {
-      val = distance + compensation;
-      if ( distance && val > 0 )
-        val &= ~63;
-      else
+      val = FT_PIX_FLOOR( distance + compensation );
+      if ( val < 0 )
         val = 0;
     }
     else
     {
-      val = -( ( compensation - distance ) & -64 );
+      val = -FT_PIX_FLOOR( compensation - distance );
       if ( val > 0 )
         val = 0;
     }
@@ -2221,10 +2217,8 @@
 
     if ( distance >= 0 )
     {
-      val = distance + compensation + 63;
-      if ( distance && val > 0 )
-        val &= ~63;
-      else
+      val = FT_PIX_CEIL( distance + compensation );
+      if ( val < 0 )
         val = 0;
     }
     else
@@ -2265,10 +2259,8 @@
 
     if ( distance >= 0 )
     {
-      val = distance + compensation + 16;
-      if ( distance && val > 0 )
-        val &= ~31;
-      else
+      val = FT_PAD_ROUND( distance + compensation, 32 );
+      if ( val < 0 )
         val = 0;
     }
     else
@@ -2315,17 +2307,17 @@
     {
       val = ( distance - CUR.phase + CUR.threshold + compensation ) &
               -CUR.period;
-      if ( distance && val < 0 )
-        val = 0;
       val += CUR.phase;
+      if ( val < 0 )
+        val = CUR.phase;
     }
     else
     {
       val = -( ( CUR.threshold - CUR.phase - distance + compensation ) &
                -CUR.period );
-      if ( val > 0 )
-        val = 0;
       val -= CUR.phase;
+      if ( val > 0 )
+        val = -CUR.phase;
     }
 
     return val;
@@ -2363,17 +2355,17 @@
     {
       val = ( ( distance - CUR.phase + CUR.threshold + compensation ) /
                 CUR.period ) * CUR.period;
-      if ( distance && val < 0 )
-        val = 0;
       val += CUR.phase;
+      if ( val < 0 )
+        val = CUR.phase;
     }
     else
     {
       val = -( ( ( CUR.threshold - CUR.phase - distance + compensation ) /
                    CUR.period ) * CUR.period );
-      if ( val > 0 )
-        val = 0;
       val -= CUR.phase;
+      if ( val > 0 )
+        val = -CUR.phase;
     }
 
     return val;
