@@ -1049,11 +1049,11 @@
   }
 
 
-#define SET_DARKENING_PARAMETERS_0( driver,                                \
-                                    x1, y1,                                \
-                                    x2, y2,                                \
-                                    x3, y3,                                \
-                                    x4, y4 )                               \
+#define SET_DARKENING_PARAMETERS( driver,                                  \
+                                  x1, y1,                                  \
+                                  x2, y2,                                  \
+                                  x3, y3,                                  \
+                                  x4, y4 )                                 \
           FT_BEGIN_STMNT                                                   \
             /* checks copied from `cff_property_set' in `cffdrivr.c' */    \
             typedef int  static_assert_darkening_parameters[               \
@@ -1073,9 +1073,6 @@
             driver->darken_params[7] = y4;                                 \
           FT_END_STMNT
 
-#define SET_DARKENING_PARAMETERS( driver, params )     \
-          SET_DARKENING_PARAMETERS_0( driver, params )
-
 
   FT_LOCAL_DEF( FT_Error )
   cff_driver_init( FT_Module  module )        /* CFF_Driver */
@@ -1092,7 +1089,14 @@
     driver->no_stem_darkening = FALSE;
 
     SET_DARKENING_PARAMETERS( driver,
-                              CFF_CONFIG_OPTION_DARKENING_PARAMETERS );
+                              CFF_CONFIG_OPTION_DARKENING_PARAMETER_X1,
+                              CFF_CONFIG_OPTION_DARKENING_PARAMETER_Y1,
+                              CFF_CONFIG_OPTION_DARKENING_PARAMETER_X2,
+                              CFF_CONFIG_OPTION_DARKENING_PARAMETER_Y2,
+                              CFF_CONFIG_OPTION_DARKENING_PARAMETER_X3,
+                              CFF_CONFIG_OPTION_DARKENING_PARAMETER_Y3,
+                              CFF_CONFIG_OPTION_DARKENING_PARAMETER_X4,
+                              CFF_CONFIG_OPTION_DARKENING_PARAMETER_Y4 );
 
     return FT_Err_Ok;
   }

@@ -773,19 +773,26 @@ FT_BEGIN_HEADER
 
   /*************************************************************************/
   /*                                                                       */
-  /* Using CFF_CONFIG_OPTION_DARKENING_PARAMETERS it is possible to set up */
-  /* the default values of the four control points that define the stem    */
-  /* darkening behaviour of the (new) CFF engine.  For more details please */
-  /* read the documentation of the `darkening-parameters' property of the  */
-  /* cff driver module (file `ftcffdrv.h'), which allows the control at    */
-  /* run-time.                                                             */
+  /* Using CFF_CONFIG_OPTION_DARKENING_PARAMETER_{X,Y}{1,2,3,4} it is      */
+  /* possible to set up the default values of the four control points that */
+  /* define the stem darkening behaviour of the (new) CFF engine.  For     */
+  /* more details please read the documentation of the                     */
+  /* `darkening-parameters' property of the cff driver module (file        */
+  /* `ftcffdrv.h'), which allows the control at run-time.                  */
   /*                                                                       */
-  /* Do *not* undefine this macro!                                         */
+  /* Do *not* undefine these macros!                                       */
   /*                                                                       */
-#define CFF_CONFIG_OPTION_DARKENING_PARAMETERS   500, 400, \
-                                                1000, 275, \
-                                                1667, 275, \
-                                                2333,   0
+#define CFF_CONFIG_OPTION_DARKENING_PARAMETER_X1   500
+#define CFF_CONFIG_OPTION_DARKENING_PARAMETER_Y1   400
+
+#define CFF_CONFIG_OPTION_DARKENING_PARAMETER_X2  1000
+#define CFF_CONFIG_OPTION_DARKENING_PARAMETER_Y2   275
+
+#define CFF_CONFIG_OPTION_DARKENING_PARAMETER_X3  1667
+#define CFF_CONFIG_OPTION_DARKENING_PARAMETER_Y3   275
+
+#define CFF_CONFIG_OPTION_DARKENING_PARAMETER_X4  2333
+#define CFF_CONFIG_OPTION_DARKENING_PARAMETER_Y4     0
 
 
   /*************************************************************************/

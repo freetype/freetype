@@ -1,3 +1,21 @@
+2014-10-23  Werner Lemberg  <wl@gnu.org>
+
+	[cff] Work around bug in preprocessor of MSVC 2010.
+
+	We have been hit by
+
+	  https://connect.microsoft.com/VisualStudio/feedback/details/718976/msvc-pr
+
+	* devel/ftoption.h, include/config/ftoption.h: Replace
+	`CFF_CONFIG_OPTION_DARKENING_PARAMETERS' with eight macros
+	`CFF_CONFIG_OPTION_DARKENING_PARAMETER_{X,Y}{1,2,3,4}'.
+
+	* src/cff/cffobjs.c (SET_DARKENING_PARAMETERS): Removed.  We no
+	longer need double expansion.
+	(SET_DARKENING_PARAMETERS_0): Renamed to ...
+	(SET_DARKENING_PARAMETERS): ... this.
+	Update call.
+
 2014-10-20  Werner Lemberg  <wl@gnu.org>
 
 	[sbit] Minor fixes.
