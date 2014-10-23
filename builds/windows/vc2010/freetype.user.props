@@ -21,29 +21,33 @@
     <UserDefines></UserDefines>
     
     <!--
-     * path where your custom `ftoptions.h' lives;
+     * path where your custom `ftoption.h' lives;
      * this is searched BEFORE any other path
      -->
-    <OptionsDirectory>..\..\..\devel</OptionsDirectory>
+    <!-- <UserOptionDirectory>..\..\..\devel</UserOptionDirectory> -->
+    <UserOptionDirectory></UserOptionDirectory>
     
     <!--
      * `;'-separated list of paths to additional include directories,
      * e.g., where to find zlib.h, png.h, etc.;
      * this is searched AFTER any other path
      -->
-    <UserIncludeDirectories>..\..\..\..\zlib-1.2.8;..\..\..\..\libpng-1.6.12</UserIncludeDirectories>
+    <!-- <UserIncludeDirectories>..\..\..\..\zlib-1.2.8;..\..\..\..\libpng-1.6.12</UserIncludeDirectories> -->
+    <UserIncludeDirectories></UserIncludeDirectories>
     
     <!--
      * `;'-separated list of paths to additional library directories,
      * e.g., where to find zlib.lib, libpng.lib, etc.
      -->
-    <UserLibraryDirectories>..\..\..\..\zlib-1.2.8;..\..\..\..\libpng-1.6.12</UserLibraryDirectories>
+    <!-- <UserLibraryDirectories>..\..\..\..\zlib-1.2.8;..\..\..\..\libpng-1.6.12</UserLibraryDirectories> -->
+    <UserLibraryDirectories></UserLibraryDirectories>
     
     <!--
      * `;'-separated list of additional linker dependencies,
      * e.g., zlib.lib, libpng.lib, etc.
      -->
-    <UserDependencies>zlib.lib;libpng16.lib</UserDependencies>
+    <!-- <UserDependencies>zlib.lib;libpng16.lib</UserDependencies> -->
+    <UserDependencies></UserDependencies>
     
   </PropertyGroup>
   
@@ -55,7 +59,7 @@
     <PropertyGroup Label="DebugProperties"
                    Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
       <UserDefines>ENABLE_DEBUG_HELPER;ENABLE_DEBUG_LOGGING</UserDefines>
-      <OptionsDirectory>config\debug</OptionsDirectory>
+      <UserOptionDirectory>config\debug</UserOptionDirectory>
       <UserIncludeDirectories>C:\mydebughelp\include</UserIncludeDirectories>
       <UserLibraryDirectories>C:\mydebughelp\lib</UserLibraryDirectories>
       <UserDependencies>dhelper64.lib</UserDependencies>
