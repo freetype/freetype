@@ -861,6 +861,35 @@ FT_BEGIN_HEADER
 #define  TT_USE_BYTECODE_INTERPRETER
 #endif
 
+
+  /*
+   * Check CFF darkening parameters.  The checks are the same as in function
+   * `cff_property_set' in file `cffdrivr.c'.
+   */
+#if CFF_CONFIG_OPTION_DARKENING_PARAMETER_X1 < 0   || \
+    CFF_CONFIG_OPTION_DARKENING_PARAMETER_X2 < 0   || \
+    CFF_CONFIG_OPTION_DARKENING_PARAMETER_X3 < 0   || \
+    CFF_CONFIG_OPTION_DARKENING_PARAMETER_X4 < 0   || \
+                                                      \
+    CFF_CONFIG_OPTION_DARKENING_PARAMETER_Y1 < 0   || \
+    CFF_CONFIG_OPTION_DARKENING_PARAMETER_Y2 < 0   || \
+    CFF_CONFIG_OPTION_DARKENING_PARAMETER_Y3 < 0   || \
+    CFF_CONFIG_OPTION_DARKENING_PARAMETER_Y4 < 0   || \
+                                                      \
+    CFF_CONFIG_OPTION_DARKENING_PARAMETER_X1 >        \
+      CFF_CONFIG_OPTION_DARKENING_PARAMETER_X2     || \
+    CFF_CONFIG_OPTION_DARKENING_PARAMETER_X2 >        \
+      CFF_CONFIG_OPTION_DARKENING_PARAMETER_X3     || \
+    CFF_CONFIG_OPTION_DARKENING_PARAMETER_X3 >        \
+      CFF_CONFIG_OPTION_DARKENING_PARAMETER_X4     || \
+                                                      \
+    CFF_CONFIG_OPTION_DARKENING_PARAMETER_Y1 > 500 || \
+    CFF_CONFIG_OPTION_DARKENING_PARAMETER_Y2 > 500 || \
+    CFF_CONFIG_OPTION_DARKENING_PARAMETER_Y3 > 500 || \
+    CFF_CONFIG_OPTION_DARKENING_PARAMETER_Y4 > 500
+#error "Invalid CFF darkening parameters!"
+#endif
+
 FT_END_HEADER
 
 

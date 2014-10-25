@@ -1,3 +1,18 @@
+2014-10-25  Werner Lemberg  <wl@gnu.org>
+
+	[cff] Test valid darkening parameter macros in `ftoption.h'.
+
+	We no longer need an otherwise unused typedef that can cause a gcc
+	warning.
+	Problem reported by Alexei.
+
+	* src/cff/cffobjs.c (cff_driver_init): Use
+	`CFF_CONFIG_OPTION_DARKENING_PARAMETER_XXX' macros directly.
+	(SET_DARKENING_PARAMETERS): Removed.
+	Compile time tests are now ...
+
+	* devel/ftoption.h, include/config/ftoption.h: ... here.
+
 2014-10-25  Alexei Podtelezhnikov  <apodtele@gmail.com>
 
 	Improve flat corner definition.
