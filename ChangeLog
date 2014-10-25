@@ -1,3 +1,12 @@
+2014-10-25  Alexei Podtelezhnikov  <apodtele@gmail.com>
+
+	Improve flat corner definition.
+
+	* include/internal/ftcalc.h (FT_HYPOT): Macro to approximate Euclidean
+	distance with the alpha max plus beta min algorithm.
+	* src/base/ftcalc.c (ft_corner_is_flat): Use it instead of Taxicab
+	metric.
+
 2014-10-23  David Weiß  <David.Weiss@ptvgroup.com>
 
 	[build] Improve property file for vc2010.

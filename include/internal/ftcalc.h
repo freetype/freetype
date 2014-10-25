@@ -311,10 +311,11 @@ FT_BEGIN_HEADER
                          FT_Pos  out_x,
                          FT_Pos  out_y );
 
+
   /*
    *  Return TRUE if a corner is flat or nearly flat.  This is equivalent to
-   *  saying that the angle difference between the `in' and `out' vectors is
-   *  very small.
+   *  saying that the corner point is close to its neighbors, or inside an 
+   *  ellipse defined by the neighbor focal points to be more precise.
    */
   FT_BASE( FT_Int )
   ft_corner_is_flat( FT_Pos  in_x,
@@ -359,6 +360,15 @@ FT_BEGIN_HEADER
   FT_BASE( FT_Fixed )
   FT_Hypot( FT_Fixed  x,
             FT_Fixed  y );
+
+
+  /*
+   *  Approximate sqrt(x*x+y*y) using alpha max plus beta min algorithm. 
+   */  
+#define FT_HYPOT( x, y )                      \
+          ( x = FT_ABS( x ), y = FT_ABS( y ), \
+            x > y ? x + ( 3 * y >> 3 )        \
+                  : y + ( 3 * x >> 3 ) )
 
 
 #if 0

@@ -858,6 +858,8 @@
                      FT_Pos  out_x,
                      FT_Pos  out_y )
   {
+#if 0
+
     FT_Pos  ax = in_x;
     FT_Pos  ay = in_y;
 
@@ -901,6 +903,27 @@
     if ( ay < 0 )
       ay = -ay;
     d_corner = ax + ay;  /* d_corner = || in + out || */
+
+#else
+
+    FT_Pos  ax = in_x + out_x;
+    FT_Pos  ay = in_y + out_y;
+
+    FT_Pos  d_in, d_out, d_corner;
+
+    /* The original implementation always returned TRUE      */
+    /* for vectors from the same quadrant dues to additivity */
+    /* of Taxicab metric there. The alpha max plus beta min  */
+    /* algorithm used here is additive within each octant,   */
+    /* so we now reject some near 90-degree corners within   */
+    /* quadrants, consistently with eliptic definition of    */
+    /* flat corner.                                          */
+
+    d_in     = FT_HYPOT(  in_x,  in_y );
+    d_out    = FT_HYPOT( out_x, out_y );
+    d_corner = FT_HYPOT(    ax,    ay );
+
+#endif
 
     /* now do a simple length comparison: */
     /*                                    */
