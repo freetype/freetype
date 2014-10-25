@@ -858,78 +858,40 @@
                      FT_Pos  out_x,
                      FT_Pos  out_y )
   {
-#if 0
-
-    FT_Pos  ax = in_x;
-    FT_Pos  ay = in_y;
-
-    FT_Pos  d_in, d_out, d_corner;
-
-
-    /* We approximate the Euclidean metric (sqrt(x^2 + y^2)) with */
-    /* the Taxicab metric (|x| + |y|), which can be computed much */
-    /* faster.  If one of the two vectors is much longer than the */
-    /* other one, the direction of the shorter vector doesn't     */
-    /* influence the result any more.                             */
-    /*                                                            */
-    /*                 corner                                     */
-    /*       x---------------------------x                        */
-    /*        \                      /                            */
-    /*         \                /                                 */
-    /*      in  \          /  out                                 */
-    /*           \    /                                           */
-    /*            o                                               */
-    /*              Point                                         */
-    /*                                                            */
-
-    if ( ax < 0 )
-      ax = -ax;
-    if ( ay < 0 )
-      ay = -ay;
-    d_in = ax + ay;  /* d_in = || in || */
-
-    ax = out_x;
-    if ( ax < 0 )
-      ax = -ax;
-    ay = out_y;
-    if ( ay < 0 )
-      ay = -ay;
-    d_out = ax + ay;  /* d_out = || out || */
-
-    ax = out_x + in_x;
-    if ( ax < 0 )
-      ax = -ax;
-    ay = out_y + in_y;
-    if ( ay < 0 )
-      ay = -ay;
-    d_corner = ax + ay;  /* d_corner = || in + out || */
-
-#else
-
     FT_Pos  ax = in_x + out_x;
     FT_Pos  ay = in_y + out_y;
 
-    FT_Pos  d_in, d_out, d_corner;
+    FT_Pos  d_in, d_out, d_hypot;
 
-    /* The original implementation always returned TRUE      */
-    /* for vectors from the same quadrant dues to additivity */
-    /* of Taxicab metric there. The alpha max plus beta min  */
-    /* algorithm used here is additive within each octant,   */
-    /* so we now reject some near 90-degree corners within   */
-    /* quadrants, consistently with eliptic definition of    */
-    /* flat corner.                                          */
 
-    d_in     = FT_HYPOT(  in_x,  in_y );
-    d_out    = FT_HYPOT( out_x, out_y );
-    d_corner = FT_HYPOT(    ax,    ay );
+    /* The idea of this function is to compare the length of the */
+    /* hypotenuse with the `in' and `out' length.  The `corner'  */
+    /* represented by `in' and `out' is flat if the hypotenuse's */
+    /* length isn't too large.                                   */
+    /*                                                           */
+    /* This approach has the advantage that the angle between    */
+    /* `in' and `out' is not checked.  In case one of the two    */
+    /* vectors is `dominant', this is, much larger than the      */
+    /* other vector, we thus always have a flat corner.          */
+    /*                                                           */
+    /*                hypotenuse                                 */
+    /*       x---------------------------x                       */
+    /*        \                      /                           */
+    /*         \                /                                */
+    /*      in  \          /  out                                */
+    /*           \    /                                          */
+    /*            o                                              */
+    /*              Point                                        */
 
-#endif
+    d_in    = FT_HYPOT(  in_x,  in_y );
+    d_out   = FT_HYPOT( out_x, out_y );
+    d_hypot = FT_HYPOT(    ax,    ay );
 
     /* now do a simple length comparison: */
     /*                                    */
-    /*   d_in + d_out < 17/16 d_corner    */
+    /*   d_in + d_out < 17/16 d_hypot     */
 
-    return ( d_in + d_out - d_corner ) < ( d_corner >> 4 );
+    return ( d_in + d_out - d_hypot ) < ( d_hypot >> 4 );
   }
 
 

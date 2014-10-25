@@ -363,11 +363,14 @@ FT_BEGIN_HEADER
 
 
   /*
-   *  Approximate sqrt(x*x+y*y) using alpha max plus beta min algorithm. 
+   *  Approximate sqrt(x*x+y*y) using the `alpha max plus beta min'
+   *  algorithm.  We use alpha = 1, beta = 3/8, giving us results with a
+   *  largest error less than 7% compared to the exact value.
    */  
-#define FT_HYPOT( x, y )                      \
-          ( x = FT_ABS( x ), y = FT_ABS( y ), \
-            x > y ? x + ( 3 * y >> 3 )        \
+#define FT_HYPOT( x, y )                 \
+          ( x = FT_ABS( x ),             \
+            y = FT_ABS( y ),             \
+            x > y ? x + ( 3 * y >> 3 )   \
                   : y + ( 3 * x >> 3 ) )
 
 
