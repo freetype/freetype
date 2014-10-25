@@ -61,7 +61,7 @@ FT_BEGIN_HEADER
   /*    that are statically linked to the library at compile time.  By     */
   /*    default, this file is <config/ftmodule.h>.                         */
   /*                                                                       */
-  /*  We highly recommend using the third method whenever possible.        */
+  /* We highly recommend using the third method whenever possible.         */
   /*                                                                       */
   /*************************************************************************/
 
@@ -216,7 +216,7 @@ FT_BEGIN_HEADER
 
   /*************************************************************************/
   /*                                                                       */
-  /*  PNG bitmap support.                                                  */
+  /* PNG bitmap support.                                                   */
   /*                                                                       */
   /*   FreeType now handles loading color bitmap glyphs in the PNG format. */
   /*   This requires help from the external libpng library.  Uncompressed  */
@@ -230,7 +230,7 @@ FT_BEGIN_HEADER
 
   /*************************************************************************/
   /*                                                                       */
-  /*  HarfBuzz support.                                                    */
+  /* HarfBuzz support.                                                     */
   /*                                                                       */
   /*   FreeType uses the HarfBuzz library to improve auto-hinting of       */
   /*   OpenType fonts.  If available, many glyphs not directly addressable */
@@ -844,8 +844,8 @@ FT_BEGIN_HEADER
 
 
   /*
-   *  This macro is obsolete.  Support has been removed in FreeType
-   *  version 2.5.
+   * This macro is obsolete.  Support has been removed in FreeType
+   * version 2.5.
    */
 /* #define FT_CONFIG_OPTION_OLD_INTERNALS */
 
