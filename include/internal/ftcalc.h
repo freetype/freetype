@@ -314,7 +314,7 @@ FT_BEGIN_HEADER
 
   /*
    *  Return TRUE if a corner is flat or nearly flat.  This is equivalent to
-   *  saying that the corner point is close to its neighbors, or inside an 
+   *  saying that the corner point is close to its neighbors, or inside an
    *  ellipse defined by the neighbor focal points to be more precise.
    */
   FT_BASE( FT_Int )
@@ -360,18 +360,6 @@ FT_BEGIN_HEADER
   FT_BASE( FT_Fixed )
   FT_Hypot( FT_Fixed  x,
             FT_Fixed  y );
-
-
-  /*
-   *  Approximate sqrt(x*x+y*y) using the `alpha max plus beta min'
-   *  algorithm.  We use alpha = 1, beta = 3/8, giving us results with a
-   *  largest error less than 7% compared to the exact value.
-   */  
-#define FT_HYPOT( x, y )                 \
-          ( x = FT_ABS( x ),             \
-            y = FT_ABS( y ),             \
-            x > y ? x + ( 3 * y >> 3 )   \
-                  : y + ( 3 * x >> 3 ) )
 
 
 #if 0

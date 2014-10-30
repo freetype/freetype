@@ -1091,37 +1091,10 @@ typedef ptrdiff_t  FT_PtrDist;
 
 
         /* dx and dy are x and y components of the P0-P3 chord vector. */
-        dx = arc[3].x - arc[0].x;
-        dy = arc[3].y - arc[0].y;
+        dx = dx_ = arc[3].x - arc[0].x;
+        dy = dy_ = arc[3].y - arc[0].y;
 
-        /* L is an (under)estimate of the Euclidean distance P0-P3.       */
-        /*                                                                */
-        /* If dx >= dy, then r = sqrt(dx^2 + dy^2) can be overestimated   */
-        /* with least maximum error by                                    */
-        /*                                                                */
-        /*   r_upperbound = dx + (sqrt(2) - 1) * dy  ,                    */
-        /*                                                                */
-        /* where sqrt(2) - 1 can be (over)estimated by 107/256, giving an */
-        /* error of no more than 8.4%.                                    */
-        /*                                                                */
-        /* Similarly, some elementary calculus shows that r can be        */
-        /* underestimated with least maximum error by                     */
-        /*                                                                */
-        /*   r_lowerbound = sqrt(2 + sqrt(2)) / 2 * dx                    */
-        /*                  + sqrt(2 - sqrt(2)) / 2 * dy  .               */
-        /*                                                                */
-        /* 236/256 and 97/256 are (under)estimates of the two algebraic   */
-        /* numbers, giving an error of no more than 8.1%.                 */
-
-        dx_ = FT_ABS( dx );
-        dy_ = FT_ABS( dy );
-
-        /* This is the same as                     */
-        /*                                         */
-        /*   L = ( 236 * FT_MAX( dx_, dy_ )        */
-        /*       + 97 * FT_MIN( dx_, dy_ ) ) >> 8; */
-        L = ( dx_ > dy_ ? 236 * dx_ +  97 * dy_
-                        :  97 * dx_ + 236 * dy_ ) >> 8;
+        L = FT_HYPOT( dx_, dy_ );
 
         /* Avoid possible arithmetic overflow below by splitting. */
         if ( L > 32767 )

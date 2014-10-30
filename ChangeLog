@@ -1,3 +1,11 @@
+2014-10-29  Alexei Podtelezhnikov  <apodtele@gmail.com>
+
+	Unify hypotenuse approximations.
+
+	* include/internal/ftcalc.h (FT_HYPOT): Move macro from here...
+	* include/internal/ftobjs.h: ... to here, next to required `FT_ABS'.
+	* src/smooth/ftgrays.c (gray_render_cubic): Use it here.
+
 2014-10-25  Werner Lemberg  <wl@gnu.org>
 
 	[cff] Test valid darkening parameter macros in `ftoption.h'.
