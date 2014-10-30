@@ -1,5 +1,11 @@
 2014-10-29  Alexei Podtelezhnikov  <apodtele@gmail.com>
 
+	[smooth] Improve code readability.
+
+	* src/smooth/ftsmooth.c (ft_smooth_render_generic): Rearrange code.
+
+2014-10-29  Alexei Podtelezhnikov  <apodtele@gmail.com>
+
 	Unify hypotenuse approximations.
 
 	* include/internal/ftcalc.h (FT_HYPOT): Move macro from here...

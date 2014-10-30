@@ -182,14 +182,6 @@
     height_org = height;
 #endif
 
-    /* release old bitmap buffer */
-    if ( slot->internal->flags & FT_GLYPH_OWN_BITMAP )
-    {
-      FT_FREE( bitmap->buffer );
-      slot->internal->flags &= ~FT_GLYPH_OWN_BITMAP;
-    }
-
-    /* allocate new one */
     pitch = width;
     if ( hmul )
     {
@@ -250,16 +242,24 @@
     bitmap->rows       = height;
     bitmap->pitch      = pitch;
 
-    /* translate outline to render it into the bitmap */
-    FT_Outline_Translate( outline, -x_shift, -y_shift );
-    have_outline_shifted = TRUE;
+    /* release old bitmap buffer */
+    if ( slot->internal->flags & FT_GLYPH_OWN_BITMAP )
+    {
+      FT_FREE( bitmap->buffer );
+      slot->internal->flags &= ~FT_GLYPH_OWN_BITMAP;
+    }
 
+    /* allocate new one */
     if ( FT_ALLOC( bitmap->buffer, (FT_ULong)pitch * height ) )
       goto Exit;
     else
       have_buffer = TRUE;
 
     slot->internal->flags |= FT_GLYPH_OWN_BITMAP;
+
+    /* translate outline to render it into the bitmap */
+    FT_Outline_Translate( outline, -x_shift, -y_shift );
+    have_outline_shifted = TRUE;
 
     /* set up parameters */
     params.target = bitmap;
