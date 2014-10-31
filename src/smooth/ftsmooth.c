@@ -119,9 +119,8 @@
 
     FT_Raster_Params  params;
 
-    FT_Bool  have_translated_origin = FALSE;
-    FT_Bool  have_outline_shifted   = FALSE;
-    FT_Bool  have_buffer            = FALSE;
+    FT_Bool  have_outline_shifted = FALSE;
+    FT_Bool  have_buffer          = FALSE;
 
 
     /* check glyph image format */
@@ -140,20 +139,20 @@
 
     outline = &slot->outline;
 
-    /* translate the outline to the new origin if needed */
+    /* account for the oigin shift */
     if ( origin )
     {
-      FT_Outline_Translate( outline, origin->x, origin->y );
-      have_translated_origin = TRUE;
+      x_shift = origin->x;
+      y_shift = origin->y;
     }
 
     /* compute the control box, and grid fit it */
     FT_Outline_Get_CBox( outline, &cbox );
 
-    cbox.xMin = FT_PIX_FLOOR( cbox.xMin );
-    cbox.yMin = FT_PIX_FLOOR( cbox.yMin );
-    cbox.xMax = FT_PIX_CEIL( cbox.xMax );
-    cbox.yMax = FT_PIX_CEIL( cbox.yMax );
+    cbox.xMin = FT_PIX_FLOOR( cbox.xMin + x_shift );
+    cbox.yMin = FT_PIX_FLOOR( cbox.yMin + y_shift );
+    cbox.xMax = FT_PIX_CEIL( cbox.xMax + x_shift );
+    cbox.yMax = FT_PIX_CEIL( cbox.yMax + y_shift );
 
     width  = (FT_ULong)( cbox.xMax - cbox.xMin ) >> 6;
     height = (FT_ULong)( cbox.yMax - cbox.yMin ) >> 6;
@@ -173,8 +172,9 @@
     if ( vmul )
       height *= 3;
 
-    x_shift = cbox.xMin;
-    y_shift = cbox.yMin;
+    x_shift -= cbox.xMin;
+    y_shift -= cbox.yMin;
+
     x_left  = cbox.xMin >> 6;
     y_top   = cbox.yMax >> 6;
 
@@ -187,7 +187,7 @@
 
       if ( hmul )
       {
-        x_shift -= 64 * ( extra >> 1 );
+        x_shift += 64 * ( extra >> 1 );
         width   += 3 * extra;
         pitch    = FT_PAD_CEIL( width, 4 );
         x_left  -= extra >> 1;
@@ -195,7 +195,7 @@
 
       if ( vmul )
       {
-        y_shift -= 64 * ( extra >> 1 );
+        y_shift += 64 * ( extra >> 1 );
         height  += 3 * extra;
         y_top   += extra >> 1;
       }
@@ -235,8 +235,11 @@
     slot->internal->flags |= FT_GLYPH_OWN_BITMAP;
 
     /* translate outline to render it into the bitmap */
-    FT_Outline_Translate( outline, -x_shift, -y_shift );
-    have_outline_shifted = TRUE;
+    if ( x_shift || y_shift )
+    {
+      FT_Outline_Translate( outline, x_shift, y_shift );
+      have_outline_shifted = TRUE;
+    }
 
     /* set up parameters */
     params.target = bitmap;
@@ -364,9 +367,7 @@
 
   Exit:
     if ( have_outline_shifted )
-      FT_Outline_Translate( outline, x_shift, y_shift );
-    if ( have_translated_origin )
-      FT_Outline_Translate( outline, -origin->x, -origin->y );
+      FT_Outline_Translate( outline, -x_shift, -y_shift );
     if ( have_buffer )
     {
       FT_FREE( bitmap->buffer );
