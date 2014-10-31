@@ -155,27 +155,8 @@
     cbox.xMax = FT_PIX_CEIL( cbox.xMax );
     cbox.yMax = FT_PIX_CEIL( cbox.yMax );
 
-    if ( cbox.xMin < 0 && cbox.xMax > FT_INT_MAX + cbox.xMin )
-    {
-      FT_ERROR(( "ft_smooth_render_generic: glyph too large:"
-                 " xMin = %d, xMax = %d\n",
-                 cbox.xMin >> 6, cbox.xMax >> 6 ));
-      error = FT_THROW( Raster_Overflow );
-      goto Exit;
-    }
-    else
-      width = ( cbox.xMax - cbox.xMin ) >> 6;
-
-    if ( cbox.yMin < 0 && cbox.yMax > FT_INT_MAX + cbox.yMin )
-    {
-      FT_ERROR(( "ft_smooth_render_generic: glyph too large:"
-                 " yMin = %d, yMax = %d\n",
-                 cbox.yMin >> 6, cbox.yMax >> 6 ));
-      error = FT_THROW( Raster_Overflow );
-      goto Exit;
-    }
-    else
-      height = ( cbox.yMax - cbox.yMin ) >> 6;
+    width  = (FT_ULong)( cbox.xMax - cbox.xMin ) >> 6;
+    height = (FT_ULong)( cbox.yMax - cbox.yMin ) >> 6;
 
 #ifndef FT_CONFIG_OPTION_SUBPIXEL_RENDERING
     width_org  = width;
@@ -192,10 +173,10 @@
     if ( vmul )
       height *= 3;
 
-    x_shift = (FT_Int) cbox.xMin;
-    y_shift = (FT_Int) cbox.yMin;
-    x_left  = (FT_Int)( cbox.xMin >> 6 );
-    y_top   = (FT_Int)( cbox.yMax >> 6 );
+    x_shift = cbox.xMin;
+    y_shift = cbox.yMin;
+    x_left  = cbox.xMin >> 6;
+    y_top   = cbox.yMax >> 6;
 
 #ifdef FT_CONFIG_OPTION_SUBPIXEL_RENDERING
 
@@ -222,8 +203,6 @@
 
 #endif
 
-#if FT_UINT_MAX > 0xFFFFU
-
     /* Required check is (pitch * height < FT_ULONG_MAX),        */
     /* but we care realistic cases only.  Always pitch <= width. */
     if ( width > 0x7FFF || height > 0x7FFF )
@@ -233,8 +212,6 @@
       error = FT_THROW( Raster_Overflow );
       goto Exit;
     }
-
-#endif
 
     bitmap->pixel_mode = FT_PIXEL_MODE_GRAY;
     bitmap->num_grays  = 256;

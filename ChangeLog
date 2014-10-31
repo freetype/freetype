@@ -1,3 +1,10 @@
+2014-10-30  Alexei Podtelezhnikov  <apodtele@gmail.com>
+
+	[smooth] Fix Savannah bug #35604 (cont'd).
+
+	* src/smooth/ftsmooth.c (ft_smooth_render_generic): Remove checks and
+	casts that became unnecessary after the variable type upgrades.
+
 2014-10-29  Alexei Podtelezhnikov  <apodtele@gmail.com>
 
 	[smooth] Improve code readability.
