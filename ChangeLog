@@ -1,5 +1,11 @@
 2014-10-31  Alexei Podtelezhnikov  <apodtele@gmail.com>
 
+	[smooth] Improve code readability.
+
+	* src/smooth/ftsmooth.c (ft_smooth_render_generic): Rearrange code.
+
+2014-10-31  Alexei Podtelezhnikov  <apodtele@gmail.com>
+
 	[smooth] Reduce outline translations during rendering.
 
 	* src/smooth/ftsmooth.c (ft_smooth_render_generic): Translate origin

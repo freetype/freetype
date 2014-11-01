@@ -103,19 +103,19 @@
                             FT_Render_Mode    required_mode )
   {
     FT_Error     error;
-    FT_Outline*  outline = NULL;
+    FT_Outline*  outline = &slot->outline;
+    FT_Bitmap*   bitmap  = &slot->bitmap;
+    FT_Memory    memory  = render->root.memory;
     FT_BBox      cbox;
+    FT_Pos       x_shift = 0;
+    FT_Pos       y_shift = 0;
+    FT_Pos       x_left, y_top;
     FT_Pos       width, height, pitch;
 #ifndef FT_CONFIG_OPTION_SUBPIXEL_RENDERING
     FT_Pos       height_org, width_org;
 #endif
-    FT_Bitmap*   bitmap  = &slot->bitmap;
-    FT_Memory    memory  = render->root.memory;
     FT_Int       hmul    = mode == FT_RENDER_MODE_LCD;
     FT_Int       vmul    = mode == FT_RENDER_MODE_LCD_V;
-    FT_Pos       x_shift = 0;
-    FT_Pos       y_shift = 0;
-    FT_Pos       x_left, y_top;
 
     FT_Raster_Params  params;
 
@@ -137,9 +137,6 @@
       goto Exit;
     }
 
-    outline = &slot->outline;
-
-    /* account for the oigin shift */
     if ( origin )
     {
       x_shift = origin->x;
@@ -147,12 +144,19 @@
     }
 
     /* compute the control box, and grid fit it */
+    /* taking into account the origin shift     */
     FT_Outline_Get_CBox( outline, &cbox );
 
     cbox.xMin = FT_PIX_FLOOR( cbox.xMin + x_shift );
     cbox.yMin = FT_PIX_FLOOR( cbox.yMin + y_shift );
     cbox.xMax = FT_PIX_CEIL( cbox.xMax + x_shift );
     cbox.yMax = FT_PIX_CEIL( cbox.yMax + y_shift );
+
+    x_shift -= cbox.xMin;
+    y_shift -= cbox.yMin;
+
+    x_left  = cbox.xMin >> 6;
+    y_top   = cbox.yMax >> 6;
 
     width  = (FT_ULong)( cbox.xMax - cbox.xMin ) >> 6;
     height = (FT_ULong)( cbox.yMax - cbox.yMin ) >> 6;
@@ -165,18 +169,12 @@
     pitch = width;
     if ( hmul )
     {
-      width = width * 3;
-      pitch = FT_PAD_CEIL( width, 4 );
+      width *= 3;
+      pitch  = FT_PAD_CEIL( width, 4 );
     }
 
     if ( vmul )
       height *= 3;
-
-    x_shift -= cbox.xMin;
-    y_shift -= cbox.yMin;
-
-    x_left  = cbox.xMin >> 6;
-    y_top   = cbox.yMax >> 6;
 
 #ifdef FT_CONFIG_OPTION_SUBPIXEL_RENDERING
 
@@ -188,20 +186,30 @@
       if ( hmul )
       {
         x_shift += 64 * ( extra >> 1 );
+        x_left  -= extra >> 1;
         width   += 3 * extra;
         pitch    = FT_PAD_CEIL( width, 4 );
-        x_left  -= extra >> 1;
       }
 
       if ( vmul )
       {
         y_shift += 64 * ( extra >> 1 );
-        height  += 3 * extra;
         y_top   += extra >> 1;
+        height  += 3 * extra;
       }
     }
 
 #endif
+
+    /*
+     * XXX: on 16bit system, we return an error for huge bitmap
+     * to prevent an overflow.
+     */
+    if ( x_left > FT_INT_MAX || y_top > FT_INT_MAX )
+    {
+      error = FT_THROW( Invalid_Pixel_Size );
+      goto Exit;
+    }
 
     /* Required check is (pitch * height < FT_ULONG_MAX),        */
     /* but we care realistic cases only.  Always pitch <= width. */
@@ -212,12 +220,6 @@
       error = FT_THROW( Raster_Overflow );
       goto Exit;
     }
-
-    bitmap->pixel_mode = FT_PIXEL_MODE_GRAY;
-    bitmap->num_grays  = 256;
-    bitmap->width      = width;
-    bitmap->rows       = height;
-    bitmap->pitch      = pitch;
 
     /* release old bitmap buffer */
     if ( slot->internal->flags & FT_GLYPH_OWN_BITMAP )
@@ -233,6 +235,16 @@
       have_buffer = TRUE;
 
     slot->internal->flags |= FT_GLYPH_OWN_BITMAP;
+
+    slot->format      = FT_GLYPH_FORMAT_BITMAP;
+    slot->bitmap_left = (FT_Int)x_left;
+    slot->bitmap_top  = (FT_Int)y_top;
+
+    bitmap->pixel_mode = FT_PIXEL_MODE_GRAY;
+    bitmap->num_grays  = 256;
+    bitmap->width      = width;
+    bitmap->rows       = height;
+    bitmap->pitch      = pitch;
 
     /* translate outline to render it into the bitmap */
     if ( x_shift || y_shift )
@@ -345,20 +357,6 @@
     }
 
 #endif /* !FT_CONFIG_OPTION_SUBPIXEL_RENDERING */
-
-    /*
-     * XXX: on 16bit system, we return an error for huge bitmap
-     * to prevent an overflow.
-     */
-    if ( x_left > FT_INT_MAX || y_top > FT_INT_MAX )
-    {
-      error = FT_THROW( Invalid_Pixel_Size );
-      goto Exit;
-    }
-
-    slot->format      = FT_GLYPH_FORMAT_BITMAP;
-    slot->bitmap_left = (FT_Int)x_left;
-    slot->bitmap_top  = (FT_Int)y_top;
 
     /* everything is fine; don't deallocate buffer */
     have_buffer = FALSE;
