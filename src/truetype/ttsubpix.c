@@ -282,7 +282,7 @@
   const SPH_TweakRule  COMPATIBILITY_MODE_Rules
                        [COMPATIBILITY_MODE_RULES_SIZE] =
   {
-    { "-", 0, "", 0 },
+    { "Verdana Clones", 0, "", 0 },
   };
 
 

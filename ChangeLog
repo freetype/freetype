@@ -1,3 +1,10 @@
+2014-11-03  Infinality  <infinality@infinality.net>
+
+	* src/truetype/ttsubpix.c (COMPATIBILITY_MODE_Rules): Updated.
+
+	The previous commit deteriorates rendering of DejaVu and similar
+	fonts; this gets compensated with this rule.
+
 2014-11-03  Werner Lemberg  <wl@gnu.org>
 
 	* src/truetype/ttinterp.c (Ins_DELTAP): Fix subpixel hinting.
