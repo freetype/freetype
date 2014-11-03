@@ -7581,42 +7581,33 @@
             /*
              *  Allow delta move if
              *
-             *  - not using ignore_x_mode rendering
-             *  - glyph is specifically set to allow it
-             *  - glyph is composite and freedom vector is not subpixel
-             *    vector
+             *  - not using ignore_x_mode rendering,
+             *  - glyph is specifically set to allow it, or
+             *  - glyph is composite and freedom vector is not in subpixel
+             *    direction.
              */
             if ( !CUR.ignore_x_mode                                   ||
                  ( CUR.sph_tweak_flags & SPH_TWEAK_ALWAYS_DO_DELTAP ) ||
                  ( CUR.is_composite && CUR.GS.freeVector.y != 0 )     )
               CUR_Func_move( &CUR.zp0, A, B );
 
-            /* Otherwise apply subpixel hinting and */
-            /* compatibility mode rules             */
-            else if ( CUR.ignore_x_mode )
+            /* Otherwise, apply subpixel hinting and compatibility mode */
+            /* rules, always skipping deltas in subpixel direction.     */
+            else if ( CUR.ignore_x_mode && CUR.GS.freeVector.y != 0 )
             {
-              if ( CUR.GS.freeVector.y != 0 )
-                B1 = (FT_UShort)CUR.zp0.cur[A].y;
-              else
-                B1 = (FT_UShort)CUR.zp0.cur[A].x;
+              /* save the y value of the point now; compare after move */
+              B1 = (FT_UShort)CUR.zp0.cur[A].y;
 
-#if 0
-              /* Standard Subpixel Hinting: Allow y move.       */
-              /* This messes up dejavu and may not be needed... */
-              if ( !CUR.face->sph_compatibility_mode &&
-                   CUR.GS.freeVector.y != 0          )
+              /* Standard subpixel hinting: Allow y move for y-touched */
+              /* points.  This messes up DejaVu ...                    */
+              if ( !CUR.face->sph_compatibility_mode          &&
+                   ( CUR.zp0.tags[A] & FT_CURVE_TAG_TOUCH_Y ) )
                 CUR_Func_move( &CUR.zp0, A, B );
-              else
-#endif /* 0 */
 
-              /* Compatibility Mode: Allow x or y move if point touched in */
-              /* Y direction.                                              */
-              if ( CUR.face->sph_compatibility_mode                      &&
-                   !( CUR.sph_tweak_flags & SPH_TWEAK_ALWAYS_SKIP_DELTAP ) )
+              /* compatibility mode */
+              else if ( CUR.face->sph_compatibility_mode                      &&
+                        !( CUR.sph_tweak_flags & SPH_TWEAK_ALWAYS_SKIP_DELTAP ) )
               {
-                /* save the y value of the point now; compare after move */
-                B1 = (FT_UShort)CUR.zp0.cur[A].y;
-
                 if ( CUR.sph_tweak_flags & SPH_TWEAK_ROUND_NONPIXEL_Y_MOVES )
                   B = FT_PIX_ROUND( B1 + B ) - B1;
 

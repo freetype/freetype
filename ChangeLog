@@ -1,3 +1,17 @@
+2014-11-03  Werner Lemberg  <wl@gnu.org>
+
+	* src/truetype/ttinterp.c (Ins_DELTAP): Fix subpixel hinting.
+
+	Before this patch, it was impossible to ever call DELTAP[123] in
+	subpixel hinting mode as described in the ClearType whitepaper; it
+	only worked if in `compatibility mode'.  However, compatibility mode
+	essentially disables SHPIX, completely ruining hinting of
+	ttfautohint output, for example.
+
+	We now follow the whitepaper more closely so that DELTAP[123]
+	instructions for touched points in the non-subpixel direction are
+	executed.
+
 2014-10-31  Alexei Podtelezhnikov  <apodtele@gmail.com>
 
 	[smooth] Improve code readability.
