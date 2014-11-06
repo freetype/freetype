@@ -1,3 +1,7 @@
+2014-11-06  Werner Lemberg  <wl@gnu.org>
+
+	* src/pcf/pcfread.c (pcf_read_TOC): Avoid memory leak.
+
 2014-11-03  Infinality  <infinality@infinality.net>
 
 	* src/truetype/ttsubpix.c (COMPATIBILITY_MODE_Rules): Updated.
