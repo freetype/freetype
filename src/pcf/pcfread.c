@@ -830,6 +830,15 @@ THE SOFTWARE.
     if ( !PCF_FORMAT_MATCH( format, PCF_DEFAULT_FORMAT ) )
       return FT_THROW( Invalid_File_Format );
 
+    /* sanity checks */
+    if ( firstCol < 0       ||
+         firstCol > lastCol ||
+         lastCol  > 0xFF    ||
+         firstRow < 0       ||
+         firstRow > lastRow ||
+         lastRow  > 0xFF    )
+      return FT_THROW( Invalid_Table );
+
     FT_TRACE4(( "pdf_get_encodings:\n" ));
 
     FT_TRACE4(( "  firstCol %d, lastCol %d, firstRow %d, lastRow %d\n",
