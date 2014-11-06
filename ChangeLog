@@ -1,5 +1,12 @@
 2014-11-06  Werner Lemberg  <wl@gnu.org>
 
+	Fix Savannah bug #43547.
+
+	* src/pcf/pcfread.c (pcf_read_TOC): Check `size' and `offset'
+	values.
+
+2014-11-06  Werner Lemberg  <wl@gnu.org>
+
 	* src/pcf/pcfread.c (pcf_read_TOC): Avoid memory leak.
 
 2014-11-03  Infinality  <infinality@infinality.net>
