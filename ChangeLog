@@ -1,9 +1,17 @@
+2014-11-07  Werner Lemberg  <wl@gnu.org>
+
+	Fix Savannah bug #43535.
+
+	* src/bdf/bdflib.c (_bdf_strncmp): New macro that checks one
+	character more than `strncmp'.
+	s/ft_strncmp/_bdf_strncmp/ everywhere.
+
 2014-11-06  Werner Lemberg  <wl@gnu.org>
 
 	Fix Savannah bug #43548.
 
-	* src/pcf/pcfread (pcf_get_encodings): Add sanity checks for row and
-	column values.
+	* src/pcf/pcfread.c (pcf_get_encodings): Add sanity checks for row
+	and column values.
 
 2014-11-06  Werner Lemberg  <wl@gnu.org>
 
