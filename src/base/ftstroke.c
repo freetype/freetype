@@ -4,7 +4,7 @@
 /*                                                                         */
 /*    FreeType path stroker (body).                                        */
 /*                                                                         */
-/*  Copyright 2002-2006, 2008-2011, 2013 by                                */
+/*  Copyright 2002-2006, 2008-2011, 2013, 2014 by                          */
 /*  David Turner, Robert Wilhelm, and Werner Lemberg.                      */
 /*                                                                         */
 /*  This file is part of the FreeType project, and may only be used,       */
@@ -1002,7 +1002,8 @@
                                                     FT_Tan( theta ) ) );
 
 
-      intersect = FT_BOOL( stroker->line_length >= min_length &&
+      intersect = FT_BOOL( min_length                         &&
+                           stroker->line_length >= min_length &&
                            line_length          >= min_length );
     }
 

@@ -1,3 +1,11 @@
+2014-11-09  Werner Lemberg  <wl@gnu.org>
+
+	* src/base/ftstroke.c (ft_stroker_inside): Fix border intersections.
+
+	One more place to check whether `radius' is zero.
+
+	Problem reported by Marco Wertz <marco.wertz@gmx.de>.
+
 2014-11-07  Werner Lemberg  <wl@gnu.org>
 
 	Fix Savannah bug #43535.
