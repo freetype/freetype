@@ -60,15 +60,18 @@
   static FT_Fixed
   ft_trig_downscale( FT_Fixed  val )
   {
-    FT_Fixed  s;
-    FT_Int64  v;
+    FT_Int  s = 1;
 
 
-    s   = val;
-    val = FT_ABS( val );
+    if ( val < 0 )
+    {
+       val = -val;
+       s = -1;
+    }
 
-    v   = ( val * (FT_Int64)FT_TRIG_SCALE ) + 0x100000000UL;
-    val = (FT_Fixed)( v >> 32 );
+    /* 0x40000000 comes from regression analysis between true */
+    /* and CORDIC hypotenuse, so it minimizes the error       */
+    val = (FT_Fixed)( ( (FT_Int64)val * FT_TRIG_SCALE + 0x40000000UL ) >> 32 );
 
     return ( s >= 0 ) ? val : -val;
   }
@@ -79,29 +82,43 @@
   static FT_Fixed
   ft_trig_downscale( FT_Fixed  val )
   {
-    FT_Fixed   s;
-    FT_UInt32  v1, v2, k1, k2, hi, lo1, lo2, lo3;
+    FT_Int     s = 1;
+    FT_UInt32  lo1, hi1, lo2, hi2, lo, hi, i1, i2;
 
 
-    s   = val;
-    val = FT_ABS( val );
+    if ( val < 0 )
+    {
+       val = -val;
+       s = -1;
+    }
 
-    v1 = (FT_UInt32)val >> 16;
-    v2 = (FT_UInt32)( val & 0xFFFFL );
+    lo1 = val & 0x0000FFFFU;
+    hi1 = val >> 16;
+    lo2 = FT_TRIG_SCALE & 0x0000FFFFU;
+    hi2 = FT_TRIG_SCALE >> 16;
 
-    k1 = (FT_UInt32)FT_TRIG_SCALE >> 16;           /* constant */
-    k2 = (FT_UInt32)( FT_TRIG_SCALE & 0xFFFFL );   /* constant */
+    lo = lo1 * lo2;
+    i1 = lo1 * hi2;
+    i2 = lo2 * hi1;
+    hi = hi1 * hi2;
 
-    hi   = k1 * v1;
-    lo1  = k1 * v2 + k2 * v1;       /* can't overflow */
+    /* Check carry overflow of i1 + i2 */
+    i1 += i2;
+    hi += (FT_UInt32)( i1 < i2 ) << 16;
 
-    lo2  = ( k2 * v2 ) >> 16;
-    lo3  = FT_MAX( lo1, lo2 );
-    lo1 += lo2;
+    hi += i1 >> 16;
+    i1  = i1 << 16;
 
-    hi  += lo1 >> 16;
-    if ( lo1 < lo3 )
-      hi += (FT_UInt32)0x10000UL;
+    /* Check carry overflow of i1 + lo */
+    lo += i1;
+    hi += ( lo < i1 );
+
+    /* 0x40000000 comes from regression analysis between true */
+    /* and CORDIC hypotenuse, so it minimizes the error       */
+
+    /* Check carry overflow of lo + 0x40000000 */
+    lo += 0x40000000U;
+    hi += ( lo < 0x40000000U );
 
     val  = (FT_Fixed)hi;
 
@@ -111,7 +128,7 @@
 #endif /* !FT_LONG64 */
 
 
-  /* undefined and never called for zero vector */  
+  /* undefined and never called for zero vector */
   static FT_Int
   ft_trig_prenorm( FT_Vector*  vec )
   {
@@ -262,11 +279,12 @@
       }
     }
 
-    /* round theta */
+    /* round theta to acknowledge its error that mostly comes */
+    /* from accumulated rounding errors in the arctan table   */
     if ( theta >= 0 )
-      theta = FT_PAD_ROUND( theta, 32 );
+      theta = FT_PAD_ROUND( theta, 16 );
     else
-      theta = -FT_PAD_ROUND( -theta, 32 );
+      theta = -FT_PAD_ROUND( -theta, 16 );
 
     vec->x = x;
     vec->y = theta;

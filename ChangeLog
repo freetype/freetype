@@ -1,3 +1,15 @@
+2014-11-10  Alexei Podtelezhnikov  <apodtele@gmail.com>
+
+	[base] CORDIC improvements.
+
+	The scaling between the hypotenuse and its CORDIC approximation is
+	based on regression analysis. The smaller padding for `theta' is
+	justifed by its maximum error of less than 6.
+
+	* src/base/fttrigon.c (ft_trig_downscale): Borrow code from
+	./ftcalc.c (ft_multo64), change linear intercept.
+	(ft_trig_pseudo_polarize): Decrease `theta' padding.
+
 2014-11-09  Werner Lemberg  <wl@gnu.org>
 
 	* src/base/ftstroke.c (ft_stroker_inside): Fix border intersections.
