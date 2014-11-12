@@ -1,3 +1,11 @@
+2014-11-12  Werner Lemberg  <wl@gnu.org>
+
+	[sfnt] Fix Savannah bug #43588.
+
+	* src/sfnt/ttcmap.c (tt_cmap8_validate, tt_cmap10_validate,
+	tt_cmap12_validate, tt_cmap13_validate, tt_cmap14_validate): Protect
+	against overflow in additions and multiplications.
+
 2014-11-10  Alexei Podtelezhnikov  <apodtele@gmail.com>
 
 	[base] CORDIC improvements.
@@ -20,7 +28,7 @@
 
 2014-11-07  Werner Lemberg  <wl@gnu.org>
 
-	Fix Savannah bug #43535.
+	[bdf] Fix Savannah bug #43535.
 
 	* src/bdf/bdflib.c (_bdf_strncmp): New macro that checks one
 	character more than `strncmp'.
@@ -28,14 +36,14 @@
 
 2014-11-06  Werner Lemberg  <wl@gnu.org>
 
-	Fix Savannah bug #43548.
+	[pcf] Fix Savannah bug #43548.
 
 	* src/pcf/pcfread.c (pcf_get_encodings): Add sanity checks for row
 	and column values.
 
 2014-11-06  Werner Lemberg  <wl@gnu.org>
 
-	Fix Savannah bug #43547.
+	[pcf] Fix Savannah bug #43547.
 
 	* src/pcf/pcfread.c (pcf_read_TOC): Check `size' and `offset'
 	values.

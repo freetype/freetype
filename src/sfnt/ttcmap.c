@@ -1669,7 +1669,8 @@
     p          = is32  + 8192;          /* skip `is32' array */
     num_groups = TT_NEXT_ULONG( p );
 
-    if ( p + num_groups * 12 > valid->limit )
+    /* p + num_groups * 12 > valid->limit ? */
+    if ( num_groups > (FT_UInt32)( valid->limit - p ) / 12 )
       FT_INVALID_TOO_SHORT;
 
     /* check groups, they must be in increasing order */
@@ -1694,7 +1695,12 @@
 
         if ( valid->level >= FT_VALIDATE_TIGHT )
         {
-          if ( start_id + end - start >= TT_VALID_GLYPH_COUNT( valid ) )
+          FT_UInt32  d = end - start;
+
+
+          /* start_id + end - start >= TT_VALID_GLYPH_COUNT( valid ) ? */
+          if ( d > TT_VALID_GLYPH_COUNT( valid )             ||
+               start_id >= TT_VALID_GLYPH_COUNT( valid ) - d )
             FT_INVALID_GLYPH_ID;
 
           count = (FT_UInt32)( end - start + 1 );
@@ -1892,7 +1898,9 @@
     count  = TT_NEXT_ULONG( p );
 
     if ( length > (FT_ULong)( valid->limit - table ) ||
-         length < 20 + count * 2                     )
+         /* length < 20 + count * 2 ? */
+         length < 20                                 ||
+         ( length - 20 ) / 2 < count                 )
       FT_INVALID_TOO_SHORT;
 
     /* check glyph indices */
@@ -2079,7 +2087,9 @@
     num_groups = TT_NEXT_ULONG( p );
 
     if ( length > (FT_ULong)( valid->limit - table ) ||
-         length < 16 + 12 * num_groups               )
+         /* length < 16 + 12 * num_groups ? */
+         length < 16                                 ||
+         ( length - 16 ) / 12 < num_groups           )
       FT_INVALID_TOO_SHORT;
 
     /* check groups, they must be in increasing order */
@@ -2101,7 +2111,12 @@
 
         if ( valid->level >= FT_VALIDATE_TIGHT )
         {
-          if ( start_id + end - start >= TT_VALID_GLYPH_COUNT( valid ) )
+          FT_UInt32  d = end - start;
+
+
+          /* start_id + end - start >= TT_VALID_GLYPH_COUNT( valid ) ? */
+          if ( d > TT_VALID_GLYPH_COUNT( valid )             ||
+               start_id >= TT_VALID_GLYPH_COUNT( valid ) - d )
             FT_INVALID_GLYPH_ID;
         }
 
@@ -2401,7 +2416,9 @@
     num_groups = TT_NEXT_ULONG( p );
 
     if ( length > (FT_ULong)( valid->limit - table ) ||
-         length < 16 + 12 * num_groups               )
+         /* length < 16 + 12 * num_groups ? */
+         length < 16                                 ||
+         ( length - 16 ) / 12 < num_groups           )
       FT_INVALID_TOO_SHORT;
 
     /* check groups, they must be in increasing order */
@@ -2787,7 +2804,9 @@
     num_selectors = TT_NEXT_ULONG( p );
 
     if ( length > (FT_ULong)( valid->limit - table ) ||
-         length < 10 + 11 * num_selectors            )
+         /* length < 10 + 11 * num_selectors ? */
+         length < 10                                 ||
+         ( length - 10 ) / 11 < num_selectors        )
       FT_INVALID_TOO_SHORT;
 
     /* check selectors, they must be in increasing order */
@@ -2823,7 +2842,8 @@
           FT_ULong  lastBase  = 0;
 
 
-          if ( defp + numRanges * 4 > valid->limit )
+          /* defp + numRanges * 4 > valid->limit ? */
+          if ( numRanges > (FT_ULong)( valid->limit - defp ) / 4 )
             FT_INVALID_TOO_SHORT;
 
           for ( i = 0; i < numRanges; ++i )
@@ -2850,7 +2870,8 @@
           FT_ULong  i, lastUni  = 0;
 
 
-          if ( numMappings * 4 > (FT_ULong)( valid->limit - ndp ) )
+          /* numMappings * 4 > (FT_ULong)( valid->limit - ndp ) ? */
+          if ( numMappings > ( (FT_ULong)( valid->limit - ndp ) ) / 4 )
             FT_INVALID_TOO_SHORT;
 
           for ( i = 0; i < numMappings; ++i )
