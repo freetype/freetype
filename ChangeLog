@@ -1,5 +1,12 @@
 2014-11-12  Werner Lemberg  <wl@gnu.org>
 
+	[sfnt] Fix Savannah bug #43589.
+
+	* src/sfnt/sfobjs.c (woff_open_font): Protect against addition
+	overflow.
+
+2014-11-12  Werner Lemberg  <wl@gnu.org>
+
 	[sfnt] Fix Savannah bug #43588.
 
 	* src/sfnt/ttcmap.c (tt_cmap8_validate, tt_cmap10_validate,

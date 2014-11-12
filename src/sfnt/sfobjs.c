@@ -567,8 +567,10 @@
 
 
       if ( table->Offset != woff_offset                         ||
-           table->Offset + table->CompLength > woff.length      ||
-           sfnt_offset + table->OrigLength > woff.totalSfntSize ||
+           table->CompLength > woff.length                      ||
+           table->Offset > woff.length - table->CompLength      ||
+           table->OrigLength > woff.totalSfntSize               ||
+           sfnt_offset > woff.totalSfntSize - table->OrigLength ||
            table->CompLength > table->OrigLength                )
       {
         error = FT_THROW( Invalid_Table );
