@@ -1,5 +1,12 @@
 2014-11-12  Werner Lemberg  <wl@gnu.org>
 
+	[sfnt] Fix Savannah bug #43591.
+
+	* src/sfnt/ttsbit.c (tt_sbit_decoder_init): Protect against addition
+	and multiplication overflow.
+
+2014-11-12  Werner Lemberg  <wl@gnu.org>
+
 	[sfnt] Fix Savannah bug #43590.
 
 	* src/sfnt/ttload.c (check_table_dir, tt_face_load_font_dir):

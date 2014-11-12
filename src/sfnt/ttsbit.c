@@ -394,9 +394,11 @@
       p                          += 34;
       decoder->bit_depth          = *p;
 
-      if ( decoder->strike_index_array > face->sbit_table_size             ||
-           decoder->strike_index_array + 8 * decoder->strike_index_count >
-             face->sbit_table_size                                         )
+      /* decoder->strike_index_array +                               */
+      /*   8 * decoder->strike_index_count > face->sbit_table_size ? */
+      if ( decoder->strike_index_array > face->sbit_table_size           ||
+           decoder->strike_index_count >
+             ( face->sbit_table_size - decoder->strike_index_array ) / 8 )
         error = FT_THROW( Invalid_File_Format );
     }
 
