@@ -269,6 +269,13 @@
       map->pitch      = map->width * 4;
       map->num_grays  = 256;
 
+      /* reject too large bitmaps similarly to the rasterizer */
+      if ( map->rows > 0x7FFF || map->width > 0x7FFF )
+      {
+        error = FT_THROW( Array_Too_Large );
+        goto DestroyExit;
+      }
+
       size = map->rows * map->pitch;
 
       error = ft_glyphslot_alloc_bitmap( slot, size );
