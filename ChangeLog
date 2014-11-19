@@ -1,5 +1,13 @@
 2014-11-19  Werner Lemberg  <wl@gnu.org>
 
+	Make `FT_Bitmap_Convert' correctly handle negative `pitch' values.
+
+	* src/base/ftbitmap.c (FT_Bitmap_Convert): Always use positive value
+	for the pitch while copying data.
+	Correctly set pitch sign in target bitmap.
+
+2014-11-19  Werner Lemberg  <wl@gnu.org>
+
 	Minor code improvement in `FT_Bitmap_Embolden'.
 
 	* src/base/ftbitmap.c (FT_Bitmap_Embolden) <FT_PIXEL_MODE_GRAY[24]>:

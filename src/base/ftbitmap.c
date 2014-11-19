@@ -433,6 +433,8 @@
     FT_Error   error = FT_Err_Ok;
     FT_Memory  memory;
 
+    FT_Int  source_pitch, target_pitch;
+
 
     if ( !library )
       return FT_THROW( Invalid_Library_Handle );
@@ -449,13 +451,15 @@
     case FT_PIXEL_MODE_LCD_V:
     case FT_PIXEL_MODE_BGRA:
       {
-        FT_Int   pad;
+        FT_Int   pad, old_target_pitch;
         FT_Long  old_size;
 
 
-        old_size = target->rows * target->pitch;
-        if ( old_size < 0 )
-          old_size = -old_size;
+        old_target_pitch = target->pitch;
+        if ( old_target_pitch < 0 )
+          old_target_pitch = -old_target_pitch;
+
+        old_size = target->rows * old_target_pitch;
 
         target->pixel_mode = FT_PIXEL_MODE_GRAY;
         target->rows       = source->rows;
@@ -469,22 +473,28 @@
             pad = alignment - pad;
         }
 
-        target->pitch = source->width + pad;
+        target_pitch = source->width + pad;
 
-        if ( target->pitch > 0                                     &&
-             (FT_ULong)target->rows > FT_ULONG_MAX / target->pitch )
+        if ( target_pitch > 0                                     &&
+             (FT_ULong)target->rows > FT_ULONG_MAX / target_pitch )
           return FT_THROW( Invalid_Argument );
 
-        if ( target->rows * target->pitch > old_size             &&
+        if ( target->rows * target_pitch > old_size               &&
              FT_QREALLOC( target->buffer,
-                          old_size, target->rows * target->pitch ) )
+                          old_size, target->rows * target_pitch ) )
           return error;
+
+        target->pitch = target->pitch < 0 ? -target_pitch : target_pitch;
       }
       break;
 
     default:
       error = FT_THROW( Invalid_Argument );
     }
+
+    source_pitch = source->pitch;
+    if ( source_pitch < 0 )
+      source_pitch = -source_pitch;
 
     switch ( source->pixel_mode )
     {
@@ -538,8 +548,8 @@
             }
           }
 
-          s += source->pitch;
-          t += target->pitch;
+          s += source_pitch;
+          t += target_pitch;
         }
       }
       break;
@@ -549,11 +559,9 @@
     case FT_PIXEL_MODE_LCD:
     case FT_PIXEL_MODE_LCD_V:
       {
-        FT_Int    width   = source->width;
-        FT_Byte*  s       = source->buffer;
-        FT_Byte*  t       = target->buffer;
-        FT_Int    s_pitch = source->pitch;
-        FT_Int    t_pitch = target->pitch;
+        FT_Int    width = source->width;
+        FT_Byte*  s     = source->buffer;
+        FT_Byte*  t     = target->buffer;
         FT_Int    i;
 
 
@@ -563,8 +571,8 @@
         {
           FT_ARRAY_COPY( t, s, width );
 
-          s += s_pitch;
-          t += t_pitch;
+          s += source_pitch;
+          t += target_pitch;
         }
       }
       break;
@@ -615,8 +623,8 @@
             }
           }
 
-          s += source->pitch;
-          t += target->pitch;
+          s += source_pitch;
+          t += target_pitch;
         }
       }
       break;
@@ -654,18 +662,17 @@
           if ( source->width & 1 )
             tt[0] = (FT_Byte)( ( ss[0] & 0xF0 ) >> 4 );
 
-          s += source->pitch;
-          t += target->pitch;
+          s += source_pitch;
+          t += target_pitch;
         }
       }
       break;
 
+
     case FT_PIXEL_MODE_BGRA:
       {
-        FT_Byte*  s       = source->buffer;
-        FT_Byte*  t       = target->buffer;
-        FT_Int    s_pitch = source->pitch;
-        FT_Int    t_pitch = target->pitch;
+        FT_Byte*  s = source->buffer;
+        FT_Byte*  t = target->buffer;
         FT_Int    i;
 
 
@@ -686,8 +693,8 @@
             tt += 1;
           }
 
-          s += s_pitch;
-          t += t_pitch;
+          s += source_pitch;
+          t += target_pitch;
         }
       }
       break;
