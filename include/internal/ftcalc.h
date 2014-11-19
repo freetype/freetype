@@ -241,7 +241,7 @@ FT_BEGIN_HEADER
 
 #ifdef FT_CONFIG_OPTION_INLINE_MULFIX
 #ifdef FT_MULFIX_ASSEMBLER
-#define FT_MulFix( a, b )  FT_MULFIX_ASSEMBLER( a, b )
+#define FT_MulFix( a, b )  FT_MULFIX_ASSEMBLER( (FT_Int32)(a), (FT_Int32)(b) )
 #endif
 #endif
 

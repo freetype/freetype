@@ -1,3 +1,17 @@
+2014-11-19  Behdad Esfahbod  <behdad@behdad.org>
+
+	Avoid compiler warnings on x86-64 for `FT_MulFix'.
+
+	`FT_MulFix' takes `FT_Long' parameters as defined in `freetype.h',
+	but several inline implementations of it in `ftcalc.h' take
+	`FT_Int32' arguments.  This is causing compiler warnings on x86-64:
+	If parameters of type `FT_Fixed' (= `FT_Long') are passed to the
+	inline implementation of this function, integer values are truncated
+	from 64bit to 32bit.
+
+	* include/internal/ftcalc.h (FT_MulFix) [FT_MULFIX_ASSEMBLER]: Add
+	casts.
+
 2014-11-15  Werner Lemberg  <wl@gnu.org>
 
 	[sfnt] Fix Savannah bug #43597.
