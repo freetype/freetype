@@ -96,6 +96,9 @@
   }
 
 
+  /* Enlarge `bitmap' horizontally and vertically by `xpixels' */
+  /* and `ypixels', respectively.                              */
+
   static FT_Error
   ft_bitmap_assure_buffer( FT_Memory   memory,
                            FT_Bitmap*  bitmap,
@@ -168,16 +171,19 @@
             write++;
           }
           if ( write < end )
-            FT_MEM_ZERO( write, end-write );
+            FT_MEM_ZERO( write, end - write );
         }
       }
 
       return FT_Err_Ok;
     }
 
+    /* otherwise allocate new buffer */
     if ( FT_QALLOC_MULT( buffer, new_pitch, bitmap->rows + ypixels ) )
       return error;
 
+    /* new rows get added at the top of the bitmap, */
+    /* thus take care of the flow direction         */
     if ( bitmap->pitch > 0 )
     {
       FT_Int  len = ( width * bpp + 7 ) >> 3;
@@ -289,6 +295,7 @@
     if ( error )
       return error;
 
+    /* take care of bitmap flow */
     pitch = bitmap->pitch;
     if ( pitch > 0 )
       p = bitmap->buffer + pitch * ystr;
@@ -309,7 +316,7 @@
        */
       for ( x = pitch - 1; x >= 0; x-- )
       {
-        unsigned char tmp;
+        unsigned char  tmp;
 
 
         tmp = p[x];
@@ -334,12 +341,12 @@
             {
               if ( p[x] + p[x - i] > bitmap->num_grays - 1 )
               {
-                p[x] = (unsigned char)(bitmap->num_grays - 1);
+                p[x] = (unsigned char)( bitmap->num_grays - 1 );
                 break;
               }
               else
               {
-                p[x] = (unsigned char)(p[x] + p[x-i]);
+                p[x] = (unsigned char)( p[x] + p[x - i] );
                 if ( p[x] == bitmap->num_grays - 1 )
                   break;
               }
@@ -382,7 +389,7 @@
     FT_UInt  l;
 
 
-    /* Short-circuit transparent color to avoid div-by-zero. */
+    /* Short-circuit transparent color to avoid division by zero. */
     if ( !a )
       return 0;
 
@@ -392,7 +399,7 @@
      * A gamma of 2.2 is fair to assume.  And then, we need to
      * undo the premultiplication too.
      *
-     * http://accessibility.kde.org/hsl-adjusted.php
+     *   http://accessibility.kde.org/hsl-adjusted.php
      *
      * We do the computation with integers only, applying a gamma of 2.0.
      * We guarantee 32-bit arithmetic to avoid overflow but the resulting
