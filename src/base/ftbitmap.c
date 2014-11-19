@@ -254,17 +254,11 @@
     case FT_PIXEL_MODE_GRAY4:
       {
         FT_Bitmap  tmp;
-        FT_Int     align;
 
 
-        if ( bitmap->pixel_mode == FT_PIXEL_MODE_GRAY2 )
-          align = ( bitmap->width + xstr + 3 ) / 4;
-        else
-          align = ( bitmap->width + xstr + 1 ) / 2;
-
+        /* convert to 8bpp */
         FT_Bitmap_New( &tmp );
-
-        error = FT_Bitmap_Convert( library, bitmap, &tmp, align );
+        error = FT_Bitmap_Convert( library, bitmap, &tmp, 1 );
         if ( error )
           return error;
 

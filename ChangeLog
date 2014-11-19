@@ -1,3 +1,10 @@
+2014-11-19  Werner Lemberg  <wl@gnu.org>
+
+	Minor code improvement in `FT_Bitmap_Embolden'.
+
+	* src/base/ftbitmap.c (FT_Bitmap_Embolden) <FT_PIXEL_MODE_GRAY[24]>:
+	Fix thinko.
+
 2014-11-19  Alexei Podtelezhnikov  <apodtele@gmail.com>
 
 	* src/base/fttrigon.c: Use dedicated `FT_Angle' for arctan table.
