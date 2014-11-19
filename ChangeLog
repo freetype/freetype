@@ -1,5 +1,20 @@
 2014-11-19  Werner Lemberg  <wl@gnu.org>
 
+	Change some fields in `FT_Bitmap' to unsigned type.
+
+	This doesn't break ABI.
+
+	* include/ftimage.h (FT_Bitmap): Make `rows', `width', `num_grays',
+	`pixel_mode', and `palette_mode' unsigned types.
+
+	* src/base/ftbitmap.c: Updated.
+	(FT_Bitmap_Copy): Fix casts.
+
+	* src/cache/ftcsbits.c, src/raster/ftraster.c, src/sfnt/pngshim.c:
+	Updated.
+
+2014-11-19  Werner Lemberg  <wl@gnu.org>
+
 	Make `FT_Bitmap_Convert' correctly handle negative `pitch' values.
 
 	* src/base/ftbitmap.c (FT_Bitmap_Convert): Always use positive value
