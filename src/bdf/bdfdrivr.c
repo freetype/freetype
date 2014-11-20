@@ -384,7 +384,7 @@ THE SOFTWARE.
       BDF_Face_Done( bdfface );
       return FT_THROW( Invalid_Argument );
     }
- 
+
     {
       bdf_property_t*  prop = NULL;
 

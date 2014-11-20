@@ -396,7 +396,7 @@
      *
      * We do the computation with integers only, applying a gamma of 2.0.
      * We guarantee 32-bit arithmetic to avoid overflow but the resulting
-     * luminosity fits into 16 bits. 
+     * luminosity fits into 16 bits.
      *
      */
 

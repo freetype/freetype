@@ -86,7 +86,7 @@
                 TBBox_Rec*  user )
   {
     FT_UPDATE_BBOX( to, user->bbox );
- 
+
     user->last = *to;
 
     return 0;

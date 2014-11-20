@@ -307,7 +307,7 @@
     if ( hi >= y )
       return (FT_UInt32)0x7FFFFFFFL;
 
-    /* We shift as many bits as we can into the high register, perform     */ 
+    /* We shift as many bits as we can into the high register, perform     */
     /* 32-bit division with modulo there, then work through the remaining  */
     /* bits with long division. This optimization is especially noticeable */
     /* for smaller dividends that barely use the high register.            */
@@ -611,10 +611,10 @@
       FT_Int64  temp, temp2;
 
 
-      temp.hi  = a >> 16; 
+      temp.hi  = a >> 16;
       temp.lo  = a << 16;
       temp2.hi = 0;
-      temp2.lo = b >> 1; 
+      temp2.lo = b >> 1;
 
       FT_Add64( &temp, &temp2, &temp );
       q = (FT_Long)ft_div64by32( temp.hi, temp.lo, b );

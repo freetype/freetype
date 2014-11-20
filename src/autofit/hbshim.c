@@ -329,7 +329,7 @@
      * out whether a glyph gets shifted vertically, but this is something I
      * would like to avoid if not really necessary.
      *
-     * Note that we don't follow this logic for the default coverage. 
+     * Note that we don't follow this logic for the default coverage.
      * Complex scripts like Devanagari have mandatory GPOS features to
      * position many glyph elements, using mark-to-base or mark-to-ligature
      * tables; the number of glyphs missed due to condition (b) would be far

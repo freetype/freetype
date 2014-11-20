@@ -535,7 +535,7 @@ FT_BEGIN_HEADER
   *
   * @description:
   *   This function analyzes a glyph outline and tries to compute its
-  *   fill orientation (see @FT_Orientation).  This is done by integrating 
+  *   fill orientation (see @FT_Orientation).  This is done by integrating
   *   the total area covered by the outline. The positive integral
   *   corresponds to the clockwise orientation and @FT_ORIENTATION_POSTSCRIPT
   *   is returned. The negative integral corresponds to the counter-clockwise
