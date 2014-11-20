@@ -1,3 +1,7 @@
+2014-11-20  Werner Lemberg  <wl@gnu.org>
+
+	* src/base/ftbitmap.c (FT_Bitmap_New): Check argument.
+
 2014-11-19  Werner Lemberg  <wl@gnu.org>
 
 	Change some fields in `FT_Bitmap' to unsigned type.

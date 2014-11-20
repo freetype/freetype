@@ -33,7 +33,8 @@
   FT_EXPORT_DEF( void )
   FT_Bitmap_New( FT_Bitmap  *abitmap )
   {
-    *abitmap = null_bitmap;
+    if ( abitmap )
+      *abitmap = null_bitmap;
   }
 
 
