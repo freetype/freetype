@@ -1,3 +1,7 @@
+2014-11-19  Alexei Podtelezhnikov  <apodtele@gmail.com>
+
+	* src/base/fttrigon.c: Use dedicated `FT_Angle' for arctan table.
+
 2014-11-19  Behdad Esfahbod  <behdad@behdad.org>
 
 	Avoid compiler warnings on x86-64 for `FT_MulFix'.

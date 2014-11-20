@@ -4,7 +4,7 @@
 /*                                                                         */
 /*    FreeType trigonometric functions (body).                             */
 /*                                                                         */
-/*  Copyright 2001-2005, 2012-2013 by                                      */
+/*  Copyright 2001-2005, 2012-2014 by                                      */
 /*  David Turner, Robert Wilhelm, and Werner Lemberg.                      */
 /*                                                                         */
 /*  This file is part of the FreeType project, and may only be used,       */
@@ -45,7 +45,7 @@
   /* this table was generated for FT_PI = 180L << 16, i.e. degrees */
 #define FT_TRIG_MAX_ITERS  23
 
-  static const FT_Fixed
+  static const FT_Angle
   ft_trig_arctan_table[] =
   {
     1740967L, 919879L, 466945L, 234379L, 117304L, 58666L, 29335L,
@@ -165,7 +165,7 @@
   {
     FT_Int           i;
     FT_Fixed         x, y, xtemp, b;
-    const FT_Fixed  *arctanptr;
+    const FT_Angle  *arctanptr;
 
 
     x = vec->x;
@@ -220,7 +220,7 @@
     FT_Angle         theta;
     FT_Int           i;
     FT_Fixed         x, y, xtemp, b;
-    const FT_Fixed  *arctanptr;
+    const FT_Angle  *arctanptr;
 
 
     x = vec->x;
