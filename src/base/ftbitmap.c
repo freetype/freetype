@@ -471,11 +471,15 @@
     FT_Error   error = FT_Err_Ok;
     FT_Memory  memory;
 
-    FT_Int  source_pitch, target_pitch;
+    FT_Byte*  s;
+    FT_Byte*  t;
 
 
     if ( !library )
       return FT_THROW( Invalid_Library_Handle );
+
+    if ( !source || !target )
+      return FT_THROW( Invalid_Argument );
 
     memory = library->memory;
 
@@ -489,7 +493,7 @@
     case FT_PIXEL_MODE_LCD_V:
     case FT_PIXEL_MODE_BGRA:
       {
-        FT_Int    pad, old_target_pitch;
+        FT_Int    pad, old_target_pitch, target_pitch;
         FT_ULong  old_size;
 
 
@@ -530,17 +534,20 @@
       error = FT_THROW( Invalid_Argument );
     }
 
-    source_pitch = source->pitch;
-    if ( source_pitch < 0 )
-      source_pitch = -source_pitch;
+    s = source->buffer;
+    t = target->buffer;
+
+    /* take care of bitmap flow */
+    if ( source->pitch < 0 )
+      s -= source->pitch * ( source->rows - 1 );
+    if ( target->pitch < 0 )
+      t -= target->pitch * ( target->rows - 1 );
 
     switch ( source->pixel_mode )
     {
     case FT_PIXEL_MODE_MONO:
       {
-        FT_Byte*  s = source->buffer;
-        FT_Byte*  t = target->buffer;
-        FT_Int    i;
+        FT_UInt  i;
 
 
         target->num_grays = 2;
@@ -549,7 +556,7 @@
         {
           FT_Byte*  ss = s;
           FT_Byte*  tt = t;
-          FT_Int    j;
+          FT_UInt   j;
 
 
           /* get the full bytes */
@@ -586,8 +593,8 @@
             }
           }
 
-          s += source_pitch;
-          t += target_pitch;
+          s += source->pitch;
+          t += target->pitch;
         }
       }
       break;
@@ -597,10 +604,8 @@
     case FT_PIXEL_MODE_LCD:
     case FT_PIXEL_MODE_LCD_V:
       {
-        FT_Int    width = source->width;
-        FT_Byte*  s     = source->buffer;
-        FT_Byte*  t     = target->buffer;
-        FT_Int    i;
+        FT_Int   width = source->width;
+        FT_UInt  i;
 
 
         target->num_grays = 256;
@@ -609,8 +614,8 @@
         {
           FT_ARRAY_COPY( t, s, width );
 
-          s += source_pitch;
-          t += target_pitch;
+          s += source->pitch;
+          t += target->pitch;
         }
       }
       break;
@@ -618,9 +623,7 @@
 
     case FT_PIXEL_MODE_GRAY2:
       {
-        FT_Byte*  s = source->buffer;
-        FT_Byte*  t = target->buffer;
-        FT_Int    i;
+        FT_UInt  i;
 
 
         target->num_grays = 4;
@@ -629,7 +632,7 @@
         {
           FT_Byte*  ss = s;
           FT_Byte*  tt = t;
-          FT_Int    j;
+          FT_UInt   j;
 
 
           /* get the full bytes */
@@ -661,8 +664,8 @@
             }
           }
 
-          s += source_pitch;
-          t += target_pitch;
+          s += source->pitch;
+          t += target->pitch;
         }
       }
       break;
@@ -670,9 +673,7 @@
 
     case FT_PIXEL_MODE_GRAY4:
       {
-        FT_Byte*  s = source->buffer;
-        FT_Byte*  t = target->buffer;
-        FT_Int    i;
+        FT_UInt  i;
 
 
         target->num_grays = 16;
@@ -681,7 +682,7 @@
         {
           FT_Byte*  ss = s;
           FT_Byte*  tt = t;
-          FT_Int    j;
+          FT_UInt   j;
 
 
           /* get the full bytes */
@@ -700,8 +701,8 @@
           if ( source->width & 1 )
             tt[0] = (FT_Byte)( ( ss[0] & 0xF0 ) >> 4 );
 
-          s += source_pitch;
-          t += target_pitch;
+          s += source->pitch;
+          t += target->pitch;
         }
       }
       break;
@@ -709,9 +710,7 @@
 
     case FT_PIXEL_MODE_BGRA:
       {
-        FT_Byte*  s = source->buffer;
-        FT_Byte*  t = target->buffer;
-        FT_Int    i;
+        FT_UInt  i;
 
 
         target->num_grays = 256;
@@ -720,7 +719,7 @@
         {
           FT_Byte*  ss = s;
           FT_Byte*  tt = t;
-          FT_Int    j;
+          FT_UInt   j;
 
 
           for ( j = source->width; j > 0; j-- )
@@ -731,8 +730,8 @@
             tt += 1;
           }
 
-          s += source_pitch;
-          t += target_pitch;
+          s += source->pitch;
+          t += target->pitch;
         }
       }
       break;

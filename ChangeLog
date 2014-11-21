@@ -1,5 +1,12 @@
 2014-11-21  Werner Lemberg  <wl@gnu.org>
 
+	* src/base/ftbitmap.c (FT_Bitmap_Convert): Improve.
+
+	This commit completes argument checks and adds support for different
+	flow directions.
+
+2014-11-21  Werner Lemberg  <wl@gnu.org>
+
 	* src/base/ftbitmap.c (FT_Bitmap_Copy): Improve.
 
 	This commit adds argument checks and support for different flow
