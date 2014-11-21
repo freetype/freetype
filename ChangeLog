@@ -1,5 +1,12 @@
 2014-11-21  Werner Lemberg  <wl@gnu.org>
 
+	[ftlcdfil] Obey flow direction.
+
+	* src/base/ftlcdfil.c (_ft_lcd_filter_fir, _ft_lcd_filter_legacy):
+	Handle `up' flow.
+
+2014-11-21  Werner Lemberg  <wl@gnu.org>
+
 	* src/base/ftbitmap.c (FT_Bitmap_Convert): Improve.
 
 	This commit completes argument checks and adds support for different
