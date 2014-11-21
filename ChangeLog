@@ -1,5 +1,12 @@
 2014-11-21  Werner Lemberg  <wl@gnu.org>
 
+	[type1, type42] Fix Savannah bug #43655.
+
+	* src/type1/t1load.c (parse_charstrings), src/type42/t42parse.c
+	(t42_parse_charstrings): Fix boundary testing.
+
+2014-11-21  Werner Lemberg  <wl@gnu.org>
+
 	* src/pcf/pcfread.c (pcf_get_metrics): Sanitize invalid metrics.
 
 2014-11-21  Werner Lemberg  <wl@gnu.org>

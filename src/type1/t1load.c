@@ -1604,7 +1604,7 @@
         FT_PtrDist  len;
 
 
-        if ( cur + 1 >= limit )
+        if ( cur + 2 >= limit )
         {
           error = FT_THROW( Invalid_File_Format );
           goto Fail;
