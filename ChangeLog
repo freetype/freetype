@@ -1,5 +1,9 @@
 2014-11-21  Werner Lemberg  <wl@gnu.org>
 
+	* src/pcf/pcfread.c (pcf_get_metrics): Sanitize invalid metrics.
+
+2014-11-21  Werner Lemberg  <wl@gnu.org>
+
 	[ftlcdfil] Obey flow direction.
 
 	* src/base/ftlcdfil.c (_ft_lcd_filter_fir, _ft_lcd_filter_legacy):

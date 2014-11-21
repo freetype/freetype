@@ -649,24 +649,40 @@ THE SOFTWARE.
       return FT_THROW( Out_Of_Memory );
 
     metrics = face->metrics;
-    for ( i = 0; i < nmetrics; i++ )
+    for ( i = 0; i < nmetrics; i++, metrics++ )
     {
-      error = pcf_get_metric( stream, format, metrics + i );
+      error = pcf_get_metric( stream, format, metrics );
 
-      metrics[i].bits = 0;
+      metrics->bits = 0;
 
       FT_TRACE5(( "  idx %d: width=%d, "
                   "lsb=%d, rsb=%d, ascent=%d, descent=%d, swidth=%d\n",
                   i,
-                  ( metrics + i )->characterWidth,
-                  ( metrics + i )->leftSideBearing,
-                  ( metrics + i )->rightSideBearing,
-                  ( metrics + i )->ascent,
-                  ( metrics + i )->descent,
-                  ( metrics + i )->attributes ));
+                  metrics->characterWidth,
+                  metrics->leftSideBearing,
+                  metrics->rightSideBearing,
+                  metrics->ascent,
+                  metrics->descent,
+                  metrics->attributes ));
 
       if ( error )
         break;
+
+      /* sanity checks -- those values are used in `PCF_Glyph_Load' to     */
+      /* compute a glyph's bitmap dimensions, thus setting them to zero in */
+      /* case of an error disables this particular glyph only              */
+      if ( metrics->rightSideBearing < metrics->leftSideBearing ||
+           metrics->ascent + metrics->descent < 0               )
+      {
+        metrics->characterWidth   = 0;
+        metrics->leftSideBearing  = 0;
+        metrics->rightSideBearing = 0;
+        metrics->ascent           = 0;
+        metrics->descent          = 0;
+
+        FT_TRACE0(( "pcf_get_metrics:"
+                    " invalid metrics for glyph %d\n", i ));
+      }
     }
 
     if ( error )
