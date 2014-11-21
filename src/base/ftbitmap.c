@@ -45,21 +45,38 @@
                   const FT_Bitmap  *source,
                   FT_Bitmap        *target)
   {
-    FT_Memory  memory = library->memory;
+    FT_Memory  memory;
     FT_Error   error  = FT_Err_Ok;
-    FT_Int     pitch  = source->pitch;
-    FT_ULong   size;
 
+    FT_Int    pitch;
+    FT_ULong  size;
+
+    FT_Int  source_pitch_sign, target_pitch_sign;
+
+
+    if ( !library )
+      return FT_THROW( Invalid_Library_Handle );
+
+    if ( !source || !target )
+      return FT_THROW( Invalid_Argument );
 
     if ( source == target )
       return FT_Err_Ok;
 
+    source_pitch_sign = source->pitch < 0 ? -1 : 1;
+    target_pitch_sign = target->pitch < 0 ? -1 : 1;
+
     if ( source->buffer == NULL )
     {
       *target = *source;
+      if ( source_pitch_sign != target_pitch_sign )
+        target->pitch = -target->pitch;
 
       return FT_Err_Ok;
     }
+
+    memory = library->memory;
+    pitch  = source->pitch;
 
     if ( pitch < 0 )
       pitch = -pitch;
@@ -71,7 +88,7 @@
       FT_ULong  target_size;
 
 
-      if ( target_pitch < 0  )
+      if ( target_pitch < 0 )
         target_pitch = -target_pitch;
       target_size = (FT_ULong)target_pitch * target->rows;
 
@@ -90,7 +107,26 @@
       *target = *source;
       target->buffer = p;
 
-      FT_MEM_COPY( target->buffer, source->buffer, size );
+      if ( source_pitch_sign == target_pitch_sign )
+        FT_MEM_COPY( target->buffer, source->buffer, size );
+      else
+      {
+        /* take care of bitmap flow */
+        FT_UInt   i;
+        FT_Byte*  s = source->buffer;
+        FT_Byte*  t = target->buffer;
+
+
+        t += pitch * ( target->rows - 1 );
+
+        for ( i = target->rows; i > 0; i-- )
+        {
+          FT_ARRAY_COPY( t, s, pitch );
+
+          s += pitch;
+          t -= pitch;
+        }
+      }
     }
 
     return error;
