@@ -276,6 +276,7 @@
         goto DestroyExit;
       }
 
+      /* this doesn't overflow: 0x7FFF * 0x7FFF * 4 < 2^32 */
       size = map->rows * map->pitch;
 
       error = ft_glyphslot_alloc_bitmap( slot, size );

@@ -59,7 +59,7 @@
 
     if ( !decreasing )
     {
-      writer->line += writer->pitch * ( target->rows-1 );
+      writer->line += writer->pitch * ( target->rows - 1 );
       writer->pitch = -writer->pitch;
     }
   }
