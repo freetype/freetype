@@ -190,14 +190,15 @@ FT_BEGIN_HEADER
   /*    FT_LOAD_NO_SCALE                                                   */
   /*    FT_LOAD_NO_HINTING                                                 */
   /*    FT_LOAD_NO_BITMAP                                                  */
-  /*    FT_LOAD_CROP_BITMAP                                                */
   /*                                                                       */
   /*    FT_LOAD_VERTICAL_LAYOUT                                            */
   /*    FT_LOAD_IGNORE_TRANSFORM                                           */
-  /*    FT_LOAD_IGNORE_GLOBAL_ADVANCE_WIDTH                                */
   /*    FT_LOAD_FORCE_AUTOHINT                                             */
   /*    FT_LOAD_NO_RECURSE                                                 */
   /*    FT_LOAD_PEDANTIC                                                   */
+  /*                                                                       */
+  /*    FT_LOAD_CROP_BITMAP                                                */
+  /*    FT_LOAD_IGNORE_GLOBAL_ADVANCE_WIDTH                                */
   /*                                                                       */
   /*    FT_LOAD_TARGET_NORMAL                                              */
   /*    FT_LOAD_TARGET_LIGHT                                               */
