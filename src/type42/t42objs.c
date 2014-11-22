@@ -292,7 +292,9 @@
       FT_Open_Args  args;
 
 
-      args.flags       = FT_OPEN_MEMORY;
+      args.flags       = FT_OPEN_MEMORY | FT_OPEN_DRIVER;
+      args.driver      = FT_Get_Module( FT_FACE_LIBRARY( face ),
+                                        "truetype" );
       args.memory_base = face->ttf_data;
       args.memory_size = face->ttf_size;
 

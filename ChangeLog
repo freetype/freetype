@@ -1,5 +1,15 @@
 2014-11-22  Werner Lemberg  <wl@gnu.org>
 
+	[type42] Allow only embedded TrueType fonts.
+
+	This is a follow-up to Savannah bug #43659.
+
+	* src/type42/t42objs.c (T42_Face_Init): Exclusively use the
+	`truetype' font driver for loading the font contained in the `sfnts'
+	array.
+
+2014-11-22  Werner Lemberg  <wl@gnu.org>
+
 	[type42] Fix Savannah bug #43659.
 
 	* src/type42/t42objs.c (T42_Open_Face): Initialize `face->ttf_size'.
