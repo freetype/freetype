@@ -2540,11 +2540,6 @@ FT_BEGIN_HEADER
    *     Indicates that the auto-hinter is preferred over the font's native
    *     hinter.  See also the note below.
    *
-   *   FT_LOAD_CROP_BITMAP ::
-   *     Indicates that the font driver should crop the loaded bitmap glyph
-   *     (i.e., remove all space around its black bits).  Not all drivers
-   *     implement this.
-   *
    *   FT_LOAD_PEDANTIC ::
    *     Indicates that the font driver should perform pedantic verifications
    *     during glyph loading.  This is mostly used to detect broken glyphs
@@ -2554,9 +2549,6 @@ FT_BEGIN_HEADER
    *     passed to the application if this flag is not set; this might
    *     result in partially hinted or distorted glyphs in case a glyph's
    *     bytecode is buggy.
-   *
-   *   FT_LOAD_IGNORE_GLOBAL_ADVANCE_WIDTH ::
-   *     Ignored.  Deprecated.
    *
    *   FT_LOAD_NO_RECURSE ::
    *     Indicate that the font driver should not load composite glyphs
@@ -2595,6 +2587,12 @@ FT_BEGIN_HEADER
    *     bitmaps are found, they will be converted to 256-level gray
    *     bitmaps transparently.  Those bitmaps will be in the
    *     @FT_PIXEL_MODE_GRAY format.
+   *
+   *   FT_LOAD_CROP_BITMAP ::
+   *     Ignored.  Deprecated.
+   *
+   *   FT_LOAD_IGNORE_GLOBAL_ADVANCE_WIDTH ::
+   *     Ignored.  Deprecated.
    *
    * @note:
    *   By default, hinting is enabled and the font's native hinter (see
