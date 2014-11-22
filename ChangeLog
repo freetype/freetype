@@ -1,5 +1,17 @@
 2014-11-22  Werner Lemberg  <wl@gnu.org>
 
+	[type42] Fix Savannah bug #43659.
+
+	* src/type42/t42objs.c (T42_Open_Face): Initialize `face->ttf_size'.
+
+	* src/type42/t42parse.c (t42_parse_sfnts): Always set
+	`face->ttf_size' directly.  This ensures a correct stream size in
+	the call to `FT_Open_Face', which follows after parsing, even for
+	buggy input data.
+	Fix error messages.
+
+2014-11-22  Werner Lemberg  <wl@gnu.org>
+
 	[cff] Fix Savannah bug #43658.
 
 	* src/cff/cf2ft.c (cf2_builder_lineTo, cf2_builder_cubeTo): Handle

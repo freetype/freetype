@@ -47,6 +47,12 @@
     if ( FT_ALLOC( face->ttf_data, 12 ) )
       goto Exit;
 
+    /* while parsing the font we always update `face->ttf_size' so that */
+    /* even in case of buggy data (which might lead to premature end of */
+    /* scanning without causing an error) the call to `FT_Open_Face' in */
+    /* `T42_Face_Init' passes the correct size                          */
+    face->ttf_size = 12;
+
     error = t42_parser_init( parser,
                              face->root.stream,
                              memory,
