@@ -1555,6 +1555,14 @@
     /* Check for the ENDFONT field. */
     if ( _bdf_strncmp( line, "ENDFONT", 7 ) == 0 )
     {
+      if ( p->flags & _BDF_GLYPH_BITS )
+      {
+        /* Missing ENDCHAR field. */
+        FT_ERROR(( "_bdf_parse_glyphs: " ERRMSG1, lineno, "ENDCHAR" ));
+        error = FT_THROW( Corrupted_Font_Glyphs );
+        goto Exit;
+      }
+
       /* Sort the glyphs by encoding. */
       ft_qsort( (char *)font->glyphs,
                 font->glyphs_used,
