@@ -1,3 +1,10 @@
+2014-11-22  Werner Lemberg  <wl@gnu.org>
+
+	[sfnt] Fix Savannah bug #43656.
+
+	* src/sfnt/ttcmap.c (tt_cmap4_validate): Fix order of validity
+	tests.
+
 2014-11-21  Werner Lemberg  <wl@gnu.org>
 
 	[type1, type42] Fix Savannah bug #43655.

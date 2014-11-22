@@ -845,9 +845,6 @@
     p      = table + 2;           /* skip format */
     length = TT_NEXT_USHORT( p );
 
-    if ( length < 16 )
-      FT_INVALID_TOO_SHORT;
-
     /* in certain fonts, the `length' field is invalid and goes */
     /* out of bound.  We try to correct this here...            */
     if ( table + length > valid->limit )
@@ -857,6 +854,9 @@
 
       length = (FT_UInt)( valid->limit - table );
     }
+
+    if ( length < 16 )
+      FT_INVALID_TOO_SHORT;
 
     p        = table + 6;
     num_segs = TT_NEXT_USHORT( p );   /* read segCountX2 */
