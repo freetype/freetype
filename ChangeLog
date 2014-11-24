@@ -1,5 +1,14 @@
 2014-11-24  Werner Lemberg  <wl@gnu.org>
 
+	Remove all code related to FT_MAX_CHARMAP_CACHEABLE.
+
+	This is no longer used.
+
+	* src/base/ftobjs.c, src/cache/ftccmap.c, src/cff/cffobjs.c,
+	src/sfnt/ttcmap.c: Do it.
+
+2014-11-24  Werner Lemberg  <wl@gnu.org>
+
 	[sfnt] Fix Savannah bug #43680.
 
 	This adds an additional constraint to make the fix from 2013-01-25

@@ -301,12 +301,6 @@
       if ( error )
         goto Exit;
 
-#ifdef FT_MAX_CHARMAP_CACHEABLE
-      /* something rotten can happen with rogue clients */
-      if ( cmap_index > FT_MAX_CHARMAP_CACHEABLE )
-        return 0; /* XXX: should return appropriate error */
-#endif
-
       if ( (FT_UInt)cmap_index < (FT_UInt)face->num_charmaps )
       {
         FT_CharMap  old, cmap  = NULL;

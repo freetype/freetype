@@ -4,7 +4,7 @@
 /*                                                                         */
 /*    OpenType objects manager (body).                                     */
 /*                                                                         */
-/*  Copyright 1996-2013 by                                                 */
+/*  Copyright 1996-2014 by                                                 */
 /*  David Turner, Robert Wilhelm, and Werner Lemberg.                      */
 /*                                                                         */
 /*  This file is part of the FreeType project, and may only be used,       */
@@ -943,16 +943,6 @@
         if ( pure_cff && cff->top_font.font_dict.cid_registry != 0xFFFFU )
           goto Exit;
 
-#ifdef FT_MAX_CHARMAP_CACHEABLE
-        if ( nn + 1 > FT_MAX_CHARMAP_CACHEABLE )
-        {
-          FT_ERROR(( "cff_face_init: no Unicode cmap is found, "
-                     "and too many subtables (%d) to add synthesized cmap\n",
-                     nn ));
-          goto Exit;
-        }
-#endif
-
         /* we didn't find a Unicode charmap -- synthesize one */
         cmaprec.face        = cffface;
         cmaprec.platform_id = TT_PLATFORM_MICROSOFT;
@@ -973,15 +963,6 @@
           cffface->charmap = cffface->charmaps[nn];
 
       Skip_Unicode:
-#ifdef FT_MAX_CHARMAP_CACHEABLE
-        if ( nn > FT_MAX_CHARMAP_CACHEABLE )
-        {
-          FT_ERROR(( "cff_face_init: Unicode cmap is found, "
-                     "but too many preceding subtables (%d) to access\n",
-                     nn - 1 ));
-          goto Exit;
-        }
-#endif
         if ( encoding->count > 0 )
         {
           FT_CMap_Class  clazz;
