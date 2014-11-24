@@ -1,3 +1,32 @@
+2014-11-24  Jarkko Pöyry  <jarkko.poyry@gmail.com>
+
+	[cff, pfr, psaux, winfonts] Fix Savannah bug #43676.
+
+	Don't cast cmap init function pointers to an incompatible type. 
+
+	Without this patch, the number of parameters between declaration and
+	the real signature differs.  Calling such a function results in
+	undefined behavior.
+
+	  ISO/IEC 9899:TC3 (Committee Draft September 7, 2007)
+	    6.5.2.2 Function calls
+	      9 If the function is defined with a type that is not
+	        compatible with the type (of the expression) pointed to by
+	        the expression that denotes the called function, the
+	        behavior is undefined.
+
+	On certain platforms (c -> js with emscripten) this causes
+	termination of execution or invalid calls because in the emscripten
+	implementation, function pointers of different types are stored in
+	different pointer arrays.  Incorrect pointer type here results in
+	indexing of an incorrect array.
+
+	* src/cff/cffcmap.c (cff_cmap_encoding_init, cff_cmap_unicode_init),
+	src/pfr/pfrcmap.c (pfr_cmap_init), src/psaux/t1cmap.c
+	t1_cmap_standard_init, t1_cmap_expert_init, t1_cmap_custom_init,
+	t1_cmap_unicode_init), src/winfonts/winfnt.c (fnt_cmap_init): Fix
+	signature.
+
 2014-11-24  Werner Lemberg  <wl@gnu.org>
 
 	[sfnt] Fix Savannah bug #43672.
