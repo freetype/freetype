@@ -1,3 +1,10 @@
+2014-11-24  Werner Lemberg  <wl@gnu.org>
+
+	[truetype] Fix Savannah bug #43679.
+
+	* src/truetype/ttpload.c (tt_face_load_hdmx): Check minimum size of
+	`record_size'.
+
 2014-11-24  Jarkko Pöyry  <jarkko.poyry@gmail.com>
 
 	[cff, pfr, psaux, winfonts] Fix Savannah bug #43676.
