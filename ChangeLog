@@ -1,3 +1,10 @@
+2014-11-24  Werner Lemberg  <wl@gnu.org>
+
+	[docmaker] Formatting, copyright, improved documentation.
+
+	* src/tools/docmaker/*: No code changes besides trivial
+	modifications.
+
 2014-11-22  Werner Lemberg  <wl@gnu.org>
 
 	[bdf] Fix Savannah bug #43660.

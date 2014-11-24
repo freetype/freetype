@@ -1,5 +1,19 @@
-#  ToHTML (c) 2002, 2003, 2005-2008, 2013
-#    David Turner <david@freetype.org>
+#
+#  tohtml.py
+#
+#    A sub-class container of the `Formatter' class to produce HTML.
+#
+#  Copyright 2002, 2003, 2005-2008, 2013, 2014 by
+#  David Turner.
+#
+#  This file is part of the FreeType project, and may only be used,
+#  modified, and distributed under the terms of the FreeType project
+#  license, LICENSE.TXT.  By continuing to use, modify, or distribute
+#  this file you indicate that you have read the license and
+#  understand and accept it fully.
+
+# The parent class is contained in file `formatter.py'.
+
 
 from sources import *
 from content import *
@@ -8,7 +22,7 @@ from formatter import *
 import time
 
 
-# The following defines the HTML header used by all generated pages.
+# The following strings define the HTML header used by all generated pages.
 html_header_1 = """\
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
 "http://www.w3.org/TR/html4/loose.dtd">
@@ -158,7 +172,7 @@ toc_footer_end = """\
 """
 
 
-# source language keyword coloration/styling
+# Source language keyword coloration and styling.
 keyword_prefix = '<span class="keyword">'
 keyword_suffix = '</span>'
 
@@ -166,16 +180,20 @@ section_synopsis_header = '<h2>Synopsis</h2>'
 section_synopsis_footer = ''
 
 
-# Translate a single line of source to HTML.  This will convert
-# a "<" into "&lt.", ">" into "&gt.", etc.
+# Translate a single line of source to HTML.  This converts `<', `>', and
+# `&' into `&lt;',`&gt;', and `&amp;'.
+#
 def  html_quote( line ):
-    result = string.replace( line, "&", "&amp;" )
-    result = string.replace( result, "<", "&lt;" )
-    result = string.replace( result, ">", "&gt;" )
+    result = string.replace( line,   "&", "&amp;" )
+    result = string.replace( result, "<", "&lt;"  )
+    result = string.replace( result, ">", "&gt;"  )
     return result
 
 
-
+################################################################
+##
+##  HTML FORMATTER CLASS
+##
 class  HtmlFormatter( Formatter ):
 
     def  __init__( self, processor, project_title, file_prefix ):
@@ -189,31 +207,32 @@ class  HtmlFormatter( Formatter ):
         else:
             file_prefix = ""
 
-        self.headers           = processor.headers
-        self.project_title     = project_title
-        self.file_prefix       = file_prefix
-        self.html_header       = html_header_1 + project_title +              \
-                                 html_header_2 +                              \
-                                 html_header_3 + file_prefix + "index.html" + \
-                                 html_header_4 + file_prefix + "toc.html" +   \
-                                 html_header_5 + project_title +              \
-                                 html_header_6
-
-        self.html_index_header = html_header_1 + project_title +             \
-                                 html_header_2 +                             \
-                                 html_header_3i + file_prefix + "toc.html" + \
-                                 html_header_5 + project_title +             \
-                                 html_header_6
-
-        self.html_toc_header   = html_header_1 + project_title +              \
-                                 html_header_2 +                              \
-                                 html_header_3 + file_prefix + "index.html" + \
-                                 html_header_5t + project_title +             \
-                                 html_header_6
-
-        self.html_footer       = "<center><font size=""-2"">generated on " +     \
-                                 time.asctime( time.localtime( time.time() ) ) + \
-                                 "</font></center>" + html_footer
+        self.headers       = processor.headers
+        self.project_title = project_title
+        self.file_prefix   = file_prefix
+        self.html_header   = (
+          html_header_1 + project_title
+          + html_header_2
+          + html_header_3 + file_prefix + "index.html"
+          + html_header_4 + file_prefix + "toc.html"
+          + html_header_5 + project_title
+          + html_header_6 )
+        self.html_index_header = (
+          html_header_1 + project_title
+          + html_header_2
+          + html_header_3i + file_prefix + "toc.html"
+          + html_header_5 + project_title
+          + html_header_6 )
+        self.html_toc_header = (
+          html_header_1 + project_title
+          + html_header_2
+          + html_header_3 + file_prefix + "index.html"
+          + html_header_5t + project_title
+          + html_header_6 )
+        self.html_footer = (
+          "<center><font size=""-2"">generated on "
+          + time.asctime( time.localtime( time.time() ) )
+          + "</font></center>" + html_footer )
 
         self.columns = 3
 
@@ -224,8 +243,8 @@ class  HtmlFormatter( Formatter ):
         return self.make_section_url( block.section ) + "#" + block.name
 
     def  make_html_word( self, word ):
-        """analyze a simple word to detect cross-references and styling"""
-        # look for cross-references
+        """Analyze a simple word to detect cross-references and markup."""
+        # handle cross-references
         m = re_crossref.match( word )
         if m:
             try:
@@ -236,11 +255,11 @@ class  HtmlFormatter( Formatter ):
                 return '<a href="' + url + '">' + name + '</a>' + rest
             except:
                 # we detected a cross-reference to an unknown item
-                sys.stderr.write( \
-                   "WARNING: undefined cross reference '" + name + "'.\n" )
+                sys.stderr.write( "WARNING: undefined cross reference"
+                                  + " '" + name + "'.\n" )
                 return '?' + name + '?' + rest
 
-        # look for italics and bolds
+        # handle markup for italic and bold
         m = re_italic.match( word )
         if m:
             name = m.group( 1 )
@@ -256,7 +275,8 @@ class  HtmlFormatter( Formatter ):
         return html_quote( word )
 
     def  make_html_para( self, words ):
-        """ convert words of a paragraph into tagged HTML text, handle xrefs """
+        """Convert words of a paragraph into tagged HTML text.  Also handle
+           cross references."""
         line = ""
         if words:
             line = self.make_html_word( words[0] )
@@ -265,8 +285,8 @@ class  HtmlFormatter( Formatter ):
             # handle hyperlinks
             line = re_url.sub( r'<a href="\1">\1</a>', line )
             # convert `...' quotations into real left and right single quotes
-            line = re.sub( r"(^|\W)`(.*?)'(\W|$)",  \
-                           r'\1&lsquo;\2&rsquo;\3', \
+            line = re.sub( r"(^|\W)`(.*?)'(\W|$)",
+                           r'\1&lsquo;\2&rsquo;\3',
                            line )
             # convert tilde into non-breakable space
             line = string.replace( line, "~", "&nbsp;" )
@@ -274,7 +294,7 @@ class  HtmlFormatter( Formatter ):
         return para_header + line + para_footer
 
     def  make_html_code( self, lines ):
-        """ convert a code sequence to HTML """
+        """Convert a code sequence to HTML."""
         line = code_header + '\n'
         for l in lines:
             line = line + html_quote( l ) + '\n'
@@ -282,7 +302,7 @@ class  HtmlFormatter( Formatter ):
         return line + code_footer
 
     def  make_html_items( self, items ):
-        """ convert a field's content into some valid HTML """
+        """Convert a field's content into HTML."""
         lines = []
         for item in items:
             if item.lines:
@@ -297,7 +317,9 @@ class  HtmlFormatter( Formatter ):
 
     def  print_html_field( self, field ):
         if field.name:
-            print "<table><tr valign=top><td><b>" + field.name + "</b></td><td>"
+            print( "<table><tr valign=top><td><b>"
+                   + field.name
+                   + "</b></td><td>" )
 
         print self.make_html_items( field.items )
 
@@ -318,12 +340,14 @@ class  HtmlFormatter( Formatter ):
                     result = result + prefix + '<b>' + name + '</b>'
                 elif re_source_keywords.match( name ):
                     # this is a C keyword
-                    result = result + prefix + keyword_prefix + name + keyword_suffix
+                    result = ( result + prefix
+                               + keyword_prefix + name + keyword_suffix )
                 elif self.identifiers.has_key( name ):
                     # this is a known identifier
                     block = self.identifiers[name]
-                    result = result + prefix + '<a href="' + \
-                             self.make_block_url( block ) + '">' + name + '</a>'
+                    result = ( result + prefix
+                               + '<a href="' + self.make_block_url( block )
+                               + '">' + name + '</a>' )
                 else:
                     result = result + html_quote( line[:length] )
 
@@ -339,10 +363,14 @@ class  HtmlFormatter( Formatter ):
         print "<table cellpadding=3 border=0>"
         for field in fields:
             if len( field.name ) > 22:
-              print "<tr valign=top><td colspan=0><b>" + field.name + "</b></td></tr>"
+              print( "<tr valign=top><td colspan=0><b>"
+                     + field.name
+                     + "</b></td></tr>" )
               print "<tr valign=top><td></td><td>"
             else:
-              print "<tr valign=top><td><b>" + field.name + "</b></td><td>"
+              print( "<tr valign=top><td><b>"
+                     + field.name
+                     + "</b></td><td>" )
 
             self.print_html_items( field.items )
             print "</td></tr>"
@@ -352,10 +380,9 @@ class  HtmlFormatter( Formatter ):
         table_fields = []
         for field in markup.fields:
             if field.name:
-                # we begin a new series of field or value definitions, we
-                # will record them in the 'table_fields' list before outputting
-                # all of them as a single table
-                #
+                # We begin a new series of field or value definitions.  We
+                # record them in the `table_fields' list before outputting
+                # all of them as a single table.
                 table_fields.append( field )
             else:
                 if table_fields:
@@ -368,7 +395,7 @@ class  HtmlFormatter( Formatter ):
             self.print_html_field_list( table_fields )
 
     #
-    #  Formatting the index
+    # formatting the index
     #
     def  index_enter( self ):
         print self.html_index_header
@@ -380,7 +407,7 @@ class  HtmlFormatter( Formatter ):
         self.index_items[name] = url
 
     def  index_exit( self ):
-        # block_index already contains the sorted list of index names
+        # `block_index' already contains the sorted list of index names
         count = len( self.block_index )
         rows  = ( count + self.columns - 1 ) / self.columns
 
@@ -392,7 +419,8 @@ class  HtmlFormatter( Formatter ):
                 if i < count:
                     bname = self.block_index[r + c * rows]
                     url   = self.index_items[bname]
-                    line = line + '<td><a href="' + url + '">' + bname + '</a></td>'
+                    line  = ( line + '<td><a href="' + url + '">'
+                              + bname + '</a></td>' )
                 else:
                     line = line + '<td></td>'
             line = line + "</tr>"
@@ -400,9 +428,9 @@ class  HtmlFormatter( Formatter ):
 
         print "</table>"
 
-        print index_footer_start +            \
-              self.file_prefix + "toc.html" + \
-              index_footer_end
+        print( index_footer_start
+               + self.file_prefix + "toc.html"
+               + index_footer_end )
 
         print self.html_footer
 
@@ -415,20 +443,20 @@ class  HtmlFormatter( Formatter ):
         Formatter.index_dump( self, index_filename )
 
     #
-    #  Formatting the table of content
+    # formatting the table of contents
     #
     def  toc_enter( self ):
         print self.html_toc_header
         print "<center><h1>Table of Contents</h1></center>"
 
     def  toc_chapter_enter( self, chapter ):
-        print  chapter_header + string.join( chapter.title ) + chapter_inter
+        print chapter_header + string.join( chapter.title ) + chapter_inter
         print "<table cellpadding=5>"
 
     def  toc_section_enter( self, section ):
         print '<tr valign=top><td class="left">'
-        print '<a href="' + self.make_section_url( section ) + '">' + \
-               section.title + '</a></td><td>'
+        print( '<a href="' + self.make_section_url( section ) + '">'
+               + section.title + '</a></td><td>' )
 
         print self.make_html_para( section.abstract )
 
@@ -440,14 +468,14 @@ class  HtmlFormatter( Formatter ):
         print chapter_footer
 
     def  toc_index( self, index_filename ):
-        print chapter_header +                                      \
-              '<a href="' + index_filename + '">Global Index</a>' + \
-              chapter_inter + chapter_footer
+        print( chapter_header
+               + '<a href="' + index_filename + '">Global Index</a>'
+               + chapter_inter + chapter_footer )
 
     def  toc_exit( self ):
-        print toc_footer_start +                \
-              self.file_prefix + "index.html" + \
-              toc_footer_end
+        print( toc_footer_start
+               + self.file_prefix + "index.html"
+               + toc_footer_end )
 
         print self.html_footer
 
@@ -461,7 +489,7 @@ class  HtmlFormatter( Formatter ):
         Formatter.toc_dump( self, toc_filename, index_filename )
 
     #
-    #  Formatting sections
+    # formatting sections
     #
     def  section_enter( self, section ):
         print self.html_header
@@ -495,7 +523,8 @@ class  HtmlFormatter( Formatter ):
                     line = line + '<td></td><td>'
                     if i < count:
                         name = section.block_names[i]
-                        line = line + '<a href="#' + name + '">' + name + '</a>'
+                        line = ( line + '<a href="#' + name + '">'
+                                 + name + '</a>' )
 
                     line = line + '</td>'
                 line = line + "</tr>"
@@ -513,7 +542,8 @@ class  HtmlFormatter( Formatter ):
 
         # place html anchor if needed
         if block.name:
-            print '<h4><a name="' + block.name + '">' + block.name + '</a></h4>'
+            print( '<h4><a name="' + block.name + '">'
+                   + block.name + '</a></h4>' )
 
         # dump the block C source lines now
         if block.code:
@@ -524,8 +554,9 @@ class  HtmlFormatter( Formatter ):
                     break;
 
 #           if not header:
-#               sys.stderr.write( \
-#                 'WARNING: No header macro for ' + block.source.filename + '.\n' )
+#               sys.stderr.write(
+#                 "WARNING: No header macro for"
+#                 + " '" + block.source.filename + "'.\n" )
 
             if header:
                 print header_location_header
@@ -552,15 +583,16 @@ class  HtmlFormatter( Formatter ):
             print marker_footer
 
     def  block_exit( self, block ):
-        print block_footer_start + self.file_prefix + "index.html" + \
-              block_footer_middle + self.file_prefix + "toc.html" +  \
-              block_footer_end
+        print( block_footer_start + self.file_prefix + "index.html"
+               + block_footer_middle + self.file_prefix + "toc.html"
+               + block_footer_end )
 
     def  section_exit( self, section ):
         print html_footer
 
     def  section_dump_all( self ):
         for section in self.sections:
-            self.section_dump( section, self.file_prefix + section.name + '.html' )
+            self.section_dump( section,
+                               self.file_prefix + section.name + '.html' )
 
 # eof

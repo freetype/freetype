@@ -1,15 +1,28 @@
-#  Utils (c) 2002, 2004, 2007, 2008  David Turner <david@freetype.org>
 #
+#  utils.py
+#
+#    Auxiliary functions for the `docmaker' tool (library file).
+#
+#  Copyright 2002, 2004, 2007, 2008, 2014 by
+#  David Turner.
+#
+#  This file is part of the FreeType project, and may only be used,
+#  modified, and distributed under the terms of the FreeType project
+#  license, LICENSE.TXT.  By continuing to use, modify, or distribute
+#  this file you indicate that you have read the license and
+#  understand and accept it fully.
+
 
 import string, sys, os, glob
+
 
 # current output directory
 #
 output_dir = None
 
 
-# This function is used to sort the index.  It is a simple lexicographical
-# sort, except that it places capital letters before lowercase ones.
+# A function to sort the index.  It is a simple lexicographical sort, except
+# that it places capital letters before lowercase ones.
 #
 def  index_sort( s1, s2 ):
     if not s1:
@@ -42,7 +55,7 @@ def  index_sort( s1, s2 ):
     return 0
 
 
-# Sort input_list, placing the elements of order_list in front.
+# Sort `input_list', placing the elements of `order_list' in front.
 #
 def  sort_order_list( input_list, order_list ):
     new_list = order_list[:]
@@ -52,9 +65,9 @@ def  sort_order_list( input_list, order_list ):
     return new_list
 
 
-# Open the standard output to a given project documentation file.  Use
-# "output_dir" to determine the filename location if necessary and save the
-# old stdout in a tuple that is returned by this function.
+# Divert standard output to a given project documentation file.  Use
+# `output_dir' to determine the filename location if necessary and save the
+# old stdout handle in a tuple that is returned by this function.
 #
 def  open_output( filename ):
     global output_dir
@@ -69,7 +82,7 @@ def  open_output( filename ):
     return ( new_file, old_stdout )
 
 
-# Close the output that was returned by "close_output".
+# Close the output that was returned by `open_output'.
 #
 def  close_output( output ):
     output[0].close()
@@ -83,15 +96,16 @@ def  check_output():
     if output_dir:
         if output_dir != "":
             if not os.path.isdir( output_dir ):
-                sys.stderr.write( "argument" + " '" + output_dir + "' " + \
-                                  "is not a valid directory" )
+                sys.stderr.write( "argument"
+                                  + " '" + output_dir + "' "
+                                  + "is not a valid directory" )
                 sys.exit( 2 )
         else:
             output_dir = None
 
 
 def  file_exists( pathname ):
-    """checks that a given file exists"""
+    """Check that a given file exists."""
     result = 1
     try:
         file = open( pathname, "r" )
@@ -104,12 +118,12 @@ def  file_exists( pathname ):
 
 
 def  make_file_list( args = None ):
-    """builds a list of input files from command-line arguments"""
+    """Build a list of input files from command-line arguments."""
     file_list = []
     # sys.stderr.write( repr( sys.argv[1 :] ) + '\n' )
 
     if not args:
-        args = sys.argv[1 :]
+        args = sys.argv[1:]
 
     for pathname in args:
         if string.find( pathname, '*' ) >= 0:
