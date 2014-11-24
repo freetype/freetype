@@ -1,5 +1,12 @@
 2014-11-24  Werner Lemberg  <wl@gnu.org>
 
+	[sfnt] Fix Savannah bug #43672.
+
+	* src/sfnt/ttkern.c (tt_face_load_kern): Use correct value for
+	minimum table length test.
+
+2014-11-24  Werner Lemberg  <wl@gnu.org>
+
 	[type1, type42] Another fix for Savannah bug #43655.
 
 	* src/type1/t1load.c (parse_charstrings), src/type42/t42parse.c
