@@ -1,5 +1,15 @@
 2014-11-24  Werner Lemberg  <wl@gnu.org>
 
+	[sfnt] Fix Savannah bug #43680.
+
+	This adds an additional constraint to make the fix from 2013-01-25
+	really work.
+
+	* src/sfnt/ttsbit.c (tt_sbit_decoder_load_image) <index_format==4>:
+	Check `p' before `num_glyphs'.
+
+2014-11-24  Werner Lemberg  <wl@gnu.org>
+
 	[truetype] Fix Savannah bug #43679.
 
 	* src/truetype/ttpload.c (tt_face_load_hdmx): Check minimum size of

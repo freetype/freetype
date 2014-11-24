@@ -1170,7 +1170,8 @@
         num_glyphs = FT_NEXT_ULONG( p );
 
         /* overflow check for p + ( num_glyphs + 1 ) * 4 */
-        if ( num_glyphs > (FT_ULong)( ( ( p_limit - p ) >> 2 ) - 1 ) )
+        if ( p + 4 > p_limit                                         ||
+             num_glyphs > (FT_ULong)( ( ( p_limit - p ) >> 2 ) - 1 ) )
           goto NoBitmap;
 
         for ( mm = 0; mm < num_glyphs; mm++ )
