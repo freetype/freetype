@@ -1,5 +1,12 @@
 2014-11-24  Werner Lemberg  <wl@gnu.org>
 
+	[type1, type42] Another fix for Savannah bug #43655.
+
+	* src/type1/t1load.c (parse_charstrings), src/type42/t42parse.c
+	(t42_parse_charstrings): Add another boundary testing.
+
+2014-11-24  Werner Lemberg  <wl@gnu.org>
+
 	[docmaker] Formatting, copyright, improved documentation.
 
 	* src/tools/docmaker/*: No code changes besides trivial
