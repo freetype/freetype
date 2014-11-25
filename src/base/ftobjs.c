@@ -3751,7 +3751,7 @@
 
 
     if ( !size )
-      return FT_THROW( Invalid_Argument );
+      return FT_THROW( Invalid_Size_Handle );
 
     face = size->face;
     if ( !face || !face->driver )
