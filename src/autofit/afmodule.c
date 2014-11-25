@@ -55,7 +55,7 @@
 
 
     if ( !face )
-      return FT_THROW( Invalid_Argument );
+      return FT_THROW( Invalid_Face_Handle );
 
     globals = (AF_FaceGlobals)face->autohint.data;
     if ( !globals )

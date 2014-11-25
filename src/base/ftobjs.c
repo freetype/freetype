@@ -408,7 +408,10 @@
     FT_GlyphSlot     slot = NULL;
 
 
-    if ( !face || !face->driver )
+    if ( !face )
+      return FT_THROW( Invalid_Face_Handle );
+
+    if ( !face->driver )
       return FT_THROW( Invalid_Argument );
 
     driver = face->driver;
@@ -3630,7 +3633,7 @@
   FT_Get_Sfnt_Table( FT_Face      face,
                      FT_Sfnt_Tag  tag )
   {
-    void*                  table = 0;
+    void*                  table = NULL;
     FT_Service_SFNT_Table  service;
 
 
@@ -3752,7 +3755,7 @@
 
     face = size->face;
     if ( !face || !face->driver )
-      return FT_THROW( Invalid_Argument );
+      return FT_THROW( Invalid_Face_Handle );
 
     /* we don't need anything more complex than that; all size objects */
     /* are already listed by the face                                  */

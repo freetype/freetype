@@ -974,7 +974,7 @@
 
     if ( !face )
     {
-      error = FT_THROW( Invalid_Argument );
+      error = FT_THROW( Invalid_Face_Handle );
       goto Exit;
     }
 

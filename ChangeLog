@@ -1,3 +1,7 @@
+2014-11-25  Werner Lemberg  <wl@gnu.org>
+
+	*/*: s/Invalid_Argument/Invalid_Face_Handle/ where appropriate.
+
 2014-11-24  Werner Lemberg  <wl@gnu.org>
 
 	[Savannah bug #43682] Adjust some renderer callbacks.
@@ -9,7 +13,7 @@
 	for orthogonality.
 	(ft_grays_raster): Use it.
 
-2014-11-24  Werner Lemberg  <wl@gnu.org>
+2014-11-25  Werner Lemberg  <wl@gnu.org>
 
 	[Savannah bug #43682] Properly handle missing return errors.
 
@@ -25,7 +29,7 @@
 	TT_Load_Glyph), src/truetype/ttgxvar.c (TT_Set_MM_Blend),
 	src/truetype/ttobjs.c (tt_size_run_fpgm, tt_size_run_prep): Do it.
 
-2014-11-24  Werner Lemberg  <wl@gnu.org>
+2014-11-25  Werner Lemberg  <wl@gnu.org>
 
 	[Savannah bug #43682] Add/remove `void' casts to some functions.
 
@@ -39,7 +43,7 @@
 	src/type1/t1load.c (parse_encoding), src/type42/t42parse.c
 	(t42_parse_encoding): Do it.
 
-2014-11-24  Werner Lemberg  <wl@gnu.org>
+2014-11-25  Werner Lemberg  <wl@gnu.org>
 
 	[Savannah bug #43682] Change some signatures to `void' return type.
 
