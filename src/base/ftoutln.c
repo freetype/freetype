@@ -643,7 +643,7 @@
     /* if we changed the current renderer for the glyph image format */
     /* we need to select it as the next current one                  */
     if ( !error && update && renderer )
-      FT_Set_Renderer( library, renderer, 0, 0 );
+      error = FT_Set_Renderer( library, renderer, 0, 0 );
 
     return error;
   }

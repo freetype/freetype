@@ -1,5 +1,21 @@
 2014-11-24  Werner Lemberg  <wl@gnu.org>
 
+	[Savannah bug #43682] Properly handle missing return errors.
+
+	The functions in this patch *do* return non-trivial errors that must
+	be taken care of.
+
+	* src/autofit/afloader.c (af_loader_load_g), src/base/ftobjs.c
+	(FT_Render_Glyph_Internal), src/base/ftoutln.c (FT_Outline_Render),
+	src/cff/cffgload.c (cff_decoder_parse_charstrings) <cff_op_endchar>,
+	src/psaux/psobjs.c (ps_parser_load_field_table), src/psaux/t1decode
+	(t1_decoder_parse_charstrings) <op_endchar>, src/truetype/ttgload.c
+	(load_truetype_glyph <subglyph loop>, tt_loader_init,
+	TT_Load_Glyph), src/truetype/ttgxvar.c (TT_Set_MM_Blend),
+	src/truetype/ttobjs.c (tt_size_run_fpgm, tt_size_run_prep): Do it.
+
+2014-11-24  Werner Lemberg  <wl@gnu.org>
+
 	[Savannah bug #43682] Add/remove `void' casts to some functions.
 
 	We use a cast to indicate that we intentionally ignore a function's

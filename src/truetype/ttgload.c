@@ -1787,8 +1787,12 @@
           /* (1): exists from the beginning                               */
           /* (2): components that have been loaded so far                 */
           /* (3): the newly loaded component                              */
-          TT_Process_Composite_Component( loader, subglyph, start_point,
-                                          num_base_points );
+          error = TT_Process_Composite_Component( loader,
+                                                  subglyph,
+                                                  start_point,
+                                                  num_base_points );
+          if ( error )
+            goto Exit;
         }
 
         loader->stream   = old_stream;
@@ -1797,16 +1801,17 @@
         /* process the glyph */
         loader->ins_pos = ins_pos;
         if ( IS_HINTED( loader->load_flags ) &&
-
 #ifdef TT_USE_BYTECODE_INTERPRETER
-
              subglyph->flags & WE_HAVE_INSTR &&
-
 #endif
-
              num_points > start_point )
-          TT_Process_Composite_Glyph( loader, start_point, start_contour );
-
+        {
+          error = TT_Process_Composite_Glyph( loader,
+                                              start_point,
+                                              start_contour );
+          if ( error )
+            goto Exit;
+        }
       }
     }
     else
@@ -2081,6 +2086,8 @@
                   FT_Int32      load_flags,
                   FT_Bool       glyf_table_only )
   {
+    FT_Error  error;
+
     TT_Face    face;
     FT_Stream  stream;
 #ifdef TT_USE_BYTECODE_INTERPRETER
@@ -2120,9 +2127,7 @@
 
       if ( size->bytecode_ready < 0 || size->cvt_ready < 0 )
       {
-        FT_Error  error = tt_size_ready_bytecode( size, pedantic );
-
-
+        error = tt_size_ready_bytecode( size, pedantic );
         if ( error )
           return error;
       }
@@ -2193,7 +2198,9 @@
                              FT_RENDER_MODE_MONO );
       }
 
-      TT_Load_Context( exec, face, size );
+      error = TT_Load_Context( exec, face, size );
+      if ( error )
+        return error;
 
 #ifdef TT_CONFIG_OPTION_SUBPIXEL_HINTING
 
@@ -2240,8 +2247,7 @@
 
       if ( reexecute )
       {
-        FT_UInt   i;
-        FT_Error  error;
+        FT_UInt  i;
 
 
         for ( i = 0; i < size->cvt_size; i++ )
@@ -2279,8 +2285,7 @@
 #endif
 
     {
-      FT_Error  error = face->goto_table( face, TTAG_glyf, stream, 0 );
-
+      error = face->goto_table( face, TTAG_glyf, stream, 0 );
 
       if ( FT_ERR_EQ( error, Table_Missing ) )
         loader->glyf_offset = 0;
@@ -2462,7 +2467,7 @@
 
 #endif /* TT_USE_BYTECODE_INTERPRETER */
 
-      compute_glyph_metrics( &loader, glyph_index );
+      error = compute_glyph_metrics( &loader, glyph_index );
     }
 
     /* Set the `high precision' bit flag.                           */

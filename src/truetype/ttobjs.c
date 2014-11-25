@@ -760,7 +760,9 @@
     if ( !exec )
       return FT_THROW( Could_Not_Find_Context );
 
-    TT_Load_Context( exec, face, size );
+    error = TT_Load_Context( exec, face, size );
+    if ( error )
+      return error;
 
     exec->callTop = 0;
     exec->top     = 0;
@@ -852,7 +854,9 @@
     if ( !exec )
       return FT_THROW( Could_Not_Find_Context );
 
-    TT_Load_Context( exec, face, size );
+    error = TT_Load_Context( exec, face, size );
+    if ( error )
+      return error;
 
     exec->callTop = 0;
     exec->top     = 0;

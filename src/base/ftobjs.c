@@ -3747,11 +3747,11 @@
     FT_Face  face;
 
 
-    if ( size == NULL )
+    if ( !size )
       return FT_THROW( Invalid_Argument );
 
     face = size->face;
-    if ( face == NULL || face->driver == NULL )
+    if ( !face || !face->driver )
       return FT_THROW( Invalid_Argument );
 
     /* we don't need anything more complex than that; all size objects */
@@ -4037,7 +4037,11 @@
         /* if we changed the current renderer for the glyph image format */
         /* we need to select it as the next current one                  */
         if ( !error && update && renderer )
-          FT_Set_Renderer( library, renderer, 0, 0 );
+        {
+          error = FT_Set_Renderer( library, renderer, 0, 0 );
+          if ( error )
+            break;
+        }
       }
     }
 
@@ -4047,6 +4051,7 @@
 #define FT_COMPONENT  trace_bitmap
 
     /* we convert to a single bitmap format for computing the checksum */
+    if ( !error )
     {
       FT_Bitmap  bitmap;
       FT_Error   err;

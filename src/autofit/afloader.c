@@ -131,8 +131,8 @@
       loader->trans_delta  = internal->glyph_delta;
 
       inverse = loader->trans_matrix;
-      FT_Matrix_Invert( &inverse );
-      FT_Vector_Transform( &loader->trans_delta, &inverse );
+      if ( !FT_Matrix_Invert( &inverse ) )
+        FT_Vector_Transform( &loader->trans_delta, &inverse );
     }
 
     switch ( slot->format )

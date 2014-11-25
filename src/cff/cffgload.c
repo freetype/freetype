@@ -1989,9 +1989,6 @@
           }
           else
           {
-            if ( !error )
-              error = FT_Err_Ok;
-
             cff_builder_close_contour( builder );
 
             /* close hints recording session */
@@ -2002,10 +1999,12 @@
                 goto Syntax_Error;
 
               /* apply hints to the loaded glyph outline now */
-              hinter->apply( hinter->hints,
-                             builder->current,
-                             (PSH_Globals)builder->hints_globals,
-                             decoder->hint_mode );
+              error = hinter->apply( hinter->hints,
+                                     builder->current,
+                                     (PSH_Globals)builder->hints_globals,
+                                     decoder->hint_mode );
+              if ( error )
+                goto Fail;
             }
 
             /* add current outline to the glyph slot */
