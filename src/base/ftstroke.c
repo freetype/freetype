@@ -795,7 +795,7 @@
 
 
     if ( !library )
-      return FT_THROW( Invalid_Argument );
+      return FT_THROW( Invalid_Library_Handle );
 
     memory = library->memory;
 

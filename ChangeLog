@@ -1,5 +1,9 @@
 2014-11-25  Werner Lemberg  <wl@gnu.org>
 
+	*/*: s/Invalid_Argument/Invalid_Library_Handle/ where appropriate.
+
+2014-11-25  Werner Lemberg  <wl@gnu.org>
+
 	*/*: s/Invalid_Argument/Invalid_Outline/ where appropriate.
 
 2014-11-25  Werner Lemberg  <wl@gnu.org>

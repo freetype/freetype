@@ -289,7 +289,10 @@
   FT_Library_SetLcdFilterWeights( FT_Library      library,
                                   unsigned char  *weights )
   {
-    if ( !library || !weights )
+    if ( !library )
+      return FT_THROW( Invalid_Library_Handle );
+
+    if ( !weights )
       return FT_THROW( Invalid_Argument );
 
     ft_memcpy( library->lcd_weights, weights, 5 );
@@ -311,7 +314,7 @@
 
 
     if ( !library )
-      return FT_THROW( Invalid_Argument );
+      return FT_THROW( Invalid_Library_Handle );
 
     switch ( filter )
     {
