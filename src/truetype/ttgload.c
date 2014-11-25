@@ -801,10 +801,8 @@
       FT_Outline      current_outline = gloader->current.outline;
 
 
-      error = TT_Set_CodeRange( loader->exec, tt_coderange_glyph,
-                                loader->exec->glyphIns, n_ins );
-      if ( error )
-        return error;
+      TT_Set_CodeRange( loader->exec, tt_coderange_glyph,
+                        loader->exec->glyphIns, n_ins );
 
       loader->exec->is_composite = is_composite;
       loader->exec->pts          = *zone;

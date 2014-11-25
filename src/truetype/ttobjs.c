@@ -801,14 +801,10 @@
 
     if ( face->font_program_size > 0 )
     {
-      error = TT_Goto_CodeRange( exec, tt_coderange_font, 0 );
+      TT_Goto_CodeRange( exec, tt_coderange_font, 0 );
 
-      if ( !error )
-      {
-        FT_TRACE4(( "Executing `fpgm' table.\n" ));
-
-        error = face->interpreter( exec );
-      }
+      FT_TRACE4(( "Executing `fpgm' table.\n" ));
+      error = face->interpreter( exec );
     }
     else
       error = FT_Err_Ok;
@@ -874,9 +870,9 @@
 
     if ( face->cvt_program_size > 0 )
     {
-      error = TT_Goto_CodeRange( exec, tt_coderange_cvt, 0 );
+      TT_Goto_CodeRange( exec, tt_coderange_cvt, 0 );
 
-      if ( !error && !size->debug )
+      if ( !size->debug )
       {
         FT_TRACE4(( "Executing `prep' table.\n" ));
 

@@ -279,10 +279,7 @@
   /* <InOut>                                                               */
   /*    exec  :: The target execution context.                             */
   /*                                                                       */
-  /* <Return>                                                              */
-  /*    FreeType error code.  0 means success.                             */
-  /*                                                                       */
-  FT_LOCAL_DEF( FT_Error )
+  FT_LOCAL_DEF( void )
   TT_Goto_CodeRange( TT_ExecContext  exec,
                      FT_Int          range,
                      FT_Long         IP )
@@ -306,8 +303,6 @@
     exec->codeSize = coderange->size;
     exec->IP       = IP;
     exec->curRange = range;
-
-    return FT_Err_Ok;
   }
 
 
@@ -329,10 +324,7 @@
   /* <InOut>                                                               */
   /*    exec   :: The target execution context.                            */
   /*                                                                       */
-  /* <Return>                                                              */
-  /*    FreeType error code.  0 means success.                             */
-  /*                                                                       */
-  FT_LOCAL_DEF( FT_Error )
+  FT_LOCAL_DEF( void )
   TT_Set_CodeRange( TT_ExecContext  exec,
                     FT_Int          range,
                     void*           base,
@@ -342,8 +334,6 @@
 
     exec->codeRangeTable[range - 1].base = (FT_Byte*)base;
     exec->codeRangeTable[range - 1].size = length;
-
-    return FT_Err_Ok;
   }
 
 
@@ -361,13 +351,7 @@
   /* <InOut>                                                               */
   /*    exec  :: The target execution context.                             */
   /*                                                                       */
-  /* <Return>                                                              */
-  /*    FreeType error code.  0 means success.                             */
-  /*                                                                       */
-  /* <Note>                                                                */
-  /*    Does not set the Error variable.                                   */
-  /*                                                                       */
-  FT_LOCAL_DEF( FT_Error )
+  FT_LOCAL_DEF( void )
   TT_Clear_CodeRange( TT_ExecContext  exec,
                       FT_Int          range )
   {
@@ -375,8 +359,6 @@
 
     exec->codeRangeTable[range - 1].base = NULL;
     exec->codeRangeTable[range - 1].size = 0;
-
-    return FT_Err_Ok;
   }
 
 
@@ -400,13 +382,10 @@
   /*                                                                       */
   /*    memory :: A handle to the parent memory object.                    */
   /*                                                                       */
-  /* <Return>                                                              */
-  /*    FreeType error code.  0 means success.                             */
-  /*                                                                       */
   /* <Note>                                                                */
   /*    Only the glyph loader and debugger should call this function.      */
   /*                                                                       */
-  FT_LOCAL_DEF( FT_Error )
+  FT_LOCAL_DEF( void )
   TT_Done_Context( TT_ExecContext  exec )
   {
     FT_Memory  memory = exec->memory;
@@ -433,8 +412,6 @@
     exec->face = NULL;
 
     FT_FREE( exec );
-
-    return FT_Err_Ok;
   }
 
 
@@ -661,13 +638,10 @@
   /* <InOut>                                                               */
   /*    size :: A handle to the target size object.                        */
   /*                                                                       */
-  /* <Return>                                                              */
-  /*    FreeType error code.  0 means success.                             */
-  /*                                                                       */
   /* <Note>                                                                */
   /*    Only the glyph loader and debugger should call this function.      */
   /*                                                                       */
-  FT_LOCAL_DEF( FT_Error )
+  FT_LOCAL_DEF( void )
   TT_Save_Context( TT_ExecContext  exec,
                    TT_Size         size )
   {
@@ -685,8 +659,6 @@
 
     for ( i = 0; i < TT_MAX_CODE_RANGES; i++ )
       size->codeRangeTable[i] = exec->codeRangeTable[i];
-
-    return FT_Err_Ok;
   }
 
 
@@ -718,12 +690,7 @@
   TT_Run_Context( TT_ExecContext  exec,
                   FT_Bool         debug )
   {
-    FT_Error  error;
-
-
-    if ( ( error = TT_Goto_CodeRange( exec, tt_coderange_glyph, 0 ) )
-           != FT_Err_Ok )
-      return error;
+    TT_Goto_CodeRange( exec, tt_coderange_glyph, 0 );
 
     exec->zp0 = exec->pts;
     exec->zp1 = exec->pts;

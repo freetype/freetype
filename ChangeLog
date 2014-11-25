@@ -1,5 +1,22 @@
 2014-11-24  Werner Lemberg  <wl@gnu.org>
 
+	[Savannah bug #43682] Change some signatures to `void' return type.
+
+	* include/internal/pshints.h (PSH_Globals_SetScaleFunc),
+	include/internal/sfnt.h (TT_Get_Metrics_Func),
+	src/pshinter/pshglob.c (psh_globals_set_scale),
+	src/pshinter/pshrec.c (ps_hints_init), src/sfnt/ttmtx.c
+	(tt_face_get_metrics), src/truetype/ttinterp.c (TT_Goto_CodeRange,
+	TT_Set_CodeRange, TT_Clear_CodeRange, TT_Done_Context,
+	TT_Save_Context): Do it.
+
+	* src/pshinter/pshglob.h, src/pshinter/pshrec.h, src/sfnt/ttmtx.h,
+	src/truetype/ttgload.c (TT_Hint_Glyph), src/truetype/ttinterp.c
+	(TT_Run_Context), src/truetype/ttinterp.h, src/truetype/ttobjs.c
+	(tt_size_run_fpgm, tt_size_run_prep): Updated.
+
+2014-11-24  Werner Lemberg  <wl@gnu.org>
+
 	Remove all code related to FT_MAX_CHARMAP_CACHEABLE.
 
 	This is no longer used.
