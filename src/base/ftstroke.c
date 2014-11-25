@@ -2060,7 +2060,10 @@
     FT_Int      tag;       /* current point's state           */
 
 
-    if ( !outline || !stroker )
+    if ( !outline )
+      return FT_THROW( Invalid_Outline );
+
+    if ( !stroker )
       return FT_THROW( Invalid_Argument );
 
     FT_Stroker_Rewind( stroker );

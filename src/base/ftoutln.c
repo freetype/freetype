@@ -73,7 +73,10 @@
     FT_Pos   delta;
 
 
-    if ( !outline || !func_interface )
+    if ( !outline )
+      return FT_THROW( Invalid_Outline );
+
+    if ( !func_interface )
       return FT_THROW( Invalid_Argument );
 
     shift = func_interface->shift;
@@ -614,7 +617,10 @@
     if ( !library )
       return FT_THROW( Invalid_Library_Handle );
 
-    if ( !outline || !params )
+    if ( !outline )
+      return FT_THROW( Invalid_Outline );
+
+    if ( !params )
       return FT_THROW( Invalid_Argument );
 
     renderer = library->cur_renderer;
@@ -911,7 +917,7 @@
 
 
     if ( !outline )
-      return FT_THROW( Invalid_Argument );
+      return FT_THROW( Invalid_Outline );
 
     xstrength /= 2;
     ystrength /= 2;

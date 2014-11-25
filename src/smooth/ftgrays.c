@@ -1515,7 +1515,10 @@ typedef ptrdiff_t  FT_PtrDist;
     TPos  delta;
 
 
-    if ( !outline || !func_interface )
+    if ( !outline )
+      return FT_THROW( Invalid_Outline );
+
+    if ( !func_interface )
       return FT_THROW( Invalid_Argument );
 
     shift = func_interface->shift;
