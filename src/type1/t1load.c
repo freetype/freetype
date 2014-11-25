@@ -1211,7 +1211,7 @@
         char*  notdef = (char *)".notdef";
 
 
-        T1_Add_Table( char_table, n, notdef, 8 );
+        (void)T1_Add_Table( char_table, n, notdef, 8 );
       }
 
       /* Now we need to read records of the form                */

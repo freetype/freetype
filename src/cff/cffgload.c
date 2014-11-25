@@ -4,7 +4,7 @@
 /*                                                                         */
 /*    OpenType Glyph Loader (body).                                        */
 /*                                                                         */
-/*  Copyright 1996-2013 by                                                 */
+/*  Copyright 1996-2014 by                                                 */
 /*  David Turner, Robert Wilhelm, and Werner Lemberg.                      */
 /*                                                                         */
 /*  This file is part of the FreeType project, and may only be used,       */
@@ -2711,10 +2711,10 @@
 
           /* compute linear advance widths */
 
-          ( (SFNT_Service)face->sfnt )->get_metrics( face, 0,
-                                                     glyph_index,
-                                                     &dummy,
-                                                     &advance );
+          (void)( (SFNT_Service)face->sfnt )->get_metrics( face, 0,
+                                                           glyph_index,
+                                                           &dummy,
+                                                           &advance );
           glyph->root.linearHoriAdvance = advance;
 
           has_vertical_info = FT_BOOL(
@@ -2724,10 +2724,10 @@
           /* get the vertical metrics from the vtmx table if we have one */
           if ( has_vertical_info )
           {
-            ( (SFNT_Service)face->sfnt )->get_metrics( face, 1,
-                                                       glyph_index,
-                                                       &dummy,
-                                                       &advance );
+            (void)( (SFNT_Service)face->sfnt )->get_metrics( face, 1,
+                                                             glyph_index,
+                                                             &dummy,
+                                                             &advance );
             glyph->root.linearVertAdvance = advance;
           }
           else
@@ -2964,10 +2964,10 @@
           FT_UShort  vertAdvance  = 0;
 
 
-          ( (SFNT_Service)face->sfnt )->get_metrics( face, 1,
-                                                     glyph_index,
-                                                     &vertBearingY,
-                                                     &vertAdvance );
+          (void)( (SFNT_Service)face->sfnt )->get_metrics( face, 1,
+                                                           glyph_index,
+                                                           &vertBearingY,
+                                                           &vertAdvance );
           metrics->vertBearingY = vertBearingY;
           metrics->vertAdvance  = vertAdvance;
         }

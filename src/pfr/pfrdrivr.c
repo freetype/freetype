@@ -37,7 +37,7 @@
     PFR_PhyFont  phys = &face->phy_font;
 
 
-    pfr_face_get_kerning( pfrface, left, right, avector );
+    (void)pfr_face_get_kerning( pfrface, left, right, avector );
 
     /* convert from metrics to outline units when necessary */
     if ( phys->outline_resolution != phys->metrics_resolution )

@@ -2294,7 +2294,7 @@
       if ( error )
         goto Fail;
 
-      (void)FT_Stroker_GetCounts( stroker, &num_points, &num_contours );
+      FT_Stroker_GetCounts( stroker, &num_points, &num_contours );
 
       FT_Outline_Done( glyph->library, outline );
 
@@ -2380,8 +2380,8 @@
       if ( error )
         goto Fail;
 
-      (void)FT_Stroker_GetBorderCounts( stroker, border,
-                                        &num_points, &num_contours );
+      FT_Stroker_GetBorderCounts( stroker, border,
+                                  &num_points, &num_contours );
 
       FT_Outline_Done( glyph->library, outline );
 
