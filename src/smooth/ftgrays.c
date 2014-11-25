@@ -2097,12 +2097,26 @@ typedef ptrdiff_t  FT_PtrDist;
   }
 
 
+  static int
+  gray_raster_set_mode( FT_Raster      raster,
+                        unsigned long  mode,
+                        void*          args )
+  {
+    FT_UNUSED( raster );
+    FT_UNUSED( mode );
+    FT_UNUSED( args );
+
+
+    return 0; /* nothing to do */
+  }
+
+
   FT_DEFINE_RASTER_FUNCS(ft_grays_raster,
     FT_GLYPH_FORMAT_OUTLINE,
 
     (FT_Raster_New_Func)     gray_raster_new,
     (FT_Raster_Reset_Func)   gray_raster_reset,
-    (FT_Raster_Set_Mode_Func)0,
+    (FT_Raster_Set_Mode_Func)gray_raster_set_mode,
     (FT_Raster_Render_Func)  gray_raster_render,
     (FT_Raster_Done_Func)    gray_raster_done
   )

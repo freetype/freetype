@@ -1,5 +1,16 @@
 2014-11-24  Werner Lemberg  <wl@gnu.org>
 
+	[Savannah bug #43682] Adjust some renderer callbacks.
+
+	* src/raster/ftraster.c (ft_black_set_mode): Change return type to
+	`int' to stay in sync with `FT_Renderer_SetModeFunc' prototype.
+
+	* src/smooth/ftgrays.c (gray_raster_set_mode): New dummy function
+	for orthogonality.
+	(ft_grays_raster): Use it.
+
+2014-11-24  Werner Lemberg  <wl@gnu.org>
+
 	[Savannah bug #43682] Properly handle missing return errors.
 
 	The functions in this patch *do* return non-trivial errors that must
