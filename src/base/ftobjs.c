@@ -1603,9 +1603,9 @@
       if ( error )
         goto Exit2;
       if ( FT_READ_LONG( rlen ) )
-        goto Exit;
+        goto Exit2;
       if ( FT_READ_USHORT( flags ) )
-        goto Exit;
+        goto Exit2;
       FT_TRACE3(( "POST fragment[%d]: offsets=0x%08x, rlen=0x%08x, flags=0x%04x\n",
                    i, offsets[i], rlen, flags ));
 
