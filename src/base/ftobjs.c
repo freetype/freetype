@@ -1560,9 +1560,9 @@
     FT_Memory  memory = library->memory;
     FT_Byte*   pfb_data = NULL;
     int        i, type, flags;
-    FT_Long    len;
-    FT_Long    pfb_len, pfb_pos, pfb_lenpos;
-    FT_Long    rlen, temp;
+    FT_ULong   len;
+    FT_ULong   pfb_len, pfb_pos, pfb_lenpos;
+    FT_ULong   rlen, temp;
 
 
     if ( face_index == -1 )
@@ -1578,25 +1578,27 @@
       error = FT_Stream_Seek( stream, offsets[i] );
       if ( error )
         goto Exit;
-      if ( FT_READ_LONG( temp ) )
+      if ( FT_READ_ULONG( temp ) )
         goto Exit;
-      if ( 0 > temp )
+#if 0
+      FT_TRACE4(( "                 POST fragment #%d: length=0x%08x\n", i, temp));
+      if ( 0x7FFFFFFFUL < temp )
+      {
         error = FT_THROW( Invalid_Offset );
-      else if ( 0x7FFFFFFFL - 6 - pfb_len < temp )
-        error = FT_THROW( Array_Too_Large );
-
-      if ( error )
         goto Exit;
+      }
+#endif
 
       pfb_len += temp + 6;
     }
 
-    if ( 0x7FFFFFFFL - 2 < pfb_len )
+    FT_TRACE2(( "             total buffer size to concatenate %d POST fragments: 0x%08x\n",
+                 resource_cnt, pfb_len + 2));
+    if ( pfb_len + 2 < 6 ) {
       error = FT_THROW( Array_Too_Large );
-    else
-      error = FT_ALLOC( pfb_data, (FT_Long)pfb_len + 2 );
-
-    if ( error )
+      goto Exit;
+    }
+    if ( FT_ALLOC( pfb_data, (FT_Long)pfb_len + 2 ) )
       goto Exit;
 
     pfb_data[0] = 0x80;
@@ -1615,21 +1617,27 @@
       error = FT_Stream_Seek( stream, offsets[i] );
       if ( error )
         goto Exit2;
-      if ( FT_READ_LONG( rlen ) )
+      if ( FT_READ_ULONG( rlen ) )
         goto Exit2;
-      if ( rlen < 0 )
+#if 0
+      if ( 0x7FFFFFFFUL < rlen )
       {
         error = FT_THROW( Invalid_Offset );
         goto Exit2;
       }
+#endif
       if ( FT_READ_USHORT( flags ) )
         goto Exit2;
       FT_TRACE3(( "POST fragment[%d]: offsets=0x%08x, rlen=0x%08x, flags=0x%04x\n",
                    i, offsets[i], rlen, flags ));
 
+      error = FT_ERR( Array_Too_Large );
       /* postpone the check of rlen longer than buffer until FT_Stream_Read() */
       if ( ( flags >> 8 ) == 0 )        /* Comment, should not be loaded */
+      {
+        FT_TRACE3(( "    Skip POST fragment #%d because it is a comment\n", i ));
         continue;
+      }
 
       /* the flags are part of the resource, so rlen >= 2.  */
       /* but some fonts declare rlen = 0 for empty fragment */
@@ -1639,16 +1647,10 @@
         rlen = 0;
 
       if ( ( flags >> 8 ) == type )
-      {
-        if ( 0x7FFFFFFFL - rlen < len )
-        {
-          error = FT_THROW( Array_Too_Large );
-          goto Exit2;
-        }
         len += rlen;
-      }
       else
       {
+        FT_TRACE3(( "    Write POST fragment #%d header (4-byte) to buffer 0x%p + 0x%08x\n", i, pfb_data, pfb_lenpos ));
         if ( pfb_lenpos + 3 > pfb_len + 2 )
           goto Exit2;
         pfb_data[pfb_lenpos    ] = (FT_Byte)( len );
@@ -1659,6 +1661,7 @@
         if ( ( flags >> 8 ) == 5 )      /* End of font mark */
           break;
 
+        FT_TRACE3(( "    Write POST fragment #%d header (6-byte) to buffer 0x%p + 0x%08x\n", i, pfb_data, pfb_pos ));
         if ( pfb_pos + 6 > pfb_len + 2 )
           goto Exit2;
         pfb_data[pfb_pos++] = 0x80;
@@ -1674,21 +1677,17 @@
         pfb_data[pfb_pos++] = 0;
       }
 
-      error = FT_ERR( Cannot_Open_Resource );
-      if ( rlen > 0x7FFFFFFFL - pfb_pos )
-      {
-        error = FT_THROW( Array_Too_Large );
-        goto Exit2;
-      }
       if ( pfb_pos > pfb_len || pfb_pos + rlen > pfb_len )
         goto Exit2;
 
+      FT_TRACE3(( "    Load POST fragment #%d (%d byte) to buffer 0x%p + 0x%08x\n", i, rlen, pfb_data, pfb_pos ));
       error = FT_Stream_Read( stream, (FT_Byte *)pfb_data + pfb_pos, rlen );
       if ( error )
         goto Exit2;
       pfb_pos += rlen;
     }
 
+    error = FT_ERR( Array_Too_Large );
     if ( pfb_pos + 2 > pfb_len + 2 )
       goto Exit2;
     pfb_data[pfb_pos++] = 0x80;
@@ -1709,6 +1708,12 @@
                                   aface );
 
   Exit2:
+    if ( error == FT_ERR( Array_Too_Large ) )
+      FT_TRACE2(( "  Abort due to too-short buffer to store all POST fragments\n" ));
+    else if ( error == FT_ERR( Invalid_Offset ) )
+      FT_TRACE2(( "  Abort due to invalid offset in a POST fragment\n" ));
+    if ( error )
+      error = FT_ERR( Cannot_Open_Resource );
     FT_FREE( pfb_data );
 
   Exit:

@@ -1,5 +1,11 @@
 2014-11-26  suzuki toshiya  <mpsuzuki@hiroshima-u.ac.jp>
 
+	* src/base/ftobjs.c (Mac_Read_POST_Resource): Use unsigned long
+	variables to read the lengths in POST fragments.  Suggested by
+	Mateusz Jurczyk <mjurczyk@google.com>.
+
+2014-11-26  suzuki toshiya  <mpsuzuki@hiroshima-u.ac.jp>
+
 	Fix Savannah bug #43539.
 
 	* src/base/ftobjs.c (Mac_Read_POST_Resource): Fix integer overflow
