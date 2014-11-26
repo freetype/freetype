@@ -1,5 +1,12 @@
 2014-11-26  suzuki toshiya  <mpsuzuki@hiroshima-u.ac.jp>
 
+	Fix Savannah bug #43538.
+
+	* src/base/ftobjs.c (Mac_Read_POST_Resource): Fix integer overflow
+	by a broken POST table in resource-fork.
+
+2014-11-26  suzuki toshiya  <mpsuzuki@hiroshima-u.ac.jp>
+
 	* src/base/ftobjs.c (Mac_Read_POST_Resource): Avoid memory leak
 	by a broken POST table in resource-fork.  Return after freeing
 	the buffered POST table when it is found to be broken.

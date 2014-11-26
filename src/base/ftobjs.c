@@ -1580,10 +1580,23 @@
         goto Exit;
       if ( FT_READ_LONG( temp ) )
         goto Exit;
+      if ( 0 > temp )
+        error = FT_THROW( Invalid_Offset );
+      else if ( 0x7FFFFFFFL - 6 - pfb_len < temp )
+        error = FT_THROW( Array_Too_Large );
+
+      if ( error )
+        goto Exit;
+
       pfb_len += temp + 6;
     }
 
-    if ( FT_ALLOC( pfb_data, (FT_Long)pfb_len + 2 ) )
+    if ( 0x7FFFFFFFL - 2 < pfb_len )
+      error = FT_THROW( Array_Too_Large );
+    else
+      error = FT_ALLOC( pfb_data, (FT_Long)pfb_len + 2 );
+
+    if ( error )
       goto Exit;
 
     pfb_data[0] = 0x80;
