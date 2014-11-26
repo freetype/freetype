@@ -440,9 +440,10 @@
       style = (StyleTable*)p;
       p += sizeof ( StyleTable );
       string_count = EndianS16_BtoN( *(short*)(p) );
+      string_count = FT_MIN( 64, string_count );
       p += sizeof ( short );
 
-      for ( i = 0; i < string_count && i < 64; i++ )
+      for ( i = 0; i < string_count; i++ )
       {
         names[i] = p;
         p       += names[i][0];
@@ -459,7 +460,7 @@
           ps_name[ps_name_len] = 0;
         }
         if ( style->indexes[face_index] > 1 &&
-             style->indexes[face_index] <= FT_MIN( string_count, 64 ) )
+             style->indexes[face_index] <= string_count )
         {
           unsigned char*  suffixes = names[style->indexes[face_index] - 1];
 
