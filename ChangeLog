@@ -1,5 +1,10 @@
 2014-11-26  suzuki toshiya  <mpsuzuki@hiroshima-u.ac.jp>
 
+	* src/base/ftobjs.c (Mac_Read_POST_Resource): Insert comments
+	and fold too long tracing messages.
+
+2014-11-26  suzuki toshiya  <mpsuzuki@hiroshima-u.ac.jp>
+
 	Fix Savannah bug #43540.
 
 	* src/base/ftmac.c (parse_fond): Prevent a buffer overrun
