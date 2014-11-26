@@ -1,5 +1,27 @@
 2014-11-26  Werner Lemberg  <wl@gnu.org>
 
+	* src/*: Add checks for parameters of API functions where missing.
+
+	`API functions' are functions tagged with `FT_EXPORT_DEF'.
+
+	Besides trivial fixes, the following changes are included, too.
+
+	* src/base/ftbdf.c (FT_Get_BDF_Charset_ID, FT_Get_BDF_Property): Set
+	error code if no service is available.
+
+	* src/base/ftinit.c (FT_Done_FreeType): Change return value for
+	invalid `library' parameter to `Invalid_Library_Handle'.
+
+	* src/base/ftobjs.c (FT_New_Size): Change return value for invalid
+	`asize' parameter to `Invalid_Argument'.
+
+	* src/base/ftoutln.c (FT_Outline_Copy): Change return value for
+	invalid `source' and `target' parameters to `Invalid_Outline'.
+	(FT_Outline_Done_Internal): Change return value for invalid
+	`outline' parameter to `Invalid_Outline'.
+
+2014-11-26  Werner Lemberg  <wl@gnu.org>
+
 	* src/cache/ftcbasic.c: Use single calls to `FT_TRACE'.
 
 2014-11-26  suzuki toshiya  <mpsuzuki@hiroshima-u.ac.jp>

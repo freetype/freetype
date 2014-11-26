@@ -245,6 +245,9 @@
     FT_ListNode  cur;
 
 
+    if ( !list )
+      return NULL;
+
     cur = list->head;
     while ( cur )
     {
@@ -254,7 +257,7 @@
       cur = cur->next;
     }
 
-    return (FT_ListNode)0;
+    return NULL;
   }
 
 
@@ -264,8 +267,13 @@
   FT_List_Add( FT_List      list,
                FT_ListNode  node )
   {
-    FT_ListNode  before = list->tail;
+    FT_ListNode  before;
 
+
+    if ( !list || !node )
+      return;
+
+    before = list->tail;
 
     node->next = 0;
     node->prev = before;
@@ -285,8 +293,13 @@
   FT_List_Insert( FT_List      list,
                   FT_ListNode  node )
   {
-    FT_ListNode  after = list->head;
+    FT_ListNode  after;
 
+
+    if ( !list || !node )
+      return;
+
+    after = list->head;
 
     node->next = after;
     node->prev = 0;
@@ -308,6 +321,9 @@
   {
     FT_ListNode  before, after;
 
+
+    if ( !list || !node )
+      return;
 
     before = node->prev;
     after  = node->next;
@@ -333,6 +349,9 @@
     FT_ListNode  before, after;
 
 
+    if ( !list || !node )
+      return;
+
     before = node->prev;
     after  = node->next;
 
@@ -357,13 +376,18 @@
   /* documentation is in ftlist.h */
 
   FT_EXPORT_DEF( FT_Error )
-  FT_List_Iterate( FT_List            list,
-                   FT_List_Iterator   iterator,
-                   void*              user )
+  FT_List_Iterate( FT_List           list,
+                   FT_List_Iterator  iterator,
+                   void*             user )
   {
-    FT_ListNode  cur   = list->head;
+    FT_ListNode  cur;
     FT_Error     error = FT_Err_Ok;
 
+
+    if ( !list || !iterator )
+      return FT_THROW( Invalid_Argument );
+
+    cur = list->head;
 
     while ( cur )
     {
@@ -391,6 +415,9 @@
   {
     FT_ListNode  cur;
 
+
+    if ( !list || !memory )
+      return;
 
     cur = list->head;
     while ( cur )

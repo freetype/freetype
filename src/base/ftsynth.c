@@ -48,8 +48,13 @@
   FT_GlyphSlot_Oblique( FT_GlyphSlot  slot )
   {
     FT_Matrix    transform;
-    FT_Outline*  outline = &slot->outline;
+    FT_Outline*  outline;
 
+
+    if ( !slot )
+      return;
+
+    outline = &slot->outline;
 
     /* only oblique outline glyphs */
     if ( slot->format != FT_GLYPH_FORMAT_OUTLINE )
@@ -84,11 +89,17 @@
   FT_EXPORT_DEF( void )
   FT_GlyphSlot_Embolden( FT_GlyphSlot  slot )
   {
-    FT_Library  library = slot->library;
-    FT_Face     face    = slot->face;
+    FT_Library  library;
+    FT_Face     face;
     FT_Error    error;
     FT_Pos      xstr, ystr;
 
+
+    if ( !slot )
+      return;
+
+    library = slot->library;
+    face    = slot->face;
 
     if ( slot->format != FT_GLYPH_FORMAT_OUTLINE &&
          slot->format != FT_GLYPH_FORMAT_BITMAP  )

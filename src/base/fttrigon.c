@@ -359,6 +359,9 @@
   FT_Vector_Unit( FT_Vector*  vec,
                   FT_Angle    angle )
   {
+    if ( !vec )
+      return;
+
     vec->x = FT_TRIG_SCALE >> 8;
     vec->y = 0;
     ft_trig_pseudo_rotate( vec, angle );
@@ -384,6 +387,9 @@
     FT_Int     shift;
     FT_Vector  v;
 
+
+    if ( !vec )
+      return;
 
     v.x   = vec->x;
     v.y   = vec->y;
@@ -422,6 +428,9 @@
     FT_Vector  v;
 
 
+    if ( !vec )
+      return 0;
+
     v = *vec;
 
     /* handle trivial cases */
@@ -458,6 +467,9 @@
     FT_Vector  v;
 
 
+    if ( !vec || !length || !angle )
+      return;
+
     v = *vec;
 
     if ( v.x == 0 && v.y == 0 )
@@ -481,6 +493,9 @@
                         FT_Fixed    length,
                         FT_Angle    angle )
   {
+    if ( !vec )
+      return;
+
     vec->x = length;
     vec->y = 0;
 

@@ -186,7 +186,7 @@
     FTC_MruNode  mrunode;
 
 
-    if ( asize == NULL )
+    if ( !asize || !scaler )
       return FT_THROW( Invalid_Argument );
 
     *asize = NULL;
@@ -313,7 +313,7 @@
     FTC_MruNode  mrunode;
 
 
-    if ( aface == NULL )
+    if ( !aface || !face_id )
       return FT_THROW( Invalid_Argument );
 
     *aface = NULL;
@@ -365,6 +365,9 @@
 
     if ( !library )
       return FT_THROW( Invalid_Library_Handle );
+
+    if ( !amanager || !requester )
+      return FT_THROW( Invalid_Argument );
 
     memory = library->memory;
 
@@ -451,11 +454,11 @@
   FT_EXPORT_DEF( void )
   FTC_Manager_Reset( FTC_Manager  manager )
   {
-    if ( manager )
-    {
-      FTC_MruList_Reset( &manager->sizes );
-      FTC_MruList_Reset( &manager->faces );
-    }
+    if ( !manager )
+      return;
+
+    FTC_MruList_Reset( &manager->sizes );
+    FTC_MruList_Reset( &manager->faces );
 
     FTC_Manager_FlushN( manager, manager->num_nodes );
   }
@@ -667,6 +670,10 @@
   {
     FT_UInt  nn;
 
+
+    if ( !manager || !face_id )
+      return;
+
     /* this will remove all FTC_SizeNode that correspond to
      * the face_id as well
      */
@@ -685,7 +692,9 @@
   FTC_Node_Unref( FTC_Node     node,
                   FTC_Manager  manager )
   {
-    if ( node && (FT_UInt)node->cache_index < manager->num_caches )
+    if ( node                                             &&
+         manager                                          &&
+         (FT_UInt)node->cache_index < manager->num_caches )
       node->ref_count--;
   }
 

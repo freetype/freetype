@@ -263,6 +263,9 @@
       return 0;
     }
 
+    if ( !face_id )
+      return 0;
+
     query.face_id    = face_id;
     query.cmap_index = (FT_UInt)cmap_index;
     query.char_code  = char_code;

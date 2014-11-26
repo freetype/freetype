@@ -760,8 +760,13 @@
   FT_EXPORT_DEF( TT_ExecContext )
   TT_New_Context( TT_Driver  driver )
   {
-    FT_Memory  memory = driver->root.root.memory;
+    FT_Memory  memory;
 
+
+    if ( !driver )
+      goto Fail;
+
+    memory = driver->root.root.memory;
 
     if ( !driver->context )
     {
@@ -8221,6 +8226,9 @@
 
 
 #ifdef TT_CONFIG_OPTION_STATIC_RASTER
+    if ( !exc )
+      return FT_THROW( Invalid_Argument );
+
     cur = *exc;
 #endif
 

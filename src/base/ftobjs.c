@@ -511,6 +511,7 @@
       internal->transform_matrix.xy = 0;
       internal->transform_matrix.yx = 0;
       internal->transform_matrix.yy = 0x10000L;
+
       matrix = &internal->transform_matrix;
     }
     else
@@ -526,6 +527,7 @@
     {
       internal->transform_delta.x = 0;
       internal->transform_delta.y = 0;
+
       delta = &internal->transform_delta;
     }
     else
@@ -1220,7 +1222,7 @@
     FT_Open_Args  args;
 
 
-    /* test for valid `library' and `aface' delayed to FT_Open_Face() */
+    /* test for valid `library' and `aface' delayed to `FT_Open_Face' */
     if ( !pathname )
       return FT_THROW( Invalid_Argument );
 
@@ -1246,7 +1248,7 @@
     FT_Open_Args  args;
 
 
-    /* test for valid `library' and `face' delayed to FT_Open_Face() */
+    /* test for valid `library' and `face' delayed to `FT_Open_Face' */
     if ( !file_base )
       return FT_THROW( Invalid_Argument );
 
@@ -2076,8 +2078,7 @@
     FT_Module*   limit;
 
 
-    /* test for valid `library' delayed to */
-    /* FT_Stream_New()                     */
+    /* test for valid `library' delayed to `FT_Stream_New' */
 
     if ( ( !aface && face_index >= 0 ) || !args )
       return FT_THROW( Invalid_Argument );
@@ -2324,7 +2325,7 @@
     FT_Open_Args  open;
 
 
-    /* test for valid `face' delayed to FT_Attach_Stream() */
+    /* test for valid `face' delayed to `FT_Attach_Stream' */
 
     if ( !filepathname )
       return FT_THROW( Invalid_Argument );
@@ -2350,7 +2351,7 @@
     FT_Driver_Class  clazz;
 
 
-    /* test for valid `parameters' delayed to FT_Stream_New() */
+    /* test for valid `parameters' delayed to `FT_Stream_New' */
 
     if ( !face )
       return FT_THROW( Invalid_Face_Handle );
@@ -2386,6 +2387,9 @@
   FT_EXPORT_DEF( FT_Error )
   FT_Reference_Face( FT_Face  face )
   {
+    if ( !face )
+      return FT_THROW( Invalid_Face_Handle );
+
     face->internal->refcount++;
 
     return FT_Err_Ok;
@@ -2452,7 +2456,7 @@
       return FT_THROW( Invalid_Face_Handle );
 
     if ( !asize )
-      return FT_THROW( Invalid_Size_Handle );
+      return FT_THROW( Invalid_Argument );
 
     if ( !face->driver )
       return FT_THROW( Invalid_Driver_Handle );
@@ -2961,6 +2965,8 @@
     FT_Size_RequestRec  req;
 
 
+    /* check of `face' delayed to `FT_Request_Size' */
+
     if ( !char_width )
       char_width = char_height;
     else if ( !char_height )
@@ -2998,6 +3004,8 @@
   {
     FT_Size_RequestRec  req;
 
+
+    /* check of `face' delayed to `FT_Request_Size' */
 
     if ( pixel_width == 0 )
       pixel_width = pixel_height;
@@ -3172,8 +3180,9 @@
       return FT_THROW( Invalid_Face_Handle );
 
     cur = face->charmaps;
-    if ( !cur )
+    if ( !cur || !charmap )
       return FT_THROW( Invalid_CharMap_Handle );
+
     if ( FT_Get_CMap_Format( charmap ) == 14 )
       return FT_THROW( Invalid_Argument );
 
@@ -3184,9 +3193,10 @@
       if ( cur[0] == charmap )
       {
         face->charmap = cur[0];
-        return 0;
+        return FT_Err_Ok;
       }
     }
+
     return FT_THROW( Invalid_Argument );
   }
 
@@ -3418,8 +3428,9 @@
     FT_UInt  result = 0;
 
 
-    if ( face && face->charmap &&
-        face->charmap->encoding == FT_ENCODING_UNICODE )
+    if ( face                                           &&
+         face->charmap                                  &&
+         face->charmap->encoding == FT_ENCODING_UNICODE )
     {
       FT_CharMap  charmap = find_variant_selector_charmap( face );
       FT_CMap     ucmap = FT_CMAP( face->charmap );
@@ -3597,7 +3608,9 @@
     FT_UInt  result = 0;
 
 
-    if ( face && FT_HAS_GLYPH_NAMES( face ) )
+    if ( face                       &&
+         FT_HAS_GLYPH_NAMES( face ) &&
+         glyph_name                 )
     {
       FT_Service_GlyphDict  service;
 
@@ -3622,15 +3635,19 @@
                      FT_Pointer  buffer,
                      FT_UInt     buffer_max )
   {
-    FT_Error  error = FT_ERR( Invalid_Argument );
+    FT_Error  error;
 
+
+    if ( !face )
+      return FT_THROW( Invalid_Face_Handle );
+
+    if ( !buffer || buffer_max == 0 )
+      return FT_THROW( Invalid_Argument );
 
     /* clean up buffer */
-    if ( buffer && buffer_max > 0 )
-      ((FT_Byte*)buffer)[0] = 0;
+    ((FT_Byte*)buffer)[0] = 0;
 
-    if ( face                                     &&
-         (FT_Long)glyph_index <= face->num_glyphs &&
+    if ( (FT_Long)glyph_index <= face->num_glyphs &&
          FT_HAS_GLYPH_NAMES( face )               )
     {
       FT_Service_GlyphDict  service;
@@ -3643,6 +3660,8 @@
       if ( service && service->get_name )
         error = service->get_name( face, glyph_index, buffer, buffer_max );
     }
+    else
+      error = FT_THROW( Invalid_Argument );
 
     return error;
   }
@@ -3732,6 +3751,8 @@
     FT_Service_SFNT_Table  service;
     FT_ULong               offset;
 
+
+    /* test for valid `length' delayed to `service->table_info' */
 
     if ( !face || !FT_IS_SFNT( face ) )
       return FT_THROW( Invalid_Face_Handle );
@@ -3984,7 +4005,7 @@
   FT_Get_Renderer( FT_Library       library,
                    FT_Glyph_Format  format )
   {
-    /* test for valid `library' delayed to FT_Lookup_Renderer() */
+    /* test for valid `library' delayed to `FT_Lookup_Renderer' */
 
     return FT_Lookup_Renderer( library, format, 0 );
   }
@@ -4001,12 +4022,26 @@
     FT_ListNode  node;
     FT_Error     error = FT_Err_Ok;
 
+    FT_Renderer_SetModeFunc  set_mode;
+
 
     if ( !library )
-      return FT_THROW( Invalid_Library_Handle );
+    {
+      error = FT_THROW( Invalid_Library_Handle );
+      goto Exit;
+    }
 
     if ( !renderer )
-      return FT_THROW( Invalid_Argument );
+    {
+      error = FT_THROW( Invalid_Argument );
+      goto Exit;
+    }
+
+    if ( num_params > 0 && !parameters )
+    {
+      error = FT_THROW( Invalid_Argument );
+      goto Exit;
+    }
 
     node = FT_List_Find( &library->renderers, renderer );
     if ( !node )
@@ -4020,18 +4055,14 @@
     if ( renderer->glyph_format == FT_GLYPH_FORMAT_OUTLINE )
       library->cur_renderer = renderer;
 
-    if ( num_params > 0 )
+    set_mode = renderer->clazz->set_mode;
+
+    for ( ; num_params > 0; num_params-- )
     {
-      FT_Renderer_SetModeFunc  set_mode = renderer->clazz->set_mode;
-
-
-      for ( ; num_params > 0; num_params-- )
-      {
-        error = set_mode( renderer, parameters->tag, parameters->data );
-        if ( error )
-          break;
-        parameters++;
-      }
+      error = set_mode( renderer, parameters->tag, parameters->data );
+      if ( error )
+        break;
+      parameters++;
     }
 
   Exit:
@@ -4354,7 +4385,7 @@
   FT_Get_Module( FT_Library   library,
                  const char*  module_name )
   {
-    FT_Module   result = 0;
+    FT_Module   result = NULL;
     FT_Module*  cur;
     FT_Module*  limit;
 
@@ -4609,6 +4640,9 @@
   FT_EXPORT_DEF( FT_Error )
   FT_Reference_Library( FT_Library  library )
   {
+    if ( !library )
+      return FT_THROW( Invalid_Library_Handle );
+
     library->refcount++;
 
     return FT_Err_Ok;
@@ -4625,7 +4659,7 @@
     FT_Error    error;
 
 
-    if ( !memory )
+    if ( !memory || !alibrary )
       return FT_THROW( Invalid_Argument );
 
 #ifdef FT_DEBUG_LEVEL_ERROR

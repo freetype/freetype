@@ -108,6 +108,9 @@
     if ( !face )
       return FT_THROW( Invalid_Face_Handle );
 
+    if ( !avector )
+      return FT_THROW( Invalid_Argument );
+
     service = ft_pfr_check( face );
     if ( service )
       error = service->get_kerning( face, left, right, avector );
@@ -130,11 +133,15 @@
     FT_Service_PfrMetrics  service;
 
 
+    if ( !face )
+      return FT_THROW( Invalid_Face_Handle );
+
+    if ( !aadvance )
+      return FT_THROW( Invalid_Argument );
+
     service = ft_pfr_check( face );
     if ( service )
-    {
       error = service->get_advance( face, gindex, aadvance );
-    }
     else
       /* XXX: TODO: PROVIDE ADVANCE-LOADING METHOD TO ALL FONT DRIVERS */
       error = FT_THROW( Invalid_Argument );

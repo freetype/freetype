@@ -44,6 +44,8 @@
 
     if ( service && service->get_charset_id )
       error = service->get_charset_id( face, &encoding, &registry );
+    else
+      error = FT_THROW( Invalid_Argument );
 
     if ( acharset_encoding )
       *acharset_encoding = encoding;
@@ -79,6 +81,8 @@
 
     if ( service && service->get_property )
       error = service->get_property( face, prop_name, aproperty );
+    else
+      error = FT_THROW( Invalid_Argument );
 
     return error;
   }

@@ -365,7 +365,7 @@
 
       /* empty glyph? */
       if ( n_points == 0 && n_contours == 0 )
-        return 0;
+        return FT_Err_Ok;
 
       /* check point and contour counts */
       if ( n_points <= 0 || n_contours <= 0 )
@@ -387,7 +387,7 @@
         goto Bad;
 
       /* XXX: check the tags array */
-      return 0;
+      return FT_Err_Ok;
     }
 
   Bad:
@@ -404,8 +404,10 @@
     FT_Int  is_owner;
 
 
-    if ( !source            || !target            ||
-         source->n_points   != target->n_points   ||
+    if ( !source || !target )
+      return FT_THROW( Invalid_Outline );
+
+    if ( source->n_points   != target->n_points   ||
          source->n_contours != target->n_contours )
       return FT_THROW( Invalid_Argument );
 
@@ -433,20 +435,21 @@
   FT_Outline_Done_Internal( FT_Memory    memory,
                             FT_Outline*  outline )
   {
-    if ( memory && outline )
-    {
-      if ( outline->flags & FT_OUTLINE_OWNER )
-      {
-        FT_FREE( outline->points   );
-        FT_FREE( outline->tags     );
-        FT_FREE( outline->contours );
-      }
-      *outline = null_outline;
+    if ( !outline )
+      return FT_THROW( Invalid_Outline );
 
-      return FT_Err_Ok;
-    }
-    else
+    if ( !memory )
       return FT_THROW( Invalid_Argument );
+
+    if ( outline->flags & FT_OUTLINE_OWNER )
+    {
+      FT_FREE( outline->points   );
+      FT_FREE( outline->tags     );
+      FT_FREE( outline->contours );
+    }
+    *outline = null_outline;
+
+    return FT_Err_Ok;
   }
 
 
@@ -668,7 +671,7 @@
     if ( !abitmap )
       return FT_THROW( Invalid_Argument );
 
-    /* other checks are delayed to FT_Outline_Render() */
+    /* other checks are delayed to `FT_Outline_Render' */
 
     params.target = abitmap;
     params.flags  = 0;
