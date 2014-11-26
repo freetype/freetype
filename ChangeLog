@@ -1,5 +1,11 @@
 2014-11-26  suzuki toshiya  <mpsuzuki@hiroshima-u.ac.jp>
 
+	* src/base/ftobj.c (Mac_Read_POST_Resource): Additional
+	overflow check in the summation of POST fragment lengths,
+	suggested by Mateusz Jurczyk <mjurczyk@google.com>.
+
+2014-11-26  suzuki toshiya  <mpsuzuki@hiroshima-u.ac.jp>
+
 	* src/base/ftobjs.c (Mac_Read_POST_Resource): Insert comments
 	and fold too long tracing messages.
 
