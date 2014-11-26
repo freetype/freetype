@@ -1,3 +1,7 @@
+2014-11-26  Werner Lemberg  <wl@gnu.org>
+
+	* src/cache/ftcbasic.c: Use single calls to `FT_TRACE'.
+
 2014-11-26  suzuki toshiya  <mpsuzuki@hiroshima-u.ac.jp>
 
 	* src/base/ftobj.c (Mac_Read_POST_Resource): Additional
