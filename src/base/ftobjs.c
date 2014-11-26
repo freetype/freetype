@@ -1617,6 +1617,11 @@
         goto Exit2;
       if ( FT_READ_LONG( rlen ) )
         goto Exit2;
+      if ( rlen < 0 )
+      {
+        error = FT_THROW( Invalid_Offset );
+        goto Exit2;
+      }
       if ( FT_READ_USHORT( flags ) )
         goto Exit2;
       FT_TRACE3(( "POST fragment[%d]: offsets=0x%08x, rlen=0x%08x, flags=0x%04x\n",
@@ -1634,7 +1639,14 @@
         rlen = 0;
 
       if ( ( flags >> 8 ) == type )
+      {
+        if ( 0x7FFFFFFFL - rlen < len )
+        {
+          error = FT_THROW( Array_Too_Large );
+          goto Exit2;
+        }
         len += rlen;
+      }
       else
       {
         if ( pfb_lenpos + 3 > pfb_len + 2 )
@@ -1663,6 +1675,11 @@
       }
 
       error = FT_ERR( Cannot_Open_Resource );
+      if ( rlen > 0x7FFFFFFFL - pfb_pos )
+      {
+        error = FT_THROW( Array_Too_Large );
+        goto Exit2;
+      }
       if ( pfb_pos > pfb_len || pfb_pos + rlen > pfb_len )
         goto Exit2;
 
