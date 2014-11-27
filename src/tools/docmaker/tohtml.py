@@ -64,6 +64,10 @@ html_header_2 = """\
   td { padding: 0 0.5em 0 0.5em; }
   td.left { padding: 0 0.5em 0 0.5em;
             text-align: left; }
+  td.small { padding: 0 0.5em 0 0.5em;
+             font-size: 83% }
+  td.tiny { padding: 0 0.5em 0 0.5em;
+            font-size: 69% }
 
   ul.empty { list-style-type: none; }
 </style>
@@ -72,33 +76,33 @@ html_header_2 = """\
 """
 
 html_header_3 = """
-<table class="center"><tr><td><font size="-1">[<a href="\
+<table class="center"><tr><td class="small">[<a href="\
 """
 
 html_header_3i = """
 <table class="center"><tr><td width="100%"></td>
-<td><font size="-1">[<a href="\
+<td class="small">[<a href="\
 """
 
 html_header_4 = """\
-">Index</a>]</font></td>
+">Index</a>]</td>
 <td width="100%"></td>
-<td><font size="-1">[<a href="\
+<td class="small">[<a href="\
 """
 
 html_header_5 = """\
-">TOC</a>]</font></td></tr></table>
+">TOC</a>]</td></tr></table>
 <h1>\
 """
 
 html_header_5t = """\
-">Index</a>]</font></td>
+">Index</a>]</td>
 <td width="100%"></td></tr></table>
 <h1>\
 """
 
 html_header_6 = """\
- API Reference</h1></center>
+ API Reference</h1>
 """
 
 
@@ -125,15 +129,15 @@ block_header        = '<table class="center" width="75%"><tr><td>'
 block_footer_start  = """\
 </td></tr></table>
 <hr width="75%">
-<table class="center" width="75%"><tr><td><font size="-2">[<a href="\
+<table class="center" width="75%"><tr><td class="small">[<a href="\
 """
 block_footer_middle = """\
-">Index</a>]</font></td>
+">Index</a>]</td>
 <td width="100%"></td>
-<td><font size="-2">[<a href="\
+<td class="tiny">[<a href="\
 """
 block_footer_end    = """\
-">TOC</a>]</font></td></tr></table>
+">TOC</a>]</td></tr></table>
 """
 
 # Description header/footer.
@@ -162,19 +166,19 @@ chapter_footer = '</li></ul></td></tr></table>'
 index_footer_start = """\
 <hr>
 <table><tr><td width="100%"></td>
-<td><font size="-2">[<a href="\
+<td class="tiny">[<a href="\
 """
 index_footer_end = """\
-">TOC</a>]</font></td></tr></table>
+">TOC</a>]</td></tr></table>
 """
 
 # TOC footer.
 toc_footer_start = """\
 <hr>
-<table><tr><td><font size="-2">[<a href="\
+<table><tr><td class="tiny">[<a href="\
 """
 toc_footer_end = """\
-">Index</a>]</font></td>
+">Index</a>]</td>
 <td width="100%"></td>
 </tr></table>
 """
