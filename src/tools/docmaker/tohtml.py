@@ -64,18 +64,18 @@ html_header_2 = """\
 """
 
 html_header_3 = """
-<table align=center><tr><td><font size=-1>[<a href="\
+<table align="center"><tr><td><font size="-1">[<a href="\
 """
 
 html_header_3i = """
-<table align=center><tr><td width="100%"></td>
-<td><font size=-1>[<a href="\
+<table align="center"><tr><td width="100%"></td>
+<td><font size="-1">[<a href="\
 """
 
 html_header_4 = """\
 ">Index</a>]</font></td>
 <td width="100%"></td>
-<td><font size=-1>[<a href="\
+<td><font size="-1">[<a href="\
 """
 
 html_header_5 = """\
@@ -113,40 +113,40 @@ para_header = "<p>"
 para_footer = "</p>"
 
 # Block header and footer.
-block_header        = '<table align=center width="75%"><tr><td>'
+block_header        = '<table align="center" width="75%"><tr><td>'
 block_footer_start  = """\
 </td></tr></table>
 <hr width="75%">
-<table align=center width="75%"><tr><td><font size=-2>[<a href="\
+<table align="center" width="75%"><tr><td><font size="-2">[<a href="\
 """
 block_footer_middle = """\
 ">Index</a>]</font></td>
 <td width="100%"></td>
-<td><font size=-2>[<a href="\
+<td><font size="-2">[<a href="\
 """
 block_footer_end    = """\
 ">TOC</a>]</font></td></tr></table>
 """
 
 # Description header/footer.
-description_header = '<table align=center width="87%"><tr><td>'
+description_header = '<table align="center" width="87%"><tr><td>'
 description_footer = "</td></tr></table><br>"
 
 # Marker header/inter/footer combination.
-marker_header = '<table align=center width="87%" cellpadding=5><tr bgcolor="#EEEEFF"><td><em><b>'
+marker_header = '<table align="center" width="87%" cellpadding="5"><tr bgcolor="#EEEEFF"><td><em><b>'
 marker_inter  = "</b></em></td></tr><tr><td>"
 marker_footer = "</td></tr></table>"
 
 # Header location header/footer.
-header_location_header = '<table align=center width="87%"><tr><td>'
+header_location_header = '<table align="center" width="87%"><tr><td>'
 header_location_footer = "</td></tr></table><br>"
 
 # Source code extracts header/footer.
-source_header = '<table align=center width="87%"><tr bgcolor="#D6E8FF"><td><pre>\n'
-source_footer = "\n</pre></table><br>"
+source_header = '<table align="center" width="87%"><tr bgcolor="#D6E8FF"><td><pre>\n'
+source_footer = "\n</pre></td></tr></table><br>"
 
 # Chapter header/inter/footer.
-chapter_header = '<br><table align=center width="75%"><tr><td><h2>'
+chapter_header = '<br><table align="center" width="75%"><tr><td><h2>'
 chapter_inter  = '</h2><ul class="empty"><li>'
 chapter_footer = '</li></ul></td></tr></table>'
 
@@ -154,7 +154,7 @@ chapter_footer = '</li></ul></td></tr></table>'
 index_footer_start = """\
 <hr>
 <table><tr><td width="100%"></td>
-<td><font size=-2>[<a href="\
+<td><font size="-2">[<a href="\
 """
 index_footer_end = """\
 ">TOC</a>]</font></td></tr></table>
@@ -163,7 +163,7 @@ index_footer_end = """\
 # TOC footer.
 toc_footer_start = """\
 <hr>
-<table><tr><td><font size=-2>[<a href="\
+<table><tr><td><font size="-2">[<a href="\
 """
 toc_footer_end = """\
 ">Index</a>]</font></td>
@@ -230,7 +230,7 @@ class  HtmlFormatter( Formatter ):
           + html_header_5t + project_title
           + html_header_6 )
         self.html_footer = (
-          "<center><font size=""-2"">generated on "
+          '<center><font size="-2">generated on '
           + time.asctime( time.localtime( time.time() ) )
           + "</font></center>" + html_footer )
 
@@ -317,7 +317,7 @@ class  HtmlFormatter( Formatter ):
 
     def  print_html_field( self, field ):
         if field.name:
-            print( "<table><tr valign=top><td><b>"
+            print( '<table><tr valign="top"><td><b>'
                    + field.name
                    + "</b></td><td>" )
 
@@ -360,15 +360,15 @@ class  HtmlFormatter( Formatter ):
 
     def  print_html_field_list( self, fields ):
         print "<p></p>"
-        print "<table cellpadding=3 border=0>"
+        print '<table cellpadding="3" border="0">'
         for field in fields:
             if len( field.name ) > 22:
-              print( "<tr valign=top><td colspan=0><b>"
+              print( '<tr valign="top"><td colspan="0"><b>'
                      + field.name
                      + "</b></td></tr>" )
-              print "<tr valign=top><td></td><td>"
+              print '<tr valign="top"><td></td><td>'
             else:
-              print( "<tr valign=top><td><b>"
+              print( '<tr valign="top"><td><b>'
                      + field.name
                      + "</b></td><td>" )
 
@@ -411,7 +411,7 @@ class  HtmlFormatter( Formatter ):
         count = len( self.block_index )
         rows  = ( count + self.columns - 1 ) / self.columns
 
-        print "<table align=center border=0 cellpadding=0 cellspacing=0>"
+        print '<table align="center" border="0" cellpadding="0" cellspacing="0">'
         for r in range( rows ):
             line = "<tr>"
             for c in range( self.columns ):
@@ -451,10 +451,10 @@ class  HtmlFormatter( Formatter ):
 
     def  toc_chapter_enter( self, chapter ):
         print chapter_header + string.join( chapter.title ) + chapter_inter
-        print "<table cellpadding=5>"
+        print '<table cellpadding="5">'
 
     def  toc_section_enter( self, section ):
-        print '<tr valign=top><td class="left">'
+        print '<tr valign="top"><td class="left">'
         print( '<a href="' + self.make_section_url( section ) + '">'
                + section.title + '</a></td><td>' )
 
@@ -507,7 +507,7 @@ class  HtmlFormatter( Formatter ):
         if maxwidth <> 0:
             # print section synopsis
             print section_synopsis_header
-            print "<table align=center cellspacing=5 cellpadding=0 border=0>"
+            print '<table align="center" cellspacing="5" cellpadding="0" border="0">'
 
             columns = width / maxwidth
             if columns < 1:

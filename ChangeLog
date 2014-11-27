@@ -1,5 +1,13 @@
 2014-11-27  Werner Lemberg  <wl@gnu.org>
 
+	[docmaker] Produce better HTML code.
+
+	* src/tools/docmaker/tohtml.py: Always use double quotes for
+	attribute values.
+	(source_footer): Close `td' and `tr' groups.
+
+2014-11-27  Werner Lemberg  <wl@gnu.org>
+
 	Use better way to disable creation of .pyc files for `make refdoc'.
 
 	Python 2.6 was released in 2008...
