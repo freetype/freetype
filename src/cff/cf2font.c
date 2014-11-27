@@ -36,6 +36,9 @@
 /***************************************************************************/
 
 
+#include <ft2build.h>
+#include FT_INTERNAL_CALC_H
+
 #include "cf2ft.h"
 
 #include "cf2glue.h"

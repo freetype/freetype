@@ -1,5 +1,10 @@
 2014-11-27  suzuki toshiya  <mpsuzuki@hiroshima-u.ac.jp>
 
+	* src/cff/cf2font.c: Include `ftcalc.h' to use FT_MSB(),
+	cf2font.c could not find it under `make multi' build.
+
+2014-11-27  suzuki toshiya  <mpsuzuki@hiroshima-u.ac.jp>
+
 	* src/smooth/ftsmooth.c (ft_smooth_render_generic): Remove
 	unrequired negative value check for `width' and `height'.
 
