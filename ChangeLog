@@ -1,3 +1,14 @@
+2014-11-27  suzuki toshiya  <mpsuzuki@hiroshima-u.ac.jp>
+
+	Prevent too negative values (< FT_INT_MIN) in bitmap metrics,
+	suggested by Alexei.
+
+	* src/pfr/pfrsbit.c (pfr_slot_load_bitmap): Prevent too
+	negative values in `xpos' and `ypos + ysize'.
+	* src/smooth/ftsmooth.c (ft_smooth_render_generic): Prevent
+	too negative values in `x_left' and `y_top'.  Either negative
+	values in `width' and `height' are checked.
+
 2014-11-27  Werner Lemberg  <wl@gnu.org>
 
 	[docmaker] Produce better HTML code.

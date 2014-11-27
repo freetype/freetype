@@ -636,7 +636,8 @@
        *      which causes a size truncation, because truncated
        *      size properties makes bitmap glyph broken.
        */
-      if ( xpos > FT_INT_MAX || ( ypos + ysize ) > FT_INT_MAX )
+      if ( xpos > FT_INT_MAX || ( ypos + ysize ) > FT_INT_MAX ||
+           xpos < FT_INT_MIN || ( ypos + ysize ) < FT_INT_MIN )
       {
         FT_TRACE1(( "pfr_slot_load_bitmap:" ));
         FT_TRACE1(( "huge bitmap glyph %dx%d over FT_GlyphSlot\n",
