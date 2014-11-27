@@ -65,9 +65,9 @@ html_header_2 = """\
   td.left { padding: 0 0.5em 0 0.5em;
             text-align: left; }
   td.small { padding: 0 0.5em 0 0.5em;
-             font-size: 83% }
+             font-size: 83%; }
   td.tiny { padding: 0 0.5em 0 0.5em;
-            font-size: 69% }
+            font-size: 69%; }
 
   ul.empty { list-style-type: none; }
 </style>
@@ -134,7 +134,7 @@ block_footer_start  = """\
 block_footer_middle = """\
 ">Index</a>]</td>
 <td width="100%"></td>
-<td class="tiny">[<a href="\
+<td class="small">[<a href="\
 """
 block_footer_end    = """\
 ">TOC</a>]</td></tr></table>
