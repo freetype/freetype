@@ -263,13 +263,13 @@ class  HtmlFormatter( Formatter ):
         m = re_italic.match( word )
         if m:
             name = m.group( 1 )
-            rest = m.group( 3 )
+            rest = m.group( 2 )
             return '<i>' + name + '</i>' + rest
 
         m = re_bold.match( word )
         if m:
             name = m.group( 1 )
-            rest = m.group( 3 )
+            rest = m.group( 2 )
             return '<b>' + name + '</b>' + rest
 
         return html_quote( word )

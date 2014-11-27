@@ -1,5 +1,12 @@
 2014-11-27  Werner Lemberg  <wl@gnu.org>
 
+	* src/tools/docmaker/sources.py (re_bold, re_italic): Use
+	non-grouping parentheses.
+	* src/tools/docmaker/tohtml.py (HtmlFormatter::make_html_word):
+	Updated.
+
+2014-11-27  Werner Lemberg  <wl@gnu.org>
+
 	* src/base/ftobjs.c (FT_Get_Glyph_Name): Fix compiler warning.
 
 	Introdruced in previous change.  Reported by Alexei.
