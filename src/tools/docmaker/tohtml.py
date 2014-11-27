@@ -80,13 +80,13 @@ html_header_4 = """\
 
 html_header_5 = """\
 ">TOC</a>]</font></td></tr></table>
-<center><h1>\
+<h1>\
 """
 
 html_header_5t = """\
 ">Index</a>]</font></td>
 <td width="100%"></td></tr></table>
-<center><h1>\
+<h1>\
 """
 
 html_header_6 = """\
@@ -101,8 +101,8 @@ html_footer = """\
 """
 
 # The header and footer used for each section.
-section_title_header = "<center><h1>"
-section_title_footer = "</h1></center>"
+section_title_header = "<h1>"
+section_title_footer = "</h1>"
 
 # The header and footer used for code segments.
 code_header = '<pre class="colored">'
@@ -447,7 +447,7 @@ class  HtmlFormatter( Formatter ):
     #
     def  toc_enter( self ):
         print self.html_toc_header
-        print "<center><h1>Table of Contents</h1></center>"
+        print "<h1>Table of Contents</h1>"
 
     def  toc_chapter_enter( self, chapter ):
         print chapter_header + string.join( chapter.title ) + chapter_inter
