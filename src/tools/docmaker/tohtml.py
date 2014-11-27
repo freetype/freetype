@@ -65,6 +65,12 @@ html_header_2 = """\
 
   table.center { margin: auto; }
   table.fill { width: 100%; }
+  table.index { margin: auto;
+                border: 0;
+                border-collapse: collapse;
+                border-spacing: 0; }
+  table.index tr { padding: 0; }
+  table.index td { padding: 0; }
   table.index-toc-link { width: 100%; }
   table.index-toc-link td.left { padding: 0 0.5em 0 0.5em;
                                  font-size: 83%;
@@ -427,7 +433,7 @@ class  HtmlFormatter( Formatter ):
         count = len( self.block_index )
         rows  = ( count + self.columns - 1 ) / self.columns
 
-        print '<table class="center" border="0" cellpadding="0" cellspacing="0">'
+        print '<table class="index">'
         for r in range( rows ):
             line = "<tr>"
             for c in range( self.columns ):

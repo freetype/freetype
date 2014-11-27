@@ -1,5 +1,9 @@
 2014-11-27  Werner Lemberg  <wl@gnu.org>
 
+	* src/tools/docmaker/tohtml.py: Usee more CSS for index.
+
+2014-11-27  Werner Lemberg  <wl@gnu.org>
+
 	[docmaker] Replace `name' attribute of `<a>' with `id'.
 
 	* src/tools/docmaker/tohtml.py (HtmlFormatter::block_enter): Do it.
