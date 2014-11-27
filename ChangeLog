@@ -1,3 +1,15 @@
+2014-11-27  Werner Lemberg  <wl@gnu.org>
+
+	* src/tools/docmaker/tohtml.py: Remove remaining `width' attributes.
+
+	For `Index' and `TOC' links, we now simply use the `text-align' CSS
+	property of `<td>' to enforce flush-left and flush-right,
+	eliminating the hack with an empty, full-width `<td>' element
+	inbetween.
+
+	The change also enforces the same (smaller) size for all index and
+	TOC links.
+
 2014-11-27  suzuki toshiya  <mpsuzuki@hiroshima-u.ac.jp>
 
 	* src/cff/cf2font.c: Include `ftcalc.h' to use FT_MSB(),

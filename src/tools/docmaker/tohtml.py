@@ -65,14 +65,23 @@ html_header_2 = """\
 
   table.center { margin: auto; }
   table.fill { width: 100%; }
+  table.index-toc-link { width: 100%; }
+  table.index-toc-link td.left { padding: 0 0.5em 0 0.5em;
+                                 font-size: 83%;
+                                 text-align: left; }
+  table.index-toc-link td.right { padding: 0 0.5em 0 0.5em;
+                                  font-size: 83%;
+                                  text-align: right; }
+  table.synopsis { margin: auto;
+                   border: 0;
+                   border-collapse: separate;
+                   border-spacing: 1em 1ex; }
+  table.synopsis tr { padding: 0; }
+  table.synopsis td { padding: 0; }
 
   td { padding: 0 0.5em 0 0.5em; }
   td.left { padding: 0 0.5em 0 0.5em;
             text-align: left; }
-  td.small { padding: 0 0.5em 0 0.5em;
-             font-size: 83%; }
-  td.tiny { padding: 0 0.5em 0 0.5em;
-            font-size: 69%; }
 
   tr.mark { background-color: #EEEEFF; }
   tr.code { background-color: #D6E8FF; }
@@ -83,29 +92,21 @@ html_header_2 = """\
 <body>
 """
 
-html_header_3 = """
-<table class="center"><tr><td class="small">[<a href="\
+html_header_3l = """
+<table class="index-toc-link"><tr><td class="left">[<a href="\
 """
 
-html_header_3i = """
-<table class="center"><tr><td width="100%"></td>
-<td class="small">[<a href="\
+html_header_3r = """
+<table class="index-toc-link"><tr><td class="right">[<a href="\
 """
 
 html_header_4 = """\
 ">Index</a>]</td>
-<td width="100%"></td>
-<td class="small">[<a href="\
+<td class="right">[<a href="\
 """
 
 html_header_5 = """\
 ">TOC</a>]</td></tr></table>
-<h1>\
-"""
-
-html_header_5t = """\
-">Index</a>]</td>
-<td width="100%"></td></tr></table>
 <h1>\
 """
 
@@ -136,12 +137,11 @@ para_footer = "</p>"
 block_header        = '<div class="indent2">'
 block_footer_start  = """\
 <hr>
-<table><tr><td class="small">[<a href="\
+<table class="index-toc-link"><tr><td class="left">[<a href="\
 """
 block_footer_middle = """\
 ">Index</a>]</td>
-<td width="100%"></td>
-<td class="small">[<a href="\
+<td class="right">[<a href="\
 """
 block_footer_end    = """\
 ">TOC</a>]</td></tr></table></div>
@@ -172,8 +172,7 @@ chapter_footer = '</li></ul></div>'
 # Index footer.
 index_footer_start = """\
 <hr>
-<table><tr><td width="100%"></td>
-<td class="tiny">[<a href="\
+<table class="index-toc-link"><tr><td class="right">[<a href="\
 """
 index_footer_end = """\
 ">TOC</a>]</td></tr></table>
@@ -182,12 +181,10 @@ index_footer_end = """\
 # TOC footer.
 toc_footer_start = """\
 <hr>
-<table><tr><td class="tiny">[<a href="\
+<table class="index-toc-link"><tr><td class="left">[<a href="\
 """
 toc_footer_end = """\
-">Index</a>]</td>
-<td width="100%"></td>
-</tr></table>
+">Index</a>]</td></tr></table>
 """
 
 
@@ -232,21 +229,21 @@ class  HtmlFormatter( Formatter ):
         self.html_header   = (
           html_header_1 + project_title
           + html_header_2
-          + html_header_3 + file_prefix + "index.html"
+          + html_header_3l + file_prefix + "index.html"
           + html_header_4 + file_prefix + "toc.html"
           + html_header_5 + project_title
           + html_header_6 )
         self.html_index_header = (
           html_header_1 + project_title
           + html_header_2
-          + html_header_3i + file_prefix + "toc.html"
+          + html_header_3r + file_prefix + "toc.html"
           + html_header_5 + project_title
           + html_header_6 )
         self.html_toc_header = (
           html_header_1 + project_title
           + html_header_2
-          + html_header_3 + file_prefix + "index.html"
-          + html_header_5t + project_title
+          + html_header_3l + file_prefix + "index.html"
+          + html_header_5 + project_title
           + html_header_6 )
         self.html_footer = (
           '<div class="timestamp">generated on '
@@ -526,7 +523,7 @@ class  HtmlFormatter( Formatter ):
         if maxwidth <> 0:
             # print section synopsis
             print section_synopsis_header
-            print '<table class="center" cellspacing="5" cellpadding="0" border="0">'
+            print '<table class="synopsis">'
 
             columns = width / maxwidth
             if columns < 1:
