@@ -1,3 +1,9 @@
+2014-11-27  Werner Lemberg  <wl@gnu.org>
+
+	* src/base/ftobjs.c (FT_Get_Glyph_Name): Fix compiler warning.
+
+	Introdruced in previous change.  Reported by Alexei.
+
 2014-11-26  Werner Lemberg  <wl@gnu.org>
 
 	* src/*: Add checks for parameters of API functions where missing.

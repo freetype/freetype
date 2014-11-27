@@ -3635,7 +3635,8 @@
                      FT_Pointer  buffer,
                      FT_UInt     buffer_max )
   {
-    FT_Error  error;
+    FT_Error              error;
+    FT_Service_GlyphDict  service;
 
 
     if ( !face )
@@ -3645,21 +3646,15 @@
       return FT_THROW( Invalid_Argument );
 
     /* clean up buffer */
-    ((FT_Byte*)buffer)[0] = 0;
+    ((FT_Byte*)buffer)[0] = '\0';
 
-    if ( (FT_Long)glyph_index <= face->num_glyphs &&
-         FT_HAS_GLYPH_NAMES( face )               )
-    {
-      FT_Service_GlyphDict  service;
+    if ( (FT_Long)glyph_index > face->num_glyphs ||
+         !FT_HAS_GLYPH_NAMES( face )             )
+      return FT_THROW( Invalid_Argument );
 
-
-      FT_FACE_LOOKUP_SERVICE( face,
-                              service,
-                              GLYPH_DICT );
-
-      if ( service && service->get_name )
-        error = service->get_name( face, glyph_index, buffer, buffer_max );
-    }
+    FT_FACE_LOOKUP_SERVICE( face, service, GLYPH_DICT );
+    if ( service && service->get_name )
+      error = service->get_name( face, glyph_index, buffer, buffer_max );
     else
       error = FT_THROW( Invalid_Argument );
 
