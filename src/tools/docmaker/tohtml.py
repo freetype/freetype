@@ -558,8 +558,7 @@ class  HtmlFormatter( Formatter ):
 
         # place html anchor if needed
         if block.name:
-            print( '<h4><a name="' + block.name + '">'
-                   + block.name + '</a></h4>' )
+            print( '<h4 id="' + block.name + '">' + block.name + '</h4>' )
 
         # dump the block C source lines now
         if block.code:
