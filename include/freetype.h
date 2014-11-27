@@ -3509,8 +3509,8 @@ FT_BEGIN_HEADER
   /*                                                                       */
   /*      http://www.unicode.org/reports/tr37/                             */
   /*                                                                       */
-  /*    To date (November 2012), the character with the most variants is   */
-  /*    U+9089, having 31 such IVS.                                        */
+  /*    To date (November 2014), the character with the most variants is   */
+  /*    U+9089, having 32 such IVS.                                        */
   /*                                                                       */
   /*    Adobe and MS decided to support IVS with a new cmap subtable       */
   /*    (format~14).  It is an odd subtable because it is not a mapping of */
