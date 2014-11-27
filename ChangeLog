@@ -1,5 +1,16 @@
 2014-11-27  Werner Lemberg  <wl@gnu.org>
 
+	Use better way to disable creation of .pyc files for `make refdoc'.
+
+	Python 2.6 was released in 2008...
+
+	* builds/freetype.mk (refdoc): Use python's `-B' option.
+
+	* builds/detect.mk (std_setup, dos_setup): Mention required python
+	version for `refdoc' target.
+
+2014-11-27  Werner Lemberg  <wl@gnu.org>
+
 	* src/tools/docmaker/sources.py (re_bold, re_italic): Use
 	non-grouping parentheses.
 	* src/tools/docmaker/tohtml.py (HtmlFormatter::make_html_word):
