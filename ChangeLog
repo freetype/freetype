@@ -1,5 +1,9 @@
 2014-11-27  Werner Lemberg  <wl@gnu.org>
 
+	* src/tools/docmaker/tohtml.py: Replace `<center>' with `<div>'.
+
+2014-11-27  Werner Lemberg  <wl@gnu.org>
+
 	* src/tools/docmaker/tohtml.py: Remove redundant `<center>' tags.
 
 	This starts a series of commits into the direction of generating

@@ -43,6 +43,9 @@ html_header_2 = """\
          color: #000000;
          background: #FFFFFF; }
 
+  div.timestamp { text-align: center;
+                  font-size: 69%; }
+
   h1 { text-align: center; }
 
   li { text-align: justify; }
@@ -233,9 +236,9 @@ class  HtmlFormatter( Formatter ):
           + html_header_5t + project_title
           + html_header_6 )
         self.html_footer = (
-          '<center><font size="-2">generated on '
+          '<div class="timestamp">generated on '
           + time.asctime( time.localtime( time.time() ) )
-          + "</font></center>" + html_footer )
+          + "</div>" + html_footer )
 
         self.columns = 3
 
