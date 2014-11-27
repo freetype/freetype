@@ -1,3 +1,8 @@
+2014-11-27  suzuki toshiya  <mpsuzuki@hiroshima-u.ac.jp>
+
+	* src/smooth/ftsmooth.c (ft_smooth_render_generic): Remove
+	unrequired negative value check for `width' and `height'.
+
 2014-11-27  Werner Lemberg  <wl@gnu.org>
 
 	* src/tools/docmaker/tohtml.py: More HTML table refactoring.

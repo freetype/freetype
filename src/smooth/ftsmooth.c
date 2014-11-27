@@ -214,8 +214,7 @@
 
     /* Required check is (pitch * height < FT_ULONG_MAX),        */
     /* but we care realistic cases only.  Always pitch <= width. */
-    if ( width  < 0 || width  > 0x7FFF ||
-         height < 0 || height > 0x7FFF )
+    if ( width > 0x7FFF || height > 0x7FFF )
     {
       FT_ERROR(( "ft_smooth_render_generic: glyph too large: %u x %u\n",
                  width, height ));
