@@ -43,6 +43,10 @@ html_header_2 = """\
          color: #000000;
          background: #FFFFFF; }
 
+  div.indent1 { width: 87%;
+                margin: auto; }
+  div.indent2 { width: 75%;
+                margin: auto; }
   div.timestamp { text-align: center;
                   font-size: 69%; }
 
@@ -60,6 +64,7 @@ html_header_2 = """\
                  color: darkblue; }
 
   table.center { margin: auto; }
+  table.fill { width: 100%; }
 
   td { padding: 0 0.5em 0 0.5em; }
   td.left { padding: 0 0.5em 0 0.5em;
@@ -68,6 +73,9 @@ html_header_2 = """\
              font-size: 83%; }
   td.tiny { padding: 0 0.5em 0 0.5em;
             font-size: 69%; }
+
+  tr.mark { background-color: #EEEEFF; }
+  tr.code { background-color: #D6E8FF; }
 
   ul.empty { list-style-type: none; }
 </style>
@@ -125,11 +133,10 @@ para_header = "<p>"
 para_footer = "</p>"
 
 # Block header and footer.
-block_header        = '<table class="center" width="75%"><tr><td>'
+block_header        = '<div class="indent2">'
 block_footer_start  = """\
-</td></tr></table>
-<hr width="75%">
-<table class="center" width="75%"><tr><td class="small">[<a href="\
+<hr>
+<table><tr><td class="small">[<a href="\
 """
 block_footer_middle = """\
 ">Index</a>]</td>
@@ -137,30 +144,30 @@ block_footer_middle = """\
 <td class="small">[<a href="\
 """
 block_footer_end    = """\
-">TOC</a>]</td></tr></table>
+">TOC</a>]</td></tr></table></div>
 """
 
 # Description header/footer.
-description_header = '<table class="center" width="87%"><tr><td>'
-description_footer = "</td></tr></table><br>"
+description_header = '<div class="indent1">'
+description_footer = "</div><br>"
 
 # Marker header/inter/footer combination.
-marker_header = '<table class="center" width="87%" cellpadding="5"><tr bgcolor="#EEEEFF"><td><em><b>'
+marker_header = '<div class="indent1"><table class="fill" cellpadding="5"><tr class="mark"><td><em><b>'
 marker_inter  = "</b></em></td></tr><tr><td>"
-marker_footer = "</td></tr></table>"
+marker_footer = "</td></tr></table></div>"
 
 # Header location header/footer.
-header_location_header = '<table class="center" width="87%"><tr><td>'
-header_location_footer = "</td></tr></table><br>"
+header_location_header = '<div class="indent1">'
+header_location_footer = "</div><br>"
 
 # Source code extracts header/footer.
-source_header = '<table class="center" width="87%"><tr bgcolor="#D6E8FF"><td><pre>\n'
-source_footer = "\n</pre></td></tr></table><br>"
+source_header = '<div class="indent1"><table class="fill"><tr class="code"><td><pre>\n'
+source_footer = "\n</pre></td></tr></table></div><br>"
 
 # Chapter header/inter/footer.
-chapter_header = '<br><table class="center" width="75%"><tr><td><h2>'
+chapter_header = '<br><div class="indent2"><h2>'
 chapter_inter  = '</h2><ul class="empty"><li>'
-chapter_footer = '</li></ul></td></tr></table>'
+chapter_footer = '</li></ul></div>'
 
 # Index footer.
 index_footer_start = """\

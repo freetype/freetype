@@ -1,5 +1,17 @@
 2014-11-27  Werner Lemberg  <wl@gnu.org>
 
+	* src/tools/docmaker/tohtml.py: More HTML table refactoring.
+
+	Replace some `<table>' tags with `<div>' to simplify structure.
+
+	Move `bgcolor' attribute to CSS.
+
+	Replace most `width' attributes with CSS.  The remaining instances
+	(providing a similar effect as LaTeX's `\hfill' command) are removed
+	in a later patch.
+
+2014-11-27  Werner Lemberg  <wl@gnu.org>
+
 	* src/tools/docmaker/tohtml.py: Replace <font> with CSS.
 
 2014-11-27  Werner Lemberg  <wl@gnu.org>
