@@ -1,5 +1,9 @@
 2014-11-27  Werner Lemberg  <wl@gnu.org>
 
+	* src/tools/docmaker/tohtml.py: Center <table> with CSS.
+
+2014-11-27  Werner Lemberg  <wl@gnu.org>
+
 	* src/tools/docmaker/tohtml.py: Replace `<center>' with `<div>'.
 
 2014-11-27  Werner Lemberg  <wl@gnu.org>

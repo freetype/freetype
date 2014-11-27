@@ -59,6 +59,8 @@ html_header_2 = """\
                  white-space: pre;
                  color: darkblue; }
 
+  table.center { margin: auto; }
+
   td { padding: 0 0.5em 0 0.5em; }
   td.left { padding: 0 0.5em 0 0.5em;
             text-align: left; }
@@ -70,11 +72,11 @@ html_header_2 = """\
 """
 
 html_header_3 = """
-<table align="center"><tr><td><font size="-1">[<a href="\
+<table class="center"><tr><td><font size="-1">[<a href="\
 """
 
 html_header_3i = """
-<table align="center"><tr><td width="100%"></td>
+<table class="center"><tr><td width="100%"></td>
 <td><font size="-1">[<a href="\
 """
 
@@ -119,11 +121,11 @@ para_header = "<p>"
 para_footer = "</p>"
 
 # Block header and footer.
-block_header        = '<table align="center" width="75%"><tr><td>'
+block_header        = '<table class="center" width="75%"><tr><td>'
 block_footer_start  = """\
 </td></tr></table>
 <hr width="75%">
-<table align="center" width="75%"><tr><td><font size="-2">[<a href="\
+<table class="center" width="75%"><tr><td><font size="-2">[<a href="\
 """
 block_footer_middle = """\
 ">Index</a>]</font></td>
@@ -135,24 +137,24 @@ block_footer_end    = """\
 """
 
 # Description header/footer.
-description_header = '<table align="center" width="87%"><tr><td>'
+description_header = '<table class="center" width="87%"><tr><td>'
 description_footer = "</td></tr></table><br>"
 
 # Marker header/inter/footer combination.
-marker_header = '<table align="center" width="87%" cellpadding="5"><tr bgcolor="#EEEEFF"><td><em><b>'
+marker_header = '<table class="center" width="87%" cellpadding="5"><tr bgcolor="#EEEEFF"><td><em><b>'
 marker_inter  = "</b></em></td></tr><tr><td>"
 marker_footer = "</td></tr></table>"
 
 # Header location header/footer.
-header_location_header = '<table align="center" width="87%"><tr><td>'
+header_location_header = '<table class="center" width="87%"><tr><td>'
 header_location_footer = "</td></tr></table><br>"
 
 # Source code extracts header/footer.
-source_header = '<table align="center" width="87%"><tr bgcolor="#D6E8FF"><td><pre>\n'
+source_header = '<table class="center" width="87%"><tr bgcolor="#D6E8FF"><td><pre>\n'
 source_footer = "\n</pre></td></tr></table><br>"
 
 # Chapter header/inter/footer.
-chapter_header = '<br><table align="center" width="75%"><tr><td><h2>'
+chapter_header = '<br><table class="center" width="75%"><tr><td><h2>'
 chapter_inter  = '</h2><ul class="empty"><li>'
 chapter_footer = '</li></ul></td></tr></table>'
 
@@ -417,7 +419,7 @@ class  HtmlFormatter( Formatter ):
         count = len( self.block_index )
         rows  = ( count + self.columns - 1 ) / self.columns
 
-        print '<table align="center" border="0" cellpadding="0" cellspacing="0">'
+        print '<table class="center" border="0" cellpadding="0" cellspacing="0">'
         for r in range( rows ):
             line = "<tr>"
             for c in range( self.columns ):
@@ -513,7 +515,7 @@ class  HtmlFormatter( Formatter ):
         if maxwidth <> 0:
             # print section synopsis
             print section_synopsis_header
-            print '<table align="center" cellspacing="5" cellpadding="0" border="0">'
+            print '<table class="center" cellspacing="5" cellpadding="0" border="0">'
 
             columns = width / maxwidth
             if columns < 1:
