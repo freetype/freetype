@@ -383,7 +383,7 @@ class  DocSection:
 class  ContentProcessor:
 
     def  __init__( self ):
-        """initialize a block content processor"""
+        """Initialize a block content processor."""
         self.reset()
 
         self.sections = {}    # dictionary of documentation sections
@@ -394,7 +394,7 @@ class  ContentProcessor:
         self.headers  = {}    # dictionary of header macros
 
     def  set_section( self, section_name ):
-        """set current section during parsing"""
+        """Set current section during parsing."""
         if not self.sections.has_key( section_name ):
             section = DocSection( section_name )
             self.sections[section_name] = section
@@ -406,15 +406,14 @@ class  ContentProcessor:
         chapter = DocChapter( block )
         self.chapters.append( chapter )
 
-
     def  reset( self ):
-        """reset the content processor for a new block"""
+        """Reset the content processor for a new block."""
         self.markups      = []
         self.markup       = None
         self.markup_lines = []
 
     def  add_markup( self ):
-        """add a new markup section"""
+        """Add a new markup section."""
         if self.markup and self.markup_lines:
 
             # get rid of last line of markup if it's empty
@@ -430,8 +429,8 @@ class  ContentProcessor:
             self.markup_lines = []
 
     def  process_content( self, content ):
-        """process a block content and return a list of DocMarkup objects
-           corresponding to it"""
+        """Process a block content and return a list of DocMarkup objects
+           corresponding to it."""
         markup       = None
         markup_lines = []
         first        = 1
@@ -595,7 +594,7 @@ class  DocBlock:
         return self.source.location()
 
     def  get_markup( self, tag_name ):
-        """return the DocMarkup corresponding to a given tag in a block"""
+        """Return the DocMarkup corresponding to a given tag in a block."""
         for m in self.markups:
             if m.tag == string.lower( tag_name ):
                 return m

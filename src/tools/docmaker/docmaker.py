@@ -49,7 +49,7 @@ def  usage():
 
 
 def  main( argv ):
-    """main program loop"""
+    """Main program loop."""
 
     global output_dir
 
