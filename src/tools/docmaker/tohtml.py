@@ -35,27 +35,30 @@ html_header_1 = """\
 html_header_2 = """\
  API Reference</title>
 <style type="text/css">
+  a:link { color: #0000EF; }
+  a:visited { color: #51188E; }
+  a:hover { color: #FF0000; }
+
   body { font-family: Verdana, Geneva, Arial, Helvetica, serif;
          color: #000000;
          background: #FFFFFF; }
 
-  p { text-align: justify; }
   h1 { text-align: center; }
-  li { text-align: justify; }
-  td { padding: 0 0.5em 0 0.5em; }
-  td.left { padding: 0 0.5em 0 0.5em;
-            text-align: left; }
 
-  a:link { color: #0000EF; }
-  a:visited { color: #51188E; }
-  a:hover { color: #FF0000; }
+  li { text-align: justify; }
+
+  p { text-align: justify; }
+
+  pre.colored { color: blue; }
 
   span.keyword { font-family: monospace;
                  text-align: left;
                  white-space: pre;
                  color: darkblue; }
 
-  pre.colored { color: blue; }
+  td { padding: 0 0.5em 0 0.5em; }
+  td.left { padding: 0 0.5em 0 0.5em;
+            text-align: left; }
 
   ul.empty { list-style-type: none; }
 </style>
