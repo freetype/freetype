@@ -1,3 +1,11 @@
+2014-11-27  Werner Lemberg  <wl@gnu.org>
+
+	[docmaker] Replace some `<table>' tags with `<h4>' and `<div>'.
+
+	* src/tools/docmaker/tohtml.py (marker_*): Use `<h4>'.
+	(source_*): Use `<div>'.
+	(HtmlFormatter::block_enter): s/<h4>/<h3>/.
+
 2014-11-28  suzuki toshiya  <mpsuzuki@hiroshima-u.ac.jp>
 
 	Fix compiler warning to conversion specifiers in debug messages.
@@ -8,7 +16,7 @@
 
 2014-11-27  Werner Lemberg  <wl@gnu.org>
 
-	* src/tools/docmaker/tohtml.py: Usee more CSS for index.
+	* src/tools/docmaker/tohtml.py: Use more CSS for index.
 
 2014-11-27  Werner Lemberg  <wl@gnu.org>
 

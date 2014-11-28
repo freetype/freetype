@@ -43,6 +43,10 @@ html_header_2 = """\
          color: #000000;
          background: #FFFFFF; }
 
+  div.code { width: 100%;
+             background-color: #D6E8FF;
+             margin: 0 0 0 -0.5em;
+             padding: 0.3ex 0 0.3ex 0.5em; }
   div.indent1 { width: 87%;
                 margin: auto; }
   div.indent2 { width: 75%;
@@ -51,6 +55,14 @@ html_header_2 = """\
                   font-size: 69%; }
 
   h1 { text-align: center; }
+  h3 { font-size: medium; }
+  h4 { background-color: #EEEEFF;
+       width: 100%;
+       font-size: medium;
+       font-style: oblique;
+       font-weight: bold;
+       margin: 0 0 0 -0.5em;
+       padding: 0.3ex 0 0.3ex 0.5em; }
 
   li { text-align: justify; }
 
@@ -64,7 +76,6 @@ html_header_2 = """\
                  color: darkblue; }
 
   table.center { margin: auto; }
-  table.fill { width: 100%; }
   table.index { margin: auto;
                 border: 0;
                 border-collapse: collapse;
@@ -88,9 +99,6 @@ html_header_2 = """\
   td { padding: 0 0.5em 0 0.5em; }
   td.left { padding: 0 0.5em 0 0.5em;
             text-align: left; }
-
-  tr.mark { background-color: #EEEEFF; }
-  tr.code { background-color: #D6E8FF; }
 
   ul.empty { list-style-type: none; }
 </style>
@@ -158,17 +166,17 @@ description_header = '<div class="indent1">'
 description_footer = "</div><br>"
 
 # Marker header/inter/footer combination.
-marker_header = '<div class="indent1"><table class="fill" cellpadding="5"><tr class="mark"><td><em><b>'
-marker_inter  = "</b></em></td></tr><tr><td>"
-marker_footer = "</td></tr></table></div>"
+marker_header = '<div class="indent1"><h4>'
+marker_inter  = "</h4>"
+marker_footer = "</div>"
 
 # Header location header/footer.
 header_location_header = '<div class="indent1">'
 header_location_footer = "</div><br>"
 
 # Source code extracts header/footer.
-source_header = '<div class="indent1"><table class="fill"><tr class="code"><td><pre>\n'
-source_footer = "\n</pre></td></tr></table></div><br>"
+source_header = '<div class="indent1"><div class="code"><pre>'
+source_footer = "</pre></div></div>"
 
 # Chapter header/inter/footer.
 chapter_header = '<br><div class="indent2"><h2>'
@@ -564,7 +572,7 @@ class  HtmlFormatter( Formatter ):
 
         # place html anchor if needed
         if block.name:
-            print( '<h4 id="' + block.name + '">' + block.name + '</h4>' )
+            print( '<h3 id="' + block.name + '">' + block.name + '</h3>' )
 
         # dump the block C source lines now
         if block.code:
