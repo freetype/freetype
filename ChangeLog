@@ -1,3 +1,12 @@
+2014-11-28  Werner Lemberg  <wl@gnu.org>
+
+	[docmaker] Format field lists with CSS.
+
+	This also simplifies the inserted HTML code.
+
+	* src/tools/docmaker/tohtml.py
+	(HtmlFormatter::print_html_field_list): Do it.
+
 2014-11-28  suzuki toshiya  <mpsuzuki@hiroshima-u.ac.jp>
 
 	Fix compiler warning to the comparison between signed and
@@ -6,14 +15,14 @@
 	* src/pfr/pfrsbit.c (pfr_slot_load_bitmap): Fix the comparison
 	between `ypos + ysize' and FT_INT_{MAX,MIN}.
 
-2014-11-27  Werner Lemberg  <wl@gnu.org>
+2014-11-28  Werner Lemberg  <wl@gnu.org>
 
-	[docmaker] Replace empty `<td>' with CSS..
+	[docmaker] Replace empty `<td>' with CSS.
 
 	* src/tools/docmaker/tohtml.py (HtmlFormatter::section_enter): Do
 	it.
 
-2014-11-27  Werner Lemberg  <wl@gnu.org>
+2014-11-28  Werner Lemberg  <wl@gnu.org>
 
 	[docmaker] Replace some `<table>' tags with `<h4>' and `<div>'.
 

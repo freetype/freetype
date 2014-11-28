@@ -76,13 +76,24 @@ html_header_2 = """\
                  color: darkblue; }
 
   table.center { margin: auto; }
+  table.fields { border: 0;
+                 border-spacing: 0; }
+  table.fields td.val { font-weight: bold;
+                        text-align: right;
+                        width: 30%;
+                        vertical-align: text-top;
+                        padding: 0 1em 0 0; }
+  table.fields td.desc { vertical-align: text-top;
+                         padding: 0 0 0 1em; }
   table.index { margin: auto;
                 border: 0;
                 border-collapse: separate;
                 border-spacing: 1em 0.3ex; }
   table.index tr { padding: 0; }
   table.index td { padding: 0; }
-  table.index-toc-link { width: 100%; }
+  table.index-toc-link { width: 100%;
+                         border: 0;
+                         border-spacing: 0; }
   table.index-toc-link td.left { padding: 0 0.5em 0 0.5em;
                                  font-size: 83%;
                                  text-align: left; }
@@ -390,18 +401,11 @@ class  HtmlFormatter( Formatter ):
 
     def  print_html_field_list( self, fields ):
         print "<p></p>"
-        print '<table cellpadding="3" border="0">'
+        print '<table class="fields">'
         for field in fields:
-            if len( field.name ) > 22:
-              print( '<tr valign="top"><td colspan="0"><b>'
-                     + field.name
-                     + "</b></td></tr>" )
-              print '<tr valign="top"><td></td><td>'
-            else:
-              print( '<tr valign="top"><td><b>'
-                     + field.name
-                     + "</b></td><td>" )
-
+            print ( '<tr><td class="val">'
+                    + field.name
+                    + '</td><td class="desc">' )
             self.print_html_items( field.items )
             print "</td></tr>"
         print "</table>"
