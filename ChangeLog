@@ -1,3 +1,11 @@
+2014-11-28  suzuki toshiya  <mpsuzuki@hiroshima-u.ac.jp>
+
+	Fix compiler warning to the comparison between signed and
+	unsigned variable.
+
+	* src/pfr/pfrsbit.c (pfr_slot_load_bitmap): Fix the comparison
+	between `ypos + ysize' and FT_INT_{MAX,MIN}.
+
 2014-11-27  Werner Lemberg  <wl@gnu.org>
 
 	[docmaker] Replace empty `<td>' with CSS..
