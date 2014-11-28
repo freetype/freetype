@@ -78,8 +78,8 @@ html_header_2 = """\
   table.center { margin: auto; }
   table.index { margin: auto;
                 border: 0;
-                border-collapse: collapse;
-                border-spacing: 0; }
+                border-collapse: separate;
+                border-spacing: 1em 0.3ex; }
   table.index tr { padding: 0; }
   table.index td { padding: 0; }
   table.index-toc-link { width: 100%; }
@@ -92,7 +92,7 @@ html_header_2 = """\
   table.synopsis { margin: auto;
                    border: 0;
                    border-collapse: separate;
-                   border-spacing: 1em 1ex; }
+                   border-spacing: 2em 1ex; }
   table.synopsis tr { padding: 0; }
   table.synopsis td { padding: 0; }
 
@@ -550,7 +550,7 @@ class  HtmlFormatter( Formatter ):
                 line = "<tr>"
                 for c in range( columns ):
                     i = r + c * rows
-                    line = line + '<td></td><td>'
+                    line = line + '<td>'
                     if i < count:
                         name = section.block_names[i]
                         line = ( line + '<a href="#' + name + '">'

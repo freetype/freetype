@@ -1,5 +1,12 @@
 2014-11-27  Werner Lemberg  <wl@gnu.org>
 
+	[docmaker] Replace empty `<td>' with CSS..
+
+	* src/tools/docmaker/tohtml.py (HtmlFormatter::section_enter): Do
+	it.
+
+2014-11-27  Werner Lemberg  <wl@gnu.org>
+
 	[docmaker] Replace some `<table>' tags with `<h4>' and `<div>'.
 
 	* src/tools/docmaker/tohtml.py (marker_*): Use `<h4>'.
