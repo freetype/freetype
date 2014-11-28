@@ -200,7 +200,7 @@
               " |  xfit |  yfit |  flags ]\n" ));
 
     for ( point = points; point < limit; point++ )
-      AF_DUMP(( "  [ %5d | %5d | %5d | %6.2f | %6.2f"
+      AF_DUMP(( "  [ %5ld | %5d | %5d | %6.2f | %6.2f"
                 " | %5.2f | %5.2f | %c ]\n",
                 point - points,
                 point->fx,
@@ -278,8 +278,8 @@
         AF_DUMP(( "  (none)\n" ));
 
       for ( seg = segments; seg < limit; seg++ )
-        AF_DUMP(( "  [ %5d | %5.2g | %5s | %4d"
-                  " | %4d | %4d | %5d | %4d"
+        AF_DUMP(( "  [ %5ld | %5.2g | %5s | %4ld"
+                  " | %4ld | %4ld | %5ld | %4ld"
                   " | %6d | %5d | %11s ]\n",
                   seg - segments,
                   dimension == AF_DIMENSION_HORZ
@@ -410,8 +410,8 @@
         AF_DUMP(( "  (none)\n" ));
 
       for ( edge = edges; edge < limit; edge++ )
-        AF_DUMP(( "  [ %5d | %5.2g | %5s | %4d"
-                  " | %5d |   %c  | %5.2f | %5.2f | %11s ]\n",
+        AF_DUMP(( "  [ %5ld | %5.2g | %5s | %4ld"
+                  " | %5ld |   %c  | %5.2f | %5.2f | %11s ]\n",
                   edge - edges,
                   (int)edge->opos / 64.0,
                   af_dir_str( (AF_Direction)edge->dir ),

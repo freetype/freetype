@@ -1,3 +1,11 @@
+2014-11-28  suzuki toshiya  <mpsuzuki@hiroshima-u.ac.jp>
+
+	Fix compiler warning to conversion specifiers in debug messages.
+
+	* src/autofit/afhints.c (af_glyph_hints_dump_points): Add length
+	modifier to dump long integers.  (af_glyph_hints_dump_segments,
+	af_glyph_hints_dump_edges): Ditto.
+
 2014-11-27  Werner Lemberg  <wl@gnu.org>
 
 	* src/tools/docmaker/tohtml.py: Usee more CSS for index.
