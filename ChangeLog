@@ -1,5 +1,20 @@
 2014-11-29  Werner Lemberg  <wl@gnu.org>
 
+	[docmaker] Provide higher-level markup and simplify HTML.
+
+	* src/tools/docmaker/tohtml.py: Instead of using extraneous `<div>'
+	elements, use CSS descendants (of class `section') to format the
+	data.
+
+	Also remove reduntant <p> and <br> elements, replacing them with
+	proper CSS.
+
+	Globally reduce page width to 75%.
+
+	(block_header): Rename <div> class to `section'.
+
+2014-11-29  Werner Lemberg  <wl@gnu.org>
+
 	[docmaker] Add `top' links after blocks.
 
 	* src/tools/docmaker/tohtml.py (block_footer_middle): Implement it.

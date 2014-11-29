@@ -41,28 +41,34 @@ html_header_2 = """\
 
   body { font-family: Verdana, Geneva, Arial, Helvetica, serif;
          color: #000000;
-         background: #FFFFFF; }
+         background: #FFFFFF;
+         width: 87%;
+         margin: auto; }
 
-  div.code { width: 100%;
-             background-color: #D6E8FF;
-             margin: 0 0 0 -0.5em;
-             padding: 0.3ex 0 0.3ex 0.5em; }
-  div.indent1 { width: 87%;
-                margin: auto; }
   div.indent2 { width: 75%;
                 margin: auto; }
+  div.section { width: 75%;
+                margin: auto; }
+  div.section hr { margin: 4ex 0 1ex 0; }
+  div.section h4 { background-color: #EEEEFF;
+                   font-size: medium;
+                   font-style: oblique;
+                   font-weight: bold;
+                   margin: 3ex 0 1.5ex 9%;
+                   padding: 0.3ex 0 0.3ex 1%; }
+  div.section p { margin: 1.5ex 0 1.5ex 10%; }
+  div.section pre { margin: 3ex 0 3ex 9%;
+                    background-color: #D6E8FF;
+                    padding: 2ex 0 2ex 1%; }
+  div.section table.fields { width: 90%;
+                             margin: 1.5ex 0 1.5ex 10%; }
   div.timestamp { text-align: center;
-                  font-size: 69%; }
+                  font-size: 69%;
+                  margin: 1.5ex 0 1.5ex 0; }
 
   h1 { text-align: center; }
-  h3 { font-size: medium; }
-  h4 { background-color: #EEEEFF;
-       width: 100%;
-       font-size: medium;
-       font-style: oblique;
-       font-weight: bold;
-       margin: 0 0 0 -0.5em;
-       padding: 0.3ex 0 0.3ex 0.5em; }
+  h3 { font-size: medium;
+       margin: 4ex 0 1.5ex 0; }
 
   li { text-align: justify; }
 
@@ -76,9 +82,6 @@ html_header_2 = """\
                  color: darkblue; }
 
   table.center { margin: auto; }
-  table.fields { border: 0;
-                 border-spacing: 0;
-                 width: 100%; }
   table.fields td.val { font-weight: bold;
                         text-align: right;
                         width: 30%;
@@ -86,7 +89,7 @@ html_header_2 = """\
                         padding: 0 1em 0 0; }
   table.fields td.desc { vertical-align: baseline;
                          padding: 0 0 0 1em; }
-  table.index { margin: auto;
+  table.index { margin: 6ex auto 6ex auto;
                 border: 0;
                 border-collapse: separate;
                 border-spacing: 1em 0.3ex; }
@@ -94,7 +97,8 @@ html_header_2 = """\
   table.index td { padding: 0; }
   table.index-toc-link { width: 100%;
                          border: 0;
-                         border-spacing: 0; }
+                         border-spacing: 0;
+                         margin: 1ex 0 1ex 0; }
   table.index-toc-link td.left { padding: 0 0.5em 0 0.5em;
                                  font-size: 83%;
                                  text-align: left; }
@@ -112,6 +116,7 @@ html_header_2 = """\
   table.synopsis td { padding: 0; }
 
   td { padding: 0 0.5em 0 0.5em; }
+  td.desc p { margin: 1.5ex 0 1.5ex 0; }
   td.left { padding: 0 0.5em 0 0.5em;
             text-align: left; }
 
@@ -130,8 +135,7 @@ html_header_3r = """
 """
 
 html_header_4 = """\
-">Index</a>]</td>
-<td class="right">[<a href="\
+">Index</a>]</td><td class="right">[<a href="\
 """
 
 html_header_5t = """\
@@ -168,14 +172,14 @@ para_header = "<p>"
 para_footer = "</p>"
 
 # Block header and footer.
-block_header        = '<div class="indent2">'
+block_header        = '<div class="section">'
 block_footer_start  = """\
 <hr>
 <table class="index-toc-link"><tr><td class="left">[<a href="\
 """
 block_footer_middle = """\
-">Index</a>]</td>
-<td class="middle">[<a href="#">Top</a>]</td>
+">Index</a>]</td>\
+<td class="middle">[<a href="#">Top</a>]</td>\
 <td class="right">[<a href="\
 """
 block_footer_end    = """\
@@ -183,21 +187,21 @@ block_footer_end    = """\
 """
 
 # Description header/footer.
-description_header = '<div class="indent1">'
-description_footer = "</div><br>"
+description_header = ""
+description_footer = ""
 
 # Marker header/inter/footer combination.
-marker_header = '<div class="indent1"><h4>'
+marker_header = "<h4>"
 marker_inter  = "</h4>"
-marker_footer = "</div>"
+marker_footer = ""
 
 # Header location header/footer.
-header_location_header = '<div class="indent1">'
-header_location_footer = "</div><br>"
+header_location_header = "<p>"
+header_location_footer = "</p>"
 
 # Source code extracts header/footer.
-source_header = '<div class="indent1"><div class="code"><pre>'
-source_footer = "</pre></div></div>"
+source_header = "<pre>"
+source_footer = "</pre>"
 
 # Chapter header/inter/footer.
 chapter_header = '<br><div class="indent2"><h2>'
@@ -415,7 +419,6 @@ class  HtmlFormatter( Formatter ):
         return result
 
     def  print_html_field_list( self, fields ):
-        print "<p></p>"
         print '<table class="fields">'
         for field in fields:
             print ( '<tr><td class="val">'
@@ -579,7 +582,7 @@ class  HtmlFormatter( Formatter ):
                 line = line + "</tr>"
                 print line
 
-            print "</table><br><br>"
+            print "</table>"
             print section_synopsis_footer
 
         print description_header
@@ -607,9 +610,9 @@ class  HtmlFormatter( Formatter ):
 #                 + " '" + block.source.filename + "'.\n" )
 
             if header:
-                print header_location_header
-                print 'Defined in ' + header + '.'
-                print header_location_footer
+                print ( header_location_header
+                        + 'Defined in ' + header + '.'
+                        + header_location_footer )
 
             print source_header
             for l in block.code:
