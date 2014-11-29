@@ -83,10 +83,11 @@ html_header_2 = """\
                         text-align: right;
                         width: 30%;
                         vertical-align: baseline;
-                        padding: 0 1em 0 0; }
+                        padding: 1ex 1em 1ex 0; }
   table.fields td.desc { vertical-align: baseline;
-                         padding: 0 0 0 1em; }
-  table.fields td.desc p { margin: 1.5ex 0 1.5ex 0; }
+                         padding: 1ex 0 1ex 1em; }
+  table.fields td.desc p:first-child { margin: 0; }
+  table.fields td.desc p { margin: 1.5ex 0 0 0; }
   table.index { margin: 6ex auto 6ex auto;
                 border: 0;
                 border-collapse: separate;
@@ -115,11 +116,13 @@ html_header_2 = """\
   table.toc td.link { width: 30%;
                       text-align: right;
                       vertical-align: baseline;
-                      padding: 0 1em 0 0; }
+                      padding: 1ex 1em 1ex 0; }
   table.toc td.desc { vertical-align: baseline;
-                      padding: 0 0 0 1em;
+                      padding: 1ex 0 1ex 1em;
                       text-align: left; }
-  table.toc td.desc p { margin: 1.5ex 0 1.5ex 0;
+  table.toc td.desc p:first-child { margin: 0;
+                                    text-align: left; }
+  table.toc td.desc p { margin: 1.5ex 0 0 0;
                         text-align: left; }
 
 </style>
