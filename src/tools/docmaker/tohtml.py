@@ -552,9 +552,7 @@ class  HtmlFormatter( Formatter ):
     def  section_enter( self, section ):
         print self.html_header
 
-        print section_title_header
-        print section.title
-        print section_title_footer
+        print section_title_header + section.title + section_title_footer
 
         maxwidth = 0
         for b in section.blocks.values():
