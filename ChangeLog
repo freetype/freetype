@@ -1,5 +1,12 @@
 2014-11-29  Werner Lemberg  <wl@gnu.org>
 
+	[docmaker] Improve HTML code for table of contents..
+
+	* src/toold/docmaker/tohtml.py: Introduce a new table class `toc',
+	together with proper CSS.
+
+2014-11-29  Werner Lemberg  <wl@gnu.org>
+
 	[docmaker] Provide higher-level markup and simplify HTML.
 
 	* src/tools/docmaker/tohtml.py: Instead of using extraneous `<div>'

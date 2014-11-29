@@ -45,8 +45,6 @@ html_header_2 = """\
          width: 87%;
          margin: auto; }
 
-  div.indent2 { width: 75%;
-                margin: auto; }
   div.section { width: 75%;
                 margin: auto; }
   div.section hr { margin: 4ex 0 1ex 0; }
@@ -62,6 +60,8 @@ html_header_2 = """\
                     padding: 2ex 0 2ex 1%; }
   div.section table.fields { width: 90%;
                              margin: 1.5ex 0 1.5ex 10%; }
+  div.section table.toc { width: 95%;
+                          margin: 1.5ex 0 1.5ex 5%; }
   div.timestamp { text-align: center;
                   font-size: 69%;
                   margin: 1.5ex 0 1.5ex 0; }
@@ -69,8 +69,6 @@ html_header_2 = """\
   h1 { text-align: center; }
   h3 { font-size: medium;
        margin: 4ex 0 1.5ex 0; }
-
-  li { text-align: justify; }
 
   p { text-align: justify; }
 
@@ -81,7 +79,6 @@ html_header_2 = """\
                  white-space: pre;
                  color: darkblue; }
 
-  table.center { margin: auto; }
   table.fields td.val { font-weight: bold;
                         text-align: right;
                         width: 30%;
@@ -89,6 +86,7 @@ html_header_2 = """\
                         padding: 0 1em 0 0; }
   table.fields td.desc { vertical-align: baseline;
                          padding: 0 0 0 1em; }
+  table.fields td.desc p { margin: 1.5ex 0 1.5ex 0; }
   table.index { margin: 6ex auto 6ex auto;
                 border: 0;
                 border-collapse: separate;
@@ -108,19 +106,22 @@ html_header_2 = """\
   table.index-toc-link td.right { padding: 0 0.5em 0 0.5em;
                                   font-size: 83%;
                                   text-align: right; }
-  table.synopsis { margin: auto;
+  table.synopsis { margin: 6ex auto 6ex auto;
                    border: 0;
                    border-collapse: separate;
                    border-spacing: 2em 0.6ex; }
   table.synopsis tr { padding: 0; }
   table.synopsis td { padding: 0; }
+  table.toc td.link { width: 30%;
+                      text-align: right;
+                      vertical-align: baseline;
+                      padding: 0 1em 0 0; }
+  table.toc td.desc { vertical-align: baseline;
+                      padding: 0 0 0 1em;
+                      text-align: left; }
+  table.toc td.desc p { margin: 1.5ex 0 1.5ex 0;
+                        text-align: left; }
 
-  td { padding: 0 0.5em 0 0.5em; }
-  td.desc p { margin: 1.5ex 0 1.5ex 0; }
-  td.left { padding: 0 0.5em 0 0.5em;
-            text-align: left; }
-
-  ul.empty { list-style-type: none; }
 </style>
 </head>
 <body>
@@ -204,9 +205,12 @@ source_header = "<pre>"
 source_footer = "</pre>"
 
 # Chapter header/inter/footer.
-chapter_header = '<br><div class="indent2"><h2>'
-chapter_inter  = '</h2><ul class="empty"><li>'
-chapter_footer = '</li></ul></div>'
+chapter_header = """\
+<div class="section">
+<h2>\
+"""
+chapter_inter  = '</h2>'
+chapter_footer = '</div>'
 
 # Index footer.
 index_footer_start = """\
@@ -503,13 +507,12 @@ class  HtmlFormatter( Formatter ):
 
     def  toc_chapter_enter( self, chapter ):
         print chapter_header + string.join( chapter.title ) + chapter_inter
-        print '<table cellpadding="5">'
+        print '<table class="toc">'
 
     def  toc_section_enter( self, section ):
-        print '<tr valign="top"><td class="left">'
-        print( '<a href="' + self.make_section_url( section ) + '">'
-               + section.title + '</a></td><td>' )
-
+        print ( '<tr><td class="link">'
+                + '<a href="' + self.make_section_url( section ) + '">'
+                + section.title + '</a></td><td class="desc">' )
         print self.make_html_para( section.abstract )
 
     def  toc_section_exit( self, section ):
