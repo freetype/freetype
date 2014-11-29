@@ -77,13 +77,14 @@ html_header_2 = """\
 
   table.center { margin: auto; }
   table.fields { border: 0;
-                 border-spacing: 0; }
+                 border-spacing: 0;
+                 width: 100%; }
   table.fields td.val { font-weight: bold;
                         text-align: right;
                         width: 30%;
-                        vertical-align: text-top;
+                        vertical-align: baseline;
                         padding: 0 1em 0 0; }
-  table.fields td.desc { vertical-align: text-top;
+  table.fields td.desc { vertical-align: baseline;
                          padding: 0 0 0 1em; }
   table.index { margin: auto;
                 border: 0;

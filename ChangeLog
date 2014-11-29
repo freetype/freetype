@@ -1,5 +1,11 @@
 2014-11-29  Werner Lemberg  <wl@gnu.org>
 
+	* src/tools/docmaker/tohtml.py: Improve CSS for fields.
+
+	Make fields align horizotnally relative to full line width.
+
+2014-11-29  Werner Lemberg  <wl@gnu.org>
+
 	* src/tools/docmaker/tohtml.py: Fix index and TOC templates.
 
 	This thinko was introduced 2014-11-27.
