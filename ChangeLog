@@ -1,8 +1,14 @@
 2014-11-29  Werner Lemberg  <wl@gnu.org>
 
+	[docmaker] Add `top' links after blocks.
+
+	* src/tools/docmaker/tohtml.py (block_footer_middle): Implement it.
+
+2014-11-29  Werner Lemberg  <wl@gnu.org>
+
 	* src/tools/docmaker/tohtml.py: Improve CSS for fields.
 
-	Make fields align horizotnally relative to full line width.
+	Make fields align horizontally relative to full line width.
 
 2014-11-29  Werner Lemberg  <wl@gnu.org>
 

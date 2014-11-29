@@ -98,13 +98,16 @@ html_header_2 = """\
   table.index-toc-link td.left { padding: 0 0.5em 0 0.5em;
                                  font-size: 83%;
                                  text-align: left; }
+  table.index-toc-link td.middle { padding: 0 0.5em 0 0.5em;
+                                   font-size: 83%;
+                                   text-align: center; }
   table.index-toc-link td.right { padding: 0 0.5em 0 0.5em;
                                   font-size: 83%;
                                   text-align: right; }
   table.synopsis { margin: auto;
                    border: 0;
                    border-collapse: separate;
-                   border-spacing: 2em 1ex; }
+                   border-spacing: 2em 0.6ex; }
   table.synopsis tr { padding: 0; }
   table.synopsis td { padding: 0; }
 
@@ -172,6 +175,7 @@ block_footer_start  = """\
 """
 block_footer_middle = """\
 ">Index</a>]</td>
+<td class="middle">[<a href="#">Top</a>]</td>
 <td class="right">[<a href="\
 """
 block_footer_end    = """\
