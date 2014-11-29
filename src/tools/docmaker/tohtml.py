@@ -130,8 +130,13 @@ html_header_4 = """\
 <td class="right">[<a href="\
 """
 
-html_header_5 = """\
+html_header_5t = """\
 ">TOC</a>]</td></tr></table>
+<h1>\
+"""
+
+html_header_5i = """\
+">Index</a>]</td></tr></table>
 <h1>\
 """
 
@@ -240,8 +245,13 @@ class  HtmlFormatter( Formatter ):
     def  __init__( self, processor, project_title, file_prefix ):
         Formatter.__init__( self, processor )
 
-        global html_header_1, html_header_2, html_header_3
-        global html_header_4, html_header_5, html_footer
+        global html_header_1
+        global html_header_2
+        global html_header_3l, html_header_3r
+        global html_header_4
+        global html_header_5t, html_header_5i
+        global html_header_6
+        global html_footer
 
         if file_prefix:
             file_prefix = file_prefix + "-"
@@ -256,19 +266,19 @@ class  HtmlFormatter( Formatter ):
           + html_header_2
           + html_header_3l + file_prefix + "index.html"
           + html_header_4 + file_prefix + "toc.html"
-          + html_header_5 + project_title
+          + html_header_5t + project_title
           + html_header_6 )
         self.html_index_header = (
           html_header_1 + project_title
           + html_header_2
           + html_header_3r + file_prefix + "toc.html"
-          + html_header_5 + project_title
+          + html_header_5t + project_title
           + html_header_6 )
         self.html_toc_header = (
           html_header_1 + project_title
           + html_header_2
           + html_header_3l + file_prefix + "index.html"
-          + html_header_5 + project_title
+          + html_header_5i + project_title
           + html_header_6 )
         self.html_footer = (
           '<div class="timestamp">generated on '
