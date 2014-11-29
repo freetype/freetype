@@ -113,7 +113,8 @@ FT_BEGIN_HEADER
   /*    The FreeType~2 base font interface.                                */
   /*                                                                       */
   /* <Description>                                                         */
-  /*    This section describes the public high-level API of FreeType~2.    */
+  /*    This section describes the most important public high-level API    */
+  /*    functions of FreeType~2.                                           */
   /*                                                                       */
   /* <Order>                                                               */
   /*    FT_Library                                                         */
