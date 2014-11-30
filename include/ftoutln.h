@@ -71,10 +71,10 @@ FT_BEGIN_HEADER
   /*                                                                       */
   /*    FT_Outline_Decompose                                               */
   /*    FT_Outline_Funcs                                                   */
-  /*    FT_Outline_MoveTo_Func                                             */
-  /*    FT_Outline_LineTo_Func                                             */
-  /*    FT_Outline_ConicTo_Func                                            */
-  /*    FT_Outline_CubicTo_Func                                            */
+  /*    FT_Outline_MoveToFunc                                              */
+  /*    FT_Outline_LineToFunc                                              */
+  /*    FT_Outline_ConicToFunc                                             */
+  /*    FT_Outline_CubicToFunc                                             */
   /*                                                                       */
   /*************************************************************************/
 
