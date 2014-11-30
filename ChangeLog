@@ -1,5 +1,12 @@
 2014-11-29  Werner Lemberg  <wl@gnu.org>
 
+	* src/tools/docmaker/sources.py (column) [Format 2]: Fix regexp.
+
+	After the single asterisk there must be no other immediately following
+	asterisk.
+
+2014-11-29  Werner Lemberg  <wl@gnu.org>
+
 	* src/tools/docmaker/tohtml.py: Improve CSS for vertical spacing.
 
 2014-11-29  Werner Lemberg  <wl@gnu.org>
