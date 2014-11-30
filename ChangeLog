@@ -1,5 +1,21 @@
 2014-11-29  Werner Lemberg  <wl@gnu.org>
 
+	[docmaker] Allow empty lines in `<Order>' blocks.
+
+	Before this patch, the suggested order of entries stopped at the
+	first empty line.
+
+	Obviously, nobody noticed that this problem caused a much reduced
+	set of links in the `Synopsis' sections; in particular, the
+	`<Order>' blocks contain a lot of entries that wouldn't be listed
+	otherwise...
+
+	* src/tools/docmaker/content.py (DocBlock::get_markup_words_all):
+	New function to iterate over all items.
+	(DocSection::process): Use it.
+
+2014-11-29  Werner Lemberg  <wl@gnu.org>
+
 	* src/tools/docmaker/sources.py (column) [Format 2]: Fix regexp.
 
 	After the single asterisk there must be no other immediately following

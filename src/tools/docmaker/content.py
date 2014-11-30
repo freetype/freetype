@@ -369,7 +369,7 @@ class  DocSection:
                 self.title       = title
                 self.abstract    = block.get_markup_words( "abstract" )
                 self.description = block.get_markup_items( "description" )
-                self.order       = block.get_markup_words( "order" )
+                self.order       = block.get_markup_words_all( "order" )
                 return
 
     def  reorder( self ):
@@ -604,6 +604,15 @@ class  DocBlock:
         try:
             m = self.get_markup( tag_name )
             return m.fields[0].items[0].words
+        except:
+            return []
+
+    def  get_markup_words_all( self, tag_name ):
+        try:
+            m = self.get_markup( tag_name )
+            return [word
+                      for items in m.fields[0].items
+                        for word in items.words]
         except:
             return []
 
