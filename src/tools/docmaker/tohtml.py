@@ -306,8 +306,10 @@ class  HtmlFormatter( Formatter ):
     def  make_section_url( self, section ):
         return self.file_prefix + section.name + ".html"
 
-    def  make_block_url( self, block ):
-        return self.make_section_url( block.section ) + "#" + block.name
+    def  make_block_url( self, block, name = None ):
+        if name == None:
+            name = block.name
+        return self.make_section_url( block.section ) + "#" + name
 
     def  make_html_word( self, word ):
         """Analyze a simple word to detect cross-references and markup."""
@@ -412,8 +414,18 @@ class  HtmlFormatter( Formatter ):
                 elif self.identifiers.has_key( name ):
                     # this is a known identifier
                     block = self.identifiers[name]
+                    id = block.name
+
+                    # link to a field ID if possible
+                    for markup in block.markups:
+                        if markup.tag == 'values':
+                            for field in markup.fields:
+                                if field.name:
+                                    id = name
+
                     result = ( result + prefix
-                               + '<a href="' + self.make_block_url( block )
+                               + '<a href="'
+                               + self.make_block_url( block, id )
                                + '">' + name + '</a>' )
                 else:
                     result = result + html_quote( line[:length] )
@@ -428,7 +440,7 @@ class  HtmlFormatter( Formatter ):
     def  print_html_field_list( self, fields ):
         print '<table class="fields">'
         for field in fields:
-            print ( '<tr><td class="val">'
+            print ( '<tr><td class="val" id="' + field.name + '">'
                     + field.name
                     + '</td><td class="desc">' )
             self.print_html_items( field.items )

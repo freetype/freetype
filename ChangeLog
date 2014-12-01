@@ -1,5 +1,14 @@
 2014-11-29  Werner Lemberg  <wl@gnu.org>
 
+	[docmaker] Use field values as HTML link targets where possible.
+
+	* src/tools/docmaker/tohtml.py (HtmlFormatter::make_block_url):
+	Accept second, optional argument to specify a name.
+	(HtmlFormatter::html_source_quote): Link to field ID if possible.
+	(HtmlFormatter::print_html_field_list): Emit `id' attribute.
+
+2014-11-29  Werner Lemberg  <wl@gnu.org>
+
 	[docmaker] Allow empty lines in `<Order>' blocks.
 
 	Before this patch, the suggested order of entries stopped at the
