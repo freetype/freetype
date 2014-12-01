@@ -1,5 +1,14 @@
 2014-11-29  Werner Lemberg  <wl@gnu.org>
 
+	[docmaker] Don't output a block multiple times.
+
+	This bug was hidden by not processing all lines of `<Order>' blocks.
+
+	* src/tools/docmaker/formatter.py (Formatter::section_dump): Filter
+	out field names.
+
+2014-11-29  Werner Lemberg  <wl@gnu.org>
+
 	[docmaker] Use field values as HTML link targets where possible.
 
 	* src/tools/docmaker/tohtml.py (HtmlFormatter::make_block_url):

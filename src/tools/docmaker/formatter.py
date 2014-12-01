@@ -182,7 +182,18 @@ class  Formatter:
         self.section_enter( section )
 
         for name in section.block_names:
+            skip_entry = 0
             block = self.identifiers[name]
+            # `block_names' can contain field names also, which we filter out
+            for markup in block.markups:
+                if markup.tag == 'values':
+                    for field in markup.fields:
+                        if field.name == name:
+                            skip_entry = 1
+
+            if skip_entry:
+              continue;
+
             self.block_enter( block )
 
             for markup in block.markups[1:]:   # always ignore first markup!
