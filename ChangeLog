@@ -1,5 +1,15 @@
 2014-12-02  Werner Lemberg  <wl@gnu.org>
 
+	[docmaker] Always handle `<Order>' section elements.
+
+	Previously, those elements were handled only for sections present in
+	a `<Sections>' chapter element.
+
+	* src/tools/docmaker/content.py (ContentProcessor::finish):
+	Implement it.
+
+2014-12-02  Werner Lemberg  <wl@gnu.org>
+
 	[docmaker] Properly handle empty rows in Synopsis.
 
 	* src/tools/docmaker/tohtml.py (HtmlFormatter::section_enter): Emit

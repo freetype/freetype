@@ -503,6 +503,7 @@ class  ContentProcessor:
         others = []
         for sec in self.sections.values():
             if not sec.chapter:
+                sec.reorder()
                 others.append( sec )
 
         # create a new special chapter for all remaining sections
