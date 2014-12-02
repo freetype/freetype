@@ -212,7 +212,7 @@ FT_BEGIN_HEADER
                          FT_Pointer  req_data,
                          FT_Face*    aface );
 
- /* */
+  /* */
 
 
   /*************************************************************************/
@@ -1046,8 +1046,8 @@ FT_BEGIN_HEADER
                               FTC_SBit      *sbit,
                               FTC_Node      *anode );
 
+  /* */
 
- /* */
 
 FT_END_HEADER
 

@@ -703,7 +703,7 @@
     /* callback function.                                     */
     if ( face->root.internal->incremental_interface )
     {
-      FT_Data data;
+      FT_Data  data;
 
 
       data.pointer = *pointer;

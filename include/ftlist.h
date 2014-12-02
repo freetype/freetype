@@ -265,7 +265,6 @@ FT_BEGIN_HEADER
                     FT_Memory           memory,
                     void*               user );
 
-
   /* */
 
 

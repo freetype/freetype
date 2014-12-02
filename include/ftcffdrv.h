@@ -108,6 +108,12 @@ FT_BEGIN_HEADER
    *   in one of four ways, top edge up or down, bottom edge up or down.
    *   Unless there are conflicting hstems, the smallest movement is taken
    *   to minimize distortion.
+   *
+   * @order:
+   *   hinting-engine
+   *   no-stem-darkening
+   *   darkening-parameters
+   *
    */
 
 
@@ -244,8 +250,8 @@ FT_BEGIN_HEADER
    *
    */
 
+  /* */
 
- /* */
 
 FT_END_HEADER
 

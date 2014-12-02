@@ -52,7 +52,6 @@ FT_BEGIN_HEADER
   /*                                                                       */
   /* <Order>                                                               */
   /*    FT_Outline                                                         */
-  /*    FT_OUTLINE_FLAGS                                                   */
   /*    FT_Outline_New                                                     */
   /*    FT_Outline_Done                                                    */
   /*    FT_Outline_Copy                                                    */
@@ -68,13 +67,17 @@ FT_BEGIN_HEADER
   /*                                                                       */
   /*    FT_Outline_Get_Bitmap                                              */
   /*    FT_Outline_Render                                                  */
-  /*                                                                       */
   /*    FT_Outline_Decompose                                               */
   /*    FT_Outline_Funcs                                                   */
   /*    FT_Outline_MoveToFunc                                              */
   /*    FT_Outline_LineToFunc                                              */
   /*    FT_Outline_ConicToFunc                                             */
   /*    FT_Outline_CubicToFunc                                             */
+  /*                                                                       */
+  /*    FT_Orientation                                                     */
+  /*    FT_Outline_Get_Orientation                                         */
+  /*                                                                       */
+  /*    FT_OUTLINE_XXX                                                     */
   /*                                                                       */
   /*************************************************************************/
 
@@ -554,7 +557,6 @@ FT_BEGIN_HEADER
   */
   FT_EXPORT( FT_Orientation )
   FT_Outline_Get_Orientation( FT_Outline*  outline );
-
 
   /* */
 

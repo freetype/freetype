@@ -1,5 +1,13 @@
 2014-12-02  Werner Lemberg  <wl@gnu.org>
 
+	* include/*: Improve structure of documentation.
+
+	. Add and update many `<Order>' tags.
+	. Apply various documentation fixes.
+	. Remove details to deprecated (or never implemented) data.
+
+2014-12-02  Werner Lemberg  <wl@gnu.org>
+
 	[docmaker] Always handle `<Order>' section elements.
 
 	Previously, those elements were handled only for sections present in

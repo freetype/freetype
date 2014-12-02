@@ -5,7 +5,7 @@
 /*    Basic SFNT/TrueType tables definitions and interface                 */
 /*    (specification only).                                                */
 /*                                                                         */
-/*  Copyright 1996-2005, 2008-2013 by                                      */
+/*  Copyright 1996-2005, 2008-2014 by                                      */
 /*  David Turner, Robert Wilhelm, and Werner Lemberg.                      */
 /*                                                                         */
 /*  This file is part of the FreeType project, and may only be used,       */
@@ -47,6 +47,25 @@ FT_BEGIN_HEADER
   /* <Description>                                                         */
   /*    This section contains the definition of TrueType-specific tables   */
   /*    as well as some routines used to access and process them.          */
+  /*                                                                       */
+  /* <Order>                                                               */
+  /*    TT_Header                                                          */
+  /*    TT_HoriHeader                                                      */
+  /*    TT_VertHeader                                                      */
+  /*    TT_OS2                                                             */
+  /*    TT_Postscript                                                      */
+  /*    TT_PCLT                                                            */
+  /*    TT_MaxProfile                                                      */
+  /*                                                                       */
+  /*    FT_Sfnt_Tag                                                        */
+  /*    FT_Get_Sfnt_Table                                                  */
+  /*    FT_Load_Sfnt_Table                                                 */
+  /*    FT_Sfnt_Table_Info                                                 */
+  /*                                                                       */
+  /*    FT_Get_CMap_Language_ID                                            */
+  /*    FT_Get_CMap_Format                                                 */
+  /*                                                                       */
+  /*    FT_PARAM_TAG_UNPATENTED_HINTING                                    */
   /*                                                                       */
   /*************************************************************************/
 
@@ -572,8 +591,6 @@ FT_BEGIN_HEADER
     sfnt_max   /* internal end mark */
 
   } FT_Sfnt_Tag;
-
-  /* */
 
 
   /*************************************************************************/
