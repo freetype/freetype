@@ -1,5 +1,12 @@
 2014-12-02  Werner Lemberg  <wl@gnu.org>
 
+	[docmaker] Thinko.
+
+	* src/tools/docmaker/content.py (DocBlock::get_markup_words_all):
+	Emit `/empty/' string for first element also.
+
+2014-12-02  Werner Lemberg  <wl@gnu.org>
+
 	[docmaker] Honour empty lines in `<Order>' section element.
 
 	This greatly improves the readability of the `Synopsis' links.

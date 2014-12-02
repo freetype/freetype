@@ -610,14 +610,14 @@ class  DocBlock:
     def  get_markup_words_all( self, tag_name ):
         try:
             m = self.get_markup( tag_name )
-            words = m.fields[0].items[0].words
-            for item in m.fields[0].items[1:]:
+            words = []
+            for item in m.fields[0].items:
                 # We honour empty lines in an `<Order>' section element by
                 # adding the sentinel `/empty/'.  The formatter should then
                 # convert it to an appropriate representation in the
                 # `section_enter' function.
-                words.append( "/empty/" )
                 words += item.words
+                words.append( "/empty/" )
             return words
         except:
             return []
