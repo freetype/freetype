@@ -183,13 +183,17 @@ class  Formatter:
 
         for name in section.block_names:
             skip_entry = 0
-            block = self.identifiers[name]
-            # `block_names' can contain field names also, which we filter out
-            for markup in block.markups:
-                if markup.tag == 'values':
-                    for field in markup.fields:
-                        if field.name == name:
-                            skip_entry = 1
+            try:
+                block = self.identifiers[name]
+                # `block_names' can contain field names also,
+                # which we filter out
+                for markup in block.markups:
+                    if markup.tag == 'values':
+                        for field in markup.fields:
+                            if field.name == name:
+                                skip_entry = 1
+            except:
+                skip_entry = 1   # this happens e.g. for `/empty/' entries
 
             if skip_entry:
               continue;

@@ -582,6 +582,9 @@ class  HtmlFormatter( Formatter ):
                 columns = 1
 
             count = len( section.block_names )
+            # don't handle last entry if it is empty
+            if section.block_names[-1] == "/empty/":
+                count -= 1
             rows  = ( count + columns - 1 ) // columns
 
             for r in range( rows ):
@@ -591,8 +594,9 @@ class  HtmlFormatter( Formatter ):
                     line = line + '<td>'
                     if i < count:
                         name = section.block_names[i]
-                        line = ( line + '<a href="#' + name + '">'
-                                 + name + '</a>' )
+                        if name != "/empty/":
+                            line = ( line + '<a href="#' + name + '">'
+                                     + name + '</a>' )
 
                     line = line + '</td>'
                 line = line + "</tr>"

@@ -1,5 +1,20 @@
 2014-12-02  Werner Lemberg  <wl@gnu.org>
 
+	[docmaker] Honour empty lines in `<Order>' section element.
+
+	This greatly improves the readability of the `Synopsis' links.
+
+	* src/tools/docmaker/content.py (DocBlock::get_markup_words_all):
+	Insert string `/empty/' between items.
+
+	* src/tools/docmaker/formatter.py (Formatter::section_dump): Make it
+	robust against nonexistent keys.
+
+	* src/tools/docmaker/tohtml.py (HtmlFormatter::section_enter): Emit
+	empty <td> elements for `/empty/'.
+
+2014-12-02  Werner Lemberg  <wl@gnu.org>
+
 	[docmaker] Ensure Python 3 compatibility.
 
 	* src/tools/docmaker/content.py (ContentProcessor::set_section,
