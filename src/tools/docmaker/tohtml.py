@@ -594,7 +594,13 @@ class  HtmlFormatter( Formatter ):
                     line = line + '<td>'
                     if i < count:
                         name = section.block_names[i]
-                        if name != "/empty/":
+                        if name == "/empty/":
+                            # it can happen that a complete row is empty, and
+                            # without a proper `filler' the browser might
+                            # collapse the row to a much smaller height (or
+                            # even omit it completely)
+                            line = line + "&nbsp;"
+                        else:
                             line = ( line + '<a href="#' + name + '">'
                                      + name + '</a>' )
 

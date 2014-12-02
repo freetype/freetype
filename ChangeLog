@@ -1,5 +1,12 @@
 2014-12-02  Werner Lemberg  <wl@gnu.org>
 
+	[docmaker] Properly handle empty rows in Synopsis.
+
+	* src/tools/docmaker/tohtml.py (HtmlFormatter::section_enter): Emit
+	`&nbsp;' for empty fields.
+
+2014-12-02  Werner Lemberg  <wl@gnu.org>
+
 	[docmaker] Thinko.
 
 	* src/tools/docmaker/content.py (DocBlock::get_markup_words_all):
