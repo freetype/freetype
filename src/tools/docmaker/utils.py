@@ -13,7 +13,7 @@
 #  understand and accept it fully.
 
 
-import string, sys, os, glob
+import string, sys, os, glob, itertools
 
 
 # current output directory
@@ -21,38 +21,19 @@ import string, sys, os, glob
 output_dir = None
 
 
-# A function to sort the index.  It is a simple lexicographical sort, except
-# that it places capital letters before lowercase ones.
+# A function that generates a sorting key.  We want lexicographical order
+# (primary key) except that capital letters are sorted before lowercase
+# ones (secondary key).
 #
-def  index_sort( s1, s2 ):
-    if not s1:
-        return -1
-
-    if not s2:
-        return 1
-
-    l1 = len( s1 )
-    l2 = len( s2 )
-    m1 = string.lower( s1 )
-    m2 = string.lower( s2 )
-
-    for i in range( l1 ):
-        if i >= l2 or m1[i] > m2[i]:
-            return 1
-
-        if m1[i] < m2[i]:
-            return -1
-
-        if s1[i] < s2[i]:
-            return -1
-
-        if s1[i] > s2[i]:
-            return 1
-
-    if l2 > l1:
-        return -1
-
-    return 0
+# The primary key is implemented by lowercasing the input.  The secondary
+# key is simply the original data appended, character by character.  For
+# example, the sort key for `FT_x' is `fFtT__xx', while the sort key for
+# `ft_X' is `fftt__xX'.  Since ASCII codes of uppercase letters are
+# numerically smaller than the codes of lowercase letters, `fFtT__xx' gets
+# sorted before `fftt__xX'.
+#
+def  index_key( s ):
+    return string.join( itertools.chain( *zip( s.lower(), s ) ) )
 
 
 # Sort `input_list', placing the elements of `order_list' in front.

@@ -411,7 +411,7 @@ class  HtmlFormatter( Formatter ):
                     # this is a C keyword
                     result = ( result + prefix
                                + keyword_prefix + name + keyword_suffix )
-                elif self.identifiers.has_key( name ):
+                elif name in self.identifiers:
                     # this is a known identifier
                     block = self.identifiers[name]
                     id = block.name
@@ -480,7 +480,7 @@ class  HtmlFormatter( Formatter ):
     def  index_exit( self ):
         # `block_index' already contains the sorted list of index names
         count = len( self.block_index )
-        rows  = ( count + self.columns - 1 ) / self.columns
+        rows  = ( count + self.columns - 1 ) // self.columns
 
         print '<table class="index">'
         for r in range( rows ):
@@ -572,17 +572,17 @@ class  HtmlFormatter( Formatter ):
                 maxwidth = len( b.name )
 
         width = 70  # XXX magic number
-        if maxwidth <> 0:
+        if maxwidth > 0:
             # print section synopsis
             print section_synopsis_header
             print '<table class="synopsis">'
 
-            columns = width / maxwidth
+            columns = width // maxwidth
             if columns < 1:
                 columns = 1
 
             count = len( section.block_names )
-            rows  = ( count + columns - 1 ) / columns
+            rows  = ( count + columns - 1 ) // columns
 
             for r in range( rows ):
                 line = "<tr>"

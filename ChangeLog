@@ -1,3 +1,26 @@
+2014-12-02  Werner Lemberg  <wl@gnu.org>
+
+	[docmaker] Ensure Python 3 compatibility.
+
+	* src/tools/docmaker/content.py (ContentProcessor::set_section,
+	ContentProcessor::finish): Replace `has_key' function with `in'
+	keyword.
+
+	* src/tools/docmaker/formatter.py (Formatter::__init__): Replace
+	sorting function with a key generator.
+	(Formatter::add_identifier): Replace `has_key' function with `in'
+	keyword.
+
+	* src/tools/docmaker/tohtml.py (HtmlFormatter::html_source_quote):
+	Replace `has_key' function with `in' keyword.
+	(HtmlFormatter::index_exit, HtmlFormatter::section_enter): Use
+	integer division.
+	s/<>/>/.
+
+	* src/tools/docmaker/utils.py: Import `itertools'.
+	(index_sort): Replaced by...
+	(index_key): ... this new key generator (doing exactly the same).
+
 2014-11-29  Werner Lemberg  <wl@gnu.org>
 
 	[docmaker] Don't output a block multiple times.

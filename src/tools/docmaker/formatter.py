@@ -54,10 +54,10 @@ class  Formatter:
                             self.add_identifier( field.name, block )
 
         self.block_index = self.identifiers.keys()
-        self.block_index.sort( index_sort )
+        self.block_index.sort( key = index_key )
 
     def  add_identifier( self, name, block ):
-        if self.identifiers.has_key( name ):
+        if name in self.identifiers:
             # duplicate name!
             sys.stderr.write( "WARNING: duplicate definition for"
                               + " '" + name + "' "
