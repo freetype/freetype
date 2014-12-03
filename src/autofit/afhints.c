@@ -180,7 +180,7 @@
   }
 
 
-#define AF_INDEX_NUM( ptr, base )  ( (ptr) ? ( (ptr) - (base) ) : -1 )
+#define AF_INDEX_NUM( ptr, base )  (int)( (ptr) ? ( (ptr) - (base) ) : -1 )
 
 
 #ifdef __cplusplus
@@ -200,9 +200,9 @@
               " |  xfit |  yfit |  flags ]\n" ));
 
     for ( point = points; point < limit; point++ )
-      AF_DUMP(( "  [ %5ld | %5d | %5d | %6.2f | %6.2f"
+      AF_DUMP(( "  [ %5d | %5d | %5d | %6.2f | %6.2f"
                 " | %5.2f | %5.2f | %c ]\n",
-                point - points,
+                AF_INDEX_NUM( point, points ),
                 point->fx,
                 point->fy,
                 point->ox / 64.0,
@@ -278,10 +278,10 @@
         AF_DUMP(( "  (none)\n" ));
 
       for ( seg = segments; seg < limit; seg++ )
-        AF_DUMP(( "  [ %5ld | %5.2g | %5s | %4ld"
-                  " | %4ld | %4ld | %5ld | %4ld"
+        AF_DUMP(( "  [ %5d | %5.2g | %5s | %4d"
+                  " | %4d | %4d | %5d | %4d"
                   " | %6d | %5d | %11s ]\n",
-                  seg - segments,
+                  AF_INDEX_NUM( seg, segments ),
                   dimension == AF_DIMENSION_HORZ
                                ? (int)seg->first->ox / 64.0
                                : (int)seg->first->oy / 64.0,
@@ -410,9 +410,9 @@
         AF_DUMP(( "  (none)\n" ));
 
       for ( edge = edges; edge < limit; edge++ )
-        AF_DUMP(( "  [ %5ld | %5.2g | %5s | %4ld"
-                  " | %5ld |   %c  | %5.2f | %5.2f | %11s ]\n",
-                  edge - edges,
+        AF_DUMP(( "  [ %5d | %5.2g | %5s | %4d"
+                  " | %5d |   %c  | %5.2f | %5.2f | %11s ]\n",
+                  AF_INDEX_NUM( edge, edges ),
                   (int)edge->opos / 64.0,
                   af_dir_str( (AF_Direction)edge->dir ),
                   AF_INDEX_NUM( edge->link, edges ),

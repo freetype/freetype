@@ -1,5 +1,20 @@
 2014-12-03  Werner Lemberg  <wl@gnu.org>
 
+	[autofit] Better fix for conversion specifiers in debug messages.
+
+	Using `%ld' for pointer differences causes warnings on 32bit
+	platforms.  The correct type would be (the relatively new) `%td',
+	however, this is missing on some important platforms.
+
+	This patch improves the change from 2014-11-28.
+
+	* src/autofit/afhints.c (AF_INDEX_NUM): Use `int' typecast.  Our
+	pointer differences are always sufficiently small.
+	(af_glyph_hints_dump_points, af_glyph_hints_dump_segments,
+	af_glyph_hints_dump_edge): Revert to `%d' and use `AF_INDEX_NUM'.
+
+2014-12-03  Werner Lemberg  <wl@gnu.org>
+
 	FT_Sfnt_Tag: s/ft_sfnt_xxx/FT_SFNT_XXX/ for orthogonality.
 
 	All public FreeType enumeration and flag values are uppercase...
@@ -202,8 +217,8 @@
 	Fix compiler warning to conversion specifiers in debug messages.
 
 	* src/autofit/afhints.c (af_glyph_hints_dump_points): Add length
-	modifier to dump long integers.  (af_glyph_hints_dump_segments,
-	af_glyph_hints_dump_edges): Ditto.
+	modifier to dump long integers.
+	(af_glyph_hints_dump_segments, af_glyph_hints_dump_edges): Ditto.
 
 2014-11-27  Werner Lemberg  <wl@gnu.org>
 
