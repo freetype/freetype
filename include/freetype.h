@@ -1832,11 +1832,11 @@ FT_BEGIN_HEADER
 
   /* these constants are deprecated; use the corresponding `FT_OPEN_XXX' */
   /* values instead                                                      */
-#define ft_open_memory    FT_OPEN_MEMORY     /* deprecated */
-#define ft_open_stream    FT_OPEN_STREAM     /* deprecated */
-#define ft_open_pathname  FT_OPEN_PATHNAME   /* deprecated */
-#define ft_open_driver    FT_OPEN_DRIVER     /* deprecated */
-#define ft_open_params    FT_OPEN_PARAMS     /* deprecated */
+#define ft_open_memory    FT_OPEN_MEMORY
+#define ft_open_stream    FT_OPEN_STREAM
+#define ft_open_pathname  FT_OPEN_PATHNAME
+#define ft_open_driver    FT_OPEN_DRIVER
+#define ft_open_params    FT_OPEN_PARAMS
 
 
   /*************************************************************************/
