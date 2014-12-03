@@ -1,5 +1,9 @@
 2014-12-03  Werner Lemberg  <wl@gnu.org>
 
+	docs/CHANGES: Updated.
+
+2014-12-03  Werner Lemberg  <wl@gnu.org>
+
 	[autofit] Better fix for conversion specifiers in debug messages.
 
 	Using `%ld' for pointer differences causes warnings on 32bit
@@ -1840,7 +1844,7 @@
 	option.
 	(libs): Updated.
 	(staticlibs): New variable, to be used if `--static' is given.
-	* builds/doc/freetype-config.1: Document `--static'.
+	* docs/freetype-config.1: Document `--static'.
 
 	* builds/unix/freetype2.in, builds/unix/unix-def.in: Updated.
 
