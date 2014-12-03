@@ -1,3 +1,15 @@
+2014-12-03  Werner Lemberg  <wl@gnu.org>
+
+	FT_Sfnt_Tag: s/ft_sfnt_xxx/FT_SFNT_XXX/ for orthogonality.
+
+	All public FreeType enumeration and flag values are uppercase...
+
+	* include/tttables.h (FT_Sfnt_Tag): Implement it.  For backwards
+	compatilibity, retain the old values as macros.
+
+	* src/base/ftfstype.c (FT_Get_FSType_Flags), src/sfnt/sfdriver.c
+	(get_sfnt_table): Updated.
+
 2014-12-02  Werner Lemberg  <wl@gnu.org>
 
 	* include/*: Improve structure of documentation.
