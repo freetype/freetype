@@ -794,8 +794,11 @@
     maskPtr      = cf2_hintmask_getMaskPtr( &tempHintMask );
 
     /* use the hStem hints only, which are first in the mask */
-    /* TODO: compare this to cffhintmaskGetBitCount */
     bitCount = cf2_arrstack_size( hStemHintArray );
+
+    /* Defense-in-depth.  Should never return here. */
+    if ( bitCount > hintMask->bitCount )
+        return;
 
     /* synthetic embox hints get highest priority */
     if ( font->blues.doEmBoxHints )

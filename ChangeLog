@@ -1,3 +1,14 @@
+2014-12-04  Dave Arnold  <darnold@adobe.com>
+
+	[cff] Fix Savannah bug #43661.
+
+	* src/cff/cf2intrp.c (cf2_interpT2CharString) <cf2_cmdHSTEM,
+	cf2_cmdVSTEM, cf2_cmdHINTMASK>: Don't append to stem arrays after
+	hintmask is constructed.
+
+	* src/cff/cf2hints.c (cf2_hintmap_build): Add defensive code to
+	avoid reading past end of hintmask.
+
 2014-12-03  Werner Lemberg  <wl@gnu.org>
 
 	docs/CHANGES: Updated.
