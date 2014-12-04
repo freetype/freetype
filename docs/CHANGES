@@ -3,6 +3,10 @@ CHANGES BETWEEN 2.5.3 and 2.5.4
 
   I. IMPORTANT BUG FIXES
 
+    - A   variant  of   vulnerability  CVE-2014-2240   was  identified
+      (cf.  http://savannah.nongnu.org/bugs/?43661) and  fixed in  the
+      new CFF driver.  All users should upgrade.
+
     - The new auto-hinter code using HarfBuzz crashed for some invalid
       fonts.
 
@@ -15,48 +19,51 @@ CHANGES BETWEEN 2.5.3 and 2.5.4
 
     - Experimental auto-hinter support of the Telugu script.
 
-    - CFF stem darkening behaviour can now be controlled at build time using
-      the eight macros
+    - CFF stem darkening behaviour can now be controlled at build time
+      using the eight macros
 
         CFF_CONFIG_OPTION_DARKENING_PARAMETER_{X,Y}{1,2,3,4}    .
 
-    - Some fields in the `FT_Bitmap' structure have been changed from
-      signed to unsigned type, which better reflects the actual usage.  It
-      is also an additional means to protect against malformed input.
+    - Some fields in the `FT_Bitmap'  structure have been changed from
+      signed to unsigned type, which better reflects the actual usage.
+      It  is also  an additional  means to  protect against  malformed
+      input.
 
-      This change doesn't break the ABI; however, it might cause compiler
-      warnings.
+      This  change doesn't  break  the ABI;  however,  it might  cause
+      compiler warnings.
 
 
   III. MISCELLANEOUS
 
-    - Improvements to the  auto-hinter's algorithm to  recognize stems
+    - Improvements to  the auto-hinter's algorithm to  recognize stems
       and local extrema.
 
     - Function `FT_Get_SubGlyph_Info' always returned an error even in
       case of success.
 
-    - Version 2.5.1  introduced  major  bugs in  the cjk  part of  the
+    - Version  2.5.1 introduced  major bugs  in  the cjk  part of  the
       auto-hinter, which are now fixed.
 
-    - The `FT_Sfnt_Tag' enumeration values have been changed to uppercase,
-      e.g. `FT_SFNT_HEAD'.  The lowercase variants are deprecated.  This is
-      for orthogonality with all other enumeration-like values in FreeType
+    - The  `FT_Sfnt_Tag'  enumeration  values  have  been  changed  to
+      uppercase,  e.g.  `FT_SFNT_HEAD'.   The lowercase  variants  are
+      deprecated.    This  is   for  orthogonality   with  all   other
+      enumeration-like values in FreeType.
 
-    - `cmake' now supports builds of FreeType as an OS X framework and for
-      iOS.
+    - `cmake' now supports builds of FreeType as an OS X framework and
+      for iOS.
 
     - Improved project files for vc2010, introducing a property file.
 
-    - The documentation generator for the API reference have been updated to
-      produce better HTML code (with proper CSS).  At the same time, the
-      documentation got a better structure.
+    - The  documentation generator  for  the API  reference have  been
+      updated to produce  better HTML code (with proper  CSS).  At the
+      same time, the documentation got a better structure.
 
-    - The FT_LOAD_BITMAP_CROP is obsolete; it is not used by any driver.
+    - The FT_LOAD_BITMAP_CROP flag is obsolete;  it is not used by any
+      driver.
 
-    - The TrueType DELTAP[123] bytecode instructions now work in subpipxel
-      hinting mode as described in the ClearType whitepaper (i.e., for
-      touched points in the non-subpixel direction).
+    - The  TrueType  DELTAP[123]  bytecode instructions  now  work  in
+      subpixel hinting  mode as described in  the ClearType whitepaper
+      (i.e., for touched points in the non-subpixel direction).
 
     - Many small improvements to the internal arithmetic routines.
 

@@ -1,3 +1,7 @@
+2014-12-04  Werner Lemberg  <wl@gnu.org>
+
+	docs/CHANGES: Updated, formatted.
+
 2014-12-04  Dave Arnold  <darnold@adobe.com>
 
 	[cff] Modify an FT_ASSERT.
