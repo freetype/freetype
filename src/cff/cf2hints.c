@@ -304,9 +304,6 @@
   cf2_hintmap_map( CF2_HintMap  hintmap,
                    CF2_Fixed    csCoord )
   {
-    FT_ASSERT( hintmap->isValid );  /* must call Build before Map */
-    FT_ASSERT( hintmap->lastIndex < CF2_MAX_HINT_EDGES );
-
     if ( hintmap->count == 0 || ! hintmap->hinted )
     {
       /* there are no hints; use uniform scale and zero offset */
@@ -317,6 +314,7 @@
       /* start linear search from last hit */
       CF2_UInt  i = hintmap->lastIndex;
 
+      FT_ASSERT( hintmap->lastIndex < CF2_MAX_HINT_EDGES );
 
       /* search up */
       while ( i < hintmap->count - 1                  &&
@@ -1694,7 +1692,8 @@
 
     if ( glyphpath->elemIsQueued )
     {
-      FT_ASSERT( cf2_hintmap_isValid( &glyphpath->hintMap ) );
+      FT_ASSERT( cf2_hintmap_isValid( &glyphpath->hintMap ) ||
+                 glyphpath->hintMap.count == 0              );
 
       cf2_glyphpath_pushPrevElem( glyphpath,
                                   &glyphpath->hintMap,
@@ -1780,7 +1779,8 @@
 
     if ( glyphpath->elemIsQueued )
     {
-      FT_ASSERT( cf2_hintmap_isValid( &glyphpath->hintMap ) );
+      FT_ASSERT( cf2_hintmap_isValid( &glyphpath->hintMap ) ||
+                 glyphpath->hintMap.count == 0              );
 
       cf2_glyphpath_pushPrevElem( glyphpath,
                                   &glyphpath->hintMap,

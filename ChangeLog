@@ -1,5 +1,15 @@
 2014-12-04  Dave Arnold  <darnold@adobe.com>
 
+	[cff] Modify an FT_ASSERT.
+
+	* src/cff/cf2hints.c (cf2_hintmap_map): After the fix for Savannah
+	bug #43661, the test font `...aspartam.otf' still triggers an
+	FT_ASSERT.  Since hintmap still works with count==0, ...
+	(cf2_glyphpath_lineTo, cf2_glyphpath_curveTo): ... add that term to
+	suppress the assert.
+
+2014-12-04  Dave Arnold  <darnold@adobe.com>
+
 	[cff] Fix Savannah bug #43661.
 
 	* src/cff/cf2intrp.c (cf2_interpT2CharString) <cf2_cmdHSTEM,
