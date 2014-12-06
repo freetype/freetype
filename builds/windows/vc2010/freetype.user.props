@@ -2,7 +2,7 @@
 <!--
  * freetype.user.props
  *
- * 
+ *
  * You can specify custom options here without altering the project file.
  *
  * Multiple entries within each property are separated by semicolons (;).
@@ -14,19 +14,19 @@
 <Project ToolsVersion="4.0"
          xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <PropertyGroup Label="Globals">
-  
+
     <!--
      * `;'-separated list of symbols to #define
      -->
     <UserDefines></UserDefines>
-    
+
     <!--
      * path where your custom `ftoption.h' lives;
      * this is searched BEFORE any other path
      -->
     <!-- <UserOptionDirectory>..\..\..\devel</UserOptionDirectory> -->
     <UserOptionDirectory></UserOptionDirectory>
-    
+
     <!--
      * `;'-separated list of paths to additional include directories,
      * e.g., where to find zlib.h, png.h, etc.;
@@ -34,23 +34,23 @@
      -->
     <!-- <UserIncludeDirectories>..\..\..\..\zlib-1.2.8;..\..\..\..\libpng-1.6.12</UserIncludeDirectories> -->
     <UserIncludeDirectories></UserIncludeDirectories>
-    
+
     <!--
      * `;'-separated list of paths to additional library directories,
      * e.g., where to find zlib.lib, libpng.lib, etc.
      -->
     <!-- <UserLibraryDirectories>..\..\..\..\zlib-1.2.8;..\..\..\..\libpng-1.6.12</UserLibraryDirectories> -->
     <UserLibraryDirectories></UserLibraryDirectories>
-    
+
     <!--
      * `;'-separated list of additional linker dependencies,
      * e.g., zlib.lib, libpng.lib, etc.
      -->
     <!-- <UserDependencies>zlib.lib;libpng16.lib</UserDependencies> -->
     <UserDependencies></UserDependencies>
-    
+
   </PropertyGroup>
-  
+
   <!--
    * Example configuration for x64 debug build only
    -->

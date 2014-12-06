@@ -7,23 +7,23 @@
 CFG=freetype - Win32 Debug Singlethreaded
 !MESSAGE This is not a valid makefile. To build this project using NMAKE,
 !MESSAGE use the Export Makefile command and run
-!MESSAGE 
+!MESSAGE
 !MESSAGE NMAKE /f "freetype.mak".
-!MESSAGE 
+!MESSAGE
 !MESSAGE You can specify a configuration when running NMAKE
 !MESSAGE by defining the macro CFG on the command line. For example:
-!MESSAGE 
+!MESSAGE
 !MESSAGE NMAKE /f "freetype.mak" CFG="freetype - Win32 Debug Singlethreaded"
-!MESSAGE 
+!MESSAGE
 !MESSAGE Possible choices for configuration are:
-!MESSAGE 
+!MESSAGE
 !MESSAGE "freetype - Win32 Release" (based on "Win32 (x86) Static Library")
 !MESSAGE "freetype - Win32 Debug" (based on "Win32 (x86) Static Library")
 !MESSAGE "freetype - Win32 Debug Multithreaded" (based on "Win32 (x86) Static Library")
 !MESSAGE "freetype - Win32 Release Multithreaded" (based on "Win32 (x86) Static Library")
 !MESSAGE "freetype - Win32 Release Singlethreaded" (based on "Win32 (x86) Static Library")
 !MESSAGE "freetype - Win32 Debug Singlethreaded" (based on "Win32 (x86) Static Library")
-!MESSAGE 
+!MESSAGE
 
 # Begin Project
 # PROP AllowPerConfigDependencies 0
@@ -180,7 +180,7 @@ LIB32=link.exe -lib
 # ADD BASE LIB32 /nologo /out:"..\..\..\objs\freetype254_D.lib"
 # ADD LIB32 /nologo /out:"..\..\..\objs\freetype254ST_D.lib"
 
-!ENDIF 
+!ENDIF
 
 # Begin Target
 

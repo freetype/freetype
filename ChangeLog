@@ -568,7 +568,7 @@
 
 	[cff, pfr, psaux, winfonts] Fix Savannah bug #43676.
 
-	Don't cast cmap init function pointers to an incompatible type. 
+	Don't cast cmap init function pointers to an incompatible type.
 
 	Without this patch, the number of parameters between declaration and
 	the real signature differs.  Calling such a function results in
