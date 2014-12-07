@@ -117,8 +117,8 @@
     /* and CORDIC hypotenuse, so it minimizes the error       */
 
     /* Check carry overflow of lo + 0x40000000 */
-    lo += 0x40000000U;
-    hi += ( lo < 0x40000000U );
+    lo += 0x40000000UL;
+    hi += ( lo < 0x40000000UL );
 
     val  = (FT_Fixed)hi;
 

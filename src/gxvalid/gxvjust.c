@@ -4,7 +4,7 @@
 /*                                                                         */
 /*    TrueTypeGX/AAT just table validation (body).                         */
 /*                                                                         */
-/*  Copyright 2005 by suzuki toshiya, Masatake YAMATO, Red Hat K.K.,       */
+/*  Copyright 2005, 2014 by suzuki toshiya, Masatake YAMATO, Red Hat K.K., */
 /*  David Turner, Robert Wilhelm, and Werner Lemberg.                      */
 /*                                                                         */
 /*  This file is part of the FreeType project, and may only be used,       */
@@ -112,7 +112,7 @@
 #endif
 
     /* According to Apple spec, only 7bits in justClass is used */
-    if ( ( justClass & 0xFFFFFF80 ) != 0 )
+    if ( ( justClass & 0xFFFFFF80UL ) != 0 )
     {
       GXV_TRACE(( "just table includes non-zero value"
                   " in unused justClass higher bits"
@@ -290,7 +290,7 @@
 
     valid->subtable_length = p - table;
 
-    if ( variantsAxis != 0x64756374 ) /* 'duct' */
+    if ( variantsAxis != 0x64756374L ) /* 'duct' */
       GXV_TRACE(( "variantsAxis 0x%08x is non default value",
                    variantsAxis ));
 

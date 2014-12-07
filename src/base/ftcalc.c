@@ -115,30 +115,31 @@
   FT_BASE_DEF ( FT_Int )
   FT_MSB( FT_UInt32 z )
   {
-    FT_Int shift = 0;
+    FT_Int  shift = 0;
+
 
     /* determine msb bit index in `shift' */
-    if ( z & 0xFFFF0000U )
+    if ( z & 0xFFFF0000UL )
     {
       z     >>= 16;
       shift  += 16;
     }
-    if ( z & 0x0000FF00U )
+    if ( z & 0x0000FF00UL )
     {
       z     >>= 8;
       shift  += 8;
     }
-    if ( z & 0x000000F0U )
+    if ( z & 0x000000F0UL )
     {
       z     >>= 4;
       shift  += 4;
     }
-    if ( z & 0x0000000CU )
+    if ( z & 0x0000000CUL )
     {
       z     >>= 2;
       shift  += 2;
     }
-    if ( z & 0x00000002U )
+    if ( z & 0x00000002UL )
     {
    /* z     >>= 1; */
       shift  += 1;

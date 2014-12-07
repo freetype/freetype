@@ -1,5 +1,9 @@
 2014-12-07  Werner Lemberg  <wl@gnu.org>
 
+	*/*: Decorate hex constants with `U' and `L' where appropriate.
+
+2014-12-07  Werner Lemberg  <wl@gnu.org>
+
 	[truetype] Prevent memory leak for buggy fonts.
 
 	* src/truetype/ttobjs.c (tt_size_done): Unconditionally call

@@ -435,8 +435,10 @@
   FT_Outline_Get_BBox( FT_Outline*  outline,
                        FT_BBox     *abbox )
   {
-    FT_BBox     cbox = { 0x7FFFFFFF, 0x7FFFFFFF, -0x7FFFFFFF, -0x7FFFFFFF };
-    FT_BBox     bbox = { 0x7FFFFFFF, 0x7FFFFFFF, -0x7FFFFFFF, -0x7FFFFFFF };
+    FT_BBox     cbox = {  0x7FFFFFFFL,  0x7FFFFFFFL,
+                         -0x7FFFFFFFL, -0x7FFFFFFFL };
+    FT_BBox     bbox = {  0x7FFFFFFFL,  0x7FFFFFFFL,
+                         -0x7FFFFFFFL, -0x7FFFFFFFL };
     FT_Vector*  vec;
     FT_UShort   n;
 

@@ -198,7 +198,7 @@
                     offset & 0xFFFFU ));
         GXV_SET_ERR_IF_PARANOID( FT_INVALID_OFFSET );
       }
-      else if ( ( offset & 0x3FFF0000UL ) == 0x0000000UL )
+      else if ( ( offset & 0x3FFF0000UL ) == 0x00000000UL )
       { /* positive offset */
         if ( (FT_Long)offset < valid->face->num_glyphs )
           return;
