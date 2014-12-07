@@ -1,5 +1,21 @@
 2014-12-07  Werner Lemberg  <wl@gnu.org>
 
+	Work around a bug in Borland's C++ compiler.
+
+	See
+
+	  http://qc.embarcadero.com/wc/qcmain.aspx?d=118998
+
+	for Borland's bug tracker entry.
+
+	Reported by Yuliana Zigangirova <zigangirova@inbox.ru>,
+	http://lists.gnu.org/archive/html/freetype-devel/2014-04/msg00001.html.
+
+	* include/internal/ftvalid.h (FT_ValidatorRec), src/smooth/ftgrays.c
+	(gray_TWorker_): Move `ft_jmp_buf' field to be the first element.
+
+2014-12-07  Werner Lemberg  <wl@gnu.org>
+
 	*/*: Decorate hex constants with `U' and `L' where appropriate.
 
 2014-12-07  Werner Lemberg  <wl@gnu.org>
