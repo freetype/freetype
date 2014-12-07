@@ -1146,8 +1146,7 @@
 
 
 #ifdef TT_USE_BYTECODE_INTERPRETER
-    if ( size->bytecode_ready >= 0 )
-      tt_size_done_bytecode( ttsize );
+    tt_size_done_bytecode( ttsize );
 #endif
 
     size->ttmetrics.valid = FALSE;

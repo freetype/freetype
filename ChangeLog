@@ -1,3 +1,10 @@
+2014-12-07  Werner Lemberg  <wl@gnu.org>
+
+	[truetype] Prevent memory leak for buggy fonts.
+
+	* src/truetype/ttobjs.c (tt_size_done): Unconditionally call
+	`tt_size_done_bytecode'.
+
 2014-12-06  Werner Lemberg  <wl@gnu.org>
 
 	* Version 2.5.4 released.
