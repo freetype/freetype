@@ -5625,7 +5625,7 @@
   /*************************************************************************/
   /*                                                                       */
   /* INSTCTRL[]:   INSTruction ConTRoL                                     */
-  /* Opcode range: 0x8e                                                    */
+  /* Opcode range: 0x8E                                                    */
   /* Stack:        int32 int32 -->                                         */
   /*                                                                       */
   static void

@@ -1910,7 +1910,7 @@
     rlen = ( header[0x57] << 24 ) |
            ( header[0x58] << 16 ) |
            ( header[0x59] <<  8 ) |
-             header[0x5a];
+             header[0x5A];
 #endif /* 0 */
     offset = 128 + ( ( dlen + 127 ) & ~127 );
 

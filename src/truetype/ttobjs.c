@@ -256,89 +256,89 @@
 #define TRICK_SFNT_ID_prep  2
 
       { /* MingLiU 1995 */
-        { 0x05bcf058UL, 0x000002e4UL }, /* cvt  */
-        { 0x28233bf1UL, 0x000087c4UL }, /* fpgm */
-        { 0xa344a1eaUL, 0x000001e1UL }  /* prep */
+        { 0x05BCF058UL, 0x000002E4UL }, /* cvt  */
+        { 0x28233BF1UL, 0x000087C4UL }, /* fpgm */
+        { 0xA344A1EAUL, 0x000001E1UL }  /* prep */
       },
       { /* MingLiU 1996- */
-        { 0x05bcf058UL, 0x000002e4UL }, /* cvt  */
-        { 0x28233bf1UL, 0x000087c4UL }, /* fpgm */
-        { 0xa344a1ebUL, 0x000001e1UL }  /* prep */
+        { 0x05BCF058UL, 0x000002E4UL }, /* cvt  */
+        { 0x28233BF1UL, 0x000087C4UL }, /* fpgm */
+        { 0xA344A1EBUL, 0x000001E1UL }  /* prep */
       },
       { /* DFKaiShu */
-        { 0x11e5ead4UL, 0x00000350UL }, /* cvt  */
-        { 0x5a30ca3bUL, 0x00009063UL }, /* fpgm */
-        { 0x13a42602UL, 0x0000007eUL }  /* prep */
+        { 0x11E5EAD4UL, 0x00000350UL }, /* cvt  */
+        { 0x5A30CA3BUL, 0x00009063UL }, /* fpgm */
+        { 0x13A42602UL, 0x0000007EUL }  /* prep */
       },
       { /* HuaTianKaiTi */
-        { 0xfffbfffcUL, 0x00000008UL }, /* cvt  */
-        { 0x9c9e48b8UL, 0x0000bea2UL }, /* fpgm */
+        { 0xFFFBFFFCUL, 0x00000008UL }, /* cvt  */
+        { 0x9C9E48B8UL, 0x0000BEA2UL }, /* fpgm */
         { 0x70020112UL, 0x00000008UL }  /* prep */
       },
       { /* HuaTianSongTi */
-        { 0xfffbfffcUL, 0x00000008UL }, /* cvt  */
-        { 0x0a5a0483UL, 0x00017c39UL }, /* fpgm */
+        { 0xFFFBFFFCUL, 0x00000008UL }, /* cvt  */
+        { 0x0A5A0483UL, 0x00017C39UL }, /* fpgm */
         { 0x70020112UL, 0x00000008UL }  /* prep */
       },
       { /* NEC fadpop7.ttf */
         { 0x00000000UL, 0x00000000UL }, /* cvt  */
-        { 0x40c92555UL, 0x000000e5UL }, /* fpgm */
-        { 0xa39b58e3UL, 0x0000117cUL }  /* prep */
+        { 0x40C92555UL, 0x000000E5UL }, /* fpgm */
+        { 0xA39B58E3UL, 0x0000117CUL }  /* prep */
       },
       { /* NEC fadrei5.ttf */
         { 0x00000000UL, 0x00000000UL }, /* cvt  */
-        { 0x33c41652UL, 0x000000e5UL }, /* fpgm */
-        { 0x26d6c52aUL, 0x00000f6aUL }  /* prep */
+        { 0x33C41652UL, 0x000000E5UL }, /* fpgm */
+        { 0x26D6C52AUL, 0x00000F6AUL }  /* prep */
       },
       { /* NEC fangot7.ttf */
         { 0x00000000UL, 0x00000000UL }, /* cvt  */
-        { 0x6db1651dUL, 0x0000019dUL }, /* fpgm */
-        { 0x6c6e4b03UL, 0x00002492UL }  /* prep */
+        { 0x6DB1651DUL, 0x0000019DUL }, /* fpgm */
+        { 0x6C6E4B03UL, 0x00002492UL }  /* prep */
       },
       { /* NEC fangyo5.ttf */
         { 0x00000000UL, 0x00000000UL }, /* cvt  */
-        { 0x40c92555UL, 0x000000e5UL }, /* fpgm */
-        { 0xde51fad0UL, 0x0000117cUL }  /* prep */
+        { 0x40C92555UL, 0x000000E5UL }, /* fpgm */
+        { 0xDE51FAD0UL, 0x0000117CUL }  /* prep */
       },
       { /* NEC fankyo5.ttf */
         { 0x00000000UL, 0x00000000UL }, /* cvt  */
-        { 0x85e47664UL, 0x000000e5UL }, /* fpgm */
-        { 0xa6c62831UL, 0x00001caaUL }  /* prep */
+        { 0x85E47664UL, 0x000000E5UL }, /* fpgm */
+        { 0xA6C62831UL, 0x00001CAAUL }  /* prep */
       },
       { /* NEC fanrgo5.ttf */
         { 0x00000000UL, 0x00000000UL }, /* cvt  */
-        { 0x2d891cfdUL, 0x0000019dUL }, /* fpgm */
-        { 0xa0604633UL, 0x00001de8UL }  /* prep */
+        { 0x2D891CFDUL, 0x0000019DUL }, /* fpgm */
+        { 0xA0604633UL, 0x00001DE8UL }  /* prep */
       },
       { /* NEC fangot5.ttc */
         { 0x00000000UL, 0x00000000UL }, /* cvt  */
-        { 0x40aa774cUL, 0x000001cbUL }, /* fpgm */
-        { 0x9b5caa96UL, 0x00001f9aUL }  /* prep */
+        { 0x40AA774CUL, 0x000001CBUL }, /* fpgm */
+        { 0x9B5CAA96UL, 0x00001F9AUL }  /* prep */
       },
       { /* NEC fanmin3.ttc */
         { 0x00000000UL, 0x00000000UL }, /* cvt  */
-        { 0x0d3de9cbUL, 0x00000141UL }, /* fpgm */
-        { 0xd4127766UL, 0x00002280UL }  /* prep */
+        { 0x0D3DE9CBUL, 0x00000141UL }, /* fpgm */
+        { 0xD4127766UL, 0x00002280UL }  /* prep */
       },
       { /* NEC FA-Gothic, 1996 */
         { 0x00000000UL, 0x00000000UL }, /* cvt  */
-        { 0x4a692698UL, 0x000001f0UL }, /* fpgm */
-        { 0x340d4346UL, 0x00001fcaUL }  /* prep */
+        { 0x4A692698UL, 0x000001F0UL }, /* fpgm */
+        { 0x340D4346UL, 0x00001FCAUL }  /* prep */
       },
       { /* NEC FA-Minchou, 1996 */
         { 0x00000000UL, 0x00000000UL }, /* cvt  */
-        { 0xcd34c604UL, 0x00000166UL }, /* fpgm */
-        { 0x6cf31046UL, 0x000022b0UL }  /* prep */
+        { 0xCD34C604UL, 0x00000166UL }, /* fpgm */
+        { 0x6CF31046UL, 0x000022B0UL }  /* prep */
       },
       { /* NEC FA-RoundGothicB, 1996 */
         { 0x00000000UL, 0x00000000UL }, /* cvt  */
-        { 0x5da75315UL, 0x0000019dUL }, /* fpgm */
-        { 0x40745a5fUL, 0x000022e0UL }  /* prep */
+        { 0x5DA75315UL, 0x0000019DUL }, /* fpgm */
+        { 0x40745A5FUL, 0x000022E0UL }  /* prep */
       },
       { /* NEC FA-RoundGothicM, 1996 */
         { 0x00000000UL, 0x00000000UL }, /* cvt  */
-        { 0xf055fc48UL, 0x000001c2UL }, /* fpgm */
-        { 0x3900ded3UL, 0x00001e18UL }  /* prep */
+        { 0xF055FC48UL, 0x000001C2UL }, /* fpgm */
+        { 0x3900DED3UL, 0x00001E18UL }  /* prep */
       }
     };
 
