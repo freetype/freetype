@@ -1,3 +1,17 @@
+2014-12-08  Werner Lemberg  <wl@gnu.org>
+
+	[pcf] Fix Savannah bug #43774.
+
+	Work around `features' of X11's `pcfWriteFont' and `pcfReadFont'
+	functions.  Since the PCF format doesn't have an official
+	specification, we have to exactly follow these functions' behaviour.
+
+	The problem was unveiled with a patch from 2014-11-06, fixing issue
+	#43547.
+
+	* src/pcf/pcfread.c (pcf_read_TOC): Don't check table size for last
+	element.  Instead, assign real size.
+
 2014-12-07  Werner Lemberg  <wl@gnu.org>
 
 	Work around a bug in Borland's C++ compiler.
