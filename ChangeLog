@@ -1,5 +1,25 @@
 2014-12-09  suzuki toshiya  <mpsuzuki@hiroshima-u.ac.jp>
 
+	[otvalid] Fix a naming convention conflicting with ftvalid.
+
+	Some prototypes in ftvalid.h use `valid' for the variables
+	typed as FT_Validator.  Their implementations in src/base/
+	ftobjs.c and utilizations in src/sfnt/ttcmap.c do similar.
+
+	Some macros in otvcommn.h assume the exist of the variable
+	`valid' typed as OTV_Validator in the caller.
+
+	Mixing these two conventions cause invalid pointer conversion
+	and unexpected SEGV in longjmp.  To prevent it, all variables
+	typed as OTV_Validator are renamed to `otvalid'.
+
+	* src/otvalid/otvcommn.h: Replace `valid' by `otvalid'.
+	* src/otvalid/{otvcommn.c, otvbase.c, otvgdef.c, otvgpos.c,
+	otvgsub.c, otvjstf.c, otvmath.c}: Replace `valid' by `otvalid'
+	if it is typed as OTV_Validator.
+
+2014-12-09  suzuki toshiya  <mpsuzuki@hiroshima-u.ac.jp>
+
 	[ftvalid] Introduce FT_THROW() in FT_INVALID_XXX macros.
 
 	Original patch is designed by Werner Lemberg.  Extra part
