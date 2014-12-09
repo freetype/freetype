@@ -1,5 +1,20 @@
 2014-12-09  suzuki toshiya  <mpsuzuki@hiroshima-u.ac.jp>
 
+	[gxvalid] Fix a naming convention conflicting with ftvalid.
+
+	See previous changeset for otvalid.
+
+	* src/gxvalid/{gxvcommn.h, gxvmort.h, gxvmorx.h}: Replace
+	`valid' by `gxvalid'.
+	* src/gxvalid/{gxvbsln.c, gxvcommn.c, gxvfeat.c, gxvjust.c,
+	gxvkern.c, gxvlcar.c, gxvmort.c, gxvmort0.c, gxvmort1.c,
+	gxvmort2.c, gxvmort4.c, gxvmort5.c, gxvmorx.c, gxvmorx0.c,
+	gxvmorx1.c, gxvmorx2.c, gxvmorx4.c, gxvmorx5.c, gxvopbd.c,
+	gxvprop.c, gxvtrak.c}: Replace `valid' by `gxvalid' if
+	it is typed as GXV_Validator.
+
+2014-12-09  suzuki toshiya  <mpsuzuki@hiroshima-u.ac.jp>
+
 	[otvalid] Fix a naming convention conflicting with ftvalid.
 
 	Some prototypes in ftvalid.h use `valid' for the variables
