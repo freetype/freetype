@@ -1,3 +1,17 @@
+2014-12-09  suzuki toshiya  <mpsuzuki@hiroshima-u.ac.jp>
+
+	[ftvalid] Introduce FT_THROW() in FT_INVALID_XXX macros.
+
+	Original patch is designed by Werner Lemberg.  Extra part
+	for otvalid and gxvalid are added by suzuki toshiya, see
+	discussion:
+	http://lists.nongnu.org/archive/html/freetype-devel/2014-12/msg00002.html
+	http://lists.nongnu.org/archive/html/freetype-devel/2014-12/msg00007.html
+
+	* include/internal/ftvalid.h: Introduce FT_THROW() in FT_INVALID_().
+	* src/gxvalid/gxvcommn.h: Ditto.
+	* src/otvalid/otvcommn.h: Ditto.
+
 2014-12-08  Werner Lemberg  <wl@gnu.org>
 
 	[pcf] Fix Savannah bug #43774.

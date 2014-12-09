@@ -4,7 +4,7 @@
 /*                                                                         */
 /*    TrueTypeGX/AAT common tables validation (specification).             */
 /*                                                                         */
-/*  Copyright 2004, 2005, 2012                                             */
+/*  Copyright 2004, 2005, 2012, 2014                                       */
 /*  by suzuki toshiya, Masatake YAMATO, Red Hat K.K.,                      */
 /*  David Turner, Robert Wilhelm, and Werner Lemberg.                      */
 /*                                                                         */
@@ -266,8 +266,8 @@ FT_BEGIN_HEADER
         ( ( (GXV_ ## tag ## _Data)valid->table_data )->field )
 
 #undef  FT_INVALID_
-#define FT_INVALID_( _prefix, _error )                         \
-          ft_validator_error( valid->root, _prefix ## _error )
+#define FT_INVALID_( _error ) \
+          ft_validator_error( valid->root, FT_THROW( _error ) )
 
 #define GXV_LIMIT_CHECK( _count )                                     \
           FT_BEGIN_STMNT                                              \
