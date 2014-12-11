@@ -667,6 +667,13 @@
             status         = BEFORE_TABLE_DIR;
             face->ttf_size = 12 + 16 * num_tables;
 
+            if ( (FT_ULong)( limit - parser->root.cursor ) < face->ttf_size )
+            {
+              FT_ERROR(( "t42_parse_sfnts: invalid data in sfnts array\n" ));
+              error = FT_THROW( Invalid_File_Format );
+              goto Fail;
+            }
+
             if ( FT_REALLOC( face->ttf_data, 12, face->ttf_size ) )
               goto Fail;
           }
