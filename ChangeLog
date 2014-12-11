@@ -1,5 +1,14 @@
 2014-12-11  Werner Lemberg  <wl@gnu.org>
 
+	* builds/toplevel.mk (dist): Use older POSIX standard for `tar'.
+
+	Apparently, BSD tar isn't capable yet of handling POSIX-1.2001
+	(contrary to GNU tar), so force the POSIX-1.1988 format.
+
+	Problem reported by Stephen Fisher <sfisher@SDF.ORG>.
+
+2014-12-11  Werner Lemberg  <wl@gnu.org>
+
 	* src/type42/t42parse.c (t42_parse_sfnts): Reject invalid TTF size.
 
 2014-12-11  Werner Lemberg  <wl@gnu.org>
