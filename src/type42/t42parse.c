@@ -580,6 +580,12 @@
 
         /* don't include delimiters */
         string_size = (FT_Long)( ( parser->root.cursor - cur - 2 + 1 ) / 2 );
+        if ( !string_size )
+        {
+          FT_ERROR(( "t42_parse_sfnts: invalid data in sfnts array\n" ));
+          error = FT_THROW( Invalid_File_Format );
+          goto Fail;
+        }
         if ( FT_REALLOC( string_buf, old_string_size, string_size ) )
           goto Fail;
 

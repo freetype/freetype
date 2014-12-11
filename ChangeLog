@@ -1,3 +1,9 @@
+2014-12-11  Werner Lemberg  <wl@gnu.org>
+
+	* src/type42/t42parse.c (t42_parse_sfnts): Check `string_size'.
+
+	Problem reported by Dennis Felsing <dennis@felsin9.de>.
+
 2014-12-09  suzuki toshiya  <mpsuzuki@hiroshima-u.ac.jp>
 
 	[gxvalid] Fix a naming convention conflicting with ftvalid.
