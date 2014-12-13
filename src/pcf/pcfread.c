@@ -192,14 +192,15 @@ THE SOFTWARE.
       tables++;
     }
 
-    /* no check of `tables->size' for last table element ... */
+    /* only check `tables->offset' for last table element ... */
     if ( ( tables->offset > size ) )
     {
       error = FT_THROW( Invalid_Table );
       goto Exit;
     }
-    /* ... instead, we adjust `tables->size' to the real value */
-    tables->size = size - tables->offset;
+    /* ... and adjust `tables->size' to the real value if necessary */
+    if ( tables->size > size - tables->offset )
+      tables->size = size - tables->offset;
 
 #ifdef FT_DEBUG_LEVEL_TRACE
 

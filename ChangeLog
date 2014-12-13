@@ -1,3 +1,7 @@
+2014-12-13  Werner Lemberg  <wl@gnu.org>
+
+	* src/pcf/pcfread.c (pcf_read_TOC): Improve fix from 2014-12-08.
+
 2014-12-11  Werner Lemberg  <wl@gnu.org>
 
 	* builds/toplevel.mk (dist): Use older POSIX standard for `tar'.
