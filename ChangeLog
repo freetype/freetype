@@ -1,3 +1,10 @@
+2014-12-24  Alexei Podtelezhnikov <apodtele@gmail.com>
+
+	[base] Formatting and nanooptimizations.
+
+	* src/base/ftcalc.c,
+	* src/base/fttrigon.c: Revise sign restoration.
+
 2014-12-13  Werner Lemberg  <wl@gnu.org>
 
 	* src/pcf/pcfread.c (pcf_read_TOC): Improve fix from 2014-12-08.

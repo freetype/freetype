@@ -73,7 +73,7 @@
     /* and CORDIC hypotenuse, so it minimizes the error       */
     val = (FT_Fixed)( ( (FT_Int64)val * FT_TRIG_SCALE + 0x40000000UL ) >> 32 );
 
-    return ( s >= 0 ) ? val : -val;
+    return s < 0 ? -val : val;
   }
 
 #else /* !FT_LONG64 */
@@ -122,7 +122,7 @@
 
     val  = (FT_Fixed)hi;
 
-    return ( s >= 0 ) ? val : -val;
+    return s < 0 ? -val : val;
   }
 
 #endif /* !FT_LONG64 */
@@ -480,8 +480,8 @@
 
     v.x = ft_trig_downscale( v.x );
 
-    *length = ( shift >= 0 ) ?                      ( v.x >>  shift )
-                             : (FT_Fixed)( (FT_UInt32)v.x << -shift );
+    *length = shift >= 0 ?                      ( v.x >>  shift )
+                         : (FT_Fixed)( (FT_UInt32)v.x << -shift );
     *angle  = v.y;
   }
 

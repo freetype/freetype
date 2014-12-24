@@ -86,8 +86,8 @@
   FT_EXPORT_DEF( FT_Fixed )
   FT_RoundFix( FT_Fixed  a )
   {
-    return ( a >= 0 ) ?   ( a + 0x8000L ) & ~0xFFFFL
-                      : -((-a + 0x8000L ) & ~0xFFFFL );
+    return a >= 0 ?   ( a + 0x8000L ) & ~0xFFFFL
+                  : -((-a + 0x8000L ) & ~0xFFFFL );
   }
 
 
@@ -96,8 +96,8 @@
   FT_EXPORT_DEF( FT_Fixed )
   FT_CeilFix( FT_Fixed  a )
   {
-    return ( a >= 0 ) ?   ( a + 0xFFFFL ) & ~0xFFFFL
-                      : -((-a + 0xFFFFL ) & ~0xFFFFL );
+    return a >= 0 ?   ( a + 0xFFFFL ) & ~0xFFFFL
+                  : -((-a + 0xFFFFL ) & ~0xFFFFL );
   }
 
 
@@ -106,8 +106,8 @@
   FT_EXPORT_DEF( FT_Fixed )
   FT_FloorFix( FT_Fixed  a )
   {
-    return ( a >= 0 ) ?   a & ~0xFFFFL
-                      : -((-a) & ~0xFFFFL );
+    return a >= 0 ?   a & ~0xFFFFL
+                  : -((-a) & ~0xFFFFL );
   }
 
 #ifndef FT_MSB
@@ -188,7 +188,7 @@
     d = (FT_Long)( c > 0 ? ( (FT_Int64)a * b + ( c >> 1 ) ) / c
                          : 0x7FFFFFFFL );
 
-    return ( s > 0 ) ? d : -d;
+    return s < 0 ? -d : d;
   }
 
 
@@ -210,7 +210,7 @@
     d = (FT_Long)( c > 0 ? (FT_Int64)a * b / c
                          : 0x7FFFFFFFL );
 
-    return ( s > 0 ) ? d : -d;
+    return s < 0 ? -d : d;
   }
 
 
@@ -235,7 +235,7 @@
 
     c = (FT_Long)( ( (FT_Int64)a * b + 0x8000L ) >> 16 );
 
-    return ( s > 0 ) ? c : -c;
+    return s < 0 ? -c : c;
 
 #endif /* FT_MULFIX_ASSEMBLER */
   }
@@ -257,7 +257,7 @@
     q = (FT_Long)( b > 0 ? ( ( (FT_UInt64)a << 16 ) + ( b >> 1 ) ) / b
                          : 0x7FFFFFFFL );
 
-    return ( s < 0 ? -q : q );
+    return s < 0 ? -q : q;
   }
 
 
@@ -439,7 +439,7 @@
                        : ft_div64by32( temp.hi, temp.lo, c );
     }
 
-    return ( s < 0 ? -a : a );
+    return s < 0 ? -a : a;
   }
 
 
@@ -476,7 +476,7 @@
                        : ft_div64by32( temp.hi, temp.lo, c );
     }
 
-    return ( s < 0 ? -a : a );
+    return s < 0 ? -a : a;
   }
 
 
@@ -574,7 +574,7 @@
            ( ( al * ( ub & 0xFFFFUL ) + 0x8000UL ) >> 16 );
     }
 
-    return ( s < 0 ? -(FT_Long)ua : (FT_Long)ua );
+    return s < 0 ? -(FT_Long)ua : (FT_Long)ua;
 
 #endif /* 0 */
 
@@ -621,7 +621,7 @@
       q = (FT_Long)ft_div64by32( temp.hi, temp.lo, b );
     }
 
-    return ( s < 0 ? -q : q );
+    return s < 0 ? -q : q;
   }
 
 
