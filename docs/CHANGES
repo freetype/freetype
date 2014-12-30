@@ -1,4 +1,14 @@
 
+CHANGES BETWEEN 2.5.4 and 2.5.5
+
+  I. IMPORTANT BUG FIXES
+
+    - Handling of  uncompressed PCF files works again (bug  introduced
+      in version 2.5.4).
+
+
+======================================================================
+
 CHANGES BETWEEN 2.5.3 and 2.5.4
 
   I. IMPORTANT BUG FIXES
