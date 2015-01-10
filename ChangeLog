@@ -2,6 +2,24 @@
 
 	[truetype] More macro expansions.
 
+	Based on a patch from Behdad.
+
+	* src/truetype/ttinterp.c (SKIP_Code, GET_ShortIns, NORMalize,
+	SET_SuperRound, ROUND_None, INS_Goto_CodeRange, CUR_Func_move,
+	CUR_Func_move_orig, CUR_Func_round, CUR_Func_cur_ppem,
+	CUR_Func_read_cvt, CUR_Func_write_cvt, CUR_Func_move_cvt,
+	CURRENT_Ratio, INS_SxVTL, COMPUTE_Funcs, COMPUTE_Round,
+	COMPUTE_Point_Displacement, MOVE_Zp2_Point): Remove by replacing
+	with expansion.
+
+	(Cur_Func_project, CUR_Func_dualproj, CUR_fast_project,
+	CUR_fast_dualproj): Replace with macros `project', `dualproj',
+	`fast_project', `fast_dualproj'.
+
+2015-01-10  Werner Lemberg  <wl@gnu.org>
+
+	[truetype] More macro expansions.
+
 	* src/truetype/ttinterp.c (EXEC_OP_, EXEC_OP): Remove by replacing
 	with expansion.
 
