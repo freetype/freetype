@@ -26,10 +26,6 @@
 FT_BEGIN_HEADER
 
 
-#define EXEC_ARG_  exc,
-#define EXEC_ARG   exc
-
-
   /*************************************************************************/
   /*                                                                       */
   /* Rounding mode constants.                                              */

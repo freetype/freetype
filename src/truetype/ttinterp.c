@@ -8337,7 +8337,7 @@
           break;
 
         case 0x0F:  /* ISECT  */
-          Ins_ISECT( EXEC_ARG_ args );
+          Ins_ISECT( exc, args );
           break;
 
         case 0x10:  /* SRP0 */
@@ -8353,19 +8353,19 @@
           break;
 
         case 0x13:  /* SZP0 */
-          Ins_SZP0( EXEC_ARG_ args );
+          Ins_SZP0( exc, args );
           break;
 
         case 0x14:  /* SZP1 */
-          Ins_SZP1( EXEC_ARG_ args );
+          Ins_SZP1( exc, args );
           break;
 
         case 0x15:  /* SZP2 */
-          Ins_SZP2( EXEC_ARG_ args );
+          Ins_SZP2( exc, args );
           break;
 
         case 0x16:  /* SZPS */
-          Ins_SZPS( EXEC_ARG_ args );
+          Ins_SZPS( exc, args );
           break;
 
         case 0x17:  /* SLOOP */
@@ -8385,7 +8385,7 @@
           break;
 
         case 0x1B:  /* ELSE */
-          Ins_ELSE( EXEC_ARG_ args );
+          Ins_ELSE( exc, args );
           break;
 
         case 0x1C:  /* JMPR */
@@ -8429,77 +8429,77 @@
           break;
 
         case 0x26:  /* MINDEX */
-          Ins_MINDEX( EXEC_ARG_ args );
+          Ins_MINDEX( exc, args );
           break;
 
         case 0x27:  /* ALIGNPTS */
-          Ins_ALIGNPTS( EXEC_ARG_ args );
+          Ins_ALIGNPTS( exc, args );
           break;
 
         case 0x28:  /* ???? */
-          Ins_UNKNOWN( EXEC_ARG_ args );
+          Ins_UNKNOWN( exc, args );
           break;
 
         case 0x29:  /* UTP */
-          Ins_UTP( EXEC_ARG_ args );
+          Ins_UTP( exc, args );
           break;
 
         case 0x2A:  /* LOOPCALL */
-          Ins_LOOPCALL( EXEC_ARG_ args );
+          Ins_LOOPCALL( exc, args );
           break;
 
         case 0x2B:  /* CALL */
-          Ins_CALL( EXEC_ARG_ args );
+          Ins_CALL( exc, args );
           break;
 
         case 0x2C:  /* FDEF */
-          Ins_FDEF( EXEC_ARG_ args );
+          Ins_FDEF( exc, args );
           break;
 
         case 0x2D:  /* ENDF */
-          Ins_ENDF( EXEC_ARG_ args );
+          Ins_ENDF( exc, args );
           break;
 
         case 0x2E:  /* MDAP */
         case 0x2F:  /* MDAP */
-          Ins_MDAP( EXEC_ARG_ args );
+          Ins_MDAP( exc, args );
           break;
 
         case 0x30:  /* IUP */
         case 0x31:  /* IUP */
-          Ins_IUP( EXEC_ARG_ args );
+          Ins_IUP( exc, args );
           break;
 
         case 0x32:  /* SHP */
         case 0x33:  /* SHP */
-          Ins_SHP( EXEC_ARG_ args );
+          Ins_SHP( exc, args );
           break;
 
         case 0x34:  /* SHC */
         case 0x35:  /* SHC */
-          Ins_SHC( EXEC_ARG_ args );
+          Ins_SHC( exc, args );
           break;
 
         case 0x36:  /* SHZ */
         case 0x37:  /* SHZ */
-          Ins_SHZ( EXEC_ARG_ args );
+          Ins_SHZ( exc, args );
           break;
 
         case 0x38:  /* SHPIX */
-          Ins_SHPIX( EXEC_ARG_ args );
+          Ins_SHPIX( exc, args );
           break;
 
         case 0x39:  /* IP    */
-          Ins_IP( EXEC_ARG_ args );
+          Ins_IP( exc, args );
           break;
 
         case 0x3A:  /* MSIRP */
         case 0x3B:  /* MSIRP */
-          Ins_MSIRP( EXEC_ARG_ args );
+          Ins_MSIRP( exc, args );
           break;
 
         case 0x3C:  /* AlignRP */
-          Ins_ALIGNRP( EXEC_ARG_ args );
+          Ins_ALIGNRP( exc, args );
           break;
 
         case 0x3D:  /* RTDG */
@@ -8508,15 +8508,15 @@
 
         case 0x3E:  /* MIAP */
         case 0x3F:  /* MIAP */
-          Ins_MIAP( EXEC_ARG_ args );
+          Ins_MIAP( exc, args );
           break;
 
         case 0x40:  /* NPUSHB */
-          Ins_NPUSHB( EXEC_ARG_ args );
+          Ins_NPUSHB( exc, args );
           break;
 
         case 0x41:  /* NPUSHW */
-          Ins_NPUSHW( EXEC_ARG_ args );
+          Ins_NPUSHW( exc, args );
           break;
 
         case 0x42:  /* WS */
@@ -8541,16 +8541,16 @@
 
         case 0x46:  /* GC */
         case 0x47:  /* GC */
-          Ins_GC( EXEC_ARG_ args );
+          Ins_GC( exc, args );
           break;
 
         case 0x48:  /* SCFS */
-          Ins_SCFS( EXEC_ARG_ args );
+          Ins_SCFS( exc, args );
           break;
 
         case 0x49:  /* MD */
         case 0x4A:  /* MD */
-          Ins_MD( EXEC_ARG_ args );
+          Ins_MD( exc, args );
           break;
 
         case 0x4B:  /* MPPEM */
@@ -8606,7 +8606,7 @@
           break;
 
         case 0x58:  /* IF */
-          Ins_IF( EXEC_ARG_ args );
+          Ins_IF( exc, args );
           break;
 
         case 0x59:  /* EIF */
@@ -8626,7 +8626,7 @@
           break;
 
         case 0x5D:  /* DELTAP1 */
-          Ins_DELTAP( EXEC_ARG_ args );
+          Ins_DELTAP( exc, args );
           break;
 
         case 0x5E:  /* SDB */
@@ -8689,13 +8689,13 @@
 
         case 0x71:  /* DELTAP2 */
         case 0x72:  /* DELTAP3 */
-          Ins_DELTAP( EXEC_ARG_ args );
+          Ins_DELTAP( exc, args );
           break;
 
         case 0x73:  /* DELTAC0 */
         case 0x74:  /* DELTAC1 */
         case 0x75:  /* DELTAC2 */
-          Ins_DELTAC( EXEC_ARG_ args );
+          Ins_DELTAC( exc, args );
           break;
 
         case 0x76:  /* SROUND */
@@ -8719,7 +8719,7 @@
           break;
 
         case 0x7B:  /* ???? */
-          Ins_UNKNOWN( EXEC_ARG_ args );
+          Ins_UNKNOWN( exc, args );
           break;
 
         case 0x7C:  /* RUTG */
@@ -8736,41 +8736,41 @@
           break;
 
         case 0x80:  /* FLIPPT */
-          Ins_FLIPPT( EXEC_ARG_ args );
+          Ins_FLIPPT( exc, args );
           break;
 
         case 0x81:  /* FLIPRGON */
-          Ins_FLIPRGON( EXEC_ARG_ args );
+          Ins_FLIPRGON( exc, args );
           break;
 
         case 0x82:  /* FLIPRGOFF */
-          Ins_FLIPRGOFF( EXEC_ARG_ args );
+          Ins_FLIPRGOFF( exc, args );
           break;
 
         case 0x83:  /* UNKNOWN */
         case 0x84:  /* UNKNOWN */
-          Ins_UNKNOWN( EXEC_ARG_ args );
+          Ins_UNKNOWN( exc, args );
           break;
 
         case 0x85:  /* SCANCTRL */
-          Ins_SCANCTRL( EXEC_ARG_ args );
+          Ins_SCANCTRL( exc, args );
           break;
 
         case 0x86:  /* SDPVTL */
         case 0x87:  /* SDPVTL */
-          Ins_SDPVTL( EXEC_ARG_ args );
+          Ins_SDPVTL( exc, args );
           break;
 
         case 0x88:  /* GETINFO */
-          Ins_GETINFO( EXEC_ARG_ args );
+          Ins_GETINFO( exc, args );
           break;
 
         case 0x89:  /* IDEF */
-          Ins_IDEF( EXEC_ARG_ args );
+          Ins_IDEF( exc, args );
           break;
 
         case 0x8A:  /* ROLL */
-          Ins_ROLL( EXEC_ARG_ args );
+          Ins_ROLL( exc, args );
           break;
 
         case 0x8B:  /* MAX */
@@ -8782,35 +8782,35 @@
           break;
 
         case 0x8D:  /* SCANTYPE */
-          Ins_SCANTYPE( EXEC_ARG_ args );
+          Ins_SCANTYPE( exc, args );
           break;
 
         case 0x8E:  /* INSTCTRL */
-          Ins_INSTCTRL( EXEC_ARG_ args );
+          Ins_INSTCTRL( exc, args );
           break;
 
         case 0x8F:
-          Ins_UNKNOWN( EXEC_ARG_ args );
+          Ins_UNKNOWN( exc, args );
           break;
 
         default:
           if ( opcode >= 0xE0 )
-            Ins_MIRP( EXEC_ARG_ args );
+            Ins_MIRP( exc, args );
           else if ( opcode >= 0xC0 )
-            Ins_MDRP( EXEC_ARG_ args );
+            Ins_MDRP( exc, args );
           else if ( opcode >= 0xB8 )
-            Ins_PUSHW( EXEC_ARG_ args );
+            Ins_PUSHW( exc, args );
           else if ( opcode >= 0xB0 )
-            Ins_PUSHB( EXEC_ARG_ args );
+            Ins_PUSHB( exc, args );
           else
-            Ins_UNKNOWN( EXEC_ARG_ args );
+            Ins_UNKNOWN( exc, args );
         }
 
       }
 
 #else
 
-      Instruct_Dispatch[exc->opcode]( EXEC_ARG_ &exc->stack[exc->args] );
+      Instruct_Dispatch[exc->opcode]( exc, &exc->stack[exc->args] );
 
 #endif /* TT_CONFIG_OPTION_INTERPRETER_SWITCH */
 

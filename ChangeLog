@@ -2,6 +2,13 @@
 
 	[truetype] More macro expansions.
 
+	* src/truetype/ttinterp.c, src/truetype/ttinterp.h (EXEC_ARG_,
+	EXEC_ARG): Remove by replacing with expansion.
+
+2015-01-10  Werner Lemberg  <wl@gnu.org>
+
+	[truetype] More macro expansions.
+
 	Based on a patch from Behdad.
 
 	* src/truetype/ttinterp.c (SKIP_Code, GET_ShortIns, NORMalize,
