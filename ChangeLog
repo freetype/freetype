@@ -1,5 +1,18 @@
 2015-01-10  Werner Lemberg  <wl@gnu.org>
 
+	[truetype] Remove TT_CONFIG_OPTION_INTERPRETER_SWITCH.
+
+	Behdad suggested this code simplification, and nobody objected...
+
+	* include/config/ftoption.h, devel/ftoption.h
+	(TT_CONFIG_OPTION_INTERPRETER_SWITCH): Remove.
+
+	* src/truetype/ttinterp.c [TT_CONFIG_OPTION_INTERPRETER_SWITCH]:
+	Remove related code.
+	(ARRAY_BOUND_ERROR): Use do-while loop.
+
+2015-01-10  Werner Lemberg  <wl@gnu.org>
+
 	[truetype] More macro expansions.
 
 	* src/truetype/ttinterp.c, src/truetype/ttinterp.h (EXEC_ARG_,

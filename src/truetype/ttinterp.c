@@ -3194,9 +3194,7 @@
      if ( BOUNDSL( I, exc->storeSize ) ) \
      {                                   \
        if ( exc->pedantic_hinting )      \
-       {                                 \
          ARRAY_BOUND_ERROR;              \
-       }                                 \
        else                              \
          args[0] = 0;                    \
      }                                   \
@@ -3215,9 +3213,7 @@
      if ( BOUNDSL( I, exc->storeSize ) ) \
      {                                   \
        if ( exc->pedantic_hinting )      \
-       {                                 \
          ARRAY_BOUND_ERROR;              \
-       }                                 \
      }                                   \
      else                                \
        exc->storage[I] = args[1];        \
@@ -3232,9 +3228,7 @@
      if ( BOUNDSL( I, exc->cvtSize ) )         \
      {                                         \
        if ( exc->pedantic_hinting )            \
-       {                                       \
          ARRAY_BOUND_ERROR;                    \
-       }                                       \
        else                                    \
          args[0] = 0;                          \
      }                                         \
@@ -3251,9 +3245,7 @@
      if ( BOUNDSL( I, exc->cvtSize ) )         \
      {                                         \
        if ( exc->pedantic_hinting )            \
-       {                                       \
          ARRAY_BOUND_ERROR;                    \
-       }                                       \
      }                                         \
      else                                      \
        exc->func_write_cvt( exc, I, args[1] ); \
@@ -3268,9 +3260,7 @@
      if ( BOUNDSL( I, exc->cvtSize ) )                            \
      {                                                            \
        if ( exc->pedantic_hinting )                               \
-       {                                                          \
          ARRAY_BOUND_ERROR;                                       \
-       }                                                          \
      }                                                            \
      else                                                         \
        exc->cvt[I] = FT_MulFix( args[1], exc->tt_metrics.scale ); \
@@ -3304,15 +3294,12 @@
       args[0] = args[1];
 
 
-#ifndef TT_CONFIG_OPTION_INTERPRETER_SWITCH
-
-
-#undef  ARRAY_BOUND_ERROR
 #define ARRAY_BOUND_ERROR                         \
+    do                                            \
     {                                             \
       exc->error = FT_THROW( Invalid_Reference ); \
       return;                                     \
-    }
+    } while (0)
 
 
   /*************************************************************************/
@@ -4261,16 +4248,6 @@
   {
     DO_MIN
   }
-
-
-#endif  /* !TT_CONFIG_OPTION_INTERPRETER_SWITCH */
-
-
-  /*************************************************************************/
-  /*                                                                       */
-  /* The following functions are called as is within the switch statement. */
-  /*                                                                       */
-  /*************************************************************************/
 
 
   /*************************************************************************/
@@ -7802,292 +7779,6 @@
   }
 
 
-#ifndef TT_CONFIG_OPTION_INTERPRETER_SWITCH
-
-
-  static
-  TInstruction_Function  Instruct_Dispatch[256] =
-  {
-    /* Opcodes are gathered in groups of 16. */
-    /* Please keep the spaces as they are.   */
-
-    /*  SVTCA  y  */  Ins_SVTCA,
-    /*  SVTCA  x  */  Ins_SVTCA,
-    /*  SPvTCA y  */  Ins_SPVTCA,
-    /*  SPvTCA x  */  Ins_SPVTCA,
-    /*  SFvTCA y  */  Ins_SFVTCA,
-    /*  SFvTCA x  */  Ins_SFVTCA,
-    /*  SPvTL //  */  Ins_SPVTL,
-    /*  SPvTL +   */  Ins_SPVTL,
-    /*  SFvTL //  */  Ins_SFVTL,
-    /*  SFvTL +   */  Ins_SFVTL,
-    /*  SPvFS     */  Ins_SPVFS,
-    /*  SFvFS     */  Ins_SFVFS,
-    /*  GPV       */  Ins_GPV,
-    /*  GFV       */  Ins_GFV,
-    /*  SFvTPv    */  Ins_SFVTPV,
-    /*  ISECT     */  Ins_ISECT,
-
-    /*  SRP0      */  Ins_SRP0,
-    /*  SRP1      */  Ins_SRP1,
-    /*  SRP2      */  Ins_SRP2,
-    /*  SZP0      */  Ins_SZP0,
-    /*  SZP1      */  Ins_SZP1,
-    /*  SZP2      */  Ins_SZP2,
-    /*  SZPS      */  Ins_SZPS,
-    /*  SLOOP     */  Ins_SLOOP,
-    /*  RTG       */  Ins_RTG,
-    /*  RTHG      */  Ins_RTHG,
-    /*  SMD       */  Ins_SMD,
-    /*  ELSE      */  Ins_ELSE,
-    /*  JMPR      */  Ins_JMPR,
-    /*  SCvTCi    */  Ins_SCVTCI,
-    /*  SSwCi     */  Ins_SSWCI,
-    /*  SSW       */  Ins_SSW,
-
-    /*  DUP       */  Ins_DUP,
-    /*  POP       */  Ins_POP,
-    /*  CLEAR     */  Ins_CLEAR,
-    /*  SWAP      */  Ins_SWAP,
-    /*  DEPTH     */  Ins_DEPTH,
-    /*  CINDEX    */  Ins_CINDEX,
-    /*  MINDEX    */  Ins_MINDEX,
-    /*  AlignPTS  */  Ins_ALIGNPTS,
-    /*  INS_0x28  */  Ins_UNKNOWN,
-    /*  UTP       */  Ins_UTP,
-    /*  LOOPCALL  */  Ins_LOOPCALL,
-    /*  CALL      */  Ins_CALL,
-    /*  FDEF      */  Ins_FDEF,
-    /*  ENDF      */  Ins_ENDF,
-    /*  MDAP[0]   */  Ins_MDAP,
-    /*  MDAP[1]   */  Ins_MDAP,
-
-    /*  IUP[0]    */  Ins_IUP,
-    /*  IUP[1]    */  Ins_IUP,
-    /*  SHP[0]    */  Ins_SHP,
-    /*  SHP[1]    */  Ins_SHP,
-    /*  SHC[0]    */  Ins_SHC,
-    /*  SHC[1]    */  Ins_SHC,
-    /*  SHZ[0]    */  Ins_SHZ,
-    /*  SHZ[1]    */  Ins_SHZ,
-    /*  SHPIX     */  Ins_SHPIX,
-    /*  IP        */  Ins_IP,
-    /*  MSIRP[0]  */  Ins_MSIRP,
-    /*  MSIRP[1]  */  Ins_MSIRP,
-    /*  AlignRP   */  Ins_ALIGNRP,
-    /*  RTDG      */  Ins_RTDG,
-    /*  MIAP[0]   */  Ins_MIAP,
-    /*  MIAP[1]   */  Ins_MIAP,
-
-    /*  NPushB    */  Ins_NPUSHB,
-    /*  NPushW    */  Ins_NPUSHW,
-    /*  WS        */  Ins_WS,
-    /*  RS        */  Ins_RS,
-    /*  WCvtP     */  Ins_WCVTP,
-    /*  RCvt      */  Ins_RCVT,
-    /*  GC[0]     */  Ins_GC,
-    /*  GC[1]     */  Ins_GC,
-    /*  SCFS      */  Ins_SCFS,
-    /*  MD[0]     */  Ins_MD,
-    /*  MD[1]     */  Ins_MD,
-    /*  MPPEM     */  Ins_MPPEM,
-    /*  MPS       */  Ins_MPS,
-    /*  FlipON    */  Ins_FLIPON,
-    /*  FlipOFF   */  Ins_FLIPOFF,
-    /*  DEBUG     */  Ins_DEBUG,
-
-    /*  LT        */  Ins_LT,
-    /*  LTEQ      */  Ins_LTEQ,
-    /*  GT        */  Ins_GT,
-    /*  GTEQ      */  Ins_GTEQ,
-    /*  EQ        */  Ins_EQ,
-    /*  NEQ       */  Ins_NEQ,
-    /*  ODD       */  Ins_ODD,
-    /*  EVEN      */  Ins_EVEN,
-    /*  IF        */  Ins_IF,
-    /*  EIF       */  Ins_EIF,
-    /*  AND       */  Ins_AND,
-    /*  OR        */  Ins_OR,
-    /*  NOT       */  Ins_NOT,
-    /*  DeltaP1   */  Ins_DELTAP,
-    /*  SDB       */  Ins_SDB,
-    /*  SDS       */  Ins_SDS,
-
-    /*  ADD       */  Ins_ADD,
-    /*  SUB       */  Ins_SUB,
-    /*  DIV       */  Ins_DIV,
-    /*  MUL       */  Ins_MUL,
-    /*  ABS       */  Ins_ABS,
-    /*  NEG       */  Ins_NEG,
-    /*  FLOOR     */  Ins_FLOOR,
-    /*  CEILING   */  Ins_CEILING,
-    /*  ROUND[0]  */  Ins_ROUND,
-    /*  ROUND[1]  */  Ins_ROUND,
-    /*  ROUND[2]  */  Ins_ROUND,
-    /*  ROUND[3]  */  Ins_ROUND,
-    /*  NROUND[0] */  Ins_NROUND,
-    /*  NROUND[1] */  Ins_NROUND,
-    /*  NROUND[2] */  Ins_NROUND,
-    /*  NROUND[3] */  Ins_NROUND,
-
-    /*  WCvtF     */  Ins_WCVTF,
-    /*  DeltaP2   */  Ins_DELTAP,
-    /*  DeltaP3   */  Ins_DELTAP,
-    /*  DeltaCn[0] */ Ins_DELTAC,
-    /*  DeltaCn[1] */ Ins_DELTAC,
-    /*  DeltaCn[2] */ Ins_DELTAC,
-    /*  SROUND    */  Ins_SROUND,
-    /*  S45Round  */  Ins_S45ROUND,
-    /*  JROT      */  Ins_JROT,
-    /*  JROF      */  Ins_JROF,
-    /*  ROFF      */  Ins_ROFF,
-    /*  INS_0x7B  */  Ins_UNKNOWN,
-    /*  RUTG      */  Ins_RUTG,
-    /*  RDTG      */  Ins_RDTG,
-    /*  SANGW     */  Ins_SANGW,
-    /*  AA        */  Ins_AA,
-
-    /*  FlipPT    */  Ins_FLIPPT,
-    /*  FlipRgON  */  Ins_FLIPRGON,
-    /*  FlipRgOFF */  Ins_FLIPRGOFF,
-    /*  INS_0x83  */  Ins_UNKNOWN,
-    /*  INS_0x84  */  Ins_UNKNOWN,
-    /*  ScanCTRL  */  Ins_SCANCTRL,
-    /*  SDPVTL[0] */  Ins_SDPVTL,
-    /*  SDPVTL[1] */  Ins_SDPVTL,
-    /*  GetINFO   */  Ins_GETINFO,
-    /*  IDEF      */  Ins_IDEF,
-    /*  ROLL      */  Ins_ROLL,
-    /*  MAX       */  Ins_MAX,
-    /*  MIN       */  Ins_MIN,
-    /*  ScanTYPE  */  Ins_SCANTYPE,
-    /*  InstCTRL  */  Ins_INSTCTRL,
-    /*  INS_0x8F  */  Ins_UNKNOWN,
-
-    /*  INS_0x90  */   Ins_UNKNOWN,
-    /*  INS_0x91  */   Ins_UNKNOWN,
-    /*  INS_0x92  */   Ins_UNKNOWN,
-    /*  INS_0x93  */   Ins_UNKNOWN,
-    /*  INS_0x94  */   Ins_UNKNOWN,
-    /*  INS_0x95  */   Ins_UNKNOWN,
-    /*  INS_0x96  */   Ins_UNKNOWN,
-    /*  INS_0x97  */   Ins_UNKNOWN,
-    /*  INS_0x98  */   Ins_UNKNOWN,
-    /*  INS_0x99  */   Ins_UNKNOWN,
-    /*  INS_0x9A  */   Ins_UNKNOWN,
-    /*  INS_0x9B  */   Ins_UNKNOWN,
-    /*  INS_0x9C  */   Ins_UNKNOWN,
-    /*  INS_0x9D  */   Ins_UNKNOWN,
-    /*  INS_0x9E  */   Ins_UNKNOWN,
-    /*  INS_0x9F  */   Ins_UNKNOWN,
-
-    /*  INS_0xA0  */   Ins_UNKNOWN,
-    /*  INS_0xA1  */   Ins_UNKNOWN,
-    /*  INS_0xA2  */   Ins_UNKNOWN,
-    /*  INS_0xA3  */   Ins_UNKNOWN,
-    /*  INS_0xA4  */   Ins_UNKNOWN,
-    /*  INS_0xA5  */   Ins_UNKNOWN,
-    /*  INS_0xA6  */   Ins_UNKNOWN,
-    /*  INS_0xA7  */   Ins_UNKNOWN,
-    /*  INS_0xA8  */   Ins_UNKNOWN,
-    /*  INS_0xA9  */   Ins_UNKNOWN,
-    /*  INS_0xAA  */   Ins_UNKNOWN,
-    /*  INS_0xAB  */   Ins_UNKNOWN,
-    /*  INS_0xAC  */   Ins_UNKNOWN,
-    /*  INS_0xAD  */   Ins_UNKNOWN,
-    /*  INS_0xAE  */   Ins_UNKNOWN,
-    /*  INS_0xAF  */   Ins_UNKNOWN,
-
-    /*  PushB[0]  */  Ins_PUSHB,
-    /*  PushB[1]  */  Ins_PUSHB,
-    /*  PushB[2]  */  Ins_PUSHB,
-    /*  PushB[3]  */  Ins_PUSHB,
-    /*  PushB[4]  */  Ins_PUSHB,
-    /*  PushB[5]  */  Ins_PUSHB,
-    /*  PushB[6]  */  Ins_PUSHB,
-    /*  PushB[7]  */  Ins_PUSHB,
-    /*  PushW[0]  */  Ins_PUSHW,
-    /*  PushW[1]  */  Ins_PUSHW,
-    /*  PushW[2]  */  Ins_PUSHW,
-    /*  PushW[3]  */  Ins_PUSHW,
-    /*  PushW[4]  */  Ins_PUSHW,
-    /*  PushW[5]  */  Ins_PUSHW,
-    /*  PushW[6]  */  Ins_PUSHW,
-    /*  PushW[7]  */  Ins_PUSHW,
-
-    /*  MDRP[00]  */  Ins_MDRP,
-    /*  MDRP[01]  */  Ins_MDRP,
-    /*  MDRP[02]  */  Ins_MDRP,
-    /*  MDRP[03]  */  Ins_MDRP,
-    /*  MDRP[04]  */  Ins_MDRP,
-    /*  MDRP[05]  */  Ins_MDRP,
-    /*  MDRP[06]  */  Ins_MDRP,
-    /*  MDRP[07]  */  Ins_MDRP,
-    /*  MDRP[08]  */  Ins_MDRP,
-    /*  MDRP[09]  */  Ins_MDRP,
-    /*  MDRP[10]  */  Ins_MDRP,
-    /*  MDRP[11]  */  Ins_MDRP,
-    /*  MDRP[12]  */  Ins_MDRP,
-    /*  MDRP[13]  */  Ins_MDRP,
-    /*  MDRP[14]  */  Ins_MDRP,
-    /*  MDRP[15]  */  Ins_MDRP,
-
-    /*  MDRP[16]  */  Ins_MDRP,
-    /*  MDRP[17]  */  Ins_MDRP,
-    /*  MDRP[18]  */  Ins_MDRP,
-    /*  MDRP[19]  */  Ins_MDRP,
-    /*  MDRP[20]  */  Ins_MDRP,
-    /*  MDRP[21]  */  Ins_MDRP,
-    /*  MDRP[22]  */  Ins_MDRP,
-    /*  MDRP[23]  */  Ins_MDRP,
-    /*  MDRP[24]  */  Ins_MDRP,
-    /*  MDRP[25]  */  Ins_MDRP,
-    /*  MDRP[26]  */  Ins_MDRP,
-    /*  MDRP[27]  */  Ins_MDRP,
-    /*  MDRP[28]  */  Ins_MDRP,
-    /*  MDRP[29]  */  Ins_MDRP,
-    /*  MDRP[30]  */  Ins_MDRP,
-    /*  MDRP[31]  */  Ins_MDRP,
-
-    /*  MIRP[00]  */  Ins_MIRP,
-    /*  MIRP[01]  */  Ins_MIRP,
-    /*  MIRP[02]  */  Ins_MIRP,
-    /*  MIRP[03]  */  Ins_MIRP,
-    /*  MIRP[04]  */  Ins_MIRP,
-    /*  MIRP[05]  */  Ins_MIRP,
-    /*  MIRP[06]  */  Ins_MIRP,
-    /*  MIRP[07]  */  Ins_MIRP,
-    /*  MIRP[08]  */  Ins_MIRP,
-    /*  MIRP[09]  */  Ins_MIRP,
-    /*  MIRP[10]  */  Ins_MIRP,
-    /*  MIRP[11]  */  Ins_MIRP,
-    /*  MIRP[12]  */  Ins_MIRP,
-    /*  MIRP[13]  */  Ins_MIRP,
-    /*  MIRP[14]  */  Ins_MIRP,
-    /*  MIRP[15]  */  Ins_MIRP,
-
-    /*  MIRP[16]  */  Ins_MIRP,
-    /*  MIRP[17]  */  Ins_MIRP,
-    /*  MIRP[18]  */  Ins_MIRP,
-    /*  MIRP[19]  */  Ins_MIRP,
-    /*  MIRP[20]  */  Ins_MIRP,
-    /*  MIRP[21]  */  Ins_MIRP,
-    /*  MIRP[22]  */  Ins_MIRP,
-    /*  MIRP[23]  */  Ins_MIRP,
-    /*  MIRP[24]  */  Ins_MIRP,
-    /*  MIRP[25]  */  Ins_MIRP,
-    /*  MIRP[26]  */  Ins_MIRP,
-    /*  MIRP[27]  */  Ins_MIRP,
-    /*  MIRP[28]  */  Ins_MIRP,
-    /*  MIRP[29]  */  Ins_MIRP,
-    /*  MIRP[30]  */  Ins_MIRP,
-    /*  MIRP[31]  */  Ins_MIRP
-  };
-
-
-#endif /* !TT_CONFIG_OPTION_INTERPRETER_SWITCH */
-
-
   /*************************************************************************/
   /*                                                                       */
   /* RUN                                                                   */
@@ -8252,8 +7943,6 @@
       }
 
 #endif /* TT_CONFIG_OPTION_SUBPIXEL_HINTING */
-
-#ifdef TT_CONFIG_OPTION_INTERPRETER_SWITCH
 
       {
         FT_Long*  args   = exc->stack + exc->args;
@@ -8524,7 +8213,7 @@
           break;
 
       Set_Invalid_Ref:
-            exc->error = FT_THROW( Invalid_Reference );
+          exc->error = FT_THROW( Invalid_Reference );
           break;
 
         case 0x43:  /* RS */
@@ -8805,14 +8494,7 @@
           else
             Ins_UNKNOWN( exc, args );
         }
-
       }
-
-#else
-
-      Instruct_Dispatch[exc->opcode]( exc, &exc->stack[exc->args] );
-
-#endif /* TT_CONFIG_OPTION_INTERPRETER_SWITCH */
 
       if ( exc->error )
       {
