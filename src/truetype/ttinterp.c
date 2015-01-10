@@ -2699,601 +2699,6 @@
   }
 
 
-  /* When not using the big switch statements, the interpreter uses a */
-  /* call table defined later below in this source.  Each opcode must */
-  /* thus have a corresponding function, even trivial ones.           */
-  /*                                                                  */
-  /* They are all defined there.                                      */
-
-#define DO_SVTCA                             \
-  {                                          \
-    FT_Short  A, B;                          \
-                                             \
-                                             \
-    A = (FT_Short)( exc->opcode & 1 ) << 14; \
-    B = A ^ (FT_Short)0x4000;                \
-                                             \
-    exc->GS.freeVector.x = A;                \
-    exc->GS.projVector.x = A;                \
-    exc->GS.dualVector.x = A;                \
-                                             \
-    exc->GS.freeVector.y = B;                \
-    exc->GS.projVector.y = B;                \
-    exc->GS.dualVector.y = B;                \
-                                             \
-    Compute_Funcs( exc );                    \
-  }
-
-
-#define DO_SPVTCA                            \
-  {                                          \
-    FT_Short  A, B;                          \
-                                             \
-                                             \
-    A = (FT_Short)( exc->opcode & 1 ) << 14; \
-    B = A ^ (FT_Short)0x4000;                \
-                                             \
-    exc->GS.projVector.x = A;                \
-    exc->GS.dualVector.x = A;                \
-                                             \
-    exc->GS.projVector.y = B;                \
-    exc->GS.dualVector.y = B;                \
-                                             \
-    GUESS_VECTOR( freeVector );              \
-                                             \
-    Compute_Funcs( exc );                    \
-  }
-
-
-#define DO_SFVTCA                            \
-  {                                          \
-    FT_Short  A, B;                          \
-                                             \
-                                             \
-    A = (FT_Short)( exc->opcode & 1 ) << 14; \
-    B = A ^ (FT_Short)0x4000;                \
-                                             \
-    exc->GS.freeVector.x = A;                \
-    exc->GS.freeVector.y = B;                \
-                                             \
-    GUESS_VECTOR( projVector );              \
-                                             \
-    Compute_Funcs( exc );                    \
-  }
-
-
-#define DO_SPVTL                                       \
-    if ( Ins_SxVTL( exc,                               \
-                    (FT_UShort)args[1],                \
-                    (FT_UShort)args[0],                \
-                    exc->opcode,                       \
-                    &exc->GS.projVector ) == SUCCESS ) \
-    {                                                  \
-      exc->GS.dualVector = exc->GS.projVector;         \
-      GUESS_VECTOR( freeVector );                      \
-      Compute_Funcs( exc );                            \
-    }
-
-
-#define DO_SFVTL                                       \
-    if ( Ins_SxVTL( exc,                               \
-                    (FT_UShort)args[1],                \
-                    (FT_UShort)args[0],                \
-                    exc->opcode,                       \
-                    &exc->GS.freeVector ) == SUCCESS ) \
-    {                                                  \
-      GUESS_VECTOR( projVector );                      \
-      Compute_Funcs( exc );                            \
-    }
-
-
-#define DO_SFVTPV                            \
-    GUESS_VECTOR( projVector );              \
-    exc->GS.freeVector = exc->GS.projVector; \
-    Compute_Funcs( exc );
-
-
-#define DO_SPVFS                                 \
-  {                                              \
-    FT_Short  S;                                 \
-    FT_Long   X, Y;                              \
-                                                 \
-                                                 \
-    /* Only use low 16bits, then sign extend */  \
-    S = (FT_Short)args[1];                       \
-    Y = (FT_Long)S;                              \
-    S = (FT_Short)args[0];                       \
-    X = (FT_Long)S;                              \
-                                                 \
-    Normalize( exc, X, Y, &exc->GS.projVector ); \
-                                                 \
-    exc->GS.dualVector = exc->GS.projVector;     \
-    GUESS_VECTOR( freeVector );                  \
-    Compute_Funcs( exc );                        \
-  }
-
-
-#define DO_SFVFS                                 \
-  {                                              \
-    FT_Short  S;                                 \
-    FT_Long   X, Y;                              \
-                                                 \
-                                                 \
-    /* Only use low 16bits, then sign extend */  \
-    S = (FT_Short)args[1];                       \
-    Y = (FT_Long)S;                              \
-    S = (FT_Short)args[0];                       \
-    X = S;                                       \
-                                                 \
-    Normalize( exc, X, Y, &exc->GS.freeVector ); \
-    GUESS_VECTOR( projVector );                  \
-    Compute_Funcs( exc );                        \
-  }
-
-
-#ifdef TT_CONFIG_OPTION_UNPATENTED_HINTING
-#define DO_GPV                                    \
-    if ( exc->face->unpatented_hinting )          \
-    {                                             \
-      args[0] = exc->GS.both_x_axis ? 0x4000 : 0; \
-      args[1] = exc->GS.both_x_axis ? 0 : 0x4000; \
-    }                                             \
-    else                                          \
-    {                                             \
-      args[0] = exc->GS.projVector.x;             \
-      args[1] = exc->GS.projVector.y;             \
-    }
-#else
-#define DO_GPV                                    \
-    args[0] = exc->GS.projVector.x;               \
-    args[1] = exc->GS.projVector.y;
-#endif
-
-
-#ifdef TT_CONFIG_OPTION_UNPATENTED_HINTING
-#define DO_GFV                                    \
-    if ( exc->face->unpatented_hinting )          \
-    {                                             \
-      args[0] = exc->GS.both_x_axis ? 0x4000 : 0; \
-      args[1] = exc->GS.both_x_axis ? 0 : 0x4000; \
-    }                                             \
-    else                                          \
-    {                                             \
-      args[0] = exc->GS.freeVector.x;             \
-      args[1] = exc->GS.freeVector.y;             \
-    }
-#else
-#define DO_GFV                                    \
-    args[0] = exc->GS.freeVector.x;               \
-    args[1] = exc->GS.freeVector.y;
-#endif
-
-
-#define DO_SRP0                       \
-    exc->GS.rp0 = (FT_UShort)args[0];
-
-
-#define DO_SRP1                       \
-    exc->GS.rp1 = (FT_UShort)args[0];
-
-
-#define DO_SRP2                       \
-    exc->GS.rp2 = (FT_UShort)args[0];
-
-
-#define DO_RTHG                                          \
-    exc->GS.round_state = TT_Round_To_Half_Grid;         \
-    exc->func_round = (TT_Round_Func)Round_To_Half_Grid;
-
-
-#define DO_RTG                                      \
-    exc->GS.round_state = TT_Round_To_Grid;         \
-    exc->func_round = (TT_Round_Func)Round_To_Grid;
-
-
-#define DO_RTDG                                            \
-    exc->GS.round_state = TT_Round_To_Double_Grid;         \
-    exc->func_round = (TT_Round_Func)Round_To_Double_Grid;
-
-
-#define DO_RUTG                                        \
-    exc->GS.round_state = TT_Round_Up_To_Grid;         \
-    exc->func_round = (TT_Round_Func)Round_Up_To_Grid;
-
-
-#define DO_RDTG                                          \
-    exc->GS.round_state = TT_Round_Down_To_Grid;         \
-    exc->func_round = (TT_Round_Func)Round_Down_To_Grid;
-
-
-#define DO_ROFF                                  \
-    exc->GS.round_state = TT_Round_Off;          \
-    exc->func_round = (TT_Round_Func)Round_None;
-
-
-#define DO_SROUND                                 \
-    SetSuperRound( exc, 0x4000, args[0] );        \
-    exc->GS.round_state = TT_Round_Super;         \
-    exc->func_round = (TT_Round_Func)Round_Super;
-
-
-#define DO_S45ROUND                                  \
-    SetSuperRound( exc, 0x2D41, args[0] );           \
-    exc->GS.round_state = TT_Round_Super_45;         \
-    exc->func_round = (TT_Round_Func)Round_Super_45;
-
-
-#define DO_SLOOP                             \
-    if ( args[0] < 0 )                       \
-      exc->error = FT_THROW( Bad_Argument ); \
-    else                                     \
-      exc->GS.loop = args[0];
-
-
-#define DO_SMD                          \
-    exc->GS.minimum_distance = args[0];
-
-
-#define DO_SCVTCI                                      \
-    exc->GS.control_value_cutin = (FT_F26Dot6)args[0];
-
-
-#define DO_SSWCI                                      \
-    exc->GS.single_width_cutin = (FT_F26Dot6)args[0];
-
-
-#define DO_SSW                                                      \
-    exc->GS.single_width_value = FT_MulFix( args[0],                \
-                                           exc->tt_metrics.scale );
-
-
-#define DO_FLIPON             \
-    exc->GS.auto_flip = TRUE;
-
-
-#define DO_FLIPOFF             \
-    exc->GS.auto_flip = FALSE;
-
-
-#define DO_SDB                               \
-    exc->GS.delta_base = (FT_UShort)args[0];
-
-
-#define DO_SDS                                  \
-    if ( (FT_ULong)args[0] > 6UL )              \
-      exc->error = FT_THROW( Bad_Argument );    \
-    else                                        \
-      exc->GS.delta_shift = (FT_UShort)args[0];
-
-
-#define DO_MD  /* nothing */
-
-
-#define DO_MPPEM                         \
-    args[0] = exc->func_cur_ppem( exc );
-
-
-  /* Note: The pointSize should be irrelevant in a given font program; */
-  /*       we thus decide to return only the ppem.                     */
-#if 0
-
-#define DO_MPS                        \
-    args[0] = exc->metrics.pointSize;
-
-#else
-
-#define DO_MPS                           \
-    args[0] = exc->func_cur_ppem( exc );
-
-#endif /* 0 */
-
-
-#define DO_DUP         \
-    args[1] = args[0];
-
-
-#define DO_CLEAR      \
-    exc->new_top = 0;
-
-
-#define DO_SWAP        \
-  {                    \
-    FT_Long  L;        \
-                       \
-                       \
-    L       = args[0]; \
-    args[0] = args[1]; \
-    args[1] = L;       \
-  }
-
-
-#define DO_DEPTH        \
-    args[0] = exc->top;
-
-
-#define DO_CINDEX                                   \
-  {                                                 \
-    FT_Long  L;                                     \
-                                                    \
-                                                    \
-    L = args[0];                                    \
-                                                    \
-    if ( L <= 0 || L > exc->args )                  \
-    {                                               \
-      if ( exc->pedantic_hinting )                  \
-        exc->error = FT_THROW( Invalid_Reference ); \
-      args[0] = 0;                                  \
-    }                                               \
-    else                                            \
-      args[0] = exc->stack[exc->args - L];          \
-  }
-
-
-#define DO_JROT                                                       \
-    if ( args[1] != 0 )                                               \
-    {                                                                 \
-      if ( args[0] == 0 && exc->args == 0 )                           \
-        exc->error = FT_THROW( Bad_Argument );                        \
-      exc->IP += args[0];                                             \
-      if ( exc->IP < 0                                             || \
-           ( exc->callTop > 0                                    &&   \
-             exc->IP > exc->callStack[exc->callTop - 1].Def->end ) )  \
-        exc->error = FT_THROW( Bad_Argument );                        \
-      exc->step_ins = FALSE;                                          \
-    }
-
-
-#define DO_JMPR                                                     \
-    if ( args[0] == 0 && exc->args == 0 )                           \
-      exc->error = FT_THROW( Bad_Argument );                        \
-    exc->IP += args[0];                                             \
-    if ( exc->IP < 0                                             || \
-         ( exc->callTop > 0                                    &&   \
-           exc->IP > exc->callStack[exc->callTop - 1].Def->end ) )  \
-      exc->error = FT_THROW( Bad_Argument );                        \
-    exc->step_ins = FALSE;
-
-
-#define DO_JROF                                                       \
-    if ( args[1] == 0 )                                               \
-    {                                                                 \
-      if ( args[0] == 0 && exc->args == 0 )                           \
-        exc->error = FT_THROW( Bad_Argument );                        \
-      exc->IP += args[0];                                             \
-      if ( exc->IP < 0                                             || \
-           ( exc->callTop > 0                                    &&   \
-             exc->IP > exc->callStack[exc->callTop - 1].Def->end ) )  \
-        exc->error = FT_THROW( Bad_Argument );                        \
-      exc->step_ins = FALSE;                                          \
-    }
-
-
-#define DO_LT                        \
-    args[0] = ( args[0] < args[1] );
-
-
-#define DO_LTEQ                       \
-    args[0] = ( args[0] <= args[1] );
-
-
-#define DO_GT                        \
-    args[0] = ( args[0] > args[1] );
-
-
-#define DO_GTEQ                       \
-    args[0] = ( args[0] >= args[1] );
-
-
-#define DO_EQ                         \
-    args[0] = ( args[0] == args[1] );
-
-
-#define DO_NEQ                        \
-    args[0] = ( args[0] != args[1] );
-
-
-#define DO_ODD                                                        \
-    args[0] = ( ( exc->func_round( exc, args[0], 0 ) & 127 ) == 64 );
-
-
-#define DO_EVEN                                                      \
-    args[0] = ( ( exc->func_round( exc, args[0], 0 ) & 127 ) == 0 );
-
-
-#define DO_AND                        \
-    args[0] = ( args[0] && args[1] );
-
-
-#define DO_OR                         \
-    args[0] = ( args[0] || args[1] );
-
-
-#define DO_NOT          \
-    args[0] = !args[0];
-
-
-#define DO_ADD          \
-    args[0] += args[1];
-
-
-#define DO_SUB          \
-    args[0] -= args[1];
-
-
-#define DO_DIV                                               \
-    if ( args[1] == 0 )                                      \
-      exc->error = FT_THROW( Divide_By_Zero );               \
-    else                                                     \
-      args[0] = FT_MulDiv_No_Round( args[0], 64L, args[1] );
-
-
-#define DO_MUL                                    \
-    args[0] = FT_MulDiv( args[0], args[1], 64L );
-
-
-#define DO_ABS                   \
-    args[0] = FT_ABS( args[0] );
-
-
-#define DO_NEG          \
-    args[0] = -args[0];
-
-
-#define DO_FLOOR                       \
-    args[0] = FT_PIX_FLOOR( args[0] );
-
-
-#define DO_CEILING                    \
-    args[0] = FT_PIX_CEIL( args[0] );
-
-#ifdef TT_CONFIG_OPTION_SUBPIXEL_HINTING
-
-#define DO_RS                                              \
-   {                                                       \
-     FT_ULong  I = (FT_ULong)args[0];                      \
-                                                           \
-                                                           \
-     if ( BOUNDSL( I, exc->storeSize ) )                   \
-     {                                                     \
-       if ( exc->pedantic_hinting )                        \
-         ARRAY_BOUND_ERROR;                                \
-       else                                                \
-         args[0] = 0;                                      \
-     }                                                     \
-     else                                                  \
-     {                                                     \
-       /* subpixel hinting - avoid Typeman Dstroke and */  \
-       /* IStroke and Vacuform rounds                  */  \
-                                                           \
-       if ( SUBPIXEL_HINTING                            && \
-            exc->ignore_x_mode                          && \
-            ( ( I == 24                             &&     \
-                ( exc->face->sph_found_func_flags &        \
-                  ( SPH_FDEF_SPACING_1 |                   \
-                    SPH_FDEF_SPACING_2 )          ) ) ||   \
-              ( I == 22                      &&            \
-                ( exc->sph_in_func_flags   &               \
-                  SPH_FDEF_TYPEMAN_STROKES ) )        ||   \
-              ( I == 8                              &&     \
-                ( exc->face->sph_found_func_flags &        \
-                  SPH_FDEF_VACUFORM_ROUND_1       ) &&     \
-                exc->iup_called                     ) ) )  \
-         args[0] = 0;                                      \
-       else                                                \
-         args[0] = exc->storage[I];                        \
-     }                                                     \
-   }
-
-#else /* !TT_CONFIG_OPTION_SUBPIXEL_HINTING */
-
-#define DO_RS                            \
-   {                                     \
-     FT_ULong  I = (FT_ULong)args[0];    \
-                                         \
-                                         \
-     if ( BOUNDSL( I, exc->storeSize ) ) \
-     {                                   \
-       if ( exc->pedantic_hinting )      \
-         ARRAY_BOUND_ERROR;              \
-       else                              \
-         args[0] = 0;                    \
-     }                                   \
-     else                                \
-       args[0] = exc->storage[I];        \
-   }
-
-#endif /* !TT_CONFIG_OPTION_SUBPIXEL_HINTING */
-
-
-#define DO_WS                            \
-   {                                     \
-     FT_ULong  I = (FT_ULong)args[0];    \
-                                         \
-                                         \
-     if ( BOUNDSL( I, exc->storeSize ) ) \
-     {                                   \
-       if ( exc->pedantic_hinting )      \
-         ARRAY_BOUND_ERROR;              \
-     }                                   \
-     else                                \
-       exc->storage[I] = args[1];        \
-   }
-
-
-#define DO_RCVT                                \
-   {                                           \
-     FT_ULong  I = (FT_ULong)args[0];          \
-                                               \
-                                               \
-     if ( BOUNDSL( I, exc->cvtSize ) )         \
-     {                                         \
-       if ( exc->pedantic_hinting )            \
-         ARRAY_BOUND_ERROR;                    \
-       else                                    \
-         args[0] = 0;                          \
-     }                                         \
-     else                                      \
-       args[0] = exc->func_read_cvt( exc, I ); \
-   }
-
-
-#define DO_WCVTP                               \
-   {                                           \
-     FT_ULong  I = (FT_ULong)args[0];          \
-                                               \
-                                               \
-     if ( BOUNDSL( I, exc->cvtSize ) )         \
-     {                                         \
-       if ( exc->pedantic_hinting )            \
-         ARRAY_BOUND_ERROR;                    \
-     }                                         \
-     else                                      \
-       exc->func_write_cvt( exc, I, args[1] ); \
-   }
-
-
-#define DO_WCVTF                                                  \
-   {                                                              \
-     FT_ULong  I = (FT_ULong)args[0];                             \
-                                                                  \
-                                                                  \
-     if ( BOUNDSL( I, exc->cvtSize ) )                            \
-     {                                                            \
-       if ( exc->pedantic_hinting )                               \
-         ARRAY_BOUND_ERROR;                                       \
-     }                                                            \
-     else                                                         \
-       exc->cvt[I] = FT_MulFix( args[1], exc->tt_metrics.scale ); \
-   }
-
-
-#define DO_DEBUG                           \
-    exc->error = FT_THROW( Debug_OpCode );
-
-
-#define DO_ROUND                                                     \
-    args[0] = exc->func_round(                                       \
-                exc,                                                 \
-                args[0],                                             \
-                exc->tt_metrics.compensations[exc->opcode - 0x68] );
-
-
-#define DO_NROUND                                                             \
-    args[0] = Round_None( exc,                                                \
-                          args[0],                                            \
-                          exc->tt_metrics.compensations[exc->opcode - 0x6C] );
-
-
-#define DO_MAX               \
-    if ( args[1] > args[0] ) \
-      args[0] = args[1];
-
-
-#define DO_MIN               \
-    if ( args[1] < args[0] ) \
-      args[0] = args[1];
-
-
 #define ARRAY_BOUND_ERROR                         \
     do                                            \
     {                                             \
@@ -3308,36 +2713,48 @@
   /* Opcode range: 0x00-0x01                                               */
   /* Stack:        -->                                                     */
   /*                                                                       */
-  static void
-  Ins_SVTCA( INS_ARG )
-  {
-    DO_SVTCA
-  }
-
-
-  /*************************************************************************/
-  /*                                                                       */
   /* SPVTCA[a]:    Set PVector to Coordinate Axis                          */
   /* Opcode range: 0x02-0x03                                               */
   /* Stack:        -->                                                     */
-  /*                                                                       */
-  static void
-  Ins_SPVTCA( INS_ARG )
-  {
-    DO_SPVTCA
-  }
-
-
-  /*************************************************************************/
   /*                                                                       */
   /* SFVTCA[a]:    Set FVector to Coordinate Axis                          */
   /* Opcode range: 0x04-0x05                                               */
   /* Stack:        -->                                                     */
   /*                                                                       */
   static void
-  Ins_SFVTCA( INS_ARG )
+  Ins_SxyTCA( INS_ARG )
   {
-    DO_SFVTCA
+    FT_Short  AA, BB;
+    FT_Byte   opcode = exc->opcode;
+
+
+    AA = (FT_Short)( ( opcode & 1 ) << 14 );
+    BB = (FT_Short)( AA ^ 0x4000 );
+
+    if ( opcode < 4 )
+    {
+      exc->GS.projVector.x = AA;
+      exc->GS.projVector.y = BB;
+
+      exc->GS.dualVector.x = AA;
+      exc->GS.dualVector.y = BB;
+    }
+    else
+    {
+      GUESS_VECTOR( projVector );
+    }
+
+    if ( ( opcode & 2 ) == 0 )
+    {
+      exc->GS.freeVector.x = AA;
+      exc->GS.freeVector.y = BB;
+    }
+    else
+    {
+      GUESS_VECTOR( freeVector );
+    }
+
+    Compute_Funcs( exc );
   }
 
 
@@ -3350,7 +2767,16 @@
   static void
   Ins_SPVTL( INS_ARG )
   {
-    DO_SPVTL
+    if ( Ins_SxVTL( exc,
+                    (FT_UShort)args[1],
+                    (FT_UShort)args[0],
+                    exc->opcode,
+                    &exc->GS.projVector ) == SUCCESS )
+    {
+      exc->GS.dualVector = exc->GS.projVector;
+      GUESS_VECTOR( freeVector );
+      Compute_Funcs( exc );
+    }
   }
 
 
@@ -3363,7 +2789,15 @@
   static void
   Ins_SFVTL( INS_ARG )
   {
-    DO_SFVTL
+    if ( Ins_SxVTL( exc,
+                    (FT_UShort)args[1],
+                    (FT_UShort)args[0],
+                    exc->opcode,
+                    &exc->GS.freeVector ) == SUCCESS )
+    {
+      GUESS_VECTOR( projVector );
+      Compute_Funcs( exc );
+    }
   }
 
 
@@ -3376,7 +2810,9 @@
   static void
   Ins_SFVTPV( INS_ARG )
   {
-    DO_SFVTPV
+    GUESS_VECTOR( projVector );
+    exc->GS.freeVector = exc->GS.projVector;
+    Compute_Funcs( exc );
   }
 
 
@@ -3389,7 +2825,21 @@
   static void
   Ins_SPVFS( INS_ARG )
   {
-    DO_SPVFS
+    FT_Short  S;
+    FT_Long   X, Y;
+
+
+    /* Only use low 16bits, then sign extend */
+    S = (FT_Short)args[1];
+    Y = (FT_Long)S;
+    S = (FT_Short)args[0];
+    X = (FT_Long)S;
+
+    Normalize( exc, X, Y, &exc->GS.projVector );
+
+    exc->GS.dualVector = exc->GS.projVector;
+    GUESS_VECTOR( freeVector );
+    Compute_Funcs( exc );
   }
 
 
@@ -3402,7 +2852,19 @@
   static void
   Ins_SFVFS( INS_ARG )
   {
-    DO_SFVFS
+    FT_Short  S;
+    FT_Long   X, Y;
+
+
+    /* Only use low 16bits, then sign extend */
+    S = (FT_Short)args[1];
+    Y = (FT_Long)S;
+    S = (FT_Short)args[0];
+    X = S;
+
+    Normalize( exc, X, Y, &exc->GS.freeVector );
+    GUESS_VECTOR( projVector );
+    Compute_Funcs( exc );
   }
 
 
@@ -3415,7 +2877,21 @@
   static void
   Ins_GPV( INS_ARG )
   {
-    DO_GPV
+#ifdef TT_CONFIG_OPTION_UNPATENTED_HINTING
+    if ( exc->face->unpatented_hinting )
+    {
+      args[0] = exc->GS.both_x_axis ? 0x4000 : 0;
+      args[1] = exc->GS.both_x_axis ? 0 : 0x4000;
+    }
+    else
+    {
+      args[0] = exc->GS.projVector.x;
+      args[1] = exc->GS.projVector.y;
+    }
+#else
+    args[0] = exc->GS.projVector.x;
+    args[1] = exc->GS.projVector.y;
+#endif
   }
 
 
@@ -3427,7 +2903,21 @@
   static void
   Ins_GFV( INS_ARG )
   {
-    DO_GFV
+#ifdef TT_CONFIG_OPTION_UNPATENTED_HINTING
+    if ( exc->face->unpatented_hinting )
+    {
+      args[0] = exc->GS.both_x_axis ? 0x4000 : 0;
+      args[1] = exc->GS.both_x_axis ? 0 : 0x4000;
+    }
+    else
+    {
+      args[0] = exc->GS.freeVector.x;
+      args[1] = exc->GS.freeVector.y;
+    }
+#else
+    args[0] = exc->GS.freeVector.x;
+    args[1] = exc->GS.freeVector.y;
+#endif
   }
 
 
@@ -3440,7 +2930,7 @@
   static void
   Ins_SRP0( INS_ARG )
   {
-    DO_SRP0
+    exc->GS.rp0 = (FT_UShort)args[0];
   }
 
 
@@ -3453,7 +2943,7 @@
   static void
   Ins_SRP1( INS_ARG )
   {
-    DO_SRP1
+    exc->GS.rp1 = (FT_UShort)args[0];
   }
 
 
@@ -3466,7 +2956,7 @@
   static void
   Ins_SRP2( INS_ARG )
   {
-    DO_SRP2
+    exc->GS.rp2 = (FT_UShort)args[0];
   }
 
 
@@ -3479,7 +2969,8 @@
   static void
   Ins_RTHG( INS_ARG )
   {
-    DO_RTHG
+    exc->GS.round_state = TT_Round_To_Half_Grid;
+    exc->func_round     = (TT_Round_Func)Round_To_Half_Grid;
   }
 
 
@@ -3492,7 +2983,8 @@
   static void
   Ins_RTG( INS_ARG )
   {
-    DO_RTG
+    exc->GS.round_state = TT_Round_To_Grid;
+    exc->func_round     = (TT_Round_Func)Round_To_Grid;
   }
 
 
@@ -3504,7 +2996,8 @@
   static void
   Ins_RTDG( INS_ARG )
   {
-    DO_RTDG
+    exc->GS.round_state = TT_Round_To_Double_Grid;
+    exc->func_round     = (TT_Round_Func)Round_To_Double_Grid;
   }
 
 
@@ -3516,7 +3009,8 @@
   static void
   Ins_RUTG( INS_ARG )
   {
-    DO_RUTG
+    exc->GS.round_state = TT_Round_Up_To_Grid;
+    exc->func_round     = (TT_Round_Func)Round_Up_To_Grid;
   }
 
 
@@ -3529,7 +3023,8 @@
   static void
   Ins_RDTG( INS_ARG )
   {
-    DO_RDTG
+    exc->GS.round_state = TT_Round_Down_To_Grid;
+    exc->func_round     = (TT_Round_Func)Round_Down_To_Grid;
   }
 
 
@@ -3542,7 +3037,8 @@
   static void
   Ins_ROFF( INS_ARG )
   {
-    DO_ROFF
+    exc->GS.round_state = TT_Round_Off;
+    exc->func_round     = (TT_Round_Func)Round_None;
   }
 
 
@@ -3555,7 +3051,10 @@
   static void
   Ins_SROUND( INS_ARG )
   {
-    DO_SROUND
+    SetSuperRound( exc, 0x4000, args[0] );
+
+    exc->GS.round_state = TT_Round_Super;
+    exc->func_round     = (TT_Round_Func)Round_Super;
   }
 
 
@@ -3568,7 +3067,10 @@
   static void
   Ins_S45ROUND( INS_ARG )
   {
-    DO_S45ROUND
+    SetSuperRound( exc, 0x2D41, args[0] );
+
+    exc->GS.round_state = TT_Round_Super_45;
+    exc->func_round     = (TT_Round_Func)Round_Super_45;
   }
 
 
@@ -3581,7 +3083,10 @@
   static void
   Ins_SLOOP( INS_ARG )
   {
-    DO_SLOOP
+    if ( args[0] < 0 )
+      exc->error = FT_THROW( Bad_Argument );
+    else
+      exc->GS.loop = args[0];
   }
 
 
@@ -3594,7 +3099,7 @@
   static void
   Ins_SMD( INS_ARG )
   {
-    DO_SMD
+    exc->GS.minimum_distance = args[0];
   }
 
 
@@ -3607,7 +3112,7 @@
   static void
   Ins_SCVTCI( INS_ARG )
   {
-    DO_SCVTCI
+    exc->GS.control_value_cutin = (FT_F26Dot6)args[0];
   }
 
 
@@ -3620,7 +3125,7 @@
   static void
   Ins_SSWCI( INS_ARG )
   {
-    DO_SSWCI
+    exc->GS.single_width_cutin = (FT_F26Dot6)args[0];
   }
 
 
@@ -3633,7 +3138,8 @@
   static void
   Ins_SSW( INS_ARG )
   {
-    DO_SSW
+    exc->GS.single_width_value = FT_MulFix( args[0],
+                                            exc->tt_metrics.scale );
   }
 
 
@@ -3646,7 +3152,7 @@
   static void
   Ins_FLIPON( INS_ARG )
   {
-    DO_FLIPON
+    exc->GS.auto_flip = TRUE;
   }
 
 
@@ -3659,7 +3165,7 @@
   static void
   Ins_FLIPOFF( INS_ARG )
   {
-    DO_FLIPOFF
+    exc->GS.auto_flip = FALSE;
   }
 
 
@@ -3685,7 +3191,7 @@
   static void
   Ins_SDB( INS_ARG )
   {
-    DO_SDB
+    exc->GS.delta_base = (FT_UShort)args[0];
   }
 
 
@@ -3698,7 +3204,10 @@
   static void
   Ins_SDS( INS_ARG )
   {
-    DO_SDS
+    if ( (FT_ULong)args[0] > 6UL )
+      exc->error = FT_THROW( Bad_Argument );
+    else
+      exc->GS.delta_shift = (FT_UShort)args[0];
   }
 
 
@@ -3711,7 +3220,7 @@
   static void
   Ins_MPPEM( INS_ARG )
   {
-    DO_MPPEM
+    args[0] = exc->func_cur_ppem( exc );
   }
 
 
@@ -3724,7 +3233,13 @@
   static void
   Ins_MPS( INS_ARG )
   {
-    DO_MPS
+    /* Note: The point size should be irrelevant in a given font program; */
+    /*       we thus decide to return only the PPEM value.                */
+#if 0
+    args[0] = exc->metrics.pointSize;
+#else
+    args[0] = exc->func_cur_ppem( exc );
+#endif
   }
 
 
@@ -3737,7 +3252,7 @@
   static void
   Ins_DUP( INS_ARG )
   {
-    DO_DUP
+    args[1] = args[0];
   }
 
 
@@ -3763,7 +3278,7 @@
   static void
   Ins_CLEAR( INS_ARG )
   {
-    DO_CLEAR
+    exc->new_top = 0;
   }
 
 
@@ -3776,7 +3291,12 @@
   static void
   Ins_SWAP( INS_ARG )
   {
-    DO_SWAP
+    FT_Long  L;
+
+
+    L       = args[0];
+    args[0] = args[1];
+    args[1] = L;
   }
 
 
@@ -3789,7 +3309,7 @@
   static void
   Ins_DEPTH( INS_ARG )
   {
-    DO_DEPTH
+    args[0] = exc->top;
   }
 
 
@@ -3802,7 +3322,19 @@
   static void
   Ins_CINDEX( INS_ARG )
   {
-    DO_CINDEX
+    FT_Long  L;
+
+
+    L = args[0];
+
+    if ( L <= 0 || L > exc->args )
+    {
+      if ( exc->pedantic_hinting )
+        exc->error = FT_THROW( Invalid_Reference );
+      args[0] = 0;
+    }
+    else
+      args[0] = exc->stack[exc->args - L];
   }
 
 
@@ -3828,7 +3360,17 @@
   static void
   Ins_JROT( INS_ARG )
   {
-    DO_JROT
+    if ( args[1] != 0 )
+    {
+      if ( args[0] == 0 && exc->args == 0 )
+        exc->error = FT_THROW( Bad_Argument );
+      exc->IP += args[0];
+      if ( exc->IP < 0                                             ||
+           ( exc->callTop > 0                                    &&
+             exc->IP > exc->callStack[exc->callTop - 1].Def->end ) )
+        exc->error = FT_THROW( Bad_Argument );
+      exc->step_ins = FALSE;
+    }
   }
 
 
@@ -3841,7 +3383,14 @@
   static void
   Ins_JMPR( INS_ARG )
   {
-    DO_JMPR
+    if ( args[0] == 0 && exc->args == 0 )
+      exc->error = FT_THROW( Bad_Argument );
+    exc->IP += args[0];
+    if ( exc->IP < 0                                             ||
+         ( exc->callTop > 0                                    &&
+           exc->IP > exc->callStack[exc->callTop - 1].Def->end ) )
+      exc->error = FT_THROW( Bad_Argument );
+    exc->step_ins = FALSE;
   }
 
 
@@ -3854,7 +3403,17 @@
   static void
   Ins_JROF( INS_ARG )
   {
-    DO_JROF
+    if ( args[1] == 0 )
+    {
+      if ( args[0] == 0 && exc->args == 0 )
+        exc->error = FT_THROW( Bad_Argument );
+      exc->IP += args[0];
+      if ( exc->IP < 0                                             ||
+           ( exc->callTop > 0                                    &&
+             exc->IP > exc->callStack[exc->callTop - 1].Def->end ) )
+        exc->error = FT_THROW( Bad_Argument );
+      exc->step_ins = FALSE;
+    }
   }
 
 
@@ -3867,7 +3426,7 @@
   static void
   Ins_LT( INS_ARG )
   {
-    DO_LT
+    args[0] = ( args[0] < args[1] );
   }
 
 
@@ -3880,7 +3439,7 @@
   static void
   Ins_LTEQ( INS_ARG )
   {
-    DO_LTEQ
+    args[0] = ( args[0] <= args[1] );
   }
 
 
@@ -3893,7 +3452,7 @@
   static void
   Ins_GT( INS_ARG )
   {
-    DO_GT
+    args[0] = ( args[0] > args[1] );
   }
 
 
@@ -3906,7 +3465,7 @@
   static void
   Ins_GTEQ( INS_ARG )
   {
-    DO_GTEQ
+    args[0] = ( args[0] >= args[1] );
   }
 
 
@@ -3919,7 +3478,7 @@
   static void
   Ins_EQ( INS_ARG )
   {
-    DO_EQ
+    args[0] = ( args[0] == args[1] );
   }
 
 
@@ -3932,7 +3491,7 @@
   static void
   Ins_NEQ( INS_ARG )
   {
-    DO_NEQ
+    args[0] = ( args[0] != args[1] );
   }
 
 
@@ -3945,7 +3504,7 @@
   static void
   Ins_ODD( INS_ARG )
   {
-    DO_ODD
+    args[0] = ( ( exc->func_round( exc, args[0], 0 ) & 127 ) == 64 );
   }
 
 
@@ -3958,7 +3517,7 @@
   static void
   Ins_EVEN( INS_ARG )
   {
-    DO_EVEN
+    args[0] = ( ( exc->func_round( exc, args[0], 0 ) & 127 ) == 0 );
   }
 
 
@@ -3971,7 +3530,7 @@
   static void
   Ins_AND( INS_ARG )
   {
-    DO_AND
+    args[0] = ( args[0] && args[1] );
   }
 
 
@@ -3984,7 +3543,7 @@
   static void
   Ins_OR( INS_ARG )
   {
-    DO_OR
+    args[0] = ( args[0] || args[1] );
   }
 
 
@@ -3997,7 +3556,7 @@
   static void
   Ins_NOT( INS_ARG )
   {
-    DO_NOT
+    args[0] = !args[0];
   }
 
 
@@ -4010,7 +3569,7 @@
   static void
   Ins_ADD( INS_ARG )
   {
-    DO_ADD
+    args[0] += args[1];
   }
 
 
@@ -4023,7 +3582,7 @@
   static void
   Ins_SUB( INS_ARG )
   {
-    DO_SUB
+    args[0] -= args[1];
   }
 
 
@@ -4036,7 +3595,10 @@
   static void
   Ins_DIV( INS_ARG )
   {
-    DO_DIV
+    if ( args[1] == 0 )
+      exc->error = FT_THROW( Divide_By_Zero );
+    else
+      args[0] = FT_MulDiv_No_Round( args[0], 64L, args[1] );
   }
 
 
@@ -4049,7 +3611,7 @@
   static void
   Ins_MUL( INS_ARG )
   {
-    DO_MUL
+    args[0] = FT_MulDiv( args[0], args[1], 64L );
   }
 
 
@@ -4062,7 +3624,7 @@
   static void
   Ins_ABS( INS_ARG )
   {
-    DO_ABS
+    args[0] = FT_ABS( args[0] );
   }
 
 
@@ -4075,7 +3637,7 @@
   static void
   Ins_NEG( INS_ARG )
   {
-    DO_NEG
+    args[0] = -args[0];
   }
 
 
@@ -4088,7 +3650,7 @@
   static void
   Ins_FLOOR( INS_ARG )
   {
-    DO_FLOOR
+    args[0] = FT_PIX_FLOOR( args[0] );
   }
 
 
@@ -4101,7 +3663,7 @@
   static void
   Ins_CEILING( INS_ARG )
   {
-    DO_CEILING
+    args[0] = FT_PIX_CEIL( args[0] );
   }
 
 
@@ -4114,7 +3676,56 @@
   static void
   Ins_RS( INS_ARG )
   {
-    DO_RS
+#ifdef TT_CONFIG_OPTION_SUBPIXEL_HINTING
+
+    FT_ULong  I = (FT_ULong)args[0];
+
+
+    if ( BOUNDSL( I, exc->storeSize ) )
+    {
+      if ( exc->pedantic_hinting )
+        ARRAY_BOUND_ERROR;
+      else
+        args[0] = 0;
+    }
+    else
+    {
+      /* subpixel hinting - avoid Typeman Dstroke and */
+      /* IStroke and Vacuform rounds                  */
+      if ( SUBPIXEL_HINTING                            &&
+           exc->ignore_x_mode                          &&
+           ( ( I == 24                             &&
+               ( exc->face->sph_found_func_flags &
+                 ( SPH_FDEF_SPACING_1 |
+                   SPH_FDEF_SPACING_2 )          ) ) ||
+             ( I == 22                      &&
+               ( exc->sph_in_func_flags   &
+                 SPH_FDEF_TYPEMAN_STROKES ) )        ||
+             ( I == 8                              &&
+               ( exc->face->sph_found_func_flags &
+                 SPH_FDEF_VACUFORM_ROUND_1       ) &&
+               exc->iup_called                     ) ) )
+        args[0] = 0;
+      else
+        args[0] = exc->storage[I];
+    }
+
+#else /* !TT_CONFIG_OPTION_SUBPIXEL_HINTING */
+
+    FT_ULong  I = (FT_ULong)args[0];
+
+
+    if ( BOUNDSL( I, exc->storeSize ) )
+    {
+      if ( exc->pedantic_hinting )
+        ARRAY_BOUND_ERROR;
+      else
+        args[0] = 0;
+    }
+    else
+      args[0] = exc->storage[I];
+
+#endif /* !TT_CONFIG_OPTION_SUBPIXEL_HINTING */
   }
 
 
@@ -4127,7 +3738,16 @@
   static void
   Ins_WS( INS_ARG )
   {
-    DO_WS
+    FT_ULong  I = (FT_ULong)args[0];
+
+
+    if ( BOUNDSL( I, exc->storeSize ) )
+    {
+      if ( exc->pedantic_hinting )
+        ARRAY_BOUND_ERROR;
+    }
+    else
+      exc->storage[I] = args[1];
   }
 
 
@@ -4140,7 +3760,16 @@
   static void
   Ins_WCVTP( INS_ARG )
   {
-    DO_WCVTP
+    FT_ULong  I = (FT_ULong)args[0];
+
+
+    if ( BOUNDSL( I, exc->cvtSize ) )
+    {
+      if ( exc->pedantic_hinting )
+        ARRAY_BOUND_ERROR;
+    }
+    else
+      exc->func_write_cvt( exc, I, args[1] );
   }
 
 
@@ -4153,7 +3782,16 @@
   static void
   Ins_WCVTF( INS_ARG )
   {
-    DO_WCVTF
+    FT_ULong  I = (FT_ULong)args[0];
+
+
+    if ( BOUNDSL( I, exc->cvtSize ) )
+    {
+      if ( exc->pedantic_hinting )
+        ARRAY_BOUND_ERROR;
+    }
+    else
+      exc->cvt[I] = FT_MulFix( args[1], exc->tt_metrics.scale );
   }
 
 
@@ -4166,7 +3804,18 @@
   static void
   Ins_RCVT( INS_ARG )
   {
-    DO_RCVT
+    FT_ULong  I = (FT_ULong)args[0];
+
+
+    if ( BOUNDSL( I, exc->cvtSize ) )
+    {
+      if ( exc->pedantic_hinting )
+        ARRAY_BOUND_ERROR;
+      else
+        args[0] = 0;
+    }
+    else
+      args[0] = exc->func_read_cvt( exc, I );
   }
 
 
@@ -4194,7 +3843,7 @@
   static void
   Ins_DEBUG( INS_ARG )
   {
-    DO_DEBUG
+    exc->error = FT_THROW( Debug_OpCode );
   }
 
 
@@ -4207,7 +3856,10 @@
   static void
   Ins_ROUND( INS_ARG )
   {
-    DO_ROUND
+    args[0] = exc->func_round(
+                exc,
+                args[0],
+                exc->tt_metrics.compensations[exc->opcode - 0x68] );
   }
 
 
@@ -4220,7 +3872,9 @@
   static void
   Ins_NROUND( INS_ARG )
   {
-    DO_NROUND
+    args[0] = Round_None( exc,
+                          args[0],
+                          exc->tt_metrics.compensations[exc->opcode - 0x6C] );
   }
 
 
@@ -4233,7 +3887,8 @@
   static void
   Ins_MAX( INS_ARG )
   {
-    DO_MAX
+    if ( args[1] > args[0] )
+      args[0] = args[1];
   }
 
 
@@ -4246,7 +3901,8 @@
   static void
   Ins_MIN( INS_ARG )
   {
-    DO_MIN
+    if ( args[1] < args[0] )
+      args[0] = args[1];
   }
 
 
@@ -7949,10 +7605,6 @@
         FT_Byte   opcode = exc->opcode;
 
 
-#undef  ARRAY_BOUND_ERROR
-#define ARRAY_BOUND_ERROR  goto Set_Invalid_Ref
-
-
         switch ( opcode )
         {
         case 0x00:  /* SVTCA y  */
@@ -7961,68 +7613,37 @@
         case 0x03:  /* SPvTCA x */
         case 0x04:  /* SFvTCA y */
         case 0x05:  /* SFvTCA x */
-          {
-            FT_Short  AA, BB;
-
-
-            AA = (FT_Short)( ( opcode & 1 ) << 14 );
-            BB = (FT_Short)( AA ^ 0x4000 );
-
-            if ( opcode < 4 )
-            {
-              exc->GS.projVector.x = AA;
-              exc->GS.projVector.y = BB;
-
-              exc->GS.dualVector.x = AA;
-              exc->GS.dualVector.y = BB;
-            }
-            else
-            {
-              GUESS_VECTOR( projVector );
-            }
-
-            if ( ( opcode & 2 ) == 0 )
-            {
-              exc->GS.freeVector.x = AA;
-              exc->GS.freeVector.y = BB;
-            }
-            else
-            {
-              GUESS_VECTOR( freeVector );
-            }
-
-            Compute_Funcs( exc );
-          }
+          Ins_SxyTCA( exc, args );
           break;
 
         case 0x06:  /* SPvTL // */
         case 0x07:  /* SPvTL +  */
-          DO_SPVTL
+          Ins_SPVTL( exc, args );
           break;
 
         case 0x08:  /* SFvTL // */
         case 0x09:  /* SFvTL +  */
-          DO_SFVTL
+          Ins_SFVTL( exc, args );
           break;
 
         case 0x0A:  /* SPvFS */
-          DO_SPVFS
+          Ins_SPVFS( exc, args );
           break;
 
         case 0x0B:  /* SFvFS */
-          DO_SFVFS
+          Ins_SFVFS( exc, args );
           break;
 
         case 0x0C:  /* GPV */
-          DO_GPV
+          Ins_GPV( exc, args );
           break;
 
         case 0x0D:  /* GFV */
-          DO_GFV
+          Ins_GFV( exc, args );
           break;
 
         case 0x0E:  /* SFvTPv */
-          DO_SFVTPV
+          Ins_SFVTPV( exc, args );
           break;
 
         case 0x0F:  /* ISECT  */
@@ -8030,15 +7651,15 @@
           break;
 
         case 0x10:  /* SRP0 */
-          DO_SRP0
+          Ins_SRP0( exc, args );
           break;
 
         case 0x11:  /* SRP1 */
-          DO_SRP1
+          Ins_SRP1( exc, args );
           break;
 
         case 0x12:  /* SRP2 */
-          DO_SRP2
+          Ins_SRP2( exc, args );
           break;
 
         case 0x13:  /* SZP0 */
@@ -8058,19 +7679,19 @@
           break;
 
         case 0x17:  /* SLOOP */
-          DO_SLOOP
+          Ins_SLOOP( exc, args );
           break;
 
         case 0x18:  /* RTG */
-          DO_RTG
+          Ins_RTG( exc, args );
           break;
 
         case 0x19:  /* RTHG */
-          DO_RTHG
+          Ins_RTHG( exc, args );
           break;
 
         case 0x1A:  /* SMD */
-          DO_SMD
+          Ins_SMD( exc, args );
           break;
 
         case 0x1B:  /* ELSE */
@@ -8078,43 +7699,43 @@
           break;
 
         case 0x1C:  /* JMPR */
-          DO_JMPR
+          Ins_JMPR( exc, args );
           break;
 
         case 0x1D:  /* SCVTCI */
-          DO_SCVTCI
+          Ins_SCVTCI( exc, args );
           break;
 
         case 0x1E:  /* SSWCI */
-          DO_SSWCI
+          Ins_SSWCI( exc, args );
           break;
 
         case 0x1F:  /* SSW */
-          DO_SSW
+          Ins_SSW( exc, args );
           break;
 
         case 0x20:  /* DUP */
-          DO_DUP
+          Ins_DUP( exc, args );
           break;
 
         case 0x21:  /* POP */
-          /* nothing :-) */
+          Ins_POP( exc, args );
           break;
 
         case 0x22:  /* CLEAR */
-          DO_CLEAR
+          Ins_CLEAR( exc, args );
           break;
 
         case 0x23:  /* SWAP */
-          DO_SWAP
+          Ins_SWAP( exc, args );
           break;
 
         case 0x24:  /* DEPTH */
-          DO_DEPTH
+          Ins_DEPTH( exc, args );
           break;
 
         case 0x25:  /* CINDEX */
-          DO_CINDEX
+          Ins_CINDEX( exc, args );
           break;
 
         case 0x26:  /* MINDEX */
@@ -8192,7 +7813,7 @@
           break;
 
         case 0x3D:  /* RTDG */
-          DO_RTDG
+          Ins_RTDG( exc, args );
           break;
 
         case 0x3E:  /* MIAP */
@@ -8209,23 +7830,19 @@
           break;
 
         case 0x42:  /* WS */
-          DO_WS
-          break;
-
-      Set_Invalid_Ref:
-          exc->error = FT_THROW( Invalid_Reference );
+          Ins_WS( exc, args );
           break;
 
         case 0x43:  /* RS */
-          DO_RS
+          Ins_RS( exc, args );
           break;
 
         case 0x44:  /* WCVTP */
-          DO_WCVTP
+          Ins_WCVTP( exc, args );
           break;
 
         case 0x45:  /* RCVT */
-          DO_RCVT
+          Ins_RCVT( exc, args );
           break;
 
         case 0x46:  /* GC */
@@ -8243,55 +7860,55 @@
           break;
 
         case 0x4B:  /* MPPEM */
-          DO_MPPEM
+          Ins_MPPEM( exc, args );
           break;
 
         case 0x4C:  /* MPS */
-          DO_MPS
+          Ins_MPS( exc, args );
           break;
 
         case 0x4D:  /* FLIPON */
-          DO_FLIPON
+          Ins_FLIPON( exc, args );
           break;
 
         case 0x4E:  /* FLIPOFF */
-          DO_FLIPOFF
+          Ins_FLIPOFF( exc, args );
           break;
 
         case 0x4F:  /* DEBUG */
-          DO_DEBUG
+          Ins_DEBUG( exc, args );
           break;
 
         case 0x50:  /* LT */
-          DO_LT
+          Ins_LT( exc, args );
           break;
 
         case 0x51:  /* LTEQ */
-          DO_LTEQ
+          Ins_LTEQ( exc, args );
           break;
 
         case 0x52:  /* GT */
-          DO_GT
+          Ins_GT( exc, args );
           break;
 
         case 0x53:  /* GTEQ */
-          DO_GTEQ
+          Ins_GTEQ( exc, args );
           break;
 
         case 0x54:  /* EQ */
-          DO_EQ
+          Ins_EQ( exc, args );
           break;
 
         case 0x55:  /* NEQ */
-          DO_NEQ
+          Ins_NEQ( exc, args );
           break;
 
         case 0x56:  /* ODD */
-          DO_ODD
+          Ins_ODD( exc, args );
           break;
 
         case 0x57:  /* EVEN */
-          DO_EVEN
+          Ins_EVEN( exc, args );
           break;
 
         case 0x58:  /* IF */
@@ -8299,19 +7916,19 @@
           break;
 
         case 0x59:  /* EIF */
-          /* do nothing */
+          Ins_EIF( exc, args );
           break;
 
         case 0x5A:  /* AND */
-          DO_AND
+          Ins_AND( exc, args );
           break;
 
         case 0x5B:  /* OR */
-          DO_OR
+          Ins_OR( exc, args );
           break;
 
         case 0x5C:  /* NOT */
-          DO_NOT
+          Ins_NOT( exc, args );
           break;
 
         case 0x5D:  /* DELTAP1 */
@@ -8319,61 +7936,61 @@
           break;
 
         case 0x5E:  /* SDB */
-          DO_SDB
+          Ins_SDB( exc, args );
           break;
 
         case 0x5F:  /* SDS */
-          DO_SDS
+          Ins_SDS( exc, args );
           break;
 
         case 0x60:  /* ADD */
-          DO_ADD
+          Ins_ADD( exc, args );
           break;
 
         case 0x61:  /* SUB */
-          DO_SUB
+          Ins_SUB( exc, args );
           break;
 
         case 0x62:  /* DIV */
-          DO_DIV
+          Ins_DIV( exc, args );
           break;
 
         case 0x63:  /* MUL */
-          DO_MUL
+          Ins_MUL( exc, args );
           break;
 
         case 0x64:  /* ABS */
-          DO_ABS
+          Ins_ABS( exc, args );
           break;
 
         case 0x65:  /* NEG */
-          DO_NEG
+          Ins_NEG( exc, args );
           break;
 
         case 0x66:  /* FLOOR */
-          DO_FLOOR
+          Ins_FLOOR( exc, args );
           break;
 
         case 0x67:  /* CEILING */
-          DO_CEILING
+          Ins_CEILING( exc, args );
           break;
 
         case 0x68:  /* ROUND */
         case 0x69:  /* ROUND */
         case 0x6A:  /* ROUND */
         case 0x6B:  /* ROUND */
-          DO_ROUND
+          Ins_ROUND( exc, args );
           break;
 
         case 0x6C:  /* NROUND */
         case 0x6D:  /* NROUND */
         case 0x6E:  /* NRRUND */
         case 0x6F:  /* NROUND */
-          DO_NROUND
+          Ins_NROUND( exc, args );
           break;
 
         case 0x70:  /* WCVTF */
-          DO_WCVTF
+          Ins_WCVTF( exc, args );
           break;
 
         case 0x71:  /* DELTAP2 */
@@ -8388,23 +8005,23 @@
           break;
 
         case 0x76:  /* SROUND */
-          DO_SROUND
+          Ins_SROUND( exc, args );
           break;
 
         case 0x77:  /* S45Round */
-          DO_S45ROUND
+          Ins_S45ROUND( exc, args );
           break;
 
         case 0x78:  /* JROT */
-          DO_JROT
+          Ins_JROT( exc, args );
           break;
 
         case 0x79:  /* JROF */
-          DO_JROF
+          Ins_JROF( exc, args );
           break;
 
         case 0x7A:  /* ROFF */
-          DO_ROFF
+          Ins_ROFF( exc, args );
           break;
 
         case 0x7B:  /* ???? */
@@ -8412,16 +8029,19 @@
           break;
 
         case 0x7C:  /* RUTG */
-          DO_RUTG
+          Ins_RUTG( exc, args );
           break;
 
         case 0x7D:  /* RDTG */
-          DO_RDTG
+          Ins_RDTG( exc, args );
           break;
 
         case 0x7E:  /* SANGW */
-        case 0x7F:  /* AA    */
-          /* nothing - obsolete */
+          Ins_SANGW( exc, args );
+          break;
+
+        case 0x7F:  /* AA */
+          Ins_AA( exc, args );
           break;
 
         case 0x80:  /* FLIPPT */
@@ -8463,11 +8083,11 @@
           break;
 
         case 0x8B:  /* MAX */
-          DO_MAX
+          Ins_MAX( exc, args );
           break;
 
         case 0x8C:  /* MIN */
-          DO_MIN
+          Ins_MIN( exc, args );
           break;
 
         case 0x8D:  /* SCANTYPE */

@@ -1,5 +1,19 @@
 2015-01-10  Werner Lemberg  <wl@gnu.org>
 
+	[truetype] More macro expansions.
+
+	Based on a patch from Behdad.
+
+	* src/truetype/ttinterp.c (DO_*): Expand macros into corresponding
+	`Ins_*' functions.
+	(TT_RunIns): Replace `DO_*' macros with `Ins_*' function calls.
+	(ARRAY_BOUND_ERROR): Remove second definition, which is no longer
+	needed.
+	(Ins_SVTCA, Ins_SPVTCA, Ins_SFVTCA): Replaced with...
+	(Ins_SxyTCA): New function.
+
+2015-01-10  Werner Lemberg  <wl@gnu.org>
+
 	[truetype] Remove TT_CONFIG_OPTION_INTERPRETER_SWITCH.
 
 	Behdad suggested this code simplification, and nobody objected...
