@@ -1,3 +1,10 @@
+2015-01-10  Werner Lemberg  <wl@gnu.org>
+
+	* src/truetype/ttinterp.c (CUR): Remove by replacing with expansion.
+
+	This starts a series of patches that simplifies the code of the
+	bytecode interpreter.
+
 2014-12-30  Werner Lemberg  <wl@gnu.org>
 
 	* Version 2.5.5 released.
