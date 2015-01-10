@@ -113,8 +113,7 @@
   /*                                                                       */
   /* This macro computes (a*2^14)/b and complements TT_MulFix14.           */
   /*                                                                       */
-#define TT_DivFix14( a, b ) \
-          FT_DivFix( a, (b) << 2 )
+#define TT_DivFix14( a, b )  FT_DivFix( a, (b) << 2 )
 
 
 #undef  SUCCESS
@@ -124,14 +123,17 @@
 #define FAILURE  1
 
 #ifdef TT_CONFIG_OPTION_UNPATENTED_HINTING
-#define GUESS_VECTOR( V )                                           \
-  if ( exc->face->unpatented_hinting )                              \
-  {                                                                 \
-    exc->GS.V.x = (FT_F2Dot14)( exc->GS.both_x_axis ? 0x4000 : 0 ); \
-    exc->GS.V.y = (FT_F2Dot14)( exc->GS.both_x_axis ? 0 : 0x4000 ); \
-  }
+#define GUESS_VECTOR( V )                                             \
+  do                                                                  \
+  {                                                                   \
+    if ( exc->face->unpatented_hinting )                              \
+    {                                                                 \
+      exc->GS.V.x = (FT_F2Dot14)( exc->GS.both_x_axis ? 0x4000 : 0 ); \
+      exc->GS.V.y = (FT_F2Dot14)( exc->GS.both_x_axis ? 0 : 0x4000 ); \
+    }                                                                 \
+  } while (0)
 #else
-#define GUESS_VECTOR( V )
+#define GUESS_VECTOR( V )  do { } while (0)
 #endif
 
   /*************************************************************************/
@@ -713,8 +715,8 @@
     /*  SFvTL +   */  PACK( 2, 0 ),
     /*  SPvFS     */  PACK( 2, 0 ),
     /*  SFvFS     */  PACK( 2, 0 ),
-    /*  GPV       */  PACK( 0, 2 ),
-    /*  GFV       */  PACK( 0, 2 ),
+    /*  GPv       */  PACK( 0, 2 ),
+    /*  GFv       */  PACK( 0, 2 ),
     /*  SFvTPv    */  PACK( 0, 0 ),
     /*  ISECT     */  PACK( 5, 0 ),
 
@@ -843,8 +845,8 @@
     /*  INS_$83   */  PACK( 0, 0 ),
     /*  INS_$84   */  PACK( 0, 0 ),
     /*  ScanCTRL  */  PACK( 1, 0 ),
-    /*  SDPVTL[0] */  PACK( 2, 0 ),
-    /*  SDPVTL[1] */  PACK( 2, 0 ),
+    /*  SDPvTL[0] */  PACK( 2, 0 ),
+    /*  SDPvTL[1] */  PACK( 2, 0 ),
     /*  GetINFO   */  PACK( 1, 1 ),
     /*  IDEF      */  PACK( 1, 0 ),
     /*  ROLL      */  PACK( 3, 3 ),
@@ -992,8 +994,8 @@
     "SFvTL +",
     "SPvFS",
     "SFvFS",
-    "GPV",
-    "GFV",
+    "GPv",
+    "GFv",
     "SFvTPv",
     "ISECT",
 
@@ -1122,8 +1124,8 @@
     "INS_$83",
     "INS_$84",
     "ScanCTRL",
-    "SDVPTL[0]",
-    "SDVPTL[1]",
+    "SDPvTL[0]",
+    "SDPvTL[1]",
     "GetINFO",
     "IDEF",
     "ROLL",
@@ -2541,9 +2543,9 @@
     else if ( exc->GS.freeVector.y == 0x4000 )
       exc->F_dot_P = exc->GS.projVector.y;
     else
-      exc->F_dot_P = ( (FT_Long)exc->GS.projVector.x * exc->GS.freeVector.x +
-                       (FT_Long)exc->GS.projVector.y * exc->GS.freeVector.y ) >>
-                     14;
+      exc->F_dot_P =
+        ( (FT_Long)exc->GS.projVector.x * exc->GS.freeVector.x +
+          (FT_Long)exc->GS.projVector.y * exc->GS.freeVector.y ) >> 14;
 
     if ( exc->GS.projVector.x == 0x4000 )
       exc->func_project = (TT_Project_Func)Project_x;
@@ -2675,8 +2677,8 @@
     A = p1->x - p2->x;
     B = p1->y - p2->y;
 
-    /* If p1 == p2, SPVTL and SFVTL behave the same as */
-    /* SPVTCA[X] and SFVTCA[X], respectively.          */
+    /* If p1 == p2, SPvTL and SFvTL behave the same as */
+    /* SPvTCA[X] and SFvTCA[X], respectively.          */
     /*                                                 */
     /* Confirmed by Greg Hitchcock.                    */
 
@@ -2713,11 +2715,11 @@
   /* Opcode range: 0x00-0x01                                               */
   /* Stack:        -->                                                     */
   /*                                                                       */
-  /* SPVTCA[a]:    Set PVector to Coordinate Axis                          */
+  /* SPvTCA[a]:    Set PVector to Coordinate Axis                          */
   /* Opcode range: 0x02-0x03                                               */
   /* Stack:        -->                                                     */
   /*                                                                       */
-  /* SFVTCA[a]:    Set FVector to Coordinate Axis                          */
+  /* SFvTCA[a]:    Set FVector to Coordinate Axis                          */
   /* Opcode range: 0x04-0x05                                               */
   /* Stack:        -->                                                     */
   /*                                                                       */
@@ -2740,9 +2742,7 @@
       exc->GS.dualVector.y = BB;
     }
     else
-    {
       GUESS_VECTOR( projVector );
-    }
 
     if ( ( opcode & 2 ) == 0 )
     {
@@ -2750,9 +2750,7 @@
       exc->GS.freeVector.y = BB;
     }
     else
-    {
       GUESS_VECTOR( freeVector );
-    }
 
     Compute_Funcs( exc );
   }
@@ -2760,7 +2758,7 @@
 
   /*************************************************************************/
   /*                                                                       */
-  /* SPVTL[a]:     Set PVector To Line                                     */
+  /* SPvTL[a]:     Set PVector To Line                                     */
   /* Opcode range: 0x06-0x07                                               */
   /* Stack:        uint32 uint32 -->                                       */
   /*                                                                       */
@@ -2782,7 +2780,7 @@
 
   /*************************************************************************/
   /*                                                                       */
-  /* SFVTL[a]:     Set FVector To Line                                     */
+  /* SFvTL[a]:     Set FVector To Line                                     */
   /* Opcode range: 0x08-0x09                                               */
   /* Stack:        uint32 uint32 -->                                       */
   /*                                                                       */
@@ -2803,7 +2801,7 @@
 
   /*************************************************************************/
   /*                                                                       */
-  /* SFVTPV[]:     Set FVector To PVector                                  */
+  /* SFvTPv[]:     Set FVector To PVector                                  */
   /* Opcode range: 0x0E                                                    */
   /* Stack:        -->                                                     */
   /*                                                                       */
@@ -2818,7 +2816,7 @@
 
   /*************************************************************************/
   /*                                                                       */
-  /* SPVFS[]:      Set PVector From Stack                                  */
+  /* SPvFS[]:      Set PVector From Stack                                  */
   /* Opcode range: 0x0A                                                    */
   /* Stack:        f2.14 f2.14 -->                                         */
   /*                                                                       */
@@ -2845,7 +2843,7 @@
 
   /*************************************************************************/
   /*                                                                       */
-  /* SFVFS[]:      Set FVector From Stack                                  */
+  /* SFvFS[]:      Set FVector From Stack                                  */
   /* Opcode range: 0x0B                                                    */
   /* Stack:        f2.14 f2.14 -->                                         */
   /*                                                                       */
@@ -2870,7 +2868,7 @@
 
   /*************************************************************************/
   /*                                                                       */
-  /* GPV[]:        Get Projection Vector                                   */
+  /* GPv[]:        Get Projection Vector                                   */
   /* Opcode range: 0x0C                                                    */
   /* Stack:        ef2.14 --> ef2.14                                       */
   /*                                                                       */
@@ -2896,7 +2894,8 @@
 
 
   /*************************************************************************/
-  /* GFV[]:        Get Freedom Vector                                      */
+  /*                                                                       */
+  /* GFv[]:        Get Freedom Vector                                      */
   /* Opcode range: 0x0D                                                    */
   /* Stack:        ef2.14 --> ef2.14                                       */
   /*                                                                       */
@@ -3245,7 +3244,7 @@
 
   /*************************************************************************/
   /*                                                                       */
-  /* DUP[]:        DUPlicate the top stack's element                       */
+  /* DUP[]:        DUPlicate the stack's top element                       */
   /* Opcode range: 0x20                                                    */
   /* Stack:        StkElt --> StkElt StkElt                                */
   /*                                                                       */
@@ -4962,7 +4961,7 @@
 
   /*************************************************************************/
   /*                                                                       */
-  /* SDPVTL[a]:    Set Dual PVector to Line                                */
+  /* SDPvTL[a]:    Set Dual PVector to Line                                */
   /* Opcode range: 0x86-0x87                                               */
   /* Stack:        uint32 uint32 -->                                       */
   /*                                                                       */
@@ -4993,7 +4992,7 @@
       A = v1->x - v2->x;
       B = v1->y - v2->y;
 
-      /* If v1 == v2, SDPVTL behaves the same as */
+      /* If v1 == v2, SDPvTL behaves the same as */
       /* SVTCA[X], respectively.                 */
       /*                                         */
       /* Confirmed by Greg Hitchcock.            */
@@ -5037,9 +5036,7 @@
     }
 
     Normalize( exc, A, B, &exc->GS.projVector );
-
     GUESS_VECTOR( freeVector );
-
     Compute_Funcs( exc );
   }
 
@@ -6406,7 +6403,7 @@
     }
 #endif /* TT_CONFIG_OPTION_SUBPIXEL_HINTING */
 
-    if ( exc->top < exc->GS.loop ||
+    if ( exc->top < exc->GS.loop                  ||
          BOUNDS( exc->GS.rp0, exc->zp0.n_points ) )
     {
       if ( exc->pedantic_hinting )
@@ -7634,11 +7631,11 @@
           Ins_SFVFS( exc, args );
           break;
 
-        case 0x0C:  /* GPV */
+        case 0x0C:  /* GPv */
           Ins_GPV( exc, args );
           break;
 
-        case 0x0D:  /* GFV */
+        case 0x0D:  /* GFv */
           Ins_GFV( exc, args );
           break;
 
@@ -8065,8 +8062,8 @@
           Ins_SCANCTRL( exc, args );
           break;
 
-        case 0x86:  /* SDPVTL */
-        case 0x87:  /* SDPVTL */
+        case 0x86:  /* SDPvTL */
+        case 0x87:  /* SDPvTL */
           Ins_SDPVTL( exc, args );
           break;
 
