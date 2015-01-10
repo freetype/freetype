@@ -65,7 +65,8 @@
   /*                                                                       */
   /* The instruction argument stack.                                       */
   /*                                                                       */
-#define INS_ARG  EXEC_OP_ FT_Long*  args    /* see ttobjs.h for EXEC_OP_ */
+#define INS_ARG  TT_ExecContext  exc, \
+                 FT_Long*        args
 
 
   /*************************************************************************/
@@ -1581,7 +1582,7 @@
   /*    The aspect ratio in 16.16 format, always <= 1.0 .                  */
   /*                                                                       */
   static FT_Long
-  Current_Ratio( EXEC_OP )
+  Current_Ratio( TT_ExecContext  exc )
   {
     if ( !exc->tt_metrics.ratio )
     {
@@ -1620,14 +1621,14 @@
 
 
   FT_CALLBACK_DEF( FT_Long )
-  Current_Ppem( EXEC_OP )
+  Current_Ppem( TT_ExecContext  exc )
   {
     return exc->tt_metrics.ppem;
   }
 
 
   FT_CALLBACK_DEF( FT_Long )
-  Current_Ppem_Stretched( EXEC_OP )
+  Current_Ppem_Stretched( TT_ExecContext  exc )
   {
     return FT_MulFix( exc->tt_metrics.ppem, CURRENT_Ratio() );
   }
@@ -1641,46 +1642,52 @@
 
 
   FT_CALLBACK_DEF( FT_F26Dot6 )
-  Read_CVT( EXEC_OP_ FT_ULong  idx )
+  Read_CVT( TT_ExecContext  exc,
+            FT_ULong        idx )
   {
     return exc->cvt[idx];
   }
 
 
   FT_CALLBACK_DEF( FT_F26Dot6 )
-  Read_CVT_Stretched( EXEC_OP_ FT_ULong  idx )
+  Read_CVT_Stretched( TT_ExecContext  exc,
+                      FT_ULong        idx )
   {
     return FT_MulFix( exc->cvt[idx], CURRENT_Ratio() );
   }
 
 
   FT_CALLBACK_DEF( void )
-  Write_CVT( EXEC_OP_ FT_ULong    idx,
-                      FT_F26Dot6  value )
+  Write_CVT( TT_ExecContext  exc,
+             FT_ULong        idx,
+             FT_F26Dot6      value )
   {
     exc->cvt[idx] = value;
   }
 
 
   FT_CALLBACK_DEF( void )
-  Write_CVT_Stretched( EXEC_OP_ FT_ULong    idx,
-                                FT_F26Dot6  value )
+  Write_CVT_Stretched( TT_ExecContext  exc,
+                       FT_ULong        idx,
+                       FT_F26Dot6      value )
   {
     exc->cvt[idx] = FT_DivFix( value, CURRENT_Ratio() );
   }
 
 
   FT_CALLBACK_DEF( void )
-  Move_CVT( EXEC_OP_ FT_ULong    idx,
-                     FT_F26Dot6  value )
+  Move_CVT( TT_ExecContext  exc,
+            FT_ULong        idx,
+            FT_F26Dot6      value )
   {
     exc->cvt[idx] += value;
   }
 
 
   FT_CALLBACK_DEF( void )
-  Move_CVT_Stretched( EXEC_OP_ FT_ULong    idx,
-                               FT_F26Dot6  value )
+  Move_CVT_Stretched( TT_ExecContext  exc,
+                      FT_ULong        idx,
+                      FT_F26Dot6      value )
   {
     exc->cvt[idx] += FT_DivFix( value, CURRENT_Ratio() );
   }
@@ -1702,7 +1709,7 @@
   /*    This one could become a macro.                                     */
   /*                                                                       */
   static FT_Short
-  GetShortIns( EXEC_OP )
+  GetShortIns( TT_ExecContext  exc )
   {
     /* Reading a byte stream so there is no endianess (DaveP) */
     exc->IP += 2;
@@ -1728,8 +1735,9 @@
   /*    SUCCESS or FAILURE.                                                */
   /*                                                                       */
   static FT_Bool
-  Ins_Goto_CodeRange( EXEC_OP_ FT_Int    aRange,
-                               FT_ULong  aIP )
+  Ins_Goto_CodeRange( TT_ExecContext  exc,
+                      FT_Int          aRange,
+                      FT_ULong        aIP )
   {
     TT_CodeRange*  range;
 
@@ -1785,9 +1793,10 @@
   /*    zone     :: The affected glyph zone.                               */
   /*                                                                       */
   static void
-  Direct_Move( EXEC_OP_ TT_GlyphZone  zone,
-                        FT_UShort     point,
-                        FT_F26Dot6    distance )
+  Direct_Move( TT_ExecContext  exc,
+               TT_GlyphZone    zone,
+               FT_UShort       point,
+               FT_F26Dot6      distance )
   {
     FT_F26Dot6  v;
 
@@ -1839,9 +1848,10 @@
   /*    zone     :: The affected glyph zone.                               */
   /*                                                                       */
   static void
-  Direct_Move_Orig( EXEC_OP_ TT_GlyphZone  zone,
-                             FT_UShort     point,
-                             FT_F26Dot6    distance )
+  Direct_Move_Orig( TT_ExecContext  exc,
+                    TT_GlyphZone    zone,
+                    FT_UShort       point,
+                    FT_F26Dot6      distance )
   {
     FT_F26Dot6  v;
 
@@ -1873,9 +1883,10 @@
 
 
   static void
-  Direct_Move_X( EXEC_OP_ TT_GlyphZone  zone,
-                          FT_UShort     point,
-                          FT_F26Dot6    distance )
+  Direct_Move_X( TT_ExecContext  exc,
+                 TT_GlyphZone    zone,
+                 FT_UShort       point,
+                 FT_F26Dot6      distance )
   {
     FT_UNUSED_EXEC;
 
@@ -1890,9 +1901,10 @@
 
 
   static void
-  Direct_Move_Y( EXEC_OP_ TT_GlyphZone  zone,
-                          FT_UShort     point,
-                          FT_F26Dot6    distance )
+  Direct_Move_Y( TT_ExecContext  exc,
+                 TT_GlyphZone    zone,
+                 FT_UShort       point,
+                 FT_F26Dot6      distance )
   {
     FT_UNUSED_EXEC;
 
@@ -1912,9 +1924,10 @@
 
 
   static void
-  Direct_Move_Orig_X( EXEC_OP_ TT_GlyphZone  zone,
-                               FT_UShort     point,
-                               FT_F26Dot6    distance )
+  Direct_Move_Orig_X( TT_ExecContext  exc,
+                      TT_GlyphZone    zone,
+                      FT_UShort       point,
+                      FT_F26Dot6      distance )
   {
     FT_UNUSED_EXEC;
 
@@ -1923,9 +1936,10 @@
 
 
   static void
-  Direct_Move_Orig_Y( EXEC_OP_ TT_GlyphZone  zone,
-                               FT_UShort     point,
-                               FT_F26Dot6    distance )
+  Direct_Move_Orig_Y( TT_ExecContext  exc,
+                      TT_GlyphZone    zone,
+                      FT_UShort       point,
+                      FT_F26Dot6      distance )
   {
     FT_UNUSED_EXEC;
 
@@ -1956,8 +1970,9 @@
   /*    before rounding.                                                   */
   /*                                                                       */
   static FT_F26Dot6
-  Round_None( EXEC_OP_ FT_F26Dot6  distance,
-                       FT_F26Dot6  compensation )
+  Round_None( TT_ExecContext  exc,
+              FT_F26Dot6      distance,
+              FT_F26Dot6      compensation )
   {
     FT_F26Dot6  val;
 
@@ -1997,8 +2012,9 @@
   /*    Rounded distance.                                                  */
   /*                                                                       */
   static FT_F26Dot6
-  Round_To_Grid( EXEC_OP_ FT_F26Dot6  distance,
-                          FT_F26Dot6  compensation )
+  Round_To_Grid( TT_ExecContext  exc,
+                 FT_F26Dot6      distance,
+                 FT_F26Dot6      compensation )
   {
     FT_F26Dot6  val;
 
@@ -2039,8 +2055,9 @@
   /*    Rounded distance.                                                  */
   /*                                                                       */
   static FT_F26Dot6
-  Round_To_Half_Grid( EXEC_OP_ FT_F26Dot6  distance,
-                               FT_F26Dot6  compensation )
+  Round_To_Half_Grid( TT_ExecContext  exc,
+                      FT_F26Dot6      distance,
+                      FT_F26Dot6      compensation )
   {
     FT_F26Dot6  val;
 
@@ -2081,8 +2098,9 @@
   /*    Rounded distance.                                                  */
   /*                                                                       */
   static FT_F26Dot6
-  Round_Down_To_Grid( EXEC_OP_ FT_F26Dot6  distance,
-                               FT_F26Dot6  compensation )
+  Round_Down_To_Grid( TT_ExecContext  exc,
+                      FT_F26Dot6      distance,
+                      FT_F26Dot6      compensation )
   {
     FT_F26Dot6  val;
 
@@ -2123,8 +2141,9 @@
   /*    Rounded distance.                                                  */
   /*                                                                       */
   static FT_F26Dot6
-  Round_Up_To_Grid( EXEC_OP_ FT_F26Dot6  distance,
-                             FT_F26Dot6  compensation )
+  Round_Up_To_Grid( TT_ExecContext  exc,
+                    FT_F26Dot6      distance,
+                    FT_F26Dot6      compensation )
   {
     FT_F26Dot6  val;
 
@@ -2165,8 +2184,9 @@
   /*    Rounded distance.                                                  */
   /*                                                                       */
   static FT_F26Dot6
-  Round_To_Double_Grid( EXEC_OP_ FT_F26Dot6  distance,
-                                 FT_F26Dot6  compensation )
+  Round_To_Double_Grid( TT_ExecContext  exc,
+                        FT_F26Dot6      distance,
+                        FT_F26Dot6      compensation )
   {
     FT_F26Dot6 val;
 
@@ -2213,8 +2233,9 @@
   /*    before rounding.                                                   */
   /*                                                                       */
   static FT_F26Dot6
-  Round_Super( EXEC_OP_ FT_F26Dot6  distance,
-                        FT_F26Dot6  compensation )
+  Round_Super( TT_ExecContext  exc,
+               FT_F26Dot6      distance,
+               FT_F26Dot6      compensation )
   {
     FT_F26Dot6  val;
 
@@ -2261,8 +2282,9 @@
   /*    greater precision.                                                 */
   /*                                                                       */
   static FT_F26Dot6
-  Round_Super_45( EXEC_OP_ FT_F26Dot6  distance,
-                           FT_F26Dot6  compensation )
+  Round_Super_45( TT_ExecContext  exc,
+                  FT_F26Dot6      distance,
+                  FT_F26Dot6      compensation )
   {
     FT_F26Dot6  val;
 
@@ -2300,7 +2322,8 @@
   /*    round_mode :: The rounding mode to be used.                        */
   /*                                                                       */
   static void
-  Compute_Round( EXEC_OP_ FT_Byte  round_mode )
+  Compute_Round( TT_ExecContext  exc,
+                 FT_Byte         round_mode )
   {
     switch ( round_mode )
     {
@@ -2353,8 +2376,9 @@
   /*    selector   :: The SROUND opcode.                                   */
   /*                                                                       */
   static void
-  SetSuperRound( EXEC_OP_ FT_F26Dot6  GridPeriod,
-                          FT_Long     selector )
+  SetSuperRound( TT_ExecContext  exc,
+                 FT_F26Dot6      GridPeriod,
+                 FT_Long         selector )
   {
     switch ( (FT_Int)( selector & 0xC0 ) )
     {
@@ -2424,8 +2448,9 @@
   /*    The distance in F26dot6 format.                                    */
   /*                                                                       */
   static FT_F26Dot6
-  Project( EXEC_OP_ FT_Pos  dx,
-                    FT_Pos  dy )
+  Project( TT_ExecContext  exc,
+           FT_Pos          dx,
+           FT_Pos          dy )
   {
 #ifdef TT_CONFIG_OPTION_UNPATENTED_HINTING
     FT_ASSERT( !exc->face->unpatented_hinting );
@@ -2454,8 +2479,9 @@
   /*    The distance in F26dot6 format.                                    */
   /*                                                                       */
   static FT_F26Dot6
-  Dual_Project( EXEC_OP_ FT_Pos  dx,
-                         FT_Pos  dy )
+  Dual_Project( TT_ExecContext  exc,
+                FT_Pos          dx,
+                FT_Pos          dy )
   {
     return TT_DotFix14( (FT_UInt32)dx, (FT_UInt32)dy,
                         exc->GS.dualVector.x,
@@ -2480,8 +2506,9 @@
   /*    The distance in F26dot6 format.                                    */
   /*                                                                       */
   static FT_F26Dot6
-  Project_x( EXEC_OP_ FT_Pos  dx,
-                      FT_Pos  dy )
+  Project_x( TT_ExecContext  exc,
+             FT_Pos          dx,
+             FT_Pos          dy )
   {
     FT_UNUSED_EXEC;
     FT_UNUSED( dy );
@@ -2507,8 +2534,9 @@
   /*    The distance in F26dot6 format.                                    */
   /*                                                                       */
   static FT_F26Dot6
-  Project_y( EXEC_OP_ FT_Pos  dx,
-                      FT_Pos  dy )
+  Project_y( TT_ExecContext  exc,
+             FT_Pos          dx,
+             FT_Pos          dy )
   {
     FT_UNUSED_EXEC;
     FT_UNUSED( dx );
@@ -2527,7 +2555,7 @@
   /*    to the current graphics state.                                     */
   /*                                                                       */
   static void
-  Compute_Funcs( EXEC_OP )
+  Compute_Funcs( TT_ExecContext  exc )
   {
 #ifdef TT_CONFIG_OPTION_UNPATENTED_HINTING
     if ( exc->face->unpatented_hinting )
@@ -2648,9 +2676,10 @@
   /*    R is undefined.                                                    */
   /*                                                                       */
   static FT_Bool
-  Normalize( EXEC_OP_ FT_F26Dot6      Vx,
-                      FT_F26Dot6      Vy,
-                      FT_UnitVector*  R )
+  Normalize( TT_ExecContext  exc,
+             FT_F26Dot6      Vx,
+             FT_F26Dot6      Vy,
+             FT_UnitVector*  R )
   {
     FT_F26Dot6  W;
 
@@ -2687,10 +2716,11 @@
 
 
   static FT_Bool
-  Ins_SxVTL( EXEC_OP_ FT_UShort       aIdx1,
-                      FT_UShort       aIdx2,
-                      FT_Int          aOpc,
-                      FT_UnitVector*  Vec )
+  Ins_SxVTL( TT_ExecContext  exc,
+             FT_UShort       aIdx1,
+             FT_UShort       aIdx2,
+             FT_Int          aOpc,
+             FT_UnitVector*  Vec )
   {
     FT_Long     A, B, C;
     FT_Vector*  p1;
@@ -4371,7 +4401,7 @@
 
 
   static FT_Bool
-  SkipCode( EXEC_OP )
+  SkipCode( TT_ExecContext  exc )
   {
     exc->IP += exc->length;
 
@@ -5769,10 +5799,11 @@
 
 
   static FT_Bool
-  Compute_Point_Displacement( EXEC_OP_ FT_F26Dot6*   x,
-                                       FT_F26Dot6*   y,
-                                       TT_GlyphZone  zone,
-                                       FT_UShort*    refp )
+  Compute_Point_Displacement( TT_ExecContext  exc,
+                              FT_F26Dot6*     x,
+                              FT_F26Dot6*     y,
+                              TT_GlyphZone    zone,
+                              FT_UShort*      refp )
   {
     TT_GlyphZoneRec  zp;
     FT_UShort        p;
@@ -5829,10 +5860,11 @@
 
 
   static void
-  Move_Zp2_Point( EXEC_OP_ FT_UShort   point,
-                           FT_F26Dot6  dx,
-                           FT_F26Dot6  dy,
-                           FT_Bool     touch )
+  Move_Zp2_Point( TT_ExecContext  exc,
+                  FT_UShort       point,
+                  FT_F26Dot6      dx,
+                  FT_F26Dot6      dy,
+                  FT_Bool         touch )
   {
 #ifdef TT_CONFIG_OPTION_UNPATENTED_HINTING
     if ( exc->face->unpatented_hinting )

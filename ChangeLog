@@ -1,5 +1,12 @@
 2015-01-10  Werner Lemberg  <wl@gnu.org>
 
+	[truetype] More macro expansions.
+
+	* src/truetype/ttinterp.c (EXEC_OP_, EXEC_OP): Remove by replacing
+	with expansion.
+
+2015-01-10  Werner Lemberg  <wl@gnu.org>
+
 	[truetype] Remove code for static TrueType interpreter.
 
 	This is a follow-up patch.

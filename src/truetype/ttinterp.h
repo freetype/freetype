@@ -26,8 +26,6 @@
 FT_BEGIN_HEADER
 
 
-#define EXEC_OP_   TT_ExecContext  exc,
-#define EXEC_OP    TT_ExecContext  exc
 #define EXEC_ARG_  exc,
 #define EXEC_ARG   exc
 
@@ -56,33 +54,38 @@ FT_BEGIN_HEADER
 
   /* Rounding function */
   typedef FT_F26Dot6
-  (*TT_Round_Func)( EXEC_OP_ FT_F26Dot6  distance,
-                             FT_F26Dot6  compensation );
+  (*TT_Round_Func)( TT_ExecContext  exc,
+                    FT_F26Dot6      distance,
+                    FT_F26Dot6      compensation );
 
   /* Point displacement along the freedom vector routine */
   typedef void
-  (*TT_Move_Func)( EXEC_OP_ TT_GlyphZone  zone,
-                            FT_UShort     point,
-                            FT_F26Dot6    distance );
+  (*TT_Move_Func)( TT_ExecContext  exc,
+                   TT_GlyphZone    zone,
+                   FT_UShort       point,
+                   FT_F26Dot6      distance );
 
   /* Distance projection along one of the projection vectors */
   typedef FT_F26Dot6
-  (*TT_Project_Func)( EXEC_OP_ FT_Pos   dx,
-                               FT_Pos   dy );
+  (*TT_Project_Func)( TT_ExecContext  exc,
+                      FT_Pos          dx,
+                      FT_Pos          dy );
 
   /* getting current ppem.  Take care of non-square pixels if necessary */
   typedef FT_Long
-  (*TT_Cur_Ppem_Func)( EXEC_OP );
+  (*TT_Cur_Ppem_Func)( TT_ExecContext  exc );
 
   /* reading a cvt value.  Take care of non-square pixels if necessary */
   typedef FT_F26Dot6
-  (*TT_Get_CVT_Func)( EXEC_OP_ FT_ULong  idx );
+  (*TT_Get_CVT_Func)( TT_ExecContext  exc,
+                      FT_ULong        idx );
 
   /* setting or moving a cvt value.  Take care of non-square pixels  */
   /* if necessary                                                    */
   typedef void
-  (*TT_Set_CVT_Func)( EXEC_OP_ FT_ULong    idx,
-                               FT_F26Dot6  value );
+  (*TT_Set_CVT_Func)( TT_ExecContext  exc,
+                      FT_ULong        idx,
+                      FT_F26Dot6      value );
 
 
   /*************************************************************************/
