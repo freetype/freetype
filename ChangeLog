@@ -1,5 +1,15 @@
 2015-01-10  Werner Lemberg  <wl@gnu.org>
 
+	[truetype] Remove code for static TrueType interpreter.
+
+	This is a follow-up patch.
+
+	* src/truetype/ttinterp.c, src/truetype/ttinterp.h
+	[TT_CONFIG_OPTION_STATIC_INTERPRETER,
+	TT_CONFIG_OPTION_STATIC_RASTER]: Remove macros and related code.
+
+2015-01-10  Werner Lemberg  <wl@gnu.org>
+
 	* src/truetype/ttinterp.c (CUR): Remove by replacing with expansion.
 
 	This starts a series of patches that simplifies the code of the

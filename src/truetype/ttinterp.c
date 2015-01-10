@@ -55,62 +55,10 @@
 
   /*************************************************************************/
   /*                                                                       */
-  /* There are two kinds of implementations:                               */
-  /*                                                                       */
-  /* a. static implementation                                              */
-  /*                                                                       */
-  /*    The current execution context is a static variable, which fields   */
-  /*    are accessed directly by the interpreter during execution.  The    */
-  /*    context is named `cur'.                                            */
-  /*                                                                       */
-  /*    This version is non-reentrant, of course.                          */
-  /*                                                                       */
-  /* b. indirect implementation                                            */
-  /*                                                                       */
-  /*    The current execution context is passed to _each_ function as its  */
-  /*    first argument, and each field is thus accessed indirectly.        */
-  /*                                                                       */
-  /*    This version is fully re-entrant.                                  */
-  /*                                                                       */
-  /* The idea is that an indirect implementation may be slower to execute  */
-  /* on low-end processors that are used in some systems (like 386s or     */
-  /* even 486s).                                                           */
-  /*                                                                       */
-  /* As a consequence, the indirect implementation is now the default, as  */
-  /* its performance costs can be considered negligible in our context.    */
-  /* Note, however, that we kept the same source with macros because:      */
-  /*                                                                       */
-  /* - The code is kept very close in design to the Pascal code used for   */
-  /*   development.                                                        */
-  /*                                                                       */
-  /* - It's much more readable that way!                                   */
-  /*                                                                       */
-  /* - It's still open to experimentation and tuning.                      */
-  /*                                                                       */
-  /*************************************************************************/
-
-
-#ifndef TT_CONFIG_OPTION_STATIC_INTERPRETER     /* indirect implementation */
-
-  /*************************************************************************/
-  /*                                                                       */
   /* This macro is used whenever `exec' is unused in a function, to avoid  */
   /* stupid warnings from pedantic compilers.                              */
   /*                                                                       */
 #define FT_UNUSED_EXEC  FT_UNUSED( exc )
-
-#else                                           /* static implementation */
-
-#define FT_UNUSED_EXEC  int  __dummy = __dummy
-
-  static
-  TT_ExecContextRec  cur;   /* static exec. context variable */
-
-  /* apparently, we have a _lot_ of direct indexing when accessing  */
-  /* the static `cur', which makes the code bigger (due to all the  */
-  /* four bytes addresses).                                         */
-
-#endif /* TT_CONFIG_OPTION_STATIC_INTERPRETER */
 
 
   /*************************************************************************/
@@ -8221,13 +8169,6 @@
 #endif /* TT_CONFIG_OPTION_SUBPIXEL_HINTING */
 
 
-#ifdef TT_CONFIG_OPTION_STATIC_RASTER
-    if ( !exc )
-      return FT_THROW( Invalid_Argument );
-
-    cur = *exc;
-#endif
-
 #ifdef TT_CONFIG_OPTION_SUBPIXEL_HINTING
     exc->iup_called = FALSE;
 #endif /* TT_CONFIG_OPTION_SUBPIXEL_HINTING */
@@ -8981,22 +8922,12 @@
     } while ( !exc->instruction_trap );
 
   LNo_Error_:
-
-#ifdef TT_CONFIG_OPTION_STATIC_RASTER
-    *exc = cur;
-#endif
-
     return FT_Err_Ok;
 
   LErrorCodeOverflow_:
     exc->error = FT_THROW( Code_Overflow );
 
   LErrorLabel_:
-
-#ifdef TT_CONFIG_OPTION_STATIC_RASTER
-    *exc = cur;
-#endif
-
     /* If any errors have occurred, function tables may be broken. */
     /* Force a re-execution of `prep' and `fpgm' tables if no      */
     /* bytecode debugger is run.                                   */
