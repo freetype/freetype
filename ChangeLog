@@ -1,5 +1,9 @@
 2015-01-11  Werner Lemberg  <wl@gnu.org>
 
+	* src/truetype/ttinterp.c (Ins_SxVTL): Simplify function call.
+
+2015-01-11  Werner Lemberg  <wl@gnu.org>
+
 	* src/truetype/ttinterp.c (Normalize): Remove unused argument.
 
 2015-01-11  Werner Lemberg  <wl@gnu.org>

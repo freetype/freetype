@@ -2629,12 +2629,13 @@
   Ins_SxVTL( TT_ExecContext  exc,
              FT_UShort       aIdx1,
              FT_UShort       aIdx2,
-             FT_Int          aOpc,
              FT_UnitVector*  Vec )
   {
     FT_Long     A, B, C;
     FT_Vector*  p1;
     FT_Vector*  p2;
+
+    FT_Byte  opcode = exc->opcode;
 
 
     if ( BOUNDS( aIdx1, exc->zp2.n_points ) ||
@@ -2658,11 +2659,11 @@
 
     if ( A == 0 && B == 0 )
     {
-      A    = 0x4000;
-      aOpc = 0;
+      A      = 0x4000;
+      opcode = 0;
     }
 
-    if ( ( aOpc & 1 ) != 0 )
+    if ( ( opcode & 1 ) != 0 )
     {
       C =  B;   /* counter clockwise rotation */
       B =  A;
@@ -2701,7 +2702,8 @@
   Ins_SxyTCA( TT_ExecContext  exc )
   {
     FT_Short  AA, BB;
-    FT_Byte   opcode = exc->opcode;
+
+    FT_Byte  opcode = exc->opcode;
 
 
     AA = (FT_Short)( ( opcode & 1 ) << 14 );
@@ -2743,7 +2745,6 @@
     if ( Ins_SxVTL( exc,
                     (FT_UShort)args[1],
                     (FT_UShort)args[0],
-                    exc->opcode,
                     &exc->GS.projVector ) == SUCCESS )
     {
       exc->GS.dualVector = exc->GS.projVector;
@@ -2766,7 +2767,6 @@
     if ( Ins_SxVTL( exc,
                     (FT_UShort)args[1],
                     (FT_UShort)args[0],
-                    exc->opcode,
                     &exc->GS.freeVector ) == SUCCESS )
     {
       GUESS_VECTOR( projVector );
@@ -4988,7 +4988,8 @@
   {
     FT_Long    A, B, C;
     FT_UShort  p1, p2;            /* was FT_Int in pas type ERROR */
-    FT_Int     aOpc = exc->opcode;
+
+    FT_Byte  opcode = exc->opcode;
 
 
     p1 = (FT_UShort)args[1];
@@ -5017,12 +5018,12 @@
 
       if ( A == 0 && B == 0 )
       {
-        A    = 0x4000;
-        aOpc = 0;
+        A      = 0x4000;
+        opcode = 0;
       }
     }
 
-    if ( ( aOpc & 1 ) != 0 )
+    if ( ( opcode & 1 ) != 0 )
     {
       C =  B;   /* counter clockwise rotation */
       B =  A;
@@ -5041,12 +5042,12 @@
 
       if ( A == 0 && B == 0 )
       {
-        A    = 0x4000;
-        aOpc = 0;
+        A      = 0x4000;
+        opcode = 0;
       }
     }
 
-    if ( ( aOpc & 1 ) != 0 )
+    if ( ( opcode & 1 ) != 0 )
     {
       C =  B;   /* counter clockwise rotation */
       B =  A;
