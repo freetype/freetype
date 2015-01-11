@@ -2585,18 +2585,15 @@
   /*    Returns FAILURE if a vector parameter is zero.                     */
   /*                                                                       */
   /* <Note>                                                                */
-  /*    In case Vx and Vy are both zero, Normalize() returns SUCCESS, and  */
+  /*    In case Vx and Vy are both zero, `Normalize' returns SUCCESS, and  */
   /*    R is undefined.                                                    */
   /*                                                                       */
   static FT_Bool
-  Normalize( TT_ExecContext  exc,
-             FT_F26Dot6      Vx,
+  Normalize( FT_F26Dot6      Vx,
              FT_F26Dot6      Vy,
              FT_UnitVector*  R )
   {
     FT_F26Dot6  W;
-
-    FT_UNUSED( exc );
 
 
     if ( FT_ABS( Vx ) < 0x4000L && FT_ABS( Vy ) < 0x4000L )
@@ -2672,7 +2669,7 @@
       A = -C;
     }
 
-    Normalize( exc, A, B, Vec );
+    Normalize( A, B, Vec );
 
     return SUCCESS;
   }
@@ -2813,7 +2810,7 @@
     S = (FT_Short)args[0];
     X = (FT_Long)S;
 
-    Normalize( exc, X, Y, &exc->GS.projVector );
+    Normalize( X, Y, &exc->GS.projVector );
 
     exc->GS.dualVector = exc->GS.projVector;
     GUESS_VECTOR( freeVector );
@@ -2841,7 +2838,7 @@
     S = (FT_Short)args[0];
     X = S;
 
-    Normalize( exc, X, Y, &exc->GS.freeVector );
+    Normalize( X, Y, &exc->GS.freeVector );
     GUESS_VECTOR( projVector );
     Compute_Funcs( exc );
   }
@@ -5032,7 +5029,7 @@
       A = -C;
     }
 
-    Normalize( exc, A, B, &exc->GS.dualVector );
+    Normalize( A, B, &exc->GS.dualVector );
 
     {
       FT_Vector*  v1 = exc->zp1.cur + p2;
@@ -5056,7 +5053,7 @@
       A = -C;
     }
 
-    Normalize( exc, A, B, &exc->GS.projVector );
+    Normalize( A, B, &exc->GS.projVector );
     GUESS_VECTOR( freeVector );
     Compute_Funcs( exc );
   }

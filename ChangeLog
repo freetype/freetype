@@ -1,5 +1,9 @@
 2015-01-11  Werner Lemberg  <wl@gnu.org>
 
+	* src/truetype/ttinterp.c (Normalize): Remove unused argument.
+
+2015-01-11  Werner Lemberg  <wl@gnu.org>
+
 	[truetype] More macro expansions.
 
 	* src/truetype/ttinterp.c (FT_UNUSED_EXEC): Remove macro by
