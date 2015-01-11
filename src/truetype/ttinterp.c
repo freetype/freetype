@@ -2628,581 +2628,12 @@
   /*************************************************************************/
 
 
-  static FT_Bool
-  Ins_SxVTL( TT_ExecContext  exc,
-             FT_UShort       aIdx1,
-             FT_UShort       aIdx2,
-             FT_UnitVector*  Vec )
-  {
-    FT_Long     A, B, C;
-    FT_Vector*  p1;
-    FT_Vector*  p2;
-
-    FT_Byte  opcode = exc->opcode;
-
-
-    if ( BOUNDS( aIdx1, exc->zp2.n_points ) ||
-         BOUNDS( aIdx2, exc->zp1.n_points ) )
-    {
-      if ( exc->pedantic_hinting )
-        exc->error = FT_THROW( Invalid_Reference );
-      return FAILURE;
-    }
-
-    p1 = exc->zp1.cur + aIdx2;
-    p2 = exc->zp2.cur + aIdx1;
-
-    A = p1->x - p2->x;
-    B = p1->y - p2->y;
-
-    /* If p1 == p2, SPvTL and SFvTL behave the same as */
-    /* SPvTCA[X] and SFvTCA[X], respectively.          */
-    /*                                                 */
-    /* Confirmed by Greg Hitchcock.                    */
-
-    if ( A == 0 && B == 0 )
-    {
-      A      = 0x4000;
-      opcode = 0;
-    }
-
-    if ( ( opcode & 1 ) != 0 )
-    {
-      C =  B;   /* counter clockwise rotation */
-      B =  A;
-      A = -C;
-    }
-
-    Normalize( A, B, Vec );
-
-    return SUCCESS;
-  }
-
-
 #define ARRAY_BOUND_ERROR                         \
     do                                            \
     {                                             \
       exc->error = FT_THROW( Invalid_Reference ); \
       return;                                     \
     } while (0)
-
-
-  /*************************************************************************/
-  /*                                                                       */
-  /* SVTCA[a]:     Set (F and P) Vectors to Coordinate Axis                */
-  /* Opcode range: 0x00-0x01                                               */
-  /* Stack:        -->                                                     */
-  /*                                                                       */
-  /* SPvTCA[a]:    Set PVector to Coordinate Axis                          */
-  /* Opcode range: 0x02-0x03                                               */
-  /* Stack:        -->                                                     */
-  /*                                                                       */
-  /* SFvTCA[a]:    Set FVector to Coordinate Axis                          */
-  /* Opcode range: 0x04-0x05                                               */
-  /* Stack:        -->                                                     */
-  /*                                                                       */
-  static void
-  Ins_SxyTCA( TT_ExecContext  exc )
-  {
-    FT_Short  AA, BB;
-
-    FT_Byte  opcode = exc->opcode;
-
-
-    AA = (FT_Short)( ( opcode & 1 ) << 14 );
-    BB = (FT_Short)( AA ^ 0x4000 );
-
-    if ( opcode < 4 )
-    {
-      exc->GS.projVector.x = AA;
-      exc->GS.projVector.y = BB;
-
-      exc->GS.dualVector.x = AA;
-      exc->GS.dualVector.y = BB;
-    }
-    else
-      GUESS_VECTOR( projVector );
-
-    if ( ( opcode & 2 ) == 0 )
-    {
-      exc->GS.freeVector.x = AA;
-      exc->GS.freeVector.y = BB;
-    }
-    else
-      GUESS_VECTOR( freeVector );
-
-    Compute_Funcs( exc );
-  }
-
-
-  /*************************************************************************/
-  /*                                                                       */
-  /* SPvTL[a]:     Set PVector To Line                                     */
-  /* Opcode range: 0x06-0x07                                               */
-  /* Stack:        uint32 uint32 -->                                       */
-  /*                                                                       */
-  static void
-  Ins_SPVTL( TT_ExecContext  exc,
-             FT_Long*        args )
-  {
-    if ( Ins_SxVTL( exc,
-                    (FT_UShort)args[1],
-                    (FT_UShort)args[0],
-                    &exc->GS.projVector ) == SUCCESS )
-    {
-      exc->GS.dualVector = exc->GS.projVector;
-      GUESS_VECTOR( freeVector );
-      Compute_Funcs( exc );
-    }
-  }
-
-
-  /*************************************************************************/
-  /*                                                                       */
-  /* SFvTL[a]:     Set FVector To Line                                     */
-  /* Opcode range: 0x08-0x09                                               */
-  /* Stack:        uint32 uint32 -->                                       */
-  /*                                                                       */
-  static void
-  Ins_SFVTL( TT_ExecContext  exc,
-             FT_Long*        args )
-  {
-    if ( Ins_SxVTL( exc,
-                    (FT_UShort)args[1],
-                    (FT_UShort)args[0],
-                    &exc->GS.freeVector ) == SUCCESS )
-    {
-      GUESS_VECTOR( projVector );
-      Compute_Funcs( exc );
-    }
-  }
-
-
-  /*************************************************************************/
-  /*                                                                       */
-  /* SFvTPv[]:     Set FVector To PVector                                  */
-  /* Opcode range: 0x0E                                                    */
-  /* Stack:        -->                                                     */
-  /*                                                                       */
-  static void
-  Ins_SFVTPV( TT_ExecContext  exc )
-  {
-    GUESS_VECTOR( projVector );
-    exc->GS.freeVector = exc->GS.projVector;
-    Compute_Funcs( exc );
-  }
-
-
-  /*************************************************************************/
-  /*                                                                       */
-  /* SPvFS[]:      Set PVector From Stack                                  */
-  /* Opcode range: 0x0A                                                    */
-  /* Stack:        f2.14 f2.14 -->                                         */
-  /*                                                                       */
-  static void
-  Ins_SPVFS( TT_ExecContext  exc,
-             FT_Long*        args )
-  {
-    FT_Short  S;
-    FT_Long   X, Y;
-
-
-    /* Only use low 16bits, then sign extend */
-    S = (FT_Short)args[1];
-    Y = (FT_Long)S;
-    S = (FT_Short)args[0];
-    X = (FT_Long)S;
-
-    Normalize( X, Y, &exc->GS.projVector );
-
-    exc->GS.dualVector = exc->GS.projVector;
-    GUESS_VECTOR( freeVector );
-    Compute_Funcs( exc );
-  }
-
-
-  /*************************************************************************/
-  /*                                                                       */
-  /* SFvFS[]:      Set FVector From Stack                                  */
-  /* Opcode range: 0x0B                                                    */
-  /* Stack:        f2.14 f2.14 -->                                         */
-  /*                                                                       */
-  static void
-  Ins_SFVFS( TT_ExecContext  exc,
-             FT_Long*        args )
-  {
-    FT_Short  S;
-    FT_Long   X, Y;
-
-
-    /* Only use low 16bits, then sign extend */
-    S = (FT_Short)args[1];
-    Y = (FT_Long)S;
-    S = (FT_Short)args[0];
-    X = S;
-
-    Normalize( X, Y, &exc->GS.freeVector );
-    GUESS_VECTOR( projVector );
-    Compute_Funcs( exc );
-  }
-
-
-  /*************************************************************************/
-  /*                                                                       */
-  /* GPv[]:        Get Projection Vector                                   */
-  /* Opcode range: 0x0C                                                    */
-  /* Stack:        ef2.14 --> ef2.14                                       */
-  /*                                                                       */
-  static void
-  Ins_GPV( TT_ExecContext  exc,
-           FT_Long*        args )
-  {
-#ifdef TT_CONFIG_OPTION_UNPATENTED_HINTING
-    if ( exc->face->unpatented_hinting )
-    {
-      args[0] = exc->GS.both_x_axis ? 0x4000 : 0;
-      args[1] = exc->GS.both_x_axis ? 0 : 0x4000;
-    }
-    else
-    {
-      args[0] = exc->GS.projVector.x;
-      args[1] = exc->GS.projVector.y;
-    }
-#else
-    args[0] = exc->GS.projVector.x;
-    args[1] = exc->GS.projVector.y;
-#endif
-  }
-
-
-  /*************************************************************************/
-  /*                                                                       */
-  /* GFv[]:        Get Freedom Vector                                      */
-  /* Opcode range: 0x0D                                                    */
-  /* Stack:        ef2.14 --> ef2.14                                       */
-  /*                                                                       */
-  static void
-  Ins_GFV( TT_ExecContext  exc,
-           FT_Long*        args )
-  {
-#ifdef TT_CONFIG_OPTION_UNPATENTED_HINTING
-    if ( exc->face->unpatented_hinting )
-    {
-      args[0] = exc->GS.both_x_axis ? 0x4000 : 0;
-      args[1] = exc->GS.both_x_axis ? 0 : 0x4000;
-    }
-    else
-    {
-      args[0] = exc->GS.freeVector.x;
-      args[1] = exc->GS.freeVector.y;
-    }
-#else
-    args[0] = exc->GS.freeVector.x;
-    args[1] = exc->GS.freeVector.y;
-#endif
-  }
-
-
-  /*************************************************************************/
-  /*                                                                       */
-  /* SRP0[]:       Set Reference Point 0                                   */
-  /* Opcode range: 0x10                                                    */
-  /* Stack:        uint32 -->                                              */
-  /*                                                                       */
-  static void
-  Ins_SRP0( TT_ExecContext  exc,
-            FT_Long*        args )
-  {
-    exc->GS.rp0 = (FT_UShort)args[0];
-  }
-
-
-  /*************************************************************************/
-  /*                                                                       */
-  /* SRP1[]:       Set Reference Point 1                                   */
-  /* Opcode range: 0x11                                                    */
-  /* Stack:        uint32 -->                                              */
-  /*                                                                       */
-  static void
-  Ins_SRP1( TT_ExecContext  exc,
-            FT_Long*        args )
-  {
-    exc->GS.rp1 = (FT_UShort)args[0];
-  }
-
-
-  /*************************************************************************/
-  /*                                                                       */
-  /* SRP2[]:       Set Reference Point 2                                   */
-  /* Opcode range: 0x12                                                    */
-  /* Stack:        uint32 -->                                              */
-  /*                                                                       */
-  static void
-  Ins_SRP2( TT_ExecContext  exc,
-            FT_Long*        args )
-  {
-    exc->GS.rp2 = (FT_UShort)args[0];
-  }
-
-
-  /*************************************************************************/
-  /*                                                                       */
-  /* RTHG[]:       Round To Half Grid                                      */
-  /* Opcode range: 0x19                                                    */
-  /* Stack:        -->                                                     */
-  /*                                                                       */
-  static void
-  Ins_RTHG( TT_ExecContext  exc )
-  {
-    exc->GS.round_state = TT_Round_To_Half_Grid;
-    exc->func_round     = (TT_Round_Func)Round_To_Half_Grid;
-  }
-
-
-  /*************************************************************************/
-  /*                                                                       */
-  /* RTG[]:        Round To Grid                                           */
-  /* Opcode range: 0x18                                                    */
-  /* Stack:        -->                                                     */
-  /*                                                                       */
-  static void
-  Ins_RTG( TT_ExecContext  exc )
-  {
-    exc->GS.round_state = TT_Round_To_Grid;
-    exc->func_round     = (TT_Round_Func)Round_To_Grid;
-  }
-
-
-  /*************************************************************************/
-  /* RTDG[]:       Round To Double Grid                                    */
-  /* Opcode range: 0x3D                                                    */
-  /* Stack:        -->                                                     */
-  /*                                                                       */
-  static void
-  Ins_RTDG( TT_ExecContext  exc )
-  {
-    exc->GS.round_state = TT_Round_To_Double_Grid;
-    exc->func_round     = (TT_Round_Func)Round_To_Double_Grid;
-  }
-
-
-  /*************************************************************************/
-  /* RUTG[]:       Round Up To Grid                                        */
-  /* Opcode range: 0x7C                                                    */
-  /* Stack:        -->                                                     */
-  /*                                                                       */
-  static void
-  Ins_RUTG( TT_ExecContext  exc )
-  {
-    exc->GS.round_state = TT_Round_Up_To_Grid;
-    exc->func_round     = (TT_Round_Func)Round_Up_To_Grid;
-  }
-
-
-  /*************************************************************************/
-  /*                                                                       */
-  /* RDTG[]:       Round Down To Grid                                      */
-  /* Opcode range: 0x7D                                                    */
-  /* Stack:        -->                                                     */
-  /*                                                                       */
-  static void
-  Ins_RDTG( TT_ExecContext  exc )
-  {
-    exc->GS.round_state = TT_Round_Down_To_Grid;
-    exc->func_round     = (TT_Round_Func)Round_Down_To_Grid;
-  }
-
-
-  /*************************************************************************/
-  /*                                                                       */
-  /* ROFF[]:       Round OFF                                               */
-  /* Opcode range: 0x7A                                                    */
-  /* Stack:        -->                                                     */
-  /*                                                                       */
-  static void
-  Ins_ROFF( TT_ExecContext  exc )
-  {
-    exc->GS.round_state = TT_Round_Off;
-    exc->func_round     = (TT_Round_Func)Round_None;
-  }
-
-
-  /*************************************************************************/
-  /*                                                                       */
-  /* SROUND[]:     Super ROUND                                             */
-  /* Opcode range: 0x76                                                    */
-  /* Stack:        Eint8 -->                                               */
-  /*                                                                       */
-  static void
-  Ins_SROUND( TT_ExecContext  exc,
-              FT_Long*        args )
-  {
-    SetSuperRound( exc, 0x4000, args[0] );
-
-    exc->GS.round_state = TT_Round_Super;
-    exc->func_round     = (TT_Round_Func)Round_Super;
-  }
-
-
-  /*************************************************************************/
-  /*                                                                       */
-  /* S45ROUND[]:   Super ROUND 45 degrees                                  */
-  /* Opcode range: 0x77                                                    */
-  /* Stack:        uint32 -->                                              */
-  /*                                                                       */
-  static void
-  Ins_S45ROUND( TT_ExecContext  exc,
-                FT_Long*        args )
-  {
-    SetSuperRound( exc, 0x2D41, args[0] );
-
-    exc->GS.round_state = TT_Round_Super_45;
-    exc->func_round     = (TT_Round_Func)Round_Super_45;
-  }
-
-
-  /*************************************************************************/
-  /*                                                                       */
-  /* SLOOP[]:      Set LOOP variable                                       */
-  /* Opcode range: 0x17                                                    */
-  /* Stack:        int32? -->                                              */
-  /*                                                                       */
-  static void
-  Ins_SLOOP( TT_ExecContext  exc,
-             FT_Long*        args )
-  {
-    if ( args[0] < 0 )
-      exc->error = FT_THROW( Bad_Argument );
-    else
-      exc->GS.loop = args[0];
-  }
-
-
-  /*************************************************************************/
-  /*                                                                       */
-  /* SMD[]:        Set Minimum Distance                                    */
-  /* Opcode range: 0x1A                                                    */
-  /* Stack:        f26.6 -->                                               */
-  /*                                                                       */
-  static void
-  Ins_SMD( TT_ExecContext  exc,
-           FT_Long*        args )
-  {
-    exc->GS.minimum_distance = args[0];
-  }
-
-
-  /*************************************************************************/
-  /*                                                                       */
-  /* SCVTCI[]:     Set Control Value Table Cut In                          */
-  /* Opcode range: 0x1D                                                    */
-  /* Stack:        f26.6 -->                                               */
-  /*                                                                       */
-  static void
-  Ins_SCVTCI( TT_ExecContext  exc,
-              FT_Long*        args )
-  {
-    exc->GS.control_value_cutin = (FT_F26Dot6)args[0];
-  }
-
-
-  /*************************************************************************/
-  /*                                                                       */
-  /* SSWCI[]:      Set Single Width Cut In                                 */
-  /* Opcode range: 0x1E                                                    */
-  /* Stack:        f26.6 -->                                               */
-  /*                                                                       */
-  static void
-  Ins_SSWCI( TT_ExecContext  exc,
-             FT_Long*        args )
-  {
-    exc->GS.single_width_cutin = (FT_F26Dot6)args[0];
-  }
-
-
-  /*************************************************************************/
-  /*                                                                       */
-  /* SSW[]:        Set Single Width                                        */
-  /* Opcode range: 0x1F                                                    */
-  /* Stack:        int32? -->                                              */
-  /*                                                                       */
-  static void
-  Ins_SSW( TT_ExecContext  exc,
-           FT_Long*        args )
-  {
-    exc->GS.single_width_value = FT_MulFix( args[0],
-                                            exc->tt_metrics.scale );
-  }
-
-
-  /*************************************************************************/
-  /*                                                                       */
-  /* FLIPON[]:     Set auto-FLIP to ON                                     */
-  /* Opcode range: 0x4D                                                    */
-  /* Stack:        -->                                                     */
-  /*                                                                       */
-  static void
-  Ins_FLIPON( TT_ExecContext  exc )
-  {
-    exc->GS.auto_flip = TRUE;
-  }
-
-
-  /*************************************************************************/
-  /*                                                                       */
-  /* FLIPOFF[]:    Set auto-FLIP to OFF                                    */
-  /* Opcode range: 0x4E                                                    */
-  /* Stack: -->                                                            */
-  /*                                                                       */
-  static void
-  Ins_FLIPOFF( TT_ExecContext  exc )
-  {
-    exc->GS.auto_flip = FALSE;
-  }
-
-
-  /*************************************************************************/
-  /*                                                                       */
-  /* SANGW[]:      Set ANGle Weight                                        */
-  /* Opcode range: 0x7E                                                    */
-  /* Stack:        uint32 -->                                              */
-  /*                                                                       */
-  static void
-  Ins_SANGW( void )
-  {
-    /* instruction not supported anymore */
-  }
-
-
-  /*************************************************************************/
-  /*                                                                       */
-  /* SDB[]:        Set Delta Base                                          */
-  /* Opcode range: 0x5E                                                    */
-  /* Stack:        uint32 -->                                              */
-  /*                                                                       */
-  static void
-  Ins_SDB( TT_ExecContext  exc,
-           FT_Long*        args )
-  {
-    exc->GS.delta_base = (FT_UShort)args[0];
-  }
-
-
-  /*************************************************************************/
-  /*                                                                       */
-  /* SDS[]:        Set Delta Shift                                         */
-  /* Opcode range: 0x5F                                                    */
-  /* Stack:        uint32 -->                                              */
-  /*                                                                       */
-  static void
-  Ins_SDS( TT_ExecContext  exc,
-           FT_Long*        args )
-  {
-    if ( (FT_ULong)args[0] > 6UL )
-      exc->error = FT_THROW( Bad_Argument );
-    else
-      exc->GS.delta_shift = (FT_UShort)args[0];
-  }
 
 
   /*************************************************************************/
@@ -3307,96 +2738,6 @@
              FT_Long*        args )
   {
     args[0] = exc->top;
-  }
-
-
-  /*************************************************************************/
-  /*                                                                       */
-  /* CINDEX[]:     Copy INDEXed element                                    */
-  /* Opcode range: 0x25                                                    */
-  /* Stack:        int32 --> StkElt                                        */
-  /*                                                                       */
-  static void
-  Ins_CINDEX( TT_ExecContext  exc,
-              FT_Long*        args )
-  {
-    FT_Long  L;
-
-
-    L = args[0];
-
-    if ( L <= 0 || L > exc->args )
-    {
-      if ( exc->pedantic_hinting )
-        exc->error = FT_THROW( Invalid_Reference );
-      args[0] = 0;
-    }
-    else
-      args[0] = exc->stack[exc->args - L];
-  }
-
-
-  /*************************************************************************/
-  /*                                                                       */
-  /* EIF[]:        End IF                                                  */
-  /* Opcode range: 0x59                                                    */
-  /* Stack:        -->                                                     */
-  /*                                                                       */
-  static void
-  Ins_EIF( void )
-  {
-    /* nothing to do */
-  }
-
-
-  /*************************************************************************/
-  /*                                                                       */
-  /* JMPR[]:       JuMP Relative                                           */
-  /* Opcode range: 0x1C                                                    */
-  /* Stack:        int32 -->                                               */
-  /*                                                                       */
-  static void
-  Ins_JMPR( TT_ExecContext  exc,
-            FT_Long*        args )
-  {
-    if ( args[0] == 0 && exc->args == 0 )
-      exc->error = FT_THROW( Bad_Argument );
-    exc->IP += args[0];
-    if ( exc->IP < 0                                             ||
-         ( exc->callTop > 0                                    &&
-           exc->IP > exc->callStack[exc->callTop - 1].Def->end ) )
-      exc->error = FT_THROW( Bad_Argument );
-    exc->step_ins = FALSE;
-  }
-
-
-  /*************************************************************************/
-  /*                                                                       */
-  /* JROT[]:       Jump Relative On True                                   */
-  /* Opcode range: 0x78                                                    */
-  /* Stack:        StkElt int32 -->                                        */
-  /*                                                                       */
-  static void
-  Ins_JROT( TT_ExecContext  exc,
-            FT_Long*        args )
-  {
-    if ( args[1] != 0 )
-      Ins_JMPR( exc, args );
-  }
-
-
-  /*************************************************************************/
-  /*                                                                       */
-  /* JROF[]:       Jump Relative On False                                  */
-  /* Opcode range: 0x79                                                    */
-  /* Stack:        StkElt int32 -->                                        */
-  /*                                                                       */
-  static void
-  Ins_JROF( TT_ExecContext  exc,
-            FT_Long*        args )
-  {
-    if ( args[1] == 0 )
-      Ins_JMPR( exc, args );
   }
 
 
@@ -3935,6 +3276,32 @@
 
   /*************************************************************************/
   /*                                                                       */
+  /* CINDEX[]:     Copy INDEXed element                                    */
+  /* Opcode range: 0x25                                                    */
+  /* Stack:        int32 --> StkElt                                        */
+  /*                                                                       */
+  static void
+  Ins_CINDEX( TT_ExecContext  exc,
+              FT_Long*        args )
+  {
+    FT_Long  L;
+
+
+    L = args[0];
+
+    if ( L <= 0 || L > exc->args )
+    {
+      if ( exc->pedantic_hinting )
+        exc->error = FT_THROW( Invalid_Reference );
+      args[0] = 0;
+    }
+    else
+      args[0] = exc->stack[exc->args - L];
+  }
+
+
+  /*************************************************************************/
+  /*                                                                       */
   /* ROLL[]:       ROLL top three elements                                 */
   /* Opcode range: 0x8A                                                    */
   /* Stack:        3 * StkElt --> 3 * StkElt                               */
@@ -3959,9 +3326,24 @@
   /*                                                                       */
   /* MANAGING THE FLOW OF CONTROL                                          */
   /*                                                                       */
-  /*   Instructions appear in the specification's order.                   */
-  /*                                                                       */
   /*************************************************************************/
+
+
+  /*************************************************************************/
+  /*                                                                       */
+  /* SLOOP[]:      Set LOOP variable                                       */
+  /* Opcode range: 0x17                                                    */
+  /* Stack:        int32? -->                                              */
+  /*                                                                       */
+  static void
+  Ins_SLOOP( TT_ExecContext  exc,
+             FT_Long*        args )
+  {
+    if ( args[0] < 0 )
+      exc->error = FT_THROW( Bad_Argument );
+    else
+      exc->GS.loop = args[0];
+  }
 
 
   static FT_Bool
@@ -4070,9 +3452,71 @@
 
   /*************************************************************************/
   /*                                                                       */
-  /* DEFINING AND USING FUNCTIONS AND INSTRUCTIONS                         */
+  /* EIF[]:        End IF                                                  */
+  /* Opcode range: 0x59                                                    */
+  /* Stack:        -->                                                     */
   /*                                                                       */
-  /*   Instructions appear in the specification's order.                   */
+  static void
+  Ins_EIF( void )
+  {
+    /* nothing to do */
+  }
+
+
+  /*************************************************************************/
+  /*                                                                       */
+  /* JMPR[]:       JuMP Relative                                           */
+  /* Opcode range: 0x1C                                                    */
+  /* Stack:        int32 -->                                               */
+  /*                                                                       */
+  static void
+  Ins_JMPR( TT_ExecContext  exc,
+            FT_Long*        args )
+  {
+    if ( args[0] == 0 && exc->args == 0 )
+      exc->error = FT_THROW( Bad_Argument );
+    exc->IP += args[0];
+    if ( exc->IP < 0                                             ||
+         ( exc->callTop > 0                                    &&
+           exc->IP > exc->callStack[exc->callTop - 1].Def->end ) )
+      exc->error = FT_THROW( Bad_Argument );
+    exc->step_ins = FALSE;
+  }
+
+
+  /*************************************************************************/
+  /*                                                                       */
+  /* JROT[]:       Jump Relative On True                                   */
+  /* Opcode range: 0x78                                                    */
+  /* Stack:        StkElt int32 -->                                        */
+  /*                                                                       */
+  static void
+  Ins_JROT( TT_ExecContext  exc,
+            FT_Long*        args )
+  {
+    if ( args[1] != 0 )
+      Ins_JMPR( exc, args );
+  }
+
+
+  /*************************************************************************/
+  /*                                                                       */
+  /* JROF[]:       Jump Relative On False                                  */
+  /* Opcode range: 0x79                                                    */
+  /* Stack:        StkElt int32 -->                                        */
+  /*                                                                       */
+  static void
+  Ins_JROF( TT_ExecContext  exc,
+            FT_Long*        args )
+  {
+    if ( args[1] == 0 )
+      Ins_JMPR( exc, args );
+  }
+
+
+  /*************************************************************************/
+  /*                                                                       */
+  /* DEFINING AND USING FUNCTIONS AND INSTRUCTIONS                         */
   /*                                                                       */
   /*************************************************************************/
 
@@ -4671,8 +4115,6 @@
   /*                                                                       */
   /* PUSHING DATA ONTO THE INTERPRETER STACK                               */
   /*                                                                       */
-  /*   Instructions appear in the specification's order.                   */
-  /*                                                                       */
   /*************************************************************************/
 
 
@@ -4795,9 +4237,559 @@
   /*                                                                       */
   /* MANAGING THE GRAPHICS STATE                                           */
   /*                                                                       */
-  /*  Instructions appear in the specs' order.                             */
-  /*                                                                       */
   /*************************************************************************/
+
+
+  static FT_Bool
+  Ins_SxVTL( TT_ExecContext  exc,
+             FT_UShort       aIdx1,
+             FT_UShort       aIdx2,
+             FT_UnitVector*  Vec )
+  {
+    FT_Long     A, B, C;
+    FT_Vector*  p1;
+    FT_Vector*  p2;
+
+    FT_Byte  opcode = exc->opcode;
+
+
+    if ( BOUNDS( aIdx1, exc->zp2.n_points ) ||
+         BOUNDS( aIdx2, exc->zp1.n_points ) )
+    {
+      if ( exc->pedantic_hinting )
+        exc->error = FT_THROW( Invalid_Reference );
+      return FAILURE;
+    }
+
+    p1 = exc->zp1.cur + aIdx2;
+    p2 = exc->zp2.cur + aIdx1;
+
+    A = p1->x - p2->x;
+    B = p1->y - p2->y;
+
+    /* If p1 == p2, SPvTL and SFvTL behave the same as */
+    /* SPvTCA[X] and SFvTCA[X], respectively.          */
+    /*                                                 */
+    /* Confirmed by Greg Hitchcock.                    */
+
+    if ( A == 0 && B == 0 )
+    {
+      A      = 0x4000;
+      opcode = 0;
+    }
+
+    if ( ( opcode & 1 ) != 0 )
+    {
+      C =  B;   /* counter clockwise rotation */
+      B =  A;
+      A = -C;
+    }
+
+    Normalize( A, B, Vec );
+
+    return SUCCESS;
+  }
+
+
+  /*************************************************************************/
+  /*                                                                       */
+  /* SVTCA[a]:     Set (F and P) Vectors to Coordinate Axis                */
+  /* Opcode range: 0x00-0x01                                               */
+  /* Stack:        -->                                                     */
+  /*                                                                       */
+  /* SPvTCA[a]:    Set PVector to Coordinate Axis                          */
+  /* Opcode range: 0x02-0x03                                               */
+  /* Stack:        -->                                                     */
+  /*                                                                       */
+  /* SFvTCA[a]:    Set FVector to Coordinate Axis                          */
+  /* Opcode range: 0x04-0x05                                               */
+  /* Stack:        -->                                                     */
+  /*                                                                       */
+  static void
+  Ins_SxyTCA( TT_ExecContext  exc )
+  {
+    FT_Short  AA, BB;
+
+    FT_Byte  opcode = exc->opcode;
+
+
+    AA = (FT_Short)( ( opcode & 1 ) << 14 );
+    BB = (FT_Short)( AA ^ 0x4000 );
+
+    if ( opcode < 4 )
+    {
+      exc->GS.projVector.x = AA;
+      exc->GS.projVector.y = BB;
+
+      exc->GS.dualVector.x = AA;
+      exc->GS.dualVector.y = BB;
+    }
+    else
+      GUESS_VECTOR( projVector );
+
+    if ( ( opcode & 2 ) == 0 )
+    {
+      exc->GS.freeVector.x = AA;
+      exc->GS.freeVector.y = BB;
+    }
+    else
+      GUESS_VECTOR( freeVector );
+
+    Compute_Funcs( exc );
+  }
+
+
+  /*************************************************************************/
+  /*                                                                       */
+  /* SPvTL[a]:     Set PVector To Line                                     */
+  /* Opcode range: 0x06-0x07                                               */
+  /* Stack:        uint32 uint32 -->                                       */
+  /*                                                                       */
+  static void
+  Ins_SPVTL( TT_ExecContext  exc,
+             FT_Long*        args )
+  {
+    if ( Ins_SxVTL( exc,
+                    (FT_UShort)args[1],
+                    (FT_UShort)args[0],
+                    &exc->GS.projVector ) == SUCCESS )
+    {
+      exc->GS.dualVector = exc->GS.projVector;
+      GUESS_VECTOR( freeVector );
+      Compute_Funcs( exc );
+    }
+  }
+
+
+  /*************************************************************************/
+  /*                                                                       */
+  /* SFvTL[a]:     Set FVector To Line                                     */
+  /* Opcode range: 0x08-0x09                                               */
+  /* Stack:        uint32 uint32 -->                                       */
+  /*                                                                       */
+  static void
+  Ins_SFVTL( TT_ExecContext  exc,
+             FT_Long*        args )
+  {
+    if ( Ins_SxVTL( exc,
+                    (FT_UShort)args[1],
+                    (FT_UShort)args[0],
+                    &exc->GS.freeVector ) == SUCCESS )
+    {
+      GUESS_VECTOR( projVector );
+      Compute_Funcs( exc );
+    }
+  }
+
+
+  /*************************************************************************/
+  /*                                                                       */
+  /* SFvTPv[]:     Set FVector To PVector                                  */
+  /* Opcode range: 0x0E                                                    */
+  /* Stack:        -->                                                     */
+  /*                                                                       */
+  static void
+  Ins_SFVTPV( TT_ExecContext  exc )
+  {
+    GUESS_VECTOR( projVector );
+    exc->GS.freeVector = exc->GS.projVector;
+    Compute_Funcs( exc );
+  }
+
+
+  /*************************************************************************/
+  /*                                                                       */
+  /* SPvFS[]:      Set PVector From Stack                                  */
+  /* Opcode range: 0x0A                                                    */
+  /* Stack:        f2.14 f2.14 -->                                         */
+  /*                                                                       */
+  static void
+  Ins_SPVFS( TT_ExecContext  exc,
+             FT_Long*        args )
+  {
+    FT_Short  S;
+    FT_Long   X, Y;
+
+
+    /* Only use low 16bits, then sign extend */
+    S = (FT_Short)args[1];
+    Y = (FT_Long)S;
+    S = (FT_Short)args[0];
+    X = (FT_Long)S;
+
+    Normalize( X, Y, &exc->GS.projVector );
+
+    exc->GS.dualVector = exc->GS.projVector;
+    GUESS_VECTOR( freeVector );
+    Compute_Funcs( exc );
+  }
+
+
+  /*************************************************************************/
+  /*                                                                       */
+  /* SFvFS[]:      Set FVector From Stack                                  */
+  /* Opcode range: 0x0B                                                    */
+  /* Stack:        f2.14 f2.14 -->                                         */
+  /*                                                                       */
+  static void
+  Ins_SFVFS( TT_ExecContext  exc,
+             FT_Long*        args )
+  {
+    FT_Short  S;
+    FT_Long   X, Y;
+
+
+    /* Only use low 16bits, then sign extend */
+    S = (FT_Short)args[1];
+    Y = (FT_Long)S;
+    S = (FT_Short)args[0];
+    X = S;
+
+    Normalize( X, Y, &exc->GS.freeVector );
+    GUESS_VECTOR( projVector );
+    Compute_Funcs( exc );
+  }
+
+
+  /*************************************************************************/
+  /*                                                                       */
+  /* GPv[]:        Get Projection Vector                                   */
+  /* Opcode range: 0x0C                                                    */
+  /* Stack:        ef2.14 --> ef2.14                                       */
+  /*                                                                       */
+  static void
+  Ins_GPV( TT_ExecContext  exc,
+           FT_Long*        args )
+  {
+#ifdef TT_CONFIG_OPTION_UNPATENTED_HINTING
+    if ( exc->face->unpatented_hinting )
+    {
+      args[0] = exc->GS.both_x_axis ? 0x4000 : 0;
+      args[1] = exc->GS.both_x_axis ? 0 : 0x4000;
+    }
+    else
+    {
+      args[0] = exc->GS.projVector.x;
+      args[1] = exc->GS.projVector.y;
+    }
+#else
+    args[0] = exc->GS.projVector.x;
+    args[1] = exc->GS.projVector.y;
+#endif
+  }
+
+
+  /*************************************************************************/
+  /*                                                                       */
+  /* GFv[]:        Get Freedom Vector                                      */
+  /* Opcode range: 0x0D                                                    */
+  /* Stack:        ef2.14 --> ef2.14                                       */
+  /*                                                                       */
+  static void
+  Ins_GFV( TT_ExecContext  exc,
+           FT_Long*        args )
+  {
+#ifdef TT_CONFIG_OPTION_UNPATENTED_HINTING
+    if ( exc->face->unpatented_hinting )
+    {
+      args[0] = exc->GS.both_x_axis ? 0x4000 : 0;
+      args[1] = exc->GS.both_x_axis ? 0 : 0x4000;
+    }
+    else
+    {
+      args[0] = exc->GS.freeVector.x;
+      args[1] = exc->GS.freeVector.y;
+    }
+#else
+    args[0] = exc->GS.freeVector.x;
+    args[1] = exc->GS.freeVector.y;
+#endif
+  }
+
+
+  /*************************************************************************/
+  /*                                                                       */
+  /* SRP0[]:       Set Reference Point 0                                   */
+  /* Opcode range: 0x10                                                    */
+  /* Stack:        uint32 -->                                              */
+  /*                                                                       */
+  static void
+  Ins_SRP0( TT_ExecContext  exc,
+            FT_Long*        args )
+  {
+    exc->GS.rp0 = (FT_UShort)args[0];
+  }
+
+
+  /*************************************************************************/
+  /*                                                                       */
+  /* SRP1[]:       Set Reference Point 1                                   */
+  /* Opcode range: 0x11                                                    */
+  /* Stack:        uint32 -->                                              */
+  /*                                                                       */
+  static void
+  Ins_SRP1( TT_ExecContext  exc,
+            FT_Long*        args )
+  {
+    exc->GS.rp1 = (FT_UShort)args[0];
+  }
+
+
+  /*************************************************************************/
+  /*                                                                       */
+  /* SRP2[]:       Set Reference Point 2                                   */
+  /* Opcode range: 0x12                                                    */
+  /* Stack:        uint32 -->                                              */
+  /*                                                                       */
+  static void
+  Ins_SRP2( TT_ExecContext  exc,
+            FT_Long*        args )
+  {
+    exc->GS.rp2 = (FT_UShort)args[0];
+  }
+
+
+  /*************************************************************************/
+  /*                                                                       */
+  /* SMD[]:        Set Minimum Distance                                    */
+  /* Opcode range: 0x1A                                                    */
+  /* Stack:        f26.6 -->                                               */
+  /*                                                                       */
+  static void
+  Ins_SMD( TT_ExecContext  exc,
+           FT_Long*        args )
+  {
+    exc->GS.minimum_distance = args[0];
+  }
+
+
+  /*************************************************************************/
+  /*                                                                       */
+  /* SCVTCI[]:     Set Control Value Table Cut In                          */
+  /* Opcode range: 0x1D                                                    */
+  /* Stack:        f26.6 -->                                               */
+  /*                                                                       */
+  static void
+  Ins_SCVTCI( TT_ExecContext  exc,
+              FT_Long*        args )
+  {
+    exc->GS.control_value_cutin = (FT_F26Dot6)args[0];
+  }
+
+
+  /*************************************************************************/
+  /*                                                                       */
+  /* SSWCI[]:      Set Single Width Cut In                                 */
+  /* Opcode range: 0x1E                                                    */
+  /* Stack:        f26.6 -->                                               */
+  /*                                                                       */
+  static void
+  Ins_SSWCI( TT_ExecContext  exc,
+             FT_Long*        args )
+  {
+    exc->GS.single_width_cutin = (FT_F26Dot6)args[0];
+  }
+
+
+  /*************************************************************************/
+  /*                                                                       */
+  /* SSW[]:        Set Single Width                                        */
+  /* Opcode range: 0x1F                                                    */
+  /* Stack:        int32? -->                                              */
+  /*                                                                       */
+  static void
+  Ins_SSW( TT_ExecContext  exc,
+           FT_Long*        args )
+  {
+    exc->GS.single_width_value = FT_MulFix( args[0],
+                                            exc->tt_metrics.scale );
+  }
+
+
+  /*************************************************************************/
+  /*                                                                       */
+  /* FLIPON[]:     Set auto-FLIP to ON                                     */
+  /* Opcode range: 0x4D                                                    */
+  /* Stack:        -->                                                     */
+  /*                                                                       */
+  static void
+  Ins_FLIPON( TT_ExecContext  exc )
+  {
+    exc->GS.auto_flip = TRUE;
+  }
+
+
+  /*************************************************************************/
+  /*                                                                       */
+  /* FLIPOFF[]:    Set auto-FLIP to OFF                                    */
+  /* Opcode range: 0x4E                                                    */
+  /* Stack: -->                                                            */
+  /*                                                                       */
+  static void
+  Ins_FLIPOFF( TT_ExecContext  exc )
+  {
+    exc->GS.auto_flip = FALSE;
+  }
+
+
+  /*************************************************************************/
+  /*                                                                       */
+  /* SANGW[]:      Set ANGle Weight                                        */
+  /* Opcode range: 0x7E                                                    */
+  /* Stack:        uint32 -->                                              */
+  /*                                                                       */
+  static void
+  Ins_SANGW( void )
+  {
+    /* instruction not supported anymore */
+  }
+
+
+  /*************************************************************************/
+  /*                                                                       */
+  /* SDB[]:        Set Delta Base                                          */
+  /* Opcode range: 0x5E                                                    */
+  /* Stack:        uint32 -->                                              */
+  /*                                                                       */
+  static void
+  Ins_SDB( TT_ExecContext  exc,
+           FT_Long*        args )
+  {
+    exc->GS.delta_base = (FT_UShort)args[0];
+  }
+
+
+  /*************************************************************************/
+  /*                                                                       */
+  /* SDS[]:        Set Delta Shift                                         */
+  /* Opcode range: 0x5F                                                    */
+  /* Stack:        uint32 -->                                              */
+  /*                                                                       */
+  static void
+  Ins_SDS( TT_ExecContext  exc,
+           FT_Long*        args )
+  {
+    if ( (FT_ULong)args[0] > 6UL )
+      exc->error = FT_THROW( Bad_Argument );
+    else
+      exc->GS.delta_shift = (FT_UShort)args[0];
+  }
+
+
+  /*************************************************************************/
+  /*                                                                       */
+  /* RTHG[]:       Round To Half Grid                                      */
+  /* Opcode range: 0x19                                                    */
+  /* Stack:        -->                                                     */
+  /*                                                                       */
+  static void
+  Ins_RTHG( TT_ExecContext  exc )
+  {
+    exc->GS.round_state = TT_Round_To_Half_Grid;
+    exc->func_round     = (TT_Round_Func)Round_To_Half_Grid;
+  }
+
+
+  /*************************************************************************/
+  /*                                                                       */
+  /* RTG[]:        Round To Grid                                           */
+  /* Opcode range: 0x18                                                    */
+  /* Stack:        -->                                                     */
+  /*                                                                       */
+  static void
+  Ins_RTG( TT_ExecContext  exc )
+  {
+    exc->GS.round_state = TT_Round_To_Grid;
+    exc->func_round     = (TT_Round_Func)Round_To_Grid;
+  }
+
+
+  /*************************************************************************/
+  /* RTDG[]:       Round To Double Grid                                    */
+  /* Opcode range: 0x3D                                                    */
+  /* Stack:        -->                                                     */
+  /*                                                                       */
+  static void
+  Ins_RTDG( TT_ExecContext  exc )
+  {
+    exc->GS.round_state = TT_Round_To_Double_Grid;
+    exc->func_round     = (TT_Round_Func)Round_To_Double_Grid;
+  }
+
+
+  /*************************************************************************/
+  /* RUTG[]:       Round Up To Grid                                        */
+  /* Opcode range: 0x7C                                                    */
+  /* Stack:        -->                                                     */
+  /*                                                                       */
+  static void
+  Ins_RUTG( TT_ExecContext  exc )
+  {
+    exc->GS.round_state = TT_Round_Up_To_Grid;
+    exc->func_round     = (TT_Round_Func)Round_Up_To_Grid;
+  }
+
+
+  /*************************************************************************/
+  /*                                                                       */
+  /* RDTG[]:       Round Down To Grid                                      */
+  /* Opcode range: 0x7D                                                    */
+  /* Stack:        -->                                                     */
+  /*                                                                       */
+  static void
+  Ins_RDTG( TT_ExecContext  exc )
+  {
+    exc->GS.round_state = TT_Round_Down_To_Grid;
+    exc->func_round     = (TT_Round_Func)Round_Down_To_Grid;
+  }
+
+
+  /*************************************************************************/
+  /*                                                                       */
+  /* ROFF[]:       Round OFF                                               */
+  /* Opcode range: 0x7A                                                    */
+  /* Stack:        -->                                                     */
+  /*                                                                       */
+  static void
+  Ins_ROFF( TT_ExecContext  exc )
+  {
+    exc->GS.round_state = TT_Round_Off;
+    exc->func_round     = (TT_Round_Func)Round_None;
+  }
+
+
+  /*************************************************************************/
+  /*                                                                       */
+  /* SROUND[]:     Super ROUND                                             */
+  /* Opcode range: 0x76                                                    */
+  /* Stack:        Eint8 -->                                               */
+  /*                                                                       */
+  static void
+  Ins_SROUND( TT_ExecContext  exc,
+              FT_Long*        args )
+  {
+    SetSuperRound( exc, 0x4000, args[0] );
+
+    exc->GS.round_state = TT_Round_Super;
+    exc->func_round     = (TT_Round_Func)Round_Super;
+  }
+
+
+  /*************************************************************************/
+  /*                                                                       */
+  /* S45ROUND[]:   Super ROUND 45 degrees                                  */
+  /* Opcode range: 0x77                                                    */
+  /* Stack:        uint32 -->                                              */
+  /*                                                                       */
+  static void
+  Ins_S45ROUND( TT_ExecContext  exc,
+                FT_Long*        args )
+  {
+    SetSuperRound( exc, 0x2D41, args[0] );
+
+    exc->GS.round_state = TT_Round_Super_45;
+    exc->func_round     = (TT_Round_Func)Round_Super_45;
+  }
 
 
   /*************************************************************************/
@@ -5266,8 +5258,6 @@
   /*************************************************************************/
   /*                                                                       */
   /* MANAGING OUTLINES                                                     */
-  /*                                                                       */
-  /*   Instructions appear in the specification's order.                   */
   /*                                                                       */
   /*************************************************************************/
 
@@ -7472,8 +7462,6 @@
   /*                                                                       */
   /*                                                                       */
   /* THIS IS THE INTERPRETER'S MAIN LOOP.                                  */
-  /*                                                                       */
-  /*  Instructions appear in the specification's order.                    */
   /*                                                                       */
   /*************************************************************************/
 
