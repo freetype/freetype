@@ -3348,30 +3348,6 @@
 
   /*************************************************************************/
   /*                                                                       */
-  /* JROT[]:       Jump Relative On True                                   */
-  /* Opcode range: 0x78                                                    */
-  /* Stack:        StkElt int32 -->                                        */
-  /*                                                                       */
-  static void
-  Ins_JROT( TT_ExecContext  exc,
-            FT_Long*        args )
-  {
-    if ( args[1] != 0 )
-    {
-      if ( args[0] == 0 && exc->args == 0 )
-        exc->error = FT_THROW( Bad_Argument );
-      exc->IP += args[0];
-      if ( exc->IP < 0                                             ||
-           ( exc->callTop > 0                                    &&
-             exc->IP > exc->callStack[exc->callTop - 1].Def->end ) )
-        exc->error = FT_THROW( Bad_Argument );
-      exc->step_ins = FALSE;
-    }
-  }
-
-
-  /*************************************************************************/
-  /*                                                                       */
   /* JMPR[]:       JuMP Relative                                           */
   /* Opcode range: 0x1C                                                    */
   /* Stack:        int32 -->                                               */
@@ -3393,6 +3369,21 @@
 
   /*************************************************************************/
   /*                                                                       */
+  /* JROT[]:       Jump Relative On True                                   */
+  /* Opcode range: 0x78                                                    */
+  /* Stack:        StkElt int32 -->                                        */
+  /*                                                                       */
+  static void
+  Ins_JROT( TT_ExecContext  exc,
+            FT_Long*        args )
+  {
+    if ( args[1] != 0 )
+      Ins_JMPR( exc, args );
+  }
+
+
+  /*************************************************************************/
+  /*                                                                       */
   /* JROF[]:       Jump Relative On False                                  */
   /* Opcode range: 0x79                                                    */
   /* Stack:        StkElt int32 -->                                        */
@@ -3402,16 +3393,7 @@
             FT_Long*        args )
   {
     if ( args[1] == 0 )
-    {
-      if ( args[0] == 0 && exc->args == 0 )
-        exc->error = FT_THROW( Bad_Argument );
-      exc->IP += args[0];
-      if ( exc->IP < 0                                             ||
-           ( exc->callTop > 0                                    &&
-             exc->IP > exc->callStack[exc->callTop - 1].Def->end ) )
-        exc->error = FT_THROW( Bad_Argument );
-      exc->step_ins = FALSE;
-    }
+      Ins_JMPR( exc, args );
   }
 
 

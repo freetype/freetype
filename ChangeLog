@@ -1,5 +1,11 @@
 2015-01-11  Werner Lemberg  <wl@gnu.org>
 
+	* src/truetype/ttinterp.c (Ins_JROT, Ins_JROF): Simplify.
+
+	Based on a patch from Behdad.
+
+2015-01-11  Werner Lemberg  <wl@gnu.org>
+
 	* src/truetype/ttinterp.c (Ins_SxVTL): Simplify function call.
 
 2015-01-11  Werner Lemberg  <wl@gnu.org>
