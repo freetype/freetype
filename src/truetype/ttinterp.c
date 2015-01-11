@@ -44,6 +44,7 @@
 #undef  FT_COMPONENT
 #define FT_COMPONENT  trace_ttinterp
 
+
   /*************************************************************************/
   /*                                                                       */
   /* In order to detect infinite loops in the code, we set up a counter    */
@@ -58,16 +59,16 @@
             TT_INTERPRETER_VERSION_38 )
 
 
-#define project( v1, v2 )                                                \
+#define PROJECT( v1, v2 )                                                \
           exc->func_project( exc, (v1)->x - (v2)->x, (v1)->y - (v2)->y )
 
-#define dualproj( v1, v2 )                                                \
+#define DUALPROJ( v1, v2 )                                                \
           exc->func_dualproj( exc, (v1)->x - (v2)->x, (v1)->y - (v2)->y )
 
-#define fast_project( v )                          \
+#define FAST_PROJECT( v )                          \
           exc->func_project( exc, (v)->x, (v)->y )
 
-#define fast_dualproj( v )                          \
+#define FAST_DUALPROJ( v )                          \
           exc->func_dualproj( exc, (v)->x, (v)->y )
 
 
@@ -85,6 +86,7 @@
   /*                                                                       */
 #define BOUNDS( x, n )   ( (FT_UInt)(x)  >= (FT_UInt)(n)  )
 #define BOUNDSL( x, n )  ( (FT_ULong)(x) >= (FT_ULong)(n) )
+
 
   /*************************************************************************/
   /*                                                                       */
@@ -112,6 +114,7 @@
 #else
 #define GUESS_VECTOR( V )  do { } while (0)
 #endif
+
 
   /*************************************************************************/
   /*                                                                       */
@@ -2473,10 +2476,10 @@
 #ifdef TT_CONFIG_OPTION_UNPATENTED_HINTING
     if ( exc->face->unpatented_hinting )
     {
-      /* If both vectors point rightwards along the x axis, set             */
-      /* `both-x-axis' true, otherwise set it false.  The x values only     */
-      /* need be tested because the vector has been normalised to a unit    */
-      /* vector of length 0x4000 = unity.                                   */
+      /* If both vectors point rightwards along the x axis, set          */
+      /* `both-x-axis' true, otherwise set it false.  The x values only  */
+      /* need be tested because the vector has been normalised to a unit */
+      /* vector of length 0x4000 = unity.                                */
       exc->GS.both_x_axis = (FT_Bool)( exc->GS.projVector.x == 0x4000 &&
                                        exc->GS.freeVector.x == 0x4000 );
 
@@ -4825,9 +4828,9 @@
     else
     {
       if ( exc->opcode & 1 )
-        R = fast_dualproj( &exc->zp2.org[L] );
+        R = FAST_DUALPROJ( &exc->zp2.org[L] );
       else
-        R = fast_project( &exc->zp2.cur[L] );
+        R = FAST_PROJECT( &exc->zp2.cur[L] );
     }
 
     args[0] = R;
@@ -4861,7 +4864,7 @@
       return;
     }
 
-    K = fast_project( &exc->zp2.cur[L] );
+    K = FAST_PROJECT( &exc->zp2.cur[L] );
 
     exc->func_move( exc, &exc->zp2, L, args[1] - K );
 
@@ -4908,7 +4911,7 @@
     else
     {
       if ( exc->opcode & 1 )
-        D = project( exc->zp0.cur + L, exc->zp1.cur + K );
+        D = PROJECT( exc->zp0.cur + L, exc->zp1.cur + K );
       else
       {
         /* XXX: UNDOCUMENTED: twilight zone special case */
@@ -4919,7 +4922,7 @@
           FT_Vector*  vec2 = exc->zp1.org + K;
 
 
-          D = dualproj( vec1, vec2 );
+          D = DUALPROJ( vec1, vec2 );
         }
         else
         {
@@ -4930,7 +4933,7 @@
           if ( exc->metrics.x_scale == exc->metrics.y_scale )
           {
             /* this should be faster */
-            D = dualproj( vec1, vec2 );
+            D = DUALPROJ( vec1, vec2 );
             D = FT_MulFix( D, exc->metrics.x_scale );
           }
           else
@@ -4941,7 +4944,7 @@
             vec.x = FT_MulFix( vec1->x - vec2->x, exc->metrics.x_scale );
             vec.y = FT_MulFix( vec1->y - vec2->y, exc->metrics.y_scale );
 
-            D = fast_dualproj( &vec );
+            D = FAST_DUALPROJ( &vec );
           }
         }
       }
@@ -5406,7 +5409,7 @@
     *zone = zp;
     *refp = p;
 
-    d = project( zp.cur + p, zp.org + p );
+    d = PROJECT( zp.cur + p, zp.org + p );
 
 #ifdef TT_CONFIG_OPTION_UNPATENTED_HINTING
     if ( exc->face->unpatented_hinting )
@@ -5699,13 +5702,13 @@
       else
 #ifdef TT_CONFIG_OPTION_SUBPIXEL_HINTING
       {
-        /*  If not using ignore_x_mode rendering, allow ZP2 move.          */
-        /*  If inline deltas aren't allowed, skip ZP2 move.                */
-        /*  If using ignore_x_mode rendering, allow ZP2 point move if:     */
-        /*   - freedom vector is y and sph_compatibility_mode is off       */
-        /*   - the glyph is composite and the move is in the Y direction   */
-        /*   - the glyph is specifically set to allow SHPIX moves          */
-        /*   - the move is on a previously Y-touched point                 */
+        /*  If not using ignore_x_mode rendering, allow ZP2 move.        */
+        /*  If inline deltas aren't allowed, skip ZP2 move.              */
+        /*  If using ignore_x_mode rendering, allow ZP2 point move if:   */
+        /*   - freedom vector is y and sph_compatibility_mode is off     */
+        /*   - the glyph is composite and the move is in the Y direction */
+        /*   - the glyph is specifically set to allow SHPIX moves        */
+        /*   - the move is on a previously Y-touched point               */
 
         if ( SUBPIXEL_HINTING   &&
              exc->ignore_x_mode )
@@ -5730,7 +5733,7 @@
               if ( ( exc->sph_tweak_flags & SPH_TWEAK_SKIP_NONPIXEL_Y_MOVES ) &&
                    ( B1 & 63 ) != 0                                           &&
                    ( B2 & 63 ) != 0                                           &&
-                    B1 != B2                                                  )
+                   B1 != B2                                                   )
                 Move_Zp2_Point( exc, point, -dx, -dy, TRUE );
             }
           }
@@ -5838,7 +5841,7 @@
       exc->zp1.cur[point] = exc->zp1.org[point];
     }
 
-    distance = project( exc->zp1.cur + point, exc->zp0.cur + exc->GS.rp0 );
+    distance = PROJECT( exc->zp1.cur + point, exc->zp0.cur + exc->GS.rp0 );
 
 #ifdef TT_CONFIG_OPTION_SUBPIXEL_HINTING
     /* subpixel hinting - make MSIRP respect CVT cut-in; */
@@ -5885,7 +5888,7 @@
 
     if ( ( exc->opcode & 1 ) != 0 )
     {
-      cur_dist = fast_project( &exc->zp0.cur[point] );
+      cur_dist = FAST_PROJECT( &exc->zp0.cur[point] );
 #ifdef TT_CONFIG_OPTION_SUBPIXEL_HINTING
       if ( SUBPIXEL_HINTING          &&
            exc->ignore_x_mode        &&
@@ -5995,7 +5998,7 @@
       distance = 0;
 #endif /* TT_CONFIG_OPTION_SUBPIXEL_HINTING */
 
-    org_dist = fast_project( &exc->zp0.cur[point] );
+    org_dist = FAST_PROJECT( &exc->zp0.cur[point] );
 
     if ( ( exc->opcode & 1 ) != 0 )   /* rounding and control cut-in flag */
     {
@@ -6069,7 +6072,7 @@
       FT_Vector*  vec2 = &exc->zp0.org[exc->GS.rp0];
 
 
-      org_dist = dualproj( vec1, vec2 );
+      org_dist = DUALPROJ( vec1, vec2 );
     }
     else
     {
@@ -6080,7 +6083,7 @@
       if ( exc->metrics.x_scale == exc->metrics.y_scale )
       {
         /* this should be faster */
-        org_dist = dualproj( vec1, vec2 );
+        org_dist = DUALPROJ( vec1, vec2 );
         org_dist = FT_MulFix( org_dist, exc->metrics.x_scale );
       }
       else
@@ -6091,7 +6094,7 @@
         vec.x = FT_MulFix( vec1->x - vec2->x, exc->metrics.x_scale );
         vec.y = FT_MulFix( vec1->y - vec2->y, exc->metrics.y_scale );
 
-        org_dist = fast_dualproj( &vec );
+        org_dist = FAST_DUALPROJ( &vec );
       }
     }
 
@@ -6149,7 +6152,7 @@
 
     /* now move the point */
 
-    org_dist = project( exc->zp1.cur + point, exc->zp0.cur + exc->GS.rp0 );
+    org_dist = PROJECT( exc->zp1.cur + point, exc->zp0.cur + exc->GS.rp0 );
 
     exc->func_move( exc, &exc->zp1, point, distance - org_dist );
 
@@ -6241,8 +6244,8 @@
       exc->zp1.cur[point]   = exc->zp1.org[point];
     }
 
-    org_dist = dualproj( &exc->zp1.org[point], &exc->zp0.org[exc->GS.rp0] );
-    cur_dist = project ( &exc->zp1.cur[point], &exc->zp0.cur[exc->GS.rp0] );
+    org_dist = DUALPROJ( &exc->zp1.org[point], &exc->zp0.org[exc->GS.rp0] );
+    cur_dist = PROJECT ( &exc->zp1.cur[point], &exc->zp0.cur[exc->GS.rp0] );
 
     /* auto-flip test */
 
@@ -6438,7 +6441,7 @@
       }
       else
       {
-        distance = project( exc->zp1.cur + point,
+        distance = PROJECT( exc->zp1.cur + point,
                             exc->zp0.cur + exc->GS.rp0 );
 
         exc->func_move( exc, &exc->zp1, point, -distance );
@@ -6573,7 +6576,7 @@
       return;
     }
 
-    distance = project( exc->zp0.cur + p2, exc->zp1.cur + p1 ) / 2;
+    distance = PROJECT( exc->zp0.cur + p2, exc->zp1.cur + p1 ) / 2;
 
     exc->func_move( exc, &exc->zp1, p1, distance );
     exc->func_move( exc, &exc->zp0, p2, -distance );
@@ -6639,9 +6642,9 @@
     else
     {
       if ( twilight )
-        old_range = dualproj( &exc->zp1.org[exc->GS.rp2], orus_base );
+        old_range = DUALPROJ( &exc->zp1.org[exc->GS.rp2], orus_base );
       else if ( exc->metrics.x_scale == exc->metrics.y_scale )
-        old_range = dualproj( &exc->zp1.orus[exc->GS.rp2], orus_base );
+        old_range = DUALPROJ( &exc->zp1.orus[exc->GS.rp2], orus_base );
       else
       {
         FT_Vector  vec;
@@ -6652,10 +6655,10 @@
         vec.y = FT_MulFix( exc->zp1.orus[exc->GS.rp2].y - orus_base->y,
                            exc->metrics.y_scale );
 
-        old_range = fast_dualproj( &vec );
+        old_range = FAST_DUALPROJ( &vec );
       }
 
-      cur_range = project( &exc->zp1.cur[exc->GS.rp2], cur_base );
+      cur_range = PROJECT( &exc->zp1.cur[exc->GS.rp2], cur_base );
     }
 
     for ( ; exc->GS.loop > 0; --exc->GS.loop )
@@ -6676,9 +6679,9 @@
       }
 
       if ( twilight )
-        org_dist = dualproj( &exc->zp2.org[point], orus_base );
+        org_dist = DUALPROJ( &exc->zp2.org[point], orus_base );
       else if ( exc->metrics.x_scale == exc->metrics.y_scale )
-        org_dist = dualproj( &exc->zp2.orus[point], orus_base );
+        org_dist = DUALPROJ( &exc->zp2.orus[point], orus_base );
       else
       {
         FT_Vector  vec;
@@ -6689,10 +6692,10 @@
         vec.y = FT_MulFix( exc->zp2.orus[point].y - orus_base->y,
                            exc->metrics.y_scale );
 
-        org_dist = fast_dualproj( &vec );
+        org_dist = FAST_DUALPROJ( &vec );
       }
 
-      cur_dist = project( &exc->zp2.cur[point], cur_base );
+      cur_dist = PROJECT( &exc->zp2.cur[point], cur_base );
 
       if ( org_dist )
       {

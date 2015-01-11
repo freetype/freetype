@@ -1,5 +1,13 @@
 2015-01-11  Werner Lemberg  <wl@gnu.org>
 
+	[truetype] Prettyfing.
+
+	* src/truetype/ttinterp.c (project, dualproj, fast_project,
+	fast_dualproj): Rename to...
+	(PROJECT, DUALPROJ, FAST_PROJECT, FAST_DUALPROJ): ... this.
+
+2015-01-11  Werner Lemberg  <wl@gnu.org>
+
 	* src/truetype/ttinterp.c (Ins_JROT, Ins_JROF): Simplify.
 
 	Based on a patch from Behdad.
