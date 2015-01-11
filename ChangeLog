@@ -1,3 +1,11 @@
+2015-01-11  Werner Lemberg  <wl@gnu.org>
+
+	[truetype] More macro expansions.
+
+	* src/truetype/ttinterp.c (INS_ARG): Remove macro by expansion,
+	adjusting funtion calls where necessary.
+	(FT_UNUSED_ARG): Removed, no longer needed.
+
 2015-01-10  Werner Lemberg  <wl@gnu.org>
 
 	[truetype] More macro expansions.

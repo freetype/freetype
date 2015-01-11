@@ -61,22 +61,6 @@
 #define FT_UNUSED_EXEC  FT_UNUSED( exc )
 
 
-  /*************************************************************************/
-  /*                                                                       */
-  /* The instruction argument stack.                                       */
-  /*                                                                       */
-#define INS_ARG  TT_ExecContext  exc, \
-                 FT_Long*        args
-
-
-  /*************************************************************************/
-  /*                                                                       */
-  /* This macro is used whenever `args' is unused in a function, to avoid  */
-  /* stupid warnings from pedantic compilers.                              */
-  /*                                                                       */
-#define FT_UNUSED_ARG  FT_UNUSED_EXEC; FT_UNUSED( args )
-
-
 #define SUBPIXEL_HINTING                                                     \
           ( ((TT_Driver)FT_FACE_DRIVER( exc->face ))->interpreter_version == \
             TT_INTERPRETER_VERSION_38 )
@@ -99,7 +83,8 @@
   /*                                                                       */
   /* Instruction dispatch function, as used by the interpreter.            */
   /*                                                                       */
-  typedef void  (*TInstruction_Function)( INS_ARG );
+  typedef void  (*TInstruction_Function)( TT_ExecContext  exc,
+                                          FT_Long*        args );
 
 
   /*************************************************************************/
@@ -2724,7 +2709,7 @@
   /* Stack:        -->                                                     */
   /*                                                                       */
   static void
-  Ins_SxyTCA( INS_ARG )
+  Ins_SxyTCA( TT_ExecContext  exc )
   {
     FT_Short  AA, BB;
     FT_Byte   opcode = exc->opcode;
@@ -2763,7 +2748,8 @@
   /* Stack:        uint32 uint32 -->                                       */
   /*                                                                       */
   static void
-  Ins_SPVTL( INS_ARG )
+  Ins_SPVTL( TT_ExecContext  exc,
+             FT_Long*        args )
   {
     if ( Ins_SxVTL( exc,
                     (FT_UShort)args[1],
@@ -2785,7 +2771,8 @@
   /* Stack:        uint32 uint32 -->                                       */
   /*                                                                       */
   static void
-  Ins_SFVTL( INS_ARG )
+  Ins_SFVTL( TT_ExecContext  exc,
+             FT_Long*        args )
   {
     if ( Ins_SxVTL( exc,
                     (FT_UShort)args[1],
@@ -2806,7 +2793,7 @@
   /* Stack:        -->                                                     */
   /*                                                                       */
   static void
-  Ins_SFVTPV( INS_ARG )
+  Ins_SFVTPV( TT_ExecContext  exc )
   {
     GUESS_VECTOR( projVector );
     exc->GS.freeVector = exc->GS.projVector;
@@ -2821,7 +2808,8 @@
   /* Stack:        f2.14 f2.14 -->                                         */
   /*                                                                       */
   static void
-  Ins_SPVFS( INS_ARG )
+  Ins_SPVFS( TT_ExecContext  exc,
+             FT_Long*        args )
   {
     FT_Short  S;
     FT_Long   X, Y;
@@ -2848,7 +2836,8 @@
   /* Stack:        f2.14 f2.14 -->                                         */
   /*                                                                       */
   static void
-  Ins_SFVFS( INS_ARG )
+  Ins_SFVFS( TT_ExecContext  exc,
+             FT_Long*        args )
   {
     FT_Short  S;
     FT_Long   X, Y;
@@ -2873,7 +2862,8 @@
   /* Stack:        ef2.14 --> ef2.14                                       */
   /*                                                                       */
   static void
-  Ins_GPV( INS_ARG )
+  Ins_GPV( TT_ExecContext  exc,
+           FT_Long*        args )
   {
 #ifdef TT_CONFIG_OPTION_UNPATENTED_HINTING
     if ( exc->face->unpatented_hinting )
@@ -2900,7 +2890,8 @@
   /* Stack:        ef2.14 --> ef2.14                                       */
   /*                                                                       */
   static void
-  Ins_GFV( INS_ARG )
+  Ins_GFV( TT_ExecContext  exc,
+           FT_Long*        args )
   {
 #ifdef TT_CONFIG_OPTION_UNPATENTED_HINTING
     if ( exc->face->unpatented_hinting )
@@ -2927,7 +2918,8 @@
   /* Stack:        uint32 -->                                              */
   /*                                                                       */
   static void
-  Ins_SRP0( INS_ARG )
+  Ins_SRP0( TT_ExecContext  exc,
+            FT_Long*        args )
   {
     exc->GS.rp0 = (FT_UShort)args[0];
   }
@@ -2940,7 +2932,8 @@
   /* Stack:        uint32 -->                                              */
   /*                                                                       */
   static void
-  Ins_SRP1( INS_ARG )
+  Ins_SRP1( TT_ExecContext  exc,
+            FT_Long*        args )
   {
     exc->GS.rp1 = (FT_UShort)args[0];
   }
@@ -2953,7 +2946,8 @@
   /* Stack:        uint32 -->                                              */
   /*                                                                       */
   static void
-  Ins_SRP2( INS_ARG )
+  Ins_SRP2( TT_ExecContext  exc,
+            FT_Long*        args )
   {
     exc->GS.rp2 = (FT_UShort)args[0];
   }
@@ -2966,7 +2960,7 @@
   /* Stack:        -->                                                     */
   /*                                                                       */
   static void
-  Ins_RTHG( INS_ARG )
+  Ins_RTHG( TT_ExecContext  exc )
   {
     exc->GS.round_state = TT_Round_To_Half_Grid;
     exc->func_round     = (TT_Round_Func)Round_To_Half_Grid;
@@ -2980,7 +2974,7 @@
   /* Stack:        -->                                                     */
   /*                                                                       */
   static void
-  Ins_RTG( INS_ARG )
+  Ins_RTG( TT_ExecContext  exc )
   {
     exc->GS.round_state = TT_Round_To_Grid;
     exc->func_round     = (TT_Round_Func)Round_To_Grid;
@@ -2993,7 +2987,7 @@
   /* Stack:        -->                                                     */
   /*                                                                       */
   static void
-  Ins_RTDG( INS_ARG )
+  Ins_RTDG( TT_ExecContext  exc )
   {
     exc->GS.round_state = TT_Round_To_Double_Grid;
     exc->func_round     = (TT_Round_Func)Round_To_Double_Grid;
@@ -3006,7 +3000,7 @@
   /* Stack:        -->                                                     */
   /*                                                                       */
   static void
-  Ins_RUTG( INS_ARG )
+  Ins_RUTG( TT_ExecContext  exc )
   {
     exc->GS.round_state = TT_Round_Up_To_Grid;
     exc->func_round     = (TT_Round_Func)Round_Up_To_Grid;
@@ -3020,7 +3014,7 @@
   /* Stack:        -->                                                     */
   /*                                                                       */
   static void
-  Ins_RDTG( INS_ARG )
+  Ins_RDTG( TT_ExecContext  exc )
   {
     exc->GS.round_state = TT_Round_Down_To_Grid;
     exc->func_round     = (TT_Round_Func)Round_Down_To_Grid;
@@ -3034,7 +3028,7 @@
   /* Stack:        -->                                                     */
   /*                                                                       */
   static void
-  Ins_ROFF( INS_ARG )
+  Ins_ROFF( TT_ExecContext  exc )
   {
     exc->GS.round_state = TT_Round_Off;
     exc->func_round     = (TT_Round_Func)Round_None;
@@ -3048,7 +3042,8 @@
   /* Stack:        Eint8 -->                                               */
   /*                                                                       */
   static void
-  Ins_SROUND( INS_ARG )
+  Ins_SROUND( TT_ExecContext  exc,
+              FT_Long*        args )
   {
     SetSuperRound( exc, 0x4000, args[0] );
 
@@ -3064,7 +3059,8 @@
   /* Stack:        uint32 -->                                              */
   /*                                                                       */
   static void
-  Ins_S45ROUND( INS_ARG )
+  Ins_S45ROUND( TT_ExecContext  exc,
+                FT_Long*        args )
   {
     SetSuperRound( exc, 0x2D41, args[0] );
 
@@ -3080,7 +3076,8 @@
   /* Stack:        int32? -->                                              */
   /*                                                                       */
   static void
-  Ins_SLOOP( INS_ARG )
+  Ins_SLOOP( TT_ExecContext  exc,
+             FT_Long*        args )
   {
     if ( args[0] < 0 )
       exc->error = FT_THROW( Bad_Argument );
@@ -3096,7 +3093,8 @@
   /* Stack:        f26.6 -->                                               */
   /*                                                                       */
   static void
-  Ins_SMD( INS_ARG )
+  Ins_SMD( TT_ExecContext  exc,
+           FT_Long*        args )
   {
     exc->GS.minimum_distance = args[0];
   }
@@ -3109,7 +3107,8 @@
   /* Stack:        f26.6 -->                                               */
   /*                                                                       */
   static void
-  Ins_SCVTCI( INS_ARG )
+  Ins_SCVTCI( TT_ExecContext  exc,
+              FT_Long*        args )
   {
     exc->GS.control_value_cutin = (FT_F26Dot6)args[0];
   }
@@ -3122,7 +3121,8 @@
   /* Stack:        f26.6 -->                                               */
   /*                                                                       */
   static void
-  Ins_SSWCI( INS_ARG )
+  Ins_SSWCI( TT_ExecContext  exc,
+             FT_Long*        args )
   {
     exc->GS.single_width_cutin = (FT_F26Dot6)args[0];
   }
@@ -3135,7 +3135,8 @@
   /* Stack:        int32? -->                                              */
   /*                                                                       */
   static void
-  Ins_SSW( INS_ARG )
+  Ins_SSW( TT_ExecContext  exc,
+           FT_Long*        args )
   {
     exc->GS.single_width_value = FT_MulFix( args[0],
                                             exc->tt_metrics.scale );
@@ -3149,7 +3150,7 @@
   /* Stack:        -->                                                     */
   /*                                                                       */
   static void
-  Ins_FLIPON( INS_ARG )
+  Ins_FLIPON( TT_ExecContext  exc )
   {
     exc->GS.auto_flip = TRUE;
   }
@@ -3162,7 +3163,7 @@
   /* Stack: -->                                                            */
   /*                                                                       */
   static void
-  Ins_FLIPOFF( INS_ARG )
+  Ins_FLIPOFF( TT_ExecContext  exc )
   {
     exc->GS.auto_flip = FALSE;
   }
@@ -3175,7 +3176,7 @@
   /* Stack:        uint32 -->                                              */
   /*                                                                       */
   static void
-  Ins_SANGW( INS_ARG )
+  Ins_SANGW( void )
   {
     /* instruction not supported anymore */
   }
@@ -3188,7 +3189,8 @@
   /* Stack:        uint32 -->                                              */
   /*                                                                       */
   static void
-  Ins_SDB( INS_ARG )
+  Ins_SDB( TT_ExecContext  exc,
+           FT_Long*        args )
   {
     exc->GS.delta_base = (FT_UShort)args[0];
   }
@@ -3201,7 +3203,8 @@
   /* Stack:        uint32 -->                                              */
   /*                                                                       */
   static void
-  Ins_SDS( INS_ARG )
+  Ins_SDS( TT_ExecContext  exc,
+           FT_Long*        args )
   {
     if ( (FT_ULong)args[0] > 6UL )
       exc->error = FT_THROW( Bad_Argument );
@@ -3217,7 +3220,8 @@
   /* Stack:        --> Euint16                                             */
   /*                                                                       */
   static void
-  Ins_MPPEM( INS_ARG )
+  Ins_MPPEM( TT_ExecContext  exc,
+             FT_Long*        args )
   {
     args[0] = exc->func_cur_ppem( exc );
   }
@@ -3230,7 +3234,8 @@
   /* Stack:        --> Euint16                                             */
   /*                                                                       */
   static void
-  Ins_MPS( INS_ARG )
+  Ins_MPS( TT_ExecContext  exc,
+           FT_Long*        args )
   {
     /* Note: The point size should be irrelevant in a given font program; */
     /*       we thus decide to return only the PPEM value.                */
@@ -3249,7 +3254,7 @@
   /* Stack:        StkElt --> StkElt StkElt                                */
   /*                                                                       */
   static void
-  Ins_DUP( INS_ARG )
+  Ins_DUP( FT_Long*  args )
   {
     args[1] = args[0];
   }
@@ -3262,7 +3267,7 @@
   /* Stack:        StkElt -->                                              */
   /*                                                                       */
   static void
-  Ins_POP( INS_ARG )
+  Ins_POP( void )
   {
     /* nothing to do */
   }
@@ -3275,7 +3280,7 @@
   /* Stack:        StkElt... -->                                           */
   /*                                                                       */
   static void
-  Ins_CLEAR( INS_ARG )
+  Ins_CLEAR( TT_ExecContext  exc )
   {
     exc->new_top = 0;
   }
@@ -3288,7 +3293,7 @@
   /* Stack:        2 * StkElt --> 2 * StkElt                               */
   /*                                                                       */
   static void
-  Ins_SWAP( INS_ARG )
+  Ins_SWAP( FT_Long*  args )
   {
     FT_Long  L;
 
@@ -3306,7 +3311,8 @@
   /* Stack:        --> uint32                                              */
   /*                                                                       */
   static void
-  Ins_DEPTH( INS_ARG )
+  Ins_DEPTH( TT_ExecContext  exc,
+             FT_Long*        args )
   {
     args[0] = exc->top;
   }
@@ -3319,7 +3325,8 @@
   /* Stack:        int32 --> StkElt                                        */
   /*                                                                       */
   static void
-  Ins_CINDEX( INS_ARG )
+  Ins_CINDEX( TT_ExecContext  exc,
+              FT_Long*        args )
   {
     FT_Long  L;
 
@@ -3344,7 +3351,7 @@
   /* Stack:        -->                                                     */
   /*                                                                       */
   static void
-  Ins_EIF( INS_ARG )
+  Ins_EIF( void )
   {
     /* nothing to do */
   }
@@ -3357,7 +3364,8 @@
   /* Stack:        StkElt int32 -->                                        */
   /*                                                                       */
   static void
-  Ins_JROT( INS_ARG )
+  Ins_JROT( TT_ExecContext  exc,
+            FT_Long*        args )
   {
     if ( args[1] != 0 )
     {
@@ -3380,7 +3388,8 @@
   /* Stack:        int32 -->                                               */
   /*                                                                       */
   static void
-  Ins_JMPR( INS_ARG )
+  Ins_JMPR( TT_ExecContext  exc,
+            FT_Long*        args )
   {
     if ( args[0] == 0 && exc->args == 0 )
       exc->error = FT_THROW( Bad_Argument );
@@ -3400,7 +3409,8 @@
   /* Stack:        StkElt int32 -->                                        */
   /*                                                                       */
   static void
-  Ins_JROF( INS_ARG )
+  Ins_JROF( TT_ExecContext  exc,
+            FT_Long*        args )
   {
     if ( args[1] == 0 )
     {
@@ -3423,7 +3433,7 @@
   /* Stack:        int32? int32? --> bool                                  */
   /*                                                                       */
   static void
-  Ins_LT( INS_ARG )
+  Ins_LT( FT_Long*  args )
   {
     args[0] = ( args[0] < args[1] );
   }
@@ -3436,7 +3446,7 @@
   /* Stack:        int32? int32? --> bool                                  */
   /*                                                                       */
   static void
-  Ins_LTEQ( INS_ARG )
+  Ins_LTEQ( FT_Long*  args )
   {
     args[0] = ( args[0] <= args[1] );
   }
@@ -3449,7 +3459,7 @@
   /* Stack:        int32? int32? --> bool                                  */
   /*                                                                       */
   static void
-  Ins_GT( INS_ARG )
+  Ins_GT( FT_Long*  args )
   {
     args[0] = ( args[0] > args[1] );
   }
@@ -3462,7 +3472,7 @@
   /* Stack:        int32? int32? --> bool                                  */
   /*                                                                       */
   static void
-  Ins_GTEQ( INS_ARG )
+  Ins_GTEQ( FT_Long*  args )
   {
     args[0] = ( args[0] >= args[1] );
   }
@@ -3475,7 +3485,7 @@
   /* Stack:        StkElt StkElt --> bool                                  */
   /*                                                                       */
   static void
-  Ins_EQ( INS_ARG )
+  Ins_EQ( FT_Long*  args )
   {
     args[0] = ( args[0] == args[1] );
   }
@@ -3488,7 +3498,7 @@
   /* Stack:        StkElt StkElt --> bool                                  */
   /*                                                                       */
   static void
-  Ins_NEQ( INS_ARG )
+  Ins_NEQ( FT_Long*  args )
   {
     args[0] = ( args[0] != args[1] );
   }
@@ -3501,7 +3511,8 @@
   /* Stack:        f26.6 --> bool                                          */
   /*                                                                       */
   static void
-  Ins_ODD( INS_ARG )
+  Ins_ODD( TT_ExecContext  exc,
+           FT_Long*        args )
   {
     args[0] = ( ( exc->func_round( exc, args[0], 0 ) & 127 ) == 64 );
   }
@@ -3514,7 +3525,8 @@
   /* Stack:        f26.6 --> bool                                          */
   /*                                                                       */
   static void
-  Ins_EVEN( INS_ARG )
+  Ins_EVEN( TT_ExecContext  exc,
+            FT_Long*        args )
   {
     args[0] = ( ( exc->func_round( exc, args[0], 0 ) & 127 ) == 0 );
   }
@@ -3527,7 +3539,7 @@
   /* Stack:        uint32 uint32 --> uint32                                */
   /*                                                                       */
   static void
-  Ins_AND( INS_ARG )
+  Ins_AND( FT_Long*  args )
   {
     args[0] = ( args[0] && args[1] );
   }
@@ -3540,7 +3552,7 @@
   /* Stack:        uint32 uint32 --> uint32                                */
   /*                                                                       */
   static void
-  Ins_OR( INS_ARG )
+  Ins_OR( FT_Long*  args )
   {
     args[0] = ( args[0] || args[1] );
   }
@@ -3553,7 +3565,7 @@
   /* Stack:        StkElt --> uint32                                       */
   /*                                                                       */
   static void
-  Ins_NOT( INS_ARG )
+  Ins_NOT( FT_Long*  args )
   {
     args[0] = !args[0];
   }
@@ -3566,7 +3578,7 @@
   /* Stack:        f26.6 f26.6 --> f26.6                                   */
   /*                                                                       */
   static void
-  Ins_ADD( INS_ARG )
+  Ins_ADD( FT_Long*  args )
   {
     args[0] += args[1];
   }
@@ -3579,7 +3591,7 @@
   /* Stack:        f26.6 f26.6 --> f26.6                                   */
   /*                                                                       */
   static void
-  Ins_SUB( INS_ARG )
+  Ins_SUB( FT_Long*  args )
   {
     args[0] -= args[1];
   }
@@ -3592,7 +3604,8 @@
   /* Stack:        f26.6 f26.6 --> f26.6                                   */
   /*                                                                       */
   static void
-  Ins_DIV( INS_ARG )
+  Ins_DIV( TT_ExecContext  exc,
+           FT_Long*        args )
   {
     if ( args[1] == 0 )
       exc->error = FT_THROW( Divide_By_Zero );
@@ -3608,7 +3621,7 @@
   /* Stack:        f26.6 f26.6 --> f26.6                                   */
   /*                                                                       */
   static void
-  Ins_MUL( INS_ARG )
+  Ins_MUL( FT_Long*  args )
   {
     args[0] = FT_MulDiv( args[0], args[1], 64L );
   }
@@ -3621,7 +3634,7 @@
   /* Stack:        f26.6 --> f26.6                                         */
   /*                                                                       */
   static void
-  Ins_ABS( INS_ARG )
+  Ins_ABS( FT_Long*  args )
   {
     args[0] = FT_ABS( args[0] );
   }
@@ -3634,7 +3647,7 @@
   /* Stack: f26.6 --> f26.6                                                */
   /*                                                                       */
   static void
-  Ins_NEG( INS_ARG )
+  Ins_NEG( FT_Long*  args )
   {
     args[0] = -args[0];
   }
@@ -3647,7 +3660,7 @@
   /* Stack:        f26.6 --> f26.6                                         */
   /*                                                                       */
   static void
-  Ins_FLOOR( INS_ARG )
+  Ins_FLOOR( FT_Long*  args )
   {
     args[0] = FT_PIX_FLOOR( args[0] );
   }
@@ -3660,7 +3673,7 @@
   /* Stack:        f26.6 --> f26.6                                         */
   /*                                                                       */
   static void
-  Ins_CEILING( INS_ARG )
+  Ins_CEILING( FT_Long*  args )
   {
     args[0] = FT_PIX_CEIL( args[0] );
   }
@@ -3673,7 +3686,8 @@
   /* Stack:        uint32 --> uint32                                       */
   /*                                                                       */
   static void
-  Ins_RS( INS_ARG )
+  Ins_RS( TT_ExecContext  exc,
+          FT_Long*        args )
   {
 #ifdef TT_CONFIG_OPTION_SUBPIXEL_HINTING
 
@@ -3735,7 +3749,8 @@
   /* Stack:        uint32 uint32 -->                                       */
   /*                                                                       */
   static void
-  Ins_WS( INS_ARG )
+  Ins_WS( TT_ExecContext  exc,
+          FT_Long*        args )
   {
     FT_ULong  I = (FT_ULong)args[0];
 
@@ -3757,7 +3772,8 @@
   /* Stack:        f26.6 uint32 -->                                        */
   /*                                                                       */
   static void
-  Ins_WCVTP( INS_ARG )
+  Ins_WCVTP( TT_ExecContext  exc,
+             FT_Long*        args )
   {
     FT_ULong  I = (FT_ULong)args[0];
 
@@ -3779,7 +3795,8 @@
   /* Stack:        uint32 uint32 -->                                       */
   /*                                                                       */
   static void
-  Ins_WCVTF( INS_ARG )
+  Ins_WCVTF( TT_ExecContext  exc,
+             FT_Long*        args )
   {
     FT_ULong  I = (FT_ULong)args[0];
 
@@ -3801,7 +3818,8 @@
   /* Stack:        uint32 --> f26.6                                        */
   /*                                                                       */
   static void
-  Ins_RCVT( INS_ARG )
+  Ins_RCVT( TT_ExecContext  exc,
+            FT_Long*        args )
   {
     FT_ULong  I = (FT_ULong)args[0];
 
@@ -3825,7 +3843,7 @@
   /* Stack:        uint32 -->                                              */
   /*                                                                       */
   static void
-  Ins_AA( INS_ARG )
+  Ins_AA( void )
   {
     /* intentionally no longer supported */
   }
@@ -3840,7 +3858,7 @@
   /* Note: The original instruction pops a value from the stack.           */
   /*                                                                       */
   static void
-  Ins_DEBUG( INS_ARG )
+  Ins_DEBUG( TT_ExecContext  exc )
   {
     exc->error = FT_THROW( Debug_OpCode );
   }
@@ -3853,7 +3871,8 @@
   /* Stack:        f26.6 --> f26.6                                         */
   /*                                                                       */
   static void
-  Ins_ROUND( INS_ARG )
+  Ins_ROUND( TT_ExecContext  exc,
+             FT_Long*        args )
   {
     args[0] = exc->func_round(
                 exc,
@@ -3869,11 +3888,13 @@
   /* Stack:        f26.6 --> f26.6                                         */
   /*                                                                       */
   static void
-  Ins_NROUND( INS_ARG )
+  Ins_NROUND( TT_ExecContext  exc,
+              FT_Long*        args )
   {
-    args[0] = Round_None( exc,
-                          args[0],
-                          exc->tt_metrics.compensations[exc->opcode - 0x6C] );
+    args[0] = Round_None(
+                exc,
+                args[0],
+                exc->tt_metrics.compensations[exc->opcode - 0x6C] );
   }
 
 
@@ -3884,7 +3905,7 @@
   /* Stack:        int32? int32? --> int32                                 */
   /*                                                                       */
   static void
-  Ins_MAX( INS_ARG )
+  Ins_MAX( FT_Long*  args )
   {
     if ( args[1] > args[0] )
       args[0] = args[1];
@@ -3898,7 +3919,7 @@
   /* Stack:        int32? int32? --> int32                                 */
   /*                                                                       */
   static void
-  Ins_MIN( INS_ARG )
+  Ins_MIN( FT_Long*  args )
   {
     if ( args[1] < args[0] )
       args[0] = args[1];
@@ -3912,7 +3933,8 @@
   /* Stack:        int32? --> StkElt                                       */
   /*                                                                       */
   static void
-  Ins_MINDEX( INS_ARG )
+  Ins_MINDEX( TT_ExecContext  exc,
+              FT_Long*        args )
   {
     FT_Long  L, K;
 
@@ -3944,11 +3966,9 @@
   /* Stack:        3 * StkElt --> 3 * StkElt                               */
   /*                                                                       */
   static void
-  Ins_ROLL( INS_ARG )
+  Ins_ROLL( FT_Long*  args )
   {
     FT_Long  A, B, C;
-
-    FT_UNUSED_EXEC;
 
 
     A = args[2];
@@ -4004,7 +4024,8 @@
   /* Stack:        StkElt -->                                              */
   /*                                                                       */
   static void
-  Ins_IF( INS_ARG )
+  Ins_IF( TT_ExecContext  exc,
+          FT_Long*        args )
   {
     FT_Int   nIfs;
     FT_Bool  Out;
@@ -4047,11 +4068,9 @@
   /* Stack:        -->                                                     */
   /*                                                                       */
   static void
-  Ins_ELSE( INS_ARG )
+  Ins_ELSE( TT_ExecContext  exc )
   {
     FT_Int  nIfs;
-
-    FT_UNUSED_ARG;
 
 
     nIfs = 1;
@@ -4091,7 +4110,8 @@
   /* Stack:        uint32 -->                                              */
   /*                                                                       */
   static void
-  Ins_FDEF( INS_ARG )
+  Ins_FDEF( TT_ExecContext  exc,
+            FT_Long*        args )
   {
     FT_ULong       n;
     TT_DefRecord*  rec;
@@ -4386,11 +4406,9 @@
   /* Stack:        -->                                                     */
   /*                                                                       */
   static void
-  Ins_ENDF( INS_ARG )
+  Ins_ENDF( TT_ExecContext  exc )
   {
     TT_CallRec*  pRec;
-
-    FT_UNUSED_ARG;
 
 
 #ifdef TT_CONFIG_OPTION_SUBPIXEL_HINTING
@@ -4437,7 +4455,8 @@
   /* Stack:        uint32? -->                                             */
   /*                                                                       */
   static void
-  Ins_CALL( INS_ARG )
+  Ins_CALL( TT_ExecContext  exc,
+            FT_Long*        args )
   {
     FT_ULong       F;
     TT_CallRec*    pCrec;
@@ -4525,7 +4544,8 @@
   /* Stack:        uint32? Eint16? -->                                     */
   /*                                                                       */
   static void
-  Ins_LOOPCALL( INS_ARG )
+  Ins_LOOPCALL( TT_ExecContext  exc,
+                FT_Long*        args )
   {
     FT_ULong       F;
     TT_CallRec*    pCrec;
@@ -4613,7 +4633,8 @@
   /* Stack:        Eint8 -->                                               */
   /*                                                                       */
   static void
-  Ins_IDEF( INS_ARG )
+  Ins_IDEF( TT_ExecContext  exc,
+            FT_Long*        args )
   {
     TT_DefRecord*  def;
     TT_DefRecord*  limit;
@@ -4688,7 +4709,8 @@
   /* Stack:        --> uint32...                                           */
   /*                                                                       */
   static void
-  Ins_NPUSHB( INS_ARG )
+  Ins_NPUSHB( TT_ExecContext  exc,
+              FT_Long*        args )
   {
     FT_UShort  L, K;
 
@@ -4715,7 +4737,8 @@
   /* Stack:        --> int32...                                            */
   /*                                                                       */
   static void
-  Ins_NPUSHW( INS_ARG )
+  Ins_NPUSHW( TT_ExecContext  exc,
+              FT_Long*        args )
   {
     FT_UShort  L, K;
 
@@ -4745,7 +4768,8 @@
   /* Stack:        --> uint32...                                           */
   /*                                                                       */
   static void
-  Ins_PUSHB( INS_ARG )
+  Ins_PUSHB( TT_ExecContext  exc,
+             FT_Long*        args )
   {
     FT_UShort  L, K;
 
@@ -4770,7 +4794,8 @@
   /* Stack:        --> int32...                                            */
   /*                                                                       */
   static void
-  Ins_PUSHW( INS_ARG )
+  Ins_PUSHW( TT_ExecContext  exc,
+             FT_Long*        args )
   {
     FT_UShort  L, K;
 
@@ -4811,7 +4836,8 @@
   /*      along the dual projection vector!                                */
   /*                                                                       */
   static void
-  Ins_GC( INS_ARG )
+  Ins_GC( TT_ExecContext  exc,
+          FT_Long*        args )
   {
     FT_ULong    L;
     FT_F26Dot6  R;
@@ -4848,7 +4874,8 @@
   /*   OA := OA + ( value - OA.p )/( f.p ) * f                             */
   /*                                                                       */
   static void
-  Ins_SCFS( INS_ARG )
+  Ins_SCFS( TT_ExecContext  exc,
+            FT_Long*        args )
   {
     FT_Long    K;
     FT_UShort  L;
@@ -4890,7 +4917,8 @@
   /* XXX: UNDOCUMENTED: `zp0 - zp1', and not `zp2 - zp1!                   */
   /*                                                                       */
   static void
-  Ins_MD( INS_ARG )
+  Ins_MD( TT_ExecContext  exc,
+          FT_Long*        args )
   {
     FT_UShort   K, L;
     FT_F26Dot6  D;
@@ -4966,7 +4994,8 @@
   /* Stack:        uint32 uint32 -->                                       */
   /*                                                                       */
   static void
-  Ins_SDPVTL( INS_ARG )
+  Ins_SDPVTL( TT_ExecContext  exc,
+              FT_Long*        args )
   {
     FT_Long    A, B, C;
     FT_UShort  p1, p2;            /* was FT_Int in pas type ERROR */
@@ -5048,7 +5077,8 @@
   /* Stack:        uint32 -->                                              */
   /*                                                                       */
   static void
-  Ins_SZP0( INS_ARG )
+  Ins_SZP0( TT_ExecContext  exc,
+            FT_Long*        args )
   {
     switch ( (FT_Int)args[0] )
     {
@@ -5077,7 +5107,8 @@
   /* Stack:        uint32 -->                                              */
   /*                                                                       */
   static void
-  Ins_SZP1( INS_ARG )
+  Ins_SZP1( TT_ExecContext  exc,
+            FT_Long*        args )
   {
     switch ( (FT_Int)args[0] )
     {
@@ -5106,7 +5137,8 @@
   /* Stack:        uint32 -->                                              */
   /*                                                                       */
   static void
-  Ins_SZP2( INS_ARG )
+  Ins_SZP2( TT_ExecContext  exc,
+            FT_Long*        args )
   {
     switch ( (FT_Int)args[0] )
     {
@@ -5135,7 +5167,8 @@
   /* Stack:        uint32 -->                                              */
   /*                                                                       */
   static void
-  Ins_SZPS( INS_ARG )
+  Ins_SZPS( TT_ExecContext  exc,
+            FT_Long*        args )
   {
     switch ( (FT_Int)args[0] )
     {
@@ -5169,7 +5202,8 @@
   /* Stack:        int32 int32 -->                                         */
   /*                                                                       */
   static void
-  Ins_INSTCTRL( INS_ARG )
+  Ins_INSTCTRL( TT_ExecContext  exc,
+                FT_Long*        args )
   {
     FT_Long  K, L;
 
@@ -5199,7 +5233,8 @@
   /* Stack:        uint32? -->                                             */
   /*                                                                       */
   static void
-  Ins_SCANCTRL( INS_ARG )
+  Ins_SCANCTRL( TT_ExecContext  exc,
+                FT_Long*        args )
   {
     FT_Int  A;
 
@@ -5245,7 +5280,8 @@
   /* Stack:        uint32? -->                                             */
   /*                                                                       */
   static void
-  Ins_SCANTYPE( INS_ARG )
+  Ins_SCANTYPE( TT_ExecContext  exc,
+                FT_Long*        args )
   {
     if ( args[0] >= 0 )
       exc->GS.scan_type = (FT_Int)args[0];
@@ -5268,11 +5304,9 @@
   /* Stack:        uint32... -->                                           */
   /*                                                                       */
   static void
-  Ins_FLIPPT( INS_ARG )
+  Ins_FLIPPT( TT_ExecContext  exc )
   {
     FT_UShort  point;
-
-    FT_UNUSED_ARG;
 
 
     if ( exc->top < exc->GS.loop )
@@ -5315,7 +5349,8 @@
   /* Stack:        uint32 uint32 -->                                       */
   /*                                                                       */
   static void
-  Ins_FLIPRGON( INS_ARG )
+  Ins_FLIPRGON( TT_ExecContext  exc,
+                FT_Long*        args )
   {
     FT_UShort  I, K, L;
 
@@ -5343,7 +5378,8 @@
   /* Stack:        uint32 uint32 -->                                       */
   /*                                                                       */
   static void
-  Ins_FLIPRGOFF( INS_ARG )
+  Ins_FLIPRGOFF( TT_ExecContext  exc,
+                 FT_Long*        args )
   {
     FT_UShort  I, K, L;
 
@@ -5474,16 +5510,13 @@
   /* Stack:        uint32... -->                                           */
   /*                                                                       */
   static void
-  Ins_SHP( INS_ARG )
+  Ins_SHP( TT_ExecContext  exc )
   {
     TT_GlyphZoneRec  zp;
     FT_UShort        refp;
 
-    FT_F26Dot6       dx,
-                     dy;
+    FT_F26Dot6       dx, dy;
     FT_UShort        point;
-
-    FT_UNUSED_ARG;
 
 
     if ( exc->top < exc->GS.loop )
@@ -5539,7 +5572,8 @@
   /*               zero which includes all points of it.                   */
   /*                                                                       */
   static void
-  Ins_SHC( INS_ARG )
+  Ins_SHC( TT_ExecContext  exc,
+           FT_Long*        args )
   {
     TT_GlyphZoneRec  zp;
     FT_UShort        refp;
@@ -5590,7 +5624,8 @@
   /* Stack:        uint32 -->                                              */
   /*                                                                       */
   static void
-  Ins_SHZ( INS_ARG )
+  Ins_SHZ( TT_ExecContext  exc,
+           FT_Long*        args )
   {
     TT_GlyphZoneRec  zp;
     FT_UShort        refp;
@@ -5637,7 +5672,8 @@
   /* Stack:        f26.6 uint32... -->                                     */
   /*                                                                       */
   static void
-  Ins_SHPIX( INS_ARG )
+  Ins_SHPIX( TT_ExecContext  exc,
+             FT_Long*        args )
   {
     FT_F26Dot6  dx, dy;
     FT_UShort   point;
@@ -5789,7 +5825,8 @@
   /* Stack:        f26.6 uint32 -->                                        */
   /*                                                                       */
   static void
-  Ins_MSIRP( INS_ARG )
+  Ins_MSIRP( TT_ExecContext  exc,
+             FT_Long*        args )
   {
     FT_UShort   point;
     FT_F26Dot6  distance;
@@ -5857,7 +5894,8 @@
   /* Stack:        uint32 -->                                              */
   /*                                                                       */
   static void
-  Ins_MDAP( INS_ARG )
+  Ins_MDAP( TT_ExecContext  exc,
+            FT_Long*        args )
   {
     FT_UShort   point;
     FT_F26Dot6  cur_dist;
@@ -5908,7 +5946,8 @@
   /* Stack:        uint32 uint32 -->                                       */
   /*                                                                       */
   static void
-  Ins_MIAP( INS_ARG )
+  Ins_MIAP( TT_ExecContext  exc,
+            FT_Long*        args )
   {
     FT_ULong    cvtEntry;
     FT_UShort   point;
@@ -6020,7 +6059,8 @@
   /* Stack:        uint32 -->                                              */
   /*                                                                       */
   static void
-  Ins_MDRP( INS_ARG )
+  Ins_MDRP( TT_ExecContext  exc,
+            FT_Long*        args )
   {
     FT_UShort   point;
     FT_F26Dot6  org_dist, distance, minimum_distance;
@@ -6157,7 +6197,8 @@
   /* Stack:        int32? uint32 -->                                       */
   /*                                                                       */
   static void
-  Ins_MIRP( INS_ARG )
+  Ins_MIRP( TT_ExecContext  exc,
+            FT_Long*        args )
   {
     FT_UShort   point;
     FT_ULong    cvtEntry;
@@ -6384,12 +6425,10 @@
   /* Stack:        uint32 uint32... -->                                    */
   /*                                                                       */
   static void
-  Ins_ALIGNRP( INS_ARG )
+  Ins_ALIGNRP( TT_ExecContext  exc )
   {
     FT_UShort   point;
     FT_F26Dot6  distance;
-
-    FT_UNUSED_ARG;
 
 
 #ifdef TT_CONFIG_OPTION_SUBPIXEL_HINTING
@@ -6449,7 +6488,8 @@
   /* Stack:        5 * uint32 -->                                          */
   /*                                                                       */
   static void
-  Ins_ISECT( INS_ARG )
+  Ins_ISECT( TT_ExecContext  exc,
+             FT_Long*        args )
   {
     FT_UShort   point,
                 a0, a1,
@@ -6543,7 +6583,8 @@
   /* Stack:        uint32 uint32 -->                                       */
   /*                                                                       */
   static void
-  Ins_ALIGNPTS( INS_ARG )
+  Ins_ALIGNPTS( TT_ExecContext  exc,
+                FT_Long*        args )
   {
     FT_UShort   p1, p2;
     FT_F26Dot6  distance;
@@ -6577,14 +6618,12 @@
   /* SOMETIMES, DUMBER CODE IS BETTER CODE */
 
   static void
-  Ins_IP( INS_ARG )
+  Ins_IP( TT_ExecContext  exc )
   {
     FT_F26Dot6  old_range, cur_range;
     FT_Vector*  orus_base;
     FT_Vector*  cur_base;
     FT_Int      twilight;
-
-    FT_UNUSED_ARG;
 
 
     if ( exc->top < exc->GS.loop )
@@ -6730,7 +6769,8 @@
   /* Stack:        uint32 -->                                              */
   /*                                                                       */
   static void
-  Ins_UTP( INS_ARG )
+  Ins_UTP( TT_ExecContext  exc,
+           FT_Long*        args )
   {
     FT_UShort  point;
     FT_Byte    mask;
@@ -6890,7 +6930,7 @@
   /* Stack:        -->                                                     */
   /*                                                                       */
   static void
-  Ins_IUP( INS_ARG )
+  Ins_IUP( TT_ExecContext  exc )
   {
     IUP_WorkerRec  V;
     FT_Byte        mask;
@@ -6903,8 +6943,6 @@
 
     FT_UInt   point;         /* current point   */
     FT_Short  contour;       /* current contour */
-
-    FT_UNUSED_ARG;
 
 
     /* ignore empty outlines */
@@ -7003,7 +7041,8 @@
   /* Stack:        uint32 (2 * uint32)... -->                              */
   /*                                                                       */
   static void
-  Ins_DELTAP( INS_ARG )
+  Ins_DELTAP( TT_ExecContext  exc,
+              FT_Long*        args )
   {
     FT_ULong   nump, k;
     FT_UShort  A;
@@ -7174,7 +7213,8 @@
   /* Stack:        uint32 (2 * uint32)... -->                              */
   /*                                                                       */
   static void
-  Ins_DELTAC( INS_ARG )
+  Ins_DELTAC( TT_ExecContext  exc,
+              FT_Long*        args )
   {
     FT_ULong  nump, k;
     FT_ULong  A, C, P;
@@ -7278,7 +7318,8 @@
   /* Stack:        uint32 --> uint32                                       */
   /*                                                                       */
   static void
-  Ins_GETINFO( INS_ARG )
+  Ins_GETINFO( TT_ExecContext  exc,
+               FT_Long*        args )
   {
     FT_Long  K;
 
@@ -7393,12 +7434,10 @@
 
 
   static void
-  Ins_UNKNOWN( INS_ARG )
+  Ins_UNKNOWN( TT_ExecContext  exc )
   {
     TT_DefRecord*  def   = exc->IDefs;
     TT_DefRecord*  limit = def + exc->numIDefs;
-
-    FT_UNUSED_ARG;
 
 
     for ( ; def < limit; def++ )
@@ -7610,7 +7649,7 @@
         case 0x03:  /* SPvTCA x */
         case 0x04:  /* SFvTCA y */
         case 0x05:  /* SFvTCA x */
-          Ins_SxyTCA( exc, args );
+          Ins_SxyTCA( exc );
           break;
 
         case 0x06:  /* SPvTL // */
@@ -7640,7 +7679,7 @@
           break;
 
         case 0x0E:  /* SFvTPv */
-          Ins_SFVTPV( exc, args );
+          Ins_SFVTPV( exc );
           break;
 
         case 0x0F:  /* ISECT  */
@@ -7680,11 +7719,11 @@
           break;
 
         case 0x18:  /* RTG */
-          Ins_RTG( exc, args );
+          Ins_RTG( exc );
           break;
 
         case 0x19:  /* RTHG */
-          Ins_RTHG( exc, args );
+          Ins_RTHG( exc );
           break;
 
         case 0x1A:  /* SMD */
@@ -7692,7 +7731,7 @@
           break;
 
         case 0x1B:  /* ELSE */
-          Ins_ELSE( exc, args );
+          Ins_ELSE( exc );
           break;
 
         case 0x1C:  /* JMPR */
@@ -7712,19 +7751,19 @@
           break;
 
         case 0x20:  /* DUP */
-          Ins_DUP( exc, args );
+          Ins_DUP( args );
           break;
 
         case 0x21:  /* POP */
-          Ins_POP( exc, args );
+          Ins_POP();
           break;
 
         case 0x22:  /* CLEAR */
-          Ins_CLEAR( exc, args );
+          Ins_CLEAR( exc );
           break;
 
         case 0x23:  /* SWAP */
-          Ins_SWAP( exc, args );
+          Ins_SWAP( args );
           break;
 
         case 0x24:  /* DEPTH */
@@ -7744,7 +7783,7 @@
           break;
 
         case 0x28:  /* ???? */
-          Ins_UNKNOWN( exc, args );
+          Ins_UNKNOWN( exc );
           break;
 
         case 0x29:  /* UTP */
@@ -7764,7 +7803,7 @@
           break;
 
         case 0x2D:  /* ENDF */
-          Ins_ENDF( exc, args );
+          Ins_ENDF( exc );
           break;
 
         case 0x2E:  /* MDAP */
@@ -7774,12 +7813,12 @@
 
         case 0x30:  /* IUP */
         case 0x31:  /* IUP */
-          Ins_IUP( exc, args );
+          Ins_IUP( exc );
           break;
 
         case 0x32:  /* SHP */
         case 0x33:  /* SHP */
-          Ins_SHP( exc, args );
+          Ins_SHP( exc );
           break;
 
         case 0x34:  /* SHC */
@@ -7797,7 +7836,7 @@
           break;
 
         case 0x39:  /* IP    */
-          Ins_IP( exc, args );
+          Ins_IP( exc );
           break;
 
         case 0x3A:  /* MSIRP */
@@ -7806,11 +7845,11 @@
           break;
 
         case 0x3C:  /* AlignRP */
-          Ins_ALIGNRP( exc, args );
+          Ins_ALIGNRP( exc );
           break;
 
         case 0x3D:  /* RTDG */
-          Ins_RTDG( exc, args );
+          Ins_RTDG( exc );
           break;
 
         case 0x3E:  /* MIAP */
@@ -7865,39 +7904,39 @@
           break;
 
         case 0x4D:  /* FLIPON */
-          Ins_FLIPON( exc, args );
+          Ins_FLIPON( exc );
           break;
 
         case 0x4E:  /* FLIPOFF */
-          Ins_FLIPOFF( exc, args );
+          Ins_FLIPOFF( exc );
           break;
 
         case 0x4F:  /* DEBUG */
-          Ins_DEBUG( exc, args );
+          Ins_DEBUG( exc );
           break;
 
         case 0x50:  /* LT */
-          Ins_LT( exc, args );
+          Ins_LT( args );
           break;
 
         case 0x51:  /* LTEQ */
-          Ins_LTEQ( exc, args );
+          Ins_LTEQ( args );
           break;
 
         case 0x52:  /* GT */
-          Ins_GT( exc, args );
+          Ins_GT( args );
           break;
 
         case 0x53:  /* GTEQ */
-          Ins_GTEQ( exc, args );
+          Ins_GTEQ( args );
           break;
 
         case 0x54:  /* EQ */
-          Ins_EQ( exc, args );
+          Ins_EQ( args );
           break;
 
         case 0x55:  /* NEQ */
-          Ins_NEQ( exc, args );
+          Ins_NEQ( args );
           break;
 
         case 0x56:  /* ODD */
@@ -7913,19 +7952,19 @@
           break;
 
         case 0x59:  /* EIF */
-          Ins_EIF( exc, args );
+          Ins_EIF();
           break;
 
         case 0x5A:  /* AND */
-          Ins_AND( exc, args );
+          Ins_AND( args );
           break;
 
         case 0x5B:  /* OR */
-          Ins_OR( exc, args );
+          Ins_OR( args );
           break;
 
         case 0x5C:  /* NOT */
-          Ins_NOT( exc, args );
+          Ins_NOT( args );
           break;
 
         case 0x5D:  /* DELTAP1 */
@@ -7941,11 +7980,11 @@
           break;
 
         case 0x60:  /* ADD */
-          Ins_ADD( exc, args );
+          Ins_ADD( args );
           break;
 
         case 0x61:  /* SUB */
-          Ins_SUB( exc, args );
+          Ins_SUB( args );
           break;
 
         case 0x62:  /* DIV */
@@ -7953,23 +7992,23 @@
           break;
 
         case 0x63:  /* MUL */
-          Ins_MUL( exc, args );
+          Ins_MUL( args );
           break;
 
         case 0x64:  /* ABS */
-          Ins_ABS( exc, args );
+          Ins_ABS( args );
           break;
 
         case 0x65:  /* NEG */
-          Ins_NEG( exc, args );
+          Ins_NEG( args );
           break;
 
         case 0x66:  /* FLOOR */
-          Ins_FLOOR( exc, args );
+          Ins_FLOOR( args );
           break;
 
         case 0x67:  /* CEILING */
-          Ins_CEILING( exc, args );
+          Ins_CEILING( args );
           break;
 
         case 0x68:  /* ROUND */
@@ -8018,31 +8057,31 @@
           break;
 
         case 0x7A:  /* ROFF */
-          Ins_ROFF( exc, args );
+          Ins_ROFF( exc );
           break;
 
         case 0x7B:  /* ???? */
-          Ins_UNKNOWN( exc, args );
+          Ins_UNKNOWN( exc );
           break;
 
         case 0x7C:  /* RUTG */
-          Ins_RUTG( exc, args );
+          Ins_RUTG( exc );
           break;
 
         case 0x7D:  /* RDTG */
-          Ins_RDTG( exc, args );
+          Ins_RDTG( exc );
           break;
 
         case 0x7E:  /* SANGW */
-          Ins_SANGW( exc, args );
+          Ins_SANGW();
           break;
 
         case 0x7F:  /* AA */
-          Ins_AA( exc, args );
+          Ins_AA();
           break;
 
         case 0x80:  /* FLIPPT */
-          Ins_FLIPPT( exc, args );
+          Ins_FLIPPT( exc );
           break;
 
         case 0x81:  /* FLIPRGON */
@@ -8055,7 +8094,7 @@
 
         case 0x83:  /* UNKNOWN */
         case 0x84:  /* UNKNOWN */
-          Ins_UNKNOWN( exc, args );
+          Ins_UNKNOWN( exc );
           break;
 
         case 0x85:  /* SCANCTRL */
@@ -8076,15 +8115,15 @@
           break;
 
         case 0x8A:  /* ROLL */
-          Ins_ROLL( exc, args );
+          Ins_ROLL( args );
           break;
 
         case 0x8B:  /* MAX */
-          Ins_MAX( exc, args );
+          Ins_MAX( args );
           break;
 
         case 0x8C:  /* MIN */
-          Ins_MIN( exc, args );
+          Ins_MIN( args );
           break;
 
         case 0x8D:  /* SCANTYPE */
@@ -8096,7 +8135,7 @@
           break;
 
         case 0x8F:
-          Ins_UNKNOWN( exc, args );
+          Ins_UNKNOWN( exc );
           break;
 
         default:
@@ -8109,7 +8148,7 @@
           else if ( opcode >= 0xB0 )
             Ins_PUSHB( exc, args );
           else
-            Ins_UNKNOWN( exc, args );
+            Ins_UNKNOWN( exc );
         }
       }
 
