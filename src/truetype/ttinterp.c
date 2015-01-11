@@ -53,14 +53,6 @@
 #define MAX_RUNNABLE_OPCODES  1000000L
 
 
-  /*************************************************************************/
-  /*                                                                       */
-  /* This macro is used whenever `exec' is unused in a function, to avoid  */
-  /* stupid warnings from pedantic compilers.                              */
-  /*                                                                       */
-#define FT_UNUSED_EXEC  FT_UNUSED( exc )
-
-
 #define SUBPIXEL_HINTING                                                     \
           ( ((TT_Driver)FT_FACE_DRIVER( exc->face ))->interpreter_version == \
             TT_INTERPRETER_VERSION_38 )
@@ -1809,7 +1801,7 @@
                  FT_UShort       point,
                  FT_F26Dot6      distance )
   {
-    FT_UNUSED_EXEC;
+    FT_UNUSED( exc );
 
 #ifdef TT_CONFIG_OPTION_SUBPIXEL_HINTING
     if ( !SUBPIXEL_HINTING   ||
@@ -1827,7 +1819,7 @@
                  FT_UShort       point,
                  FT_F26Dot6      distance )
   {
-    FT_UNUSED_EXEC;
+    FT_UNUSED( exc );
 
     zone->cur[point].y += distance;
     zone->tags[point]  |= FT_CURVE_TAG_TOUCH_Y;
@@ -1850,7 +1842,7 @@
                       FT_UShort       point,
                       FT_F26Dot6      distance )
   {
-    FT_UNUSED_EXEC;
+    FT_UNUSED( exc );
 
     zone->org[point].x += distance;
   }
@@ -1862,7 +1854,7 @@
                       FT_UShort       point,
                       FT_F26Dot6      distance )
   {
-    FT_UNUSED_EXEC;
+    FT_UNUSED( exc );
 
     zone->org[point].y += distance;
   }
@@ -1897,7 +1889,7 @@
   {
     FT_F26Dot6  val;
 
-    FT_UNUSED_EXEC;
+    FT_UNUSED( exc );
 
 
     if ( distance >= 0 )
@@ -1939,7 +1931,7 @@
   {
     FT_F26Dot6  val;
 
-    FT_UNUSED_EXEC;
+    FT_UNUSED( exc );
 
 
     if ( distance >= 0 )
@@ -1982,7 +1974,7 @@
   {
     FT_F26Dot6  val;
 
-    FT_UNUSED_EXEC;
+    FT_UNUSED( exc );
 
 
     if ( distance >= 0 )
@@ -2025,7 +2017,7 @@
   {
     FT_F26Dot6  val;
 
-    FT_UNUSED_EXEC;
+    FT_UNUSED( exc );
 
 
     if ( distance >= 0 )
@@ -2068,7 +2060,7 @@
   {
     FT_F26Dot6  val;
 
-    FT_UNUSED_EXEC;
+    FT_UNUSED( exc );
 
 
     if ( distance >= 0 )
@@ -2111,7 +2103,7 @@
   {
     FT_F26Dot6 val;
 
-    FT_UNUSED_EXEC;
+    FT_UNUSED( exc );
 
 
     if ( distance >= 0 )
@@ -2431,7 +2423,7 @@
              FT_Pos          dx,
              FT_Pos          dy )
   {
-    FT_UNUSED_EXEC;
+    FT_UNUSED( exc );
     FT_UNUSED( dy );
 
     return dx;
@@ -2459,7 +2451,7 @@
              FT_Pos          dx,
              FT_Pos          dy )
   {
-    FT_UNUSED_EXEC;
+    FT_UNUSED( exc );
     FT_UNUSED( dx );
 
     return dy;
@@ -2604,7 +2596,7 @@
   {
     FT_F26Dot6  W;
 
-    FT_UNUSED_EXEC;
+    FT_UNUSED( exc );
 
 
     if ( FT_ABS( Vx ) < 0x4000L && FT_ABS( Vy ) < 0x4000L )
