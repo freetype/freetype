@@ -155,15 +155,13 @@ ifneq ($(wildcard $(OBJ_DIR)/ftoption.h),)
   FTOPTION_FLAG := $DFT_CONFIG_OPTIONS_H="<ftoption.h>"
 endif
 
-# Note that a build with the `configure' script uses $(CFLAGS) only.
+# `CPPFLAGS' might be specified by the user in the environment.
 #
 FT_CFLAGS  = $(CPPFLAGS) \
-             $(INCLUDE_FLAGS) \
              $(CFLAGS) \
              $DFT2_BUILD_LIBRARY \
              $DFT_CONFIG_MODULES_H="<ftmodule.h>" \
              $(FTOPTION_FLAG)
-FT_COMPILE = $(CC) $(ANSIFLAGS) $(FT_CFLAGS)
 
 
 # Include the `exports' rules file.
@@ -194,6 +192,8 @@ DEVEL_H    := $(wildcard $(TOP_DIR)/devel/*.h)
 
 FREETYPE_H := $(PUBLIC_H) $(INTERNAL_H) $(CONFIG_H) $(DEVEL_H)
 
+
+FT_COMPILE := $(CC) $(ANSIFLAGS) $(INCLUDE_FLAGS) $(FT_CFLAGS)
 
 # ftsystem component
 #
@@ -269,9 +269,6 @@ endif
 objects: $(OBJECTS_LIST)
 
 library: $(PROJECT_LIBRARY)
-
-.c.$O:
-	$(FT_COMPILE) $T$(subst /,$(COMPILER_SEP),$@ $<)
 
 
 ifneq ($(findstring refdoc,$(MAKECMDGOALS)),)

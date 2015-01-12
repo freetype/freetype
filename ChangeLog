@@ -1,3 +1,18 @@
+2015-01-12  Werner Lemberg  <wl@gnu.org>
+
+	Fix Savannah bug #43976.
+
+	Assure that FreeType's internal include directories are found before
+	`CPPFLAGS' (which might be set by the user in the environment), and
+	`CPPFLAGS' before `CFLAGS'.
+
+	* builds/freetype.mk (FT_CFLAGS): Don't add `INCLUDE_FLAGS'.
+	(FT_COMPILE): Make this a special variable for compiling only the
+	files handled in `freetype.mk'.
+	(.c.$O): Removed, unused.
+
+	* src/*/rules.mk (*_COMPILE): Fix order of include directories.
+
 2015-01-11  Werner Lemberg  <wl@gnu.org>
 
 	[truetype] Prettyfing.

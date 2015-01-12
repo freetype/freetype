@@ -21,9 +21,14 @@ GZIP_DIR := $(SRC_DIR)/gzip
 # compilation flags for the driver
 #
 ifeq ($(SYSTEM_ZLIB),)
-  GZIP_COMPILE := $(FT_COMPILE) $I$(subst /,$(COMPILER_SEP),$(GZIP_DIR))
+  GZIP_COMPILE := $(CC) $(ANSIFLAGS)                             \
+                        $I$(subst /,$(COMPILER_SEP),$(GZIP_DIR)) \
+                        $(INCLUDE_FLAGS)                         \
+                        $(FT_CFLAGS)
 else
-  GZIP_COMPILE := $(FT_COMPILE)
+  GZIP_COMPILE := $(CC) $(ANSIFLAGS)     \
+                        $(INCLUDE_FLAGS) \
+                        $(FT_CFLAGS)
 endif
 
 

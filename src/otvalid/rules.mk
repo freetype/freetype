@@ -20,7 +20,10 @@ OTV_DIR := $(SRC_DIR)/otvalid
 
 # compilation flags for the driver
 #
-OTV_COMPILE := $(FT_COMPILE) $I$(subst /,$(COMPILER_SEP),$(OTV_DIR))
+OTV_COMPILE := $(CC) $(ANSIFLAGS)                            \
+                     $I$(subst /,$(COMPILER_SEP),$(OTV_DIR)) \
+                     $(INCLUDE_FLAGS)                        \
+                     $(FT_CFLAGS)
 
 
 # OTV driver sources (i.e., C files)

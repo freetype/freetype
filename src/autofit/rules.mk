@@ -20,7 +20,10 @@ AUTOF_DIR := $(SRC_DIR)/autofit
 
 # compilation flags for the driver
 #
-AUTOF_COMPILE := $(FT_COMPILE) $I$(subst /,$(COMPILER_SEP),$(AUTOF_DIR))
+AUTOF_COMPILE := $(CC) $(ANSIFLAGS)                              \
+                       $I$(subst /,$(COMPILER_SEP),$(AUTOF_DIR)) \
+                       $(INCLUDE_FLAGS)                          \
+                       $(FT_CFLAGS)
 
 
 # AUTOF driver sources (i.e., C files)

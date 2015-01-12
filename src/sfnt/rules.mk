@@ -20,7 +20,10 @@ SFNT_DIR := $(SRC_DIR)/sfnt
 
 # compilation flags for the driver
 #
-SFNT_COMPILE := $(FT_COMPILE) $I$(subst /,$(COMPILER_SEP),$(SFNT_DIR))
+SFNT_COMPILE := $(CC) $(ANSIFLAGS)                             \
+                      $I$(subst /,$(COMPILER_SEP),$(SFNT_DIR)) \
+                      $(INCLUDE_FLAGS)                         \
+                      $(FT_CFLAGS)
 
 
 # SFNT driver sources (i.e., C files)

@@ -18,7 +18,10 @@
 CFF_DIR := $(SRC_DIR)/cff
 
 
-CFF_COMPILE := $(FT_COMPILE) $I$(subst /,$(COMPILER_SEP),$(CFF_DIR))
+CFF_COMPILE := $(CC) $(ANSIFLAGS)                            \
+                     $I$(subst /,$(COMPILER_SEP),$(CFF_DIR)) \
+                     $(INCLUDE_FLAGS)                        \
+                     $(FT_CFLAGS)
 
 
 # CFF driver sources (i.e., C files)

@@ -18,7 +18,10 @@
 FNT_DIR := $(SRC_DIR)/winfonts
 
 
-FNT_COMPILE := $(FT_COMPILE) $I$(subst /,$(COMPILER_SEP),$(FNT_DIR))
+FNT_COMPILE := $(CC) $(ANSIFLAGS)                            \
+                     $I$(subst /,$(COMPILER_SEP),$(FNT_DIR)) \
+                     $(INCLUDE_FLAGS)                        \
+                     $(FT_CFLAGS)
 
 
 # Windows driver sources (i.e., C files)

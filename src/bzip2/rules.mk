@@ -22,7 +22,9 @@ BZIP2_DIR := $(SRC_DIR)/bzip2
 
 # compilation flags for the driver
 #
-BZIP2_COMPILE := $(FT_COMPILE)
+BZIP2_COMPILE := $(CC) $(ANSIFLAGS)     \
+                       $(INCLUDE_FLAGS) \
+                       $(FT_CFLAGS)
 
 
 # BZIP2 support sources (i.e., C files)

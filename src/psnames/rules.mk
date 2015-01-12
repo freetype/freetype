@@ -20,7 +20,10 @@ PSNAMES_DIR := $(SRC_DIR)/psnames
 
 # compilation flags for the driver
 #
-PSNAMES_COMPILE := $(FT_COMPILE) $I$(subst /,$(COMPILER_SEP),$(PSNAMES_DIR))
+PSNAMES_COMPILE := $(CC) $(ANSIFLAGS)                                \
+                         $I$(subst /,$(COMPILER_SEP),$(PSNAMES_DIR)) \
+                         $(INCLUDE_FLAGS)                            \
+                         $(FT_CFLAGS)
 
 
 # PSNames driver sources (i.e., C files)

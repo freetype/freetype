@@ -20,7 +20,10 @@ PSHINTER_DIR := $(SRC_DIR)/pshinter
 
 # compilation flags for the driver
 #
-PSHINTER_COMPILE := $(FT_COMPILE) $I$(subst /,$(COMPILER_SEP),$(PSHINTER_DIR))
+PSHINTER_COMPILE := $(CC) $(ANSIFLAGS)                                 \
+                          $I$(subst /,$(COMPILER_SEP),$(PSHINTER_DIR)) \
+                          $(INCLUDE_FLAGS)                             \
+                          $(FT_CFLAGS)
 
 
 # PSHINTER driver sources (i.e., C files)

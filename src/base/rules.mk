@@ -23,7 +23,10 @@
 #                 layer proper.
 
 
-BASE_COMPILE := $(FT_COMPILE) $I$(subst /,$(COMPILER_SEP),$(SRC_DIR)/base)
+BASE_COMPILE := $(CC) $(ANSIFLAGS)                             \
+                      $I$(subst /,$(COMPILER_SEP),$(BASE_DIR)) \
+                      $(INCLUDE_FLAGS)                         \
+                      $(FT_CFLAGS)
 
 
 # Base layer sources

@@ -20,7 +20,10 @@ PSAUX_DIR := $(SRC_DIR)/psaux
 
 # compilation flags for the driver
 #
-PSAUX_COMPILE := $(FT_COMPILE) $I$(subst /,$(COMPILER_SEP),$(PSAUX_DIR))
+PSAUX_COMPILE := $(CC) $(ANSIFLAGS)                              \
+                       $I$(subst /,$(COMPILER_SEP),$(PSAUX_DIR)) \
+                       $(INCLUDE_FLAGS)                          \
+                       $(FT_CFLAGS)
 
 
 # PSAUX driver sources (i.e., C files)

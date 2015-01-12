@@ -17,9 +17,13 @@
 #
 SMOOTH_DIR := $(SRC_DIR)/smooth
 
+
 # compilation flags for the driver
 #
-SMOOTH_COMPILE := $(FT_COMPILE) $I$(subst /,$(COMPILER_SEP),$(SMOOTH_DIR))
+SMOOTH_COMPILE := $(CC) $(ANSIFLAGS)                               \
+                        $I$(subst /,$(COMPILER_SEP),$(SMOOTH_DIR)) \
+                        $(INCLUDE_FLAGS)                           \
+                        $(FT_CFLAGS)
 
 
 # smooth driver sources (i.e., C files)

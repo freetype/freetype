@@ -23,7 +23,10 @@ LZW_DIR := $(SRC_DIR)/lzw
 
 # compilation flags for the driver
 #
-LZW_COMPILE := $(FT_COMPILE) $I$(subst /,$(COMPILER_SEP),$(LZW_DIR))
+LZW_COMPILE := $(CC) $(ANSIFLAGS)                            \
+                     $I$(subst /,$(COMPILER_SEP),$(LZW_DIR)) \
+                     $(INCLUDE_FLAGS)                        \
+                     $(FT_CFLAGS)
 
 
 # LZW support sources (i.e., C files)

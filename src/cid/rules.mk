@@ -18,7 +18,10 @@
 CID_DIR := $(SRC_DIR)/cid
 
 
-CID_COMPILE := $(FT_COMPILE) $I$(subst /,$(COMPILER_SEP),$(CID_DIR))
+CID_COMPILE := $(CC) $(ANSIFLAGS)                            \
+                     $I$(subst /,$(COMPILER_SEP),$(CID_DIR)) \
+                     $(INCLUDE_FLAGS)                        \
+                     $(FT_CFLAGS)
 
 
 # CID driver sources (i.e., C files)
