@@ -1,5 +1,20 @@
 2015-01-14  Behdad Esfahbod  <behdad@behdad.org>
 
+	[autofit] Add embedded arrays for points and contours.
+
+	This avoids at least two malloc calls for typical glyphs.
+
+	* src/autofit/afhints.h (AF_POINTS_EMBEDDED, AF_CONTOURS_EMBEDDED):
+	New macros.
+	(AF_GlyphHintsRec): Add two arrays for contours and points.
+
+	* src/autofit/afhints.c (af_glyph_hints_init, af_glyph_hints_done):
+	Updated.
+	(af_glyph_hints_reload): Only allocate data if number of contours or
+	points exceeds given threshold values.
+
+2015-01-14  Behdad Esfahbod  <behdad@behdad.org>
+
 	[autofit] Allocate hints object on the stack.
 
 	This avoids one malloc per load.

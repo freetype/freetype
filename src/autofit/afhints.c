@@ -488,7 +488,8 @@
   af_glyph_hints_init( AF_GlyphHints  hints,
                        FT_Memory      memory )
   {
-    FT_ZERO( hints );
+    /* no need to initialize the embedded items */
+    FT_MEM_ZERO( hints, sizeof ( *hints ) - sizeof ( hints->embedded ) );
     hints->memory = memory;
   }
 
@@ -521,13 +522,15 @@
       FT_FREE( axis->edges );
     }
 
-    FT_FREE( hints->contours );
+    if ( hints->contours != hints->embedded.contours )
+      FT_FREE( hints->contours );
     hints->max_contours = 0;
     hints->num_contours = 0;
 
-    FT_FREE( hints->points );
-    hints->num_points = 0;
+    if ( hints->points != hints->embedded.points )
+      FT_FREE( hints->points );
     hints->max_points = 0;
+    hints->num_points = 0;
 
     hints->memory = NULL;
   }
@@ -572,8 +575,14 @@
     /* first of all, reallocate the contours array if necessary */
     new_max = (FT_UInt)outline->n_contours;
     old_max = hints->max_contours;
-    if ( new_max > old_max )
+
+    if ( new_max <= AF_CONTOURS_EMBEDDED )
+      hints->contours = hints->embedded.contours;
+    else if ( new_max > old_max )
     {
+      if ( hints->contours == hints->embedded.contours )
+        hints->contours = NULL;
+
       new_max = ( new_max + 3 ) & ~3; /* round up to a multiple of 4 */
 
       if ( FT_RENEW_ARRAY( hints->contours, old_max, new_max ) )
@@ -589,8 +598,14 @@
      */
     new_max = (FT_UInt)( outline->n_points + 2 );
     old_max = hints->max_points;
-    if ( new_max > old_max )
+
+    if ( new_max <= AF_POINTS_EMBEDDED )
+      hints->points = hints->embedded.points;
+    else if ( new_max > old_max )
     {
+      if ( hints->points == hints->embedded.points )
+        hints->points = NULL;
+
       new_max = ( new_max + 2 + 7 ) & ~7; /* round up to a multiple of 8 */
 
       if ( FT_RENEW_ARRAY( hints->points, old_max, new_max ) )
