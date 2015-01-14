@@ -1,5 +1,40 @@
 2015-01-14  Behdad Esfahbod  <behdad@behdad.org>
 
+	[autofit] Remove (unused) support for composite glyphs.
+
+	We never have to deal with composite glyphs in the autohinter, as
+	those will be loaded into FORMAT_OUTLINE by the recursed
+	`FT_Load_Glyph' function.
+
+	In the rare cases that FT_LOAD_NO_RECURSE is set, it will imply
+	FT_LOAD_NO_SCALE as per `FT_Load_Glyph', which then implies
+	FT_LOAD_NO_HINTING:
+
+	  /* resolve load flags dependencies */
+
+	  if ( load_flags & FT_LOAD_NO_RECURSE )
+	    load_flags |= FT_LOAD_NO_SCALE         |
+	                  FT_LOAD_IGNORE_TRANSFORM;
+
+	  if ( load_flags & FT_LOAD_NO_SCALE )
+	  {
+	    load_flags |= FT_LOAD_NO_HINTING |
+	                  FT_LOAD_NO_BITMAP;
+
+	    load_flags &= ~FT_LOAD_RENDER;
+	  }
+
+	and as such the auto-hinter is never called.  Thus, the recursion in
+	`af_loader_load_g' never actually happens.  So remove the depth
+	counter as well.
+
+	* src/autofit/afloader.c (af_loader_load_g): Remove `depth'
+	parameter.
+	<FT_GLYPH_FORMAT_COMPOSITE>: Remove associated code.
+	(af_loader_load_glyph): Updated.
+
+2015-01-14  Behdad Esfahbod  <behdad@behdad.org>
+
 	[raster] Fix uninitialized memory access.
 
 	Apparently `ras.cProfile' might be uninitialized.  This will be the

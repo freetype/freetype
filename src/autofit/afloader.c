@@ -89,16 +89,17 @@
   }
 
 
-  /* Load a single glyph component.  This routine calls itself */
-  /* recursively, if necessary, and does the main work of      */
-  /* `af_loader_load_glyph.'                                   */
+  /* Do the main work of `af_loader_load_glyph'.  Note that we never   */
+  /* have to deal with composite glyphs as those get loaded into       */
+  /* FT_GLYPH_FORMAT_OUTLINE by the recursed `FT_Load_Glyph' function. */
+  /* In the rare cases where FT_LOAD_NO_RECURSE is set, it implies     */
+  /* FT_LOAD_NO_SCALE and as such the auto-hinter is never called.     */
 
   static FT_Error
   af_loader_load_g( AF_Loader  loader,
                     AF_Scaler  scaler,
                     FT_UInt    glyph_index,
-                    FT_Int32   load_flags,
-                    FT_UInt    depth )
+                    FT_Int32   load_flags )
   {
     FT_Error          error;
     FT_Face           face     = loader->face;
@@ -265,133 +266,12 @@
       FT_GlyphLoader_Add( gloader );
       break;
 
-    case FT_GLYPH_FORMAT_COMPOSITE:
-      {
-        FT_UInt      nn, num_subglyphs = slot->num_subglyphs;
-        FT_UInt      num_base_subgs, start_point;
-        FT_SubGlyph  subglyph;
-
-
-        start_point = gloader->base.outline.n_points;
-
-        /* first of all, copy the subglyph descriptors in the glyph loader */
-        error = FT_GlyphLoader_CheckSubGlyphs( gloader, num_subglyphs );
-        if ( error )
-          goto Exit;
-
-        FT_ARRAY_COPY( gloader->current.subglyphs,
-                       slot->subglyphs,
-                       num_subglyphs );
-
-        gloader->current.num_subglyphs = num_subglyphs;
-        num_base_subgs                 = gloader->base.num_subglyphs;
-
-        /* now read each subglyph independently */
-        for ( nn = 0; nn < num_subglyphs; nn++ )
-        {
-          FT_Vector  pp1, pp2;
-          FT_Pos     x, y;
-          FT_UInt    num_points, num_new_points, num_base_points;
-
-
-          /* gloader.current.subglyphs can change during glyph loading due */
-          /* to re-allocation -- we must recompute the current subglyph on */
-          /* each iteration                                                */
-          subglyph = gloader->base.subglyphs + num_base_subgs + nn;
-
-          pp1 = loader->pp1;
-          pp2 = loader->pp2;
-
-          num_base_points = gloader->base.outline.n_points;
-
-          error = af_loader_load_g( loader, scaler, subglyph->index,
-                                    load_flags, depth + 1 );
-          if ( error )
-            goto Exit;
-
-          /* recompute subglyph pointer */
-          subglyph = gloader->base.subglyphs + num_base_subgs + nn;
-
-          if ( !( subglyph->flags & FT_SUBGLYPH_FLAG_USE_MY_METRICS ) )
-          {
-            loader->pp1 = pp1;
-            loader->pp2 = pp2;
-          }
-
-          num_points     = gloader->base.outline.n_points;
-          num_new_points = num_points - num_base_points;
-
-          /* now perform the transformation required for this subglyph */
-
-          if ( subglyph->flags & ( FT_SUBGLYPH_FLAG_SCALE    |
-                                   FT_SUBGLYPH_FLAG_XY_SCALE |
-                                   FT_SUBGLYPH_FLAG_2X2      ) )
-          {
-            FT_Vector*  cur   = gloader->base.outline.points +
-                                num_base_points;
-            FT_Vector*  limit = cur + num_new_points;
-
-
-            for ( ; cur < limit; cur++ )
-              FT_Vector_Transform( cur, &subglyph->transform );
-          }
-
-          /* apply offset */
-
-          if ( !( subglyph->flags & FT_SUBGLYPH_FLAG_ARGS_ARE_XY_VALUES ) )
-          {
-            FT_Int      k = subglyph->arg1;
-            FT_UInt     l = subglyph->arg2;
-            FT_Vector*  p1;
-            FT_Vector*  p2;
-
-
-            if ( start_point + k >= num_base_points         ||
-                               l >= (FT_UInt)num_new_points )
-            {
-              error = FT_THROW( Invalid_Composite );
-              goto Exit;
-            }
-
-            l += num_base_points;
-
-            /* for now, only use the current point coordinates; */
-            /* we eventually may consider another approach      */
-            p1 = gloader->base.outline.points + start_point + k;
-            p2 = gloader->base.outline.points + start_point + l;
-
-            x = p1->x - p2->x;
-            y = p1->y - p2->y;
-          }
-          else
-          {
-            x = FT_MulFix( subglyph->arg1, hints->x_scale ) + hints->x_delta;
-            y = FT_MulFix( subglyph->arg2, hints->y_scale ) + hints->y_delta;
-
-            x = FT_PIX_ROUND( x );
-            y = FT_PIX_ROUND( y );
-          }
-
-          {
-            FT_Outline  dummy = gloader->base.outline;
-
-
-            dummy.points  += num_base_points;
-            dummy.n_points = (short)num_new_points;
-
-            FT_Outline_Translate( &dummy, x, y );
-          }
-        }
-      }
-      break;
-
     default:
       /* we don't support other formats (yet?) */
       error = FT_THROW( Unimplemented_Feature );
     }
 
   Hint_Metrics:
-    if ( depth == 0 )
     {
       FT_BBox    bbox;
       FT_Vector  vvector;
@@ -558,7 +438,7 @@
             goto Exit;
         }
 
-        error = af_loader_load_g( loader, &scaler, gindex, load_flags, 0 );
+        error = af_loader_load_g( loader, &scaler, gindex, load_flags );
       }
     }
   Exit:
