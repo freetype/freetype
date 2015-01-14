@@ -4666,12 +4666,9 @@
       goto Fail;
 #endif
 
-    /* allocate the render pool */
-    library->raster_pool_size = FT_RENDER_POOL_SIZE;
-#if FT_RENDER_POOL_SIZE > 0
-    if ( FT_ALLOC( library->raster_pool, FT_RENDER_POOL_SIZE ) )
-      goto Fail;
-#endif
+    /* we don't use raster_pool anymore. */
+    library->raster_pool_size = 0;
+    library->raster_pool      = NULL;
 
     library->version_major = FREETYPE_MAJOR;
     library->version_minor = FREETYPE_MINOR;
@@ -4819,10 +4816,6 @@
       }
     }
 #endif
-
-    /* Destroy raster objects */
-    FT_FREE( library->raster_pool );
-    library->raster_pool_size = 0;
 
 #ifdef FT_CONFIG_OPTION_PIC
     /* Destroy pic container contents */

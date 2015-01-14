@@ -1078,10 +1078,10 @@ FT_BEGIN_HEADER
   /*    FT_Raster_ResetFunc                                                */
   /*                                                                       */
   /* <Description>                                                         */
-  /*    FreeType provides an area of memory called the `render pool',      */
-  /*    available to all registered rasters.  This pool can be freely used */
-  /*    during a given scan-conversion but is shared by all rasters.  Its  */
-  /*    content is thus transient.                                         */
+  /*    FreeType used to provide an area of memory called the `render      */
+  /*    pool' available to all registered rasters.  This was not thread    */
+  /*    safe however and now FreeType never allocates this pool.  NULL     */
+  /*    is always passed in as pool_base.                                  */
   /*                                                                       */
   /*    This function is called each time the render pool changes, or just */
   /*    after a new raster object is created.                              */
@@ -1094,10 +1094,9 @@ FT_BEGIN_HEADER
   /*    pool_size :: The size in bytes of the render pool.                 */
   /*                                                                       */
   /* <Note>                                                                */
-  /*    Rasters can ignore the render pool and rely on dynamic memory      */
+  /*    Rasters should ignore the render pool and rely on dynamic or stack */
   /*    allocation if they want to (a handle to the memory allocator is    */
-  /*    passed to the raster constructor).  However, this is not           */
-  /*    recommended for efficiency purposes.                               */
+  /*    passed to the raster constructor).                                 */
   /*                                                                       */
   typedef void
   (*FT_Raster_ResetFunc)( FT_Raster       raster,

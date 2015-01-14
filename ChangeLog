@@ -1,5 +1,20 @@
 2015-01-14  Behdad Esfahbod  <behdad@behdad.org>
 
+	[base] Don't allocate `library->raster_pool' anymore.
+
+	It's unused after the following commits:
+
+	  [raster] Allocate render pool for mono rasterizer on the stack.
+	  [raster] Remove 5-level gray AA mode from monochrome rasterizer.
+
+	The value of FT_RENDER_POOL_SIZE still serves the purpose it used to
+	serve, which is, to adjust the pool size.  But the pool is now
+	allocated on the stack on demand.
+
+	* src/base/ftobjs.c (FT_New_Library, FT_Done_Library): Implement.
+
+2015-01-14  Behdad Esfahbod  <behdad@behdad.org>
+
 	[base] Do not reorder library->renderers upon use.
 
 	Instead of keeping `library->renderers' in a MRU order, just leave
