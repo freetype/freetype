@@ -1,5 +1,22 @@
 2015-01-14  Behdad Esfahbod  <behdad@behdad.org>
 
+	[base] Do not reorder library->renderers upon use.
+
+	Instead of keeping `library->renderers' in a MRU order, just leave
+	it as-is.  The MRU machinery wasn't thread-safe.
+
+	With this patch, rasterizing glyphs from different faces from
+	different threads doesn't fail choosing rasterizer
+	(FT_Err_Cannot_Render_Glyph).
+
+	Easiest to see that crash was to add a `printf' (or otherwise let
+	thread yield in FT_Throw with debugging enabled).
+
+	* src/base/ftobjs.c (FT_Render_Glyph_Internal), src/base/ftoutln.c
+	(FT_Outline_Render): Don't call `FT_Set_Renderer'.
+
+2015-01-14  Behdad Esfahbod  <behdad@behdad.org>
+
 	[raster] Allocate render pool for mono rasterizer on the stack.
 
 	Instead of using the `render_pool' member of `FT_Library' that is

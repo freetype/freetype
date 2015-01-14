@@ -612,7 +612,6 @@
                      FT_Raster_Params*  params )
   {
     FT_Error     error;
-    FT_Bool      update = FALSE;
     FT_Renderer  renderer;
     FT_ListNode  node;
 
@@ -646,13 +645,7 @@
       /* format                                                */
       renderer = FT_Lookup_Renderer( library, FT_GLYPH_FORMAT_OUTLINE,
                                      &node );
-      update   = TRUE;
     }
-
-    /* if we changed the current renderer for the glyph image format */
-    /* we need to select it as the next current one                  */
-    if ( !error && update && renderer )
-      error = FT_Set_Renderer( library, renderer, 0, 0 );
 
     return error;
   }

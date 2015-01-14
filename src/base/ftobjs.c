@@ -4084,8 +4084,7 @@
 
     default:
       {
-        FT_ListNode  node   = 0;
-        FT_Bool      update = 0;
+        FT_ListNode  node = 0;
 
 
         /* small shortcut for the very common case */
@@ -4112,16 +4111,6 @@
           /* now, look for another renderer that supports the same */
           /* format.                                               */
           renderer = FT_Lookup_Renderer( library, slot->format, &node );
-          update   = 1;
-        }
-
-        /* if we changed the current renderer for the glyph image format */
-        /* we need to select it as the next current one                  */
-        if ( !error && update && renderer )
-        {
-          error = FT_Set_Renderer( library, renderer, 0, 0 );
-          if ( error )
-            break;
         }
       }
     }
