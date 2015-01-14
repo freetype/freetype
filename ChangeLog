@@ -1,3 +1,7 @@
+2015-01-14  Werner Lemberg  <wl@gnu.org>
+
+	* docs/CHANGES: Updated, using a description from Behdad.
+
 2015-01-14  Behdad Esfahbod  <behdad@behdad.org>
 
 	* src/autofit/afmodule.c (af_autofitter_done): Fix compiler warning.

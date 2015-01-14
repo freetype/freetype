@@ -394,8 +394,11 @@ FT_BEGIN_HEADER
   /*    It also embeds a memory manager (see @FT_Memory), as well as a     */
   /*    scan-line converter object (see @FT_Raster).                       */
   /*                                                                       */
-  /*    In multi-threaded applications, make sure that the same FT_Library */
-  /*    object or any of its children doesn't get accessed in parallel.    */
+  /*    In multi-threaded applications it is easiest to use one            */
+  /*    `FT_Library' object per thread.  In case this is too cumbersome,   */
+  /*    a single `FT_Library' object across threads is possible also       */
+  /*    (since FreeType version 2.5.6), as long as a mutex lock is used    */
+  /*    around @FT_New_Face and @FT_Done_Face.                             */
   /*                                                                       */
   /* <Note>                                                                */
   /*    Library objects are normally created by @FT_Init_FreeType, and     */
@@ -476,6 +479,14 @@ FT_BEGIN_HEADER
   /*    a given filepathname or a custom input stream.                     */
   /*                                                                       */
   /*    Use @FT_Done_Face to destroy it (along with its slot and sizes).   */
+  /*                                                                       */
+  /*    An `FT_Face' object can only be safely used from one thread at a   */
+  /*    time.  Similarly, creation and destruction of `FT_Face' with the   */
+  /*    same @FT_Library object can only be done from one thread at a      */
+  /*    time.  On the other hand, functions like @FT_Load_Glyph and its    */
+  /*    siblings are thread-safe and do not need the lock to be held as    */
+  /*    long as the same `FT_Face' object is not used from multiple        */
+  /*    threads at the same time.                                          */
   /*                                                                       */
   /* <Also>                                                                */
   /*    See @FT_FaceRec for the publicly accessible fields of a given face */
@@ -1769,8 +1780,8 @@ FT_BEGIN_HEADER
   /*    use @FT_New_Library instead, followed by a call to                 */
   /*    @FT_Add_Default_Modules (or a series of calls to @FT_Add_Module).  */
   /*                                                                       */
-  /*    For multi-threading applications each thread should have its own   */
-  /*    FT_Library object.                                                 */
+  /*    See the documentation of @FT_Library and @FT_Face for              */
+  /*    multi-threading issues.                                            */
   /*                                                                       */
   /*    If you need reference-counting (cf. @FT_Reference_Library), use    */
   /*    @FT_New_Library and @FT_Done_Library.                              */
