@@ -26,7 +26,7 @@
 
   /* Initialize glyph loader. */
 
-  FT_LOCAL_DEF( FT_Error )
+  FT_LOCAL_DEF( void )
   af_loader_init( AF_Loader  loader,
                   FT_Memory  memory )
   {
@@ -36,7 +36,6 @@
 #ifdef FT_DEBUG_AUTOFIT
     _af_debug_hints = &loader->hints;
 #endif
-    return FT_GlyphLoader_New( memory, &loader->gloader );
   }
 
 
@@ -52,8 +51,6 @@
 
     loader->face    = face;
     loader->globals = (AF_FaceGlobals)face->autohint.data;
-
-    FT_GlyphLoader_Rewind( loader->gloader );
 
     if ( loader->globals == NULL )
     {
@@ -84,8 +81,6 @@
 #ifdef FT_DEBUG_AUTOFIT
     _af_debug_hints = NULL;
 #endif
-    FT_GlyphLoader_Done( loader->gloader );
-    loader->gloader = NULL;
   }
 
 
@@ -103,11 +98,11 @@
   {
     FT_Error          error;
     FT_Face           face     = loader->face;
-    FT_GlyphLoader    gloader  = loader->gloader;
     AF_StyleMetrics   metrics  = loader->metrics;
     AF_GlyphHints     hints    = &loader->hints;
     FT_GlyphSlot      slot     = face->glyph;
     FT_Slot_Internal  internal = slot->internal;
+    FT_GlyphLoader    gloader  = internal->loader;
     FT_Int32          flags;
 
 
@@ -139,29 +134,6 @@
                               loader->trans_delta.x,
                               loader->trans_delta.y );
 
-      /* copy the outline points in the loader's current                */
-      /* extra points which are used to keep original glyph coordinates */
-      error = FT_GLYPHLOADER_CHECK_POINTS( gloader,
-                                           slot->outline.n_points + 4,
-                                           slot->outline.n_contours );
-      if ( error )
-        goto Exit;
-
-      FT_ARRAY_COPY( gloader->current.outline.points,
-                     slot->outline.points,
-                     slot->outline.n_points );
-
-      FT_ARRAY_COPY( gloader->current.outline.contours,
-                     slot->outline.contours,
-                     slot->outline.n_contours );
-
-      FT_ARRAY_COPY( gloader->current.outline.tags,
-                     slot->outline.tags,
-                     slot->outline.n_points );
-
-      gloader->current.outline.n_points   = slot->outline.n_points;
-      gloader->current.outline.n_contours = slot->outline.n_contours;
-
       /* compute original horizontal phantom points (and ignore */
       /* vertical ones)                                         */
       loader->pp1.x = hints->x_delta;
@@ -187,7 +159,7 @@
 
         if ( writing_system_class->style_hints_apply )
           writing_system_class->style_hints_apply( hints,
-                                                   &gloader->current.outline,
+                                                   &gloader->base.outline,
                                                    metrics );
       }
 
@@ -262,8 +234,6 @@
         slot->rsb_delta = loader->pp2.x - pp2x;
       }
 
-      /* good, we simply add the glyph to our loader's base */
-      FT_GlyphLoader_Add( gloader );
       break;
 
     default:
@@ -346,18 +316,14 @@
       slot->metrics.horiAdvance = FT_PIX_ROUND( slot->metrics.horiAdvance );
       slot->metrics.vertAdvance = FT_PIX_ROUND( slot->metrics.vertAdvance );
 
-      /* now copy outline into glyph slot */
-      FT_GlyphLoader_Rewind( internal->loader );
-      error = FT_GlyphLoader_CopyPoints( internal->loader, gloader );
-      if ( error )
-        goto Exit;
-
+#if 0
       /* reassign all outline fields except flags to protect them */
       slot->outline.n_contours = internal->loader->base.outline.n_contours;
       slot->outline.n_points   = internal->loader->base.outline.n_points;
       slot->outline.points     = internal->loader->base.outline.points;
       slot->outline.tags       = internal->loader->base.outline.tags;
       slot->outline.contours   = internal->loader->base.outline.contours;
+#endif
 
       slot->format  = FT_GLYPH_FORMAT_OUTLINE;
     }

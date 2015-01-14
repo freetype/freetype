@@ -41,7 +41,6 @@ FT_BEGIN_HEADER
     AF_FaceGlobals    globals;
 
     /* current glyph data */
-    FT_GlyphLoader    gloader;
     AF_GlyphHintsRec  hints;
     AF_StyleMetrics   metrics;
     FT_Bool           transformed;
@@ -54,7 +53,7 @@ FT_BEGIN_HEADER
   } AF_LoaderRec, *AF_Loader;
 
 
-  FT_LOCAL( FT_Error )
+  FT_LOCAL( void )
   af_loader_init( AF_Loader  loader,
                   FT_Memory  memory );
 
