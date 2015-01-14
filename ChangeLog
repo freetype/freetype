@@ -1,5 +1,39 @@
 2015-01-14  Behdad Esfahbod  <behdad@behdad.org>
 
+	[truetype] Allocate TT_ExecContext in TT_Size instead of TT_Driver.
+
+	Previously the code had stipulation for using a per-TT_Size exec
+	context if `size->debug' was true.  But there was no way that
+	`size->debug' could *ever* be true.  As such, the code was always
+	using the singleton `TT_ExecContext' that was stored in `TT_Driver'.
+	This was, clearly, not threadsafe.
+
+	With this patch, loading glyphs from different faces from different
+	threads doesn't crash in the bytecode loader code.
+
+	* src/truetype/ttobjs.h (TT_SizeRec): Remove `debug' member.
+	(TT_DriverRec): Remove `context' member.
+
+	* src/truetype/ttobjs.c (tt_size_run_fpgm, tt_size_run_prep): Remove
+	`TT_ExecContext' code related to a global `TT_Driver' object.
+
+	(tt_driver_done): Don't remove `TT_ExecContext' object here but ...
+	(tt_size_done_bytecode): ... here.
+
+	(tt_driver_init): Don't create `TT_ExecContext' object here but ...
+	(tt_size_init_bytecode): ... here, only on demand.
+
+	* src/truetype/ttinterp.c (TT_Run_Context): Remove defunct debug
+	code.
+	(TT_New_Context): Remove `TT_ExecContext' code related to a global
+	`TT_Driver' object.
+
+	* src/truetype/ttinterp.h: Updated.
+
+	* src/truetype/ttgload.c (TT_Hint_Glyph, tt_loader_init): Updated.
+
+2015-01-14  Behdad Esfahbod  <behdad@behdad.org>
+
 	[autofit] Allocate AF_Loader on the stack instead of AF_Module.
 
 	Stop sharing a global `AF_Loader'.  Allocate one on the stack during

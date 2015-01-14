@@ -324,13 +324,6 @@ FT_BEGIN_HEADER
 
     TT_GlyphZoneRec    twilight;     /* The instance's twilight zone    */
 
-    /* debugging variables */
-
-    /* When using the debugger, we must keep the */
-    /* execution context tied to the instance    */
-    /* object rather than asking it on demand.   */
-
-    FT_Bool            debug;
     TT_ExecContext     context;
 
     /* if negative, `fpgm' (resp. `prep'), wasn't executed yet; */
@@ -351,7 +344,6 @@ FT_BEGIN_HEADER
   {
     FT_DriverRec  root;
 
-    TT_ExecContext   context;  /* execution context        */
     TT_GlyphZoneRec  zone;     /* glyph loader points zone */
 
     FT_UInt  interpreter_version;

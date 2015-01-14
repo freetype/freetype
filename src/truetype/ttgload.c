@@ -794,7 +794,6 @@
 
     if ( n_ins > 0 )
     {
-      FT_Bool   debug;
       FT_Error  error;
 
       FT_GlyphLoader  gloader         = loader->gloader;
@@ -807,10 +806,7 @@
       loader->exec->is_composite = is_composite;
       loader->exec->pts          = *zone;
 
-      debug = FT_BOOL( !( loader->load_flags & FT_LOAD_NO_SCALE ) &&
-                       ((TT_Size)loader->size)->debug             );
-
-      error = TT_Run_Context( loader->exec, debug );
+      error = TT_Run_Context( loader->exec );
       if ( error && loader->exec->pedantic_hinting )
         return error;
 
@@ -2137,8 +2133,7 @@
         return size->cvt_ready;
 
       /* query new execution context */
-      exec = size->debug ? size->context
-                         : ( (TT_Driver)FT_FACE_DRIVER( face ) )->context;
+      exec = size->context;
       if ( !exec )
         return FT_THROW( Could_Not_Find_Context );
 

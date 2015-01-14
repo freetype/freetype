@@ -751,14 +751,7 @@
     FT_Error        error;
 
 
-    /* debugging instances have their own context */
-    if ( size->debug )
-      exec = size->context;
-    else
-      exec = ( (TT_Driver)FT_FACE_DRIVER( face ) )->context;
-
-    if ( !exec )
-      return FT_THROW( Could_Not_Find_Context );
+    exec = size->context;
 
     error = TT_Load_Context( exec, face, size );
     if ( error )
@@ -845,14 +838,7 @@
     FT_Error        error;
 
 
-    /* debugging instances have their own context */
-    if ( size->debug )
-      exec = size->context;
-    else
-      exec = ( (TT_Driver)FT_FACE_DRIVER( face ) )->context;
-
-    if ( !exec )
-      return FT_THROW( Could_Not_Find_Context );
+    exec = size->context;
 
     error = TT_Load_Context( exec, face, size );
     if ( error )
@@ -876,12 +862,9 @@
     {
       TT_Goto_CodeRange( exec, tt_coderange_cvt, 0 );
 
-      if ( !size->debug )
-      {
-        FT_TRACE4(( "Executing `prep' table.\n" ));
+      FT_TRACE4(( "Executing `prep' table.\n" ));
 
-        error = face->interpreter( exec );
-      }
+      error = face->interpreter( exec );
     }
     else
       error = FT_Err_Ok;
@@ -924,12 +907,10 @@
     TT_Face    face   = (TT_Face)ftsize->face;
     FT_Memory  memory = face->root.memory;
 
-
-    if ( size->debug )
+    if ( size->context )
     {
-      /* the debug context must be deleted by the debugger itself */
+      TT_Done_Context( size->context );
       size->context = NULL;
-      size->debug   = FALSE;
     }
 
     FT_FREE( size->cvt );
@@ -975,6 +956,8 @@
 
     size->bytecode_ready = -1;
     size->cvt_ready      = -1;
+
+    size->context = TT_New_Context( (TT_Driver)face->root.driver );
 
     size->max_function_defs    = maxp->maxFunctionDefs;
     size->max_instruction_defs = maxp->maxInstructionDefs;
@@ -1259,10 +1242,6 @@
 
     TT_Driver  driver = (TT_Driver)ttdriver;
 
-
-    if ( !TT_New_Context( driver ) )
-      return FT_THROW( Could_Not_Find_Context );
-
 #ifdef TT_CONFIG_OPTION_SUBPIXEL_HINTING
     driver->interpreter_version = TT_INTERPRETER_VERSION_38;
 #else
@@ -1293,20 +1272,7 @@
   FT_LOCAL_DEF( void )
   tt_driver_done( FT_Module  ttdriver )     /* TT_Driver */
   {
-#ifdef TT_USE_BYTECODE_INTERPRETER
-    TT_Driver  driver = (TT_Driver)ttdriver;
-
-
-    /* destroy the execution context */
-    if ( driver->context )
-    {
-      TT_Done_Context( driver->context );
-      driver->context = NULL;
-    }
-#else
     FT_UNUSED( ttdriver );
-#endif
-
   }
 
 

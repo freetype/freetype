@@ -544,12 +544,8 @@
   /* <Return>                                                              */
   /*    TrueType error code.  0 means success.                             */
   /*                                                                       */
-  /* <Note>                                                                */
-  /*    Only the glyph loader and debugger should call this function.      */
-  /*                                                                       */
   FT_LOCAL_DEF( FT_Error )
-  TT_Run_Context( TT_ExecContext  exec,
-                  FT_Bool         debug )
+  TT_Run_Context( TT_ExecContext  exec )
   {
     TT_Goto_CodeRange( exec, tt_coderange_glyph, 0 );
 
@@ -579,16 +575,7 @@
     exec->top     = 0;
     exec->callTop = 0;
 
-#if 1
-    FT_UNUSED( debug );
-
     return exec->face->interpreter( exec );
-#else
-    if ( !debug )
-      return TT_RunIns( exec );
-    else
-      return FT_Err_Ok;
-#endif
   }
 
 
@@ -622,6 +609,9 @@
   TT_New_Context( TT_Driver  driver )
   {
     FT_Memory  memory;
+    FT_Error   error;
+
+    TT_ExecContext  exec;
 
 
     if ( !driver )
@@ -629,26 +619,16 @@
 
     memory = driver->root.root.memory;
 
-    if ( !driver->context )
-    {
-      FT_Error        error;
-      TT_ExecContext  exec;
+    /* allocate object */
+    if ( FT_NEW( exec ) )
+      goto Fail;
 
+    /* initialize it; in case of error this deallocates `exec' too */
+    error = Init_Context( exec, memory );
+    if ( error )
+      goto Fail;
 
-      /* allocate object */
-      if ( FT_NEW( exec ) )
-        goto Fail;
-
-      /* initialize it; in case of error this deallocates `exec' too */
-      error = Init_Context( exec, memory );
-      if ( error )
-        goto Fail;
-
-      /* store it into the driver */
-      driver->context = exec;
-    }
-
-    return driver->context;
+    return exec;
 
   Fail:
     return NULL;

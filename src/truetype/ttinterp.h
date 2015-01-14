@@ -327,6 +327,7 @@ FT_BEGIN_HEADER
   /*                                                                       */
   /* <Note>                                                                */
   /*    Only the glyph loader and debugger should call this function.      */
+  /*    (And right now only the glyph loader uses it.)                     */
   /*                                                                       */
   FT_EXPORT( TT_ExecContext )
   TT_New_Context( TT_Driver  driver );
@@ -346,8 +347,7 @@ FT_BEGIN_HEADER
                    TT_Size         ins );
 
   FT_LOCAL( FT_Error )
-  TT_Run_Context( TT_ExecContext  exec,
-                  FT_Bool         debug );
+  TT_Run_Context( TT_ExecContext  exec );
 #endif /* TT_USE_BYTECODE_INTERPRETER */
 
 
