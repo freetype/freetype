@@ -27,14 +27,14 @@
   /* Initialize glyph loader. */
 
   FT_LOCAL_DEF( void )
-  af_loader_init( AF_Loader  loader,
-                  FT_Memory  memory )
+  af_loader_init( AF_Loader      loader,
+                  AF_GlyphHints  hints )
   {
     FT_ZERO( loader );
 
-    af_glyph_hints_init( &loader->hints, memory );
+    loader->hints = hints;
 #ifdef FT_DEBUG_AUTOFIT
-    _af_debug_hints = &loader->hints;
+    _af_debug_hints = loader->hints;
 #endif
   }
 
@@ -73,10 +73,9 @@
   FT_LOCAL_DEF( void )
   af_loader_done( AF_Loader  loader )
   {
-    af_glyph_hints_done( &loader->hints );
-
     loader->face    = NULL;
     loader->globals = NULL;
+    loader->hints   = NULL;
 
 #ifdef FT_DEBUG_AUTOFIT
     _af_debug_hints = NULL;
@@ -99,7 +98,7 @@
     FT_Error          error;
     FT_Face           face     = loader->face;
     AF_StyleMetrics   metrics  = loader->metrics;
-    AF_GlyphHints     hints    = &loader->hints;
+    AF_GlyphHints     hints    = loader->hints;
     FT_GlyphSlot      slot     = face->glyph;
     FT_Slot_Internal  internal = slot->internal;
     FT_GlyphLoader    gloader  = internal->loader;
@@ -398,7 +397,7 @@
 
         if ( writing_system_class->style_hints_init )
         {
-          error = writing_system_class->style_hints_init( &loader->hints,
+          error = writing_system_class->style_hints_init( loader->hints,
                                                           metrics );
           if ( error )
             goto Exit;

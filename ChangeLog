@@ -1,5 +1,23 @@
 2015-01-14  Behdad Esfahbod  <behdad@behdad.org>
 
+	[autofit] Allocate hints object on the stack.
+
+	This avoids one malloc per load.
+
+	* src/autofit/afloader.h (AF_LoaderRec): Change type of `hints' to
+	`AF_GlyphHints'.
+	Update prototype.
+
+	* src/autofit/afloader.c (af_loader_init): Use `AF_GlyphHints'
+	parameter instead of `FT_Memory'.
+	(af_loader_done): Directly reset `load_hints'.
+	(af_loader_load_g): Updated.
+
+	* src/autofit/afmodule.c (af_autofitter_load_glyph): Use local
+	`hints' object.
+
+2015-01-14  Behdad Esfahbod  <behdad@behdad.org>
+
 	[autofit] Reuse slot glyph loader.
 
 	No need to create a new glyph loader; we can reuse the one from

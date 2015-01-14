@@ -271,18 +271,23 @@
                             FT_UInt       glyph_index,
                             FT_Int32      load_flags )
   {
-    FT_Error      error = FT_Err_Ok;
-    AF_LoaderRec  loader[1];
+    FT_Error   error  = FT_Err_Ok;
+    FT_Memory  memory = module->root.library->memory;
+
+    AF_GlyphHintsRec  hints[1];
+    AF_LoaderRec      loader[1];
 
     FT_UNUSED( size );
 
 
-    af_loader_init( loader, module->root.library->memory );
+    af_glyph_hints_init( hints, memory );
+    af_loader_init( loader, hints );
 
     error = af_loader_load_glyph( loader, module, slot->face,
                                   glyph_index, load_flags );
 
     af_loader_done( loader );
+    af_glyph_hints_done( hints );
 
     return error;
   }
