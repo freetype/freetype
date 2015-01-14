@@ -1,5 +1,30 @@
 2015-01-14  Behdad Esfahbod  <behdad@behdad.org>
 
+	[smooth] Allocate render pool for smooth rasterizer on the stack.
+
+	Instead of using the `render_pool' member of `FT_Library' that is
+	provided down to the rasterizer, completely ignore that and allocate
+	needed objects on the stack instead.
+
+	With this patch, rasterizing glyphs from different faces from
+	different threads doesn't crash in the smooth rasterizer.
+
+	Bugs:
+
+	  https://bugzilla.redhat.com/show_bug.cgi?id=678397
+	  https://bugzilla.redhat.com/show_bug.cgi?id=1004315
+	  https://bugzilla.redhat.com/show_bug.cgi?id=1165471
+	  https://bugs.freedesktop.org/show_bug.cgi?id=69034
+
+	* src/smooth/ftgrays.c (gray_TRaster): Remove `buffer',
+	`buffer_size', `band_size', and `worker' members.
+
+	(gray_raster_render): Create `buffer', `buffer_size', and
+	`band_size' locally.
+	(gray_raster_reset): Updated.
+
+2015-01-14  Behdad Esfahbod  <behdad@behdad.org>
+
 	[truetype] Allocate TT_ExecContext in TT_Size instead of TT_Driver.
 
 	Previously the code had stipulation for using a per-TT_Size exec

@@ -464,11 +464,7 @@ typedef ptrdiff_t  FT_PtrDist;
 
   typedef struct gray_TRaster_
   {
-    void*         buffer;
-    long          buffer_size;
-    int           band_size;
     void*         memory;
-    gray_PWorker  worker;
 
   } gray_TRaster, *gray_PRaster;
 
@@ -1918,12 +1914,17 @@ typedef ptrdiff_t  FT_PtrDist;
   gray_raster_render( gray_PRaster             raster,
                       const FT_Raster_Params*  params )
   {
-    const FT_Outline*  outline    = (const FT_Outline*)params->source;
-    const FT_Bitmap*   target_map = params->target;
-    gray_PWorker       worker;
+    const FT_Outline*  outline     = (const FT_Outline*)params->source;
+    const FT_Bitmap*   target_map  = params->target;
+
+    gray_TWorker  worker[1];
+
+    TCell  buffer[FT_MAX( FT_RENDER_POOL_SIZE, 2048 ) / sizeof ( TCell )];
+    long   buffer_size = sizeof ( buffer );
+    int    band_size   = (int)( buffer_size / ( sizeof ( TCell ) * 8 ) );
 
 
-    if ( !raster || !raster->buffer || !raster->buffer_size )
+    if ( !raster )
       return FT_THROW( Invalid_Argument );
 
     if ( !outline )
@@ -1939,8 +1940,6 @@ typedef ptrdiff_t  FT_PtrDist;
     if ( outline->n_points !=
            outline->contours[outline->n_contours - 1] + 1 )
       return FT_THROW( Invalid_Outline );
-
-    worker = raster->worker;
 
     /* if direct mode is not set, we must have a target bitmap */
     if ( !( params->flags & FT_RASTER_FLAG_DIRECT ) )
@@ -1979,12 +1978,12 @@ typedef ptrdiff_t  FT_PtrDist;
       ras.clip_box.yMax =  32767L;
     }
 
-    gray_init_cells( RAS_VAR_ raster->buffer, raster->buffer_size );
+    gray_init_cells( RAS_VAR_ buffer, buffer_size );
 
     ras.outline        = *outline;
     ras.num_cells      = 0;
     ras.invalid        = 1;
-    ras.band_size      = raster->band_size;
+    ras.band_size      = band_size;
     ras.num_gray_spans = 0;
 
     if ( params->flags & FT_RASTER_FLAG_DIRECT )
@@ -2069,34 +2068,9 @@ typedef ptrdiff_t  FT_PtrDist;
                      char*      pool_base,
                      long       pool_size )
   {
-    gray_PRaster  rast = (gray_PRaster)raster;
-
-
-    if ( raster )
-    {
-      if ( pool_base && pool_size >= (long)sizeof ( gray_TWorker ) + 2048 )
-      {
-        gray_PWorker  worker = (gray_PWorker)pool_base;
-
-
-        rast->worker      = worker;
-        rast->buffer      = pool_base +
-                              ( ( sizeof ( gray_TWorker ) +
-                                  sizeof ( TCell ) - 1 )  &
-                                ~( sizeof ( TCell ) - 1 ) );
-        rast->buffer_size = (long)( ( pool_base + pool_size ) -
-                                    (char*)rast->buffer ) &
-                                      ~( sizeof ( TCell ) - 1 );
-        rast->band_size   = (int)( rast->buffer_size /
-                                     ( sizeof ( TCell ) * 8 ) );
-      }
-      else
-      {
-        rast->buffer      = NULL;
-        rast->buffer_size = 0;
-        rast->worker      = NULL;
-      }
-    }
+    FT_UNUSED( raster );
+    FT_UNUSED( pool_base );
+    FT_UNUSED( pool_size );
   }
 
 
