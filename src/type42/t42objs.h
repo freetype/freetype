@@ -55,7 +55,6 @@ FT_BEGIN_HEADER
   {
     FT_DriverRec     root;
     FT_Driver_Class  ttclazz;
-    void*            extension_component;
 
   } T42_DriverRec, *T42_Driver;
 
