@@ -305,6 +305,8 @@ FT_BEGIN_HEADER
 
   } AF_EdgeRec;
 
+#define AF_SEGMENTS_EMBEDDED  18   /* number of embedded segments   */
+#define AF_EDGES_EMBEDDED     12   /* number of embedded edges      */
 
   typedef struct  AF_AxisHintsRec_
   {
@@ -320,6 +322,14 @@ FT_BEGIN_HEADER
     AF_Edge       edges;        /* edges array               */
 
     AF_Direction  major_dir;    /* either vertical or horizontal */
+
+    /* two arrays to avoid allocation penalty */
+    struct
+    {
+      AF_SegmentRec  segments[AF_SEGMENTS_EMBEDDED];
+      AF_EdgeRec     edges[AF_EDGES_EMBEDDED];
+    } embedded;
+
 
   } AF_AxisHintsRec, *AF_AxisHints;
 

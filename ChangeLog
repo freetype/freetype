@@ -1,5 +1,25 @@
 2015-01-14  Behdad Esfahbod  <behdad@behdad.org>
 
+	[autofit] Add embedded array of segments and edges.
+
+	Avoids multiple mallocs per typical glyphs.
+
+	With this and recent changes to avoid mallocs, the thread-safe
+	stack-based loader is now as fast as the previous model that had one
+	cached singleton.
+
+	* src/autofit/afhints.h (AF_SEGMENTS_EMBEDDED, AF_EDGES_EMBEDDED):
+	New macros.
+	(AF_AxisHintsRec): Add two arrays for segments and edges.
+
+	* src/autofit/afhints.c (af_axis_hints_new_segment): Only allocate
+	data if number of segments exceeds given threshold value.
+	(af_axis_hints_new_edge):  Only allocate data if number of edges
+	exceeds given threshold value.
+	(af_glyph_hints_done): Updated.
+
+2015-01-14  Behdad Esfahbod  <behdad@behdad.org>
+
 	[autofit] Add embedded arrays for points and contours.
 
 	This avoids at least two malloc calls for typical glyphs.

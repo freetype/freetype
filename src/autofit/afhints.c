@@ -43,7 +43,15 @@
     AF_Segment  segment = NULL;
 
 
-    if ( axis->num_segments >= axis->max_segments )
+    if ( axis->num_segments < AF_SEGMENTS_EMBEDDED )
+    {
+      if ( axis->segments == NULL )
+      {
+        axis->segments     = axis->embedded.segments;
+        axis->max_segments = AF_SEGMENTS_EMBEDDED;
+      }
+    }
+    else if ( axis->num_segments >= axis->max_segments )
     {
       FT_Int  old_max = axis->max_segments;
       FT_Int  new_max = old_max;
@@ -60,8 +68,18 @@
       if ( new_max < old_max || new_max > big_max )
         new_max = big_max;
 
-      if ( FT_RENEW_ARRAY( axis->segments, old_max, new_max ) )
-        goto Exit;
+      if ( axis->segments == axis->embedded.segments )
+      {
+        if ( FT_NEW_ARRAY( axis->segments, new_max ) )
+          goto Exit;
+        ft_memcpy( axis->segments, axis->embedded.segments,
+                   sizeof ( axis->embedded.segments ) );
+      }
+      else
+      {
+        if ( FT_RENEW_ARRAY( axis->segments, old_max, new_max ) )
+          goto Exit;
+      }
 
       axis->max_segments = new_max;
     }
@@ -89,7 +107,15 @@
     AF_Edge   edges;
 
 
-    if ( axis->num_edges >= axis->max_edges )
+    if ( axis->num_edges < AF_EDGES_EMBEDDED )
+    {
+      if ( axis->edges == NULL )
+      {
+        axis->edges     = axis->embedded.edges;
+        axis->max_edges = AF_EDGES_EMBEDDED;
+      }
+    }
+    else if ( axis->num_edges >= axis->max_edges )
     {
       FT_Int  old_max = axis->max_edges;
       FT_Int  new_max = old_max;
@@ -106,8 +132,18 @@
       if ( new_max < old_max || new_max > big_max )
         new_max = big_max;
 
-      if ( FT_RENEW_ARRAY( axis->edges, old_max, new_max ) )
-        goto Exit;
+      if ( axis->edges == axis->embedded.edges )
+      {
+        if ( FT_NEW_ARRAY( axis->edges, new_max ) )
+          goto Exit;
+        ft_memcpy( axis->edges, axis->embedded.edges,
+                   sizeof ( axis->embedded.edges ) );
+      }
+      else
+      {
+        if ( FT_RENEW_ARRAY( axis->edges, old_max, new_max ) )
+          goto Exit;
+      }
 
       axis->max_edges = new_max;
     }
@@ -515,11 +551,13 @@
 
       axis->num_segments = 0;
       axis->max_segments = 0;
-      FT_FREE( axis->segments );
+      if ( axis->segments != axis->embedded.segments )
+        FT_FREE( axis->segments );
 
       axis->num_edges = 0;
       axis->max_edges = 0;
-      FT_FREE( axis->edges );
+      if ( axis->edges != axis->embedded.edges )
+        FT_FREE( axis->edges );
     }
 
     if ( hints->contours != hints->embedded.contours )
