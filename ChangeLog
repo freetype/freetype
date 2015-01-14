@@ -1,5 +1,9 @@
 2015-01-14  Behdad Esfahbod  <behdad@behdad.org>
 
+	* src/autofit/afmodule.c (af_autofitter_done): Fix compiler warning.
+
+2015-01-14  Behdad Esfahbod  <behdad@behdad.org>
+
 	[autofit] Add embedded array of segments and edges.
 
 	Avoids multiple mallocs per typical glyphs.

@@ -260,7 +260,7 @@
   FT_CALLBACK_DEF( void )
   af_autofitter_done( FT_Module  ft_module )      /* AF_Module */
   {
-    AF_Module  module = (AF_Module)ft_module;
+    FT_UNUSED( ft_module );
   }
 
 
