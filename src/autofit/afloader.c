@@ -27,12 +27,9 @@
   /* Initialize glyph loader. */
 
   FT_LOCAL_DEF( FT_Error )
-  af_loader_init( AF_Module  module )
+  af_loader_init( AF_Loader  loader,
+                  FT_Memory  memory )
   {
-    AF_Loader  loader = module->loader;
-    FT_Memory  memory = module->root.library->memory;
-
-
     FT_ZERO( loader );
 
     af_glyph_hints_init( &loader->hints, memory );
@@ -46,11 +43,11 @@
   /* Reset glyph loader and compute globals if necessary. */
 
   FT_LOCAL_DEF( FT_Error )
-  af_loader_reset( AF_Module  module,
+  af_loader_reset( AF_Loader  loader,
+                   AF_Module  module,
                    FT_Face    face )
   {
-    FT_Error   error  = FT_Err_Ok;
-    AF_Loader  loader = module->loader;
+    FT_Error  error = FT_Err_Ok;
 
 
     loader->face    = face;
@@ -77,11 +74,8 @@
   /* Finalize glyph loader. */
 
   FT_LOCAL_DEF( void )
-  af_loader_done( AF_Module  module )
+  af_loader_done( AF_Loader  loader )
   {
-    AF_Loader  loader = module->loader;
-
-
     af_glyph_hints_done( &loader->hints );
 
     loader->face    = NULL;
@@ -496,14 +490,14 @@
   /* Load a glyph. */
 
   FT_LOCAL_DEF( FT_Error )
-  af_loader_load_glyph( AF_Module  module,
+  af_loader_load_glyph( AF_Loader  loader,
+                        AF_Module  module,
                         FT_Face    face,
                         FT_UInt    gindex,
                         FT_Int32   load_flags )
   {
     FT_Error      error;
     FT_Size       size   = face->size;
-    AF_Loader     loader = module->loader;
     AF_ScalerRec  scaler;
 
 
@@ -521,7 +515,7 @@
     scaler.render_mode = FT_LOAD_TARGET_MODE( load_flags );
     scaler.flags       = 0;  /* XXX: fix this */
 
-    error = af_loader_reset( module, face );
+    error = af_loader_reset( loader, module, face );
     if ( !error )
     {
       AF_StyleMetrics  metrics;

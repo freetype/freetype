@@ -1,5 +1,41 @@
 2015-01-14  Behdad Esfahbod  <behdad@behdad.org>
 
+	[autofit] Allocate AF_Loader on the stack instead of AF_Module.
+
+	Stop sharing a global `AF_Loader'.  Allocate one on the stack during
+	glyph load.
+
+	Right now this results in about 25% slowdown, to be fixed in a
+	following commit.
+
+	With this patch loading glyphs from different faces from different
+	threads doesn't immediately crash in the autohinting loader code.
+
+	Bugs:
+
+	  https://bugzilla.redhat.com/show_bug.cgi?id=1164941
+
+	* src/autofit/afloader.c (af_loader_init): Pass
+	`AF_Loader' and `FT_Memory' instead of `AF_Module' as arguments.
+	(af_loader_reset, af_loader_load_glyph): Also pass `loader' as
+	argument.
+	(af_loader_done): Use `AF_Loader' instead of `AF_Module' as
+	argument.
+
+	* src/autofit/afmodule.c (af_autofitter_init): Don't call
+	`af_loader_init'.
+	(af_autofitter_done): Don't call `af_loader_done'.
+	(af_autofitter_load_glyph): Use a local `AF_Loader' object.
+
+	* src/autofit/afloader.h: Include `afmodule.h'.
+	Update prototypes.
+	Move typedef for `AF_Module' to...
+
+	* src/autofit/afmodule.h: ... this place.
+	No longer include `afloader.h'.
+
+2015-01-14  Behdad Esfahbod  <behdad@behdad.org>
+
 	* src/type42/t42objs.h (T42_DriverRec): Remove unused member.
 
 2015-01-12  Werner Lemberg  <wl@gnu.org>

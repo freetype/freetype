@@ -20,12 +20,11 @@
 #define __AFLOADER_H__
 
 #include "afhints.h"
+#include "afmodule.h"
 #include "afglobal.h"
 
 
 FT_BEGIN_HEADER
-
-  typedef struct AF_ModuleRec_*  AF_Module;
 
   /*
    *  The autofitter module's (global) data structure to communicate with
@@ -56,20 +55,23 @@ FT_BEGIN_HEADER
 
 
   FT_LOCAL( FT_Error )
-  af_loader_init( AF_Module  module );
+  af_loader_init( AF_Loader  loader,
+                  FT_Memory  memory );
 
 
   FT_LOCAL( FT_Error )
-  af_loader_reset( AF_Module  module,
+  af_loader_reset( AF_Loader  loader,
+                   AF_Module  module,
                    FT_Face    face );
 
 
   FT_LOCAL( void )
-  af_loader_done( AF_Module  module );
+  af_loader_done( AF_Loader  loader );
 
 
   FT_LOCAL( FT_Error )
-  af_loader_load_glyph( AF_Module  module,
+  af_loader_load_glyph( AF_Loader  loader,
+                        AF_Module  module,
                         FT_Face    face,
                         FT_UInt    gindex,
                         FT_Int32   load_flags );

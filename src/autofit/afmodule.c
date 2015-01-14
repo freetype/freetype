@@ -253,7 +253,7 @@
     module->fallback_style = AF_STYLE_FALLBACK;
     module->default_script = AF_SCRIPT_DEFAULT;
 
-    return af_loader_init( module );
+    return FT_Err_Ok;
   }
 
 
@@ -261,9 +261,6 @@
   af_autofitter_done( FT_Module  ft_module )      /* AF_Module */
   {
     AF_Module  module = (AF_Module)ft_module;
-
-
-    af_loader_done( module );
   }
 
 
@@ -274,10 +271,22 @@
                             FT_UInt       glyph_index,
                             FT_Int32      load_flags )
   {
+    FT_Error      error = FT_Err_Ok;
+    AF_LoaderRec  loader[1];
+
     FT_UNUSED( size );
 
-    return af_loader_load_glyph( module, slot->face,
-                                 glyph_index, load_flags );
+
+    error = af_loader_init( loader, module->root.library->memory );
+    if ( error )
+      return error;
+
+    error = af_loader_load_glyph( loader, module, slot->face,
+                                  glyph_index, load_flags );
+
+    af_loader_done( loader );
+
+    return error;
   }
 
 
