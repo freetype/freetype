@@ -1982,7 +1982,8 @@
         /* to be drawn.                                                   */
 
       lastProfile = ras.cProfile;
-      if ( ras.cProfile->flags & Flow_Up )
+      if ( ras.top != ras.cProfile->offset &&
+           ( ras.cProfile->flags & Flow_Up ) )
         o = IS_TOP_OVERSHOOT( ras.lastY );
       else
         o = IS_BOTTOM_OVERSHOOT( ras.lastY );

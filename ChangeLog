@@ -1,5 +1,25 @@
 2015-01-14  Behdad Esfahbod  <behdad@behdad.org>
 
+	[raster] Fix uninitialized memory access.
+
+	Apparently `ras.cProfile' might be uninitialized.  This will be the
+	case if `ras.top == ras.cProfile->offset', as can be seen in
+	`End_Profile'.  The overshoot code introduced in a change `Fix B/W
+	rasterization of subglyphs with different drop-out modes.' (from
+	2009-06-18) violated this, accessing `ras.cProfile->flags'
+	unconditionally just before calling `End_Profile' (which then
+	detected that `cProfile' is uninitialized and didn't touch it).
+
+	This was harmless, and was not detected by valgrind before because
+	the objects were allocated on the `raster_pool', which was always
+	initialized.  With recent change to allocate raster buffers on the
+	stack, valgrind now reported this invalid access.
+
+	* src/raster/ftraster.c (Convert_Glyph): Don't access an
+	uninitialized `cProfile'.
+
+2015-01-14  Behdad Esfahbod  <behdad@behdad.org>
+
 	[smooth] Fix uninitialized memory access.
 
 	Looks like `ras.span_y' could always be used without initialization.
