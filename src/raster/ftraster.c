@@ -150,14 +150,6 @@
   /* define DEBUG_RASTER if you want to compile a debugging version */
 /* #define DEBUG_RASTER */
 
-  /* define FT_RASTER_OPTION_ANTI_ALIASING if you want to support */
-  /* 5-levels anti-aliasing                                       */
-/* #define FT_RASTER_OPTION_ANTI_ALIASING */
-
-  /* The size of the two-lines intermediate bitmap used */
-  /* for anti-aliasing, in bytes.                       */
-#define RASTER_GRAY_LINES  2048
-
 
   /*************************************************************************/
   /*************************************************************************/
@@ -514,9 +506,6 @@
 
     Short       traceIncr;          /* sweep's increment in target bitmap  */
 
-    Short       gray_min_x;         /* current min x during gray rendering */
-    Short       gray_max_x;         /* current max x during gray rendering */
-
     /* dispatch variables */
 
     Function_Sweep_Init*  Proc_Sweep_Init;
@@ -529,33 +518,12 @@
     Bool        second_pass;        /* indicates whether a horizontal pass */
                                     /* should be performed to control      */
                                     /* drop-out accurately when calling    */
-                                    /* Render_Glyph.  Note that there is   */
-                                    /* no horizontal pass during gray      */
-                                    /* rendering.                          */
+                                    /* Render_Glyph.                       */
 
     TPoint      arcs[3 * MaxBezier + 1]; /* The Bezier stack               */
 
     black_TBand  band_stack[16];    /* band stack used for sub-banding     */
     Int          band_top;          /* band stack top                      */
-
-#ifdef FT_RASTER_OPTION_ANTI_ALIASING
-
-    Byte*       grays;
-
-    Byte        gray_lines[RASTER_GRAY_LINES];
-                                /* Intermediate table used to render the   */
-                                /* graylevels pixmaps.                     */
-                                /* gray_lines is a buffer holding two      */
-                                /* monochrome scanlines                    */
-
-    Short       gray_width;     /* width in bytes of one monochrome        */
-                                /* intermediate scanline of gray_lines.    */
-                                /* Each gray pixel takes 2 bits long there */
-
-                       /* The gray_lines must hold 2 lines, thus with size */
-                       /* in bytes of at least `gray_width*2'.             */
-
-#endif /* FT_RASTER_ANTI_ALIASING */
 
   };
 
@@ -566,8 +534,6 @@
     long           buffer_size;
     void*          memory;
     black_PWorker  worker;
-    Byte           grays[5];
-    Short          gray_width;
 
   } black_TRaster, *black_PRaster;
 
@@ -581,70 +547,6 @@
 #define ras  (*worker)
 
 #endif /* !FT_STATIC_RASTER */
-
-
-#ifdef FT_RASTER_OPTION_ANTI_ALIASING
-
-  /* A lookup table used to quickly count set bits in four gray 2x2 */
-  /* cells.  The values of the table have been produced with the    */
-  /* following code:                                                */
-  /*                                                                */
-  /*   for ( i = 0; i < 256; i++ )                                  */
-  /*   {                                                            */
-  /*     l = 0;                                                     */
-  /*     j = i;                                                     */
-  /*                                                                */
-  /*     for ( c = 0; c < 4; c++ )                                  */
-  /*     {                                                          */
-  /*       l <<= 4;                                                 */
-  /*                                                                */
-  /*       if ( j & 0x80 ) l++;                                     */
-  /*       if ( j & 0x40 ) l++;                                     */
-  /*                                                                */
-  /*       j = ( j << 2 ) & 0xFF;                                   */
-  /*     }                                                          */
-  /*     printf( "0x%04X", l );                                     */
-  /*   }                                                            */
-  /*                                                                */
-
-  static const short  count_table[256] =
-  {
-    0x0000, 0x0001, 0x0001, 0x0002, 0x0010, 0x0011, 0x0011, 0x0012,
-    0x0010, 0x0011, 0x0011, 0x0012, 0x0020, 0x0021, 0x0021, 0x0022,
-    0x0100, 0x0101, 0x0101, 0x0102, 0x0110, 0x0111, 0x0111, 0x0112,
-    0x0110, 0x0111, 0x0111, 0x0112, 0x0120, 0x0121, 0x0121, 0x0122,
-    0x0100, 0x0101, 0x0101, 0x0102, 0x0110, 0x0111, 0x0111, 0x0112,
-    0x0110, 0x0111, 0x0111, 0x0112, 0x0120, 0x0121, 0x0121, 0x0122,
-    0x0200, 0x0201, 0x0201, 0x0202, 0x0210, 0x0211, 0x0211, 0x0212,
-    0x0210, 0x0211, 0x0211, 0x0212, 0x0220, 0x0221, 0x0221, 0x0222,
-    0x1000, 0x1001, 0x1001, 0x1002, 0x1010, 0x1011, 0x1011, 0x1012,
-    0x1010, 0x1011, 0x1011, 0x1012, 0x1020, 0x1021, 0x1021, 0x1022,
-    0x1100, 0x1101, 0x1101, 0x1102, 0x1110, 0x1111, 0x1111, 0x1112,
-    0x1110, 0x1111, 0x1111, 0x1112, 0x1120, 0x1121, 0x1121, 0x1122,
-    0x1100, 0x1101, 0x1101, 0x1102, 0x1110, 0x1111, 0x1111, 0x1112,
-    0x1110, 0x1111, 0x1111, 0x1112, 0x1120, 0x1121, 0x1121, 0x1122,
-    0x1200, 0x1201, 0x1201, 0x1202, 0x1210, 0x1211, 0x1211, 0x1212,
-    0x1210, 0x1211, 0x1211, 0x1212, 0x1220, 0x1221, 0x1221, 0x1222,
-    0x1000, 0x1001, 0x1001, 0x1002, 0x1010, 0x1011, 0x1011, 0x1012,
-    0x1010, 0x1011, 0x1011, 0x1012, 0x1020, 0x1021, 0x1021, 0x1022,
-    0x1100, 0x1101, 0x1101, 0x1102, 0x1110, 0x1111, 0x1111, 0x1112,
-    0x1110, 0x1111, 0x1111, 0x1112, 0x1120, 0x1121, 0x1121, 0x1122,
-    0x1100, 0x1101, 0x1101, 0x1102, 0x1110, 0x1111, 0x1111, 0x1112,
-    0x1110, 0x1111, 0x1111, 0x1112, 0x1120, 0x1121, 0x1121, 0x1122,
-    0x1200, 0x1201, 0x1201, 0x1202, 0x1210, 0x1211, 0x1211, 0x1212,
-    0x1210, 0x1211, 0x1211, 0x1212, 0x1220, 0x1221, 0x1221, 0x1222,
-    0x2000, 0x2001, 0x2001, 0x2002, 0x2010, 0x2011, 0x2011, 0x2012,
-    0x2010, 0x2011, 0x2011, 0x2012, 0x2020, 0x2021, 0x2021, 0x2022,
-    0x2100, 0x2101, 0x2101, 0x2102, 0x2110, 0x2111, 0x2111, 0x2112,
-    0x2110, 0x2111, 0x2111, 0x2112, 0x2120, 0x2121, 0x2121, 0x2122,
-    0x2100, 0x2101, 0x2101, 0x2102, 0x2110, 0x2111, 0x2111, 0x2112,
-    0x2110, 0x2111, 0x2111, 0x2112, 0x2120, 0x2121, 0x2121, 0x2122,
-    0x2200, 0x2201, 0x2201, 0x2202, 0x2210, 0x2211, 0x2211, 0x2212,
-    0x2210, 0x2211, 0x2211, 0x2212, 0x2220, 0x2221, 0x2221, 0x2222
-  };
-
-#endif /* FT_RASTER_OPTION_ANTI_ALIASING */
-
 
 
   /*************************************************************************/
@@ -2268,9 +2170,6 @@
     ras.traceOfs  = -*min * pitch;
     if ( pitch > 0 )
       ras.traceOfs += ( ras.target.rows - 1 ) * pitch;
-
-    ras.gray_min_x = 0;
-    ras.gray_max_x = 0;
   }
 
 
@@ -2317,11 +2216,6 @@
 
       f1 = (Byte)  ( 0xFF >> ( e1 & 7 ) );
       f2 = (Byte) ~( 0x7F >> ( e2 & 7 ) );
-
-      if ( ras.gray_min_x > c1 )
-        ras.gray_min_x = (short)c1;
-      if ( ras.gray_max_x < c2 )
-        ras.gray_max_x = (short)c2;
 
       target = ras.bTarget + ras.traceOfs + c1;
       c2 -= c1;
@@ -2485,11 +2379,6 @@
     {
       c1 = (Short)( e1 >> 3 );
       f1 = (Short)( e1 & 7 );
-
-      if ( ras.gray_min_x > c1 )
-        ras.gray_min_x = c1;
-      if ( ras.gray_max_x < c1 )
-        ras.gray_max_x = c1;
 
       ras.bTarget[ras.traceOfs + c1] |= (char)( 0x80 >> f1 );
     }
@@ -2693,249 +2582,6 @@
     /* Nothing, really */
     FT_UNUSED_RASTER;
   }
-
-
-#ifdef FT_RASTER_OPTION_ANTI_ALIASING
-
-
-  /*************************************************************************/
-  /*                                                                       */
-  /*  Vertical Gray Sweep Procedure Set                                    */
-  /*                                                                       */
-  /*  These two routines are used during the vertical gray-levels sweep    */
-  /*  phase by the generic Draw_Sweep() function.                          */
-  /*                                                                       */
-  /*  NOTES                                                                */
-  /*                                                                       */
-  /*  - The target pixmap's width *must* be a multiple of 4.               */
-  /*                                                                       */
-  /*  - You have to use the function Vertical_Sweep_Span() for the gray    */
-  /*    span call.                                                         */
-  /*                                                                       */
-  /*************************************************************************/
-
-  static void
-  Vertical_Gray_Sweep_Init( RAS_ARGS Short*  min,
-                                     Short*  max )
-  {
-    Long  pitch, byte_len;
-
-
-    *min = *min & -2;
-    *max = ( *max + 3 ) & -2;
-
-    ras.traceOfs  = 0;
-    pitch         = ras.target.pitch;
-    byte_len      = -pitch;
-    ras.traceIncr = (Short)byte_len;
-    ras.traceG    = ( *min / 2 ) * byte_len;
-
-    if ( pitch > 0 )
-    {
-      ras.traceG += ( ras.target.rows - 1 ) * pitch;
-      byte_len    = -byte_len;
-    }
-
-    ras.gray_min_x =  (Short)byte_len;
-    ras.gray_max_x = -(Short)byte_len;
-  }
-
-
-  static void
-  Vertical_Gray_Sweep_Step( RAS_ARG )
-  {
-    short*  count = (short*)count_table;
-    Byte*   grays;
-
-
-    ras.traceOfs += ras.gray_width;
-
-    if ( ras.traceOfs > ras.gray_width )
-    {
-      PByte  pix;
-
-
-      pix   = ras.gTarget + ras.traceG + ras.gray_min_x * 4;
-      grays = ras.grays;
-
-      if ( ras.gray_max_x >= 0 )
-      {
-        Long  last_pixel = ras.target.width - 1;
-        Int   last_cell  = last_pixel >> 2;
-        Int   last_bit   = last_pixel & 3;
-        Bool  over       = 0;
-
-        Int    c1, c2;
-        PByte  bit, bit2;
-
-
-        if ( ras.gray_max_x >= last_cell && last_bit != 3 )
-        {
-          ras.gray_max_x = last_cell - 1;
-          over = 1;
-        }
-
-        if ( ras.gray_min_x < 0 )
-          ras.gray_min_x = 0;
-
-        bit  = ras.bTarget + ras.gray_min_x;
-        bit2 = bit + ras.gray_width;
-
-        c1 = ras.gray_max_x - ras.gray_min_x;
-
-        while ( c1 >= 0 )
-        {
-          c2 = count[*bit] + count[*bit2];
-
-          if ( c2 )
-          {
-            pix[0] = grays[(c2 >> 12) & 0x000F];
-            pix[1] = grays[(c2 >> 8 ) & 0x000F];
-            pix[2] = grays[(c2 >> 4 ) & 0x000F];
-            pix[3] = grays[ c2        & 0x000F];
-
-            *bit  = 0;
-            *bit2 = 0;
-          }
-
-          bit++;
-          bit2++;
-          pix += 4;
-          c1--;
-        }
-
-        if ( over )
-        {
-          c2 = count[*bit] + count[*bit2];
-          if ( c2 )
-          {
-            switch ( last_bit )
-            {
-            case 2:
-              pix[2] = grays[(c2 >> 4 ) & 0x000F];
-            case 1:
-              pix[1] = grays[(c2 >> 8 ) & 0x000F];
-            default:
-              pix[0] = grays[(c2 >> 12) & 0x000F];
-            }
-
-            *bit  = 0;
-            *bit2 = 0;
-          }
-        }
-      }
-
-      ras.traceOfs = 0;
-      ras.traceG  += ras.traceIncr;
-
-      ras.gray_min_x =  32000;
-      ras.gray_max_x = -32000;
-    }
-  }
-
-
-  static void
-  Horizontal_Gray_Sweep_Span( RAS_ARGS Short       y,
-                                       FT_F26Dot6  x1,
-                                       FT_F26Dot6  x2,
-                                       PProfile    left,
-                                       PProfile    right )
-  {
-    /* nothing, really */
-    FT_UNUSED_RASTER;
-    FT_UNUSED( y );
-    FT_UNUSED( x1 );
-    FT_UNUSED( x2 );
-    FT_UNUSED( left );
-    FT_UNUSED( right );
-  }
-
-
-  static void
-  Horizontal_Gray_Sweep_Drop( RAS_ARGS Short       y,
-                                       FT_F26Dot6  x1,
-                                       FT_F26Dot6  x2,
-                                       PProfile    left,
-                                       PProfile    right )
-  {
-    Long   e1, e2;
-    PByte  pixel;
-
-
-    /* During the horizontal sweep, we only take care of drop-outs */
-
-    e1 = CEILING( x1 );
-    e2 = FLOOR  ( x2 );
-
-    if ( e1 > e2 )
-    {
-      Int  dropOutControl = left->flags & 7;
-
-
-      if ( e1 == e2 + ras.precision )
-      {
-        switch ( dropOutControl )
-        {
-        case 0: /* simple drop-outs including stubs */
-          e1 = e2;
-          break;
-
-        case 4: /* smart drop-outs including stubs */
-          e1 = FLOOR( ( x1 + x2 - 1 ) / 2 + ras.precision_half );
-          break;
-
-        case 1: /* simple drop-outs excluding stubs */
-        case 5: /* smart drop-outs excluding stubs  */
-          /* see Vertical_Sweep_Drop for details */
-
-          /* rightmost stub test */
-          if ( left->next == right && left->height <= 0 )
-            return;
-
-          /* leftmost stub test */
-          if ( right->next == left && left->start == y )
-            return;
-
-          if ( dropOutControl == 1 )
-            e1 = e2;
-          else
-            e1 = FLOOR( ( x1 + x2 - 1 ) / 2 + ras.precision_half );
-
-          break;
-
-        default: /* modes 2, 3, 6, 7 */
-          return;  /* no drop-out control */
-        }
-      }
-      else
-        return;
-    }
-
-    if ( e1 >= 0 )
-    {
-      Byte  color;
-
-
-      if ( x2 - x1 >= ras.precision_half )
-        color = ras.grays[2];
-      else
-        color = ras.grays[1];
-
-      e1 = TRUNC( e1 ) / 2;
-      if ( e1 < ras.target.rows )
-      {
-        pixel = ras.gTarget - e1 * ras.target.pitch + y / 2;
-        if ( ras.target.pitch > 0 )
-          pixel += ( ras.target.rows - 1 ) * ras.target.pitch;
-
-        if ( pixel[0] == ras.grays[0] )
-          pixel[0] = color;
-      }
-    }
-  }
-
-
-#endif /* FT_RASTER_OPTION_ANTI_ALIASING */
 
 
   /*************************************************************************/
@@ -3332,118 +2978,10 @@
   }
 
 
-#ifdef FT_RASTER_OPTION_ANTI_ALIASING
-
-  /*************************************************************************/
-  /*                                                                       */
-  /* <Function>                                                            */
-  /*    Render_Gray_Glyph                                                  */
-  /*                                                                       */
-  /* <Description>                                                         */
-  /*    Render a glyph with grayscaling.  Sub-banding if needed.           */
-  /*                                                                       */
-  /* <Return>                                                              */
-  /*    FreeType error code.  0 means success.                             */
-  /*                                                                       */
-  FT_LOCAL_DEF( FT_Error )
-  Render_Gray_Glyph( RAS_ARG )
-  {
-    Long      pixel_width;
-    FT_Error  error;
-
-
-    Set_High_Precision( RAS_VARS ras.outline.flags &
-                                 FT_OUTLINE_HIGH_PRECISION );
-    ras.scale_shift = ras.precision_shift + 1;
-
-    if ( ras.outline.flags & FT_OUTLINE_IGNORE_DROPOUTS )
-      ras.dropOutControl = 2;
-    else
-    {
-      if ( ras.outline.flags & FT_OUTLINE_SMART_DROPOUTS )
-        ras.dropOutControl = 4;
-      else
-        ras.dropOutControl = 0;
-
-      if ( !( ras.outline.flags & FT_OUTLINE_INCLUDE_STUBS ) )
-        ras.dropOutControl += 1;
-    }
-
-    ras.second_pass = !( ras.outline.flags & FT_OUTLINE_SINGLE_PASS );
-
-    /* Vertical Sweep */
-
-    ras.band_top            = 0;
-    ras.band_stack[0].y_min = 0;
-    ras.band_stack[0].y_max = 2 * ras.target.rows - 1;
-
-    ras.bWidth  = ras.gray_width;
-    pixel_width = 2 * ( ( ras.target.width + 3 ) >> 2 );
-
-    if ( ras.bWidth > pixel_width )
-      ras.bWidth = pixel_width;
-
-    ras.bWidth  = ras.bWidth * 8;
-    ras.bTarget = (Byte*)ras.gray_lines;
-    ras.gTarget = (Byte*)ras.target.buffer;
-
-    ras.Proc_Sweep_Init = Vertical_Gray_Sweep_Init;
-    ras.Proc_Sweep_Span = Vertical_Sweep_Span;
-    ras.Proc_Sweep_Drop = Vertical_Sweep_Drop;
-    ras.Proc_Sweep_Step = Vertical_Gray_Sweep_Step;
-
-    error = Render_Single_Pass( RAS_VARS 0 );
-    if ( error )
-      return error;
-
-    /* Horizontal Sweep */
-    if ( ras.second_pass && ras.dropOutControl != 2 )
-    {
-      ras.Proc_Sweep_Init = Horizontal_Sweep_Init;
-      ras.Proc_Sweep_Span = Horizontal_Gray_Sweep_Span;
-      ras.Proc_Sweep_Drop = Horizontal_Gray_Sweep_Drop;
-      ras.Proc_Sweep_Step = Horizontal_Sweep_Step;
-
-      ras.band_top            = 0;
-      ras.band_stack[0].y_min = 0;
-      ras.band_stack[0].y_max = ras.target.width * 2 - 1;
-
-      error = Render_Single_Pass( RAS_VARS 1 );
-      if ( error )
-        return error;
-    }
-
-    return Raster_Err_None;
-  }
-
-#else /* !FT_RASTER_OPTION_ANTI_ALIASING */
-
-  FT_LOCAL_DEF( FT_Error )
-  Render_Gray_Glyph( RAS_ARG )
-  {
-    FT_UNUSED_RASTER;
-
-    return FT_THROW( Unsupported );
-  }
-
-#endif /* !FT_RASTER_OPTION_ANTI_ALIASING */
-
-
   static void
   ft_black_init( black_PRaster  raster )
   {
-#ifdef FT_RASTER_OPTION_ANTI_ALIASING
-    FT_UInt  n;
-
-
-    /* set default 5-levels gray palette */
-    for ( n = 0; n < 5; n++ )
-      raster->grays[n] = n * 255 / 4;
-
-    raster->gray_width = RASTER_GRAY_LINES / 2;
-#else
     FT_UNUSED( raster );
-#endif
   }
 
 
@@ -3547,25 +3085,9 @@
                      unsigned long  mode,
                      const char*    palette )
   {
-#ifdef FT_RASTER_OPTION_ANTI_ALIASING
-
-    if ( mode == FT_MAKE_TAG( 'p', 'a', 'l', '5' ) )
-    {
-      /* set 5-levels gray palette */
-      raster->grays[0] = palette[0];
-      raster->grays[1] = palette[1];
-      raster->grays[2] = palette[2];
-      raster->grays[3] = palette[3];
-      raster->grays[4] = palette[4];
-    }
-
-#else
-
     FT_UNUSED( raster );
     FT_UNUSED( mode );
     FT_UNUSED( palette );
-
-#endif
 
     return 0;
   }
@@ -3619,16 +3141,8 @@
     worker->buff       = (PLong) raster->buffer;
     worker->sizeBuff   = worker->buff +
                            raster->buffer_size / sizeof ( Long );
-#ifdef FT_RASTER_OPTION_ANTI_ALIASING
-    worker->grays      = raster->grays;
-    worker->gray_width = raster->gray_width;
 
-    FT_MEM_ZERO( worker->gray_lines, worker->gray_width * 2 );
-#endif
-
-    return ( params->flags & FT_RASTER_FLAG_AA )
-           ? Render_Gray_Glyph( RAS_VAR )
-           : Render_Glyph( RAS_VAR );
+    return Render_Glyph( RAS_VAR );
   }
 
 

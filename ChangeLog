@@ -1,5 +1,28 @@
 2015-01-14  Behdad Esfahbod  <behdad@behdad.org>
 
+	[raster] Remove 5-level gray AA mode from monochrome rasterizer.
+
+	It was off by default and couldn't be turned on at runtime.  And the
+	smooth rasterizer superceded it over ten years ago.  No point in
+	keeping.  Comments suggested that it was there for compatibility
+	with FreeType 1.
+
+	550 lines down.
+
+	* src/raster/ftraster.c (FT_RASTER_OPTION_ANTI_ALIASING,
+	RASTER_GRAY_LINES): Remove macros and all associated code.
+
+	(black_TWorker): Remove `gray_min_x' and `gray_max_x'.
+	(black_TRaster): Remove `grays' and `gray_width'.
+
+	(Vertical_Sweep_Init, Vertical_Sweep_Span, Vertical_Sweep_Drop,
+	ft_black_render): Updated.
+
+	* src/raster/ftrend1.c (ft_raster1_render): Simplify code.
+	(ft_raster5_renderer_class): Removed.
+
+2015-01-14  Behdad Esfahbod  <behdad@behdad.org>
+
 	[smooth] Allocate render pool for smooth rasterizer on the stack.
 
 	Instead of using the `render_pool' member of `FT_Library' that is

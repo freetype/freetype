@@ -120,38 +120,11 @@
     }
 
     /* check rendering mode */
-#ifndef FT_CONFIG_OPTION_PIC
     if ( mode != FT_RENDER_MODE_MONO )
     {
       /* raster1 is only capable of producing monochrome bitmaps */
-      if ( render->clazz == &ft_raster1_renderer_class )
-        return FT_THROW( Cannot_Render_Glyph );
+      return FT_THROW( Cannot_Render_Glyph );
     }
-    else
-    {
-      /* raster5 is only capable of producing 5-gray-levels bitmaps */
-      if ( render->clazz == &ft_raster5_renderer_class )
-        return FT_THROW( Cannot_Render_Glyph );
-    }
-#else /* FT_CONFIG_OPTION_PIC */
-    /* When PIC is enabled, we cannot get to the class object      */
-    /* so instead we check the final character in the class name   */
-    /* ("raster5" or "raster1"). Yes this is a hack.               */
-    /* The "correct" thing to do is have different render function */
-    /* for each of the classes.                                    */
-    if ( mode != FT_RENDER_MODE_MONO )
-    {
-      /* raster1 is only capable of producing monochrome bitmaps */
-      if ( render->clazz->root.module_name[6] == '1' )
-        return FT_THROW( Cannot_Render_Glyph );
-    }
-    else
-    {
-      /* raster5 is only capable of producing 5-gray-levels bitmaps */
-      if ( render->clazz->root.module_name[6] == '5' )
-        return FT_THROW( Cannot_Render_Glyph );
-    }
-#endif /* FT_CONFIG_OPTION_PIC */
 
     outline = &slot->outline;
 
@@ -251,37 +224,6 @@
       sizeof ( FT_RendererRec ),
 
       "raster1",
-      0x10000L,
-      0x20000L,
-
-      0,    /* module specific interface */
-
-      (FT_Module_Constructor)ft_raster1_init,
-      (FT_Module_Destructor) 0,
-      (FT_Module_Requester)  0
-    ,
-
-    FT_GLYPH_FORMAT_OUTLINE,
-
-    (FT_Renderer_RenderFunc)   ft_raster1_render,
-    (FT_Renderer_TransformFunc)ft_raster1_transform,
-    (FT_Renderer_GetCBoxFunc)  ft_raster1_get_cbox,
-    (FT_Renderer_SetModeFunc)  ft_raster1_set_mode,
-
-    (FT_Raster_Funcs*)    &FT_STANDARD_RASTER_GET
-  )
-
-
-  /* This renderer is _NOT_ part of the default modules; you will need */
-  /* to register it by hand in your application.  It should only be    */
-  /* used for backwards-compatibility with FT 1.x anyway.              */
-  /*                                                                   */
-  FT_DEFINE_RENDERER( ft_raster5_renderer_class,
-
-      FT_MODULE_RENDERER,
-      sizeof ( FT_RendererRec ),
-
-      "raster5",
       0x10000L,
       0x20000L,
 
