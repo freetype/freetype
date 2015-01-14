@@ -1,5 +1,20 @@
 2015-01-14  Behdad Esfahbod  <behdad@behdad.org>
 
+	[smooth] Fix uninitialized memory access.
+
+	Looks like `ras.span_y' could always be used without initialization.
+	This was never detected by valgrind before because the library-wide
+	`raster_pool' was used for the worker object and `raster_pool' was
+	originally zero'ed.  But subsequent reuses of it were using `span_y'
+	uninitialized.  With the recent change to not use `render_pool' and
+	allocate worker and buffer on the stack, valgrind now detects this
+	uninitialized access.
+
+	* src/smooth/ftgrays.c (gray_raster_render): Initialize
+	`ras.span_y'.
+
+2015-01-14  Behdad Esfahbod  <behdad@behdad.org>
+
 	[base] Don't initialize unused `driver->glyph_loader'.
 
 	* src/base/ftobjs.c (Destroy_Driver): Don't call

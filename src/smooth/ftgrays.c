@@ -1985,6 +1985,7 @@ typedef ptrdiff_t  FT_PtrDist;
     ras.invalid        = 1;
     ras.band_size      = band_size;
     ras.num_gray_spans = 0;
+    ras.span_y         = 0;
 
     if ( params->flags & FT_RASTER_FLAG_DIRECT )
     {
