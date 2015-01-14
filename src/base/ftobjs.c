@@ -968,10 +968,6 @@
                       (FT_List_Destructor)destroy_face,
                       driver->root.memory,
                       driver );
-
-    /* check whether we need to drop the driver's glyph loader */
-    if ( FT_DRIVER_USES_OUTLINES( driver ) )
-      FT_GlyphLoader_Done( driver->glyph_loader );
   }
 
 
@@ -4313,17 +4309,10 @@
     /* if the module is a font driver */
     if ( FT_MODULE_IS_DRIVER( module ) )
     {
-      /* allocate glyph loader if needed */
       FT_Driver  driver = FT_DRIVER( module );
 
 
       driver->clazz = (FT_Driver_Class)module->clazz;
-      if ( FT_DRIVER_USES_OUTLINES( driver ) )
-      {
-        error = FT_GlyphLoader_New( memory, &driver->glyph_loader );
-        if ( error )
-          goto Fail;
-      }
     }
 
     if ( clazz->module_init )
@@ -4340,15 +4329,6 @@
     return error;
 
   Fail:
-    if ( FT_MODULE_IS_DRIVER( module ) )
-    {
-      FT_Driver  driver = FT_DRIVER( module );
-
-
-      if ( FT_DRIVER_USES_OUTLINES( driver ) )
-        FT_GlyphLoader_Done( driver->glyph_loader );
-    }
-
     if ( FT_MODULE_IS_RENDERER( module ) )
     {
       FT_Renderer  renderer = FT_RENDERER( module );

@@ -740,9 +740,8 @@ FT_BEGIN_HEADER
   /*     faces_list   :: The list of faces currently opened by this        */
   /*                     driver.                                           */
   /*                                                                       */
-  /*     glyph_loader :: The glyph loader for all faces managed by this    */
-  /*                     driver.  This object isn't defined for unscalable */
-  /*                     formats.                                          */
+  /*     glyph_loader :: Unused.  Used to be glyph loader for all faces    */
+  /*                     managed by this driver.                           */
   /*                                                                       */
   typedef struct  FT_DriverRec_
   {

@@ -1,5 +1,13 @@
 2015-01-14  Behdad Esfahbod  <behdad@behdad.org>
 
+	[base] Don't initialize unused `driver->glyph_loader'.
+
+	* src/base/ftobjs.c (Destroy_Driver): Don't call
+	`FT_GlyphLoader_Done'.
+	(FT_Add_Module): Don't call `FT_GlyphLoader_New'.
+
+2015-01-14  Behdad Esfahbod  <behdad@behdad.org>
+
 	[base] Don't allocate `library->raster_pool' anymore.
 
 	It's unused after the following commits:
