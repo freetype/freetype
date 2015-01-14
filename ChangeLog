@@ -1,5 +1,22 @@
 2015-01-14  Behdad Esfahbod  <behdad@behdad.org>
 
+	[raster] Allocate render pool for mono rasterizer on the stack.
+
+	Instead of using the `render_pool' member of `FT_Library' that is
+	provided down to the rasterizer, completely ignore that and allocate
+	needed objects on the stack instead.
+
+	With this patch, rasterizing glyphs from different faces from
+	different threads doesn't crash in the monochrome rasterizer.
+
+	* src/raster/ftraster.c (black_TRaster): Remove `buffer',
+	`buffer_size', and `worker' members.
+
+	(ft_black_render): Create `buffer' locally.
+	(ft_black_reset): Updated.
+
+2015-01-14  Behdad Esfahbod  <behdad@behdad.org>
+
 	[raster] Remove 5-level gray AA mode from monochrome rasterizer.
 
 	It was off by default and couldn't be turned on at runtime.  And the

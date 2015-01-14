@@ -530,10 +530,7 @@
 
   typedef struct  black_TRaster_
   {
-    char*          buffer;
-    long           buffer_size;
     void*          memory;
-    black_PWorker  worker;
 
   } black_TRaster, *black_PRaster;
 
@@ -3058,25 +3055,9 @@
                   char*          pool_base,
                   long           pool_size )
   {
-    if ( raster )
-    {
-      if ( pool_base && pool_size >= (long)sizeof ( black_TWorker ) + 2048 )
-      {
-        black_PWorker  worker = (black_PWorker)pool_base;
-
-
-        raster->buffer      = pool_base + ( ( sizeof ( *worker ) + 7 ) & ~7 );
-        raster->buffer_size = (long)( pool_base + pool_size -
-                                        (char*)raster->buffer );
-        raster->worker      = worker;
-      }
-      else
-      {
-        raster->buffer      = NULL;
-        raster->buffer_size = 0;
-        raster->worker      = NULL;
-      }
-    }
+    FT_UNUSED( raster );
+    FT_UNUSED( pool_base );
+    FT_UNUSED( pool_size );
   }
 
 
@@ -3099,10 +3080,13 @@
   {
     const FT_Outline*  outline    = (const FT_Outline*)params->source;
     const FT_Bitmap*   target_map = params->target;
-    black_PWorker      worker;
+
+    black_TWorker  worker[1];
+
+    Long  buffer[FT_MAX( FT_RENDER_POOL_SIZE, 2048 ) / sizeof ( Long )];
 
 
-    if ( !raster || !raster->buffer || !raster->buffer_size )
+    if ( !raster )
       return FT_THROW( Not_Ini );
 
     if ( !outline )
@@ -3118,8 +3102,6 @@
     if ( outline->n_points !=
            outline->contours[outline->n_contours - 1] + 1 )
       return FT_THROW( Invalid );
-
-    worker = raster->worker;
 
     /* this version of the raster does not support direct rendering, sorry */
     if ( params->flags & FT_RASTER_FLAG_DIRECT )
@@ -3138,9 +3120,8 @@
     ras.outline = *outline;
     ras.target  = *target_map;
 
-    worker->buff       = (PLong) raster->buffer;
-    worker->sizeBuff   = worker->buff +
-                           raster->buffer_size / sizeof ( Long );
+    worker->buff     = buffer;
+    worker->sizeBuff = (&buffer)[1]; /* Points to right after buffer. */
 
     return Render_Glyph( RAS_VAR );
   }
