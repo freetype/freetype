@@ -2,7 +2,7 @@
 # FreeType 2 BZIP2 support configuration rules
 #
 
-# Copyright 2010 by
+# Copyright 2010-2015 by
 # Joel Klinghed.
 #
 # Based on src/lzw/rules.mk, Copyright 2004-2006 by

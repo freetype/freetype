@@ -4,7 +4,7 @@
 /*                                                                         */
 /*    FreeType API for accessing CID font information (specification).     */
 /*                                                                         */
-/*  Copyright 2007, 2009 by                                                */
+/*  Copyright 2007-2015 by                                                 */
 /*  Dereg Clegg and Michael Toftdal.                                       */
 /*                                                                         */
 /*  This file is part of the FreeType project, and may only be used,       */

@@ -161,7 +161,7 @@ MAC  ---     PS     TYPE_1  ---        type1    T1_SPEC.pdf
 
 ------------------------------------------------------------------------
 
-Copyright 2004, 2005, 2008, 2009, 2010 by
+Copyright 2004-2015 by
 David Turner, Robert Wilhelm, and Werner Lemberg.
 
 This  file is  part  of the  FreeType  project, and  may  only be  used,
