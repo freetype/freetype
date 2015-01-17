@@ -4,8 +4,8 @@
 /*                                                                         */
 /*    TrueType bytecode interpreter (body).                                */
 /*                                                                         */
-/*  Copyright 1996-2014                                                    */
-/*  by David Turner, Robert Wilhelm, and Werner Lemberg.                   */
+/*  Copyright 1996-2014 by                                                 */
+/*  David Turner, Robert Wilhelm, and Werner Lemberg.                      */
 /*                                                                         */
 /*  This file is part of the FreeType project, and may only be used,       */
 /*  modified, and distributed under the terms of the FreeType project      */

@@ -4,7 +4,8 @@
 /*                                                                         */
 /*    Type 42 font parser (specification).                                 */
 /*                                                                         */
-/*  Copyright 2002, 2003 by Roberto Alameda.                               */
+/*  Copyright 2002, 2003 by                                                */
+/*  Roberto Alameda.                                                       */
 /*                                                                         */
 /*  This file is part of the FreeType project, and may only be used,       */
 /*  modified, and distributed under the terms of the FreeType project      */

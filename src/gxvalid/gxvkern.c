@@ -4,8 +4,8 @@
 /*                                                                         */
 /*    TrueTypeGX/AAT kern table validation (body).                         */
 /*                                                                         */
-/*  Copyright 2004-2007, 2013                                              */
-/*  by suzuki toshiya, Masatake YAMATO, Red Hat K.K.,                      */
+/*  Copyright 2004-2007, 2013 by                                           */
+/*  suzuki toshiya, Masatake YAMATO, Red Hat K.K.,                         */
 /*  David Turner, Robert Wilhelm, and Werner Lemberg.                      */
 /*                                                                         */
 /*  This file is part of the FreeType project, and may only be used,       */
