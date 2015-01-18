@@ -104,7 +104,7 @@
   {
     FT_Error     error;
     FT_Outline*  outline;
-    FT_BBox      cbox;
+    FT_BBox      cbox, cbox0;
     FT_UInt      width, height, pitch;
     FT_Bitmap*   bitmap;
     FT_Memory    memory;
@@ -133,14 +133,14 @@
       FT_Outline_Translate( outline, origin->x, origin->y );
 
     /* compute the control box, and grid fit it */
-    FT_Outline_Get_CBox( outline, &cbox );
+    FT_Outline_Get_CBox( outline, &cbox0 );
 
     /* undocumented but confirmed: bbox values get rounded */
 #if 1
-    cbox.xMin = FT_PIX_ROUND( cbox.xMin );
-    cbox.yMin = FT_PIX_ROUND( cbox.yMin );
-    cbox.xMax = FT_PIX_ROUND( cbox.xMax );
-    cbox.yMax = FT_PIX_ROUND( cbox.yMax );
+    cbox.xMin = FT_PIX_ROUND( cbox0.xMin );
+    cbox.yMin = FT_PIX_ROUND( cbox0.yMin );
+    cbox.xMax = FT_PIX_ROUND( cbox0.xMax );
+    cbox.yMax = FT_PIX_ROUND( cbox0.yMax );
 #else
     cbox.xMin = FT_PIX_FLOOR( cbox.xMin );
     cbox.yMin = FT_PIX_FLOOR( cbox.yMin );
@@ -148,8 +148,28 @@
     cbox.yMax = FT_PIX_CEIL( cbox.yMax );
 #endif
 
+    /* If either `width' or `height' round to 0, try    */
+    /* explicitly rounding up/down.  In the case of     */
+    /* glyphs containing only one very narrow feature,  */
+    /* this gives the drop-out compensation in the scan */
+    /* conversion code a chance to do its stuff.        */
     width  = (FT_UInt)( ( cbox.xMax - cbox.xMin ) >> 6 );
+    if ( width == 0 )
+    {
+      cbox.xMin = FT_PIX_FLOOR( cbox0.xMin );
+      cbox.xMax = FT_PIX_CEIL( cbox0.xMax );
+
+      width = (FT_UInt)( ( cbox.xMax - cbox.xMin ) >> 6 );
+    }
+
     height = (FT_UInt)( ( cbox.yMax - cbox.yMin ) >> 6 );
+    if ( height == 0 )
+    {
+      cbox.yMin = FT_PIX_FLOOR( cbox0.yMin );
+      cbox.yMax = FT_PIX_CEIL( cbox0.yMax );
+
+      height = (FT_UInt)( ( cbox.yMax - cbox.yMin ) >> 6 );
+    }
 
     if ( width > FT_USHORT_MAX || height > FT_USHORT_MAX )
     {

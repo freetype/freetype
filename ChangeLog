@@ -1,3 +1,23 @@
+2015-01-18  Chris Liddell  <chris.liddell@artifex.com>
+
+	[raster] Fix Savannah bug #44022.
+
+	Add fallback for glyphs with degenerate bounding boxes.
+
+	If a glyph has only one very narrow feature, the bbox can end up
+	with either the width or height of the bbox being 0, in which case
+	no raster memory is allocated and no attempt is made to render the
+	glyph.  This is less than ideal when the drop-out compensation in
+	the rendering code would actually result in the glyph being
+	rendered.
+
+	This problem can be observed with the `I' glyph (gid 47) in the
+	Autodesk RomanS TrueType font.
+
+	* src/raster/ftrend1.c (ft_raster1_render): Add a fallback if either
+	dimension is zero to explicitly round up/down (instead of simply
+	round).
+
 2015-01-17  Werner Lemberg  <wl@gnu.org>
 
 	Add some tools to handle yearly copyright notice updates.
