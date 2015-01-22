@@ -642,9 +642,12 @@ FT_BEGIN_HEADER
   /*                                                                       */
   /*    FT_ENCODING_MS_SYMBOL ::                                           */
   /*      Corresponds to the Microsoft Symbol encoding, used to encode     */
-  /*      mathematical symbols in the 32..255 character code range.  For   */
-  /*      more information, see                                            */
-  /*      `http://www.kostis.net/charsets/symbol.htm'.                     */
+  /*      mathematical symbols and wingdings.  For more information, see   */
+  /*      `http://www.kostis.net/charsets/symbol.htm' and                  */
+  /*      `http://www.kostis.net/charsets/wingding.htm'.                   */
+  /*                                                                       */
+  /*      This encoding uses character codes from the PUA (Private Unicode */
+  /*      Area) in the range U+F020-U+F0FF.                                */
   /*                                                                       */
   /*    FT_ENCODING_SJIS ::                                                */
   /*      Corresponds to Japanese SJIS encoding.  More info at             */
