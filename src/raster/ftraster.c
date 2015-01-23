@@ -3108,6 +3108,9 @@
     if ( params->flags & FT_RASTER_FLAG_DIRECT )
       return FT_THROW( Unsupported );
 
+    if ( params->flags & FT_RASTER_FLAG_AA )
+      return FT_THROW( Unsupported );
+
     if ( !target_map )
       return FT_THROW( Invalid );
 

@@ -1,3 +1,19 @@
+2015-01-23  Behdad Esfahbod  <behdad@behdad.org>
+
+	[raster] Handle `FT_RASTER_FLAG_AA' correctly.
+
+	This fixes a breakage caused by the commit `[raster] Remove
+	5-level gray AA mode from monochrome rasterizer.'.
+
+	Problem reported by Markus Trippelsdorf <markus@trippelsdorf.de> and
+	octoploid <octoploid@yandex.com>.
+
+	* src/raster/ftraster.c (ft_black_render): Handle
+	`FT_RASTER_FLAG_AA'.
+
+	* src/raster/ftrend1.c (ft_raster1_render): Remove gray AA mode
+	remnants.
+
 2015-01-18  Werner Lemberg  <wl@gnu.org>
 
 	* src/base/ftobjs.c (FT_New_Library): Fix compiler warning.

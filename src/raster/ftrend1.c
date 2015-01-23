@@ -187,19 +187,8 @@
       slot->internal->flags &= ~FT_GLYPH_OWN_BITMAP;
     }
 
-    /* allocate new one, depends on pixel format */
-    if ( !( mode & FT_RENDER_MODE_MONO ) )
-    {
-      /* we pad to 32 bits, only for backwards compatibility with FT 1.x */
-      pitch              = FT_PAD_CEIL( width, 4 );
-      bitmap->pixel_mode = FT_PIXEL_MODE_GRAY;
-      bitmap->num_grays  = 256;
-    }
-    else
-    {
-      pitch              = ( ( width + 15 ) >> 4 ) << 1;
-      bitmap->pixel_mode = FT_PIXEL_MODE_MONO;
-    }
+    pitch              = ( ( width + 15 ) >> 4 ) << 1;
+    bitmap->pixel_mode = FT_PIXEL_MODE_MONO;
 
     bitmap->width = width;
     bitmap->rows  = height;
@@ -217,9 +206,6 @@
     params.target = bitmap;
     params.source = outline;
     params.flags  = 0;
-
-    if ( bitmap->pixel_mode == FT_PIXEL_MODE_GRAY )
-      params.flags |= FT_RASTER_FLAG_AA;
 
     /* render outline into the bitmap */
     error = render->raster_render( render->raster, &params );
