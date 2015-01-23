@@ -5,8 +5,7 @@
 	This fixes a breakage caused by the commit `[raster] Remove
 	5-level gray AA mode from monochrome rasterizer.'.
 
-	Problem reported by Markus Trippelsdorf <markus@trippelsdorf.de> and
-	octoploid <octoploid@yandex.com>.
+	Problem reported by Markus Trippelsdorf <markus@trippelsdorf.de>.
 
 	* src/raster/ftraster.c (ft_black_render): Handle
 	`FT_RASTER_FLAG_AA'.
