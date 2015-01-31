@@ -97,7 +97,14 @@ FT_BEGIN_HEADER
     AF_BLUE_STRING_LATIN_SMALL_DESCENDER = 290,
     AF_BLUE_STRING_TELUGU_TOP = 296,
     AF_BLUE_STRING_TELUGU_BOTTOM = 318,
-    af_blue_1_1 = 339,
+    AF_BLUE_STRING_THAI_TOP = 340,
+    AF_BLUE_STRING_THAI_BOTTOM = 359,
+    AF_BLUE_STRING_THAI_ASCENDER = 381,
+    AF_BLUE_STRING_THAI_LARGE_ASCENDER = 391,
+    AF_BLUE_STRING_THAI_DESCENDER = 401,
+    AF_BLUE_STRING_THAI_LARGE_DESCENDER = 414,
+    AF_BLUE_STRING_THAI_DIGIT_TOP = 421,
+    af_blue_1_1 = 430,
 #ifdef AF_CONFIG_OPTION_CJK
     AF_BLUE_STRING_CJK_TOP = af_blue_1_1 + 1,
     AF_BLUE_STRING_CJK_BOTTOM = af_blue_1_1 + 153,
@@ -148,7 +155,7 @@ FT_BEGIN_HEADER
 #define AF_BLUE_PROPERTY_CJK_RIGHT  AF_BLUE_PROPERTY_CJK_TOP
 
 
-#define AF_BLUE_STRINGSET_MAX_LEN  7
+#define AF_BLUE_STRINGSET_MAX_LEN  8
 
   /* The AF_Blue_Stringset enumeration values are offsets into the */
   /* `af_blue_stringsets' array.                                   */
@@ -161,7 +168,8 @@ FT_BEGIN_HEADER
     AF_BLUE_STRINGSET_HEBR = 19,
     AF_BLUE_STRINGSET_LATN = 23,
     AF_BLUE_STRINGSET_TELU = 30,
-    af_blue_2_1 = 33,
+    AF_BLUE_STRINGSET_THAI = 33,
+    af_blue_2_1 = 41,
 #ifdef AF_CONFIG_OPTION_CJK
     AF_BLUE_STRINGSET_HANI = af_blue_2_1 + 0,
     af_blue_2_1_1 = af_blue_2_1 + 2,

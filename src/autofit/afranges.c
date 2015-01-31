@@ -98,6 +98,12 @@
     AF_UNIRANGE_REC(       0UL,       0UL )
   };
 
+  const AF_Script_UniRangeRec  af_thai_uniranges[] =
+  {
+    AF_UNIRANGE_REC(  0x0E00UL,  0x0E7FUL ),  /* Thai */
+    AF_UNIRANGE_REC(       0UL,       0UL )
+  };
+
 #ifdef AF_CONFIG_OPTION_INDIC
 
   const AF_Script_UniRangeRec  af_beng_uniranges[] =

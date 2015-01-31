@@ -122,6 +122,13 @@
          AF_BLUE_STRINGSET_TELU,
          AF_COVERAGE_DEFAULT )
 
+  STYLE( thai_dflt, THAI_DFLT,
+         "Thai default style",
+         AF_WRITING_SYSTEM_LATIN,
+         AF_SCRIPT_THAI,
+         AF_BLUE_STRINGSET_THAI,
+         AF_COVERAGE_DEFAULT )
+
 #ifdef AF_CONFIG_OPTION_INDIC
 
   /* no blue stringset support for the Indic writing system yet */

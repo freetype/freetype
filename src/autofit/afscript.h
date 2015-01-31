@@ -62,6 +62,11 @@
           HB_SCRIPT_TELUGU,
           0xC66, 0xC67, 0x0 ) /* ౦ ౧ */
 
+  SCRIPT( thai, THAI,
+          "Thai",
+          HB_SCRIPT_THAI,
+          0xE32, 0xE45, 0xE50 ) /* า ๅ ๐ */
+
 #ifdef AF_CONFIG_OPTION_INDIC
 
   SCRIPT( beng, BENG,
