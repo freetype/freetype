@@ -1,3 +1,17 @@
+2015-02-06  Werner Lemberg  <wl@gnu.org>
+
+	[autofit] Fix potential memory leak.
+
+	While this doesn't show up with FreeType, exactly the same code
+	leaks with ttfautohint's modified auto-hinter code (which gets used
+	in a slightly different way).
+
+	It certainly doesn't harm since it is similar to already existing
+	checks in the code for embedded arrays.
+
+	* src/autofit/afhints.c (af_glyph_hints_reload): Set `max_contours'
+	and `max_points' for all cases.
+
 2015-01-31  Werner Lemberg  <wl@gnu.org>
 
 	[autofit] Add support for Thai script.

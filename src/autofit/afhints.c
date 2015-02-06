@@ -615,7 +615,13 @@
     old_max = hints->max_contours;
 
     if ( new_max <= AF_CONTOURS_EMBEDDED )
-      hints->contours = hints->embedded.contours;
+    {
+      if ( hints->contours == NULL )
+      {
+        hints->contours     = hints->embedded.contours;
+        hints->max_contours = AF_CONTOURS_EMBEDDED;
+      }
+    }
     else if ( new_max > old_max )
     {
       if ( hints->contours == hints->embedded.contours )
@@ -638,7 +644,13 @@
     old_max = hints->max_points;
 
     if ( new_max <= AF_POINTS_EMBEDDED )
-      hints->points = hints->embedded.points;
+    {
+      if ( hints->points == NULL )
+      {
+        hints->points     = hints->embedded.points;
+        hints->max_points = AF_POINTS_EMBEDDED;
+      }
+    }
     else if ( new_max > old_max )
     {
       if ( hints->points == hints->embedded.points )
