@@ -1425,12 +1425,14 @@
       goto Exit;
     }
 
+#ifndef FT_CONFIG_OPTION_INCREMENTAL
     /* check glyph index */
     if ( glyph_index >= (FT_UInt)face->root.num_glyphs )
     {
       error = FT_THROW( Invalid_Glyph_Index );
       goto Exit;
     }
+#endif
 
     loader->glyph_index = glyph_index;
 

@@ -1,3 +1,11 @@
+2015-02-06  Jon Anderson  <jon@websupergoo.com>
+
+	[truetype] Fix regression in the incremental glyph loader.
+
+	* src/truetype/ttgload.c (load_truetype_glyph): For incremental
+	fonts, the glyph index may be greater than the number of glyphs
+	indicated, so guard the check with a preprocessor conditional.
+
 2015-02-06  Werner Lemberg  <wl@gnu.org>
 
 	[autofit] Fix potential memory leak.
