@@ -1,3 +1,11 @@
+2015-02-07  Werner Lemberg  <wl@gnu.org>
+
+	[sfnt] Fix Savannah bug #44184.
+
+	* src/sfnt/ttload.c (check_table_dir, tt_face_load_font_dir): No
+	longer reject `htmx' and `vmtx' tables with invalid length but
+	sanitize them.
+
 2015-02-06  Jon Anderson  <jon@websupergoo.com>
 
 	[truetype] Fix regression in the incremental glyph loader.
