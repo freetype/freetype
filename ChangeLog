@@ -1,3 +1,14 @@
+2015-02-15  Werner Lemberg  <wl@gnu.org>
+
+	[base] Clean up signedness in arithmetic functions.
+
+	This makes the code more readable and reduces compiler warnings.
+
+	* src/base/ftcalc.c (FT_MulDiv, FT_MulDiv_No_Round, FT_MulFix,
+	FT_DivFix): Convert input parameters to unsigned, do the
+	computation, then convert the result back to signed.
+	(ft_corner_orientation): Fix casts.
+
 2015-02-07  Werner Lemberg  <wl@gnu.org>
 
 	[sfnt] Fix Savannah bug #44184.
