@@ -405,7 +405,7 @@ FT_BEGIN_HEADER
   /*    glyph_hints       :: Format-specific glyph hints management.       */
   /*                                                                       */
 
-#define FT_GLYPH_OWN_BITMAP  0x1
+#define FT_GLYPH_OWN_BITMAP  0x1U
 
   typedef struct  FT_Slot_InternalRec_
   {
@@ -614,12 +614,12 @@ FT_BEGIN_HEADER
 
 #define FT_REQUEST_WIDTH( req )                                            \
           ( (req)->horiResolution                                          \
-              ? (FT_Pos)( (req)->width * (req)->horiResolution + 36 ) / 72 \
+              ? ( (req)->width * (FT_Pos)(req)->horiResolution + 36 ) / 72 \
               : (req)->width )
 
 #define FT_REQUEST_HEIGHT( req )                                            \
           ( (req)->vertResolution                                           \
-              ? (FT_Pos)( (req)->height * (req)->vertResolution + 36 ) / 72 \
+              ? ( (req)->height * (FT_Pos)(req)->vertResolution + 36 ) / 72 \
               : (req)->height )
 
 

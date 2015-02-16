@@ -1,5 +1,12 @@
 2015-02-16  Werner Lemberg  <wl@gnu.org>
 
+	Various minor signedness fixes.
+
+	* include/ftadvanc.h, include/internal/ftobjs.h,
+	src/base/ftgloadr.c, src/base/ftobjs.c: Apply.
+
+2015-02-16  Werner Lemberg  <wl@gnu.org>
+
 	New `TYPEOF' macro.
 
 	This helps suppress signedness warnings, avoiding issues with

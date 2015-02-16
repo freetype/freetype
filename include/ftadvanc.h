@@ -77,7 +77,7 @@ FT_BEGIN_HEADER
   /*    and hinting of the glyph outline, are extremely slow by            */
   /*    comparison.                                                        */
   /*                                                                       */
-#define FT_ADVANCE_FLAG_FAST_ONLY  0x20000000UL
+#define FT_ADVANCE_FLAG_FAST_ONLY  0x20000000L
 
 
   /*************************************************************************/
