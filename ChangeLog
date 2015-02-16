@@ -1,5 +1,12 @@
 2015-02-16  Werner Lemberg  <wl@gnu.org>
 
+	[base] Finish compiler warning fixes for signedness issues.
+
+	* src/base/ftglyph.c, src/base/ftlcdfil.c, src/base/ftstroke.c:
+	Apply.
+
+2015-02-16  Werner Lemberg  <wl@gnu.org>
+
 	* include/tttables.h (TT_OS2): `fsType' must be FT_UShort.
 
 2015-02-16  Werner Lemberg  <wl@gnu.org>

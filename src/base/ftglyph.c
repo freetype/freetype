@@ -126,9 +126,9 @@
 
 
     cbox->xMin = glyph->left << 6;
-    cbox->xMax = cbox->xMin + ( glyph->bitmap.width << 6 );
+    cbox->xMax = cbox->xMin + (FT_Pos)( glyph->bitmap.width << 6 );
     cbox->yMax = glyph->top << 6;
-    cbox->yMin = cbox->yMax - ( glyph->bitmap.rows << 6 );
+    cbox->yMin = cbox->yMax - (FT_Pos)( glyph->bitmap.rows << 6 );
   }
 
 
@@ -173,7 +173,9 @@
     }
 
     /* allocate new outline */
-    error = FT_Outline_New( library, source->n_points, source->n_contours,
+    error = FT_Outline_New( library,
+                            (FT_UInt)source->n_points,
+                            source->n_contours,
                             &glyph->outline );
     if ( error )
       goto Exit;
@@ -205,8 +207,10 @@
     FT_Library       library = FT_GLYPH( source )->library;
 
 
-    error = FT_Outline_New( library, source->outline.n_points,
-                            source->outline.n_contours, &target->outline );
+    error = FT_Outline_New( library,
+                            (FT_UInt)source->outline.n_points,
+                            source->outline.n_contours,
+                            &target->outline );
     if ( !error )
       FT_Outline_Copy( &source->outline, &target->outline );
 
