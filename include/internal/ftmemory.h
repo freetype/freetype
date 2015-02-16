@@ -215,11 +215,14 @@ FT_BEGIN_HEADER
 #define FT_MEM_SET_ERROR( cond )  ( (cond), error != 0 )
 
 
-#define FT_MEM_SET( dest, byte, count )     ft_memset( dest, byte, count )
+#define FT_MEM_SET( dest, byte, count )               \
+          ft_memset( dest, byte, (FT_Offset)(count) )
 
-#define FT_MEM_COPY( dest, source, count )  ft_memcpy( dest, source, count )
+#define FT_MEM_COPY( dest, source, count )              \
+          ft_memcpy( dest, source, (FT_Offset)(count) )
 
-#define FT_MEM_MOVE( dest, source, count )  ft_memmove( dest, source, count )
+#define FT_MEM_MOVE( dest, source, count )               \
+          ft_memmove( dest, source, (FT_Offset)(count) )
 
 
 #define FT_MEM_ZERO( dest, count )  FT_MEM_SET( dest, 0, count )
@@ -227,14 +230,19 @@ FT_BEGIN_HEADER
 #define FT_ZERO( p )                FT_MEM_ZERO( p, sizeof ( *(p) ) )
 
 
-#define FT_ARRAY_ZERO( dest, count )                        \
-          FT_MEM_ZERO( dest, (count) * sizeof ( *(dest) ) )
+#define FT_ARRAY_ZERO( dest, count )                             \
+          FT_MEM_ZERO( dest,                                     \
+                       (FT_Offset)(count) * sizeof ( *(dest) ) )
 
-#define FT_ARRAY_COPY( dest, source, count )                        \
-          FT_MEM_COPY( dest, source, (count) * sizeof ( *(dest) ) )
+#define FT_ARRAY_COPY( dest, source, count )                     \
+          FT_MEM_COPY( dest,                                     \
+                       source,                                   \
+                       (FT_Offset)(count) * sizeof ( *(dest) ) )
 
-#define FT_ARRAY_MOVE( dest, source, count )                        \
-          FT_MEM_MOVE( dest, source, (count) * sizeof ( *(dest) ) )
+#define FT_ARRAY_MOVE( dest, source, count )                     \
+          FT_MEM_MOVE( dest,                                     \
+                       source,                                   \
+                       (FT_Offset)(count) * sizeof ( *(dest) ) )
 
 
   /*

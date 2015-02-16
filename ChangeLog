@@ -1,3 +1,9 @@
+2015-02-16  Werner Lemberg  <wl@gnu.org>
+
+	* include/internal/ftmemory.h: Add some `FT_Offset' casts.
+	(FT_MEM_SET, FT_MEM_COPY, FT_MEM_MOVE, FT_ARRAY_ZERO, FT_ARRAY_COPY,
+	FT_MEM_MOVE): Do it.
+
 2015-02-15  Werner Lemberg  <wl@gnu.org>
 
 	[base] Clean up signedness issues in `ftdbgmem.c'.
