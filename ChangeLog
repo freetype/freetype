@@ -1,5 +1,12 @@
 2015-02-16  Werner Lemberg  <wl@gnu.org>
 
+	Fix Savannah bug #44261.
+
+	* builds/unix/detect.mk (setup) [unix]: Set `CONFIG_SHELL' in the
+	environment also while calling the configure script.
+
+2015-02-16  Werner Lemberg  <wl@gnu.org>
+
 	* include/internal/ftmemory.h: Add some `FT_Offset' casts.
 	(FT_MEM_SET, FT_MEM_COPY, FT_MEM_MOVE, FT_ARRAY_ZERO, FT_ARRAY_COPY,
 	FT_MEM_MOVE): Do it.
