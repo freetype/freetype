@@ -44,7 +44,7 @@ FT_BEGIN_HEADER
   typedef struct  FT_RFork_Ref_
   {
     FT_UShort  res_id;
-    FT_ULong   offset;
+    FT_Long    offset;
 
   } FT_RFork_Ref;
 
@@ -83,7 +83,7 @@ FT_BEGIN_HEADER
 
   /* this array is a storage in non-PIC mode, so ; is needed in END */
 #define CONST_FT_RFORK_RULE_ARRAY_BEGIN( name, type )  \
-          const type name[] = {
+          static const type name[] = {
 #define CONST_FT_RFORK_RULE_ARRAY_ENTRY( func_suffix, type_suffix )  \
           { raccess_guess_ ## func_suffix,                           \
             FT_RFork_Rule_ ## type_suffix },

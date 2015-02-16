@@ -1,5 +1,18 @@
 2015-02-16  Werner Lemberg  <wl@gnu.org>
 
+	Next round of minor compiler warning fixes.
+
+	* include/internal/ftrfork.h (FT_RFork_Ref): Change `offset' member
+	type to `FT_Long'.
+	(CONST_FT_RFORK_RULE_ARRAY_BEGIN): Add `static' keyword.
+
+	* include/internal/ftstream.h (FT_Stream_Pos): Return `FT_ULong'. 
+
+	* src/base/ftoutln.c, src/base/ftrfork.c, src/base/ftstream.c:
+	Signedess fixes.
+
+2015-02-16  Werner Lemberg  <wl@gnu.org>
+
 	Various minor signedness fixes.
 
 	* include/ftadvanc.h, include/internal/ftobjs.h,

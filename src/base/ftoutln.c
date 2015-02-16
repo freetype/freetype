@@ -279,7 +279,7 @@
       if ( error )
         goto Exit;
 
-      first = last + 1;
+      first = (FT_UInt)last + 1;
     }
 
     FT_TRACE5(( "FT_Outline_Decompose: Done\n", n ));
@@ -320,7 +320,7 @@
          FT_NEW_ARRAY( anoutline->contours, numContours ) )
       goto Fail;
 
-    anoutline->n_points    = (FT_UShort)numPoints;
+    anoutline->n_points    = (FT_Short)numPoints;
     anoutline->n_contours  = (FT_Short)numContours;
     anoutline->flags      |= FT_OUTLINE_OWNER;
 
@@ -1043,7 +1043,7 @@
     /* We use the nonzero winding rule to find the orientation.       */
     /* Since glyph outlines behave much more `regular' than arbitrary */
     /* cubic or quadratic curves, this test deals with the polygon    */
-    /* only which is spanned up by the control points.                */
+    /* only that is spanned up by the control points.                 */
 
     FT_Outline_Get_CBox( outline, &cbox );
 
@@ -1051,10 +1051,11 @@
     if ( cbox.xMin == cbox.xMax || cbox.yMin == cbox.yMax )
       return FT_ORIENTATION_NONE;
 
-    xshift = FT_MSB( FT_ABS( cbox.xMax ) | FT_ABS( cbox.xMin ) ) - 14;
+    xshift = FT_MSB( (FT_UInt32)( FT_ABS( cbox.xMax ) |
+                                  FT_ABS( cbox.xMin ) ) ) - 14;
     xshift = FT_MAX( xshift, 0 );
 
-    yshift = FT_MSB( cbox.yMax - cbox.yMin ) - 14;
+    yshift = FT_MSB( (FT_UInt32)( cbox.yMax - cbox.yMin ) ) - 14;
     yshift = FT_MAX( yshift, 0 );
 
     points = outline->points;

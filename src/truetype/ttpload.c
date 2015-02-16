@@ -124,7 +124,7 @@
         TT_Table  entry = face->dir_tables;
         TT_Table  limit = entry + face->num_tables;
 
-        FT_Long   pos  = FT_Stream_Pos( stream );
+        FT_Long   pos  = (FT_Long)FT_STREAM_POS();
         FT_Long   dist = 0x7FFFFFFFL;
 
 

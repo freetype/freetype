@@ -1495,7 +1495,7 @@
     FT_UNUSED( params );
 
 
-    pos = (FT_ULong)FT_Stream_Pos( stream );
+    pos = FT_STREAM_POS();
 
     error = ft_lookup_PS_in_sfnt_stream( stream,
                                          face_index,

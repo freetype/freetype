@@ -361,7 +361,7 @@ FT_BEGIN_HEADER
                   FT_Long    distance );
 
   /* return current stream position */
-  FT_BASE( FT_Long )
+  FT_BASE( FT_ULong )
   FT_Stream_Pos( FT_Stream  stream );
 
   /* read bytes from a stream into a user-allocated buffer, returns an */
