@@ -1,5 +1,24 @@
 2015-02-15  Werner Lemberg  <wl@gnu.org>
 
+	[base] Clean up signedness issues in `ftdbgmem.c'.
+
+	Also fix other minor issues.
+
+	* src/base/ftdbgmem.c (FT_MemTableRec): Replace all FT_ULong types
+	with FT_Long for consistency.
+	(ft_mem_primes): Change type to `FT_Int'.
+	(ft_mem_closest_prime, ft_mem_table_set): Updated.
+
+	(ft_mem_debug_panic, ft_mem_debug_alloc, ft_mem_debug_free,
+	ft_mem_debug_realloc): Use `static' keyword and fix signedness
+	warnings where necessary.
+
+	(ft_mem_table_resize, ft_mem_table_new, ft_mem_table_destroy,
+	ft_mem_table_get_nodep, ft_mem_debug_init, FT_DumpMemory): Fix types
+	and add or remove casts to avoid signedness warnings.
+
+2015-02-15  Werner Lemberg  <wl@gnu.org>
+
 	[base] Clean up signedness in arithmetic functions.
 
 	This makes the code more readable and reduces compiler warnings.
