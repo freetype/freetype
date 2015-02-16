@@ -1,5 +1,12 @@
 2015-02-16  Werner Lemberg  <wl@gnu.org>
 
+	More minor signedness warning fixes.
+
+	* src/base/ftbbox.c, src/base/ftbitmap.c, src/base/fttrigon.c,
+	src/base/ftutil.c: Apply.
+
+2015-02-16  Werner Lemberg  <wl@gnu.org>
+
 	Next round of minor compiler warning fixes.
 
 	* include/internal/ftrfork.h (FT_RFork_Ref): Change `offset' member

@@ -180,7 +180,7 @@
               FT_Error    *p_error )
   {
     FT_Error    error;
-    FT_Pointer  p = ft_mem_qalloc( memory, size, &error );
+    FT_Pointer  p = ft_mem_qalloc( memory, (FT_Long)size, &error );
 
 
     if ( !error && address )

@@ -92,8 +92,8 @@
        s = -1;
     }
 
-    lo1 = val & 0x0000FFFFU;
-    hi1 = val >> 16;
+    lo1 = (FT_UInt32)val & 0x0000FFFFU;
+    hi1 = (FT_UInt32)val >> 16;
     lo2 = FT_TRIG_SCALE & 0x0000FFFFU;
     hi2 = FT_TRIG_SCALE >> 16;
 
@@ -120,7 +120,7 @@
     lo += 0x40000000UL;
     hi += ( lo < 0x40000000UL );
 
-    val  = (FT_Fixed)hi;
+    val = (FT_Fixed)hi;
 
     return s < 0 ? -val : val;
   }
@@ -139,7 +139,7 @@
     x = vec->x;
     y = vec->y;
 
-    shift = FT_MSB( FT_ABS( x ) | FT_ABS( y ) );
+    shift = FT_MSB( (FT_UInt32)( FT_ABS( x ) | FT_ABS( y ) ) );
 
     if ( shift <= FT_TRIG_SAFE_MSB )
     {
@@ -450,7 +450,7 @@
     v.x = ft_trig_downscale( v.x );
 
     if ( shift > 0 )
-      return ( v.x + ( 1 << ( shift - 1 ) ) ) >> shift;
+      return ( v.x + ( 1L << ( shift - 1 ) ) ) >> shift;
 
     return (FT_Fixed)( (FT_UInt32)v.x << -shift );
   }
