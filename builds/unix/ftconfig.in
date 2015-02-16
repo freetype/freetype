@@ -89,7 +89,7 @@ FT_BEGIN_HEADER
   /* is copied from default include/config/ftconfig.h.           */
   /* If any improvement is required for this file, it should be  */
   /* applied to the original header file for the builders that   */
-  /* does not use configure script.                              */
+  /* do not use configure script.                                */
 
   /* The size of an `int' type.  */
 #if                                 FT_UINT_MAX == 0xFFFFUL
@@ -349,9 +349,27 @@ FT_BEGIN_HEADER
 #endif
 
 
+  /*************************************************************************/
+  /*                                                                       */
+  /* <Section>                                                             */
+  /*    miscellaneous                                                      */
+  /*                                                                       */
+  /*************************************************************************/
+
+
 #define FT_BEGIN_STMNT  do {
 #define FT_END_STMNT    } while ( 0 )
 #define FT_DUMMY_STMNT  FT_BEGIN_STMNT FT_END_STMNT
+
+
+  /* typeof condition taken from gnulib's `intprops.h' header file */
+#if ( __GNUC__ >= 2                         || \
+      defined( __IBM__TYPEOF__ )            || \
+      ( __SUNPRO_C >= 0x5110 && !__STDC__ ) )
+#define TYPEOF( type, x )  (__typeof__ (type))(x)
+#else
+#define TYPEOF( type, x )  (x)
+#endif
 
 
 #ifdef FT_MAKE_OPTION_SINGLE_OBJECT

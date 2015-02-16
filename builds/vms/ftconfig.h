@@ -292,9 +292,27 @@ FT_BEGIN_HEADER
 #endif
 
 
+  /*************************************************************************/
+  /*                                                                       */
+  /* <Section>                                                             */
+  /*    miscellaneous                                                      */
+  /*                                                                       */
+  /*************************************************************************/
+
+
 #define FT_BEGIN_STMNT  do {
 #define FT_END_STMNT    } while ( 0 )
 #define FT_DUMMY_STMNT  FT_BEGIN_STMNT FT_END_STMNT
+
+
+  /* typeof condition taken from gnulib's `intprops.h' header file */
+#if ( __GNUC__ >= 2                         || \
+      defined( __IBM__TYPEOF__ )            || \
+      ( __SUNPRO_C >= 0x5110 && !__STDC__ ) )
+#define TYPEOF( type, x )  (__typeof__ (type))(x)
+#else
+#define TYPEOF( type, x )  (x)
+#endif
 
 
 #ifdef FT_MAKE_OPTION_SINGLE_OBJECT
