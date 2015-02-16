@@ -1,5 +1,10 @@
 2015-02-16  Werner Lemberg  <wl@gnu.org>
 
+	* src/base/ftsystem.c: Use casts in standard C function wrappers.
+	(ft_alloc, ft_realloc, ft_ansi_stream_io, FT_Stream_Open): Do it.
+
+2015-02-16  Werner Lemberg  <wl@gnu.org>
+
 	Fix Savannah bug #44261.
 
 	* builds/unix/detect.mk (setup) [unix]: Set `CONFIG_SHELL' in the

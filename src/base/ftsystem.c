@@ -71,7 +71,7 @@
   {
     FT_UNUSED( memory );
 
-    return ft_smalloc( size );
+    return ft_smalloc( (size_t)size );
   }
 
 
@@ -104,7 +104,7 @@
     FT_UNUSED( memory );
     FT_UNUSED( cur_size );
 
-    return ft_srealloc( block, new_size );
+    return ft_srealloc( block, (size_t)new_size );
   }
 
 
@@ -212,7 +212,7 @@
     file = STREAM_FILE( stream );
 
     if ( stream->pos != offset )
-      ft_fseek( file, offset, SEEK_SET );
+      ft_fseek( file, (long)offset, SEEK_SET );
 
     return (unsigned long)ft_fread( buffer, 1, count, file );
   }
@@ -247,7 +247,7 @@
     }
 
     ft_fseek( file, 0, SEEK_END );
-    stream->size = ft_ftell( file );
+    stream->size = (unsigned long)ft_ftell( file );
     if ( !stream->size )
     {
       FT_ERROR(( "FT_Stream_Open:" ));
