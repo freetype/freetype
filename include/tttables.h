@@ -371,7 +371,7 @@ FT_BEGIN_HEADER
     FT_Short   xAvgCharWidth;
     FT_UShort  usWeightClass;
     FT_UShort  usWidthClass;
-    FT_Short   fsType;
+    FT_UShort  fsType;
     FT_Short   ySubscriptXSize;
     FT_Short   ySubscriptYSize;
     FT_Short   ySubscriptXOffset;

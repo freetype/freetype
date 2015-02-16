@@ -1,5 +1,9 @@
 2015-02-16  Werner Lemberg  <wl@gnu.org>
 
+	* include/tttables.h (TT_OS2): `fsType' must be FT_UShort.
+
+2015-02-16  Werner Lemberg  <wl@gnu.org>
+
 	More minor signedness warning fixes.
 
 	* src/base/ftbbox.c, src/base/ftbitmap.c, src/base/fttrigon.c,
