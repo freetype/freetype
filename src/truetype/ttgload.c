@@ -100,13 +100,15 @@
     else if ( face->os2.version != 0xFFFFU )
     {
       *tsb = (FT_Short)( face->os2.sTypoAscender - yMax );
-      *ah  = face->os2.sTypoAscender - face->os2.sTypoDescender;
+      *ah  = (FT_UShort)FT_ABS( face->os2.sTypoAscender -
+                                face->os2.sTypoDescender );
     }
 
     else
     {
       *tsb = (FT_Short)( face->horizontal.Ascender - yMax );
-      *ah  = face->horizontal.Ascender - face->horizontal.Descender;
+      *ah  = (FT_UShort)FT_ABS( face->horizontal.Ascender -
+                                face->horizontal.Descender );
     }
 
     FT_TRACE5(( "  advance height (font units): %d\n", *ah ));
@@ -555,8 +557,8 @@
       *flag  = (FT_Byte)( f & FT_CURVE_TAG_ON );
     }
 
-    outline->n_points   = (FT_UShort)n_points;
-    outline->n_contours = (FT_Short) n_contours;
+    outline->n_points   = (FT_Short)n_points;
+    outline->n_contours = (FT_Short)n_contours;
 
     load->cursor = p;
 
@@ -707,9 +709,10 @@
                    FT_UInt       start_point,
                    FT_UInt       start_contour )
   {
-    zone->n_points    = (FT_UShort)( load->outline.n_points - start_point );
-    zone->n_contours  = (FT_Short) ( load->outline.n_contours -
-                                       start_contour );
+    zone->n_points    = (FT_UShort)load->outline.n_points -
+                          (FT_UShort)start_point;
+    zone->n_contours  = load->outline.n_contours -
+                          (FT_Short)start_contour;
     zone->org         = load->extra_points + start_point;
     zone->cur         = load->outline.points + start_point;
     zone->orus        = load->extra_points2 + start_point;
@@ -740,7 +743,7 @@
     TT_GlyphZone  zone = &loader->zone;
 
 #ifdef TT_USE_BYTECODE_INTERPRETER
-    FT_UInt       n_ins;
+    FT_Long       n_ins;
 #else
     FT_UNUSED( is_composite );
 #endif
@@ -753,7 +756,7 @@
       FT_TRACE1(( " (0x%lx byte) is truncated\n",
                  loader->glyph->control_len ));
     }
-    n_ins = (FT_UInt)( loader->glyph->control_len );
+    n_ins = loader->glyph->control_len;
 
     /* save original point position in org */
     if ( n_ins > 0 )
@@ -887,7 +890,7 @@
       error = TT_Vary_Get_Glyph_Deltas( (TT_Face)(loader->face),
                                         loader->glyph_index,
                                         &deltas,
-                                        n_points );
+                                        (FT_UInt)n_points );
       if ( error )
         return error;
 
@@ -916,9 +919,9 @@
       TT_Driver  driver = (TT_Driver)FT_FACE_DRIVER( face );
 
       FT_String*  family         = face->root.family_name;
-      FT_Int      ppem           = loader->size->metrics.x_ppem;
+      FT_UInt     ppem           = loader->size->metrics.x_ppem;
       FT_String*  style          = face->root.style_name;
-      FT_Int      x_scale_factor = 1000;
+      FT_UInt     x_scale_factor = 1000;
 #endif
 
       FT_Vector*  vec   = outline->points;
@@ -946,7 +949,7 @@
              x_scale_factor != 1000                         )
         {
           x_scale = FT_MulDiv( ((TT_Size)loader->size)->metrics.x_scale,
-                               x_scale_factor, 1000 );
+                               (FT_Long)x_scale_factor, 1000 );
           y_scale = ((TT_Size)loader->size)->metrics.y_scale;
 
           /* compensate for any scaling by de/emboldening; */
@@ -1017,7 +1020,7 @@
   {
     FT_GlyphLoader  gloader    = loader->gloader;
     FT_Vector*      base_vec   = gloader->base.outline.points;
-    FT_UInt         num_points = gloader->base.outline.n_points;
+    FT_UInt         num_points = (FT_UInt)gloader->base.outline.n_points;
     FT_Bool         have_scale;
     FT_Pos          x, y;
 
@@ -1039,8 +1042,8 @@
     /* get offset */
     if ( !( subglyph->flags & ARGS_ARE_XY_VALUES ) )
     {
-      FT_UInt     k = subglyph->arg1;
-      FT_UInt     l = subglyph->arg2;
+      FT_UInt     k = (FT_UInt)subglyph->arg1;
+      FT_UInt     l = (FT_UInt)subglyph->arg2;
       FT_Vector*  p1;
       FT_Vector*  p2;
 
@@ -1470,7 +1473,8 @@
 
       FT_MEM_ZERO( &inc_stream, sizeof ( inc_stream ) );
       FT_Stream_OpenMemory( &inc_stream,
-                            glyph_data.pointer, glyph_data.length );
+                            glyph_data.pointer,
+                            (FT_ULong)glyph_data.length );
 
       loader->stream = &inc_stream;
     }
@@ -1498,7 +1502,7 @@
 
       error = face->access_glyph_frame( loader, glyph_index,
                                         loader->glyf_offset + offset,
-                                        loader->byte_len );
+                                        (FT_UInt)loader->byte_len );
       if ( error )
         goto Exit;
 
@@ -1631,8 +1635,8 @@
       FT_ULong  ins_pos;  /* position of composite instructions, if any */
 
 
-      start_point   = gloader->base.outline.n_points;
-      start_contour = gloader->base.outline.n_contours;
+      start_point   = (FT_UInt)gloader->base.outline.n_points;
+      start_contour = (FT_UInt)gloader->base.outline.n_contours;
 
       /* for each subglyph, read composite header */
       error = face->read_composite_glyph( loader );
@@ -1650,7 +1654,7 @@
 
       if ( face->doblend )
       {
-        FT_Int       i, limit;
+        FT_UInt      i, limit;
         FT_SubGlyph  subglyph;
         FT_Memory    memory = face->root.memory;
 
@@ -1755,10 +1759,12 @@
           pp[2] = loader->pp3;
           pp[3] = loader->pp4;
 
-          num_base_points = gloader->base.outline.n_points;
+          num_base_points = (FT_UInt)gloader->base.outline.n_points;
 
-          error = load_truetype_glyph( loader, subglyph->index,
-                                       recurse_count + 1, FALSE );
+          error = load_truetype_glyph( loader,
+                                       (FT_UInt)subglyph->index,
+                                       recurse_count + 1,
+                                       FALSE );
           if ( error )
             goto Exit;
 
@@ -1774,7 +1780,7 @@
             loader->pp4 = pp[3];
           }
 
-          num_points = gloader->base.outline.n_points;
+          num_points = (FT_UInt)gloader->base.outline.n_points;
 
           if ( num_points == num_base_points )
             continue;
@@ -2037,7 +2043,7 @@
     error = sfnt->load_sbit_image( face,
                                    size->strike_index,
                                    glyph_index,
-                                   (FT_Int)load_flags,
+                                   (FT_UInt)load_flags,
                                    stream,
                                    &glyph->bitmap,
                                    &metrics );
@@ -2305,7 +2311,7 @@
       loader->gloader = gloader;
     }
 
-    loader->load_flags = load_flags;
+    loader->load_flags = (FT_ULong)load_flags;
 
     loader->face   = (FT_Face)face;
     loader->size   = (FT_Size)size;

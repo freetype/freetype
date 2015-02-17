@@ -1,3 +1,13 @@
+2015-02-17  Werner Lemberg  <wl@gnu.org>
+
+	[truetype] Various signedness fixes.
+
+	* include/internal/ftgloadr.h, src/truetype/ttpload.c: Apply.
+
+	* src/truetype/ttgload.c: Apply.
+	(TT_Get_VMetrics): Protect against invalid ascenders and descenders
+	while constructing advance height.
+
 2015-02-16  Werner Lemberg  <wl@gnu.org>
 
 	[base] Finish compiler warning fixes for signedness issues.
