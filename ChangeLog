@@ -1,5 +1,9 @@
 2015-02-17  Werner Lemberg  <wl@gnu.org>
 
+	* src/truetype/ttsubpix.c: Adding missing `static' keywords.
+
+2015-02-17  Werner Lemberg  <wl@gnu.org>
+
 	[truetype] More signedness fixes.
 
 	* include/internal/tttypes.h, src/truetype/ttinterp.h,
