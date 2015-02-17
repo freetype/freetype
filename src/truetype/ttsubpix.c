@@ -905,7 +905,7 @@
   {
     TT_Face     face   = (TT_Face)loader->face;
     FT_String*  family = face->root.family_name;
-    int         ppem   = loader->size->metrics.x_ppem;
+    FT_UInt     ppem   = loader->size->metrics.x_ppem;
     FT_String*  style  = face->root.style_name;
 
 

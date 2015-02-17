@@ -1,5 +1,12 @@
 2015-02-17  Werner Lemberg  <wl@gnu.org>
 
+	[truetype] Finish compiler warning fixes for signedness issues.
+
+	* src/truetype/ttgxvar.c, src/truetype/ttsubpix.c,
+	src/truetype/ttsubpix.h: Apply.
+
+2015-02-17  Werner Lemberg  <wl@gnu.org>
+
 	* src/truetype/ttsubpix.c: Adding missing `static' keywords.
 
 2015-02-17  Werner Lemberg  <wl@gnu.org>

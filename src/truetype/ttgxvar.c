@@ -286,7 +286,7 @@
     GX_Blend        blend  = face->blend;
     GX_AVarSegment  segment;
     FT_Error        error = FT_Err_Ok;
-    FT_ULong        version;
+    FT_Long         version;
     FT_Long         axisCount;
     FT_Int          i, j;
     FT_ULong        table_len;
@@ -428,7 +428,7 @@
         goto Exit;
 
       for ( i = 0; i <= blend->gv_glyphcnt; ++i )
-        blend->glyphoffsets[i] = offsetToData + FT_GET_LONG();
+        blend->glyphoffsets[i] = offsetToData + FT_GET_ULONG();
 
       FT_FRAME_EXIT();
     }
@@ -577,9 +577,9 @@
   typedef struct  fvar_axis_
   {
     FT_ULong   axisTag;
-    FT_ULong   minValue;
-    FT_ULong   defaultValue;
-    FT_ULong   maxValue;
+    FT_Fixed   minValue;
+    FT_Fixed   defaultValue;
+    FT_Fixed   maxValue;
     FT_UShort  flags;
     FT_UShort  nameID;
 
@@ -647,9 +647,9 @@
 
       FT_FRAME_START( 20 ),
         FT_FRAME_ULONG ( axisTag ),
-        FT_FRAME_ULONG ( minValue ),
-        FT_FRAME_ULONG ( defaultValue ),
-        FT_FRAME_ULONG ( maxValue ),
+        FT_FRAME_LONG  ( minValue ),
+        FT_FRAME_LONG  ( defaultValue ),
+        FT_FRAME_LONG  ( maxValue ),
         FT_FRAME_USHORT( flags ),
         FT_FRAME_USHORT( nameID ),
       FT_FRAME_END
@@ -742,9 +742,9 @@
         if ( FT_STREAM_READ_FIELDS( fvaraxis_fields, &axis_rec ) )
           goto Exit;
         a->tag     = axis_rec.axisTag;
-        a->minimum = axis_rec.minValue;     /* A Fixed */
-        a->def     = axis_rec.defaultValue; /* A Fixed */
-        a->maximum = axis_rec.maxValue;     /* A Fixed */
+        a->minimum = axis_rec.minValue;
+        a->def     = axis_rec.defaultValue;
+        a->maximum = axis_rec.maxValue;
         a->strid   = axis_rec.nameID;
 
         a->name[0] = (FT_String)(   a->tag >> 24 );
@@ -766,7 +766,7 @@
         (void) /* flags = */ FT_GET_USHORT();
 
         for ( j = 0; j < fvar_head.axisCount; ++j )
-          ns->coords[j] = FT_GET_ULONG();     /* A Fixed */
+          ns->coords[j] = FT_GET_LONG();
 
         FT_FRAME_EXIT();
       }
