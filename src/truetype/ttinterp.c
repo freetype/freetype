@@ -158,7 +158,7 @@
     /*       which will return to the first byte *after* the code    */
     /*       range, we test for IP <= Size instead of IP < Size.     */
     /*                                                               */
-    FT_ASSERT( (FT_ULong)IP <= coderange->size );
+    FT_ASSERT( IP <= coderange->size );
 
     exec->code     = coderange->base;
     exec->codeSize = coderange->size;
@@ -359,7 +359,7 @@
   FT_LOCAL_DEF( FT_Error )
   Update_Max( FT_Memory  memory,
               FT_ULong*  size,
-              FT_Long    multiplier,
+              FT_ULong   multiplier,
               void*      _pbuff,
               FT_ULong   new_max )
   {
@@ -452,13 +452,13 @@
 
     /* XXX: We reserve a little more elements on the stack to deal safely */
     /*      with broken fonts like arialbs, courbs, timesbs, etc.         */
-    tmp = exec->stackSize;
+    tmp = (FT_ULong)exec->stackSize;
     error = Update_Max( exec->memory,
                         &tmp,
                         sizeof ( FT_F26Dot6 ),
                         (void*)&exec->stack,
                         maxp->maxStackElements + 32 );
-    exec->stackSize = (FT_UInt)tmp;
+    exec->stackSize = (FT_Long)tmp;
     if ( error )
       return error;
 
@@ -1633,7 +1633,7 @@
   static FT_Bool
   Ins_Goto_CodeRange( TT_ExecContext  exc,
                       FT_Int          aRange,
-                      FT_ULong        aIP )
+                      FT_Long         aIP )
   {
     TT_CodeRange*  range;
 
@@ -2352,7 +2352,7 @@
     FT_ASSERT( !exc->face->unpatented_hinting );
 #endif
 
-    return TT_DotFix14( (FT_UInt32)dx, (FT_UInt32)dy,
+    return TT_DotFix14( dx, dy,
                         exc->GS.projVector.x,
                         exc->GS.projVector.y );
   }
@@ -2379,7 +2379,7 @@
                 FT_Pos          dx,
                 FT_Pos          dy )
   {
-    return TT_DotFix14( (FT_UInt32)dx, (FT_UInt32)dy,
+    return TT_DotFix14( dx, dy,
                         exc->GS.dualVector.x,
                         exc->GS.dualVector.y );
   }
@@ -3621,7 +3621,7 @@
 
     rec   = exc->FDefs;
     limit = rec + exc->numFDefs;
-    n     = args[0];
+    n     = (FT_ULong)args[0];
 
     for ( ; rec < limit; rec++ )
     {
@@ -3863,7 +3863,7 @@
 
     /* first of all, check the index */
 
-    F = args[0];
+    F = (FT_ULong)args[0];
     if ( BOUNDSL( F, exc->maxFunc + 1 ) )
       goto Fail;
 
@@ -3951,7 +3951,7 @@
 
 
     /* first of all, check the index */
-    F = args[1];
+    F = (FT_ULong)args[1];
     if ( BOUNDSL( F, exc->maxFunc + 1 ) )
       goto Fail;
 
@@ -5528,7 +5528,7 @@
     FT_UShort        start, limit, i;
 
 
-    contour = (FT_UShort)args[0];
+    contour = (FT_Short)args[0];
     bounds  = ( exc->GS.gep2 == 0 ) ? 1 : exc->zp2.n_contours;
 
     if ( BOUNDS( contour, bounds ) )
@@ -5651,8 +5651,8 @@
     else
 #endif
     {
-      dx = TT_MulFix14( (FT_UInt32)args[0], exc->GS.freeVector.x );
-      dy = TT_MulFix14( (FT_UInt32)args[0], exc->GS.freeVector.y );
+      dx = TT_MulFix14( args[0], exc->GS.freeVector.x );
+      dy = TT_MulFix14( args[0], exc->GS.freeVector.y );
     }
 
     while ( exc->GS.loop > 0 )
@@ -5953,9 +5953,9 @@
            ( !exc->ignore_x_mode                ||
              !exc->face->sph_compatibility_mode ) )
 #endif /* TT_CONFIG_OPTION_SUBPIXEL_HINTING */
-        exc->zp0.org[point].x = TT_MulFix14( (FT_UInt32)distance,
+        exc->zp0.org[point].x = TT_MulFix14( distance,
                                              exc->GS.freeVector.x );
-      exc->zp0.org[point].y = TT_MulFix14( (FT_UInt32)distance,
+      exc->zp0.org[point].y = TT_MulFix14( distance,
                                            exc->GS.freeVector.y ),
       exc->zp0.cur[point]   = exc->zp0.org[point];
     }
@@ -6206,10 +6206,10 @@
     if ( exc->GS.gep1 == 0 )
     {
       exc->zp1.org[point].x = exc->zp0.org[exc->GS.rp0].x +
-                              TT_MulFix14( (FT_UInt32)cvt_dist,
+                              TT_MulFix14( cvt_dist,
                                            exc->GS.freeVector.x );
       exc->zp1.org[point].y = exc->zp0.org[exc->GS.rp0].y +
-                              TT_MulFix14( (FT_UInt32)cvt_dist,
+                              TT_MulFix14( cvt_dist,
                                            exc->GS.freeVector.y );
       exc->zp1.cur[point]   = exc->zp1.org[point];
     }

@@ -788,7 +788,7 @@
     TT_Set_CodeRange( exec,
                       tt_coderange_font,
                       face->font_program,
-                      face->font_program_size );
+                      (FT_Long)face->font_program_size );
 
     /* disable CVT and glyph programs coderange */
     TT_Clear_CodeRange( exec, tt_coderange_cvt );
@@ -854,7 +854,7 @@
     TT_Set_CodeRange( exec,
                       tt_coderange_cvt,
                       face->cvt_program,
-                      face->cvt_program_size );
+                      (FT_Long)face->cvt_program_size );
 
     TT_Clear_CodeRange( exec, tt_coderange_glyph );
 

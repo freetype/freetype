@@ -158,11 +158,11 @@ FT_BEGIN_HEADER
 
     FT_Long            top;        /* top of exec. stack   */
 
-    FT_UInt            stackSize;  /* size of exec. stack  */
+    FT_Long            stackSize;  /* size of exec. stack  */
     FT_Long*           stack;      /* current exec. stack  */
 
     FT_Long            args;
-    FT_UInt            new_top;    /* new top after exec.  */
+    FT_Long            new_top;    /* new top after exec.  */
 
     TT_GlyphZoneRec    zp0,        /* zone records */
                        zp1,
@@ -303,7 +303,7 @@ FT_BEGIN_HEADER
   FT_LOCAL( FT_Error )
   Update_Max( FT_Memory  memory,
               FT_ULong*  size,
-              FT_Long    multiplier,
+              FT_ULong   multiplier,
               void*      _pbuff,
               FT_ULong   new_max );
 #endif /* TT_USE_BYTECODE_INTERPRETER */

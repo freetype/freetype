@@ -1440,7 +1440,7 @@ FT_BEGIN_HEADER
   {
     FT_Memory   memory;
     FT_UShort   max_points;
-    FT_UShort   max_contours;
+    FT_Short    max_contours;
     FT_UShort   n_points;    /* number of points in zone    */
     FT_Short    n_contours;  /* number of contours          */
 

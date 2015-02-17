@@ -1,5 +1,13 @@
 2015-02-17  Werner Lemberg  <wl@gnu.org>
 
+	[truetype] More signedness fixes.
+
+	* include/internal/tttypes.h, src/truetype/ttinterp.h,
+	src/truetype/ttobjs.h, src/truetype/ttinterp.c,
+	src/truetype/ttobjs.c: Apply.
+
+2015-02-17  Werner Lemberg  <wl@gnu.org>
+
 	[truetype] Various signedness fixes.
 
 	* include/internal/ftgloadr.h, src/truetype/ttpload.c: Apply.
