@@ -1,5 +1,11 @@
 2015-02-17  Werner Lemberg  <wl@gnu.org>
 
+	[base] Fix Savannah bug #44284.
+
+	* src/base/ftcalc.c (FT_MulFix): Typos.
+
+2015-02-17  Werner Lemberg  <wl@gnu.org>
+
 	[truetype] Finish compiler warning fixes for signedness issues.
 
 	* src/truetype/ttgxvar.c, src/truetype/ttsubpix.c,

@@ -236,7 +236,7 @@
   {
 #ifdef FT_MULFIX_ASSEMBLER
 
-    return FT_MULFIX_ASSEMBLER( a, b );
+    return FT_MULFIX_ASSEMBLER( a_, b_ );
 
 #else
 
