@@ -433,7 +433,7 @@
 
           if ( cur + 2 < limit && *cur == '/' && n < count )
           {
-            FT_PtrDist  len;
+            FT_UInt  len;
 
 
             cur++;
@@ -445,7 +445,7 @@
             if ( parser->root.error )
               return;
 
-            len = parser->root.cursor - cur;
+            len = (FT_UInt)( parser->root.cursor - cur );
 
             parser->root.error = T1_Add_Table( char_table, charcode,
                                                cur, len + 1 );
@@ -873,7 +873,7 @@
 
       if ( *cur == '/' )
       {
-        FT_PtrDist  len;
+        FT_UInt  len;
 
 
         if ( cur + 2 >= limit )
@@ -884,7 +884,7 @@
         }
 
         cur++;                              /* skip `/' */
-        len = parser->root.cursor - cur;
+        len = (FT_UInt)( parser->root.cursor - cur );
 
         error = T1_Add_Table( name_table, n, cur, len + 1 );
         if ( error )
@@ -914,7 +914,7 @@
           goto Fail;
         }
 
-        len = parser->root.cursor - cur;
+        len = (FT_UInt)( parser->root.cursor - cur );
 
         error = T1_Add_Table( code_table, n, cur, len + 1 );
         if ( error )
@@ -1135,7 +1135,7 @@
       /* look for immediates */
       else if ( *cur == '/' && cur + 2 < limit )
       {
-        FT_PtrDist  len;
+        FT_UInt  len;
 
 
         cur++;
@@ -1145,7 +1145,7 @@
         if ( parser->root.error )
           goto Exit;
 
-        len = parser->root.cursor - cur;
+        len = (FT_UInt)( parser->root.cursor - cur );
 
         if ( len > 0 && len < 22 && parser->root.cursor < limit )
         {
@@ -1164,9 +1164,9 @@
             if ( !name )
               continue;
 
-            if ( cur[0] == name[0]                                  &&
-                 len == (FT_PtrDist)ft_strlen( (const char *)name ) &&
-                 ft_memcmp( cur, name, len ) == 0                   )
+            if ( cur[0] == name[0]                      &&
+                 len == ft_strlen( (const char *)name ) &&
+                 ft_memcmp( cur, name, len ) == 0       )
             {
               /* we found it -- run the parsing callback! */
               parser->root.error = t42_load_keyword( face,

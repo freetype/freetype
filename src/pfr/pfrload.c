@@ -449,9 +449,9 @@
                                FT_Byte*     limit,
                                PFR_PhyFont  phy_font )
   {
-    FT_Error    error  = FT_Err_Ok;
-    FT_Memory   memory = phy_font->memory;
-    FT_PtrDist  len    = limit - p;
+    FT_Error   error  = FT_Err_Ok;
+    FT_Memory  memory = phy_font->memory;
+    FT_UInt    len    = (FT_UInt)( limit - p );
 
 
     if ( phy_font->font_id != NULL )

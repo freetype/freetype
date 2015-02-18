@@ -342,11 +342,11 @@
         /* look for immediates */
         if ( *cur == '/' && cur + 2 < limit )
         {
-          FT_PtrDist  len;
+          FT_UInt  len;
 
 
           cur++;
-          len = parser->root.cursor - cur;
+          len = (FT_UInt)( parser->root.cursor - cur );
 
           if ( len > 0 && len < 22 )
           {
@@ -363,10 +363,10 @@
               if ( !name )
                 break;
 
-              if ( cur[0] == name[0]                                 &&
-                   len == (FT_PtrDist)ft_strlen( (const char*)name ) )
+              if ( cur[0] == name[0]                     &&
+                   len == ft_strlen( (const char*)name ) )
               {
-                FT_PtrDist  n;
+                FT_UInt  n;
 
 
                 for ( n = 1; n < len; n++ )

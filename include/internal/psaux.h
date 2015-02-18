@@ -71,10 +71,10 @@ FT_BEGIN_HEADER
     (*done)( PS_Table  table );
 
     FT_Error
-    (*add)( PS_Table    table,
-            FT_Int      idx,
-            void*       object,
-            FT_PtrDist  length );
+    (*add)( PS_Table  table,
+            FT_Int    idx,
+            void*     object,
+            FT_UInt   length );
 
     void
     (*release)( PS_Table  table );
@@ -127,7 +127,7 @@ FT_BEGIN_HEADER
     FT_Int             max_elems;
     FT_Int             num_elems;
     FT_Byte**          elements;       /* addresses of table elements */
-    FT_PtrDist*        lengths;        /* lengths of table elements   */
+    FT_UInt*           lengths;        /* lengths of table elements   */
 
     FT_Memory          memory;
     PS_Table_FuncsRec  funcs;
@@ -677,7 +677,7 @@ FT_BEGIN_HEADER
     FT_Int               lenIV;        /* internal for sub routine calls */
     FT_UInt              num_subrs;
     FT_Byte**            subrs;
-    FT_PtrDist*          subrs_len;    /* array of subrs length (optional) */
+    FT_UInt*             subrs_len;    /* array of subrs length (optional) */
 
     FT_Matrix            font_matrix;
     FT_Vector            font_offset;

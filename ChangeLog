@@ -1,5 +1,24 @@
 2015-02-18  Werner Lemberg  <wl@gnu.org>
 
+	Don't use `FT_PtrDist' for lengths.
+
+	Use FT_UInt instead.
+
+	* include/internal/psaux.h (PS_Table_FuncsRec, PS_TableRec,
+	T1_DecoderRec): Do it.
+
+	* include/internal/t1types.h (T1_FontRec): Ditto.
+
+	* src/cid/cidload.c (cid_parse_dict): Updated.
+	* src/pfr/pfrload.c (pfr_extra_item_load_font_id): Ditto.
+	* src/psaux/psobjs.c (ps_table_add), src/psaux/psobjs.h: Ditto.
+	* src/type1/t1load.c (parse_blend_axis_types, parse_encoding,
+	parse_chharstrings, parse_dict): Ditto.
+	* src/type42/t42parse.c (t42_parse_encoding, t42_parse_charstrings,
+	t42_parse_dict): Ditto.
+
+2015-02-18  Werner Lemberg  <wl@gnu.org>
+
 	* src/type1/t1driver.c (t1_ps_get_font_value): Clean up.
 	This handles negative values better, avoiding many casts.
 

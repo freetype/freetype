@@ -52,10 +52,10 @@ FT_BEGIN_HEADER
                 FT_Memory  memory );
 
   FT_LOCAL( FT_Error )
-  ps_table_add( PS_Table    table,
-                FT_Int      idx,
-                void*       object,
-                FT_PtrDist  length );
+  ps_table_add( PS_Table  table,
+                FT_Int    idx,
+                void*     object,
+                FT_UInt   length );
 
   FT_LOCAL( void )
   ps_table_done( PS_Table  table );
