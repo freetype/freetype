@@ -127,7 +127,7 @@ FT_BEGIN_HEADER
 
   typedef struct  CID_SubrsRec_
   {
-    FT_UInt    num_subrs;
+    FT_Int     num_subrs;
     FT_Byte**  code;
 
   } CID_SubrsRec, *CID_Subrs;

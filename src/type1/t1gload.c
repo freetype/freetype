@@ -92,7 +92,7 @@
     if ( !error )
       error = decoder->funcs.parse_charstrings(
                 decoder, (FT_Byte*)char_string->pointer,
-                char_string->length );
+                (FT_UInt)char_string->length );
 
 #ifdef FT_CONFIG_OPTION_INCREMENTAL
 
@@ -194,7 +194,7 @@
     for ( glyph_index = 0; glyph_index < type1->num_glyphs; glyph_index++ )
     {
       /* now get load the unscaled outline */
-      (void)T1_Parse_Glyph( &decoder, glyph_index );
+      (void)T1_Parse_Glyph( &decoder, (FT_UInt)glyph_index );
       if ( glyph_index == 0 || decoder.builder.advance.x > *max_advance )
         *max_advance = decoder.builder.advance.x;
 

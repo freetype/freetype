@@ -450,11 +450,11 @@
 
           if ( design < p_design )
           {
-            after = p;
+            after = (FT_Int)p;
             break;
           }
 
-          before = p;
+          before = (FT_Int)p;
         }
 
         /* now interpolate if necessary */
@@ -692,7 +692,9 @@
           }
 
           num_axis = n_axis;
-          error = t1_allocate_blend( face, num_designs, num_axis );
+          error = t1_allocate_blend( face,
+                                     (FT_UInt)num_designs,
+                                     (FT_UInt)num_axis );
           if ( error )
             goto Exit;
           blend = face->blend;
@@ -757,7 +759,7 @@
     old_cursor = parser->root.cursor;
     old_limit  = parser->root.limit;
 
-    error = t1_allocate_blend( face, 0, num_axis );
+    error = t1_allocate_blend( face, 0, (FT_UInt)num_axis );
     if ( error )
       goto Exit;
     blend = face->blend;
@@ -848,7 +850,7 @@
 
     if ( !blend || !blend->num_designs )
     {
-      error = t1_allocate_blend( face, num_designs, 0 );
+      error = t1_allocate_blend( face, (FT_UInt)num_designs, 0 );
       if ( error )
         goto Exit;
       blend = face->blend;
@@ -890,8 +892,8 @@
   parse_buildchar( T1_Face    face,
                    T1_Loader  loader )
   {
-    face->len_buildchar = T1_ToFixedArray( &loader->parser, 0, NULL, 0 );
-
+    face->len_buildchar = (FT_UInt)T1_ToFixedArray( &loader->parser,
+                                                    0, NULL, 0 );
     return;
   }
 
@@ -1038,9 +1040,11 @@
   }
 
 
+  /* return 1 in case of success */
+
   static int
   read_binary_data( T1_Parser  parser,
-                    FT_Long*   size,
+                    FT_ULong*  size,
                     FT_Byte**  base,
                     FT_Bool    incremental )
   {
@@ -1072,7 +1076,7 @@
       if ( s >= 0 && s < limit - *base )
       {
         parser->root.cursor += s + 1;
-        *size = s;
+        *size = (FT_ULong)s;
         return !parser->root.error;
       }
     }
@@ -1407,7 +1411,8 @@
     /*                         */
     for (;;)
     {
-      FT_Long   idx, size;
+      FT_Long   idx;
+      FT_ULong  size;
       FT_Byte*  base;
 
 
@@ -1457,7 +1462,7 @@
         /* some fonts define empty subr records -- this is not totally */
         /* compliant to the specification (which says they should at   */
         /* least contain a `return'), but we support them anyway       */
-        if ( size < face->type1.private_dict.lenIV )
+        if ( size < (FT_ULong)face->type1.private_dict.lenIV )
         {
           error = FT_THROW( Invalid_File_Format );
           goto Fail;
@@ -1468,7 +1473,7 @@
           goto Fail;
         FT_MEM_COPY( temp, base, size );
         psaux->t1_decrypt( temp, size, 4330 );
-        size -= face->type1.private_dict.lenIV;
+        size -= (FT_ULong)face->type1.private_dict.lenIV;
         error = T1_Add_Table( table, (FT_Int)idx,
                               temp + face->type1.private_dict.lenIV, size );
         FT_FREE( temp );
@@ -1508,7 +1513,7 @@
     FT_Byte*       cur;
     FT_Byte*       limit        = parser->root.limit;
     FT_Int         n, num_glyphs;
-    FT_UInt        notdef_index = 0;
+    FT_Int         notdef_index = 0;
     FT_Byte        notdef_found = 0;
 
 
@@ -1555,7 +1560,7 @@
 
     for (;;)
     {
-      FT_Long   size;
+      FT_ULong  size;
       FT_Byte*  base;
 
 
@@ -1649,7 +1654,7 @@
           FT_Byte*  temp;
 
 
-          if ( size <= face->type1.private_dict.lenIV )
+          if ( size <= (FT_ULong)face->type1.private_dict.lenIV )
           {
             error = FT_THROW( Invalid_File_Format );
             goto Fail;
@@ -1660,7 +1665,7 @@
             goto Fail;
           FT_MEM_COPY( temp, base, size );
           psaux->t1_decrypt( temp, size, 4330 );
-          size -= face->type1.private_dict.lenIV;
+          size -= (FT_ULong)face->type1.private_dict.lenIV;
           error = T1_Add_Table( code_table, n,
                                 temp + face->type1.private_dict.lenIV, size );
           FT_FREE( temp );
@@ -1846,7 +1851,7 @@
   parse_dict( T1_Face    face,
               T1_Loader  loader,
               FT_Byte*   base,
-              FT_Long    size )
+              FT_ULong   size )
   {
     T1_Parser  parser = &loader->parser;
     FT_Byte   *limit, *start_binary = NULL;
@@ -1902,7 +1907,7 @@
       else if ( *cur == 'R' && cur + 6 < limit && *(cur + 1) == 'D' &&
                 have_integer )
       {
-        FT_Long   s;
+        FT_ULong  s;
         FT_Byte*  b;
 
 
@@ -1915,7 +1920,7 @@
       else if ( *cur == '-' && cur + 6 < limit && *(cur + 1) == '|' &&
                 have_integer )
       {
-        FT_Long   s;
+        FT_ULong  s;
         FT_Byte*  b;
 
 

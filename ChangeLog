@@ -1,5 +1,13 @@
 2015-02-18  Werner Lemberg  <wl@gnu.org>
 
+	[type1] Fix signedness issues.
+
+	* include/internal/psaux.h, include/internal/t1types.h,
+	src/psaux/psobjs.c, src/psaux/psobjs.h, src/psaux/t1decode.c,
+	src/type1/t1gload.c, src/type1/t1load.c, src/type1/t1parse.c: Apply.
+
+2015-02-18  Werner Lemberg  <wl@gnu.org>
+
 	[psaux, type1] Fix minor AFM issues.
 
 	* include/internal/t1types.h (AFM_KernPairRec): Make indices

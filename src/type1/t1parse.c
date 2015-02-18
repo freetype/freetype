@@ -273,7 +273,7 @@
       /* made of several segments.  We thus first read the number of   */
       /* segments to compute the total size of the private dictionary  */
       /* then re-read them into memory.                                */
-      FT_Long    start_pos = FT_STREAM_POS();
+      FT_ULong   start_pos = FT_STREAM_POS();
       FT_UShort  tag;
 
 
@@ -411,9 +411,11 @@
       /* fine that are violating this limitation, so we add a heuristic  */
       /* test to stop at \r only if it is not used for EOL.              */
 
-      pos_lf  = ft_memchr( cur, '\n', limit - cur );
-      test_cr = FT_BOOL( !pos_lf                                      ||
-                         pos_lf > ft_memchr( cur, '\r', limit - cur ) );
+      pos_lf  = ft_memchr( cur, '\n', (size_t)( limit - cur ) );
+      test_cr = FT_BOOL( !pos_lf                                       ||
+                         pos_lf > ft_memchr( cur,
+                                             '\r',
+                                             (size_t)( limit - cur ) ) );
 
       while ( cur < limit                    &&
               ( *cur == ' '                ||
@@ -429,7 +431,7 @@
         goto Exit;
       }
 
-      size = (FT_ULong)( parser->base_len - ( cur - parser->base_dict ) );
+      size = parser->base_len - (FT_ULong)( cur - parser->base_dict );
 
       if ( parser->in_memory )
       {
@@ -459,7 +461,7 @@
            ft_isxdigit( cur[2] ) && ft_isxdigit( cur[3] ) )
       {
         /* ASCII hexadecimal encoding */
-        FT_Long  len;
+        FT_ULong  len;
 
 
         parser->root.cursor = cur;

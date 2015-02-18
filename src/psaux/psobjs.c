@@ -1373,7 +1373,7 @@
   ps_parser_to_bytes( PS_Parser  parser,
                       FT_Byte*   bytes,
                       FT_Offset  max_bytes,
-                      FT_Long*   pnum_bytes,
+                      FT_ULong*  pnum_bytes,
                       FT_Bool    delimiters )
   {
     FT_Error  error = FT_Err_Ok;

@@ -365,7 +365,7 @@ FT_BEGIN_HEADER
     (*to_bytes)( PS_Parser  parser,
                  FT_Byte*   bytes,
                  FT_Offset  max_bytes,
-                 FT_Long*   pnum_bytes,
+                 FT_ULong*  pnum_bytes,
                  FT_Bool    delimiters );
 
     FT_Int
@@ -675,7 +675,7 @@ FT_BEGIN_HEADER
     FT_Byte**            glyph_names;
 
     FT_Int               lenIV;        /* internal for sub routine calls */
-    FT_UInt              num_subrs;
+    FT_Int               num_subrs;
     FT_Byte**            subrs;
     FT_UInt*             subrs_len;    /* array of subrs length (optional) */
 

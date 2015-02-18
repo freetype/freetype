@@ -1346,7 +1346,7 @@
             FT_TRACE4(( " callsubr" ));
 
             idx = Fix2Int( top[0] );
-            if ( idx < 0 || idx >= (FT_Int)decoder->num_subrs )
+            if ( idx < 0 || idx >= decoder->num_subrs )
             {
               FT_ERROR(( "t1_decoder_parse_charstrings:"
                          " invalid subrs index\n" ));
