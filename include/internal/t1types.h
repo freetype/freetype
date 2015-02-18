@@ -157,10 +157,10 @@ FT_BEGIN_HEADER
 
   typedef struct  AFM_KernPairRec_
   {
-    FT_Int  index1;
-    FT_Int  index2;
-    FT_Int  x;
-    FT_Int  y;
+    FT_UInt  index1;
+    FT_UInt  index2;
+    FT_Int   x;
+    FT_Int   y;
 
   } AFM_KernPairRec, *AFM_KernPair;
 
@@ -171,9 +171,9 @@ FT_BEGIN_HEADER
     FT_Fixed       Ascender;
     FT_Fixed       Descender;
     AFM_TrackKern  TrackKerns;   /* free if non-NULL */
-    FT_Int         NumTrackKern;
+    FT_UInt        NumTrackKern;
     AFM_KernPair   KernPairs;    /* free if non-NULL */
-    FT_Int         NumKernPair;
+    FT_UInt        NumKernPair;
 
   } AFM_FontInfoRec, *AFM_FontInfo;
 

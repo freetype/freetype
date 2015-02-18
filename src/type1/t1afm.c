@@ -169,8 +169,8 @@
       goto Exit;
 
     /* now, read each kern pair */
-    kp             = fi->KernPairs;
-    limit          = p + 4 * fi->NumKernPair;
+    kp    = fi->KernPairs;
+    limit = p + 4 * fi->NumKernPair;
 
     /* PFM kerning data are stored by encoding rather than glyph index, */
     /* so find the PostScript charmap of this font and install it       */
@@ -362,7 +362,7 @@
                         FT_Fixed*  kerning )
   {
     AFM_FontInfo  fi = (AFM_FontInfo)( (T1_Face)face )->afm_data;
-    FT_Int        i;
+    FT_UInt       i;
 
 
     if ( !fi )

@@ -61,6 +61,7 @@ FT_BEGIN_HEADER
       char*     s;
       FT_Fixed  f;
       FT_Int    i;
+      FT_UInt   u;
       FT_Bool   b;
 
     } u;

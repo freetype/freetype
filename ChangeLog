@@ -1,5 +1,22 @@
 2015-02-18  Werner Lemberg  <wl@gnu.org>
 
+	[psaux, type1] Fix minor AFM issues.
+
+	* include/internal/t1types.h (AFM_KernPairRec): Make indices
+	unsigned.
+	Update users.
+	(AFM_FontInfoRec): Make element counters unsigned.
+	Update users.
+	* src/psaux/afmparse.h (AFM_ValueRec): Add union member for unsigned
+	int.
+
+	* src/psaux/afmparse.c (afm_parse_track_kern, afm_parse_kern_pairs):
+	Reject negative values for number of kerning elements.
+
+	* src/type1/t1afm.c, src/tools/test_afm.c: Updated.
+
+2015-02-18  Werner Lemberg  <wl@gnu.org>
+
 	Don't use `FT_PtrDist' for lengths.
 
 	Use FT_UInt instead.
