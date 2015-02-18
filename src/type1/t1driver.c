@@ -176,9 +176,11 @@
                         PS_Dict_Keys  key,
                         FT_UInt       idx,
                         void         *value,
-                        FT_Long       value_len )
+                        FT_Long       value_len_ )
   {
-    FT_Long  retval = -1;
+    FT_ULong  retval    = 0; /* always >= 1 if valid */
+    FT_ULong  value_len = value_len_ < 0 ? 0 : (FT_ULong)value_len_;
+
     T1_Face  t1face = (T1_Face)face;
     T1_Font  type1  = &t1face->type1;
 
@@ -225,7 +227,7 @@
       if ( idx < sizeof ( type1->font_bbox ) /
                    sizeof ( type1->font_bbox.xMin ) )
       {
-        FT_Fixed val = 0;
+        FT_Fixed  val = 0;
 
 
         retval = sizeof ( val );
@@ -258,7 +260,7 @@
       break;
 
     case PS_DICT_FONT_NAME:
-      retval = (FT_Long)( ft_strlen( type1->font_name ) + 1 );
+      retval = ft_strlen( type1->font_name ) + 1;
       if ( value && value_len >= retval )
         ft_memcpy( value, (void *)( type1->font_name ), retval );
       break;
@@ -278,7 +280,7 @@
     case PS_DICT_CHAR_STRING_KEY:
       if ( idx < (FT_UInt)type1->num_glyphs )
       {
-        retval = (FT_Long)( ft_strlen( type1->glyph_names[idx] ) + 1 );
+        retval = ft_strlen( type1->glyph_names[idx] ) + 1;
         if ( value && value_len >= retval )
         {
           ft_memcpy( value, (void *)( type1->glyph_names[idx] ), retval );
@@ -290,7 +292,7 @@
     case PS_DICT_CHAR_STRING:
       if ( idx < (FT_UInt)type1->num_glyphs )
       {
-        retval = (FT_Long)( type1->charstrings_len[idx] + 1 );
+        retval = type1->charstrings_len[idx] + 1;
         if ( value && value_len >= retval )
         {
           ft_memcpy( value, (void *)( type1->charstrings[idx] ),
@@ -310,7 +312,7 @@
       if ( type1->encoding_type == T1_ENCODING_TYPE_ARRAY &&
            idx < (FT_UInt)type1->encoding.num_chars       )
       {
-        retval = (FT_Long)( ft_strlen( type1->encoding.char_name[idx] ) + 1 );
+        retval = ft_strlen( type1->encoding.char_name[idx] ) + 1;
         if ( value && value_len >= retval )
         {
           ft_memcpy( value, (void *)( type1->encoding.char_name[idx] ),
@@ -329,7 +331,7 @@
     case PS_DICT_SUBR:
       if ( idx < (FT_UInt)type1->num_subrs )
       {
-        retval = (FT_Long)( type1->subrs_len[idx] + 1 );
+        retval = type1->subrs_len[idx] + 1;
         if ( value && value_len >= retval )
         {
           ft_memcpy( value, (void *)( type1->subrs[idx] ), retval - 1 );
@@ -523,31 +525,31 @@
       break;
 
     case PS_DICT_VERSION:
-      retval = (FT_Long)( ft_strlen( type1->font_info.version ) + 1 );
+      retval = ft_strlen( type1->font_info.version ) + 1;
       if ( value && value_len >= retval )
         ft_memcpy( value, (void *)( type1->font_info.version ), retval );
       break;
 
     case PS_DICT_NOTICE:
-      retval = (FT_Long)( ft_strlen( type1->font_info.notice ) + 1 );
+      retval = ft_strlen( type1->font_info.notice ) + 1;
       if ( value && value_len >= retval )
         ft_memcpy( value, (void *)( type1->font_info.notice ), retval );
       break;
 
     case PS_DICT_FULL_NAME:
-      retval = (FT_Long)( ft_strlen( type1->font_info.full_name ) + 1 );
+      retval = ft_strlen( type1->font_info.full_name ) + 1;
       if ( value && value_len >= retval )
         ft_memcpy( value, (void *)( type1->font_info.full_name ), retval );
       break;
 
     case PS_DICT_FAMILY_NAME:
-      retval = (FT_Long)( ft_strlen( type1->font_info.family_name ) + 1 );
+      retval = ft_strlen( type1->font_info.family_name ) + 1;
       if ( value && value_len >= retval )
         ft_memcpy( value, (void *)( type1->font_info.family_name ), retval );
       break;
 
     case PS_DICT_WEIGHT:
-      retval = (FT_Long)( ft_strlen( type1->font_info.weight ) + 1 );
+      retval = ft_strlen( type1->font_info.weight ) + 1;
       if ( value && value_len >= retval )
         ft_memcpy( value, (void *)( type1->font_info.weight ), retval );
       break;
@@ -559,7 +561,7 @@
       break;
     }
 
-    return retval;
+    return retval == 0 ? -1 : (FT_Long)retval;
   }
 
 

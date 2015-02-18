@@ -1,3 +1,8 @@
+2015-02-18  Werner Lemberg  <wl@gnu.org>
+
+	* src/type1/t1driver.c (t1_ps_get_font_value): Clean up.
+	This handles negative values better, avoiding many casts.
+
 2015-02-17  Werner Lemberg  <wl@gnu.org>
 
 	[base] Fix Savannah bug #44284.
