@@ -673,7 +673,12 @@
         goto Exit;
 
       if ( fvar_head.version != (FT_Long)0x00010000L                      ||
+#if 0
+           /* fonts like `JamRegular.ttf' have an incorrect value for */
+           /* `countSizePairs'; since value 2 is hard-coded in `fvar' */
+           /* version 1.0, we simply ignore it                        */
            fvar_head.countSizePairs != 2                                  ||
+#endif
            fvar_head.axisSize != 20                                       ||
            /* axisCount limit implied by 16-bit instanceSize */
            fvar_head.axisCount > 0x3FFE                                   ||

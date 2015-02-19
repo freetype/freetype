@@ -1,5 +1,14 @@
 2015-02-19  Werner Lemberg  <wl@gnu.org>
 
+	* src/truetype/ttgxvar.c (TT_Get_MM_Var): Ignore `countSizePairs'.
+
+	This is hard-coded to value 2 in `fvar' version 1.0 (and no newer
+	version exists), but some fonts set it incorrectly.
+
+	Problem reported by Adam Twardoch <adam@fontlab.com>.
+
+2015-02-19  Werner Lemberg  <wl@gnu.org>
+
 	[cff] Emit better error code for invalid private dict size.
 
 	* src/cff/cffparse.c (cff_parse_private_dict): Reject negative
