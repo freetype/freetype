@@ -2071,8 +2071,8 @@
   af_latin_compute_stem_width( AF_GlyphHints  hints,
                                AF_Dimension   dim,
                                FT_Pos         width,
-                               AF_Edge_Flags  base_flags,
-                               AF_Edge_Flags  stem_flags )
+                               FT_UInt        base_flags,
+                               FT_UInt        stem_flags )
   {
     AF_LatinMetrics  metrics  = (AF_LatinMetrics)hints->metrics;
     AF_LatinAxis     axis     = &metrics->axis[dim];
@@ -2239,10 +2239,9 @@
   {
     FT_Pos  dist = stem_edge->opos - base_edge->opos;
 
-    FT_Pos  fitted_width = af_latin_compute_stem_width(
-                             hints, dim, dist,
-                             (AF_Edge_Flags)base_edge->flags,
-                             (AF_Edge_Flags)stem_edge->flags );
+    FT_Pos  fitted_width = af_latin_compute_stem_width( hints, dim, dist,
+                                                        base_edge->flags,
+                                                        stem_edge->flags );
 
 
     stem_edge->pos = base_edge->pos + fitted_width;
@@ -2437,10 +2436,9 @@
 
 
         org_len = edge2->opos - edge->opos;
-        cur_len = af_latin_compute_stem_width(
-                    hints, dim, org_len,
-                    (AF_Edge_Flags)edge->flags,
-                    (AF_Edge_Flags)edge2->flags );
+        cur_len = af_latin_compute_stem_width( hints, dim, org_len,
+                                               edge->flags,
+                                               edge2->flags );
 
         /* some voodoo to specially round edges for small stem widths; */
         /* the idea is to align the center of a stem, then shifting    */
@@ -2507,10 +2505,9 @@
         org_len    = edge2->opos - edge->opos;
         org_center = org_pos + ( org_len >> 1 );
 
-        cur_len = af_latin_compute_stem_width(
-                    hints, dim, org_len,
-                    (AF_Edge_Flags)edge->flags,
-                    (AF_Edge_Flags)edge2->flags );
+        cur_len = af_latin_compute_stem_width( hints, dim, org_len,
+                                               edge->flags,
+                                               edge2->flags );
 
         if ( edge2->flags & AF_EDGE_DONE )
         {
@@ -2568,10 +2565,9 @@
           org_len    = edge2->opos - edge->opos;
           org_center = org_pos + ( org_len >> 1 );
 
-          cur_len    = af_latin_compute_stem_width(
-                         hints, dim, org_len,
-                         (AF_Edge_Flags)edge->flags,
-                         (AF_Edge_Flags)edge2->flags );
+          cur_len    = af_latin_compute_stem_width( hints, dim, org_len,
+                                                    edge->flags,
+                                                    edge2->flags );
 
           cur_pos1 = FT_PIX_ROUND( org_pos );
           delta1   = cur_pos1 + ( cur_len >> 1 ) - org_center;

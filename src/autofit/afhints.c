@@ -254,7 +254,7 @@
 
 
   static const char*
-  af_edge_flags_to_string( AF_Edge_Flags  flags )
+  af_edge_flags_to_string( FT_UInt  flags )
   {
     static char  temp[32];
     int          pos = 0;
@@ -329,7 +329,7 @@
                   AF_INDEX_NUM( seg->edge, edges ),
                   seg->height,
                   seg->height - ( seg->max_coord - seg->min_coord ),
-                  af_edge_flags_to_string( (AF_Edge_Flags)seg->flags ) ));
+                  af_edge_flags_to_string( seg->flags ) ));
       AF_DUMP(( "\n" ));
     }
   }
@@ -456,7 +456,7 @@
                   edge->blue_edge ? 'y' : 'n',
                   edge->opos / 64.0,
                   edge->pos / 64.0,
-                  af_edge_flags_to_string( (AF_Edge_Flags)edge->flags ) ));
+                  af_edge_flags_to_string( edge->flags ) ));
       AF_DUMP(( "\n" ));
     }
   }
@@ -1110,7 +1110,7 @@
     AF_AxisHints  axis        = &hints->axis[dim];
     AF_Edge       edges       = axis->edges;
     AF_Edge       edge_limit  = edges + axis->num_edges;
-    AF_Flags      touch_flag;
+    FT_UInt       touch_flag;
 
 
     if ( dim == AF_DIMENSION_HORZ )
@@ -1363,7 +1363,7 @@
     AF_Point   point_limit   = points + hints->num_points;
     AF_Point*  contour       = hints->contours;
     AF_Point*  contour_limit = contour + hints->num_contours;
-    AF_Flags   touch_flag;
+    FT_UInt    touch_flag;
     AF_Point   point;
     AF_Point   end_point;
     AF_Point   first_point;

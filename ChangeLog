@@ -1,3 +1,25 @@
+2015-02-19  Werner Lemberg  <wl@gnu.org>
+
+	[autofit] Use macros for (unsigned) flags, not enumerations.
+
+	This harmonizes with other code in FreeType (and reduces the number
+	of necessary casts to avoid compiler warnings).
+
+	* src/autofit/afblue.hin: Make flag macros unsigned.
+	* src/autofit/afblue.h: Regenerated.
+
+	* src/autofit/afcjk.h: Replace flag enumeration with macros.
+	* src/autofit/afcjk.c: Updated.
+
+	* src/autofit/afhints.h (AF_Flags, AF_Edge_Flags): Replace with
+	macros.
+	* src/autofit/afhints.c: Updated.
+
+	* src/autofit/aflatin.h: Replace flag enumerations with macros.
+	* src/autofit/aflatin.c, src/autofit/aflatin2.c: Updated.
+
+	* src/autofit/aftypes.h (AF_ScalerFlags): Replace with macros.
+
 2015-02-18  Werner Lemberg  <wl@gnu.org>
 
 	[type1] Fix signedness issues.

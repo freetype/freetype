@@ -835,8 +835,8 @@
         {
           AF_Point  pt   = first;
           AF_Point  last = point;
-          AF_Flags  f0   = (AF_Flags)( pt->flags & AF_FLAG_CONTROL );
-          AF_Flags  f1;
+          FT_UInt   f0   = pt->flags & AF_FLAG_CONTROL;
+          FT_UInt   f1;
 
 
           segment->flags &= ~AF_EDGE_ROUND;
@@ -844,7 +844,7 @@
           for ( ; pt != last; f0 = f1 )
           {
             pt = pt->next;
-            f1 = (AF_Flags)( pt->flags & AF_FLAG_CONTROL );
+            f1 = pt->flags & AF_FLAG_CONTROL;
 
             if ( !f0 && !f1 )
               break;
@@ -1621,8 +1621,8 @@
   af_latin2_compute_stem_width( AF_GlyphHints  hints,
                                 AF_Dimension   dim,
                                 FT_Pos         width,
-                                AF_Edge_Flags  base_flags,
-                                AF_Edge_Flags  stem_flags )
+                                FT_UInt        base_flags,
+                                FT_UInt        stem_flags )
   {
     AF_LatinMetrics  metrics  = (AF_LatinMetrics) hints->metrics;
     AF_LatinAxis     axis     = & metrics->axis[dim];
@@ -1793,10 +1793,9 @@
   {
     FT_Pos  dist = stem_edge->opos - base_edge->opos;
 
-    FT_Pos  fitted_width = af_latin2_compute_stem_width(
-                             hints, dim, dist,
-                             (AF_Edge_Flags)base_edge->flags,
-                             (AF_Edge_Flags)stem_edge->flags );
+    FT_Pos  fitted_width = af_latin2_compute_stem_width( hints, dim, dist,
+                                                         base_edge->flags,
+                                                         stem_edge->flags );
 
 
     stem_edge->pos = base_edge->pos + fitted_width;
@@ -1942,10 +1941,9 @@
 
 
         org_len = edge2->opos - edge->opos;
-        cur_len = af_latin2_compute_stem_width(
-                    hints, dim, org_len,
-                    (AF_Edge_Flags)edge->flags,
-                    (AF_Edge_Flags)edge2->flags );
+        cur_len = af_latin2_compute_stem_width( hints, dim, org_len,
+                                                edge->flags,
+                                                edge2->flags );
         if ( cur_len <= 64 )
           u_off = d_off = 32;
         else
@@ -2007,10 +2005,9 @@
         org_len    = edge2->opos - edge->opos;
         org_center = org_pos + ( org_len >> 1 );
 
-        cur_len = af_latin2_compute_stem_width(
-                   hints, dim, org_len,
-                   (AF_Edge_Flags)edge->flags,
-                   (AF_Edge_Flags)edge2->flags );
+        cur_len = af_latin2_compute_stem_width( hints, dim, org_len,
+                                                edge->flags,
+                                                edge2->flags );
 
         org_left  = org_pos + ( ( org_len - cur_len ) >> 1 );
         org_right = org_pos + ( ( org_len + cur_len ) >> 1 );

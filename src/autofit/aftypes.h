@@ -168,13 +168,9 @@ extern void*  _af_debug_hints;
    *  auto-hinted glyph image.
    */
 
-  typedef enum  AF_ScalerFlags_
-  {
-    AF_SCALER_FLAG_NO_HORIZONTAL = 1,  /* disable horizontal hinting */
-    AF_SCALER_FLAG_NO_VERTICAL   = 2,  /* disable vertical hinting   */
-    AF_SCALER_FLAG_NO_ADVANCE    = 4   /* disable advance hinting    */
-
-  } AF_ScalerFlags;
+#define AF_SCALER_FLAG_NO_HORIZONTAL  1U /* disable horizontal hinting */
+#define AF_SCALER_FLAG_NO_VERTICAL    2U /* disable vertical hinting   */
+#define AF_SCALER_FLAG_NO_ADVANCE     4U /* disable advance hinting    */
 
 
   typedef struct  AF_ScalerRec_

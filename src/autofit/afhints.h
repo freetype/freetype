@@ -207,35 +207,27 @@ FT_BEGIN_HEADER
 
 
   /* point hint flags */
-  typedef enum  AF_Flags_
-  {
-    AF_FLAG_NONE = 0,
+#define AF_FLAG_NONE  0
 
-    /* point type flags */
-    AF_FLAG_CONIC   = 1 << 0,
-    AF_FLAG_CUBIC   = 1 << 1,
-    AF_FLAG_CONTROL = AF_FLAG_CONIC | AF_FLAG_CUBIC,
+  /* point type flags */
+#define AF_FLAG_CONIC    ( 1U << 0 )
+#define AF_FLAG_CUBIC    ( 1U << 1 )
+#define AF_FLAG_CONTROL  ( AF_FLAG_CONIC | AF_FLAG_CUBIC )
 
-    /* point touch flags */
-    AF_FLAG_TOUCH_X = 1 << 2,
-    AF_FLAG_TOUCH_Y = 1 << 3,
+  /* point touch flags */
+#define AF_FLAG_TOUCH_X  ( 1U << 2 )
+#define AF_FLAG_TOUCH_Y  ( 1U << 3 )
 
-    /* candidates for weak interpolation have this flag set */
-    AF_FLAG_WEAK_INTERPOLATION = 1 << 4
-
-  } AF_Flags;
+  /* candidates for weak interpolation have this flag set */
+#define AF_FLAG_WEAK_INTERPOLATION  ( 1 << 4 )
 
 
   /* edge hint flags */
-  typedef enum  AF_Edge_Flags_
-  {
-    AF_EDGE_NORMAL  = 0,
-    AF_EDGE_ROUND   = 1 << 0,
-    AF_EDGE_SERIF   = 1 << 1,
-    AF_EDGE_DONE    = 1 << 2,
-    AF_EDGE_NEUTRAL = 1 << 3  /* set if edge aligns to a neutral blue zone */
-
-  } AF_Edge_Flags;
+#define AF_EDGE_NORMAL  0
+#define AF_EDGE_ROUND    ( 1U << 0 )
+#define AF_EDGE_SERIF    ( 1U << 1 )
+#define AF_EDGE_DONE     ( 1U << 2 )
+#define AF_EDGE_NEUTRAL  ( 1U << 3 ) /* edge aligns to a neutral blue zone */
 
 
   typedef struct AF_PointRec_*    AF_Point;
