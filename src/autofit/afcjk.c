@@ -260,8 +260,8 @@
     FT_Pos      fills[AF_BLUE_STRING_MAX_LEN];
     FT_Pos      flats[AF_BLUE_STRING_MAX_LEN];
 
-    FT_Int      num_fills;
-    FT_Int      num_flats;
+    FT_UInt     num_fills;
+    FT_UInt     num_flats;
 
     FT_Bool     fill;
 
@@ -1354,13 +1354,13 @@
 
   static FT_Pos
   af_cjk_snap_width( AF_Width  widths,
-                     FT_Int    count,
+                     FT_UInt   count,
                      FT_Pos    width )
   {
-    int     n;
-    FT_Pos  best      = 64 + 32 + 2;
-    FT_Pos  reference = width;
-    FT_Pos  scaled;
+    FT_UInt  n;
+    FT_Pos   best      = 64 + 32 + 2;
+    FT_Pos   reference = width;
+    FT_Pos   scaled;
 
 
     for ( n = 0; n < count; n++ )

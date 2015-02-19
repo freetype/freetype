@@ -1572,13 +1572,13 @@
 
   static FT_Pos
   af_latin2_snap_width( AF_Width  widths,
-                        FT_Int    count,
+                        FT_UInt   count,
                         FT_Pos    width )
   {
-    int     n;
-    FT_Pos  best      = 64 + 32 + 2;
-    FT_Pos  reference = width;
-    FT_Pos  scaled;
+    FT_UInt  n;
+    FT_Pos   best      = 64 + 32 + 2;
+    FT_Pos   reference = width;
+    FT_Pos   scaled;
 
 
     for ( n = 0; n < count; n++ )

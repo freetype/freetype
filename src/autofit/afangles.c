@@ -259,7 +259,7 @@
           sum         += table[j].org;
           table[j].org = 0;
         }
-        table[cur_idx].org = sum / j;
+        table[cur_idx].org = sum / (FT_Pos)j;
 
         if ( i < *count - 1 )
         {

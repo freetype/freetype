@@ -314,8 +314,9 @@
 
     memory = face->memory;
 
-    if ( FT_ALLOC( globals, sizeof ( *globals ) +
-                            face->num_glyphs * sizeof ( FT_Byte ) ) )
+    if ( FT_ALLOC( globals,
+                   sizeof ( *globals ) +
+                     (FT_ULong)face->num_glyphs * sizeof ( FT_Byte ) ) )
       goto Exit;
 
     globals->face         = face;

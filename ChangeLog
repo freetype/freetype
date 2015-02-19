@@ -1,5 +1,14 @@
 2015-02-19  Werner Lemberg  <wl@gnu.org>
 
+	[autofit] Fix signedness issues.
+
+	* src/autofit/afangles.c, src/autofit/afcjk.c,
+	src/autofit/afglobal.c, src/autofit/afhints.c,
+	src/autofit/aflatin.c, src/autofit/aflatin2.c, src/autofit/afwarp.c,
+	src/autofit/hbshim.c: Apply.
+
+2015-02-19  Werner Lemberg  <wl@gnu.org>
+
 	[autofit] Use macros for (unsigned) flags, not enumerations.
 
 	This harmonizes with other code in FreeType (and reduces the number

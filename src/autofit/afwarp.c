@@ -76,10 +76,10 @@
                                FT_Pos        xx2,
                                AF_WarpScore  base_distort,
                                AF_Segment    segments,
-                               FT_UInt       num_segments )
+                               FT_Int        num_segments )
   {
     FT_Int        idx_min, idx_max, idx0;
-    FT_UInt       nn;
+    FT_Int        nn;
     AF_WarpScore  scores[65];
 
 
@@ -171,7 +171,7 @@
     FT_Fixed      org_scale;
     FT_Pos        org_delta;
 
-    FT_UInt       nn, num_points, num_segments;
+    FT_Int        nn, num_points, num_segments;
     FT_Int        X1, X2;
     FT_Int        w;
 
