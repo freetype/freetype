@@ -1,5 +1,12 @@
 2015-02-19  Werner Lemberg  <wl@gnu.org>
 
+	[cff] Emit better error code for invalid private dict size.
+
+	* src/cff/cffparse.c (cff_parse_private_dict): Reject negative
+	values for size and offset.
+
+2015-02-19  Werner Lemberg  <wl@gnu.org>
+
 	[autofit] Fix signedness issues.
 
 	* src/autofit/afangles.c, src/autofit/afcjk.c,
