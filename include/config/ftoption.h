@@ -431,6 +431,8 @@ FT_BEGIN_HEADER
   /*     af_glyph_hints_dump_points                                        */
   /*     af_glyph_hints_dump_segments                                      */
   /*     af_glyph_hints_dump_edges                                         */
+  /*     af_glyph_hints_get_num_segments                                   */
+  /*     af_glyph_hints_get_segment_offset                                 */
   /*                                                                       */
   /*   As an argument, they use another global variable:                   */
   /*                                                                       */
