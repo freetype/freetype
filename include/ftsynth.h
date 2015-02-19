@@ -62,8 +62,10 @@ FT_BEGIN_HEADER
   /* a wrapper for @FT_Outline_Embolden and @FT_Bitmap_Embolden.           */
   /*                                                                       */
   /* For emboldened outlines the height, width, and advance metrics are    */
-  /* increased by the strength of the emboldening.  You can also call      */
-  /* @FT_Outline_Get_CBox to get precise values.                           */
+  /* increased by the strength of the emboldening -- this even affects     */
+  /* mono-width fonts!                                                     */
+  /*                                                                       */
+  /* You can also call @FT_Outline_Get_CBox to get precise values.         */
   FT_EXPORT( void )
   FT_GlyphSlot_Embolden( FT_GlyphSlot  slot );
 
