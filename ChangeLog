@@ -1,5 +1,16 @@
 2015-02-20  Werner Lemberg  <wl@gnu.org>
 
+	[cid] Fix signedness issues and emit some better error codes.
+
+	* src/cid/cidgload.c, src/cid/cidload.h, src/cid/cidobjs.c,
+	src/cid/cidparse.h: Apply.
+	* src/cid/cidload.c: Apply.
+	(parse_fd_array): Reject negative values for number of dictionaries.
+	* src/cid/cidparse.c: Apply.
+	(cid_parser_new): Reject negative values for hex data length.
+
+2015-02-20  Werner Lemberg  <wl@gnu.org>
+
 	[cff] Signedness fixes for new engine.
 
 	* src/cff/cf2arrst.c, src/cff/cf2fixed.h, src/cff/cf2ft.c,

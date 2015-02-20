@@ -36,7 +36,7 @@ FT_BEGIN_HEADER
   } CID_Loader;
 
 
-  FT_LOCAL( FT_Long )
+  FT_LOCAL( FT_ULong )
   cid_get_offset( FT_Byte**  start,
                   FT_Byte    offsize );
 

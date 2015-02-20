@@ -38,7 +38,7 @@
 
 
   /* read a single offset */
-  FT_LOCAL_DEF( FT_Long )
+  FT_LOCAL_DEF( FT_ULong )
   cid_get_offset( FT_Byte*  *start,
                   FT_Byte    offsize )
   {
@@ -53,7 +53,7 @@
     }
 
     *start = p;
-    return (FT_Long)result;
+    return result;
   }
 
 
@@ -222,6 +222,12 @@
 
 
     num_dicts = cid_parser_to_int( parser );
+    if ( num_dicts < 0 )
+    {
+      FT_ERROR(( "parse_fd_array: invalid number of dictionaries\n" ));
+      error = FT_THROW( Invalid_File_Format );
+      goto Exit;
+    }
 
     if ( !cid->font_dicts )
     {
@@ -231,7 +237,7 @@
       if ( FT_NEW_ARRAY( cid->font_dicts, num_dicts ) )
         goto Exit;
 
-      cid->num_dicts = (FT_UInt)num_dicts;
+      cid->num_dicts = num_dicts;
 
       /* don't forget to set a few defaults */
       for ( n = 0; n < cid->num_dicts; n++ )
@@ -290,7 +296,7 @@
   cid_parse_dict( CID_Face     face,
                   CID_Loader*  loader,
                   FT_Byte*     base,
-                  FT_Long      size )
+                  FT_ULong     size )
   {
     CID_Parser*  parser = &loader->parser;
 
@@ -450,8 +456,8 @@
       }
 
       /* read the subrmap's offsets */
-      if ( FT_STREAM_SEEK( cid->data_offset + dict->subrmap_offset ) ||
-           FT_FRAME_ENTER( ( num_subrs + 1 ) * dict->sd_bytes )      )
+      if ( FT_STREAM_SEEK( cid->data_offset + dict->subrmap_offset )     ||
+           FT_FRAME_ENTER( ( num_subrs + 1 ) * (FT_UInt)dict->sd_bytes ) )
         goto Fail;
 
       p = (FT_Byte*)stream->cursor;
@@ -500,7 +506,7 @@
         }
       }
 
-      subr->num_subrs = num_subrs;
+      subr->num_subrs = (FT_Int)num_subrs;
     }
 
   Exit:
@@ -546,7 +552,7 @@
 
   static FT_Error
   cid_hex_to_binary( FT_Byte*  data,
-                     FT_Long   data_len,
+                     FT_ULong  data_len,
                      FT_ULong  offset,
                      CID_Face  face )
   {

@@ -64,11 +64,11 @@ FT_BEGIN_HEADER
     FT_Stream     stream;
 
     FT_Byte*      postscript;
-    FT_Long       postscript_len;
+    FT_ULong      postscript_len;
 
     FT_ULong      data_offset;
 
-    FT_Long       binary_length;
+    FT_ULong      binary_length;
 
     CID_FaceInfo  cid;
     FT_Int        num_dict;

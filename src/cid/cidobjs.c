@@ -351,7 +351,7 @@
       PS_FontInfo   info = &cid->font_info;
 
 
-      cidface->num_glyphs   = cid->cid_count;
+      cidface->num_glyphs   = (FT_Long)cid->cid_count;
       cidface->num_charmaps = 0;
 
       cidface->face_index = face_index;
