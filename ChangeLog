@@ -1,5 +1,15 @@
 2015-02-20  Werner Lemberg  <wl@gnu.org>
 
+	[cff] Thinkos in bias handling.
+
+	Only the final result is always positive.
+
+	Bug introduced three commits earlier.
+
+	* src/cff/cffgload.c, src/cff/cffgload.h: Apply.
+
+2015-02-20  Werner Lemberg  <wl@gnu.org>
+
 	[cid] Fix signedness issues and emit some better error codes.
 
 	* src/cid/cidgload.c, src/cid/cidload.h, src/cid/cidobjs.c,

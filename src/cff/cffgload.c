@@ -337,7 +337,7 @@
   /*                                                                       */
   /* <Return>                                                              */
   /*    The bias value.                                                    */
-  static FT_UInt
+  static FT_Int
   cff_compute_bias( FT_Int   in_charstring_type,
                     FT_UInt  num_subrs )
   {
@@ -2385,7 +2385,8 @@
 
         case cff_op_callsubr:
           {
-            FT_UInt  idx = ( (FT_UInt)args[0] >> 16 ) + decoder->locals_bias;
+            FT_UInt  idx = (FT_UInt)( ( args[0] >> 16 ) +
+                                      decoder->locals_bias );
 
 
             FT_TRACE4(( " callsubr(%d)\n", idx ));
@@ -2426,7 +2427,8 @@
 
         case cff_op_callgsubr:
           {
-            FT_UInt  idx = ( (FT_UInt)args[0] >> 16 ) + decoder->globals_bias;
+            FT_UInt  idx = (FT_UInt)( ( args[0] >> 16 ) +
+                                      decoder->globals_bias );
 
 
             FT_TRACE4(( " callgsubr(%d)\n", idx ));
