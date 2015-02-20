@@ -760,11 +760,12 @@
 
           /* push our current CFF charstring region on subrStack */
           charstring = (CF2_Buffer)
-                         cf2_arrstack_getPointer( &subrStack,
-                                                  charstringIndex + 1 );
+                         cf2_arrstack_getPointer(
+                           &subrStack,
+                           (size_t)charstringIndex + 1 );
 
           /* set up the new CFF region and pointer */
-          subrIndex = cf2_stack_popInt( opStack );
+          subrIndex = (CF2_UInt)cf2_stack_popInt( opStack );
 
           switch ( op1 )
           {
@@ -809,8 +810,9 @@
 
         /* restore position in previous charstring */
         charstring = (CF2_Buffer)
-                       cf2_arrstack_getPointer( &subrStack,
-                                                --charstringIndex );
+                       cf2_arrstack_getPointer(
+                         &subrStack,
+                         (CF2_UInt)--charstringIndex );
         continue;     /* do not clear the stack */
 
       case cf2_cmdESC:
@@ -1088,8 +1090,8 @@
           /* must be either 4 or 5 --                       */
           /* this is a (deprecated) implied `seac' operator */
 
-          CF2_UInt       achar;
-          CF2_UInt       bchar;
+          CF2_Int        achar;
+          CF2_Int        bchar;
           CF2_BufferRec  component;
           CF2_Fixed      dummyWidth;   /* ignore component width */
           FT_Error       error2;

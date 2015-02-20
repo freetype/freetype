@@ -1,5 +1,12 @@
 2015-02-20  Werner Lemberg  <wl@gnu.org>
 
+	[cff] Signedness fixes for new engine.
+
+	* src/cff/cf2arrst.c, src/cff/cf2fixed.h, src/cff/cf2ft.c,
+	src/cff/cf2ft.h, src/cff/cf2hints.c, src/cff/cf2intrp.c: Apply.
+
+2015-02-20  Werner Lemberg  <wl@gnu.org>
+
 	[cff] Signedness fixes for basic infrastructure and old engine.
 
 	* include/internal/pshints.h, src/cff/cffdrivr.c,
