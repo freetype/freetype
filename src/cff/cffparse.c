@@ -129,7 +129,7 @@
                   FT_Long*  scaling )
   {
     FT_Byte*  p = start;
-    FT_UInt   nib;
+    FT_Int    nib;
     FT_UInt   phase;
 
     FT_Long   result, number, exponent;
@@ -166,7 +166,7 @@
       }
 
       /* Get the nibble. */
-      nib   = ( p[0] >> phase ) & 0xF;
+      nib   = (FT_Int)( p[0] >> phase ) & 0xF;
       phase = 4 - phase;
 
       if ( nib == 0xE )
@@ -559,7 +559,7 @@
       offset->x  = cff_parse_fixed_scaled( data++, scaling );
       offset->y  = cff_parse_fixed_scaled( data,   scaling );
 
-      *upm = power_tens[scaling];
+      *upm = (FT_ULong)power_tens[scaling];
 
       FT_TRACE4(( " [%f %f %f %f %f %f]\n",
                   (double)matrix->xx / *upm / 65536,

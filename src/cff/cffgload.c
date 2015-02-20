@@ -337,11 +337,11 @@
   /*                                                                       */
   /* <Return>                                                              */
   /*    The bias value.                                                    */
-  static FT_Int
+  static FT_UInt
   cff_compute_bias( FT_Int   in_charstring_type,
                     FT_UInt  num_subrs )
   {
-    FT_Int  result;
+    FT_UInt  result;
 
 
     if ( in_charstring_type == 1 )
@@ -646,7 +646,7 @@
     for ( n = 0; n < cff->num_glyphs; n++ )
     {
       if ( cff->charset.sids[n] == glyph_sid )
-        return n;
+        return (FT_Int)n;
     }
 
     return -1;
@@ -672,7 +672,7 @@
 
 
       *pointer = (FT_Byte*)data.pointer;
-      *length = data.length;
+      *length  = (FT_ULong)data.length;
 
       return error;
     }
@@ -707,7 +707,7 @@
 
 
       data.pointer = *pointer;
-      data.length  = length;
+      data.length  = (FT_Int)length;
 
       face->root.internal->incremental_interface->funcs->free_glyph_data(
         face->root.internal->incremental_interface->object, &data );
@@ -819,7 +819,7 @@
     FT_GlyphLoader_Prepare( builder->loader );
 
     /* First load `bchar' in builder */
-    error = cff_get_glyph_data( face, bchar_index,
+    error = cff_get_glyph_data( face, (FT_UInt)bchar_index,
                                 &charstring, &charstring_len );
     if ( !error )
     {
@@ -849,7 +849,7 @@
     builder->pos_y = ady;
 
     /* Now load `achar' on top of the base outline. */
-    error = cff_get_glyph_data( face, achar_index,
+    error = cff_get_glyph_data( face, (FT_UInt)achar_index,
                                 &charstring, &charstring_len );
     if ( !error )
     {
@@ -922,10 +922,10 @@
     decoder->read_width = 1;
 
     /* compute random seed from stack address of parameter */
-    seed = (FT_Fixed)( ( (FT_PtrDist)(char*)&seed              ^
-                         (FT_PtrDist)(char*)&decoder           ^
-                         (FT_PtrDist)(char*)&charstring_base ) &
-                         FT_ULONG_MAX ) ;
+    seed = (FT_Fixed)( ( (FT_Offset)(char*)&seed            ^
+                         (FT_Offset)(char*)&decoder         ^
+                         (FT_Offset)(char*)&charstring_base ) &
+                         FT_ULONG_MAX                         );
     seed = ( seed ^ ( seed >> 10 ) ^ ( seed >> 20 ) ) & 0xFFFFL;
     if ( seed == 0 )
       seed = 0x7384;
@@ -1373,12 +1373,12 @@
           {
             if ( op == cff_op_hintmask )
               hinter->hintmask( hinter->hints,
-                                builder->current->n_points,
-                                decoder->num_hints,
+                                (FT_UInt)builder->current->n_points,
+                                (FT_UInt)decoder->num_hints,
                                 ip );
             else
               hinter->counter( hinter->hints,
-                               decoder->num_hints,
+                               (FT_UInt)decoder->num_hints,
                                ip );
           }
 
@@ -1995,7 +1995,7 @@
             if ( hinter )
             {
               if ( hinter->close( hinter->hints,
-                                  builder->current->n_points ) )
+                                  (FT_UInt)builder->current->n_points ) )
                 goto Syntax_Error;
 
               /* apply hints to the loaded glyph outline now */
@@ -2385,8 +2385,7 @@
 
         case cff_op_callsubr:
           {
-            FT_UInt  idx = (FT_UInt)( ( args[0] >> 16 ) +
-                                      decoder->locals_bias );
+            FT_UInt  idx = ( (FT_UInt)args[0] >> 16 ) + decoder->locals_bias;
 
 
             FT_TRACE4(( " callsubr(%d)\n", idx ));
@@ -2427,8 +2426,7 @@
 
         case cff_op_callgsubr:
           {
-            FT_UInt  idx = (FT_UInt)( ( args[0] >> 16 ) +
-                                      decoder->globals_bias );
+            FT_UInt  idx = ( (FT_UInt)args[0] >> 16 ) + decoder->globals_bias;
 
 
             FT_TRACE4(( " callgsubr(%d)\n", idx ));
@@ -2669,7 +2667,7 @@
         error = sfnt->load_sbit_image( face,
                                        size->strike_index,
                                        glyph_index,
-                                       (FT_Int)load_flags,
+                                       (FT_UInt)load_flags,
                                        stream,
                                        &glyph->root.bitmap,
                                        &metrics );
@@ -2757,16 +2755,16 @@
     /* this scaling is only relevant if the PS hinter isn't active */
     if ( cff->num_subfonts )
     {
-      FT_ULong  top_upm, sub_upm;
-      FT_Byte   fd_index = cff_fd_select_get( &cff->fd_select,
-                                              glyph_index );
+      FT_Long  top_upm, sub_upm;
+      FT_Byte  fd_index = cff_fd_select_get( &cff->fd_select,
+                                             glyph_index );
 
 
       if ( fd_index >= cff->num_subfonts )
         fd_index = (FT_Byte)( cff->num_subfonts - 1 );
 
-      top_upm = cff->top_font.font_dict.units_per_em;
-      sub_upm = cff->subfonts[fd_index]->font_dict.units_per_em;
+      top_upm = (FT_Long)cff->top_font.font_dict.units_per_em;
+      sub_upm = (FT_Long)cff->subfonts[fd_index]->font_dict.units_per_em;
 
 
       font_matrix = cff->subfonts[fd_index]->font_dict.font_matrix;
@@ -2884,7 +2882,7 @@
         {
           glyph->root.control_data = csindex->bytes +
                                      csindex->offsets[glyph_index] - 1;
-          glyph->root.control_len  = charstring_len;
+          glyph->root.control_len  = (FT_Long)charstring_len;
         }
       }
 

@@ -465,7 +465,7 @@ FT_BEGIN_HEADER
   typedef void
   (*T2_Hints_StemsFunc)( T2_Hints   hints,
                          FT_UInt    dimension,
-                         FT_UInt    count,
+                         FT_Int     count,
                          FT_Fixed*  coordinates );
 
 

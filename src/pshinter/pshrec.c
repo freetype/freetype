@@ -835,14 +835,14 @@
   /* add one or more stems to the current hints table */
   static void
   ps_hints_stem( PS_Hints  hints,
-                 FT_Int    dimension,
-                 FT_UInt   count,
+                 FT_UInt   dimension,
+                 FT_Int    count,
                  FT_Long*  stems )
   {
     if ( !hints->error )
     {
       /* limit "dimension" to 0..1 */
-      if ( dimension < 0 || dimension > 1 )
+      if ( dimension > 1 )
       {
         FT_TRACE0(( "ps_hints_stem: invalid dimension (%d) used\n",
                     dimension ));
@@ -891,7 +891,7 @@
   /* add one Type1 counter stem to the current hints table */
   static void
   ps_hints_t1stem3( PS_Hints   hints,
-                    FT_Int     dimension,
+                    FT_UInt    dimension,
                     FT_Fixed*  stems )
   {
     FT_Error  error = FT_Err_Ok;
@@ -906,7 +906,7 @@
 
 
       /* limit "dimension" to 0..1 */
-      if ( dimension < 0 || dimension > 1 )
+      if ( dimension > 1 )
       {
         FT_TRACE0(( "ps_hints_t1stem3: invalid dimension (%d) used\n",
                     dimension ));
@@ -1128,7 +1128,7 @@
 
   static void
   t1_hints_stem( T1_Hints   hints,
-                 FT_Int     dimension,
+                 FT_UInt    dimension,
                  FT_Fixed*  coords )
   {
     FT_Pos  stems[2];
@@ -1172,12 +1172,12 @@
 
   static void
   t2_hints_stems( T2_Hints   hints,
-                  FT_Int     dimension,
+                  FT_UInt    dimension,
                   FT_Int     count,
                   FT_Fixed*  coords )
   {
-    FT_Pos  stems[32], y, n;
-    FT_Int  total = count;
+    FT_Pos  stems[32], y;
+    FT_Int  total = count, n;
 
 
     y = 0;

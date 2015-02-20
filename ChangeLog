@@ -1,3 +1,11 @@
+2015-02-20  Werner Lemberg  <wl@gnu.org>
+
+	[cff] Signedness fixes for basic infrastructure and old engine.
+
+	* include/internal/pshints.h, src/cff/cffdrivr.c,
+	src/cff/cffgload.c, src/cff/cffgload.h, src/cff/cffload.c,
+	src/cff/cffobjs.c, src/cff/cffparse.c, src/pshinter/pshrec.c: Apply.
+
 2015-02-19  Werner Lemberg  <wl@gnu.org>
 
 	* src/truetype/ttgxvar.c (TT_Get_MM_Var): Ignore `countSizePairs'.
