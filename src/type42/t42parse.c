@@ -184,7 +184,7 @@
     if ( error || FT_STREAM_SEEK( 0 ) )
       goto Exit;
 
-    size = stream->size;
+    size = (FT_Long)stream->size;
 
     /* now, try to load `size' bytes of the `base' dictionary we */
     /* found previously                                          */
@@ -524,9 +524,9 @@
     FT_Byte*    limit  = parser->root.limit;
     FT_Error    error;
     FT_Int      num_tables = 0;
-    FT_ULong    count;
+    FT_Long     count;
 
-    FT_Long     n, string_size, old_string_size, real_size;
+    FT_ULong    n, string_size, old_string_size, real_size;
     FT_Byte*    string_buf = NULL;
     FT_Bool     allocated  = 0;
 
@@ -579,7 +579,7 @@
           goto Exit;
 
         /* don't include delimiters */
-        string_size = (FT_Long)( ( parser->root.cursor - cur - 2 + 1 ) / 2 );
+        string_size = (FT_ULong)( ( parser->root.cursor - cur - 2 + 1 ) / 2 );
         if ( !string_size )
         {
           FT_ERROR(( "t42_parse_sfnts: invalid data in sfnts array\n" ));
@@ -594,11 +594,14 @@
         parser->root.cursor = cur;
         (void)T1_ToBytes( parser, string_buf, string_size, &real_size, 1 );
         old_string_size = string_size;
-        string_size = real_size;
+        string_size     = real_size;
       }
 
       else if ( ft_isdigit( *cur ) )
       {
+        FT_Long  tmp;
+
+
         if ( allocated )
         {
           FT_ERROR(( "t42_parse_sfnts: "
@@ -607,13 +610,15 @@
           goto Fail;
         }
 
-        string_size = T1_ToInt( parser );
-        if ( string_size < 0 )
+        tmp = T1_ToInt( parser );
+        if ( tmp < 0 )
         {
           FT_ERROR(( "t42_parse_sfnts: invalid string size\n" ));
           error = FT_THROW( Invalid_File_Format );
           goto Fail;
         }
+        else
+          string_size = (FT_ULong)tmp;
 
         T1_Skip_PS_Token( parser );             /* `RD' */
         if ( parser->root.error )
@@ -621,7 +626,7 @@
 
         string_buf = parser->root.cursor + 1;   /* one space after `RD' */
 
-        if ( limit - parser->root.cursor < string_size )
+        if ( (FT_ULong)( limit - parser->root.cursor ) < string_size )
         {
           FT_ERROR(( "t42_parse_sfnts: too much binary data\n" ));
           error = FT_THROW( Invalid_File_Format );
@@ -667,7 +672,7 @@
             status         = BEFORE_TABLE_DIR;
             face->ttf_size = 12 + 16 * num_tables;
 
-            if ( (FT_ULong)( limit - parser->root.cursor ) < face->ttf_size )
+            if ( (FT_Long)( limit - parser->root.cursor ) < face->ttf_size )
             {
               FT_ERROR(( "t42_parse_sfnts: invalid data in sfnts array\n" ));
               error = FT_THROW( Invalid_File_Format );
@@ -700,7 +705,7 @@
               len = FT_PEEK_ULONG( p );
 
               /* Pad to a 4-byte boundary length */
-              face->ttf_size += ( len + 3 ) & ~3;
+              face->ttf_size += (FT_Long)( ( len + 3 ) & ~3U );
             }
 
             status = OTHER_TABLES;
@@ -754,8 +759,8 @@
 
     FT_Byte*       cur;
     FT_Byte*       limit        = parser->root.limit;
-    FT_UInt        n;
-    FT_UInt        notdef_index = 0;
+    FT_Int         n;
+    FT_Int         notdef_index = 0;
     FT_Byte        notdef_found = 0;
 
 
@@ -770,15 +775,21 @@
 
     if ( ft_isdigit( *parser->root.cursor ) )
     {
-      loader->num_glyphs = (FT_UInt)T1_ToInt( parser );
+      loader->num_glyphs = T1_ToInt( parser );
       if ( parser->root.error )
         return;
+      if ( loader->num_glyphs < 0 )
+      {
+        FT_ERROR(( "t42_parse_encoding: invalid number of glyphs\n" ));
+        error = FT_THROW( Invalid_File_Format );
+        goto Fail;
+      }
     }
     else if ( *parser->root.cursor == '<' )
     {
       /* We have `<< ... >>'.  Count the number of `/' in the dictionary */
       /* to get its size.                                                */
-      FT_UInt  count = 0;
+      FT_Int  count = 0;
 
 
       T1_Skip_PS_Token( parser );

@@ -40,7 +40,7 @@ FT_BEGIN_HEADER
     const void*     afm_data;
 #endif
     FT_Byte*        ttf_data;
-    FT_ULong        ttf_size;
+    FT_Long         ttf_size;
     FT_Face         ttf_face;
     FT_CharMapRec   charmaprecs[2];
     FT_CharMap      charmaps[2];

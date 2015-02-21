@@ -1,5 +1,12 @@
 2015-02-21  Werner Lemberg  <wl@gnu.org>
 
+	[type42] Signedness fixes.
+
+	* src/type42/t42parse.c, src/type42/t42parse.h,
+	src/type42/t42types.h: Apply.
+
+2015-02-21  Werner Lemberg  <wl@gnu.org>
+
 	[pfr] Signedness fixes.
 
 	* src/pfr/pfrdrivr.c, src/pfr/pfrgload.c, src/pfr/pfrload.c,
