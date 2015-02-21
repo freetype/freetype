@@ -1,5 +1,9 @@
 2015-02-21  Werner Lemberg  <wl@gnu.org>
 
+	* src/winfonts/winfnt.c: Signedness fixes.
+
+2015-02-21  Werner Lemberg  <wl@gnu.org>
+
 	[type42] Signedness fixes.
 
 	* src/type42/t42parse.c, src/type42/t42parse.h,
