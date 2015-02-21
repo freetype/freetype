@@ -770,7 +770,8 @@
           switch ( op1 )
           {
           case cf2_cmdCALLGSUBR:
-            FT_TRACE4(( "(%d)\n", subrIndex + decoder->globals_bias ));
+            FT_TRACE4(( "(%d)\n",
+                        subrIndex + (CF2_UInt)decoder->globals_bias ));
 
             if ( cf2_initGlobalRegionBuffer( decoder,
                                              subrIndex,
@@ -783,7 +784,8 @@
 
           default:
             /* cf2_cmdCALLSUBR */
-            FT_TRACE4(( "(%d)\n", subrIndex + decoder->locals_bias ));
+            FT_TRACE4(( "(%d)\n",
+                        subrIndex + (CF2_UInt)decoder->locals_bias ));
 
             if ( cf2_initLocalRegionBuffer( decoder,
                                             subrIndex,

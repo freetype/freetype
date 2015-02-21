@@ -341,7 +341,7 @@
   cff_compute_bias( FT_Int   in_charstring_type,
                     FT_UInt  num_subrs )
   {
-    FT_UInt  result;
+    FT_Int  result;
 
 
     if ( in_charstring_type == 1 )

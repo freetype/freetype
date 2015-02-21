@@ -551,7 +551,7 @@
 
     FT_ZERO( buf );
 
-    idx += decoder->globals_bias;
+    idx += (CF2_UInt)decoder->globals_bias;
     if ( idx >= decoder->num_globals )
       return TRUE;     /* error */
 
@@ -626,7 +626,7 @@
 
     FT_ZERO( buf );
 
-    idx += decoder->locals_bias;
+    idx += (CF2_UInt)decoder->locals_bias;
     if ( idx >= decoder->num_locals )
       return TRUE;     /* error */
 

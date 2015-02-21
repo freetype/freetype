@@ -1,3 +1,9 @@
+2015-02-21  Werner Lemberg  <wl@gnu.org>
+
+	[cff] Minor signedness fixes related to last commit.
+
+	* src/cff/cf2ft.c, src/cff/cf2intrp.c, src/cff/cffgload.c: Apply.
+
 2015-02-20  Werner Lemberg  <wl@gnu.org>
 
 	[cff] Thinkos in bias handling.
