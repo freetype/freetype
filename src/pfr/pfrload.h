@@ -85,7 +85,7 @@ FT_BEGIN_HEADER
   FT_LOCAL( FT_Error )
   pfr_log_font_count( FT_Stream   stream,
                       FT_UInt32   log_section_offset,
-                      FT_UInt    *acount );
+                      FT_Long    *acount );
 
   /* load a pfr logical font entry */
   FT_LOCAL( FT_Error )

@@ -1,5 +1,13 @@
 2015-02-21  Werner Lemberg  <wl@gnu.org>
 
+	[pfr] Signedness fixes.
+
+	* src/pfr/pfrdrivr.c, src/pfr/pfrgload.c, src/pfr/pfrload.c,
+	src/pfr/pfrload.h, src/pfr/pfrobjs.c, src/pfr/pfrsbit.c,
+	src/pfr/pfrtypes.h: Apply.
+
+2015-02-21  Werner Lemberg  <wl@gnu.org>
+
 	[cff] Minor signedness fixes related to last commit.
 
 	* src/cff/cf2ft.c, src/cff/cf2intrp.c, src/cff/cffgload.c: Apply.

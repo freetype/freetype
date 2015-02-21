@@ -43,12 +43,14 @@
     if ( phys->outline_resolution != phys->metrics_resolution )
     {
       if ( avector->x != 0 )
-        avector->x = FT_MulDiv( avector->x, phys->outline_resolution,
-                                            phys->metrics_resolution );
+        avector->x = FT_MulDiv( avector->x,
+                                (FT_Long)phys->outline_resolution,
+                                (FT_Long)phys->metrics_resolution );
 
       if ( avector->y != 0 )
-        avector->y = FT_MulDiv( avector->x, phys->outline_resolution,
-                                            phys->metrics_resolution );
+        avector->y = FT_MulDiv( avector->x,
+                                (FT_Long)phys->outline_resolution,
+                                (FT_Long)phys->metrics_resolution );
     }
 
     return FT_Err_Ok;
@@ -118,10 +120,10 @@
     if ( size )
     {
       x_scale = FT_DivFix( size->metrics.x_ppem << 6,
-                           phys->metrics_resolution );
+                           (FT_Long)phys->metrics_resolution );
 
       y_scale = FT_DivFix( size->metrics.y_ppem << 6,
-                           phys->metrics_resolution );
+                           (FT_Long)phys->metrics_resolution );
     }
 
     if ( ametrics_x_scale )
