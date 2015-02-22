@@ -108,8 +108,8 @@
         p_next = p_limit;
 
       /* only use horizontal kerning tables */
-      if ( ( coverage & ~8 ) != 0x0001 ||
-           p + 8 > p_limit             )
+      if ( ( coverage & ~8U ) != 0x0001 ||
+           p + 8 > p_limit              )
         goto NextTable;
 
       num_pairs = FT_NEXT_USHORT( p );

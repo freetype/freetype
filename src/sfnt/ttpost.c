@@ -52,7 +52,7 @@
 
 #include FT_SERVICE_POSTSCRIPT_CMAPS_H
 
-#define MAC_NAME( x )  ( (FT_String*)psnames->macintosh_name( x ) )
+#define MAC_NAME( x )  (FT_String*)psnames->macintosh_name( (FT_UInt)(x) )
 
 
 #else /* FT_CONFIG_OPTION_POSTSCRIPT_NAMES */
@@ -62,7 +62,7 @@
    /* table of Mac names.  Thus, it is possible to build a version of */
    /* FreeType without the Type 1 driver & PSNames module.            */
 
-#define MAC_NAME( x )  ( (FT_String*)tt_post_default_names[x] )
+#define MAC_NAME( x )  (FT_String*)tt_post_default_names[x]
 
   /* the 258 default Mac PS glyph names; see file `tools/glnames.py' */
 
@@ -155,7 +155,7 @@
   static FT_Error
   load_format_20( TT_Face    face,
                   FT_Stream  stream,
-                  FT_Long    post_limit )
+                  FT_ULong   post_limit )
   {
     FT_Memory   memory = stream->memory;
     FT_Error    error;
@@ -243,8 +243,8 @@
             goto Fail1;
         }
 
-        if ( (FT_Int)len > post_limit                   ||
-             FT_STREAM_POS() > post_limit - (FT_Int)len )
+        if ( len > post_limit                   ||
+             FT_STREAM_POS() > post_limit - len )
         {
           FT_ERROR(( "load_format_20:"
                      " exceeding string length (%d),"
@@ -307,7 +307,7 @@
   static FT_Error
   load_format_25( TT_Face    face,
                   FT_Stream  stream,
-                  FT_Long    post_limit )
+                  FT_ULong   post_limit )
   {
     FT_Memory  memory = stream->memory;
     FT_Error   error;
@@ -377,7 +377,7 @@
     FT_Error   error;
     FT_Fixed   format;
     FT_ULong   post_len;
-    FT_Long    post_limit;
+    FT_ULong   post_limit;
 
 
     /* get a stream for the face's resource */
@@ -547,10 +547,7 @@
       }
 
       if ( idx < (FT_UInt)table->num_glyphs )    /* paranoid checking */
-      {
-        idx    += table->offsets[idx];
-        *PSname = MAC_NAME( idx );
-      }
+        *PSname = MAC_NAME( (FT_Int)idx + table->offsets[idx] );
     }
 
     /* nothing to do for format == 0x00030000L */

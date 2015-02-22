@@ -421,7 +421,7 @@
 
 
           /* make metrics table length a multiple of 4 */
-          entry->Length = ( stream->size - entry->Offset ) & ~3;
+          entry->Length = ( stream->size - entry->Offset ) & ~3U;
 
           FT_TRACE2(( "  %c%c%c%c  %08lx  %08lx  %08lx"
                       " (sanitized; original length %08lx)\n",

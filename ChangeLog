@@ -1,5 +1,15 @@
 2015-02-22  Werner Lemberg  <wl@gnu.org>
 
+	[sfnt] Signedness fixes.
+
+	* src/sfnt/pngshim.c, src/sfnt/sfobjs.c, src/sfnt/ttcmap.c,
+	src/sfnt/ttkern.c, src/sfnt/ttload.c, src/sfnt/ttpost.c,
+	src/sfnt/ttsbit.c: Apply.
+	* src/sfnt/sfdriver.c: Apply.
+	(sfnt_get_ps_name): Simplify.
+
+2015-02-22  Werner Lemberg  <wl@gnu.org>
+
 	[bdf] Signedness fixes.
 
 	* src/bdf/bdf.h, src/bdf/bdfdrivr.c, src/bdf/bdfdrivr.h,
