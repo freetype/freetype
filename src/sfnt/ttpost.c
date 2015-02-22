@@ -246,11 +246,14 @@
         if ( len > post_limit                   ||
              FT_STREAM_POS() > post_limit - len )
         {
+          FT_Int  d = post_limit - FT_STREAM_POS();
+
+
           FT_ERROR(( "load_format_20:"
                      " exceeding string length (%d),"
                      " truncating at end of post table (%d byte left)\n",
-                     len, post_limit - FT_STREAM_POS() ));
-          len = FT_MAX( 0, post_limit - FT_STREAM_POS() );
+                     len, d ));
+          len = (FT_UInt)FT_MAX( 0, d );
         }
 
         if ( FT_NEW_ARRAY( name_strings[n], len + 1 ) ||

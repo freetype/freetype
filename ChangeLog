@@ -1,5 +1,11 @@
 2015-02-22  Werner Lemberg  <wl@gnu.org>
 
+	* src/sfnt/ttpost.c (load_format_20): Fix error tracing message.
+
+	Bug introduced 6 commits earlier.
+
+2015-02-22  Werner Lemberg  <wl@gnu.org>
+
 	[pshinter] Fix thinko.
 
 	* src/pshinter/pshalgo.c (psh_glyph_find_strong_points): Correctly
