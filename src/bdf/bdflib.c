@@ -243,7 +243,7 @@
 
     /* Mocklisp hash function. */
     while ( *kp )
-      res = ( res << 5 ) - res + *kp++;
+      res = ( res << 5 ) - res + (unsigned long)*kp++;
 
     ndp = bp + ( res % ht->size );
     while ( *ndp )
@@ -264,9 +264,9 @@
   hash_rehash( hashtable*  ht,
                FT_Memory   memory )
   {
-    hashnode*  obp = ht->table, *bp, *nbp;
-    int        i, sz = ht->size;
-    FT_Error   error = FT_Err_Ok;
+    hashnode*     obp = ht->table, *bp, *nbp;
+    unsigned int  i, sz = ht->size;
+    FT_Error      error = FT_Err_Ok;
 
 
     ht->size <<= 1;
@@ -294,8 +294,8 @@
   hash_init( hashtable*  ht,
              FT_Memory   memory )
   {
-    int       sz    = INITIAL_HT_SIZE;
-    FT_Error  error = FT_Err_Ok;
+    unsigned int  sz    = INITIAL_HT_SIZE;
+    FT_Error      error = FT_Err_Ok;
 
 
     ht->size  = sz;
@@ -316,8 +316,8 @@
   {
     if ( ht != 0 )
     {
-      int        i, sz = ht->size;
-      hashnode*  bp = ht->table;
+      unsigned int  i, sz = ht->size;
+      hashnode*     bp = ht->table;
 
 
       for ( i = 0; i < sz; i++, bp++ )
@@ -570,10 +570,11 @@
                    char*          line,
                    unsigned long  linelen )
   {
-    int       mult, final_empty;
-    char      *sp, *ep, *end;
-    char      seps[32];
-    FT_Error  error = FT_Err_Ok;
+    unsigned long  final_empty;
+    int            mult;
+    char           *sp, *ep, *end;
+    char           seps[32];
+    FT_Error       error = FT_Err_Ok;
 
 
     /* Initialize the list. */
@@ -715,7 +716,7 @@
       {
         bytes  = (ptrdiff_t)FT_Stream_TryRead(
                    stream, (FT_Byte*)buf + cursor,
-                   (FT_ULong)( buf_size - cursor ) );
+                   buf_size - (unsigned long)cursor );
         avail  = cursor + bytes;
         cursor = 0;
         refill = 0;
@@ -760,7 +761,7 @@
           if ( FT_RENEW_ARRAY( buf, buf_size, new_size ) )
             goto Exit;
 
-          cursor   = buf_size;
+          cursor   = (ptrdiff_t)buf_size;
           buf_size = new_size;
         }
         else
@@ -858,9 +859,9 @@
 
   /* Routine to convert an ASCII string into an unsigned long integer. */
   static unsigned long
-  _bdf_atoul( char*   s,
-              char**  end,
-              int     base )
+  _bdf_atoul( char*         s,
+              char**        end,
+              unsigned int  base )
   {
     unsigned long         v;
     const unsigned char*  dmap;
@@ -903,7 +904,7 @@
   }
 
 
-  /* Routine to convert an ASCII string into an signed long integer. */
+  /* Routine to convert an ASCII string into a signed long integer. */
   static long
   _bdf_atol( char*   s,
              char**  end,
@@ -1162,20 +1163,20 @@
 
   /* Parse flags. */
 
-#define _BDF_START      0x0001
-#define _BDF_FONT_NAME  0x0002
-#define _BDF_SIZE       0x0004
-#define _BDF_FONT_BBX   0x0008
-#define _BDF_PROPS      0x0010
-#define _BDF_GLYPHS     0x0020
-#define _BDF_GLYPH      0x0040
-#define _BDF_ENCODING   0x0080
-#define _BDF_SWIDTH     0x0100
-#define _BDF_DWIDTH     0x0200
-#define _BDF_BBX        0x0400
-#define _BDF_BITMAP     0x0800
+#define _BDF_START      0x0001U
+#define _BDF_FONT_NAME  0x0002U
+#define _BDF_SIZE       0x0004U
+#define _BDF_FONT_BBX   0x0008U
+#define _BDF_PROPS      0x0010U
+#define _BDF_GLYPHS     0x0020U
+#define _BDF_GLYPH      0x0040U
+#define _BDF_ENCODING   0x0080U
+#define _BDF_SWIDTH     0x0100U
+#define _BDF_DWIDTH     0x0200U
+#define _BDF_BBX        0x0400U
+#define _BDF_BITMAP     0x0800U
 
-#define _BDF_SWIDTH_ADJ  0x1000
+#define _BDF_SWIDTH_ADJ  0x1000U
 
 #define _BDF_GLYPH_BITS ( _BDF_GLYPH    | \
                           _BDF_ENCODING | \
@@ -1771,7 +1772,7 @@
 
           glyph           = font->unencoded + font->unencoded_used;
           glyph->name     = p->glyph_name;
-          glyph->encoding = font->unencoded_used++;
+          glyph->encoding = (long)font->unencoded_used++;
         }
         else
           /* Free up the glyph name if the unencoded shouldn't be */
@@ -2360,7 +2361,8 @@
           shift >>= 1;
         }
 
-        shift = (short)( ( bitcount > 3 ) ? 8 : ( 1 << bitcount ) );
+        shift = (unsigned short)( ( bitcount > 3 ) ? 8
+                                                   : ( 1U << bitcount ) );
 
         if ( p->font->bpp > shift || p->font->bpp != shift )
         {

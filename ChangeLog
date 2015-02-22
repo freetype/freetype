@@ -1,5 +1,12 @@
 2015-02-22  Werner Lemberg  <wl@gnu.org>
 
+	[bdf] Signedness fixes.
+
+	* src/bdf/bdf.h, src/bdf/bdfdrivr.c, src/bdf/bdfdrivr.h,
+	src/bdf/bdflib.c: Apply.
+
+2015-02-22  Werner Lemberg  <wl@gnu.org>
+
 	* src/bdf/bdflib.c (_bdf_atous): New function.
 	(_bdf_parse_glyphs, _bdf_parse_start): Use it.
 
