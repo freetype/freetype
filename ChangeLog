@@ -1,3 +1,11 @@
+2015-02-22  Werner Lemberg  <wl@gnu.org>
+
+	[pcf] Signedness fixes.
+
+	* src/pcf/pcf.h, src/pcf/pcfdrivr.c: Apply.
+	* src/pcf/pcfread.c: Apply.
+	(pcf_get_encodings): Ignore invalid negative encoding offsets.
+
 2015-02-21  Werner Lemberg  <wl@gnu.org>
 
 	* src/winfonts/winfnt.c: Signedness fixes.
