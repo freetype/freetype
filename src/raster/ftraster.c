@@ -310,7 +310,7 @@
 
   typedef union  Alignment_
   {
-    long    l;
+    Long    l;
     void*   p;
     void  (*f)(void);
 
@@ -354,8 +354,8 @@
                              /* Bit 3: profile orientation (up/down)     */
                              /* Bit 4: is top profile?                   */
                              /* Bit 5: is bottom profile?                */
-    long        height;      /* profile's height in scanlines            */
-    long        start;       /* profile's starting scanline              */
+    Long        height;      /* profile's height in scanlines            */
+    Long        start;       /* profile's starting scanline              */
 
     Int         countL;      /* number of lines to step before this      */
                              /* profile becomes drawable                 */
@@ -379,7 +379,7 @@
 
 
 #define AlignProfileSize \
-  ( ( sizeof ( TProfile ) + sizeof ( Alignment ) - 1 ) / sizeof ( long ) )
+  ( ( sizeof ( TProfile ) + sizeof ( Alignment ) - 1 ) / sizeof ( Long ) )
 
 
 #undef RAS_ARG
@@ -1712,7 +1712,7 @@
   static Bool
   Decompose_Curve( RAS_ARGS UShort  first,
                             UShort  last,
-                            int     flipped )
+                            Int     flipped )
   {
     FT_Vector   v_last;
     FT_Vector   v_control;
@@ -1723,7 +1723,7 @@
     FT_Vector*  limit;
     char*       tags;
 
-    unsigned    tag;       /* current point's state           */
+    UInt        tag;       /* current point's state           */
 
 
     points = ras.outline.points;
@@ -1934,10 +1934,10 @@
   /*    rendering.                                                         */
   /*                                                                       */
   static Bool
-  Convert_Glyph( RAS_ARGS int  flipped )
+  Convert_Glyph( RAS_ARGS Int  flipped )
   {
-    int       i;
-    unsigned  start;
+    Int   i;
+    UInt  start;
 
 
     ras.fProfile = NULL;
@@ -2200,7 +2200,7 @@
 
     if ( e2 >= 0 && e1 < ras.bWidth )
     {
-      int   c1, c2;
+      Int   c1, c2;
       Byte  f1, f2;
 
 
@@ -2948,9 +2948,9 @@
 
     ras.band_top            = 0;
     ras.band_stack[0].y_min = 0;
-    ras.band_stack[0].y_max = (short)( ras.target.rows - 1 );
+    ras.band_stack[0].y_max = (Short)( ras.target.rows - 1 );
 
-    ras.bWidth  = (unsigned short)ras.target.width;
+    ras.bWidth  = (UShort)ras.target.width;
     ras.bTarget = (Byte*)ras.target.buffer;
 
     if ( ( error = Render_Single_Pass( RAS_VARS 0 ) ) != 0 )
@@ -2966,7 +2966,7 @@
 
       ras.band_top            = 0;
       ras.band_stack[0].y_min = 0;
-      ras.band_stack[0].y_max = (short)( ras.target.width - 1 );
+      ras.band_stack[0].y_max = (Short)( ras.target.width - 1 );
 
       if ( ( error = Render_Single_Pass( RAS_VARS 1 ) ) != 0 )
         return error;
@@ -3054,7 +3054,7 @@
   static void
   ft_black_reset( black_PRaster  raster,
                   char*          pool_base,
-                  long           pool_size )
+                  Long           pool_size )
   {
     FT_UNUSED( raster );
     FT_UNUSED( pool_base );
@@ -3064,7 +3064,7 @@
 
   static int
   ft_black_set_mode( black_PRaster  raster,
-                     unsigned long  mode,
+                     ULong          mode,
                      const char*    palette )
   {
     FT_UNUSED( raster );

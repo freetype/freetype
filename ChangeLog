@@ -1,5 +1,9 @@
 2015-02-22  Werner Lemberg  <wl@gnu.org>
 
+	* src/raster/ftraster.c: Use the file's typedefs everywhere.
+
+2015-02-22  Werner Lemberg  <wl@gnu.org>
+
 	* src/sfnt/ttpost.c (load_format_20): Fix error tracing message.
 
 	Bug introduced 6 commits earlier.
