@@ -61,12 +61,8 @@ FT_BEGIN_HEADER
 
 
   /* hint flags */
-  typedef enum  PS_Hint_Flags_
-  {
-    PS_HINT_FLAG_GHOST  = 1,
-    PS_HINT_FLAG_BOTTOM = 2
-
-  } PS_Hint_Flags;
+#define PS_HINT_FLAG_GHOST   1U
+#define PS_HINT_FLAG_BOTTOM  2U
 
 
   /* hint descriptor */

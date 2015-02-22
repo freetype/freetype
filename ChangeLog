@@ -1,5 +1,13 @@
 2015-02-22  Werner Lemberg  <wl@gnu.org>
 
+	[pshinter] Use macros for (unsigned) flags, not enumerations.
+
+	* src/pshinter/pshalgo.h (PSH_Hint_Flags): Replace with macros.
+	Updated.
+	* src/pshinter/pshrec.h (PS_Hint_Flags): Replace with macros.
+
+2015-02-22  Werner Lemberg  <wl@gnu.org>
+
 	* src/pshinter/pshrec.c: Simplify.
 	(ps_hints_open, ps_hints_stem): Remove switch statement.
 
