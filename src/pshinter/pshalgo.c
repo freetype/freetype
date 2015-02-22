@@ -1274,8 +1274,8 @@
          FT_NEW_ARRAY( glyph->contours, outline->n_contours ) )
       goto Exit;
 
-    glyph->num_points   = outline->n_points;
-    glyph->num_contours = outline->n_contours;
+    glyph->num_points   = (FT_UInt)outline->n_points;
+    glyph->num_contours = (FT_UInt)outline->n_contours;
 
     {
       FT_UInt      first = 0, next, n;
@@ -1285,15 +1285,15 @@
 
       for ( n = 0; n < glyph->num_contours; n++ )
       {
-        FT_Int     count;
+        FT_UInt    count;
         PSH_Point  point;
 
 
-        next  = outline->contours[n] + 1;
+        next  = (FT_UInt)outline->contours[n] + 1;
         count = next - first;
 
         contour->start = points + first;
-        contour->count = (FT_UInt)count;
+        contour->count = count;
 
         if ( count > 0 )
         {
@@ -1697,12 +1697,10 @@
       for ( ; num_masks > 1; num_masks--, mask++ )
       {
         FT_UInt  next;
-        FT_Int   count;
+        FT_UInt  count;
 
 
-        next  = mask->end_point > glyph->num_points
-                  ? glyph->num_points
-                  : mask->end_point;
+        next  = FT_MIN( mask->end_point, glyph->num_points );
         count = next - first;
         if ( count > 0 )
         {

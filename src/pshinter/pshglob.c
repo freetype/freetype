@@ -240,7 +240,7 @@
                        FT_Int     family )
   {
     PSH_Blue_Table  top_table, bot_table;
-    FT_Int          count_top, count_bot;
+    FT_UInt         count_top, count_bot;
 
 
     if ( family )

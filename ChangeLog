@@ -1,5 +1,12 @@
 2015-02-22  Werner Lemberg  <wl@gnu.org>
 
+	[pshinter] Signedness fixes.
+
+	* src/pshinter/pshalgo.c, src/pshinter/pshglob.c,
+	src/pshinter/pshrec.c: Apply.
+
+2015-02-22  Werner Lemberg  <wl@gnu.org>
+
 	[pshinter] Use macros for (unsigned) flags, not enumerations.
 
 	* src/pshinter/pshalgo.h (PSH_Hint_Flags): Replace with macros.

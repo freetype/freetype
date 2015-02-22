@@ -167,12 +167,12 @@
   /* clear a given bit */
   static void
   ps_mask_clear_bit( PS_Mask  mask,
-                     FT_Int   idx )
+                     FT_UInt  idx )
   {
     FT_Byte*  p;
 
 
-    if ( (FT_UInt)idx >= mask->num_bits )
+    if ( idx >= mask->num_bits )
       return;
 
     p    = mask->bytes + ( idx >> 3 );
@@ -183,17 +183,14 @@
   /* set a given bit, possibly grow the mask */
   static FT_Error
   ps_mask_set_bit( PS_Mask    mask,
-                   FT_Int     idx,
+                   FT_UInt    idx,
                    FT_Memory  memory )
   {
     FT_Error  error = FT_Err_Ok;
     FT_Byte*  p;
 
 
-    if ( idx < 0 )
-      goto Exit;
-
-    if ( (FT_UInt)idx >= mask->num_bits )
+    if ( idx >= mask->num_bits )
     {
       error = ps_mask_ensure( mask, idx + 1, memory );
       if ( error )
@@ -372,8 +369,8 @@
   /* test whether two masks in a table intersect */
   static FT_Int
   ps_mask_table_test_intersect( PS_Mask_Table  table,
-                                FT_Int         index1,
-                                FT_Int         index2 )
+                                FT_UInt        index1,
+                                FT_UInt        index2 )
   {
     PS_Mask   mask1  = table->masks + index1;
     PS_Mask   mask2  = table->masks + index2;
@@ -404,23 +401,25 @@
   /* merge two masks, used by ps_mask_table_merge_all */
   static FT_Error
   ps_mask_table_merge( PS_Mask_Table  table,
-                       FT_Int         index1,
-                       FT_Int         index2,
+                       FT_UInt        index1,
+                       FT_UInt        index2,
                        FT_Memory      memory )
   {
-    FT_UInt   temp;
     FT_Error  error = FT_Err_Ok;
 
 
     /* swap index1 and index2 so that index1 < index2 */
     if ( index1 > index2 )
     {
+      FT_UInt  temp;
+
+
       temp   = index1;
       index1 = index2;
       index2 = temp;
     }
 
-    if ( index1 < index2 && index1 >= 0 && index2 < (FT_Int)table->num_masks )
+    if ( index1 < index2 && index2 < table->num_masks )
     {
       /* we need to merge the bitsets of index1 and index2 with a */
       /* simple union                                             */
@@ -453,7 +452,7 @@
         /* merge (unite) the bitsets */
         read  = mask2->bytes;
         write = mask1->bytes;
-        pos   = (FT_UInt)( ( count2 + 7 ) >> 3 );
+        pos   = ( count2 + 7 ) >> 3;
 
         for ( ; pos > 0; pos-- )
         {
@@ -468,14 +467,17 @@
       mask2->num_bits  = 0;
       mask2->end_point = 0;
 
-      delta = table->num_masks - 1 - index2; /* number of masks to move */
+      /* number of masks to move */
+      delta = (FT_Int)( table->num_masks - 1 - index2 );
       if ( delta > 0 )
       {
         /* move to end of table for reuse */
         PS_MaskRec  dummy = *mask2;
 
 
-        ft_memmove( mask2, mask2 + 1, delta * sizeof ( PS_MaskRec ) );
+        ft_memmove( mask2,
+                    mask2 + 1,
+                    (FT_UInt)delta * sizeof ( PS_MaskRec ) );
 
         mask2[delta] = dummy;
       }
@@ -502,13 +504,19 @@
     FT_Error  error = FT_Err_Ok;
 
 
-    for ( index1 = table->num_masks - 1; index1 > 0; index1-- )
+    /* both loops go down to 0, thus FT_Int for index1 and index2 */
+    for ( index1 = (FT_Int)table->num_masks - 1; index1 > 0; index1-- )
     {
       for ( index2 = index1 - 1; index2 >= 0; index2-- )
       {
-        if ( ps_mask_table_test_intersect( table, index1, index2 ) )
+        if ( ps_mask_table_test_intersect( table,
+                                           (FT_UInt)index1,
+                                           (FT_UInt)index2 ) )
         {
-          error = ps_mask_table_merge( table, index2, index1, memory );
+          error = ps_mask_table_merge( table,
+                                       (FT_UInt)index2,
+                                       (FT_UInt)index1,
+                                       memory );
           if ( error )
             goto Exit;
 
@@ -670,8 +678,8 @@
     {
       PS_Mask  mask;
       FT_UInt  idx;
-      FT_UInt  max   = dim->hints.num_hints;
-      PS_Hint  hint  = dim->hints.hints;
+      FT_UInt  max  = dim->hints.num_hints;
+      PS_Hint  hint = dim->hints.hints;
 
 
       for ( idx = 0; idx < max; idx++, hint++ )
@@ -742,17 +750,26 @@
     }
 
     /* now, set the bits for our hints in the counter mask */
-    error = ps_mask_set_bit( counter, hint1, memory );
-    if ( error )
-      goto Exit;
+    if ( hint1 >= 0 )
+    {
+      error = ps_mask_set_bit( counter, (FT_UInt)hint1, memory );
+      if ( error )
+        goto Exit;
+    }
 
-    error = ps_mask_set_bit( counter, hint2, memory );
-    if ( error )
-      goto Exit;
+    if ( hint2 >= 0 )
+    {
+      error = ps_mask_set_bit( counter, (FT_UInt)hint2, memory );
+      if ( error )
+        goto Exit;
+    }
 
-    error = ps_mask_set_bit( counter, hint3, memory );
-    if ( error )
-      goto Exit;
+    if ( hint3 >= 0 )
+    {
+      error = ps_mask_set_bit( counter, (FT_UInt)hint3, memory );
+      if ( error )
+        goto Exit;
+    }
 
   Exit:
     return error;
