@@ -958,7 +958,54 @@
   }
 
 
-  /* Routine to convert an ASCII string into an signed short integer. */
+  /* Routine to convert an ASCII string into an unsigned short integer. */
+  static unsigned short
+  _bdf_atous( char*         s,
+              char**        end,
+              unsigned int  base )
+  {
+    unsigned short        v;
+    const unsigned char*  dmap;
+
+
+    if ( s == 0 || *s == 0 )
+      return 0;
+
+    /* Make sure the radix is something recognizable.  Default to 10. */
+    switch ( base )
+    {
+    case 8:
+      dmap = odigits;
+      break;
+    case 16:
+      dmap = hdigits;
+      break;
+    default:
+      base = 10;
+      dmap = ddigits;
+      break;
+    }
+
+    /* Check for the special hex prefix. */
+    if ( *s == '0'                                  &&
+         ( *( s + 1 ) == 'x' || *( s + 1 ) == 'X' ) )
+    {
+      base = 16;
+      dmap = hdigits;
+      s   += 2;
+    }
+
+    for ( v = 0; sbitset( dmap, *s ); s++ )
+      v = (unsigned short)( v * base + a2i[(int)*s] );
+
+    if ( end != 0 )
+      *end = s;
+
+    return v;
+  }
+
+
+  /* Routine to convert an ASCII string into a signed short integer. */
   static short
   _bdf_atos( char*   s,
              char**  end,
@@ -1864,8 +1911,8 @@
       if ( error )
         goto Exit;
 
-      glyph->bbx.width    = _bdf_atos( p->list.field[1], 0, 10 );
-      glyph->bbx.height   = _bdf_atos( p->list.field[2], 0, 10 );
+      glyph->bbx.width    = _bdf_atous( p->list.field[1], 0, 10 );
+      glyph->bbx.height   = _bdf_atous( p->list.field[2], 0, 10 );
       glyph->bbx.x_offset = _bdf_atos( p->list.field[3], 0, 10 );
       glyph->bbx.y_offset = _bdf_atos( p->list.field[4], 0, 10 );
 
@@ -2225,8 +2272,8 @@
       if ( error )
         goto Exit;
 
-      p->font->bbx.width  = _bdf_atos( p->list.field[1], 0, 10 );
-      p->font->bbx.height = _bdf_atos( p->list.field[2], 0, 10 );
+      p->font->bbx.width  = _bdf_atous( p->list.field[1], 0, 10 );
+      p->font->bbx.height = _bdf_atous( p->list.field[2], 0, 10 );
 
       p->font->bbx.x_offset = _bdf_atos( p->list.field[3], 0, 10 );
       p->font->bbx.y_offset = _bdf_atos( p->list.field[4], 0, 10 );

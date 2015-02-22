@@ -1,5 +1,10 @@
 2015-02-22  Werner Lemberg  <wl@gnu.org>
 
+	* src/bdf/bdflib.c (_bdf_atous): New function.
+	(_bdf_parse_glyphs, _bdf_parse_start): Use it.
+
+2015-02-22  Werner Lemberg  <wl@gnu.org>
+
 	[pcf] Signedness fixes.
 
 	* src/pcf/pcf.h, src/pcf/pcfdrivr.c: Apply.
