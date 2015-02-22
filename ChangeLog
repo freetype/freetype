@@ -1,5 +1,13 @@
 2015-02-22  Werner Lemberg  <wl@gnu.org>
 
+	[pshinter] Fix thinko.
+
+	* src/pshinter/pshalgo.c (psh_glyph_find_strong_points): Correctly
+	check `count'.
+	Bug introduced two commits earlier.
+
+2015-02-22  Werner Lemberg  <wl@gnu.org>
+
 	[raster] Signedness fixes.
 
 	* src/raster/ftraster.c, src/raster/ftrend1.c: Apply.

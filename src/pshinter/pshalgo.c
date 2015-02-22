@@ -1696,14 +1696,12 @@
       mask++;
       for ( ; num_masks > 1; num_masks--, mask++ )
       {
-        FT_UInt  next;
-        FT_UInt  count;
+        FT_UInt  next = FT_MIN( mask->end_point, glyph->num_points );
 
 
-        next  = FT_MIN( mask->end_point, glyph->num_points );
-        count = next - first;
-        if ( count > 0 )
+        if ( next > first )
         {
+          FT_UInt    count = next - first;
           PSH_Point  point = glyph->points + first;
 
 
