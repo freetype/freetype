@@ -192,7 +192,7 @@
 
     bitmap->width = width;
     bitmap->rows  = height;
-    bitmap->pitch = pitch;
+    bitmap->pitch = (int)pitch;
 
     if ( FT_ALLOC_MULT( bitmap->buffer, pitch, height ) )
       goto Exit;

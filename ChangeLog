@@ -1,5 +1,11 @@
 2015-02-22  Werner Lemberg  <wl@gnu.org>
 
+	[raster] Signedness fixes.
+
+	* src/raster/ftraster.c, src/raster/ftrend1.c: Apply.
+
+2015-02-22  Werner Lemberg  <wl@gnu.org>
+
 	[pshinter] Signedness fixes.
 
 	* src/pshinter/pshalgo.c, src/pshinter/pshglob.c,

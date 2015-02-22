@@ -326,9 +326,9 @@
 
 
   /* values for the `flags' bit field */
-#define Flow_Up           0x8
-#define Overshoot_Top     0x10
-#define Overshoot_Bottom  0x20
+#define Flow_Up           0x08U
+#define Overshoot_Top     0x10U
+#define Overshoot_Bottom  0x20U
 
 
   /* States of each line, arc, and profile */
@@ -350,14 +350,14 @@
     FT_F26Dot6  X;           /* current coordinate during sweep          */
     PProfile    link;        /* link to next profile (various purposes)  */
     PLong       offset;      /* start of profile's data in render pool   */
-    unsigned    flags;       /* Bit 0-2: drop-out mode                   */
+    UShort      flags;       /* Bit 0-2: drop-out mode                   */
                              /* Bit 3: profile orientation (up/down)     */
                              /* Bit 4: is top profile?                   */
                              /* Bit 5: is bottom profile?                */
     long        height;      /* profile's height in scanlines            */
     long        start;       /* profile's starting scanline              */
 
-    unsigned    countL;      /* number of lines to step before this      */
+    Int         countL;      /* number of lines to step before this      */
                              /* profile becomes drawable                 */
 
     PProfile    next;        /* next profile in same contour, used       */
@@ -443,7 +443,7 @@
 #define CEILING( x )  ( ( (x) + ras.precision - 1 ) & -ras.precision )
 #define TRUNC( x )    ( (Long)(x) >> ras.precision_bits )
 #define FRAC( x )     ( (x) & ( ras.precision - 1 ) )
-#define SCALED( x )   ( ( (ULong)(x) << ras.scale_shift ) - ras.precision_half )
+#define SCALED( x )   ( ( (Long)(x) << ras.scale_shift ) - ras.precision_half )
 
 #define IS_BOTTOM_OVERSHOOT( x ) \
           (Bool)( CEILING( x ) - x >= ras.precision_half )
@@ -1963,12 +1963,12 @@
       ras.state    = Unknown_State;
       ras.gProfile = NULL;
 
-      if ( Decompose_Curve( RAS_VARS (unsigned short)start,
-                                     ras.outline.contours[i],
+      if ( Decompose_Curve( RAS_VARS (UShort)start,
+                                     (UShort)ras.outline.contours[i],
                                      flipped ) )
         return FAILURE;
 
-      start = ras.outline.contours[i] + 1;
+      start = (UShort)ras.outline.contours[i] + 1;
 
       /* we must now check whether the extreme arcs join or not */
       if ( FRAC( ras.lastY ) == 0 &&
@@ -2167,7 +2167,7 @@
     ras.traceIncr = (Short)-pitch;
     ras.traceOfs  = -*min * pitch;
     if ( pitch > 0 )
-      ras.traceOfs += ( ras.target.rows - 1 ) * pitch;
+      ras.traceOfs += (Long)( ras.target.rows - 1 ) * pitch;
   }
 
 
@@ -2447,7 +2447,7 @@
 
           p = bits - e1 * ras.target.pitch;
           if ( ras.target.pitch > 0 )
-            p += ( ras.target.rows - 1 ) * ras.target.pitch;
+            p += (Long)( ras.target.rows - 1 ) * ras.target.pitch;
 
           p[0] |= f1;
         }
@@ -2547,7 +2547,7 @@
 
         bits -= e1 * ras.target.pitch;
         if ( ras.target.pitch > 0 )
-          bits += ( ras.target.rows - 1 ) * ras.target.pitch;
+          bits += (Long)( ras.target.rows - 1 ) * ras.target.pitch;
 
         if ( e1 >= 0                     &&
              (ULong)e1 < ras.target.rows &&
@@ -2567,7 +2567,7 @@
     {
       bits -= e1 * ras.target.pitch;
       if ( ras.target.pitch > 0 )
-        bits += ( ras.target.rows - 1 ) * ras.target.pitch;
+        bits += (Long)( ras.target.rows - 1 ) * ras.target.pitch;
 
       bits[0] |= f1;
     }
@@ -2651,7 +2651,7 @@
 
     while ( P )
     {
-      P->countL = (UShort)( P->start - min_Y );
+      P->countL = P->start - min_Y;
       P = P->link;
     }
 
@@ -2937,8 +2937,8 @@
         ras.dropOutControl += 1;
     }
 
-    ras.second_pass = (FT_Byte)( !( ras.outline.flags &
-                                    FT_OUTLINE_SINGLE_PASS ) );
+    ras.second_pass = (Bool)( !( ras.outline.flags      &
+                                 FT_OUTLINE_SINGLE_PASS ) );
 
     /* Vertical Sweep */
     ras.Proc_Sweep_Init = Vertical_Sweep_Init;
