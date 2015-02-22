@@ -1,5 +1,10 @@
 2015-02-22  Werner Lemberg  <wl@gnu.org>
 
+	* src/pshinter/pshrec.c: Simplify.
+	(ps_hints_open, ps_hints_stem): Remove switch statement.
+
+2015-02-22  Werner Lemberg  <wl@gnu.org>
+
 	[sfnt] Signedness fixes.
 
 	* src/sfnt/pngshim.c, src/sfnt/sfobjs.c, src/sfnt/ttcmap.c,

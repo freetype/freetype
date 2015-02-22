@@ -811,24 +811,11 @@
   ps_hints_open( PS_Hints      hints,
                  PS_Hint_Type  hint_type )
   {
-    switch ( hint_type )
-    {
-    case PS_HINT_TYPE_1:
-    case PS_HINT_TYPE_2:
-      hints->error     = FT_Err_Ok;
-      hints->hint_type = hint_type;
+    hints->error     = FT_Err_Ok;
+    hints->hint_type = hint_type;
 
-      ps_dimension_init( &hints->dimension[0] );
-      ps_dimension_init( &hints->dimension[1] );
-      break;
-
-    default:
-      hints->error     = FT_THROW( Invalid_Argument );
-      hints->hint_type = hint_type;
-
-      FT_TRACE0(( "ps_hints_open: invalid charstring type\n" ));
-      break;
-    }
+    ps_dimension_init( &hints->dimension[0] );
+    ps_dimension_init( &hints->dimension[1] );
   }
 
 
@@ -839,50 +826,42 @@
                  FT_Int    count,
                  FT_Long*  stems )
   {
-    if ( !hints->error )
+    PS_Dimension  dim;
+
+
+    if ( hints->error )
+      return;
+
+    /* limit "dimension" to 0..1 */
+    if ( dimension > 1 )
     {
-      /* limit "dimension" to 0..1 */
-      if ( dimension > 1 )
+      FT_TRACE0(( "ps_hints_stem: invalid dimension (%d) used\n",
+                  dimension ));
+      dimension = ( dimension != 0 );
+    }
+
+    /* record the stems in the current hints/masks table */
+    /* (Type 1 & 2's `hstem' or `vstem' operators)       */
+    dim = &hints->dimension[dimension];
+
+    for ( ; count > 0; count--, stems += 2 )
+    {
+      FT_Error   error;
+      FT_Memory  memory = hints->memory;
+
+
+      error = ps_dimension_add_t1stem( dim,
+                                       (FT_Int)stems[0],
+                                       (FT_Int)stems[1],
+                                       memory,
+                                       NULL );
+      if ( error )
       {
-        FT_TRACE0(( "ps_hints_stem: invalid dimension (%d) used\n",
-                    dimension ));
-        dimension = ( dimension != 0 );
-      }
+        FT_ERROR(( "ps_hints_stem: could not add stem"
+                   " (%d,%d) to hints table\n", stems[0], stems[1] ));
 
-      /* record the stems in the current hints/masks table */
-      switch ( hints->hint_type )
-      {
-      case PS_HINT_TYPE_1:  /* Type 1 "hstem" or "vstem" operator */
-      case PS_HINT_TYPE_2:  /* Type 2 "hstem" or "vstem" operator */
-        {
-          PS_Dimension  dim = &hints->dimension[dimension];
-
-
-          for ( ; count > 0; count--, stems += 2 )
-          {
-            FT_Error   error;
-            FT_Memory  memory = hints->memory;
-
-
-            error = ps_dimension_add_t1stem(
-                      dim, (FT_Int)stems[0], (FT_Int)stems[1],
-                      memory, NULL );
-            if ( error )
-            {
-              FT_ERROR(( "ps_hints_stem: could not add stem"
-                         " (%d,%d) to hints table\n", stems[0], stems[1] ));
-
-              hints->error = error;
-              return;
-            }
-          }
-          break;
-        }
-
-      default:
-        FT_TRACE0(( "ps_hints_stem: called with invalid hint type (%d)\n",
-                    hints->hint_type ));
-        break;
+        hints->error = error;
+        return;
       }
     }
   }
