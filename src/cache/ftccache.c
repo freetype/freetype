@@ -88,16 +88,16 @@
    * body for FTC_NODE__TOP_FOR_HASH( cache, hash )
    */
   FT_LOCAL_DEF( FTC_Node* )
-  ftc_get_top_node_for_hash( FTC_Cache   cache,
-                             FT_PtrDist  hash )
+  ftc_get_top_node_for_hash( FTC_Cache  cache,
+                             FT_Offset  hash )
   {
     FTC_Node*  pnode;
-    FT_UInt    idx;
+    FT_Offset  idx;
 
 
-    idx = (FT_UInt)( hash & cache->mask );
+    idx = hash & cache->mask;
     if ( idx < cache->p )
-      idx = (FT_UInt)( hash & ( 2 * cache->mask + 1 ) );
+      idx = hash & ( 2 * cache->mask + 1 );
     pnode = cache->buckets + idx;
     return pnode;
   }
@@ -414,7 +414,7 @@
 
   static void
   ftc_cache_add( FTC_Cache  cache,
-                 FT_PtrDist hash,
+                 FT_Offset  hash,
                  FTC_Node   node )
   {
     node->hash        = hash;
@@ -442,7 +442,7 @@
 
   FT_LOCAL_DEF( FT_Error )
   FTC_Cache_NewNode( FTC_Cache   cache,
-                     FT_PtrDist  hash,
+                     FT_Offset   hash,
                      FT_Pointer  query,
                      FTC_Node   *anode )
   {
@@ -481,7 +481,7 @@
 
   FT_LOCAL_DEF( FT_Error )
   FTC_Cache_Lookup( FTC_Cache   cache,
-                    FT_PtrDist  hash,
+                    FT_Offset   hash,
                     FT_Pointer  query,
                     FTC_Node   *anode )
   {

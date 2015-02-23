@@ -242,7 +242,7 @@
     FTC_Node          node;
     FT_Error          error;
     FT_UInt           gindex = 0;
-    FT_PtrDist        hash;
+    FT_Offset         hash;
     FT_Int            no_cmap_change = 0;
 
 

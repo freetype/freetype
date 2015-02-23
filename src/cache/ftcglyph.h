@@ -260,7 +260,7 @@ FT_BEGIN_HEADER
 #ifndef FTC_INLINE
   FT_LOCAL( FT_Error )
   FTC_GCache_Lookup( FTC_GCache   cache,
-                     FT_PtrDist   hash,
+                     FT_Offset    hash,
                      FT_UInt      gindex,
                      FTC_GQuery   query,
                      FTC_Node    *anode );

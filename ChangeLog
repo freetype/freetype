@@ -1,5 +1,19 @@
 2015-02-23  Werner Lemberg  <wl@gnu.org>
 
+	[cache] Replace `FT_PtrDist' with `FT_Offset'.
+
+	* src/cache/ftccache.h (FTC_NodeRec): `FT_Offset' (a.k.a. `size_t')
+	is a better choice for `hash' to hold a pointer than `FT_PtrDist'
+	(a.k.a. `ptrdiff_t'), especially since the latter is signed,
+	causing zillions of signedness warnings.  [Note that `hash' was of
+	type `FT_UInt32' before the change to `FT_PtrDist.]
+	Update all users.
+
+	* src/cache/ftcbasic.c, src/cache/ftccache.c, src/cache/ftccmap.c,
+	src/cache/ftcglyph.c, src/cache/ftcglyph.h: Updated.
+
+2015-02-23  Werner Lemberg  <wl@gnu.org>
+
 	[smooth, raster] Re-enable standalone compilation.
 
 	* src/raster/ftraster.c (FT_RENDER_POOL_SIZE, FT_MAX)
@@ -306,7 +320,7 @@
 	type to `FT_Long'.
 	(CONST_FT_RFORK_RULE_ARRAY_BEGIN): Add `static' keyword.
 
-	* include/internal/ftstream.h (FT_Stream_Pos): Return `FT_ULong'. 
+	* include/internal/ftstream.h (FT_Stream_Pos): Return `FT_ULong'.
 
 	* src/base/ftoutln.c, src/base/ftrfork.c, src/base/ftstream.c:
 	Signedess fixes.

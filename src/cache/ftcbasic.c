@@ -45,8 +45,8 @@
           FT_BOOL( FTC_SCALER_COMPARE( &(a)->scaler, &(b)->scaler ) && \
                    (a)->load_flags == (b)->load_flags               )
 
-#define FTC_BASIC_ATTR_HASH( a )                                   \
-          ( FTC_SCALER_HASH( &(a)->scaler ) + 31*(a)->load_flags )
+#define FTC_BASIC_ATTR_HASH( a )                                     \
+          ( FTC_SCALER_HASH( &(a)->scaler ) + 31 * (a)->load_flags )
 
 
   typedef struct  FTC_BasicQueryRec_
@@ -283,7 +283,7 @@
     FTC_BasicQueryRec  query;
     FTC_Node           node = 0; /* make compiler happy */
     FT_Error           error;
-    FT_PtrDist         hash;
+    FT_Offset          hash;
 
 
     /* some argument checks are delayed to `FTC_Cache_Lookup' */
@@ -356,7 +356,7 @@
     FTC_BasicQueryRec  query;
     FTC_Node           node = 0; /* make compiler happy */
     FT_Error           error;
-    FT_PtrDist         hash;
+    FT_Offset          hash;
 
 
     /* some argument checks are delayed to `FTC_Cache_Lookup' */
@@ -466,7 +466,7 @@
     FT_Error           error;
     FTC_BasicQueryRec  query;
     FTC_Node           node = 0; /* make compiler happy */
-    FT_PtrDist         hash;
+    FT_Offset          hash;
 
 
     if ( anode )
@@ -541,7 +541,7 @@
     FT_Error           error;
     FTC_BasicQueryRec  query;
     FTC_Node           node = 0; /* make compiler happy */
-    FT_PtrDist         hash;
+    FT_Offset          hash;
 
 
     if ( anode )
