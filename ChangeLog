@@ -1,3 +1,13 @@
+2015-02-23  Werner Lemberg  <wl@gnu.org>
+
+	[smooth, raster] Re-enable standalone compilation.
+
+	* src/raster/ftraster.c (FT_RENDER_POOL_SIZE, FT_MAX)
+	[_STANDALONE_]: Define macros.
+
+	* src/smooth/ftgrays.c (FT_RENDER_POOL_SIZE, FT_MAX, FT_ABS,
+	FT_HYPOT) [_STANDALONE_]: Define macros.
+
 2015-02-22  Werner Lemberg  <wl@gnu.org>
 
 	[smooth] Signedness fixes.

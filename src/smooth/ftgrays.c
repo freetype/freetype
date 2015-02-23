@@ -94,12 +94,32 @@
 #ifdef _STANDALONE_
 
 
+  /* The size in bytes of the render pool used by the scan-line converter  */
+  /* to do all of its work.                                                */
+#define FT_RENDER_POOL_SIZE  16384L
+
+
   /* Auxiliary macros for token concatenation. */
 #define FT_ERR_XCAT( x, y )  x ## y
 #define FT_ERR_CAT( x, y )   FT_ERR_XCAT( x, y )
 
 #define FT_BEGIN_STMNT  do {
 #define FT_END_STMNT    } while ( 0 )
+
+#define FT_MAX( a, b )  ( (a) > (b) ? (a) : (b) )
+#define FT_ABS( a )     ( (a) < 0 ? -(a) : (a) )
+
+
+  /*
+   *  Approximate sqrt(x*x+y*y) using the `alpha max plus beta min'
+   *  algorithm.  We use alpha = 1, beta = 3/8, giving us results with a
+   *  largest error less than 7% compared to the exact value.
+   */
+#define FT_HYPOT( x, y )                 \
+          ( x = FT_ABS( x ),             \
+            y = FT_ABS( y ),             \
+            x > y ? x + ( 3 * y >> 3 )   \
+                  : y + ( 3 * x >> 3 ) )
 
 
   /* define this to dump debugging information */
@@ -1740,14 +1760,17 @@ typedef ptrdiff_t  FT_PtrDist;
 
   } gray_TBand;
 
-    FT_DEFINE_OUTLINE_FUNCS(func_interface,
-      (FT_Outline_MoveTo_Func) gray_move_to,
-      (FT_Outline_LineTo_Func) gray_line_to,
-      (FT_Outline_ConicTo_Func)gray_conic_to,
-      (FT_Outline_CubicTo_Func)gray_cubic_to,
-      0,
-      0
-    )
+
+  FT_DEFINE_OUTLINE_FUNCS(
+    func_interface,
+
+    (FT_Outline_MoveTo_Func) gray_move_to,
+    (FT_Outline_LineTo_Func) gray_line_to,
+    (FT_Outline_ConicTo_Func)gray_conic_to,
+    (FT_Outline_CubicTo_Func)gray_cubic_to,
+    0,
+    0 )
+
 
   static int
   gray_convert_glyph_inner( RAS_ARG )
@@ -2090,15 +2113,16 @@ typedef ptrdiff_t  FT_PtrDist;
   }
 
 
-  FT_DEFINE_RASTER_FUNCS(ft_grays_raster,
+  FT_DEFINE_RASTER_FUNCS(
+    ft_grays_raster,
+
     FT_GLYPH_FORMAT_OUTLINE,
 
     (FT_Raster_New_Func)     gray_raster_new,
     (FT_Raster_Reset_Func)   gray_raster_reset,
     (FT_Raster_Set_Mode_Func)gray_raster_set_mode,
     (FT_Raster_Render_Func)  gray_raster_render,
-    (FT_Raster_Done_Func)    gray_raster_done
-  )
+    (FT_Raster_Done_Func)    gray_raster_done )
 
 
 /* END */

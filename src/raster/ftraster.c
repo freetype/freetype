@@ -49,6 +49,10 @@
 
 #ifdef _STANDALONE_
 
+  /* The size in bytes of the render pool used by the scan-line converter  */
+  /* to do all of its work.                                                */
+#define FT_RENDER_POOL_SIZE  16384L
+
 #define FT_CONFIG_STANDARD_LIBRARY_H  <stdlib.h>
 
 #include <string.h>           /* for memset */
@@ -174,6 +178,8 @@
   /* Auxiliary macros for token concatenation. */
 #define FT_ERR_XCAT( x, y )  x ## y
 #define FT_ERR_CAT( x, y )   FT_ERR_XCAT( x, y )
+
+#define FT_MAX( a, b )  ( (a) > (b) ? (a) : (b) )
 
   /* This macro is used to indicate that a function parameter is unused. */
   /* Its purpose is simply to reduce compiler warnings.  Note also that  */
@@ -3131,14 +3137,16 @@
   }
 
 
-  FT_DEFINE_RASTER_FUNCS( ft_standard_raster,
+  FT_DEFINE_RASTER_FUNCS(
+    ft_standard_raster,
+
     FT_GLYPH_FORMAT_OUTLINE,
+
     (FT_Raster_New_Func)     ft_black_new,
     (FT_Raster_Reset_Func)   ft_black_reset,
     (FT_Raster_Set_Mode_Func)ft_black_set_mode,
     (FT_Raster_Render_Func)  ft_black_render,
-    (FT_Raster_Done_Func)    ft_black_done
-  )
+    (FT_Raster_Done_Func)    ft_black_done )
 
 
 /* END */
