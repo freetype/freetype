@@ -258,11 +258,6 @@ FT_BEGIN_HEADER
   /*                    field is intended for paletted pixel modes.  Not   */
   /*                    used currently.                                    */
   /*                                                                       */
-  /* <Note>                                                                */
-  /*   For now, the only pixel modes supported by FreeType are mono and    */
-  /*   grays.  However, drivers might be added in the future to support    */
-  /*   more `colorful' options.                                            */
-  /*                                                                       */
   typedef struct  FT_Bitmap_
   {
     unsigned int    rows;
