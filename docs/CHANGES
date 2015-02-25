@@ -1,5 +1,5 @@
 
-CHANGES BETWEEN 2.5.5 and 2.5.6
+CHANGES BETWEEN 2.5.5 and 2.6
 
   II. IMPORTANT CHANGES
 
@@ -20,6 +20,17 @@ CHANGES BETWEEN 2.5.5 and 2.5.6
       Any calls to `FT_Load_Glyph' and similar API are safe and do not
       need the lock  to be held as  long as the same  `FT_Face' is not
       used from multiple threads at the same time.
+
+
+  III. MISCELLANEOUS
+
+    - Some  fields  in  the  `FTC_ImageTypeRec'  structure  have  been
+      changed from signed to unsigned  type, which better reflects the
+      actual usage.  It is also an additional means to protect against
+      malformed input.
+
+      This  change doesn't  break  the ABI;  however,  it might  cause
+      compiler warnings.
 
 
 ======================================================================

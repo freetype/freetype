@@ -667,8 +667,8 @@ FT_BEGIN_HEADER
   typedef struct  FTC_ImageTypeRec_
   {
     FTC_FaceID  face_id;
-    FT_Int      width;
-    FT_Int      height;
+    FT_UInt     width;
+    FT_UInt     height;
     FT_Int32    flags;
 
   } FTC_ImageTypeRec;

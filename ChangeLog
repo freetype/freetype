@@ -1,5 +1,16 @@
 2015-02-25  Werner Lemberg  <wl@gnu.org>
 
+	Change dimension fields in `FTC_ImageTypeRec' to unsigned type.
+
+	This doesn't break ABI.
+
+	* include/ftcache.h (FTC_ImageTypeRec): Use unsigned types for
+	`width' and `height'.
+
+	* docs/CHANGES: Document it.
+
+2015-02-25  Werner Lemberg  <wl@gnu.org>
+
 	[cache] Don't use `labs'.
 
 	This is the only place in FreeType where this function was used.
