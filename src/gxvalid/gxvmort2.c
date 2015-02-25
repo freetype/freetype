@@ -303,7 +303,7 @@
     p += gxvalid->subtable_length;
     gxv_mort_subtable_type2_ligatureTable_validate( table, gxvalid );
 
-    gxvalid->subtable_length = p - table;
+    gxvalid->subtable_length = (FT_ULong)( p - table );
 
     GXV_EXIT;
   }

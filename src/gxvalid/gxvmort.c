@@ -113,7 +113,7 @@
     if ( !IS_GXV_MORT_FEATURE_OFF( f ) )
       FT_INVALID_DATA;
 
-    gxvalid->subtable_length = p - table;
+    gxvalid->subtable_length = (FT_ULong)( p - table );
     GXV_EXIT;
   }
 
@@ -214,7 +214,7 @@
       /* TODO: validate subFeatureFlags */
     }
 
-    gxvalid->subtable_length = p - table;
+    gxvalid->subtable_length = (FT_ULong)( p - table );
 
     GXV_EXIT;
   }

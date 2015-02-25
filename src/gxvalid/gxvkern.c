@@ -549,7 +549,7 @@
       }
     }
 
-    gxvalid->subtable_length = p - table;
+    gxvalid->subtable_length = (FT_ULong)( p - table );
 
     GXV_EXIT;
   }
@@ -779,7 +779,7 @@
 #ifdef GXV_LOAD_TRACE_VARS
       version    = 0;
 #endif
-      length     = ( u16[0] << 16 ) + u16[1];
+      length     = ( (FT_ULong)u16[0] << 16 ) + u16[1];
 #ifdef GXV_LOAD_TRACE_VARS
       tupleIndex = 0;
 #endif

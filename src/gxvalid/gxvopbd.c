@@ -91,7 +91,7 @@
         if ( delta_value == -1 )
           continue;
 
-        gxv_ctlPoint_validate( glyph, delta_value, gxvalid );
+        gxv_ctlPoint_validate( glyph, (FT_UShort)delta_value, gxvalid );
       }
       else                              /* format 0, value is distance */
         continue;

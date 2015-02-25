@@ -404,7 +404,7 @@ FT_BEGIN_HEADER
 
   FT_LOCAL( void )
   gxv_ctlPoint_validate( FT_UShort      gid,
-                         FT_Short       ctl_point,
+                         FT_UShort      ctl_point,
                          GXV_Validator  gxvalid );
 
 

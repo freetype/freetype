@@ -1,5 +1,17 @@
 2015-02-25  Werner Lemberg  <wl@gnu.org>
 
+	[gxvalid] Signedness fixes.
+
+	* src/gxvalid/gxvbsln.c, src/gxvalid/gxvcommn.c,
+	src/gxvalid/gxvcommn.h, src/gxvalid/gxvjust.c,
+	src/gxvalid/gxvkern.c, src/gxvalid/gxvlcar.c, src/gxvalid/gxvmort.c,
+	src/gxvalid/gxvmort1.c, src/gxvalid/gxvmort2.c,
+	src/gxvalid/gxvmorx.c, src/gxvalid/gxvmorx1.c,
+	src/gxvalid/gxvmorx2.c, src/gxvalid/gxvopbd.c,
+	src/gxvalid/gxvprop.c, src/gxvalid/gxvtrak.c: Apply.
+
+2015-02-25  Werner Lemberg  <wl@gnu.org>
+
 	[cache] Signedness fixes.
 
 	* src/cache/ftcbasic.c, src/cache/ftccmap.c, src/cache/ftcimage.c,
@@ -35,7 +47,7 @@
 	is a better choice for `hash' to hold a pointer than `FT_PtrDist'
 	(a.k.a. `ptrdiff_t'), especially since the latter is signed,
 	causing zillions of signedness warnings.  [Note that `hash' was of
-	type `FT_UInt32' before the change to `FT_PtrDist.]
+	type `FT_UInt32' before the change to `FT_PtrDist'.]
 	Update all users.
 
 	* src/cache/ftcbasic.c, src/cache/ftccache.c, src/cache/ftccmap.c,

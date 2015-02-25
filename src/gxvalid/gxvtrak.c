@@ -135,7 +135,7 @@
       }
     }
 
-    gxvalid->subtable_length = p - table;
+    gxvalid->subtable_length = (FT_ULong)( p - table );
     GXV_EXIT;
   }
 
@@ -162,7 +162,8 @@
     nSizes          = FT_NEXT_USHORT( p );
     sizeTableOffset = FT_NEXT_ULONG( p );
 
-    gxv_odtect_add_range( table, p - table, "trackData header", odtect );
+    gxv_odtect_add_range( table, (FT_ULong)( p - table ),
+                          "trackData header", odtect );
 
     /* validate trackTable */
     gxv_trak_trackTable_validate( p, limit, nTracks, gxvalid );

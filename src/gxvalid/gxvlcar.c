@@ -66,7 +66,7 @@
   /*************************************************************************/
 
   static void
-  gxv_lcar_partial_validate( FT_UShort      partial,
+  gxv_lcar_partial_validate( FT_Short       partial,
                              FT_UShort      glyph,
                              GXV_Validator  gxvalid )
   {
@@ -75,7 +75,7 @@
     if ( GXV_LCAR_DATA( format ) != 1 )
       goto Exit;
 
-    gxv_ctlPoint_validate( glyph, partial, gxvalid );
+    gxv_ctlPoint_validate( glyph, (FT_UShort)partial, gxvalid );
 
   Exit:
     GXV_EXIT;
@@ -203,7 +203,7 @@
     GXV_INIT;
 
     GXV_LIMIT_CHECK( 4 + 2 );
-    version = FT_NEXT_ULONG( p );
+    version = FT_NEXT_LONG( p );
     GXV_LCAR_DATA( format ) = FT_NEXT_USHORT( p );
 
     if ( version != 0x00010000UL)

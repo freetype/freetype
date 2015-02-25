@@ -149,11 +149,11 @@
 
     if ( optdata->substitutionTable_num_lookupTables < markIndex + 1 )
       optdata->substitutionTable_num_lookupTables =
-        (FT_Short)( markIndex + 1 );
+        (FT_UShort)( markIndex + 1 );
 
     if ( optdata->substitutionTable_num_lookupTables < currentIndex + 1 )
       optdata->substitutionTable_num_lookupTables =
-        (FT_Short)( currentIndex + 1 );
+        (FT_UShort)( currentIndex + 1 );
   }
 
 
