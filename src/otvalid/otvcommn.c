@@ -687,7 +687,7 @@
 
     OTV_TRACE(( " (Count = %d)\n", Count ));
 
-    otv_Coverage_validate( table + Coverage, otvalid, Count );
+    otv_Coverage_validate( table + Coverage, otvalid, (FT_Int)Count );
 
     OTV_LIMIT_CHECK( Count * 2 );
 

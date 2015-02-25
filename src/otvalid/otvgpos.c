@@ -395,7 +395,9 @@
 
         len_value = otv_value_length( ValueFormat );
 
-        otv_Coverage_validate( table + Coverage, otvalid, ValueCount );
+        otv_Coverage_validate( table + Coverage,
+                               otvalid,
+                               (FT_Int)ValueCount );
 
         OTV_LIMIT_CHECK( ValueCount * len_value );
 
@@ -605,7 +607,9 @@
 
         OTV_TRACE(( " (EntryExitCount = %d)\n", EntryExitCount ));
 
-        otv_Coverage_validate( table + Coverage, otvalid, EntryExitCount );
+        otv_Coverage_validate( table + Coverage,
+                               otvalid,
+                               (FT_Int)EntryExitCount );
 
         OTV_LIMIT_CHECK( EntryExitCount * 4 );
 

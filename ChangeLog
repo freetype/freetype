@@ -1,5 +1,13 @@
 2015-02-25  Werner Lemberg  <wl@gnu.org>
 
+	[otvalid] Signedness fixes.
+
+	* src/otvalid/otvcommn.c, src/otvalid/otvgdef.c,
+	src/otvalid/otvgpos.c, src/otvalid/otvgsub.c, src/otvalid/otvmath.c:
+	Apply.
+
+2015-02-25  Werner Lemberg  <wl@gnu.org>
+
 	* src/bzip2/ftbzip2.c (ft_bzip2_alloc): Signedness fix.
 
 2015-02-25  Werner Lemberg  <wl@gnu.org>
