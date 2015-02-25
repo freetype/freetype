@@ -71,7 +71,7 @@
                   int        items,
                   int        size )
   {
-    FT_ULong    sz = (FT_ULong)size * items;
+    FT_ULong    sz = (FT_ULong)size * (FT_ULong)items;
     FT_Error    error;
     FT_Pointer  p  = NULL;
 

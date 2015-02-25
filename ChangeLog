@@ -1,5 +1,9 @@
 2015-02-25  Werner Lemberg  <wl@gnu.org>
 
+	* src/bzip2/ftbzip2.c (ft_bzip2_alloc): Signedness fix.
+
+2015-02-25  Werner Lemberg  <wl@gnu.org>
+
 	[lzw] Signedness fixes.
 
 	* src/lzw/ftzopen.c, src/lzw/ftzopen.h: Apply.
