@@ -1,5 +1,13 @@
 2015-02-25  Werner Lemberg  <wl@gnu.org>
 
+	[psaux] Signedness fixes.
+
+	* include/internal/psaux.h, src/psaux/afmparse.c,
+	src/psaux/afmparse.h, src/psaux/psconv.c, src/psaux/psobjs.c,
+	src/psaux/t1cmap.c, src/psaux/t1decode.c: Apply.
+
+2015-02-25  Werner Lemberg  <wl@gnu.org>
+
 	[otvalid] Signedness fixes.
 
 	* src/otvalid/otvcommn.c, src/otvalid/otvgdef.c,

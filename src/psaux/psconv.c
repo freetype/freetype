@@ -489,8 +489,8 @@
       if ( c OP 0x80 )
         break;
 
-      c = ft_char_table[c & 0x7F];
-      if ( (unsigned)c >= 16 )
+      c = (FT_UInt)ft_char_table[c & 0x7F];
+      if ( c >= 16 )
         break;
 
       pad = ( pad << 4 ) | c;

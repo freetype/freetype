@@ -122,7 +122,7 @@ FT_BEGIN_HEADER
     FT_Byte*           block;          /* current memory block           */
     FT_Offset          cursor;         /* current cursor in memory block */
     FT_Offset          capacity;       /* current size of memory block   */
-    FT_Long            init;
+    FT_ULong           init;
 
     FT_Int             max_elems;
     FT_Int             num_elems;

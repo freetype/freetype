@@ -75,8 +75,8 @@
 #define AFM_STREAM_KEY_BEGIN( stream )    \
           (char*)( (stream)->cursor - 1 )
 
-#define AFM_STREAM_KEY_LEN( stream, key )       \
-          ( (char*)(stream)->cursor - key - 1 )
+#define AFM_STREAM_KEY_LEN( stream, key )           \
+          (FT_Offset)( (char*)(stream)->cursor - key - 1 )
 
 #define AFM_STATUS_EOC( stream ) \
           ( (stream)->status >= AFM_STREAM_STATUS_EOC )
@@ -369,11 +369,11 @@
   FT_LOCAL_DEF( FT_Int )
   afm_parser_read_vals( AFM_Parser  parser,
                         AFM_Value   vals,
-                        FT_UInt     n )
+                        FT_Int      n )
   {
     AFM_Stream  stream = parser->stream;
     char*       str;
-    FT_UInt     i;
+    FT_Int      i;
 
 
     if ( n > AFM_MAX_ARGUMENTS )
@@ -828,7 +828,7 @@
 
   static FT_Error
   afm_parser_skip_section( AFM_Parser  parser,
-                           FT_UInt     n,
+                           FT_Int      n,
                            AFM_Token   end_section )
   {
     char*      key;

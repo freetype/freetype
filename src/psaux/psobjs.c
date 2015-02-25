@@ -1224,7 +1224,7 @@
 
           for ( i = 0; i < 4; i++ )
           {
-            result = ps_tofixedarray( &cur, limit, max_objects,
+            result = ps_tofixedarray( &cur, limit, (FT_Int)max_objects,
                                       temp + i * max_objects, 0 );
             if ( result < 0 || (FT_UInt)result < max_objects )
             {
@@ -1315,7 +1315,7 @@
       goto Exit;
     }
     if ( (FT_UInt)num_elements > field->array_max )
-      num_elements = field->array_max;
+      num_elements = (FT_Int)field->array_max;
 
     old_cursor = parser->cursor;
     old_limit  = parser->limit;
