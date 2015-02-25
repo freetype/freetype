@@ -1,5 +1,11 @@
 2015-02-25  Werner Lemberg  <wl@gnu.org>
 
+	[lzw] Signedness fixes.
+
+	* src/lzw/ftzopen.c, src/lzw/ftzopen.h: Apply.
+
+2015-02-25  Werner Lemberg  <wl@gnu.org>
+
 	[gxvalid] Signedness fixes.
 
 	* src/gxvalid/gxvbsln.c, src/gxvalid/gxvcommn.c,

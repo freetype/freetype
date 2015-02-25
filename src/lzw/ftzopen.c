@@ -55,7 +55,7 @@
   ft_lzwstate_get_code( FT_LzwState  state )
   {
     FT_UInt   num_bits = state->num_bits;
-    FT_Int    offset   = state->buf_offset;
+    FT_UInt   offset   = state->buf_offset;
     FT_Byte*  p;
     FT_Int    result;
 
