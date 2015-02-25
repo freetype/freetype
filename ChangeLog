@@ -1,3 +1,14 @@
+2015-02-25  Werner Lemberg  <wl@gnu.org>
+
+	[cache] Don't use `labs'.
+
+	This is the only place in FreeType where this function was used.
+
+	* include/config/ftstdlib.h (ft_labs): Remove.
+
+	* src/cache/ftcimage.c (ftc_inode_weight): Replace `ft_labs' with
+	`FT_ABS'.
+
 2015-02-23  Werner Lemberg  <wl@gnu.org>
 
 	[cache] Replace `FT_PtrDist' with `FT_Offset'.
