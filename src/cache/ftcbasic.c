@@ -138,8 +138,10 @@
       FT_Face  face = size->face;
 
 
-      error = FT_Load_Glyph( face, gindex,
-                             family->attrs.load_flags | FT_LOAD_RENDER );
+      error = FT_Load_Glyph(
+                face,
+                gindex,
+                (FT_Int)family->attrs.load_flags | FT_LOAD_RENDER );
       if ( !error )
         *aface = face;
     }
@@ -169,7 +171,9 @@
     {
       face = size->face;
 
-      error = FT_Load_Glyph( face, gindex, family->attrs.load_flags );
+      error = FT_Load_Glyph( face,
+                             gindex,
+                             (FT_Int)family->attrs.load_flags );
       if ( !error )
       {
         if ( face->glyph->format == FT_GLYPH_FORMAT_BITMAP  ||
@@ -300,7 +304,7 @@
     if ( (FT_ULong)( type->flags - FT_INT_MIN ) > FT_UINT_MAX )
       FT_TRACE1(( "FTC_ImageCache_Lookup:"
                   " higher bits in load_flags 0x%x are dropped\n",
-                  type->flags & ~((FT_ULong)FT_UINT_MAX) ));
+                  (FT_ULong)type->flags & ~((FT_ULong)FT_UINT_MAX) ));
 
     query.attrs.scaler.face_id = type->face_id;
     query.attrs.scaler.width   = type->width;
@@ -481,7 +485,7 @@
     if ( (FT_ULong)( type->flags - FT_INT_MIN ) > FT_UINT_MAX )
       FT_TRACE1(( "FTC_ImageCache_Lookup:"
                   " higher bits in load_flags 0x%x are dropped\n",
-                  type->flags & ~((FT_ULong)FT_UINT_MAX) ));
+                  (FT_ULong)type->flags & ~((FT_ULong)FT_UINT_MAX) ));
 
     query.attrs.scaler.face_id = type->face_id;
     query.attrs.scaler.width   = type->width;

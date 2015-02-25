@@ -1,5 +1,12 @@
 2015-02-25  Werner Lemberg  <wl@gnu.org>
 
+	[cache] Signedness fixes.
+
+	* src/cache/ftcbasic.c, src/cache/ftccmap.c, src/cache/ftcimage.c,
+	src/cache/ftcmanag.c, src/cache/ftcsbits.c: Apply.
+
+2015-02-25  Werner Lemberg  <wl@gnu.org>
+
 	Change dimension fields in `FTC_ImageTypeRec' to unsigned type.
 
 	This doesn't break ABI.

@@ -133,9 +133,9 @@
 
 
         outg = (FT_OutlineGlyph)glyph;
-        size = outg->outline.n_points *
+        size = (FT_Offset)outg->outline.n_points *
                  ( sizeof ( FT_Vector ) + sizeof ( FT_Byte ) ) +
-               outg->outline.n_contours * sizeof ( FT_Short ) +
+               (FT_Offset)outg->outline.n_contours * sizeof ( FT_Short ) +
                sizeof ( *outg );
       }
       break;

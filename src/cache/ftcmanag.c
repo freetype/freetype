@@ -60,8 +60,11 @@
     if ( scaler->pixel )
       error = FT_Set_Pixel_Sizes( face, scaler->width, scaler->height );
     else
-      error = FT_Set_Char_Size( face, scaler->width, scaler->height,
-                                scaler->x_res, scaler->y_res );
+      error = FT_Set_Char_Size( face,
+                                (FT_F26Dot6)scaler->width,
+                                (FT_F26Dot6)scaler->height,
+                                scaler->x_res,
+                                scaler->y_res );
     if ( error )
     {
       FT_Done_Size( size );
