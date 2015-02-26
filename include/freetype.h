@@ -666,7 +666,7 @@ FT_BEGIN_HEADER
   /*    FT_ENCODING_WANSUNG ::                                             */
   /*      Corresponds to the Korean encoding system known as Wansung.      */
   /*      For more information see                                         */
-  /*      `http://msdn.microsoft.com/en-US/goglobal/cc305154'.             */
+  /*      `https://msdn.microsoft.com/en-US/goglobal/cc305154'.            */
   /*                                                                       */
   /*    FT_ENCODING_JOHAB ::                                               */
   /*      The Korean standard character set (KS~C 5601-1992), which        */
@@ -3413,8 +3413,9 @@ FT_BEGIN_HEADER
   /*    @FT_Get_FSType_Flags; they inform client applications of embedding */
   /*    and subsetting restrictions associated with a font.                */
   /*                                                                       */
-  /*    See http://www.adobe.com/devnet/acrobat/pdfs/FontPolicies.pdf for  */
-  /*    more details.                                                      */
+  /*    See                                                                */
+  /*    http://www.adobe.com/content/dam/Adobe/en/devnet/acrobat/pdfs/FontPolicies.pdf */
+  /*    for more details.                                                  */
   /*                                                                       */
   /* <Values>                                                              */
   /*    FT_FSTYPE_INSTALLABLE_EMBEDDING ::                                 */
