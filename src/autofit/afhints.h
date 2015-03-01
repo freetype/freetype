@@ -219,7 +219,7 @@ FT_BEGIN_HEADER
 #define AF_FLAG_TOUCH_Y  ( 1U << 3 )
 
   /* candidates for weak interpolation have this flag set */
-#define AF_FLAG_WEAK_INTERPOLATION  ( 1 << 4 )
+#define AF_FLAG_WEAK_INTERPOLATION  ( 1U << 4 )
 
 
   /* edge hint flags */
