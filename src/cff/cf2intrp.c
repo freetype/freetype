@@ -43,6 +43,7 @@
 #include "cf2font.h"
 #include "cf2stack.h"
 #include "cf2hints.h"
+#include "cf2intrp.h"
 
 #include "cf2error.h"
 

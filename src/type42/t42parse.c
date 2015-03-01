@@ -104,12 +104,6 @@
 
 
 #define T1_Add_Table( p, i, o, l )  (p)->funcs.add( (p), i, o, l )
-#define T1_Done_Table( p )          \
-          do                        \
-          {                         \
-            if ( (p)->funcs.done )  \
-              (p)->funcs.done( p ); \
-          } while ( 0 )
 #define T1_Release_Table( p )          \
           do                           \
           {                            \

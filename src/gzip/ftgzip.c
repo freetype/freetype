@@ -58,7 +58,6 @@
  /* conflicts when a program is linked with both FreeType and the    */
  /* original ZLib.                                                   */
 
-#define NO_DUMMY_DECL
 #ifndef USE_ZLIB_ZCALLOC
 #define MY_ZCALLOC /* prevent all zcalloc() & zfree() in zutils.c */
 #endif

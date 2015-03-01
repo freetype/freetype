@@ -1382,7 +1382,7 @@
   }
 
 
-  FT_LOCAL_DEF( void )
+  static void
   af_latin2_hints_compute_blue_edges( AF_GlyphHints    hints,
                                       AF_LatinMetrics  metrics )
   {
@@ -1829,7 +1829,7 @@
   /*************************************************************************/
 
 
-  FT_LOCAL_DEF( void )
+  static void
   af_latin2_hint_edges( AF_GlyphHints  hints,
                         AF_Dimension   dim )
   {

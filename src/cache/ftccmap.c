@@ -63,8 +63,6 @@
   } FTC_CMapQueryRec, *FTC_CMapQuery;
 
 #define FTC_CMAP_QUERY( x )  ((FTC_CMapQuery)(x))
-#define FTC_CMAP_QUERY_HASH( x )                                         \
-          FTC_CMAP_HASH( (x)->face_id, (x)->cmap_index, (x)->char_code )
 
   /* the cmap cache node */
   typedef struct  FTC_CMapNodeRec_
@@ -78,8 +76,6 @@
   } FTC_CMapNodeRec, *FTC_CMapNode;
 
 #define FTC_CMAP_NODE( x ) ( (FTC_CMapNode)( x ) )
-#define FTC_CMAP_NODE_HASH( x )                                      \
-          FTC_CMAP_HASH( (x)->face_id, (x)->cmap_index, (x)->first )
 
   /* if (indices[n] == FTC_CMAP_UNKNOWN), we assume that the corresponding */
   /* glyph indices haven't been queried through FT_Get_Glyph_Index() yet   */

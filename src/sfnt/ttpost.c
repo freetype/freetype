@@ -246,7 +246,7 @@
         if ( len > post_limit                   ||
              FT_STREAM_POS() > post_limit - len )
         {
-          FT_Int  d = post_limit - FT_STREAM_POS();
+          FT_Int  d = (FT_Int)post_limit - (FT_Int)FT_STREAM_POS();
 
 
           FT_ERROR(( "load_format_20:"

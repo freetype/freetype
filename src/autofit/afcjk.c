@@ -1190,7 +1190,7 @@
 
   /* Compute all edges which lie within blue zones. */
 
-  FT_LOCAL_DEF( void )
+  static void
   af_cjk_hints_compute_blue_edges( AF_GlyphHints  hints,
                                    AF_CJKMetrics  metrics,
                                    AF_Dimension   dim )

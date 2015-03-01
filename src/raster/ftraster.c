@@ -2920,7 +2920,7 @@
   /* <Return>                                                              */
   /*    FreeType error code.  0 means success.                             */
   /*                                                                       */
-  FT_LOCAL_DEF( FT_Error )
+  static FT_Error
   Render_Glyph( RAS_ARG )
   {
     FT_Error  error;

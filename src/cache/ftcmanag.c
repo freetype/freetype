@@ -34,8 +34,6 @@
 #undef  FT_COMPONENT
 #define FT_COMPONENT  trace_cache
 
-#define FTC_LRU_GET_MANAGER( lru )  ( (FTC_Manager)(lru)->user_data )
-
 
   static FT_Error
   ftc_scaler_lookup_size( FTC_Manager  manager,

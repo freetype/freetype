@@ -562,7 +562,7 @@
   }
 
 
-  FT_LOCAL_DEF( FT_Error )
+  static FT_Error
   afm_parser_read_int( AFM_Parser  parser,
                        FT_Int*     aint )
   {

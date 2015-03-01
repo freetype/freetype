@@ -54,7 +54,7 @@
   /*************************************************************************/
 
 
-  FT_LOCAL_DEF( FT_Error )
+  static FT_Error
   T1_Parse_Glyph_And_Get_Char_String( T1_Decoder  decoder,
                                       FT_UInt     glyph_index,
                                       FT_Data*    char_string )

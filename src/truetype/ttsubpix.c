@@ -744,7 +744,7 @@
 #endif /* FORCE_NATURAL_WIDTHS */
 
 
-  FT_LOCAL_DEF( FT_Bool )
+  static FT_Bool
   is_member_of_family_class( const FT_String*  detected_font_name,
                              const FT_String*  rule_font_name )
   {
@@ -779,7 +779,7 @@
   }
 
 
-  FT_LOCAL_DEF( FT_Bool )
+  static FT_Bool
   is_member_of_style_class( const FT_String*  detected_font_style,
                             const FT_String*  rule_font_style )
   {

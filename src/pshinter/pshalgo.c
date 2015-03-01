@@ -38,8 +38,6 @@
 
 #define  COMPUTE_INFLEXS  /* compute inflection points to optimize `S' */
                           /* and similar glyphs                        */
-#define  STRONGER         /* slightly increase the contrast of smooth  */
-                          /* hinting                                   */
 
 
   /*************************************************************************/
@@ -890,9 +888,6 @@
   /*************************************************************************/
   /*************************************************************************/
 
-#define PSH_ZONE_MIN  -3200000L
-#define PSH_ZONE_MAX  +3200000L
-
 #define xxDEBUG_ZONES
 
 
@@ -909,10 +904,6 @@
              zone->min,
              zone->max );
   }
-
-#else
-
-#define psh_print_zone( x )  do { } while ( 0 )
 
 #endif /* DEBUG_ZONES */
 

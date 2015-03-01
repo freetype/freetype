@@ -1,5 +1,47 @@
 2015-02-25  Werner Lemberg  <wl@gnu.org>
 
+	Various compiler warning fixes for `make multi'.
+
+	* src/autofit/afcjk.c (af_cjk_hints_compute_blue_edges),
+	src/autofit/aflatin.c (af_latin_hint_compute_blue_edges,
+	af_latin_hint_edges), src/autofit/aflatin2.c
+	(af_latin2_hints_compute_blue_edges, af_latin2_hint_edges): Declare
+	as `static'.
+
+	* src/cache/ftccmap.c (FTC_CMAP_QUERY_HASH, FTC_CMAP_NODE_HASH):
+	Removed.  Unused.
+	* src/cache/ftcimage.c: Include FT_INTERNAL_OBJECTS_H.
+	* src/cache/ftcmanag.c (FTC_LRU_GET_MANAGER): Removed.  Unused.
+
+	* src/cff/cf2intrp.c: Include `cf2intrp.h'.
+	* src/cff/cffdrivr.c (PAIR_TAG): Removed.  Unused.
+
+	* src/gzip/ftgzip.c (NO_DUMMY_DECL): Removed.  Unused.
+
+	* src/psaux/afmparse.c (afm_parser_read_int): Declare as `static'.
+
+	* src/pshinter/pshalgo.c (STRONGER, PSH_ZONE_MIN, PSH_ZONE_MAX):
+	Removed.  Unused.
+
+	* src/raster/ftraster.c (Render_Glyph): Declare as `static'.
+
+	* src/sfnt/ttpost.c (load_format_20): Fix signedness warning.
+
+	* src/truetype/ttdriver.c (PAIR_TAG): Removed.  Unused.
+	* src/truetype/ttsubpix.c (is_member_of_family_class,
+	is_member_of_style_class): Declare as `static'.
+
+	* src/type1/t1gload.c (T1_Parse_Glyph_And_Get_Char_String): Declare
+	as `static'.
+	* src/type1/t1load.c (mm_axis_unmap, mm_weights_unmap): Declare as
+	`static'.
+	(T1_FIELD_COUNT): Removed.  Unused.
+	* src/type1/t1parse.h (T1_Done_Table): Removed.  Unused.
+
+	* src/type42/t42parse.c (T1_Done_Table): Removed.  Unused.
+
+2015-02-25  Werner Lemberg  <wl@gnu.org>
+
 	[psaux] Signedness fixes.
 
 	* include/internal/psaux.h, src/psaux/afmparse.c,
