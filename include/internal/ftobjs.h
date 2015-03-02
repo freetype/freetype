@@ -84,11 +84,11 @@ FT_BEGIN_HEADER
                   : y + ( 3 * x >> 3 ) )
 
   /* we use the TYPEOF macro to suppress signedness compilation warnings */
-#define FT_PAD_FLOOR( x, n )  ( (x) & ~TYPEOF( x, (n)-1 ) )
+#define FT_PAD_FLOOR( x, n )  ( (x) & ~TYPEOF( x )( (n)-1 ) )
 #define FT_PAD_ROUND( x, n )  FT_PAD_FLOOR( (x) + ((n)/2), n )
 #define FT_PAD_CEIL( x, n )   FT_PAD_FLOOR( (x) + ((n)-1), n )
 
-#define FT_PIX_FLOOR( x )     ( (x) & ~TYPEOF( x, 63 ) )
+#define FT_PIX_FLOOR( x )     ( (x) & ~TYPEOF( x )63 )
 #define FT_PIX_ROUND( x )     FT_PIX_FLOOR( (x) + 32 )
 #define FT_PIX_CEIL( x )      FT_PIX_FLOOR( (x) + 63 )
 

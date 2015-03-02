@@ -309,9 +309,9 @@ FT_BEGIN_HEADER
 #if ( __GNUC__ >= 2                         || \
       defined( __IBM__TYPEOF__ )            || \
       ( __SUNPRO_C >= 0x5110 && !__STDC__ ) )
-#define TYPEOF( type, x )  (__typeof__ (type))(x)
+#define TYPEOF( type )  (__typeof__ (type))
 #else
-#define TYPEOF( type, x )  (x)
+#define TYPEOF( type )  /* empty */
 #endif
 
 

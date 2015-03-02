@@ -1,4 +1,16 @@
-2015-02-25  Werner Lemberg  <wl@gnu.org>
+2015-03-02  Werner Lemberg  <wl@gnu.org>
+
+	Simplify `TYPEOF' macro.
+
+	No need for two arguments.
+
+	* include/config/ftconfig.h, builds/unix/ftconfig.in,
+	builds/vms/ftconfig.h (TYPEOF): Updated.
+
+	* include/internal/ftobjs.h (FT_PAD_FLOOR, FT_PIX_FLOOR),
+	src/autofit/afwarp.h (AF_WARPER_FLOOR): Updated.
+
+2015-03-01  Werner Lemberg  <wl@gnu.org>
 
 	Various compiler warning fixes for `make multi'.
 
