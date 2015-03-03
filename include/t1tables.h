@@ -492,8 +492,9 @@ FT_BEGIN_HEADER
    *    FreeType error code.  0~means success.
    *
    * @note:
-   *    The string pointers within the font info structure are owned by
-   *    the face and don't need to be freed by the caller.
+   *    String pointers within the @PS_FontInfoRec structure are owned by
+   *    the face and don't need to be freed by the caller.  Missing entries
+   *    in the font's FontInfo dictionary are represented by NULL pointers.
    *
    *    If the font's format is not PostScript-based, this function will
    *    return the `FT_Err_Invalid_Argument' error code.
