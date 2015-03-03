@@ -362,9 +362,10 @@
 
         error   = FT_Load_Glyph( face, glyph_index, FT_LOAD_NO_SCALE );
         outline = face->glyph->outline;
-        if ( error || outline.n_points <= 0 )
+        /* reject glyphs that don't produce any rendering */
+        if ( error || outline.n_points <= 2 )
         {
-          FT_TRACE5(( "  U+%04lX contains no outlines\n", ch ));
+          FT_TRACE5(( "  U+%04lX contains no (usable) outlines\n", ch ));
           continue;
         }
 

@@ -1,3 +1,10 @@
+2015-03-03  Werner Lemberg  <wl@gnu.org>
+
+	[autofit] Fix Savannah bug #44241.
+
+	* src/autofit/aflatin.c (af_latin_metrics_init_blues): Reject glyphs
+	with less than 3 points.
+
 2015-03-02  Werner Lemberg  <wl@gnu.org>
 
 	Simplify `TYPEOF' macro.
