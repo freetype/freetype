@@ -908,6 +908,11 @@ FT_BEGIN_HEADER
   /*                           Can be NULL (e.g., in fonts embedded in a   */
   /*                           PDF file).                                  */
   /*                                                                       */
+  /*                           In case the font doesn't provide a specific */
+  /*                           family name entry, FreeType tries to        */
+  /*                           synthesize one, deriving it from other name */
+  /*                           entries.                                    */
+  /*                                                                       */
   /*    style_name          :: The face's style name.  This is an ASCII    */
   /*                           string, usually in English, that describes  */
   /*                           the typeface's style (like `Italic',        */
