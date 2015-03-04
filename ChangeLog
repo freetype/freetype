@@ -1,3 +1,13 @@
+2015-03-04  Werner Lemberg  <wl@gnu.org>
+
+	[truetype] Some fixes and code refactoring in `ttgxvar.c'.
+
+	* src/truetype/ttgxvar.c (ft_var_readpackedpoints): Fix return value
+	of `point_cnt' if two bytes are read.
+	Use a more vertical coding style.
+	(ft_var_readpackeddeltas): Use FT_UInt for `delta_cnt' parameter.
+	Use a more vertical coding style.
+
 2015-03-03  Werner Lemberg  <wl@gnu.org>
 
 	[autofit] Fix Savannah bug #44241.

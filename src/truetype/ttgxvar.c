@@ -20,7 +20,7 @@
   /*                                                                       */
   /* Apple documents the `fvar', `gvar', `cvar', and `avar' tables at      */
   /*                                                                       */
-  /*   http://developer.apple.com/fonts/TTRefMan/RM06/Chap6[fgca]var.html  */
+  /*   https://developer.apple.com/fonts/TrueType-Reference-Manual/RM06/Chap6[fgca]var.html */
   /*                                                                       */
   /* The documentation for `fvar' is inconsistent.  At one point it says   */
   /* that `countSizePairs' should be 3, at another point 2.  It should     */
@@ -60,9 +60,9 @@
 #ifdef TT_CONFIG_OPTION_GX_VAR_SUPPORT
 
 
-#define FT_Stream_FTell( stream )  \
+#define FT_Stream_FTell( stream )                         \
           (FT_ULong)( (stream)->cursor - (stream)->base )
-#define FT_Stream_SeekSet( stream, off ) \
+#define FT_Stream_SeekSet( stream, off )                  \
           ( (stream)->cursor = (stream)->base + (off) )
 
 
@@ -96,8 +96,8 @@
 #define ALL_POINTS  (FT_UShort*)~(FT_PtrDist)0
 
 
-#define GX_PT_POINTS_ARE_WORDS      0x80
-#define GX_PT_POINT_RUN_COUNT_MASK  0x7F
+#define GX_PT_POINTS_ARE_WORDS      0x80U
+#define GX_PT_POINT_RUN_COUNT_MASK  0x7FU
 
 
   /*************************************************************************/
@@ -126,26 +126,33 @@
                            FT_UInt   *point_cnt )
   {
     FT_UShort *points = NULL;
-    FT_Int     n;
-    FT_Int     runcnt;
-    FT_Int     i;
-    FT_Int     j;
-    FT_Int     first;
+    FT_UInt    n;
+    FT_UInt    runcnt;
+    FT_UInt    i, j;
+    FT_UShort  first;
     FT_Memory  memory = stream->memory;
     FT_Error   error  = FT_Err_Ok;
 
     FT_UNUSED( error );
 
 
-    *point_cnt = n = FT_GET_BYTE();
+    *point_cnt = 0;
+
+    n = FT_GET_BYTE();
     if ( n == 0 )
       return ALL_POINTS;
 
     if ( n & GX_PT_POINTS_ARE_WORDS )
-      n = FT_GET_BYTE() | ( ( n & GX_PT_POINT_RUN_COUNT_MASK ) << 8 );
+    {
+      n  &= GX_PT_POINT_RUN_COUNT_MASK;
+      n <<= 8;
+      n  |= FT_GET_BYTE();
+    }
 
     if ( FT_NEW_ARRAY( points, n ) )
       return NULL;
+
+    *point_cnt = n;
 
     i = 0;
     while ( i < n )
@@ -153,25 +160,33 @@
       runcnt = FT_GET_BYTE();
       if ( runcnt & GX_PT_POINTS_ARE_WORDS )
       {
-        runcnt = runcnt & GX_PT_POINT_RUN_COUNT_MASK;
-        first  = points[i++] = FT_GET_USHORT();
+        runcnt     &= GX_PT_POINT_RUN_COUNT_MASK;
+        first       = FT_GET_USHORT();
+        points[i++] = first;
 
         if ( runcnt < 1 || i + runcnt >= n )
           goto Exit;
 
-        /* first point not included in runcount */
-        for ( j = 0; j < runcnt; ++j )
-          points[i++] = (FT_UShort)( first += FT_GET_USHORT() );
+        /* first point not included in run count */
+        for ( j = 0; j < runcnt; j++ )
+        {
+          first      += FT_GET_USHORT();
+          points[i++] = first;
+        }
       }
       else
       {
-        first = points[i++] = FT_GET_BYTE();
+        first       = FT_GET_BYTE();
+        points[i++] = first;
 
         if ( runcnt < 1 || i + runcnt >= n )
           goto Exit;
 
-        for ( j = 0; j < runcnt; ++j )
-          points[i++] = (FT_UShort)( first += FT_GET_BYTE() );
+        for ( j = 0; j < runcnt; j++ )
+        {
+          first      += FT_GET_BYTE();
+          points[i++] = first;
+        }
       }
     }
 
@@ -180,12 +195,9 @@
   }
 
 
-  enum
-  {
-    GX_DT_DELTAS_ARE_ZERO      = 0x80,
-    GX_DT_DELTAS_ARE_WORDS     = 0x40,
-    GX_DT_DELTA_RUN_COUNT_MASK = 0x3F
-  };
+#define GX_DT_DELTAS_ARE_ZERO       0x80U
+#define GX_DT_DELTAS_ARE_WORDS      0x40U
+#define GX_DT_DELTA_RUN_COUNT_MASK  0x3FU
 
 
   /*************************************************************************/
@@ -200,7 +212,7 @@
   /* <Input>                                                               */
   /*    stream    :: The data stream.                                      */
   /*                                                                       */
-  /*    delta_cnt :: The number of to be read.                             */
+  /*    delta_cnt :: The number of deltas to be read.                      */
   /*                                                                       */
   /* <Return>                                                              */
   /*    An array of FT_Short containing the deltas for the affected        */
@@ -210,12 +222,11 @@
   /*                                                                       */
   static FT_Short*
   ft_var_readpackeddeltas( FT_Stream  stream,
-                           FT_Offset  delta_cnt )
+                           FT_UInt    delta_cnt )
   {
     FT_Short  *deltas = NULL;
-    FT_UInt    runcnt;
-    FT_Offset  i;
-    FT_UInt    j;
+    FT_UInt    runcnt, cnt;
+    FT_UInt    i, j;
     FT_Memory  memory = stream->memory;
     FT_Error   error  = FT_Err_Ok;
 
@@ -229,34 +240,30 @@
     while ( i < delta_cnt )
     {
       runcnt = FT_GET_BYTE();
+      cnt    = runcnt & GX_DT_DELTA_RUN_COUNT_MASK;
+
       if ( runcnt & GX_DT_DELTAS_ARE_ZERO )
       {
-        /* runcnt zeroes get added */
-        for ( j = 0;
-              j <= ( runcnt & GX_DT_DELTA_RUN_COUNT_MASK ) && i < delta_cnt;
-              ++j )
+        /* `runcnt' zeroes get added */
+        for ( j = 0; j <= cnt && i < delta_cnt; j++ )
           deltas[i++] = 0;
       }
       else if ( runcnt & GX_DT_DELTAS_ARE_WORDS )
       {
-        /* runcnt shorts from the stack */
-        for ( j = 0;
-              j <= ( runcnt & GX_DT_DELTA_RUN_COUNT_MASK ) && i < delta_cnt;
-              ++j )
+        /* `runcnt' shorts from the stack */
+        for ( j = 0; j <= cnt && i < delta_cnt; j++ )
           deltas[i++] = FT_GET_SHORT();
       }
       else
       {
-        /* runcnt signed bytes from the stack */
-        for ( j = 0;
-              j <= ( runcnt & GX_DT_DELTA_RUN_COUNT_MASK ) && i < delta_cnt;
-              ++j )
+        /* `runcnt' signed bytes from the stack */
+        for ( j = 0; j <= cnt && i < delta_cnt; j++ )
           deltas[i++] = FT_GET_CHAR();
       }
 
-      if ( j <= ( runcnt & GX_DT_DELTA_RUN_COUNT_MASK ) )
+      if ( j <= cnt )
       {
-        /* Bad format */
+        /* bad format */
         FT_FREE( deltas );
         return NULL;
       }
@@ -330,10 +337,9 @@
 
       for ( j = 0; j < segment->pairCount; ++j )
       {
-        segment->correspondence[j].fromCoord =
-          FT_GET_SHORT() << 2;    /* convert to Fixed */
-        segment->correspondence[j].toCoord =
-          FT_GET_SHORT()<<2;    /* convert to Fixed */
+        /* convert to Fixed */
+        segment->correspondence[j].fromCoord = FT_GET_SHORT() << 2;
+        segment->correspondence[j].toCoord   = FT_GET_SHORT() << 2;
       }
     }
 
