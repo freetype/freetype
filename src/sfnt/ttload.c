@@ -417,7 +417,9 @@
         if ( entry->Tag == TTAG_hmtx ||
              entry->Tag == TTAG_vmtx )
         {
+#ifdef FT_DEBUG_LEVEL_TRACE
           FT_ULong  old_length = entry->Length;
+#endif
 
 
           /* make metrics table length a multiple of 4 */
