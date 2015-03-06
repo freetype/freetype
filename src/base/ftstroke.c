@@ -1220,11 +1220,8 @@
       goto Exit;
 
     /* when we turn to the right, the inside side is 0 */
-    inside_side = 0;
-
     /* otherwise, the inside side is 1 */
-    if ( turn < 0 )
-      inside_side = 1;
+    inside_side = ( turn < 0 );
 
     /* process the inside side */
     error = ft_stroker_inside( stroker, inside_side, line_length );
@@ -1232,7 +1229,7 @@
       goto Exit;
 
     /* process the outside side */
-    error = ft_stroker_outside( stroker, 1 - inside_side, line_length );
+    error = ft_stroker_outside( stroker, !inside_side, line_length );
 
   Exit:
     return error;
@@ -1941,11 +1938,8 @@
       if ( turn != 0 )
       {
         /* when we turn to the right, the inside side is 0 */
-        inside_side = 0;
-
         /* otherwise, the inside side is 1 */
-        if ( turn < 0 )
-          inside_side = 1;
+        inside_side = ( turn < 0 );
 
         error = ft_stroker_inside( stroker,
                                    inside_side,
@@ -1955,7 +1949,7 @@
 
         /* process the outside side */
         error = ft_stroker_outside( stroker,
-                                    1 - inside_side,
+                                    !inside_side,
                                     stroker->subpath_line_length );
         if ( error )
           goto Exit;

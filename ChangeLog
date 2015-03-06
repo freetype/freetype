@@ -1,3 +1,7 @@
+2015-03-05  Alexei Podtelezhnikov <apodtele@gmail.com>
+
+	* src/base/ftstroke.c: Simplify.
+
 2015-03-04  Werner Lemberg  <wl@gnu.org>
 
 	[truetype] Some fixes and code refactoring in `ttgxvar.c'.
