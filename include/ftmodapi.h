@@ -469,7 +469,9 @@ FT_BEGIN_HEADER
   /* <Description>                                                         */
   /*    This function is used to create a new FreeType library instance    */
   /*    from a given memory object.  It is thus possible to use libraries  */
-  /*    with distinct memory allocators within the same program.           */
+  /*    with distinct memory allocators within the same program.  Note,    */
+  /*    however, that the used @FT_Memory structure is expected to remain  */
+  /*    valid for the life of the @FT_Library object.                      */
   /*                                                                       */
   /*    Normally, you would call this function (followed by a call to      */
   /*    @FT_Add_Default_Modules or a series of calls to @FT_Add_Module)    */
