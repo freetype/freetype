@@ -140,7 +140,7 @@ FT_BEGIN_HEADER
   /*    This function may be useful if you want to control FreeType 2's    */
   /*    debug level in your application.                                   */
   /*                                                                       */
-  FT_BASE( const char * )
+  FT_BASE( const char* )
   FT_Trace_Get_Name( FT_Int  idx );
 
 
