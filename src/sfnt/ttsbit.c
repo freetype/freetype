@@ -1448,7 +1448,7 @@
       FT_Library  library = face->root.glyph->library;
 
 
-      FT_Bitmap_New( &new_map );
+      FT_Bitmap_Init( &new_map );
 
       /* Convert to 8bit grayscale. */
       error = FT_Bitmap_Convert( library, map, &new_map, 1 );

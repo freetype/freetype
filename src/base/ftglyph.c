@@ -82,7 +82,7 @@
     }
     else
     {
-      FT_Bitmap_New( &glyph->bitmap );
+      FT_Bitmap_Init( &glyph->bitmap );
       error = FT_Bitmap_Copy( library, &slot->bitmap, &glyph->bitmap );
     }
 

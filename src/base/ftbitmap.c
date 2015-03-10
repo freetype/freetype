@@ -31,6 +31,16 @@
   /* documentation is in ftbitmap.h */
 
   FT_EXPORT_DEF( void )
+  FT_Bitmap_Init( FT_Bitmap  *abitmap )
+  {
+    if ( abitmap )
+      *abitmap = null_bitmap;
+  }
+
+
+  /* deprecated function name; retained for ABI compatibility */
+
+  FT_EXPORT_DEF( void )
   FT_Bitmap_New( FT_Bitmap  *abitmap )
   {
     if ( abitmap )
@@ -297,7 +307,7 @@
 
 
         /* convert to 8bpp */
-        FT_Bitmap_New( &tmp );
+        FT_Bitmap_Init( &tmp );
         error = FT_Bitmap_Convert( library, bitmap, &tmp, 1 );
         if ( error )
           return error;
@@ -759,7 +769,7 @@
       FT_Error   error;
 
 
-      FT_Bitmap_New( &bitmap );
+      FT_Bitmap_Init( &bitmap );
       error = FT_Bitmap_Copy( slot->library, &slot->bitmap, &bitmap );
       if ( error )
         return error;

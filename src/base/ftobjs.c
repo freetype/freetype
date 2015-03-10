@@ -4123,7 +4123,7 @@
       FT_Error   err;
 
 
-      FT_Bitmap_New( &bitmap );
+      FT_Bitmap_Init( &bitmap );
 
       /* this also converts the bitmap flow to `down' (i.e., pitch > 0) */
       err = FT_Bitmap_Convert( library, &slot->bitmap, &bitmap, 1 );
