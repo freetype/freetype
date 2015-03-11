@@ -1,3 +1,9 @@
+2015-03-10  Alexei Podtelezhnikov <apodtele@gmail.com>
+
+	Fix Savannah bug #44412 (part 1).
+
+	* src/base/ftstroke.c (ft_stroker_inside): Handle near U-turns.
+
 2015-03-10  Werner Lemberg  <wl@gnu.org>
 
 	[base] Rename `FT_Bitmap_New' to `FT_Bitmap_Init'.

@@ -999,7 +999,9 @@
 
     /* Only intersect borders if between two lineto's and both */
     /* lines are long enough (line_length is zero for curves). */
-    if ( !border->movable || line_length == 0 )
+    /* Also avoid U-turns of nearly 180 degree.                */
+    if ( !border->movable || line_length == 0  ||
+         theta > 0x59C000 || theta < -0x59C000 )
       intersect = FALSE;
     else
     {
