@@ -19,6 +19,17 @@
 #include "afranges.h"
 
 
+  const AF_Script_UniRangeRec  af_arab_uniranges[] =
+  {
+    AF_UNIRANGE_REC(  0x0600UL,  0x06FFUL ),  /* Arabic                                 */
+    AF_UNIRANGE_REC(  0x0750UL,  0x07FFUL ),  /* Arabic Supplement                      */
+    AF_UNIRANGE_REC(  0x08A0UL,  0x08FFUL ),  /* Arabic Extended-A                      */
+    AF_UNIRANGE_REC(  0xFB50UL,  0xFDFFUL ),  /* Arabic Presentation Forms-A            */
+    AF_UNIRANGE_REC(  0xFE70UL,  0xFEFFUL ),  /* Arabic Presentation Forms-B            */
+    AF_UNIRANGE_REC( 0x1EE00UL, 0x1EEFFUL ),  /* Arabic Mathematical Alphabetic Symbols */
+    AF_UNIRANGE_REC(       0UL,       0UL )
+  };
+
   const AF_Script_UniRangeRec  af_cyrl_uniranges[] =
   {
     AF_UNIRANGE_REC(  0x0400UL,  0x04FFUL ),  /* Cyrillic            */

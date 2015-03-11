@@ -1,5 +1,23 @@
 2015-03-11  Werner Lemberg  <wl@gnu.org>
 
+	[autofit] Add support for Arabic script.
+
+	Thanks to Titus Nemeth <tn@tntypography.eu> for guidance!
+
+	* src/autofit/afblue.dat: Add blue zone data for Arabic.
+
+	* src/autofit/afblue.c, src/autofit/afblue.h: Regenerated.
+
+	* src/autofit/afscript.h: Add Arabic standard characters.
+
+	* src/autofit/afranges.c: Add Arabic data.
+
+	* src/autofit/afstyles.h: Add Arabic data.
+
+	* docs/CHANGES: Document it.
+
+2015-03-11  Werner Lemberg  <wl@gnu.org>
+
 	Rename `svxf86nm.h' to `svfntfmt.h'; update related symbols.
 
 	* include/internal/ftserv.h (FT_SERVICE_XFREE86_NAME_H): Renamed

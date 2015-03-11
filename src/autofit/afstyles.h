@@ -80,6 +80,14 @@
                        "default",                        \
                        DEFAULT )
 
+
+  STYLE( arab_dflt, ARAB_DFLT,
+         "Arabic default style",
+         AF_WRITING_SYSTEM_LATIN,
+         AF_SCRIPT_ARAB,
+         AF_BLUE_STRINGSET_ARAB,
+         AF_COVERAGE_DEFAULT )
+
   META_STYLE_LATIN( cyrl, CYRL, "Cyrillic" )
 
   META_STYLE_LATIN( grek, GREK, "Greek" )

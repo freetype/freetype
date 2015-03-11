@@ -26,6 +26,10 @@
   af_blue_strings[] =
   {
     /* */
+    '\xD8', '\xA7', '\xD8', '\xA5', '\xD9', '\x84', '\xD9', '\x83', '\xD8', '\xB7', '\xD8', '\xB8',  /* ا إ ل ك ط ظ */
+    '\0',
+    '\xD8', '\xAA', '\xD8', '\xAB', '\xD8', '\xB7', '\xD8', '\xB8', '\xD9', '\x83',  /* ت ث ط ظ ك */
+    '\0',
     '\xD0', '\x91', '\xD0', '\x92', '\xD0', '\x95', '\xD0', '\x9F', '\xD0', '\x97', '\xD0', '\x9E', '\xD0', '\xA1', '\xD0', '\xAD',  /* БВЕПЗОСЭ */
     '\0',
     '\xD0', '\x91', '\xD0', '\x92', '\xD0', '\x95', '\xD0', '\xA8', '\xD0', '\x97', '\xD0', '\x9E', '\xD0', '\xA1', '\xD0', '\xAD',  /* БВЕШЗОСЭ */
@@ -135,6 +139,9 @@
   af_blue_stringsets[] =
   {
     /* */
+    { AF_BLUE_STRING_ARABIC_TOP,   AF_BLUE_PROPERTY_LATIN_TOP },
+    { AF_BLUE_STRING_ARABIC_JOIN,  0                          },
+    { AF_BLUE_STRING_MAX,          0                          },
     { AF_BLUE_STRING_CYRILLIC_CAPITAL_TOP,     AF_BLUE_PROPERTY_LATIN_TOP        },
     { AF_BLUE_STRING_CYRILLIC_CAPITAL_BOTTOM,  0                                 },
     { AF_BLUE_STRING_CYRILLIC_SMALL,           AF_BLUE_PROPERTY_LATIN_TOP      |
