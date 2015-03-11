@@ -2,7 +2,7 @@
 /*                                                                         */
 /*  ftfntfmt.c                                                             */
 /*                                                                         */
-/*    FreeType utility file for X11 support (body).                        */
+/*    FreeType utility file for font formats (body).                       */
 /*                                                                         */
 /*  Copyright 2002-2015 by                                                 */
 /*  David Turner, Robert Wilhelm, and Werner Lemberg.                      */
@@ -23,6 +23,21 @@
 
 
   /* documentation is in ftfntfmt.h */
+
+  FT_EXPORT_DEF( const char* )
+  FT_Get_Font_Format( FT_Face  face )
+  {
+    const char*  result = NULL;
+
+
+    if ( face )
+      FT_FACE_FIND_SERVICE( face, result, XF86_NAME );
+
+    return result;
+  }
+
+
+  /* deprecated function name; retained for ABI compatibility */
 
   FT_EXPORT_DEF( const char* )
   FT_Get_X11_Font_Format( FT_Face  face )

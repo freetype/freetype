@@ -34,9 +34,14 @@ CHANGES BETWEEN 2.5.5 and 2.6
       This  change doesn't  break  the ABI;  however,  it might  cause
       compiler warnings.
 
-    - Function `FT_Bitmap_New'  has been renamed to  `FT_Bitmap_Init',
-      since this  name better  reflects its  function.   For backwards
+    - Function `FT_Bitmap_New'  has been renamed  to `FT_Bitmap_Init',
+      since  this name  better reflects  its function.   For backwards
       compatibility, the old function name is still available.
+
+    - Function   `FT_Get_X11_Font_Format'   has    been   renamed   to
+      `FT_Get_Font_Format',  since  this   name  better  reflects  its
+      function.  For backwards compatibility, the old function name is
+      still available.
 
 
 ======================================================================

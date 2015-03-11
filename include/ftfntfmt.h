@@ -2,7 +2,7 @@
 /*                                                                         */
 /*  ftfntfmt.h                                                             */
 /*                                                                         */
-/*    Support functions for X11.                                           */
+/*    Support functions for font formats.                                  */
 /*                                                                         */
 /*  Copyright 2002-2015 by                                                 */
 /*  David Turner, Robert Wilhelm, and Werner Lemberg.                      */
@@ -49,22 +49,20 @@ FT_BEGIN_HEADER
   /*   however, there are special cases (like in PDF devices) where it is  */
   /*   important to differentiate, in spite of FreeType's uniform API.     */
   /*                                                                       */
-  /*   This function is in the X11/xf86 namespace for historical reasons   */
-  /*   and in no way depends on that windowing system.                     */
-  /*                                                                       */
   /*************************************************************************/
 
 
   /*************************************************************************/
   /*                                                                       */
   /* <Function>                                                            */
-  /*   FT_Get_X11_Font_Format                                              */
+  /*   FT_Get_Font_Format                                                  */
   /*                                                                       */
   /* <Description>                                                         */
-  /*   Return a string describing the format of a given face, using values */
-  /*   that can be used as an X11 FONT_PROPERTY.  Possible values are      */
-  /*   `TrueType', `Type~1', `BDF', `PCF', `Type~42', `CID~Type~1', `CFF', */
-  /*   `PFR', and `Windows~FNT'.                                           */
+  /*   Return a string describing the format of a given face.  Possible    */
+  /*   values are `TrueType', `Type~1', `BDF', `PCF', `Type~42',           */
+  /*   `CID~Type~1', `CFF', `PFR', and `Windows~FNT'.                      */
+  /*                                                                       */
+  /*   The return value is suitable to be used as an X11 FONT_PROPERTY.    */
   /*                                                                       */
   /* <Input>                                                               */
   /*   face ::                                                             */
@@ -73,8 +71,18 @@ FT_BEGIN_HEADER
   /* <Return>                                                              */
   /*   Font format string.  NULL in case of error.                         */
   /*                                                                       */
+  /* <Note>                                                                */
+  /*   A deprecated name for the same function is                          */
+  /*   `FT_Get_X11_Font_Format'.                                           */
+  /*                                                                       */
+  FT_EXPORT( const char* )
+  FT_Get_Font_Format( FT_Face  face );
+
+
+  /* deprecated */
   FT_EXPORT( const char* )
   FT_Get_X11_Font_Format( FT_Face  face );
+
 
   /* */
 
