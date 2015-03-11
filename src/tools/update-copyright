@@ -6,8 +6,8 @@
 topdir=`git rev-parse --show-toplevel`
 toolsdir=$topdir/src/tools
 
-git ls-files $topdir                    \
-| sed 's|^|./|'                         \
+git ls-files --full-name $topdir        \
+| sed 's|^|../../|'                     \
 | grep -vFf $toolsdir/no-copyright      \
 | xargs $toolsdir/update-copyright-year
 

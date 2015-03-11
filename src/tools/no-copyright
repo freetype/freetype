@@ -26,7 +26,6 @@ src/bdf/bdflib.c
 src/bdf/module.mk
 src/bdf/README
 src/bdf/rules.mk
-README
 #
 src/pcf/module.mk
 src/pcf/pcf.c

@@ -1,5 +1,14 @@
 2015-03-11  Werner Lemberg  <wl@gnu.org>
 
+	Fix automatic copyright updating.
+
+	* src/tools/update-copyright: Make scanning of `no-copyright'
+	actually work.
+
+	* src/tools/no-copyright: Don't include README in general.
+
+2015-03-11  Werner Lemberg  <wl@gnu.org>
+
 	Rename `ftxf86.[ch]' to `ftfntfmt.[ch]'.
 
 	CMakeLists.txt, builds/amiga/makefile, builds/amiga/makefile.os4,
