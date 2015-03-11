@@ -750,7 +750,7 @@ FT_BEGIN_HEADER
 #define FT_SERVICE_TRUETYPE_ENGINE_H    <internal/services/svtteng.h>
 #define FT_SERVICE_TT_CMAP_H            <internal/services/svttcmap.h>
 #define FT_SERVICE_WINFNT_H             <internal/services/svwinfnt.h>
-#define FT_SERVICE_XFREE86_NAME_H       <internal/services/svxf86nm.h>
+#define FT_SERVICE_FONT_FORMAT_H        <internal/services/svfntfmt.h>
 #define FT_SERVICE_TRUETYPE_GLYF_H      <internal/services/svttglyf.h>
 
  /* */

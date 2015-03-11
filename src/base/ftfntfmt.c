@@ -19,7 +19,7 @@
 #include <ft2build.h>
 #include FT_FONT_FORMATS_H
 #include FT_INTERNAL_OBJECTS_H
-#include FT_SERVICE_XFREE86_NAME_H
+#include FT_SERVICE_FONT_FORMAT_H
 
 
   /* documentation is in ftfntfmt.h */
@@ -31,7 +31,7 @@
 
 
     if ( face )
-      FT_FACE_FIND_SERVICE( face, result, XF86_NAME );
+      FT_FACE_FIND_SERVICE( face, result, FONT_FORMAT );
 
     return result;
   }
@@ -46,7 +46,7 @@
 
 
     if ( face )
-      FT_FACE_FIND_SERVICE( face, result, XF86_NAME );
+      FT_FACE_FIND_SERVICE( face, result, FONT_FORMAT );
 
     return result;
   }

@@ -33,7 +33,7 @@ THE SOFTWARE.
 #include FT_TRUETYPE_IDS_H
 
 #include FT_SERVICE_BDF_H
-#include FT_SERVICE_XFREE86_NAME_H
+#include FT_SERVICE_FONT_FORMAT_H
 
 #include "bdf.h"
 #include "bdfdrivr.h"
@@ -836,8 +836,8 @@ THE SOFTWARE.
 
   static const FT_ServiceDescRec  bdf_services[] =
   {
-    { FT_SERVICE_ID_BDF,       &bdf_service_bdf },
-    { FT_SERVICE_ID_XF86_NAME, FT_XF86_FORMAT_BDF },
+    { FT_SERVICE_ID_BDF,         &bdf_service_bdf },
+    { FT_SERVICE_ID_FONT_FORMAT, FT_FONT_FORMAT_BDF },
     { NULL, NULL }
   };
 

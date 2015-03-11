@@ -48,7 +48,7 @@ THE SOFTWARE.
 #define FT_COMPONENT  trace_pcfread
 
 #include FT_SERVICE_BDF_H
-#include FT_SERVICE_XFREE86_NAME_H
+#include FT_SERVICE_FONT_FORMAT_H
 
 
   /*************************************************************************/
@@ -669,8 +669,8 @@ THE SOFTWARE.
 
   static const FT_ServiceDescRec  pcf_services[] =
   {
-    { FT_SERVICE_ID_BDF,       &pcf_service_bdf },
-    { FT_SERVICE_ID_XF86_NAME, FT_XF86_FORMAT_PCF },
+    { FT_SERVICE_ID_BDF,         &pcf_service_bdf },
+    { FT_SERVICE_ID_FONT_FORMAT, FT_FONT_FORMAT_PCF },
     { NULL, NULL }
   };
 

@@ -28,7 +28,7 @@
 #include "winfnt.h"
 #include "fnterrs.h"
 #include FT_SERVICE_WINFNT_H
-#include FT_SERVICE_XFREE86_NAME_H
+#include FT_SERVICE_FONT_FORMAT_H
 
   /*************************************************************************/
   /*                                                                       */
@@ -1108,8 +1108,8 @@
 
   static const FT_ServiceDescRec  winfnt_services[] =
   {
-    { FT_SERVICE_ID_XF86_NAME, FT_XF86_FORMAT_WINFNT },
-    { FT_SERVICE_ID_WINFNT,    &winfnt_service_rec },
+    { FT_SERVICE_ID_FONT_FORMAT, FT_FONT_FORMAT_WINFNT },
+    { FT_SERVICE_ID_WINFNT,      &winfnt_service_rec },
     { NULL, NULL }
   };
 

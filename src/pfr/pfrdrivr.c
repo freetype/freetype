@@ -20,7 +20,7 @@
 #include FT_INTERNAL_DEBUG_H
 #include FT_INTERNAL_STREAM_H
 #include FT_SERVICE_PFR_H
-#include FT_SERVICE_XFREE86_NAME_H
+#include FT_SERVICE_FONT_FORMAT_H
 #include "pfrdrivr.h"
 #include "pfrobjs.h"
 
@@ -153,7 +153,7 @@
   static const FT_ServiceDescRec  pfr_services[] =
   {
     { FT_SERVICE_ID_PFR_METRICS, &pfr_metrics_service_rec },
-    { FT_SERVICE_ID_XF86_NAME,   FT_XF86_FORMAT_PFR },
+    { FT_SERVICE_ID_FONT_FORMAT, FT_FONT_FORMAT_PFR },
     { NULL, NULL }
   };
 

@@ -1,5 +1,22 @@
 2015-03-11  Werner Lemberg  <wl@gnu.org>
 
+	Rename `svxf86nm.h' to `svfntfmt.h'; update related symbols.
+
+	* include/internal/ftserv.h (FT_SERVICE_XFREE86_NAME_H): Renamed
+	to...
+	(FT_SERVICE_FONT_FORMAT_H): This.
+
+	* include/internal/services/svfntfmt.h (FT_XF86_FORMAT_*): Renamed
+	to ...
+	(FT_FONT_FORMAT_*): This.
+
+	src/base/ftfntfmt.c, src/bdf/bdfdrivr.c, src/cff/cffdrivr.c,
+	src/cid/cidriver.c, src/pcf/pcfdrivr.c, src/pfr/pfrdrivr.c,
+	src/truetype/ttdriver.c, src/type1/t1driver.c,
+	src/type42/t42drivr.c, src/winfonts/winfnt.c: Updated.
+
+2015-03-11  Werner Lemberg  <wl@gnu.org>
+
 	[base] Rename `FT_XFREE86_H' to `FT_FONT_FORMATS_H'.
 
 	* include/config/ftheader.h: Implement it.
