@@ -5,8 +5,7 @@
 # Copyright 2010-2015 by
 # Joel Klinghed.
 #
-# Based on src/lzw/rules.mk, Copyright 2004-2006 by
-# Albert Chin-A-Young.
+# based on `src/lzw/rules.mk'
 #
 # This file is part of the FreeType project, and may only be used, modified,
 # and distributed under the terms of the FreeType project license,

@@ -5267,7 +5267,7 @@ def main():
   write( "/*                                                                         */\n" )
   write( "/*    PostScript glyph names.                                              */\n" )
   write( "/*                                                                         */\n" )
-  write( "/*  Copyright 2005, 2008, 2011 by                                          */\n" )
+  write( "/*  Copyright 2005-2015 by                                                 */\n" )
   write( "/*  David Turner, Robert Wilhelm, and Werner Lemberg.                      */\n" )
   write( "/*                                                                         */\n" )
   write( "/*  This file is part of the FreeType project, and may only be used,       */\n" )

@@ -11,8 +11,7 @@
 /*  Copyright 2010-2015 by                                                 */
 /*  Joel Klinghed.                                                         */
 /*                                                                         */
-/*  Based on src/gzip/ftgzip.c, Copyright 2002 - 2010 by                   */
-/*  David Turner, Robert Wilhelm, and Werner Lemberg.                      */
+/*  based on `src/gzip/ftgzip.c'                                           */
 /*                                                                         */
 /*  This file is part of the FreeType project, and may only be used,       */
 /*  modified, and distributed under the terms of the FreeType project      */

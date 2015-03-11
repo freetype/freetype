@@ -23,7 +23,7 @@ $! * LOPTS - Options to be passed to the link command
 $! * CCOPT - Options to be passed to the C compiler
 $!
 $! In case of problems with the install you might contact me at
-$! zinser@zinser.no-ip.info(preferred) or
+$! zinser@zinser.no-ip.info (preferred) or
 $! zinser@sysdev.deutsche-boerse.com (work)
 $!
 $! Make procedure history for Freetype2
@@ -1197,7 +1197,7 @@ $! Analyze Object files for OpenVMS AXP to extract Procedure and Data
 $! information to build a symbol vector for a shareable image
 $! All the "brains" of this logic was suggested by Hartmut Becker
 $! (Hartmut.Becker@compaq.com). All the bugs were introduced by me
-$! (zinser@decus.de), so if you do have problem reports please do not
+$! (zinser@zinser.no-ip.info), so if you do have problem reports please do not
 $! bother Hartmut/HP, but get in touch with me
 $!
 $! Version history
