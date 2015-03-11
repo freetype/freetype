@@ -43,6 +43,10 @@ CHANGES BETWEEN 2.5.5 and 2.6
       function.  For backwards compatibility, the old function name is
       still available.
 
+      Additionally, the header  file macro for this  function has been
+      renamed to  `FT_FONT_FORMATS_H' (the old name  `FT_XFREE86_H' is
+      retained for backwards compatibility).
+
 
 ======================================================================
 

@@ -1,5 +1,12 @@
 2015-03-11  Werner Lemberg  <wl@gnu.org>
 
+	[base] Rename `FT_XFREE86_H' to `FT_FONT_FORMATS_H'.
+
+	* include/config/ftheader.h: Implement it.
+	* src/base/ftfntfmt.c, docs/CHANGES: Updated.
+
+2015-03-11  Werner Lemberg  <wl@gnu.org>
+
 	[base] Rename `FT_Get_X11_Font_Format' to `FT_Get_Font_Format'.
 
 	* include/ftfntfmt.h, src/base/ftfntfmt.c: Implement it.

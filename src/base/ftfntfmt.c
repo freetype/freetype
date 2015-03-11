@@ -17,7 +17,7 @@
 
 
 #include <ft2build.h>
-#include FT_XFREE86_H
+#include FT_FONT_FORMATS_H
 #include FT_INTERNAL_OBJECTS_H
 #include FT_SERVICE_XFREE86_NAME_H
 

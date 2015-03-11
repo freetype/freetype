@@ -710,14 +710,16 @@
   /*************************************************************************
    *
    * @macro:
-   *   FT_XFREE86_H
+   *   FT_FONT_FORMATS_H
    *
    * @description:
    *   A macro used in #include statements to name the file containing the
-   *   FreeType~2 API which provides functions specific to the XFree86 and
-   *   X.Org X11 servers.
+   *   FreeType~2 API which provides functions specific to font formats.
    */
-#define FT_XFREE86_H  <ftfntfmt.h>
+#define FT_FONT_FORMATS_H  <ftfntfmt.h>
+
+  /* deprecated */
+#define FT_XFREE86_H  FT_FONT_FORMATS_H
 
 
   /*************************************************************************
