@@ -1,6 +1,6 @@
 /***************************************************************************/
 /*                                                                         */
-/*  ftxf86.c                                                               */
+/*  ftfntfmt.c                                                             */
 /*                                                                         */
 /*    FreeType utility file for X11 support (body).                        */
 /*                                                                         */
@@ -22,7 +22,7 @@
 #include FT_SERVICE_XFREE86_NAME_H
 
 
-  /* documentation is in ftxf86.h */
+  /* documentation is in ftfntfmt.h */
 
   FT_EXPORT_DEF( const char* )
   FT_Get_X11_Font_Format( FT_Face  face )

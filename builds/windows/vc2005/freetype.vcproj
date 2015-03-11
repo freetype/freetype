@@ -346,6 +346,8 @@
       <Filter Name="FT_MODULES">
         <File RelativePath="..\..\..\src\base\ftbbox.c">
         </File>
+        <File RelativePath="..\..\..\src\base\ftfntfmt.c">
+        </File>
         <File RelativePath="..\..\..\src\base\ftmm.c">
           <FileConfiguration Name="Release|Win32">
             <Tool Name="VCCLCompilerTool" Optimization="2" AdditionalIncludeDirectories="" PreprocessorDefinitions="" />
@@ -373,8 +375,6 @@
         <File RelativePath="..\..\..\src\base\fttype1.c">
         </File>
         <File RelativePath="..\..\..\src\base\ftwinfnt.c">
-        </File>
-        <File RelativePath="..\..\..\src\base\ftxf86.c">
         </File>
         <File RelativePath="..\..\..\src\base\ftlcdfil.c">
         </File>

@@ -717,7 +717,7 @@
    *   FreeType~2 API which provides functions specific to the XFree86 and
    *   X.Org X11 servers.
    */
-#define FT_XFREE86_H  <ftxf86.h>
+#define FT_XFREE86_H  <ftfntfmt.h>
 
 
   /*************************************************************************

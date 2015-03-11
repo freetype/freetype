@@ -226,6 +226,10 @@ SOURCE=..\..\..\src\base\ftbitmap.c
 # End Source File
 # Begin Source File
 
+SOURCE=..\..\..\src\base\ftfntfmt.c
+# End Source File
+# Begin Source File
+
 SOURCE=..\..\..\src\base\ftfstype.c
 # End Source File
 # Begin Source File
@@ -298,10 +302,6 @@ SOURCE=..\..\..\src\base\fttype1.c
 # Begin Source File
 
 SOURCE=..\..\..\src\base\ftwinfnt.c
-# End Source File
-# Begin Source File
-
-SOURCE=..\..\..\src\base\ftxf86.c
 # End Source File
 # Begin Source File
 
