@@ -299,11 +299,9 @@
     FT_Vector  v;
 
 
-    v.x = FT_TRIG_SCALE >> 8;
-    v.y = 0;
-    ft_trig_pseudo_rotate( &v, angle );
+    FT_Vector_Unit( &v, angle );
 
-    return ( v.x + 0x80L ) >> 8;
+    return v.x;
   }
 
 
@@ -312,7 +310,12 @@
   FT_EXPORT_DEF( FT_Fixed )
   FT_Sin( FT_Angle  angle )
   {
-    return FT_Cos( FT_ANGLE_PI2 - angle );
+    FT_Vector  v;
+
+
+    FT_Vector_Unit( &v, angle );
+
+    return v.y;
   }
 
 
@@ -324,9 +327,7 @@
     FT_Vector  v;
 
 
-    v.x = FT_TRIG_SCALE >> 8;
-    v.y = 0;
-    ft_trig_pseudo_rotate( &v, angle );
+    FT_Vector_Unit( &v, angle );
 
     return FT_DivFix( v.y, v.x );
   }

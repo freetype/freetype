@@ -1,3 +1,9 @@
+2015-03-17  Alexei Podtelezhnikov <apodtele@gmail.com>
+
+	Fix Savannah bug #44412 (part 2).
+
+	* src/base/fttrigon.c (FT_Sin, FT_Cos, FT_Tan): Call `FT_Vector_Unit'.
+
 2015-03-11  Werner Lemberg  <wl@gnu.org>
 
 	[autofit] Add support for Arabic script.
