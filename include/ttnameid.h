@@ -321,7 +321,7 @@ FT_BEGIN_HEADER
   /*                                                                       */
   /* The canonical source for the Apple assigned Language ID's is at       */
   /*                                                                       */
-  /*   https://developer.apple.com/fonts/TTRefMan/RM06/Chap6name.html      */
+  /*   https://developer.apple.com/fonts/TrueType-Reference-Manual/RM06/Chap6name.html */
   /*                                                                       */
 #define TT_MAC_LANGID_ENGLISH                       0
 #define TT_MAC_LANGID_FRENCH                        1

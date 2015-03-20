@@ -35,7 +35,7 @@ import sys, string, struct, re, os.path
 #
 # See
 #
-#   http://fonts.apple.com/TTRefMan/RM06/Chap6post.html
+#   https://developer.apple.com/fonts/TrueType-Reference-Manual/RM06/Chap6post.html
 #
 # for the official list.
 #
