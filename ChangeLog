@@ -1,3 +1,11 @@
+2015-03-21  Werner Lemberg  <wl@gnu.org>
+
+	[truetype] Improve `gvar' handling.
+
+	* src/truetype/ttgxvar.c (ft_var_readpackedpoints): Correctly handle
+	single-element runs.  Cf. glyph `Q' in Skia.ttf with weights larger
+	than the default.
+
 2015-03-20  Alexei Podtelezhnikov <apodtele@gmail.com>
 
 	* src/base/fttrigon.c (FT_Vector_Rotate): Minor refactoring.

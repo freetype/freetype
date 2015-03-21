@@ -164,7 +164,7 @@
         first       = FT_GET_USHORT();
         points[i++] = first;
 
-        if ( runcnt < 1 || i + runcnt >= n )
+        if ( runcnt < 1 || i + runcnt > n )
           goto Exit;
 
         /* first point not included in run count */
@@ -179,7 +179,7 @@
         first       = FT_GET_BYTE();
         points[i++] = first;
 
-        if ( runcnt < 1 || i + runcnt >= n )
+        if ( runcnt < 1 || i + runcnt > n )
           goto Exit;
 
         for ( j = 0; j < runcnt; j++ )
