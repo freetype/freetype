@@ -1,3 +1,7 @@
+2015-03-20  Alexei Podtelezhnikov <apodtele@gmail.com>
+
+	* src/base/fttrigon.c (FT_Vector_Rotate): Minor refactoring.
+
 2015-03-17  Alexei Podtelezhnikov <apodtele@gmail.com>
 
 	Fix Savannah bug #44412 (part 2).

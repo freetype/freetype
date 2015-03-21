@@ -389,33 +389,32 @@
     FT_Vector  v;
 
 
-    if ( !vec )
+    if ( !vec || !angle )
       return;
 
-    v.x   = vec->x;
-    v.y   = vec->y;
+    v = *vec;
 
-    if ( angle && ( v.x != 0 || v.y != 0 ) )
+    if ( v.x == 0 && v.y == 0 )
+      return;
+
+    shift = ft_trig_prenorm( &v );
+    ft_trig_pseudo_rotate( &v, angle );
+    v.x = ft_trig_downscale( v.x );
+    v.y = ft_trig_downscale( v.y );
+
+    if ( shift > 0 )
     {
-      shift = ft_trig_prenorm( &v );
-      ft_trig_pseudo_rotate( &v, angle );
-      v.x = ft_trig_downscale( v.x );
-      v.y = ft_trig_downscale( v.y );
-
-      if ( shift > 0 )
-      {
-        FT_Int32  half = (FT_Int32)1L << ( shift - 1 );
+      FT_Int32  half = (FT_Int32)1L << ( shift - 1 );
 
 
-        vec->x = ( v.x + half + FT_SIGN_LONG( v.x ) ) >> shift;
-        vec->y = ( v.y + half + FT_SIGN_LONG( v.y ) ) >> shift;
-      }
-      else
-      {
-        shift  = -shift;
-        vec->x = (FT_Pos)( (FT_ULong)v.x << shift );
-        vec->y = (FT_Pos)( (FT_ULong)v.y << shift );
-      }
+      vec->x = ( v.x + half + FT_SIGN_LONG( v.x ) ) >> shift;
+      vec->y = ( v.y + half + FT_SIGN_LONG( v.y ) ) >> shift;
+    }
+    else
+    {
+      shift  = -shift;
+      vec->x = (FT_Pos)( (FT_ULong)v.x << shift );
+      vec->y = (FT_Pos)( (FT_ULong)v.y << shift );
     }
   }
 
