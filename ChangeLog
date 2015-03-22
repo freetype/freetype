@@ -1,3 +1,14 @@
+2015-03-21  Alexei Podtelezhnikov <apodtele@gmail.com>
+
+	[base] Optimize `FT_Angle_Diff'.
+
+	Under normal circumstances we are usually close to the desired range
+	of angle values, so that the remainder is not really necessary.
+
+	* src/base/fttrigon.c (FT_Angle_Diff): Use loops instead of remainder.
+
+	* src/autofit/aftypes.h (AF_ANGLE_DIFF): Ditto in the unused macro.
+
 2015-03-21  Werner Lemberg  <wl@gnu.org>
 
 	[truetype] Improve `gvar' handling.
