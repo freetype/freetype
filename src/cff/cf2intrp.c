@@ -771,8 +771,9 @@
           switch ( op1 )
           {
           case cf2_cmdCALLGSUBR:
-            FT_TRACE4(( "(%d)\n",
-                        subrIndex + (CF2_UInt)decoder->globals_bias ));
+            FT_TRACE4(( " (idx %d, entering level %d)\n",
+                        subrIndex + (CF2_UInt)decoder->globals_bias,
+                        charstringIndex + 1 ));
 
             if ( cf2_initGlobalRegionBuffer( decoder,
                                              subrIndex,
@@ -785,8 +786,9 @@
 
           default:
             /* cf2_cmdCALLSUBR */
-            FT_TRACE4(( "(%d)\n",
-                        subrIndex + (CF2_UInt)decoder->locals_bias ));
+            FT_TRACE4(( " (idx %d, entering level %d)\n",
+                        subrIndex + (CF2_UInt)decoder->locals_bias,
+                        charstringIndex + 1 ));
 
             if ( cf2_initLocalRegionBuffer( decoder,
                                             subrIndex,
@@ -802,7 +804,7 @@
         continue; /* do not clear the stack */
 
       case cf2_cmdRETURN:
-        FT_TRACE4(( " return\n" ));
+        FT_TRACE4(( " return (leaving level %d)\n", charstringIndex ));
 
         if ( charstringIndex < 1 )
         {

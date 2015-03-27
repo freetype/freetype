@@ -2389,7 +2389,9 @@
                                       decoder->locals_bias );
 
 
-            FT_TRACE4(( " callsubr(%d)\n", idx ));
+            FT_TRACE4(( " callsubr (idx %d, entering level %d)\n",
+                        idx,
+                        zone - decoder->zones + 1 ));
 
             if ( idx >= decoder->num_locals )
             {
@@ -2431,7 +2433,9 @@
                                       decoder->globals_bias );
 
 
-            FT_TRACE4(( " callgsubr(%d)\n", idx ));
+            FT_TRACE4(( " callgsubr (idx %d, entering level %d)\n",
+                        idx,
+                        zone - decoder->zones + 1 ));
 
             if ( idx >= decoder->num_globals )
             {
@@ -2468,7 +2472,8 @@
           break;
 
         case cff_op_return:
-          FT_TRACE4(( " return\n" ));
+          FT_TRACE4(( " return (leaving level %d)\n",
+                      decoder->zone - decoder->zones ));
 
           if ( decoder->zone <= decoder->zones )
           {

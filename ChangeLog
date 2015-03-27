@@ -1,3 +1,13 @@
+2015-03-27  Werner Lemberg  <wl@gnu.org>
+
+	[cff] Trace charstring nesting levels.
+
+	* src/cff/cf2intrp.c (cf2_interpT2CharString) <cf2_cmdCALLGSUBR,
+	cf2_cmdCALLSUBR, cf2_cmdRETURN>: Implement it.
+
+	* src/cff/cffgload.c (cff_decoder_parse_charstrings)
+	<cff_op_callsubr, cff_op_callgsubr, cff_op_return>: Ditto.
+
 2015-03-21  Alexei Podtelezhnikov <apodtele@gmail.com>
 
 	[base] Optimize `FT_Angle_Diff'.
