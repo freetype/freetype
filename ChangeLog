@@ -1,5 +1,13 @@
 2015-03-27  Werner Lemberg  <wl@gnu.org>
 
+	[type1] Minor.
+
+	* src/type1/t1load.c (T1_Set_MM_Blend, T1_Set_MM_Design): Use
+	FT_THROW.
+	(T1_Set_Var_Design): Use T1_MAX_MM_AXIS and FT_THROW.
+
+2015-03-27  Werner Lemberg  <wl@gnu.org>
+
 	[cff] Trace charstring nesting levels.
 
 	* src/cff/cf2intrp.c (cf2_interpT2CharString) <cf2_cmdCALLGSUBR,

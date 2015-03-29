@@ -368,44 +368,39 @@
                    FT_Fixed*  coords )
   {
     PS_Blend  blend = face->blend;
-    FT_Error  error;
     FT_UInt   n, m;
 
 
-    error = FT_ERR( Invalid_Argument );
+    if ( !blend || blend->num_axis != num_coords )
+      return FT_THROW( Invalid_Argument );
 
-    if ( blend && blend->num_axis == num_coords )
+    /* recompute the weight vector from the blend coordinates */
+    for ( n = 0; n < blend->num_designs; n++ )
     {
-      /* recompute the weight vector from the blend coordinates */
-      for ( n = 0; n < blend->num_designs; n++ )
+      FT_Fixed  result = 0x10000L;  /* 1.0 fixed */
+
+
+      for ( m = 0; m < blend->num_axis; m++ )
       {
-        FT_Fixed  result = 0x10000L;  /* 1.0 fixed */
+        FT_Fixed  factor;
 
 
-        for ( m = 0; m < blend->num_axis; m++ )
-        {
-          FT_Fixed  factor;
+        /* get current blend axis position */
+        factor = coords[m];
+        if ( factor < 0 )
+          factor = 0;
+        if ( factor > 0x10000L )
+          factor = 0x10000L;
 
+        if ( ( n & ( 1 << m ) ) == 0 )
+          factor = 0x10000L - factor;
 
-          /* get current blend axis position */
-          factor = coords[m];
-          if ( factor < 0 )
-            factor = 0;
-          if ( factor > 0x10000L )
-            factor = 0x10000L;
-
-          if ( ( n & ( 1 << m ) ) == 0 )
-            factor = 0x10000L - factor;
-
-          result = FT_MulFix( result, factor );
-        }
-        blend->weight_vector[n] = result;
+        result = FT_MulFix( result, factor );
       }
-
-      error = FT_Err_Ok;
+      blend->weight_vector[n] = result;
     }
 
-    return error;
+    return FT_Err_Ok;
   }
 
 
@@ -415,68 +410,63 @@
                     FT_Long*  coords )
   {
     PS_Blend  blend = face->blend;
-    FT_Error  error;
     FT_UInt   n, p;
+    FT_Fixed  final_blends[T1_MAX_MM_DESIGNS];
 
 
-    error = FT_ERR( Invalid_Argument );
-    if ( blend && blend->num_axis == num_coords )
+    if ( !blend || blend->num_axis != num_coords )
+      return FT_THROW( Invalid_Argument );
+
+    /* compute the blend coordinates through the blend design map */
+
+    for ( n = 0; n < blend->num_axis; n++ )
     {
-      /* compute the blend coordinates through the blend design map */
-      FT_Fixed  final_blends[T1_MAX_MM_DESIGNS];
+      FT_Long       design  = coords[n];
+      FT_Fixed      the_blend;
+      PS_DesignMap  map     = blend->design_map + n;
+      FT_Long*      designs = map->design_points;
+      FT_Fixed*     blends  = map->blend_points;
+      FT_Int        before  = -1, after = -1;
 
 
-      for ( n = 0; n < blend->num_axis; n++ )
+      for ( p = 0; p < (FT_UInt)map->num_points; p++ )
       {
-        FT_Long       design  = coords[n];
-        FT_Fixed      the_blend;
-        PS_DesignMap  map     = blend->design_map + n;
-        FT_Long*      designs = map->design_points;
-        FT_Fixed*     blends  = map->blend_points;
-        FT_Int        before  = -1, after = -1;
+        FT_Long  p_design = designs[p];
 
 
-        for ( p = 0; p < (FT_UInt)map->num_points; p++ )
+        /* exact match? */
+        if ( design == p_design )
         {
-          FT_Long  p_design = designs[p];
-
-
-          /* exact match? */
-          if ( design == p_design )
-          {
-            the_blend = blends[p];
-            goto Found;
-          }
-
-          if ( design < p_design )
-          {
-            after = (FT_Int)p;
-            break;
-          }
-
-          before = (FT_Int)p;
+          the_blend = blends[p];
+          goto Found;
         }
 
-        /* now interpolate if necessary */
-        if ( before < 0 )
-          the_blend = blends[0];
+        if ( design < p_design )
+        {
+          after = (FT_Int)p;
+          break;
+        }
 
-        else if ( after < 0 )
-          the_blend = blends[map->num_points - 1];
-
-        else
-          the_blend = FT_MulDiv( design         - designs[before],
-                                 blends [after] - blends [before],
-                                 designs[after] - designs[before] );
-
-      Found:
-        final_blends[n] = the_blend;
+        before = (FT_Int)p;
       }
 
-      error = T1_Set_MM_Blend( face, num_coords, final_blends );
+      /* now interpolate if necessary */
+      if ( before < 0 )
+        the_blend = blends[0];
+
+      else if ( after < 0 )
+        the_blend = blends[map->num_points - 1];
+
+      else
+        the_blend = FT_MulDiv( design         - designs[before],
+                               blends [after] - blends [before],
+                               designs[after] - designs[before] );
+
+    Found:
+      final_blends[n] = the_blend;
     }
 
-    return error;
+    return T1_Set_MM_Blend( face, num_coords, final_blends );
   }
 
 
@@ -490,20 +480,17 @@
                      FT_UInt    num_coords,
                      FT_Fixed*  coords )
   {
-     FT_Long   lcoords[4];          /* maximum axis count is 4 */
-     FT_UInt   i;
-     FT_Error  error;
+     FT_Long  lcoords[T1_MAX_MM_AXIS];
+     FT_UInt  i;
 
 
-     error = FT_ERR( Invalid_Argument );
-     if ( num_coords <= 4 && num_coords > 0 )
-     {
-       for ( i = 0; i < num_coords; ++i )
-         lcoords[i] = FIXED_TO_INT( coords[i] );
-       error = T1_Set_MM_Design( face, num_coords, lcoords );
-     }
+     if ( num_coords > T1_MAX_MM_AXIS || num_coords == 0 )
+       return FT_THROW( Invalid_Argument );
 
-     return error;
+     for ( i = 0; i < num_coords; ++i )
+       lcoords[i] = FIXED_TO_INT( coords[i] );
+
+     return T1_Set_MM_Design( face, num_coords, lcoords );
   }
 
 
