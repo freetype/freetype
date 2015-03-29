@@ -29,7 +29,12 @@ FT_BEGIN_HEADER
 
 
 #define CFF_MAX_OPERANDS        48
-#define CFF_MAX_SUBRS_CALLS     32
+#define CFF_MAX_SUBRS_CALLS     16  /* maximum subroutine nesting;         */
+                                    /* only 10 are allowed but there exist */
+                                    /* fonts like `HiraKakuProN-W3.ttf'    */
+                                    /* (Hiragino Kaku Gothic ProN W3;      */
+                                    /* 8.2d6e1; 2014-12-19) that exceed    */
+                                    /* this limit                          */
 #define CFF_MAX_TRANS_ELEMENTS  32
 
 

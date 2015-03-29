@@ -1,5 +1,12 @@
 2015-03-29  Werner Lemberg  <wl@gnu.org>
 
+	[cff] Fix Savannah bug #44629.
+
+	* src/cff/cf2font.h (CF2_MAX_SUBR), src/cff/cffgload.h
+	(CFF_MAX_SUBRS_CALLS): Set to 16.
+
+2015-03-29  Werner Lemberg  <wl@gnu.org>
+
 	[type1, truetype] Make the MM API more flexible w.r.t. `num_coords'.
 
 	This commit allows `num_coords' to be larger or smaller than the
