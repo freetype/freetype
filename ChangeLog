@@ -1,4 +1,18 @@
-2015-03-27  Werner Lemberg  <wl@gnu.org>
+2015-03-29  Werner Lemberg  <wl@gnu.org>
+
+	[type1, truetype] Make the MM API more flexible w.r.t. `num_coords'.
+
+	This commit allows `num_coords' to be larger or smaller than the
+	number of available axes while selecting a design instance, either
+	ignoring excess data or using defaults if data is missing.
+
+	* src/truetype/ttgxvar.c (TT_Set_MM_Blend, TT_Set_Var_Design):
+	Implement it.
+
+	* src/type1/t1load.c (T1_Set_MM_Blend, T1_Set_MM_Design,
+	T1_Set_Var_Design): Ditto.
+
+2015-03-29  Werner Lemberg  <wl@gnu.org>
 
 	[type1] Minor.
 

@@ -371,8 +371,11 @@
     FT_UInt   n, m;
 
 
-    if ( !blend || blend->num_axis != num_coords )
+    if ( !blend )
       return FT_THROW( Invalid_Argument );
+
+    if ( num_coords > blend->num_axis )
+      num_coords = blend->num_axis;
 
     /* recompute the weight vector from the blend coordinates */
     for ( n = 0; n < blend->num_designs; n++ )
@@ -385,8 +388,9 @@
         FT_Fixed  factor;
 
 
-        /* get current blend axis position */
-        factor = coords[m];
+        /* get current blend axis position;                  */
+        /* use a default value if we don't have a coordinate */
+        factor = m < num_coords ? coords[m] : 0x8000;
         if ( factor < 0 )
           factor = 0;
         if ( factor > 0x10000L )
@@ -414,20 +418,29 @@
     FT_Fixed  final_blends[T1_MAX_MM_DESIGNS];
 
 
-    if ( !blend || blend->num_axis != num_coords )
+    if ( !blend )
       return FT_THROW( Invalid_Argument );
+
+    if ( num_coords > blend->num_axis )
+      num_coords = blend->num_axis;
 
     /* compute the blend coordinates through the blend design map */
 
     for ( n = 0; n < blend->num_axis; n++ )
     {
-      FT_Long       design  = coords[n];
+      FT_Long       design;
       FT_Fixed      the_blend;
       PS_DesignMap  map     = blend->design_map + n;
       FT_Long*      designs = map->design_points;
       FT_Fixed*     blends  = map->blend_points;
       FT_Int        before  = -1, after = -1;
 
+
+      /* use a default value if we don't have a coordinate */
+      if ( n < num_coords )
+        design = coords[n];
+      else
+        design = ( designs[map->num_points - 1] - designs[0] ) / 2;
 
       for ( p = 0; p < (FT_UInt)map->num_points; p++ )
       {
@@ -466,7 +479,7 @@
       final_blends[n] = the_blend;
     }
 
-    return T1_Set_MM_Blend( face, num_coords, final_blends );
+    return T1_Set_MM_Blend( face, blend->num_axis, final_blends );
   }
 
 
@@ -484,8 +497,8 @@
      FT_UInt  i;
 
 
-     if ( num_coords > T1_MAX_MM_AXIS || num_coords == 0 )
-       return FT_THROW( Invalid_Argument );
+     if ( num_coords > T1_MAX_MM_AXIS )
+       num_coords = T1_MAX_MM_AXIS;
 
      for ( i = 0; i < num_coords; ++i )
        lcoords[i] = FIXED_TO_INT( coords[i] );

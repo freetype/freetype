@@ -864,7 +864,10 @@
   /*                  Initialize the blend structure with `gvar' data.     */
   /*                                                                       */
   /* <Input>                                                               */
-  /*    num_coords :: Must be the axis count of the font.                  */
+  /*    num_coords :: The number of available coordinates.  If it is       */
+  /*                  larger than the number of axes, ignore the excess    */
+  /*                  values.  If it is smaller than the number of axes,   */
+  /*                  use the default value (0) for the remaining axes.    */
   /*                                                                       */
   /*    coords     :: An array of `num_coords', each between [-1,1].       */
   /*                                                                       */
@@ -902,11 +905,8 @@
     blend = face->blend;
     mmvar = blend->mmvar;
 
-    if ( num_coords != mmvar->num_axis )
-    {
-      error = FT_THROW( Invalid_Argument );
-      goto Exit;
-    }
+    if ( num_coords > mmvar->num_axis )
+      num_coords = mmvar->num_axis;
 
     for ( i = 0; i < num_coords; i++ )
       if ( coords[i] < -0x00010000L || coords[i] > 0x00010000L )
@@ -921,7 +921,7 @@
 
     if ( blend->normalizedcoords == NULL )
     {
-      if ( FT_NEW_ARRAY( blend->normalizedcoords, num_coords ) )
+      if ( FT_NEW_ARRAY( blend->normalizedcoords, mmvar->num_axis ) )
         goto Exit;
 
       manageCvt = mcvt_modify;
@@ -943,13 +943,22 @@
         }
       }
 
+      for ( ; i < mmvar->num_axis; i++ )
+      {
+        if ( blend->normalizedcoords[i] != 0 )
+        {
+          manageCvt = mcvt_load;
+          break;
+        }
+      }
+
       /* If we don't change the blend coords then we don't need to do  */
       /* anything to the cvt table.  It will be correct.  Otherwise we */
       /* no longer have the original cvt (it was modified when we set  */
       /* the blend last time), so we must reload and then modify it.   */
     }
 
-    blend->num_axis = num_coords;
+    blend->num_axis = mmvar->num_axis;
     FT_MEM_COPY( blend->normalizedcoords,
                  coords,
                  num_coords * sizeof ( FT_Fixed ) );
@@ -1001,7 +1010,10 @@
   /*                  Initialize the blend struct with `gvar' data.        */
   /*                                                                       */
   /* <Input>                                                               */
-  /*    num_coords :: This must be the axis count of the font.             */
+  /*    num_coords :: The number of available coordinates.  If it is       */
+  /*                  larger than the number of axes, ignore the excess    */
+  /*                  values.  If it is smaller than the number of axes,   */
+  /*                  use the default values for the remaining axes.       */
   /*                                                                       */
   /*    coords     :: A coordinate array with `num_coords' elements.       */
   /*                                                                       */
@@ -1032,11 +1044,8 @@
     blend = face->blend;
     mmvar = blend->mmvar;
 
-    if ( num_coords != mmvar->num_axis )
-    {
-      error = FT_THROW( Invalid_Argument );
-      goto Exit;
-    }
+    if ( num_coords > mmvar->num_axis )
+      num_coords = mmvar->num_axis;
 
     /* Axis normalization is a two stage process.  First we normalize */
     /* based on the [min,def,max] values for the axis to be [-1,0,1]. */
@@ -1046,7 +1055,7 @@
       goto Exit;
 
     a = mmvar->axis;
-    for ( i = 0; i < mmvar->num_axis; i++, a++ )
+    for ( i = 0; i < num_coords; i++, a++ )
     {
       if ( coords[i] > a->maximum || coords[i] < a->minimum )
       {
@@ -1063,6 +1072,9 @@
         normalized[i] = FT_DivFix( coords[i] - a->def,
                                    a->maximum - a->def );
     }
+
+    for ( ; i < mmvar->num_axis; i++ )
+      normalized[i] = 0;
 
     if ( !blend->avar_checked )
       ft_var_load_avar( face );
@@ -1087,7 +1099,7 @@
       }
     }
 
-    error = TT_Set_MM_Blend( face, num_coords, normalized );
+    error = TT_Set_MM_Blend( face, mmvar->num_axis, normalized );
 
   Exit:
     FT_FREE( normalized );
