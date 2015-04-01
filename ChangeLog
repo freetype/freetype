@@ -1,3 +1,7 @@
+2015-04-01  Werner Lemberg  <wl@gnu.org>
+
+	* src/autofit/afhints.c (af_glyph_hints_done): Fix minor thinko.
+
 2015-03-29  Werner Lemberg  <wl@gnu.org>
 
 	[cff] Fix Savannah bug #44629.

@@ -533,12 +533,14 @@
   FT_LOCAL_DEF( void )
   af_glyph_hints_done( AF_GlyphHints  hints )
   {
-    FT_Memory  memory = hints->memory;
+    FT_Memory  memory;
     int        dim;
 
 
     if ( !( hints && hints->memory ) )
       return;
+
+    memory = hints->memory;
 
     /*
      *  note that we don't need to free the segment and edge
