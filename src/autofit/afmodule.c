@@ -302,6 +302,10 @@
     error = af_loader_load_glyph( loader, module, slot->face,
                                   glyph_index, load_flags );
 
+    af_glyph_hints_dump_points( hints, 0 );
+    af_glyph_hints_dump_segments( hints, 0 );
+    af_glyph_hints_dump_edges( hints, 0 );
+
     af_loader_done( loader );
 
     return error;

@@ -2239,12 +2239,6 @@
       }
     }
 
-#if 0
-    af_glyph_hints_dump_points( hints );
-    af_glyph_hints_dump_segments( hints );
-    af_glyph_hints_dump_edges( hints );
-#endif
-
     af_glyph_hints_save( hints, outline );
 
   Exit:

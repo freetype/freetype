@@ -1,5 +1,14 @@
 2015-04-01  Werner Lemberg  <wl@gnu.org>
 
+	[autofit] Call dumper functions for tracing.
+
+	* src/autofit/afcjk.c (af_cjk_hints_apply): Remove dead code.
+	* src/autofit/afhints.c (af_glyph_hints_dump_points): Minor
+	improvement.
+	* src/autofit/afmodule.c (af_autofitter_load_glyph): Implement it.
+
+2015-04-01  Werner Lemberg  <wl@gnu.org>
+
 	[autofit] Make debugging stuff work again.
 
 	The interface to ftgrid was broken in the series of commits starting

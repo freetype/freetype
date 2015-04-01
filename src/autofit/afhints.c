@@ -231,9 +231,13 @@
     AF_Point  point;
 
 
-    AF_DUMP(( "Table of points:\n"
-              "  [ index |  xorg |  yorg | xscale | yscale"
-              " |  xfit |  yfit |  flags ]\n" ));
+    AF_DUMP(( "Table of points:\n" ));
+
+    if ( hints->num_points )
+      AF_DUMP(( "  [ index |  xorg |  yorg | xscale | yscale"
+                " |  xfit |  yfit |  flags ]\n" ));
+    else
+      AF_DUMP(( "  (none)\n" ));
 
     for ( point = points; point < limit; point++ )
       AF_DUMP(( "  [ %5d | %5d | %5d | %6.2f | %6.2f"
