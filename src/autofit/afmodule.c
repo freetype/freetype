@@ -23,10 +23,14 @@
 #include "afpic.h"
 
 #ifdef FT_DEBUG_AUTOFIT
-  int    _af_debug_disable_horz_hints;
-  int    _af_debug_disable_vert_hints;
-  int    _af_debug_disable_blue_hints;
-  void*  _af_debug_hints;
+  int  _af_debug_disable_horz_hints;
+  int  _af_debug_disable_vert_hints;
+  int  _af_debug_disable_blue_hints;
+
+  /* we use a global object instead of a local one for debugging */
+  AF_GlyphHintsRec  _af_debug_hints_rec[1];
+
+  void*  _af_debug_hints = _af_debug_hints_rec;
 #endif
 
 #include FT_INTERNAL_OBJECTS_H
@@ -261,6 +265,11 @@
   af_autofitter_done( FT_Module  ft_module )      /* AF_Module */
   {
     FT_UNUSED( ft_module );
+
+#ifdef FT_DEBUG_AUTOFIT
+    if ( _af_debug_hints_rec->memory )
+      af_glyph_hints_done( _af_debug_hints_rec );
+#endif
   }
 
 
@@ -273,6 +282,31 @@
   {
     FT_Error   error  = FT_Err_Ok;
     FT_Memory  memory = module->root.library->memory;
+
+#ifdef FT_DEBUG_AUTOFIT
+
+    /* in debug mode, we use a global object that survives this routine */
+
+    AF_GlyphHints  hints = _af_debug_hints_rec;
+    AF_LoaderRec   loader[1];
+
+    FT_UNUSED( size );
+
+
+    if ( hints->memory )
+      af_glyph_hints_done( hints );
+
+    af_glyph_hints_init( hints, memory );
+    af_loader_init( loader, hints );
+
+    error = af_loader_load_glyph( loader, module, slot->face,
+                                  glyph_index, load_flags );
+
+    af_loader_done( loader );
+
+    return error;
+
+#else /* !FT_DEBUG_AUTOFIT */
 
     AF_GlyphHintsRec  hints[1];
     AF_LoaderRec      loader[1];
@@ -290,6 +324,8 @@
     af_glyph_hints_done( hints );
 
     return error;
+
+#endif /* !FT_DEBUG_AUTOFIT */
   }
 
 

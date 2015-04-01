@@ -33,9 +33,6 @@
     FT_ZERO( loader );
 
     loader->hints = hints;
-#ifdef FT_DEBUG_AUTOFIT
-    _af_debug_hints = loader->hints;
-#endif
   }
 
 
@@ -76,10 +73,6 @@
     loader->face    = NULL;
     loader->globals = NULL;
     loader->hints   = NULL;
-
-#ifdef FT_DEBUG_AUTOFIT
-    _af_debug_hints = NULL;
-#endif
   }
 
 

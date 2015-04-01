@@ -1,5 +1,22 @@
 2015-04-01  Werner Lemberg  <wl@gnu.org>
 
+	[autofit] Make debugging stuff work again.
+
+	The interface to ftgrid was broken in the series of commits starting
+	with
+
+	  [autofit] Allocate AF_Loader on the stack instead of AF_Module.
+
+	from 2015-01-14.
+
+	* src/autofit/afmodule.c (_af_debug_hints_rec) [FT_DEBUG_AUTOFIT]:
+	Use a global AF_GlyphHintsRec object for debugging.
+	(af_autofitter_done, af_autofitter_load_glyph): Updated.
+
+	* src/autofit/afloader.c (af_loader_init, af_loader_done): Updated.
+
+2015-04-01  Werner Lemberg  <wl@gnu.org>
+
 	* src/autofit/afhints.c (af_glyph_hints_done): Fix minor thinko.
 
 2015-03-29  Werner Lemberg  <wl@gnu.org>
