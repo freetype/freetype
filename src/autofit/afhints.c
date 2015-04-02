@@ -509,15 +509,15 @@
       else
       {
         dir = AF_DIR_DOWN;
-        ll  = dy;
+        ll  = -dy;
         ss  = dx;
       }
     }
 
-    /* return no direction if arm lengths differ too much            */
+    /* return no direction if arm lengths do not differ enough       */
     /* (value 14 is heuristic, corresponding to approx. 4.1 degrees) */
-    ss *= 14;
-    if ( FT_ABS( ll ) <= FT_ABS( ss ) )
+    /* the long arm is never negative                                */
+    if ( ll <= 14 * FT_ABS( ss ) )
       dir = AF_DIR_NONE;
 
     return dir;

@@ -1,3 +1,10 @@
+2015-03-21  Alexei Podtelezhnikov <apodtele@gmail.com>
+
+	[autofit] Finish the thought.
+
+	* src/autofit/afhints.c (af_direction_compute): make sure the long arm
+	is never negative so that its `FT_ABS' is not necessary.
+
 2015-04-01  Werner Lemberg  <wl@gnu.org>
 
 	[autofit] Call dumper functions for tracing.
