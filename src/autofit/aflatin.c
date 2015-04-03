@@ -2334,7 +2334,7 @@
           FT_Byte  neutral2 = edge2->flags & AF_EDGE_NEUTRAL;
 
 
-          if ( ( neutral && neutral2 ) || neutral2 )
+          if ( neutral2 )
           {
             edge2->blue_edge = NULL;
             edge2->flags    &= ~AF_EDGE_NEUTRAL;
