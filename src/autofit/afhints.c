@@ -792,8 +792,6 @@
 
           FT_Pos  out_x, out_y;
 
-          FT_Bool  is_first;
-
 
           /* since the first point of a contour could be part of a */
           /* series of near points, go backwards to find the first */
@@ -844,17 +842,13 @@
           out_x = 0;
           out_y = 0;
 
-          is_first = 1;
-
-          for ( point = first;
-                point != first || is_first;
-                point = point->next )
+          next = first;
+          do
           {
             AF_Direction  out_dir;
 
 
-            is_first = 0;
-
+            point = next;
             next = point->next;
 
             out_x += next->fx - point->fx;
@@ -886,7 +880,8 @@
 
             out_x = 0;
             out_y = 0;
-          }
+
+          } while ( next != first );
         }
 
         /*
