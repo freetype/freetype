@@ -1,3 +1,15 @@
+2015-04-10  Werner Lemberg  <wl@gnu.org>
+
+	[cff] Update advance width handling to OpenType 1.7.
+
+	Problem reported by Behdad.
+
+	* src/cff/cffdrivr.c (cff_get_advances): Handle SFNT case
+	separately.
+
+	* src/cff/cffgload.c (cff_slot_load): Use advance width and side
+	bearing values from `hmtx' table if present.
+
 2015-04-03  Alexei Podtelezhnikov <apodtele@gmail.com>
 
 	* src/autofit/afhints.c (af_glyph_hints_reload): Use do-while loop.

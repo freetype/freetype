@@ -195,6 +195,68 @@
     FT_GlyphSlot  slot  = face->glyph;
 
 
+    if ( FT_IS_SFNT( face ) )
+    {
+      /* OpenType 1.7 mandates that the data from `hmtx' table be used; */
+      /* it is no longer necessary that those values are identical to   */
+      /* the values in the `CFF' table                                  */
+
+      TT_Face   ttface = (TT_Face)face;
+      FT_Short  dummy;
+
+
+      if ( flags & FT_LOAD_VERTICAL_LAYOUT )
+      {
+        /* check whether we have data from the `vmtx' table at all; */
+        /* otherwise we extract the info from the CFF glyphstrings  */
+        /* (instead of synthesizing a global value using the `OS/2' */
+        /* table)                                                   */
+        if ( !ttface->vertical_info )
+          goto Missing_Table;
+
+        for ( nn = 0; nn < count; nn++ )
+        {
+          FT_UShort  ah;
+
+
+          ( (SFNT_Service)ttface->sfnt )->get_metrics( ttface,
+                                                       1,
+                                                       start + nn,
+                                                       &dummy,
+                                                       &ah );
+
+          FT_TRACE5(( "  idx %d: advance height %d font units\n",
+                      start + nn, ah ));
+          advances[nn] = ah;
+        }
+      }
+      else
+      {
+        /* check whether we have data from the `hmtx' table at all */
+        if ( !ttface->horizontal.number_Of_HMetrics )
+          goto Missing_Table;
+
+        for ( nn = 0; nn < count; nn++ )
+        {
+          FT_UShort  aw;
+
+
+          ( (SFNT_Service)ttface->sfnt )->get_metrics( ttface,
+                                                       0,
+                                                       start + nn,
+                                                       &dummy,
+                                                       &aw );
+
+          FT_TRACE5(( "  idx %d: advance width %d font units\n",
+                      start + nn, aw ));
+          advances[nn] = aw;
+        }
+      }
+
+      return error;
+    }
+
+  Missing_Table:
     flags |= (FT_UInt32)FT_LOAD_ADVANCE_ONLY;
 
     for ( nn = 0; nn < count; nn++ )

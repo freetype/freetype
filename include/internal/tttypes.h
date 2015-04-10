@@ -1111,7 +1111,7 @@ FT_BEGIN_HEADER
   /*                            This field also contains the associated    */
   /*                            vertical metrics table (`vmtx'), if found. */
   /*                            IMPORTANT: The contents of this field is   */
-  /*                            undefined if the `verticalInfo' field is   */
+  /*                            undefined if the `vertical_info' field is  */
   /*                            unset.                                     */
   /*                                                                       */
   /*    num_names            :: The number of name records within this     */
