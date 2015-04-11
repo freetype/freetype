@@ -158,7 +158,7 @@
     FT_Stream  stream = NULL;
 
 
-    *astream = 0;
+    *astream = NULL;
 
     if ( !library )
       return FT_THROW( Invalid_Library_Handle );
@@ -353,10 +353,10 @@
     slot->bitmap_left   = 0;
     slot->bitmap_top    = 0;
     slot->num_subglyphs = 0;
-    slot->subglyphs     = 0;
-    slot->control_data  = 0;
+    slot->subglyphs     = NULL;
+    slot->control_data  = NULL;
     slot->control_len   = 0;
-    slot->other         = 0;
+    slot->other         = NULL;
     slot->format        = FT_GLYPH_FORMAT_NONE;
 
     slot->linearHoriAdvance = 0;
@@ -387,7 +387,7 @@
       if ( FT_DRIVER_USES_OUTLINES( driver ) )
       {
         FT_GlyphLoader_Done( slot->internal->loader );
-        slot->internal->loader = 0;
+        slot->internal->loader = NULL;
       }
 
       FT_FREE( slot->internal );
@@ -438,7 +438,7 @@
         *aslot = slot;
     }
     else if ( aslot )
-      *aslot = 0;
+      *aslot = NULL;
 
 
   Exit:
@@ -932,7 +932,7 @@
                       (FT_List_Destructor)destroy_size,
                       memory,
                       driver );
-    face->size = 0;
+    face->size = NULL;
 
     /* now discard client data */
     if ( face->generic.finalizer )
@@ -950,7 +950,7 @@
       face->stream,
       ( face->face_flags & FT_FACE_FLAG_EXTERNAL_STREAM ) != 0 );
 
-    face->stream = 0;
+    face->stream = NULL;
 
     /* get rid of it */
     if ( face->internal )
@@ -1153,7 +1153,7 @@
       int  i;
 
 
-      face->internal->incremental_interface = 0;
+      face->internal->incremental_interface = NULL;
       for ( i = 0; i < num_params && !face->internal->incremental_interface;
             i++ )
         if ( params[i].tag == FT_PARAM_TAG_INCREMENTAL )
@@ -1195,7 +1195,7 @@
         clazz->done_face( face );
       FT_FREE( internal );
       FT_FREE( face );
-      *aface = 0;
+      *aface = NULL;
     }
 
     return error;
@@ -1298,8 +1298,8 @@
     FT_FREE( stream->base );
 
     stream->size  = 0;
-    stream->base  = 0;
-    stream->close = 0;
+    stream->base  = NULL;
+    stream->close = NULL;
   }
 
 
@@ -1323,7 +1323,7 @@
     if ( !base )
       return FT_THROW( Invalid_Argument );
 
-    *astream = 0;
+    *astream = NULL;
     memory = library->memory;
     if ( FT_NEW( stream ) )
       goto Exit;
@@ -1938,7 +1938,7 @@
     FT_Bool    is_darwin_vfs, vfs_rfork_has_no_font = FALSE; /* not tested */
 
     FT_Open_Args  args2;
-    FT_Stream     stream2 = 0;
+    FT_Stream     stream2 = NULL;
 
 
     FT_Raccess_Guess( library, stream,
@@ -2099,7 +2099,7 @@
       if ( FT_MODULE_IS_DRIVER( driver ) )
       {
         FT_Int         num_params = 0;
-        FT_Parameter*  params     = 0;
+        FT_Parameter*  params     = NULL;
 
 
         if ( args->flags & FT_OPEN_PARAMS )
@@ -2133,7 +2133,7 @@
         if ( FT_MODULE_IS_DRIVER( cur[0] ) )
         {
           FT_Int         num_params = 0;
-          FT_Parameter*  params     = 0;
+          FT_Parameter*  params     = NULL;
 
 
           driver = FT_DRIVER( cur[0] );
@@ -2444,8 +2444,8 @@
     FT_Driver        driver;
     FT_Driver_Class  clazz;
 
-    FT_Size          size = 0;
-    FT_ListNode      node = 0;
+    FT_Size          size = NULL;
+    FT_ListNode      node = NULL;
 
 
     if ( !face )
@@ -2457,7 +2457,7 @@
     if ( !face->driver )
       return FT_THROW( Invalid_Driver_Handle );
 
-    *asize = 0;
+    *asize = NULL;
 
     driver = face->driver;
     clazz  = driver->clazz;
@@ -2470,7 +2470,7 @@
     size->face = face;
 
     /* for now, do not use any internal fields in size objects */
-    size->internal = 0;
+    size->internal = NULL;
 
     if ( clazz->init_size )
       error = clazz->init_size( size );
@@ -2528,7 +2528,7 @@
 
       if ( face->size == size )
       {
-        face->size = 0;
+        face->size = NULL;
         if ( face->sizes_list.head )
           face->size = (FT_Size)(face->sizes_list.head->data);
       }
@@ -3848,7 +3848,7 @@
                       FT_ListNode*     node )
   {
     FT_ListNode  cur;
-    FT_Renderer  result = 0;
+    FT_Renderer  result = NULL;
 
 
     if ( !library )
@@ -3860,7 +3860,7 @@
     {
       if ( *node )
         cur = (*node)->next;
-      *node = 0;
+      *node = NULL;
     }
 
     while ( cur )
@@ -4080,7 +4080,7 @@
 
     default:
       {
-        FT_ListNode  node = 0;
+        FT_ListNode  node = NULL;
 
 
         /* small shortcut for the very common case */
@@ -4215,7 +4215,7 @@
 
 
     if ( library && library->auto_hinter == module )
-      library->auto_hinter = 0;
+      library->auto_hinter = NULL;
 
     /* if the module is a renderer */
     if ( FT_MODULE_IS_RENDERER( module ) )
@@ -4465,7 +4465,7 @@
             cur[0] = cur[1];
             cur++;
           }
-          limit[0] = 0;
+          limit[0] = NULL;
 
           /* destroy the module */
           Destroy_Module( module );
@@ -4793,7 +4793,7 @@
         if ( module )
         {
           Destroy_Module( module );
-          library->modules[n] = 0;
+          library->modules[n] = NULL;
         }
       }
     }

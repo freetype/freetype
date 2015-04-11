@@ -291,7 +291,7 @@
      FT_Glyph   glyph  = NULL;
 
 
-     *aglyph = 0;
+     *aglyph = NULL;
 
      if ( !FT_ALLOC( glyph, clazz->glyph_size ) )
      {

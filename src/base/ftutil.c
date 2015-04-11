@@ -275,7 +275,7 @@
 
     before = list->tail;
 
-    node->next = 0;
+    node->next = NULL;
     node->prev = before;
 
     if ( before )
@@ -302,7 +302,7 @@
     after = list->head;
 
     node->next = after;
-    node->prev = 0;
+    node->prev = NULL;
 
     if ( !after )
       list->tail = node;
@@ -366,7 +366,7 @@
     else
       list->tail = before;
 
-    node->prev       = 0;
+    node->prev       = NULL;
     node->next       = list->head;
     list->head->prev = node;
     list->head       = node;
@@ -433,8 +433,8 @@
       cur = next;
     }
 
-    list->head = 0;
-    list->tail = 0;
+    list->head = NULL;
+    list->tail = NULL;
   }
 
 

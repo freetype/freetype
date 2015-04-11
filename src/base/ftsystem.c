@@ -171,7 +171,7 @@
 
     stream->descriptor.pointer = NULL;
     stream->size               = 0;
-    stream->base               = 0;
+    stream->base               = NULL;
   }
 
 
@@ -232,7 +232,7 @@
 
     stream->descriptor.pointer = NULL;
     stream->pathname.pointer   = (char*)filepathname;
-    stream->base               = 0;
+    stream->base               = NULL;
     stream->pos                = 0;
     stream->read               = NULL;
     stream->close              = NULL;
@@ -292,7 +292,7 @@
     memory = (FT_Memory)ft_smalloc( sizeof ( *memory ) );
     if ( memory )
     {
-      memory->user    = 0;
+      memory->user    = NULL;
       memory->alloc   = ft_alloc;
       memory->realloc = ft_realloc;
       memory->free    = ft_free;

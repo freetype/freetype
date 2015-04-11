@@ -39,9 +39,9 @@
     stream->base   = (FT_Byte*) base;
     stream->size   = size;
     stream->pos    = 0;
-    stream->cursor = 0;
-    stream->read   = 0;
-    stream->close  = 0;
+    stream->cursor = NULL;
+    stream->read   = NULL;
+    stream->close  = NULL;
   }
 
 
@@ -203,8 +203,8 @@
       *pbytes = (FT_Byte*)stream->cursor;
 
       /* equivalent to FT_Stream_ExitFrame(), with no memory block release */
-      stream->cursor = 0;
-      stream->limit  = 0;
+      stream->cursor = NULL;
+      stream->limit  = NULL;
     }
 
     return error;
@@ -226,7 +226,7 @@
       FT_FREE( *pbytes );
 #endif
     }
-    *pbytes = 0;
+    *pbytes = NULL;
   }
 
 
@@ -335,8 +335,8 @@
       FT_FREE( stream->base );
 #endif
     }
-    stream->cursor = 0;
-    stream->limit  = 0;
+    stream->cursor = NULL;
+    stream->limit  = NULL;
   }
 
 

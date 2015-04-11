@@ -138,7 +138,7 @@
 #include FT_CONFIG_MODULES_H
 
     FT_FREE( classes );
-    pic_container->default_module_classes = 0;
+    pic_container->default_module_classes = NULL;
   }
 
 
@@ -164,7 +164,7 @@
 
     memory = library->memory;
 
-    pic_container->default_module_classes = 0;
+    pic_container->default_module_classes = NULL;
 
     if ( FT_ALLOC( classes, sizeof ( FT_Module_Class* ) *
                               ( FT_NUM_MODULE_CLASSES + 1 ) ) )
@@ -172,8 +172,8 @@
 
     /* initialize all pointers to 0, especially the last one */
     for ( i = 0; i < FT_NUM_MODULE_CLASSES; i++ )
-      classes[i] = 0;
-    classes[FT_NUM_MODULE_CLASSES] = 0;
+      classes[i] = NULL;
+    classes[FT_NUM_MODULE_CLASSES] = NULL;
 
     i = 0;
 

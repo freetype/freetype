@@ -35,7 +35,7 @@
 
 #include FT_CONFIG_STANDARD_LIBRARY_H
 
-  FT_BASE_DEF( const char* )  _ft_debug_file   = 0;
+  FT_BASE_DEF( const char* )  _ft_debug_file   = NULL;
   FT_BASE_DEF( long )         _ft_debug_lineno = 0;
 
   extern void
@@ -361,7 +361,7 @@
       while ( node )
       {
         next       = node->link;
-        node->link = 0;
+        node->link = NULL;
 
         if ( node->size > 0 )
         {
@@ -383,7 +383,7 @@
         ft_mem_table_free( table, node );
         node = next;
       }
-      table->buckets[i] = 0;
+      table->buckets[i] = NULL;
     }
 
     ft_mem_table_free( table, table->buckets );
