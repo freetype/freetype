@@ -420,7 +420,7 @@ THE SOFTWARE.
           goto Exit;
       }
       else
-        bdfface->family_name = 0;
+        bdfface->family_name = NULL;
 
       if ( ( error = bdf_interpret_style( face ) ) != 0 )
         goto Exit;
@@ -509,7 +509,7 @@ THE SOFTWARE.
 
       /* charmaps */
       {
-        bdf_property_t  *charset_registry = 0, *charset_encoding = 0;
+        bdf_property_t  *charset_registry, *charset_encoding;
         FT_Bool          unicode_charmap  = 0;
 
 

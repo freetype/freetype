@@ -683,7 +683,7 @@
     unsigned long     lineno, buf_size;
     int               refill, hold, to_skip;
     ptrdiff_t         bytes, start, end, cursor, avail;
-    char*             buf    = 0;
+    char*             buf    = NULL;
     FT_Memory         memory = stream->memory;
     FT_Error          error  = FT_Err_Ok;
 
@@ -1751,7 +1751,7 @@
         glyph->encoding = p->glyph_enc;
 
         /* Reset the initial glyph info. */
-        p->glyph_name = 0;
+        p->glyph_name = NULL;
       }
       else
       {
@@ -1779,7 +1779,7 @@
           /* kept.                                                */
           FT_FREE( p->glyph_name );
 
-        p->glyph_name = 0;
+        p->glyph_name = NULL;
       }
 
       /* Clear the flags that might be added when width and height are */

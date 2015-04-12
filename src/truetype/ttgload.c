@@ -409,7 +409,7 @@
 
     /* reading the bytecode instructions */
     load->glyph->control_len  = 0;
-    load->glyph->control_data = 0;
+    load->glyph->control_data = NULL;
 
     if ( p + 2 > limit )
       goto Invalid_Outline;
@@ -1730,7 +1730,7 @@
 
       {
         FT_UInt      n, num_base_points;
-        FT_SubGlyph  subglyph       = 0;
+        FT_SubGlyph  subglyph       = NULL;
 
         FT_UInt      num_points     = start_point;
         FT_UInt      num_subglyphs  = gloader->current.num_subglyphs;

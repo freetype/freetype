@@ -448,14 +448,14 @@ THE SOFTWARE.
   pcf_get_properties( FT_Stream  stream,
                       PCF_Face   face )
   {
-    PCF_ParseProperty  props      = 0;
+    PCF_ParseProperty  props      = NULL;
     PCF_Property       properties = NULL;
     FT_ULong           nprops, i;
     FT_ULong           format, size;
     FT_Error           error;
     FT_Memory          memory     = FT_FACE( face )->memory;
     FT_ULong           string_size;
-    FT_String*         strings    = 0;
+    FT_String*         strings    = NULL;
 
 
     error = pcf_seek_to_table_type( stream,
@@ -620,7 +620,7 @@ THE SOFTWARE.
     FT_Error    error;
     FT_Memory   memory  = FT_FACE( face )->memory;
     FT_ULong    format, size;
-    PCF_Metric  metrics = 0;
+    PCF_Metric  metrics = NULL;
     FT_ULong    nmetrics, i;
 
 
@@ -1316,7 +1316,7 @@ THE SOFTWARE.
 
       /* set up charset */
       {
-        PCF_Property  charset_registry = 0, charset_encoding = 0;
+        PCF_Property  charset_registry, charset_encoding;
 
 
         charset_registry = pcf_find_property( face, "CHARSET_REGISTRY" );
