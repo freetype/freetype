@@ -143,13 +143,13 @@
     FT_ULong   size;
 
 
-    psaux->ps_parser_funcs->init( &parser->root, 0, 0, memory );
+    psaux->ps_parser_funcs->init( &parser->root, NULL, NULL, memory );
 
     parser->stream       = stream;
     parser->base_len     = 0;
-    parser->base_dict    = 0;
+    parser->base_dict    = NULL;
     parser->private_len  = 0;
-    parser->private_dict = 0;
+    parser->private_dict = NULL;
     parser->in_pfb       = 0;
     parser->in_memory    = 0;
     parser->single_block = 0;
@@ -445,7 +445,7 @@
         parser->single_block = 1;
         parser->private_dict = parser->base_dict;
         parser->private_len  = size;
-        parser->base_dict    = 0;
+        parser->base_dict    = NULL;
         parser->base_len     = 0;
       }
 

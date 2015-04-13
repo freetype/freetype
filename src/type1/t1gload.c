@@ -504,7 +504,7 @@
 
       /* Set the control data to null - it is no longer available if   */
       /* loaded incrementally.                                         */
-      t1glyph->control_data = 0;
+      t1glyph->control_data = NULL;
       t1glyph->control_len  = 0;
     }
 #endif

@@ -142,11 +142,11 @@
     FT_Long   size;
 
 
-    psaux->ps_parser_funcs->init( &parser->root, 0, 0, memory );
+    psaux->ps_parser_funcs->init( &parser->root, NULL, NULL, memory );
 
     parser->stream    = stream;
     parser->base_len  = 0;
-    parser->base_dict = 0;
+    parser->base_dict = NULL;
     parser->in_memory = 0;
 
     /*******************************************************************/

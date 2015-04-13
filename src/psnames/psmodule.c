@@ -312,7 +312,7 @@
 
     /* we first allocate the table */
     table->num_maps = 0;
-    table->maps     = 0;
+    table->maps     = NULL;
 
     if ( !FT_NEW_ARRAY( table->maps, num_glyphs + EXTRA_GLYPH_LIST_SIZE ) )
     {

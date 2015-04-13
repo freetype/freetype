@@ -2213,8 +2213,8 @@
     /* the `lengths' field must be released later             */
     type1->glyph_names_block    = loader.glyph_names.block;
     type1->glyph_names          = (FT_String**)loader.glyph_names.elements;
-    loader.glyph_names.block    = 0;
-    loader.glyph_names.elements = 0;
+    loader.glyph_names.block    = NULL;
+    loader.glyph_names.elements = NULL;
 
     /* we must now build type1.encoding when we have a custom array */
     if ( type1->encoding_type == T1_ENCODING_TYPE_ARRAY )

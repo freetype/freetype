@@ -446,7 +446,7 @@
                        FT_Offset*  len )
   {
     AFM_Stream  stream = parser->stream;
-    char*       key    = 0;  /* make stupid compiler happy */
+    char*       key    = NULL;  /* make stupid compiler happy */
 
 
     if ( line )

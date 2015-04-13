@@ -81,7 +81,7 @@
     table->max_elems = count;
     table->init      = 0xDEADBEEFUL;
     table->num_elems = 0;
-    table->block     = 0;
+    table->block     = NULL;
     table->capacity  = 0;
     table->cursor    = 0;
 
@@ -619,8 +619,8 @@
 
 
     token->type  = T1_TOKEN_TYPE_NONE;
-    token->start = 0;
-    token->limit = 0;
+    token->start = NULL;
+    token->limit = NULL;
 
     /* first of all, skip leading whitespace */
     ps_parser_skip_spaces( parser );
@@ -701,7 +701,7 @@
 
     if ( !token->limit )
     {
-      token->start = 0;
+      token->start = NULL;
       token->type  = T1_TOKEN_TYPE_NONE;
     }
 
@@ -1547,7 +1547,7 @@
       FT_GlyphLoader_Rewind( loader );
 
       builder->hints_globals = size->internal;
-      builder->hints_funcs   = 0;
+      builder->hints_funcs   = NULL;
 
       if ( hinting )
         builder->hints_funcs = glyph->internal->glyph_hints;
