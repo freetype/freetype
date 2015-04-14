@@ -30,9 +30,9 @@
 
 
 #ifdef DEBUG_HINTER
-  PSH_Hint_Table  ps_debug_hint_table = 0;
-  PSH_HintFunc    ps_debug_hint_func  = 0;
-  PSH_Glyph       ps_debug_glyph      = 0;
+  PSH_Hint_Table  ps_debug_hint_table = NULL;
+  PSH_HintFunc    ps_debug_hint_func  = NULL;
+  PSH_Glyph       ps_debug_glyph      = NULL;
 #endif
 
 
@@ -65,13 +65,13 @@
   {
     FT_FREE( table->zones );
     table->num_zones = 0;
-    table->zone      = 0;
+    table->zone      = NULL;
 
     FT_FREE( table->sort );
     FT_FREE( table->hints );
     table->num_hints   = 0;
     table->max_hints   = 0;
-    table->sort_global = 0;
+    table->sort_global = NULL;
   }
 
 
@@ -119,7 +119,7 @@
       PSH_Hint   hint2;
 
 
-      hint->parent = 0;
+      hint->parent = NULL;
       for ( ; count > 0; count--, sorted++ )
       {
         hint2 = sorted[0];
@@ -192,7 +192,7 @@
     table->sort_global = table->sort + count;
     table->num_hints   = 0;
     table->num_zones   = 0;
-    table->zone        = 0;
+    table->zone        = NULL;
 
     /* initialize the `table->hints' array */
     {
@@ -1140,7 +1140,7 @@
     glyph->num_points   = 0;
     glyph->num_contours = 0;
 
-    glyph->memory = 0;
+    glyph->memory = NULL;
   }
 
 
@@ -2035,7 +2035,7 @@
       /* count the number of strong points in this contour */
       next      = start + contour->count;
       fit_count = 0;
-      first     = 0;
+      first     = NULL;
 
       for ( point = start; point < next; point++ )
         if ( psh_point_is_fitted( point ) )

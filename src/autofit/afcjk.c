@@ -863,19 +863,19 @@
 
               if ( link == seg2 )
               {
-                seg->link  = 0;
+                seg->link  = NULL;
                 seg->serif = link1;
               }
               else if ( link == link2 )
               {
-                seg->link  = 0;
+                seg->link  = NULL;
                 seg->serif = seg1;
               }
             }
           }
           else
           {
-            seg1->link = link1->link = 0;
+            seg1->link = link1->link = NULL;
 
             break;
           }
@@ -892,7 +892,7 @@
         seg2->num_linked++;
         if ( seg2->link != seg1 )
         {
-          seg1->link = 0;
+          seg1->link = NULL;
 
           if ( seg2->score < dist_threshold || seg1->score < seg2->score * 4 )
             seg1->serif = seg2->link;
@@ -1159,7 +1159,7 @@
         /*      Example: the `c' in cour.pfa at size 13     */
 
         if ( edge->serif && edge->link )
-          edge->serif = 0;
+          edge->serif = NULL;
       }
     }
 
@@ -1712,7 +1712,7 @@
     AF_Edge       edge_limit = edges + axis->num_edges;
     FT_PtrDist    n_edges;
     AF_Edge       edge;
-    AF_Edge       anchor   = 0;
+    AF_Edge       anchor   = NULL;
     FT_Pos        delta    = 0;
     FT_Int        skipped  = 0;
     FT_Bool       has_last_stem = FALSE;

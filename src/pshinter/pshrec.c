@@ -31,7 +31,7 @@
 #define FT_COMPONENT  trace_pshrec
 
 #ifdef DEBUG_HINTER
-  PS_Hints  ps_debug_hints         = 0;
+  PS_Hints  ps_debug_hints         = NULL;
   int       ps_debug_no_horz_hints = 0;
   int       ps_debug_no_vert_hints = 0;
 #endif
@@ -85,7 +85,7 @@
   {
     FT_Error  error = FT_Err_Ok;
     FT_UInt   count;
-    PS_Hint   hint = 0;
+    PS_Hint   hint = NULL;
 
 
     count = table->num_hints;
@@ -254,7 +254,7 @@
   {
     FT_UInt   count;
     FT_Error  error = FT_Err_Ok;
-    PS_Mask   mask  = 0;
+    PS_Mask   mask  = NULL;
 
 
     count = table->num_masks;
@@ -810,7 +810,7 @@
     ps_dimension_done( &hints->dimension[1], memory );
 
     hints->error  = FT_Err_Ok;
-    hints->memory = 0;
+    hints->memory = NULL;
   }
 
 

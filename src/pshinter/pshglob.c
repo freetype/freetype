@@ -23,7 +23,7 @@
 #include "pshglob.h"
 
 #ifdef DEBUG_HINTER
-  PSH_Globals  ps_debug_globals = 0;
+  PSH_Globals  ps_debug_globals = NULL;
 #endif
 
 
@@ -369,7 +369,7 @@
   {
     FT_UInt         count;
     FT_UInt         num;
-    PSH_Blue_Table  table = 0;
+    PSH_Blue_Table  table = NULL;
 
     /*                                                        */
     /* Determine whether we need to suppress overshoots or    */
@@ -635,7 +635,7 @@
       FT_FREE( globals );
 
 #ifdef DEBUG_HINTER
-      ps_debug_globals = 0;
+      ps_debug_globals = NULL;
 #endif
     }
   }

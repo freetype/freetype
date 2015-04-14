@@ -1048,7 +1048,7 @@
       {
         if ( seg2->link != seg1 )
         {
-          seg1->link  = 0;
+          seg1->link  = NULL;
           seg1->serif = seg2->link;
         }
       }
@@ -1128,7 +1128,7 @@
 
     for ( seg = segments; seg < segment_limit; seg++ )
     {
-      AF_Edge  found = 0;
+      AF_Edge  found = NULL;
       FT_Int   ee;
 
 
@@ -1355,7 +1355,7 @@
         /*      Example: the `c' in cour.pfa at size 13     */
 
         if ( edge->serif && edge->link )
-          edge->serif = 0;
+          edge->serif = NULL;
       }
     }
 
@@ -1837,7 +1837,7 @@
     AF_Edge       edges      = axis->edges;
     AF_Edge       edge_limit = edges + axis->num_edges;
     AF_Edge       edge;
-    AF_Edge       anchor     = 0;
+    AF_Edge       anchor     = NULL;
     FT_Int        has_serifs = 0;
     FT_Pos        anchor_drift = 0;
 
