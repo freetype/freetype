@@ -163,8 +163,8 @@
     FT_Int      num_glyphs;
     FT_UShort   num_names;
 
-    FT_UShort*  glyph_indices = 0;
-    FT_Char**   name_strings  = 0;
+    FT_UShort*  glyph_indices = NULL;
+    FT_Char**   name_strings  = NULL;
 
 
     if ( FT_READ_USHORT( num_glyphs ) )
@@ -316,7 +316,7 @@
     FT_Error   error;
 
     FT_Int     num_glyphs;
-    FT_Char*   offset_table = 0;
+    FT_Char*   offset_table = NULL;
 
     FT_UNUSED( post_limit );
 

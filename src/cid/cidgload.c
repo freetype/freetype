@@ -47,7 +47,7 @@
     FT_ULong       fd_select;
     FT_Stream      stream       = face->cid_stream;
     FT_Error       error        = FT_Err_Ok;
-    FT_Byte*       charstring   = 0;
+    FT_Byte*       charstring   = NULL;
     FT_Memory      memory       = face->root.memory;
     FT_ULong       glyph_length = 0;
     PSAux_Service  psaux        = (PSAux_Service)face->psaux;

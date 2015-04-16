@@ -413,7 +413,7 @@
     FT_Int         n;
     CID_Subrs      subr;
     FT_UInt        max_offsets = 0;
-    FT_ULong*      offsets = 0;
+    FT_ULong*      offsets = NULL;
     PSAux_Service  psaux = (PSAux_Service)face->psaux;
 
 

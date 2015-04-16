@@ -201,7 +201,7 @@
     FT_FREE( font->family_name );
 
     FT_FREE( font );
-    face->font = 0;
+    face->font = NULL;
   }
 
 
@@ -277,7 +277,7 @@
     WinMZ_HeaderRec  mz_header;
 
 
-    face->font = 0;
+    face->font = NULL;
 
     /* does it begin with an MZ header? */
     if ( FT_STREAM_SEEK( 0 )                                      ||

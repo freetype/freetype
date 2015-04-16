@@ -49,7 +49,7 @@
   FT_LOCAL_DEF( void )
   cid_slot_done( FT_GlyphSlot  slot )
   {
-    slot->internal->glyph_hints = 0;
+    slot->internal->glyph_hints = NULL;
   }
 
 
@@ -122,7 +122,7 @@
       if ( funcs )
         funcs->destroy( (PSH_Globals)cidsize->internal );
 
-      cidsize->internal = 0;
+      cidsize->internal = NULL;
     }
   }
 
@@ -243,8 +243,8 @@
     FT_FREE( cid->registry );
     FT_FREE( cid->ordering );
 
-    cidface->family_name = 0;
-    cidface->style_name  = 0;
+    cidface->family_name = NULL;
+    cidface->style_name  = NULL;
 
     FT_FREE( face->binary_data );
     FT_FREE( face->cid_stream );
@@ -421,7 +421,7 @@
 
       /* no embedded bitmap support */
       cidface->num_fixed_sizes = 0;
-      cidface->available_sizes = 0;
+      cidface->available_sizes = NULL;
 
       cidface->bbox.xMin =   cid->font_bbox.xMin            >> 16;
       cidface->bbox.yMin =   cid->font_bbox.yMin            >> 16;

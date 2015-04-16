@@ -273,8 +273,8 @@
       builder->current = &loader->current.outline;
       FT_GlyphLoader_Rewind( loader );
 
-      builder->hints_globals = 0;
-      builder->hints_funcs   = 0;
+      builder->hints_globals = NULL;
+      builder->hints_funcs   = NULL;
 
       if ( hinting && size )
       {
@@ -2872,7 +2872,7 @@
       /* fonts.                                                       */
       if ( face->root.internal->incremental_interface )
       {
-        glyph->root.control_data = 0;
+        glyph->root.control_data = NULL;
         glyph->root.control_len = 0;
       }
       else

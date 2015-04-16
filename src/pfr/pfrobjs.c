@@ -192,7 +192,7 @@
       pfrface->style_name = phy_font->style_name;
 
       pfrface->num_fixed_sizes = 0;
-      pfrface->available_sizes = 0;
+      pfrface->available_sizes = NULL;
 
       pfrface->bbox         = phy_font->bbox;
       pfrface->units_per_EM = (FT_UShort)phy_font->outline_resolution;
