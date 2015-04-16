@@ -1,3 +1,25 @@
+2015-04-16  Werner Lemberg  <wl@gnu.org>
+
+	[autofit] Add debugging hook to disable warper.
+
+	* src/autofit/afmodule.c (_af_debug_disable_warper)
+	[FT_DEBUG_AUTOFIT]: New global variable.
+
+	* src/autofit/aftypes.h: Updated.
+	(AF_SCALER_FLAG_NO_WARPER): New macro (not actively used yet).
+
+	* src/autofit/afhints.h (AF_HINTS_DO_WARP): New macro.
+
+	* src/autofi/aflatin.c (af_latin_hints_apply)
+	[AF_CONFIG_OPTION_USE_WARPER]: Use `AF_HINTS_DO_WARP' to control use
+	of warper.
+
+	* src/autofit/afcjk.c (af_cjk_hints_init, af_cjk_hints_apply)
+	[AF_CONFIG_OPTION_USE_WARPER]: Synchronize with `aflatin.c'.
+
+	* src/autofit/aflatin2.c (af_latin2_hints_apply)
+	[AF_CONFIG_OPTION_USE_WARPER]: Synchronize with `aflatin.c'.
+
 2015-04-10  Werner Lemberg  <wl@gnu.org>
 
 	[cff] Update advance width handling to OpenType 1.7.

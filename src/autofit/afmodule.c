@@ -26,6 +26,7 @@
   int  _af_debug_disable_horz_hints;
   int  _af_debug_disable_vert_hints;
   int  _af_debug_disable_blue_hints;
+  int  _af_debug_disable_warper;
 
   /* we use a global object instead of a local one for debugging */
   AF_GlyphHintsRec  _af_debug_hints_rec[1];

@@ -59,6 +59,7 @@ FT_BEGIN_HEADER
 extern int    _af_debug_disable_horz_hints;
 extern int    _af_debug_disable_vert_hints;
 extern int    _af_debug_disable_blue_hints;
+extern int    _af_debug_disable_warper;
 extern void*  _af_debug_hints;
 
 #endif /* FT_DEBUG_AUTOFIT */
@@ -170,6 +171,7 @@ extern void*  _af_debug_hints;
 #define AF_SCALER_FLAG_NO_HORIZONTAL  1U /* disable horizontal hinting */
 #define AF_SCALER_FLAG_NO_VERTICAL    2U /* disable vertical hinting   */
 #define AF_SCALER_FLAG_NO_ADVANCE     4U /* disable advance hinting    */
+#define AF_SCALER_FLAG_NO_WARPER      8U /* disable warper             */
 
 
   typedef struct  AF_ScalerRec_

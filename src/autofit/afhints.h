@@ -387,6 +387,10 @@ FT_BEGIN_HEADER
 
 #define AF_HINTS_DO_BLUES( h )  ( !_af_debug_disable_blue_hints )
 
+#define AF_HINTS_DO_WARP( h )                                       \
+          ( !_af_debug_disable_warper                            && \
+            !AF_HINTS_TEST_SCALER( h, AF_SCALER_FLAG_NO_WARPER ) )
+
 #else /* !FT_DEBUG_AUTOFIT */
 
 #define AF_HINTS_DO_HORIZONTAL( h )                                \
@@ -399,6 +403,9 @@ FT_BEGIN_HEADER
           !AF_HINTS_TEST_SCALER( h, AF_SCALER_FLAG_NO_ADVANCE )
 
 #define AF_HINTS_DO_BLUES( h )  1
+
+#define AF_HINTS_DO_WARP( h )                                  \
+          !AF_HINTS_TEST_SCALER( h, AF_SCALER_FLAG_NO_WARPER )
 
 #endif /* !FT_DEBUG_AUTOFIT */
 
