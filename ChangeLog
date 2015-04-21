@@ -1,5 +1,9 @@
 2015-04-21  Werner Lemberg  <wl@gnu.org>
 
+	* docs/CHANGES: Updated.
+
+2015-04-21  Werner Lemberg  <wl@gnu.org>
+
 	[autofit] Introduce `warping' property.
 
 	This code replaces the debugging hook from the previous commit with

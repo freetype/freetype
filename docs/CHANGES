@@ -25,8 +25,28 @@ CHANGES BETWEEN 2.5.5 and 2.6
 
     - Arabic script support has been added to the auto-hinter.
 
+    - Following OpenType version 1.7, advance widths and side bearing
+      values in CFFs (wrapped in an SFNT structure) are now always
+      taken from the `hmtx' table.
+
 
   III. MISCELLANEOUS
+
+    - A new auto-hinter  property `warping' can switch on  and off the
+      warping code  if this  experimental feature  is compiled  in (by
+      defining the AF_CONFIG_OPTION_USE_WARPER configuration option).
+
+      The AF_CONFIG_OPTION_USE_WARPER option itself is an old feature,
+      available   since  2006.    Warping   only   works  in   `light'
+      auto-hinting mode.   The idea of  the code is to  slightly scale
+      and  shift a  glyph  along the  non-hinted  dimension (which  is
+      usually the horizontal axis) so that as much of its segments are
+      aligned  (more or  less) to  the grid.   To find  out a  glyph's
+      optimal   scaling   and   shifting  value,   various   parameter
+      combinations are tried and scored.
+
+      See  file  `ftautoh.h' for  more;  the  demo programs  `ftdiff',
+      `ftview', and `ftgrid' can toggle warping with key `w'.
 
     - Some  fields  in  the  `FTC_ImageTypeRec'  structure  have  been
       changed from signed to unsigned  type, which better reflects the
@@ -48,6 +68,25 @@ CHANGES BETWEEN 2.5.5 and 2.6
       Additionally, the header  file macro for this  function has been
       renamed to  `FT_FONT_FORMATS_H' (the old name  `FT_XFREE86_H' is
       retained for backwards compatibility).
+
+    - Some improvements to the GX variation font handling.
+
+    - Various improvements to the `ftgrid' demo program.
+
+      . It  can now  display  GX  and  MM  fonts  while  interactively
+        manipulating the axes (with keys F2, F3, and F4).
+
+      . Anti-aliasing rendering  modes can now be  selected (with keys
+        F5 and F6).
+
+    - Various improvements to the `ftdump' demo program.
+
+      . It now displays information on MM and GX variation axes.
+
+      . New  command line option  `-u' makes  it output data  in utf-8
+        encoding.
+
+    - The `ftmulti' demo program can now handle four MM or GX axes.
 
 
 ======================================================================
