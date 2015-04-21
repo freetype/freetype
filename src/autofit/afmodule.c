@@ -26,7 +26,6 @@
   int  _af_debug_disable_horz_hints;
   int  _af_debug_disable_vert_hints;
   int  _af_debug_disable_blue_hints;
-  int  _af_debug_disable_warper;
 
   /* we use a global object instead of a local one for debugging */
   AF_GlyphHintsRec  _af_debug_hints_rec[1];
@@ -146,6 +145,17 @@
 
       return error;
     }
+#ifdef AF_CONFIG_OPTION_USE_WARPER
+    else if ( !ft_strcmp( property_name, "warping" ) )
+    {
+      FT_Bool*  warping = (FT_Bool*)value;
+
+
+      module->warping = *warping;
+
+      return error;
+    }
+#endif /* AF_CONFIG_OPTION_USE_WARPER */
 
     FT_TRACE0(( "af_property_set: missing property `%s'\n",
                 property_name ));
@@ -162,6 +172,9 @@
     AF_Module  module         = (AF_Module)ft_module;
     FT_UInt    fallback_style = module->fallback_style;
     FT_UInt    default_script = module->default_script;
+#ifdef AF_CONFIG_OPTION_USE_WARPER
+    FT_Bool    warping        = module->warping;
+#endif
 
 
     if ( !ft_strcmp( property_name, "glyph-to-script-map" ) )
@@ -208,7 +221,17 @@
 
       return error;
     }
+#ifdef AF_CONFIG_OPTION_USE_WARPER
+    else if ( !ft_strcmp( property_name, "warping" ) )
+    {
+      FT_Bool*  val = (FT_Bool*)value;
 
+
+      *val = warping;
+
+      return error;
+    }
+#endif /* AF_CONFIG_OPTION_USE_WARPER */
 
     FT_TRACE0(( "af_property_get: missing property `%s'\n",
                 property_name ));
@@ -257,6 +280,9 @@
 
     module->fallback_style = AF_STYLE_FALLBACK;
     module->default_script = AF_SCRIPT_DEFAULT;
+#ifdef AF_CONFIG_OPTION_USE_WARPER
+    module->warping        = 1;
+#endif
 
     return FT_Err_Ok;
   }

@@ -1,3 +1,29 @@
+2015-04-21  Werner Lemberg  <wl@gnu.org>
+
+	[autofit] Introduce `warping' property.
+
+	This code replaces the debugging hook from the previous commit with
+	a better, more generic solution.
+
+	* include/ftautoh.h: Document it.
+
+	* src/autofit/afmodule.h (AF_ModuleRec)
+	[AF_CONFIG_OPTION_USE_WARPER]: Add `warping' field.
+
+	* src/autofit/afmodule.c (_af_debug_disable_warper): Remove.
+	(af_property_set, af_property_get, af_autofitter_init)
+	[AF_CONFIG_OPTION_USE_WARPER]: Handle `warping' option.
+
+	* src/autofit/afhints.h (AF_HINTS_DO_WARP): Remove use of the no
+	longer existing `_af_debug_disable_warper'.
+
+	* src/autofit/afcjk.c (af_cjk_hints_init), src/autofit/aflatin.c
+	(af_latin_hints_init), src/autofit/aflatin2.c (af_latin2_hints_init)
+	[AF_CONFIG_OPTION_USE_WARPER]: Add `AF_SCALER_FLAG_NO_WARPER' to the
+	scaler flags if warping is off.
+
+	* src/autofit/aftypes.h: Updated.
+
 2015-04-16  Werner Lemberg  <wl@gnu.org>
 
 	[autofit] Add debugging hook to disable warper.

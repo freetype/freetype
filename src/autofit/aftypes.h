@@ -59,7 +59,6 @@ FT_BEGIN_HEADER
 extern int    _af_debug_disable_horz_hints;
 extern int    _af_debug_disable_vert_hints;
 extern int    _af_debug_disable_blue_hints;
-extern int    _af_debug_disable_warper;
 extern void*  _af_debug_hints;
 
 #endif /* FT_DEBUG_AUTOFIT */

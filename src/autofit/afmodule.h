@@ -28,7 +28,7 @@ FT_BEGIN_HEADER
 
 
   /*
-   *  This is the `extended' FT_Module structure which holds the
+   *  This is the `extended' FT_Module structure that holds the
    *  autofitter's global data.
    */
 
@@ -38,11 +38,14 @@ FT_BEGIN_HEADER
 
     FT_UInt       fallback_style;
     FT_UInt       default_script;
+#ifdef AF_CONFIG_OPTION_USE_WARPER
+    FT_Bool       warping;
+#endif
 
   } AF_ModuleRec, *AF_Module;
 
 
-FT_DECLARE_MODULE(autofit_module_class)
+FT_DECLARE_MODULE( autofit_module_class )
 
 
 FT_END_HEADER

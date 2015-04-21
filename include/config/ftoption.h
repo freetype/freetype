@@ -820,8 +820,10 @@ FT_BEGIN_HEADER
   /* grid.  To find out the optimal scaling and shifting value, various    */
   /* parameter combinations are tried and scored.                          */
   /*                                                                       */
-  /* This experimental option is only active if the render mode is         */
-  /* FT_RENDER_MODE_LIGHT.                                                 */
+  /* This experimental option is active only if the rendering mode is      */
+  /* FT_RENDER_MODE_LIGHT; you can switch warping on and off with the      */
+  /* `warping' property of the auto-hinter (see file `ftautoh.h' for more  */
+  /* information).                                                         */
   /*                                                                       */
 /* #define AF_CONFIG_OPTION_USE_WARPER */
 

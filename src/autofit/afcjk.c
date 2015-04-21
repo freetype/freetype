@@ -1334,6 +1334,12 @@
 
     scaler_flags |= AF_SCALER_FLAG_NO_ADVANCE;
 
+#ifdef AF_CONFIG_OPTION_USE_WARPER
+    /* get (global) warper flag */
+    if ( !metrics->root.globals->module->warping )
+      scaler_flags |= AF_SCALER_FLAG_NO_WARPER;
+#endif
+
     hints->scaler_flags = scaler_flags;
     hints->other_flags  = other_flags;
 
