@@ -1160,7 +1160,7 @@ FT_BEGIN_HEADER
   /*      TrueType bytecode instructions to move and scale all of its      */
   /*      subglyphs.                                                       */
   /*                                                                       */
-  /*      It is not possible to autohint such fonts using                  */
+  /*      It is not possible to auto-hint such fonts using                 */
   /*      @FT_LOAD_FORCE_AUTOHINT; it will also ignore                     */
   /*      @FT_LOAD_NO_HINTING.  You have to set both @FT_LOAD_NO_HINTING   */
   /*      and @FT_LOAD_NO_AUTOHINT to really disable hinting; however, you */
@@ -1669,11 +1669,11 @@ FT_BEGIN_HEADER
   /*                         needs to know about the image format.         */
   /*                                                                       */
   /*    lsb_delta         :: The difference between hinted and unhinted    */
-  /*                         left side bearing while autohinting is        */
+  /*                         left side bearing while auto-hinting is       */
   /*                         active.  Zero otherwise.                      */
   /*                                                                       */
   /*    rsb_delta         :: The difference between hinted and unhinted    */
-  /*                         right side bearing while autohinting is       */
+  /*                         right side bearing while auto-hinting is      */
   /*                         active.  Zero otherwise.                      */
   /*                                                                       */
   /* <Note>                                                                */
@@ -1696,7 +1696,7 @@ FT_BEGIN_HEADER
   /*    `slot->format' is also changed to @FT_GLYPH_FORMAT_BITMAP.         */
   /*                                                                       */
   /* <Note>                                                                */
-  /*    Here a small pseudo code fragment that shows how to use            */
+  /*    Here is a small pseudo code fragment that shows how to use         */
   /*    `lsb_delta' and `rsb_delta':                                       */
   /*                                                                       */
   /*    {                                                                  */
