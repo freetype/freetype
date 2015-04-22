@@ -823,7 +823,7 @@ FT_BEGIN_HEADER
   /* This experimental option is active only if the rendering mode is      */
   /* FT_RENDER_MODE_LIGHT; you can switch warping on and off with the      */
   /* `warping' property of the auto-hinter (see file `ftautoh.h' for more  */
-  /* information).                                                         */
+  /* information; by default it is switched off).                          */
   /*                                                                       */
 #define AF_CONFIG_OPTION_USE_WARPER
 

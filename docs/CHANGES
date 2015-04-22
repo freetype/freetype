@@ -34,7 +34,9 @@ CHANGES BETWEEN 2.5.5 and 2.6
 
     - A new auto-hinter  property `warping' can switch on  and off the
       warping code  if this  experimental feature  is compiled  in (by
-      defining the AF_CONFIG_OPTION_USE_WARPER configuration option).
+      defining the  AF_CONFIG_OPTION_USE_WARPER  configuration option;
+      by default  this option is  now enabled but  warping is switched
+      off).
 
       The AF_CONFIG_OPTION_USE_WARPER option itself is an old feature,
       available   since  2006.    Warping   only   works  in   `light'

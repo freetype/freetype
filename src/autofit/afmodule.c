@@ -281,7 +281,7 @@
     module->fallback_style = AF_STYLE_FALLBACK;
     module->default_script = AF_SCRIPT_DEFAULT;
 #ifdef AF_CONFIG_OPTION_USE_WARPER
-    module->warping        = 1;
+    module->warping        = 0;
 #endif
 
     return FT_Err_Ok;

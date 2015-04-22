@@ -411,12 +411,12 @@ FT_BEGIN_HEADER
    *   glyph's optimal scaling and shifting value, various parameter
    *   combinations are tried and scored.
    *
-   *   By default, warping is on.  The example below shows how to switch off
+   *   By default, warping is off.  The example below shows how to switch on
    *   warping (omitting the error handling).
    *
    *   {
    *     FT_Library  library;
-   *     FT_Bool     warping = 0;
+   *     FT_Bool     warping = 1;
    *
    *
    *     FT_Init_FreeType( &library );

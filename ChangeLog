@@ -1,5 +1,16 @@
 2015-04-21  Werner Lemberg  <wl@gnu.org>
 
+	[autofit] By default, enable warping code but switch off warping.
+
+	Suggested by Behdad.
+
+	* include/config/ftoption.h: Define AF_CONFIG_OPTION_USE_WARPER.
+
+	* src/autofit/afmodule.c (af_autofitter_init): Initialize `warping'
+	with `false'.
+
+2015-04-21  Werner Lemberg  <wl@gnu.org>
+
 	* docs/CHANGES: Updated.
 
 2015-04-21  Werner Lemberg  <wl@gnu.org>
