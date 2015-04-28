@@ -1,3 +1,16 @@
+2015-04-28  Werner Lemberg  <wl@gnu.org>
+
+	[cff] Use `name' table for PS name if we have a SFNT-CFF.
+
+	This follows the OpenType 1.7 specification.  See
+
+	  http://tug.org/pipermail/tex-live/2015-April/036634.html
+
+	for a discussion.
+
+	* src/cff/cffdrivr.c (cff_get_ps_name): Use the `sfnt' service if we
+	have an SFNT.
+
 2015-04-27  Alexei Podtelezhnikov <apodtele@gmail.com>
 
 	[truetype] Speed up IUP.

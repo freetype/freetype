@@ -437,8 +437,26 @@
   static const char*
   cff_get_ps_name( CFF_Face  face )
   {
-    CFF_Font  cff = (CFF_Font)face->extra.data;
+    CFF_Font      cff  = (CFF_Font)face->extra.data;
+    SFNT_Service  sfnt = (SFNT_Service)face->sfnt;
 
+
+    /* following the OpenType specification 1.7, we return the name stored */
+    /* in the `name' table for a CFF wrapped into an SFNT container        */
+
+    if ( sfnt )
+    {
+      FT_Library             library     = FT_FACE_LIBRARY( face );
+      FT_Module              sfnt_module = FT_Get_Module( library, "sfnt" );
+      FT_Service_PsFontName  service     =
+        (FT_Service_PsFontName)ft_module_get_service(
+                                 sfnt_module,
+                                 FT_SERVICE_ID_POSTSCRIPT_FONT_NAME );
+
+
+      if ( service && service->get_ps_font_name )
+        return service->get_ps_font_name( FT_FACE( face ) );
+    }
 
     return (const char*)cff->font_name;
   }
