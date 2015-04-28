@@ -25,9 +25,15 @@ CHANGES BETWEEN 2.5.5 and 2.6
 
     - Arabic script support has been added to the auto-hinter.
 
-    - Following OpenType version 1.7, advance widths and side bearing
-      values in CFFs (wrapped in an SFNT structure) are now always
+    - Following OpenType version 1.7,  advance widths and side bearing
+      values in  CFFs (wrapped  in an SFNT  structure) are  now always
       taken from the `hmtx' table.
+
+    - Following OpenType  version 1.7, the  PostScript font name  of a
+      CFF font (wrapped in an SFNT structure) is now always taken from
+      the `name'  table.  This is  also true for  OpenType Collections
+      (i.e., TTCs using  CFFs subfonts instead of TTFs),  where it may
+      have a significant difference.
 
 
   III. MISCELLANEOUS
