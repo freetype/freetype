@@ -1,3 +1,10 @@
+2015-04-27  Alexei Podtelezhnikov <apodtele@gmail.com>
+
+	[truetype] Speed up IUP.
+
+	* src/truetype/ttinterp.c (_iup_worker_interpolate): Separate trivial
+	snapping to the same position from true interpolation.
+
 2015-04-21  Werner Lemberg  <wl@gnu.org>
 
 	[autofit] By default, enable warping code but switch off warping.

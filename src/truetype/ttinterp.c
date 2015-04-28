@@ -6783,7 +6783,7 @@
                            FT_UInt     ref2 )
   {
     FT_UInt     i;
-    FT_F26Dot6  orus1, orus2, org1, org2, delta1, delta2;
+    FT_F26Dot6  orus1, orus2, org1, org2, cur1, cur2, delta1, delta2;
 
 
     if ( p1 > p2 )
@@ -6813,12 +6813,15 @@
 
     org1   = worker->orgs[ref1].x;
     org2   = worker->orgs[ref2].x;
-    delta1 = worker->curs[ref1].x - org1;
-    delta2 = worker->curs[ref2].x - org2;
+    cur1   = worker->curs[ref1].x;
+    cur2   = worker->curs[ref2].x;
+    delta1 = cur1 - org1;
+    delta2 = cur2 - org2;
 
-    if ( orus1 == orus2 )
+    if ( cur1 == cur2 || orus1 == orus2 )
     {
-      /* simple shift of untouched points */
+
+      /* trivial snap or shift of untouched points */
       for ( i = p1; i <= p2; i++ )
       {
         FT_F26Dot6  x = worker->orgs[i].x;
@@ -6826,8 +6829,12 @@
 
         if ( x <= org1 )
           x += delta1;
-        else
+
+        else if ( x >= org2 )
           x += delta2;
+
+        else
+          x = cur1;
 
         worker->curs[i].x = x;
       }
@@ -6855,12 +6862,10 @@
           if ( !scale_valid )
           {
             scale_valid = 1;
-            scale       = FT_DivFix( org2 + delta2 - ( org1 + delta1 ),
-                                     orus2 - orus1 );
+            scale       = FT_DivFix( cur2 - cur1, orus2 - orus1 );
           }
 
-          x = ( org1 + delta1 ) +
-              FT_MulFix( worker->orus[i].x - orus1, scale );
+          x = cur1 + FT_MulFix( worker->orus[i].x - orus1, scale );
         }
         worker->curs[i].x = x;
       }
