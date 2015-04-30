@@ -1,3 +1,11 @@
+2015-04-29  Alexei Podtelezhnikov <apodtele@gmail.com>
+
+	[autofit] Speed up IUP.
+
+	* src/autofit/afhints.c (af_iup_interp): Separate trivial snapping to
+	the same position from true interpolation, use `scale' to reduce
+	divisions.
+
 2015-04-28  Werner Lemberg  <wl@gnu.org>
 
 	[cff] Use `name' table for PS name if we have a SFNT-CFF.

@@ -1292,33 +1292,27 @@
                  AF_Point  ref2 )
   {
     AF_Point  p;
-    FT_Pos    u;
-    FT_Pos    v1 = ref1->v;
-    FT_Pos    v2 = ref2->v;
-    FT_Pos    d1 = ref1->u - v1;
-    FT_Pos    d2 = ref2->u - v2;
+    FT_Pos    u, v1, v2, u1, u2, d1, d2;
 
 
     if ( p1 > p2 )
       return;
 
-    if ( v1 == v2 )
+    if ( ref1->v > ref2->v )
     {
-      for ( p = p1; p <= p2; p++ )
-      {
-        u = p->v;
-
-        if ( u <= v1 )
-          u += d1;
-        else
-          u += d2;
-
-        p->u = u;
-      }
-      return;
+      p    = ref1;
+      ref1 = ref2;
+      ref2 = p;
     }
 
-    if ( v1 < v2 )
+    v1 = ref1->v;
+    v2 = ref2->v;
+    u1 = ref1->u;
+    u2 = ref2->u;
+    d1 = u1 - v1;
+    d2 = u2 - v2;
+
+    if ( u1 == u2 || v1 == v2 )
     {
       for ( p = p1; p <= p2; p++ )
       {
@@ -1329,23 +1323,25 @@
         else if ( u >= v2 )
           u += d2;
         else
-          u = ref1->u + FT_MulDiv( u - v1, ref2->u - ref1->u, v2 - v1 );
+          u = u1;
 
         p->u = u;
       }
     }
     else
     {
+      FT_Fixed  scale = FT_DivFix( u2 - u1, v2 - v1 );
+
       for ( p = p1; p <= p2; p++ )
       {
         u = p->v;
 
-        if ( u <= v2 )
-          u += d2;
-        else if ( u >= v1 )
+        if ( u <= v1 )
           u += d1;
+        else if ( u >= v2 )
+          u += d2;
         else
-          u = ref1->u + FT_MulDiv( u - v1, ref2->u - ref1->u, v2 - v1 );
+          u = u1 + FT_MulFix( u - v1, scale );
 
         p->u = u;
       }
