@@ -1,3 +1,12 @@
+2015-05-12  Chris Liddell  <chris.liddell@artifex.com>
+
+	[cff] fix incremental interface with new cff code.
+
+	* src/cff/cf2ft.c (cf2_getSeacComponent): When using the incremental
+	interface to retrieve glyph data for a SEAC, it be left to the
+	incremental interface callback to apply the encoding to raw
+	character index (as it was in the previous code).
+
 2015-04-29  Alexei Podtelezhnikov <apodtele@gmail.com>
 
 	[autofit] Speed up IUP.

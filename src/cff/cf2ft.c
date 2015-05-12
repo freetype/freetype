@@ -582,9 +582,18 @@
 
     FT_ZERO( buf );
 
-    gid = cff_lookup_glyph_by_stdcharcode( decoder->cff, code );
-    if ( gid < 0 )
-      return FT_THROW( Invalid_Glyph_Format );
+#ifdef FT_CONFIG_OPTION_INCREMENTAL
+    /* Incremental fonts don't necessarily have valid charsets.        */
+    /* They use the character code, not the glyph index, in this case. */
+    if ( decoder->builder.face->root.internal->incremental_interface )
+      gid = code;
+    else
+#endif /* FT_CONFIG_OPTION_INCREMENTAL */
+    {
+      gid = cff_lookup_glyph_by_stdcharcode( decoder->cff, code );
+      if ( gid < 0 )
+        return FT_THROW( Invalid_Glyph_Format );
+    }
 
     error = cff_get_glyph_data( decoder->builder.face,
                                 (CF2_UInt)gid,
