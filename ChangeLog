@@ -1,5 +1,16 @@
 2015-05-12  Chris Liddell  <chris.liddell@artifex.com>
 
+	[cff] Make the `*curveto' operators more tolerant.
+
+	* src/cff/cf2intrp.c (cf2_interpT2CharString): The opcodes
+	`vvcurveto', `hhcurveto', `vhcurveto', and `hvcurveto' all iterate,
+	pulling values off the stack until the stack is exhausted.
+	Implicitly the stack must be a multiple (or for subtly different
+	behaviour) a multiple plus a specific number of extra values deep.
+	If that's not the case, enforce it (as the old code did).
+
+2015-05-12  Chris Liddell  <chris.liddell@artifex.com>
+
 	[cff] fix incremental interface with new cff code.
 
 	* src/cff/cf2ft.c (cf2_getSeacComponent): When using the incremental

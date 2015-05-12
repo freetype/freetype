@@ -1298,9 +1298,15 @@
 
       case cf2_cmdVVCURVETO:
         {
-          CF2_UInt  count = cf2_stack_count( opStack );
+          CF2_UInt  count, count1 = cf2_stack_count( opStack );
           CF2_UInt  index = 0;
 
+
+          /* if `cf2_stack_count' isn't of the form 4n or 4n+1, */
+          /* we enforce it by clearing the second bit           */
+          /* (and sorting the stack indexing to suit)           */
+          count  = count1 & ~2;
+          index += count1 - count;
 
           FT_TRACE4(( " vvcurveto\n" ));
 
@@ -1337,9 +1343,15 @@
 
       case cf2_cmdHHCURVETO:
         {
-          CF2_UInt  count = cf2_stack_count( opStack );
+          CF2_UInt  count, count1 = cf2_stack_count( opStack );
           CF2_UInt  index = 0;
 
+
+          /* if `cf2_stack_count' isn't of the form 4n or 4n+1, */
+          /* we enforce it by clearing the second bit           */
+          /* (and sorting the stack indexing to suit)           */
+          count  = count1 & ~2;
+          index += count1 - count;
 
           FT_TRACE4(( " hhcurveto\n" ));
 
@@ -1377,11 +1389,18 @@
       case cf2_cmdVHCURVETO:
       case cf2_cmdHVCURVETO:
         {
-          CF2_UInt  count = cf2_stack_count( opStack );
+          CF2_UInt  count, count1 = cf2_stack_count( opStack );
           CF2_UInt  index = 0;
 
           FT_Bool  alternate = op1 == cf2_cmdHVCURVETO;
 
+
+          /* if `cf2_stack_count' isn't of the form 8n, 8n+1, */
+          /* 8n+4, or 8n+5, we enforce it by clearing the     */
+          /* second bit                                       */
+          /* (and sorting the stack indexing to suit)         */
+          count  = count1 & ~2;
+          index += count1 - count;
 
           FT_TRACE4(( alternate ? " hvcurveto\n" : " vhcurveto\n" ));
 
