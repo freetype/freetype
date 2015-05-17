@@ -621,15 +621,31 @@
         goto Invalid_Composite;
 
       /* read arguments */
-      if ( subglyph->flags & ARGS_ARE_WORDS )
+      if ( subglyph->flags & ARGS_ARE_XY_VALUES )
       {
-        subglyph->arg1 = FT_NEXT_SHORT( p );
-        subglyph->arg2 = FT_NEXT_SHORT( p );
+        if ( subglyph->flags & ARGS_ARE_WORDS )
+        {
+          subglyph->arg1 = FT_NEXT_SHORT( p );
+          subglyph->arg2 = FT_NEXT_SHORT( p );
+        }
+        else
+        {
+          subglyph->arg1 = FT_NEXT_CHAR( p );
+          subglyph->arg2 = FT_NEXT_CHAR( p );
+        }
       }
       else
       {
-        subglyph->arg1 = FT_NEXT_CHAR( p );
-        subglyph->arg2 = FT_NEXT_CHAR( p );
+        if ( subglyph->flags & ARGS_ARE_WORDS )
+        {
+          subglyph->arg1 = (FT_Int)FT_NEXT_USHORT( p );
+          subglyph->arg2 = (FT_Int)FT_NEXT_USHORT( p );
+        }
+        else
+        {
+          subglyph->arg1 = (FT_Int)FT_NEXT_BYTE( p );
+          subglyph->arg2 = (FT_Int)FT_NEXT_BYTE( p );
+        }
       }
 
       /* read transform */

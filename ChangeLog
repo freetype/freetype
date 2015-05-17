@@ -1,3 +1,17 @@
+2015-05-17  Werner Lemberg  <wl@gnu.org>
+
+	[truetype] Fix loading of composite glyphs.
+
+	* src/truetype/ttgload.c (TT_Load_Composite_Glyph): If the
+	ARGS_ARE_XY_VALUES flag is not set, handle argument values as
+	unsigned.  I trust `ttx' (which has exactly such code) that it does
+	the right thing here...
+
+	The reason that noone has ever noticed this bug is probably the fact
+	that point-aligned subglyphs are rare, as are subglyphs with a
+	number of points in the range [128;255], which is quite large (or
+	even in the range [32768;65535], which is extremely unlikely).
+
 2015-05-12  Chris Liddell  <chris.liddell@artifex.com>
 
 	[cff] Make the `*curveto' operators more tolerant.
