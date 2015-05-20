@@ -1930,7 +1930,7 @@
         val = 0;
     }
 
-    return  val;
+    return val;
   }
 
 
@@ -2273,7 +2273,7 @@
   /*                                                                       */
   static void
   SetSuperRound( TT_ExecContext  exc,
-                 FT_F26Dot6      GridPeriod,
+                 FT_F2Dot14      GridPeriod,
                  FT_Long         selector )
   {
     switch ( (FT_Int)( selector & 0xC0 ) )
@@ -2291,7 +2291,6 @@
         break;
 
       /* This opcode is reserved, but... */
-
       case 0xC0:
         exc->period = GridPeriod;
         break;
@@ -2321,9 +2320,10 @@
     else
       exc->threshold = ( (FT_Int)( selector & 0x0F ) - 4 ) * exc->period / 8;
 
-    exc->period    /= 256;
-    exc->phase     /= 256;
-    exc->threshold /= 256;
+    /* convert to F26Dot6 format */
+    exc->period    >>= 8;
+    exc->phase     >>= 8;
+    exc->threshold >>= 8;
   }
 
 
