@@ -153,14 +153,16 @@
     loader->vadvance     = advance_height;
 
 #ifdef TT_CONFIG_OPTION_SUBPIXEL_HINTING
-    if ( driver->interpreter_version == TT_INTERPRETER_VERSION_38 )
+    if ( driver->interpreter_version == TT_INTERPRETER_VERSION_38 &&
+         loader->exec                                             )
     {
-      if ( loader->exec )
-        loader->exec->sph_tweak_flags = 0;
+      loader->exec->sph_tweak_flags = 0;
 
-      /* this may not be the right place for this, but it works */
-      if ( loader->exec && loader->exec->ignore_x_mode )
-        sph_set_tweaks( loader, glyph_index );
+      /* This may not be the right place for this, but it works...  */
+      /* Note that we have to unconditionally load the tweaks since */
+      /* it is possible that glyphs individually switch ClearType's */
+      /* backwards compatibility mode on and off.                   */
+      sph_set_tweaks( loader, glyph_index );
     }
 #endif /* TT_CONFIG_OPTION_SUBPIXEL_HINTING */
 
@@ -2256,7 +2258,7 @@
         /* requires a re-execution of the CVT program                 */
         if ( grayscale != exec->grayscale )
         {
-          FT_TRACE4(( "tt_loader_init: grayscale change,"
+          FT_TRACE4(( "tt_loader_init: grayscale hinting change,"
                       " re-executing `prep' table\n" ));
 
           exec->grayscale = grayscale;
@@ -2276,13 +2278,18 @@
           return error;
       }
 
-      /* see whether the cvt program has disabled hinting */
+      /* check whether the cvt program has disabled hinting */
       if ( exec->GS.instruct_control & 1 )
         load_flags |= FT_LOAD_NO_HINTING;
 
       /* load default graphics state -- if needed */
       if ( exec->GS.instruct_control & 2 )
         exec->GS = tt_default_graphics_state;
+
+      /* check whether we have a font hinted for ClearType --           */
+      /* note that this flag can also be modified in a glyph's bytecode */
+      if ( exec->GS.instruct_control & 4 )
+        exec->ignore_x_mode = 0;
 
       exec->pedantic_hinting = FT_BOOL( load_flags & FT_LOAD_PEDANTIC );
       loader->exec = exec;

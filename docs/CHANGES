@@ -35,6 +35,9 @@ CHANGES BETWEEN 2.5.5 and 2.6
       (i.e., TTCs using  CFFs subfonts instead of TTFs),  where it may
       have a significant difference.
 
+    - Fonts natively hinted for  ClearType are now supported, properly
+      handling selector index 3 of the INSTCTRL bytecode instruction.
+
 
   III. MISCELLANEOUS
 

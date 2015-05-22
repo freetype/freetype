@@ -4924,8 +4924,9 @@
 
 #ifdef TT_CONFIG_OPTION_SUBPIXEL_HINTING
     /* Disable Type 2 Vacuform Rounds - e.g. Arial Narrow */
-    if ( SUBPIXEL_HINTING                        &&
-         exc->ignore_x_mode && FT_ABS( D ) == 64 )
+    if ( SUBPIXEL_HINTING   &&
+         exc->ignore_x_mode &&
+         FT_ABS( D ) == 64  )
       D += 1;
 #endif /* TT_CONFIG_OPTION_SUBPIXEL_HINTING */
 
@@ -5152,24 +5153,42 @@
   Ins_INSTCTRL( TT_ExecContext  exc,
                 FT_Long*        args )
   {
-    FT_Long  K, L;
+    FT_Long  K, L, Kf;
 
 
     K = args[1];
     L = args[0];
 
-    if ( K < 1 || K > 2 )
+    /* selector values cannot be `OR'ed;                 */
+    /* they are indices starting with index 1, not flags */
+    if ( K < 1 || K > 3 )
     {
       if ( exc->pedantic_hinting )
         exc->error = FT_THROW( Invalid_Reference );
       return;
     }
 
-    if ( L != 0 )
-        L = K;
+    /* convert index to flag value */
+    Kf = 1 << ( K - 1 );
 
-    exc->GS.instruct_control = FT_BOOL(
-      ( (FT_Byte)exc->GS.instruct_control & ~(FT_Byte)K ) | (FT_Byte)L );
+    if ( L != 0 )
+    {
+      /* arguments to selectors look like flag values */
+      if ( L != Kf )
+      {
+        if ( exc->pedantic_hinting )
+          exc->error = FT_THROW( Invalid_Reference );
+        return;
+      }
+    }
+
+    exc->GS.instruct_control &= ~(FT_Byte)Kf;
+    exc->GS.instruct_control |= (FT_Byte)L;
+
+    /* INSTCTRL modifying flag 3 also has an effect */
+    /* outside of the CVT program                   */
+    if ( K == 3 )
+      exc->ignore_x_mode = FT_BOOL( L == 4 );
   }
 
 
@@ -7284,11 +7303,18 @@
     /*                              */
     if ( SUBPIXEL_HINTING     &&
          ( args[0] & 1 ) != 0 &&
-         exc->ignore_x_mode   )
+         exc->subpixel        )
     {
-      K = exc->rasterizer_version;
-      FT_TRACE7(( "Setting rasterizer version %d\n",
-                  exc->rasterizer_version ));
+      if ( exc->ignore_x_mode )
+      {
+        /* if in ClearType backwards compatibility mode,        */
+        /* we sometimes change the TrueType version dynamically */
+        K = exc->rasterizer_version;
+        FT_TRACE7(( "Setting rasterizer version %d\n",
+                    exc->rasterizer_version ));
+      }
+      else
+        K = TT_INTERPRETER_VERSION_38;
     }
     else
 #endif /* TT_CONFIG_OPTION_SUBPIXEL_HINTING */
@@ -7322,7 +7348,6 @@
 #ifdef TT_CONFIG_OPTION_SUBPIXEL_HINTING
 
     if ( SUBPIXEL_HINTING                                     &&
-         exc->ignore_x_mode                                   &&
          exc->rasterizer_version >= TT_INTERPRETER_VERSION_35 )
     {
 

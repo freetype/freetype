@@ -1,5 +1,24 @@
 2015-05-20  Werner Lemberg  <wl@gnu.org>
 
+	[truetype] Support selector index 3 of the INSTCTRL instruction.
+
+	This flag activates `native ClearType hinting', disabling backwards
+	compatibility mode as described in Greg Hitchcocks whitepaper.  In
+	other words, it enables unrestricted functionality of all TrueType
+	instructions in ClearType.
+
+	* src/truetype/ttgload.c (tt_get_metrics): Call `sph_set_tweaks'
+	unconditionally.
+	(tt_loader_init): Unset `ignore_x_mode' flag if bit 2 of
+	`GS.instruct_control' is active.
+
+	* src/truetype/ttinterp.c (Ins_INSTCTRL): Handle selector index 3.
+	(Ins_GETINFO): Updated.
+
+	* docs/CHANGES: Document it.
+
+2015-05-20  Werner Lemberg  <wl@gnu.org>
+
 	[truetype] Minor.
 
 	* src/truetype/ttinterp.h (SetSuperRound): Fix type of `GridPeriod'
