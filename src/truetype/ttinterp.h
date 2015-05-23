@@ -252,7 +252,7 @@ FT_BEGIN_HEADER
 #ifdef TT_CONFIG_OPTION_SUBPIXEL_HINTING
     TT_Round_Func      func_round_sphn;   /* subpixel rounding function */
 
-    FT_Bool            subpixel;          /* Using subpixel hinting?       */
+    FT_Bool            subpixel_hinting;  /* Using subpixel hinting?       */
     FT_Bool            ignore_x_mode;     /* Standard rendering mode for   */
                                           /* subpixel hinting.  On if gray */
                                           /* or subpixel hinting is on.    */

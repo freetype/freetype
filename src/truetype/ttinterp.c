@@ -7301,9 +7301,9 @@
     /* Selector Bit:  0             */
     /* Return Bit(s): 0-7           */
     /*                              */
-    if ( SUBPIXEL_HINTING     &&
-         ( args[0] & 1 ) != 0 &&
-         exc->subpixel        )
+    if ( SUBPIXEL_HINTING      &&
+         ( args[0] & 1 ) != 0  &&
+         exc->subpixel_hinting )
     {
       if ( exc->ignore_x_mode )
       {
@@ -7358,7 +7358,7 @@
         /* Selector Bit:  6             */
         /* Return Bit(s): 13            */
         /*                              */
-        if ( ( args[0] & 64 ) != 0 && exc->subpixel )
+        if ( ( args[0] & 64 ) != 0 && exc->subpixel_hinting )
           K |= 1 << 13;
 
         /********************************/

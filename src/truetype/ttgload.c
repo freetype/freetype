@@ -1367,11 +1367,14 @@
 #define TT_LOADER_SET_PP( loader )                                          \
           do                                                                \
           {                                                                 \
-            FT_Bool  subpixel_  = loader->exec ? loader->exec->subpixel     \
-                                               : 0;                         \
-            FT_Bool  grayscale_ = loader->exec ? loader->exec->grayscale    \
-                                               : 0;                         \
-            FT_Bool  use_aw_2_  = (FT_Bool)( subpixel_ && grayscale_ );     \
+            FT_Bool  subpixel_hinting_ = loader->exec                       \
+                                           ? loader->exec->subpixel_hinting \
+                                           : 0;                             \
+            FT_Bool  grayscale_        = loader->exec                       \
+                                           ? loader->exec->grayscale        \
+                                           : 0;                             \
+            FT_Bool  use_aw_2_         = (FT_Bool)( subpixel_hinting_ &&    \
+                                                    grayscale_        );    \
                                                                             \
                                                                             \
             (loader)->pp1.x = (loader)->bbox.xMin - (loader)->left_bearing; \
@@ -2133,7 +2136,7 @@
 #ifdef TT_CONFIG_OPTION_SUBPIXEL_HINTING
       TT_Driver  driver = (TT_Driver)FT_FACE_DRIVER( face );
 
-      FT_Bool  subpixel = FALSE;
+      FT_Bool  subpixel_hinting = FALSE;
 
 #if 0
       /* not used yet */
@@ -2167,24 +2170,24 @@
 
       if ( driver->interpreter_version == TT_INTERPRETER_VERSION_38 )
       {
-        subpixel = FT_BOOL( ( FT_LOAD_TARGET_MODE( load_flags ) !=
-                              FT_RENDER_MODE_MONO               )  &&
-                            SPH_OPTION_SET_SUBPIXEL                );
+        subpixel_hinting = FT_BOOL( ( FT_LOAD_TARGET_MODE( load_flags ) !=
+                                      FT_RENDER_MODE_MONO               )  &&
+                                    SPH_OPTION_SET_SUBPIXEL                );
 
-        if ( subpixel )
+        if ( subpixel_hinting )
           grayscale = FALSE;
         else if ( SPH_OPTION_SET_GRAYSCALE )
         {
-          grayscale = TRUE;
-          subpixel  = FALSE;
+          grayscale        = TRUE;
+          subpixel_hinting = FALSE;
         }
         else
           grayscale = FALSE;
 
         if ( FT_IS_TRICKY( glyph->face ) )
-          subpixel = FALSE;
+          subpixel_hinting = FALSE;
 
-        exec->ignore_x_mode      = subpixel || grayscale;
+        exec->ignore_x_mode      = subpixel_hinting || grayscale;
         exec->rasterizer_version = SPH_OPTION_SET_RASTERIZER_VERSION;
         if ( exec->sph_tweak_flags & SPH_TWEAK_RASTERIZER_35 )
           exec->rasterizer_version = TT_INTERPRETER_VERSION_35;
@@ -2229,13 +2232,13 @@
       {
         /* a change from mono to subpixel rendering (and vice versa) */
         /* requires a re-execution of the CVT program                */
-        if ( subpixel != exec->subpixel )
+        if ( subpixel_hinting != exec->subpixel_hinting )
         {
           FT_TRACE4(( "tt_loader_init: subpixel hinting change,"
                       " re-executing `prep' table\n" ));
 
-          exec->subpixel = subpixel;
-          reexecute      = TRUE;
+          exec->subpixel_hinting = subpixel_hinting;
+          reexecute              = TRUE;
         }
 
         /* a change from mono to grayscale rendering (and vice versa) */

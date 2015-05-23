@@ -1,4 +1,13 @@
-2015-05-20  Werner Lemberg  <wl@gnu.org>
+2015-05-23  Werner Lemberg  <wl@gnu.org>
+
+	[truetype] Minor.
+
+	* src/truetype/ttinterp.h (TT_ExecContext):
+	 s/subpixel/subpixel_hinting.
+
+	* src/truetype/ttgload.c, src/truetype/ttgload.h: Updated.
+
+2015-05-22  Werner Lemberg  <wl@gnu.org>
 
 	[truetype] Support selector index 3 of the INSTCTRL instruction.
 
