@@ -2299,10 +2299,12 @@
       if ( exec->GS.instruct_control & 2 )
         exec->GS = tt_default_graphics_state;
 
+#ifdef TT_CONFIG_OPTION_SUBPIXEL_HINTING
       /* check whether we have a font hinted for ClearType --           */
       /* note that this flag can also be modified in a glyph's bytecode */
       if ( exec->GS.instruct_control & 4 )
         exec->ignore_x_mode = 0;
+#endif
 
       exec->pedantic_hinting = FT_BOOL( load_flags & FT_LOAD_PEDANTIC );
       loader->exec = exec;

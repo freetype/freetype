@@ -5185,10 +5185,12 @@
     exc->GS.instruct_control &= ~(FT_Byte)Kf;
     exc->GS.instruct_control |= (FT_Byte)L;
 
+#ifdef TT_CONFIG_OPTION_SUBPIXEL_HINTING
     /* INSTCTRL modifying flag 3 also has an effect */
     /* outside of the CVT program                   */
     if ( K == 3 )
       exc->ignore_x_mode = FT_BOOL( L == 4 );
+#endif
   }
 
 

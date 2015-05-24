@@ -1,3 +1,12 @@
+2015-05-24  Werner Lemberg  <wl@gnu.org>
+
+	[truetype] Fix commit from 2015-05-22.
+
+	* src/truetype/ttgload.c, src/truetype/ttinterp.c: Guard new code
+	with `TT_CONFIG_OPTION_SUBPIXEL_HINTING'.
+
+	Problem reported by Nikolaus Waxweiler <madigens@gmail.com>.
+
 2015-05-23  Werner Lemberg  <wl@gnu.org>
 
 	[truetype] Fix return values of GETINFO bytecode instruction.
