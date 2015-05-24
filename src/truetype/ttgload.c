@@ -2143,7 +2143,9 @@
       FT_Bool  compatible_widths;
       FT_Bool  symmetrical_smoothing;
       FT_Bool  bgr;
+      FT_Bool  vertical_lcd;
       FT_Bool  subpixel_positioned;
+      FT_Bool  gray_cleartype;
 #endif
 #endif /* TT_CONFIG_OPTION_SUBPIXEL_HINTING */
 
@@ -2194,9 +2196,11 @@
 
 #if 1
         exec->compatible_widths     = SPH_OPTION_SET_COMPATIBLE_WIDTHS;
-        exec->symmetrical_smoothing = FALSE;
+        exec->symmetrical_smoothing = TRUE;
         exec->bgr                   = FALSE;
+        exec->vertical_lcd          = FALSE;
         exec->subpixel_positioned   = TRUE;
+        exec->gray_cleartype        = FALSE;
 #else /* 0 */
         exec->compatible_widths =
           FT_BOOL( FT_LOAD_TARGET_MODE( load_flags ) !=
@@ -2207,9 +2211,15 @@
         exec->bgr =
           FT_BOOL( FT_LOAD_TARGET_MODE( load_flags ) !=
                    TT_LOAD_BGR );
+        exec->vertical_lcd =
+          FT_BOOL( FT_LOAD_TARGET_MODE( load_flags ) !=
+                   TT_LOAD_VERTICAL_LCD );
         exec->subpixel_positioned =
           FT_BOOL( FT_LOAD_TARGET_MODE( load_flags ) !=
                    TT_LOAD_SUBPIXEL_POSITIONED );
+        exec->gray_cleartype =
+          FT_BOOL( FT_LOAD_TARGET_MODE( load_flags ) !=
+                   TT_LOAD_GRAY_CLEARTYPE );
 #endif /* 0 */
 
       }

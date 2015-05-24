@@ -7286,6 +7286,14 @@
   /* Opcode range: 0x88                                                    */
   /* Stack:        uint32 --> uint32                                       */
   /*                                                                       */
+  /* XXX: UNDOCUMENTED: Selector bits higher than 9 are currently (May     */
+  /*      2015) not documented in the OpenType specification.              */
+  /*                                                                       */
+  /*      Selector bit 11 is incorrectly described as bit 8, while the     */
+  /*      real meaning of bit 8 (vertical LCD subpixels) stays             */
+  /*      undocumented.  The same mistake can be found in Greg Hitchcock's */
+  /*      whitepaper.                                                      */
+  /*                                                                       */
   static void
   Ins_GETINFO( TT_ExecContext  exc,
                FT_Long*        args )
@@ -7371,12 +7379,12 @@
           K |= 1 << 14;
 
         /********************************/
-        /* SYMMETRICAL SMOOTHING        */
+        /* VERTICAL LCD SUBPIXELS?      */
         /* Selector Bit:  8             */
         /* Return Bit(s): 15            */
         /*                              */
         /* Functionality still needs to be added */
-        if ( ( args[0] & 256 ) != 0 && exc->symmetrical_smoothing )
+        if ( ( args[0] & 256 ) != 0 && exc->vertical_lcd )
           K |= 1 << 15;
 
         /********************************/
@@ -7398,6 +7406,24 @@
           /* Functionality still needs to be added */
           if ( ( args[0] & 1024 ) != 0 && exc->subpixel_positioned )
             K |= 1 << 17;
+
+          /********************************/
+          /* SYMMETRICAL SMOOTHING        */
+          /* Selector Bit:  11            */
+          /* Return Bit(s): 18            */
+          /*                              */
+          /* Functionality still needs to be added */
+          if ( ( args[0] & 2048 ) != 0 && exc->symmetrical_smoothing )
+            K |= 1 << 18;
+
+          /********************************/
+          /* GRAY CLEARTYPE               */
+          /* Selector Bit:  12            */
+          /* Return Bit(s): 19            */
+          /*                              */
+          /* Functionality still needs to be added */
+          if ( ( args[0] & 4096 ) != 0 && exc->gray_cleartype )
+            K |= 1 << 19;
         }
       }
     }

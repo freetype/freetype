@@ -1,5 +1,21 @@
 2015-05-23  Werner Lemberg  <wl@gnu.org>
 
+	[truetype] Fix return values of GETINFO bytecode instruction.
+
+	* src/truetype/ttinterp.h (TT_ExecContextRec): New fields
+	`vertical_lcd' and `gray_cleartype'.
+
+	* src/truetype/ttgload.c (tt_loader_init): Initialize new fields.
+	Change `symmetrical smoothing' to TRUE, since FreeType produces
+	exactly this.
+
+	* src/truetype/ttinterp.c (Ins_GETINFO): Fix selector/return bit
+	values for symmetrical smoothing, namely 11/18.
+	Handle bits for vertical LCD subpixels (8/15) and Gray ClearType
+	(12/19).
+
+2015-05-23  Werner Lemberg  <wl@gnu.org>
+
 	[truetype] Minor.
 
 	* src/truetype/ttinterp.h (TT_ExecContext):
