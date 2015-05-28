@@ -136,8 +136,8 @@ FT_BEGIN_HEADER
    *
    *   Depending on the graphics framework, Microsoft uses different
    *   bytecode and rendering engines.  As a consequence, the version
-   *   numbers returned by a call to the `GETINFO[1]' bytecode instruction
-   *   are more convoluted than desired.
+   *   numbers returned by a call to the `GETINFO' bytecode instruction are
+   *   more convoluted than desired.
    *
    *   Here are two tables that try to shed some light on the possible
    *   values for the MS rasterizer engine, together with the additional
@@ -177,7 +177,7 @@ FT_BEGIN_HEADER
    *   {
    *      version   sampling          rendering        comment
    *               x        y       x           y
-   *     ---------------------------------------------------------------
+   *     --------------------------------------------------------------
    *       v1.0   normal  normal  B/W           B/W    bi-level
    *       v1.6   high    high    gray          gray   grayscale
    *       v1.8   high    normal  color-filter  B/W    (GDI) ClearType

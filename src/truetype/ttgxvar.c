@@ -409,6 +409,7 @@
       FT_FRAME_END
     };
 
+
     if ( ( error = face->goto_table( face,
                                      TTAG_gvar,
                                      stream,

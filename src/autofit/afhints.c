@@ -1332,6 +1332,7 @@
     {
       FT_Fixed  scale = FT_DivFix( u2 - u1, v2 - v1 );
 
+
       for ( p = p1; p <= p2; p++ )
       {
         u = p->v;
