@@ -1,3 +1,10 @@
+2015-05-28  Werner Lemberg  <wl@gnu.org>
+
+	* src/tools/apinames.c (names_dump): Fix invalid reference.
+
+	Problem reported by Guzman Mosqueda, Jose R
+	<jose.r.guzman.mosqueda@intel.com>.
+
 2015-05-24  Werner Lemberg  <wl@gnu.org>
 
 	[truetype] Fix commit from 2015-05-22.
