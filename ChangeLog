@@ -1,3 +1,11 @@
+2015-05-31  Werner Lemberg  <wl@gnu.org>
+
+	[truetype] Add tracing information to GX code.
+
+	* src/truetype/ttgxvar.c (ft_var_load_avar, ft_var_load_gvar,
+	ft_var_apply_tuple, TT_Get_MM_Var, TT_Set_MM_Blend,
+	TT_Set_Var_Design, tt_face_vary_cvt): Do it.
+
 2015-05-28  Werner Lemberg  <wl@gnu.org>
 
 	* src/tools/apinames.c (names_dump): Fix invalid reference.

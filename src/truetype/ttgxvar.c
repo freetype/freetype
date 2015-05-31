@@ -301,12 +301,15 @@
     FT_UNUSED( error );
 
 
+    FT_TRACE2(( "AVAR " ));
+
     blend->avar_checked = TRUE;
-    if ( ( error = face->goto_table( face,
-                                     TTAG_avar,
-                                     stream,
-                                     &table_len ) ) != 0 )
+    error = face->goto_table( face, TTAG_avar, stream, &table_len );
+    if ( error )
+    {
+      FT_TRACE2(( "is missing\n" ));
       return;
+    }
 
     if ( FT_FRAME_ENTER( table_len ) )
       return;
@@ -314,9 +317,20 @@
     version   = FT_GET_LONG();
     axisCount = FT_GET_LONG();
 
-    if ( version != 0x00010000L                       ||
-         axisCount != (FT_Long)blend->mmvar->num_axis )
+    if ( version != 0x00010000L )
+    {
+      FT_TRACE2(( "bad table version\n" ));
       goto Exit;
+    }
+
+    FT_TRACE2(( "loaded\n" ));
+
+    if ( axisCount != (FT_Long)blend->mmvar->num_axis )
+    {
+      FT_TRACE2(( "ft_var_load_avar: number of axes in `avar' and `cvar'\n"
+                  "                  table are different\n" ));
+      goto Exit;
+    }
 
     if ( FT_NEW_ARRAY( blend->avar_segment, axisCount ) )
       goto Exit;
@@ -324,6 +338,8 @@
     segment = &blend->avar_segment[0];
     for ( i = 0; i < axisCount; i++, segment++ )
     {
+      FT_TRACE5(( "  axis %d:\n", i ));
+
       segment->pairCount = FT_GET_USHORT();
       if ( FT_NEW_ARRAY( segment->correspondence, segment->pairCount ) )
       {
@@ -343,7 +359,13 @@
         /* convert to Fixed */
         segment->correspondence[j].fromCoord = FT_GET_SHORT() << 2;
         segment->correspondence[j].toCoord   = FT_GET_SHORT() << 2;
+
+        FT_TRACE5(( "    mapping %.4f to %.4f\n",
+                    segment->correspondence[j].fromCoord / 65536.0,
+                    segment->correspondence[j].toCoord / 65536.0 ));
       }
+
+      FT_TRACE5(( "\n" ));
     }
 
   Exit:
@@ -410,11 +432,16 @@
     };
 
 
+    FT_TRACE2(( "GVAR " ));
+
     if ( ( error = face->goto_table( face,
                                      TTAG_gvar,
                                      stream,
                                      &table_len ) ) != 0 )
+    {
+      FT_TRACE2(( "is missing\n" ));
       goto Exit;
+    }
 
     gvar_start = FT_STREAM_POS( );
     if ( FT_STREAM_READ_FIELDS( gvar_fields, &gvar_head ) )
@@ -424,12 +451,25 @@
     blend->gv_glyphcnt = gvar_head.glyphCount;
     offsetToData       = gvar_start + gvar_head.offsetToData;
 
-    if ( gvar_head.version   != (FT_Long)0x00010000L              ||
-         gvar_head.axisCount != (FT_UShort)blend->mmvar->num_axis )
+    if ( gvar_head.version != 0x00010000L )
     {
+      FT_TRACE1(( "bad table version\n" ));
       error = FT_THROW( Invalid_Table );
       goto Exit;
     }
+
+    FT_TRACE2(( "loaded\n" ));
+
+    if ( gvar_head.axisCount != (FT_UShort)blend->mmvar->num_axis )
+    {
+      FT_TRACE1(( "ft_var_load_gvar: number of axes in `gvar' and `cvar'\n"
+                  "                  table are different\n" ));
+      error = FT_THROW( Invalid_Table );
+      goto Exit;
+    }
+
+    FT_TRACE5(( "gvar: there are %d shared coordinates:\n",
+                blend->tuplecount ));
 
     if ( FT_NEW_ARRAY( blend->glyphoffsets, blend->gv_glyphcnt + 1 ) )
       goto Exit;
@@ -469,9 +509,19 @@
         goto Exit;
 
       for ( i = 0; i < blend->tuplecount; i++ )
+      {
+        FT_TRACE5(( "  [ " ));
         for ( j = 0 ; j < (FT_UInt)gvar_head.axisCount; j++ )
+        {
           blend->tuplecoords[i * gvar_head.axisCount + j] =
             FT_GET_SHORT() << 2;                /* convert to FT_Fixed */
+          FT_TRACE5(( "%.4f ",
+            blend->tuplecoords[i * gvar_head.axisCount + j] / 65536.0 ));
+        }
+        FT_TRACE5(( "]\n" ));
+      }
+
+      FT_TRACE5(( "\n" ));
 
       FT_FRAME_EXIT();
     }
@@ -521,45 +571,80 @@
 
     for ( i = 0; i < blend->num_axis; i++ )
     {
-      if ( tuple_coords[i] == 0 )
-        /* It's not clear why (for intermediate tuples) we don't need     */
-        /* to check against start/end -- the documentation says we don't. */
-        /* Similarly, it's unclear why we don't need to scale along the   */
-        /* axis.                                                          */
-        continue;
+      FT_TRACE6(( "    axis coordinate %d (%.4f):\n",
+                  i, blend->normalizedcoords[i] / 65536.0 ));
 
-      else if ( blend->normalizedcoords[i] == 0                           ||
-                ( blend->normalizedcoords[i] < 0 && tuple_coords[i] > 0 ) ||
+      /* It's not clear why (for intermediate tuples) we don't need     */
+      /* to check against start/end -- the documentation says we don't. */
+      /* Similarly, it's unclear why we don't need to scale along the   */
+      /* axis.                                                          */
+
+      if ( tuple_coords[i] == 0 )
+      {
+        FT_TRACE6(( "      tuple coordinate is zero, ignored\n", i ));
+        continue;
+      }
+
+      else if ( blend->normalizedcoords[i] == 0 )
+      {
+        FT_TRACE6(( "      axis coordinate is zero, stop\n" ));
+        apply = 0;
+        break;
+      }
+
+      else if ( ( blend->normalizedcoords[i] < 0 && tuple_coords[i] > 0 ) ||
                 ( blend->normalizedcoords[i] > 0 && tuple_coords[i] < 0 ) )
       {
+        FT_TRACE6(( "      tuple coordinate value %.4f is exceeded, stop\n",
+                    tuple_coords[i] / 65536.0 ));
         apply = 0;
         break;
       }
 
       else if ( !( tupleIndex & GX_TI_INTERMEDIATE_TUPLE ) )
+      {
+        FT_TRACE6(( "      tuple coordinate value %.4f fits\n",
+                    tuple_coords[i] / 65536.0 ));
         /* not an intermediate tuple */
         apply = FT_MulFix( apply,
                            blend->normalizedcoords[i] > 0
                              ? blend->normalizedcoords[i]
                              : -blend->normalizedcoords[i] );
+      }
 
       else if ( blend->normalizedcoords[i] <= im_start_coords[i] ||
                 blend->normalizedcoords[i] >= im_end_coords[i]   )
       {
+        FT_TRACE6(( "      intermediate tuple range [%.4f;%.4f] is exceeded,"
+                    " stop\n",
+                    im_start_coords[i] / 65536.0,
+                    im_end_coords[i] / 65536.0 ));
         apply = 0;
         break;
       }
 
       else if ( blend->normalizedcoords[i] < tuple_coords[i] )
+      {
+        FT_TRACE6(( "      intermediate tuple range [%.4f;%.4f] fits\n",
+                    im_start_coords[i] / 65536.0,
+                    im_end_coords[i] / 65536.0 ));
         apply = FT_MulDiv( apply,
                            blend->normalizedcoords[i] - im_start_coords[i],
                            tuple_coords[i] - im_start_coords[i] );
+      }
 
       else
+      {
+        FT_TRACE6(( "      intermediate tuple range [%.4f;%.4f] fits\n",
+                    im_start_coords[i] / 65536.0,
+                    im_end_coords[i] / 65536.0 ));
         apply = FT_MulDiv( apply,
                            im_end_coords[i] - blend->normalizedcoords[i],
                            im_end_coords[i] - tuple_coords[i] );
+      }
     }
+
+    FT_TRACE6(( "    apply factor is %.4f\n", apply / 65536.0 ));
 
     return apply;
   }
@@ -674,14 +759,23 @@
 
     if ( face->blend == NULL )
     {
+      FT_TRACE2(( "FVAR " ));
+
       /* both `fvar' and `gvar' must be present */
       if ( ( error = face->goto_table( face, TTAG_gvar,
                                        stream, &table_len ) ) != 0 )
+      {
+        FT_TRACE1(( "\n"
+                    "TT_Get_MM_Var: `gvar' table is missing\n" ));
         goto Exit;
+      }
 
       if ( ( error = face->goto_table( face, TTAG_fvar,
                                        stream, &table_len ) ) != 0 )
+      {
+        FT_TRACE1(( "is missing\n" ));
         goto Exit;
+      }
 
       fvar_start = FT_STREAM_POS( );
 
@@ -704,9 +798,15 @@
            fvar_head.offsetToData + fvar_head.axisCount * 20U +
              fvar_head.instanceCount * fvar_head.instanceSize > table_len )
       {
+        FT_TRACE1(( "\n"
+                    "TT_Get_MM_Var: invalid `fvar' header\n" ));
         error = FT_THROW( Invalid_Table );
         goto Exit;
       }
+
+      FT_TRACE2(( "loaded\n" ));
+
+      FT_TRACE5(( "number of GX style axes: %d\n", fvar_head.axisCount ));
 
       if ( FT_NEW( face->blend ) )
         goto Exit;
@@ -779,8 +879,16 @@
         a->name[3] = (FT_String)( ( a->tag       ) & 0xFF );
         a->name[4] = '\0';
 
+        FT_TRACE5(( "  \"%s\": minimum=%.4f, default=%.4f, maximum=%.4f\n",
+                    a->name,
+                    a->minimum / 65536.0,
+                    a->def / 65536.0,
+                    a->maximum / 65536.0 ));
+
         a++;
       }
+
+      FT_TRACE5(( "\n" ));
 
       ns = mmvar->namedstyle;
       for ( i = 0; i < fvar_head.instanceCount; i++, ns++ )
@@ -907,14 +1015,28 @@
     mmvar = blend->mmvar;
 
     if ( num_coords > mmvar->num_axis )
+    {
+      FT_TRACE2(( "TT_Set_MM_Blend: only using first %d of %d coordinates\n",
+                  mmvar->num_axis, num_coords ));
       num_coords = mmvar->num_axis;
+    }
+
+    FT_TRACE5(( "normalized design coordinates:\n" ));
 
     for ( i = 0; i < num_coords; i++ )
+    {
+      FT_TRACE5(( "  %.4f\n", coords[i] / 65536.0 ));
       if ( coords[i] < -0x00010000L || coords[i] > 0x00010000L )
       {
+        FT_TRACE1(( "TT_Set_MM_Blend: normalized design coordinate %.4f\n"
+                    "                 is out of range [-1;1]\n",
+                    coords[i] / 65536.0 ));
         error = FT_THROW( Invalid_Argument );
         goto Exit;
       }
+    }
+
+    FT_TRACE5(( "\n" ));
 
     if ( blend->glyphoffsets == NULL )
       if ( ( error = ft_var_load_gvar( face ) ) != 0 )
@@ -1046,7 +1168,12 @@
     mmvar = blend->mmvar;
 
     if ( num_coords > mmvar->num_axis )
+    {
+      FT_TRACE2(( "TT_Set_Var_Design:"
+                  " only using first %d of %d coordinates\n",
+                  mmvar->num_axis, num_coords ));
       num_coords = mmvar->num_axis;
+    }
 
     /* Axis normalization is a two stage process.  First we normalize */
     /* based on the [min,def,max] values for the axis to be [-1,0,1]. */
@@ -1055,11 +1182,19 @@
     if ( FT_NEW_ARRAY( normalized, mmvar->num_axis ) )
       goto Exit;
 
+    FT_TRACE5(( "design coordinates:\n" ));
+
     a = mmvar->axis;
     for ( i = 0; i < num_coords; i++, a++ )
     {
+      FT_TRACE5(( "  %.4f\n", coords[i] / 65536.0 ));
       if ( coords[i] > a->maximum || coords[i] < a->minimum )
       {
+        FT_TRACE1(( "TT_Set_Var_Design: normalized design coordinate %.4f\n"
+                    "                   is out of range [%.4f;%.4f]\n",
+                    coords[i] / 65536.0,
+                    a->minimum / 65536.0,
+                    a->maximum / 65536.0 ));
         error = FT_THROW( Invalid_Argument );
         goto Exit;
       }
@@ -1074,6 +1209,8 @@
                                    a->maximum - a->def );
     }
 
+    FT_TRACE5(( "\n" ));
+
     for ( ; i < mmvar->num_axis; i++ )
       normalized[i] = 0;
 
@@ -1082,10 +1219,15 @@
 
     if ( blend->avar_segment != NULL )
     {
+      FT_TRACE5(( "normalized design coordinates"
+                  " before applying `avar' data:\n" ));
+
       av = blend->avar_segment;
       for ( i = 0; i < mmvar->num_axis; i++, av++ )
       {
         for ( j = 1; j < (FT_UInt)av->pairCount; j++ )
+        {
+          FT_TRACE5(( "  %.4f\n", normalized[i] / 65536.0 ));
           if ( normalized[i] < av->correspondence[j].fromCoord )
           {
             normalized[i] =
@@ -1097,6 +1239,7 @@
               av->correspondence[j - 1].toCoord;
             break;
           }
+        }
       }
     }
 
@@ -1163,16 +1306,16 @@
 
     if ( blend == NULL )
     {
-      FT_TRACE2(( "tt_face_vary_cvt: no blend specified\n" ));
-
+      FT_TRACE2(( "\n"
+                  "tt_face_vary_cvt: no blend specified\n" ));
       error = FT_Err_Ok;
       goto Exit;
     }
 
     if ( face->cvt == NULL )
     {
-      FT_TRACE2(( "tt_face_vary_cvt: no `cvt ' table\n" ));
-
+      FT_TRACE2(( "\n"
+                  "tt_face_vary_cvt: no `cvt ' table\n" ));
       error = FT_Err_Ok;
       goto Exit;
     }
@@ -1201,6 +1344,8 @@
       goto FExit;
     }
 
+    FT_TRACE2(( "loaded\n" ));
+
     if ( FT_NEW_ARRAY( tuple_coords, blend->num_axis )    ||
          FT_NEW_ARRAY( im_start_coords, blend->num_axis ) ||
          FT_NEW_ARRAY( im_end_coords, blend->num_axis )   )
@@ -1213,12 +1358,16 @@
     /* tuplecount, but John Jenkins says that shared points don't apply */
     /* to `cvar', and no other flags are defined.                       */
 
+    FT_TRACE5(( "cvar: there are %d tuples:\n", tupleCount ));
+
     for ( i = 0; i < ( tupleCount & 0xFFF ); i++ )
     {
       FT_UInt   tupleDataSize;
       FT_UInt   tupleIndex;
       FT_Fixed  apply;
 
+
+      FT_TRACE6(( "  tuple %d:\n", i ));
 
       tupleDataSize = FT_GET_USHORT();
       tupleIndex    = FT_GET_USHORT();
@@ -1280,22 +1429,70 @@
 
       else if ( localpoints == ALL_POINTS )
       {
+#ifdef FT_DEBUG_LEVEL_TRACE
+        int  count = 0;
+#endif
+
+
+        FT_TRACE7(( "    CVT deltas:\n" ));
+
         /* this means that there are deltas for every entry in cvt */
         for ( j = 0; j < face->cvt_size; j++ )
-          face->cvt[j] = (FT_Short)( face->cvt[j] +
+        {
+          FT_Long  orig_cvt = face->cvt[j];
+
+
+          face->cvt[j] = (FT_Short)( orig_cvt +
                                      FT_MulFix( deltas[j], apply ) );
+
+#ifdef FT_DEBUG_LEVEL_TRACE
+          if ( orig_cvt != face->cvt[j] )
+          {
+            FT_TRACE7(( "      %d: %d -> %d\n",
+                        j, orig_cvt, face->cvt[j] ));
+            count++;
+          }
+#endif
+        }
+
+#ifdef FT_DEBUG_LEVEL_TRACE
+        if ( !count )
+          FT_TRACE7(( "      none\n" ));
+#endif
       }
 
       else
       {
+#ifdef FT_DEBUG_LEVEL_TRACE
+        int  count = 0;
+#endif
+
+
+        FT_TRACE7(( "    CVT deltas:\n" ));
+
         for ( j = 0; j < point_count; j++ )
         {
-          int  pindex = localpoints[j];
+          int      pindex   = localpoints[j];
+          FT_Long  orig_cvt = face->cvt[pindex];
 
 
-          face->cvt[pindex] = (FT_Short)( face->cvt[pindex] +
+          face->cvt[pindex] = (FT_Short)( orig_cvt +
                                           FT_MulFix( deltas[j], apply ) );
+
+#ifdef FT_DEBUG_LEVEL_TRACE
+          if ( orig_cvt != face->cvt[pindex] )
+          {
+            FT_TRACE7(( "      %d: %d -> %d\n",
+                        pindex, orig_cvt, face->cvt[pindex] ));
+            count++;
+          }
+#endif
         }
+
+#ifdef FT_DEBUG_LEVEL_TRACE
+        if ( !count )
+          FT_TRACE7(( "      none\n" ));
+#endif
       }
 
       if ( localpoints != ALL_POINTS )
@@ -1306,6 +1503,8 @@
 
       FT_Stream_SeekSet( stream, here );
     }
+
+    FT_TRACE5(( "\n" ));
 
   FExit:
     FT_FRAME_EXIT();
