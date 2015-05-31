@@ -1,7 +1,7 @@
 
 CHANGES BETWEEN 2.5.5 and 2.6
 
-  II. IMPORTANT CHANGES
+  I. IMPORTANT CHANGES
 
     - Behdad  Esfahbod contributed  code  for improved  thread-safety,
       which results in the following model.
@@ -38,13 +38,15 @@ CHANGES BETWEEN 2.5.5 and 2.6
     - Fonts natively hinted for  ClearType are now supported, properly
       handling selector index 3 of the INSTCTRL bytecode instruction.
 
+    - Major improvements to the GX TrueType variation font handling.
 
-  III. MISCELLANEOUS
+
+  II. MISCELLANEOUS
 
     - A new auto-hinter  property `warping' can switch on  and off the
       warping code  if this  experimental feature  is compiled  in (by
-      defining the  AF_CONFIG_OPTION_USE_WARPER  configuration option;
-      by default  this option is  now enabled but  warping is switched
+      defining  the AF_CONFIG_OPTION_USE_WARPER  configuration option;
+      by default  this option is  now enabled but warping  is switched
       off).
 
       The AF_CONFIG_OPTION_USE_WARPER option itself is an old feature,
@@ -80,11 +82,9 @@ CHANGES BETWEEN 2.5.5 and 2.6
       renamed to  `FT_FONT_FORMATS_H' (the old name  `FT_XFREE86_H' is
       retained for backwards compatibility).
 
-    - Some improvements to the GX variation font handling.
-
     - Various improvements to the `ftgrid' demo program.
 
-      . It  can now  display  GX  and  MM  fonts  while  interactively
+      . It  can  now  display  GX and  MM  fonts  while  interactively
         manipulating the axes (with keys F2, F3, and F4).
 
       . Anti-aliasing rendering  modes can now be  selected (with keys
@@ -97,7 +97,8 @@ CHANGES BETWEEN 2.5.5 and 2.6
       . New  command line option  `-u' makes  it output data  in utf-8
         encoding.
 
-    - The `ftmulti' demo program can now handle four MM or GX axes.
+    - The `ftmulti'  demo program can  now handle up  to six MM  or GX
+      axes.
 
 
 ======================================================================
