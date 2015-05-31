@@ -1518,13 +1518,230 @@
   }
 
 
+  /* Shift the original coordinates of all points between indices `p1' */
+  /* and `p2', using the same difference as given by index `ref'.      */
+
+  /* modeled after `af_iup_shift' */
+
+  static void
+  tt_delta_shift( int         p1,
+                  int         p2,
+                  int         ref,
+                  FT_Vector*  in_points,
+                  FT_Vector*  out_points )
+  {
+    int        p;
+    FT_Vector  delta;
+
+
+    delta.x = out_points[ref].x - in_points[ref].x;
+    delta.y = out_points[ref].y - in_points[ref].y;
+
+    if ( delta.x == 0 && delta.y == 0 )
+      return;
+
+    for ( p = p1; p < ref; p++ )
+    {
+      out_points[p].x += delta.x;
+      out_points[p].y += delta.y;
+    }
+
+    for ( p = ref + 1; p <= p2; p++ )
+    {
+      out_points[p].x += delta.x;
+      out_points[p].y += delta.y;
+    }
+  }
+
+
+  /* Interpolate the original coordinates of all points with indices */
+  /* between `p1' and `p2', using `ref1' and `ref2' as the reference */
+  /* point indices.                                                  */
+
+  /* modeled after `af_iup_interp', `_iup_worker_interpolate', and */
+  /* `Ins_IUP'                                                     */
+
+  static void
+  tt_delta_interpolate( int         p1,
+                        int         p2,
+                        int         ref1,
+                        int         ref2,
+                        FT_Vector*  in_points,
+                        FT_Vector*  out_points )
+  {
+    int  p, i;
+
+    FT_Pos  out, in1, in2, out1, out2, d1, d2;
+
+
+    if ( p1 > p2 )
+      return;
+
+    /* handle both horizontal and vertical coordinates */
+    for ( i = 0; i <= 1; i++ )
+    {
+      /* shift array pointers so that we can access `foo.y' as `foo.x' */
+      in_points  = (FT_Vector*)( (FT_Pos*)in_points + i );
+      out_points = (FT_Vector*)( (FT_Pos*)out_points + i );
+
+      if ( in_points[ref1].x > in_points[ref2].x )
+      {
+        p    = ref1;
+        ref1 = ref2;
+        ref2 = p;
+      }
+
+      in1  = in_points[ref1].x;
+      in2  = in_points[ref2].x;
+      out1 = out_points[ref1].x;
+      out2 = out_points[ref2].x;
+      d1   = out1 - in1;
+      d2   = out2 - in2;
+
+      if ( out1 == out2 || in1 == in2 )
+      {
+        for ( p = p1; p <= p2; p++ )
+        {
+          out = in_points[p].x;
+
+          if ( out <= in1 )
+            out += d1;
+          else if ( out >= in2 )
+            out += d2;
+          else
+            out = out1;
+
+          out_points[p].x = out;
+        }
+      }
+      else
+      {
+        FT_Fixed  scale = FT_DivFix( out2 - out1, in2 - in1 );
+
+
+        for ( p = p1; p <= p2; p++ )
+        {
+          out = in_points[p].x;
+
+          if ( out <= in1 )
+            out += d1;
+          else if ( out >= in2 )
+            out += d2;
+          else
+            out = out1 + FT_MulFix( out - in1, scale );
+
+          out_points[p].x = out;
+        }
+      }
+    }
+  }
+
+
+  /* Interpolate points without delta values, similar to */
+  /* the `IUP' hinting instruction.                      */
+
+  /* modeled after `Ins_IUP */
+
+  static void
+  tt_handle_deltas( FT_Outline*  outline,
+                    FT_Vector*   in_points,
+                    FT_Bool*     has_delta )
+  {
+    FT_Vector*  out_points;
+
+    FT_UInt  first_point;
+    FT_UInt  end_point;
+
+    FT_UInt  first_delta;
+    FT_UInt  cur_delta;
+
+    FT_UInt   point;
+    FT_Short  contour;
+
+
+    /* ignore empty outlines */
+    if ( !outline->n_contours )
+      return;
+
+    out_points = outline->points;
+
+    contour = 0;
+    point   = 0;
+
+    do
+    {
+      end_point   = outline->contours[contour];
+      first_point = point;
+
+      /* search first point that has a delta */
+      while ( point <= end_point && !has_delta[point] )
+        point++;
+
+      if ( point <= end_point )
+      {
+        first_delta = point;
+        cur_delta   = point;
+
+        point++;
+
+        while ( point <= end_point )
+        {
+          /* search next point that has a delta  */
+          /* and interpolate intermediate points */
+          if ( has_delta[point] )
+          {
+            tt_delta_interpolate( cur_delta + 1,
+                                  point - 1,
+                                  cur_delta,
+                                  point,
+                                  in_points,
+                                  out_points );
+            cur_delta = point;
+          }
+
+          point++;
+        }
+
+        /* shift contour if we only have a single delta */
+        if ( cur_delta == first_delta )
+          tt_delta_shift( first_point,
+                          end_point,
+                          cur_delta,
+                          in_points,
+                          out_points );
+        else
+        {
+          /* otherwise handle remaining points       */
+          /* at the end and beginning of the contour */
+          tt_delta_interpolate( cur_delta + 1,
+                                end_point,
+                                cur_delta,
+                                first_delta,
+                                in_points,
+                                out_points );
+
+          if ( first_delta > 0 )
+            tt_delta_interpolate( first_point,
+                                  first_delta - 1,
+                                  cur_delta,
+                                  first_delta,
+                                  in_points,
+                                  out_points );
+        }
+      }
+      contour++;
+
+    } while ( contour < outline->n_contours );
+  }
+
+
   /*************************************************************************/
   /*                                                                       */
   /* <Function>                                                            */
-  /*    TT_Vary_Get_Glyph_Deltas                                           */
+  /*    TT_Vary_Apply_Glyph_Deltas                                         */
   /*                                                                       */
   /* <Description>                                                         */
-  /*    Load the appropriate deltas for the current glyph.                 */
+  /*    Apply the appropriate deltas to the current glyph.                 */
   /*                                                                       */
   /* <Input>                                                               */
   /*    face        :: A handle to the target face object.                 */
@@ -1534,22 +1751,24 @@
   /*    n_points    :: The number of the points in the glyph, including    */
   /*                   phantom points.                                     */
   /*                                                                       */
-  /* <Output>                                                              */
-  /*    deltas      :: The array of points to change.                      */
+  /* <InOut>                                                               */
+  /*    outline     :: The outline to change.                              */
   /*                                                                       */
   /* <Return>                                                              */
   /*    FreeType error code.  0 means success.                             */
   /*                                                                       */
   FT_LOCAL_DEF( FT_Error )
-  TT_Vary_Get_Glyph_Deltas( TT_Face      face,
-                            FT_UInt      glyph_index,
-                            FT_Vector*  *deltas,
-                            FT_UInt      n_points )
+  TT_Vary_Apply_Glyph_Deltas( TT_Face      face,
+                              FT_UInt      glyph_index,
+                              FT_Outline*  outline,
+                              FT_UInt      n_points )
   {
     FT_Stream   stream = face->root.stream;
     FT_Memory   memory = stream->memory;
     GX_Blend    blend  = face->blend;
-    FT_Vector*  delta_xy = NULL;
+
+    FT_Vector*  points_org = NULL;
+    FT_Bool*    has_delta  = NULL;
 
     FT_Error    error;
     FT_ULong    glyph_start;
@@ -1570,15 +1789,18 @@
     if ( !face->doblend || blend == NULL )
       return FT_THROW( Invalid_Argument );
 
-    /* to be freed by the caller */
-    if ( FT_NEW_ARRAY( delta_xy, n_points ) )
-      goto Exit;
-    *deltas = delta_xy;
-
     if ( glyph_index >= blend->gv_glyphcnt      ||
          blend->glyphoffsets[glyph_index] ==
            blend->glyphoffsets[glyph_index + 1] )
-      return FT_Err_Ok;               /* no variation data for this glyph */
+    {
+      FT_TRACE2(( "TT_Vary_Apply_Glyph_Deltas:"
+                  " no variation data for this glyph\n" ));
+      return FT_Err_Ok;
+    }
+
+    if ( FT_NEW_ARRAY( points_org, n_points ) ||
+         FT_NEW_ARRAY( has_delta, n_points )  )
+      goto Fail1;
 
     if ( FT_STREAM_SEEK( blend->glyphoffsets[glyph_index] )   ||
          FT_FRAME_ENTER( blend->glyphoffsets[glyph_index + 1] -
@@ -1610,12 +1832,16 @@
       FT_Stream_SeekSet( stream, here );
     }
 
+    FT_TRACE5(( "gvar: there are %d tuples:\n", tupleCount ));
+
     for ( i = 0; i < ( tupleCount & GX_TC_TUPLE_COUNT_MASK ); i++ )
     {
       FT_UInt   tupleDataSize;
       FT_UInt   tupleIndex;
       FT_Fixed  apply;
 
+
+      FT_TRACE6(( "  tuple %d:\n", i ));
 
       tupleDataSize = FT_GET_USHORT();
       tupleIndex    = FT_GET_USHORT();
@@ -1629,7 +1855,7 @@
       else if ( ( tupleIndex & GX_TI_TUPLE_INDEX_MASK ) >= blend->tuplecount )
       {
         error = FT_THROW( Invalid_Table );
-        goto Fail3;
+        goto Fail2;
       }
       else
         FT_MEM_COPY(
@@ -1684,24 +1910,101 @@
 
       else if ( points == ALL_POINTS )
       {
+#ifdef FT_DEBUG_LEVEL_TRACE
+        int  count = 0;
+#endif
+
+
+        FT_TRACE7(( "    point deltas:\n" ));
+
         /* this means that there are deltas for every point in the glyph */
         for ( j = 0; j < n_points; j++ )
         {
-          delta_xy[j].x += FT_MulFix( deltas_x[j], apply );
-          delta_xy[j].y += FT_MulFix( deltas_y[j], apply );
+#ifdef FT_DEBUG_LEVEL_TRACE
+          FT_Vector  point_org = outline->points[j];
+#endif
+
+
+          outline->points[j].x += FT_MulFix( deltas_x[j], apply );
+          outline->points[j].y += FT_MulFix( deltas_y[j], apply );
+
+#ifdef FT_DEBUG_LEVEL_TRACE
+          if ( ( point_org.x != outline->points[j].x ) ||
+               ( point_org.y != outline->points[j].y ) )
+          {
+            FT_TRACE7(( "      %d: (%d, %d) -> (%d, %d)\n",
+                        j,
+                        point_org.x,
+                        point_org.y,
+                        outline->points[j].x,
+                        outline->points[j].y ));
+            count++;
+          }
+#endif
         }
+
+#ifdef FT_DEBUG_LEVEL_TRACE
+        if ( !count )
+          FT_TRACE7(( "      none\n" ));
+#endif
       }
 
       else
       {
+#ifdef FT_DEBUG_LEVEL_TRACE
+        int  count = 0;
+#endif
+
+
+        /* we have to interpolate the missing deltas similar to the */
+        /* IUP bytecode instruction                                 */
+        for ( j = 0; j < n_points; j++ )
+        {
+          points_org[j] = outline->points[j];
+          has_delta[j]  = FALSE;
+        }
+
         for ( j = 0; j < point_count; j++ )
         {
-          if ( localpoints[j] >= n_points )
+          FT_UShort  idx = localpoints[j];
+
+
+          if ( idx >= n_points )
             continue;
 
-          delta_xy[localpoints[j]].x += FT_MulFix( deltas_x[j], apply );
-          delta_xy[localpoints[j]].y += FT_MulFix( deltas_y[j], apply );
+          has_delta[idx] = TRUE;
+
+          outline->points[idx].x += FT_MulFix( deltas_x[j], apply );
+          outline->points[idx].y += FT_MulFix( deltas_y[j], apply );
         }
+
+        /* no need to handle phantom points here,      */
+        /* since solitary points can't be interpolated */
+        tt_handle_deltas( outline,
+                          points_org,
+                          has_delta );
+
+#ifdef FT_DEBUG_LEVEL_TRACE
+        FT_TRACE7(( "    point deltas:\n" ));
+
+        for ( j = 0; j < n_points; j++)
+        {
+          if ( ( points_org[j].x != outline->points[j].x ) ||
+               ( points_org[j].y != outline->points[j].y ) )
+          {
+            FT_TRACE7(( "      %d: (%d, %d) -> (%d, %d)\n",
+                        j,
+                        points_org[j].x,
+                        points_org[j].y,
+                        outline->points[j].x,
+                        outline->points[j].y ));
+            count++;
+          }
+        }
+
+        if ( !count )
+          FT_TRACE7(( "      none\n" ));
+#endif
       }
 
       if ( localpoints != ALL_POINTS )
@@ -1714,22 +2017,19 @@
       FT_Stream_SeekSet( stream, here );
     }
 
-  Fail3:
+    FT_TRACE5(( "\n" ));
+
+  Fail2:
     FT_FREE( tuple_coords );
     FT_FREE( im_start_coords );
     FT_FREE( im_end_coords );
 
-  Fail2:
     FT_FRAME_EXIT();
 
   Fail1:
-    if ( error )
-    {
-      FT_FREE( delta_xy );
-      *deltas = NULL;
-    }
+    FT_FREE( points_org );
+    FT_FREE( has_delta );
 
-  Exit:
     return error;
   }
 

@@ -162,10 +162,10 @@ FT_BEGIN_HEADER
 
 
   FT_LOCAL( FT_Error )
-  TT_Vary_Get_Glyph_Deltas( TT_Face      face,
-                            FT_UInt      glyph_index,
-                            FT_Vector*  *deltas,
-                            FT_UInt      n_points );
+  TT_Vary_Apply_Glyph_Deltas( TT_Face      face,
+                              FT_UInt      glyph_index,
+                              FT_Outline*  outline,
+                              FT_UInt      n_points );
 
 
   FT_LOCAL( void )

@@ -1,5 +1,29 @@
 2015-05-31  Werner Lemberg  <wl@gnu.org>
 
+	[truetype] In GX, make private point numbers work correctly.
+
+	This is completely missing in Apple's documentation: If a `gvar'
+	tuple uses private point numbers (this is, deltas are specified for
+	some points only), the uncovered points must be interpolated for
+	this tuple similar to the IUP bytecode instruction.  Examples that
+	need this functionality are glyphs `Oslash' and `Q' in Skia.ttf.
+
+	* src/truetype/ttgxvar.c (tt_delta_shift, tt_delta_interpolate,
+	tt_handle_deltas): New functions.
+	(TT_Vary_Get_Glyph_Deltas): Renamed to...
+	(TT_Vary_Apply_Glyph_Deltas): ... this; it directly processes the
+	points and does no longer return an array of deltas.
+	Add tracing information.
+	Call `tt_handle_deltas' to interpolate missing deltas.
+	Also fix a minor memory leak in case of error.
+
+	* src/truetype/ttgxvar.h: Updated.
+
+	* src/truetype/ttgload.c (TT_Process_Simple_Glyph,
+	load_truetype_glyph): Updated.
+
+2015-05-31  Werner Lemberg  <wl@gnu.org>
+
 	[truetype] In GX, make intermediate tuplets work at extrema.
 
 	* src/truetype/ttgxvar.c (ft_var_apply_tuple): Fix range condition.
