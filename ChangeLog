@@ -1,5 +1,11 @@
 2015-05-31  Werner Lemberg  <wl@gnu.org>
 
+	[truetype] In GX, make intermediate tuplets work at extrema.
+
+	* src/truetype/ttgxvar.c (ft_var_apply_tuple): Fix range condition.
+
+2015-05-31  Werner Lemberg  <wl@gnu.org>
+
 	[truetype] Add tracing information to GX code.
 
 	* src/truetype/ttgxvar.c (ft_var_load_avar, ft_var_load_gvar,
