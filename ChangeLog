@@ -1,3 +1,12 @@
+2015-06-01  Werner Lemberg  <wl@gnu.org>
+
+	[truetype] While tracing opcodes, show code position and stack.
+
+	* src/truetype/ttinterp.c: Change all existing TRACE7 calls to
+	TRACE6.
+	(opcode_name): Add string lengths.
+	(TT_RunIns): Implement display of code position and stack.
+
 2015-05-31  Werner Lemberg  <wl@gnu.org>
 
 	[truetype] In GX, make private point numbers work correctly.
