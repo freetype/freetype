@@ -954,6 +954,16 @@
     TT_MaxProfile*  maxp = &face->max_profile;
 
 
+    /* clean up bytecode related data */
+    FT_FREE( size->function_defs );
+    FT_FREE( size->instruction_defs );
+    FT_FREE( size->cvt );
+    FT_FREE( size->storage );
+
+    if ( size->context )
+      TT_Done_Context( size->context );
+    tt_glyphzone_done( &size->twilight );
+
     size->bytecode_ready = -1;
     size->cvt_ready      = -1;
 

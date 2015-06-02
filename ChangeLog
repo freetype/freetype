@@ -1,4 +1,18 @@
-2015-06-01  Werner Lemberg  <wl@gnu.org>
+2015-06-03  Werner Lemberg  <wl@gnu.org>
+
+	[truetype] Fix memory leak.
+
+	Problem reported by Grissiom <chaos.proton@gmail.com>; in
+
+	  http://lists.nongnu.org/archive/html/freetype/2015-05/msg00013.html
+
+	there is an example code to trigger the bug.
+
+	* src/truetype/ttobjs.c (tt_size_init_bytecode): Free old `size'
+	data before allocating again.  Bug most probably introduced four
+	years ago in version 2.4.3.
+
+2015-06-02  Werner Lemberg  <wl@gnu.org>
 
 	[raster] Add more tracing.
 
