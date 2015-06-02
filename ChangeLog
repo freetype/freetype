@@ -1,5 +1,13 @@
 2015-06-01  Werner Lemberg  <wl@gnu.org>
 
+	[raster] Add more tracing.
+
+	* src/raster/ftraster.c (FT_TRACE7) [_STANDALONE_]: Define.
+	(Vertical_Sweep_Span, Vertical_Sweep_Drop, Horizontal_Sweep_Span,
+	Horizontal_Sweep_Drop, Render_Glyph): Add tracing calls.
+
+2015-06-01  Werner Lemberg  <wl@gnu.org>
+
 	[truetype] While tracing opcodes, show code position and stack.
 
 	* src/truetype/ttinterp.c: Change all existing TRACE7 calls to

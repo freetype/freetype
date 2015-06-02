@@ -197,6 +197,7 @@
 #define FT_TRACE( x )   do { } while ( 0 )    /* nothing */
 #define FT_TRACE1( x )  do { } while ( 0 )    /* nothing */
 #define FT_TRACE6( x )  do { } while ( 0 )    /* nothing */
+#define FT_TRACE7( x )  do { } while ( 0 )    /* nothing */
 #endif
 
 #ifndef FT_THROW
@@ -582,11 +583,11 @@
      * approximating it as a straight segment.  The default value of 32 (for
      * low accuracy) corresponds to
      *
-     *   32 / 64 == 0.5 pixels ,
+     *   32 / 64 == 0.5 pixels,
      *
      * while for the high accuracy case we have
      *
-     *   256/ (1 << 12) = 0.0625 pixels .
+     *   256 / (1 << 12) = 0.0625 pixels.
      *
      * `precision_jitter' is an epsilon threshold used in
      * `Vertical_Sweep_Span' to deal with small imperfections in the Bezier
@@ -669,13 +670,13 @@
       if ( overshoot )
         ras.cProfile->flags |= Overshoot_Bottom;
 
-      FT_TRACE6(( "New ascending profile = %p\n", ras.cProfile ));
+      FT_TRACE6(( "  new ascending profile = %p\n", ras.cProfile ));
       break;
 
     case Descending_State:
       if ( overshoot )
         ras.cProfile->flags |= Overshoot_Top;
-      FT_TRACE6(( "New descending profile = %p\n", ras.cProfile ));
+      FT_TRACE6(( "  new descending profile = %p\n", ras.cProfile ));
       break;
 
     default:
@@ -730,7 +731,7 @@
       PProfile  oldProfile;
 
 
-      FT_TRACE6(( "Ending profile %p, start = %ld, height = %ld\n",
+      FT_TRACE6(( "  ending profile %p, start = %ld, height = %ld\n",
                   ras.cProfile, ras.cProfile->start, h ));
 
       ras.cProfile->height = h;
@@ -2194,6 +2195,14 @@
     FT_UNUSED( right );
 
 
+    /* in high-precision mode, we need 12 digits after the comma to */
+    /* represent multiples of 1/(1<<12) = 1/4096                    */
+    FT_TRACE7(( "  y=%d x=[%.12f;%.12f], drop-out=%d",
+                y,
+                x1 / (double)ras.precision,
+                x2 / (double)ras.precision,
+                dropOutControl ));
+
     /* Drop-out control */
 
     e1 = TRUNC( CEILING( x1 ) );
@@ -2214,6 +2223,8 @@
         e1 = 0;
       if ( e2 >= ras.bWidth )
         e2 = ras.bWidth - 1;
+
+      FT_TRACE7(( " -> x=[%d;%d]", e1, e2 ));
 
       c1 = (Short)( e1 >> 3 );
       c2 = (Short)( e2 >> 3 );
@@ -2242,6 +2253,8 @@
       else
         *target |= ( f1 & f2 );
     }
+
+    FT_TRACE7(( "\n" ));
   }
 
 
@@ -2255,6 +2268,11 @@
     Long   e1, e2, pxl;
     Short  c1, f1;
 
+
+    FT_TRACE7(( "  y=%d x=[%.12f;%.12f]",
+                y,
+                x1 / (double)ras.precision,
+                x2 / (double)ras.precision ));
 
     /* Drop-out control */
 
@@ -2287,6 +2305,8 @@
     {
       Int  dropOutControl = left->flags & 7;
 
+
+      FT_TRACE7(( ", drop-out=%d", dropOutControl ));
 
       if ( e1 == e2 + ras.precision )
       {
@@ -2334,14 +2354,14 @@
                left->height <= 0                  &&
                !( left->flags & Overshoot_Top   &&
                   x2 - x1 >= ras.precision_half ) )
-            return;
+            goto Exit;
 
           /* lower stub test */
           if ( right->next == left                 &&
                left->start == y                    &&
                !( left->flags & Overshoot_Bottom &&
                   x2 - x1 >= ras.precision_half  ) )
-            return;
+            goto Exit;
 
           if ( dropOutControl == 1 )
             pxl = e2;
@@ -2350,7 +2370,7 @@
           break;
 
         default: /* modes 2, 3, 6, 7 */
-          return;  /* no drop-out control */
+          goto Exit;  /* no drop-out control */
         }
 
         /* undocumented but confirmed: If the drop-out would result in a  */
@@ -2371,21 +2391,26 @@
 
         if ( e1 >= 0 && e1 < ras.bWidth                      &&
              ras.bTarget[ras.traceOfs + c1] & ( 0x80 >> f1 ) )
-          return;
+          goto Exit;
       }
       else
-        return;
+        goto Exit;
     }
 
     e1 = TRUNC( pxl );
 
     if ( e1 >= 0 && e1 < ras.bWidth )
     {
+      FT_TRACE7(( " -> x=%d (drop-out)", e1 ));
+
       c1 = (Short)( e1 >> 3 );
       f1 = (Short)( e1 & 7 );
 
       ras.bTarget[ras.traceOfs + c1] |= (char)( 0x80 >> f1 );
     }
+
+  Exit:
+    FT_TRACE7(( "\n" ));
   }
 
 
@@ -2432,32 +2457,39 @@
       Long  e1, e2;
 
 
+      FT_TRACE7(( "  x=%d y=[%.12f;%.12f]",
+                  y,
+                  x1 / (double)ras.precision,
+                  x2 / (double)ras.precision ));
+
       e1 = CEILING( x1 );
       e2 = FLOOR  ( x2 );
 
       if ( e1 == e2 )
       {
-        Byte   f1;
-        PByte  bits;
-
-
-        bits = ras.bTarget + ( y >> 3 );
-        f1   = (Byte)( 0x80 >> ( y & 7 ) );
-
         e1 = TRUNC( e1 );
 
         if ( e1 >= 0 && (ULong)e1 < ras.target.rows )
         {
+          Byte   f1;
+          PByte  bits;
           PByte  p;
 
 
-          p = bits - e1 * ras.target.pitch;
+          FT_TRACE7(( " -> y=%d (drop-out)", e1 ));
+
+          bits = ras.bTarget + ( y >> 3 );
+          f1   = (Byte)( 0x80 >> ( y & 7 ) );
+          p    = bits - e1 * ras.target.pitch;
+
           if ( ras.target.pitch > 0 )
             p += (Long)( ras.target.rows - 1 ) * ras.target.pitch;
 
           p[0] |= f1;
         }
       }
+
+      FT_TRACE7(( "\n" ));
     }
   }
 
@@ -2473,6 +2505,11 @@
     PByte  bits;
     Byte   f1;
 
+
+    FT_TRACE7(( "  x=%d y=[%.12f;%.12f]",
+                y,
+                x1 / (double)ras.precision,
+                x2 / (double)ras.precision ));
 
     /* During the horizontal sweep, we only take care of drop-outs */
 
@@ -2495,6 +2532,8 @@
       Int  dropOutControl = left->flags & 7;
 
 
+      FT_TRACE7(( ", dropout=%d", dropOutControl ));
+
       if ( e1 == e2 + ras.precision )
       {
         switch ( dropOutControl )
@@ -2516,14 +2555,14 @@
                left->height <= 0                  &&
                !( left->flags & Overshoot_Top   &&
                   x2 - x1 >= ras.precision_half ) )
-            return;
+            goto Exit;
 
           /* leftmost stub test */
           if ( right->next == left                 &&
                left->start == y                    &&
                !( left->flags & Overshoot_Bottom &&
                   x2 - x1 >= ras.precision_half  ) )
-            return;
+            goto Exit;
 
           if ( dropOutControl == 1 )
             pxl = e2;
@@ -2532,7 +2571,7 @@
           break;
 
         default: /* modes 2, 3, 6, 7 */
-          return;  /* no drop-out control */
+          goto Exit;  /* no drop-out control */
         }
 
         /* undocumented but confirmed: If the drop-out would result in a  */
@@ -2558,25 +2597,30 @@
         if ( e1 >= 0                     &&
              (ULong)e1 < ras.target.rows &&
              *bits & f1                  )
-          return;
+          goto Exit;
       }
       else
-        return;
+        goto Exit;
     }
-
-    bits = ras.bTarget + ( y >> 3 );
-    f1   = (Byte)( 0x80 >> ( y & 7 ) );
 
     e1 = TRUNC( pxl );
 
     if ( e1 >= 0 && (ULong)e1 < ras.target.rows )
     {
+      FT_TRACE7(( " -> y=%d (drop-out)", e1 ));
+
+      bits  = ras.bTarget + ( y >> 3 );
+      f1    = (Byte)( 0x80 >> ( y & 7 ) );
       bits -= e1 * ras.target.pitch;
+
       if ( ras.target.pitch > 0 )
         bits += (Long)( ras.target.rows - 1 ) * ras.target.pitch;
 
       bits[0] |= f1;
     }
+
+  Exit:
+    FT_TRACE7(( "\n" ));
   }
 
 
@@ -2947,6 +2991,8 @@
                                  FT_OUTLINE_SINGLE_PASS ) );
 
     /* Vertical Sweep */
+    FT_TRACE7(( "Vertical pass (ftraster)\n" ));
+
     ras.Proc_Sweep_Init = Vertical_Sweep_Init;
     ras.Proc_Sweep_Span = Vertical_Sweep_Span;
     ras.Proc_Sweep_Drop = Vertical_Sweep_Drop;
@@ -2965,6 +3011,8 @@
     /* Horizontal Sweep */
     if ( ras.second_pass && ras.dropOutControl != 2 )
     {
+      FT_TRACE7(( "Horizontal pass (ftraster)\n" ));
+
       ras.Proc_Sweep_Init = Horizontal_Sweep_Init;
       ras.Proc_Sweep_Span = Horizontal_Sweep_Span;
       ras.Proc_Sweep_Drop = Horizontal_Sweep_Drop;
