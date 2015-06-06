@@ -90,6 +90,8 @@ CHANGES BETWEEN 2.5.5 and 2.6
       . Anti-aliasing rendering  modes can now be  selected (with keys
         F5 and F6).
 
+      . The display of point numbers can be toggled with key `D'.
+
     - Various improvements to the `ftdump' demo program.
 
       . It now displays information on MM and GX variation axes.
