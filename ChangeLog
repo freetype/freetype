@@ -1,3 +1,9 @@
+2015-06-06  Ashish Azad  <ashish.azad@samsung.com>
+
+	Fix Savannah bug #45260.
+
+	* src/pfr/pfrdrivr.c (pfr_get_kerning): Fix typo.
+
 2015-06-03  Werner Lemberg  <wl@gnu.org>
 
 	[truetype] Fix memory leak.

@@ -48,7 +48,7 @@
                                 (FT_Long)phys->metrics_resolution );
 
       if ( avector->y != 0 )
-        avector->y = FT_MulDiv( avector->x,
+        avector->y = FT_MulDiv( avector->y,
                                 (FT_Long)phys->outline_resolution,
                                 (FT_Long)phys->metrics_resolution );
     }
