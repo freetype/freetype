@@ -271,29 +271,6 @@ objects: $(OBJECTS_LIST)
 library: $(PROJECT_LIBRARY)
 
 
-ifneq ($(findstring refdoc,$(MAKECMDGOALS)),)
-  # poor man's `sed' emulation with make's built-in string functions
-  work := $(strip $(shell $(CAT) $(PUBLIC_DIR)/freetype.h))
-  work := $(subst |,x,$(work))
-  work := $(subst $(space),|,$(work))
-  work := $(subst \#define|FREETYPE_MAJOR|,$(space),$(work))
-  work := $(word 2,$(work))
-  major := $(subst |,$(space),$(work))
-  major := $(firstword $(major))
-
-  work := $(subst \#define|FREETYPE_MINOR|,$(space),$(work))
-  work := $(word 2,$(work))
-  minor := $(subst |,$(space),$(work))
-  minor := $(firstword $(minor))
-
-  work := $(subst \#define|FREETYPE_PATCH|,$(space),$(work))
-  work := $(word 2,$(work))
-  patch := $(subst |,$(space),$(work))
-  patch := $(firstword $(patch))
-
-  version := $(major).$(minor).$(patch)
-endif
-
 # Option `-B' disables generation of .pyc files (available since python 2.6)
 #
 refdoc:

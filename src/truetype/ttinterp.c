@@ -611,7 +611,7 @@
     FT_Memory  memory;
     FT_Error   error;
 
-    TT_ExecContext  exec;
+    TT_ExecContext  exec = NULL;
 
 
     if ( !driver )

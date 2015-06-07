@@ -23,6 +23,19 @@
 #include "afpic.h"
 
 #ifdef FT_DEBUG_AUTOFIT
+
+#ifndef FT_MAKE_OPTION_SINGLE_OBJECT
+  extern void
+  af_glyph_hints_dump_segments( AF_GlyphHints  hints,
+                                FT_Bool        to_stdout );
+  extern void
+  af_glyph_hints_dump_points( AF_GlyphHints  hints,
+                              FT_Bool        to_stdout );
+  extern void
+  af_glyph_hints_dump_edges( AF_GlyphHints  hints,
+                             FT_Bool        to_stdout );
+#endif
+
   int  _af_debug_disable_horz_hints;
   int  _af_debug_disable_vert_hints;
   int  _af_debug_disable_blue_hints;
