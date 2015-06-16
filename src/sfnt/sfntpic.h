@@ -31,7 +31,6 @@ FT_BEGIN_HEADER
 #define SFNT_SERVICE_GLYPH_DICT_GET  sfnt_service_glyph_dict
 #define SFNT_SERVICE_PS_NAME_GET     sfnt_service_ps_name
 #define TT_SERVICE_CMAP_INFO_GET     tt_service_get_cmap_info
-#define SFNT_SERVICES_GET            sfnt_services
 #define TT_CMAP_CLASSES_GET          tt_cmap_classes
 #define SFNT_SERVICE_SFNT_TABLE_GET  sfnt_service_sfnt_table
 #define SFNT_SERVICE_BDF_GET         sfnt_service_bdf
@@ -83,8 +82,6 @@ FT_BEGIN_HEADER
           ( GET_PIC( library )->sfnt_service_ps_name )
 #define TT_SERVICE_CMAP_INFO_GET                           \
           ( GET_PIC( library )->tt_service_get_cmap_info )
-#define SFNT_SERVICES_GET                       \
-          ( GET_PIC( library )->sfnt_services )
 #define TT_CMAP_CLASSES_GET                       \
           ( GET_PIC( library )->tt_cmap_classes )
 #define SFNT_SERVICE_SFNT_TABLE_GET                       \

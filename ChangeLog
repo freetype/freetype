@@ -1,3 +1,10 @@
+2015-06-16  Werner Lemberg  <wl@gnu.org>
+
+	Fix Savannah bug #45326.
+
+	* src/sfnt/sfntpic.h (SFNT_SERVICES_GET): Remove duplicate
+	definitions.
+
 2015-06-07  Werner Lemberg  <wl@gnu.org>
 
 	* Version 2.6 released.
