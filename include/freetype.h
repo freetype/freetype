@@ -3454,6 +3454,9 @@ FT_BEGIN_HEADER
   /*      bitmaps available in the font, then the font is unembeddable.    */
   /*                                                                       */
   /* <Note>                                                                */
+  /*    The flags are ORed together, thus more than a single value can be  */
+  /*    returned.                                                          */
+  /*                                                                       */
   /*    While the fsType flags can indicate that a font may be embedded, a */
   /*    license with the font vendor may be separately required to use the */
   /*    font in this way.                                                  */
