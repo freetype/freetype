@@ -16,7 +16,9 @@ SubDir  FT2_TOP $(FT2_SRC_DIR) bdf ;
 
   if $(FT2_MULTI)
   {
-    _sources = bdfdrivr bdflib ;
+    _sources = bdfdrivr
+               bdflib
+               ;
   }
   else
   {

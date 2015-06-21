@@ -1,3 +1,27 @@
+2015-06-21  Werner Lemberg  <wl@gnu.org>
+
+	Make Jam support work again.
+
+	This is just very basic stuff and just a little bit tested on
+	GNU/Linux only.  I won't delve into this since I'm not a Jam user.
+
+	* Jamfile: Call `HDRMACRO' for `ftserv.h' also.
+	(DEFINES): Replace with...
+	(CCFLAGS): ... this.
+
+	* src/Jamfile: Don't call `HDRMACRO' for `internal.h'; this is
+	already handled in the top-level Jamfile.
+
+	* src/autofit/Jamfile (DEFINES): Replace with...
+	(CCFLAGS): ... this.
+	(_sources): Add missing files.
+
+	* src/cache/Jamfile: Don't call `HDRMACRO' for `ftcache.h'; it no
+	longer contains macro header definitions.
+
+	* src/base/Jamfile, src/cff/Jamfile, src/sfnt/Jamfile,
+	src/truetype/Jamfile (_sources): Add missing files.
+
 2015-06-16  Werner Lemberg  <wl@gnu.org>
 
 	Fix Savannah bug #45326.

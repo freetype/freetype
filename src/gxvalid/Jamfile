@@ -17,10 +17,29 @@ SubDir  FT2_TOP $(FT2_SRC_DIR) gxvalid ;
 
   if $(FT2_MULTI)
   {
-    _sources = gxvcommn gxvfeat  gxvbsln  gxvtrak  gxvopbd  gxvprop
-               gxvmort  gxvmort0 gxvmort1 gxvmort2 gxvmort4 gxvmort5
-               gxvmorx  gxvmorx0 gxvmorx1 gxvmorx2 gxvmorx4 gxvmorx5
-               gxvlcar  gxvkern  gxvmod   gxvjust  ;
+    _sources = gxvbsln
+               gxvcommn
+               gxvfeat
+               gxvjust
+               gxvkern
+               gxvlcar
+               gxvmod
+               gxvmort
+               gxvmort0
+               gxvmort1
+               gxvmort2
+               gxvmort4
+               gxvmort5
+               gxvmorx
+               gxvmorx0
+               gxvmorx1
+               gxvmorx2
+               gxvmorx4
+               gxvmorx5
+               gxvopbd
+               gxvprop
+               gxvtrak
+               ;
   }
   else
   {

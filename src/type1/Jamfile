@@ -16,7 +16,13 @@ SubDir  FT2_TOP $(FT2_SRC_DIR) type1 ;
 
   if $(FT2_MULTI)
   {
-    _sources = t1afm t1driver t1objs t1load t1gload t1parse ;
+    _sources = t1afm
+               t1driver
+               t1gload
+               t1load
+               t1objs
+               t1parse
+               ;
   }
   else
   {

@@ -17,11 +17,25 @@ SubDir FT2_TOP src autofit ;
   # define FT2_AUTOFIT2 to enable experimental latin hinter replacement
   if $(FT2_AUTOFIT2)
   {
-    DEFINES += FT_OPTION_AUTOFIT2 ;
+    CCFLAGS += FT_OPTION_AUTOFIT2 ;
   }
   if $(FT2_MULTI)
   {
-    _sources = afangles afglobal afhints aflatin afcjk afindic afloader afmodule afdummy afwarp afpic ;
+    _sources = afangles
+               afblue
+               afcjk
+               afdummy
+               afglobal
+               afhints
+               afindic
+               aflatin
+               afloader
+               afmodule
+               afpic
+               afranges
+               afwarp
+               hbshim
+               ;
 
     if $(FT2_AUTOFIT2)
     {
