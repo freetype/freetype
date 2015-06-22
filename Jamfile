@@ -143,9 +143,9 @@ CCFLAGS += -DFT2_BUILD_LIBRARY ;
 # macros that are later used in #include statements.  They need to be parsed
 # in order to record these definitions.
 #
-HDRMACRO  [ FT2_SubDir  $(FT2_INCLUDE_DIR) config ftheader.h ] ;
-HDRMACRO  [ FT2_SubDir  $(FT2_INCLUDE_DIR) internal internal.h ] ;
-HDRMACRO  [ FT2_SubDir  $(FT2_INCLUDE_DIR) internal ftserv.h ] ;
+HDRMACRO  [ FT2_SubDir  $(FT2_INCLUDE_DIR) freetype2 config ftheader.h ] ;
+HDRMACRO  [ FT2_SubDir  $(FT2_INCLUDE_DIR) freetype2 internal internal.h ] ;
+HDRMACRO  [ FT2_SubDir  $(FT2_INCLUDE_DIR) freetype2 internal ftserv.h ] ;
 
 
 # Now include the Jamfile in `freetype2/src', used to drive the compilation
@@ -199,8 +199,8 @@ actions RefDoc
          --prefix=ft2
          --title=FreeType-2.6
          --output=$(DOC_DIR)
-         $(FT2_INCLUDE)/*.h
-         $(FT2_INCLUDE)/config/*.h
+         $(FT2_INCLUDE)/freetype2/*.h
+         $(FT2_INCLUDE)/freetype2/config/*.h
 }
 
 RefDoc  refdoc ;

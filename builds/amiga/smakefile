@@ -40,7 +40,7 @@
 #
 # link your programs with ft2_680x0.lib and either ftsystem.o or ftsystempure.o
 # (and either ftdebug.o or ftdebugpure.o if you enabled FT_DEBUG_LEVEL_ERROR or
-# FT_DEBUG_LEVEL_TRACE in include/config/ftoption.h).
+# FT_DEBUG_LEVEL_TRACE in include/freetype2/config/ftoption.h).
 
 OBJBASE = ftbase.o ftbbox.o ftbdf.o ftbitmap.o ftcid.o ftfntfmt.o ftfstype.o \
 	  ftgasp.o ftglyph.o ftgxval.o ftlcdfil.o ftmm.o ftotval.o           \

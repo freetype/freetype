@@ -137,8 +137,9 @@ if test "$echo_ft_version" = "yes" ; then
 fi
 
 if test "$echo_cflags" = "yes" ; then
-  cflags="-I${SYSROOT}$includedir/freetype2"
-  echo $cflags
+  if test "${SYSROOT}$includedir" != "/usr/include"; then
+    echo -I${SYSROOT}$includedir
+  fi
 fi
 
 if test "$echo_libs" = "yes" ; then

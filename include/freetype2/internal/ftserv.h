@@ -734,24 +734,24 @@ FT_BEGIN_HEADER
    *  The header files containing the services.
    */
 
-#define FT_SERVICE_BDF_H                <internal/services/svbdf.h>
-#define FT_SERVICE_CID_H                <internal/services/svcid.h>
-#define FT_SERVICE_GLYPH_DICT_H         <internal/services/svgldict.h>
-#define FT_SERVICE_GX_VALIDATE_H        <internal/services/svgxval.h>
-#define FT_SERVICE_KERNING_H            <internal/services/svkern.h>
-#define FT_SERVICE_MULTIPLE_MASTERS_H   <internal/services/svmm.h>
-#define FT_SERVICE_OPENTYPE_VALIDATE_H  <internal/services/svotval.h>
-#define FT_SERVICE_PFR_H                <internal/services/svpfr.h>
-#define FT_SERVICE_POSTSCRIPT_CMAPS_H   <internal/services/svpscmap.h>
-#define FT_SERVICE_POSTSCRIPT_INFO_H    <internal/services/svpsinfo.h>
-#define FT_SERVICE_POSTSCRIPT_NAME_H    <internal/services/svpostnm.h>
-#define FT_SERVICE_PROPERTIES_H         <internal/services/svprop.h>
-#define FT_SERVICE_SFNT_H               <internal/services/svsfnt.h>
-#define FT_SERVICE_TRUETYPE_ENGINE_H    <internal/services/svtteng.h>
-#define FT_SERVICE_TT_CMAP_H            <internal/services/svttcmap.h>
-#define FT_SERVICE_WINFNT_H             <internal/services/svwinfnt.h>
-#define FT_SERVICE_FONT_FORMAT_H        <internal/services/svfntfmt.h>
-#define FT_SERVICE_TRUETYPE_GLYF_H      <internal/services/svttglyf.h>
+#define FT_SERVICE_BDF_H                <freetype2/internal/services/svbdf.h>
+#define FT_SERVICE_CID_H                <freetype2/internal/services/svcid.h>
+#define FT_SERVICE_GLYPH_DICT_H         <freetype2/internal/services/svgldict.h>
+#define FT_SERVICE_GX_VALIDATE_H        <freetype2/internal/services/svgxval.h>
+#define FT_SERVICE_KERNING_H            <freetype2/internal/services/svkern.h>
+#define FT_SERVICE_MULTIPLE_MASTERS_H   <freetype2/internal/services/svmm.h>
+#define FT_SERVICE_OPENTYPE_VALIDATE_H  <freetype2/internal/services/svotval.h>
+#define FT_SERVICE_PFR_H                <freetype2/internal/services/svpfr.h>
+#define FT_SERVICE_POSTSCRIPT_CMAPS_H   <freetype2/internal/services/svpscmap.h>
+#define FT_SERVICE_POSTSCRIPT_INFO_H    <freetype2/internal/services/svpsinfo.h>
+#define FT_SERVICE_POSTSCRIPT_NAME_H    <freetype2/internal/services/svpostnm.h>
+#define FT_SERVICE_PROPERTIES_H         <freetype2/internal/services/svprop.h>
+#define FT_SERVICE_SFNT_H               <freetype2/internal/services/svsfnt.h>
+#define FT_SERVICE_TRUETYPE_ENGINE_H    <freetype2/internal/services/svtteng.h>
+#define FT_SERVICE_TT_CMAP_H            <freetype2/internal/services/svttcmap.h>
+#define FT_SERVICE_WINFNT_H             <freetype2/internal/services/svwinfnt.h>
+#define FT_SERVICE_FONT_FORMAT_H        <freetype2/internal/services/svfntfmt.h>
+#define FT_SERVICE_TRUETYPE_GLYF_H      <freetype2/internal/services/svttglyf.h>
 
  /* */
 

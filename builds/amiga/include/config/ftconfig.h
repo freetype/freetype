@@ -34,9 +34,9 @@
 /* Now include the original file */
 #ifndef __MORPHOS__
 #ifdef __SASC
-#include "FT:include/config/ftconfig.h"
+#include "FT:include/freetype2/config/ftconfig.h"
 #else
-#include "/FT/include/config/ftconfig.h"
+#include "/FT/include/freetype2/config/ftconfig.h"
 #endif
 #else
 /* We must define that, it seems that
@@ -45,7 +45,7 @@
  * binaries from http://www.morphos.de)
  */
 #define _LIBC_LIMITS_H_
-#include "/FT/include/config/ftconfig.h"
+#include "/FT/include/freetype2/config/ftconfig.h"
 #endif
 
 /*

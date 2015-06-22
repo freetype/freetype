@@ -121,9 +121,9 @@ execute_process(
   OUTPUT_FILE ${PROJECT_BINARY_DIR}/include/freetype2/ftconfig.h
 )
 
-file(GLOB PUBLIC_HEADERS "include/*.h")
-file(GLOB PUBLIC_CONFIG_HEADERS "include/config/*.h")
-file(GLOB PRIVATE_HEADERS "include/internal/*.h")
+file(GLOB PUBLIC_HEADERS "include/freetype2/*.h")
+file(GLOB PUBLIC_CONFIG_HEADERS "include/freetype2/config/*.h")
+file(GLOB PRIVATE_HEADERS "include/freetype2/internal/*.h")
 
 set(BASE_SRCS
   src/autofit/autofit.c

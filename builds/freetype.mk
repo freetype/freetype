@@ -97,7 +97,7 @@ BASE_DIR := $(SRC_DIR)/base
 
 # Other derived directories.
 #
-PUBLIC_DIR   := $(TOP_DIR)/include
+PUBLIC_DIR   := $(TOP_DIR)/include/freetype2
 INTERNAL_DIR := $(PUBLIC_DIR)/internal
 SERVICES_DIR := $(INTERNAL_DIR)/services
 CONFIG_DIR   := $(PUBLIC_DIR)/config
@@ -175,7 +175,7 @@ OBJECTS_LIST :=
 
 
 # Define $(PUBLIC_H) as the list of all public header files located in
-# `$(TOP_DIR)/include/freetype'.  $(INTERNAL_H), and $(CONFIG_H) are defined
+# `$(TOP_DIR)/include/freetype2'.  $(INTERNAL_H), and $(CONFIG_H) are defined
 # similarly.
 #
 # This is used to simplify the dependency rules -- if one of these files

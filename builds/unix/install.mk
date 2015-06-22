@@ -45,10 +45,13 @@ install: $(PROJECT_LIBRARY)
           $(INSTALL_DATA)                                  \
             $$P $(DESTDIR)$(includedir)/freetype2/config ; \
         done
+	$(INSTALL_DATA) $(TOP_DIR)/include/ft2build.h \
+          $(DESTDIR)$(includedir)/ft2build.h
 	-$(DELETE) $(DESTDIR)$(includedir)/freetype2/freetype/config/*
 	-$(DELDIR) $(DESTDIR)$(includedir)/freetype2/freetype/config
 	-$(DELETE) $(DESTDIR)$(includedir)/freetype2/freetype/*
 	-$(DELDIR) $(DESTDIR)$(includedir)/freetype2/freetype
+	-$(DELETE) $(DESTDIR)$(includedir)/freetype2/ft2build.h
 	$(INSTALL_DATA) $(OBJ_BUILD)/ftconfig.h               \
           $(DESTDIR)$(includedir)/freetype2/config/ftconfig.h
 	$(INSTALL_DATA) $(OBJ_DIR)/ftmodule.h                 \
@@ -69,6 +72,7 @@ uninstall:
 	-$(DELDIR) $(DESTDIR)$(includedir)/freetype2/config
 	-$(DELETE) $(DESTDIR)$(includedir)/freetype2/*
 	-$(DELDIR) $(DESTDIR)$(includedir)/freetype2
+	-$(DELETE) $(DESTDIR)$(includedir)/ft2build.h
 	-$(DELETE) $(DESTDIR)$(bindir)/freetype-config
 	-$(DELETE) $(DESTDIR)$(datadir)/aclocal/freetype2.m4
 	-$(DELETE) $(DESTDIR)$(libdir)/pkgconfig/freetype2.pc

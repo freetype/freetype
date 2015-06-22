@@ -377,23 +377,23 @@ SOURCE=..\..\..\include\ft2build.h
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\include\config\ftconfig.h
+SOURCE=..\..\..\include\freetype2\config\ftconfig.h
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\include\config\ftheader.h
+SOURCE=..\..\..\include\freetype2\config\ftheader.h
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\include\config\ftmodule.h
+SOURCE=..\..\..\include\freetype2\config\ftmodule.h
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\include\config\ftoption.h
+SOURCE=..\..\..\include\freetype2\config\ftoption.h
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\include\config\ftstdlib.h
+SOURCE=..\..\..\include\freetype2\config\ftstdlib.h
 # End Source File
 # End Group
 # End Target

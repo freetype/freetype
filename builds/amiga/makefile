@@ -43,7 +43,7 @@
 #
 # link your programs with libft2_ppc.a and either ftsystem.ppc.o or ftsystempure.ppc.o
 # (and either ftdebug.ppc.o or ftdebugpure.ppc.o if you enabled FT_DEBUG_LEVEL_ERROR or
-# FT_DEBUG_LEVEL_TRACE in include/config/ftoption.h).
+# FT_DEBUG_LEVEL_TRACE in include/freetype2/config/ftoption.h).
 
 all:	libft2_ppc.a ftsystem.ppc.o ftsystempure.ppc.o
 

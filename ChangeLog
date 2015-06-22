@@ -1,3 +1,41 @@
+2015-06-22  Werner Lemberg  <wl@gnu.org>
+
+	Fix Savannah bug #45097.
+
+	We no longer `pollute' the namespace of possible header file names;
+	instead we move `ft2build.h' up by one level so that it gets
+	installed in the default include directory (e.g.,
+	/usr/local/include).  After this commit, only `ft2build.h' stays in
+	the compiler's include path.
+
+	No visible changes for the user who follows the standard FreeType
+	header inclusion rules.
+
+	* include/*: Move to ...
+	* include/freetype2/*: This directory, except `ft2build.h'.
+
+	* CMakeLists.txt (PUBLIC_HEADERS, PUBLIC_CONFIG_HEADERS,
+	PRIVATE_HEADERS), Jamfile (HDRMACRO, RefDoc), autogen.sh: Updated.
+
+	* builds/amiga/include/config/ftconfig.h, builds/freetype.mk
+	(PUBLIC_DIR), builds/symbian/bld.inf, builds/toplevel.mk (work),
+	builds/unix/install.mk (install, uninstall),
+	builds/unix/freetype2.in: Updated.
+
+	* builds/unix/freetype-config.in: Updated.
+	Emit -I directory only if it is not `/usr/include'.
+
+	* builds/wince/*, builds/windows/*: Updated.
+
+	* devel/ft2build.h, include/ft2build.h: Updated.
+
+	* include/freetype2/config/ftheader.h,
+	include/freetype2/internal/ftserv.h,
+	include/freetype2/internal/internal.h: Update all header file
+	macros.
+
+	* src/tools/chktrcmp.py (TRACE_DEF_FILES): Updated.
+
 2015-06-21  Werner Lemberg  <wl@gnu.org>
 
 	Make Jam support work again.
