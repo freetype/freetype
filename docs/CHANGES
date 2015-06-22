@@ -13,9 +13,9 @@ CHANGES BETWEEN 2.6 and 2.6.1
       insensitive file systems like Mac OS X or Windows).
 
       Applications  that  use   (a)  `freetype-config'  or  FreeType's
-      `freetype2.pc' file pkg-config to  get the include directory for
-      the compiler,  and (b) the  documented way for  header inclusion
-      like
+      `freetype2.pc' file for pkg-config  to get the include directory
+      for  the  compiler,  and  (b)  the  documented  way  for  header
+      inclusion like
 
         #include <ft2build.h>
         #include FT_FREETYPE_H
