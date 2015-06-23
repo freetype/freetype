@@ -1,3 +1,11 @@
+2015-06-23  Werner Lemberg  <wl@gnu.org>
+
+	s/TYPEOF/FT_TYPEOF/ (#45376).
+
+	* builds/unix/ftconfig.in, builds/vms/ftconfig.in,
+	include/freetype2/config/ftconfig.h,
+	include/freetype2/internal/ftobjs.h, src/autofit/afwarp.h: Do it.
+
 2015-06-22  Werner Lemberg  <wl@gnu.org>
 
 	Fix Savannah bug #45097.
