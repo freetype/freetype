@@ -2356,8 +2356,10 @@
           p->font->bpp = 8;
         else if ( bpp > 2 )
           p->font->bpp = 4;
+        else if ( bpp > 1 )
+          p->font->bpp = 2;
         else
-          p->font->bpp = bpp;
+          p->font->bpp = 1;
 
         if ( p->font->bpp != bpp )
           FT_TRACE2(( "_bdf_parse_start: " ACMSG11, p->font->bpp ));

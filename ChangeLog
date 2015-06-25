@@ -1,5 +1,9 @@
 2015-06-24  Alexei Podtelezhnikov <apodtele@gmail.com>
 
+	* src/bdf/bdflib.c (_bdf_parse_start): Disallow 0 bpp.
+
+2015-06-24  Alexei Podtelezhnikov <apodtele@gmail.com>
+
 	* src/bdf/bdflib.c (_bdf_parse_start): Simplify bpp parsing.
 
 2015-06-23  Werner Lemberg  <wl@gnu.org>
