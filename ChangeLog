@@ -8,6 +8,10 @@
 
 2015-06-25  Werner Lemberg  <wl@gnu.org>
 
+	* CMakeLists.txt (BASE_SRCS): Use `ftbase.c' and `psnames.c'.
+
+2015-06-25  Werner Lemberg  <wl@gnu.org>
+
 	Another adjustment to header locations.
 
 	This change is a result of a discussion thread on freetype-devel
