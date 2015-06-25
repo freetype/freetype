@@ -11,42 +11,48 @@
 # indicate that you have read the license and understand and accept it
 # fully.
 #
+# As a preliminary, create a compilation directory and change into it, for
+# example
 #
-# Say
+#   mkdir ~/freetype2.compiled
+#   cd ~/freetype2.compiled
 #
-#   cmake CMakeLists.txt
+# Now you can say
+#
+#   cmake <path-to-freetype2-src-dir>
 #
 # to create a Makefile that builds a static version of the library.
 #
 # For a dynamic library, use
 #
-#   cmake CMakeLists.txt -DBUILD_SHARED_LIBS:BOOL=true
+#   cmake <path-to-freetype2-src-dir> -DBUILD_SHARED_LIBS:BOOL=true
 #
 # For a framework on OS X, use
 #
-#   cmake CMakeLists.txt -DBUILD_FRAMEWORK:BOOL=true -G Xcode
+#   cmake <path-to-freetype2-src-dir> -DBUILD_FRAMEWORK:BOOL=true -G Xcode
 #
 # instead.
 #
 # For an iOS static library, use
 #
-#   cmake CMakeLists.txt -DIOS_PLATFORM=OS -G Xcode
+#   cmake <path-to-freetype2-src-dir> -DIOS_PLATFORM=OS -G Xcode
 #
 # or
 #
-#   cmake CMakeLists.txt -DIOS_PLATFORM=SIMULATOR -G Xcode
+#   cmake <path-to-freetype2-src-dir> -DIOS_PLATFORM=SIMULATOR -G Xcode
 #
 # Please refer to the cmake manual for further options, in particular, how
 # to modify compilation and linking parameters.
 #
 # Some notes.
 #
-# . `cmake' will overwrite FreeType's original (top-level) `Makefile' file.
+# . `cmake' will overwrite some files in the source tree in case you don't
+#   call it from a build directory as described above.
 #
 # . You can use `cmake' directly on a freshly cloned FreeType git
 #   repository.
 #
-# . `CMakeLists.txt'  is provided as-is since it is not used by the
+# . `CMakeLists.txt' is provided as-is since it is not used by the
 #   developer team.
 
 
@@ -109,21 +115,21 @@ add_definitions(-DFT2_BUILD_LIBRARY)
 include_directories("${PROJECT_SOURCE_DIR}/include")
 
 # Create the configuration file
-message(STATUS "Creating directory, ${PROJECT_BINARY_DIR}/include/freetype2.")
-file(MAKE_DIRECTORY ${PROJECT_BINARY_DIR}/include/freetype2)
+message(STATUS "Creating directory, ${PROJECT_BINARY_DIR}/include/freetype/config.")
+file(MAKE_DIRECTORY ${PROJECT_BINARY_DIR}/include/freetype/config)
 
 # For the auto-generated ftconfig.h file
-include_directories(BEFORE "${PROJECT_BINARY_DIR}/include/freetype2")
-message(STATUS "Creating ${PROJECT_BINARY_DIR}/include/freetype2/ftconfig.h.")
+include_directories(BEFORE "${PROJECT_BINARY_DIR}/include/freetype/config")
+message(STATUS "Creating ${PROJECT_BINARY_DIR}/include/freetype/config/ftconfig.h.")
 execute_process(
   COMMAND sed -e "s/FT_CONFIG_OPTIONS_H/<ftoption.h>/" -e "s/FT_CONFIG_STANDARD_LIBRARY_H/<ftstdlib.h>/" -e "s?/undef ?#undef ?"
   INPUT_FILE ${PROJECT_SOURCE_DIR}/builds/unix/ftconfig.in
-  OUTPUT_FILE ${PROJECT_BINARY_DIR}/include/freetype2/ftconfig.h
+  OUTPUT_FILE ${PROJECT_BINARY_DIR}/include/freetype/config/ftconfig.h
 )
 
-file(GLOB PUBLIC_HEADERS "include/freetype2/*.h")
-file(GLOB PUBLIC_CONFIG_HEADERS "include/freetype2/config/*.h")
-file(GLOB PRIVATE_HEADERS "include/freetype2/internal/*.h")
+file(GLOB PUBLIC_HEADERS "include/ft2build.h" "include/freetype/*.h")
+file(GLOB PUBLIC_CONFIG_HEADERS "include/freetype/config/*.h")
+file(GLOB PRIVATE_HEADERS "include/freetype/internal/*.h")
 
 set(BASE_SRCS
   src/autofit/autofit.c
@@ -219,6 +225,10 @@ endif ()
 install(DIRECTORY ${PROJECT_SOURCE_DIR}/include/
   DESTINATION include/freetype2
   PATTERN "internal" EXCLUDE
+  PATTERN "ftconfig.h" EXCLUDE
+)
+install(FILES ${PROJECT_BINARY_DIR}/include/freetype/config/ftconfig.h
+  DESTINATION include/freetype2/freetype/config
 )
 install(TARGETS freetype
   RUNTIME DESTINATION bin

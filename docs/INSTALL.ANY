@@ -103,7 +103,7 @@ I. Standard procedure
       `type1cid.c' needs `psaux.c', `pshinter.c', and `psnames.c'
       `type42.c'   needs `truetype.c'
 
-      Please consult the central `include/freetype2/config/ftoption.h'
+      Please consult the central  `include/freetype/config/ftoption.h'
       configuration file for details on additional libraries necessary
       for some optional features.
 

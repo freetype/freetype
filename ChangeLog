@@ -6,6 +6,52 @@
 
 	* src/bdf/bdflib.c (_bdf_parse_start): Simplify bpp parsing.
 
+2015-06-25  Werner Lemberg  <wl@gnu.org>
+
+	Another adjustment to header locations.
+
+	This change is a result of a discussion thread on freetype-devel
+
+	  http://lists.nongnu.org/archive/html/freetype-devel/2015-06/msg00041.html
+
+	Re-introduce the `freetype2' subdirectory for all FreeType header
+	files after installation, and rename the `freetype2' subdirectory in
+	the git repository to `freetype'.
+
+	* include/freetype2: Renamed to...
+	* include/freetype: This.
+
+	* CMakeLists.txt (PUBLIC_HEADERS, PUBLIC_CONFIG_HEADERS,
+	PRIVATE_HEADERS): Updated.
+	Update creation of `ftconfig.h'.
+	Install generated `ftconfig.h'.
+
+	* Jamfile (HDRMACRO, RefDoc), autogen.sh: Updated.
+
+	* builds/amiga/include/config/ftconfig.h, builds/freetype.mk
+	(PUBLIC_DIR), builds/symbian/bld.inf, builds/toplevel.mk (work),
+	builds/unix/freetype2.in: Updated.
+
+	* builds/unix/freetype-config.in: Updated.
+	* builds/unix/configure.raw: Don't check for `rmdir'.
+	* builds/unix/unix-def.in (DELDIR): Use `rm -rf', which is portable
+	according to the autoconf info manual.
+	* builds/unix/install.mk (install, uninstall,
+	distclean_project_unix): Update and simplify.
+
+	* builds/wince/*, builds/windows/*: Updated.
+
+	* devel/ft2build.h, include/ft2build.h: Updated.
+
+	* include/freetype2/config/ftheader.h,
+	include/freetype2/internal/ftserv.h,
+	include/freetype2/internal/internal.h: Update all header file
+	macros.
+
+	* src/tools/chktrcmp.py (TRACE_DEF_FILES): Updated.
+
+	* docs/*: Updated.
+
 2015-06-23  Werner Lemberg  <wl@gnu.org>
 
 	s/TYPEOF/FT_TYPEOF/ (#45376).

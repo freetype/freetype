@@ -2,11 +2,8 @@ CHANGES BETWEEN 2.6 and 2.6.1
 
   I. IMPORTANT CHANGES
 
-    - The header file layout has been slightly changed (again).  After
-      installation,   the  file   `ft2build.h'  is   now  located   in
-      `<prefix>/include'.  Additionally, the  header directory include
-      path  has changed  from  `<prefix>/include/freetype2' to  simply
-      `<prefix>/include'.
+    - The header  file layout  has been  changed (again),  moving  all
+      header files except `ft2build.h' into a subdirectory tree.
 
       Doing so  reduces the  possibility of  header file  name clashes
       (e.g., FTGL's  `FTGlyph.h' with  FreeType's `ftglyph.h'  on case

@@ -1706,11 +1706,11 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\..\include\ft2build.h" />
-    <ClInclude Include="..\..\..\include\freetype2\config\ftconfig.h" />
-    <ClInclude Include="..\..\..\include\freetype2\config\ftheader.h" />
-    <ClInclude Include="..\..\..\include\freetype2\config\ftmodule.h" />
-    <ClInclude Include="..\..\..\include\freetype2\config\ftoption.h" />
-    <ClInclude Include="..\..\..\include\freetype2\config\ftstdlib.h" />
+    <ClInclude Include="..\..\..\include\freetype\config\ftconfig.h" />
+    <ClInclude Include="..\..\..\include\freetype\config\ftheader.h" />
+    <ClInclude Include="..\..\..\include\freetype\config\ftmodule.h" />
+    <ClInclude Include="..\..\..\include\freetype\config\ftoption.h" />
+    <ClInclude Include="..\..\..\include\freetype\config\ftstdlib.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

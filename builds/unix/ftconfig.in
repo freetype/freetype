@@ -86,7 +86,7 @@ FT_BEGIN_HEADER
 #else /* !FT_USE_AUTOCONF_SIZEOF_TYPES */
 
   /* Following cpp computation of the bit length of int and long */
-  /* is copied from default include/freetype2/config/ftconfig.h. */
+  /* is copied from default include/freetype/config/ftconfig.h.  */
   /* If any improvement is required for this file, it should be  */
   /* applied to the original header file for the builders that   */
   /* do not use configure script.                                */

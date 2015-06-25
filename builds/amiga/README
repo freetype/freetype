@@ -51,7 +51,7 @@ directory.  The results are:
 
 - ftdebug.o, an object module containing the standard version of the
   debugging code which uses vprintf() and exit() (not pure).
-  Debugging can be turned on in FT:include/freetype2/config/ftoption.h
+  Debugging can be turned on in FT:include/freetype/config/ftoption.h
   and with FT_SetTraceLevel().
 
 - ftdebugpure.o, an object module containing the pure version of the
@@ -65,13 +65,13 @@ directory.  The results are:
   program, I decided to use a different scheme: You must #include
   FT:src/base/ftinit.c in your sourcecode and specify with #define
   statements which modules you need.  See
-  include/freetype2/config/ftmodule.h.
+  include/freetype/config/ftmodule.h.
 
 
 To use in your own programs:
 
 - Insert the #define and #include statements from top of
-  include/freetype2/config/ftmodule.h in your source code and
+  include/freetype/config/ftmodule.h in your source code and
   uncomment the #define statements for the FreeType2 modules you need.
 
 - You can use either PARAMETERS=REGISTER or PARAMETERS=STACK for
@@ -101,7 +101,7 @@ To adapt to other compilers:
   useful for the src directory).
 
 - An example of how to replace/workaround a problematic include file
-  is include/freetype2/config/ftconfig.h; it changes a #define that
+  is include/freetype/config/ftconfig.h; it changes a #define that
   would prevent SAS/C from generating XDEF's where it should do that and
   then includes the standard FreeType2 include file.
 

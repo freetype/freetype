@@ -70,11 +70,6 @@ AC_SUBST(CC_BUILD)
 AC_SUBST(EXEEXT_BUILD)
 
 
-# auxiliary programs
-
-AC_CHECK_PROG([RMDIR], [rmdir], [rmdir])
-
-
 # Since this file will be finally moved to another directory we make
 # the path of the install script absolute.  This small code snippet has
 # been taken from automake's `ylwrap' script.
