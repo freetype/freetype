@@ -147,7 +147,6 @@ set(BASE_SRCS
   src/base/ftbdf.c
   src/base/ftbitmap.c
   src/base/ftcid.c
-  src/base/ftdebug.c
   src/base/ftfntfmt.c
   src/base/ftfstype.c
   src/base/ftgasp.c
@@ -184,6 +183,14 @@ set(BASE_SRCS
   src/type42/type42.c
   src/winfonts/winfnt.c
 )
+
+if (WIN32)
+  set(BASE_SRCS ${BASE_SRCS} builds/windows/ftdebug.c)
+elseif (WINCE)
+  set(BASE_SRCS ${BASE_SRCS} builds/wince/ftdebug.c)
+else ()
+  set(BASE_SRCS ${BASE_SRCS} src/base/ftdebug.c)
+endif ()
 
 include_directories("src/truetype")
 include_directories("src/sfnt")
