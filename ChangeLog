@@ -1,6 +1,10 @@
+2015-06-27  Werner Lemberg  <wl@gnu.org>
+
+	* src/tools/docmaker/utils.py (check_output): Add missing `\n'.
+
 2015-06-26  Werner Lemberg  <wl@gnu.org>
 
-	* CMakeLists.txt: Select platform-dependend `ftdebug.c'.
+	* CMakeLists.txt: Select platform-dependent `ftdebug.c'.
 
 2015-06-25  Werner Lemberg  <wl@gnu.org>
 
