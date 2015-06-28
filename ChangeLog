@@ -1,5 +1,11 @@
 2015-06-28  Werner Lemberg  <wl@gnu.org>
 
+	* CMakeLists.txt: Fix creation of `ftconfig.h'.
+	Check for UNIX header files using `check_include_file'.
+	Set up correct header include directories.
+
+2015-06-28  Werner Lemberg  <wl@gnu.org>
+
 	* CMakeLists.txt: Disallow in-source builds.
 
 2015-06-27  Werner Lemberg  <wl@gnu.org>

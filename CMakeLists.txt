@@ -58,6 +58,10 @@
 
 cmake_minimum_required(VERSION 2.6)
 
+
+include(CheckIncludeFile)
+
+
 # CMAKE_TOOLCHAIN_FILE must be set before `project' is called, which
 # configures the base build environment and references the toolchain file
 if (APPLE)
@@ -128,30 +132,48 @@ set(PROJECT_VERSION ${VERSION_MAJOR}.${VERSION_MINOR}.${VERSION_PATCH})
 # Compiler definitions for building the library
 add_definitions(-DFT2_BUILD_LIBRARY)
 
-# Specify library include directories
-include_directories("${PROJECT_SOURCE_DIR}/include")
+
+message(STATUS
+  "Creating directory ${PROJECT_BINARY_DIR}/include/freetype/config")
+file(MAKE_DIRECTORY "${PROJECT_BINARY_DIR}/include/freetype/config")
 
 # Create the configuration file
 if (UNIX)
-  message(STATUS
-    "Creating directory ${PROJECT_BINARY_DIR}/include/freetype/config")
-  file(MAKE_DIRECTORY "${PROJECT_BINARY_DIR}/include/freetype/config")
+  check_include_file("unistd.h" HAVE_UNISTD_H)
+  check_include_file("fcntl.h" HAVE_FCNTL_H)
+  check_include_file("stdint.h" HAVE_STDINT_H)
 
-  include_directories(BEFORE "${PROJECT_BINARY_DIR}/include/freetype/config")
   message(STATUS
     "Creating file ${PROJECT_BINARY_DIR}/include/freetype/config/ftconfig.h")
 
   file(READ "${PROJECT_SOURCE_DIR}/builds/unix/ftconfig.in"
     FTCONFIG_H)
-  string(REPLACE "FT_CONFIG_OPTIONS_H" "ftoption.h"
-    FTCONFIG_H "${FTCONFIG_H}")
-  string(REPLACE "FT_CONFIG_STANDARD_LIBRARY_H" "ftstdlib.h"
-    FTCONFIG_H "${FTCONFIG_H}")
+  if (HAVE_UNISTD_H)
+    string(REGEX REPLACE
+      "#undef +(HAVE_UNISTD_H)" "#define \\1"
+      FTCONFIG_H "${FTCONFIG_H}")
+  endif ()
+  if (HAVE_FCNTL_H)
+    string(REGEX REPLACE
+      "#undef +(HAVE_FCNTL_H)" "#define \\1"
+      FTCONFIG_H "${FTCONFIG_H}")
+  endif ()
+  if (HAVE_STDINT_H)
+    string(REGEX REPLACE
+      "#undef +(HAVE_STDINT_H)" "#define \\1"
+      FTCONFIG_H "${FTCONFIG_H}")
+  endif ()
   string(REPLACE "/undef " "#undef "
     FTCONFIG_H "${FTCONFIG_H}")
   file(WRITE "${PROJECT_BINARY_DIR}/include/freetype/config/ftconfig.h"
     "${FTCONFIG_H}")
 endif ()
+
+
+# Specify library include directories
+include_directories("${PROJECT_SOURCE_DIR}/include")
+include_directories(BEFORE "${PROJECT_BINARY_DIR}/include")
+
 
 file(GLOB PUBLIC_HEADERS "include/ft2build.h" "include/freetype/*.h")
 file(GLOB PUBLIC_CONFIG_HEADERS "include/freetype/config/*.h")
@@ -209,13 +231,6 @@ else ()
   set(BASE_SRCS ${BASE_SRCS} src/base/ftdebug.c)
 endif ()
 
-include_directories("src/truetype")
-include_directories("src/sfnt")
-include_directories("src/autofit")
-include_directories("src/smooth")
-include_directories("src/raster")
-include_directories("src/psaux")
-include_directories("src/psnames")
 
 if (BUILD_FRAMEWORK)
   set(BASE_SRCS
