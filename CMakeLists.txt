@@ -3,13 +3,14 @@
 # Copyright 2013-2015 by
 # David Turner, Robert Wilhelm, and Werner Lemberg.
 #
-# Written by John Cary <cary@txcorp.com>
+# Written originally by John Cary <cary@txcorp.com>
 #
 # This file is part of the FreeType project, and may only be used, modified,
 # and distributed under the terms of the FreeType project license,
 # LICENSE.TXT.  By continuing to use, modify, or distribute this file you
 # indicate that you have read the license and understand and accept it
 # fully.
+#
 #
 # As a preliminary, create a compilation directory and change into it, for
 # example
@@ -25,34 +26,37 @@
 #
 # For a dynamic library, use
 #
-#   cmake <path-to-freetype2-src-dir> -DBUILD_SHARED_LIBS:BOOL=true
+#   cmake <path-to-freetype2-src-dir> -D BUILD_SHARED_LIBS:BOOL=true
 #
 # For a framework on OS X, use
 #
-#   cmake <path-to-freetype2-src-dir> -DBUILD_FRAMEWORK:BOOL=true -G Xcode
+#   cmake <path-to-freetype2-src-dir> -D BUILD_FRAMEWORK:BOOL=true -G Xcode
 #
 # instead.
 #
 # For an iOS static library, use
 #
-#   cmake <path-to-freetype2-src-dir> -DIOS_PLATFORM=OS -G Xcode
+#   cmake <path-to-freetype2-src-dir> -D IOS_PLATFORM=OS -G Xcode
 #
 # or
 #
-#   cmake <path-to-freetype2-src-dir> -DIOS_PLATFORM=SIMULATOR -G Xcode
+#   cmake <path-to-freetype2-src-dir> -D IOS_PLATFORM=SIMULATOR -G Xcode
 #
 # Please refer to the cmake manual for further options, in particular, how
 # to modify compilation and linking parameters.
 #
 # Some notes.
 #
-# . `cmake' will overwrite some files in the source tree in case you don't
-#   call it from a build directory as described above.
+# . `cmake' creates configuration files in
+#
+#     <build-directory>/include/freetype/config
+#
+#   which should be further modified if necessary.
 #
 # . You can use `cmake' directly on a freshly cloned FreeType git
 #   repository.
 #
-# . `CMakeLists.txt' is provided as-is since it is not used by the
+# . `CMakeLists.txt' is provided as-is since it is normally not used by the
 #   developer team.
 
 
@@ -223,6 +227,7 @@ file(GLOB PUBLIC_HEADERS "include/ft2build.h" "include/freetype/*.h")
 file(GLOB PUBLIC_CONFIG_HEADERS "include/freetype/config/*.h")
 file(GLOB PRIVATE_HEADERS "include/freetype/internal/*.h")
 
+
 set(BASE_SRCS
   src/autofit/autofit.c
   src/base/ftbase.c
@@ -283,12 +288,14 @@ if (BUILD_FRAMEWORK)
   )
 endif ()
 
+
 add_library(freetype
   ${PUBLIC_HEADERS}
   ${PUBLIC_CONFIG_HEADERS}
   ${PRIVATE_HEADERS}
   ${BASE_SRCS}
 )
+
 
 if (BUILD_FRAMEWORK)
   set_property(SOURCE ${PUBLIC_CONFIG_HEADERS}
@@ -345,6 +352,7 @@ install(TARGETS freetype
   FRAMEWORK DESTINATION Library/Frameworks
 )
 
+
 # Packaging
 # CPack version numbers for release tarball name.
 set(CPACK_PACKAGE_VERSION_MAJOR ${VERSION_MAJOR})
@@ -365,7 +373,9 @@ set(CPACK_SOURCE_IGNORE_FILES
 set(CPACK_GENERATOR TGZ)
 include(CPack)
 
+
 # add make dist target
 add_custom_target(dist COMMAND ${CMAKE_MAKE_PROGRAM} package_source)
+
 
 # eof
