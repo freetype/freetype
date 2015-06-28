@@ -1,5 +1,13 @@
 2015-06-28  Werner Lemberg  <wl@gnu.org>
 
+	* CMakeLists.txt: Always create `ftconfig.h'.
+
+	For non-UNIX builds, the file stays unmodified.  However, it's
+	better to have the main configuration files at the same place
+	regardless of the OS.
+
+2015-06-28  Werner Lemberg  <wl@gnu.org>
+
 	* CMakeLists.txt: Improve MSVC support (#43737).
 
 2015-06-28  Werner Lemberg  <wl@gnu.org>

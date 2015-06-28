@@ -156,13 +156,13 @@ file(MAKE_DIRECTORY "${PROJECT_BINARY_DIR}/include/freetype/config")
 
 
 # Create the configuration file
+message(STATUS
+  "Creating file ${PROJECT_BINARY_DIR}/include/freetype/config/ftconfig.h")
+
 if (UNIX)
   check_include_file("unistd.h" HAVE_UNISTD_H)
   check_include_file("fcntl.h" HAVE_FCNTL_H)
   check_include_file("stdint.h" HAVE_STDINT_H)
-
-  message(STATUS
-    "Creating file ${PROJECT_BINARY_DIR}/include/freetype/config/ftconfig.h")
 
   file(READ "${PROJECT_SOURCE_DIR}/builds/unix/ftconfig.in"
     FTCONFIG_H)
@@ -183,6 +183,11 @@ if (UNIX)
   endif ()
   string(REPLACE "/undef " "#undef "
     FTCONFIG_H "${FTCONFIG_H}")
+  file(WRITE "${PROJECT_BINARY_DIR}/include/freetype/config/ftconfig.h"
+    "${FTCONFIG_H}")
+else ()
+  file(READ "${PROJECT_SOURCE_DIR}/include/freetype/config/ftconfig.h"
+    FTCONFIG_H)
   file(WRITE "${PROJECT_BINARY_DIR}/include/freetype/config/ftconfig.h"
     "${FTCONFIG_H}")
 endif ()
@@ -341,8 +346,11 @@ install(DIRECTORY ${PROJECT_SOURCE_DIR}/include/
   DESTINATION include/freetype2
   PATTERN "internal" EXCLUDE
   PATTERN "ftconfig.h" EXCLUDE
+  PATTERN "ftoption.h" EXCLUDE
 )
-install(FILES ${PROJECT_BINARY_DIR}/include/freetype/config/ftconfig.h
+install(FILES
+  ${PROJECT_BINARY_DIR}/include/freetype/config/ftconfig.h
+  ${PROJECT_BINARY_DIR}/include/freetype/config/ftoption.h
   DESTINATION include/freetype2/freetype/config
 )
 install(TARGETS freetype
