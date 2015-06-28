@@ -92,7 +92,24 @@ else ()
   endif ()
 endif ()
 
+
 project(freetype)
+
+
+# Disallow in-source builds
+if ("${PROJECT_BINARY_DIR}" STREQUAL "${PROJECT_SOURCE_DIR}")
+  message(FATAL_ERROR
+    "
+In-source builds are not permitted!  Make a separate folder for"
+    " building, e.g.,"
+    "
+  mkdir build; cd build; cmake .."
+    "
+Before that, remove the files created by this failed run with"
+    "
+  rm -rf CMakeCache.txt CMakeFiles")
+endif ()
+
 
 if (BUILD_FRAMEWORK)
   if (NOT "${CMAKE_GENERATOR}" STREQUAL "Xcode")
