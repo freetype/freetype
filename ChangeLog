@@ -1,5 +1,9 @@
 2015-06-28  Werner Lemberg  <wl@gnu.org>
 
+	* CMakeLists.txt: Improve MSVC support (#43737).
+
+2015-06-28  Werner Lemberg  <wl@gnu.org>
+
 	[cmake] Check for libraries and create `ftoption.h'.
 
 	* builds/FindHarfBuzz.cmake: New file, taken from
