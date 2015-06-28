@@ -115,6 +115,10 @@ Before that, remove the files created by this failed run with"
 endif ()
 
 
+# Add local cmake modules
+set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} ${PROJECT_SOURCE_DIR}/builds)
+
+
 if (BUILD_FRAMEWORK)
   if (NOT "${CMAKE_GENERATOR}" STREQUAL "Xcode")
     message(FATAL_ERROR
@@ -124,18 +128,28 @@ if (BUILD_FRAMEWORK)
   set(BUILD_SHARED_LIBS ON)
 endif ()
 
+
 set(VERSION_MAJOR "2")
 set(VERSION_MINOR "6")
 set(VERSION_PATCH "0")
 set(PROJECT_VERSION ${VERSION_MAJOR}.${VERSION_MINOR}.${VERSION_PATCH})
 
+
 # Compiler definitions for building the library
 add_definitions(-DFT2_BUILD_LIBRARY)
+
+
+# Find dependencies
+find_package(ZLIB)
+find_package(BZip2)
+find_package(PNG)
+find_package(HarfBuzz)
 
 
 message(STATUS
   "Creating directory ${PROJECT_BINARY_DIR}/include/freetype/config")
 file(MAKE_DIRECTORY "${PROJECT_BINARY_DIR}/include/freetype/config")
+
 
 # Create the configuration file
 if (UNIX)
@@ -168,6 +182,36 @@ if (UNIX)
   file(WRITE "${PROJECT_BINARY_DIR}/include/freetype/config/ftconfig.h"
     "${FTCONFIG_H}")
 endif ()
+
+
+# Create the options file
+message(STATUS
+  "Creating file ${PROJECT_BINARY_DIR}/include/freetype/config/ftoption.h")
+
+file(READ "${PROJECT_SOURCE_DIR}/include/freetype/config/ftoption.h"
+  FTOPTION_H)
+if (ZLIB_FOUND)
+  string(REGEX REPLACE
+    "/\\* +(#define +FT_CONFIG_OPTION_SYSTEM_ZLIB) +\\*/" "\\1"
+    FTOPTION_H "${FTOPTION_H}")
+endif ()
+if (BZIP2_FOUND)
+  string(REGEX REPLACE
+    "/\\* +(#define +FT_CONFIG_OPTION_USE_BZIP2) +\\*/" "\\1"
+    FTOPTION_H "${FTOPTION_H}")
+endif ()
+if (PNG_FOUND)
+  string(REGEX REPLACE
+    "/\\* +(#define +FT_CONFIG_OPTION_USE_PNG) +\\*/" "\\1"
+    FTOPTION_H "${FTOPTION_H}")
+endif ()
+if (HARFBUZZ_FOUND)
+  string(REGEX REPLACE
+    "/\\* +(#define +FT_CONFIG_OPTION_USE_HARFBUZZ) +\\*/" "\\1"
+    FTOPTION_H "${FTOPTION_H}")
+endif ()
+file(WRITE "${PROJECT_BINARY_DIR}/include/freetype/config/ftoption.h"
+  "${FTOPTION_H}")
 
 
 # Specify library include directories
@@ -257,6 +301,26 @@ if (BUILD_FRAMEWORK)
     XCODE_ATTRIBUTE_INSTALL_PATH "@rpath"
   )
 endif ()
+
+
+if (ZLIB_FOUND)
+  target_link_libraries(freetype ${ZLIB_LIBRARIES})
+  include_directories(${ZLIB_INCLUDE_DIRS})
+endif ()
+if (BZIP2_FOUND)
+  target_link_libraries(freetype ${BZIP2_LIBRARIES})
+  include_directories(${BZIP2_INCLUDE_DIR}) # not BZIP2_INCLUDE_DIRS
+endif ()
+if (PNG_FOUND)
+  add_definitions(${PNG_DEFINITIONS})
+  target_link_libraries(freetype ${PNG_LIBRARIES})
+  include_directories(${PNG_INCLUDE_DIRS})
+endif ()
+if (HARFBUZZ_FOUND)
+  target_link_libraries(freetype ${HARFBUZZ_LIBRARIES})
+  include_directories(${HARFBUZZ_INCLUDE_DIRS})
+endif ()
+
 
 # Installations
 # Note the trailing slash in the argument to the `DIRECTORY' directive

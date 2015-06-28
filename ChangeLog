@@ -1,5 +1,18 @@
 2015-06-28  Werner Lemberg  <wl@gnu.org>
 
+	[cmake] Check for libraries and create `ftoption.h'.
+
+	* builds/FindHarfBuzz.cmake: New file, taken from
+
+	  https://trac.webkit.org/browser/trunk/Source/cmake/FindHarfBuzz.cmake
+
+	* CMakeLists.Txt: Add path to local cmake modules.
+	Find dependencies for zlib, bzip2, libpng, and harfbuzz.
+	Create `ftoption.h' file.
+	Set up include and linker stuff for libraries.
+
+2015-06-28  Werner Lemberg  <wl@gnu.org>
+
 	* CMakeLists.txt: Fix creation of `ftconfig.h'.
 	Check for UNIX header files using `check_include_file'.
 	Set up correct header include directories.
