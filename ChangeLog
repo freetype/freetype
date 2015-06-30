@@ -1,3 +1,12 @@
+2015-06-30  Werner Lemberg  <wl@gnu.org>
+
+	Fix some clang compiler warnings.
+
+	* src/base/ftoutln.c (FT_Outline_EmboldenXY), src/cff/cf2intrp.c
+	(cf2_interpT2CharString), src/truetype/ttgload.c
+	(load_truetype_glyph), src/truetype/ttgxvar.c (tt_handle_deltas),
+	src/truetype/ttinterp.c (Ins_INSTCTRL): Fix signedness issues.
+
 2015-06-29  Alexei Podtelezhnikov <apodtele@gmail.com>
 
 	[truetype] Speed up bytecode interpreter.
@@ -8,7 +17,8 @@
 
 	[base] Speed up emboldening.
 
-	* src/base/ftoutln.c (FT_Outline_EmboldenXY): Use `FT_Vector_NormLen'.
+	* src/base/ftoutln.c (FT_Outline_EmboldenXY): Use
+	`FT_Vector_NormLen'.
 
 2015-06-29  Alexei Podtelezhnikov <apodtele@gmail.com>
 

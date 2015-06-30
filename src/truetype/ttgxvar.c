@@ -1649,13 +1649,13 @@
   {
     FT_Vector*  out_points;
 
-    FT_UInt  first_point;
-    FT_UInt  end_point;
+    FT_Int  first_point;
+    FT_Int  end_point;
 
-    FT_UInt  first_delta;
-    FT_UInt  cur_delta;
+    FT_Int  first_delta;
+    FT_Int  cur_delta;
 
-    FT_UInt   point;
+    FT_Int    point;
     FT_Short  contour;
 
 

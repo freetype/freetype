@@ -5147,11 +5147,11 @@
   Ins_INSTCTRL( TT_ExecContext  exc,
                 FT_Long*        args )
   {
-    FT_Long  K, L, Kf;
+    FT_ULong  K, L, Kf;
 
 
-    K = args[1];
-    L = args[0];
+    K = (FT_ULong)args[1];
+    L = (FT_ULong)args[0];
 
     /* selector values cannot be `OR'ed;                 */
     /* they are indices starting with index 1, not flags */

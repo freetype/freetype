@@ -946,7 +946,7 @@
       /* compute incoming normalized vector */
       in.x = v_cur.x - v_prev.x;
       in.y = v_cur.y - v_prev.y;
-      l_in = FT_Vector_NormLen( &in );
+      l_in = (FT_Fixed)FT_Vector_NormLen( &in );
 
       for ( n = first; n <= last; n++ )
       {
@@ -958,7 +958,7 @@
         /* compute outgoing normalized vector */
         out.x = v_next.x - v_cur.x;
         out.y = v_next.y - v_cur.y;
-        l_out = FT_Vector_NormLen( &out );
+        l_out = (FT_Fixed)FT_Vector_NormLen( &out );
 
         d = FT_MulFix( in.x, out.x ) + FT_MulFix( in.y, out.y );
 

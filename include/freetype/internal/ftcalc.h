@@ -302,9 +302,9 @@ FT_BEGIN_HEADER
   /*
    *  This function normalizes a vector and returns its original length.
    *  The normalized vector is a 16.16 fixed-point unit vector with length
-   *  close to 0x10000. The accuracy of the returned length is limited to
-   *  16 bits also. The function utilizes quick inverse square root
-   *  aproximation without divisions and square roots relying on Newton's
+   *  close to 0x10000.  The accuracy of the returned length is limited to
+   *  16 bits also.  The function utilizes quick inverse square root
+   *  approximation without divisions and square roots relying on Newton's
    *  iterations instead.
    */
   FT_BASE( FT_UInt32 )

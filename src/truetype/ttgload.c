@@ -1582,7 +1582,7 @@
         error = TT_Vary_Apply_Glyph_Deltas( (TT_Face)(loader->face),
                                              glyph_index,
                                              &outline,
-                                             outline.n_points );
+                                             (FT_UInt)outline.n_points );
         if ( error )
           goto Exit;
 
@@ -1679,7 +1679,7 @@
 
       if ( face->doblend )
       {
-        FT_UInt      i, limit;
+        short        i, limit;
         FT_SubGlyph  subglyph;
 
         FT_Outline  outline;
@@ -1690,11 +1690,11 @@
         FT_Memory  memory = face->root.memory;
 
 
-        limit = gloader->current.num_subglyphs;
+        limit = (short)gloader->current.num_subglyphs;
 
         /* construct an outline structure for              */
         /* communication with `TT_Vary_Apply_Glyph_Deltas' */
-        outline.n_points   = gloader->current.num_subglyphs + 4;
+        outline.n_points   = (short)( gloader->current.num_subglyphs + 4 );
         outline.n_contours = outline.n_points;
 
         if ( FT_NEW_ARRAY( points, outline.n_points )   ||
@@ -1748,7 +1748,7 @@
                          face,
                          glyph_index,
                          &outline,
-                         outline.n_points ) ) != 0 )
+                         (FT_UInt)outline.n_points ) ) != 0 )
           goto Exit1;
 
         subglyph = gloader->current.subglyphs + gloader->base.num_subglyphs;
