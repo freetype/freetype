@@ -88,13 +88,6 @@
 #define BOUNDSL( x, n )  ( (FT_ULong)(x) >= (FT_ULong)(n) )
 
 
-  /*************************************************************************/
-  /*                                                                       */
-  /* This macro computes (a*2^14)/b and complements TT_MulFix14.           */
-  /*                                                                       */
-#define TT_DivFix14( a, b )  FT_DivFix( a, (b) << 2 )
-
-
 #undef  SUCCESS
 #define SUCCESS  0
 
@@ -2580,26 +2573,23 @@
              FT_F26Dot6      Vy,
              FT_UnitVector*  R )
   {
-    FT_F26Dot6  W;
+    FT_Vector V;
 
 
-    if ( FT_ABS( Vx ) < 0x4000L && FT_ABS( Vy ) < 0x4000L )
+    if ( Vx == 0 && Vy == 0 )
     {
-      if ( Vx == 0 && Vy == 0 )
-      {
-        /* XXX: UNDOCUMENTED! It seems that it is possible to try   */
-        /*      to normalize the vector (0,0).  Return immediately. */
-        return SUCCESS;
-      }
-
-      Vx *= 0x4000;
-      Vy *= 0x4000;
+      /* XXX: UNDOCUMENTED! It seems that it is possible to try   */
+      /*      to normalize the vector (0,0).  Return immediately. */
+      return SUCCESS;
     }
 
-    W = FT_Hypot( Vx, Vy );
+    V.x = Vx;
+    V.y = Vy;
 
-    R->x = (FT_F2Dot14)TT_DivFix14( Vx, W );
-    R->y = (FT_F2Dot14)TT_DivFix14( Vy, W );
+    FT_Vector_NormLen( &V );
+
+    R->x = (FT_F2Dot14)( V.x / 4 );
+    R->y = (FT_F2Dot14)( V.y / 4 );
 
     return SUCCESS;
   }

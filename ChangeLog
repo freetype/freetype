@@ -1,5 +1,11 @@
 2015-06-29  Alexei Podtelezhnikov <apodtele@gmail.com>
 
+	[truetype] Speed up bytecode interpreter.
+
+	* src/truetype/ttinterp.c (Normalize): Use `FT_Vector_NormLen'.
+
+2015-06-29  Alexei Podtelezhnikov <apodtele@gmail.com>
+
 	[base] Speed up emboldening.
 
 	* src/base/ftoutln.c (FT_Outline_EmboldenXY): Use `FT_Vector_NormLen'.
