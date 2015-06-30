@@ -1,5 +1,11 @@
 2015-06-29  Alexei Podtelezhnikov <apodtele@gmail.com>
 
+	[base] Speed up emboldening.
+
+	* src/base/ftoutln.c (FT_Outline_EmboldenXY): Use `FT_Vector_NormLen'.
+
+2015-06-29  Alexei Podtelezhnikov <apodtele@gmail.com>
+
 	[base] Implement fast vector normalization.
 
 	The function uses Newton's iterations instead of dividing vector
