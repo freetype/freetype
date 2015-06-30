@@ -785,6 +785,88 @@
   }
 
 
+  /* documentation is in ftcalc.h */
+
+  FT_BASE_DEF( FT_UInt32 )
+  FT_Vector_NormLen( FT_Vector*  vector )
+  {
+    FT_Int32   x = vector->x;
+    FT_Int32   y = vector->y;
+    FT_Int32   b, z;
+    FT_UInt32  u, v, l;
+    FT_Int     sx = 1, sy = 1, shift;
+
+
+    FT_MOVE_SIGN( x, sx );
+    FT_MOVE_SIGN( y, sy );
+
+    /* trivial cases */
+    if ( x == 0 )
+    {
+      if ( y > 0 )
+        vector->y = sy * 0x10000;
+      return y;
+    }
+    else if ( y == 0 )
+    {
+      if ( x > 0 )
+        vector->x = sx * 0x10000;
+      return x;
+    }
+
+    /* estimate length and prenormalize */
+    l = x > y ? (FT_UInt32)x + ( y >> 1 )
+              : (FT_UInt32)y + ( x >> 1 );
+
+    shift  = 31 - FT_MSB( l );
+    shift -= 15 + ( l >= 0xAAAAAAAAUL >> shift );
+
+    if ( shift > 0 )
+    {
+      x <<= shift;
+      y <<= shift;
+
+      /* reestimate length for tiny vectors */
+      l = x > y ? (FT_UInt32)x + ( y >> 1 )
+                : (FT_UInt32)y + ( x >> 1 );
+    }
+    else
+    {
+      x >>= -shift;
+      y >>= -shift;
+      l >>= -shift;
+    }
+
+    /* lower linear approximation for reciprocal length minus one */
+    b = 0x10000 - (FT_Int32)l;
+
+    /*  Newton's iterations */
+    do
+    {
+      u = (FT_UInt32)( x + ( x * b >> 16 ) );
+      v = (FT_UInt32)( y + ( y * b >> 16 ) );
+
+      /* converting to signed gives difference with 2^32 */
+      z = -(FT_Int32)( u * u + v * v ) / 0x200;
+      z = z * ( ( 0x10000 + b ) >> 8 ) / 0x10000;
+
+      b += z;
+    } while ( z > 0 );
+
+    vector->x = sx < 0 ? -(FT_Pos)u : (FT_Pos)u;
+    vector->y = sy < 0 ? -(FT_Pos)v : (FT_Pos)v;
+
+    /* true length, again taking advantage of signed difference with 2^32 */
+    l = 0x10000 + (FT_Int32)( u * x + v * y ) / 0x10000;
+    if ( shift > 0 )
+      l = ( l + ( 1 << ( shift - 1 ) ) ) >> shift;
+    else
+      l <<= -shift;
+
+    return l;
+  }
+
+
 #if 0
 
   /* documentation is in ftcalc.h */

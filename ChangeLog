@@ -1,3 +1,13 @@
+2015-06-29  Alexei Podtelezhnikov <apodtele@gmail.com>
+
+	[base] Implement fast vector normalization.
+
+	The function uses Newton's iterations instead of dividing vector
+	components by its length, which needs a square root. This is,
+	literally, a bit less accurate but a lot faster.
+
+	* src/base/ftcalc.c (FT_Vector_NormLen): New function.
+
 2015-06-28  Werner Lemberg  <wl@gnu.org>
 
 	* CMakeLists.txt: Always create `ftconfig.h'.
