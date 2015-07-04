@@ -698,7 +698,8 @@
   /*              TT_Get_MM_Var initializes the blend structure.           */
   /*                                                                       */
   /* <Output>                                                              */
-  /*    master :: The `fvar' data (must be freed by caller).               */
+  /*    master :: The `fvar' data (must be freed by caller).  Can be NULL, */
+  /*              which makes this function simply load MM support.        */
   /*                                                                       */
   /* <Return>                                                              */
   /*    FreeType error code.  0 means success.                             */
