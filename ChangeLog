@@ -1,3 +1,16 @@
+2015-07-07  Werner Lemberg  <wl@gnu.org>
+
+	[sfnt] Make `tt_face_get_name' member of the SFNT interface.
+
+	* include/freetype/internal/sfnt.h (TT_Get_Name_Func): New
+	prototype.
+	(SFNT_Interface, FT_DEFINE_SFNT_INTERFACE): New member `get_name'.
+
+	* src/sfnt/sfdriver.c (sfnt_interface): Updated.
+
+	* src/sfnt/sfobjs.c (tt_face_get_name): Tag it with `LOCAL_DEF'.
+	* src/sfnt/sfobjs.h: Add prototype for it.
+
 2015-06-30  Werner Lemberg  <wl@gnu.org>
 
 	Fix some clang compiler warnings.

@@ -120,27 +120,9 @@
                                                    FT_Memory     memory );
 
 
-  /*************************************************************************/
-  /*                                                                       */
-  /* <Function>                                                            */
-  /*    tt_face_get_name                                                   */
-  /*                                                                       */
-  /* <Description>                                                         */
-  /*    Returns a given ENGLISH name record in ASCII.                      */
-  /*                                                                       */
-  /* <Input>                                                               */
-  /*    face   :: A handle to the source face object.                      */
-  /*                                                                       */
-  /*    nameid :: The name id of the name record to return.                */
-  /*                                                                       */
-  /* <InOut>                                                               */
-  /*    name   :: The address of a string pointer.  NULL if no name is     */
-  /*              present.                                                 */
-  /*                                                                       */
-  /* <Return>                                                              */
-  /*    FreeType error code.  0 means success.                             */
-  /*                                                                       */
-  static FT_Error
+  /* documentation is in sfnt.h */
+
+  FT_LOCAL_DEF( FT_Error )
   tt_face_get_name( TT_Face      face,
                     FT_UShort    nameid,
                     FT_String**  name )
