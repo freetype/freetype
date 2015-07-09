@@ -20,10 +20,10 @@
 #define __RASTPIC_H__
 
 
-FT_BEGIN_HEADER
-
 #include FT_INTERNAL_PIC_H
 
+
+FT_BEGIN_HEADER
 
 #ifndef FT_CONFIG_OPTION_PIC
 

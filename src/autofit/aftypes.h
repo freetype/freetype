@@ -41,6 +41,10 @@
 
 #include "afblue.h"
 
+#ifdef FT_DEBUG_AUTOFIT
+#include FT_CONFIG_STANDARD_LIBRARY_H
+#endif
+
 
 FT_BEGIN_HEADER
 
@@ -53,8 +57,6 @@ FT_BEGIN_HEADER
   /*************************************************************************/
 
 #ifdef FT_DEBUG_AUTOFIT
-
-#include FT_CONFIG_STANDARD_LIBRARY_H
 
 extern int    _af_debug_disable_horz_hints;
 extern int    _af_debug_disable_vert_hints;

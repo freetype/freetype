@@ -20,8 +20,6 @@
 #define __SFNTPIC_H__
 
 
-FT_BEGIN_HEADER
-
 #include FT_INTERNAL_PIC_H
 
 
@@ -54,6 +52,8 @@ FT_BEGIN_HEADER
 #include FT_INTERNAL_SFNT_H
 #include "ttcmap.h"
 
+
+FT_BEGIN_HEADER
 
   typedef struct  sfntModulePIC_
   {
@@ -99,11 +99,12 @@ FT_BEGIN_HEADER
   FT_Error
   sfnt_module_class_pic_init( FT_Library  library );
 
+
+FT_END_HEADER
+
 #endif /* FT_CONFIG_OPTION_PIC */
 
   /* */
-
-FT_END_HEADER
 
 #endif /* __SFNTPIC_H__ */
 

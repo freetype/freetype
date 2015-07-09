@@ -1,3 +1,25 @@
+2015-07-09  Werner Lemberg  <wl@gnu.org>
+
+	Better support of user-supplied C++ namespaces.
+
+	See
+
+	  http://lists.nongnu.org/archive/html/freetype-devel/2015-07/msg00008.html
+
+	for a rationale.
+
+	* src/autofit/afpic.h, src/base/basepic.h, src/cff/cffpic.h,
+	src/pshinter/pshpic.h, src/psnames/pspic.h, src/raster/rastpic.h,
+	src/sfnt/sfntpic.h, src/smooth/ftspic.h, src/truetype/ttpic.h
+	(FT_BEGIN_HEADER, FT_END_HEADER): Move macro calls to not enclose
+	header files that contain FT_{BEGIN,END}_HEADER macros by
+	themselves.
+
+	* src/autofit/aftypes.h [FT_DEBUG_AUTOFIT]: Include
+	FT_CONFIG_STANDARD_LIBRARY_H earlier.
+
+	* src/truetype/ttpic.h: Include FT_INTERNL_PIC_H.
+
 2015-07-07  Werner Lemberg  <wl@gnu.org>
 
 	[sfnt] Make `tt_face_get_name' member of the SFNT interface.
