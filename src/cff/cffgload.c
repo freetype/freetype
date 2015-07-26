@@ -3064,9 +3064,7 @@
         metrics->width  = cbox.xMax - cbox.xMin;
         metrics->height = cbox.yMax - cbox.yMin;
 
-        if ( !face->horizontal.number_Of_HMetrics )
-          metrics->horiBearingX = cbox.xMin;
-
+        metrics->horiBearingX = cbox.xMin;
         metrics->horiBearingY = cbox.yMax;
 
         if ( has_vertical_info )
