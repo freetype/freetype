@@ -1,6 +1,15 @@
 CHANGES BETWEEN 2.6 and 2.6.1
 
-  I. IMPORTANT CHANGES
+  I. IMPORTANT BUG FIXES
+
+    - It turned  out that for CFFs  only the advance widths  should be
+      taken  from  the  `htmx',  not the  side  bearings.   This  bug,
+      introduced in  version 2.6.0, makes  it necessary to  upgrade if
+      you are  using CFFs; otherwise  you get cropped glyphs  with GUI
+      interfaces like GTK or Qt.
+
+
+  II. IMPORTANT CHANGES
 
     - The header  file layout  has been  changed (again),  moving  all
       header files except `ft2build.h' into a subdirectory tree.
