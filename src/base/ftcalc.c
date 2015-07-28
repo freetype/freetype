@@ -817,10 +817,10 @@
       return x;
     }
 
-    /* estimate length and prenormalize by shifting so that */
+    /* Estimate length and prenormalize by shifting so that */
     /* the new approximate length is between 2/3 and 4/3.   */
-    /* The magic contsnt 0xAAAAAAAAUL (2/3 of 2^32) helps   */
-    /* to achive this in 16.16 fixed-point representation.  */
+    /* The magic constant 0xAAAAAAAAUL (2/3 of 2^32) helps  */
+    /* achieve this in 16.16 fixed-point representation.    */
     l = x > y ? x + ( y >> 1 )
               : y + ( x >> 1 );
 
@@ -832,7 +832,7 @@
       x <<= shift;
       y <<= shift;
 
-      /* reestimate length for tiny vectors */
+      /* re-estimate length for tiny vectors */
       l = x > y ? x + ( y >> 1 )
                 : y + ( x >> 1 );
     }
@@ -860,6 +860,7 @@
       z = z * ( ( 0x10000 + b ) >> 8 ) / 0x10000;
 
       b += z;
+
     } while ( z > 0 );
 
     vector->x = sx < 0 ? -(FT_Pos)u : (FT_Pos)u;
