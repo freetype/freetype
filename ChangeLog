@@ -1,3 +1,7 @@
+2015-07-27  Alexei Podtelezhnikov <apodtele@gmail.com>
+
+	* src/base/ftcalc.c (FT_Vector_NormLen): Explicate type conversions.
+
 2015-07-26  Matthias Clasen  <matthias.clasen@gmail.com>
 
 	[cff] Don't use `hmtx' table for LSB (#45520).

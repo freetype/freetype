@@ -790,15 +790,18 @@
   FT_BASE_DEF( FT_UInt32 )
   FT_Vector_NormLen( FT_Vector*  vector )
   {
-    FT_Int32   x = vector->x;
-    FT_Int32   y = vector->y;
+    FT_Int32   x_ = vector->x;
+    FT_Int32   y_ = vector->y;
     FT_Int32   b, z;
-    FT_UInt32  u, v, l;
+    FT_UInt32  x, y, u, v, l;
     FT_Int     sx = 1, sy = 1, shift;
 
 
-    FT_MOVE_SIGN( x, sx );
-    FT_MOVE_SIGN( y, sy );
+    FT_MOVE_SIGN( x_, sx );
+    FT_MOVE_SIGN( y_, sy );
+
+    x = (FT_UInt32)x_;
+    y = (FT_UInt32)y_;
 
     /* trivial cases */
     if ( x == 0 )
@@ -814,12 +817,15 @@
       return x;
     }
 
-    /* estimate length and prenormalize */
-    l = x > y ? (FT_UInt32)x + ( y >> 1 )
-              : (FT_UInt32)y + ( x >> 1 );
+    /* estimate length and prenormalize by shifting so that */
+    /* the new approximate length is between 2/3 and 4/3.   */
+    /* The magic contsnt 0xAAAAAAAAUL (2/3 of 2^32) helps   */
+    /* to achive this in 16.16 fixed-point representation.  */
+    l = x > y ? x + ( y >> 1 )
+              : y + ( x >> 1 );
 
     shift  = 31 - FT_MSB( l );
-    shift -= 15 + ( l >= 0xAAAAAAAAUL >> shift );
+    shift -= 15 + ( l >= ( 0xAAAAAAAAUL >> shift ) );
 
     if ( shift > 0 )
     {
@@ -827,8 +833,8 @@
       y <<= shift;
 
       /* reestimate length for tiny vectors */
-      l = x > y ? (FT_UInt32)x + ( y >> 1 )
-                : (FT_UInt32)y + ( x >> 1 );
+      l = x > y ? x + ( y >> 1 )
+                : y + ( x >> 1 );
     }
     else
     {
@@ -840,11 +846,14 @@
     /* lower linear approximation for reciprocal length minus one */
     b = 0x10000 - (FT_Int32)l;
 
+    x_ = (FT_Int32)x;
+    y_ = (FT_Int32)y;
+
     /*  Newton's iterations */
     do
     {
-      u = (FT_UInt32)( x + ( x * b >> 16 ) );
-      v = (FT_UInt32)( y + ( y * b >> 16 ) );
+      u = (FT_UInt32)( x_ + ( x_ * b >> 16 ) );
+      v = (FT_UInt32)( y_ + ( y_ * b >> 16 ) );
 
       /* converting to signed gives difference with 2^32 */
       z = -(FT_Int32)( u * u + v * v ) / 0x200;
