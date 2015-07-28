@@ -42,6 +42,7 @@
     general use and discussion:      freetype@nongnu.org
     engine internals, porting, etc.: freetype-devel@nongnu.org
     announcements:                   freetype-announce@nongnu.org
+    git repository tracker:          freetype-commit@nongnu.org
 
   The lists are moderated; see
 
