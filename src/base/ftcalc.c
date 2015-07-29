@@ -849,13 +849,15 @@
     x_ = (FT_Int32)x;
     y_ = (FT_Int32)y;
 
-    /*  Newton's iterations */
+    /* Newton's iterations */
     do
     {
       u = (FT_UInt32)( x_ + ( x_ * b >> 16 ) );
       v = (FT_UInt32)( y_ + ( y_ * b >> 16 ) );
 
-      /* converting to signed gives difference with 2^32 */
+      /* Normalized squared length in the parentheses approaches 2^32. */
+      /* On two's complement systems, converting to signed gives the   */
+      /* difference with 2^32 even if the expression wraps around.     */
       z = -(FT_Int32)( u * u + v * v ) / 0x200;
       z = z * ( ( 0x10000 + b ) >> 8 ) / 0x10000;
 
@@ -866,8 +868,10 @@
     vector->x = sx < 0 ? -(FT_Pos)u : (FT_Pos)u;
     vector->y = sy < 0 ? -(FT_Pos)v : (FT_Pos)v;
 
-    /* true length, again taking advantage of signed difference with 2^32 */
-    l = 0x10000 + (FT_Int32)( u * x + v * y ) / 0x10000;
+    /* Conversion to signed helps to recover from likely wrap around */
+    /* in calculating the prenormalized length, because it gives the */
+    /* correct difference with 2^32 on two's complement systems.     */
+    l = (FT_UInt32)( 0x10000 + (FT_Int32)( u * x + v * y ) / 0x10000 );
     if ( shift > 0 )
       l = ( l + ( 1 << ( shift - 1 ) ) ) >> shift;
     else
