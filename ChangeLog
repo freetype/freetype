@@ -1,8 +1,15 @@
-2015-07-28  Alexei Podtelezhnikov <apodtele@gmail.com>
+2015-07-31  Werner Lemberg  <wl@gnu.org>
+
+	Define FT_LONG_MAX.
+
+	* include/freetype/config/ftstdlib.h (FT_LONG_MAX): New macro.
+	* src/cff/cf2arrst.c (cf2_arrstack_setNumElements): Use it.
+
+2015-07-28  Alexei Podtelezhnikov  <apodtele@gmail.com>
 
 	* src/base/ftcalc.c (FT_Vector_NormLen): Clarify.
 
-2015-07-27  Alexei Podtelezhnikov <apodtele@gmail.com>
+2015-07-27  Alexei Podtelezhnikov  <apodtele@gmail.com>
 
 	* src/base/ftcalc.c (FT_Vector_NormLen): Explicate type conversions.
 
