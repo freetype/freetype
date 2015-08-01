@@ -656,20 +656,20 @@
 
       if ( subglyph->flags & WE_HAVE_A_SCALE )
       {
-        xx = (FT_Fixed)FT_NEXT_SHORT( p ) << 2;
+        xx = (FT_Fixed)FT_NEXT_SHORT( p ) * 4;
         yy = xx;
       }
       else if ( subglyph->flags & WE_HAVE_AN_XY_SCALE )
       {
-        xx = (FT_Fixed)FT_NEXT_SHORT( p ) << 2;
-        yy = (FT_Fixed)FT_NEXT_SHORT( p ) << 2;
+        xx = (FT_Fixed)FT_NEXT_SHORT( p ) * 4;
+        yy = (FT_Fixed)FT_NEXT_SHORT( p ) * 4;
       }
       else if ( subglyph->flags & WE_HAVE_A_2X2 )
       {
-        xx = (FT_Fixed)FT_NEXT_SHORT( p ) << 2;
-        yx = (FT_Fixed)FT_NEXT_SHORT( p ) << 2;
-        xy = (FT_Fixed)FT_NEXT_SHORT( p ) << 2;
-        yy = (FT_Fixed)FT_NEXT_SHORT( p ) << 2;
+        xx = (FT_Fixed)FT_NEXT_SHORT( p ) * 4;
+        yx = (FT_Fixed)FT_NEXT_SHORT( p ) * 4;
+        xy = (FT_Fixed)FT_NEXT_SHORT( p ) * 4;
+        yy = (FT_Fixed)FT_NEXT_SHORT( p ) * 4;
       }
 
       subglyph->transform.xx = xx;
@@ -1988,7 +1988,7 @@
              ( ( ignore_x_mode && loader->exec->compatible_widths ) ||
                 !ignore_x_mode                                      ||
                 SPH_OPTION_BITMAP_WIDTHS                            ) )
-          glyph->metrics.horiAdvance = *widthp << 6;
+          glyph->metrics.horiAdvance = *widthp * 64;
       }
       else
 
@@ -1996,7 +1996,7 @@
 
       {
         if ( widthp )
-          glyph->metrics.horiAdvance = *widthp << 6;
+          glyph->metrics.horiAdvance = *widthp * 64;
       }
     }
 
@@ -2136,16 +2136,16 @@
       glyph->outline.n_points   = 0;
       glyph->outline.n_contours = 0;
 
-      glyph->metrics.width  = (FT_Pos)metrics.width  << 6;
-      glyph->metrics.height = (FT_Pos)metrics.height << 6;
+      glyph->metrics.width  = (FT_Pos)metrics.width  * 64;
+      glyph->metrics.height = (FT_Pos)metrics.height * 64;
 
-      glyph->metrics.horiBearingX = (FT_Pos)metrics.horiBearingX << 6;
-      glyph->metrics.horiBearingY = (FT_Pos)metrics.horiBearingY << 6;
-      glyph->metrics.horiAdvance  = (FT_Pos)metrics.horiAdvance  << 6;
+      glyph->metrics.horiBearingX = (FT_Pos)metrics.horiBearingX * 64;
+      glyph->metrics.horiBearingY = (FT_Pos)metrics.horiBearingY * 64;
+      glyph->metrics.horiAdvance  = (FT_Pos)metrics.horiAdvance  * 64;
 
-      glyph->metrics.vertBearingX = (FT_Pos)metrics.vertBearingX << 6;
-      glyph->metrics.vertBearingY = (FT_Pos)metrics.vertBearingY << 6;
-      glyph->metrics.vertAdvance  = (FT_Pos)metrics.vertAdvance  << 6;
+      glyph->metrics.vertBearingX = (FT_Pos)metrics.vertBearingX * 64;
+      glyph->metrics.vertBearingY = (FT_Pos)metrics.vertBearingY * 64;
+      glyph->metrics.vertAdvance  = (FT_Pos)metrics.vertAdvance  * 64;
 
       glyph->format = FT_GLYPH_FORMAT_BITMAP;
 

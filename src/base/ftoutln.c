@@ -52,8 +52,9 @@
                         const FT_Outline_Funcs*  func_interface,
                         void*                    user )
   {
-#undef SCALED
-#define SCALED( x )  ( ( (x) << shift ) - delta )
+#undef  SCALED
+#define SCALED( x )  ( ( (x) < 0 ? -( -(x) << shift )             \
+                                 :  (  (x) << shift ) ) - delta )
 
     FT_Vector   v_last;
     FT_Vector   v_control;

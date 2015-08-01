@@ -450,7 +450,9 @@
 #define CEILING( x )  ( ( (x) + ras.precision - 1 ) & -ras.precision )
 #define TRUNC( x )    ( (Long)(x) >> ras.precision_bits )
 #define FRAC( x )     ( (x) & ( ras.precision - 1 ) )
-#define SCALED( x )   ( ( (Long)(x) << ras.scale_shift ) - ras.precision_half )
+#define SCALED( x )   ( ( (x) < 0 ? -( -(x) << ras.scale_shift )   \
+                                  :  (  (x) << ras.scale_shift ) ) \
+                        - ras.precision_half )
 
 #define IS_BOTTOM_OVERSHOOT( x ) \
           (Bool)( CEILING( x ) - x >= ras.precision_half )

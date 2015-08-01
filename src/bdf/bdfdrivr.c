@@ -615,9 +615,9 @@ THE SOFTWARE.
 
     FT_Select_Metrics( size->face, strike_index );
 
-    size->metrics.ascender    = bdffont->font_ascent << 6;
-    size->metrics.descender   = -bdffont->font_descent << 6;
-    size->metrics.max_advance = bdffont->bbx.width << 6;
+    size->metrics.ascender    = bdffont->font_ascent * 64;
+    size->metrics.descender   = -bdffont->font_descent * 64;
+    size->metrics.max_advance = bdffont->bbx.width * 64;
 
     return FT_Err_Ok;
   }
@@ -734,18 +734,18 @@ THE SOFTWARE.
     slot->bitmap_left = glyph.bbx.x_offset;
     slot->bitmap_top  = glyph.bbx.ascent;
 
-    slot->metrics.horiAdvance  = (FT_Pos)( glyph.dwidth << 6 );
-    slot->metrics.horiBearingX = (FT_Pos)( glyph.bbx.x_offset << 6 );
-    slot->metrics.horiBearingY = (FT_Pos)( glyph.bbx.ascent << 6 );
-    slot->metrics.width        = (FT_Pos)( bitmap->width << 6 );
-    slot->metrics.height       = (FT_Pos)( bitmap->rows << 6 );
+    slot->metrics.horiAdvance  = (FT_Pos)( glyph.dwidth * 64 );
+    slot->metrics.horiBearingX = (FT_Pos)( glyph.bbx.x_offset * 64 );
+    slot->metrics.horiBearingY = (FT_Pos)( glyph.bbx.ascent * 64 );
+    slot->metrics.width        = (FT_Pos)( bitmap->width * 64 );
+    slot->metrics.height       = (FT_Pos)( bitmap->rows * 64 );
 
     /*
      * XXX DWIDTH1 and VVECTOR should be parsed and
      * used here, provided such fonts do exist.
      */
     ft_synthesize_vertical_metrics( &slot->metrics,
-                                    bdf->bdffont->bbx.height << 6 );
+                                    bdf->bdffont->bbx.height * 64 );
 
   Exit:
     return error;

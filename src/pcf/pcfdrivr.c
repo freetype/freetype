@@ -430,9 +430,9 @@ THE SOFTWARE.
 
     FT_Select_Metrics( size->face, strike_index );
 
-    size->metrics.ascender    =  accel->fontAscent << 6;
-    size->metrics.descender   = -accel->fontDescent << 6;
-    size->metrics.max_advance =  accel->maxbounds.characterWidth << 6;
+    size->metrics.ascender    =  accel->fontAscent * 64;
+    size->metrics.descender   = -accel->fontDescent * 64;
+    size->metrics.max_advance =  accel->maxbounds.characterWidth * 64;
 
     return FT_Err_Ok;
   }
@@ -583,16 +583,16 @@ THE SOFTWARE.
     slot->bitmap_left = metric->leftSideBearing;
     slot->bitmap_top  = metric->ascent;
 
-    slot->metrics.horiAdvance  = (FT_Pos)( metric->characterWidth << 6 );
-    slot->metrics.horiBearingX = (FT_Pos)( metric->leftSideBearing << 6 );
-    slot->metrics.horiBearingY = (FT_Pos)( metric->ascent << 6 );
+    slot->metrics.horiAdvance  = (FT_Pos)( metric->characterWidth * 64 );
+    slot->metrics.horiBearingX = (FT_Pos)( metric->leftSideBearing * 64 );
+    slot->metrics.horiBearingY = (FT_Pos)( metric->ascent * 64 );
     slot->metrics.width        = (FT_Pos)( ( metric->rightSideBearing -
-                                             metric->leftSideBearing ) << 6 );
-    slot->metrics.height       = (FT_Pos)( bitmap->rows << 6 );
+                                             metric->leftSideBearing ) * 64 );
+    slot->metrics.height       = (FT_Pos)( bitmap->rows * 64 );
 
     ft_synthesize_vertical_metrics( &slot->metrics,
                                     ( face->accel.fontAscent +
-                                      face->accel.fontDescent ) << 6 );
+                                      face->accel.fontDescent ) * 64 );
 
   Exit:
     return error;

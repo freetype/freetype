@@ -1,5 +1,35 @@
 2015-07-31  Werner Lemberg  <wl@gnu.org>
 
+	Fix some bugs found by clang's `-fsanitize=undefined' (#45661).
+
+	* src/base/ftrfork.c (FT_Raccess_Get_HeaderInfo): Only accept
+	positive values from header.
+	Check overflow.
+
+	* src/base/ftoutln.c (SCALED): Correctly handle left-shift of
+	negative values.
+
+	* src/bdf/bdf.h (_bdf_glyph_modified, _bdf_set_glyph_modified,
+	_bdf_clear_glyph_modified): Use unsigned long constant.
+
+	* src/bdf/bdfdrivr.c (BDF_Size_Select, BDF_Glyph_Load): Don't
+	left-shift values that can be negative.
+
+	* src/pcf/pcfdrivr.c (PCF_Size_Select, PCF_Glyph_Load): Don't
+	left-shift values that can be negative.
+
+	* src/raster/ftraster.c (SCALED): Correctly handle left-shift of
+	negative values.
+
+	* src/sfnt/ttsbit.c (tt_face_load_strike_metrics): Don't left-shift
+	values that can be negative.
+
+	* src/truetype/ttgload.c (TT_Load_Composite_Glyph,
+	compute_glyph_metrics, load_sbit_image): Don't left-shift values
+	that can be negative.
+
+2015-07-31  Werner Lemberg  <wl@gnu.org>
+
 	Define FT_LONG_MAX.
 
 	* include/freetype/config/ftstdlib.h (FT_LONG_MAX): New macro.
