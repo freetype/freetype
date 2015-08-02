@@ -629,7 +629,7 @@
       if ( !dict->has_font_matrix )
         dict->units_per_em = pure_cff ? 1000 : face->root.units_per_EM;
 
-      /* Normalize the font matrix so that `matrix->xx' is 1; the */
+      /* Normalize the font matrix so that `matrix->yy' is 1; the */
       /* scaling is done with `units_per_em' then (at this point, */
       /* it already contains the scaling factor, but without      */
       /* normalization of the matrix).                            */
