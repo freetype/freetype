@@ -17,7 +17,6 @@ exec_prefix="%exec_prefix%"
 exec_prefix_set="no"
 includedir="%includedir%"
 libdir="%libdir%"
-enable_shared="%build_libtool_libs%"
 
 usage()
 {

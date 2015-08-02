@@ -1,5 +1,9 @@
 2015-08-02  Werner Lemberg  <wl@gnu.org>
 
+	* builds/unix/freetype-config.in (enable_shared): Remove.  Unused.
+
+2015-08-02  Werner Lemberg  <wl@gnu.org>
+
 	Fix more invalid left-shifts.
 
 	* src/pfr/pfrgload.c (pfr_glyph_load_compound): Use multiplication,
