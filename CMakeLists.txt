@@ -100,6 +100,10 @@ else ()
   endif ()
 endif ()
 
+if (WIN32 AND BUILD_SHARED_LIBS)
+  message(FATAL_ERROR "Shared libraries not supported on Windows.")
+endif ()
+
 
 project(freetype)
 
@@ -136,7 +140,9 @@ endif ()
 set(VERSION_MAJOR "2")
 set(VERSION_MINOR "6")
 set(VERSION_PATCH "0")
+
 set(PROJECT_VERSION ${VERSION_MAJOR}.${VERSION_MINOR}.${VERSION_PATCH})
+set(SHARED_LIBRARY_VERSION ${VERSION_MAJOR}.${VERSION_MINOR})
 
 
 # Compiler definitions for building the library
@@ -300,6 +306,15 @@ add_library(freetype
   ${PRIVATE_HEADERS}
   ${BASE_SRCS}
 )
+
+
+if (BUILD_SHARED_LIBS)
+  set_target_properties(freetype PROPERTIES
+    VERSION ${PROJECT_VERSION}
+    SOVERSION ${SHARED_LIBRARY_VERSION}
+    COMPILE_DEFINITIONS freetype_EXPORTS
+  )
+endif ()
 
 
 if (BUILD_FRAMEWORK)

@@ -1,5 +1,11 @@
 2015-08-02  Werner Lemberg  <wl@gnu.org>
 
+	* CMakeLists.txt: Improve shared library support.
+
+	Based on a patch from John Cary <cary@txcorp.com>.
+
+2015-08-02  Werner Lemberg  <wl@gnu.org>
+
 	* builds/unix/freetype-config.in (enable_shared): Remove.  Unused.
 
 2015-08-02  Werner Lemberg  <wl@gnu.org>
