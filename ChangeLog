@@ -1,3 +1,14 @@
+2015-08-02  Werner Lemberg  <wl@gnu.org>
+
+	Fix more invalid left-shifts.
+
+	* src/pfr/pfrgload.c (pfr_glyph_load_compound): Use multiplication,
+	not left-shift.
+
+	* src/truetype/ttgxvar.c (ft_var_load_avar, ft_var_load_gvar,
+	tt_face_vary_cvt, TT_Vary_Apply_Glyph_Deltas): Use multiplication,
+	not left-shift.
+
 2015-07-31  Werner Lemberg  <wl@gnu.org>
 
 	Fix some bugs found by clang's `-fsanitize=undefined' (#45661).
