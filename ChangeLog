@@ -1,5 +1,11 @@
 2015-08-03  Werner Lemberg  <wl@gnu.org>
 
+	* src/truetype/ttgload.c (load_truetype_glyph)
+	[TT_CONFIG_OPTION_GX_VAR_SUPPORT]: Fix crash for composite glyphs
+	having a depth greater than 1.
+
+2015-08-03  Werner Lemberg  <wl@gnu.org>
+
 	Fix typo in clang bug from 2015-07-31 (#45678).
 
 	* src/base/ftrfork.c (FT_Raccess_Get_HeaderInfo): Fix inequality.

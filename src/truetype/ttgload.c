@@ -1702,7 +1702,7 @@
              FT_NEW_ARRAY( contours, outline.n_points ) )
           goto Exit1;
 
-        subglyph = gloader->current.subglyphs + gloader->base.num_subglyphs;
+        subglyph = gloader->current.subglyphs;
 
         for ( i = 0; i < limit; i++, subglyph++ )
         {
@@ -1751,7 +1751,7 @@
                          (FT_UInt)outline.n_points ) ) != 0 )
           goto Exit1;
 
-        subglyph = gloader->current.subglyphs + gloader->base.num_subglyphs;
+        subglyph = gloader->current.subglyphs;
 
         for ( i = 0; i < limit; i++, subglyph++ )
         {
