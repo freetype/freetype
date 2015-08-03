@@ -1,3 +1,9 @@
+2015-08-03  Werner Lemberg  <wl@gnu.org>
+
+	Fix typo in clang bug from 2015-07-31 (#45678).
+
+	* src/base/ftrfork.c (FT_Raccess_Get_HeaderInfo): Fix inequality.
+
 2015-08-02  Werner Lemberg  <wl@gnu.org>
 
 	* CMakeLists.txt: Improve shared library support.

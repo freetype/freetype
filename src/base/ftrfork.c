@@ -93,8 +93,8 @@
     if ( *rdata_pos != map_pos - rdata_len || map_pos == 0 )
       return FT_THROW( Unknown_File_Format );
 
-    if ( FT_LONG_MAX - rfork_offset > *rdata_pos ||
-         FT_LONG_MAX - rfork_offset > map_pos    )
+    if ( FT_LONG_MAX - rfork_offset < *rdata_pos ||
+         FT_LONG_MAX - rfork_offset < map_pos    )
       return FT_THROW( Unknown_File_Format );
 
     *rdata_pos += rfork_offset;
