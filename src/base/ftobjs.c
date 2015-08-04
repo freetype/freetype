@@ -1889,13 +1889,14 @@
     if ( error )
       goto Exit;
 
-    if (            header[ 0] !=  0 ||
-                    header[74] !=  0 ||
-                    header[82] !=  0 ||
-                    header[ 1] ==  0 ||
-                    header[ 1] >  33 ||
-                    header[63] !=  0 ||
-         header[2 + header[1]] !=  0 )
+    if (            header[ 0] !=   0 ||
+                    header[74] !=   0 ||
+                    header[82] !=   0 ||
+                    header[ 1] ==   0 ||
+                    header[ 1] >   33 ||
+                    header[63] !=   0 ||
+         header[2 + header[1]] !=   0 ||
+                  header[0x53] > 0x7F )
       return FT_THROW( Unknown_File_Format );
 
     dlen = ( header[0x53] << 24 ) |

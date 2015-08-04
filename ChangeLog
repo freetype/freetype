@@ -1,3 +1,10 @@
+2015-08-04  Werner Lemberg  <wl@gnu.org>
+
+	Another left-shift bug (#45681).
+
+	* src/base/ftobjs.c (IsMacBinary): Only accept positive values for
+	`dlen'.
+
 2015-08-03  Alexei Podtelezhnikov  <apodtele@gmail.com>
 
 	[base] Fix `ft_corner_orientation'.
