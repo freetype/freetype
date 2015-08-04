@@ -928,52 +928,34 @@
                          FT_Pos  out_x,
                          FT_Pos  out_y )
   {
-    FT_Long  result; /* avoid overflow on 16-bit system */
-
-
-    /* deal with the trivial cases quickly */
-    if ( in_y == 0 )
-    {
-      if ( in_x >= 0 )
-        result = out_y;
-      else
-        result = -out_y;
-    }
-    else if ( in_x == 0 )
-    {
-      if ( in_y >= 0 )
-        result = -out_x;
-      else
-        result = out_x;
-    }
-    else if ( out_y == 0 )
-    {
-      if ( out_x >= 0 )
-        result = in_y;
-      else
-        result = -in_y;
-    }
-    else if ( out_x == 0 )
-    {
-      if ( out_y >= 0 )
-        result = -in_x;
-      else
-        result =  in_x;
-    }
-    else /* general case */
-    {
 #ifdef FT_LONG64
 
-      FT_Int64  delta = (FT_Int64)in_x * out_y - (FT_Int64)in_y * out_x;
+    FT_Int64  delta = (FT_Int64)in_x * out_y - (FT_Int64)in_y * out_x;
 
 
-      if ( delta == 0 )
-        result = 0;
-      else
-        result = 1 - 2 * ( delta < 0 );
+    return ( delta > 0 ) - ( delta < 0 );
 
 #else
 
+    FT_Int  result;
+
+
+    if ( (FT_ULong)FT_ABS( in_x ) + (FT_ULong)FT_ABS( out_y ) <= 131071UL &&
+         (FT_ULong)FT_ABS( in_y ) + (FT_ULong)FT_ABS( out_x ) <= 131071UL )
+    {
+      FT_Long  z1 = in_x * out_y;
+      FT_Long  z2 = in_y * out_x;
+
+
+      if ( z1 > z2 )
+        result = +1;
+      else if ( z1 < z2 )
+        result = -1;
+      else
+        result = 0;
+    }
+    else /* products might overflow 32 bits */
+    {
       FT_Int64  z1, z2;
 
 
@@ -991,12 +973,12 @@
         result = -1;
       else
         result = 0;
-
-#endif
     }
 
     /* XXX: only the sign of return value, +1/0/-1 must be used */
-    return (FT_Int)result;
+    return result;
+
+#endif
   }
 
 
