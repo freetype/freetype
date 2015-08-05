@@ -1,3 +1,19 @@
+2015-08-05  Werner Lemberg  <wl@gnu.org>
+
+	[autofit] Improve recognition of flat vs. rounded segments.
+
+	Lower the flatness threshold from upem/8 to upem/14, making the
+	auto-hinter accept shorter elements.
+
+	Synchronize flat/round stem selection algorithm with blue zone code.
+
+	* src/autofit/aflatin.c (FLAT_THRESHOLD): New macro.
+	(af_latin_metrics_init_blues): Use it.
+	(af_latin_hints_compute_segments): Collect information on maximum
+	and minimum coordinates of `on' points; use this to add a constraint
+	for the flat/round decision similar to
+	`af_latin_metrics_init_blues'.
+
 2015-08-04  Werner Lemberg  <wl@gnu.org>
 
 	Another left-shift bug (#45681).
