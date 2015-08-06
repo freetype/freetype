@@ -1,3 +1,13 @@
+2015-08-05  Alexei Podtelezhnikov  <apodtele@gmail.com>
+
+	[truetype] Clean up types.
+
+	* src/truetype/ttobjs.c (TT_Size): Move declaration from here.
+	* include/freetype/internal/tttypes.h (TT_Size): ... to here.
+	(TT_LoaderRec): Switch to appropriate types for `face' and `size'.
+	* src/truetype/ttgload.c: Remove corresponding type casts.
+	* src/truetype/ttsubpix.c: Ditto.
+
 2015-08-05  Werner Lemberg  <wl@gnu.org>
 
 	[autofit] Improve recognition of flat vs. rounded segments.

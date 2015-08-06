@@ -120,7 +120,7 @@
   tt_get_metrics( TT_Loader  loader,
                   FT_UInt    glyph_index )
   {
-    TT_Face    face   = (TT_Face)loader->face;
+    TT_Face    face   = loader->face;
 #ifdef TT_CONFIG_OPTION_SUBPIXEL_HINTING
     TT_Driver  driver = (TT_Driver)FT_FACE_DRIVER( face );
 #endif
@@ -182,7 +182,7 @@
   tt_get_metrics_incr_overrides( TT_Loader  loader,
                                  FT_UInt    glyph_index )
   {
-    TT_Face  face = (TT_Face)loader->face;
+    TT_Face  face = loader->face;
 
     FT_Short   left_bearing = 0, top_bearing = 0;
     FT_UShort  advance_width = 0, advance_height = 0;
@@ -754,7 +754,7 @@
                  FT_Bool    is_composite )
   {
 #ifdef TT_CONFIG_OPTION_SUBPIXEL_HINTING
-    TT_Face    face   = (TT_Face)loader->face;
+    TT_Face    face   = loader->face;
     TT_Driver  driver = (TT_Driver)FT_FACE_DRIVER( face );
 #endif
 
@@ -781,7 +781,7 @@
       FT_ARRAY_COPY( zone->org, zone->cur, zone->n_points );
 
     /* Reset graphics state. */
-    loader->exec->GS = ((TT_Size)loader->size)->GS;
+    loader->exec->GS = loader->size->GS;
 
     /* XXX: UNDOCUMENTED! Hinting instructions of a composite glyph */
     /*      completely refer to the (already) hinted subglyphs.     */
@@ -794,10 +794,8 @@
     }
     else
     {
-      loader->exec->metrics.x_scale =
-        ((TT_Size)loader->size)->metrics.x_scale;
-      loader->exec->metrics.y_scale =
-        ((TT_Size)loader->size)->metrics.y_scale;
+      loader->exec->metrics.x_scale = loader->size->metrics.x_scale;
+      loader->exec->metrics.y_scale = loader->size->metrics.y_scale;
     }
 #endif
 
@@ -897,13 +895,13 @@
 
 #ifdef TT_CONFIG_OPTION_GX_VAR_SUPPORT
 
-    if ( ((TT_Face)loader->face)->doblend )
+    if ( loader->face->doblend )
     {
       /* Deltas apply to the unscaled data. */
-      error = TT_Vary_Apply_Glyph_Deltas( (TT_Face)(loader->face),
-                                           loader->glyph_index,
-                                           outline,
-                                           (FT_UInt)n_points );
+      error = TT_Vary_Apply_Glyph_Deltas( loader->face,
+                                          loader->glyph_index,
+                                          outline,
+                                          (FT_UInt)n_points );
       if ( error )
         return error;
     }
@@ -920,7 +918,7 @@
 
     {
 #ifdef TT_CONFIG_OPTION_SUBPIXEL_HINTING
-      TT_Face    face   = (TT_Face)loader->face;
+      TT_Face    face   = loader->face;
       TT_Driver  driver = (TT_Driver)FT_FACE_DRIVER( face );
 
       FT_String*  family         = face->root.family_name;
@@ -953,9 +951,9 @@
         if ( ( loader->load_flags & FT_LOAD_NO_SCALE ) == 0 ||
              x_scale_factor != 1000                         )
         {
-          x_scale = FT_MulDiv( ((TT_Size)loader->size)->metrics.x_scale,
+          x_scale = FT_MulDiv( loader->size->metrics.x_scale,
                                (FT_Long)x_scale_factor, 1000 );
-          y_scale = ((TT_Size)loader->size)->metrics.y_scale;
+          y_scale = loader->size->metrics.y_scale;
 
           /* compensate for any scaling by de/emboldening; */
           /* the amount was determined via experimentation */
@@ -975,8 +973,8 @@
         /* scale the glyph */
         if ( ( loader->load_flags & FT_LOAD_NO_SCALE ) == 0 )
         {
-          x_scale = ((TT_Size)loader->size)->metrics.x_scale;
-          y_scale = ((TT_Size)loader->size)->metrics.y_scale;
+          x_scale = loader->size->metrics.x_scale;
+          y_scale = loader->size->metrics.y_scale;
 
           do_scale = TRUE;
         }
@@ -1135,8 +1133,8 @@
 
       if ( !( loader->load_flags & FT_LOAD_NO_SCALE ) )
       {
-        FT_Fixed  x_scale = ((TT_Size)loader->size)->metrics.x_scale;
-        FT_Fixed  y_scale = ((TT_Size)loader->size)->metrics.y_scale;
+        FT_Fixed  x_scale = loader->size->metrics.x_scale;
+        FT_Fixed  y_scale = loader->size->metrics.y_scale;
 
 
         x = FT_MulFix( x, x_scale );
@@ -1215,7 +1213,7 @@
       FT_TRACE5(( "  Instructions size = %d\n", n_ins ));
 
       /* check it */
-      max_ins = ((TT_Face)loader->face)->max_profile.maxSizeOfInstructions;
+      max_ins = loader->face->max_profile.maxSizeOfInstructions;
       if ( n_ins > max_ins )
       {
         /* don't trust `maxSizeOfInstructions'; */
@@ -1412,7 +1410,7 @@
     FT_Error        error        = FT_Err_Ok;
     FT_Fixed        x_scale, y_scale;
     FT_ULong        offset;
-    TT_Face         face         = (TT_Face)loader->face;
+    TT_Face         face         = loader->face;
     FT_GlyphLoader  gloader      = loader->gloader;
     FT_Bool         opened_frame = 0;
 
@@ -1445,8 +1443,8 @@
 
     if ( ( loader->load_flags & FT_LOAD_NO_SCALE ) == 0 )
     {
-      x_scale = ((TT_Size)loader->size)->metrics.x_scale;
-      y_scale = ((TT_Size)loader->size)->metrics.y_scale;
+      x_scale = loader->size->metrics.x_scale;
+      y_scale = loader->size->metrics.y_scale;
     }
     else
     {
@@ -1552,7 +1550,7 @@
 
 #ifdef TT_CONFIG_OPTION_GX_VAR_SUPPORT
 
-      if ( ((TT_Face)(loader->face))->doblend )
+      if ( loader->face->doblend )
       {
         /* a small outline structure with four elements for */
         /* communication with `TT_Vary_Apply_Glyph_Deltas'  */
@@ -1579,10 +1577,10 @@
         outline.contours   = contours;
 
         /* this must be done before scaling */
-        error = TT_Vary_Apply_Glyph_Deltas( (TT_Face)(loader->face),
-                                             glyph_index,
-                                             &outline,
-                                             (FT_UInt)outline.n_points );
+        error = TT_Vary_Apply_Glyph_Deltas( loader->face,
+                                            glyph_index,
+                                            &outline,
+                                            (FT_UInt)outline.n_points );
         if ( error )
           goto Exit;
 
@@ -1935,7 +1933,7 @@
   compute_glyph_metrics( TT_Loader  loader,
                          FT_UInt    glyph_index )
   {
-    TT_Face    face   = (TT_Face)loader->face;
+    TT_Face    face   = loader->face;
 #ifdef TT_CONFIG_OPTION_SUBPIXEL_HINTING
     TT_Driver  driver = (TT_Driver)FT_FACE_DRIVER( face );
 #endif
@@ -1943,7 +1941,7 @@
     FT_BBox       bbox;
     FT_Fixed      y_scale;
     TT_GlyphSlot  glyph = loader->glyph;
-    TT_Size       size  = (TT_Size)loader->size;
+    TT_Size       size  = loader->size;
 
 
     y_scale = 0x10000L;
@@ -2414,8 +2412,8 @@
 
     loader->load_flags = (FT_ULong)load_flags;
 
-    loader->face   = (FT_Face)face;
-    loader->size   = (FT_Size)size;
+    loader->face   = face;
+    loader->size   = size;
     loader->glyph  = (FT_GlyphSlot)glyph;
     loader->stream = stream;
 
