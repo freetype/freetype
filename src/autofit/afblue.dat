@@ -69,8 +69,15 @@ AF_BLUE_STRING_ENUM AF_BLUE_STRINGS_ARRAY AF_BLUE_STRING_MAX_LEN:
 
   AF_BLUE_STRING_ARABIC_TOP
     "ا إ ل ك ط ظ"
-  AF_BLUE_STRING_ARABIC_JOIN
+  AF_BLUE_STRING_ARABIC_BOTTOM
     "ت ث ط ظ ك"
+  // We don't necessarily have access to medial forms via Unicode in case
+  // Arabic presentational forms are missing.  The only character that is
+  // guaranteed to have the same vertical position with joining (this is,
+  // non-isolated) forms is U+0640, ARABIC TATWEEL, which must join both
+  // round and flat curves.
+  AF_BLUE_STRING_ARABIC_JOIN
+    "ـ"
 
   AF_BLUE_STRING_CYRILLIC_CAPITAL_TOP
     "БВЕПЗОСЭ"
@@ -289,9 +296,10 @@ AF_BLUE_STRING_ENUM AF_BLUE_STRINGS_ARRAY AF_BLUE_STRING_MAX_LEN:
 AF_BLUE_STRINGSET_ENUM AF_BLUE_STRINGSETS_ARRAY AF_BLUE_STRINGSET_MAX_LEN:
 
   AF_BLUE_STRINGSET_ARAB
-    { AF_BLUE_STRING_ARABIC_TOP,   AF_BLUE_PROPERTY_LATIN_TOP }
-    { AF_BLUE_STRING_ARABIC_JOIN,  0                          }
-    { AF_BLUE_STRING_MAX,          0                          }
+    { AF_BLUE_STRING_ARABIC_TOP,    AF_BLUE_PROPERTY_LATIN_TOP     }
+    { AF_BLUE_STRING_ARABIC_BOTTOM, 0                              }
+    { AF_BLUE_STRING_ARABIC_JOIN,   AF_BLUE_PROPERTY_LATIN_NEUTRAL }
+    { AF_BLUE_STRING_MAX,           0                              }
 
   AF_BLUE_STRINGSET_CYRL
     { AF_BLUE_STRING_CYRILLIC_CAPITAL_TOP,     AF_BLUE_PROPERTY_LATIN_TOP        }

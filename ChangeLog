@@ -1,3 +1,15 @@
+2015-08-06  Werner Lemberg  <wl@gnu.org>
+
+	[autofit] Improve Arabic hinting.
+
+	Problem reported by Titus Nemeth <tn@tntypography.eu> (by using
+	ttfautohint).
+
+	* src/autofit/afblue.dat: Add neutral blue zone for the tatweel
+	character.
+
+	* src/autofit/afblue.c, src/autofit/afblue.h: Regenerated.
+
 2015-08-05  Alexei Podtelezhnikov  <apodtele@gmail.com>
 
 	[truetype] Clean up types.
