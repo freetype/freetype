@@ -252,7 +252,7 @@
     FT_Int      result;
 
 
-    result = T1_ToFixedArray( parser, 6, temp, 3 );
+    result = T1_ToFixedArray( parser, 6, temp, 0 );
 
     if ( result < 6 )
     {
@@ -264,16 +264,10 @@
 
     if ( temp_scale == 0 )
     {
-      FT_ERROR(( "t1_parse_font_matrix: invalid font matrix\n" ));
+      FT_ERROR(( "t42_parse_font_matrix: invalid font matrix\n" ));
       parser->root.error = FT_THROW( Invalid_File_Format );
       return;
     }
-
-    /* Set Units per EM based on FontMatrix values.  We set the value to */
-    /* 1000 / temp_scale, because temp_scale was already multiplied by   */
-    /* 1000 (in t1_tofixed, from psobjs.c).                              */
-
-    root->units_per_EM = (FT_UShort)FT_DivFix( 1000, temp_scale );
 
     /* we need to scale the values by 1.0/temp_scale */
     if ( temp_scale != 0x10000L )

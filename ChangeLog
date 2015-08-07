@@ -1,3 +1,11 @@
+2015-08-06  Alexei Podtelezhnikov  <apodtele@gmail.com>
+
+	[type42] Parse FontMatrix according to specifications.
+
+	* src/type42/t42parse.c (t42_parse_font_matrix): Type 42 FontMatrix
+	does not need scaling by 1000. Units_per_EM are taken from the
+	embedded TrueType.
+
 2015-08-06  Werner Lemberg  <wl@gnu.org>
 
 	[autofit] Improve Arabic hinting.
