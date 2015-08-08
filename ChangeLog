@@ -1,5 +1,22 @@
 2015-08-08  Werner Lemberg  <wl@gnu.org>
 
+	[type42] Fix glyph access.
+
+	This is a severe bug: We've missed one level of indirection, as
+	described in the Type 42 specification.  As a result, ftview
+	sometimes showed incorrect glyphs for given glyph names, and even
+	displayed `error 0x0006' (invalid argument!) in case the number of
+	glyph indices differed between the Type 42 font and the embedded
+	TTF.
+
+	Apparently, noone ever noticed it; this shows how much Type 42 fonts
+	are in use...
+
+	* src/type42/t42objs.c (T42_GlyphSlot_Load): Map Type 42 glyph index
+	to embedded TTF's glyph index.
+
+2015-08-08  Werner Lemberg  <wl@gnu.org>
+
 	[type42] Minor clean-up.
 
 	* src/type42/t42parse.c (t42_parse_font_matrix): Remove unused

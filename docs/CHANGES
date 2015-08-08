@@ -8,6 +8,10 @@ CHANGES BETWEEN 2.6 and 2.6.1
       you are  using CFFs; otherwise  you get cropped glyphs  with GUI
       interfaces like GTK or Qt.
 
+    - Accessing Type 42 fonts returned  incorrect results if the glyph
+      order of the embedded TrueType font differs from the glyph order
+      of the Type 42 charstrings table.
+
 
   II. IMPORTANT CHANGES
 
@@ -28,6 +32,15 @@ CHANGES BETWEEN 2.6 and 2.6.1
         ...
 
       don't need any change to the source code.
+
+
+  III. MISCELLANEOUS
+
+    - The auto-hinter's Arabic script support has been enhanced.
+
+    - The TrueType bytecode interpreter now runs slightly faster.
+
+    - Improved support for builds with cmake.
 
 
 ======================================================================
