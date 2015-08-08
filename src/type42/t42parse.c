@@ -246,7 +246,6 @@
     T42_Parser  parser = &loader->parser;
     FT_Matrix*  matrix = &face->type1.font_matrix;
     FT_Vector*  offset = &face->type1.font_offset;
-    FT_Face     root   = (FT_Face)&face->root;
     FT_Fixed    temp[6];
     FT_Fixed    temp_scale;
     FT_Int      result;
