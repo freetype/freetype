@@ -268,7 +268,7 @@
       return;
     }
 
-    /* we need to scale the values by 1.0/temp_scale */
+    /* atypical case */
     if ( temp_scale != 0x10000L )
     {
       temp[0] = FT_DivFix( temp[0], temp_scale );

@@ -1,3 +1,12 @@
+2015-08-10  Alexei Podtelezhnikov  <apodtele@gmail.com>
+
+	[type1,cid,type42] Minor improvements.
+
+	* src/type1/t1load.c (t1_parse_font_matrix): Scale units per EM only
+	when necessary. Refresh comments.
+	* src/cid/cidload.c (cid_parse_font_matrix): Ditto.
+	* src/type42/t42parse.c (t42_parse_font_matrix): Refresh comments.
+
 2015-08-08  Werner Lemberg  <wl@gnu.org>
 
 	[type42] Fix glyph access.
