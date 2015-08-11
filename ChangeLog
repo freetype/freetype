@@ -1,3 +1,11 @@
+2015-08-11  Werner Lemberg  <wl@gnu.org>
+
+	[builds/unix] Minor.
+
+	* builds/unix/configure.raw:
+	s/lib{priv,staticconf}/libs{priv,staticconf}/ for orthogonality with
+	similarly named uppercase variables.
+
 2015-08-10  Alexei Podtelezhnikov  <apodtele@gmail.com>
 
 	[type1,cid,type42] Minor improvements.
