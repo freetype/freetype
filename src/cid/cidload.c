@@ -167,7 +167,7 @@
       matrix = &dict->font_matrix;
       offset = &dict->font_offset;
 
-      /* input is scaled by 1000 to accomodate default FontMatrix */
+      /* input is scaled by 1000 to accommodate default FontMatrix */
       result = cid_parser_to_fixed_array( parser, 6, temp, 3 );
 
       if ( result < 6 )

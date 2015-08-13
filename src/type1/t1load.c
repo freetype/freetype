@@ -1107,7 +1107,7 @@
     FT_Int      result;
 
 
-    /* input is scaled by 1000 to accomodate default FontMatrix */
+    /* input is scaled by 1000 to accommodate default FontMatrix */
     result = T1_ToFixedArray( parser, 6, temp, 3 );
 
     if ( result < 6 )
