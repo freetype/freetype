@@ -31,14 +31,14 @@ FT_BEGIN_HEADER
   FT_LOCAL( FT_Error )
   sfnt_init_face( FT_Stream      stream,
                   TT_Face        face,
-                  FT_Int         face_index,
+                  FT_Int         face_instance_index,
                   FT_Int         num_params,
                   FT_Parameter*  params );
 
   FT_LOCAL( FT_Error )
   sfnt_load_face( FT_Stream      stream,
                   TT_Face        face,
-                  FT_Int         face_index,
+                  FT_Int         face_instance_index,
                   FT_Int         num_params,
                   FT_Parameter*  params );
 

@@ -44,7 +44,9 @@ FT_BEGIN_HEADER
   /*    face       :: A handle to the target face object.                  */
   /*                                                                       */
   /*    face_index :: The index of the TrueType font, if we are opening a  */
-  /*                  collection.                                          */
+  /*                  collection, in bits 0-15.  The numbered instance     */
+  /*                  index~+~1 of a GX (sub)font, if applicable, in bits  */
+  /*                  16-30.                                               */
   /*                                                                       */
   /*    num_params :: The number of additional parameters.                 */
   /*                                                                       */
@@ -87,7 +89,9 @@ FT_BEGIN_HEADER
   /*    face       :: A handle to the target face object.                  */
   /*                                                                       */
   /*    face_index :: The index of the TrueType font, if we are opening a  */
-  /*                  collection.                                          */
+  /*                  collection, in bits 0-15.  The numbered instance     */
+  /*                  index~+~1 of a GX (sub)font, if applicable, in bits  */
+  /*                  16-30.                                               */
   /*                                                                       */
   /*    num_params :: The number of additional parameters.                 */
   /*                                                                       */

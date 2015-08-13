@@ -1,3 +1,43 @@
+2015-08-13  Werner Lemberg  <wl@gnu.org>
+
+	[truetype] Introduce named instance access to GX fonts.
+
+	For functions querying a face, bits 16-30 of the face index can hold
+	the named instance index if we have a GX font.  The indices start
+	with value 1; value 0 indicates font access without GX variation
+	data.
+
+	* include/freetype/freetype.h (FT_FaceRec): Update documentation.
+	* include/freetype/internal/sfnt.h: Ditto.
+
+	* src/sfnt/sfobjs.c (sfnt_init_face)
+	[TT_CONFIG_OPTION_GX_VAR_SUPPORT]: Get number of named instances and
+	do argument checks.
+	(sfnt_load_face): Updated.
+
+	* src/truetype/ttobjs.c (tt_face_init)
+	[TT_CONFIG_OPTION_GX_VAR_SUPPORT]: Use named instance, overwriting
+	the style name.
+
+	* src/base/ftobjs.c (open_face_from_buffer,
+	open_face_PS_from_sfnt_stream): Updated.
+	* src/bdf/bdfdrivr.c (BDF_Face_Init): Updated.
+	* src/cff/cffload.c (cff_font_load): Updated.
+
+	* src/cff/cffobjs.c (cff_face_init): Make function exit early for
+	pure CFF fonts if `font_index < 0'.
+	Updated.
+
+	* src/cid/cidobjs.c (cid_face_init): Updated.
+	* src/pcf/pcfdrivr.c (PCF_Face_Init): Updated.
+	* src/pfr/pfrobjs.c (pfr_face_init): Updated.
+	* src/type1/t1objs.c (T1_Face_Init): Updated.
+	* src/type42/t42objs.c (T42_Face_Init): Updated.
+	* src/winfonts/winfnt.c (fnt_face_get_dll_font, FNT_Face_Init):
+	Updated.
+
+	* docs/CHANGES: Updated.
+
 2015-08-12  Alexei Podtelezhnikov  <apodtele@gmail.com>
 
 	[type1,cff,cid] Streamline font matrix application.

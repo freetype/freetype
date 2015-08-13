@@ -345,13 +345,14 @@ THE SOFTWARE.
 #endif
     }
 
-    /* PCF could not have multiple face in single font file.
-     * XXX: non-zero face_index is already invalid argument, but
-     *      Type1, Type42 driver has a convention to return
+    /* PCF cannot have multiple faces in a single font file.
+     * XXX: A non-zero face_index is already an invalid argument, but
+     *      Type1, Type42 drivers have a convention to return
      *      an invalid argument error when the font could be
      *      opened by the specified driver.
      */
-    if ( face_index > 0 ) {
+    if ( face_index > 0 && ( face_index & 0xFFFF ) > 0 )
+    {
       FT_ERROR(( "PCF_Face_Init: invalid face index\n" ));
       PCF_Face_Done( pcfface );
       return FT_THROW( Invalid_Argument );

@@ -1375,13 +1375,13 @@
     }
 
 #ifdef FT_MACINTOSH
-    /* At this point, face_index has served its purpose;      */
+    /* At this point, the face index has served its purpose;  */
     /* whoever calls this function has already used it to     */
     /* locate the correct font data.  We should not propagate */
     /* this index to FT_Open_Face() (unless it is negative).  */
 
     if ( face_index > 0 )
-      face_index = 0;
+      face_index &= 0x7FFF0000L; /* retain GX data */
 #endif
 
     error = FT_Open_Face( library, &args, face_index, aface );
@@ -1494,6 +1494,10 @@
     FT_UNUSED( num_params );
     FT_UNUSED( params );
 
+
+    /* ignore GX stuff */
+    if ( face_index > 0 )
+      face_index &= 0xFFFFL;
 
     pos = FT_STREAM_POS();
 
@@ -1737,7 +1741,7 @@
   /* The resource header says we've got resource_cnt `sfnt'      */
   /* (TrueType/OpenType) resources in this file.  Look through   */
   /* them for the one indicated by face_index, load it into mem, */
-  /* pass it on the the truetype driver and return it.           */
+  /* pass it on to the truetype driver, and return it.           */
   /*                                                             */
   static FT_Error
   Mac_Read_sfnt_Resource( FT_Library  library,

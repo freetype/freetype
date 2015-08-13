@@ -379,7 +379,8 @@ THE SOFTWARE.
      *      an invalid argument error when the font could be
      *      opened by the specified driver.
      */
-    if ( face_index > 0 ) {
+    if ( face_index > 0 && ( face_index & 0xFFFF ) > 0 )
+    {
       FT_ERROR(( "BDF_Face_Init: invalid face index\n" ));
       BDF_Face_Done( bdfface );
       return FT_THROW( Invalid_Argument );

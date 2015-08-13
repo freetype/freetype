@@ -208,7 +208,7 @@
       goto Exit;
 
     /* check the face index */
-    if ( face_index > 0 )
+    if ( ( face_index & 0xFFFF ) > 0 )
     {
       FT_ERROR(( "T42_Face_Init: invalid face index\n" ));
       error = FT_THROW( Invalid_Argument );

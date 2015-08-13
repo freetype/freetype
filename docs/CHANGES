@@ -33,6 +33,19 @@ CHANGES BETWEEN 2.6 and 2.6.1
 
       don't need any change to the source code.
 
+    - Simple access  to named instances  in GX variation fonts  is now
+      available (in addition to the  previous method via FreeType's MM
+      interface).   In  the  FT_Face  structure,  bits  16-30  of  the
+      `face_index' field hold the current named instance index for the
+      given face  index, and bits  16-30 of `style_flags'  contain the
+      number of  instances for  the given face  index.  `FT_Open_Face'
+      and friends also understand the  extended bits of the face index
+      parameter.
+
+      You need to enable  TT_CONFIG_OPTION_GX_VAR_SUPPORT for this new
+      feature.  Otherwise, bits  16-30 of the two fields  are zero (or
+      are ignored).
+
 
   III. MISCELLANEOUS
 
