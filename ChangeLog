@@ -1,3 +1,10 @@
+2015-08-15  pazer  <ibemad@gmail.com>
+
+	Fix C++ compilation (#45762).
+
+	* src/base/ftstroke.c (ft_outline_glyph_class): Use
+	FT_CALLBACK_TABLE.
+
 2015-08-14  Alexei Podtelezhnikov  <apodtele@gmail.com>
 
 	[truetype] Clean up.
