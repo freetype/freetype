@@ -250,29 +250,6 @@
 
   /*************************************************************************/
   /*                                                                       */
-  /* Translates an array of coordinates.                                   */
-  /*                                                                       */
-  static void
-  translate_array( FT_UInt     n,
-                   FT_Vector*  coords,
-                   FT_Pos      delta_x,
-                   FT_Pos      delta_y )
-  {
-    FT_UInt  k;
-
-
-    if ( delta_x )
-      for ( k = 0; k < n; k++ )
-        coords[k].x += delta_x;
-
-    if ( delta_y )
-      for ( k = 0; k < n; k++ )
-        coords[k].y += delta_y;
-  }
-
-
-  /*************************************************************************/
-  /*                                                                       */
   /* The following functions are used by default with TrueType fonts.      */
   /* However, they can be replaced by alternatives if we need to support   */
   /* TrueType-compressed formats (like MicroType) in the future.           */
@@ -1022,11 +999,13 @@
                                   FT_UInt      num_base_points )
   {
     FT_GlyphLoader  gloader    = loader->gloader;
-    FT_Vector*      base_vec   = gloader->base.outline.points;
-    FT_UInt         num_points = (FT_UInt)gloader->base.outline.n_points;
+    FT_Outline      current;
     FT_Bool         have_scale;
     FT_Pos          x, y;
 
+
+    current.points   = gloader->base.outline.points + num_base_points;
+    current.n_points = gloader->base.outline.n_points - num_base_points;
 
     have_scale = FT_BOOL( subglyph->flags & ( WE_HAVE_A_SCALE     |
                                               WE_HAVE_AN_XY_SCALE |
@@ -1034,17 +1013,12 @@
 
     /* perform the transform required for this subglyph */
     if ( have_scale )
-    {
-      FT_UInt  i;
-
-
-      for ( i = num_base_points; i < num_points; i++ )
-        FT_Vector_Transform( base_vec + i, &subglyph->transform );
-    }
+      FT_Outline_Transform( &current, &subglyph->transform );
 
     /* get offset */
     if ( !( subglyph->flags & ARGS_ARE_XY_VALUES ) )
     {
+      FT_UInt     num_points = (FT_UInt)gloader->base.outline.n_points;
       FT_UInt     k = (FT_UInt)subglyph->arg1;
       FT_UInt     l = (FT_UInt)subglyph->arg2;
       FT_Vector*  p1;
@@ -1149,9 +1123,7 @@
     }
 
     if ( x || y )
-      translate_array( num_points - num_base_points,
-                       base_vec + num_base_points,
-                       x, y );
+      FT_Outline_Translate( &current, x, y );
 
     return FT_Err_Ok;
   }

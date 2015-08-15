@@ -1,3 +1,11 @@
+2015-08-14  Alexei Podtelezhnikov  <apodtele@gmail.com>
+
+	[truetype] Clean up.
+
+	* src/truetype/ttgload.c (TT_Process_Composite_Component): Use
+	`FT_Outline_Transform' and `FT_Outline_Translate'.
+	(translate_array): Dropped.
+
 2015-08-14  Andreas Enge  <andreas.enge@inria.fr>
 
 	* builds/unix/detect.mk (CONFIG_SHELL): Don't handle it (#44261).
