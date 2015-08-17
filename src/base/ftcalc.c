@@ -437,9 +437,6 @@
 
     /* XXX: this function does not allow 64-bit arguments */
 
-    if ( a_ == 0 || b_ == c_ )
-      return a_;
-
     FT_MOVE_SIGN( a_, s );
     FT_MOVE_SIGN( b_, s );
     FT_MOVE_SIGN( c_, s );
@@ -487,9 +484,6 @@
 
 
     /* XXX: this function does not allow 64-bit arguments */
-
-    if ( a_ == 0 || b_ == c_ )
-      return a_;
 
     FT_MOVE_SIGN( a_, s );
     FT_MOVE_SIGN( b_, s );
@@ -546,9 +540,6 @@
     FT_UInt32  a, b;
 
 
-    if ( a_ == 0 || b_ == 0x10000L )
-      return a_;
-
     /*
      *  This is a clever way of converting a signed number `a' into its
      *  absolute value (stored back into `a') and its sign.  The sign is
@@ -598,9 +589,6 @@
 
 
     /* XXX: this function does not allow 64-bit arguments */
-
-    if ( a_ == 0 || b_ == 0x10000L )
-      return a_;
 
     FT_MOVE_SIGN( a_, s );
     FT_MOVE_SIGN( b_, s );

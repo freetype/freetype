@@ -1,3 +1,10 @@
+2015-08-16  Alexei Podtelezhnikov  <apodtele@gmail.com>
+
+	[base] Reoptimize aritmetic.
+
+	* src/base/ftcalc.c (FT_MulDiv, FT_MulFix) [!FT_LONG64]: Remove
+	special cases that slow down the general use.
+
 2015-08-15  pazer  <ibemad@gmail.com>
 
 	Fix C++ compilation (#45762).
