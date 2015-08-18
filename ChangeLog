@@ -1,3 +1,10 @@
+2015-08-17  Alexei Podtelezhnikov  <apodtele@gmail.com>
+
+	[base] Improve emboldener (#45596).
+
+	* src/base/ftoutln.c (FT_Outline_EmboldenXY): Correct displacement
+	of zero-lenght segments.
+
 2015-08-16  Alexei Podtelezhnikov  <apodtele@gmail.com>
 
 	[base] Reoptimize arithmetic.
