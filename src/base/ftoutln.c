@@ -937,7 +937,7 @@
     {
       FT_Vector  in, out, shift;
       FT_Fixed   l_in, l_out, l, q, d;
-      int        last = outline->contours[c];
+      FT_Int     last = outline->contours[c];
 
 
       v_first = points[first];
@@ -968,8 +968,7 @@
         {
           d = d + 0x10000L;
 
-          /* shift components are aligned along lateral bisector */
-          /* and directed according to the outline orientation.  */
+          /* shift along lateral bisector in appropriate orientation */
           shift.x = in.y + out.y;
           shift.y = in.x + out.x;
 
@@ -1000,8 +999,8 @@
         else
           shift.x = shift.y = 0;
 
-        outline->points[n].x = v_cur.x + xstrength + shift.x;
-        outline->points[n].y = v_cur.y + ystrength + shift.y;
+        points[n].x = v_cur.x + xstrength + shift.x;
+        points[n].y = v_cur.y + ystrength + shift.y;
 
         in    = out;
         l_in  = l_out;
