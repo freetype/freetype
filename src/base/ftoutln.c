@@ -935,14 +935,15 @@
     for ( c = 0; c < outline->n_contours; c++ )
     {
       FT_Vector  in, out, anchor, shift;
-      FT_Fixed   l_in = 0, l_out, l_anchor, l, q, d;
+      FT_Fixed   l_in, l_out, l_anchor, l, q, d;
       FT_Int     i, j, k;
 
 
+      l_in = 0;
       last = outline->contours[c];
 
-      /* Counter i cycles though the points; counter j advances only   */
-      /* when points are moved; anchor k markes the first moved point. */
+      /* Counter i cycles though the points; counter j advances only */
+      /* if points are moved; anchor k marks the first moved point.  */
       for ( i = last, j = first, k = -1;
             j != i && i != k;
             j = j < last ? j + 1 : first )
@@ -966,7 +967,7 @@
         {
           if ( k < 0 )
           {
-            k = i;
+            k        = i;
             anchor   = in;
             l_anchor = l_in;
           }
