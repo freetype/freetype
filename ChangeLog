@@ -1,3 +1,13 @@
+2015-08-18  Werner Lemberg  <wl@gnu.org>
+
+	[raster] Remove last remnants of `raster5' driver.
+
+	* src/raster/ftrend1.h (ft_raster5_renderer_class): Removed.
+
+	* src/raster/rastpic.c, src/raster/rastpic.h
+	(ft_raster5_renderer_class_pic_init,
+	ft_raster5_renderer_class_pic_free): Removed.
+
 2015-08-17  Alexei Podtelezhnikov  <apodtele@gmail.com>
 
 	[base] Improve emboldener (#45596).
