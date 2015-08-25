@@ -3041,6 +3041,11 @@ FT_BEGIN_HEADER
   /*    FT_KERNING_UNSCALED :: Return the kerning vector in original font  */
   /*                           units.                                      */
   /*                                                                       */
+  /* <Note>                                                                */
+  /*    FT_KERNING_DEFAULT returns full pixel values; it also makes        */
+  /*    FreeType heuristically scale down kerning distances at small ppem  */
+  /*    values so that they don't become too big.                          */
+  /*                                                                       */
   typedef enum  FT_Kerning_Mode_
   {
     FT_KERNING_DEFAULT  = 0,
