@@ -1,3 +1,18 @@
+2015-08-30  Werner Lemberg  <wl@gnu.org>
+
+	[autofit] Make glyph style array use 16bit values.
+
+	* include/freetype/ftautoh.h (FT_Prop_GlyphToScriptMap): Use
+	`FT_UShort' for `map' field.
+
+	* src/autofit/afglobal.c (af_face_globals_compute_style_coverage,
+	af_face_globals_new), src/autofit/hbshim.c, src/autofit/hbshim.h
+	(af_get_coverage): Use FT_UShort for `glyph_styles' array.
+
+	* src/autofit/afglobal.h (AF_STYLE_UNASSIGNED, AF_DIGIT): Extend to
+	16 bits.
+	(AF_FaceGlobalsRec): Use `FT_UShort' for `glyph_styles' field.
+
 2015-08-26  Werner Lemberg  <wl@gnu.org>
 
 	* builds/unix/configure.raw: Need harfbuzz >= 0.9.21 (#45828).

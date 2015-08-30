@@ -135,16 +135,15 @@
     FT_Error    error;
     FT_Face     face        = globals->face;
     FT_CharMap  old_charmap = face->charmap;
-    FT_Byte*    gstyles     = globals->glyph_styles;
+    FT_UShort*  gstyles     = globals->glyph_styles;
     FT_UInt     ss;
     FT_UInt     i;
     FT_UInt     dflt        = ~0U; /* a non-valid value */
 
 
     /* the value AF_STYLE_UNASSIGNED means `uncovered glyph' */
-    FT_MEM_SET( globals->glyph_styles,
-                AF_STYLE_UNASSIGNED,
-                globals->glyph_count );
+    for ( i = 0; i < (FT_UInt)globals->glyph_count; i++ )
+      gstyles[i] = AF_STYLE_UNASSIGNED;
 
     error = FT_Select_Charmap( face, FT_ENCODING_UNICODE );
     if ( error )
@@ -193,7 +192,7 @@
           if ( gindex != 0                             &&
                gindex < (FT_ULong)globals->glyph_count &&
                gstyles[gindex] == AF_STYLE_UNASSIGNED  )
-            gstyles[gindex] = (FT_Byte)ss;
+            gstyles[gindex] = (FT_UShort)ss;
 
           for (;;)
           {
@@ -204,7 +203,7 @@
 
             if ( gindex < (FT_ULong)globals->glyph_count &&
                  gstyles[gindex] == AF_STYLE_UNASSIGNED  )
-              gstyles[gindex] = (FT_Byte)ss;
+              gstyles[gindex] = (FT_UShort)ss;
           }
         }
       }
@@ -314,14 +313,17 @@
 
     memory = face->memory;
 
+    /* we allocate an AF_FaceGlobals structure together */
+    /* with the glyph_styles array                      */
     if ( FT_ALLOC( globals,
                    sizeof ( *globals ) +
-                     (FT_ULong)face->num_glyphs * sizeof ( FT_Byte ) ) )
+                     (FT_ULong)face->num_glyphs * sizeof ( FT_UShort ) ) )
       goto Exit;
 
     globals->face         = face;
     globals->glyph_count  = face->num_glyphs;
-    globals->glyph_styles = (FT_Byte*)( globals + 1 );
+    /* right after the globals structure come the glyph styles */
+    globals->glyph_styles = (FT_UShort*)( globals + 1 );
     globals->module       = module;
 
 #ifdef FT_CONFIG_OPTION_USE_HARFBUZZ
