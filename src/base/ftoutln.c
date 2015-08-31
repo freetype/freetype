@@ -942,8 +942,8 @@
       l_in = 0;
       last = outline->contours[c];
 
-      /* Counter i cycles though the points; counter j advances only */
-      /* if points are moved; anchor k marks the first moved point.  */
+      /* Counter j cycles though the points; counter i advances only  */
+      /* when points are moved; anchor k marks the first moved point. */
       for ( i = last, j = first, k = -1;
             j != i && i != k;
             j = j < last ? j + 1 : first )
@@ -953,15 +953,15 @@
           out.x = points[j].x - points[i].x;
           out.y = points[j].y - points[i].y;
           l_out = FT_Vector_NormLen( &out );
+
+          if ( l_out == 0 )
+            continue;
         }
         else
         {
           out   = anchor;
           l_out = l_anchor;
         }
-
-        if ( l_out == 0 )
-          continue;
 
         if ( l_in != 0 )
         {
