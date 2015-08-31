@@ -249,9 +249,9 @@
 
       for ( nn = 0; nn < globals->glyph_count; nn++ )
       {
-        if ( ( gstyles[nn] & ~AF_DIGIT ) == AF_STYLE_UNASSIGNED )
+        if ( ( gstyles[nn] & AF_STYLE_MASK ) == AF_STYLE_UNASSIGNED )
         {
-          gstyles[nn] &= ~AF_STYLE_UNASSIGNED;
+          gstyles[nn] &= ~AF_STYLE_MASK;
           gstyles[nn] |= globals->module->fallback_style;
         }
       }
@@ -275,7 +275,7 @@
 
       for ( idx = 0; idx < globals->glyph_count; idx++ )
       {
-        if ( ( gstyles[idx] & ~AF_DIGIT ) == style_class->style )
+        if ( ( gstyles[idx] & AF_STYLE_MASK ) == style_class->style )
         {
           if ( !( count % 10 ) )
             FT_TRACE4(( " " ));

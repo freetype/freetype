@@ -72,8 +72,12 @@ FT_BEGIN_HEADER
 #endif
   /* default script for OpenType; ignored if HarfBuzz isn't used */
 #define AF_SCRIPT_DEFAULT    AF_SCRIPT_LATN
-  /* a bit mask indicating an uncovered glyph        */
-#define AF_STYLE_UNASSIGNED  0x7FFF
+
+  /* a bit mask for TA_DIGIT */
+#define AF_STYLE_MASK        0x7FFF
+  /* an uncovered glyph      */
+#define AF_STYLE_UNASSIGNED  AF_STYLE_MASK
+
   /* if this flag is set, we have an ASCII digit     */
 #define AF_DIGIT             0x8000U
 

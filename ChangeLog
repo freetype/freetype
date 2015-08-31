@@ -1,5 +1,15 @@
 2015-08-30  Werner Lemberg  <wl@gnu.org>
 
+	[autofit] Code clean-up.
+
+	* src/autofit/afglobal.h (AF_STYLE_MASK): New macro.
+	(AF_STYLE_UNASSIGNED): Use AF_STYLE_MASK for definition.
+
+	* src/autofit/afglobal.c (af_face_globals_compute_style_coverage):
+	Updated.
+
+2015-08-30  Werner Lemberg  <wl@gnu.org>
+
 	[autofit] Make glyph style array use 16bit values.
 
 	* include/freetype/ftautoh.h (FT_Prop_GlyphToScriptMap): Use
