@@ -6495,8 +6495,6 @@
     dx = exc->zp0.cur[b0].x - exc->zp1.cur[a0].x;
     dy = exc->zp0.cur[b0].y - exc->zp1.cur[a0].y;
 
-    exc->zp2.tags[point] |= FT_CURVE_TAG_TOUCH_BOTH;
-
     discriminant = FT_MulDiv( dax, -dby, 0x40 ) +
                    FT_MulDiv( day, dbx, 0x40 );
     dotproduct   = FT_MulDiv( dax, dbx, 0x40 ) +
@@ -6533,6 +6531,8 @@
                                 exc->zp0.cur[b0].y +
                                 exc->zp0.cur[b1].y ) / 4;
     }
+
+    exc->zp2.tags[point] |= FT_CURVE_TAG_TOUCH_BOTH;
   }
 
 
