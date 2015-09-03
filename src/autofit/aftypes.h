@@ -217,7 +217,8 @@ extern void*  _af_debug_hints;
                                      AF_StyleMetrics  metrics );
 
   typedef void
-  (*AF_WritingSystem_ApplyHintsFunc)( AF_GlyphHints    hints,
+  (*AF_WritingSystem_ApplyHintsFunc)( FT_UInt          glyph_index,
+                                      AF_GlyphHints    hints,
                                       FT_Outline*      outline,
                                       AF_StyleMetrics  metrics );
 

@@ -2836,7 +2836,8 @@
   /* Apply the complete hinting algorithm to a latin glyph. */
 
   static FT_Error
-  af_latin_hints_apply( AF_GlyphHints    hints,
+  af_latin_hints_apply( FT_UInt          glyph_index,
+                        AF_GlyphHints    hints,
                         FT_Outline*      outline,
                         AF_LatinMetrics  metrics )
   {
@@ -2844,6 +2845,8 @@
     int       dim;
 
     AF_LatinAxis  axis;
+
+    FT_UNUSED( glyph_index );
 
 
     error = af_glyph_hints_reload( hints, outline );

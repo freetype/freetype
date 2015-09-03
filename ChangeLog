@@ -1,3 +1,19 @@
+2015-09-03  Werner Lemberg  <wl@gnu.org>
+
+	[autofit] Pass glyph index to hinting function.
+
+	No functionality change yet.
+
+	* src/autofit/aftypes.h (AF_WritingSystem_ApplyHintsFunc): Pass
+	glyph index.
+
+	* src/autofit/afcjk.c, src/autofit/afcjk.h (af_cjk_hints_apply),
+	src/autofit/afdummy.c (af_dummy_hints_apply), src/autofit/afindic.c
+	(af_indic_hints_apply), src/autofit/aflatin.c
+	(af_latin_hints_apply), src/autofit/aflatin2.c
+	(af_latin2_hints_apply), src/autofit/afloader.c (af_loader_load_g):
+	Updated.
+
 2015-08-30  Werner Lemberg  <wl@gnu.org>
 
 	[autofit] Code clean-up.

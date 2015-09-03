@@ -2181,7 +2181,8 @@
   /* Apply the complete hinting algorithm to a CJK glyph. */
 
   FT_LOCAL_DEF( FT_Error )
-  af_cjk_hints_apply( AF_GlyphHints  hints,
+  af_cjk_hints_apply( FT_UInt        glyph_index,
+                      AF_GlyphHints  hints,
                       FT_Outline*    outline,
                       AF_CJKMetrics  metrics )
   {
@@ -2189,6 +2190,7 @@
     int       dim;
 
     FT_UNUSED( metrics );
+    FT_UNUSED( glyph_index );
 
 
     error = af_glyph_hints_reload( hints, outline );
