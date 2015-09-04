@@ -294,8 +294,9 @@ extern void*  _af_debug_hints;
   /*************************************************************************/
 
   /*
-   *  Each script is associated with a set of Unicode ranges that gets used
-   *  to test whether the font face supports the script.
+   *  Each script is associated with two sets of Unicode ranges to test
+   *  whether the font face supports the script, and which no-base characters
+   *  the script contains.
    *
    *  We use four-letter script tags from the OpenType specification,
    *  extended by `NONE', which indicates `no script'.
@@ -332,7 +333,9 @@ extern void*  _af_debug_hints;
   {
     AF_Script  script;
 
-    AF_Script_UniRange  script_uni_ranges; /* last must be { 0, 0 }        */
+    /* last element in the ranges must be { 0, 0 } */
+    AF_Script_UniRange  script_uni_ranges;
+    AF_Script_UniRange  script_uni_nobase_ranges;
 
     FT_UInt32  standard_char1;             /* for default width and height */
     FT_UInt32  standard_char2;             /* ditto                        */
@@ -512,6 +515,7 @@ extern void*  _af_debug_hints;
           script_class,                   \
           script,                         \
           ranges,                         \
+          nobase_ranges,                  \
           std_char1,                      \
           std_char2,                      \
           std_char3 )                     \
@@ -520,6 +524,7 @@ extern void*  _af_debug_hints;
   {                                       \
     script,                               \
     ranges,                               \
+    nobase_ranges,                        \
     std_char1,                            \
     std_char2,                            \
     std_char3                             \
@@ -586,17 +591,19 @@ extern void*  _af_debug_hints;
           script_class,                                    \
           script_,                                         \
           ranges,                                          \
+          nobase_ranges,                                   \
           std_char1,                                       \
           std_char2,                                       \
           std_char3 )                                      \
   FT_LOCAL_DEF( void )                                     \
   FT_Init_Class_ ## script_class( AF_ScriptClassRec*  ac ) \
   {                                                        \
-    ac->script            = script_;                       \
-    ac->script_uni_ranges = ranges;                        \
-    ac->standard_char1    = std_char1;                     \
-    ac->standard_char2    = std_char2;                     \
-    ac->standard_char3    = std_char3;                     \
+    ac->script                   = script_;                \
+    ac->script_uni_ranges        = ranges;                 \
+    ac->script_uni_nobase_ranges = nobase_ranges;          \
+    ac->standard_char1           = std_char1;              \
+    ac->standard_char2           = std_char2;              \
+    ac->standard_char3           = std_char3;              \
   }
 
 

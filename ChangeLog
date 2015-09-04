@@ -1,5 +1,37 @@
 2015-09-04  Werner Lemberg  <wl@gnu.org>
 
+	[autofit] Redesign code ranges (2/2).
+
+	This commit adds two fallback scripts (`latb', `latp') and
+	implements support for the no-base character ranges introduced in
+	the previous commit.
+
+	* src/autofit/aftypes.h (AF_ScriptClassRec): Add
+	`script_uni_nobase_ranges' field.
+	(AF_DEFINE_SCRIPT_CLASS): Updated.
+
+	* src/autofit/afscript.h, src/autofit/afstyles.h: Add `latb' and
+	`latp' fallback scripts.
+
+	* src/autofit/afblue.dat: Add blue zones for Latin subscript and
+	superscript fallback scripts.
+
+	* src/autofit/afblue.c, src/autofit/afblue.h: Regenerated.
+
+	* src/autofit/afglobal.h (AF_NOBASE): New style flag for no-base
+	characters.
+	(AF_STYLE_MASK): Updated.
+
+	* src/autofit/afglobal.c (SCRIPT): Updated.
+	(af_face_globals_compute_style_coverage): Handle new style flag.
+
+	* src/autofit/aflatin.c (af_latin_hints_apply): Handle new style
+	flag.
+
+	* src/autofit/afranges.h (SCRIPT): Use it to export no-base ranges.
+
+2015-09-04  Werner Lemberg  <wl@gnu.org>
+
 	[autofit] Redesign code ranges (1/2).
 
 	This patch introduces auxiliary code ranges that identify no-base

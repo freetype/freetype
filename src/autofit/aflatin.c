@@ -2846,8 +2846,6 @@
 
     AF_LatinAxis  axis;
 
-    FT_UNUSED( glyph_index );
-
 
     error = af_glyph_hints_reload( hints, outline );
     if ( error )
@@ -2881,7 +2879,9 @@
       if ( error )
         goto Exit;
 
-      af_latin_hints_compute_blue_edges( hints, metrics );
+      /* apply blue zones to base characters only */
+      if ( !( metrics->root.globals->glyph_styles[glyph_index] & AF_NOBASE ) )
+        af_latin_hints_compute_blue_edges( hints, metrics );
     }
 
     /* grid-fit the outline */

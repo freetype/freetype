@@ -131,6 +131,31 @@ AF_BLUE_STRING_ENUM AF_BLUE_STRINGS_ARRAY AF_BLUE_STRING_MAX_LEN:
   AF_BLUE_STRING_LATIN_SMALL_DESCENDER
     "pqgjy"
 
+  // we assume that both the subscript and superscript ranges
+  // don't contain oldstyle digits (actually, most fonts probably
+  // have digits only in those ranges)
+  AF_BLUE_STRING_LATIN_SUBS_CAPITAL_TOP
+    "₀₃₅₇₈"
+  AF_BLUE_STRING_LATIN_SUBS_CAPITAL_BOTTOM
+    "₀₁₂₃₈"
+  AF_BLUE_STRING_LATIN_SUBS_SMALL_F_TOP
+    "ᵢⱼₕₖₗ"
+  AF_BLUE_STRING_LATIN_SUBS_SMALL
+    "ₐₑₒₓₙₛᵥᵤᵣ"
+  AF_BLUE_STRING_LATIN_SUBS_SMALL_DESCENDER
+    "ᵦᵧᵨᵩₚ"
+
+  AF_BLUE_STRING_LATIN_SUPS_CAPITAL_TOP
+    "⁰³⁵⁷ᵀᴴᴱᴼ"
+  AF_BLUE_STRING_LATIN_SUPS_CAPITAL_BOTTOM
+    "⁰¹²³ᴱᴸᴼᵁ"
+  AF_BLUE_STRING_LATIN_SUPS_SMALL_F_TOP
+    "ᵇᵈᵏʰʲᶠⁱ"
+  AF_BLUE_STRING_LATIN_SUPS_SMALL
+    "ᵉᵒʳˢˣᶜᶻ"
+  AF_BLUE_STRING_LATIN_SUPS_SMALL_DESCENDER
+    "ᵖʸᵍ"
+
   // we separate the letters with spaces to avoid ligatures;
   // this is just for convenience to simplify reading
   AF_BLUE_STRING_TELUGU_TOP
@@ -346,6 +371,26 @@ AF_BLUE_STRINGSET_ENUM AF_BLUE_STRINGSETS_ARRAY AF_BLUE_STRINGSET_MAX_LEN:
     { AF_BLUE_STRING_LATIN_SMALL,           0                                 }
     { AF_BLUE_STRING_LATIN_SMALL_DESCENDER, 0                                 }
     { AF_BLUE_STRING_MAX,                   0                                 }
+
+  AF_BLUE_STRINGSET_LATB
+    { AF_BLUE_STRING_LATIN_SUBS_CAPITAL_TOP,     AF_BLUE_PROPERTY_LATIN_TOP        }
+    { AF_BLUE_STRING_LATIN_SUBS_CAPITAL_BOTTOM,  0                                 }
+    { AF_BLUE_STRING_LATIN_SUBS_SMALL_F_TOP,     AF_BLUE_PROPERTY_LATIN_TOP        }
+    { AF_BLUE_STRING_LATIN_SUBS_SMALL,           AF_BLUE_PROPERTY_LATIN_TOP      |
+                                                 AF_BLUE_PROPERTY_LATIN_X_HEIGHT   }
+    { AF_BLUE_STRING_LATIN_SUBS_SMALL,           0                                 }
+    { AF_BLUE_STRING_LATIN_SUBS_SMALL_DESCENDER, 0                                 }
+    { AF_BLUE_STRING_MAX,                        0                                 }
+
+  AF_BLUE_STRINGSET_LATP
+    { AF_BLUE_STRING_LATIN_SUPS_CAPITAL_TOP,     AF_BLUE_PROPERTY_LATIN_TOP        }
+    { AF_BLUE_STRING_LATIN_SUPS_CAPITAL_BOTTOM,  0                                 }
+    { AF_BLUE_STRING_LATIN_SUPS_SMALL_F_TOP,     AF_BLUE_PROPERTY_LATIN_TOP        }
+    { AF_BLUE_STRING_LATIN_SUPS_SMALL,           AF_BLUE_PROPERTY_LATIN_TOP      |
+                                                 AF_BLUE_PROPERTY_LATIN_X_HEIGHT   }
+    { AF_BLUE_STRING_LATIN_SUPS_SMALL,           0                                 }
+    { AF_BLUE_STRING_LATIN_SUPS_SMALL_DESCENDER, 0                                 }
+    { AF_BLUE_STRING_MAX,                        0                                 }
 
   AF_BLUE_STRINGSET_TELU
     { AF_BLUE_STRING_TELUGU_TOP,    AF_BLUE_PROPERTY_LATIN_TOP }

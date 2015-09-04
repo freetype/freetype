@@ -47,6 +47,7 @@
             af_ ## s ## _script_class,      \
             AF_SCRIPT_ ## S,                \
             af_ ## s ## _uniranges,         \
+            af_ ## s ## _nobase_uniranges,  \
             sc1, sc2, sc3 )
 
 #include "afscript.h"
@@ -189,9 +190,9 @@
 
           gindex = FT_Get_Char_Index( face, charcode );
 
-          if ( gindex != 0                             &&
-               gindex < (FT_ULong)globals->glyph_count &&
-               gstyles[gindex] == AF_STYLE_UNASSIGNED  )
+          if ( gindex != 0                                                &&
+               gindex < (FT_ULong)globals->glyph_count                    &&
+               ( gstyles[gindex] & AF_STYLE_MASK ) == AF_STYLE_UNASSIGNED )
             gstyles[gindex] = (FT_UShort)ss;
 
           for (;;)
@@ -201,9 +202,38 @@
             if ( gindex == 0 || charcode > range->last )
               break;
 
-            if ( gindex < (FT_ULong)globals->glyph_count &&
-                 gstyles[gindex] == AF_STYLE_UNASSIGNED  )
+            if ( gindex < (FT_ULong)globals->glyph_count                    &&
+                 ( gstyles[gindex] & AF_STYLE_MASK ) == AF_STYLE_UNASSIGNED )
               gstyles[gindex] = (FT_UShort)ss;
+          }
+        }
+
+        /* do the same for the script's no-base characters */
+        for ( range = script_class->script_uni_nobase_ranges;
+              range->first != 0;
+              range++ )
+        {
+          FT_ULong  charcode = range->first;
+          FT_UInt   gindex;
+
+
+          gindex = FT_Get_Char_Index( face, charcode );
+
+          if ( gindex != 0                                          &&
+               gindex < (FT_ULong)globals->glyph_count              &&
+               ( gstyles[gindex] & AF_STYLE_MASK ) == (FT_UShort)ss )
+            gstyles[gindex] |= AF_NOBASE;
+
+          for (;;)
+          {
+            charcode = FT_Get_Next_Char( face, charcode, &gindex );
+
+            if ( gindex == 0 || charcode > range->last )
+              break;
+
+            if ( gindex < (FT_ULong)globals->glyph_count              &&
+                 ( gstyles[gindex] & AF_STYLE_MASK ) == (FT_UShort)ss )
+              gstyles[gindex] |= AF_NOBASE;
           }
         }
       }
