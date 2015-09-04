@@ -1,3 +1,30 @@
+2015-09-04  Werner Lemberg  <wl@gnu.org>
+
+	[autofit] Redesign code ranges (1/2).
+
+	This patch introduces auxiliary code ranges that identify no-base
+	characters; they refer to glyphs of a script that should be hinted
+	without alignments to blue zones (mostly diacritics).
+
+	It also splits off ranges for fallback scripts that handle subscript
+	and superscript characters not covered by OpenType features.  For
+	example, this greatly helps improve the hinting of various phonetic
+	alphabets, which contain a large amount characters that look like
+	superscript glyphs.
+
+	Finally, code ranges are updated to Unicode 8.0, and enclosed
+	characters are removed in general since they normally look better if
+	they stay unhinted.
+
+	* src/autofit/afranges.c (af_latn_uniranges): Updated to Unicode
+	8.0.
+	Split off superscript-like and subscript-like glyphs into...
+
+	(af_latb_uniranges, af_latp_uniranges): ... these two new arrays.
+
+	(af_xxxx_nobase_uniranges): New arrays that hold no-base characters
+	of the corresponding character ranges.
+
 2015-09-03  Werner Lemberg  <wl@gnu.org>
 
 	[autofit] Pass glyph index to hinting function.
