@@ -801,15 +801,14 @@
 
     /* if it is <, simply insert it, ignore if == */
     if ( n >= 0 && y > y_turns[n] )
-      while ( n >= 0 )
+      do
       {
         Int  y2 = (Int)y_turns[n];
 
 
         y_turns[n] = y;
         y = y2;
-        n--;
-      }
+      } while ( --n >= 0 );
 
     if ( n < 0 )
     {
@@ -850,7 +849,7 @@
 
     if ( n > 1 && p )
     {
-      while ( n > 0 )
+      do
       {
         Int  bottom, top;
 
@@ -878,8 +877,7 @@
           return FAILURE;
 
         p = p->link;
-        n--;
-      }
+      } while ( --n );
     }
     else
       ras.fProfile = NULL;
@@ -1250,7 +1248,7 @@
 
     start_arc = arc;
 
-    while ( arc >= start_arc && e <= e2 )
+    do
     {
       ras.joint = FALSE;
 
@@ -1283,7 +1281,7 @@
         }
         arc -= degree;
       }
-    }
+    } while ( arc >= start_arc && e <= e2 );
 
   Fin:
     ras.top  = top;

@@ -1,3 +1,13 @@
+2015-09-04  Alexei Podtelezhnikov  <apodtele@gmail.com>
+
+	[raster,smooth] Microoptimizations.
+
+	* src/raster/ftraster.c (Insert_Y_Turn, Finalize_Profile_Table,
+	Beziier_Up, ): Use do-while loops.
+
+	* src/smooth/ftgrays.c (gray_render_scanline, gray_render_line,
+	gray_convert_glyph): Ditto.
+
 2015-09-04  Werner Lemberg  <wl@gnu.org>
 
 	[autofit] Redesign code ranges (2/2).

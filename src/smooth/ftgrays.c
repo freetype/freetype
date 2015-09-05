@@ -758,7 +758,7 @@ typedef ptrdiff_t  FT_PtrDist;
 
       mod -= (int)dx;
 
-      while ( ex1 != ex2 )
+      do
       {
         delta = lift;
         mod  += rem;
@@ -773,7 +773,7 @@ typedef ptrdiff_t  FT_PtrDist;
         y1        += delta;
         ex1       += incr;
         gray_set_cell( RAS_VAR_ ex1, ey );
-      }
+      } while ( ex1 != ex2 );
     }
 
     delta      = y2 - y1;
@@ -896,7 +896,7 @@ typedef ptrdiff_t  FT_PtrDist;
       FT_DIV_MOD( int, p, dy, lift, rem );
       mod -= (int)dy;
 
-      while ( ey1 != ey2 )
+      do
       {
         delta = lift;
         mod  += rem;
@@ -914,7 +914,7 @@ typedef ptrdiff_t  FT_PtrDist;
 
         ey1 += incr;
         gray_set_cell( RAS_VAR_ TRUNC( x ), ey1 );
-      }
+      } while ( ey1 != ey2 );
     }
 
     gray_render_scanline( RAS_VAR_ ey1, x,
@@ -1847,7 +1847,7 @@ typedef ptrdiff_t  FT_PtrDist;
       bands[0].max = max;
       band         = bands;
 
-      while ( band >= bands )
+      do
       {
         TPos  bottom, top, middle;
         int   error;
@@ -1923,7 +1923,7 @@ typedef ptrdiff_t  FT_PtrDist;
         band[0].min = middle;
         band[0].max = top;
         band++;
-      }
+      } while ( band >= bands );
     }
 
     if ( ras.band_shoot > 8 && ras.band_size > 16 )
