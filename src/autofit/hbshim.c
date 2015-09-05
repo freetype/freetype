@@ -509,7 +509,7 @@
   FT_Error
   af_get_coverage( AF_FaceGlobals  globals,
                    AF_StyleClass   style_class,
-                   FT_Byte*        gstyles )
+                   FT_UShort*      gstyles )
   {
     FT_UNUSED( globals );
     FT_UNUSED( style_class );
