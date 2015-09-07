@@ -1,3 +1,7 @@
+2015-09-07  Alexei Podtelezhnikov  <apodtele@gmail.com>
+
+	* src/smooth/ftgrays.c (gray_render_line): Simplify clipping.
+
 2015-09-04  Alexei Podtelezhnikov  <apodtele@gmail.com>
 
 	[raster,smooth] Microoptimizations.
