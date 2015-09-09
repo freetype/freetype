@@ -51,9 +51,19 @@ CHANGES BETWEEN 2.6 and 2.6.1
 
     - The auto-hinter's Arabic script support has been enhanced.
 
+    - Superscript-like and  subscript-like glyphs  as used  by various
+      phonetic alphabets like the IPA  are now better supported by the
+      auto-hinter.
+
     - The TrueType bytecode interpreter now runs slightly faster.
 
     - Improved support for builds with cmake.
+
+    - The  function  `FT_CeilFix'  now   always  rounds  towards  plus
+      infinity.
+
+    - The  function  `FT_FloorFix'  now always  rounds  towards  minus
+      infinity.
 
 
 ======================================================================
