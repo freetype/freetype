@@ -1,3 +1,10 @@
+2015-09-09  Wojciech Mamrak  <wmamrak@gmail.com>
+
+	* src/base/ftcalc.c (FT_CeilFix, FT_FloorFix): Normalize.
+
+	This commit makes the functions behave as expected, this is,
+	rounding towards plus or minus infinity.
+
 2015-09-07  Alexei Podtelezhnikov  <apodtele@gmail.com>
 
 	* src/smooth/ftgrays.c (gray_render_line): Simplify clipping.

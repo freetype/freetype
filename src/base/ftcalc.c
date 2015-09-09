@@ -96,8 +96,7 @@
   FT_EXPORT_DEF( FT_Fixed )
   FT_CeilFix( FT_Fixed  a )
   {
-    return a >= 0 ?   ( a + 0xFFFFL ) & ~0xFFFFL
-                  : -((-a + 0xFFFFL ) & ~0xFFFFL );
+    return ( a + 0xFFFFL ) & ~0xFFFFL;
   }
 
 
@@ -106,8 +105,7 @@
   FT_EXPORT_DEF( FT_Fixed )
   FT_FloorFix( FT_Fixed  a )
   {
-    return a >= 0 ?   a & ~0xFFFFL
-                  : -((-a) & ~0xFFFFL );
+    return a & ~0xFFFFL;
   }
 
 #ifndef FT_MSB

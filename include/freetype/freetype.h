@@ -3955,7 +3955,8 @@ FT_BEGIN_HEADER
   /*    a :: The number to be rounded.                                     */
   /*                                                                       */
   /* <Return>                                                              */
-  /*    The result of `(a + 0x8000) & -0x10000'.                           */
+  /*    `a' rounded to nearest 16.16 fixed integer, halfway cases away     */
+  /*    from zero.                                                         */
   /*                                                                       */
   FT_EXPORT( FT_Fixed )
   FT_RoundFix( FT_Fixed  a );
@@ -3974,7 +3975,7 @@ FT_BEGIN_HEADER
   /*    a :: The number for which the ceiling function is to be computed.  */
   /*                                                                       */
   /* <Return>                                                              */
-  /*    The result of `(a + 0x10000 - 1) & -0x10000'.                      */
+  /*    `a' rounded towards plus infinity.                                 */
   /*                                                                       */
   FT_EXPORT( FT_Fixed )
   FT_CeilFix( FT_Fixed  a );
@@ -3993,7 +3994,7 @@ FT_BEGIN_HEADER
   /*    a :: The number for which the floor function is to be computed.    */
   /*                                                                       */
   /* <Return>                                                              */
-  /*    The result of `a & -0x10000'.                                      */
+  /*    `a' rounded towards minus infinity.                                */
   /*                                                                       */
   FT_EXPORT( FT_Fixed )
   FT_FloorFix( FT_Fixed  a );
