@@ -1868,7 +1868,7 @@
 	(LITTLE_ENDIAN_USHORT, LITTLE_ENDIAN_UINT): New macros.
 	(T1_Read_PFM): New function.
 	(T1_Read_Metrics): New higher-level function to be used instead of
-	T1Read_AFM.
+	T1_Read_AFM.
 	Update all callers.
 
 2004-07-31  Werner Lemberg  <wl@gnu.org>
