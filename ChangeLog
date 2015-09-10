@@ -1,3 +1,7 @@
+2015-09-09  Alexei Podtelezhnikov  <apodtele@gmail.com>
+
+	* src/base/ftcalc.c (FT_RoundFix): Improve.
+
 2015-09-09  Wojciech Mamrak  <wmamrak@gmail.com>
 
 	* src/base/ftcalc.c (FT_CeilFix, FT_FloorFix): Normalize.

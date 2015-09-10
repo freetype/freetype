@@ -86,8 +86,7 @@
   FT_EXPORT_DEF( FT_Fixed )
   FT_RoundFix( FT_Fixed  a )
   {
-    return a >= 0 ?   ( a + 0x8000L ) & ~0xFFFFL
-                  : -((-a + 0x8000L ) & ~0xFFFFL );
+    return ( a + 0x8000L - ( a < 0 ) ) & ~0xFFFFL;
   }
 
 
