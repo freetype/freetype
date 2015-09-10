@@ -1,3 +1,10 @@
+2015-09-10  Werner Lemberg  <wl@gnu.org>
+
+	[docmaker] Allow `-' in bold and italic markup.
+
+	* src/tools/docmaker/sources.py (re_italic, re_bold): Adjust
+	accordingly.
+
 2015-09-09  Alexei Podtelezhnikov  <apodtele@gmail.com>
 
 	* src/base/ftcalc.c (FT_RoundFix): Improve.
