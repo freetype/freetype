@@ -414,6 +414,13 @@
           {
             charcode = (FT_Int)T1_ToInt( parser );
             T1_Skip_Spaces( parser );
+
+            /* protect against invalid charcode */
+            if ( cur == parser->root.cursor )
+            {
+              parser->root.error = FT_THROW( Unknown_File_Format );
+              return;
+            }
           }
 
           cur = parser->root.cursor;
@@ -448,10 +455,10 @@
             /* immediates-only mode we would get an infinite loop if   */
             /* we don't do anything here.                              */
             /*                                                         */
-            /* This encoding array is not valid according to the type1 */
-            /* specification (it might be an encoding for a CID type1  */
-            /* font, however), so we conclude that this font is NOT a  */
-            /* type1 font.                                             */
+            /* This encoding array is not valid according to the       */
+            /* type42 specification (it might be an encoding for a CID */
+            /* type42 font, however), so we conclude that this font is */
+            /* NOT a type42 font.                                      */
             parser->root.error = FT_THROW( Unknown_File_Format );
             return;
           }
@@ -487,7 +494,7 @@
         face->type1.encoding_type = T1_ENCODING_TYPE_ISOLATIN1;
 
       else
-        parser->root.error = FT_THROW( Ignore );
+        parser->root.error = FT_ERR( Ignore );
     }
   }
 

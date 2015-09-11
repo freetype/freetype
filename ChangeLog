@@ -1,3 +1,10 @@
+2015-09-11  Werner Lemberg  <wl@gnu.org>
+
+	[type42] Fix endless loop (#45920).
+
+	* src/type42/t42parse.c (t42_parse_encoding): Synchronize with
+	type1's `parse_encoding'.
+
 2015-09-10  Werner Lemberg  <wl@gnu.org>
 
 	[docmaker] Allow `-' in bold and italic markup.
