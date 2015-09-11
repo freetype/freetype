@@ -2037,7 +2037,11 @@
 #undef  FT_COMPONENT
 #define FT_COMPONENT  trace_raccess
 
-      FT_TRACE3(( "Try as dfont: %s ...", args->pathname ));
+#ifdef FT_DEBUG_LEVEL_TRACE
+      FT_TRACE3(( "Try as dfont: " ));
+      if ( !( args->flags & FT_OPEN_MEMORY ) )
+        FT_TRACE3(( "%s ...", args->pathname ));
+#endif
 
       error = IsMacResource( library, stream, 0, face_index, aface );
 

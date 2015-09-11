@@ -1,5 +1,14 @@
 2015-09-11  Werner Lemberg  <wl@gnu.org>
 
+	[base] Avoid crash while tracing `load_mac_face'.
+
+	Reported in Savannah bug #45919.
+
+	* src/base/ftobjs.c (load_mac_face): Honour FT_OPEN_MEMORY while
+	tracing.
+
+2015-09-11  Werner Lemberg  <wl@gnu.org>
+
 	[type42] Fix endless loop (#45920).
 
 	* src/type42/t42parse.c (t42_parse_encoding): Synchronize with
