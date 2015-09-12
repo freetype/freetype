@@ -1,5 +1,13 @@
 2015-09-11  Werner Lemberg  <wl@gnu.org>
 
+	[psaux] Fix potential buffer overflow (#45922).
+
+	* src/psaux/psobjs.c (ps_parser_skip_PS_token): If a token is
+	enclosed in balanced expressions, ensure that the cursor position
+	doesn't get larger than the current limit.
+
+2015-09-11  Werner Lemberg  <wl@gnu.org>
+
 	[base] Avoid crash while tracing `load_mac_face'.
 
 	Reported in Savannah bug #45919.

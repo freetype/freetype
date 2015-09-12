@@ -594,6 +594,9 @@
       error = FT_THROW( Invalid_File_Format );
     }
 
+    if ( cur > limit )
+      cur = limit;
+
     parser->error  = error;
     parser->cursor = cur;
   }
