@@ -320,6 +320,21 @@
 
         size_shift = FT_GET_USHORT_LE();
 
+        /* Microsoft's specification of the executable-file header format */
+        /* for `New Executable' (NE) doesn't give a limit for the         */
+        /* alignment shift count; however, in 1985, the year of the       */
+        /* specification release, only 32bit values were supported, thus  */
+        /* anything larger than 16 doesn't make sense in general, given   */
+        /* that file offsets are 16bit values, shifted by the alignment   */
+        /* shift count                                                    */
+        if ( size_shift > 16 )
+        {
+          FT_TRACE2(( "invalid alignment shift count for resource data\n" ));
+          error = FT_THROW( Invalid_File_Format );
+          goto Exit;
+        }
+
+
         for (;;)
         {
           FT_UShort  type_id, count;

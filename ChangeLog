@@ -1,5 +1,11 @@
 2015-09-13  Werner Lemberg  <wl@gnu.org>
 
+	[winfonts] Check alignment shift count for resource data (#45938).
+
+	* src/winfonts/winfnt.c (fnt_face_get_dll_font): Implement it.
+
+2015-09-13  Werner Lemberg  <wl@gnu.org>
+
 	[type1] Fix potential buffer overflow (#45923).
 
 	* src/type1/t1parse.c (T1_Get_Private_Dict): Assure `cur' doesn't
