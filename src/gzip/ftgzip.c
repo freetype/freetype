@@ -557,6 +557,9 @@
 
       stream->descriptor.pointer = NULL;
     }
+
+    if ( !stream->read )
+      FT_FREE( stream->base );
   }
 
 
@@ -584,7 +587,7 @@
     old_pos = stream->pos;
     if ( !FT_Stream_Seek( stream, stream->size - 4 ) )
     {
-      result = FT_Stream_ReadULong( stream, &error );
+      result = FT_Stream_ReadULongLE( stream, &error );
       if ( error )
         result = 0;
 
@@ -685,7 +688,7 @@
 
     stream->size  = 0x7FFFFFFFL;  /* don't know the real size! */
     stream->pos   = 0;
-    stream->base  = 0;
+    stream->base  = NULL;
     stream->read  = ft_gzip_stream_io;
     stream->close = ft_gzip_stream_close;
 

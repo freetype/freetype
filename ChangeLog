@@ -1,3 +1,15 @@
+2015-09-13  Werner Lemberg  <wl@gnu.org>
+
+	[gzip] Fix access of small compressed files (#45937).
+
+	* src/gzip/ftgzip.c (ft_gzip_stream_close): Avoid memory leak.
+
+	(ft_gzip_get_uncompressed_file): Correct byte order while reading
+	unsigned long value.  Without this change, the whole optimization of
+	accessing small files in `FT_Stream_OpenGzip' is never executed!  As
+	a consequence, access to PCF files in general (which are normally
+	small files) should be much improved now as originally intended.
+
 2015-09-11  Werner Lemberg  <wl@gnu.org>
 
 	[psaux] Fix potential buffer overflow (#45922).
