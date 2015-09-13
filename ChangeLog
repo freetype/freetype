@@ -1,3 +1,10 @@
+2015-09-14  Werner Lemberg  <wl@gnu.org>
+
+	[type1] Fix another potential buffer overflow (#45955).
+
+	* src/type1/t1parse (T1_Get_Private_Dict): Assure that check for
+	`eexec' doesn't exceed `limit'.
+
 2015-09-13  Werner Lemberg  <wl@gnu.org>
 
 	Replace `mkinstalldirs' with AC_PROG_MKDIR_P.
