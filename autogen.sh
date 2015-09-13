@@ -156,7 +156,6 @@ run aclocal -I . --force
 run $LIBTOOLIZE --force --copy --install
 run autoconf --force
 
-chmod +x mkinstalldirs
 chmod +x install-sh
 
 cd ../..

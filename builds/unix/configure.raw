@@ -71,15 +71,24 @@ AC_SUBST(EXEEXT_BUILD)
 
 
 # Since this file will be finally moved to another directory we make
-# the path of the install script absolute.  This small code snippet has
+# the path of the install scripts absolute.  This small code snippet has
 # been taken from automake's `ylwrap' script.
 
 AC_PROG_INSTALL
 case "$INSTALL" in
-/*)
+[\\/]* | ?:[\\/]*)
   ;;
-*/*)
+*[\\/]*)
   INSTALL="`pwd`/$INSTALL"
+  ;;
+esac
+
+AC_PROG_MKDIR_P
+case "$MKDIR_P" in
+[\\/]* | ?:[\\/]*)
+  ;;
+*[\\/]*)
+  MKDIR_P="`pwd`/$MKDIR_P"
   ;;
 esac
 

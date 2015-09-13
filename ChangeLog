@@ -1,5 +1,18 @@
 2015-09-13  Werner Lemberg  <wl@gnu.org>
 
+	Replace `mkinstalldirs' with AC_PROG_MKDIR_P.
+
+	* builds/unix/mkinstalldirs: Removed, no longer needed.
+
+	* builds/unix/configure.raw: Call `AC_PROG_MKDIR_P'.
+	Update pwd call for `$INSTALL'.
+
+	* builds/unix/unix-def.in (MKINSTALLDIRS): Use `@MKDIR_P@'.
+
+	* autogen.sh: Updated.
+
+2015-09-13  Werner Lemberg  <wl@gnu.org>
+
 	[winfonts] Check alignment shift count for resource data (#45938).
 
 	* src/winfonts/winfnt.c (fnt_face_get_dll_font): Implement it.
