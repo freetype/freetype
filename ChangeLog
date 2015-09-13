@@ -1,5 +1,12 @@
 2015-09-13  Werner Lemberg  <wl@gnu.org>
 
+	[type1] Fix potential buffer overflow (#45923).
+
+	* src/type1/t1parse.c (T1_Get_Private_Dict): Assure `cur' doesn't
+	point to end of file buffer.
+
+2015-09-13  Werner Lemberg  <wl@gnu.org>
+
 	[gzip] Fix access of small compressed files (#45937).
 
 	* src/gzip/ftgzip.c (ft_gzip_stream_close): Avoid memory leak.

@@ -389,6 +389,15 @@
 
       cur   = limit;
       limit = parser->base_dict + parser->base_len;
+
+      if ( cur >= limit )
+      {
+        FT_ERROR(( "T1_Get_Private_Dict:"
+                   " premature end in private dictionary\n" ));
+        error = FT_THROW( Invalid_File_Format );
+        goto Exit;
+      }
+
       goto Again;
 
       /* now determine where to write the _encrypted_ binary private  */
