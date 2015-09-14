@@ -1,3 +1,7 @@
+2015-09-14  Alexei Podtelezhnikov  <apodtele@gmail.com>
+
+	* src/base/ftcalc.c (FT_MulFix) [FT_LONG64]: Improve.
+
 2015-09-14  Werner Lemberg  <wl@gnu.org>
 
 	[type1] Fix another potential buffer overflow (#45955).
