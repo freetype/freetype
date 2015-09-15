@@ -1,5 +1,11 @@
 2015-09-15  Werner Lemberg  <wl@gnu.org>
 
+	[truetype] Fix integer type (#45965).
+
+	* src/truetype/ttobjs.c (tt_synth_sfnt_checksum): Implement it.
+
+2015-09-15  Werner Lemberg  <wl@gnu.org>
+
 	* src/pcf/pcfread.c (pcf_load_font): Fix integer overflow (#45964).
 
 2015-09-15  Werner Lemberg  <wl@gnu.org>
