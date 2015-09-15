@@ -1,5 +1,17 @@
 2015-09-15  Werner Lemberg  <wl@gnu.org>
 
+	[type1, type42] Fix memory leaks (#45966).
+
+	* src/type1/t1load.c (parse_blend_axis_types): Handle multiple axis
+	names.
+	(parse_blend_design_map): Allow only a single design map.
+	(parse_encoding): Handle multiple encoding vectors.
+
+	* src/type42/t42parse.c (t42_parse_encoding): Handle multiple
+	encoding vectors.
+
+2015-09-15  Werner Lemberg  <wl@gnu.org>
+
 	[truetype] Fix integer type (#45965).
 
 	* src/truetype/ttobjs.c (tt_synth_sfnt_checksum): Implement it.

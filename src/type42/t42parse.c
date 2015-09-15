@@ -345,6 +345,14 @@
       if ( parser->root.cursor >= limit )
         return;
 
+      /* PostScript happily allows overwriting of encoding arrays */
+      if ( encode->char_index )
+      {
+        FT_FREE( encode->char_index );
+        FT_FREE( encode->char_name );
+        T1_Release_Table( char_table );
+      }
+
       /* we use a T1_Table to store our charnames */
       loader->num_chars = encode->num_chars = count;
       if ( FT_NEW_ARRAY( encode->char_index, count )     ||
