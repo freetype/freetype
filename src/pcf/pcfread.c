@@ -1287,8 +1287,7 @@ THE SOFTWARE.
         prop = pcf_find_property( face, "POINT_SIZE" );
         if ( prop )
           /* convert from 722.7 decipoints to 72 points per inch */
-          bsize->size =
-            (FT_Pos)( ( prop->value.l * 64 * 7200 + 36135L ) / 72270L );
+          bsize->size = FT_MulDiv( prop->value.l, 64 * 7200, 72270L );
 
         prop = pcf_find_property( face, "PIXEL_SIZE" );
         if ( prop )
