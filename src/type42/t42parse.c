@@ -332,6 +332,15 @@
       else
         count = (FT_Int)T1_ToInt( parser );
 
+      /* only composite fonts (which we don't support) */
+      /* can have larger values                        */
+      if ( count > 256 )
+      {
+        FT_ERROR(( "t42_parse_encoding: invalid encoding array size\n" ));
+        parser->root.error = FT_THROW( Invalid_File_Format );
+        return;
+      }
+
       T1_Skip_Spaces( parser );
       if ( parser->root.cursor >= limit )
         return;

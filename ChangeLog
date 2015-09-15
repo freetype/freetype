@@ -1,3 +1,10 @@
+2015-09-15  Werner Lemberg  <wl@gnu.org>
+
+	[type1, type42] Check encoding array size (#45961).
+
+	* src/type1/t1load.c (parse_encoding), src/type42/t42parse.c
+	(t42_parse_encoding): Do it.
+
 2015-09-14  Alexei Podtelezhnikov  <apodtele@gmail.com>
 
 	* src/base/ftcalc.c (FT_MulFix) [FT_LONG64]: Improve.
