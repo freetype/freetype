@@ -998,14 +998,16 @@
                                   FT_UInt      start_point,
                                   FT_UInt      num_base_points )
   {
-    FT_GlyphLoader  gloader    = loader->gloader;
+    FT_GlyphLoader  gloader = loader->gloader;
     FT_Outline      current;
     FT_Bool         have_scale;
     FT_Pos          x, y;
 
 
-    current.points   = gloader->base.outline.points + num_base_points;
-    current.n_points = gloader->base.outline.n_points - num_base_points;
+    current.points   = gloader->base.outline.points +
+                         num_base_points;
+    current.n_points = gloader->base.outline.n_points -
+                         (short)num_base_points;
 
     have_scale = FT_BOOL( subglyph->flags & ( WE_HAVE_A_SCALE     |
                                               WE_HAVE_AN_XY_SCALE |

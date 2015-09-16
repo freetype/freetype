@@ -935,7 +935,7 @@
     for ( c = 0; c < outline->n_contours; c++ )
     {
       FT_Vector  in, out, anchor, shift;
-      FT_Fixed   l_in, l_out, l_anchor, l, q, d;
+      FT_Fixed   l_in, l_out, l_anchor = 0, l, q, d;
       FT_Int     i, j, k;
 
 
@@ -952,7 +952,7 @@
         {
           out.x = points[j].x - points[i].x;
           out.y = points[j].y - points[i].y;
-          l_out = FT_Vector_NormLen( &out );
+          l_out = (FT_Fixed)FT_Vector_NormLen( &out );
 
           if ( l_out == 0 )
             continue;

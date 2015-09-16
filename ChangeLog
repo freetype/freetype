@@ -1,3 +1,12 @@
+2015-09-16  Werner Lemberg  <wl@gnu.org>
+
+	Minor fixes for some clang warnings.
+
+	* src/base/ftoutln.c (FT_Outline_EmboldenXY): Cast, possible missing
+	initialization.
+
+	* src/truetype/ttgload.c (TT_Process_Composite_Component): Cast.
+
 2015-09-15  Werner Lemberg  <wl@gnu.org>
 
 	[type1, type42] Fix memory leaks (#45966).
