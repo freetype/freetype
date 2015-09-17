@@ -1,5 +1,11 @@
 2015-09-17  Werner Lemberg  <wl@gnu.org>
 
+	[pcf] Fix integer overflows (#45985).
+
+	* src/pcf/pcfread.c (pcf_load_font): Use FT_MulDiv.
+
+2015-09-17  Werner Lemberg  <wl@gnu.org>
+
 	[pcf] Use FT_ABS for some property values (#45893).
 
 	* src/pcf/pcfread.c (pcf_load_font): Take absolute values for

@@ -1290,7 +1290,7 @@ THE SOFTWARE.
           bsize->width = (FT_Short)( ( FT_ABS( prop->value.l ) + 5 ) / 10 );
         }
         else
-          bsize->width = (FT_Short)( bsize->height * 2 / 3 );
+          bsize->width = (FT_Short)FT_MulDiv( bsize->height, 2, 3 );
 
         prop = pcf_find_property( face, "POINT_SIZE" );
         if ( prop )
@@ -1339,10 +1339,12 @@ THE SOFTWARE.
         {
           bsize->y_ppem = bsize->size;
           if ( resolution_y )
-            bsize->y_ppem = bsize->y_ppem * resolution_y / 72;
+            bsize->y_ppem = FT_MulDiv( bsize->y_ppem, resolution_y, 72 );
         }
         if ( resolution_x && resolution_y )
-          bsize->x_ppem = bsize->y_ppem * resolution_x / resolution_y;
+          bsize->x_ppem = FT_MulDiv( bsize->y_ppem,
+                                     resolution_x,
+                                     resolution_y );
         else
           bsize->x_ppem = bsize->y_ppem;
       }
