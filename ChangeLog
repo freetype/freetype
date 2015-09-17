@@ -1,5 +1,12 @@
 2015-09-17  Werner Lemberg  <wl@gnu.org>
 
+	[psaux] Fix memory leak (#45986).
+
+	* src/psaux/psobjs.c (ps_parser_load_field) <T1_FIELD_TYPE_MM_BBOX>:
+	Free `temp' in case of error.
+
+2015-09-17  Werner Lemberg  <wl@gnu.org>
+
 	[psaux] Improve tracing message.
 
 	* src/psaux/psobjs.c (ps_parser_load_field) <T1_FIELD_TYPE_MM_BBOX>:

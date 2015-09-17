@@ -1241,6 +1241,8 @@
                                            : ( i == 2 ? "third"
                                                       : "fourth" ) ) ));
               error = FT_THROW( Invalid_File_Format );
+
+              FT_FREE( temp );
               goto Exit;
             }
 
