@@ -841,6 +841,15 @@
 
     /* initialize tables */
 
+    /* contrary to Type1, we disallow multiple CharStrings arrays */
+    if ( swap_table->init )
+    {
+      FT_ERROR(( "t42_parse_charstrings:"
+                 " only one CharStrings array allowed\n" ));
+      error = FT_THROW( Invalid_File_Format );
+      goto Fail;
+    }
+
     error = psaux->ps_table_funcs->init( code_table,
                                          loader->num_glyphs,
                                          memory );
