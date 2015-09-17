@@ -1,3 +1,11 @@
+2015-09-17  Werner Lemberg  <wl@gnu.org>
+
+	[pcf] Use FT_ABS for some property values (#45893).
+
+	* src/pcf/pcfread.c (pcf_load_font): Take absolute values for
+	AVERAGE_WIDTH, POINT_SIZE, PIXEL_SIZE, RESOLUTION_X, and
+	RESOLUTION_Y.  In tracing mode, add warnings.
+
 2015-09-16  Werner Lemberg  <wl@gnu.org>
 
 	Minor fixes for some clang warnings.
