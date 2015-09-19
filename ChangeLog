@@ -1,3 +1,11 @@
+2015-09-19  Werner Lemberg  <wl@gnu.org>
+
+	[pcf] Improve `FT_ABS' fix from 2015-09-17 (#45999).
+
+	* src/pcf/pcfread.c (pcf_load_font): Do first the cast to FT_Short,
+	then take the absolute value.
+	Also apply FT_ABS to `height'.
+
 2015-09-17  Werner Lemberg  <wl@gnu.org>
 
 	[type42] Fix memory leak (#45989).

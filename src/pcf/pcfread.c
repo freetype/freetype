@@ -1272,13 +1272,18 @@ THE SOFTWARE.
 
         FT_MEM_ZERO( bsize, sizeof ( FT_Bitmap_Size ) );
 
+        /* for simplicity, we take absolute values of integer properties */
+
 #if 0
         bsize->height = face->accel.maxbounds.ascent << 6;
 #endif
-        bsize->height = (FT_Short)( face->accel.fontAscent +
-                                    face->accel.fontDescent );
 
-        /* for simplicity, we take absolute values of integer properties */
+#ifdef FT_DEBUG_LEVEL_TRACE
+        if ( face->accel.fontAscent + face->accel.fontDescent < 0 )
+          FT_TRACE0(( "pcf_load_font: negative height\n" ));
+#endif
+        bsize->height = FT_ABS( (FT_Short)( face->accel.fontAscent +
+                                            face->accel.fontDescent ) );
 
         prop = pcf_find_property( face, "AVERAGE_WIDTH" );
         if ( prop )
@@ -1287,7 +1292,7 @@ THE SOFTWARE.
           if ( prop->value.l < 0 )
             FT_TRACE0(( "pcf_load_font: negative average width\n" ));
 #endif
-          bsize->width = (FT_Short)( ( FT_ABS( prop->value.l ) + 5 ) / 10 );
+          bsize->width = FT_ABS( (FT_Short)( ( prop->value.l ) + 5 ) / 10 );
         }
         else
           bsize->width = (FT_Short)FT_MulDiv( bsize->height, 2, 3 );
@@ -1312,7 +1317,7 @@ THE SOFTWARE.
           if ( prop->value.l < 0 )
             FT_TRACE0(( "pcf_load_font: negative pixel size\n" ));
 #endif
-          bsize->y_ppem = (FT_Short)FT_ABS( prop->value.l ) << 6;
+          bsize->y_ppem = FT_ABS( (FT_Short)prop->value.l ) << 6;
         }
 
         prop = pcf_find_property( face, "RESOLUTION_X" );
@@ -1322,7 +1327,7 @@ THE SOFTWARE.
           if ( prop->value.l < 0 )
             FT_TRACE0(( "pcf_load_font: negative X resolution\n" ));
 #endif
-          resolution_x = (FT_Short)FT_ABS( prop->value.l );
+          resolution_x = FT_ABS( (FT_Short)prop->value.l );
         }
 
         prop = pcf_find_property( face, "RESOLUTION_Y" );
@@ -1332,7 +1337,7 @@ THE SOFTWARE.
           if ( prop->value.l < 0 )
             FT_TRACE0(( "pcf_load_font: negative Y resolution\n" ));
 #endif
-          resolution_y = (FT_Short)FT_ABS( prop->value.l );
+          resolution_y = FT_ABS( (FT_Short)prop->value.l );
         }
 
         if ( bsize->y_ppem == 0 )
