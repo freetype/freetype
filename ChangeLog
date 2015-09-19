@@ -1,5 +1,29 @@
 2015-09-19  Werner Lemberg  <wl@gnu.org>
 
+	[sfnt] Improve handling of invalid SFNT table entries (#45987).
+
+	This patch fixes weaknesses in function `tt_face_load_font_dir'.
+
+	- It incorrectly assumed that valid tables are always at the
+	  beginning.  As a consequence, some valid tables after invalid
+	  entries (which are ignored) were never seen.
+
+	- Duplicate table entries (this is, having the same tag) were not
+	  rejected.
+
+	- The number of valid tables was sometimes too large, leading to
+	  access of invalid tables.
+
+	* src/sfnt/ttload.c (check_table_dir): Add argument to return number
+	of valid tables.
+	Add another tracing message.
+	(tt_face_load_font_dir): Only allocate table array for valid
+	entries as returned by `check_table_dir'.
+	Reject duplicate tables and adjust number of valid tables
+	accordingly.
+
+2015-09-19  Werner Lemberg  <wl@gnu.org>
+
 	[pcf] Improve `FT_ABS' fix from 2015-09-17 (#45999).
 
 	* src/pcf/pcfread.c (pcf_load_font): Do first the cast to FT_Short,
