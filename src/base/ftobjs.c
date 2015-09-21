@@ -1586,12 +1586,14 @@
       /* FT2 allocator takes signed long buffer length,
        * too large value causing overflow should be checked
        */
-      FT_TRACE4(( "                 POST fragment #%d: length=0x%08x\n",
-                  i, temp));
-      if ( 0x7FFFFFFFUL < temp || pfb_len + temp + 6 < pfb_len )
+      FT_TRACE4(( "                 POST fragment #%d: length=0x%08x"
+                  " total pfb_len=0x%08x\n",
+                  i, temp, pfb_len + temp + 6));
+      if ( FT_MAC_RFORK_MAX_LEN < temp               ||
+           FT_MAC_RFORK_MAX_LEN - temp < pfb_len + 6 )
       {
-        FT_TRACE2(( "             too long fragment length makes"
-                    " pfb_len confused: temp=0x%08x\n", temp ));
+        FT_TRACE2(( "             MacOS resource length cannot exceed"
+                    " 0x%08x\n", FT_MAC_RFORK_MAX_LEN ));
         error = FT_THROW( Invalid_Offset );
         goto Exit;
       }
@@ -1664,7 +1666,7 @@
       else
       {
         FT_TRACE3(( "    Write POST fragment #%d header (4-byte) to buffer"
-                    " 0x%p + 0x%08x\n", i, pfb_data, pfb_lenpos ));
+                    " %p + 0x%08x\n", i, pfb_data, pfb_lenpos ));
         if ( pfb_lenpos + 3 > pfb_len + 2 )
           goto Exit2;
         pfb_data[pfb_lenpos    ] = (FT_Byte)( len );
@@ -1676,7 +1678,7 @@
           break;
 
         FT_TRACE3(( "    Write POST fragment #%d header (6-byte) to buffer"
-                    " 0x%p + 0x%08x\n", i, pfb_data, pfb_pos ));
+                    " %p + 0x%08x\n", i, pfb_data, pfb_pos ));
         if ( pfb_pos + 6 > pfb_len + 2 )
           goto Exit2;
         pfb_data[pfb_pos++] = 0x80;
@@ -1696,7 +1698,7 @@
         goto Exit2;
 
       FT_TRACE3(( "    Load POST fragment #%d (%d byte) to buffer"
-                  " 0x%p + 0x%08x\n", i, rlen, pfb_data, pfb_pos ));
+                  " %p + 0x%08x\n", i, rlen, pfb_data, pfb_pos ));
       error = FT_Stream_Read( stream, (FT_Byte *)pfb_data + pfb_pos, rlen );
       if ( error )
         goto Exit2;
@@ -1774,6 +1776,8 @@
       goto Exit;
     if ( rlen == -1 )
       return FT_THROW( Cannot_Open_Resource );
+    if ( rlen > FT_MAC_RFORK_MAX_LEN )
+      return FT_THROW( Invalid_Offset );
 
     error = open_face_PS_from_sfnt_stream( library,
                                            stream,
