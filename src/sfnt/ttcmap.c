@@ -199,7 +199,7 @@
   /*****                          FORMAT 2                             *****/
   /*****                                                               *****/
   /***** This is used for certain CJK encodings that encode text in a  *****/
-  /***** mixed 8/16 bits encoding along the following lines:           *****/
+  /***** mixed 8/16 bits encoding along the following lines.           *****/
   /*****                                                               *****/
   /***** * Certain byte values correspond to an 8-bit character code   *****/
   /*****   (typically in the range 0..127 for ASCII compatibility).    *****/
@@ -209,19 +209,19 @@
   /*****   second byte of a 2-byte character).                         *****/
   /*****                                                               *****/
   /***** The following charmap lookup and iteration functions all      *****/
-  /***** assume that the value "charcode" correspond to following:     *****/
+  /***** assume that the value `charcode' fulfills the following.      *****/
   /*****                                                               *****/
-  /*****   - For one byte characters, "charcode" is simply the         *****/
+  /*****   - For one byte characters, `charcode' is simply the         *****/
   /*****     character code.                                           *****/
   /*****                                                               *****/
-  /*****   - For two byte characters, "charcode" is the 2-byte         *****/
-  /*****     character code in big endian format.  More exactly:       *****/
+  /*****   - For two byte characters, `charcode' is the 2-byte         *****/
+  /*****     character code in big endian format.  More precisely:     *****/
   /*****                                                               *****/
   /*****       (charcode >> 8)    is the first byte value              *****/
   /*****       (charcode & 0xFF)  is the second byte value             *****/
   /*****                                                               *****/
-  /***** Note that not all values of "charcode" are valid according    *****/
-  /***** to these rules, and the function moderately check the         *****/
+  /***** Note that not all values of `charcode' are valid according    *****/
+  /***** to these rules, and the function moderately checks the        *****/
   /***** arguments.                                                    *****/
   /*****                                                               *****/
   /*************************************************************************/
@@ -249,7 +249,7 @@
   /* table, i.e., it is the corresponding sub-header index multiplied      */
   /* by 8.                                                                 */
   /*                                                                       */
-  /* Each sub-header has the following format:                             */
+  /* Each sub-header has the following format.                             */
   /*                                                                       */
   /*   NAME        OFFSET      TYPE            DESCRIPTION                 */
   /*                                                                       */
@@ -264,11 +264,11 @@
   /* according to the specification.                                       */
   /*                                                                       */
   /* If a character code is contained within a given sub-header, then      */
-  /* mapping it to a glyph index is done as follows:                       */
+  /* mapping it to a glyph index is done as follows.                       */
   /*                                                                       */
   /* * The value of `offset' is read.  This is a _byte_ distance from the  */
   /*   location of the `offset' field itself into a slice of the           */
-  /*   `glyph_ids' table.  Let's call it `slice' (it is a USHORT[] too).   */
+  /*   `glyph_ids' table.  Let's call it `slice' (it is a USHORT[], too).  */
   /*                                                                       */
   /* * The value `slice[char.lo - first]' is read.  If it is 0, there is   */
   /*   no glyph for the charcode.  Otherwise, the value of `delta' is      */
@@ -326,7 +326,7 @@
     FT_ASSERT( p == table + 518 );
 
     subs      = p;
-    glyph_ids = subs + (max_subs + 1) * 8;
+    glyph_ids = subs + ( max_subs + 1 ) * 8;
     if ( glyph_ids > valid->limit )
       FT_INVALID_TOO_SHORT;
 
@@ -436,6 +436,7 @@
       }
       result = sub;
     }
+
   Exit:
     return result;
   }
@@ -475,6 +476,7 @@
           result = (FT_UInt)( (FT_Int)idx + delta ) & 0xFFFFU;
       }
     }
+
     return result;
   }
 
@@ -973,7 +975,7 @@
           /* segment if it contains only a single character.     */
           /*                                                     */
           /* We thus omit the test here, delaying it to the      */
-          /* routines which actually access the cmap.            */
+          /* routines that actually access the cmap.             */
           else if ( n != num_segs - 1                       ||
                     !( start == 0xFFFFU && end == 0xFFFFU ) )
           {
@@ -1310,7 +1312,6 @@
 
       /* if `charcode' is not in any segment, then `mid' is */
       /* the segment nearest to `charcode'                  */
-      /*                                                    */
 
       if ( charcode > end )
       {
@@ -1443,7 +1444,7 @@
   /*                                                                       */
   /*   NAME        OFFSET          TYPE             DESCRIPTION            */
   /*                                                                       */
-  /*   format       0              USHORT           must be 4              */
+  /*   format       0              USHORT           must be 6              */
   /*   length       2              USHORT           table length in bytes  */
   /*   language     4              USHORT           Mac language code      */
   /*                                                                       */
@@ -1511,6 +1512,7 @@
       p += 2 * idx;
       result = TT_PEEK_USHORT( p );
     }
+
     return result;
   }
 
@@ -1602,7 +1604,7 @@
   /*****                                                               *****/
   /***** The purpose of this format is to easily map UTF-16 text to    *****/
   /***** glyph indices.  Basically, the `char_code' must be in one of  *****/
-  /***** the following formats:                                        *****/
+  /***** the following formats.                                        *****/
   /*****                                                               *****/
   /*****   - A 16-bit value that isn't part of the Unicode Surrogates  *****/
   /*****     Area (i.e. U+D800-U+DFFF).                                *****/
@@ -1615,7 +1617,7 @@
   /***** The `is32' table embedded in the charmap indicates whether a  *****/
   /***** given 16-bit value is in the surrogates area or not.          *****/
   /*****                                                               *****/
-  /***** So, for any given `char_code', we can assert the following:   *****/
+  /***** So, for any given `char_code', we can assert the following.   *****/
   /*****                                                               *****/
   /*****   If `char_hi == 0' then we must have `is32[char_lo] == 0'.   *****/
   /*****                                                               *****/
@@ -2230,7 +2232,6 @@
 
       /* if `char_code' is not in any group, then `mid' is */
       /* the group nearest to `char_code'                  */
-      /*                                                   */
 
       if ( char_code > end )
       {
@@ -2485,7 +2486,7 @@
 
         if ( gindex )
         {
-          cmap->cur_charcode = char_code;;
+          cmap->cur_charcode = char_code;
           cmap->cur_gindex   = gindex;
           cmap->cur_group    = n;
 
