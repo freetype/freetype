@@ -3382,8 +3382,12 @@
         FT_TRACE1(( "FT_Get_Char_Index: too large charcode" ));
         FT_TRACE1(( " 0x%x is truncated\n", charcode ));
       }
+
       result = cmap->clazz->char_index( cmap, (FT_UInt32)charcode );
+      if ( result >= (FT_UInt)face->num_glyphs )
+        result = 0;
     }
+
     return result;
   }
 
@@ -3402,7 +3406,7 @@
     if ( face && face->charmap && face->num_glyphs )
     {
       gindex = FT_Get_Char_Index( face, 0 );
-      if ( gindex == 0 || gindex >= (FT_UInt)face->num_glyphs )
+      if ( gindex == 0 )
         result = FT_Get_Next_Char( face, 0, &gindex );
     }
 

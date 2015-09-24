@@ -1,3 +1,32 @@
+2015-09-23  Werner Lemberg  <wl@gnu.org>
+
+	[base, sfnt] Better checks for invalid cmaps (1/2).
+
+	* src/base/ftobjs.c (FT_Get_Char_Index): Don't return out-of-bounds
+	glyph indices.
+	(FT_Get_First_Char): Updated.
+
+	* src/sfnt/ttcmap.c (tt_cmap6_char_next): Don't return character
+	codes greater than 0xFFFF.
+
+	(tt_cmap8_char_index): Avoid integer overflow in computation of
+	glyph index.
+	(tt_cmap8_char_next): Avoid integer overflows in computation of
+	both next character code and glyph index.
+
+	(tt_cmap10_char_index): Fix unsigned integer logic.
+	(tt_cmap10_char_next): Avoid integer overflow in computation of
+	next character code.
+
+	(tt_cmap12_next): Avoid integer overflows in computation of both
+	next character code and glyph index.
+	(tt_cmap12_char_map_binary): Ditto.
+	(tt_cmap12_char_next): Simplify.
+
+	(tt_cmap13_char_map_binary): Avoid integer overflow in computation
+	of next character code.
+	(tt_cmap13_char_next): Simplify.
+
 2015-09-21  suzuki toshiya  <mpsuzuki@hiroshima-u.ac.jp>
 
 	[base] Check too long POST and sfnt resource (#45919). 

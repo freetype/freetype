@@ -51,6 +51,13 @@
 #define TT_NEXT_ULONG   FT_NEXT_ULONG
 
 
+  /* Too large glyph index return values are caught in `FT_Get_Char_Index' */
+  /* and `FT_Get_Next_Char' (the latter calls the internal `next' function */
+  /* again in this case).  To mark character code return values as invalid */
+  /* it is sufficient to set the corresponding glyph index return value to */
+  /* zero.                                                                 */
+
+
   FT_CALLBACK_DEF( FT_Error )
   tt_cmap_init( TT_CMap   cmap,
                 FT_Byte*  table )
@@ -1533,7 +1540,7 @@
 
 
     if ( char_code >= 0x10000UL )
-      goto Exit;
+      return 0;
 
     if ( char_code < start )
       char_code = start;
@@ -1549,10 +1556,13 @@
         result = char_code;
         break;
       }
+
+      if ( char_code >= 0xFFFFU )
+        return 0;
+
       char_code++;
     }
 
-  Exit:
     *pchar_code = result;
     return gindex;
   }
@@ -1772,7 +1782,10 @@
 
       if ( char_code <= end )
       {
-        result = (FT_UInt)( start_id + char_code - start );
+        if ( start_id > 0xFFFFFFFFUL - ( char_code - start ) )
+          return 0;
+
+        result = (FT_UInt)( start_id + ( char_code - start ) );
         break;
       }
     }
@@ -1785,13 +1798,18 @@
                       FT_UInt32  *pchar_code )
   {
     FT_UInt32  result     = 0;
-    FT_UInt32  char_code  = *pchar_code + 1;
+    FT_UInt32  char_code;
     FT_UInt    gindex     = 0;
     FT_Byte*   table      = cmap->data;
     FT_Byte*   p          = table + 8204;
     FT_UInt32  num_groups = TT_NEXT_ULONG( p );
     FT_UInt32  start, end, start_id;
 
+
+    if ( *pchar_code >= 0xFFFFFFFFUL )
+      return 0;
+
+    char_code = *pchar_code + 1;
 
     p = table + 8208;
 
@@ -1804,18 +1822,30 @@
       if ( char_code < start )
         char_code = start;
 
+    Again:
       if ( char_code <= end )
       {
-        gindex = (FT_UInt)( char_code - start + start_id );
-        if ( gindex != 0 )
+        /* ignore invalid group */
+        if ( start_id > 0xFFFFFFFFUL - ( char_code - start ) )
+          continue;
+
+        gindex = (FT_UInt)( start_id + ( char_code - start ) );
+
+        /* does first element of group point to `.notdef' glyph? */
+        if ( gindex == 0 )
         {
-          result = char_code;
-          goto Exit;
+          if ( char_code >= 0xFFFFFFFFUL )
+            break;
+
+          char_code++;
+          goto Again;
         }
+
+        result = char_code;
+        break;
       }
     }
 
-  Exit:
     *pchar_code = result;
     return gindex;
   }
@@ -1932,14 +1962,20 @@
     FT_Byte*   p      = table + 12;
     FT_UInt32  start  = TT_NEXT_ULONG( p );
     FT_UInt32  count  = TT_NEXT_ULONG( p );
-    FT_UInt32  idx    = (FT_ULong)( char_code - start );
+    FT_UInt32  idx;
 
+
+    if ( char_code < start )
+      return 0;
+
+    idx = char_code - start;
 
     if ( idx < count )
     {
       p     += 2 * idx;
       result = TT_PEEK_USHORT( p );
     }
+
     return result;
   }
 
@@ -1949,7 +1985,7 @@
                        FT_UInt32  *pchar_code )
   {
     FT_Byte*   table     = cmap->data;
-    FT_UInt32  char_code = *pchar_code + 1;
+    FT_UInt32  char_code;
     FT_UInt    gindex    = 0;
     FT_Byte*   p         = table + 12;
     FT_UInt32  start     = TT_NEXT_ULONG( p );
@@ -1957,10 +1993,15 @@
     FT_UInt32  idx;
 
 
+    if ( *pchar_code >= 0xFFFFFFFFUL )
+      return 0;
+
+    char_code = *pchar_code + 1;
+
     if ( char_code < start )
       char_code = start;
 
-    idx = (FT_UInt32)( char_code - start );
+    idx = char_code - start;
     p  += 2 * idx;
 
     for ( ; idx < count; idx++ )
@@ -1968,6 +2009,10 @@
       gindex = TT_NEXT_USHORT( p );
       if ( gindex != 0 )
         break;
+
+      if ( char_code >= 0xFFFFFFFFUL )
+        return 0;
+
       char_code++;
     }
 
@@ -2157,18 +2202,30 @@
       if ( char_code < start )
         char_code = start;
 
-      for ( ; char_code <= end; char_code++ )
+    Again:
+      if ( char_code <= end )
       {
-        gindex = (FT_UInt)( start_id + char_code - start );
+        /* ignore invalid group */
+        if ( start_id > 0xFFFFFFFFUL - ( char_code - start ) )
+          continue;
 
-        if ( gindex )
+        gindex = (FT_UInt)( start_id + ( char_code - start ) );
+
+        /* does first element of group point to `.notdef' glyph? */
+        if ( gindex == 0 )
         {
-          cmap->cur_charcode = char_code;;
-          cmap->cur_gindex   = gindex;
-          cmap->cur_group    = n;
+          if ( char_code >= 0xFFFFFFFFUL )
+            goto Fail;
 
-          return;
+          char_code++;
+          goto Again;
         }
+
+        cmap->cur_charcode = char_code;
+        cmap->cur_gindex   = gindex;
+        cmap->cur_group    = n;
+
+        return;
       }
     }
 
@@ -2198,7 +2255,12 @@
     end = 0xFFFFFFFFUL;
 
     if ( next )
+    {
+      if ( char_code >= 0xFFFFFFFFUL )
+        return 0;
+
       char_code++;
+    }
 
     min = 0;
     max = num_groups;
@@ -2219,8 +2281,12 @@
       else
       {
         start_id = TT_PEEK_ULONG( p );
-        gindex = (FT_UInt)( start_id + char_code - start );
 
+        /* reject invalid glyph index */
+        if ( start_id > 0xFFFFFFFFUL - ( char_code - start ) )
+          gindex = 0;
+        else
+          gindex = (FT_UInt)( start_id + ( char_code - start ) );
         break;
       }
     }
@@ -2254,8 +2320,7 @@
       else
         cmap12->cur_gindex = gindex;
 
-      if ( gindex )
-        *pchar_code = cmap12->cur_charcode;
+      *pchar_code = cmap12->cur_charcode;
     }
 
     return gindex;
@@ -2275,11 +2340,8 @@
                        FT_UInt32  *pchar_code )
   {
     TT_CMap12  cmap12 = (TT_CMap12)cmap;
-    FT_ULong   gindex;
+    FT_UInt    gindex;
 
-
-    if ( cmap12->cur_charcode >= 0xFFFFFFFFUL )
-      return 0;
 
     /* no need to search */
     if ( cmap12->valid && cmap12->cur_charcode == *pchar_code )
@@ -2287,11 +2349,8 @@
       tt_cmap12_next( cmap12 );
       if ( cmap12->valid )
       {
-        gindex = cmap12->cur_gindex;
-
-        /* XXX: check cur_charcode overflow is expected */
-        if ( gindex )
-          *pchar_code = (FT_UInt32)cmap12->cur_charcode;
+        gindex      = cmap12->cur_gindex;
+        *pchar_code = (FT_UInt32)cmap12->cur_charcode;
       }
       else
         gindex = 0;
@@ -2299,8 +2358,7 @@
     else
       gindex = tt_cmap12_char_map_binary( cmap, pchar_code, 1 );
 
-    /* XXX: check gindex overflow is expected */
-    return (FT_UInt32)gindex;
+    return gindex;
   }
 
 
@@ -2521,7 +2579,12 @@
     end = 0xFFFFFFFFUL;
 
     if ( next )
+    {
+      if ( char_code >= 0xFFFFFFFFUL )
+        return 0;
+
       char_code++;
+    }
 
     min = 0;
     max = num_groups;
@@ -2576,8 +2639,7 @@
       else
         cmap13->cur_gindex = gindex;
 
-      if ( gindex )
-        *pchar_code = cmap13->cur_charcode;
+      *pchar_code = cmap13->cur_charcode;
     }
 
     return gindex;
@@ -2600,18 +2662,14 @@
     FT_UInt    gindex;
 
 
-    if ( cmap13->cur_charcode >= 0xFFFFFFFFUL )
-      return 0;
-
     /* no need to search */
     if ( cmap13->valid && cmap13->cur_charcode == *pchar_code )
     {
       tt_cmap13_next( cmap13 );
       if ( cmap13->valid )
       {
-        gindex = cmap13->cur_gindex;
-        if ( gindex )
-          *pchar_code = cmap13->cur_charcode;
+        gindex      = cmap13->cur_gindex;
+        *pchar_code = cmap13->cur_charcode;
       }
       else
         gindex = 0;
