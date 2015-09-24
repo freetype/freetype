@@ -3372,6 +3372,13 @@ FT_BEGIN_HEADER
   /*      }                                                                */
   /*    }                                                                  */
   /*                                                                       */
+  /*    Be aware that character codes can have values up to 0xFFFFFFFF;    */
+  /*    this might happen for non-Unicode or malformed cmaps.  However,    */
+  /*    even with regular Unicode encoding, so-called `last resort fonts'  */
+  /*    (using SFNT cmap format 13, see function @FT_Get_CMap_Format)      */
+  /*    normally have entries for all Unicode characters up to 0x1FFFFF,   */
+  /*    which can cause *a lot* of iterations.                             */
+  /*                                                                       */
   /*    Note that `*agindex' is set to~0 if the charmap is empty.  The     */
   /*    result itself can be~0 in two cases: if the charmap is empty or    */
   /*    if the value~0 is the first valid character code.                  */

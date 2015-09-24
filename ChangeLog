@@ -1,5 +1,18 @@
 2015-09-23  Werner Lemberg  <wl@gnu.org>
 
+	[sfnt] Better checks for invalid cmaps (2/2) (#46019).
+
+	While the current code in `FT_Get_Next_Char' correctly rejects
+	out-of-bounds glyph indices, it can be extremely slow for malformed
+	cmaps that use 32bit values.  This commit tries to improve that.
+
+	* src/sfnt/ttcmap.c (tt_cmap8_char_next, tt_cmap12_next,
+	tt_cmap12_char_map_binary, tt_cmap13_next,
+	tt_cmap13_char_map_binary): Reject glyph indices larger than or
+	equal to the number of glyphs.
+
+2015-09-23  Werner Lemberg  <wl@gnu.org>
+
 	[base, sfnt] Better checks for invalid cmaps (1/2).
 
 	* src/base/ftobjs.c (FT_Get_Char_Index): Don't return out-of-bounds

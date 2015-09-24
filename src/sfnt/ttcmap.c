@@ -1797,6 +1797,7 @@
   tt_cmap8_char_next( TT_CMap     cmap,
                       FT_UInt32  *pchar_code )
   {
+    FT_Face    face       = cmap->cmap.charmap.face;
     FT_UInt32  result     = 0;
     FT_UInt32  char_code;
     FT_UInt    gindex     = 0;
@@ -1840,6 +1841,11 @@
           char_code++;
           goto Again;
         }
+
+        /* if `gindex' is invalid, the remaining values */
+        /* in this group are invalid, too               */
+        if ( gindex >= (FT_UInt)face->num_glyphs )
+          continue;
 
         result = char_code;
         break;
@@ -2181,6 +2187,7 @@
   static void
   tt_cmap12_next( TT_CMap12  cmap )
   {
+    FT_Face   face = cmap->cmap.cmap.charmap.face;
     FT_Byte*  p;
     FT_ULong  start, end, start_id, char_code;
     FT_ULong  n;
@@ -2220,6 +2227,11 @@
           char_code++;
           goto Again;
         }
+
+        /* if `gindex' is invalid, the remaining values */
+        /* in this group are invalid, too               */
+        if ( gindex >= (FT_UInt)face->num_glyphs )
+          continue;
 
         cmap->cur_charcode = char_code;
         cmap->cur_gindex   = gindex;
@@ -2293,6 +2305,7 @@
 
     if ( next )
     {
+      FT_Face    face   = cmap->cmap.charmap.face;
       TT_CMap12  cmap12 = (TT_CMap12)cmap;
 
 
@@ -2309,6 +2322,9 @@
       cmap12->valid        = 1;
       cmap12->cur_charcode = char_code;
       cmap12->cur_group    = mid;
+
+      if ( gindex >= (FT_UInt)face->num_glyphs )
+        gindex = 0;
 
       if ( !gindex )
       {
@@ -2517,6 +2533,7 @@
   static void
   tt_cmap13_next( TT_CMap13  cmap )
   {
+    FT_Face   face = cmap->cmap.cmap.charmap.face;
     FT_Byte*  p;
     FT_ULong  start, end, glyph_id, char_code;
     FT_ULong  n;
@@ -2542,7 +2559,7 @@
       {
         gindex = (FT_UInt)glyph_id;
 
-        if ( gindex )
+        if ( gindex && gindex < (FT_UInt)face->num_glyphs )
         {
           cmap->cur_charcode = char_code;
           cmap->cur_gindex   = gindex;
@@ -2612,6 +2629,7 @@
 
     if ( next )
     {
+      FT_Face    face   = cmap->cmap.charmap.face;
       TT_CMap13  cmap13 = (TT_CMap13)cmap;
 
 
@@ -2628,6 +2646,9 @@
       cmap13->valid        = 1;
       cmap13->cur_charcode = char_code;
       cmap13->cur_group    = mid;
+
+      if ( gindex >= (FT_UInt)face->num_glyphs )
+        gindex = 0;
 
       if ( !gindex )
       {
