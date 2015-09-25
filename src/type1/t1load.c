@@ -1541,7 +1541,7 @@
 
     PSAux_Service  psaux        = (PSAux_Service)face->psaux;
 
-    FT_Byte*       cur;
+    FT_Byte*       cur          = parser->root.cursor;
     FT_Byte*       limit        = parser->root.limit;
     FT_Int         n, num_glyphs;
     FT_Int         notdef_index = 0;
@@ -1553,6 +1553,15 @@
     {
       error = FT_THROW( Invalid_File_Format );
       goto Fail;
+    }
+
+    /* we certainly need more than 8 bytes per glyph */
+    if ( num_glyphs > ( limit - cur ) >> 3 )
+    {
+      FT_TRACE0(( "parse_charstrings: adjusting number of glyphs"
+                  " (from %d to %d)\n",
+                  num_glyphs, ( limit - cur ) >> 3 ));
+      num_glyphs = ( limit - cur ) >> 3;
     }
 
     /* some fonts like Optima-Oblique not only define the /CharStrings */

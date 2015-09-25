@@ -1,3 +1,10 @@
+2015-09-25  Werner Lemberg  <wl@gnu.org>
+
+	[type1] Protect against invalid number of glyphs (#46029).
+
+	* src/type1/t1load.c (parse_charstrings): Check number of
+	`CharStrings' dictionary entries against size of data stream.
+
 2015-09-23  Werner Lemberg  <wl@gnu.org>
 
 	[sfnt] Better checks for invalid cmaps (2/2) (#46019).
