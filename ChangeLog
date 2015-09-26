@@ -1,5 +1,12 @@
 2015-09-26  Werner Lemberg  <wl@gnu.org>
 
+	[autofit] Minor tracing improvement.
+
+	* src/autofit/aflatin.c (af_latin_metrics_scale_dim): Don't emit
+	blue zones header line if there are no blue zones.
+
+2015-09-26  Werner Lemberg  <wl@gnu.org>
+
 	[bzip2, gzip, lzw] Harmonize function signatures with prototype.
 
 	Suggested by Hin-Tak Leung.

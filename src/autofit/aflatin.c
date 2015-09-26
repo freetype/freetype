@@ -1038,8 +1038,11 @@
 
     if ( dim == AF_DIMENSION_VERT )
     {
-      FT_TRACE5(( "blue zones (style `%s')\n",
-                  af_style_names[metrics->root.style_class->style] ));
+#ifdef FT_DEBUG_LEVEL_TRACE
+      if ( axis->blue_count )
+        FT_TRACE5(( "blue zones (style `%s')\n",
+                    af_style_names[metrics->root.style_class->style] ));
+#endif
 
       /* scale the blue zones */
       for ( nn = 0; nn < axis->blue_count; nn++ )
