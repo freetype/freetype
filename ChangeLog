@@ -49,25 +49,24 @@
 
 2015-09-21  suzuki toshiya  <mpsuzuki@hiroshima-u.ac.jp>
 
-	[base] Check too long POST and sfnt resource (#45919). 
+	[base] Check too long POST and sfnt resource (#45919).
 
-	* src/base/ftbase.h (FT_MAC_RFORK_MAX_LEN): Maximum length
-	of the resource fork for Mac OS.  The resource fork larger
-	than 16 MB can be written but could not be handled
-	correctly, at least in Carbon routine.
-	See https://support.microsoft.com/en-us/kb/130437
+	* src/base/ftbase.h (FT_MAC_RFORK_MAX_LEN): Maximum length of the
+	resource fork for Mac OS.  Resource forks larger than 16 MB can be
+	written but can't be handled correctly, at least in Carbon routine.
+	See https://support.microsoft.com/en-us/kb/130437.
 
-	* src/base/ftobjs.c (Mac_Read_POST_Resource): No need `0x'
-	for `%p' formatter.
+	* src/base/ftobjs.c (Mac_Read_POST_Resource): No need to use `0x'
+	prefix for `%p' formatter.
 
-	* src/base/ftbase.c (Mac_Read_POST_Resource): Check the
-	fragment and total size of the concatenated POST resource
+	* src/base/ftbase.c (Mac_Read_POST_Resource): Check the fragment and
+	total size of the concatenated POST resource before buffer
+	allocation.
+	(Mac_Read_sfnt_Resource): Check the declared size of sfnt resource
 	before buffer allocation.
-	(Mac_Read_sfnt_Resource): Check the declared size of
-	sfnt resource before buffer allocation.
 
-	* src/base/ftmac.c (read_lwfn, FT_New_Face_From_SFNT):
-	Check the total resource size before buffer allocation.
+	* src/base/ftmac.c (read_lwfn, FT_New_Face_From_SFNT): Check the
+	total resource size before buffer allocation.
 
 2015-09-19  Werner Lemberg  <wl@gnu.org>
 
