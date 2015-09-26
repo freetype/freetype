@@ -1776,7 +1776,7 @@
       goto Exit;
     if ( rlen == -1 )
       return FT_THROW( Cannot_Open_Resource );
-    if ( rlen > FT_MAC_RFORK_MAX_LEN )
+    if ( (FT_ULong)rlen > FT_MAC_RFORK_MAX_LEN )
       return FT_THROW( Invalid_Offset );
 
     error = open_face_PS_from_sfnt_stream( library,
