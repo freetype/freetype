@@ -1,3 +1,10 @@
+2015-09-26  Hin-Tak Leung  <htl10@users.sourceforge.net>
+
+	Add new FT_LOAD_COMPUTE_METRICS load flag.
+
+	* include/freetype/freetype.h (FT_LOAD_COMPUTE_METRICS): New macro.
+	* src/truetype/ttgload.c (compute_glyph_metrics): Usage.
+
 2015-09-26  Werner Lemberg  <wl@gnu.org>
 
 	* src/base/ftobjs.c (Mac_Read_sfnt_Resource): Add cast.

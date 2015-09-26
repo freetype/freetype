@@ -1936,8 +1936,10 @@
     glyph->metrics.horiAdvance  = loader->pp2.x - loader->pp1.x;
 
     /* adjust advance width to the value contained in the hdmx table */
-    if ( !face->postscript.isFixedPitch  &&
-         IS_HINTED( loader->load_flags ) )
+    /* unless FT_LOAD_COMPUTE_METRICS is set                         */
+    if ( !face->postscript.isFixedPitch                    &&
+         IS_HINTED( loader->load_flags )                   &&
+         !( loader->load_flags & FT_LOAD_COMPUTE_METRICS ) )
     {
       FT_Byte*  widthp;
 

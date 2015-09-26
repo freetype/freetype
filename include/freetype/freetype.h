@@ -2743,6 +2743,16 @@ FT_BEGIN_HEADER
    *     bitmaps transparently.  Those bitmaps will be in the
    *     @FT_PIXEL_MODE_GRAY format.
    *
+   *   FT_LOAD_COMPUTE_METRICS ::
+   *     This flag sets computing glyph metrics without the use of bundled
+   *     metrics tables (for example, the `hdmx' table in TrueType fonts).
+   *     Well-behaving fonts have optimized bundled metrics and these should
+   *     be used.  This flag is mainly used by font validating or font
+   *     editing applications, which need to ignore, verify, or edit those
+   *     tables.
+   *
+   *     Currently, this flag is only implemented for TrueType fonts.
+   *
    *   FT_LOAD_CROP_BITMAP ::
    *     Ignored.  Deprecated.
    *
@@ -2788,6 +2798,7 @@ FT_BEGIN_HEADER
 #define FT_LOAD_NO_AUTOHINT                  ( 1L << 15 )
   /* Bits 16..19 are used by `FT_LOAD_TARGET_' */
 #define FT_LOAD_COLOR                        ( 1L << 20 )
+#define FT_LOAD_COMPUTE_METRICS              ( 1L << 21 )
 
   /* */
 
