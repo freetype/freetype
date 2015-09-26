@@ -1,3 +1,12 @@
+2015-09-26  Werner Lemberg  <wl@gnu.org>
+
+	[bzip2, gzip, lzw] Harmonize function signatures with prototype.
+
+	Suggested by Hin-Tak Leung.
+
+	* src/bzip2/ftbzip2.c (ft_bzip2_stream_io), src/gzip/ftgzip.c
+	(ft_gzip_stream_io), src/lzw/ftlzw.c (ft_lzw_stream_io): Do it.
+
 2015-09-26  Hin-Tak Leung  <htl10@users.sourceforge.net>
 
 	Add new FT_LOAD_COMPUTE_METRICS load flag.

@@ -437,16 +437,16 @@
   }
 
 
-  static FT_ULong
-  ft_bzip2_stream_io( FT_Stream  stream,
-                      FT_ULong   pos,
-                      FT_Byte*   buffer,
-                      FT_ULong   count )
+  static unsigned long
+  ft_bzip2_stream_io( FT_Stream       stream,
+                      unsigned long   offset,
+                      unsigned char*  buffer,
+                      unsigned long   count )
   {
     FT_BZip2File  zip = (FT_BZip2File)stream->descriptor.pointer;
 
 
-    return ft_bzip2_file_io( zip, pos, buffer, count );
+    return ft_bzip2_file_io( zip, offset, buffer, count );
   }
 
 

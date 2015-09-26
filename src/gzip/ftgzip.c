@@ -563,16 +563,16 @@
   }
 
 
-  static FT_ULong
-  ft_gzip_stream_io( FT_Stream  stream,
-                     FT_ULong   pos,
-                     FT_Byte*   buffer,
-                     FT_ULong   count )
+  static unsigned long
+  ft_gzip_stream_io( FT_Stream       stream,
+                     unsigned long   offset,
+                     unsigned char*  buffer,
+                     unsigned long   count )
   {
     FT_GZipFile  zip = (FT_GZipFile)stream->descriptor.pointer;
 
 
-    return ft_gzip_file_io( zip, pos, buffer, count );
+    return ft_gzip_file_io( zip, offset, buffer, count );
   }
 
 
