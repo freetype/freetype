@@ -317,7 +317,6 @@ typedef ptrdiff_t  FT_PtrDist;
 #undef SCALED
 
 #define ONE_PIXEL       ( 1L << PIXEL_BITS )
-#define PIXEL_MASK      ( -1L << PIXEL_BITS )
 #define TRUNC( x )      ( (TCoord)( (x) >> PIXEL_BITS ) )
 #define SUBPIXELS( x )  ( (TPos)(x) << PIXEL_BITS )
 #define FLOOR( x )      ( (x) & -ONE_PIXEL )
