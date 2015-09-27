@@ -1516,8 +1516,10 @@
       goto Exit;
 
     error = FT_Stream_Read( stream, (FT_Byte *)sfnt_ps, length );
-    if ( error )
+    if ( error ) {
+      FT_FREE( sfnt_ps );
       goto Exit;
+    }
 
     error = open_face_from_buffer( library,
                                    sfnt_ps,
@@ -1794,8 +1796,10 @@
     if ( FT_ALLOC( sfnt_data, rlen ) )
       return error;
     error = FT_Stream_Read( stream, (FT_Byte *)sfnt_data, (FT_ULong)rlen );
-    if ( error )
+    if ( error ) {
+      FT_FREE( sfnt_data );
       goto Exit;
+    }
 
     is_cff = rlen > 4 && !ft_memcmp( sfnt_data, "OTTO", 4 );
     error = open_face_from_buffer( library,

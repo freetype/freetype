@@ -1,4 +1,18 @@
 2015-09-27  suzuki toshiya  <mpsuzuki@hiroshima-u.ac.jp>
+ 
+	[base] Fix a leak by broken sfnt-PS or resource fork (#46028).
+
+	open_face_from_buffer() frees passed buffer if valid font
+	is not found.  But if copying to the buffer is failed,
+	the allocated buffer should be freed within the caller.
+
+	* src/base/ftobjs.c (open_face_PS_from_sfnt_stream): Free
+	the buffer `sfnt_ps' if an error caused before calling
+	open_face_from_buffer().
+	(Mac_Read_sfnt_Resource): Free the buffer `sfnt_data' if
+	an error caused before calling open_face_from_buffer();
+
+2015-09-27  suzuki toshiya  <mpsuzuki@hiroshima-u.ac.jp>
 
 	[mac] Fix buffer size calculation for LWFN font.
 
