@@ -1,3 +1,10 @@
+2015-09-27  suzuki toshiya  <mpsuzuki@hiroshima-u.ac.jp>
+
+	[mac] Fix buffer size calculation for LWFN font.
+
+	* src/base/ftmac.c (read_lwfn): Cast post_size to FT_ULong
+	to prevent confused copy by too large chunk size.
+
 2015-09-26  Alexei Podtelezhnikov  <apodtele@gmail.com>
 
 	* src/smooth/ftgrays.c (PIXEL_MASK): Remove unused macro.

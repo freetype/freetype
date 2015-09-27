@@ -618,7 +618,7 @@
           total_size += 6; /* code + 4 bytes chunk length */
       }
 
-      total_size += GetHandleSize( post_data ) - 2;
+      total_size += (FT_ULong)GetHandleSize( post_data ) - 2;
       last_code = code;
 
       /* detect resource fork overflow */
