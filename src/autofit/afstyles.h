@@ -108,6 +108,13 @@
          AF_BLUE_STRINGSET_HEBR,
          AF_COVERAGE_DEFAULT )
 
+  STYLE( lao_dflt, LAO_DFLT,
+         "Lao default style",
+         AF_WRITING_SYSTEM_LATIN,
+         AF_SCRIPT_LAO,
+         AF_BLUE_STRINGSET_LAO,
+         AF_COVERAGE_DEFAULT )
+
   META_STYLE_LATIN( latn, LATN, "Latin" )
 
   STYLE( latb_dflt, LATB_DFLT,

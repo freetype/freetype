@@ -64,6 +64,16 @@
     '\0',
     '\xD7', '\xA7', '\xD7', '\x9A', '\xD7', '\x9F', '\xD7', '\xA3', '\xD7', '\xA5',  /* קךןףץ */
     '\0',
+    '\xE0', '\xBA', '\xB2', '\xE0', '\xBA', '\x94', '\xE0', '\xBA', '\xAD', '\xE0', '\xBA', '\xA1', '\xE0', '\xBA', '\xA5', '\xE0', '\xBA', '\xA7', '\xE0', '\xBA', '\xA3', '\xE0', '\xBA', '\x87',  /* າ ດ ອ ມ ລ ວ ຣ ງ */
+    '\0',
+    '\xE0', '\xBA', '\xB2', '\xE0', '\xBA', '\xAD', '\xE0', '\xBA', '\x9A', '\xE0', '\xBA', '\x8D', '\xE0', '\xBA', '\xA3', '\xE0', '\xBA', '\xAE', '\xE0', '\xBA', '\xA7', '\xE0', '\xBA', '\xA2',  /* າ ອ ບ ຍ ຣ ຮ ວ ຢ */
+    '\0',
+    '\xE0', '\xBA', '\x9B', '\xE0', '\xBA', '\xA2', '\xE0', '\xBA', '\x9F', '\xE0', '\xBA', '\x9D',  /* ປ ຢ ຟ ຝ */
+    '\0',
+    '\xE0', '\xBB', '\x82', '\xE0', '\xBB', '\x84', '\xE0', '\xBB', '\x83',  /* ໂ ໄ ໃ */
+    '\0',
+    '\xE0', '\xBA', '\x87', '\xE0', '\xBA', '\x8A', '\xE0', '\xBA', '\x96', '\xE0', '\xBA', '\xBD', '\xE0', '\xBB', '\x86', '\xE0', '\xBA', '\xAF',  /* ງ ຊ ຖ ຽ ໆ ຯ */
+    '\0',
     'T', 'H', 'E', 'Z', 'O', 'C', 'Q', 'S',  /* THEZOCQS */
     '\0',
     'H', 'E', 'Z', 'L', 'O', 'C', 'U', 'S',  /* HEZLOCUS */
@@ -193,6 +203,13 @@
     { AF_BLUE_STRING_HEBREW_BOTTOM,    0                             },
     { AF_BLUE_STRING_HEBREW_DESCENDER, 0                             },
     { AF_BLUE_STRING_MAX,              0                             },
+    { AF_BLUE_STRING_LAO_TOP,             AF_BLUE_PROPERTY_LATIN_TOP      |
+                                          AF_BLUE_PROPERTY_LATIN_X_HEIGHT   },
+    { AF_BLUE_STRING_LAO_BOTTOM,          0                                 },
+    { AF_BLUE_STRING_LAO_ASCENDER,        AF_BLUE_PROPERTY_LATIN_TOP        },
+    { AF_BLUE_STRING_LAO_LARGE_ASCENDER,  AF_BLUE_PROPERTY_LATIN_TOP        },
+    { AF_BLUE_STRING_LAO_DESCENDER,       0                                 },
+    { AF_BLUE_STRING_MAX,                 0                                 },
     { AF_BLUE_STRING_LATIN_CAPITAL_TOP,     AF_BLUE_PROPERTY_LATIN_TOP        },
     { AF_BLUE_STRING_LATIN_CAPITAL_BOTTOM,  0                                 },
     { AF_BLUE_STRING_LATIN_SMALL_F_TOP,     AF_BLUE_PROPERTY_LATIN_TOP        },

@@ -55,6 +55,12 @@
           HB_SCRIPT_HEBREW,
           0x5DD, 0x0, 0x0 ) /* ם */
 
+  /* only digit zero has a simple shape in the Lao script */
+  SCRIPT( lao, LAO,
+          "Lao",
+          HB_SCRIPT_LAO,
+          0xED0, 0x0, 0x0 ) /* ໐ */
+
   SCRIPT( latn, LATN,
           "Latin",
           HB_SCRIPT_LATIN,

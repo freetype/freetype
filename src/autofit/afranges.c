@@ -180,6 +180,21 @@
   };
 
 
+  const AF_Script_UniRangeRec  af_lao_uniranges[] =
+  {
+    AF_UNIRANGE_REC(  0x0E80UL,  0x0EFFUL ),  /* Lao */
+    AF_UNIRANGE_REC(       0UL,       0UL )
+  };
+
+  const AF_Script_UniRangeRec  af_lao_nobase_uniranges[] =
+  {
+    AF_UNIRANGE_REC(  0x0EB1UL,  0x0EB1UL ),
+    AF_UNIRANGE_REC(  0x0EB4UL,  0x0EBCUL ),
+    AF_UNIRANGE_REC(  0x0EC8UL,  0x0ECDUL ),
+    AF_UNIRANGE_REC(       0UL,       0UL )
+  };
+
+
   const AF_Script_UniRangeRec  af_latn_uniranges[] =
   {
     AF_UNIRANGE_REC(  0x0020UL,  0x007FUL ),  /* Basic Latin (no control chars)         */
