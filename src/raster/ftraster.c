@@ -2114,7 +2114,7 @@
     while ( current )
     {
       current->X       = *current->offset;
-      current->offset += current->flags & Flow_Up ? 1 : -1;
+      current->offset += ( current->flags & Flow_Up ) ? 1 : -1;
       current->height--;
       current = current->link;
     }
