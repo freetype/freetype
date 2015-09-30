@@ -47,7 +47,7 @@
             af_ ## s ## _script_class,      \
             AF_SCRIPT_ ## S,                \
             af_ ## s ## _uniranges,         \
-            af_ ## s ## _nobase_uniranges,  \
+            af_ ## s ## _nonbase_uniranges, \
             sc1, sc2, sc3 )
 
 #include "afscript.h"
@@ -208,8 +208,8 @@
           }
         }
 
-        /* do the same for the script's no-base characters */
-        for ( range = script_class->script_uni_nobase_ranges;
+        /* do the same for the script's non-base characters */
+        for ( range = script_class->script_uni_nonbase_ranges;
               range->first != 0;
               range++ )
         {
@@ -222,7 +222,7 @@
           if ( gindex != 0                                          &&
                gindex < (FT_ULong)globals->glyph_count              &&
                ( gstyles[gindex] & AF_STYLE_MASK ) == (FT_UShort)ss )
-            gstyles[gindex] |= AF_NOBASE;
+            gstyles[gindex] |= AF_NONBASE;
 
           for (;;)
           {
@@ -233,7 +233,7 @@
 
             if ( gindex < (FT_ULong)globals->glyph_count              &&
                  ( gstyles[gindex] & AF_STYLE_MASK ) == (FT_UShort)ss )
-              gstyles[gindex] |= AF_NOBASE;
+              gstyles[gindex] |= AF_NONBASE;
           }
         }
       }

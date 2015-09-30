@@ -2883,7 +2883,7 @@
         goto Exit;
 
       /* apply blue zones to base characters only */
-      if ( !( metrics->root.globals->glyph_styles[glyph_index] & AF_NOBASE ) )
+      if ( !( metrics->root.globals->glyph_styles[glyph_index] & AF_NONBASE ) )
         af_latin_hints_compute_blue_edges( hints, metrics );
     }
 

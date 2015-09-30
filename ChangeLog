@@ -1,5 +1,11 @@
 2015-09-30  Werner Lemberg  <wl@gnu.org>
 
+	[autofit] Replace `no-base' with `non-base'.
+
+	* src/autofit/*: Do it.
+
+2015-09-30  Werner Lemberg  <wl@gnu.org>
+
 	[sfnt] Rewrite `tt_cmap4_char_map_linear' (#46078).
 
 	* src/sfnt/ttcmap.c (tt_cmap4_char_map_linear): Add code to better

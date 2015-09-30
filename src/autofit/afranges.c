@@ -48,12 +48,12 @@
   /*     Right now, they are quickly derived by visual inspection. */
   /*     I can imagine that fine-tuning is necessary.              */
 
-  /* for the auto-hinter, a `no-base character' is something that should */
-  /* not be affected by blue zones, regardless of whether this is a      */
-  /* spacing or no-spacing glyph                                         */
+  /* for the auto-hinter, a `non-base character' is something that should */
+  /* not be affected by blue zones, regardless of whether this is a       */
+  /* spacing or no-spacing glyph                                          */
 
-  /* the `ta_xxxx_nobase_uniranges' ranges must be strict subsets */
-  /* of the corresponding `ta_xxxx_uniranges' ranges              */
+  /* the `ta_xxxx_nonbase_uniranges' ranges must be strict subsets */
+  /* of the corresponding `ta_xxxx_uniranges' ranges               */
 
 
   const AF_Script_UniRangeRec  af_arab_uniranges[] =
@@ -67,7 +67,7 @@
     AF_UNIRANGE_REC(       0UL,       0UL )
   };
 
-  const AF_Script_UniRangeRec  af_arab_nobase_uniranges[] =
+  const AF_Script_UniRangeRec  af_arab_nonbase_uniranges[] =
   {
     AF_UNIRANGE_REC(  0x0600UL,  0x0605UL ),
     AF_UNIRANGE_REC(  0x0610UL,  0x061AUL ),
@@ -100,7 +100,7 @@
     AF_UNIRANGE_REC(       0UL,       0UL )
   };
 
-  const AF_Script_UniRangeRec  af_cyrl_nobase_uniranges[] =
+  const AF_Script_UniRangeRec  af_cyrl_nonbase_uniranges[] =
   {
     AF_UNIRANGE_REC(  0x0483UL,  0x0489UL ),
     AF_UNIRANGE_REC(  0x2DE0UL,  0x2DFFUL ),
@@ -128,7 +128,7 @@
     AF_UNIRANGE_REC(       0UL,       0UL )
   };
 
-  const AF_Script_UniRangeRec  af_deva_nobase_uniranges[] =
+  const AF_Script_UniRangeRec  af_deva_nonbase_uniranges[] =
   {
     AF_UNIRANGE_REC(  0x0900UL,  0x0902UL ),
     AF_UNIRANGE_REC(  0x093AUL,  0x093AUL ),
@@ -149,7 +149,7 @@
     AF_UNIRANGE_REC(       0UL,       0UL )
   };
 
-  const AF_Script_UniRangeRec  af_grek_nobase_uniranges[] =
+  const AF_Script_UniRangeRec  af_grek_nonbase_uniranges[] =
   {
     AF_UNIRANGE_REC(  0x037AUL,  0x037AUL ),
     AF_UNIRANGE_REC(  0x0384UL,  0x0385UL ),
@@ -169,7 +169,7 @@
     AF_UNIRANGE_REC(       0UL,       0UL )
   };
 
-  const AF_Script_UniRangeRec  af_hebr_nobase_uniranges[] =
+  const AF_Script_UniRangeRec  af_hebr_nonbase_uniranges[] =
   {
     AF_UNIRANGE_REC(  0x0591UL,  0x05BFUL ),
     AF_UNIRANGE_REC(  0x05C1UL,  0x05C2UL ),
@@ -186,7 +186,7 @@
     AF_UNIRANGE_REC(       0UL,       0UL )
   };
 
-  const AF_Script_UniRangeRec  af_lao_nobase_uniranges[] =
+  const AF_Script_UniRangeRec  af_lao_nonbase_uniranges[] =
   {
     AF_UNIRANGE_REC(  0x0EB1UL,  0x0EB1UL ),
     AF_UNIRANGE_REC(  0x0EB4UL,  0x0EBCUL ),
@@ -232,7 +232,7 @@
     AF_UNIRANGE_REC(       0UL,       0UL )
   };
 
-  const AF_Script_UniRangeRec  af_latn_nobase_uniranges[] =
+  const AF_Script_UniRangeRec  af_latn_nonbase_uniranges[] =
   {
     AF_UNIRANGE_REC(  0x005EUL,  0x0060UL ),
     AF_UNIRANGE_REC(  0x007EUL,  0x007EUL ),
@@ -262,7 +262,7 @@
     AF_UNIRANGE_REC(       0UL,       0UL )
   };
 
-  const AF_Script_UniRangeRec af_latb_nobase_uniranges[] =
+  const AF_Script_UniRangeRec af_latb_nonbase_uniranges[] =
   {
     AF_UNIRANGE_REC( 0UL, 0UL )
   };
@@ -286,7 +286,7 @@
     AF_UNIRANGE_REC(       0UL,       0UL )
   };
 
-  const AF_Script_UniRangeRec af_latp_nobase_uniranges[] =
+  const AF_Script_UniRangeRec af_latp_nonbase_uniranges[] =
   {
     AF_UNIRANGE_REC( 0UL, 0UL )
   };
@@ -297,7 +297,7 @@
     AF_UNIRANGE_REC( 0UL, 0UL )
   };
 
-  const AF_Script_UniRangeRec  af_none_nobase_uniranges[] =
+  const AF_Script_UniRangeRec  af_none_nonbase_uniranges[] =
   {
     AF_UNIRANGE_REC( 0UL, 0UL )
   };
@@ -309,7 +309,7 @@
     AF_UNIRANGE_REC(       0UL,       0UL )
   };
 
-  const AF_Script_UniRangeRec  af_telu_nobase_uniranges[] =
+  const AF_Script_UniRangeRec  af_telu_nonbase_uniranges[] =
   {
     AF_UNIRANGE_REC(  0x0C00UL,  0x0C00UL ),
     AF_UNIRANGE_REC(  0x0C3EUL,  0x0C40UL ),
@@ -325,7 +325,7 @@
     AF_UNIRANGE_REC(       0UL,       0UL )
   };
 
-  const AF_Script_UniRangeRec  af_thai_nobase_uniranges[] =
+  const AF_Script_UniRangeRec  af_thai_nonbase_uniranges[] =
   {
     AF_UNIRANGE_REC(  0x0E31UL,  0x0E31UL ),
     AF_UNIRANGE_REC(  0x0E34UL,  0x0E3AUL ),
@@ -342,7 +342,7 @@
     AF_UNIRANGE_REC(       0UL,       0UL )
   };
 
-  const AF_Script_UniRangeRec  af_beng_nobase_uniranges[] =
+  const AF_Script_UniRangeRec  af_beng_nonbase_uniranges[] =
   {
     AF_UNIRANGE_REC(  0x0981UL,  0x0981UL ),
     AF_UNIRANGE_REC(  0x09BCUL,  0x09BCUL ),
@@ -359,7 +359,7 @@
     AF_UNIRANGE_REC(       0UL,       0UL )
   };
 
-  const AF_Script_UniRangeRec  af_gujr_nobase_uniranges[] =
+  const AF_Script_UniRangeRec  af_gujr_nonbase_uniranges[] =
   {
     AF_UNIRANGE_REC(  0x0A81UL,  0x0A82UL ),
     AF_UNIRANGE_REC(  0x0ABCUL,  0x0ABCUL ),
@@ -376,7 +376,7 @@
     AF_UNIRANGE_REC(       0UL,       0UL )
   };
 
-  const AF_Script_UniRangeRec  af_guru_nobase_uniranges[] =
+  const AF_Script_UniRangeRec  af_guru_nonbase_uniranges[] =
   {
     AF_UNIRANGE_REC(  0x0A01UL,  0x0A02UL ),
     AF_UNIRANGE_REC(  0x0A3CUL,  0x0A3EUL ),
@@ -393,7 +393,7 @@
     AF_UNIRANGE_REC(       0UL,       0UL )
   };
 
-  const AF_Script_UniRangeRec  af_knda_nobase_uniranges[] =
+  const AF_Script_UniRangeRec  af_knda_nonbase_uniranges[] =
   {
     AF_UNIRANGE_REC(  0x0C81UL,  0x0C81UL ),
     AF_UNIRANGE_REC(  0x0CBCUL,  0x0CBCUL ),
@@ -411,7 +411,7 @@
     AF_UNIRANGE_REC(       0UL,       0UL )
   };
 
-  const AF_Script_UniRangeRec  af_limb_nobase_uniranges[] =
+  const AF_Script_UniRangeRec  af_limb_nonbase_uniranges[] =
   {
     AF_UNIRANGE_REC(  0x1920UL,  0x1922UL ),
     AF_UNIRANGE_REC(  0x1927UL,  0x1934UL ),
@@ -426,7 +426,7 @@
     AF_UNIRANGE_REC(       0UL,       0UL )
   };
 
-  const AF_Script_UniRangeRec  af_mlym_nobase_uniranges[] =
+  const AF_Script_UniRangeRec  af_mlym_nonbase_uniranges[] =
   {
     AF_UNIRANGE_REC(  0x0D01UL,  0x0D01UL ),
     AF_UNIRANGE_REC(  0x0D4DUL,  0x0D4EUL ),
@@ -441,7 +441,7 @@
     AF_UNIRANGE_REC(       0UL,       0UL )
   };
 
-  const AF_Script_UniRangeRec  af_orya_nobase_uniranges[] =
+  const AF_Script_UniRangeRec  af_orya_nonbase_uniranges[] =
   {
     AF_UNIRANGE_REC(  0x0B01UL,  0x0B02UL ),
     AF_UNIRANGE_REC(  0x0B3CUL,  0x0B3CUL ),
@@ -459,7 +459,7 @@
     AF_UNIRANGE_REC(       0UL,       0UL )
   };
 
-  const AF_Script_UniRangeRec  af_sinh_nobase_uniranges[] =
+  const AF_Script_UniRangeRec  af_sinh_nonbase_uniranges[] =
   {
     AF_UNIRANGE_REC(  0x0DCAUL,  0x0DCAUL ),
     AF_UNIRANGE_REC(  0x0DD2UL,  0x0DD6UL ),
@@ -474,7 +474,7 @@
     AF_UNIRANGE_REC(       0UL,       0UL )
   };
 
-  const AF_Script_UniRangeRec  af_sund_nobase_uniranges[] =
+  const AF_Script_UniRangeRec  af_sund_nonbase_uniranges[] =
   {
     AF_UNIRANGE_REC(  0x1B80UL,  0x1B82UL ),
     AF_UNIRANGE_REC(  0x1BA1UL,  0x1BADUL ),
@@ -488,7 +488,7 @@
     AF_UNIRANGE_REC(       0UL,       0UL )
   };
 
-  const AF_Script_UniRangeRec  af_sylo_nobase_uniranges[] =
+  const AF_Script_UniRangeRec  af_sylo_nonbase_uniranges[] =
   {
     AF_UNIRANGE_REC(  0xA802UL,  0xA802UL ),
     AF_UNIRANGE_REC(  0xA806UL,  0xA806UL ),
@@ -504,7 +504,7 @@
     AF_UNIRANGE_REC(       0UL,       0UL )
   };
 
-  const AF_Script_UniRangeRec  af_taml_nobase_uniranges[] =
+  const AF_Script_UniRangeRec  af_taml_nonbase_uniranges[] =
   {
     AF_UNIRANGE_REC(  0x0B82UL,  0x0B82UL ),
     AF_UNIRANGE_REC(  0x0BC0UL,  0x0BC2UL ),
@@ -519,7 +519,7 @@
     AF_UNIRANGE_REC(       0UL,       0UL )
   };
 
-  const AF_Script_UniRangeRec  af_tibt_nobase_uniranges[] =
+  const AF_Script_UniRangeRec  af_tibt_nonbase_uniranges[] =
   {
     AF_UNIRANGE_REC(  0x0F18UL,  0x0F19UL ),
     AF_UNIRANGE_REC(  0x0F35UL,  0x0F35UL ),
@@ -574,7 +574,7 @@
     AF_UNIRANGE_REC(       0UL,       0UL )
   };
 
-  const AF_Script_UniRangeRec  af_hani_nobase_uniranges[] =
+  const AF_Script_UniRangeRec  af_hani_nonbase_uniranges[] =
   {
     AF_UNIRANGE_REC(  0x302AUL,  0x302FUL ),
     AF_UNIRANGE_REC(  0x3190UL,  0x319FUL ),
