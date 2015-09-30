@@ -1,5 +1,14 @@
 2015-09-30  Werner Lemberg  <wl@gnu.org>
 
+	[sfnt] Rewrite `tt_cmap4_char_map_linear' (#46078).
+
+	* src/sfnt/ttcmap.c (tt_cmap4_char_map_linear): Add code to better
+	skip invalid segments.
+	If searching the next character, provide a more efficient logic to
+	speed up the code.
+
+2015-09-30  Werner Lemberg  <wl@gnu.org>
+
 	[truetype] Adjust number of glyphs for malformed `loca' tables.
 
 	* src/truetype/ttpload.c (tt_face_load_loca): Implement it.
