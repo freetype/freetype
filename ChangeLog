@@ -1,5 +1,10 @@
 2015-10-01  Werner Lemberg  <wl@gnu.org>
 
+	* src/autofit/afranges.c (af_deva_nonbase_uniranges): Fix ranges.
+	They should be a subset of `af_deva_uniranges'.
+
+2015-10-01  Werner Lemberg  <wl@gnu.org>
+
 	[sfnt] Make `tt_cmap4_char_map_linear' faster (#46078).
 
 	* src/sfnt/ttcmap.c (tt_cmap4_char_map_linear): Use inner loop to
