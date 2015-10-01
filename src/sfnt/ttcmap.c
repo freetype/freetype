@@ -1130,18 +1130,16 @@
             /* we have an invalid glyph index; if there is an overflow, */
             /* we can adjust `charcode', otherwise the whole segment is */
             /* invalid                                                  */
+            gindex = 0;
+
             if ( (FT_Int)charcode + delta < 0 &&
                  (FT_Int)end + delta >= 0     )
-            {
               charcode = (FT_UInt)( -delta );
-              gindex   = 0;
-            }
+
             else if ( (FT_Int)charcode + delta < 0x10000L &&
                       (FT_Int)end + delta >= 0x10000L     )
-            {
               charcode = (FT_UInt)( 0x10000L - delta );
-              gindex   = 0;
-            }
+
             else
               continue;
           }
