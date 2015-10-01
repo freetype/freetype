@@ -1,3 +1,10 @@
+2015-10-01  Werner Lemberg  <wl@gnu.org>
+
+	[sfnt] Make `tt_cmap4_char_map_linear' faster (#46078).
+
+	* src/sfnt/ttcmap.c (tt_cmap4_char_map_linear): Use inner loop to
+	reject too large glyph indices.
+
 2015-09-30  Alexei Podtelezhnikov  <apodtele@gmail.com>
 
 	[smooth] Clean up worker.

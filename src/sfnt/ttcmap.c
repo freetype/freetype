@@ -1115,7 +1115,11 @@
 
           gindex = TT_PEEK_USHORT( r );
           if ( gindex )
+          {
             gindex = (FT_UInt)( (FT_Int)gindex + delta ) & 0xFFFFU;
+            if ( gindex >= (FT_UInt)face->root.num_glyphs )
+              gindex = 0;
+          }
         }
         else
         {
