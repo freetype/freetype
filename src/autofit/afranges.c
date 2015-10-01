@@ -110,19 +110,19 @@
   };
 
 
-  /* there are some characters in the Devanagari Unicode block that are    */
+  /* There are some characters in the Devanagari Unicode block that are    */
   /* generic to Indic scripts; we omit them so that their presence doesn't */
-  /* trigger Devanagari                                                    */
+  /* trigger Devanagari.                                                   */
 
   const AF_Script_UniRangeRec  af_deva_uniranges[] =
   {
     AF_UNIRANGE_REC(  0x0900UL,  0x093BUL ),  /* Devanagari          */
     /* omitting U+093C nukta */
-    AF_UNIRANGE_REC(  0x093DUL,  0x0950UL ),
+    AF_UNIRANGE_REC(  0x093DUL,  0x0950UL ),  /* ... continued       */
     /* omitting U+0951 udatta, U+0952 anudatta */
-    AF_UNIRANGE_REC(  0x0953UL,  0x0963UL ),
+    AF_UNIRANGE_REC(  0x0953UL,  0x0963UL ),  /* ... continued       */
     /* omitting U+0964 danda, U+0965 double danda */
-    AF_UNIRANGE_REC(  0x0966UL,  0x097FUL ),
+    AF_UNIRANGE_REC(  0x0966UL,  0x097FUL ),  /* ... continued       */
     AF_UNIRANGE_REC(  0x20B9UL,  0x20B9UL ),  /* (new) Rupee sign    */
     AF_UNIRANGE_REC(  0xA8E0UL,  0xA8FFUL ),  /* Devanagari Extended */
     AF_UNIRANGE_REC(       0UL,       0UL )
@@ -199,19 +199,19 @@
   {
     AF_UNIRANGE_REC(  0x0020UL,  0x007FUL ),  /* Basic Latin (no control chars)         */
     AF_UNIRANGE_REC(  0x00A0UL,  0x00A9UL ),  /* Latin-1 Supplement (no control chars)  */
-    AF_UNIRANGE_REC(  0x00ABUL,  0x00B1UL ),
-    AF_UNIRANGE_REC(  0x00B4UL,  0x00B8UL ),
-    AF_UNIRANGE_REC(  0x00BBUL,  0x00FFUL ),
+    AF_UNIRANGE_REC(  0x00ABUL,  0x00B1UL ),  /* ... continued                          */
+    AF_UNIRANGE_REC(  0x00B4UL,  0x00B8UL ),  /* ... continued                          */
+    AF_UNIRANGE_REC(  0x00BBUL,  0x00FFUL ),  /* ... continued                          */
     AF_UNIRANGE_REC(  0x0100UL,  0x017FUL ),  /* Latin Extended-A                       */
     AF_UNIRANGE_REC(  0x0180UL,  0x024FUL ),  /* Latin Extended-B                       */
     AF_UNIRANGE_REC(  0x0250UL,  0x02AFUL ),  /* IPA Extensions                         */
     AF_UNIRANGE_REC(  0x02B9UL,  0x02DFUL ),  /* Spacing Modifier Letters               */
-    AF_UNIRANGE_REC(  0x02E5UL,  0x02FFUL ),
+    AF_UNIRANGE_REC(  0x02E5UL,  0x02FFUL ),  /* ... continued                          */
     AF_UNIRANGE_REC(  0x0300UL,  0x036FUL ),  /* Combining Diacritical Marks            */
     AF_UNIRANGE_REC(  0x1AB0UL,  0x1ABEUL ),  /* Combining Diacritical Marks Extended   */
     AF_UNIRANGE_REC(  0x1D00UL,  0x1D2BUL ),  /* Phonetic Extensions                    */
-    AF_UNIRANGE_REC(  0x1D6BUL,  0x1D77UL ),
-    AF_UNIRANGE_REC(  0x1D79UL,  0x1D7FUL ),
+    AF_UNIRANGE_REC(  0x1D6BUL,  0x1D77UL ),  /* ... continued                          */
+    AF_UNIRANGE_REC(  0x1D79UL,  0x1D7FUL ),  /* ... continued                          */
     AF_UNIRANGE_REC(  0x1D80UL,  0x1D9AUL ),  /* Phonetic Extensions Supplement         */
     AF_UNIRANGE_REC(  0x1DC0UL,  0x1DFFUL ),  /* Combining Diacritical Marks Supplement */
     AF_UNIRANGE_REC(  0x1E00UL,  0x1EFFUL ),  /* Latin Extended Additional              */
@@ -220,13 +220,13 @@
     AF_UNIRANGE_REC(  0x20BAUL,  0x20CFUL ),  /* ... except new Rupee sign              */
     AF_UNIRANGE_REC(  0x2150UL,  0x218FUL ),  /* Number Forms                           */
     AF_UNIRANGE_REC(  0x2C60UL,  0x2C7BUL ),  /* Latin Extended-C                       */
-    AF_UNIRANGE_REC(  0x2C7EUL,  0x2C7FUL ),
+    AF_UNIRANGE_REC(  0x2C7EUL,  0x2C7FUL ),  /* ... continued                          */
     AF_UNIRANGE_REC(  0x2E00UL,  0x2E7FUL ),  /* Supplemental Punctuation               */
     AF_UNIRANGE_REC(  0xA720UL,  0xA76FUL ),  /* Latin Extended-D                       */
-    AF_UNIRANGE_REC(  0xA771UL,  0xA7F7UL ),
-    AF_UNIRANGE_REC(  0xA7FAUL,  0xA7FFUL ),
+    AF_UNIRANGE_REC(  0xA771UL,  0xA7F7UL ),  /* ... continued                          */
+    AF_UNIRANGE_REC(  0xA7FAUL,  0xA7FFUL ),  /* ... continued                          */
     AF_UNIRANGE_REC(  0xAB30UL,  0xAB5BUL ),  /* Latin Extended-E                       */
-    AF_UNIRANGE_REC(  0xAB60UL,  0xAB6FUL ),
+    AF_UNIRANGE_REC(  0xAB60UL,  0xAB6FUL ),  /* ... continued                          */
     AF_UNIRANGE_REC(  0xFB00UL,  0xFB06UL ),  /* Alphab. Present. Forms (Latin Ligs)    */
     AF_UNIRANGE_REC( 0x1D400UL, 0x1D7FFUL ),  /* Mathematical Alphanumeric Symbols      */
     AF_UNIRANGE_REC(       0UL,       0UL )
@@ -256,9 +256,9 @@
 
   const AF_Script_UniRangeRec af_latb_uniranges[] =
   {
-    AF_UNIRANGE_REC(  0x1D62UL,  0x1D6AUL ),
-    AF_UNIRANGE_REC(  0x2080UL,  0x209CUL ),
-    AF_UNIRANGE_REC(  0x2C7CUL,  0x2C7CUL ),
+    AF_UNIRANGE_REC(  0x1D62UL,  0x1D6AUL ),  /* some small subscript letters   */
+    AF_UNIRANGE_REC(  0x2080UL,  0x209CUL ),  /* subscript digits and letters   */
+    AF_UNIRANGE_REC(  0x2C7CUL,  0x2C7CUL ),  /* latin subscript small letter j */
     AF_UNIRANGE_REC(       0UL,       0UL )
   };
 
@@ -270,19 +270,19 @@
 
   const AF_Script_UniRangeRec af_latp_uniranges[] =
   {
-    AF_UNIRANGE_REC(  0x00AAUL,  0x00AAUL ),
-    AF_UNIRANGE_REC(  0x00B2UL,  0x00B3UL ),
-    AF_UNIRANGE_REC(  0x00B9UL,  0x00BAUL ),
-    AF_UNIRANGE_REC(  0x02B0UL,  0x02B8UL ),
-    AF_UNIRANGE_REC(  0x02E0UL,  0x02E4UL ),
-    AF_UNIRANGE_REC(  0x1D2CUL,  0x1D61UL ),
-    AF_UNIRANGE_REC(  0x1D78UL,  0x1D78UL ),
-    AF_UNIRANGE_REC(  0x1D9BUL,  0x1DBFUL ),
-    AF_UNIRANGE_REC(  0x2070UL,  0x207FUL ),
-    AF_UNIRANGE_REC(  0x2C7DUL,  0x2C7DUL ),
-    AF_UNIRANGE_REC(  0xA770UL,  0xA770UL ),
-    AF_UNIRANGE_REC(  0xA7F8UL,  0xA7F9UL ),
-    AF_UNIRANGE_REC(  0xAB5CUL,  0xAB5FUL ),
+    AF_UNIRANGE_REC(  0x00AAUL,  0x00AAUL ),  /* feminine ordinal indicator          */
+    AF_UNIRANGE_REC(  0x00B2UL,  0x00B3UL ),  /* superscript two and three           */
+    AF_UNIRANGE_REC(  0x00B9UL,  0x00BAUL ),  /* superscript one, masc. ord. indic.  */
+    AF_UNIRANGE_REC(  0x02B0UL,  0x02B8UL ),  /* some latin superscript mod. letters */
+    AF_UNIRANGE_REC(  0x02E0UL,  0x02E4UL ),  /* some IPA modifier letters           */
+    AF_UNIRANGE_REC(  0x1D2CUL,  0x1D61UL ),  /* latin superscript modifier letters  */
+    AF_UNIRANGE_REC(  0x1D78UL,  0x1D78UL ),  /* modifier letter cyrillic en         */
+    AF_UNIRANGE_REC(  0x1D9BUL,  0x1DBFUL ),  /* more modifier letters               */
+    AF_UNIRANGE_REC(  0x2070UL,  0x207FUL ),  /* superscript digits and letters      */
+    AF_UNIRANGE_REC(  0x2C7DUL,  0x2C7DUL ),  /* modifier letter capital v           */
+    AF_UNIRANGE_REC(  0xA770UL,  0xA770UL ),  /* modifier letter us                  */
+    AF_UNIRANGE_REC(  0xA7F8UL,  0xA7F9UL ),  /* more modifier letters               */
+    AF_UNIRANGE_REC(  0xAB5CUL,  0xAB5FUL ),  /* more modifier letters               */
     AF_UNIRANGE_REC(       0UL,       0UL )
   };
 
