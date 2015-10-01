@@ -442,8 +442,6 @@ typedef ptrdiff_t  FT_PtrDist;
     TCoord  cx, cy;
     TPos    x,  y;
 
-    TPos    last_ey;
-
     FT_Vector   bez_stack[32 * 3 + 1];
     int         lev_stack[32];
 
@@ -676,7 +674,6 @@ typedef ptrdiff_t  FT_PtrDist;
     ras.cover   = 0;
     ras.ex      = ex - ras.min_ex;
     ras.ey      = ey - ras.min_ey;
-    ras.last_ey = SUBPIXELS( ey );
     ras.invalid = 0;
 
     gray_set_cell( RAS_VAR_ ex, ey );
@@ -795,9 +792,9 @@ typedef ptrdiff_t  FT_PtrDist;
     int     delta, rem, lift, incr;
 
 
-    ey1 = TRUNC( ras.last_ey );
+    ey1 = TRUNC( ras.y );
     ey2 = TRUNC( to_y );     /* if (ey2 >= ras.max_ey) ey2 = ras.max_ey-1; */
-    fy1 = (TCoord)( ras.y - ras.last_ey );
+    fy1 = (TCoord)( ras.y - SUBPIXELS( ey1 ) );
     fy2 = (TCoord)( to_y - SUBPIXELS( ey2 ) );
 
     dx = to_x - ras.x;
@@ -912,7 +909,6 @@ typedef ptrdiff_t  FT_PtrDist;
   End:
     ras.x       = to_x;
     ras.y       = to_y;
-    ras.last_ey = SUBPIXELS( ey2 );
   }
 
 

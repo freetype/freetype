@@ -1,3 +1,10 @@
+2015-09-30  Alexei Podtelezhnikov  <apodtele@gmail.com>
+
+	[smooth] Clean up worker.
+
+	* src/smooth/ftgrays.c (gray_TWorker): Remove lightly used `last_ey'.
+	(gray_start_cell, gray_render_line): Update.
+
 2015-09-30  Werner Lemberg  <wl@gnu.org>
 
 	[autofit] Replace `no-base' with `non-base'.
