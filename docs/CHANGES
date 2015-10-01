@@ -46,6 +46,8 @@ CHANGES BETWEEN 2.6 and 2.6.1
       feature.  Otherwise, bits  16-30 of the two fields  are zero (or
       are ignored).
 
+    - Lao script support has been added to the auto-hinter.
+
 
   III. MISCELLANEOUS
 
@@ -64,6 +66,15 @@ CHANGES BETWEEN 2.6 and 2.6.1
 
     - The  function  `FT_FloorFix'  now always  rounds  towards  minus
       infinity.
+
+    - A new  load flag `FT_LOAD_COMPUTE_METRICS' is  now available; it
+      makes FreeType  ignore pre-computed  metrics, as needed  by font
+      validating  or  font  editing  programs.  Right  now,  only  the
+      TrueType  module supports  it  to ignore  data  from the  `hdmx'
+      table.
+
+    - Another round of bug fixes  to better handle broken fonts, found
+      by Kostya Serebryany <kcc@google.com>.
 
 
 ======================================================================
