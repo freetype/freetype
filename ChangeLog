@@ -1,3 +1,9 @@
+2015-10-01  Alexei Podtelezhnikov  <apodtele@gmail.com>
+
+	[smooth] Clean up worker.
+
+	* src/smooth/ftgrays.c (gray_TWorker): Remove never used fields.
+
 2015-10-01  Werner Lemberg  <wl@gnu.org>
 
 	[sfnt] Make `tt_cmap4_char_map_linear' more robust (#46078).

@@ -439,7 +439,6 @@ typedef ptrdiff_t  FT_PtrDist;
     FT_PtrDist  max_cells;
     FT_PtrDist  num_cells;
 
-    TCoord  cx, cy;
     TPos    x,  y;
 
     FT_Vector   bez_stack[32 * 3 + 1];
