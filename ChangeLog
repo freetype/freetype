@@ -1,3 +1,11 @@
+2015-10-03  Werner Lemberg  <wl@gnu.org>
+
+	[bzip2, gzip] Avoid access of unitialized memory (#46109).
+
+	* src/bzip2/ftbzip2.c (ft_bzip2_file_fill_output), src/gzip/ftgzip.c
+	(ft_gzip_file_fill_output): In case of an error, adjust the limit to
+	avoid copying uninitialized memory.
+
 2015-10-01  Alexei Podtelezhnikov  <apodtele@gmail.com>
 
 	[smooth] Clean up worker.

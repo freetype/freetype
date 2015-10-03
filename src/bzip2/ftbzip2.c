@@ -310,7 +310,8 @@
       }
       else if ( err != BZ_OK )
       {
-        error = FT_THROW( Invalid_Stream_Operation );
+        zip->limit = zip->cursor;
+        error      = FT_THROW( Invalid_Stream_Operation );
         break;
       }
     }
