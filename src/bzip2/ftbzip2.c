@@ -254,7 +254,10 @@
       size = stream->read( stream, stream->pos, zip->input,
                            FT_BZIP2_BUFFER_SIZE );
       if ( size == 0 )
+      {
+        zip->limit = zip->cursor;
         return FT_THROW( Invalid_Stream_Operation );
+      }
     }
     else
     {
@@ -263,7 +266,10 @@
         size = FT_BZIP2_BUFFER_SIZE;
 
       if ( size == 0 )
+      {
+        zip->limit = zip->cursor;
         return FT_THROW( Invalid_Stream_Operation );
+      }
 
       FT_MEM_COPY( zip->input, stream->base + stream->pos, size );
     }
