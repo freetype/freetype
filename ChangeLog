@@ -1,5 +1,11 @@
 2015-10-04  Werner Lemberg  <wl@gnu.org>
 
+	[base] Replace left shifts with multiplication (#46118).
+
+	* src/base/ftglyph.c (ft_bitmap_glyph_bbox, FT_Get_Glyph): Do it.
+
+2015-10-04  Werner Lemberg  <wl@gnu.org>
+
 	* Version 2.6.1 released.
 	=========================
 
