@@ -1,4 +1,40 @@
-2015-10-03  Werner Lemberg  <wl@gnu.org>
+2015-10-04  Werner Lemberg  <wl@gnu.org>
+
+	* Version 2.6.1 released.
+	=========================
+
+
+	Tag sources with `VER-2-6-1'.
+
+	* docs/VERSION.DLL: Update documentation and bump version number to
+	2.6.1.
+
+	* README, Jamfile (RefDoc), builds/windows/vc2005/freetype.vcproj,
+	builds/windows/vc2005/index.html,
+	builds/windows/vc2008/freetype.vcproj,
+	builds/windows/vc2008/index.html,
+	builds/windows/vc2010/freetype.vcxproj,
+	builds/windows/vc2010/index.html,
+	builds/windows/visualc/freetype.dsp,
+	builds/windows/visualc/freetype.vcproj,
+	builds/windows/visualc/index.html,
+	builds/windows/visualce/freetype.dsp,
+	builds/windows/visualce/freetype.vcproj,
+	builds/windows/visualce/index.html,
+	builds/wince/vc2005-ce/freetype.vcproj,
+	builds/wince/vc2005-ce/index.html,
+	builds/wince/vc2008-ce/freetype.vcproj,
+	builds/wince/vc2008-ce/index.html: s/2.6/2.6.1/, s/26/261/.
+
+	* include/freetype/freetype.h (FREETYPE_PATCH): Set to 1.
+
+	* builds/unix/configure.raw (version_info): Set to 18:1:12.
+	* CMakeLists.txt (VERSION_PATCH): Set to 1.
+
+	* src/autofit/afmodule.c [AF_DEBUG_AUTOFIT]: Ensure C linking for
+	dumping functions.
+
+2015-10-04  Werner Lemberg  <wl@gnu.org>
 
 	[bzip2, gzip] Avoid access of unitialized memory (#46109).
 
@@ -1098,8 +1134,8 @@
 	(FREETYPE_PATCH): Set to 0.
 
 	* builds/unix/configure.raw (version_info): Set to 18:0:12.
-	* CMakeLists.txt (VERSION_MINOR): Set to 0.
-	(VERSION_PATCH): Set to 6.
+	* CMakeLists.txt (VERSION_MINOR): Set to 6.
+	(VERSION_PATCH): Set to 0.
 
 	* src/autofit/afmodule.c [!FT_MAKE_OPTION_SINGLE_OBJECT]: Add
 	declarations for dumping functions.
