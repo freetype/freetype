@@ -444,7 +444,7 @@
     /* following the OpenType specification 1.7, we return the name stored */
     /* in the `name' table for a CFF wrapped into an SFNT container        */
 
-    if ( sfnt )
+    if ( FT_IS_SFNT( FT_FACE( face ) ) && sfnt )
     {
       FT_Library             library     = FT_FACE_LIBRARY( face );
       FT_Module              sfnt_module = FT_Get_Module( library, "sfnt" );

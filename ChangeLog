@@ -1,3 +1,10 @@
+2015-10-06  Werner Lemberg  <wl@gnu.org>
+
+	[cff] Return correct PS names from pure CFF (#46130).
+
+	* src/cff/cffdrivr.c (cff_get_ps_name): Use SFNT service only for
+	SFNT.
+
 2015-10-04  Werner Lemberg  <wl@gnu.org>
 
 	[base] Replace left shifts with multiplication (#46118).
