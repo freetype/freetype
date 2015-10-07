@@ -1,3 +1,17 @@
+2015-10-01  Alexei Podtelezhnikov  <apodtele@gmail.com>
+
+	[smooth] Faster alternative line renderer.
+
+	This implementation renders the entire line segment at once without
+	subdividing it into scanlines.  The main speed improvement comes from
+	reducing the number of divisions to just two per line segment, which
+	is a bare minimum to calculate cell coverage in a smooth rasterizer.
+	Notably, the progression from cell to cell does not itself require any
+	divisions at all.  The speed improvement is more noticeable at larger
+	sizes.
+
+	* src/smooth/ftgrays.c (gray_render_line): New implementation.
+
 2015-10-06  Werner Lemberg  <wl@gnu.org>
 
 	[cff] Return correct PS names from pure CFF (#46130).
