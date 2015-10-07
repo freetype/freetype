@@ -1,3 +1,9 @@
+2015-10-07  Kostya Serebryany  <kcc@google.com>
+
+	[ftfuzzer] Add support for LLVM's LibFuzzer.
+
+	* src/tools/ftfuzzer/ftfuzzer.cc, src/tools/runinput.cc: New files.
+
 2015-10-01  Alexei Podtelezhnikov  <apodtele@gmail.com>
 
 	[smooth] Faster alternative line renderer.
