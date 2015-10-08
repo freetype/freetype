@@ -102,10 +102,18 @@ THE SOFTWARE.
          FT_STREAM_READ_FIELDS( pcf_toc_header, toc ) )
       return FT_THROW( Cannot_Open_Resource );
 
-    if ( toc->version != PCF_FILE_VERSION                 ||
-         toc->count   >  FT_ARRAY_MAX( face->toc.tables ) ||
-         toc->count   == 0                                )
+    if ( toc->version != PCF_FILE_VERSION ||
+         toc->count   == 0                )
       return FT_THROW( Invalid_File_Format );
+
+    /* we need 16 bytes per TOC entry */
+    if ( toc->count > stream->size >> 4 )
+    {
+      FT_TRACE0(( "pcf_read_TOC: adjusting number of tables"
+                  " (from %d to %d)\n",
+                  toc->count, stream->size >> 4 ));
+      toc->count = stream->size >> 4;
+    }
 
     if ( FT_NEW_ARRAY( face->toc.tables, toc->count ) )
       return FT_THROW( Out_Of_Memory );

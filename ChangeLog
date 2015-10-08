@@ -1,5 +1,12 @@
 2015-10-08  Werner Lemberg  <wl@gnu.org>
 
+	[pcf] Protect against invalid number of TOC entries (#46159).
+
+	* src/pcf/pcfread.c (pcf_read_TOC): Check number of TOC entries
+	against size of data stream.
+
+2015-10-08  Werner Lemberg  <wl@gnu.org>
+
 	[type42] Protect against invalid number of glyphs (#46159).
 
 	* src/type42/t42parse.c (t42_parse_charstrings): Check number of
