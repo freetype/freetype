@@ -1,5 +1,12 @@
 2015-10-08  Werner Lemberg  <wl@gnu.org>
 
+	[type42] Protect against invalid number of glyphs (#46159).
+
+	* src/type42/t42parse.c (t42_parse_charstrings): Check number of
+	`CharStrings' dictionary entries against size of data stream.
+
+2015-10-08  Werner Lemberg  <wl@gnu.org>
+
 	[sfnt] Fix some signed overflows (#46149).
 
 	* src/sfnt/ttsbit.c (tt_face_load_strike_metrics)

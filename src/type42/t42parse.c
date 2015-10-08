@@ -795,6 +795,17 @@
         error = FT_THROW( Invalid_File_Format );
         goto Fail;
       }
+
+      /* we certainly need more than 4 bytes per glyph */
+      if ( loader->num_glyphs > ( limit - parser->root.cursor ) >> 2 )
+      {
+        FT_TRACE0(( "t42_parse_charstrings: adjusting number of glyphs"
+                    " (from %d to %d)\n",
+                    loader->num_glyphs,
+                    ( limit - parser->root.cursor ) >> 2 ));
+        loader->num_glyphs = ( limit - parser->root.cursor ) >> 2;
+      }
+
     }
     else if ( *parser->root.cursor == '<' )
     {
