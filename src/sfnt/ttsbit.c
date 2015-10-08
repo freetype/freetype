@@ -269,11 +269,11 @@
     case TT_SBIT_TABLE_TYPE_SBIX:
       {
         FT_Stream       stream = face->root.stream;
-        FT_UInt         offset, upem;
-        FT_UShort       ppem, resolution;
+        FT_UInt         offset;
+        FT_UShort       upem, ppem, resolution;
         TT_HoriHeader  *hori;
         FT_ULong        table_size;
-        FT_Pos          ppem_, upem_; /* to reduce casts */
+        FT_Pos          ppem_; /* to reduce casts */
 
         FT_Error  error;
         FT_Byte*  p;
@@ -307,14 +307,16 @@
         metrics->y_ppem = ppem;
 
         ppem_ = (FT_Pos)ppem;
-        upem_ = (FT_Pos)upem;
 
-        metrics->ascender    = ppem_ * hori->Ascender * 64 / upem_;
-        metrics->descender   = ppem_ * hori->Descender * 64 / upem_;
-        metrics->height      = ppem_ * ( hori->Ascender -
-                                         hori->Descender +
-                                         hori->Line_Gap ) * 64 / upem_;
-        metrics->max_advance = ppem_ * hori->advance_Width_Max * 64 / upem_;
+        metrics->ascender =
+          FT_MulDiv( hori->Ascender, ppem_ * 64, upem );
+        metrics->descender =
+          FT_MulDiv( hori->Descender, ppem_ * 64, upem );
+        metrics->height =
+          FT_MulDiv( hori->Ascender - hori->Descender + hori->Line_Gap,
+                     ppem_ * 64, upem );
+        metrics->max_advance =
+          FT_MulDiv( hori->advance_Width_Max, ppem_ * 64, upem );
 
         return error;
       }

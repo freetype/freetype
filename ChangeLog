@@ -1,5 +1,12 @@
 2015-10-08  Werner Lemberg  <wl@gnu.org>
 
+	[sfnt] Fix some signed overflows (#46149).
+
+	* src/sfnt/ttsbit.c (tt_face_load_strike_metrics)
+	<TT_SBIT_TABLE_TYPE_SBIX>: Use `FT_MulDiv'.
+
+2015-10-08  Werner Lemberg  <wl@gnu.org>
+
 	[type1] Protect against invalid number of subroutines (#46150).
 
 	* src/type1/t1load.c (parse_subrs): Check number of
