@@ -1,3 +1,10 @@
+2015-10-08  Werner Lemberg  <wl@gnu.org>
+
+	[type1] Protect against invalid number of subroutines (#46150).
+
+	* src/type1/t1load.c (parse_subrs): Check number of
+	`Subrs' dictionary entries against size of data stream.
+
 2015-10-07  Kostya Serebryany  <kcc@google.com>
 
 	[ftfuzzer] Add support for LLVM's LibFuzzer.

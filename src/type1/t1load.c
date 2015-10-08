@@ -1420,6 +1420,21 @@
     }
 
     num_subrs = (FT_Int)T1_ToInt( parser );
+    if ( num_subrs < 0 )
+    {
+      parser->root.error = FT_THROW( Invalid_File_Format );
+      return;
+    }
+
+    /* we certainly need more than 8 bytes per subroutine */
+    if ( num_subrs > ( parser->root.limit - parser->root.cursor ) >> 3 )
+    {
+      FT_TRACE0(( "parse_subrs: adjusting number of subroutines"
+                  " (from %d to %d)\n",
+                  num_subrs,
+                  ( parser->root.limit - parser->root.cursor ) >> 3 ));
+      num_subrs = ( parser->root.limit - parser->root.cursor ) >> 3;
+    }
 
     /* position the parser right before the `dup' of the first subr */
     T1_Skip_PS_Token( parser );         /* `array' */
