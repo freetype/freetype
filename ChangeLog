@@ -1,3 +1,7 @@
+2015-10-09  Werner Lemberg  <wl@gnu.org>
+
+	* src/gzip/ftgzip.c (FT_Stream_OpenGzip): Use real stream size.
+
 2015-10-08  Werner Lemberg  <wl@gnu.org>
 
 	[pcf] Protect against invalid number of TOC entries (#46159).
