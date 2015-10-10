@@ -1,5 +1,12 @@
 2015-10-10  Werner Lemberg  <wl@gnu.org>
 
+	[sfnt] Fix infinite loops with broken cmaps (#46167).
+
+	* src/sfnt/ttcmap.c (tt_cmap8_char_next, tt_cmap12_next): Take care
+	of border condidions (i.e., if the loops exit naturally).
+
+2015-10-10  Werner Lemberg  <wl@gnu.org>
+
 	[truetype] More sanity tests for GX handling.
 
 	These tests should mainly help avoid unnecessarily large memory
