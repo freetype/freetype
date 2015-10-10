@@ -106,6 +106,9 @@ THE SOFTWARE.
          toc->count   == 0                )
       return FT_THROW( Invalid_File_Format );
 
+    if ( stream->size < 16 )
+      return FT_THROW( Invalid_File_Format );
+
     /* we need 16 bytes per TOC entry */
     if ( toc->count > stream->size >> 4 )
     {
