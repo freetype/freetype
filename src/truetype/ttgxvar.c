@@ -1950,6 +1950,9 @@
 #endif
       }
 
+      else if ( localpoints == NULL )
+        ; /* failure, ignore it */
+
       else
       {
 #ifdef FT_DEBUG_LEVEL_TRACE

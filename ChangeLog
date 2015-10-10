@@ -1,5 +1,12 @@
 2015-10-10  Werner Lemberg  <wl@gnu.org>
 
+	[truetype] Better protection against malformed GX data (#46166).
+
+	* src/truetype/ttgxvar.c (TT_Vary_Apply_Glyph_Deltas): Correctly
+	handle empty `localpoints' array.
+
+2015-10-10  Werner Lemberg  <wl@gnu.org>
+
 	* src/pcf/pcfread.c (pcf_read_TOC): Check stream size (#46162).
 
 2015-10-09  Werner Lemberg  <wl@gnu.org>
