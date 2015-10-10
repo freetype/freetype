@@ -1,5 +1,23 @@
 2015-10-10  Werner Lemberg  <wl@gnu.org>
 
+	[truetype] More sanity tests for GX handling.
+
+	These tests should mainly help avoid unnecessarily large memory
+	allocations in case of malformed fonts.
+
+	* src/truetype/ttgxvar.c (ft_var_readpackedpoints,
+	ft_var_readpackeddeltas): Check number of points against stream
+	size.
+	(ft_var_load_avar): Check `pairCount' against table length.
+	(ft_var_load_gvar): Check `globalCoordCount' and `glyphCount'
+	against table length.
+	(tt_face_vary_cvt): Check `tupleCount' and `offsetToData'.
+	Fix trace.
+	(TT_Vary_Apply_Glyph_Deltas): Fix trace.
+	Free `sharedpoints' to avoid memory leak.
+
+2015-10-10  Werner Lemberg  <wl@gnu.org>
+
 	[truetype] Better protection against malformed GX data (#46166).
 
 	* src/truetype/ttgxvar.c (TT_Vary_Apply_Glyph_Deltas): Correctly

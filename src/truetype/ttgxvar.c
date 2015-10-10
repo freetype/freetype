@@ -149,6 +149,12 @@
       n  |= FT_GET_BYTE();
     }
 
+    if ( n > stream->size - stream->pos )
+    {
+      FT_TRACE1(( "ft_var_readpackedpoints: number of points too large\n" ));
+      return NULL;
+    }
+
     if ( FT_NEW_ARRAY( points, n ) )
       return NULL;
 
@@ -232,6 +238,12 @@
 
     FT_UNUSED( error );
 
+
+    if ( delta_cnt > stream->size - stream->pos )
+    {
+      FT_TRACE1(( "ft_var_readpackeddeltas: number of points too large\n" ));
+      return NULL;
+    }
 
     if ( FT_NEW_ARRAY( deltas, delta_cnt ) )
       return NULL;
@@ -341,7 +353,8 @@
       FT_TRACE5(( "  axis %d:\n", i ));
 
       segment->pairCount = FT_GET_USHORT();
-      if ( FT_NEW_ARRAY( segment->correspondence, segment->pairCount ) )
+      if ( (FT_ULong)segment->pairCount * 4 > table_len                ||
+           FT_NEW_ARRAY( segment->correspondence, segment->pairCount ) )
       {
         /* Failure.  Free everything we have done so far.  We must do */
         /* it right now since loading the `avar' table is optional.   */
@@ -447,18 +460,12 @@
     if ( FT_STREAM_READ_FIELDS( gvar_fields, &gvar_head ) )
       goto Exit;
 
-    blend->tuplecount  = gvar_head.globalCoordCount;
-    blend->gv_glyphcnt = gvar_head.glyphCount;
-    offsetToData       = gvar_start + gvar_head.offsetToData;
-
     if ( gvar_head.version != 0x00010000L )
     {
       FT_TRACE1(( "bad table version\n" ));
       error = FT_THROW( Invalid_Table );
       goto Exit;
     }
-
-    FT_TRACE2(( "loaded\n" ));
 
     if ( gvar_head.axisCount != (FT_UShort)blend->mmvar->num_axis )
     {
@@ -467,6 +474,27 @@
       error = FT_THROW( Invalid_Table );
       goto Exit;
     }
+
+    /* rough sanity check, ignoring offsets */
+    if ( (FT_ULong)gvar_head.globalCoordCount * gvar_head.axisCount >
+           table_len / 2 )
+    {
+      FT_TRACE1(( "ft_var_load_gvar:"
+                  " invalid number of global coordinates\n" ));
+      error = FT_THROW( Invalid_Table );
+      goto Exit;
+    }
+
+    /* rough sanity check: offsets can be either 2 or 4 bytes, */
+    /* and a single variation needs at least 4 bytes per glyph */
+    if ( (FT_ULong)gvar_head.glyphCount *
+           ( ( gvar_head.flags & 1 ) ? 8 : 6 ) > table_len )
+
+    FT_TRACE2(( "loaded\n" ));
+
+    blend->tuplecount  = gvar_head.globalCoordCount;
+    blend->gv_glyphcnt = gvar_head.glyphCount;
+    offsetToData       = gvar_start + gvar_head.offsetToData;
 
     FT_TRACE5(( "gvar: there are %d shared coordinates:\n",
                 blend->tuplecount ));
@@ -1353,13 +1381,25 @@
       goto FExit;
 
     tupleCount   = FT_GET_USHORT();
-    offsetToData = table_start + FT_GET_USHORT();
+    offsetToData = FT_GET_USHORT();
 
-    /* The documentation implies there are flags packed into the        */
-    /* tuplecount, but John Jenkins says that shared points don't apply */
-    /* to `cvar', and no other flags are defined.                       */
+    /* rough sanity test */
+    if ( offsetToData + tupleCount * 4 > table_len )
+    {
+      FT_TRACE2(( "tt_face_vary_cvt:"
+                  " invalid CVT variation array header\n" ));
 
-    FT_TRACE5(( "cvar: there are %d tuples:\n", tupleCount ));
+      error = FT_THROW( Invalid_Table );
+      goto FExit;
+    }
+
+    offsetToData += table_start;
+
+    /* The documentation implies there are flags packed into              */
+    /* `tupleCount', but John Jenkins says that shared points don't apply */
+    /* to `cvar', and no other flags are defined.                         */
+
+    FT_TRACE5(( "cvar: there are %d tuples:\n", tupleCount & 0xFFF ));
 
     for ( i = 0; i < ( tupleCount & 0xFFF ); i++ )
     {
@@ -1833,7 +1873,8 @@
       FT_Stream_SeekSet( stream, here );
     }
 
-    FT_TRACE5(( "gvar: there are %d tuples:\n", tupleCount ));
+    FT_TRACE5(( "gvar: there are %d tuples:\n",
+                tupleCount & GX_TC_TUPLE_COUNT_MASK ));
 
     for ( i = 0; i < ( tupleCount & GX_TC_TUPLE_COUNT_MASK ); i++ )
     {
@@ -2013,6 +2054,8 @@
 
       if ( localpoints != ALL_POINTS )
         FT_FREE( localpoints );
+      if ( sharedpoints != ALL_POINTS )
+        FT_FREE( sharedpoints );
       FT_FREE( deltas_x );
       FT_FREE( deltas_y );
 
