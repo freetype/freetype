@@ -883,9 +883,17 @@
 
 #ifdef TT_CONFIG_OPTION_GX_VAR_SUPPORT
     {
-      FT_ULong   fvar_len;
+      FT_ULong  fvar_len;
+
+      FT_ULong  version;
+      FT_ULong  offset;
+
+      FT_UShort  num_axes;
+      FT_UShort  axis_size;
       FT_UShort  num_instances;
-      FT_Int     instance_index;
+      FT_UShort  instance_size;
+
+      FT_Int  instance_index;
 
 
       instance_index = FT_ABS( face_instance_index ) >> 16;
@@ -893,8 +901,31 @@
       /* test whether current face is a GX font with named instances */
       if ( face->goto_table( face, TTAG_fvar, stream, &fvar_len ) ||
            fvar_len < 20                                          ||
-           FT_STREAM_SKIP( 12 )                                   ||
-           FT_READ_USHORT( num_instances )                        )
+           FT_READ_ULONG( version )                               ||
+           FT_READ_USHORT( offset )                               ||
+           FT_STREAM_SKIP( 2 )                                    ||
+           FT_READ_USHORT( num_axes )                             ||
+           FT_READ_USHORT( axis_size )                            ||
+           FT_READ_USHORT( num_instances )                        ||
+           FT_READ_USHORT( instance_size )                        )
+      {
+        version       = 0;
+        num_axes      = 0;
+        axis_size     = 0;
+        num_instances = 0;
+        instance_size = 0;
+      }
+
+      /* check that the data is bound by the table length; */
+      /* based on similar code in function `TT_Get_MM_Var' */
+      if ( version != 0x00010000UL                    ||
+           axis_size != 20                            ||
+           num_axes > 0x3FFE                          ||
+           instance_size != 4 + 4 * num_axes          ||
+           num_instances > 0x7EFF                     ||
+           offset                          +
+             axis_size * num_axes          +
+             instance_size * num_instances > fvar_len )
         num_instances = 0;
 
       /* we support at most 2^15 - 1 instances */

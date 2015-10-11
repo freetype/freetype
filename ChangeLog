@@ -1,3 +1,11 @@
+2015-10-11  Werner Lemberg  <wl@gnu.org>
+
+	[sfnt] Improve extraction of number of named instances.
+
+	* src/sfnt/sfobjs.c (sfnt_init_face)
+	[TT_CONFIG_OPTION_GX_VAR_SUPPORT]: Check number of instances against
+	`fvar' table size.
+
 2015-10-10  Alexei Podtelezhnikov  <apodtele@gmail.com>
 
 	* src/base/ftoutln.c (FT_Outline_Get_Orientation): Fix overflow
