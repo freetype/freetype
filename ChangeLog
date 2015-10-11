@@ -1,3 +1,8 @@
+2015-10-10  Alexei Podtelezhnikov  <apodtele@gmail.com>
+
+	* src/base/ftoutln.c (FT_Outline_Get_Orientation): Fix overflow
+	(#46149).
+
 2015-10-10  Werner Lemberg  <wl@gnu.org>
 
 	[sfnt] Fix infinite loops with broken cmaps (#46167).
@@ -72,7 +77,7 @@
 
 	* src/tools/ftfuzzer/ftfuzzer.cc, src/tools/runinput.cc: New files.
 
-2015-10-01  Alexei Podtelezhnikov  <apodtele@gmail.com>
+2015-10-06  Alexei Podtelezhnikov  <apodtele@gmail.com>
 
 	[smooth] Faster alternative line renderer.
 
