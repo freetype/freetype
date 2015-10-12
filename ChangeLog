@@ -1,3 +1,12 @@
+2015-10-12  Werner Lemberg  <wl@gnu.org>
+
+	[unix] Make MKDIR_P actually work.
+
+	* builds/unix/configure.raw: Fix underquoting of `INSTALL' and
+	`MKDIR_P'.
+
+	Problem reported by Dan Liddell <lddll@yahoo.com>.
+
 2015-10-11  Werner Lemberg  <wl@gnu.org>
 
 	[sfnt] Improve extraction of number of named instances.
