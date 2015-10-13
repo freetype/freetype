@@ -2059,8 +2059,6 @@
 
       if ( localpoints != ALL_POINTS )
         FT_FREE( localpoints );
-      if ( sharedpoints != ALL_POINTS )
-        FT_FREE( sharedpoints );
       FT_FREE( deltas_x );
       FT_FREE( deltas_y );
 
@@ -2072,6 +2070,8 @@
     FT_TRACE5(( "\n" ));
 
   Fail2:
+    if ( sharedpoints != ALL_POINTS )
+      FT_FREE( sharedpoints );
     FT_FREE( tuple_coords );
     FT_FREE( im_start_coords );
     FT_FREE( im_end_coords );

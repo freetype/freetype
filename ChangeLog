@@ -1,5 +1,12 @@
 2015-10-13  Werner Lemberg  <wl@gnu.org>
 
+	[truetype] Fix memory leak for broken GX fonts (#46188).
+
+	* src/truetype/ttgxvar.c (TT_Vary_Apply_Glyph_Deltas): Fix scope of
+	deallocation.
+
+2015-10-13  Werner Lemberg  <wl@gnu.org>
+
 	[truetype] Fix commit from 2015-10-10.
 
 	* src/truetype/ttgxvar.c (ft_var_load_gvar): Add missing error
