@@ -1864,7 +1864,19 @@
       goto Fail2;
 
     tupleCount   = FT_GET_USHORT();
-    offsetToData = glyph_start + FT_GET_USHORT();
+    offsetToData = FT_GET_USHORT();
+
+    /* rough sanity test */
+    if ( offsetToData + tupleCount * 4 > stream->size - stream->pos )
+    {
+      FT_TRACE2(( "TT_Vary_Apply_Glyph_Deltas:"
+                  " invalid glyph variation array header\n" ));
+
+      error = FT_THROW( Invalid_Table );
+      goto Fail2;
+    }
+
+    offsetToData += glyph_start;
 
     if ( tupleCount & GX_TC_TUPLES_SHARE_POINT_NUMBERS )
     {
@@ -1901,6 +1913,9 @@
       }
       else if ( ( tupleIndex & GX_TI_TUPLE_INDEX_MASK ) >= blend->tuplecount )
       {
+        FT_TRACE2(( "TT_Vary_Apply_Glyph_Deltas:"
+                    " invalid tuple index\n" ));
+
         error = FT_THROW( Invalid_Table );
         goto Fail2;
       }
