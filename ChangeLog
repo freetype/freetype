@@ -1,5 +1,20 @@
 2015-10-13  Werner Lemberg  <wl@gnu.org>
 
+	[ftfuzzer] Handle TTCs and MM/GX variations.
+
+	This patch also contains various other improvements.
+
+	* src/tools/ftfuzzer/ftfuzzer.cc: Add preprocessor guard to reject
+	pre-C++11 compilers.
+	(FT_Global): New class.  Use it to provide a global constructor and
+	destructor for the `FT_Library' object.
+	(setIntermediateAxis): New function to select an (arbitrary)
+	instance.
+	(LLVMFuzzerTestOneInput): Loop over all faces and named instances.
+	Also call `FT_Set_Char_Size'.
+
+2015-10-13  Werner Lemberg  <wl@gnu.org>
+
 	[truetype] Refine some GX sanity tests.
 
 	Use the `gvar' table size instead of the remaining bytes in the
