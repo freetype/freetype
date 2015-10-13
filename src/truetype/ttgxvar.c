@@ -489,6 +489,11 @@
     /* and a single variation needs at least 4 bytes per glyph */
     if ( (FT_ULong)gvar_head.glyphCount *
            ( ( gvar_head.flags & 1 ) ? 8 : 6 ) > table_len )
+    {
+      FT_TRACE1(( "ft_var_load_gvar: invalid number of glyphs\n" ));
+      error = FT_THROW( Invalid_Table );
+      goto Exit;
+    }
 
     FT_TRACE2(( "loaded\n" ));
 

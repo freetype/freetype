@@ -1,3 +1,10 @@
+2015-10-13  Werner Lemberg  <wl@gnu.org>
+
+	[truetype] Fix commit from 2015-10-10.
+
+	* src/truetype/ttgxvar.c (ft_var_load_gvar): Add missing error
+	handling body to condition.
+
 2015-10-12  Werner Lemberg  <wl@gnu.org>
 
 	[unix] Make MKDIR_P actually work.
