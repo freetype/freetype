@@ -1,5 +1,19 @@
 2015-10-13  Werner Lemberg  <wl@gnu.org>
 
+	[truetype] Refine some GX sanity tests.
+
+	Use the `gvar' table size instead of the remaining bytes in the
+	stream.
+
+	* src/truetype/ttgxvar.h (GX_BlendRec): New field `gvar_size'.
+
+	* src/truetype/ttgxvar.c (ft_var_load_gvar): Set `gvar_size'.
+	(ft_var_readpackedpoints, ft_var_readpackeddeltas: New argument
+	`size'.
+	(tt_face_vary_cvt, TT_Vary_Apply_Glyph_Deltas): Updated.
+
+2015-10-13  Werner Lemberg  <wl@gnu.org>
+
 	[truetype] Another GX sanity test.
 
 	* src/truetype/ttgxvar.c (TT_Vary_Apply_Glyph_Deltas): Check

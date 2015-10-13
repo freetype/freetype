@@ -112,6 +112,8 @@
   /* <Input>                                                               */
   /*    stream    :: The data stream.                                      */
   /*                                                                       */
+  /*    size      :: The size of the table holding the data.               */
+  /*                                                                       */
   /* <Output>                                                              */
   /*    point_cnt :: The number of points read.  A zero value means that   */
   /*                 all points in the glyph will be affected, without     */
@@ -123,6 +125,7 @@
   /*                                                                       */
   static FT_UShort*
   ft_var_readpackedpoints( FT_Stream  stream,
+                           FT_ULong   size,
                            FT_UInt   *point_cnt )
   {
     FT_UShort *points = NULL;
@@ -149,7 +152,7 @@
       n  |= FT_GET_BYTE();
     }
 
-    if ( n > stream->size - stream->pos )
+    if ( n > size )
     {
       FT_TRACE1(( "ft_var_readpackedpoints: number of points too large\n" ));
       return NULL;
@@ -218,6 +221,8 @@
   /* <Input>                                                               */
   /*    stream    :: The data stream.                                      */
   /*                                                                       */
+  /*    size      :: The size of the table holding the data.               */
+  /*                                                                       */
   /*    delta_cnt :: The number of deltas to be read.                      */
   /*                                                                       */
   /* <Return>                                                              */
@@ -228,6 +233,7 @@
   /*                                                                       */
   static FT_Short*
   ft_var_readpackeddeltas( FT_Stream  stream,
+                           FT_ULong   size,
                            FT_UInt    delta_cnt )
   {
     FT_Short  *deltas = NULL;
@@ -239,7 +245,7 @@
     FT_UNUSED( error );
 
 
-    if ( delta_cnt > stream->size - stream->pos )
+    if ( delta_cnt > size )
     {
       FT_TRACE1(( "ft_var_readpackeddeltas: number of points too large\n" ));
       return NULL;
@@ -497,6 +503,7 @@
 
     FT_TRACE2(( "loaded\n" ));
 
+    blend->gvar_size   = table_len;
     blend->tuplecount  = gvar_head.globalCoordCount;
     blend->gv_glyphcnt = gvar_head.glyphCount;
     offsetToData       = gvar_start + gvar_head.offsetToData;
@@ -1466,8 +1473,11 @@
 
       FT_Stream_SeekSet( stream, offsetToData );
 
-      localpoints = ft_var_readpackedpoints( stream, &point_count );
+      localpoints = ft_var_readpackedpoints( stream,
+                                             table_len,
+                                             &point_count );
       deltas      = ft_var_readpackeddeltas( stream,
+                                             table_len,
                                              point_count == 0 ? face->cvt_size
                                                               : point_count );
       if ( localpoints == NULL || deltas == NULL )
@@ -1867,7 +1877,7 @@
     offsetToData = FT_GET_USHORT();
 
     /* rough sanity test */
-    if ( offsetToData + tupleCount * 4 > stream->size - stream->pos )
+    if ( offsetToData + tupleCount * 4 > blend->gvar_size )
     {
       FT_TRACE2(( "TT_Vary_Apply_Glyph_Deltas:"
                   " invalid glyph variation array header\n" ));
@@ -1884,7 +1894,9 @@
 
       FT_Stream_SeekSet( stream, offsetToData );
 
-      sharedpoints = ft_var_readpackedpoints( stream, &spoint_count );
+      sharedpoints = ft_var_readpackedpoints( stream,
+                                              blend->gvar_size,
+                                              &spoint_count );
       offsetToData = FT_Stream_FTell( stream );
 
       FT_Stream_SeekSet( stream, here );
@@ -1951,7 +1963,9 @@
       {
         FT_Stream_SeekSet( stream, offsetToData );
 
-        localpoints = ft_var_readpackedpoints( stream, &point_count );
+        localpoints = ft_var_readpackedpoints( stream,
+                                               blend->gvar_size,
+                                               &point_count );
         points      = localpoints;
       }
       else
@@ -1961,9 +1975,11 @@
       }
 
       deltas_x = ft_var_readpackeddeltas( stream,
+                                          blend->gvar_size,
                                           point_count == 0 ? n_points
                                                            : point_count );
       deltas_y = ft_var_readpackeddeltas( stream,
+                                          blend->gvar_size,
                                           point_count == 0 ? n_points
                                                            : point_count );
 
