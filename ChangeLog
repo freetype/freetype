@@ -1,5 +1,11 @@
 2015-10-13  Werner Lemberg  <wl@gnu.org>
 
+	[type1] Correctly handle missing MM axis names (#46202).
+
+	* src/type1/t1load.c (T1_Get_MM_Var): Implement it.
+
+2015-10-13  Werner Lemberg  <wl@gnu.org>
+
 	[pcf] Quickly exit if font index < 0.
 
 	Similar to other font formats, this commit makes the parser no

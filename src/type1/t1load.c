@@ -336,6 +336,9 @@
       mmvar->axis[i].strid   = ~0U;                      /* Does not apply */
       mmvar->axis[i].tag     = ~0U;                      /* Does not apply */
 
+      if ( !mmvar->axis[i].name )
+        continue;
+
       if ( ft_strcmp( mmvar->axis[i].name, "Weight" ) == 0 )
         mmvar->axis[i].tag = FT_MAKE_TAG( 'w', 'g', 'h', 't' );
       else if ( ft_strcmp( mmvar->axis[i].name, "Width" ) == 0 )
