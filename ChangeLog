@@ -1,5 +1,22 @@
 2015-10-13  Werner Lemberg  <wl@gnu.org>
 
+	[pcf] Quickly exit if font index < 0.
+
+	Similar to other font formats, this commit makes the parser no
+	longer check the whole PCF file but only the header and the TOC if
+	we just want to get the number of available faces (and a proper
+	recognition of the font format).
+
+	* src/pcf/pcfdrivr.c (PCF_Face_Init): Updated.
+	Exit quickly if face_index < 0.
+
+	* src/pcfread.c (pcf_load_font): Add `face_index' argument.
+	Exit quickly if face_index < 0.
+
+	* src/pcf/pcf.h: Updated.
+
+2015-10-13  Werner Lemberg  <wl@gnu.org>
+
 	[ftfuzzer] Handle TTCs and MM/GX variations.
 
 	This patch also contains various other improvements.

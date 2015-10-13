@@ -1184,8 +1184,10 @@ THE SOFTWARE.
 
   FT_LOCAL_DEF( FT_Error )
   pcf_load_font( FT_Stream  stream,
-                 PCF_Face   face )
+                 PCF_Face   face,
+                 FT_Long    face_index )
   {
+    FT_Face    root   = FT_FACE( face );
     FT_Error   error;
     FT_Memory  memory = FT_FACE( face )->memory;
     FT_Bool    hasBDFAccelerators;
@@ -1194,6 +1196,13 @@ THE SOFTWARE.
     error = pcf_read_TOC( stream, face );
     if ( error )
       goto Exit;
+
+    root->num_faces  = 1;
+    root->face_index = 0;
+
+    /* If we are performing a simple font format check, exit immediately. */
+    if ( face_index < 0 )
+      return FT_Err_Ok;
 
     error = pcf_get_properties( stream, face );
     if ( error )
@@ -1237,12 +1246,8 @@ THE SOFTWARE.
 
     /* now construct the face object */
     {
-      FT_Face       root = FT_FACE( face );
       PCF_Property  prop;
 
-
-      root->num_faces  = 1;
-      root->face_index = 0;
 
       root->face_flags |= FT_FACE_FLAG_FIXED_SIZES |
                           FT_FACE_FLAG_HORIZONTAL  |

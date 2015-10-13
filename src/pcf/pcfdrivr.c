@@ -271,7 +271,7 @@ THE SOFTWARE.
 
     FT_TRACE2(( "PCF driver\n" ));
 
-    error = pcf_load_font( stream, face );
+    error = pcf_load_font( stream, face, face_index );
     if ( error )
     {
       PCF_Face_Done( pcfface );
@@ -332,7 +332,7 @@ THE SOFTWARE.
 
       stream = pcfface->stream;
 
-      error = pcf_load_font( stream, face );
+      error = pcf_load_font( stream, face, face_index );
       if ( error )
         goto Fail;
 
@@ -351,7 +351,9 @@ THE SOFTWARE.
      *      an invalid argument error when the font could be
      *      opened by the specified driver.
      */
-    if ( face_index > 0 && ( face_index & 0xFFFF ) > 0 )
+    if ( face_index < 0 )
+      goto Exit;
+    else if ( face_index > 0 && ( face_index & 0xFFFF ) > 0 )
     {
       FT_ERROR(( "PCF_Face_Init: invalid face index\n" ));
       PCF_Face_Done( pcfface );
