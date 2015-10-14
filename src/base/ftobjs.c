@@ -55,7 +55,18 @@
 #pragma warning( disable : 4244 )
 #endif /* _MSC_VER */
 
-  /* it's easiest to include `md5.c' directly */
+  /* It's easiest to include `md5.c' directly.  However, since OpenSSL */
+  /* also provides the same functions, there might be conflicts if     */
+  /* both FreeType and OpenSSL are built as static libraries.  For     */
+  /* this reason, we put the MD5 stuff into the `FT_' namespace.       */
+#define MD5_u32plus  FT_MD5_u32plus
+#define MD5_CTX      FT_MD5_CTX
+#define MD5_Init     FT_MD5_Init
+#define MD5_Update   FT_MD5_Update
+#define MD5_Final    FT_MD5_Final
+
+#undef  HAVE_OPENSSL
+
 #include "md5.c"
 
 #if defined( _MSC_VER )

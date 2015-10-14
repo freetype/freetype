@@ -1,3 +1,10 @@
+2015-10-14  Werner Lemberg  <wl@gnu.org>
+
+	[base] Use `FT_' namespace for MD5 functions (#42366).
+
+	* src/base/ftobjs.c (MD5_*): Define as `FT_MD5_*'.
+	Undefine HAVE_OPENSSL.
+
 2015-10-13  Werner Lemberg  <wl@gnu.org>
 
 	[type1] Correctly handle missing MM axis names (#46202).
