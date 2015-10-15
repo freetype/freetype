@@ -1,3 +1,9 @@
+2015-10-15  Werner Lemberg  <wl@gnu.org>
+
+	* src/truetype/ttinterp.c (TT_RunIns): Fix bytecode stack tracing.
+
+	The used indices were off by 1.
+
 2015-10-15  Bungeman  <bungeman@gmail.com>
 	    Werner Lemberg  <wl@gnu.org>
 

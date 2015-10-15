@@ -7565,7 +7565,7 @@
                               ? 2
                               : 12 - ( *opcode_name[exc->opcode] - '0' ),
                               "#" ));
-        for ( n = 0; n < cnt; n++ )
+        for ( n = 1; n <= cnt; n++ )
           FT_TRACE7(( " %d", exc->stack[exc->top - n] ));
         FT_TRACE6(( "\n" ));
       }
