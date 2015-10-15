@@ -2531,14 +2531,14 @@
         /* Error happened while parsing header. */
         FT_ERROR(( "bdf_load_font: " ERRMSG2, lineno ));
         error = FT_THROW( Corrupted_Font_Header );
-        goto Exit;
+        goto Fail;
       }
       else
       {
         /* Error happened when parsing glyphs. */
         FT_ERROR(( "bdf_load_font: " ERRMSG3, lineno ));
         error = FT_THROW( Corrupted_Font_Glyphs );
-        goto Exit;
+        goto Fail;
       }
     }
 

@@ -1,3 +1,10 @@
+2015-10-15  Bungeman  <bungeman@gmail.com>
+
+	[bdf] Fix memory leak (#46213).
+
+	* src/bdf/bdflib.c (bdf_load_font): Always go to label `Fail' in
+	case of error.
+
 2015-10-15  Werner Lemberg  <wl@gnu.org>
 
 	[truetype] Add TT_CONFIG_OPTION_MAX_RUNNABLE_OPCODES (#46208).
