@@ -4167,39 +4167,50 @@
 #undef  FT_COMPONENT
 #define FT_COMPONENT  trace_bitmap
 
-    /* we convert to a single bitmap format for computing the checksum */
-    if ( !error )
+    /*
+     * Computing the MD5 checksum is expensive, unnecessarily distorting a
+     * possible profiling of FreeType if compiled with tracing support.  For
+     * this reason, we execute the following code only if explicitly
+     * requested.
+     */
+
+    /* we use FT_TRACE3 in this block */
+    if ( ft_trace_levels[trace_bitmap] >= 3 )
     {
-      FT_Bitmap  bitmap;
-      FT_Error   err;
-
-
-      FT_Bitmap_Init( &bitmap );
-
-      /* this also converts the bitmap flow to `down' (i.e., pitch > 0) */
-      err = FT_Bitmap_Convert( library, &slot->bitmap, &bitmap, 1 );
-      if ( !err )
+      /* we convert to a single bitmap format for computing the checksum */
+      if ( !error )
       {
-        MD5_CTX        ctx;
-        unsigned char  md5[16];
-        int            i;
-        unsigned int   rows  = bitmap.rows;
-        unsigned int   pitch = (unsigned int)bitmap.pitch;
+        FT_Bitmap  bitmap;
+        FT_Error   err;
 
 
-        MD5_Init( &ctx );
-        MD5_Update( &ctx, bitmap.buffer, rows * pitch );
-        MD5_Final( md5, &ctx );
+        FT_Bitmap_Init( &bitmap );
 
-        FT_TRACE3(( "MD5 checksum for %dx%d bitmap:\n"
-                    "  ",
-                    rows, pitch ));
-        for ( i = 0; i < 16; i++ )
-          FT_TRACE3(( "%02X", md5[i] ));
-        FT_TRACE3(( "\n" ));
+        /* this also converts the bitmap flow to `down' (i.e., pitch > 0) */
+        err = FT_Bitmap_Convert( library, &slot->bitmap, &bitmap, 1 );
+        if ( !err )
+        {
+          MD5_CTX        ctx;
+          unsigned char  md5[16];
+          int            i;
+          unsigned int   rows  = bitmap.rows;
+          unsigned int   pitch = (unsigned int)bitmap.pitch;
+
+
+          MD5_Init( &ctx );
+          MD5_Update( &ctx, bitmap.buffer, rows * pitch );
+          MD5_Final( md5, &ctx );
+
+          FT_TRACE3(( "MD5 checksum for %dx%d bitmap:\n"
+                      "  ",
+                      rows, pitch ));
+          for ( i = 0; i < 16; i++ )
+            FT_TRACE3(( "%02X", md5[i] ));
+          FT_TRACE3(( "\n" ));
+        }
+
+        FT_Bitmap_Done( library, &bitmap );
       }
-
-      FT_Bitmap_Done( library, &bitmap );
     }
 
 #undef  FT_COMPONENT

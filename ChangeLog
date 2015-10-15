@@ -1,3 +1,11 @@
+2015-10-15  Werner Lemberg  <wl@gnu.org>
+
+	[base] Compute MD5 checksums only if explicitly requested.
+
+	This improves profiling accuracy.
+
+	* src/base/ftobjs.c (FT_Render_Glyph_Internal): Implement it.
+
 2015-10-14  Werner Lemberg  <wl@gnu.org>
 
 	[base] Use `FT_' namespace for MD5 functions (#42366).
