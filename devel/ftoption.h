@@ -693,6 +693,17 @@ FT_BEGIN_HEADER
 
 
   /*************************************************************************/
+  /*                                                                       */
+  /* Option TT_CONFIG_OPTION_MAX_RUNNABLE_OPCODES controls the maximum     */
+  /* number of bytecode instructions executed for a single run of the      */
+  /* bytecode interpreter, needed to prevent infinite loops.  You don't    */
+  /* want to change this except for very special situations (e.g., making  */
+  /* a library fuzzer spend less time to handle broken fonts).             */
+  /*                                                                       */
+#define TT_CONFIG_OPTION_MAX_RUNNABLE_OPCODES  1000000L
+
+
+  /*************************************************************************/
   /*************************************************************************/
   /****                                                                 ****/
   /****      T Y P E 1   D R I V E R    C O N F I G U R A T I O N       ****/

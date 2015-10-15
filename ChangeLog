@@ -1,5 +1,15 @@
 2015-10-15  Werner Lemberg  <wl@gnu.org>
 
+	[truetype] Add TT_CONFIG_OPTION_MAX_RUNNABLE_OPCODES (#46208).
+
+	* devel/ftoption.h, include/freetype/config/ftoption.h
+	(TT_CONFIG_OPTION_MAX_RUNNABLE_OPCODES): New configuration macro.
+
+	* src/truetype/ttinterp.c (MAX_RUNNABLE_OPCODES): Removed.
+	(TT_RunIns): Updated.
+
+2015-10-15  Werner Lemberg  <wl@gnu.org>
+
 	* src/truetype/ttinterp.c (TT_RunIns): Fix bytecode stack tracing.
 
 	The used indices were off by 1.
