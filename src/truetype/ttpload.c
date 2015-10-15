@@ -222,7 +222,8 @@
     if ( pos1 > face->glyf_len )
     {
       FT_TRACE1(( "tt_face_get_location:"
-                  " too large offset=0x%08lx found for gid=0x%04lx,"
+                  " too large offset=0x%08lx found for gid=0x%04lx,\n"
+                  "                     "
                   " exceeding the end of glyf table (0x%08lx)\n",
                   pos1, gindex, face->glyf_len ));
       *asize = 0;
@@ -232,7 +233,8 @@
     if ( pos2 > face->glyf_len )
     {
       FT_TRACE1(( "tt_face_get_location:"
-                  " too large offset=0x%08lx found for gid=0x%04lx,"
+                  " too large offset=0x%08lx found for gid=0x%04lx,\n"
+                  "                     "
                   " truncate at the end of glyf table (0x%08lx)\n",
                   pos2, gindex + 1, face->glyf_len ));
       pos2 = face->glyf_len;
