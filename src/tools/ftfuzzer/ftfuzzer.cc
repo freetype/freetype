@@ -131,42 +131,59 @@ using namespace std;
                                  &face ) )
           continue;
 
-        // set up 20pt at 72dpi as an arbitrary size
-        FT_Set_Char_Size( face, 20, 20, 72, 72 );
-
-        // test MM interface only for a face without a selected instance
-        if ( instance_index == 0 )
-          setIntermediateAxis( face );
-
-        // loop over all glyphs
-        for ( unsigned int  glyph_index = 0;
-              glyph_index < (unsigned int)face->num_glyphs;
-              glyph_index++ )
+        // loop over all bitmap stroke sizes
+        // and an arbitrary size for outlines
+        for ( long  fixed_sizes_index = 0;
+              fixed_sizes_index < face->num_fixed_sizes + 1;
+              fixed_sizes_index++ )
         {
-          if ( FT_Load_Glyph( face, glyph_index, load_flags ) )
-            continue;
+          FT_Int32  flags = load_flags;
 
-          // Rendering is the most expensive and the least interesting part.
-          //
-          // if ( FT_Render_Glyph( face->glyph, render_mode) )
-          //   continue;
-          // FT_GlyphSlot_Embolden( face->glyph );
+          if ( !fixed_sizes_index )
+          {
+            // set up 20pt at 72dpi as an arbitrary size
+            FT_Set_Char_Size( face, 20, 20, 72, 72 );
+            flags |= FT_LOAD_NO_BITMAP;
+          }
+          else
+          {
+            FT_Select_Size( face, fixed_sizes_index - 1 );
+            flags |= FT_LOAD_COLOR;
+          }
+
+          // test MM interface only for a face without a selected instance
+          if ( instance_index == 0 )
+            setIntermediateAxis( face );
+
+          // loop over all glyphs
+          for ( unsigned int  glyph_index = 0;
+                glyph_index < (unsigned int)face->num_glyphs;
+                glyph_index++ )
+          {
+            if ( FT_Load_Glyph( face, glyph_index, flags ) )
+              continue;
+
+            // Rendering is the most expensive and the least interesting part.
+            //
+            // if ( FT_Render_Glyph( face->glyph, render_mode) )
+            //   continue;
+            // FT_GlyphSlot_Embolden( face->glyph );
 
 #if 0
-          FT_Glyph  glyph;
-          if ( !FT_Get_Glyph( face->glyph, &glyph ) )
-            FT_Done_Glyph( glyph );
+            FT_Glyph  glyph;
+            if ( !FT_Get_Glyph( face->glyph, &glyph ) )
+              FT_Done_Glyph( glyph );
 
-          FT_Outline*  outline = &face->glyph->outline;
-          FT_Matrix    rot30   = { 0xDDB4, -0x8000, 0x8000, 0xDDB4 };
+            FT_Outline*  outline = &face->glyph->outline;
+            FT_Matrix    rot30   = { 0xDDB4, -0x8000, 0x8000, 0xDDB4 };
 
-          FT_Outline_Transform( outline, &rot30 );
+            FT_Outline_Transform( outline, &rot30 );
 
-          FT_BBox  bbox;
-          FT_Outline_Get_BBox( outline, &bbox );
+            FT_BBox  bbox;
+            FT_Outline_Get_BBox( outline, &bbox );
 #endif
+          }
         }
-
         FT_Done_Face( face );
       }
     }

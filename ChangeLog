@@ -1,3 +1,8 @@
+2015-10-15  Bungeman  <bungeman@gmail.com>
+	    Werner Lemberg  <wl@gnu.org>
+
+	* src/tools/ftfuzzer/ftfuzzer.cc: Handle fixed sizes (#46211).
+
 2015-10-15  Werner Lemberg  <wl@gnu.org>
 
 	[base] Compute MD5 checksums only if explicitly requested.
