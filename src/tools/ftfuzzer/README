@@ -1,0 +1,23 @@
+ftfuzzer
+--------
+
+ftfuzzer.cc contains a target function for FreeType fuzzing.
+It can be used with libFuzzer (http://llvm.org/docs/LibFuzzer.html)
+or potentially any other similar fuzzer.
+
+Usage:
+  1. Build libfreetype.a and ftfuzzer.cc using the most recent clang compiler
+     with these flags:
+     -fsanitize-coverage=edge,8bit-counters # for fuzzer coverage feedback
+     -fsanitize=address,signed-integer-overflow,shift  # for bug checking
+  2. Link with libFuzzer (it contains main()).
+  3. Run the fuzzer on some test corpus.
+
+The exact flags and commands may vary.
+There is a continuous fuzzing bot that runs ftfuzzer:
+https://github.com/google/libfuzzer-bot/tree/master/freetype.
+Check the bot confituration for the most current settings.
+
+runinput.cc contains a convenience main() function to run the target function
+on a set of input files. Link it with ftfuzzer.cc and libfreetype.a
+and run like "./a.out my_tests_inputs/*"

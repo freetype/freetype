@@ -1,3 +1,9 @@
+2015-10-15  Kostya Serebryany <kcc@google.com>
+
+	[ftfuzzer] Add README.
+
+	* src/tools/ftfuzzer/README: New file.
+
 2015-10-15  Bungeman  <bungeman@gmail.com>
 
 	[bdf] Fix memory leak (#46213).
