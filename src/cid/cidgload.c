@@ -100,7 +100,7 @@
     /* and charstring offset from the CIDMap.                */
     {
       FT_UInt   entry_len = (FT_UInt)( cid->fd_bytes + cid->gd_bytes );
-      FT_ULong  off1;
+      FT_ULong  off1, off2;
 
 
       if ( FT_STREAM_SEEK( cid->data_offset + cid->cidmap_offset +
@@ -108,18 +108,23 @@
            FT_FRAME_ENTER( 2 * entry_len )                         )
         goto Exit;
 
-      p            = (FT_Byte*)stream->cursor;
-      fd_select    = cid_get_offset( &p, (FT_Byte)cid->fd_bytes );
-      off1         = cid_get_offset( &p, (FT_Byte)cid->gd_bytes );
-      p           += cid->fd_bytes;
-      glyph_length = cid_get_offset( &p, (FT_Byte)cid->gd_bytes ) - off1;
+      p         = (FT_Byte*)stream->cursor;
+      fd_select = cid_get_offset( &p, (FT_Byte)cid->fd_bytes );
+      off1      = cid_get_offset( &p, (FT_Byte)cid->gd_bytes );
+      p        += cid->fd_bytes;
+      off2      = cid_get_offset( &p, (FT_Byte)cid->gd_bytes );
       FT_FRAME_EXIT();
 
-      if ( fd_select >= (FT_ULong)cid->num_dicts )
+      if ( fd_select >= (FT_ULong)cid->num_dicts ||
+           off2 >= stream->size                  ||
+           off1 > off2                           )
       {
+        FT_TRACE0(( "cid_load_glyph: invalid glyph stream offsets\n" ));
         error = FT_THROW( Invalid_Offset );
         goto Exit;
       }
+
+      glyph_length = off2 - off1;
       if ( glyph_length == 0 )
         goto Exit;
       if ( FT_ALLOC( charstring, glyph_length ) )
