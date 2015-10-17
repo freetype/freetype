@@ -1,5 +1,11 @@
 2015-10-17  Werner Lemberg  <wl@gnu.org>
 
+	* src/cid/cidgload.c (cid_load_glyph): Fix memory leak.
+
+	Reported by Kostya Serebryany <kcc@google.com>.
+
+2015-10-17  Werner Lemberg  <wl@gnu.org>
+
 	[bdf] Prevent memory leak (#46217).
 
 	* src/bdf/bdflib.c (_bdf_parse_glyphs) <STARTCHAR>: Check

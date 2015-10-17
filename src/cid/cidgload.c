@@ -167,8 +167,6 @@
                 glyph_length - cs_offset );
     }
 
-    FT_FREE( charstring );
-
 #ifdef FT_CONFIG_OPTION_INCREMENTAL
 
     /* Incremental fonts can optionally override the metrics. */
@@ -193,6 +191,8 @@
 #endif /* FT_CONFIG_OPTION_INCREMENTAL */
 
   Exit:
+    FT_FREE( charstring );
+
     return error;
   }
 
