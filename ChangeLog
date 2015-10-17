@@ -1,5 +1,14 @@
 2015-10-17  Werner Lemberg  <wl@gnu.org>
 
+	[bdf] Use stream size to adjust number of glyphs.
+
+	* src/bdf/bdflib.c (ACMSG17): New message macro.
+	(_bdf_parse_t): Add member `size'.
+	(bdf_load_font): Set `size'.
+	(_bdf_parse_glyphs): Adjust `cnt' if necessary.
+
+2015-10-17  Werner Lemberg  <wl@gnu.org>
+
 	* src/cid/cidload.c (cid_parse_dict): Check `[FG]DBytes' size.
 
 2015-10-17  Werner Lemberg  <wl@gnu.org>

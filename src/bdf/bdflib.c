@@ -201,6 +201,7 @@
 #define ACMSG14  "Glyph %ld extra columns removed.\n"
 #define ACMSG15  "Incorrect glyph count: %ld indicated but %ld found.\n"
 #define ACMSG16  "Glyph %ld missing columns padded with zero bits.\n"
+#define ACMSG17  "Adjusting number of glyphs to %ld.\n"
 
   /* Error messages. */
 #define ERRMSG1  "[line %ld] Missing `%s' line.\n"
@@ -432,6 +433,7 @@
     _bdf_list_t     list;
 
     FT_Memory       memory;
+    unsigned long   size;        /* the stream size */
 
   } _bdf_parse_t;
 
@@ -1579,6 +1581,13 @@
         goto Exit;
       p->cnt = font->glyphs_size = _bdf_atoul( p->list.field[1], 0, 10 );
 
+      /* We need at least 20 bytes per glyph. */
+      if ( p->cnt > p->size / 20 )
+      {
+        p->cnt = p->size / 20;
+        FT_TRACE2(( "_bdf_parse_glyphs: " ACMSG17, p->cnt ));
+      }
+
       /* Make sure the number of glyphs is non-zero. */
       if ( p->cnt == 0 )
         font->glyphs_size = 64;
@@ -2447,6 +2456,7 @@
     memory    = NULL;
     p->opts   = (bdf_options_t*)( ( opts != 0 ) ? opts : &_bdf_opts );
     p->minlb  = 32767;
+    p->size   = stream->size;
     p->memory = extmemory;  /* only during font creation */
 
     _bdf_list_init( &p->list, extmemory );
