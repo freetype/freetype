@@ -1584,7 +1584,7 @@
       /* We need at least 20 bytes per glyph. */
       if ( p->cnt > p->size / 20 )
       {
-        p->cnt = p->size / 20;
+        p->cnt = font->glyphs_size = p->size / 20;
         FT_TRACE2(( "_bdf_parse_glyphs: " ACMSG17, p->cnt ));
       }
 
