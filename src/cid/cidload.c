@@ -401,6 +401,16 @@
         FT_ERROR(( "cid_parse_dict: No font dictionary found\n" ));
         return FT_THROW( Invalid_File_Format );
       }
+
+      /* allow at most 32bit offsets */
+      if ( face->cid.fd_bytes > 4 || face->cid.gd_bytes > 4 )
+      {
+        FT_ERROR(( "cid_parse_dict:"
+                   " Values of `FDBytes' or `GDBytes' larger than 4\n"
+                   "               "
+                   " are not supported\n" ));
+        return FT_THROW( Invalid_File_Format );
+      }
     }
 
     return parser->root.error;

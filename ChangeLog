@@ -1,5 +1,9 @@
 2015-10-17  Werner Lemberg  <wl@gnu.org>
 
+	* src/cid/cidload.c (cid_parse_dict): Check `[FG]DBytes' size.
+
+2015-10-17  Werner Lemberg  <wl@gnu.org>
+
 	* src/cid/cidgload.c (cid_glyph_load): Check file offsets (#46222).
 
 2015-10-17  Werner Lemberg  <wl@gnu.org>
