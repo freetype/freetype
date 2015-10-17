@@ -512,7 +512,7 @@
         break;
 
       case 12:
-        if ( ip > limit )
+        if ( ip >= limit )
         {
           FT_ERROR(( "t1_decoder_parse_charstrings:"
                      " invalid escape (12+EOF)\n" ));

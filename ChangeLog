@@ -1,4 +1,11 @@
-2015-10-15  Werner Lemberg  <wl@gnu.org>
+2015-10-17  Werner Lemberg  <wl@gnu.org>
+
+	[psaux] Fix heap buffer overflow (#46221).
+
+	* src/psaux/t1decode.c (t1_decoder_parse_charstring) <operator 12>:
+	Fix limit check.
+
+2015-10-17  Werner Lemberg  <wl@gnu.org>
 
 	* src/cid/cidload.c (cid_parse_dict): Handle invalid input (#46220).
 
