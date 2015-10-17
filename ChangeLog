@@ -1,4 +1,8 @@
-2015-10-15  Kostya Serebryany <kcc@google.com>
+2015-10-15  Werner Lemberg  <wl@gnu.org>
+
+	* src/cid/cidload.c (cid_parse_dict): Handle invalid input (#46220).
+
+2015-10-15  Kostya Serebryany  <kcc@google.com>
 
 	[ftfuzzer] Add README.
 

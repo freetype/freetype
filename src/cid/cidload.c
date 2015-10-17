@@ -395,7 +395,14 @@
 
         cur = parser->root.cursor;
       }
+
+      if ( !face->cid.num_dicts )
+      {
+        FT_ERROR(( "cid_parse_dict: No font dictionary found\n" ));
+        return FT_THROW( Invalid_File_Format );
+      }
     }
+
     return parser->root.error;
   }
 
