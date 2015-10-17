@@ -116,7 +116,7 @@
       FT_FRAME_EXIT();
 
       if ( fd_select >= (FT_ULong)cid->num_dicts ||
-           off2 >= stream->size                  ||
+           off2 > stream->size                   ||
            off1 > off2                           )
       {
         FT_TRACE0(( "cid_load_glyph: invalid glyph stream offsets\n" ));
