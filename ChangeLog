@@ -1,5 +1,12 @@
 2015-10-17  Werner Lemberg  <wl@gnu.org>
 
+	[bdf] Prevent memory leak (#46217).
+
+	* src/bdf/bdflib.c (_bdf_parse_glyphs) <STARTCHAR>: Check
+	_BDF_GLYPH_BITS.
+
+2015-10-17  Werner Lemberg  <wl@gnu.org>
+
 	[bdf] Use stream size to adjust number of glyphs.
 
 	* src/bdf/bdflib.c (ACMSG17): New message macro.

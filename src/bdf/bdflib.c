@@ -1650,6 +1650,14 @@
     /* Check for the STARTCHAR field. */
     if ( _bdf_strncmp( line, "STARTCHAR", 9 ) == 0 )
     {
+      if ( p->flags & _BDF_GLYPH_BITS )
+      {
+        /* Missing ENDCHAR field. */
+        FT_ERROR(( "_bdf_parse_glyphs: " ERRMSG1, lineno, "ENDCHAR" ));
+        error = FT_THROW( Missing_Startchar_Field );
+        goto Exit;
+      }
+
       /* Set the character name in the parse info first until the */
       /* encoding can be checked for an unencoded character.      */
       FT_FREE( p->glyph_name );
