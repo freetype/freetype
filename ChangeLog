@@ -1,3 +1,10 @@
+2015-10-18  Werner Lemberg  <wl@gnu.org>
+
+	[truetype] Better protection against malformed `fpgm' (#46223).
+
+	* src/truetype/ttobjs.c (tt_size_init_bytecode): Don't execute a
+	malformed `fpgm' table more than once.
+
 2015-10-17  Werner Lemberg  <wl@gnu.org>
 
 	* src/cid/cidgload.c (cid_load_glyph): Fix memory leak.
