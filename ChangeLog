@@ -1,5 +1,12 @@
 2015-10-18  Werner Lemberg  <wl@gnu.org>
 
+	[truetype] Improve TT_CONFIG_OPTION_MAX_RUNNABLE_OPCODES (#46223).
+
+	* devel/ftoption.h, include/freetype/config/ftoption.h: Surround it
+	with #ifndef ... #endif, as suggested in the tracker issue.
+
+2015-10-18  Werner Lemberg  <wl@gnu.org>
+
 	[truetype] Better protection against malformed `fpgm' (#46223).
 
 	* src/truetype/ttobjs.c (tt_size_init_bytecode): Don't execute a

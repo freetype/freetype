@@ -700,7 +700,14 @@ FT_BEGIN_HEADER
   /* want to change this except for very special situations (e.g., making  */
   /* a library fuzzer spend less time to handle broken fonts).             */
   /*                                                                       */
+  /* It is not expected that this value is ever modified by a configuring  */
+  /* script; instead, it gets surrounded with #ifndef ... #endif so that   */
+  /* the value can be set as a preprocessor option on the compiler's       */
+  /* command line.                                                         */
+  /*                                                                       */
+#ifndef TT_CONFIG_OPTION_MAX_RUNNABLE_OPCODES
 #define TT_CONFIG_OPTION_MAX_RUNNABLE_OPCODES  1000000L
+#endif
 
 
   /*************************************************************************/
