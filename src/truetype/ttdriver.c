@@ -534,31 +534,31 @@
       0x10000L,        /* driver version == 1.0                 */
       0x20000L,        /* driver requires FreeType 2.0 or above */
 
-      (void*)0,        /* driver specific interface */
+      0,    /* module-specific interface */
 
-      tt_driver_init,
-      tt_driver_done,
-      tt_get_interface,
+      tt_driver_init,           /* FT_Module_Constructor  module_init   */
+      tt_driver_done,           /* FT_Module_Destructor   module_done   */
+      tt_get_interface,         /* FT_Module_Requester    get_interface */
 
     sizeof ( TT_FaceRec ),
     sizeof ( TT_SizeRec ),
     sizeof ( FT_GlyphSlotRec ),
 
-    tt_face_init,
-    tt_face_done,
-    tt_size_init,
-    tt_size_done,
-    tt_slot_init,
-    0,                       /* FT_Slot_DoneFunc */
+    tt_face_init,               /* FT_Face_InitFunc  init_face */
+    tt_face_done,               /* FT_Face_DoneFunc  done_face */
+    tt_size_init,               /* FT_Size_InitFunc  init_size */
+    tt_size_done,               /* FT_Size_DoneFunc  done_size */
+    tt_slot_init,               /* FT_Slot_InitFunc  init_slot */
+    0,                          /* FT_Slot_DoneFunc  done_slot */
 
-    tt_glyph_load,
+    tt_glyph_load,              /* FT_Slot_LoadFunc  load_glyph */
 
-    tt_get_kerning,
-    0,                       /* FT_Face_AttachFunc */
-    tt_get_advances,
+    tt_get_kerning,             /* FT_Face_GetKerningFunc   get_kerning  */
+    0,                          /* FT_Face_AttachFunc       attach_file  */
+    tt_get_advances,            /* FT_Face_GetAdvancesFunc  get_advances */
 
-    tt_size_request,
-    TT_SIZE_SELECT
+    tt_size_request,            /* FT_Size_RequestFunc  request_size */
+    TT_SIZE_SELECT              /* FT_Size_SelectFunc   select_size  */
   )
 
 

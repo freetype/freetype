@@ -876,31 +876,29 @@
 
       0,   /* module-specific interface */
 
-      cff_driver_init,
-      cff_driver_done,
-      cff_get_interface,
+      cff_driver_init,          /* FT_Module_Constructor  module_init   */
+      cff_driver_done,          /* FT_Module_Destructor   module_done   */
+      cff_get_interface,        /* FT_Module_Requester    get_interface */
 
-    /* now the specific driver fields */
     sizeof ( TT_FaceRec ),
     sizeof ( CFF_SizeRec ),
     sizeof ( CFF_GlyphSlotRec ),
 
-    cff_face_init,
-    cff_face_done,
-    cff_size_init,
-    cff_size_done,
-    cff_slot_init,
-    cff_slot_done,
+    cff_face_init,              /* FT_Face_InitFunc  init_face */
+    cff_face_done,              /* FT_Face_DoneFunc  done_face */
+    cff_size_init,              /* FT_Size_InitFunc  init_size */
+    cff_size_done,              /* FT_Size_DoneFunc  done_size */
+    cff_slot_init,              /* FT_Slot_InitFunc  init_slot */
+    cff_slot_done,              /* FT_Slot_DoneFunc  done_slot */
 
-    cff_glyph_load,
+    cff_glyph_load,             /* FT_Slot_LoadFunc  load_glyph */
 
-    cff_get_kerning,
-    0,                       /* FT_Face_AttachFunc */
-    cff_get_advances,
+    cff_get_kerning,            /* FT_Face_GetKerningFunc   get_kerning  */
+    0,                          /* FT_Face_AttachFunc       attach_file  */
+    cff_get_advances,           /* FT_Face_GetAdvancesFunc  get_advances */
 
-    cff_size_request,
-
-    CFF_SIZE_SELECT
+    cff_size_request,           /* FT_Size_RequestFunc  request_size */
+    CFF_SIZE_SELECT             /* FT_Size_SelectFunc   select_size  */
   )
 
 

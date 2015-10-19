@@ -212,32 +212,32 @@
       0x10000L,
       0x20000L,
 
-      0,    /* format interface */
+      0,    /* module-specific interface */
 
-      T42_Driver_Init,
-      T42_Driver_Done,
-      T42_Get_Interface,
+      T42_Driver_Init,          /* FT_Module_Constructor  module_init   */
+      T42_Driver_Done,          /* FT_Module_Destructor   module_done   */
+      T42_Get_Interface,        /* FT_Module_Requester    get_interface */
     },
 
     sizeof ( T42_FaceRec ),
     sizeof ( T42_SizeRec ),
     sizeof ( T42_GlyphSlotRec ),
 
-    T42_Face_Init,
-    T42_Face_Done,
-    T42_Size_Init,
-    T42_Size_Done,
-    T42_GlyphSlot_Init,
-    T42_GlyphSlot_Done,
+    T42_Face_Init,              /* FT_Face_InitFunc  init_face */
+    T42_Face_Done,              /* FT_Face_DoneFunc  done_face */
+    T42_Size_Init,              /* FT_Size_InitFunc  init_size */
+    T42_Size_Done,              /* FT_Size_DoneFunc  done_size */
+    T42_GlyphSlot_Init,         /* FT_Slot_InitFunc  init_slot */
+    T42_GlyphSlot_Done,         /* FT_Slot_DoneFunc  done_slot */
 
-    T42_GlyphSlot_Load,
+    T42_GlyphSlot_Load,         /* FT_Slot_LoadFunc  load_glyph */
 
-    0,                 /* FT_Face_GetKerningFunc  */
-    0,                 /* FT_Face_AttachFunc      */
+    0,                          /* FT_Face_GetKerningFunc   get_kerning  */
+    0,                          /* FT_Face_AttachFunc       attach_file  */
+    0,                          /* FT_Face_GetAdvancesFunc  get_advances */
 
-    0,                 /* FT_Face_GetAdvancesFunc */
-    T42_Size_Request,
-    T42_Size_Select
+    T42_Size_Request,           /* FT_Size_RequestFunc  request_size */
+    T42_Size_Select             /* FT_Size_SelectFunc   select_size  */
   };
 
 
