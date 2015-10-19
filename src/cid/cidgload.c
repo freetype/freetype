@@ -157,6 +157,12 @@
 
       /* Adjustment for seed bytes. */
       cs_offset = decoder->lenIV >= 0 ? (FT_UInt)decoder->lenIV : 0;
+      if ( cs_offset > glyph_length )
+      {
+        FT_TRACE0(( "cid_load_glyph: invalid glyph stream offsets\n" ));
+        error = FT_THROW( Invalid_Offset );
+        goto Exit;
+      }
 
       /* Decrypt only if lenIV >= 0. */
       if ( decoder->lenIV >= 0 )

@@ -1,3 +1,10 @@
+2015-10-18  Bungeman  <bungeman@gmail.com>
+
+	[cid] Better handle invalid glyph stream offsets (#46221).
+
+	* src/cid/cidgload.c (cid_load_glyph): Check minimum size of glyph
+	length.
+
 2015-10-18  Werner Lemberg  <wl@gnu.org>
 
 	[psaux] Fix tracing of negative numbers.
