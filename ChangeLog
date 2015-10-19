@@ -1,5 +1,15 @@
 2015-10-18  Werner Lemberg  <wl@gnu.org>
 
+	[psaux] Fix tracing of negative numbers.
+
+	Due to incorrect casting negative numbers were shown as very large
+	(positive) integers on 64bit systems.
+
+	* src/psaux/t1decode.c (t1_decoder_parse_charstrings) <op_none>:
+	Use division instead of shift.
+
+2015-10-18  Werner Lemberg  <wl@gnu.org>
+
 	[truetype] Improve TT_CONFIG_OPTION_MAX_RUNNABLE_OPCODES (#46223).
 
 	* devel/ftoption.h, include/freetype/config/ftoption.h: Surround it
