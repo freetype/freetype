@@ -1,4 +1,8 @@
-2015-10-18  Bungeman  <bungeman@gmail.com>
+2015-10-20  Werner Lemberg  <wl@gnu.org>
+
+	* src/type1/t1afm.c (T1_Read_Metrics): Fix memory leak (#46229).
+
+2015-10-19  Bungeman  <bungeman@gmail.com>
 
 	[cid] Better handle invalid glyph stream offsets (#46221).
 
