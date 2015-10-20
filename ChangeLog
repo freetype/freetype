@@ -1,5 +1,17 @@
 2015-10-20  Werner Lemberg  <wl@gnu.org>
 
+	[cid] Add a bunch of safety checks.
+
+	* src/cid/cidload.c (parse_fd_array): Check `num_dicts' against
+	stream size.
+	(cid_read_subrs): Check largest offset against stream size.
+	(cid_parse_dict): Move safety check to ...
+	(cid_face_open): ... this function.
+	Also test length of binary data and values of `SDBytes',
+	`SubrMapOffset', `SubrCount', `CIDMapOffset', and `CIDCount'.
+
+2015-10-20  Werner Lemberg  <wl@gnu.org>
+
 	[cid] Avoid segfault with malformed input (#46250).
 
 	* src/cid/cidload.c (cid_read_subrs): Return a proper error code for
