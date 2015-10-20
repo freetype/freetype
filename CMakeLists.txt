@@ -100,13 +100,13 @@ else ()
   endif ()
 endif ()
 
-if (WIN32 AND BUILD_SHARED_LIBS)
-  message(FATAL_ERROR "Shared libraries not supported on Windows.")
-endif ()
-
 
 project(freetype)
 
+
+if (WIN32 AND NOT MINGW AND BUILD_SHARED_LIBS)
+  message(FATAL_ERROR "Building shared libraries on Windows needs MinGW")
+endif ()
 
 # Disallow in-source builds
 if ("${PROJECT_BINARY_DIR}" STREQUAL "${PROJECT_SOURCE_DIR}")

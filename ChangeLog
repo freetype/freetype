@@ -1,3 +1,7 @@
+2015-10-20  StudioEtrange  <nomorgan@gmail.com>
+
+	* CMakeLists.txt: Enable shared library builds on MinGW (#46233).
+
 2015-10-20  Werner Lemberg  <wl@gnu.org>
 
 	* src/type1/t1afm.c (T1_Read_Metrics): Fix memory leak (#46229).
