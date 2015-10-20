@@ -1,3 +1,10 @@
+2015-10-20  Werner Lemberg  <wl@gnu.org>
+
+	[cid] Avoid segfault with malformed input (#46250).
+
+	* src/cid/cidload.c (cid_read_subrs): Return a proper error code for
+	unsorted offsets.
+
 2015-10-20  StudioEtrange  <nomorgan@gmail.com>
 
 	* CMakeLists.txt: Enable shared library builds on MinGW (#46233).

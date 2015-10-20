@@ -484,7 +484,11 @@
       /* offsets must be ordered */
       for ( count = 1; count <= num_subrs; count++ )
         if ( offsets[count - 1] > offsets[count] )
+        {
+          FT_TRACE1(( "cid_read_subrs: offsets are not ordered\n" ));
+          error = FT_THROW( Syntax_Error );
           goto Fail;
+        }
 
       /* now, compute the size of subrs charstrings, */
       /* allocate, and read them                     */
