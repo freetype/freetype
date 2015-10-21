@@ -1,5 +1,12 @@
 2015-10-21  Werner Lemberg  <wl@gnu.org>
 
+	[base] Pacify compiler (#46266).
+
+	* src/base/ftoutln.c (FT_Outline_EmboldenXY): Initialize `in' and
+	`anchor'.
+
+2015-10-21  Werner Lemberg  <wl@gnu.org>
+
 	[type42] Fix heap buffer overflow (#46269).
 
 	* src/type42/t42parse.c (t42_parse_sfnts): Fix off-by-one error in

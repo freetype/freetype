@@ -942,6 +942,9 @@
       l_in = 0;
       last = outline->contours[c];
 
+      /* pacify compiler */
+      in.x = in.y = anchor.x = anchor.y = 0;
+
       /* Counter j cycles though the points; counter i advances only  */
       /* when points are moved; anchor k marks the first moved point. */
       for ( i = last, j = first, k = -1;
