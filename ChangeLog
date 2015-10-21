@@ -1,3 +1,10 @@
+2015-10-21  Werner Lemberg  <wl@gnu.org>
+
+	[type42] Better check invalid `sfnts' array data (#46255).
+
+	* src/type42/t42parse.c (t42_parse_sfnts): Table lengths must be
+	checked individually against available data size.
+
 2015-10-20  Werner Lemberg  <wl@gnu.org>
 
 	[cid] Add a bunch of safety checks.
