@@ -1,5 +1,12 @@
 2015-10-21  Dave Arnold  <darnold@adobe.com>
 
+	[cff] Fix limit in assert for max hints.
+
+	* src/cff/cf2interp.c (cf2_hintmask_setAll): Allow mask equal to the
+	limit (96 bits).
+
+2015-10-21  Dave Arnold  <darnold@adobe.com>
+
 	[cff] Remove an assert (#46107).
 
 	* src/cff/cf2hints.c (cf2_hintmap_insertHint): Ignore paired edges

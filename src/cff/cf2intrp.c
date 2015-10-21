@@ -184,7 +184,7 @@
       return;
 
     FT_ASSERT( hintmask->byteCount > 0 );
-    FT_ASSERT( hintmask->byteCount <
+    FT_ASSERT( hintmask->byteCount <=
                  sizeof ( hintmask->mask ) / sizeof ( hintmask->mask[0] ) );
 
     /* set mask to all ones */
