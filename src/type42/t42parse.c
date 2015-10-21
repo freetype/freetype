@@ -640,7 +640,7 @@
 
         string_buf = parser->root.cursor + 1;   /* one space after `RD' */
 
-        if ( (FT_ULong)( limit - parser->root.cursor ) < string_size )
+        if ( (FT_ULong)( limit - parser->root.cursor ) <= string_size )
         {
           FT_ERROR(( "t42_parse_sfnts: too much binary data\n" ));
           error = FT_THROW( Invalid_File_Format );
