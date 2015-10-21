@@ -1,3 +1,10 @@
+2015-10-21  Dave Arnold  <darnold@adobe.com>
+
+	[cff] Remove an assert (#46107).
+
+	* src/cff/cf2hints.c (cf2_hintmap_insertHint): Ignore paired edges
+	in wrong order.
+
 2015-10-21  Werner Lemberg  <wl@gnu.org>
 
 	[sfnt] Avoid unnecessarily large allocation for WOFFs (#46257).
