@@ -451,10 +451,14 @@
                                      woff.metaOrigLength != 0 ) ) ||
          ( woff.metaLength != 0 && woff.metaOrigLength == 0 )     ||
          ( woff.privOffset == 0 && woff.privLength != 0 )         )
+    {
+      FT_ERROR(( "woff_font_open: invalid WOFF header\n" ));
       return FT_THROW( Invalid_Table );
+    }
 
-    if ( FT_ALLOC( sfnt, woff.totalSfntSize ) ||
-         FT_NEW( sfnt_stream )                )
+    /* Don't trust `totalSfntSize' before thorough checks. */
+    if ( FT_ALLOC( sfnt, 12 + woff.num_tables * 16UL ) ||
+         FT_NEW( sfnt_stream )                         )
       goto Exit;
 
     sfnt_header = sfnt;
@@ -521,6 +525,8 @@
       if ( table->Tag <= old_tag )
       {
         FT_FRAME_EXIT();
+
+        FT_ERROR(( "woff_font_open: table tags are not sorted\n" ));
         error = FT_THROW( Invalid_Table );
         goto Exit;
       }
@@ -555,6 +561,7 @@
            sfnt_offset > woff.totalSfntSize - table->OrigLength ||
            table->CompLength > table->OrigLength                )
       {
+        FT_ERROR(( "woff_font_open: invalid table offsets\n" ));
         error = FT_THROW( Invalid_Table );
         goto Exit;
       }
@@ -580,6 +587,8 @@
       if ( woff.metaOffset != woff_offset                  ||
            woff.metaOffset + woff.metaLength > woff.length )
       {
+        FT_ERROR(( "woff_font_open:"
+                   " invalid `metadata' offset or length\n" ));
         error = FT_THROW( Invalid_Table );
         goto Exit;
       }
@@ -596,6 +605,7 @@
       if ( woff.privOffset != woff_offset                  ||
            woff.privOffset + woff.privLength > woff.length )
       {
+        FT_ERROR(( "woff_font_open: invalid `private' offset or length\n" ));
         error = FT_THROW( Invalid_Table );
         goto Exit;
       }
@@ -607,9 +617,18 @@
     if ( sfnt_offset != woff.totalSfntSize ||
          woff_offset != woff.length        )
     {
+      FT_ERROR(( "woff_font_open: invalid `sfnt' table structure\n" ));
       error = FT_THROW( Invalid_Table );
       goto Exit;
     }
+
+    /* Now use `totalSfntSize'. */
+    if ( FT_REALLOC( sfnt,
+                     12 + woff.num_tables * 16UL,
+                     woff.totalSfntSize ) )
+      goto Exit;
+
+    sfnt_header = sfnt + 12;
 
     /* Write the tables. */
 
@@ -651,6 +670,7 @@
           goto Exit;
         if ( output_len != table->OrigLength )
         {
+          FT_ERROR(( "woff_font_open: compressed table length mismatch\n" ));
           error = FT_THROW( Invalid_Table );
           goto Exit;
         }

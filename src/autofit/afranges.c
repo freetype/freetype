@@ -179,6 +179,34 @@
   };
 
 
+  const AF_Script_UniRangeRec  af_khmr_uniranges[] =
+  {
+    AF_UNIRANGE_REC(  0x1780UL,  0x17FFUL ),  /* Khmer */
+    AF_UNIRANGE_REC(       0UL,       0UL )
+  };
+
+  const AF_Script_UniRangeRec  af_khmr_nonbase_uniranges[] =
+  {
+    AF_UNIRANGE_REC(  0x17B7UL,  0x17BDUL ),
+    AF_UNIRANGE_REC(  0x17C6UL,  0x17C6UL ),
+    AF_UNIRANGE_REC(  0x17C9UL,  0x17D3UL ),
+    AF_UNIRANGE_REC(  0x17DDUL,  0x17DDUL ),
+    AF_UNIRANGE_REC(       0UL,       0UL )
+  };
+
+
+  const AF_Script_UniRangeRec  af_khms_uniranges[] =
+  {
+    AF_UNIRANGE_REC(  0x19E0UL,  0x19FFUL ),  /* Khmer Symbols */
+    AF_UNIRANGE_REC(       0UL,       0UL )
+  };
+
+  const AF_Script_UniRangeRec  af_khms_nonbase_uniranges[] =
+  {
+    AF_UNIRANGE_REC( 0UL, 0UL )
+  };
+
+
   const AF_Script_UniRangeRec  af_lao_uniranges[] =
   {
     AF_UNIRANGE_REC(  0x0E80UL,  0x0EFFUL ),  /* Lao */

@@ -1,5 +1,13 @@
 2015-10-21  Werner Lemberg  <wl@gnu.org>
 
+	[sfnt] Avoid unnecessarily large allocation for WOFFs (#46257).
+
+	* src/sfnt/sfobjs.c (woff_open_font): Use WOFF's `totalSfntSize'
+	only after thorough checks.
+	Add tracing messages.
+
+2015-10-21  Werner Lemberg  <wl@gnu.org>
+
 	[type42] Better check invalid `sfnts' array data (#46255).
 
 	* src/type42/t42parse.c (t42_parse_sfnts): Table lengths must be
