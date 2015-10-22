@@ -1,3 +1,20 @@
+2015-10-22  Dave Arnold  <darnold@adobe.com>
+	    Werner Lemberg  <wl@gnu.org>
+
+	[cff] Avoid overflow/module arithmetic.
+
+	This modifies the addition of subroutine number to subroutine bias
+	from unsigned to signed, but does not change any results.
+
+	* src/cff/cf2ft.c (cf2_initGlobalRegionBuffer,
+	cf2_initLocalRegionBuffer): Change variable names from (unsigned)
+	`idx' to (signed) `subrNum', since it is not an index until after
+	the bias is added.
+	* src/cff/cf2ft.h: Updated.
+
+	* src/cff/cf2intrp.c (cf2_interpT2CharString) <cf2_cmdCALLSUBR>:
+	Updated similarly.
+
 2015-10-22  Werner Lemberg  <wl@gnu.org>
 
 	[cid] Better check of `SubrCount' dictionary entry (#46272).
