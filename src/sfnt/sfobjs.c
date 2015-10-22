@@ -930,6 +930,7 @@
            FT_READ_USHORT( instance_size )                        )
       {
         version       = 0;
+        offset        = 0;
         num_axes      = 0;
         axis_size     = 0;
         num_instances = 0;

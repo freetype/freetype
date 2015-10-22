@@ -1,3 +1,11 @@
+2015-10-22  Werner Lemberg  <wl@gnu.org>
+
+	[sfnt, type42] Fix clang compiler warnings.
+
+	* src/sfnt/sfobjs.c (sfnt_init_face): Initialize `offset'.
+
+	* src/type42/t42parse.c (t42_parse_sfnts): Use proper cast.
+
 2015-10-22  Dave Arnold  <darnold@adobe.com>
 	    Werner Lemberg  <wl@gnu.org>
 

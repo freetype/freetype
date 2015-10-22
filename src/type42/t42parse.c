@@ -672,7 +672,7 @@
       /* The whole TTF is now loaded into `string_buf'.  We are */
       /* checking its contents while copying it to `ttf_data'.  */
 
-      size = limit - parser->root.cursor;
+      size = (FT_ULong)( limit - parser->root.cursor );
 
       for ( n = 0; n < string_size; n++ )
       {
