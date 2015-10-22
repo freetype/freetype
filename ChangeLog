@@ -1,3 +1,10 @@
+2015-10-22  Werner Lemberg  <wl@gnu.org>
+
+	[cid] Better check of `SubrCount' dictionary entry (#46272).
+
+	* src/cid/cidload.c (cid_face_open): Add more sanity tests for
+	`fd_bytes', `gd_bytes', `sd_bytes', and `num_subrs'.
+
 2015-10-21  Werner Lemberg  <wl@gnu.org>
 
 	[base] Pacify compiler (#46266).

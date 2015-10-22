@@ -750,6 +750,14 @@
 
     /* sanity tests */
 
+    if ( cid->fd_bytes < 0 || cid->gd_bytes < 0 )
+    {
+      FT_ERROR(( "cid_parse_dict:"
+                 " Invalid `FDBytes' or `GDBytes' value\n" ));
+      error = FT_THROW( Invalid_File_Format );
+      goto Exit;
+    }
+
     /* allow at most 32bit offsets */
     if ( cid->fd_bytes > 4 || cid->gd_bytes > 4 )
     {
@@ -769,6 +777,13 @@
       CID_FaceDict  dict = cid->font_dicts + n;
 
 
+      if ( dict->sd_bytes < 0 )
+      {
+        FT_ERROR(( "cid_parse_dict: Invalid `SDBytes' value\n" ));
+        error = FT_THROW( Invalid_File_Format );
+        goto Exit;
+      }
+
       if ( dict->sd_bytes > 4 )
       {
         FT_ERROR(( "cid_parse_dict:"
@@ -785,9 +800,11 @@
         goto Exit;
       }
 
-      if ( dict->sd_bytes                                              &&
-           dict->num_subrs >
-             ( binary_length - dict->subrmap_offset ) / dict->sd_bytes )
+      /* `num_subrs' is scanned as a signed integer */
+      if ( (FT_Int)dict->num_subrs < 0                                     ||
+           ( dict->sd_bytes                                              &&
+             dict->num_subrs > ( binary_length - dict->subrmap_offset ) /
+                                 (FT_UInt)dict->sd_bytes                 ) )
       {
         FT_ERROR(( "cid_parse_dict: Invalid `SubrCount' value\n" ));
         error = FT_THROW( Invalid_File_Format );
