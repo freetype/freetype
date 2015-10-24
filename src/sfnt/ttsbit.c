@@ -289,12 +289,12 @@
             /* sanitize buggy ascender and descender values */
             if ( max_before_bl || min_after_bl )
             {
-              metrics->ascender  = max_before_bl;
-              metrics->descender = min_after_bl;
+              metrics->ascender  = max_before_bl * 64;
+              metrics->descender = min_after_bl * 64;
             }
             else
             {
-              metrics->ascender  = metrics->y_ppem;
+              metrics->ascender  = metrics->y_ppem * 64;
               metrics->descender = 0;
             }
           }
@@ -313,7 +313,8 @@
                       "                            "
                       " for strike (%d, %d)\n",
                       metrics->x_ppem, metrics->y_ppem ));
-          metrics->height = metrics->y_ppem;
+          metrics->height    = metrics->y_ppem * 64;
+          metrics->descender = metrics->ascender - metrics->height;
         }
 
         /* Is this correct? */
