@@ -247,6 +247,8 @@
     case TT_SBIT_TABLE_TYPE_CBLC:
       {
         FT_Byte*  strike;
+        FT_Char   max_before_bl;
+        FT_Char   min_after_bl;
 
 
         strike = face->sbit_table + 8 + strike_index * 48;
@@ -256,7 +258,63 @@
 
         metrics->ascender  = (FT_Char)strike[16] * 64;  /* hori.ascender  */
         metrics->descender = (FT_Char)strike[17] * 64;  /* hori.descender */
-        metrics->height    = metrics->ascender - metrics->descender;
+
+        /* Due to fuzzy wording in the EBLC documentation, we find both */
+        /* positive and negative values for `descender'.  Additionally, */
+        /* many fonts have both `ascender' and `descender' set to zero  */
+        /* (which is definitely wrong).  MS Windows simply ignores all  */
+        /* those values...  For these reasons we apply some heuristics  */
+        /* to get a reasonable, non-zero value for the height.          */
+
+        max_before_bl = (FT_Char)strike[24];
+        min_after_bl  = (FT_Char)strike[25];
+
+        if ( metrics->descender > 0 )
+        {
+          /* compare sign of descender with `min_after_bl' */
+          if ( min_after_bl < 0 )
+            metrics->descender = -metrics->descender;
+        }
+
+        else if ( metrics->descender == 0 )
+        {
+          if ( metrics->ascender == 0 )
+          {
+            FT_TRACE2(( "tt_face_load_strike_metrics:"
+                        " sanitizing invalid ascender and descender\n"
+                        "                            "
+                        " values for strike (%d, %d)\n",
+                        metrics->x_ppem, metrics->y_ppem ));
+
+            /* sanitize buggy ascender and descender values */
+            if ( max_before_bl || min_after_bl )
+            {
+              metrics->ascender  = max_before_bl;
+              metrics->descender = min_after_bl;
+            }
+            else
+            {
+              metrics->ascender  = metrics->y_ppem;
+              metrics->descender = 0;
+            }
+          }
+        }
+
+#if 0
+        else
+          ; /* if we have a negative descender, simply use it */
+#endif
+
+        metrics->height = metrics->ascender - metrics->descender;
+        if ( metrics->height == 0 )
+        {
+          FT_TRACE2(( "tt_face_load_strike_metrics:"
+                      " sanitizing invalid height value\n"
+                      "                            "
+                      " for strike (%d, %d)\n",
+                      metrics->x_ppem, metrics->y_ppem ));
+          metrics->height = metrics->y_ppem;
+        }
 
         /* Is this correct? */
         metrics->max_advance = ( (FT_Char)strike[22] + /* min_origin_SB  */
