@@ -1,3 +1,19 @@
+2015-10-25  Werner Lemberg  <wl@gnu.org>
+
+	[autofit] Improve tracing.
+
+	* src/autofit/afhints.c (af_print_idx, af_get_segment_index,
+	af_get_edge_index): New functions.
+
+	(af_glyph_hints_dump_points): Remove unnecessary `|', `[', and `]'.
+	Add segment and edge index for each point.
+	Slightly change printing order of some elements.
+	Don't print `-1' but `--' for missing elements.
+
+	(af_glyph_hints_dump_segments, af_glyph_hints_dump_edges): Remove
+	unnecessary `|', `[', and `]'.
+	Don't print `-1' but `--' for missing elements.
+
 2015-10-24  Werner Lemberg  <wl@gnu.org>
 
 	[sfnt] Sanitize bitmap strike glyph height.
