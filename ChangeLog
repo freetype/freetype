@@ -1,3 +1,11 @@
+2015-10-26  Werner Lemberg  <wl@gnu.org>
+
+	[truetype] Fix sanitizing logic for `loca' (#46223).
+
+	* src/truetype/ttpload.c (tt_face_load_loca): A thinko caused an
+	incorrect adjustment of the number of glyphs, most often using far
+	too large values.
+
 2015-10-25  Werner Lemberg  <wl@gnu.org>
 
 	[autofit] Improve tracing.
