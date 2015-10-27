@@ -1,3 +1,21 @@
+2015-10-27  Werner Lemberg  <wl@gnu.org>
+
+	[pfr] Add some safety guards (#46302).
+
+	* src/pfr/pfrload.h (PFR_CHECK): Rename to...
+	(PFR_CHECK_SIZE): ... this.
+	(PFR_SIZE): [!PFR_CONFIG_NO_CHECKS]: Define to PFR_CHECK_SIZE.
+
+	* src/pfr/pfrload.c (pfr_log_font_count): Check `count'. 
+	(pfr_extra_item_load_kerning_pairs): Remove tracing message.
+	(pfr_phy_font_load): Use PFR_CHECK_SIZE where appropriate.
+	Allocate `chars' after doing a size checks.
+
+	* src/pfr/pfrsbit.c (pfr_load_bitmap_bits): Move test for invalid
+	bitmap format to...
+	(pfr_slot_load_bitmap): ... this function.
+	Check bitmap size.
+
 2015-10-26  Werner Lemberg  <wl@gnu.org>
 
 	[truetype] Fix sanitizing logic for `loca' (#46223).

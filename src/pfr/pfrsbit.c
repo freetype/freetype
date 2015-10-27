@@ -510,8 +510,7 @@
         break;
 
       default:
-        FT_ERROR(( "pfr_read_bitmap_data: invalid image type\n" ));
-        error = FT_THROW( Invalid_File_Format );
+        ;
       }
     }
 
@@ -631,6 +630,53 @@
                                        &xpos, &ypos,
                                        &xsize, &ysize,
                                        &advance, &format );
+
+      /*
+       * Before allocating the target bitmap, we check whether the given
+       * bitmap dimensions are valid, depending on the image format.
+       *
+       * Format 0: We have a stream of pixels (with 8 pixels per byte).
+       *
+       *             (xsize * ysize + 7) / 8 <= gps_size
+       *
+       * Format 1: Run-length encoding; the high nibble holds the number of
+       *           white bits, the low nibble the number of black bits.  In
+       *           other words, a single byte can represent at most 15
+       *           pixels.
+       *
+       *             xsize * ysize <= 15 * gps_size
+       *
+       * Format 2: Run-length encoding; the high byte holds the number of
+       *           white bits, the low byte the number of black bits.  In
+       *           other words, two bytes can represent at most 255 pixels.
+       *
+       *             xsize * ysize <= 255 * (gps_size + 1) / 2
+       */
+      switch ( format )
+      {
+      case 0:
+        if ( ( (FT_ULong)xsize * ysize + 7 ) / 8 > gps_size )
+          error = FT_THROW( Invalid_Table );
+        break;
+      case 1:
+        if ( (FT_ULong)xsize * ysize > 15 * gps_size )
+          error = FT_THROW( Invalid_Table );
+        break;
+      case 2:
+        if ( (FT_ULong)xsize * ysize > 255 * ( ( gps_size + 1 ) / 2 ) )
+          error = FT_THROW( Invalid_Table );
+        break;
+      default:
+        FT_ERROR(( "pfr_slot_load_bitmap: invalid image type\n" ));
+        error = FT_THROW( Invalid_Table );
+      }
+
+      if ( error )
+      {
+        if ( FT_ERR_EQ( error, Invalid_Table ) )
+          FT_ERROR(( "pfr_slot_load_bitmap: invalid bitmap dimensions\n" ));
+        goto Exit;
+      }
 
       /*
        * XXX: on 16bit systems we return an error for huge bitmaps

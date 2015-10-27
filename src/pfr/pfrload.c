@@ -26,6 +26,93 @@
 #define FT_COMPONENT  trace_pfr
 
 
+  /*
+   *  The overall structure of a PFR file is as follows.
+   *
+   *    PFR header
+   *      58 bytes (contains nPhysFonts)
+   *
+   *    Logical font directory (size at most 2^16 bytes)
+   *      2 bytes (nLogFonts)
+   *      + nLogFonts * 5 bytes
+   *
+   *         ==>   nLogFonts <= 13106
+   *
+   *    Logical font section (size at most 2^24 bytes)
+   *      nLogFonts * logFontRecord
+   *
+   *      logFontRecord (size at most 2^16 bytes)
+   *        12 bytes (fontMatrix)
+   *        + 1 byte (flags)
+   *        + 0-5 bytes (depending on `flags')
+   *        + 0-(1+255*(2+255)) = 0-65536 (depending on `flags')
+   *        + 5 bytes (physical font info)
+   *        + 0-1 bytes (depending on PFR header)
+   *
+   *         ==>   minimum size 18 bytes
+   *
+   *    Physical font section (size at most 2^24 bytes)
+   *      nPhysFonts * (physFontRecord
+   *                    + nBitmapSizes * nBmapChars * bmapCharRecord)
+   *
+   *      physFontRecord (size at most 2^24 bytes)
+   *        14 bytes (font info)
+   *        + 1 byte (flags)
+   *        + 0-2 (depending on `flags')
+   *        + 0-? (structure too complicated to be shown here; depending on
+   *               `flags'; contains `nBitmapSizes' and `nBmapChars')
+   *        + 3 bytes (nAuxBytes)
+   *        + nAuxBytes
+   *        + 1 byte (nBlueValues)
+   *        + 2 * nBlueValues
+   *        + 6 bytes (hinting data)
+   *        + 2 bytes (nCharacters)
+   *        + nCharacters * (4-10 bytes) (depending on `flags')
+   *
+   *         ==>   minimum size 27 bytes
+   *
+   *      bmapCharRecord
+   *        4-7 bytes
+   *
+   *    Glyph program strings (three possible types: simpleGps, compoundGps,
+   *                           and bitmapGps; size at most 2^24 bytes)
+   *      simpleGps (size at most 2^16 bytes)
+   *        1 byte (flags)
+   *        1-2 bytes (n[XY]orus, depending on `flags')
+   *        0-(64+512*2) = 0-1088 bytes (depending on `n[XY]orus')
+   *        0-? (structure too complicated to be shown here; depending on
+   *             `flags')
+   *        1-? glyph data (faintly resembling PS Type 1 charstrings)
+   *
+   *         ==>   minimum size 3 bytes
+   *
+   *      compoundGps (size at most 2^16 bytes)
+   *        1 byte (nElements <= 63, flags)
+   *        + 0-(1+255*(2+255)) = 0-65536 (depending on `flags')
+   *        + nElements * (6-14 bytes)
+   *
+   *      bitmapGps (size at most 2^16 bytes)
+   *        1 byte (flags)
+   *        3-13 bytes (position info, depending on `flags')
+   *        0-? bitmap data
+   *
+   *         ==>   minimum size 4 bytes
+   *
+   *    PFR trailer
+   *        8 bytes
+   *
+   *
+   * ==>   minimum size of a valid PFR:
+   *         58 (header)
+   *         + 2 (nLogFonts)
+   *         + 27 (1 physFontRecord)
+   *         + 8 (trailer)
+   *        -----
+   *         95 bytes
+   *
+   */
+
+
   /*************************************************************************/
   /*************************************************************************/
   /*****                                                               *****/
@@ -211,6 +298,16 @@
     if ( FT_STREAM_SEEK( section_offset ) ||
          FT_READ_USHORT( count )          )
       goto Exit;
+
+    /* check maximum value and a rough minimum size */
+    if ( count > ( ( 1 << 16 ) - 2 ) / 5                ||
+         2 + count * 5 >= stream->size - section_offset )
+    {
+      FT_ERROR(( "pfr_log_font_count:"
+                 " invalid number of logical fonts\n" ));
+      error = FT_THROW( Invalid_Table );
+      goto Exit;
+    }
 
     result = count;
 
@@ -530,8 +627,6 @@
     FT_Memory     memory = phy_font->memory;
 
 
-    FT_TRACE2(( "pfr_extra_item_load_kerning_pairs()\n" ));
-
     if ( FT_NEW( item ) )
       goto Exit;
 
@@ -782,7 +877,7 @@
       FT_Byte*  q2;
 
 
-      PFR_CHECK( num_aux );
+      PFR_CHECK_SIZE( num_aux );
       p += num_aux;
 
       while ( num_aux > 0 )
@@ -871,9 +966,6 @@
       phy_font->num_chars    = count = PFR_NEXT_USHORT( p );
       phy_font->chars_offset = offset + (FT_Offset)( p - stream->cursor );
 
-      if ( FT_NEW_ARRAY( phy_font->chars, count ) )
-        goto Fail;
-
       Size = 1 + 1 + 2;
       if ( flags & PFR_PHY_2BYTE_CHARCODE )
         Size += 1;
@@ -890,7 +982,10 @@
       if ( flags & PFR_PHY_3BYTE_GPS_OFFSET )
         Size += 1;
 
-      PFR_CHECK( count * Size );
+      PFR_CHECK_SIZE( count * Size );
+
+      if ( FT_NEW_ARRAY( phy_font->chars, count ) )
+        goto Fail;
 
       for ( n = 0; n < count; n++ )
       {
