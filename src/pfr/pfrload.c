@@ -75,7 +75,8 @@
           if ( extra->type == item_type )
           {
             error = extra->parser( p, p + item_size, item_data );
-            if ( error ) goto Exit;
+            if ( error )
+              goto Exit;
 
             break;
           }
@@ -183,7 +184,8 @@
     {
       result = 0;
     }
-    return  result;
+
+    return result;
   }
 
 
@@ -206,7 +208,8 @@
     FT_UInt   result = 0;
 
 
-    if ( FT_STREAM_SEEK( section_offset ) || FT_READ_USHORT( count ) )
+    if ( FT_STREAM_SEEK( section_offset ) ||
+         FT_READ_USHORT( count )          )
       goto Exit;
 
     result = count;
@@ -254,13 +257,14 @@
       FT_UInt   local;
 
 
-      if ( FT_STREAM_SEEK( offset ) || FT_FRAME_ENTER( size ) )
+      if ( FT_STREAM_SEEK( offset ) ||
+           FT_FRAME_ENTER( size )   )
         goto Exit;
 
       p     = stream->cursor;
       limit = p + size;
 
-      PFR_CHECK(13);
+      PFR_CHECK( 13 );
 
       log_font->matrix[0] = PFR_NEXT_LONG( p );
       log_font->matrix[1] = PFR_NEXT_LONG( p );
@@ -308,10 +312,11 @@
       if ( flags & PFR_LOG_EXTRA_ITEMS )
       {
         error = pfr_extra_items_skip( &p, limit );
-        if (error) goto Fail;
+        if ( error )
+          goto Fail;
       }
 
-      PFR_CHECK(5);
+      PFR_CHECK( 5 );
       log_font->phys_size   = PFR_NEXT_USHORT( p );
       log_font->phys_offset = PFR_NEXT_ULONG( p );
       if ( size_increment )
@@ -358,7 +363,7 @@
 
     PFR_CHECK( 5 );
 
-    p += 3;  /* skip bctSize */
+    p     += 3;  /* skip bctSize */
     flags0 = PFR_NEXT_BYTE( p );
     count  = PFR_NEXT_BYTE( p );
 
@@ -434,12 +439,12 @@
   }
 
 
-  /* Load font ID.  This is a so-called "unique" name that is rather
-   * long and descriptive (like "Tiresias ScreenFont v7.51").
+  /* Load font ID.  This is a so-called `unique' name that is rather
+   * long and descriptive (like `Tiresias ScreenFont v7.51').
    *
    * Note that a PFR font's family name is contained in an *undocumented*
-   * string of the "auxiliary data" portion of a physical font record.  This
-   * may also contain the "real" style name!
+   * string of the `auxiliary data' portion of a physical font record.  This
+   * may also contain the `real' style name!
    *
    * If no family name is present, the font ID is used instead for the
    * family.
@@ -612,7 +617,6 @@
   }
 
 
-
   static const PFR_ExtraItemRec  pfr_phy_font_extra_items[] =
   {
     { 1, (PFR_ExtraItem_ParseFunc)pfr_extra_item_load_bitmap_info },
@@ -623,7 +627,8 @@
   };
 
 
-  /* Loads a name from the auxiliary data.  Since this extracts undocumented
+  /*
+   * Load a name from the auxiliary data.  Since this extracts undocumented
    * strings from the font file, we need to be careful here.
    */
   static FT_Error
@@ -729,7 +734,8 @@
     phy_font->kern_items      = NULL;
     phy_font->kern_items_tail = &phy_font->kern_items;
 
-    if ( FT_STREAM_SEEK( offset ) || FT_FRAME_ENTER( size ) )
+    if ( FT_STREAM_SEEK( offset ) ||
+         FT_FRAME_ENTER( size )   )
       goto Exit;
 
     phy_font->cursor = stream->cursor;
@@ -757,16 +763,16 @@
     /* load the extra items when present */
     if ( flags & PFR_PHY_EXTRA_ITEMS )
     {
-      error =  pfr_extra_items_parse( &p, limit,
-                                      pfr_phy_font_extra_items, phy_font );
+      error = pfr_extra_items_parse( &p, limit,
+                                     pfr_phy_font_extra_items, phy_font );
 
       if ( error )
         goto Fail;
     }
 
-    /* In certain fonts, the auxiliary bytes contain interesting  */
-    /* information. These are not in the specification but can be */
-    /* guessed by looking at the content of a few PFR0 fonts.     */
+    /* In certain fonts, the auxiliary bytes contain interesting   */
+    /* information.  These are not in the specification but can be */
+    /* guessed by looking at the content of a few PFR0 fonts.      */
     PFR_CHECK( 3 );
     num_aux = PFR_NEXT_ULONG( p );
 
@@ -797,9 +803,8 @@
         switch ( type )
         {
         case 1:
-          /* this seems to correspond to the font's family name,
-           * padded to 16-bits with one zero when necessary
-           */
+          /* this seems to correspond to the font's family name, padded to */
+          /* an even number of bytes with a zero byte appended if needed   */
           error = pfr_aux_name_load( q, length - 4U, memory,
                                      &phy_font->family_name );
           if ( error )
@@ -817,9 +822,8 @@
           break;
 
         case 3:
-          /* this seems to correspond to the font's style name,
-           * padded to 16-bits with one zero when necessary
-           */
+          /* this seems to correspond to the font's style name, padded to */
+          /* an even number of bytes with a zero byte appended if needed  */
           error = pfr_aux_name_load( q, length - 4U, memory,
                                      &phy_font->style_name );
           if ( error )

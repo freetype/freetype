@@ -37,11 +37,11 @@
 
   typedef struct  PFR_BitWriter_
   {
-    FT_Byte*  line;      /* current line start                    */
-    FT_Int    pitch;     /* line size in bytes                    */
-    FT_UInt   width;     /* width in pixels/bits                  */
-    FT_UInt   rows;      /* number of remaining rows to scan      */
-    FT_UInt   total;     /* total number of bits to draw          */
+    FT_Byte*  line;      /* current line start               */
+    FT_Int    pitch;     /* line size in bytes               */
+    FT_UInt   width;     /* width in pixels/bits             */
+    FT_UInt   rows;      /* number of remaining rows to scan */
+    FT_UInt   total;     /* total number of bits to draw     */
 
   } PFR_BitWriterRec, *PFR_BitWriter;
 
@@ -341,8 +341,8 @@
   }
 
 
-  /* load bitmap metrics.  "*padvance" must be set to the default value */
-  /* before calling this function...                                    */
+  /* load bitmap metrics.  `*padvance' must be set to the default value */
+  /* before calling this function                                       */
   /*                                                                    */
   static FT_Error
   pfr_load_bitmap_metrics( FT_Byte**  pdata,
@@ -544,7 +544,7 @@
 
     character = &phys->chars[glyph_index];
 
-    /* Look-up a bitmap strike corresponding to the current */
+    /* look up a bitmap strike corresponding to the current */
     /* character dimensions                                 */
     {
       FT_UInt  n;
@@ -555,9 +555,7 @@
       {
         if ( strike->x_ppm == (FT_UInt)size->root.metrics.x_ppem &&
              strike->y_ppm == (FT_UInt)size->root.metrics.y_ppem )
-        {
           goto Found_Strike;
-        }
 
         strike++;
       }
@@ -568,7 +566,7 @@
 
   Found_Strike:
 
-    /* Now lookup the glyph's position within the file */
+    /* now look up the glyph's position within the file */
     {
       FT_UInt  char_len;
 
@@ -578,7 +576,7 @@
       if ( strike->flags & 2 ) char_len += 1;
       if ( strike->flags & 4 ) char_len += 1;
 
-      /* Access data directly in the frame to speed lookups */
+      /* access data directly in the frame to speed lookups */
       if ( FT_STREAM_SEEK( phys->bct_offset + strike->bct_offset ) ||
            FT_FRAME_ENTER( char_len * strike->num_bitmaps )        )
         goto Exit;
@@ -595,7 +593,7 @@
 
       if ( gps_size == 0 )
       {
-        /* Could not find a bitmap program string for this glyph */
+        /* could not find a bitmap program string for this glyph */
         error = FT_THROW( Invalid_Argument );
         goto Exit;
       }
@@ -617,8 +615,8 @@
 
       glyph->root.linearHoriAdvance = advance;
 
-      /* compute default advance, i.e., scaled advance.  This can be */
-      /* overridden in the bitmap header of certain glyphs.          */
+      /* compute default advance, i.e., scaled advance; this can be */
+      /* overridden in the bitmap header of certain glyphs          */
       advance = FT_MulDiv( (FT_Fixed)size->root.metrics.x_ppem << 8,
                            character->advance,
                            (FT_Long)phys->metrics_resolution );
@@ -684,14 +682,12 @@
 
           error = ft_glyphslot_alloc_bitmap( &glyph->root, len );
           if ( !error )
-          {
             error = pfr_load_bitmap_bits(
                       p,
                       stream->limit,
                       format,
                       FT_BOOL(face->header.color_flags & 2),
                       &glyph->root.bitmap );
-          }
         }
       }
 
@@ -701,5 +697,6 @@
   Exit:
     return error;
   }
+
 
 /* END */
