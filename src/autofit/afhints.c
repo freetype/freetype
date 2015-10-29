@@ -312,7 +312,7 @@
       char  buf1[16], buf2[16], buf3[16], buf4[16];
 
 
-      AF_DUMP(( "  %5d  %5s %5s  %5s %5s    %c  "
+      AF_DUMP(( "  %5d  %5s %5s  %5s %5s  %s "
                 " %5d %5d %7.2f %7.2f %7.2f %7.2f\n",
                 point_idx,
                 af_print_idx( buf1,
@@ -321,7 +321,8 @@
                 af_print_idx( buf3,
                               af_get_edge_index( hints, segment_idx_0, 0 ) ),
                 af_print_idx( buf4, segment_idx_0 ),
-                ( point->flags & AF_FLAG_WEAK_INTERPOLATION ) ? 'w' : '-',
+                ( point->flags & AF_FLAG_WEAK_INTERPOLATION ) ? "weak"
+                                                              : " -- ",
 
                 point->fx,
                 point->fy,
