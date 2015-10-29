@@ -1,3 +1,13 @@
+2015-10-29  Werner Lemberg  <wl@gnu.org>
+
+	* CMakeLists.txt: Remove code to set MSVC's /FD compiler switch.
+
+	Problem reported by David Capello <davidcapello@gmail.com>; see
+
+	  http://lists.nongnu.org/archive/html/freetype-devel/2015-10/msg00108.html
+
+	for details.
+
 2015-10-27  Werner Lemberg  <wl@gnu.org>
 
 	[pfr] Add some safety guards (#46302).

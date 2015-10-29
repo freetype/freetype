@@ -330,12 +330,6 @@ if (BUILD_FRAMEWORK)
 endif ()
 
 
-if (MSVC)
-  set_target_properties(freetype PROPERTIES
-    COMPILE_FLAGS /Fd"$(IntDir)$(TargetName).pdb")
-endif ()
-
-
 if (ZLIB_FOUND)
   target_link_libraries(freetype ${ZLIB_LIBRARIES})
   include_directories(${ZLIB_INCLUDE_DIRS})
