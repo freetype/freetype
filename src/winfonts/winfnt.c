@@ -1121,7 +1121,7 @@
 
   static const FT_Service_WinFntRec  winfnt_service_rec =
   {
-    winfnt_get_header
+    winfnt_get_header       /* get_header */
   };
 
  /*

@@ -117,8 +117,8 @@
 
   FT_DEFINE_SERVICE_PROPERTIESREC(
     tt_service_properties,
-    (FT_Properties_SetFunc)tt_property_set,
-    (FT_Properties_GetFunc)tt_property_get )
+    (FT_Properties_SetFunc)tt_property_set,     /* set_property */
+    (FT_Properties_GetFunc)tt_property_get )    /* get_property */
 
 
   /*************************************************************************/
@@ -417,12 +417,13 @@
 #ifdef TT_CONFIG_OPTION_GX_VAR_SUPPORT
   FT_DEFINE_SERVICE_MULTIMASTERSREC(
     tt_service_gx_multi_masters,
-    (FT_Get_MM_Func)        NULL,
-    (FT_Set_MM_Design_Func) NULL,
-    (FT_Set_MM_Blend_Func)  TT_Set_MM_Blend,
-    (FT_Get_MM_Var_Func)    TT_Get_MM_Var,
-    (FT_Set_Var_Design_Func)TT_Set_Var_Design )
+    (FT_Get_MM_Func)        NULL,                   /* get_mm         */
+    (FT_Set_MM_Design_Func) NULL,                   /* set_mm_design  */
+    (FT_Set_MM_Blend_Func)  TT_Set_MM_Blend,        /* set_mm_blend   */
+    (FT_Get_MM_Var_Func)    TT_Get_MM_Var,          /* get_mm_var     */
+    (FT_Set_Var_Design_Func)TT_Set_Var_Design )     /* set_var_design */
 #endif
+
 
   static const FT_Service_TrueTypeEngineRec  tt_service_truetype_engine =
   {
@@ -441,9 +442,11 @@
 #endif /* TT_USE_BYTECODE_INTERPRETER */
   };
 
+
   FT_DEFINE_SERVICE_TTGLYFREC(
     tt_service_truetype_glyf,
-    (TT_Glyf_GetLocationFunc)tt_face_get_location )
+    (TT_Glyf_GetLocationFunc)tt_face_get_location )    /* get_location */
+
 
 #ifdef TT_CONFIG_OPTION_GX_VAR_SUPPORT
   FT_DEFINE_SERVICEDESCREC5(

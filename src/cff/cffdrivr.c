@@ -358,8 +358,8 @@
 
   FT_DEFINE_SERVICE_GLYPHDICTREC(
     cff_service_glyph_dict,
-    (FT_GlyphDict_GetNameFunc)  cff_get_glyph_name,
-    (FT_GlyphDict_NameIndexFunc)cff_get_name_index
+    (FT_GlyphDict_GetNameFunc)  cff_get_glyph_name,      /* get_name   */
+    (FT_GlyphDict_NameIndexFunc)cff_get_name_index       /* name_index */
   )
 
 
@@ -421,11 +421,13 @@
 
   FT_DEFINE_SERVICE_PSINFOREC(
     cff_service_ps_info,
-    (PS_GetFontInfoFunc)   cff_ps_get_font_info,
-    (PS_GetFontExtraFunc)  NULL,
-    (PS_HasGlyphNamesFunc) cff_ps_has_glyph_names,
-    (PS_GetFontPrivateFunc)NULL,        /* unsupported with CFF fonts */
-    (PS_GetFontValueFunc)  NULL         /* not implemented            */
+    (PS_GetFontInfoFunc)   cff_ps_get_font_info,    /* ps_get_font_info    */
+    (PS_GetFontExtraFunc)  NULL,                    /* ps_get_font_extra   */
+    (PS_HasGlyphNamesFunc) cff_ps_has_glyph_names,  /* ps_has_glyph_names  */
+    /* unsupported with CFF fonts */
+    (PS_GetFontPrivateFunc)NULL,                    /* ps_get_font_private */
+    /* not implemented            */
+    (PS_GetFontValueFunc)  NULL                     /* ps_get_font_value   */
   )
 
 
@@ -464,7 +466,7 @@
 
   FT_DEFINE_SERVICE_PSFONTNAMEREC(
     cff_service_ps_name,
-    (FT_PsName_GetFunc)cff_get_ps_name
+    (FT_PsName_GetFunc)cff_get_ps_name      /* get_ps_font_name */
   )
 
 
@@ -511,7 +513,7 @@
 
   FT_DEFINE_SERVICE_TTCMAPSREC(
     cff_service_get_cmap_info,
-    (TT_CMap_Info_GetFunc)cff_get_cmap_info
+    (TT_CMap_Info_GetFunc)cff_get_cmap_info    /* get_cmap_info */
   )
 
 
@@ -641,9 +643,12 @@
 
   FT_DEFINE_SERVICE_CIDREC(
     cff_service_cid_info,
-    (FT_CID_GetRegistryOrderingSupplementFunc)cff_get_ros,
-    (FT_CID_GetIsInternallyCIDKeyedFunc)      cff_get_is_cid,
-    (FT_CID_GetCIDFromGlyphIndexFunc)         cff_get_cid_from_glyph_index
+    (FT_CID_GetRegistryOrderingSupplementFunc)
+      cff_get_ros,                             /* get_ros                  */
+    (FT_CID_GetIsInternallyCIDKeyedFunc)
+      cff_get_is_cid,                          /* get_is_cid               */
+    (FT_CID_GetCIDFromGlyphIndexFunc)
+      cff_get_cid_from_glyph_index             /* get_cid_from_glyph_index */
   )
 
 
@@ -776,8 +781,8 @@
 
   FT_DEFINE_SERVICE_PROPERTIESREC(
     cff_service_properties,
-    (FT_Properties_SetFunc)cff_property_set,
-    (FT_Properties_GetFunc)cff_property_get )
+    (FT_Properties_SetFunc)cff_property_set,      /* set_property */
+    (FT_Properties_GetFunc)cff_property_get )     /* get_property */
 
 
   /*************************************************************************/

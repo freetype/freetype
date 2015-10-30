@@ -59,7 +59,7 @@
 
   static const FT_Service_PsFontNameRec  cid_service_ps_name =
   {
-    (FT_PsName_GetFunc) cid_get_postscript_name
+    (FT_PsName_GetFunc)cid_get_postscript_name    /* get_ps_font_name */
   };
 
 
@@ -88,11 +88,14 @@
 
   static const FT_Service_PsInfoRec  cid_service_ps_info =
   {
-    (PS_GetFontInfoFunc)   cid_ps_get_font_info,
-    (PS_GetFontExtraFunc)  cid_ps_get_font_extra,
-    (PS_HasGlyphNamesFunc) NULL,        /* unsupported with CID fonts */
-    (PS_GetFontPrivateFunc)NULL,        /* unsupported                */
-    (PS_GetFontValueFunc)  NULL         /* not implemented            */
+    (PS_GetFontInfoFunc)   cid_ps_get_font_info,   /* ps_get_font_info    */
+    (PS_GetFontExtraFunc)  cid_ps_get_font_extra,  /* ps_get_font_extra   */
+    /* unsupported with CID fonts */
+    (PS_HasGlyphNamesFunc) NULL,                   /* ps_has_glyph_names  */
+    /* unsupported                */
+    (PS_GetFontPrivateFunc)NULL,                   /* ps_get_font_private */
+    /* not implemented            */
+    (PS_GetFontValueFunc)  NULL                    /* ps_get_font_value   */
   };
 
 
@@ -155,9 +158,12 @@
 
   static const FT_Service_CIDRec  cid_service_cid_info =
   {
-     (FT_CID_GetRegistryOrderingSupplementFunc)cid_get_ros,
-     (FT_CID_GetIsInternallyCIDKeyedFunc)      cid_get_is_cid,
-     (FT_CID_GetCIDFromGlyphIndexFunc)         cid_get_cid_from_glyph_index
+    (FT_CID_GetRegistryOrderingSupplementFunc)
+      cid_get_ros,                             /* get_ros                  */
+    (FT_CID_GetIsInternallyCIDKeyedFunc)
+      cid_get_is_cid,                          /* get_is_cid               */
+    (FT_CID_GetCIDFromGlyphIndexFunc)
+      cid_get_cid_from_glyph_index             /* get_cid_from_glyph_index */
   };
 
 

@@ -139,9 +139,9 @@
   static
   const FT_Service_PfrMetricsRec  pfr_metrics_service_rec =
   {
-    pfr_get_metrics,
-    pfr_face_get_kerning,
-    pfr_get_advance
+    pfr_get_metrics,          /* get_metrics */
+    pfr_face_get_kerning,     /* get_kerning */
+    pfr_get_advance           /* get_advance */
   };
 
 

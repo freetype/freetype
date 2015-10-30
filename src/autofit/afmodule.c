@@ -262,8 +262,8 @@
 
   FT_DEFINE_SERVICE_PROPERTIESREC(
     af_service_properties,
-    (FT_Properties_SetFunc)af_property_set,
-    (FT_Properties_GetFunc)af_property_get )
+    (FT_Properties_SetFunc)af_property_set,        /* set_property */
+    (FT_Properties_GetFunc)af_property_get )       /* get_property */
 
 
   FT_DEFINE_SERVICEDESCREC1(

@@ -659,8 +659,8 @@ THE SOFTWARE.
 
   static const FT_Service_BDFRec  pcf_service_bdf =
   {
-    (FT_BDF_GetCharsetIdFunc)pcf_get_charset_id,
-    (FT_BDF_GetPropertyFunc) pcf_get_bdf_property
+    (FT_BDF_GetCharsetIdFunc)pcf_get_charset_id,     /* get_charset_id */
+    (FT_BDF_GetPropertyFunc) pcf_get_bdf_property    /* get_property   */
   };
 
 

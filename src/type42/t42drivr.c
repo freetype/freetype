@@ -90,8 +90,8 @@
 
   static const FT_Service_GlyphDictRec  t42_service_glyph_dict =
   {
-    (FT_GlyphDict_GetNameFunc)  t42_get_glyph_name,
-    (FT_GlyphDict_NameIndexFunc)t42_get_name_index
+    (FT_GlyphDict_GetNameFunc)  t42_get_glyph_name,    /* get_name   */
+    (FT_GlyphDict_NameIndexFunc)t42_get_name_index     /* name_index */
   };
 
 
@@ -110,7 +110,7 @@
 
   static const FT_Service_PsFontNameRec  t42_service_ps_font_name =
   {
-    (FT_PsName_GetFunc)t42_get_ps_font_name
+    (FT_PsName_GetFunc)t42_get_ps_font_name   /* get_ps_font_name */
   };
 
 
@@ -161,11 +161,12 @@
 
   static const FT_Service_PsInfoRec  t42_service_ps_info =
   {
-    (PS_GetFontInfoFunc)   t42_ps_get_font_info,
-    (PS_GetFontExtraFunc)  t42_ps_get_font_extra,
-    (PS_HasGlyphNamesFunc) t42_ps_has_glyph_names,
-    (PS_GetFontPrivateFunc)t42_ps_get_font_private,
-    (PS_GetFontValueFunc)  NULL             /* not implemented */
+    (PS_GetFontInfoFunc)   t42_ps_get_font_info,    /* ps_get_font_info    */
+    (PS_GetFontExtraFunc)  t42_ps_get_font_extra,   /* ps_get_font_extra   */
+    (PS_HasGlyphNamesFunc) t42_ps_has_glyph_names,  /* ps_has_glyph_names  */
+    (PS_GetFontPrivateFunc)t42_ps_get_font_private, /* ps_get_font_private */
+    /* not implemented */
+    (PS_GetFontValueFunc)  NULL                     /* ps_get_font_value   */
   };
 
 
