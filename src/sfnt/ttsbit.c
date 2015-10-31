@@ -608,13 +608,16 @@
   tt_sbit_decoder_load_image( TT_SBitDecoder  decoder,
                               FT_UInt         glyph_index,
                               FT_Int          x_pos,
-                              FT_Int          y_pos );
+                              FT_Int          y_pos,
+                              FT_UInt         recurse_count );
 
-  typedef FT_Error  (*TT_SBitDecoder_LoadFunc)( TT_SBitDecoder  decoder,
-                                                FT_Byte*        p,
-                                                FT_Byte*        plimit,
-                                                FT_Int          x_pos,
-                                                FT_Int          y_pos );
+  typedef FT_Error  (*TT_SBitDecoder_LoadFunc)(
+                      TT_SBitDecoder  decoder,
+                      FT_Byte*        p,
+                      FT_Byte*        plimit,
+                      FT_Int          x_pos,
+                      FT_Int          y_pos,
+                      FT_UInt         recurse_count );
 
 
   static FT_Error
@@ -622,13 +625,16 @@
                                      FT_Byte*        p,
                                      FT_Byte*        limit,
                                      FT_Int          x_pos,
-                                     FT_Int          y_pos )
+                                     FT_Int          y_pos,
+                                     FT_UInt         recurse_count )
   {
     FT_Error    error = FT_Err_Ok;
     FT_Byte*    line;
     FT_Int      pitch, width, height, line_bits, h;
     FT_UInt     bit_height, bit_width;
     FT_Bitmap*  bitmap;
+
+    FT_UNUSED( recurse_count );
 
 
     /* check that we can write the glyph into the bitmap */
@@ -761,7 +767,8 @@
                                     FT_Byte*        p,
                                     FT_Byte*        limit,
                                     FT_Int          x_pos,
-                                    FT_Int          y_pos )
+                                    FT_Int          y_pos,
+                                    FT_UInt         recurse_count )
   {
     FT_Error    error = FT_Err_Ok;
     FT_Byte*    line;
@@ -769,6 +776,8 @@
     FT_UInt     bit_height, bit_width;
     FT_Bitmap*  bitmap;
     FT_UShort   rval;
+
+    FT_UNUSED( recurse_count );
 
 
     /* check that we can write the glyph into the bitmap */
@@ -885,7 +894,8 @@
                                  FT_Byte*        p,
                                  FT_Byte*        limit,
                                  FT_Int          x_pos,
-                                 FT_Int          y_pos )
+                                 FT_Int          y_pos,
+                                 FT_UInt         recurse_count )
   {
     FT_Error  error = FT_Err_Ok;
     FT_UInt   num_components, nn;
@@ -919,8 +929,11 @@
 
 
       /* NB: a recursive call */
-      error = tt_sbit_decoder_load_image( decoder, gindex,
-                                          x_pos + dx, y_pos + dy );
+      error = tt_sbit_decoder_load_image( decoder,
+                                          gindex,
+                                          x_pos + dx,
+                                          y_pos + dy,
+                                          recurse_count + 1 );
       if ( error )
         break;
     }
@@ -952,10 +965,13 @@
                             FT_Byte*        p,
                             FT_Byte*        limit,
                             FT_Int          x_pos,
-                            FT_Int          y_pos )
+                            FT_Int          y_pos,
+                            FT_UInt         recurse_count )
   {
     FT_Error  error = FT_Err_Ok;
     FT_ULong  png_len;
+
+    FT_UNUSED( recurse_count );
 
 
     if ( limit - p < 4 )
@@ -998,7 +1014,8 @@
                                FT_ULong        glyph_start,
                                FT_ULong        glyph_size,
                                FT_Int          x_pos,
-                               FT_Int          y_pos )
+                               FT_Int          y_pos,
+                               FT_UInt         recurse_count )
   {
     FT_Error   error;
     FT_Stream  stream = decoder->stream;
@@ -1124,7 +1141,7 @@
           goto Fail;
       }
 
-      error = loader( decoder, p, p_limit, x_pos, y_pos );
+      error = loader( decoder, p, p_limit, x_pos, y_pos, recurse_count );
     }
 
   Fail:
@@ -1139,13 +1156,9 @@
   tt_sbit_decoder_load_image( TT_SBitDecoder  decoder,
                               FT_UInt         glyph_index,
                               FT_Int          x_pos,
-                              FT_Int          y_pos )
+                              FT_Int          y_pos,
+                              FT_UInt         recurse_count )
   {
-    /*
-     *  First, we find the correct strike range that applies to this
-     *  glyph index.
-     */
-
     FT_Byte*  p          = decoder->eblc_base + decoder->strike_index_array;
     FT_Byte*  p_limit    = decoder->eblc_limit;
     FT_ULong  num_ranges = decoder->strike_index_count;
@@ -1153,6 +1166,17 @@
     FT_ULong  image_start = 0, image_end = 0, image_offset;
 
 
+    /* arbitrary recursion limit */
+    if ( recurse_count > 100 )
+    {
+      FT_TRACE4(( "tt_sbit_decoder_load_image:"
+                  " recursion depth exceeded\n" ));
+      goto Failure;
+    }
+
+
+    /* First, we find the correct strike range that applies to this */
+    /* glyph index.                                                 */
     for ( ; num_ranges > 0; num_ranges-- )
     {
       start = FT_NEXT_USHORT( p );
@@ -1317,7 +1341,8 @@
                                         image_start,
                                         image_end,
                                         x_pos,
-                                        y_pos );
+                                        y_pos,
+                                        recurse_count );
 
   Failure:
     return FT_THROW( Invalid_Table );
@@ -1479,6 +1504,7 @@
         {
           error = tt_sbit_decoder_load_image( decoder,
                                               glyph_index,
+                                              0,
                                               0,
                                               0 );
           tt_sbit_decoder_done( decoder );
