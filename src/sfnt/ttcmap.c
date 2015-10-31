@@ -774,7 +774,7 @@
     if ( charcode < cmap->cur_start )
       charcode = cmap->cur_start;
 
-    for ( ;; )
+    for (;;)
     {
       FT_Byte*  values = cmap->cur_values;
       FT_UInt   end    = cmap->cur_end;
@@ -3458,7 +3458,7 @@
       ni   = 1;
       i    = 0;
 
-      for ( ;; )
+      for (;;)
       {
         if ( nuni > duni + dcnt )
         {
