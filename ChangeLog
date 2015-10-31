@@ -1,5 +1,13 @@
 2015-10-31  Werner Lemberg  <wl@gnu.org>
 
+	[sfnt] Fix cmap 14 validation (#46346).
+
+	* src/sfnt/ttcmap.c (tt_cmap14_validate): Check limit before
+	accessing `numRanges' and `numMappings'.
+	Fix size check for non-default UVS table.
+
+2015-10-31  Werner Lemberg  <wl@gnu.org>
+
 	[sfnt] Handle infinite recursion in bitmap strikes (#46344).
 
 	* src/sfnt/ttsbit.c (TT_SBitDecoder_LoadFunc,
