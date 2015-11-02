@@ -1,5 +1,15 @@
 2015-11-02  Nikolaus Waxweiler  <madigens@gmail.com>
 
+	[autofit] Extend `AF_FaceGlobalsRec' to hold emboldening data.
+
+	* src/autofit/afglobal.h (AF_FaceGlobalsRec): Add fields.
+
+	* src/autofit/afglobal.c (af_face_globals_new): Initialize new
+	fields.
+	(af_face_globals_free): Reset new fields.
+
+2015-11-02  Nikolaus Waxweiler  <madigens@gmail.com>
+
 	[autofit] Add stem-darkening properties.
 
 	Actual code follows in a later commit.
