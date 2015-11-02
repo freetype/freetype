@@ -1,7 +1,10 @@
-// we use `unique_ptr' and `decltype', defined since C++11
+// we use `unique_ptr', `decltype', and other gimmicks defined since C++11
 #if __cplusplus < 201103L
 #  error "a C++11 compiler is needed"
 #endif
+
+#include <archive.h>
+#include <archive_entry.h>
 
 #include <assert.h>
 #include <stdint.h>
@@ -10,7 +13,7 @@
 #include <vector>
 
 
-using namespace std;
+  using namespace std;
 
 
 #include <ft2build.h>
@@ -34,6 +37,7 @@ using namespace std;
   static FT_Library  library;
   static int         InitResult;
 
+
   struct FT_Global {
     FT_Global() {
       InitResult = FT_Init_FreeType( &library );
@@ -44,6 +48,81 @@ using namespace std;
   };
 
   FT_Global  global_ft;
+
+
+  static int
+  archive_read_entry_data( struct archive   *ar,
+                           vector<FT_Byte>  *vw )
+  {
+    int             r;
+    const FT_Byte*  buff;
+    size_t          size;
+    int64_t         offset;
+
+    for (;;)
+    {
+      r = archive_read_data_block( ar,
+                                   reinterpret_cast<const void**>( &buff ),
+                                   &size,
+                                   &offset );
+      if ( r == ARCHIVE_EOF )
+        return ARCHIVE_OK;
+      if ( r != ARCHIVE_OK )
+        return r;
+
+      vw->insert( vw->end(), buff, buff + size );
+    }
+  }
+
+
+  static vector<vector<FT_Byte>>
+  parse_data( const uint8_t*  data,
+              size_t          size )
+  {
+    struct archive_entry*    entry;
+    int                      r;
+    vector<vector<FT_Byte>>  files;
+
+    unique_ptr<struct  archive,
+               decltype ( archive_read_free )*>  a( archive_read_new(),
+                                                    archive_read_free );
+
+    // activate reading of uncompressed tar archives
+    archive_read_support_format_tar( a.get() );
+
+    // the need for `const_cast' was removed with libarchive commit be4d4dd
+    if ( !( r = archive_read_open_memory(
+                  a.get(),
+                  const_cast<void*>(static_cast<const void*>( data ) ),
+                  size ) ) )
+    {
+      unique_ptr<struct  archive,
+                 decltype ( archive_read_close )*>  a_open( a.get(),
+                                                            archive_read_close );
+
+      // read files contained in archive
+      for (;;)
+      {
+        r = archive_read_next_header( a_open.get(), &entry );
+        if ( r == ARCHIVE_EOF )
+          break;
+        if ( r != ARCHIVE_OK )
+          break;
+
+        vector<FT_Byte>  entry_data;
+        r = archive_read_entry_data( a.get(), &entry_data );
+        if ( r != ARCHIVE_OK )
+          break;
+
+        files.push_back( move( entry_data ) );
+      }
+    }
+
+    if ( files.size() == 0 )
+      files.emplace_back( data, data + size );
+
+    return files;
+  }
 
 
   static void
@@ -74,6 +153,7 @@ using namespace std;
   }
 
 
+  // the interface function to the libFuzzer library
   extern "C" int
   LLVMFuzzerTestOneInput( const uint8_t*  data,
                           size_t          size_ )
@@ -83,7 +163,7 @@ using namespace std;
     if ( size_ < 1 )
       return 0;
 
-    long  size = (long)size_;
+    const vector<vector<FT_Byte>>&  files = parse_data( data, size_ );
 
     FT_Face         face;
     FT_Int32        load_flags  = FT_LOAD_DEFAULT;
@@ -99,7 +179,11 @@ using namespace std;
     // more than a single font.
 
     // get number of faces
-    if ( FT_New_Memory_Face( library, data, size, -1, &face ) )
+    if ( FT_New_Memory_Face( library,
+                             files[0].data(),
+                             (FT_Long)files[0].size(),
+                             -1,
+                             &face ) )
       return 0;
     long  num_faces = face->num_faces;
     FT_Done_Face( face );
@@ -111,8 +195,8 @@ using namespace std;
     {
       // get number of instances
       if ( FT_New_Memory_Face( library,
-                               data,
-                               size,
+                               files[0].data(),
+                               (FT_Long)files[0].size(),
                                -( face_index + 1 ),
                                &face ) )
         continue;
@@ -125,11 +209,28 @@ using namespace std;
             instance_index++ )
       {
         if ( FT_New_Memory_Face( library,
-                                 data,
-                                 size,
+                                 files[0].data(),
+                                 (FT_Long)files[0].size(),
                                  ( instance_index << 16 ) + face_index,
                                  &face ) )
           continue;
+
+        // if we have more than a single input file coming from an archive,
+        // attach them (starting with the second file) using the order given
+        // in the archive
+        for ( size_t  files_index = 1;
+              files_index < files.size();
+              files_index++ )
+        {
+          FT_Open_Args  open_args = {};
+          open_args.flags         = FT_OPEN_MEMORY;
+          open_args.memory_base   = files[files_index].data();
+          open_args.memory_size   = (FT_Long)files[files_index].size();
+
+          // the last archive element will be eventually used as the
+          // attachment
+          FT_Attach_Stream( face, &open_args );
+        }
 
         // loop over all bitmap stroke sizes
         // and an arbitrary size for outlines
@@ -192,4 +293,4 @@ using namespace std;
   }
 
 
-/* END */
+// END

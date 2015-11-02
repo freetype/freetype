@@ -1,3 +1,22 @@
+2015-11-02  Bungeman  <bungeman@gmail.com>
+
+	[ftfuzzer] Add support for multiple files (patch #8779).
+
+	Currently, libFuzzer only supports mutation of a single file.  We
+	circumvent this problem by using an uncompressed tar archive as
+	multiple-file input for the fuzzer.
+
+	This patch enables tests of `FT_Attach_Stream' and AFM/PFM parsing;
+	a constructed tarball should contain a font file as the first
+	element, and files to be attached as further elements.
+
+	* src/tools/ftfuzzer/ftfuzzer.cc: Include libarchive headers.
+	(archive_read_entry_data, parse_data): New functions.
+	(LLVMFuzzerTestOneInput): Updated.
+
+	* src/tools/ftfuzzer/ftmutator.cc: New file, providing a custom
+	mutator for libFuzzer that can mutate tarballs in a sensible way.
+
 2015-10-31  Werner Lemberg  <wl@gnu.org>
 
 	[sfnt] Fix cmap 14 validation (#46346).
