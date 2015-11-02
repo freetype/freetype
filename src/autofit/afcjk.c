@@ -688,6 +688,22 @@
   }
 
 
+  /* Extract standard_width from writing system/script specific */
+  /* metrics class.                                             */
+
+  FT_LOCAL_DEF( void )
+  af_cjk_get_standard_widths( AF_CJKMetrics  metrics,
+                              FT_Pos*        stdHW,
+                              FT_Pos*        stdVW )
+  {
+    if ( stdHW )
+      *stdHW = metrics->axis[AF_DIMENSION_VERT].standard_width;
+
+    if ( stdVW )
+      *stdVW = metrics->axis[AF_DIMENSION_HORZ].standard_width;
+  }
+
+
   /*************************************************************************/
   /*************************************************************************/
   /*****                                                               *****/
@@ -2280,6 +2296,7 @@
     (AF_WritingSystem_InitMetricsFunc) af_cjk_metrics_init,
     (AF_WritingSystem_ScaleMetricsFunc)af_cjk_metrics_scale,
     (AF_WritingSystem_DoneMetricsFunc) NULL,
+    (AF_WritingSystem_GetStdWidthsFunc)af_cjk_get_standard_widths,
 
     (AF_WritingSystem_InitHintsFunc)   af_cjk_hints_init,
     (AF_WritingSystem_ApplyHintsFunc)  af_cjk_hints_apply
@@ -2299,6 +2316,7 @@
     (AF_WritingSystem_InitMetricsFunc) NULL,
     (AF_WritingSystem_ScaleMetricsFunc)NULL,
     (AF_WritingSystem_DoneMetricsFunc) NULL,
+    (AF_WritingSystem_GetStdWidthsFunc)NULL,
 
     (AF_WritingSystem_InitHintsFunc)   NULL,
     (AF_WritingSystem_ApplyHintsFunc)  NULL
