@@ -405,4 +405,141 @@
   }
 
 
+  /*
+   * Compute amount of font units the face should be emboldened by, in
+   * analogy to the CFF driver's `cf2_computeDarkening' function.  See there
+   * for details of the algorithm.
+   *
+   * XXX: Currently a crude adaption of the original algorithm.  Do better?
+   */
+#define af_intToFixed( i ) \
+          ( (FT_Fixed)( (FT_UInt32)(i) << 16 ) )
+#define af_fixedToInt( x ) \
+          ( (FT_Short)( ( (FT_UInt32)(x) + 0x8000U ) >> 16 ) )
+#define af_floatToFixed( f ) \
+          ( (FT_Fixed)( (f) * 65536.0 + 0.5 ) )
+
+  FT_LOCAL_DEF( FT_Int32 )
+  af_loader_compute_darkening( AF_Loader  loader,
+                               FT_Face    face,
+                               FT_Pos     standard_width )
+  {
+    AF_Module  module = loader->globals->module;
+
+    FT_UShort  units_per_EM;
+    FT_Fixed   ppem, em_ratio;
+    FT_Fixed   stem_width, stem_width_per_1000, scaled_stem, darken_amount;
+    FT_Int     log_base_2;
+    FT_Int     x1, y1, x2, y2, x3, y3, x4, y4;
+
+
+    ppem         = FT_MAX( af_intToFixed( 4 ),
+                           af_intToFixed( face->size->metrics.x_ppem ) );
+    units_per_EM = face->units_per_EM;
+
+    em_ratio = FT_DivFix( af_intToFixed( 1000 ),
+                          af_intToFixed ( units_per_EM ) );
+    if ( em_ratio < af_floatToFixed( .01 ) )
+    {
+      /* If something goes wrong, don't embolden. */
+      return 0;
+    }
+
+    x1 = module->darken_params[0];
+    y1 = module->darken_params[1];
+    x2 = module->darken_params[2];
+    y2 = module->darken_params[3];
+    x3 = module->darken_params[4];
+    y3 = module->darken_params[5];
+    x4 = module->darken_params[6];
+    y4 = module->darken_params[7];
+
+    if ( standard_width <= 0 )
+    {
+      stem_width          = af_intToFixed( 75 ); /* taken from cf2font.c */
+      stem_width_per_1000 = stem_width;
+    }
+    else
+    {
+      stem_width          = af_intToFixed( standard_width );
+      stem_width_per_1000 = FT_MulFix( stem_width, em_ratio );
+    }
+
+    log_base_2 = FT_MSB( (FT_UInt32)stem_width_per_1000 ) +
+                 FT_MSB( (FT_UInt32)ppem );
+
+    if ( log_base_2 >= 46 )
+    {
+      /* possible overflow */
+      scaled_stem = af_intToFixed( x4 );
+    }
+    else
+      scaled_stem = FT_MulFix( stem_width_per_1000, ppem );
+
+    /* now apply the darkening parameters */
+    if ( scaled_stem < af_intToFixed( x1 ) )
+      darken_amount = FT_DivFix( af_intToFixed( y1 ), ppem );
+
+    else if ( scaled_stem < af_intToFixed( x2 ) )
+    {
+      FT_Int  xdelta = x2 - x1;
+      FT_Int  ydelta = y2 - y1;
+      FT_Int  x      = stem_width_per_1000 -
+                       FT_DivFix( af_intToFixed( x1 ), ppem );
+
+
+      if ( !xdelta )
+        goto Try_x3;
+
+      darken_amount = FT_MulDiv( x, ydelta, xdelta ) +
+                      FT_DivFix( af_intToFixed( y1 ), ppem );
+    }
+
+    else if ( scaled_stem < af_intToFixed( x3 ) )
+    {
+    Try_x3:
+      {
+        FT_Int  xdelta = x3 - x2;
+        FT_Int  ydelta = y3 - y2;
+        FT_Int  x      = stem_width_per_1000 -
+                         FT_DivFix( af_intToFixed( x2 ), ppem );
+
+
+        if ( !xdelta )
+          goto Try_x4;
+
+        darken_amount = FT_MulDiv( x, ydelta, xdelta ) +
+                        FT_DivFix( af_intToFixed( y2 ), ppem );
+      }
+    }
+
+    else if ( scaled_stem < af_intToFixed( x4 ) )
+    {
+    Try_x4:
+      {
+        FT_Int  xdelta = x4 - x3;
+        FT_Int  ydelta = y4 - y3;
+        FT_Int  x      = stem_width_per_1000 -
+                         FT_DivFix( af_intToFixed( x3 ), ppem );
+
+
+        if ( !xdelta )
+          goto Use_y4;
+
+        darken_amount = FT_MulDiv( x, ydelta, xdelta ) +
+                        FT_DivFix( af_intToFixed( y3 ), ppem );
+      }
+    }
+
+    else
+    {
+    Use_y4:
+      darken_amount = FT_DivFix( af_intToFixed( y4 ), ppem );
+    }
+
+    /* Convert darken_amount from per 1000 em to true character space. */
+    return af_fixedToInt( FT_DivFix( darken_amount, em_ratio ) );
+  }
+
+
 /* END */

@@ -1,5 +1,17 @@
 2015-11-02  Nikolaus Waxweiler  <madigens@gmail.com>
 
+	[autofit] Implement darkening computation function.
+
+	This is a crude adaption of the original `cf2_computeDarkening'
+	function.
+
+	* src/autofit/afloader.c (af_intToFixed, af_fixedToInt,
+	af_floatToFixed): New macros, taken from `cf2fixed.h'.
+	(af_loader_compute_darkening): New function.
+	* src/autofit/afloader.h: Updated.
+
+2015-11-02  Nikolaus Waxweiler  <madigens@gmail.com>
+
 	[autofit] Add functions to get standard widths for writing systems.
 
 	We need the computed standard horizontal and vertical widths for the
