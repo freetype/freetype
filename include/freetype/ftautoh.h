@@ -439,6 +439,58 @@ FT_BEGIN_HEADER
    */
 
 
+  /**************************************************************************
+   *
+   * @property:
+   *   no-stem-darkening
+   *
+   * @description:
+   *   *Experimental* *only*
+   *
+   *   The main purpose of emboldening glyphs or `stem darkening' is to
+   *   enhance readability at smaller sizes.  The smaller the size, the more
+   *   emboldening is applied to keep glyphs from `thinning out'.  All
+   *   glyphs that pass through the autohinter will be emboldened unless
+   *   this property is set to TRUE.
+   *
+   *   See the description of the CFF driver for algorithmic details.  Total
+   *   consistency with the CFF driver is currently not achieved because the
+   *   emboldening method differs and glyphs must be scaled down on the
+   *   Y-axis to keep outline points inside their precomputed blue zones.
+   *   The smaller the size (especially 9ppem and down), the higher the loss
+   *   of emboldening versus the CFF driver.
+   *
+   *   *ATTENTION*: This feature has been developed with linear alpha
+   *   blending and gamma correction of glyphs in mind: A rendering library
+   *   must apply linear alpha blending while compositing glyph bitmaps onto
+   *   a surface and then apply gamma correction to the glyph pixels to get
+   *   from linear space to display space (unless the display works in
+   *   linear space).  Internal testing at Adobe found that a gamma
+   *   correction value of 1.8 gives good results across a wide range of
+   *   displays with a sRGB gamma curve or a similar one.
+   *
+   *   If this is not possible, it might be better to disable stem
+   *   darkening.  Currently, this can only be done globally.
+   *
+   */
+
+
+  /**************************************************************************
+   *
+   * @property:
+   *   darkening-parameters
+   *
+   * @description:
+   *   *Experimental* *only*
+   *
+   *   See the description of the CFF driver for details.  This
+   *   implementation appropriates the
+   *   CFF_CONFIG_OPTION_DARKENING_PARAMETER_* #defines for consistency.
+   *   Note the differences described in @no-stem-darkening.
+   *
+   */
+
+
   /* */
 
 

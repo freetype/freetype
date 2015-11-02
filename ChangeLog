@@ -1,3 +1,19 @@
+2015-11-02  Nikolaus Waxweiler  <madigens@gmail.com>
+
+	[autofit] Add stem-darkening properties.
+
+	Actual code follows in a later commit.
+
+	* include/freetype/ftautoh.h: Document `no-stem-darkening' and
+	`darkening-parameters'.
+
+	* src/autofit/afmodule.h: New fields `no_stem_darkening' and
+	`darken_params'.
+
+	* src/autofit/afmodule.c (af_property_set, af_property_get):
+	Handle them.
+	(af_autofitter_init): Initialize them.
+
 2015-11-02  Bungeman  <bungeman@gmail.com>
 
 	[ftfuzzer] Add support for multiple files (patch #8779).
