@@ -1,5 +1,9 @@
 2015-11-02  Nikolaus Waxweiler  <madigens@gmail.com>
 
+	* src/autofit/afloader.c (af_loader_load_g): Implement emboldening.
+
+2015-11-02  Nikolaus Waxweiler  <madigens@gmail.com>
+
 	[autofit] Implement darkening computation function.
 
 	This is a crude adaption of the original `cf2_computeDarkening'

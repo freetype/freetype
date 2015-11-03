@@ -76,6 +76,14 @@
   }
 
 
+#define af_intToFixed( i ) \
+          ( (FT_Fixed)( (FT_UInt32)(i) << 16 ) )
+#define af_fixedToInt( x ) \
+          ( (FT_Short)( ( (FT_UInt32)(x) + 0x8000U ) >> 16 ) )
+#define af_floatToFixed( f ) \
+          ( (FT_Fixed)( (f) * 65536.0 + 0.5 ) )
+
+
   /* Do the main work of `af_loader_load_glyph'.  Note that we never   */
   /* have to deal with composite glyphs as those get loaded into       */
   /* FT_GLYPH_FORMAT_OUTLINE by the recursed `FT_Load_Glyph' function. */
@@ -88,6 +96,8 @@
                     FT_UInt    glyph_index,
                     FT_Int32   load_flags )
   {
+    AF_Module  module = loader->globals->module;
+
     FT_Error          error;
     FT_Face           face     = loader->face;
     AF_StyleMetrics   metrics  = loader->metrics;
@@ -103,6 +113,132 @@
     if ( error )
       goto Exit;
 
+    /*
+     * Apply stem darkening (emboldening) here before hints are applied to
+     * the outline.  Glyphs are scaled down proportionally to the
+     * emboldening so that curve points don't fall outside their precomputed
+     * blue zones.
+     *
+     * Any emboldening done by the font driver (e.g., the CFF driver)
+     * doesn't reach here because the autohinter loads the unprocessed
+     * glyphs in font units for analysis (functions `af_*_metrics_init_*')
+     * and then above to prepare it for the rasterizers by itself,
+     * independently of the font driver.  So emboldening must be done here,
+     * within the autohinter.
+     *
+     * All glyphs to be autohinted pass through here one by one.  The
+     * standard widths can therefore change from one glyph to the next,
+     * depending on what script a glyph is assigned to (each script has its
+     * own set of standard widths and other metrics).  The darkening amount
+     * must therefore be recomputed for each size and
+     * `standard_{vertical,horizontal}_width' change.
+     */
+    if ( !module->no_stem_darkening )
+    {
+      AF_FaceGlobals         globals = loader->globals;
+      AF_WritingSystemClass  writing_system_class;
+
+      FT_Pos  stdVW = 0;
+      FT_Pos  stdHW = 0;
+
+      FT_Bool  size_changed = face->size->metrics.x_ppem
+                                != globals->stem_darkening_for_ppem;
+
+      FT_Fixed  em_size  = af_intToFixed( face->units_per_EM );
+      FT_Fixed  em_ratio = FT_DivFix( af_intToFixed( 1000 ), em_size );
+
+      FT_Matrix  scale_down_matrix = { 0x10000L, 0, 0, 0x10000L };
+
+
+      /* Skip stem darkening for broken fonts. */
+      if ( !face->units_per_EM )
+        goto After_Emboldening;
+
+      /*
+       * We depend on the writing system (script analyzers) to supply
+       * standard widths for the script of the glyph we are looking at.  If
+       * it can't deliver, stem darkening is effectively disabled.
+       */
+      writing_system_class =
+        AF_WRITING_SYSTEM_CLASSES_GET[metrics->style_class->writing_system];
+
+      if ( writing_system_class->style_metrics_getstdw )
+        writing_system_class->style_metrics_getstdw( metrics,
+                                                     &stdHW,
+                                                     &stdVW );
+      else
+        goto After_Emboldening;
+
+
+      if ( size_changed                                               ||
+           ( stdVW > 0 && stdVW != globals->standard_vertical_width ) )
+      {
+        FT_Fixed  darken_by_font_units_x, darken_x;
+
+
+        darken_by_font_units_x =
+          af_intToFixed( af_loader_compute_darkening( loader,
+                                                      face,
+                                                      stdVW ) );
+        darken_x = FT_DivFix( FT_MulFix( darken_by_font_units_x,
+                                         face->size->metrics.x_scale ),
+                              em_ratio );
+
+        globals->standard_vertical_width = stdVW;
+        globals->stem_darkening_for_ppem = face->size->metrics.x_ppem;
+        globals->darken_x                = af_fixedToInt( darken_x );
+      }
+
+      if ( size_changed                                                 ||
+           ( stdHW > 0 && stdHW != globals->standard_horizontal_width ) )
+      {
+        FT_Fixed  darken_by_font_units_y, darken_y;
+
+
+        darken_by_font_units_y =
+          af_intToFixed( af_loader_compute_darkening( loader,
+                                                      face,
+                                                      stdHW ) );
+        darken_y = FT_DivFix( FT_MulFix( darken_by_font_units_y,
+                                         face->size->metrics.y_scale ),
+                              em_ratio );
+
+        globals->standard_horizontal_width = stdHW;
+        globals->stem_darkening_for_ppem   = face->size->metrics.x_ppem;
+        globals->darken_y                  = af_fixedToInt( darken_y );
+
+        /*
+         * Scale outlines down on the Y-axis to keep them inside their blue
+         * zones.  The stronger the emboldening, the stronger the
+         * downscaling (plus heuristical padding to prevent outlines still
+         * falling out their zones due to rounding).
+         *
+         * Reason: `FT_Outline_Embolden' works by shifting the rightmost
+         * points of stems farther to the right, and topmost points farther
+         * up.  This positions points on the Y-axis outside their
+         * pre-computed blue zones and leads to distortion when applying the
+         * hints in the code further below.  Code outside this emboldening
+         * block doesn't know we are presenting it with modified outlines
+         * the analyzer didn't see!
+         *
+         * An unfortunate side effect of downscaling is that the emboldening
+         * effect is slightly decreased.  The loss becomes more pronounced
+         * versus the CFF driver at smaller sizes, e.g., at 9ppem and below.
+         */
+        globals->scale_down_factor =
+          FT_DivFix( em_size - ( darken_by_font_units_y + af_intToFixed( 8 ) ),
+                     em_size );
+      }
+
+      FT_Outline_EmboldenXY( &slot->outline,
+                             globals->darken_x,
+                             globals->darken_y );
+
+      scale_down_matrix.yy = globals->scale_down_factor;
+      FT_Outline_Transform( &slot->outline, &scale_down_matrix );
+    }
+
+  After_Emboldening:
     loader->transformed = internal->glyph_transformed;
     if ( loader->transformed )
     {
@@ -412,13 +548,6 @@
    *
    * XXX: Currently a crude adaption of the original algorithm.  Do better?
    */
-#define af_intToFixed( i ) \
-          ( (FT_Fixed)( (FT_UInt32)(i) << 16 ) )
-#define af_fixedToInt( x ) \
-          ( (FT_Short)( ( (FT_UInt32)(x) + 0x8000U ) >> 16 ) )
-#define af_floatToFixed( f ) \
-          ( (FT_Fixed)( (f) * 65536.0 + 0.5 ) )
-
   FT_LOCAL_DEF( FT_Int32 )
   af_loader_compute_darkening( AF_Loader  loader,
                                FT_Face    face,
