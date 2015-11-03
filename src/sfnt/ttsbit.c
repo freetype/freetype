@@ -1025,7 +1025,8 @@
 
 
     /* seek into the EBDT table now */
-    if ( glyph_start + glyph_size > decoder->ebdt_size )
+    if ( !glyph_size                                   ||
+         glyph_start + glyph_size > decoder->ebdt_size )
     {
       error = FT_THROW( Invalid_Argument );
       goto Exit;

@@ -1,3 +1,10 @@
+2015-11-03  Werner Lemberg  <wl@gnu.org>
+
+	[sfnt] Protect against zero-size bitmaps (#46345).
+
+	* src/sfnt/ttsbit.c (tt_sbit_decoder_load_bitmap): Check
+	`glyph_size'.
+
 2015-11-02  Nikolaus Waxweiler  <madigens@gmail.com>
 
 	* src/autofit/afloader.c (af_loader_load_g): Implement emboldening.
