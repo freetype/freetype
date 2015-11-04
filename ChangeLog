@@ -1,5 +1,19 @@
 2015-11-04  Werner Lemberg  <wl@gnu.org>
 
+	[truetype] Catch infinite recursion in subglyphs (#46372).
+
+	* include/freetype/internal/tttypes.h (TT_LoaderRec): New field
+	`composites'.
+
+	* src/truetype/ttgload.c: Include FT_LIST_H.
+	(load_truetype_glyph): Add composite subglyph index to a list;
+	abort if index is already in list.
+	(tt_loader_init): Updated.
+	(tt_loader_done): New function.
+	(TT_Load_Glyph): Call `tt_loader_done'.
+
+2015-11-04  Werner Lemberg  <wl@gnu.org>
+
 	[truetype] Better tracing of composite glyphs.
 
 	* src/truetype/ttgload.c (TT_Load_Composite_Glyph,
