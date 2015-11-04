@@ -659,6 +659,7 @@
     } while ( subglyph->flags & MORE_COMPONENTS );
 
     gloader->current.num_subglyphs = num_subglyphs;
+    FT_TRACE5(( "  %d components\n", num_subglyphs ));
 
 #ifdef TT_USE_BYTECODE_INTERPRETER
 
@@ -1394,6 +1395,11 @@
     FT_Bool         glyph_data_loaded = 0;
 #endif
 
+
+#ifdef FT_DEBUG_LEVEL_TRACE
+    if ( recurse_count )
+      FT_TRACE5(( "  nesting level: %d\n", recurse_count ));
+#endif
 
     /* some fonts have an incorrect value of `maxComponentDepth', */
     /* thus we allow depth 1 to catch the majority of them        */
