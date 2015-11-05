@@ -808,6 +808,12 @@
       goto Exit;
     }
 
+    if ( !line_bits || !height )
+    {
+      /* nothing to do */
+      goto Exit;
+    }
+
     /* now do the blit */
 
     /* adjust `line' to point to the first byte of the bitmap */
