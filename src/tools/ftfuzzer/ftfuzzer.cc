@@ -1,3 +1,17 @@
+// ftfuzzer.cc
+//
+//   A fuzzing function to test FreeType with libFuzzer.
+//
+// Copyright 2015 by
+// David Turner, Robert Wilhelm, and Werner Lemberg.
+//
+// This file is part of the FreeType project, and may only be used,
+// modified, and distributed under the terms of the FreeType project
+// license, LICENSE.TXT.  By continuing to use, modify, or distribute
+// this file you indicate that you have read the license and
+// understand and accept it fully.
+
+
 // we use `unique_ptr', `decltype', and other gimmicks defined since C++11
 #if __cplusplus < 201103L
 #  error "a C++11 compiler is needed"

@@ -1,10 +1,23 @@
-// A custom fuzzer mutator for FreeType.
+// ftmutator.cc
 //
+//   A custom fuzzer mutator to test for FreeType with libFuzzer.
+//
+// Copyright 2015 by
+// David Turner, Robert Wilhelm, and Werner Lemberg.
+//
+// This file is part of the FreeType project, and may only be used,
+// modified, and distributed under the terms of the FreeType project
+// license, LICENSE.TXT.  By continuing to use, modify, or distribute
+// this file you indicate that you have read the license and
+// understand and accept it fully.
+
+
 // Since `tar' is not a valid format for input to FreeType, treat any input
 // that looks like `tar' as multiple files and mutate them separately.
 //
 // In the future, a variation of this may be used to guide mutation on a
 // logically higher level.
+
 
 // we use `unique_ptr', `decltype', and other gimmicks defined since C++11
 #if __cplusplus < 201103L
