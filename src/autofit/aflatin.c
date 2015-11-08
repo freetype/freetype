@@ -293,6 +293,8 @@
       const char*  p = &af_blue_strings[bs->string];
       FT_Pos*      blue_ref;
       FT_Pos*      blue_shoot;
+      FT_Pos       ascender;
+      FT_Pos       descender;
 
 
 #ifdef FT_DEBUG_LEVEL_TRACE
@@ -344,6 +346,8 @@
 
       num_flats  = 0;
       num_rounds = 0;
+      ascender   = 0;
+      descender  = 0;
 
       while ( *p )
       {
@@ -405,20 +409,30 @@
             if ( AF_LATIN_IS_TOP_BLUE( bs ) )
             {
               for ( pp = first; pp <= last; pp++ )
+              {
                 if ( best_point < 0 || points[pp].y > best_y )
                 {
                   best_point = pp;
                   best_y     = points[pp].y;
+                  ascender   = FT_MAX( ascender, best_y + y_offset );
                 }
+                else
+                  descender = FT_MIN( descender, points[pp].y + y_offset );
+              }
             }
             else
             {
               for ( pp = first; pp <= last; pp++ )
+              {
                 if ( best_point < 0 || points[pp].y < best_y )
                 {
                   best_point = pp;
                   best_y     = points[pp].y;
+                  descender  = FT_MIN( descender, best_y + y_offset );
                 }
+                else
+                  ascender = FT_MAX( ascender, points[pp].y + y_offset );
+              }
             }
 
             if ( best_point != old_best_point )
@@ -791,6 +805,9 @@
         }
       }
 
+      blue->ascender  = ascender;
+      blue->descender = descender;
+
       blue->flags = 0;
       if ( AF_LATIN_IS_TOP_BLUE( bs ) )
         blue->flags |= AF_LATIN_BLUE_TOP;
@@ -973,18 +990,52 @@
 #endif
           if ( dim == AF_DIMENSION_VERT )
           {
-            scale = FT_MulDiv( scale, fitted, scaled );
+            FT_Pos    max_height;
+            FT_Pos    dist;
+            FT_Fixed  new_scale;
 
-            FT_TRACE5((
-              "af_latin_metrics_scale_dim:"
-              " x height alignment (style `%s'):\n"
-              "                           "
-              " vertical scaling changed from %.4f to %.4f (by %d%%)\n"
-              "\n",
-              af_style_names[metrics->root.style_class->style],
-              axis->org_scale / 65536.0,
-              scale / 65536.0,
-              ( fitted - scaled ) * 100 / scaled ));
+
+            new_scale = FT_MulDiv( scale, fitted, scaled );
+
+            /* the scaling should not change the result by more than two pixels */
+            max_height = metrics->units_per_em;
+
+            for ( nn = 0; nn < Axis->blue_count; nn++ )
+            {
+              max_height = FT_MAX( max_height, Axis->blues[nn].ascender );
+              max_height = FT_MAX( max_height, -Axis->blues[nn].descender );
+            }
+
+            dist  = FT_ABS( FT_MulFix( max_height, new_scale - scale ) );
+            dist &= ~127;
+
+            if ( dist == 0 )
+            {
+              scale = new_scale;
+
+              FT_TRACE5((
+                "af_latin_metrics_scale_dim:"
+                " x height alignment (style `%s'):\n"
+                "                           "
+                " vertical scaling changed from %.4f to %.4f (by %d%%)\n"
+                "\n",
+                af_style_names[metrics->root.style_class->style],
+                axis->org_scale / 65536.0,
+                scale / 65536.0,
+                ( fitted - scaled ) * 100 / scaled ));
+            }
+#ifdef FT_DEBUG_LEVEL_TRACE
+            else
+            {
+              FT_TRACE5((
+                "af_latin_metrics_scale_dim:"
+                " x height alignment (style `%s'):\n"
+                "                           "
+                " excessive vertical scaling abandoned\n"
+                "\n",
+                af_style_names[metrics->root.style_class->style] ));
+            }
+#endif
           }
         }
       }

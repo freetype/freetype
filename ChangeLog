@@ -1,3 +1,15 @@
+2015-11-06  Philipp Knechtges  <philipp-dev@knechtges.com>
+
+	[autofit] Don't distort (latin) glyphs too much (#46195).
+
+	* src/autofit/aflatin.h (AF_LatinBlueRec): Add `ascender' and
+	`descender' fields.
+
+	* src/autofit/aflatin.c (af_latin_metrics_init_blues): Collect
+	ascender and descender data for blue zones.
+	(af_latin_metrics_scale_dim): Reject vertical scaling values that
+	change the result by more than two pixels.
+
 2015-11-05  Werner Lemberg  <wl@gnu.org>
 
 	[sfnt] Ignore embedded bitmaps with zero size (#46379).
