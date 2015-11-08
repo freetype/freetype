@@ -1,4 +1,10 @@
-2015-11-06  Philipp Knechtges  <philipp-dev@knechtges.com>
+2015-11-08  Behdad Esfahbod  <behdad@behdad.org>
+
+	[sfnt] Accept version 3 of `EBLC' and `CBLC' tables also.
+
+	* src/sfnt/ttsbit.c (tt_face_load_sbit): Implement it.
+
+2015-11-08  Philipp Knechtges  <philipp-dev@knechtges.com>
 
 	[autofit] Don't distort (latin) glyphs too much (#46195).
 

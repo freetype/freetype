@@ -104,7 +104,8 @@
         version     = FT_NEXT_LONG( p );
         num_strikes = FT_NEXT_ULONG( p );
 
-        if ( ( (FT_ULong)version & 0xFFFF0000UL ) != 0x00020000UL )
+        if ( ( (FT_ULong)version & 0xFFFF0000UL ) != 0x00020000UL &&
+             ( (FT_ULong)version & 0xFFFF0000UL ) != 0x00030000UL )
         {
           error = FT_THROW( Unknown_File_Format );
           goto Exit;
