@@ -1,5 +1,9 @@
 2015-11-09  Werner Lemberg  <wl@gnu.org>
 
+	* src/cid/cidload.c (cid_face_open): Fix GDBytes guard (#46408).
+
+2015-11-09  Werner Lemberg  <wl@gnu.org>
+
 	[truetype] Remove integer to pointer conversion compiler warning.
 
 	Problem reported by Alexei.

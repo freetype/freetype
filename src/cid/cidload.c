@@ -750,7 +750,7 @@
 
     /* sanity tests */
 
-    if ( cid->fd_bytes < 0 || cid->gd_bytes < 0 )
+    if ( cid->fd_bytes < 0 || cid->gd_bytes < 1 )
     {
       FT_ERROR(( "cid_parse_dict:"
                  " Invalid `FDBytes' or `GDBytes' value\n" ));
