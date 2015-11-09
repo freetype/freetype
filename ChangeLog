@@ -1,3 +1,12 @@
+2015-11-09  Werner Lemberg  <wl@gnu.org>
+
+	[truetype] Remove integer to pointer conversion compiler warning.
+
+	Problem reported by Alexei.
+
+	* src/truetype/ttgload.c (load_truetype_glyph): Use a solution found
+	in the glib library to fix the issue.
+
 2015-11-08  Behdad Esfahbod  <behdad@behdad.org>
 
 	[sfnt] Accept version 3 of `EBLC' and `CBLC' tables also.

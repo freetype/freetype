@@ -1641,8 +1641,16 @@
       FT_ULong  ins_pos;  /* position of composite instructions, if any */
 
 
+      /*
+       * We store the glyph index directly in the `node->data' pointer,
+       * following the glib solution (cf. macro `GUINT_TO_POINTER') with a
+       * double cast to make this portable.  Note, however, that this needs
+       * pointers with a width of at least 32 bits.
+       */
+
       /* check whether we already have a composite glyph with this index */
-      if ( FT_List_Find( &loader->composites, (void*)glyph_index ) )
+      if ( FT_List_Find( &loader->composites,
+                         (void*)(unsigned long)glyph_index ) )
       {
         FT_TRACE1(( "TT_Load_Composite_Glyph:"
                     " infinite recursion detected\n" ));
@@ -1656,7 +1664,7 @@
 
         if ( FT_NEW( node ) )
           goto Exit;
-        node->data = (void*)glyph_index;
+        node->data = (void*)(unsigned long)glyph_index;
         FT_List_Add( &loader->composites, node );
       }
 
