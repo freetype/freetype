@@ -2821,9 +2821,6 @@ FT_BEGIN_HEADER
    *   have specified (e.g., the TrueType bytecode interpreter).  You can set
    *   @FT_LOAD_FORCE_AUTOHINT to ensure that the auto-hinter is used.
    *
-   *   Also note that @FT_LOAD_TARGET_LIGHT is an exception, in that it
-   *   always implies @FT_LOAD_FORCE_AUTOHINT.
-   *
    * @values:
    *   FT_LOAD_TARGET_NORMAL ::
    *     This corresponds to the default hinting algorithm, optimized for
@@ -2834,8 +2831,6 @@ FT_BEGIN_HEADER
    *     A lighter hinting algorithm for non-monochrome modes.  Many
    *     generated glyphs are more fuzzy but better resemble its original
    *     shape.  A bit like rendering on Mac OS~X.
-   *
-   *     As a special exception, this target implies @FT_LOAD_FORCE_AUTOHINT.
    *
    *   FT_LOAD_TARGET_MONO ::
    *     Strong hinting algorithm that should only be used for monochrome

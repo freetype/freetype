@@ -1,3 +1,24 @@
+2015-11-10  Jan Alexander Steffens (heftig)  <jan.steffens@gmail.com>
+
+	Allow native CFF hinter in FT_RENDER_MODE_LIGHT.
+
+	Both the native CFF hinter and the auto-hinter now have a very
+	similar rendering style.
+
+	* include/freetype/freetype.h: Mention that FT_LOAD_TARGET_LIGHT no
+	longer implies FT_LOAD_FORCE_AUTOHINT.
+
+	* include/freetype/ftmodapi.h (FT_MODULE_DRIVER_HINTS_LIGHTLY): New
+	macro.
+
+	* include/freetype/internal/ftobjs.h (FT_DRIVER_HINTS_LIGHTLY): New
+	macro.
+
+	* src/cff/cffdrivr.c (cff_driver_class): Use it.
+
+	* src/base/ftobjs.c (FT_Load_Glyph): Update auto-hinter selection
+	logic.
+
 2015-11-09  Werner Lemberg  <wl@gnu.org>
 
 	* src/cid/cidload.c (cid_face_open): Fix GDBytes guard (#46408).

@@ -686,7 +686,8 @@
         /* check the size of the `fpgm' and `prep' tables, too --    */
         /* the assumption is that there don't exist real TTFs where  */
         /* both `fpgm' and `prep' tables are missing                 */
-        if ( mode == FT_RENDER_MODE_LIGHT                       ||
+        if ( ( mode == FT_RENDER_MODE_LIGHT                   &&
+               !FT_DRIVER_HINTS_LIGHTLY( driver ) )             ||
              face->internal->ignore_unpatented_hinter           ||
              ( FT_IS_SFNT( face )                             &&
                ttface->num_locations                          &&
