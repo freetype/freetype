@@ -371,7 +371,7 @@
 #ifdef AF_CONFIG_OPTION_USE_WARPER
     module->warping           = 0;
 #endif
-    module->no_stem_darkening = FALSE;
+    module->no_stem_darkening = TRUE;
 
     module->darken_params[0]  = CFF_CONFIG_OPTION_DARKENING_PARAMETER_X1;
     module->darken_params[1]  = CFF_CONFIG_OPTION_DARKENING_PARAMETER_Y1;

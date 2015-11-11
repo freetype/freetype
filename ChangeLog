@@ -1,3 +1,10 @@
+2015-11-11  Werner Lemberg  <wl@gnu.org>
+
+	[cff, autofit] Switch off stem darkening by default.
+
+	* src/autofit/afmodule.c (af_autofitter_init), src/cff/cffobjs.c
+	(cff_driver_init): Do it.
+
 2015-11-10  Jan Alexander Steffens (heftig)  <jan.steffens@gmail.com>
 
 	Allow native CFF hinter in FT_RENDER_MODE_LIGHT.
