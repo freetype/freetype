@@ -88,7 +88,7 @@ FT_BEGIN_HEADER
    *     [0x10, 0x50, 0x60, 0x50, 0x10]    ,
    *   }
    *
-   *   where `a' has value 0x30 and `b' value 0x20.  The weights in filter
+   *   where `a' has value 0x30 and `c' value 0x20.  The weights in filter
    *   may have a sum larger than 0x100, which increases coloration slightly
    *   but also improves contrast.
    */
