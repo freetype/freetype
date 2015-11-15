@@ -1,3 +1,7 @@
+2015-11-15  Werner Lemberg  <wl@gnu.org>
+
+	* src/bdf/bdflib.c (bdf_load_font): Fix small memory leak (#46439).
+
 2015-11-11  Werner Lemberg  <wl@gnu.org>
 
 	[cff, autofit] Switch off stem darkening by default.
