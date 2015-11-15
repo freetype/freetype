@@ -257,11 +257,23 @@
       }
       else
       {
-        if ( point >= segment->first || point <= segment->last )
-          break;
+        AF_Point  p = segment->first;
+
+
+        for (;;)
+        {
+          if ( point == p )
+            goto Exit;
+
+          if ( p == segment->last )
+            break;
+
+          p = p->next;
+        }
       }
     }
 
+  Exit:
     if ( segment == limit )
       return -1;
 

@@ -1,5 +1,12 @@
 2015-11-15  Werner Lemberg  <wl@gnu.org>
 
+	* src/autofit/afhints.c (af_get_segment_index): Fix it.
+
+	The old code was too simple, returning invalid values in most cases
+	where a segment crosses the contour start.
+
+2015-11-15  Werner Lemberg  <wl@gnu.org>
+
 	* src/bdf/bdflib.c (bdf_load_font): Fix small memory leak (#46439).
 
 2015-11-11  Werner Lemberg  <wl@gnu.org>
