@@ -354,6 +354,7 @@
 #ifdef USE_LEGACY
 
     case FT_LCD_FILTER_LEGACY:
+    case FT_LCD_FILTER_LEGACY1:
       library->lcd_filter_func = _ft_lcd_filter_legacy;
       library->lcd_extra       = 0;
       break;

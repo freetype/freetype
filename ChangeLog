@@ -1,3 +1,20 @@
+2015-11-20  Werner Lemberg  <wl@gnu.org>
+
+	Add `FT_LCD_FILTER_LEGACY1' enum value.
+
+	This does the same as `FT_LCD_FILTER_LEGACY'.
+
+	See
+
+	  https://bugs.freedesktop.org/show_bug.cgi?id=92981
+
+	for the reasoning.
+
+	* include/freetype/ftlcdfil.h (FT_LcdFilter): New value
+	`FT_LCD_FILTER_LEGACY1'.
+
+	* src/base/ftlcdfil.c (FT_Library_SetLcdFilter): Use it.
+
 2015-11-15  Werner Lemberg  <wl@gnu.org>
 
 	* src/autofit/afhints.c (af_get_segment_index): Fix it.

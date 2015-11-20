@@ -126,14 +126,23 @@ FT_BEGIN_HEADER
    *     This filter is only provided for comparison purposes, and might be
    *     disabled or stay unsupported in the future.
    *
+   *   FT_LCD_FILTER_LEGACY1 ::
+   *     For historical reasons, the FontConfig library returns a different
+   *     enumeration value for legacy LCD filtering.  To make code work that
+   *     (incorrectly) forwards FontConfig's enumeration value to
+   *     @FT_Library_SetLcdFilter without proper mapping, it is thus easiest
+   *     to have another enumeration value, which is completely equal to
+   *     `FT_LCD_FILTER_LEGACY'.
+   *
    * @since:
-   *   2.3.0
+   *   2.3.0 (`FT_LCD_FILTER_LEGACY1' since 2.6.2)
    */
   typedef enum  FT_LcdFilter_
   {
     FT_LCD_FILTER_NONE    = 0,
     FT_LCD_FILTER_DEFAULT = 1,
     FT_LCD_FILTER_LIGHT   = 2,
+    FT_LCD_FILTER_LEGACY1 = 3,
     FT_LCD_FILTER_LEGACY  = 16,
 
     FT_LCD_FILTER_MAX   /* do not remove */
