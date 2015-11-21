@@ -1,3 +1,50 @@
+CHANGES BETWEEN 2.6 and 2.6.2
+
+  I. IMPORTANT CHANGES
+
+    - The auto-hinter now supports stem darkening, to be controlled by
+      the    new   `no-stem-darkening'    and   `darkening-parameters'
+      properties.  This is an  experimental feature, and the interface
+      might change in a future release.
+
+    - By default, stem darkening is now switched off (for both the CFF
+      engine and the  auto-hinter).  The main reason is  that you need
+      linear  alpha  blending  and  gamma correction  to  get  correct
+      rendering results, and  the latter is not yet  available in most
+      freely  available  rendering  stacks like  X11.   Applying  stem
+      darkening without proper gamma correction  leads to far too dark
+      rendering results.
+
+    - The   meaning  of   `FT_RENDER_MODE_LIGHT'  has   been  slightly
+      modified.   It  now  essentially  means `no  hinting  along  the
+      horizontal  axis'; in  particular,  no change  of glyph  advance
+      widths.  Consequently, the auto-hinter  is used for all scalable
+      font  formats  except  for  CFF.    It  is  planned  that  other
+      font-specific rendering engines (TrueType, Type 1) will follow.
+
+
+  II. MISCELLANEOUS
+
+    - For    better    compatibility   with    FontConfig,    function
+      `FT_Library_SetLcdFilter'  accepts   a  new   enumeration  value
+      `FT_LCD_FILTER_LEGACY1'   (which  has   the   same  meaning   as
+      `FT_LCD_FILTER_LEGACY').
+
+    - A large number of bugs have been detected by using the libFuzzer
+      framework,  which should  further  improve  handling of  invalid
+      fonts.  Thanks again to Kostya Serebryany and Bungeman!
+
+    - `TT_CONFIG_OPTION_MAX_RUNNABLE_OPCODES',  a   new  configuration
+      option, controls the maximum number of executed opcodes within a
+      bytecode program.  You don't want to change this except for very
+      special  situations (e.g.,  making a  library fuzzer  spend less
+      time to handle broken fonts).
+
+    - The smooth renderer has been made faster.
+
+
+======================================================================
+
 CHANGES BETWEEN 2.6 and 2.6.1
 
   I. IMPORTANT BUG FIXES
