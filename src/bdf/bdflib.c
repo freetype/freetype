@@ -1790,6 +1790,9 @@
           glyph           = font->unencoded + font->unencoded_used;
           glyph->name     = p->glyph_name;
           glyph->encoding = (long)font->unencoded_used++;
+
+          /* Reset the initial glyph info. */
+          p->glyph_name = NULL;
         }
         else
         {
@@ -2589,6 +2592,7 @@
 
       memory = extmemory;
 
+      FT_FREE( p->glyph_name );
       FT_FREE( p );
     }
 
@@ -2600,7 +2604,6 @@
     memory = extmemory;
 
     FT_FREE( p->font );
-    FT_FREE( p->glyph_name );
 
     goto Exit;
   }

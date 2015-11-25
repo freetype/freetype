@@ -1,3 +1,10 @@
+2015-11-25  Werner Lemberg  <wl@gnu.org>
+
+	* src/bdf/bdflib.c (bdf_load_font): Fix small memory leak (#46480).
+
+	(_bdf_parse_glyphs): Always reset `p->glyph_name' after moving its
+	contents.
+
 2015-11-21  Werner Lemberg  <wl@gnu.org>
 
 	* include/freetype/internal/ftcalc.h: Don't use `register' keyword.
