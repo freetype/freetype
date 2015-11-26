@@ -442,7 +442,7 @@ FT_BEGIN_HEADER
   /**************************************************************************
    *
    * @property:
-   *   no-stem-darkening
+   *   no-stem-darkening[autofit]
    *
    * @description:
    *   *Experimental* *only*
@@ -478,7 +478,7 @@ FT_BEGIN_HEADER
   /**************************************************************************
    *
    * @property:
-   *   darkening-parameters
+   *   darkening-parameters[autofit]
    *
    * @description:
    *   *Experimental* *only*
@@ -486,7 +486,7 @@ FT_BEGIN_HEADER
    *   See the description of the CFF driver for details.  This
    *   implementation appropriates the
    *   CFF_CONFIG_OPTION_DARKENING_PARAMETER_* #defines for consistency.
-   *   Note the differences described in @no-stem-darkening.
+   *   Note the differences described in @no-stem-darkening[autofit].
    *
    */
 
