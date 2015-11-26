@@ -1,3 +1,17 @@
+2015-11-26  Werner Lemberg  <wl@gnu.org>
+
+	[docmaker] Allow `foo[bar]' as identifier.
+
+	We need this to handle equally named properties in different
+	modules.
+
+	* src/tools/docmaker/content.py (re_identifier),
+	src/tools/docmaker/sources.py (re_crossref): Allow `foo[bar]'.
+
+	* src/tools/docmaker/tohtml.py (HtmlFormatter::make_html_word,
+	HtmlFormatter::index_exit, HtmlFormatter::section_enter,
+	HtmlFormatter::block_enter): Handle `foo[bar]'.
+
 2015-11-25  Werner Lemberg  <wl@gnu.org>
 
 	* src/bdf/bdflib.c (bdf_load_font): Fix small memory leak (#46480).

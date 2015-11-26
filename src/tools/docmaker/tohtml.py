@@ -317,10 +317,15 @@ class  HtmlFormatter( Formatter ):
         m = re_crossref.match( word )
         if m:
             try:
-                name = m.group( 1 )
-                rest = m.group( 2 )
+                name = m.group( 'name' )
+                rest = m.group( 'rest' )
                 block = self.identifiers[name]
                 url   = self.make_block_url( block )
+                # display `foo[bar]' as `foo'
+                name = re.sub( r'\[.*\]', '', name )
+                # normalize url, following RFC 3986
+                url = string.replace( url, "[", "(" )
+                url = string.replace( url, "]", ")" )
                 return '<a href="' + url + '">' + name + '</a>' + rest
             except:
                 # we detected a cross-reference to an unknown item
@@ -490,6 +495,12 @@ class  HtmlFormatter( Formatter ):
                 if i < count:
                     bname = self.block_index[r + c * rows]
                     url   = self.index_items[bname]
+                    # display `foo[bar]' as `foo (bar)'
+                    bname = string.replace( bname, "[", " (" )
+                    bname = string.replace( bname, "]", ")"  )
+                    # normalize url, following RFC 3986
+                    url = string.replace( url, "[", "(" )
+                    url = string.replace( url, "]", ")" )
                     line  = ( line + '<td><a href="' + url + '">'
                               + bname + '</a></td>' )
                 else:
@@ -601,7 +612,13 @@ class  HtmlFormatter( Formatter ):
                             # even omit it completely)
                             line = line + "&nbsp;"
                         else:
-                            line = ( line + '<a href="#' + name + '">'
+                            url = name
+                            # display `foo[bar]' as `foo'
+                            name = re.sub( r'\[.*\]', '', name )
+                            # normalize url, following RFC 3986
+                            url = string.replace( url, "[", "(" )
+                            url = string.replace( url, "]", ")" )
+                            line = ( line + '<a href="#' + url + '">'
                                      + name + '</a>' )
 
                     line = line + '</td>'
@@ -620,7 +637,13 @@ class  HtmlFormatter( Formatter ):
 
         # place html anchor if needed
         if block.name:
-            print( '<h3 id="' + block.name + '">' + block.name + '</h3>' )
+            url = block.name
+            # display `foo[bar]' as `foo'
+            name = re.sub( r'\[.*\]', '', block.name )
+            # normalize url, following RFC 3986
+            url = string.replace( url, "[", "(" )
+            url = string.replace( url, "]", ")" )
+            print( '<h3 id="' + url + '">' + name + '</h3>' )
 
         # dump the block C source lines now
         if block.code:
