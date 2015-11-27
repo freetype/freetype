@@ -351,22 +351,32 @@ if (BUILD_FRAMEWORK)
   )
 endif ()
 
+if (NOT CMAKE_VERSION VERSION_LESS 2.8.11)
+  target_include_directories(freetype
+    PUBLIC $<INSTALL_INTERFACE:include/freetype2>)
+endif ()
+
+if (CMAKE_VERSION VERSION_LESS 2.8.12)
+  set(MAYBE_PRIVATE "")
+else ()
+  set(MAYBE_PRIVATE "PRIVATE")
+endif ()
 
 if (ZLIB_FOUND)
-  target_link_libraries(freetype ${ZLIB_LIBRARIES})
+  target_link_libraries(freetype ${MAYBE_PRIVATE} ${ZLIB_LIBRARIES})
   include_directories(${ZLIB_INCLUDE_DIRS})
 endif ()
 if (BZIP2_FOUND)
-  target_link_libraries(freetype ${BZIP2_LIBRARIES})
+  target_link_libraries(freetype ${MAYBE_PRIVATE} ${BZIP2_LIBRARIES})
   include_directories(${BZIP2_INCLUDE_DIR}) # not BZIP2_INCLUDE_DIRS
 endif ()
 if (PNG_FOUND)
   add_definitions(${PNG_DEFINITIONS})
-  target_link_libraries(freetype ${PNG_LIBRARIES})
+  target_link_libraries(freetype ${MAYBE_PRIVATE} ${PNG_LIBRARIES})
   include_directories(${PNG_INCLUDE_DIRS})
 endif ()
 if (HARFBUZZ_FOUND)
-  target_link_libraries(freetype ${HARFBUZZ_LIBRARIES})
+  target_link_libraries(freetype ${MAYBE_PRIVATE} ${HARFBUZZ_LIBRARIES})
   include_directories(${HARFBUZZ_INCLUDE_DIRS})
 endif ()
 
@@ -385,10 +395,15 @@ install(FILES
   DESTINATION include/freetype2/freetype/config
 )
 install(TARGETS freetype
+  EXPORT freetype-targets
   RUNTIME DESTINATION bin
   LIBRARY DESTINATION lib
   ARCHIVE DESTINATION lib
   FRAMEWORK DESTINATION Library/Frameworks
+)
+install(EXPORT freetype-targets
+  DESTINATION lib/cmake/freetype
+  FILE freetype-config.cmake
 )
 
 

@@ -1,5 +1,9 @@
 2015-11-27  Tamas Kenez  <tamas.kenez@adasworks.com>
 
+	* CMakeLists.txt: Create `freetype-config.cmake' config module.
+
+2015-11-27  Tamas Kenez  <tamas.kenez@adasworks.com>
+
 	* CMakeLists.txt: Set CMAKE_DEBUG_POSTFIX to `d'.
 
 2015-11-27  Tamas Kenez  <tamas.kenez@adasworks.com>
