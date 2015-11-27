@@ -1,3 +1,9 @@
+2015-11-27  Tamas Kenez  <tamas.kenez@adasworks.com>
+
+	[cmake] Make `FindHarfbuzz' observe the REQUIRED option.
+
+	* builds/cmake/FindHarfBuzz.cmake: Implement it.
+
 2015-11-27  Werner Lemberg  <wl@gnu.org>
 
 	[cmake] Collect files specific to cmake in `builds/cmake'.
