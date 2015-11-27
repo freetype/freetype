@@ -1,5 +1,11 @@
 2015-11-27  Tamas Kenez  <tamas.kenez@adasworks.com>
 
+	[cmake] Add script to test the config module.
+
+	* builds/cmake/testbuild.sh: New file.
+
+2015-11-27  Tamas Kenez  <tamas.kenez@adasworks.com>
+
 	* CMakeLists.txt: Create `freetype-config.cmake' config module.
 
 2015-11-27  Tamas Kenez  <tamas.kenez@adasworks.com>
