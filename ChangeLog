@@ -1,3 +1,7 @@
+2015-11-27  Alexander Bock  <alexander.j.bock@nasa.gov>
+
+	CMakeLists.txt: Honour new command line flag `FREETYPE_NO_DIST'.
+
 2015-11-26  Werner Lemberg  <wl@gnu.org>
 
 	[docmaker] Allow `foo[bar]' as identifier.

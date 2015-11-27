@@ -58,6 +58,9 @@
 #
 # . `CMakeLists.txt' is provided as-is since it is normally not used by the
 #   developer team.
+#
+# . If you want to disable the automatic generation of the distribution
+#   targets, add the `-D FREETYPE_NO_DIST=true' command line argument.
 
 
 cmake_minimum_required(VERSION 2.6)
@@ -391,8 +394,9 @@ set(CPACK_GENERATOR TGZ)
 include(CPack)
 
 
-# add make dist target
-add_custom_target(dist COMMAND ${CMAKE_MAKE_PROGRAM} package_source)
-
+# Add `make dist' target if FREETYPE_DIST is set (which is the default)
+if (NOT DEFINED FREETYPE_NO_DIST)
+  add_custom_target(dist COMMAND ${CMAKE_MAKE_PROGRAM} package_source)
+endif ()
 
 # eof
