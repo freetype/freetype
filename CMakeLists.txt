@@ -61,6 +61,13 @@
 #
 # . If you want to disable the automatic generation of the distribution
 #   targets, add the `-D FREETYPE_NO_DIST=true' command line argument.
+#
+# . Set the `WITH_ZLIB', `WITH_BZip2', `WITH_PNG', and `WITH_HarfBuzz'
+#   CMake variables to `ON' or `OFF' to force or skip using a dependency.
+#   Leave a variable undefined (which is the default) to use the dependency
+#   only if it is available.  Example:
+#
+#     cmake ... -DWITH_ZLIB=ON -DWITH_HarfBuzz=OFF ...
 
 
 cmake_minimum_required(VERSION 2.6)
@@ -153,10 +160,21 @@ add_definitions(-DFT2_BUILD_LIBRARY)
 
 
 # Find dependencies
-find_package(ZLIB)
-find_package(BZip2)
-find_package(PNG)
-find_package(HarfBuzz)
+foreach (d ZLIB BZip2 PNG HarfBuzz)
+  string(TOUPPER "${d}" D)
+
+  if (DEFINED WITH_${d} OR DEFINED WITH_${D})
+    if (WITH_${d} OR WITH_${D})
+      find_package(${d} QUIET REQUIRED)
+    endif ()
+  else ()
+    find_package(${d} QUIET)
+  endif ()
+
+  if (${d}_FOUND OR ${D}_FOUND)
+    message(STATUS "Building with ${d}")
+  endif()
+endforeach ()
 
 
 message(STATUS

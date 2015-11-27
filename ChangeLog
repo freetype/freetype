@@ -1,5 +1,12 @@
 2015-11-27  Tamas Kenez  <tamas.kenez@adasworks.com>
 
+	[cmake] Add better control of library dependencies.
+
+	* CMakeLists.txt: Add `WITH_*' variables to force/auto/omit
+	ZLIB/BZip2/PNG/HarfBuzz.
+
+2015-11-27  Tamas Kenez  <tamas.kenez@adasworks.com>
+
 	[cmake] Make `FindHarfbuzz' observe the REQUIRED option.
 
 	* builds/cmake/FindHarfBuzz.cmake: Implement it.
