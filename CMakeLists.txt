@@ -320,6 +320,7 @@ if (BUILD_FRAMEWORK)
   )
 endif ()
 
+set(CMAKE_DEBUG_POSTFIX d)
 
 add_library(freetype
   ${PUBLIC_HEADERS}
