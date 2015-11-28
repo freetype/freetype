@@ -1,3 +1,11 @@
+2015-11-28  Werner Lemberg  <wl@gnu.org>
+
+	Fix C++ compilation.
+
+	* src/autofit/afloader.c: Include FT_INTERNAL_CALC_H.
+
+	* src/truetype/ttgload.c (load_truetype_glyph): Pacify compiler.
+
 2015-11-28  Nikolaus Waxweiler  <madigens@gmail.com>
 
 	Change default LCD filter to be normalized and color-balanced.

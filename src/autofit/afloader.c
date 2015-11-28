@@ -23,6 +23,8 @@
 #include "afmodule.h"
 #include "afpic.h"
 
+#include FT_INTERNAL_CALC_H
+
 
   /* Initialize glyph loader. */
 

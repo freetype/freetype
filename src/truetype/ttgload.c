@@ -1659,7 +1659,7 @@
       }
       else
       {
-        FT_ListNode  node;
+        FT_ListNode  node = NULL;
 
 
         if ( FT_NEW( node ) )
