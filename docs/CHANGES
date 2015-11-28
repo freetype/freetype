@@ -1,11 +1,13 @@
-CHANGES BETWEEN 2.6 and 2.6.2
+
+CHANGES BETWEEN 2.6.1 and 2.6.2
 
   I. IMPORTANT CHANGES
 
     - The auto-hinter now supports stem darkening, to be controlled by
       the    new   `no-stem-darkening'    and   `darkening-parameters'
-      properties.  This is an  experimental feature, and the interface
-      might change in a future release.
+      properties.   This is  an  experimental  feature contributed  by
+      Nikolaus Waxweiler, and  the interface might change  in a future
+      release.
 
     - By default, stem darkening is now switched off (for both the CFF
       engine and the  auto-hinter).  The main reason is  that you need
@@ -25,6 +27,9 @@ CHANGES BETWEEN 2.6 and 2.6.2
 
   II. MISCELLANEOUS
 
+    - The default  LCD filter  has been changed  to be  normalized and
+      color-balanced.
+
     - For    better    compatibility   with    FontConfig,    function
       `FT_Library_SetLcdFilter'  accepts   a  new   enumeration  value
       `FT_LCD_FILTER_LEGACY1'   (which  has   the   same  meaning   as
@@ -41,6 +46,15 @@ CHANGES BETWEEN 2.6 and 2.6.2
       time to handle broken fonts).
 
     - The smooth renderer has been made faster.
+
+    - The `ftstring'  demo program  now supports  sub-pixel rendering;
+      use key `l' to cycle through the LCD modes.
+
+    - The `ftstring'  demo program now supports  colour rendering; use
+      the `space' key to cycle through various colour combinations.
+
+    - The graphical demo programs now use a default gamma value of 1.8
+      (instead of 1.2).
 
 
 ======================================================================
