@@ -1,3 +1,10 @@
+2015-11-28  Nikolaus Waxweiler  <madigens@gmail.com>
+
+	Change default LCD filter to be normalized and color-balanced.
+
+	* src/base/ftlcdfil.c (FT_Library_SetLcdFilter): Update
+	`default_filter'.
+
 2015-11-28  Werner Lemberg  <wl@gnu.org>
 
 	[docmaker] Allow references to section names.
