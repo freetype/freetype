@@ -3068,8 +3068,8 @@ FT_BEGIN_HEADER
   /*       and apply gamma to get them in a linear space,                  */
   /*                                                                       */
   /*    2. use OVER to blend the two linear colors using the glyph pixel   */
-  /*       as the alpha value (remember, the glyph bitmap is a coverage    */
-  /*       bitmap), and                                                    */
+  /*       as the alpha value (remember, the glyph bitmap is an alpha      */
+  /*       coverage bitmap), and                                           */
   /*                                                                       */
   /*    3. apply inverse gamma to the blended pixel and write it back to   */
   /*       the image.                                                      */
@@ -3089,7 +3089,8 @@ FT_BEGIN_HEADER
   /*    gives equal weight to the three color primaries and does not       */
   /*    exceed a sum of 0x100, see section @lcd_filtering.  Then the       */
   /*    only difference to gray linear blending is that subpixel-rendered  */
-  /*    linear blending is done 3~times per pixel.                         */
+  /*    linear blending is done 3~times per pixel: red foreground subpixel */
+  /*    to red background subpixel and so on for green and blue.           */
   /*                                                                       */
   /* <InOut>                                                               */
   /*    slot        :: A handle to the glyph slot containing the image to  */

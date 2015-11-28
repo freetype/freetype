@@ -50,7 +50,9 @@ FT_BEGIN_HEADER
    *   subpixels are color pixels, using them unfiltered creates severe
    *   color fringes.  Use the @FT_Library_SetLcdFilter API to specify a
    *   low-pass filter, which is then applied to subpixel-rendered bitmaps
-   *   generated through @FT_Render_Glyph.
+   *   generated through @FT_Render_Glyph.  The filter sacrifices some of
+   *   the higher resolution to reduce color fringes, making the glyph image
+   *   slightly blurrier.  Positional improvements will remain.
    *
    *   Note that no filter is active by default, and that this function is
    *   *not* implemented in default builds of the library.  You need to
