@@ -1,3 +1,20 @@
+2015-11-28  Werner Lemberg  <wl@gnu.org>
+
+	[docmaker] Allow references to section names.
+
+	In the reference, we show the section's title enclosed in single
+	quotes.
+
+	* src/tools/docmaker/formatter.py (Formatter::__init__): Collect
+	section names as identifiers.
+
+	* src/tools/docmaker/tohtml.py (section_title_header): Split into...
+	(section_title_header1, section_title_header2): ... these two
+	strings.
+	(HtmlFormatter::make_block_url, make_html_word, html_source_quote):
+	Handle sections.
+	(HtmlFormatter::section_enter): Updated to add `id' HTML attribute.
+
 2015-11-27  Tamas Kenez  <tamas.kenez@adasworks.com>
 
 	[cmake] Add script to test the config module.

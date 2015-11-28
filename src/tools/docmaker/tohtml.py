@@ -164,7 +164,8 @@ html_footer = """\
 """
 
 # The header and footer used for each section.
-section_title_header = "<h1>"
+section_title_header1 = '<h1 id="'
+section_title_header2 = '">'
 section_title_footer = "</h1>"
 
 # The header and footer used for code segments.
@@ -309,7 +310,14 @@ class  HtmlFormatter( Formatter ):
     def  make_block_url( self, block, name = None ):
         if name == None:
             name = block.name
-        return self.make_section_url( block.section ) + "#" + name
+
+        try:
+            section_url = self.make_section_url( block.section )
+        except:
+            # we already have a section
+            section_url = self.make_section_url( block )
+
+        return section_url + "#" + name
 
     def  make_html_word( self, word ):
         """Analyze a simple word to detect cross-references and markup."""
@@ -326,7 +334,18 @@ class  HtmlFormatter( Formatter ):
                 # normalize url, following RFC 3986
                 url = string.replace( url, "[", "(" )
                 url = string.replace( url, "]", ")" )
-                return '<a href="' + url + '">' + name + '</a>' + rest
+
+                try:
+                    # for sections, display title
+                    url = ( '&lsquo;<a href="' + url + '">'
+                            + block.title + '</a>&rsquo;'
+                            + rest )
+                except:
+                    url = ( '<a href="' + url + '">'
+                            + name + '</a>'
+                            + rest )
+
+                return url
             except:
                 # we detected a cross-reference to an unknown item
                 sys.stderr.write( "WARNING: undefined cross reference"
@@ -422,16 +441,22 @@ class  HtmlFormatter( Formatter ):
                     id = block.name
 
                     # link to a field ID if possible
-                    for markup in block.markups:
-                        if markup.tag == 'values':
-                            for field in markup.fields:
-                                if field.name:
-                                    id = name
+                    try:
+                      for markup in block.markups:
+                          if markup.tag == 'values':
+                              for field in markup.fields:
+                                  if field.name:
+                                      id = name
 
-                    result = ( result + prefix
-                               + '<a href="'
-                               + self.make_block_url( block, id )
-                               + '">' + name + '</a>' )
+                      result = ( result + prefix
+                                 + '<a href="'
+                                 + self.make_block_url( block, id )
+                                 + '">' + name + '</a>' )
+                    except:
+                      # sections don't have `markups'; however, we don't
+                      # want references to sections here anyway
+                      result = result + html_quote( line[:length] )
+
                 else:
                     result = result + html_quote( line[:length] )
 
@@ -575,7 +600,9 @@ class  HtmlFormatter( Formatter ):
     def  section_enter( self, section ):
         print self.html_header
 
-        print section_title_header + section.title + section_title_footer
+        print ( section_title_header1 + section.name + section_title_header2
+                + section.title
+                + section_title_footer )
 
         maxwidth = 0
         for b in section.blocks.values():
