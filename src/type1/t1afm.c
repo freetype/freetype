@@ -248,6 +248,8 @@
       FT_TRACE1(( "T1_Read_Metrics:"
                   " Freeing previously attached metrics data.\n" ));
       T1_Done_Metrics( memory, (AFM_FontInfo)face->afm_data );
+
+      face->afm_data = NULL;
     }
 
     if ( FT_NEW( fi )                   ||

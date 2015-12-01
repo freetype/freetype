@@ -1,3 +1,10 @@
+2015-12-01  Werner Lemberg  <wl@gnu.org>
+
+	[type1] Avoid dangling pointer (#46572).
+
+	* src/type1/t1afm.c (T1_Read_Metrics): Properly reset
+	`face->afm_data'.
+
 2015-11-28  Alexei Podtelezhnikov  <apodtele@gmail.com>
 
 	* include/freetype/ftlcdfil.h: Documentation tweak.
