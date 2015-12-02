@@ -3015,6 +3015,22 @@ FT_BEGIN_HEADER
   /*    the glyph image format, finding the relevant renderer, and         */
   /*    invoking it.                                                       */
   /*                                                                       */
+  /* <InOut>                                                               */
+  /*    slot        :: A handle to the glyph slot containing the image to  */
+  /*                   convert.                                            */
+  /*                                                                       */
+  /* <Input>                                                               */
+  /*    render_mode :: This is the render mode used to render the glyph    */
+  /*                   image into a bitmap.  See @FT_Render_Mode for a     */
+  /*                   list of possible values.                            */
+  /*                                                                       */
+  /* <Return>                                                              */
+  /*    FreeType error code.  0~means success.                             */
+  /*                                                                       */
+  /* <Note>                                                                */
+  /*    To get meaningful results, font scaling values must be set with    */
+  /*    functions like @FT_Set_Char_Size before calling FT_Render_Glyph.   */
+  /*                                                                       */
   /*    When FreeType outputs a bitmap of a glyph, it really outputs an    */
   /*    alpha coverage map.  If a pixel is completely covered by a         */
   /*    filled-in outline, the bitmap contains 0xFF at that pixel, meaning */
@@ -3091,22 +3107,6 @@ FT_BEGIN_HEADER
   /*    only difference to gray linear blending is that subpixel-rendered  */
   /*    linear blending is done 3~times per pixel: red foreground subpixel */
   /*    to red background subpixel and so on for green and blue.           */
-  /*                                                                       */
-  /* <InOut>                                                               */
-  /*    slot        :: A handle to the glyph slot containing the image to  */
-  /*                   convert.                                            */
-  /*                                                                       */
-  /* <Input>                                                               */
-  /*    render_mode :: This is the render mode used to render the glyph    */
-  /*                   image into a bitmap.  See @FT_Render_Mode for a     */
-  /*                   list of possible values.                            */
-  /*                                                                       */
-  /* <Return>                                                              */
-  /*    FreeType error code.  0~means success.                             */
-  /*                                                                       */
-  /* <Note>                                                                */
-  /*    To get meaningful results, font scaling values must be set with    */
-  /*    functions like @FT_Set_Char_Size before calling FT_Render_Glyph.   */
   /*                                                                       */
   FT_EXPORT( FT_Error )
   FT_Render_Glyph( FT_GlyphSlot    slot,
