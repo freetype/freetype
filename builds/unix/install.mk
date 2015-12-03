@@ -28,8 +28,11 @@
 # installing new files to avoid interferences with files installed by
 # previous FreeType versions (which use slightly different locations).
 #
+# We also remove `$(includedir)/ft2build.h' for the same reason.
+#
 install: $(PROJECT_LIBRARY)
 	-$(DELDIR) $(DESTDIR)$(includedir)/freetype2
+	-$(DELETE) $(DESTDIR)$(includedir)/ft2build.h
 	$(MKINSTALLDIRS) $(DESTDIR)$(libdir)                               \
                          $(DESTDIR)$(libdir)/pkgconfig                     \
                          $(DESTDIR)$(includedir)/freetype2/freetype/config \
