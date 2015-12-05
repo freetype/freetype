@@ -193,7 +193,7 @@
 
     warper->best_scale   = org_scale;
     warper->best_delta   = org_delta;
-    warper->best_score   = INT_MIN;
+    warper->best_score   = FT_INT_MIN;
     warper->best_distort = 0;
 
     axis         = &hints->axis[dim];
