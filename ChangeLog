@@ -1,5 +1,13 @@
 2015-12-05  Werner Lemberg  <wl@gnu.org>
 
+	* src/autofit/afblue.dat: Separate blue zone characters with spaces.
+
+	Another preparation for character cluster support.
+
+	* src/autofit/afblue.c, src/autofit.afblue.h: Regenerated.
+
+2015-12-05  Werner Lemberg  <wl@gnu.org>
+
 	* src/tools/afblue.pl (convert_ascii_chars): Don't ignore spaces.
 
 	Instead, reduce multiple spaces to a single one.  We need this later
