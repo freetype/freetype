@@ -1,5 +1,12 @@
 2015-12-05  Werner Lemberg  <wl@gnu.org>
 
+	* src/tools/afblue.pl (convert_ascii_chars): Don't ignore spaces.
+
+	Instead, reduce multiple spaces to a single one.  We need this later
+	for supporting character clusters in `afblue.dat'.
+
+2015-12-05  Werner Lemberg  <wl@gnu.org>
+
 	* src/autofit/afblue.hin (GET_UTF8_CHAR): Use `do...while(0)'.
 
 	* src/autofit/afblue.h: Regenerated.
