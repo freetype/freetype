@@ -101,45 +101,36 @@
       AF_ScriptClass  script_class = AF_SCRIPT_CLASSES_GET
                                        [style_class->script];
 
-      FT_UInt32  standard_char;
+      const char*  p;
+
+      FT_ULong  ch;
 
 
-      standard_char = script_class->standard_char1;
-      af_get_char_index( &metrics->root,
-                         standard_char,
-                         &glyph_index,
-                         &y_offset );
-      if ( !glyph_index )
+      p = script_class->standard_charstring;
+
+      /* We check a list of standard characters.  The first match wins. */
+
+      glyph_index = 0;
+      while ( *p )
       {
-        if ( script_class->standard_char2 )
-        {
-          standard_char = script_class->standard_char2;
-          af_get_char_index( &metrics->root,
-                             standard_char,
-                             &glyph_index,
-                             &y_offset );
-          if ( !glyph_index )
-          {
-            if ( script_class->standard_char3 )
-            {
-              standard_char = script_class->standard_char3;
-              af_get_char_index( &metrics->root,
-                                 standard_char,
-                                 &glyph_index,
-                                 &y_offset );
-              if ( !glyph_index )
-                goto Exit;
-            }
-            else
-              goto Exit;
-          }
-        }
-        else
-          goto Exit;
+        while ( *p == ' ' )
+          p++;
+
+        GET_UTF8_CHAR( ch, p );
+
+        af_get_char_index( &metrics->root,
+                           ch,
+                           &glyph_index,
+                           &y_offset );
+        if ( glyph_index )
+          break;
       }
 
+      if ( !glyph_index )
+        goto Exit;
+
       FT_TRACE5(( "standard character: U+%04lX (glyph index %d)\n",
-                  standard_char, glyph_index ));
+                  ch, glyph_index ));
 
       error = FT_Load_Glyph( face, glyph_index, FT_LOAD_NO_SCALE );
       if ( error || face->glyph->outline.n_points <= 0 )

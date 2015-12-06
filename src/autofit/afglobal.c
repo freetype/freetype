@@ -42,13 +42,13 @@
 
 
 #undef  SCRIPT
-#define SCRIPT( s, S, d, h, sc1, sc2, sc3 ) \
+#define SCRIPT( s, S, d, h, ss ) \
           AF_DEFINE_SCRIPT_CLASS(           \
             af_ ## s ## _script_class,      \
             AF_SCRIPT_ ## S,                \
             af_ ## s ## _uniranges,         \
             af_ ## s ## _nonbase_uniranges, \
-            sc1, sc2, sc3 )
+            ss )
 
 #include "afscript.h"
 
@@ -83,7 +83,7 @@
 
 
 #undef  SCRIPT
-#define SCRIPT( s, S, d, h, sc1, sc2, sc3 ) \
+#define SCRIPT( s, S, d, h, ss ) \
           &af_ ## s ## _script_class,
 
   FT_LOCAL_ARRAY_DEF( AF_ScriptClass )

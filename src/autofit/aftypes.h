@@ -309,7 +309,7 @@ extern void*  _af_debug_hints;
    */
 
 #undef  SCRIPT
-#define SCRIPT( s, S, d, h, sc1, sc2, sc3 ) \
+#define SCRIPT( s, S, d, h, ss ) \
           AF_SCRIPT_ ## S,
 
   /* The list of known scripts. */
@@ -343,9 +343,7 @@ extern void*  _af_debug_hints;
     AF_Script_UniRange  script_uni_ranges;
     AF_Script_UniRange  script_uni_nonbase_ranges;
 
-    FT_UInt32  standard_char1;             /* for default width and height */
-    FT_UInt32  standard_char2;             /* ditto                        */
-    FT_UInt32  standard_char3;             /* ditto                        */
+    const char*  standard_charstring;      /* for default width and height */
 
   } AF_ScriptClassRec;
 
@@ -524,18 +522,14 @@ extern void*  _af_debug_hints;
           script,                         \
           ranges,                         \
           nonbase_ranges,                 \
-          std_char1,                      \
-          std_char2,                      \
-          std_char3 )                     \
+          std_charstring )                \
   FT_CALLBACK_TABLE_DEF                   \
   const AF_ScriptClassRec  script_class = \
   {                                       \
     script,                               \
     ranges,                               \
     nonbase_ranges,                       \
-    std_char1,                            \
-    std_char2,                            \
-    std_char3                             \
+    std_charstring,                       \
   };
 
 
@@ -601,18 +595,14 @@ extern void*  _af_debug_hints;
           script_,                                         \
           ranges,                                          \
           nonbase_ranges,                                  \
-          std_char1,                                       \
-          std_char2,                                       \
-          std_char3 )                                      \
+          std_charstring )                                 \
   FT_LOCAL_DEF( void )                                     \
   FT_Init_Class_ ## script_class( AF_ScriptClassRec*  ac ) \
   {                                                        \
     ac->script                    = script_;               \
     ac->script_uni_ranges         = ranges;                \
     ac->script_uni_nonbase_ranges = nonbase_ranges;        \
-    ac->standard_char1            = std_char1;             \
-    ac->standard_char2            = std_char2;             \
-    ac->standard_char3            = std_char3;             \
+    ac->standard_charstring       = std_charstring;        \
   }
 
 

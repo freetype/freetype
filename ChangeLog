@@ -1,3 +1,25 @@
+2015-12-06  Werner Lemberg  <wl@gnu.org>
+
+	[autofit] Use string of standard characters.
+
+	This is more flexible; additionally, it would allow character
+	clusters.
+
+	* src/autofit/aftypes.h (SCRIPT, AF_DEFINE_SCRIPT_CLASS): Updated.
+	(AF_ScriptClassRec): Replace `standard_char[123]' with
+	`standard_charstring'.
+
+	* src/autofit/afscript.h: Replace last three character arguments
+	of the `SCRIPT' calls with a string parameter, holding the standard
+	characters (in UTF-8 encoding) separated with spaces.
+
+	* src/autofit/afglobal.c, src/autofit/afglobal.h,
+	src/autofit/afpic.c, src/autofit/afranges.c, src/autofit/hbshim.c
+	(SCRIPT): Updated.
+
+	* src/autofit/afcjk.c (af_cjk_metrics_init_widths),
+	src/autofit/aflatin.c (af_latin_metrics_init_widths): Updated.
+
 2015-12-05  Werner Lemberg  <wl@gnu.org>
 
 	* src/autofit/afblue.dat: Separate blue zone characters with spaces.
@@ -425,7 +447,7 @@
 	(PFR_CHECK_SIZE): ... this.
 	(PFR_SIZE): [!PFR_CONFIG_NO_CHECKS]: Define to PFR_CHECK_SIZE.
 
-	* src/pfr/pfrload.c (pfr_log_font_count): Check `count'. 
+	* src/pfr/pfrload.c (pfr_log_font_count): Check `count'.
 	(pfr_extra_item_load_kerning_pairs): Remove tracing message.
 	(pfr_phy_font_load): Use PFR_CHECK_SIZE where appropriate.
 	Allocate `chars' after doing a size checks.
@@ -1017,7 +1039,7 @@
 	* src/autofit/afstyles.h: Add Lao data.
 
 2015-09-27  suzuki toshiya  <mpsuzuki@hiroshima-u.ac.jp>
- 
+
 	[base] Fix a leak by broken sfnt-PS or resource fork (#46028).
 
 	open_face_from_buffer() frees passed buffer if valid font

@@ -86,7 +86,7 @@
 
   /* load HarfBuzz script tags */
 #undef  SCRIPT
-#define SCRIPT( s, S, d, h, sc1, sc2, sc3 )  h,
+#define SCRIPT( s, S, d, h, ss )  h,
 
 
   static const hb_script_t  scripts[] =
