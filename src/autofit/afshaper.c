@@ -544,11 +544,12 @@
   void*
   af_shaper_buf_create( FT_Face  face )
   {
+    FT_Error   error;
     FT_Memory  memory = face->memory;
     FT_ULong*  buf;
 
 
-    FT_ALLOC( buf, sizeof ( FT_ULong ) );
+    FT_MEM_ALLOC( buf, sizeof ( FT_ULong ) );
 
     return (void*)buf;
   }
@@ -620,7 +621,7 @@
                       FT_LOAD_NO_SCALE         |
                       FT_LOAD_NO_HINTING       |
                       FT_LOAD_IGNORE_TRANSFORM,
-                      advance ) )
+                      advance );
 
     if ( y_offset )
       *y_offset = 0;
