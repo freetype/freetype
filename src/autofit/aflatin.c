@@ -79,7 +79,6 @@
     {
       FT_Error            error;
       FT_ULong            glyph_index;
-      FT_Long             y_offset;
       int                 dim;
       AF_LatinMetricsRec  dummy[1];
       AF_Scaler           scaler = &dummy->root.scaler;
@@ -92,12 +91,15 @@
       AF_ScriptClass  script_class = AF_SCRIPT_CLASSES_GET
                                        [style_class->script];
 
+      void*        shaper_buf;
       const char*  p;
 
+#ifdef FT_DEBUG_LEVEL_TRACE
       FT_ULong  ch;
+#endif
 
-
-      p = script_class->standard_charstring;
+      p          = script_class->standard_charstring;
+      shaper_buf = af_shaper_buf_create( face );
 
       /*
        * We check a list of standard characters to catch features like
@@ -109,18 +111,40 @@
       glyph_index = 0;
       while ( *p )
       {
+        unsigned int  num_idx;
+
+#ifdef FT_DEBUG_LEVEL_TRACE
+        const char*  p_old;
+#endif
+
+
         while ( *p == ' ' )
           p++;
 
-        GET_UTF8_CHAR( ch, p );
+#ifdef FT_DEBUG_LEVEL_TRACE
+        p_old = p;
+        GET_UTF8_CHAR( ch, p_old );
+#endif
 
-        af_get_char_index( &metrics->root,
-                           ch,
-                           &glyph_index,
-                           &y_offset );
+        /* reject input that maps to more than a single glyph */
+        p = af_shaper_get_cluster( p, &metrics->root, shaper_buf, &num_idx );
+        if ( num_idx > 1 )
+          continue;
+
+        /* otherwise exit loop if we have a result */
+        glyph_index = af_shaper_get_elem( &metrics->root,
+                                          shaper_buf,
+                                          0,
+                                          NULL,
+                                          NULL );
         if ( glyph_index )
           break;
       }
+
+      af_shaper_buf_destroy( face, shaper_buf );
+
+      if ( !glyph_index )
+        goto Exit;
 
       if ( !glyph_index )
         goto Exit;
@@ -269,6 +293,8 @@
 
     FT_Pos  flat_threshold = FLAT_THRESHOLD( metrics->units_per_em );
 
+    void*  shaper_buf;
+
 
     /* we walk over the blue character strings as specified in the */
     /* style's entry in the `af_blue_stringset' array              */
@@ -276,6 +302,8 @@
     FT_TRACE5(( "latin blue zones computation\n"
                 "============================\n"
                 "\n" ));
+
+    shaper_buf = af_shaper_buf_create( face );
 
     for ( ; bs->string != AF_BLUE_STRING_MAX; bs++ )
     {
@@ -340,24 +368,51 @@
 
       while ( *p )
       {
-        FT_ULong    ch;
         FT_ULong    glyph_index;
         FT_Long     y_offset;
-        FT_Pos      best_y;                            /* same as points.y */
         FT_Int      best_point, best_contour_first, best_contour_last;
         FT_Vector*  points;
-        FT_Bool     round = 0;
+
+        FT_Pos   best_y_extremum;                      /* same as points.y */
+        FT_Bool  best_round = 0;
 
         unsigned int  i, num_idx;
 
+#ifdef FT_DEBUG_LEVEL_TRACE
+        const char*  p_old;
+        FT_ULong     ch;
+#endif
 
-        GET_UTF8_CHAR( ch, p );
 
-        num_idx = 1;
+        while ( *p == ' ' )
+          p++;
+
+#ifdef FT_DEBUG_LEVEL_TRACE
+        p_old = p;
+        GET_UTF8_CHAR( ch, p_old );
+#endif
+
+        p = af_shaper_get_cluster( p, &metrics->root, shaper_buf, &num_idx );
+
+        if ( AF_LATIN_IS_TOP_BLUE( bs ) )
+          best_y_extremum = FT_INT_MIN;
+        else
+          best_y_extremum = FT_INT_MAX;
+
+        /* iterate over all glyph elements of the character cluster */
+        /* and get the data of the `biggest' one                    */
         for ( i = 0; i < num_idx; i++ )
         {
+          FT_Pos   best_y;
+          FT_Bool  round = 0;
+
+
           /* load the character in the face -- skip unknown or empty ones */
-          af_get_char_index( &metrics->root, ch, &glyph_index, &y_offset );
+          glyph_index = af_shaper_get_elem( &metrics->root,
+                                            shaper_buf,
+                                            i,
+                                            NULL,
+                                            &y_offset );
           if ( glyph_index == 0 )
           {
             FT_TRACE5(( "  U+%04lX unavailable\n", ch ));
@@ -369,7 +424,13 @@
           /* reject glyphs that don't produce any rendering */
           if ( error || outline.n_points <= 2 )
           {
-            FT_TRACE5(( "  U+%04lX contains no (usable) outlines\n", ch ));
+#ifdef FT_DEBUG_LEVEL_TRACE
+            if ( num_idx == 1 )
+              FT_TRACE5(( "  U+%04lX contains no (usable) outlines\n", ch ));
+            else
+              FT_TRACE5(( "  component %d of cluster starting with U+%04lX"
+                          " contains no (usable) outlines\n", i, ch ));
+#endif
             continue;
           }
 
@@ -394,9 +455,10 @@
 
               last = outline.contours[nn];
 
-              /* Avoid single-point contours since they are never rasterized. */
-              /* In some fonts, they correspond to mark attachment points     */
-              /* that are way outside of the glyph's real outline.            */
+              /* Avoid single-point contours since they are never      */
+              /* rasterized.  In some fonts, they correspond to mark   */
+              /* attachment points that are way outside of the glyph's */
+              /* real outline.                                         */
               if ( last <= first )
                 continue;
 
@@ -648,8 +710,8 @@
                   if ( l2r == left2right     &&
                        d >= length_threshold )
                   {
-                    /* all constraints are met; update segment after finding */
-                    /* its end                                               */
+                    /* all constraints are met; update segment after */
+                    /* finding its end                               */
                     do
                     {
                       if ( last < best_contour_last )
@@ -735,12 +797,31 @@
             FT_TRACE5(( " (%s)\n", round ? "round" : "flat" ));
           }
 
-          if ( round )
-            rounds[num_rounds++] = best_y;
+          if ( AF_LATIN_IS_TOP_BLUE( bs ) )
+          {
+            if ( best_y > best_y_extremum )
+            {
+              best_y_extremum = best_y;
+              best_round      = round;
+            }
+          }
           else
-            flats[num_flats++]   = best_y;
-        }
-      }
+          {
+            if ( best_y < best_y_extremum )
+            {
+              best_y_extremum = best_y;
+              best_round      = round;
+            }
+          }
+
+        } /* end for loop */
+
+        if ( best_round )
+          rounds[num_rounds++] = best_y_extremum;
+        else
+          flats[num_flats++]   = best_y_extremum;
+
+      } /* end while loop */
 
       if ( num_flats == 0 && num_rounds == 0 )
       {
@@ -820,7 +901,10 @@
       FT_TRACE5(( "    -> reference = %ld\n"
                   "       overshoot = %ld\n",
                   *blue_ref, *blue_shoot ));
-    }
+
+    } /* end for loop */
+
+    af_shaper_buf_destroy( face, shaper_buf );
 
     FT_TRACE5(( "\n" ));
 
@@ -834,27 +918,36 @@
   af_latin_metrics_check_digits( AF_LatinMetrics  metrics,
                                  FT_Face          face )
   {
-    FT_UInt   i;
     FT_Bool   started = 0, same_width = 1;
     FT_Fixed  advance, old_advance = 0;
 
+    void*  shaper_buf;
 
-    /* digit `0' is 0x30 in all supported charmaps */
-    for ( i = 0x30; i <= 0x39; i++ )
+    /* in all supported charmaps, digits have character codes 0x30-0x39 */
+    const char   digits[] = "0 1 2 3 4 5 6 7 8 9";
+    const char*  p;
+
+
+    p          = digits;
+    shaper_buf = af_shaper_buf_create( face );
+
+    while ( *p )
     {
-      FT_ULong  glyph_index;
-      FT_Long   y_offset;
+      FT_ULong      glyph_index;
+      unsigned int  num_idx;
 
 
-      af_get_char_index( &metrics->root, i, &glyph_index, &y_offset );
-      if ( glyph_index == 0 )
+      /* reject input that maps to more than a single glyph */
+      p = af_shaper_get_cluster( p, &metrics->root, shaper_buf, &num_idx );
+      if ( num_idx > 1 )
         continue;
 
-      if ( FT_Get_Advance( face, glyph_index,
-                           FT_LOAD_NO_SCALE         |
-                           FT_LOAD_NO_HINTING       |
-                           FT_LOAD_IGNORE_TRANSFORM,
-                           &advance ) )
+      glyph_index = af_shaper_get_elem( &metrics->root,
+                                        shaper_buf,
+                                        0,
+                                        &advance,
+                                        NULL );
+      if ( !glyph_index )
         continue;
 
       if ( started )
@@ -871,6 +964,8 @@
         started     = 1;
       }
     }
+
+    af_shaper_buf_destroy( face, shaper_buf );
 
     metrics->root.digits_have_same_width = same_width;
   }

@@ -40,8 +40,8 @@ AUTOF_DRV_SRC := $(AUTOF_DIR)/afangles.c \
                  $(AUTOF_DIR)/afmodule.c \
                  $(AUTOF_DIR)/afpic.c    \
                  $(AUTOF_DIR)/afranges.c \
-                 $(AUTOF_DIR)/afwarp.c   \
-                 $(AUTOF_DIR)/hbshim.c
+                 $(AUTOF_DIR)/afshaper.c \
+                 $(AUTOF_DIR)/afwarp.c
 
 # AUTOF driver headers
 #

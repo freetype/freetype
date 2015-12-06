@@ -23,7 +23,7 @@
 
 #include "aftypes.h"
 #include "afmodule.h"
-#include "hbshim.h"
+#include "afshaper.h"
 
 
 FT_BEGIN_HEADER

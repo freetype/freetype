@@ -18,7 +18,7 @@
 
 #include "afglobal.h"
 #include "afranges.h"
-#include "hbshim.h"
+#include "afshaper.h"
 #include FT_INTERNAL_DEBUG_H
 
 
@@ -240,12 +240,12 @@
       else
       {
         /* get glyphs not directly addressable by cmap */
-        af_get_coverage( globals, style_class, gstyles );
+        af_shaper_get_coverage( globals, style_class, gstyles );
       }
     }
 
     /* handle the default OpenType features of the default script ... */
-    af_get_coverage( globals, AF_STYLE_CLASSES_GET[dflt], gstyles );
+    af_shaper_get_coverage( globals, AF_STYLE_CLASSES_GET[dflt], gstyles );
 
     /* ... and the remaining default OpenType features */
     for ( ss = 0; AF_STYLE_CLASSES_GET[ss]; ss++ )
@@ -254,7 +254,7 @@
 
 
       if ( ss != dflt && style_class->coverage == AF_COVERAGE_DEFAULT )
-        af_get_coverage( globals, style_class, gstyles );
+        af_shaper_get_coverage( globals, style_class, gstyles );
     }
 
     /* mark ASCII digits */

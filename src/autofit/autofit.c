@@ -34,7 +34,7 @@
 #include "afcjk.c"
 #include "afindic.c"
 
-#include "hbshim.c"
+#include "afshaper.c"
 
 #include "afloader.c"
 #include "afmodule.c"

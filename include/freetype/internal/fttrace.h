@@ -148,7 +148,7 @@ FT_TRACE_DEF( afcjk )
 FT_TRACE_DEF( aflatin )
 FT_TRACE_DEF( aflatin2 )
 FT_TRACE_DEF( afwarp )
-FT_TRACE_DEF( afharfbuzz )
+FT_TRACE_DEF( afshaper )
 FT_TRACE_DEF( afglobal )
 
 /* END */

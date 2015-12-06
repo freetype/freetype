@@ -1,5 +1,44 @@
 2015-12-06  Werner Lemberg  <wl@gnu.org>
 
+	[autofit] Rewrite HarfBuzz interface to support character clusters.
+
+	Scripts like Khmer have blue zones that can't be directly
+	represented by Unicode characters.  Instead, it is necessary to let
+	HarfBuzz convert character clusters into proper glyph representation
+	forms, then deriving the blue zone information from the resulting
+	glyphs.
+
+	* src/autofit/hbshim.c, src/autofit/hbshim.h: Replaced by...
+	* src/autofit/afshaper.c, src/autofit/afshaper.h: ... these two new
+	files, providing a new API to access HarfBuzz.
+
+	The new API manages a HarfBuzz buffer with `af_shaper_buf_create'
+	and `af_shaper_buf_destroy'.  The buffer receives a UTF8 encoded
+	string with function `af_shaper_get_cluster', and the resulting
+	glyph data (indices, advance widths, vertical offsets) can be
+	iteratively accessed with function `af_shaper_get_elem'.
+
+	* src/autofit/afcjk.c (af_cjk_metrics_init_widths,
+	af_cjk_metrics_init_blues, af_cjk_metrics_check_digits): Updated.
+
+	* src/autofit/aflatin.c (af_latin_metrics_init_widths,
+	af_latin_metrics_init_blues, af_latin_metrics_check_digits):
+	Updated.
+
+	* include/freetype/internal/fttrace.h: s/afharfbuzz/afshaper/.
+
+	* src/autofit/afglobal.c: s/hbshim.h/afshaper.h/.
+	(af_face_globals_compute_style_coverage): Updated.
+
+	* src/autofit/afglocal.h: s/hbshim.h/afshaper.h/.
+
+	* src/autofit/autofit.c: s/hbshim.c/afshaper.c/.
+
+	* src/autofit/Jamfile, src/autofit/rules.mk (AUTOF_DRV_SRC):
+	Updated.
+
+2015-12-06  Werner Lemberg  <wl@gnu.org>
+
 	[autofit] Prepare forthcoming changes.
 
 	This makes it easier to control the commits.
