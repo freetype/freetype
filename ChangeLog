@@ -1,5 +1,14 @@
 2015-12-06  Werner Lemberg  <wl@gnu.org>
 
+	[autofit] Prepare forthcoming changes.
+
+	This makes it easier to control the commits.
+
+	* src/autofit/aflatin.c (af_latin_metrics_init_blues): Add dummy
+	loop.  No functional change.
+
+2015-12-06  Werner Lemberg  <wl@gnu.org>
+
 	[autofit] Use string of standard characters.
 
 	This is more flexible; additionally, it would allow character
