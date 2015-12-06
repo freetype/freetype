@@ -64,6 +64,18 @@
     '\0',
     '\xD7', '\xA7', ' ', '\xD7', '\x9A', ' ', '\xD7', '\x9F', ' ', '\xD7', '\xA3', ' ', '\xD7', '\xA5',  /* ק ך ן ף ץ */
     '\0',
+    '\xE1', '\x9E', '\x81', ' ', '\xE1', '\x9E', '\x91', ' ', '\xE1', '\x9E', '\x93', ' ', '\xE1', '\x9E', '\xA7', ' ', '\xE1', '\x9E', '\xA9', ' ', '\xE1', '\x9E', '\xB6',  /* ខ ទ ន ឧ ឩ ា */
+    '\0',
+    '\xE1', '\x9E', '\x81', ' ', '\xE1', '\x9E', '\x83', ' ', '\xE1', '\x9E', '\x85', ' ', '\xE1', '\x9E', '\x8B', ' ', '\xE1', '\x9E', '\x94', ' ', '\xE1', '\x9E', '\x98', ' ', '\xE1', '\x9E', '\x99', ' ', '\xE1', '\x9E', '\xB2',  /* ខ ឃ ច ឋ ប ម យ ឲ */
+    '\0',
+    '\xE1', '\x9E', '\x8F', '\xE1', '\x9F', '\x92', '\xE1', '\x9E', '\x9A', ' ', '\xE1', '\x9E', '\x9A', '\xE1', '\x9F', '\x80', ' ', '\xE1', '\x9E', '\xB2', '\xE1', '\x9F', '\x92', '\xE1', '\x9E', '\x99',  /* ត្រ រៀ ឲ្យ */
+    '\0',
+    '\xE1', '\x9E', '\x84', '\xE1', '\x9F', '\x92', '\xE1', '\x9E', '\x81', '\xE1', '\x9F', '\x92', '\xE1', '\x9E', '\x99', ' ', '\xE1', '\x9E', '\x80', '\xE1', '\x9F', '\x92', '\xE1', '\x9E', '\x94', '\xE1', '\x9F', '\x80',  /* ង្ខ្យ ក្បៀ */
+    '\0',
+    '\xE1', '\xA7', '\xA0', ' ', '\xE1', '\xA7', '\xA1',  /* ᧠ ᧡ */
+    '\0',
+    '\xE1', '\xA7', '\xB6', ' ', '\xE1', '\xA7', '\xB9',  /* ᧶ ᧹ */
+    '\0',
     '\xE0', '\xBA', '\xB2', ' ', '\xE0', '\xBA', '\x94', ' ', '\xE0', '\xBA', '\xAD', ' ', '\xE0', '\xBA', '\xA1', ' ', '\xE0', '\xBA', '\xA5', ' ', '\xE0', '\xBA', '\xA7', ' ', '\xE0', '\xBA', '\xA3', ' ', '\xE0', '\xBA', '\x87',  /* າ ດ ອ ມ ລ ວ ຣ ງ */
     '\0',
     '\xE0', '\xBA', '\xB2', ' ', '\xE0', '\xBA', '\xAD', ' ', '\xE0', '\xBA', '\x9A', ' ', '\xE0', '\xBA', '\x8D', ' ', '\xE0', '\xBA', '\xA3', ' ', '\xE0', '\xBA', '\xAE', ' ', '\xE0', '\xBA', '\xA7', ' ', '\xE0', '\xBA', '\xA2',  /* າ ອ ບ ຍ ຣ ຮ ວ ຢ */
@@ -203,6 +215,16 @@
     { AF_BLUE_STRING_HEBREW_BOTTOM,    0                             },
     { AF_BLUE_STRING_HEBREW_DESCENDER, 0                             },
     { AF_BLUE_STRING_MAX,              0                             },
+    { AF_BLUE_STRING_KHMER_TOP,             AF_BLUE_PROPERTY_LATIN_TOP      |
+                                            AF_BLUE_PROPERTY_LATIN_X_HEIGHT   },
+    { AF_BLUE_STRING_KHMER_BOTTOM,          0                                 },
+    { AF_BLUE_STRING_KHMER_DESCENDER,       0                                 },
+    { AF_BLUE_STRING_KHMER_LARGE_DESCENDER, 0                                 },
+    { AF_BLUE_STRING_MAX,                   0                                 },
+    { AF_BLUE_STRING_KHMER_SYMBOLS_WAXING_TOP,    AF_BLUE_PROPERTY_LATIN_TOP      |
+                                                  AF_BLUE_PROPERTY_LATIN_X_HEIGHT   },
+    { AF_BLUE_STRING_KHMER_SYMBOLS_WANING_BOTTOM, 0                                 },
+    { AF_BLUE_STRING_MAX,                         0                                 },
     { AF_BLUE_STRING_LAO_TOP,             AF_BLUE_PROPERTY_LATIN_TOP      |
                                           AF_BLUE_PROPERTY_LATIN_X_HEIGHT   },
     { AF_BLUE_STRING_LAO_BOTTOM,          0                                 },

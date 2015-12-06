@@ -108,6 +108,20 @@
          AF_BLUE_STRINGSET_HEBR,
          AF_COVERAGE_DEFAULT )
 
+  STYLE( khmr_dflt, KHMR_DFLT,
+         "Khmer default style",
+         AF_WRITING_SYSTEM_LATIN,
+         AF_SCRIPT_KHMR,
+         AF_BLUE_STRINGSET_KHMR,
+         AF_COVERAGE_DEFAULT )
+
+  STYLE( khms_dflt, KHMS_DFLT,
+         "Khmer Symbols default style",
+         AF_WRITING_SYSTEM_LATIN,
+         AF_SCRIPT_KHMS,
+         AF_BLUE_STRINGSET_KHMS,
+         AF_COVERAGE_DEFAULT )
+
   STYLE( lao_dflt, LAO_DFLT,
          "Lao default style",
          AF_WRITING_SYSTEM_LATIN,

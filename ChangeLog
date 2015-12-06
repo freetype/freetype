@@ -1,5 +1,22 @@
 2015-12-06  Werner Lemberg  <wl@gnu.org>
 
+	[autofit] Add support for Khmer script.
+
+	We split Khmer into two auto-hinter scripts: `Khmer' (`khmr') and
+	`Khmer symbols' (`khms', U+19E0-U+19FF).
+
+	* src/autofit/afblue.dat: Add blue zone data for Khmer.
+
+	* src/autofit/afblue.c, src/autofit/afblue.h: Regenerated.
+
+	* src/autofit/afscript.h: Add Khmer standard characters.
+
+	* src/autofit/afranges.c: Add Khmer data.
+
+	* src/autofit/afstyles.h: Add Khmer data.
+
+2015-12-06  Werner Lemberg  <wl@gnu.org>
+
 	[autofit] Rewrite HarfBuzz interface to support character clusters.
 
 	Scripts like Khmer have blue zones that can't be directly

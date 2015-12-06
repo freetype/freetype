@@ -125,6 +125,20 @@ AF_BLUE_STRING_ENUM AF_BLUE_STRINGS_ARRAY AF_BLUE_STRING_MAX_LEN:
   AF_BLUE_STRING_HEBREW_DESCENDER
     "ק ך ן ף ץ"
 
+  AF_BLUE_STRING_KHMER_TOP
+    "ខ ទ ន ឧ ឩ ា"
+  AF_BLUE_STRING_KHMER_BOTTOM
+    "ខ ឃ ច ឋ ប ម យ ឲ"
+  AF_BLUE_STRING_KHMER_DESCENDER
+    "ត្រ រៀ ឲ្យ"
+  AF_BLUE_STRING_KHMER_LARGE_DESCENDER
+    "ង្ខ្យ ក្បៀ"
+
+  AF_BLUE_STRING_KHMER_SYMBOLS_WAXING_TOP
+    "᧠ ᧡"
+  AF_BLUE_STRING_KHMER_SYMBOLS_WANING_BOTTOM
+    "᧶ ᧹"
+
   AF_BLUE_STRING_LAO_TOP
     "າ ດ ອ ມ ລ ວ ຣ ງ"
   AF_BLUE_STRING_LAO_BOTTOM
@@ -265,6 +279,14 @@ AF_BLUE_STRING_ENUM AF_BLUE_STRINGS_ARRAY AF_BLUE_STRING_MAX_LEN:
 // respectively.  Only horizontal blue zones (i.e., adjusting vertical
 // coordinate values) are supported.
 //
+// Some scripts like Khmer need character composition to get all necessary
+// blue zones, since Unicode only provides an abstract data model that
+// doesn't represent all possible glyph shapes.  For such character
+// clusters, the HarfBuzz library is used to convert them into the
+// corresponding glyphs.  The largest glyph element (where `largest' can be
+// either `largest ascender' or `largest descender') then defines the
+// corresponding flat or round extremum.
+//
 // For the latin auto-hinter, the overshoot should be larger than the
 // reference for top zones, and vice versa for bottom zones.
 //
@@ -375,6 +397,20 @@ AF_BLUE_STRINGSET_ENUM AF_BLUE_STRINGSETS_ARRAY AF_BLUE_STRINGSET_MAX_LEN:
     { AF_BLUE_STRING_HEBREW_BOTTOM,    0                             }
     { AF_BLUE_STRING_HEBREW_DESCENDER, 0                             }
     { AF_BLUE_STRING_MAX,              0                             }
+
+  AF_BLUE_STRINGSET_KHMR
+    { AF_BLUE_STRING_KHMER_TOP,             AF_BLUE_PROPERTY_LATIN_TOP      |
+                                            AF_BLUE_PROPERTY_LATIN_X_HEIGHT   }
+    { AF_BLUE_STRING_KHMER_BOTTOM,          0                                 }
+    { AF_BLUE_STRING_KHMER_DESCENDER,       0                                 }
+    { AF_BLUE_STRING_KHMER_LARGE_DESCENDER, 0                                 }
+    { AF_BLUE_STRING_MAX,                   0                                 }
+
+  AF_BLUE_STRINGSET_KHMS
+    { AF_BLUE_STRING_KHMER_SYMBOLS_WAXING_TOP,    AF_BLUE_PROPERTY_LATIN_TOP      |
+                                                  AF_BLUE_PROPERTY_LATIN_X_HEIGHT   }
+    { AF_BLUE_STRING_KHMER_SYMBOLS_WANING_BOTTOM, 0                                 }
+    { AF_BLUE_STRING_MAX,                         0                                 }
 
   AF_BLUE_STRINGSET_LAO
     { AF_BLUE_STRING_LAO_TOP,             AF_BLUE_PROPERTY_LATIN_TOP      |
