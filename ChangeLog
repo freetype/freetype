@@ -1,5 +1,14 @@
 2015-12-06  Werner Lemberg  <wl@gnu.org>
 
+	* src/autofit/afblue.dat: Add more Khmer clusters.
+
+	Some fonts have incorrect ligatures; we need more samples to get a
+	good mean value.
+
+	* src/autofit/afblue.c, src/autofit/afblue.h: Regenerated.
+
+2015-12-06  Werner Lemberg  <wl@gnu.org>
+
 	[autofit] Typos.
 
 	* src/autofit/afshaper.c (af_shaper_buf_create, af_shaper_get_elem)
