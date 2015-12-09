@@ -100,9 +100,10 @@ FT_BEGIN_HEADER
   /* blue string can't be used in more than a single writing system, which */
   /* is a safe bet.                                                        */
 #define AF_BLUE_PROPERTY_LATIN_TOP       ( 1U << 0 )  /* must have value 1 */
-#define AF_BLUE_PROPERTY_LATIN_NEUTRAL   ( 1U << 1 )
-#define AF_BLUE_PROPERTY_LATIN_X_HEIGHT  ( 1U << 2 )
-#define AF_BLUE_PROPERTY_LATIN_LONG      ( 1U << 3 )
+#define AF_BLUE_PROPERTY_LATIN_SUB_TOP   ( 1U << 1 )
+#define AF_BLUE_PROPERTY_LATIN_NEUTRAL   ( 1U << 2 )
+#define AF_BLUE_PROPERTY_LATIN_X_HEIGHT  ( 1U << 3 )
+#define AF_BLUE_PROPERTY_LATIN_LONG      ( 1U << 4 )
 
 #define AF_BLUE_PROPERTY_CJK_TOP    ( 1U << 0 )       /* must have value 1 */
 #define AF_BLUE_PROPERTY_CJK_HORIZ  ( 1U << 1 )       /* must have value 2 */

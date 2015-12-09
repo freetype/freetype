@@ -127,6 +127,8 @@ AF_BLUE_STRING_ENUM AF_BLUE_STRINGS_ARRAY AF_BLUE_STRING_MAX_LEN:
 
   AF_BLUE_STRING_KHMER_TOP
     "ខ ទ ន ឧ ឩ ា"
+  AF_BLUE_STRING_KHMER_SUBSCRIPT_TOP
+    "ក្ក ក្ខ ក្គ ក្ថ"
   AF_BLUE_STRING_KHMER_BOTTOM
     "ខ ឃ ច ឋ ប ម យ ឲ"
   AF_BLUE_STRING_KHMER_DESCENDER
@@ -297,6 +299,21 @@ AF_BLUE_STRING_ENUM AF_BLUE_STRINGS_ARRAY AF_BLUE_STRING_MAX_LEN:
 //
 //     If not set, take the minimum values.
 //
+//     Mutually exclusive with `LATIN_SUB_TOP'.
+//
+//   LATIN_SUB_TOP
+//     For all glyphs of a character cluster, compute the maximum flat
+//     and round coordinate values of each component, then take the
+//     smallest of the maximum values.  The idea is to get the top of
+//     subscript glyphs, as used in Khmer, for example.  Note that
+//     this mechanism doesn't work for ordinary ligatures.
+//
+//     This flags indicates a secondary blue zone: It gets removed if
+//     there is a non-LATIN_SUB_TOP blue zone at the same coordinate
+//     value (after scaling).
+//
+//     Mutually exclusive with `LATIN_TOP'.
+//
 //   LATIN_NEUTRAL
 //     Ignore round extrema and define the blue zone with flat values only.
 //     Both top and bottom of contours can match.  This is useful for
@@ -401,6 +418,7 @@ AF_BLUE_STRINGSET_ENUM AF_BLUE_STRINGSETS_ARRAY AF_BLUE_STRINGSET_MAX_LEN:
   AF_BLUE_STRINGSET_KHMR
     { AF_BLUE_STRING_KHMER_TOP,             AF_BLUE_PROPERTY_LATIN_TOP      |
                                             AF_BLUE_PROPERTY_LATIN_X_HEIGHT   }
+    { AF_BLUE_STRING_KHMER_SUBSCRIPT_TOP,   AF_BLUE_PROPERTY_LATIN_SUB_TOP    }
     { AF_BLUE_STRING_KHMER_BOTTOM,          0                                 }
     { AF_BLUE_STRING_KHMER_DESCENDER,       0                                 }
     { AF_BLUE_STRING_KHMER_LARGE_DESCENDER, 0                                 }

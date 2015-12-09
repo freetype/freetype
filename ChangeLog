@@ -1,5 +1,31 @@
 2015-12-09  Werner Lemberg  <wl@gnu.org>
 
+	[autofit] Introduce subscript top blue zones.
+
+	This feature is mainly for Khmer: The idea is to avoid a clash
+	between the top of subscript glyphs and the bottom of normal
+	baseline glyphs.
+
+	This only works for character clusters mapped to multiple glyphs.
+
+	* src/autofit/afblue.dat: Add subscript top blue zone for Khmer.
+
+	* src/autofit/afblue.hin (AF_BLUE_PROPERTY_LATIN_SUB_TOP): New
+	macro.
+
+	* src/autofit/afblue.c, src/autofit/afblue.h: Regenerated.
+
+	* src/autofit/aflatin.h (AF_LATIN_IS_SUB_TOP_BLUE,
+	AF_LATIN_BLUE_SUB_TOP): New macros.
+
+	* src/autofit/aflatin.c (af_latin_metrics_init_blues): Handle new
+	blue zone property.
+	Update tracing messages.
+	(af_latin_metrics_scale_dim): Handle new blue zone property.
+	(af_latin_hints_compute_blue_edges): Updated.
+
+2015-12-09  Werner Lemberg  <wl@gnu.org>
+
 	[autofit] Fix tracing message.
 
 	* src/autofit/aflatin.c (af_latin_metrics_scale_dim): Display

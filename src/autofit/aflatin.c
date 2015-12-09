@@ -330,6 +330,11 @@
             FT_TRACE5(( "top" ));
             have_flag = 1;
           }
+          else if ( AF_LATIN_IS_SUB_TOP_BLUE( bs ) )
+          {
+            FT_TRACE5(( "sub top" ));
+            have_flag = 1;
+          }
 
           if ( AF_LATIN_IS_NEUTRAL_BLUE( bs ) )
           {
@@ -462,7 +467,8 @@
               if ( last <= first )
                 continue;
 
-              if ( AF_LATIN_IS_TOP_BLUE( bs ) )
+              if ( AF_LATIN_IS_TOP_BLUE( bs )     ||
+                   AF_LATIN_IS_SUB_TOP_BLUE( bs ) )
               {
                 for ( pp = first; pp <= last; pp++ )
                 {
@@ -871,7 +877,8 @@
         FT_Bool  over_ref = FT_BOOL( shoot > ref );
 
 
-        if ( AF_LATIN_IS_TOP_BLUE( bs ) ^ over_ref )
+        if ( ( AF_LATIN_IS_TOP_BLUE( bs )    ||
+               AF_LATIN_IS_SUB_TOP_BLUE( bs) ) ^ over_ref )
         {
           *blue_ref   =
           *blue_shoot = ( shoot + ref ) / 2;
@@ -887,6 +894,8 @@
       blue->flags = 0;
       if ( AF_LATIN_IS_TOP_BLUE( bs ) )
         blue->flags |= AF_LATIN_BLUE_TOP;
+      if ( AF_LATIN_IS_SUB_TOP_BLUE( bs ) )
+        blue->flags |= AF_LATIN_BLUE_SUB_TOP;
       if ( AF_LATIN_IS_NEUTRAL_BLUE( bs ) )
         blue->flags |= AF_LATIN_BLUE_NEUTRAL;
 
@@ -1256,6 +1265,40 @@
 #endif
 
           blue->flags |= AF_LATIN_BLUE_ACTIVE;
+        }
+      }
+
+      /* use sub-top blue zone only if it doesn't overlap with */
+      /* another (non-sup-top) blue zone; otherwise, the       */
+      /* effect would be similar to a neutral blue zone, which */
+      /* is not desired here                                   */
+      for ( nn = 0; nn < axis->blue_count; nn++ )
+      {
+        AF_LatinBlue  blue = &axis->blues[nn];
+        FT_UInt       i;
+
+
+        if ( !( blue->flags & AF_LATIN_BLUE_SUB_TOP ) )
+          continue;
+        if ( !( blue->flags & AF_LATIN_BLUE_ACTIVE ) )
+          continue;
+
+        for ( i = 0; i < axis->blue_count; i++ )
+        {
+          AF_LatinBlue  b = &axis->blues[i];
+
+
+          if ( b->flags & AF_LATIN_BLUE_SUB_TOP )
+            continue;
+          if ( !( b->flags & AF_LATIN_BLUE_ACTIVE ) )
+            continue;
+
+          if ( b->ref.fit <= blue->shoot.fit &&
+               b->shoot.fit >= blue->ref.fit )
+          {
+            blue->flags &= ~AF_LATIN_BLUE_ACTIVE;
+            break;
+          }
         }
       }
 
@@ -2071,7 +2114,8 @@
         /* the major direction) -- this assumes the TrueType convention  */
         /* for the orientation of contours                               */
         is_top_blue =
-          (FT_Byte)( ( blue->flags & AF_LATIN_BLUE_TOP ) != 0 );
+          (FT_Byte)( ( blue->flags & ( AF_LATIN_BLUE_TOP     |
+                                       AF_LATIN_BLUE_SUB_TOP ) ) != 0 );
         is_neutral_blue =
           (FT_Byte)( ( blue->flags & AF_LATIN_BLUE_NEUTRAL ) != 0);
         is_major_dir =
