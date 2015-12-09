@@ -1256,21 +1256,29 @@
 #endif
 
           blue->flags |= AF_LATIN_BLUE_ACTIVE;
-
-          FT_TRACE5(( "  reference %d: %d scaled to %.2f%s\n"
-                      "  overshoot %d: %d scaled to %.2f%s\n",
-                      nn,
-                      blue->ref.org,
-                      blue->ref.fit / 64.0,
-                      blue->flags & AF_LATIN_BLUE_ACTIVE ? ""
-                                                         : " (inactive)",
-                      nn,
-                      blue->shoot.org,
-                      blue->shoot.fit / 64.0,
-                      blue->flags & AF_LATIN_BLUE_ACTIVE ? ""
-                                                         : " (inactive)" ));
         }
       }
+
+#ifdef FT_DEBUG_LEVEL_TRACE
+      for ( nn = 0; nn < axis->blue_count; nn++ )
+      {
+        AF_LatinBlue  blue = &axis->blues[nn];
+
+
+        FT_TRACE5(( "  reference %d: %d scaled to %.2f%s\n"
+                    "  overshoot %d: %d scaled to %.2f%s\n",
+                    nn,
+                    blue->ref.org,
+                    blue->ref.fit / 64.0,
+                    blue->flags & AF_LATIN_BLUE_ACTIVE ? ""
+                                                       : " (inactive)",
+                    nn,
+                    blue->shoot.org,
+                    blue->shoot.fit / 64.0,
+                    blue->flags & AF_LATIN_BLUE_ACTIVE ? ""
+                                                       : " (inactive)" ));
+      }
+#endif
     }
   }
 

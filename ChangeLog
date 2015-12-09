@@ -1,3 +1,10 @@
+2015-12-09  Werner Lemberg  <wl@gnu.org>
+
+	[autofit] Fix tracing message.
+
+	* src/autofit/aflatin.c (af_latin_metrics_scale_dim): Display
+	inactive blue zones also.
+
 2015-12-06  Werner Lemberg  <wl@gnu.org>
 
 	* src/autofit/afblue.dat: Add more Khmer clusters.
