@@ -1,5 +1,12 @@
 2015-12-09  Werner Lemberg  <wl@gnu.org>
 
+	[autofit] Thinko.
+
+	* src/autofit/aflatin.c (af_latin_metrics_init_blues): Don't count
+	empty blue zones (bug introduced 2015-12-06).
+
+2015-12-09  Werner Lemberg  <wl@gnu.org>
+
 	[autofit] Introduce subscript top blue zones.
 
 	This feature is mainly for Khmer: The idea is to avoid a clash

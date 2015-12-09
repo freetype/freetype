@@ -822,10 +822,14 @@
 
         } /* end for loop */
 
-        if ( best_round )
-          rounds[num_rounds++] = best_y_extremum;
-        else
-          flats[num_flats++]   = best_y_extremum;
+        if ( !( best_y_extremum == FT_INT_MIN ||
+                best_y_extremum == FT_INT_MAX ) )
+        {
+          if ( best_round )
+            rounds[num_rounds++] = best_y_extremum;
+          else
+            flats[num_flats++]   = best_y_extremum;
+        }
 
       } /* end while loop */
 
