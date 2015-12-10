@@ -1,3 +1,9 @@
+2015-12-10  Werner Lemberg  <wl@gnu.org>
+
+	[autofit] Remove redundant code.
+
+	* src/autofit/aflatin.c (af_latin_metrics_init_widths): Do it.
+
 2015-12-09  Werner Lemberg  <wl@gnu.org>
 
 	[autofit] Thinko.
