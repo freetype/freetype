@@ -486,9 +486,9 @@
     *count = hb_buffer_get_length( buf );
 
 #ifdef FT_DEBUG_LEVEL_TRACE
-      if ( feature && *count > 1 )
-        FT_TRACE1(( "af_get_char_index:"
-                    " input character mapped to multiple glyphs\n" ));
+    if ( feature && *count > 1 )
+      FT_TRACE1(( "af_get_char_index:"
+                  " input character mapped to multiple glyphs\n" ));
 #endif
 
     return q;
