@@ -487,7 +487,7 @@
 
 #ifdef FT_DEBUG_LEVEL_TRACE
     if ( feature && *count > 1 )
-      FT_TRACE1(( "af_get_char_index:"
+      FT_TRACE1(( "af_shaper_get_cluster:"
                   " input character mapped to multiple glyphs\n" ));
 #endif
 
