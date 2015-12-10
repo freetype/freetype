@@ -55,12 +55,6 @@
           HB_SCRIPT_HEBREW,
           "\xD7\x9D" ) /* ם */
 
-  /* only digit zero has a simple shape in the Lao script */
-  SCRIPT( lao, LAO,
-          "Lao",
-          HB_SCRIPT_LAO,
-          "\xE0\xBB\x90" ) /* ໐ */
-
   /* only digit zero has a simple shape in the Khmer script */
   SCRIPT( khmr, KHMR,
           "Khmer",
@@ -71,6 +65,12 @@
           "Khmer Symbols",
           HB_SCRIPT_INVALID,
           "\xE1\xA7\xA1 \xE1\xA7\xAA" ) /* ᧡ ᧪ */
+
+  /* only digit zero has a simple shape in the Lao script */
+  SCRIPT( lao, LAO,
+          "Lao",
+          HB_SCRIPT_LAO,
+          "\xE0\xBB\x90" ) /* ໐ */
 
   SCRIPT( latn, LATN,
           "Latin",
