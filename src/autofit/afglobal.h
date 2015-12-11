@@ -110,6 +110,7 @@ FT_BEGIN_HEADER
 
 #ifdef FT_CONFIG_OPTION_USE_HARFBUZZ
     hb_font_t*       hb_font;
+    hb_buffer_t*     hb_buf;           /* for feature comparison */
 #endif
 
     /* per-face auto-hinter properties */

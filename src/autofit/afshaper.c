@@ -466,7 +466,7 @@
     while ( *p == ' ' )
       p++;
 
-    /* count characters up to next space (or end of buffer) */
+    /* count bytes up to next space (or end of buffer) */
     q = p;
     while ( !( *q == ' ' || *q == '\0' ) )
       GET_UTF8_CHAR( dummy, q );
@@ -482,6 +482,46 @@
     /* shape buffer, which means conversion from character codes to */
     /* glyph indices, possibly applying a feature                   */
     hb_shape( font, buf, feature, feature ? 1 : 0 );
+
+    if ( feature )
+    {
+      hb_buffer_t*  hb_buf = metrics->globals->hb_buf;
+
+      unsigned int      gcount;
+      hb_glyph_info_t*  ginfo;
+
+      unsigned int      hb_gcount;
+      hb_glyph_info_t*  hb_ginfo;
+
+
+      /* we have to check whether applying a feature does actually change */
+      /* glyph indices; otherwise the affected glyph or glyphs aren't     */
+      /* available at all in the feature                                  */
+
+      hb_buffer_clear_contents( hb_buf );
+      hb_buffer_add_utf8( hb_buf, p, len, 0, len );
+      hb_buffer_guess_segment_properties( hb_buf );
+      hb_shape( font, hb_buf, NULL, 0 );
+
+      ginfo    = hb_buffer_get_glyph_infos( buf, &gcount );
+      hb_ginfo = hb_buffer_get_glyph_infos( hb_buf, &hb_gcount );
+
+      if ( gcount == hb_gcount )
+      {
+        unsigned int  i;
+
+
+        for (i = 0; i < gcount; i++ )
+          if ( ginfo[i].codepoint != hb_ginfo[i].codepoint )
+            break;
+
+        if ( i == gcount )
+        {
+          /* both buffers have identical glyph indices */
+          hb_buffer_clear_contents( buf );
+        }
+      }
+    }
 
     *count = hb_buffer_get_length( buf );
 

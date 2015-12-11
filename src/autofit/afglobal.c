@@ -364,6 +364,7 @@
 
 #ifdef FT_CONFIG_OPTION_USE_HARFBUZZ
     globals->hb_font = hb_ft_font_create( face, NULL );
+    globals->hb_buf  = hb_buffer_create();
 #endif
 
     error = af_face_globals_compute_style_coverage( globals );
@@ -410,6 +411,9 @@
 #ifdef FT_CONFIG_OPTION_USE_HARFBUZZ
       hb_font_destroy( globals->hb_font );
       globals->hb_font = NULL;
+
+      hb_buffer_destroy( globals->hb_buf );
+      globals->hb_buf = NULL;
 #endif
 
       globals->glyph_count               = 0;

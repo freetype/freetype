@@ -1,5 +1,23 @@
 2015-12-10  Werner Lemberg  <wl@gnu.org>
 
+	[autofit] Restore OpenType feature check.
+
+	This was removed while rewriting the HarfBuzz interface.
+
+	* src/autofit/afglobal.h (AF_FaceGlobalsRec): Add `hb_buf' field to
+	hold internal HarfBuzz buffer, needed for feature comparison.
+
+	* src/autofit/afglobal.c (af_face_globals_new,
+	af_face_globals_free): Initialize and destroy `hb_buf'.
+
+	* src/autofit/afshaper.c (af_shaper_get_cluster): Compare character
+	(cluster) with and without applied feature.
+
+	* src/autofit/aflatin.c (af_latin_metrics_init_blues): Fix tracing
+	message.
+
+2015-12-10  Werner Lemberg  <wl@gnu.org>
+
 	[autofit] Remove redundant code.
 
 	* src/autofit/aflatin.c (af_latin_metrics_init_widths): Do it.

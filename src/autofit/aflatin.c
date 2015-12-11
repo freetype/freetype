@@ -396,6 +396,12 @@
 
         p = af_shaper_get_cluster( p, &metrics->root, shaper_buf, &num_idx );
 
+        if ( !num_idx )
+        {
+          FT_TRACE5(( "  U+%04lX unavailable\n", ch ));
+          continue;
+        }
+
         if ( AF_LATIN_IS_TOP_BLUE( bs ) )
           best_y_extremum = FT_INT_MIN;
         else
