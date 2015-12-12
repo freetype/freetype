@@ -90,7 +90,7 @@
   SCRIPT( none, NONE,
           "no script",
           HB_SCRIPT_INVALID,
-          NULL )
+          "" )
 
   /* there are no simple forms for letters; we thus use two digit shapes */
   SCRIPT( telu, TELU,

@@ -1,3 +1,7 @@
+2015-12-12  Werner Lemberg  <wl@gnu.org>
+
+	* src/autofit/afscript.h: Avoid potential crash.
+
 2015-12-10  Werner Lemberg  <wl@gnu.org>
 
 	[autofit] Restore OpenType feature check.
