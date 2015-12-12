@@ -1,5 +1,9 @@
 2015-12-12  Werner Lemberg  <wl@gnu.org>
 
+	* src/autofit/aflatin.c (af_latin_metrics_init_blues): Minor.
+
+2015-12-12  Werner Lemberg  <wl@gnu.org>
+
 	* src/autofit/afscript.h: Avoid potential crash.
 
 2015-12-10  Werner Lemberg  <wl@gnu.org>

@@ -773,7 +773,13 @@
             /* with a vertical shift                                     */
             best_y += y_offset;
 
-            FT_TRACE5(( "  U+%04lX: best_y = %5ld", ch, best_y ));
+#ifdef FT_DEBUG_LEVEL_TRACE
+            if ( num_idx == 1 )
+              FT_TRACE5(( "  U+%04lX: best_y = %5ld", ch, best_y ));
+            else
+              FT_TRACE5(( "  component %d of cluster starting with U+%04lX:"
+                          " best_y = %5ld", i, ch, best_y ));
+#endif
 
             /* now set the `round' flag depending on the segment's kind: */
             /*                                                           */
