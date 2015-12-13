@@ -154,6 +154,13 @@
          AF_COVERAGE_DEFAULT )
 #endif
 
+  STYLE( mymr_dflt, MYMR_DFLT,
+         "Myanmar default style",
+         AF_WRITING_SYSTEM_LATIN,
+         AF_SCRIPT_MYMR,
+         AF_BLUE_STRINGSET_MYMR,
+         AF_COVERAGE_DEFAULT )
+
   STYLE( none_dflt, NONE_DFLT,
          "no style",
          AF_WRITING_SYSTEM_DUMMY,

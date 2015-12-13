@@ -319,6 +319,32 @@
   };
 
 
+  const AF_Script_UniRangeRec af_mymr_uniranges[] =
+  {
+    AF_UNIRANGE_REC( 0x1000UL, 0x109FUL ),    /* Myanmar            */
+    AF_UNIRANGE_REC( 0xA9E0UL, 0xA9FFUL ),    /* Myanmar Extended-B */
+    AF_UNIRANGE_REC( 0xAA60UL, 0xAA7FUL ),    /* Myanmar Extended-A */
+    AF_UNIRANGE_REC(      0UL,      0UL )
+  };
+
+  const AF_Script_UniRangeRec af_mymr_nonbase_uniranges[] =
+  {
+    AF_UNIRANGE_REC( 0x102DUL, 0x1030UL ),
+    AF_UNIRANGE_REC( 0x1032UL, 0x1037UL ),
+    AF_UNIRANGE_REC( 0x103AUL, 0x103AUL ),
+    AF_UNIRANGE_REC( 0x103DUL, 0x103EUL ),
+    AF_UNIRANGE_REC( 0x1058UL, 0x1059UL ),
+    AF_UNIRANGE_REC( 0x105EUL, 0x1060UL ),
+    AF_UNIRANGE_REC( 0x1071UL, 0x1074UL ),
+    AF_UNIRANGE_REC( 0x1082UL, 0x1082UL ),
+    AF_UNIRANGE_REC( 0x1085UL, 0x1086UL ),
+    AF_UNIRANGE_REC( 0x108DUL, 0x108DUL ),
+    AF_UNIRANGE_REC( 0xA9E5UL, 0xA9E5UL ),
+    AF_UNIRANGE_REC( 0xAA7CUL, 0xAA7CUL ),
+    AF_UNIRANGE_REC(      0UL,      0UL )
+  };
+
+
   const AF_Script_UniRangeRec  af_none_uniranges[] =
   {
     AF_UNIRANGE_REC( 0UL, 0UL )

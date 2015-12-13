@@ -118,6 +118,14 @@
     '\0',
     '\xE1', '\xB5', '\x96', ' ', '\xCA', '\xB8', ' ', '\xE1', '\xB5', '\x8D',  /* ᵖ ʸ ᵍ */
     '\0',
+    '\xE1', '\x80', '\x81', ' ', '\xE1', '\x80', '\x82', ' ', '\xE1', '\x80', '\x84', ' ', '\xE1', '\x80', '\x92', ' ', '\xE1', '\x80', '\x9D', ' ', '\xE1', '\x81', '\xA5', ' ', '\xE1', '\x81', '\x8A', ' ', '\xE1', '\x81', '\x8B',  /* ခ ဂ င ဒ ဝ ၥ ၊ ။ */
+    '\0',
+    '\xE1', '\x80', '\x84', ' ', '\xE1', '\x80', '\x8E', ' ', '\xE1', '\x80', '\x92', ' ', '\xE1', '\x80', '\x95', ' ', '\xE1', '\x80', '\x97', ' ', '\xE1', '\x80', '\x9D', ' ', '\xE1', '\x81', '\x8A', ' ', '\xE1', '\x81', '\x8B',  /* င ဎ ဒ ပ ဗ ဝ ၊ ။ */
+    '\0',
+    '\xE1', '\x80', '\xA9', ' ', '\xE1', '\x80', '\xBC', ' ', '\xE1', '\x81', '\x8D', ' ', '\xE1', '\x81', '\x8F', ' ', '\xE1', '\x81', '\x86', ' ', '\xE1', '\x80', '\xAB', ' ', '\xE1', '\x80', '\xAD',  /* ဩ ြ ၍ ၏ ၆ ါ ိ */
+    '\0',
+    '\xE1', '\x80', '\x89', ' ', '\xE1', '\x80', '\x8A', ' ', '\xE1', '\x80', '\xA5', ' ', '\xE1', '\x80', '\xA9', ' ', '\xE1', '\x80', '\xA8', ' ', '\xE1', '\x81', '\x82', ' ', '\xE1', '\x81', '\x85', ' ', '\xE1', '\x81', '\x89',  /* ဉ ည ဥ ဩ ဨ ၂ ၅ ၉ */
+    '\0',
     '\xE0', '\xB0', '\x87', ' ', '\xE0', '\xB0', '\x8C', ' ', '\xE0', '\xB0', '\x99', ' ', '\xE0', '\xB0', '\x9E', ' ', '\xE0', '\xB0', '\xA3', ' ', '\xE0', '\xB0', '\xB1', ' ', '\xE0', '\xB1', '\xAF',  /* ఇ ఌ ఙ ఞ ణ ఱ ౯ */
     '\0',
     '\xE0', '\xB0', '\x85', ' ', '\xE0', '\xB0', '\x95', ' ', '\xE0', '\xB0', '\x9A', ' ', '\xE0', '\xB0', '\xB0', ' ', '\xE0', '\xB0', '\xBD', ' ', '\xE0', '\xB1', '\xA8', ' ', '\xE0', '\xB1', '\xAC',  /* అ క చ ర ఽ ౨ ౬ */
@@ -259,6 +267,12 @@
     { AF_BLUE_STRING_LATIN_SUPS_SMALL,           0                                 },
     { AF_BLUE_STRING_LATIN_SUPS_SMALL_DESCENDER, 0                                 },
     { AF_BLUE_STRING_MAX,                        0                                 },
+    { AF_BLUE_STRING_MYANMAR_TOP,       AF_BLUE_PROPERTY_LATIN_TOP      |
+                                        AF_BLUE_PROPERTY_LATIN_X_HEIGHT   },
+    { AF_BLUE_STRING_MYANMAR_BOTTOM,    0                                 },
+    { AF_BLUE_STRING_MYANMAR_ASCENDER,  AF_BLUE_PROPERTY_LATIN_TOP        },
+    { AF_BLUE_STRING_MYANMAR_DESCENDER, 0                                 },
+    { AF_BLUE_STRING_MAX,               0                                 },
     { AF_BLUE_STRING_TELUGU_TOP,    AF_BLUE_PROPERTY_LATIN_TOP },
     { AF_BLUE_STRING_TELUGU_BOTTOM, 0                          },
     { AF_BLUE_STRING_MAX,           0                          },
