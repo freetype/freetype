@@ -1,4 +1,11 @@
-2015-12-10  Ben Wagner <bungeman@gmail.com>
+2015-12-14  Werner Lemberg  <wl@gnu.org>
+
+	[base] Fix calls to `FT_Stream_Seek'.
+
+	* src/base/ftobjs.c (Mac_Read_sfnt_Resource, FT_Open_Face): Set
+	`error'.
+
+2015-12-14  Ben Wagner <bungeman@gmail.com>
 
 	[base] Check error when seeking to data supplied offset (#46635).
 
