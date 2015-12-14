@@ -281,7 +281,7 @@
   };
 
 
-  const AF_Script_UniRangeRec af_latb_uniranges[] =
+  const AF_Script_UniRangeRec  af_latb_uniranges[] =
   {
     AF_UNIRANGE_REC(  0x1D62UL,  0x1D6AUL ),  /* some small subscript letters   */
     AF_UNIRANGE_REC(  0x2080UL,  0x209CUL ),  /* subscript digits and letters   */
@@ -289,13 +289,13 @@
     AF_UNIRANGE_REC(       0UL,       0UL )
   };
 
-  const AF_Script_UniRangeRec af_latb_nonbase_uniranges[] =
+  const AF_Script_UniRangeRec  af_latb_nonbase_uniranges[] =
   {
     AF_UNIRANGE_REC( 0UL, 0UL )
   };
 
 
-  const AF_Script_UniRangeRec af_latp_uniranges[] =
+  const AF_Script_UniRangeRec  af_latp_uniranges[] =
   {
     AF_UNIRANGE_REC(  0x00AAUL,  0x00AAUL ),  /* feminine ordinal indicator          */
     AF_UNIRANGE_REC(  0x00B2UL,  0x00B3UL ),  /* superscript two and three           */
@@ -313,13 +313,13 @@
     AF_UNIRANGE_REC(       0UL,       0UL )
   };
 
-  const AF_Script_UniRangeRec af_latp_nonbase_uniranges[] =
+  const AF_Script_UniRangeRec  af_latp_nonbase_uniranges[] =
   {
     AF_UNIRANGE_REC( 0UL, 0UL )
   };
 
 
-  const AF_Script_UniRangeRec af_mymr_uniranges[] =
+  const AF_Script_UniRangeRec  af_mymr_uniranges[] =
   {
     AF_UNIRANGE_REC( 0x1000UL, 0x109FUL ),    /* Myanmar            */
     AF_UNIRANGE_REC( 0xA9E0UL, 0xA9FFUL ),    /* Myanmar Extended-B */
@@ -327,7 +327,7 @@
     AF_UNIRANGE_REC(      0UL,      0UL )
   };
 
-  const AF_Script_UniRangeRec af_mymr_nonbase_uniranges[] =
+  const AF_Script_UniRangeRec  af_mymr_nonbase_uniranges[] =
   {
     AF_UNIRANGE_REC( 0x102DUL, 0x1030UL ),
     AF_UNIRANGE_REC( 0x1032UL, 0x1037UL ),
