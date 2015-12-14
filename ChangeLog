@@ -1,3 +1,15 @@
+2015-12-14  Ben Wagner  <bungeman@gmail.com>
+
+	[bdf] Remove dead code (#46625).
+
+	The BDF specification only allows decimal numbers, no octal or
+	hexidecimal decoding is needed.
+
+	* src/bdf/bdflib.c (_bdf_atoul, _bdf_atol, _bdf_atous,
+	_bdf_atos): Remove unused code and parameters.
+	Update all callers.
+	(odigits): Remove.
+
 2015-12-14  Werner Lemberg  <wl@gnu.org>
 
 	[base] Fix calls to `FT_Stream_Seek'.

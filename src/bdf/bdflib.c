@@ -834,14 +834,6 @@
     0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00
   };
 
-  static const unsigned char  odigits[32] =
-  {
-    0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0xFF, 0x00,
-    0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
-    0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
-    0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
-  };
-
   static const unsigned char  ddigits[32] =
   {
     0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0xFF, 0x03,
@@ -859,80 +851,32 @@
   };
 
 
-  /* Routine to convert an ASCII string into an unsigned long integer. */
+  /* Routine to convert a decimal ASCII string to an unsigned long integer. */
   static unsigned long
-  _bdf_atoul( char*         s,
-              char**        end,
-              unsigned int  base )
+  _bdf_atoul( char*  s )
   {
-    unsigned long         v;
-    const unsigned char*  dmap;
+    unsigned long  v;
 
 
     if ( s == 0 || *s == 0 )
       return 0;
 
-    /* Make sure the radix is something recognizable.  Default to 10. */
-    switch ( base )
-    {
-    case 8:
-      dmap = odigits;
-      break;
-    case 16:
-      dmap = hdigits;
-      break;
-    default:
-      base = 10;
-      dmap = ddigits;
-      break;
-    }
-
-    /* Check for the special hex prefix. */
-    if ( *s == '0'                                  &&
-         ( *( s + 1 ) == 'x' || *( s + 1 ) == 'X' ) )
-    {
-      base = 16;
-      dmap = hdigits;
-      s   += 2;
-    }
-
-    for ( v = 0; sbitset( dmap, *s ); s++ )
-      v = v * base + a2i[(int)*s];
-
-    if ( end != 0 )
-      *end = s;
+    for ( v = 0; sbitset( ddigits, *s ); s++ )
+      v = v * 10 + a2i[(int)*s];
 
     return v;
   }
 
 
-  /* Routine to convert an ASCII string into a signed long integer. */
+  /* Routine to convert a decimal ASCII string to a signed long integer. */
   static long
-  _bdf_atol( char*   s,
-             char**  end,
-             int     base )
+  _bdf_atol( char*  s )
   {
-    long                  v, neg;
-    const unsigned char*  dmap;
+    long  v, neg;
 
 
     if ( s == 0 || *s == 0 )
       return 0;
-
-    /* Make sure the radix is something recognizable.  Default to 10. */
-    switch ( base )
-    {
-    case 8:
-      dmap = odigits;
-      break;
-    case 16:
-      dmap = hdigits;
-      break;
-    default:
-      base = 10;
-      dmap = ddigits;
-      break;
-    }
 
     /* Check for a minus sign. */
     neg = 0;
@@ -942,99 +886,39 @@
       neg = 1;
     }
 
-    /* Check for the special hex prefix. */
-    if ( *s == '0'                                  &&
-         ( *( s + 1 ) == 'x' || *( s + 1 ) == 'X' ) )
-    {
-      base = 16;
-      dmap = hdigits;
-      s   += 2;
-    }
-
-    for ( v = 0; sbitset( dmap, *s ); s++ )
-      v = v * base + a2i[(int)*s];
-
-    if ( end != 0 )
-      *end = s;
+    for ( v = 0; sbitset( ddigits, *s ); s++ )
+      v = v * 10 + a2i[(int)*s];
 
     return ( !neg ) ? v : -v;
   }
 
 
-  /* Routine to convert an ASCII string into an unsigned short integer. */
+  /* Routine to convert a decimal ASCII string to an unsigned short integer. */
   static unsigned short
-  _bdf_atous( char*         s,
-              char**        end,
-              unsigned int  base )
+  _bdf_atous( char*  s )
   {
-    unsigned short        v;
-    const unsigned char*  dmap;
+    unsigned short  v;
 
 
     if ( s == 0 || *s == 0 )
       return 0;
 
-    /* Make sure the radix is something recognizable.  Default to 10. */
-    switch ( base )
-    {
-    case 8:
-      dmap = odigits;
-      break;
-    case 16:
-      dmap = hdigits;
-      break;
-    default:
-      base = 10;
-      dmap = ddigits;
-      break;
-    }
-
-    /* Check for the special hex prefix. */
-    if ( *s == '0'                                  &&
-         ( *( s + 1 ) == 'x' || *( s + 1 ) == 'X' ) )
-    {
-      base = 16;
-      dmap = hdigits;
-      s   += 2;
-    }
-
-    for ( v = 0; sbitset( dmap, *s ); s++ )
-      v = (unsigned short)( v * base + a2i[(int)*s] );
-
-    if ( end != 0 )
-      *end = s;
+    for ( v = 0; sbitset( ddigits, *s ); s++ )
+      v = (unsigned short)( v * 10 + a2i[(int)*s] );
 
     return v;
   }
 
 
-  /* Routine to convert an ASCII string into a signed short integer. */
+  /* Routine to convert a decimal ASCII string to a signed short integer. */
   static short
-  _bdf_atos( char*   s,
-             char**  end,
-             int     base )
+  _bdf_atos( char*  s )
   {
-    short                 v, neg;
-    const unsigned char*  dmap;
+    short  v, neg;
 
 
     if ( s == 0 || *s == 0 )
       return 0;
-
-    /* Make sure the radix is something recognizable.  Default to 10. */
-    switch ( base )
-    {
-    case 8:
-      dmap = odigits;
-      break;
-    case 16:
-      dmap = hdigits;
-      break;
-    default:
-      base = 10;
-      dmap = ddigits;
-      break;
-    }
 
     /* Check for a minus. */
     neg = 0;
@@ -1044,20 +928,8 @@
       neg = 1;
     }
 
-    /* Check for the special hex prefix. */
-    if ( *s == '0'                                  &&
-         ( *( s + 1 ) == 'x' || *( s + 1 ) == 'X' ) )
-    {
-      base = 16;
-      dmap = hdigits;
-      s   += 2;
-    }
-
-    for ( v = 0; sbitset( dmap, *s ); s++ )
-      v = (short)( v * base + a2i[(int)*s] );
-
-    if ( end != 0 )
-      *end = s;
+    for ( v = 0; sbitset( ddigits, *s ); s++ )
+      v = (short)( v * 10 + a2i[(int)*s] );
 
     return (short)( ( !neg ) ? v : -v );
   }
@@ -1390,11 +1262,11 @@
         break;
 
       case BDF_INTEGER:
-        fp->value.l = _bdf_atol( value, 0, 10 );
+        fp->value.l = _bdf_atol( value );
         break;
 
       case BDF_CARDINAL:
-        fp->value.ul = _bdf_atoul( value, 0, 10 );
+        fp->value.ul = _bdf_atoul( value );
         break;
 
       default:
@@ -1460,11 +1332,11 @@
       break;
 
     case BDF_INTEGER:
-      fp->value.l = _bdf_atol( value, 0, 10 );
+      fp->value.l = _bdf_atol( value );
       break;
 
     case BDF_CARDINAL:
-      fp->value.ul = _bdf_atoul( value, 0, 10 );
+      fp->value.ul = _bdf_atoul( value );
       break;
     }
 
@@ -1579,7 +1451,7 @@
       error = _bdf_list_split( &p->list, (char *)" +", line, linelen );
       if ( error )
         goto Exit;
-      p->cnt = font->glyphs_size = _bdf_atoul( p->list.field[1], 0, 10 );
+      p->cnt = font->glyphs_size = _bdf_atoul( p->list.field[1] );
 
       /* We need at least 20 bytes per glyph. */
       if ( p->cnt > p->size / 20 )
@@ -1704,7 +1576,7 @@
       if ( error )
         goto Exit;
 
-      p->glyph_enc = _bdf_atol( p->list.field[1], 0, 10 );
+      p->glyph_enc = _bdf_atol( p->list.field[1] );
 
       /* Normalize negative encoding values.  The specification only */
       /* allows -1, but we can be more generous here.                */
@@ -1713,7 +1585,7 @@
 
       /* Check for alternative encoding format. */
       if ( p->glyph_enc == -1 && p->list.used > 2 )
-        p->glyph_enc = _bdf_atol( p->list.field[2], 0, 10 );
+        p->glyph_enc = _bdf_atol( p->list.field[2] );
 
       if ( p->glyph_enc < -1 )
         p->glyph_enc = -1;
@@ -1890,7 +1762,7 @@
       if ( error )
         goto Exit;
 
-      glyph->swidth = (unsigned short)_bdf_atoul( p->list.field[1], 0, 10 );
+      glyph->swidth = (unsigned short)_bdf_atoul( p->list.field[1] );
       p->flags |= _BDF_SWIDTH;
 
       goto Exit;
@@ -1906,7 +1778,7 @@
       if ( error )
         goto Exit;
 
-      glyph->dwidth = (unsigned short)_bdf_atoul( p->list.field[1], 0, 10 );
+      glyph->dwidth = (unsigned short)_bdf_atoul( p->list.field[1] );
 
       if ( !( p->flags & _BDF_SWIDTH ) )
       {
@@ -1934,10 +1806,10 @@
       if ( error )
         goto Exit;
 
-      glyph->bbx.width    = _bdf_atous( p->list.field[1], 0, 10 );
-      glyph->bbx.height   = _bdf_atous( p->list.field[2], 0, 10 );
-      glyph->bbx.x_offset = _bdf_atos( p->list.field[3], 0, 10 );
-      glyph->bbx.y_offset = _bdf_atos( p->list.field[4], 0, 10 );
+      glyph->bbx.width    = _bdf_atous( p->list.field[1] );
+      glyph->bbx.height   = _bdf_atous( p->list.field[2] );
+      glyph->bbx.x_offset = _bdf_atos( p->list.field[3] );
+      glyph->bbx.y_offset = _bdf_atos( p->list.field[4] );
 
       /* Generate the ascent and descent of the character. */
       glyph->bbx.ascent  = (short)( glyph->bbx.height + glyph->bbx.y_offset );
@@ -2266,7 +2138,7 @@
       if ( error )
         goto Exit;
       /* at this point, `p->font' can't be NULL */
-      p->cnt = p->font->props_size = _bdf_atoul( p->list.field[1], 0, 10 );
+      p->cnt = p->font->props_size = _bdf_atoul( p->list.field[1] );
 
       if ( FT_NEW_ARRAY( p->font->props, p->cnt ) )
       {
@@ -2295,11 +2167,11 @@
       if ( error )
         goto Exit;
 
-      p->font->bbx.width  = _bdf_atous( p->list.field[1], 0, 10 );
-      p->font->bbx.height = _bdf_atous( p->list.field[2], 0, 10 );
+      p->font->bbx.width  = _bdf_atous( p->list.field[1] );
+      p->font->bbx.height = _bdf_atous( p->list.field[2] );
 
-      p->font->bbx.x_offset = _bdf_atos( p->list.field[3], 0, 10 );
-      p->font->bbx.y_offset = _bdf_atos( p->list.field[4], 0, 10 );
+      p->font->bbx.x_offset = _bdf_atos( p->list.field[3] );
+      p->font->bbx.y_offset = _bdf_atos( p->list.field[4] );
 
       p->font->bbx.ascent  = (short)( p->font->bbx.height +
                                       p->font->bbx.y_offset );
@@ -2361,9 +2233,9 @@
       if ( error )
         goto Exit;
 
-      p->font->point_size   = _bdf_atoul( p->list.field[1], 0, 10 );
-      p->font->resolution_x = _bdf_atoul( p->list.field[2], 0, 10 );
-      p->font->resolution_y = _bdf_atoul( p->list.field[3], 0, 10 );
+      p->font->point_size   = _bdf_atoul( p->list.field[1] );
+      p->font->resolution_x = _bdf_atoul( p->list.field[2] );
+      p->font->resolution_y = _bdf_atoul( p->list.field[3] );
 
       /* Check for the bits per pixel field. */
       if ( p->list.used == 5 )
@@ -2371,7 +2243,7 @@
         unsigned short bpp;
 
 
-        bpp = (unsigned short)_bdf_atos( p->list.field[4], 0, 10 );
+        bpp = (unsigned short)_bdf_atos( p->list.field[4] );
 
         /* Only values 1, 2, 4, 8 are allowed for greymap fonts. */
         if ( bpp > 4 )
