@@ -1521,7 +1521,8 @@
     if ( error )
       goto Exit;
 
-    if ( FT_Stream_Seek( stream, pos + offset ) )
+    error = FT_Stream_Seek( stream, pos + offset );
+    if ( error )
       goto Exit;
 
     if ( FT_ALLOC( sfnt_ps, (FT_Long)length ) )

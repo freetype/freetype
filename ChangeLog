@@ -1,3 +1,11 @@
+2015-12-10  Ben Wagner <bungeman@gmail.com>
+
+	[base] Check error when seeking to data supplied offset (#46635).
+
+	* src/base/ftobjs.c (open_face_PS_from_sfnt_stream):
+	`ft_lookup_PS_in_sfnt_stream' returns offset and and length from
+	user supplied data.  Use of this these values must be checked.
+
 2015-12-13  Werner Lemberg  <wl@gnu.org>
 
 	[autofit] Add support for Myanmar script.
@@ -551,7 +559,7 @@
 	Handle them.
 	(af_autofitter_init): Initialize them.
 
-2015-11-02  Bungeman  <bungeman@gmail.com>
+2015-11-02  Ben Wagner  <bungeman@gmail.com>
 
 	[ftfuzzer] Add support for multiple files (patch #8779).
 
@@ -759,7 +767,7 @@
 
 	* src/type1/t1afm.c (T1_Read_Metrics): Fix memory leak (#46229).
 
-2015-10-19  Bungeman  <bungeman@gmail.com>
+2015-10-19  Ben Wagner  <bungeman@gmail.com>
 
 	[cid] Better handle invalid glyph stream offsets (#46221).
 
@@ -837,7 +845,7 @@
 
 	* src/tools/ftfuzzer/README: New file.
 
-2015-10-15  Bungeman  <bungeman@gmail.com>
+2015-10-15  Ben Wagner  <bungeman@gmail.com>
 
 	[bdf] Fix memory leak (#46213).
 
@@ -860,7 +868,7 @@
 
 	The used indices were off by 1.
 
-2015-10-15  Bungeman  <bungeman@gmail.com>
+2015-10-15  Ben Wagner  <bungeman@gmail.com>
 	    Werner Lemberg  <wl@gnu.org>
 
 	* src/tools/ftfuzzer/ftfuzzer.cc: Handle fixed sizes (#46211).
