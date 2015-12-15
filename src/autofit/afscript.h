@@ -35,6 +35,12 @@
           HB_SCRIPT_ARABIC,
           "\xD9\x84 \xD8\xAD \xD9\x80" ) /* ل ح ـ */
 
+  /* there are no simple forms for letters; we thus use two digit shapes */
+  SCRIPT( beng, BENG,
+          "Bengali",
+          HB_SCRIPT_BENGALI,
+          "\xE0\xA7\xA6 \xE0\xA7\xAA" ) /* ০ ৪*/
+
   SCRIPT( cyrl, CYRL,
           "Cyrillic",
           HB_SCRIPT_CYRILLIC,
@@ -109,11 +115,6 @@
           "\xE0\xB8\xB2 \xE0\xB9\x85 \xE0\xB9\x90" ) /* า ๅ ๐ */
 
 #ifdef AF_CONFIG_OPTION_INDIC
-
-  SCRIPT( beng, BENG,
-          "Bengali",
-          HB_SCRIPT_BENGALI,
-          "o" ) /* XXX */
 
   SCRIPT( gujr, GUJR,
           "Gujarati",

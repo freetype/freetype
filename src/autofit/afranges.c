@@ -91,6 +91,23 @@
   };
 
 
+  const AF_Script_UniRangeRec  af_beng_uniranges[] =
+  {
+    AF_UNIRANGE_REC(  0x0980UL,  0x09FFUL ),  /* Bengali */
+    AF_UNIRANGE_REC(       0UL,       0UL )
+  };
+
+  const AF_Script_UniRangeRec  af_beng_nonbase_uniranges[] =
+  {
+    AF_UNIRANGE_REC(  0x0981UL,  0x0981UL ),
+    AF_UNIRANGE_REC(  0x09BCUL,  0x09BCUL ),
+    AF_UNIRANGE_REC(  0x09C1UL,  0x09C4UL ),
+    AF_UNIRANGE_REC(  0x09CDUL,  0x09CDUL ),
+    AF_UNIRANGE_REC(  0x09E2UL,  0x09E3UL ),
+    AF_UNIRANGE_REC(       0UL,       0UL )
+  };
+
+
   const AF_Script_UniRangeRec  af_cyrl_uniranges[] =
   {
     AF_UNIRANGE_REC(  0x0400UL,  0x04FFUL ),  /* Cyrillic            */
@@ -388,23 +405,6 @@
 
 
 #ifdef AF_CONFIG_OPTION_INDIC
-
-  const AF_Script_UniRangeRec  af_beng_uniranges[] =
-  {
-    AF_UNIRANGE_REC(  0x0980UL,  0x09FFUL ),  /* Bengali */
-    AF_UNIRANGE_REC(       0UL,       0UL )
-  };
-
-  const AF_Script_UniRangeRec  af_beng_nonbase_uniranges[] =
-  {
-    AF_UNIRANGE_REC(  0x0981UL,  0x0981UL ),
-    AF_UNIRANGE_REC(  0x09BCUL,  0x09BCUL ),
-    AF_UNIRANGE_REC(  0x09C1UL,  0x09C4UL ),
-    AF_UNIRANGE_REC(  0x09CDUL,  0x09CDUL ),
-    AF_UNIRANGE_REC(  0x09E2UL,  0x09E3UL ),
-    AF_UNIRANGE_REC(       0UL,       0UL )
-  };
-
 
   const AF_Script_UniRangeRec  af_gujr_uniranges[] =
   {

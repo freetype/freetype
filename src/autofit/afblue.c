@@ -32,6 +32,12 @@
     '\0',
     '\xD9', '\x80',  /* ـ */
     '\0',
+    '\xE0', '\xA6', '\x85', ' ', '\xE0', '\xA6', '\xA1', ' ', '\xE0', '\xA6', '\xA4', ' ', '\xE0', '\xA6', '\xA8', ' ', '\xE0', '\xA6', '\xAC', ' ', '\xE0', '\xA6', '\xAD', ' ', '\xE0', '\xA6', '\xB2', ' ', '\xE0', '\xA6', '\x95',  /* অ ড ত ন ব ভ ল ক */
+    '\0',
+    '\xE0', '\xA6', '\x87', ' ', '\xE0', '\xA6', '\x9F', ' ', '\xE0', '\xA6', '\xA0', ' ', '\xE0', '\xA6', '\xBF', ' ', '\xE0', '\xA7', '\x80', ' ', '\xE0', '\xA7', '\x88', ' ', '\xE0', '\xA7', '\x97', ' ',  /* ই ট ঠ ি ী ৈ ৗ  */
+    '\0',
+    '\xE0', '\xA6', '\x93', ' ', '\xE0', '\xA6', '\x8F', ' ', '\xE0', '\xA6', '\xA1', ' ', '\xE0', '\xA6', '\xA4', ' ', '\xE0', '\xA6', '\xA8', ' ', '\xE0', '\xA6', '\xAC', ' ', '\xE0', '\xA6', '\xB2', ' ', '\xE0', '\xA6', '\x95',  /* ও এ ড ত ন ব ল ক */
+    '\0',
     '\xD0', '\x91', ' ', '\xD0', '\x92', ' ', '\xD0', '\x95', ' ', '\xD0', '\x9F', ' ', '\xD0', '\x97', ' ', '\xD0', '\x9E', ' ', '\xD0', '\xA1', ' ', '\xD0', '\xAD',  /* Б В Е П З О С Э */
     '\0',
     '\xD0', '\x91', ' ', '\xD0', '\x92', ' ', '\xD0', '\x95', ' ', '\xD0', '\xA8', ' ', '\xD0', '\x97', ' ', '\xD0', '\x9E', ' ', '\xD0', '\xA1', ' ', '\xD0', '\xAD',  /* Б В Е Ш З О С Э */
@@ -197,6 +203,13 @@
     { AF_BLUE_STRING_ARABIC_BOTTOM, 0                              },
     { AF_BLUE_STRING_ARABIC_JOIN,   AF_BLUE_PROPERTY_LATIN_NEUTRAL },
     { AF_BLUE_STRING_MAX,           0                              },
+    { AF_BLUE_STRING_BENGALI_TOP,    AF_BLUE_PROPERTY_LATIN_TOP        },
+    { AF_BLUE_STRING_BENGALI_HEAD,   AF_BLUE_PROPERTY_LATIN_TOP        },
+    { AF_BLUE_STRING_BENGALI_BASE,   AF_BLUE_PROPERTY_LATIN_TOP      |
+                                     AF_BLUE_PROPERTY_LATIN_NEUTRAL  |
+                                     AF_BLUE_PROPERTY_LATIN_X_HEIGHT   },
+    { AF_BLUE_STRING_BENGALI_BASE,   0                                 },
+    { AF_BLUE_STRING_MAX,            0                                 },
     { AF_BLUE_STRING_CYRILLIC_CAPITAL_TOP,     AF_BLUE_PROPERTY_LATIN_TOP        },
     { AF_BLUE_STRING_CYRILLIC_CAPITAL_BOTTOM,  0                                 },
     { AF_BLUE_STRING_CYRILLIC_SMALL,           AF_BLUE_PROPERTY_LATIN_TOP      |
