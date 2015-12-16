@@ -89,7 +89,7 @@ AF_BLUE_STRING_ENUM AF_BLUE_STRINGS_ARRAY AF_BLUE_STRING_MAX_LEN:
   AF_BLUE_STRING_BENGALI_BASE
     "অ ড ত ন ব ভ ল ক"
   AF_BLUE_STRING_BENGALI_TOP
-    "ই ট ঠ ি ী ৈ ৗ "
+    "ই ট ঠ ি ী ৈ ৗ"
   AF_BLUE_STRING_BENGALI_HEAD
     "ও এ ড ত ন ব ল ক"
 
