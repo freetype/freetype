@@ -1,3 +1,21 @@
+2015-12-19  Werner Lemberg  <wl@gnu.org>
+
+	[bdf, base] Lift hash functions from bdf driver to base module.
+
+	* src/base/fthash.c, include/freetype/internal/fthash.h: New files,
+	containing (massaged) code from `bdflib.c' and `bdf.h'.
+
+	* include/freetype/internal/internal.h (FT_INTERNAL_HASH_H): New
+	macro.
+
+	* src/base/ftbase.c: Include `fthash.c'.
+
+	* src/base/Jamfile (_sources): Add `fthash'.
+
+	* src/base/rules.mk (BASE_SRC): Add `fthash.c'.
+
+	* docs/LICENSE.TXT: Updated.
+
 2015-12-15  Werner Lemberg  <wl@gnu.org>
 
 	[autofit] Add blue-zone support for Bengali script.

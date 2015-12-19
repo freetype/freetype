@@ -22,6 +22,7 @@ SubDir  FT2_TOP $(FT2_SRC_DIR) base ;
                ftcalc
                ftdbgmem
                ftgloadr
+               fthash
                ftobjs
                ftoutln
                ftpic

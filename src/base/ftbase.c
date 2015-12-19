@@ -26,6 +26,7 @@
 #include "ftcalc.c"
 #include "ftdbgmem.c"
 #include "ftgloadr.c"
+#include "fthash.c"
 #include "ftobjs.c"
 #include "ftoutln.c"
 #include "ftrfork.c"
