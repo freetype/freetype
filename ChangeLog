@@ -1,5 +1,16 @@
 2015-12-19  Werner Lemberg  <wl@gnu.org>
 
+	[bdf] Use new hash functions.
+
+	* src/bdf/bdf.h: Include FT_INTERNAL_HASH_H.
+	(hashnode, hashtable): Removed.
+	(bdf_font_t): Use `FT_HashRec' type for `proptbl'.
+
+	* src/bdf/bdflib.c: Remove all hash functions.
+	Update code for new hash structure and function names.
+
+2015-12-19  Werner Lemberg  <wl@gnu.org>
+
 	[bdf, base] Lift hash functions from bdf driver to base module.
 
 	* src/base/fthash.c, include/freetype/internal/fthash.h: New files,

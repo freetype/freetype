@@ -33,6 +33,7 @@
 #include <ft2build.h>
 #include FT_INTERNAL_OBJECTS_H
 #include FT_INTERNAL_STREAM_H
+#include FT_INTERNAL_HASH_H
 
 
 FT_BEGIN_HEADER
@@ -157,24 +158,6 @@ FT_BEGIN_HEADER
   } bdf_glyph_t;
 
 
-  typedef struct  _hashnode_
-  {
-    const char*  key;
-    size_t       data;
-
-  } _hashnode, *hashnode;
-
-
-  typedef struct  hashtable_
-  {
-    unsigned int  limit;
-    unsigned int  size;
-    unsigned int  used;
-    hashnode*     table;
-
-  } hashtable;
-
-
   typedef struct  bdf_glyphlist_t_
   {
     unsigned short  pad;          /* Pad to 4-byte boundary.              */
@@ -238,7 +221,7 @@ FT_BEGIN_HEADER
 
     bdf_property_t*  user_props;
     unsigned long    nuser_props;
-    hashtable        proptbl;
+    FT_HashRec       proptbl;
 
   } bdf_font_t;
 
