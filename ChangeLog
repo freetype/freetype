@@ -1,5 +1,17 @@
 2015-12-20  Werner Lemberg  <wl@gnu.org>
 
+	[base] Thinko: Remove free function pointer.
+
+	We don't copy keys or values while hashing.
+
+	* include/freetype/internal/fthash.h (FT_Hash_FreeFunc): Removed.
+	(FT_HashRec): Remove `free' field.
+
+	* src/base/fthash.c (hash_str_free): Removed.
+	(ft_hash_init, ft_hash_free): Updated.
+
+2015-12-20  Werner Lemberg  <wl@gnu.org>
+
 	[base, bdf] Don't expose `FT_Hashnode' in hash functions.
 
 	* src/base/fthash.c (hash_lookup, ft_hash_str_lookup,

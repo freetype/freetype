@@ -75,10 +75,6 @@ FT_BEGIN_HEADER
   (*FT_Hash_CompareFunc)( FT_Hashkey*  a,
                           FT_Hashkey*  b );
 
-  typedef void
-  (*FT_Hash_FreeFunc)( FT_Hashnode  hn,
-                       FT_Memory    memory );
-
 
   typedef struct  FT_HashRec_
   {
@@ -88,7 +84,6 @@ FT_BEGIN_HEADER
 
     FT_Hash_LookupFunc   lookup;
     FT_Hash_CompareFunc  compare;
-    FT_Hash_FreeFunc     free;
 
     FT_Hashnode*  table;
 

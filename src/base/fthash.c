@@ -101,14 +101,6 @@
   }
 
 
-  static void
-  hash_str_free( FT_Hashnode  hn,
-                 FT_Memory    memory )
-  {
-    FT_FREE( hn );
-  }
-
-
   static FT_Hashnode*
   hash_bucket( FT_Hashkey  key,
                FT_Hash     hash )
@@ -186,13 +178,11 @@
     {
       hash->lookup  = hash_num_lookup;
       hash->compare = hash_num_compare;
-      hash->free    = NULL;
     }
     else
     {
       hash->lookup  = hash_str_lookup;
       hash->compare = hash_str_compare;
-      hash->free    = hash_str_free;
     }
 
     FT_MEM_NEW_ARRAY( hash->table, sz );
@@ -212,11 +202,8 @@
       FT_UInt       i;
 
 
-      if ( hash->free )
-      {
-        for ( i = 0; i < sz; i++, bp++ )
-          (hash->free)( *bp, memory );
-      }
+      for ( i = 0; i < sz; i++, bp++ )
+        FT_FREE( *bp );
 
       FT_FREE( hash->table );
     }
