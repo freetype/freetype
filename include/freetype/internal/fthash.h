@@ -118,11 +118,11 @@ FT_BEGIN_HEADER
                       FT_Hash    hash,
                       FT_Memory  memory );
 
-  FT_Hashnode
+  size_t*
   ft_hash_str_lookup( const char*  key,
                       FT_Hash      hash );
 
-  FT_Hashnode
+  size_t*
   ft_hash_num_lookup( FT_Int   num,
                       FT_Hash  hash );
 

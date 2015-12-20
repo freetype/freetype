@@ -291,18 +291,19 @@
   }
 
 
-  static FT_Hashnode
+  static size_t*
   hash_lookup( FT_Hashkey  key,
                FT_Hash     hash )
   {
     FT_Hashnode*  np = hash_bucket( key, hash );
 
 
-    return *np;
+    return (*np) ? &(*np)->data
+                 : NULL;
   }
 
 
-  FT_Hashnode
+  size_t*
   ft_hash_str_lookup( const char*  key,
                       FT_Hash      hash )
   {
@@ -315,7 +316,7 @@
   }
 
 
-  FT_Hashnode
+  size_t*
   ft_hash_num_lookup( FT_Int   num,
                       FT_Hash  hash )
   {

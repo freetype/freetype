@@ -1,5 +1,18 @@
 2015-12-20  Werner Lemberg  <wl@gnu.org>
 
+	[base, bdf] Don't expose `FT_Hashnode' in hash functions.
+
+	* src/base/fthash.c (hash_lookup, ft_hash_str_lookup,
+	ft_hash_num_lookup): Return pointer to `size_t' instead of
+	`FT_Hashnode'.
+
+	* include/freetype/internal/fthash.h: Updated.
+
+	* src/bdf/bdflib.c (bdf_get_property, _bdf_add_property,
+	bdf_get_font_property): Updated.
+
+2015-12-20  Werner Lemberg  <wl@gnu.org>
+
 	[base, bdf] Add number hashing.
 
 	* src/base/fthash.c (hash_num_lookup, hash_num_compare): New

@@ -848,25 +848,23 @@
   }
 
 
-  FT_LOCAL_DEF( bdf_property_t * )
+  FT_LOCAL_DEF( bdf_property_t* )
   bdf_get_property( char*        name,
                     bdf_font_t*  font )
   {
-    FT_Hashnode  hn;
-    size_t       propid;
+    size_t*  propid;
 
 
     if ( name == 0 || *name == 0 )
       return 0;
 
-    if ( ( hn = ft_hash_str_lookup( name, &(font->proptbl) ) ) == 0 )
+    if ( ( propid = ft_hash_str_lookup( name, &(font->proptbl) ) ) == NULL )
       return 0;
 
-    propid = hn->data;
-    if ( propid >= _num_bdf_properties )
-      return font->user_props + ( propid - _num_bdf_properties );
+    if ( *propid >= _num_bdf_properties )
+      return font->user_props + ( *propid - _num_bdf_properties );
 
-    return (bdf_property_t*)_bdf_properties + propid;
+    return (bdf_property_t*)_bdf_properties + *propid;
   }
 
 
@@ -1074,8 +1072,7 @@
                      char*          value,
                      unsigned long  lineno )
   {
-    size_t          propid;
-    FT_Hashnode     hn;
+    size_t*         propid;
     bdf_property_t  *prop, *fp;
     FT_Memory       memory = font->memory;
     FT_Error        error  = FT_Err_Ok;
@@ -1084,11 +1081,12 @@
 
 
     /* First, check whether the property already exists in the font. */
-    if ( ( hn = ft_hash_str_lookup( name, (FT_Hash)font->internal ) ) != 0 )
+    if ( ( propid = ft_hash_str_lookup( name,
+                                        (FT_Hash)font->internal ) ) != NULL )
     {
       /* The property already exists in the font, so simply replace */
       /* the value of the property with the current value.          */
-      fp = font->props + hn->data;
+      fp = font->props + *propid;
 
       switch ( fp->format )
       {
@@ -1120,13 +1118,13 @@
 
     /* See whether this property type exists yet or not. */
     /* If not, create it.                                */
-    hn = ft_hash_str_lookup( name, &(font->proptbl) );
-    if ( hn == 0 )
+    propid = ft_hash_str_lookup( name, &(font->proptbl) );
+    if ( propid == NULL )
     {
       error = bdf_create_property( name, BDF_ATOM, font );
       if ( error )
         goto Exit;
-      hn = ft_hash_str_lookup( name, &(font->proptbl) );
+      propid = ft_hash_str_lookup( name, &(font->proptbl) );
     }
 
     /* Allocate another property if this is overflow. */
@@ -1150,11 +1148,10 @@
       font->props_size++;
     }
 
-    propid = hn->data;
-    if ( propid >= _num_bdf_properties )
-      prop = font->user_props + ( propid - _num_bdf_properties );
+    if ( *propid >= _num_bdf_properties )
+      prop = font->user_props + ( *propid - _num_bdf_properties );
     else
-      prop = (bdf_property_t*)_bdf_properties + propid;
+      prop = (bdf_property_t*)_bdf_properties + *propid;
 
     fp = font->props + font->props_used;
 
@@ -2408,15 +2405,15 @@
   bdf_get_font_property( bdf_font_t*  font,
                          const char*  name )
   {
-    FT_Hashnode  hn;
+    size_t*  propid;
 
 
     if ( font == 0 || font->props_size == 0 || name == 0 || *name == 0 )
       return 0;
 
-    hn = ft_hash_str_lookup( name, (FT_Hash)font->internal );
+    propid = ft_hash_str_lookup( name, (FT_Hash)font->internal );
 
-    return hn ? ( font->props + hn->data ) : 0;
+    return propid ? ( font->props + *propid ) : 0;
   }
 
 
