@@ -84,7 +84,7 @@ FT_BEGIN_HEADER
   FT_Error
   ft_hash_insert( char*      key,
                   size_t     data,
-                  FT_Hash    ht,
+                  FT_Hash    hash,
                   FT_Memory  memory );
 
   FT_Hashnode

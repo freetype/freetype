@@ -36,24 +36,6 @@ FT_BEGIN_HEADER
   /*    The glyph loader is an internal object used to load several glyphs */
   /*    together (for example, in the case of composites).                 */
   /*                                                                       */
-  /* <Note>                                                                */
-  /*    The glyph loader implementation is not part of the high-level API, */
-  /*    hence the forward structure declaration.                           */
-  /*                                                                       */
-  typedef struct FT_GlyphLoaderRec_*  FT_GlyphLoader ;
-
-
-#if 0  /* moved to freetype.h in version 2.2 */
-#define FT_SUBGLYPH_FLAG_ARGS_ARE_WORDS          1
-#define FT_SUBGLYPH_FLAG_ARGS_ARE_XY_VALUES      2
-#define FT_SUBGLYPH_FLAG_ROUND_XY_TO_GRID        4
-#define FT_SUBGLYPH_FLAG_SCALE                   8
-#define FT_SUBGLYPH_FLAG_XY_SCALE             0x40
-#define FT_SUBGLYPH_FLAG_2X2                  0x80
-#define FT_SUBGLYPH_FLAG_USE_MY_METRICS      0x200
-#endif
-
-
   typedef struct  FT_SubGlyphRec_
   {
     FT_Int     index;
@@ -89,7 +71,7 @@ FT_BEGIN_HEADER
 
     void*            other;            /* for possible future extension? */
 
-  } FT_GlyphLoaderRec;
+  } FT_GlyphLoaderRec, *FT_GlyphLoader;
 
 
   /* create new empty glyph loader */
