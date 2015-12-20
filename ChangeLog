@@ -1,5 +1,19 @@
 2015-12-20  Werner Lemberg  <wl@gnu.org>
 
+	[base, bdf] Add number hashing.
+
+	* src/base/fthash.c (hash_num_lookup, hash_num_compare): New
+	functions.
+	(ft_hash_init): Add argument to select between number and string
+	hashing.
+	(ft_hash_num_insert, ft_hash_num_lookup): New functions.
+
+	* include/freetype/internal/fthash.h: Updated.
+
+	* src/bdf/bdflib.c (_bdf_parse_start): Updated.
+
+2015-12-20  Werner Lemberg  <wl@gnu.org>
+
 	[base] Introduce hash lookup, compare, and free function pointers.
 
 	* include/freetype/internal/fthash.c (FT_Hash_LookupFunc,

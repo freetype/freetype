@@ -1941,7 +1941,7 @@
         bdf_property_t*  prop;
 
 
-        error = ft_hash_init( &(font->proptbl), memory );
+        error = ft_hash_init( &(font->proptbl), 0, memory );
         if ( error )
           goto Exit;
         for ( i = 0, prop = (bdf_property_t*)_bdf_properties;
@@ -1956,7 +1956,7 @@
 
       if ( FT_ALLOC( p->font->internal, sizeof ( FT_HashRec ) ) )
         goto Exit;
-      error = ft_hash_init( (FT_Hash)p->font->internal, memory );
+      error = ft_hash_init( (FT_Hash)p->font->internal, 0, memory );
       if ( error )
         goto Exit;
       p->font->spacing      = p->opts->font_spacing;

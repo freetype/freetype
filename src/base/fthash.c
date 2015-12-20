@@ -61,6 +61,23 @@
   }
 
 
+  static FT_ULong
+  hash_num_lookup( FT_Hashkey*  key )
+  {
+    FT_ULong  num = key->num;
+    FT_ULong  res;
+
+
+    /* Mocklisp hash function. */
+    res = num & 0xFF;
+    res = ( res << 5 ) - res + ( ( num >>  8 ) & 0xFF );
+    res = ( res << 5 ) - res + ( ( num >> 16 ) & 0xFF );
+    res = ( res << 5 ) - res + ( ( num >> 24 ) & 0xFF );
+
+    return res;
+  }
+
+
   static FT_Bool
   hash_str_compare( FT_Hashkey*  a,
                     FT_Hashkey*  b )
@@ -69,7 +86,18 @@
          ft_strcmp( a->str, b->str ) == 0 )
       return 1;
 
-   return 0;
+    return 0;
+  }
+
+
+  static FT_Bool
+  hash_num_compare( FT_Hashkey*  a,
+                    FT_Hashkey*  b )
+  {
+    if ( a->num == b->num )
+      return 1;
+
+    return 0;
   }
 
 
@@ -143,6 +171,7 @@
 
   FT_Error
   ft_hash_init( FT_Hash    hash,
+                FT_Bool    is_num,
                 FT_Memory  memory )
   {
     FT_UInt   sz = INITIAL_HT_SIZE;
@@ -153,9 +182,18 @@
     hash->limit = sz / 3;
     hash->used  = 0;
 
-    hash->lookup  = hash_str_lookup;
-    hash->compare = hash_str_compare;
-    hash->free    = hash_str_free;
+    if ( is_num )
+    {
+      hash->lookup  = hash_num_lookup;
+      hash->compare = hash_num_compare;
+      hash->free    = NULL;
+    }
+    else
+    {
+      hash->lookup  = hash_str_lookup;
+      hash->compare = hash_str_compare;
+      hash->free    = hash_str_free;
+    }
 
     FT_MEM_NEW_ARRAY( hash->table, sz );
 
@@ -238,6 +276,21 @@
   }
 
 
+  FT_Error
+  ft_hash_num_insert( FT_Int     num,
+                      size_t     data,
+                      FT_Hash    hash,
+                      FT_Memory  memory )
+  {
+    FT_Hashkey  hk;
+
+
+    hk.num = num;
+
+    return hash_insert( hk, data, hash, memory );
+  }
+
+
   static FT_Hashnode
   hash_lookup( FT_Hashkey  key,
                FT_Hash     hash )
@@ -257,6 +310,19 @@
 
 
     hk.str = key;
+
+    return hash_lookup( hk, hash );
+  }
+
+
+  FT_Hashnode
+  ft_hash_num_lookup( FT_Int   num,
+                      FT_Hash  hash )
+  {
+    FT_Hashkey  hk;
+
+
+    hk.num = num;
 
     return hash_lookup( hk, hash );
   }

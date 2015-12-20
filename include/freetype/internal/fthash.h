@@ -99,6 +99,7 @@ FT_BEGIN_HEADER
 
   FT_Error
   ft_hash_init( FT_Hash    hash,
+                FT_Bool    is_num,
                 FT_Memory  memory );
 
   void
@@ -111,9 +112,20 @@ FT_BEGIN_HEADER
                       FT_Hash      hash,
                       FT_Memory    memory );
 
+  FT_Error
+  ft_hash_num_insert( FT_Int     num,
+                      size_t     data,
+                      FT_Hash    hash,
+                      FT_Memory  memory );
+
   FT_Hashnode
   ft_hash_str_lookup( const char*  key,
                       FT_Hash      hash );
+
+  FT_Hashnode
+  ft_hash_num_lookup( FT_Int   num,
+                      FT_Hash  hash );
+
 
 FT_END_HEADER
 
