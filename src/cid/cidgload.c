@@ -142,9 +142,10 @@
 
 
       /* Set up subrs */
-      decoder->num_subrs = cid_subrs->num_subrs;
-      decoder->subrs     = cid_subrs->code;
-      decoder->subrs_len = 0;
+      decoder->num_subrs  = cid_subrs->num_subrs;
+      decoder->subrs      = cid_subrs->code;
+      decoder->subrs_len  = 0;
+      decoder->subrs_hash = NULL;
 
       /* Set up font matrix */
       dict                 = cid->font_dicts + fd_select;

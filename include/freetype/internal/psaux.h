@@ -24,6 +24,7 @@
 #include <ft2build.h>
 #include FT_INTERNAL_OBJECTS_H
 #include FT_INTERNAL_TYPE1_TYPES_H
+#include FT_INTERNAL_HASH_H
 #include FT_SERVICE_POSTSCRIPT_CMAPS_H
 
 
@@ -678,6 +679,7 @@ FT_BEGIN_HEADER
     FT_Int               num_subrs;
     FT_Byte**            subrs;
     FT_UInt*             subrs_len;    /* array of subrs length (optional) */
+    FT_Hash              subrs_hash;   /* used if `num_subrs' was massaged */
 
     FT_Matrix            font_matrix;
     FT_Vector            font_offset;

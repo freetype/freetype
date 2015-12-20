@@ -46,6 +46,7 @@ FT_BEGIN_HEADER
 
     FT_Int        num_subrs;
     PS_TableRec   subrs;
+    FT_Hash       subrs_hash;
     FT_Bool       fontdata;
 
     FT_UInt       keywords_encountered; /* T1_LOADER_ENCOUNTERED_XXX */

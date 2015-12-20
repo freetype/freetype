@@ -25,6 +25,7 @@
 #include FT_TYPE1_TABLES_H
 #include FT_INTERNAL_POSTSCRIPT_HINTS_H
 #include FT_INTERNAL_SERVICE_H
+#include FT_INTERNAL_HASH_H
 #include FT_SERVICE_POSTSCRIPT_CMAPS_H
 
 
@@ -107,6 +108,7 @@ FT_BEGIN_HEADER
     FT_Int           num_subrs;
     FT_Byte**        subrs;
     FT_UInt*         subrs_len;
+    FT_Hash          subrs_hash;
 
     FT_Int           num_glyphs;
     FT_String**      glyph_names;       /* array of glyph names       */

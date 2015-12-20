@@ -29,6 +29,7 @@
 
 #include FT_INTERNAL_DEBUG_H
 #include FT_INTERNAL_STREAM_H
+#include FT_INTERNAL_HASH_H
 
 #include FT_SERVICE_MULTIPLE_MASTERS_H
 #include FT_SERVICE_GLYPH_DICT_H
@@ -329,13 +330,36 @@
       break;
 
     case PS_DICT_SUBR:
-      if ( idx < (FT_UInt)type1->num_subrs )
       {
-        retval = type1->subrs_len[idx] + 1;
-        if ( value && value_len >= retval )
+        FT_Bool  ok = 0;
+
+
+        if ( type1->subrs_hash )
         {
-          ft_memcpy( value, (void *)( type1->subrs[idx] ), retval - 1 );
-          ((FT_Char *)value)[retval - 1] = (FT_Char)'\0';
+          /* convert subr index to array index */
+          size_t*  val = ft_hash_num_lookup( idx, type1->subrs_hash );
+
+
+          if ( val )
+          {
+            idx = *val;
+            ok  = 1;
+          }
+        }
+        else
+        {
+          if ( idx < (FT_UInt)type1->num_subrs )
+            ok = 1;
+        }
+
+        if ( ok )
+        {
+          retval = type1->subrs_len[idx] + 1;
+          if ( value && value_len >= retval )
+          {
+            ft_memcpy( value, (void *)( type1->subrs[idx] ), retval - 1 );
+            ((FT_Char *)value)[retval - 1] = (FT_Char)'\0';
+          }
         }
       }
       break;

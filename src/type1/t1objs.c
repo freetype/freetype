@@ -247,6 +247,9 @@
     FT_FREE( type1->subrs );
     FT_FREE( type1->subrs_len );
 
+    ft_hash_free( type1->subrs_hash, memory );
+    FT_FREE( type1->subrs_hash );
+
     FT_FREE( type1->subrs_block );
     FT_FREE( type1->charstrings_block );
     FT_FREE( type1->glyph_names_block );

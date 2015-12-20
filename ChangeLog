@@ -1,5 +1,40 @@
 2015-12-20  Werner Lemberg  <wl@gnu.org>
 
+	[type1, psaux] Handle large values of num_subrs correctly (#46692).
+
+	We now use a hash to map from subr indices to array elements holding
+	the subroutines, if necessary.
+
+	* include/freetype/internal/t1types.h: Include FT_INTERNAL_HASH_H.
+	(T1_FontRec): Add `subrs_hash' field.
+
+	* include/freetype/internal/psaux.h: Include FT_INTERNAL_HASH_H.
+	(T1_DecoderRec): Add `subrs_hash' field.
+
+	* src/type1/t1load.h (T1_LoaderRec): Add `subrs_hash' field.
+
+	* src/type1/t1driver.c: Include FT_INTERNAL_HASH_H.
+	(t1_ps_get_font_value) [PS_DICT_SUBR]: Look up hash if necessary.
+
+	* src/type1/t1load.c: Include FT_INTERNAL_HASH_H.
+	(parse_subrs): Use hash for subr indices that exceed the allocated
+	number of subr slots.
+	(t1_init_loader): Remove unnecessary code.
+	(t1_done_loader, T1_Open_Face): Updated.
+
+	* src/type1/t1gload.c (T1_Compute_Max_Advance, T1_Get_Advances,
+	T1_Load_Glyph): Updated.
+
+	* src/type1/t1objs.c (T1_Face_Done): Updated.
+
+	* src/psaux/t1decode.c: Include FT_INTERNAL_HASH_H.
+	(t1_decoder_parse_charstrings) [op_callsubr]: Look up hash if
+	necessary.
+
+	* src/cid/cidgload.c (cid_load_glyph): Updated.
+
+2015-12-20  Werner Lemberg  <wl@gnu.org>
+
 	[base] Thinko: Remove free function pointer.
 
 	We don't copy keys or values while hashing.
