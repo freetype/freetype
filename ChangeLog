@@ -1,3 +1,21 @@
+2015-12-20  Werner Lemberg  <wl@gnu.org>
+
+	[base, bdf] Use a union as a hash key.
+
+	We want to support both an integer and a string key later on.
+
+	* include/freetype/internal/fthash.h (FT_Hashkey): New union.
+	(FT_HashnodeRec): Updated.
+	(ft_hash_insert, ft_hash_lookup): Renamed to ...
+	(ft_hash_str_insert, ft_hash_str_lookup): ... this.
+
+	* src/base/fthash.c (hash_bucket): Updated.
+	(ft_hash_insert, ft_hash_lookup): Renamed to ...
+	(hash_insert, hash_lookup): ... this.
+	(ft_hash_str_insert, ft_hash_str_lookup): New wrapper functions.
+
+	* src/bdf/bdflib.c: Updated.
+
 2015-12-19  Werner Lemberg  <wl@gnu.org>
 
 	[bdf] Use new hash functions.

@@ -812,7 +812,7 @@
     /* First check whether the property has        */
     /* already been added or not.  If it has, then */
     /* simply ignore it.                           */
-    if ( ft_hash_lookup( name, &(font->proptbl) ) )
+    if ( ft_hash_str_lookup( name, &(font->proptbl) ) )
       goto Exit;
 
     if ( FT_RENEW_ARRAY( font->user_props,
@@ -837,7 +837,7 @@
 
     n = _num_bdf_properties + font->nuser_props;
 
-    error = ft_hash_insert( p->name, n, &(font->proptbl), memory );
+    error = ft_hash_str_insert( p->name, n, &(font->proptbl), memory );
     if ( error )
       goto Exit;
 
@@ -859,7 +859,7 @@
     if ( name == 0 || *name == 0 )
       return 0;
 
-    if ( ( hn = ft_hash_lookup( name, &(font->proptbl) ) ) == 0 )
+    if ( ( hn = ft_hash_str_lookup( name, &(font->proptbl) ) ) == 0 )
       return 0;
 
     propid = hn->data;
@@ -1084,7 +1084,7 @@
 
 
     /* First, check whether the property already exists in the font. */
-    if ( ( hn = ft_hash_lookup( name, (FT_Hash)font->internal ) ) != 0 )
+    if ( ( hn = ft_hash_str_lookup( name, (FT_Hash)font->internal ) ) != 0 )
     {
       /* The property already exists in the font, so simply replace */
       /* the value of the property with the current value.          */
@@ -1120,13 +1120,13 @@
 
     /* See whether this property type exists yet or not. */
     /* If not, create it.                                */
-    hn = ft_hash_lookup( name, &(font->proptbl) );
+    hn = ft_hash_str_lookup( name, &(font->proptbl) );
     if ( hn == 0 )
     {
       error = bdf_create_property( name, BDF_ATOM, font );
       if ( error )
         goto Exit;
-      hn = ft_hash_lookup( name, &(font->proptbl) );
+      hn = ft_hash_str_lookup( name, &(font->proptbl) );
     }
 
     /* Allocate another property if this is overflow. */
@@ -1187,10 +1187,10 @@
     if ( _bdf_strncmp( name, "COMMENT", 7 ) != 0 )
     {
       /* Add the property to the font property table. */
-      error = ft_hash_insert( fp->name,
-                              font->props_used,
-                              (FT_Hash)font->internal,
-                              memory );
+      error = ft_hash_str_insert( fp->name,
+                                  font->props_used,
+                                  (FT_Hash)font->internal,
+                                  memory );
       if ( error )
         goto Exit;
     }
@@ -1947,8 +1947,8 @@
         for ( i = 0, prop = (bdf_property_t*)_bdf_properties;
               i < _num_bdf_properties; i++, prop++ )
         {
-          error = ft_hash_insert( prop->name, i,
-                                  &(font->proptbl), memory );
+          error = ft_hash_str_insert( prop->name, i,
+                                      &(font->proptbl), memory );
           if ( error )
             goto Exit;
         }
@@ -2414,7 +2414,7 @@
     if ( font == 0 || font->props_size == 0 || name == 0 || *name == 0 )
       return 0;
 
-    hn = ft_hash_lookup( name, (FT_Hash)font->internal );
+    hn = ft_hash_str_lookup( name, (FT_Hash)font->internal );
 
     return hn ? ( font->props + hn->data ) : 0;
   }

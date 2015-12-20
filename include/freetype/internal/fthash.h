@@ -50,10 +50,18 @@
 FT_BEGIN_HEADER
 
 
+  typedef union  FT_Hashkey_
+  {
+    FT_Int       num;
+    const char*  str;
+
+  } FT_Hashkey;
+
+
   typedef struct  FT_HashnodeRec_
   {
-    const char*  key;
-    size_t       data;
+    FT_Hashkey  key;
+    size_t      data;
 
   } FT_HashnodeRec;
 
@@ -82,14 +90,14 @@ FT_BEGIN_HEADER
                 FT_Memory  memory );
 
   FT_Error
-  ft_hash_insert( char*      key,
-                  size_t     data,
-                  FT_Hash    hash,
-                  FT_Memory  memory );
+  ft_hash_str_insert( const char*  key,
+                      size_t       data,
+                      FT_Hash      hash,
+                      FT_Memory    memory );
 
   FT_Hashnode
-  ft_hash_lookup( const char*  key,
-                  FT_Hash      hash );
+  ft_hash_str_lookup( const char*  key,
+                      FT_Hash      hash );
 
 FT_END_HEADER
 

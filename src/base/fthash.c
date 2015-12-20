@@ -47,10 +47,10 @@
 
 
   static FT_Hashnode*
-  hash_bucket( const char*  key,
-               FT_Hash      hash )
+  hash_bucket( FT_Hashkey  key,
+               FT_Hash     hash )
   {
-    const char*   kp  = key;
+    const char*   kp  = key.str;
     FT_ULong      res = 0;
     FT_Hashnode*  bp  = hash->table;
     FT_Hashnode*  ndp;
@@ -63,10 +63,10 @@
     ndp = bp + ( res % hash->size );
     while ( *ndp )
     {
-      kp = (*ndp)->key;
+      kp = (*ndp)->key.str;
 
-      if ( kp[0] == key[0]           &&
-           ft_strcmp( kp, key ) == 0 )
+      if ( kp[0] == key.str[0]           &&
+           ft_strcmp( kp, key.str ) == 0 )
         break;
 
       ndp--;
@@ -149,11 +149,11 @@
   }
 
 
-  FT_Error
-  ft_hash_insert( char*      key,
-                  size_t     data,
-                  FT_Hash    hash,
-                  FT_Memory  memory )
+  static FT_Error
+  hash_insert( FT_Hashkey  key,
+               size_t      data,
+               FT_Hash     hash,
+               FT_Memory   memory )
   {
     FT_Hashnode   nn;
     FT_Hashnode*  bp    = hash_bucket( key, hash );
@@ -187,14 +187,42 @@
   }
 
 
-  FT_Hashnode
-  ft_hash_lookup( const char*  key,
-                  FT_Hash      hash )
+  FT_Error
+  ft_hash_str_insert( const char*  key,
+                      size_t       data,
+                      FT_Hash      hash,
+                      FT_Memory    memory )
+  {
+    FT_Hashkey  hk;
+
+
+    hk.str = key;
+
+    return hash_insert( hk, data, hash, memory );
+  }
+
+
+  static FT_Hashnode
+  hash_lookup( FT_Hashkey  key,
+               FT_Hash     hash )
   {
     FT_Hashnode*  np = hash_bucket( key, hash );
 
 
     return *np;
+  }
+
+
+  FT_Hashnode
+  ft_hash_str_lookup( const char*  key,
+                      FT_Hash      hash )
+  {
+    FT_Hashkey  hk;
+
+
+    hk.str = key;
+
+    return hash_lookup( hk, hash );
   }
 
 
