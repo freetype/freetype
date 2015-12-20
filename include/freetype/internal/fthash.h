@@ -68,11 +68,27 @@ FT_BEGIN_HEADER
   typedef struct FT_HashnodeRec_  *FT_Hashnode;
 
 
+  typedef FT_ULong
+  (*FT_Hash_LookupFunc)( FT_Hashkey*  key );
+
+  typedef FT_Bool
+  (*FT_Hash_CompareFunc)( FT_Hashkey*  a,
+                          FT_Hashkey*  b );
+
+  typedef void
+  (*FT_Hash_FreeFunc)( FT_Hashnode  hn,
+                       FT_Memory    memory );
+
+
   typedef struct  FT_HashRec_
   {
     FT_UInt  limit;
     FT_UInt  size;
     FT_UInt  used;
+
+    FT_Hash_LookupFunc   lookup;
+    FT_Hash_CompareFunc  compare;
+    FT_Hash_FreeFunc     free;
 
     FT_Hashnode*  table;
 

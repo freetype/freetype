@@ -46,27 +46,56 @@
 #define INITIAL_HT_SIZE  241
 
 
-  static FT_Hashnode*
-  hash_bucket( FT_Hashkey  key,
-               FT_Hash     hash )
+  static FT_ULong
+  hash_str_lookup( FT_Hashkey*  key )
   {
-    const char*   kp  = key.str;
-    FT_ULong      res = 0;
-    FT_Hashnode*  bp  = hash->table;
-    FT_Hashnode*  ndp;
+    const char*  kp  = key->str;
+    FT_ULong     res = 0;
 
 
     /* Mocklisp hash function. */
     while ( *kp )
       res = ( res << 5 ) - res + (FT_ULong)*kp++;
 
+    return res;
+  }
+
+
+  static FT_Bool
+  hash_str_compare( FT_Hashkey*  a,
+                    FT_Hashkey*  b )
+  {
+    if ( a->str[0] == b->str[0]           &&
+         ft_strcmp( a->str, b->str ) == 0 )
+      return 1;
+
+   return 0;
+  }
+
+
+  static void
+  hash_str_free( FT_Hashnode  hn,
+                 FT_Memory    memory )
+  {
+    FT_FREE( hn );
+  }
+
+
+  static FT_Hashnode*
+  hash_bucket( FT_Hashkey  key,
+               FT_Hash     hash )
+  {
+    FT_ULong      res = 0;
+    FT_Hashnode*  bp  = hash->table;
+    FT_Hashnode*  ndp;
+
+
+    res = (hash->lookup)( &key );
+
     ndp = bp + ( res % hash->size );
     while ( *ndp )
     {
-      kp = (*ndp)->key.str;
-
-      if ( kp[0] == key.str[0]           &&
-           ft_strcmp( kp, key.str ) == 0 )
+      if ( (hash->compare)( &(*ndp)->key, &key ) )
         break;
 
       ndp--;
@@ -124,6 +153,10 @@
     hash->limit = sz / 3;
     hash->used  = 0;
 
+    hash->lookup  = hash_str_lookup;
+    hash->compare = hash_str_compare;
+    hash->free    = hash_str_free;
+
     FT_MEM_NEW_ARRAY( hash->table, sz );
 
     return error;
@@ -141,8 +174,11 @@
       FT_UInt       i;
 
 
-      for ( i = 0; i < sz; i++, bp++ )
-        FT_FREE( *bp );
+      if ( hash->free )
+      {
+        for ( i = 0; i < sz; i++, bp++ )
+          (hash->free)( *bp, memory );
+      }
 
       FT_FREE( hash->table );
     }

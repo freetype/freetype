@@ -1,5 +1,18 @@
 2015-12-20  Werner Lemberg  <wl@gnu.org>
 
+	[base] Introduce hash lookup, compare, and free function pointers.
+
+	* include/freetype/internal/fthash.c (FT_Hash_LookupFunc,
+	FT_Hash_CompareFunc, FT_Hash_FreeFunc): New typedefs.
+	(FT_HashRec): Add `lookup', `compare', and `free' fields.
+
+	* src/base/fthash.c (hash_str_lookup, hash_str_compare,
+	hash_str_free): New functions.
+	(ft_hash_init): Set function pointers.
+	(hash_bucket, ft_hash_free): Use them.
+
+2015-12-20  Werner Lemberg  <wl@gnu.org>
+
 	[base, bdf] Use a union as a hash key.
 
 	We want to support both an integer and a string key later on.
