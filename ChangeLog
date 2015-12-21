@@ -1,3 +1,9 @@
+2015-12-21  Werner Lemberg  <wl@gnu.org>
+
+	[type1] Avoid shift of negative numbers (#46732).
+
+	* src/type1/t1load.c (parse_subrs): Do it.
+
 2015-12-20  Werner Lemberg  <wl@gnu.org>
 
 	[type1, psaux] Handle large values of num_subrs correctly (#46692).

@@ -1433,7 +1433,8 @@
     }
 
     /* we certainly need more than 8 bytes per subroutine */
-    if ( num_subrs > ( parser->root.limit - parser->root.cursor ) >> 3 )
+    if ( parser->root.limit > parser->root.cursor                      &&
+         num_subrs > ( parser->root.limit - parser->root.cursor ) >> 3 )
     {
       /*
        * There are two possibilities.  Either the font contains an invalid
