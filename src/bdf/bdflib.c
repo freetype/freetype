@@ -1938,7 +1938,7 @@
         bdf_property_t*  prop;
 
 
-        error = ft_hash_init( &(font->proptbl), 0, memory );
+        error = ft_hash_str_init( &(font->proptbl), memory );
         if ( error )
           goto Exit;
         for ( i = 0, prop = (bdf_property_t*)_bdf_properties;
@@ -1953,7 +1953,7 @@
 
       if ( FT_ALLOC( p->font->internal, sizeof ( FT_HashRec ) ) )
         goto Exit;
-      error = ft_hash_init( (FT_Hash)p->font->internal, 0, memory );
+      error = ft_hash_str_init( (FT_Hash)p->font->internal, memory );
       if ( error )
         goto Exit;
       p->font->spacing      = p->opts->font_spacing;
@@ -2339,7 +2339,7 @@
     /* Free up the internal hash table of property names. */
     if ( font->internal )
     {
-      ft_hash_free( (FT_Hash)font->internal, memory );
+      ft_hash_str_free( (FT_Hash)font->internal, memory );
       FT_FREE( font->internal );
     }
 
@@ -2384,7 +2384,7 @@
     FT_FREE( font->overflow.glyphs );
 
     /* bdf_cleanup */
-    ft_hash_free( &(font->proptbl), memory );
+    ft_hash_str_free( &(font->proptbl), memory );
 
     /* Free up the user defined properties. */
     for ( prop = font->user_props, i = 0;

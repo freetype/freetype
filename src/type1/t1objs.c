@@ -247,7 +247,7 @@
     FT_FREE( type1->subrs );
     FT_FREE( type1->subrs_len );
 
-    ft_hash_free( type1->subrs_hash, memory );
+    ft_hash_num_free( type1->subrs_hash, memory );
     FT_FREE( type1->subrs_hash );
 
     FT_FREE( type1->subrs_block );

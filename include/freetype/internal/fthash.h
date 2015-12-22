@@ -93,13 +93,18 @@ FT_BEGIN_HEADER
 
 
   FT_Error
-  ft_hash_init( FT_Hash    hash,
-                FT_Bool    is_num,
-                FT_Memory  memory );
+  ft_hash_str_init( FT_Hash    hash,
+                    FT_Memory  memory );
+
+  FT_Error
+  ft_hash_num_init( FT_Hash    hash,
+                    FT_Memory  memory );
 
   void
-  ft_hash_free( FT_Hash    hash,
-                FT_Memory  memory );
+  ft_hash_str_free( FT_Hash    hash,
+                    FT_Memory  memory );
+
+#define ft_hash_num_free  ft_hash_str_free
 
   FT_Error
   ft_hash_str_insert( const char*  key,

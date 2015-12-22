@@ -1462,7 +1462,7 @@
         if ( FT_NEW( hash ) )
           goto Fail;
 
-        error = ft_hash_init( hash, 1, memory );
+        error = ft_hash_num_init( hash, memory );
         if ( error )
           goto Fail;
       }
@@ -2163,7 +2163,7 @@
     T1_Release_Table( &loader->subrs );
 
     /* finalize hash */
-    ft_hash_free( loader->subrs_hash, memory );
+    ft_hash_num_free( loader->subrs_hash, memory );
     FT_FREE( loader->subrs_hash );
 
     /* finalize parser */

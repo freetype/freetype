@@ -1,3 +1,19 @@
+2015-12-22  Werner Lemberg  <wl@gnu.org>
+
+	[base] Make hash interface symmetric.
+
+	Use `num' and `str' infixes everywhere.
+
+	* src/base/fthash.c (ft_hash_init): Renamed to...
+	(hash_init): ... This.
+	(ft_hash_str_init, ft_hash_num_init): New functions.
+	(ft_hash_free): Renamed to...
+	(ft_hash_str_free): ... This.
+
+	* include/freetype/internal/fthash.h: Updated.
+
+	* src/bdf/bdflib.c, src/type1/t1load.c, src/type1/t1objs.c: Updated.
+
 2015-12-21  Werner Lemberg  <wl@gnu.org>
 
 	[type1] Avoid shift of negative numbers (#46732).

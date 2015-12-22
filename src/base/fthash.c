@@ -161,10 +161,10 @@
   }
 
 
-  FT_Error
-  ft_hash_init( FT_Hash    hash,
-                FT_Bool    is_num,
-                FT_Memory  memory )
+  static FT_Error
+  hash_init( FT_Hash    hash,
+             FT_Bool    is_num,
+             FT_Memory  memory )
   {
     FT_UInt   sz = INITIAL_HT_SIZE;
     FT_Error  error;
@@ -191,9 +191,25 @@
   }
 
 
+  FT_Error
+  ft_hash_str_init( FT_Hash    hash,
+                    FT_Memory  memory )
+  {
+    return hash_init( hash, 0, memory );
+  }
+
+
+  FT_Error
+  ft_hash_num_init( FT_Hash    hash,
+                    FT_Memory  memory )
+  {
+    return hash_init( hash, 1, memory );
+  }
+
+
   void
-  ft_hash_free( FT_Hash    hash,
-                FT_Memory  memory )
+  ft_hash_str_free( FT_Hash    hash,
+                    FT_Memory  memory )
   {
     if ( hash )
     {
@@ -208,6 +224,9 @@
       FT_FREE( hash->table );
     }
   }
+
+
+  /* `ft_hash_num_free' is the same as `ft_hash_str_free' */
 
 
   static FT_Error
