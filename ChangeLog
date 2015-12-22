@@ -1,5 +1,9 @@
 2015-12-22  Werner Lemberg  <wl@gnu.org>
 
+	* src/type1/t1load.c (parse_subrs): Fix memory leak (#46744).
+
+2015-12-22  Werner Lemberg  <wl@gnu.org>
+
 	[base] Make hash interface symmetric.
 
 	Use `num' and `str' infixes everywhere.

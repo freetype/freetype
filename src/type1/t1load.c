@@ -1462,6 +1462,8 @@
         if ( FT_NEW( hash ) )
           goto Fail;
 
+        loader->subrs_hash = hash;
+
         error = ft_hash_num_init( hash, memory );
         if ( error )
           goto Fail;
@@ -1571,10 +1573,7 @@
     }
 
     if ( !loader->num_subrs )
-    {
-      loader->num_subrs  = num_subrs;
-      loader->subrs_hash = hash;
-    }
+      loader->num_subrs = num_subrs;
 
     return;
 
