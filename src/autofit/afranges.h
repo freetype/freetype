@@ -26,13 +26,13 @@
 FT_BEGIN_HEADER
 
 #undef  SCRIPT
-#define SCRIPT( s, S, d, h, ss )                                        \
+#define SCRIPT( s, S, d, h, H, ss )                                     \
           extern const AF_Script_UniRangeRec  af_ ## s ## _uniranges[];
 
 #include "afscript.h"
 
 #undef  SCRIPT
-#define SCRIPT( s, S, d, h, ss )                                                \
+#define SCRIPT( s, S, d, h, H, ss )                                             \
           extern const AF_Script_UniRangeRec  af_ ## s ## _nonbase_uniranges[];
 
 #include "afscript.h"

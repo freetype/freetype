@@ -42,7 +42,7 @@
 
 
 #undef  SCRIPT
-#define SCRIPT( s, S, d, h, ss ) \
+#define SCRIPT( s, S, d, h, H, ss )         \
           AF_DEFINE_SCRIPT_CLASS(           \
             af_ ## s ## _script_class,      \
             AF_SCRIPT_ ## S,                \
@@ -83,7 +83,7 @@
 
 
 #undef  SCRIPT
-#define SCRIPT( s, S, d, h, ss ) \
+#define SCRIPT( s, S, d, h, H, ss )   \
           &af_ ## s ## _script_class,
 
   FT_LOCAL_ARRAY_DEF( AF_ScriptClass )

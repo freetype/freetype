@@ -34,7 +34,7 @@ FT_BEGIN_HEADER
 
 
 #undef  SCRIPT
-#define SCRIPT( s, S, d, h, ss )                               \
+#define SCRIPT( s, S, d, h, H, ss )                            \
           AF_DECLARE_SCRIPT_CLASS( af_ ## s ## _script_class )
 
 #include "afscript.h"

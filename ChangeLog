@@ -1,3 +1,16 @@
+2015-12-23  Werner Lemberg  <wl@gnu.org>
+
+	[autofit] Start implementing hinting direction (up/down, down/up).
+
+	Right now, it does nothing.
+
+	* src/autofit/afscript.h: Add another parameter to `SCRIPT',
+	specifying hinting direction.
+
+	* src/autofit/afglobal.c, scr/autofit/afglobal.h,
+	src/autofit/afpic.c, src/autofit/afranges.h, src/autofit/afshaper.c,
+	src/autofit/aftypes.h: Extend `SCRIPT' definitions.
+
 2015-12-22  Werner Lemberg  <wl@gnu.org>
 
 	* src/type1/t1load.c (parse_subrs): Fix memory leak (#46744).

@@ -309,7 +309,7 @@ extern void*  _af_debug_hints;
    */
 
 #undef  SCRIPT
-#define SCRIPT( s, S, d, h, ss ) \
+#define SCRIPT( s, S, d, h, H, ss ) \
           AF_SCRIPT_ ## S,
 
   /* The list of known scripts. */
