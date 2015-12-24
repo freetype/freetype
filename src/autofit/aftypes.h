@@ -343,6 +343,8 @@ extern void*  _af_debug_hints;
     AF_Script_UniRange  script_uni_ranges;
     AF_Script_UniRange  script_uni_nonbase_ranges;
 
+    FT_Bool  top_to_bottom_hinting;
+
     const char*  standard_charstring;      /* for default width and height */
 
   } AF_ScriptClassRec;
@@ -479,6 +481,10 @@ extern void*  _af_debug_hints;
   } AF_StyleMetricsRec;
 
 
+#define AF_HINTING_BOTTOM_TO_TOP  0
+#define AF_HINTING_TOP_TO_BOTTOM  1
+
+
   /* Declare and define vtables for classes */
 #ifndef FT_CONFIG_OPTION_PIC
 
@@ -522,6 +528,7 @@ extern void*  _af_debug_hints;
           script,                         \
           ranges,                         \
           nonbase_ranges,                 \
+          top_to_bottom,                  \
           std_charstring )                \
   FT_CALLBACK_TABLE_DEF                   \
   const AF_ScriptClassRec  script_class = \
@@ -529,6 +536,7 @@ extern void*  _af_debug_hints;
     script,                               \
     ranges,                               \
     nonbase_ranges,                       \
+    top_to_bottom,                        \
     std_charstring,                       \
   };
 
@@ -595,6 +603,7 @@ extern void*  _af_debug_hints;
           script_,                                         \
           ranges,                                          \
           nonbase_ranges,                                  \
+          top_to_bottom,                                   \
           std_charstring )                                 \
   FT_LOCAL_DEF( void )                                     \
   FT_Init_Class_ ## script_class( AF_ScriptClassRec*  ac ) \
@@ -602,6 +611,7 @@ extern void*  _af_debug_hints;
     ac->script                    = script_;               \
     ac->script_uni_ranges         = ranges;                \
     ac->script_uni_nonbase_ranges = nonbase_ranges;        \
+    ac->top_to_bottom_hinting     = top_to_bottom;         \
     ac->standard_charstring       = std_charstring;        \
   }
 

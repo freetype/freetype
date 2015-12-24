@@ -1,3 +1,16 @@
+2015-12-24  Werner Lemberg  <wl@gnu.org>
+
+	[autofit] Add hinting direction to `AF_ScriptClassRec'.
+
+	Still unused.
+
+	* src/autofit/afglobal.c (SCRIPT): Handle hinting direction.
+
+	* src/autofit/aftypes.h (AF_ScriptClassRec): Add
+	`top_to_bottom_hinting' field.
+	(AF_HINTING_BOTTOM_TO_TOP, AF_HINTING_TOP_TO_BOTTOM): New macros.
+	(AF_DEFINE_SCRIPT_CLASS): Updated.
+
 2015-12-23  Werner Lemberg  <wl@gnu.org>
 
 	[autofit] Start implementing hinting direction (up/down, down/up).

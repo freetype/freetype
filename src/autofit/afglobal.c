@@ -48,6 +48,7 @@
             AF_SCRIPT_ ## S,                \
             af_ ## s ## _uniranges,         \
             af_ ## s ## _nonbase_uniranges, \
+            AF_ ## H,                       \
             ss )
 
 #include "afscript.h"
