@@ -419,6 +419,7 @@ FT_BEGIN_HEADER
   af_axis_hints_new_edge( AF_AxisHints  axis,
                           FT_Int        fpos,
                           AF_Direction  dir,
+                          FT_Bool       top_to_bottom_hinting,
                           FT_Memory     memory,
                           AF_Edge      *edge );
 

@@ -1773,6 +1773,12 @@
     FT_Memory     memory = hints->memory;
     AF_LatinAxis  laxis  = &((AF_LatinMetrics)hints->metrics)->axis[dim];
 
+    AF_StyleClass   style_class  = hints->metrics->style_class;
+    AF_ScriptClass  script_class = AF_SCRIPT_CLASSES_GET
+                                     [style_class->script];
+
+    FT_Bool  top_to_bottom_hinting = 0;
+
     AF_Segment    segments      = axis->segments;
     AF_Segment    segment_limit = segments + axis->num_segments;
     AF_Segment    seg;
@@ -1794,6 +1800,9 @@
     up_dir = ( dim == AF_DIMENSION_HORZ ) ? AF_DIR_UP
                                           : AF_DIR_RIGHT;
 #endif
+
+    if ( dim == AF_DIMENSION_VERT )
+      top_to_bottom_hinting = script_class->top_to_bottom_hinting;
 
     /*
      *  We ignore all segments that are less than 1 pixel in length
@@ -1872,6 +1881,7 @@
         /* sort according to the position    */
         error = af_axis_hints_new_edge( axis, seg->pos,
                                         (AF_Direction)seg->dir,
+                                        top_to_bottom_hinting,
                                         memory, &edge );
         if ( error )
           goto Exit;
@@ -2558,14 +2568,23 @@
     AF_Edge       anchor     = NULL;
     FT_Int        has_serifs = 0;
 
+    AF_StyleClass   style_class  = hints->metrics->style_class;
+    AF_ScriptClass  script_class = AF_SCRIPT_CLASSES_GET
+                                     [style_class->script];
+
+    FT_Bool  top_to_bottom_hinting = 0;
+
 #ifdef FT_DEBUG_LEVEL_TRACE
-    FT_UInt       num_actions = 0;
+    FT_UInt  num_actions = 0;
 #endif
 
 
     FT_TRACE5(( "latin %s edge hinting (style `%s')\n",
                 dim == AF_DIMENSION_VERT ? "horizontal" : "vertical",
                 af_style_names[hints->metrics->style_class->style] ));
+
+    if ( dim == AF_DIMENSION_VERT )
+      top_to_bottom_hinting = script_class->top_to_bottom_hinting;
 
     /* we begin by aligning all stems relative to the blue zone */
     /* if needed -- that's only for horizontal edges            */
@@ -2862,7 +2881,9 @@
         edge->flags  |= AF_EDGE_DONE;
         edge2->flags |= AF_EDGE_DONE;
 
-        if ( edge > edges && edge->pos < edge[-1].pos )
+        if ( edge > edges                                             &&
+             ( top_to_bottom_hinting ? ( edge->pos > edge[-1].pos )
+                                     : ( edge->pos < edge[-1].pos ) ) )
         {
 #ifdef FT_DEBUG_LEVEL_TRACE
           FT_TRACE5(( "  BOUND: edge %d (pos=%.2f) moved to %.2f\n",
@@ -3023,7 +3044,9 @@
 #endif
         edge->flags |= AF_EDGE_DONE;
 
-        if ( edge > edges && edge->pos < edge[-1].pos )
+        if ( edge > edges                                             &&
+             ( top_to_bottom_hinting ? ( edge->pos > edge[-1].pos )
+                                     : ( edge->pos < edge[-1].pos ) ) )
         {
 #ifdef FT_DEBUG_LEVEL_TRACE
           FT_TRACE5(( "  BOUND: edge %d (pos=%.2f) moved to %.2f\n",
@@ -3034,9 +3057,10 @@
           edge->pos = edge[-1].pos;
         }
 
-        if ( edge + 1 < edge_limit        &&
-             edge[1].flags & AF_EDGE_DONE &&
-             edge->pos > edge[1].pos      )
+        if ( edge + 1 < edge_limit                                   &&
+             edge[1].flags & AF_EDGE_DONE                            &&
+             ( top_to_bottom_hinting ? ( edge->pos < edge[1].pos )
+                                     : ( edge->pos > edge[1].pos ) ) )
         {
 #ifdef FT_DEBUG_LEVEL_TRACE
           FT_TRACE5(( "  BOUND: edge %d (pos=%.2f) moved to %.2f\n",

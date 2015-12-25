@@ -99,6 +99,7 @@
   af_axis_hints_new_edge( AF_AxisHints  axis,
                           FT_Int        fpos,
                           AF_Direction  dir,
+                          FT_Bool       top_to_bottom_hinting,
                           FT_Memory     memory,
                           AF_Edge      *anedge )
   {
@@ -153,7 +154,8 @@
 
     while ( edge > edges )
     {
-      if ( edge[-1].fpos < fpos )
+      if ( top_to_bottom_hinting ? ( edge[-1].fpos > fpos )
+                                 : ( edge[-1].fpos < fpos ) )
         break;
 
       /* we want the edge with same position and minor direction */

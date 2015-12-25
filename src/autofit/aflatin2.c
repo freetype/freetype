@@ -1195,7 +1195,7 @@
 
         /* insert a new edge in the list and */
         /* sort according to the position    */
-        error = af_axis_hints_new_edge( axis, seg->pos, seg->dir,
+        error = af_axis_hints_new_edge( axis, seg->pos, seg->dir, 0,
                                         memory, &edge );
         if ( error )
           goto Exit;

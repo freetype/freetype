@@ -1,3 +1,21 @@
+2015-12-25  Werner Lemberg  <wl@gnu.org>
+
+	[autofit] Make top-to-bottom hinting work in latin auto-hinter.
+
+	This improves rendering of scripts like Bengali or Devanagari.
+
+	* src/autofit/afhints.c (af_axis_hints_new_edge): Add parameter to
+	pass top-to-bottom hinting flag.  This makes the function sort edges
+	in descending vertical position.
+
+	* src/autofit/afhints.c: Updated.
+
+	* src/autofit/aflatin.c (af_latin_hints_compute_edges,
+	af_latin_hint_edges): Use `top_to_bottom_hinting' flag.
+
+	* src/autofit/afcjk.c (af_cjk_hints_compute_edges),
+	src/autofit/aflatin2.c (af_latin2_hints_compute_edges): Updated.
+
 2015-12-24  Werner Lemberg  <wl@gnu.org>
 
 	[autofit] Add hinting direction to `AF_ScriptClassRec'.
