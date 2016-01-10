@@ -1463,9 +1463,12 @@
         {
           CF2_Int  v;
 
+          CF2_Int  byte1 = cf2_buf_readByte( charstring );
+          CF2_Int  byte2 = cf2_buf_readByte( charstring );
 
-          v = (FT_Short)( ( cf2_buf_readByte( charstring ) << 8 ) |
-                            cf2_buf_readByte( charstring )        );
+
+          v = (FT_Short)( ( byte1 << 8 ) |
+                            byte2        );
 
           FT_TRACE4(( " %d", v ));
 
@@ -1527,12 +1530,16 @@
           {
             CF2_Fixed  v;
 
+            FT_UInt32  byte1 = (FT_UInt32)cf2_buf_readByte( charstring );
+            FT_UInt32  byte2 = (FT_UInt32)cf2_buf_readByte( charstring );
+            FT_UInt32  byte3 = (FT_UInt32)cf2_buf_readByte( charstring );
+            FT_UInt32  byte4 = (FT_UInt32)cf2_buf_readByte( charstring );
 
-            v = (CF2_Fixed)
-                  ( ( (FT_UInt32)cf2_buf_readByte( charstring ) << 24 ) |
-                    ( (FT_UInt32)cf2_buf_readByte( charstring ) << 16 ) |
-                    ( (FT_UInt32)cf2_buf_readByte( charstring ) <<  8 ) |
-                      (FT_UInt32)cf2_buf_readByte( charstring )         );
+
+            v = (CF2_Fixed)( ( byte1 << 24 ) |
+                             ( byte2 << 16 ) |
+                             ( byte3 <<  8 ) |
+                               byte4         );
 
             FT_TRACE4(( " %.2f", v / 65536.0 ));
 

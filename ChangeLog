@@ -1,3 +1,12 @@
+2016-01-10  Jered Gray  <jegray@google.com>
+
+	[cff] Fix usage of `|' operator.
+
+	* src/cff/cf2intrp.c (cf2_interpT2CharString) [cf2_cmdEXTENDEDNMBR,
+	default]: `|' is not guaranteed to be processed from left to right
+	by the compiler.  However, the code repeatedly calls
+	`cf2_buf_readByte' to get the arguments to `|' ...  Fix this.
+
 2015-12-25  Werner Lemberg  <wl@gnu.org>
 
 	[autofit] Make top-to-bottom hinting work in latin auto-hinter.
