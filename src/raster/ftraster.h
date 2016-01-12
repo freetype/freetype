@@ -33,7 +33,7 @@ FT_BEGIN_HEADER
   /* Uncomment the following line if you are using ftraster.c as a         */
   /* standalone module, fully independent of FreeType.                     */
   /*                                                                       */
-/* #define _STANDALONE_ */
+/* #define STANDALONE_ */
 
   FT_EXPORT_VAR( const FT_Raster_Funcs )  ft_standard_raster;
 

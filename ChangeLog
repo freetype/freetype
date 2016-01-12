@@ -1,5 +1,15 @@
 2016-01-12  Werner Lemberg  <wl@gnu.org>
 
+	Don't use macro names that start with `_[A-Z]' [2/3].
+
+	Such macro names are reserved for both C and C++.
+
+	* include/freetype/ftimage.h, src/raster/ftraster.c,
+	src/smooth/ftgrays.c, src/smooth/ftgrays.h:
+	s/_STANDALONE_/STANDALONE_/.
+
+2016-01-12  Werner Lemberg  <wl@gnu.org>
+
 	Don't use macro names that start with `_[A-Z]' [1/3].
 
 	Such macro names are reserved for both C and C++.

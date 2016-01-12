@@ -28,8 +28,8 @@
 #define FTIMAGE_H_
 
 
-  /* _STANDALONE_ is from ftgrays.c */
-#ifndef _STANDALONE_
+  /* STANDALONE_ is from ftgrays.c */
+#ifndef STANDALONE_
 #include <ft2build.h>
 #endif
 
