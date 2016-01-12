@@ -24,8 +24,8 @@
 
 FT_BEGIN_HEADER
 
-#define _FTC_FACE_ID_HASH( i )                                  \
-          ( ( (FT_Offset)(i) >> 3 ) ^ ( (FT_Offset)(i) << 7 ) )
+#define FTC_FACE_ID_HASH( i )                                  \
+         ( ( (FT_Offset)(i) >> 3 ) ^ ( (FT_Offset)(i) << 7 ) )
 
   /* handle to cache object */
   typedef struct FTC_CacheRec_*  FTC_Cache;
@@ -228,7 +228,7 @@ FT_BEGIN_HEADER
     {                                                                    \
       _node = *_pnode;                                                   \
       if ( _node == NULL )                                               \
-        goto _NewNode;                                                   \
+        goto NewNode_;                                                   \
                                                                          \
       if ( _node->hash == _hash                             &&           \
            _nodcomp( _node, query, _cache, &_list_changed ) )            \
@@ -248,7 +248,7 @@ FT_BEGIN_HEADER
         if ( *_pnode == NULL )                                           \
         {                                                                \
           FT_ERROR(( "FTC_CACHE_LOOKUP_CMP: oops!!! node missing\n" ));  \
-          goto _NewNode;                                                 \
+          goto NewNode_;                                                 \
         }                                                                \
         else                                                             \
           _pnode = &((*_pnode)->link);                                   \
@@ -273,12 +273,12 @@ FT_BEGIN_HEADER
         FTC_MruNode_Up( (FTC_MruNode*)_nl,                               \
                         (FTC_MruNode)_node );                            \
     }                                                                    \
-    goto _Ok;                                                            \
+    goto Ok_;                                                            \
                                                                          \
-  _NewNode:                                                              \
+  NewNode_:                                                              \
     error = FTC_Cache_NewNode( _cache, _hash, query, &_node );           \
                                                                          \
-  _Ok:                                                                   \
+  Ok_:                                                                   \
     node = _node;                                                        \
   FT_END_STMNT
 

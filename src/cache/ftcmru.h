@@ -181,7 +181,7 @@ FT_BEGIN_HEADER
             FTC_MruNode_Up( _pfirst, _node );                               \
                                                                             \
           node = _node;                                                     \
-          goto _MruOk;                                                      \
+          goto MruOk_;                                                      \
         }                                                                   \
         _node = _node->next;                                                \
                                                                             \
@@ -189,7 +189,7 @@ FT_BEGIN_HEADER
     }                                                                       \
                                                                             \
     error = FTC_MruList_New( (list), (key), (FTC_MruNode*)(void*)&(node) ); \
-  _MruOk:                                                                   \
+  MruOk_:                                                                   \
     ;                                                                       \
   FT_END_STMNT
 

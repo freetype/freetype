@@ -1,5 +1,16 @@
 2016-01-12  Werner Lemberg  <wl@gnu.org>
 
+	Don't use macro names that start with `_[A-Z]' [3/3].
+
+	Such macro names are reserved for both C and C++.
+
+	* src/cache/ftccache.h: s/_FTC_FACE_ID_HASH/FTC_FACE_ID_HASH/.
+	Update all callers.
+	(FTC_CACHE_LOOKUP_CMP): Replace `_XXX' with `XXX_'.
+	* src/cache/ftcmru.c (FTC_MRULIST_LOOKUP_CMP): Ditto.
+
+2016-01-12  Werner Lemberg  <wl@gnu.org>
+
 	Don't use macro names that start with `_[A-Z]' [2/3].
 
 	Such macro names are reserved for both C and C++.
