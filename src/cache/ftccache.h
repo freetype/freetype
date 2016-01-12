@@ -69,11 +69,11 @@ FT_BEGIN_HEADER
 #define FTC_NODE( x )    ( (FTC_Node)(x) )
 #define FTC_NODE_P( x )  ( (FTC_Node*)(x) )
 
-#define FTC_NODE__NEXT( x )  FTC_NODE( (x)->mru.next )
-#define FTC_NODE__PREV( x )  FTC_NODE( (x)->mru.prev )
+#define FTC_NODE_NEXT( x )  FTC_NODE( (x)->mru.next )
+#define FTC_NODE_PREV( x )  FTC_NODE( (x)->mru.prev )
 
 #ifdef FTC_INLINE
-#define FTC_NODE__TOP_FOR_HASH( cache, hash )                     \
+#define FTC_NODE_TOP_FOR_HASH( cache, hash )                      \
         ( ( cache )->buckets +                                    \
             ( ( ( ( hash ) &   ( cache )->mask ) < ( cache )->p ) \
               ? ( ( hash ) & ( ( cache )->mask * 2 + 1 ) )        \
@@ -82,7 +82,7 @@ FT_BEGIN_HEADER
   FT_LOCAL( FTC_Node* )
   ftc_get_top_node_for_hash( FTC_Cache  cache,
                              FT_Offset  hash );
-#define FTC_NODE__TOP_FOR_HASH( cache, hash )            \
+#define FTC_NODE_TOP_FOR_HASH( cache, hash )             \
         ftc_get_top_node_for_hash( ( cache ), ( hash ) )
 #endif
 
@@ -220,7 +220,7 @@ FT_BEGIN_HEADER
     node  = NULL;                                                        \
                                                                          \
     /* Go to the `top' node of the list sharing same masked hash */      \
-    _bucket = _pnode = FTC_NODE__TOP_FOR_HASH( _cache, _hash );          \
+    _bucket = _pnode = FTC_NODE_TOP_FOR_HASH( _cache, _hash );           \
                                                                          \
     /* Look up a node with identical hash and queried properties.    */  \
     /* NOTE: _nodcomp() may change the linked list to reduce memory. */  \
@@ -240,7 +240,7 @@ FT_BEGIN_HEADER
     if ( _list_changed )                                                 \
     {                                                                    \
       /* Update _bucket by possibly modified linked list */              \
-      _bucket = _pnode = FTC_NODE__TOP_FOR_HASH( _cache, _hash );        \
+      _bucket = _pnode = FTC_NODE_TOP_FOR_HASH( _cache, _hash );         \
                                                                          \
       /* Update _pnode by possibly modified linked list */               \
       while ( *_pnode != _node )                                         \

@@ -245,10 +245,10 @@ FT_BEGIN_HEADER
 
 #define FTC_GCACHE_CLASS( x )  ((FTC_GCacheClass)(x))
 
-#define FTC_CACHE__GCACHE_CLASS( x ) \
+#define FTC_CACHE_GCACHE_CLASS( x ) \
           FTC_GCACHE_CLASS( FTC_CACHE(x)->org_class )
-#define FTC_CACHE__FAMILY_CLASS( x ) \
-          ( (FTC_MruListClass)FTC_CACHE__GCACHE_CLASS( x )->family_class )
+#define FTC_CACHE_FAMILY_CLASS( x ) \
+          ( (FTC_MruListClass)FTC_CACHE_GCACHE_CLASS( x )->family_class )
 
 
   /* convenience function; use it instead of FTC_Manager_Register_Cache */

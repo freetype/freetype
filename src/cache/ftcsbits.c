@@ -215,7 +215,7 @@
     FT_UInt     gindex = gquery->gindex;
     FTC_Family  family = gquery->family;
 
-    FTC_SFamilyClass  clazz = FTC_CACHE__SFAMILY_CLASS( cache );
+    FTC_SFamilyClass  clazz = FTC_CACHE_SFAMILY_CLASS( cache );
     FT_UInt           total;
     FT_UInt           node_count;
 

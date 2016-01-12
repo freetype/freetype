@@ -106,7 +106,7 @@
   FTC_Family_Init( FTC_Family  family,
                    FTC_Cache   cache )
   {
-    FTC_GCacheClass  clazz = FTC_CACHE__GCACHE_CLASS( cache );
+    FTC_GCacheClass  clazz = FTC_CACHE_GCACHE_CLASS( cache );
 
 
     family->clazz     = clazz->family_class;

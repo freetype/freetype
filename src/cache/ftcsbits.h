@@ -64,8 +64,8 @@ FT_BEGIN_HEADER
 
 #define FTC_SFAMILY_CLASS( x )  ((FTC_SFamilyClass)(x))
 
-#define FTC_CACHE__SFAMILY_CLASS( x )  \
-          FTC_SFAMILY_CLASS( FTC_CACHE__GCACHE_CLASS( x )->family_class )
+#define FTC_CACHE_SFAMILY_CLASS( x )  \
+          FTC_SFAMILY_CLASS( FTC_CACHE_GCACHE_CLASS( x )->family_class )
 
 
   FT_LOCAL( void )

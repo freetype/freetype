@@ -72,8 +72,8 @@ FT_BEGIN_HEADER
 
 #define FTC_IFAMILY_CLASS( x )  ((FTC_IFamilyClass)(x))
 
-#define FTC_CACHE__IFAMILY_CLASS( x ) \
-          FTC_IFAMILY_CLASS( FTC_CACHE__GCACHE_CLASS(x)->family_class )
+#define FTC_CACHE_IFAMILY_CLASS( x ) \
+          FTC_IFAMILY_CLASS( FTC_CACHE_GCACHE_CLASS(x)->family_class )
 
 
   /* can be used as a @FTC_Node_FreeFunc */
