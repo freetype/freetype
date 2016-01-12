@@ -16,8 +16,8 @@
 /***************************************************************************/
 
 
-#ifndef __FTFNTFMT_H__
-#define __FTFNTFMT_H__
+#ifndef FTFNTFMT_H_
+#define FTFNTFMT_H_
 
 #include <ft2build.h>
 #include FT_FREETYPE_H
@@ -89,4 +89,7 @@ FT_BEGIN_HEADER
 
 FT_END_HEADER
 
-#endif /* __FTFNTFMT_H__ */
+#endif /* FTFNTFMT_H_ */
+
+
+/* END */

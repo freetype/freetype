@@ -16,8 +16,8 @@
 /***************************************************************************/
 
 
-#ifndef __FTBDF_H__
-#define __FTBDF_H__
+#ifndef FTBDF_H_
+#define FTBDF_H_
 
 #include <ft2build.h>
 #include FT_FREETYPE_H
@@ -204,7 +204,7 @@ FT_BEGIN_HEADER
 
 FT_END_HEADER
 
-#endif /* __FTBDF_H__ */
+#endif /* FTBDF_H_ */
 
 
 /* END */

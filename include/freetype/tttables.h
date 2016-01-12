@@ -17,8 +17,8 @@
 /***************************************************************************/
 
 
-#ifndef __TTTABLES_H__
-#define __TTTABLES_H__
+#ifndef TTTABLES_H_
+#define TTTABLES_H_
 
 
 #include <ft2build.h>
@@ -823,7 +823,7 @@ FT_BEGIN_HEADER
 
 FT_END_HEADER
 
-#endif /* __TTTABLES_H__ */
+#endif /* TTTABLES_H_ */
 
 
 /* END */

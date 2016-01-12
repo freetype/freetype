@@ -19,8 +19,8 @@
 /*                                                                         */
 /***************************************************************************/
 
-#ifndef __FT_ZOPEN_H__
-#define __FT_ZOPEN_H__
+#ifndef FTZOPEN_H_
+#define FTZOPEN_H_
 
 #include <ft2build.h>
 #include FT_FREETYPE_H
@@ -166,7 +166,7 @@
 
 /* */
 
-#endif /* __FT_ZOPEN_H__ */
+#endif /* FTZOPEN_H_ */
 
 
 /* END */

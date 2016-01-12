@@ -16,8 +16,8 @@
 /***************************************************************************/
 
 
-#ifndef __FTBASE_H__
-#define __FTBASE_H__
+#ifndef FTBASE_H_
+#define FTBASE_H_
 
 
 #include <ft2build.h>
@@ -68,7 +68,7 @@ FT_BEGIN_HEADER
 
 FT_END_HEADER
 
-#endif /* __FTBASE_H__ */
+#endif /* FTBASE_H_ */
 
 
 /* END */

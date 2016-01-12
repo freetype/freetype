@@ -16,8 +16,8 @@
 /***************************************************************************/
 
 
-#ifndef __FTTYPES_H__
-#define __FTTYPES_H__
+#ifndef FTTYPES_H_
+#define FTTYPES_H_
 
 
 #include <ft2build.h>
@@ -596,7 +596,7 @@ FT_BEGIN_HEADER
 
 FT_END_HEADER
 
-#endif /* __FTTYPES_H__ */
+#endif /* FTTYPES_H_ */
 
 
 /* END */

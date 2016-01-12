@@ -16,8 +16,8 @@
 /***************************************************************************/
 
 
-#ifndef __FTTRIGON_H__
-#define __FTTRIGON_H__
+#ifndef FTTRIGON_H_
+#define FTTRIGON_H_
 
 #include FT_FREETYPE_H
 
@@ -344,7 +344,7 @@ FT_BEGIN_HEADER
 
 FT_END_HEADER
 
-#endif /* __FTTRIGON_H__ */
+#endif /* FTTRIGON_H_ */
 
 
 /* END */

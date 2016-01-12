@@ -16,8 +16,8 @@
 /***************************************************************************/
 
 
-#ifndef __FTMEMORY_H__
-#define __FTMEMORY_H__
+#ifndef FTMEMORY_H_
+#define FTMEMORY_H_
 
 
 #include <ft2build.h>
@@ -380,7 +380,7 @@ FT_BEGIN_HEADER
 
 FT_END_HEADER
 
-#endif /* __FTMEMORY_H__ */
+#endif /* FTMEMORY_H_ */
 
 
 /* END */

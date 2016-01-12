@@ -16,8 +16,8 @@
 /***************************************************************************/
 
 
-#ifndef __AFSHAPER_H__
-#define __AFSHAPER_H__
+#ifndef AFSHAPER_H_
+#define AFSHAPER_H_
 
 
 #include <ft2build.h>
@@ -65,7 +65,7 @@ FT_BEGIN_HEADER
 
 FT_END_HEADER
 
-#endif /* __AFSHAPER_H__ */
+#endif /* AFSHAPER_H_ */
 
 
 /* END */

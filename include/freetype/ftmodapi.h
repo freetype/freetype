@@ -16,8 +16,8 @@
 /***************************************************************************/
 
 
-#ifndef __FTMODAPI_H__
-#define __FTMODAPI_H__
+#ifndef FTMODAPI_H_
+#define FTMODAPI_H_
 
 
 #include <ft2build.h>
@@ -666,7 +666,7 @@ FT_BEGIN_HEADER
 
 FT_END_HEADER
 
-#endif /* __FTMODAPI_H__ */
+#endif /* FTMODAPI_H_ */
 
 
 /* END */

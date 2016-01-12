@@ -16,8 +16,8 @@
 /***************************************************************************/
 
 
-#ifndef __TTGXVAR_H__
-#define __TTGXVAR_H__
+#ifndef TTGXVAR_H_
+#define TTGXVAR_H_
 
 
 #include <ft2build.h>
@@ -178,7 +178,7 @@ FT_BEGIN_HEADER
 FT_END_HEADER
 
 
-#endif /* __TTGXVAR_H__ */
+#endif /* TTGXVAR_H_ */
 
 
 /* END */

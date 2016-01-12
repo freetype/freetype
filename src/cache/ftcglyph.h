@@ -113,8 +113,8 @@
   /*************************************************************************/
 
 
-#ifndef __FTCGLYPH_H__
-#define __FTCGLYPH_H__
+#ifndef FTCGLYPH_H_
+#define FTCGLYPH_H_
 
 
 #include <ft2build.h>
@@ -323,7 +323,7 @@ FT_BEGIN_HEADER
 FT_END_HEADER
 
 
-#endif /* __FTCGLYPH_H__ */
+#endif /* FTCGLYPH_H_ */
 
 
 /* END */

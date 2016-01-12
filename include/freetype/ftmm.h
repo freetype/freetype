@@ -16,8 +16,8 @@
 /***************************************************************************/
 
 
-#ifndef __FTMM_H__
-#define __FTMM_H__
+#ifndef FTMM_H_
+#define FTMM_H_
 
 
 #include <ft2build.h>
@@ -378,7 +378,7 @@ FT_BEGIN_HEADER
 
 FT_END_HEADER
 
-#endif /* __FTMM_H__ */
+#endif /* FTMM_H_ */
 
 
 /* END */

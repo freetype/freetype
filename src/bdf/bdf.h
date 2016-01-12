@@ -22,8 +22,8 @@
  */
 
 
-#ifndef __BDF_H__
-#define __BDF_H__
+#ifndef BDF_H_
+#define BDF_H_
 
 
 /*
@@ -274,7 +274,7 @@ FT_BEGIN_HEADER
 FT_END_HEADER
 
 
-#endif /* __BDF_H__ */
+#endif /* BDF_H_ */
 
 
 /* END */

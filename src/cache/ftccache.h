@@ -16,8 +16,8 @@
 /***************************************************************************/
 
 
-#ifndef __FTCCACHE_H__
-#define __FTCCACHE_H__
+#ifndef FTCCACHE_H_
+#define FTCCACHE_H_
 
 
 #include "ftcmru.h"
@@ -346,7 +346,7 @@ FT_BEGIN_HEADER
 FT_END_HEADER
 
 
-#endif /* __FTCCACHE_H__ */
+#endif /* FTCCACHE_H_ */
 
 
 /* END */

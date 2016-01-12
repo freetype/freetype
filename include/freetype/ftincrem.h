@@ -16,8 +16,8 @@
 /***************************************************************************/
 
 
-#ifndef __FTINCREM_H__
-#define __FTINCREM_H__
+#ifndef FTINCREM_H_
+#define FTINCREM_H_
 
 #include <ft2build.h>
 #include FT_FREETYPE_H
@@ -348,7 +348,7 @@ FT_BEGIN_HEADER
 
 FT_END_HEADER
 
-#endif /* __FTINCREM_H__ */
+#endif /* FTINCREM_H_ */
 
 
 /* END */

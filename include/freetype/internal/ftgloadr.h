@@ -16,8 +16,8 @@
 /***************************************************************************/
 
 
-#ifndef __FTGLOADR_H__
-#define __FTGLOADR_H__
+#ifndef FTGLOADR_H_
+#define FTGLOADR_H_
 
 
 #include <ft2build.h>
@@ -148,7 +148,7 @@ FT_BEGIN_HEADER
 
 FT_END_HEADER
 
-#endif /* __FTGLOADR_H__ */
+#endif /* FTGLOADR_H_ */
 
 
 /* END */

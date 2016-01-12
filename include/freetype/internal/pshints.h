@@ -18,8 +18,8 @@
 /***************************************************************************/
 
 
-#ifndef __PSHINTS_H__
-#define __PSHINTS_H__
+#ifndef PSHINTS_H_
+#define PSHINTS_H_
 
 
 #include <ft2build.h>
@@ -716,7 +716,7 @@ FT_BEGIN_HEADER
 
 FT_END_HEADER
 
-#endif /* __PSHINTS_H__ */
+#endif /* PSHINTS_H_ */
 
 
 /* END */

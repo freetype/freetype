@@ -16,8 +16,8 @@
 /***************************************************************************/
 
 
-#ifndef __AFPIC_H__
-#define __AFPIC_H__
+#ifndef AFPIC_H_
+#define AFPIC_H_
 
 
 #include FT_INTERNAL_PIC_H
@@ -99,7 +99,7 @@ FT_END_HEADER
 
  /* */
 
-#endif /* __AFPIC_H__ */
+#endif /* AFPIC_H_ */
 
 
 /* END */

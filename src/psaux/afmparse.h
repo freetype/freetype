@@ -16,8 +16,8 @@
 /***************************************************************************/
 
 
-#ifndef __AFMPARSE_H__
-#define __AFMPARSE_H__
+#ifndef AFMPARSE_H_
+#define AFMPARSE_H_
 
 
 #include <ft2build.h>
@@ -83,7 +83,7 @@ FT_BEGIN_HEADER
 
 FT_END_HEADER
 
-#endif /* __AFMPARSE_H__ */
+#endif /* AFMPARSE_H_ */
 
 
 /* END */

@@ -32,8 +32,8 @@
   /*************************************************************************/
 
 
-#ifndef __FTCIMAGE_H__
-#define __FTCIMAGE_H__
+#ifndef FTCIMAGE_H_
+#define FTCIMAGE_H_
 
 
 #include <ft2build.h>
@@ -101,7 +101,7 @@ FT_BEGIN_HEADER
 
 FT_END_HEADER
 
-#endif /* __FTCIMAGE_H__ */
+#endif /* FTCIMAGE_H_ */
 
 
 /* END */

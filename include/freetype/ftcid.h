@@ -16,8 +16,8 @@
 /***************************************************************************/
 
 
-#ifndef __FTCID_H__
-#define __FTCID_H__
+#ifndef FTCID_H_
+#define FTCID_H_
 
 #include <ft2build.h>
 #include FT_FREETYPE_H
@@ -162,7 +162,7 @@ FT_BEGIN_HEADER
 
 FT_END_HEADER
 
-#endif /* __FTCID_H__ */
+#endif /* FTCID_H_ */
 
 
 /* END */

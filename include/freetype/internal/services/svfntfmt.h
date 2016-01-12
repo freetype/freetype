@@ -16,8 +16,8 @@
 /***************************************************************************/
 
 
-#ifndef __SVFNTFMT_H__
-#define __SVFNTFMT_H__
+#ifndef SVFNTFMT_H_
+#define SVFNTFMT_H_
 
 #include FT_INTERNAL_SERVICE_H
 
@@ -49,7 +49,7 @@ FT_BEGIN_HEADER
 FT_END_HEADER
 
 
-#endif /* __SVFNTFMT_H__ */
+#endif /* SVFNTFMT_H_ */
 
 
 /* END */

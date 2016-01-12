@@ -16,8 +16,8 @@
 /***************************************************************************/
 
 
-#ifndef __SFNTPIC_H__
-#define __SFNTPIC_H__
+#ifndef SFNTPIC_H_
+#define SFNTPIC_H_
 
 
 #include FT_INTERNAL_PIC_H
@@ -106,7 +106,7 @@ FT_END_HEADER
 
   /* */
 
-#endif /* __SFNTPIC_H__ */
+#endif /* SFNTPIC_H_ */
 
 
 /* END */

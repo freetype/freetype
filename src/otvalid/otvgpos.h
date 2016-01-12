@@ -16,8 +16,8 @@
 /***************************************************************************/
 
 
-#ifndef __OTVGPOS_H__
-#define __OTVGPOS_H__
+#ifndef OTVGPOS_H_
+#define OTVGPOS_H_
 
 
 FT_BEGIN_HEADER
@@ -30,7 +30,7 @@ FT_BEGIN_HEADER
 
 FT_END_HEADER
 
-#endif /* __OTVGPOS_H__ */
+#endif /* OTVGPOS_H_ */
 
 
 /* END */

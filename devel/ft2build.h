@@ -27,14 +27,14 @@
   *
   */
 
-#ifndef __FT2BUILD_H__
-#define __FT2BUILD_H__
+#ifndef FT2BUILD_H_
+#define FT2BUILD_H_
 
 #define FT_CONFIG_OPTIONS_H  <ftoption.h>
 
 #include <freetype/config/ftheader.h>
 
-#endif /* __FT2BUILD_H__ */
+#endif /* FT2BUILD_H_ */
 
 
 /* END */

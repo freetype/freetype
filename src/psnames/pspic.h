@@ -16,8 +16,8 @@
 /***************************************************************************/
 
 
-#ifndef __PSPIC_H__
-#define __PSPIC_H__
+#ifndef PSPIC_H_
+#define PSPIC_H_
 
 
 #include FT_INTERNAL_PIC_H
@@ -62,7 +62,7 @@ FT_END_HEADER
 
  /* */
 
-#endif /* __PSPIC_H__ */
+#endif /* PSPIC_H_ */
 
 
 /* END */

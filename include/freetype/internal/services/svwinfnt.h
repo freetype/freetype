@@ -16,8 +16,8 @@
 /***************************************************************************/
 
 
-#ifndef __SVWINFNT_H__
-#define __SVWINFNT_H__
+#ifndef SVWINFNT_H_
+#define SVWINFNT_H_
 
 #include FT_INTERNAL_SERVICE_H
 #include FT_WINFONTS_H
@@ -44,7 +44,7 @@ FT_BEGIN_HEADER
 FT_END_HEADER
 
 
-#endif /* __SVWINFNT_H__ */
+#endif /* SVWINFNT_H_ */
 
 
 /* END */

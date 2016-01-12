@@ -24,8 +24,8 @@
   /*************************************************************************/
 
 
-#ifndef __FTIMAGE_H__
-#define __FTIMAGE_H__
+#ifndef FTIMAGE_H_
+#define FTIMAGE_H_
 
 
   /* _STANDALONE_ is from ftgrays.c */
@@ -1203,7 +1203,7 @@ FT_BEGIN_HEADER
 
 FT_END_HEADER
 
-#endif /* __FTIMAGE_H__ */
+#endif /* FTIMAGE_H_ */
 
 
 /* END */

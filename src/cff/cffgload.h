@@ -16,8 +16,8 @@
 /***************************************************************************/
 
 
-#ifndef __CFFGLOAD_H__
-#define __CFFGLOAD_H__
+#ifndef CFFGLOAD_H_
+#define CFFGLOAD_H_
 
 
 #include <ft2build.h>
@@ -239,7 +239,7 @@ FT_BEGIN_HEADER
 
 FT_END_HEADER
 
-#endif /* __CFFGLOAD_H__ */
+#endif /* CFFGLOAD_H_ */
 
 
 /* END */

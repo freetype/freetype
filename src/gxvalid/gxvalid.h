@@ -25,8 +25,8 @@
 /***************************************************************************/
 
 
-#ifndef __GXVALID_H__
-#define __GXVALID_H__
+#ifndef GXVALID_H_
+#define GXVALID_H_
 
 #include <ft2build.h>
 #include FT_FREETYPE_H
@@ -102,7 +102,7 @@ FT_BEGIN_HEADER
 FT_END_HEADER
 
 
-#endif /* __GXVALID_H__ */
+#endif /* GXVALID_H_ */
 
 
 /* END */

@@ -23,8 +23,8 @@
   /*************************************************************************/
 
 
-#ifndef __FTOBJS_H__
-#define __FTOBJS_H__
+#ifndef FTOBJS_H_
+#define FTOBJS_H_
 
 #include <ft2build.h>
 #include FT_RENDER_H
@@ -1568,7 +1568,7 @@ FT_BEGIN_HEADER
 
 FT_END_HEADER
 
-#endif /* __FTOBJS_H__ */
+#endif /* FTOBJS_H_ */
 
 
 /* END */

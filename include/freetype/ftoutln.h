@@ -17,8 +17,8 @@
 /***************************************************************************/
 
 
-#ifndef __FTOUTLN_H__
-#define __FTOUTLN_H__
+#ifndef FTOUTLN_H_
+#define FTOUTLN_H_
 
 
 #include <ft2build.h>
@@ -563,7 +563,7 @@ FT_BEGIN_HEADER
 
 FT_END_HEADER
 
-#endif /* __FTOUTLN_H__ */
+#endif /* FTOUTLN_H_ */
 
 
 /* END */

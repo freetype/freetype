@@ -19,8 +19,8 @@
 /***************************************************************************/
 
 
-#ifndef __FT_SFNT_NAMES_H__
-#define __FT_SFNT_NAMES_H__
+#ifndef FTSNAMES_H_
+#define FTSNAMES_H_
 
 
 #include <ft2build.h>
@@ -194,7 +194,7 @@ FT_BEGIN_HEADER
 
 FT_END_HEADER
 
-#endif /* __FT_SFNT_NAMES_H__ */
+#endif /* FTSNAMES_H_ */
 
 
 /* END */

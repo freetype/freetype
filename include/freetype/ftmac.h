@@ -25,8 +25,8 @@
 /***************************************************************************/
 
 
-#ifndef __FTMAC_H__
-#define __FTMAC_H__
+#ifndef FTMAC_H_
+#define FTMAC_H_
 
 
 #include <ft2build.h>
@@ -268,7 +268,7 @@ FT_BEGIN_HEADER
 FT_END_HEADER
 
 
-#endif /* __FTMAC_H__ */
+#endif /* FTMAC_H_ */
 
 
 /* END */

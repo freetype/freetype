@@ -36,8 +36,8 @@
 /***************************************************************************/
 
 
-#ifndef __CF2STACK_H__
-#define __CF2STACK_H__
+#ifndef CF2STACK_H_
+#define CF2STACK_H_
 
 
 FT_BEGIN_HEADER
@@ -100,7 +100,7 @@ FT_BEGIN_HEADER
 FT_END_HEADER
 
 
-#endif /* __CF2STACK_H__ */
+#endif /* CF2STACK_H_ */
 
 
 /* END */

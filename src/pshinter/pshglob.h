@@ -16,8 +16,8 @@
 /***************************************************************************/
 
 
-#ifndef __PSHGLOB_H__
-#define __PSHGLOB_H__
+#ifndef PSHGLOB_H_
+#define PSHGLOB_H_
 
 
 #include FT_FREETYPE_H
@@ -190,7 +190,7 @@ FT_BEGIN_HEADER
 FT_END_HEADER
 
 
-#endif /* __PSHGLOB_H__ */
+#endif /* PSHGLOB_H_ */
 
 
 /* END */

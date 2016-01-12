@@ -16,8 +16,8 @@
 /***************************************************************************/
 
 
-#ifndef __SVPSCMAP_H__
-#define __SVPSCMAP_H__
+#ifndef SVPSCMAP_H_
+#define SVPSCMAP_H_
 
 #include FT_INTERNAL_OBJECTS_H
 
@@ -171,7 +171,7 @@ FT_BEGIN_HEADER
 FT_END_HEADER
 
 
-#endif /* __SVPSCMAP_H__ */
+#endif /* SVPSCMAP_H_ */
 
 
 /* END */

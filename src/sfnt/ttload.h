@@ -17,8 +17,8 @@
 /***************************************************************************/
 
 
-#ifndef __TTLOAD_H__
-#define __TTLOAD_H__
+#ifndef TTLOAD_H_
+#define TTLOAD_H_
 
 
 #include <ft2build.h>
@@ -106,7 +106,7 @@ FT_BEGIN_HEADER
 
 FT_END_HEADER
 
-#endif /* __TTLOAD_H__ */
+#endif /* TTLOAD_H_ */
 
 
 /* END */

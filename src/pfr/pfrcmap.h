@@ -16,8 +16,8 @@
 /***************************************************************************/
 
 
-#ifndef __PFRCMAP_H__
-#define __PFRCMAP_H__
+#ifndef PFRCMAP_H_
+#define PFRCMAP_H_
 
 #include <ft2build.h>
 #include FT_INTERNAL_OBJECTS_H
@@ -40,7 +40,7 @@ FT_BEGIN_HEADER
 FT_END_HEADER
 
 
-#endif /* __PFRCMAP_H__ */
+#endif /* PFRCMAP_H_ */
 
 
 /* END */

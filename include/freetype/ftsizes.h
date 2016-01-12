@@ -25,8 +25,8 @@
   /*************************************************************************/
 
 
-#ifndef __FTSIZES_H__
-#define __FTSIZES_H__
+#ifndef FTSIZES_H_
+#define FTSIZES_H_
 
 
 #include <ft2build.h>
@@ -153,7 +153,7 @@ FT_BEGIN_HEADER
 
 FT_END_HEADER
 
-#endif /* __FTSIZES_H__ */
+#endif /* FTSIZES_H_ */
 
 
 /* END */

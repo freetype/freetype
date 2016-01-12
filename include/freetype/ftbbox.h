@@ -27,8 +27,8 @@
   /*************************************************************************/
 
 
-#ifndef __FTBBOX_H__
-#define __FTBBOX_H__
+#ifndef FTBBOX_H_
+#define FTBBOX_H_
 
 
 #include <ft2build.h>
@@ -90,7 +90,7 @@ FT_BEGIN_HEADER
 
 FT_END_HEADER
 
-#endif /* __FTBBOX_H__ */
+#endif /* FTBBOX_H_ */
 
 
 /* END */

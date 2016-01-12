@@ -16,8 +16,8 @@
 /***************************************************************************/
 
 
-#ifndef __FTCFFDRV_H__
-#define __FTCFFDRV_H__
+#ifndef FTCFFDRV_H_
+#define FTCFFDRV_H_
 
 #include <ft2build.h>
 #include FT_FREETYPE_H
@@ -256,7 +256,7 @@ FT_BEGIN_HEADER
 FT_END_HEADER
 
 
-#endif /* __FTCFFDRV_H__ */
+#endif /* FTCFFDRV_H_ */
 
 
 /* END */

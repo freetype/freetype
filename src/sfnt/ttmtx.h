@@ -16,8 +16,8 @@
 /***************************************************************************/
 
 
-#ifndef __TTMTX_H__
-#define __TTMTX_H__
+#ifndef TTMTX_H_
+#define TTMTX_H_
 
 
 #include <ft2build.h>
@@ -49,7 +49,7 @@ FT_BEGIN_HEADER
 
 FT_END_HEADER
 
-#endif /* __TTMTX_H__ */
+#endif /* TTMTX_H_ */
 
 
 /* END */

@@ -59,8 +59,8 @@
   /*************************************************************************/
 
 
-#ifndef __FTCMANAG_H__
-#define __FTCMANAG_H__
+#ifndef FTCMANAG_H_
+#define FTCMANAG_H_
 
 
 #include <ft2build.h>
@@ -169,7 +169,7 @@ FT_BEGIN_HEADER
 
 FT_END_HEADER
 
-#endif /* __FTCMANAG_H__ */
+#endif /* FTCMANAG_H_ */
 
 
 /* END */

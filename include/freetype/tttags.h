@@ -16,8 +16,8 @@
 /***************************************************************************/
 
 
-#ifndef __TTAGS_H__
-#define __TTAGS_H__
+#ifndef TTAGS_H_
+#define TTAGS_H_
 
 
 #include <ft2build.h>
@@ -105,7 +105,7 @@ FT_BEGIN_HEADER
 
 FT_END_HEADER
 
-#endif /* __TTAGS_H__ */
+#endif /* TTAGS_H_ */
 
 
 /* END */

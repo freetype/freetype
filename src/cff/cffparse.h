@@ -16,8 +16,8 @@
 /***************************************************************************/
 
 
-#ifndef __CFF_PARSE_H__
-#define __CFF_PARSE_H__
+#ifndef CFFPARSE_H_
+#define CFFPARSE_H_
 
 
 #include <ft2build.h>
@@ -100,7 +100,7 @@ FT_BEGIN_HEADER
 FT_END_HEADER
 
 
-#endif /* __CFF_PARSE_H__ */
+#endif /* CFFPARSE_H_ */
 
 
 /* END */

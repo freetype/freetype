@@ -16,8 +16,8 @@
 /***************************************************************************/
 
 
-#ifndef __CIDRIVER_H__
-#define __CIDRIVER_H__
+#ifndef CIDRIVER_H_
+#define CIDRIVER_H_
 
 
 #include <ft2build.h>
@@ -37,7 +37,7 @@ FT_BEGIN_HEADER
 
 FT_END_HEADER
 
-#endif /* __CIDRIVER_H__ */
+#endif /* CIDRIVER_H_ */
 
 
 /* END */

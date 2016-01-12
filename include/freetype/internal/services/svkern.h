@@ -16,8 +16,8 @@
 /***************************************************************************/
 
 
-#ifndef __SVKERN_H__
-#define __SVKERN_H__
+#ifndef SVKERN_H_
+#define SVKERN_H_
 
 #include FT_INTERNAL_SERVICE_H
 #include FT_TRUETYPE_TABLES_H
@@ -45,7 +45,7 @@ FT_BEGIN_HEADER
 FT_END_HEADER
 
 
-#endif /* __SVKERN_H__ */
+#endif /* SVKERN_H_ */
 
 
 /* END */

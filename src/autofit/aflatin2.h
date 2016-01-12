@@ -17,8 +17,8 @@
 /***************************************************************************/
 
 
-#ifndef __AFLATIN2_H__
-#define __AFLATIN2_H__
+#ifndef AFLATIN2_H_
+#define AFLATIN2_H_
 
 #include "afhints.h"
 
@@ -35,7 +35,7 @@ FT_BEGIN_HEADER
 
 FT_END_HEADER
 
-#endif /* __AFLATIN_H__ */
+#endif /* AFLATIN_H_ */
 
 
 /* END */

@@ -16,8 +16,8 @@
 /***************************************************************************/
 
 
-#ifndef __AFCJK_H__
-#define __AFCJK_H__
+#ifndef AFCJK_H_
+#define AFCJK_H_
 
 #include "afhints.h"
 #include "aflatin.h"
@@ -135,7 +135,7 @@ FT_BEGIN_HEADER
 
 FT_END_HEADER
 
-#endif /* __AFCJK_H__ */
+#endif /* AFCJK_H_ */
 
 
 /* END */

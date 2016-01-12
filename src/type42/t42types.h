@@ -16,8 +16,8 @@
 /***************************************************************************/
 
 
-#ifndef __T42TYPES_H__
-#define __T42TYPES_H__
+#ifndef T42TYPES_H_
+#define T42TYPES_H_
 
 
 #include <ft2build.h>
@@ -51,7 +51,7 @@ FT_BEGIN_HEADER
 
 FT_END_HEADER
 
-#endif /* __T42TYPES_H__ */
+#endif /* T42TYPES_H_ */
 
 
 /* END */

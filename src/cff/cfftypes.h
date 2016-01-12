@@ -17,8 +17,8 @@
 /***************************************************************************/
 
 
-#ifndef __CFFTYPES_H__
-#define __CFFTYPES_H__
+#ifndef CFFTYPES_H_
+#define CFFTYPES_H_
 
 
 #include <ft2build.h>
@@ -278,7 +278,7 @@ FT_BEGIN_HEADER
 
 FT_END_HEADER
 
-#endif /* __CFFTYPES_H__ */
+#endif /* CFFTYPES_H_ */
 
 
 /* END */

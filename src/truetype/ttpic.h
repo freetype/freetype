@@ -16,8 +16,8 @@
 /***************************************************************************/
 
 
-#ifndef __TTPIC_H__
-#define __TTPIC_H__
+#ifndef TTPIC_H_
+#define TTPIC_H_
 
 
 #include FT_INTERNAL_PIC_H
@@ -77,7 +77,7 @@ FT_END_HEADER
 
  /* */
 
-#endif /* __TTPIC_H__ */
+#endif /* TTPIC_H_ */
 
 
 /* END */

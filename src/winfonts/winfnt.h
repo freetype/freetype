@@ -17,8 +17,8 @@
 /***************************************************************************/
 
 
-#ifndef __WINFNT_H__
-#define __WINFNT_H__
+#ifndef WINFNT_H_
+#define WINFNT_H_
 
 
 #include <ft2build.h>
@@ -165,7 +165,7 @@ FT_BEGIN_HEADER
 FT_END_HEADER
 
 
-#endif /* __WINFNT_H__ */
+#endif /* WINFNT_H_ */
 
 
 /* END */

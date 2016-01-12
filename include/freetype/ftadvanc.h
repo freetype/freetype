@@ -16,8 +16,8 @@
 /***************************************************************************/
 
 
-#ifndef __FTADVANC_H__
-#define __FTADVANC_H__
+#ifndef FTADVANC_H_
+#define FTADVANC_H_
 
 
 #include <ft2build.h>
@@ -181,7 +181,7 @@ FT_BEGIN_HEADER
 
 FT_END_HEADER
 
-#endif /* __FTADVANC_H__ */
+#endif /* FTADVANC_H_ */
 
 
 /* END */

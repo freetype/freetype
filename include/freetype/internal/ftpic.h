@@ -23,8 +23,8 @@
   /*************************************************************************/
 
 
-#ifndef __FTPIC_H__
-#define __FTPIC_H__
+#ifndef FTPIC_H_
+#define FTPIC_H_
 
 
 FT_BEGIN_HEADER
@@ -65,7 +65,7 @@ FT_BEGIN_HEADER
 
 FT_END_HEADER
 
-#endif /* __FTPIC_H__ */
+#endif /* FTPIC_H_ */
 
 
 /* END */

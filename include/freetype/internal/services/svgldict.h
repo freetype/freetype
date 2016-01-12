@@ -16,8 +16,8 @@
 /***************************************************************************/
 
 
-#ifndef __SVGLDICT_H__
-#define __SVGLDICT_H__
+#ifndef SVGLDICT_H_
+#define SVGLDICT_H_
 
 #include FT_INTERNAL_SERVICE_H
 
@@ -85,4 +85,7 @@ FT_BEGIN_HEADER
 FT_END_HEADER
 
 
-#endif /* __SVGLDICT_H__ */
+#endif /* SVGLDICT_H_ */
+
+
+/* END */

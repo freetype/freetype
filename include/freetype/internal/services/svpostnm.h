@@ -16,8 +16,8 @@
 /***************************************************************************/
 
 
-#ifndef __SVPOSTNM_H__
-#define __SVPOSTNM_H__
+#ifndef SVPOSTNM_H_
+#define SVPOSTNM_H_
 
 #include FT_INTERNAL_SERVICE_H
 
@@ -75,7 +75,7 @@ FT_BEGIN_HEADER
 FT_END_HEADER
 
 
-#endif /* __SVPOSTNM_H__ */
+#endif /* SVPOSTNM_H_ */
 
 
 /* END */

@@ -40,8 +40,8 @@
   /*************************************************************************/
 
 
-#ifndef __FTCMRU_H__
-#define __FTCMRU_H__
+#ifndef FTCMRU_H_
+#define FTCMRU_H_
 
 
 #include <ft2build.h>
@@ -240,7 +240,7 @@ FT_BEGIN_HEADER
 FT_END_HEADER
 
 
-#endif /* __FTCMRU_H__ */
+#endif /* FTCMRU_H_ */
 
 
 /* END */

@@ -33,8 +33,8 @@
   /*                                                                       */
   /*************************************************************************/
 
-#ifndef __FTCONFIG_H__
-#define __FTCONFIG_H__
+#ifndef FTCONFIG_H_
+#define FTCONFIG_H_
 
 #include <ft2build.h>
 #include FT_CONFIG_OPTIONS_H
@@ -434,7 +434,7 @@ FT_BEGIN_HEADER
 FT_END_HEADER
 
 
-#endif /* __FTCONFIG_H__ */
+#endif /* FTCONFIG_H_ */
 
 
 /* END */

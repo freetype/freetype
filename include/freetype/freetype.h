@@ -16,8 +16,8 @@
 /***************************************************************************/
 
 
-#ifndef __FREETYPE_H__
-#define __FREETYPE_H__
+#ifndef FREETYPE_H_
+#define FREETYPE_H_
 
 
 #ifndef FT_FREETYPE_H
@@ -4278,7 +4278,7 @@ FT_BEGIN_HEADER
 
 FT_END_HEADER
 
-#endif /* __FREETYPE_H__ */
+#endif /* FREETYPE_H_ */
 
 
 /* END */

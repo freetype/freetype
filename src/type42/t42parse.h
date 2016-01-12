@@ -16,8 +16,8 @@
 /***************************************************************************/
 
 
-#ifndef __T42PARSE_H__
-#define __T42PARSE_H__
+#ifndef T42PARSE_H_
+#define T42PARSE_H_
 
 
 #include "t42objs.h"
@@ -85,7 +85,7 @@ FT_BEGIN_HEADER
 FT_END_HEADER
 
 
-#endif /* __T42PARSE_H__ */
+#endif /* T42PARSE_H_ */
 
 
 /* END */

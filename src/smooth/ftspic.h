@@ -16,8 +16,8 @@
 /***************************************************************************/
 
 
-#ifndef __FTSPIC_H__
-#define __FTSPIC_H__
+#ifndef FTSPIC_H_
+#define FTSPIC_H_
 
 
 #include FT_INTERNAL_PIC_H
@@ -69,7 +69,7 @@ FT_BEGIN_HEADER
 
 FT_END_HEADER
 
-#endif /* __FTSPIC_H__ */
+#endif /* FTSPIC_H_ */
 
 
 /* END */

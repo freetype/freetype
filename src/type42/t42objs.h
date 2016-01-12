@@ -16,8 +16,8 @@
 /***************************************************************************/
 
 
-#ifndef __T42OBJS_H__
-#define __T42OBJS_H__
+#ifndef T42OBJS_H_
+#define T42OBJS_H_
 
 #include <ft2build.h>
 #include FT_FREETYPE_H
@@ -118,7 +118,7 @@ FT_BEGIN_HEADER
 FT_END_HEADER
 
 
-#endif /* __T42OBJS_H__ */
+#endif /* T42OBJS_H_ */
 
 
 /* END */

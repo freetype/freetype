@@ -16,8 +16,8 @@
 /***************************************************************************/
 
 
-#ifndef __FTOPTION_H__
-#define __FTOPTION_H__
+#ifndef FTOPTION_H_
+#define FTOPTION_H_
 
 
 #include <ft2build.h>
@@ -898,7 +898,7 @@ FT_BEGIN_HEADER
 FT_END_HEADER
 
 
-#endif /* __FTOPTION_H__ */
+#endif /* FTOPTION_H_ */
 
 
 /* END */

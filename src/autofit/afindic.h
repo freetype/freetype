@@ -17,8 +17,8 @@
 /***************************************************************************/
 
 
-#ifndef __AFINDIC_H__
-#define __AFINDIC_H__
+#ifndef AFINDIC_H_
+#define AFINDIC_H_
 
 #include "afhints.h"
 
@@ -35,7 +35,7 @@ FT_BEGIN_HEADER
 
 FT_END_HEADER
 
-#endif /* __AFINDIC_H__ */
+#endif /* AFINDIC_H_ */
 
 
 /* END */

@@ -16,8 +16,8 @@
 /***************************************************************************/
 
 
-#ifndef __RASTPIC_H__
-#define __RASTPIC_H__
+#ifndef RASTPIC_H_
+#define RASTPIC_H_
 
 
 #include FT_INTERNAL_PIC_H
@@ -57,7 +57,7 @@ FT_BEGIN_HEADER
 
 FT_END_HEADER
 
-#endif /* __RASTPIC_H__ */
+#endif /* RASTPIC_H_ */
 
 
 /* END */

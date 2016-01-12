@@ -16,8 +16,8 @@
 /***************************************************************************/
 
 
-#ifndef __AFMODULE_H__
-#define __AFMODULE_H__
+#ifndef AFMODULE_H_
+#define AFMODULE_H_
 
 #include <ft2build.h>
 #include FT_INTERNAL_OBJECTS_H
@@ -52,7 +52,7 @@ FT_DECLARE_MODULE( autofit_module_class )
 
 FT_END_HEADER
 
-#endif /* __AFMODULE_H__ */
+#endif /* AFMODULE_H_ */
 
 
 /* END */

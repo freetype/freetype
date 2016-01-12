@@ -19,8 +19,8 @@
 /***************************************************************************/
 
 
-#ifndef __AFBLUE_H__
-#define __AFBLUE_H__
+#ifndef AFBLUE_H_
+#define AFBLUE_H_
 
 
 FT_BEGIN_HEADER
@@ -249,7 +249,7 @@ FT_BEGIN_HEADER
 FT_END_HEADER
 
 
-#endif /* __AFBLUE_H__ */
+#endif /* AFBLUE_H_ */
 
 
 /* END */

@@ -16,8 +16,8 @@
 /***************************************************************************/
 
 
-#ifndef __OTVALID_H__
-#define __OTVALID_H__
+#ifndef OTVALID_H_
+#define OTVALID_H_
 
 
 #include <ft2build.h>
@@ -72,7 +72,7 @@ FT_BEGIN_HEADER
 
 FT_END_HEADER
 
-#endif /* __OTVALID_H__ */
+#endif /* OTVALID_H_ */
 
 
 /* END */

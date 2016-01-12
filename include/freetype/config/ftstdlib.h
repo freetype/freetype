@@ -23,14 +23,13 @@
   /* FreeType normally requires.  It also defines macros to rename the     */
   /* standard functions within the FreeType source code.                   */
   /*                                                                       */
-  /* Load a file which defines __FTSTDLIB_H__ before this one to override  */
-  /* it.                                                                   */
+  /* Load a file which defines FTSTDLIB_H_ before this one to override it. */
   /*                                                                       */
   /*************************************************************************/
 
 
-#ifndef __FTSTDLIB_H__
-#define __FTSTDLIB_H__
+#ifndef FTSTDLIB_H_
+#define FTSTDLIB_H_
 
 
 #include <stddef.h>
@@ -168,7 +167,7 @@
 #include <stdarg.h>
 
 
-#endif /* __FTSTDLIB_H__ */
+#endif /* FTSTDLIB_H_ */
 
 
 /* END */

@@ -1,3 +1,11 @@
+2016-01-12  Werner Lemberg  <wl@gnu.org>
+
+	Don't use macro names that contain `__' [1/2].
+
+	Such macro names are reserved for both C and C++.
+
+	*/*: Replace macros of the form `__XXX_H__' with `XXX_H_'.
+
 2016-01-10  Jered Gray  <jegray@google.com>
 
 	[cff] Fix usage of `|' operator.

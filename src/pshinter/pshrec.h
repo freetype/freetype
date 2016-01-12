@@ -28,8 +28,8 @@
   /**************************************************************************/
 
 
-#ifndef __PSHREC_H__
-#define __PSHREC_H__
+#ifndef PSHREC_H_
+#define PSHREC_H_
 
 
 #include <ft2build.h>
@@ -166,7 +166,7 @@ FT_BEGIN_HEADER
 FT_END_HEADER
 
 
-#endif /* __PS_HINTER_RECORD_H__ */
+#endif /* PSHREC_H_ */
 
 
 /* END */

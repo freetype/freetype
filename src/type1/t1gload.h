@@ -16,8 +16,8 @@
 /***************************************************************************/
 
 
-#ifndef __T1GLOAD_H__
-#define __T1GLOAD_H__
+#ifndef T1GLOAD_H_
+#define T1GLOAD_H_
 
 
 #include <ft2build.h>
@@ -47,7 +47,7 @@ FT_BEGIN_HEADER
 
 FT_END_HEADER
 
-#endif /* __T1GLOAD_H__ */
+#endif /* T1GLOAD_H_ */
 
 
 /* END */

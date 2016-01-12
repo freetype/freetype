@@ -16,8 +16,8 @@
 /***************************************************************************/
 
 
-#ifndef __CIDPARSE_H__
-#define __CIDPARSE_H__
+#ifndef CIDPARSE_H_
+#define CIDPARSE_H_
 
 
 #include <ft2build.h>
@@ -117,7 +117,7 @@ FT_BEGIN_HEADER
 
 FT_END_HEADER
 
-#endif /* __CIDPARSE_H__ */
+#endif /* CIDPARSE_H_ */
 
 
 /* END */

@@ -16,8 +16,8 @@
 /***************************************************************************/
 
 
-#ifndef __CFFPIC_H__
-#define __CFFPIC_H__
+#ifndef CFFPIC_H_
+#define CFFPIC_H_
 
 
 #include FT_INTERNAL_PIC_H
@@ -102,7 +102,7 @@ FT_END_HEADER
 
  /* */
 
-#endif /* __CFFPIC_H__ */
+#endif /* CFFPIC_H_ */
 
 
 /* END */

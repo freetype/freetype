@@ -16,8 +16,8 @@
 /***************************************************************************/
 
 
-#ifndef __AFHINTS_H__
-#define __AFHINTS_H__
+#ifndef AFHINTS_H_
+#define AFHINTS_H_
 
 #include "aftypes.h"
 
@@ -473,7 +473,7 @@ FT_BEGIN_HEADER
 
 FT_END_HEADER
 
-#endif /* __AFHINTS_H__ */
+#endif /* AFHINTS_H_ */
 
 
 /* END */

@@ -16,8 +16,8 @@
 /***************************************************************************/
 
 
-#ifndef __PSHMOD_H__
-#define __PSHMOD_H__
+#ifndef PSHMOD_H_
+#define PSHMOD_H_
 
 
 #include <ft2build.h>
@@ -33,7 +33,7 @@ FT_BEGIN_HEADER
 FT_END_HEADER
 
 
-#endif /* __PSHMOD_H__ */
+#endif /* PSHMOD_H_ */
 
 
 /* END */

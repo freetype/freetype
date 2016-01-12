@@ -16,8 +16,8 @@
 /***************************************************************************/
 
 
-#ifndef __T1AFM_H__
-#define __T1AFM_H__
+#ifndef T1AFM_H_
+#define T1AFM_H_
 
 #include <ft2build.h>
 #include "t1objs.h"
@@ -48,7 +48,7 @@ FT_BEGIN_HEADER
 
 FT_END_HEADER
 
-#endif /* __T1AFM_H__ */
+#endif /* T1AFM_H_ */
 
 
 /* END */

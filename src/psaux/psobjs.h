@@ -16,8 +16,8 @@
 /***************************************************************************/
 
 
-#ifndef __PSOBJS_H__
-#define __PSOBJS_H__
+#ifndef PSOBJS_H_
+#define PSOBJS_H_
 
 
 #include <ft2build.h>
@@ -206,7 +206,7 @@ FT_BEGIN_HEADER
 
 FT_END_HEADER
 
-#endif /* __PSOBJS_H__ */
+#endif /* PSOBJS_H_ */
 
 
 /* END */

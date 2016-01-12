@@ -16,8 +16,8 @@
 /***************************************************************************/
 
 
-#ifndef __BASEPIC_H__
-#define __BASEPIC_H__
+#ifndef BASEPIC_H_
+#define BASEPIC_H_
 
 
 #include FT_INTERNAL_PIC_H
@@ -85,7 +85,7 @@ FT_END_HEADER
 
   /* */
 
-#endif /* __BASEPIC_H__ */
+#endif /* BASEPIC_H_ */
 
 
 /* END */

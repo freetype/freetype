@@ -16,8 +16,8 @@
 /***************************************************************************/
 
 
-#ifndef __AFWRTSYS_H__
-#define __AFWRTSYS_H__
+#ifndef AFWRTSYS_H_
+#define AFWRTSYS_H_
 
   /* Since preprocessor directives can't create other preprocessor */
   /* directives, we have to include the header files manually.     */
@@ -30,7 +30,7 @@
 #include "aflatin2.h"
 #endif
 
-#endif /* __AFWRTSYS_H__ */
+#endif /* AFWRTSYS_H_ */
 
 
   /* The following part can be included multiple times. */

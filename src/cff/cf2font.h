@@ -36,8 +36,8 @@
 /***************************************************************************/
 
 
-#ifndef __CF2FONT_H__
-#define __CF2FONT_H__
+#ifndef CF2FONT_H_
+#define CF2FONT_H_
 
 
 #include "cf2ft.h"
@@ -115,7 +115,7 @@ FT_BEGIN_HEADER
 FT_END_HEADER
 
 
-#endif /* __CF2FONT_H__ */
+#endif /* CF2FONT_H_ */
 
 
 /* END */

@@ -17,8 +17,8 @@
 /***************************************************************************/
 
 
-#ifndef __TTKERN_H__
-#define __TTKERN_H__
+#ifndef TTKERN_H_
+#define TTKERN_H_
 
 
 #include <ft2build.h>
@@ -46,7 +46,7 @@ FT_BEGIN_HEADER
 
 FT_END_HEADER
 
-#endif /* __TTKERN_H__ */
+#endif /* TTKERN_H_ */
 
 
 /* END */

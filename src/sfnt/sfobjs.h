@@ -16,8 +16,8 @@
 /***************************************************************************/
 
 
-#ifndef __SFOBJS_H__
-#define __SFOBJS_H__
+#ifndef SFOBJS_H_
+#define SFOBJS_H_
 
 
 #include <ft2build.h>
@@ -53,7 +53,7 @@ FT_BEGIN_HEADER
 
 FT_END_HEADER
 
-#endif /* __SFDRIVER_H__ */
+#endif /* SFDRIVER_H_ */
 
 
 /* END */

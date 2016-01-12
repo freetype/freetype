@@ -16,8 +16,8 @@
 /***************************************************************************/
 
 
-#ifndef __FTRASTER_H__
-#define __FTRASTER_H__
+#ifndef FTRASTER_H_
+#define FTRASTER_H_
 
 
 #include <ft2build.h>
@@ -40,7 +40,7 @@ FT_BEGIN_HEADER
 
 FT_END_HEADER
 
-#endif /* __FTRASTER_H__ */
+#endif /* FTRASTER_H_ */
 
 
 /* END */

@@ -22,12 +22,12 @@
   /*                                                                       */
   /*************************************************************************/
 
-#ifndef __T1ERRORS_H__
-#define __T1ERRORS_H__
+#ifndef T1ERRORS_H_
+#define T1ERRORS_H_
 
 #include FT_MODULE_ERRORS_H
 
-#undef __FTERRORS_H__
+#undef FTERRORS_H_
 
 #undef  FT_ERR_PREFIX
 #define FT_ERR_PREFIX  T1_Err_
@@ -35,7 +35,7 @@
 
 #include FT_ERRORS_H
 
-#endif /* __T1ERRORS_H__ */
+#endif /* T1ERRORS_H_ */
 
 
 /* END */

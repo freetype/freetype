@@ -16,8 +16,8 @@
 /***************************************************************************/
 
 
-#ifndef __AFLOADER_H__
-#define __AFLOADER_H__
+#ifndef AFLOADER_H_
+#define AFLOADER_H_
 
 #include "afhints.h"
 #include "afmodule.h"
@@ -85,7 +85,7 @@ FT_BEGIN_HEADER
 
 FT_END_HEADER
 
-#endif /* __AFLOADER_H__ */
+#endif /* AFLOADER_H_ */
 
 
 /* END */

@@ -16,8 +16,8 @@
 /***************************************************************************/
 
 
-#ifndef __CIDLOAD_H__
-#define __CIDLOAD_H__
+#ifndef CIDLOAD_H_
+#define CIDLOAD_H_
 
 
 #include <ft2build.h>
@@ -47,7 +47,7 @@ FT_BEGIN_HEADER
 
 FT_END_HEADER
 
-#endif /* __CIDLOAD_H__ */
+#endif /* CIDLOAD_H_ */
 
 
 /* END */

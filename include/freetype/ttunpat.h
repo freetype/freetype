@@ -18,8 +18,8 @@
 /***************************************************************************/
 
 
-#ifndef __TTUNPAT_H__
-#define __TTUNPAT_H__
+#ifndef TTUNPAT_H_
+#define TTUNPAT_H_
 
 
 #include <ft2build.h>
@@ -54,7 +54,7 @@ FT_BEGIN_HEADER
 FT_END_HEADER
 
 
-#endif /* __TTUNPAT_H__ */
+#endif /* TTUNPAT_H_ */
 
 
 /* END */

@@ -16,8 +16,8 @@
 /***************************************************************************/
 
 
-#ifndef __TTNAMEID_H__
-#define __TTNAMEID_H__
+#ifndef TTNAMEID_H_
+#define TTNAMEID_H_
 
 
 #include <ft2build.h>
@@ -1231,7 +1231,7 @@ FT_BEGIN_HEADER
 
 FT_END_HEADER
 
-#endif /* __TTNAMEID_H__ */
+#endif /* TTNAMEID_H_ */
 
 
 /* END */

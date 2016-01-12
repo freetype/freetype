@@ -16,8 +16,8 @@
 /***************************************************************************/
 
 
-#ifndef __SVCID_H__
-#define __SVCID_H__
+#ifndef SVCID_H_
+#define SVCID_H_
 
 #include FT_INTERNAL_SERVICE_H
 
@@ -84,7 +84,7 @@ FT_BEGIN_HEADER
 FT_END_HEADER
 
 
-#endif /* __SVCID_H__ */
+#endif /* SVCID_H_ */
 
 
 /* END */

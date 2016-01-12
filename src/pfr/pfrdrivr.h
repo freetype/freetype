@@ -16,8 +16,8 @@
 /***************************************************************************/
 
 
-#ifndef __PFRDRIVR_H__
-#define __PFRDRIVR_H__
+#ifndef PFRDRIVR_H_
+#define PFRDRIVR_H_
 
 
 #include <ft2build.h>
@@ -37,7 +37,7 @@ FT_BEGIN_HEADER
 FT_END_HEADER
 
 
-#endif /* __PFRDRIVR_H__ */
+#endif /* PFRDRIVR_H_ */
 
 
 /* END */

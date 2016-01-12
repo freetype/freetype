@@ -28,8 +28,8 @@
   /*************************************************************************/
 
 
-#ifndef __FTSERV_H__
-#define __FTSERV_H__
+#ifndef FTSERV_H_
+#define FTSERV_H_
 
 
 FT_BEGIN_HEADER
@@ -757,7 +757,7 @@ FT_BEGIN_HEADER
 
 FT_END_HEADER
 
-#endif /* __FTSERV_H__ */
+#endif /* FTSERV_H_ */
 
 
 /* END */

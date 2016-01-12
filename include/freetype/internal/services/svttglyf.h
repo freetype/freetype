@@ -15,8 +15,8 @@
 /*                                                                         */
 /***************************************************************************/
 
-#ifndef __SVTTGLYF_H__
-#define __SVTTGLYF_H__
+#ifndef SVTTGLYF_H_
+#define SVTTGLYF_H_
 
 #include FT_INTERNAL_SERVICE_H
 #include FT_TRUETYPE_TABLES_H
@@ -63,7 +63,7 @@ FT_BEGIN_HEADER
 
 FT_END_HEADER
 
-#endif /* __SVTTGLYF_H__ */
+#endif /* SVTTGLYF_H_ */
 
 
 /* END */

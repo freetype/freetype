@@ -16,8 +16,8 @@
 /***************************************************************************/
 
 
-#ifndef __TTSUBPIX_H__
-#define __TTSUBPIX_H__
+#ifndef TTSUBPIX_H_
+#define TTSUBPIX_H_
 
 #include <ft2build.h>
 #include "ttobjs.h"
@@ -105,6 +105,7 @@ FT_BEGIN_HEADER
 
 FT_END_HEADER
 
-#endif /* __TTSUBPIX_H__ */
+#endif /* TTSUBPIX_H_ */
+
 
 /* END */

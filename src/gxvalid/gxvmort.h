@@ -25,8 +25,8 @@
 /***************************************************************************/
 
 
-#ifndef __GXVMORT_H__
-#define __GXVMORT_H__
+#ifndef GXVMORT_H_
+#define GXVMORT_H_
 
 #include "gxvalid.h"
 #include "gxvcommn.h"
@@ -88,7 +88,7 @@
                                     GXV_Validator  gxvalid );
 
 
-#endif /* __GXVMORT_H__ */
+#endif /* GXVMORT_H_ */
 
 
 /* END */

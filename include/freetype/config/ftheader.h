@@ -15,8 +15,8 @@
 /*                                                                         */
 /***************************************************************************/
 
-#ifndef __FT_HEADER_H__
-#define __FT_HEADER_H__
+#ifndef FTHEADER_H_
+#define FTHEADER_H_
 
 
   /*@***********************************************************************/
@@ -828,7 +828,7 @@
 #endif /* FT2_BUILD_LIBRARY */
 
 
-#endif /* __FT2_BUILD_H__ */
+#endif /* FTHEADER_H_ */
 
 
 /* END */

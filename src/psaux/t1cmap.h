@@ -16,8 +16,8 @@
 /***************************************************************************/
 
 
-#ifndef __T1CMAP_H__
-#define __T1CMAP_H__
+#ifndef T1CMAP_H_
+#define T1CMAP_H_
 
 #include <ft2build.h>
 #include FT_INTERNAL_OBJECTS_H
@@ -99,7 +99,7 @@ FT_BEGIN_HEADER
 
 FT_END_HEADER
 
-#endif /* __T1CMAP_H__ */
+#endif /* T1CMAP_H_ */
 
 
 /* END */

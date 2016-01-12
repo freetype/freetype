@@ -16,8 +16,8 @@
 /***************************************************************************/
 
 
-#ifndef __CFFOBJS_H__
-#define __CFFOBJS_H__
+#ifndef CFFOBJS_H_
+#define CFFOBJS_H_
 
 
 #include <ft2build.h>
@@ -179,7 +179,7 @@ FT_BEGIN_HEADER
 
 FT_END_HEADER
 
-#endif /* __CFFOBJS_H__ */
+#endif /* CFFOBJS_H_ */
 
 
 /* END */

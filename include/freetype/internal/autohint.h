@@ -24,8 +24,8 @@
   /*************************************************************************/
 
 
-#ifndef __AUTOHINT_H__
-#define __AUTOHINT_H__
+#ifndef AUTOHINT_H_
+#define AUTOHINT_H_
 
 
   /*************************************************************************/
@@ -238,7 +238,7 @@ FT_BEGIN_HEADER
 
 FT_END_HEADER
 
-#endif /* __AUTOHINT_H__ */
+#endif /* AUTOHINT_H_ */
 
 
 /* END */

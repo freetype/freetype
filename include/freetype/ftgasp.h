@@ -16,8 +16,8 @@
 /***************************************************************************/
 
 
-#ifndef _FT_GASP_H_
-#define _FT_GASP_H_
+#ifndef FTGASP_H_
+#define FTGASP_H_
 
 #include <ft2build.h>
 #include FT_FREETYPE_H
@@ -123,7 +123,7 @@
   /* */
 
 
-#endif /* _FT_GASP_H_ */
+#endif /* FTGASP_H_ */
 
 
 /* END */

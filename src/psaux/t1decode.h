@@ -16,8 +16,8 @@
 /***************************************************************************/
 
 
-#ifndef __T1DECODE_H__
-#define __T1DECODE_H__
+#ifndef T1DECODE_H_
+#define T1DECODE_H_
 
 
 #include <ft2build.h>
@@ -58,7 +58,7 @@ FT_BEGIN_HEADER
 
 FT_END_HEADER
 
-#endif /* __T1DECODE_H__ */
+#endif /* T1DECODE_H_ */
 
 
 /* END */

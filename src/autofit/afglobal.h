@@ -17,8 +17,8 @@
 /***************************************************************************/
 
 
-#ifndef __AFGLOBAL_H__
-#define __AFGLOBAL_H__
+#ifndef AFGLOBAL_H_
+#define AFGLOBAL_H_
 
 
 #include "aftypes.h"
@@ -167,7 +167,7 @@ FT_BEGIN_HEADER
 
 FT_END_HEADER
 
-#endif /* __AFGLOBAL_H__ */
+#endif /* AFGLOBAL_H_ */
 
 
 /* END */

@@ -24,8 +24,8 @@
   /*                                                 */
   /***************************************************/
 
-#ifndef __FTMISC_H__
-#define __FTMISC_H__
+#ifndef FTMISC_H_
+#define FTMISC_H_
 
 
   /* memset */
@@ -136,7 +136,7 @@
     return ( s > 0 ) ? d : -d;
   }
 
-#endif /* __FTMISC_H__ */
+#endif /* FTMISC_H_ */
 
 
 /* END */

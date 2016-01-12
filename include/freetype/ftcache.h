@@ -16,8 +16,8 @@
 /***************************************************************************/
 
 
-#ifndef __FTCACHE_H__
-#define __FTCACHE_H__
+#ifndef FTCACHE_H_
+#define FTCACHE_H_
 
 
 #include <ft2build.h>
@@ -1051,7 +1051,7 @@ FT_BEGIN_HEADER
 
 FT_END_HEADER
 
-#endif /* __FTCACHE_H__ */
+#endif /* FTCACHE_H_ */
 
 
 /* END */

@@ -17,8 +17,8 @@
 /***************************************************************************/
 
 
-#ifndef __T1TABLES_H__
-#define __T1TABLES_H__
+#ifndef T1TABLES_H_
+#define T1TABLES_H_
 
 
 #include <ft2build.h>
@@ -755,7 +755,7 @@ FT_BEGIN_HEADER
 
 FT_END_HEADER
 
-#endif /* __T1TABLES_H__ */
+#endif /* T1TABLES_H_ */
 
 
 /* END */

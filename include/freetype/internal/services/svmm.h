@@ -16,8 +16,8 @@
 /***************************************************************************/
 
 
-#ifndef __SVMM_H__
-#define __SVMM_H__
+#ifndef SVMM_H_
+#define SVMM_H_
 
 #include FT_INTERNAL_SERVICE_H
 
@@ -107,7 +107,7 @@ FT_BEGIN_HEADER
 
 FT_END_HEADER
 
-#endif /* __SVMM_H__ */
+#endif /* SVMM_H_ */
 
 
 /* END */

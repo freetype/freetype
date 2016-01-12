@@ -16,8 +16,8 @@
 /***************************************************************************/
 
 
-#ifndef __TTOBJS_H__
-#define __TTOBJS_H__
+#ifndef TTOBJS_H_
+#define TTOBJS_H_
 
 
 #include <ft2build.h>
@@ -419,7 +419,7 @@ FT_BEGIN_HEADER
 
 FT_END_HEADER
 
-#endif /* __TTOBJS_H__ */
+#endif /* TTOBJS_H_ */
 
 
 /* END */

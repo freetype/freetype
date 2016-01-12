@@ -17,8 +17,8 @@
 /***************************************************************************/
 
 
-#ifndef __OTVMOD_H__
-#define __OTVMOD_H__
+#ifndef OTVMOD_H_
+#define OTVMOD_H_
 
 
 #include <ft2build.h>
@@ -37,7 +37,7 @@ FT_BEGIN_HEADER
 
 FT_END_HEADER
 
-#endif /* __OTVMOD_H__ */
+#endif /* OTVMOD_H_ */
 
 
 /* END */

@@ -39,8 +39,8 @@
    */
 
 
-#ifndef __GXVCOMMN_H__
-#define __GXVCOMMN_H__
+#ifndef GXVCOMMN_H_
+#define GXVCOMMN_H_
 
 
 #include <ft2build.h>
@@ -576,7 +576,7 @@ FT_BEGIN_HEADER
 
 FT_END_HEADER
 
-#endif /* __GXVCOMMN_H__ */
+#endif /* GXVCOMMN_H_ */
 
 
 /* END */

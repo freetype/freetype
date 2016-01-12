@@ -17,8 +17,8 @@
 /***************************************************************************/
 
 
-#ifndef __FT_LCD_FILTER_H__
-#define __FT_LCD_FILTER_H__
+#ifndef FTLCDFIL_H_
+#define FTLCDFIL_H_
 
 #include <ft2build.h>
 #include FT_FREETYPE_H
@@ -286,7 +286,7 @@ FT_BEGIN_HEADER
 
 FT_END_HEADER
 
-#endif /* __FT_LCD_FILTER_H__ */
+#endif /* FTLCDFIL_H_ */
 
 
 /* END */

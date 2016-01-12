@@ -16,8 +16,8 @@
 /***************************************************************************/
 
 
-#ifndef __AFWARP_H__
-#define __AFWARP_H__
+#ifndef AFWARP_H_
+#define AFWARP_H_
 
 #include "afhints.h"
 
@@ -58,7 +58,7 @@ FT_BEGIN_HEADER
 FT_END_HEADER
 
 
-#endif /* __AFWARP_H__ */
+#endif /* AFWARP_H_ */
 
 
 /* END */

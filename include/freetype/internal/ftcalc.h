@@ -16,8 +16,8 @@
 /***************************************************************************/
 
 
-#ifndef __FTCALC_H__
-#define __FTCALC_H__
+#ifndef FTCALC_H_
+#define FTCALC_H_
 
 
 #include <ft2build.h>
@@ -412,7 +412,7 @@ FT_BEGIN_HEADER
 
 FT_END_HEADER
 
-#endif /* __FTCALC_H__ */
+#endif /* FTCALC_H_ */
 
 
 /* END */

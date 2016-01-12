@@ -16,8 +16,8 @@
 /***************************************************************************/
 
 
-#ifndef __FTCSBITS_H__
-#define __FTCSBITS_H__
+#ifndef FTCSBITS_H_
+#define FTCSBITS_H_
 
 
 #include <ft2build.h>
@@ -97,7 +97,7 @@ FT_BEGIN_HEADER
 
 FT_END_HEADER
 
-#endif /* __FTCSBITS_H__ */
+#endif /* FTCSBITS_H_ */
 
 
 /* END */

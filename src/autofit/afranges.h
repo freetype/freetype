@@ -16,8 +16,8 @@
 /***************************************************************************/
 
 
-#ifndef __AFRANGES_H__
-#define __AFRANGES_H__
+#ifndef AFRANGES_H_
+#define AFRANGES_H_
 
 
 #include "aftypes.h"
@@ -41,7 +41,7 @@ FT_BEGIN_HEADER
 
 FT_END_HEADER
 
-#endif /* __AFRANGES_H__ */
+#endif /* AFRANGES_H_ */
 
 
 /* END */

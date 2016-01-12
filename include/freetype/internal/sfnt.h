@@ -16,8 +16,8 @@
 /***************************************************************************/
 
 
-#ifndef __SFNT_H__
-#define __SFNT_H__
+#ifndef SFNT_H_
+#define SFNT_H_
 
 
 #include <ft2build.h>
@@ -742,7 +742,7 @@ FT_BEGIN_HEADER
 
 FT_END_HEADER
 
-#endif /* __SFNT_H__ */
+#endif /* SFNT_H_ */
 
 
 /* END */

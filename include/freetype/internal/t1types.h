@@ -17,8 +17,8 @@
 /***************************************************************************/
 
 
-#ifndef __T1TYPES_H__
-#define __T1TYPES_H__
+#ifndef T1TYPES_H_
+#define T1TYPES_H_
 
 
 #include <ft2build.h>
@@ -251,7 +251,7 @@ FT_BEGIN_HEADER
 
 FT_END_HEADER
 
-#endif /* __T1TYPES_H__ */
+#endif /* T1TYPES_H_ */
 
 
 /* END */

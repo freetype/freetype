@@ -16,8 +16,8 @@
 /***************************************************************************/
 
 
-#ifndef __PFROBJS_H__
-#define __PFROBJS_H__
+#ifndef PFROBJS_H_
+#define PFROBJS_H_
 
 #include "pfrtypes.h"
 
@@ -90,7 +90,7 @@ FT_BEGIN_HEADER
 
 FT_END_HEADER
 
-#endif /* __PFROBJS_H__ */
+#endif /* PFROBJS_H_ */
 
 
 /* END */

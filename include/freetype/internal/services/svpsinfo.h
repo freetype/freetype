@@ -16,8 +16,8 @@
 /***************************************************************************/
 
 
-#ifndef __SVPSINFO_H__
-#define __SVPSINFO_H__
+#ifndef SVPSINFO_H_
+#define SVPSINFO_H_
 
 #include FT_INTERNAL_SERVICE_H
 #include FT_INTERNAL_TYPE1_TYPES_H
@@ -105,7 +105,7 @@ FT_BEGIN_HEADER
 FT_END_HEADER
 
 
-#endif /* __SVPSINFO_H__ */
+#endif /* SVPSINFO_H_ */
 
 
 /* END */

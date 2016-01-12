@@ -39,8 +39,8 @@
   /*************************************************************************/
 
 
-#ifndef __FTHASH_H__
-#define __FTHASH_H__
+#ifndef FTHASH_H_
+#define FTHASH_H_
 
 
 #include <ft2build.h>
@@ -130,7 +130,7 @@ FT_BEGIN_HEADER
 FT_END_HEADER
 
 
-#endif /* __FTHASH_H__ */
+#endif /* FTHASH_H_ */
 
 
 /* END */
