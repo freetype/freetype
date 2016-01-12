@@ -1,5 +1,14 @@
 2016-01-12  Werner Lemberg  <wl@gnu.org>
 
+	Don't use macro names that start with `_[A-Z]' [1/3].
+
+	Such macro names are reserved for both C and C++.
+
+	* src/bdf/bdflib.c: Replace macros of the form `_BDF_XXX' with
+	`BDF_XXX_'.
+
+2016-01-12  Werner Lemberg  <wl@gnu.org>
+
 	Don't use macro names that contain `__' [2/2].
 
 	Such macro names are reserved for both C and C++.

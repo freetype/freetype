@@ -877,30 +877,30 @@
 
   /* Parse flags. */
 
-#define _BDF_START      0x0001U
-#define _BDF_FONT_NAME  0x0002U
-#define _BDF_SIZE       0x0004U
-#define _BDF_FONT_BBX   0x0008U
-#define _BDF_PROPS      0x0010U
-#define _BDF_GLYPHS     0x0020U
-#define _BDF_GLYPH      0x0040U
-#define _BDF_ENCODING   0x0080U
-#define _BDF_SWIDTH     0x0100U
-#define _BDF_DWIDTH     0x0200U
-#define _BDF_BBX        0x0400U
-#define _BDF_BITMAP     0x0800U
+#define BDF_START_      0x0001U
+#define BDF_FONT_NAME_  0x0002U
+#define BDF_SIZE_       0x0004U
+#define BDF_FONT_BBX_   0x0008U
+#define BDF_PROPS_      0x0010U
+#define BDF_GLYPHS_     0x0020U
+#define BDF_GLYPH_      0x0040U
+#define BDF_ENCODING_   0x0080U
+#define BDF_SWIDTH_     0x0100U
+#define BDF_DWIDTH_     0x0200U
+#define BDF_BBX_        0x0400U
+#define BDF_BITMAP_     0x0800U
 
-#define _BDF_SWIDTH_ADJ  0x1000U
+#define BDF_SWIDTH_ADJ_  0x1000U
 
-#define _BDF_GLYPH_BITS ( _BDF_GLYPH    | \
-                          _BDF_ENCODING | \
-                          _BDF_SWIDTH   | \
-                          _BDF_DWIDTH   | \
-                          _BDF_BBX      | \
-                          _BDF_BITMAP   )
+#define BDF_GLYPH_BITS_ ( BDF_GLYPH_    | \
+                          BDF_ENCODING_ | \
+                          BDF_SWIDTH_   | \
+                          BDF_DWIDTH_   | \
+                          BDF_BBX_      | \
+                          BDF_BITMAP_   )
 
-#define _BDF_GLYPH_WIDTH_CHECK   0x40000000UL
-#define _BDF_GLYPH_HEIGHT_CHECK  0x80000000UL
+#define BDF_GLYPH_WIDTH_CHECK_   0x40000000UL
+#define BDF_GLYPH_HEIGHT_CHECK_  0x80000000UL
 
 
   static FT_Error
@@ -1278,7 +1278,7 @@
     }
 
     /* The very first thing expected is the number of glyphs. */
-    if ( !( p->flags & _BDF_GLYPHS ) )
+    if ( !( p->flags & BDF_GLYPHS_ ) )
     {
       if ( _bdf_strncmp( line, "CHARS", 5 ) != 0 )
       {
@@ -1315,7 +1315,7 @@
       if ( FT_NEW_ARRAY( font->glyphs, font->glyphs_size ) )
         goto Exit;
 
-      p->flags |= _BDF_GLYPHS;
+      p->flags |= BDF_GLYPHS_;
 
       goto Exit;
     }
@@ -1323,7 +1323,7 @@
     /* Check for the ENDFONT field. */
     if ( _bdf_strncmp( line, "ENDFONT", 7 ) == 0 )
     {
-      if ( p->flags & _BDF_GLYPH_BITS )
+      if ( p->flags & BDF_GLYPH_BITS_ )
       {
         /* Missing ENDCHAR field. */
         FT_ERROR(( "_bdf_parse_glyphs: " ERRMSG1, lineno, "ENDCHAR" ));
@@ -1337,7 +1337,7 @@
                 sizeof ( bdf_glyph_t ),
                 by_encoding );
 
-      p->flags &= ~_BDF_START;
+      p->flags &= ~BDF_START_;
 
       goto Exit;
     }
@@ -1346,14 +1346,14 @@
     if ( _bdf_strncmp( line, "ENDCHAR", 7 ) == 0 )
     {
       p->glyph_enc = 0;
-      p->flags    &= ~_BDF_GLYPH_BITS;
+      p->flags    &= ~BDF_GLYPH_BITS_;
 
       goto Exit;
     }
 
     /* Check whether a glyph is being scanned but should be */
     /* ignored because it is an unencoded glyph.            */
-    if ( ( p->flags & _BDF_GLYPH )     &&
+    if ( ( p->flags & BDF_GLYPH_ )     &&
          p->glyph_enc            == -1 &&
          p->opts->keep_unencoded == 0  )
       goto Exit;
@@ -1361,7 +1361,7 @@
     /* Check for the STARTCHAR field. */
     if ( _bdf_strncmp( line, "STARTCHAR", 9 ) == 0 )
     {
-      if ( p->flags & _BDF_GLYPH_BITS )
+      if ( p->flags & BDF_GLYPH_BITS_ )
       {
         /* Missing ENDCHAR field. */
         FT_ERROR(( "_bdf_parse_glyphs: " ERRMSG1, lineno, "ENDCHAR" ));
@@ -1393,7 +1393,7 @@
 
       FT_MEM_COPY( p->glyph_name, s, slen + 1 );
 
-      p->flags |= _BDF_GLYPH;
+      p->flags |= BDF_GLYPH_;
 
       FT_TRACE4(( DBGMSG1, lineno, s ));
 
@@ -1403,7 +1403,7 @@
     /* Check for the ENCODING field. */
     if ( _bdf_strncmp( line, "ENCODING", 8 ) == 0 )
     {
-      if ( !( p->flags & _BDF_GLYPH ) )
+      if ( !( p->flags & BDF_GLYPH_ ) )
       {
         /* Missing STARTCHAR field. */
         FT_ERROR(( "_bdf_parse_glyphs: " ERRMSG1, lineno, "STARTCHAR" ));
@@ -1517,9 +1517,9 @@
 
       /* Clear the flags that might be added when width and height are */
       /* checked for consistency.                                      */
-      p->flags &= ~( _BDF_GLYPH_WIDTH_CHECK | _BDF_GLYPH_HEIGHT_CHECK );
+      p->flags &= ~( BDF_GLYPH_WIDTH_CHECK_ | BDF_GLYPH_HEIGHT_CHECK_ );
 
-      p->flags |= _BDF_ENCODING;
+      p->flags |= BDF_ENCODING_;
 
       goto Exit;
     }
@@ -1531,16 +1531,16 @@
       glyph = font->glyphs + ( font->glyphs_used - 1 );
 
     /* Check whether a bitmap is being constructed. */
-    if ( p->flags & _BDF_BITMAP )
+    if ( p->flags & BDF_BITMAP_ )
     {
       /* If there are more rows than are specified in the glyph metrics, */
       /* ignore the remaining lines.                                     */
       if ( p->row >= (unsigned long)glyph->bbx.height )
       {
-        if ( !( p->flags & _BDF_GLYPH_HEIGHT_CHECK ) )
+        if ( !( p->flags & BDF_GLYPH_HEIGHT_CHECK_ ) )
         {
           FT_TRACE2(( "_bdf_parse_glyphs: " ACMSG13, glyph->encoding ));
-          p->flags |= _BDF_GLYPH_HEIGHT_CHECK;
+          p->flags |= BDF_GLYPH_HEIGHT_CHECK_;
           font->modified = 1;
         }
 
@@ -1565,10 +1565,10 @@
       /* If any line has not enough columns,            */
       /* indicate they have been padded with zero bits. */
       if ( i < nibbles                            &&
-           !( p->flags & _BDF_GLYPH_WIDTH_CHECK ) )
+           !( p->flags & BDF_GLYPH_WIDTH_CHECK_ ) )
       {
         FT_TRACE2(( "_bdf_parse_glyphs: " ACMSG16, glyph->encoding ));
-        p->flags       |= _BDF_GLYPH_WIDTH_CHECK;
+        p->flags       |= BDF_GLYPH_WIDTH_CHECK_;
         font->modified  = 1;
       }
 
@@ -1580,10 +1580,10 @@
       /* If any line has extra columns, indicate they have been removed. */
       if ( i == nibbles                           &&
            sbitset( hdigits, line[nibbles] )      &&
-           !( p->flags & _BDF_GLYPH_WIDTH_CHECK ) )
+           !( p->flags & BDF_GLYPH_WIDTH_CHECK_ ) )
       {
         FT_TRACE2(( "_bdf_parse_glyphs: " ACMSG14, glyph->encoding ));
-        p->flags       |= _BDF_GLYPH_WIDTH_CHECK;
+        p->flags       |= BDF_GLYPH_WIDTH_CHECK_;
         font->modified  = 1;
       }
 
@@ -1594,7 +1594,7 @@
     /* Expect the SWIDTH (scalable width) field next. */
     if ( _bdf_strncmp( line, "SWIDTH", 6 ) == 0 )
     {
-      if ( !( p->flags & _BDF_ENCODING ) )
+      if ( !( p->flags & BDF_ENCODING_ ) )
         goto Missing_Encoding;
 
       error = _bdf_list_split( &p->list, (char *)" +", line, linelen );
@@ -1602,7 +1602,7 @@
         goto Exit;
 
       glyph->swidth = (unsigned short)_bdf_atoul( p->list.field[1] );
-      p->flags |= _BDF_SWIDTH;
+      p->flags |= BDF_SWIDTH_;
 
       goto Exit;
     }
@@ -1610,7 +1610,7 @@
     /* Expect the DWIDTH (scalable width) field next. */
     if ( _bdf_strncmp( line, "DWIDTH", 6 ) == 0 )
     {
-      if ( !( p->flags & _BDF_ENCODING ) )
+      if ( !( p->flags & BDF_ENCODING_ ) )
         goto Missing_Encoding;
 
       error = _bdf_list_split( &p->list, (char *)" +", line, linelen );
@@ -1619,7 +1619,7 @@
 
       glyph->dwidth = (unsigned short)_bdf_atoul( p->list.field[1] );
 
-      if ( !( p->flags & _BDF_SWIDTH ) )
+      if ( !( p->flags & BDF_SWIDTH_ ) )
       {
         /* Missing SWIDTH field.  Emit an auto correction message and set */
         /* the scalable width from the device width.                      */
@@ -1631,14 +1631,14 @@
                                      font->resolution_x ) );
       }
 
-      p->flags |= _BDF_DWIDTH;
+      p->flags |= BDF_DWIDTH_;
       goto Exit;
     }
 
     /* Expect the BBX field next. */
     if ( _bdf_strncmp( line, "BBX", 3 ) == 0 )
     {
-      if ( !( p->flags & _BDF_ENCODING ) )
+      if ( !( p->flags & BDF_ENCODING_ ) )
         goto Missing_Encoding;
 
       error = _bdf_list_split( &p->list, (char *)" +", line, linelen );
@@ -1665,7 +1665,7 @@
       p->minlb    = (short)FT_MIN( glyph->bbx.x_offset, p->minlb );
       p->maxlb    = (short)FT_MAX( glyph->bbx.x_offset, p->maxlb );
 
-      if ( !( p->flags & _BDF_DWIDTH ) )
+      if ( !( p->flags & BDF_DWIDTH_ ) )
       {
         /* Missing DWIDTH field.  Emit an auto correction message and set */
         /* the device width to the glyph width.                           */
@@ -1694,12 +1694,12 @@
           else
             _bdf_set_glyph_modified( font->nmod, glyph->encoding );
 
-          p->flags       |= _BDF_SWIDTH_ADJ;
+          p->flags       |= BDF_SWIDTH_ADJ_;
           font->modified  = 1;
         }
       }
 
-      p->flags |= _BDF_BBX;
+      p->flags |= BDF_BBX_;
       goto Exit;
     }
 
@@ -1709,7 +1709,7 @@
       unsigned long  bitmap_size;
 
 
-      if ( !( p->flags & _BDF_BBX ) )
+      if ( !( p->flags & BDF_BBX_ ) )
       {
         /* Missing BBX field. */
         FT_ERROR(( "_bdf_parse_glyphs: " ERRMSG1, lineno, "BBX" ));
@@ -1734,7 +1734,7 @@
         goto Exit;
 
       p->row    = 0;
-      p->flags |= _BDF_BITMAP;
+      p->flags |= BDF_BITMAP_;
 
       goto Exit;
     }
@@ -1749,7 +1749,7 @@
     error = FT_THROW( Missing_Encoding_Field );
 
   Exit:
-    if ( error && ( p->flags & _BDF_GLYPH ) )
+    if ( error && ( p->flags & BDF_GLYPH_ ) )
       FT_FREE( p->glyph_name );
 
     return error;
@@ -1813,7 +1813,7 @@
         p->font->modified = 1;
       }
 
-      p->flags &= ~_BDF_PROPS;
+      p->flags &= ~BDF_PROPS_;
       *next     = _bdf_parse_glyphs;
 
       goto Exit;
@@ -1911,7 +1911,7 @@
       goto Exit;
     }
 
-    if ( !( p->flags & _BDF_START ) )
+    if ( !( p->flags & BDF_START_ ) )
     {
       memory = p->memory;
 
@@ -1923,7 +1923,7 @@
         goto Exit;
       }
 
-      p->flags = _BDF_START;
+      p->flags = BDF_START_;
       font = p->font = 0;
 
       if ( FT_NEW( font ) )
@@ -1965,7 +1965,7 @@
     /* Check for the start of the properties. */
     if ( _bdf_strncmp( line, "STARTPROPERTIES", 15 ) == 0 )
     {
-      if ( !( p->flags & _BDF_FONT_BBX ) )
+      if ( !( p->flags & BDF_FONT_BBX_ ) )
       {
         /* Missing the FONTBOUNDINGBOX field. */
         FT_ERROR(( "_bdf_parse_start: " ERRMSG1, lineno, "FONTBOUNDINGBOX" ));
@@ -1985,7 +1985,7 @@
         goto Exit;
       }
 
-      p->flags |= _BDF_PROPS;
+      p->flags |= BDF_PROPS_;
       *next     = _bdf_parse_properties;
 
       goto Exit;
@@ -1994,7 +1994,7 @@
     /* Check for the FONTBOUNDINGBOX field. */
     if ( _bdf_strncmp( line, "FONTBOUNDINGBOX", 15 ) == 0 )
     {
-      if ( !( p->flags & _BDF_SIZE ) )
+      if ( !( p->flags & BDF_SIZE_ ) )
       {
         /* Missing the SIZE field. */
         FT_ERROR(( "_bdf_parse_start: " ERRMSG1, lineno, "SIZE" ));
@@ -2017,7 +2017,7 @@
 
       p->font->bbx.descent = (short)( -p->font->bbx.y_offset );
 
-      p->flags |= _BDF_FONT_BBX;
+      p->flags |= BDF_FONT_BBX_;
 
       goto Exit;
     }
@@ -2052,7 +2052,7 @@
       if ( error )
         goto Exit;
 
-      p->flags |= _BDF_FONT_NAME;
+      p->flags |= BDF_FONT_NAME_;
 
       goto Exit;
     }
@@ -2060,7 +2060,7 @@
     /* Check for the SIZE field. */
     if ( _bdf_strncmp( line, "SIZE", 4 ) == 0 )
     {
-      if ( !( p->flags & _BDF_FONT_NAME ) )
+      if ( !( p->flags & BDF_FONT_NAME_ ) )
       {
         /* Missing the FONT field. */
         FT_ERROR(( "_bdf_parse_start: " ERRMSG1, lineno, "FONT" ));
@@ -2100,7 +2100,7 @@
       else
         p->font->bpp = 1;
 
-      p->flags |= _BDF_SIZE;
+      p->flags |= BDF_SIZE_;
 
       goto Exit;
     }
@@ -2111,7 +2111,7 @@
       char  nbuf[128];
 
 
-      if ( !( p->flags & _BDF_FONT_BBX ) )
+      if ( !( p->flags & BDF_FONT_BBX_ ) )
       {
         /* Missing the FONTBOUNDINGBOX field. */
         FT_ERROR(( "_bdf_parse_start: " ERRMSG1, lineno, "FONTBOUNDINGBOX" ));
@@ -2252,15 +2252,15 @@
           p->font->bbx.height = (unsigned short)( p->maxas + p->maxds );
         }
 
-        if ( p->flags & _BDF_SWIDTH_ADJ )
+        if ( p->flags & BDF_SWIDTH_ADJ_ )
           FT_TRACE2(( "bdf_load_font: " ACMSG8 ));
       }
     }
 
-    if ( p->flags & _BDF_START )
+    if ( p->flags & BDF_START_ )
     {
       /* The ENDFONT field was never reached or did not exist. */
-      if ( !( p->flags & _BDF_GLYPHS ) )
+      if ( !( p->flags & BDF_GLYPHS_ ) )
       {
         /* Error happened while parsing header. */
         FT_ERROR(( "bdf_load_font: " ERRMSG2, lineno ));
