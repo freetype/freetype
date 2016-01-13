@@ -5,7 +5,7 @@
 /*    FreeType API for checking patented TrueType bytecode instructions    */
 /*    (body).                                                              */
 /*                                                                         */
-/*  Copyright 2007-2015 by                                                 */
+/*  Copyright 2007-2016 by                                                 */
 /*  David Turner.                                                          */
 /*                                                                         */
 /*  This file is part of the FreeType project, and may only be used,       */
