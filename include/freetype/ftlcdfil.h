@@ -248,10 +248,10 @@ FT_BEGIN_HEADER
    *   FT_Library_SetLcdFilterWeights
    *
    * @description:
-   *   Use this function to override the filter weights selected by
-   *   @FT_Library_SetLcdFilter.  By default, FreeType uses the quintuple
-   *   (0x00, 0x55, 0x56, 0x55, 0x00) for FT_LCD_FILTER_LIGHT, and (0x08,
-   *   0x4D, 0x56, 0x4D, 0x08) for FT_LCD_FILTER_DEFAULT.
+   *   Use this function to override default or light filter weights
+   *   selected by @FT_Library_SetLcdFilter.  By default, FreeType uses
+   *   the quintuple (0x00, 0x55, 0x56, 0x55, 0x00) for FT_LCD_FILTER_LIGHT,
+   *   and (0x08, 0x4D, 0x56, 0x4D, 0x08) for FT_LCD_FILTER_DEFAULT.
    *
    * @input:
    *   library ::
@@ -272,7 +272,7 @@ FT_BEGIN_HEADER
    *   default builds of FreeType.
    *
    *   This function must be called after @FT_Library_SetLcdFilter to have
-   *   any effect.
+   *   any effect on default or light filter.
    *
    * @since:
    *   2.4.0
