@@ -250,8 +250,8 @@ FT_BEGIN_HEADER
    *   FT_Library_SetLcdFilterWeights
    *
    * @description:
-   *   Use this function to override default or light filter weights
-   *   selected by @FT_Library_SetLcdFilter.
+   *   This function can be used to enable LCD filter with custom weights,
+   *   instead of using presets in @FT_Library_SetLcdFilter.
    *
    * @input:
    *   library ::
@@ -270,9 +270,6 @@ FT_BEGIN_HEADER
    *   configuration macro FT_CONFIG_OPTION_SUBPIXEL_RENDERING is not
    *   defined in your build of the library, which should correspond to all
    *   default builds of FreeType.
-   *
-   *   This function must be called after @FT_Library_SetLcdFilter to have
-   *   any effect on default or light filter.
    *
    * @since:
    *   2.4.0

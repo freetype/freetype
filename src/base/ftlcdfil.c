@@ -296,6 +296,8 @@
       return FT_THROW( Invalid_Argument );
 
     ft_memcpy( library->lcd_weights, weights, 5 );
+    library->lcd_filter_func = _ft_lcd_filter_fir;
+    library->lcd_extra       = 2;
 
     return FT_Err_Ok;
   }
@@ -322,25 +324,9 @@
       break;
 
     case FT_LCD_FILTER_DEFAULT:
-#if defined( FT_FORCE_LEGACY_LCD_FILTER )
-
-      library->lcd_filter_func = _ft_lcd_filter_legacy;
-      library->lcd_extra       = 0;
-
-#elif defined( FT_FORCE_LIGHT_LCD_FILTER )
-
-      ft_memcpy( library->lcd_weights, light_filter, 5 );
-      library->lcd_filter_func = _ft_lcd_filter_fir;
-      library->lcd_extra       = 2;
-
-#else
-
       ft_memcpy( library->lcd_weights, default_filter, 5 );
       library->lcd_filter_func = _ft_lcd_filter_fir;
       library->lcd_extra       = 2;
-
-#endif
-
       break;
 
     case FT_LCD_FILTER_LIGHT:

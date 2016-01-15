@@ -1,3 +1,13 @@
+2016-01-14  Alexei Podtelezhnikov  <apodtele@gmail.com>
+
+	[base] Empower `FT_Library_SetLcdFilterWeights'.
+
+	* src/base/ftlcdfil.c (FT_Library_SetLcdFilterWeights): Enable filter
+	in addition to setting weights.
+	(FT_Library_SetLcdFilter): Clean out FT_FORCE_LIGHT_LCD_FILTER and
+	FT_FORCE_LEGACY_LCD_FILTER.
+	* include/freetype/ftlcdfil.h: Documentation update.
+
 2016-01-12  Werner Lemberg  <wl@gnu.org>
 
 	Don't use macro names that start with `_[A-Z]' [3/3].
