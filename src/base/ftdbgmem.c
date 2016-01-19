@@ -367,7 +367,8 @@
         {
           printf(
             "leaked memory block at address %p, size %8ld in (%s:%ld)\n",
-            node->address, node->size,
+            (void*)node->address,
+            node->size,
             FT_FILENAME( node->source->file_name ),
             node->source->line_no );
 

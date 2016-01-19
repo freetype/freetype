@@ -1160,9 +1160,11 @@
         glyphOffset.l = FT_NEXT_LONG( p );
         break;
 
+#if 0
       default:
         GXV_SET_ERR_IF_PARANOID( FT_INVALID_FORMAT );
         goto Exit;
+#endif
       }
 
       if ( NULL != gxvalid->statetable.entry_validate_func )
@@ -1174,7 +1176,9 @@
                                                  gxvalid );
     }
 
+#if 0
   Exit:
+#endif
     *length_p = (FT_UShort)( p - table );
 
     GXV_EXIT;

@@ -337,7 +337,8 @@
         if ( type1->subrs_hash )
         {
           /* convert subr index to array index */
-          size_t*  val = ft_hash_num_lookup( idx, type1->subrs_hash );
+          size_t*  val = ft_hash_num_lookup( (FT_Int)idx,
+                                             type1->subrs_hash );
 
 
           if ( val )

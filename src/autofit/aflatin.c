@@ -95,7 +95,7 @@
       const char*  p;
 
 #ifdef FT_DEBUG_LEVEL_TRACE
-      FT_ULong  ch;
+      FT_ULong  ch = 0;
 #endif
 
       p          = script_class->standard_charstring;

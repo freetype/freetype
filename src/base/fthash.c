@@ -64,7 +64,7 @@
   static FT_ULong
   hash_num_lookup( FT_Hashkey*  key )
   {
-    FT_ULong  num = key->num;
+    FT_ULong  num = (FT_ULong)key->num;
     FT_ULong  res;
 
 

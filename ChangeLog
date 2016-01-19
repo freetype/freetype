@@ -1,3 +1,27 @@
+2016-01-19  Werner Lemberg  <wl@gnu.org>
+
+	Various minor clang fixes.
+
+	* src/autofit/afcjk.c (af_cjk_metrics_init_widths),
+	src/autofit/aflatin.c (af_latin_metrics_init_widths): Initialize
+	`ch'.
+
+	* src/base/ftcalc.c (FT_MulFix) [FT_LONG64]: Add cast.
+
+	* src/base/ftdbgmem.c (ft_mem_table_destroy): Add cast.
+
+	* src/base/fthash.c (hash_num_lookup): Add cast.
+
+	* src/base/fttrigon.c (ft_trig_downscale) [FT_LONG64]: Fix cast.
+
+	* src/gxvalid/gxvcommn.c (gxv_EntryTable_validate): Comment out
+	redundant code.
+
+	* src/type1/t1driver.c (t1_get_ps_font_value) <PS_DICT_SUBR>: Add
+	cast.
+
+	* src/type1/t1load.c (parse_subrs): Fix type of `count'.
+
 2016-01-19  Derek B. Noonburg  <derekn@glyphandcog.com>
 
 	[truetype] Add another tricky font.
