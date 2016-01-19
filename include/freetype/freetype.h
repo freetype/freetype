@@ -141,7 +141,6 @@ FT_BEGIN_HEADER
   /*    FT_FACE_FLAG_GLYPH_NAMES                                           */
   /*    FT_FACE_FLAG_EXTERNAL_STREAM                                       */
   /*    FT_FACE_FLAG_HINTER                                                */
-  /*    FT_FACE_FLAG_TRICKY                                                */
   /*                                                                       */
   /*    FT_HAS_HORIZONTAL                                                  */
   /*    FT_HAS_VERTICAL                                                    */

@@ -246,7 +246,7 @@
   tt_check_trickyness_sfnt_ids( TT_Face  face )
   {
 #define TRICK_SFNT_IDS_PER_FACE   3
-#define TRICK_SFNT_IDS_NUM_FACES  17
+#define TRICK_SFNT_IDS_NUM_FACES  18
 
     static const tt_sfnt_id_rec sfnt_id[TRICK_SFNT_IDS_NUM_FACES]
                                        [TRICK_SFNT_IDS_PER_FACE] = {
@@ -268,6 +268,11 @@
       { /* DFKaiShu */
         { 0x11E5EAD4UL, 0x00000350UL }, /* cvt  */
         { 0x5A30CA3BUL, 0x00009063UL }, /* fpgm */
+        { 0x13A42602UL, 0x0000007EUL }  /* prep */
+      },
+      { /* DFKaiShu2 */
+        { 0x11E5EAD4UL, 0x00000350UL }, /* cvt  */
+        { 0xA6E78C01UL, 0x00008998UL }, /* fpgm */
         { 0x13A42602UL, 0x0000007EUL }  /* prep */
       },
       { /* HuaTianKaiTi */

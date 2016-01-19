@@ -1,3 +1,10 @@
+2016-01-19  Derek B. Noonburg  <derekn@glyphandcog.com>
+
+	[truetype] Add another tricky font.
+
+	* src/truetype/ttobjs.c (TRICK_SFNT_IDS_NUM_FACES): Increase.
+	(sfnt_id): Add variant of `DFKaiShu'.
+
 2016-01-14  Alexei Podtelezhnikov  <apodtele@gmail.com>
 
 	[base] Empower `FT_Library_SetLcdFilterWeights'.
