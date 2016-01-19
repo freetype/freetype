@@ -241,22 +241,22 @@
       else
       {
         /* get glyphs not directly addressable by cmap */
-        af_shaper_get_coverage( globals, style_class, gstyles );
+        af_shaper_get_coverage( globals, style_class, gstyles, 0 );
       }
     }
 
-    /* handle the default OpenType features of the default script ... */
-    af_shaper_get_coverage( globals, AF_STYLE_CLASSES_GET[dflt], gstyles );
-
-    /* ... and the remaining default OpenType features */
+    /* handle the remaining default OpenType features ... */
     for ( ss = 0; AF_STYLE_CLASSES_GET[ss]; ss++ )
     {
       AF_StyleClass  style_class = AF_STYLE_CLASSES_GET[ss];
 
 
-      if ( ss != dflt && style_class->coverage == AF_COVERAGE_DEFAULT )
-        af_shaper_get_coverage( globals, style_class, gstyles );
+      if ( style_class->coverage == AF_COVERAGE_DEFAULT )
+        af_shaper_get_coverage( globals, style_class, gstyles, 0 );
     }
+
+    /* ... and finally the default OpenType features of the default script */
+    af_shaper_get_coverage( globals, AF_STYLE_CLASSES_GET[dflt], gstyles, 1 );
 
     /* mark ASCII digits */
     for ( i = 0x30; i <= 0x39; i++ )

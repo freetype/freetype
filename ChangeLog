@@ -1,5 +1,42 @@
 2016-01-19  Werner Lemberg  <wl@gnu.org>
 
+	[autofit] Fix handling of default script.
+
+	Patch taken from ttfautohint, commit
+	071ae2c00e0d67f9d19418f4fade1c23d27dc185.
+
+	There were two bugs.
+
+	  - We now use non-standard script tags like `khms' for special
+	    purposes.  However, HarfBuzz maps such tags to `DFLT', and
+	    without this commit the associated lookups were incorrectly
+	    assigned to the non-standard tags.
+
+	  - Let's assume we have a Bengali font, and the font's `DFLT'
+	    script tag handles the necessary lookups for Bengali, too.
+	    Without this commit, the `DFLT' lookups were assigned to
+	    ttfautohint's default script (usually `latn') before the
+	    standard lookups for Bengali were handled.
+
+	    We now have the following order while searching for covered
+	    glyph indices.
+
+	      special features of scripts (e.g. `sups' for Cyrillic)
+	      Unicode mappings of scripts
+	      remaining features of scripts (especially important for Indic
+	        scripts)
+	      default features of default script
+
+	* src/autofit/afshaper.c, src/autofit/afshaper.h
+	(af_shaper_get_coverage): Add boolean parameter to indicate default
+	script.
+	Update all callers.
+
+	* src/autofit/afglobal.c (af_face_globals_compute_style_coverage):
+	Fix search order for coverages.
+
+2016-01-19  Werner Lemberg  <wl@gnu.org>
+
 	Various minor clang fixes.
 
 	* src/autofit/afcjk.c (af_cjk_metrics_init_widths),

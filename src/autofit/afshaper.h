@@ -38,7 +38,8 @@ FT_BEGIN_HEADER
   FT_Error
   af_shaper_get_coverage( AF_FaceGlobals  globals,
                           AF_StyleClass   style_class,
-                          FT_UShort*      gstyles );
+                          FT_UShort*      gstyles,
+                          FT_Bool         default_script );
 
 
   void*
