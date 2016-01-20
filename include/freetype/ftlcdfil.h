@@ -57,7 +57,8 @@ FT_BEGIN_HEADER
    *   Note that no filter is active by default, and that this function is
    *   *not* implemented in default builds of the library.  You need to
    *   #define FT_CONFIG_OPTION_SUBPIXEL_RENDERING in your `ftoption.h' file
-   *   in order to activate it.
+   *   in order to activate it and explicitly call @FT_Library_SetLcdFilter
+   *   to enable it.
    *
    *   A filter should have two properties:
    *
@@ -101,6 +102,18 @@ FT_BEGIN_HEADER
    *
    *   - [0x08 0x4D 0x56 0x4D 0x08] is beveled, normalized and, almost
    *     balanced.
+   *
+   *   The filter affects glyph bitmaps rendered through @FT_Render_Glyph,
+   *   @FT_Load_Glyph, and @FT_Load_Char.  It does _not_ affect the output
+   *   of @FT_Outline_Render and @FT_Outline_Get_Bitmap.
+   *
+   *   If this feature is activated, the dimensions of LCD glyph bitmaps are
+   *   either larger or taller than the dimensions of the corresponding
+   *   outline with regards to the pixel grid.  For example, for
+   *   @FT_RENDER_MODE_LCD, the filter adds 3~subpixels to the left, and
+   *   3~subpixels to the right.  The bitmap offset values are adjusted
+   *   accordingly, so clients shouldn't need to modify their layout and
+   *   glyph positioning code when enabling the filter.
    *
    *   It is important to understand that linear alpha blending and gamma
    *   correction is critical for correctly rendering glyphs onto surfaces
@@ -219,22 +232,6 @@ FT_BEGIN_HEADER
    *   configuration macro FT_CONFIG_OPTION_SUBPIXEL_RENDERING is not
    *   defined in your build of the library, which should correspond to all
    *   default builds of FreeType.
-   *
-   *   The filter affects glyph bitmaps rendered through @FT_Render_Glyph,
-   *   @FT_Outline_Get_Bitmap, @FT_Load_Glyph, and @FT_Load_Char.
-   *
-   *   It does _not_ affect the output of @FT_Outline_Render and
-   *   @FT_Outline_Get_Bitmap.
-   *
-   *   If this feature is activated, the dimensions of LCD glyph bitmaps are
-   *   either larger or taller than the dimensions of the corresponding
-   *   outline with regards to the pixel grid.  For example, for
-   *   @FT_RENDER_MODE_LCD, the filter adds up to 3~pixels to the left, and
-   *   up to 3~pixels to the right.
-   *
-   *   The bitmap offset values are adjusted correctly, so clients shouldn't
-   *   need to modify their layout and glyph positioning code when enabling
-   *   the filter.
    *
    * @since:
    *   2.3.0
