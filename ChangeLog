@@ -1,5 +1,14 @@
 2016-01-20  Werner Lemberg  <wl@gnu.org>
 
+	[autofix] Complete last autofit commit.
+
+	Problem reported by Kostya Serebryany <kcc@google.com>.
+
+	* src/autofit/afshaper.c (af_shaper_get_coverage)
+	[!FT_CONFIG_OPTION_USE_HARFBUZZ]: Update signature.
+
+2016-01-20  Werner Lemberg  <wl@gnu.org>
+
 	Still handle `__FTERRORS_H__'.
 
 	We need this for backwards compatibility.

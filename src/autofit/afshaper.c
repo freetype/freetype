@@ -576,11 +576,13 @@
   FT_Error
   af_shaper_get_coverage( AF_FaceGlobals  globals,
                           AF_StyleClass   style_class,
-                          FT_UShort*      gstyles )
+                          FT_UShort*      gstyles,
+                          FT_Bool         default_script )
   {
     FT_UNUSED( globals );
     FT_UNUSED( style_class );
     FT_UNUSED( gstyles );
+    FT_UNUSED( default_script );
 
     return FT_Err_Ok;
   }
