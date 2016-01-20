@@ -99,8 +99,18 @@
 
   /* */
 
-#ifndef FTERRORS_H_
+  /* In previous FreeType versions we used `__FTERRORS_H__'.  However, */
+  /* using two successive underscores in a non-system symbol name      */
+  /* violates the C (and C++) standard, so it was changed to the       */
+  /* current form.  In spite of this, we have to make                  */
+  /*                                                                   */
+  /*   #undefine __FTERRORS_H__                                        */
+  /*                                                                   */
+  /* work for backwards compatibility.                                 */
+  /*                                                                   */
+#if !( defined( FTERRORS_H_ ) && defined ( __FTERRORS_H__ ) )
 #define FTERRORS_H_
+#define __FTERRORS_H__
 
 
   /* include module base error codes */
@@ -210,7 +220,7 @@
 #undef FT_ERR_PREFIX
 #endif
 
-#endif /* FTERRORS_H_ */
+#endif /* !(FTERRORS_H_ && __FTERRORS_H__) */
 
 
 /* END */

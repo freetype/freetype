@@ -1,3 +1,15 @@
+2016-01-20  Werner Lemberg  <wl@gnu.org>
+
+	Still handle `__FTERRORS_H__'.
+
+	We need this for backwards compatibility.
+
+	Problem reported by John Emmas <johne53@tiscali.co.uk>.
+
+	* include/freetype/fterrors.h: Fix inclusion guard so that
+	undefining either `FTERRORS_H_' or `__FTERRORS_H__' works as
+	expected.
+
 2016-01-19  Werner Lemberg  <wl@gnu.org>
 
 	[autofit] Fix handling of default script.
