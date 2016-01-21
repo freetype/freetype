@@ -1,3 +1,9 @@
+2016-01-21  Werner Lemberg  <wl@gnu.org>
+
+	[gxvalid] Remove commented out code.
+
+	* src/gxvalid/gxvcommn.c (gxv_EntryTable_validate): Do it.
+
 2016-01-20  Werner Lemberg  <wl@gnu.org>
 
 	[autofix] Complete last autofit commit.
