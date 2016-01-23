@@ -1,3 +1,12 @@
+2016-01-22  Alexei Podtelezhnikov  <apodtele@gmail.com>
+
+	Better access to 64-bit integers for C99 compilers.
+
+	* include/freetype/config/ftconfig.h [FT_LONG64]: Use
+	__STDC_VERSION__ to define 64-bit integers.
+	* builds/unix/ftconfig.in [FT_LONG64]: Ditto.
+	* builds/vms/ftconfig.h [FT_LONG64]: Ditto.
+
 2016-01-21  Werner Lemberg  <wl@gnu.org>
 
 	[gxvalid] Remove commented out code.
