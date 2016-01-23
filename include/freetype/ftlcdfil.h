@@ -108,8 +108,8 @@ FT_BEGIN_HEADER
    *   of @FT_Outline_Render and @FT_Outline_Get_Bitmap.
    *
    *   If this feature is activated, the dimensions of LCD glyph bitmaps are
-   *   either larger or taller than the dimensions of the corresponding
-   *   outline with regards to the pixel grid.  For example, for
+   *   either wider or taller than the dimensions of the corresponding
+   *   outline with regard to the pixel grid.  For example, for
    *   @FT_RENDER_MODE_LCD, the filter adds 3~subpixels to the left, and
    *   3~subpixels to the right.  The bitmap offset values are adjusted
    *   accordingly, so clients shouldn't need to modify their layout and
