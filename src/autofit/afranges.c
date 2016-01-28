@@ -196,6 +196,24 @@
   };
 
 
+  const AF_Script_UniRangeRec  af_knda_uniranges[] =
+  {
+    AF_UNIRANGE_REC(  0x0C80UL,  0x0CFFUL ),  /* Kannada */
+    AF_UNIRANGE_REC(       0UL,       0UL )
+  };
+
+  const AF_Script_UniRangeRec  af_knda_nonbase_uniranges[] =
+  {
+    AF_UNIRANGE_REC(  0x0C81UL,  0x0C81UL ),
+    AF_UNIRANGE_REC(  0x0CBCUL,  0x0CBCUL ),
+    AF_UNIRANGE_REC(  0x0CBFUL,  0x0CBFUL ),
+    AF_UNIRANGE_REC(  0x0CC6UL,  0x0CC6UL ),
+    AF_UNIRANGE_REC(  0x0CCCUL,  0x0CCDUL ),
+    AF_UNIRANGE_REC(  0x0CE2UL,  0x0CE3UL ),
+    AF_UNIRANGE_REC(       0UL,       0UL )
+  };
+
+
   const AF_Script_UniRangeRec  af_khmr_uniranges[] =
   {
     AF_UNIRANGE_REC(  0x1780UL,  0x17FFUL ),  /* Khmer */
@@ -436,24 +454,6 @@
     AF_UNIRANGE_REC(  0x0A41UL,  0x0A51UL ),
     AF_UNIRANGE_REC(  0x0A70UL,  0x0A71UL ),
     AF_UNIRANGE_REC(  0x0A75UL,  0x0A75UL ),
-    AF_UNIRANGE_REC(       0UL,       0UL )
-  };
-
-
-  const AF_Script_UniRangeRec  af_knda_uniranges[] =
-  {
-    AF_UNIRANGE_REC(  0x0C80UL,  0x0CFFUL ),  /* Kannada */
-    AF_UNIRANGE_REC(       0UL,       0UL )
-  };
-
-  const AF_Script_UniRangeRec  af_knda_nonbase_uniranges[] =
-  {
-    AF_UNIRANGE_REC(  0x0C81UL,  0x0C81UL ),
-    AF_UNIRANGE_REC(  0x0CBCUL,  0x0CBCUL ),
-    AF_UNIRANGE_REC(  0x0CBFUL,  0x0CBFUL ),
-    AF_UNIRANGE_REC(  0x0CC6UL,  0x0CC6UL ),
-    AF_UNIRANGE_REC(  0x0CCCUL,  0x0CCDUL ),
-    AF_UNIRANGE_REC(  0x0CE2UL,  0x0CE3UL ),
     AF_UNIRANGE_REC(       0UL,       0UL )
   };
 

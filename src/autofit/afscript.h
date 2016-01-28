@@ -67,6 +67,12 @@
           HINTING_BOTTOM_TO_TOP,
           "\xD7\x9D" ) /* ם */
 
+  SCRIPT( knda, KNDA,
+          "Kannada",
+          HB_SCRIPT_KANNADA,
+          HINTING_BOTTOM_TO_TOP,
+          "\xE0\xB3\xA6 \xE0\xB2\xAC" ) /* ೦ ಬ */
+
   /* only digit zero has a simple shape in the Khmer script */
   SCRIPT( khmr, KHMR,
           "Khmer",
@@ -141,12 +147,6 @@
   SCRIPT( guru, GURU,
           "Gurmukhi",
           HB_SCRIPT_GURMUKHI,
-          HINTING_BOTTOM_TO_TOP,
-          "o" ) /* XXX */
-
-  SCRIPT( knda, KNDA,
-          "Kannada",
-          HB_SCRIPT_KANNADA,
           HINTING_BOTTOM_TO_TOP,
           "o" ) /* XXX */
 
