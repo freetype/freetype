@@ -613,12 +613,7 @@ FT_BEGIN_HEADER
    *       The library doesn't implement any kind of bytecode interpreter.
    *
    *     FT_TRUETYPE_ENGINE_TYPE_UNPATENTED ::
-   *       The library implements a bytecode interpreter that doesn't
-   *       support the patented operations of the TrueType virtual machine.
-   *
-   *       Its main use is to load certain Asian fonts that position and
-   *       scale glyph components with bytecode instructions.  It produces
-   *       bad output for most other fonts.
+   *       Deprecated and removed.
    *
    *     FT_TRUETYPE_ENGINE_TYPE_PATENTED ::
    *       The library implements a bytecode interpreter that covers

@@ -32,10 +32,6 @@
 #include "ttinterp.h"
 #endif
 
-#ifdef TT_CONFIG_OPTION_UNPATENTED_HINTING
-#include FT_TRUETYPE_UNPATENTED_H
-#endif
-
 #ifdef TT_CONFIG_OPTION_GX_VAR_SUPPORT
 #include "ttgxvar.h"
 #endif
@@ -680,29 +676,6 @@
     }
 
 #endif /* TT_CONFIG_OPTION_GX_VAR_SUPPORT */
-
-#if defined( TT_CONFIG_OPTION_UNPATENTED_HINTING    ) && \
-    !defined( TT_CONFIG_OPTION_BYTECODE_INTERPRETER )
-
-    {
-      FT_Bool  unpatented_hinting;
-      int      i;
-
-
-      /* Determine whether unpatented hinting is to be used for this face. */
-      unpatented_hinting = FT_BOOL
-        ( library->debug_hooks[FT_DEBUG_HOOK_UNPATENTED_HINTING] != NULL );
-
-      for ( i = 0; i < num_params && !face->unpatented_hinting; i++ )
-        if ( params[i].tag == FT_PARAM_TAG_UNPATENTED_HINTING )
-          unpatented_hinting = TRUE;
-
-      if ( !unpatented_hinting )
-        ttface->internal->ignore_unpatented_hinter = TRUE;
-    }
-
-#endif /* TT_CONFIG_OPTION_UNPATENTED_HINTING &&
-          !TT_CONFIG_OPTION_BYTECODE_INTERPRETER */
 
     /* initialize standard glyph loading routines */
     TT_Init_Glyph_Loading( face );

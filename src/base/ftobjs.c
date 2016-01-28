@@ -688,7 +688,6 @@
         /* both `fpgm' and `prep' tables are missing                 */
         if ( ( mode == FT_RENDER_MODE_LIGHT                   &&
                !FT_DRIVER_HINTS_LIGHTLY( driver ) )             ||
-             face->internal->ignore_unpatented_hinter           ||
              ( FT_IS_SFNT( face )                             &&
                ttface->num_locations                          &&
                ttface->max_profile.maxSizeOfInstructions == 0 &&

@@ -72,10 +72,6 @@ FT_BEGIN_HEADER
     FT_UnitVector  projVector;
     FT_UnitVector  freeVector;
 
-#ifdef TT_CONFIG_OPTION_UNPATENTED_HINTING
-    FT_Bool        both_x_axis;
-#endif
-
     FT_Long        loop;
     FT_F26Dot6     minimum_distance;
     FT_Int         round_state;

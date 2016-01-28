@@ -1,5 +1,31 @@
 2016-01-28  Nikolaus Waxweiler  <madigens@gmail.com>
 
+	Remove unpatented hinter (3/3).
+
+	* include/freetype/config/ftoption.h
+	(TT_CONFIG_OPTION_UNPATENTED_HINTING): Remove.
+
+	* include/freetype/internal/ftobjs.h (FT_Face_InternalRec): Remove
+	`ignore_unpatented_hinter' field.
+	Update users.
+	(FT_DEBUG_HOOK_UNPATENTED_HINTING): Remove.
+	Update users.
+
+	* include/freetype/internal/tttypes.h (TT_FaceRec): Remove
+	`unpatented_hinting' field.
+	Update users.
+
+	* src/base/ftpatent.c (_tt_check_patents_in_range,
+	_tt_check_patents_in_table, _tt_face_check_patents): Remove.
+	(FT_Face_CheckTrueTypePatents, FT_Face_SetUnpatentedHinting):
+	Replace code with dummies.
+
+	* src/truetype/ttobjs.c (tt_face_init): Remove now defunct code. 
+	* src/truetype/ttobjs.h (TT_GraphicsState): Remove `both_x_axis'
+	field.
+
+2016-01-28  Nikolaus Waxweiler  <madigens@gmail.com>
+
 	Remove unpatented hinter (2/3).
 
 	* devel/ftoption.h (TT_CONFIG_OPTION_UNPATENTED_HINTING): Remove.

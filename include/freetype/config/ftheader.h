@@ -753,8 +753,7 @@
    *   FT_UNPATENTED_HINTING_H
    *
    * @description:
-   *   A macro used in #include statements to name the file containing the
-   *   FreeType~2 API which performs color filtering for subpixel rendering.
+   *   Deprecated.
    */
 #define FT_UNPATENTED_HINTING_H  <freetype/ttunpat.h>
 
@@ -766,7 +765,7 @@
    *
    * @description:
    *   A macro used in #include statements to name the file containing the
-   *   FreeType~2 API which performs color filtering for subpixel rendering.
+   *   FreeType~2 API which performs incremental glyph loading.
    */
 #define FT_INCREMENTAL_H  <freetype/ftincrem.h>
 

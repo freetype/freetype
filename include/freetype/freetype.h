@@ -4217,20 +4217,13 @@ FT_BEGIN_HEADER
   /*    FT_Face_CheckTrueTypePatents                                       */
   /*                                                                       */
   /* <Description>                                                         */
-  /*    Parse all bytecode instructions of a TrueType font file to check   */
-  /*    whether any of the patented opcodes are used.  This is only useful */
-  /*    if you want to be able to use the unpatented hinter with           */
-  /*    fonts that do *not* use these opcodes.                             */
-  /*                                                                       */
-  /*    Note that this function parses *all* glyph instructions in the     */
-  /*    font file, which may be slow.                                      */
+  /*    Deprecated, does nothing.                                          */
   /*                                                                       */
   /* <Input>                                                               */
   /*    face :: A face handle.                                             */
   /*                                                                       */
   /* <Return>                                                              */
-  /*    1~if this is a TrueType font that uses one of the patented         */
-  /*    opcodes, 0~otherwise.                                              */
+  /*    Always returns false.                                              */
   /*                                                                       */
   /* <Note>                                                                */
   /*    Since May 2010, TrueType hinting is no longer patented.            */
@@ -4248,9 +4241,7 @@ FT_BEGIN_HEADER
   /*    FT_Face_SetUnpatentedHinting                                       */
   /*                                                                       */
   /* <Description>                                                         */
-  /*    Enable or disable the unpatented hinter for a given face.          */
-  /*    Only enable it if you have determined that the face doesn't        */
-  /*    use any patented opcodes (see @FT_Face_CheckTrueTypePatents).      */
+  /*    Deprecated, does nothing.                                          */
   /*                                                                       */
   /* <Input>                                                               */
   /*    face  :: A face handle.                                            */
@@ -4258,9 +4249,7 @@ FT_BEGIN_HEADER
   /*    value :: New boolean setting.                                      */
   /*                                                                       */
   /* <Return>                                                              */
-  /*    The old setting value.  This will always be false if this is not   */
-  /*    an SFNT font, or if the unpatented hinter is not compiled in this  */
-  /*    instance of the library.                                           */
+  /*    Always returns false.                                              */
   /*                                                                       */
   /* <Note>                                                                */
   /*    Since May 2010, TrueType hinting is no longer patented.            */
