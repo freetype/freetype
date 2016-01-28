@@ -1,3 +1,10 @@
+2016-01-28  Nikolaus Waxweiler  <madigens@gmail.com>
+
+	Remove unpatented hinter (1/3).
+
+	* src/truetype/ttinterp.c [TT_CONFIG_OPTION_UNPATENTED_HINTING]:
+	Remove all code related to this macro.
+
 2016-01-28  Werner Lemberg  <wl@gnu.org>
 
 	[autofit] Add blue-zone support for Kannada script.
