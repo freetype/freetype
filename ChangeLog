@@ -1,3 +1,10 @@
+2016-01-30  Werner Lemberg  <wl@gnu.org>
+
+	[autofit] Minor tracing improvement.
+
+	* src/autofit/afhints.c (af_glyph_hints_dump_points): Insert newline
+	at the start of a new contour.
+
 2016-01-28  Nikolaus Waxweiler  <madigens@gmail.com>
 
 	Remove unpatented hinter (3/3).

@@ -304,16 +304,18 @@
   af_glyph_hints_dump_points( AF_GlyphHints  hints,
                               FT_Bool        to_stdout )
   {
-    AF_Point  points = hints->points;
-    AF_Point  limit  = points + hints->num_points;
-    AF_Point  point;
+    AF_Point   points  = hints->points;
+    AF_Point   limit   = points + hints->num_points;
+    AF_Point*  contour = hints->contours;
+    AF_Point*  climit  = contour + hints->num_contours;
+    AF_Point   point;
 
 
     AF_DUMP(( "Table of points:\n" ));
 
     if ( hints->num_points )
       AF_DUMP(( "  index  hedge  hseg  vedge  vseg  flags"
-                "  xorg  yorg  xscale  yscale   xfit    yfit\n" ));
+                "  xorg  yorg  xscale  yscale   xfit    yfit" ));
     else
       AF_DUMP(( "  (none)\n" ));
 
@@ -325,6 +327,13 @@
 
       char  buf1[16], buf2[16], buf3[16], buf4[16];
 
+
+      /* insert extra newline at the beginning of a contour */
+      if ( contour < climit && *contour == point )
+      {
+        AF_DUMP(( "\n" ));
+        contour++;
+      }
 
       AF_DUMP(( "  %5d  %5s %5s  %5s %5s  %s "
                 " %5d %5d %7.2f %7.2f %7.2f %7.2f\n",
