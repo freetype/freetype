@@ -116,7 +116,7 @@
          AF_COVERAGE_DEFAULT )
 
   STYLE( knda_dflt, KNDA_DFLT,
-         "KANNADA default style",
+         "Kannada default style",
          AF_WRITING_SYSTEM_LATIN,
          AF_SCRIPT_KNDA,
          AF_BLUE_STRINGSET_KNDA,
