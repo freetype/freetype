@@ -1,3 +1,9 @@
+2016-02-03  Werner Lemberg  <wl@gnu.org>
+
+	[cff] Fix handling of face_index == -1 for pure CFF.
+
+	* src/cff/cffobjs.c (cff_face_init): Return correct number of faces.
+
 2016-01-30  Werner Lemberg  <wl@gnu.org>
 
 	[autofit] Minor tracing improvement.

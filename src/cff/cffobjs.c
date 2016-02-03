@@ -586,7 +586,10 @@
       /* if we are performing a simple font format check, exit immediately */
       /* (this is here for pure CFF)                                       */
       if ( face_index < 0 )
+      {
+        cffface->num_faces = (FT_Long)cff->num_faces;
         return FT_Err_Ok;
+      }
 
       cff->pshinter = pshinter;
       cff->psnames  = psnames;
