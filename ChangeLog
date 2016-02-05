@@ -1,3 +1,11 @@
+2016-02-05  Sebastian Rasmussen  <sebras@gmail.com>
+
+	Make direct call of `make install' work (#47072).
+
+	* builds/unix/unix-def.in (freetype-config): Make sure
+	`freetype-config' is generated for both make targets (`all' and
+	`install').
+
 2016-02-05  Werner Lemberg  <wl@gnu.org>
 
 	[base] Fix advance width loading for MM and GX fonts (#47064).

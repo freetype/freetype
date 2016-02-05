@@ -142,7 +142,7 @@ $(OBJ_BUILD)/freetype2.pc: $(TOP_DIR)/builds/unix/freetype2.in
 	chmod a-w $@.tmp
 	mv $@.tmp $@
 
-all: $(OBJ_BUILD)/freetype-config \
+all install: $(OBJ_BUILD)/freetype-config \
      $(OBJ_BUILD)/freetype2.pc
 
 # EOF
