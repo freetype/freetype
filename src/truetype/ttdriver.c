@@ -194,7 +194,7 @@
                    FT_Fixed  *advances )
   {
     FT_UInt  nn;
-    TT_Face  face  = (TT_Face) ttface;
+    TT_Face  face = (TT_Face) ttface;
 
 
     /* XXX: TODO: check for sbits */
@@ -227,6 +227,7 @@
 
     return FT_Err_Ok;
   }
+
 
   /*************************************************************************/
   /*************************************************************************/
