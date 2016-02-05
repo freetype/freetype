@@ -1,3 +1,11 @@
+2016-02-05  Werner Lemberg  <wl@gnu.org>
+
+	[base] Fix advance width loading for MM and GX fonts (#47064).
+
+	* src/base/ftadvanc.c (LOAD_ADVANCE_FAST_CHECK): Return false for
+	MM and GX fonts.
+	Update callers.
+
 2016-02-03  Werner Lemberg  <wl@gnu.org>
 
 	[cff] Fix handling of face_index == -1 for pure CFF.
