@@ -2221,12 +2221,23 @@
           break;
 
         case cff_op_store:
+          /* this operator was removed from the Type2 specification */
+          /* in version 16-March-2000                               */
           FT_TRACE4(( " store\n"));
 
           goto Unimplemented;
 
         case cff_op_load:
+          /* this operator was removed from the Type2 specification */
+          /* in version 16-March-2000                               */
           FT_TRACE4(( " load\n" ));
+
+          goto Unimplemented;
+
+        case cff_op_blend:
+          /* this operator was removed from the Type2 specification */
+          /* in version 16-March-2000                               */
+          FT_TRACE4(( " blend\n" ));
 
           goto Unimplemented;
 
@@ -2358,9 +2369,21 @@
           }
           break;
 
-        case cff_op_eq:
+        case cff_op_not:
           {
             FT_Fixed  cond = !args[0];
+
+
+            FT_TRACE4(( " not\n" ));
+
+            args[0] = cond ? 0x10000L : 0;
+            args++;
+          }
+          break;
+
+        case cff_op_eq:
+          {
+            FT_Fixed  cond = args[0] == args[1];
 
 
             FT_TRACE4(( " eq\n" ));

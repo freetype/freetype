@@ -1,3 +1,10 @@
+2016-02-06  Werner Lemberg  <wl@gnu.org>
+
+	[cff] Fix some Type 2 operators in old CFF engine.
+
+	* src/cff/cffgload.c (cff_decoder_parse_charstrings): Fix `eq'
+	operator, add `not' and (unsupported) `blend' operators.
+
 2016-02-05  Sebastian Rasmussen  <sebras@gmail.com>
 
 	Make direct call of `make install' work (#47072).
