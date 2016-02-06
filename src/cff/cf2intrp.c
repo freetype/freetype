@@ -293,7 +293,8 @@
     /* variable accumulates delta values from operand stack */
     CF2_Fixed  position = hintOffset;
 
-    if ( hasWidthArg && ! *haveWidth )
+
+    if ( hasWidthArg && !*haveWidth )
       *width = cf2_stack_getReal( opStack, 0 ) +
                  cf2_getNominalWidthX( font->decoder );
 
@@ -608,7 +609,7 @@
                      0 );
 
         if ( font->decoder->width_only )
-            goto exit;
+          goto exit;
 
         break;
 
@@ -632,7 +633,7 @@
                      0 );
 
         if ( font->decoder->width_only )
-            goto exit;
+          goto exit;
 
         break;
 
@@ -646,7 +647,7 @@
         haveWidth = TRUE;
 
         if ( font->decoder->width_only )
-            goto exit;
+          goto exit;
 
         curY += cf2_stack_popFixed( opStack );
 
@@ -1085,7 +1086,7 @@
         haveWidth = TRUE;
 
         if ( font->decoder->width_only )
-            goto exit;
+          goto exit;
 
         /* close path if still open */
         cf2_glyphpath_closeOpenPath( &glyphPath );
@@ -1117,8 +1118,8 @@
           error2 = cf2_getSeacComponent( decoder, achar, &component );
           if ( error2 )
           {
-             lastError = error2;      /* pass FreeType error through */
-             goto exit;
+            lastError = error2;      /* pass FreeType error through */
+            goto exit;
           }
           cf2_interpT2CharString( font,
                                   &component,
@@ -1172,7 +1173,7 @@
                      0 );
 
         if ( font->decoder->width_only )
-            goto exit;
+          goto exit;
 
         if ( op1 == cf2_cmdHINTMASK )
         {
@@ -1231,7 +1232,7 @@
         haveWidth = TRUE;
 
         if ( font->decoder->width_only )
-            goto exit;
+          goto exit;
 
         curY += cf2_stack_popFixed( opStack );
         curX += cf2_stack_popFixed( opStack );
@@ -1250,7 +1251,7 @@
         haveWidth = TRUE;
 
         if ( font->decoder->width_only )
-            goto exit;
+          goto exit;
 
         curX += cf2_stack_popFixed( opStack );
 
