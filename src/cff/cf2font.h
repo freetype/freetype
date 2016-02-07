@@ -54,6 +54,7 @@ FT_BEGIN_HEADER
                                    /* (Hiragino Kaku Gothic ProN W3;      */
                                    /* 8.2d6e1; 2014-12-19) that exceed    */
                                    /* this limit                          */
+#define CF2_STORAGE_SIZE        32
 
 
   /* typedef is in `cf2glue.h' */

@@ -94,6 +94,11 @@ FT_BEGIN_HEADER
                      CF2_UInt   idx );
 
   FT_LOCAL( void )
+  cf2_stack_roll( CF2_Stack  stack,
+                  CF2_Int    count,
+                  CF2_Int    idx );
+
+  FT_LOCAL( void )
   cf2_stack_clear( CF2_Stack  stack );
 
 

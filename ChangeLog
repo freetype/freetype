@@ -1,3 +1,16 @@
+2016-02-07  Werner Lemberg  <wl@gnu.org>
+
+	[cff] Implement missing operators in new engine (except `random').
+
+	* src/cff/cf2font.h (CF2_STORAGE_SIZE): New macro.
+
+	* src/cff/cf2intrp.c (cf2_interpT2CharString): Implement the
+	following operators: abs, add, and, div, drop, dup, eq, exch, get,
+	ifelse, index, mul, neg, not, or, put, roll, sqrt, sub.
+
+	* src/cff/cf2stack.h, src/cff/cf2stack.c (cf2_stack_roll): New
+	auxiliary function for `roll' operator.
+
 2016-02-06  Werner Lemberg  <wl@gnu.org>
 
 	[cff] Fix some Type 2 operators in old CFF engine.
