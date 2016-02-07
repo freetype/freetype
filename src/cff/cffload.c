@@ -501,8 +501,8 @@
           {
             element++;
             off2 = cff_index_read_offset( idx, &error );
-          }
-          while ( off2 == 0 && element < idx->count );
+
+          } while ( off2 == 0 && element < idx->count );
         }
       }
       else   /* use offsets table */
