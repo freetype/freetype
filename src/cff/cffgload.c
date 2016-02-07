@@ -2082,15 +2082,14 @@
 
           if ( args[0] > 0 )
           {
-            FT_Int    count = 9;
-            FT_Fixed  root  = args[0];
+            FT_Fixed  root = args[0];
             FT_Fixed  new_root;
 
 
             for (;;)
             {
               new_root = ( root + FT_DivFix( args[0], root ) + 1 ) >> 1;
-              if ( new_root == root || count <= 0 )
+              if ( new_root == root )
                 break;
               root = new_root;
             }

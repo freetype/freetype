@@ -1,5 +1,12 @@
 2016-02-07  Werner Lemberg  <wl@gnu.org>
 
+	[cff] Minor.
+
+	* src/cff/cffgload.c (cff_decoder_parse_charstrings) <cff_op_sqrt>:
+	Remove dead code.
+
+2016-02-07  Werner Lemberg  <wl@gnu.org>
+
 	[cff] Implement missing operators in new engine (except `random').
 
 	* src/cff/cf2font.h (CF2_STORAGE_SIZE): New macro.
