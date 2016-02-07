@@ -1,5 +1,12 @@
 2016-02-07  Werner Lemberg  <wl@gnu.org>
 
+	Fix another runtime error found by clang's sanitizer (#47082).
+
+	* src/base/ftstroke.c (ft_stroke_border_export): Properly handle
+	empty input buffer.
+
+2016-02-07  Werner Lemberg  <wl@gnu.org>
+
 	Fix runtime errors found by clang's sanitizer (#47082).
 
 	* src/base/ftobjs.c (FT_Render_Glyph_Internal), src/base/ftoutln.c
@@ -138,7 +145,7 @@
 
 2016-01-20  Werner Lemberg  <wl@gnu.org>
 
-	[autofix] Complete last autofit commit.
+	[autofit] Complete last autofit commit.
 
 	Problem reported by Kostya Serebryany <kcc@google.com>.
 

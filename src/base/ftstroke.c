@@ -712,9 +712,10 @@
                            FT_Outline*      outline )
   {
     /* copy point locations */
-    FT_ARRAY_COPY( outline->points + outline->n_points,
-                   border->points,
-                   border->num_points );
+    if ( border->num_points )
+      FT_ARRAY_COPY( outline->points + outline->n_points,
+                     border->points,
+                     border->num_points );
 
     /* copy tags */
     {
