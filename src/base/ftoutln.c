@@ -415,11 +415,14 @@
     if ( source == target )
       return FT_Err_Ok;
 
-    FT_ARRAY_COPY( target->points, source->points, source->n_points );
+    if ( source->n_points )
+    {
+      FT_ARRAY_COPY( target->points, source->points, source->n_points );
+      FT_ARRAY_COPY( target->tags,   source->tags,   source->n_points );
+    }
 
-    FT_ARRAY_COPY( target->tags, source->tags, source->n_points );
-
-    FT_ARRAY_COPY( target->contours, source->contours, source->n_contours );
+    if ( source->n_contours )
+      FT_ARRAY_COPY( target->contours, source->contours, source->n_contours );
 
     /* copy all flags, except the `FT_OUTLINE_OWNER' one */
     is_owner      = target->flags & FT_OUTLINE_OWNER;

@@ -53,6 +53,8 @@
       pitch = -pitch;
 
     size = (FT_ULong)pitch * bitmap->rows;
+    if ( !size )
+      return FT_Err_Ok;
 
     if ( !FT_ALLOC( sbit->buffer, size ) )
       FT_MEM_COPY( sbit->buffer, bitmap->buffer, size );

@@ -4201,7 +4201,8 @@
 
 
           MD5_Init( &ctx );
-          MD5_Update( &ctx, bitmap.buffer, rows * pitch );
+          if ( bitmap.buffer )
+            MD5_Update( &ctx, bitmap.buffer, rows * pitch );
           MD5_Final( md5, &ctx );
 
           FT_TRACE3(( "MD5 checksum for %dx%d bitmap:\n"
