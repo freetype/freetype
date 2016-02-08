@@ -1,5 +1,40 @@
 2016-02-07  Werner Lemberg  <wl@gnu.org>
 
+	* Version 2.6.3 released.
+	=========================
+
+
+	Tag sources with `VER-2-6-3'.
+
+	* docs/VERSION.DLL: Update documentation and bump version number to
+	2.6.3.
+
+	* README, Jamfile (RefDoc), builds/windows/vc2005/freetype.vcproj,
+	builds/windows/vc2005/index.html,
+	builds/windows/vc2008/freetype.vcproj,
+	builds/windows/vc2008/index.html,
+	builds/windows/vc2010/freetype.vcxproj,
+	builds/windows/vc2010/index.html,
+	builds/windows/visualc/freetype.dsp,
+	builds/windows/visualc/freetype.vcproj,
+	builds/windows/visualc/index.html,
+	builds/windows/visualce/freetype.dsp,
+	builds/windows/visualce/freetype.vcproj,
+	builds/windows/visualce/index.html,
+	builds/wince/vc2005-ce/freetype.vcproj,
+	builds/wince/vc2005-ce/index.html,
+	builds/wince/vc2008-ce/freetype.vcproj,
+	builds/wince/vc2008-ce/index.html: s/2.6.2/2.6.3/, s/262/263/.
+
+	* include/freetype/freetype.h (FREETYPE_PATCH): Set to 3.
+
+	* builds/unix/configure.raw (version_info): Set to 18:3:12.
+	* CMakeLists.txt (VERSION_PATCH): Set to 2.
+
+	* docs/CHANGES: Updated.
+
+2016-02-07  Werner Lemberg  <wl@gnu.org>
+
 	Fix another runtime error found by clang's sanitizer (#47082).
 
 	* src/base/ftstroke.c (ft_stroke_border_export): Properly handle

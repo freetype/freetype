@@ -1,4 +1,53 @@
 
+CHANGES BETWEEN 2.6.2 and 2.6.3
+
+  I. IMPORTANT CHANGES
+
+    - Khmer,  Myanmar, Bengali,  and Kannada  script support  has been
+      added to the auto-hinter.
+
+
+  II. MISCELLANEOUS
+
+    - Better  support of  Indic  scripts like  Devanagari  by using  a
+      top-to-bottom hinting flow.
+
+    - All  FreeType macros  starting  with two  underscores have  been
+      renamed to  avoid a violation of  both the C and  C++ standards.
+      Example: Header  macros of the  form `__FOO_H__' are  now called
+      `FOO_H_'.  In most cases,  this should be completely transparent
+      to the user.   The exception to this  is `__FTERRORS_H__', which
+      must be  sometimes undefined by  the user to get  FreeType error
+      strings:  Both this  form and  the new  `FTERRORS_H_' macro  are
+      accepted for backwards compatibility.
+
+    - Minor improvements mainly to the Type 1 driver.
+
+    - The  new CFF  engine now  supports all  Type 2  operators except
+      `random'.
+
+    - The macro `_STANDALONE_', used for  compiling the B/W and smooth
+      rasterizers  as   stand-alone  modules,  has  been   renamed  to
+      `STANDALONE_', since macro names starting with an underscore and
+      followed by an uppercase letter are reserved in both C and C++.
+
+    - Function  `FT_Library_SetLcdFilterWeights'  now  also  activates
+      custom LCD filter weights (instead of just adjusting them).
+
+    - Support for  `unpatented hinting'  has been  completely removed:
+      Consequently,  the two  functions `FT_Face_CheckTrueTypePatents'
+      and  `FT_Face_SetUnpatentedHinting'  now  return  always  false,
+      doing nothing.
+
+    - The `ftgamma' demo  program has been modernized;  the gamma grid
+      display has been moved from `ftview' to this program.
+
+    - It is now possible to  cycle through the available LCD fitlering
+      modes.
+
+
+======================================================================
+
 CHANGES BETWEEN 2.6.1 and 2.6.2
 
   I. IMPORTANT CHANGES
