@@ -42,8 +42,8 @@ CHANGES BETWEEN 2.6.2 and 2.6.3
     - The `ftgamma' demo  program has been modernized;  the gamma grid
       display has been moved from `ftview' to this program.
 
-    - It is now possible to  cycle through the available LCD fitlering
-      modes.
+    - In `ftview',  it is now possible to cycle through  the available
+      LCD filtering modes.
 
 
 ======================================================================
