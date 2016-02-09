@@ -1,3 +1,10 @@
+2016-02-09  Werner Lemberg  <wl@gnu.org>
+
+	[docmaker] Don't emit trailing newlines.
+
+	* src/tools/docmaker/tohtml.py (HtmlFormatter::make_html_code):
+	Use `rstrip'.
+
 2016-02-07  Werner Lemberg  <wl@gnu.org>
 
 	* Version 2.6.3 released.
