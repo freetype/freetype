@@ -1,5 +1,9 @@
 2016-02-14  Werner Lemberg  <wl@gnu.org>
 
+	* src/base/fthash.c: Include FT_INTERNAL_MEMORY_H.
+
+2016-02-14  Werner Lemberg  <wl@gnu.org>
+
 	* src/cff/cffparse.c: Include `cffgload.h'.
 
 	Problem reported by Colin Walters <walters@verbum.org>.
