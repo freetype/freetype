@@ -1,5 +1,11 @@
 2016-02-14  Werner Lemberg  <wl@gnu.org>
 
+	* src/cff/cffparse.c: Include `cffgload.h'.
+
+	Problem reported by Colin Walters <walters@verbum.org>.
+
+2016-02-14  Werner Lemberg  <wl@gnu.org>
+
 	[cff] Make old CFF engine show MM CFFs (without variations).
 
 	The new code only displays the first master in the font.

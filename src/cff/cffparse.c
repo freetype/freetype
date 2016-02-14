@@ -23,6 +23,7 @@
 
 #include "cfferrs.h"
 #include "cffpic.h"
+#include "cffgload.h"
 
 
   /*************************************************************************/
