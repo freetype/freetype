@@ -1,3 +1,33 @@
+2016-02-14  Werner Lemberg  <wl@gnu.org>
+
+	[cff] Make old CFF engine show MM CFFs (without variations).
+
+	The new code only displays the first master in the font.
+
+	* src/cff/cffgload.c (cff_decode_parse_charstrings): Add new
+	parameter to allow function calls from dictionaries also.
+	<cff_op_blend>: Partially implement it.
+	Update all callers.
+	* src/cff/cffgload.h: Updated.
+
+	* src/cff/cffparse.c (cff_parser_init): Add new parameter to pass the
+	number of Multiple Master designs.
+	Update all callers.
+	(cff_parse_multiple_master): New function to rudimentarily parse
+	operator.
+	(cff_parser_run): Handle `T2' operator.
+	* src/cff/cffparse.h: Updated.
+	(CFF_ParserRec): Add `num_designs' field.
+
+	* src/cff/cffload.c: Updated.
+
+	* src/cff/cfftoken.h: Handle `MultipleMaster' operator.
+
+	* src/cff/cfftypes.h (CFF_FontRecDictRec): Add `num_designs' field.
+
+	* src/sfnt/sfobjs.c (sfnt_init_face): Don't handle `fvar' table for
+	MM CFFs.
+
 2016-02-09  Werner Lemberg  <wl@gnu.org>
 
 	[docmaker] Don't emit trailing newlines.

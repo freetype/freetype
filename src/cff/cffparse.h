@@ -47,6 +47,8 @@ FT_BEGIN_HEADER
     FT_UInt    object_code;
     void*      object;
 
+    FT_UShort  num_designs; /* a copy of `CFF_FontRecDict->num_designs' */
+
   } CFF_ParserRec, *CFF_Parser;
 
 
@@ -54,7 +56,8 @@ FT_BEGIN_HEADER
   cff_parser_init( CFF_Parser  parser,
                    FT_UInt     code,
                    void*       object,
-                   FT_Library  library);
+                   FT_Library  library,
+                   FT_UShort   num_designs );
 
   FT_LOCAL( FT_Error )
   cff_parser_run( CFF_Parser  parser,

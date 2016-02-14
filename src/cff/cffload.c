@@ -1316,7 +1316,11 @@
     CFF_Private      priv = &font->private_dict;
 
 
-    cff_parser_init( &parser, CFF_CODE_TOPDICT, &font->font_dict, library );
+    cff_parser_init( &parser,
+                     CFF_CODE_TOPDICT,
+                     &font->font_dict,
+                     library,
+                     0 );
 
     /* set defaults */
     FT_MEM_ZERO( top, sizeof ( *top ) );
@@ -1370,7 +1374,11 @@
       priv->expansion_factor = (FT_Fixed)( 0.06 * 0x10000L );
       priv->blue_scale       = (FT_Fixed)( 0.039625 * 0x10000L * 1000 );
 
-      cff_parser_init( &parser, CFF_CODE_PRIVATE, priv, library );
+      cff_parser_init( &parser,
+                       CFF_CODE_PRIVATE,
+                       priv,
+                       library,
+                       top->num_designs );
 
       if ( FT_STREAM_SEEK( base_offset + font->font_dict.private_offset ) ||
            FT_FRAME_ENTER( font->font_dict.private_size )                 )

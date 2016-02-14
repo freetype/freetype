@@ -39,7 +39,8 @@
   cff_parser_init( CFF_Parser  parser,
                    FT_UInt     code,
                    void*       object,
-                   FT_Library  library)
+                   FT_Library  library,
+                   FT_UShort   num_designs )
   {
     FT_MEM_ZERO( parser, sizeof ( *parser ) );
 
@@ -47,6 +48,7 @@
     parser->object_code = code;
     parser->object      = object;
     parser->library     = library;
+    parser->num_designs = num_designs;
   }
 
 
@@ -649,6 +651,47 @@
   }
 
 
+  /* We assume that the `MultipleMaster' operator comes before any */
+  /* top DICT operators that contain T2 charstrings.  Otherwise,   */
+  /* `num_designs' is zero, leading to errors in handling the      */
+  /* `blend' operator later on.                                    */
+
+  static FT_Error
+  cff_parse_multiple_master( CFF_Parser  parser )
+  {
+    CFF_FontRecDict  dict = (CFF_FontRecDict)parser->object;
+    FT_Error         error;
+
+
+    FT_TRACE1(( "Multiple Master CFFs not supported yet,"
+                " handling first master design only\n" ));
+
+    error = FT_ERR( Stack_Underflow );
+
+    /* currently, we handle only the first argument */
+    if ( parser->top >= parser->stack + 5 )
+    {
+      FT_Long  num_designs = cff_parse_num( parser->stack );
+
+
+      if ( num_designs > 16 || num_designs < 2 )
+      {
+        FT_ERROR(( "cff_parse_multiple_master:"
+                   " Invalid number of designs\n" ));
+        error = FT_THROW( Invalid_File_Format );
+      }
+      else
+      {
+        dict->num_designs   = (FT_UShort)num_designs;
+        parser->num_designs = dict->num_designs;
+        error = FT_Err_Ok;
+      }
+    }
+
+    return error;
+  }
+
+
   static FT_Error
   cff_parse_cid_ros( CFF_Parser  parser )
   {
@@ -972,7 +1015,7 @@
         if ( parser->top - parser->stack >= CFF_MAX_STACK_DEPTH )
           goto Stack_Overflow;
 
-        *parser->top ++ = p;
+        *parser->top++ = p;
 
         /* now, skip it */
         if ( v == 30 )
@@ -1000,6 +1043,133 @@
           p += 4;
         else if ( v > 246 )
           p += 1;
+      }
+      else if ( v == 31 )
+      {
+        /* a Type 2 charstring */
+
+        CFF_Decoder  decoder;
+        CFF_FontRec  cff_rec;
+        FT_Byte*     charstring_base;
+        FT_ULong     charstring_len;
+
+        FT_Fixed*  stack;
+        FT_Byte*   q;
+
+
+        charstring_base = ++p;
+
+        /* search `endchar' operator */
+        for (;;)
+        {
+          if ( p >= limit )
+            goto Exit;
+          if ( *p == 14 )
+            break;
+          p++;
+        }
+
+        charstring_len = (FT_ULong)( p - charstring_base ) + 1;
+
+        /* construct CFF_Decoder object */
+        FT_MEM_ZERO( &decoder, sizeof ( decoder ) );
+        FT_MEM_ZERO( &cff_rec, sizeof ( cff_rec ) );
+
+        cff_rec.top_font.font_dict.num_designs = parser->num_designs;
+        decoder.cff                            = &cff_rec;
+
+        error = cff_decoder_parse_charstrings( &decoder,
+                                               charstring_base,
+                                               charstring_len,
+                                               1 );
+
+        /* Now copy the stack data in the temporary decoder object,    */
+        /* converting it back to charstring number representations     */
+        /* (this is ugly, I know).                                     */
+        /*                                                             */
+        /* We overwrite the original top DICT charstring under the     */
+        /* assumption that the charstring representation of the result */
+        /* of `cff_decoder_parse_charstrings' is shorter, which should */
+        /* be always true.                                             */
+
+        q     = charstring_base - 1;
+        stack = decoder.stack;
+
+        while ( stack < decoder.top )
+        {
+          FT_ULong  num;
+          FT_Bool   neg;
+
+
+          if ( parser->top - parser->stack >= CFF_MAX_STACK_DEPTH )
+            goto Stack_Overflow;
+
+          *parser->top++ = q;
+
+          if ( *stack < 0 )
+          {
+            num = (FT_ULong)-*stack;
+            neg = 1;
+          }
+          else
+          {
+            num = (FT_ULong)*stack;
+            neg = 0;
+          }
+
+          if ( num & 0xFFFFU )
+          {
+            if ( neg )
+              num = (FT_ULong)-num;
+
+            *q++ = 255;
+            *q++ = ( num & 0xFF000000U ) >> 24;
+            *q++ = ( num & 0x00FF0000U ) >> 16;
+            *q++ = ( num & 0x0000FF00U ) >>  8;
+            *q++ =   num & 0x000000FFU;
+          }
+          else
+          {
+            num >>= 16;
+
+            if ( neg )
+            {
+              if ( num <= 107 )
+                *q++ = (FT_Byte)( 139 - num );
+              else if ( num <= 1131 )
+              {
+                *q++ = (FT_Byte)( ( ( num - 108 ) >> 8 ) + 251 );
+                *q++ = (FT_Byte)( ( num - 108 ) & 0xFF );
+              }
+              else
+              {
+                num = (FT_ULong)-num;
+
+                *q++ = 28;
+                *q++ = (FT_Byte)( num >> 8 );
+                *q++ = (FT_Byte)( num & 0xFF );
+              }
+            }
+            else
+            {
+              if ( num <= 107 )
+                *q++ = (FT_Byte)( num + 139 );
+              else if ( num <= 1131 )
+              {
+                *q++ = (FT_Byte)( ( ( num - 108 ) >> 8 ) + 247 );
+                *q++ = (FT_Byte)( ( num - 108 ) & 0xFF );
+              }
+              else
+              {
+                *q++ = 28;
+                *q++ = (FT_Byte)( num >> 8 );
+                *q++ = (FT_Byte)( num & 0xFF );
+              }
+            }
+          }
+
+          stack++;
+        }
       }
       else
       {

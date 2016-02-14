@@ -145,6 +145,11 @@ FT_BEGIN_HEADER
     FT_ULong   cid_fd_select_offset;
     FT_UInt    cid_font_name;
 
+    /* the next field comes from the data of the deprecated       */
+    /* `MultipleMaster' operator; it is needed to parse the (also */
+    /* deprecated) `blend' operator in Type 2 charstrings         */
+    FT_UShort  num_designs;
+
   } CFF_FontRecDictRec, *CFF_FontRecDict;
 
 
