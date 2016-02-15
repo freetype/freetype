@@ -551,7 +551,7 @@
       for ( i = 0; i < blend->tuplecount; i++ )
       {
         FT_TRACE5(( "  [ " ));
-        for ( j = 0 ; j < (FT_UInt)gvar_head.axisCount; j++ )
+        for ( j = 0; j < (FT_UInt)gvar_head.axisCount; j++ )
         {
           blend->tuplecoords[i * gvar_head.axisCount + j] =
             FT_GET_SHORT() * 4;                 /* convert to FT_Fixed */

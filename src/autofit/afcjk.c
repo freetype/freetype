@@ -1528,7 +1528,7 @@
       }
 
       if ( dist < 54 )
-        dist += ( 54 - dist ) / 2 ;
+        dist += ( 54 - dist ) / 2;
       else if ( dist < 3 * 64 )
       {
         FT_Pos  delta;

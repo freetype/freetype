@@ -809,7 +809,7 @@
     /* When multiple GIDs map to the same CID, we choose the lowest */
     /* GID.  This is not described in any spec, but it matches the  */
     /* behaviour of recent Acroread versions.                       */
-    for ( j = (FT_Long)num_glyphs - 1; j >= 0 ; j-- )
+    for ( j = (FT_Long)num_glyphs - 1; j >= 0; j-- )
       charset->cids[charset->sids[j]] = (FT_UShort)j;
 
     charset->max_cid    = max_cid;

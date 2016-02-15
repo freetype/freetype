@@ -326,7 +326,7 @@
                                       /* Point to axes after MM_Var struct */
     mmvar->namedstyle      = NULL;
 
-    for ( i = 0 ; i < mmaster.num_axis; ++i )
+    for ( i = 0; i < mmaster.num_axis; ++i )
     {
       mmvar->axis[i].name    = mmaster.axis[i].name;
       mmvar->axis[i].minimum = INT_TO_FIXED( mmaster.axis[i].minimum);

@@ -398,11 +398,11 @@
     for ( j = 0; j < TRICK_SFNT_IDS_NUM_FACES; j++ )
     {
       if ( !has_cvt  && !sfnt_id[j][TRICK_SFNT_ID_cvt].Length )
-        num_matched_ids[j] ++;
+        num_matched_ids[j]++;
       if ( !has_fpgm && !sfnt_id[j][TRICK_SFNT_ID_fpgm].Length )
-        num_matched_ids[j] ++;
+        num_matched_ids[j]++;
       if ( !has_prep && !sfnt_id[j][TRICK_SFNT_ID_prep].Length )
-        num_matched_ids[j] ++;
+        num_matched_ids[j]++;
       if ( num_matched_ids[j] == TRICK_SFNT_IDS_PER_FACE )
         return TRUE;
     }

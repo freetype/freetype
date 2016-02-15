@@ -442,7 +442,7 @@ THE SOFTWARE.
     int           i;
 
 
-    for ( i = 0 ; i < face->nprops && !found; i++ )
+    for ( i = 0; i < face->nprops && !found; i++ )
     {
       if ( !ft_strcmp( properties[i].name, prop ) )
         found = 1;

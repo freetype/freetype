@@ -680,7 +680,7 @@
 #endif /* FT_CONFIG_OPTION_INCREMENTAL */
 
     {
-      CFF_Font  cff  = (CFF_Font)(face->extra.data);
+      CFF_Font  cff = (CFF_Font)(face->extra.data);
 
 
       return cff_index_access_element( &cff->charstrings_index, glyph_index,
