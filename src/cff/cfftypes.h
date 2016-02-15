@@ -255,6 +255,7 @@ FT_BEGIN_HEADER
     FT_UInt          num_strings;
     FT_Byte**        strings;
     FT_Byte*         string_pool;
+    FT_ULong         string_pool_size;
 
     CFF_SubFontRec   top_font;
     FT_UInt          num_subfonts;

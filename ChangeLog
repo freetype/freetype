@@ -1,3 +1,22 @@
+2016-02-15  Werner Lemberg  <wl@gnu.org>
+
+	[cff] Correctly trace SIDs that contain NULL bytes.
+
+	We need this to properly trace Multiple Master CFFs, which contain
+	two SIDs that are charstrings.
+
+	This commit makes FreeType also show the last SID, omitted
+	previously due to a bug.
+
+	* src/cff/cfftypes.h (CFF_FontRec): Add `string_pool_size' field.
+
+	* src/cff/cffload.c (cff_index_get_pointers): Add argument to return
+	the pool size.
+	Update all callers.
+
+	* src/cff/cffobjs.c (cff_face_init) [FT_DEBUG_LEVEL_TRACE]: Directly
+	access `cff->strings' to display the non-default strings.
+
 2016-02-14  Werner Lemberg  <wl@gnu.org>
 
 	* src/base/fthash.c: Include FT_INTERNAL_MEMORY_H.

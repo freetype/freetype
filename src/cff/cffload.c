@@ -382,13 +382,15 @@
   static FT_Error
   cff_index_get_pointers( CFF_Index   idx,
                           FT_Byte***  table,
-                          FT_Byte**   pool )
+                          FT_Byte**   pool,
+                          FT_ULong*   pool_size )
   {
     FT_Error   error     = FT_Err_Ok;
     FT_Memory  memory    = idx->stream->memory;
 
     FT_Byte**  t         = NULL;
     FT_Byte*   new_bytes = NULL;
+    FT_ULong   new_size;
 
 
     *table = NULL;
@@ -400,10 +402,11 @@
         goto Exit;
     }
 
-    if ( idx->count > 0                                        &&
-         !FT_NEW_ARRAY( t, idx->count + 1 )                    &&
-         ( !pool || !FT_ALLOC( new_bytes,
-                               idx->data_size + idx->count ) ) )
+    new_size = idx->data_size + idx->count;
+
+    if ( idx->count > 0                                &&
+         !FT_NEW_ARRAY( t, idx->count + 1 )            &&
+         ( !pool || !FT_ALLOC( new_bytes, new_size ) ) )
     {
       FT_ULong  n, cur_offset;
       FT_ULong  extra = 0;
@@ -459,6 +462,8 @@
 
       if ( pool )
         *pool = new_bytes;
+      if ( pool_size )
+        *pool_size = new_size;
     }
 
   Exit:
@@ -1408,7 +1413,7 @@
         goto Exit;
 
       error = cff_index_get_pointers( &font->local_subrs_index,
-                                      &font->local_subrs, NULL );
+                                      &font->local_subrs, NULL, NULL );
       if ( error )
         goto Exit;
     }
@@ -1486,16 +1491,17 @@
 
     /* read the name, top dict, string and global subrs index */
     if ( FT_SET_ERROR( cff_index_init( &font->name_index,
-                                       stream, 0 ) )                  ||
+                                       stream, 0 ) )                       ||
          FT_SET_ERROR( cff_index_init( &font->font_dict_index,
-                                       stream, 0 ) )                  ||
+                                       stream, 0 ) )                       ||
          FT_SET_ERROR( cff_index_init( &string_index,
-                                       stream, 1 ) )                  ||
+                                       stream, 1 ) )                       ||
          FT_SET_ERROR( cff_index_init( &font->global_subrs_index,
-                                       stream, 1 ) )                  ||
+                                       stream, 1 ) )                       ||
          FT_SET_ERROR( cff_index_get_pointers( &string_index,
                                                &font->strings,
-                                               &font->string_pool ) ) )
+                                               &font->string_pool,
+                                               &font->string_pool_size ) ) )
       goto Exit;
 
     font->num_strings = string_index.count;
@@ -1622,7 +1628,7 @@
     font->num_glyphs = font->charstrings_index.count;
 
     error = cff_index_get_pointers( &font->global_subrs_index,
-                                    &font->global_subrs, NULL );
+                                    &font->global_subrs, NULL, NULL );
 
     if ( error )
       goto Exit;
