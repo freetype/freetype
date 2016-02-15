@@ -652,10 +652,8 @@
   }
 
 
-  /* We assume that the `MultipleMaster' operator comes before any */
-  /* top DICT operators that contain T2 charstrings.  Otherwise,   */
-  /* `num_designs' is zero, leading to errors in handling the      */
-  /* `blend' operator later on.                                    */
+  /* The `MultipleMaster' operator comes before any  */
+  /* top DICT operators that contain T2 charstrings. */
 
   static FT_Error
   cff_parse_multiple_master( CFF_Parser  parser )
