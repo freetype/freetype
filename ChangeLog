@@ -1,5 +1,27 @@
 2016-02-15  Werner Lemberg  <wl@gnu.org>
 
+	[cff] Partially handle `load' and `store' ops in old CFF engine.
+
+	Now all glyphs of MM CFFs like `ITCGaramondMM-It.otf' can be
+	displayed.
+
+	* src/cff/cffgload.c (cff_decoder_parse_charstrings) <cff_op_store,
+	cff_op_load>: Partially implement it.
+
+	* src/cff/cffparse.c (cff_parser_init): Add new parameter to pass
+	the number of Multiple Master axes.
+	Update all callers.
+	(cff_parse_multiple_master): Get number of axes.
+	(cff_parser_run) <opcode 31>: Updated.
+	* src/cff/cffparse.h: Updated.
+	(CFF_ParserRec): Add `num_axes' field.
+
+	* src/cff/cffload.c: Updated.
+
+	* src/cff/cfftypes.h (CFF_FontRecDictRec): Add `num_axes' field.
+
+2016-02-15  Werner Lemberg  <wl@gnu.org>
+
 	[cff] Correctly trace SIDs that contain NULL bytes.
 
 	We need this to properly trace Multiple Master CFFs, which contain

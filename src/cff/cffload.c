@@ -1325,6 +1325,7 @@
                      CFF_CODE_TOPDICT,
                      &font->font_dict,
                      library,
+                     0,
                      0 );
 
     /* set defaults */
@@ -1383,7 +1384,8 @@
                        CFF_CODE_PRIVATE,
                        priv,
                        library,
-                       top->num_designs );
+                       top->num_designs,
+                       top->num_axes );
 
       if ( FT_STREAM_SEEK( base_offset + font->font_dict.private_offset ) ||
            FT_FRAME_ENTER( font->font_dict.private_size )                 )

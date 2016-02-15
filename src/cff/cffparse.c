@@ -41,7 +41,8 @@
                    FT_UInt     code,
                    void*       object,
                    FT_Library  library,
-                   FT_UShort   num_designs )
+                   FT_UShort   num_designs,
+                   FT_UShort   num_axes )
   {
     FT_MEM_ZERO( parser, sizeof ( *parser ) );
 
@@ -50,6 +51,7 @@
     parser->object      = object;
     parser->library     = library;
     parser->num_designs = num_designs;
+    parser->num_axes    = num_axes;
   }
 
 
@@ -682,7 +684,11 @@
       else
       {
         dict->num_designs   = (FT_UShort)num_designs;
+        dict->num_axes      = (FT_UShort)( parser->top - parser->stack - 4 );
+
         parser->num_designs = dict->num_designs;
+        parser->num_axes    = dict->num_axes;
+
         error = FT_Err_Ok;
       }
     }
@@ -1075,6 +1081,7 @@
         FT_MEM_ZERO( &cff_rec, sizeof ( cff_rec ) );
 
         cff_rec.top_font.font_dict.num_designs = parser->num_designs;
+        cff_rec.top_font.font_dict.num_axes    = parser->num_axes;
         decoder.cff                            = &cff_rec;
 
         error = cff_decoder_parse_charstrings( &decoder,

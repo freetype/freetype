@@ -919,6 +919,8 @@
                          decoder->cff->top_font.font_dict.charstring_type;
     FT_UShort          num_designs =
                          decoder->cff->top_font.font_dict.num_designs;
+    FT_UShort          num_axes =
+                         decoder->cff->top_font.font_dict.num_axes;
 
     T2_Hints_Funcs     hinter;
 
@@ -2248,6 +2250,10 @@
 
             FT_TRACE4(( " put\n" ));
 
+            /* the Type2 specification before version 16-March-2000 */
+            /* didn't give a hard-coded size limit of the temporary */
+            /* storage array; instead, an argument of the           */
+            /* `MultipleMaster' operator set the size               */
             if ( idx >= 0 && idx < CFF_MAX_TRANS_ELEMENTS )
               decoder->buildchar[idx] = val;
           }
@@ -2272,16 +2278,43 @@
         case cff_op_store:
           /* this operator was removed from the Type2 specification */
           /* in version 16-March-2000                               */
-          FT_TRACE4(( " store\n"));
 
-          goto Unimplemented;
+          /* since we currently don't handle interpolation of multiple */
+          /* master fonts, this is a no-op                             */
+          FT_TRACE4(( " store\n"));
+          break;
 
         case cff_op_load:
           /* this operator was removed from the Type2 specification */
           /* in version 16-March-2000                               */
-          FT_TRACE4(( " load\n" ));
+          {
+            FT_Int  reg_idx = (FT_Int)args[0];
+            FT_Int  idx     = (FT_Int)args[1];
+            FT_Int  count   = (FT_Int)args[2];
 
-          goto Unimplemented;
+
+            FT_TRACE4(( " load\n" ));
+
+            /* since we currently don't handle interpolation of multiple */
+            /* master fonts, we store a vector [1 0 0 ...] in the        */
+            /* temporary storage array regardless of the Registry index  */
+            if ( reg_idx >= 0 && reg_idx <= 2             &&
+                 idx >= 0 && idx < CFF_MAX_TRANS_ELEMENTS &&
+                 count >= 0 && count <= num_axes          )
+            {
+              FT_Int  end, i;
+
+
+              end = FT_MIN( idx + count, CFF_MAX_TRANS_ELEMENTS );
+
+              if ( idx < end )
+                decoder->buildchar[idx] = 1 << 16;
+
+              for ( i = idx + 1; i < end; i++ )
+                decoder->buildchar[i] = 0;
+            }
+          }
+          break;
 
         case cff_op_blend:
           /* this operator was removed from the Type2 specification */
@@ -2577,7 +2610,6 @@
           break;
 
         default:
-        Unimplemented:
           FT_ERROR(( "Unimplemented opcode: %d", ip[-1] ));
 
           if ( ip[-1] == 12 )
