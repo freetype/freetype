@@ -1,5 +1,12 @@
 2016-02-15  Werner Lemberg  <wl@gnu.org>
 
+	[cff] Handle T2 operator only with old CFF engine (#47157).
+
+	* src/cff/cffparse.c (cff_parser_run) <opcode 31>: Enclose with
+	#ifdef CFF_CONFIG_OPTION_OLD_ENGINE...#endif.
+
+2016-02-15  Werner Lemberg  <wl@gnu.org>
+
 	[cff] Partially handle `load' and `store' ops in old CFF engine.
 
 	Now all glyphs of MM CFFs like `ITCGaramondMM-It.otf' can be

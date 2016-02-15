@@ -1049,6 +1049,7 @@
         else if ( v > 246 )
           p += 1;
       }
+#ifdef CFF_CONFIG_OPTION_OLD_ENGINE
       else if ( v == 31 )
       {
         /* a Type 2 charstring */
@@ -1177,6 +1178,7 @@
           stack++;
         }
       }
+#endif /* CFF_CONFIG_OPTION_OLD_ENGINE */
       else
       {
         /* This is not a number, hence it's an operator.  Compute its code */
