@@ -664,8 +664,15 @@
     FT_Error         error;
 
 
-    FT_TRACE1(( "Multiple Master CFFs not supported yet,"
-                " handling first master design only\n" ));
+#ifdef FT_DEBUG_LEVEL_TRACE
+    /* beautify tracing message */
+    if ( ft_trace_levels[FT_COMPONENT] < 4 )
+      FT_TRACE1(( "Multiple Master CFFs not supported yet,"
+                  " handling first master design only\n" ));
+    else
+      FT_TRACE1(( " (not supported yet,"
+                  " handling first master design only)\n" ));
+#endif
 
     error = FT_ERR( Stack_Underflow );
 

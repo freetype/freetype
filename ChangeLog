@@ -1,5 +1,9 @@
 2016-02-15  Werner Lemberg  <wl@gnu.org>
 
+	* src/cff/cffparse.c (cff_parse_multiple_master): Improve tracing.
+
+2016-02-15  Werner Lemberg  <wl@gnu.org>
+
 	[cff] Handle T2 operator only with old CFF engine (#47157).
 
 	* src/cff/cffparse.c (cff_parser_run) <opcode 31>: Enclose with
