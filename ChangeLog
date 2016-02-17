@@ -1,3 +1,9 @@
+2016-02-16  Alexei Podtelezhnikov  <apodtele@gmail.com>
+
+	[smooth] Fix integer overflow (#47114).
+
+	* src/smooth/ftgrays.c (TArea): Make it unconditionally `long'.
+
 2016-02-15  Werner Lemberg  <wl@gnu.org>
 
 	* src/cff/cffparse.c (cff_parse_multiple_master): Improve tracing.

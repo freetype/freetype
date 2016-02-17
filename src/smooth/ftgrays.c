@@ -388,25 +388,7 @@ typedef ptrdiff_t  FT_PtrDist;
 
   typedef long  TCoord;   /* integer scanline/pixel coordinate */
   typedef long  TPos;     /* sub-pixel coordinate              */
-
-  /* determine the type used to store cell areas.  This normally takes at */
-  /* least PIXEL_BITS*2 + 1 bits.  On 16-bit systems, we need to use      */
-  /* `long' instead of `int', otherwise bad things happen                 */
-
-#if PIXEL_BITS <= 7
-
-  typedef int  TArea;
-
-#else /* PIXEL_BITS >= 8 */
-
-  /* approximately determine the size of integers using an ANSI-C header */
-#if FT_UINT_MAX == 0xFFFFU
-  typedef long  TArea;
-#else
-  typedef int   TArea;
-#endif
-
-#endif /* PIXEL_BITS >= 8 */
+  typedef long  TArea;    /* cell areas, coordinate products   */
 
 
   /* maximum number of gray spans in a call to the span callback */
