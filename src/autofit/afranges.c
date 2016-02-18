@@ -354,6 +354,21 @@
   };
 
 
+  const AF_Script_UniRangeRec  af_mlym_uniranges[] =
+  {
+    AF_UNIRANGE_REC(  0x0D00UL,  0x0D7FUL ),  /* Malayalam */
+    AF_UNIRANGE_REC(       0UL,       0UL )
+  };
+
+  const AF_Script_UniRangeRec  af_mlym_nonbase_uniranges[] =
+  {
+    AF_UNIRANGE_REC(  0x0D01UL,  0x0D01UL ),
+    AF_UNIRANGE_REC(  0x0D4DUL,  0x0D4EUL ),
+    AF_UNIRANGE_REC(  0x0D62UL,  0x0D63UL ),
+    AF_UNIRANGE_REC(       0UL,       0UL )
+  };
+
+
   const AF_Script_UniRangeRec  af_mymr_uniranges[] =
   {
     AF_UNIRANGE_REC( 0x1000UL, 0x109FUL ),    /* Myanmar            */
@@ -469,21 +484,6 @@
     AF_UNIRANGE_REC(  0x1920UL,  0x1922UL ),
     AF_UNIRANGE_REC(  0x1927UL,  0x1934UL ),
     AF_UNIRANGE_REC(  0x1937UL,  0x193BUL ),
-    AF_UNIRANGE_REC(       0UL,       0UL )
-  };
-
-
-  const AF_Script_UniRangeRec  af_mlym_uniranges[] =
-  {
-    AF_UNIRANGE_REC(  0x0D00UL,  0x0D7FUL ),  /* Malayalam */
-    AF_UNIRANGE_REC(       0UL,       0UL )
-  };
-
-  const AF_Script_UniRangeRec  af_mlym_nonbase_uniranges[] =
-  {
-    AF_UNIRANGE_REC(  0x0D01UL,  0x0D01UL ),
-    AF_UNIRANGE_REC(  0x0D4DUL,  0x0D4EUL ),
-    AF_UNIRANGE_REC(  0x0D62UL,  0x0D63UL ),
     AF_UNIRANGE_REC(       0UL,       0UL )
   };
 

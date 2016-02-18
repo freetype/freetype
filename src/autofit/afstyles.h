@@ -168,6 +168,13 @@
          AF_COVERAGE_DEFAULT )
 #endif
 
+  STYLE( mlym_dflt, MLYM_DFLT,
+         "Malayalam default style",
+         AF_WRITING_SYSTEM_LATIN,
+         AF_SCRIPT_MLYM,
+         AF_BLUE_STRINGSET_MLYM,
+         AF_COVERAGE_DEFAULT )
+
   STYLE( mymr_dflt, MYMR_DFLT,
          "Myanmar default style",
          AF_WRITING_SYSTEM_LATIN,
@@ -211,7 +218,6 @@
   STYLE_DEFAULT_INDIC( gujr, GUJR, "Gujarati" )
   STYLE_DEFAULT_INDIC( guru, GURU, "Gurmukhi" )
   STYLE_DEFAULT_INDIC( limb, LIMB, "Limbu" )
-  STYLE_DEFAULT_INDIC( mlym, MLYM, "Malayalam" )
   STYLE_DEFAULT_INDIC( orya, ORYA, "Oriya" )
   STYLE_DEFAULT_INDIC( sinh, SINH, "Sinhala" )
   STYLE_DEFAULT_INDIC( sund, SUND, "Sundanese" )
