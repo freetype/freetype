@@ -1,3 +1,23 @@
+2016-02-25  Werner Lemberg  <wl@gnu.org>
+
+	[autofit] Add blue-zone support for Tamil script.
+
+	This essentially moves the Tamil script from the `Indic' hinter to
+	the `Latin' hinter.
+
+	* src/autofit/afblue.dat: Add blue zone data for Tamil.
+
+	* src/autofit/afblue.c, src/autofit/afblue.h: Regenerated.
+
+	* src/autofit/afscript.h: Add Tamli standard character and move data
+	out of AF_CONFIG_OPTION_INDIC block.
+
+	* src/autofit/afranges.c: Move Tamil data out of
+	AF_CONFIG_OPTION_INDIC block.
+
+	* src/autofit/afstyles.h: Update Tamil data; in particular, use
+	AF_WRITING_SYSTEM_LATIN.
+
 2016-02-18  Werner Lemberg  <wl@gnu.org>
 
 	[autofit] Add blue-zone support for Malayalam script.

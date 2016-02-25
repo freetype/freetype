@@ -189,6 +189,13 @@
          (AF_Blue_Stringset)0,
          AF_COVERAGE_DEFAULT )
 
+  STYLE( taml_dflt, TAML_DFLT,
+         "Tamil default style",
+         AF_WRITING_SYSTEM_LATIN,
+         AF_SCRIPT_TAML,
+         AF_BLUE_STRINGSET_TAML,
+         AF_COVERAGE_DEFAULT )
+
   STYLE( telu_dflt, TELU_DFLT,
          "Telugu default style",
          AF_WRITING_SYSTEM_LATIN,
@@ -222,7 +229,6 @@
   STYLE_DEFAULT_INDIC( sinh, SINH, "Sinhala" )
   STYLE_DEFAULT_INDIC( sund, SUND, "Sundanese" )
   STYLE_DEFAULT_INDIC( sylo, SYLO, "Syloti Nagri" )
-  STYLE_DEFAULT_INDIC( taml, TAML, "Tamil" )
   STYLE_DEFAULT_INDIC( tibt, TIBT, "Tibetan" )
 
 #endif /* AF_CONFIG_OPTION_INDIC */

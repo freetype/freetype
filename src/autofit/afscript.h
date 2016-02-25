@@ -129,6 +129,13 @@
           HINTING_BOTTOM_TO_TOP,
           "" )
 
+  /* only digit zero has a simple (round) shape in the Tamil script */
+  SCRIPT( taml, TAML,
+          "Tamil",
+          HB_SCRIPT_TAMIL,
+          HINTING_BOTTOM_TO_TOP,
+          "\xE0\xAF\xA6" ) /* ௦ */
+
   /* there are no simple forms for letters; we thus use two digit shapes */
   SCRIPT( telu, TELU,
           "Telugu",
@@ -183,12 +190,6 @@
   SCRIPT( sylo, SYLO,
           "Syloti Nagri",
           HB_SCRIPT_SYLOTI_NAGRI,
-          HINTING_BOTTOM_TO_TOP,
-          "o" ) /* XXX */
-
-  SCRIPT( taml, TAML,
-          "Tamil",
-          HB_SCRIPT_TAMIL,
           HINTING_BOTTOM_TO_TOP,
           "o" ) /* XXX */
 
