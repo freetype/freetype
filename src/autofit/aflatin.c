@@ -2885,14 +2885,21 @@
              ( top_to_bottom_hinting ? ( edge->pos > edge[-1].pos )
                                      : ( edge->pos < edge[-1].pos ) ) )
         {
+          /* don't move if stem would (almost) disappear otherwise; */
+          /* the ad-hoc value 16 corresponds to 1/4px               */
+          if ( edge->link && FT_ABS( edge->link->pos - edge[-1].pos ) > 16 )
+          {
 #ifdef FT_DEBUG_LEVEL_TRACE
-          FT_TRACE5(( "  BOUND: edge %d (pos=%.2f) moved to %.2f\n",
-                      edge - edges, edge->pos / 64.0, edge[-1].pos / 64.0 ));
+            FT_TRACE5(( "  BOUND: edge %d (pos=%.2f) moved to %.2f\n",
+                        edge - edges,
+                        edge->pos / 64.0,
+                        edge[-1].pos / 64.0 ));
 
-          num_actions++;
+            num_actions++;
 #endif
 
-          edge->pos = edge[-1].pos;
+            edge->pos = edge[-1].pos;
+          }
         }
       }
     }
@@ -3048,13 +3055,20 @@
              ( top_to_bottom_hinting ? ( edge->pos > edge[-1].pos )
                                      : ( edge->pos < edge[-1].pos ) ) )
         {
+          /* don't move if stem would (almost) disappear otherwise; */
+          /* the ad-hoc value 16 corresponds to 1/4px               */
+          if ( edge->link && FT_ABS( edge->link->pos - edge[-1].pos ) > 16 )
+          {
 #ifdef FT_DEBUG_LEVEL_TRACE
-          FT_TRACE5(( "  BOUND: edge %d (pos=%.2f) moved to %.2f\n",
-                      edge - edges, edge->pos / 64.0, edge[-1].pos / 64.0 ));
+            FT_TRACE5(( "  BOUND: edge %d (pos=%.2f) moved to %.2f\n",
+                        edge - edges,
+                        edge->pos / 64.0,
+                        edge[-1].pos / 64.0 ));
 
-          num_actions++;
+            num_actions++;
 #endif
-          edge->pos = edge[-1].pos;
+            edge->pos = edge[-1].pos;
+          }
         }
 
         if ( edge + 1 < edge_limit                                   &&
@@ -3062,14 +3076,21 @@
              ( top_to_bottom_hinting ? ( edge->pos < edge[1].pos )
                                      : ( edge->pos > edge[1].pos ) ) )
         {
+          /* don't move if stem would (almost) disappear otherwise; */
+          /* the ad-hoc value 16 corresponds to 1/4px               */
+          if ( edge->link && FT_ABS( edge->link->pos - edge[-1].pos ) > 16 )
+          {
 #ifdef FT_DEBUG_LEVEL_TRACE
-          FT_TRACE5(( "  BOUND: edge %d (pos=%.2f) moved to %.2f\n",
-                      edge - edges, edge->pos / 64.0, edge[1].pos / 64.0 ));
+            FT_TRACE5(( "  BOUND: edge %d (pos=%.2f) moved to %.2f\n",
+                        edge - edges,
+                        edge->pos / 64.0,
+                        edge[1].pos / 64.0 ));
 
-          num_actions++;
+            num_actions++;
 #endif
 
-          edge->pos = edge[1].pos;
+            edge->pos = edge[1].pos;
+          }
         }
       }
     }

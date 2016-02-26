@@ -1,3 +1,14 @@
+2016-02-26  Werner Lemberg  <wl@gnu.org>
+
+	[autofit] Improve BOUND action.
+
+	In complex glyph shapes, the original logic was too simple to cater
+	for situations that would actually need something similar to PS Hint
+	masks.  This fix should alleviate the worst cases.
+
+	* src/autofit/aflatin.c (af_latin_hint_edges): Don't allow
+	complete disappearance of stems.
+
 2016-02-25  Werner Lemberg  <wl@gnu.org>
 
 	[autofit] Add blue-zone support for Tamil script.
