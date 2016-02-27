@@ -1439,11 +1439,16 @@
       AF_Point  point      =  contour[0];
       AF_Point  last       =  point->prev;
       int       on_edge    =  0;
-      FT_Pos    min_pos    =  32000;  /* minimum segment pos != min_coord */
-      FT_Pos    max_pos    = -32000;  /* maximum segment pos != max_coord */
-      FT_Pos    min_on_pos =  32000;
-      FT_Pos    max_on_pos = -32000;
-      FT_Bool   passed;
+
+      /* we call values measured along a segment (point->v)    */
+      /* `coordinates', and values orthogonal to it (point->u) */
+      /* `positions'                                           */
+      FT_Pos  min_pos      =  32000;
+      FT_Pos  max_pos      = -32000;
+      FT_Pos  min_on_coord =  32000;
+      FT_Pos  max_on_coord = -32000;
+
+      FT_Bool  passed;
 
 
       if ( point == last )  /* skip singletons -- just in case */
@@ -1478,24 +1483,29 @@
 
         if ( on_edge )
         {
+          /* get minimum and maximum position */
           u = point->u;
           if ( u < min_pos )
             min_pos = u;
           if ( u > max_pos )
             max_pos = u;
 
-          /* get minimum and maximum coordinate of on points */
+          /* get minimum and maximum coordinate of `on' points */
           if ( !( point->flags & AF_FLAG_CONTROL ) )
           {
             v = point->v;
-            if ( v < min_on_pos )
-              min_on_pos = v;
-            if ( v > max_on_pos )
-              max_on_pos = v;
+            if ( v < min_on_coord )
+              min_on_coord = v;
+            if ( v > max_on_coord )
+              max_on_coord = v;
           }
 
           if ( point->out_dir != segment_dir || point == last )
           {
+            FT_Pos  min_coord;
+            FT_Pos  max_coord;
+
+
             /* we are just leaving an edge; record a new segment! */
             segment->last = point;
             segment->pos  = (FT_Short)( ( min_pos + max_pos ) >> 1 );
@@ -1504,20 +1514,20 @@
             /* is a control point, and the length of the on points  */
             /* inbetween doesn't exceed a heuristic limit           */
             if ( ( segment->first->flags | point->flags ) & AF_FLAG_CONTROL &&
-                 ( max_on_pos - min_on_pos ) < flat_threshold               )
+                 ( max_on_coord - min_on_coord ) < flat_threshold           )
               segment->flags |= AF_EDGE_ROUND;
 
             /* compute segment size */
-            min_pos = max_pos = point->v;
+            min_coord = max_coord = point->v;
 
             v = segment->first->v;
-            if ( v < min_pos )
-              min_pos = v;
-            if ( v > max_pos )
-              max_pos = v;
+            if ( v < min_coord )
+              min_coord = v;
+            if ( v > max_coord )
+              max_coord = v;
 
-            segment->min_coord = (FT_Short)min_pos;
-            segment->max_coord = (FT_Short)max_pos;
+            segment->min_coord = (FT_Short)min_coord;
+            segment->max_coord = (FT_Short)max_coord;
             segment->height    = (FT_Short)( segment->max_coord -
                                              segment->min_coord );
 
@@ -1555,11 +1565,11 @@
 
           if ( point->flags & AF_FLAG_CONTROL )
           {
-            min_on_pos =  32000;
-            max_on_pos = -32000;
+            min_on_coord =  32000;
+            max_on_coord = -32000;
           }
           else
-            min_on_pos = max_on_pos = point->v;
+            min_on_coord = max_on_coord = point->v;
 
           on_edge = 1;
         }

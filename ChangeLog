@@ -1,3 +1,11 @@
+2016-02-27  Werner Lemberg  <wl@gnu.org>
+
+	[autofit] Minor code clean-up.
+
+	* src/autofit/aflatin.c (af_latin_hints_compute_segments): Change
+	some local variable names to better differentiate between values
+	along a segment and values orthogonal to it.
+
 2016-02-26  Werner Lemberg  <wl@gnu.org>
 
 	[autofit] Improve BOUND action.
