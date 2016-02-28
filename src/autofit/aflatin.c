@@ -1436,19 +1436,34 @@
     /* do each contour separately */
     for ( ; contour < contour_limit; contour++ )
     {
-      AF_Point  point      =  contour[0];
-      AF_Point  last       =  point->prev;
-      int       on_edge    =  0;
+      AF_Point  point   = contour[0];
+      AF_Point  last    = point->prev;
+      int       on_edge = 0;
 
       /* we call values measured along a segment (point->v)    */
       /* `coordinates', and values orthogonal to it (point->u) */
       /* `positions'                                           */
       FT_Pos  min_pos      =  32000;
       FT_Pos  max_pos      = -32000;
+      FT_Pos  min_coord    =  32000;
+      FT_Pos  max_coord    = -32000;
+      FT_Pos  min_flags    =  AF_FLAG_NONE;
+      FT_Pos  max_flags    =  AF_FLAG_NONE;
       FT_Pos  min_on_coord =  32000;
       FT_Pos  max_on_coord = -32000;
 
       FT_Bool  passed;
+
+      AF_Segment  prev_segment = NULL;
+
+      FT_Pos     prev_min_pos;
+      FT_Pos     prev_max_pos;
+      FT_Pos     prev_min_coord;
+      FT_Pos     prev_max_coord;
+      FT_UShort  prev_min_flags;
+      FT_UShort  prev_max_flags;
+      FT_Pos     prev_min_on_coord;
+      FT_Pos     prev_max_on_coord;
 
 
       if ( point == last )  /* skip singletons -- just in case */
@@ -1490,6 +1505,19 @@
           if ( u > max_pos )
             max_pos = u;
 
+          /* get minimum and maximum coordinate together with flags */
+          v = point->v;
+          if ( v < min_coord )
+          {
+            min_coord = v;
+            min_flags = point->flags;
+          }
+          if ( v > max_coord )
+          {
+            max_coord = v;
+            max_flags = point->flags;
+          }
+
           /* get minimum and maximum coordinate of `on' points */
           if ( !( point->flags & AF_FLAG_CONTROL ) )
           {
@@ -1502,37 +1530,149 @@
 
           if ( point->out_dir != segment_dir || point == last )
           {
-            FT_Pos  min_coord;
-            FT_Pos  max_coord;
+            /* check whether the new segment's start point is identical to */
+            /* the previous segment's end point; for example, this might   */
+            /* happen for spikes                                           */
 
+            if ( !prev_segment || segment->first != prev_segment->last )
+            {
+              /* points are different: we are just leaving an edge, thus */
+              /* record a new segment                                    */
 
-            /* we are just leaving an edge; record a new segment! */
-            segment->last = point;
-            segment->pos  = (FT_Short)( ( min_pos + max_pos ) >> 1 );
+              segment->last = point;
+              segment->pos  = (FT_Short)( ( min_pos + max_pos ) >> 1 );
 
-            /* a segment is round if either its first or last point */
-            /* is a control point, and the length of the on points  */
-            /* inbetween doesn't exceed a heuristic limit           */
-            if ( ( segment->first->flags | point->flags ) & AF_FLAG_CONTROL &&
-                 ( max_on_coord - min_on_coord ) < flat_threshold           )
-              segment->flags |= AF_EDGE_ROUND;
+              /* a segment is round if either its first or last point */
+              /* is a control point, and the length of the on points  */
+              /* inbetween doesn't exceed a heuristic limit           */
+              if ( ( min_flags | max_flags ) & AF_FLAG_CONTROL      &&
+                   ( max_on_coord - min_on_coord ) < flat_threshold )
+                segment->flags |= AF_EDGE_ROUND;
 
-            /* compute segment size */
-            min_coord = max_coord = point->v;
+              segment->min_coord = (FT_Short)min_coord;
+              segment->max_coord = (FT_Short)max_coord;
+              segment->height    = segment->max_coord - segment->min_coord;
 
-            v = segment->first->v;
-            if ( v < min_coord )
-              min_coord = v;
-            if ( v > max_coord )
-              max_coord = v;
+              prev_segment      = segment;
+              prev_min_pos      = min_pos;
+              prev_max_pos      = max_pos;
+              prev_min_coord    = min_coord;
+              prev_max_coord    = max_coord;
+              prev_min_flags    = min_flags;
+              prev_max_flags    = max_flags;
+              prev_min_on_coord = min_on_coord;
+              prev_max_on_coord = max_on_coord;
+            }
+            else
+            {
+              /* points are the same: we don't create a new segment but */
+              /* merge the current segment with the previous one        */
 
-            segment->min_coord = (FT_Short)min_coord;
-            segment->max_coord = (FT_Short)max_coord;
-            segment->height    = (FT_Short)( segment->max_coord -
-                                             segment->min_coord );
+              if ( prev_segment->last->in_dir == point->in_dir )
+              {
+                /* we have identical directions (this can happen for       */
+                /* degenerate outlines that move zig-zag along the main    */
+                /* axis without changing the coordinate value of the other */
+                /* axis, and where the segments have just been merged):    */
+                /* unify segments                                          */
+
+                /* update constraints */
+
+                if ( prev_min_pos < min_pos )
+                  min_pos = prev_min_pos;
+                if ( prev_max_pos > max_pos )
+                  max_pos = prev_max_pos;
+
+                if ( prev_min_coord < min_coord )
+                {
+                  min_coord = prev_min_coord;
+                  min_flags = prev_min_flags;
+                }
+                if ( prev_max_coord > max_coord )
+                {
+                  max_coord = prev_max_coord;
+                  max_flags = prev_max_flags;
+                }
+
+                if ( prev_min_on_coord < min_on_coord )
+                  min_on_coord = prev_min_on_coord;
+                if ( prev_max_on_coord > max_on_coord )
+                  max_on_coord = prev_max_on_coord;
+
+                prev_segment->last = point;
+                prev_segment->pos  = (FT_Short)( ( min_pos +
+                                                   max_pos ) >> 1 );
+
+                if ( ( min_flags | max_flags ) & AF_FLAG_CONTROL      &&
+                     ( max_on_coord - min_on_coord ) < flat_threshold )
+                  prev_segment->flags |= AF_EDGE_ROUND;
+                else
+                  prev_segment->flags &= ~AF_EDGE_ROUND;
+
+                prev_segment->min_coord = (FT_Short)min_coord;
+                prev_segment->max_coord = (FT_Short)max_coord;
+                prev_segment->height    = prev_segment->max_coord -
+                                          prev_segment->min_coord;
+              }
+              else
+              {
+                /* we have different directions; use the properties of the */
+                /* longer segment and discard the other one                */
+
+                if ( FT_ABS( prev_max_coord - prev_min_coord ) >
+                     FT_ABS( max_coord - min_coord ) )
+                {
+                  /* discard current segment */
+
+                  if ( min_pos < prev_min_pos )
+                    prev_min_pos = min_pos;
+                  if ( max_pos > prev_max_pos )
+                    prev_max_pos = max_pos;
+
+                  prev_segment->last = point;
+                  prev_segment->pos  = (FT_Short)( ( prev_min_pos +
+                                                     prev_max_pos ) >> 1 );
+                }
+                else
+                {
+                  /* discard previous segment */
+
+                  if ( prev_min_pos < min_pos )
+                    min_pos = prev_min_pos;
+                  if ( prev_max_pos > max_pos )
+                    max_pos = prev_max_pos;
+
+                  segment->last = point;
+                  segment->pos  = (FT_Short)( ( min_pos + max_pos ) >> 1 );
+
+                  if ( ( min_flags | max_flags ) & AF_FLAG_CONTROL      &&
+                       ( max_on_coord - min_on_coord ) < flat_threshold )
+                    segment->flags |= AF_EDGE_ROUND;
+
+                  segment->min_coord = (FT_Short)min_coord;
+                  segment->max_coord = (FT_Short)max_coord;
+                  segment->height    = segment->max_coord -
+                                       segment->min_coord;
+
+                  *prev_segment = *segment;
+
+                  prev_min_pos      = min_pos;
+                  prev_max_pos      = max_pos;
+                  prev_min_coord    = min_coord;
+                  prev_max_coord    = max_coord;
+                  prev_min_flags    = min_flags;
+                  prev_max_flags    = max_flags;
+                  prev_min_on_coord = min_on_coord;
+                  prev_max_on_coord = max_on_coord;
+                }
+              }
+
+              axis->num_segments--;
+            }
 
             on_edge = 0;
             segment = NULL;
+
             /* fall through */
           }
         }
@@ -1561,7 +1701,9 @@
           segment->first = point;
           segment->last  = point;
 
-          min_pos = max_pos = point->u;
+          min_pos   = max_pos   = point->u;
+          min_coord = max_coord = point->v;
+          min_flags = max_flags = point->flags;
 
           if ( point->flags & AF_FLAG_CONTROL )
           {

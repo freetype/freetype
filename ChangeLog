@@ -1,5 +1,19 @@
 2016-02-27  Werner Lemberg  <wl@gnu.org>
 
+	[autofit] Properly handle spikes pointing to the x-axis.
+
+	An example that gets better rendered is glyph `uusignTaml' (glyph
+	index 2286) in font `FreeSerif.ttf' (Version 0412.2263) at 22ppem.
+
+	* src/autofit/aflatin.c (af_latin_hints_compute_segments): Properly
+	handle segments where the last point of the first segment is
+	identical to the first point in the second one.  This can happen for
+	malformed fonts or spikes.  We either merge the new segment with the
+	previous one (both segments point into the same direction), or we
+	discard the shorter segment if they point into different directions.
+
+2016-02-27  Werner Lemberg  <wl@gnu.org>
+
 	[autofit] Minor code clean-up.
 
 	* src/autofit/aflatin.c (af_latin_hints_compute_segments): Change
