@@ -140,6 +140,12 @@
     '\0',
     '\xE1', '\x80', '\x89', ' ', '\xE1', '\x80', '\x8A', ' ', '\xE1', '\x80', '\xA5', ' ', '\xE1', '\x80', '\xA9', ' ', '\xE1', '\x80', '\xA8', ' ', '\xE1', '\x81', '\x82', ' ', '\xE1', '\x81', '\x85', ' ', '\xE1', '\x81', '\x89',  /* ဉ ည ဥ ဩ ဨ ၂ ၅ ၉ */
     '\0',
+    '\xE0', '\xB6', '\x89', ' ', '\xE0', '\xB6', '\x9A', ' ', '\xE0', '\xB6', '\x9D', ' ', '\xE0', '\xB6', '\xB3', ' ', '\xE0', '\xB6', '\xB4', ' ', '\xE0', '\xB6', '\xBA', ' ', '\xE0', '\xB6', '\xBD', ' ', '\xE0', '\xB7', '\x86',  /* ඉ ක ඝ ඳ ප ය ල ෆ */
+    '\0',
+    '\xE0', '\xB6', '\x91', ' ', '\xE0', '\xB6', '\x94', ' ', '\xE0', '\xB6', '\x9D', ' ', '\xE0', '\xB6', '\xA2', ' ', '\xE0', '\xB6', '\xA7', ' ', '\xE0', '\xB6', '\xAE', ' ', '\xE0', '\xB6', '\xB0', ' ', '\xE0', '\xB6', '\xBB',  /* එ ඔ ඝ ජ ට ථ ධ ර */
+    '\0',
+    '\xE0', '\xB6', '\xAF', ' ', '\xE0', '\xB6', '\xB3', ' ', '\xE0', '\xB6', '\x8B', ' ', '\xE0', '\xB6', '\xBD', ' ', '\xE0', '\xB6', '\xAD', '\xE0', '\xB7', '\x96', ' ', '\xE0', '\xB6', '\xAD', '\xE0', '\xB7', '\x94', ' ', '\xE0', '\xB6', '\xB6', '\xE0', '\xB7', '\x94', ' ', '\xE0', '\xB6', '\xAF', '\xE0', '\xB7', '\x94',  /* ද ඳ උ ල තූ තු බු දු */
+    '\0',
     '\xE0', '\xAE', '\x89', ' ', '\xE0', '\xAE', '\x92', ' ', '\xE0', '\xAE', '\x93', ' ', '\xE0', '\xAE', '\xB1', ' ', '\xE0', '\xAE', '\x88', ' ', '\xE0', '\xAE', '\x95', ' ', '\xE0', '\xAE', '\x99', ' ', '\xE0', '\xAE', '\x9A',  /* உ ஒ ஓ ற ஈ க ங ச */
     '\0',
     '\xE0', '\xAE', '\x95', ' ', '\xE0', '\xAE', '\x9A', ' ', '\xE0', '\xAE', '\xB2', ' ', '\xE0', '\xAE', '\xB6', ' ', '\xE0', '\xAE', '\x89', ' ', '\xE0', '\xAE', '\x99', ' ', '\xE0', '\xAE', '\x9F', ' ', '\xE0', '\xAE', '\xAA',  /* க ச ல ஶ உ ங ட ப */
@@ -304,6 +310,10 @@
     { AF_BLUE_STRING_MYANMAR_ASCENDER,  AF_BLUE_PROPERTY_LATIN_TOP        },
     { AF_BLUE_STRING_MYANMAR_DESCENDER, 0                                 },
     { AF_BLUE_STRING_MAX,               0                                 },
+    { AF_BLUE_STRING_SINHALA_TOP,       AF_BLUE_PROPERTY_LATIN_TOP },
+    { AF_BLUE_STRING_SINHALA_BOTTOM,    0                          },
+    { AF_BLUE_STRING_SINHALA_DESCENDER, 0                          },
+    { AF_BLUE_STRING_MAX,               0                          },
     { AF_BLUE_STRING_TAMIL_TOP,    AF_BLUE_PROPERTY_LATIN_TOP },
     { AF_BLUE_STRING_TAMIL_BOTTOM, 0                          },
     { AF_BLUE_STRING_MAX,          0                          },

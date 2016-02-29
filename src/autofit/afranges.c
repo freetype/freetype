@@ -406,6 +406,20 @@
   };
 
 
+  const AF_Script_UniRangeRec  af_sinh_uniranges[] =
+  {
+    AF_UNIRANGE_REC(  0x0D80UL,  0x0DFFUL ),  /* Sinhala */
+    AF_UNIRANGE_REC(       0UL,       0UL )
+  };
+
+  const AF_Script_UniRangeRec  af_sinh_nonbase_uniranges[] =
+  {
+    AF_UNIRANGE_REC(  0x0DCAUL,  0x0DCAUL ),
+    AF_UNIRANGE_REC(  0x0DD2UL,  0x0DD6UL ),
+    AF_UNIRANGE_REC(       0UL,       0UL )
+  };
+
+
   const AF_Script_UniRangeRec  af_taml_uniranges[] =
   {
     AF_UNIRANGE_REC(  0x0B80UL,  0x0BFFUL ),  /* Tamil */
@@ -517,20 +531,6 @@
     AF_UNIRANGE_REC(  0x0B41UL,  0x0B44UL ),
     AF_UNIRANGE_REC(  0x0B4DUL,  0x0B56UL ),
     AF_UNIRANGE_REC(  0x0B62UL,  0x0B63UL ),
-    AF_UNIRANGE_REC(       0UL,       0UL )
-  };
-
-
-  const AF_Script_UniRangeRec  af_sinh_uniranges[] =
-  {
-    AF_UNIRANGE_REC(  0x0D80UL,  0x0DFFUL ),  /* Sinhala */
-    AF_UNIRANGE_REC(       0UL,       0UL )
-  };
-
-  const AF_Script_UniRangeRec  af_sinh_nonbase_uniranges[] =
-  {
-    AF_UNIRANGE_REC(  0x0DCAUL,  0x0DCAUL ),
-    AF_UNIRANGE_REC(  0x0DD2UL,  0x0DD6UL ),
     AF_UNIRANGE_REC(       0UL,       0UL )
   };
 

@@ -214,6 +214,13 @@ AF_BLUE_STRING_ENUM AF_BLUE_STRINGS_ARRAY AF_BLUE_STRING_MAX_LEN:
   AF_BLUE_STRING_MYANMAR_DESCENDER
     "ဉ ည ဥ ဩ ဨ ၂ ၅ ၉"
 
+  AF_BLUE_STRING_SINHALA_TOP
+    "ඉ ක ඝ ඳ ප ය ල ෆ"
+  AF_BLUE_STRING_SINHALA_BOTTOM
+    "එ ඔ ඝ ජ ට ථ ධ ර"
+  AF_BLUE_STRING_SINHALA_DESCENDER
+    "ද ඳ උ ල තූ තු බු දු"
+
   AF_BLUE_STRING_TAMIL_TOP
     "உ ஒ ஓ ற ஈ க ங ச"
   AF_BLUE_STRING_TAMIL_BOTTOM
@@ -526,6 +533,12 @@ AF_BLUE_STRINGSET_ENUM AF_BLUE_STRINGSETS_ARRAY AF_BLUE_STRINGSET_MAX_LEN:
     { AF_BLUE_STRING_MYANMAR_ASCENDER,  AF_BLUE_PROPERTY_LATIN_TOP        }
     { AF_BLUE_STRING_MYANMAR_DESCENDER, 0                                 }
     { AF_BLUE_STRING_MAX,               0                                 }
+
+  AF_BLUE_STRINGSET_SINH
+    { AF_BLUE_STRING_SINHALA_TOP,       AF_BLUE_PROPERTY_LATIN_TOP }
+    { AF_BLUE_STRING_SINHALA_BOTTOM,    0                          }
+    { AF_BLUE_STRING_SINHALA_DESCENDER, 0                          }
+    { AF_BLUE_STRING_MAX,               0                          }
 
   AF_BLUE_STRINGSET_TAML
     { AF_BLUE_STRING_TAMIL_TOP,    AF_BLUE_PROPERTY_LATIN_TOP }
