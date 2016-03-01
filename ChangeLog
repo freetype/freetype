@@ -1,4 +1,11 @@
 2016-03-01  Werner Lemberg  <wl@gnu.org>
+	    Kostya Serebryany  <kcc@google.com>
+
+	[ftfuzzer] Add unit for testing smooth and black rasterizers.
+
+	* src/tools/ftfuzzer/rasterfuzzer.cc: New file.
+
+2016-03-01  Werner Lemberg  <wl@gnu.org>
 
 	[autofit] Fix reallocation error introduced in 2016-02-27 (#47310).
 
