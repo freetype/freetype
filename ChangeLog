@@ -1,5 +1,12 @@
 2016-03-01  Werner Lemberg  <wl@gnu.org>
 
+	[autofit] Fix reallocation error introduced in 2016-02-27 (#47310).
+
+	* src/autofit/aflatin.c (af_latin_hints_compute_segments): Reassign
+	`prev_segment' after reallocation.
+
+2016-03-01  Werner Lemberg  <wl@gnu.org>
+
 	Fix clang warnings.
 
 	* src/autofit/aflatin.c (af_latin_hints_compute_segments): Use

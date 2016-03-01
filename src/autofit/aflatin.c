@@ -1701,6 +1701,11 @@
           segment->first = point;
           segment->last  = point;
 
+          /* `af_axis_hints_new_segment' reallocates memory,    */
+          /* thus we have to refresh the `prev_segment' pointer */
+          if ( prev_segment )
+            prev_segment = segment - 1;
+
           min_pos   = max_pos   = point->u;
           min_coord = max_coord = point->v;
           min_flags = max_flags = point->flags;
