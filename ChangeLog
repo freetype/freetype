@@ -1,3 +1,20 @@
+2016-03-01  Werner Lemberg  <wl@gnu.org>
+
+	Fix clang warnings.
+
+	* src/autofit/aflatin.c (af_latin_hints_compute_segments): Use
+	FT_UShort for `min_flags' and `max_flags'.
+	Initialize `prev_*' variables.
+
+	* src/cff/cffobjs.c (cff_face_init) [FT_DEBUG_LEVEL_TRACE]: Fix
+	types of local variables.
+
+	* src/smooth/ftgrays.c (gray_dump_cells) [FT_DEBUG_LEVEL_TRACE]:
+	Update `printf' format string.
+
+	* src/tools/ftfuzzer/ftfuzzer.cc (setIntermediateAxis): Add cast.
+	(LLVMFuzzerTestOneInput): Fix loop type.
+
 2016-02-29  Werner Lemberg  <wl@gnu.org>
 
 	[autofit] Add blue-zone support for Sinhala script.

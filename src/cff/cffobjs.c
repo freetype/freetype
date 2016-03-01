@@ -638,13 +638,13 @@
         /* We thus access `cff->strings' directly.                      */
         for ( idx = 1; idx < cff->num_strings; idx++ )
         {
-          FT_Byte*  s1    = cff->strings[idx - 1];
-          FT_Byte*  s2    = cff->strings[idx];
-          size_t    s1len = s2 - s1 - 1; /* without the final NULL byte */
-          size_t    l;
+          FT_Byte*    s1    = cff->strings[idx - 1];
+          FT_Byte*    s2    = cff->strings[idx];
+          FT_PtrDist  s1len = s2 - s1 - 1; /* without the final NULL byte */
+          FT_PtrDist  l;
 
 
-          FT_TRACE4(( "  %5d ", idx + 390, s ));
+          FT_TRACE4(( "  %5d ", idx + 390 ));
           for ( l = 0; l < s1len; l++ )
             FT_TRACE4(( "%c", s1[l] ));
           FT_TRACE4(( "\n" ));
@@ -653,13 +653,13 @@
         /* print last element */
         if ( cff->num_strings )
         {
-          FT_Byte*  s1    = cff->strings[cff->num_strings - 1];
-          FT_Byte*  s2    = cff->string_pool + cff->string_pool_size;
-          size_t    s1len = s2 - s1 - 1;
-          size_t    l;
+          FT_Byte*    s1    = cff->strings[cff->num_strings - 1];
+          FT_Byte*    s2    = cff->string_pool + cff->string_pool_size;
+          FT_PtrDist  s1len = s2 - s1 - 1;
+          FT_PtrDist  l;
 
 
-          FT_TRACE4(( "  %5d ", cff->num_strings + 390, s ));
+          FT_TRACE4(( "  %5d ", cff->num_strings + 390 ));
           for ( l = 0; l < s1len; l++ )
             FT_TRACE4(( "%c", s1[l] ));
           FT_TRACE4(( "\n" ));

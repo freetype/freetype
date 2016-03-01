@@ -1443,27 +1443,27 @@
       /* we call values measured along a segment (point->v)    */
       /* `coordinates', and values orthogonal to it (point->u) */
       /* `positions'                                           */
-      FT_Pos  min_pos      =  32000;
-      FT_Pos  max_pos      = -32000;
-      FT_Pos  min_coord    =  32000;
-      FT_Pos  max_coord    = -32000;
-      FT_Pos  min_flags    =  AF_FLAG_NONE;
-      FT_Pos  max_flags    =  AF_FLAG_NONE;
-      FT_Pos  min_on_coord =  32000;
-      FT_Pos  max_on_coord = -32000;
+      FT_Pos     min_pos      =  32000;
+      FT_Pos     max_pos      = -32000;
+      FT_Pos     min_coord    =  32000;
+      FT_Pos     max_coord    = -32000;
+      FT_UShort  min_flags    =  AF_FLAG_NONE;
+      FT_UShort  max_flags    =  AF_FLAG_NONE;
+      FT_Pos     min_on_coord =  32000;
+      FT_Pos     max_on_coord = -32000;
 
       FT_Bool  passed;
 
       AF_Segment  prev_segment = NULL;
 
-      FT_Pos     prev_min_pos;
-      FT_Pos     prev_max_pos;
-      FT_Pos     prev_min_coord;
-      FT_Pos     prev_max_coord;
-      FT_UShort  prev_min_flags;
-      FT_UShort  prev_max_flags;
-      FT_Pos     prev_min_on_coord;
-      FT_Pos     prev_max_on_coord;
+      FT_Pos     prev_min_pos      = min_pos;
+      FT_Pos     prev_max_pos      = max_pos;
+      FT_Pos     prev_min_coord    = min_coord;
+      FT_Pos     prev_max_coord    = max_coord;
+      FT_UShort  prev_min_flags    = min_flags;
+      FT_UShort  prev_max_flags    = max_flags;
+      FT_Pos     prev_min_on_coord = min_on_coord;
+      FT_Pos     prev_max_on_coord = max_on_coord;
 
 
       if ( point == last )  /* skip singletons -- just in case */
