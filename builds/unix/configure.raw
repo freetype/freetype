@@ -235,6 +235,9 @@ if test "x$GCC" = xyes; then
   *-*-mingw*)
     XX_ANSIFLAGS="-pedantic"
     ;;
+  *-*-aix*)
+    XX_ANSIFLAGS="-pedantic"
+    ;;
   *)
     GCC_VERSION=`$CC -dumpversion`
     GCC_MAJOR=`echo "$GCC_VERSION" | sed 's/\([[^.]][[^.]]*\).*/\1/'`

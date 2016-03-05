@@ -1,3 +1,10 @@
+2016-03-05  J Raynor <jxraynor@gmail.com>
+
+	Make FreeType compile on AIX out of the box.
+
+	* builds/unix/configure.raw (XX_ANSIFLAGS): Don't use `-ansi' on
+	AIX.
+
 2016-03-01  Werner Lemberg  <wl@gnu.org>
 	    Kostya Serebryany  <kcc@google.com>
 
