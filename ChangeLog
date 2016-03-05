@@ -1,3 +1,15 @@
+2016-03-05  Werner Lemberg  <wl@gnu.org>
+
+	[autofit] Avoid excessive stem length rounding (#25392).
+
+	* src/autofit/aflatin.c (af_latin_compute_stem_width): Add argument
+	to pass difference between hinted and unhinted position of base
+	point; use this to adjust the stem width depending on the PPEM so
+	that it doesn't become too large under certain circumstances.
+	Update all callers using value 0 for this argument except...
+	(af_latin_align_linked_edge): Pass position delta of base point to
+	`af_latin_compute_stem_width'.
+
 2016-03-05  J Raynor <jxraynor@gmail.com>
 
 	Make FreeType compile on AIX out of the box.
