@@ -1,3 +1,9 @@
+2016-03-06  Alexei Podtelezhnikov  <apodtele@gmail.com>
+
+	[smooth] Replace left shifts with multiplications (#47114).
+
+	* src/smooth/ftgrays.c (SUBPIXELS, UPSCALE, DOWNSCALE): Do it.
+
 2016-03-05  Werner Lemberg  <wl@gnu.org>
 
 	[autofit] Avoid excessive stem length rounding (#25392).

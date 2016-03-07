@@ -320,17 +320,17 @@ typedef ptrdiff_t  FT_PtrDist;
 
 #define ONE_PIXEL       ( 1L << PIXEL_BITS )
 #define TRUNC( x )      ( (TCoord)( (x) >> PIXEL_BITS ) )
-#define SUBPIXELS( x )  ( (TPos)(x) << PIXEL_BITS )
+#define SUBPIXELS( x )  ( (TPos)(x) * ONE_PIXEL )
 #define FLOOR( x )      ( (x) & -ONE_PIXEL )
 #define CEILING( x )    ( ( (x) + ONE_PIXEL - 1 ) & -ONE_PIXEL )
 #define ROUND( x )      ( ( (x) + ONE_PIXEL / 2 ) & -ONE_PIXEL )
 
 #if PIXEL_BITS >= 6
-#define UPSCALE( x )    ( (x) << ( PIXEL_BITS - 6 ) )
+#define UPSCALE( x )    ( (x) * ( ONE_PIXEL >> 6 ) )
 #define DOWNSCALE( x )  ( (x) >> ( PIXEL_BITS - 6 ) )
 #else
 #define UPSCALE( x )    ( (x) >> ( 6 - PIXEL_BITS ) )
-#define DOWNSCALE( x )  ( (x) << ( 6 - PIXEL_BITS ) )
+#define DOWNSCALE( x )  ( (x) * ( 64 >> PIXEL_BITS ) )
 #endif
 
 
