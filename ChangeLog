@@ -1,5 +1,16 @@
 2016-03-06  Alexei Podtelezhnikov  <apodtele@gmail.com>
 
+	[base] Refuse to render enormous outlines (#47114).
+
+	The goal is to avoid integer overflows in the rendering algorithms.
+	The limit is chosen arbitrarily at some 2^18 pixels, which should be
+	enough for modern devices including printers.
+
+	* src/base/ftoutln.c (FT_Outline_Render): Check CBox and reject
+	enormous outlines.
+
+2016-03-06  Alexei Podtelezhnikov  <apodtele@gmail.com>
+
 	[smooth] Replace left shifts with multiplications (#47114).
 
 	* src/smooth/ftgrays.c (SUBPIXELS, UPSCALE, DOWNSCALE): Do it.
