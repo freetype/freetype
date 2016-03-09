@@ -1,3 +1,12 @@
+2016-03-09  Behdad Esfahbod  <behdad@behdad.org>
+
+	[truetype] Fix handling of non-intermediate GX tuples.
+
+	We probably did not notice this as all fonts we tested had only
+	tuple_coords[i] be +1 or -1 for non-intermediate tuples.
+
+	* src/truetype/ttgxvar.c (ft_var_apply_tuple): Implement it.
+
 2016-03-06  Alexei Podtelezhnikov  <apodtele@gmail.com>
 
 	[base] Refuse to render enormous outlines (#47114).

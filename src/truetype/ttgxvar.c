@@ -632,8 +632,8 @@
         break;
       }
 
-      else if ( ( blend->normalizedcoords[i] < 0 && tuple_coords[i] > 0 ) ||
-                ( blend->normalizedcoords[i] > 0 && tuple_coords[i] < 0 ) )
+      else if ( ( blend->normalizedcoords[i] < FT_MIN( 0, tuple_coords[i] ) ) ||
+                ( blend->normalizedcoords[i] > FT_MAX( 0, tuple_coords[i] ) ) )
       {
         FT_TRACE6(( "      tuple coordinate value %.4f is exceeded, stop\n",
                     tuple_coords[i] / 65536.0 ));
@@ -646,10 +646,9 @@
         FT_TRACE6(( "      tuple coordinate value %.4f fits\n",
                     tuple_coords[i] / 65536.0 ));
         /* not an intermediate tuple */
-        apply = FT_MulFix( apply,
-                           blend->normalizedcoords[i] > 0
-                             ? blend->normalizedcoords[i]
-                             : -blend->normalizedcoords[i] );
+        apply = FT_MulDiv( apply,
+                           blend->normalizedcoords[i],
+                           tuple_coords[i] );
       }
 
       else if ( blend->normalizedcoords[i] < im_start_coords[i] ||
