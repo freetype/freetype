@@ -1,3 +1,10 @@
+2016-03-11  Pavlo Denysov  <paul.kiev+savannah@gmail.com>
+
+	Fix CMake issues for iOS (patch #8941).
+
+	* CMakeLists.txt (CMAKE_TOOLCHAIN_FILE): Fix directory.
+	* builds/cmake/iOS.cmake: No longer enforce gcc.
+
 2016-03-09  Behdad Esfahbod  <behdad@behdad.org>
 
 	[truetype] Fix handling of non-intermediate GX tuples.

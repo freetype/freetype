@@ -36,11 +36,11 @@
 #
 # For an iOS static library, use
 #
-#   cmake <path-to-freetype2-src-dir> -D IOS_PLATFORM=OS -G Xcode
+#   cmake -D IOS_PLATFORM=OS -G Xcode <path-to-freetype2-src-dir>
 #
 # or
 #
-#   cmake <path-to-freetype2-src-dir> -D IOS_PLATFORM=SIMULATOR -G Xcode
+#   cmake -D IOS_PLATFORM=SIMULATOR -G Xcode <path-to-freetype2-src-dir>
 #
 # Please refer to the cmake manual for further options, in particular, how
 # to modify compilation and linking parameters.
@@ -102,7 +102,7 @@ if (APPLE)
     set(BUILD_SHARED_LIBS OFF)
 
     set(CMAKE_TOOLCHAIN_FILE
-      ${PROJECT_SOURCE_DIR}/builds/cmake/iOS.cmake)
+      ${CMAKE_SOURCE_DIR}/builds/cmake/iOS.cmake)
   endif ()
 else ()
   if (DEFINED IOS_PLATFORM)
