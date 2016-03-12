@@ -1,3 +1,11 @@
+2016-03-12  Werner Lemberg  <wl@gnu.org>
+
+	[ftfuzzer] Improve coverage of rasterfuzzer.
+
+	* src/tools/ftfuzzer/rasterfuzzer.cc (LLVMFuzzerTestOneInput): Use
+	input data for `tags' array also.
+	Trim input data to get more positive hits.
+
 2016-03-11  Pavlo Denysov  <paul.kiev+savannah@gmail.com>
 
 	Fix CMake issues for iOS (patch #8941).

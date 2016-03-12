@@ -71,27 +71,52 @@
       NULL                // palette
     };
 
-    short  n_points = short( size_ / sizeof ( FT_Vector ) );
+    const size_t vsize = sizeof ( FT_Vector );
+    const size_t tsize = sizeof ( char );
+
+    // we use the input data for both points and tags
+    short  n_points = short( size_ / ( vsize + tsize ) );
     if ( n_points <= 2 )
       return 0;
 
     FT_Vector*  points = reinterpret_cast<FT_Vector*>(
-                           const_cast<uint8_t*>( data ) );
+                           const_cast<uint8_t*>(
+                             data ) );
+    char*       tags   = reinterpret_cast<char*>(
+                           const_cast<uint8_t*>(
+                             data + size_t( n_points ) * vsize ) );
+
+    // to reduce the number of invalid outlines that are immediately
+    // rejected in `FT_Outline_Render', limit values to 2^18 pixels
+    // (i.e., 2^24 bits)
+    for ( short  i = 0; i < n_points; i++ )
+    {
+      if ( points[i].x == LONG_MIN )
+        points[i].x = 0;
+      else if ( points[i].x < 0 )
+        points[i].x = -( -points[i].x & 0xFFFFFF ) - 1;
+      else
+        points[i].x = ( points[i].x & 0xFFFFFF ) + 1;
+
+      if ( points[i].y == LONG_MIN )
+        points[i].y = 0;
+      else if ( points[i].y < 0 )
+        points[i].y = -( -points[i].y & 0xFFFFFF ) - 1;
+      else
+        points[i].y = ( points[i].y & 0xFFFFFF ) + 1;
+    }
 
     short  contours[1];
     contours[0] = n_points - 1;
 
-    vector<char>  tags( (size_t)n_points );
-    fill( tags.begin(), tags.end(), 1 );
-
     FT_Outline  outline =
     {
-      1,                                      // n_contours
-      n_points,                               // n_points
-      points,                                 // points
-      reinterpret_cast<char*>( tags.data() ), // tags
-      contours,                               // contours
-      FT_OUTLINE_NONE                         // flags
+      1,               // n_contours
+      n_points,        // n_points
+      points,          // points
+      tags,            // tags
+      contours,        // contours
+      FT_OUTLINE_NONE  // flags
     };
 
     FT_Outline_Get_Bitmap( library, &outline, &bitmap_mono );
