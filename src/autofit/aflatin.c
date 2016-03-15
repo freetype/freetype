@@ -2511,7 +2511,6 @@
     AF_LatinMetrics  metrics  = (AF_LatinMetrics)hints->metrics;
     AF_LatinAxis     axis     = &metrics->axis[dim];
     FT_Pos           dist     = width;
-    FT_Pos           bdelta   = 0;
     FT_Int           sign     = 0;
     FT_Int           vertical = ( dim == AF_DIMENSION_VERT );
 
@@ -2524,32 +2523,6 @@
     {
       dist = -width;
       sign = 1;
-    }
-
-    /* A stem's end position depends on two values: the start position    */
-    /* and the stem length.  The former gets usually rounded to the grid, */
-    /* while the latter gets rounded also if it exceeds a certain length  */
-    /* (see below in this function).  This `double rounding' can lead to  */
-    /* a great difference to the original, unhinted position; this        */
-    /* normally doesn't matter for large PPEM values, but for small sizes */
-    /* it can easily make outlines collide.  For this reason, we adjust   */
-    /* the stem length by a small amount depending on the PPEM value in   */
-    /* case the former and latter rounding both point into the same       */
-    /* direction.                                                         */
-
-    if ( ( ( width > 0 ) && ( base_delta > 0 ) ) ||
-         ( ( width < 0 ) && ( base_delta < 0 ) ) )
-    {
-      FT_UInt  ppem = metrics->root.scaler.face->size->metrics.x_ppem;
-
-
-      if ( ppem < 10 )
-        bdelta = base_delta;
-      else if ( ppem < 30 )
-        bdelta = ( base_delta * (FT_Pos)( 30 - ppem ) ) / 20;
-
-      if ( bdelta < 0 )
-        bdelta = -bdelta;
     }
 
     if ( (  vertical && !AF_LATIN_HINTS_DO_VERT_SNAP( hints ) ) ||
@@ -2609,7 +2582,39 @@
             dist += delta;
         }
         else
+        {
+          /* A stem's end position depends on two values: the start        */
+          /* position and the stem length.  The former gets usually        */
+          /* rounded to the grid, while the latter gets rounded also if it */
+          /* exceeds a certain length (see below in this function).  This  */
+          /* `double rounding' can lead to a great difference to the       */
+          /* original, unhinted position; this normally doesn't matter for */
+          /* large PPEM values, but for small sizes it can easily make     */
+          /* outlines collide.  For this reason, we adjust the stem length */
+          /* by a small amount depending on the PPEM value in case the     */
+          /* former and latter rounding both point into the same           */
+          /* direction.                                                    */
+
+          FT_Pos  bdelta = 0;
+
+
+          if ( ( ( width > 0 ) && ( base_delta > 0 ) ) ||
+               ( ( width < 0 ) && ( base_delta < 0 ) ) )
+          {
+            FT_UInt  ppem = metrics->root.scaler.face->size->metrics.x_ppem;
+
+
+            if ( ppem < 10 )
+              bdelta = base_delta;
+            else if ( ppem < 30 )
+              bdelta = ( base_delta * (FT_Pos)( 30 - ppem ) ) / 20;
+
+            if ( bdelta < 0 )
+              bdelta = -bdelta;
+          }
+
           dist = ( dist - bdelta + 32 ) & ~63;
+        }
       }
     }
     else
