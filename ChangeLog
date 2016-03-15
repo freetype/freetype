@@ -1,3 +1,9 @@
+2016-03-14  Alexei Podtelezhnikov  <apodtele@gmail.com>
+
+	[smooth] Temporarily revert 6eb6158dd787 (#47114).
+
+	* src/smooth/ftgrays.c (gray_render_line): Old implementation.
+
 2016-03-12  Werner Lemberg  <wl@gnu.org>
 
 	[ftfuzzer] Improve coverage of rasterfuzzer.

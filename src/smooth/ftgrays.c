@@ -671,7 +671,7 @@ typedef ptrdiff_t  FT_PtrDist;
     gray_set_cell( RAS_VAR_ ex, ey );
   }
 
-#if 0
+#if 1
 
   /*************************************************************************/
   /*                                                                       */
