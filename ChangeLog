@@ -1,3 +1,11 @@
+2016-03-17  Alexei Podtelezhnikov  <apodtele@gmail.com>
+
+	[smooth] Minor refactoring.
+
+	* src/smooth/ftgrays.c (gray_render_conic, gray_render_cubic): Move
+	upscaling from here...
+	(gray_conic_to, gray_cubic_to):... to here.
+
 2016-03-15  Werner Lemberg  <wl@gnu.org>
 
 	* src/autofit/aflatin.c (af_latin_compute_stem_width): Optimize.
