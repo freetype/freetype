@@ -689,12 +689,8 @@ typedef ptrdiff_t  FT_PtrDist;
     int     incr;
 
 
-    dx = x2 - x1;
-
     ex1 = TRUNC( x1 );
     ex2 = TRUNC( x2 );
-    fx1 = (TCoord)( x1 - SUBPIXELS( ex1 ) );
-    fx2 = (TCoord)( x2 - SUBPIXELS( ex2 ) );
 
     /* trivial case.  Happens often */
     if ( y1 == y2 )
@@ -702,6 +698,9 @@ typedef ptrdiff_t  FT_PtrDist;
       gray_set_cell( RAS_VAR_ ex2, ey );
       return;
     }
+
+    fx1 = (TCoord)( x1 - SUBPIXELS( ex1 ) );
+    fx2 = (TCoord)( x2 - SUBPIXELS( ex2 ) );
 
     /* everything is located in a single cell.  That is easy! */
     /*                                                        */
@@ -716,6 +715,7 @@ typedef ptrdiff_t  FT_PtrDist;
     /* ok, we'll have to render a run of adjacent cells on the same */
     /* scanline...                                                  */
     /*                                                              */
+    dx    = x2 - x1;
     p     = ( ONE_PIXEL - fx1 ) * ( y2 - y1 );
     first = ONE_PIXEL;
     incr  = 1;
@@ -787,16 +787,14 @@ typedef ptrdiff_t  FT_PtrDist;
 
     ey1 = TRUNC( ras.y );
     ey2 = TRUNC( to_y );     /* if (ey2 >= ras.max_ey) ey2 = ras.max_ey-1; */
-    fy1 = (TCoord)( ras.y - SUBPIXELS( ey1 ) );
-    fy2 = (TCoord)( to_y - SUBPIXELS( ey2 ) );
-
-    dx = to_x - ras.x;
-    dy = to_y - ras.y;
 
     /* perform vertical clipping */
     if ( ( ey1 >= ras.max_ey && ey2 >= ras.max_ey ) ||
          ( ey1 <  ras.min_ey && ey2 <  ras.min_ey ) )
       goto End;
+
+    fy1 = (TCoord)( ras.y - SUBPIXELS( ey1 ) );
+    fy2 = (TCoord)( to_y - SUBPIXELS( ey2 ) );
 
     /* everything is on a single scanline */
     if ( ey1 == ey2 )
@@ -804,6 +802,9 @@ typedef ptrdiff_t  FT_PtrDist;
       gray_render_scanline( RAS_VAR_ ey1, ras.x, fy1, to_x, fy2 );
       goto End;
     }
+
+    dx = to_x - ras.x;
+    dy = to_y - ras.y;
 
     /* vertical line - avoid calling gray_render_scanline */
     incr = 1;
@@ -918,8 +919,6 @@ typedef ptrdiff_t  FT_PtrDist;
     TCoord  ex1, ex2, ey1, ey2;
 
 
-    ex1 = TRUNC( ras.x );
-    ex2 = TRUNC( to_x );
     ey1 = TRUNC( ras.y );
     ey2 = TRUNC( to_y );
 
@@ -928,11 +927,14 @@ typedef ptrdiff_t  FT_PtrDist;
          ( ey1 <  ras.min_ey && ey2 <  ras.min_ey ) )
       goto End;
 
-    dx = to_x - ras.x;
-    dy = to_y - ras.y;
+    ex1 = TRUNC( ras.x );
+    ex2 = TRUNC( to_x );
 
     fx1 = ras.x - SUBPIXELS( ex1 );
     fy1 = ras.y - SUBPIXELS( ey1 );
+
+    dx = to_x - ras.x;
+    dy = to_y - ras.y;
 
     if ( ex1 == ex2 && ey1 == ey2 )       /* inside one cell */
       ;
@@ -1066,7 +1068,6 @@ typedef ptrdiff_t  FT_PtrDist;
   gray_render_conic( RAS_ARG )
   {
     TPos        dx, dy;
-    TPos        min, max, y;
     int         top, level;
     int*        levels = ras.lev_stack;
     FT_Vector*  arc = ras.bez_stack;
@@ -1080,20 +1081,6 @@ typedef ptrdiff_t  FT_PtrDist;
       dx = dy;
 
     if ( dx < ONE_PIXEL / 4 )
-      goto Draw;
-
-    /* short-cut the arc that crosses the current band */
-    min = max = arc[0].y;
-
-    y = arc[1].y;
-    if ( y < min ) min = y;
-    if ( y > max ) max = y;
-
-    y = arc[2].y;
-    if ( y < min ) min = y;
-    if ( y > max ) max = y;
-
-    if ( TRUNC( min ) >= ras.max_ey || TRUNC( max ) < ras.min_ey )
       goto Draw;
 
     level = 0;
@@ -1158,32 +1145,10 @@ typedef ptrdiff_t  FT_PtrDist;
   gray_render_cubic( RAS_ARG )
   {
     FT_Vector*  arc = ras.bez_stack;
-    TPos        min, max, y;
+    TPos        dx, dy, dx_, dy_;
+    TPos        dx1, dy1, dx2, dy2;
+    TPos        L, s, s_limit;
 
-
-    /* Short-cut the arc that crosses the current band. */
-    min = max = arc[0].y;
-
-    y = arc[1].y;
-    if ( y < min )
-      min = y;
-    if ( y > max )
-      max = y;
-
-    y = arc[2].y;
-    if ( y < min )
-      min = y;
-    if ( y > max )
-      max = y;
-
-    y = arc[3].y;
-    if ( y < min )
-      min = y;
-    if ( y > max )
-      max = y;
-
-    if ( TRUNC( min ) >= ras.max_ey || TRUNC( max ) < ras.min_ey )
-      goto Draw;
 
     for (;;)
     {
@@ -1192,64 +1157,53 @@ typedef ptrdiff_t  FT_PtrDist;
       /* F. Hain, at                                                      */
       /* http://www.cis.southalabama.edu/~hain/general/Publications/Bezier/Camera-ready%20CISST02%202.pdf */
 
-      {
-        TPos  dx, dy, dx_, dy_;
-        TPos  dx1, dy1, dx2, dy2;
-        TPos  L, s, s_limit;
+      /* dx and dy are x and y components of the P0-P3 chord vector. */
+      dx = dx_ = arc[3].x - arc[0].x;
+      dy = dy_ = arc[3].y - arc[0].y;
 
+      L = FT_HYPOT( dx_, dy_ );
 
-        /* dx and dy are x and y components of the P0-P3 chord vector. */
-        dx = dx_ = arc[3].x - arc[0].x;
-        dy = dy_ = arc[3].y - arc[0].y;
+      /* Avoid possible arithmetic overflow below by splitting. */
+      if ( L > 32767 )
+        goto Split;
 
-        L = FT_HYPOT( dx_, dy_ );
+      /* Max deviation may be as much as (s/L) * 3/4 (if Hain's v = 1). */
+      s_limit = L * (TPos)( ONE_PIXEL / 6 );
 
-        /* Avoid possible arithmetic overflow below by splitting. */
-        if ( L > 32767 )
-          goto Split;
+      /* s is L * the perpendicular distance from P1 to the line P0-P3. */
+      dx1 = arc[1].x - arc[0].x;
+      dy1 = arc[1].y - arc[0].y;
+      s = FT_ABS( dy * dx1 - dx * dy1 );
 
-        /* Max deviation may be as much as (s/L) * 3/4 (if Hain's v = 1). */
-        s_limit = L * (TPos)( ONE_PIXEL / 6 );
+      if ( s > s_limit )
+        goto Split;
 
-        /* s is L * the perpendicular distance from P1 to the line P0-P3. */
-        dx1 = arc[1].x - arc[0].x;
-        dy1 = arc[1].y - arc[0].y;
-        s = FT_ABS( dy * dx1 - dx * dy1 );
+      /* s is L * the perpendicular distance from P2 to the line P0-P3. */
+      dx2 = arc[2].x - arc[0].x;
+      dy2 = arc[2].y - arc[0].y;
+      s = FT_ABS( dy * dx2 - dx * dy2 );
 
-        if ( s > s_limit )
-          goto Split;
+      if ( s > s_limit )
+        goto Split;
 
-        /* s is L * the perpendicular distance from P2 to the line P0-P3. */
-        dx2 = arc[2].x - arc[0].x;
-        dy2 = arc[2].y - arc[0].y;
-        s = FT_ABS( dy * dx2 - dx * dy2 );
+      /* Split super curvy segments where the off points are so far
+         from the chord that the angles P0-P1-P3 or P0-P2-P3 become
+         acute as detected by appropriate dot products. */
+      if ( dx1 * ( dx1 - dx ) + dy1 * ( dy1 - dy ) > 0 ||
+           dx2 * ( dx2 - dx ) + dy2 * ( dy2 - dy ) > 0 )
+        goto Split;
 
-        if ( s > s_limit )
-          goto Split;
-
-        /* Split super curvy segments where the off points are so far
-           from the chord that the angles P0-P1-P3 or P0-P2-P3 become
-           acute as detected by appropriate dot products. */
-        if ( dx1 * ( dx1 - dx ) + dy1 * ( dy1 - dy ) > 0 ||
-             dx2 * ( dx2 - dx ) + dy2 * ( dy2 - dy ) > 0 )
-          goto Split;
-
-        /* No reason to split. */
-        goto Draw;
-      }
-
-    Split:
-      gray_split_cubic( arc );
-      arc += 3;
-      continue;
-
-    Draw:
       gray_render_line( RAS_VAR_ arc[0].x, arc[0].y );
 
       if ( arc == ras.bez_stack )
         return;
 
       arc -= 3;
+      continue;
+
+    Split:
+      gray_split_cubic( arc );
+      arc += 3;
     }
   }
 
@@ -1292,6 +1246,8 @@ typedef ptrdiff_t  FT_PtrDist;
                  gray_PWorker      worker )
   {
     FT_Vector*  arc = ras.bez_stack;
+    TPos        min = SUBPIXELS( ras.min_ey );
+    TPos        max = SUBPIXELS( ras.max_ey );
 
 
     arc[0].x = UPSCALE( to->x );
@@ -1301,7 +1257,17 @@ typedef ptrdiff_t  FT_PtrDist;
     arc[2].x = ras.x;
     arc[2].y = ras.y;
 
-    gray_render_conic( RAS_VAR );
+    /* only render arc inside the current band */
+    if ( ( min <= arc[0].y && arc[0].y < max ) ||
+         ( min <= arc[1].y && arc[1].y < max ) ||
+         ( min <= arc[2].y && arc[2].y < max ) )
+      gray_render_conic( RAS_VAR );
+    else
+    {
+      ras.x = arc[0].x;
+      ras.y = arc[0].y;
+    }
+
     return 0;
   }
 
@@ -1313,6 +1279,8 @@ typedef ptrdiff_t  FT_PtrDist;
                  gray_PWorker      worker )
   {
     FT_Vector*  arc = ras.bez_stack;
+    TPos        min = SUBPIXELS( ras.min_ey );
+    TPos        max = SUBPIXELS( ras.max_ey );
 
 
     arc[0].x = UPSCALE( to->x );
@@ -1324,7 +1292,18 @@ typedef ptrdiff_t  FT_PtrDist;
     arc[3].x = ras.x;
     arc[3].y = ras.y;
 
-    gray_render_cubic( RAS_VAR );
+    /* only render arc inside the current band */
+    if ( ( min <= arc[0].y && arc[0].y < max ) ||
+         ( min <= arc[1].y && arc[1].y < max ) ||
+         ( min <= arc[2].y && arc[2].y < max ) ||
+         ( min <= arc[3].y && arc[3].y < max ) )
+      gray_render_cubic( RAS_VAR );
+    else
+    {
+      ras.x = arc[0].x;
+      ras.y = arc[0].y;
+    }
+
     return 0;
   }
 

@@ -1,10 +1,20 @@
+2016-03-18  Alexei Podtelezhnikov  <apodtele@gmail.com>
+
+	[smooth] Minor refactoring and microoptimizations.
+
+	* src/smooth/ftgrays.c (gray_render_conic, gray_render_cubic): Move
+	band clipping from here.
+	(gray_conic_to, gray_cubic_to): ... to here.
+	(gray_rander_line, gray_render_scanline): Initialize variables closer
+	to their use.
+
 2016-03-17  Alexei Podtelezhnikov  <apodtele@gmail.com>
 
 	[smooth] Minor refactoring.
 
 	* src/smooth/ftgrays.c (gray_render_conic, gray_render_cubic): Move
-	upscaling from here...
-	(gray_conic_to, gray_cubic_to):... to here.
+	upscaling from here.
+	(gray_conic_to, gray_cubic_to): ... to here.
 
 2016-03-15  Werner Lemberg  <wl@gnu.org>
 
