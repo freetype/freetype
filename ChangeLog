@@ -1,3 +1,12 @@
+2016-03-20  Werner Lemberg  <wl@gnu.org>
+
+	[autofit] Show `near' points in tracing.
+
+	* src/autofit/afhints.h (AF_FLAG_NEAR): New macro.
+
+	* src/autofit/afhints.c (af_glyph_hints_dump_points): Implement it.
+	(af_glyph_hints_reload): Handle AF_FLAG_NEAR.
+
 2016-03-18  Alexei Podtelezhnikov  <apodtele@gmail.com>
 
 	[smooth] Minor refactoring and microoptimizations.

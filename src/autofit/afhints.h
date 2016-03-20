@@ -221,6 +221,9 @@ FT_BEGIN_HEADER
   /* candidates for weak interpolation have this flag set */
 #define AF_FLAG_WEAK_INTERPOLATION  ( 1U << 4 )
 
+  /* the distance to the next point is very small */
+#define AF_FLAG_NEAR  ( 1U << 5 )
+
 
   /* edge hint flags */
 #define AF_EDGE_NORMAL  0
