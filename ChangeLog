@@ -1,3 +1,9 @@
+2016-03-21  Werner Lemberg  <wl@gnu.org>
+
+	* src/autofit/afhints.c (af_glyph_hints_reload): Thinko.
+
+	This fixes the previous commit to this file.
+
 2016-03-21  Alexei Podtelezhnikov  <apodtele@gmail.com>
 
 	[smooth] Partly revert recent changes.

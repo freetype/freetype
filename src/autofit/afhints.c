@@ -831,9 +831,6 @@
         FT_Int      contour_index = 0;
 
 
-        end->fx = (FT_Short)vec[endpoint].x;
-        end->fy = (FT_Short)vec[endpoint].y;
-
         for ( point = points; point < point_limit; point++, vec++, tag++ )
         {
           FT_Pos  out_x, out_y;
@@ -846,6 +843,9 @@
           point->fy = (FT_Short)vec->y;
           point->ox = point->x = FT_MulFix( vec->x, x_scale ) + x_delta;
           point->oy = point->y = FT_MulFix( vec->y, y_scale ) + y_delta;
+
+          end->fx = (FT_Short)outline->points[endpoint].x;
+          end->fy = (FT_Short)outline->points[endpoint].y;
 
           switch ( FT_CURVE_TAG( *tag ) )
           {
@@ -874,12 +874,8 @@
             if ( ++contour_index < outline->n_contours )
             {
               endpoint = outline->contours[contour_index];
-
-              end  = points + endpoint;
-              prev = end;
-
-              end->fx = (FT_Short)vec[endpoint].x;
-              end->fy = (FT_Short)vec[endpoint].y;
+              end      = points + endpoint;
+              prev     = end;
             }
           }
         }
