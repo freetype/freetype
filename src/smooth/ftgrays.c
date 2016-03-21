@@ -715,10 +715,10 @@ typedef ptrdiff_t  FT_PtrDist;
     /* ok, we'll have to render a run of adjacent cells on the same */
     /* scanline...                                                  */
     /*                                                              */
-    dx    = x2 - x1;
     p     = ( ONE_PIXEL - fx1 ) * ( y2 - y1 );
     first = ONE_PIXEL;
     incr  = 1;
+    dx    = x2 - x1;
 
     if ( dx < 0 )
     {
@@ -1246,8 +1246,6 @@ typedef ptrdiff_t  FT_PtrDist;
                  gray_PWorker      worker )
   {
     FT_Vector*  arc = ras.bez_stack;
-    TPos        min = SUBPIXELS( ras.min_ey );
-    TPos        max = SUBPIXELS( ras.max_ey );
 
 
     arc[0].x = UPSCALE( to->x );
@@ -1257,16 +1255,16 @@ typedef ptrdiff_t  FT_PtrDist;
     arc[2].x = ras.x;
     arc[2].y = ras.y;
 
-    /* only render arc inside the current band */
-    if ( ( min <= arc[0].y && arc[0].y < max ) ||
-         ( min <= arc[1].y && arc[1].y < max ) ||
-         ( min <= arc[2].y && arc[2].y < max ) )
-      gray_render_conic( RAS_VAR );
+    /* short-cut the arc that crosses the current band */
+    if ( ( TRUNC( arc[0].y ) >= ras.max_ey &&
+           TRUNC( arc[1].y ) >= ras.max_ey &&
+           TRUNC( arc[2].y ) >= ras.max_ey ) ||
+         ( TRUNC( arc[0].y ) <  ras.min_ey &&
+           TRUNC( arc[1].y ) <  ras.min_ey &&
+           TRUNC( arc[2].y ) <  ras.min_ey ) )
+      gray_render_line( RAS_VAR_ arc[0].x, arc[0].y );
     else
-    {
-      ras.x = arc[0].x;
-      ras.y = arc[0].y;
-    }
+      gray_render_conic( RAS_VAR );
 
     return 0;
   }
@@ -1279,8 +1277,6 @@ typedef ptrdiff_t  FT_PtrDist;
                  gray_PWorker      worker )
   {
     FT_Vector*  arc = ras.bez_stack;
-    TPos        min = SUBPIXELS( ras.min_ey );
-    TPos        max = SUBPIXELS( ras.max_ey );
 
 
     arc[0].x = UPSCALE( to->x );
@@ -1292,17 +1288,18 @@ typedef ptrdiff_t  FT_PtrDist;
     arc[3].x = ras.x;
     arc[3].y = ras.y;
 
-    /* only render arc inside the current band */
-    if ( ( min <= arc[0].y && arc[0].y < max ) ||
-         ( min <= arc[1].y && arc[1].y < max ) ||
-         ( min <= arc[2].y && arc[2].y < max ) ||
-         ( min <= arc[3].y && arc[3].y < max ) )
-      gray_render_cubic( RAS_VAR );
+    /* short-cut the arc that crosses the current band */
+    if ( ( TRUNC( arc[0].y ) >= ras.max_ey &&
+           TRUNC( arc[1].y ) >= ras.max_ey &&
+           TRUNC( arc[2].y ) >= ras.max_ey &&
+           TRUNC( arc[3].y ) >= ras.max_ey ) ||
+         ( TRUNC( arc[0].y ) <  ras.min_ey &&
+           TRUNC( arc[1].y ) <  ras.min_ey &&
+           TRUNC( arc[2].y ) <  ras.min_ey &&
+           TRUNC( arc[3].y ) <  ras.min_ey ) )
+      gray_render_line( RAS_VAR_ arc[0].x, arc[0].y );
     else
-    {
-      ras.x = arc[0].x;
-      ras.y = arc[0].y;
-    }
+      gray_render_cubic( RAS_VAR );
 
     return 0;
   }

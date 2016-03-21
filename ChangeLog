@@ -1,3 +1,10 @@
+2016-03-21  Alexei Podtelezhnikov  <apodtele@gmail.com>
+
+	[smooth] Partly revert recent changes.
+
+	* src/smooth/ftgrays.c (gray_conic_to, gray_cubic_to): Rework
+	conditions to fix rendering issues.
+
 2016-03-20  Werner Lemberg  <wl@gnu.org>
 
 	[autofit] Show `near' points in tracing.
