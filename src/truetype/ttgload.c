@@ -427,7 +427,8 @@
       load->glyph->control_len  = n_ins;
       load->glyph->control_data = load->exec->glyphIns;
 
-      FT_MEM_COPY( load->exec->glyphIns, p, (FT_Long)n_ins );
+      if ( n_ins )
+        FT_MEM_COPY( load->exec->glyphIns, p, (FT_Long)n_ins );
     }
 
 #endif /* TT_USE_BYTECODE_INTERPRETER */
