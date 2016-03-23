@@ -2074,6 +2074,20 @@ typedef ptrdiff_t  FT_PtrDist;
     if ( !( params->flags & FT_RASTER_FLAG_AA ) )
       return FT_THROW( Invalid_Mode );
 
+    /* reject too large outline coordinates */
+    {
+      FT_Vector*  vec   = outline->points;
+      FT_Vector*  limit = vec + outline->n_points;
+
+
+      for ( ; vec < limit; vec++ )
+      {
+        if ( vec->x < -0x1000000L || vec->x > 0x1000000L ||
+             vec->y < -0x1000000L || vec->y > 0x1000000L )
+         return FT_THROW( Invalid_Outline );
+      }
+    }
+
     /* compute clipping box */
     if ( !( params->flags & FT_RASTER_FLAG_DIRECT ) )
     {

@@ -3175,6 +3175,20 @@
     if ( !target_map->buffer )
       return FT_THROW( Invalid );
 
+    /* reject too large outline coordinates */
+    {
+      FT_Vector*  vec   = outline->points;
+      FT_Vector*  limit = vec + outline->n_points;
+
+
+      for ( ; vec < limit; vec++ )
+      {
+        if ( vec->x < -0x1000000L || vec->x > 0x1000000L ||
+             vec->y < -0x1000000L || vec->y > 0x1000000L )
+         return FT_THROW( Invalid );
+      }
+    }
+
     ras.outline = *outline;
     ras.target  = *target_map;
 

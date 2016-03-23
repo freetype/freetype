@@ -618,7 +618,6 @@
     FT_Error     error;
     FT_Renderer  renderer;
     FT_ListNode  node;
-    FT_BBox      cbox;
 
 
     if ( !library )
@@ -629,11 +628,6 @@
 
     if ( !params )
       return FT_THROW( Invalid_Argument );
-
-    FT_Outline_Get_CBox( outline, &cbox );
-    if ( cbox.xMin < -0x1000000L || cbox.yMin < -0x1000000L ||
-         cbox.xMax >  0x1000000L || cbox.yMax >  0x1000000L )
-      return FT_THROW( Invalid_Outline );
 
     renderer = library->cur_renderer;
     node     = library->renderers.head;

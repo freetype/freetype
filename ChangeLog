@@ -1,5 +1,16 @@
 2016-03-23  Werner Lemberg  <wl@gnu.org>
 
+	[raster, smooth] Directly test outline size (#47500).
+
+	This improves stand-alone compilation.
+
+	* src/base/ftoutln.c (FT_Outline_Render): Move cbox size test to...
+
+	* src/raster/ftraster.c (ft_black_render), src/smooth/ftgrays.c
+	(gray_raster_render): ...these functions.
+
+2016-03-23  Werner Lemberg  <wl@gnu.org>
+
 	[raster, smooth] Fix some clang sanitizer runtime issues.
 
 	* src/raster/ftraster.c (ft_black_reset, ft_black_set_mode,
