@@ -1,5 +1,12 @@
 2016-03-23  Werner Lemberg  <wl@gnu.org>
 
+	Rename `VERSION.DLL' (#47472).
+
+	* docs/VERSION.DLL: Renamed to...
+	* docs/VERSIONS.TXT: ...this.
+
+2016-03-23  Werner Lemberg  <wl@gnu.org>
+
 	[raster, smooth] Directly test outline size (#47500).
 
 	This improves stand-alone compilation.

@@ -15,7 +15,7 @@ AC_INIT([FreeType], [@VERSION@], [freetype@nongnu.org], [freetype])
 AC_CONFIG_SRCDIR([ftconfig.in])
 
 
-# Don't forget to update docs/VERSION.DLL!
+# Don't forget to update `docs/VERSIONS.TXT'!
 
 version_info='18:3:12'
 AC_SUBST([version_info])
