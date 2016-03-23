@@ -1,3 +1,13 @@
+2016-03-23  Werner Lemberg  <wl@gnu.org>
+
+	[raster, smooth] Fix some clang sanitizer runtime issues.
+
+	* src/raster/ftraster.c (ft_black_reset, ft_black_set_mode,
+	ft_black_render): Harmonize signatures with `ftimage.h'.
+
+	* src/smooth/ftgrays.c (gray_raster_render, gray_raster_reset):
+	Ditto.
+
 2016-03-22  Werner Lemberg  <wl@gnu.org>
 
 	* src/truetype/ttgload.c (TT_Load_Simple_Glyph): Minor.

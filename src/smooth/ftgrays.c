@@ -2025,7 +2025,7 @@ typedef ptrdiff_t  FT_PtrDist;
 
 
   static int
-  gray_raster_render( gray_PRaster             raster,
+  gray_raster_render( FT_Raster                raster,
                       const FT_Raster_Params*  params )
   {
     const FT_Outline*  outline     = (const FT_Outline*)params->source;
@@ -2180,9 +2180,9 @@ typedef ptrdiff_t  FT_PtrDist;
 
 
   static void
-  gray_raster_reset( FT_Raster  raster,
-                     char*      pool_base,
-                     long       pool_size )
+  gray_raster_reset( FT_Raster       raster,
+                     unsigned char*  pool_base,
+                     unsigned long   pool_size )
   {
     FT_UNUSED( raster );
     FT_UNUSED( pool_base );
