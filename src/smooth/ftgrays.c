@@ -1083,6 +1083,8 @@ typedef ptrdiff_t  FT_PtrDist;
     if ( dx < ONE_PIXEL / 4 )
       goto Draw;
 
+    /* we can calculate the number of necessary bisections because  */
+    /* each bisection predictably reduces deviation at least 4-fold */
     level = 0;
     do
     {
