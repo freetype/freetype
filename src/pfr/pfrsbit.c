@@ -283,14 +283,17 @@
                           FT_ULong*  found_size )
   {
     FT_UInt   left, right, char_len;
-    FT_Bool   two = FT_BOOL( flags & 1 );
+    FT_Bool   two = FT_BOOL( flags & PFR_BITMAP_2BYTE_CHARCODE );
     FT_Byte*  buff;
 
 
     char_len = 4;
-    if ( two )       char_len += 1;
-    if ( flags & 2 ) char_len += 1;
-    if ( flags & 4 ) char_len += 1;
+    if ( two )
+      char_len += 1;
+    if ( flags & PFR_BITMAP_2BYTE_SIZE )
+      char_len += 1;
+    if ( flags & PFR_BITMAP_3BYTE_OFFSET )
+      char_len += 1;
 
     left  = 0;
     right = count;
@@ -329,12 +332,12 @@
     return;
 
   Found_It:
-    if ( flags & 2 )
+    if ( flags & PFR_BITMAP_2BYTE_SIZE )
       *found_size = PFR_NEXT_USHORT( buff );
     else
       *found_size = PFR_NEXT_BYTE( buff );
 
-    if ( flags & 4 )
+    if ( flags & PFR_BITMAP_3BYTE_OFFSET )
       *found_offset = PFR_NEXT_ULONG( buff );
     else
       *found_offset = PFR_NEXT_USHORT( buff );
@@ -570,9 +573,12 @@
 
 
       char_len = 4;
-      if ( strike->flags & 1 ) char_len += 1;
-      if ( strike->flags & 2 ) char_len += 1;
-      if ( strike->flags & 4 ) char_len += 1;
+      if ( strike->flags & PFR_BITMAP_2BYTE_CHARCODE )
+        char_len += 1;
+      if ( strike->flags & PFR_BITMAP_2BYTE_SIZE )
+        char_len += 1;
+      if ( strike->flags & PFR_BITMAP_3BYTE_OFFSET )
+        char_len += 1;
 
       /* access data directly in the frame to speed lookups */
       if ( FT_STREAM_SEEK( phys->bct_offset + strike->bct_offset ) ||
@@ -733,7 +739,8 @@
                       p,
                       stream->limit,
                       format,
-                      FT_BOOL(face->header.color_flags & 2),
+                      FT_BOOL( face->header.color_flags &
+                               PFR_FLAG_INVERT_BITMAP   ),
                       &glyph->root.bitmap );
         }
       }

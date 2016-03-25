@@ -1,5 +1,12 @@
 2016-03-25  Werner Lemberg  <wl@gnu.org>
 
+	[pfr] Minor.
+
+	* src/pfr/pfrsbit.c, srf/pfr/pfrobjs.c: Use flag names instead of
+	bare numbers.
+
+2016-03-25  Werner Lemberg  <wl@gnu.org>
+
 	[pfr] Various clang sanitizer fixes.
 
 	* src/pfr/pfrsbit.c (pfr_load_bitmap_metrics): Correctly handle
