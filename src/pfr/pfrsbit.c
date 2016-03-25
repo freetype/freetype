@@ -357,7 +357,6 @@
   {
     FT_Error  error = FT_Err_Ok;
     FT_Byte   flags;
-    FT_Char   c;
     FT_Byte   b;
     FT_Byte*  p = *pdata;
     FT_Long   xpos, ypos, advance;
@@ -377,9 +376,9 @@
     {
     case 0:
       PFR_CHECK( 1 );
-      c    = PFR_NEXT_INT8( p );
-      xpos = c >> 4;
-      ypos = ( (FT_Char)( c << 4 ) ) >> 4;
+      b    = PFR_NEXT_BYTE( p );
+      xpos = (FT_Char)b >> 4;
+      ypos = ( (FT_Char)( b << 4 ) ) >> 4;
       break;
 
     case 1:
@@ -630,6 +629,8 @@
                                        &xpos, &ypos,
                                        &xsize, &ysize,
                                        &advance, &format );
+      if ( error )
+        goto Exit1;
 
       /*
        * Before allocating the target bitmap, we check whether the given
@@ -675,7 +676,7 @@
       {
         if ( FT_ERR_EQ( error, Invalid_Table ) )
           FT_ERROR(( "pfr_slot_load_bitmap: invalid bitmap dimensions\n" ));
-        goto Exit;
+        goto Exit1;
       }
 
       /*
@@ -710,8 +711,8 @@
         /* XXX: needs casts to fit FT_Glyph_Metrics.{width|height} */
         glyph->root.metrics.width        = (FT_Pos)xsize << 6;
         glyph->root.metrics.height       = (FT_Pos)ysize << 6;
-        glyph->root.metrics.horiBearingX = xpos << 6;
-        glyph->root.metrics.horiBearingY = ypos << 6;
+        glyph->root.metrics.horiBearingX = xpos * 64;
+        glyph->root.metrics.horiBearingY = ypos * 64;
         glyph->root.metrics.horiAdvance  = FT_PIX_ROUND( ( advance >> 2 ) );
         glyph->root.metrics.vertBearingX = - glyph->root.metrics.width >> 1;
         glyph->root.metrics.vertBearingY = 0;
@@ -737,6 +738,7 @@
         }
       }
 
+    Exit1:
       FT_FRAME_EXIT();
     }
 

@@ -1,3 +1,12 @@
+2016-03-25  Werner Lemberg  <wl@gnu.org>
+
+	[pfr] Various clang sanitizer fixes.
+
+	* src/pfr/pfrsbit.c (pfr_load_bitmap_metrics): Correctly handle
+	signed nibbles.
+	(pfr_slot_load_bitmap): Correctly exit frame in case of error.
+	Fix invalid left shifts.
+
 2016-03-23  Werner Lemberg  <wl@gnu.org>
 
 	Rename `VERSION.DLL' (#47472).
