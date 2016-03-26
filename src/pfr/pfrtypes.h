@@ -121,6 +121,10 @@ FT_BEGIN_HEADER
 
   typedef enum  PFR_BitmapFlags_
   {
+    /* not part of the specification but used for implementation */
+    PFR_BITMAP_VALID_CHARCODES     = 0x80,
+    PFR_BITMAP_CHARCODES_VALIDATED = 0x40,
+
     PFR_BITMAP_3BYTE_OFFSET   = 4,
     PFR_BITMAP_2BYTE_SIZE     = 2,
     PFR_BITMAP_2BYTE_CHARCODE = 1

@@ -1,4 +1,20 @@
-2016-03-25  Werner Lemberg  <wl@gnu.org>
+2016-03-26  Werner Lemberg  <wl@gnu.org>
+
+	[pfr] Robustify bitmap strike handling (#47514).
+
+	We did a binary search for a charcode without ensuring that the
+	searched data is ordered.  Validating the order is now done lazily,
+	this is, the first access to a bitmap glyph triggers the order check
+	in the corresponding bitmap strike.
+
+	* src/pfr/pfrtypes.h (PFR_BitmapFlags): New values
+	`PFR_BITMAP_VALID_CHARCODES' and `PFR_BITMAP_CHARCODES_VALIDATED'.
+
+	* src/pfr/pfrsbit.c (pfr_lookup_bitmap_data): Make `flags' argument
+	a pointer.  Handle new PFR_BITMAP_XXX flags.
+	(pfr_slot_load_bitmap): Updated.
+
+2016-03-26  Werner Lemberg  <wl@gnu.org>
 
 	[pfr] Fix handling of compound glyphs.
 

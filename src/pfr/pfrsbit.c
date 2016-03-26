@@ -277,23 +277,75 @@
   pfr_lookup_bitmap_data( FT_Byte*   base,
                           FT_Byte*   limit,
                           FT_UInt    count,
-                          FT_UInt    flags,
+                          FT_UInt*   flags,
                           FT_UInt    char_code,
                           FT_ULong*  found_offset,
                           FT_ULong*  found_size )
   {
     FT_UInt   left, right, char_len;
-    FT_Bool   two = FT_BOOL( flags & PFR_BITMAP_2BYTE_CHARCODE );
+    FT_Bool   two = FT_BOOL( *flags & PFR_BITMAP_2BYTE_CHARCODE );
     FT_Byte*  buff;
 
 
     char_len = 4;
     if ( two )
       char_len += 1;
-    if ( flags & PFR_BITMAP_2BYTE_SIZE )
+    if ( *flags & PFR_BITMAP_2BYTE_SIZE )
       char_len += 1;
-    if ( flags & PFR_BITMAP_3BYTE_OFFSET )
+    if ( *flags & PFR_BITMAP_3BYTE_OFFSET )
       char_len += 1;
+
+    if ( !( *flags & PFR_BITMAP_CHARCODES_VALIDATED ) )
+    {
+      FT_Byte*  p;
+      FT_Byte*  lim;
+      FT_UInt   code;
+      FT_Long   prev_code;
+
+
+      *flags    |= PFR_BITMAP_VALID_CHARCODES;
+      prev_code  = -1;
+      lim        = base + count * char_len;
+
+      if ( lim > limit )
+      {
+        FT_TRACE0(( "pfr_lookup_bitmap_data:"
+                    " number of bitmap records too large,\n"
+                    "                       "
+                    " thus ignoring all bitmaps in this strike\n" ));
+        *flags &= ~PFR_BITMAP_VALID_CHARCODES;
+      }
+      else
+      {
+        /* check whether records are sorted by code */
+        for ( p = base; p < lim; p += char_len )
+        {
+          if ( two )
+            code = FT_PEEK_USHORT( p );
+          else
+            code = *p;
+
+          if ( code <= prev_code )
+          {
+            FT_TRACE0(( "pfr_lookup_bitmap_data:"
+                        " bitmap records are not sorted,\n"
+                        "                       "
+                        " thus ignoring all bitmaps in this strike\n" ));
+            *flags &= ~PFR_BITMAP_VALID_CHARCODES;
+            break;
+          }
+
+          prev_code = code;
+        }
+      }
+
+      *flags |= PFR_BITMAP_CHARCODES_VALIDATED;
+    }
+
+    /* ignore bitmaps in case table is not valid     */
+    /* (this might be sanitized, but PFR is dead...) */
+    if ( !( *flags & PFR_BITMAP_VALID_CHARCODES ) )
+      goto Fail;
 
     left  = 0;
     right = count;
@@ -305,11 +357,6 @@
 
       middle = ( left + right ) >> 1;
       buff   = base + middle * char_len;
-
-      /* check that we are not outside of the table -- */
-      /* this is possible with broken fonts...         */
-      if ( buff + char_len > limit )
-        goto Fail;
 
       if ( two )
         code = PFR_NEXT_USHORT( buff );
@@ -332,12 +379,12 @@
     return;
 
   Found_It:
-    if ( flags & PFR_BITMAP_2BYTE_SIZE )
+    if ( *flags & PFR_BITMAP_2BYTE_SIZE )
       *found_size = PFR_NEXT_USHORT( buff );
     else
       *found_size = PFR_NEXT_BYTE( buff );
 
-    if ( flags & PFR_BITMAP_3BYTE_OFFSET )
+    if ( *flags & PFR_BITMAP_3BYTE_OFFSET )
       *found_offset = PFR_NEXT_ULONG( buff );
     else
       *found_offset = PFR_NEXT_USHORT( buff );
@@ -588,7 +635,7 @@
       pfr_lookup_bitmap_data( stream->cursor,
                               stream->limit,
                               strike->num_bitmaps,
-                              strike->flags,
+                              &strike->flags,
                               character->char_code,
                               &gps_offset,
                               &gps_size );
