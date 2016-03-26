@@ -1,5 +1,18 @@
 2016-03-25  Werner Lemberg  <wl@gnu.org>
 
+	[pfr] Fix handling of compound glyphs.
+
+	Extra items are indicated with different bit positions.
+
+	* src/pfr/pfrtypes.h (PFR_GlyphFlags): Replace
+	`PFR_GLYPH_EXTRA_ITEMS' with `PFR_GLYPH_SIMPLE_EXTRA_ITEMS' and
+	`PFR_GLYPH_COMPOUND_EXTRA_ITEMS'.
+
+	* src/pfr/pfrgload.c (pfr_glyph_load_simple,
+	pfr_glyph_load_compound): Use them.
+
+2016-03-25  Werner Lemberg  <wl@gnu.org>
+
 	[pfr] Minor.
 
 	* src/pfr/pfrsbit.c, srf/pfr/pfrobjs.c: Use flag names instead of
