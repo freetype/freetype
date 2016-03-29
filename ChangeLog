@@ -1,3 +1,10 @@
+2016-03-29  Werner Lemberg  <wl@gnu.org>
+
+	* src/pfr/pfrtypes.h: Replace all enums with macros.
+
+	We need `~FOO' to unset bits, and only with unsigned values (which
+	`enum' isn't normally) this works cleanly.
+
 2016-03-26  Werner Lemberg  <wl@gnu.org>
 
 	[pfr] Robustify bitmap strike handling (#47514).

@@ -377,7 +377,7 @@
         if ( flags & PFR_LOG_2BYTE_STROKE )
           local++;
 
-        if ( (flags & PFR_LINE_JOIN_MASK) == PFR_LINE_JOIN_MITER )
+        if ( ( flags & PFR_LINE_JOIN_MASK ) == PFR_LINE_JOIN_MITER )
           local += 3;
       }
       if ( flags & PFR_LOG_BOLD )
