@@ -282,7 +282,7 @@
                           FT_ULong*  found_offset,
                           FT_ULong*  found_size )
   {
-    FT_UInt   left, right, char_len;
+    FT_UInt   min, max, char_len;
     FT_Bool   two = FT_BOOL( *flags & PFR_BITMAP_2BYTE_CHARCODE );
     FT_Byte*  buff;
 
@@ -347,16 +347,17 @@
     if ( !( *flags & PFR_BITMAP_VALID_CHARCODES ) )
       goto Fail;
 
-    left  = 0;
-    right = count;
+    min = 0;
+    max = count;
 
-    while ( left < right )
+    /* binary search */
+    while ( min < max )
     {
-      FT_UInt  middle, code;
+      FT_UInt  mid, code;
 
 
-      middle = ( left + right ) >> 1;
-      buff   = base + middle * char_len;
+      mid  = ( min + max ) >> 1;
+      buff = base + mid * char_len;
 
       if ( two )
         code = PFR_NEXT_USHORT( buff );
@@ -367,9 +368,9 @@
         goto Found_It;
 
       if ( code < char_code )
-        left = middle;
+        min = mid;
       else
-        right = middle;
+        max = mid;
     }
 
   Fail:
@@ -494,7 +495,7 @@
 
     case 1:
       PFR_CHECK( 1 );
-      advance = PFR_NEXT_INT8( p ) << 8;
+      advance = PFR_NEXT_INT8( p ) * 256;
       break;
 
     case 2:

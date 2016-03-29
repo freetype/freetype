@@ -1,5 +1,14 @@
 2016-03-29  Werner Lemberg  <wl@gnu.org>
 
+	[pfr] Minor.
+
+	* src/pfr/pfrsbit.c (pfr_lookup_bitmap_data): Replace `left',
+	`right', and `middle' with `min', `max', and `mid' as used in other
+	FreeType binary search code.
+	(pfr_load_bitmap_metrics): Fix invalid left shift.
+
+2016-03-29  Werner Lemberg  <wl@gnu.org>
+
 	* src/pfr/pfrtypes.h: Replace all enums with macros.
 
 	We need `~FOO' to unset bits, and only with unsigned values (which
