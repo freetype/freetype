@@ -3104,7 +3104,7 @@
 
       if ( char_code < start )
         max = mid;
-      else if ( char_code > start+cnt )
+      else if ( char_code > start + cnt )
         min = mid + 1;
       else
         return TRUE;

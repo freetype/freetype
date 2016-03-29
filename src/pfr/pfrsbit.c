@@ -364,13 +364,12 @@
       else
         code = PFR_NEXT_BYTE( buff );
 
-      if ( code == char_code )
-        goto Found_It;
-
-      if ( code < char_code )
-        min = mid;
-      else
+      if ( char_code < code )
         max = mid;
+      else if ( char_code > code )
+        min = mid + 1;
+      else
+        goto Found_It;
     }
 
   Fail:

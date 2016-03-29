@@ -1,5 +1,12 @@
 2016-03-29  Werner Lemberg  <wl@gnu.org>
 
+	[pfr] Fix binary search (#47514).
+
+	* src/pfr/pfrsbit.c (pfr_lookup_bitmap_data): Handle border
+	conditions correctly.
+
+2016-03-29  Werner Lemberg  <wl@gnu.org>
+
 	[pfr] Minor.
 
 	* src/pfr/pfrsbit.c (pfr_lookup_bitmap_data): Replace `left',
