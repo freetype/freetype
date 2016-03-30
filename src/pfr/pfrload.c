@@ -299,9 +299,15 @@
          FT_READ_USHORT( count )          )
       goto Exit;
 
-    /* check maximum value and a rough minimum size */
+    /* check maximum value and a rough minimum size:     */
+    /* - no more than 13106 log fonts                    */
+    /* - we need 5 bytes for a log header record         */
+    /* - we need at least 18 bytes for a log font record */
+    /* - the overall size is at least 95 bytes plus the  */
+    /*   log header and log font records                 */
     if ( count > ( ( 1 << 16 ) - 2 ) / 5                ||
-         2 + count * 5 >= stream->size - section_offset )
+         2 + count * 5 >= stream->size - section_offset ||
+         95 + count * ( 5 + 18 ) >= stream->size        )
     {
       FT_ERROR(( "pfr_log_font_count:"
                  " invalid number of logical fonts\n" ));

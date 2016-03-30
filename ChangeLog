@@ -1,5 +1,9 @@
 2016-03-30  Werner Lemberg  <wl@gnu.org>
 
+	* src/pfr/pfrload.c (pfr_log_font_count): Better font size estimate.
+
+2016-03-30  Werner Lemberg  <wl@gnu.org>
+
 	* src/pfr/pfrload.c (pfr_aux_name_load): Fix memory leak (#47567).
 
 2016-03-29  Werner Lemberg  <wl@gnu.org>
