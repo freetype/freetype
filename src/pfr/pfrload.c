@@ -743,6 +743,9 @@
     FT_UInt     n, ok;
 
 
+    if ( *astring )
+      FT_FREE( *astring );
+
     if ( len > 0 && p[len - 1] == 0 )
       len--;
 
@@ -758,15 +761,13 @@
 
     if ( ok )
     {
-      if ( *astring )
-        FT_FREE( *astring );
-
       if ( FT_ALLOC( result, len + 1 ) )
         goto Exit;
 
       FT_MEM_COPY( result, p, len );
       result[len] = 0;
     }
+
   Exit:
     *astring = result;
     return error;
