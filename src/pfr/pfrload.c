@@ -740,9 +740,8 @@
     if ( len > 0 && p[len - 1] == 0 )
       len--;
 
-    /* check that each character is ASCII for making sure not to
-       load garbage
-     */
+    /* check that each character is ASCII  */
+    /* for making sure not to load garbage */
     ok = ( len > 0 );
     for ( n = 0; n < len; n++ )
       if ( p[n] < 32 || p[n] > 127 )
@@ -753,6 +752,9 @@
 
     if ( ok )
     {
+      if ( *astring )
+        FT_FREE( *astring );
+
       if ( FT_ALLOC( result, len + 1 ) )
         goto Exit;
 
