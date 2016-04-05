@@ -1,3 +1,16 @@
+2016-04-05  Werner Lemberg  <wl@gnu.org>
+
+	[autofit] Provide dummy blue zone for pseudo script `none'.
+
+	Even if the dummy hinter is used as the handler for `none' (which
+	doesn't use blue zones), it is more consistent than the old value
+	(which was 0), pointing to Arabic...
+
+	* src/autofit/afblue.dat: Add `AF_BLUE_STRINGSET_NONE'.
+	* src/autofit/afblue.c, src/autofit/afblue.h: Regenerated.
+
+	* src/autofit/afstyles.h (none_dflt): Use AF_BLUE_STRINGSET_NONE.
+
 2016-03-30  Werner Lemberg  <wl@gnu.org>
 
 	* src/pfr/pfrload.c (pfr_aux_name_load): Thinko (#47567).

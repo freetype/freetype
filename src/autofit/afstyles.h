@@ -186,7 +186,7 @@
          "no style",
          AF_WRITING_SYSTEM_DUMMY,
          AF_SCRIPT_NONE,
-         (AF_Blue_Stringset)0,
+         AF_BLUE_STRINGSET_NONE,
          AF_COVERAGE_DEFAULT )
 
   STYLE( sinh_dflt, SINH_DFLT,

@@ -534,6 +534,9 @@ AF_BLUE_STRINGSET_ENUM AF_BLUE_STRINGSETS_ARRAY AF_BLUE_STRINGSET_MAX_LEN:
     { AF_BLUE_STRING_MYANMAR_DESCENDER, 0                                 }
     { AF_BLUE_STRING_MAX,               0                                 }
 
+  AF_BLUE_STRINGSET_NONE
+    { AF_BLUE_STRING_MAX, 0 }
+
   AF_BLUE_STRINGSET_SINH
     { AF_BLUE_STRING_SINHALA_TOP,       AF_BLUE_PROPERTY_LATIN_TOP }
     { AF_BLUE_STRING_SINHALA_BOTTOM,    0                          }
