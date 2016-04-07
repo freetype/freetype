@@ -2798,7 +2798,7 @@
 	* src/base/ftglyph.c (FT_Glyph_To_Bitmap): `glyph' must be
 	set before derefering to obtain `library'.  The initialization
 	of `clazz', `glyph', `library' and NULL pointer check are
-	reordered to minimize PIC conditonals.
+	reordered to minimize PIC conditionals.
 
 2012-01-14  suzuki toshiya  <mpsuzuki@hiroshima-u.ac.jp>
 
@@ -3261,7 +3261,7 @@
 
 2011-09-17  Alexei Podtelezhnikov  <apodtele@gmail.com>
 
-	[smooth] Slightly optimize conic and cubic flatterners.
+	[smooth] Slightly optimize conic and cubic flatteners.
 
 	* src/smooth/ftgrays.c (gray_render_conic, gray_render_cubic): Move
 	out some code from the main loop to speed it up.
@@ -4756,7 +4756,7 @@
 	* src/bzip2/*: New files.
 
 	* src/pcf/pcf.h: s/gzip_/comp_/.
-	* src/pcf/pcfdrvr.c: Include FT_BZIP2_H.
+	* src/pcf/pcfdrivr.c: Include FT_BZIP2_H.
 	s/gzip_/comp_/.
 	(PCF_Face_Init): Handle bzip2 compressed files.
 
@@ -4768,7 +4768,7 @@
 
 	If we encounter a space in a string then the sbit buffer is NULL,
 	height and width are 0s.  So the check in ftc_snode_compare will
-	always pass for spaces (comparision with 255).  Here the comments
+	always pass for spaces (comparison with 255).  Here the comments
 	above the condition are proper but the implementation is not.  When
 	we create an snode I think it is the proper way to initialize the
 	width to 255 and then put a check for being equal to 255 in snode
@@ -5548,7 +5548,7 @@
 	Add reference counters and to FT_Library and FT_Face objects.
 
 	* include/freetype/freetype.h (FT_Reference_Face): New function.
-	* include/freetype/ftmodapi.h (FT_Rererence_Library): New function.
+	* include/freetype/ftmodapi.h (FT_Reference_Library): New function.
 
 	* include/freetype/internal/ftobjs.h (FT_Face_InternalRec,
 	FT_LibraryRec): New field `refcount'.

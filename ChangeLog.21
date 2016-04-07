@@ -756,7 +756,7 @@
 	(AF_AxisHintsRec): Add `max_segments' and `max_edges'.
 	(af_axis_hints_new_segment, af_axis_hints_new_edge): New prototypes.
 
-	* src/autofit/aflatin.c (af_latin_metricsc_scale): Don't call
+	* src/autofit/aflatin.c (af_latin_metrics_scale): Don't call
 	AF_SCALER_EQUAL_SCALES.
 	(af_latin_hints_compute_segments): Change return type to FT_Error.
 	Update all callers.
@@ -1014,7 +1014,7 @@
 	t42_parse_charstrings, t42_parse_dict): Check parser error value
 	after call to T1_Skip_PS_Token (where necessary).
 
-	* src/psaux/psobjc.c (skip_string, ps_parser_skip_PS_token,
+	* src/psaux/psobjs.c (skip_string, ps_parser_skip_PS_token,
 	ps_tobytes): Add error messages.
 
 2005-02-12  Werner Lemberg  <wl@gnu.org>
@@ -1159,7 +1159,7 @@
 	(ah_test_extremum, ah_get_orientation): Removed.
 	(ah_outline_load): Use FT_Outline_Get_Orientation.
 
-	* src/base/ftsynth.c (ft_test_extrama, ft_get_orientation): Removed.
+	* src/base/ftsynth.c (ft_test_extrema, ft_get_orientation): Removed.
 	(FT_GlyphSlot_Embolden): Use FT_Outline_Get_Orientation.
 
 2004-11-23  Fernando Papa  <fpapa@netgate.com.uy>
@@ -1829,7 +1829,7 @@
 
 2004-08-05  David Turner  <david@freetype.org>
 
-	`Activate' gray-scale specifing hinting within the TrueType
+	`Activate' gray-scale specifying hinting within the TrueType
 	bytecode interpreter.  This is an experimental feature which
 	should probably be made optional.
 
@@ -1839,7 +1839,7 @@
 	(TT_Load_Glyph): Here.
 	Set `grayscale' flag except for `FT_LOAD_TARGET_MONO'.
 
-	* src/truetyep/ttinterp.c (Ins_GETINFO): Return MS rasterizer
+	* src/truetype/ttinterp.c (Ins_GETINFO): Return MS rasterizer
 	version 1.7.
 	Return rotation and stretching info only if glyph is rotated or
 	stretched, respectively.
@@ -3331,7 +3331,7 @@
 
 	* src/cff/cffdrivr.c (cff_get_cmap_info): Call sfnt module's TT CMap
 	Info service function if the cmap comes from sfnt.  Return 0 if the
-	cmap is sythesized in cff module.
+	cmap is synthesized in cff module.
 
 2004-01-20  David Turner  <david@freetype.org>
 
@@ -4659,7 +4659,7 @@
 
 	* src/type42/t42drivr.c: Include FT_SERVICE_XFREE86_NAME_H,
 	FT_SERVICE_GLYPH_DICT_H, and FT_SERVICE_POSTSCRIPT_NAME_H.
-	(t42_service_glyph_dict, t42_service_ps_name): New strucures
+	(t42_service_glyph_dict, t42_service_ps_name): New structures
 	providing Type 42 services.
 	(t42_services): New services list.
 	(T42_Get_Interface): Use `ft_service_list_lookup'.
@@ -5706,7 +5706,7 @@
 	(ah_outline_compute_edges): Scale `edge_distance_threshold' down
 	after rounding instead of scaling comparison value in loop.
 
-	* src/autohint/ahhint.c (ah_hinter_align_stong_points): Provide
+	* src/autohint/ahhint.c (ah_hinter_align_strong_points): Provide
 	alternative code which runs faster.
 	Handle `before->scale == 0'.
 
@@ -5960,7 +5960,7 @@
 
 2003-03-27  David Turner  <david@freetype.org>
 
-	* README: Udpated.
+	* README: Updated.
 
 	* README.UNX: Removed (now replaced by docs/INSTALL.UNX).
 
@@ -6608,7 +6608,7 @@
 
 2002-11-01  David Turner  <david@freetype.org>
 
-	Added PFR-specific public API.  Fixed the kerning retrievel routine
+	Added PFR-specific public API.  Fixed the kerning retrieval routine
 	(it returned invalid values when the outline and metrics resolution
 	differ).
 
@@ -7556,7 +7556,7 @@
 	Get glyph offset.
 
 	* src/truetype/ttobjs.c (TT_Face_Init)
-	[FT_CONFIG_OPTION_INCOREMENTAL]: Added the incremental loading
+	[FT_CONFIG_OPTION_INCREMENTAL]: Added the incremental loading
 	system for the TrueType driver.
 
 	* src/cid/cidgload.c (cid_load_glyph)
@@ -8245,7 +8245,7 @@
 	`fttype1.c' in src/base.
 
 	* src/pshinter/pshglob.c (psh_blues_scale_zones): Fixed a bug that
-	prevented family blue zones substitution from hapenning correctly.
+	prevented family blue zones substitution from happening correctly.
 
 	* include/freetype/ftbdf.h FT_Get_BDF_Charset_ID): Adding
 	documentation comment.
@@ -8716,7 +8716,7 @@
 
 	src/cache/ftcimage.c, src/cache/ftcsbits.c,
 
-	src/cff/cffdriver.c, src/cff/cffload.c, src/cff/cffobjs.c,
+	src/cff/cffdrivr.c, src/cff/cffload.c, src/cff/cffobjs.c,
 
 	src/cid/cidload.c, src/cid/cidparse.c, src/cid/cidriver.c,
 

@@ -245,7 +245,7 @@
 	All public FreeType enumeration and flag values are uppercase...
 
 	* include/tttables.h (FT_Sfnt_Tag): Implement it.  For backwards
-	compatilibity, retain the old values as macros.
+	compatibility, retain the old values as macros.
 
 	* src/base/ftfstype.c (FT_Get_FSType_Flags), src/sfnt/sfdriver.c
 	(get_sfnt_table): Updated.
@@ -380,7 +380,7 @@
 	elements, use CSS descendants (of class `section') to format the
 	data.
 
-	Also remove reduntant <p> and <br> elements, replacing them with
+	Also remove redundant <p> and <br> elements, replacing them with
 	proper CSS.
 
 	Globally reduce page width to 75%.
@@ -549,7 +549,7 @@
 
 	* src/base/ftobjs.c (FT_Get_Glyph_Name): Fix compiler warning.
 
-	Introdruced in previous change.  Reported by Alexei.
+	Introduced in previous change.  Reported by Alexei.
 
 2014-11-26  Werner Lemberg  <wl@gnu.org>
 
@@ -945,7 +945,7 @@
 
 	The scaling between the hypotenuse and its CORDIC approximation is
 	based on regression analysis. The smaller padding for `theta' is
-	justifed by its maximum error of less than 6.
+	justified by its maximum error of less than 6.
 
 	* src/base/fttrigon.c (ft_trig_downscale): Borrow code from
 	./ftcalc.c (ft_multo64), change linear intercept.
@@ -1430,7 +1430,7 @@
 	[base] Avoid undefined FT_MSB in `BBox_Cubic_Check'.
 
 	* src/base/ftbbox.c (BBox_Cubic_Check): Update.
-	(update_cubic_max): Repalce with...
+	(update_cubic_max): Replace with...
 	(cubic_peak): ... this, which now handles upscaling.
 
 2014-08-11  Alexei Podtelezhnikov  <apodtele@gmail.com>
@@ -3999,7 +3999,7 @@
 
 	* builds/vms/ftconfig.h: Ditto.
 	Make the differences to the master `ftconfig.h' file as small as
-	possible for easier maintainance.
+	possible for easier maintenance.
 
 2013-08-05  Werner Lemberg  <wl@gnu.org>
 
@@ -5098,7 +5098,7 @@
 
 	[truetype] Add framework for TrueType properties.
 
-	* src/truetype/ttdrivr.c: Include FT_SERVICE_PROPERTIES_H.
+	* src/truetype/ttdriver.c: Include FT_SERVICE_PROPERTIES_H.
 	(tt_property_set, tt_property_get): New functions, still empty.
 	Define `tt_service_properties' service.
 	Update `tt_services'.

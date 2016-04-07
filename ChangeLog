@@ -1034,7 +1034,7 @@
 	[bdf] Remove dead code (#46625).
 
 	The BDF specification only allows decimal numbers, no octal or
-	hexidecimal decoding is needed.
+	hexadecimal decoding is needed.
 
 	* src/bdf/bdflib.c (_bdf_atoul, _bdf_atol, _bdf_atous,
 	_bdf_atos): Remove unused code and parameters.
@@ -2173,7 +2173,7 @@
 
 2015-10-04  Werner Lemberg  <wl@gnu.org>
 
-	[bzip2, gzip] Avoid access of unitialized memory (#46109).
+	[bzip2, gzip] Avoid access of uninitialized memory (#46109).
 
 	* src/bzip2/ftbzip2.c (ft_bzip2_file_fill_input), src/gzip/ftgzip.c
 	(ft_gzip_file_fill_input): In case of an error, adjust the limit to
@@ -2181,7 +2181,7 @@
 
 2015-10-03  Werner Lemberg  <wl@gnu.org>
 
-	[bzip2, gzip] Avoid access of unitialized memory (#46109).
+	[bzip2, gzip] Avoid access of uninitialized memory (#46109).
 
 	* src/bzip2/ftbzip2.c (ft_bzip2_file_fill_output), src/gzip/ftgzip.c
 	(ft_gzip_file_fill_output): In case of an error, adjust the limit to
@@ -2590,7 +2590,7 @@
 	[raster,smooth] Microoptimizations.
 
 	* src/raster/ftraster.c (Insert_Y_Turn, Finalize_Profile_Table,
-	Beziier_Up, ): Use do-while loops.
+	Bezier_Up, ): Use do-while loops.
 
 	* src/smooth/ftgrays.c (gray_render_scanline, gray_render_line,
 	gray_convert_glyph): Ditto.
@@ -2721,7 +2721,7 @@
 	[base] Improve emboldener (#45596).
 
 	* src/base/ftoutln.c (FT_Outline_EmboldenXY): Correct displacement
-	of zero-lenght segments.
+	of zero-length segments.
 
 2015-08-16  Alexei Podtelezhnikov  <apodtele@gmail.com>
 
@@ -4172,7 +4172,7 @@
 	* src/pfr/pfrload.c (pfr_extra_item_load_font_id): Ditto.
 	* src/psaux/psobjs.c (ps_table_add), src/psaux/psobjs.h: Ditto.
 	* src/type1/t1load.c (parse_blend_axis_types, parse_encoding,
-	parse_chharstrings, parse_dict): Ditto.
+	parse_charstrings, parse_dict): Ditto.
 	* src/type42/t42parse.c (t42_parse_encoding, t42_parse_charstrings,
 	t42_parse_dict): Ditto.
 
@@ -4245,7 +4245,7 @@
 	* include/internal/ftstream.h (FT_Stream_Pos): Return `FT_ULong'.
 
 	* src/base/ftoutln.c, src/base/ftrfork.c, src/base/ftstream.c:
-	Signedess fixes.
+	Signedness fixes.
 
 2015-02-16  Werner Lemberg  <wl@gnu.org>
 
@@ -4795,7 +4795,7 @@
 	[truetype] More macro expansions.
 
 	* src/truetype/ttinterp.c (INS_ARG): Remove macro by expansion,
-	adjusting funtion calls where necessary.
+	adjusting function calls where necessary.
 	(FT_UNUSED_ARG): Removed, no longer needed.
 
 2015-01-10  Werner Lemberg  <wl@gnu.org>

@@ -1090,7 +1090,7 @@ $   type/out=vmslib.dat sys$input
 !          might look like. They are site specific and the locations of the
 !          library and include files need almost certainly to be changed.
 !
-! Location: All of the libaries can be found at the following addresses
+! Location: All of the libraries can be found at the following addresses
 !
 !   ZLIB:     http://zinser.no-ip.info/vms/sw/zlib.htmlx
 !

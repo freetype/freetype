@@ -971,8 +971,8 @@ FT_BEGIN_HEADER
   /*                                                                       */
   /* <Description>                                                         */
   /*    Used to initialize an instance of FT_Outline_Funcs struct.         */
-  /*    When FT_CONFIG_OPTION_PIC is defined an init funtion will need to  */
-  /*    be called with a pre-allocated structure to be filled.             */
+  /*    When FT_CONFIG_OPTION_PIC is defined an init function will need    */
+  /*    to be called with a pre-allocated structure to be filled.          */
   /*    When FT_CONFIG_OPTION_PIC is not defined the struct will be        */
   /*    allocated in the global scope (or the scope where the macro        */
   /*    is used).                                                          */
@@ -1030,8 +1030,8 @@ FT_BEGIN_HEADER
   /*                                                                       */
   /* <Description>                                                         */
   /*    Used to initialize an instance of FT_Raster_Funcs struct.          */
-  /*    When FT_CONFIG_OPTION_PIC is defined an init funtion will need to  */
-  /*    be called with a pre-allocated structure to be filled.             */
+  /*    When FT_CONFIG_OPTION_PIC is defined an init function will need    */
+  /*    to be called with a pre-allocated structure to be filled.          */
   /*    When FT_CONFIG_OPTION_PIC is not defined the struct will be        */
   /*    allocated in the global scope (or the scope where the macro        */
   /*    is used).                                                          */
@@ -1090,8 +1090,8 @@ FT_BEGIN_HEADER
   /*                                                                       */
   /* <Description>                                                         */
   /*    Used to initialize an instance of FT_Glyph_Class struct.           */
-  /*    When FT_CONFIG_OPTION_PIC is defined an init funtion will need to  */
-  /*    be called with a pre-allocated stcture to be filled.               */
+  /*    When FT_CONFIG_OPTION_PIC is defined an init function will need    */
+  /*    to be called with a pre-allocated stcture to be filled.            */
   /*    When FT_CONFIG_OPTION_PIC is not defined the struct will be        */
   /*    allocated in the global scope (or the scope where the macro        */
   /*    is used).                                                          */
@@ -1164,8 +1164,8 @@ FT_BEGIN_HEADER
   /* <Description>                                                         */
   /*    Used to initialize an instance of FT_Renderer_Class struct.        */
   /*                                                                       */
-  /*    When FT_CONFIG_OPTION_PIC is defined a `create' funtion will need  */
-  /*    to be called with a pointer where the allocated structure is       */
+  /*    When FT_CONFIG_OPTION_PIC is defined a `create' function will      */
+  /*    need to be called with a pointer where the allocated structure is  */
   /*    returned.  And when it is no longer needed a `destroy' function    */
   /*    needs to be called to release that allocation.                     */
   /*    `fcinit.c' (ft_create_default_module_classes) already contains     */
@@ -1368,8 +1368,8 @@ FT_BEGIN_HEADER
   /* <Description>                                                         */
   /*    Used to initialize an instance of an FT_Module_Class struct.       */
   /*                                                                       */
-  /*    When FT_CONFIG_OPTION_PIC is defined a `create' funtion needs to   */
-  /*    be called with a pointer where the allocated structure is          */
+  /*    When FT_CONFIG_OPTION_PIC is defined a `create' function needs     */
+  /*    to be called with a pointer where the allocated structure is       */
   /*    returned.  And when it is no longer needed a `destroy' function    */
   /*    needs to be called to release that allocation.                     */
   /*    `fcinit.c' (ft_create_default_module_classes) already contains     */

@@ -934,7 +934,7 @@
 	* include/freetype/freetype.h (FT_GlyphSlotRec): Improve
 	documentation of `outline' field.
 
-	* src/sfnt/sfobjc.s: Inckude FT_INTERNAL_DEBUG_H.
+	* src/sfnt/sfobjs.s: Include FT_INTERNAL_DEBUG_H.
 	* src/sfnt/sfdriver.c: Include ttmtx.h.
 
 	* src/autofit/afcjk.c: Include aftypes.h and aflatin.h.
@@ -1835,7 +1835,7 @@
 
 2005-12-07  Werner Lemberg  <wl@gnu.org>
 
-	* src/sfnt/sfobjc.c (sfnt_init_face): Move tag check to...
+	* src/sfnt/sfobjs.c (sfnt_init_face): Move tag check to...
 	* src/sfnt/ttload.c (sfnt_init): Here, before handling TTCs.
 
 2005-12-06  Chia-I Wu  <b90201047@ntu.edu.tw>
@@ -1962,7 +1962,7 @@
 
 	* docs/CHANGES: Mention scaling bug.
 
-2005-11-18  susuzki toshiya  <mpsuzuki@hiroshima-u.ac.jp>
+2005-11-18  suzuki toshiya  <mpsuzuki@hiroshima-u.ac.jp>
 
 	* include/freetype/ftgxval.h, src/base/ftgxval.c
 	(FT_TrueTypeGX_Free, FT_ClassicKern_Free): New functions to free
@@ -2311,7 +2311,7 @@
 	CJK font).  A SING Glyphlet Font is an OpenType font that contains
 	the outline(s), either in a `glyf' or `CFF' table, for a glyph;
 	`cmap', `BASE', and `GSUB' tables are present with the same format
-	and functionaliy as a regular OpenType font; there are no `name',
+	and functionality as a regular OpenType font; there are no `name',
 	`head', `OS/2', and `post' tables; there are two new tables, `SING'
 	which contains details about the glyphlet, and `META' which contains
 	metadata.
