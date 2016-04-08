@@ -139,7 +139,7 @@
 	Fix compilation warning.
 
 	* src/base/ftbase.h: s/LOCAL_DEF/LOCAL/.
-	* src/base/ftobjc.s: Include ftbase.h conditionally.
+	* src/base/ftobjs.c: Include ftbase.h conditionally.
 
 2010-01-11  Kwang Yul Seo  <skyul@company100.net>
 
@@ -3519,7 +3519,7 @@
 2008-12-21  Werner Lemberg  <wl@gnu.org>
 
 	* src/pfr/pfrdrivr.c, src/winfonts/winfnt.c, src/cache/ftcmanag.c,
-	src/smooth/ftgrays.c, src/base/ftobjc.s, src/sfobjs.c:
+	src/smooth/ftgrays.c, src/base/ftobjs.c, src/sfobjs.c:
 	s/_Err_Bad_Argument/_Err_Invalid_Argument/.  The former is for
 	errors in the bytecode interpreter only.
 
@@ -4098,7 +4098,7 @@
 2008-09-18  suzuki toshiya  <mpsuzuki@hiroshima-u.ac.jp>
 
 	* src/cff/cffobjs.c (cff_face_init): Use TTAG_OTTO defined
-	in ttags.h instead of numerical value 0x4F54544FL.
+	in tttags.h instead of numerical value 0x4F54544FL.
 
 2008-09-16  Werner Lemberg  <wl@gnu.org>
 
@@ -4248,7 +4248,7 @@
 2008-08-29  suzuki toshiya  <mpsuzuki@hiroshima-u.ac.jp>
 
 	* src/sfnt/sfobjs.c (sfnt_open_font): Use TTAG_OTTO defined in
-	ttags.h instead of FT_MAKE_TAG( 'O', 'T', 'T', 'O' ).
+	tttags.h instead of FT_MAKE_TAG( 'O', 'T', 'T', 'O' ).
 
 2008-08-28  Werner Lemberg  <wl@gnu.org>
 
@@ -4258,7 +4258,7 @@
 
 2008-08-23  Werner Lemberg  <wl@gnu.org>
 
-	* src/type/t1afm.c (compare_kern_pairs), src/pxaux/afmparse.c
+	* src/type/t1afm.c (compare_kern_pairs), src/psaux/afmparse.c
 	(afm_compare_kern_pairs): Fix comparison.  This fixes Savannah bug
 	#24119.
 
@@ -5428,7 +5428,7 @@
 	* include/freetype/config/ftheader.h (FT_CID_H): New macro.
 	* include/freetype/ftcid.h: New file.
 
-	* include/freetype/internal/ftserv.h (FT_SERVIVE_CID_H): New macro.
+	* include/freetype/internal/ftserv.h (FT_SERVICE_CID_H): New macro.
 	* include/freetype/internal/services/svcid.h: New file.
 
 	* src/base/ftcid.c: New file.
@@ -5938,7 +5938,7 @@
 
 	Savannah patch #5929.
 
-	* include/freetype/tttables.h, src/base/ftobjcs.c
+	* include/freetype/tttables.h, src/base/ftobjs.c
 	(FT_Get_CMap_Format): New function.
 
 	* include/freetype/internal/services/svttcmap.c (TT_CMapInfo): Add
@@ -6005,7 +6005,7 @@
 
 2007-05-11  David Turner  <david@freetype.org>
 
-	* src/cache/ftbasic.c, include/freetype/ftcache.h
+	* src/cache/ftcbasic.c, include/freetype/ftcache.h
 	(FTC_ImageCache_LookupScaler, FTC_SBit_Cache_LookupScaler): Two new
 	functions that allow us to look up glyphs using an FTC_Scaler object
 	to specify the size, making it possible to use fractional pixel
@@ -7840,7 +7840,7 @@
 	* src/base/ftobjs.c (load_face_in_embedded_rfork): Replace
 	`FT_Stream_Close' by `FT_Stream_Free' to fix memory leak.
 
-	* src/base/ftrfrk.c (raccess_guess_linux_double_from_file_name):
+	* src/base/ftrfork.c (raccess_guess_linux_double_from_file_name):
 	Replace `FT_Stream_Close' by `FT_Stream_Free' to fix memory leak.
 
 2006-05-19  suzuki toshiya  <mpsuzuki@hiroshima-u.ac.jp>

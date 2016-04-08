@@ -25,7 +25,7 @@
 
 2016-03-29  Werner Lemberg  <wl@gnu.org>
 
-	* src/base/ftadvance.c (FT_Get_Advances): Fix invalid left shift.
+	* src/base/ftadvanc.c (FT_Get_Advances): Fix invalid left shift.
 
 2016-03-29  Werner Lemberg  <wl@gnu.org>
 
@@ -3541,7 +3541,7 @@
 
 	* src/autofit/afhints.h (AF_HINTS_DO_WARP): New macro.
 
-	* src/autofi/aflatin.c (af_latin_hints_apply)
+	* src/autofit/aflatin.c (af_latin_hints_apply)
 	[AF_CONFIG_OPTION_USE_WARPER]: Use `AF_HINTS_DO_WARP' to control use
 	of warper.
 
@@ -4763,7 +4763,7 @@
 
 2015-01-11  Werner Lemberg  <wl@gnu.org>
 
-	[truetype] Prettyfing.
+	[truetype] Prettifying.
 
 	* src/truetype/ttinterp.c (project, dualproj, fast_project,
 	fast_dualproj): Rename to...

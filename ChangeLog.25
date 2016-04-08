@@ -579,7 +579,7 @@
 
 2014-11-26  suzuki toshiya  <mpsuzuki@hiroshima-u.ac.jp>
 
-	* src/base/ftobj.c (Mac_Read_POST_Resource): Additional
+	* src/base/ftobjs.c (Mac_Read_POST_Resource): Additional
 	overflow check in the summation of POST fragment lengths,
 	suggested by Mateusz Jurczyk <mjurczyk@google.com>.
 
@@ -2697,7 +2697,7 @@
 
 	[autofit] Introduce `coverages'.
 
-	Coverages are the interface to the HarfBuzz library to acces
+	Coverages are the interface to the HarfBuzz library to access
 	OpenType features for handling glyphs not addressable by the cmap.
 
 	Right now, compilation of HarfBuzz is only added to the development
@@ -2896,11 +2896,11 @@
 	* src/autofit/afdummy.c, src/autofit/afdummy.h: Updated.
 	* src/autofit/afindic.c, src/autofit/afindic.h: Updated.
 	* src/autofit/aflatin.c, src/autofit/aflatin.h: Updated.
-	* src/autofit/aflatn2.c, src/autofit/aflatn2.h: Updated.
+	* src/autofit/aflatin2.c, src/autofit/aflatin2.h: Updated.
 
 	* src/autofit/afpic.c: Updated.
 
-	* src/autofir/autofit.c: Include `afranges.c'.
+	* src/autofit/autofit.c: Include `afranges.c'.
 	* src/autofit/rules.mk (AUTOF_DRV_SRC): Add `afranges.c'.
 
 2013-12-18  Werner Lemberg  <wl@gnu.org>
@@ -4319,7 +4319,7 @@
 
 	* include/freetype/internal/tttypes.h (TT_SBit_MetricsRec): Widen
 	fields to FT_Short and FT_UShort, respectively.
-	(TT_SBitTableType): New enumeration.
+	(TT_SbitTableType): New enumeration.
 	(TT_FaceRec): Add `sbit_table_type' field.
 
 	* include/freetype/tttags.h (TTAG_sbix): New macro.
@@ -4332,7 +4332,7 @@
 	* src/sfnt/ttsbit.c: Include `ttmtx.h'.
 	(tt_face_load_eblc): Renamed to...
 	(tt_face_load_sbit): This.
-	Handlic `sbix' bitmaps.
+	Handle `sbix' bitmaps.
 	(tt_face_free_eblc): Renamed to...
 	(tt_face_load_sbit): This.
 	Updated.
@@ -4615,7 +4615,7 @@
 	Fix Savannah bug #39269.
 
 	* src/base/ftgloadr.c (FT_GlyphLoader_CheckPoints): Free memory in
-	case of reacollocation failures.
+	case of reallocation failures.
 
 2013-06-18  Andrew Church  <achurch+savannah@achurch.org>
 

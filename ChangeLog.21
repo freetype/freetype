@@ -1112,7 +1112,7 @@
 	but return them as-is.
 
 	* docs/CHANGES: Mention new bitmap API.
-	* include/freetype/ftchapter.s: Updated.
+	* include/freetype/ftchapters.h: Updated.
 
 2004-12-11  Robert Clark  <freetype@ratty.org.uk>
 
@@ -2048,7 +2048,7 @@
 	pcf_get_metrics, pcf_get_bitmaps, pcf_get_encodings): Improve
 	debugging messages.
 
-	* src/pcf/pcfdrivr.c (FT_COMPOMENT): Move up.
+	* src/pcf/pcfdrivr.c (FT_COMPONENT): Move up.
 	(PCF_Face_Init): Simplify code.
 
 	* src/bdf/bdfdrivr.h (BDF_FaceRec): New element `default_glyph'.
@@ -2116,7 +2116,7 @@
 	* include/freetype/cache/ftcmru.h (FTC_MruNode_CompareFunc): Change
 	return type to FT_Bool.
 
-	* src/cache/ftbasic.c (ftc_basic_family_compare): Change return
+	* src/cache/ftcbasic.c (ftc_basic_family_compare): Change return
 	type to FT_Bool.
 
 	* src/cache/ftccache.c (FTC_Cache_Init, ftc_cache_init): Make
@@ -2899,7 +2899,7 @@
 	Improve MacOS fond support.  Provide a new API
 	`FT_New_Face_From_FSSpec' similar to `FT_New_Face'.
 
-	* src/base/ftmac.c [__MWERKS__]: Include FSp_fpopen.h.
+	* src/base/ftmac.c [__MWERKS__]: Include FSp_fopen.h.
 	STREAM_FILE [__MWERKS__]: New macro.
 	(ft_FSp_stream_close, ft_FSp_stream_io) [__MWERKS__]: New functions.
 	(file_spec_from_path) [__MWERKS__]: Updated #if statement.
@@ -3460,7 +3460,7 @@
 
 2003-12-25  Werner Lemberg  <wl@gnu.org>
 
-	* src/base/fttrigon.c, src/base/ftgloadr.c: Inlude
+	* src/base/fttrigon.c, src/base/ftgloadr.c: Include
 	FT_INTERNAL_OBJECTS_H.
 
 	* src/base/ftstroke.c (FT_Outline_GetInsideBorder,
@@ -3539,7 +3539,7 @@
 	src/cache/ftcsbits.c,
 	src/cache/ftccmap.c,
 	src/cache/ftcbasic.c (added),
-	src/cache/ftclru.c (removed):
+	src/cache/ftlru.c (removed):
 
 	  *Complete* rewrite of the cache sub-system to `solve' the
 	  following points:
@@ -4683,7 +4683,7 @@
 	(gindex,gindex).
 
 	* src/base/ftpfr.c (ft_pfr_check): Fix serious typo.
-	* src/pfr/prfload.c: Remove dead code.
+	* src/pfr/pfrload.c: Remove dead code.
 	(pfr_get_gindex, pfr_compare_kern_pairs, pfr_sort_kerning_pairs):
 	New functions.
 	(pfr_phy_font_done): Free `kern_pairs'.
@@ -5569,7 +5569,7 @@
 	* src/bdf/bdfdrivr.c (BDF_Face_Init), src/pcf/pcfdriver.c
 	(PCF_Face_Init): Test for charset registry case-insensitively.
 
-	* src/gzip/ftgzip.c (ft_gzip_fil_io): Revert change from yesterday;
+	* src/gzip/ftgzip.c (ft_gzip_file_io): Revert change from yesterday;
 	it has already been fixed differently.
 
 	* src/truetype/ttinterp.c (DO_SFVTL): Add missing braces around
@@ -6275,7 +6275,7 @@
 	(bdf_driver_class): Use `bdf_driver_requester'.
 
 	* src/pcf/pcfdrivr.c: Include FT_BDF_H.
-	(pcf_get_bdf_property, pdc_driver_requester): New functions
+	(pcf_get_bdf_property, pcf_driver_requester): New functions
 	(pcf_driver_class): Use `pcf_driver_requester'.
 
 	* src/pcf/pcfread.c: Include `pcfread.h'.
@@ -6695,7 +6695,7 @@
 	* src/pfr/pfrgload.c: Include `pfrsbit.h'.
 	* src/pfr/pfrload.c (pfr_extra_item_load_kerning_pairs): Rewritten.
 	(pfr_phy_font_done, pfr_phy_font_load): Updated.
-	* src/pfr/pfrobks.c: Include `pfrsbit.h'.
+	* src/pfr/pfrobjs.c: Include `pfrsbit.h'.
 	(pfr_face_init): Handle kerning and embedded bitmaps.
 	(pfr_slot_load): Load embedded bitmaps.
 	(PFR_KERN_INDEX): Removed.
@@ -7897,7 +7897,7 @@
 
 2002-06-21  Sven Neumann  <sven@convergence.de>
 
-	* src/prf/pfrtypes.h (PFR_KernPair): New structure.
+	* src/pfr/pfrtypes.h (PFR_KernPair): New structure.
 	(PFR_PhyFont): Use it.
 	(PFR_KernFlags): New enumeration.
 	* src/pfr/pfrload.c (pfr_extra_item_load_kerning_pairs): New
@@ -8622,7 +8622,7 @@
 
 2002-04-19  Werner Lemberg  <wl@gnu.org>
 
-	* src/pfr/pfrload.c (pfr_extra_items_farse): Fix debug message.
+	* src/pfr/pfrload.c (pfr_extra_items_parse): Fix debug message.
 	(pfr_phy_font_load): s/size/Size/ for local variable to avoid
 	compiler warning.
 	* src/pfr/pfrobjs.c (pfr_face_init): Fix debug message.
@@ -8676,7 +8676,7 @@
 
 2002-04-16  Francesco Zappa Nardelli  <Francesco.Zappa.Nardelli@ens.fr>
 
-	* src/pcf/pcfread (pcf_get_accell): Fix parsing of accelerator
+	* src/pcf/pcfread.c (pcf_get_accel): Fix parsing of accelerator
 	tables.
 
 2002-04-15  David Turner  <david@freetype.org>
@@ -9068,7 +9068,7 @@
 
 	* include/freetype/internal/psaux.h, src/cid/cidload.c,
 	src/cidtoken.h, src/psaux/psobjs.c, src/psaux/psobjs.h,
-	src/psaux/t1decode.c, stc/type1/t1load.c, src/type1/t1tokens.h:
+	src/psaux/t1decode.c, src/type1/t1load.c, src/type1/t1tokens.h:
 	Updated common PostScript type definitions.
 	Renamed all enumeration values like to uppercase variants:
 

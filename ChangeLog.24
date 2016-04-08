@@ -978,7 +978,7 @@
 
 	[base] Clean up trigonometric core.
 
-	* src/base/fttrrigon.c (ft_trig_pseudo_polarize): Align algorithm
+	* src/base/fttrigon.c (ft_trig_pseudo_polarize): Align algorithm
 	with `ft_trig_pseudo_rotate'.
 
 2012-12-18  Infinality  <infinality@infinality.net>
@@ -990,7 +990,7 @@
 
 2012-12-17  Infinality  <infinality@infinality.net>
 
-	[truetype] Remove unusued code and variables.
+	[truetype] Remove unused code and variables.
 
 	* src/truetype/ttinterp.c: Updated.
 	(Ins_FDEF): Remove opcode patterns that are not being used.
@@ -1012,7 +1012,7 @@
 
 2012-12-16  Infinality  <infinality@infinality.net>
 
-	[truetype] Remove unusued code and variables.  Add minor fixes.
+	[truetype] Remove unused code and variables.  Add minor fixes.
 
 	* src/truetype/ttsubpix.h: Updated.
 	(SKIP_NONPIXEL_Y_MOVES_Rules_Exceptions): Add Trebuchet MS.
@@ -1037,7 +1037,7 @@
 	(Ins_FDEF): Rework code to fix bugs and add more detection.
 	(Ins_CALL): Remove unused code.
 	(Ins_LOOPCALL): Remove unused code.
-	(TT_RunIns): Remove unusued code.
+	(TT_RunIns): Remove unused code.
 	(Ins_SHPIX): Add logic to handle ttfautohinted fonts.
 	(Ins_MIRP): Don't round x in cut-in calculation.  Add logic to handle
 	ttfautohinted fonts.
@@ -2556,7 +2556,7 @@
 	s/t1_init_loader/cid_init_loader/.
 	s/t1_done_loader/cid_done_loader/.
 
-	* src/pxaux/t1cmap.c: s/t1_get_glyph_name/psaux_get_glyph_name/.
+	* src/psaux/t1cmap.c: s/t1_get_glyph_name/psaux_get_glyph_name/.
 
 	* src/truetype/ttdriver.c: s/Load_Glyph/tt_glyph_load/.
 
@@ -2796,7 +2796,7 @@
 	[base] Fix a dereference of uninitialized variable in PIC mode.
 
 	* src/base/ftglyph.c (FT_Glyph_To_Bitmap): `glyph' must be
-	set before derefering to obtain `library'.  The initialization
+	set before dereferring to obtain `library'.  The initialization
 	of `clazz', `glyph', `library' and NULL pointer check are
 	reordered to minimize PIC conditionals.
 
