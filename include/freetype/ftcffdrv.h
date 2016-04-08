@@ -89,7 +89,7 @@ FT_BEGIN_HEADER
    *   features preserve the design's weight and spacing much better than
    *   aliased type would.
    *
-   *   2) Aligment in the vertical direction: Weights and spacing along the
+   *   2) Alignment in the vertical direction: Weights and spacing along the
    *   y~axis are less critical; what is much more important is the visual
    *   alignment of related features (like cap-height and x-height).  The
    *   sense of alignment for these is enhanced by the sharpness of grid-fit

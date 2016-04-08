@@ -185,7 +185,7 @@ FT_BEGIN_HEADER
   /*                                                                       */
   /*    CompLength :: Compressed table length (in bytes).                  */
   /*                                                                       */
-  /*    OrigLength :: Unompressed table length (in bytes).                 */
+  /*    OrigLength :: Uncompressed table length (in bytes).                */
   /*                                                                       */
   /*    CheckSum   :: The table checksum.  This value can be ignored.      */
   /*                                                                       */
