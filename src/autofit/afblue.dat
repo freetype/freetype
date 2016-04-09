@@ -65,8 +65,8 @@
 // values; this essentially means that the maximum values can easily be too
 // large.  Given that the purpose of those values is to create local
 // fixed-size arrays at compile time for further processing of the blue zone
-// data, this isn't a problem.  Note the the final zero byte of a string is
-// not counted.  Note also that the count holds the number of UTF-8 encoded
+// data, this isn't a problem.  Note the final zero byte of a string is not
+// counted.  Note also that the count holds the number of UTF-8 encoded
 // characters, not bytes.
 
 

@@ -52,10 +52,10 @@
 #undef  META_STYLE_LATIN
 #define META_STYLE_LATIN( s, S, ds )                     \
           STYLE_LATIN( s, S, c2cp, C2CP, ds,             \
-                       "petite capticals from capitals", \
+                       "petite capitals from capitals", \
                        PETITE_CAPITALS_FROM_CAPITALS )   \
           STYLE_LATIN( s, S, c2sc, C2SC, ds,             \
-                       "small capticals from capitals",  \
+                       "small capitals from capitals",  \
                        SMALL_CAPITALS_FROM_CAPITALS )    \
           STYLE_LATIN( s, S, ordn, ORDN, ds,             \
                        "ordinals",                       \

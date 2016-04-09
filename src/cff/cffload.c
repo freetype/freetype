@@ -876,8 +876,8 @@
     FT_UShort  glyph_sid;
 
 
-    /* If the the offset is greater than 2, we have to parse the */
-    /* charset table.                                            */
+    /* If the offset is greater than 2, we have to parse the charset */
+    /* table.                                                        */
     if ( offset > 2 )
     {
       FT_UInt  j;

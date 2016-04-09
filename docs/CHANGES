@@ -3754,7 +3754,7 @@ BETA-8 (RELEASE CANDIDATE) CHANGES
         automatically when needed.
 
   - Reformatted all  modules source  code in order  to get rid  of the
-    basic data types redifinitions (i.e. `TT_Int' instead of `FT_Int',
+    basic data types redefinitions (i.e. `TT_Int' instead of `FT_Int',
     `T1_Fixed'  instead  of  `FT_Fixed').  Hence  the  format-specific
     prefixes like  `TT_', `T1_',  `T2_' and `CID_'  are only  used for
     relevant structures.

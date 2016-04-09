@@ -1096,7 +1096,7 @@ $   type/out=vmslib.dat sys$input
 !
 ZLIB # sys$library:libz.olb # sys$library: # zlib.h # FT_CONFIG_OPTION_SYSTEM_ZLIB
 $   write sys$output "New driver file vmslib.dat created."
-$   write sys$output "Please customize libary locations for your site"
+$   write sys$output "Please customize library locations for your site"
 $   write sys$output "and afterwards re-execute ''myproc'"
 $   goto err_exit
 $ endif
