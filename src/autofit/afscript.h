@@ -55,6 +55,18 @@
           HINTING_TOP_TO_BOTTOM,
           "\xE0\xA4\xA0 \xE0\xA4\xB5 \xE0\xA4\x9F" ) /* ठ व ट */
 
+  SCRIPT( geor, GEOR,
+          "Georgian (Mkhedruli)",
+          HB_SCRIPT_GEORGIAN,
+          HINTING_BOTTOM_TO_TOP,
+          "\xE1\x83\x98 \xE1\x83\x94 \xE1\x83\x90" ) /* ი ე ა */
+
+  SCRIPT( geok, GEOK,
+          "Georgian (Khutsuri)",
+          HB_SCRIPT_INVALID,
+          HINTING_BOTTOM_TO_TOP,
+          "\xE1\x82\xB6 \xE1\x82\xB1 \xE2\xB4\x99" ) /* Ⴖ Ⴑ ⴙ */
+
   SCRIPT( grek, GREK,
           "Greek",
           HB_SCRIPT_GREEK,

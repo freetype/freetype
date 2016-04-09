@@ -1,3 +1,40 @@
+2016-04-09  Werner Lemberg  <wl@gnu.org>
+
+	[autofit] Add support for Georgian scripts.
+
+	Georgian is problematic, since `uppercase' forms of Mkhedruli
+	(called Mtavruli) are not yet defined in Unicode, which means that
+	proper blue zones can't be defined.  However, there is already a
+	proposal submitted to Unicode; see
+
+	  http://www.unicode.org/L2/L2016/16034-n4707-georgian.pdf
+
+	Additionally, due to historical reasons, Unicode treats Khutsuri as
+	the same script as Mkhedruli, and so does OpenType.  However, since
+	the two scripts have completely different shapes it can happen that
+	blue zones differ considerably.  The tag `geok' used here (derived
+	from ISO 15924) to differentiate the two scripts is not an OpenType
+	tag in use.  If we now have a font that contains both glyphs for
+	Mkhedruli and Khutsuri, and it uses OpenType features for both also,
+	HarfBuzz unavoidably treats all glyphs as `geor'.  As a consequence,
+	blue zones for `geok' are not used for glyphs involved in the
+	OpenType features.
+
+	An issue not yet resolved is which OpenType feature should be used
+	to access Mtavruli glyph shapes; right now, FreeType doesn't set up
+	support for them, but it is easy to add them later on as soon as
+	more information is available.
+
+	* src/autofit/afblue.dat: Add blue zone data for Georgian.
+
+	* src/autofit/afblue.c, src/autofit/afblue.h: Regenerated.
+
+	* src/autofit/afscript.h: Add Georgian standard characters.
+
+	* src/autofit/afranges.c: Add Georgian data.
+
+	* src/autofit/afstyles.h: Add Georgian data.
+
 2016-04-05  Werner Lemberg  <wl@gnu.org>
 
 	[autofit] Provide dummy blue zone for pseudo script `none'.

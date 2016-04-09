@@ -158,6 +158,36 @@
   };
 
 
+  const AF_Script_UniRangeRec  af_geor_uniranges[] =
+  {
+    AF_UNIRANGE_REC(  0x10D0UL,  0x10FFUL ),  /* Georgian (Mkhedruli) */
+#if 0
+    /* the following range is proposed for inclusion in Unicode */
+    AF_UNIRANGE_REC(  0x1C90UL,  0x1CBFUL ),  /* Georgian (Mtavruli)  */
+#endif
+    AF_UNIRANGE_REC(       0UL,       0UL )
+  };
+
+  const AF_Script_UniRangeRec  af_geor_nonbase_uniranges[] =
+  {
+    AF_UNIRANGE_REC( 0UL, 0UL )
+  };
+
+
+  const AF_Script_UniRangeRec  af_geok_uniranges[] =
+  {
+    /* Khutsuri */
+    AF_UNIRANGE_REC(  0x10A0UL,  0x10CDUL ),  /* Georgian (Asomtavruli) */
+    AF_UNIRANGE_REC(  0x2D00UL,  0x2D2DUL ),  /* Georgian (Nuskhuri)    */
+    AF_UNIRANGE_REC(       0UL,       0UL )
+  };
+
+  const AF_Script_UniRangeRec  af_geok_nonbase_uniranges[] =
+  {
+    AF_UNIRANGE_REC( 0UL, 0UL )
+  };
+
+
   const AF_Script_UniRangeRec  af_grek_uniranges[] =
   {
     AF_UNIRANGE_REC(  0x0370UL,  0x03FFUL ),  /* Greek and Coptic */

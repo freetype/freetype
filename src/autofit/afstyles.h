@@ -106,6 +106,20 @@
          AF_BLUE_STRINGSET_DEVA,
          AF_COVERAGE_DEFAULT )
 
+  STYLE( geor_dflt, GEOR_DFLT,
+         "Georgian (Mkhedruli) default style",
+         AF_WRITING_SYSTEM_LATIN,
+         AF_SCRIPT_GEOR,
+         AF_BLUE_STRINGSET_GEOR,
+         AF_COVERAGE_DEFAULT )
+
+  STYLE( geok_dflt, GEOK_DFLT,
+         "Georgian (Khutsuri) default style",
+         AF_WRITING_SYSTEM_LATIN,
+         AF_SCRIPT_GEOK,
+         AF_BLUE_STRINGSET_GEOK,
+         AF_COVERAGE_DEFAULT )
+
   META_STYLE_LATIN( grek, GREK, "Greek" )
 
   STYLE( hebr_dflt, HEBR_DFLT,

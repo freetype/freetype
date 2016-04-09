@@ -114,6 +114,29 @@ AF_BLUE_STRING_ENUM AF_BLUE_STRINGS_ARRAY AF_BLUE_STRING_MAX_LEN:
   AF_BLUE_STRING_DEVANAGARI_BOTTOM
     "ु ृ"
 
+  AF_BLUE_STRING_GEORGIAN_MKHEDRULI_TOP
+    "გ დ ე ვ თ ი ო ღ"
+  AF_BLUE_STRING_GEORGIAN_MKHEDRULI_BOTTOM
+    "ა ზ მ ს შ ძ ხ ჰ"
+  AF_BLUE_STRING_GEORGIAN_MKHEDRULI_ASCENDER
+    "ს ხ ქ ზ მ შ ჩ წ"
+  AF_BLUE_STRING_GEORGIAN_MKHEDRULI_DESCENDER
+    "ე ვ ჟ ტ უ ფ ქ ყ"
+
+  AF_BLUE_STRING_GEORGIAN_ASOMTAVRULI_TOP
+    "Ⴑ Ⴇ Ⴙ Ⴜ Ⴄ Ⴅ Ⴓ Ⴚ"
+  AF_BLUE_STRING_GEORGIAN_ASOMTAVRULI_BOTTOM
+    "Ⴄ Ⴅ Ⴇ Ⴈ Ⴆ Ⴑ Ⴊ Ⴋ"
+
+  AF_BLUE_STRING_GEORGIAN_NUSKHURI_TOP
+    "ⴁ ⴗ ⴂ ⴄ ⴅ ⴇ ⴔ ⴖ"
+  AF_BLUE_STRING_GEORGIAN_NUSKHURI_BOTTOM
+    "ⴈ ⴌ ⴖ ⴎ ⴃ ⴆ ⴋ ⴢ"
+  AF_BLUE_STRING_GEORGIAN_NUSKHURI_ASCENDER
+    "ⴐ ⴑ ⴓ ⴕ ⴙ ⴛ ⴡ ⴣ"
+  AF_BLUE_STRING_GEORGIAN_NUSKHURI_DESCENDER
+    "ⴄ ⴅ ⴔ ⴕ ⴁ ⴂ ⴘ ⴝ"
+
   AF_BLUE_STRING_GREEK_CAPITAL_TOP
     "Γ Β Ε Ζ Θ Ο Ω"
   AF_BLUE_STRING_GREEK_CAPITAL_BOTTOM
@@ -444,6 +467,25 @@ AF_BLUE_STRINGSET_ENUM AF_BLUE_STRINGSETS_ARRAY AF_BLUE_STRINGSET_MAX_LEN:
     { AF_BLUE_STRING_DEVANAGARI_BASE,   0                                 }
     { AF_BLUE_STRING_DEVANAGARI_BOTTOM, 0                                 }
     { AF_BLUE_STRING_MAX,               0                                 }
+
+  // blue zones for Mtavruli are missing (not yet defined in Unicode)
+  AF_BLUE_STRINGSET_GEOR
+    { AF_BLUE_STRING_GEORGIAN_MKHEDRULI_TOP,       AF_BLUE_PROPERTY_LATIN_TOP      |
+                                                   AF_BLUE_PROPERTY_LATIN_X_HEIGHT   }
+    { AF_BLUE_STRING_GEORGIAN_MKHEDRULI_BOTTOM,    0                                 }
+    { AF_BLUE_STRING_GEORGIAN_MKHEDRULI_ASCENDER,  AF_BLUE_PROPERTY_LATIN_TOP        }
+    { AF_BLUE_STRING_GEORGIAN_MKHEDRULI_DESCENDER, 0                                 }
+    { AF_BLUE_STRING_MAX,                          0                                 }
+
+  AF_BLUE_STRINGSET_GEOK
+    { AF_BLUE_STRING_GEORGIAN_ASOMTAVRULI_TOP,       AF_BLUE_PROPERTY_LATIN_TOP        }
+    { AF_BLUE_STRING_GEORGIAN_ASOMTAVRULI_BOTTOM,    0                                 }
+    { AF_BLUE_STRING_GEORGIAN_NUSKHURI_TOP,          AF_BLUE_PROPERTY_LATIN_TOP      |
+                                                     AF_BLUE_PROPERTY_LATIN_X_HEIGHT   }
+    { AF_BLUE_STRING_GEORGIAN_NUSKHURI_BOTTOM,       0                                 }
+    { AF_BLUE_STRING_GEORGIAN_NUSKHURI_ASCENDER,     AF_BLUE_PROPERTY_LATIN_TOP        }
+    { AF_BLUE_STRING_GEORGIAN_NUSKHURI_DESCENDER,    0                                 }
+    { AF_BLUE_STRING_MAX,                            0                                 }
 
   AF_BLUE_STRINGSET_GREK
     { AF_BLUE_STRING_GREEK_CAPITAL_TOP,     AF_BLUE_PROPERTY_LATIN_TOP        }
