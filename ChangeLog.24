@@ -780,7 +780,7 @@
 
 	Move font tweaking tables to...
 
-	* src/truetype/ttsubpic.c: This file and decorate them with `static'
+	* src/truetype/ttsubpix.c: This file and decorate them with `static'
 	and `const' where appropriate.
 
 	(X_SCALING_Rules, X_SCALING_RULES_SIZE): Renamed to...
@@ -1395,7 +1395,7 @@
 
 	[autofit] Minor optimization.
 
-	* src/autofit/afglobals.c (af_face_globals_compute_script_coverage):
+	* src/autofit/afglobal.c (af_face_globals_compute_script_coverage):
 	Add loop condition.
 
 2012-09-29  Werner Lemberg  <wl@gnu.org>
@@ -4120,7 +4120,7 @@
 	[autofit] Add more Indic scripts with hanging baseline.
 
 	* src/autofit/afindic.c (af_indic_uniranges): Tibetan, Limbu,
-	Sundanese, Meetei Mayak, Syloti Nagri and Sharada scripts are
+	Sundanese, Meetei Mayek, Syloti Nagri and Sharada scripts are
 	added.
 
 2011-04-21  Behdad Esfahbod  <behdad@behdad.org>
@@ -6278,8 +6278,8 @@
 	Use real types instead of `void' for `pshinter' and `psnames' fields.
 
 	* src/cff/cffload.c: Don't include PS cmaps service.
-	(cff_index_get_pointers): Add `pool' parameter which allows to
-	insert an extra NUL character for each String INDEX entry.
+	(cff_index_get_pointers): Add `pool' parameter which allows inserting
+	an extra NUL character for each String INDEX entry.
 	(cff_index_get_name): Make it a local function.
 	(cff_index_get_string): New function.
 	(cff_subfont_load): Updated.

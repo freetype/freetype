@@ -2444,7 +2444,7 @@
 	that the covered ranges are the same: Bengali, Devanagari, Gujarati,
 	Gurmukhi, Kannada, Limbu, Malayalam, Oriya, Sinhala, Sundanese,
 	Syloti Nagri, Tamil, Telugu, and Tibetan.  At the same time, remove
-	entries for Meetai Mayak and Sharada – the Unicode ranges were
+	entries for Meetei Mayek and Sharada – the Unicode ranges were
 	incorrect (and nobody has complained about that), fonts are scarce
 	for those scripts, and the Indic auto-hinter support is rudimentary
 	anyways.
@@ -3418,7 +3418,7 @@
 	* src/autofit/afblue.c, src/autofit/afblue.h: Regenerated.
 
 	* src/autofit/aflatin.c, src/autofit/aflatin.h,
-	src/autofit/atlatin2.c: Updated.
+	src/autofit/aflatin2.c: Updated.
 
 2013-10-19  Werner Lemberg  <wl@gnu.org>
 

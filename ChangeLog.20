@@ -330,7 +330,7 @@
 
 2001-12-22  Francesco Zappa Nardelli  <Francesco.Zappa.Nardelli@ens.fr>
 
-	* src/pfc/pcfread.c (pcf_load_font): Handle property `POINT_SIZE'
+	* src/pcf/pcfread.c (pcf_load_font): Handle property `POINT_SIZE'
 	and fix incorrect computation of `available_sizes'.
 
 2001-12-22  David Turner  <david@freetype.org>
@@ -412,7 +412,7 @@
 	* src/cff/cffgload.h: Updated.
 	* src/cff/cffobjs.c: Include FT_INTERNAL_POSTSCRIPT_HINTS_H.
 	(CFF_Size_Get_Globals_Funcs, CFF_Size_Done, CFF_Size_Init,
-	CFF_Size_Reset, CFF_GlyphSlot_Done, CFF_GLyphSlot_Init): New
+	CFF_Size_Reset, CFF_GlyphSlot_Done, CFF_GlyphSlot_Init): New
 	functions.
 	(CFF_Init_Face): Renamed to ...
 	(CFF_Face_Init): This.

@@ -1630,8 +1630,8 @@
 
 	* include/freetype/internal/t1types.h (T1_FaceRec): Updated.
 
-	* src/psaux/t1cmap.h (T1_CmapStdRec): Updated.
-	(T1_CmapUnicode, T1_CmapUnicodeRec): Removed.
+	* src/psaux/t1cmap.h (T1_CMapStdRec): Updated.
+	(T1_CMapUnicode, T1_CMapUnicodeRec): Removed.
 
 	* src/psaux/t1cmap.c (t1_get_glyph_name): New callback function.
 	(t1_cmap_unicode_init, t1_cmap_unicode_done,

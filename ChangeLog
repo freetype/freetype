@@ -120,7 +120,7 @@
 
 	[pfr] Minor.
 
-	* src/pfr/pfrsbit.c, srf/pfr/pfrobjs.c: Use flag names instead of
+	* src/pfr/pfrsbit.c, src/pfr/pfrobjs.c: Use flag names instead of
 	bare numbers.
 
 2016-03-25  Werner Lemberg  <wl@gnu.org>
@@ -1244,7 +1244,7 @@
 	* src/autofit/afglobal.c: s/hbshim.h/afshaper.h/.
 	(af_face_globals_compute_style_coverage): Updated.
 
-	* src/autofit/afglocal.h: s/hbshim.h/afshaper.h/.
+	* src/autofit/afglobal.h: s/hbshim.h/afshaper.h/.
 
 	* src/autofit/autofit.c: s/hbshim.c/afshaper.c/.
 
@@ -2833,7 +2833,7 @@
 	* src/type1/t1gload.c (T1_Load_Glyph): Directly modify advances only
 	if font matrix is not trivial.
 	* src/cff/cffgload.c (cff_slot_load): Ditto.
-	* sff/cid/cidgload.c (cid_slot_load_glyph): Ditto for advances and the
+	* src/cid/cidgload.c (cid_slot_load_glyph): Ditto for advances and the
 	entire outline.
 
 2015-08-11  Werner Lemberg  <wl@gnu.org>

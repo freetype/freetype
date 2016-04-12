@@ -327,7 +327,7 @@
 	Blaskey <listtarget@danbala.com>).
 
 	* src/sfnt/ttcmap.h (TT_CMap): Add member `unsorted'.
-	* src/sfnt/ttcmac.c: Use SFNT_Err_Ok where appropriate.
+	* src/sfnt/ttcmap.c: Use SFNT_Err_Ok where appropriate.
 
 	(tt_cmap0_validate, tt_cmap2_validate, tt_cmap6_validate,
 	tt_cmap8_validate, tt_cmap10_validate, tt_cmap12_validate): Use
@@ -4119,7 +4119,7 @@
 	(fnt_cmap_class_rec, fnt_cmap_class), src/bdf/bdflib.c (empty,
 	_num_bdf_properties), src/gzip/infutil.c (inflate_mask),
 	src/gzip/inffixed.h (fixed_bl, fixed_bd, fixed_tl, fixed_td),
-	src/gzip/inftrees.h (inflate_trees_fixed), srf/gzip/inftrees.c
+	src/gzip/inftrees.h (inflate_trees_fixed), src/gzip/inftrees.c
 	(inflate_trees_fixed): Decorate with more `const' to avoid
 	writable global variables which are disallowed on ARM.
 
@@ -6547,7 +6547,7 @@
 
 2002-11-07  David Turner  <david@freetype.org>
 
-	* src/cache/ftcsbit.c (ftc_sbit_node_load): Fixed a small bug that
+	* src/cache/ftcsbits.c (ftc_sbit_node_load): Fixed a small bug that
 	caused problems with embedded bitmaps.
 
 	* src/otlayout/otlayout.h, src/otlyaout/otlconf.h,
@@ -7032,7 +7032,7 @@
 	(FTC_Image_Cache_Lookup): This function.
 	(ftc_image_family_init): Updated.
 
-	* src/cache/ftcsbit.c (FTC_SBitQueryRec, FTC_SBitFamilyRec):
+	* src/cache/ftcsbits.c (FTC_SBitQueryRec, FTC_SBitFamilyRec):
 	Updated.
 	(ftc_sbit_node_load): Updated.
 	Moved code to convert type flags to load flags to...
@@ -9076,7 +9076,7 @@
 	  t1_field_cid_info => T1_FIELD_LOCATION_CID_INFO
 	  etc.
 
-	* include/freetype/internal/psglobals.h: Removed.
+	* include/freetype/internal/psglobal.h: Removed.
 	* include/freetype/internal/pshints.h, src/pshinter/pshglob.h:
 	Updated.
 

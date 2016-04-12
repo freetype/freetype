@@ -1409,7 +1409,7 @@
 
 	base: Prevent some overflows on LP64 systems.
 
-	* src/base/ftadvance.c (FT_Get_Advances): Cast the
+	* src/base/ftadvanc.c (FT_Get_Advances): Cast the
 	unsigned long constant FT_LOAD_ADVANCE_ONLY to FT_UInt32
 	for LP64 platforms.
 
@@ -2814,7 +2814,7 @@
 	* src/base/ftglyph.c when FT_CONFIG_OPTION_PIC is defined
 	ft_bitmap_glyph_class and ft_outline_glyph_class will be allocated
 	in the pic_container instead of the global scope and use macros from
- 	basepic.h to access them.
+	basepic.h to access them.
 	* src/base/ftbbox.c allocate bbox_interface stract on the stack
 	instead of the global scope when FT_CONFIG_OPTION_PIC is defined.
 	* src/base/ftstroke.c access ft_outline_glyph_class allocated in
@@ -5329,7 +5329,7 @@
 
 2007-08-18  Werner Lemberg  <wl@gnu.org>
 
-	* src/otvalid/otvcmmn.c (otv_x_y_ux_sy): Skip context glyphs.  Found
+	* src/otvalid/otvcommn.c (otv_x_y_ux_sy): Skip context glyphs.  Found
 	by Imran Yousaf.  Fixes Savannah bug #20773.
 
 	(otv_Lookup_validate): Correct handling of LookupType.  Found by
@@ -6097,8 +6097,8 @@
 
 2007-04-06  David Turner  <david@freetype.org>
 
-	* src/base/ftbimap.c (ft_bitmap_assure_buffer): Fix buffer-overwrite bug
-	(Savannah bug #19536).
+	* src/base/ftbitmap.c (ft_bitmap_assure_buffer): Fix buffer-overwrite
+	bug (Savannah bug #19536).
 
 2007-04-04  Werner Lemberg  <wl@gnu.org>
 
@@ -7647,7 +7647,7 @@
 	`len_buildchar'.
 	Remove `keywords_flags'.
 
-	* src/type1/t1load.h (T1_LoaderRect): New field
+	* src/type1/t1load.h (T1_LoaderRec): New field
 	`keywords_encountered'.
 	(T1_PRIVATE, T1_FONTDIR_AFTER_PRIVATE): New macros.
 
