@@ -2855,7 +2855,7 @@ FT_BEGIN_HEADER
    *
    *   If @FT_LOAD_RENDER is also set, the glyph is rendered in the
    *   corresponding mode (i.e., the mode that matches the used algorithm
-   *   best).  An exeption is FT_LOAD_TARGET_MONO since it implies
+   *   best).  An exception is FT_LOAD_TARGET_MONO since it implies
    *   @FT_LOAD_MONOCHROME.
    *
    *   You can use a hinting algorithm that doesn't correspond to the same

@@ -833,7 +833,7 @@ FT_BEGIN_HEADER
   /*                        filtering callback function.                   */
   /*                                                                       */
   /*    pic_container    :: Contains global structs and tables, instead    */
-  /*                        of defining them globallly.                    */
+  /*                        of defining them globally.                     */
   /*                                                                       */
   /*    refcount         :: A counter initialized to~1 at the time an      */
   /*                        @FT_Library structure is created.              */

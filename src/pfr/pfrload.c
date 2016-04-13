@@ -615,7 +615,7 @@
 
   Too_Short:
     error = FT_THROW( Invalid_Table );
-    FT_ERROR(( "pfr_exta_item_load_stem_snaps:"
+    FT_ERROR(( "pfr_extra_item_load_stem_snaps:"
                " invalid stem snaps table\n" ));
     goto Exit;
   }
