@@ -613,6 +613,11 @@
     {
       FT_TRACE6(( "    axis coordinate %d (%.4f):\n",
                   i, blend->normalizedcoords[i] / 65536.0 ));
+      if ( !( tupleIndex & GX_TI_INTERMEDIATE_TUPLE ) )
+        FT_TRACE6(( "      intermediate coordinates %d (%.4f, %.4f):\n",
+                    i,
+                    im_start_coords[i] / 65536.0,
+                    im_end_coords[i] / 65536.0 ));
 
       /* It's not clear why (for intermediate tuples) we don't need     */
       /* to check against start/end -- the documentation says we don't. */
@@ -625,61 +630,74 @@
         continue;
       }
 
-      else if ( blend->normalizedcoords[i] == 0 )
+      if ( blend->normalizedcoords[i] == 0 )
       {
         FT_TRACE6(( "      axis coordinate is zero, stop\n" ));
         apply = 0;
         break;
       }
 
-      else if ( ( blend->normalizedcoords[i] < FT_MIN( 0, tuple_coords[i] ) ) ||
-                ( blend->normalizedcoords[i] > FT_MAX( 0, tuple_coords[i] ) ) )
+      if ( blend->normalizedcoords[i] == tuple_coords[i] )
       {
-        FT_TRACE6(( "      tuple coordinate value %.4f is exceeded, stop\n",
+        FT_TRACE6(( "      tuple coordinate value %.4f fits perfectly\n",
                     tuple_coords[i] / 65536.0 ));
-        apply = 0;
-        break;
+        /* `apply' does not change */
+        continue;
       }
 
-      else if ( !( tupleIndex & GX_TI_INTERMEDIATE_TUPLE ) )
+      if ( !( tupleIndex & GX_TI_INTERMEDIATE_TUPLE ) )
       {
+        /* not an intermediate tuple */
+
+        if ( blend->normalizedcoords[i] < FT_MIN( 0, tuple_coords[i] ) ||
+             blend->normalizedcoords[i] > FT_MAX( 0, tuple_coords[i] ) )
+        {
+          FT_TRACE6(( "      tuple coordinate value %.4f is exceeded, stop\n",
+                      tuple_coords[i] / 65536.0 ));
+          apply = 0;
+          break;
+        }
+
         FT_TRACE6(( "      tuple coordinate value %.4f fits\n",
                     tuple_coords[i] / 65536.0 ));
-        /* not an intermediate tuple */
         apply = FT_MulDiv( apply,
                            blend->normalizedcoords[i],
                            tuple_coords[i] );
       }
-
-      else if ( blend->normalizedcoords[i] < im_start_coords[i] ||
-                blend->normalizedcoords[i] > im_end_coords[i]   )
-      {
-        FT_TRACE6(( "      intermediate tuple range [%.4f;%.4f] is exceeded,"
-                    " stop\n",
-                    im_start_coords[i] / 65536.0,
-                    im_end_coords[i] / 65536.0 ));
-        apply = 0;
-        break;
-      }
-
-      else if ( blend->normalizedcoords[i] < tuple_coords[i] )
-      {
-        FT_TRACE6(( "      intermediate tuple range [%.4f;%.4f] fits\n",
-                    im_start_coords[i] / 65536.0,
-                    im_end_coords[i] / 65536.0 ));
-        apply = FT_MulDiv( apply,
-                           blend->normalizedcoords[i] - im_start_coords[i],
-                           tuple_coords[i] - im_start_coords[i] );
-      }
-
       else
       {
-        FT_TRACE6(( "      intermediate tuple range [%.4f;%.4f] fits\n",
-                    im_start_coords[i] / 65536.0,
-                    im_end_coords[i] / 65536.0 ));
-        apply = FT_MulDiv( apply,
-                           im_end_coords[i] - blend->normalizedcoords[i],
-                           im_end_coords[i] - tuple_coords[i] );
+        /* intermediate tuple */
+
+        if ( blend->normalizedcoords[i] < im_start_coords[i] ||
+             blend->normalizedcoords[i] > im_end_coords[i]   )
+        {
+          FT_TRACE6(( "      intermediate tuple range [%.4f;%.4f] is exceeded,"
+                      " stop\n",
+                      im_start_coords[i] / 65536.0,
+                      im_end_coords[i] / 65536.0 ));
+          apply = 0;
+          break;
+        }
+
+        else if ( blend->normalizedcoords[i] < tuple_coords[i] )
+        {
+          FT_TRACE6(( "      intermediate tuple range [%.4f;%.4f] fits\n",
+                      im_start_coords[i] / 65536.0,
+                      im_end_coords[i] / 65536.0 ));
+          apply = FT_MulDiv( apply,
+                             blend->normalizedcoords[i] - im_start_coords[i],
+                             tuple_coords[i] - im_start_coords[i] );
+        }
+
+        else
+        {
+          FT_TRACE6(( "      intermediate tuple range [%.4f;%.4f] fits\n",
+                      im_start_coords[i] / 65536.0,
+                      im_end_coords[i] / 65536.0 ));
+          apply = FT_MulDiv( apply,
+                             im_end_coords[i] - blend->normalizedcoords[i],
+                             im_end_coords[i] - tuple_coords[i] );
+        }
       }
     }
 

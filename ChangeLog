@@ -1,3 +1,10 @@
+2016-04-16  Behdad Esfahbod  <behdad@behdad.org>
+
+	[truetype] Another fix for non-intermediate GX tuples.
+
+	* src/truetype/ttgxvar.c (ft_var_apply_tuple): Add some missing
+	cases.
+
 2016-04-12  Alexei Podtelezhnikov  <apodtele@gmail.com>
 
 	Remove forgotten macro.
