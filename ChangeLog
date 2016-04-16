@@ -1,3 +1,15 @@
+2016-04-16  David Capello  <davidcapello@gmail.com>
+
+	[cmake] Honor SKIP_INSTALL_* settings (as used in zlib).
+
+	As FreeType depends on zlib, if we don't install zlib (e.g., because
+	we defined SKIP_INSTALL_ALL), FreeType cannot be installed, too
+	(cmake triggers an error saying that FreeType cannot be installed
+	because zlib target isn't in the export set).
+
+	* CMakeLists.txt: Honor `SKIP_INSTALL_HEADERS',
+	`SKIP_INSTALL_LIBRARIES', and `SKIP_INSTALL_ALL' settings.
+
 2016-04-16  Behdad Esfahbod  <behdad@behdad.org>
 
 	[truetype] Another fix for non-intermediate GX tuples.
