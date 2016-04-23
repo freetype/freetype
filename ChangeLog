@@ -1,3 +1,14 @@
+2016-04-23  Werner Lemberg  <wl@gnu.org>
+
+	[autofit] Improve Georgian blue zone characters.
+
+	Suggested by Akaki Razmadze <razmadzekoko@gmail.com>.
+
+	* src/autofit/afblue.dat (AF_BLUE_STRING_GEORGIAN_MKHEDRULI_BOTTOM):
+	Updated.
+
+	* src/autofit/afblue.c: Regenerated.
+
 2016-04-16  David Capello  <davidcapello@gmail.com>
 
 	[cmake] Honor SKIP_INSTALL_* settings (as used in zlib).
