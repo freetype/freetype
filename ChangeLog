@@ -1,5 +1,12 @@
 2016-04-24  Werner Lemberg  <wl@gnu.org>
 
+	Minor.
+
+	* include/freetype/freetype.h (FT_HAS_*, FT_IS_*): Protect macro
+	argument with parentheses.
+
+2016-04-24  Werner Lemberg  <wl@gnu.org>
+
 	[truetype] Fix deallocation in case of error (#47726).
 
 	* src/truetype/ttgload.c (load_truetype_glyph): Initialize fields in
