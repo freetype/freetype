@@ -1704,6 +1704,9 @@
         outline.n_points   = (short)( gloader->current.num_subglyphs + 4 );
         outline.n_contours = outline.n_points;
 
+        outline.tags     = NULL;
+        outline.contours = NULL;
+
         if ( FT_NEW_ARRAY( points, outline.n_points )   ||
              FT_NEW_ARRAY( tags, outline.n_points )     ||
              FT_NEW_ARRAY( contours, outline.n_points ) )
