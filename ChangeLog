@@ -1,3 +1,23 @@
+2016-04-25  Werner Lemberg  <wl@gnu.org>
+
+	[autofit] Add blue-zone support for Gujarati script.
+
+	This essentially moves the Gujarati script from the `Indic' hinter to
+	the `Latin' hinter.
+
+	* src/autofit/afblue.dat: Add blue zone data for Gujarati.
+
+	* src/autofit/afblue.c, src/autofit/afblue.h: Regenerated.
+
+	* src/autofit/afscript.h: Add Gujarati standard characters and move
+	data out of AF_CONFIG_OPTION_INDIC block.
+
+	* src/autofit/afranges.c: Move Gujarati data out of
+	AF_CONFIG_OPTION_INDIC block.
+
+	* src/autofit/afstyles.h: Update Gujarati data; in particular, use
+	AF_WRITING_SYSTEM_LATIN.
+
 2016-04-24  Werner Lemberg  <wl@gnu.org>
 
 	Minor.

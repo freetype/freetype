@@ -73,6 +73,12 @@
           HINTING_BOTTOM_TO_TOP,
           "\xCE\xBF \xCE\x9F" ) /* ο Ο */
 
+  SCRIPT( gujr, GUJR,
+          "Gujarati",
+          HB_SCRIPT_GUJARATI,
+          HINTING_BOTTOM_TO_TOP,
+          "\xE0\xAA\x9F \xE0\xAB\xA6" ) /* ટ ૦ */
+
   SCRIPT( hebr, HEBR,
           "Hebrew",
           HB_SCRIPT_HEBREW,
@@ -168,12 +174,6 @@
           "\xE0\xB8\xB2 \xE0\xB9\x85 \xE0\xB9\x90" ) /* า ๅ ๐ */
 
 #ifdef AF_CONFIG_OPTION_INDIC
-
-  SCRIPT( gujr, GUJR,
-          "Gujarati",
-          HB_SCRIPT_GUJARATI,
-          HINTING_BOTTOM_TO_TOP,
-          "o" ) /* XXX */
 
   SCRIPT( guru, GURU,
           "Gurmukhi",

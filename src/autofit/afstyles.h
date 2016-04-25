@@ -122,6 +122,13 @@
 
   META_STYLE_LATIN( grek, GREK, "Greek" )
 
+  STYLE( gujr_dflt, GUJR_DFLT,
+         "Gujarati default style",
+         AF_WRITING_SYSTEM_LATIN,
+         AF_SCRIPT_GUJR,
+         AF_BLUE_STRINGSET_GUJR,
+         AF_COVERAGE_DEFAULT )
+
   STYLE( hebr_dflt, HEBR_DFLT,
          "Hebrew default style",
          AF_WRITING_SYSTEM_LATIN,
@@ -243,7 +250,6 @@
                  (AF_Blue_Stringset)0,    \
                  AF_COVERAGE_DEFAULT )
 
-  STYLE_DEFAULT_INDIC( gujr, GUJR, "Gujarati" )
   STYLE_DEFAULT_INDIC( guru, GURU, "Gurmukhi" )
   STYLE_DEFAULT_INDIC( limb, LIMB, "Limbu" )
   STYLE_DEFAULT_INDIC( orya, ORYA, "Oriya" )

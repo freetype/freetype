@@ -148,6 +148,17 @@ AF_BLUE_STRING_ENUM AF_BLUE_STRINGS_ARRAY AF_BLUE_STRING_MAX_LEN:
   AF_BLUE_STRING_GREEK_SMALL_DESCENDER
     "β γ η μ ρ φ χ ψ"
 
+  AF_BLUE_STRING_GUJARATI_TOP
+    "ત ન ઋ ઌ છ ટ ર ૦"
+  AF_BLUE_STRING_GUJARATI_BOTTOM
+    "ખ ગ ઘ ઞ ઇ ઈ ઠ જ"
+  AF_BLUE_STRING_GUJARATI_ASCENDER
+    "ઈ ઊ િ ી લી શ્ચિ જિ સી"
+  AF_BLUE_STRING_GUJARATI_DESCENDER
+    "ુ ૃ ૄ ખુ છૃ છૄ"
+  AF_BLUE_STRING_GUJARATI_DIGIT_TOP
+    "૦ ૧ ૨ ૩ ૭"
+
   AF_BLUE_STRING_HEBREW_TOP
     "ב ד ה ח ך כ ם ס"
   AF_BLUE_STRING_HEBREW_BOTTOM
@@ -496,6 +507,15 @@ AF_BLUE_STRINGSET_ENUM AF_BLUE_STRINGSETS_ARRAY AF_BLUE_STRINGSET_MAX_LEN:
     { AF_BLUE_STRING_GREEK_SMALL,           0                                 }
     { AF_BLUE_STRING_GREEK_SMALL_DESCENDER, 0                                 }
     { AF_BLUE_STRING_MAX,                   0                                 }
+
+  AF_BLUE_STRINGSET_GUJR
+    { AF_BLUE_STRING_GUJARATI_TOP,       AF_BLUE_PROPERTY_LATIN_TOP      |
+                                         AF_BLUE_PROPERTY_LATIN_X_HEIGHT   }
+    { AF_BLUE_STRING_GUJARATI_BOTTOM,    0                                 }
+    { AF_BLUE_STRING_GUJARATI_ASCENDER,  AF_BLUE_PROPERTY_LATIN_TOP        }
+    { AF_BLUE_STRING_GUJARATI_DESCENDER, 0                                 }
+    { AF_BLUE_STRING_GUJARATI_DIGIT_TOP, AF_BLUE_PROPERTY_LATIN_TOP        }
+    { AF_BLUE_STRING_MAX,                0                                 }
 
   AF_BLUE_STRINGSET_HEBR
     { AF_BLUE_STRING_HEBREW_TOP,       AF_BLUE_PROPERTY_LATIN_TOP  |
