@@ -1,3 +1,14 @@
+2016-05-05  Werner Lemberg  <wl@gnu.org>
+
+	[cff, truetype] Fix logic for `FT_Property_Set'.
+
+	Otherwise some properties could be set to arbitrary values, which is
+	harmless, but querying could give wrong positive results.
+
+	* src/cff/cffdrivr.c (cff_property_set) [hinting-engine],
+	* src/truetype/ttdriver.c (tt_property_set) [interpreter-version]:
+	Only allow defined values.
+
 2016-04-25  Werner Lemberg  <wl@gnu.org>
 
 	[autofit] Add blue-zone support for Gujarati script.
