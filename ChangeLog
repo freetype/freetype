@@ -1,3 +1,15 @@
+2016-05-05  Alexei Podtelezhnikov  <apodtele@gmail.com>
+
+	[smooth] More efficient accounting of conic splits and draws.
+
+	A single decrement counter of segments to draw, instead of an array,
+	contains all the information necessary to decide when to split and
+	when to draw a conic segment. The number of splits before each draw is
+	equal to the number of trailing zeros in the counter.
+
+	* src/smooth/ftgrays.c (gray_TWorker): Remove `lev_stack'.
+	(gray_render_conic): Updated to use decrement counter of segments.
+
 2016-05-05  Werner Lemberg  <wl@gnu.org>
 
 	[cff, truetype] Fix logic for `FT_Property_Set'.

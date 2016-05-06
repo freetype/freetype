@@ -369,7 +369,7 @@ typedef ptrdiff_t  FT_PtrDist;
 
 
   /* These macros speed up repetitive divisions by replacing them */
-  /* with multiplications and right shifts.                       */ 
+  /* with multiplications and right shifts.                       */
 #define FT_UDIVPREP( b )                                       \
   long  b ## _r = (long)( FT_ULONG_MAX >> PIXEL_BITS ) / ( b )
 #define FT_UDIV( a, b )                                        \
@@ -435,7 +435,6 @@ typedef ptrdiff_t  FT_PtrDist;
     TPos    x,  y;
 
     FT_Vector   bez_stack[32 * 3 + 1];
-    int         lev_stack[32];
 
     FT_Outline  outline;
     FT_Bitmap   target;
@@ -1068,50 +1067,44 @@ typedef ptrdiff_t  FT_PtrDist;
   gray_render_conic( RAS_ARG )
   {
     TPos        dx, dy;
-    int         top, level;
-    int*        levels = ras.lev_stack;
+    int         draw, split, level;
     FT_Vector*  arc = ras.bez_stack;
 
-
-    top      = 0;
 
     dx = FT_ABS( arc[2].x + arc[0].x - 2 * arc[1].x );
     dy = FT_ABS( arc[2].y + arc[0].y - 2 * arc[1].y );
     if ( dx < dy )
       dx = dy;
 
-    if ( dx < ONE_PIXEL / 4 )
-      goto Draw;
+    /* We can calculate the number of necessary bisections because  */
+    /* each bisection predictably reduces deviation exactly 4-fold. */
 
-    /* we can calculate the number of necessary bisections because  */
-    /* each bisection predictably reduces deviation at least 4-fold */
     level = 0;
-    do
+    while ( dx > ONE_PIXEL / 4 )
     {
       dx >>= 2;
       level++;
-    } while ( dx > ONE_PIXEL / 4 );
+    }
 
-    levels[0] = level;
+    /* We use decrement counter to count the total number of segments */
+    /* to draw starting from 2^level. Before each draw we split as    */
+    /* many times as there are trailing zeros in the counter.         */
 
+    draw = 1 << level;
     do
     {
-      level = levels[top];
-      if ( level > 0 )
+      split = 1;
+      while ( ( draw & split ) == 0 )
       {
         gray_split_conic( arc );
         arc += 2;
-        top++;
-        levels[top] = levels[top - 1] = level - 1;
-        continue;
+        split <<= 1;
       }
 
-    Draw:
       gray_render_line( RAS_VAR_ arc[0].x, arc[0].y );
-      top--;
       arc -= 2;
 
-    } while ( top >= 0 );
+    } while ( --draw );
   }
 
 
