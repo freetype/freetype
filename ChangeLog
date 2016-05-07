@@ -1,3 +1,15 @@
+2016-05-07  Werner Lemberg  <wl@gnu.org>
+
+	[cache] Allow value 0 for face ID.
+
+	We never dereference `face_id', and some implementations might use a
+	running number instead of a pointer.  Additionally, disallowing
+	value zero was undocumented.
+
+	* src/cache/ftccmap.c (FTC_CMapCache_Lookup), src/cache/ftcmanag.c
+	(FTC_Manager_LookupFace, FTC_Manager_RemoveFaceID): Remove test for
+	`face_id'.
+
 2016-05-05  Alexei Podtelezhnikov  <apodtele@gmail.com>
 
 	[smooth] More efficient accounting of conic splits and draws.
