@@ -1859,7 +1859,7 @@
 
 	Fix `checking if gcc static flag -static works' test.
 
-	On my linux build tree, I receive yes answer in in every package I
+	On my linux build tree, I receive yes answer in every package I
 	build except freetype for this test checking if gcc static flag
 	`-static' works
 

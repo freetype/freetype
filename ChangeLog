@@ -1196,7 +1196,7 @@
 	[base] Check error when seeking to data supplied offset (#46635).
 
 	* src/base/ftobjs.c (open_face_PS_from_sfnt_stream):
-	`ft_lookup_PS_in_sfnt_stream' returns offset and and length from
+	`ft_lookup_PS_in_sfnt_stream' returns offset and length from
 	user supplied data.  Use of this these values must be checked.
 
 2015-12-13  Werner Lemberg  <wl@gnu.org>
