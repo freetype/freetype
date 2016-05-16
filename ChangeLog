@@ -1,3 +1,11 @@
+2016-05-16  Werner Lemberg  <wl@gnu.org>
+
+	[cid] Fix scanning for `StartData' and `/sfnts' (#47892).
+
+	* src/cid/cidparse.c (STARTDATA, STARTDATA_LEN, SFNTS, SFNTS_LEN):
+	New macros.
+	(cid_parser_new): Fix and document algorithm.
+
 2016-05-16  suzuki toshiya  <mpsuzuki@hiroshima-u.ac.jp>
 
 	[truetype] Improve the recursive reference detector.
