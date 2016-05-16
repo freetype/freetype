@@ -1,5 +1,12 @@
 2016-05-16  Werner Lemberg  <wl@gnu.org>
 
+	[base] Reject invalid sfnt Mac resource (#47891).
+
+	* src/base/ftobjs.c (open_face_PS_from_sfnt_stream): Check validity
+	of `CID ' and `TYPE1' table offset and length.
+
+2016-05-16  Werner Lemberg  <wl@gnu.org>
+
 	[cid] Fix scanning for `StartData' and `/sfnts' (#47892).
 
 	* src/cid/cidparse.c (STARTDATA, STARTDATA_LEN, SFNTS, SFNTS_LEN):

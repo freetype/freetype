@@ -1483,6 +1483,7 @@
       if ( face_index >= 0 && pstable_index == face_index )
         return FT_Err_Ok;
     }
+
     return FT_THROW( Table_Missing );
   }
 
@@ -1520,6 +1521,19 @@
     if ( error )
       goto Exit;
 
+    if ( offset > stream->size )
+    {
+      FT_TRACE2(( "open_face_PS_from_sfnt_stream: invalid table offset\n" ));
+      error = FT_THROW( Invalid_Table );
+      goto Exit;
+    }
+    else if ( length > stream->size - offset )
+    {
+      FT_TRACE2(( "open_face_PS_from_sfnt_stream: invalid table length\n" ));
+      error = FT_THROW( Invalid_Table );
+      goto Exit;
+    }
+
     error = FT_Stream_Seek( stream, pos + offset );
     if ( error )
       goto Exit;
@@ -1528,7 +1542,8 @@
       goto Exit;
 
     error = FT_Stream_Read( stream, (FT_Byte *)sfnt_ps, length );
-    if ( error ) {
+    if ( error )
+    {
       FT_FREE( sfnt_ps );
       goto Exit;
     }
