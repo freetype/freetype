@@ -1,3 +1,19 @@
+2016-05-16  suzuki toshiya  <mpsuzuki@hiroshima-u.ac.jp>
+
+	[truetype] Improve the recursive reference detector.
+
+	The previous fix for #46372 misunderstood a composite glyph referring
+	same component twice as a recursive reference.  See the discussion
+
+	http://lists.gnu.org/archive/html/freetype/2016-05/msg00000.html
+
+	Thanks to Khaled Hosny for finding this issue.
+
+	* src/truetype/ttgload.c (ft_list_get_node_at): A function to get
+	the i-th node from FT_List.  (load_truetype_glyph): In the traversal
+	scan of the reference tree in the composite glyph, we clear the
+	nodes filled by previous sibling chain.
+
 2016-05-07  Werner Lemberg  <wl@gnu.org>
 
 	[cache] Allow value 0 for face ID.

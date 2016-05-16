@@ -1369,6 +1369,29 @@
 #endif /* !TT_CONFIG_OPTION_SUBPIXEL_HINTING */
 
 
+  /* a utility function to retrieve i-th node from given FT_List */
+  static FT_ListNode
+  ft_list_get_node_at( FT_List  list,
+                       FT_UInt  index )
+  {
+    FT_ListNode  cur;
+
+
+    if ( !list )
+      return NULL;
+
+    for ( cur = list->head; cur; cur = cur->next )
+    {
+      if ( !index )
+        return cur;
+
+      index --;
+    }
+
+    return NULL;
+  }
+
+
   /*************************************************************************/
   /*                                                                       */
   /* <Function>                                                            */
@@ -1640,6 +1663,7 @@
       FT_UInt   start_point;
       FT_UInt   start_contour;
       FT_ULong  ins_pos;  /* position of composite instructions, if any */
+      FT_ListNode  node, node2;
 
 
       /*
@@ -1648,6 +1672,13 @@
        * double cast to make this portable.  Note, however, that this needs
        * pointers with a width of at least 32 bits.
        */
+
+
+      /* clear the nodes filled by sibling chains */
+      node = ft_list_get_node_at( &loader->composites, recurse_count );
+      for ( node2 = node ; node2 ; node2 = node2->next )
+        node2->data = (void*)ULONG_MAX;
+
 
       /* check whether we already have a composite glyph with this index */
       if ( FT_List_Find( &loader->composites,
@@ -1658,11 +1689,12 @@
         error = FT_THROW( Invalid_Composite );
         goto Exit;
       }
+      else if ( node )
+      {
+        node->data = (void*)(unsigned long)glyph_index;
+      }
       else
       {
-        FT_ListNode  node = NULL;
-
-
         if ( FT_NEW( node ) )
           goto Exit;
         node->data = (void*)(unsigned long)glyph_index;
