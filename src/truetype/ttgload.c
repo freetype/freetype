@@ -1385,7 +1385,7 @@
       if ( !index )
         return cur;
 
-      index --;
+      index--;
     }
 
     return NULL;
@@ -1663,6 +1663,7 @@
       FT_UInt   start_point;
       FT_UInt   start_contour;
       FT_ULong  ins_pos;  /* position of composite instructions, if any */
+
       FT_ListNode  node, node2;
 
 
@@ -1676,9 +1677,8 @@
 
       /* clear the nodes filled by sibling chains */
       node = ft_list_get_node_at( &loader->composites, recurse_count );
-      for ( node2 = node ; node2 ; node2 = node2->next )
+      for ( node2 = node; node2; node2 = node2->next )
         node2->data = (void*)ULONG_MAX;
-
 
       /* check whether we already have a composite glyph with this index */
       if ( FT_List_Find( &loader->composites,
@@ -1689,10 +1689,10 @@
         error = FT_THROW( Invalid_Composite );
         goto Exit;
       }
+
       else if ( node )
-      {
         node->data = (void*)(unsigned long)glyph_index;
-      }
+
       else
       {
         if ( FT_NEW( node ) )
