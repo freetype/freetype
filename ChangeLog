@@ -1,3 +1,15 @@
+2016-05-17  Werner Lemberg  <wl@gnu.org>
+
+	[cff] Fix matrix scaling (#47848).
+
+	* include/freetype/config/ftstdlib.h (FT_LONG_MIN): New macro.
+
+	* src/cff/cffparse.c (cff_parse_font_matrix): Use largest scaling
+	value of all matrix coefficients to scale matrix.
+
+	* src/cff/cffobjs.c (cff_face_init): Use `matrix->yx' member for
+	matrix normalization if `matrix->yy' is zero.
+
 2016-05-16  Werner Lemberg  <wl@gnu.org>
 
 	[base] Reject invalid sfnt Mac resource (#47891).

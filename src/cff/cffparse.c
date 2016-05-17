@@ -521,7 +521,11 @@
 
     if ( parser->top >= parser->stack + 6 )
     {
-      FT_Long  scaling;
+      FT_Fixed  values[6];
+      FT_Long   scalings[6];
+
+      FT_Long  min_scaling, max_scaling;
+      int      i;
 
 
       error = FT_Err_Ok;
@@ -530,22 +534,36 @@
 
       /* We expect a well-formed font matrix, this is, the matrix elements */
       /* `xx' and `yy' are of approximately the same magnitude.  To avoid  */
-      /* loss of precision, we use the magnitude of element `xx' to scale  */
-      /* all other elements.  The scaling factor is then contained in the  */
-      /* `units_per_em' value.                                             */
+      /* loss of precision, we use the magnitude of the largest matrix     */
+      /* element to scale all other elements.  The scaling factor is then  */
+      /* contained in the `units_per_em' value.                            */
 
-      matrix->xx = cff_parse_fixed_dynamic( data++, &scaling );
+      max_scaling = FT_LONG_MIN;
+      min_scaling = FT_LONG_MAX;
 
-      scaling = -scaling;
+      for ( i = 0; i < 6; i++ )
+      {
+        values[i] = cff_parse_fixed_dynamic( data++, &scalings[i] );
+        if ( values[i] )
+        {
+          if ( scalings[i] > max_scaling )
+            max_scaling = scalings[i];
+          if ( scalings[i] < min_scaling )
+            min_scaling = scalings[i];
+        }
+      }
 
-      if ( scaling < 0 || scaling > 9 )
+      if ( max_scaling < -9                  ||
+           max_scaling > 0                   ||
+           ( max_scaling - min_scaling ) < 0 ||
+           ( max_scaling - min_scaling ) > 9 )
       {
         /* Return default matrix in case of unlikely values. */
 
         FT_TRACE1(( "cff_parse_font_matrix:"
-                    " strange scaling value for xx element (%d),\n"
+                    " strange scaling values (minimum %d, maximum %d),\n"
                     "                      "
-                    " using default matrix\n", scaling ));
+                    " using default matrix\n", min_scaling, max_scaling ));
 
         matrix->xx = 0x10000L;
         matrix->yx = 0;
@@ -558,13 +576,42 @@
         goto Exit;
       }
 
-      matrix->yx = cff_parse_fixed_scaled( data++, scaling );
-      matrix->xy = cff_parse_fixed_scaled( data++, scaling );
-      matrix->yy = cff_parse_fixed_scaled( data++, scaling );
-      offset->x  = cff_parse_fixed_scaled( data++, scaling );
-      offset->y  = cff_parse_fixed_scaled( data,   scaling );
+      for ( i = 0; i < 6; i++ )
+      {
+        FT_Fixed  value = values[i];
+        FT_Long   divisor, half_divisor;
 
-      *upm = (FT_ULong)power_tens[scaling];
+
+        if ( !value )
+          continue;
+
+        divisor      = power_tens[max_scaling - scalings[i]];
+        half_divisor = divisor >> 1;
+
+        if ( value < 0 )
+        {
+          if ( FT_LONG_MIN + half_divisor < value )
+            values[i] = ( value - half_divisor ) / divisor;
+          else
+            values[i] = FT_LONG_MIN / divisor;
+        }
+        else
+        {
+          if ( FT_LONG_MAX - half_divisor > value )
+            values[i] = ( value + half_divisor ) / divisor;
+          else
+            values[i] = FT_LONG_MAX / divisor;
+        }
+      }
+
+      matrix->xx = values[0];
+      matrix->yx = values[1];
+      matrix->xy = values[2];
+      matrix->yy = values[3];
+      offset->x  = values[4];
+      offset->y  = values[5];
+
+      *upm = (FT_ULong)power_tens[-max_scaling];
 
       FT_TRACE4(( " [%f %f %f %f %f %f]\n",
                   (double)matrix->xx / *upm / 65536,

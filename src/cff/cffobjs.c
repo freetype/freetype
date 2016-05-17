@@ -670,10 +670,11 @@
       if ( !dict->has_font_matrix )
         dict->units_per_em = pure_cff ? 1000 : face->root.units_per_EM;
 
-      /* Normalize the font matrix so that `matrix->yy' is 1; the */
-      /* scaling is done with `units_per_em' then (at this point, */
-      /* it already contains the scaling factor, but without      */
-      /* normalization of the matrix).                            */
+      /* Normalize the font matrix so that `matrix->yy' is 1; if  */
+      /* it is zero, we use `matrix->yx' instead.  The scaling is */
+      /* done with `units_per_em' then (at this point, it already */
+      /* contains the scaling factor, but without normalization   */
+      /* of the matrix).                                          */
       /*                                                          */
       /* Note that the offsets must be expressed in integer font  */
       /* units.                                                   */
@@ -682,8 +683,11 @@
         FT_Matrix*  matrix = &dict->font_matrix;
         FT_Vector*  offset = &dict->font_offset;
         FT_ULong*   upm    = &dict->units_per_em;
-        FT_Fixed    temp   = FT_ABS( matrix->yy );
+        FT_Fixed    temp;
 
+
+        temp = matrix->yy ? FT_ABS( matrix->yy )
+                          : FT_ABS( matrix->yx );
 
         if ( temp != 0x10000L )
         {
@@ -752,7 +756,10 @@
         matrix = &sub->font_matrix;
         offset = &sub->font_offset;
         upm    = &sub->units_per_em;
-        temp   = FT_ABS( matrix->yy );
+
+        temp = matrix->yy ? FT_ABS( matrix->yy )
+                          : FT_ABS( matrix->yx );
+
 
         if ( temp != 0x10000L )
         {
