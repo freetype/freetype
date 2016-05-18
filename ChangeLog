@@ -1,5 +1,39 @@
 2016-05-17  Nikolaus Waxweiler  <madigens@gmail.com>
 
+	[truetype] New implementation of v38 bytecode interpreter [2/3].
+
+	This patch actually modifies the bytecode interpreter.
+
+	See added comments in `ttinterp.h' for more information on this and
+	the following commit in the series.
+
+	* src/truetype/ttinterp.c (SUBPIXEL_HINTING): Replaced by...
+	(NO_SUBPIXEL_HINTING, SUBPIXEL_HINTING_INFINALITY,
+	SUBPIXEL_HINTING_MINIMAL): ...new macros.
+	(Direct_Move, Direct_Move_X, Direct_Move_Y): Handle backwards
+	compatibility.
+	Updated.
+	(Ins_RS, Ins_FDEF, Ins_ENDF, Ins_CALL, Ins_LOOPCALL, Ins_MD):
+	Updated.
+	(Ins_INSTCTRL): Handle native ClearType mode flag.
+	Updated.
+	(Ins_FLIPPT, Ins_FLIPRGON, Ins_FLIPRGOFF): Handle backwards
+	compatibility.
+	(Move_Zp2_Point): Ditto.
+	(Ins_SHP): Updated.
+	(Ins_SHPIX): Handle backwards compatibility.
+	Updated.
+	(Ins_MSIRP, Ins_MDAP, Ins_MIAP, Ins_MDRP, Ins_MIRP): Updated.
+	(Ins_ALIGNRP): Updated.
+	(Ins_IUP, Ins_DELTAP): Handle backwards compatibility.
+	Updated.
+	(Ins_GETINFO): Handle v38 flags.
+	Updated.
+	(TT_RunIns): Handle backwards compatibility mode.
+	Updated.
+
+2016-05-17  Nikolaus Waxweiler  <madigens@gmail.com>
+
 	[truetype] New implementation of v38 bytecode interpreter [1/3].
 
 	This patch prepares data structures and the like.
