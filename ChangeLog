@@ -1,5 +1,13 @@
 2016-05-17  Nikolaus Waxweiler  <madigens@gmail.com>
 
+	[truetype] Make TT_LOADER_SET_PP support subpixel hinting [3/3].
+
+	* src/truetype/ttgload.c (TT_LOADER_SET_PP): Replace macro with...
+	(tt_loader_set_pp): ... this new function.
+	Update all callers.
+
+2016-05-17  Nikolaus Waxweiler  <madigens@gmail.com>
+
 	[truetype] New implementation of v38 bytecode interpreter [2/3].
 
 	This patch actually modifies the bytecode interpreter.

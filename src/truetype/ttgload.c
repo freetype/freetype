@@ -1335,50 +1335,48 @@
    * (3) for everything else.
    *
    */
-   /* XXX merge infinality + lean datafields? */
+  static void
+  tt_loader_set_pp( TT_Loader  loader )
+  {
+    FT_Bool  subpixel_hinting = 0;
+    FT_Bool  grayscale        = 0;
+    FT_Bool  use_aw_2         = 0;
+
+#ifdef TT_CONFIG_OPTION_SUBPIXEL_HINTING
+    TT_Driver driver = (TT_Driver)FT_FACE_DRIVER( loader->face );
+#endif
+
 #ifdef TT_SUPPORT_SUBPIXEL_HINTING_INFINALITY
+    if ( driver->interpreter_version == TT_INTERPRETER_VERSION_38 )
+    {
+      subpixel_hinting = loader->exec ? loader->exec->subpixel_hinting
+                                      : 0;
+      grayscale        = loader->exec ? loader->exec->grayscale
+                                      : 0;
+    }
+#endif
+#ifdef TT_SUPPORT_SUBPIXEL_HINTING_MINIMAL
+    if ( driver->interpreter_version == TT_INTERPRETER_VERSION_40 )
+    {
+      subpixel_hinting = loader->exec ? loader->exec->subpixel_hinting_lean
+                                      : 0;
+      grayscale        = loader->exec ? loader->exec->grayscale_cleartype
+                                      : 0;
+    }
+#endif
 
-#define TT_LOADER_SET_PP( loader )                                          \
-          do                                                                \
-          {                                                                 \
-            FT_Bool  subpixel_hinting_ = loader->exec                       \
-                                           ? loader->exec->subpixel_hinting \
-                                           : 0;                             \
-            FT_Bool  grayscale_        = loader->exec                       \
-                                           ? loader->exec->grayscale        \
-                                           : 0;                             \
-            FT_Bool  use_aw_2_         = (FT_Bool)( subpixel_hinting_ &&    \
-                                                    grayscale_        );    \
-                                                                            \
-                                                                            \
-            (loader)->pp1.x = (loader)->bbox.xMin - (loader)->left_bearing; \
-            (loader)->pp1.y = 0;                                            \
-            (loader)->pp2.x = (loader)->pp1.x + (loader)->advance;          \
-            (loader)->pp2.y = 0;                                            \
-                                                                            \
-            (loader)->pp3.x = use_aw_2_ ? (loader)->advance / 2 : 0;        \
-            (loader)->pp3.y = (loader)->bbox.yMax + (loader)->top_bearing;  \
-            (loader)->pp4.x = use_aw_2_ ? (loader)->advance / 2 : 0;        \
-            (loader)->pp4.y = (loader)->pp3.y - (loader)->vadvance;         \
-          } while ( 0 )
+    use_aw_2 = (FT_Bool)( subpixel_hinting && grayscale );
 
-#else /* !TT_SUPPORT_SUBPIXEL_HINTING_INFINALITY */
+    loader->pp1.x = loader->bbox.xMin - loader->left_bearing;
+    loader->pp1.y = 0;
+    loader->pp2.x = loader->pp1.x + loader->advance;
+    loader->pp2.y = 0;
 
-#define TT_LOADER_SET_PP( loader )                                          \
-          do                                                                \
-          {                                                                 \
-            (loader)->pp1.x = (loader)->bbox.xMin - (loader)->left_bearing; \
-            (loader)->pp1.y = 0;                                            \
-            (loader)->pp2.x = (loader)->pp1.x + (loader)->advance;          \
-            (loader)->pp2.y = 0;                                            \
-                                                                            \
-            (loader)->pp3.x = 0;                                            \
-            (loader)->pp3.y = (loader)->bbox.yMax + (loader)->top_bearing;  \
-            (loader)->pp4.x = 0;                                            \
-            (loader)->pp4.y = (loader)->pp3.y - (loader)->vadvance;         \
-          } while ( 0 )
-
-#endif /* !TT_SUPPORT_SUBPIXEL_HINTING_INFINALITY */
+    loader->pp3.x = use_aw_2 ? loader->advance / 2 : 0;
+    loader->pp3.y = loader->bbox.yMax + loader->top_bearing;
+    loader->pp4.x = use_aw_2 ? loader->advance / 2 : 0;
+    loader->pp4.y = loader->pp3.y - loader->vadvance;
+  }
 
 
   /* a utility function to retrieve i-th node from given FT_List */
@@ -1559,7 +1557,7 @@
 
       /* must initialize points before (possibly) overriding */
       /* glyph metrics from the incremental interface        */
-      TT_LOADER_SET_PP( loader );
+      tt_loader_set_pp( loader );
 
 #ifdef FT_CONFIG_OPTION_INCREMENTAL
       tt_get_metrics_incr_overrides( loader, glyph_index );
@@ -1634,7 +1632,7 @@
 
     /* must initialize phantom points before (possibly) overriding */
     /* glyph metrics from the incremental interface                */
-    TT_LOADER_SET_PP( loader );
+    tt_loader_set_pp( loader );
 
 #ifdef FT_CONFIG_OPTION_INCREMENTAL
     tt_get_metrics_incr_overrides( loader, glyph_index );
