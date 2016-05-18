@@ -1,3 +1,47 @@
+2016-05-17  Nikolaus Waxweiler  <madigens@gmail.com>
+
+	[truetype] New implementation of v38 bytecode interpreter [1/3].
+
+	This patch prepares data structures and the like.
+
+	See added comments in `ttinterp.h' for more information on this and
+	the following commits in the series.
+
+	* devel/ftoption.h, include/freetype/config/ftoption.h
+	(TT_CONFIG_OPTION_SUBPIXEL_HINTING): Assign values to differentiate
+	between subpixel versions.
+	(TT_SUPPORT_SUBPIXEL_HINTING_INFINALITY,
+	TT_SUPPORT_SUBPIXEL_HINTING_MINIMAL): New macros.
+
+	* include/freetype/ftttdrv.h (TT_INTERPRETER_VERSION_40): New macro.
+
+	* include/freetype/internal/tttypes.h (TT_FaceRec): Updated.
+
+	* src/truetype/ttinterp.h (TT_ExecContextRec): Define new fields
+	`subpixel_hinting_lean', `vertical_lcd_lean',
+	`backwards_compatibility', `iupx_called', iupy_called', and
+	`grayscale_cleartype' for new hinting mode.
+
+	* src/truetype/ttdriver.c (tt_property_set): Handle v38 and v40
+	interpreters conditionally.
+
+	* src/truetype/ttgload.c (TT_Hint_Glyph): Save phantom points unless
+	in v38 backwards compatibility mode.
+	Updated.
+	(compute_glyph_metrics): Add v38 backwards compatibility mode
+	constraint for adjusting advance widths.
+	Updated.
+	(tt_loader_init): Handle new flags `subpixel_hinting_lean',
+	`grayscale_cleartype', and `vertical_lcd_lean'.
+	Updated.
+	(tt_get_metrics, TT_Process_Simple_Glyph, TT_LOADER_SET_PP):
+	Updated.
+
+	* src/truetype/ttobjs.c (tt_driver_init): Conditionally set
+	default interpreter version number.
+
+	* src/truetype/ttsubpix.c, src/truetype/ttsubpix.h: Updated.
+
 2016-05-17  Werner Lemberg  <wl@gnu.org>
 
 	[cff] Fix matrix scaling (#47848).

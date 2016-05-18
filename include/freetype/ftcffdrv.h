@@ -110,7 +110,7 @@ FT_BEGIN_HEADER
    *   to minimize distortion.
    *
    * @order:
-   *   hinting-engine
+   *   hinting-engine[cff]
    *   no-stem-darkening[cff]
    *   darkening-parameters[cff]
    *
@@ -120,7 +120,7 @@ FT_BEGIN_HEADER
   /**************************************************************************
    *
    * @property:
-   *   hinting-engine
+   *   hinting-engine[cff]
    *
    * @description:
    *   Thanks to Adobe, which contributed a new hinting (and parsing)
@@ -157,8 +157,8 @@ FT_BEGIN_HEADER
    *   FT_CFF_HINTING_XXX
    *
    * @description:
-   *   A list of constants used for the @hinting-engine property to select
-   *   the hinting engine for CFF fonts.
+   *   A list of constants used for the @hinting-engine[cff] property to
+   *   select the hinting engine for CFF fonts.
    *
    * @values:
    *   FT_CFF_HINTING_FREETYPE ::

@@ -73,8 +73,11 @@
 
 
       if ( *interpreter_version == TT_INTERPRETER_VERSION_35
-#ifdef TT_CONFIG_OPTION_SUBPIXEL_HINTING
+#ifdef TT_SUPPORT_SUBPIXEL_HINTING_INFINALITY
            || *interpreter_version == TT_INTERPRETER_VERSION_38
+#endif
+#ifdef TT_SUPPORT_SUBPIXEL_HINTING_MINIMAL
+           || *interpreter_version == TT_INTERPRETER_VERSION_40
 #endif
          )
         driver->interpreter_version = *interpreter_version;
