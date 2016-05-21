@@ -1,3 +1,10 @@
+2016-05-21  Werner Lemberg  <wl@gnu.org>
+
+	Work around a bug of the C 8.0.0.1 compiler on AIX 5.3 (#47955).
+
+	* include/freetype/internal/ftmemory.h (cplusplus_typeof): Use
+	braces for `extern "C++"'.
+
 2016-05-17  Nikolaus Waxweiler  <madigens@gmail.com>
 
 	[truetype] Make TT_LOADER_SET_PP support subpixel hinting [3/3].
