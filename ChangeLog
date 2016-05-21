@@ -1,5 +1,16 @@
 2016-05-21  Werner Lemberg  <wl@gnu.org>
 
+	Minor clang++ fixes.
+
+	* src/base/ftobjs.c (FT_Add_Module), src/psaux/psobjs.c
+	(ps_parser_load_field), src/type1/t1load.c (parse_subrs): Add
+	initializer.
+
+	* src/cache/ftccache.h (FTC_CACHE_TRYLOOP_END): Avoid implicit
+	conversion from NULL to boolean.
+
+2016-05-21  Werner Lemberg  <wl@gnu.org>
+
 	Work around a bug of the C 8.0.0.1 compiler on AIX 5.3 (#47955).
 
 	* include/freetype/internal/ftmemory.h (cplusplus_typeof): Use

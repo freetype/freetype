@@ -4323,7 +4323,7 @@
   {
     FT_Error   error;
     FT_Memory  memory;
-    FT_Module  module;
+    FT_Module  module = NULL;
     FT_UInt    nn;
 
 
