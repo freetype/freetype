@@ -632,7 +632,7 @@ FT_BEGIN_HEADER
   /*                                                                       */
 /* #define TT_CONFIG_OPTION_SUBPIXEL_HINTING  1     */
 /* #define TT_CONFIG_OPTION_SUBPIXEL_HINTING  2     */
-#define TT_CONFIG_OPTION_SUBPIXEL_HINTING     1 | 2
+#define TT_CONFIG_OPTION_SUBPIXEL_HINTING     ( 1 | 2 )
 
 
   /*************************************************************************/
