@@ -129,6 +129,13 @@
          AF_BLUE_STRINGSET_GUJR,
          AF_COVERAGE_DEFAULT )
 
+  STYLE( guru_dflt, GURU_DFLT,
+         "Gurmukhi default style",
+         AF_WRITING_SYSTEM_LATIN,
+         AF_SCRIPT_GURU,
+         AF_BLUE_STRINGSET_GURU,
+         AF_COVERAGE_DEFAULT )
+
   STYLE( hebr_dflt, HEBR_DFLT,
          "Hebrew default style",
          AF_WRITING_SYSTEM_LATIN,
@@ -250,7 +257,6 @@
                  (AF_Blue_Stringset)0,    \
                  AF_COVERAGE_DEFAULT )
 
-  STYLE_DEFAULT_INDIC( guru, GURU, "Gurmukhi" )
   STYLE_DEFAULT_INDIC( limb, LIMB, "Limbu" )
   STYLE_DEFAULT_INDIC( orya, ORYA, "Oriya" )
   STYLE_DEFAULT_INDIC( sund, SUND, "Sundanese" )

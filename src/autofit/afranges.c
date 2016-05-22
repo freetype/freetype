@@ -225,6 +225,23 @@
   };
 
 
+  const AF_Script_UniRangeRec  af_guru_uniranges[] =
+  {
+    AF_UNIRANGE_REC(  0x0A00UL,  0x0A7FUL ),  /* Gurmukhi */
+    AF_UNIRANGE_REC(       0UL,       0UL )
+  };
+
+  const AF_Script_UniRangeRec  af_guru_nonbase_uniranges[] =
+  {
+    AF_UNIRANGE_REC(  0x0A01UL,  0x0A02UL ),
+    AF_UNIRANGE_REC(  0x0A3CUL,  0x0A3EUL ),
+    AF_UNIRANGE_REC(  0x0A41UL,  0x0A51UL ),
+    AF_UNIRANGE_REC(  0x0A70UL,  0x0A71UL ),
+    AF_UNIRANGE_REC(  0x0A75UL,  0x0A75UL ),
+    AF_UNIRANGE_REC(       0UL,       0UL )
+  };
+
+
   const AF_Script_UniRangeRec  af_hebr_uniranges[] =
   {
     AF_UNIRANGE_REC(  0x0590UL,  0x05FFUL ),  /* Hebrew                          */
@@ -514,23 +531,6 @@
 
 
 #ifdef AF_CONFIG_OPTION_INDIC
-
-  const AF_Script_UniRangeRec  af_guru_uniranges[] =
-  {
-    AF_UNIRANGE_REC(  0x0A00UL,  0x0A7FUL ),  /* Gurmukhi */
-    AF_UNIRANGE_REC(       0UL,       0UL )
-  };
-
-  const AF_Script_UniRangeRec  af_guru_nonbase_uniranges[] =
-  {
-    AF_UNIRANGE_REC(  0x0A01UL,  0x0A02UL ),
-    AF_UNIRANGE_REC(  0x0A3CUL,  0x0A3EUL ),
-    AF_UNIRANGE_REC(  0x0A41UL,  0x0A51UL ),
-    AF_UNIRANGE_REC(  0x0A70UL,  0x0A71UL ),
-    AF_UNIRANGE_REC(  0x0A75UL,  0x0A75UL ),
-    AF_UNIRANGE_REC(       0UL,       0UL )
-  };
-
 
   const AF_Script_UniRangeRec  af_limb_uniranges[] =
   {

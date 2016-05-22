@@ -94,6 +94,16 @@
     '\0',
     '\xE0', '\xAB', '\xA6', ' ', '\xE0', '\xAB', '\xA7', ' ', '\xE0', '\xAB', '\xA8', ' ', '\xE0', '\xAB', '\xA9', ' ', '\xE0', '\xAB', '\xAD',  /* ૦ ૧ ૨ ૩ ૭ */
     '\0',
+    '\xE0', '\xA8', '\x95', ' ', '\xE0', '\xA8', '\x97', ' ', '\xE0', '\xA8', '\x99', ' ', '\xE0', '\xA8', '\x9A', ' ', '\xE0', '\xA8', '\x9C', ' ', '\xE0', '\xA8', '\xA4', ' ', '\xE0', '\xA8', '\xA7', ' ', '\xE0', '\xA8', '\xB8',  /* ਕ ਗ ਙ ਚ ਜ ਤ ਧ ਸ */
+    '\0',
+    '\xE0', '\xA8', '\x95', ' ', '\xE0', '\xA8', '\x97', ' ', '\xE0', '\xA8', '\x99', ' ', '\xE0', '\xA8', '\x9A', ' ', '\xE0', '\xA8', '\x9C', ' ', '\xE0', '\xA8', '\xA4', ' ', '\xE0', '\xA8', '\xA7', ' ', '\xE0', '\xA8', '\xB8',  /* ਕ ਗ ਙ ਚ ਜ ਤ ਧ ਸ */
+    '\0',
+    '\xE0', '\xA8', '\x87', ' ', '\xE0', '\xA8', '\x88', ' ', '\xE0', '\xA8', '\x89', ' ', '\xE0', '\xA8', '\x8F', ' ', '\xE0', '\xA8', '\x93', ' ', '\xE0', '\xA9', '\xB3', ' ', '\xE0', '\xA8', '\xBF', ' ', '\xE0', '\xA9', '\x80',  /* ਇ ਈ ਉ ਏ ਓ ੳ ਿ ੀ */
+    '\0',
+    '\xE0', '\xA8', '\x85', ' ', '\xE0', '\xA8', '\x8F', ' ', '\xE0', '\xA8', '\x93', ' ', '\xE0', '\xA8', '\x97', ' ', '\xE0', '\xA8', '\x9C', ' ', '\xE0', '\xA8', '\xA0', ' ', '\xE0', '\xA8', '\xB0', ' ', '\xE0', '\xA8', '\xB8',  /* ਅ ਏ ਓ ਗ ਜ ਠ ਰ ਸ */
+    '\0',
+    '\xE0', '\xA9', '\xA6', ' ', '\xE0', '\xA9', '\xA7', ' ', '\xE0', '\xA9', '\xA8', ' ', '\xE0', '\xA9', '\xA9', ' ', '\xE0', '\xA9', '\xAD',  /* ੦ ੧ ੨ ੩ ੭ */
+    '\0',
     '\xD7', '\x91', ' ', '\xD7', '\x93', ' ', '\xD7', '\x94', ' ', '\xD7', '\x97', ' ', '\xD7', '\x9A', ' ', '\xD7', '\x9B', ' ', '\xD7', '\x9D', ' ', '\xD7', '\xA1',  /* ב ד ה ח ך כ ם ס */
     '\0',
     '\xD7', '\x91', ' ', '\xD7', '\x98', ' ', '\xD7', '\x9B', ' ', '\xD7', '\x9D', ' ', '\xD7', '\xA1', ' ', '\xD7', '\xA6',  /* ב ט כ ם ס צ */
@@ -301,6 +311,14 @@
     { AF_BLUE_STRING_GUJARATI_ASCENDER,  AF_BLUE_PROPERTY_LATIN_TOP        },
     { AF_BLUE_STRING_GUJARATI_DESCENDER, 0                                 },
     { AF_BLUE_STRING_GUJARATI_DIGIT_TOP, AF_BLUE_PROPERTY_LATIN_TOP        },
+    { AF_BLUE_STRING_MAX,                0                                 },
+    { AF_BLUE_STRING_GURMUKHI_TOP,       AF_BLUE_PROPERTY_LATIN_TOP        },
+    { AF_BLUE_STRING_GURMUKHI_HEAD,      AF_BLUE_PROPERTY_LATIN_TOP        },
+    { AF_BLUE_STRING_GURMUKHI_BASE,      AF_BLUE_PROPERTY_LATIN_TOP      |
+                                         AF_BLUE_PROPERTY_LATIN_NEUTRAL  |
+                                         AF_BLUE_PROPERTY_LATIN_X_HEIGHT   },
+    { AF_BLUE_STRING_GURMUKHI_BOTTOM,    0                                 },
+    { AF_BLUE_STRING_GURMUKHI_DIGIT_TOP, AF_BLUE_PROPERTY_LATIN_TOP        },
     { AF_BLUE_STRING_MAX,                0                                 },
     { AF_BLUE_STRING_HEBREW_TOP,       AF_BLUE_PROPERTY_LATIN_TOP  |
                                        AF_BLUE_PROPERTY_LATIN_LONG   },
