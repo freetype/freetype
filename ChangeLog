@@ -1,3 +1,15 @@
+2016-05-23  Werner Lemberg  <wl@gnu.org>
+
+	* builds/unix/unix-cc.in (LINK_LIBRARY): Use `-export-symbols'.
+
+	This was commented about 10 years ago – I think the reason then to
+	disable libtool's `-export-symbols' option was to give some badly
+	programmed applications access to internal FreeType functions.
+
+	I believe that we should no longer take care of such programs; the
+	number of symbols exported should be rather restricted as much as
+	possible.
+
 2016-05-22  Werner Lemberg  <wl@gnu.org>
 
 	[autofit] Add blue-zone support for Gurmukhi script.
