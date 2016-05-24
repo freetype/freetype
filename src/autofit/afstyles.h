@@ -90,6 +90,13 @@
          AF_BLUE_STRINGSET_ARAB,
          AF_COVERAGE_DEFAULT )
 
+  STYLE( armn_dflt, ARMN_DFLT,
+         "Armenian default style",
+         AF_WRITING_SYSTEM_LATIN,
+         AF_SCRIPT_ARMN,
+         AF_BLUE_STRINGSET_ARMN,
+         AF_COVERAGE_DEFAULT )
+
   STYLE( beng_dflt, BENG_DFLT,
          "Bengali default style",
          AF_WRITING_SYSTEM_LATIN,

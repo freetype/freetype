@@ -36,6 +36,12 @@
           HINTING_BOTTOM_TO_TOP,
           "\xD9\x84 \xD8\xAD \xD9\x80" ) /* ل ح ـ */
 
+  SCRIPT( armn, ARMN,
+          "Armenian",
+          HB_SCRIPT_ARMENIAN,
+          HINTING_BOTTOM_TO_TOP,
+          "\xD6\x85 \xD5\x95" ) /* օ Օ */
+
   /* there are no simple forms for letters; we thus use two digit shapes */
   SCRIPT( beng, BENG,
           "Bengali",

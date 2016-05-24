@@ -86,6 +86,19 @@ AF_BLUE_STRING_ENUM AF_BLUE_STRINGS_ARRAY AF_BLUE_STRING_MAX_LEN:
   AF_BLUE_STRING_ARABIC_JOIN
     "ـ"
 
+  AF_BLUE_STRING_ARMENIAN_CAPITAL_TOP
+    "Ա Մ Ւ Փ Բ Գ Դ Օ"
+  AF_BLUE_STRING_ARMENIAN_CAPITAL_BOTTOM
+    "Ւ Ո Փ Ճ Շ Ս Տ Օ"
+  AF_BLUE_STRING_ARMENIAN_SMALL_ASCENDER
+    "ե է ի մ վ փ ֆ փ"
+  AF_BLUE_STRING_ARMENIAN_SMALL_TOP
+    "ա յ ւ ս գ ջ ր օ"
+  AF_BLUE_STRING_ARMENIAN_SMALL_BOTTOM
+    "հ ո ճ ա ե ծ ս օ"
+  AF_BLUE_STRING_ARMENIAN_SMALL_DESCENDER
+    "բ ը ի լ ղ պ փ ց"
+
   AF_BLUE_STRING_BENGALI_BASE
     "অ ড ত ন ব ভ ল ক"
   AF_BLUE_STRING_BENGALI_TOP
@@ -470,6 +483,16 @@ AF_BLUE_STRINGSET_ENUM AF_BLUE_STRINGSETS_ARRAY AF_BLUE_STRINGSET_MAX_LEN:
                                      AF_BLUE_PROPERTY_LATIN_X_HEIGHT   }
     { AF_BLUE_STRING_BENGALI_BASE,   0                                 }
     { AF_BLUE_STRING_MAX,            0                                 }
+
+  AF_BLUE_STRINGSET_ARMN
+    { AF_BLUE_STRING_ARMENIAN_CAPITAL_TOP,     AF_BLUE_PROPERTY_LATIN_TOP        }
+    { AF_BLUE_STRING_ARMENIAN_CAPITAL_BOTTOM,  0                                 }
+    { AF_BLUE_STRING_ARMENIAN_SMALL_ASCENDER,  AF_BLUE_PROPERTY_LATIN_TOP        }
+    { AF_BLUE_STRING_ARMENIAN_SMALL_TOP,       AF_BLUE_PROPERTY_LATIN_TOP      |
+                                               AF_BLUE_PROPERTY_LATIN_X_HEIGHT   }
+    { AF_BLUE_STRING_ARMENIAN_SMALL_BOTTOM,    0                                 }
+    { AF_BLUE_STRING_ARMENIAN_SMALL_DESCENDER, 0                                 }
+    { AF_BLUE_STRING_MAX,                      0                                 }
 
   AF_BLUE_STRINGSET_CYRL
     { AF_BLUE_STRING_CYRILLIC_CAPITAL_TOP,     AF_BLUE_PROPERTY_LATIN_TOP        }

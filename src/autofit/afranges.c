@@ -91,6 +91,21 @@
   };
 
 
+  const AF_Script_UniRangeRec  af_armn_uniranges[] =
+  {
+    AF_UNIRANGE_REC(  0x0530UL,  0x0558UL ),  /* Armenian                          */
+    AF_UNIRANGE_REC(  0x0560UL,  0x058FUL ),
+    AF_UNIRANGE_REC(  0xFB13UL,  0xFB17UL ),  /* Alphab. Present. Forms (Armenian) */
+    AF_UNIRANGE_REC(       0UL,       0UL )
+  };
+
+  const AF_Script_UniRangeRec  af_armn_nonbase_uniranges[] =
+  {
+    AF_UNIRANGE_REC(  0x0559UL,  0x055FUL ),
+    AF_UNIRANGE_REC(       0UL,       0UL )
+  };
+
+
   const AF_Script_UniRangeRec  af_beng_uniranges[] =
   {
     AF_UNIRANGE_REC(  0x0980UL,  0x09FFUL ),  /* Bengali */
