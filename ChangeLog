@@ -1,3 +1,10 @@
+2016-05-25  Werner Lemberg  <wl@gnu.org>
+
+	[autofit] Fixes for Armenian and Gujarati ranges.
+
+	* src/autofit/afranges.c (af_armn_uniranges): Corrected.
+	(af_guru_nonbase_uniranges): Make U+0A3E a base character.
+
 2016-05-24  Werner Lemberg  <wl@gnu.org>
 
 	[autofit] Add support for Armenian script.

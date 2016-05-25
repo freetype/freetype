@@ -93,8 +93,7 @@
 
   const AF_Script_UniRangeRec  af_armn_uniranges[] =
   {
-    AF_UNIRANGE_REC(  0x0530UL,  0x0558UL ),  /* Armenian                          */
-    AF_UNIRANGE_REC(  0x0560UL,  0x058FUL ),
+    AF_UNIRANGE_REC(  0x0530UL,  0x058FUL ),  /* Armenian                          */
     AF_UNIRANGE_REC(  0xFB13UL,  0xFB17UL ),  /* Alphab. Present. Forms (Armenian) */
     AF_UNIRANGE_REC(       0UL,       0UL )
   };
@@ -249,7 +248,7 @@
   const AF_Script_UniRangeRec  af_guru_nonbase_uniranges[] =
   {
     AF_UNIRANGE_REC(  0x0A01UL,  0x0A02UL ),
-    AF_UNIRANGE_REC(  0x0A3CUL,  0x0A3EUL ),
+    AF_UNIRANGE_REC(  0x0A3CUL,  0x0A3CUL ),
     AF_UNIRANGE_REC(  0x0A41UL,  0x0A51UL ),
     AF_UNIRANGE_REC(  0x0A70UL,  0x0A71UL ),
     AF_UNIRANGE_REC(  0x0A75UL,  0x0A75UL ),
