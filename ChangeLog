@@ -1,3 +1,20 @@
+2016-05-26  Alexei Podtelezhnikov  <apodtele@gmail.com>
+
+	[smooth] Shrink bisection stack.
+
+	The convergence of Bézier flatteners is fast with the deviation
+	from straight line being assymptotically cut 4-fold on each bisection.
+	This justifies smaller bisection stack size.
+
+	* src/smooth/ftgrays.c (gray_TWorker): Remove common `bez_stack'.
+	(gray_render_conic): Create and use conic `bez_stack'. Move back the
+	band analysis from...
+	(gray_conic_to): ... here.
+	(gray_render_cubic): Create and use cubic `bez_stack'. Move back the
+	band analysis from...
+	(gray_cubic_to): ... here.
+	(gray_move_to): Updated.
+
 2016-05-25  Werner Lemberg  <wl@gnu.org>
 
 	[autofit] Fixes for Armenian and Gujarati ranges.

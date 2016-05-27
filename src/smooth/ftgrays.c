@@ -434,8 +434,6 @@ typedef ptrdiff_t  FT_PtrDist;
 
     TPos    x,  y;
 
-    FT_Vector   bez_stack[32 * 3 + 1];
-
     FT_Outline  outline;
     FT_Bitmap   target;
     FT_BBox     clip_box;
@@ -1064,12 +1062,34 @@ typedef ptrdiff_t  FT_PtrDist;
 
 
   static void
-  gray_render_conic( RAS_ARG )
+  gray_render_conic( RAS_ARG_ const FT_Vector*  control,
+                              const FT_Vector*  to )
   {
+    FT_Vector   bez_stack[16 * 2 + 1];  /* enough to accommodate bisections */
+    FT_Vector*  arc = bez_stack;
     TPos        dx, dy;
-    int         draw, split, level;
-    FT_Vector*  arc = ras.bez_stack;
+    int         draw, split;
 
+
+    arc[0].x = UPSCALE( to->x );
+    arc[0].y = UPSCALE( to->y );
+    arc[1].x = UPSCALE( control->x );
+    arc[1].y = UPSCALE( control->y );
+    arc[2].x = ras.x;
+    arc[2].y = ras.y;
+
+    /* short-cut the arc that crosses the current band */
+    if ( ( TRUNC( arc[0].y ) >= ras.max_ey &&
+           TRUNC( arc[1].y ) >= ras.max_ey &&
+           TRUNC( arc[2].y ) >= ras.max_ey ) ||
+         ( TRUNC( arc[0].y ) <  ras.min_ey &&
+           TRUNC( arc[1].y ) <  ras.min_ey &&
+           TRUNC( arc[2].y ) <  ras.min_ey ) )
+    {
+      ras.x = arc[0].x;
+      ras.y = arc[0].y;
+      return;
+    }
 
     dx = FT_ABS( arc[2].x + arc[0].x - 2 * arc[1].x );
     dy = FT_ABS( arc[2].y + arc[0].y - 2 * arc[1].y );
@@ -1078,19 +1098,17 @@ typedef ptrdiff_t  FT_PtrDist;
 
     /* We can calculate the number of necessary bisections because  */
     /* each bisection predictably reduces deviation exactly 4-fold. */
-
-    level = 0;
+    /* Even 32-bit deviation would vanish after 16 bisections.      */
+    draw = 1;
     while ( dx > ONE_PIXEL / 4 )
     {
-      dx >>= 2;
-      level++;
+      dx   >>= 2;
+      draw <<= 1;
     }
 
     /* We use decrement counter to count the total number of segments */
     /* to draw starting from 2^level. Before each draw we split as    */
     /* many times as there are trailing zeros in the counter.         */
-
-    draw = 1 << level;
     do
     {
       split = 1;
@@ -1137,13 +1155,40 @@ typedef ptrdiff_t  FT_PtrDist;
 
 
   static void
-  gray_render_cubic( RAS_ARG )
+  gray_render_cubic( RAS_ARG_ const FT_Vector*  control1,
+                              const FT_Vector*  control2,
+                              const FT_Vector*  to )
   {
-    FT_Vector*  arc = ras.bez_stack;
+    FT_Vector   bez_stack[16 * 3 + 1];  /* enough to accommodate bisections */
+    FT_Vector*  arc = bez_stack;
     TPos        dx, dy, dx_, dy_;
     TPos        dx1, dy1, dx2, dy2;
     TPos        L, s, s_limit;
 
+
+    arc[0].x = UPSCALE( to->x );
+    arc[0].y = UPSCALE( to->y );
+    arc[1].x = UPSCALE( control2->x );
+    arc[1].y = UPSCALE( control2->y );
+    arc[2].x = UPSCALE( control1->x );
+    arc[2].y = UPSCALE( control1->y );
+    arc[3].x = ras.x;
+    arc[3].y = ras.y;
+
+    /* short-cut the arc that crosses the current band */
+    if ( ( TRUNC( arc[0].y ) >= ras.max_ey &&
+           TRUNC( arc[1].y ) >= ras.max_ey &&
+           TRUNC( arc[2].y ) >= ras.max_ey &&
+           TRUNC( arc[3].y ) >= ras.max_ey ) ||
+         ( TRUNC( arc[0].y ) <  ras.min_ey &&
+           TRUNC( arc[1].y ) <  ras.min_ey &&
+           TRUNC( arc[2].y ) <  ras.min_ey &&
+           TRUNC( arc[3].y ) <  ras.min_ey ) )
+    {
+      ras.x = arc[0].x;
+      ras.y = arc[0].y;
+      return;
+    }
 
     for (;;)
     {
@@ -1190,7 +1235,7 @@ typedef ptrdiff_t  FT_PtrDist;
 
       gray_render_line( RAS_VAR_ arc[0].x, arc[0].y );
 
-      if ( arc == ras.bez_stack )
+      if ( arc == bez_stack )
         return;
 
       arc -= 3;
@@ -1220,8 +1265,8 @@ typedef ptrdiff_t  FT_PtrDist;
 
     gray_start_cell( RAS_VAR_ TRUNC( x ), TRUNC( y ) );
 
-    worker->x = x;
-    worker->y = y;
+    ras.x = x;
+    ras.y = y;
     return 0;
   }
 
@@ -1240,27 +1285,7 @@ typedef ptrdiff_t  FT_PtrDist;
                  const FT_Vector*  to,
                  gray_PWorker      worker )
   {
-    FT_Vector*  arc = ras.bez_stack;
-
-
-    arc[0].x = UPSCALE( to->x );
-    arc[0].y = UPSCALE( to->y );
-    arc[1].x = UPSCALE( control->x );
-    arc[1].y = UPSCALE( control->y );
-    arc[2].x = ras.x;
-    arc[2].y = ras.y;
-
-    /* short-cut the arc that crosses the current band */
-    if ( ( TRUNC( arc[0].y ) >= ras.max_ey &&
-           TRUNC( arc[1].y ) >= ras.max_ey &&
-           TRUNC( arc[2].y ) >= ras.max_ey ) ||
-         ( TRUNC( arc[0].y ) <  ras.min_ey &&
-           TRUNC( arc[1].y ) <  ras.min_ey &&
-           TRUNC( arc[2].y ) <  ras.min_ey ) )
-      gray_render_line( RAS_VAR_ arc[0].x, arc[0].y );
-    else
-      gray_render_conic( RAS_VAR );
-
+    gray_render_conic( RAS_VAR_ control, to );
     return 0;
   }
 
@@ -1271,31 +1296,7 @@ typedef ptrdiff_t  FT_PtrDist;
                  const FT_Vector*  to,
                  gray_PWorker      worker )
   {
-    FT_Vector*  arc = ras.bez_stack;
-
-
-    arc[0].x = UPSCALE( to->x );
-    arc[0].y = UPSCALE( to->y );
-    arc[1].x = UPSCALE( control2->x );
-    arc[1].y = UPSCALE( control2->y );
-    arc[2].x = UPSCALE( control1->x );
-    arc[2].y = UPSCALE( control1->y );
-    arc[3].x = ras.x;
-    arc[3].y = ras.y;
-
-    /* short-cut the arc that crosses the current band */
-    if ( ( TRUNC( arc[0].y ) >= ras.max_ey &&
-           TRUNC( arc[1].y ) >= ras.max_ey &&
-           TRUNC( arc[2].y ) >= ras.max_ey &&
-           TRUNC( arc[3].y ) >= ras.max_ey ) ||
-         ( TRUNC( arc[0].y ) <  ras.min_ey &&
-           TRUNC( arc[1].y ) <  ras.min_ey &&
-           TRUNC( arc[2].y ) <  ras.min_ey &&
-           TRUNC( arc[3].y ) <  ras.min_ey ) )
-      gray_render_line( RAS_VAR_ arc[0].x, arc[0].y );
-    else
-      gray_render_cubic( RAS_VAR );
-
+    gray_render_cubic( RAS_VAR_ control1, control2, to );
     return 0;
   }
 
