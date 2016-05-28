@@ -1,3 +1,12 @@
+2016-05-28  Werner Lemberg  <wl@gnu.org>
+
+	* src/autofit/afranges.c: Remove `UL' postfix from hex numbers.
+
+	Suggested by Alexei.  `UL' is only needed for 16bit compilers, but
+	it seems noone is using this anymore (and we no longer test whether
+	FreeType compiles in such an environment).  Otherwise, it is easy to
+	add the postfix to the `AF_UNICODE_RANGE' macro.
+
 2016-05-26  Alexei Podtelezhnikov  <apodtele@gmail.com>
 
 	[smooth] Shrink bisection stack.
