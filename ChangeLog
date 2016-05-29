@@ -1,3 +1,12 @@
+2016-05-30  Werner Lemberg  <wl@gnu.org>
+
+	[type42] Support `CharStrings' entry format as created by LilyPond.
+
+	* src/type42/t42parse.c (t42_parse_charstrings): Handle entries
+	having the format
+
+	  (foo) cvn 12345 def
+
 2016-05-28  Werner Lemberg  <wl@gnu.org>
 
 	* src/autofit/afranges.c: Remove `UL' postfix from hex numbers.
