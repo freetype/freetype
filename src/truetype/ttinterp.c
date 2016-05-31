@@ -5548,6 +5548,12 @@
 #ifdef TT_SUPPORT_SUBPIXEL_HINTING_INFINALITY
     FT_Int      B1, B2;
 #endif
+#ifdef TT_SUPPORT_SUBPIXEL_HINTING_MINIMAL
+    FT_Bool     in_twilight = exc->GS.gep0 == 0 || \
+                              exc->GS.gep1 == 0 || \
+                              exc->GS.gep2 == 0;
+#endif
+
 
 
     if ( exc->top < exc->GS.loop + 1 )
@@ -5656,11 +5662,15 @@
       if ( SUBPIXEL_HINTING_MINIMAL     &&
            exc->backwards_compatibility )
       {
-        /* XXX: breaks Rokkitt < v1.2                   */
-        /*      (glyphs explode vertically on ALIGNRP). */
-        if ( !( exc->iupx_called && exc->iupy_called )              &&
-             ( ( exc->is_composite && exc->GS.freeVector.y != 0 ) ||
-               ( exc->zp2.tags[point] & FT_CURVE_TAG_TOUCH_Y )    ) )
+        /* Special case: allow SHPIX to move points in the twilight zone.  */
+        /* Otherwise, treat SHPIX the same as DELTAP.  Unbreaks various    */
+        /* fonts such as older versions of Rokkitt and DTL Argo T Light    */
+        /* that would glitch severly after calling ALIGNRP after a blocked */
+        /* SHPIX.                                                          */
+        if ( in_twilight                                                ||
+             ( !( exc->iupx_called && exc->iupy_called )              &&
+               ( ( exc->is_composite && exc->GS.freeVector.y != 0 ) ||
+                 ( exc->zp2.tags[point] & FT_CURVE_TAG_TOUCH_Y )    ) ) )
           Move_Zp2_Point( exc, point, 0, dy, TRUE );
       }
       else

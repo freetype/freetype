@@ -1,3 +1,13 @@
+2016-05-17  Nikolaus Waxweiler  <madigens@gmail.com>
+
+	[truetype] Let SHPIX move points in the twilight zone in v40.
+
+	* src/truetype/ttinterp.c (Ins_SHPIX): Allow SHPIX to move points in
+	the twilight zone.  Otherwise, treat SHPIX the same as DELTAP.
+	Unbreaks various fonts such as older versions of Rokkitt and DTL
+	Argo T Light that would glitch severly after calling ALIGNRP after a
+	blocked SHPIX.
+
 2016-05-30  Werner Lemberg  <wl@gnu.org>
 
 	[type42] Support `CharStrings' entry format as created by LilyPond.
