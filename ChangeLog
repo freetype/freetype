@@ -1,8 +1,11 @@
 2016-06-04  Werner Lemberg  <wl@gnu.org>
 
-	[truetype] Fix missed test for named instances (#48122).
+	Fix a test for named instances (#48122).
 
-	* src/truetype/ftobjs.c (Mac_Read_sfnt_Resource): Implement.
+	This was missed while giving negative face indices an extended
+	meaning.
+
+	* src/base/ftobjs.c (Mac_Read_sfnt_Resource): Implement.
 
 2016-05-31  Nikolaus Waxweiler  <madigens@gmail.com>
 
