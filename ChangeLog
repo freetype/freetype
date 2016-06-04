@@ -1,4 +1,10 @@
-2016-05-17  Nikolaus Waxweiler  <madigens@gmail.com>
+2016-06-04  Werner Lemberg  <wl@gnu.org>
+
+	[truetype] Fix missed test for named instances (#48122).
+
+	* src/truetype/ftobjs.c (Mac_Read_sfnt_Resource): Implement.
+
+2016-05-31  Nikolaus Waxweiler  <madigens@gmail.com>
 
 	[truetype] Let SHPIX move points in the twilight zone in v40.
 
