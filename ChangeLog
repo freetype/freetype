@@ -633,7 +633,7 @@
 	(af_latin_align_linked_edge): Pass position delta of base point to
 	`af_latin_compute_stem_width'.
 
-2016-03-05  J Raynor <jxraynor@gmail.com>
+2016-03-05  J Raynor  <jxraynor@gmail.com>
 
 	Make FreeType compile on AIX out of the box.
 
@@ -1446,7 +1446,7 @@
 	* src/base/ftobjs.c (Mac_Read_sfnt_Resource, FT_Open_Face): Set
 	`error'.
 
-2015-12-14  Ben Wagner <bungeman@gmail.com>
+2015-12-14  Ben Wagner  <bungeman@gmail.com>
 
 	[base] Check error when seeking to data supplied offset (#46635).
 
@@ -3431,20 +3431,20 @@
 	(load_truetype_glyph), src/truetype/ttgxvar.c (tt_handle_deltas),
 	src/truetype/ttinterp.c (Ins_INSTCTRL): Fix signedness issues.
 
-2015-06-29  Alexei Podtelezhnikov <apodtele@gmail.com>
+2015-06-29  Alexei Podtelezhnikov  <apodtele@gmail.com>
 
 	[truetype] Speed up bytecode interpreter.
 
 	* src/truetype/ttinterp.c (Normalize): Use `FT_Vector_NormLen'.
 
-2015-06-29  Alexei Podtelezhnikov <apodtele@gmail.com>
+2015-06-29  Alexei Podtelezhnikov  <apodtele@gmail.com>
 
 	[base] Speed up emboldening.
 
 	* src/base/ftoutln.c (FT_Outline_EmboldenXY): Use
 	`FT_Vector_NormLen'.
 
-2015-06-29  Alexei Podtelezhnikov <apodtele@gmail.com>
+2015-06-29  Alexei Podtelezhnikov  <apodtele@gmail.com>
 
 	[base] Implement fast vector normalization.
 
@@ -3552,11 +3552,11 @@
 
 	* docs/*: Updated.
 
-2015-06-24  Alexei Podtelezhnikov <apodtele@gmail.com>
+2015-06-24  Alexei Podtelezhnikov  <apodtele@gmail.com>
 
 	* src/bdf/bdflib.c (_bdf_parse_start): Disallow 0 bpp.
 
-2015-06-24  Alexei Podtelezhnikov <apodtele@gmail.com>
+2015-06-24  Alexei Podtelezhnikov  <apodtele@gmail.com>
 
 	* src/bdf/bdflib.c (_bdf_parse_start): Simplify bpp parsing.
 
@@ -3858,7 +3858,7 @@
 	incremental interface callback to apply the encoding to raw
 	character index (as it was in the previous code).
 
-2015-04-29  Alexei Podtelezhnikov <apodtele@gmail.com>
+2015-04-29  Alexei Podtelezhnikov  <apodtele@gmail.com>
 
 	[autofit] Speed up IUP.
 
@@ -3879,7 +3879,7 @@
 	* src/cff/cffdrivr.c (cff_get_ps_name): Use the `sfnt' service if we
 	have an SFNT.
 
-2015-04-27  Alexei Podtelezhnikov <apodtele@gmail.com>
+2015-04-27  Alexei Podtelezhnikov  <apodtele@gmail.com>
 
 	[truetype] Speed up IUP.
 
@@ -3961,15 +3961,15 @@
 	* src/cff/cffgload.c (cff_slot_load): Use advance width and side
 	bearing values from `hmtx' table if present.
 
-2015-04-03  Alexei Podtelezhnikov <apodtele@gmail.com>
+2015-04-03  Alexei Podtelezhnikov  <apodtele@gmail.com>
 
 	* src/autofit/afhints.c (af_glyph_hints_reload): Use do-while loop.
 
-2015-04-02  Alexei Podtelezhnikov <apodtele@gmail.com>
+2015-04-02  Alexei Podtelezhnikov  <apodtele@gmail.com>
 
 	* src/autofit/aflatin.c (af_latin_hint_edges): Reduce logic.
 
-2015-04-01  Alexei Podtelezhnikov <apodtele@gmail.com>
+2015-04-01  Alexei Podtelezhnikov  <apodtele@gmail.com>
 
 	[autofit] Finish the thought.
 
@@ -4045,7 +4045,7 @@
 	* src/cff/cffgload.c (cff_decoder_parse_charstrings)
 	<cff_op_callsubr, cff_op_callgsubr, cff_op_return>: Ditto.
 
-2015-03-21  Alexei Podtelezhnikov <apodtele@gmail.com>
+2015-03-21  Alexei Podtelezhnikov  <apodtele@gmail.com>
 
 	[base] Optimize `FT_Angle_Diff'.
 
@@ -4064,11 +4064,11 @@
 	single-element runs.  Cf. glyph `Q' in Skia.ttf with weights larger
 	than the default.
 
-2015-03-20  Alexei Podtelezhnikov <apodtele@gmail.com>
+2015-03-20  Alexei Podtelezhnikov  <apodtele@gmail.com>
 
 	* src/base/fttrigon.c (FT_Vector_Rotate): Minor refactoring.
 
-2015-03-17  Alexei Podtelezhnikov <apodtele@gmail.com>
+2015-03-17  Alexei Podtelezhnikov  <apodtele@gmail.com>
 
 	Fix Savannah bug #44412 (part 2).
 
@@ -4155,7 +4155,7 @@
 	include/config/ftheader.h, include/ftfntfmt.h, modules.cfg,
 	src/base/ftfntfmt.c, vms_make.com: Updated.
 
-2015-03-10  Alexei Podtelezhnikov <apodtele@gmail.com>
+2015-03-10  Alexei Podtelezhnikov  <apodtele@gmail.com>
 
 	Fix Savannah bug #44412 (part 1).
 
@@ -4176,7 +4176,7 @@
 
 	Found by Alexei.
 
-2015-03-05  Alexei Podtelezhnikov <apodtele@gmail.com>
+2015-03-05  Alexei Podtelezhnikov  <apodtele@gmail.com>
 
 	* src/base/ftstroke.c: Simplify.
 

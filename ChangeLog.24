@@ -2546,7 +2546,7 @@
 
 	* src/bdf/bdflib.c (_bdf_is_atom): Fix handling of property value.
 
-2012-02-24  Vinnie Falco  <vinnie.falco@gmail.com>
+2012-02-24  Vinnie Falco  <vinnie.falco@gmail.com>
 
 	Prepare source code for amalgamation (6/6).
 
@@ -2562,14 +2562,14 @@
 
 	* src/type1/t1load.c: s/parse_font_matrix/t1_parse_font_matrix/.
 
-2012-02-24  Vinnie Falco  <vinnie.falco@gmail.com>
+2012-02-24  Vinnie Falco  <vinnie.falco@gmail.com>
 
 	Prepare source code for amalgamation (5/6).
 
 	* include/freetype/fterrors.h: Undefine FT_KEEP_ERR_PREFIX after
 	using it.
 
-2012-02-22  Vinnie Falco  <vinnie.falco@gmail.com>
+2012-02-22  Vinnie Falco  <vinnie.falco@gmail.com>
 
 	Prepare source code for amalgamation (4/6).
 
@@ -2581,7 +2581,7 @@
 	* src/raster/ftraster.c: s/TRaster/gray_TRaster/,
 	s/PRaster/gray_PRaster/.
 
-2012-02-20  Vinnie Falco  <vinnie.falco@gmail.com>
+2012-02-20  Vinnie Falco  <vinnie.falco@gmail.com>
 
 	Prepare source code for amalgamation (3/6).
 
@@ -2590,14 +2590,14 @@
 	* src/raster/ftraster.c: s/TWorker/gray_TWorker/,
 	s/PWorker/gray_PWorker/.
 
-2012-02-20  Vinnie Falco  <vinnie.falco@gmail.com>
+2012-02-20  Vinnie Falco  <vinnie.falco@gmail.com>
 
 	Prepare source code for amalgamation (2/6).
 
 	* src/smooth/ftgrays.c, src/raster/ftraster.c: Undefine FLOOR,
 	CEILING, TRUNC, and SCALED before defining it.
 
-2012-02-20  Vinnie Falco  <vinnie.falco@gmail.com>
+2012-02-20  Vinnie Falco  <vinnie.falco@gmail.com>
 
 	Prepare source code for amalgamation (1/6).
 
@@ -3621,7 +3621,7 @@
 	* src/base/ftstroke.c: Revised.
 	* include/freetype/ftstroke.h: Updated.
 
-2011-06-30  İsmail Dönmez <ismail@namtrac.org>
+2011-06-30  İsmail Dönmez  <ismail@namtrac.org>
 
 	* builds/toplevel.mk: We use git, not CVS, thus skip `.gitignore'.
 
@@ -3680,7 +3680,7 @@
 
 	[autogen.sh] Reflect environment variable LIBTOOLIZE.
 
-2011-06-18  Werner Lemberg <wl@gnu.org>
+2011-06-18  Werner Lemberg  <wl@gnu.org>
 
 	Update license documentation.
 
@@ -5420,7 +5420,7 @@
 	a Kaishu typeface paired with `HuaTianSongTi?' by Huatian
 	Information Industry.
 
-2010-08-17  Teijo Kinnunen <Teijo.Kinnunen@nuance.com>
+2010-08-17  Teijo Kinnunen  <Teijo.Kinnunen@nuance.com>
 
 	[cache] Fix Savannah bug #30788.
 

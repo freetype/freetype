@@ -2412,7 +2412,7 @@
 	* builds/unix/detect.mk (.PHONY): Adding `devel', `unix', `lcc',
 	`setup'.
 
-2000-11-30  David Turner  <david.turner@freetype.ogr>
+2000-11-30  David Turner  <david.turner@freetype.org>
 
 	* INSTALL: Slightly updated the quick starter documentation to
 	include IDE compilation, prevent against BSD Make, and specify `make

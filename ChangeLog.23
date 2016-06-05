@@ -3576,7 +3576,7 @@
 
 	* docs/CHANGES: Updated.
 
-2008-12-18  Bevan, David  <dbevan@emtex.com>
+2008-12-18  David Bevan  <dbevan@emtex.com>
 
 	Provide API for accessing embedding and subsetting restriction
 	information.
@@ -3656,12 +3656,12 @@
 	* src/sfnt/sfobjs.c (sfnt_load_face): A font with neither outlines
 	nor bitmaps is scalable.
 
-2008-12-05  Werner Lemberg  <wl@nu.org>
+2008-12-05  Werner Lemberg  <wl@gnu.org>
 
 	* src/autofit/aflatin.c (af_latin_uniranges): Add more ranges.  This
 	fixes Savannah bug #21190 which also provides a basic patch.
 
-2008-12-05  Werner Lemberg  <wl@nu.org>
+2008-12-05  Werner Lemberg  <wl@gnu.org>
 
 	* include/freetype/freetype.h (FT_LOAD_ADVANCE_ONLY): Use value
 	0x100 instead of 0x10000; the latter value is already occupied by
@@ -4160,7 +4160,7 @@
 	used in building of FreeType2, it is written in `freetype2.pc' and
 	`freetype-config'.
 
-2008-09-01  david turner  <david@freetype.org>
+2008-09-01  David Turner  <david@freetype.org>
 
 	* src/cache/ftccmap.c (FTC_CMapCache_Lookup): Accept a negative cmap
 	index to mean `use default cached FT_Face's charmap'.  This fixes
@@ -4931,7 +4931,7 @@
 	tt_cmap14_find_variant): Return correct value.
 	(tt_cmap14_variant_chars): Fix check for `di'.
 
-2008-02-29  Wermer Lemberg  <wl@gnu.org>
+2008-02-29  Werner Lemberg  <wl@gnu.org>
 
 	* docs/CHANGES: Updated.
 
@@ -6201,14 +6201,14 @@
 	conftest.c, to avoid unexpected shell evaluation.  Possibly it is a
 	bug or undocumented behaviour of autoconf.
 
-2007-03-18  David Turner   <david@freetype.org>
+2007-03-18  David Turner  <david@freetype.org>
 
 	* src/truetype/ttinterp.c (Ins_MDRP): Another bytecode regression
 	fix; testing still needed.
 
 	* src/truetype/ttinterp.c (Ins_MD): Another bytecode regression fix.
 
-2007-03-17  David Turner   <david@freetype.org>
+2007-03-17  David Turner  <david@freetype.org>
 
 	* src/truetype/ttinterp.c (Ins_IP): Fix wrong handling of the
 	(undocumented) twilight zone special case.

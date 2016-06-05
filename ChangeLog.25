@@ -34,7 +34,7 @@
 
 	* builds/toplevel.mk (dist): Fix typos.
 
-2014-12-24  Alexei Podtelezhnikov <apodtele@gmail.com>
+2014-12-24  Alexei Podtelezhnikov  <apodtele@gmail.com>
 
 	[base] Formatting and nanooptimizations.
 
@@ -1780,7 +1780,7 @@
 	appearing in the GPOS table if we are processing the default
 	coverage.
 
-2014-04-13  David Weber <weber.aulendorf@googlemail.com>
+2014-04-13  David Weber  <weber.aulendorf@googlemail.com>
 
 	[smooth] Fix stand-alone compilation.
 

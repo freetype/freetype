@@ -352,7 +352,7 @@
 	* src/tools/docmaker/sources.py (re_bold, re_italic): Accept "'"
 	also.
 
-2006-03-23  David Turner <david@freetype.org>
+2006-03-23  David Turner  <david@freetype.org>
 
 	Add FT_Get_SubGlyph_Info API to retrieve subglyph data.  Note that
 	we do not expose the FT_SubGlyphRec structure.
