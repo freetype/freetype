@@ -47,7 +47,7 @@
           "Bengali",
           HB_SCRIPT_BENGALI,
           HINTING_TOP_TO_BOTTOM,
-          "\xE0\xA7\xA6 \xE0\xA7\xAA" ) /* ০ ৪*/
+          "\xE0\xA7\xA6 \xE0\xA7\xAA" ) /* ০ ৪ */
 
   SCRIPT( cyrl, CYRL,
           "Cyrillic",
@@ -89,7 +89,7 @@
           "Gurmukhi",
           HB_SCRIPT_GURMUKHI,
           HINTING_TOP_TO_BOTTOM,
-          "\xE0\xA8\xA0 \xE0\xA8\xB0 \xE0\xA9\xA6" ) /* ਠ ਰ ੦*/
+          "\xE0\xA8\xA0 \xE0\xA8\xB0 \xE0\xA9\xA6" ) /* ਠ ਰ ੦ */
 
   SCRIPT( hebr, HEBR,
           "Hebrew",

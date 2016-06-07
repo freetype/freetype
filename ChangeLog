@@ -1,3 +1,12 @@
+2016-06-07  Werner Lemberg  <wl@gnu.org>
+
+	[autofit] Fix compilation with VS2016 (#48126).
+
+	This compiler doesn't recognize the end-of-comment sequence `*/' if
+	it immediately follows non-ASCII characters.
+
+	* src/autofit/afscript.h: Ensure whitespace before `*/'.
+
 2016-06-04  Werner Lemberg  <wl@gnu.org>
 
 	Fix a test for named instances (#48122).
