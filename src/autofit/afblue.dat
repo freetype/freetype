@@ -127,6 +127,11 @@ AF_BLUE_STRING_ENUM AF_BLUE_STRINGS_ARRAY AF_BLUE_STRING_MAX_LEN:
   AF_BLUE_STRING_DEVANAGARI_BOTTOM
     "ु ृ"
 
+  AF_BLUE_STRING_ETHIOPIC_TOP
+    "ሀ ሃ ዘ ፐ ማ በ ዋ ዐ"
+  AF_BLUE_STRING_ETHIOPIC_BOTTOM
+    "ለ ሐ በ ዘ ሀ ሪ ዐ ጨ"
+
   AF_BLUE_STRING_GEORGIAN_MKHEDRULI_TOP
     "გ დ ე ვ თ ი ო ღ"
   AF_BLUE_STRING_GEORGIAN_MKHEDRULI_BOTTOM
@@ -512,6 +517,11 @@ AF_BLUE_STRINGSET_ENUM AF_BLUE_STRINGSETS_ARRAY AF_BLUE_STRINGSET_MAX_LEN:
     { AF_BLUE_STRING_DEVANAGARI_BASE,   0                                 }
     { AF_BLUE_STRING_DEVANAGARI_BOTTOM, 0                                 }
     { AF_BLUE_STRING_MAX,               0                                 }
+
+  AF_BLUE_STRINGSET_ETHI
+    { AF_BLUE_STRING_ETHIOPIC_TOP,    AF_BLUE_PROPERTY_LATIN_TOP }
+    { AF_BLUE_STRING_ETHIOPIC_BOTTOM, 0                          }
+    { AF_BLUE_STRING_MAX,             0                          }
 
   // blue zones for Mtavruli are missing (not yet defined in Unicode)
   AF_BLUE_STRINGSET_GEOR

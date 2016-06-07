@@ -66,6 +66,10 @@
     '\0',
     '\xE0', '\xA5', '\x81', ' ', '\xE0', '\xA5', '\x83',  /* ु ृ */
     '\0',
+    '\xE1', '\x88', '\x80', ' ', '\xE1', '\x88', '\x83', ' ', '\xE1', '\x8B', '\x98', ' ', '\xE1', '\x8D', '\x90', ' ', '\xE1', '\x88', '\x9B', ' ', '\xE1', '\x89', '\xA0', ' ', '\xE1', '\x8B', '\x8B', ' ', '\xE1', '\x8B', '\x90',  /* ሀ ሃ ዘ ፐ ማ በ ዋ ዐ */
+    '\0',
+    '\xE1', '\x88', '\x88', ' ', '\xE1', '\x88', '\x90', ' ', '\xE1', '\x89', '\xA0', ' ', '\xE1', '\x8B', '\x98', ' ', '\xE1', '\x88', '\x80', ' ', '\xE1', '\x88', '\xAA', ' ', '\xE1', '\x8B', '\x90', ' ', '\xE1', '\x8C', '\xA8',  /* ለ ሐ በ ዘ ሀ ሪ ዐ ጨ */
+    '\0',
     '\xE1', '\x83', '\x92', ' ', '\xE1', '\x83', '\x93', ' ', '\xE1', '\x83', '\x94', ' ', '\xE1', '\x83', '\x95', ' ', '\xE1', '\x83', '\x97', ' ', '\xE1', '\x83', '\x98', ' ', '\xE1', '\x83', '\x9D', ' ', '\xE1', '\x83', '\xA6',  /* გ დ ე ვ თ ი ო ღ */
     '\0',
     '\xE1', '\x83', '\x90', ' ', '\xE1', '\x83', '\x96', ' ', '\xE1', '\x83', '\x9B', ' ', '\xE1', '\x83', '\xA1', ' ', '\xE1', '\x83', '\xA8', ' ', '\xE1', '\x83', '\xAB', ' ', '\xE1', '\x83', '\xAE', ' ', '\xE1', '\x83', '\x9E',  /* ა ზ მ ს შ ძ ხ პ */
@@ -303,6 +307,9 @@
     { AF_BLUE_STRING_DEVANAGARI_BASE,   0                                 },
     { AF_BLUE_STRING_DEVANAGARI_BOTTOM, 0                                 },
     { AF_BLUE_STRING_MAX,               0                                 },
+    { AF_BLUE_STRING_ETHIOPIC_TOP,    AF_BLUE_PROPERTY_LATIN_TOP },
+    { AF_BLUE_STRING_ETHIOPIC_BOTTOM, 0                          },
+    { AF_BLUE_STRING_MAX,             0                          },
     { AF_BLUE_STRING_GEORGIAN_MKHEDRULI_TOP,       AF_BLUE_PROPERTY_LATIN_TOP      |
                                                    AF_BLUE_PROPERTY_LATIN_X_HEIGHT   },
     { AF_BLUE_STRING_GEORGIAN_MKHEDRULI_BOTTOM,    0                                 },

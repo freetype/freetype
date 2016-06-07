@@ -113,6 +113,13 @@
          AF_BLUE_STRINGSET_DEVA,
          AF_COVERAGE_DEFAULT )
 
+  STYLE( ethi_dflt, ETHI_DFLT,
+         "Ethiopic default style",
+         AF_WRITING_SYSTEM_LATIN,
+         AF_SCRIPT_ETHI,
+         AF_BLUE_STRINGSET_ETHI,
+         AF_COVERAGE_DEFAULT )
+
   STYLE( geor_dflt, GEOR_DFLT,
          "Georgian (Mkhedruli) default style",
          AF_WRITING_SYSTEM_LATIN,

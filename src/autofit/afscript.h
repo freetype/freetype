@@ -61,6 +61,12 @@
           HINTING_TOP_TO_BOTTOM,
           "\xE0\xA4\xA0 \xE0\xA4\xB5 \xE0\xA4\x9F" ) /* ठ व ट */
 
+  SCRIPT( ethi, ETHI,
+          "Ethiopic",
+          HB_SCRIPT_ETHIOPIC,
+          HINTING_BOTTOM_TO_TOP,
+          "\xE1\x8B\x90" ) /* ዐ */
+
   SCRIPT( geor, GEOR,
           "Georgian (Mkhedruli)",
           HB_SCRIPT_GEORGIAN,
