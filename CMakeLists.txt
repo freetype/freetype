@@ -215,14 +215,17 @@ if (UNIX)
   endif ()
   string(REPLACE "/undef " "#undef "
     FTCONFIG_H "${FTCONFIG_H}")
-  file(WRITE "${PROJECT_BINARY_DIR}/include/freetype/config/ftconfig.h"
+  file(WRITE "${PROJECT_BINARY_DIR}/include/freetype/config/ftconfig.h-new"
     "${FTCONFIG_H}")
 else ()
   file(READ "${PROJECT_SOURCE_DIR}/include/freetype/config/ftconfig.h"
     FTCONFIG_H)
-  file(WRITE "${PROJECT_BINARY_DIR}/include/freetype/config/ftconfig.h"
+  file(WRITE "${PROJECT_BINARY_DIR}/include/freetype/config/ftconfig.h-new"
     "${FTCONFIG_H}")
 endif ()
+execute_process(COMMAND ${CMAKE_COMMAND} -E copy_if_different
+  "${PROJECT_BINARY_DIR}/include/freetype/config/ftconfig.h-new"
+  "${PROJECT_BINARY_DIR}/include/freetype/config/ftconfig.h")
 
 
 # Create the options file
@@ -251,8 +254,11 @@ if (HARFBUZZ_FOUND)
     "/\\* +(#define +FT_CONFIG_OPTION_USE_HARFBUZZ) +\\*/" "\\1"
     FTOPTION_H "${FTOPTION_H}")
 endif ()
-file(WRITE "${PROJECT_BINARY_DIR}/include/freetype/config/ftoption.h"
+file(WRITE "${PROJECT_BINARY_DIR}/include/freetype/config/ftoption.h-new"
   "${FTOPTION_H}")
+execute_process(COMMAND ${CMAKE_COMMAND} -E copy_if_different
+  "${PROJECT_BINARY_DIR}/include/freetype/config/ftoption.h-new"
+  "${PROJECT_BINARY_DIR}/include/freetype/config/ftoption.h")
 
 
 # Specify library include directories

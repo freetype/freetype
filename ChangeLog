@@ -1,3 +1,12 @@
+2016-06-09  David Capello  <davidcapello@gmail.com>
+
+	[cmake] Avoid modifying `ftconfig.h' and `ftoption.h' files.
+
+	* CMakeLists.txt: Each time cmake is run those files are
+	modified and the whole FreeType library is recompiled.  With this
+	change we change the files only if there are real modifications, so
+	we can avoid recompilations.
+
 2016-06-09  Werner Lemberg  <wl@gnu.org>
 
 	[bdf] Check number of properties (#48166).
