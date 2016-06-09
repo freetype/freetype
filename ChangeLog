@@ -1,3 +1,9 @@
+2016-06-09  Werner Lemberg  <wl@gnu.org>
+
+	[bdf] Check number of properties (#48166).
+
+	* src/bdf/bdflib.c (_bdf_parse_start): Implement.
+
 2016-06-08  Alexei Podtelezhnikov  <apodtele@gmail.com>
 
 	[smooth] Re-enable new line renderer on 64-bit archs.
