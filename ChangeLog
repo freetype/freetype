@@ -1,3 +1,10 @@
+2016-06-08  Alexei Podtelezhnikov  <apodtele@gmail.com>
+
+	[smooth] Minor clean-ups.
+
+	* src/smooth/ftgrays.c (gray_dump_cells): Move out of the way.
+	(gray_render_span): Remove spurious casts and streamline.
+
 2016-06-07  Werner Lemberg  <wl@gnu.org>
 
 	[autofit] Add support for Ethiopic script.

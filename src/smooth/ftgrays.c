@@ -475,6 +475,32 @@ typedef ptrdiff_t  FT_PtrDist;
   } gray_TRaster, *gray_PRaster;
 
 
+#ifdef FT_DEBUG_LEVEL_TRACE
+
+  /* to be called while in the debugger --                                */
+  /* this function causes a compiler warning since it is unused otherwise */
+  static void
+  gray_dump_cells( RAS_ARG )
+  {
+    int  yindex;
+
+
+    for ( yindex = 0; yindex < ras.ycount; yindex++ )
+    {
+      PCell  cell;
+
+
+      printf( "%3d:", yindex );
+
+      for ( cell = ras.ycells[yindex]; cell != NULL; cell = cell->next )
+        printf( " (%3ld, c:%4ld, a:%6ld)",
+                cell->x, cell->cover, cell->area );
+      printf( "\n" );
+    }
+  }
+
+#endif /* FT_DEBUG_LEVEL_TRACE */
+
 
   /*************************************************************************/
   /*                                                                       */
@@ -1323,29 +1349,25 @@ typedef ptrdiff_t  FT_PtrDist;
 
       if ( coverage )
       {
+        unsigned char*  q = p + spans->x;
+
+
         /* For small-spans it is faster to do it by ourselves than
          * calling `memset'.  This is mainly due to the cost of the
          * function call.
          */
-        if ( spans->len >= 8 )
-          FT_MEM_SET( p + spans->x, (unsigned char)coverage, spans->len );
-        else
+        switch ( spans->len )
         {
-          unsigned char*  q = p + spans->x;
-
-
-          switch ( spans->len )
-          {
-          case 7: *q++ = (unsigned char)coverage;
-          case 6: *q++ = (unsigned char)coverage;
-          case 5: *q++ = (unsigned char)coverage;
-          case 4: *q++ = (unsigned char)coverage;
-          case 3: *q++ = (unsigned char)coverage;
-          case 2: *q++ = (unsigned char)coverage;
-          case 1: *q   = (unsigned char)coverage;
-          default:
-            ;
-          }
+        case 7: *q++ = coverage;
+        case 6: *q++ = coverage;
+        case 5: *q++ = coverage;
+        case 4: *q++ = coverage;
+        case 3: *q++ = coverage;
+        case 2: *q++ = coverage;
+        case 1: *q   = coverage;
+        case 0: break;
+        default:
+          FT_MEM_SET( q, coverage, spans->len );
         }
       }
     }
@@ -1455,33 +1477,6 @@ typedef ptrdiff_t  FT_PtrDist;
       ras.num_gray_spans++;
     }
   }
-
-
-#ifdef FT_DEBUG_LEVEL_TRACE
-
-  /* to be called while in the debugger --                                */
-  /* this function causes a compiler warning since it is unused otherwise */
-  static void
-  gray_dump_cells( RAS_ARG )
-  {
-    int  yindex;
-
-
-    for ( yindex = 0; yindex < ras.ycount; yindex++ )
-    {
-      PCell  cell;
-
-
-      printf( "%3d:", yindex );
-
-      for ( cell = ras.ycells[yindex]; cell != NULL; cell = cell->next )
-        printf( " (%3ld, c:%4ld, a:%6ld)",
-                cell->x, cell->cover, cell->area );
-      printf( "\n" );
-    }
-  }
-
-#endif /* FT_DEBUG_LEVEL_TRACE */
 
 
   static void
