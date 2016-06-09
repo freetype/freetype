@@ -1,5 +1,12 @@
 2016-06-08  Alexei Podtelezhnikov  <apodtele@gmail.com>
 
+	[smooth] Re-enable new line renderer on 64-bit archs.
+
+	* src/smooth/ftgrays (gray_render_line): Conditionally re-enable new
+	implementation, where it is safe from overflows.
+
+2016-06-08  Alexei Podtelezhnikov  <apodtele@gmail.com>
+
 	[smooth] Minor clean-ups.
 
 	* src/smooth/ftgrays.c (gray_dump_cells): Move out of the way.
