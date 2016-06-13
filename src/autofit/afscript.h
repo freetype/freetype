@@ -49,6 +49,12 @@
           HINTING_TOP_TO_BOTTOM,
           "\xE0\xA7\xA6 \xE0\xA7\xAA" ) /* ০ ৪ */
 
+  SCRIPT( cher, CHER,
+          "Cherokee",
+          HB_SCRIPT_CHEROKEE,
+          HINTING_BOTTOM_TO_TOP,
+          "\xE1\x8E\xA4 \xE1\x8F\x85 \xEA\xAE\x95" ) /* Ꭴ Ꮕ ꮕ */
+
   SCRIPT( cyrl, CYRL,
           "Cyrillic",
           HB_SCRIPT_CYRILLIC,

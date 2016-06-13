@@ -50,6 +50,14 @@
     '\0',
     '\xE0', '\xA6', '\x93', ' ', '\xE0', '\xA6', '\x8F', ' ', '\xE0', '\xA6', '\xA1', ' ', '\xE0', '\xA6', '\xA4', ' ', '\xE0', '\xA6', '\xA8', ' ', '\xE0', '\xA6', '\xAC', ' ', '\xE0', '\xA6', '\xB2', ' ', '\xE0', '\xA6', '\x95',  /* ও এ ড ত ন ব ল ক */
     '\0',
+    '\xE1', '\x8F', '\x86', ' ', '\xE1', '\x8E', '\xBB', ' ', '\xE1', '\x8E', '\xAC', ' ', '\xE1', '\x8F', '\x83', ' ', '\xE1', '\x8E', '\xA4', ' ', '\xE1', '\x8F', '\xA3', ' ', '\xE1', '\x8E', '\xA6', ' ', '\xE1', '\x8F', '\x95',  /* Ꮖ Ꮋ Ꭼ Ꮓ Ꭴ Ꮳ Ꭶ Ꮥ */
+    '\0',
+    '\xEA', '\xAE', '\x92', ' ', '\xEA', '\xAE', '\xA4', ' ', '\xEA', '\xAE', '\xB6', ' ', '\xEA', '\xAD', '\xB4', ' ', '\xEA', '\xAD', '\xBE', ' ', '\xEA', '\xAE', '\x97', ' ', '\xEA', '\xAE', '\x9D', ' ', '\xEA', '\xAE', '\xBF',  /* ꮒ ꮤ ꮶ ꭴ ꭾ ꮗ ꮝ ꮿ */
+    '\0',
+    '\xEA', '\xAE', '\x96', ' ', '\xEA', '\xAD', '\xBC', ' ', '\xEA', '\xAE', '\x93', ' ', '\xEA', '\xAE', '\xA0', ' ', '\xEA', '\xAE', '\xB3', ' ', '\xEA', '\xAD', '\xB6', ' ', '\xEA', '\xAE', '\xA5', ' ', '\xEA', '\xAE', '\xBB',  /* ꮖ ꭼ ꮓ ꮠ ꮳ ꭶ ꮥ ꮻ */
+    '\0',
+    '\xE1', '\x8F', '\xB8', ' ', '\xEA', '\xAE', '\x90', ' ', '\xEA', '\xAD', '\xB9', ' ', '\xEA', '\xAD', '\xBB',  /* ᏸ ꮐ ꭹ ꭻ */
+    '\0',
     '\xD0', '\x91', ' ', '\xD0', '\x92', ' ', '\xD0', '\x95', ' ', '\xD0', '\x9F', ' ', '\xD0', '\x97', ' ', '\xD0', '\x9E', ' ', '\xD0', '\xA1', ' ', '\xD0', '\xAD',  /* Б В Е П З О С Э */
     '\0',
     '\xD0', '\x91', ' ', '\xD0', '\x92', ' ', '\xD0', '\x95', ' ', '\xD0', '\xA8', ' ', '\xD0', '\x97', ' ', '\xD0', '\x9E', ' ', '\xD0', '\xA1', ' ', '\xD0', '\xAD',  /* Б В Е Ш З О С Э */
@@ -292,6 +300,14 @@
                                    AF_BLUE_PROPERTY_LATIN_X_HEIGHT   },
     { AF_BLUE_STRING_BENGALI_BASE, 0                                 },
     { AF_BLUE_STRING_MAX,          0                                 },
+    { AF_BLUE_STRING_CHEROKEE_CAPITAL,         AF_BLUE_PROPERTY_LATIN_TOP        },
+    { AF_BLUE_STRING_CHEROKEE_CAPITAL,         0                                 },
+    { AF_BLUE_STRING_CHEROKEE_SMALL_ASCENDER,  AF_BLUE_PROPERTY_LATIN_TOP        },
+    { AF_BLUE_STRING_CHEROKEE_SMALL,           AF_BLUE_PROPERTY_LATIN_TOP      |
+                                               AF_BLUE_PROPERTY_LATIN_X_HEIGHT   },
+    { AF_BLUE_STRING_CHEROKEE_SMALL,           0                                 },
+    { AF_BLUE_STRING_CHEROKEE_SMALL_DESCENDER, 0                                 },
+    { AF_BLUE_STRING_MAX,                      0                                 },
     { AF_BLUE_STRING_CYRILLIC_CAPITAL_TOP,     AF_BLUE_PROPERTY_LATIN_TOP        },
     { AF_BLUE_STRING_CYRILLIC_CAPITAL_BOTTOM,  0                                 },
     { AF_BLUE_STRING_CYRILLIC_SMALL,           AF_BLUE_PROPERTY_LATIN_TOP      |

@@ -104,6 +104,13 @@
          AF_BLUE_STRINGSET_BENG,
          AF_COVERAGE_DEFAULT )
 
+  STYLE( cher_dflt, CHER_DFLT,
+         "Cherokee default style",
+         AF_WRITING_SYSTEM_LATIN,
+         AF_SCRIPT_CHER,
+         AF_BLUE_STRINGSET_CHER,
+         AF_COVERAGE_DEFAULT )
+
   META_STYLE_LATIN( cyrl, CYRL, "Cyrillic" )
 
   STYLE( deva_dflt, DEVA_DFLT,

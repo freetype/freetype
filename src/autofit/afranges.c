@@ -122,6 +122,19 @@
   };
 
 
+  const AF_Script_UniRangeRec  af_cher_uniranges[] =
+  {
+    AF_UNIRANGE_REC(  0x13A0,  0x13FF ),  /* Cherokee            */
+    AF_UNIRANGE_REC(  0xAB70,  0xABBF ),  /* Cherokee Supplement */
+    AF_UNIRANGE_REC(       0,       0 )
+  };
+
+  const AF_Script_UniRangeRec  af_cher_nonbase_uniranges[] =
+  {
+    AF_UNIRANGE_REC( 0, 0 )
+  };
+
+
   const AF_Script_UniRangeRec  af_cyrl_uniranges[] =
   {
     AF_UNIRANGE_REC(  0x0400,  0x04FF ),  /* Cyrillic            */

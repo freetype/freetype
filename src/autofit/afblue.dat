@@ -106,6 +106,15 @@ AF_BLUE_STRING_ENUM AF_BLUE_STRINGS_ARRAY AF_BLUE_STRING_MAX_LEN:
   AF_BLUE_STRING_BENGALI_HEAD
     "ও এ ড ত ন ব ল ক"
 
+  AF_BLUE_STRING_CHEROKEE_CAPITAL
+    "Ꮖ Ꮋ Ꭼ Ꮓ Ꭴ Ꮳ Ꭶ Ꮥ"
+  AF_BLUE_STRING_CHEROKEE_SMALL_ASCENDER
+    "ꮒ ꮤ ꮶ ꭴ ꭾ ꮗ ꮝ ꮿ"
+  AF_BLUE_STRING_CHEROKEE_SMALL
+    "ꮖ ꭼ ꮓ ꮠ ꮳ ꭶ ꮥ ꮻ"
+  AF_BLUE_STRING_CHEROKEE_SMALL_DESCENDER
+    "ᏸ ꮐ ꭹ ꭻ"
+
   AF_BLUE_STRING_CYRILLIC_CAPITAL_TOP
     "Б В Е П З О С Э"
   AF_BLUE_STRING_CYRILLIC_CAPITAL_BOTTOM
@@ -498,6 +507,16 @@ AF_BLUE_STRINGSET_ENUM AF_BLUE_STRINGSETS_ARRAY AF_BLUE_STRINGSET_MAX_LEN:
                                    AF_BLUE_PROPERTY_LATIN_X_HEIGHT   }
     { AF_BLUE_STRING_BENGALI_BASE, 0                                 }
     { AF_BLUE_STRING_MAX,          0                                 }
+
+  AF_BLUE_STRINGSET_CHER
+    { AF_BLUE_STRING_CHEROKEE_CAPITAL,         AF_BLUE_PROPERTY_LATIN_TOP        }
+    { AF_BLUE_STRING_CHEROKEE_CAPITAL,         0                                 }
+    { AF_BLUE_STRING_CHEROKEE_SMALL_ASCENDER,  AF_BLUE_PROPERTY_LATIN_TOP        }
+    { AF_BLUE_STRING_CHEROKEE_SMALL,           AF_BLUE_PROPERTY_LATIN_TOP      |
+                                               AF_BLUE_PROPERTY_LATIN_X_HEIGHT   }
+    { AF_BLUE_STRING_CHEROKEE_SMALL,           0                                 }
+    { AF_BLUE_STRING_CHEROKEE_SMALL_DESCENDER, 0                                 }
+    { AF_BLUE_STRING_MAX,                      0                                 }
 
   AF_BLUE_STRINGSET_CYRL
     { AF_BLUE_STRING_CYRILLIC_CAPITAL_TOP,     AF_BLUE_PROPERTY_LATIN_TOP        }
