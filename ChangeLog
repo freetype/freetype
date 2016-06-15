@@ -1,3 +1,7 @@
+2016-06-14  Alexei Podtelezhnikov  <apodtele@gmail.com>
+
+	* src/smooth/ftgrays.c (gray_hline): Optimize if-condition.
+
 2016-06-13  Werner Lemberg  <wl@gnu.org>
 
 	[autofit] Add support for Cherokee script.
@@ -31,7 +35,7 @@
 
 	[smooth] Re-enable new line renderer on 64-bit archs.
 
-	* src/smooth/ftgrays (gray_render_line): Conditionally re-enable new
+	* src/smooth/ftgrays.c (gray_render_line): Conditionally re-enable new
 	implementation, where it is safe from overflows.
 
 2016-06-08  Alexei Podtelezhnikov  <apodtele@gmail.com>
