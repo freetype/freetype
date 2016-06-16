@@ -1,3 +1,7 @@
+2016-06-16  Werner Lemberg  <wl@gnu.org>
+
+	* src/base/md5.c: Updated to recent version.
+
 2016-06-14  Alexei Podtelezhnikov  <apodtele@gmail.com>
 
 	* src/smooth/ftgrays.c (gray_hline): Optimize if-condition.
