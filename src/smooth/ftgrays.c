@@ -106,7 +106,6 @@
 #define FT_BEGIN_STMNT  do {
 #define FT_END_STMNT    } while ( 0 )
 
-#define FT_MAX( a, b )  ( (a) > (b) ? (a) : (b) )
 #define FT_ABS( a )     ( (a) < 0 ? -(a) : (a) )
 
 
@@ -391,10 +390,6 @@ typedef ptrdiff_t  FT_PtrDist;
   typedef long  TArea;    /* cell areas, coordinate products   */
 
 
-  /* maximum number of gray spans in a call to the span callback */
-#define FT_MAX_GRAY_SPANS  32
-
-
   typedef struct TCell_*  PCell;
 
   typedef struct  TCell_
@@ -405,6 +400,17 @@ typedef ptrdiff_t  FT_PtrDist;
     PCell   next;
 
   } TCell;
+
+
+  /* maximum number of gray spans in a call to the span callback */
+#define FT_MAX_GRAY_SPANS  32
+
+  /* maximum number of gray cells in the buffer */
+#if FT_RENDER_POOL_SIZE > 2048
+#define FT_MAX_GRAY_POOL  ( FT_RENDER_POOL_SIZE / sizeof ( TCell ) )
+#elif
+#define FT_MAX_GRAY_POOL  ( 2048 / sizeof ( TCell ) )
+#endif
 
 
 #if defined( _MSC_VER )      /* Visual C++ (and Intel C++) */
@@ -2024,10 +2030,7 @@ typedef ptrdiff_t  FT_PtrDist;
 
     gray_TWorker  worker[1];
 
-    TCell  buffer[FT_MAX( FT_RENDER_POOL_SIZE, 2048 ) / sizeof ( TCell )];
-    long   buffer_size = sizeof ( buffer );
-    int    band_size   = (int)( buffer_size /
-                                (long)( sizeof ( TCell ) * 8 ) );
+    TCell  buffer[FT_MAX_GRAY_POOL];
 
 
     if ( !raster )
@@ -2098,12 +2101,12 @@ typedef ptrdiff_t  FT_PtrDist;
       ras.clip_box.yMax =  32767L;
     }
 
-    gray_init_cells( RAS_VAR_ buffer, buffer_size );
+    gray_init_cells( RAS_VAR_ buffer, sizeof ( buffer ) );
 
     ras.outline        = *outline;
     ras.num_cells      = 0;
     ras.invalid        = 1;
-    ras.band_size      = band_size;
+    ras.band_size      = FT_MAX_GRAY_POOL / 8;
     ras.num_gray_spans = 0;
     ras.span_y         = 0;
 

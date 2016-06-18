@@ -1,3 +1,12 @@
+2016-06-17  Alexei Podtelezhnikov  <apodtele@gmail.com>
+
+	[raster, smooth] Handle FT_RENDER_POOL_SIZE better.
+
+	* src/raster/ftraster.c (FT_MAX_BLACK_POOL): New macro.
+	(ft_black_render): Updated.
+	* src/smooth/ftgrays.c (FT_MAX_GRAY_POOL): New macro.
+	(gray_raster_render): Updated.
+
 2016-06-16  Werner Lemberg  <wl@gnu.org>
 
 	* src/base/md5.c: Updated to recent version.

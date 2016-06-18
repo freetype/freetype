@@ -179,8 +179,6 @@
 #define FT_ERR_XCAT( x, y )  x ## y
 #define FT_ERR_CAT( x, y )   FT_ERR_XCAT( x, y )
 
-#define FT_MAX( a, b )  ( (a) > (b) ? (a) : (b) )
-
   /* This macro is used to indicate that a function parameter is unused. */
   /* Its purpose is simply to reduce compiler warnings.  Note also that  */
   /* simply defining it as `(void)x' doesn't avoid warnings with certain */
@@ -458,6 +456,12 @@
           (Bool)( CEILING( x ) - x >= ras.precision_half )
 #define IS_TOP_OVERSHOOT( x )    \
           (Bool)( x - FLOOR( x ) >= ras.precision_half )
+
+#if FT_RENDER_POOL_SIZE > 2048
+#define FT_MAX_BLACK_POOL  ( FT_RENDER_POOL_SIZE / sizeof ( Long ) )
+#elif
+#define FT_MAX_BLACK_POOL  ( 2048 / sizeof ( Long ) )
+#endif
 
   /* The most used variables are positioned at the top of the structure. */
   /* Thus, their offset can be coded with less opcodes, resulting in a   */
@@ -3138,7 +3142,7 @@
 
     black_TWorker  worker[1];
 
-    Long  buffer[FT_MAX( FT_RENDER_POOL_SIZE, 2048 ) / sizeof ( Long )];
+    Long  buffer[FT_MAX_BLACK_POOL];
 
 
     if ( !raster )
