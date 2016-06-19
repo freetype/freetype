@@ -408,7 +408,7 @@ typedef ptrdiff_t  FT_PtrDist;
   /* maximum number of gray cells in the buffer */
 #if FT_RENDER_POOL_SIZE > 2048
 #define FT_MAX_GRAY_POOL  ( FT_RENDER_POOL_SIZE / sizeof ( TCell ) )
-#elif
+#else
 #define FT_MAX_GRAY_POOL  ( 2048 / sizeof ( TCell ) )
 #endif
 

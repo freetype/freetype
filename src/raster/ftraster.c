@@ -459,7 +459,7 @@
 
 #if FT_RENDER_POOL_SIZE > 2048
 #define FT_MAX_BLACK_POOL  ( FT_RENDER_POOL_SIZE / sizeof ( Long ) )
-#elif
+#else
 #define FT_MAX_BLACK_POOL  ( 2048 / sizeof ( Long ) )
 #endif
 
