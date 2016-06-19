@@ -452,7 +452,6 @@ typedef ptrdiff_t  FT_PtrDist;
     int                  span_y;
 
     int  band_size;
-    int  band_shoot;
 
     void*       buffer;
     long        buffer_size;
@@ -1920,8 +1919,6 @@ typedef ptrdiff_t  FT_PtrDist;
     if ( num_bands >= 39 )
       num_bands = 39;
 
-    ras.band_shoot = 0;
-
     min   = ras.min_ey;
     max_y = ras.max_ey;
 
@@ -2003,9 +2000,6 @@ typedef ptrdiff_t  FT_PtrDist;
           return 1;
         }
 
-        if ( bottom-top >= ras.band_size )
-          ras.band_shoot++;
-
         band[1].min = bottom;
         band[1].max = middle;
         band[0].min = middle;
@@ -2013,9 +2007,6 @@ typedef ptrdiff_t  FT_PtrDist;
         band++;
       } while ( band >= bands );
     }
-
-    if ( ras.band_shoot > 8 && ras.band_size > 16 )
-      ras.band_size = ras.band_size / 2;
 
     return 0;
   }

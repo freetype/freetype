@@ -1,3 +1,10 @@
+2016-06-18  Alexei Podtelezhnikov  <apodtele@gmail.com>
+
+	[smooth] Remove `band_shoot' that never worked.
+
+	* src/smooth/ftgrays.c (gray_TWorker): Remove `band_shoot'.
+	(gray_convert_glyph): Updated.
+
 2016-06-17  Alexei Podtelezhnikov  <apodtele@gmail.com>
 
 	[raster, smooth] Handle FT_RENDER_POOL_SIZE better.
