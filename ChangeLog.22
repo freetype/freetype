@@ -260,7 +260,7 @@
 2006-04-26  Werner Lemberg  <wl@gnu.org>
 
 	* src/psaux/psobjs.c (shift_elements): Don't use FT_Long but
-	FT_PtrDiff for `delta'.  Reported by Céline PILLET
+	FT_PtrDist for `delta'.  Reported by Céline PILLET
 	<Celine.Pillet@Tagginfo.com>.
 
 2006-04-21  David Turner  <david@freetype.org>
@@ -2371,7 +2371,7 @@
 	(gxv_kern_subtable_fmt1_valueTable_load,
 	gxv_kern_subtable_fmt1_subtable_setup,
 	gxv_kern_subtable_fmt1_entry_validate): Fix C++ compiler errors.
-	(gxv_kern_coverage_validate): Use KERN_DIALECT_UNKWOWN.
+	(gxv_kern_coverage_validate): Use KERN_DIALECT_UNKNOWN.
 	Improve trace message.
 	(gxv_kern_validate_generic): Fix C++ compiler error.
 	Improve trace message.

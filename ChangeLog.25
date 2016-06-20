@@ -3240,7 +3240,7 @@
 
 	*/*: Essentially do `s@/freetype/@/@' where appropriate.
 
-	* CMakeList.txt: Simplify.
+	* CMakeLists.txt: Simplify.
 	* builds/unix/freetype-config.in, builds/unix/freetype2.in: For
 	`--cflags', return a single directory.
 	* builds/unix/install.mk (install): No longer try to remove `cache'

@@ -4000,7 +4000,7 @@
 
 	[autofit] Add bluezones for CJK Ideographs.
 
-	To remove extremas of vertical strokes of CJK Ideographs at
+	To remove extrema of vertical strokes of CJK Ideographs at
 	low resolution and make the top and bottom horizontal stems
 	aligned, bluezones for CJK Ideographs are calculated from
 	sample glyphs.  At present, vertical bluezones (bluezones

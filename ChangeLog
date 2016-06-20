@@ -1869,7 +1869,7 @@
 
 2015-11-27  Tamas Kenez  <tamas.kenez@adasworks.com>
 
-	[cmake] Make `FindHarfbuzz' observe the REQUIRED option.
+	[cmake] Make `FindHarfBuzz' observe the REQUIRED option.
 
 	* builds/cmake/FindHarfBuzz.cmake: Implement it.
 

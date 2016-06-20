@@ -571,7 +571,7 @@
 	doing anything else.  This avoids unnecessary heap allocations
 	(400KByte of heap memory for the LZW decoder).
 
-	* src/gzip/ftgzip.c (FT_Stream_OpenGZip): Ditto for the gzip
+	* src/gzip/ftgzip.c (FT_Stream_OpenGzip): Ditto for the gzip
 	decoder, although the code savings are smaller.
 
 	* docs/CHANGES: Updated.
@@ -2289,7 +2289,7 @@
 
 	* src/cff/cffgload.h (CFF_Builder): Remove `error'.
 	* src/cff/cffgload.c (cff_decoder_parse_charstrings): Replace
-	`Memory_Error' with `Fail' und update all users.
+	`Memory_Error' with `Fail' and update all users.
 
 2004-05-11  Werner Lemberg  <wl@gnu.org>
 
@@ -6973,7 +6973,7 @@
 
 	* src/pshinter/pshalgo2.c (psh2_glyph_find_strong_points),
 	src/pshinter/pshalgo3.c (psh3_glyph_find_strong_points): Adding fix
-	to prevent seg fault when hints are provided in an empty glyph.
+	to prevent segfault when hints are provided in an empty glyph.
 
 	* src/cache/ftccache.i (GEN_CACHE_LOOKUP) [FT_DEBUG_LEVEL_ERROR]:
 	Removed conditional code.  This fixes a bug that prevented

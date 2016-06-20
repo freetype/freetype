@@ -2815,7 +2815,7 @@
 	ft_bitmap_glyph_class and ft_outline_glyph_class will be allocated
 	in the pic_container instead of the global scope and use macros from
 	basepic.h to access them.
-	* src/base/ftbbox.c allocate bbox_interface stract on the stack
+	* src/base/ftbbox.c allocate bbox_interface struct on the stack
 	instead of the global scope when FT_CONFIG_OPTION_PIC is defined.
 	* src/base/ftstroke.c access ft_outline_glyph_class allocated in
 	ftglyph.c via macros from basepic.h
