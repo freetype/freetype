@@ -1937,34 +1937,26 @@ typedef ptrdiff_t  FT_PtrDist;
         TPos  bottom, top, middle;
         int   error;
 
-        {
-          PCell  cells_max;
-          int    yindex;
-          long   cell_start, cell_end, cell_mod;
 
+        /* memory management */
+        {
+          int    ycount = band->max - band->min;
+          int    cell_start;
+
+
+          cell_start = ( ycount * sizeof( PCell ) + sizeof( TCell ) - 1 ) /
+                       sizeof( TCell );
+
+          if ( FT_MAX_GRAY_POOL - cell_start < 2 )
+            goto ReduceBands;
+
+          ras.cells     = (PCell)ras.buffer + cell_start;
+          ras.max_cells = FT_MAX_GRAY_POOL - cell_start;
 
           ras.ycells = (PCell*)ras.buffer;
-          ras.ycount = band->max - band->min;
-
-          cell_start = (long)sizeof ( PCell ) * ras.ycount;
-          cell_mod   = cell_start % (long)sizeof ( TCell );
-          if ( cell_mod > 0 )
-            cell_start += (long)sizeof ( TCell ) - cell_mod;
-
-          cell_end  = ras.buffer_size;
-          cell_end -= cell_end % (long)sizeof ( TCell );
-
-          cells_max = (PCell)( (char*)ras.buffer + cell_end );
-          ras.cells = (PCell)( (char*)ras.buffer + cell_start );
-          if ( ras.cells >= cells_max )
-            goto ReduceBands;
-
-          ras.max_cells = cells_max - ras.cells;
-          if ( ras.max_cells < 2 )
-            goto ReduceBands;
-
-          for ( yindex = 0; yindex < ras.ycount; yindex++ )
-            ras.ycells[yindex] = NULL;
+          ras.ycount = ycount;
+          while ( ycount )
+            ras.ycells[--ycount] = NULL;
         }
 
         ras.num_cells = 0;

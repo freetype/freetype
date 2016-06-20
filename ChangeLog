@@ -1,3 +1,9 @@
+2016-06-20  Alexei Podtelezhnikov  <apodtele@gmail.com>
+
+	[smooth] Sanitize memory managenent.
+
+	* src/smooth/ftgrays.c (gray_convert_glyph): Cleaned up.
+
 2016-06-18  Alexei Podtelezhnikov  <apodtele@gmail.com>
 
 	[smooth] Remove `band_shoot' that never worked.
