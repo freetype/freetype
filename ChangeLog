@@ -1,3 +1,9 @@
+2016-06-20  Werner Lemberg  <wl@gnu.org>
+
+	[smooth] Remove compiler warnings.
+
+	* src/smooth/ftgrays.c (gray_convert_glyph): Fix reports from clang.
+
 2016-06-20  Alexei Podtelezhnikov  <apodtele@gmail.com>
 
 	[smooth] Sanitize memory managenent.

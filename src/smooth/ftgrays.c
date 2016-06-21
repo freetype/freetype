@@ -1940,21 +1940,21 @@ typedef ptrdiff_t  FT_PtrDist;
 
         /* memory management */
         {
-          int    ycount = band->max - band->min;
-          int    cell_start;
+          unsigned long  ycount = (unsigned long)( band->max - band->min );
+          unsigned long  cell_start;
 
 
-          cell_start = ( ycount * sizeof( PCell ) + sizeof( TCell ) - 1 ) /
-                       sizeof( TCell );
+          cell_start = ( ycount * sizeof ( PCell ) + sizeof ( TCell ) - 1 ) /
+                       sizeof ( TCell );
 
           if ( FT_MAX_GRAY_POOL - cell_start < 2 )
             goto ReduceBands;
 
           ras.cells     = (PCell)ras.buffer + cell_start;
-          ras.max_cells = FT_MAX_GRAY_POOL - cell_start;
+          ras.max_cells = (FT_PtrDist)( FT_MAX_GRAY_POOL - cell_start );
 
           ras.ycells = (PCell*)ras.buffer;
-          ras.ycount = ycount;
+          ras.ycount = (TPos)ycount;
           while ( ycount )
             ras.ycells[--ycount] = NULL;
         }
