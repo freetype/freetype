@@ -1056,7 +1056,7 @@
 
 2001-08-30  Anthony Feik  <afeick@hotmail.com>
 
-	* src/type1/t1afm.c (T1_Read_Afm): Now correctly sets the flag
+	* src/type1/t1afm.c (T1_Read_AFM): Now correctly sets the flag
 	FT_FACE_FLAG_KERNING when appropriate for Type1 + AFM files.
 
 2001-08-25  Werner Lemberg  <wl@gnu.org>
@@ -1759,7 +1759,7 @@
 
 2001-03-20  Werner Lemberg  <wl@gnu.org>
 
-	* builds/win32/detekt.mk: Fix .PHONY target for Intel compiler.
+	* builds/win32/detect.mk: Fix .PHONY target for Intel compiler.
 
 2001-03-20  David Turner  <david.turner@freetype.org>
 
@@ -2338,7 +2338,7 @@
 2000-12-06  Werner Lemberg  <wl@gnu.org>
 
 	* builds/module.mk: Replaced `xxx #' with `xxx$(space).
-	* builds/os2/detekt.mk, builds/win32/detekt.mk: Moved comment to
+	* builds/os2/detect.mk, builds/win32/detect.mk: Moved comment to
 	avoid trailing spaces in variable.
 	* builds/freetype.mk: Use $(D) instead of $D to make statement more
 	readable.

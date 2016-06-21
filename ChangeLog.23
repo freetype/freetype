@@ -197,7 +197,7 @@
 	Fix Savannah bug #28395.
 
 	* src/truetype/ttdriver.c (Load_Glyph), src/type1/t1gload.c
-	(T1_Loada_Glyph): Don't check `num_glyphs' if incremental interface
+	(T1_Load_Glyph): Don't check `num_glyphs' if incremental interface
 	is used.
 
 2010-01-05  Ken Sharp  <ken.sharp@artifex.com>

@@ -5116,7 +5116,7 @@
 	ft_glyph_bbox_subpixels, ft_glyph_bbox_gridfit,
 	ft_glyph_bbox_truncate, ft_glyph_bbox_pixels): Replaced with
 	FT_GLYPH_BBOX_UNSCALED, FT_GLYPH_BBOX_SUBPIXELS,
-	FT_GLYPH_BBIX_GRIDFIT, FT_GLYPH_BBOX_TRUNCATE, FT_GLYPH_BBOX_PIXELS.
+	FT_GLYPH_BBOX_GRIDFIT, FT_GLYPH_BBOX_TRUNCATE, FT_GLYPH_BBOX_PIXELS.
 	The lowercase variants are now (deprecated aliases) to the uppercase
 	versions.
 	Updated all other files.

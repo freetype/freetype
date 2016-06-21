@@ -2014,7 +2014,7 @@
 	(compute_glyph_metrics): Handle `compatible widths' option.
 	(tt_loader_init): Handle ClearType GETINFO information bits.
 
-	* src/truetype/rules.mk (TT_DRC_SRC): Updated.
+	* src/truetype/rules.mk (TT_DRV_SRC): Updated.
 
 	* src/truetype/ttinterp.c: Include `ttsubpix.h'.
 	[Where necessary, changes below are guarded by
