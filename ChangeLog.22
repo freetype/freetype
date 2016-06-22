@@ -360,7 +360,7 @@
 	* include/freetype/internal/ftgloadr.h (FT_SUBGLYPH_FLAGS_*): Moved
 	to...
 	* include/freetype/freetype.h (FT_SUBGLYPH_FLAGS_*): Here.
-	(FT_Get_SybGlyph_Info): New declaration.
+	(FT_Get_SubGlyph_Info): New declaration.
 
 	* src/base/ftobjs.c (FT_Get_SubGlyph_Info): New function.
 

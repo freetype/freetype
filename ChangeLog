@@ -1345,7 +1345,7 @@
 	* src/autofit/afscript.h: Add another parameter to `SCRIPT',
 	specifying hinting direction.
 
-	* src/autofit/afglobal.c, scr/autofit/afglobal.h,
+	* src/autofit/afglobal.c, src/autofit/afglobal.h,
 	src/autofit/afpic.c, src/autofit/afranges.h, src/autofit/afshaper.c,
 	src/autofit/aftypes.h: Extend `SCRIPT' definitions.
 
@@ -3509,7 +3509,7 @@
 	* src/autofit/aftypes.h [FT_DEBUG_AUTOFIT]: Include
 	FT_CONFIG_STANDARD_LIBRARY_H earlier.
 
-	* src/truetype/ttpic.h: Include FT_INTERNL_PIC_H.
+	* src/truetype/ttpic.h: Include FT_INTERNAL_PIC_H.
 
 2015-07-07  Werner Lemberg  <wl@gnu.org>
 

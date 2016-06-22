@@ -4010,7 +4010,7 @@
 	* src/cff/cffload.h, src/cff/cffobjs.h, src/cff/cffparse.h: Don't
 	include FT_INTERNAL_CFF_TYPES_H but cfftypes.h directly.
 
-	* src/cif/cidriver.c: Include FT_SERVICE_POSTSCRIPT_INFO_H.
+	* src/cid/cidriver.c: Include FT_SERVICE_POSTSCRIPT_INFO_H.
 	(cid_ps_get_font_info): New function.
 	(cid_service_ps_info): New service.
 	(cid_services): Updated.
@@ -5346,7 +5346,7 @@
 	* src/cff/cffload (cff_subfont_load): Fix default values of
 	expansion_factor and blue_scale.
 
-	* src/cif/cidtoken.h, src/type1/t1tokens.h: Use T1_FIELD_FIXED_1000
+	* src/cid/cidtoken.h, src/type1/t1tokens.h: Use T1_FIELD_FIXED_1000
 	for blue_scale.
 
 	* src/pshinter/pshglob.c (psh_globals_new): Fix default value of
@@ -7155,7 +7155,7 @@
 	to ...
 	(FT_Glyph_{Init,Done,Transform,GetBBox,Copy,Prepare}Func): This.
 	(FTRenderer_{render,transform,getCBox,setMode}): Renamed to ...
-	(FT_Renderer_{RenderFunc,TransformFunc,GetCBoxFunc,SeteModeFunc}):
+	(FT_Renderer_{RenderFunc,TransformFunc,GetCBoxFunc,SetModeFunc}):
 	This.
 
 	Updated all affected code.
