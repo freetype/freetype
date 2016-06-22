@@ -1516,7 +1516,7 @@ typedef ptrdiff_t  FT_PtrDist;
 
   /*************************************************************************/
   /*                                                                       */
-  /*  The following function should only compile in stand-alone mode,      */
+  /*  The following functions should only compile in stand-alone mode,     */
   /*  i.e., when building this component without the rest of FreeType.     */
   /*                                                                       */
   /*************************************************************************/
@@ -1794,51 +1794,82 @@ typedef ptrdiff_t  FT_PtrDist;
     return FT_THROW( Invalid_Outline );
   }
 
-#endif /* STANDALONE_ */
-
 
   /*************************************************************************/
   /*                                                                       */
-  /* Compute the outline bounding box.                                     */
+  /* <Function>                                                            */
+  /*    FT_Outline_Get_CBox                                                */
   /*                                                                       */
+  /* <Description>                                                         */
+  /*    Return an outline's `control box'.  The control box encloses all   */
+  /*    the outline's points, including Bézier control points.  Though it  */
+  /*    coincides with the exact bounding box for most glyphs, it can be   */
+  /*    slightly larger in some situations (like when rotating an outline  */
+  /*    that contains Bézier outside arcs).                                */
+  /*                                                                       */
+  /*    Computing the control box is very fast, while getting the bounding */
+  /*    box can take much more time as it needs to walk over all segments  */
+  /*    and arcs in the outline.  To get the latter, you can use the       */
+  /*    `ftbbox' component, which is dedicated to this single task.        */
+  /*                                                                       */
+  /* <Input>                                                               */
+  /*    outline :: A pointer to the source outline descriptor.             */
+  /*                                                                       */
+  /* <Output>                                                              */
+  /*    acbox   :: The outline's control box.                              */
+  /*                                                                       */
+  /* <Note>                                                                */
+  /*    See @FT_Glyph_Get_CBox for a discussion of tricky fonts.           */
+  /*                                                                       */
+
   static void
-  gray_compute_cbox( RAS_ARG )
+  FT_Outline_Get_CBox( const FT_Outline*  outline,
+                       FT_BBox           *acbox )
   {
-    FT_Outline*  outline = &ras.outline;
-    FT_Vector*   vec     = outline->points;
-    FT_Vector*   limit   = vec + outline->n_points;
+    TPos  xMin, yMin, xMax, yMax;
 
 
-    if ( outline->n_points <= 0 )
+    if ( outline && acbox )
     {
-      ras.min_ex = ras.max_ex = 0;
-      ras.min_ey = ras.max_ey = 0;
-      return;
+      if ( outline->n_points == 0 )
+      {
+        xMin = 0;
+        yMin = 0;
+        xMax = 0;
+        yMax = 0;
+      }
+      else
+      {
+        FT_Vector*  vec   = outline->points;
+        FT_Vector*  limit = vec + outline->n_points;
+
+
+        xMin = xMax = vec->x;
+        yMin = yMax = vec->y;
+        vec++;
+
+        for ( ; vec < limit; vec++ )
+        {
+          TPos  x, y;
+
+
+          x = vec->x;
+          if ( x < xMin ) xMin = x;
+          if ( x > xMax ) xMax = x;
+
+          y = vec->y;
+          if ( y < yMin ) yMin = y;
+          if ( y > yMax ) yMax = y;
+        }
+      }
+      acbox->xMin = xMin;
+      acbox->xMax = xMax;
+      acbox->yMin = yMin;
+      acbox->yMax = yMax;
     }
-
-    ras.min_ex = ras.max_ex = vec->x;
-    ras.min_ey = ras.max_ey = vec->y;
-
-    vec++;
-
-    for ( ; vec < limit; vec++ )
-    {
-      TPos  x = vec->x;
-      TPos  y = vec->y;
-
-
-      if ( x < ras.min_ex ) ras.min_ex = x;
-      if ( x > ras.max_ex ) ras.max_ex = x;
-      if ( y < ras.min_ey ) ras.min_ey = y;
-      if ( y > ras.max_ey ) ras.max_ey = y;
-    }
-
-    /* truncate the bounding box to integer pixels */
-    ras.min_ex = ras.min_ex >> 6;
-    ras.min_ey = ras.min_ey >> 6;
-    ras.max_ex = ( ras.max_ex + 63 ) >> 6;
-    ras.max_ey = ( ras.max_ey + 63 ) >> 6;
   }
+
+#endif /* STANDALONE_ */
 
 
   typedef struct  gray_TBand_
@@ -1886,15 +1917,21 @@ typedef ptrdiff_t  FT_PtrDist;
   static int
   gray_convert_glyph( RAS_ARG )
   {
+    FT_BBox               cbox;
+    FT_BBox*              clip;
     gray_TBand            bands[40];
     gray_TBand* volatile  band;
     int volatile          n, num_bands;
     TPos volatile         min, max, max_y;
-    FT_BBox*              clip;
 
 
-    /* Set up state in the raster object */
-    gray_compute_cbox( RAS_VAR );
+    FT_Outline_Get_CBox( &ras.outline, &cbox );
+
+    /* truncate the bounding box to integer pixels */
+    ras.min_ex = cbox.xMin >> 6;
+    ras.min_ey = cbox.yMin >> 6;
+    ras.max_ex = ( cbox.xMax + 63 ) >> 6;
+    ras.max_ey = ( cbox.yMax + 63 ) >> 6;
 
     /* clip to target bitmap, exit if nothing to do */
     clip = &ras.clip_box;

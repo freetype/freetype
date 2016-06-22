@@ -1,3 +1,11 @@
+2016-06-21  Alexei Podtelezhnikov  <apodtele@gmail.com>
+
+	[smooth] Use `FT_Outline_Get_CBox'.
+
+	* src/smooth/ftgrays.c [STANDALONE_]: Duplicate `FT_Outline_Get_CBox'.
+	(gray_compute_cbox): Remove this function.
+	(gray_convert_glyph): Update to use `FT_Outline_Get_CBox'.
+
 2016-06-20  Werner Lemberg  <wl@gnu.org>
 
 	[smooth] Remove compiler warnings.
