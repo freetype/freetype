@@ -1,3 +1,15 @@
+2016-06-22  Alexei Podtelezhnikov  <apodtele@gmail.com>
+
+	[smooth] Consolidate boundary checks.
+
+	Removing the checks from `gray_hline' shaves 1% off rendering speed.
+
+	* src/smooth/ftgrays.c [STANDALONE_]: Duplicate `FT_MIN' and `FT_MAX'.
+	(gray_TWorker): No need to store `clip_box'.
+	(gray_hline): Remove unnecessary boundary checks.
+	(gray_convert_glyph): Move boundary checks from here.
+	(gray_raster_render): ... to here and consolidate.
+
 2016-06-21  Alexei Podtelezhnikov  <apodtele@gmail.com>
 
 	[smooth] Use `FT_Outline_Get_CBox'.

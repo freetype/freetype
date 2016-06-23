@@ -106,6 +106,8 @@
 #define FT_BEGIN_STMNT  do {
 #define FT_END_STMNT    } while ( 0 )
 
+#define FT_MIN( a, b )  ( (a) < (b) ? (a) : (b) )
+#define FT_MAX( a, b )  ( (a) > (b) ? (a) : (b) )
 #define FT_ABS( a )     ( (a) < 0 ? -(a) : (a) )
 
 
@@ -442,7 +444,6 @@ typedef ptrdiff_t  FT_PtrDist;
 
     FT_Outline  outline;
     FT_Bitmap   target;
-    FT_BBox     clip_box;
 
     FT_Span     gray_spans[FT_MAX_GRAY_SPANS];
     int         num_gray_spans;
@@ -1373,14 +1374,6 @@ typedef ptrdiff_t  FT_PtrDist;
     y += (TCoord)ras.min_ey;
     x += (TCoord)ras.min_ex;
 
-    /* FT_Span.x is a 16-bit short, so limit our coordinates appropriately */
-    if ( x >= 32767 )
-      x = 32767;
-
-    /* FT_Span.y is an integer, so limit our coordinates appropriately */
-    if ( y >= FT_INT_MAX )
-      y = FT_INT_MAX;
-
     if ( coverage )
     {
       FT_Span*  span;
@@ -1917,37 +1910,11 @@ typedef ptrdiff_t  FT_PtrDist;
   static int
   gray_convert_glyph( RAS_ARG )
   {
-    FT_BBox               cbox;
-    FT_BBox*              clip;
     gray_TBand            bands[40];
     gray_TBand* volatile  band;
     int volatile          n, num_bands;
     TPos volatile         min, max, max_y;
 
-
-    FT_Outline_Get_CBox( &ras.outline, &cbox );
-
-    /* truncate the bounding box to integer pixels */
-    ras.min_ex = cbox.xMin >> 6;
-    ras.min_ey = cbox.yMin >> 6;
-    ras.max_ex = ( cbox.xMax + 63 ) >> 6;
-    ras.max_ey = ( cbox.yMax + 63 ) >> 6;
-
-    /* clip to target bitmap, exit if nothing to do */
-    clip = &ras.clip_box;
-
-    if ( ras.max_ex <= clip->xMin || ras.min_ex >= clip->xMax ||
-         ras.max_ey <= clip->yMin || ras.min_ey >= clip->yMax )
-      return 0;
-
-    if ( ras.min_ex < clip->xMin ) ras.min_ex = clip->xMin;
-    if ( ras.min_ey < clip->yMin ) ras.min_ey = clip->yMin;
-
-    if ( ras.max_ex > clip->xMax ) ras.max_ex = clip->xMax;
-    if ( ras.max_ey > clip->yMax ) ras.max_ey = clip->yMax;
-
-    ras.count_ex = ras.max_ex - ras.min_ex;
-    ras.count_ey = ras.max_ey - ras.min_ey;
 
     /* set up vertical bands */
     num_bands = (int)( ( ras.max_ey - ras.min_ey ) / ras.band_size );
@@ -2047,6 +2014,7 @@ typedef ptrdiff_t  FT_PtrDist;
   {
     const FT_Outline*  outline     = (const FT_Outline*)params->source;
     const FT_Bitmap*   target_map  = params->target;
+    FT_BBox            cbox, clip;
 
     gray_TWorker  worker[1];
 
@@ -2088,38 +2056,49 @@ typedef ptrdiff_t  FT_PtrDist;
     if ( !( params->flags & FT_RASTER_FLAG_AA ) )
       return FT_THROW( Invalid_Mode );
 
+    FT_Outline_Get_CBox( outline, &cbox );
+
     /* reject too large outline coordinates */
-    {
-      FT_Vector*  vec   = outline->points;
-      FT_Vector*  limit = vec + outline->n_points;
+    if ( cbox.xMin < -0x1000000L || cbox.xMax > 0x1000000L ||
+         cbox.yMin < -0x1000000L || cbox.yMax > 0x1000000L )
+      return FT_THROW( Invalid_Outline );
 
-
-      for ( ; vec < limit; vec++ )
-      {
-        if ( vec->x < -0x1000000L || vec->x > 0x1000000L ||
-             vec->y < -0x1000000L || vec->y > 0x1000000L )
-         return FT_THROW( Invalid_Outline );
-      }
-    }
+    /* truncate the bounding box to integer pixels */
+    cbox.xMin = cbox.xMin >> 6;
+    cbox.yMin = cbox.yMin >> 6;
+    cbox.xMax = ( cbox.xMax + 63 ) >> 6;
+    cbox.yMax = ( cbox.yMax + 63 ) >> 6;
 
     /* compute clipping box */
     if ( !( params->flags & FT_RASTER_FLAG_DIRECT ) )
     {
       /* compute clip box from target pixmap */
-      ras.clip_box.xMin = 0;
-      ras.clip_box.yMin = 0;
-      ras.clip_box.xMax = (FT_Pos)target_map->width;
-      ras.clip_box.yMax = (FT_Pos)target_map->rows;
+      clip.xMin = 0;
+      clip.yMin = 0;
+      clip.xMax = (FT_Pos)target_map->width;
+      clip.yMax = (FT_Pos)target_map->rows;
     }
     else if ( params->flags & FT_RASTER_FLAG_CLIP )
-      ras.clip_box = params->clip_box;
+      clip = params->clip_box;
     else
     {
-      ras.clip_box.xMin = -32768L;
-      ras.clip_box.yMin = -32768L;
-      ras.clip_box.xMax =  32767L;
-      ras.clip_box.yMax =  32767L;
+      clip.xMin = -32768L;
+      clip.yMin = -32768L;
+      clip.xMax =  32767L;
+      clip.yMax =  32767L;
     }
+
+    /* clip to target bitmap, exit if nothing to do */
+    ras.min_ex = FT_MAX( cbox.xMin, clip.xMin );
+    ras.min_ey = FT_MAX( cbox.yMin, clip.yMin );
+    ras.max_ex = FT_MIN( cbox.xMax, clip.xMax );
+    ras.max_ey = FT_MIN( cbox.yMax, clip.yMax );
+
+    if ( ras.max_ex <= ras.min_ex || ras.max_ey <= ras.min_ey )
+      return 0;
+
+    ras.count_ex = ras.max_ex - ras.min_ex;
+    ras.count_ey = ras.max_ey - ras.min_ey;
 
     gray_init_cells( RAS_VAR_ buffer, sizeof ( buffer ) );
 
