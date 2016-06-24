@@ -1,3 +1,12 @@
+2016-06-23  Alexei Podtelezhnikov  <apodtele@gmail.com>
+
+	[smooth] Consolidate memory management.
+
+	* src/smooth/ftgrays.c (gray_init_cells): Remove function.
+	(gray_TWorker): Remove fields that become local variables.
+	(gray_raster_render): Move rendering buffer declaration from here.
+	(gray_convert_glyph): ... to here and update accordingly.
+
 2016-06-22  Alexei Podtelezhnikov  <apodtele@gmail.com>
 
 	[smooth] Consolidate boundary checks.

@@ -452,11 +452,6 @@ typedef ptrdiff_t  FT_PtrDist;
     void*                render_span_data;
     int                  span_y;
 
-    int  band_size;
-
-    void*       buffer;
-    long        buffer_size;
-
     PCell*     ycells;
     TPos       ycount;
 
@@ -506,27 +501,6 @@ typedef ptrdiff_t  FT_PtrDist;
   }
 
 #endif /* FT_DEBUG_LEVEL_TRACE */
-
-
-  /*************************************************************************/
-  /*                                                                       */
-  /* Initialize the cells table.                                           */
-  /*                                                                       */
-  static void
-  gray_init_cells( RAS_ARG_ void*  buffer,
-                            long   byte_size )
-  {
-    ras.buffer      = buffer;
-    ras.buffer_size = byte_size;
-
-    ras.ycells      = (PCell*) buffer;
-    ras.cells       = NULL;
-    ras.max_cells   = 0;
-    ras.num_cells   = 0;
-    ras.area        = 0;
-    ras.cover       = 0;
-    ras.invalid     = 1;
-  }
 
 
   /*************************************************************************/
@@ -1910,6 +1884,8 @@ typedef ptrdiff_t  FT_PtrDist;
   static int
   gray_convert_glyph( RAS_ARG )
   {
+    TCell                 buffer[FT_MAX_GRAY_POOL];
+    const int             band_size = FT_MAX_GRAY_POOL / 8;
     gray_TBand            bands[40];
     gray_TBand* volatile  band;
     int volatile          n, num_bands;
@@ -1917,7 +1893,7 @@ typedef ptrdiff_t  FT_PtrDist;
 
 
     /* set up vertical bands */
-    num_bands = (int)( ( ras.max_ey - ras.min_ey ) / ras.band_size );
+    num_bands = (int)( ( ras.max_ey - ras.min_ey ) / band_size );
     if ( num_bands == 0 )
       num_bands = 1;
     if ( num_bands >= 39 )
@@ -1928,7 +1904,7 @@ typedef ptrdiff_t  FT_PtrDist;
 
     for ( n = 0; n < num_bands; n++, min = max )
     {
-      max = min + ras.band_size;
+      max = min + band_size;
       if ( n == num_bands - 1 || max > max_y )
         max = max_y;
 
@@ -1954,10 +1930,10 @@ typedef ptrdiff_t  FT_PtrDist;
           if ( FT_MAX_GRAY_POOL - cell_start < 2 )
             goto ReduceBands;
 
-          ras.cells     = (PCell)ras.buffer + cell_start;
+          ras.cells     = buffer + cell_start;
           ras.max_cells = (FT_PtrDist)( FT_MAX_GRAY_POOL - cell_start );
 
-          ras.ycells = (PCell*)ras.buffer;
+          ras.ycells = (PCell*)buffer;
           ras.ycount = (TPos)ycount;
           while ( ycount )
             ras.ycells[--ycount] = NULL;
@@ -2017,8 +1993,6 @@ typedef ptrdiff_t  FT_PtrDist;
     FT_BBox            cbox, clip;
 
     gray_TWorker  worker[1];
-
-    TCell  buffer[FT_MAX_GRAY_POOL];
 
 
     if ( !raster )
@@ -2100,12 +2074,7 @@ typedef ptrdiff_t  FT_PtrDist;
     ras.count_ex = ras.max_ex - ras.min_ex;
     ras.count_ey = ras.max_ey - ras.min_ey;
 
-    gray_init_cells( RAS_VAR_ buffer, sizeof ( buffer ) );
-
     ras.outline        = *outline;
-    ras.num_cells      = 0;
-    ras.invalid        = 1;
-    ras.band_size      = FT_MAX_GRAY_POOL / 8;
     ras.num_gray_spans = 0;
     ras.span_y         = 0;
 
