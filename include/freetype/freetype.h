@@ -2578,6 +2578,10 @@ FT_BEGIN_HEADER
   /*    don't have a corresponding glyph in the font).  See the discussion */
   /*    of the @FT_FACE_FLAG_CID_KEYED flag for more details.              */
   /*                                                                       */
+  /*    If you receive `FT_Err_Glyph_Too_Big', try getting the glyph       */
+  /*    outline at EM size, then scale it manually and fill it as a        */
+  /*    graphics operation.                                                */
+  /*                                                                       */
   FT_EXPORT( FT_Error )
   FT_Load_Glyph( FT_Face   face,
                  FT_UInt   glyph_index,
