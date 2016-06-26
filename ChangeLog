@@ -1,4 +1,12 @@
-2016-04-24  Werner Lemberg  <wl@gnu.org>
+2016-06-26  Alexei Podtelezhnikov  <apodtele@gmail.com>
+
+	[pcf] Fix handling of very large fonts (#47708).
+
+	* src/pcf/pcfread.c (pcf_get_encodings): Make `encodingOffset' an
+	unsigned short.
+	Only reject `0xFFFF' as an invalid encoding offset.
+
+2016-06-25  Werner Lemberg  <wl@gnu.org>
 
 	[truetype] Really fix deallocation in case of error (#47726).
 
