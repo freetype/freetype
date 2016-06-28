@@ -1,5 +1,14 @@
 2016-06-26  Alexei Podtelezhnikov  <apodtele@gmail.com>
 
+	[smooth] Minor clean-ups.
+
+	* src/smooth/ftgrays.c (gray_convert_glyph): Do not use volatile
+	qualifier.
+	(gray_raster_render): Move span initializations from here.
+	(gray_sweep): ... to here and remove unused `target' argument.
+
+2016-06-26  Alexei Podtelezhnikov  <apodtele@gmail.com>
+
 	[pcf] Fix handling of very large fonts (#47708).
 
 	* src/pcf/pcfread.c (pcf_get_encodings): Make `encodingOffset' an

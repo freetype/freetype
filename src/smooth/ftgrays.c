@@ -1408,17 +1408,16 @@ typedef ptrdiff_t  FT_PtrDist;
 
 
   static void
-  gray_sweep( RAS_ARG_ const FT_Bitmap*  target )
+  gray_sweep( RAS_ARG )
   {
     int  yindex;
-
-    FT_UNUSED( target );
 
 
     if ( ras.num_cells == 0 )
       return;
 
     ras.num_gray_spans = 0;
+    ras.span_y         = 0;
 
     FT_TRACE7(( "gray_sweep: start\n" ));
 
@@ -1884,12 +1883,12 @@ typedef ptrdiff_t  FT_PtrDist;
   static int
   gray_convert_glyph( RAS_ARG )
   {
-    TCell                 buffer[FT_MAX_GRAY_POOL];
-    const int             band_size = FT_MAX_GRAY_POOL / 8;
-    gray_TBand            bands[40];
-    gray_TBand* volatile  band;
-    int volatile          n, num_bands;
-    TPos volatile         min, max, max_y;
+    TCell        buffer[FT_MAX_GRAY_POOL];
+    const int    band_size = FT_MAX_GRAY_POOL / 8;
+    gray_TBand   bands[40];
+    gray_TBand*  band;
+    int          n, num_bands;
+    TPos         min, max, max_y;
 
 
     /* set up vertical bands */
@@ -1949,7 +1948,7 @@ typedef ptrdiff_t  FT_PtrDist;
 
         if ( !error )
         {
-          gray_sweep( RAS_VAR_ &ras.target );
+          gray_sweep( RAS_VAR );
           band--;
           continue;
         }
@@ -2075,8 +2074,6 @@ typedef ptrdiff_t  FT_PtrDist;
     ras.count_ey = ras.max_ey - ras.min_ey;
 
     ras.outline        = *outline;
-    ras.num_gray_spans = 0;
-    ras.span_y         = 0;
 
     if ( params->flags & FT_RASTER_FLAG_DIRECT )
     {
