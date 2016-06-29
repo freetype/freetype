@@ -303,7 +303,7 @@ typedef ptrdiff_t  FT_PtrDist;
 
 #else /* FT_STATIC_RASTER */
 
-#define RAS_ARG   /* empty */
+#define RAS_ARG   void
 #define RAS_ARG_  /* empty */
 #define RAS_VAR   /* empty */
 #define RAS_VAR_  /* empty */
@@ -453,7 +453,6 @@ typedef ptrdiff_t  FT_PtrDist;
     int                  span_y;
 
     PCell*     ycells;
-    TPos       ycount;
 
   } gray_TWorker, *gray_PWorker;
 
@@ -486,7 +485,7 @@ typedef ptrdiff_t  FT_PtrDist;
     int  yindex;
 
 
-    for ( yindex = 0; yindex < ras.ycount; yindex++ )
+    for ( yindex = 0; yindex < ras.count_ey; yindex++ )
     {
       PCell  cell;
 
@@ -1421,7 +1420,7 @@ typedef ptrdiff_t  FT_PtrDist;
 
     FT_TRACE7(( "gray_sweep: start\n" ));
 
-    for ( yindex = 0; yindex < ras.ycount; yindex++ )
+    for ( yindex = 0; yindex < ras.count_ey; yindex++ )
     {
       PCell   cell  = ras.ycells[yindex];
       TCoord  cover = 0;
@@ -1919,8 +1918,8 @@ typedef ptrdiff_t  FT_PtrDist;
 
         /* memory management */
         {
-          unsigned long  ycount = (unsigned long)( band->max - band->min );
-          unsigned long  cell_start;
+          size_t  ycount = (size_t)( band->max - band->min );
+          size_t  cell_start;
 
 
           cell_start = ( ycount * sizeof ( PCell ) + sizeof ( TCell ) - 1 ) /
@@ -1933,7 +1932,6 @@ typedef ptrdiff_t  FT_PtrDist;
           ras.max_cells = (FT_PtrDist)( FT_MAX_GRAY_POOL - cell_start );
 
           ras.ycells = (PCell*)buffer;
-          ras.ycount = (TPos)ycount;
           while ( ycount )
             ras.ycells[--ycount] = NULL;
         }
@@ -1965,9 +1963,7 @@ typedef ptrdiff_t  FT_PtrDist;
         /* be some problems.                                     */
         if ( middle == bottom )
         {
-#ifdef FT_DEBUG_LEVEL_TRACE
           FT_TRACE7(( "gray_convert_glyph: rotten glyph\n" ));
-#endif
           return 1;
         }
 

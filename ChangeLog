@@ -1,4 +1,11 @@
-2016-06-26  Alexei Podtelezhnikov  <apodtele@gmail.com>
+2016-06-28  Alexei Podtelezhnikov  <apodtele@gmail.com>
+
+	[smooth] Minor clean-ups.
+
+	* src/smooth/ftgrays.c (gray_TWorker): Remove redundant `ycount'.
+	(gray_sweep, gray_convert_glyph, gray_dump_cells): Updated.
+
+2016-06-27  Alexei Podtelezhnikov  <apodtele@gmail.com>
 
 	[smooth] Minor clean-ups.
 
