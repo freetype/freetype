@@ -77,6 +77,7 @@
     AF_UNIRANGE_REC(  0x06DF,  0x06E4 ),
     AF_UNIRANGE_REC(  0x06E7,  0x06E8 ),
     AF_UNIRANGE_REC(  0x06EA,  0x06ED ),
+    AF_UNIRANGE_REC(  0x08D4,  0x08E1 ),
     AF_UNIRANGE_REC(  0x08E3,  0x08FF ),
     AF_UNIRANGE_REC(  0xFBB2,  0xFBC1 ),
     AF_UNIRANGE_REC(  0xFE70,  0xFE70 ),
@@ -141,6 +142,7 @@
     AF_UNIRANGE_REC(  0x0500,  0x052F ),  /* Cyrillic Supplement */
     AF_UNIRANGE_REC(  0x2DE0,  0x2DFF ),  /* Cyrillic Extended-A */
     AF_UNIRANGE_REC(  0xA640,  0xA69F ),  /* Cyrillic Extended-B */
+    AF_UNIRANGE_REC(  0x1C80,  0x1C8F ),  /* Cyrillic Extended-C */
     AF_UNIRANGE_REC(       0,       0 )
   };
 

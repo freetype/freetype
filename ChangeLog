@@ -1,3 +1,10 @@
+2016-07-02  Werner Lemberg  <wl@gnu.org>
+
+	[autofit] Update to Unicode 9.0.0.
+
+	* src/autofit/afranges.c (af_arab_nonbase_uniranges,
+	af_cyrl_uniranges): Add new data.
+
 2016-07-01  Alexei Podtelezhnikov  <apodtele@gmail.com>
 
 	[smooth] Variable type revision (part 1).
