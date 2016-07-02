@@ -269,7 +269,6 @@ FT_BEGIN_HEADER
 
     AF_Segment  link;        /* (stem) link segment        */
     AF_Segment  serif;       /* primary segment for serifs */
-    FT_Pos      num_linked;  /* number of linked segments  */
     FT_Pos      score;       /* used during stem matching  */
     FT_Pos      len;         /* used during stem matching  */
 
@@ -292,7 +291,6 @@ FT_BEGIN_HEADER
     AF_Width    blue_edge;  /* non-NULL if this is a blue edge */
     AF_Edge     link;       /* link edge                       */
     AF_Edge     serif;      /* primary edge for serifs         */
-    FT_Short    num_linked; /* number of linked edges          */
     FT_Int      score;      /* used during stem matching       */
 
     AF_Segment  first;      /* first segment in edge */

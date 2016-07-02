@@ -1,5 +1,14 @@
 2016-07-02  Werner Lemberg  <wl@gnu.org>
 
+	[autofit] Remove unused structure members.
+
+	* src/autofit/afhints.h (AF_SegmentRec, AF_EdgeRec): Remove
+	`num_linked'.
+
+	* src/autofit/afcjk.c (af_cjk_hints_link_segments): Updated.
+
+2016-07-02  Werner Lemberg  <wl@gnu.org>
+
 	[autofit] Update to Unicode 9.0.0.
 
 	* src/autofit/afranges.c (af_arab_nonbase_uniranges,
