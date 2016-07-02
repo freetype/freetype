@@ -1,3 +1,15 @@
+2016-07-01  Alexei Podtelezhnikov  <apodtele@gmail.com>
+
+	[smooth] Variable type revision (part 1).
+
+	This patch restores original `TCoord' definition as `int' so that the
+	rendering pool is used more efficiently on LP64 platforms (unix).
+
+	* src/smooth/ftgrays.c (gray_TWorker, TCell, gray_TBand): Switch some
+	fields to `TCoord'.
+	(gray_find_cell, gray_render_scanline, gray_render_line, gray_hline,
+	gray_sweep, gray_convert_glyph): Updated.
+
 2016-06-28  Alexei Podtelezhnikov  <apodtele@gmail.com>
 
 	[smooth] Minor clean-ups.
