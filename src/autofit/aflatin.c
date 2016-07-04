@@ -1466,9 +1466,6 @@
       FT_Pos     prev_max_on_coord = max_on_coord;
 
 
-      if ( point == last )  /* skip singletons -- just in case */
-        continue;
-
       if ( FT_ABS( last->out_dir )  == major_dir &&
            FT_ABS( point->out_dir ) == major_dir )
       {
@@ -1685,7 +1682,12 @@
           passed = 1;
         }
 
-        if ( !on_edge && FT_ABS( point->out_dir ) == major_dir )
+        /* if we are not on an edge, check whether the major direction */
+        /* coincides with the current point's `out' direction, or      */
+        /* whether we have a single-point contour                      */
+        if ( !on_edge                                  &&
+             ( FT_ABS( point->out_dir ) == major_dir ||
+               point == point->prev                  ) )
         {
           /* this is the start of a new segment! */
           segment_dir = (AF_Direction)point->out_dir;
@@ -1719,6 +1721,24 @@
             min_on_coord = max_on_coord = point->v;
 
           on_edge = 1;
+
+          if ( point == point->prev )
+          {
+            /* we have a one-point segment: this is a one-point */
+            /* contour with `in' and `out' direction set to     */
+            /* AF_DIR_NONE                                      */
+            segment->pos = (FT_Short)min_pos;
+
+            if (point->flags & AF_FLAG_CONTROL)
+              segment->flags |= AF_EDGE_ROUND;
+
+            segment->min_coord = (FT_Short)point->v;
+            segment->max_coord = (FT_Short)point->v;
+            segment->height = 0;
+
+            on_edge = 0;
+            segment = NULL;
+          }
         }
 
         point = point->next;
@@ -2002,7 +2022,10 @@
       FT_Int   ee;
 
 
-      if ( seg->height < segment_length_threshold )
+      /* ignore too short segments and, in this loop, */
+      /* one-point segments without a direction       */
+      if ( seg->height < segment_length_threshold ||
+           seg->dir == AF_DIR_NONE                )
         continue;
 
       /* A special case for serif edges: If they are smaller than */
@@ -2058,6 +2081,44 @@
       {
         /* if an edge was found, simply add the segment to the edge's */
         /* list                                                       */
+        seg->edge_next         = found->first;
+        found->last->edge_next = seg;
+        found->last            = seg;
+      }
+    }
+
+    /* we loop again over all segments to catch one-point segments   */
+    /* without a direction: if possible, link them to existing edges */
+    for ( seg = segments; seg < segment_limit; seg++ )
+    {
+      AF_Edge  found = NULL;
+      FT_Int   ee;
+
+
+      if ( seg->dir != AF_DIR_NONE )
+        continue;
+
+      /* look for an edge corresponding to the segment */
+      for ( ee = 0; ee < axis->num_edges; ee++ )
+      {
+        AF_Edge  edge = axis->edges + ee;
+        FT_Pos   dist;
+
+
+        dist = seg->pos - edge->fpos;
+        if ( dist < 0 )
+          dist = -dist;
+
+        if ( dist < edge_distance_threshold )
+        {
+          found = edge;
+          break;
+        }
+      }
+
+      /* one-point segments without a match are ignored */
+      if ( found )
+      {
         seg->edge_next         = found->first;
         found->last->edge_next = seg;
         found->last            = seg;

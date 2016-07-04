@@ -1,3 +1,17 @@
+2016-07-04  Werner Lemberg  <wl@gnu.org>
+
+	[autofit] Handle single-point contours as segments.
+
+	Doing so allows us to link them to edges – some fonts like
+	`NotoSansGurmukhi-Regular' have such isolated points sitting exactly
+	on other outlines.
+
+	* src/autofit/aflatin.c (af_latin_hints_compute_segments): Don't
+	ignore one-point contours but handle them specially as one-point
+	segments.
+	(af_latin_hints_compute_edges): Append one-point segments to edges
+	if possible.
+
 2016-07-02  Werner Lemberg  <wl@gnu.org>
 
 	[autofit] Remove unused structure members.
