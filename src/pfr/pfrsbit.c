@@ -325,7 +325,7 @@
           else
             code = *p;
 
-          if ( code <= prev_code )
+          if ( (FT_Long)code <= prev_code )
           {
             FT_TRACE0(( "pfr_lookup_bitmap_data:"
                         " bitmap records are not sorted,\n"
