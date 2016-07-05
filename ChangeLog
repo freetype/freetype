@@ -1,3 +1,12 @@
+2016-07-04  Alexei Podtelezhnikov  <apodtele@gmail.com>
+
+	[smooth] Variable type revision (part 2).
+
+	* src/smooth/ftgrays.c (TArea): Restore original definition as `int'.
+	(gray_render_line) [FT_LONG64]: Updated.
+	(gray_convert_glyph): 32-bit band bisection stack should be 32 bands.
+	(gray_convert_glyph_inner): Trace successes and failures.
+
 2016-07-04  Werner Lemberg  <wl@gnu.org>
 
 	[autofit] Handle single-point contours as segments.
