@@ -76,14 +76,6 @@
 
   /*************************************************************************/
   /*                                                                       */
-  /* Instruction dispatch function, as used by the interpreter.            */
-  /*                                                                       */
-  typedef void  (*TInstruction_Function)( TT_ExecContext  exc,
-                                          FT_Long*        args );
-
-
-  /*************************************************************************/
-  /*                                                                       */
   /* Two simple bounds-checking macros.                                    */
   /*                                                                       */
 #define BOUNDS( x, n )   ( (FT_UInt)(x)  >= (FT_UInt)(n)  )
