@@ -1,3 +1,13 @@
+2016-07-07  suzuki toshiya  <mpsuzuki@hiroshima-u.ac.jp>
+
+	[mac] Fix Savannah bug #48417.
+
+	Mac OS X linker throws errors when `-exported_symbol_list' input
+	file includes non-existing symbols.  Reported by Ryan Schmidt.
+
+	* builds/exports.mk: Exclude ftmac.h from the headers for apinames
+	by default.  Include it when ftmac.c would be compiled.
+
 2016-07-06  Werner Lemberg  <wl@gnu.org>
 
 	* src/truetype/ttinterp.c (TInstruction_Function): Removed, unused.
