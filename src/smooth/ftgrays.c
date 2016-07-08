@@ -1911,7 +1911,7 @@ typedef ptrdiff_t  FT_PtrDist;
     min   = ras.min_ey;
     max_y = ras.max_ey;
 
-    for ( ; min < max_y; min = max )
+    for (; min < max_y; min = max )
     {
       max = min + band_size;
       if ( max > max_y )

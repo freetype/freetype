@@ -226,123 +226,6 @@
   }
 
 
-#ifdef FT_CONFIG_OPTION_ENVIRONMENT_PROPERTIES
-
-#define MAX_LENGTH  128
-
-  /*
-   * The `FREETYPE_PROPERTIES' environment variable has the following
-   * syntax form (broken here into multiple lines for better readability)
-   *
-   *   <whitespace>
-   *   <module-name1> ':'
-   *   <property-name1> '=' <property-value1>
-   *   <whitespace>
-   *   <module-name2> ':'
-   *   <property-name2> '=' <property-value2>
-   *   ...
-   *
-   * Example:
-   *
-   *   FREETYPE_PROPERTIES=truetype:interpreter-version=35 \
-   *                       cff:no-stem-darkening=1 \
-   *                       autofitter:warping=1
-   *
-   */
-
-  static void
-  ft_get_default_properties( FT_Library  library )
-  {
-    const char*  env;
-    const char*  p;
-    const char*  q;
-
-    char  module_name[MAX_LENGTH + 1];
-    char  property_name[MAX_LENGTH + 1];
-    char  property_value[MAX_LENGTH + 1];
-
-    int  i;
-
-
-    env = getenv( "FREETYPE_PROPERTIES" );
-    if ( !env )
-      return;
-
-    for ( p = env; *p; p++ )
-    {
-      module_name[0]    = '\0';
-      property_name[0]  = '\0';
-      property_value[0] = '\0';
-
-      /* skip leading whitespace and separators */
-      if ( *p == ' ' || *p == '\t' )
-        continue;
-
-      /* read module name, followed by `:' */
-      q = p;
-      for ( i = 0; i < MAX_LENGTH; i++ )
-      {
-        if ( !*p || *p == ':' )
-          break;
-        module_name[i] = *p++;
-      }
-      module_name[i] = '\0';
-
-      if ( !*p )
-        break;
-      if ( *p != ':' || p == q )
-        break;
-
-      /* read property name, followed by `=' */
-      q = p;
-      for ( i = 0; i < MAX_LENGTH; i++ )
-      {
-        if ( !*p || *p == '=' )
-          break;
-        property_name[i] = *p++;
-      }
-      property_name[i] = '\0';
-
-      if ( !*p )
-        break;
-      if ( *p != '=' || p == q )
-        break;
-
-      /* read property value, followed by whitespace (if any) */
-      q = p;
-      for ( i = 0; i < MAX_LENGTH; i++ )
-      {
-        if ( !*p || *p == ' ' || *p == '\t' )
-          break;
-        property_value[i] = *p++;
-      }
-      property_value[i] = '\0';
-
-      if ( !( *p == '\0' || *p == ' ' || *p == '\t' ) || p == q )
-        break;
-
-      /* we have all data; resolve them into a call to FT_Property_Set */
-      /* if possible                                                   */
-
-      /* we completely ignore errors */
-      FT_Property_Set( library,
-                       module_name,
-                       property_name,
-                       property_value );
-    }
-  }
-
-#else
-
-  static void
-  ft_get_default_properties( FT_Library  library )
-  {
-    FT_UNUSED( library );
-  }
-
-#endif
-
-
   /* documentation is in freetype.h */
 
   FT_EXPORT_DEF( FT_Error )
@@ -372,8 +255,6 @@
       FT_Done_Memory( memory );
     else
       FT_Add_Default_Modules( *alibrary );
-
-    ft_get_default_properties( *alibrary );
 
     return error;
   }

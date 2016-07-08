@@ -2,25 +2,25 @@
 
 	[smooth] Sub-banding protocol revision.
 
-	Rasterization sub-banding is utilized at large sizes while using a
-	rather small fixed memory pool.  Indeed it is possible to make an
+	Rasterization sub-banding is utilized at large sizes while using
+	rather small fixed memory pool. Indeed it is possible to make an
 	educated guess how much memory is necessary at a given size for a
-	given glyph.  It turns out that, for a large majority of European
-	glyphs, you should store about 8 times more boundary pixels than
-	their height.  Or, vice versa, if your memory pool can hold 800
-	pixels the band height should be 100 and you should sub-band
-	anything larger than that.  Should you still run out of memory,
-	FreeType bisects the band but you have wasted some time.  This is
-	what has been implemented in FreeType since the beginning.
+	given glyph. It turns out that, for large majority of European glyphs,
+	you should store about 8 times more boundary pixels than their height.
+	Or, vice versa, if your memory pool can hold 800 pixels the band
+	height should be 100 and you should sub-band anything larger than
+	that. Should you still run out of memory, FreeType bisects the band
+	but you have wasted some time. This is what has been implemented in
+	FreeType since the beginning.
 
-	It was overlooked, however, that the top band could grow to twice
-	the default band size leading to unnecessary memory overflows there.
-	This commit fixes that.  Now the bands are distributed more evenly
-	and cannot exceed the default size.
+	It was overlooked, however, that the top band could grow to twice the
+	default band size leading to unnecessary memory overflows there. This
+	commit fixes that. Now the bands are distributed more evenly and
+	cannot exceed the default size.
 
 	Now the magic number 8 is really suitable for rather simple European
-	scripts.  For complex Chinese logograms the magic number should be
-	13 but that is subject for another day.
+	scripts. For complex Chinese logograms the magic number should be 13
+	but that is subject for another day.
 
 	* src/smooth/ftgrays.c (gray_convert_glyph): Revise sub-banding
 	protocol.
