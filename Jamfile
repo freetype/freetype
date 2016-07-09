@@ -161,7 +161,20 @@ SubInclude FT2_TOP $(FT2_SRC_DIR) tools ;
 rule GenExportSymbols
 {
   local  apinames = apinames$(SUFEXE) ;
-  local  headers  = [ Glob $(2) : *.h ] ;
+  local  aheader ;
+  local  headers ;
+
+  for aheader in [ Glob $(2) : *.h ]
+  {
+    switch $(aheader)
+    {
+      case */ftmac.h :
+        if ( $(MAC) || $(OS) = MACOSX ) {
+          headers += $(aheader) ;
+        }
+      case *.h : headers += $(aheader) ;
+    }
+  }
 
   LOCATE on $(1) = $(ALL_LOCATE_TARGET) ;
 
@@ -177,7 +190,7 @@ actions GenExportSymbols1 bind APINAMES
   $(APINAMES) $(2) > $(1)
 }
 
-GenExportSymbols  ftexport.sym : include include/cache ;
+GenExportSymbols  ftexport.sym : include/freetype ;
 
 # Test files (hinter debugging).  Only used by FreeType developers.
 #

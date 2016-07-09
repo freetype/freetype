@@ -1,3 +1,13 @@
+2016-07-09  suzuki toshiya  <mpsuzuki@hiroshima-u.ac.jp>
+
+	[mac] Fix ftexport.sym target in Jamfile.
+
+	* Jamfile: Update the directories of the header files scanned for
+	ftexport.sym.  They were incorrect since the migration of the
+	header files, on 2015-06-22.  Either inexisting include/cache
+	(removed on 2006-03-20) is not needed to be listed explicitly.
+	Now ftmac.h is scanned only in the case of Mac OS & Mac OS X.
+
 2016-07-08  Alexei Podtelezhnikov  <apodtele@gmail.com>
 
 	[smooth] Sub-banding protocol revision.
