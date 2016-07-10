@@ -61,7 +61,8 @@
   static FT_Error
   tt_property_set( FT_Module    module,         /* TT_Driver */
                    const char*  property_name,
-                   const void*  value )
+                   const void*  value,
+                   FT_Bool      value_is_string )
   {
     FT_Error   error  = FT_Err_Ok;
     TT_Driver  driver = (TT_Driver)module;
@@ -69,8 +70,13 @@
 
     if ( !ft_strcmp( property_name, "interpreter-version" ) )
     {
-      FT_UInt*  interpreter_version = (FT_UInt*)value;
+      FT_UInt*  interpreter_version;
 
+
+      if ( value_is_string )
+        return FT_THROW( Invalid_Argument );
+
+      interpreter_version = (FT_UInt*)value;
 
       if ( *interpreter_version == TT_INTERPRETER_VERSION_35
 #ifdef TT_SUPPORT_SUBPIXEL_HINTING_INFINALITY

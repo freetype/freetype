@@ -659,7 +659,8 @@
   static FT_Error
   cff_property_set( FT_Module    module,         /* CFF_Driver */
                     const char*  property_name,
-                    const void*  value )
+                    const void*  value,
+                    FT_Bool      value_is_string )
   {
     FT_Error    error  = FT_Err_Ok;
     CFF_Driver  driver = (CFF_Driver)module;
@@ -667,17 +668,23 @@
 
     if ( !ft_strcmp( property_name, "darkening-parameters" ) )
     {
-      FT_Int*  darken_params = (FT_Int*)value;
+      FT_Int*  darken_params;
+      FT_Int   x1, y1, x2, y2, x3, y3, x4, y4;
 
-      FT_Int  x1 = darken_params[0];
-      FT_Int  y1 = darken_params[1];
-      FT_Int  x2 = darken_params[2];
-      FT_Int  y2 = darken_params[3];
-      FT_Int  x3 = darken_params[4];
-      FT_Int  y3 = darken_params[5];
-      FT_Int  x4 = darken_params[6];
-      FT_Int  y4 = darken_params[7];
 
+      if ( value_is_string )
+        return FT_THROW( Invalid_Argument );
+
+      darken_params = (FT_Int*)value;
+
+      x1 = darken_params[0];
+      y1 = darken_params[1];
+      x2 = darken_params[2];
+      y2 = darken_params[3];
+      x3 = darken_params[4];
+      y3 = darken_params[5];
+      x4 = darken_params[6];
+      y4 = darken_params[7];
 
       if ( x1 < 0   || x2 < 0   || x3 < 0   || x4 < 0   ||
            y1 < 0   || y2 < 0   || y3 < 0   || y4 < 0   ||
@@ -698,8 +705,13 @@
     }
     else if ( !ft_strcmp( property_name, "hinting-engine" ) )
     {
-      FT_UInt*  hinting_engine = (FT_UInt*)value;
+      FT_UInt*  hinting_engine;
 
+
+      if ( value_is_string )
+        return FT_THROW( Invalid_Argument );
+
+      hinting_engine = (FT_UInt*)value;
 
       if ( *hinting_engine == FT_CFF_HINTING_ADOBE
 #ifdef CFF_CONFIG_OPTION_OLD_ENGINE
@@ -714,8 +726,13 @@
     }
     else if ( !ft_strcmp( property_name, "no-stem-darkening" ) )
     {
-      FT_Bool*  no_stem_darkening = (FT_Bool*)value;
+      FT_Bool*  no_stem_darkening;
 
+
+      if ( value_is_string )
+        return FT_THROW( Invalid_Argument );
+
+      no_stem_darkening = (FT_Bool*)value;
 
       driver->no_stem_darkening = *no_stem_darkening;
 

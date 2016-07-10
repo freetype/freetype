@@ -1,3 +1,26 @@
+2016-07-09  Werner Lemberg  <wl@gnu.org>
+
+	Add function `ft_property_string_set'.
+
+	This is a preparation for handling an `FREETYPE_PROPERTIES'
+	environment variable to control (some) driver properties.
+
+	No change in functionality.
+
+	* src/base/ftobjs.c (ft_property_do): Add `value_is_string'
+	parameter.
+	(ft_property_string_set): New function.
+	(FT_Property_Set, FT_Property_Get): Updated.
+
+	* include/freetype/internal/ftobjs.h: Updated.
+
+	* include/freetype/internal/services/svprop.h
+	(FT_Properties_SetFunc): Add `value_is_string' parameter.
+
+	* src/autofit/afmodule.c (af_property_set), src/cff/cffdrivr.c
+	(cff_property_set), src/truetype/ttdriver.c (tt_property_set):
+	Updated, emitting an error currently if `value_is_string' is set.
+
 2016-07-09  suzuki toshiya  <mpsuzuki@hiroshima-u.ac.jp>
 
 	[mac] Fix ftexport.sym target in Jamfile.

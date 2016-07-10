@@ -107,7 +107,8 @@
   static FT_Error
   af_property_set( FT_Module    ft_module,
                    const char*  property_name,
-                   const void*  value )
+                   const void*  value,
+                   FT_Bool      value_is_string )
   {
     FT_Error   error  = FT_Err_Ok;
     AF_Module  module = (AF_Module)ft_module;
@@ -115,10 +116,14 @@
 
     if ( !ft_strcmp( property_name, "fallback-script" ) )
     {
-      FT_UInt*  fallback_script = (FT_UInt*)value;
+      FT_UInt*  fallback_script;
+      FT_UInt   ss;
 
-      FT_UInt  ss;
 
+      if ( value_is_string )
+        return FT_THROW( Invalid_Argument );
+
+      fallback_script = (FT_UInt*)value;
 
       /* We translate the fallback script to a fallback style that uses */
       /* `fallback-script' as its script and `AF_COVERAGE_NONE' as its  */
@@ -147,8 +152,13 @@
     }
     else if ( !ft_strcmp( property_name, "default-script" ) )
     {
-      FT_UInt*  default_script = (FT_UInt*)value;
+      FT_UInt*  default_script;
 
+
+      if ( value_is_string )
+        return FT_THROW( Invalid_Argument );
+
+      default_script = (FT_UInt*)value;
 
       module->default_script = *default_script;
 
@@ -156,9 +166,14 @@
     }
     else if ( !ft_strcmp( property_name, "increase-x-height" ) )
     {
-      FT_Prop_IncreaseXHeight*  prop = (FT_Prop_IncreaseXHeight*)value;
+      FT_Prop_IncreaseXHeight*  prop;
       AF_FaceGlobals            globals;
 
+
+      if ( value_is_string )
+        return FT_THROW( Invalid_Argument );
+
+      prop = (FT_Prop_IncreaseXHeight*)value;
 
       error = af_property_get_face_globals( prop->face, &globals, module );
       if ( !error )
@@ -169,8 +184,13 @@
 #ifdef AF_CONFIG_OPTION_USE_WARPER
     else if ( !ft_strcmp( property_name, "warping" ) )
     {
-      FT_Bool*  warping = (FT_Bool*)value;
+      FT_Bool*  warping;
 
+
+      if ( value_is_string )
+        return FT_THROW( Invalid_Argument );
+
+      warping = (FT_Bool*)value;
 
       module->warping = *warping;
 
@@ -179,17 +199,23 @@
 #endif /* AF_CONFIG_OPTION_USE_WARPER */
     else if ( !ft_strcmp( property_name, "darkening-parameters" ) )
     {
-      FT_Int*  darken_params = (FT_Int*)value;
+      FT_Int*  darken_params;
+      FT_Int   x1, y1, x2, y2, x3, y3, x4, y4;
 
-      FT_Int  x1 = darken_params[0];
-      FT_Int  y1 = darken_params[1];
-      FT_Int  x2 = darken_params[2];
-      FT_Int  y2 = darken_params[3];
-      FT_Int  x3 = darken_params[4];
-      FT_Int  y3 = darken_params[5];
-      FT_Int  x4 = darken_params[6];
-      FT_Int  y4 = darken_params[7];
 
+      if ( value_is_string )
+        return FT_THROW( Invalid_Argument );
+
+      darken_params = (FT_Int*)value;
+
+      x1 = darken_params[0];
+      y1 = darken_params[1];
+      x2 = darken_params[2];
+      y2 = darken_params[3];
+      x3 = darken_params[4];
+      y3 = darken_params[5];
+      x4 = darken_params[6];
+      y4 = darken_params[7];
 
       if ( x1 < 0   || x2 < 0   || x3 < 0   || x4 < 0   ||
            y1 < 0   || y2 < 0   || y3 < 0   || y4 < 0   ||
@@ -210,8 +236,13 @@
     }
     else if ( !ft_strcmp( property_name, "no-stem-darkening" ) )
     {
-      FT_Bool*  no_stem_darkening = (FT_Bool*)value;
+      FT_Bool*  no_stem_darkening;
 
+
+      if ( value_is_string )
+        return FT_THROW( Invalid_Argument );
+
+      no_stem_darkening = (FT_Bool*)value;
 
       module->no_stem_darkening = *no_stem_darkening;
 

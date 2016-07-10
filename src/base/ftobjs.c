@@ -4564,7 +4564,8 @@
                   const FT_String*  module_name,
                   const FT_String*  property_name,
                   void*             value,
-                  FT_Bool           set )
+                  FT_Bool           set,
+                  FT_Bool           value_is_string )
   {
     FT_Module*           cur;
     FT_Module*           limit;
@@ -4634,8 +4635,13 @@
       return FT_THROW( Unimplemented_Feature );
     }
 
-    return set ? service->set_property( cur[0], property_name, value )
-               : service->get_property( cur[0], property_name, value );
+    return set ? service->set_property( cur[0],
+                                        property_name,
+                                        value,
+                                        value_is_string )
+               : service->get_property( cur[0],
+                                        property_name,
+                                        value );
   }
 
 
@@ -4651,7 +4657,8 @@
                            module_name,
                            property_name,
                            (void*)value,
-                           TRUE );
+                           TRUE,
+                           FALSE );
   }
 
 
@@ -4667,7 +4674,26 @@
                            module_name,
                            property_name,
                            value,
+                           FALSE,
                            FALSE );
+  }
+
+
+  /* this variant is used for handling the FREETYPE_PROPERTIES */
+  /* environment variable                                      */
+
+  FT_BASE_DEF( FT_Error )
+  ft_property_string_set( FT_Library        library,
+                          const FT_String*  module_name,
+                          const FT_String*  property_name,
+                          FT_String*        value )
+  {
+    return ft_property_do( library,
+                           module_name,
+                           property_name,
+                           (void*)value,
+                           TRUE,
+                           TRUE );
   }
 
 
