@@ -1,3 +1,18 @@
+2016-07-10  Werner Lemberg  <wl@gnu.org>
+
+	Implement handling of `FREETYPE_PROPERTIES' environment variable.
+
+	Recognizing properties follows in another commit.
+
+	* devel/ftoption.h, include/freetype/config/ftoption.h
+	(FT_CONFIG_OPTION_ENVIRONMENT_PROPERTIES): New macro.
+
+	* include/freetype/config/ftstdlib.h (ft_getenv): New macro.
+
+	* src/base/ftinit.c (ft_set_default_properties): New function to
+	parse `FREETYPE_PROPERTIES' and calling `ft_property_string_set'.
+	(FT_Init_FreeType): Updated.
+
 2016-07-09  Werner Lemberg  <wl@gnu.org>
 
 	Add function `ft_property_string_set'.

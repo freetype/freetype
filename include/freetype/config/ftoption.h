@@ -77,6 +77,36 @@ FT_BEGIN_HEADER
 
   /*************************************************************************/
   /*                                                                       */
+  /* If you enable this configuration option, FreeType recognizes an       */
+  /* environment variable called `FREETYPE_PROPERTIES', which can be used  */
+  /* to control the various font drivers and modules.  The controllable    */
+  /* properties are listed in the section `Controlling FreeType Modules'   */
+  /* in the reference's table of contents; currently there are properties  */
+  /* for the auto-hinter (file `ftautoh.h'), CFF (file `ftcffdrv.h'), and  */
+  /* TrueType (file `ftttdrv.h').                                          */
+  /*                                                                       */
+  /* `FREETYPE_PROPERTIES' has the following syntax form (broken here into */
+  /* multiple lines for better readability).                               */
+  /*                                                                       */
+  /*   <optional whitespace>                                               */
+  /*   <module-name1> ':'                                                  */
+  /*   <property-name1> '=' <property-value1>                              */
+  /*   <whitespace>                                                        */
+  /*   <module-name2> ':'                                                  */
+  /*   <property-name2> '=' <property-value2>                              */
+  /*   ...                                                                 */
+  /*                                                                       */
+  /* Example:                                                              */
+  /*                                                                       */
+  /*   FREETYPE_PROPERTIES=truetype:interpreter-version=35 \               */
+  /*                       cff:no-stem-darkening=1 \                       */
+  /*                       autofitter:warping=1                            */
+  /*                                                                       */
+#define FT_CONFIG_OPTION_ENVIRONMENT_PROPERTIES
+
+
+  /*************************************************************************/
+  /*                                                                       */
   /* Uncomment the line below if you want to activate sub-pixel rendering  */
   /* (a.k.a. LCD rendering, or ClearType) in this build of the library.    */
   /*                                                                       */
