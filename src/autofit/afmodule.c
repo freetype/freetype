@@ -113,6 +113,10 @@
     FT_Error   error  = FT_Err_Ok;
     AF_Module  module = (AF_Module)ft_module;
 
+#ifndef FT_CONFIG_OPTION_ENVIRONMENT_PROPERTIES
+    FT_UNUSED( value_is_string );
+#endif
+
 
     if ( !ft_strcmp( property_name, "fallback-script" ) )
     {
@@ -120,8 +124,10 @@
       FT_UInt   ss;
 
 
+#ifdef FT_CONFIG_OPTION_ENVIRONMENT_PROPERTIES
       if ( value_is_string )
         return FT_THROW( Invalid_Argument );
+#endif
 
       fallback_script = (FT_UInt*)value;
 
@@ -155,8 +161,10 @@
       FT_UInt*  default_script;
 
 
+#ifdef FT_CONFIG_OPTION_ENVIRONMENT_PROPERTIES
       if ( value_is_string )
         return FT_THROW( Invalid_Argument );
+#endif
 
       default_script = (FT_UInt*)value;
 
@@ -170,8 +178,10 @@
       AF_FaceGlobals            globals;
 
 
+#ifdef FT_CONFIG_OPTION_ENVIRONMENT_PROPERTIES
       if ( value_is_string )
         return FT_THROW( Invalid_Argument );
+#endif
 
       prop = (FT_Prop_IncreaseXHeight*)value;
 
@@ -184,6 +194,7 @@
 #ifdef AF_CONFIG_OPTION_USE_WARPER
     else if ( !ft_strcmp( property_name, "warping" ) )
     {
+#ifdef FT_CONFIG_OPTION_ENVIRONMENT_PROPERTIES
       if ( value_is_string )
       {
         const char*  s = (const char*)value;
@@ -198,6 +209,7 @@
           return FT_THROW( Invalid_Argument );
       }
       else
+#endif
       {
         FT_Bool*  warping = (FT_Bool*)value;
 
@@ -212,6 +224,8 @@
     {
       FT_Int*  darken_params;
       FT_Int   x1, y1, x2, y2, x3, y3, x4, y4;
+
+#ifdef FT_CONFIG_OPTION_ENVIRONMENT_PROPERTIES
       FT_Int   dp[8];
 
 
@@ -239,6 +253,7 @@
         darken_params = dp;
       }
       else
+#endif
         darken_params = (FT_Int*)value;
 
       x1 = darken_params[0];
@@ -269,6 +284,7 @@
     }
     else if ( !ft_strcmp( property_name, "no-stem-darkening" ) )
     {
+#ifdef FT_CONFIG_OPTION_ENVIRONMENT_PROPERTIES
       if ( value_is_string )
       {
         const char*  s   = (const char*)value;
@@ -283,6 +299,7 @@
           return FT_THROW( Invalid_Argument );
       }
       else
+#endif
       {
         FT_Bool*  no_stem_darkening = (FT_Bool*)value;
 

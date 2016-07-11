@@ -4679,6 +4679,8 @@
   }
 
 
+#ifdef FT_CONFIG_OPTION_ENVIRONMENT_PROPERTIES
+
   /* this variant is used for handling the FREETYPE_PROPERTIES */
   /* environment variable                                      */
 
@@ -4695,6 +4697,8 @@
                            TRUE,
                            TRUE );
   }
+
+#endif
 
 
   /*************************************************************************/

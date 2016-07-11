@@ -1,5 +1,14 @@
 2016-07-11  Werner Lemberg  <wl@gnu.org>
 
+	Conditionally compile environment support.
+
+	* include/freetype/internal/ftobjs.h, src/autofit/afmodule.c,
+	src/base/ftobjs.c, src/cff/cffdrivr.c, src/truetype/ttdriver.c:
+	Decorate with `FT_CONFIG_OPTION_ENVIRONMENT_PROPERTIES' where
+	necessary.
+
+2016-07-11  Werner Lemberg  <wl@gnu.org>
+
 	Handle properties in `FREETYPE_PROPERTIES' environment variable.
 
 	This commit covers the most important one.

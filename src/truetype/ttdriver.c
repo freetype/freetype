@@ -67,12 +67,17 @@
     FT_Error   error  = FT_Err_Ok;
     TT_Driver  driver = (TT_Driver)module;
 
+#ifndef FT_CONFIG_OPTION_ENVIRONMENT_PROPERTIES
+    FT_UNUSED( value_is_string );
+#endif
+
 
     if ( !ft_strcmp( property_name, "interpreter-version" ) )
     {
       FT_UInt  interpreter_version;
 
 
+#ifdef FT_CONFIG_OPTION_ENVIRONMENT_PROPERTIES
       if ( value_is_string )
       {
         const char*  s = (const char*)value;
@@ -81,6 +86,7 @@
         interpreter_version = (FT_UInt)ft_strtol( s, NULL, 10 );
       }
       else
+#endif
       {
         FT_UInt*  iv = (FT_UInt*)value;
 
