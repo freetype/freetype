@@ -1,3 +1,17 @@
+2016-07-11  Werner Lemberg  <wl@gnu.org>
+
+	Replace calls to `atol' with `strtol'.
+
+	We later on need strtol's `endptr' feature.
+
+	* include/freetype/config/ftstdlib.h (ft_atol): Replace with...
+	(ft_strtol): ... this.
+
+	* src/base/ftdbgmem.c (ft_mem_debug_init): Updated.
+	* src/cid/cidparse.c (cid_parser_new): Ditto.
+	* src/type42/t42drivr.c (t42_get_name_index), src/type42/t42objs.c
+	(T42_GlyphSlot_Load): Ditto.
+
 2016-07-10  Werner Lemberg  <wl@gnu.org>
 
 	Implement handling of `FREETYPE_PROPERTIES' environment variable.

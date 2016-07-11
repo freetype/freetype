@@ -213,7 +213,7 @@
       {
         if ( ft_strncmp( (char*)arg1, "(Hex)", 5 ) == 0 )
         {
-          FT_Long  tmp = ft_atol( (const char *)arg2 );
+          FT_Long  tmp = ft_strtol( (const char *)arg2, NULL, 10 );
 
 
           if ( tmp < 0 )

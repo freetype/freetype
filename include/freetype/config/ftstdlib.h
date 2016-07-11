@@ -142,7 +142,7 @@
   /**********************************************************************/
 
 
-#define ft_atol    atol
+#define ft_strtol  strtol
 #define ft_getenv  getenv
 
 
