@@ -1,5 +1,20 @@
 2016-07-11  Werner Lemberg  <wl@gnu.org>
 
+	Handle properties in `FREETYPE_PROPERTIES' environment variable.
+
+	This commit covers the most important one.
+
+	* src/autofit/afmodule.c (af_property_set): Handle `warping',
+	`darkening-parameters', and `no-stem-darkening'.
+
+	* src/cff/cffdrivr.c (cff_property_set): Handle
+	`darkening-parameters', `hinting-engine', and `no-stem-darkening'.
+
+	* src/truetype/ttdriver.c (tt_property_set): Handle
+	`interpreter-version'.
+
+2016-07-11  Werner Lemberg  <wl@gnu.org>
+
 	Replace calls to `atol' with `strtol'.
 
 	We later on need strtol's `endptr' feature.

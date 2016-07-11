@@ -70,23 +70,33 @@
 
     if ( !ft_strcmp( property_name, "interpreter-version" ) )
     {
-      FT_UInt*  interpreter_version;
+      FT_UInt  interpreter_version;
 
 
       if ( value_is_string )
-        return FT_THROW( Invalid_Argument );
+      {
+        const char*  s = (const char*)value;
 
-      interpreter_version = (FT_UInt*)value;
 
-      if ( *interpreter_version == TT_INTERPRETER_VERSION_35
+        interpreter_version = (FT_UInt)ft_strtol( s, NULL, 10 );
+      }
+      else
+      {
+        FT_UInt*  iv = (FT_UInt*)value;
+
+
+        interpreter_version = *iv;
+      }
+
+      if ( interpreter_version == TT_INTERPRETER_VERSION_35
 #ifdef TT_SUPPORT_SUBPIXEL_HINTING_INFINALITY
-           || *interpreter_version == TT_INTERPRETER_VERSION_38
+           || interpreter_version == TT_INTERPRETER_VERSION_38
 #endif
 #ifdef TT_SUPPORT_SUBPIXEL_HINTING_MINIMAL
-           || *interpreter_version == TT_INTERPRETER_VERSION_40
+           || interpreter_version == TT_INTERPRETER_VERSION_40
 #endif
          )
-        driver->interpreter_version = *interpreter_version;
+        driver->interpreter_version = interpreter_version;
       else
         error = FT_ERR( Unimplemented_Feature );
 

@@ -670,12 +670,34 @@
     {
       FT_Int*  darken_params;
       FT_Int   x1, y1, x2, y2, x3, y3, x4, y4;
+      FT_Int   dp[8];
 
 
       if ( value_is_string )
-        return FT_THROW( Invalid_Argument );
+      {
+        const char*  s = (const char*)value;
+        char*        ep;
+        int          i;
 
-      darken_params = (FT_Int*)value;
+
+        /* eight comma-separated numbers */
+        for ( i = 0; i < 7; i++ )
+        {
+          dp[i] = (FT_Int)ft_strtol( s, &ep, 10 );
+          if ( *ep != ',' || s == ep )
+            return FT_THROW( Invalid_Argument );
+
+          s = ep + 1;
+        }
+
+        dp[7] = (FT_Int)ft_strtol( s, &ep, 10 );
+        if ( !( *ep == '\0' || *ep == ' ' ) || s == ep )
+          return FT_THROW( Invalid_Argument );
+
+        darken_params = dp;
+      }
+      else
+        darken_params = (FT_Int*)value;
 
       x1 = darken_params[0];
       y1 = darken_params[1];
@@ -705,36 +727,58 @@
     }
     else if ( !ft_strcmp( property_name, "hinting-engine" ) )
     {
-      FT_UInt*  hinting_engine;
-
-
       if ( value_is_string )
-        return FT_THROW( Invalid_Argument );
+      {
+        const char*  s = (const char*)value;
 
-      hinting_engine = (FT_UInt*)value;
 
-      if ( *hinting_engine == FT_CFF_HINTING_ADOBE
+        if ( !ft_strcmp( s, "adobe" ) )
+          driver->hinting_engine = FT_CFF_HINTING_ADOBE;
 #ifdef CFF_CONFIG_OPTION_OLD_ENGINE
-           || *hinting_engine == FT_CFF_HINTING_FREETYPE
+        else if ( !ft_strcmp( s, "freetype" ) )
+          driver->hinting_engine = FT_CFF_HINTING_FREETYPE;
 #endif
-         )
-        driver->hinting_engine = *hinting_engine;
+        else
+          return FT_THROW( Invalid_Argument );
+      }
       else
-        error = FT_ERR( Unimplemented_Feature );
+      {
+        FT_UInt*  hinting_engine = (FT_UInt*)value;
 
-      return error;
+        if ( *hinting_engine == FT_CFF_HINTING_ADOBE
+#ifdef CFF_CONFIG_OPTION_OLD_ENGINE
+             || *hinting_engine == FT_CFF_HINTING_FREETYPE
+#endif
+           )
+          driver->hinting_engine = *hinting_engine;
+        else
+          error = FT_ERR( Unimplemented_Feature );
+
+        return error;
+      }
     }
     else if ( !ft_strcmp( property_name, "no-stem-darkening" ) )
     {
-      FT_Bool*  no_stem_darkening;
-
-
       if ( value_is_string )
-        return FT_THROW( Invalid_Argument );
+      {
+        const char*  s   = (const char*)value;
+        long         nsd = ft_strtol( s, NULL, 10 );
 
-      no_stem_darkening = (FT_Bool*)value;
 
-      driver->no_stem_darkening = *no_stem_darkening;
+        if ( nsd == 0 )
+          driver->no_stem_darkening = 0;
+        else if ( nsd == 1 )
+          driver->no_stem_darkening = 1;
+        else
+          return FT_THROW( Invalid_Argument );
+      }
+      else
+      {
+        FT_Bool*  no_stem_darkening = (FT_Bool*)value;
+
+
+        driver->no_stem_darkening = *no_stem_darkening;
+      }
 
       return error;
     }

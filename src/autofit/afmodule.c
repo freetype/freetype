@@ -184,15 +184,26 @@
 #ifdef AF_CONFIG_OPTION_USE_WARPER
     else if ( !ft_strcmp( property_name, "warping" ) )
     {
-      FT_Bool*  warping;
-
-
       if ( value_is_string )
-        return FT_THROW( Invalid_Argument );
+      {
+        const char*  s = (const char*)value;
+        long         w = ft_strtol( s, NULL, 10 );
 
-      warping = (FT_Bool*)value;
 
-      module->warping = *warping;
+        if ( w == 0 )
+          module->warping = 0;
+        else if ( w == 1 )
+          module->warping = 1;
+        else
+          return FT_THROW( Invalid_Argument );
+      }
+      else
+      {
+        FT_Bool*  warping = (FT_Bool*)value;
+
+
+        module->warping = *warping;
+      }
 
       return error;
     }
@@ -201,12 +212,34 @@
     {
       FT_Int*  darken_params;
       FT_Int   x1, y1, x2, y2, x3, y3, x4, y4;
+      FT_Int   dp[8];
 
 
       if ( value_is_string )
-        return FT_THROW( Invalid_Argument );
+      {
+        const char*  s = (const char*)value;
+        char*        ep;
+        int          i;
 
-      darken_params = (FT_Int*)value;
+
+        /* eight comma-separated numbers */
+        for ( i = 0; i < 7; i++ )
+        {
+          dp[i] = (FT_Int)ft_strtol( s, &ep, 10 );
+          if ( *ep != ',' || s == ep )
+            return FT_THROW( Invalid_Argument );
+
+          s = ep + 1;
+        }
+
+        dp[7] = (FT_Int)ft_strtol( s, &ep, 10 );
+        if ( !( *ep == '\0' || *ep == ' ' ) || s == ep )
+          return FT_THROW( Invalid_Argument );
+
+        darken_params = dp;
+      }
+      else
+        darken_params = (FT_Int*)value;
 
       x1 = darken_params[0];
       y1 = darken_params[1];
@@ -236,15 +269,26 @@
     }
     else if ( !ft_strcmp( property_name, "no-stem-darkening" ) )
     {
-      FT_Bool*  no_stem_darkening;
-
-
       if ( value_is_string )
-        return FT_THROW( Invalid_Argument );
+      {
+        const char*  s   = (const char*)value;
+        long         nsd = ft_strtol( s, NULL, 10 );
 
-      no_stem_darkening = (FT_Bool*)value;
 
-      module->no_stem_darkening = *no_stem_darkening;
+        if ( nsd == 0 )
+          module->no_stem_darkening = 0;
+        else if ( nsd == 1 )
+          module->no_stem_darkening = 1;
+        else
+          return FT_THROW( Invalid_Argument );
+      }
+      else
+      {
+        FT_Bool*  no_stem_darkening = (FT_Bool*)value;
+
+
+        module->no_stem_darkening = *no_stem_darkening;
+      }
 
       return error;
     }
