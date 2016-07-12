@@ -1,4 +1,24 @@
 
+CHANGES BETWEEN 2.6.4 and 2.6.5
+
+  I. IMPORTANT BUG FIXES
+
+    - Compilation works again  on Mac OS X (bug introduced  in version
+      2.6.4).
+
+
+  I. IMPORTANT CHANGES
+
+    - The new  subpixel hinting  mode is now  disabled by  default; it
+      will  be enabled  by default  in the  forthcoming 2.7.x  series.
+      Main reason for reverting this feature is the principle of least
+      surprise: a  sudden change in  appearance of all fonts  (even if
+      the rendering improves  for almost all recent  fonts) should not
+      be expected in a new micro version of a series.
+
+
+======================================================================
+
 CHANGES BETWEEN 2.6.3 and 2.6.4
 
   I. IMPORTANT CHANGES
