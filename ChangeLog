@@ -1,3 +1,40 @@
+2016-07-12  Werner Lemberg  <wl@gnu.org>
+
+	* Version 2.6.5 released.
+	=========================
+
+
+	Tag sources with `VER-2-6-5'.
+
+	* include/freetype/config/ftoption.h
+	(TT_CONFIG_OPTION_SUBPIXEL_HINTING): Comment out.
+
+	* docs/VERSION.TXT: Add entry for version 2.6.5.
+
+	* README, Jamfile (RefDoc), builds/windows/vc2005/freetype.vcproj,
+	builds/windows/vc2005/index.html,
+	builds/windows/vc2008/freetype.vcproj,
+	builds/windows/vc2008/index.html,
+	builds/windows/vc2010/freetype.vcxproj,
+	builds/windows/vc2010/index.html,
+	builds/windows/visualc/freetype.dsp,
+	builds/windows/visualc/freetype.vcproj,
+	builds/windows/visualc/index.html,
+	builds/windows/visualce/freetype.dsp,
+	builds/windows/visualce/freetype.vcproj,
+	builds/windows/visualce/index.html,
+	builds/wince/vc2005-ce/freetype.vcproj,
+	builds/wince/vc2005-ce/index.html,
+	builds/wince/vc2008-ce/freetype.vcproj,
+	builds/wince/vc2008-ce/index.html: s/2.6.4/2.6.5/, s/264/265/.
+
+	* include/freetype/freetype.h (FREETYPE_PATCH): Set to 5.
+
+	* builds/unix/configure.raw (version_info): Set to 18:5:12.
+	* CMakeLists.txt (VERSION_PATCH): Set to 5.
+
+	* docs/CHANGES: Updated.
+
 2016-07-09  suzuki toshiya  <mpsuzuki@hiroshima-u.ac.jp>
 
 	[mac] Fix ftexport.sym target in Jamfile.
