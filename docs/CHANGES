@@ -7,7 +7,7 @@ CHANGES BETWEEN 2.6.4 and 2.6.5
       2.6.4).
 
 
-  I. IMPORTANT CHANGES
+  II. IMPORTANT CHANGES
 
     - The new  subpixel hinting  mode is now  disabled by  default; it
       will  be enabled  by default  in the  forthcoming 2.7.x  series.

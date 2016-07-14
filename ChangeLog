@@ -6,6 +6,10 @@
 
 	Tag sources with `VER-2-6-5'.
 
+	This commit immediately follows `[mac] Fix ftexport.sym target in
+	Jamfile.' on a separate branch, which was then merged with master
+	after the release.
+
 	* include/freetype/config/ftoption.h
 	(TT_CONFIG_OPTION_SUBPIXEL_HINTING): Comment out.
 
