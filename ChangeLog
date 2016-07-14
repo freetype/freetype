@@ -1,3 +1,14 @@
+2016-07-14  Behdad Esfahbod  <behdad@behdad.org>
+
+	[truetype] Fix gxvar delta interpolation.
+
+	The coordinates of the base font should be used for interpolation
+	purposes, NOT the current points (i.e., the result of accumulation
+	of previous deltas).
+
+	* src/truetype/ttgxvar.c (TT_Vary_Apply_Glyph_Deltas): Initialize
+	`points_org' before looping over all tuples.
+
 2016-07-12  Werner Lemberg  <wl@gnu.org>
 
 	* Version 2.6.5 released.

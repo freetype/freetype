@@ -1922,6 +1922,9 @@
     FT_TRACE5(( "gvar: there are %d tuples:\n",
                 tupleCount & GX_TC_TUPLE_COUNT_MASK ));
 
+    for ( j = 0; j < n_points; j++ )
+      points_org[j] = outline->points[j];
+
     for ( i = 0; i < ( tupleCount & GX_TC_TUPLE_COUNT_MASK ); i++ )
     {
       FT_UInt   tupleDataSize;
@@ -2057,10 +2060,7 @@
         /* we have to interpolate the missing deltas similar to the */
         /* IUP bytecode instruction                                 */
         for ( j = 0; j < n_points; j++ )
-        {
-          points_org[j] = outline->points[j];
           has_delta[j]  = FALSE;
-        }
 
         for ( j = 0; j < point_count; j++ )
         {
