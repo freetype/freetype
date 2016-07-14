@@ -1,5 +1,9 @@
 2016-07-14  Werner Lemberg  <wl@gnu.org>
 
+	* include/freetype/freetype.h (FT_IS_NAMED_INSTANCE): New macro.
+
+2016-07-14  Werner Lemberg  <wl@gnu.org>
+
 	[sfnt] Fix `face_index' value in `FT_Face' for named instances.
 
 	* src/sfnt/sfobjc.s (sfnt_init_face): Don't strip off higher 16bits.

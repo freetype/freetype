@@ -9,6 +9,12 @@ CHANGES BETWEEN 2.6.5 and 2.7
       documented.
 
 
+  II. MISCELLANEOUS
+
+    - A new macro `FT_IS_NAMED_INSTANCE' to test  whether a given face
+      is a named instance.
+
+
 ======================================================================
 
 CHANGES BETWEEN 2.6.4 and 2.6.5

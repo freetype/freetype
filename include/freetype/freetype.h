@@ -1361,6 +1361,20 @@ FT_BEGIN_HEADER
   /*************************************************************************
    *
    * @macro:
+   *   FT_IS_NAMED_INSTANCE( face )
+   *
+   * @description:
+   *   A macro that returns true whenever a face object is a named instance
+   *   of a GX variation font.
+   *
+   */
+#define FT_IS_NAMED_INSTANCE( face ) \
+          ( (face)->face_index & 0x7FFF0000L )
+
+
+  /*************************************************************************
+   *
+   * @macro:
    *   FT_IS_CID_KEYED( face )
    *
    * @description:
