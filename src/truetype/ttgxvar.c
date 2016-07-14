@@ -2019,7 +2019,7 @@
         for ( j = 0; j < n_points; j++ )
         {
 #ifdef FT_DEBUG_LEVEL_TRACE
-          FT_Vector  point_org = outline->points[j];
+          FT_Vector  point_org = points_org[j];
 #endif
 
 

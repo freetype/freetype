@@ -1,3 +1,7 @@
+2016-07-14  Werner Lemberg  <wl@gnu.org>
+
+	* src/truetype/ttgxvar.c (TT_Vary_Apply_Glyph_Deltas): Fix tracing.
+
 2016-07-14  Behdad Esfahbod  <behdad@behdad.org>
 
 	[truetype] Fix gxvar delta interpolation.
