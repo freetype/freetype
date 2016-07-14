@@ -1,4 +1,16 @@
 
+CHANGES BETWEEN 2.6.5 and 2.7
+
+  I. IMPORTANT BUG FIXES
+
+    - After  loading a  named instance  of  a GX  variation font,  the
+      `face_index'  value  in  the returned  `FT_Face'  structure  now
+      correctly holds the named instance  index in the upper 16bits as
+      documented.
+
+
+======================================================================
+
 CHANGES BETWEEN 2.6.4 and 2.6.5
 
   I. IMPORTANT BUG FIXES
