@@ -1,5 +1,21 @@
 2016-07-15  Werner Lemberg  <wl@gnu.org>
 
+	[autofit] Update and improve segment and edge tracing.
+
+	* src/autofit/afhints.c (af_glyph_hints_dump_segments): Trace
+	`delta' also.
+	Don't show first point of segment as a replacement for `pos'; this
+	is (a) misleading, since the difference to `pos' can be almost
+	arbitrarily large in corner cases, and (b) it is better to have all
+	segment data in font units instead of a single value given in output
+	space coordinates.
+	Improve layout.
+	(af_glyph_hints_dump_edges): Show px->units and units->px conversion
+	values for convenience.
+	Improve layout.
+
+2016-07-15  Werner Lemberg  <wl@gnu.org>
+
 	[autofit] For edges, reject segments wider than 1px (#41334).
 
 	* src/autofit/afhints.h (AF_SegmentRec): New member `delta'.
