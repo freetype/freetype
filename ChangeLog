@@ -1,3 +1,14 @@
+2016-07-15  Werner Lemberg  <wl@gnu.org>
+
+	[autofit] For edges, reject segments wider than 1px (#41334).
+
+	* src/autofit/afhints.h (AF_SegmentRec): New member `delta'.
+
+	* src/autofit/aflatin.c (af_latin_hints_compute_segments): Compute
+	`delta'.
+	(af_latin_hints_compute_edges): Reject segments with a delta larger
+	than 0.5px.
+
 2016-07-14  Werner Lemberg  <wl@gnu.org>
 
 	* include/freetype/freetype.h (FT_IS_NAMED_INSTANCE): New macro.
