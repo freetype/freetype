@@ -1,3 +1,9 @@
+2016-07-16  Nikolaus Waxweiler  <madigens@gmail.com>
+
+	* src/truetype/ttinterp.c (Ins_MIRP): Fix copy-and-paste error.
+
+	Problem reported by Hin-Tak Leung.
+
 2016-07-15  Werner Lemberg  <wl@gnu.org>
 
 	[autofit] Update and improve segment and edge tracing.

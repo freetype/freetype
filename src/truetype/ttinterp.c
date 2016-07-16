@@ -6088,7 +6088,6 @@
          exc->GS.freeVector.x != 0                          &&
          !( exc->sph_tweak_flags & SPH_TWEAK_NORMAL_ROUND ) )
       control_value_cutin = minimum_distance = 0;
-    else
 #endif /* TT_SUPPORT_SUBPIXEL_HINTING_INFINALITY */
 
     /* XXX: UNDOCUMENTED! cvt[-1] = 0 always */
