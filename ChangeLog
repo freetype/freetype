@@ -1,3 +1,11 @@
+2016-07-15  Werner Lemberg  <wl@gnu.org>
+
+	* src/autofit/aflatin.c (af_latin_hints_compute_segments): Thinko.
+
+	`max_pos' is always larger than `min_pos' so `FT_ABS' is not needed.
+
+	Reported by Alexei.
+
 2016-07-16  Nikolaus Waxweiler  <madigens@gmail.com>
 
 	* src/truetype/ttinterp.c (Ins_MIRP): Fix copy-and-paste error.

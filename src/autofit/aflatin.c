@@ -1538,7 +1538,7 @@
 
               segment->last  = point;
               segment->pos   = (FT_Short)( ( min_pos + max_pos ) >> 1 );
-              segment->delta = (FT_Short)FT_ABS( ( max_pos - min_pos ) >> 1 );
+              segment->delta = (FT_Short)( ( max_pos - min_pos ) >> 1 );
 
               /* a segment is round if either its first or last point */
               /* is a control point, and the length of the on points  */
