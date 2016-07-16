@@ -1,5 +1,29 @@
 2016-07-16  Werner Lemberg  <wl@gnu.org>
 
+	[truetype] Add bytecode support for GX variation fonts.
+
+	This commit implements undocumented (but confirmed) stuff from
+	Apple's old bytecode engine.
+
+	  GETVARIATION[], opcode 0x91
+	    This opcode pushes normalized variation coordinates for all axes
+	    onto the stack (in 2.14 format).  Coordinate of first axis gets
+	    pushed first.
+
+	  GETINFO[], selector bit 3
+	    If GX variation support is enabled, bit 10 of the result is set
+	    to 1.
+
+	* src/truetype/ttinterp.c: Include FT_MULTIPLE_MASTERS_H.
+	(opcode_name) [TT_CONFIG_OPTION_GX_VAR_SUPPORT]: Updated.
+	(Ins_GETINFO) [TT_CONFIG_OPTION_GX_VAR_SUPPORT]: Handle selector
+	bit 3, checking support for variation glyph hinting.
+	(Ins_GETVARIATION) [TT_CONFIG_OPTION_GX_VAR_SUPPORT]: New function
+	to implement opcode 0x91.
+	(TT_RunIns) [TT_CONFIG_OPTION_GX_VAR_SUPPORT]: Handle opcode 0x91.
+
+2016-07-16  Werner Lemberg  <wl@gnu.org>
+
 	[truetype] Fix GETINFO bytecode instruction.
 
 	* src/truetype/ttinterp.c (Ins_GETINFO): Fix return value for
