@@ -7227,7 +7227,7 @@
     /* Return Bit(s): 8             */
     /*                              */
     if ( ( args[0] & 2 ) != 0 && exc->tt_metrics.rotated )
-      K |= 0x80;
+      K |= 1 << 8;
 
     /********************************/
     /* GLYPH STRETCHED              */
@@ -7235,7 +7235,7 @@
     /* Return Bit(s): 9             */
     /*                              */
     if ( ( args[0] & 4 ) != 0 && exc->tt_metrics.stretched )
-      K |= 1 << 8;
+      K |= 1 << 9;
 
     /********************************/
     /* BI-LEVEL HINTING AND         */

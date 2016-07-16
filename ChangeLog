@@ -1,3 +1,10 @@
+2016-07-16  Werner Lemberg  <wl@gnu.org>
+
+	[truetype] Fix GETINFO bytecode instruction.
+
+	* src/truetype/ttinterp.c (Ins_GETINFO): Fix return value for
+	stretching information.
+
 2016-07-16  Behdad Esfahbod  <behdad@behdad.org>
 
 	[truetype] Make all glyphs in `Zycon' GX font work.
