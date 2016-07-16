@@ -1,3 +1,22 @@
+2016-07-14  Behdad Esfahbod  <behdad@behdad.org>
+
+	[truetype] More fixes for GX.
+
+	This finally fixes the rendering of the cyclist and the lizard in
+	the `Zycon' font.
+
+	* src/truetype/ttgxvar.c (ft_var_readpackedpoints): `first' point
+	index is always cumulative.
+
+	(tt_handle_deltas): Rename to...
+	(tt_interpolate_deltas): ... This.
+	Add new parameter for output point array.
+	Update caller.
+
+	(TT_Vary_Apply_Glyph_Deltas): Add `points_out' array; it now holds
+	the intermediate results of `tt_interpolate_deltas' that are to be
+	added to `outline->points'.
+
 2016-07-15  Werner Lemberg  <wl@gnu.org>
 
 	* src/autofit/aflatin.c (af_latin_hints_compute_segments): Thinko.
