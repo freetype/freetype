@@ -1,4 +1,11 @@
-2016-07-14  Behdad Esfahbod  <behdad@behdad.org>
+2016-07-16  Werner Lemberg  <wl@gnu.org>
+
+	[truetype] Fix GX delta tracing.
+
+	* src/truetype/ttgxvar.c (TT_Vary_Apply_Glyph_Deltas): Trace
+	relative point movements.
+
+2016-07-16  Behdad Esfahbod  <behdad@behdad.org>
 
 	[truetype] More fixes for GX.
 

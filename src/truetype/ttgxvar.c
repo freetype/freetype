@@ -2018,22 +2018,20 @@
         /* this means that there are deltas for every point in the glyph */
         for ( j = 0; j < n_points; j++ )
         {
+          FT_Pos  delta_x = FT_MulFix( deltas_x[j], apply );
+          FT_Pos  delta_y = FT_MulFix( deltas_y[j], apply );
+
+
+          outline->points[j].x += delta_x;
+          outline->points[j].y += delta_y;
+
 #ifdef FT_DEBUG_LEVEL_TRACE
-          FT_Vector  point_org = points_org[j];
-#endif
-
-
-          outline->points[j].x += FT_MulFix( deltas_x[j], apply );
-          outline->points[j].y += FT_MulFix( deltas_y[j], apply );
-
-#ifdef FT_DEBUG_LEVEL_TRACE
-          if ( ( point_org.x != outline->points[j].x ) ||
-               ( point_org.y != outline->points[j].y ) )
+          if ( delta_x || delta_y )
           {
             FT_TRACE7(( "      %d: (%d, %d) -> (%d, %d)\n",
                         j,
-                        point_org.x,
-                        point_org.y,
+                        outline->points[j].x - delta_x,
+                        outline->points[j].y - delta_y,
                         outline->points[j].x,
                         outline->points[j].y ));
             count++;
@@ -2086,30 +2084,32 @@
                                points_org,
                                has_delta );
 
-        for ( j = 0; j < n_points; j++ )
-        {
-          outline->points[j].x += points_out[j].x - points_org[j].x;
-          outline->points[j].y += points_out[j].y - points_org[j].y;
-        }
-
-#ifdef FT_DEBUG_LEVEL_TRACE
         FT_TRACE7(( "    point deltas:\n" ));
 
-        for ( j = 0; j < n_points; j++)
+        for ( j = 0; j < n_points; j++ )
         {
-          if ( ( points_org[j].x != outline->points[j].x ) ||
-               ( points_org[j].y != outline->points[j].y ) )
+          FT_Pos  delta_x = points_out[j].x - points_org[j].x;
+          FT_Pos  delta_y = points_out[j].y - points_org[j].y;
+
+
+          outline->points[j].x += delta_x;
+          outline->points[j].y += delta_y;
+
+#ifdef FT_DEBUG_LEVEL_TRACE
+          if ( delta_x || delta_y )
           {
             FT_TRACE7(( "      %d: (%d, %d) -> (%d, %d)\n",
                         j,
-                        points_org[j].x,
-                        points_org[j].y,
+                        outline->points[j].x - delta_x,
+                        outline->points[j].y - delta_y,
                         outline->points[j].x,
                         outline->points[j].y ));
             count++;
           }
+#endif
         }
 
+#ifdef FT_DEBUG_LEVEL_TRACE
         if ( !count )
           FT_TRACE7(( "      none\n" ));
 #endif
