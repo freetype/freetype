@@ -784,7 +784,7 @@
 
     /*  INS_$90  */   PACK( 0, 0 ),
     /*  GETVAR   */   PACK( 0, 0 ), /* will be handled specially */
-    /*  INS_$92  */   PACK( 0, 0 ),
+    /*  GETDATA  */   PACK( 0, 1 ),
     /*  INS_$93  */   PACK( 0, 0 ),
     /*  INS_$94  */   PACK( 0, 0 ),
     /*  INS_$95  */   PACK( 0, 0 ),
@@ -1071,7 +1071,7 @@
 #else
     "7 INS_$91",
 #endif
-    "7 INS_$92",
+    "7 GETDATA",
     "7 INS_$93",
     "7 INS_$94",
     "7 INS_$95",
@@ -7400,7 +7400,7 @@
   /*************************************************************************/
   /*                                                                       */
   /* GETVARIATION[]: get normalized variation (blend) coordinates          */
-  /* Opcode range:   0x24                                                  */
+  /* Opcode range:   0x91                                                  */
   /* Stack:          --> f2.14...                                          */
   /*                                                                       */
   /* XXX: UNDOCUMENTED!  There is no documentation from Apple for this     */
@@ -7428,6 +7428,21 @@
 
 #endif /* TT_CONFIG_OPTION_GX_VAR_SUPPORT */
 
+
+  /*************************************************************************/
+  /*                                                                       */
+  /* GETDATA[]:    no idea what this is good for                           */
+  /* Opcode range: 0x92                                                    */
+  /* Stack:        --> 17                                                  */
+  /*                                                                       */
+  /* XXX: UNDOCUMENTED!  There is no documentation from Apple for this     */
+  /*      very weird bytecode instruction.                                 */
+  /*                                                                       */
+  static void
+  Ins_GETDATA( FT_Long*  args )
+  {
+    args[0] = 17;
+  }
 
 
   static void
@@ -8190,6 +8205,10 @@
             Ins_UNKNOWN( exc );
           break;
 #endif
+
+        case 0x92:
+          Ins_GETDATA( args );
+          break;
 
         default:
           if ( opcode >= 0xE0 )

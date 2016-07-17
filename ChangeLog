@@ -1,5 +1,18 @@
 2016-07-16  Werner Lemberg  <wl@gnu.org>
 
+	[truetype] Add support for Apple's
+
+	  GETDATA[], opcode 0x92
+
+	bytecode instruction.  It always returns 17, and we have absolutely
+	no idea what it is good for...
+
+	* src/truetype/ttinterp.c (Pop_Push_Count, opcode_name): Updated.
+	(Ins_GETDATA): New function.
+	(TT_RunIns): Add it.
+
+2016-07-16  Werner Lemberg  <wl@gnu.org>
+
 	[truetype] Add bytecode support for GX variation fonts.
 
 	This commit implements undocumented (but confirmed) stuff from
