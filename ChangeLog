@@ -1,4 +1,12 @@
-2016-07-16  Werner Lemberg  <wl@gnu.org>
+2016-07-18  Werner Lemberg  <wl@gnu.org>
+
+	[truetype] Make GETDATA work only for GX fonts.
+
+	* src/truetype/ttinterp.c (opcode_name): Updated.
+	(Ins_GETDATA): Only define for `TT_CONFIG_OPTION_GX_VAR_SUPPORT'.
+	(TT_RunIns): Updated.
+
+2016-07-17  Werner Lemberg  <wl@gnu.org>
 
 	[truetype] Add support for Apple's
 

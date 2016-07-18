@@ -1068,10 +1068,11 @@
     "7 INS_$90",
 #ifdef TT_CONFIG_OPTION_GX_VAR_SUPPORT
     "6 GETVAR",
+    "7 GETDATA",
 #else
     "7 INS_$91",
+    "7 INS_$92",
 #endif
-    "7 GETDATA",
     "7 INS_$93",
     "7 INS_$94",
     "7 INS_$95",
@@ -7426,8 +7427,6 @@
       args[i] = coords[i] >> 2; /* convert 16.16 to 2.14 format */
   }
 
-#endif /* TT_CONFIG_OPTION_GX_VAR_SUPPORT */
-
 
   /*************************************************************************/
   /*                                                                       */
@@ -7443,6 +7442,8 @@
   {
     args[0] = 17;
   }
+
+#endif /* TT_CONFIG_OPTION_GX_VAR_SUPPORT */
 
 
   static void
@@ -8204,11 +8205,17 @@
           else
             Ins_UNKNOWN( exc );
           break;
-#endif
 
         case 0x92:
-          Ins_GETDATA( args );
+          /* there is at least one MS font (LaoUI.ttf version 5.01) that */
+          /* uses IDEFs for 0x91 and 0x92; for this reason we activate   */
+          /* GETDATA for GX fonts only, similar to GETVARIATION          */
+          if ( exc->face->blend )
+            Ins_GETDATA( args );
+          else
+            Ins_UNKNOWN( exc );
           break;
+#endif
 
         default:
           if ( opcode >= 0xE0 )
