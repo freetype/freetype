@@ -1,5 +1,12 @@
 2016-07-19  Werner Lemberg  <wl@gnu.org>
 
+	[truetype] Sanitizer fix, second try.
+
+	* src/truetype/ttgxvar.c (ft_var_readpackedpoints): Fix boundary
+	tests and use only one slot more.
+
+2016-07-19  Werner Lemberg  <wl@gnu.org>
+
 	[truetype] Sanitizer fix.
 
 	* src/truetype/ttgxvar.c (ft_var_readpackedpoints): Increase array
