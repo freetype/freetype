@@ -159,9 +159,9 @@
     }
 
     /* in the nested loops below we increase `i' twice; */
-    /* it is faster to simply allocate one more slot    */
+    /* it is faster to simply allocate two more slots   */
     /* than to add another test within the loop         */
-    if ( FT_NEW_ARRAY( points, n + 1 ) )
+    if ( FT_NEW_ARRAY( points, n + 2 ) )
       return NULL;
 
     *point_cnt = n;
