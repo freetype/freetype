@@ -1,3 +1,10 @@
+2016-07-19  Werner Lemberg  <wl@gnu.org>
+
+	[truetype] Sanitizer fix.
+
+	* src/truetype/ttgxvar.c (ft_var_readpackedpoints): Increase array
+	to fix nested loops.
+
 2016-07-18  Werner Lemberg  <wl@gnu.org>
 
 	[truetype] Make GETDATA work only for GX fonts.
