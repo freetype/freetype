@@ -1,3 +1,14 @@
+2016-07-22  Hin-Tak Leung  <htl10@users.sourceforge.net>
+
+	[truetype] Record the end of IDEFs.
+
+	To match the logic in FDEF.  The value of the end is only used for
+	bound-checking in `Ins_JMPR', so it may not have been obvious that
+	it was not recorded.  Tested (as part of Font Validator 2.0) all the
+	fonts on Fedora and did not see any change.
+
+	* src/truetype/ttinterp.c (Ins_IDEF): Updated.
+
 2016-07-19  Werner Lemberg  <wl@gnu.org>
 
 	[truetype] Sanitizer fix, second try.

@@ -4008,6 +4008,7 @@
         exc->error = FT_THROW( Nested_DEFS );
         return;
       case 0x2D:   /* ENDF */
+        def->end = exc->IP;
         return;
       }
     }
