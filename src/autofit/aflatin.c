@@ -1076,7 +1076,7 @@
         FT_UInt  ppem;
 
 
-        scaled    = FT_MulFix( blue->shoot.org, scaler->y_scale );
+        scaled    = FT_MulFix( blue->shoot.org, scale );
         ppem      = metrics->root.scaler.face->size->metrics.x_ppem;
         limit     = metrics->root.globals->increase_x_height;
         threshold = 40;
@@ -1123,8 +1123,6 @@
 
             if ( dist == 0 )
             {
-              scale = new_scale;
-
               FT_TRACE5((
                 "af_latin_metrics_scale_dim:"
                 " x height alignment (style `%s'):\n"
@@ -1132,9 +1130,11 @@
                 " vertical scaling changed from %.4f to %.4f (by %d%%)\n"
                 "\n",
                 af_style_names[metrics->root.style_class->style],
-                axis->org_scale / 65536.0,
                 scale / 65536.0,
+                new_scale / 65536.0,
                 ( fitted - scaled ) * 100 / scaled ));
+
+              scale = new_scale;
             }
 #ifdef FT_DEBUG_LEVEL_TRACE
             else

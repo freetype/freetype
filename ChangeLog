@@ -1,3 +1,9 @@
+2016-07-26  Werner Lemberg  <wl@gnu.org>
+
+	* src/autofit/aflatin.c (af_latin_metrics_scale_dim): Minor.
+
+	No functional change.
+
 2016-07-22  Hin-Tak Leung  <htl10@users.sourceforge.net>
 
 	[truetype] Record the end of IDEFs.
