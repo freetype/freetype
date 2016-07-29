@@ -1,3 +1,15 @@
+2016-07-29  Werner Lemberg  <wl@gnu.org>
+
+	[sfnt, truetype] Don't abort on invalid `maxComponentDepth'.
+
+	Since 2016-05-16 we detect infinite recursion directly.
+
+	* src/sfnt/ttload.c (tt_face_load_maxp): Don't adjust
+	`maxComponentDepth'.
+	* src/truetype/ttgload.c (load_truetype_glyph): Don't abort if
+	`maxComponentDepth' is not valid.  Instead, simply adjust its value
+	and emit a tracing message.
+
 2016-07-26  Werner Lemberg  <wl@gnu.org>
 
 	* src/autofit/aflatin.c (af_latin_metrics_scale_dim): Minor.

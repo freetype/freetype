@@ -1436,13 +1436,12 @@
       FT_TRACE5(( "  nesting level: %d\n", recurse_count ));
 #endif
 
-    /* some fonts have an incorrect value of `maxComponentDepth', */
-    /* thus we allow depth 1 to catch the majority of them        */
-    if ( recurse_count > 1                                   &&
-         recurse_count > face->max_profile.maxComponentDepth )
+    /* some fonts have an incorrect value of `maxComponentDepth' */
+    if ( recurse_count > face->max_profile.maxComponentDepth )
     {
-      error = FT_THROW( Invalid_Composite );
-      goto Exit;
+      FT_TRACE1(( "load_truetype_glyph: maxComponentDepth set to %d\n",
+                  recurse_count ));
+      face->max_profile.maxComponentDepth = recurse_count;
     }
 
 #ifndef FT_CONFIG_OPTION_INCREMENTAL
