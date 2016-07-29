@@ -7405,8 +7405,9 @@
   /* Opcode range:   0x91                                                  */
   /* Stack:          --> f2.14...                                          */
   /*                                                                       */
-  /* XXX: UNDOCUMENTED!  There is no documentation from Apple for this     */
-  /*      bytecode instruction.                                            */
+  /* XXX: UNDOCUMENTED!  There is no official documentation from Apple for */
+  /*      this bytecode instruction.  Active only if a font has GX         */
+  /*      variation axes.                                                  */
   /*                                                                       */
   static void
   Ins_GETVARIATION( TT_ExecContext  exc,
