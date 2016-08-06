@@ -1,3 +1,10 @@
+2016-07-16  Behdad Esfahbod  <behdad@behdad.org>
+
+	[truetype] Fix GX variation handling of composites.
+
+	* src/truetype/ttgload.c (load_truetype_glyph)
+	[TT_CONFIG_OPTION_GX_VAR_SUPPORT]: Check `ARGS_ARE_XY_VALUES' flag.
+
 2016-08-05  Alexei Podtelezhnikov  <apodtele@gmail.com>
 
 	[smooth] Minor refactoring.

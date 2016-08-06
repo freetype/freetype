@@ -1807,11 +1807,11 @@
 
         for ( i = 0; i < limit; i++, subglyph++ )
         {
-          /* XXX: overflow check for subglyph->{arg1,arg2}.         */
-          /*      Deltas must be within signed 16-bit,              */
-          /*      but the restriction of summed deltas is not clear */
-          subglyph->arg1 = (FT_Int16)points[i].x;
-          subglyph->arg2 = (FT_Int16)points[i].y;
+          if ( subglyph->flags & ARGS_ARE_XY_VALUES )
+          {
+            subglyph->arg1 = (FT_Int16)points[i].x;
+            subglyph->arg2 = (FT_Int16)points[i].y;
+          }
         }
 
         loader->pp1.x = points[i + 0].x;
