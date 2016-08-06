@@ -657,14 +657,14 @@ typedef ptrdiff_t  FT_PtrDist;
       return;
     }
 
-    fx1 = (TCoord)( x1 - SUBPIXELS( ex1 ) );
-    fx2 = (TCoord)( x2 - SUBPIXELS( ex2 ) );
+    fx1   = (TCoord)( x1 - SUBPIXELS( ex1 ) );
+    fx2   = (TCoord)( x2 - SUBPIXELS( ex2 ) );
+    delta = y2 - y1;
 
     /* everything is located in a single cell.  That is easy! */
     /*                                                        */
     if ( ex1 == ex2 )
     {
-      delta      = y2 - y1;
       ras.area  += (TArea)(( fx1 + fx2 ) * delta);
       ras.cover += delta;
       return;
@@ -673,14 +673,17 @@ typedef ptrdiff_t  FT_PtrDist;
     /* ok, we'll have to render a run of adjacent cells on the same */
     /* scanline...                                                  */
     /*                                                              */
-    p     = ( ONE_PIXEL - fx1 ) * ( y2 - y1 );
-    first = ONE_PIXEL;
-    incr  = 1;
-    dx    = x2 - x1;
+    dx = x2 - x1;
 
-    if ( dx < 0 )
+    if ( dx > 0 )
     {
-      p     = fx1 * ( y2 - y1 );
+      p     = ( ONE_PIXEL - fx1 ) * delta;
+      first = ONE_PIXEL;
+      incr  = 1;
+    }
+    else
+    {
+      p     = fx1 * delta;
       first = 0;
       incr  = -1;
       dx    = -dx;
@@ -764,8 +767,6 @@ typedef ptrdiff_t  FT_PtrDist;
     dy = to_y - ras.y;
 
     /* vertical line - avoid calling gray_render_scanline */
-    incr = 1;
-
     if ( dx == 0 )
     {
       TCoord  ex     = TRUNC( ras.x );
@@ -773,8 +774,12 @@ typedef ptrdiff_t  FT_PtrDist;
       TArea   area;
 
 
-      first = ONE_PIXEL;
-      if ( dy < 0 )
+      if ( dy > 0)
+      {
+        first = ONE_PIXEL;
+        incr  = 1;
+      }
+      else
       {
         first = 0;
         incr  = -1;
@@ -806,11 +811,13 @@ typedef ptrdiff_t  FT_PtrDist;
     }
 
     /* ok, we have to render several scanlines */
-    p     = ( ONE_PIXEL - fy1 ) * dx;
-    first = ONE_PIXEL;
-    incr  = 1;
-
-    if ( dy < 0 )
+    if ( dy > 0)
+    {
+      p     = ( ONE_PIXEL - fy1 ) * dx;
+      first = ONE_PIXEL;
+      incr  = 1;
+    }
+    else
     {
       p     = fy1 * dx;
       first = 0;

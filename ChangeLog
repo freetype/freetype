@@ -1,3 +1,10 @@
+2016-08-05  Alexei Podtelezhnikov  <apodtele@gmail.com>
+
+	[smooth] Minor refactoring.
+
+	* src/smooth/ftgrays.c (gray_render_scanline, gray_render_line):
+	Updated.
+
 2016-07-29  Werner Lemberg  <wl@gnu.org>
 
 	[sfnt, truetype] Don't abort on invalid `maxComponentDepth'.
