@@ -1,4 +1,20 @@
-2016-07-16  Behdad Esfahbod  <behdad@behdad.org>
+2016-08-06  Jon Spencer  <jon@jonspencer.ca>
+
+	[sfnt] Fix `FT_Get_Advance' for bitmap strikes.
+
+	`FT_Get_Advance' returns 0 for bitmap fonts.  It first gets the
+	advance value from the font table and then scales it by the
+	`font->size->metrics->x_scale' field.  But `FT_Select_Size' doesn't
+	set that value for bitmap fonts and the advance gets scaled to zero.
+
+	Taken from
+
+	  https://github.com/behdad/harfbuzz/issues/252
+
+	* src/sfnt/ttsbit.c (tt_face_load_strike_metrics)
+	<TT_SBIT_TABLE_TYPE_EBLC>: Set scale values.
+
+2016-08-06  Behdad Esfahbod  <behdad@behdad.org>
 
 	[truetype] Fix GX variation handling of composites.
 
