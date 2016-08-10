@@ -1184,8 +1184,8 @@
 #define FT_STRUCTURE  TT_Postscript
 
       FT_FRAME_START( 32 ),
-        FT_FRAME_ULONG( FormatType ),
-        FT_FRAME_ULONG( italicAngle ),
+        FT_FRAME_LONG ( FormatType ),
+        FT_FRAME_LONG ( italicAngle ),
         FT_FRAME_SHORT( underlinePosition ),
         FT_FRAME_SHORT( underlineThickness ),
         FT_FRAME_ULONG( isFixedPitch ),

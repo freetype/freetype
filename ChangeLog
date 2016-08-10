@@ -1,3 +1,9 @@
+2016-08-10  Werner Lemberg  <wl@gnu.org>
+
+	[sfnt] Use correct type for `italicAngle' field (#48732).
+
+	* src/sfnt/ttload.c (tt_face_load_post): Fix types.
+
 2016-08-06  Jon Spencer  <jon@jonspencer.ca>
 
 	[sfnt] Fix `FT_Get_Advance' for bitmap strikes.
