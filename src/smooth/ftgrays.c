@@ -1365,10 +1365,10 @@ typedef ptrdiff_t  FT_PtrDist;
       /* see whether we can add this span to the current list */
       count = ras.num_gray_spans;
       span  = ras.gray_spans + count - 1;
-      if ( span->coverage == coverage &&
+      if ( count > 0                  &&
+           span->coverage == coverage &&
            span->x + span->len == x   &&
-           ras.span_y == y            &&
-           count > 0                  )
+           ras.span_y == y            )
       {
         span->len = (unsigned short)( span->len + acount );
         return;
