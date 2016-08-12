@@ -1,5 +1,9 @@
 2016-08-11  Alexei Podtelezhnikov  <apodtele@gmail.com>
 
+	* src/truetype/ttinterp.c (TT_RunIns): Minor and formatting.
+
+2016-08-11  Alexei Podtelezhnikov  <apodtele@gmail.com>
+
 	* src/truetype/ttinterp.c (Pop_Push_Count): Fix some entries.
 
 2016-08-10  Peter Klotz  <Peter.Klotz@ith-icoserve.com>
