@@ -1,3 +1,14 @@
+2016-08-13  Werner Lemberg  <wl@gnu.org>
+
+	[winfonts] Avoid zero bitmap width and height.
+
+	Reported as
+
+	  https://bugzilla.mozilla.org/show_bug.cgi?id=1272173
+
+	* src/winfonts/winfnt.c (FNT_Face_Init): Check zero pixel height.
+	(FNT_Load_Glyph): Check for zero pitch.
+
 2016-08-11  Alexei Podtelezhnikov  <apodtele@gmail.com>
 
 	* src/truetype/ttinterp.c (Pop_Push_Count): Revert changes.
