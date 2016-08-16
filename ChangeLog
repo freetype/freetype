@@ -1,5 +1,16 @@
 2016-08-16  Werner Lemberg  <wl@gnu.org>
 
+	[lzw] Avoid buffer overrun.
+
+	Reported as
+
+	  https://bugzilla.mozilla.org/show_bug.cgi?id=1273283
+
+	* src/lzw/ftzopen.c (ft_lzwstate_refill): Ensure `buf_size' doesn't
+	underflow.
+
+2016-08-16  Werner Lemberg  <wl@gnu.org>
+
 	[truetype] Fix compiler warning.
 
 	* src/truetype/ttgload.c (load_truetype_glyph): Add cast.

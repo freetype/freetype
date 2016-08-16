@@ -42,7 +42,12 @@
     state->buf_total += count;
     state->in_eof     = FT_BOOL( count < state->num_bits );
     state->buf_offset = 0;
-    state->buf_size   = ( state->buf_size << 3 ) - ( state->num_bits - 1 );
+
+    state->buf_size <<= 3;
+    if ( state->buf_size > state->num_bits )
+      state->buf_size -= state->num_bits - 1;
+    else
+      return -1; /* not enough data */
 
     if ( count == 0 )  /* end of file */
       return -1;
