@@ -1,5 +1,11 @@
 2016-08-16  Werner Lemberg  <wl@gnu.org>
 
+	[lzw] Avoid invalid left shift.
+
+	* src/lzw/ftzopen.c (ft_lzwstate_get_code): Limit `num_bits'.
+
+2016-08-16  Werner Lemberg  <wl@gnu.org>
+
 	[lzw] Avoid buffer overrun.
 
 	Reported as

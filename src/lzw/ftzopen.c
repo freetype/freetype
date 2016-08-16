@@ -65,6 +65,9 @@
     FT_Int    result;
 
 
+    if ( num_bits > LZW_MAX_BITS )
+      return -1;
+
     if ( state->buf_clear                    ||
          offset >= state->buf_size           ||
          state->free_ent >= state->free_bits )
