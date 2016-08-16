@@ -1,5 +1,12 @@
 2016-08-16  Werner Lemberg  <wl@gnu.org>
 
+	[lzw] Optimize last commit.
+
+	* src/lzw/ftzopen.c (ft_lzwstate_get_code): Move check into
+	conditional clause.
+
+2016-08-16  Werner Lemberg  <wl@gnu.org>
+
 	[lzw] Avoid invalid left shift.
 
 	Reported as
