@@ -2,6 +2,10 @@
 
 	[lzw] Avoid invalid left shift.
 
+	Reported as
+
+	  https://bugzilla.mozilla.org/show_bug.cgi?id=1295366
+
 	* src/lzw/ftzopen.c (ft_lzwstate_get_code): Limit `num_bits'.
 
 2016-08-16  Werner Lemberg  <wl@gnu.org>
