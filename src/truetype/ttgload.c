@@ -1441,7 +1441,7 @@
     {
       FT_TRACE1(( "load_truetype_glyph: maxComponentDepth set to %d\n",
                   recurse_count ));
-      face->max_profile.maxComponentDepth = recurse_count;
+      face->max_profile.maxComponentDepth = (FT_UShort)recurse_count;
     }
 
 #ifndef FT_CONFIG_OPTION_INCREMENTAL

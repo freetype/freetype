@@ -1,3 +1,9 @@
+2016-08-16  Werner Lemberg  <wl@gnu.org>
+
+	[truetype] Fix compiler warning.
+
+	* src/truetype/ttgload.c (load_truetype_glyph): Add cast.
+
 2016-08-13  Werner Lemberg  <wl@gnu.org>
 
 	[winfonts] Avoid zero bitmap width and height.
