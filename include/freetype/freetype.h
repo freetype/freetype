@@ -2345,12 +2345,21 @@ FT_BEGIN_HEADER
   /*    FT_Size_Request_Type                                               */
   /*                                                                       */
   /* <Description>                                                         */
-  /*    An enumeration type that lists the supported size request types.   */
+  /*    An enumeration type that lists the supported size request types,   */
+  /*    i.e., what input size (in font units) maps to the requested output */
+  /*    size (in pixels, as computed from the arguments of                 */
+  /*    @FT_Size_Request).                                                 */
   /*                                                                       */
   /* <Values>                                                              */
   /*    FT_SIZE_REQUEST_TYPE_NOMINAL ::                                    */
   /*      The nominal size.  The `units_per_EM' field of @FT_FaceRec is    */
   /*      used to determine both scaling values.                           */
+  /*                                                                       */
+  /*      This is the standard scaling found in most applications.  In     */
+  /*      particular, use this size request type for TrueType fonts if     */
+  /*      they provide optical scaling or something similar.  Note,        */
+  /*      however, that `units_per_EM' is a rather abstract value which    */
+  /*      bears no relation to the actual size of the glyphs in a font.    */
   /*                                                                       */
   /*    FT_SIZE_REQUEST_TYPE_REAL_DIM ::                                   */
   /*      The real dimension.  The sum of the `ascender' and (minus of)    */
@@ -2405,21 +2414,27 @@ FT_BEGIN_HEADER
   /* <Fields>                                                              */
   /*    type           :: See @FT_Size_Request_Type.                       */
   /*                                                                       */
-  /*    width          :: The desired width.                               */
+  /*    width          :: The desired width, given as a 26.6 fractional    */
+  /*                      point value (with 72pt = 1in).                   */
   /*                                                                       */
-  /*    height         :: The desired height.                              */
+  /*    height         :: The desired height, given as a 26.6 fractional   */
+  /*                      point value (with 72pt = 1in).                   */
   /*                                                                       */
-  /*    horiResolution :: The horizontal resolution.  If set to zero,      */
-  /*                      `width' is treated as a 26.6 fractional pixel    */
-  /*                      value.                                           */
+  /*    horiResolution :: The horizontal resolution (dpi, i.e., pixels per */
+  /*                      inch).  If set to zero, `width' is treated as a  */
+  /*                      26.6 fractional *pixel* value.                   */
   /*                                                                       */
-  /*    vertResolution :: The vertical resolution.  If set to zero,        */
-  /*                      `height' is treated as a 26.6 fractional pixel   */
-  /*                      value.                                           */
+  /*    vertResolution :: The vertical resolution (dpi, i.e., pixels per   */
+  /*                      inch).  If set to zero, `height' is treated as a */
+  /*                      26.6 fractional *pixel* value.                   */
   /*                                                                       */
   /* <Note>                                                                */
   /*    If `width' is zero, then the horizontal scaling value is set equal */
   /*    to the vertical scaling value, and vice versa.                     */
+  /*                                                                       */
+  /*    If `type' is FT_SIZE_REQUEST_TYPE_SCALES, `width' and `height' are */
+  /*    interpreted directly as 16.16 fractional scaling values, without   */
+  /*    any further modification.                                          */
   /*                                                                       */
   typedef struct  FT_Size_RequestRec_
   {
