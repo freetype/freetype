@@ -397,6 +397,7 @@
       exec->maxIDefs   = size->max_instruction_defs;
       exec->FDefs      = size->function_defs;
       exec->IDefs      = size->instruction_defs;
+      exec->pointSize  = size->point_size;
       exec->tt_metrics = size->ttmetrics;
       exec->metrics    = size->metrics;
 
@@ -2580,13 +2581,20 @@
   Ins_MPS( TT_ExecContext  exc,
            FT_Long*        args )
   {
-    /* Note: The point size should be irrelevant in a given font program; */
-    /*       we thus decide to return only the PPEM value.                */
-#if 0
-    args[0] = exc->metrics.pointSize;
-#else
-    args[0] = exc->func_cur_ppem( exc );
-#endif
+    if ( NO_SUBPIXEL_HINTING )
+    {
+      /* Microsoft's GDI bytecode interpreter always returns value 12; */
+      /* we return the current PPEM value instead.                     */
+      args[0] = exc->func_cur_ppem( exc );
+    }
+    else
+    {
+      /* A possible practical application of the MPS instruction is to   */
+      /* implement optical scaling and similar features, which should be */
+      /* based on perceptual attributes, thus independent of the         */
+      /* resolution.                                                     */
+      args[0] = exc->pointSize;
+    }
   }
 
 

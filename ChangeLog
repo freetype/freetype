@@ -1,5 +1,22 @@
 2016-08-16  Werner Lemberg  <wl@gnu.org>
 
+	[truetype] Fix `MPS' instruction.
+
+	According to Greg Hitchcock, MPS in DWrite really returns the point
+	size.
+
+	* src/truetype/ttobjs.h (TT_SizeRec): Add `point_size' member.
+
+	* src/truetype/ttdriver.c (tt_size_request): Set `point_size'.
+
+	* src/truetype/ttinterp.h (TT_ExecContextRec): Add `pointSize'
+	member.
+
+	* src/truetype/ttinterp.c (TT_Load_Context): Updated.
+	(Ins_MPS): Fix instruction.
+
+2016-08-16  Werner Lemberg  <wl@gnu.org>
+
 	[lzw] Optimize last commit.
 
 	* src/lzw/ftzopen.c (ft_lzwstate_get_code): Move check into

@@ -339,6 +339,25 @@
     {
       error = tt_size_reset( ttsize );
       ttsize->root.metrics = ttsize->metrics;
+
+#ifdef TT_USE_BYTECODE_INTERPRETER
+      /* for the `MPS' bytecode instruction we need the point size */
+      {
+        FT_UInt  resolution = ttsize->metrics.x_ppem > ttsize->metrics.y_ppem
+                                ? req->horiResolution
+                                : req->vertResolution;
+
+
+        /* if we don't have a resolution value, assume 72dpi */
+        if ( req->type == FT_SIZE_REQUEST_TYPE_SCALES ||
+             !resolution                              )
+          resolution = 72;
+
+        ttsize->point_size = FT_MulDiv( ttsize->ttmetrics.ppem,
+                                        64 * 72,
+                                        resolution );
+      }
+#endif
     }
 
     return error;
