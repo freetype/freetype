@@ -2434,7 +2434,8 @@ FT_BEGIN_HEADER
   /*                                                                       */
   /*    If `type' is FT_SIZE_REQUEST_TYPE_SCALES, `width' and `height' are */
   /*    interpreted directly as 16.16 fractional scaling values, without   */
-  /*    any further modification.                                          */
+  /*    any further modification, and both `horiResolution' and            */
+  /*    `vertResolution' are ignored.                                      */
   /*                                                                       */
   typedef struct  FT_Size_RequestRec_
   {
