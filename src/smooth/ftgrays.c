@@ -404,9 +404,6 @@ typedef ptrdiff_t  FT_PtrDist;
   } TCell;
 
 
-  /* maximum number of gray spans in a call to the span callback */
-#define FT_MAX_GRAY_SPANS  32
-
   /* maximum number of gray cells in the buffer */
 #if FT_RENDER_POOL_SIZE > 2048
 #define FT_MAX_GRAY_POOL  ( FT_RENDER_POOL_SIZE / sizeof ( TCell ) )
@@ -445,12 +442,8 @@ typedef ptrdiff_t  FT_PtrDist;
     FT_Outline  outline;
     FT_Bitmap   target;
 
-    FT_Span     gray_spans[FT_MAX_GRAY_SPANS];
-    int         num_gray_spans;
-
     FT_Raster_Span_Func  render_span;
     void*                render_span_data;
-    int                  span_y;
 
     PCell*     ycells;
 
@@ -1353,64 +1346,16 @@ typedef ptrdiff_t  FT_PtrDist;
         coverage = 255;
     }
 
-    y += ras.min_ey;
-    x += ras.min_ex;
-
     if ( coverage )
     {
-      FT_Span*  span;
-      int       count;
+      FT_Span  span;
 
 
-      /* see whether we can add this span to the current list */
-      count = ras.num_gray_spans;
-      span  = ras.gray_spans + count - 1;
-      if ( count > 0                  &&
-           span->coverage == coverage &&
-           span->x + span->len == x   &&
-           ras.span_y == y            )
-      {
-        span->len = (unsigned short)( span->len + acount );
-        return;
-      }
+      span.x        = (short)( x + ras.min_ex );
+      span.len      = (unsigned short)acount;
+      span.coverage = (unsigned char)coverage;
 
-      if ( ras.span_y != y || count >= FT_MAX_GRAY_SPANS )
-      {
-        if ( ras.render_span && count > 0 )
-          ras.render_span( ras.span_y, count, ras.gray_spans,
-                           ras.render_span_data );
-
-#ifdef FT_DEBUG_LEVEL_TRACE
-
-        if ( count > 0 )
-        {
-          int  n;
-
-
-          FT_TRACE7(( "y = %3d ", ras.span_y ));
-          span = ras.gray_spans;
-          for ( n = 0; n < count; n++, span++ )
-            FT_TRACE7(( "[%d..%d]:%02x ",
-                        span->x, span->x + span->len - 1, span->coverage ));
-          FT_TRACE7(( "\n" ));
-        }
-
-#endif /* FT_DEBUG_LEVEL_TRACE */
-
-        ras.num_gray_spans = 0;
-        ras.span_y         = (int)y;
-
-        span  = ras.gray_spans;
-      }
-      else
-        span++;
-
-      /* add a gray span to the current list */
-      span->x        = (short)x;
-      span->len      = (unsigned short)acount;
-      span->coverage = (unsigned char)coverage;
-
-      ras.num_gray_spans++;
+      ras.render_span( y + ras.min_ey, 1, &span, ras.render_span_data );
     }
   }
 
@@ -1423,9 +1368,6 @@ typedef ptrdiff_t  FT_PtrDist;
 
     if ( ras.num_cells == 0 )
       return;
-
-    ras.num_gray_spans = 0;
-    ras.span_y         = 0;
 
     FT_TRACE7(( "gray_sweep: start\n" ));
 
@@ -1459,30 +1401,7 @@ typedef ptrdiff_t  FT_PtrDist;
                     ras.count_ex - x );
     }
 
-    if ( ras.render_span && ras.num_gray_spans > 0 )
-      ras.render_span( ras.span_y, ras.num_gray_spans,
-                       ras.gray_spans, ras.render_span_data );
-
-#ifdef FT_DEBUG_LEVEL_TRACE
-
-    if ( ras.num_gray_spans > 0 )
-    {
-      FT_Span*  span;
-      int       n;
-
-
-      FT_TRACE7(( "y = %3d ", ras.span_y ));
-      span = ras.gray_spans;
-      for ( n = 0; n < ras.num_gray_spans; n++, span++ )
-        FT_TRACE7(( "[%d..%d]:%02x ",
-                    span->x, span->x + span->len - 1, span->coverage ));
-      FT_TRACE7(( "\n" ));
-    }
-
     FT_TRACE7(( "gray_sweep: end\n" ));
-
-#endif /* FT_DEBUG_LEVEL_TRACE */
-
   }
 
 

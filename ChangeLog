@@ -1,3 +1,18 @@
+2016-08-22  Alexei Podtelezhnikov  <apodtele@gmail.com>
+
+	[smooth] Simplify span rendering.
+
+	This removes unnecessary complexity of span merging and buffering.
+	Instead, the spans are rendered as they come, speeding up the
+	rendering by about 5% percents as a result.
+
+	* src/smooth/ftgrays.c [FT_MAX_GRAY_SPANS]: Macro removed.
+	(gray_TWorker): Remove span buffer and related fields.
+	(gray_sweep, gray_hline): Updated.
+
+	* include/freetype/ftimage.h: Remove documentation note about
+	`FT_MAX_GRAY_SPANS', which was never in `ftoption.h' and is now gone.
+
 2016-08-16  Werner Lemberg  <wl@gnu.org>
 
 	[truetype] Fix `MPS' instruction.
