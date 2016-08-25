@@ -1776,6 +1776,12 @@
       }
     }
 
+    if ( !n )
+    {
+      error = FT_THROW( Invalid_File_Format );
+      goto Fail;
+    }
+
     loader->num_glyphs = n;
 
     /* if /.notdef is found but does not occupy index 0, do our magic. */
