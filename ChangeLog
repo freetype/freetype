@@ -1,3 +1,7 @@
+2016-08-25  Werner Lemberg  <wl@gnu.org>
+
+	* include/freetype/internal/ftdriver.h: Remove unused typedefs.
+
 2016-08-22  Alexei Podtelezhnikov  <apodtele@gmail.com>
 
 	[smooth] Simplify span rendering.
