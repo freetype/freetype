@@ -1376,7 +1376,7 @@
 
           /* if p > limit, the whole segment is invalid */
           if ( next && p > limit )
-            continue;
+            break;
 
           gindex = TT_PEEK_USHORT( p );
           if ( gindex )
@@ -1404,9 +1404,6 @@
             else if ( (FT_Int)charcode + delta < 0x10000L &&
                       (FT_Int)end + delta >= 0x10000L     )
               charcode = (FT_UInt)( 0x10000L - delta );
-
-            else
-              continue;
           }
         }
 

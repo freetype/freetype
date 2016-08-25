@@ -1,5 +1,11 @@
 2016-08-25  Werner Lemberg  <wl@gnu.org>
 
+	[sfnt] Fix previous commit (#48901).
+
+	* src/sfnt/ttcmap.c (tt_cmap4_char_map_binary): Thinkos.
+
+2016-08-25  Werner Lemberg  <wl@gnu.org>
+
 	[sfnt] Speed up handling of invalid format 4 cmaps.
 
 	* src/sfnt/ttcmap.c (tt_cmap4_next, tt_cmap4_char_map_binary): Add
