@@ -1,5 +1,9 @@
 2016-08-26  Werner Lemberg  <wl@gnu.org>
 
+	* src/cid/cidload.c (cid_face_open): Improve handling of `SDBytes'.
+
+2016-08-26  Werner Lemberg  <wl@gnu.org>
+
 	[cid] Fix commit from 2016-05-16.
 
 	* src/cid/cidparse.c (cid_parser_new): Fix off-by-one errors.
