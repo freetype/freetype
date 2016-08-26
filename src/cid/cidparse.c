@@ -199,7 +199,7 @@
     limit = parser->root.limit;
     cur   = parser->root.cursor;
 
-    while ( cur < limit - SFNTS_LEN )
+    while ( cur <= limit - SFNTS_LEN )
     {
       if ( parser->root.error )
       {
@@ -208,7 +208,7 @@
       }
 
       if ( cur[0] == 'S'                                           &&
-           cur < limit - STARTDATA_LEN                             &&
+           cur <= limit - STARTDATA_LEN                            &&
            ft_strncmp( (char*)cur, STARTDATA, STARTDATA_LEN ) == 0 )
       {
         if ( ft_strncmp( (char*)arg1, "(Hex)", 5 ) == 0 )

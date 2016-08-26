@@ -1,5 +1,11 @@
 2016-08-26  Werner Lemberg  <wl@gnu.org>
 
+	[cid] Fix commit from 2016-05-16.
+
+	* src/cid/cidparse.c (cid_parser_new): Fix off-by-one errors.
+
+2016-08-26  Werner Lemberg  <wl@gnu.org>
+
 	[sfnt] Cache offset and size to bitmap data table.
 
 	This commit avoids `EBDT' and friends being looked up again and
