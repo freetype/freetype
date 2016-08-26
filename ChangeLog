@@ -1,3 +1,18 @@
+2016-08-26  Werner Lemberg  <wl@gnu.org>
+
+	[sfnt] Cache offset and size to bitmap data table.
+
+	This commit avoids `EBDT' and friends being looked up again and
+	again while loading a single embedded bitmap.
+
+	* include/freetype/internal/tttypes.h (TT_FaceRec)
+	[TT_CONFIG_OPTION_EMBEDDED_BITMAPS]: New fields `ebdt_start' and
+	`ebdt_size'.
+
+	* src/sfnt/ttsbit.c (tt_sbit_decoder_init): Move table lookup to ...
+	(tt_face_load_sbit): ... this function; also store the table size
+	and offset.
+
 2016-08-26  Alexei Podtelezhnikov  <apodtele@gmail.com>
 
 	* src/smooth/ftgrays.c (gray_raster_render): Minor tweaks.
