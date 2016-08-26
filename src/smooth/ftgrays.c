@@ -1924,11 +1924,17 @@ typedef ptrdiff_t  FT_PtrDist;
     const FT_Bitmap*   target_map  = params->target;
     FT_BBox            cbox, clip;
 
+#ifndef FT_STATIC_RASTER
     gray_TWorker  worker[1];
+#endif
 
 
     if ( !raster )
       return FT_THROW( Invalid_Argument );
+
+    /* this version does not support monochrome rendering */
+    if ( !( params->flags & FT_RASTER_FLAG_AA ) )
+      return FT_THROW( Invalid_Mode );
 
     if ( !outline )
       return FT_THROW( Invalid_Outline );
@@ -1944,9 +1950,19 @@ typedef ptrdiff_t  FT_PtrDist;
            outline->contours[outline->n_contours - 1] + 1 )
       return FT_THROW( Invalid_Outline );
 
-    /* if direct mode is not set, we must have a target bitmap */
-    if ( !( params->flags & FT_RASTER_FLAG_DIRECT ) )
+    ras.outline = *outline;
+
+    if ( params->flags & FT_RASTER_FLAG_DIRECT )
     {
+      if ( !params->gray_spans )
+        return 0;
+
+      ras.render_span      = (FT_Raster_Span_Func)params->gray_spans;
+      ras.render_span_data = params->user;
+    }
+    else
+    {
+      /* if direct mode is not set, we must have a target bitmap */
       if ( !target_map )
         return FT_THROW( Invalid_Argument );
 
@@ -1956,11 +1972,11 @@ typedef ptrdiff_t  FT_PtrDist;
 
       if ( !target_map->buffer )
         return FT_THROW( Invalid_Argument );
-    }
 
-    /* this version does not support monochrome rendering */
-    if ( !( params->flags & FT_RASTER_FLAG_AA ) )
-      return FT_THROW( Invalid_Mode );
+      ras.target           = *target_map;
+      ras.render_span      = (FT_Raster_Span_Func)gray_render_span;
+      ras.render_span_data = &ras;
+    }
 
     FT_Outline_Get_CBox( outline, &cbox );
 
@@ -2005,20 +2021,6 @@ typedef ptrdiff_t  FT_PtrDist;
 
     ras.count_ex = ras.max_ex - ras.min_ex;
     ras.count_ey = ras.max_ey - ras.min_ey;
-
-    ras.outline        = *outline;
-
-    if ( params->flags & FT_RASTER_FLAG_DIRECT )
-    {
-      ras.render_span      = (FT_Raster_Span_Func)params->gray_spans;
-      ras.render_span_data = params->user;
-    }
-    else
-    {
-      ras.target           = *target_map;
-      ras.render_span      = (FT_Raster_Span_Func)gray_render_span;
-      ras.render_span_data = &ras;
-    }
 
     return gray_convert_glyph( RAS_VAR );
   }

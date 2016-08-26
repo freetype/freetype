@@ -1,3 +1,7 @@
+2016-08-26  Alexei Podtelezhnikov  <apodtele@gmail.com>
+
+	* src/smooth/ftgrays.c (gray_raster_render): Minor tweaks.
+
 2016-08-26  Werner Lemberg  <wl@gnu.org>
 
 	[type1] Fix heap buffer overflow.
@@ -32,7 +36,7 @@
 
 	This removes unnecessary complexity of span merging and buffering.
 	Instead, the spans are rendered as they come, speeding up the
-	rendering by about 5% percents as a result.
+	rendering by about 5% as a result.
 
 	* src/smooth/ftgrays.c [FT_MAX_GRAY_SPANS]: Macro removed.
 	(gray_TWorker): Remove span buffer and related fields.
