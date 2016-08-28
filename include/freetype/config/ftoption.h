@@ -524,6 +524,16 @@ FT_BEGIN_HEADER
   /*   Setting this macro is needed for systems that prohibit address      */
   /*   fixups, such as BREW.                                               */
   /*                                                                       */
+  /*   Note that PIC support is not available for all modules (see         */
+  /*   `modules.cfg' for a complete list).  For building with PIC support, */
+  /*   do the following.                                                   */
+  /*                                                                       */
+  /*     1. Clone the repository.                                          */
+  /*     2. Remove all subdirectories in `src' that don't have PIC         */
+  /*        support.                                                       */
+  /*     3. Comment out the corresponding modules in `modules.cfg'.        */
+  /*     4. Compile.                                                       */
+  /*                                                                       */
 /* #define FT_CONFIG_OPTION_PIC */
 
 
