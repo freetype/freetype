@@ -1,3 +1,10 @@
+2016-08-27  Alexei Podtelezhnikov  <apodtele@gmail.com>
+
+	[smooth] Reduce stack of band boundaries.
+
+	* src/smooth/ftgrays.c (gray_TBand): Removed.
+	(gray_convert_glyph): Updated to stack band boundaries concisely.
+
 2016-08-26  Werner Lemberg  <wl@gnu.org>
 
 	* src/cid/cidload.c (cid_face_open): Improve handling of `SDBytes'.

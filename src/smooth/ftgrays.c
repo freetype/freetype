@@ -1765,13 +1765,6 @@ typedef ptrdiff_t  FT_PtrDist;
 #endif /* STANDALONE_ */
 
 
-  typedef struct  gray_TBand_
-  {
-    TCoord  min, max;
-
-  } gray_TBand;
-
-
   FT_DEFINE_OUTLINE_FUNCS(
     func_interface,
 
@@ -1818,12 +1811,12 @@ typedef ptrdiff_t  FT_PtrDist;
   static int
   gray_convert_glyph( RAS_ARG )
   {
-    TCell        buffer[FT_MAX_GRAY_POOL];
-    TCoord       band_size = FT_MAX_GRAY_POOL / 8;
-    int          num_bands;
-    TCoord       min, max, max_y;
-    gray_TBand   bands[32];  /* enough to accommodate bisections */
-    gray_TBand*  band;
+    TCell    buffer[FT_MAX_GRAY_POOL];
+    TCoord   band_size = FT_MAX_GRAY_POOL / 8;
+    int      num_bands;
+    TCoord   min, max, max_y;
+    TCoord   bands[32];  /* enough to accommodate bisections */
+    TCoord*  band;
 
 
     /* set up vertical bands */
@@ -1843,19 +1836,19 @@ typedef ptrdiff_t  FT_PtrDist;
       if ( max > max_y )
         max = max_y;
 
-      bands[0].min = min;
-      bands[0].max = max;
-      band         = bands;
+      band    = bands;
+      band[1] = min;
+      band[0] = max;
 
       do
       {
-        TCoord  bottom, top, middle;
+        TCoord  width = band[0] - band[1];
         int     error;
 
 
         /* memory management */
         {
-          size_t  ycount = (size_t)( band->max - band->min );
+          size_t  ycount = (size_t)width;
           size_t  cell_start;
 
 
@@ -1875,9 +1868,9 @@ typedef ptrdiff_t  FT_PtrDist;
 
         ras.num_cells = 0;
         ras.invalid   = 1;
-        ras.min_ey    = band->min;
-        ras.max_ey    = band->max;
-        ras.count_ey  = band->max - band->min;
+        ras.min_ey    = band[1];
+        ras.max_ey    = band[0];
+        ras.count_ey  = width;
 
         error = gray_convert_glyph_inner( RAS_VAR );
 
@@ -1892,23 +1885,19 @@ typedef ptrdiff_t  FT_PtrDist;
 
       ReduceBands:
         /* render pool overflow; we will reduce the render band by half */
-        bottom = band->min;
-        top    = band->max;
-        middle = bottom + ( ( top - bottom ) >> 1 );
+        width >>= 1;
 
         /* This is too complex for a single scanline; there must */
         /* be some problems.                                     */
-        if ( middle == bottom )
+        if ( width == 0 )
         {
           FT_TRACE7(( "gray_convert_glyph: rotten glyph\n" ));
           return 1;
         }
 
-        band[1].min = bottom;
-        band[1].max = middle;
-        band[0].min = middle;
-        band[0].max = top;
         band++;
+        band[1]  = band[0];
+        band[0] += width;
       } while ( band >= bands );
     }
 
