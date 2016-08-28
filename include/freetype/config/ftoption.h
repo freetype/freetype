@@ -527,13 +527,14 @@ FT_BEGIN_HEADER
   /*   FT_CONFIG_OPTION_PIC, which is only necessary for very special      */
   /*   compilers.]                                                         */
   /*                                                                       */
-  /*   Note that PIC support is not available for all modules (see         */
-  /*   `modules.cfg' for a complete list).  For building with PIC support, */
-  /*   do the following.                                                   */
+  /*   Note that FT_CONFIG_OPTION_PIC support is not available for all     */
+  /*   modules (see `modules.cfg' for a complete list).  For building with */
+  /*   FT_CONFIG_OPTION_PIC support, do the following.                     */
   /*                                                                       */
-  /*     1. Clone the repository.                                          */
-  /*     2. Remove all subdirectories in `src' that don't have PIC         */
-  /*        support.                                                       */
+  /*     0. Clone the repository.                                          */
+  /*     1. Define FT_CONFIG_OPTION_PIC.                                   */
+  /*     2. Remove all subdirectories in `src' that don't have             */
+  /*        FT_CONFIG_OPTION_PIC support.                                  */
   /*     3. Comment out the corresponding modules in `modules.cfg'.        */
   /*     4. Compile.                                                       */
   /*                                                                       */
