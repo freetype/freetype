@@ -403,6 +403,12 @@ typedef ptrdiff_t  FT_PtrDist;
 
   } TCell;
 
+  typedef struct TPixmap_
+  {
+    unsigned char*  origin;  /* pixmap origin at the bottom-left */
+    int             pitch;   /* pitch to go down one row */
+
+  } TPixmap;
 
   /* maximum number of gray cells in the buffer */
 #if FT_RENDER_POOL_SIZE > 2048
@@ -440,7 +446,7 @@ typedef ptrdiff_t  FT_PtrDist;
     TPos    x,  y;
 
     FT_Outline  outline;
-    FT_Bitmap   target;
+    TPixmap     target;
 
     FT_Raster_Span_Func  render_span;
     void*                render_span_data;
@@ -1270,14 +1276,8 @@ typedef ptrdiff_t  FT_PtrDist;
                     const FT_Span*  spans,
                     gray_PWorker    worker )
   {
-    unsigned char*  p;
-    FT_Bitmap*      map = &worker->target;
+    unsigned char*  p = worker->target.origin - y * worker->target.pitch;
 
-
-    /* first of all, compute the scanline offset */
-    p = (unsigned char*)map->buffer - y * map->pitch;
-    if ( map->pitch >= 0 )
-      p += ( map->rows - 1 ) * (unsigned int)map->pitch;
 
     for ( ; count > 0; count--, spans++ )
     {
@@ -1962,7 +1962,14 @@ typedef ptrdiff_t  FT_PtrDist;
       if ( !target_map->buffer )
         return FT_THROW( Invalid_Argument );
 
-      ras.target           = *target_map;
+      if ( target_map->pitch < 0 )
+        ras.target.origin = target_map->buffer;
+      else
+        ras.target.origin = target_map->buffer
+              + ( target_map->rows - 1 ) * (unsigned int)target_map->pitch;
+
+      ras.target.pitch = target_map->pitch;
+
       ras.render_span      = (FT_Raster_Span_Func)gray_render_span;
       ras.render_span_data = &ras;
     }

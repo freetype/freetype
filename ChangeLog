@@ -1,3 +1,15 @@
+2016-08-29  Alexei Podtelezhnikov  <apodtele@gmail.com>
+
+	[smooth] Streamline pixmap drawing.
+
+	This gives 2% speed improvement in rendering simple glyphs.
+
+	* src/smooth/ftgrays.c (TPixmap): Reduced pixmap descriptor with a
+	pointer to its bottom-left and pitch to be used in...
+	(gray_TWorker): ... here.
+	(gray_render_span): Move pixmap flow check from here...
+	(gray_raster_render): .. to here.
+
 2016-08-27  Alexei Podtelezhnikov  <apodtele@gmail.com>
 
 	[smooth] Reduce stack of band boundaries.
