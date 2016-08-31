@@ -1,3 +1,12 @@
+2016-08-30  Alexei Podtelezhnikov  <apodtele@gmail.com>
+
+	[smooth] Streamline pixmap drawing a bit more.
+
+	Zero coverage is unlikely (1 out of 256) to warrant checking. This
+	gives 0.5% speed improvement in dendering simple glyphs.
+
+	* src/smooth/ftgrays.c (gray_hline, gray_render_span): Remove checks.
+
 2016-08-29  Alexei Podtelezhnikov  <apodtele@gmail.com>
 
 	[smooth] Streamline pixmap drawing.

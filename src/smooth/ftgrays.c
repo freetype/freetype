@@ -1281,31 +1281,26 @@ typedef ptrdiff_t  FT_PtrDist;
 
     for ( ; count > 0; count--, spans++ )
     {
-      unsigned char  coverage = spans->coverage;
+      unsigned char   coverage = spans->coverage;
+      unsigned char*  q = p + spans->x;
 
 
-      if ( coverage )
+      /* For small-spans it is faster to do it by ourselves than
+       * calling `memset'.  This is mainly due to the cost of the
+       * function call.
+       */
+      switch ( spans->len )
       {
-        unsigned char*  q = p + spans->x;
-
-
-        /* For small-spans it is faster to do it by ourselves than
-         * calling `memset'.  This is mainly due to the cost of the
-         * function call.
-         */
-        switch ( spans->len )
-        {
-        case 7: *q++ = coverage;
-        case 6: *q++ = coverage;
-        case 5: *q++ = coverage;
-        case 4: *q++ = coverage;
-        case 3: *q++ = coverage;
-        case 2: *q++ = coverage;
-        case 1: *q   = coverage;
-        case 0: break;
-        default:
-          FT_MEM_SET( q, coverage, spans->len );
-        }
+      case 7: *q++ = coverage;
+      case 6: *q++ = coverage;
+      case 5: *q++ = coverage;
+      case 4: *q++ = coverage;
+      case 3: *q++ = coverage;
+      case 2: *q++ = coverage;
+      case 1: *q   = coverage;
+      case 0: break;
+      default:
+        FT_MEM_SET( q, coverage, spans->len );
       }
     }
   }
@@ -1317,7 +1312,8 @@ typedef ptrdiff_t  FT_PtrDist;
                        TArea   area,
                        TCoord  acount )
   {
-    int  coverage;
+    int      coverage;
+    FT_Span  span;
 
 
     /* compute the coverage line's coverage, depending on the    */
@@ -1346,17 +1342,11 @@ typedef ptrdiff_t  FT_PtrDist;
         coverage = 255;
     }
 
-    if ( coverage )
-    {
-      FT_Span  span;
+    span.x        = (short)( x + ras.min_ex );
+    span.len      = (unsigned short)acount;
+    span.coverage = (unsigned char)coverage;
 
-
-      span.x        = (short)( x + ras.min_ex );
-      span.len      = (unsigned short)acount;
-      span.coverage = (unsigned char)coverage;
-
-      ras.render_span( y + ras.min_ey, 1, &span, ras.render_span_data );
-    }
+    ras.render_span( y + ras.min_ey, 1, &span, ras.render_span_data );
   }
 
 
