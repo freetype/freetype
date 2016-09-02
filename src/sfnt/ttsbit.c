@@ -881,7 +881,7 @@
         }
 
         *pwrite++ |= ( ( rval >> nbits ) & 0xFF ) &
-                     ( ~( 0xFF << w ) << ( 8 - w - x_pos ) );
+                     ( ~( 0xFFU << w ) << ( 8 - w - x_pos ) );
         rval     <<= 8;
 
         w = line_bits - w;
