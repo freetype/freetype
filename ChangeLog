@@ -1,9 +1,23 @@
+2016-09-01  Alexei Podtelezhnikov  <apodtele@gmail.com>
+
+	[smooth] Simplify span rendering more.
+
+	It turns out that there is significant cost associated with `FT_Span'
+	creation and calls to `gray_render_span' because it happerns so
+	frequently. This removes these steps from our internal use but leaves
+	it alone for `FT_RASTER_FLAG_DIRECT" to preserve API. The speed gain
+	is about 5%.
+
+	* src/smooth/ftgrays.c (gray_render_span): Removed. The code is
+	migrated to...
+	(gray_hline): ... here.
+
 2016-08-30  Alexei Podtelezhnikov  <apodtele@gmail.com>
 
 	[smooth] Streamline pixmap drawing a bit more.
 
 	Zero coverage is unlikely (1 out of 256) to warrant checking. This
-	gives 0.5% speed improvement in dendering simple glyphs.
+	gives 0.5% speed improvement in rendering simple glyphs.
 
 	* src/smooth/ftgrays.c (gray_hline, gray_render_span): Remove checks.
 

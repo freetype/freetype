@@ -1271,42 +1271,6 @@ typedef ptrdiff_t  FT_PtrDist;
 
 
   static void
-  gray_render_span( int             y,
-                    int             count,
-                    const FT_Span*  spans,
-                    gray_PWorker    worker )
-  {
-    unsigned char*  p = worker->target.origin - y * worker->target.pitch;
-
-
-    for ( ; count > 0; count--, spans++ )
-    {
-      unsigned char   coverage = spans->coverage;
-      unsigned char*  q = p + spans->x;
-
-
-      /* For small-spans it is faster to do it by ourselves than
-       * calling `memset'.  This is mainly due to the cost of the
-       * function call.
-       */
-      switch ( spans->len )
-      {
-      case 7: *q++ = coverage;
-      case 6: *q++ = coverage;
-      case 5: *q++ = coverage;
-      case 4: *q++ = coverage;
-      case 3: *q++ = coverage;
-      case 2: *q++ = coverage;
-      case 1: *q   = coverage;
-      case 0: break;
-      default:
-        FT_MEM_SET( q, coverage, spans->len );
-      }
-    }
-  }
-
-
-  static void
   gray_hline( RAS_ARG_ TCoord  x,
                        TCoord  y,
                        TArea   area,
@@ -1342,11 +1306,39 @@ typedef ptrdiff_t  FT_PtrDist;
         coverage = 255;
     }
 
-    span.x        = (short)( x + ras.min_ex );
-    span.len      = (unsigned short)acount;
-    span.coverage = (unsigned char)coverage;
+    if ( ras.render_span )  /* for FT_RASTER_FLAG_DIRECT only */
+    {
+      span.x        = (short)( x + ras.min_ex );
+      span.len      = (unsigned short)acount;
+      span.coverage = (unsigned char)coverage;
 
-    ras.render_span( y + ras.min_ey, 1, &span, ras.render_span_data );
+      ras.render_span( y + ras.min_ey, 1, &span, ras.render_span_data );
+    }
+    else
+    {
+      unsigned char*  q = ras.target.origin -
+                          ras.target.pitch * ( y + ras.min_ey ) +
+                                               x + ras.min_ex;
+
+
+      /* For small-spans it is faster to do it by ourselves than
+       * calling `memset'.  This is mainly due to the cost of the
+       * function call.
+       */
+      switch ( acount )
+      {
+      case 7: *q++ = coverage;
+      case 6: *q++ = coverage;
+      case 5: *q++ = coverage;
+      case 4: *q++ = coverage;
+      case 3: *q++ = coverage;
+      case 2: *q++ = coverage;
+      case 1: *q   = coverage;
+      case 0: break;
+      default:
+        FT_MEM_SET( q, coverage, acount );
+      }
+    }
   }
 
 
@@ -1960,8 +1952,8 @@ typedef ptrdiff_t  FT_PtrDist;
 
       ras.target.pitch = target_map->pitch;
 
-      ras.render_span      = (FT_Raster_Span_Func)gray_render_span;
-      ras.render_span_data = &ras;
+      ras.render_span      = (FT_Raster_Span_Func)NULL;
+      ras.render_span_data = NULL;
     }
 
     FT_Outline_Get_CBox( outline, &cbox );
