@@ -1,3 +1,7 @@
+2016-09-02  Werner Lemberg  <wl@gnu.org>.
+
+	* src/smooth/ftgrays.c (gray_hline): Fix clang compiler warnings.
+
 2016-09-02  Werner Lemberg  <wl@gnu.org>
 
 	Some preparations for the next release.

@@ -1319,6 +1319,7 @@ typedef ptrdiff_t  FT_PtrDist;
       unsigned char*  q = ras.target.origin -
                           ras.target.pitch * ( y + ras.min_ey ) +
                                                x + ras.min_ex;
+      unsigned char   c = (unsigned char)coverage;
 
 
       /* For small-spans it is faster to do it by ourselves than
@@ -1327,16 +1328,16 @@ typedef ptrdiff_t  FT_PtrDist;
        */
       switch ( acount )
       {
-      case 7: *q++ = coverage;
-      case 6: *q++ = coverage;
-      case 5: *q++ = coverage;
-      case 4: *q++ = coverage;
-      case 3: *q++ = coverage;
-      case 2: *q++ = coverage;
-      case 1: *q   = coverage;
+      case 7: *q++ = c;
+      case 6: *q++ = c;
+      case 5: *q++ = c;
+      case 4: *q++ = c;
+      case 3: *q++ = c;
+      case 2: *q++ = c;
+      case 1: *q   = c;
       case 0: break;
       default:
-        FT_MEM_SET( q, coverage, acount );
+        FT_MEM_SET( q, c, acount );
       }
     }
   }
