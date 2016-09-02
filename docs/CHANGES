@@ -1,7 +1,33 @@
 
 CHANGES BETWEEN 2.6.5 and 2.7
 
-  I. IMPORTANT BUG FIXES
+  I. IMPORTANT CHANGES
+
+    - As announced earlier, the 2.7.x series now uses the new subpixel
+      hinting  mode as  the  default, emulating  a  modern version  of
+      ClearType.
+
+      This change inevitably leads to different rendering results, and
+      you   might   change   the   `TT_CONFIG_OPTION_SUBPIXEL_HINTING'
+      configuration option to  adapt it to your taste (or  use the new
+      `FREETYPE_PROPERTIES'    environment    variable).    See    the
+      corresponding entry  below for  version 2.6.4, which  gives more
+      information.
+
+    - A new option  `FT_CONFIG_OPTION_ENVIRONMENT_PROPERTIES' has been
+      introduced.   If  set (which  is  the  default), an  environment
+      variable  `FREETYPE_PROPERTIES' can  be used  to control  driver
+      properties.  Example:
+
+        FREETYPE_PROPERTIES=truetype:interpreter-version=35 \
+                            cff:no-stem-darkening=1 \
+                            autofitter:warping=1
+
+      This allows to select, say, the subpixel hinting mode at runtime
+      for a given application.  See file `ftoption.h' for more.
+
+
+  II. IMPORTANT BUG FIXES
 
     - After  loading a  named instance  of  a GX  variation font,  the
       `face_index'  value  in  the returned  `FT_Face'  structure  now
@@ -9,10 +35,23 @@ CHANGES BETWEEN 2.6.5 and 2.7
       documented.
 
 
-  II. MISCELLANEOUS
+  III. MISCELLANEOUS
 
-    - A new macro `FT_IS_NAMED_INSTANCE' to test  whether a given face
+    - A new macro `FT_IS_NAMED_INSTANCE' to  test whether a given face
       is a named instance.
+
+    - More fixes to GX font handling.
+
+    - Apple's   `GETVARIATION'  bytecode   operator  (needed   for  GX
+      variation font support) has been implemented.
+
+    - Another round  of fuzzer fixes,  mainly to reject  invalid fonts
+      faster.
+
+    - Handling of raw CID fonts  was broken (bug introduced in version
+      2.6.4).
+
+    - The smooth rasterizer has been streamlined to make it faster.
 
 
 ======================================================================
