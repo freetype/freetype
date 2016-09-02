@@ -115,6 +115,10 @@ FT_BEGIN_HEADER
   /*    outline for stroking purposes (otherwise it would result in a      */
   /*    visible dot when round caps are used).                             */
   /*                                                                       */
+  /*    Similarly, the function returns success for an empty outline also  */
+  /*    (doing nothing, this is, not calling any emitter); if necessary,   */
+  /*    you should filter this out, too.                                   */
+  /*                                                                       */
   FT_EXPORT( FT_Error )
   FT_Outline_Decompose( FT_Outline*              outline,
                         const FT_Outline_Funcs*  func_interface,
