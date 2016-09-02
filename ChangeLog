@@ -1,5 +1,11 @@
 2016-09-02  Werner Lemberg  <wl@gnu.org>
 
+	[unix] Enable 64bit support in file system access (#48962).
+
+	* builds/unix/configure.raw: Call `AC_SYS_LARGEFILE'.
+
+2016-09-02  Werner Lemberg  <wl@gnu.org>
+
 	[sfnt] Avoid left shift of negative value (#48980).
 
 	* src/sfnt/ttsbit.c (tt_sbit_decoder_load_bit_aligned): Use unsigned

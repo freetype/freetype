@@ -180,6 +180,8 @@ CPPFLAGS="${orig_CPPFLAGS}"
 
 # checks for library functions
 
+AC_SYS_LARGEFILE
+
 # Here we check whether we can use our mmap file component.
 
 AC_ARG_ENABLE([mmap],
