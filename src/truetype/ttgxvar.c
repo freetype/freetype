@@ -1894,7 +1894,8 @@
     offsetToData = FT_GET_USHORT();
 
     /* rough sanity test */
-    if ( offsetToData + tupleCount * 4 > blend->gvar_size )
+    if ( offsetToData + ( tupleCount & GX_TC_TUPLE_COUNT_MASK ) * 4 >
+           blend->gvar_size )
     {
       FT_TRACE2(( "TT_Vary_Apply_Glyph_Deltas:"
                   " invalid glyph variation array header\n" ));
@@ -1979,10 +1980,10 @@
 
       here = FT_Stream_FTell( stream );
 
+      FT_Stream_SeekSet( stream, offsetToData );
+
       if ( tupleIndex & GX_TI_PRIVATE_POINT_NUMBERS )
       {
-        FT_Stream_SeekSet( stream, offsetToData );
-
         localpoints = ft_var_readpackedpoints( stream,
                                                blend->gvar_size,
                                                &point_count );
@@ -2045,9 +2046,6 @@
 #endif
       }
 
-      else if ( localpoints == NULL )
-        ; /* failure, ignore it */
-
       else
       {
 #ifdef FT_DEBUG_LEVEL_TRACE
@@ -2065,7 +2063,7 @@
 
         for ( j = 0; j < point_count; j++ )
         {
-          FT_UShort  idx = localpoints[j];
+          FT_UShort  idx = points[j];
 
 
           if ( idx >= n_points )

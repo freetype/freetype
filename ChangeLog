@@ -1,5 +1,16 @@
 2016-09-03  Werner Lemberg  <wl@gnu.org>
 
+	[truetype] More fixes for handling of GX deltas.
+
+	Problems reported by Bob Taylor <Bob.Taylor@monotype.com>.
+
+	* src/truetype/ttgxvar.c (TT_Vary_Apply_Glyph_Deltas): Fix rough
+	sanity test for glyph variation array header size.
+	Always set stream position before reading packed x and y deltas.
+	Fix thinko w.r.t. `localpoints' array.
+
+2016-09-03  Werner Lemberg  <wl@gnu.org>
+
 	[ftrandom] Various fixes.
 
 	* src/tools/ftrandom/ftrandom.c (GOOD_FONTS_DIR): Provide better
