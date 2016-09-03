@@ -1,5 +1,29 @@
 2016-09-03  Werner Lemberg  <wl@gnu.org>
 
+	[ftrandom] Various fixes.
+
+	* src/tools/ftrandom/ftrandom.c (GOOD_FONTS_DIR): Provide better
+	default.
+	(error_fraction): Make it of type `double' to work as advertized –
+	this was completely broken.
+	Update all related code.
+	(error_count, fcnt): Make it unsigned to fix compiler warnings.
+	Update all related code.
+	(fontlist): Change `len' member to `long' to fix compiler warnings.
+	(FT_MoveTo, FT_LineTo, FT_ConicTo, FT_CubicTo, abort_test): Tag
+	unused variables.
+	(TestFace, FindFonts, copyfont, do_test): Fix compiler warnings.
+	(ExecuteTest): Ditto.
+	Call `FT_Done_FreeType'.
+	(getErrorCnt): Replace `ceil' with an ordinary cast to `unsigned
+	int'.
+	(usage): Improve output.
+	(main): Fix compiler warnings.
+
+	* src/tools/ftrandom/README: Updated.
+
+2016-09-03  Werner Lemberg  <wl@gnu.org>
+
 	[base] Avoid negative bitmap stroke dimensions (#48985).
 
 	* src/base/ftobjs.c (FT_Open_Face): Check whether negation was
