@@ -1,3 +1,9 @@
+2016-09-03  Werner Lemberg  <wl@gnu.org>
+
+	[cff] Avoid null pointer passed to FT_MEM_COPY (#48984).
+
+	* src/cff/cffload.c (cff_index_get_name): Check `byte_len'.
+
 2016-09-02  Werner Lemberg  <wl@gnu.org>
 
 	[unix] Enable 64bit support in file system access (#48962).
