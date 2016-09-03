@@ -1,5 +1,14 @@
 2016-09-03  Werner Lemberg  <wl@gnu.org>
 
+	[base] Avoid negative bitmap stroke dimensions (#48985).
+
+	* src/base/ftobjs.c (FT_Open_Face): Check whether negation was
+	actually successful.  For example, this can fail for value
+	-32768 if the type is `signed short'.  If there are problems,
+	disable the stroke.
+
+2016-09-03  Werner Lemberg  <wl@gnu.org>
+
 	[cff] Avoid null pointer passed to FT_MEM_COPY (#48984).
 
 	* src/cff/cffload.c (cff_index_get_name): Check `byte_len'.
