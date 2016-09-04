@@ -1,3 +1,17 @@
+2016-09-04  Werner Lemberg  <wl@gnu.org>
+
+	[ftrandom] Improve Makefile.
+
+	It now supports both a normal build (`./configure && make') and a
+	development build (`make devel').
+
+	* src/tools/ftrandom/Makefile (VPATH): Set it so that
+	`libfreetype.a' gets searched in both `objs' (for the development
+	build) and `objs/.libs' (for a normal build which uses libtool).
+	(LIBS): Add missing libraries.
+	(ftrandom.o): New rule.
+	(ftrandom): Use automatic variables.
+
 2016-09-03  Werner Lemberg  <wl@gnu.org>
 
 	[truetype] More fixes for handling of GX deltas.
