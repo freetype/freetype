@@ -1,5 +1,18 @@
 2016-09-05  Werner Lemberg  <wl@gnu.org>
 
+	[ftrandom] Minor improvements.
+
+	* src/tools/ftrandom/ftrandom.c (_XOPEN_SOURCE): New macro, set to
+	500.
+
+	* src/tools/ftrandom/Makefile (CFLAGS): Split off include
+	directories to ...
+	(INCLUDES): ... this new variable.
+	(LDFLAGS): New variable.
+	(ftrandom.o, ftrandom): Updated.
+
+2016-09-05  Werner Lemberg  <wl@gnu.org>
+
 	[autofit] Improve Armenian support.
 
 	Thanks to Hrant H Papazian <hpapazian@gmail.com> for help.

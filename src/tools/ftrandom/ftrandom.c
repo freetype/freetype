@@ -29,6 +29,9 @@
 /* This file is now part of the FreeType library */
 
 
+#define _XOPEN_SOURCE 500 /* for `kill', `strdup', `random', and `srandom' */
+
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>

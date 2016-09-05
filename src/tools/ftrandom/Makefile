@@ -25,8 +25,9 @@ WFLAGS = -Wmissing-prototypes \
          -Wchar-subscripts \
          -Wsequence-point
 CFLAGS = $(WFLAGS) \
-         -g \
-         -I $(TOP_DIR)/include
+         -g
+INCLUDES = -I $(TOP_DIR)/include
+LDFLAGS =
 LIBS = -lm \
        -lz \
        -lpng \
@@ -36,9 +37,9 @@ LIBS = -lm \
 all: $(OBJ_DIR)/ftrandom
 
 $(OBJ_DIR)/ftrandom.o: $(SRC_DIR)/ftrandom.c
-	$(CC) -c -o $@ $(CFLAGS) $<
+	$(CC) $(CFLAGS) $(INCLUDES) -c -o $@ $<
 
 $(OBJ_DIR)/ftrandom: $(OBJ_DIR)/ftrandom.o libfreetype.a
-	$(CC) -o $(OBJ_DIR)/ftrandom $^ $(LIBS)
+	$(CC) $(LDFLAGS) -o $@ $^ $(LIBS)
 
 # EOF
