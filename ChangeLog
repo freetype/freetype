@@ -1,3 +1,14 @@
+2016-09-05  Werner Lemberg  <wl@gnu.org>
+
+	[autofit] Improve Armenian support.
+
+	Thanks to Hrant H Papazian <hpapazian@gmail.com> for help.
+
+	* src/autofit/afblue.dat (AF_BLUE_STRING_ARMENIAN_*): Improve
+	selection of characters.
+
+	* src/autofit/afblue.c, src/autofit/afblue.h: Regenerated.
+
 2016-09-04  Werner Lemberg  <wl@gnu.org>
 
 	[ftrandom] Improve Makefile.
