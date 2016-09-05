@@ -1,5 +1,12 @@
 2016-09-05  Werner Lemberg  <wl@gnu.org>
 
+	[cff] Fix memory initialization.
+
+	* src/cff/cf2stack.c (cf2_stack_init): Use `FT_NEW'.  The `Q'
+	variants of FreeType's memory allocation macros don't do zeroing.
+
+2016-09-05  Werner Lemberg  <wl@gnu.org>
+
 	[ftrandom] Minor improvements.
 
 	* src/tools/ftrandom/ftrandom.c (_XOPEN_SOURCE): New macro, set to
