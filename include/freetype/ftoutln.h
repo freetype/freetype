@@ -217,6 +217,10 @@ FT_BEGIN_HEADER
   /* <Return>                                                              */
   /*    FreeType error code.  0~means success.                             */
   /*                                                                       */
+  /* <Note>                                                                */
+  /*    An empty outline, or an outline with a single point only is also   */
+  /*    valid.                                                             */
+  /*                                                                       */
   FT_EXPORT( FT_Error )
   FT_Outline_Check( FT_Outline*  outline );
 
