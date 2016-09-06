@@ -1,3 +1,14 @@
+2016-09-06  Jonathan Kew  <jfkthame@gmail.com>
+
+	[cff] Fix uninitialized memory.
+
+	Problem reported as
+
+	  https://bugzilla.mozilla.org/show_bug.cgi?id=1270288
+
+	* src/cff/cf2interp.c (cf2_interpT2CharString): Initialize `storage'
+	array to handle a `get' opcode without a previous `put'.
+
 2016-09-05  Alexei Podtelezhnikov  <apodtele@gmail.com>
 
 	* src/smooth/ftgrays.c (gray_move_to, gray_start_cell): Revert.
