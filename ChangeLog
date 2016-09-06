@@ -1,3 +1,9 @@
+2016-09-06  Werner Lemberg  <wl@gnu.org>
+
+	[type1] MM fonts support exactly zero named instances (#48748).
+
+	* src/type1/t1load.c (T1_Get_MM_Var): Set `num_namedstyles' to zero.
+
 2016-09-06  Jonathan Kew  <jfkthame@gmail.com>
 
 	[cff] Fix uninitialized memory.
