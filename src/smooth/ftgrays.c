@@ -605,29 +605,6 @@ typedef ptrdiff_t  FT_PtrDist;
   }
 
 
-  /*************************************************************************/
-  /*                                                                       */
-  /* Start a new contour at a given cell.                                  */
-  /*                                                                       */
-  static void
-  gray_start_cell( RAS_ARG_ TCoord  ex,
-                            TCoord  ey )
-  {
-    if ( ex > ras.max_ex )
-      ex = ras.max_ex;
-
-    if ( ex < ras.min_ex )
-      ex = ras.min_ex - 1;
-
-    ras.area    = 0;
-    ras.cover   = 0;
-    ras.ex      = ex - ras.min_ex;
-    ras.ey      = ey - ras.min_ey;
-    ras.invalid = 0;
-
-    gray_set_cell( RAS_VAR_ ex, ey );
-  }
-
 #ifndef FT_LONG64
 
   /*************************************************************************/
@@ -1224,15 +1201,11 @@ typedef ptrdiff_t  FT_PtrDist;
     TPos  x, y;
 
 
-    /* record current cell, if any */
-    if ( !ras.invalid )
-      gray_record_cell( RAS_VAR );
-
     /* start to a new position */
     x = UPSCALE( to->x );
     y = UPSCALE( to->y );
 
-    gray_start_cell( RAS_VAR_ TRUNC( x ), TRUNC( y ) );
+    gray_set_cell( RAS_VAR_ TRUNC( x ), TRUNC( y ) );
 
     ras.x = x;
     ras.y = y;

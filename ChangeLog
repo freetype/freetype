@@ -1,3 +1,11 @@
+2016-09-05  Alexei Podtelezhnikov  <apodtele@gmail.com>
+
+	[smooth] Improve contour start.
+
+	* src/smooth/ftgrays.c (gray_move_to): Call `gray_set_cell' directly
+	instead of...
+	(gray_start_cell): ... this function, which is removed.
+
 2016-09-05  Werner Lemberg  <wl@gnu.org>
 
 	[cff] Fix memory initialization.
