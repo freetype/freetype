@@ -1,3 +1,12 @@
+2016-09-06  Alexei Podtelezhnikov  <apodtele@gmail.com>
+
+	[smooth] Improve contour start (take 2).
+
+	* src/smooth/ftgrays.c (gray_move_to): Call `gray_set_cell' directly
+	instead of...
+	(gray_start_cell): ... this function, which is removed.
+	(gray_convert_glyph): Make initial y-coordinate invalid.
+
 2016-09-06  Werner Lemberg  <wl@gnu.org>
 
 	[type1] MM fonts support exactly zero named instances (#48748).
