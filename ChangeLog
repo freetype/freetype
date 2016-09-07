@@ -1,5 +1,15 @@
 2016-09-06  Alexei Podtelezhnikov  <apodtele@gmail.com>
 
+	[smooth] Operate in absolute bitmap coordinates.
+
+	Simpler bitmap addressing improves performance by 1.5%.
+
+	* src/smooth/ftgrays.c (gray_TWorker): Remove count fields.
+	(gray_dump_cells, gray_find_cell, gray_set_cell, gray_hline,
+	gray_sweep, gray_convert_glyph, gray_raster_render): Updated.
+
+2016-09-06  Alexei Podtelezhnikov  <apodtele@gmail.com>
+
 	[smooth] Improve contour start (take 2).
 
 	* src/smooth/ftgrays.c (gray_move_to): Call `gray_set_cell' directly
