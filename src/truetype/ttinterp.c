@@ -31,6 +31,9 @@
 #include "ttinterp.h"
 #include "tterrors.h"
 #include "ttsubpix.h"
+#ifdef TT_CONFIG_OPTION_GX_VAR_SUPPORT
+#include "ttgxvar.h"
+#endif
 
 
 #ifdef TT_USE_BYTECODE_INTERPRETER

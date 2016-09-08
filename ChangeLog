@@ -1,5 +1,11 @@
 2016-09-08  Werner Lemberg  <wl@gnu.org>
 
+	* src/truetype/ttinterp.c: Include `ttgxvar.h'.
+
+	This fixes the `multi' build.
+
+2016-09-08  Werner Lemberg  <wl@gnu.org>
+
 	[autofit] Another improvement to Armenian support.
 
 	Suggested by Hrant H Papazian <hpapazian@gmail.com>.
