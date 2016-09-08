@@ -1,5 +1,41 @@
 2016-09-08  Werner Lemberg  <wl@gnu.org>
 
+	* Version 2.7 released.
+	=======================
+
+
+	Tag sources with `VER-2-7'.
+
+	* docs/VERSION.TXT: Add entry for version 2.7.
+
+	* README, Jamfile (RefDoc), builds/windows/vc2005/freetype.vcproj,
+	builds/windows/vc2005/index.html,
+	builds/windows/vc2008/freetype.vcproj,
+	builds/windows/vc2008/index.html,
+	builds/windows/vc2010/freetype.vcxproj,
+	builds/windows/vc2010/index.html,
+	builds/windows/visualc/freetype.dsp,
+	builds/windows/visualc/freetype.vcproj,
+	builds/windows/visualc/index.html,
+	builds/windows/visualce/freetype.dsp,
+	builds/windows/visualce/freetype.vcproj,
+	builds/windows/visualce/index.html,
+	builds/wince/vc2005-ce/freetype.vcproj,
+	builds/wince/vc2005-ce/index.html,
+	builds/wince/vc2008-ce/freetype.vcproj,
+	builds/wince/vc2008-ce/index.html: s/2.6.5/2.7/, s/265/27/.
+
+	* include/freetype/freetype.h (FREETYPE_MINOR): Set to 7.
+	(FREETYPE_PATCH): Set to 0.
+
+	* builds/unix/configure.raw (version_info): Set to 18:6:12.
+	* CMakeLists.txt (VERSION_MINOR): Set to 7.
+	(VERSION_PATCH): Set to 0.
+
+	* docs/CHANGES: Updated.
+
+2016-09-08  Werner Lemberg  <wl@gnu.org>
+
 	* src/truetype/ttinterp.c: Include `ttgxvar.h'.
 
 	This fixes the `multi' build.

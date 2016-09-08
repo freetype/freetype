@@ -51,7 +51,14 @@ CHANGES BETWEEN 2.6.5 and 2.7
     - Handling of raw CID fonts  was broken (bug introduced in version
       2.6.4).
 
-    - The smooth rasterizer has been streamlined to make it faster.
+    - The smooth rasterizer has been streamlined  to make it faster by
+      approx. 20%.
+
+    - The `ftgrid'  demo program now  understands command  line option
+      `-d' to give start-up design coordinates.
+
+    - The `ftdump' demo program has  a new command line option `-p' to
+      dump TrueType bytecode instructions.
 
 
 ======================================================================
