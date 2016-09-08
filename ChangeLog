@@ -1,3 +1,12 @@
+2016-09-08  Werner Lemberg  <wl@gnu.org>
+
+	[autofit] Another improvement to Armenian support.
+
+	Suggested by Hrant H Papazian <hpapazian@gmail.com>.
+
+	* src/autofit/afscript.h: Use better suited characters to derive
+	default stem widths.
+
 2016-09-07  Alexei Podtelezhnikov  <apodtele@gmail.com>
 
 	* src/smooth/ftgrays.c (gray_hline): Microptimize.
