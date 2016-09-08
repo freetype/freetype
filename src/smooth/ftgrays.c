@@ -1333,7 +1333,7 @@ typedef ptrdiff_t  FT_PtrDist;
         TArea  area;
 
 
-        if ( cell->x > x && cover != 0 )
+        if ( cover != 0 && cell->x > x )
           gray_hline( RAS_VAR_ x, y, (TArea)cover * ( ONE_PIXEL * 2 ),
                       cell->x - x );
 
