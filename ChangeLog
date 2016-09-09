@@ -1,3 +1,28 @@
+2016-09-09  Werner Lemberg  <wl@gnu.org>
+
+	[sfnt] Don't provide (completely) broken strike data.
+
+	FreeType tries to sanitize strike header data; we now reject
+	completely broken ones.
+
+	* include/freetype/internal/tttypes.h (TT_FaceRec): New
+	`sbit_strike_map' array pointer.
+
+	* src/base/ftobjs.c (FT_Match_Size): Reject matches where either
+	width or height would be zero.
+	Add tracing message in case of error.
+
+	* src/sfnt/sfobjs.c (sfnt_load_face): Populate `sbit_strike_map',
+	only using (more or less) valid strike header data for
+	FT_Face's `available_sizes' array.
+	(sfnt_done_face): Updated.
+
+	* src/sfnt/ttsbit.c (tt_face_set_sbit_strike): Use
+	`sbit_strike_map'.
+	(tt_face_load_strike_metrics): Improve tracing.
+
+	* src/truetype/ttdriver.c (tt_size_select): Use `sbit_strike_map'.
+
 2016-09-08  Werner Lemberg  <wl@gnu.org>
 
 	* Version 2.7 released.

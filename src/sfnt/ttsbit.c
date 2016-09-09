@@ -251,7 +251,14 @@
                            FT_Size_Request  req,
                            FT_ULong*        astrike_index )
   {
-    return FT_Match_Size( (FT_Face)face, req, 0, astrike_index );
+    FT_Error  error;
+
+
+    error = FT_Match_Size( (FT_Face)face, req, 0, astrike_index );
+    if ( !error )
+      *astrike_index = face->sbit_strike_map[*astrike_index];
+
+    return error;
   }
 
 
@@ -305,7 +312,8 @@
             FT_TRACE2(( "tt_face_load_strike_metrics:"
                         " sanitizing invalid ascender and descender\n"
                         "                            "
-                        " values for strike (%d, %d)\n",
+                        " values for strike %d (%dppem, %dppem)\n",
+                        strike_index,
                         metrics->x_ppem, metrics->y_ppem ));
 
             /* sanitize buggy ascender and descender values */

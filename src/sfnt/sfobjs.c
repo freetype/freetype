@@ -1411,7 +1411,7 @@
        *  depths in the FT_Bitmap_Size record.  This is a design error.
        */
       {
-        FT_UInt  i, count;
+        FT_UInt  count;
 
 
         count = face->sbit_num_strikes;
@@ -1423,6 +1423,8 @@
           FT_Short         avgwidth = face->os2.xAvgCharWidth;
           FT_Size_Metrics  metrics;
 
+          FT_UInt  strike_idx, bsize_idx;
+
 
           if ( em_size == 0 || face->os2.version == 0xFFFFU )
           {
@@ -1430,31 +1432,43 @@
             em_size = 1;
           }
 
-          if ( FT_NEW_ARRAY( root->available_sizes, count ) )
+          /* to avoid invalid strike data in the `available_sizes' field */
+          /* of `FT_Face', we map `available_sizes' indices to strike    */
+          /* indices                                                     */
+          if ( FT_NEW_ARRAY( root->available_sizes, count ) ||
+               FT_NEW_ARRAY( face->sbit_strike_map, count ) )
             goto Exit;
 
-          for ( i = 0; i < count; i++ )
+          bsize_idx = 0;
+          for ( strike_idx = 0; strike_idx < count; strike_idx++ )
           {
-            FT_Bitmap_Size*  bsize = root->available_sizes + i;
+            FT_Bitmap_Size*  bsize = root->available_sizes + bsize_idx;
 
 
-            error = sfnt->load_strike_metrics( face, i, &metrics );
+            error = sfnt->load_strike_metrics( face, strike_idx, &metrics );
             if ( error )
               goto Exit;
 
             bsize->height = (FT_Short)( metrics.height >> 6 );
-            bsize->width = (FT_Short)(
-                ( avgwidth * metrics.x_ppem + em_size / 2 ) / em_size );
+            bsize->width  = (FT_Short)(
+              ( avgwidth * metrics.x_ppem + em_size / 2 ) / em_size );
 
             bsize->x_ppem = metrics.x_ppem << 6;
             bsize->y_ppem = metrics.y_ppem << 6;
 
             /* assume 72dpi */
             bsize->size   = metrics.y_ppem << 6;
+
+            /* only use strikes with valid PPEM values */
+            if ( bsize->x_ppem && bsize->y_ppem )
+              face->sbit_strike_map[bsize_idx++] = strike_idx;
           }
 
+          /* reduce array size to the actually used elements */
+          (void)FT_RENEW_ARRAY( face->sbit_strike_map, count, bsize_idx );
+
           root->face_flags     |= FT_FACE_FLAG_FIXED_SIZES;
-          root->num_fixed_sizes = (FT_Int)count;
+          root->num_fixed_sizes = (FT_Int)bsize_idx;
         }
       }
 
@@ -1648,6 +1662,7 @@
 
     /* freeing sbit size table */
     FT_FREE( face->root.available_sizes );
+    FT_FREE( face->sbit_strike_map );
     face->root.num_fixed_sizes = 0;
 
     FT_FREE( face->postscript_name );

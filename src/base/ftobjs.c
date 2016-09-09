@@ -2631,6 +2631,9 @@
     w = FT_PIX_ROUND( w );
     h = FT_PIX_ROUND( h );
 
+    if ( !w || !h )
+      return FT_THROW( Invalid_Pixel_Size );
+
     for ( i = 0; i < face->num_fixed_sizes; i++ )
     {
       FT_Bitmap_Size*  bsize = face->available_sizes + i;
@@ -2649,6 +2652,8 @@
         return FT_Err_Ok;
       }
     }
+
+    FT_TRACE3(( "FT_Match_Size: no matching bitmap strike\n" ));
 
     return FT_THROW( Invalid_Pixel_Size );
   }

@@ -1371,6 +1371,7 @@ FT_BEGIN_HEADER
     FT_ULong              sbit_table_size;
     TT_SbitTableType      sbit_table_type;
     FT_UInt               sbit_num_strikes;
+    FT_UInt*              sbit_strike_map;
 
     FT_Byte*              kern_table;
     FT_ULong              kern_table_size;

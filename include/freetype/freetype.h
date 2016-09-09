@@ -951,6 +951,10 @@ FT_BEGIN_HEADER
   /*                           strikes in the face.  It is set to NULL if  */
   /*                           there is no bitmap strike.                  */
   /*                                                                       */
+  /*                           Note that FreeType tries to sanitize the    */
+  /*                           strike data since they are sometimes sloppy */
+  /*                           or incorrect, but this can easily fail.     */
+  /*                                                                       */
   /*    num_charmaps        :: The number of charmaps in the face.         */
   /*                                                                       */
   /*    charmaps            :: An array of the charmaps of the face.       */

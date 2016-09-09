@@ -273,11 +273,13 @@
 
   static FT_Error
   tt_size_select( FT_Size   size,
-                  FT_ULong  strike_index )
+                  FT_ULong  bsize_index )
   {
     TT_Face   ttface = (TT_Face)size->face;
     TT_Size   ttsize = (TT_Size)size;
     FT_Error  error  = FT_Err_Ok;
+
+    FT_UInt  strike_index = ttface->sbit_strike_map[bsize_index];
 
 
     ttsize->strike_index = strike_index;
@@ -285,13 +287,13 @@
     if ( FT_IS_SCALABLE( size->face ) )
     {
       /* use the scaled metrics, even when tt_size_reset fails */
-      FT_Select_Metrics( size->face, strike_index );
+      FT_Select_Metrics( size->face, bsize_index );
 
       tt_size_reset( ttsize ); /* ignore return value */
     }
     else
     {
-      SFNT_Service      sfnt    = (SFNT_Service) ttface->sfnt;
+      SFNT_Service      sfnt    = (SFNT_Service)ttface->sfnt;
       FT_Size_Metrics*  metrics = &size->metrics;
 
 
@@ -319,7 +321,7 @@
     if ( FT_HAS_FIXED_SIZES( size->face ) )
     {
       TT_Face       ttface = (TT_Face)size->face;
-      SFNT_Service  sfnt   = (SFNT_Service) ttface->sfnt;
+      SFNT_Service  sfnt   = (SFNT_Service)ttface->sfnt;
       FT_ULong      strike_index;
 
 
