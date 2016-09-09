@@ -1,5 +1,13 @@
 2016-09-09  Werner Lemberg  <wl@gnu.org>
 
+	[ftfuzzer] Minor improvements.
+
+	* src/tools/ftfuzzer/ftfuzzer.cc (LLVMFuzzerTestOneInput): Ignore
+	invalid strikes.
+	Use better values for call to `FT_Set_Char_Size'.
+
+2016-09-09  Werner Lemberg  <wl@gnu.org>
+
 	[sfnt] Don't provide (completely) broken strike data.
 
 	FreeType tries to sanitize strike header data; we now reject
