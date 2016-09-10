@@ -251,14 +251,7 @@
                            FT_Size_Request  req,
                            FT_ULong*        astrike_index )
   {
-    FT_Error  error;
-
-
-    error = FT_Match_Size( (FT_Face)face, req, 0, astrike_index );
-    if ( !error )
-      *astrike_index = face->sbit_strike_map[*astrike_index];
-
-    return error;
+    return FT_Match_Size( (FT_Face)face, req, 0, astrike_index );
   }
 
 
@@ -267,8 +260,22 @@
                                FT_ULong          strike_index,
                                FT_Size_Metrics*  metrics )
   {
-    if ( strike_index >= (FT_ULong)face->sbit_num_strikes )
-      return FT_THROW( Invalid_Argument );
+    /* we have to test for the existence of `sbit_strike_map'    */
+    /* because the function gets also used at the very beginning */
+    /* to construct `sbit_strike_map' itself                     */
+    if ( face->sbit_strike_map )
+    {
+      if ( strike_index >= (FT_ULong)face->root.num_fixed_sizes )
+        return FT_THROW( Invalid_Argument );
+
+      /* map to real index */
+      strike_index = face->sbit_strike_map[strike_index];
+    }
+    else
+    {
+      if ( strike_index >= (FT_ULong)face->sbit_num_strikes )
+        return FT_THROW( Invalid_Argument );
+    }
 
     switch ( (FT_UInt)face->sbit_table_type )
     {
@@ -456,6 +463,8 @@
     FT_Error   error  = FT_ERR( Table_Missing );
     FT_Stream  stream = face->root.stream;
 
+
+    strike_index = face->sbit_strike_map[strike_index];
 
     if ( !face->ebdt_size )
       goto Exit;
@@ -1417,6 +1426,8 @@
 
     FT_UNUSED( map );
 
+
+    strike_index = face->sbit_strike_map[strike_index];
 
     metrics->width  = 0;
     metrics->height = 0;

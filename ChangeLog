@@ -1,3 +1,24 @@
+2016-09-10  Werner Lemberg  <wl@gnu.org>
+
+	[sfnt] Fix previous commit.
+
+	Problems reported as
+
+	  https://bugs.chromium.org/p/oss-fuzz/issues/detail?id=40
+
+	We now map the strike index right before accessing the physical
+	data, not earlier.
+
+	* src/sfnt/sfobjs.c (sfnt_load_face): Set `face->sbit_strike_map'
+	after creating the map so that...
+
+	* src/sfnt/ttsbit.c (tt_face_load_strike_metrics): ... this function
+	can be used before and after setting up `sbit_strike_map'.
+	(tt_face_set_sbit_strike): Revert change.
+	(tt_sbit_decoder_init, tt_face_load_sbix_image): Map strike index.
+
+	* src/truetype/ttdriver.c (tt_size_select): Revert change.
+
 2016-09-09  Werner Lemberg  <wl@gnu.org>
 
 	[ftfuzzer] Minor improvements.
