@@ -577,24 +577,21 @@ typedef ptrdiff_t  FT_PtrDist;
 
     /* All cells that are on the left of the clipping region go to the */
     /* min_ex - 1 horizontal position.                                 */
+
     if ( ex > ras.max_ex )
       ex = ras.max_ex;
 
     if ( ex < ras.min_ex )
       ex = ras.min_ex - 1;
 
-    /* are we moving to a different cell ? */
-    if ( ex != ras.ex || ey != ras.ey )
-    {
-      /* record the current one if it is valid */
-      if ( !ras.invalid )
-        gray_record_cell( RAS_VAR );
+    /* record the current one if it is valid */
+    if ( !ras.invalid )
+      gray_record_cell( RAS_VAR );
 
-      ras.area  = 0;
-      ras.cover = 0;
-      ras.ex    = ex;
-      ras.ey    = ey;
-    }
+    ras.area  = 0;
+    ras.cover = 0;
+    ras.ex    = ex;
+    ras.ey    = ey;
 
     ras.invalid = ( ey >= ras.max_ey || ey < ras.min_ey ||
                     ex >= ras.max_ex );
@@ -1820,7 +1817,7 @@ typedef ptrdiff_t  FT_PtrDist;
         ras.num_cells = 0;
         ras.invalid   = 1;
         ras.min_ey    = band[1];
-        ras.max_ey    = ras.ey = band[0];
+        ras.max_ey    = band[0];
 
         error = gray_convert_glyph_inner( RAS_VAR );
 

@@ -1,3 +1,14 @@
+2016-09-11  Alexei Podtelezhnikov  <apodtele@gmail.com>
+
+	[smooth] Fix valgrind warning and reoptimize.
+
+	The algorithm calls `gray_set_cell' at the start of each new contour
+	or when the contours cross the cell boundaries. Double-checking for
+	that is wasteful.
+
+	* src/smooth/ftgrays.c (gray_set_cell): Remove check for a new cell.
+	(gray_convert_glyph): Remove initialization introduced by 44b172e88.
+
 2016-09-10  Werner Lemberg  <wl@gnu.org>
 
 	[sfnt] Fix previous commit.
