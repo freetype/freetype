@@ -511,9 +511,6 @@ typedef ptrdiff_t  FT_PtrDist;
     TCoord  x = ras.ex;
 
 
-    if ( x > ras.max_ex )
-      x = ras.max_ex;
-
     pcell = &ras.ycells[ras.ey - ras.min_ey];
     for (;;)
     {
@@ -577,9 +574,6 @@ typedef ptrdiff_t  FT_PtrDist;
 
     /* All cells that are on the left of the clipping region go to the */
     /* min_ex - 1 horizontal position.                                 */
-
-    if ( ex > ras.max_ex )
-      ex = ras.max_ex;
 
     if ( ex < ras.min_ex )
       ex = ras.min_ex - 1;

@@ -1,5 +1,9 @@
 2016-09-11  Alexei Podtelezhnikov  <apodtele@gmail.com>
 
+	* src/smooth/ftgrays.c (gray_{find,set}_cell): Remove dubious code.
+
+2016-09-11  Alexei Podtelezhnikov  <apodtele@gmail.com>
+
 	[smooth] Fix valgrind warning and reoptimize.
 
 	The algorithm calls `gray_set_cell' at the start of each new contour
