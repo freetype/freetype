@@ -1761,8 +1761,6 @@ Exit:
     GX_Blend    blend;
     FT_UInt     i;
 
-    face->doblend = FALSE;
-
     if ( face->blend == NULL )
     {
       if ( ( error = TT_Get_MM_Var( face, NULL ) ) != 0 )
