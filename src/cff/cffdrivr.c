@@ -32,6 +32,12 @@
 #include "cffcmap.h"
 #include "cffparse.h"
 
+#ifdef TT_CONFIG_OPTION_GX_VAR_SUPPORT
+#include FT_MULTIPLE_MASTERS_H
+#include FT_SERVICE_MULTIPLE_MASTERS_H
+#include "../truetype/ttgxvar.h"
+#endif
+
 #include "cfferrs.h"
 #include "cffpic.h"
 
@@ -290,6 +296,14 @@
     FT_UShort   sid;
     FT_Error    error;
 
+
+    /* TODO: for testing: cff2 does not have glyph names */
+    /* will need to use post table method */
+    if ( font->version_major == 2 )
+    {
+      FT_STRCPYN( buffer, "noname", buffer_max );
+      return FT_Err_Ok;
+    }
 
     if ( !font->psnames )
     {
@@ -871,15 +885,31 @@
   /*************************************************************************/
   /*************************************************************************/
 
+/* reuse some of the TT functions for the cff multi_master service */
+#ifdef TT_CONFIG_OPTION_GX_VAR_SUPPORT
+  FT_DEFINE_SERVICE_MULTIMASTERSREC(
+    cff_service_multi_masters,
+    (FT_Get_MM_Func)         NULL,                   /* get_mm         */
+    (FT_Set_MM_Design_Func)  NULL,                   /* set_mm_design  */
+    (FT_Set_MM_Blend_Func)   TT_Set_MM_Blend,        /* set_mm_blend   */
+    (FT_Get_MM_Var_Func)     TT_Get_MM_Var,          /* get_mm_var     */
+    (FT_Set_Var_Design_Func) TT_Set_Var_Design,      /* set_var_design */
+    (FT_Get_Var_Design_Func) TT_Get_Var_Design,      /* get_var_design */
+    (FT_Get_Var_Blend_Func)  TT_Get_Var_Blend )      /* get_var_blend  */
+    
+#endif
+
+/* TODO: fix up ifdefs and we really need an 8-parameter FT_DEFINE_SERVICEDESCREC8 */
 #ifndef FT_CONFIG_OPTION_NO_GLYPH_NAMES
   FT_DEFINE_SERVICEDESCREC7(
     cff_services,
     FT_SERVICE_ID_FONT_FORMAT,          FT_FONT_FORMAT_CFF,
+    FT_SERVICE_ID_MULTI_MASTERS,        &CFF_SERVICE_MULTI_MASTERS_GET,
     FT_SERVICE_ID_POSTSCRIPT_INFO,      &CFF_SERVICE_PS_INFO_GET,
     FT_SERVICE_ID_POSTSCRIPT_FONT_NAME, &CFF_SERVICE_PS_NAME_GET,
     FT_SERVICE_ID_GLYPH_DICT,           &CFF_SERVICE_GLYPH_DICT_GET,
     FT_SERVICE_ID_TT_CMAP,              &CFF_SERVICE_GET_CMAP_INFO_GET,
-    FT_SERVICE_ID_CID,                  &CFF_SERVICE_CID_INFO_GET,
+    /*FT_SERVICE_ID_CID,                  &CFF_SERVICE_CID_INFO_GET,*/
     FT_SERVICE_ID_PROPERTIES,           &CFF_SERVICE_PROPERTIES_GET
   )
 #else

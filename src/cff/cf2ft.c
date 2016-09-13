@@ -102,9 +102,10 @@
     if ( font )
     {
       FT_Memory  memory = font->memory;
-
-
       (void)memory;
+
+      FT_FREE( font->lastNormalizedVector );
+      FT_FREE( font->blendVector );
     }
   }
 
@@ -366,6 +367,9 @@
                                &hinted,
                                &scaled );
 
+      /* copy isCFF2 boolean from TT_Face to CF2_Font */
+      font->isCFF2 = builder->face->isCFF2;
+
       font->renderingFlags = 0;
       if ( hinted )
         font->renderingFlags |= CF2_FlagsHinted;
@@ -412,6 +416,39 @@
     return decoder->current_subfont;
   }
 
+  /* get pointer to VStore structure */
+  FT_LOCAL_DEF( CFF_VStore )
+  cf2_getVStore( CFF_Decoder* decoder )
+  {
+    FT_ASSERT( decoder && decoder->cff );
+
+    return &decoder->cff->vstore;
+  }
+
+  /* get normalized design vector for current render request */
+  /* returns pointer and length                              */
+  /* if blend struct is not initialized, return length zero  */
+  /* Note: use FT_Fixed not CF2_Fixed for the vector         */
+  FT_LOCAL_DEF( void )
+  cf2_getNormalizedVector( CFF_Decoder* decoder, CF2_UInt * len, FT_Fixed ** vec  )
+  {
+    GX_Blend blend;
+
+    FT_ASSERT( decoder && decoder->builder.face );
+    FT_ASSERT( vec && len );
+
+    blend = decoder->builder.face->blend;
+    if ( blend )
+    {
+      *vec = blend->normalizedcoords;
+      *len = blend->num_axis;
+    }
+    else
+    {
+      *vec = NULL;
+      *len = 0;
+    }
+  }
 
   /* get `y_ppem' from `CFF_Size' */
   FT_LOCAL_DEF( CF2_Fixed )

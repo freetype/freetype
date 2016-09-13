@@ -216,7 +216,7 @@
     cf2_cmdRESERVED_13,  /* 13 */
     cf2_cmdENDCHAR,      /* 14 */
     cf2_cmdRESERVED_15,  /* 15 */
-    cf2_cmdRESERVED_16,  /* 16 */
+    cf2_cmdBLEND,        /* 16 */
     cf2_cmdRESERVED_17,  /* 17 */
     cf2_cmdHSTEMHM,      /* 18 */
     cf2_cmdHINTMASK,     /* 19 */
@@ -402,6 +402,34 @@
     *curY = vals[13];
   }
 
+  /* Blend numOperands on the stack,                  */
+  /* store results into the first numBlends values,   */
+  /* then pop remaining arguments.                    */
+  static void
+  cf2_doBlend( const CF2_Font  font,
+               CF2_Stack       opStack,
+               CF2_UInt        numBlends )
+  {
+    CF2_UInt delta;
+    CF2_UInt base;
+    CF2_UInt i, j;
+    CF2_UInt numOperands = (CF2_UInt)(numBlends * font->lenBlendVector);
+
+    base = cf2_stack_count( opStack ) - numOperands;
+    delta = base + numBlends;
+    for ( i = 0; i < numBlends; i++ )
+    {
+      const CF2_Fixed * weight = &font->blendVector[1];
+      CF2_Fixed sum = cf2_stack_getReal( opStack, i+base );    /* start with first term */
+      for ( j = 1; j < font->lenBlendVector; j++ )
+      {
+        sum += FT_MulFix( *weight++, cf2_stack_getReal( opStack, delta++ ));
+      }
+      cf2_stack_setReal( opStack, i+base, sum );               /* store blended result  */
+    }
+    /* leave only numBlends results on stack */
+    cf2_stack_pop( opStack, numOperands - numBlends );
+}
 
   /*
    * `error' is a shared error code used by many objects in this
@@ -585,11 +613,19 @@
       case cf2_cmdRESERVED_9:
       case cf2_cmdRESERVED_13:
       case cf2_cmdRESERVED_15:
-      case cf2_cmdRESERVED_16:
       case cf2_cmdRESERVED_17:
         /* we may get here if we have a prior error */
         FT_TRACE4(( " unknown op (%d)\n", op1 ));
         break;
+
+      case cf2_cmdBLEND:
+        {
+          FT_UInt numBlends = (FT_UInt)cf2_stack_popInt( opStack );
+          FT_TRACE4(( " blend\n"  ));
+          cf2_doBlend( font, opStack, numBlends );
+        }
+        continue;     /* do not clear the stack */
+
 
       case cf2_cmdHSTEMHM:
       case cf2_cmdHSTEM:

@@ -1,3 +1,12 @@
+  Branch of FreeType to support OpenType 1.8
+  ==========================================
+
+  This branch contains changes for supporting OpenType 1.8.
+  The changes will be merged back upstream in September 2016,
+  when the specification for OpenType 1.8 is final and has
+  been published.
+
+
   FreeType 2.6.5
   ==============
 

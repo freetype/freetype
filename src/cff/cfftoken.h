@@ -45,6 +45,9 @@
   CFF_FIELD_NUM     ( 16,    encoding_offset,     "Encoding" )
   CFF_FIELD_NUM     ( 17,    charstrings_offset,  "CharStrings" )
   CFF_FIELD_CALLBACK( 18,    private_dict,        "Private" )
+  CFF_FIELD_NUM     ( 22,    vsindex,             "vsindex" )
+  CFF_FIELD_NUM     ( 24,    vstore_offset,       "vstore" )
+  CFF_FIELD_NUM     ( 25,    maxstack,            "maxstack" )
   CFF_FIELD_NUM     ( 0x114, synthetic_base,      "SyntheticBase" )
   CFF_FIELD_STRING  ( 0x115, embedded_postscript, "PostScript" )
 
@@ -101,5 +104,6 @@
   CFF_FIELD_NUM       ( 20,    default_width,          "defaultWidthX" )
   CFF_FIELD_NUM       ( 21,    nominal_width,          "nominalWidthX" )
 
+  CFF_FIELD_BLEND     ( 31,                            "blend" )
 
 /* END */

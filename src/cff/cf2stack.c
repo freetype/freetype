@@ -194,6 +194,34 @@
     }
   }
 
+  /* provide random access to stack */
+  FT_LOCAL_DEF( void )
+  cf2_stack_setReal( CF2_Stack  stack,
+                     CF2_UInt   idx,
+                     CF2_Fixed  val )
+  {
+    if ( idx > cf2_stack_count( stack ) )
+    {
+      CF2_SET_ERROR( stack->error, Stack_Overflow );
+      return;
+    }
+
+    stack->buffer[idx].u.r = val;
+    stack->buffer[idx].type = CF2_NumberFixed;
+  }
+
+  /* discard (pop) num values from stack */
+  FT_LOCAL_DEF( void )
+  cf2_stack_pop( CF2_Stack  stack,
+                 CF2_UInt   num )
+  {
+    if ( num > cf2_stack_count( stack ) )
+    {
+      CF2_SET_ERROR( stack->error, Stack_Underflow );
+      return;
+    }
+    stack->top -= num;
+  }
 
   FT_LOCAL( void )
   cf2_stack_roll( CF2_Stack  stack,

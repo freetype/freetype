@@ -90,6 +90,7 @@ FT_TRACE_DEF( cffparse )
 
 FT_TRACE_DEF( cf2blues )
 FT_TRACE_DEF( cf2hints )
+FT_TRACE_DEF( cf2font )
 FT_TRACE_DEF( cf2interp )
 
   /* Type 42 driver component */

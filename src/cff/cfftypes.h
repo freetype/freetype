@@ -101,6 +101,38 @@ FT_BEGIN_HEADER
 
   } CFF_CharsetRec, *CFF_Charset;
 
+  typedef struct CFF_VarData_
+  {
+    /* FT_UInt      itemCount;         not used; always zero         */
+    /* FT_UInt      shortDeltaCount;   not used; always zero         */
+    FT_UInt         regionIdxCount; /* # regions in this var data    */
+    FT_UInt*        regionIndices;  /* array of regionCount indices  */
+                                    /* these index the varRegionList */
+  } CFF_VarData;
+
+  typedef struct CFF_AxisCoords_    /* contribution of one axis to a region   */
+  {
+    FT_Fixed        startCoord;
+    FT_Fixed        peakCoord;      /* zero peak means no effect (factor = 1) */
+    FT_Fixed        endCoord;
+  } CFF_AxisCoords;
+
+  typedef struct CFF_VarRegion_
+  {
+    CFF_AxisCoords* axisList;       /* array of axisCount records */
+  } CFF_VarRegion;
+
+  typedef struct  CFF_VstoreRec_
+  {
+    FT_UInt         dataCount;
+    CFF_VarData*    varData;        /* array of dataCount records */
+                                    /* vsindex indexes this array */
+    FT_UShort       axisCount;
+    FT_UInt         regionCount;    /* total # regions defined    */
+    CFF_VarRegion*  varRegionList;
+
+  } CFF_VStoreRec, *CFF_VStore;
+
 
   typedef struct  CFF_FontRecDictRec_
   {
@@ -150,6 +182,11 @@ FT_BEGIN_HEADER
     /* deprecated) `blend' operator in Type 2 charstrings            */
     FT_UShort  num_designs;
     FT_UShort  num_axes;
+
+    /* fields for CFF2 */
+    FT_UInt    vsindex;
+    FT_ULong   vstore_offset;
+    FT_UInt    maxstack;
 
   } CFF_FontRecDictRec, *CFF_FontRecDict;
 
@@ -279,6 +316,8 @@ FT_BEGIN_HEADER
 
     /* since version 2.4.12 */
     FT_Generic       cf2_instance;
+
+    CFF_VStoreRec    vstore;
 
   } CFF_FontRec, *CFF_Font;
 

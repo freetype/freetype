@@ -47,7 +47,7 @@
 FT_BEGIN_HEADER
 
 
-#define CF2_OPERAND_STACK_SIZE  48
+#define CF2_OPERAND_STACK_SIZE  193/* TODO: this is temporary for CFF2    */
 #define CF2_MAX_SUBR            16 /* maximum subroutine nesting;         */
                                    /* only 10 are allowed but there exist */
                                    /* fonts like `HiraKakuProN-W3.ttf'    */
@@ -63,6 +63,7 @@ FT_BEGIN_HEADER
     FT_Memory  memory;
     FT_Error   error;     /* shared error for this instance */
 
+    FT_Bool             isCFF2;
     CF2_RenderingFlags  renderingFlags;
 
     /* variables that depend on Transform:  */
@@ -73,6 +74,13 @@ FT_BEGIN_HEADER
     CF2_Matrix  innerTransform;    /* for hinting; erect, scaled       */
     CF2_Matrix  outerTransform;    /* post hinting; includes rotations */
     CF2_Fixed   ppem;              /* transform-dependent              */
+
+    /* variation data */
+    CF2_UInt    lastVsindex;         /* last vsindex used              */
+    CF2_UInt    lenNormalizedVector; /* normDV length (aka numAxes)    */
+    FT_Fixed *  lastNormalizedVector;/* last normDV used               */
+    CF2_UInt    lenBlendVector;      /* blendV length (aka numMasters) */
+    CF2_Fixed * blendVector;         /* current blendV (per glyph)     */
 
     CF2_Int  unitsPerEm;
 

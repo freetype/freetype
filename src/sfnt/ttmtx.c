@@ -22,6 +22,10 @@
 #include FT_TRUETYPE_TAGS_H
 #include "ttmtx.h"
 
+#ifdef TT_CONFIG_OPTION_GX_VAR_SUPPORT
+#include "../truetype/ttgxvar.h"
+#endif
+
 #include "sferrors.h"
 
 
@@ -274,6 +278,12 @@
       *abearing = 0;
       *aadvance = 0;
     }
+#ifdef TT_CONFIG_OPTION_GX_VAR_SUPPORT
+    /* TODO: handle VVAR and LSB */
+    if ( !vertical )
+      tt_adjust_advance( face, gindex, aadvance );
+#endif
+
   }
 
 

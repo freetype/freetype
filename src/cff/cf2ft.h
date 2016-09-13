@@ -64,6 +64,14 @@ FT_BEGIN_HEADER
   FT_LOCAL( CFF_SubFont )
   cf2_getSubfont( CFF_Decoder*  decoder );
 
+  FT_LOCAL( CFF_VStore )
+  cf2_getVStore( CFF_Decoder*  decoder );
+
+
+  FT_LOCAL_DEF( void )
+  cf2_getNormalizedVector( CFF_Decoder*  decoder,
+                           CF2_UInt *    len,
+                           FT_Fixed **   vec  );
 
   FT_LOCAL( CF2_Fixed )
   cf2_getPpemY( CFF_Decoder*  decoder );

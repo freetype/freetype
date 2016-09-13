@@ -449,7 +449,9 @@
     (FT_Set_MM_Design_Func) NULL,                   /* set_mm_design  */
     (FT_Set_MM_Blend_Func)  TT_Set_MM_Blend,        /* set_mm_blend   */
     (FT_Get_MM_Var_Func)    TT_Get_MM_Var,          /* get_mm_var     */
-    (FT_Set_Var_Design_Func)TT_Set_Var_Design )     /* set_var_design */
+    (FT_Set_Var_Design_Func)TT_Set_Var_Design,      /* set_var_design */
+    (FT_Get_Var_Design_Func)TT_Get_Var_Design,      /* get_var_design */
+    (FT_Get_Var_Blend_Func) TT_Get_Var_Blend )      /* get_var_blend  */
 #endif
 
 

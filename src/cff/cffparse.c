@@ -782,6 +782,32 @@
     return error;
   }
 
+  /* TODO: replace this test code with doBlend */
+  static FT_Error
+  cff_parse_blend( CFF_Parser  parser )
+  {
+    FT_UInt          num_args = (FT_UInt)( parser->top - parser->stack );
+    FT_UInt          numBlends;
+    FT_Error         error;
+
+    error = FT_ERR( Stack_Underflow );
+    FT_TRACE1(( " cff_parse_blend\n" ));
+
+    if ( parser->top >= parser->stack + 1 ) /* at least one operand */
+    {
+      /* top of stack gives number of blends */
+      numBlends = (FT_UInt)cff_parse_num( parser->top - 1 );
+
+      if ( numBlends < num_args )
+      {
+        /* for testing, just reduce stack to first numBlends values */
+        parser->top = parser->stack + numBlends;
+
+        error = FT_Err_Ok;
+      }
+    }
+    return error;
+  }
 
 #define CFF_FIELD_NUM( code, name, id )             \
           CFF_FIELD( code, name, id, cff_kind_num )
@@ -814,6 +840,15 @@
             code | CFFCODE,                  \
             0, 0,                            \
             cff_parse_ ## name,              \
+            0, 0                             \
+          },
+
+#define CFF_FIELD_BLEND( code, id )          \
+          {                                  \
+            cff_kind_blend,                  \
+            code | CFFCODE,                  \
+            0, 0,                            \
+            cff_parse_blend,                 \
             0, 0                             \
           },
 
@@ -856,6 +891,16 @@
             code | CFFCODE,                  \
             0, 0,                            \
             cff_parse_ ## name,              \
+            0, 0,                            \
+            id                               \
+          },
+
+#define CFF_FIELD_BLEND( code, id )          \
+          {                                  \
+            cff_kind_blend,                  \
+            code | CFFCODE,                  \
+            0, 0,                            \
+            cff_parse_blend,                 \
             0, 0,                            \
             id                               \
           },
@@ -1386,7 +1431,7 @@
               }
               break;
 
-            default:  /* callback */
+            default:  /* callback or blend */
               error = field->reader( parser );
               if ( error )
                 goto Exit;
@@ -1400,7 +1445,8 @@
 
       Found:
         /* clear stack */
-        parser->top = parser->stack;
+        if ( field->kind != cff_kind_blend )
+            parser->top = parser->stack;
       }
       p++;
     }

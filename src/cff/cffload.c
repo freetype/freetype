@@ -589,12 +589,15 @@
                       FT_UInt   element )
   {
     CFF_Index   idx = &font->name_index;
-    FT_Memory   memory = idx->stream->memory;
+    FT_Memory   memory;
     FT_Byte*    bytes;
     FT_ULong    byte_len;
     FT_Error    error;
     FT_String*  name = 0;
 
+    if ( !idx->stream )  /* CFF2 does not include a name index */
+      goto Exit;
+    memory = idx->stream->memory;
 
     error = cff_index_access_element( idx, element, &bytes, &byte_len );
     if ( error )
@@ -862,6 +865,32 @@
     charset->offset = 0;
   }
 
+  static void
+  cff_vstore_done( CFF_VStoreRec*   vstore,
+                   FT_Memory        memory )
+  {
+    FT_UInt i;
+
+    /* free regionList and axisLists */
+    if ( vstore->varRegionList )
+    {
+      for ( i=0; i<vstore->regionCount; i++ )
+      {
+        FT_FREE( vstore->varRegionList[i].axisList );
+      }
+    }
+    FT_FREE( vstore->varRegionList );
+
+    /* free varData and indices */
+    if ( vstore->varData )
+    {
+      for ( i=0; i<vstore->dataCount; i++ )
+      {
+        FT_FREE( vstore->varData[i].regionIndices );
+      }
+    }
+    FT_FREE( vstore->varData );
+  }
 
   static FT_Error
   cff_charset_load( CFF_Charset  charset,
@@ -1052,6 +1081,130 @@
     return error;
   }
 
+
+  /* convert 2.14 to Fixed */
+  #define FT_fdot14ToFixed( x )             \
+          (((FT_Fixed)((FT_Int16)(x))) << 2 )
+
+  static FT_Error
+  cff_vstore_load(  CFF_VStoreRec*  vstore,
+                    FT_Stream       stream,
+                    FT_ULong        base_offset,
+                    FT_ULong        offset )
+  {
+    FT_Memory  memory = stream->memory;
+    FT_Error   error = FT_THROW( Invalid_File_Format );
+    FT_UInt    i,j;
+
+    /* no offset means no vstore to parse */
+    if ( offset )
+    {
+      FT_UInt   vsSize;     /* currently unused */
+      FT_UInt   vsOffset;
+      FT_UInt   format;
+      FT_ULong  regionListOffset;
+      FT_ULong  dataOffsetArrayOffset;
+      FT_ULong  varDataOffset;
+
+      /* we need to parse the table to determine its size */
+      if ( FT_STREAM_SEEK( base_offset + offset ) ||
+           FT_READ_USHORT( vsSize ) )
+        goto Exit;
+
+      /* actual variation store begins after the length */
+      vsOffset = FT_STREAM_POS();
+
+      /* check the header */
+      if ( FT_READ_USHORT( format ) )
+        goto Exit;
+      if ( format != 1 )
+      {
+        error = FT_THROW( Invalid_File_Format );
+        goto Exit;
+      }
+
+      /* read top level fields */
+      if ( FT_READ_ULONG( regionListOffset )   ||
+           FT_READ_USHORT( vstore->dataCount ) )
+        goto Exit;
+
+      /* save position of item variation data offsets */
+      /* we'll parse region list first, then come back */
+      dataOffsetArrayOffset = FT_STREAM_POS();
+
+      /* parse regionList and axisLists*/
+      if ( FT_STREAM_SEEK( vsOffset + regionListOffset ) ||
+           FT_READ_USHORT( vstore->axisCount )         ||
+           FT_READ_USHORT( vstore->regionCount ) )
+        goto Exit;
+
+      if ( FT_NEW_ARRAY( vstore->varRegionList, vstore->regionCount ) )
+        goto Exit;
+
+      for ( i=0; i<vstore->regionCount; i++ )
+      {
+        CFF_VarRegion* region = &vstore->varRegionList[i];
+        if ( FT_NEW_ARRAY( region->axisList, vstore->axisCount ) )
+          goto Exit;
+        for ( j=0; j<vstore->axisCount; j++ )
+        {
+          CFF_AxisCoords* axis = &region->axisList[j];
+          FT_Int16 start14, peak14, end14;
+          if ( FT_READ_SHORT( start14 ) ||
+               FT_READ_SHORT( peak14 )  ||
+               FT_READ_SHORT( end14 ) )
+            goto Exit;
+          axis->startCoord = FT_fdot14ToFixed( start14 );
+          axis->peakCoord =  FT_fdot14ToFixed( peak14 );
+          axis->endCoord =   FT_fdot14ToFixed( end14 );
+        }
+      }
+
+      /* re-position to parse varData and regionIndices */
+      if ( FT_STREAM_SEEK( dataOffsetArrayOffset ) )
+        goto Exit;
+
+      if ( FT_NEW_ARRAY( vstore->varData, vstore->dataCount ) )
+        goto Exit;
+
+      for ( i=0; i<vstore->dataCount; i++ )
+      {
+        FT_UInt itemCount, shortDeltaCount;
+        CFF_VarData* data = &vstore->varData[i];
+
+        if ( FT_READ_ULONG( varDataOffset ) )
+          goto Exit;
+
+        if ( FT_STREAM_SEEK( vsOffset + varDataOffset ) )
+          goto Exit;
+
+        /* ignore these two values because CFF2 has no delta sets */
+        if ( FT_READ_USHORT( itemCount ) ||
+             FT_READ_USHORT( shortDeltaCount ) )
+          goto Exit;
+
+        /* Note: just record values; consistency is checked later */
+        /* by cf2_buildBlendVector when it consumes vstore        */
+
+        if ( FT_READ_USHORT( data->regionIdxCount ) )
+          goto Exit;
+        if ( FT_NEW_ARRAY( data->regionIndices, data->regionIdxCount ) )
+          goto Exit;
+        for ( j=0; j<data->regionIdxCount; j++ )
+        {
+          if ( FT_READ_USHORT( data->regionIndices[j] ) )
+            goto Exit;
+        }
+      }
+
+    }
+    error = FT_Err_Ok;
+
+  Exit:
+    if ( error )
+      cff_vstore_done( vstore, memory );
+    return error;
+  }
 
   static void
   cff_encoding_done( CFF_Encoding  encoding )
@@ -1442,7 +1595,8 @@
                  FT_Stream  stream,
                  FT_Int     face_index,
                  CFF_Font   font,
-                 FT_Bool    pure_cff )
+                 FT_Bool    pure_cff,
+                 FT_Bool    cff2 )
   {
     static const FT_Frame_Field  cff_header_fields[] =
     {
@@ -1478,7 +1632,7 @@
       goto Exit;
 
     /* check format */
-    if ( font->version_major   != 1 ||
+    if ( font->version_major != ( cff2 ? 2 : 1 ) ||
          font->header_size      < 4 ||
          font->absolute_offsize > 4 )
     {
@@ -1492,8 +1646,9 @@
       goto Exit;
 
     /* read the name, top dict, string and global subrs index */
-    if ( FT_SET_ERROR( cff_index_init( &font->name_index,
-                                       stream, 0 ) )                       ||
+    /* CFF2 does not contain a name index */
+    if ( ( !cff2 && FT_SET_ERROR( cff_index_init( &font->name_index,
+                                       stream, 0 ) ) )                     ||
          FT_SET_ERROR( cff_index_init( &font->font_dict_index,
                                        stream, 0 ) )                       ||
          FT_SET_ERROR( cff_index_init( &string_index,
@@ -1636,7 +1791,7 @@
       goto Exit;
 
     /* read the Charset and Encoding tables if available */
-    if ( font->num_glyphs > 0 )
+    if ( !cff2 && font->num_glyphs > 0 )
     {
       FT_Bool  invert = FT_BOOL( dict->cid_registry != 0xFFFFU && pure_cff );
 
@@ -1659,6 +1814,14 @@
           goto Exit;
       }
     }
+
+    /* read the Variation Store if available */
+    error = cff_vstore_load( &font->vstore,
+                             stream,
+                             base_offset,
+                             dict->vstore_offset );
+    if ( error )
+      goto Exit;
 
     /* get the font name (/CIDFontName for CID-keyed fonts, */
     /* /FontName otherwise)                                 */
@@ -1696,6 +1859,7 @@
 
     cff_encoding_done( &font->encoding );
     cff_charset_done( &font->charset, font->stream );
+    cff_vstore_done( &font->vstore, memory );
 
     cff_subfont_done( memory, &font->top_font );
 

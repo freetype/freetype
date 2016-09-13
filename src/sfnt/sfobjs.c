@@ -1085,10 +1085,12 @@
 #ifdef FT_CONFIG_OPTION_INCREMENTAL
     has_outline = FT_BOOL( face->root.internal->incremental_interface != 0 ||
                            tt_face_lookup_table( face, TTAG_glyf )    != 0 ||
-                           tt_face_lookup_table( face, TTAG_CFF )     != 0 );
+                           tt_face_lookup_table( face, TTAG_CFF )     != 0 ||
+                           tt_face_lookup_table( face, TTAG_CFF2 ));
 #else
     has_outline = FT_BOOL( tt_face_lookup_table( face, TTAG_glyf ) != 0 ||
-                           tt_face_lookup_table( face, TTAG_CFF )  != 0 );
+                           tt_face_lookup_table( face, TTAG_CFF )  != 0 ||
+                           tt_face_lookup_table( face, TTAG_CFF2 ));
 #endif
 
     is_apple_sbit = 0;
@@ -1330,6 +1332,9 @@
       if ( tt_face_lookup_table( face, TTAG_glyf ) != 0 &&
            tt_face_lookup_table( face, TTAG_fvar ) != 0 &&
            tt_face_lookup_table( face, TTAG_gvar ) != 0 )
+        flags |= FT_FACE_FLAG_MULTIPLE_MASTERS;
+      if ( tt_face_lookup_table( face, TTAG_CFF2 ) != 0 &&
+           tt_face_lookup_table( face, TTAG_fvar ) != 0 )
         flags |= FT_FACE_FLAG_MULTIPLE_MASTERS;
 #endif
 

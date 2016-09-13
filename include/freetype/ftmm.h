@@ -171,6 +171,7 @@ FT_BEGIN_HEADER
   {
     FT_Fixed*  coords;
     FT_UInt    strid;
+    FT_UInt    psid;
 
   } FT_Var_Named_Style;
 
@@ -329,6 +330,10 @@ FT_BEGIN_HEADER
                                  FT_UInt    num_coords,
                                  FT_Fixed*  coords );
 
+  FT_EXPORT( FT_Error )
+  FT_Get_Var_Design_Coordinates( FT_Face    face,
+                                 FT_UInt    num_coords,
+                                 FT_Fixed*  coords );
 
   /*************************************************************************/
   /*                                                                       */
@@ -374,6 +379,11 @@ FT_BEGIN_HEADER
                                 FT_Fixed*  coords );
 
   /* */
+
+  FT_EXPORT( FT_Error )
+  FT_Get_Var_Blend_Coordinates( FT_Face    face,
+                                FT_UInt    num_coords,
+                                FT_Fixed*  coords );
 
 
 FT_END_HEADER

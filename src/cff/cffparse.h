@@ -28,7 +28,7 @@
 FT_BEGIN_HEADER
 
 
-#define CFF_MAX_STACK_DEPTH  96
+#define CFF_MAX_STACK_DEPTH  193
 
 #define CFF_CODE_TOPDICT  0x1000
 #define CFF_CODE_PRIVATE  0x2000
@@ -77,6 +77,7 @@ FT_BEGIN_HEADER
     cff_kind_bool,
     cff_kind_delta,
     cff_kind_callback,
+    cff_kind_blend,
 
     cff_kind_max  /* do not remove */
   };

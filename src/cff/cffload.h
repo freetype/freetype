@@ -64,7 +64,8 @@ FT_BEGIN_HEADER
                  FT_Stream  stream,
                  FT_Int     face_index,
                  CFF_Font   font,
-                 FT_Bool    pure_cff );
+                 FT_Bool    pure_cff,
+                 FT_Bool    cff2 );
 
   FT_LOCAL( void )
   cff_font_done( CFF_Font  font );

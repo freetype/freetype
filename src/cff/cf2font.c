@@ -38,6 +38,7 @@
 
 #include <ft2build.h>
 #include FT_INTERNAL_CALC_H
+#include FT_INTERNAL_DEBUG_H
 
 #include "cf2ft.h"
 
@@ -46,6 +47,8 @@
 #include "cf2error.h"
 #include "cf2intrp.h"
 
+#undef  FT_COMPONENT
+#define FT_COMPONENT  trace_cf2font
 
   /* Compute a stem darkening amount in character space. */
   static void
@@ -233,18 +236,146 @@
     *darkenAmount += boldenAmount / 2;
   }
 
+  /* compute a blend vector from variation store index and normalized vector  */
+  /* return size of blend vector and allocated storage for it                 */
+  /* caller must free this                                                    */
+  /* lenNormalizedVector == 0 produces a default blend vector                 */
+  /* Note: normalizedVector uses FT_Fixed, not CF2_Fixed                      */
+  static void
+  cf2_buildBlendVector( CF2_Font font, CF2_UInt vsindex,
+                        CF2_UInt lenNormalizedVector, FT_Fixed * normalizedVector,
+                        CF2_UInt * lenBlendVector, CF2_Fixed ** blendVector )
+  {
+    FT_Error   error  = FT_Err_Ok;        /* for FT_REALLOC */
+    FT_Memory  memory = font->memory;     /* for FT_REALLOC */
+    CF2_UInt len;
+    CFF_VStore vs;
+    CFF_VarData* varData;
+    CF2_UInt master;
+
+    FT_UNUSED( lenNormalizedVector );
+    FT_UNUSED( vsindex );
+
+    FT_ASSERT( lenBlendVector && blendVector );
+    FT_ASSERT( lenNormalizedVector == 0 || normalizedVector );
+    FT_TRACE4(( "cf2_buildBlendVector\n" ));
+
+    vs = cf2_getVStore( font->decoder );
+
+    /* VStore and fvar must be consistent */
+    if ( lenNormalizedVector != 0 && lenNormalizedVector != vs->axisCount )
+    {
+      FT_TRACE4(( "cf2_buildBlendVector: Axis count mismatch\n" ));
+      CF2_SET_ERROR( &font->error, Invalid_File_Format );
+      goto Exit;
+    }
+    if ( vsindex >= vs->dataCount )
+    {
+      FT_TRACE4(( "cf2_buildBlendVector: vsindex out of range\n" ));
+      CF2_SET_ERROR( &font->error, Invalid_File_Format );
+      goto Exit;
+    }
+
+    /* select the item variation data structure */
+    varData = &vs->varData[vsindex];
+
+    /* prepare an output buffer for the blend vector */
+    len = varData->regionIdxCount + 1;    /* add 1 for default */
+    if ( FT_REALLOC( *blendVector, *lenBlendVector, len * sizeof( **blendVector )) )
+      return;
+    *lenBlendVector = len;
+
+    /* outer loop steps through master designs to be blended */
+    for ( master=0; master<len; master++ )
+    {
+      CF2_UInt j;
+      CF2_UInt idx;
+      CFF_VarRegion* varRegion;
+
+      /* default factor is always one */
+      if ( master == 0 )
+      {
+        *blendVector[master] = CF2_FIXED_ONE;
+        FT_TRACE4(( "blend vector len %d\n [ %f ", len, (double)(*blendVector)[master] / 65536 ));
+        continue;
+      }
+
+      /* VStore array does not include default master, so subtract one */
+      idx = varData->regionIndices[master-1];
+      varRegion = &vs->varRegionList[idx];
+
+      if ( idx >= vs->regionCount )
+      {
+        FT_TRACE4(( "cf2_buildBlendVector: region index out of range\n" ));
+        CF2_SET_ERROR( &font->error, Invalid_File_Format );
+        goto Exit;
+      }
+
+      /* Note: lenNormalizedVector could be zero      */
+      /* In that case, build default blend vector     */
+      if ( lenNormalizedVector != 0 )
+        (*blendVector)[master] = CF2_FIXED_ONE; /* default */
+
+      /* inner loop steps through axes in this region */
+      for ( j=0; j<lenNormalizedVector; j++ )
+      {
+        CFF_AxisCoords* axis = &varRegion->axisList[j];
+        CF2_Fixed axisScalar;
+
+        /* compute the scalar contribution of this axis */
+        /* ignore invalid ranges */
+        if ( axis->startCoord > axis->peakCoord || axis->peakCoord > axis->endCoord )
+          axisScalar = CF2_FIXED_ONE;
+        else if ( axis->startCoord < 0 && axis->endCoord > 0 && axis->peakCoord != 0 )
+          axisScalar = CF2_FIXED_ONE;
+        /* peak of 0 means ignore this axis */
+        else if ( axis->peakCoord == 0 )
+          axisScalar = CF2_FIXED_ONE;
+        /* ignore this region if coords are out of range */
+        else if ( normalizedVector[j] < axis->startCoord || normalizedVector[j] > axis->endCoord )
+          axisScalar = 0;
+        /* calculate a proportional factor */
+        else
+        {
+          if ( normalizedVector[j] == axis->peakCoord )
+            axisScalar = CF2_FIXED_ONE;
+          else if ( normalizedVector[j] < axis->peakCoord )
+            axisScalar = FT_DivFix( normalizedVector[j] - axis->startCoord,
+                                    axis->peakCoord - axis->startCoord );
+          else
+            axisScalar = FT_DivFix( axis->endCoord - normalizedVector[j],
+                                    axis->endCoord - axis->peakCoord );
+        }
+        /* take product of all the axis scalars */
+        (*blendVector)[master] = FT_MulFix( (*blendVector)[master], axisScalar );
+      }
+      FT_TRACE4(( ", %f ", (double)(*blendVector)[master] / 65536 ));
+    }
+    FT_TRACE4(( "]\n" ));
+
+  Exit:
+    return;
+ }
+
 
   /* set up values for the current FontDict and matrix */
+  /* called for each glyph to be rendered */
 
   /* caller's transform is adjusted for subpixel positioning */
   static void
   cf2_font_setup( CF2_Font           font,
                   const CF2_Matrix*  transform )
   {
+    FT_Error   error  = FT_Err_Ok;        /* for FT_REALLOC */
+    FT_Memory  memory = font->memory;     /* for FT_REALLOC */
+
     /* pointer to parsed font object */
     CFF_Decoder*  decoder = font->decoder;
 
     FT_Bool  needExtraSetup = FALSE;
+
+    CFF_VStoreRec* vstore;
+    FT_Bool  hasVariations = FALSE;
 
     /* character space units */
     CF2_Fixed  boldenX = font->syntheticEmboldeningAmountX;
@@ -252,6 +383,8 @@
 
     CFF_SubFont  subFont;
     CF2_Fixed    ppem;
+    CF2_UInt     lenNormalizedV = 0;
+    FT_Fixed *   normalizedV = NULL;
 
 
     /* clear previous error */
@@ -264,6 +397,33 @@
     {
       font->lastSubfont = subFont;
       needExtraSetup    = TRUE;
+    }
+
+    /* check for variation vectors */
+    vstore = cf2_getVStore( decoder );
+    hasVariations = ( vstore->dataCount != 0 );
+
+    if ( hasVariations )
+    {
+      if ( font->lenBlendVector == 0 )
+        needExtraSetup = TRUE;      /* a blend vector is required */
+
+      /* Note: lenNormalizedVector is zero until FT_Get_MM_Var() is called */
+      cf2_getNormalizedVector( decoder, &lenNormalizedV, &normalizedV );
+
+      /* determine if blend vector needs to be recomputed */
+      if ( font->lastVsindex != subFont->font_dict.vsindex ||
+        lenNormalizedV == 0 ||
+        font->lenNormalizedVector != lenNormalizedV ||
+        ( lenNormalizedV &&
+          memcmp( normalizedV,
+                  &font->lastNormalizedVector,
+                  lenNormalizedV * sizeof( *normalizedV ) ) != 0 ) )
+      {
+        font->lastVsindex = subFont->font_dict.vsindex;
+        /* vectors will be copied below, during ExtraSetup */
+        needExtraSetup = TRUE;
+      }
     }
 
     /* if ppem has changed, we need to recompute some cached data         */
@@ -423,7 +583,37 @@
 
       /* compute blue zones for this instance */
       cf2_blues_init( &font->blues, font );
-    }
+
+      /* copy normalized vector used to compute blend vector */
+      if ( hasVariations )
+      {
+        /* if user has set a normalized vector, use it */
+        /* otherwise, assume default */
+        if ( lenNormalizedV != 0 )
+        {
+          /* user has set a normalized vector */
+          if ( FT_REALLOC( font->lastNormalizedVector,
+                           font->lenNormalizedVector,
+                           lenNormalizedV * sizeof( *normalizedV )) )
+          {
+            CF2_SET_ERROR( &font->error, Out_Of_Memory );
+            return;
+          }
+          font->lenNormalizedVector = lenNormalizedV;
+          FT_MEM_COPY( font->lastNormalizedVector,
+                       normalizedV,
+                       lenNormalizedV * sizeof( *normalizedV ));
+        }
+
+        /* build blend vector for this instance */
+        cf2_buildBlendVector( font, font->lastVsindex,
+                              font->lenNormalizedVector,
+                              font->lastNormalizedVector,
+                              &font->lenBlendVector,
+                              &font->blendVector );
+      }
+
+    } /* needExtraSetup */
   }
 
 

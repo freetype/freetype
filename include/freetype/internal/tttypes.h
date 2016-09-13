@@ -1346,6 +1346,7 @@ FT_BEGIN_HEADER
     FT_ULong              glyf_len;
 
 #ifdef TT_CONFIG_OPTION_GX_VAR_SUPPORT
+    FT_Bool               isCFF2;
     FT_Bool               doblend;
     GX_Blend              blend;
 #endif
