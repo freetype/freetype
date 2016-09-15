@@ -406,7 +406,7 @@
     if ( hasVariations )
     {
       if ( font->lenBlendVector == 0 )
-        needExtraSetup = TRUE;      /* a blend vector is required */
+        needExtraSetup = TRUE;          /* a blend vector is required */
 
       /* Note: lenNormalizedVector is zero until FT_Get_MM_Var() is called */
       cf2_getNormalizedVector( decoder, &lenNormalizedV, &normalizedV );
