@@ -1,3 +1,7 @@
+2016-09-15  Alexei Podtelezhnikov  <apodtele@gmail.com>
+
+	* src/smooth/ftgrays.c (gray_sweep): Remove check for empty table.
+
 2016-09-14  Alexei Podtelezhnikov  <apodtele@gmail.com>
 
 	[smooth] Another tiny speed-up.

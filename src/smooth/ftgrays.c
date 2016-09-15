@@ -1298,9 +1298,6 @@ typedef ptrdiff_t  FT_PtrDist;
     int  y;
 
 
-    if ( ras.num_cells == 0 )
-      return;
-
     FT_TRACE7(( "gray_sweep: start\n" ));
 
     for ( y = ras.min_ey; y < ras.max_ey; y++ )
