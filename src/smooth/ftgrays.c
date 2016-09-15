@@ -504,8 +504,8 @@ typedef ptrdiff_t  FT_PtrDist;
   /*                                                                       */
   /* Record the current cell in the table.                                 */
   /*                                                                       */
-  static PCell
-  gray_find_cell( RAS_ARG )
+  static void
+  gray_record_cell( RAS_ARG )
   {
     PCell  *pcell, cell;
     TCoord  x = ras.ex;
@@ -519,7 +519,7 @@ typedef ptrdiff_t  FT_PtrDist;
         break;
 
       if ( cell->x == x )
-        goto Exit;
+        goto Found;
 
       pcell = &cell->next;
     }
@@ -527,30 +527,21 @@ typedef ptrdiff_t  FT_PtrDist;
     if ( ras.num_cells >= ras.max_cells )
       ft_longjmp( ras.jump_buffer, 1 );
 
+    /* insert new cell */
     cell        = ras.cells + ras.num_cells++;
     cell->x     = x;
-    cell->area  = 0;
-    cell->cover = 0;
+    cell->area  = ras.area;
+    cell->cover = ras.cover;
 
     cell->next  = *pcell;
     *pcell      = cell;
 
-  Exit:
-    return cell;
-  }
+    return;
 
-
-  static void
-  gray_record_cell( RAS_ARG )
-  {
-    if ( ras.area | ras.cover )
-    {
-      PCell  cell = gray_find_cell( RAS_VAR );
-
-
-      cell->area  += ras.area;
-      cell->cover += ras.cover;
-    }
+  Found:
+    /* update old cell */
+    cell->area  += ras.area;
+    cell->cover += ras.cover;
   }
 
 

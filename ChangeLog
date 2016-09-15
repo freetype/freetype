@@ -1,3 +1,10 @@
+2016-09-14  Alexei Podtelezhnikov  <apodtele@gmail.com>
+
+	[smooth] Another tiny speed-up.
+
+	* src/smooth/ftgrays.c (gray_find_cell): Merge into...
+	(gray_record_cell): ... this function.
+
 2016-09-11  Alexei Podtelezhnikov  <apodtele@gmail.com>
 
 	* src/smooth/ftgrays.c (gray_{find,set}_cell): Remove dubious code.
