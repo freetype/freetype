@@ -714,7 +714,7 @@
       0x10000L,
       0x20000L,
 
-      0,    /* module-specific interface */
+      NULL,    /* module-specific interface */
 
       T1_Driver_Init,           /* FT_Module_Constructor  module_init   */
       T1_Driver_Done,           /* FT_Module_Destructor   module_done   */
@@ -735,8 +735,8 @@
     T1_Load_Glyph,              /* FT_Slot_LoadFunc  load_glyph */
 
 #ifdef T1_CONFIG_OPTION_NO_AFM
-    0,                          /* FT_Face_GetKerningFunc   get_kerning  */
-    0,                          /* FT_Face_AttachFunc       attach_file  */
+    NULL,                       /* FT_Face_GetKerningFunc   get_kerning  */
+    NULL,                       /* FT_Face_AttachFunc       attach_file  */
 #else
     Get_Kerning,                /* FT_Face_GetKerningFunc   get_kerning  */
     T1_Read_Metrics,            /* FT_Face_AttachFunc       attach_file  */
@@ -744,7 +744,7 @@
     T1_Get_Advances,            /* FT_Face_GetAdvancesFunc  get_advances */
 
     T1_Size_Request,            /* FT_Size_RequestFunc  request_size */
-    0                           /* FT_Size_SelectFunc   select_size  */
+    NULL                        /* FT_Size_SelectFunc   select_size  */
   };
 
 

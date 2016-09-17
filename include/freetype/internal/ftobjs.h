@@ -193,6 +193,7 @@ FT_BEGIN_HEADER
   typedef struct  FT_CMap_ClassRec_
   {
     FT_ULong               size;
+
     FT_CMap_InitFunc       init;
     FT_CMap_DoneFunc       done;
     FT_CMap_CharIndexFunc  char_index;

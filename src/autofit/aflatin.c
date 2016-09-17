@@ -3477,13 +3477,13 @@
 
     sizeof ( AF_LatinMetricsRec ),
 
-    (AF_WritingSystem_InitMetricsFunc) af_latin_metrics_init,
-    (AF_WritingSystem_ScaleMetricsFunc)af_latin_metrics_scale,
-    (AF_WritingSystem_DoneMetricsFunc) NULL,
-    (AF_WritingSystem_GetStdWidthsFunc)af_latin_get_standard_widths,
+    (AF_WritingSystem_InitMetricsFunc) af_latin_metrics_init,        /* style_metrics_init    */
+    (AF_WritingSystem_ScaleMetricsFunc)af_latin_metrics_scale,       /* style_metrics_scale   */
+    (AF_WritingSystem_DoneMetricsFunc) NULL,                         /* style_metrics_done    */
+    (AF_WritingSystem_GetStdWidthsFunc)af_latin_get_standard_widths, /* style_metrics_getstdw */
 
-    (AF_WritingSystem_InitHintsFunc)   af_latin_hints_init,
-    (AF_WritingSystem_ApplyHintsFunc)  af_latin_hints_apply
+    (AF_WritingSystem_InitHintsFunc)   af_latin_hints_init,          /* style_hints_init      */
+    (AF_WritingSystem_ApplyHintsFunc)  af_latin_hints_apply          /* style_hints_apply     */
   )
 
 

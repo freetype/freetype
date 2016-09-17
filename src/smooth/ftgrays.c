@@ -1697,12 +1697,14 @@ typedef ptrdiff_t  FT_PtrDist;
   FT_DEFINE_OUTLINE_FUNCS(
     func_interface,
 
-    (FT_Outline_MoveTo_Func) gray_move_to,
-    (FT_Outline_LineTo_Func) gray_line_to,
-    (FT_Outline_ConicTo_Func)gray_conic_to,
-    (FT_Outline_CubicTo_Func)gray_cubic_to,
-    0,
-    0 )
+    (FT_Outline_MoveTo_Func) gray_move_to,   /* move_to  */
+    (FT_Outline_LineTo_Func) gray_line_to,   /* line_to  */
+    (FT_Outline_ConicTo_Func)gray_conic_to,  /* conic_to */
+    (FT_Outline_CubicTo_Func)gray_cubic_to,  /* cubic_to */
+
+    0,                                       /* shift    */
+    0                                        /* delta    */
+  )
 
 
   static int
@@ -2039,11 +2041,12 @@ typedef ptrdiff_t  FT_PtrDist;
 
     FT_GLYPH_FORMAT_OUTLINE,
 
-    (FT_Raster_New_Func)     gray_raster_new,
-    (FT_Raster_Reset_Func)   gray_raster_reset,
-    (FT_Raster_Set_Mode_Func)gray_raster_set_mode,
-    (FT_Raster_Render_Func)  gray_raster_render,
-    (FT_Raster_Done_Func)    gray_raster_done )
+    (FT_Raster_New_Func)     gray_raster_new,       /* raster_new      */
+    (FT_Raster_Reset_Func)   gray_raster_reset,     /* raster_reset    */
+    (FT_Raster_Set_Mode_Func)gray_raster_set_mode,  /* raster_set_mode */
+    (FT_Raster_Render_Func)  gray_raster_render,    /* raster_render   */
+    (FT_Raster_Done_Func)    gray_raster_done       /* raster_done     */
+  )
 
 
 /* END */

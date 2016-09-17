@@ -156,10 +156,11 @@
   const FTC_MruListClassRec  ftc_size_list_class =
   {
     sizeof ( FTC_SizeNodeRec ),
-    ftc_size_node_compare,
-    ftc_size_node_init,
-    ftc_size_node_reset,
-    ftc_size_node_done
+
+    ftc_size_node_compare,  /* FTC_MruNode_CompareFunc  node_compare */
+    ftc_size_node_init,     /* FTC_MruNode_InitFunc     node_init    */
+    ftc_size_node_reset,    /* FTC_MruNode_ResetFunc    node_reset   */
+    ftc_size_node_done      /* FTC_MruNode_DoneFunc     node_done    */
   };
 
 
@@ -296,10 +297,10 @@
   {
     sizeof ( FTC_FaceNodeRec),
 
-    ftc_face_node_compare,
-    ftc_face_node_init,
-    0,                          /* FTC_MruNode_ResetFunc */
-    ftc_face_node_done
+    ftc_face_node_compare,  /* FTC_MruNode_CompareFunc  node_compare */
+    ftc_face_node_init,     /* FTC_MruNode_InitFunc     node_init    */
+    NULL,                   /* FTC_MruNode_ResetFunc    node_reset   */
+    ftc_face_node_done      /* FTC_MruNode_DoneFunc     node_done    */
   };
 
 

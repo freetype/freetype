@@ -136,12 +136,16 @@
   {
     sizeof ( T1_CMapStdRec ),
 
-    (FT_CMap_InitFunc)     t1_cmap_standard_init,
-    (FT_CMap_DoneFunc)     t1_cmap_std_done,
-    (FT_CMap_CharIndexFunc)t1_cmap_std_char_index,
-    (FT_CMap_CharNextFunc) t1_cmap_std_char_next,
+    (FT_CMap_InitFunc)     t1_cmap_standard_init,   /* init       */
+    (FT_CMap_DoneFunc)     t1_cmap_std_done,        /* done       */
+    (FT_CMap_CharIndexFunc)t1_cmap_std_char_index,  /* char_index */
+    (FT_CMap_CharNextFunc) t1_cmap_std_char_next,   /* char_next  */
 
-    NULL, NULL, NULL, NULL, NULL
+    (FT_CMap_CharVarIndexFunc)    NULL,  /* char_var_index   */
+    (FT_CMap_CharVarIsDefaultFunc)NULL,  /* char_var_default */
+    (FT_CMap_VariantListFunc)     NULL,  /* variant_list     */
+    (FT_CMap_CharVariantListFunc) NULL,  /* charvariant_list */
+    (FT_CMap_VariantCharListFunc) NULL   /* variantchar_list */
   };
 
 
@@ -161,12 +165,16 @@
   {
     sizeof ( T1_CMapStdRec ),
 
-    (FT_CMap_InitFunc)     t1_cmap_expert_init,
-    (FT_CMap_DoneFunc)     t1_cmap_std_done,
-    (FT_CMap_CharIndexFunc)t1_cmap_std_char_index,
-    (FT_CMap_CharNextFunc) t1_cmap_std_char_next,
+    (FT_CMap_InitFunc)     t1_cmap_expert_init,     /* init       */
+    (FT_CMap_DoneFunc)     t1_cmap_std_done,        /* done       */
+    (FT_CMap_CharIndexFunc)t1_cmap_std_char_index,  /* char_index */
+    (FT_CMap_CharNextFunc) t1_cmap_std_char_next,   /* char_next  */
 
-    NULL, NULL, NULL, NULL, NULL
+    (FT_CMap_CharVarIndexFunc)    NULL,  /* char_var_index   */
+    (FT_CMap_CharVarIsDefaultFunc)NULL,  /* char_var_default */
+    (FT_CMap_VariantListFunc)     NULL,  /* variant_list     */
+    (FT_CMap_CharVariantListFunc) NULL,  /* charvariant_list */
+    (FT_CMap_VariantCharListFunc) NULL   /* variantchar_list */
   };
 
 
@@ -257,12 +265,16 @@
   {
     sizeof ( T1_CMapCustomRec ),
 
-    (FT_CMap_InitFunc)     t1_cmap_custom_init,
-    (FT_CMap_DoneFunc)     t1_cmap_custom_done,
-    (FT_CMap_CharIndexFunc)t1_cmap_custom_char_index,
-    (FT_CMap_CharNextFunc) t1_cmap_custom_char_next,
+    (FT_CMap_InitFunc)     t1_cmap_custom_init,        /* init       */
+    (FT_CMap_DoneFunc)     t1_cmap_custom_done,        /* done       */
+    (FT_CMap_CharIndexFunc)t1_cmap_custom_char_index,  /* char_index */
+    (FT_CMap_CharNextFunc) t1_cmap_custom_char_next,   /* char_next  */
 
-    NULL, NULL, NULL, NULL, NULL
+    (FT_CMap_CharVarIndexFunc)    NULL,  /* char_var_index   */
+    (FT_CMap_CharVarIsDefaultFunc)NULL,  /* char_var_default */
+    (FT_CMap_VariantListFunc)     NULL,  /* variant_list     */
+    (FT_CMap_CharVariantListFunc) NULL,  /* charvariant_list */
+    (FT_CMap_VariantCharListFunc) NULL   /* variantchar_list */
   };
 
 
@@ -343,12 +355,16 @@
   {
     sizeof ( PS_UnicodesRec ),
 
-    (FT_CMap_InitFunc)     t1_cmap_unicode_init,
-    (FT_CMap_DoneFunc)     t1_cmap_unicode_done,
-    (FT_CMap_CharIndexFunc)t1_cmap_unicode_char_index,
-    (FT_CMap_CharNextFunc) t1_cmap_unicode_char_next,
+    (FT_CMap_InitFunc)     t1_cmap_unicode_init,        /* init       */
+    (FT_CMap_DoneFunc)     t1_cmap_unicode_done,        /* done       */
+    (FT_CMap_CharIndexFunc)t1_cmap_unicode_char_index,  /* char_index */
+    (FT_CMap_CharNextFunc) t1_cmap_unicode_char_next,   /* char_next  */
 
-    NULL, NULL, NULL, NULL, NULL
+    (FT_CMap_CharVarIndexFunc)    NULL,  /* char_var_index   */
+    (FT_CMap_CharVarIsDefaultFunc)NULL,  /* char_var_default */
+    (FT_CMap_VariantListFunc)     NULL,  /* variant_list     */
+    (FT_CMap_CharVariantListFunc) NULL,  /* charvariant_list */
+    (FT_CMap_VariantCharListFunc) NULL   /* variantchar_list */
   };
 
 

@@ -700,10 +700,10 @@ THE SOFTWARE.
       0x10000L,
       0x20000L,
 
-      0,    /* module-specific interface */
+      NULL,    /* module-specific interface */
 
-      0,                        /* FT_Module_Constructor  module_init   */
-      0,                        /* FT_Module_Destructor   module_done   */
+      NULL,                     /* FT_Module_Constructor  module_init   */
+      NULL,                     /* FT_Module_Destructor   module_done   */
       pcf_driver_requester      /* FT_Module_Requester    get_interface */
     },
 
@@ -713,16 +713,16 @@ THE SOFTWARE.
 
     PCF_Face_Init,              /* FT_Face_InitFunc  init_face */
     PCF_Face_Done,              /* FT_Face_DoneFunc  done_face */
-    0,                          /* FT_Size_InitFunc  init_size */
-    0,                          /* FT_Size_DoneFunc  done_size */
-    0,                          /* FT_Slot_InitFunc  init_slot */
-    0,                          /* FT_Slot_DoneFunc  done_slot */
+    NULL,                       /* FT_Size_InitFunc  init_size */
+    NULL,                       /* FT_Size_DoneFunc  done_size */
+    NULL,                       /* FT_Slot_InitFunc  init_slot */
+    NULL,                       /* FT_Slot_DoneFunc  done_slot */
 
     PCF_Glyph_Load,             /* FT_Slot_LoadFunc  load_glyph */
 
-    0,                          /* FT_Face_GetKerningFunc   get_kerning  */
-    0,                          /* FT_Face_AttachFunc       attach_file  */
-    0,                          /* FT_Face_GetAdvancesFunc  get_advances */
+    NULL,                       /* FT_Face_GetKerningFunc   get_kerning  */
+    NULL,                       /* FT_Face_AttachFunc       attach_file  */
+    NULL,                       /* FT_Face_GetAdvancesFunc  get_advances */
 
     PCF_Size_Request,           /* FT_Size_RequestFunc  request_size */
     PCF_Size_Select             /* FT_Size_SelectFunc   select_size  */

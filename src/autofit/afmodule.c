@@ -421,12 +421,14 @@
 
   FT_DEFINE_SERVICE_PROPERTIESREC(
     af_service_properties,
+
     (FT_Properties_SetFunc)af_property_set,        /* set_property */
     (FT_Properties_GetFunc)af_property_get )       /* get_property */
 
 
   FT_DEFINE_SERVICEDESCREC1(
     af_services,
+
     FT_SERVICE_ID_PROPERTIES, &AF_SERVICE_PROPERTIES_GET )
 
 
@@ -552,6 +554,7 @@
 
   FT_DEFINE_AUTOHINTER_INTERFACE(
     af_autofitter_interface,
+
     NULL,                                                    /* reset_face */
     NULL,                                              /* get_global_hints */
     NULL,                                             /* done_global_hints */
@@ -570,9 +573,10 @@
 
     (const void*)&AF_INTERFACE_GET,
 
-    (FT_Module_Constructor)af_autofitter_init,
-    (FT_Module_Destructor) af_autofitter_done,
-    (FT_Module_Requester)  af_get_interface )
+    (FT_Module_Constructor)af_autofitter_init,  /* module_init   */
+    (FT_Module_Destructor) af_autofitter_done,  /* module_done   */
+    (FT_Module_Requester)  af_get_interface     /* get_interface */
+  )
 
 
 /* END */

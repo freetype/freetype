@@ -1170,10 +1170,10 @@
       0x10000L,
       0x20000L,
 
-      0,    /* module-specific interface */
+      NULL, /* module-specific interface */
 
-      0,                        /* FT_Module_Constructor  module_init   */
-      0,                        /* FT_Module_Destructor   module_done   */
+      NULL,                     /* FT_Module_Constructor  module_init   */
+      NULL,                     /* FT_Module_Destructor   module_done   */
       winfnt_get_service        /* FT_Module_Requester    get_interface */
     },
 
@@ -1183,16 +1183,16 @@
 
     FNT_Face_Init,              /* FT_Face_InitFunc  init_face */
     FNT_Face_Done,              /* FT_Face_DoneFunc  done_face */
-    0,                          /* FT_Size_InitFunc  init_size */
-    0,                          /* FT_Size_DoneFunc  done_size */
-    0,                          /* FT_Slot_InitFunc  init_slot */
-    0,                          /* FT_Slot_DoneFunc  done_slot */
+    NULL,                       /* FT_Size_InitFunc  init_size */
+    NULL,                       /* FT_Size_DoneFunc  done_size */
+    NULL,                       /* FT_Slot_InitFunc  init_slot */
+    NULL,                       /* FT_Slot_DoneFunc  done_slot */
 
     FNT_Load_Glyph,             /* FT_Slot_LoadFunc  load_glyph */
 
-    0,                          /* FT_Face_GetKerningFunc   get_kerning  */
-    0,                          /* FT_Face_AttachFunc       attach_file  */
-    0,                          /* FT_Face_GetAdvancesFunc  get_advances */
+    NULL,                       /* FT_Face_GetKerningFunc   get_kerning  */
+    NULL,                       /* FT_Face_AttachFunc       attach_file  */
+    NULL,                       /* FT_Face_GetAdvancesFunc  get_advances */
 
     FNT_Size_Request,           /* FT_Size_RequestFunc  request_size */
     FNT_Size_Select             /* FT_Size_SelectFunc   select_size  */
