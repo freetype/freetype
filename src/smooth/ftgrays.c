@@ -371,8 +371,9 @@ typedef ptrdiff_t  FT_PtrDist;
 
   /* These macros speed up repetitive divisions by replacing them */
   /* with multiplications and right shifts.                       */
-#define FT_UDIVPREP( b )                                       \
-  long  b ## _r = (long)( FT_ULONG_MAX >> PIXEL_BITS ) / ( b )
+#define FT_UDIVPREP( c, b )                                        \
+  long  b ## _r = c ? (long)( FT_ULONG_MAX >> PIXEL_BITS ) / ( b ) \
+                    : 0
 #define FT_UDIV( a, b )                                        \
   ( ( (unsigned long)( a ) * (unsigned long)( b ## _r ) ) >>   \
     ( sizeof( long ) * FT_CHAR_BIT - PIXEL_BITS ) )
@@ -890,8 +891,8 @@ typedef ptrdiff_t  FT_PtrDist;
     else                                  /* any other line */
     {
       TPos  prod = dx * fy1 - dy * fx1;
-      FT_UDIVPREP( dx );
-      FT_UDIVPREP( dy );
+      FT_UDIVPREP( ex1 != ex2, dx );
+      FT_UDIVPREP( ey1 != ey2, dy );
 
 
       /* The fundamental value `prod' determines which side and the  */
