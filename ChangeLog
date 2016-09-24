@@ -1,3 +1,10 @@
+2016-09-24  Werner Lemberg  <wl@gnu.org>
+
+	[autofit] Tracing fixes.
+
+	* src/autofit/afmodule.c (af_autofitter_load_glyph): Call dumping
+	functions only if we actually do tracing.
+
 2016-09-22  Alexei Podtelezhnikov  <apodtele@gmail.com>
 
 	[smooth] Reduce divisions in the line renderer.
