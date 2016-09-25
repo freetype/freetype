@@ -257,7 +257,7 @@
           if ( !fixed_sizes_index )
           {
             // set up 20pt at 72dpi as an arbitrary size
-            if ( FT_Set_Char_Size( face, 20 * 64, 20 * 64, 72, 72 ) );
+            if ( FT_Set_Char_Size( face, 20 * 64, 20 * 64, 72, 72 ) )
               continue;
             flags |= FT_LOAD_NO_BITMAP;
           }
