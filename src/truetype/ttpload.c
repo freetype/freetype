@@ -222,13 +222,13 @@
       }
     }
 
-    /* Check broken location data */
+    /* Check broken location data. */
     if ( pos1 > face->glyf_len )
     {
       FT_TRACE1(( "tt_face_get_location:"
-                  " too large offset=0x%08lx found for gid=0x%04lx,\n"
+                  " too large offset (0x%08lx) found for glyph index %ld,\n"
                   "                     "
-                  " exceeding the end of glyf table (0x%08lx)\n",
+                  " exceeding the end of `glyf' table (0x%08lx)\n",
                   pos1, gindex, face->glyf_len ));
       *asize = 0;
       return 0;
@@ -236,12 +236,26 @@
 
     if ( pos2 > face->glyf_len )
     {
-      FT_TRACE1(( "tt_face_get_location:"
-                  " too large offset=0x%08lx found for gid=0x%04lx,\n"
-                  "                     "
-                  " truncate at the end of glyf table (0x%08lx)\n",
-                  pos2, gindex + 1, face->glyf_len ));
-      pos2 = face->glyf_len;
+      /* We try to sanitize the last `loca' entry. */
+      if ( gindex == face->num_locations - 1 )
+      {
+        FT_TRACE1(( "tt_face_get_location:"
+                    " too large offset (0x%08lx) found for glyph index %ld,\n"
+                    "                     "
+                    " truncating at the end of `glyf' table (0x%08lx)\n",
+                    pos2, gindex + 1, face->glyf_len ));
+        pos2 = face->glyf_len;
+      }
+      else
+      {
+        FT_TRACE1(( "tt_face_get_location:"
+                    " too large offset (0x%08lx) found for glyph index %ld,\n"
+                    "                     "
+                    " exceeding the end of `glyf' table (0x%08lx)\n",
+                    pos2, gindex + 1, face->glyf_len ));
+        *asize = 0;
+        return 0;
+      }
     }
 
     /* The `loca' table must be ordered; it refers to the length of */

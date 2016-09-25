@@ -1,5 +1,17 @@
 2016-09-25  Werner Lemberg  <wl@gnu.org>
 
+	[truetype] Sanitize only last entry of `loca' table.
+
+	Without this patch, a loca sequence like `0 100000 0 100000 ...',
+	where value 100000 is larger than the `glyf' table size, makes
+	FreeType handle the whole `glyf' table as a single glyph again and
+	again, which is certainly invalid (and can be very slow, too).
+
+	* src/truetype/ttpload.c (tt_face_get_location): Implement.
+	Improve tracing messages.
+
+2016-09-25  Werner Lemberg  <wl@gnu.org>
+
 	* src/tools/ftfuzzer/ftfuzzer.cc (LLVMFuzzerTestOneInput): Fix typo.
 
 2016-09-24  Werner Lemberg  <wl@gnu.org>
