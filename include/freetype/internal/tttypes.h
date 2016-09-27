@@ -1344,6 +1344,7 @@ FT_BEGIN_HEADER
     const char*           postscript_name;
 
     FT_ULong              glyf_len;
+    FT_ULong              glyf_offset;    /* since 2.7.1 */
 
 #ifdef TT_CONFIG_OPTION_GX_VAR_SUPPORT
     FT_Bool               doblend;
@@ -1491,8 +1492,6 @@ FT_BEGIN_HEADER
     FT_Bool          linear_def;
     FT_Vector        pp1;
     FT_Vector        pp2;
-
-    FT_ULong         glyf_offset;
 
     /* the zone where we load our glyphs */
     TT_GlyphZoneRec  base;

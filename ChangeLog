@@ -1,5 +1,19 @@
 2016-09-27  Werner Lemberg  <wl@gnu.org>
 
+	[truetype] Speed up `TT_Load_Glyph'.
+
+	This avoids additional calls to `tt_face_lookup_table' for the
+	`glyf' table, which can be expensive.
+
+	* include/freetype/internal/tttypes.h (TT_LoaderRec): Move
+	`glyf_offset' field to ...
+	(TT_FaceRec): ... this structure.
+	* src/truetype/ttgload.c (load_truetype_glyph): Updated.
+	(tt_loader_init): Move initialization of `glyf_offset' to ...
+	* src/truetype/ttpload.c (tt_face_load_loca): .. this function.
+
+2016-09-27  Werner Lemberg  <wl@gnu.org>
+
 	[truetype] Introduce dynamic limits for some bytecode opcodes.
 
 	This speeds up FreeType's handling of malformed fonts.

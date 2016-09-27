@@ -1505,10 +1505,10 @@
     {
 #ifdef FT_CONFIG_OPTION_INCREMENTAL
       /* for the incremental interface, `glyf_offset' is always zero */
-      if ( !loader->glyf_offset                        &&
+      if ( !face->glyf_offset                          &&
            !face->root.internal->incremental_interface )
 #else
-      if ( !loader->glyf_offset )
+      if ( !face->glyf_offset )
 #endif /* FT_CONFIG_OPTION_INCREMENTAL */
       {
         FT_TRACE2(( "no `glyf' table but non-zero `loca' entry\n" ));
@@ -1517,7 +1517,7 @@
       }
 
       error = face->access_glyph_frame( loader, glyph_index,
-                                        loader->glyf_offset + offset,
+                                        face->glyf_offset + offset,
                                         (FT_UInt)loader->byte_len );
       if ( error )
         goto Exit;
@@ -2496,32 +2496,6 @@
     }
 
 #endif /* TT_USE_BYTECODE_INTERPRETER */
-
-    /* seek to the beginning of the glyph table -- for Type 42 fonts     */
-    /* the table might be accessed from a Postscript stream or something */
-    /* else...                                                           */
-
-#ifdef FT_CONFIG_OPTION_INCREMENTAL
-
-    if ( face->root.internal->incremental_interface )
-      loader->glyf_offset = 0;
-    else
-
-#endif
-
-    {
-      error = face->goto_table( face, TTAG_glyf, stream, 0 );
-
-      if ( FT_ERR_EQ( error, Table_Missing ) )
-        loader->glyf_offset = 0;
-      else if ( error )
-      {
-        FT_ERROR(( "tt_loader_init: could not access glyph table\n" ));
-        return error;
-      }
-      else
-        loader->glyf_offset = FT_STREAM_POS();
-    }
 
     /* get face's glyph loader */
     if ( !glyf_table_only )

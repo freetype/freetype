@@ -73,9 +73,22 @@
     /* it is possible that a font doesn't have a glyf table at all */
     /* or its size is zero                                         */
     if ( FT_ERR_EQ( error, Table_Missing ) )
-      face->glyf_len = 0;
+    {
+      face->glyf_len    = 0;
+      face->glyf_offset = 0;
+    }
     else if ( error )
       goto Exit;
+    else
+    {
+#ifdef FT_CONFIG_OPTION_INCREMENTAL
+      if ( face->root.internal->incremental_interface )
+        face->glyf_offset = 0;
+      else
+#endif
+        face->glyf_offset = FT_STREAM_POS();
+    }
+
 
     FT_TRACE2(( "Locations " ));
     error = face->goto_table( face, TTAG_loca, stream, &table_len );
