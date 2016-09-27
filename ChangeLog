@@ -1,3 +1,20 @@
+2016-09-27  Werner Lemberg  <wl@gnu.org>
+
+	[truetype] Introduce dynamic limits for some bytecode opcodes.
+
+	This speeds up FreeType's handling of malformed fonts.
+
+	* src/truetype/ttinterp.c (TT_RunIns): Set up limits for the number
+	of twilight points, the total number of negative jumps, and the
+	total number of loops in LOOPCALL opcodes.  The values are based on
+	the number of points and entries in the CVT table.
+	(Ins_JMPR): Test negative jump counter.
+	(Ins_LOOPCALL): Test loopcall counter.
+
+	* src/truetype/ttinterp.h (TT_ExecContext): Updated.
+
+	* docs/CHANGES: Updated.
+
 2016-09-25  Werner Lemberg  <wl@gnu.org>
 
 	[truetype] Sanitize only last entry of `loca' table.

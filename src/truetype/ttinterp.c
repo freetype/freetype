@@ -3388,13 +3388,27 @@
             FT_Long*        args )
   {
     if ( args[0] == 0 && exc->args == 0 )
+    {
       exc->error = FT_THROW( Bad_Argument );
+      return;
+    }
+
     exc->IP += args[0];
     if ( exc->IP < 0                                             ||
          ( exc->callTop > 0                                    &&
            exc->IP > exc->callStack[exc->callTop - 1].Def->end ) )
+    {
       exc->error = FT_THROW( Bad_Argument );
+      return;
+    }
+
     exc->step_ins = FALSE;
+
+    if ( args[0] < 0 )
+    {
+      if ( ++exc->neg_jump_counter > exc->neg_jump_counter_max )
+        exc->error = FT_THROW( Execution_Too_Long );
+    }
   }
 
 
@@ -3949,6 +3963,10 @@
       Ins_Goto_CodeRange( exc, def->range, def->start );
 
       exc->step_ins = FALSE;
+
+      exc->loopcall_counter += args[0];
+      if ( exc->loopcall_counter > exc->loopcall_counter_max )
+        exc->error = FT_THROW( Execution_Too_Long );
     }
 
     return;
@@ -7533,6 +7551,7 @@
   TT_RunIns( TT_ExecContext  exc )
   {
     FT_Long    ins_counter = 0;  /* executed instructions counter */
+    FT_Long    num_twilight_points;
     FT_UShort  i;
 
 #ifdef TT_SUPPORT_SUBPIXEL_HINTING_INFINALITY
@@ -7567,6 +7586,41 @@
     exc->iupx_called = FALSE;
     exc->iupy_called = FALSE;
 #endif
+
+    /* We restrict the number of twilight points to a reasonable,     */
+    /* heuristic value to avoid slow execution of malformed bytecode. */
+    num_twilight_points = FT_MAX( 30,
+                                  2 * ( exc->pts.n_points + exc->cvtSize ) );
+    if ( exc->twilight.n_points > num_twilight_points )
+    {
+      FT_TRACE5(( "TT_RunIns: Resetting number of twilight points\n"
+                  "           from %d to the more reasonable value %d\n",
+                  exc->twilight.n_points,
+                  num_twilight_points ));
+      exc->twilight.n_points = num_twilight_points;
+    }
+
+    /* Set up loop detectors.  We restrict the number of LOOPCALL loops  */
+    /* and the number of JMPR, JROT, and JROF calls with a negative      */
+    /* argument to values that depend on the size of the CVT table and   */
+    /* the number of points in the current glyph (if applicable).        */
+    /*                                                                   */
+    /* The idea is that in real-world bytecode you either iterate over   */
+    /* all CVT entries, or over all points (or contours) of a glyph, and */
+    /* such iterations don't happen very often.                          */
+    exc->loopcall_counter = 0;
+    exc->neg_jump_counter = 0;
+
+    /* The maximum values are heuristic. */
+    exc->loopcall_counter_max = FT_MAX( 100,
+                                        10 * ( exc->pts.n_points +
+                                               exc->cvtSize ) );
+    FT_TRACE5(( "TT_RunIns: Limiting total number of loops in LOOPCALL"
+                " to %d\n", exc->loopcall_counter_max ));
+
+    exc->neg_jump_counter_max = exc->loopcall_counter_max;
+    FT_TRACE5(( "TT_RunIns: Limiting total number of backward jumps"
+                " to %d\n", exc->neg_jump_counter_max ));
 
     /* set PPEM and CVT functions */
     exc->tt_metrics.ratio = 0;

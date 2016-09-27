@@ -1,4 +1,31 @@
 
+CHANGES BETWEEN 2.7 and 2.7.1
+
+  I. IMPORTANT CHANGES
+
+
+  II. IMPORTANT BUG FIXES
+
+
+  III. MISCELLANEOUS
+
+    - Some limits for TrueType  bytecode execution have been tightened
+      to  speed   up  FreeType's  handling  of   malformed  fonts,  in
+      particular to quickly abort endless loops.
+
+      - The  number of  twilight points  can no  longer be  set to  an
+        arbitrarily large value.
+
+      - The total number of jump  opcode instructions (like JMPR) with
+        negative arguments  is dynamically restricted; the  same holds
+        for the total number of iterations in LOOPCALL opcodes.
+
+      The dynamic limits are based on  the number of points in a glyph
+      and the number of CVT entries.  Please report if you encounter a
+      font where the selected values are not adequate.
+
+======================================================================
+
 CHANGES BETWEEN 2.6.5 and 2.7
 
   I. IMPORTANT CHANGES
