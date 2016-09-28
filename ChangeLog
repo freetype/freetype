@@ -1,3 +1,7 @@
+2016-09-28  Werner Lemberg  <wl@gnu.org>
+
+	*/*: s/FT_MEM_ZERO/FT_ZERO/ where appropriate.
+
 2016-09-27  Werner Lemberg  <wl@gnu.org>
 
 	[truetype] Trace number of executed opcodes.

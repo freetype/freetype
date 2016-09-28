@@ -1591,7 +1591,7 @@
                    FT_Render_Mode       hint_mode,
                    T1_Decoder_Callback  parse_callback )
   {
-    FT_MEM_ZERO( decoder, sizeof ( *decoder ) );
+    FT_ZERO( decoder );
 
     /* retrieve PSNames interface from list of current modules */
     {

@@ -2149,7 +2149,7 @@
   {
     FT_UNUSED( face );
 
-    FT_MEM_ZERO( loader, sizeof ( *loader ) );
+    FT_ZERO( loader );
   }
 
 

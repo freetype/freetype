@@ -1487,7 +1487,7 @@
       offset            = 0;
       loader->byte_len  = glyph_data.length;
 
-      FT_MEM_ZERO( &inc_stream, sizeof ( inc_stream ) );
+      FT_ZERO( &inc_stream );
       FT_Stream_OpenMemory( &inc_stream,
                             glyph_data.pointer,
                             (FT_ULong)glyph_data.length );
@@ -2252,7 +2252,7 @@
     face   = (TT_Face)glyph->face;
     stream = face->root.stream;
 
-    FT_MEM_ZERO( loader, sizeof ( TT_LoaderRec ) );
+    FT_ZERO( loader );
 
 #ifdef TT_USE_BYTECODE_INTERPRETER
 

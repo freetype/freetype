@@ -239,7 +239,7 @@
                     FT_Memory    memory,
                     FT_Error*    error )
   {
-    FT_MEM_ZERO( outline, sizeof ( CF2_OutlineRec ) );
+    FT_ZERO( outline );
 
     outline->root.memory = memory;
     outline->root.error  = error;

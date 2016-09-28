@@ -114,7 +114,7 @@
     FT_UInt      n, count;
 
 
-    FT_MEM_ZERO( priv, sizeof ( *priv ) );
+    FT_ZERO( priv );
 
     count = priv->num_blue_values = cpriv->num_blue_values;
     for ( n = 0; n < count; n++ )

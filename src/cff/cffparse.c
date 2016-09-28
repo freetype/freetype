@@ -44,7 +44,7 @@
                    FT_UShort   num_designs,
                    FT_UShort   num_axes )
   {
-    FT_MEM_ZERO( parser, sizeof ( *parser ) );
+    FT_ZERO( parser );
 
     parser->top         = parser->stack;
     parser->object_code = code;
@@ -1132,8 +1132,8 @@
         charstring_len = (FT_ULong)( p - charstring_base ) + 1;
 
         /* construct CFF_Decoder object */
-        FT_MEM_ZERO( &decoder, sizeof ( decoder ) );
-        FT_MEM_ZERO( &cff_rec, sizeof ( cff_rec ) );
+        FT_ZERO( &decoder );
+        FT_ZERO( &cff_rec );
 
         cff_rec.top_font.font_dict.num_designs = parser->num_designs;
         cff_rec.top_font.font_dict.num_axes    = parser->num_axes;

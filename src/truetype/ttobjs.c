@@ -117,7 +117,7 @@
     FT_Error  error;
 
 
-    FT_MEM_ZERO( zone, sizeof ( *zone ) );
+    FT_ZERO( zone );
     zone->memory = memory;
 
     if ( FT_NEW_ARRAY( zone->org,      maxPoints   ) ||

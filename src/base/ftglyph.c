@@ -546,8 +546,8 @@
     /* we render the glyph into a glyph bitmap using a `dummy' glyph slot */
     /* then calling FT_Render_Glyph_Internal()                            */
 
-    FT_MEM_ZERO( &dummy, sizeof ( dummy ) );
-    FT_MEM_ZERO( &dummy_internal, sizeof ( dummy_internal ) );
+    FT_ZERO( &dummy );
+    FT_ZERO( &dummy_internal );
     dummy.internal = &dummy_internal;
     dummy.library  = library;
     dummy.format   = clazz->glyph_format;

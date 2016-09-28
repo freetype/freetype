@@ -439,7 +439,7 @@ THE SOFTWARE.
         FT_Short         resolution_x = 0, resolution_y = 0;
 
 
-        FT_MEM_ZERO( bsize, sizeof ( FT_Bitmap_Size ) );
+        FT_ZERO( bsize );
 
         bsize->height = (FT_Short)( font->font_ascent + font->font_descent );
 

@@ -65,7 +65,7 @@
     FT_Byte   *arg1, *arg2;
 
 
-    FT_MEM_ZERO( parser, sizeof ( *parser ) );
+    FT_ZERO( parser );
     psaux->ps_parser_funcs->init( &parser->root, 0, 0, memory );
 
     parser->stream = stream;

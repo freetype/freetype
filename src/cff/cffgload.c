@@ -391,7 +391,7 @@
 
 
     /* clear everything */
-    FT_MEM_ZERO( decoder, sizeof ( *decoder ) );
+    FT_ZERO( decoder );
 
     /* initialize builder */
     cff_builder_init( &decoder->builder, face, size, slot, hinting );

@@ -1144,7 +1144,7 @@
       }
 
       fp = font->props + font->props_size;
-      FT_MEM_ZERO( fp, sizeof ( bdf_property_t ) );
+      FT_ZERO( fp );
       font->props_size++;
     }
 

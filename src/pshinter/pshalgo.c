@@ -1162,7 +1162,7 @@
 
 
     /* clear all fields */
-    FT_MEM_ZERO( glyph, sizeof ( *glyph ) );
+    FT_ZERO( glyph );
 
     memory = glyph->memory = globals->memory;
 

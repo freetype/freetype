@@ -232,7 +232,7 @@
     FT_UShort  count;
 
 
-    FT_MEM_ZERO( idx, sizeof ( *idx ) );
+    FT_ZERO( idx );
 
     idx->stream = stream;
     idx->start  = FT_STREAM_POS();
@@ -310,7 +310,7 @@
         FT_FRAME_RELEASE( idx->bytes );
 
       FT_FREE( idx->offsets );
-      FT_MEM_ZERO( idx, sizeof ( *idx ) );
+      FT_ZERO( idx );
     }
   }
 
@@ -1330,7 +1330,7 @@
                      0 );
 
     /* set defaults */
-    FT_MEM_ZERO( top, sizeof ( *top ) );
+    FT_ZERO( top );
 
     top->underline_position  = -( 100L << 16 );
     top->underline_thickness = 50L << 16;
@@ -1373,7 +1373,7 @@
     if ( top->private_offset && top->private_size )
     {
       /* set defaults */
-      FT_MEM_ZERO( priv, sizeof ( *priv ) );
+      FT_ZERO( priv );
 
       priv->blue_shift       = 7;
       priv->blue_fuzz        = 1;
