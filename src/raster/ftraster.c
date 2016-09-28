@@ -251,6 +251,10 @@
 #define FT_MEM_ZERO( dest, count )  FT_MEM_SET( dest, 0, count )
 #endif
 
+#ifndef FT_ZERO
+#define FT_ZERO( p )  FT_MEM_ZERO( p, sizeof ( *(p) ) )
+#endif
+
   /* FMulDiv means `Fast MulDiv'; it is used in case where `b' is       */
   /* typically a small value and the result of a*b is known to fit into */
   /* 32 bits.                                                           */
@@ -3057,7 +3061,7 @@
 
 
      *araster = (FT_Raster)&the_raster;
-     FT_MEM_ZERO( &the_raster, sizeof ( the_raster ) );
+     FT_ZERO( &the_raster );
      ft_black_init( &the_raster );
 
      return 0;

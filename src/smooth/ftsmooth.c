@@ -87,7 +87,7 @@
                       FT_GlyphSlot  slot,
                       FT_BBox*      cbox )
   {
-    FT_MEM_ZERO( cbox, sizeof ( *cbox ) );
+    FT_ZERO( cbox );
 
     if ( slot->format == render->glyph_format )
       FT_Outline_Get_CBox( &slot->outline, cbox );

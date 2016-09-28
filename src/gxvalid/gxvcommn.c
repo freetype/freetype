@@ -972,7 +972,7 @@
       FT_UShort  i;
 
 
-      ft_memset( nGlyphInClass, 0, 256 );
+      FT_MEM_ZERO( nGlyphInClass, 256 );
 
 
       for ( i = 0; i < nGlyphs; i++ )

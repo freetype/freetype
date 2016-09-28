@@ -286,6 +286,10 @@ typedef ptrdiff_t  FT_PtrDist;
 #define FT_MEM_ZERO( dest, count )  FT_MEM_SET( dest, 0, count )
 #endif
 
+#ifndef FT_ZERO
+#define FT_ZERO( p )  FT_MEM_ZERO( p, sizeof ( *(p) ) )
+#endif
+
   /* as usual, for the speed hungry :-) */
 
 #undef RAS_ARG
@@ -1966,7 +1970,7 @@ typedef ptrdiff_t  FT_PtrDist;
 
 
     *araster = (FT_Raster)&the_raster;
-    FT_MEM_ZERO( &the_raster, sizeof ( the_raster ) );
+    FT_ZERO( &the_raster );
 
     return 0;
   }

@@ -1,5 +1,25 @@
 2016-09-28  Werner Lemberg  <wl@gnu.org>
 
+	More FT_ZERO usage.
+
+	* src/gxvalid/gxvcommn.c (gxv_ClassTable_validate):
+	s/ft_memset/FT_MEM_ZERO/.
+
+	* src/psaux/t1decode.c (t1_decoder_parse_charstrings):
+	s/ft_memset/FT_ARRAY_ZERO/.
+
+	* src/raster/ftraster.c (FT_ZERO): Define.
+	(ft_black_new): Use it.
+	* src/raster/ftrend1.c (ft_raster1_get_cbox):
+	s/FT_MEM_ZERO/FT_ZERO/.
+
+	* src/smooth/ftgrays.c (FT_ZERO): Define.
+	(gray_raster_new): Use it.
+	* src/smooth/ftsmooth.c (ft_smooth_get_cbox):
+	s/FT_MEM_ZERO/FT_ZERO/.
+
+2016-09-28  Werner Lemberg  <wl@gnu.org>
+
 	*/*: s/FT_MEM_ZERO/FT_ZERO/ where appropriate.
 
 2016-09-27  Werner Lemberg  <wl@gnu.org>
