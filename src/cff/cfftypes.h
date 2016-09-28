@@ -269,8 +269,9 @@ FT_BEGIN_HEADER
     FT_Byte          version_major;
     FT_Byte          version_minor;
     FT_Byte          header_size;
-    FT_Byte          absolute_offsize;
+    FT_Byte          absolute_offsize;  /* cff2_top_dict_length */
 
+    FT_Bool          cff2;
 
     CFF_IndexRec     name_index;
     CFF_IndexRec     top_dict_index;
