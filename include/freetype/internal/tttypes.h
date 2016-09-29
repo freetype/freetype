@@ -1182,18 +1182,6 @@ FT_BEGIN_HEADER
   /*                            file  `ttconfig.h' for comments on the     */
   /*                            TT_CONFIG_OPTION_POSTSCRIPT_NAMES option.  */
   /*                                                                       */
-  /*    num_locations        :: The number of glyph locations in this      */
-  /*                            TrueType file.  This should be             */
-  /*                            identical to the number of glyphs.         */
-  /*                            Ignored for Type 2 fonts.                  */
-  /*                                                                       */
-  /*    glyph_locations      :: An array of longs.  These are offsets to   */
-  /*                            glyph data within the `glyf' table.        */
-  /*                            Ignored for Type 2 font faces.             */
-  /*                                                                       */
-  /*    glyf_len             :: The length of the `glyf' table.  Needed    */
-  /*                            for malformed `loca' tables.               */
-  /*                                                                       */
   /*    font_program_size    :: Size in bytecodes of the face's font       */
   /*                            program.  0 if none defined.  Ignored for  */
   /*                            Type 2 fonts.                              */
@@ -1219,19 +1207,19 @@ FT_BEGIN_HEADER
   /*                            units.  Comes from the `cvt ' table.       */
   /*                            Ignored for Type 2 fonts.                  */
   /*                                                                       */
-  /*    num_kern_pairs       :: The number of kerning pairs present in the */
-  /*                            font file.  The engine only loads the      */
-  /*                            first horizontal format 0 kern table it    */
-  /*                            finds in the font file.  Ignored for       */
-  /*                            Type 2 fonts.                              */
-  /*                                                                       */
-  /*    kern_table_index     :: The index of the kerning table in the font */
-  /*                            kerning directory.  Ignored for Type 2     */
-  /*                            fonts.                                     */
-  /*                                                                       */
   /*    interpreter          :: A pointer to the TrueType bytecode         */
   /*                            interpreters field is also used to hook    */
   /*                            the debugger in `ttdebug'.                 */
+  /*                                                                       */
+  /*    extra                :: Reserved for third-party font drivers.     */
+  /*                                                                       */
+  /*    postscript_name      :: The PS name of the font.  Used by the      */
+  /*                            postscript name service.                   */
+  /*                                                                       */
+  /*    glyf_len             :: The length of the `glyf' table.  Needed    */
+  /*                            for malformed `loca' tables.               */
+  /*                                                                       */
+  /*    glyf_offset          :: The file offset of the `glyf' table.       */
   /*                                                                       */
   /*    doblend              :: A boolean which is set if the font should  */
   /*                            be blended (this is for GX var).           */
@@ -1240,10 +1228,79 @@ FT_BEGIN_HEADER
   /*                            variation tables (rather like Multiple     */
   /*                            Master data).                              */
   /*                                                                       */
-  /*    extra                :: Reserved for third-party font drivers.     */
+  /*    horz_metrics_size    :: The size of the `hmtx' table.              */
   /*                                                                       */
-  /*    postscript_name      :: The PS name of the font.  Used by the      */
-  /*                            postscript name service.                   */
+  /*    vert_metrics_size    :: The size of the `vmtx' table.              */
+  /*                                                                       */
+  /*    num_locations        :: The number of glyph locations in this      */
+  /*                            TrueType file.  This should be             */
+  /*                            identical to the number of glyphs.         */
+  /*                            Ignored for Type 2 fonts.                  */
+  /*                                                                       */
+  /*    glyph_locations      :: An array of longs.  These are offsets to   */
+  /*                            glyph data within the `glyf' table.        */
+  /*                            Ignored for Type 2 font faces.             */
+  /*                                                                       */
+  /*    hdmx_table           :: A pointer to the `hdmx' table.             */
+  /*                                                                       */
+  /*    hdmx_table_size      :: The size of the `hdmx' table.              */
+  /*                                                                       */
+  /*    hdmx_record_count    :: The number of hdmx records.                */
+  /*                                                                       */
+  /*    hdmx_record_size     :: The size of a single hdmx record.          */
+  /*                                                                       */
+  /*    hdmx_record_sizes    :: An array holding the ppem sizes available  */
+  /*                            in the `hdmx' table.                       */
+  /*                                                                       */
+  /*    sbit_table           :: A pointer to the font's embedded bitmap    */
+  /*                            location table.                            */
+  /*                                                                       */
+  /*    sbit_table_size      :: The size of `sbit_table'.                  */
+  /*                                                                       */
+  /*    sbit_table_type      :: The sbit table type (CBLC, SBIX, etc.).    */
+  /*                                                                       */
+  /*    sbit_num_strikes     :: The number of sbit strikes exposed by      */
+  /*                            FreeType's API, omitting invalid strikes.  */
+  /*                                                                       */
+  /*    sbit_strike_map      :: A mapping between the strike indices       */
+  /*                            exposed by the API and the indices used in */
+  /*                            the font's sbit table.                     */
+  /*                                                                       */
+  /*    kern_table           :: A pointer to the `kern' table.             */
+  /*                                                                       */
+  /*    kern_table_size      :: The size of the `kern' table.              */
+  /*                                                                       */
+  /*    num_kern_tables      :: The number of supported kern subtables     */
+  /*                            (up to 32; FreeType recognizes only        */
+  /*                            horizontal ones with format 0).            */
+  /*                                                                       */
+  /*    kern_avail_bits      :: The availability status of kern subtables; */
+  /*                            if bit n is set, table n is available.     */
+  /*                                                                       */
+  /*    kern_order_bits      :: The sortedness status of kern subtables;   */
+  /*                            if bit n is set, table n is sorted.        */
+  /*                                                                       */
+  /*    bdf                  :: Data related to an SFNT font's `bdf'       */
+  /*                            table; see `tttypes.h'.                    */
+  /*                                                                       */
+  /*    horz_metrics_offset  :: The file offset of the `hmtx' table.       */
+  /*                                                                       */
+  /*    vert_metrics_offset  :: The file offset of the `vmtx' table.       */
+  /*                                                                       */
+  /*    sph_found_func_flags :: Flags identifying special bytecode         */
+  /*                            functions (used by the v38 implementation  */
+  /*                            of the bytecode interpreter).              */
+  /*                                                                       */
+  /*    sph_compatibility_mode ::                                          */
+  /*                            This flag is set if we are in ClearType    */
+  /*                            backwards compatibility mode (used by the  */
+  /*                            v38 implementation of the bytecode         */
+  /*                            interpreter).                              */
+  /*                                                                       */
+  /*    ebdt_start           :: The file offset of the sbit data table     */
+  /*                            (CBDT, bdat, etc.).                        */
+  /*                                                                       */
+  /*    ebdt_size            :: The size of the sbit data table.           */
   /*                                                                       */
   typedef struct  TT_FaceRec_
   {
@@ -1353,10 +1410,7 @@ FT_BEGIN_HEADER
 
     /* since version 2.2 */
 
-    FT_Byte*              horz_metrics;
     FT_ULong              horz_metrics_size;
-
-    FT_Byte*              vert_metrics;
     FT_ULong              vert_metrics_size;
 
     FT_ULong              num_locations; /* in broken TTF, gid > 0xFFFF */

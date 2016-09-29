@@ -1,3 +1,13 @@
+2016-09-29  Werner Lemberg  <wl@gnu.org>
+
+	[truetype] Clean up `TT_Face' structure.
+
+	* include/freetype/internal/tttypes.h (TT_FaceRec): Remove unused
+	fields `horz_metrics' and `vert_metrics'.
+	Update documentation.
+
+	* src/sfnt/sfobjs.c (sfnt_done_face): Updated.
+
 2016-09-28  Werner Lemberg  <wl@gnu.org>
 
 	More FT_ZERO usage.
