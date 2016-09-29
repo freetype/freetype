@@ -263,6 +263,10 @@
           }
           else
           {
+            // bitmap strokes are not active for glyph variations
+            if ( instance_index )
+              continue;
+
             if ( FT_Select_Size( face, fixed_sizes_index - 1 ) )
               continue;
             flags |= FT_LOAD_COLOR;

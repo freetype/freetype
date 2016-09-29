@@ -1,5 +1,12 @@
 2016-09-29  Werner Lemberg  <wl@gnu.org>
 
+	[ftfuzzer] Speed up.
+
+	* src/tools/ftfuzzer/ftfuzzer.cc (LLVMFuzzerTestOneInput): Don't
+	check for embedded bitmaps if we have a non-default instance.
+
+2016-09-29  Werner Lemberg  <wl@gnu.org>
+
 	[truetype] Disallow bitmap strokes for non-default instances.
 
 	Also speed up access of default instances if GX variations are
