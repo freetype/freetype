@@ -2338,6 +2338,18 @@ FT_BEGIN_HEADER
   /* <Return>                                                              */
   /*    FreeType error code.  0~means success.                             */
   /*                                                                       */
+  /* <Note>                                                                */
+  /*    For bitmaps embedded in outline fonts it is common that only a     */
+  /*    subset of the available glyphs at a given ppem value is available. */
+  /*    FreeType silently uses outlines if there is no bitmap for a given  */
+  /*    glyph index.                                                       */
+  /*                                                                       */
+  /*    For GX variation fonts, a bitmap strike makes sense only if the    */
+  /*    default instance is active (this is, no glyph variation takes      */
+  /*    place); otherwise, FreeType simply ignores bitmap strikes.  The    */
+  /*    same is true for all named instances that are different from the   */
+  /*    default instance.                                                  */
+  /*                                                                       */
   FT_EXPORT( FT_Error )
   FT_Select_Size( FT_Face  face,
                   FT_Int   strike_index );
