@@ -1469,7 +1469,8 @@
                     FT_UInt      font_index,
                     FT_Stream    stream,
                     FT_ULong     base_offset,
-                    FT_Library   library )
+                    FT_Library   library,
+                    FT_UInt      code )
   {
     FT_Error         error;
     CFF_ParserRec    parser;
@@ -1480,7 +1481,7 @@
 
 
     cff_parser_init( &parser,
-                     CFF_CODE_TOPDICT,
+                     code,
                      &font->font_dict,
                      library,
                      0,
@@ -1552,7 +1553,7 @@
       priv->blue_scale       = (FT_Fixed)( 0.039625 * 0x10000L * 1000 );
 
       cff_parser_init( &parser,
-                       CFF_CODE_PRIVATE,
+                       code == CFF2_CODE_FONTDICT ? CFF2_CODE_PRIVATE : CFF_CODE_PRIVATE,
                        priv,
                        library,
                        top->num_designs,
@@ -1746,7 +1747,8 @@
                               subfont_index,
                               stream,
                               base_offset,
-                              library );
+                              library,
+                              cff2 ? CFF2_CODE_TOPDICT : CFF_CODE_TOPDICT );
     if ( error )
       goto Exit;
 
@@ -1775,7 +1777,8 @@
       if ( error )
         goto Exit;
 
-      if ( fd_index.count > CFF_MAX_CID_FONTS )
+      /* Font Dicts are not limited to 256 for CFF2 */
+      if ( !cff2 && fd_index.count > CFF_MAX_CID_FONTS )
       {
         FT_TRACE0(( "cff_font_load: FD array too large in CID font\n" ));
         goto Fail_CID;
@@ -1796,7 +1799,8 @@
         sub = font->subfonts[idx];
         FT_TRACE4(( "parsing subfont %u\n", idx ));
         error = cff_subfont_load( sub, &fd_index, idx,
-                                  stream, base_offset, library );
+                                  stream, base_offset, library, 
+                                  cff2 ? CFF2_CODE_FONTDICT : CFF_CODE_TOPDICT );
         if ( error )
           goto Fail_CID;
       }

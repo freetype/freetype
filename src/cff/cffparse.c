@@ -820,9 +820,6 @@
 #define CFF_FIELD_BOOL( code, name, id )             \
           CFF_FIELD( code, name, id, cff_kind_bool )
 
-#define CFFCODE_TOPDICT  0x1000
-#define CFFCODE_PRIVATE  0x2000
-
 
 #ifndef FT_CONFIG_OPTION_PIC
 

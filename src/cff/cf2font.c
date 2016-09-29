@@ -417,7 +417,7 @@
         font->lenNormalizedVector != lenNormalizedV ||
         ( lenNormalizedV &&
           memcmp( normalizedV,
-                  &font->lastNormalizedVector,
+                  font->lastNormalizedVector,
                   lenNormalizedV * sizeof( *normalizedV ) ) != 0 ) )
       {
         font->lastVsindex = subFont->font_dict.vsindex;

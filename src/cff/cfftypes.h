@@ -223,6 +223,9 @@ FT_BEGIN_HEADER
     FT_Pos    default_width;
     FT_Pos    nominal_width;
 
+    /* fields for CFF2 */
+    FT_UInt    vsindex;
+
   } CFF_PrivateRec, *CFF_Private;
 
 
