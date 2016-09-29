@@ -1,5 +1,25 @@
 2016-09-29  Werner Lemberg  <wl@gnu.org>
 
+	[truetype] Disallow bitmap strokes for non-default instances.
+
+	Also speed up access of default instances if GX variations are
+	active.
+
+	* include/freetype/internal/tttypes.h (TT_FaceRec): Add
+	`is_default_instance' member.
+
+	* src/sfnt/sfobjs.c (sfnt_init_face): Initialize
+	`is_default_instance'.
+
+	* src/truetype/ttgload.c (TT_Process_Simple_Glyph,
+	load_truetype_glyph): Add test for default instance.
+	(TT_Load_Glyph): Load embedded bitmaps for default instance only.
+
+	* src/truetype/ttgxvar.c (TT_Set_MM_Blend): Compute
+	`is_default_instance'.
+
+2016-09-29  Werner Lemberg  <wl@gnu.org>
+
 	[truetype] Clean up `TT_Face' structure.
 
 	* include/freetype/internal/tttypes.h (TT_FaceRec): Remove unused

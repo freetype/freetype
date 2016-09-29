@@ -886,7 +886,7 @@
 
 #ifdef TT_CONFIG_OPTION_GX_VAR_SUPPORT
 
-    if ( loader->face->doblend )
+    if ( loader->face->doblend && !loader->face->is_default_instance )
     {
       /* Deltas apply to the unscaled data. */
       error = TT_Vary_Apply_Glyph_Deltas( loader->face,
@@ -1564,7 +1564,7 @@
 
 #ifdef TT_CONFIG_OPTION_GX_VAR_SUPPORT
 
-      if ( loader->face->doblend )
+      if ( loader->face->doblend && !loader->face->is_default_instance )
       {
         /* a small outline structure with four elements for */
         /* communication with `TT_Vary_Apply_Glyph_Deltas'  */
@@ -1727,7 +1727,7 @@
 
 #ifdef TT_CONFIG_OPTION_GX_VAR_SUPPORT
 
-      if ( face->doblend )
+      if ( face->doblend && !face->is_default_instance )
       {
         short        i, limit;
         FT_SubGlyph  subglyph;
@@ -2566,18 +2566,17 @@
   {
     FT_Error      error;
     TT_LoaderRec  loader;
+    TT_Face       face = (TT_Face)glyph->face;
 
 
     FT_TRACE1(( "TT_Load_Glyph: glyph index %d\n", glyph_index ));
 
 #ifdef TT_CONFIG_OPTION_EMBEDDED_BITMAPS
 
-    /* try to load embedded bitmap if any              */
-    /*                                                 */
-    /* XXX: The convention should be emphasized in     */
-    /*      the documents because it can be confusing. */
+    /* try to load embedded bitmap (if any) */
     if ( size->strike_index != 0xFFFFFFFFUL      &&
-         ( load_flags & FT_LOAD_NO_BITMAP ) == 0 )
+         ( load_flags & FT_LOAD_NO_BITMAP ) == 0 &&
+         face->is_default_instance               )
     {
       error = load_sbit_image( size, glyph, glyph_index, load_flags );
       if ( !error )

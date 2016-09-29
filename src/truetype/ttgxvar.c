@@ -1051,6 +1051,7 @@
     GX_Blend    blend;
     FT_MM_Var*  mmvar;
     FT_UInt     i;
+    FT_Bool     is_default_instance = 1;
     FT_Memory   memory = face->root.memory;
 
     enum
@@ -1093,6 +1094,9 @@
         error = FT_THROW( Invalid_Argument );
         goto Exit;
       }
+
+      if ( coords[i] != 0 )
+        is_default_instance = 0;
     }
 
     FT_TRACE5(( "\n" ));
@@ -1171,6 +1175,8 @@
         break;
       }
     }
+
+    face->is_default_instance = is_default_instance;
 
   Exit:
     return error;

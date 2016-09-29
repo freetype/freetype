@@ -1302,6 +1302,10 @@ FT_BEGIN_HEADER
   /*                                                                       */
   /*    ebdt_size            :: The size of the sbit data table.           */
   /*                                                                       */
+  /*    is_default_instance  :: Set if the glyph outlines can be used      */
+  /*                            unmodified (i.e., without applying glyph   */
+  /*                            variation deltas).                         */
+  /*                                                                       */
   typedef struct  TT_FaceRec_
   {
     FT_FaceRec            root;
@@ -1454,6 +1458,9 @@ FT_BEGIN_HEADER
     FT_ULong              ebdt_start;  /* either `CBDT', `EBDT', or `bdat' */
     FT_ULong              ebdt_size;
 #endif
+
+    /* since 2.7.1 */
+    FT_Bool               is_default_instance;
 
   } TT_FaceRec;
 
