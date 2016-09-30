@@ -24,6 +24,12 @@ CHANGES BETWEEN 2.7 and 2.7.1
       and the number of CVT entries.  Please report if you encounter a
       font where the selected values are not adequate.
 
+    - PCF family names are made more `colourful'; they now include the
+      foundry  and information  whether they contain  wide characters.
+      For example,  you no longer get `Fixed' but  rather `Sony Fixed'
+      or `Misc Fixed Wide'.
+
+
 ======================================================================
 
 CHANGES BETWEEN 2.6.5 and 2.7

@@ -1,5 +1,28 @@
 2016-09-29  Werner Lemberg  <wl@gnu.org>
 
+	[pcf] Enrich family name with foundry name and glyph width info.
+
+	This is a very old patch from openSuSE (from 2006, submitted to
+	FreeType in 2011) that I forgot to apply.
+
+	  https://build.opensuse.org/package/view_file/openSUSE:Factory/freetype2/freetype2-bitmap-foundry.patch
+
+	Prepend the foundry name plus a space to the family name.  There are
+	many fonts just called `Fixed' which look completely different, and
+	which have nothing to do with each other.  When selecting `Fixed' in
+	KDE or Gnome one gets results that appear rather random, the style
+	changes often if one changes the size and one cannot select some
+	fonts at all.
+
+	We also check whether we have `wide' characters; all put together,
+	we get family names like `Sony Fixed' or `Misc Fixed Wide'.
+
+	* src/pcf/pcfread.c (pcf_load_font): Implement it.
+
+	* docs/CHANGES: Document it.
+
+2016-09-29  Werner Lemberg  <wl@gnu.org>
+
 	[ftfuzzer] Speed up.
 
 	* src/tools/ftfuzzer/ftfuzzer.cc (LLVMFuzzerTestOneInput): Don't
