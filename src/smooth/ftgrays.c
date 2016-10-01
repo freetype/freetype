@@ -443,6 +443,7 @@ typedef ptrdiff_t  FT_PtrDist;
     TCoord  cover;
     int     invalid;
 
+    PCell*      ycells;
     PCell       cells;
     FT_PtrDist  max_cells;
     FT_PtrDist  num_cells;
@@ -454,8 +455,6 @@ typedef ptrdiff_t  FT_PtrDist;
 
     FT_Raster_Span_Func  render_span;
     void*                render_span_data;
-
-    PCell*     ycells;
 
   } gray_TWorker, *gray_PWorker;
 
@@ -1792,18 +1791,15 @@ typedef ptrdiff_t  FT_PtrDist;
           cell_start = ( ycount * sizeof ( PCell ) + sizeof ( TCell ) - 1 ) /
                        sizeof ( TCell );
 
-          if ( FT_MAX_GRAY_POOL - cell_start < 2 )
-            goto ReduceBands;
-
           ras.cells     = buffer + cell_start;
           ras.max_cells = (FT_PtrDist)( FT_MAX_GRAY_POOL - cell_start );
+          ras.num_cells = 0;
 
           ras.ycells = (PCell*)buffer;
           while ( ycount )
             ras.ycells[--ycount] = NULL;
         }
 
-        ras.num_cells = 0;
         ras.invalid   = 1;
         ras.min_ey    = band[1];
         ras.max_ey    = band[0];
@@ -1819,7 +1815,6 @@ typedef ptrdiff_t  FT_PtrDist;
         else if ( error != ErrRaster_Memory_Overflow )
           return 1;
 
-      ReduceBands:
         /* render pool overflow; we will reduce the render band by half */
         width >>= 1;
 

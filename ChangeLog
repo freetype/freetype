@@ -1,3 +1,10 @@
+2016-10-01  Alexei Podtelezhnikov  <apodtele@gmail.com>
+
+	[smooth] Remove impossibility.
+
+	* src/smooth/ftgrays.c (TWorker): Rearrange fields.
+	(gray_convert_glyph): Remove impossible condition and clean up.
+
 2016-09-29  Werner Lemberg  <wl@gnu.org>
 
 	[pcf] Enrich family name with foundry name and glyph width info.
