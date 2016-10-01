@@ -190,12 +190,14 @@
       break;
 
     default:
+      /* we ignore unknown table formats */
       error = FT_THROW( Unknown_File_Format );
       break;
     }
 
     if ( !error )
-      FT_TRACE3(( "sbit_num_strikes: %u\n", face->sbit_num_strikes ));
+      FT_TRACE3(( "tt_face_load_sbit_strikes: found %u strikes\n",
+                  face->sbit_num_strikes ));
 
     face->ebdt_start = 0;
     face->ebdt_size  = 0;
@@ -216,6 +218,15 @@
         face->ebdt_start = FT_STREAM_POS();
         face->ebdt_size  = ebdt_size;
       }
+    }
+
+    if ( !face->ebdt_size )
+    {
+      FT_TRACE2(( "tt_face_load_sbit_strikes:"
+                  " no embedded bitmap data table found;\n"
+                  "                          "
+                  " resetting number of strikes to zero\n" ));
+      face->sbit_num_strikes = 0;
     }
 
     return FT_Err_Ok;

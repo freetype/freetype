@@ -1,3 +1,10 @@
+2016-10-01  Werner Lemberg  <wl@gnu.org>
+
+	[sfnt] Disable bitmap strikes if we don't have a bitmap data table.
+
+	* src/sfnt/ttsbit.c (tt_face_load_sbit): Check whether we have
+	a bitmap data table.
+
 2016-10-01  Alexei Podtelezhnikov  <apodtele@gmail.com>
 
 	[smooth] Remove impossibility.
