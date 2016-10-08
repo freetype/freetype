@@ -1,5 +1,9 @@
 2016-10-08  Werner Lemberg  <wl@gnu.org>
 
+	* src/cid/cidload.c (cid_face_open): Properly propagate `error'.
+
+2016-10-08  Werner Lemberg  <wl@gnu.org>
+
 	[cid] Fix parsing of subr offsets.
 
 	Bug introduced 2016-05-16.
