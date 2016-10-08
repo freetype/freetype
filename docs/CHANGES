@@ -6,6 +6,9 @@ CHANGES BETWEEN 2.7 and 2.7.1
 
   II. IMPORTANT BUG FIXES
 
+    - Handling of  raw CID fonts was partially  broken (bug introduced
+      in 2.6.4).
+
 
   III. MISCELLANEOUS
 

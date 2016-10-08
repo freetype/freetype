@@ -1,3 +1,11 @@
+2016-10-08  Werner Lemberg  <wl@gnu.org>
+
+	[cid] Fix parsing of subr offsets.
+
+	Bug introduced 2016-05-16.
+
+	* src/cid/cidparse.c (cid_parser_new): Fix off-by-one error.
+
 2016-10-01  Werner Lemberg  <wl@gnu.org>
 
 	[sfnt] Disable bitmap strikes if we don't have a bitmap data table.
