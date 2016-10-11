@@ -1,5 +1,16 @@
 2016-10-11  Werner Lemberg  <wl@gnu.org>
 
+	[psaux] Fix handling of invalid flex subrs.
+
+	Problem reported as
+
+	  https://bugs.chromium.org/p/oss-fuzz/issues/detail?id=52
+
+	* src/psaux/t1decode.c (t1_decoder_parse_charstrings)
+	<op_callothersubr>: Set `flex_state' after error checking.
+
+2016-10-11  Werner Lemberg  <wl@gnu.org>
+
 	* src/truetype/ttgxvar.c (tt_done_blend): Fix deallocation.
 
 2016-10-08  Werner Lemberg  <wl@gnu.org>
