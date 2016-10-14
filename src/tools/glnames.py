@@ -415,7 +415,7 @@ t1_expert_encoding = \
 # This data has been taken literally from the files `glyphlist.txt'
 # and `zapfdingbats.txt' version 2.0, Sept 2002.  It is available from
 #
-#   http://sourceforge.net/adobe/aglfn/
+#   https://github.com/adobe-type-tools/agl-aglfn
 #
 adobe_glyph_list = """\
 A;0041

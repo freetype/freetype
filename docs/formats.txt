@@ -157,7 +157,7 @@ MAC  ---     PS     TYPE_1  ---        type1    T1_SPEC.pdf
     George  Williams deduced  the font  format from the X11  sources and
     documented it for his FontForge font editor:
 
-      http://fontforge.sourceforge.net/pcf-format.html
+      http://fontforge.github.io/pcf-format.html
 
 [5] This is from MS Windows 3; see Microsoft's Knowledge Base article at
 
