@@ -1552,10 +1552,15 @@
 
         for ( j = 0; j < point_count; j++ )
         {
-          int      pindex   = localpoints[j];
-          FT_Long  orig_cvt = face->cvt[pindex];
+          int      pindex;
+          FT_Long  orig_cvt;
 
 
+          pindex = localpoints[j];
+          if ( (FT_ULong)pindex >= face->cvt_size )
+            continue;
+
+          orig_cvt          = face->cvt[pindex];
           face->cvt[pindex] = (FT_Short)( orig_cvt +
                                           FT_MulFix( deltas[j], apply ) );
 

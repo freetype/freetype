@@ -1,3 +1,14 @@
+2016-10-14  Werner Lemberg  <wl@gnu.org>
+
+	[truetype] Fix handling of `cvar' table data.
+
+	Reported as
+
+	  https://bugs.chromium.org/p/oss-fuzz/issues/detail?id=53
+
+	* src/truetype/ttgxvar.c (tt_face_vary_cvt): Ignore invalid CVT
+	indices.
+
 2016-10-11  Werner Lemberg  <wl@gnu.org>
 
 	[psaux] Fix handling of invalid flex subrs.
