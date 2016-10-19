@@ -225,19 +225,33 @@
   static FT_Error
   cff_index_init( CFF_Index  idx,
                   FT_Stream  stream,
-                  FT_Bool    load )
+                  FT_Bool    load,
+                  FT_Bool    cff2 )
   {
     FT_Error   error;
     FT_Memory  memory = stream->memory;
-    FT_UShort  count;
+    FT_UInt    count;
 
 
     FT_MEM_ZERO( idx, sizeof ( *idx ) );
 
     idx->stream = stream;
     idx->start  = FT_STREAM_POS();
-    if ( !FT_READ_USHORT( count ) &&
-         count > 0                )
+
+    if ( cff2 )
+    {
+      if ( FT_READ_ULONG( count ) )
+        goto Exit;
+      idx->hdr_size = 5;
+    }
+    else
+    {
+      if ( FT_READ_USHORT( count ) )
+        goto Exit;
+      idx->hdr_size = 3;
+    }
+
+    if ( count > 0 )
     {
       FT_Byte   offsize;
       FT_ULong  size;
@@ -258,7 +272,7 @@
       idx->off_size = offsize;
       size          = (FT_ULong)( count + 1 ) * offsize;
 
-      idx->data_offset = idx->start + 3 + size;
+      idx->data_offset = idx->start + idx->hdr_size + size;
 
       if ( FT_STREAM_SKIP( size - offsize ) )
         goto Exit;
@@ -335,7 +349,7 @@
       data_size = (FT_ULong)( idx->count + 1 ) * offsize;
 
       if ( FT_NEW_ARRAY( idx->offsets, idx->count + 1 ) ||
-           FT_STREAM_SEEK( idx->start + 3 )             ||
+           FT_STREAM_SEEK( idx->start + idx->hdr_size ) ||
            FT_FRAME_ENTER( data_size )                  )
         goto Exit;
 
@@ -493,7 +507,7 @@
         FT_ULong  pos = element * idx->off_size;
 
 
-        if ( FT_STREAM_SEEK( idx->start + 3 + pos ) )
+        if ( FT_STREAM_SEEK( idx->start + idx->hdr_size + pos ) )
           goto Exit;
 
         off1 = cff_index_read_offset( idx, &error );
@@ -1478,6 +1492,7 @@
     FT_ULong         dict_len;
     CFF_FontRecDict  top  = &font->font_dict;
     CFF_Private      priv = &font->private_dict;
+    FT_Bool          cff2 = (code == CFF2_CODE_TOPDICT );
 
 
     cff_parser_init( &parser,
@@ -1582,7 +1597,7 @@
                            priv->local_subrs_offset ) )
         goto Exit;
 
-      error = cff_index_init( &font->local_subrs_index, stream, 1 );
+      error = cff_index_init( &font->local_subrs_index, stream, 1, cff2 );
       if ( error )
         goto Exit;
 
@@ -1622,11 +1637,10 @@
 #undef  FT_STRUCTURE
 #define FT_STRUCTURE  CFF_FontRec
 
-      FT_FRAME_START( 4 ),
+      FT_FRAME_START( 3 ),
         FT_FRAME_BYTE( version_major ),
         FT_FRAME_BYTE( version_minor ),
         FT_FRAME_BYTE( header_size ),
-        FT_FRAME_BYTE( absolute_offsize ),
       FT_FRAME_END
     };
 
@@ -1653,16 +1667,21 @@
 
     /* check format */
     if ( font->version_major != ( cff2 ? 2 : 1 ) ||
-         font->header_size      < 4 ||
-         ( !cff2 && font->absolute_offsize > 4 ) )
+         font->header_size      < 4 )
     {
       FT_TRACE2(( "  not a CFF font header\n" ));
       error = FT_THROW( Unknown_File_Format );
       goto Exit;
     }
 
+    if ( cff2 )
+    {
+      if ( FT_READ_USHORT( font->top_dict_length ) )
+        goto Exit;
+    }
+
     /* skip the rest of the header */
-    if ( FT_STREAM_SKIP( font->header_size - 4 ) )
+    if ( FT_STREAM_SEEK( base_offset + font->header_size ) )
       goto Exit;
 
     if ( cff2 )
@@ -1674,28 +1693,28 @@
       /* length of data, but leave count at zero as an indicator   */
       FT_ZERO( &font->font_dict_index );
       font->font_dict_index.data_offset = FT_STREAM_POS();
-      font->font_dict_index.data_size = font->absolute_offsize;
+      font->font_dict_index.data_size = font->top_dict_length;
 
       /* skip the top dict data for now, we'll parse it later      */
-      if ( FT_STREAM_SKIP( font->absolute_offsize ) )
+      if ( FT_STREAM_SKIP( font->top_dict_length ) )
         goto Exit;
 
       /* next, read the global subrs index                         */
       if ( FT_SET_ERROR( cff_index_init( &font->global_subrs_index,
-                                       stream, 1 ) ) )
+                                       stream, 1, cff2 ) ) )
         goto Exit;
     }
     else
     {
       /* for CFF, read the name, top dict, string and global subrs index */
       if ( FT_SET_ERROR( cff_index_init( &font->name_index,
-                                       stream, 0 ) )                       ||
+                                       stream, 0, cff2 ) )                 ||
          FT_SET_ERROR( cff_index_init( &font->font_dict_index,
-                                       stream, 0 ) )                       ||
+                                       stream, 0, cff2 ) )                 ||
          FT_SET_ERROR( cff_index_init( &string_index,
-                                       stream, 1 ) )                       ||
+                                       stream, 1, cff2 ) )                 ||
          FT_SET_ERROR( cff_index_init( &font->global_subrs_index,
-                                       stream, 1 ) )                       ||
+                                       stream, 1, cff2 ) )                 ||
          FT_SET_ERROR( cff_index_get_pointers( &string_index,
                                                &font->strings,
                                                &font->string_pool,
@@ -1755,7 +1774,7 @@
     if ( FT_STREAM_SEEK( base_offset + dict->charstrings_offset ) )
       goto Exit;
 
-    error = cff_index_init( &font->charstrings_index, stream, 0 );
+    error = cff_index_init( &font->charstrings_index, stream, 0, cff2 );
     if ( error )
       goto Exit;
 
@@ -1773,7 +1792,7 @@
       if ( FT_STREAM_SEEK( base_offset + dict->cid_fd_array_offset ) )
         goto Exit;
 
-      error = cff_index_init( &fd_index, stream, 0 );
+      error = cff_index_init( &fd_index, stream, 0, cff2 );
       if ( error )
         goto Exit;
 

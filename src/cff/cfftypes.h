@@ -64,6 +64,7 @@ FT_BEGIN_HEADER
   {
     FT_Stream  stream;
     FT_ULong   start;
+    FT_UInt    hdr_size;
     FT_UInt    count;
     FT_Byte    off_size;
     FT_ULong   data_offset;
@@ -272,7 +273,8 @@ FT_BEGIN_HEADER
     FT_Byte          version_major;
     FT_Byte          version_minor;
     FT_Byte          header_size;
-    FT_Byte          absolute_offsize;  /* cff2_top_dict_length */
+
+    FT_UInt          top_dict_length;   /* cff2 only */
 
     FT_Bool          cff2;
 

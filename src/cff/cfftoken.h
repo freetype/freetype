@@ -144,7 +144,7 @@
   CFF_FIELD_NUM       ( 0x111, language_group,         "LanguageGroup" )
   CFF_FIELD_FIXED     ( 0x112, expansion_factor,       "ExpansionFactor" )
   CFF_FIELD_NUM       ( 22,    vsindex,                "vsindex" )
-  CFF_FIELD_BLEND     ( 31,                            "blend" )
+  CFF_FIELD_BLEND     ( 23,                            "blend" )
   CFF_FIELD_NUM       ( 19,    local_subrs_offset,     "Subrs" )
 
 
