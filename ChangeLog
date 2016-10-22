@@ -1,3 +1,10 @@
+2016-10-22  Werner Lemberg  <wl@gnu.org>
+
+	[sfnt] Improve handling of invalid post 2.5 tables [#49393].
+
+	* src/sfnt/ttpost.c (load_format_25): We need at least a single
+	table entry.
+
 2016-10-14  Werner Lemberg  <wl@gnu.org>
 
 	[truetype] Fix handling of `cvar' table data.
