@@ -1,5 +1,11 @@
 2016-10-22  Werner Lemberg  <wl@gnu.org>
 
+	[truetype] Fix SCANTYPE instruction (#49394).
+
+	* src/truetype/ttinterp.c (Ins_SCANTYPE): Only use lower 16bits.
+
+2016-10-22  Werner Lemberg  <wl@gnu.org>
+
 	[sfnt] Improve handling of invalid post 2.5 tables [#49393].
 
 	* src/sfnt/ttpost.c (load_format_25): We need at least a single
