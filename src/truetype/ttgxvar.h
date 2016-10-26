@@ -149,6 +149,11 @@ FT_BEGIN_HEADER
                    FT_Fixed*  coords );
 
   FT_LOCAL( FT_Error )
+  TT_Get_MM_Blend( TT_Face    face,
+                   FT_UInt    num_coords,
+                   FT_Fixed*  coords );
+
+  FT_LOCAL( FT_Error )
   TT_Set_Var_Design( TT_Face    face,
                      FT_UInt    num_coords,
                      FT_Fixed*  coords );

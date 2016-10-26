@@ -1,5 +1,34 @@
 2016-10-26  Werner Lemberg  <wl@gnu.org>
 
+	Add `FT_Get_{MM,Var}_Blend_Coordinates' functions.
+
+	* include/freetype/ftmm.h: Declare.
+
+	* include/freetype/internal/services/svmm.h (FT_Get_MM_Blend_Func):
+	New typedef.
+	(MultiMasters): New MM service function `get_mm_blend'.
+	(FT_DEFINE_SERVICE_MULTIMASTERSREC): Updated.
+	Update all callers.
+
+	* src/base/ftmm.c (FT_Get_MM_Blend_Coordinates,
+	FT_Get_Var_Blend_Coordinates): Implement.
+
+	* src/truetype/ttdriver.c: Updated.
+
+	* src/truetype/ttgxvar.c (TT_Get_MM_Blend): New function to handle
+	`get_mm_blend' service.
+	* src/truetype/ttgxvar.h: Updated.
+
+	* src/type1/t1driver.c: Updated.
+
+	* src/type1/t1load.c (T1_Get_MM_Blend): New function to handle
+	`get_mm_blend' service.
+	* src/type1/t1load.h: Updated.
+
+	* docs/CHANGES: Document.
+
+2016-10-26  Werner Lemberg  <wl@gnu.org>
+
 	* src/type1/t1load.c (parse_subrs): Fix limit check.
 
 	Reported as

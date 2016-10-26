@@ -413,6 +413,41 @@
 
 
   FT_LOCAL_DEF( FT_Error )
+  T1_Get_MM_Blend( T1_Face    face,
+                   FT_UInt    num_coords,
+                   FT_Fixed*  coords )
+  {
+    PS_Blend  blend = face->blend;
+
+    FT_Fixed  axiscoords[4];
+    FT_UInt   i, nc;
+
+
+    if ( !blend )
+      return FT_THROW( Invalid_Argument );
+
+    mm_weights_unmap( blend->weight_vector,
+                      axiscoords,
+                      blend->num_axis );
+
+    nc = num_coords;
+    if ( num_coords > blend->num_axis )
+    {
+      FT_TRACE2(( "T1_Get_MM_Blend: only using first %d of %d coordinates\n",
+                  blend->num_axis, num_coords ));
+      nc = blend->num_axis;
+    }
+
+    for ( i = 0; i < nc; ++i )
+      coords[i] = axiscoords[i];
+    for ( ; i < num_coords; i++ )
+      coords[i] = 0x8000;
+
+    return FT_Err_Ok;
+  }
+
+
+  FT_LOCAL_DEF( FT_Error )
   T1_Set_MM_Design( T1_Face   face,
                     FT_UInt   num_coords,
                     FT_Long*  coords )

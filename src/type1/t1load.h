@@ -80,6 +80,11 @@ FT_BEGIN_HEADER
                    FT_Fixed*  coords );
 
   FT_LOCAL( FT_Error )
+  T1_Get_MM_Blend( T1_Face    face,
+                   FT_UInt    num_coords,
+                   FT_Fixed*  coords );
+
+  FT_LOCAL( FT_Error )
   T1_Set_MM_Design( T1_Face   face,
                     FT_UInt   num_coords,
                     FT_Long*  coords );

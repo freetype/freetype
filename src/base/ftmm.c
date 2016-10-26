@@ -231,4 +231,63 @@
   }
 
 
+  /* documentation is in ftmm.h */
+
+  FT_EXPORT_DEF( FT_Error )
+  FT_Get_MM_Blend_Coordinates( FT_Face    face,
+                               FT_UInt    num_coords,
+                               FT_Fixed*  coords )
+  {
+    FT_Error                 error;
+    FT_Service_MultiMasters  service;
+
+
+    /* check of `face' delayed to `ft_face_get_mm_service' */
+
+    if ( !coords )
+      return FT_THROW( Invalid_Argument );
+
+    error = ft_face_get_mm_service( face, &service );
+    if ( !error )
+    {
+      error = FT_ERR( Invalid_Argument );
+      if ( service->get_mm_blend )
+         error = service->get_mm_blend( face, num_coords, coords );
+    }
+
+    return error;
+  }
+
+
+  /* documentation is in ftmm.h */
+
+  /* This is exactly the same as the previous function.  It exists for */
+  /* orthogonality.                                                    */
+
+  FT_EXPORT_DEF( FT_Error )
+  FT_Get_Var_Blend_Coordinates( FT_Face    face,
+                                FT_UInt    num_coords,
+                                FT_Fixed*  coords )
+  {
+    FT_Error                 error;
+    FT_Service_MultiMasters  service;
+
+
+    /* check of `face' delayed to `ft_face_get_mm_service' */
+
+    if ( !coords )
+      return FT_THROW( Invalid_Argument );
+
+    error = ft_face_get_mm_service( face, &service );
+    if ( !error )
+    {
+      error = FT_ERR( Invalid_Argument );
+      if ( service->get_mm_blend )
+         error = service->get_mm_blend( face, num_coords, coords );
+    }
+
+    return error;
+  }
+
+
 /* END */

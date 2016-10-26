@@ -32,6 +32,11 @@ CHANGES BETWEEN 2.7 and 2.7.1
       For example,  you no longer get `Fixed' but  rather `Sony Fixed'
       or `Misc Fixed Wide'.
 
+    - A new  function `FT_Get_Var_Blend_Coordinates'  (with its  alias
+      name  `FT_Get_MM_Blend_Coordinates') to retrieve the  normalized
+      blend  coordinates of the currently  selected variation instance
+      has been added to the Multiple Masters interface.
+
 
 ======================================================================
 

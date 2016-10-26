@@ -1186,6 +1186,64 @@
   /*************************************************************************/
   /*                                                                       */
   /* <Function>                                                            */
+  /*    TT_Get_MM_Blend                                                    */
+  /*                                                                       */
+  /* <Description>                                                         */
+  /*    Get the blend (normalized) coordinates for this instance of the    */
+  /*    font.                                                              */
+  /*                                                                       */
+  /* <InOut>                                                               */
+  /*    face       :: The font.                                            */
+  /*                  Initialize the blend structure with `gvar' data.     */
+  /*                                                                       */
+  /* <Input>                                                               */
+  /*    num_coords :: The number of available coordinates.  If it is       */
+  /*                  larger than the number of axes, set the excess       */
+  /*                  values to 0.                                         */
+  /*                                                                       */
+  /*    coords     :: An array of `num_coords', each between [-1,1].       */
+  /*                                                                       */
+  /* <Return>                                                              */
+  /*    FreeType error code.  0 means success.                             */
+  /*                                                                       */
+  FT_LOCAL_DEF( FT_Error )
+  TT_Get_MM_Blend( TT_Face    face,
+                   FT_UInt    num_coords,
+                   FT_Fixed*  coords )
+  {
+    FT_Error  error = FT_Err_Ok;
+    GX_Blend  blend;
+    FT_UInt   i, nc;
+
+
+    if ( face->blend == NULL )
+    {
+      if ( ( error = TT_Get_MM_Var( face, NULL ) ) != 0 )
+        return error;
+    }
+
+    blend = face->blend;
+
+    nc = num_coords;
+    if ( num_coords > blend->num_axis )
+    {
+      FT_TRACE2(( "TT_Get_MM_Blend: only using first %d of %d coordinates\n",
+                  blend->num_axis, num_coords ));
+      nc = blend->num_axis;
+    }
+
+    for ( i = 0; i < nc; ++i )
+      coords[i] = blend->normalizedcoords[i];
+    for ( ; i < num_coords; i++ )
+      coords[i] = 0;
+
+    return FT_Err_Ok;
+  }
+
+
+  /*************************************************************************/
+  /*                                                                       */
+  /* <Function>                                                            */
   /*    TT_Set_Var_Design                                                  */
   /*                                                                       */
   /* <Description>                                                         */
