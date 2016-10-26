@@ -1,3 +1,10 @@
+2016-10-25  Alexei Podtelezhnikov  <apodtele@gmail.com>
+
+	[cff] Correct cmap format reporting (#24819).
+
+	* src/cff/cffdrivr.c (cff_get_cmap_info): Throw an error on synthetic
+	charmap instead of guessing its format and language.
+
 2016-10-22  Werner Lemberg  <wl@gnu.org>
 
 	[truetype] Fix SCANTYPE instruction (#49394).

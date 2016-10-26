@@ -494,9 +494,6 @@
     FT_Library  library = FT_FACE_LIBRARY( face );
 
 
-    cmap_info->language = 0;
-    cmap_info->format   = 0;
-
     if ( cmap->clazz != &CFF_CMAP_ENCODING_CLASS_REC_GET &&
          cmap->clazz != &CFF_CMAP_UNICODE_CLASS_REC_GET  )
     {
@@ -509,6 +506,8 @@
       if ( service && service->get_cmap_info )
         error = service->get_cmap_info( charmap, cmap_info );
     }
+    else
+      error = FT_THROW( Invalid_CharMap_Format );
 
     return error;
   }
