@@ -1,3 +1,11 @@
+2016-10-26  Werner Lemberg  <wl@gnu.org>
+
+	* src/type1/t1load.c (parse_subrs): Fix limit check.
+
+	Reported as
+
+	  https://bugs.chromium.org/p/oss-fuzz/issues/detail?id=81
+
 2016-10-25  Alexei Podtelezhnikov  <apodtele@gmail.com>
 
 	[cff] Correct cmap format reporting (#24819).

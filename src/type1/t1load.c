@@ -1433,7 +1433,7 @@
     }
 
     /* we certainly need more than 8 bytes per subroutine */
-    if ( parser->root.limit > parser->root.cursor                      &&
+    if ( parser->root.limit >= parser->root.cursor                     &&
          num_subrs > ( parser->root.limit - parser->root.cursor ) >> 3 )
     {
       /*
