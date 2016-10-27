@@ -563,10 +563,11 @@
       record_size &= 0xFFFFU;
 
     /* The limit for `num_records' is a heuristic value. */
-    if ( version != 0           ||
-         num_records > 255      ||
-         record_size > 0x10001L ||
-         record_size < 4        )
+    if ( version != 0                   ||
+         num_records > 255              ||
+         ( num_records > 0            &&
+           ( record_size > 0x10001L ||
+             record_size < 4        ) ) )
     {
       error = FT_THROW( Invalid_File_Format );
       goto Fail;

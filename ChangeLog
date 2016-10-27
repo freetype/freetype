@@ -1,3 +1,12 @@
+2016-10-27  Werner Lemberg  <wl@gnu.org>
+
+	[truetype] Fix commit from 2014-11-24.
+
+	Problem reported by Hin-Tak Leung  <htl10@users.sourceforge.net>.
+
+	* src/truetype/ttpload.c (tt_face_load_hdmx): Fix file checking
+	logic.
+
 2016-10-26  Werner Lemberg  <wl@gnu.org>
 
 	Add `FT_Get_{MM,Var}_Blend_Coordinates' functions.
