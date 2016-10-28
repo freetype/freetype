@@ -3964,7 +3964,7 @@
 
       exc->step_ins = FALSE;
 
-      exc->loopcall_counter += args[0];
+      exc->loopcall_counter += (FT_ULong)args[0];
       if ( exc->loopcall_counter > exc->loopcall_counter_max )
         exc->error = FT_THROW( Execution_Too_Long );
     }
@@ -5180,7 +5180,7 @@
                 FT_Long*        args )
   {
     if ( args[0] >= 0 )
-      exc->GS.scan_type = (FT_Int)args[0] & 0xFFFFU;
+      exc->GS.scan_type = (FT_Int)args[0] & 0xFFFF;
   }
 
 
@@ -7550,8 +7550,8 @@
   FT_EXPORT_DEF( FT_Error )
   TT_RunIns( TT_ExecContext  exc )
   {
-    FT_Long    ins_counter = 0;  /* executed instructions counter */
-    FT_Long    num_twilight_points;
+    FT_ULong   ins_counter = 0;  /* executed instructions counter */
+    FT_ULong   num_twilight_points;
     FT_UShort  i;
 
 #ifdef TT_SUPPORT_SUBPIXEL_HINTING_INFINALITY
@@ -7593,11 +7593,14 @@
                                   2 * ( exc->pts.n_points + exc->cvtSize ) );
     if ( exc->twilight.n_points > num_twilight_points )
     {
+      if ( num_twilight_points > 0xFFFFU )
+        num_twilight_points = 0xFFFFU;
+
       FT_TRACE5(( "TT_RunIns: Resetting number of twilight points\n"
                   "           from %d to the more reasonable value %d\n",
                   exc->twilight.n_points,
                   num_twilight_points ));
-      exc->twilight.n_points = num_twilight_points;
+      exc->twilight.n_points = (FT_UShort)num_twilight_points;
     }
 
     /* Set up loop detectors.  We restrict the number of LOOPCALL loops  */

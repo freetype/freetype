@@ -1,3 +1,14 @@
+2016-10-29  Werner Lemberg  <wl@gnu.org>
+
+	[truetype] Remove clang warnings.
+
+	* src/truetype/ttinterp.h (TT_ExecContextRec): Using `FT_ULong' for
+	loop counter handling.
+
+	* src/truetype/ttinterp.c: Updated.
+	(Ins_SCANTYPE): Use signed constant.
+	(TT_RunIns): Ensure `num_twilight_points' is 16bit.
+
 2016-10-27  Werner Lemberg  <wl@gnu.org>
 
 	[truetype] Fix commit from 2014-11-24.
