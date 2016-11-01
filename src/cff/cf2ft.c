@@ -104,8 +104,8 @@
       FT_Memory  memory = font->memory;
       (void)memory;
 
-      FT_FREE( font->lastNormalizedVector );
-      FT_FREE( font->blendVector );
+      FT_FREE( font->blend.lastNDV );
+      FT_FREE( font->blend.BV );
     }
   }
 

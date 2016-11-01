@@ -134,6 +134,24 @@ FT_BEGIN_HEADER
 
   } CFF_VStoreRec, *CFF_VStore;
 
+  /* forward reference */
+  typedef struct  CFF_FontRec_ *CFF_Font;
+
+  typedef struct CFF_BlendRec_
+  {
+    /* object to manage one cached blend vector                       */
+    /* Note: NDV is long 32/64 bit, while BV is 16.16 (FT_Int32)      */
+    FT_Bool         builtBV;        /* blendV has been built          */
+    FT_Bool         usedBV;         /* blendV has been used           */
+    CFF_Font        font;           /* top level font struct          */
+    FT_UInt         lastVsindex;    /* last vsindex used              */
+    FT_UInt         lenNDV;         /* normDV length (aka numAxes)    */
+    FT_Fixed *      lastNDV;        /* last NDV used                  */
+    FT_UInt         lenBV;          /* BlendV length (aka numMasters) */
+    FT_Int32 *      BV;             /* current blendV (per DICT/glyph)*/
+
+  } CFF_BlendRec, *CFF_Blend;
+
 
   typedef struct  CFF_FontRecDictRec_
   {
@@ -185,12 +203,14 @@ FT_BEGIN_HEADER
     FT_UShort  num_axes;
 
     /* fields for CFF2 */
-    FT_UInt    vsindex;
     FT_ULong   vstore_offset;
     FT_UInt    maxstack;
 
   } CFF_FontRecDictRec, *CFF_FontRecDict;
 
+
+  /* forward reference */
+  typedef struct  CFF_SubFontRec_ *CFF_SubFont;
 
   typedef struct  CFF_PrivateRec_
   {
@@ -225,7 +245,8 @@ FT_BEGIN_HEADER
     FT_Pos    nominal_width;
 
     /* fields for CFF2 */
-    FT_UInt    vsindex;
+    FT_UInt     vsindex;
+    CFF_SubFont subfont;
 
   } CFF_PrivateRec, *CFF_Private;
 
@@ -254,6 +275,23 @@ FT_BEGIN_HEADER
     CFF_FontRecDictRec  font_dict;
     CFF_PrivateRec      private_dict;
 
+    /* fields for CFF2 */
+    CFF_BlendRec        blend;      /* current blend vector       */
+    FT_UInt             lenNDV;     /* current length NDV or zero */
+    FT_Fixed *          NDV;        /* ptr to current NDV or NULL */
+
+    /* blend_stack is a writable buffer to hold blend results           */
+    /* this buffer is to the side of the normal cff parser stack        */
+    /* cff_parse_blend()/cff_blend_doBlend() pushes blend results here  */
+    /* the normal stack then points to these values instead of the DICT */
+    /* because all other operators in Private DICT clear the stack,     */
+    /* blend_stack could be cleared at each operator other than blend   */
+    /* blended values are stored as 5-byte fixed point                  */
+    FT_Byte *           blend_stack;    /* base of stack allocation     */
+    FT_Byte *           blend_top;      /* first empty slot             */
+    FT_UInt             blend_used;     /* number of bytes in use       */
+    FT_UInt             blend_alloc;    /* number of bytes allocated    */
+
     CFF_IndexRec        local_subrs_index;
     FT_Byte**           local_subrs; /* array of pointers into Local Subrs INDEX data */
 
@@ -265,8 +303,10 @@ FT_BEGIN_HEADER
 
   typedef struct  CFF_FontRec_
   {
+    FT_Library       library;
     FT_Stream        stream;
-    FT_Memory        memory;
+    FT_Memory        memory;        /* TODO: take this from stream->memory? */
+    FT_ULong         base_offset;   /* offset to start of CFF */
     FT_UInt          num_faces;
     FT_UInt          num_glyphs;
 
@@ -323,7 +363,7 @@ FT_BEGIN_HEADER
     /* since version 2.4.12 */
     FT_Generic       cf2_instance;
 
-    CFF_VStoreRec    vstore;
+    CFF_VStoreRec    vstore;        /* parsed vstore structure */
 
   } CFF_FontRec, *CFF_Font;
 

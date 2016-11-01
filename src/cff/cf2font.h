@@ -76,11 +76,10 @@ FT_BEGIN_HEADER
     CF2_Fixed   ppem;              /* transform-dependent              */
 
     /* variation data */
-    CF2_UInt    lastVsindex;         /* last vsindex used              */
-    CF2_UInt    lenNormalizedVector; /* normDV length (aka numAxes)    */
-    FT_Fixed *  lastNormalizedVector;/* last normDV used               */
-    CF2_UInt    lenBlendVector;      /* blendV length (aka numMasters) */
-    CF2_Fixed * blendVector;         /* current blendV (per glyph)     */
+    CFF_BlendRec blend;             /* cached charstring blend vector  */
+    CF2_UInt     vsindex;           /* current vsindex                 */
+    CF2_UInt     lenNDV;            /* current length NDV or zero      */
+    FT_Fixed *   NDV;               /* ptr to current NDV or NULL      */
 
     CF2_Int  unitsPerEm;
 

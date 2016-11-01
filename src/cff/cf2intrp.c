@@ -406,22 +406,22 @@
   /* store results into the first numBlends values,   */
   /* then pop remaining arguments.                    */
   static void
-  cf2_doBlend( const CF2_Font  font,
+  cf2_doBlend( const CFF_Blend blend,
                CF2_Stack       opStack,
                CF2_UInt        numBlends )
   {
     CF2_UInt delta;
     CF2_UInt base;
     CF2_UInt i, j;
-    CF2_UInt numOperands = (CF2_UInt)(numBlends * font->lenBlendVector);
+    CF2_UInt numOperands = (CF2_UInt)(numBlends * blend->lenBV);
 
     base = cf2_stack_count( opStack ) - numOperands;
     delta = base + numBlends;
     for ( i = 0; i < numBlends; i++ )
     {
-      const CF2_Fixed * weight = &font->blendVector[1];
+      const CF2_Fixed * weight = &blend->BV[1];
       CF2_Fixed sum = cf2_stack_getReal( opStack, i+base );    /* start with first term */
-      for ( j = 1; j < font->lenBlendVector; j++ )
+      for ( j = 1; j < blend->lenBV; j++ )
       {
         sum += FT_MulFix( *weight++, cf2_stack_getReal( opStack, delta++ ));
       }
@@ -620,9 +620,23 @@
 
       case cf2_cmdBLEND:
         {
-          FT_UInt numBlends = (FT_UInt)cf2_stack_popInt( opStack );
+          FT_UInt numBlends;
+
           FT_TRACE4(( " blend\n"  ));
-          cf2_doBlend( font, opStack, numBlends );
+
+          if ( !font->isCFF2 )
+            break;    /* clear stack & ignore */
+
+          /* check cached blend vector */
+          if ( cff_blend_check_vector( &font->blend, font->vsindex, font->lenNDV, font->NDV ) )
+          {
+            cff_blend_build_vector( &font->blend, font->vsindex, font->lenNDV, font->NDV );
+          }
+          /* do the blend */
+          numBlends = (FT_UInt)cf2_stack_popInt( opStack );
+          cf2_doBlend( &font->blend, opStack, numBlends );
+
+          font->blend.usedBV = TRUE;
         }
         continue;     /* do not clear the stack */
 

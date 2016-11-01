@@ -28,6 +28,7 @@
 
 #include "cfferrs.h"
 
+#define FT_FIXED_ONE ((FT_Fixed)0x10000)
 
 #if 1
 
@@ -1113,6 +1114,7 @@
   {
     FT_Memory  memory = stream->memory;
     FT_Error   error = FT_THROW( Invalid_File_Format );
+    FT_ULong * dataOffsetArray = NULL;
     FT_UInt    i,j;
 
     /* no offset means no vstore to parse */
@@ -1122,8 +1124,6 @@
       FT_UInt   vsOffset;
       FT_UInt   format;
       FT_ULong  regionListOffset;
-      FT_ULong  dataOffsetArrayOffset;
-      FT_ULong  varDataOffset;
 
       /* we need to parse the table to determine its size */
       if ( FT_STREAM_SEEK( base_offset + offset ) ||
@@ -1147,9 +1147,15 @@
            FT_READ_USHORT( vstore->dataCount ) )
         goto Exit;
 
-      /* save position of item variation data offsets */
-      /* we'll parse region list first, then come back */
-      dataOffsetArrayOffset = FT_STREAM_POS();
+      /* make temporary copy of item variation data offsets */
+      /* we'll parse region list first, then come back      */
+      if ( FT_NEW_ARRAY( dataOffsetArray, vstore->dataCount ) )
+        goto Exit;
+      for ( i=0; i<vstore->dataCount; i++ )
+      {
+        if ( FT_READ_ULONG( dataOffsetArray[i] ) )
+          goto Exit;
+      }
 
       /* parse regionList and axisLists*/
       if ( FT_STREAM_SEEK( vsOffset + regionListOffset ) ||
@@ -1179,10 +1185,7 @@
         }
       }
 
-      /* re-position to parse varData and regionIndices */
-      if ( FT_STREAM_SEEK( dataOffsetArrayOffset ) )
-        goto Exit;
-
+      /* use dataOffsetArray now to parse varData items */
       if ( FT_NEW_ARRAY( vstore->varData, vstore->dataCount ) )
         goto Exit;
 
@@ -1191,10 +1194,7 @@
         FT_UInt itemCount, shortDeltaCount;
         CFF_VarData* data = &vstore->varData[i];
 
-        if ( FT_READ_ULONG( varDataOffset ) )
-          goto Exit;
-
-        if ( FT_STREAM_SEEK( vsOffset + varDataOffset ) )
+        if ( FT_STREAM_SEEK( vsOffset + dataOffsetArray[i] ) )
           goto Exit;
 
         /* ignore these two values because CFF2 has no delta sets */
@@ -1220,9 +1220,252 @@
     error = FT_Err_Ok;
 
   Exit:
+    FT_FREE( dataOffsetArray );
     if ( error )
       cff_vstore_done( vstore, memory );
     return error;
+  }
+
+  /* clear blend stack (after blend values are consumed)    */
+  /* TODO: should do this in cff_run_parse, but subFont     */
+  /* ref is not available there.                            */
+  /* allocation is not changed when stack is cleared        */
+  static void
+  cff_blend_clear( CFF_SubFont      subFont )
+  {
+    subFont->blend_top = subFont->blend_stack;
+    subFont->blend_used = 0;
+  }
+
+  /* Blend numOperands on the stack,                        */
+  /* store results into the first numBlends values,         */
+  /* then pop remaining arguments.                          */
+  /* This is comparable to cf2_doBlend() but                */
+  /* the cffparse stack is different and can't be written.  */
+  /* Blended values are written to a different buffer,      */
+  /* using reserved operator 255.                           */
+  /* Blend calculation is done in 16.16 fixed point.        */
+  static FT_Error
+  cff_blend_doBlend( CFF_SubFont       subFont,
+                     CFF_Parser        parser,
+                     FT_UInt           numBlends )
+  {
+    FT_UInt delta;
+    FT_UInt base;
+    FT_UInt i, j;
+    FT_UInt size;
+    CFF_Blend blend = &subFont->blend;
+    FT_Memory memory = subFont->blend.font->memory; /* for FT_REALLOC */
+    FT_Error         error = FT_Err_Ok;             /* for FT_REALLOC */
+
+    FT_UInt numOperands = (FT_UInt)(numBlends * blend->lenBV);
+
+    /* check if we have room for numBlends values at blend_top  */
+    size = 5 * numBlends;           /* add 5 bytes per entry    */
+    if ( subFont->blend_used + size > subFont->blend_alloc )
+    {
+      /* increase or allocate blend_stack and reset blend_top   */
+      /* prepare to append numBlends values to the buffer       */
+      if ( FT_REALLOC( subFont->blend_stack, subFont->blend_alloc, subFont->blend_alloc + size ) )
+        goto Exit;
+      subFont->blend_top = subFont->blend_stack + subFont->blend_used;
+      subFont->blend_alloc += size;
+    }
+    subFont->blend_used += size;
+
+    base = ( parser->top - 1 - parser->stack ) - numOperands;
+    delta = base + numBlends;
+    for ( i = 0; i < numBlends; i++ )
+    {
+      const FT_Int32 * weight = &blend->BV[1];
+
+      /* convert inputs to 16.16 fixed point */
+      FT_Int32 sum = cff_parse_num( parser, &parser->stack[ i+base ] ) << 16;
+      for ( j = 1; j < blend->lenBV; j++ )
+      {
+        sum += FT_MulFix( *weight++, cff_parse_num( parser, &parser->stack[ delta++ ] ) << 16 );
+      }
+      /* point parser stack to new value on blend_stack */
+      parser->stack[ i+base ] = subFont->blend_top; 
+
+      /* push blended result as Type 2 5-byte fixed point number                    */
+      /* (except that host byte order is used )                                     */
+      /* this will not conflict with actual DICTs because 255 is a reserved opcode  */
+      /* in both CFF and CFF2 DICTs                                                 */
+      /* see cff_parse_num() for decode of this, which rounds to an integer         */
+      *subFont->blend_top++ = 255;
+      *(( FT_UInt32 *)subFont->blend_top ) = sum;               /* write 4 bytes    */
+      subFont->blend_top += 4;
+    }
+    /* leave only numBlends results on parser stack */
+    parser->top = &parser->stack[ base + numBlends ];
+
+Exit:
+    return error;
+  }
+
+  /* compute a blend vector from variation store index and normalized vector    */
+  /* based on pseudo-code in OpenType Font Variations Overview                  */
+  /* Note: lenNDV == 0 produces a default blend vector, (1,0,0,...)             */
+  static FT_Error
+  cff_blend_build_vector( CFF_Blend blend,
+                          FT_UInt   vsindex,
+                          FT_UInt   lenNDV, FT_Fixed * NDV )
+  {
+    FT_Error   error  = FT_Err_Ok;              /* for FT_REALLOC */
+    FT_Memory  memory = blend->font->memory;    /* for FT_REALLOC */
+    FT_UInt len;
+    CFF_VStore vs;
+    CFF_VarData* varData;
+    FT_UInt master;
+
+    FT_UNUSED( lenNDV );
+    FT_UNUSED( vsindex );
+
+    FT_ASSERT( lenNDV == 0 || NDV );
+    FT_TRACE4(( "cff_blend_build_vector\n" ));
+
+    blend->builtBV = FALSE;
+
+    /* vs = cf2_getVStore( font->decoder ); */
+    vs = &blend->font->vstore;
+
+    /* VStore and fvar must be consistent */
+    if ( lenNDV != 0 && lenNDV != vs->axisCount )
+    {
+      FT_TRACE4(( "cff_blend_build_vector: Axis count mismatch\n" ));
+      error = FT_THROW( Invalid_File_Format );
+      goto Exit;
+    }
+    if ( vsindex >= vs->dataCount )
+    {
+      FT_TRACE4(( "cff_blend_build_vector: vsindex out of range\n" ));
+      error = FT_THROW( Invalid_File_Format );
+      goto Exit;
+    }
+
+    /* select the item variation data structure */
+    varData = &vs->varData[vsindex];
+
+    /* prepare buffer for the blend vector */
+    len = varData->regionIdxCount + 1;    /* add 1 for default component */
+    if ( FT_REALLOC( blend->BV, blend->lenBV * sizeof( *blend->BV ), len * sizeof( *blend->BV )) )
+      goto Exit;
+    blend->lenBV = len;
+
+    /* outer loop steps through master designs to be blended */
+    for ( master=0; master<len; master++ )
+    {
+      FT_UInt j;
+      FT_UInt idx;
+      CFF_VarRegion* varRegion;
+
+      /* default factor is always one */
+      if ( master == 0 )
+      {
+        blend->BV[master] = FT_FIXED_ONE;
+        FT_TRACE4(( "blend vector len %d\n [ %f ", len, (double)(blend->BV[master] / 65536. ) ));
+        continue;
+      }
+
+      /* VStore array does not include default master, so subtract one */
+      idx = varData->regionIndices[master-1];
+      varRegion = &vs->varRegionList[idx];
+
+      if ( idx >= vs->regionCount )
+      {
+        FT_TRACE4(( "cf2_buildBlendVector: region index out of range\n" ));
+        error = FT_THROW( Invalid_File_Format );
+        goto Exit;
+      }
+
+      /* Note: lenNDV could be zero                                     */
+      /* In that case, build default blend vector (1,0,0...)            */
+      /* In the normal case, init each component to 1 before inner loop */
+      if ( lenNDV != 0 )
+        blend->BV[master] = FT_FIXED_ONE; /* default */
+
+      /* inner loop steps through axes in this region */
+      for ( j=0; j<lenNDV; j++ )
+      {
+        CFF_AxisCoords* axis = &varRegion->axisList[j];
+        FT_Fixed axisScalar;
+
+        /* compute the scalar contribution of this axis */
+        /* ignore invalid ranges */
+        if ( axis->startCoord > axis->peakCoord || axis->peakCoord > axis->endCoord )
+          axisScalar = FT_FIXED_ONE;
+        else if ( axis->startCoord < 0 && axis->endCoord > 0 && axis->peakCoord != 0 )
+          axisScalar = FT_FIXED_ONE;
+        /* peak of 0 means ignore this axis */
+        else if ( axis->peakCoord == 0 )
+          axisScalar = FT_FIXED_ONE;
+        /* ignore this region if coords are out of range */
+        else if ( NDV[j] < axis->startCoord || NDV[j] > axis->endCoord )
+          axisScalar = 0;
+        /* calculate a proportional factor */
+        else
+        {
+          if ( NDV[j] == axis->peakCoord )
+            axisScalar = FT_FIXED_ONE;
+          else if ( NDV[j] < axis->peakCoord )
+            axisScalar = FT_DivFix( NDV[j] - axis->startCoord,
+                                    axis->peakCoord - axis->startCoord );
+          else
+            axisScalar = FT_DivFix( axis->endCoord - NDV[j],
+                                    axis->endCoord - axis->peakCoord );
+        }
+        /* take product of all the axis scalars */
+        blend->BV[master] = FT_MulFix( blend->BV[master], axisScalar );
+      }
+      FT_TRACE4(( ", %f ", (double)blend->BV[master] / 65536. ));
+    }
+    FT_TRACE4(( "]\n" ));
+
+    /* record the parameters used to build the blend vector */
+    blend->lastVsindex = vsindex;
+    if ( lenNDV != 0 )
+    {
+      /* user has set a normalized vector */
+      if ( FT_REALLOC( blend->lastNDV,
+                       blend->lenNDV * sizeof( *NDV ),
+                       lenNDV * sizeof( *NDV )) )
+      {
+        error = FT_THROW( Out_Of_Memory );
+        goto Exit;
+      }
+      blend->lenNDV = lenNDV;
+      FT_MEM_COPY( blend->lastNDV,
+                   NDV,
+                   lenNDV * sizeof( *NDV ));
+    }
+    blend->builtBV = TRUE;
+
+  Exit:
+    return error;
+ }
+
+  /* lenNDV is zero for default vector              */
+  /* return TRUE if blend vector needs to be built  */
+  static FT_Bool
+  cff_blend_check_vector( CFF_Blend  blend,
+                          FT_UInt    vsindex,
+                          FT_UInt    lenNDV,
+                          FT_Fixed * NDV )
+  {
+    if ( !blend->builtBV ||
+          blend->lastVsindex != vsindex ||
+          blend->lenNDV != lenNDV ||
+          ( lenNDV &&
+            memcmp( NDV,
+            blend->lastNDV,
+                    lenNDV * sizeof( *NDV ) ) != 0 ) )
+    {
+      /* need to build blend vector */
+      return TRUE;
+    }
+
+    return FALSE;
   }
 
   static void
@@ -1477,27 +1720,94 @@
   }
 
 
+  /* parse private dictionary as separate function                      */
+  /* first call is always from cff_face_init, so NDV has not been set   */
+  /* for CFF2 variation, cff_slot_load must call each time NDV changes  */
   static FT_Error
-  cff_subfont_load( CFF_SubFont  font,
+  cff_load_private_dict( CFF_Font    font,
+                         CFF_SubFont subfont,
+                         FT_UInt   lenNDV, FT_Fixed * NDV )
+  {
+    FT_Error         error = FT_Err_Ok;
+    CFF_ParserRec    parser;
+    CFF_FontRecDict  top  = &subfont->font_dict;
+    CFF_Private      priv = &subfont->private_dict;
+    FT_Stream        stream = font->stream;
+
+    if ( top->private_offset == 0 || top->private_size == 0 )
+      goto Exit;        /* no private DICT, do nothing */
+
+    /* store handle needed to access memory, vstore for blend */
+    subfont->blend.font = font;
+
+    /* set defaults */
+    FT_MEM_ZERO( priv, sizeof ( *priv ) );
+
+    priv->blue_shift       = 7;
+    priv->blue_fuzz        = 1;
+    priv->lenIV            = -1;
+    priv->expansion_factor = (FT_Fixed)( 0.06 * 0x10000L );
+    priv->blue_scale       = (FT_Fixed)( 0.039625 * 0x10000L * 1000 );
+
+    /* provide inputs for blend calculations */
+    priv->subfont = subfont;
+    subfont->lenNDV = lenNDV;
+    subfont->NDV = NDV;
+
+    cff_parser_init( &parser,
+                     font->cff2 ? CFF2_CODE_PRIVATE : CFF_CODE_PRIVATE,
+                     priv,
+                     font->library,
+                     top->num_designs,
+                     top->num_axes );
+    if ( FT_STREAM_SEEK( font->base_offset + top->private_offset ) ||
+         FT_FRAME_ENTER( top->private_size )                 )
+      goto Exit;
+
+    FT_TRACE4(( " private dictionary:\n" ));
+    error = cff_parser_run( &parser,
+                            (FT_Byte*)stream->cursor,
+                            (FT_Byte*)stream->limit );
+    FT_FRAME_EXIT();
+    if ( error )
+      goto Exit;
+
+    /* ensure that `num_blue_values' is even */
+    priv->num_blue_values &= ~1;
+
+  Exit:
+    cff_blend_clear( subfont );
+    return error;
+  }
+
+  /* There are 3 ways to call this function, distinguished by code: */
+  /* CFF_CODE_TOPDICT for either a CFF Top DICT or a CFF Font DICT  */
+  /* CFF2_CODE_TOPDICT for CFF2 Top DICT                            */
+  /* CFF2_CODE_FONTDICT for CFF2 Font DICT                          */
+
+  static FT_Error
+  cff_subfont_load( CFF_SubFont  subfont,
                     CFF_Index    idx,
                     FT_UInt      font_index,
                     FT_Stream    stream,
                     FT_ULong     base_offset,
                     FT_Library   library,
-                    FT_UInt      code )
+                    FT_UInt      code,
+                    CFF_Font     font )
   {
     FT_Error         error;
     CFF_ParserRec    parser;
     FT_Byte*         dict = NULL;
     FT_ULong         dict_len;
-    CFF_FontRecDict  top  = &font->font_dict;
-    CFF_Private      priv = &font->private_dict;
-    FT_Bool          cff2 = (code == CFF2_CODE_TOPDICT );
+    CFF_FontRecDict  top  = &subfont->font_dict;
+    CFF_Private      priv = &subfont->private_dict;
+    FT_Bool          cff2 = (code == CFF2_CODE_TOPDICT ||
+                             code == CFF2_CODE_FONTDICT );
 
 
     cff_parser_init( &parser,
                      code,
-                     &font->font_dict,
+                     &subfont->font_dict,
                      library,
                      0,
                      0 );
@@ -1555,40 +1865,12 @@
     if ( top->cid_registry != 0xFFFFU )
       goto Exit;
 
-    /* parse the private dictionary, if any */
-    if ( top->private_offset && top->private_size )
-    {
-      /* set defaults */
-      FT_MEM_ZERO( priv, sizeof ( *priv ) );
-
-      priv->blue_shift       = 7;
-      priv->blue_fuzz        = 1;
-      priv->lenIV            = -1;
-      priv->expansion_factor = (FT_Fixed)( 0.06 * 0x10000L );
-      priv->blue_scale       = (FT_Fixed)( 0.039625 * 0x10000L * 1000 );
-
-      cff_parser_init( &parser,
-                       code == CFF2_CODE_FONTDICT ? CFF2_CODE_PRIVATE : CFF_CODE_PRIVATE,
-                       priv,
-                       library,
-                       top->num_designs,
-                       top->num_axes );
-
-      if ( FT_STREAM_SEEK( base_offset + font->font_dict.private_offset ) ||
-           FT_FRAME_ENTER( font->font_dict.private_size )                 )
-        goto Exit;
-
-      FT_TRACE4(( " private dictionary:\n" ));
-      error = cff_parser_run( &parser,
-                              (FT_Byte*)stream->cursor,
-                              (FT_Byte*)stream->limit );
-      FT_FRAME_EXIT();
-      if ( error )
-        goto Exit;
-
-      /* ensure that `num_blue_values' is even */
-      priv->num_blue_values &= ~1;
-    }
+    /* parse the private dictionary, if any                     */
+    /* CFF2 does not have a private dictionary in the Top DICT  */
+    /* but may have one in a Font DICT. We need to parse        */
+    /* the latter here in order to load any local subrs.        */
+    if ( cff_load_private_dict( font, subfont, 0, 0 ) )
+      goto Exit;
 
     /* read the local subrs, if any */
     if ( priv->local_subrs_offset )
@@ -1597,12 +1879,12 @@
                            priv->local_subrs_offset ) )
         goto Exit;
 
-      error = cff_index_init( &font->local_subrs_index, stream, 1, cff2 );
+      error = cff_index_init( &subfont->local_subrs_index, stream, 1, cff2 );
       if ( error )
         goto Exit;
 
-      error = cff_index_get_pointers( &font->local_subrs_index,
-                                      &font->local_subrs, NULL, NULL );
+      error = cff_index_get_pointers( &subfont->local_subrs_index,
+                                      &subfont->local_subrs, NULL, NULL );
       if ( error )
         goto Exit;
     }
@@ -1620,6 +1902,9 @@
     {
       cff_index_done( &subfont->local_subrs_index );
       FT_FREE( subfont->local_subrs );
+      FT_FREE( subfont->blend.lastNDV );
+      FT_FREE( subfont->blend.BV );
+      FT_FREE( subfont->blend_stack );
     }
   }
 
@@ -1655,29 +1940,38 @@
     FT_ZERO( font );
     FT_ZERO( &string_index );
 
+    font->library = library;
     font->stream = stream;
     font->memory = memory;
     font->cff2   = cff2;
+    base_offset  = font->base_offset = FT_STREAM_POS();
     dict         = &font->top_font.font_dict;
-    base_offset  = FT_STREAM_POS();
 
     /* read CFF font header */
     if ( FT_STREAM_READ_FIELDS( cff_header_fields, font ) )
       goto Exit;
 
-    /* check format */
-    if ( font->version_major != ( cff2 ? 2 : 1 ) ||
-         font->header_size      < 4 )
-    {
-      FT_TRACE2(( "  not a CFF font header\n" ));
-      error = FT_THROW( Unknown_File_Format );
-      goto Exit;
-    }
-
     if ( cff2 )
     {
+      if ( font->version_major != 2 ||
+         font->header_size      < 5 )
+      {
+        FT_TRACE2(( "  not a CFF2 font header\n" ));
+        error = FT_THROW( Unknown_File_Format );
+        goto Exit;
+      }
       if ( FT_READ_USHORT( font->top_dict_length ) )
         goto Exit;
+    }
+    else
+    {
+      if ( font->version_major != 1 ||
+         font->header_size      < 4 )
+      {
+        FT_TRACE2(( "  not a CFF font header\n" ));
+        error = FT_THROW( Unknown_File_Format );
+        goto Exit;
+      }
     }
 
     /* skip the rest of the header */
@@ -1767,7 +2061,8 @@
                               stream,
                               base_offset,
                               library,
-                              cff2 ? CFF2_CODE_TOPDICT : CFF_CODE_TOPDICT );
+                              cff2 ? CFF2_CODE_TOPDICT : CFF_CODE_TOPDICT,
+                              font );
     if ( error )
       goto Exit;
 
@@ -1786,6 +2081,15 @@
       CFF_SubFont   sub = NULL;
       FT_UInt       idx;
 
+
+      /* for CFF2, read the Variation Store if available                    */
+      /* this must follow the Top DICT parse and precede any Private DICT   */
+      error = cff_vstore_load( &font->vstore,
+                               stream,
+                               base_offset,
+                               dict->vstore_offset );
+      if ( error )
+        goto Exit;
 
       /* this is a CID-keyed font, we must now allocate a table of */
       /* sub-fonts, then load each of them separately              */
@@ -1819,7 +2123,8 @@
         FT_TRACE4(( "parsing subfont %u\n", idx ));
         error = cff_subfont_load( sub, &fd_index, idx,
                                   stream, base_offset, library, 
-                                  cff2 ? CFF2_CODE_FONTDICT : CFF_CODE_TOPDICT );
+                                  cff2 ? CFF2_CODE_FONTDICT : CFF_CODE_TOPDICT,
+                                  font );
         if ( error )
           goto Fail_CID;
       }
@@ -1881,14 +2186,6 @@
           goto Exit;
       }
     }
-
-    /* read the Variation Store if available */
-    error = cff_vstore_load( &font->vstore,
-                             stream,
-                             base_offset,
-                             dict->vstore_offset );
-    if ( error )
-      goto Exit;
 
     /* get the font name (/CIDFontName for CID-keyed fonts, */
     /* /FontName otherwise)                                 */

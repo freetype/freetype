@@ -366,9 +366,6 @@
   cf2_font_setup( CF2_Font           font,
                   const CF2_Matrix*  transform )
   {
-    FT_Error   error  = FT_Err_Ok;        /* for FT_REALLOC */
-    FT_Memory  memory = font->memory;     /* for FT_REALLOC */
-
     /* pointer to parsed font object */
     CFF_Decoder*  decoder = font->decoder;
 
@@ -405,25 +402,23 @@
 
     if ( hasVariations )
     {
-      if ( font->lenBlendVector == 0 )
-        needExtraSetup = TRUE;          /* a blend vector is required */
-
+      /* see if Private DICT in this subfont needs to be reparsed          */
       /* Note: lenNormalizedVector is zero until FT_Get_MM_Var() is called */
       cf2_getNormalizedVector( decoder, &lenNormalizedV, &normalizedV );
 
-      /* determine if blend vector needs to be recomputed */
-      if ( font->lastVsindex != subFont->font_dict.vsindex ||
-        lenNormalizedV == 0 ||
-        font->lenNormalizedVector != lenNormalizedV ||
-        ( lenNormalizedV &&
-          memcmp( normalizedV,
-                  font->lastNormalizedVector,
-                  lenNormalizedV * sizeof( *normalizedV ) ) != 0 ) )
+      if ( cff_blend_check_vector( &subFont->blend,
+                                   subFont->private_dict.vsindex,
+                                   lenNormalizedV, normalizedV ) )
       {
-        font->lastVsindex = subFont->font_dict.vsindex;
-        /* vectors will be copied below, during ExtraSetup */
+        /* blend has changed, reparse */
+        cff_load_private_dict( decoder->cff, subFont, lenNormalizedV, normalizedV );
         needExtraSetup = TRUE;
       }
+      /* store vector inputs for blends in charstring */
+      font->blend.font = subFont->blend.font;           /* copy from subfont */ 
+      font->vsindex = subFont->private_dict.vsindex;    /* initial value for charstring */
+      font->lenNDV = lenNormalizedV;
+      font->NDV = normalizedV;
     }
 
     /* if ppem has changed, we need to recompute some cached data         */
@@ -583,35 +578,6 @@
 
       /* compute blue zones for this instance */
       cf2_blues_init( &font->blues, font );
-
-      /* copy normalized vector used to compute blend vector */
-      if ( hasVariations )
-      {
-        /* if user has set a normalized vector, use it */
-        /* otherwise, assume default */
-        if ( lenNormalizedV != 0 )
-        {
-          /* user has set a normalized vector */
-          if ( FT_REALLOC( font->lastNormalizedVector,
-                           font->lenNormalizedVector,
-                           lenNormalizedV * sizeof( *normalizedV )) )
-          {
-            CF2_SET_ERROR( &font->error, Out_Of_Memory );
-            return;
-          }
-          font->lenNormalizedVector = lenNormalizedV;
-          FT_MEM_COPY( font->lastNormalizedVector,
-                       normalizedV,
-                       lenNormalizedV * sizeof( *normalizedV ));
-        }
-
-        /* build blend vector for this instance */
-        cf2_buildBlendVector( font, font->lastVsindex,
-                              font->lenNormalizedVector,
-                              font->lastNormalizedVector,
-                              &font->lenBlendVector,
-                              &font->blendVector );
-      }
 
     } /* needExtraSetup */
   }

@@ -24,6 +24,7 @@
 #include "cfferrs.h"
 #include "cffpic.h"
 #include "cffgload.h"
+#include "cffload.h"
 
 
   /*************************************************************************/
@@ -403,23 +404,33 @@
 
   /* read a number, either integer or real */
   static FT_Long
-  cff_parse_num( FT_Byte**  d )
+  cff_parse_num( CFF_Parser  parser, FT_Byte**  d )
   {
-    return **d == 30 ? ( cff_parse_real( d[0], d[1], 0, NULL ) >> 16 )
-                     :   cff_parse_integer( d[0], d[1] );
-  }
+    if  ( **d == 30 )
+      /* BCD is truncated to integer */
+      return cff_parse_real( *d, parser->limit, 0, NULL ) >> 16;
+    else if ( **d == 255 )
+      /* 16.16 fixed point is used internally for CFF2 blend results */
+      /* Since these are trusted values, a limit check is not needed */
 
+      /* after the 255, 4 bytes are in host order */
+      /* blend result is rounded to integer       */
+      return (FT_Long) ( *( (FT_UInt32 *) ( d[0] + 1 ) ) + 0x8000U ) >> 16;
+    else
+      return cff_parse_integer( *d, parser->limit );
+  }
 
   /* read a floating point number, either integer or real */
   static FT_Fixed
-  do_fixed( FT_Byte**  d,
+  do_fixed( CFF_Parser parser,
+            FT_Byte**  d,
             FT_Long    scaling )
   {
     if ( **d == 30 )
-      return cff_parse_real( d[0], d[1], scaling, NULL );
+        return cff_parse_real( *d, parser->limit, scaling, NULL );
     else
     {
-      FT_Long  val = cff_parse_integer( d[0], d[1] );
+      FT_Long  val = cff_parse_integer( *d, parser->limit );
 
 
       if ( scaling )
@@ -447,19 +458,21 @@
 
   /* read a floating point number, either integer or real */
   static FT_Fixed
-  cff_parse_fixed( FT_Byte**  d )
+  cff_parse_fixed( CFF_Parser parser,
+                   FT_Byte**  d )
   {
-    return do_fixed( d, 0 );
+    return do_fixed( parser, d, 0 );
   }
 
 
   /* read a floating point number, either integer or real, */
   /* but return `10^scaling' times the number read in      */
   static FT_Fixed
-  cff_parse_fixed_scaled( FT_Byte**  d,
+  cff_parse_fixed_scaled( CFF_Parser parser,
+                          FT_Byte**  d,
                           FT_Long    scaling )
   {
-    return do_fixed( d, scaling );
+    return do_fixed( parser, d, scaling );
   }
 
 
@@ -467,13 +480,14 @@
   /* and return it as precise as possible -- `scaling' returns */
   /* the scaling factor (as a power of 10)                     */
   static FT_Fixed
-  cff_parse_fixed_dynamic( FT_Byte**  d,
+  cff_parse_fixed_dynamic( CFF_Parser parser,
+                           FT_Byte**  d,
                            FT_Long*   scaling )
   {
     FT_ASSERT( scaling );
 
     if ( **d == 30 )
-      return cff_parse_real( d[0], d[1], 0, scaling );
+      return cff_parse_real( *d, parser->limit, 0, scaling );
     else
     {
       FT_Long  number;
@@ -543,7 +557,7 @@
 
       for ( i = 0; i < 6; i++ )
       {
-        values[i] = cff_parse_fixed_dynamic( data++, &scalings[i] );
+        values[i] = cff_parse_fixed_dynamic( parser, data++, &scalings[i] );
         if ( values[i] )
         {
           if ( scalings[i] > max_scaling )
@@ -640,10 +654,10 @@
 
     if ( parser->top >= parser->stack + 4 )
     {
-      bbox->xMin = FT_RoundFix( cff_parse_fixed( data++ ) );
-      bbox->yMin = FT_RoundFix( cff_parse_fixed( data++ ) );
-      bbox->xMax = FT_RoundFix( cff_parse_fixed( data++ ) );
-      bbox->yMax = FT_RoundFix( cff_parse_fixed( data   ) );
+      bbox->xMin = FT_RoundFix( cff_parse_fixed( parser, data++ ) );
+      bbox->yMin = FT_RoundFix( cff_parse_fixed( parser, data++ ) );
+      bbox->xMax = FT_RoundFix( cff_parse_fixed( parser, data++ ) );
+      bbox->yMax = FT_RoundFix( cff_parse_fixed( parser, data   ) );
       error = FT_Err_Ok;
 
       FT_TRACE4(( " [%d %d %d %d]\n",
@@ -672,7 +686,7 @@
       FT_Long  tmp;
 
 
-      tmp = cff_parse_num( data++ );
+      tmp = cff_parse_num( parser, data++ );
       if ( tmp < 0 )
       {
         FT_ERROR(( "cff_parse_private_dict: Invalid dictionary size\n" ));
@@ -681,7 +695,7 @@
       }
       dict->private_size = (FT_ULong)tmp;
 
-      tmp = cff_parse_num( data );
+      tmp = cff_parse_num( parser, data );
       if ( tmp < 0 )
       {
         FT_ERROR(( "cff_parse_private_dict: Invalid dictionary offset\n" ));
@@ -726,7 +740,7 @@
     /* currently, we handle only the first argument */
     if ( parser->top >= parser->stack + 5 )
     {
-      FT_Long  num_designs = cff_parse_num( parser->stack );
+      FT_Long  num_designs = cff_parse_num( parser, parser->stack );
 
 
       if ( num_designs > 16 || num_designs < 2 )
@@ -763,11 +777,11 @@
 
     if ( parser->top >= parser->stack + 3 )
     {
-      dict->cid_registry = (FT_UInt)cff_parse_num( data++ );
-      dict->cid_ordering = (FT_UInt)cff_parse_num( data++ );
+      dict->cid_registry = (FT_UInt)cff_parse_num( parser, data++ );
+      dict->cid_ordering = (FT_UInt)cff_parse_num( parser, data++ );
       if ( **data == 30 )
         FT_TRACE1(( "cff_parse_cid_ros: real supplement is rounded\n" ));
-      dict->cid_supplement = cff_parse_num( data );
+      dict->cid_supplement = cff_parse_num( parser, data );
       if ( dict->cid_supplement < 0 )
         FT_TRACE1(( "cff_parse_cid_ros: negative supplement %d is found\n",
                    dict->cid_supplement ));
@@ -786,26 +800,31 @@
   static FT_Error
   cff_parse_blend( CFF_Parser  parser )
   {
-    FT_UInt          num_args = (FT_UInt)( parser->top - parser->stack );
+    /* blend operator can only be used in a Private DICT */
+    CFF_Private      priv = (CFF_Private)parser->object;
+    CFF_SubFont      subFont;
+    CFF_Blend        blend;
     FT_UInt          numBlends;
     FT_Error         error;
 
     error = FT_ERR( Stack_Underflow );
     FT_TRACE1(( " cff_parse_blend\n" ));
 
-    if ( parser->top >= parser->stack + 1 ) /* at least one operand */
+    if ( !priv || !priv->subfont )
     {
-      /* top of stack gives number of blends */
-      numBlends = (FT_UInt)cff_parse_num( parser->top - 1 );
-
-      if ( numBlends < num_args )
-      {
-        /* for testing, just reduce stack to first numBlends values */
-        parser->top = parser->stack + numBlends;
-
-        error = FT_Err_Ok;
-      }
+      error = FT_ERR( Invalid_File_Format );
+      goto Exit;
     }
+    subFont = priv->subfont;
+    blend = &subFont->blend;
+
+    if ( cff_blend_check_vector( blend, priv->vsindex, subFont->lenNDV, subFont->NDV ) )
+        cff_blend_build_vector( blend, priv->vsindex, subFont->lenNDV, subFont->NDV );
+
+    numBlends = (FT_UInt)cff_parse_num( parser, parser->top - 1 );
+
+    error = cff_blend_doBlend(subFont, parser, numBlends );
+  Exit:
     return error;
   }
 
@@ -1109,8 +1128,10 @@
     {
       FT_UInt  v = *p;
 
-
-      if ( v >= 27 && v != 31 )
+      /* opcode 31 is legacy MM T2 operator, not a number           */
+      /* opcode 255 is reserved and should not appear in fonts      */
+      /* it is used internally for CFF2 blends                      */
+      if ( v >= 27 && v != 31 && v != 255 )
       {
         /* it's a number; we will push its position on the stack */
         if ( parser->top - parser->stack >= CFF_MAX_STACK_DEPTH )
@@ -1322,15 +1343,15 @@
             case cff_kind_bool:
             case cff_kind_string:
             case cff_kind_num:
-              val = cff_parse_num( parser->stack );
+              val = cff_parse_num( parser, parser->stack );
               goto Store_Number;
 
             case cff_kind_fixed:
-              val = cff_parse_fixed( parser->stack );
+              val = cff_parse_fixed( parser, parser->stack );
               goto Store_Number;
 
             case cff_kind_fixed_thousand:
-              val = cff_parse_fixed_scaled( parser->stack, 3 );
+              val = cff_parse_fixed_scaled( parser, parser->stack, 3 );
 
             Store_Number:
               switch ( field->size )
@@ -1399,7 +1420,7 @@
                 val = 0;
                 while ( num_args > 0 )
                 {
-                  val += cff_parse_num( data++ );
+                  val += cff_parse_num( parser, data++ );
                   switch ( field->size )
                   {
                   case (8 / FT_CHAR_BIT):
@@ -1442,8 +1463,9 @@
 
       Found:
         /* clear stack */
+        /* TODO: could clear blend stack here, but we don't have access to subFont */
         if ( field->kind != cff_kind_blend )
-            parser->top = parser->stack;
+          parser->top = parser->stack;
       }
       p++;
     }
