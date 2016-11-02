@@ -432,6 +432,8 @@
     FT_ULong        table_offset;
     FT_ULong        store_offset;
     FT_ULong        map_offset;
+    FT_ULong *      dataOffsetArray = NULL;
+
 
     FT_TRACE2(( "HVAR " ));
 
@@ -465,8 +467,6 @@
     /* parse item variation store */
     {
       FT_UShort format;
-      FT_ULong data_offset_array_offset;
-      FT_ULong data_offset;
       FT_ULong region_offset;
       GX_HVStore itemStore;
       FT_UInt i, j, k;
@@ -490,13 +490,20 @@
       hvarTable = blend->hvar_table;
       itemStore = &hvarTable->itemStore;
 
+      /* read top level fields */
       if ( FT_READ_ULONG( region_offset ) ||
            FT_READ_USHORT( itemStore->dataCount ) )
         goto Exit;
 
-      /* save position of item variation data offsets */
-      /* we'll parse region list first, then come back */
-      data_offset_array_offset = FT_STREAM_POS();
+      /* make temporary copy of item variation data offsets */
+      /* we'll parse region list first, then come back      */
+      if ( FT_NEW_ARRAY( dataOffsetArray, itemStore->dataCount ) )
+        goto Exit;
+      for ( i=0; i<itemStore->dataCount; i++ )
+      {
+        if ( FT_READ_ULONG( dataOffsetArray[i] ) )
+          goto Exit;
+      }
 
       /* parse array of region records (region list) */
       if ( FT_STREAM_SEEK( table_offset + store_offset + region_offset ) )
@@ -533,50 +540,47 @@
       }
       /* end of region list parse */
 
-      /* parse array of item variation data subtables */
-      if ( FT_STREAM_SEEK( data_offset_array_offset ) )
+      /* use dataOffsetArray now to parse varData items */
+      if ( FT_NEW_ARRAY( itemStore->varData, itemStore->dataCount ) )
         goto Exit;
 
-      if ( FT_NEW_ARRAY( itemStore->varData, itemStore->dataCount ) )
-          goto Exit;
-
-      hvarData = itemStore->varData;
       for ( i=0; i<itemStore->dataCount; i++ )
       {
-        if ( FT_READ_ULONG( data_offset ) )
+        hvarData = &itemStore->varData[i];
+
+        if ( FT_STREAM_SEEK( table_offset + store_offset + dataOffsetArray[i] ) )
           goto Exit;
 
-        if ( FT_STREAM_SEEK( table_offset + store_offset + data_offset ) ||
-             FT_READ_USHORT( hvarData->itemCount ) ||
+        if ( FT_READ_USHORT( hvarData->itemCount ) ||
              FT_READ_USHORT( shortDeltaCount ) ||
-             FT_READ_USHORT( hvarData->regionCount ) )
+             FT_READ_USHORT( hvarData->regionIdxCount ) )
           goto Exit;
 
         /* check some data consistency */
-        if ( shortDeltaCount > hvarData->regionCount )
+        if ( shortDeltaCount > hvarData->regionIdxCount )
         {
           FT_TRACE2(( "bad short count %d or region count %d\n",
-                      shortDeltaCount, hvarData->regionCount ));
+                      shortDeltaCount, hvarData->regionIdxCount ));
           error = FT_THROW( Invalid_File_Format );
           goto Exit;
         }
-        if ( hvarData->regionCount > itemStore->regionCount )
+        if ( hvarData->regionIdxCount > itemStore->regionCount )
         {
           FT_TRACE2(( "inconsistent regionCount %d in varData[ %d ]\n",
-                      hvarData->regionCount, i ));
+                      hvarData->regionIdxCount, i ));
           error = FT_THROW( Invalid_File_Format );
           goto Exit;
         }
 
         /* parse region indices */
-        if ( FT_NEW_ARRAY( hvarData->regionIndices, hvarData->regionCount ) )
+        if ( FT_NEW_ARRAY( hvarData->regionIndices, hvarData->regionIdxCount ) )
           goto Exit;
 
-        for ( j=0; j<hvarData->regionCount; j++ )
+        for ( j=0; j<hvarData->regionIdxCount; j++ )
         {
           if ( FT_READ_USHORT( hvarData->regionIndices[j] ) )
             goto Exit;
-          if ( hvarData->regionIndices[j] >= hvarData->regionCount )
+          if ( hvarData->regionIndices[j] >= itemStore->regionCount )
           {
             FT_TRACE2(( "bad region index %d\n", hvarData->regionIndices[j] ));
             error = FT_THROW( Invalid_File_Format );
@@ -584,15 +588,15 @@
           }
         }
 
-        /* parse delta set                                                   */
-        /* on input, deltas are ( shortDeltaCount + regionCount ) bytes each */
-        /* on output, deltas are expanded to regionCount shorts each         */
-        if ( FT_NEW_ARRAY( hvarData->deltaSet, hvarData->regionCount * hvarData->itemCount ) )
+        /* parse delta set                                                      */
+        /* on input, deltas are ( shortDeltaCount + regionIdxCount ) bytes each */
+        /* on output, deltas are expanded to regionIdxCount shorts each         */
+        if ( FT_NEW_ARRAY( hvarData->deltaSet, hvarData->regionIdxCount * hvarData->itemCount ) )
           goto Exit;
 
         /* the delta set is stored as a 2-dimensional array of shorts   */
         /* sign-extend signed bytes to signed shorts                    */
-        for ( j=0; j<hvarData->itemCount * hvarData->regionCount; )
+        for ( j=0; j<hvarData->itemCount * hvarData->regionIdxCount; )
         {
           for ( k=0; k<shortDeltaCount; k++,j++ )
           {
@@ -602,7 +606,7 @@
               goto Exit;
             hvarData->deltaSet[j] = delta;
           }
-          for ( ; k<hvarData->regionCount; k++,j++ )
+          for ( ; k<hvarData->regionIdxCount; k++,j++ )
           {
             /* read the (signed) byte deltas */
             FT_Char delta;
@@ -690,6 +694,7 @@
     error = FT_Err_Ok;
 
   Exit:
+    FT_FREE( dataOffsetArray );
     if ( error == FT_Err_Ok )
       blend->hvar_checked = TRUE;
   }
@@ -742,11 +747,11 @@
     outerIndex = face->blend->hvar_table->widthMap.outerIndex[ gindex ];
     innerIndex = face->blend->hvar_table->widthMap.innerIndex[ gindex ];
     varData = &face->blend->hvar_table->itemStore.varData[ outerIndex ];
-    deltaSet = &varData->deltaSet[ face->blend->hvar_table->itemStore.regionCount * innerIndex ];
+    deltaSet = &varData->deltaSet[ varData->regionIdxCount * innerIndex ];
 
-    /* see pseudo code from Font Variations Overview */
+    /* see pseudo code from Font Variations Overview         */
     /* outer loop steps through master designs to be blended */
-    for ( master=0; master<varData->regionCount; master++ )
+    for ( master=0; master<varData->regionIdxCount; master++ )
     {
       FT_UInt regionIndex = varData->regionIndices[ master ];
       GX_AxisCoords axis = face->blend->hvar_table->itemStore.varRegionList[ regionIndex ].axisList;
@@ -797,7 +802,6 @@
     FT_TRACE4(( "]\n" ));
 
     /* apply the accumulated adjustment to the default to derive the interpolated value */
-    /* TODO check rounding: *aadvance is short */
     *aadvance += FT_fixedToInt( netAdjustment );
 
 Exit:

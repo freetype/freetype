@@ -74,32 +74,32 @@ FT_BEGIN_HEADER
   typedef struct GX_HVarData_
   {
     FT_UInt         itemCount;          /* # delta sets per item           */
-    FT_UInt         regionCount;        /* # regions in this var data      */
+    FT_UInt         regionIdxCount;     /* # region indices in this data   */
     FT_UInt*        regionIndices;      /* array of regionCount indices    */
                                         /* these index the varRegionList   */
     FT_Short*       deltaSet;           /* array of itemCount deltas       */
-                                        /* use innerIndex for this array */
+                                        /* use innerIndex for this array   */
   } GX_HVarDataRec, *GX_HVarData;
 
-  typedef struct GX_AxisCoords_     /* contribution of one axis to a region */
+  typedef struct GX_AxisCoords_ /* contribution of one axis to a region    */
   {
     FT_Fixed        startCoord;
-    FT_Fixed        peakCoord;      /* zero means no effect (factor = 1) */
+    FT_Fixed        peakCoord;      /* zero means no effect (factor = 1)   */
     FT_Fixed        endCoord;
   } GX_AxisCoordsRec, *GX_AxisCoords;
 
   typedef struct GX_HVarRegion_
   {
-    GX_AxisCoords   axisList;        /* array of axisCount records */
+    GX_AxisCoords   axisList;               /* array of axisCount records  */
   } GX_HVarRegionRec, *GX_HVarRegion;
 
-  typedef struct  GX_HVStoreRec_    /* HVAR item variation store  */
+  typedef struct  GX_HVStoreRec_            /* HVAR item variation store   */
   {
     FT_UInt         dataCount;
-    GX_HVarData     varData;        /* array of dataCount records */
-                                    /* use outerIndex for this array */
+    GX_HVarData     varData;            /* array of dataCount records      */
+                                        /* use outerIndex for this array   */
     FT_UShort       axisCount;
-    FT_UInt         regionCount;    /* total # regions defined    */
+    FT_UInt         regionCount;        /* total # regions defined         */
     GX_HVarRegion   varRegionList;
 
   } GX_HVStoreRec, *GX_HVStore;
@@ -107,16 +107,16 @@ FT_BEGIN_HEADER
   typedef struct GX_WidthMapRec_
   {
       FT_UInt       mapCount;
-      FT_UInt*      outerIndex;     /* indices to item var data */
-      FT_UInt*      innerIndex;     /* indices to delta set */
+      FT_UInt*      outerIndex;             /* indices to item var data    */
+      FT_UInt*      innerIndex;             /* indices to delta set        */
   } GX_WidthMapRec, *GX_WidthMap;
 
   typedef struct  GX_HVarRec_
   {
-    GX_HVStoreRec      itemStore;       /* Item Variation Store  */
-    GX_WidthMapRec     widthMap;      /* Advance Width Mapping */
-    /* GX_LSBMap       LsbMap;         Not implemented       */
-    /* GX_RSBMap       RsbMap;         Not implemented       */
+    GX_HVStoreRec      itemStore;           /* Item Variation Store        */
+    GX_WidthMapRec     widthMap;            /* Advance Width Mapping       */
+    /* GX_LSBMap       LsbMap;                 Not implemented             */
+    /* GX_RSBMap       RsbMap;                 Not implemented             */
   } GX_HVarTableRec, *GX_HVarTable;
 
   /*************************************************************************/
