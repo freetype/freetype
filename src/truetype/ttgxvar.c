@@ -1310,26 +1310,33 @@
     a = mmvar->axis;
     for ( i = 0; i < num_coords; i++, a++ )
     {
-      FT_TRACE5(( "  %.4f\n", coords[i] / 65536.0 ));
-      if ( coords[i] > a->maximum || coords[i] < a->minimum )
+      FT_Fixed  coord = coords[i];
+
+
+      FT_TRACE5(( "  %.4f\n", coord / 65536.0 ));
+      if ( coord > a->maximum || coord < a->minimum )
       {
-        FT_TRACE1(( "TT_Set_Var_Design: normalized design coordinate %.4f\n"
-                    "                   is out of range [%.4f;%.4f]\n",
-                    coords[i] / 65536.0,
-                    a->minimum / 65536.0,
-                    a->maximum / 65536.0 ));
-        error = FT_THROW( Invalid_Argument );
-        goto Exit;
+        FT_TRACE1((
+          "TT_Set_Var_Design: normalized design coordinate %.4f\n"
+          "                   is out of range [%.4f;%.4f]; clamping\n",
+          coord / 65536.0,
+          a->minimum / 65536.0,
+          a->maximum / 65536.0 ));
+
+        if ( coord > a->maximum)
+          coord = a->maximum;
+        else
+          coord = a->minimum;
       }
 
-      if ( coords[i] < a->def )
+      if ( coord < a->def )
         normalized[i] = -FT_DivFix( coords[i] - a->def,
                                     a->minimum - a->def );
-      else if ( a->maximum == a->def )
-        normalized[i] = 0;
-      else
+      else if ( coord > a->def )
         normalized[i] = FT_DivFix( coords[i] - a->def,
                                    a->maximum - a->def );
+      else
+        normalized[i] = 0;
     }
 
     FT_TRACE5(( "\n" ));

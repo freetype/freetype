@@ -1,3 +1,13 @@
+2016-11-03  Behdad Esfahbod  <behdad@behdad.org>
+
+	[truetype] Clamp variation requests to valid range.
+
+	This is required by OpenType 1.8; it also avoids rounding surprises.
+
+	* src/truetype/ttgxvar.c (TT_Set_Var_Design): Clamp design coordinates
+	outside of the allowed range to always stay within the range instead
+	of producing an error.
+
 2016-10-29  Werner Lemberg  <wl@gnu.org>
 
 	[truetype] Remove clang warnings.
