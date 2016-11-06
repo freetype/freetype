@@ -2802,6 +2802,14 @@ FT_BEGIN_HEADER
    *
    *     Currently, this flag is only implemented for TrueType fonts.
    *
+   *   FT_LOAD_BITMAP_METRICS_ONLY ::
+   *     This flag is used to request loading of the metrics and bitmap
+   *     image information of a (possibly embedded) bitmap glyph without
+   *     allocating or copying the bitmap image data itself.  No effect if
+   *     the target glyph is not a bitmap image.
+   *
+   *     This flag unsets @FT_LOAD_RENDER.
+   *
    *   FT_LOAD_CROP_BITMAP ::
    *     Ignored.  Deprecated.
    *
@@ -2848,6 +2856,7 @@ FT_BEGIN_HEADER
   /* Bits 16..19 are used by `FT_LOAD_TARGET_' */
 #define FT_LOAD_COLOR                        ( 1L << 20 )
 #define FT_LOAD_COMPUTE_METRICS              ( 1L << 21 )
+#define FT_LOAD_BITMAP_METRICS_ONLY          ( 1L << 22 )
 
   /* */
 

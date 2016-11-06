@@ -641,6 +641,9 @@
       load_flags &= ~FT_LOAD_RENDER;
     }
 
+    if ( load_flags & FT_LOAD_BITMAP_METRICS_ONLY )
+      load_flags &= ~FT_LOAD_RENDER;
+
     /*
      * Determine whether we need to auto-hint or not.
      * The general rules are:

@@ -1,4 +1,37 @@
-2016-10-29  Werner Lemberg  <wl@gnu.org>
+2016-11-06  Seigo Nonaka  <nona@google.com>
+	    Werner Lemberg  <wl@gnu.org>
+
+	Introduce a way of quickly retrieving (embedded) bitmap metrics.
+
+	`FT_Load_Glyph' doesn't generate a bitmap for a non-bitmap glyph
+	until the user calls `FT_Render_Glyph'.  However, it always
+	allocates memory for bitmaps and copies or decodes the contents of a
+	bitmap glyph, which can be quite slow for PNG data.
+
+	* include/freetype/freetype.h (FT_LOAD_BITMAP_METRICS_ONLY): New
+	macro.
+
+	* src/base/ftobjs.c (FT_Load_Glyph): Unset FT_LOAD_RENDER if
+	FT_LOAD_BITMAP_METRICS_ONLY is used.
+
+	* src/sfnt/ttsbit.c (tt_sbit_decoder_alloc_bitmap,
+	tt_sbit_decoder_load_bitmap): Add argument to control allocation of
+	the glyph slot.
+	(tt_sbit_decoder_load_image, tt_sbit_decoder_load_compound,
+	tt_face_load_sbit_image): Updated.
+
+	* src/pcf/pcfdrivr.c (PCF_Glyph_Load): Quickly exit if
+	`FT_LOAD_BITMAP_METRICS_ONLY' is set.
+
+	* src/pfr/pfrsbit.c, src/pfr/pfrsbit.h (pfr_slot_load_bitmap): Add
+	argument to control allocation of the glyph slot.
+	* src/pfr/pfrobjs (pfr_slot_load): Updated.
+
+	* src/winfonts/winfnt.c (FNT_Load_Glyph): Ditto.
+
+	* docs/CHANGES: Updated.
+
+2016-11-06  Werner Lemberg  <wl@gnu.org>
 
 	Synchronize with gnulib (#49448).
 

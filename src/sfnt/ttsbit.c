@@ -536,7 +536,8 @@
 
 
   static FT_Error
-  tt_sbit_decoder_alloc_bitmap( TT_SBitDecoder  decoder )
+  tt_sbit_decoder_alloc_bitmap( TT_SBitDecoder  decoder,
+                                FT_Bool         metrics_only )
   {
     FT_Error    error = FT_Err_Ok;
     FT_UInt     width, height;
@@ -598,6 +599,9 @@
     /* check that there is no empty image */
     if ( size == 0 )
       goto Exit;     /* exit successfully! */
+
+    if ( metrics_only )
+      goto Exit;     /* only metrics are requested */
 
     error = ft_glyphslot_alloc_bitmap( decoder->face->root.glyph, size );
     if ( error )
@@ -665,7 +669,8 @@
                               FT_UInt         glyph_index,
                               FT_Int          x_pos,
                               FT_Int          y_pos,
-                              FT_UInt         recurse_count );
+                              FT_UInt         recurse_count,
+                              FT_Bool         metrics_only );
 
   typedef FT_Error  (*TT_SBitDecoder_LoadFunc)(
                       TT_SBitDecoder  decoder,
@@ -995,7 +1000,9 @@
                                           gindex,
                                           x_pos + dx,
                                           y_pos + dy,
-                                          recurse_count + 1 );
+                                          recurse_count + 1,
+                                          /* request full bitmap image */
+                                          FALSE );
       if ( error )
         break;
     }
@@ -1077,7 +1084,8 @@
                                FT_ULong        glyph_size,
                                FT_Int          x_pos,
                                FT_Int          y_pos,
-                               FT_UInt         recurse_count )
+                               FT_UInt         recurse_count,
+                               FT_Bool         metrics_only )
   {
     FT_Error   error;
     FT_Stream  stream = decoder->stream;
@@ -1199,10 +1207,14 @@
 
       if ( !decoder->bitmap_allocated )
       {
-        error = tt_sbit_decoder_alloc_bitmap( decoder );
+        error = tt_sbit_decoder_alloc_bitmap( decoder, metrics_only );
+
         if ( error )
           goto Fail;
       }
+
+      if ( metrics_only )
+        goto Fail; /* this is not an error */
 
       error = loader( decoder, p, p_limit, x_pos, y_pos, recurse_count );
     }
@@ -1220,7 +1232,8 @@
                               FT_UInt         glyph_index,
                               FT_Int          x_pos,
                               FT_Int          y_pos,
-                              FT_UInt         recurse_count )
+                              FT_UInt         recurse_count,
+                              FT_Bool         metrics_only )
   {
     FT_Byte*  p          = decoder->eblc_base + decoder->strike_index_array;
     FT_Byte*  p_limit    = decoder->eblc_limit;
@@ -1405,7 +1418,8 @@
                                         image_end,
                                         x_pos,
                                         y_pos,
-                                        recurse_count );
+                                        recurse_count,
+                                        metrics_only );
 
   Failure:
     return FT_THROW( Invalid_Table );
@@ -1567,11 +1581,13 @@
         error = tt_sbit_decoder_init( decoder, face, strike_index, metrics );
         if ( !error )
         {
-          error = tt_sbit_decoder_load_image( decoder,
-                                              glyph_index,
-                                              0,
-                                              0,
-                                              0 );
+          error = tt_sbit_decoder_load_image(
+                    decoder,
+                    glyph_index,
+                    0,
+                    0,
+                    0,
+                    ( load_flags & FT_LOAD_BITMAP_METRICS_ONLY ) != 0 );
           tt_sbit_decoder_done( decoder );
         }
       }
@@ -1592,9 +1608,10 @@
     }
 
     /* Flatten color bitmaps if color was not requested. */
-    if ( !error                                &&
-         !( load_flags & FT_LOAD_COLOR )       &&
-         map->pixel_mode == FT_PIXEL_MODE_BGRA )
+    if ( !error                                        &&
+         !( load_flags & FT_LOAD_COLOR )               &&
+         !( load_flags & FT_LOAD_BITMAP_METRICS_ONLY ) &&
+         map->pixel_mode == FT_PIXEL_MODE_BGRA         )
     {
       FT_Bitmap   new_map;
       FT_Library  library = face->root.glyph->library;

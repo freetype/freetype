@@ -492,8 +492,6 @@ THE SOFTWARE.
     PCF_Metric  metric;
     FT_ULong    bytes;
 
-    FT_UNUSED( load_flags );
-
 
     FT_TRACE1(( "PCF_Glyph_Load: glyph index %d\n", glyph_index ));
 
@@ -550,6 +548,24 @@ THE SOFTWARE.
       return FT_THROW( Invalid_File_Format );
     }
 
+    slot->format      = FT_GLYPH_FORMAT_BITMAP;
+    slot->bitmap_left = metric->leftSideBearing;
+    slot->bitmap_top  = metric->ascent;
+
+    slot->metrics.horiAdvance  = (FT_Pos)( metric->characterWidth * 64 );
+    slot->metrics.horiBearingX = (FT_Pos)( metric->leftSideBearing * 64 );
+    slot->metrics.horiBearingY = (FT_Pos)( metric->ascent * 64 );
+    slot->metrics.width        = (FT_Pos)( ( metric->rightSideBearing -
+                                             metric->leftSideBearing ) * 64 );
+    slot->metrics.height       = (FT_Pos)( bitmap->rows * 64 );
+
+    ft_synthesize_vertical_metrics( &slot->metrics,
+                                    ( face->accel.fontAscent +
+                                      face->accel.fontDescent ) * 64 );
+
+    if ( load_flags & FT_LOAD_BITMAP_METRICS_ONLY )
+      goto Exit;
+
     /* XXX: to do: are there cases that need repadding the bitmap? */
     bytes = (FT_ULong)bitmap->pitch * bitmap->rows;
 
@@ -581,21 +597,6 @@ THE SOFTWARE.
         break;
       }
     }
-
-    slot->format      = FT_GLYPH_FORMAT_BITMAP;
-    slot->bitmap_left = metric->leftSideBearing;
-    slot->bitmap_top  = metric->ascent;
-
-    slot->metrics.horiAdvance  = (FT_Pos)( metric->characterWidth * 64 );
-    slot->metrics.horiBearingX = (FT_Pos)( metric->leftSideBearing * 64 );
-    slot->metrics.horiBearingY = (FT_Pos)( metric->ascent * 64 );
-    slot->metrics.width        = (FT_Pos)( ( metric->rightSideBearing -
-                                             metric->leftSideBearing ) * 64 );
-    slot->metrics.height       = (FT_Pos)( bitmap->rows * 64 );
-
-    ft_synthesize_vertical_metrics( &slot->metrics,
-                                    ( face->accel.fontAscent +
-                                      face->accel.fontDescent ) * 64 );
 
   Exit:
     return error;

@@ -37,6 +37,9 @@ CHANGES BETWEEN 2.7 and 2.7.1
       blend  coordinates of the currently  selected variation instance
       has been added to the Multiple Masters interface.
 
+    - A new load flag `FT_LOAD_BITMAP_METRICS_ONLY' to retrieve bitmap
+      information without loading the (embedded) bitmap itself.
+
 
 ======================================================================
 
