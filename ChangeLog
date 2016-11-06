@@ -1,3 +1,13 @@
+2016-10-29  Werner Lemberg  <wl@gnu.org>
+
+	Synchronize with gnulib (#49448).
+
+	* include/freetype/config/ftconfig.h, builds/unix/ftconfig.in,
+	builds/vms/ftconfig.h (FT_TYPEOF): Update code to use definition in
+	current version of `intprops.h'.
+	Other minor synchronization to reduce code differences between the
+	three files.
+
 2016-11-03  Behdad Esfahbod  <behdad@behdad.org>
 
 	[truetype] Clamp variation requests to valid range.
