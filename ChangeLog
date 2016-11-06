@@ -1,3 +1,19 @@
+2016-11-06  Werner Lemberg  <wl@gnu.org>
+
+	[sfnt] Speed up `sbix' lookup.
+
+	This also fixes a bug introduced in 2016-10-01 which prevents
+	display of embedded bitmap fonts that use the `sbix' format.
+
+	* src/sfnt/ttsbit.c (tt_face_load_sbit): Store `sbix' size and
+	offset also in `ebdt_size' and `ebdt_start', respectively.  This
+	makes the test for an embedded bitmap data table succeed for this
+	format.
+
+	(tt_face_load_strike_metrics) <TT_SBIT_TABLE_TYPE_SBIX>: Use
+	`ebdt_size' and `ebdt_start'
+	(tt_face_load_sbix_image): Ditto.
+
 2016-11-06  Seigo Nonaka  <nona@google.com>
 	    Werner Lemberg  <wl@gnu.org>
 

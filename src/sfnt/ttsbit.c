@@ -48,6 +48,7 @@
   {
     FT_Error  error;
     FT_ULong  table_size;
+    FT_ULong  table_start;
 
 
     face->sbit_table       = NULL;
@@ -82,6 +83,8 @@
       error = FT_THROW( Invalid_File_Format );
       goto Exit;
     }
+
+    table_start = FT_STREAM_POS();
 
     switch ( (FT_UInt)face->sbit_table_type )
     {
@@ -202,7 +205,14 @@
     face->ebdt_start = 0;
     face->ebdt_size  = 0;
 
-    if ( face->sbit_table_type != TT_SBIT_TABLE_TYPE_NONE )
+    if ( face->sbit_table_type == TT_SBIT_TABLE_TYPE_SBIX )
+    {
+      /* the `sbix' table is self-contained; */
+      /* it has no associated data table     */
+      face->ebdt_start = table_start;
+      face->ebdt_size  = table_size;
+    }
+    else if ( face->sbit_table_type != TT_SBIT_TABLE_TYPE_NONE )
     {
       FT_ULong  ebdt_size;
 
@@ -389,7 +399,6 @@
         FT_UInt         offset;
         FT_UShort       upem, ppem, resolution;
         TT_HoriHeader  *hori;
-        FT_ULong        table_size;
         FT_Pos          ppem_; /* to reduce casts */
 
         FT_Error  error;
@@ -399,15 +408,11 @@
         p      = face->sbit_table + 8 + 4 * strike_index;
         offset = FT_NEXT_ULONG( p );
 
-        error = face->goto_table( face, TTAG_sbix, stream, &table_size );
-        if ( error )
-          return error;
-
-        if ( offset + 4  > table_size )
+        if ( offset + 4 > face->ebdt_size )
           return FT_THROW( Invalid_File_Format );
 
-        if ( FT_STREAM_SEEK( FT_STREAM_POS() + offset ) ||
-             FT_FRAME_ENTER( 4 )                        )
+        if ( FT_STREAM_SEEK( face->ebdt_start + offset ) ||
+             FT_FRAME_ENTER( 4 )                         )
           return error;
 
         ppem       = FT_GET_USHORT();
@@ -1440,8 +1445,7 @@
                            FT_Bitmap           *map,
                            TT_SBit_MetricsRec  *metrics )
   {
-    FT_UInt   sbix_pos, strike_offset, glyph_start, glyph_end;
-    FT_ULong  table_size;
+    FT_UInt   strike_offset, glyph_start, glyph_end;
     FT_Int    originOffsetX, originOffsetY;
     FT_Tag    graphicType;
     FT_Int    recurse_depth = 0;
@@ -1460,21 +1464,18 @@
     p = face->sbit_table + 8 + 4 * strike_index;
     strike_offset = FT_NEXT_ULONG( p );
 
-    error = face->goto_table( face, TTAG_sbix, stream, &table_size );
-    if ( error )
-      return error;
-    sbix_pos = FT_STREAM_POS();
-
   retry:
     if ( glyph_index > (FT_UInt)face->root.num_glyphs )
       return FT_THROW( Invalid_Argument );
 
-    if ( strike_offset >= table_size                          ||
-         table_size - strike_offset < 4 + glyph_index * 4 + 8 )
+    if ( strike_offset >= face->ebdt_size                          ||
+         face->ebdt_size - strike_offset < 4 + glyph_index * 4 + 8 )
       return FT_THROW( Invalid_File_Format );
 
-    if ( FT_STREAM_SEEK( sbix_pos + strike_offset + 4 + glyph_index * 4 ) ||
-         FT_FRAME_ENTER( 8 )                                              )
+    if ( FT_STREAM_SEEK( face->ebdt_start  +
+                         strike_offset + 4 +
+                         glyph_index * 4   ) ||
+         FT_FRAME_ENTER( 8 )                 )
       return error;
 
     glyph_start = FT_GET_ULONG();
@@ -1484,13 +1485,13 @@
 
     if ( glyph_start == glyph_end )
       return FT_THROW( Invalid_Argument );
-    if ( glyph_start > glyph_end                ||
-         glyph_end - glyph_start < 8            ||
-         table_size - strike_offset < glyph_end )
+    if ( glyph_start > glyph_end                     ||
+         glyph_end - glyph_start < 8                 ||
+         face->ebdt_size - strike_offset < glyph_end )
       return FT_THROW( Invalid_File_Format );
 
-    if ( FT_STREAM_SEEK( sbix_pos + strike_offset + glyph_start ) ||
-         FT_FRAME_ENTER( glyph_end - glyph_start )                )
+    if ( FT_STREAM_SEEK( face->ebdt_start + strike_offset + glyph_start ) ||
+         FT_FRAME_ENTER( glyph_end - glyph_start )                        )
       return error;
 
     originOffsetX = FT_GET_SHORT();
