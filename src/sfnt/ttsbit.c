@@ -1071,6 +1071,7 @@
                            decoder->stream->memory,
                            p,
                            png_len,
+                           FALSE,
                            FALSE );
 
   Exit:
@@ -1443,7 +1444,8 @@
                            FT_UInt              glyph_index,
                            FT_Stream            stream,
                            FT_Bitmap           *map,
-                           TT_SBit_MetricsRec  *metrics )
+                           TT_SBit_MetricsRec  *metrics,
+                           FT_Bool              metrics_only )
   {
     FT_UInt   strike_offset, glyph_start, glyph_end;
     FT_Int    originOffsetX, originOffsetY;
@@ -1522,7 +1524,8 @@
                              stream->memory,
                              stream->cursor,
                              glyph_end - glyph_start - 8,
-                             TRUE );
+                             TRUE,
+                             metrics_only );
 #else
       error = FT_THROW( Unimplemented_Feature );
 #endif
@@ -1595,12 +1598,14 @@
       break;
 
     case TT_SBIT_TABLE_TYPE_SBIX:
-      error = tt_face_load_sbix_image( face,
-                                       strike_index,
-                                       glyph_index,
-                                       stream,
-                                       map,
-                                       metrics );
+      error = tt_face_load_sbix_image(
+                face,
+                strike_index,
+                glyph_index,
+                stream,
+                map,
+                metrics,
+                ( load_flags & FT_LOAD_BITMAP_METRICS_ONLY ) != 0 );
       break;
 
     default:
