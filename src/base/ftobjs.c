@@ -4217,7 +4217,7 @@
     if ( ft_trace_levels[trace_bitmap] >= 3 )
     {
       /* we convert to a single bitmap format for computing the checksum */
-      if ( !error )
+      if ( !error && slot->bitmap.buffer )
       {
         FT_Bitmap  bitmap;
         FT_Error   err;

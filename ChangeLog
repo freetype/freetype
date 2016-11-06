@@ -1,5 +1,9 @@
 2016-11-06  Werner Lemberg  <wl@gnu.org>
 
+	* src/base/ftobjs.c (FT_Render_Glyph_Internal): Fix tracing.
+
+2016-11-06  Werner Lemberg  <wl@gnu.org>
+
 	[sfnt] Improve FT_LOAD_BITMAP_METRICS_ONLY for `sbix' format.
 
 	It's unavoidable to call the PNG engine, but to get the metrics it
