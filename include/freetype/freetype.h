@@ -2326,7 +2326,10 @@ FT_BEGIN_HEADER
   /*    FT_Select_Size                                                     */
   /*                                                                       */
   /* <Description>                                                         */
-  /*    Select a bitmap strike.                                            */
+  /*    Select a bitmap strike.  To be more precise, this function sets    */
+  /*    the scaling factors of the active @FT_Size object in a face so     */
+  /*    that bitmaps from this particular strike are taken by              */
+  /*    @FT_Load_Glyph and friends.                                        */
   /*                                                                       */
   /* <InOut>                                                               */
   /*    face         :: A handle to a target face object.                  */
@@ -2349,6 +2352,8 @@ FT_BEGIN_HEADER
   /*    place); otherwise, FreeType simply ignores bitmap strikes.  The    */
   /*    same is true for all named instances that are different from the   */
   /*    default instance.                                                  */
+  /*                                                                       */
+  /*    Don't use this function if you are using the FreeType cache API.   */
   /*                                                                       */
   FT_EXPORT( FT_Error )
   FT_Select_Size( FT_Face  face,
