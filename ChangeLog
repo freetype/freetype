@@ -1,3 +1,11 @@
+2016-11-10  Werner Lemberg  <wl@gnu.org>
+
+	Fix `lcd_weights' array size.
+
+	* include/freetype/internal/ftobjs.h (FT_LibraryRec): Do it.
+
+	Reported by Nikolaus.
+
 2016-11-06  Werner Lemberg  <wl@gnu.org>
 
 	* src/base/ftobjs.c (FT_Render_Glyph_Internal): Fix tracing.

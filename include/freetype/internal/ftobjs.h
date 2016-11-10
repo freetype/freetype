@@ -875,7 +875,7 @@ FT_BEGIN_HEADER
 #ifdef FT_CONFIG_OPTION_SUBPIXEL_RENDERING
     FT_LcdFilter             lcd_filter;
     FT_Int                   lcd_extra;        /* number of extra pixels */
-    FT_Byte                  lcd_weights[7];   /* filter weights, if any */
+    FT_Byte                  lcd_weights[5];   /* filter weights, if any */
     FT_Bitmap_LcdFilterFunc  lcd_filter_func;  /* filtering callback     */
 #endif
 
