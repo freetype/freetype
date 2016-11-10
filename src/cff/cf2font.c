@@ -415,8 +415,9 @@
         needExtraSetup = TRUE;
       }
       /* store vector inputs for blends in charstring */
-      font->blend.font = subFont->blend.font;           /* copy from subfont */ 
-      font->vsindex = subFont->private_dict.vsindex;    /* initial value for charstring */
+      font->blend.font = subFont->blend.font;           /* copy from subfont               */
+      font->blend.usedBV = FALSE;                       /* clear state of charstring blend */
+      font->vsindex = subFont->private_dict.vsindex;    /* initial value for charstring    */
       font->lenNDV = lenNormalizedV;
       font->NDV = normalizedV;
     }

@@ -139,7 +139,13 @@ FT_BEGIN_HEADER
 
   typedef struct CFF_BlendRec_
   {
-    /* object to manage one cached blend vector                       */
+    /* This object manages one cached blend vector.                   */
+    /* There is a BlendRec for Private DICT parsing in each subfont   */
+    /* and a BlendRec for charstrings in CF2_Font instance data.      */
+    /* A cached BV may be used across DICTs or Charstrings if inputs  */
+    /* have not changed.                                              */
+    /* usedBV is reset at the start of each parse or charstring.      */
+    /* vsindex cannot be changed after a BV is used.                  */
     /* Note: NDV is long 32/64 bit, while BV is 16.16 (FT_Int32)      */
     FT_Bool         builtBV;        /* blendV has been built          */
     FT_Bool         usedBV;         /* blendV has been used           */

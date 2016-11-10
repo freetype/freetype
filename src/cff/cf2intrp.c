@@ -215,7 +215,7 @@
     cf2_cmdESC,          /* 12 */
     cf2_cmdRESERVED_13,  /* 13 */
     cf2_cmdENDCHAR,      /* 14 */
-    cf2_cmdRESERVED_15,  /* 15 */
+    cf2_cmdVSINDEX,      /* 15 */
     cf2_cmdBLEND,        /* 16 */
     cf2_cmdRESERVED_17,  /* 17 */
     cf2_cmdHSTEMHM,      /* 18 */
@@ -612,11 +612,24 @@
       case cf2_cmdRESERVED_2:
       case cf2_cmdRESERVED_9:
       case cf2_cmdRESERVED_13:
-      case cf2_cmdRESERVED_15:
       case cf2_cmdRESERVED_17:
         /* we may get here if we have a prior error */
         FT_TRACE4(( " unknown op (%d)\n", op1 ));
         break;
+
+      case cf2_cmdVSINDEX:
+        {
+          if ( font->blend.usedBV )
+          {
+            /* vsindex not allowed after blend */
+            lastError = FT_THROW( Invalid_Glyph_Format );
+            goto exit;
+          }
+
+          font->vsindex = (FT_UInt)cf2_stack_popInt( opStack );
+          FT_TRACE4(( " %d\n", font->vsindex ));
+          break;
+        }
 
       case cf2_cmdBLEND:
         {
@@ -630,7 +643,9 @@
           /* check cached blend vector */
           if ( cff_blend_check_vector( &font->blend, font->vsindex, font->lenNDV, font->NDV ) )
           {
-            cff_blend_build_vector( &font->blend, font->vsindex, font->lenNDV, font->NDV );
+            lastError = cff_blend_build_vector( &font->blend, font->vsindex, font->lenNDV, font->NDV );
+            if ( lastError != FT_Err_Ok )
+              goto exit;
           }
           /* do the blend */
           numBlends = (FT_UInt)cf2_stack_popInt( opStack );

@@ -1258,7 +1258,16 @@
     FT_Memory memory = subFont->blend.font->memory; /* for FT_REALLOC */
     FT_Error         error = FT_Err_Ok;             /* for FT_REALLOC */
 
+    /* compute expected number of operands for this blend */
     FT_UInt numOperands = (FT_UInt)(numBlends * blend->lenBV);
+    FT_UInt count = parser->top - 1 - parser->stack;
+
+    if ( numOperands > count )
+    {
+      FT_TRACE4(( " cff_blend_doBlend: Stack underflow %d args\n", count ));
+      error = FT_THROW( Stack_Underflow );
+      goto Exit;
+    }
 
     /* check if we have room for numBlends values at blend_top  */
     size = 5 * numBlends;           /* add 5 bytes per entry    */
@@ -1273,8 +1282,8 @@
     }
     subFont->blend_used += size;
 
-    base = ( parser->top - 1 - parser->stack ) - numOperands;
-    delta = base + numBlends;
+    base = count - numOperands;     /* index of first blend arg */
+    delta = base + numBlends;       /* index of first delta arg */
     for ( i = 0; i < numBlends; i++ )
     {
       const FT_Int32 * weight = &blend->BV[1];
@@ -1323,23 +1332,21 @@ Exit:
     FT_UNUSED( vsindex );
 
     FT_ASSERT( lenNDV == 0 || NDV );
-    FT_TRACE4(( "cff_blend_build_vector\n" ));
 
     blend->builtBV = FALSE;
 
-    /* vs = cf2_getVStore( font->decoder ); */
     vs = &blend->font->vstore;
 
     /* VStore and fvar must be consistent */
     if ( lenNDV != 0 && lenNDV != vs->axisCount )
     {
-      FT_TRACE4(( "cff_blend_build_vector: Axis count mismatch\n" ));
+      FT_TRACE4(( " cff_blend_build_vector: Axis count mismatch\n" ));
       error = FT_THROW( Invalid_File_Format );
       goto Exit;
     }
     if ( vsindex >= vs->dataCount )
     {
-      FT_TRACE4(( "cff_blend_build_vector: vsindex out of range\n" ));
+      FT_TRACE4(( " cff_blend_build_vector: vsindex out of range\n" ));
       error = FT_THROW( Invalid_File_Format );
       goto Exit;
     }
@@ -1364,7 +1371,7 @@ Exit:
       if ( master == 0 )
       {
         blend->BV[master] = FT_FIXED_ONE;
-        FT_TRACE4(( "blend vector len %d\n [ %f ", len, (double)(blend->BV[master] / 65536. ) ));
+        FT_TRACE4(( "   build blend vector len %d\n   [ %f ", len, (double)(blend->BV[master] / 65536. ) ));
         continue;
       }
 
@@ -1374,7 +1381,7 @@ Exit:
 
       if ( idx >= vs->regionCount )
       {
-        FT_TRACE4(( "cf2_buildBlendVector: region index out of range\n" ));
+        FT_TRACE4(( " cf2_buildBlendVector: region index out of range\n" ));
         error = FT_THROW( Invalid_File_Format );
         goto Exit;
       }
@@ -1739,6 +1746,7 @@ Exit:
 
     /* store handle needed to access memory, vstore for blend */
     subfont->blend.font = font;
+    subfont->blend.usedBV = FALSE;  /* clear state */
 
     /* set defaults */
     FT_MEM_ZERO( priv, sizeof ( *priv ) );
@@ -1869,7 +1877,8 @@ Exit:
     /* CFF2 does not have a private dictionary in the Top DICT  */
     /* but may have one in a Font DICT. We need to parse        */
     /* the latter here in order to load any local subrs.        */
-    if ( cff_load_private_dict( font, subfont, 0, 0 ) )
+    error = cff_load_private_dict( font, subfont, 0, 0 );
+    if ( error )
       goto Exit;
 
     /* read the local subrs, if any */
