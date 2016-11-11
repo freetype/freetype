@@ -1379,7 +1379,8 @@
         /* close path if still open */
         cf2_glyphpath_closeOpenPath( &glyphPath );
 
-        if ( cf2_stack_count( opStack ) > 1 )
+        /* disable seac for CFF2 (charstring ending with args on stack) */
+        if ( !font->isCFF2 && cf2_stack_count( opStack ) > 1 )
         {
           /* must be either 4 or 5 --                       */
           /* this is a (deprecated) implied `seac' operator */
