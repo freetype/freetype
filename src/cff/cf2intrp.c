@@ -547,8 +547,10 @@
      * If one of the above operators occurs without explicitly specifying
      * a width, we assume the default width.
      *
+     * CFF2 charstrings always return the default width (0)
+     *
      */
-    haveWidth = FALSE;
+    haveWidth = font->isCFF2 ? TRUE : FALSE;
     *width    = cf2_getDefaultWidthX( decoder );
 
     /*
