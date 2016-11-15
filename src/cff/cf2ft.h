@@ -67,6 +67,9 @@ FT_BEGIN_HEADER
   FT_LOCAL( CFF_VStore )
   cf2_getVStore( CFF_Decoder*  decoder );
 
+  FT_LOCAL_DEF ( FT_UInt )
+  cf2_getMaxstack( CFF_Decoder* decoder );
+
 
   FT_LOCAL_DEF( void )
   cf2_getNormalizedVector( CFF_Decoder*  decoder,

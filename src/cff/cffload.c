@@ -1844,6 +1844,9 @@ Exit:
     top->cid_ordering        = 0xFFFFU;
     top->cid_font_name       = 0xFFFFU;
 
+    /* set default stack size */
+    top->maxstack            = cff2 ? 193 : 48;
+
     if ( idx->count )   /* count is nonzero for a real index */
       error = cff_index_access_element( idx, font_index, &dict, &dict_len );
     else

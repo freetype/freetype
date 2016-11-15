@@ -46,8 +46,8 @@
 
 FT_BEGIN_HEADER
 
-
-#define CF2_OPERAND_STACK_SIZE  193/* TODO: this is temporary for CFF2    */
+#define CF2_CFF2_STACK_SIZE     193
+#define CF2_OPERAND_STACK_SIZE  48
 #define CF2_MAX_SUBR            16 /* maximum subroutine nesting;         */
                                    /* only 10 are allowed but there exist */
                                    /* fonts like `HiraKakuProN-W3.ttf'    */

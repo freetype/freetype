@@ -474,6 +474,7 @@
     CF2_Fixed  hintOriginY = curY;
 
     CF2_Stack  opStack = NULL;
+    FT_UInt    stackSize = font->isCFF2 ? CF2_CFF2_STACK_SIZE : CF2_OPERAND_STACK_SIZE;
     FT_Byte    op1;                       /* first opcode byte */
 
     CF2_F16Dot16  storage[CF2_STORAGE_SIZE];    /* for `put' and `get' */
@@ -561,7 +562,14 @@
      */
 
     /* allocate an operand stack */
-    opStack = cf2_stack_init( memory, error );
+    if ( font->isCFF2 )
+    {
+      /* CFF2 font may increase the operand stack size */
+      FT_UInt maxstack = cf2_getMaxstack( decoder );
+      if ( maxstack > stackSize )
+        stackSize = maxstack;
+    }
+    opStack = cf2_stack_init( memory, error, stackSize );
     if ( !opStack )
     {
       lastError = FT_THROW( Out_Of_Memory );

@@ -425,6 +425,16 @@
     return &decoder->cff->vstore;
   }
 
+  /* get maxstack value from CFF2 Top DICT                         */
+  /* Note: CFF2 Font DICT contains only the default maxstack value */
+  FT_LOCAL_DEF ( FT_UInt )
+  cf2_getMaxstack( CFF_Decoder* decoder )
+  {
+    FT_ASSERT( decoder && decoder->cff );
+
+    return decoder->cff->top_font.font_dict.maxstack;
+  }
+
   /* get normalized design vector for current render request */
   /* returns pointer and length                              */
   /* if blend struct is not initialized, return length zero  */
