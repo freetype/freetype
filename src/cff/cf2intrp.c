@@ -562,13 +562,8 @@
      */
 
     /* allocate an operand stack */
-    if ( font->isCFF2 )
-    {
-      /* CFF2 font may increase the operand stack size */
-      FT_UInt maxstack = cf2_getMaxstack( decoder );
-      if ( maxstack > stackSize )
-        stackSize = maxstack;
-    }
+    stackSize = font->isCFF2 ? cf2_getMaxstack( decoder ) : 
+                               CF2_OPERAND_STACK_SIZE;
     opStack = cf2_stack_init( memory, error, stackSize );
     if ( !opStack )
     {

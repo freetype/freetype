@@ -37,22 +37,48 @@
 #define FT_COMPONENT  trace_cffparse
 
 
-  FT_LOCAL_DEF( void )
+  FT_LOCAL_DEF( FT_Error )
   cff_parser_init( CFF_Parser  parser,
                    FT_UInt     code,
                    void*       object,
                    FT_Library  library,
+                   FT_UInt     stackSize,
                    FT_UShort   num_designs,
                    FT_UShort   num_axes )
   {
+    FT_Memory  memory = library->memory;    /* for FT_NEW_ARRAY */
+    FT_Error   error;                       /* for FT_NEW_ARRAY */
+
     FT_MEM_ZERO( parser, sizeof ( *parser ) );
 
-    parser->top         = parser->stack;
+    /*parser->top         = parser->stack;*/
     parser->object_code = code;
     parser->object      = object;
     parser->library     = library;
     parser->num_designs = num_designs;
     parser->num_axes    = num_axes;
+
+    /* allocate the stack buffer */
+    if ( FT_NEW_ARRAY( parser->stack, stackSize ) )
+    {
+      FT_FREE( parser->stack );
+      goto Exit;
+    }
+
+    parser->stackSize = stackSize;
+    parser->top = parser->stack;    /* empty stack */
+
+  Exit:
+    return error;
+  }
+
+
+  FT_LOCAL_DEF( void )
+  cff_parser_done( CFF_Parser parser )
+  {
+    FT_Memory  memory = parser->library->memory;    /* for FT_FREE */
+
+    FT_FREE( parser->stack );
   }
 
 
@@ -865,6 +891,36 @@
     return error;
   }
 
+  /* maxstack operator increases parser and operand stacks for CFF2 */
+  static FT_Error
+  cff_parse_maxstack( CFF_Parser  parser )
+  {
+    /* maxstack operator can only be used in a Top DICT */
+    CFF_FontRecDict  dict = (CFF_FontRecDict)parser->object;
+    FT_Byte**        data = parser->stack;
+    FT_Error         error = FT_Err_Ok;
+
+    if ( !dict )
+    {
+      error = FT_ERR( Invalid_File_Format );
+      goto Exit;
+    }
+
+    dict->maxstack = (FT_UInt)cff_parse_num( parser, data++ );
+    if ( dict->maxstack > CFF2_MAX_STACK )
+      dict->maxstack = CFF2_MAX_STACK;
+    if ( dict->maxstack < CFF2_DEFAULT_STACK )
+      dict->maxstack = CFF2_DEFAULT_STACK;
+
+    FT_TRACE4(( " %d\n", dict->maxstack ));
+    error = FT_Err_Ok;
+
+  Exit:
+    return error;
+  }
+
+
+
 #define CFF_FIELD_NUM( code, name, id )             \
           CFF_FIELD( code, name, id, cff_kind_num )
 #define CFF_FIELD_FIXED( code, name, id )             \
@@ -1171,7 +1227,7 @@
       if ( v >= 27 && v != 31 && v != 255 )
       {
         /* it's a number; we will push its position on the stack */
-        if ( parser->top - parser->stack >= CFF_MAX_STACK_DEPTH )
+        if ( (FT_UInt)( parser->top - parser->stack ) >= parser->stackSize )
           goto Stack_Overflow;
 
         *parser->top++ = p;
@@ -1262,7 +1318,7 @@
           FT_Bool   neg;
 
 
-          if ( parser->top - parser->stack >= CFF_MAX_STACK_DEPTH )
+          if ( parser->top - parser->stack >= parser->stackSize )*/
             goto Stack_Overflow;
 
           *parser->top++ = q;

@@ -107,12 +107,12 @@
 #undef  CFFCODE
 #define CFFCODE       CFF2_CODE_TOPDICT
 
-  CFF_FIELD_CALLBACK( 0x107, font_matrix,         "FontMatrix" )
-  CFF_FIELD_NUM     ( 17,    charstrings_offset,  "CharStrings" )
-  CFF_FIELD_NUM     ( 0x124, cid_fd_array_offset,  "FDArray" )
-  CFF_FIELD_NUM     ( 0x125, cid_fd_select_offset, "FDSelect" )
-  CFF_FIELD_NUM     ( 24,    vstore_offset,       "vstore" )
-  CFF_FIELD_NUM     ( 25,    maxstack,            "maxstack" )
+  CFF_FIELD_CALLBACK( 0x107, font_matrix,              "FontMatrix" )
+  CFF_FIELD_NUM     ( 17,    charstrings_offset,       "CharStrings" )
+  CFF_FIELD_NUM     ( 0x124, cid_fd_array_offset,      "FDArray" )
+  CFF_FIELD_NUM     ( 0x125, cid_fd_select_offset,     "FDSelect" )
+  CFF_FIELD_NUM     ( 24,    vstore_offset,            "vstore" )
+  CFF_FIELD_CALLBACK( 25,    maxstack,                 "maxstack" )
 
 #undef  FT_STRUCTURE
 #define FT_STRUCTURE  CFF_FontRecDictRec
@@ -120,9 +120,8 @@
 #undef  CFFCODE
 #define CFFCODE       CFF2_CODE_FONTDICT
 
-  CFF_FIELD_CALLBACK( 18,    private_dict,        "Private" )
-  CFF_FIELD_CALLBACK( 0x107, font_matrix,         "FontMatrix" )
-  CFF_FIELD_STRING  ( 0x126, cid_font_name,        "FontName" )
+  CFF_FIELD_CALLBACK( 18,    private_dict,             "Private" )
+  CFF_FIELD_CALLBACK( 0x107, font_matrix,              "FontMatrix" )
 
 #undef  FT_STRUCTURE
 #define FT_STRUCTURE  CFF_PrivateRec

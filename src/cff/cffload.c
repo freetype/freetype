@@ -1740,9 +1740,10 @@ Exit:
     CFF_FontRecDict  top  = &subfont->font_dict;
     CFF_Private      priv = &subfont->private_dict;
     FT_Stream        stream = font->stream;
+    FT_UInt          stackSize;
 
     if ( top->private_offset == 0 || top->private_size == 0 )
-      goto Exit;        /* no private DICT, do nothing */
+      goto Exit2;       /* no private DICT, do nothing */
 
     /* store handle needed to access memory, vstore for blend */
     subfont->blend.font = font;
@@ -1762,12 +1763,17 @@ Exit:
     subfont->lenNDV = lenNDV;
     subfont->NDV = NDV;
 
-    cff_parser_init( &parser,
-                     font->cff2 ? CFF2_CODE_PRIVATE : CFF_CODE_PRIVATE,
-                     priv,
-                     font->library,
-                     top->num_designs,
-                     top->num_axes );
+    stackSize = font->cff2 ? font->top_font.font_dict.maxstack :
+                             CFF_MAX_STACK_DEPTH + 1;
+
+    if ( cff_parser_init( &parser,
+                          font->cff2 ? CFF2_CODE_PRIVATE : CFF_CODE_PRIVATE,
+                          priv,
+                          font->library,
+                          stackSize,
+                          top->num_designs,
+                          top->num_axes ) )
+      goto Exit;
     if ( FT_STREAM_SEEK( font->base_offset + top->private_offset ) ||
          FT_FRAME_ENTER( top->private_size )                 )
       goto Exit;
@@ -1784,7 +1790,12 @@ Exit:
     priv->num_blue_values &= ~1;
 
   Exit:
-    cff_blend_clear( subfont );
+    /* clean up */
+    cff_blend_clear( subfont ); /* clear blend stack */
+    cff_parser_done( &parser ); /* free parser stack */
+
+  Exit2:
+    /* no clean up (parser not inited) */
     return error;
   }
 
@@ -1811,12 +1822,15 @@ Exit:
     CFF_Private      priv = &subfont->private_dict;
     FT_Bool          cff2 = (code == CFF2_CODE_TOPDICT ||
                              code == CFF2_CODE_FONTDICT );
+    FT_UInt          stackSize = cff2 ? CFF2_DEFAULT_STACK : CFF_MAX_STACK_DEPTH;
 
-
+    /* Note: we use default stack size for CFF2 Font DICT because   */
+    /* Top and Font DICTs are not allowed to have blend operators   */
     cff_parser_init( &parser,
                      code,
                      &subfont->font_dict,
                      library,
+                     stackSize,
                      0,
                      0 );
 
@@ -1902,6 +1916,8 @@ Exit:
     }
 
   Exit:
+    cff_parser_done( &parser ); /* free parser stack */
+
     return error;
   }
 
@@ -2113,7 +2129,8 @@ Exit:
         goto Exit;
 
       /* Font Dicts are not limited to 256 for CFF2 */
-      if ( !cff2 && fd_index.count > CFF_MAX_CID_FONTS )
+      /* TODO: support this for CFF2                */
+      if ( fd_index.count > CFF_MAX_CID_FONTS )
       {
         FT_TRACE0(( "cff_font_load: FD array too large in CID font\n" ));
         goto Fail_CID;
@@ -2134,7 +2151,7 @@ Exit:
         sub = font->subfonts[idx];
         FT_TRACE4(( "parsing subfont %u\n", idx ));
         error = cff_subfont_load( sub, &fd_index, idx,
-                                  stream, base_offset, library, 
+                                  stream, base_offset, library,
                                   cff2 ? CFF2_CODE_FONTDICT : CFF_CODE_TOPDICT,
                                   font );
         if ( error )
