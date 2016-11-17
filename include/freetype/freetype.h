@@ -1731,7 +1731,6 @@ FT_BEGIN_HEADER
   /*    position (e.g., coordinates (0,0) on the baseline).  Of course,    */
   /*    `slot->format' is also changed to @FT_GLYPH_FORMAT_BITMAP.         */
   /*                                                                       */
-  /* <Note>                                                                */
   /*    Here is a small pseudo code fragment that shows how to use         */
   /*    `lsb_delta' and `rsb_delta':                                       */
   /*                                                                       */
@@ -1758,6 +1757,12 @@ FT_BEGIN_HEADER
   /*        origin_x += face->glyph->advance.x;                            */
   /*      endfor                                                           */
   /*    }                                                                  */
+  /*                                                                       */
+  /*    If you use strong auto-hinting, you *must* apply these delta       */
+  /*    values!  Otherwise you will experience far too large inter-glyph   */
+  /*    spacing at small rendering sizes in most cases.  Note that it      */
+  /*    doesn't harm to use the above code for other hinting modes also,   */
+  /*    since the delta values are zero then.                              */
   /*                                                                       */
   typedef struct  FT_GlyphSlotRec_
   {
