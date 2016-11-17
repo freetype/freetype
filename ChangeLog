@@ -1,3 +1,12 @@
+2016-11-17  Werner Lemberg  <wl@gnu.org>
+
+	Better support of LLP64 systems with gcc (and clang).
+
+	* builds/unix/configure.raw: Call `AC_TYPE_LONG_LONG_INT'.
+
+	* builds/unix/ftconfig.in (FT_LONG64): Enable for LLP64 systems (and
+	suppress warnings) even without `FT_CONFIG_OPTION_FORCE_INT64'.
+
 2016-11-10  Werner Lemberg  <wl@gnu.org>
 
 	Fix `lcd_weights' array size.
