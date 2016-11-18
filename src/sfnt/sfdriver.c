@@ -151,7 +151,7 @@
    *
    */
 
-  static FT_Error
+  FT_EXPORT_DEF( FT_Error )
   sfnt_get_glyph_name( TT_Face     face,
                        FT_UInt     glyph_index,
                        FT_Pointer  buffer,
@@ -169,7 +169,7 @@
   }
 
 
-  static FT_UInt
+  FT_EXPORT_DEF( FT_UInt )
   sfnt_get_name_index( TT_Face     face,
                        FT_String*  glyph_name )
   {

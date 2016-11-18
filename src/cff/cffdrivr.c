@@ -38,6 +38,17 @@
 #include "../truetype/ttgxvar.h"
 #endif
 
+/* TODO use services interface to link to these functions (in sfdriver.c) */
+  FT_EXPORT( FT_Error )
+  sfnt_get_glyph_name( TT_Face     face,
+                       FT_UInt     glyph_index,
+                       FT_Pointer  buffer,
+                       FT_UInt     buffer_max );
+  FT_EXPORT( FT_UInt )
+  sfnt_get_name_index( TT_Face     face,
+                       FT_String*  glyph_name );
+
+
 #include "cfferrs.h"
 #include "cffpic.h"
 
@@ -297,12 +308,11 @@
     FT_Error    error;
 
 
-    /* TODO: for testing: cff2 does not have glyph names */
-    /* will need to use post table method */
+    /* CFF2 table does not have glyph names */
+    /* we need to use post table method */
     if ( font->version_major == 2 )
     {
-      FT_STRCPYN( buffer, "noname", buffer_max );
-      return FT_Err_Ok;
+      return sfnt_get_glyph_name( face, glyph_index, buffer, buffer_max );
     }
 
     if ( !font->psnames )
@@ -342,9 +352,15 @@
     FT_UShort           sid;
     FT_UInt             i;
 
-
     cff     = (CFF_FontRec *)face->extra.data;
     charset = &cff->charset;
+
+    /* CFF2 table does not have glyph names */
+    /* we need to use post table method */
+    if ( cff->version_major == 2 )
+    {
+      return sfnt_get_name_index( face, glyph_name );
+    }
 
     FT_FACE_FIND_GLOBAL_SERVICE( face, psnames, POSTSCRIPT_CMAPS );
     if ( !psnames )
