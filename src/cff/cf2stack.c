@@ -72,7 +72,7 @@
       FT_FREE( stack );
       return NULL;
     }
-    
+
     stack->stackSize = stackSize;
     stack->top = stack->buffer;     /* empty stack */
 
