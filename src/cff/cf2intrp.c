@@ -474,7 +474,7 @@
     CF2_Fixed  hintOriginY = curY;
 
     CF2_Stack  opStack = NULL;
-    FT_UInt    stackSize = font->isCFF2 ? CF2_CFF2_STACK_SIZE : CF2_OPERAND_STACK_SIZE;
+    FT_UInt    stackSize;
     FT_Byte    op1;                       /* first opcode byte */
 
     CF2_F16Dot16  storage[CF2_STORAGE_SIZE];    /* for `put' and `get' */

@@ -1260,7 +1260,7 @@
 
     /* compute expected number of operands for this blend */
     FT_UInt numOperands = (FT_UInt)(numBlends * blend->lenBV);
-    FT_UInt count = parser->top - 1 - parser->stack;
+    FT_UInt count = (FT_UInt)( parser->top - 1 - parser->stack );
 
     if ( numOperands > count )
     {
@@ -1859,7 +1859,7 @@ Exit:
     top->cid_font_name       = 0xFFFFU;
 
     /* set default stack size */
-    top->maxstack            = cff2 ? 193 : 48;
+    top->maxstack            = cff2 ? CFF2_DEFAULT_STACK : 48;
 
     if ( idx->count )   /* count is nonzero for a real index */
       error = cff_index_access_element( idx, font_index, &dict, &dict_len );
