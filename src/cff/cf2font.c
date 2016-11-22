@@ -253,9 +253,6 @@
     CFF_VarData* varData;
     CF2_UInt master;
 
-    FT_UNUSED( lenNormalizedVector );
-    FT_UNUSED( vsindex );
-
     FT_ASSERT( lenBlendVector && blendVector );
     FT_ASSERT( lenNormalizedVector == 0 || normalizedVector );
     FT_TRACE4(( "cf2_buildBlendVector\n" ));

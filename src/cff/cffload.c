@@ -1328,9 +1328,6 @@ Exit:
     CFF_VarData* varData;
     FT_UInt master;
 
-    FT_UNUSED( lenNDV );
-    FT_UNUSED( vsindex );
-
     FT_ASSERT( lenNDV == 0 || NDV );
 
     blend->builtBV = FALSE;

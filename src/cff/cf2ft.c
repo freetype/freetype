@@ -425,8 +425,7 @@
     return &decoder->cff->vstore;
   }
 
-  /* get maxstack value from CFF2 Top DICT                         */
-  /* Note: CFF2 Font DICT contains only the default maxstack value */
+  /* get maxstack value from CFF2 Top DICT */
   FT_LOCAL_DEF ( FT_UInt )
   cf2_getMaxstack( CFF_Decoder* decoder )
   {
