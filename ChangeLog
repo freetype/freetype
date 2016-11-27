@@ -1,3 +1,16 @@
+2016-11-27  Nikolaus Waxweiler  <madigens@gmail.com>
+
+	[autofit] Code shuffling.
+
+	Also improve some comments and remove unused code.
+
+	No functional change.
+
+	* src/autofit/afloader.c (af_loader_load_g): Merged with...
+	(af_loader_load_glyph): ...this function.
+	Split off emboldening code into...
+	(af_loader_embolden_glyph_in_slot): ... this function.
+
 2016-11-17  Werner Lemberg  <wl@gnu.org>
 
 	Better support of LLP64 systems with gcc (and clang).
