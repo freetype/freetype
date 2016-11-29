@@ -1,3 +1,9 @@
+2016-11-29  Werner Lemberg  <wl@gnu.org>
+
+	[smooth] Avoid conditional jump on uninitialized value (#49711).
+
+	* src/smooth/ftgrays.c (gray_raster_render): Initialize `worker'.
+
 2016-11-27  Nikolaus Waxweiler  <madigens@gmail.com>
 
 	[autofit] Code shuffling.
