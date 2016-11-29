@@ -1,5 +1,9 @@
 2016-11-29  Werner Lemberg  <wl@gnu.org>
 
+	[smooth] Revert previous commit.  Already fixed with 6ca54c64.
+
+2016-11-29  Werner Lemberg  <wl@gnu.org>
+
 	[smooth] Avoid conditional jump on uninitialized value (#49711).
 
 	* src/smooth/ftgrays.c (gray_raster_render): Initialize `worker'.

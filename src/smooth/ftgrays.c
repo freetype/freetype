@@ -1870,8 +1870,6 @@ typedef ptrdiff_t  FT_PtrDist;
            outline->contours[outline->n_contours - 1] + 1 )
       return FT_THROW( Invalid_Outline );
 
-    FT_ZERO( worker );
-
     ras.outline = *outline;
 
     if ( params->flags & FT_RASTER_FLAG_DIRECT )
