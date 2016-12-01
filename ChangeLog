@@ -1,3 +1,14 @@
+2016-12-01  Oleksandr Chekhovskyi  <oleksandr.chekhovskyi@gmail.com>
+
+	[autofit] Fix Emscripten crash (patch #9180).
+
+	Function calls through pointers must use a matching signature to
+	work on Emscripten, since such calls are dispatched through lookup
+	tables grouped by signature.
+
+	* src/autofit/aftypes.h (AF_WritingSystem_ApplyHintsFunc): Fix
+	typedef.
+
 2016-11-29  Werner Lemberg  <wl@gnu.org>
 
 	[smooth] Revert previous commit.  Already fixed with 6ca54c64.
