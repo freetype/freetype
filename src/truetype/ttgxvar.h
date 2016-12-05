@@ -162,6 +162,10 @@ FT_BEGIN_HEADER
   TT_Get_MM_Var( TT_Face      face,
                  FT_MM_Var*  *master );
 
+  FT_LOCAL( FT_Error )
+  TT_Get_Var_Design( TT_Face    face,
+                     FT_UInt    num_coords,
+                     FT_Fixed*  coords );
 
   FT_LOCAL( FT_Error )
   tt_face_vary_cvt( TT_Face    face,

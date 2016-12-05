@@ -546,6 +546,20 @@
   }
 
 
+  FT_LOCAL_DEF( FT_Error )
+  T1_Get_Var_Design( T1_Face    face,
+                     FT_UInt    num_coords,
+                     FT_Fixed*  coords )
+  {
+    FT_UNUSED( face );
+    FT_UNUSED( num_coords );
+    FT_UNUSED( coords );
+
+    /* TODO: Implement this function. */
+    return FT_THROW( Unimplemented_Feature );
+  }
+
+
   FT_LOCAL_DEF( void )
   T1_Done_Blend( T1_Face  face )
   {

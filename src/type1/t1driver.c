@@ -124,7 +124,8 @@
     (FT_Set_MM_Blend_Func)  T1_Set_MM_Blend,       /* set_mm_blend   */
     (FT_Get_MM_Blend_Func)  T1_Get_MM_Blend,       /* get_mm_blend   */
     (FT_Get_MM_Var_Func)    T1_Get_MM_Var,         /* get_mm_var     */
-    (FT_Set_Var_Design_Func)T1_Set_Var_Design      /* set_var_design */
+    (FT_Set_Var_Design_Func)T1_Set_Var_Design,     /* set_var_design */
+    (FT_Get_Var_Design_Func)T1_Get_Var_Design      /* get_var_design */
   };
 #endif
 

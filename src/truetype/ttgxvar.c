@@ -1381,6 +1381,20 @@
   }
 
 
+  FT_LOCAL_DEF( FT_Error )
+  TT_Get_Var_Design( TT_Face    face,
+                     FT_UInt    num_coords,
+                     FT_Fixed*  coords )
+  {
+    FT_UNUSED( face );
+    FT_UNUSED( num_coords );
+    FT_UNUSED( coords );
+
+    /* TODO: Implement this function. */
+    return FT_THROW( Unimplemented_Feature );
+  }
+
+
   /*************************************************************************/
   /*************************************************************************/
   /*****                                                               *****/
