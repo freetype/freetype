@@ -1,3 +1,13 @@
+2016-12-06  Werner Lemberg  <wl@gnu.org>
+
+	* src/type1/t1load.c (parse_subrs): Fix memory leak.
+
+	The `subrs' keyword might erroneously occur multiple times.
+
+	Reported as
+
+	  https://bugs.chromium.org/p/oss-fuzz/issues/detail?id=231
+
 2016-12-01  Werner Lemberg  <wl@gnu.org>
 
 	[gzip] Improve building with external zlib (#49673).

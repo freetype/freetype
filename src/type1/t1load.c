@@ -1441,7 +1441,6 @@
     FT_Error   error;
     FT_Int     num_subrs;
     FT_UInt    count;
-    FT_Hash    hash = NULL;
 
     PSAux_Service  psaux = (PSAux_Service)face->psaux;
 
@@ -1492,14 +1491,12 @@
                   ( parser->root.limit - parser->root.cursor ) >> 3 ));
       num_subrs = ( parser->root.limit - parser->root.cursor ) >> 3;
 
-      if ( !hash )
+      if ( !loader->subrs_hash )
       {
-        if ( FT_NEW( hash ) )
+        if ( FT_NEW( loader->subrs_hash ) )
           goto Fail;
 
-        loader->subrs_hash = hash;
-
-        error = ft_hash_num_init( hash, memory );
+        error = ft_hash_num_init( loader->subrs_hash, memory );
         if ( error )
           goto Fail;
       }
@@ -1562,9 +1559,9 @@
 
       /* if we use a hash, the subrs index is the key, and a running */
       /* counter specified for `T1_Add_Table' acts as the value      */
-      if ( hash )
+      if ( loader->subrs_hash )
       {
-        ft_hash_num_insert( idx, count, hash, memory );
+        ft_hash_num_insert( idx, count, loader->subrs_hash, memory );
         idx = count;
       }
 
