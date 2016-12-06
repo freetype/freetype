@@ -832,6 +832,118 @@
 
           switch ( op2 )
           {
+          case cf2_escHFLEX:
+            {
+              static const FT_Bool  readFromStack[12] =
+              {
+                TRUE /* dx1 */, FALSE /* dy1 */,
+                TRUE /* dx2 */, TRUE  /* dy2 */,
+                TRUE /* dx3 */, FALSE /* dy3 */,
+                TRUE /* dx4 */, FALSE /* dy4 */,
+                TRUE /* dx5 */, FALSE /* dy5 */,
+                TRUE /* dx6 */, FALSE /* dy6 */
+              };
+
+
+              FT_TRACE4(( " hflex\n" ));
+
+              cf2_doFlex( opStack,
+                          &curX,
+                          &curY,
+                          &glyphPath,
+                          readFromStack,
+                          FALSE /* doConditionalLastRead */ );
+            }
+            continue;
+
+          case cf2_escFLEX:
+            {
+              static const FT_Bool  readFromStack[12] =
+              {
+                TRUE /* dx1 */, TRUE /* dy1 */,
+                TRUE /* dx2 */, TRUE /* dy2 */,
+                TRUE /* dx3 */, TRUE /* dy3 */,
+                TRUE /* dx4 */, TRUE /* dy4 */,
+                TRUE /* dx5 */, TRUE /* dy5 */,
+                TRUE /* dx6 */, TRUE /* dy6 */
+              };
+
+
+              FT_TRACE4(( " flex\n" ));
+
+              cf2_doFlex( opStack,
+                          &curX,
+                          &curY,
+                          &glyphPath,
+                          readFromStack,
+                          FALSE /* doConditionalLastRead */ );
+            }
+            break;      /* TODO: why is this not a continue? */
+
+          case cf2_escHFLEX1:
+            {
+              static const FT_Bool  readFromStack[12] =
+              {
+                TRUE /* dx1 */, TRUE  /* dy1 */,
+                TRUE /* dx2 */, TRUE  /* dy2 */,
+                TRUE /* dx3 */, FALSE /* dy3 */,
+                TRUE /* dx4 */, FALSE /* dy4 */,
+                TRUE /* dx5 */, TRUE  /* dy5 */,
+                TRUE /* dx6 */, FALSE /* dy6 */
+              };
+
+
+              FT_TRACE4(( " hflex1\n" ));
+
+              cf2_doFlex( opStack,
+                          &curX,
+                          &curY,
+                          &glyphPath,
+                          readFromStack,
+                          FALSE /* doConditionalLastRead */ );
+            }
+            continue;
+
+          case cf2_escFLEX1:
+            {
+              static const FT_Bool  readFromStack[12] =
+              {
+                TRUE  /* dx1 */, TRUE  /* dy1 */,
+                TRUE  /* dx2 */, TRUE  /* dy2 */,
+                TRUE  /* dx3 */, TRUE  /* dy3 */,
+                TRUE  /* dx4 */, TRUE  /* dy4 */,
+                TRUE  /* dx5 */, TRUE  /* dy5 */,
+                FALSE /* dx6 */, FALSE /* dy6 */
+              };
+
+
+              FT_TRACE4(( " flex1\n" ));
+
+              cf2_doFlex( opStack,
+                          &curX,
+                          &curY,
+                          &glyphPath,
+                          readFromStack,
+                          TRUE /* doConditionalLastRead */ );
+            }
+            continue;
+
+          case cf2_escRESERVED_1:
+          case cf2_escRESERVED_2:
+          case cf2_escRESERVED_6:
+          case cf2_escRESERVED_7:
+          case cf2_escRESERVED_8:
+          case cf2_escRESERVED_13:
+          case cf2_escRESERVED_16:
+          case cf2_escRESERVED_17:
+          case cf2_escRESERVED_19:
+          case cf2_escRESERVED_25:
+          case cf2_escRESERVED_31:
+          case cf2_escRESERVED_32:
+          case cf2_escRESERVED_33:
+            FT_TRACE4(( " unknown op (12, %d)\n", op2 ));
+            break;
+
           case cf2_escDOTSECTION:
             /* something about `flip type of locking' -- ignore it */
             FT_TRACE4(( " dotsection\n" ));
@@ -1149,115 +1261,6 @@
             }
             continue; /* do not clear the stack */
 
-          case cf2_escHFLEX:
-            {
-              static const FT_Bool  readFromStack[12] =
-              {
-                TRUE /* dx1 */, FALSE /* dy1 */,
-                TRUE /* dx2 */, TRUE  /* dy2 */,
-                TRUE /* dx3 */, FALSE /* dy3 */,
-                TRUE /* dx4 */, FALSE /* dy4 */,
-                TRUE /* dx5 */, FALSE /* dy5 */,
-                TRUE /* dx6 */, FALSE /* dy6 */
-              };
-
-
-              FT_TRACE4(( " hflex\n" ));
-
-              cf2_doFlex( opStack,
-                          &curX,
-                          &curY,
-                          &glyphPath,
-                          readFromStack,
-                          FALSE /* doConditionalLastRead */ );
-            }
-            continue;
-
-          case cf2_escFLEX:
-            {
-              static const FT_Bool  readFromStack[12] =
-              {
-                TRUE /* dx1 */, TRUE /* dy1 */,
-                TRUE /* dx2 */, TRUE /* dy2 */,
-                TRUE /* dx3 */, TRUE /* dy3 */,
-                TRUE /* dx4 */, TRUE /* dy4 */,
-                TRUE /* dx5 */, TRUE /* dy5 */,
-                TRUE /* dx6 */, TRUE /* dy6 */
-              };
-
-
-              FT_TRACE4(( " flex\n" ));
-
-              cf2_doFlex( opStack,
-                          &curX,
-                          &curY,
-                          &glyphPath,
-                          readFromStack,
-                          FALSE /* doConditionalLastRead */ );
-            }
-            break;      /* TODO: why is this not a continue? */
-
-          case cf2_escHFLEX1:
-            {
-              static const FT_Bool  readFromStack[12] =
-              {
-                TRUE /* dx1 */, TRUE  /* dy1 */,
-                TRUE /* dx2 */, TRUE  /* dy2 */,
-                TRUE /* dx3 */, FALSE /* dy3 */,
-                TRUE /* dx4 */, FALSE /* dy4 */,
-                TRUE /* dx5 */, TRUE  /* dy5 */,
-                TRUE /* dx6 */, FALSE /* dy6 */
-              };
-
-
-              FT_TRACE4(( " hflex1\n" ));
-
-              cf2_doFlex( opStack,
-                          &curX,
-                          &curY,
-                          &glyphPath,
-                          readFromStack,
-                          FALSE /* doConditionalLastRead */ );
-            }
-            continue;
-
-          case cf2_escFLEX1:
-            {
-              static const FT_Bool  readFromStack[12] =
-              {
-                TRUE  /* dx1 */, TRUE  /* dy1 */,
-                TRUE  /* dx2 */, TRUE  /* dy2 */,
-                TRUE  /* dx3 */, TRUE  /* dy3 */,
-                TRUE  /* dx4 */, TRUE  /* dy4 */,
-                TRUE  /* dx5 */, TRUE  /* dy5 */,
-                FALSE /* dx6 */, FALSE /* dy6 */
-              };
-
-
-              FT_TRACE4(( " flex1\n" ));
-
-              cf2_doFlex( opStack,
-                          &curX,
-                          &curY,
-                          &glyphPath,
-                          readFromStack,
-                          TRUE /* doConditionalLastRead */ );
-            }
-            continue;
-
-          case cf2_escRESERVED_1:
-          case cf2_escRESERVED_2:
-          case cf2_escRESERVED_6:
-          case cf2_escRESERVED_7:
-          case cf2_escRESERVED_8:
-          case cf2_escRESERVED_13:
-          case cf2_escRESERVED_16:
-          case cf2_escRESERVED_17:
-          case cf2_escRESERVED_19:
-          case cf2_escRESERVED_25:
-          case cf2_escRESERVED_31:
-          case cf2_escRESERVED_32:
-          case cf2_escRESERVED_33:
           default:
             FT_TRACE4(( " unknown op (12, %d)\n", op2 ));
 
