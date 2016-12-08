@@ -1,5 +1,14 @@
 2016-12-08  Werner Lemberg  <wl@gnu.org>
 
+	Add framework to support services with 8 functions.
+
+	We will need this for CFF variation font support.
+
+	* include/freetype/internal/ftserv.h (FT_DEFINE_SERVICEDESCREC8):
+	New macro.
+
+2016-12-08  Werner Lemberg  <wl@gnu.org>
+
 	[sfnt] Add `get_glyph_name' and `get_name_index' to SFNT interface.
 
 	CFF2 fonts will need access to those two functions.
