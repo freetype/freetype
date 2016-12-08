@@ -1,3 +1,18 @@
+2016-12-08  Werner Lemberg  <wl@gnu.org>
+
+	[sfnt] Add `get_glyph_name' and `get_name_index' to SFNT interface.
+
+	CFF2 fonts will need access to those two functions.
+
+	* include/freetype/internal/sfnt.h: Include FT_SERVICE_GLYPH_DICT_H.
+	(SFNT_Interface): Add `get_glyph_name' and `get_name_index' members.
+	(FT_DEFINE_SFNT_INTERFACE): Updated.
+
+	* src/sfnt/sfdriver.c (sfnt_get_glyph_name, sfnt_get_name_index):
+	Fix signatures to exactly correspond to the glyph dict service
+	function typedefs.
+	(sfnt_interface): Updated.
+
 2016-12-06  Dave Arnold  <darnold@adobe.com>
 
 	Add `FT_Get_Var_Design_Coordinates' function.

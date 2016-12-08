@@ -154,7 +154,7 @@
    */
 
   static FT_Error
-  sfnt_get_glyph_name( TT_Face     face,
+  sfnt_get_glyph_name( FT_Face     face,
                        FT_UInt     glyph_index,
                        FT_Pointer  buffer,
                        FT_UInt     buffer_max )
@@ -163,7 +163,7 @@
     FT_Error    error;
 
 
-    error = tt_face_get_ps_name( face, glyph_index, &gname );
+    error = tt_face_get_ps_name( (TT_Face)face, glyph_index, &gname );
     if ( !error )
       FT_STRCPYN( buffer, gname, buffer_max );
 
@@ -172,26 +172,26 @@
 
 
   static FT_UInt
-  sfnt_get_name_index( TT_Face     face,
+  sfnt_get_name_index( FT_Face     face,
                        FT_String*  glyph_name )
   {
-    FT_Face  root = &face->root;
+    TT_Face  ttface = (TT_Face)face;
 
     FT_UInt  i, max_gid = FT_UINT_MAX;
 
 
-    if ( root->num_glyphs < 0 )
+    if ( face->num_glyphs < 0 )
       return 0;
-    else if ( (FT_ULong)root->num_glyphs < FT_UINT_MAX )
-      max_gid = (FT_UInt)root->num_glyphs;
+    else if ( (FT_ULong)face->num_glyphs < FT_UINT_MAX )
+      max_gid = (FT_UInt)face->num_glyphs;
     else
       FT_TRACE0(( "Ignore glyph names for invalid GID 0x%08x - 0x%08x\n",
-                  FT_UINT_MAX, root->num_glyphs ));
+                  FT_UINT_MAX, face->num_glyphs ));
 
     for ( i = 0; i < max_gid; i++ )
     {
       FT_String*  gname;
-      FT_Error    error = tt_face_get_ps_name( face, i, &gname );
+      FT_Error    error = tt_face_get_ps_name( ttface, i, &gname );
 
 
       if ( error )
@@ -528,7 +528,12 @@
 
     tt_face_get_metrics,    /* TT_Get_Metrics_Func     get_metrics     */
 
-    tt_face_get_name        /* TT_Get_Name_Func        get_name        */
+    tt_face_get_name,       /* TT_Get_Name_Func        get_name        */
+
+    PUT_PS_NAMES( sfnt_get_glyph_name ),
+                        /* FT_GlyphDict_GetNameFunc     get_glyph_name */
+    PUT_PS_NAMES( sfnt_get_name_index )
+                        /* FT_GlyphDict_NameIndexFunc   get_name_index */
   )
 
 
