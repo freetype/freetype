@@ -1,3 +1,10 @@
+2016-12-09  Werner Lemberg  <wl@gnu.org>
+
+	[sfnt] Revert change from 2016-12-08.
+
+	I missed the functionality of `ft_module_get_service', which makes
+	the change unnecessary.
+
 2016-12-08  Werner Lemberg  <wl@gnu.org>
 
 	Add framework to support services with 8 functions.

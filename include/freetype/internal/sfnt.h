@@ -24,8 +24,6 @@
 #include FT_INTERNAL_DRIVER_H
 #include FT_INTERNAL_TRUETYPE_TYPES_H
 
-#include FT_SERVICE_GLYPH_DICT_H
-
 
 FT_BEGIN_HEADER
 
@@ -591,11 +589,6 @@ FT_BEGIN_HEADER
 
     TT_Get_Name_Func             get_name;
 
-    /* since 2.7.1;                                             */
-    /* this is the SFNT specific part of the glyph dict service */
-    FT_GlyphDict_GetNameFunc     get_glyph_name;
-    FT_GlyphDict_NameIndexFunc   get_name_index;
-
   } SFNT_Interface;
 
 
@@ -635,9 +628,7 @@ FT_BEGIN_HEADER
           set_sbit_strike_,              \
           load_strike_metrics_,          \
           get_metrics_,                  \
-          get_name_,                     \
-          get_glyph_name_,               \
-          get_name_index_ )              \
+          get_name_ )                    \
   static const SFNT_Interface  class_ =  \
   {                                      \
     goto_table_,                         \
@@ -670,8 +661,6 @@ FT_BEGIN_HEADER
     load_strike_metrics_,                \
     get_metrics_,                        \
     get_name_,                           \
-    get_glyph_name_,                     \
-    get_name_index_                      \
   };
 
 #else /* FT_CONFIG_OPTION_PIC */
@@ -710,9 +699,7 @@ FT_BEGIN_HEADER
           set_sbit_strike_,                             \
           load_strike_metrics_,                         \
           get_metrics_,                                 \
-          get_name_,                                    \
-          get_glyph_name_,                              \
-          get_name_index_ )                             \
+          get_name_ )                                   \
   void                                                  \
   FT_Init_Class_ ## class_( FT_Library       library,   \
                             SFNT_Interface*  clazz )    \
@@ -749,8 +736,6 @@ FT_BEGIN_HEADER
     clazz->load_strike_metrics = load_strike_metrics_;  \
     clazz->get_metrics         = get_metrics_;          \
     clazz->get_name            = get_name_;             \
-    clazz->get_glyph_name      = get_glyph_name;        \
-    clazz->get_name_index      = get_name_index_;       \
   }
 
 #endif /* FT_CONFIG_OPTION_PIC */

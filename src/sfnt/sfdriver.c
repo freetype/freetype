@@ -528,12 +528,7 @@
 
     tt_face_get_metrics,    /* TT_Get_Metrics_Func     get_metrics     */
 
-    tt_face_get_name,       /* TT_Get_Name_Func        get_name        */
-
-    PUT_PS_NAMES( sfnt_get_glyph_name ),
-                        /* FT_GlyphDict_GetNameFunc     get_glyph_name */
-    PUT_PS_NAMES( sfnt_get_name_index )
-                        /* FT_GlyphDict_NameIndexFunc   get_name_index */
+    tt_face_get_name        /* TT_Get_Name_Func        get_name        */
   )
 
 
