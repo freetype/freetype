@@ -739,7 +739,7 @@
     face->cvt_program_size  = 0;
 
 #ifdef TT_CONFIG_OPTION_GX_VAR_SUPPORT
-    tt_done_blend( memory, face->blend );
+    tt_done_blend( face );
     face->blend = NULL;
 #endif
   }

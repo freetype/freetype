@@ -1,3 +1,23 @@
+2016-12-10  Werner Lemberg  <wl@gnu.org>
+
+	[truetype, type1] Add `done_blend' to MM service.
+
+	For internal use; we want to share code between the forthcoming CFF2
+	support and TrueType.
+
+	* include/freetype/internal/services/svmm.h (FT_Done_Blend_Func):
+	New typedef.
+	(MultiMasters): Add `done_blend'.
+	(FT_Service_MultiMasters): Updated.
+
+	* src/truetype/ttgxvar.c (tt_done_blend): Use `TT_Face' as argument.
+	* src/truetype/ttgxvar.h: Updated.
+
+	* src/truetype/ttobjs.c (TT_Face_Done): Updated.
+
+	* src/truetype/ttdriver.c (tt_service_gx_multi_masters): Updated.
+	* src/type1/t1driver.c (t1_service_multi_masters): Updated.
+
 2016-12-09  Werner Lemberg  <wl@gnu.org>
 
 	[sfnt] Revert change from 2016-12-08.

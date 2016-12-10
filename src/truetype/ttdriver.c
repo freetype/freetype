@@ -473,7 +473,9 @@
     (FT_Get_MM_Blend_Func)  TT_Get_MM_Blend,        /* get_mm_blend   */
     (FT_Get_MM_Var_Func)    TT_Get_MM_Var,          /* get_mm_var     */
     (FT_Set_Var_Design_Func)TT_Set_Var_Design,      /* set_var_design */
-    (FT_Get_Var_Design_Func)TT_Get_Var_Design       /* get_var_design */
+    (FT_Get_Var_Design_Func)TT_Get_Var_Design,      /* get_var_design */
+
+    (FT_Done_Blend_Func)    tt_done_blend           /* done_blend     */
   )
 #endif
 

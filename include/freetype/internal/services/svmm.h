@@ -68,6 +68,9 @@ FT_BEGIN_HEADER
                            FT_UInt   num_coords,
                            FT_Long*  coords );
 
+  typedef void
+  (*FT_Done_Blend_Func)( FT_Face );
+
 
   FT_DEFINE_SERVICE( MultiMasters )
   {
@@ -78,6 +81,9 @@ FT_BEGIN_HEADER
     FT_Get_MM_Var_Func      get_mm_var;
     FT_Set_Var_Design_Func  set_var_design;
     FT_Get_Var_Design_Func  get_var_design;
+
+    /* for internal use; only needed for code sharing between modules */
+    FT_Done_Blend_Func      done_blend;
   };
 
 
@@ -90,7 +96,8 @@ FT_BEGIN_HEADER
                                            get_mm_blend_,    \
                                            get_mm_var_,      \
                                            set_var_design_,  \
-                                           get_var_design_ ) \
+                                           get_var_design_,  \
+                                           done_blend_     ) \
   static const FT_Service_MultiMastersRec  class_ =          \
   {                                                          \
     get_mm_,                                                 \
@@ -99,7 +106,8 @@ FT_BEGIN_HEADER
     get_mm_blend_,                                           \
     get_mm_var_,                                             \
     set_var_design_,                                         \
-    get_var_design_                                          \
+    get_var_design_,                                         \
+    done_blend_                                              \
   };
 
 #else /* FT_CONFIG_OPTION_PIC */
@@ -111,7 +119,8 @@ FT_BEGIN_HEADER
                                            get_mm_blend_,        \
                                            get_mm_var_,          \
                                            set_var_design_,      \
-                                           get_var_design_ )     \
+                                           get_var_design_,      \
+                                           done_blend_ )         \
   void                                                           \
   FT_Init_Class_ ## class_( FT_Service_MultiMastersRec*  clazz ) \
   {                                                              \
@@ -122,6 +131,7 @@ FT_BEGIN_HEADER
     clazz->get_mm_var     = get_mm_var_;                         \
     clazz->set_var_design = set_var_design_;                     \
     clazz->get_var_design = get_var_design_;                     \
+    clazz->done_blend     = done_blend_;                         \
   }
 
 #endif /* FT_CONFIG_OPTION_PIC */

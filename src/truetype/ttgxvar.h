@@ -180,8 +180,7 @@ FT_BEGIN_HEADER
 
 
   FT_LOCAL( void )
-  tt_done_blend( FT_Memory  memory,
-                 GX_Blend   blend );
+  tt_done_blend( TT_Face  face );
 
 
 FT_END_HEADER

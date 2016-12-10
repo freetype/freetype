@@ -2242,9 +2242,12 @@
   /*    Free the blend internal data structure.                            */
   /*                                                                       */
   FT_LOCAL_DEF( void )
-  tt_done_blend( FT_Memory  memory,
-                 GX_Blend   blend )
+  tt_done_blend( TT_Face  face )
   {
+    FT_Memory  memory = FT_FACE_MEMORY( face );
+    GX_Blend   blend  = face->blend;
+
+
     if ( blend != NULL )
     {
       FT_UInt  i, num_axes;
