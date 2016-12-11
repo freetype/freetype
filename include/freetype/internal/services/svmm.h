@@ -68,6 +68,11 @@ FT_BEGIN_HEADER
                            FT_UInt   num_coords,
                            FT_Long*  coords );
 
+  typedef FT_Error
+  (*FT_Get_Var_Blend_Func)( FT_Face     face,
+                            FT_UInt    *num_coords,
+                            FT_Fixed*  *coords );
+
   typedef void
   (*FT_Done_Blend_Func)( FT_Face );
 
@@ -83,6 +88,7 @@ FT_BEGIN_HEADER
     FT_Get_Var_Design_Func  get_var_design;
 
     /* for internal use; only needed for code sharing between modules */
+    FT_Get_Var_Blend_Func   get_var_blend;
     FT_Done_Blend_Func      done_blend;
   };
 
@@ -97,6 +103,7 @@ FT_BEGIN_HEADER
                                            get_mm_var_,      \
                                            set_var_design_,  \
                                            get_var_design_,  \
+                                           get_var_blend_,   \
                                            done_blend_     ) \
   static const FT_Service_MultiMastersRec  class_ =          \
   {                                                          \
@@ -107,6 +114,7 @@ FT_BEGIN_HEADER
     get_mm_var_,                                             \
     set_var_design_,                                         \
     get_var_design_,                                         \
+    get_var_blend_,                                          \
     done_blend_                                              \
   };
 
@@ -120,6 +128,7 @@ FT_BEGIN_HEADER
                                            get_mm_var_,          \
                                            set_var_design_,      \
                                            get_var_design_,      \
+                                           get_var_blend_,       \
                                            done_blend_ )         \
   void                                                           \
   FT_Init_Class_ ## class_( FT_Service_MultiMastersRec*  clazz ) \
@@ -131,6 +140,7 @@ FT_BEGIN_HEADER
     clazz->get_mm_var     = get_mm_var_;                         \
     clazz->set_var_design = set_var_design_;                     \
     clazz->get_var_design = get_var_design_;                     \
+    clazz->get_var_blend  = get_var_blend_;                      \
     clazz->done_blend     = done_blend_;                         \
   }
 

@@ -2236,6 +2236,39 @@
   /*************************************************************************/
   /*                                                                       */
   /* <Function>                                                            */
+  /*    tt_get_var_blend                                                   */
+  /*                                                                       */
+  /* <Description>                                                         */
+  /*    An internal version of `TT_Get_MM_Blend' that just returns         */
+  /*    pointers instead of copying data, without any initialization of    */
+  /*    the MM machinery in case it isn't loaded yet.                      */
+  /*                                                                       */
+  FT_LOCAL_DEF( FT_Error )
+  tt_get_var_blend( TT_Face     face,
+                    FT_UInt    *num_coords,
+                    FT_Fixed*  *coords )
+  {
+    FT_Error  error = FT_Err_Ok;
+
+
+    if ( face->blend )
+    {
+      *num_coords = face->blend->num_axis;
+      *coords     = face->blend->normalizedcoords;
+    }
+    else
+    {
+      *num_coords = 0;
+      *coords     = NULL;
+    }
+
+    return FT_Err_Ok;
+  }
+
+
+  /*************************************************************************/
+  /*                                                                       */
+  /* <Function>                                                            */
   /*    tt_done_blend                                                      */
   /*                                                                       */
   /* <Description>                                                         */

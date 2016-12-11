@@ -179,6 +179,11 @@ FT_BEGIN_HEADER
                               FT_UInt      n_points );
 
 
+  FT_LOCAL( FT_Error )
+  tt_get_var_blend( TT_Face     face,
+                    FT_UInt    *num_coords,
+                    FT_Fixed*  *coords );
+
   FT_LOCAL( void )
   tt_done_blend( TT_Face  face );
 

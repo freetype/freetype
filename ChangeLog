@@ -1,5 +1,23 @@
 2016-12-10  Werner Lemberg  <wl@gnu.org>
 
+	[truetype, type1] Add `get_var_blend' to MM service.
+
+	For internal use; we want to share code between the forthcoming CFF2
+	support and TrueType.
+
+	* include/freetype/internal/services/svmm.h (FT_Get_Var_Blend_Func):
+	New typedef.
+	(MultiMasters): Add `get_var_blend'.
+	(FT_Service_MultiMasters): Updated.
+
+	* src/truetype/ttgxvar.c (tt_get_var_blend): New function.
+	* src/truetype/ttgxvar.h: Updated.
+
+	* src/truetype/ttdriver.c (tt_service_gx_multi_masters): Updated.
+	* src/type1/t1driver.c (t1_service_multi_masters): Updated.
+
+2016-12-10  Werner Lemberg  <wl@gnu.org>
+
 	[truetype, type1] Add `done_blend' to MM service.
 
 	For internal use; we want to share code between the forthcoming CFF2

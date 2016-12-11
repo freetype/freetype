@@ -475,6 +475,7 @@
     (FT_Set_Var_Design_Func)TT_Set_Var_Design,      /* set_var_design */
     (FT_Get_Var_Design_Func)TT_Get_Var_Design,      /* get_var_design */
 
+    (FT_Get_Var_Blend_Func) tt_get_var_blend,       /* get_var_blend  */
     (FT_Done_Blend_Func)    tt_done_blend           /* done_blend     */
   )
 #endif
