@@ -1,3 +1,7 @@
+2016-12-14  Werner Lemberg  <wl@gnu.org>
+
+	* src/truetype/ttgxvar.c (tt_get_var_blend): Fix compiler warning.
+
 2016-12-14  Dave Arnold  <darnold@adobe.com>
 	    Werner Lemberg  <wl@gnu.org>
 

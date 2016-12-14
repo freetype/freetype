@@ -2248,9 +2248,6 @@
                     FT_UInt    *num_coords,
                     FT_Fixed*  *coords )
   {
-    FT_Error  error = FT_Err_Ok;
-
-
     if ( face->blend )
     {
       *num_coords = face->blend->num_axis;
