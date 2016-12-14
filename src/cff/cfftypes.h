@@ -224,8 +224,10 @@ FT_BEGIN_HEADER
 
   typedef struct  CFF_FontRec_
   {
+    FT_Library       library;
     FT_Stream        stream;
     FT_Memory        memory;
+    FT_ULong         base_offset;   /* offset to start of CFF */
     FT_UInt          num_faces;
     FT_UInt          num_glyphs;
 

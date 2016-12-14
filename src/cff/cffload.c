@@ -1333,25 +1333,77 @@
 
 
   static FT_Error
-  cff_subfont_load( CFF_SubFont  font,
+  cff_load_private_dict( CFF_Font     font,
+                         CFF_SubFont  subfont )
+  {
+    FT_Error         error  = FT_Err_Ok;
+    CFF_ParserRec    parser;
+    CFF_FontRecDict  top    = &subfont->font_dict;
+    CFF_Private      priv   = &subfont->private_dict;
+    FT_Stream        stream = font->stream;
+
+
+    /* parse the private dictionary, if any */
+    if ( !top->private_offset || !top->private_size )
+      goto Exit;
+
+    /* set defaults */
+    FT_ZERO( priv );
+
+    priv->blue_shift       = 7;
+    priv->blue_fuzz        = 1;
+    priv->lenIV            = -1;
+    priv->expansion_factor = (FT_Fixed)( 0.06 * 0x10000L );
+    priv->blue_scale       = (FT_Fixed)( 0.039625 * 0x10000L * 1000 );
+
+    cff_parser_init( &parser,
+                     CFF_CODE_PRIVATE,
+                     priv,
+                     font->library,
+                     top->num_designs,
+                     top->num_axes );
+
+    if ( FT_STREAM_SEEK( font->base_offset + top->private_offset ) ||
+         FT_FRAME_ENTER( top->private_size )                       )
+      goto Exit;
+
+    FT_TRACE4(( " private dictionary:\n" ));
+    error = cff_parser_run( &parser,
+                            (FT_Byte*)stream->cursor,
+                            (FT_Byte*)stream->limit );
+    FT_FRAME_EXIT();
+
+    if ( error )
+      goto Exit;
+
+    /* ensure that `num_blue_values' is even */
+    priv->num_blue_values &= ~1;
+
+  Exit:
+    return error;
+  }
+
+
+  static FT_Error
+  cff_subfont_load( CFF_SubFont  subfont,
                     CFF_Index    idx,
                     FT_UInt      font_index,
                     FT_Stream    stream,
                     FT_ULong     base_offset,
-                    FT_Library   library )
+                    CFF_Font     font )
   {
     FT_Error         error;
     CFF_ParserRec    parser;
     FT_Byte*         dict = NULL;
     FT_ULong         dict_len;
-    CFF_FontRecDict  top  = &font->font_dict;
-    CFF_Private      priv = &font->private_dict;
+    CFF_FontRecDict  top  = &subfont->font_dict;
+    CFF_Private      priv = &subfont->private_dict;
 
 
     cff_parser_init( &parser,
                      CFF_CODE_TOPDICT,
-                     &font->font_dict,
-                     library,
+                     &subfont->font_dict,
+                     font->library,
                      0,
                      0 );
 
@@ -1396,39 +1448,9 @@
       goto Exit;
 
     /* parse the private dictionary, if any */
-    if ( top->private_offset && top->private_size )
-    {
-      /* set defaults */
-      FT_ZERO( priv );
-
-      priv->blue_shift       = 7;
-      priv->blue_fuzz        = 1;
-      priv->lenIV            = -1;
-      priv->expansion_factor = (FT_Fixed)( 0.06 * 0x10000L );
-      priv->blue_scale       = (FT_Fixed)( 0.039625 * 0x10000L * 1000 );
-
-      cff_parser_init( &parser,
-                       CFF_CODE_PRIVATE,
-                       priv,
-                       library,
-                       top->num_designs,
-                       top->num_axes );
-
-      if ( FT_STREAM_SEEK( base_offset + font->font_dict.private_offset ) ||
-           FT_FRAME_ENTER( font->font_dict.private_size )                 )
-        goto Exit;
-
-      FT_TRACE4(( " private dictionary:\n" ));
-      error = cff_parser_run( &parser,
-                              (FT_Byte*)stream->cursor,
-                              (FT_Byte*)stream->limit );
-      FT_FRAME_EXIT();
-      if ( error )
-        goto Exit;
-
-      /* ensure that `num_blue_values' is even */
-      priv->num_blue_values &= ~1;
-    }
+    error = cff_load_private_dict( font, subfont );
+    if ( error )
+      goto Exit;
 
     /* read the local subrs, if any */
     if ( priv->local_subrs_offset )
@@ -1437,12 +1459,12 @@
                            priv->local_subrs_offset ) )
         goto Exit;
 
-      error = cff_index_init( &font->local_subrs_index, stream, 1 );
+      error = cff_index_init( &subfont->local_subrs_index, stream, 1 );
       if ( error )
         goto Exit;
 
-      error = cff_index_get_pointers( &font->local_subrs_index,
-                                      &font->local_subrs, NULL, NULL );
+      error = cff_index_get_pointers( &subfont->local_subrs_index,
+                                      &subfont->local_subrs, NULL, NULL );
       if ( error )
         goto Exit;
     }
@@ -1495,10 +1517,13 @@
     FT_ZERO( font );
     FT_ZERO( &string_index );
 
-    font->stream = stream;
-    font->memory = memory;
-    dict         = &font->top_font.font_dict;
-    base_offset  = FT_STREAM_POS();
+    dict        = &font->top_font.font_dict;
+    base_offset = FT_STREAM_POS();
+
+    font->library     = library;
+    font->stream      = stream;
+    font->memory      = memory;
+    font->base_offset = base_offset;
 
     /* read CFF font header */
     if ( FT_STREAM_READ_FIELDS( cff_header_fields, font ) )
@@ -1577,7 +1602,7 @@
                               subfont_index,
                               stream,
                               base_offset,
-                              library );
+                              font );
     if ( error )
       goto Exit;
 
@@ -1625,8 +1650,12 @@
       {
         sub = font->subfonts[idx];
         FT_TRACE4(( "parsing subfont %u\n", idx ));
-        error = cff_subfont_load( sub, &fd_index, idx,
-                                  stream, base_offset, library );
+        error = cff_subfont_load( sub,
+                                  &fd_index,
+                                  idx,
+                                  stream,
+                                  base_offset,
+                                  font );
         if ( error )
           goto Fail_CID;
       }

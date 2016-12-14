@@ -1,3 +1,17 @@
+2016-12-15  Dave Arnold  <darnold@adobe.com>
+	    Werner Lemberg  <wl@gnu.org>
+
+	[cff] Code shuffling.
+
+	* src/cff/cfftypes.h (CFF_Font): Add `library' and `base_offset'
+	fields.
+
+	* src/cff/cffload.c (cff_subfont_load): Change last argument to
+	`CFF_Font'
+	Split off parsing of private dictionary into...
+	(cff_load_private_dict): ...this new function.
+	(cff_font_load): Updated.
+
 2016-12-14  Werner Lemberg  <wl@gnu.org>
 
 	[sfnt, truetype] Add framework for Metrics Variations service.
