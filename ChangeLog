@@ -1,3 +1,13 @@
+2016-12-14  Dave Arnold  <darnold@adobe.com>
+	    Werner Lemberg  <wl@gnu.org>
+
+	[sfnt, cff] Minor preparations.
+
+	* include/freetype/tttags.h (TTAG_CFF2, TTAG_HVAR, TTAG_MVAR,
+	TTAG_VVAR): New SFNT table tags.
+
+	* src/cff/cf2fixed.h (CF2_FIXED_ONE, CF2_FIXED_EPSILON): Add cast.
+
 2016-12-10  Werner Lemberg  <wl@gnu.org>
 
 	[truetype, type1] Add `get_var_blend' to MM service.
