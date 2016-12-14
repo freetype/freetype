@@ -1,5 +1,30 @@
 2016-12-14  Werner Lemberg  <wl@gnu.org>
 
+	[cff] Add Multiple Masters service.
+
+	The code simply uses the MM functions from the `truetype' module.
+
+	Everything is guarded with TT_CONFIG_OPTION_GX_VAR_SUPPORT.
+
+	* include/freetype/internal/tttypes.h (TT_Face): New field `mm'.
+
+	* src/cff/cffdrivr.c: Include FT_SERVICE_MULTIPLE_MASTERS_H.
+	(cff_set_mm_blend, cff_get_mm_blend, cff_get_mm_var,
+	cff_set_var_design, cff_get_var_design): New functions.
+	(cff_service_multi_masters): New service.
+	(cff_services): Updated.
+
+	* src/cff/cffload.c (cff_get_var_blend, cff_done_blend): New
+	functions.
+	* src/cff/cffload.h: Updated.
+
+	* src/cff/cffpic.h (CFF_SERVICE_MULTI_MASTERS_GET): New macro.
+
+	* src/sfnt/sfobjs.c: Include FT_SERVICE_MULTIPLE_MASTERS_H.
+	(sfnt_init_face): Initialize `face->mm'.
+
+2016-12-14  Werner Lemberg  <wl@gnu.org>
+
 	Extend functionality of `ft_module_get_service'.
 
 	It can now differentiate between local and global searches.

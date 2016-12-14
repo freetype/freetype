@@ -1161,6 +1161,8 @@ FT_BEGIN_HEADER
   /*                                                                       */
   /*    psnames              :: A pointer to the PostScript names service. */
   /*                                                                       */
+  /*    mm                   :: A pointer to the Multiple Masters service. */
+  /*                                                                       */
   /*    hdmx                 :: The face's horizontal device metrics       */
   /*                            (`hdmx' table).  This table is optional in */
   /*                            TrueType/OpenType fonts.                   */
@@ -1348,6 +1350,12 @@ FT_BEGIN_HEADER
     /* a typeless pointer to the FT_Service_PsCMapsRec table used to */
     /* handle glyph names <-> unicode & Mac values                   */
     void*                 psnames;
+
+#ifdef TT_CONFIG_OPTION_GX_VAR_SUPPORT
+    /* a typeless pointer to the FT_Service_MultiMasters table used to */
+    /* handle variation fonts                                          */
+    void*                 mm;
+#endif
 
 
     /***********************************************************************/

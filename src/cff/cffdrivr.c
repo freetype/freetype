@@ -32,6 +32,10 @@
 #include "cffcmap.h"
 #include "cffparse.h"
 
+#ifdef TT_CONFIG_OPTION_GX_VAR_SUPPORT
+#include FT_SERVICE_MULTIPLE_MASTERS_H
+#endif
+
 #include "cfferrs.h"
 #include "cffpic.h"
 
@@ -866,6 +870,89 @@
     (FT_Properties_GetFunc)cff_property_get )     /* get_property */
 
 
+#ifdef TT_CONFIG_OPTION_GX_VAR_SUPPORT
+
+  /*
+   *  MULTIPLE MASTER SERVICE
+   *
+   */
+
+  static FT_Error
+  cff_set_mm_blend( CFF_Face   face,
+                    FT_UInt    num_coords,
+                    FT_Fixed*  coords )
+  {
+    FT_Service_MultiMasters  mm = (FT_Service_MultiMasters)face->mm;
+
+
+    return mm->set_mm_blend( FT_FACE( face ), num_coords, coords );
+  }
+
+
+  static FT_Error
+  cff_get_mm_blend( CFF_Face   face,
+                    FT_UInt    num_coords,
+                    FT_Fixed*  coords )
+  {
+    FT_Service_MultiMasters  mm = (FT_Service_MultiMasters)face->mm;
+
+
+    return mm->get_mm_blend( FT_FACE( face ), num_coords, coords );
+  }
+
+
+  static FT_Error
+  cff_get_mm_var( CFF_Face     face,
+                  FT_MM_Var*  *master )
+  {
+    FT_Service_MultiMasters  mm = (FT_Service_MultiMasters)face->mm;
+
+
+    return mm->get_mm_var( FT_FACE( face ), master );
+  }
+
+
+  static FT_Error
+  cff_set_var_design( CFF_Face   face,
+                      FT_UInt    num_coords,
+                      FT_Fixed*  coords )
+  {
+    FT_Service_MultiMasters  mm = (FT_Service_MultiMasters)face->mm;
+
+
+    return mm->set_var_design( FT_FACE( face ), num_coords, coords );
+  }
+
+
+  static FT_Error
+  cff_get_var_design( CFF_Face   face,
+                      FT_UInt    num_coords,
+                      FT_Fixed*  coords )
+  {
+    FT_Service_MultiMasters  mm = (FT_Service_MultiMasters)face->mm;
+
+
+    return mm->get_var_design( FT_FACE( face ), num_coords, coords );
+  }
+
+
+  FT_DEFINE_SERVICE_MULTIMASTERSREC(
+    cff_service_multi_masters,
+
+    (FT_Get_MM_Func)        NULL,                   /* get_mm         */
+    (FT_Set_MM_Design_Func) NULL,                   /* set_mm_design  */
+    (FT_Set_MM_Blend_Func)  cff_set_mm_blend,       /* set_mm_blend   */
+    (FT_Get_MM_Blend_Func)  cff_get_mm_blend,       /* get_mm_blend   */
+    (FT_Get_MM_Var_Func)    cff_get_mm_var,         /* get_mm_var     */
+    (FT_Set_Var_Design_Func)cff_set_var_design,     /* set_var_design */
+    (FT_Get_Var_Design_Func)cff_get_var_design,     /* get_var_design */
+
+    (FT_Get_Var_Blend_Func) cff_get_var_blend,      /* get_var_blend  */
+    (FT_Done_Blend_Func)    cff_done_blend          /* done_blend     */
+  )
+#endif
+
+
   /*************************************************************************/
   /*************************************************************************/
   /*************************************************************************/
@@ -878,7 +965,21 @@
   /*************************************************************************/
   /*************************************************************************/
 
-#ifndef FT_CONFIG_OPTION_NO_GLYPH_NAMES
+#if !defined FT_CONFIG_OPTION_NO_GLYPH_NAMES && \
+     defined TT_CONFIG_OPTION_GX_VAR_SUPPORT
+  FT_DEFINE_SERVICEDESCREC8(
+    cff_services,
+
+    FT_SERVICE_ID_FONT_FORMAT,          FT_FONT_FORMAT_CFF,
+    FT_SERVICE_ID_MULTI_MASTERS,        &CFF_SERVICE_MULTI_MASTERS_GET,
+    FT_SERVICE_ID_POSTSCRIPT_INFO,      &CFF_SERVICE_PS_INFO_GET,
+    FT_SERVICE_ID_POSTSCRIPT_FONT_NAME, &CFF_SERVICE_PS_NAME_GET,
+    FT_SERVICE_ID_GLYPH_DICT,           &CFF_SERVICE_GLYPH_DICT_GET,
+    FT_SERVICE_ID_TT_CMAP,              &CFF_SERVICE_GET_CMAP_INFO_GET,
+    FT_SERVICE_ID_CID,                  &CFF_SERVICE_CID_INFO_GET,
+    FT_SERVICE_ID_PROPERTIES,           &CFF_SERVICE_PROPERTIES_GET
+  )
+#elif !defined FT_CONFIG_OPTION_NO_GLYPH_NAMES
   FT_DEFINE_SERVICEDESCREC7(
     cff_services,
 
@@ -886,6 +987,18 @@
     FT_SERVICE_ID_POSTSCRIPT_INFO,      &CFF_SERVICE_PS_INFO_GET,
     FT_SERVICE_ID_POSTSCRIPT_FONT_NAME, &CFF_SERVICE_PS_NAME_GET,
     FT_SERVICE_ID_GLYPH_DICT,           &CFF_SERVICE_GLYPH_DICT_GET,
+    FT_SERVICE_ID_TT_CMAP,              &CFF_SERVICE_GET_CMAP_INFO_GET,
+    FT_SERVICE_ID_CID,                  &CFF_SERVICE_CID_INFO_GET,
+    FT_SERVICE_ID_PROPERTIES,           &CFF_SERVICE_PROPERTIES_GET
+  )
+#elif defined TT_CONFIG_OPTION_GX_VAR_SUPPORT
+  FT_DEFINE_SERVICEDESCREC7(
+    cff_services,
+
+    FT_SERVICE_ID_FONT_FORMAT,          FT_FONT_FORMAT_CFF,
+    FT_SERVICE_ID_MULTI_MASTERS,        &CFF_SERVICE_MULTI_MASTERS_GET,
+    FT_SERVICE_ID_POSTSCRIPT_INFO,      &CFF_SERVICE_PS_INFO_GET,
+    FT_SERVICE_ID_POSTSCRIPT_FONT_NAME, &CFF_SERVICE_PS_NAME_GET,
     FT_SERVICE_ID_TT_CMAP,              &CFF_SERVICE_GET_CMAP_INFO_GET,
     FT_SERVICE_ID_CID,                  &CFF_SERVICE_CID_INFO_GET,
     FT_SERVICE_ID_PROPERTIES,           &CFF_SERVICE_PROPERTIES_GET
