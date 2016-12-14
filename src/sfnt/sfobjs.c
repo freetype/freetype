@@ -31,6 +31,7 @@
 
 #ifdef TT_CONFIG_OPTION_GX_VAR_SUPPORT
 #include FT_SERVICE_MULTIPLE_MASTERS_H
+#include FT_SERVICE_METRICS_VARIATIONS_H
 #endif
 
 #include "sferrors.h"
@@ -888,6 +889,8 @@
                                         FT_SERVICE_ID_MULTI_MASTERS,
                                         0 );
     }
+
+    FT_FACE_FIND_GLOBAL_SERVICE( face, face->var, METRICS_VARIATIONS );
 #endif
 
     FT_TRACE2(( "SFNT driver\n" ));

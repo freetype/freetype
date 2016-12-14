@@ -25,6 +25,7 @@
 #ifdef TT_CONFIG_OPTION_GX_VAR_SUPPORT
 #include FT_MULTIPLE_MASTERS_H
 #include FT_SERVICE_MULTIPLE_MASTERS_H
+#include FT_SERVICE_METRICS_VARIATIONS_H
 #endif
 
 #include FT_SERVICE_TRUETYPE_ENGINE_H
@@ -464,6 +465,7 @@
   /*************************************************************************/
 
 #ifdef TT_CONFIG_OPTION_GX_VAR_SUPPORT
+
   FT_DEFINE_SERVICE_MULTIMASTERSREC(
     tt_service_gx_multi_masters,
 
@@ -478,7 +480,23 @@
     (FT_Get_Var_Blend_Func) tt_get_var_blend,       /* get_var_blend  */
     (FT_Done_Blend_Func)    tt_done_blend           /* done_blend     */
   )
-#endif
+
+  FT_DEFINE_SERVICE_METRICSVARIATIONSREC(
+    tt_service_metrics_variations,
+
+    (FT_HAdvance_Adjust_Func)NULL,                   /* hadvance_adjust */
+    (FT_LSB_Adjust_Func)     NULL,                   /* lsb_adjust      */
+    (FT_RSB_Adjust_Func)     NULL,                   /* rsb_adjust      */
+
+    (FT_VAdvance_Adjust_Func)NULL,                   /* vadvance_adjust */
+    (FT_TSB_Adjust_Func)     NULL,                   /* tsb_adjust      */
+    (FT_BSB_Adjust_Func)     NULL,                   /* bsb_adjust      */
+    (FT_VOrg_Adjust_Func)    NULL,                   /* vorg_adjust     */
+
+    (FT_Metrics_Adjust_Func) NULL                    /* metrics_adjust  */
+  )
+
+#endif /* TT_CONFIG_OPTION_GX_VAR_SUPPORT */
 
 
   static const FT_Service_TrueTypeEngineRec  tt_service_truetype_engine =
@@ -503,14 +521,15 @@
 
 
 #ifdef TT_CONFIG_OPTION_GX_VAR_SUPPORT
-  FT_DEFINE_SERVICEDESCREC5(
+  FT_DEFINE_SERVICEDESCREC6(
     tt_services,
 
-    FT_SERVICE_ID_FONT_FORMAT,     FT_FONT_FORMAT_TRUETYPE,
-    FT_SERVICE_ID_MULTI_MASTERS,   &TT_SERVICE_GX_MULTI_MASTERS_GET,
-    FT_SERVICE_ID_TRUETYPE_ENGINE, &tt_service_truetype_engine,
-    FT_SERVICE_ID_TT_GLYF,         &TT_SERVICE_TRUETYPE_GLYF_GET,
-    FT_SERVICE_ID_PROPERTIES,      &TT_SERVICE_PROPERTIES_GET )
+    FT_SERVICE_ID_FONT_FORMAT,        FT_FONT_FORMAT_TRUETYPE,
+    FT_SERVICE_ID_MULTI_MASTERS,      &TT_SERVICE_GX_MULTI_MASTERS_GET,
+    FT_SERVICE_ID_METRICS_VARIATIONS, &TT_SERVICE_METRICS_VARIATIONS_GET,
+    FT_SERVICE_ID_TRUETYPE_ENGINE,    &tt_service_truetype_engine,
+    FT_SERVICE_ID_TT_GLYF,            &TT_SERVICE_TRUETYPE_GLYF_GET,
+    FT_SERVICE_ID_PROPERTIES,         &TT_SERVICE_PROPERTIES_GET )
 #else
   FT_DEFINE_SERVICEDESCREC4(
     tt_services,

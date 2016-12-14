@@ -818,6 +818,7 @@ FT_BEGIN_HEADER
 #define FT_SERVICE_GLYPH_DICT_H         <freetype/internal/services/svgldict.h>
 #define FT_SERVICE_GX_VALIDATE_H        <freetype/internal/services/svgxval.h>
 #define FT_SERVICE_KERNING_H            <freetype/internal/services/svkern.h>
+#define FT_SERVICE_METRICS_VARIATIONS_H <freetype/internal/services/svmetric.h>
 #define FT_SERVICE_MULTIPLE_MASTERS_H   <freetype/internal/services/svmm.h>
 #define FT_SERVICE_OPENTYPE_VALIDATE_H  <freetype/internal/services/svotval.h>
 #define FT_SERVICE_PFR_H                <freetype/internal/services/svpfr.h>

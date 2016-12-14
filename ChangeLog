@@ -1,5 +1,29 @@
 2016-12-14  Werner Lemberg  <wl@gnu.org>
 
+	[sfnt, truetype] Add framework for Metrics Variations service.
+
+	No effect yet; service functions will be implemented later on.
+
+	Everything is guarded with TT_CONFIG_OPTION_GX_VAR_SUPPORT.
+
+	* include/freetype/internal/services/svmetric.h: New file.
+
+	* include/freetype/internal/ftserv.h
+	(FT_SERVICE_METRICS_VARIATIONS_H): New macro.
+
+	* include/freetype/internal/tttypes.h (TT_Face): New field `var'.
+
+	* src/sfnt/sfobjs.c: Include FT_SERVICE_METRICS_VARIATIONS_H.
+	(sfnt_init_face): Initialize `face->var'.
+
+	* src/truetype/ttdriver.c: Include FT_SERVICE_METRICS_VARIATIONS_H.
+	(tt_service_metrics_variations): New service.
+	(tt_services): Updated.
+
+	* src/truetype/ttpic.h: Updated.
+
+2016-12-14  Werner Lemberg  <wl@gnu.org>
+
 	[cff] Add Multiple Masters service.
 
 	The code simply uses the MM functions from the `truetype' module.

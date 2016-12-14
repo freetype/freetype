@@ -1355,6 +1355,10 @@ FT_BEGIN_HEADER
     /* a typeless pointer to the FT_Service_MultiMasters table used to */
     /* handle variation fonts                                          */
     void*                 mm;
+
+    /* a typeless pointer to the FT_Service_MetricsVariationsRec table */
+    /* used to handle the HVAR, VVAR, and MVAR OpenType tables         */
+    void*                 var;
 #endif
 
 
