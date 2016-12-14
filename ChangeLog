@@ -1,5 +1,20 @@
 2016-12-14  Werner Lemberg  <wl@gnu.org>
 
+	Extend functionality of `ft_module_get_service'.
+
+	It can now differentiate between local and global searches.
+
+	* src/base/ftobjs.c (ft_module_get_service): Add `global' argument.
+	(FT_Get_TrueType_Engine_Type): Updated.
+
+	* src/cff/cffdrivr.c (cff_get_ps_name, cff_get_cmap_info): Updated.
+
+	* include/freetype/internal/ftobjs.h: Updated.
+	* include/freetype/internal/ftserv.h (FT_FACE_FIND_GLOBAL_SERVICE):
+	Updated.
+
+2016-12-14  Werner Lemberg  <wl@gnu.org>
+
 	* src/truetype/ttgxvar.c (tt_get_var_blend): Fix compiler warning.
 
 2016-12-14  Dave Arnold  <darnold@adobe.com>

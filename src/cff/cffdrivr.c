@@ -455,7 +455,8 @@
       FT_Service_PsFontName  service     =
         (FT_Service_PsFontName)ft_module_get_service(
                                  sfnt_module,
-                                 FT_SERVICE_ID_POSTSCRIPT_FONT_NAME );
+                                 FT_SERVICE_ID_POSTSCRIPT_FONT_NAME,
+                                 0 );
 
 
       if ( service && service->get_ps_font_name )
@@ -500,7 +501,8 @@
       FT_Module           sfnt    = FT_Get_Module( library, "sfnt" );
       FT_Service_TTCMaps  service =
         (FT_Service_TTCMaps)ft_module_get_service( sfnt,
-                                                   FT_SERVICE_ID_TT_CMAP );
+                                                   FT_SERVICE_ID_TT_CMAP,
+                                                   0 );
 
 
       if ( service && service->get_cmap_info )

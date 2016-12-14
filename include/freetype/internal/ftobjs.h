@@ -531,7 +531,8 @@ FT_BEGIN_HEADER
 
   FT_BASE( FT_Pointer )
   ft_module_get_service( FT_Module    module,
-                         const char*  service_id );
+                         const char*  service_id,
+                         FT_Bool      global );
 
 #ifdef FT_CONFIG_OPTION_ENVIRONMENT_PROPERTIES
   FT_BASE( FT_Error )

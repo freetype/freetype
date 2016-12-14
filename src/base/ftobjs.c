@@ -4496,7 +4496,8 @@
 
   FT_BASE_DEF( FT_Pointer )
   ft_module_get_service( FT_Module    module,
-                         const char*  service_id )
+                         const char*  service_id,
+                         FT_Bool      global )
   {
     FT_Pointer  result = NULL;
 
@@ -4509,7 +4510,7 @@
       if ( module->clazz->get_interface )
         result = module->clazz->get_interface( module, service_id );
 
-      if ( result == NULL )
+      if ( global && result == NULL )
       {
         /* we didn't find it, look in all other modules then */
         FT_Library  library = module->library;
@@ -4977,7 +4978,8 @@
 
         service = (FT_Service_TrueTypeEngine)
                     ft_module_get_service( module,
-                                           FT_SERVICE_ID_TRUETYPE_ENGINE );
+                                           FT_SERVICE_ID_TRUETYPE_ENGINE,
+                                           0 );
         if ( service )
           result = service->engine_type;
       }
