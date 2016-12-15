@@ -432,24 +432,31 @@
 
 
   /* read a number, either integer or real */
-  static FT_Long
-  cff_parse_num( FT_Byte**  d )
+  FT_LOCAL_DEF( FT_Long )
+  cff_parse_num( CFF_Parser  parser,
+                 FT_Byte**   d )
   {
-    return **d == 30 ? ( cff_parse_real( d[0], d[1], 0, NULL ) >> 16 )
-                     :   cff_parse_integer( d[0], d[1] );
+    if ( **d == 30 )
+    {
+      /* binary-coded decimal is truncated to integer */
+      return cff_parse_real( *d, parser->limit, 0, NULL ) >> 16;
+    }
+    else
+      return cff_parse_integer( *d, parser->limit );
   }
 
 
   /* read a floating point number, either integer or real */
   static FT_Fixed
-  do_fixed( FT_Byte**  d,
-            FT_Long    scaling )
+  do_fixed( CFF_Parser  parser,
+            FT_Byte**   d,
+            FT_Long     scaling )
   {
     if ( **d == 30 )
-      return cff_parse_real( d[0], d[1], scaling, NULL );
+      return cff_parse_real( *d, parser->limit, scaling, NULL );
     else
     {
-      FT_Long  val = cff_parse_integer( d[0], d[1] );
+      FT_Long  val = cff_parse_integer( *d, parser->limit );
 
 
       if ( scaling )
@@ -477,19 +484,21 @@
 
   /* read a floating point number, either integer or real */
   static FT_Fixed
-  cff_parse_fixed( FT_Byte**  d )
+  cff_parse_fixed( CFF_Parser  parser,
+                   FT_Byte**   d )
   {
-    return do_fixed( d, 0 );
+    return do_fixed( parser, d, 0 );
   }
 
 
   /* read a floating point number, either integer or real, */
   /* but return `10^scaling' times the number read in      */
   static FT_Fixed
-  cff_parse_fixed_scaled( FT_Byte**  d,
-                          FT_Long    scaling )
+  cff_parse_fixed_scaled( CFF_Parser  parser,
+                          FT_Byte**   d,
+                          FT_Long     scaling )
   {
-    return do_fixed( d, scaling );
+    return do_fixed( parser, d, scaling );
   }
 
 
@@ -497,13 +506,14 @@
   /* and return it as precise as possible -- `scaling' returns */
   /* the scaling factor (as a power of 10)                     */
   static FT_Fixed
-  cff_parse_fixed_dynamic( FT_Byte**  d,
-                           FT_Long*   scaling )
+  cff_parse_fixed_dynamic( CFF_Parser  parser,
+                           FT_Byte**   d,
+                           FT_Long*    scaling )
   {
     FT_ASSERT( scaling );
 
     if ( **d == 30 )
-      return cff_parse_real( d[0], d[1], 0, scaling );
+      return cff_parse_real( *d, parser->limit, 0, scaling );
     else
     {
       FT_Long  number;
@@ -573,7 +583,7 @@
 
       for ( i = 0; i < 6; i++ )
       {
-        values[i] = cff_parse_fixed_dynamic( data++, &scalings[i] );
+        values[i] = cff_parse_fixed_dynamic( parser, data++, &scalings[i] );
         if ( values[i] )
         {
           if ( scalings[i] > max_scaling )
@@ -670,10 +680,10 @@
 
     if ( parser->top >= parser->stack + 4 )
     {
-      bbox->xMin = FT_RoundFix( cff_parse_fixed( data++ ) );
-      bbox->yMin = FT_RoundFix( cff_parse_fixed( data++ ) );
-      bbox->xMax = FT_RoundFix( cff_parse_fixed( data++ ) );
-      bbox->yMax = FT_RoundFix( cff_parse_fixed( data   ) );
+      bbox->xMin = FT_RoundFix( cff_parse_fixed( parser, data++ ) );
+      bbox->yMin = FT_RoundFix( cff_parse_fixed( parser, data++ ) );
+      bbox->xMax = FT_RoundFix( cff_parse_fixed( parser, data++ ) );
+      bbox->yMax = FT_RoundFix( cff_parse_fixed( parser, data   ) );
       error = FT_Err_Ok;
 
       FT_TRACE4(( " [%d %d %d %d]\n",
@@ -702,7 +712,7 @@
       FT_Long  tmp;
 
 
-      tmp = cff_parse_num( data++ );
+      tmp = cff_parse_num( parser, data++ );
       if ( tmp < 0 )
       {
         FT_ERROR(( "cff_parse_private_dict: Invalid dictionary size\n" ));
@@ -711,7 +721,7 @@
       }
       dict->private_size = (FT_ULong)tmp;
 
-      tmp = cff_parse_num( data );
+      tmp = cff_parse_num( parser, data );
       if ( tmp < 0 )
       {
         FT_ERROR(( "cff_parse_private_dict: Invalid dictionary offset\n" ));
@@ -756,7 +766,7 @@
     /* currently, we handle only the first argument */
     if ( parser->top >= parser->stack + 5 )
     {
-      FT_Long  num_designs = cff_parse_num( parser->stack );
+      FT_Long  num_designs = cff_parse_num( parser, parser->stack );
 
 
       if ( num_designs > 16 || num_designs < 2 )
@@ -793,11 +803,11 @@
 
     if ( parser->top >= parser->stack + 3 )
     {
-      dict->cid_registry = (FT_UInt)cff_parse_num( data++ );
-      dict->cid_ordering = (FT_UInt)cff_parse_num( data++ );
+      dict->cid_registry = (FT_UInt)cff_parse_num( parser, data++ );
+      dict->cid_ordering = (FT_UInt)cff_parse_num( parser, data++ );
       if ( **data == 30 )
         FT_TRACE1(( "cff_parse_cid_ros: real supplement is rounded\n" ));
-      dict->cid_supplement = cff_parse_num( data );
+      dict->cid_supplement = cff_parse_num( parser, data );
       if ( dict->cid_supplement < 0 )
         FT_TRACE1(( "cff_parse_cid_ros: negative supplement %d is found\n",
                    dict->cid_supplement ));
@@ -1310,15 +1320,15 @@
             case cff_kind_bool:
             case cff_kind_string:
             case cff_kind_num:
-              val = cff_parse_num( parser->stack );
+              val = cff_parse_num( parser, parser->stack );
               goto Store_Number;
 
             case cff_kind_fixed:
-              val = cff_parse_fixed( parser->stack );
+              val = cff_parse_fixed( parser, parser->stack );
               goto Store_Number;
 
             case cff_kind_fixed_thousand:
-              val = cff_parse_fixed_scaled( parser->stack, 3 );
+              val = cff_parse_fixed_scaled( parser, parser->stack, 3 );
 
             Store_Number:
               switch ( field->size )
@@ -1387,7 +1397,7 @@
                 val = 0;
                 while ( num_args > 0 )
                 {
-                  val += cff_parse_num( data++ );
+                  val += cff_parse_num( parser, data++ );
                   switch ( field->size )
                   {
                   case (8 / FT_CHAR_BIT):

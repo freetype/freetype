@@ -1,5 +1,19 @@
 2016-12-15  Dave Arnold  <darnold@adobe.com>
 
+	[cff] Extend number parsing.
+
+	The forthcoming CFF2 support needs a dynamic parsing limit.
+
+	* src/cff/cffparse.c (cff_parse_num, do_fixed, cff_parse_fixed,
+	cff_parse_fixed_scaled, cff_parse_fixed_dynamic): Add argument for
+	parser.
+	(cff_parse_font_matrix, cff_parse_font_bbox, cff_parse_private_dict,
+	cff_parse_multiple_master, cff_parse_cid_ros, cff_parser_run): Updated.
+
+	* src/cff/cffparse.h (cff_parse_num): Export locally.
+
+2016-12-15  Dave Arnold  <darnold@adobe.com>
+
 	[cff] Implement dynamic stack size for Adobe engine.
 
 	This also adds `cf2_stack_setReal' and `cf2_stack_pop', needed for
