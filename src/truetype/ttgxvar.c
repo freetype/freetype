@@ -748,6 +748,151 @@
   }
 
 
+  /*************************************************************************/
+  /*                                                                       */
+  /* <Function>                                                            */
+  /*    tt_hadvance_adjust                                                 */
+  /*                                                                       */
+  /* <Description>                                                         */
+  /*    Apply HVAR advance width adjustment of a given glyph.              */
+  /*                                                                       */
+  /* <Input>                                                               */
+  /*    gindex :: The glyph index.                                         */
+  /*                                                                       */
+  /* <InOut>                                                               */
+  /*    face   :: The font face.                                           */
+  /*                                                                       */
+  /*    adelta :: Points to width value that gets modified.                */
+  /*                                                                       */
+  FT_LOCAL_DEF( FT_Error )
+  tt_hadvance_adjust( TT_Face  face,
+                      FT_UInt  gindex,
+                      FT_Int  *avalue )
+  {
+    FT_Error  error = FT_Err_Ok;
+
+    GX_HVarData  varData;
+
+    FT_UInt    innerIndex, outerIndex;
+    FT_UInt    master, j;
+    FT_Fixed   netAdjustment = 0;     /* accumulated adjustment */
+    FT_Fixed   scaledDelta;
+    FT_Short*  deltaSet;
+    FT_Fixed   delta;
+
+
+    if ( !face->blend )
+      goto Exit;
+
+    if ( !face->blend->hvar_loaded )
+    {
+      /* initialize hvar table */
+      face->blend->hvar_error = ft_var_load_hvar( face );
+    }
+
+    if ( !face->blend->hvar_checked )
+    {
+      error = face->blend->hvar_error;
+      goto Exit;
+    }
+
+    if ( gindex >= face->blend->hvar_table->widthMap.mapCount )
+    {
+      FT_TRACE2(( "gindex %d out of range\n", gindex ));
+      error = FT_THROW( Invalid_Argument );
+      goto Exit;
+    }
+
+    /* trust that HVAR parser has checked indices */
+    outerIndex = face->blend->hvar_table->widthMap.outerIndex[gindex];
+    innerIndex = face->blend->hvar_table->widthMap.innerIndex[gindex];
+    varData    = &face->blend->hvar_table->itemStore.varData[outerIndex];
+    deltaSet   = &varData->deltaSet[varData->regionIdxCount * innerIndex];
+
+    /* See pseudo code from `Font Variations Overview' */
+    /* in the OpenType specification.                  */
+
+    /* outer loop steps through master designs to be blended */
+    for ( master = 0; master < varData->regionIdxCount; master++ )
+    {
+      FT_Fixed  scalar      = FT_FIXED_ONE;
+      FT_UInt   regionIndex = varData->regionIndices[master];
+
+      GX_AxisCoords  axis = face->blend
+                              ->hvar_table
+                              ->itemStore.varRegionList[regionIndex]
+                                         .axisList;
+
+
+      /* inner loop steps through axes in this region */
+      for ( j = 0;
+            j < face->blend->hvar_table->itemStore.axisCount;
+            j++, axis++ )
+      {
+        FT_Fixed  axisScalar;
+
+
+        /* compute the scalar contribution of this axis; */
+        /* ignore invalid ranges                         */
+        if ( axis->startCoord > axis->peakCoord ||
+             axis->peakCoord > axis->endCoord   )
+          axisScalar = FT_FIXED_ONE;
+
+        else if ( axis->startCoord < 0 &&
+                  axis->endCoord > 0   &&
+                  axis->peakCoord != 0 )
+          axisScalar = FT_FIXED_ONE;
+
+        /* peak of 0 means ignore this axis */
+        else if ( axis->peakCoord == 0 )
+          axisScalar = FT_FIXED_ONE;
+
+        /* ignore this region if coords are out of range */
+        else if ( face->blend->normalizedcoords[j] < axis->startCoord ||
+                  face->blend->normalizedcoords[j] > axis->endCoord   )
+          axisScalar = 0;
+
+        /* calculate a proportional factor */
+        else
+        {
+          if ( face->blend->normalizedcoords[j] == axis->peakCoord )
+            axisScalar = FT_FIXED_ONE;
+          else if ( face->blend->normalizedcoords[j] < axis->peakCoord )
+            axisScalar =
+              FT_DivFix( face->blend->normalizedcoords[j] - axis->startCoord,
+                         axis->peakCoord - axis->startCoord );
+          else
+            axisScalar =
+              FT_DivFix( axis->endCoord - face->blend->normalizedcoords[j],
+                         axis->endCoord - axis->peakCoord );
+        }
+
+        /* take product of all the axis scalars */
+        scalar = FT_MulFix( scalar, axisScalar );
+
+      } /* per-axis loop */
+
+      FT_TRACE4(( ", %f ", scalar / 65536.0 ));
+
+      /* get the scaled delta for this region */
+      delta       = FT_intToFixed( deltaSet[master] );
+      scaledDelta = FT_MulFix( scalar, delta );
+
+      /* accumulate the adjustments from each region */
+      netAdjustment = netAdjustment + scaledDelta;
+
+    } /* per-region loop */
+
+    FT_TRACE4(( "]\n" ));
+
+    /* apply the accumulated adjustment to derive the interpolated value */
+    *avalue += FT_fixedToInt( netAdjustment );
+
+  Exit:
+    return error;
+  }
+
+
   typedef struct  GX_GVar_Head_
   {
     FT_Long    version;

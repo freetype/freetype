@@ -254,6 +254,10 @@ FT_BEGIN_HEADER
                               FT_Outline*  outline,
                               FT_UInt      n_points );
 
+  FT_LOCAL( FT_Error )
+  tt_hadvance_adjust( TT_Face  face,
+                      FT_UInt  gindex,
+                      FT_Int  *adelta );
 
   FT_LOCAL( FT_Error )
   tt_get_var_blend( TT_Face     face,

@@ -1,6 +1,14 @@
 2016-12-15  Dave Arnold  <darnold@adobe.com>
 	    Werner Lemberg  <wl@gnu.org>
 
+	[truetype] Provide function to apply `HVAR' advance width variation.
+
+	* src/truetype/ttgxvar.c (tt_hadvance_adjust): New function.
+	* src/truetype/ttgxvar.h: Updated.
+
+2016-12-15  Dave Arnold  <darnold@adobe.com>
+	    Werner Lemberg  <wl@gnu.org>
+
 	[truetype] Add `HVAR' table parsing.
 
 	Note that this is not complete yet; it only handles advance width
