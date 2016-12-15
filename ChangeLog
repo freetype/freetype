@@ -1,4 +1,27 @@
 2016-12-15  Dave Arnold  <darnold@adobe.com>
+	    Werner Lemberg  <wl@gnu.org>
+
+	[truetype] Add `HVAR' table parsing.
+
+	Note that this is not complete yet; it only handles advance width
+	variation.
+
+	Activation of the code follows in another commit.
+
+	* include/freetype/ftmm.h (FT_Var_Named_Style): Add `psid' member.
+
+	* src/truetype/ttgxvar.h (GX_HVarData, GX_AxisCoords, GX_HVarRegion,
+	GX_HVStore, GX_WidthMap): New auxiliary structures for...
+	(GX_HVarTable): ... HVAR main structure.
+	(GX_BlendRec): Add data for HVAR loading.
+
+	* src/truetype/ttgxvar.c (FT_FIXED_ONE, FT_fdot14ToFixed,
+	FT_intToFixed, FT_fixedToInt): New macros.
+	(ft_var_load_hvar): New function.
+	(TT_Get_MM_Var): Updated.
+	(tt_done_blend): Deallocate HVAR data.
+
+2016-12-15  Dave Arnold  <darnold@adobe.com>
 
 	[cff] Extend number parsing.
 

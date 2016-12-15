@@ -171,6 +171,7 @@ FT_BEGIN_HEADER
   {
     FT_Fixed*  coords;
     FT_UInt    strid;
+    FT_UInt    psid;   /* since 2.7.1 */
 
   } FT_Var_Named_Style;
 
