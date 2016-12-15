@@ -47,6 +47,8 @@
 
 #include "cf2error.h"
 
+#include "cffload.h"
+
 
   /*************************************************************************/
   /*                                                                       */
@@ -215,8 +217,8 @@
     cf2_cmdESC,          /* 12 */
     cf2_cmdRESERVED_13,  /* 13 */
     cf2_cmdENDCHAR,      /* 14 */
-    cf2_cmdRESERVED_15,  /* 15 */
-    cf2_cmdRESERVED_16,  /* 16 */
+    cf2_cmdVSINDEX,      /* 15 */
+    cf2_cmdBLEND,        /* 16 */
     cf2_cmdRESERVED_17,  /* 17 */
     cf2_cmdHSTEMHM,      /* 18 */
     cf2_cmdHINTMASK,     /* 19 */
@@ -401,6 +403,43 @@
 
     *curX = vals[12];
     *curY = vals[13];
+  }
+
+
+  /* Blend numOperands on the stack,                */
+  /* store results into the first numBlends values, */
+  /* then pop remaining arguments.                  */
+  static void
+  cf2_doBlend( const CFF_Blend  blend,
+               CF2_Stack        opStack,
+               CF2_UInt         numBlends )
+  {
+    CF2_UInt  delta;
+    CF2_UInt  base;
+    CF2_UInt  i, j;
+    CF2_UInt  numOperands = (CF2_UInt)( numBlends * blend->lenBV );
+
+
+    base  = cf2_stack_count( opStack ) - numOperands;
+    delta = base + numBlends;
+
+    for ( i = 0; i < numBlends; i++ )
+    {
+      const CF2_Fixed*  weight = &blend->BV[1];
+
+      /* start with first term */
+      CF2_Fixed  sum = cf2_stack_getReal( opStack, i + base );
+
+
+      for ( j = 1; j < blend->lenBV; j++ )
+        sum += FT_MulFix( *weight++, cf2_stack_getReal( opStack, delta++ ) );
+
+      /* store blended result  */
+      cf2_stack_setReal( opStack, i + base, sum );
+    }
+
+    /* leave only `numBlends' results on stack */
+    cf2_stack_pop( opStack, numOperands - numBlends );
   }
 
 
@@ -602,12 +641,58 @@
       case cf2_cmdRESERVED_2:
       case cf2_cmdRESERVED_9:
       case cf2_cmdRESERVED_13:
-      case cf2_cmdRESERVED_15:
-      case cf2_cmdRESERVED_16:
       case cf2_cmdRESERVED_17:
         /* we may get here if we have a prior error */
         FT_TRACE4(( " unknown op (%d)\n", op1 ));
         break;
+
+      case cf2_cmdVSINDEX:
+        FT_TRACE4(( " vsindex\n" ));
+
+        if ( !font->isCFF2 )
+          break;    /* clear stack & ignore */
+
+        if ( font->blend.usedBV )
+        {
+          /* vsindex not allowed after blend */
+          lastError = FT_THROW( Invalid_Glyph_Format );
+          goto exit;
+        }
+
+        font->vsindex = (FT_UInt)cf2_stack_popInt( opStack );
+        break;
+
+      case cf2_cmdBLEND:
+        {
+          FT_UInt  numBlends;
+
+
+          FT_TRACE4(( " blend\n" ));
+
+          if ( !font->isCFF2 )
+            break;    /* clear stack & ignore */
+
+          /* check cached blend vector */
+          if ( cff_blend_check_vector( &font->blend,
+                                       font->vsindex,
+                                       font->lenNDV,
+                                       font->NDV ) )
+          {
+            lastError = cff_blend_build_vector( &font->blend,
+                                                font->vsindex,
+                                                font->lenNDV,
+                                                font->NDV );
+            if ( lastError )
+              goto exit;
+          }
+
+          /* do the blend */
+          numBlends = (FT_UInt)cf2_stack_popInt( opStack );
+          cf2_doBlend( &font->blend, opStack, numBlends );
+
+          font->blend.usedBV = TRUE;
+        }
+        continue;     /* do not clear the stack */
 
       case cf2_cmdHSTEMHM:
       case cf2_cmdHSTEM:

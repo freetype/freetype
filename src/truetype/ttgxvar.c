@@ -1325,9 +1325,14 @@
       if ( ( error = face->goto_table( face, TTAG_gvar,
                                        stream, &table_len ) ) != 0 )
       {
-        FT_TRACE1(( "\n"
-                    "TT_Get_MM_Var: `gvar' table is missing\n" ));
-        goto Exit;
+        /* CFF2 is an alternate to gvar here */
+        if ( ( error = face->goto_table( face, TTAG_CFF2,
+                                         stream, &table_len ) ) != 0 )
+        {
+          FT_TRACE1(( "\n"
+                      "TT_Get_MM_Var: `gvar' or `CFF2' table is missing\n" ));
+          goto Exit;
+        }
       }
 
       if ( ( error = face->goto_table( face, TTAG_fvar,
@@ -1617,7 +1622,7 @@
 
     FT_TRACE5(( "\n" ));
 
-    if ( blend->glyphoffsets == NULL )
+    if ( !face->isCFF2 && blend->glyphoffsets == NULL )
       if ( ( error = ft_var_load_gvar( face ) ) != 0 )
         goto Exit;
 

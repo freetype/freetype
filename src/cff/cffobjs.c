@@ -1095,6 +1095,11 @@
         FT_FREE( face->extra.data );
       }
     }
+
+#ifdef TT_CONFIG_OPTION_GX_VAR_SUPPORT
+    cff_done_blend( face );
+    face->blend = NULL;
+#endif
   }
 
 

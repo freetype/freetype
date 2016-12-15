@@ -22,6 +22,7 @@
 
 #include <ft2build.h>
 #include "cfftypes.h"
+#include "cffparse.h"
 
 
 FT_BEGIN_HEADER
@@ -75,6 +76,25 @@ FT_BEGIN_HEADER
   cff_fd_select_get( CFF_FDSelect  fdselect,
                      FT_UInt       glyph_index );
 
+  FT_LOCAL( FT_Bool )
+  cff_blend_check_vector( CFF_Blend  blend,
+                          FT_UInt    vsindex,
+                          FT_UInt    lenNDV,
+                          FT_Fixed*  NDV );
+
+  FT_LOCAL( FT_Error )
+  cff_blend_build_vector( CFF_Blend  blend,
+                          FT_UInt    vsindex,
+                          FT_UInt    lenNDV,
+                          FT_Fixed*  NDV );
+
+  FT_LOCAL( void )
+  cff_blend_clear( CFF_SubFont  subFont );
+
+  FT_LOCAL( FT_Error )
+  cff_blend_doBlend( CFF_SubFont  subfont,
+                     CFF_Parser   parser,
+                     FT_UInt      numBlends );
 
 #ifdef TT_CONFIG_OPTION_GX_VAR_SUPPORT
   FT_LOCAL( FT_Error )

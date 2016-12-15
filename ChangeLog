@@ -1,6 +1,66 @@
 2016-12-15  Dave Arnold  <darnold@adobe.com>
 	    Werner Lemberg  <wl@gnu.org>
 
+	[cff] Implement CFF2 support (2/2).
+
+	The font variation code.  All parts dependent on the GX code in the
+	`truetype' module are guarded with TT_CONFIG_OPTION_GX_VAR_SUPPORT. 
+	In other words, you can still compile the `cff' module without
+	defining TT_CONFIG_OPTION_GX_VAR_SUPPORT (which brings you CFF2
+	support without font variation).
+
+	* src/cff/cf2font.c (cf2_font_setup): Add support for font
+	variation.
+	* src/cff/cf2font.h (CF2_Font): Add fields for variation data.
+
+	* src/cff/cf2ft.c (cf2_free_instance): Free blend data.
+	(cf2_getVStore, cf2_getNormalizedVector): New functions.
+	* src/cff/cf2ft.h: Updated.
+
+	* src/cff/cf2intrp.c: Include `cffload.h'.
+	(cf2_cmdRESERVED_15, cf2_cmdRESERVED_16): Replace with...
+	(cf2_cmdVSINDEX, cf2_cmdBLEND): ... this new enum values.
+	(cf2_doBlend): New function.
+	(cf2_interpT2CharString): Handle `vsindex' and `blend' opcodes.
+
+	* src/cff/cffload.c (FT_fdot14ToFixed): New macro.
+	(cff_vstore_done, cff_vstore_load): New functions.
+	(cff_blend_clear, cff_blend_doBlend, cff_blend_build_vector,
+	cff_blend_check_vector): New functions.
+	(cff_load_private_dict): Add arguments for blend vector.
+	Handle blend data.
+	(cff_subfont_load, cff_subfont_done): Updated.
+	(cff_font_load): Handle CFF2 variation store data.
+	(cff_font_done): Updated.
+	* src/cff/cffload.h: Include `cffparse.h'.
+	Updated.
+
+	* src/cff/cffobjs.c (cff_face_done): Updated.
+
+	* src/cff/cffparse.c: Include `cffload.h'.
+	(cff_parse_num): Handle internal value 255.
+	(cff_parse_vsindex, cff_parse_blend): New functions.
+	(CFF_FIELD_BLEND): New macro.
+	(cff_parser_run): Updated.
+	* src/cff/cffparse.h (cff_kind_blend): New enum value.
+
+	* src/cff/cfftoken.h: Handle `vstore', `vsindex', and `blend'
+	dictionary values.
+
+	* src/cff/cfftypes.h (CFF_VarData, CFF_AxisCoords, CFF_VarRegion,
+	CFF_VStore, CFF_Blend): New structures.
+	(CFF_FontRecDict): Add `vstore_offset' field.
+	(CFF_Private): Add `vsindex' field.
+	(CFF_SubFont): Add fields for blend data.
+	(CFF_Font): Add `vstore' field.
+
+	* src/truetype/ttgxvar.c (TT_Get_MM_Var): `CFF2' is equal to `gvar',
+	since glyph variation data is directly embedded.
+	(TT_Set_MM_Blend): Don't load `gvar' table for CFF2 fonts.
+
+2016-12-15  Dave Arnold  <darnold@adobe.com>
+	    Werner Lemberg  <wl@gnu.org>
+
 	[cff] Implement CFF2 support (1/2).
 
 	This commit does not contain the blend code for font variation

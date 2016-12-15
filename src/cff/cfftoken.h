@@ -111,6 +111,7 @@
   CFF_FIELD_NUM     ( 17,    charstrings_offset,   "CharStrings" )
   CFF_FIELD_NUM     ( 0x124, cid_fd_array_offset,  "FDArray" )
   CFF_FIELD_NUM     ( 0x125, cid_fd_select_offset, "FDSelect" )
+  CFF_FIELD_NUM     ( 24,    vstore_offset,        "vstore" )
   CFF_FIELD_CALLBACK( 25,    maxstack,             "maxstack" )
 
 
@@ -141,6 +142,8 @@
   CFF_FIELD_DELTA     ( 0x10D, snap_heights, 13,       "StemSnapV" )
   CFF_FIELD_NUM       ( 0x111, language_group,         "LanguageGroup" )
   CFF_FIELD_FIXED     ( 0x112, expansion_factor,       "ExpansionFactor" )
+  CFF_FIELD_CALLBACK  ( 22,    vsindex,                "vsindex" )
+  CFF_FIELD_BLEND     ( 23,                            "blend" )
   CFF_FIELD_NUM       ( 19,    local_subrs_offset,     "Subrs" )
 
 

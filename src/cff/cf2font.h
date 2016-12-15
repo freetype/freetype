@@ -75,6 +75,12 @@ FT_BEGIN_HEADER
     CF2_Matrix  outerTransform;    /* post hinting; includes rotations */
     CF2_Fixed   ppem;              /* transform-dependent              */
 
+    /* variation data */
+    CFF_BlendRec  blend;            /* cached charstring blend vector  */
+    CF2_UInt      vsindex;          /* current vsindex                 */
+    CF2_UInt      lenNDV;           /* current length NDV or zero      */
+    FT_Fixed*     NDV;              /* ptr to current NDV or NULL      */
+
     CF2_Int  unitsPerEm;
 
     CF2_Fixed  syntheticEmboldeningAmountX;   /* character space units */

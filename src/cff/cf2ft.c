@@ -104,7 +104,8 @@
       FT_Memory  memory = font->memory;
 
 
-      (void)memory;
+      FT_FREE( font->blend.lastNDV );
+      FT_FREE( font->blend.BV );
     }
   }
 
@@ -416,6 +417,16 @@
   }
 
 
+  /* get pointer to VStore structure */
+  FT_LOCAL_DEF( CFF_VStore )
+  cf2_getVStore( CFF_Decoder*  decoder )
+  {
+    FT_ASSERT( decoder && decoder->cff );
+
+    return &decoder->cff->vstore;
+  }
+
+
   /* get maxstack value from CFF2 Top DICT */
   FT_LOCAL_DEF( FT_UInt )
   cf2_getMaxstack( CFF_Decoder*  decoder )
@@ -424,6 +435,24 @@
 
     return decoder->cff->top_font.font_dict.maxstack;
   }
+
+
+#ifdef TT_CONFIG_OPTION_GX_VAR_SUPPORT
+  /* Get normalized design vector for current render request; */
+  /* return pointer and length.                               */
+  /*                                                          */
+  /* Note: Uses FT_Fixed not CF2_Fixed for the vector.        */
+  FT_LOCAL_DEF( FT_Error )
+  cf2_getNormalizedVector( CFF_Decoder*  decoder,
+                           CF2_UInt     *len,
+                           FT_Fixed*    *vec )
+  {
+    FT_ASSERT( decoder && decoder->builder.face );
+    FT_ASSERT( vec && len );
+
+    return cff_get_var_blend( decoder->builder.face, len, vec );
+  }
+#endif
 
 
   /* get `y_ppem' from `CFF_Size' */

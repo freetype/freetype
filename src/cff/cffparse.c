@@ -24,6 +24,7 @@
 #include "cfferrs.h"
 #include "cffpic.h"
 #include "cffgload.h"
+#include "cffload.h"
 
 
   /*************************************************************************/
@@ -441,6 +442,17 @@
       /* binary-coded decimal is truncated to integer */
       return cff_parse_real( *d, parser->limit, 0, NULL ) >> 16;
     }
+
+    else if ( **d == 255 )
+    {
+      /* 16.16 fixed point is used internally for CFF2 blend results. */
+      /* Since these are trusted values, a limit check is not needed. */
+
+      /* After the 255, 4 bytes are in host order. */
+      /* Blend result is rounded to integer.       */
+      return (FT_Long)( *( (FT_UInt32 *) ( d[0] + 1 ) ) + 0x8000U ) >> 16;
+    }
+
     else
       return cff_parse_integer( *d, parser->limit );
   }
@@ -823,6 +835,90 @@
   }
 
 
+  static FT_Error
+  cff_parse_vsindex( CFF_Parser  parser )
+  {
+    /* vsindex operator can only be used in a Private DICT */
+    CFF_Private  priv = (CFF_Private)parser->object;
+    FT_Byte**    data = parser->stack;
+    CFF_Blend    blend;
+    FT_Error     error;
+
+
+    if ( !priv || !priv->subfont )
+    {
+      error = FT_THROW( Invalid_File_Format );
+      goto Exit;
+    }
+
+    blend = &priv->subfont->blend;
+
+    if ( blend->usedBV )
+    {
+      FT_ERROR(( " cff_parse_vsindex: vsindex not allowed after blend\n" ));
+      error = FT_THROW( Syntax_Error );
+      goto Exit;
+    }
+
+    priv->vsindex = (FT_UInt)cff_parse_num( parser, data++ );
+
+    FT_TRACE4(( " %d\n", priv->vsindex ));
+
+    error = FT_Err_Ok;
+
+  Exit:
+    return error;
+  }
+
+
+  static FT_Error
+  cff_parse_blend( CFF_Parser  parser )
+  {
+    /* blend operator can only be used in a Private DICT */
+    CFF_Private  priv = (CFF_Private)parser->object;
+    CFF_SubFont  subFont;
+    CFF_Blend    blend;
+    FT_UInt      numBlends;
+    FT_Error     error;
+
+
+    error = FT_ERR( Stack_Underflow );
+
+    if ( !priv || !priv->subfont )
+    {
+      error = FT_THROW( Invalid_File_Format );
+      goto Exit;
+    }
+
+    subFont = priv->subfont;
+    blend   = &subFont->blend;
+
+    if ( cff_blend_check_vector( blend,
+                                 priv->vsindex,
+                                 subFont->lenNDV,
+                                 subFont->NDV ) )
+    {
+      error = cff_blend_build_vector( blend,
+                                      priv->vsindex,
+                                      subFont->lenNDV,
+                                      subFont->NDV );
+      if ( error != FT_Err_Ok )
+        goto Exit;
+    }
+
+    numBlends = (FT_UInt)cff_parse_num( parser, parser->top - 1 );
+
+    FT_TRACE4(( "   %d values blended\n", numBlends ));
+
+    error = cff_blend_doBlend( subFont, parser, numBlends );
+
+    blend->usedBV = TRUE;
+
+  Exit:
+    return error;
+  }
+
+
   /* maxstack operator increases parser and operand stacks for CFF2 */
   static FT_Error
   cff_parse_maxstack( CFF_Parser  parser )
@@ -883,6 +979,15 @@
             0, 0                             \
           },
 
+#define CFF_FIELD_BLEND( code, id ) \
+          {                         \
+            cff_kind_blend,         \
+            code | CFFCODE,         \
+            0, 0,                   \
+            cff_parse_blend,        \
+            0, 0                    \
+          },
+
 #define CFF_FIELD( code, name, id, kind ) \
           {                               \
             kind,                         \
@@ -924,6 +1029,16 @@
             cff_parse_ ## name,              \
             0, 0,                            \
             id                               \
+          },
+
+#define CFF_FIELD_BLEND( code, id ) \
+          {                         \
+            cff_kind_blend,         \
+            code | CFFCODE,         \
+            0, 0,                   \
+            cff_parse_blend,        \
+            0, 0,                   \
+            id                      \
           },
 
 #define CFF_FIELD( code, name, id, kind ) \
@@ -1133,8 +1248,10 @@
     {
       FT_UInt  v = *p;
 
-
-      if ( v >= 27 && v != 31 )
+      /* Opcode 31 is legacy MM T2 operator, not a number.      */
+      /* Opcode 255 is reserved and should not appear in fonts; */
+      /* it is used internally for CFF2 blends.                 */
+      if ( v >= 27 && v != 31 && v != 255 )
       {
         /* it's a number; we will push its position on the stack */
         if ( (FT_UInt)( parser->top - parser->stack ) >= parser->stackSize )
@@ -1452,7 +1569,7 @@
               }
               break;
 
-            default:  /* callback */
+            default:  /* callback or blend */
               error = field->reader( parser );
               if ( error )
                 goto Exit;
@@ -1466,7 +1583,10 @@
 
       Found:
         /* clear stack */
-        parser->top = parser->stack;
+        /* TODO: could clear blend stack here,       */
+        /*       but we don't have access to subFont */
+        if ( field->kind != cff_kind_blend )
+          parser->top = parser->stack;
       }
       p++;
     }
