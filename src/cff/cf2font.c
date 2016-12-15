@@ -234,7 +234,8 @@
   }
 
 
-  /* set up values for the current FontDict and matrix */
+  /* set up values for the current FontDict and matrix; */
+  /* called for each glyph to be rendered               */
 
   /* caller's transform is adjusted for subpixel positioning */
   static void
@@ -423,7 +424,8 @@
 
       /* compute blue zones for this instance */
       cf2_blues_init( &font->blues, font );
-    }
+
+    } /* needExtraSetup */
   }
 
 

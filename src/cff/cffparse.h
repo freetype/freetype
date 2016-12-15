@@ -28,10 +28,17 @@
 FT_BEGIN_HEADER
 
 
+  /* CFF uses constant parser stack size; */
+  /* CFF2 can increase from default 193   */
 #define CFF_MAX_STACK_DEPTH  96
+#define CFF2_MAX_STACK      513
+#define CFF2_DEFAULT_STACK  193
 
-#define CFF_CODE_TOPDICT  0x1000
-#define CFF_CODE_PRIVATE  0x2000
+#define CFF_CODE_TOPDICT    0x1000
+#define CFF_CODE_PRIVATE    0x2000
+#define CFF2_CODE_TOPDICT   0x3000
+#define CFF2_CODE_FONTDICT  0x4000
+#define CFF2_CODE_PRIVATE   0x5000
 
 
   typedef struct  CFF_ParserRec_

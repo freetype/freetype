@@ -63,6 +63,7 @@ FT_BEGIN_HEADER
     FT_Memory  memory;
     FT_Error   error;     /* shared error for this instance */
 
+    FT_Bool             isCFF2;
     CF2_RenderingFlags  renderingFlags;
 
     /* variables that depend on Transform:  */

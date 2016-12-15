@@ -65,6 +65,10 @@ FT_BEGIN_HEADER
   cf2_getSubfont( CFF_Decoder*  decoder );
 
 
+  FT_LOCAL( FT_UInt )
+  cf2_getMaxstack( CFF_Decoder*  decoder );
+
+
   FT_LOCAL( CF2_Fixed )
   cf2_getPpemY( CFF_Decoder*  decoder );
   FT_LOCAL( CF2_Fixed )

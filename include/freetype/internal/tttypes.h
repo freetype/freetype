@@ -1419,6 +1419,8 @@ FT_BEGIN_HEADER
     FT_ULong              glyf_len;
     FT_ULong              glyf_offset;    /* since 2.7.1 */
 
+    FT_Bool               isCFF2;         /* since 2.7.1 */
+
 #ifdef TT_CONFIG_OPTION_GX_VAR_SUPPORT
     FT_Bool               doblend;
     GX_Blend              blend;

@@ -29,6 +29,9 @@
 #include "cfferrs.h"
 
 
+#define FT_FIXED_ONE  ( (FT_Fixed)0x10000 )
+
+
 #if 1
 
   static const FT_UShort  cff_isoadobe_charset[229] =
@@ -225,19 +228,33 @@
   static FT_Error
   cff_index_init( CFF_Index  idx,
                   FT_Stream  stream,
-                  FT_Bool    load )
+                  FT_Bool    load,
+                  FT_Bool    cff2 )
   {
     FT_Error   error;
     FT_Memory  memory = stream->memory;
-    FT_UShort  count;
+    FT_UInt    count;
 
 
     FT_ZERO( idx );
 
     idx->stream = stream;
     idx->start  = FT_STREAM_POS();
-    if ( !FT_READ_USHORT( count ) &&
-         count > 0                )
+
+    if ( cff2 )
+    {
+      if ( FT_READ_ULONG( count ) )
+        goto Exit;
+      idx->hdr_size = 5;
+    }
+    else
+    {
+      if ( FT_READ_USHORT( count ) )
+        goto Exit;
+      idx->hdr_size = 3;
+    }
+
+    if ( count > 0 )
     {
       FT_Byte   offsize;
       FT_ULong  size;
@@ -258,7 +275,7 @@
       idx->off_size = offsize;
       size          = (FT_ULong)( count + 1 ) * offsize;
 
-      idx->data_offset = idx->start + 3 + size;
+      idx->data_offset = idx->start + idx->hdr_size + size;
 
       if ( FT_STREAM_SKIP( size - offsize ) )
         goto Exit;
@@ -335,7 +352,7 @@
       data_size = (FT_ULong)( idx->count + 1 ) * offsize;
 
       if ( FT_NEW_ARRAY( idx->offsets, idx->count + 1 ) ||
-           FT_STREAM_SEEK( idx->start + 3 )             ||
+           FT_STREAM_SEEK( idx->start + idx->hdr_size ) ||
            FT_FRAME_ENTER( data_size )                  )
         goto Exit;
 
@@ -493,7 +510,7 @@
         FT_ULong  pos = element * idx->off_size;
 
 
-        if ( FT_STREAM_SEEK( idx->start + 3 + pos ) )
+        if ( FT_STREAM_SEEK( idx->start + idx->hdr_size + pos ) )
           goto Exit;
 
         off1 = cff_index_read_offset( idx, &error );
@@ -589,12 +606,17 @@
                       FT_UInt   element )
   {
     CFF_Index   idx = &font->name_index;
-    FT_Memory   memory = idx->stream->memory;
+    FT_Memory   memory;
     FT_Byte*    bytes;
     FT_ULong    byte_len;
     FT_Error    error;
     FT_String*  name = 0;
 
+
+    if ( !idx->stream )  /* CFF2 does not include a name index */
+      goto Exit;
+
+    memory = idx->stream->memory;
 
     error = cff_index_access_element( idx, element, &bytes, &byte_len );
     if ( error )
@@ -724,6 +746,10 @@
   {
     FT_Byte  fd = 0;
 
+    /* if there is no FDSelect, return zero               */
+    /* Note: CFF2 with just one Font Dict has no FDSelect */
+    if ( fdselect->data == NULL )
+      goto Exit;
 
     switch ( fdselect->format )
     {
@@ -777,6 +803,7 @@
       ;
     }
 
+  Exit:
     return fd;
   }
 
@@ -1356,10 +1383,13 @@
     priv->expansion_factor = (FT_Fixed)( 0.06 * 0x10000L );
     priv->blue_scale       = (FT_Fixed)( 0.039625 * 0x10000L * 1000 );
 
-    stackSize = CFF_MAX_STACK_DEPTH + 1;
+    priv->subfont = subfont;
+
+    stackSize = font->cff2 ? font->top_font.font_dict.maxstack
+                           : CFF_MAX_STACK_DEPTH + 1;
 
     if ( cff_parser_init( &parser,
-                          CFF_CODE_PRIVATE,
+                          font->cff2 ? CFF2_CODE_PRIVATE : CFF_CODE_PRIVATE,
                           priv,
                           font->library,
                           stackSize,
@@ -1393,12 +1423,19 @@
   }
 
 
+  /* There are 3 ways to call this function, distinguished by code.  */
+  /*                                                                 */
+  /* . CFF_CODE_TOPDICT for either a CFF Top DICT or a CFF Font DICT */
+  /* . CFF2_CODE_TOPDICT for CFF2 Top DICT                           */
+  /* . CFF2_CODE_FONTDICT for CFF2 Font DICT                         */
+
   static FT_Error
   cff_subfont_load( CFF_SubFont  subfont,
                     CFF_Index    idx,
                     FT_UInt      font_index,
                     FT_Stream    stream,
                     FT_ULong     base_offset,
+                    FT_UInt      code,
                     CFF_Font     font )
   {
     FT_Error         error;
@@ -1408,11 +1445,16 @@
     CFF_FontRecDict  top  = &subfont->font_dict;
     CFF_Private      priv = &subfont->private_dict;
 
-    FT_UInt  stackSize = CFF_MAX_STACK_DEPTH;
+    FT_Bool  cff2      = ( code == CFF2_CODE_TOPDICT  ||
+                           code == CFF2_CODE_FONTDICT );
+    FT_UInt  stackSize = cff2 ? CFF2_DEFAULT_STACK
+                              : CFF_MAX_STACK_DEPTH;
 
 
+    /* Note: We use default stack size for CFF2 Font DICT because        */
+    /*       Top and Font DICTs are not allowed to have blend operators. */
     if ( cff_parser_init( &parser,
-                          CFF_CODE_TOPDICT,
+                          code,
                           &subfont->font_dict,
                           font->library,
                           stackSize,
@@ -1444,14 +1486,35 @@
     top->cid_ordering        = 0xFFFFU;
     top->cid_font_name       = 0xFFFFU;
 
-    error = cff_index_access_element( idx, font_index, &dict, &dict_len );
+    /* set default stack size */
+    top->maxstack            = cff2 ? CFF2_DEFAULT_STACK : 48;
+
+    if ( idx->count )   /* count is nonzero for a real index */
+      error = cff_index_access_element( idx, font_index, &dict, &dict_len );
+    else
+    {
+      /* CFF2 has a fake top dict index;     */
+      /* simulate `cff_index_access_element' */
+
+      /* Note: macros implicitly use `stream' and set `error' */
+      if ( FT_STREAM_SEEK( idx->data_offset )       ||
+           FT_FRAME_EXTRACT( idx->data_size, dict ) )
+        goto Exit;
+
+      dict_len = idx->data_size;
+    }
+
     if ( !error )
     {
       FT_TRACE4(( " top dictionary:\n" ));
       error = cff_parser_run( &parser, dict, dict + dict_len );
     }
 
-    cff_index_forget_element( idx, &dict );
+    /* clean up regardless of error */
+    if ( idx->count )
+      cff_index_forget_element( idx, &dict );
+    else
+      FT_FRAME_RELEASE( dict );
 
     if ( error )
       goto Exit;
@@ -1460,7 +1523,11 @@
     if ( top->cid_registry != 0xFFFFU )
       goto Exit;
 
-    /* parse the private dictionary, if any */
+    /* Parse the private dictionary, if any.                   */
+    /*                                                         */
+    /* CFF2 does not have a private dictionary in the Top DICT */
+    /* but may have one in a Font DICT.  We need to parse      */
+    /* the latter here in order to load any local subrs.       */
     error = cff_load_private_dict( font, subfont );
     if ( error )
       goto Exit;
@@ -1472,7 +1539,7 @@
                            priv->local_subrs_offset ) )
         goto Exit;
 
-      error = cff_index_init( &subfont->local_subrs_index, stream, 1 );
+      error = cff_index_init( &subfont->local_subrs_index, stream, 1, cff2 );
       if ( error )
         goto Exit;
 
@@ -1506,18 +1573,18 @@
                  FT_Stream  stream,
                  FT_Int     face_index,
                  CFF_Font   font,
-                 FT_Bool    pure_cff )
+                 FT_Bool    pure_cff,
+                 FT_Bool    cff2 )
   {
     static const FT_Frame_Field  cff_header_fields[] =
     {
 #undef  FT_STRUCTURE
 #define FT_STRUCTURE  CFF_FontRec
 
-      FT_FRAME_START( 4 ),
+      FT_FRAME_START( 3 ),
         FT_FRAME_BYTE( version_major ),
         FT_FRAME_BYTE( version_minor ),
         FT_FRAME_BYTE( header_size ),
-        FT_FRAME_BYTE( absolute_offsize ),
       FT_FRAME_END
     };
 
@@ -1538,40 +1605,80 @@
     font->library     = library;
     font->stream      = stream;
     font->memory      = memory;
+    font->cff2        = cff2;
     font->base_offset = base_offset;
 
     /* read CFF font header */
     if ( FT_STREAM_READ_FIELDS( cff_header_fields, font ) )
       goto Exit;
 
-    /* check format */
-    if ( font->version_major   != 1 ||
-         font->header_size      < 4 ||
-         font->absolute_offsize > 4 )
+    if ( cff2 )
     {
-      FT_TRACE2(( "  not a CFF font header\n" ));
-      error = FT_THROW( Unknown_File_Format );
-      goto Exit;
+      if ( font->version_major != 2 ||
+           font->header_size < 5    )
+      {
+        FT_TRACE2(( "  not a CFF2 font header\n" ));
+        error = FT_THROW( Unknown_File_Format );
+        goto Exit;
+      }
+
+      if ( FT_READ_USHORT( font->top_dict_length ) )
+        goto Exit;
+    }
+    else
+    {
+      if ( font->version_major != 1 ||
+           font->header_size < 4    )
+      {
+        FT_TRACE2(( "  not a CFF font header\n" ));
+        error = FT_THROW( Unknown_File_Format );
+        goto Exit;
+      }
     }
 
     /* skip the rest of the header */
-    if ( FT_STREAM_SKIP( font->header_size - 4 ) )
+    if ( FT_STREAM_SEEK( base_offset + font->header_size ) )
       goto Exit;
 
-    /* read the name, top dict, string and global subrs index */
-    if ( FT_SET_ERROR( cff_index_init( &font->name_index,
-                                       stream, 0 ) )                       ||
-         FT_SET_ERROR( cff_index_init( &font->font_dict_index,
-                                       stream, 0 ) )                       ||
-         FT_SET_ERROR( cff_index_init( &string_index,
-                                       stream, 1 ) )                       ||
-         FT_SET_ERROR( cff_index_init( &font->global_subrs_index,
-                                       stream, 1 ) )                       ||
-         FT_SET_ERROR( cff_index_get_pointers( &string_index,
-                                               &font->strings,
-                                               &font->string_pool,
-                                               &font->string_pool_size ) ) )
-      goto Exit;
+    if ( cff2 )
+    {
+      /* For CFF2, the top dict data immediately follow the header    */
+      /* and the length is stored in the header `offSize' field;      */
+      /* there is no index for it.                                    */
+      /*                                                              */
+      /* Use the `font_dict_index' to save the current position       */
+      /* and length of data, but leave count at zero as an indicator. */
+      FT_ZERO( &font->font_dict_index );
+
+      font->font_dict_index.data_offset = FT_STREAM_POS();
+      font->font_dict_index.data_size   = font->top_dict_length;
+
+      /* skip the top dict data for now, we will parse it later */
+      if ( FT_STREAM_SKIP( font->top_dict_length ) )
+        goto Exit;
+
+      /* next, read the global subrs index */
+      if ( FT_SET_ERROR( cff_index_init( &font->global_subrs_index,
+                                         stream, 1, cff2 ) ) )
+        goto Exit;
+    }
+    else
+    {
+      /* for CFF, read the name, top dict, string and global subrs index */
+      if ( FT_SET_ERROR( cff_index_init( &font->name_index,
+                                         stream, 0, cff2 ) )                 ||
+           FT_SET_ERROR( cff_index_init( &font->font_dict_index,
+                                         stream, 0, cff2 ) )                 ||
+           FT_SET_ERROR( cff_index_init( &string_index,
+                                         stream, 1, cff2 ) )                 ||
+           FT_SET_ERROR( cff_index_init( &font->global_subrs_index,
+                                         stream, 1, cff2 ) )                 ||
+           FT_SET_ERROR( cff_index_get_pointers( &string_index,
+                                                 &font->strings,
+                                                 &font->string_pool,
+                                                 &font->string_pool_size ) ) )
+        goto Exit;
+    }
 
     font->num_strings = string_index.count;
 
@@ -1617,6 +1724,7 @@
                               subfont_index,
                               stream,
                               base_offset,
+                              cff2 ? CFF2_CODE_TOPDICT : CFF_CODE_TOPDICT,
                               font );
     if ( error )
       goto Exit;
@@ -1624,12 +1732,13 @@
     if ( FT_STREAM_SEEK( base_offset + dict->charstrings_offset ) )
       goto Exit;
 
-    error = cff_index_init( &font->charstrings_index, stream, 0 );
+    error = cff_index_init( &font->charstrings_index, stream, 0, cff2 );
     if ( error )
       goto Exit;
 
-    /* now, check for a CID font */
-    if ( dict->cid_registry != 0xFFFFU )
+    /* now, check for a CID or CFF2 font */
+    if ( dict->cid_registry != 0xFFFFU ||
+         cff2                          )
     {
       CFF_IndexRec  fd_index;
       CFF_SubFont   sub = NULL;
@@ -1641,10 +1750,12 @@
       if ( FT_STREAM_SEEK( base_offset + dict->cid_fd_array_offset ) )
         goto Exit;
 
-      error = cff_index_init( &fd_index, stream, 0 );
+      error = cff_index_init( &fd_index, stream, 0, cff2 );
       if ( error )
         goto Exit;
 
+      /* Font Dicts are not limited to 256 for CFF2. */
+      /* TODO: support this for CFF2                 */
       if ( fd_index.count > CFF_MAX_CID_FONTS )
       {
         FT_TRACE0(( "cff_font_load: FD array too large in CID font\n" ));
@@ -1670,16 +1781,20 @@
                                   idx,
                                   stream,
                                   base_offset,
+                                  cff2 ? CFF2_CODE_FONTDICT
+                                       : CFF_CODE_TOPDICT,
                                   font );
         if ( error )
           goto Fail_CID;
       }
 
-      /* now load the FD Select array */
-      error = CFF_Load_FD_Select( &font->fd_select,
-                                  font->charstrings_index.count,
-                                  stream,
-                                  base_offset + dict->cid_fd_select_offset );
+      /* now load the FD Select array;               */
+      /* CFF2 omits FDSelect if there is only one FD */
+      if ( !cff2 || fd_index.count > 1 )
+        error = CFF_Load_FD_Select( &font->fd_select,
+                                    font->charstrings_index.count,
+                                    stream,
+                                    base_offset + dict->cid_fd_select_offset );
 
     Fail_CID:
       cff_index_done( &fd_index );
@@ -1707,7 +1822,7 @@
       goto Exit;
 
     /* read the Charset and Encoding tables if available */
-    if ( font->num_glyphs > 0 )
+    if ( !cff2 && font->num_glyphs > 0 )
     {
       FT_Bool  invert = FT_BOOL( dict->cid_registry != 0xFFFFU && pure_cff );
 
@@ -1755,7 +1870,7 @@
     cff_index_done( &font->charstrings_index );
 
     /* release font dictionaries, but only if working with */
-    /* a CID keyed CFF font                                */
+    /* a CID keyed CFF font or a CFF2 font                 */
     if ( font->num_subfonts > 0 )
     {
       for ( idx = 0; idx < font->num_subfonts; idx++ )

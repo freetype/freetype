@@ -491,6 +491,7 @@
     FT_Service_PsCMaps  psnames;
     PSHinter_Service    pshinter;
     FT_Bool             pure_cff    = 1;
+    FT_Bool             cff2        = 0;
     FT_Bool             sfnt_format = 0;
     FT_Library          library     = cffface->driver->root.library;
 
@@ -553,8 +554,18 @@
           goto Exit;
       }
 
-      /* now load the CFF part of the file */
-      error = face->goto_table( face, TTAG_CFF, stream, 0 );
+      /* now load the CFF part of the file; */
+      /* give priority to CFF2              */
+      error = face->goto_table( face, TTAG_CFF2, stream, 0 );
+      if ( !error )
+      {
+        cff2         = 1;
+        face->isCFF2 = cff2;
+      }
+
+      if ( FT_ERR_EQ( error, Table_Missing ) )
+        error = face->goto_table( face, TTAG_CFF, stream, 0 );
+
       if ( error )
         goto Exit;
     }
@@ -579,7 +590,12 @@
         goto Exit;
 
       face->extra.data = cff;
-      error = cff_font_load( library, stream, face_index, cff, pure_cff );
+      error = cff_font_load( library,
+                             stream,
+                             face_index,
+                             cff,
+                             pure_cff,
+                             cff2 );
       if ( error )
         goto Exit;
 

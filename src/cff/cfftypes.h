@@ -64,6 +64,7 @@ FT_BEGIN_HEADER
   {
     FT_Stream  stream;
     FT_ULong   start;
+    FT_UInt    hdr_size;
     FT_UInt    count;
     FT_Byte    off_size;
     FT_ULong   data_offset;
@@ -151,7 +152,14 @@ FT_BEGIN_HEADER
     FT_UShort  num_designs;
     FT_UShort  num_axes;
 
+    /* fields for CFF2 */
+    FT_UInt    maxstack;
+
   } CFF_FontRecDictRec, *CFF_FontRecDict;
+
+
+  /* forward reference */
+  typedef struct CFF_SubFontRec_*  CFF_SubFont;
 
 
   typedef struct  CFF_PrivateRec_
@@ -186,6 +194,9 @@ FT_BEGIN_HEADER
     FT_Pos    default_width;
     FT_Pos    nominal_width;
 
+    /* fields for CFF2 */
+    CFF_SubFont  subfont;
+
   } CFF_PrivateRec, *CFF_Private;
 
 
@@ -213,10 +224,11 @@ FT_BEGIN_HEADER
     CFF_FontRecDictRec  font_dict;
     CFF_PrivateRec      private_dict;
 
-    CFF_IndexRec        local_subrs_index;
-    FT_Byte**           local_subrs; /* array of pointers into Local Subrs INDEX data */
+    CFF_IndexRec  local_subrs_index;
+    FT_Byte**     local_subrs; /* array of pointers           */
+                               /* into Local Subrs INDEX data */
 
-  } CFF_SubFontRec, *CFF_SubFont;
+  } CFF_SubFontRec;
 
 
 #define CFF_MAX_CID_FONTS  256
@@ -226,7 +238,7 @@ FT_BEGIN_HEADER
   {
     FT_Library       library;
     FT_Stream        stream;
-    FT_Memory        memory;
+    FT_Memory        memory;        /* TODO: take this from stream->memory? */
     FT_ULong         base_offset;   /* offset to start of CFF */
     FT_UInt          num_faces;
     FT_UInt          num_glyphs;
@@ -234,8 +246,10 @@ FT_BEGIN_HEADER
     FT_Byte          version_major;
     FT_Byte          version_minor;
     FT_Byte          header_size;
-    FT_Byte          absolute_offsize;
 
+    FT_UInt          top_dict_length;   /* cff2 only */
+
+    FT_Bool          cff2;
 
     CFF_IndexRec     name_index;
     CFF_IndexRec     top_dict_index;

@@ -295,6 +295,35 @@
     FT_Error    error;
 
 
+    /* CFF2 table does not have glyph names; */
+    /* we need to use `post' table method    */
+    if ( font->version_major == 2 )
+    {
+      FT_Library            library     = FT_FACE_LIBRARY( face );
+      FT_Module             sfnt_module = FT_Get_Module( library, "sfnt" );
+      FT_Service_GlyphDict  service     =
+        (FT_Service_GlyphDict)ft_module_get_service(
+                                 sfnt_module,
+                                 FT_SERVICE_ID_GLYPH_DICT,
+                                 0 );
+
+
+      if ( service && service->get_name )
+        return service->get_name( FT_FACE( face ),
+                                  glyph_index,
+                                  buffer,
+                                  buffer_max );
+      else
+      {
+        FT_ERROR(( "cff_get_glyph_name:"
+                   " cannot get glyph name from a CFF2 font\n"
+                   "                   "
+                   " without the `PSNames' module\n" ));
+        error = FT_THROW( Missing_Module );
+        goto Exit;
+      }
+    }
+
     if ( !font->psnames )
     {
       FT_ERROR(( "cff_get_glyph_name:"
@@ -335,6 +364,31 @@
 
     cff     = (CFF_FontRec *)face->extra.data;
     charset = &cff->charset;
+
+    /* CFF2 table does not have glyph names; */
+    /* we need to use `post' table method    */
+    if ( cff->version_major == 2 )
+    {
+      FT_Library            library     = FT_FACE_LIBRARY( face );
+      FT_Module             sfnt_module = FT_Get_Module( library, "sfnt" );
+      FT_Service_GlyphDict  service     =
+        (FT_Service_GlyphDict)ft_module_get_service(
+                                 sfnt_module,
+                                 FT_SERVICE_ID_GLYPH_DICT,
+                                 0 );
+
+
+      if ( service && service->name_index )
+        return service->name_index( FT_FACE( face ), glyph_name );
+      else
+      {
+        FT_ERROR(( "cff_get_name_index:"
+                   " cannot get glyph index from a CFF2 font\n"
+                   "                   "
+                   " without the `PSNames' module\n" ));
+        return 0;
+      }
+    }
 
     FT_FACE_FIND_GLOBAL_SERVICE( face, psnames, POSTSCRIPT_CMAPS );
     if ( !psnames )

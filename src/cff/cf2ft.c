@@ -366,6 +366,9 @@
                                &hinted,
                                &scaled );
 
+      /* copy isCFF2 boolean from TT_Face to CF2_Font */
+      font->isCFF2 = builder->face->isCFF2;
+
       font->renderingFlags = 0;
       if ( hinted )
         font->renderingFlags |= CF2_FlagsHinted;
@@ -410,6 +413,16 @@
     FT_ASSERT( decoder && decoder->current_subfont );
 
     return decoder->current_subfont;
+  }
+
+
+  /* get maxstack value from CFF2 Top DICT */
+  FT_LOCAL_DEF( FT_UInt )
+  cf2_getMaxstack( CFF_Decoder*  decoder )
+  {
+    FT_ASSERT( decoder && decoder->cff );
+
+    return decoder->cff->top_font.font_dict.maxstack;
   }
 
 

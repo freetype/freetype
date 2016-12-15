@@ -1,3 +1,55 @@
+2016-12-15  Dave Arnold  <darnold@adobe.com>
+	    Werner Lemberg  <wl@gnu.org>
+
+	[cff] Implement CFF2 support (1/2).
+
+	This commit does not contain the blend code for font variation
+	support, which follows in another commit.
+
+	You should ignore whitespace while inspecting this commit.
+
+	* include/freetype/internal/tttypes.h (TT_Face): Add `isCFF2'
+	member.
+
+	* src/cff/cf2font.h (CF2_Font): Add `isCFF2' member.
+
+	* src/cff/cf2ft.c (cf2_decoder_parse_charstrings): Handle `isCFF2'
+	flag.
+	(cf2_getMaxstack): New function.
+	* src/cff/cf2ft.h: Updated.
+
+	* src/cff/cf2intrp.c (cf2_escRESERVED_38): New enum.
+	(cf2_interpT2CharString): Handle CFF2 differences.
+	Add tracing message for errors.
+
+	* src/cff/cffdrivr.c (cff_get_glyph_name, cff_get_name_index):
+	Update for CFF2.
+
+	* src/cff/cffload.c (FT_FIXED_ONE): New macro.
+	(cff_index_init, cff_index_load_offsets, cff_index_access_element,
+	cff_index_get_name, cff_ft_select_get, cff_load_private_dict,
+	cff_subfont_load, cff_font_load): Handle CFF2.
+	* src/cff/cffload.h: Updated.
+
+	* src/cff/cffobjs.c (cff_face_init): Handle CFF2.
+
+	* src/cff/cffparse.c (cff_parse_maxstack): New function.
+	(CFFCODE_TOPDICT, CFFCODE_PRIVATE): Removed
+	* src/cff/cffparse.h (CFF2_MAX_STACK, CFF2_DEFAULT_STACK): New
+	macros.
+	(CFF2_CODE_TOPDICT, CFF2_CODE_FONTDICT, CFF2_CODE_PRIVATE): New
+	macros.
+
+	* src/cff/cfftoken.h: Add fields for CFF2 dictionaries (but no blend
+	stuff).
+
+	* src/cff/cfftypes.h (CFF_Index): Add `hdr_size' field.
+	(CFF_FontRecDict): Add `maxstack' field.
+	(CFF_Private): Add `subfont' field.
+	(CFF_Font): Add `top_dict_length' and `cff2' fields.
+
+	* src/sfnt/sfobjs.c (sfnt_load_face): Handle `CFF2' table.
+
 2016-12-15  Werner Lemberg  <wl@gnu.org>
 	    Dave Arnold  <darnold@adobe.com>
 
