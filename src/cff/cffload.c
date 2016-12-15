@@ -1341,11 +1341,11 @@
     CFF_FontRecDict  top    = &subfont->font_dict;
     CFF_Private      priv   = &subfont->private_dict;
     FT_Stream        stream = font->stream;
+    FT_UInt          stackSize;
 
 
-    /* parse the private dictionary, if any */
     if ( !top->private_offset || !top->private_size )
-      goto Exit;
+      goto Exit2;       /* no private DICT, do nothing */
 
     /* set defaults */
     FT_ZERO( priv );
@@ -1356,12 +1356,16 @@
     priv->expansion_factor = (FT_Fixed)( 0.06 * 0x10000L );
     priv->blue_scale       = (FT_Fixed)( 0.039625 * 0x10000L * 1000 );
 
-    cff_parser_init( &parser,
-                     CFF_CODE_PRIVATE,
-                     priv,
-                     font->library,
-                     top->num_designs,
-                     top->num_axes );
+    stackSize = CFF_MAX_STACK_DEPTH + 1;
+
+    if ( cff_parser_init( &parser,
+                          CFF_CODE_PRIVATE,
+                          priv,
+                          font->library,
+                          stackSize,
+                          top->num_designs,
+                          top->num_axes ) )
+      goto Exit;
 
     if ( FT_STREAM_SEEK( font->base_offset + top->private_offset ) ||
          FT_FRAME_ENTER( top->private_size )                       )
@@ -1380,6 +1384,11 @@
     priv->num_blue_values &= ~1;
 
   Exit:
+    /* clean up */
+    cff_parser_done( &parser ); /* free parser stack */
+
+  Exit2:
+    /* no clean up (parser not initialized) */
     return error;
   }
 
@@ -1399,13 +1408,17 @@
     CFF_FontRecDict  top  = &subfont->font_dict;
     CFF_Private      priv = &subfont->private_dict;
 
+    FT_UInt  stackSize = CFF_MAX_STACK_DEPTH;
 
-    cff_parser_init( &parser,
-                     CFF_CODE_TOPDICT,
-                     &subfont->font_dict,
-                     font->library,
-                     0,
-                     0 );
+
+    if ( cff_parser_init( &parser,
+                          CFF_CODE_TOPDICT,
+                          &subfont->font_dict,
+                          font->library,
+                          stackSize,
+                          0,
+                          0 ) )
+      goto Exit;
 
     /* set defaults */
     FT_ZERO( top );
@@ -1470,6 +1483,8 @@
     }
 
   Exit:
+    cff_parser_done( &parser ); /* free parser stack */
+
     return error;
   }
 

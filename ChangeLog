@@ -1,4 +1,35 @@
 2016-12-15  Dave Arnold  <darnold@adobe.com>
+
+	[cff] Implement dynamic stack size for Adobe engine.
+
+	This also adds `cf2_stack_setReal' and `cf2_stack_pop', needed for
+	the forthcoming CFF2 support.
+
+	* src/cff/cf2stack.c (cf2_stack_init): Add argument for stack size.
+	(cf2_stack_free): Deallocate stack.
+	(cf2_stack_count, cf2_stack_pushInt, cf2_stack_pushFixed,
+	cf2_stack_popInt, cf2_stack_popFixed, cf2_stack_getReal,
+	cf2_stack_clear): Updated.
+	(cf2_stack_setReal, cf2_stack_pop): New functions.
+
+	* src/cff/cf2stack.h (CF2_Stack): Add `stackSize' member.
+	Update function declarations.
+
+	* src/cff/cf2intrp.c (cf2_interpT2CharString): Updated.
+
+	* src/cff/cffparse.c (cff_parser_init): Add parameter for stack
+	size; return error code.
+	(cff_parser_done): New function.
+	(cff_parser_run): Updated.
+
+	* src/cff/cffparse.h (CFF_Parser): Add `stackSize' member and make
+	`stack' a pointer.
+	Update function declarations.
+
+	* src/cff/cffload.c (cff_load_private_dict, cff_subfont_load):
+	Updated.
+
+2016-12-15  Dave Arnold  <darnold@adobe.com>
 	    Werner Lemberg  <wl@gnu.org>
 
 	[cff] Code shuffling.

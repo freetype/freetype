@@ -36,22 +36,52 @@
 #define FT_COMPONENT  trace_cffparse
 
 
-  FT_LOCAL_DEF( void )
+  FT_LOCAL_DEF( FT_Error )
   cff_parser_init( CFF_Parser  parser,
                    FT_UInt     code,
                    void*       object,
                    FT_Library  library,
+                   FT_UInt     stackSize,
                    FT_UShort   num_designs,
                    FT_UShort   num_axes )
   {
+    FT_Memory  memory = library->memory;    /* for FT_NEW_ARRAY */
+    FT_Error   error;                       /* for FT_NEW_ARRAY */
+
+
     FT_ZERO( parser );
 
+#if 0
     parser->top         = parser->stack;
+#endif
     parser->object_code = code;
     parser->object      = object;
     parser->library     = library;
     parser->num_designs = num_designs;
     parser->num_axes    = num_axes;
+
+    /* allocate the stack buffer */
+    if ( FT_NEW_ARRAY( parser->stack, stackSize ) )
+    {
+      FT_FREE( parser->stack );
+      goto Exit;
+    }
+
+    parser->stackSize = stackSize;
+    parser->top       = parser->stack;    /* empty stack */
+
+  Exit:
+    return error;
+  }
+
+
+  FT_LOCAL_DEF( void )
+  cff_parser_done( CFF_Parser  parser )
+  {
+    FT_Memory  memory = parser->library->memory;    /* for FT_FREE */
+
+
+    FT_FREE( parser->stack );
   }
 
 
@@ -1071,7 +1101,7 @@
       if ( v >= 27 && v != 31 )
       {
         /* it's a number; we will push its position on the stack */
-        if ( parser->top - parser->stack >= CFF_MAX_STACK_DEPTH )
+        if ( (FT_UInt)( parser->top - parser->stack ) >= parser->stackSize )
           goto Stack_Overflow;
 
         *parser->top++ = p;
@@ -1162,7 +1192,7 @@
           FT_Bool   neg;
 
 
-          if ( parser->top - parser->stack >= CFF_MAX_STACK_DEPTH )
+          if ( (FT_UInt)( parser->top - parser->stack ) >= parser->stackSize )
             goto Stack_Overflow;
 
           *parser->top++ = q;

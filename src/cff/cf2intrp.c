@@ -532,7 +532,7 @@
      */
 
     /* allocate an operand stack */
-    opStack = cf2_stack_init( memory, error );
+    opStack = cf2_stack_init( memory, error, CF2_OPERAND_STACK_SIZE );
     if ( !opStack )
     {
       lastError = FT_THROW( Out_Of_Memory );
