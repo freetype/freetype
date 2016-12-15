@@ -1339,7 +1339,7 @@
       /* CFF2 DICTs.  See `cff_parse_num' for decode of this, which rounds */
       /* to an integer.                                                    */
       *subFont->blend_top++             = 255;
-      *((FT_UInt32*)subFont->blend_top) = sum; /* write 4 bytes */
+      *((FT_UInt32*)subFont->blend_top) = (FT_UInt32)sum; /* write 4 bytes */
       subFont->blend_top               += 4;
     }
 
@@ -1928,13 +1928,14 @@
 
     /* Note: We use default stack size for CFF2 Font DICT because        */
     /*       Top and Font DICTs are not allowed to have blend operators. */
-    if ( cff_parser_init( &parser,
-                          code,
-                          &subfont->font_dict,
-                          font->library,
-                          stackSize,
-                          0,
-                          0 ) )
+    error = cff_parser_init( &parser,
+                             code,
+                             &subfont->font_dict,
+                             font->library,
+                             stackSize,
+                             0,
+                             0 );
+    if ( error )
       goto Exit;
 
     /* set defaults */

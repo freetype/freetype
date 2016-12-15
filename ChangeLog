@@ -1,3 +1,12 @@
+2016-12-15  Werner Lemberg  <wl@gnu.org>
+
+	Fix clang warnings.
+
+	* src/cff/cffload.c (cff_blend_doBlend): Add cast.
+	(cff_subfont_load): Set `error' correctly.
+
+	* src/sfnt/ttmtx.c (tt_face_get_metrics): Typo.
+
 2016-12-15  Dave Arnold  <darnold@adobe.com>
 	    Werner Lemberg  <wl@gnu.org>
 

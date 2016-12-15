@@ -308,8 +308,8 @@
           var->lsb_adjust( f, gindex, &b );
       }
 
-      *aadvance = (FT_Short)a;
-      *abearing = (FT_UShort)b;
+      *aadvance = (FT_UShort)a;
+      *abearing = (FT_Short)b;
     }
 #endif
   }
