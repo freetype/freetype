@@ -484,7 +484,7 @@
   FT_DEFINE_SERVICE_METRICSVARIATIONSREC(
     tt_service_metrics_variations,
 
-    (FT_HAdvance_Adjust_Func)NULL,                   /* hadvance_adjust */
+    (FT_HAdvance_Adjust_Func)tt_hadvance_adjust,     /* hadvance_adjust */
     (FT_LSB_Adjust_Func)     NULL,                   /* lsb_adjust      */
     (FT_RSB_Adjust_Func)     NULL,                   /* rsb_adjust      */
 

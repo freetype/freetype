@@ -2629,7 +2629,13 @@
           FT_Pos  delta_y = FT_MulFix( deltas_y[j], apply );
 
 
-          outline->points[j].x += delta_x;
+          /* Experimental fix for double adjustment of advance width: */
+          /* adjust phantom point 2 only if there's no HVAR.          */
+          /*                                                          */
+          /* TODO: handle LSB (pp1) and VVAR (pp3, pp4) too           */
+          if ( j != ( n_points - 3 ) || blend->hvar_checked == FALSE )
+            outline->points[j].x += delta_x;
+
           outline->points[j].y += delta_y;
 
 #ifdef FT_DEBUG_LEVEL_TRACE

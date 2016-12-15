@@ -1,7 +1,24 @@
+2016-12-15  Werner Lemberg  <wl@gnu.org>
+	    Dave Arnold  <darnold@adobe.com>
+
+	[truetype] Provide HVAR advance width variation as a service.
+
+	Everything is guarded with TT_CONFIG_OPTION_GX_VAR_SUPPORT.
+
+	* src/truetype/ttdriver.c (tt_service_metrics_variations): Updated.
+
+	* src/truetype/ttgxvar.c (TT_Vary_Apply_Glyph_Deltas): Prevent
+	double adjustment of advance width.
+
+	* src/sfnt/ttmtx.c: Include FT_SERVICE_METRICS_VARIATIONS_H.
+	(tt_face_get_metrics): Apply metrics variations.
+
 2016-12-15  Dave Arnold  <darnold@adobe.com>
 	    Werner Lemberg  <wl@gnu.org>
 
 	[truetype] Provide function to apply `HVAR' advance width variation.
+
+	Everything is guarded with TT_CONFIG_OPTION_GX_VAR_SUPPORT.
 
 	* src/truetype/ttgxvar.c (tt_hadvance_adjust): New function.
 	* src/truetype/ttgxvar.h: Updated.
@@ -15,6 +32,8 @@
 	variation.
 
 	Activation of the code follows in another commit.
+
+	Everything is guarded with TT_CONFIG_OPTION_GX_VAR_SUPPORT.
 
 	* include/freetype/ftmm.h (FT_Var_Named_Style): Add `psid' member.
 
