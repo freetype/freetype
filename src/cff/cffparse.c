@@ -1422,13 +1422,17 @@
         /* and look for it in our current list.                            */
 
         FT_UInt                   code;
-        FT_UInt                   num_args = (FT_UInt)
-                                             ( parser->top - parser->stack );
+        FT_UInt                   num_args;
         const CFF_Field_Handler*  field;
 
 
+        if ( (FT_UInt)( parser->top - parser->stack ) >= parser->stackSize )
+          goto Stack_Overflow;
+
+        num_args     = (FT_UInt)( parser->top - parser->stack );
         *parser->top = p;
-        code = v;
+        code         = v;
+
         if ( v == 12 )
         {
           /* two byte operator */

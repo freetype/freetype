@@ -1,3 +1,10 @@
+2016-12-16  Werner Lemberg  <wl@gnu.org>
+
+	[cff] Fix heap buffer overflow (#49858).
+
+	* src/cff/cffparse.c (cff_parser_run): Add one more stack size
+	check.
+
 2016-12-15  Werner Lemberg  <wl@gnu.org>
 
 	Fix clang warnings.
