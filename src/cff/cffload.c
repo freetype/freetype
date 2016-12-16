@@ -23,6 +23,11 @@
 #include FT_TRUETYPE_TAGS_H
 #include FT_TYPE1_TABLES_H
 
+#ifdef TT_CONFIG_OPTION_GX_VAR_SUPPORT
+#include FT_MULTIPLE_MASTERS_H
+#include FT_SERVICE_MULTIPLE_MASTERS_H
+#endif
+
 #include "cffload.h"
 #include "cffparse.h"
 
@@ -1126,15 +1131,15 @@
     /* no offset means no vstore to parse */
     if ( offset )
     {
-      FT_UInt   vsSize;     /* currently unused */
       FT_UInt   vsOffset;
       FT_UInt   format;
       FT_ULong  regionListOffset;
 
 
-      /* we need to parse the table to determine its size */
+      /* we need to parse the table to determine its size; */
+      /* skip table length                                 */
       if ( FT_STREAM_SEEK( base_offset + offset ) ||
-           FT_READ_USHORT( vsSize )               )
+           FT_STREAM_SKIP( 2 )                    )
         goto Exit;
 
       /* actual variation store begins after the length */
@@ -1824,7 +1829,7 @@
   /* so NDV has not been set for CFF2 variation.                          */
   /*                                                                      */
   /* `cff_slot_load' must call this function each time NDV changes.       */
-  static FT_Error
+  FT_LOCAL_DEF( FT_Error )
   cff_load_private_dict( CFF_Font     font,
                          CFF_SubFont  subfont,
                          FT_UInt      lenNDV,

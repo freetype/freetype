@@ -433,11 +433,9 @@
 
     FT_Error   error;
     FT_UShort  majorVersion;
-    FT_UShort  minorVersion;
     FT_ULong   table_len;
     FT_ULong   table_offset;
     FT_ULong   store_offset;
-    FT_ULong   map_offset;
 
     FT_ULong*  dataOffsetArray = NULL;
 
@@ -455,8 +453,9 @@
 
     table_offset = FT_STREAM_POS();
 
+    /* skip minor version */
     if ( FT_READ_USHORT( majorVersion ) ||
-         FT_READ_USHORT( minorVersion ) )
+         FT_STREAM_SKIP( 2 )            )
       goto Exit;
     if ( majorVersion != 1 )
     {
@@ -465,8 +464,9 @@
       goto Exit;
     }
 
+    /* skip map offset */
     if ( FT_READ_ULONG( store_offset ) ||
-         FT_READ_ULONG( map_offset )   )
+         FT_STREAM_SKIP( 4 )           )
       goto Exit;
 
     /* parse item variation store */

@@ -42,6 +42,7 @@
 
 #include "cf2ft.h"
 #include "cf2blues.h"
+#include "cffload.h"
 
 
 FT_BEGIN_HEADER

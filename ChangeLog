@@ -1,5 +1,22 @@
 2016-12-16  Werner Lemberg  <wl@gnu.org>
 
+	[cff, truetype] Remove compiler warnings; fix `make multi'.
+
+	* src/cff/cf2font.h: Include `cffload.h'.
+
+	* src/cff/cffload.c: Include FT_MULTIPLE_MASTERS_H and
+	FT_SERVICE_MULTIPLE_MASTERS_H.
+	(cff_vstore_load): Eliminate `vsSize'.
+	(cff_load_private_dict): Tag as `FT_LOCAL_DEF'.
+
+	* src/cff/cffload.h: Include `cffobjs.h'.
+	Provide declaration for `cff_load_private_dict'.
+
+	* src/truetype/ttgxvar.c (ft_var_load_hvar): Eliminate
+	`minorVersion' and `map_offset'.
+
+2016-12-16  Werner Lemberg  <wl@gnu.org>
+
 	[cff] Fix heap buffer overflow (#49858).
 
 	* src/cff/cffparse.c (cff_parser_run): Add one more stack size

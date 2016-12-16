@@ -23,6 +23,7 @@
 #include <ft2build.h>
 #include "cfftypes.h"
 #include "cffparse.h"
+#include "cffobjs.h"  /* for CFF_Face */
 
 
 FT_BEGIN_HEADER
@@ -71,6 +72,12 @@ FT_BEGIN_HEADER
   FT_LOCAL( void )
   cff_font_done( CFF_Font  font );
 
+
+  FT_LOCAL( FT_Error )
+  cff_load_private_dict( CFF_Font     font,
+                         CFF_SubFont  subfont,
+                         FT_UInt      lenNDV,
+                         FT_Fixed*    NDV );
 
   FT_LOCAL( FT_Byte )
   cff_fd_select_get( CFF_FDSelect  fdselect,
