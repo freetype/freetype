@@ -2020,7 +2020,8 @@
     offsetToData = FT_GET_USHORT();
 
     /* rough sanity test */
-    if ( offsetToData + tupleCount * 4 > table_len )
+    if ( offsetToData + ( tupleCount & GX_TC_TUPLE_COUNT_MASK ) * 4 >
+           table_len )
     {
       FT_TRACE2(( "tt_face_vary_cvt:"
                   " invalid CVT variation array header\n" ));

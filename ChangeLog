@@ -1,5 +1,13 @@
 2016-12-16  Werner Lemberg  <wl@gnu.org>
 
+	[truetype] Fix `cvar' sanity test.
+
+	Reported by Dave Arnold.
+
+	* src/truetype/ttgxvar.c (tt_face_vary_cvt): Use tuple count mask.
+
+2016-12-16  Werner Lemberg  <wl@gnu.org>
+
 	[cff, truetype] Remove compiler warnings; fix `make multi'.
 
 	* src/cff/cf2font.h: Include `cffload.h'.
