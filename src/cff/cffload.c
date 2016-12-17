@@ -1843,12 +1843,13 @@
     FT_UInt          stackSize;
 
 
-    if ( !top->private_offset || !top->private_size )
-      goto Exit2;       /* no private DICT, do nothing */
-
-    /* store handle needed to access memory, vstore for blend */
+    /* store handle needed to access memory, vstore for blend;    */
+    /* we need this for clean-up even if there is no private DICT */
     subfont->blend.font   = font;
     subfont->blend.usedBV = FALSE;  /* clear state */
+
+    if ( !top->private_offset || !top->private_size )
+      goto Exit2;       /* no private DICT, do nothing */
 
     /* set defaults */
     FT_ZERO( priv );

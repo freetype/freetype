@@ -1,3 +1,11 @@
+2016-12-17  Werner Lemberg  <wl@gnu.org>
+
+	* src/cff/cffload.c (cff_load_private_dict): Always init `blend'.
+
+	Reported as
+
+	  https://bugs.chromium.org/p/oss-fuzz/issues/detail?id=295
+
 2016-12-16  Werner Lemberg  <wl@gnu.org>
 
 	[truetype] Fix `cvar' sanity test.
