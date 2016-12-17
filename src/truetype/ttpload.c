@@ -89,7 +89,6 @@
         face->glyf_offset = FT_STREAM_POS();
     }
 
-
     FT_TRACE2(( "Locations " ));
     error = face->goto_table( face, TTAG_loca, stream, &table_len );
     if ( error )

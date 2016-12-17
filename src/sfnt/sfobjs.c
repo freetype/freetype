@@ -967,6 +967,7 @@
       /* based on similar code in function `TT_Get_MM_Var' */
       if ( version != 0x00010000UL                    ||
            axis_size != 20                            ||
+           num_axes == 0                              ||
            num_axes > 0x3FFE                          ||
            instance_size != 4 + 4 * num_axes          ||
            num_instances > 0x7EFF                     ||

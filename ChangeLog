@@ -1,5 +1,18 @@
 2016-12-17  Werner Lemberg  <wl@gnu.org>
 
+	[sfnt, truetype] Various sanitizing fixes.
+
+	* src/sfnt/sfobjs.c (sfnt_init_face): If the axis count in `fvar' is
+	zero, set `num_instances' to zero.
+
+	* src/truetype/ttgxvar.c (TT_Get_MM_Var): Handle `fvar' table with
+	zero axes as invalid.
+
+	* src/truetype/ttobjs.c (tt_face_init): Improve logic of loading
+	`loca', `cvt', `fpgm', and `prep' table.
+
+2016-12-17  Werner Lemberg  <wl@gnu.org>
+
 	Improve tracing of `FT_Open_Face'.
 
 	* src/base/ftobjs.c (FT_Open_Face): Return info on number of

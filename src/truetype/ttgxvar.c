@@ -1355,6 +1355,7 @@
            fvar_head.countSizePairs != 2                                  ||
 #endif
            fvar_head.axisSize != 20                                       ||
+           fvar_head.axisCount == 0                                       ||
            /* axisCount limit implied by 16-bit instanceSize */
            fvar_head.axisCount > 0x3FFE                                   ||
            fvar_head.instanceCount > 0x7EFF                               ||

@@ -581,13 +581,29 @@
 #ifdef FT_CONFIG_OPTION_INCREMENTAL
 
       if ( !ttface->internal->incremental_interface )
+      {
         error = tt_face_load_loca( face, stream );
-      if ( !error )
-        error = tt_face_load_cvt( face, stream );
-      if ( !error )
-        error = tt_face_load_fpgm( face, stream );
-      if ( !error )
-        error = tt_face_load_prep( face, stream );
+
+        /* having a (non-zero) `glyf' table without */
+        /* a `loca' table is not valid              */
+        if ( face->glyf_len && FT_ERR_EQ( error, Table_Missing ) )
+          goto Exit;
+        if ( error )
+          goto Exit;
+      }
+
+      /* `fpgm', `cvt', and `prep' are optional */
+      error = tt_face_load_cvt( face, stream );
+      if ( error && FT_ERR_NEQ( error, Table_Missing ) )
+        goto Exit;
+
+      error = tt_face_load_fpgm( face, stream );
+      if ( error && FT_ERR_NEQ( error, Table_Missing ) )
+        goto Exit;
+
+      error = tt_face_load_prep( face, stream );
+      if ( error && FT_ERR_NEQ( error, Table_Missing ) )
+        goto Exit;
 
       /* Check the scalable flag based on `loca'. */
       if ( !ttface->internal->incremental_interface &&
@@ -605,14 +621,27 @@
 
 #else /* !FT_CONFIG_OPTION_INCREMENTAL */
 
-      if ( !error )
-        error = tt_face_load_loca( face, stream );
-      if ( !error )
-        error = tt_face_load_cvt( face, stream );
-      if ( !error )
-        error = tt_face_load_fpgm( face, stream );
-      if ( !error )
-        error = tt_face_load_prep( face, stream );
+      error = tt_face_load_loca( face, stream );
+
+      /* having a (non-zero) `glyf' table without */
+      /* a `loca' table is not valid              */
+      if ( face->glyf_len && FT_ERR_EQ( error, Table_Missing ) )
+        goto Exit;
+      if ( error )
+        goto Exit;
+
+      /* `fpgm', `cvt', and `prep' are optional */
+      error = tt_face_load_cvt( face, stream );
+      if ( error && FT_ERR_NEQ( error, Table_Missing ) )
+        goto Exit;
+
+      error = tt_face_load_fpgm( face, stream );
+      if ( error && FT_ERR_NEQ( error, Table_Missing ) )
+        goto Exit;
+
+      error = tt_face_load_prep( face, stream );
+      if ( error && FT_ERR_NEQ( error, Table_Missing ) )
+        goto Exit;
 
       /* Check the scalable flag based on `loca'. */
       if ( ttface->num_fixed_sizes          &&
