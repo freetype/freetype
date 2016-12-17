@@ -2122,6 +2122,19 @@
     FT_Module*   limit;
 
 
+#ifdef FT_DEBUG_LEVEL_TRACE
+    FT_TRACE3(( "FT_Open_Face: " ));
+    if ( face_index < 0 )
+      FT_TRACE3(( "Requesting number of faces and named instances\n"));
+    else
+    {
+      FT_TRACE3(( "Requesting face %ld", face_index & 0xFFFFL ));
+      if ( face_index & 0x7FFF0000L )
+        FT_TRACE3(( ", named instance %ld", face_index >> 16 ));
+      FT_TRACE3(( "\n" ));
+    }
+#endif
+
     /* test for valid `library' delayed to `FT_Stream_New' */
 
     if ( ( !aface && face_index >= 0 ) || !args )
@@ -2368,6 +2381,17 @@
       destroy_face( memory, face, driver );
 
   Exit:
+#ifdef FT_DEBUG_LEVEL_TRACE
+    if ( !error && face_index < 0 )
+    {
+      FT_TRACE3(( "FT_Open_Face: The font has %ld faces\n"
+                  "              and %ld named instances for face %ld\n",
+                  face->num_faces,
+                  face->style_flags >> 16,
+                  -face_index - 1 ));
+    }
+#endif
+
     FT_TRACE4(( "FT_Open_Face: Return %d\n", error ));
 
     return error;

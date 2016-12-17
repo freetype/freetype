@@ -1,5 +1,15 @@
 2016-12-17  Werner Lemberg  <wl@gnu.org>
 
+	Improve tracing of `FT_Open_Face'.
+
+	* src/base/ftobjs.c (FT_Open_Face): Return info on number of
+	available faces and numbered instances, or the indices of the
+	requested face and numbered instance.
+
+	* src/sfnt/sfobjs. (sfnt_open_font): Trace number of subfonts.
+
+2016-12-17  Werner Lemberg  <wl@gnu.org>
+
 	* src/cff/cffload.c (cff_load_private_dict): Always init `blend'.
 
 	Reported as

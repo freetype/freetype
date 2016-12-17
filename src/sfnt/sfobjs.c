@@ -804,6 +804,9 @@
       if ( FT_STREAM_READ_FIELDS( ttc_header_fields, &face->ttc_header ) )
         return error;
 
+      FT_TRACE3(( "                with %ld subfonts\n",
+                  face->ttc_header.count ));
+
       if ( face->ttc_header.count == 0 )
         return FT_THROW( Invalid_Table );
 
