@@ -2301,7 +2301,7 @@
         p->font->comments[p->font->comments_len] = 0;
       }
     }
-    else if ( error == FT_Err_Ok )
+    else if ( !error )
       error = FT_THROW( Invalid_File_Format );
 
     *font = p->font;

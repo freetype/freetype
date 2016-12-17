@@ -347,7 +347,7 @@
                 size,
                 gindex,
                 ( load_flags & FT_LOAD_BITMAP_METRICS_ONLY ) != 0 );
-      if ( error == 0 )
+      if ( !error )
         goto Exit;
     }
 

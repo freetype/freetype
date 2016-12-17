@@ -752,10 +752,8 @@
           if ( arg_cnt != 0 )
             goto Unexpected_OtherSubr;
 
-          if ( ( error = t1_builder_start_point( builder, x, y ) )
-                 != FT_Err_Ok                                      ||
-               ( error = t1_builder_check_points( builder, 6 ) )
-                 != FT_Err_Ok                                      )
+          if ( FT_SET_ERROR( t1_builder_start_point( builder, x, y ) ) ||
+               FT_SET_ERROR( t1_builder_check_points( builder, 6 ) )   )
             goto Fail;
 
           decoder->flex_state        = 1;
@@ -1200,8 +1198,7 @@
         case op_hlineto:
           FT_TRACE4(( " hlineto" ));
 
-          if ( ( error = t1_builder_start_point( builder, x, y ) )
-                 != FT_Err_Ok )
+          if ( FT_SET_ERROR( t1_builder_start_point( builder, x, y ) ) )
             goto Fail;
 
           x += top[0];
@@ -1222,10 +1219,8 @@
         case op_hvcurveto:
           FT_TRACE4(( " hvcurveto" ));
 
-          if ( ( error = t1_builder_start_point( builder, x, y ) )
-                 != FT_Err_Ok                                      ||
-               ( error = t1_builder_check_points( builder, 3 ) )
-                 != FT_Err_Ok                                      )
+          if ( FT_SET_ERROR( t1_builder_start_point( builder, x, y ) ) ||
+               FT_SET_ERROR( t1_builder_check_points( builder, 3 ) )   )
             goto Fail;
 
           x += top[0];
@@ -1240,16 +1235,14 @@
         case op_rlineto:
           FT_TRACE4(( " rlineto" ));
 
-          if ( ( error = t1_builder_start_point( builder, x, y ) )
-                 != FT_Err_Ok )
+          if ( FT_SET_ERROR( t1_builder_start_point( builder, x, y ) ) )
             goto Fail;
 
           x += top[0];
           y += top[1];
 
         Add_Line:
-          if ( ( error = t1_builder_add_point1( builder, x, y ) )
-                 != FT_Err_Ok )
+          if ( FT_SET_ERROR( t1_builder_add_point1( builder, x, y ) ) )
             goto Fail;
           break;
 
@@ -1269,10 +1262,8 @@
         case op_rrcurveto:
           FT_TRACE4(( " rrcurveto" ));
 
-          if ( ( error = t1_builder_start_point( builder, x, y ) )
-                 != FT_Err_Ok                                      ||
-               ( error = t1_builder_check_points( builder, 3 ) )
-                 != FT_Err_Ok                                      )
+          if ( FT_SET_ERROR( t1_builder_start_point( builder, x, y ) ) ||
+               FT_SET_ERROR( t1_builder_check_points( builder, 3 ) )   )
             goto Fail;
 
           x += top[0];
@@ -1291,10 +1282,8 @@
         case op_vhcurveto:
           FT_TRACE4(( " vhcurveto" ));
 
-          if ( ( error = t1_builder_start_point( builder, x, y ) )
-                 != FT_Err_Ok                                      ||
-               ( error = t1_builder_check_points( builder, 3 ) )
-                 != FT_Err_Ok                                      )
+          if ( FT_SET_ERROR( t1_builder_start_point( builder, x, y ) ) ||
+               FT_SET_ERROR( t1_builder_check_points( builder, 3 ) )   )
             goto Fail;
 
           y += top[0];
@@ -1309,8 +1298,7 @@
         case op_vlineto:
           FT_TRACE4(( " vlineto" ));
 
-          if ( ( error = t1_builder_start_point( builder, x, y ) )
-                 != FT_Err_Ok )
+          if ( FT_SET_ERROR( t1_builder_start_point( builder, x, y ) ) )
             goto Fail;
 
           y += top[0];

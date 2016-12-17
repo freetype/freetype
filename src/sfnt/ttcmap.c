@@ -3756,7 +3756,7 @@
               error = clazz->validate( cmap, FT_VALIDATOR( &valid ) );
             }
 
-            if ( valid.validator.error == 0 )
+            if ( !valid.validator.error )
             {
               FT_CMap  ttcmap;
 

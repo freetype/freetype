@@ -1260,8 +1260,8 @@ THE SOFTWARE.
       if ( face->accel.constantWidth )
         root->face_flags |= FT_FACE_FLAG_FIXED_WIDTH;
 
-      if ( ( error = pcf_interpret_style( face ) ) != 0 )
-         goto Exit;
+      if ( FT_SET_ERROR( pcf_interpret_style( face ) ) )
+        goto Exit;
 
       prop = pcf_find_property( face, "FAMILY_NAME" );
       if ( prop && prop->isString )

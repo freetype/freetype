@@ -1796,11 +1796,11 @@
 
         /* this call provides additional offsets */
         /* for each component's translation      */
-        if ( ( error = TT_Vary_Apply_Glyph_Deltas(
-                         face,
-                         glyph_index,
-                         &outline,
-                         (FT_UInt)outline.n_points ) ) != 0 )
+        if ( FT_SET_ERROR( TT_Vary_Apply_Glyph_Deltas(
+                             face,
+                             glyph_index,
+                             &outline,
+                             (FT_UInt)outline.n_points ) ) )
           goto Exit1;
 
         subglyph = gloader->current.subglyphs;

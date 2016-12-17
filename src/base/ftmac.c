@@ -942,13 +942,14 @@
     /* if it works, fine.                                           */
 
     error = FT_New_Face_From_Suitcase( library, pathname, face_index, aface );
-    if ( error == 0 )
-      return error;
+    if ( error )
+    {
+      /* let it fall through to normal loader (.ttf, .otf, etc.); */
+      /* we signal this by returning no error and no FT_Face      */
+      *aface = NULL;
+    }
 
-    /* let it fall through to normal loader (.ttf, .otf, etc.); */
-    /* we signal this by returning no error and no FT_Face      */
-    *aface = NULL;
-    return 0;
+    return FT_Err_Ok;
   }
 
 
@@ -982,12 +983,13 @@
     /* try resourcefork based font: LWFN, FFIL */
     error = FT_New_Face_From_Resource( library, (UInt8 *)pathname,
                                        face_index, aface );
-    if ( error != 0 || *aface != NULL )
+    if ( error || *aface )
       return error;
 
     /* let it fall through to normal loader (.ttf, .otf, etc.) */
     args.flags    = FT_OPEN_PATHNAME;
     args.pathname = (char*)pathname;
+
     return FT_Open_Face( library, &args, face_index, aface );
   }
 

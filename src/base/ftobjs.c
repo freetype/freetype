@@ -1400,7 +1400,7 @@
 
     error = FT_Open_Face( library, &args, face_index, aface );
 
-    if ( error == FT_Err_Ok )
+    if ( !error )
       (*aface)->face_flags &= ~FT_FACE_FLAG_EXTERNAL_STREAM;
     else
 #ifdef FT_MACINTOSH
@@ -1758,11 +1758,12 @@
                                   aface );
 
   Exit2:
-    if ( error == FT_ERR( Array_Too_Large ) )
+    if ( FT_ERR_EQ( error, Array_Too_Large ) )
       FT_TRACE2(( "  Abort due to too-short buffer to store"
                   " all POST fragments\n" ));
-    else if ( error == FT_ERR( Invalid_Offset ) )
+    else if ( FT_ERR_EQ( error, Invalid_Offset ) )
       FT_TRACE2(( "  Abort due to invalid offset in a POST fragment\n" ));
+
     if ( error )
       error = FT_ERR( Cannot_Open_Resource );
     FT_FREE( pfb_data );

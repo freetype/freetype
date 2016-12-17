@@ -954,10 +954,10 @@
 
     FT_TRACE2(( "GVAR " ));
 
-    if ( ( error = face->goto_table( face,
-                                     TTAG_gvar,
-                                     stream,
-                                     &table_len ) ) != 0 )
+    if ( FT_SET_ERROR( face->goto_table( face,
+                                         TTAG_gvar,
+                                         stream,
+                                         &table_len ) ) )
     {
       FT_TRACE2(( "is missing\n" ));
       goto Exit;
@@ -1322,12 +1322,12 @@
       FT_TRACE2(( "FVAR " ));
 
       /* both `fvar' and `gvar' must be present */
-      if ( ( error = face->goto_table( face, TTAG_gvar,
-                                       stream, &table_len ) ) != 0 )
+      if ( FT_SET_ERROR( face->goto_table( face, TTAG_gvar,
+                                           stream, &table_len ) ) )
       {
         /* CFF2 is an alternate to gvar here */
-        if ( ( error = face->goto_table( face, TTAG_CFF2,
-                                         stream, &table_len ) ) != 0 )
+        if ( FT_SET_ERROR( face->goto_table( face, TTAG_CFF2,
+                                             stream, &table_len ) ) )
         {
           FT_TRACE1(( "\n"
                       "TT_Get_MM_Var: `gvar' or `CFF2' table is missing\n" ));
@@ -1335,8 +1335,8 @@
         }
       }
 
-      if ( ( error = face->goto_table( face, TTAG_fvar,
-                                       stream, &table_len ) ) != 0 )
+      if ( FT_SET_ERROR( face->goto_table( face, TTAG_fvar,
+                                           stream, &table_len ) ) )
       {
         FT_TRACE1(( "is missing\n" ));
         goto Exit;
@@ -1589,7 +1589,7 @@
 
     if ( face->blend == NULL )
     {
-      if ( ( error = TT_Get_MM_Var( face, NULL ) ) != 0 )
+      if ( FT_SET_ERROR( TT_Get_MM_Var( face, NULL ) ) )
         goto Exit;
     }
 
@@ -1624,7 +1624,7 @@
     FT_TRACE5(( "\n" ));
 
     if ( !face->isCFF2 && blend->glyphoffsets == NULL )
-      if ( ( error = ft_var_load_gvar( face ) ) != 0 )
+      if ( FT_SET_ERROR( ft_var_load_gvar( face ) ) )
         goto Exit;
 
     if ( blend->normalizedcoords == NULL )
@@ -1740,7 +1740,7 @@
 
     if ( face->blend == NULL )
     {
-      if ( ( error = TT_Get_MM_Var( face, NULL ) ) != 0 )
+      if ( FT_SET_ERROR( TT_Get_MM_Var( face, NULL ) ) )
         return error;
     }
 
@@ -1805,7 +1805,7 @@
 
     if ( face->blend == NULL )
     {
-      if ( ( error = TT_Get_MM_Var( face, NULL ) ) != 0 )
+      if ( FT_SET_ERROR( TT_Get_MM_Var( face, NULL ) ) )
         goto Exit;
     }
 
