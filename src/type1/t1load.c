@@ -2156,7 +2156,7 @@
                 parser->root.error = t1_load_keyword( face,
                                                       loader,
                                                       keyword );
-                if ( parser->root.error != FT_Err_Ok )
+                if ( parser->root.error )
                 {
                   if ( FT_ERR_EQ( parser->root.error, Ignore ) )
                     parser->root.error = FT_Err_Ok;

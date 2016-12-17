@@ -902,7 +902,7 @@
                                       priv->vsindex,
                                       subFont->lenNDV,
                                       subFont->NDV );
-      if ( error != FT_Err_Ok )
+      if ( error )
         goto Exit;
     }
 
