@@ -1,5 +1,9 @@
 2016-12-17  Werner Lemberg  <wl@gnu.org>
 
+	* src/truetype/ttobjs.c (tt_face_init): Simplify conditional code.
+
+2016-12-17  Werner Lemberg  <wl@gnu.org>
+
 	[sfnt, truetype] Various sanitizing fixes.
 
 	* src/sfnt/sfobjs.c (sfnt_init_face): If the axis count in `fvar' is

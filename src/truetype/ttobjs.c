@@ -577,10 +577,9 @@
 
     if ( FT_IS_SCALABLE( ttface ) )
     {
-
 #ifdef FT_CONFIG_OPTION_INCREMENTAL
-
       if ( !ttface->internal->incremental_interface )
+#endif
       {
         error = tt_face_load_loca( face, stream );
 
@@ -606,58 +605,22 @@
         goto Exit;
 
       /* Check the scalable flag based on `loca'. */
-      if ( !ttface->internal->incremental_interface &&
-           ttface->num_fixed_sizes                  &&
-           face->glyph_locations                    &&
-           tt_check_single_notdef( ttface )         )
+#ifdef FT_CONFIG_OPTION_INCREMENTAL
+      if ( !ttface->internal->incremental_interface )
+#endif
       {
-        FT_TRACE5(( "tt_face_init:"
-                    " Only the `.notdef' glyph has an outline.\n"
-                    "             "
-                    " Resetting scalable flag to FALSE.\n" ));
+        if ( ttface->num_fixed_sizes          &&
+             face->glyph_locations            &&
+             tt_check_single_notdef( ttface ) )
+        {
+          FT_TRACE5(( "tt_face_init:"
+                      " Only the `.notdef' glyph has an outline.\n"
+                      "             "
+                      " Resetting scalable flag to FALSE.\n" ));
 
-        ttface->face_flags &= ~FT_FACE_FLAG_SCALABLE;
+          ttface->face_flags &= ~FT_FACE_FLAG_SCALABLE;
+        }
       }
-
-#else /* !FT_CONFIG_OPTION_INCREMENTAL */
-
-      error = tt_face_load_loca( face, stream );
-
-      /* having a (non-zero) `glyf' table without */
-      /* a `loca' table is not valid              */
-      if ( face->glyf_len && FT_ERR_EQ( error, Table_Missing ) )
-        goto Exit;
-      if ( error )
-        goto Exit;
-
-      /* `fpgm', `cvt', and `prep' are optional */
-      error = tt_face_load_cvt( face, stream );
-      if ( error && FT_ERR_NEQ( error, Table_Missing ) )
-        goto Exit;
-
-      error = tt_face_load_fpgm( face, stream );
-      if ( error && FT_ERR_NEQ( error, Table_Missing ) )
-        goto Exit;
-
-      error = tt_face_load_prep( face, stream );
-      if ( error && FT_ERR_NEQ( error, Table_Missing ) )
-        goto Exit;
-
-      /* Check the scalable flag based on `loca'. */
-      if ( ttface->num_fixed_sizes          &&
-           face->glyph_locations            &&
-           tt_check_single_notdef( ttface ) )
-      {
-        FT_TRACE5(( "tt_face_init:"
-                    " Only the `.notdef' glyph has an outline.\n"
-                    "             "
-                    " Resetting scalable flag to FALSE.\n" ));
-
-        ttface->face_flags &= ~FT_FACE_FLAG_SCALABLE;
-      }
-
-#endif /* !FT_CONFIG_OPTION_INCREMENTAL */
-
     }
 
 #ifdef TT_CONFIG_OPTION_GX_VAR_SUPPORT
