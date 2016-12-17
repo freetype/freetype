@@ -1,5 +1,9 @@
 2016-12-17  Werner Lemberg  <wl@gnu.org>
 
+	* src/cff/cffload.c (cff_build_blend_vector): Remove redundant code.
+
+2016-12-17  Werner Lemberg  <wl@gnu.org>
+
 	* src/truetype/ttobjs.c (tt_face_init): Simplify conditional code.
 
 2016-12-17  Werner Lemberg  <wl@gnu.org>

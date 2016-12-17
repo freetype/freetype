@@ -751,6 +751,7 @@
   {
     FT_Byte  fd = 0;
 
+
     /* if there is no FDSelect, return zero               */
     /* Note: CFF2 with just one Font Dict has no FDSelect */
     if ( fdselect->data == NULL )
@@ -1505,10 +1506,7 @@
       if ( FT_REALLOC( blend->lastNDV,
                        blend->lenNDV * sizeof ( *NDV ),
                        lenNDV * sizeof ( *NDV ) ) )
-      {
-        error = FT_THROW( Out_Of_Memory );
         goto Exit;
-      }
 
       blend->lenNDV = lenNDV;
       FT_MEM_COPY( blend->lastNDV,
