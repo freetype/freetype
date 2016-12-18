@@ -1,5 +1,20 @@
 2016-12-18  Werner Lemberg  <wl@gnu.org>
 
+	[base] Fix invalid mac font recursion.
+
+	Reported as
+
+	  https://bugs.chromium.org/p/oss-fuzz/issues/detail?id=304
+
+	* src/base/ftobjs.c (FT_Open_Face): Code moved to...
+	(ft_open_face_internal): ... this function.
+	Add a parameter to control whether we try special Mac font handling
+	in case of failure.
+	(FT_Open_Face, FT_New_Face, FT_New_Memory_Face,
+	open_face_from_buffer): Use `ft_open_face_internal'.
+
+2016-12-18  Werner Lemberg  <wl@gnu.org>
+
 	* src/cff/cffobjs.c (cff_face_init): Make named instances work.
 
 2016-12-18  Werner Lemberg  <wl@gnu.org>

@@ -79,6 +79,15 @@
 #define GRID_FIT_METRICS
 
 
+  /* forward declaration */
+  static FT_Error
+  ft_open_face_internal( FT_Library           library,
+                         const FT_Open_Args*  args,
+                         FT_Long              face_index,
+                         FT_Face             *aface,
+                         FT_Bool              test_mac_fonts );
+
+
   FT_BASE_DEF( FT_Pointer )
   ft_service_list_lookup( FT_ServiceDesc  service_descriptors,
                           const char*     service_id )
@@ -1240,7 +1249,7 @@
     args.pathname = (char*)pathname;
     args.stream   = NULL;
 
-    return FT_Open_Face( library, &args, face_index, aface );
+    return ft_open_face_internal( library, &args, face_index, aface, 1 );
   }
 
 #endif
@@ -1267,7 +1276,7 @@
     args.memory_size = file_size;
     args.stream      = NULL;
 
-    return FT_Open_Face( library, &args, face_index, aface );
+    return ft_open_face_internal( library, &args, face_index, aface, 1 );
   }
 
 
@@ -1302,7 +1311,7 @@
 
   /* Finalizer for a memory stream; gets called by FT_Done_Face(). */
   /* It frees the memory it uses.                                  */
-  /* From ftmac.c.                                                 */
+  /* From `ftmac.c'.                                               */
   static void
   memory_stream_close( FT_Stream  stream )
   {
@@ -1318,7 +1327,7 @@
 
 
   /* Create a new memory stream from a buffer and a size. */
-  /* From ftmac.c.                                        */
+  /* From `ftmac.c'.                                      */
   static FT_Error
   new_memory_stream( FT_Library           library,
                      FT_Byte*             base,
@@ -1338,7 +1347,7 @@
       return FT_THROW( Invalid_Argument );
 
     *astream = NULL;
-    memory = library->memory;
+    memory   = library->memory;
     if ( FT_NEW( stream ) )
       goto Exit;
 
@@ -1354,7 +1363,7 @@
 
 
   /* Create a new FT_Face given a buffer and a driver name. */
-  /* from ftmac.c */
+  /* From `ftmac.c'.                                        */
   FT_LOCAL_DEF( FT_Error )
   open_face_from_buffer( FT_Library   library,
                          FT_Byte*     base,
@@ -1380,11 +1389,11 @@
       return error;
     }
 
-    args.flags = FT_OPEN_STREAM;
+    args.flags  = FT_OPEN_STREAM;
     args.stream = stream;
     if ( driver_name )
     {
-      args.flags = args.flags | FT_OPEN_DRIVER;
+      args.flags  = args.flags | FT_OPEN_DRIVER;
       args.driver = FT_Get_Module( library, driver_name );
     }
 
@@ -1398,7 +1407,7 @@
       face_index &= 0x7FFF0000L; /* retain GX data */
 #endif
 
-    error = FT_Open_Face( library, &args, face_index, aface );
+    error = ft_open_face_internal( library, &args, face_index, aface, 0 );
 
     if ( !error )
       (*aface)->face_flags &= ~FT_FACE_FLAG_EXTERNAL_STREAM;
@@ -2112,6 +2121,17 @@
                 FT_Long              face_index,
                 FT_Face             *aface )
   {
+    return ft_open_face_internal( library, args, face_index, aface, 1 );
+  }
+
+
+  static FT_Error
+  ft_open_face_internal( FT_Library           library,
+                         const FT_Open_Args*  args,
+                         FT_Long              face_index,
+                         FT_Face             *aface,
+                         FT_Bool              test_mac_fonts )
+  {
     FT_Error     error;
     FT_Driver    driver = NULL;
     FT_Memory    memory = NULL;
@@ -2121,6 +2141,10 @@
     FT_Bool      external_stream;
     FT_Module*   cur;
     FT_Module*   limit;
+
+#ifndef FT_CONFIG_OPTION_MAC_FONTS
+    FT_UNUSED( test_mac_fonts );
+#endif
 
 
 #ifdef FT_DEBUG_LEVEL_TRACE
@@ -2212,7 +2236,8 @@
             goto Success;
 
 #ifdef FT_CONFIG_OPTION_MAC_FONTS
-          if ( ft_strcmp( cur[0]->clazz->module_name, "truetype" ) == 0 &&
+          if ( test_mac_fonts                                           &&
+               ft_strcmp( cur[0]->clazz->module_name, "truetype" ) == 0 &&
                FT_ERR_EQ( error, Table_Missing )                        )
           {
             /* TrueType but essential tables are missing */
@@ -2249,16 +2274,20 @@
         goto Fail2;
 
 #if !defined( FT_MACINTOSH ) && defined( FT_CONFIG_OPTION_MAC_FONTS )
-      error = load_mac_face( library, stream, face_index, aface, args );
-      if ( !error )
+      if ( test_mac_fonts )
       {
-        /* We don't want to go to Success here.  We've already done that. */
-        /* On the other hand, if we succeeded we still need to close this */
-        /* stream (we opened a different stream which extracted the       */
-        /* interesting information out of this stream here.  That stream  */
-        /* will still be open and the face will point to it).             */
-        FT_Stream_Free( stream, external_stream );
-        return error;
+        error = load_mac_face( library, stream, face_index, aface, args );
+        if ( !error )
+        {
+          /* We don't want to go to Success here.  We've already done   */
+          /* that.  On the other hand, if we succeeded we still need to */
+          /* close this stream (we opened a different stream which      */
+          /* extracted the interesting information out of this stream   */
+          /* here.  That stream will still be open and the face will    */
+          /* point to it).                                              */
+          FT_Stream_Free( stream, external_stream );
+          return error;
+        }
       }
 
       if ( FT_ERR_NEQ( error, Unknown_File_Format ) )
