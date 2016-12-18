@@ -1,5 +1,9 @@
 2016-12-18  Werner Lemberg  <wl@gnu.org>
 
+	* src/cff/cffobjs.c (cff_face_init): Make named instances work.
+
+2016-12-18  Werner Lemberg  <wl@gnu.org>
+
 	[truetype, cff] Extend `get_var_blend' function of MM service.
 
 	In particular, we need access to named instance data.
