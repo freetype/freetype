@@ -949,7 +949,7 @@
            fvar_len < 20                                          ||
            FT_READ_ULONG( version )                               ||
            FT_READ_USHORT( offset )                               ||
-           FT_STREAM_SKIP( 2 )                                    ||
+           FT_STREAM_SKIP( 2 ) /* count_size_pairs */             ||
            FT_READ_USHORT( num_axes )                             ||
            FT_READ_USHORT( axis_size )                            ||
            FT_READ_USHORT( num_instances )                        ||
@@ -963,18 +963,30 @@
         instance_size = 0;
       }
 
-      /* check that the data is bound by the table length; */
-      /* based on similar code in function `TT_Get_MM_Var' */
+      /* check that the data is bound by the table length */
       if ( version != 0x00010000UL                    ||
+#if 0
+           /* fonts like `JamRegular.ttf' have an incorrect value for   */
+           /* `count_size_pairs'; since value 2 is hard-coded in `fvar' */
+           /* version 1.0, we simply ignore it                          */
+           count_size_pairs != 2                      ||
+#endif
            axis_size != 20                            ||
            num_axes == 0                              ||
+           /* `num_axes' limit implied by 16-bit `instance_size' */
            num_axes > 0x3FFE                          ||
-           instance_size != 4 + 4 * num_axes          ||
+           !( instance_size == 4 + 4 * num_axes ||
+              instance_size == 6 + 4 * num_axes )     ||
            num_instances > 0x7EFF                     ||
            offset                          +
              axis_size * num_axes          +
              instance_size * num_instances > fvar_len )
-        num_instances = 0;
+      {
+        num_instances  = 0;
+        face->use_fvar = 0;
+      }
+      else
+        face->use_fvar = 1;
 
       /* we don't support Multiple Master CFFs yet */
       if ( !face->goto_table( face, TTAG_CFF, stream, 0 ) )
@@ -1356,13 +1368,14 @@
 #ifdef TT_CONFIG_OPTION_GX_VAR_SUPPORT
       /* Don't bother to load the tables unless somebody asks for them. */
       /* No need to do work which will (probably) not be used.          */
-      if ( tt_face_lookup_table( face, TTAG_glyf ) != 0 &&
-           tt_face_lookup_table( face, TTAG_fvar ) != 0 &&
-           tt_face_lookup_table( face, TTAG_gvar ) != 0 )
-        flags |= FT_FACE_FLAG_MULTIPLE_MASTERS;
-      if ( tt_face_lookup_table( face, TTAG_CFF2 ) != 0 &&
-           tt_face_lookup_table( face, TTAG_fvar ) != 0 )
-        flags |= FT_FACE_FLAG_MULTIPLE_MASTERS;
+      if ( face->use_fvar )
+      {
+        if ( tt_face_lookup_table( face, TTAG_glyf ) != 0 &&
+             tt_face_lookup_table( face, TTAG_gvar ) != 0 )
+          flags |= FT_FACE_FLAG_MULTIPLE_MASTERS;
+        if ( tt_face_lookup_table( face, TTAG_CFF2 ) != 0 )
+          flags |= FT_FACE_FLAG_MULTIPLE_MASTERS;
+      }
 #endif
 
       root->face_flags = flags;

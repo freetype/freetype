@@ -1,5 +1,21 @@
 2016-12-18  Werner Lemberg  <wl@gnu.org>
 
+	[sfnt] Handle `fvar' with zero axes as a non-MM font.
+
+	This is better behaviour than exiting with an error.
+
+	* include/freetype/internal/tttypes.h (TT_Face): Add `use_fvar'
+	field.
+
+	* src/sfnt/sfobjs.c (sfnt_init_face): Compute `use_fvar', also
+	updating the validation code.
+	Use `use_fvar' to compute FT_FACE_FLAG_MULTIPLE_MASTERS.
+
+	* src/truetype/ttgxvar.c (TT_Get_MM_Var): Remove `fvar' validation
+	code.
+
+2016-12-18  Werner Lemberg  <wl@gnu.org>
+
 	Minor GX code shuffling.
 
 	* include/freetype/internal/tttypes.h (TT_Face): Move

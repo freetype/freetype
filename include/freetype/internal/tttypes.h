@@ -1163,6 +1163,9 @@ FT_BEGIN_HEADER
   /*                                                                       */
   /*    mm                   :: A pointer to the Multiple Masters service. */
   /*                                                                       */
+  /*    var                  :: A pointer to the Metrics Variations        */
+  /*                            service.                                   */
+  /*                                                                       */
   /*    hdmx                 :: The face's horizontal device metrics       */
   /*                            (`hdmx' table).  This table is optional in */
   /*                            TrueType/OpenType fonts.                   */
@@ -1233,6 +1236,9 @@ FT_BEGIN_HEADER
   /*    is_default_instance  :: Set if the glyph outlines can be used      */
   /*                            unmodified (i.e., without applying glyph   */
   /*                            variation deltas).                         */
+  /*                                                                       */
+  /*    use_fvar             :: Set if the `fvar' table header is valid,   */
+  /*                            and we have at least one design axis.      */
   /*                                                                       */
   /*    horz_metrics_size    :: The size of the `hmtx' table.              */
   /*                                                                       */
@@ -1426,6 +1432,7 @@ FT_BEGIN_HEADER
     GX_Blend              blend;
 
     FT_Bool               is_default_instance;   /* since 2.7.1 */
+    FT_Bool               use_fvar;              /* since 2.7.1 */
 #endif
 
     /* since version 2.2 */

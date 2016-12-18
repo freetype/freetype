@@ -1344,41 +1344,13 @@
 
       fvar_start = FT_STREAM_POS( );
 
+      /* the validity of the `fvar' header data was already checked */
+      /* in function `sfnt_init_face'                               */
       if ( FT_STREAM_READ_FIELDS( fvar_fields, &fvar_head ) )
         goto Exit;
 
-      if ( fvar_head.version != (FT_Long)0x00010000L                      ||
-#if 0
-           /* fonts like `JamRegular.ttf' have an incorrect value for */
-           /* `countSizePairs'; since value 2 is hard-coded in `fvar' */
-           /* version 1.0, we simply ignore it                        */
-           fvar_head.countSizePairs != 2                                  ||
-#endif
-           fvar_head.axisSize != 20                                       ||
-           fvar_head.axisCount == 0                                       ||
-           /* axisCount limit implied by 16-bit instanceSize */
-           fvar_head.axisCount > 0x3FFE                                   ||
-           fvar_head.instanceCount > 0x7EFF                               ||
-           fvar_head.offsetToData + fvar_head.axisCount * 20U +
-             fvar_head.instanceCount * fvar_head.instanceSize > table_len )
-      {
-        FT_TRACE1(( "\n"
-                    "TT_Get_MM_Var: invalid `fvar' header\n" ));
-        error = FT_THROW( Invalid_Table );
-        goto Exit;
-      }
-
-      if ( fvar_head.instanceSize == 4 + 4 * fvar_head.axisCount )
-        usePsName = FALSE;
-      else if ( fvar_head.instanceSize == 6 + 4 * fvar_head.axisCount )
-        usePsName = TRUE;
-      else
-      {
-        FT_TRACE1(( "\n"
-                    "TT_Get_MM_Var: invalid `fvar' header\n" ));
-        error = FT_THROW( Invalid_Table );
-        goto Exit;
-      }
+      usePsName = FT_BOOL( fvar_head.instanceSize ==
+                           6 + 4 * fvar_head.axisCount );
 
       FT_TRACE2(( "loaded\n" ));
 
