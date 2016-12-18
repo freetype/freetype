@@ -260,9 +260,10 @@ FT_BEGIN_HEADER
                       FT_Int  *adelta );
 
   FT_LOCAL( FT_Error )
-  tt_get_var_blend( TT_Face     face,
-                    FT_UInt    *num_coords,
-                    FT_Fixed*  *coords );
+  tt_get_var_blend( TT_Face      face,
+                    FT_UInt     *num_coords,
+                    FT_Fixed*   *coords,
+                    FT_MM_Var*  *mm_var );
 
   FT_LOCAL( void )
   tt_done_blend( TT_Face  face );

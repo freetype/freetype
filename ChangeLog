@@ -1,5 +1,23 @@
 2016-12-18  Werner Lemberg  <wl@gnu.org>
 
+	[truetype, cff] Extend `get_var_blend' function of MM service.
+
+	In particular, we need access to named instance data.
+
+	* include/freetype/internal/services/svmm.h (FT_Get_Var_Blend_Func):
+	Add argument for `FT_MM_Var'.
+
+	* src/cff/cffload.c (cff_get_var_blend): Updated.
+	* src/cff/cffload.h: Updated.
+
+	* src/cff/cf2ft.c (cf2_getNormalizedVector): Updated.
+
+	* src/truetype/ttgxvar.c (tt_get_var_blend): Updated.
+	Accept value `NULL' for arguments.
+	* src/truetype/ttgxvar.h: Updated.
+
+2016-12-18  Werner Lemberg  <wl@gnu.org>
+
 	[sfnt] Handle `fvar' with zero axes as a non-MM font.
 
 	This is better behaviour than exiting with an error.

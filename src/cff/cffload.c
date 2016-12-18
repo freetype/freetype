@@ -1548,14 +1548,15 @@
 #ifdef TT_CONFIG_OPTION_GX_VAR_SUPPORT
 
   FT_LOCAL_DEF( FT_Error )
-  cff_get_var_blend( CFF_Face    face,
-                     FT_UInt    *num_coords,
-                     FT_Fixed*  *coords )
+  cff_get_var_blend( CFF_Face     face,
+                     FT_UInt     *num_coords,
+                     FT_Fixed*   *coords,
+                     FT_MM_Var*  *mm_var )
   {
     FT_Service_MultiMasters  mm = (FT_Service_MultiMasters)face->mm;
 
 
-    return mm->get_var_blend( FT_FACE( face ), num_coords, coords );
+    return mm->get_var_blend( FT_FACE( face ), num_coords, coords, mm_var );
   }
 
 

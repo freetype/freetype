@@ -69,9 +69,10 @@ FT_BEGIN_HEADER
                            FT_Long*  coords );
 
   typedef FT_Error
-  (*FT_Get_Var_Blend_Func)( FT_Face     face,
-                            FT_UInt    *num_coords,
-                            FT_Fixed*  *coords );
+  (*FT_Get_Var_Blend_Func)( FT_Face      face,
+                            FT_UInt     *num_coords,
+                            FT_Fixed*   *coords,
+                            FT_MM_Var*  *mm_var );
 
   typedef void
   (*FT_Done_Blend_Func)( FT_Face );

@@ -450,7 +450,7 @@
     FT_ASSERT( decoder && decoder->builder.face );
     FT_ASSERT( vec && len );
 
-    return cff_get_var_blend( decoder->builder.face, len, vec );
+    return cff_get_var_blend( decoder->builder.face, len, vec, NULL );
   }
 #endif
 
