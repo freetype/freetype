@@ -1,5 +1,17 @@
 2016-12-18  Werner Lemberg  <wl@gnu.org>
 
+	Minor GX code shuffling.
+
+	* include/freetype/internal/tttypes.h (TT_Face): Move
+	`is_default_instance' into TT_CONFIG_OPTION_GX_VAR_SUPPORT
+	block.
+
+	* src/sfnt/sfobjs.c (sfnt_init_face): Updated.
+	* src/truetype/ttgload.c (IS_DEFAULT_INSTANCE): New macro.
+	(TT_Load_Glyph): Use it.
+
+2016-12-18  Werner Lemberg  <wl@gnu.org>
+
 	[cff] Better handling of non-CFF font formats.
 
 	* src/cff/cffload.c (cff_font_load): Pure CFFs don't have a

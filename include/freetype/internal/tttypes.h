@@ -1230,6 +1230,10 @@ FT_BEGIN_HEADER
   /*                            variation tables (rather like Multiple     */
   /*                            Master data).                              */
   /*                                                                       */
+  /*    is_default_instance  :: Set if the glyph outlines can be used      */
+  /*                            unmodified (i.e., without applying glyph   */
+  /*                            variation deltas).                         */
+  /*                                                                       */
   /*    horz_metrics_size    :: The size of the `hmtx' table.              */
   /*                                                                       */
   /*    vert_metrics_size    :: The size of the `vmtx' table.              */
@@ -1303,10 +1307,6 @@ FT_BEGIN_HEADER
   /*                            (CBDT, bdat, etc.).                        */
   /*                                                                       */
   /*    ebdt_size            :: The size of the sbit data table.           */
-  /*                                                                       */
-  /*    is_default_instance  :: Set if the glyph outlines can be used      */
-  /*                            unmodified (i.e., without applying glyph   */
-  /*                            variation deltas).                         */
   /*                                                                       */
   typedef struct  TT_FaceRec_
   {
@@ -1424,6 +1424,8 @@ FT_BEGIN_HEADER
 #ifdef TT_CONFIG_OPTION_GX_VAR_SUPPORT
     FT_Bool               doblend;
     GX_Blend              blend;
+
+    FT_Bool               is_default_instance;   /* since 2.7.1 */
 #endif
 
     /* since version 2.2 */
@@ -1472,9 +1474,6 @@ FT_BEGIN_HEADER
     FT_ULong              ebdt_start;  /* either `CBDT', `EBDT', or `bdat' */
     FT_ULong              ebdt_size;
 #endif
-
-    /* since 2.7.1 */
-    FT_Bool               is_default_instance;
 
   } TT_FaceRec;
 

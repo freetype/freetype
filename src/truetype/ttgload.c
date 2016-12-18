@@ -2566,7 +2566,12 @@
   {
     FT_Error      error;
     TT_LoaderRec  loader;
-    TT_Face       face = (TT_Face)glyph->face;
+
+#ifdef TT_CONFIG_OPTION_GX_VAR_SUPPORT
+#define IS_DEFAULT_INSTANCE  ( ( (TT_Face)glyph->face )->is_default_instance )
+#else
+#define IS_DEFAULT_INSTANCE  1
+#endif
 
 
     FT_TRACE1(( "TT_Load_Glyph: glyph index %d\n", glyph_index ));
@@ -2576,7 +2581,7 @@
     /* try to load embedded bitmap (if any) */
     if ( size->strike_index != 0xFFFFFFFFUL      &&
          ( load_flags & FT_LOAD_NO_BITMAP ) == 0 &&
-         face->is_default_instance               )
+         IS_DEFAULT_INSTANCE                     )
     {
       error = load_sbit_image( size, glyph, glyph_index, load_flags );
       if ( !error )

@@ -925,8 +925,6 @@
     if ( error )
       return error;
 
-    face->is_default_instance = 1;
-
 #ifdef TT_CONFIG_OPTION_GX_VAR_SUPPORT
     {
       FT_ULong  fvar_len;
@@ -941,6 +939,8 @@
 
       FT_Int  instance_index;
 
+
+      face->is_default_instance = 1;
 
       instance_index = FT_ABS( face_instance_index ) >> 16;
 
