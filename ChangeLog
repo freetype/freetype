@@ -1,3 +1,10 @@
+2016-12-18  Werner Lemberg  <wl@gnu.org>
+
+	[cff] Better handling of non-CFF font formats.
+
+	* src/cff/cffload.c (cff_font_load): Pure CFFs don't have a
+	signature, so return `FT_Err_Unknown_File_Format' more often.
+
 2016-12-17  Werner Lemberg  <wl@gnu.org>
 
 	* src/cff/cffload.c (cff_build_blend_vector): Remove redundant code.

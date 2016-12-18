@@ -2111,8 +2111,15 @@
     }
     else
     {
+      FT_Byte  absolute_offset;
+
+
+      if ( FT_READ_BYTE( absolute_offset ) )
+        goto Exit;
+
       if ( font->version_major != 1 ||
-           font->header_size < 4    )
+           font->header_size < 4    ||
+           absolute_offset > 4      )
       {
         FT_TRACE2(( "  not a CFF font header\n" ));
         error = FT_THROW( Unknown_File_Format );
@@ -2122,7 +2129,17 @@
 
     /* skip the rest of the header */
     if ( FT_STREAM_SEEK( base_offset + font->header_size ) )
+    {
+      /* For pure CFFs we have read only four bytes so far.  Contrary to */
+      /* other formats like SFNT those bytes doesn't define a signature; */
+      /* it is thus possible that the font isn't a CFF at all.           */
+      if ( pure_cff )
+      {
+        FT_TRACE2(( "  not a CFF file\n" ));
+        error = FT_THROW( Unknown_File_Format );
+      }
       goto Exit;
+    }
 
     if ( cff2 )
     {
@@ -2150,8 +2167,17 @@
     {
       /* for CFF, read the name, top dict, string and global subrs index */
       if ( FT_SET_ERROR( cff_index_init( &font->name_index,
-                                         stream, 0, cff2 ) )                 ||
-           FT_SET_ERROR( cff_index_init( &font->font_dict_index,
+                                         stream, 0, cff2 ) ) )
+      {
+        if ( pure_cff )
+        {
+          FT_TRACE2(( "  not a CFF file\n" ));
+          error = FT_THROW( Unknown_File_Format );
+        }
+        goto Exit;
+      }
+
+      if ( FT_SET_ERROR( cff_index_init( &font->font_dict_index,
                                          stream, 0, cff2 ) )                 ||
            FT_SET_ERROR( cff_index_init( &string_index,
                                          stream, 1, cff2 ) )                 ||
