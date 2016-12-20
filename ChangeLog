@@ -9,7 +9,7 @@
 2016-12-20  Ben Wagner  <bungeman@google.com>
 	    Werner Lemberg  <wl@gnu.org>
 
-	[truetype] Fix linear metrics of GX variation fonts.
+	[truetype] Fix linear metrics of GX variation fonts (#49829).
 
 	When asking for an unhinted non-default variations,
 	`linearVertAdvance' is currently the value from the `hmtx' table
@@ -17,7 +17,7 @@
 	support fixes this, but fonts will exist without that table and will
 	need sane fallback.
 
-	Problem reported as
+	Problem also reported as
 
 	  https://bugs.chromium.org/p/skia/issues/detail?id=5917
 
