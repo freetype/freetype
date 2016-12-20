@@ -34,6 +34,7 @@
 
 #ifdef TT_CONFIG_OPTION_GX_VAR_SUPPORT
 #include FT_SERVICE_MULTIPLE_MASTERS_H
+#include FT_SERVICE_METRICS_VARIATIONS_H
 #endif
 
 #include "cfferrs.h"
@@ -208,9 +209,21 @@
       TT_Face   ttface = (TT_Face)face;
       FT_Short  dummy;
 
+#ifdef TT_CONFIG_OPTION_GX_VAR_SUPPORT
+      FT_Service_MetricsVariations  var =
+        (FT_Service_MetricsVariations)ttface->var;
+#endif
+
 
       if ( flags & FT_LOAD_VERTICAL_LAYOUT )
       {
+#ifdef TT_CONFIG_OPTION_GX_VAR_SUPPORT
+        /* no fast retrieval for blended MM fonts without VVAR table */
+        if ( ( FT_HAS_MULTIPLE_MASTERS( face ) && ttface->blend ) &&
+             !( var && var->vadvance_adjust )                     )
+          return FT_THROW( Unimplemented_Feature );
+#endif
+
         /* check whether we have data from the `vmtx' table at all; */
         /* otherwise we extract the info from the CFF glyphstrings  */
         /* (instead of synthesizing a global value using the `OS/2' */
@@ -236,6 +249,13 @@
       }
       else
       {
+#ifdef TT_CONFIG_OPTION_GX_VAR_SUPPORT
+        /* no fast retrieval for blended MM fonts without HVAR table */
+        if ( ( FT_HAS_MULTIPLE_MASTERS( face ) && ttface->blend ) &&
+             !( var && var->hadvance_adjust )                     )
+          return FT_THROW( Unimplemented_Feature );
+#endif
+
         /* check whether we have data from the `hmtx' table at all */
         if ( !ttface->horizontal.number_Of_HMetrics )
           goto Missing_Table;

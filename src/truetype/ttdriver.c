@@ -224,13 +224,25 @@
                    FT_Fixed  *advances )
   {
     FT_UInt  nn;
-    TT_Face  face = (TT_Face) ttface;
+    TT_Face  face = (TT_Face)ttface;
+
+#ifdef TT_CONFIG_OPTION_GX_VAR_SUPPORT
+    FT_Service_MetricsVariations  var =
+      (FT_Service_MetricsVariations)face->var;
+#endif
 
 
     /* XXX: TODO: check for sbits */
 
     if ( flags & FT_LOAD_VERTICAL_LAYOUT )
     {
+#ifdef TT_CONFIG_OPTION_GX_VAR_SUPPORT
+      /* no fast retrieval for blended MM fonts without VVAR table */
+      if ( ( FT_HAS_MULTIPLE_MASTERS( ttface ) && face->blend ) &&
+           !( var && var->vadvance_adjust )                     )
+        return FT_THROW( Unimplemented_Feature );
+#endif
+
       for ( nn = 0; nn < count; nn++ )
       {
         FT_Short   tsb;
@@ -244,6 +256,13 @@
     }
     else
     {
+#ifdef TT_CONFIG_OPTION_GX_VAR_SUPPORT
+      /* no fast retrieval for blended MM fonts without HVAR table */
+      if ( ( FT_HAS_MULTIPLE_MASTERS( ttface ) && face->blend ) &&
+           !( var && var->hadvance_adjust )                     )
+        return FT_THROW( Unimplemented_Feature );
+#endif
+
       for ( nn = 0; nn < count; nn++ )
       {
         FT_Short   lsb;

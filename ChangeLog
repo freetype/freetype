@@ -1,3 +1,16 @@
+2016-12-20  Werner Lemberg  <wl@gnu.org>
+
+	[cff, truetype] Fast advance width retrieval for fonts with HVAR.
+
+	Everything is guarded with TT_CONFIG_OPTION_GX_VAR_SUPPORT.
+
+	* src/base/ftadvanc.c (LOAD_ADVANCE_FAST_CHECK): Don't handle MM.
+
+	* src/cff/cffdrivr.c: Include FT_SERVICE_METRICS_VARIATIONS_H.
+	(cff_get_advances): Test for HVAR and VVAR.
+
+	* src/truetype/ttdriver.c (tt_get_advances): Test for HVAR and VVAR.
+
 2016-12-18  Werner Lemberg  <wl@gnu.org>
 
 	[base] Fix invalid mac font recursion.
