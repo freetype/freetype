@@ -238,8 +238,8 @@
     {
 #ifdef TT_CONFIG_OPTION_GX_VAR_SUPPORT
       /* no fast retrieval for blended MM fonts without VVAR table */
-      if ( ( FT_HAS_MULTIPLE_MASTERS( ttface ) && face->blend ) &&
-           !( var && var->vadvance_adjust )                     )
+      if ( !face->is_default_instance       &&
+           !( var && var->vadvance_adjust ) )
         return FT_THROW( Unimplemented_Feature );
 #endif
 
@@ -258,8 +258,8 @@
     {
 #ifdef TT_CONFIG_OPTION_GX_VAR_SUPPORT
       /* no fast retrieval for blended MM fonts without HVAR table */
-      if ( ( FT_HAS_MULTIPLE_MASTERS( ttface ) && face->blend ) &&
-           !( var && var->hadvance_adjust )                     )
+      if ( !face->is_default_instance       &&
+           !( var && var->hadvance_adjust ) )
         return FT_THROW( Unimplemented_Feature );
 #endif
 

@@ -1,3 +1,11 @@
+2016-12-20  Werner Lemberg  <wl@gnu.org>
+
+	[truetype] Improve logic for getting fast advance widths.
+
+	* src/cff/cffdrivr.c (cff_get_advances), src/truetype/ttdriver.c
+	(tt_get_advances): Use `is_default_instance' for test; this gets
+	recomputed after changing blend coordinates.
+
 2016-12-20  Ben Wagner  <bungeman@google.com>
 	    Werner Lemberg  <wl@gnu.org>
 
