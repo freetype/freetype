@@ -1869,19 +1869,19 @@
   {
     FT_Memory  memory = library->memory;
     FT_Error   error;
-    FT_Long    map_offset, rdara_pos;
+    FT_Long    map_offset, rdata_pos;
     FT_Long    *data_offsets;
     FT_Long    count;
 
 
     error = FT_Raccess_Get_HeaderInfo( library, stream, resource_offset,
-                                       &map_offset, &rdara_pos );
+                                       &map_offset, &rdata_pos );
     if ( error )
       return error;
 
     /* POST resources must be sorted to concatenate properly */
     error = FT_Raccess_Get_DataOffsets( library, stream,
-                                        map_offset, rdara_pos,
+                                        map_offset, rdata_pos,
                                         TTAG_POST, TRUE,
                                         &data_offsets, &count );
     if ( !error )
@@ -1898,7 +1898,7 @@
     /* sfnt resources should not be sorted to preserve the face order by
        QuickDraw API */
     error = FT_Raccess_Get_DataOffsets( library, stream,
-                                        map_offset, rdara_pos,
+                                        map_offset, rdata_pos,
                                         TTAG_sfnt, FALSE,
                                         &data_offsets, &count );
     if ( !error )
