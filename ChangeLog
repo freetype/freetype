@@ -1,5 +1,30 @@
 2016-12-20  Werner Lemberg  <wl@gnu.org>
 
+	[base] More sanity checks for Mac resources.
+
+	We use
+
+	  https://github.com/kreativekorp/ksfl/wiki/Macintosh-Resource-File-Format
+
+	and
+
+	  https://developer.apple.com/legacy/library/documentation/mac/pdf/MoreMacintoshToolbox.pdf#page=151
+
+	as references.
+
+	* include/freetype/internal/ftrfork.h (FT_RFork_Ref): Use FT_Short
+	for `res_id'.
+
+	* src/base/ftrfork.c (FT_Raccess_Get_HeaderInfo): Extract map length
+	and use it to improve sanity checks.
+	Follow the specification more closely;in particular, all data types
+	are signed, not unsigned.
+	(FT_Raccess_Get_DataOffsets): Follow the specification more closely;
+	in particular, all data types are signed, not unsigned.
+	Add some sanity checks.
+
+2016-12-20  Werner Lemberg  <wl@gnu.org>
+
 	[truetype] Improve logic for getting fast advance widths.
 
 	* src/cff/cffdrivr.c (cff_get_advances), src/truetype/ttdriver.c
