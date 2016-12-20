@@ -9,6 +9,10 @@
 	support fixes this, but fonts will exist without that table and will
 	need sane fallback.
 
+	Problem reported as
+
+	  https://bugs.chromium.org/p/skia/issues/detail?id=5917
+
 	* src/truetype/ttgload.c (TT_Process_Simple_Glyph,
 	load_truetype_glyph): Implement linear advance adjustments if `HVAR'
 	or `VVAR' tables are missing.
