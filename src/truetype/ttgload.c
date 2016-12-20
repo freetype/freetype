@@ -888,11 +888,25 @@
 
     if ( loader->face->doblend && !loader->face->is_default_instance )
     {
+      FT_Service_MetricsVariations  var =
+        (FT_Service_MetricsVariations)loader->face->var;
+
+
       /* Deltas apply to the unscaled data. */
       error = TT_Vary_Apply_Glyph_Deltas( loader->face,
                                           loader->glyph_index,
                                           outline,
                                           (FT_UInt)n_points );
+
+      /* recalculate linear horizontal and vertical advances */
+      /* if we don't have HVAR and VVAR, respectively        */
+      if ( !( var && var->hadvance_adjust ) )
+        loader->linear = outline->points[n_points - 3].x -
+                         outline->points[n_points - 4].x;
+      if ( !( var && var->vadvance_adjust ) )
+        loader->vadvance = outline->points[n_points - 1].x -
+                           outline->points[n_points - 2].x;
+
       if ( error )
         return error;
     }
@@ -1566,6 +1580,10 @@
 
       if ( loader->face->doblend && !loader->face->is_default_instance )
       {
+        FT_Service_MetricsVariations  var =
+          (FT_Service_MetricsVariations)loader->face->var;
+
+
         /* a small outline structure with four elements for */
         /* communication with `TT_Vary_Apply_Glyph_Deltas'  */
         FT_Vector   points[4];
@@ -1607,6 +1625,14 @@
         loader->pp3.y = points[2].y;
         loader->pp4.x = points[3].x;
         loader->pp4.y = points[3].y;
+
+
+        /* recalculate linear horizontal and vertical advances */
+        /* if we don't have HVAR and VVAR, respectively        */
+        if ( !( var && var->hadvance_adjust ) )
+          loader->linear = loader->pp2.x - loader->pp1.x;
+        if ( !( var && var->vadvance_adjust ) )
+          loader->vadvance = loader->pp4.x - loader->pp3.x;
       }
 
 #endif /* TT_CONFIG_OPTION_GX_VAR_SUPPORT */
@@ -1729,6 +1755,10 @@
 
       if ( face->doblend && !face->is_default_instance )
       {
+        FT_Service_MetricsVariations  var =
+          (FT_Service_MetricsVariations)face->var;
+
+
         short        i, limit;
         FT_SubGlyph  subglyph;
 
@@ -1824,6 +1854,13 @@
         loader->pp4.x = points[i + 3].x;
         loader->pp4.y = points[i + 3].y;
 
+        /* recalculate linear horizontal and vertical advances */
+        /* if we don't have HVAR and VVAR, respectively        */
+        if ( !( var && var->hadvance_adjust ) )
+          loader->linear = loader->pp2.x - loader->pp1.x;
+        if ( !( var && var->vadvance_adjust ) )
+          loader->vadvance = loader->pp4.x - loader->pp3.x;
+
       Exit1:
         FT_FREE( outline.points );
         FT_FREE( outline.tags );
@@ -1883,6 +1920,9 @@
         {
           FT_Vector  pp[4];
 
+          FT_Int  linear_hadvance;
+          FT_Int  linear_vadvance;
+
 
           /* Each time we call load_truetype_glyph in this loop, the   */
           /* value of `gloader.base.subglyphs' can change due to table */
@@ -1894,6 +1934,9 @@
           pp[1] = loader->pp2;
           pp[2] = loader->pp3;
           pp[3] = loader->pp4;
+
+          linear_hadvance = loader->linear;
+          linear_vadvance = loader->vadvance;
 
           num_base_points = (FT_UInt)gloader->base.outline.n_points;
 
@@ -1914,6 +1957,9 @@
             loader->pp2 = pp[1];
             loader->pp3 = pp[2];
             loader->pp4 = pp[3];
+
+            loader->linear   = linear_hadvance;
+            loader->vadvance = linear_vadvance;
           }
 
           num_points = (FT_UInt)gloader->base.outline.n_points;
