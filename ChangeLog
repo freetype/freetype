@@ -2,6 +2,14 @@
 
 	* src/truetype/ttgxvar.c (TT_Vary_Apply_Glyph_Deltas): Thinko.
 
+	I should really stop coding late in the evening...
+
+	Thanks again to Ben for checking.
+
+2016-12-21  Werner Lemberg  <wl@gnu.org>
+
+	* src/truetype/ttgxvar.c (TT_Vary_Apply_Glyph_Deltas): Thinko.
+
 	Don't apply deltas twice for non-phantom points.
 
 	Spotted by Ben Wagner.

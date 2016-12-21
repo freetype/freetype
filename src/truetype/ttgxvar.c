@@ -2626,22 +2626,22 @@
             /* To avoid double adjustment of advance width or height, */
             /* adjust phantom points only if there is no HVAR or VVAR */
             /* support, respectively.                                 */
-            if ( j == ( n_points - 3 )          ||
+            if ( j == ( n_points - 3 )          &&
                  !( face->variation_support   &
                     TT_FACE_FLAG_VAR_HADVANCE ) )
               outline->points[j].x += delta_x;
 
-            else if ( j == ( n_points - 2 )        ||
+            else if ( j == ( n_points - 2 )        &&
                       !( face->variation_support &
                          TT_FACE_FLAG_VAR_LSB    ) )
               outline->points[j].x += delta_x;
 
-            else if ( j == ( n_points - 1 )          ||
+            else if ( j == ( n_points - 1 )          &&
                       !( face->variation_support   &
                          TT_FACE_FLAG_VAR_VADVANCE ) )
               outline->points[j].y += delta_y;
 
-            else if ( j == ( n_points - 0 )        ||
+            else if ( j == ( n_points - 0 )        &&
                       !( face->variation_support &
                          TT_FACE_FLAG_VAR_TSB    ) )
               outline->points[j].y += delta_y;
