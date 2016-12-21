@@ -1,5 +1,22 @@
 2016-12-21  Werner Lemberg  <wl@gnu.org>
 
+	[truetype, sfnt] Introduce font variation flags to `TT_Face'.
+
+	* include/freetype/internal/tttypes.h (TT_FACE_FLAG_VAR_XXX):
+	New macros describing available functionality of various OpenType
+	tables related to font variation.
+	(TT_Face): New fields `variation_support' and `mvar_support',
+	replacing and extending `use_fvar'.
+
+	* src/sfnt/sfobjs.c (sfnt_init_face, sfnt_load_face): Use
+	`variation_support'.
+
+	* src/truetype/ttgxvar.c (ft_var_load_hvar): Set `variation_support'
+	field.
+	(TT_Vary_Apply_Glyph_Deltas): Updated.
+
+2016-12-21  Werner Lemberg  <wl@gnu.org>
+
 	[base] Improve sanity check for Mac resources (#49888).
 
 	* src/base/ftobjs.c (Mac_Read_sfnt_Resource): Abort if `rlen' is not

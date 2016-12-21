@@ -742,7 +742,12 @@
     FT_FREE( dataOffsetArray );
 
     if ( !error )
+    {
       blend->hvar_checked = TRUE;
+
+      /* TODO: implement other HVAR stuff */
+      face->variation_support |= TT_FACE_FLAG_VAR_HADVANCE;
+    }
 
     return error;
   }
@@ -795,6 +800,9 @@
       error = face->blend->hvar_error;
       goto Exit;
     }
+
+    /* advance width adjustments are always present in an `HVAR' table, */
+    /* so need to test for this capability                              */
 
     if ( gindex >= face->blend->hvar_table->widthMap.mapCount )
     {
@@ -2608,14 +2616,22 @@
           FT_Pos  delta_y = FT_MulFix( deltas_y[j], apply );
 
 
-          /* Experimental fix for double adjustment of advance width: */
-          /* adjust phantom point 2 only if there's no HVAR.          */
-          /*                                                          */
-          /* TODO: handle LSB (pp1) and VVAR (pp3, pp4) too           */
-          if ( j != ( n_points - 3 ) || blend->hvar_checked == FALSE )
+          /* To avoid double adjustment of advance width or height, */
+          /* adjust phantom points only if there is no HVAR or VVAR */
+          /* table, respectively.                                   */
+          if ( j != ( n_points - 3 )                                    ||
+               !( face->variation_support & TT_FACE_FLAG_VAR_HADVANCE ) )
+            outline->points[j].x += delta_x;
+          if ( j != ( n_points - 2 )                               ||
+               !( face->variation_support & TT_FACE_FLAG_VAR_LSB ) )
             outline->points[j].x += delta_x;
 
-          outline->points[j].y += delta_y;
+          if ( j != ( n_points - 1 )                                    ||
+               !( face->variation_support & TT_FACE_FLAG_VAR_VADVANCE ) )
+            outline->points[j].y += delta_y;
+          if ( j != ( n_points - 0 )                               ||
+               !( face->variation_support & TT_FACE_FLAG_VAR_TSB ) )
+            outline->points[j].y += delta_y;
 
 #ifdef FT_DEBUG_LEVEL_TRACE
           if ( delta_x || delta_y )

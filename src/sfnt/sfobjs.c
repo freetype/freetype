@@ -981,12 +981,9 @@
            offset                          +
              axis_size * num_axes          +
              instance_size * num_instances > fvar_len )
-      {
-        num_instances  = 0;
-        face->use_fvar = 0;
-      }
+        num_instances = 0;
       else
-        face->use_fvar = 1;
+        face->variation_support |= TT_FACE_FLAG_VAR_FVAR;
 
       /* we don't support Multiple Master CFFs yet */
       if ( !face->goto_table( face, TTAG_CFF, stream, 0 ) )
@@ -1368,7 +1365,7 @@
 #ifdef TT_CONFIG_OPTION_GX_VAR_SUPPORT
       /* Don't bother to load the tables unless somebody asks for them. */
       /* No need to do work which will (probably) not be used.          */
-      if ( face->use_fvar )
+      if ( face->variation_support & TT_FACE_FLAG_VAR_FVAR )
       {
         if ( tt_face_lookup_table( face, TTAG_glyf ) != 0 &&
              tt_face_lookup_table( face, TTAG_gvar ) != 0 )
