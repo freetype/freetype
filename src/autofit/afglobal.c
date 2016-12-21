@@ -417,17 +417,8 @@
       globals->hb_buf = NULL;
 #endif
 
-      globals->glyph_count               = 0;
-      globals->stem_darkening_for_ppem   = 0;
-      globals->darken_x                  = 0;
-      globals->darken_y                  = 0;
-      globals->standard_vertical_width   = 0;
-      globals->standard_horizontal_width = 0;
-      globals->scale_down_factor         = 0;
-      /* no need to free this one! */
-      globals->glyph_styles              = NULL;
-      globals->face                      = NULL;
-
+      /* no need to free `globals->glyph_styles'; */
+      /* it is part of the `globals' array        */
       FT_FREE( globals );
     }
   }

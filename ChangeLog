@@ -1,5 +1,13 @@
 2016-12-21  Werner Lemberg  <wl@gnu.org>
 
+	* src/truetype/ttgxvar.c (TT_Vary_Apply_Glyph_Deltas): Thinko.
+
+	Don't apply deltas twice for non-phantom points.
+
+	Spotted by Ben Wagner.
+
+2016-12-21  Werner Lemberg  <wl@gnu.org>
+
 	[cff, truetype] Another try for #49829.
 
 	* src/cff/cffdrivr.c: Don't include

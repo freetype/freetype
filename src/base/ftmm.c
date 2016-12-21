@@ -140,6 +140,13 @@
         error = service->set_mm_design( face, num_coords, coords );
     }
 
+    /* enforce recomputation of auto-hinting data */
+    if ( !error && face->autohint.finalizer )
+    {
+      face->autohint.finalizer( face->autohint.data );
+      face->autohint.data = NULL;
+    }
+
     return error;
   }
 
@@ -166,6 +173,13 @@
       error = FT_ERR( Invalid_Argument );
       if ( service->set_var_design )
         error = service->set_var_design( face, num_coords, coords );
+    }
+
+    /* enforce recomputation of auto-hinting data */
+    if ( !error && face->autohint.finalizer )
+    {
+      face->autohint.finalizer( face->autohint.data );
+      face->autohint.data = NULL;
     }
 
     return error;
@@ -224,6 +238,13 @@
         error = service->set_mm_blend( face, num_coords, coords );
     }
 
+    /* enforce recomputation of auto-hinting data */
+    if ( !error && face->autohint.finalizer )
+    {
+      face->autohint.finalizer( face->autohint.data );
+      face->autohint.data = NULL;
+    }
+
     return error;
   }
 
@@ -253,6 +274,13 @@
       error = FT_ERR( Invalid_Argument );
       if ( service->set_mm_blend )
         error = service->set_mm_blend( face, num_coords, coords );
+    }
+
+    /* enforce recomputation of auto-hinting data */
+    if ( !error && face->autohint.finalizer )
+    {
+      face->autohint.finalizer( face->autohint.data );
+      face->autohint.data = NULL;
     }
 
     return error;
