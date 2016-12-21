@@ -1,3 +1,10 @@
+2016-12-21  Werner Lemberg  <wl@gnu.org>
+
+	[base] Improve sanity check for Mac resources (#49888).
+
+	* src/base/ftobjs.c (Mac_Read_sfnt_Resource): Abort if `rlen' is not
+	positive.
+
 2016-12-20  Werner Lemberg  <wl@gnu.org>
 
 	[base] More sanity checks for Mac resources.

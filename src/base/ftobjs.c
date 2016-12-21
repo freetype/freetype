@@ -1842,7 +1842,7 @@
 
     if ( FT_READ_LONG( rlen ) )
       goto Exit;
-    if ( rlen == -1 )
+    if ( rlen < 1 )
       return FT_THROW( Cannot_Open_Resource );
     if ( (FT_ULong)rlen > FT_MAC_RFORK_MAX_LEN )
       return FT_THROW( Invalid_Offset );
