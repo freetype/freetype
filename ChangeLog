@@ -1,5 +1,19 @@
 2016-12-21  Werner Lemberg  <wl@gnu.org>
 
+	[cff, truetype] Another try for #49829.
+
+	* src/cff/cffdrivr.c: Don't include
+	`FT_SERVICE_METRICS_VARIATIONS_H'.
+	(cff_get_advances): Use `ttface->variation_support'.
+
+	* src/truetype/ttdriver.c (tt_get_advances): Use
+	`ttface->variation_support'.
+
+	* src/truetype/ttgload.c (TT_Process_Simple_Glyph,
+	load_truetype_glyph): Use `ttface->variation_support'.
+
+2016-12-21  Werner Lemberg  <wl@gnu.org>
+
 	[truetype, sfnt] Introduce font variation flags to `TT_Face'.
 
 	* include/freetype/internal/tttypes.h (TT_FACE_FLAG_VAR_XXX):

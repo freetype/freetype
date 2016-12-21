@@ -888,10 +888,6 @@
 
     if ( loader->face->doblend && !loader->face->is_default_instance )
     {
-      FT_Service_MetricsVariations  var =
-        (FT_Service_MetricsVariations)loader->face->var;
-
-
       /* Deltas apply to the unscaled data. */
       error = TT_Vary_Apply_Glyph_Deltas( loader->face,
                                           loader->glyph_index,
@@ -900,10 +896,10 @@
 
       /* recalculate linear horizontal and vertical advances */
       /* if we don't have HVAR and VVAR, respectively        */
-      if ( !( var && var->hadvance_adjust ) )
+      if ( !( loader->face->variation_support & TT_FACE_FLAG_VAR_HADVANCE ) )
         loader->linear = outline->points[n_points - 3].x -
                          outline->points[n_points - 4].x;
-      if ( !( var && var->vadvance_adjust ) )
+      if ( !( loader->face->variation_support & TT_FACE_FLAG_VAR_VADVANCE ) )
         loader->vadvance = outline->points[n_points - 1].x -
                            outline->points[n_points - 2].x;
 
@@ -1580,10 +1576,6 @@
 
       if ( loader->face->doblend && !loader->face->is_default_instance )
       {
-        FT_Service_MetricsVariations  var =
-          (FT_Service_MetricsVariations)loader->face->var;
-
-
         /* a small outline structure with four elements for */
         /* communication with `TT_Vary_Apply_Glyph_Deltas'  */
         FT_Vector   points[4];
@@ -1629,9 +1621,9 @@
 
         /* recalculate linear horizontal and vertical advances */
         /* if we don't have HVAR and VVAR, respectively        */
-        if ( !( var && var->hadvance_adjust ) )
+        if ( !( loader->face->variation_support & TT_FACE_FLAG_VAR_HADVANCE ) )
           loader->linear = loader->pp2.x - loader->pp1.x;
-        if ( !( var && var->vadvance_adjust ) )
+        if ( !( loader->face->variation_support & TT_FACE_FLAG_VAR_VADVANCE ) )
           loader->vadvance = loader->pp4.x - loader->pp3.x;
       }
 
@@ -1755,10 +1747,6 @@
 
       if ( face->doblend && !face->is_default_instance )
       {
-        FT_Service_MetricsVariations  var =
-          (FT_Service_MetricsVariations)face->var;
-
-
         short        i, limit;
         FT_SubGlyph  subglyph;
 
@@ -1856,9 +1844,9 @@
 
         /* recalculate linear horizontal and vertical advances */
         /* if we don't have HVAR and VVAR, respectively        */
-        if ( !( var && var->hadvance_adjust ) )
+        if ( !( face->variation_support & TT_FACE_FLAG_VAR_HADVANCE ) )
           loader->linear = loader->pp2.x - loader->pp1.x;
-        if ( !( var && var->vadvance_adjust ) )
+        if ( !( face->variation_support & TT_FACE_FLAG_VAR_VADVANCE ) )
           loader->vadvance = loader->pp4.x - loader->pp3.x;
 
       Exit1:

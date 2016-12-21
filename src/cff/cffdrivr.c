@@ -34,7 +34,6 @@
 
 #ifdef TT_CONFIG_OPTION_GX_VAR_SUPPORT
 #include FT_SERVICE_MULTIPLE_MASTERS_H
-#include FT_SERVICE_METRICS_VARIATIONS_H
 #endif
 
 #include "cfferrs.h"
@@ -209,18 +208,13 @@
       TT_Face   ttface = (TT_Face)face;
       FT_Short  dummy;
 
-#ifdef TT_CONFIG_OPTION_GX_VAR_SUPPORT
-      FT_Service_MetricsVariations  var =
-        (FT_Service_MetricsVariations)ttface->var;
-#endif
-
 
       if ( flags & FT_LOAD_VERTICAL_LAYOUT )
       {
 #ifdef TT_CONFIG_OPTION_GX_VAR_SUPPORT
         /* no fast retrieval for blended MM fonts without VVAR table */
-        if ( !ttface->is_default_instance     &&
-             !( var && var->vadvance_adjust ) )
+        if ( !ttface->is_default_instance                               &&
+             !( ttface->variation_support & TT_FACE_FLAG_VAR_VADVANCE ) )
           return FT_THROW( Unimplemented_Feature );
 #endif
 
@@ -251,8 +245,8 @@
       {
 #ifdef TT_CONFIG_OPTION_GX_VAR_SUPPORT
         /* no fast retrieval for blended MM fonts without HVAR table */
-        if ( !ttface->is_default_instance     &&
-             !( var && var->hadvance_adjust ) )
+        if ( !ttface->is_default_instance                               &&
+             !( ttface->variation_support & TT_FACE_FLAG_VAR_HADVANCE ) )
           return FT_THROW( Unimplemented_Feature );
 #endif
 
