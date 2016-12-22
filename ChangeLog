@@ -1,5 +1,13 @@
 2016-12-22  Werner Lemberg  <wl@gnu.org>
 
+	Ensure used preprocessor symbols are defined (#49790).
+
+	* builds/unix/ftconfig.in, builds/vms/ftconfig.h,
+	include/freetype/config/ftconfig.h: Check `__GNUC__', `__IBMC__',
+	and `__SUNPRO_C' correctly.
+
+2016-12-22  Werner Lemberg  <wl@gnu.org>
+
 	* src/base/ftrfork.c (FT_Raccess_Get_DataOffsets): Check `count'.
 
 	Reported as
