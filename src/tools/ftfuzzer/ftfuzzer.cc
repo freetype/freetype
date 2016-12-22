@@ -55,6 +55,14 @@
   struct FT_Global {
     FT_Global() {
       InitResult = FT_Init_FreeType( &library );
+      if ( InitResult )
+        return;
+
+      // try to activate Adobe's CFF engine; it might not be the default
+      unsigned int  cff_hinting_engine = FT_CFF_HINTING_ADOBE;
+      FT_Property_Set( library,
+                       "cff",
+                       "hinting-engine", &cff_hinting_engine );
     }
     ~FT_Global() {
       FT_Done_FreeType( library );

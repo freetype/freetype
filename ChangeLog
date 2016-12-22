@@ -1,3 +1,10 @@
+2016-12-22  Werner Lemberg  <wl@gnu.org>
+
+	[ftfuzzer] Always use Adobe CFF engine.
+
+	* src/tools/ftfuzzer/ftfuzzer.cc (FT_Global::FT_Global): Implement
+	it.
+
 2016-12-21  Werner Lemberg  <wl@gnu.org>
 
 	* src/truetype/ttgxvar.c (TT_Vary_Apply_Glyph_Deltas): Thinko.
