@@ -362,7 +362,7 @@ if (BUILD_FRAMEWORK)
   )
 endif ()
 
-if (NOT CMAKE_VERSION VERSION_LESS 2.8.11)
+if (NOT CMAKE_VERSION VERSION_LESS 2.8.12)
   target_include_directories(freetype
     PUBLIC $<INSTALL_INTERFACE:include/freetype2>)
 endif ()

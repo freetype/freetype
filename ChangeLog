@@ -1,5 +1,9 @@
 2016-12-22  Werner Lemberg  <wl@gnu.org>
 
+	* CMakeLists.txt: Make it work with cmake 2.8.11.2 (#49909).
+
+2016-12-22  Werner Lemberg  <wl@gnu.org>
+
 	Ensure used preprocessor symbols are defined (#49790).
 
 	* builds/unix/ftconfig.in, builds/vms/ftconfig.h,
