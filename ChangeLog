@@ -46,6 +46,21 @@
 
 2016-12-21  Werner Lemberg  <wl@gnu.org>
 
+	[autofit] Support variation fonts.
+
+	(This ChangeLog entry was added later on.)
+
+	* src/autofit/afglobal.c (af_face_globals_free): Remove useless
+	code.
+
+	* src/base/ftmm.c (FT_Set_MM_Design_Coordinates,
+	* FT_Set_Var_Design_Coordinates, FT_Set_MM_Blend_Coordinates,
+	FT_Set_Var_Blend_Coordinates): Finalize
+	auto-hinter data to enforce recomputation.  Note that this is a
+	brute-force method which should be improved.
+
+2016-12-21  Werner Lemberg  <wl@gnu.org>
+
 	* src/truetype/ttgxvar.c (TT_Vary_Apply_Glyph_Deltas): Thinko.
 
 	Don't apply deltas twice for non-phantom points.
