@@ -1,5 +1,13 @@
 2016-12-22  Werner Lemberg  <wl@gnu.org>
 
+	* src/base/ftrfork.c (FT_Raccess_Get_DataOffsets): Check `count'.
+
+	Reported as
+
+	  https://bugs.chromium.org/p/oss-fuzz/issues/detail?id=308
+
+2016-12-22  Werner Lemberg  <wl@gnu.org>
+
 	[cff] Protect against invalid `vsindex' and `blend' values.
 
 	Reported as

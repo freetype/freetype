@@ -248,7 +248,9 @@
         *count = subcnt + 1;
         rpos  += map_offset;
 
-        if ( *count > 2727 )
+        /* a zero count might be valid in the resource specification, */
+        /* however, it is completely useless to us                    */
+        if ( *count < 1 || *count > 2727 )
           return FT_THROW( Invalid_Table );
 
         error = FT_Stream_Seek( stream, (FT_ULong)rpos );
