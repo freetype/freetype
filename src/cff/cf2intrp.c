@@ -659,7 +659,13 @@
           goto exit;
         }
 
-        font->vsindex = (FT_UInt)cf2_stack_popInt( opStack );
+        {
+          FT_Int  temp = cf2_stack_popInt( opStack );
+
+
+          if ( temp >= 0 )
+            font->vsindex = (FT_UInt)temp;
+        }
         break;
 
       case cf2_cmdBLEND:
@@ -687,7 +693,12 @@
           }
 
           /* do the blend */
-          numBlends = (FT_UInt)cf2_stack_popInt( opStack );
+          {
+            FT_Int  temp = cf2_stack_popInt( opStack );
+
+
+            numBlends = temp > 0 ? (FT_UInt)temp : 0;
+          }
           cf2_doBlend( &font->blend, opStack, numBlends );
 
           font->blend.usedBV = TRUE;
@@ -1225,7 +1236,7 @@
                     idx = cf2_stack_popInt( opStack );
 
                     if ( idx >= 0 && idx < CF2_STORAGE_SIZE )
-                    cf2_stack_pushFixed( opStack, storage[idx] );
+                      cf2_stack_pushFixed( opStack, storage[idx] );
                   }
                   continue; /* do not clear the stack */
 

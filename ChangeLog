@@ -1,5 +1,16 @@
 2016-12-22  Werner Lemberg  <wl@gnu.org>
 
+	[cff] Protect against invalid `vsindex' and `blend' values.
+
+	Reported as
+
+	  https://bugs.chromium.org/p/oss-fuzz/issues/detail?id=305
+
+	* src/cff/cf2intrp.c (cf2_interpT2CharString) <cf2_cmdVSINDEX,
+	cf2_cmdBLEND>: Implement it.
+
+2016-12-22  Werner Lemberg  <wl@gnu.org>
+
 	[ftfuzzer] Always use Adobe CFF engine.
 
 	* src/tools/ftfuzzer/ftfuzzer.cc (FT_Global::FT_Global): Implement
