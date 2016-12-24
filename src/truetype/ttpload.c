@@ -104,8 +104,7 @@
       if ( table_len >= 0x40000L )
       {
         FT_TRACE2(( "table too large\n" ));
-        error = FT_THROW( Invalid_Table );
-        goto Exit;
+        table_len = 0x3FFFFL;
       }
       face->num_locations = table_len >> shift;
     }
@@ -116,8 +115,7 @@
       if ( table_len >= 0x20000L )
       {
         FT_TRACE2(( "table too large\n" ));
-        error = FT_THROW( Invalid_Table );
-        goto Exit;
+        table_len = 0x1FFFFL;
       }
       face->num_locations = table_len >> shift;
     }
