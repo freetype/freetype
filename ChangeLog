@@ -1,3 +1,7 @@
+2016-12-24  Werner Lemberg  <wl@gnu.org>
+
+	* src/sfnt/sfobjs.c (sfnt_init_face): Fix tracing.
+
 2016-12-22  Werner Lemberg  <wl@gnu.org>
 
 	* CMakeLists.txt: Make it work with cmake 2.8.11.2 (#49909).
