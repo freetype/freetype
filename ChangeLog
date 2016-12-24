@@ -1,5 +1,11 @@
 2016-12-24  Werner Lemberg  <wl@gnu.org>
 
+	* src/truetype/ttpload.c (tt_face_load_hdmx): Ignore `version'.
+
+	Problem reported by 張俊芝 <418092625@qq.com>.
+
+2016-12-24  Werner Lemberg  <wl@gnu.org>
+
 	* src/sfnt/ttsbit.c (tt_face_load_sbit): Allow more version values.
 
 	Some fonts seem to have the `version' field in the wrong byte order.

@@ -524,7 +524,7 @@
   {
     FT_Error   error;
     FT_Memory  memory = stream->memory;
-    FT_UInt    version, nn, num_records;
+    FT_UInt    nn, num_records;
     FT_ULong   table_size, record_size;
     FT_Byte*   p;
     FT_Byte*   limit;
@@ -541,7 +541,10 @@
     p     = face->hdmx_table;
     limit = p + table_size;
 
-    version     = FT_NEXT_USHORT( p );
+    /* Given that `hdmx' tables are losing its importance (for example, */
+    /* variation fonts introduced in OpenType 1.8 must not have this    */
+    /* table) we no longer test for a correct `version' field.          */
+    p          += 2;
     num_records = FT_NEXT_USHORT( p );
     record_size = FT_NEXT_ULONG( p );
 
@@ -560,8 +563,7 @@
       record_size &= 0xFFFFU;
 
     /* The limit for `num_records' is a heuristic value. */
-    if ( version != 0                   ||
-         num_records > 255              ||
+    if ( num_records > 255              ||
          ( num_records > 0            &&
            ( record_size > 0x10001L ||
              record_size < 4        ) ) )
