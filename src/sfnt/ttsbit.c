@@ -107,8 +107,12 @@
         version     = FT_NEXT_LONG( p );
         num_strikes = FT_NEXT_ULONG( p );
 
+        /* there's at least one font (FZShuSong-Z01, version 3)   */
+        /* that uses the wrong byte order for the `version' field */
         if ( ( (FT_ULong)version & 0xFFFF0000UL ) != 0x00020000UL &&
-             ( (FT_ULong)version & 0xFFFF0000UL ) != 0x00030000UL )
+             ( (FT_ULong)version & 0x0000FFFFUL ) != 0x00000200UL &&
+             ( (FT_ULong)version & 0xFFFF0000UL ) != 0x00030000UL &&
+             ( (FT_ULong)version & 0x0000FFFFUL ) != 0x00000300UL )
         {
           error = FT_THROW( Unknown_File_Format );
           goto Exit;
