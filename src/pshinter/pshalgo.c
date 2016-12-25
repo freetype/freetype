@@ -1572,8 +1572,8 @@
     PS_Mask         mask      = table->hint_masks->masks;
     FT_UInt         num_masks = table->hint_masks->num_masks;
     FT_UInt         first     = 0;
-    FT_Int          major_dir = dimension == 0 ? PSH_DIR_VERTICAL
-                                               : PSH_DIR_HORIZONTAL;
+    FT_Int          major_dir = ( dimension == 0 ) ? PSH_DIR_VERTICAL
+                                                   : PSH_DIR_HORIZONTAL;
     PSH_Dimension   dim       = &glyph->globals->dimension[dimension];
     FT_Fixed        scale     = dim->scale_mult;
     FT_Int          threshold;

@@ -5577,9 +5577,9 @@
     FT_Int      B1, B2;
 #endif
 #ifdef TT_SUPPORT_SUBPIXEL_HINTING_MINIMAL
-    FT_Bool     in_twilight = exc->GS.gep0 == 0 || \
-                              exc->GS.gep1 == 0 || \
-                              exc->GS.gep2 == 0;
+    FT_Bool     in_twilight = FT_BOOL( exc->GS.gep0 == 0 ||
+                                       exc->GS.gep1 == 0 ||
+                                       exc->GS.gep2 == 0 );
 #endif
 
 
@@ -6537,7 +6537,9 @@
      * Otherwise, by definition, the value of exc->twilight.orus[n] is (0,0),
      * for every n.
      */
-    twilight = exc->GS.gep0 == 0 || exc->GS.gep1 == 0 || exc->GS.gep2 == 0;
+    twilight = ( exc->GS.gep0 == 0 ||
+                 exc->GS.gep1 == 0 ||
+                 exc->GS.gep2 == 0 );
 
     if ( BOUNDS( exc->GS.rp1, exc->zp0.n_points ) )
     {

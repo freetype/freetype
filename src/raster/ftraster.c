@@ -1520,8 +1520,9 @@
         state_bez = y1 < y3 ? Ascending_State : Descending_State;
         if ( ras.state != state_bez )
         {
-          Bool  o = state_bez == Ascending_State ? IS_BOTTOM_OVERSHOOT( y1 )
-                                                 : IS_TOP_OVERSHOOT( y1 );
+          Bool  o = ( state_bez == Ascending_State )
+                      ? IS_BOTTOM_OVERSHOOT( y1 )
+                      : IS_TOP_OVERSHOOT( y1 );
 
 
           /* finalize current profile if any */
@@ -1656,8 +1657,9 @@
         /* detect a change of direction */
         if ( ras.state != state_bez )
         {
-          Bool  o = state_bez == Ascending_State ? IS_BOTTOM_OVERSHOOT( y1 )
-                                                 : IS_TOP_OVERSHOOT( y1 );
+          Bool  o = ( state_bez == Ascending_State )
+                      ? IS_BOTTOM_OVERSHOOT( y1 )
+                      : IS_TOP_OVERSHOOT( y1 );
 
 
           /* finalize current profile if any */
@@ -2390,7 +2392,7 @@
           pxl = e2;
 
         /* check that the other pixel isn't set */
-        e1 = pxl == e1 ? e2 : e1;
+        e1 = ( pxl == e1 ) ? e2 : e1;
 
         e1 = TRUNC( e1 );
 
@@ -2591,7 +2593,7 @@
           pxl = e2;
 
         /* check that the other pixel isn't set */
-        e1 = pxl == e1 ? e2 : e1;
+        e1 = ( pxl == e1 ) ? e2 : e1;
 
         e1 = TRUNC( e1 );
 

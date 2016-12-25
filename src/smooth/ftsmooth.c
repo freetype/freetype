@@ -114,8 +114,8 @@
 #ifndef FT_CONFIG_OPTION_SUBPIXEL_RENDERING
     FT_Pos       height_org, width_org;
 #endif
-    FT_Int       hmul    = mode == FT_RENDER_MODE_LCD;
-    FT_Int       vmul    = mode == FT_RENDER_MODE_LCD_V;
+    FT_Int       hmul    = ( mode == FT_RENDER_MODE_LCD );
+    FT_Int       vmul    = ( mode == FT_RENDER_MODE_LCD_V );
 
     FT_Raster_Params  params;
 

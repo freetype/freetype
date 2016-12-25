@@ -88,7 +88,7 @@
       break;
 
     case FT_SFNT_OS2:
-      table = face->os2.version == 0xFFFFU ? NULL : &face->os2;
+      table = ( face->os2.version == 0xFFFFU ) ? NULL : &face->os2;
       break;
 
     case FT_SFNT_POST:

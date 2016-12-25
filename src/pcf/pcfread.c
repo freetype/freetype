@@ -319,7 +319,7 @@ THE SOFTWARE.
 
 
       /* parsing normal metrics */
-      fields = PCF_BYTE_ORDER( format ) == MSBFirst
+      fields = ( PCF_BYTE_ORDER( format ) == MSBFirst )
                ? pcf_metric_msb_header
                : pcf_metric_header;
 

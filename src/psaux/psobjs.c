@@ -695,7 +695,7 @@
       /* ************ otherwise, it is any token **************/
     default:
       token->start = cur;
-      token->type  = ( *cur == '/' ? T1_TOKEN_TYPE_KEY : T1_TOKEN_TYPE_ANY );
+      token->type  = ( *cur == '/' ) ? T1_TOKEN_TYPE_KEY : T1_TOKEN_TYPE_ANY;
       ps_parser_skip_PS_token( parser );
       cur = parser->cursor;
       if ( !parser->error )

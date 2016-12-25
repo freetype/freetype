@@ -1925,8 +1925,8 @@
     CFF_FontRecDict  top  = &subfont->font_dict;
     CFF_Private      priv = &subfont->private_dict;
 
-    FT_Bool  cff2      = ( code == CFF2_CODE_TOPDICT  ||
-                           code == CFF2_CODE_FONTDICT );
+    FT_Bool  cff2      = FT_BOOL( code == CFF2_CODE_TOPDICT  ||
+                                  code == CFF2_CODE_FONTDICT );
     FT_UInt  stackSize = cff2 ? CFF2_DEFAULT_STACK
                               : CFF_MAX_STACK_DEPTH;
 
