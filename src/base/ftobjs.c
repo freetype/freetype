@@ -1114,7 +1114,7 @@
 
     end = first + face->num_charmaps;  /* points after the last one */
 
-    for ( cur = first; cur < end; ++cur )
+    for ( cur = first; cur < end; cur++ )
     {
       if ( cur[0]->platform_id == TT_PLATFORM_APPLE_UNICODE    &&
            cur[0]->encoding_id == TT_APPLE_ID_VARIANT_SELECTOR &&
@@ -1617,7 +1617,7 @@
     /* Find the length of all the POST resources, concatenated.  Assume */
     /* worst case (each resource in its own section).                   */
     pfb_len = 0;
-    for ( i = 0; i < resource_cnt; ++i )
+    for ( i = 0; i < resource_cnt; i++ )
     {
       error = FT_Stream_Seek( stream, (FT_ULong)offsets[i] );
       if ( error )

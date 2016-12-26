@@ -1643,7 +1643,7 @@
             {
               x1 = cf2_stack_getReal( opStack, index ) + curX;
 
-              ++index;
+              index++;
             }
             else
               x1 = curX;
@@ -1688,7 +1688,7 @@
             {
               y1 = cf2_stack_getReal( opStack, index ) + curY;
 
-              ++index;
+              index++;
             }
             else
               y1 = curY;
@@ -1745,7 +1745,7 @@
               {
                 x3 = cf2_stack_getReal( opStack, index + 4 ) + x2;
 
-                ++index;
+                index++;
               }
               else
                 x3 = x2;
@@ -1764,7 +1764,7 @@
               {
                 y3 = cf2_stack_getReal( opStack, index + 4 ) + y2;
 
-                ++index;
+                index++;
               }
               else
                 y3 = y2;

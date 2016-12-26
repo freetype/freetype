@@ -237,7 +237,7 @@
     if ( ncv <= axismap->blend_points[0] )
       return INT_TO_FIXED( axismap->design_points[0] );
 
-    for ( j = 1; j < axismap->num_points; ++j )
+    for ( j = 1; j < axismap->num_points; j++ )
     {
       if ( ncv <= axismap->blend_points[j] )
         return INT_TO_FIXED( axismap->design_points[j - 1] ) +
@@ -326,7 +326,7 @@
                                       /* Point to axes after MM_Var struct */
     mmvar->namedstyle      = NULL;
 
-    for ( i = 0; i < mmaster.num_axis; ++i )
+    for ( i = 0; i < mmaster.num_axis; i++ )
     {
       mmvar->axis[i].name    = mmaster.axis[i].name;
       mmvar->axis[i].minimum = INT_TO_FIXED( mmaster.axis[i].minimum);
@@ -354,7 +354,7 @@
                         axiscoords,
                         blend->num_axis );
 
-      for ( i = 0; i < mmaster.num_axis; ++i )
+      for ( i = 0; i < mmaster.num_axis; i++ )
         mmvar->axis[i].def = mm_axis_unmap( &blend->design_map[i],
                                             axiscoords[i] );
     }
@@ -438,7 +438,7 @@
       nc = blend->num_axis;
     }
 
-    for ( i = 0; i < nc; ++i )
+    for ( i = 0; i < nc; i++ )
       coords[i] = axiscoords[i];
     for ( ; i < num_coords; i++ )
       coords[i] = 0x8000;
@@ -539,7 +539,7 @@
      if ( num_coords > T1_MAX_MM_AXIS )
        num_coords = T1_MAX_MM_AXIS;
 
-     for ( i = 0; i < num_coords; ++i )
+     for ( i = 0; i < num_coords; i++ )
        lcoords[i] = FIXED_TO_INT( coords[i] );
 
      return T1_Set_MM_Design( face, num_coords, lcoords );

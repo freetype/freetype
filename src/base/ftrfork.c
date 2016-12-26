@@ -137,7 +137,7 @@
 
     allzeros = 1;
     allmatch = 1;
-    for ( i = 0; i < 16; ++i )
+    for ( i = 0; i < 16; i++ )
     {
       if ( head2[i] != 0 )
         allzeros = 0;
@@ -228,7 +228,7 @@
     if ( cnt > 4079 )
       return FT_THROW( Invalid_Table );
 
-    for ( i = 0; i < cnt; ++i )
+    for ( i = 0; i < cnt; i++ )
     {
       if ( FT_READ_LONG( tag_internal ) ||
            FT_READ_SHORT( subcnt )      ||
@@ -260,7 +260,7 @@
         if ( FT_NEW_ARRAY( ref, *count ) )
           return error;
 
-        for ( j = 0; j < *count; ++j )
+        for ( j = 0; j < *count; j++ )
         {
           if ( FT_READ_SHORT( ref[j].res_id ) )
             goto Exit;

@@ -450,7 +450,7 @@
       FT_Int  idx;
 
 
-      for ( idx = 1; idx <= style_name_length; ++idx )
+      for ( idx = 1; idx <= style_name_length; idx++ )
       {
         if ( family_name[family_name_length - idx] !=
              style_name[style_name_length - idx] )
@@ -469,7 +469,7 @@
                   family_name[idx] == ' ' ||
                   family_name[idx] == '_' ||
                   family_name[idx] == '+' ) )
-          --idx;
+          idx--;
 
         if ( idx > 0 )
           family_name[idx + 1] = '\0';

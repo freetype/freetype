@@ -240,7 +240,7 @@
     FT_UInt32  char_code = *pchar_code;
 
 
-    ++char_code;
+    char_code++;
 
     if ( char_code < cmap->first )
       char_code = cmap->first;

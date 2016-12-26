@@ -1120,7 +1120,7 @@
 
             FT_TRACE4(( "BuildCharArray = [ " ));
 
-            for ( i = 0; i < decoder->len_buildchar; ++i )
+            for ( i = 0; i < decoder->len_buildchar; i++ )
               FT_TRACE4(( "%d ", decoder->buildchar[i] ));
 
             FT_TRACE4(( "]\n" ));
@@ -1323,7 +1323,7 @@
           /* otherwise, we divide numbers in 16.16 format --    */
           /* in both cases, it is the same operation            */
           *top = FT_DivFix( top[0], top[1] );
-          ++top;
+          top++;
 
           large_int = FALSE;
           break;

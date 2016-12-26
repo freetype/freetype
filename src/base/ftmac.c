@@ -821,7 +821,7 @@
       return FT_THROW( Cannot_Open_Resource );
 
     num_faces_in_res = 0;
-    for ( res_index = 1; ; ++res_index )
+    for ( res_index = 1; ; res_index++ )
     {
       short  num_faces_in_fond;
 

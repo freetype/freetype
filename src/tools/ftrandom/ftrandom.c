@@ -177,7 +177,7 @@
 
     FT_Set_Char_Size( face, 0, font_size, 72, 72 );
 
-    for ( gid = 0; gid < face->num_glyphs; ++gid )
+    for ( gid = 0; gid < face->num_glyphs; gid++ )
     {
       if ( check_outlines         &&
            FT_IS_SCALABLE( face ) )
@@ -225,7 +225,7 @@
       num = face->num_faces;
       FT_Done_Face( face );
 
-      for ( i = 0; i < num; ++i )
+      for ( i = 0; i < num; i++ )
       {
         if ( !FT_New_Face( context, testfont, i, &face ) )
           TestFace( face );
@@ -255,7 +255,7 @@
     if ( pt < strrchr( filename, '/' ) )
       return false;
 
-    for ( i = 0; extensions[i] != NULL; ++i )
+    for ( i = 0; extensions[i] != NULL; i++ )
       if ( strcasecmp( pt + 1, extensions[i] ) == 0 ||
            strcasecmp( pt,     extensions[i] ) == 0 )
         return true;
@@ -357,7 +357,7 @@
     max  = 0;
     fcnt = 0;
 
-    for ( i = 0; fontdirs[i] != NULL; ++i )
+    for ( i = 0; fontdirs[i] != NULL; i++ )
     {
       DIR*            examples;
       struct dirent*  ent;
@@ -395,7 +395,7 @@
           fontlist[fcnt].len  = statb.st_size;
 
           figurefiletype( &fontlist[fcnt] );
-          ++fcnt;
+          fcnt++;
         }
       }
 
@@ -464,7 +464,7 @@
     fclose( good );
 
     err_cnt = getErrorCnt( item );
-    for ( i = 0; i < err_cnt; ++i )
+    for ( i = 0; i < err_cnt; i++ )
     {
       fseek( newf, getRandom( 0, (int)( item->len - 1 ) ), SEEK_SET );
 
@@ -609,14 +609,14 @@
     dirs = calloc( (size_t)( argc + 1 ), sizeof ( char ** ) );
     exts = calloc( (size_t)( argc + 1 ), sizeof ( char ** ) );
 
-    for ( i = 1; i < argc; ++i )
+    for ( i = 1; i < argc; i++ )
     {
       char*  pt = argv[i];
       char*  end;
 
 
       if ( pt[0] == '-' && pt[1] == '-' )
-        ++pt;
+        pt++;
 
       if ( strcmp( pt, "-all" ) == 0 )
         allexts = true;

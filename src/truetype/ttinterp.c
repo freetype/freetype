@@ -6587,7 +6587,7 @@
       cur_range = PROJECT( &exc->zp1.cur[exc->GS.rp2], cur_base );
     }
 
-    for ( ; exc->GS.loop > 0; --exc->GS.loop )
+    for ( ; exc->GS.loop > 0; exc->GS.loop-- )
     {
       FT_UInt     point = (FT_UInt)exc->stack[--exc->args];
       FT_F26Dot6  org_dist, cur_dist, new_dist;

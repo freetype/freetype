@@ -115,7 +115,7 @@
 
     stack->top->u.i  = val;
     stack->top->type = CF2_NumberInt;
-    ++stack->top;
+    stack->top++;
   }
 
 
@@ -131,7 +131,7 @@
 
     stack->top->u.r  = val;
     stack->top->type = CF2_NumberFixed;
-    ++stack->top;
+    stack->top++;
   }
 
 
@@ -150,7 +150,7 @@
       return 0;   /* type mismatch */
     }
 
-    --stack->top;
+    stack->top--;
 
     return stack->top->u.i;
   }
@@ -167,7 +167,7 @@
       return cf2_intToFixed( 0 );    /* underflow */
     }
 
-    --stack->top;
+    stack->top--;
 
     switch ( stack->top->type )
     {

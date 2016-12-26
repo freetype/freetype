@@ -344,7 +344,7 @@
       FT_Byte  c = *cur;
 
 
-      ++cur;
+      cur++;
 
       if ( c == '\\' )
       {
@@ -370,17 +370,17 @@
         case '\\':
         case '(':
         case ')':
-          ++cur;
+          cur++;
           break;
 
         default:
           /* skip octal escape or ignore backslash */
-          for ( i = 0; i < 3 && cur < limit; ++i )
+          for ( i = 0; i < 3 && cur < limit; i++ )
           {
             if ( !IS_OCTAL_DIGIT( *cur ) )
               break;
 
-            ++cur;
+            cur++;
           }
         }
       }
@@ -455,19 +455,19 @@
 
     FT_ASSERT( **acur == '{' );
 
-    for ( cur = *acur; cur < limit && error == FT_Err_Ok; ++cur )
+    for ( cur = *acur; cur < limit && error == FT_Err_Ok; cur++ )
     {
       switch ( *cur )
       {
       case '{':
-        ++embed;
+        embed++;
         break;
 
       case '}':
-        --embed;
+        embed--;
         if ( embed == 0 )
         {
-          ++cur;
+          cur++;
           goto end;
         }
         break;

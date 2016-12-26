@@ -1734,7 +1734,7 @@
       nc = blend->num_axis;
     }
 
-    for ( i = 0; i < nc; ++i )
+    for ( i = 0; i < nc; i++ )
       coords[i] = blend->normalizedcoords[i];
     for ( ; i < num_coords; i++ )
       coords[i] = 0;

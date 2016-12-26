@@ -3053,7 +3053,7 @@
           if ( numRanges > (FT_ULong)( valid->limit - defp ) / 4 )
             FT_INVALID_TOO_SHORT;
 
-          for ( i = 0; i < numRanges; ++i )
+          for ( i = 0; i < numRanges; i++ )
           {
             FT_ULong  base = TT_NEXT_UINT24( defp );
             FT_ULong  cnt  = FT_NEXT_BYTE( defp );
@@ -3086,7 +3086,7 @@
           if ( numMappings > ( (FT_ULong)( valid->limit - ndp ) ) / 5 )
             FT_INVALID_TOO_SHORT;
 
-          for ( i = 0; i < numMappings; ++i )
+          for ( i = 0; i < numMappings; i++ )
           {
             FT_ULong  uni = TT_NEXT_UINT24( ndp );
             FT_ULong  gid = TT_NEXT_USHORT( ndp );
@@ -3327,7 +3327,7 @@
       return NULL;
 
     result = cmap14->results;
-    for ( i = 0; i < count; ++i )
+    for ( i = 0; i < count; i++ )
     {
       result[i] = (FT_UInt32)TT_NEXT_UINT24( p );
       p        += 8;
@@ -3352,7 +3352,7 @@
     if ( tt_cmap14_ensure( cmap14, ( count + 1 ), memory ) )
       return NULL;
 
-    for ( q = cmap14->results; count > 0; --count )
+    for ( q = cmap14->results; count > 0; count-- )
     {
       FT_UInt32  varSel    = TT_NEXT_UINT24( p );
       FT_ULong   defOff    = TT_NEXT_ULONG( p );
@@ -3411,7 +3411,7 @@
     if ( tt_cmap14_ensure( cmap14, ( cnt + 1 ), memory ) )
       return NULL;
 
-    for ( q = cmap14->results; numRanges > 0; --numRanges )
+    for ( q = cmap14->results; numRanges > 0; numRanges-- )
     {
       FT_UInt32  uni = (FT_UInt32)TT_NEXT_UINT24( p );
 
@@ -3448,7 +3448,7 @@
       return NULL;
 
     ret = cmap14->results;
-    for ( i = 0; i < numMappings; ++i )
+    for ( i = 0; i < numMappings; i++ )
     {
       ret[i] = (FT_UInt32)TT_NEXT_UINT24( p );
       p += 2;
@@ -3532,10 +3532,10 @@
       {
         if ( nuni > duni + dcnt )
         {
-          for ( k = 0; k <= dcnt; ++k )
+          for ( k = 0; k <= dcnt; k++ )
             ret[i++] = duni + k;
 
-          ++di;
+          di++;
 
           if ( di > numRanges )
             break;
@@ -3549,7 +3549,7 @@
             ret[i++] = nuni;
           /* If it is within the default range then ignore it -- */
           /* that should not have happened                       */
-          ++ni;
+          ni++;
           if ( ni > numMappings )
             break;
 
@@ -3568,7 +3568,7 @@
         {
           ret[i++] = (FT_UInt32)TT_NEXT_UINT24( p );
           p += 2;
-          ++ni;
+          ni++;
         }
       }
       else if ( di <= numRanges )
@@ -3576,7 +3576,7 @@
         /* If we get here then we have run out of all non-default     */
         /* mappings.  We have read one default range which we haven't */
         /* stored and there may be others that need to be read.       */
-        for ( k = 0; k <= dcnt; ++k )
+        for ( k = 0; k <= dcnt; k++ )
           ret[i++] = duni + k;
 
         while ( di < numRanges )
@@ -3584,9 +3584,9 @@
           duni = (FT_UInt32)TT_NEXT_UINT24( dp );
           dcnt = FT_NEXT_BYTE( dp );
 
-          for ( k = 0; k <= dcnt; ++k )
+          for ( k = 0; k <= dcnt; k++ )
             ret[i++] = duni + k;
-          ++di;
+          di++;
         }
       }
 
