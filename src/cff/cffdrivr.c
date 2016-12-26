@@ -456,11 +456,11 @@
     FT_Error  error = FT_Err_Ok;
 
 
-    if ( cff && cff->font_info == NULL )
+    if ( cff && !cff->font_info )
     {
-      CFF_FontRecDict  dict   = &cff->top_font.font_dict;
+      CFF_FontRecDict  dict      = &cff->top_font.font_dict;
       PS_FontInfoRec  *font_info = NULL;
-      FT_Memory        memory = face->root.memory;
+      FT_Memory        memory    = face->root.memory;
 
 
       if ( FT_ALLOC( font_info, sizeof ( *font_info ) ) )
@@ -621,7 +621,7 @@
 
       if ( registry )
       {
-        if ( cff->registry == NULL )
+        if ( !cff->registry )
           cff->registry = cff_index_get_sid_string( cff,
                                                     dict->cid_registry );
         *registry = cff->registry;
@@ -629,7 +629,7 @@
 
       if ( ordering )
       {
-        if ( cff->ordering == NULL )
+        if ( !cff->ordering )
           cff->ordering = cff_index_get_sid_string( cff,
                                                     dict->cid_ordering );
         *ordering = cff->ordering;
@@ -1104,7 +1104,7 @@
 #endif
 
     result = ft_service_list_lookup( CFF_SERVICES_GET, module_interface );
-    if ( result != NULL )
+    if ( result )
       return result;
 
     /* `driver' is not yet evaluated in non-PIC mode */

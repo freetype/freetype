@@ -1531,7 +1531,7 @@
           }
         }
 
-        if ( point->hint == NULL )
+        if ( !point->hint )
         {
           for ( nn = 0; nn < num_hints; nn++ )
           {

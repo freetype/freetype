@@ -129,7 +129,7 @@
 
     coderange = &exec->codeRangeTable[range - 1];
 
-    FT_ASSERT( coderange->base != NULL );
+    FT_ASSERT( coderange->base );
 
     /* NOTE: Because the last instruction of a program may be a CALL */
     /*       which will return to the first byte *after* the code    */
@@ -1613,7 +1613,7 @@
 
     range = &exc->codeRangeTable[aRange - 1];
 
-    if ( range->base == NULL )     /* invalid coderange */
+    if ( !range->base )     /* invalid coderange */
     {
       exc->error = FT_THROW( Invalid_CodeRange );
       return FAILURE;

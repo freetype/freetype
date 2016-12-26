@@ -618,7 +618,7 @@ THE SOFTWARE.
 
 
     prop = pcf_find_property( face, prop_name );
-    if ( prop != NULL )
+    if ( prop )
     {
       if ( prop->isString )
       {

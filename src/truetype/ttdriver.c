@@ -575,7 +575,7 @@
 #endif
 
     result = ft_service_list_lookup( TT_SERVICES_GET, tt_interface );
-    if ( result != NULL )
+    if ( result )
       return result;
 
 #ifndef FT_CONFIG_OPTION_PIC

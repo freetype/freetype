@@ -1156,7 +1156,7 @@ THE SOFTWARE.
 
         len = lengths[nn];
 
-        if ( src == NULL )
+        if ( !src )
           continue;
 
         /* separate elements with a space */

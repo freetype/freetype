@@ -1957,7 +1957,7 @@
     FT_Long        dlen, offset;
 
 
-    if ( NULL == stream )
+    if ( !stream )
       return FT_THROW( Invalid_Stream_Operation );
 
     error = FT_Stream_Seek( stream, 0 );
@@ -3457,7 +3457,7 @@
     FT_CMap    cmap = NULL;
 
 
-    if ( clazz == NULL || charmap == NULL || charmap->face == NULL )
+    if ( !clazz || !charmap || !charmap->face )
       return FT_THROW( Invalid_Argument );
 
     face   = charmap->face;
@@ -3602,7 +3602,7 @@
       FT_CMap     ucmap = FT_CMAP( face->charmap );
 
 
-      if ( charmap != NULL )
+      if ( charmap )
       {
         FT_CMap  vcmap = FT_CMAP( charmap );
 
@@ -3643,7 +3643,7 @@
       FT_CharMap  charmap = find_variant_selector_charmap( face );
 
 
-      if ( charmap != NULL )
+      if ( charmap )
       {
         FT_CMap  vcmap = FT_CMAP( charmap );
 
@@ -3682,7 +3682,7 @@
       FT_CharMap  charmap = find_variant_selector_charmap( face );
 
 
-      if ( charmap != NULL )
+      if ( charmap )
       {
         FT_CMap    vcmap  = FT_CMAP( charmap );
         FT_Memory  memory = FT_FACE_MEMORY( face );
@@ -3710,7 +3710,7 @@
       FT_CharMap  charmap = find_variant_selector_charmap( face );
 
 
-      if ( charmap != NULL )
+      if ( charmap )
       {
         FT_CMap    vcmap  = FT_CMAP( charmap );
         FT_Memory  memory = FT_FACE_MEMORY( face );
@@ -3744,7 +3744,7 @@
       FT_CharMap  charmap = find_variant_selector_charmap( face );
 
 
-      if ( charmap != NULL )
+      if ( charmap )
       {
         FT_CMap    vcmap  = FT_CMAP( charmap );
         FT_Memory  memory = FT_FACE_MEMORY( face );
@@ -3872,7 +3872,7 @@
     if ( face && FT_IS_SFNT( face ) )
     {
       FT_FACE_FIND_SERVICE( face, service, SFNT_TABLE );
-      if ( service != NULL )
+      if ( service )
         table = service->get_table( face, tag );
     }
 
@@ -3896,7 +3896,7 @@
       return FT_THROW( Invalid_Face_Handle );
 
     FT_FACE_FIND_SERVICE( face, service, SFNT_TABLE );
-    if ( service == NULL )
+    if ( !service )
       return FT_THROW( Unimplemented_Feature );
 
     return service->load_table( face, tag, offset, buffer, length );
@@ -3921,7 +3921,7 @@
       return FT_THROW( Invalid_Face_Handle );
 
     FT_FACE_FIND_SERVICE( face, service, SFNT_TABLE );
-    if ( service == NULL )
+    if ( !service )
       return FT_THROW( Unimplemented_Feature );
 
     return service->table_info( face, table_index, tag, &offset, length );
@@ -3943,7 +3943,7 @@
 
     face = charmap->face;
     FT_FACE_FIND_SERVICE( face, service, TT_CMAP );
-    if ( service == NULL )
+    if ( !service )
       return 0;
     if ( service->get_cmap_info( charmap, &cmap_info ))
       return 0;
@@ -3967,7 +3967,7 @@
 
     face = charmap->face;
     FT_FACE_FIND_SERVICE( face, service, TT_CMAP );
-    if ( service == NULL )
+    if ( !service )
       return -1;
     if ( service->get_cmap_info( charmap, &cmap_info ))
       return -1;
@@ -4590,7 +4590,7 @@
       if ( module->clazz->get_interface )
         result = module->clazz->get_interface( module, service_id );
 
-      if ( global && result == NULL )
+      if ( global && !result )
       {
         /* we didn't find it, look in all other modules then */
         FT_Library  library = module->library;
@@ -4607,7 +4607,7 @@
             if ( cur[0]->clazz->get_interface )
             {
               result = cur[0]->clazz->get_interface( cur[0], service_id );
-              if ( result != NULL )
+              if ( result )
                 break;
             }
           }

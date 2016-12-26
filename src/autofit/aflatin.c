@@ -2211,7 +2211,7 @@
                                 seg->serif->edge         &&
                                 seg->serif->edge != edge );
 
-          if ( ( seg->link && seg->link->edge != NULL ) || is_serif )
+          if ( ( seg->link && seg->link->edge ) || is_serif )
           {
             AF_Edge     edge2;
             AF_Segment  seg2;

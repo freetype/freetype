@@ -260,7 +260,7 @@
 
     if ( rec && convert )
     {
-      if ( rec->string == NULL )
+      if ( !rec->string )
       {
         FT_Stream  stream = face->name_table.stream;
 
@@ -1119,14 +1119,14 @@
 
     /* do we have outlines in there? */
 #ifdef FT_CONFIG_OPTION_INCREMENTAL
-    has_outline = FT_BOOL( face->root.internal->incremental_interface      ||
-                           tt_face_lookup_table( face, TTAG_glyf ) != NULL ||
-                           tt_face_lookup_table( face, TTAG_CFF ) != NULL  ||
-                           tt_face_lookup_table( face, TTAG_CFF2 ) != NULL );
+    has_outline = FT_BOOL( face->root.internal->incremental_interface ||
+                           tt_face_lookup_table( face, TTAG_glyf )    ||
+                           tt_face_lookup_table( face, TTAG_CFF )     ||
+                           tt_face_lookup_table( face, TTAG_CFF2 )    );
 #else
-    has_outline = FT_BOOL( tt_face_lookup_table( face, TTAG_glyf ) != NULL ||
-                           tt_face_lookup_table( face, TTAG_CFF ) != NULL  ||
-                           tt_face_lookup_table( face, TTAG_CFF2 ) != NULL );
+    has_outline = FT_BOOL( tt_face_lookup_table( face, TTAG_glyf ) ||
+                           tt_face_lookup_table( face, TTAG_CFF )  ||
+                           tt_face_lookup_table( face, TTAG_CFF2 ) );
 #endif
 
     is_apple_sbit = 0;
@@ -1435,7 +1435,7 @@
                                                   charmap->encoding_id );
 
 #if 0
-          if ( root->charmap     == NULL &&
+          if ( !root->charmap                           &&
                charmap->encoding == FT_ENCODING_UNICODE )
           {
             /* set 'root->charmap' to the first Unicode encoding we find */

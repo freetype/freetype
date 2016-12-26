@@ -750,7 +750,7 @@
         if ( !token.type )
           break;
 
-        if ( tokens != NULL && cur < limit )
+        if ( tokens && cur < limit )
           *cur = token;
 
         cur++;
@@ -815,12 +815,12 @@
 
       old_cur = cur;
 
-      if ( coords != NULL && count >= max_coords )
+      if ( coords && count >= max_coords )
         break;
 
       /* call PS_Conv_ToFixed() even if coords == NULL */
       /* to properly parse number at `cur'             */
-      *( coords != NULL ? &coords[count] : &dummy ) =
+      *( coords ? &coords[count] : &dummy ) =
         (FT_Short)( PS_Conv_ToFixed( &cur, limit, 0 ) >> 16 );
 
       if ( old_cur == cur )
@@ -895,12 +895,12 @@
 
       old_cur = cur;
 
-      if ( values != NULL && count >= max_values )
+      if ( values && count >= max_values )
         break;
 
       /* call PS_Conv_ToFixed() even if coords == NULL */
       /* to properly parse number at `cur'             */
-      *( values != NULL ? &values[count] : &dummy ) =
+      *( values ? &values[count] : &dummy ) =
         PS_Conv_ToFixed( &cur, limit, power_ten );
 
       if ( old_cur == cur )
@@ -1172,7 +1172,7 @@
 
           /* for this to work (FT_String**)q must have been */
           /* initialized to NULL                            */
-          if ( *(FT_String**)q != NULL )
+          if ( *(FT_String**)q )
           {
             FT_TRACE0(( "ps_parser_load_field: overwriting field %s\n",
                         field->ident ));

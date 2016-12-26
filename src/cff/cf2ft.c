@@ -312,7 +312,7 @@
     font = (CF2_Font)decoder->cff->cf2_instance.data;
 
     /* on first glyph, allocate instance structure */
-    if ( decoder->cff->cf2_instance.data == NULL )
+    if ( !decoder->cff->cf2_instance.data )
     {
       decoder->cff->cf2_instance.finalizer =
         (FT_Generic_Finalizer)cf2_free_instance;

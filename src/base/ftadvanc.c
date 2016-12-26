@@ -36,7 +36,7 @@
     if ( flags & FT_LOAD_NO_SCALE )
       return FT_Err_Ok;
 
-    if ( face->size == NULL )
+    if ( !face->size )
       return FT_THROW( Invalid_Size_Handle );
 
     if ( flags & FT_LOAD_VERTICAL_LAYOUT )

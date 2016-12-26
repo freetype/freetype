@@ -168,7 +168,7 @@
       AF_Script_UniRange  range;
 
 
-      if ( script_class->script_uni_ranges == NULL )
+      if ( !script_class->script_uni_ranges )
         continue;
 
       /*
@@ -456,7 +456,7 @@
                              [style_class->writing_system];
 
     metrics = globals->metrics[style];
-    if ( metrics == NULL )
+    if ( !metrics )
     {
       /* create the global metrics object if necessary */
       FT_Memory  memory = globals->face->memory;

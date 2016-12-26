@@ -2946,7 +2946,7 @@
 
 
     cmap->max_results = 0;
-    if ( memory != NULL && cmap->results != NULL )
+    if ( memory && cmap->results )
       FT_FREE( cmap->results );
   }
 
@@ -3782,7 +3782,7 @@
           }
         }
 
-        if ( *pclazz == NULL )
+        if ( !*pclazz )
         {
           FT_TRACE0(( "tt_face_build_cmaps:"
                       " unsupported cmap sub-table ignored\n" ));

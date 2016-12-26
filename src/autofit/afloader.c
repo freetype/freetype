@@ -51,7 +51,7 @@
     loader->face    = face;
     loader->globals = (AF_FaceGlobals)face->autohint.data;
 
-    if ( loader->globals == NULL )
+    if ( !loader->globals )
     {
       error = af_face_globals_new( face, &loader->globals, module );
       if ( !error )

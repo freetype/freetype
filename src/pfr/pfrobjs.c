@@ -185,7 +185,7 @@
        * nothing.
        */
       pfrface->family_name = phy_font->family_name;
-      if ( pfrface->family_name == NULL )
+      if ( !pfrface->family_name )
         pfrface->family_name = phy_font->font_id;
 
       /* note that the style name can be NULL in certain PFR fonts,

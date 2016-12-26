@@ -1119,7 +1119,7 @@
     /* See whether this property type exists yet or not. */
     /* If not, create it.                                */
     propid = ft_hash_str_lookup( name, &(font->proptbl) );
-    if ( propid == NULL )
+    if ( !propid )
     {
       error = bdf_create_property( name, BDF_ATOM, font );
       if ( error )

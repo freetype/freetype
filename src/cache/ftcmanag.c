@@ -553,7 +553,7 @@
                 manager->num_nodes ));
 #endif
 
-    if ( manager->cur_weight < manager->max_weight || first == NULL )
+    if ( manager->cur_weight < manager->max_weight || !first )
       return;
 
     /* go to last node -- it's a circular list */
@@ -638,7 +638,7 @@
 
 
     /* try to remove `count' nodes from the list */
-    if ( first == NULL )  /* empty list! */
+    if ( !first )  /* empty list! */
       return 0;
 
     /* go to last node - it's a circular list */

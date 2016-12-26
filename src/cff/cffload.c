@@ -345,7 +345,7 @@
     FT_Memory  memory = stream->memory;
 
 
-    if ( idx->count > 0 && idx->offsets == NULL )
+    if ( idx->count > 0 && !idx->offsets )
     {
       FT_Byte    offsize = idx->off_size;
       FT_ULong   data_size;
@@ -417,7 +417,7 @@
 
     *table = NULL;
 
-    if ( idx->offsets == NULL )
+    if ( !idx->offsets )
     {
       error = cff_index_load_offsets( idx );
       if ( error )
@@ -754,7 +754,7 @@
 
     /* if there is no FDSelect, return zero               */
     /* Note: CFF2 with just one Font Dict has no FDSelect */
-    if ( fdselect->data == NULL )
+    if ( !fdselect->data )
       goto Exit;
 
     switch ( fdselect->format )

@@ -1325,7 +1325,7 @@
     /* read the font data and set up the internal representation */
     /* if not already done                                       */
 
-    if ( face->blend == NULL )
+    if ( !face->blend )
     {
       FT_TRACE2(( "FVAR " ));
 
@@ -1469,7 +1469,7 @@
 
     /* fill the output array if requested */
 
-    if ( master != NULL )
+    if ( master )
     {
       FT_UInt  n;
 
@@ -1567,7 +1567,7 @@
 
     face->doblend = FALSE;
 
-    if ( face->blend == NULL )
+    if ( !face->blend )
     {
       if ( FT_SET_ERROR( TT_Get_MM_Var( face, NULL ) ) )
         goto Exit;
@@ -1603,11 +1603,11 @@
 
     FT_TRACE5(( "\n" ));
 
-    if ( !face->isCFF2 && blend->glyphoffsets == NULL )
+    if ( !face->isCFF2 && !blend->glyphoffsets )
       if ( FT_SET_ERROR( ft_var_load_gvar( face ) ) )
         goto Exit;
 
-    if ( blend->normalizedcoords == NULL )
+    if ( !blend->normalizedcoords )
     {
       if ( FT_NEW_ARRAY( blend->normalizedcoords, mmvar->num_axis ) )
         goto Exit;
@@ -1653,7 +1653,7 @@
 
     face->doblend = TRUE;
 
-    if ( face->cvt != NULL )
+    if ( face->cvt )
     {
       switch ( manageCvt )
       {
@@ -1718,7 +1718,7 @@
     FT_UInt   i, nc;
 
 
-    if ( face->blend == NULL )
+    if ( !face->blend )
     {
       if ( FT_SET_ERROR( TT_Get_MM_Var( face, NULL ) ) )
         return error;
@@ -1783,7 +1783,7 @@
     FT_Memory       memory = face->root.memory;
 
 
-    if ( face->blend == NULL )
+    if ( !face->blend )
     {
       if ( FT_SET_ERROR( TT_Get_MM_Var( face, NULL ) ) )
         goto Exit;
@@ -1849,7 +1849,7 @@
     if ( !blend->avar_checked )
       ft_var_load_avar( face );
 
-    if ( blend->avar_segment != NULL )
+    if ( blend->avar_segment )
     {
       FT_TRACE5(( "normalized design coordinates"
                   " before applying `avar' data:\n" ));
@@ -1950,7 +1950,7 @@
 
     FT_TRACE2(( "CVAR " ));
 
-    if ( blend == NULL )
+    if ( !blend )
     {
       FT_TRACE2(( "\n"
                   "tt_face_vary_cvt: no blend specified\n" ));
@@ -1958,7 +1958,7 @@
       goto Exit;
     }
 
-    if ( face->cvt == NULL )
+    if ( !face->cvt )
     {
       FT_TRACE2(( "\n"
                   "tt_face_vary_cvt: no `cvt ' table\n" ));
@@ -2086,7 +2086,7 @@
                                              table_len,
                                              point_count == 0 ? face->cvt_size
                                                               : point_count );
-      if ( localpoints == NULL || deltas == NULL )
+      if ( !localpoints || !deltas )
         ; /* failure, ignore it */
 
       else if ( localpoints == ALL_POINTS )
@@ -2451,7 +2451,7 @@
     FT_Short    *deltas_x, *deltas_y;
 
 
-    if ( !face->doblend || blend == NULL )
+    if ( !face->doblend || !blend )
       return FT_THROW( Invalid_Argument );
 
     if ( glyph_index >= blend->gv_glyphcnt      ||
@@ -2597,7 +2597,7 @@
                                           point_count == 0 ? n_points
                                                            : point_count );
 
-      if ( points == NULL || deltas_y == NULL || deltas_x == NULL )
+      if ( !points || !deltas_y || !deltas_x )
         ; /* failure, ignore it */
 
       else if ( points == ALL_POINTS )
@@ -2818,7 +2818,7 @@
     GX_Blend   blend  = face->blend;
 
 
-    if ( blend != NULL )
+    if ( blend )
     {
       FT_UInt  i, num_axes;
 
@@ -2829,14 +2829,14 @@
       FT_FREE( blend->normalizedcoords );
       FT_FREE( blend->mmvar );
 
-      if ( blend->avar_segment != NULL )
+      if ( blend->avar_segment )
       {
         for ( i = 0; i < num_axes; i++ )
           FT_FREE( blend->avar_segment[i].correspondence );
         FT_FREE( blend->avar_segment );
       }
 
-      if ( blend->hvar_table != NULL )
+      if ( blend->hvar_table )
       {
         if ( blend->hvar_table->itemStore.varData )
         {

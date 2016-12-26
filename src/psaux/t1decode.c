@@ -873,7 +873,7 @@
             PS_Blend  blend = decoder->blend;
 
 
-            if ( arg_cnt != 1 || blend == NULL )
+            if ( arg_cnt != 1 || !blend )
               goto Unexpected_OtherSubr;
 
             idx = Fix2Int( top[0] );
@@ -941,7 +941,7 @@
             PS_Blend  blend = decoder->blend;
 
 
-            if ( arg_cnt != 2 || blend == NULL )
+            if ( arg_cnt != 2 || !blend )
               goto Unexpected_OtherSubr;
 
             idx = Fix2Int( top[1] );
@@ -962,7 +962,7 @@
             PS_Blend  blend = decoder->blend;
 
 
-            if ( arg_cnt != 1 || blend == NULL )
+            if ( arg_cnt != 1 || !blend )
               goto Unexpected_OtherSubr;
 
             idx = Fix2Int( top[0] );

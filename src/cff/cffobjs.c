@@ -1083,7 +1083,7 @@
         error = FT_Err_Ok;
 
         /* if no Unicode charmap was previously selected, select this one */
-        if ( cffface->charmap == NULL && nn != (FT_UInt)cffface->num_charmaps )
+        if ( !cffface->charmap && nn != (FT_UInt)cffface->num_charmaps )
           cffface->charmap = cffface->charmaps[nn];
 
       Skip_Unicode:

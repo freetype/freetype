@@ -45,7 +45,7 @@
     cmap->code_to_sid   = is_expert ? psnames->adobe_expert_encoding
                                     : psnames->adobe_std_encoding;
 
-    FT_ASSERT( cmap->code_to_sid != NULL );
+    FT_ASSERT( cmap->code_to_sid );
   }
 
 
@@ -201,7 +201,7 @@
     cmap->count   = (FT_UInt)encoding->code_last - cmap->first;
     cmap->indices = encoding->char_index;
 
-    FT_ASSERT( cmap->indices != NULL );
+    FT_ASSERT( cmap->indices );
     FT_ASSERT( encoding->code_first <= encoding->code_last );
 
     return 0;

@@ -605,7 +605,7 @@
     for (;;)
     {
       post_data = Get1Resource( TTAG_POST, res_id++ );
-      if ( post_data == NULL )
+      if ( !post_data )
         break;  /* we are done */
 
       code = (*post_data)[0];
@@ -644,7 +644,7 @@
     for (;;)
     {
       post_data = Get1Resource( TTAG_POST, res_id++ );
-      if ( post_data == NULL )
+      if ( !post_data )
         break;  /* we are done */
 
       post_size = (FT_ULong)GetHandleSize( post_data ) - 2;
@@ -655,7 +655,7 @@
         if ( last_code != -1 )
         {
           /* we are done adding a chunk, fill in the size field */
-          if ( size_p != NULL )
+          if ( size_p )
           {
             *size_p++ = (FT_Byte)(   pfb_chunk_size         & 0xFF );
             *size_p++ = (FT_Byte)( ( pfb_chunk_size >> 8  ) & 0xFF );
@@ -743,7 +743,7 @@
 
 
     sfnt = GetResource( TTAG_sfnt, sfnt_id );
-    if ( sfnt == NULL )
+    if ( !sfnt )
       return FT_THROW( Invalid_Handle );
 
     sfnt_size = (FT_ULong)GetHandleSize( sfnt );

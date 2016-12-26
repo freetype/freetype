@@ -519,7 +519,7 @@ typedef ptrdiff_t  FT_PtrDist;
     for (;;)
     {
       cell = *pcell;
-      if ( cell == NULL || cell->x > x )
+      if ( !cell || cell->x > x )
         break;
 
       if ( cell->x == x )
