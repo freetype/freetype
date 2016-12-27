@@ -1,3 +1,12 @@
+2016-12-27  Werner Lemberg  <wl@gnu.org>
+
+	[truetype, type1] Implement `FT_Get_Var_Design_Coordinates'.
+
+	* src/truetype/ttgxvar.c (TT_Get_Var_Design): Implement.
+	(TT_Set_Var_Design): Fix tracing.
+
+	* src/type1/t1load.c (T1_Get_Var_Design): Implement.
+
 2016-12-24  Werner Lemberg  <wl@gnu.org>
 
 	* src/truetype/ttpload.c (tt_face_load_hdmx): Ignore `version'.

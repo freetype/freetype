@@ -1800,7 +1800,7 @@
       num_coords = mmvar->num_axis;
     }
 
-    /* Axis normalization is a two stage process.  First we normalize */
+    /* Axis normalization is a two-stage process.  First we normalize */
     /* based on the [min,def,max] values for the axis to be [-1,0,1]. */
     /* Then, if there's an `avar' table, we renormalize this range.   */
 
@@ -1859,9 +1859,10 @@
       {
         for ( j = 1; j < (FT_UInt)av->pairCount; j++ )
         {
-          FT_TRACE5(( "  %.4f\n", normalized[i] / 65536.0 ));
           if ( normalized[i] < av->correspondence[j].fromCoord )
           {
+            FT_TRACE5(( "  %.4f\n", normalized[i] / 65536.0 ));
+
             normalized[i] =
               FT_MulDiv( normalized[i] - av->correspondence[j - 1].fromCoord,
                          av->correspondence[j].toCoord -
@@ -1883,17 +1884,112 @@
   }
 
 
+  /*************************************************************************/
+  /*                                                                       */
+  /* <Function>                                                            */
+  /*    TT_Get_Var_Design                                                  */
+  /*                                                                       */
+  /* <Description>                                                         */
+  /*    Get the design coordinates of the currently selected interpolated  */
+  /*    font.                                                              */
+  /*                                                                       */
+  /* <Input>                                                               */
+  /*    face       :: A handle to the source face.                         */
+  /*                                                                       */
+  /*    num_coords :: The number of design coordinates to retrieve.  If it */
+  /*                  is larger than the number of axes, set the excess    */
+  /*                  values to~0.                                         */
+  /*                                                                       */
+  /* <Output>                                                              */
+  /*    coords     :: The design coordinates array.                        */
+  /*                                                                       */
+  /* <Return>                                                              */
+  /*    FreeType error code.  0~means success.                             */
+  /*                                                                       */
   FT_LOCAL_DEF( FT_Error )
   TT_Get_Var_Design( TT_Face    face,
                      FT_UInt    num_coords,
                      FT_Fixed*  coords )
   {
-    FT_UNUSED( face );
-    FT_UNUSED( num_coords );
-    FT_UNUSED( coords );
+    FT_Error  error = FT_Err_Ok;
 
-    /* TODO: Implement this function. */
-    return FT_THROW( Unimplemented_Feature );
+    GX_Blend      blend;
+    FT_MM_Var*    mmvar;
+    FT_Var_Axis*  a;
+
+    FT_UInt  i, j, nc;
+
+
+    if ( !face->blend )
+    {
+      if ( FT_SET_ERROR( TT_Get_MM_Var( face, NULL ) ) )
+        return error;
+    }
+
+    blend = face->blend;
+
+    nc = num_coords;
+    if ( num_coords > blend->num_axis )
+    {
+      FT_TRACE2(( "TT_Get_MM_Blend: only using first %d of %d coordinates\n",
+                  blend->num_axis, num_coords ));
+      nc = blend->num_axis;
+    }
+
+    for ( i = 0; i < nc; ++i )
+      coords[i] = blend->normalizedcoords[i];
+
+    for ( ; i < num_coords; i++ )
+      coords[i] = 0;
+
+    if ( !blend->avar_checked )
+      ft_var_load_avar( face );
+
+    if ( blend->avar_segment )
+    {
+      GX_AVarSegment  av = blend->avar_segment;
+
+
+      FT_TRACE5(( "normalized design coordinates"
+                  " after removing `avar' distortion:\n" ));
+
+      for ( i = 0; i < nc; i++, av++ )
+      {
+        for ( j = 1; j < (FT_UInt)av->pairCount; j++ )
+        {
+          if ( coords[i] < av->correspondence[j].toCoord )
+          {
+            coords[i] =
+              FT_MulDiv( coords[i] - av->correspondence[j - 1].toCoord,
+                         av->correspondence[j].fromCoord -
+                           av->correspondence[j - 1].fromCoord,
+                         av->correspondence[j].toCoord -
+                           av->correspondence[j - 1].toCoord ) +
+              av->correspondence[j - 1].fromCoord;
+
+            FT_TRACE5(( "  %.4f\n", coords[i] / 65536.0 ));
+            break;
+          }
+        }
+      }
+    }
+
+    mmvar = blend->mmvar;
+    a     = mmvar->axis;
+
+    for ( i = 0; i < nc; i++, a++ )
+    {
+      if ( coords[i] < 0 )
+        coords[i] = a->def + FT_MulFix( coords[i],
+                                        a->def - a->minimum );
+      else if ( coords[i] > 0 )
+        coords[i] = a->def + FT_MulFix( coords[i],
+                                        a->maximum - a->def );
+      else
+        coords[i] = a->def;
+    }
+
+    return FT_Err_Ok;
   }
 
 

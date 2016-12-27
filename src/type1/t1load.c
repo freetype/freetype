@@ -551,12 +551,34 @@
                      FT_UInt    num_coords,
                      FT_Fixed*  coords )
   {
-    FT_UNUSED( face );
-    FT_UNUSED( num_coords );
-    FT_UNUSED( coords );
+    PS_Blend  blend = face->blend;
 
-    /* TODO: Implement this function. */
-    return FT_THROW( Unimplemented_Feature );
+    FT_Fixed  axiscoords[4];
+    FT_UInt   i, nc;
+
+
+    if ( !blend )
+      return FT_THROW( Invalid_Argument );
+
+    mm_weights_unmap( blend->weight_vector,
+                      axiscoords,
+                      blend->num_axis );
+
+    nc = num_coords;
+    if ( num_coords > blend->num_axis )
+    {
+      FT_TRACE2(( "T1_Get_Var_Design:"
+                  " only using first %d of %d coordinates\n",
+                  blend->num_axis, num_coords ));
+      nc = blend->num_axis;
+    }
+
+    for ( i = 0; i < nc; i++ )
+      coords[i] = mm_axis_unmap( &blend->design_map[i], axiscoords[i] );
+    for ( ; i < num_coords; i++ )
+      coords[i] = 0;
+
+    return FT_Err_Ok;
   }
 
 
