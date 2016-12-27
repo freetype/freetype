@@ -1,5 +1,13 @@
 2016-12-27  Werner Lemberg  <wl@gnu.org>
 
+	Documentation updates.
+
+	* docs/CHANGES: Add missing information.
+
+	* docs/formats.txt: Rewritten and updated.
+
+2016-12-27  Werner Lemberg  <wl@gnu.org>
+
 	[truetype, type1] Implement `FT_Get_Var_Design_Coordinates'.
 
 	* src/truetype/ttgxvar.c (TT_Get_Var_Design): Implement.
