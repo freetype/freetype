@@ -1,5 +1,16 @@
 2016-12-28  Werner Lemberg  <wl@gnu.org>
 
+	[cff] Catch `blend' op in non-variant fonts.
+
+	Reported as
+
+	  https://bugs.chromium.org/p/oss-fuzz/issues/detail?id=334
+
+	* src/cff/cf2intrp.c (cf2_interpT2CharString) <cf2_cmdBLEND>: Don't
+	allow `blend' op for non-variant fonts.
+
+2016-12-28  Werner Lemberg  <wl@gnu.org>
+
 	[cff] Better check of number of blends.
 
 	* src/cff/cf2intrp.c (cf2_interpT2CharString) <cf2_cmdBLEND>,

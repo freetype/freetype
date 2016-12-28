@@ -678,6 +678,13 @@
           if ( !font->isCFF2 )
             break;    /* clear stack & ignore */
 
+          /* do we have a `blend' op in a non-variant font? */
+          if ( !font->blend.font )
+          {
+            lastError = FT_THROW( Invalid_Glyph_Format );
+            goto exit;
+          }
+
           /* check cached blend vector */
           if ( cff_blend_check_vector( &font->blend,
                                        font->vsindex,
