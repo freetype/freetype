@@ -22,6 +22,8 @@
 #include FT_SERVICE_POSTSCRIPT_CMAPS_H
 
 #include "psmodule.h"
+
+#define  DEFINE_PS_TABLES
 #include "pstables.h"
 
 #include "psnamerr.h"

@@ -1,5 +1,20 @@
 2016-12-28  Werner Lemberg  <wl@gnu.org>
 
+	[psnames] Only declare, not define, data in `pstables.h' (#49949).
+
+	Pdfium includes `pstables.h' a second time; moving the definition
+	from `pstables.h' to `psmodule.c' saves more than 60kByte data
+	segment space for this case.
+
+	* src/tools/glnames.py (StringTable::dump,
+	StringTable::dump_sublist, dump_encoding, dump_array): Emit
+	additional code to only define tables if `DEFINE_PS_TABLES' is set.
+
+	* src/psnames/pstables.h: Regenerated.
+	* src/psnames/psmodule.c (DEFINE_PS_TABLES): Define.
+
+2016-12-28  Werner Lemberg  <wl@gnu.org>
+
 	[cff] Catch `blend' op in non-variant fonts.
 
 	Reported as
