@@ -693,12 +693,13 @@
           }
 
           /* do the blend */
+          numBlends = (FT_UInt)cf2_stack_popInt( opStack );
+          if ( numBlends > stackSize )
           {
-            FT_Int  temp = cf2_stack_popInt( opStack );
-
-
-            numBlends = temp > 0 ? (FT_UInt)temp : 0;
+            lastError = FT_THROW( Invalid_Glyph_Format );
+            goto exit;
           }
+
           cf2_doBlend( &font->blend, opStack, numBlends );
 
           font->blend.usedBV = TRUE;

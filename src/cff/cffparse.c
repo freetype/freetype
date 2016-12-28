@@ -907,6 +907,12 @@
     }
 
     numBlends = (FT_UInt)cff_parse_num( parser, parser->top - 1 );
+    if ( numBlends > parser->stackSize )
+    {
+      FT_ERROR(( "cff_parse_blend: Invalid number of blends\n" ));
+      error = FT_THROW( Invalid_File_Format );
+      goto Exit;
+    }
 
     FT_TRACE4(( "   %d values blended\n", numBlends ));
 

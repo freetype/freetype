@@ -1,3 +1,11 @@
+2016-12-28  Werner Lemberg  <wl@gnu.org>
+
+	[cff] Better check of number of blends.
+
+	* src/cff/cf2intrp.c (cf2_interpT2CharString) <cf2_cmdBLEND>,
+	src/cff/cffparse.c (cff_parse_blend): Compare number of blends with
+	stack size.
+
 2016-12-27  Werner Lemberg  <wl@gnu.org>
 
 	Documentation updates.
