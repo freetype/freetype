@@ -1,5 +1,16 @@
 2016-12-29  Werner Lemberg  <wl@gnu.org>
 
+	[truetype] Variation font API stability issues.
+
+	Make some functions work before a call to `TT_Set_MM_Blend'.
+
+	* src/truetype/ttgxvar.c (tt_hadvance_adjust): Exit immediately if
+	we don't blend.
+	(TT_Get_MM_Blend, TT_Get_Var_Design): Return default values if we
+	don't blend.
+
+2016-12-29  Werner Lemberg  <wl@gnu.org>
+
 	* src/truetype/ttgxvar.c (TT_Get_MM_Var): Check axis data.
 
 	Reported as

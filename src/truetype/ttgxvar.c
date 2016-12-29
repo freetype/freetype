@@ -786,7 +786,7 @@
     FT_Fixed   delta;
 
 
-    if ( !face->blend )
+    if ( !face->doblend || !face->blend )
       goto Exit;
 
     if ( !face->blend->hvar_loaded )
@@ -1745,8 +1745,17 @@
       nc = blend->num_axis;
     }
 
-    for ( i = 0; i < nc; i++ )
-      coords[i] = blend->normalizedcoords[i];
+    if ( face->doblend )
+    {
+      for ( i = 0; i < nc; i++ )
+        coords[i] = blend->normalizedcoords[i];
+    }
+    else
+    {
+      for ( i = 0; i < nc; i++ )
+        coords[i] = 0;
+    }
+
     for ( ; i < num_coords; i++ )
       coords[i] = 0;
 
@@ -1947,8 +1956,16 @@
       nc = blend->num_axis;
     }
 
-    for ( i = 0; i < nc; ++i )
-      coords[i] = blend->normalizedcoords[i];
+    if ( face->doblend )
+    {
+      for ( i = 0; i < nc; i++ )
+        coords[i] = blend->normalizedcoords[i];
+    }
+    else
+    {
+      for ( i = 0; i < nc; i++ )
+        coords[i] = 0;
+    }
 
     for ( ; i < num_coords; i++ )
       coords[i] = 0;
