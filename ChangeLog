@@ -1,3 +1,14 @@
+2016-12-29  Werner Lemberg  <wl@gnu.org>
+
+	[pcf] Protect against gzip bombs.
+
+	Fix suggested by Kostya; reported as
+
+	  https://bugs.chromium.org/p/oss-fuzz/issues/detail?id=345
+
+	* src/pcf/pcfread.c (pcf_read_TOC): Limit number of TOC entries to
+	1024.
+
 2016-12-28  Werner Lemberg  <wl@gnu.org>
 
 	[psnames] Only declare, not define, data in `pstables.h' (#49949).

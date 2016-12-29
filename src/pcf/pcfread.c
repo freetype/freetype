@@ -109,13 +109,18 @@ THE SOFTWARE.
     if ( stream->size < 16 )
       return FT_THROW( Invalid_File_Format );
 
-    /* we need 16 bytes per TOC entry */
-    if ( toc->count > stream->size >> 4 )
+    /* We need 16 bytes per TOC entry.  Additionally, as a */
+    /* heuristic protection against gzip bombs (i.e., very */
+    /* small input files that expand to insanely large     */
+    /* files), we limit the number of TOC entries to 1024. */
+    if ( toc->count > stream->size >> 4 ||
+         toc->count > 1024              )
     {
       FT_TRACE0(( "pcf_read_TOC: adjusting number of tables"
                   " (from %d to %d)\n",
-                  toc->count, stream->size >> 4 ));
-      toc->count = stream->size >> 4;
+                  toc->count,
+                  FT_MIN( stream->size >> 4, 1024 ) ));
+      toc->count = FT_MIN( stream->size >> 4, 1024 );
     }
 
     if ( FT_NEW_ARRAY( face->toc.tables, toc->count ) )
