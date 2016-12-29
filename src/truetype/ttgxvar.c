@@ -1435,6 +1435,17 @@
         a->name[3] = (FT_String)( ( a->tag       ) & 0xFF );
         a->name[4] = '\0';
 
+        if ( a->minimum > a->def ||
+             a->def > a->maximum )
+        {
+          FT_TRACE2(( "TT_Get_MM_Var:"
+                      " invalid \"%s\" axis record; disabling\n",
+                      a->name ));
+
+          a->minimum = a->def;
+          a->maximum = a->def;
+        }
+
         FT_TRACE5(( "  \"%s\": minimum=%.5f, default=%.5f, maximum=%.5f\n",
                     a->name,
                     a->minimum / 65536.0,

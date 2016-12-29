@@ -1,5 +1,13 @@
 2016-12-29  Werner Lemberg  <wl@gnu.org>
 
+	* src/truetype/ttgxvar.c (TT_Get_MM_Var): Check axis data.
+
+	Reported as
+
+	  https://bugs.chromium.org/p/oss-fuzz/issues/detail?id=348
+
+2016-12-29  Werner Lemberg  <wl@gnu.org>
+
 	[truetype] Tracing fixes.
 
 	* src/truetype/ttgxvar.c (tt_hadvance_adjust): Emit correct
