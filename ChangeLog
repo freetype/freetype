@@ -1,5 +1,14 @@
 2016-12-29  Werner Lemberg  <wl@gnu.org>
 
+	[truetype] Tracing fixes.
+
+	* src/truetype/ttgxvar.c (tt_hadvance_adjust): Emit correct
+	information.
+	(TT_Set_Var_Design): Fix typo.
+	(TT_Get_Var_Design): Fix typos.
+
+2016-12-29  Werner Lemberg  <wl@gnu.org>
+
 	*/*: Use `0.5f' for tracing 16.16 numbers.
 
 2016-12-29  Werner Lemberg  <wl@gnu.org>

@@ -880,8 +880,6 @@
 
       } /* per-axis loop */
 
-      FT_TRACE4(( ", %f ", scalar / 65536.0 ));
-
       /* get the scaled delta for this region */
       delta       = FT_intToFixed( deltaSet[master] );
       scaledDelta = FT_MulFix( scalar, delta );
@@ -891,9 +889,11 @@
 
     } /* per-region loop */
 
-    FT_TRACE4(( "]\n" ));
-
     /* apply the accumulated adjustment to derive the interpolated value */
+    FT_TRACE5(( "horizontal width %d adjusted by %d units (HVAR)\n",
+                *avalue,
+                FT_fixedToInt( netAdjustment ) ));
+
     *avalue += FT_fixedToInt( netAdjustment );
 
   Exit:
@@ -1819,7 +1819,7 @@
       if ( coord > a->maximum || coord < a->minimum )
       {
         FT_TRACE1((
-          "TT_Set_Var_Design: normalized design coordinate %.5f\n"
+          "TT_Set_Var_Design: design coordinate %.5f\n"
           "                   is out of range [%.5f;%.5f]; clamping\n",
           coord / 65536.0,
           a->minimum / 65536.0,
@@ -1931,7 +1931,7 @@
     nc = num_coords;
     if ( num_coords > blend->num_axis )
     {
-      FT_TRACE2(( "TT_Get_MM_Blend: only using first %d of %d coordinates\n",
+      FT_TRACE2(( "TT_Get_Var_Design: only using first %d of %d coordinates\n",
                   blend->num_axis, num_coords ));
       nc = blend->num_axis;
     }
@@ -1950,7 +1950,7 @@
       GX_AVarSegment  av = blend->avar_segment;
 
 
-      FT_TRACE5(( "normalized design coordinates"
+      FT_TRACE5(( "design coordinates"
                   " after removing `avar' distortion:\n" ));
 
       for ( i = 0; i < nc; i++, av++ )
