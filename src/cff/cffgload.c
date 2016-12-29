@@ -1026,7 +1026,7 @@
         if ( !( val & 0xFFFFL ) )
           FT_TRACE4(( " %hd", (FT_Short)( (FT_UInt32)val >> 16 ) ));
         else
-          FT_TRACE4(( " %.2f", val / 65536.0 ));
+          FT_TRACE4(( " %.5f", val / 65536.0 ));
 #endif
 
       }

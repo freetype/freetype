@@ -1873,7 +1873,7 @@
                              ( byte3 <<  8 ) |
                                byte4         );
 
-            FT_TRACE4(( " %.2f", v / 65536.0 ));
+            FT_TRACE4(( " %.5f", v / 65536.0 ));
 
             cf2_stack_pushFixed( opStack, v );
           }

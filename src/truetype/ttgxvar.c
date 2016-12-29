@@ -380,7 +380,7 @@
         segment->correspondence[j].fromCoord = FT_GET_SHORT() * 4;
         segment->correspondence[j].toCoord   = FT_GET_SHORT() * 4;
 
-        FT_TRACE5(( "    mapping %.4f to %.4f\n",
+        FT_TRACE5(( "    mapping %.5f to %.5f\n",
                     segment->correspondence[j].fromCoord / 65536.0,
                     segment->correspondence[j].toCoord / 65536.0 ));
       }
@@ -1064,7 +1064,7 @@
         {
           blend->tuplecoords[i * gvar_head.axisCount + j] =
             FT_GET_SHORT() * 4;                 /* convert to FT_Fixed */
-          FT_TRACE5(( "%.4f ",
+          FT_TRACE5(( "%.5f ",
             blend->tuplecoords[i * gvar_head.axisCount + j] / 65536.0 ));
         }
         FT_TRACE5(( "]\n" ));
@@ -1120,10 +1120,10 @@
 
     for ( i = 0; i < blend->num_axis; i++ )
     {
-      FT_TRACE6(( "    axis coordinate %d (%.4f):\n",
+      FT_TRACE6(( "    axis coordinate %d (%.5f):\n",
                   i, blend->normalizedcoords[i] / 65536.0 ));
       if ( !( tupleIndex & GX_TI_INTERMEDIATE_TUPLE ) )
-        FT_TRACE6(( "      intermediate coordinates %d (%.4f, %.4f):\n",
+        FT_TRACE6(( "      intermediate coordinates %d (%.5f, %.5f):\n",
                     i,
                     im_start_coords[i] / 65536.0,
                     im_end_coords[i] / 65536.0 ));
@@ -1148,7 +1148,7 @@
 
       if ( blend->normalizedcoords[i] == tuple_coords[i] )
       {
-        FT_TRACE6(( "      tuple coordinate value %.4f fits perfectly\n",
+        FT_TRACE6(( "      tuple coordinate value %.5f fits perfectly\n",
                     tuple_coords[i] / 65536.0 ));
         /* `apply' does not change */
         continue;
@@ -1161,13 +1161,13 @@
         if ( blend->normalizedcoords[i] < FT_MIN( 0, tuple_coords[i] ) ||
              blend->normalizedcoords[i] > FT_MAX( 0, tuple_coords[i] ) )
         {
-          FT_TRACE6(( "      tuple coordinate value %.4f is exceeded, stop\n",
+          FT_TRACE6(( "      tuple coordinate value %.5f is exceeded, stop\n",
                       tuple_coords[i] / 65536.0 ));
           apply = 0;
           break;
         }
 
-        FT_TRACE6(( "      tuple coordinate value %.4f fits\n",
+        FT_TRACE6(( "      tuple coordinate value %.5f fits\n",
                     tuple_coords[i] / 65536.0 ));
         apply = FT_MulDiv( apply,
                            blend->normalizedcoords[i],
@@ -1180,7 +1180,7 @@
         if ( blend->normalizedcoords[i] < im_start_coords[i] ||
              blend->normalizedcoords[i] > im_end_coords[i]   )
         {
-          FT_TRACE6(( "      intermediate tuple range [%.4f;%.4f] is exceeded,"
+          FT_TRACE6(( "      intermediate tuple range [%.5f;%.5f] is exceeded,"
                       " stop\n",
                       im_start_coords[i] / 65536.0,
                       im_end_coords[i] / 65536.0 ));
@@ -1190,7 +1190,7 @@
 
         else if ( blend->normalizedcoords[i] < tuple_coords[i] )
         {
-          FT_TRACE6(( "      intermediate tuple range [%.4f;%.4f] fits\n",
+          FT_TRACE6(( "      intermediate tuple range [%.5f;%.5f] fits\n",
                       im_start_coords[i] / 65536.0,
                       im_end_coords[i] / 65536.0 ));
           apply = FT_MulDiv( apply,
@@ -1200,7 +1200,7 @@
 
         else
         {
-          FT_TRACE6(( "      intermediate tuple range [%.4f;%.4f] fits\n",
+          FT_TRACE6(( "      intermediate tuple range [%.5f;%.5f] fits\n",
                       im_start_coords[i] / 65536.0,
                       im_end_coords[i] / 65536.0 ));
           apply = FT_MulDiv( apply,
@@ -1210,7 +1210,7 @@
       }
     }
 
-    FT_TRACE6(( "    apply factor is %.4f\n", apply / 65536.0 ));
+    FT_TRACE6(( "    apply factor is %.5f\n", apply / 65536.0 ));
 
     return apply;
   }
@@ -1435,7 +1435,7 @@
         a->name[3] = (FT_String)( ( a->tag       ) & 0xFF );
         a->name[4] = '\0';
 
-        FT_TRACE5(( "  \"%s\": minimum=%.4f, default=%.4f, maximum=%.4f\n",
+        FT_TRACE5(( "  \"%s\": minimum=%.5f, default=%.5f, maximum=%.5f\n",
                     a->name,
                     a->minimum / 65536.0,
                     a->def / 65536.0,
@@ -1587,10 +1587,10 @@
 
     for ( i = 0; i < num_coords; i++ )
     {
-      FT_TRACE5(( "  %.4f\n", coords[i] / 65536.0 ));
+      FT_TRACE5(( "  %.5f\n", coords[i] / 65536.0 ));
       if ( coords[i] < -0x00010000L || coords[i] > 0x00010000L )
       {
-        FT_TRACE1(( "TT_Set_MM_Blend: normalized design coordinate %.4f\n"
+        FT_TRACE1(( "TT_Set_MM_Blend: normalized design coordinate %.5f\n"
                     "                 is out of range [-1;1]\n",
                     coords[i] / 65536.0 ));
         error = FT_THROW( Invalid_Argument );
@@ -1815,12 +1815,12 @@
       FT_Fixed  coord = coords[i];
 
 
-      FT_TRACE5(( "  %.4f\n", coord / 65536.0 ));
+      FT_TRACE5(( "  %.5f\n", coord / 65536.0 ));
       if ( coord > a->maximum || coord < a->minimum )
       {
         FT_TRACE1((
-          "TT_Set_Var_Design: normalized design coordinate %.4f\n"
-          "                   is out of range [%.4f;%.4f]; clamping\n",
+          "TT_Set_Var_Design: normalized design coordinate %.5f\n"
+          "                   is out of range [%.5f;%.5f]; clamping\n",
           coord / 65536.0,
           a->minimum / 65536.0,
           a->maximum / 65536.0 ));
@@ -1861,7 +1861,7 @@
         {
           if ( normalized[i] < av->correspondence[j].fromCoord )
           {
-            FT_TRACE5(( "  %.4f\n", normalized[i] / 65536.0 ));
+            FT_TRACE5(( "  %.5f\n", normalized[i] / 65536.0 ));
 
             normalized[i] =
               FT_MulDiv( normalized[i] - av->correspondence[j - 1].fromCoord,
@@ -1967,7 +1967,7 @@
                            av->correspondence[j - 1].toCoord ) +
               av->correspondence[j - 1].fromCoord;
 
-            FT_TRACE5(( "  %.4f\n", coords[i] / 65536.0 ));
+            FT_TRACE5(( "  %.5f\n", coords[i] / 65536.0 ));
             break;
           }
         }
