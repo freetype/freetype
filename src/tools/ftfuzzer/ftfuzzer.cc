@@ -22,7 +22,6 @@
 
 #include <assert.h>
 #include <stdint.h>
-#include <stdlib.h>
 
 #include <memory>
 #include <vector>
@@ -88,6 +87,8 @@
     int  t; // total number of values so far
     int  m; // number of selected values so far
 
+    uint32_t  r; // the current pseudo-random number
+
     Random( int n_,
             int N_ )
     : n( n_ ),
@@ -96,10 +97,10 @@
       t = 0;
       m = 0;
 
-      // ideally, this should depend on the input file,
+      // Ideally, this should depend on the input file,
       // for example, taking the sha256 as input;
-      // however, this is overkill for fuzzying tests
-      srand( 12345 );
+      // however, this is overkill for fuzzying tests.
+      r = 12345;
     }
 
     int get()
@@ -108,7 +109,14 @@
         return -1;
 
     Redo:
-      double  U = double(rand()) / RAND_MAX;
+      // We can't use `rand': different C libraries might provide
+      // different implementations of this function.  As a replacement,
+      // we use a 32bit version of the `xorshift' algorithm.
+      r ^= r << 13;
+      r ^= r >> 17;
+      r ^= r << 5;
+
+      double  U = double( r ) / UINT32_MAX;
 
       if ( ( N - t ) * U >= ( n - m ) )
       {

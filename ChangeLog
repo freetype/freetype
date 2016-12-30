@@ -1,5 +1,12 @@
 2016-12-30  Werner Lemberg  <wl@gnu.org>
 
+	[ftfuzzer] Replace `rand' with an xorshift algorithm.
+
+	* src/tools/ftfuzzer/ftfuzzer.cc: Don't include `stdlib.h'.
+	(Random): Implement and use a 32bit `xorshift' algorithm.
+
+2016-12-30  Werner Lemberg  <wl@gnu.org>
+
 	[ftfuzzer] Restrict number of tested bitmap strikes.
 
 	Malformed fonts often have large values for the number of bitmap
