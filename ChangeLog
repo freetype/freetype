@@ -1,3 +1,21 @@
+2016-12-30  Werner Lemberg  <wl@gnu.org>
+
+	[ftfuzzer] Restrict number of tested bitmap strikes.
+
+	Malformed fonts often have large values for the number of bitmap
+	strikes, and FreeType doesn't check the validity of all bitmap
+	strikes in advance.
+
+	Reported as
+
+	  https://bugs.chromium.org/p/oss-fuzz/issues/detail?id=353
+
+	* src/tools/ftfuzzer/ftfuzzer.cc: Include `stdlib.h' for `rand'.
+	(Random): Small class to provide n randomly selected numbers
+	(without repitition) out of the value set [0,N].
+	(LLVMFuzzerTestOneInput): Use it to test only up to 10 bitmap
+	strikes.
+
 2016-12-29  Werner Lemberg  <wl@gnu.org>
 
 	[truetype] Variation font API stability issues.

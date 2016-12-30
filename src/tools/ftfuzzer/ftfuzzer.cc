@@ -22,6 +22,7 @@
 
 #include <assert.h>
 #include <stdint.h>
+#include <stdlib.h>
 
 #include <memory>
 #include <vector>
@@ -52,8 +53,10 @@
   static int         InitResult;
 
 
-  struct FT_Global {
-    FT_Global() {
+  struct FT_Global
+  {
+    FT_Global()
+    {
       InitResult = FT_Init_FreeType( &library );
       if ( InitResult )
         return;
@@ -64,12 +67,61 @@
                        "cff",
                        "hinting-engine", &cff_hinting_engine );
     }
-    ~FT_Global() {
+
+    ~FT_Global()
+    {
       FT_Done_FreeType( library );
     }
   };
 
   FT_Global  global_ft;
+
+
+  // We want to select n values at random (without repitition),
+  // with 0 < n <= N.  The algorithm is taken from TAoCP, Vol. 2
+  // (Algorithm S, selection sampling technique)
+  struct Random
+  {
+    int  n;
+    int  N;
+
+    int  t; // total number of values so far
+    int  m; // number of selected values so far
+
+    Random( int n_,
+            int N_ )
+    : n( n_ ),
+      N( N_ )
+    {
+      t = 0;
+      m = 0;
+
+      // ideally, this should depend on the input file,
+      // for example, taking the sha256 as input;
+      // however, this is overkill for fuzzying tests
+      srand( 12345 );
+    }
+
+    int get()
+    {
+      if ( m >= n )
+        return -1;
+
+    Redo:
+      double  U = double(rand()) / RAND_MAX;
+
+      if ( ( N - t ) * U >= ( n - m ) )
+      {
+        t++;
+        goto Redo;
+      }
+
+      t++;
+      m++;
+
+      return t;
+    }
+  };
 
 
   static int
@@ -254,15 +306,19 @@
           FT_Attach_Stream( face, &open_args );
         }
 
-        // loop over all bitmap stroke sizes
-        // and an arbitrary size for outlines
-        for ( int  fixed_sizes_index = 0;
-              fixed_sizes_index < face->num_fixed_sizes + 1;
-              fixed_sizes_index++ )
+        // loop over an arbitrary size for outlines (index 0)
+        // and up to ten arbitrarily selected bitmap stroke sizes (index 1-10)
+        int  max_idx = face->num_fixed_sizes < 10
+                         ? face->num_fixed_sizes
+                         : 10;
+
+        Random pool( max_idx, face->num_fixed_sizes );
+
+        for ( int  idx = 0; idx <= max_idx; idx++ )
         {
           FT_Int32  flags = load_flags;
 
-          if ( !fixed_sizes_index )
+          if ( !idx )
           {
             // set up 20pt at 72dpi as an arbitrary size
             if ( FT_Set_Char_Size( face, 20 * 64, 20 * 64, 72, 72 ) )
@@ -275,7 +331,7 @@
             if ( instance_index )
               continue;
 
-            if ( FT_Select_Size( face, fixed_sizes_index - 1 ) )
+            if ( FT_Select_Size( face, pool.get() - 1 ) )
               continue;
             flags |= FT_LOAD_COLOR;
           }
