@@ -1,4 +1,15 @@
-2016-09-08  Werner Lemberg  <wl@gnu.org>
+2016-12-31  Werner Lemberg  <wl@gnu.org>
+
+	[truetype] Check axis count in HVAR table.
+
+	Reported as
+
+	  https://bugs.chromium.org/p/oss-fuzz/issues/detail?id=362
+
+	* src/truetype/ttgxvar.c (ft_var_load_hvar): Check axis count.
+	(ft_var_load_avar): Fix tracing message.
+
+2016-12-30  Werner Lemberg  <wl@gnu.org>
 
 	* Version 2.7.1 released.
 	=========================

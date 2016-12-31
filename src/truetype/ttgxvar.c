@@ -346,7 +346,7 @@
 
     if ( axisCount != (FT_Long)blend->mmvar->num_axis )
     {
-      FT_TRACE2(( "ft_var_load_avar: number of axes in `avar' and `cvar'\n"
+      FT_TRACE2(( "ft_var_load_avar: number of axes in `avar' and `fvar'\n"
                   "                  table are different\n" ));
       goto Exit;
     }
@@ -520,6 +520,14 @@
       if ( FT_READ_USHORT( itemStore->axisCount )   ||
            FT_READ_USHORT( itemStore->regionCount ) )
         goto Exit;
+
+      if ( itemStore->axisCount != (FT_Long)blend->mmvar->num_axis )
+      {
+        FT_TRACE2(( "ft_var_load_hvar: number of axes in `hvar' and `fvar'\n"
+                    "                  table are different\n" ));
+        error = FT_THROW( Invalid_Table );
+        goto Exit;
+      }
 
       if ( FT_NEW_ARRAY( itemStore->varRegionList, itemStore->regionCount ) )
         goto Exit;
