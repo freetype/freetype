@@ -1307,6 +1307,10 @@
     size = 5 * numBlends;           /* add 5 bytes per entry    */
     if ( subFont->blend_used + size > subFont->blend_alloc )
     {
+      FT_Byte*  blend_stack_old = subFont->blend_stack;
+      FT_Byte*  blend_top_old   = subFont->blend_top;
+
+
       /* increase or allocate `blend_stack' and reset `blend_top'; */
       /* prepare to append `numBlends' values to the buffer        */
       if ( FT_REALLOC( subFont->blend_stack,
@@ -1316,6 +1320,22 @@
 
       subFont->blend_top    = subFont->blend_stack + subFont->blend_used;
       subFont->blend_alloc += size;
+
+      /* iterate over the parser stack and adjust pointers */
+      /* if the reallocated buffer has a different address */
+      if ( blend_stack_old                         &&
+           subFont->blend_stack != blend_stack_old )
+      {
+        FT_PtrDist  offset = subFont->blend_stack - blend_stack_old;
+        FT_Byte**   p;
+
+
+        for ( p = parser->stack; p < parser->top; p++ )
+        {
+          if ( *p >= blend_stack_old && *p < blend_top_old )
+            *p += offset;
+        }
+      }
     }
     subFont->blend_used += size;
 

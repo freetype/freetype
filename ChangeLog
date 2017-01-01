@@ -1,5 +1,16 @@
 2017-01-01  Werner Lemberg  <wl@gnu.org>
 
+	[cff] Handle multiple `blend' operators in a row correctly.
+
+	Reported as
+
+	  https://bugs.chromium.org/p/oss-fuzz/issues/detail?id=368
+
+	* src/cff/cffload.c (cff_blend_doBlend): Adjust `parser->stack'
+	pointers into `subFont->blend_stack' after reallocation.
+
+2017-01-01  Werner Lemberg  <wl@gnu.org>
+
 	[sfnt] Return correct number of named instances for TTCs.
 
 	Without this patch, requesting information for face index N returned
