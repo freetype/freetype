@@ -462,7 +462,8 @@
 
 
   Exit:
-    FT_TRACE4(( "FT_New_GlyphSlot: Return %d\n", error ));
+    FT_TRACE4(( "FT_New_GlyphSlot: Return 0x%x\n", error ));
+
     return error;
   }
 
@@ -2031,13 +2032,15 @@
       {
         FT_TRACE3(( "Skip rule %d: darwin vfs resource fork"
                     " is already checked and"
-                    " no font is found\n", i ));
+                    " no font is found\n",
+                    i ));
         continue;
       }
 
       if ( errors[i] )
       {
-        FT_TRACE3(( "Error[%d] has occurred in rule %d\n", errors[i], i ));
+        FT_TRACE3(( "Error 0x%x has occurred in rule %d\n",
+                    errors[i], i ));
         continue;
       }
 
@@ -2448,7 +2451,7 @@
     }
 #endif
 
-    FT_TRACE4(( "FT_Open_Face: Return %d\n", error ));
+    FT_TRACE4(( "FT_Open_Face: Return 0x%x\n", error ));
 
     return error;
   }

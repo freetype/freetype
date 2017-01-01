@@ -561,7 +561,7 @@
                   error = fnt_font_load( face->font, stream );
                   if ( error )
                   {
-                    FT_TRACE2(( "font #%lu load error %d\n",
+                    FT_TRACE2(( "font #%lu load error 0x%x\n",
                                 dir_entry2.name, error ));
                     goto Fail;
                   }

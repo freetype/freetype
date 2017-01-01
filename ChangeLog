@@ -1,5 +1,9 @@
 2016-12-31  Werner Lemberg  <wl@gnu.org>
 
+	*/*: Use hex numbers for errors in tracing messages.
+
+2016-12-31  Werner Lemberg  <wl@gnu.org>
+
 	[truetype] Check axis count in HVAR table.
 
 	Reported as
