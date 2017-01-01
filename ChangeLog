@@ -1,3 +1,13 @@
+2017-01-01  Werner Lemberg  <wl@gnu.org>
+
+	[sfnt] Return correct number of named instances for TTCs.
+
+	Without this patch, requesting information for face index N returned
+	the data for face index N+1 (or index 0).
+
+	* src/sfnt/sfobjs.c (sfnt_init_face): Correctly adjust `face_index'
+	for negative `face_instance_index' values.
+
 2016-12-31  Werner Lemberg  <wl@gnu.org>
 
 	*/*: Use hex numbers for errors in tracing messages.
