@@ -448,9 +448,13 @@
       /* 16.16 fixed point is used internally for CFF2 blend results. */
       /* Since these are trusted values, a limit check is not needed. */
 
-      /* After the 255, 4 bytes are in host order. */
-      /* Blend result is rounded to integer.       */
-      return (FT_Long)( *( (FT_UInt32 *) ( d[0] + 1 ) ) + 0x8000U ) >> 16;
+      /* After the 255, 4 bytes give the number. */
+      /* Blend result is rounded to integer.     */
+      return (FT_Short)(
+               ( ( ( (FT_ULong)*( d[0] + 1 ) << 24 ) |
+                   ( (FT_ULong)*( d[0] + 2 ) << 16 ) |
+                   ( (FT_ULong)*( d[0] + 3 ) <<  8 ) |
+                     (FT_ULong)*( d[0] + 4 )         ) + 0x8000U ) >> 16 );
     }
 
     else

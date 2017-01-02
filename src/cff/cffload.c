@@ -1113,7 +1113,7 @@
 
 
   /* convert 2.14 to Fixed */
-  #define FT_fdot14ToFixed( x )  ( ( (FT_Fixed)( (FT_Int16)(x) ) ) << 2 )
+  #define FT_fdot14ToFixed( x )  ( (FT_Fixed)( (FT_ULong)(x) << 2 ) )
 
 
   static FT_Error
@@ -1349,24 +1349,25 @@
 
 
       /* convert inputs to 16.16 fixed point */
-      sum = cff_parse_num( parser, &parser->stack[i + base] ) << 16;
+      sum = cff_parse_num( parser, &parser->stack[i + base] ) * 65536;
 
       for ( j = 1; j < blend->lenBV; j++ )
         sum += FT_MulFix( *weight++,
                           cff_parse_num( parser,
-                                         &parser->stack[delta++] ) << 16 );
+                                         &parser->stack[delta++] ) * 65536 );
 
       /* point parser stack to new value on blend_stack */
       parser->stack[i + base] = subFont->blend_top;
 
-      /* Push blended result as Type 2 5-byte fixed point number (except   */
-      /* that host byte order is used).  This will not conflict with       */
-      /* actual DICTs because 255 is a reserved opcode in both CFF and     */
-      /* CFF2 DICTs.  See `cff_parse_num' for decode of this, which rounds */
-      /* to an integer.                                                    */
-      *subFont->blend_top++             = 255;
-      *((FT_UInt32*)subFont->blend_top) = (FT_UInt32)sum; /* write 4 bytes */
-      subFont->blend_top               += 4;
+      /* Push blended result as Type 2 5-byte fixed point number.  This */
+      /* will not conflict with actual DICTs because 255 is a reserved  */
+      /* opcode in both CFF and CFF2 DICTs.  See `cff_parse_num' for    */
+      /* decode of this, which rounds to an integer.                    */
+      *subFont->blend_top++ = 255;
+      *subFont->blend_top++ = ( (FT_UInt32)sum & 0xFF000000U ) >> 24;
+      *subFont->blend_top++ = ( (FT_UInt32)sum & 0x00FF0000U ) >> 16;
+      *subFont->blend_top++ = ( (FT_UInt32)sum & 0x0000FF00U ) >>  8;
+      *subFont->blend_top++ =   (FT_UInt32)sum & 0x000000FFU;
     }
 
     /* leave only numBlends results on parser stack */

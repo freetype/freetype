@@ -4135,6 +4135,7 @@
   ;
 
 
+#ifdef  DEFINE_PS_TABLES
   /*
    *  This function searches the compressed table efficiently.
    */
@@ -4229,6 +4230,7 @@
   NotFound:
     return 0;
   }
+#endif /* DEFINE_PS_TABLES */
 
 #endif /* FT_CONFIG_OPTION_ADOBE_GLYPH_LIST */
 

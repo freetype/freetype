@@ -461,6 +461,9 @@
       FT_Byte*      p;
 
 
+      if ( !num_subrs )
+        continue;
+
       /* reallocate offsets array if needed */
       if ( num_subrs + 1 > max_offsets )
       {

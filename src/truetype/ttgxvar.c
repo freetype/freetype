@@ -396,10 +396,10 @@
   /* some macros we need */
   #define FT_FIXED_ONE  ( (FT_Fixed)0x10000 )
 
-  #define FT_fdot14ToFixed( x )                    \
-          ( ( (FT_Fixed)( (FT_Int16)(x) ) ) << 2 )
-  #define FT_intToFixed( i )                     \
-          ( (FT_Fixed)( (FT_UInt32)(i) << 16 ) )
+  #define FT_fdot14ToFixed( x )                \
+          ( (FT_Fixed)( (FT_ULong)(x) << 2 ) )
+  #define FT_intToFixed( i )                    \
+          ( (FT_Fixed)( (FT_ULong)(i) << 16 ) )
   #define FT_fixedToInt( x )                                   \
           ( (FT_Short)( ( (FT_UInt32)(x) + 0x8000U ) >> 16 ) )
 
