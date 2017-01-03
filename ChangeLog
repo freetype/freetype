@@ -1,13 +1,17 @@
 2017-01-03  Werner Lemberg  <wl@gnu.org>
 
+	* src/cff/cffparse.c (cff_parse_num): Simplify.
+
+2017-01-03  Werner Lemberg  <wl@gnu.org>
+
 	Various fixes for clang's undefined behaviour sanitizer.
 
 	* src/cff/cffload.c (FT_fdot14ToFixed): Fix casting.
 	(cff_blend_doBlend): Don't left-shift negative numbers.
 	Handle 5-byte numbers byte by byte to avoid alignment issues.
 
-	* src/cff/cffparse.c (cff_parse): Handle 5-byte numbers byte by byte
-	to avoid alignment issues.
+	* src/cff/cffparse.c (cff_parse_num): Handle 5-byte numbers byte by
+	byte to avoid alignment issues.
 
 	* src/cid/cidload (cid_read_subrs): Do nothing if we don't have any
 	subrs.
