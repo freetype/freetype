@@ -1262,30 +1262,10 @@
 
     /* embedded bitmap support */
     if ( sfnt->load_eblc )
-    {
       LOAD_( eblc );
-      if ( error )
-      {
-        /* a font which contains neither bitmaps nor outlines is */
-        /* still valid (although rather useless in most cases);  */
-        /* however, you can find such stripped fonts in PDFs     */
-        if ( FT_ERR_EQ( error, Table_Missing ) )
-          error = FT_Err_Ok;
-        else
-          goto Exit;
-      }
-    }
 
+    /* consider the pclt, kerning, and gasp tables as optional */
     LOAD_( pclt );
-    if ( error )
-    {
-      if ( FT_ERR_NEQ( error, Table_Missing ) )
-        goto Exit;
-
-      face->pclt.Version = 0;
-    }
-
-    /* consider the kerning and gasp tables as optional */
     LOAD_( gasp );
     LOAD_( kern );
 

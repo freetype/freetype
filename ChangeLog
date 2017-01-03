@@ -1,5 +1,13 @@
 2017-01-03  Werner Lemberg  <wl@gnu.org>
 
+	[sfnt] Don't fail if PCLT, EBLC (and similar tables) are invalid.
+
+	These tables are optional.
+
+	* src/sfnt/sfobjs.c (sfnt_load_face): Implement it.
+
+2017-01-03  Werner Lemberg  <wl@gnu.org>
+
 	* src/cff/cffparse.c (cff_parse_num): Simplify.
 
 2017-01-03  Werner Lemberg  <wl@gnu.org>
