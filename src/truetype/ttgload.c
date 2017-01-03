@@ -398,18 +398,18 @@
 
     FT_TRACE5(( "  Instructions size: %u\n", n_ins ));
 
-    /* check it */
-    if ( ( limit - p ) < n_ins )
-    {
-      FT_TRACE0(( "TT_Load_Simple_Glyph: instruction count mismatch\n" ));
-      error = FT_THROW( Too_Many_Hints );
-      goto Fail;
-    }
-
 #ifdef TT_USE_BYTECODE_INTERPRETER
 
     if ( IS_HINTED( load->load_flags ) )
     {
+      /* check instructions size */
+      if ( ( limit - p ) < n_ins )
+      {
+        FT_TRACE1(( "TT_Load_Simple_Glyph: instruction count mismatch\n" ));
+        error = FT_THROW( Too_Many_Hints );
+        goto Fail;
+      }
+
       /* we don't trust `maxSizeOfInstructions' in the `maxp' table */
       /* and thus update the bytecode array size by ourselves       */
 
@@ -2649,14 +2649,20 @@
 
     /* if FT_LOAD_NO_SCALE is not set, `ttmetrics' must be valid */
     if ( !( load_flags & FT_LOAD_NO_SCALE ) && !size->ttmetrics.valid )
-      return FT_THROW( Invalid_Size_Handle );
+    {
+      error = FT_THROW( Invalid_Size_Handle );
+      goto Exit;
+    }
 
     if ( load_flags & FT_LOAD_SBITS_ONLY )
-      return FT_THROW( Invalid_Argument );
+    {
+      error = FT_THROW( Invalid_Argument );
+      goto Exit;
+    }
 
     error = tt_loader_init( &loader, size, glyph, load_flags, FALSE );
     if ( error )
-      return error;
+      goto Exit;
 
     glyph->format        = FT_GLYPH_FORMAT_OUTLINE;
     glyph->num_subglyphs = 0;
@@ -2730,6 +2736,13 @@
     if ( !( load_flags & FT_LOAD_NO_SCALE ) &&
          size->root.metrics.y_ppem < 24     )
       glyph->outline.flags |= FT_OUTLINE_HIGH_PRECISION;
+
+  Exit:
+#ifdef FT_DEBUG_LEVEL_TRACE
+    if ( error )
+      FT_TRACE1(( "  failed (error code 0x%x)\n",
+                  error ));
+#endif
 
     return error;
   }

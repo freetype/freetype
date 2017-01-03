@@ -819,6 +819,11 @@
 
       FT_TRACE4(( "Executing `fpgm' table.\n" ));
       error = face->interpreter( exec );
+#ifdef FT_DEBUG_LEVEL_TRACE
+      if ( error )
+        FT_TRACE4(( "  interpretation failed with error code 0x%x\n",
+                    error ));
+#endif
     }
     else
       error = FT_Err_Ok;
@@ -882,8 +887,12 @@
       TT_Goto_CodeRange( exec, tt_coderange_cvt, 0 );
 
       FT_TRACE4(( "Executing `prep' table.\n" ));
-
       error = face->interpreter( exec );
+#ifdef FT_DEBUG_LEVEL_TRACE
+      if ( error )
+        FT_TRACE4(( "  interpretation failed with error code 0x%x\n",
+                    error ));
+#endif
     }
     else
       error = FT_Err_Ok;
@@ -1075,8 +1084,10 @@
 
     if ( size->bytecode_ready < 0 )
       error = tt_size_init_bytecode( (FT_Size)size, pedantic );
+    else
+      error = size->bytecode_ready;
 
-    if ( error || size->bytecode_ready )
+    if ( error )
       goto Exit;
 
     /* rescale CVT when needed */
@@ -1108,6 +1119,8 @@
 
       error = tt_size_run_prep( size, pedantic );
     }
+    else
+      error = size->cvt_ready;
 
   Exit:
     return error;

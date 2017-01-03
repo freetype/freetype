@@ -1,5 +1,18 @@
 2017-01-03  Werner Lemberg  <wl@gnu.org>
 
+	[truetype] Various minor fixes.
+
+	* src/truetype/ttgload.c (TT_Load_Simple_Glyph): Check instruction
+	size only if we do native hinting.
+	(TT_Load_Glyph): Trace returned error code.
+
+	* src/truetype/ttobjs.c (tt_size_run_fpgm, tt_size_run_prep): Trace
+	returned error code.
+	(tt_size_ready_bytecode): Don't run `prep' table if `fpgm' table is
+	invalid.
+
+2017-01-03  Werner Lemberg  <wl@gnu.org>
+
 	[sfnt] Don't fail if PCLT, EBLC (and similar tables) are invalid.
 
 	These tables are optional.
