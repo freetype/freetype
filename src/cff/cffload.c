@@ -2199,6 +2199,16 @@
         goto Exit;
       }
 
+      /* font names must not be empty */
+      if ( font->name_index.data_size < font->name_index.count )
+      {
+        /* for pure CFFs, we still haven't checked enough bytes */
+        /* to be sure that it is a CFF at all                   */
+        error = pure_cff ? FT_THROW( Unknown_File_Format )
+                         : FT_THROW( Invalid_File_Format );
+        goto Exit;
+      }
+
       if ( FT_SET_ERROR( cff_index_init( &font->font_dict_index,
                                          stream, 0, cff2 ) )                 ||
            FT_SET_ERROR( cff_index_init( &string_index,
@@ -2210,6 +2220,15 @@
                                                  &font->string_pool,
                                                  &font->string_pool_size ) ) )
         goto Exit;
+
+      /* there must be a Top DICT index entry for each name index entry */
+      if ( font->name_index.count > font->font_dict_index.count )
+      {
+        FT_ERROR(( "cff_font_load:"
+                   " not enough entries in Top DICT index\n" ));
+        error = FT_THROW( Invalid_File_Format );
+        goto Exit;
+      }
     }
 
     font->num_strings = string_index.count;

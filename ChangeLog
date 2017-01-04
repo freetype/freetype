@@ -1,5 +1,16 @@
 2017-01-04  Werner Lemberg  <wl@gnu.org>
 
+	[cff] More consistency checks for pure CFFs.
+
+	Reported as
+
+	  https://bugs.chromium.org/p/oss-fuzz/issues/detail?id=378
+
+	* src/cff/cffload.c (cff_font_load): Check element number and size
+	of Name and Top DICT indices.
+
+2017-01-04  Werner Lemberg  <wl@gnu.org>
+
 	[cff, truetype] Minor tracing improvement.
 
 	* src/cff/cffobjs.c (cff_face_init), src/truetype/ttobjs.c
