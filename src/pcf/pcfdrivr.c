@@ -286,6 +286,7 @@ THE SOFTWARE.
 
 
         /* this didn't work, try gzip support! */
+        FT_TRACE2(( "  ... try gzip stream\n" ));
         error2 = FT_Stream_OpenGzip( &face->comp_stream, stream );
         if ( FT_ERR_EQ( error2, Unimplemented_Feature ) )
           goto Fail;
@@ -301,6 +302,7 @@ THE SOFTWARE.
 
 
         /* this didn't work, try LZW support! */
+        FT_TRACE2(( "  ... try LZW stream\n" ));
         error3 = FT_Stream_OpenLZW( &face->comp_stream, stream );
         if ( FT_ERR_EQ( error3, Unimplemented_Feature ) )
           goto Fail;
@@ -316,6 +318,7 @@ THE SOFTWARE.
 
 
         /* this didn't work, try Bzip2 support! */
+        FT_TRACE2(( "  ... try Bzip2 stream\n" ));
         error4 = FT_Stream_OpenBzip2( &face->comp_stream, stream );
         if ( FT_ERR_EQ( error4, Unimplemented_Feature ) )
           goto Fail;

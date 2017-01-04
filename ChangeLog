@@ -1,5 +1,9 @@
 2017-01-04  Werner Lemberg  <wl@gnu.org>
 
+	* src/pcf/pcfdrivr.c (PCF_Face_Init): Trace compression format.
+
+2017-01-04  Werner Lemberg  <wl@gnu.org>
+
 	[cff] More consistency checks for pure CFFs.
 
 	Reported as
