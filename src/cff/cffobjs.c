@@ -517,6 +517,7 @@
       goto Exit;
 
     /* check whether we have a valid OpenType file */
+    FT_TRACE2(( "  " ));
     error = sfnt->init_face( stream, face, face_index, num_params, params );
     if ( !error )
     {

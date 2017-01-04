@@ -1,3 +1,10 @@
+2017-01-04  Werner Lemberg  <wl@gnu.org>
+
+	[cff, truetype] Minor tracing improvement.
+
+	* src/cff/cffobjs.c (cff_face_init), src/truetype/ttobjs.c
+	(tt_face_init): Indent first tracing message from SFNT driver.
+
 2017-01-03  Werner Lemberg  <wl@gnu.org>
 
 	[truetype] Various minor fixes.
