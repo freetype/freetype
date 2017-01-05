@@ -753,7 +753,10 @@
     {
       blend->hvar_checked = TRUE;
 
-      /* TODO: implement other HVAR stuff */
+      /* FreeType doesn't provide functions to quickly retrieve */
+      /* LSB or RSB values; we thus don't have to implement     */
+      /* support for those two item variation stores.           */
+
       face->variation_support |= TT_FACE_FLAG_VAR_HADVANCE;
     }
 
