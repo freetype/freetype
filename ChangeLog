@@ -1,5 +1,20 @@
 2017-01-06  Werner Lemberg  <wl@gnu.org>
 
+	[truetype] More generalization of GX stuff.
+
+	We need this later on for MVAR also.
+
+	* src/truetype/ttgxvar.c (ft_var_load_delta_set_index_mapping): Add
+	parameters for delta-set index mapping and item variation store.
+	(ft_var_load_item_variation_store): Add parameter for item variation
+	store.
+	s/hvarData/varData/.
+	Move allocation of `hvar_table' to...
+	(ft_var_load_hvar): ...this function.
+	Updated.
+
+2017-01-06  Werner Lemberg  <wl@gnu.org>
+
 	[truetype] Some GX structure renames for generalization.
 
 	We need this later on for MVAR also.

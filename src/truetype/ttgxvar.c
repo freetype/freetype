@@ -405,8 +405,9 @@
 
 
   static FT_Error
-  ft_var_load_item_variation_store( TT_Face   face,
-                                    FT_ULong  offset )
+  ft_var_load_item_variation_store( TT_Face          face,
+                                    FT_ULong         offset,
+                                    GX_ItemVarStore  itemStore )
   {
     FT_Stream  stream = FT_FACE_STREAM( face );
     FT_Memory  memory = stream->memory;
@@ -417,10 +418,8 @@
     FT_UInt    i, j, k;
     FT_UInt    shortDeltaCount;
 
-    GX_Blend         blend = face->blend;
-    GX_ItemVarStore  itemStore;
-    GX_HVarTable     hvarTable;
-    GX_ItemVarData   hvarData;
+    GX_Blend        blend = face->blend;
+    GX_ItemVarData  varData;
 
     FT_ULong*  dataOffsetArray = NULL;
 
@@ -435,12 +434,6 @@
       error = FT_THROW( Invalid_Table );
       goto Exit;
     }
-
-    if ( FT_NEW( blend->hvar_table ) )    /* allocate table at top level */
-      goto Exit;
-
-    hvarTable = blend->hvar_table;
-    itemStore = &hvarTable->itemStore;
 
     /* read top level fields */
     if ( FT_READ_ULONG( region_offset )         ||
@@ -469,9 +462,9 @@
     if ( itemStore->axisCount != (FT_Long)blend->mmvar->num_axis )
     {
       FT_TRACE2(( "ft_var_load_item_variation_store:"
-                  " number of axes in `hvar' and `fvar'\n"
+                  " number of axes in item variation store\n"
                   "                                 "
-                  " table are different\n" ));
+                  " and `fvar' table are different\n" ));
       error = FT_THROW( Invalid_Table );
       goto Exit;
     }
@@ -514,49 +507,49 @@
 
     for ( i = 0; i < itemStore->dataCount; i++ )
     {
-      hvarData = &itemStore->varData[i];
+      varData = &itemStore->varData[i];
 
       if ( FT_STREAM_SEEK( offset + dataOffsetArray[i] ) )
         goto Exit;
 
-      if ( FT_READ_USHORT( hvarData->itemCount )      ||
-           FT_READ_USHORT( shortDeltaCount )          ||
-           FT_READ_USHORT( hvarData->regionIdxCount ) )
+      if ( FT_READ_USHORT( varData->itemCount )      ||
+           FT_READ_USHORT( shortDeltaCount )         ||
+           FT_READ_USHORT( varData->regionIdxCount ) )
         goto Exit;
 
       /* check some data consistency */
-      if ( shortDeltaCount > hvarData->regionIdxCount )
+      if ( shortDeltaCount > varData->regionIdxCount )
       {
         FT_TRACE2(( "bad short count %d or region count %d\n",
                     shortDeltaCount,
-                    hvarData->regionIdxCount ));
+                    varData->regionIdxCount ));
         error = FT_THROW( Invalid_Table );
         goto Exit;
       }
 
-      if ( hvarData->regionIdxCount > itemStore->regionCount )
+      if ( varData->regionIdxCount > itemStore->regionCount )
       {
         FT_TRACE2(( "inconsistent regionCount %d in varData[%d]\n",
-                    hvarData->regionIdxCount,
+                    varData->regionIdxCount,
                     i ));
         error = FT_THROW( Invalid_Table );
         goto Exit;
       }
 
       /* parse region indices */
-      if ( FT_NEW_ARRAY( hvarData->regionIndices,
-                         hvarData->regionIdxCount ) )
+      if ( FT_NEW_ARRAY( varData->regionIndices,
+                         varData->regionIdxCount ) )
         goto Exit;
 
-      for ( j = 0; j < hvarData->regionIdxCount; j++ )
+      for ( j = 0; j < varData->regionIdxCount; j++ )
       {
-        if ( FT_READ_USHORT( hvarData->regionIndices[j] ) )
+        if ( FT_READ_USHORT( varData->regionIndices[j] ) )
           goto Exit;
 
-        if ( hvarData->regionIndices[j] >= itemStore->regionCount )
+        if ( varData->regionIndices[j] >= itemStore->regionCount )
         {
           FT_TRACE2(( "bad region index %d\n",
-                      hvarData->regionIndices[j] ));
+                      varData->regionIndices[j] ));
           error = FT_THROW( Invalid_Table );
           goto Exit;
         }
@@ -567,13 +560,13 @@
       /* On input, deltas are (shortDeltaCount + regionIdxCount) bytes   */
       /* each; on output, deltas are expanded to `regionIdxCount' shorts */
       /* each.                                                           */
-      if ( FT_NEW_ARRAY( hvarData->deltaSet,
-                         hvarData->regionIdxCount * hvarData->itemCount ) )
+      if ( FT_NEW_ARRAY( varData->deltaSet,
+                         varData->regionIdxCount * varData->itemCount ) )
         goto Exit;
 
       /* the delta set is stored as a 2-dimensional array of shorts; */
       /* sign-extend signed bytes to signed shorts                   */
-      for ( j = 0; j < hvarData->itemCount * hvarData->regionIdxCount; )
+      for ( j = 0; j < varData->itemCount * varData->regionIdxCount; )
       {
         for ( k = 0; k < shortDeltaCount; k++, j++ )
         {
@@ -584,10 +577,10 @@
           if ( FT_READ_SHORT( delta ) )
             goto Exit;
 
-          hvarData->deltaSet[j] = delta;
+          varData->deltaSet[j] = delta;
         }
 
-        for ( ; k < hvarData->regionIdxCount; k++, j++ )
+        for ( ; k < varData->regionIdxCount; k++, j++ )
         {
           /* read the (signed) byte deltas */
           FT_Char  delta;
@@ -596,7 +589,7 @@
           if ( FT_READ_CHAR( delta ) )
             goto Exit;
 
-          hvarData->deltaSet[j] = delta;
+          varData->deltaSet[j] = delta;
         }
       }
     }
@@ -609,16 +602,15 @@
 
 
   static FT_Error
-  ft_var_load_delta_set_index_mapping( TT_Face   face,
-                                       FT_ULong  offset )
+  ft_var_load_delta_set_index_mapping( TT_Face            face,
+                                       FT_ULong           offset,
+                                       GX_DeltaSetIdxMap  map,
+                                       GX_ItemVarStore    itemStore )
   {
     FT_Stream  stream = FT_FACE_STREAM( face );
     FT_Memory  memory = stream->memory;
 
     FT_Error   error;
-
-    GX_Blend           blend = face->blend;
-    GX_DeltaSetIdxMap  widthMap;
 
     FT_UShort  format;
     FT_UInt    entrySize;
@@ -627,11 +619,9 @@
     FT_UInt    i, j;
 
 
-    widthMap = &blend->hvar_table->widthMap;
-
-    if ( FT_STREAM_SEEK( offset )             ||
-         FT_READ_USHORT( format )             ||
-         FT_READ_USHORT( widthMap->mapCount ) )
+    if ( FT_STREAM_SEEK( offset )        ||
+         FT_READ_USHORT( format )        ||
+         FT_READ_USHORT( map->mapCount ) )
       goto Exit;
 
     if ( format & 0xFFC0 )
@@ -646,13 +636,13 @@
     innerBitCount  = ( format & 0x000F ) + 1;
     innerIndexMask = ( 1 << innerBitCount ) - 1;
 
-    if ( FT_NEW_ARRAY( widthMap->innerIndex, widthMap->mapCount ) )
+    if ( FT_NEW_ARRAY( map->innerIndex, map->mapCount ) )
       goto Exit;
 
-    if ( FT_NEW_ARRAY( widthMap->outerIndex, widthMap->mapCount ) )
+    if ( FT_NEW_ARRAY( map->outerIndex, map->mapCount ) )
       goto Exit;
 
-    for ( i = 0; i < widthMap->mapCount; i++ )
+    for ( i = 0; i < map->mapCount; i++ )
     {
       FT_UInt  mapData = 0;
       FT_UInt  outerIndex, innerIndex;
@@ -672,7 +662,7 @@
 
       outerIndex = mapData >> innerBitCount;
 
-      if ( outerIndex >= blend->hvar_table->itemStore.dataCount )
+      if ( outerIndex >= itemStore->dataCount )
       {
         FT_TRACE2(( "outerIndex[%d] == %d out of range\n",
                     i,
@@ -681,12 +671,11 @@
         goto Exit;
       }
 
-      widthMap->outerIndex[i] = outerIndex;
+      map->outerIndex[i] = outerIndex;
 
       innerIndex = mapData & innerIndexMask;
 
-      if ( innerIndex >=
-             blend->hvar_table->itemStore.varData[outerIndex].itemCount )
+      if ( innerIndex >= itemStore->varData[outerIndex].itemCount )
       {
         FT_TRACE2(( "innerIndex[%d] == %d out of range\n",
                     i,
@@ -695,7 +684,7 @@
           goto Exit;
       }
 
-      widthMap->innerIndex[i] = innerIndex;
+      map->innerIndex[i] = innerIndex;
     }
 
   Exit:
@@ -726,6 +715,7 @@
   ft_var_load_hvar( TT_Face  face )
   {
     FT_Stream  stream = FT_FACE_STREAM( face );
+    FT_Memory  memory = stream->memory;
 
     GX_Blend  blend = face->blend;
 
@@ -765,9 +755,13 @@
          FT_READ_ULONG( widthMap_offset ) )
       goto Exit;
 
+    if ( FT_NEW( blend->hvar_table ) )
+      goto Exit;
+
     error = ft_var_load_item_variation_store(
               face,
-              table_offset + store_offset );
+              table_offset + store_offset,
+              &blend->hvar_table->itemStore );
     if ( error )
       goto Exit;
 
@@ -775,7 +769,9 @@
     {
       error = ft_var_load_delta_set_index_mapping(
                 face,
-                table_offset + widthMap_offset );
+                table_offset + widthMap_offset,
+                &blend->hvar_table->widthMap,
+                &blend->hvar_table->itemStore );
       if ( error )
         goto Exit;
     }
