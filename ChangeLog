@@ -1,5 +1,24 @@
 2017-01-06  Werner Lemberg  <wl@gnu.org>
 
+	[truetype] Some GX structure renames for generalization.
+
+	We need this later on for MVAR also.
+
+	* src/truetype/ttgxvar.h (GX_HVarData): Renamed to...
+	(GX_ItemVarData): ...this.
+	(GX_HVarRegion): Renamed to...
+	(GX_VarRegion): ...this.
+	(GX_HVStore): Renamed to...
+	(GX_ItemVarStore): ...this.
+	(GX_WidthMap): Renamed to...
+	(GX_DeltaSetIdxMap): ...this.
+
+	(GX_HVarTable): Updated.
+
+	* src/truetype/ttgxvar.c: Updated.
+
+2017-01-06  Werner Lemberg  <wl@gnu.org>
+
 	[truetype] Code shuffling.
 
 	* src/truetype/ttgxvar.c (): Split off loading of item variation

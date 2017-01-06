@@ -417,10 +417,10 @@
     FT_UInt    i, j, k;
     FT_UInt    shortDeltaCount;
 
-    GX_Blend      blend = face->blend;
-    GX_HVStore    itemStore;
-    GX_HVarTable  hvarTable;
-    GX_HVarData   hvarData;
+    GX_Blend         blend = face->blend;
+    GX_ItemVarStore  itemStore;
+    GX_HVarTable     hvarTable;
+    GX_ItemVarData   hvarData;
 
     FT_ULong*  dataOffsetArray = NULL;
 
@@ -617,8 +617,8 @@
 
     FT_Error   error;
 
-    GX_Blend     blend = face->blend;
-    GX_WidthMap  widthMap;
+    GX_Blend           blend = face->blend;
+    GX_DeltaSetIdxMap  widthMap;
 
     FT_UShort  format;
     FT_UInt    entrySize;
@@ -822,7 +822,7 @@
   {
     FT_Error  error = FT_Err_Ok;
 
-    GX_HVarData  varData;
+    GX_ItemVarData  varData;
 
     FT_UInt    master, j;
     FT_Fixed   netAdjustment = 0;     /* accumulated adjustment */

@@ -61,7 +61,7 @@ FT_BEGIN_HEADER
   } GX_AVarSegmentRec, *GX_AVarSegment;
 
 
-  typedef struct  GX_HVarDataRec_
+  typedef struct  GX_ItemVarDataRec_
   {
     FT_UInt    itemCount;      /* number of delta sets per item         */
     FT_UInt    regionIdxCount; /* number of region indices in this data */
@@ -70,7 +70,7 @@ FT_BEGIN_HEADER
     FT_Short*  deltaSet;       /* array of `itemCount' deltas           */
                                /* use `innerIndex' for this array       */
 
-  } GX_HVarDataRec, *GX_HVarData;
+  } GX_ItemVarDataRec, *GX_ItemVarData;
 
 
   /* contribution of one axis to a region */
@@ -83,33 +83,33 @@ FT_BEGIN_HEADER
   } GX_AxisCoordsRec, *GX_AxisCoords;
 
 
-  typedef struct  GX_HVarRegionRec_
+  typedef struct  GX_VarRegionRec_
   {
     GX_AxisCoords  axisList;               /* array of axisCount records */
 
-  } GX_HVarRegionRec, *GX_HVarRegion;
+  } GX_VarRegionRec, *GX_VarRegion;
 
 
-  /* HVAR item variation store */
-  typedef struct  GX_HVStoreRec_
+  /* item variation store */
+  typedef struct  GX_ItemVarStoreRec_
   {
-    FT_UInt        dataCount;
-    GX_HVarData    varData;            /* array of dataCount records;     */
-                                       /* use `outerIndex' for this array */
-    FT_UShort      axisCount;
-    FT_UInt        regionCount;        /* total number of regions defined */
-    GX_HVarRegion  varRegionList;
+    FT_UInt         dataCount;
+    GX_ItemVarData  varData;            /* array of dataCount records;     */
+                                        /* use `outerIndex' for this array */
+    FT_UShort     axisCount;
+    FT_UInt       regionCount;          /* total number of regions defined */
+    GX_VarRegion  varRegionList;
 
-  } GX_HVStoreRec, *GX_HVStore;
+  } GX_ItemVarStoreRec, *GX_ItemVarStore;
 
 
-  typedef struct  GX_WidthMapRec_
+  typedef struct  GX_DeltaSetIdxMapRec_
   {
     FT_UInt   mapCount;
     FT_UInt*  outerIndex;             /* indices to item var data */
     FT_UInt*  innerIndex;             /* indices to delta set     */
 
-  } GX_WidthMapRec, *GX_WidthMap;
+  } GX_DeltaSetIdxMapRec, *GX_DeltaSetIdxMap;
 
 
   /*************************************************************************/
@@ -122,11 +122,11 @@ FT_BEGIN_HEADER
   /*                                                                       */
   typedef struct  GX_HVarTableRec_
   {
-    GX_HVStoreRec   itemStore;        /* Item Variation Store */
-    GX_WidthMapRec  widthMap;         /* Advance Width Mapping */
+    GX_ItemVarStoreRec    itemStore;        /* Item Variation Store  */
+    GX_DeltaSetIdxMapRec  widthMap;         /* Advance Width Mapping */
 #if 0
-    GX_LSBMap       lsbMap;           /* not implemented */
-    GX_RSBMap       rsbMap;           /* not implemented */
+    GX_DeltaSetIdxMapRec  lsbMap;           /* not implemented */
+    GX_DeltaSetIdxMapRec  rsbMap;           /* not implemented */
 #endif
 
   } GX_HVarTableRec, *GX_HVarTable;
