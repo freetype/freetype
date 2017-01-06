@@ -1,3 +1,30 @@
+2017-01-06  Werner Lemberg  <wl@gnu.org>
+
+	[pcf] Revise driver.
+
+	This commit improves tracing and handling of malformed fonts.  In
+	particular, the changes to `pcf_get_properties' fix
+
+	  https://bugs.chromium.org/p/oss-fuzz/issues/detail?id=379
+
+	* src/pcf/pcfread.c (tableNames): Use long names for better
+	readability.
+	(pcf_read_TOC): Allow at most 9 tables.
+	(pcf_get_properties): Allow at most 256 properties.
+	Limit strings array length to 256 * (65536 + 1) bytes.
+	Better tracing.
+	(pcf_get_metric): Trace metric data.
+	(pcf_get_metrics): Allow at most 65536 metrics.
+	Fix comparison of `metrics->ascent' and `metrics->descent' to avoid
+	potential overflow.
+	Better tracing.
+	(pcf_get_bitmaps): Allow at most 65536 bitmaps.
+	Better tracing.
+	(pcf_get_encodings, pcf_get_accel): Better tracing.
+
+	* src/pcf/pcfdrivr.c (PCF_Glyph_Load): Don't trace `format' details.
+	These are now shown by `pcf_get_bitmaps'.
+
 2017-01-04  Werner Lemberg  <wl@gnu.org>
 
 	* src/pcf/pcfdrivr.c (PCF_Face_Init): Trace compression format.
