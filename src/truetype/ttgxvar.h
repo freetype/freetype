@@ -125,8 +125,8 @@ FT_BEGIN_HEADER
     GX_HVStoreRec   itemStore;        /* Item Variation Store */
     GX_WidthMapRec  widthMap;         /* Advance Width Mapping */
 #if 0
-    GX_LSBMap       LsbMap;           /* not implemented */
-    GX_RSBMap       RsbMap;           /* not implemented */
+    GX_LSBMap       lsbMap;           /* not implemented */
+    GX_RSBMap       rsbMap;           /* not implemented */
 #endif
 
   } GX_HVarTableRec, *GX_HVarTable;

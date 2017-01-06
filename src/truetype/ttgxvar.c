@@ -436,6 +436,7 @@
     FT_ULong   table_len;
     FT_ULong   table_offset;
     FT_ULong   store_offset;
+    FT_ULong   widthMap_offset;
 
     FT_ULong*  dataOffsetArray = NULL;
 
@@ -464,9 +465,8 @@
       goto Exit;
     }
 
-    /* skip map offset */
-    if ( FT_READ_ULONG( store_offset ) ||
-         FT_STREAM_SKIP( 4 )           )
+    if ( FT_READ_ULONG( store_offset )    ||
+         FT_READ_ULONG( widthMap_offset ) )
       goto Exit;
 
     /* parse item variation store */
@@ -619,7 +619,7 @@
 
         /* Parse delta set.                                                */
         /*                                                                 */
-        /* On input, deltas are ( shortDeltaCount + regionIdxCount ) bytes */
+        /* On input, deltas are (shortDeltaCount + regionIdxCount) bytes   */
         /* each; on output, deltas are expanded to `regionIdxCount' shorts */
         /* each.                                                           */
         if ( FT_NEW_ARRAY( hvarData->deltaSet,
@@ -660,6 +660,7 @@
     /* end parse item variation store */
 
     /* parse width map */
+    if ( widthMap_offset )
     {
       GX_WidthMap  widthMap;
 
@@ -789,7 +790,6 @@
 
     GX_HVarData  varData;
 
-    FT_UInt    innerIndex, outerIndex;
     FT_UInt    master, j;
     FT_Fixed   netAdjustment = 0;     /* accumulated adjustment */
     FT_Fixed   scaledDelta;
@@ -815,18 +815,40 @@
     /* advance width adjustments are always present in an `HVAR' table, */
     /* so need to test for this capability                              */
 
-    if ( gindex >= face->blend->hvar_table->widthMap.mapCount )
+    if ( face->blend->hvar_table->widthMap.innerIndex )
     {
-      FT_TRACE2(( "gindex %d out of range\n", gindex ));
-      error = FT_THROW( Invalid_Argument );
-      goto Exit;
-    }
+      FT_UInt  innerIndex, outerIndex;
 
-    /* trust that HVAR parser has checked indices */
-    outerIndex = face->blend->hvar_table->widthMap.outerIndex[gindex];
-    innerIndex = face->blend->hvar_table->widthMap.innerIndex[gindex];
-    varData    = &face->blend->hvar_table->itemStore.varData[outerIndex];
-    deltaSet   = &varData->deltaSet[varData->regionIdxCount * innerIndex];
+
+      if ( gindex >= face->blend->hvar_table->widthMap.mapCount )
+      {
+        FT_TRACE2(( "gindex %d out of range\n", gindex ));
+        error = FT_THROW( Invalid_Argument );
+        goto Exit;
+      }
+
+      /* trust that HVAR parser has checked indices */
+      outerIndex = face->blend->hvar_table->widthMap.outerIndex[gindex];
+      innerIndex = face->blend->hvar_table->widthMap.innerIndex[gindex];
+      varData    = &face->blend->hvar_table->itemStore.varData[outerIndex];
+      deltaSet   = &varData->deltaSet[varData->regionIdxCount * innerIndex];
+    }
+    else
+    {
+      /* no widthMap data; use glyph index as inner index instead */
+      /* (and value 0 for outer index)                            */
+
+      varData = &face->blend->hvar_table->itemStore.varData[0];
+
+      if ( gindex >= varData->itemCount )
+      {
+        FT_TRACE2(( "gindex %d out of range\n", gindex ));
+        error = FT_THROW( Invalid_Argument );
+        goto Exit;
+      }
+
+      deltaSet = &varData->deltaSet[varData->regionIdxCount * gindex];
+    }
 
     /* See pseudo code from `Font Variations Overview' */
     /* in the OpenType specification.                  */

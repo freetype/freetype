@@ -1,5 +1,14 @@
 2017-01-06  Werner Lemberg  <wl@gnu.org>
 
+	[truetype] Add HVAR access without advance width map.
+
+	* src/truetype/ttgxvar.c (ft_var_load_hvar): Handle case where
+	`offsetToAdvanceWidthMapping' is zero.
+	(tt_hadvance_adjust): Implement direct deltaSet access by glyph
+	index.
+
+2017-01-06  Werner Lemberg  <wl@gnu.org>
+
 	[pcf] Revise driver.
 
 	This commit improves tracing and handling of malformed fonts.  In
