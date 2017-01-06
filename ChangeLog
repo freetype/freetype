@@ -1,5 +1,14 @@
 2017-01-06  Werner Lemberg  <wl@gnu.org>
 
+	[truetype] Code shuffling.
+
+	* src/truetype/ttgxvar.c (): Split off loading of item variation
+	store and delta set index mapping into...
+	(ft_var_load_item_variation_store,
+	ft_var_load_delta_set_index_mapping): ... new functions.
+
+2017-01-06  Werner Lemberg  <wl@gnu.org>
+
 	[truetype] Add HVAR access without advance width map.
 
 	* src/truetype/ttgxvar.c (ft_var_load_hvar): Handle case where
