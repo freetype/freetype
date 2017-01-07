@@ -167,6 +167,9 @@ FT_BEGIN_HEADER
   /*                                                                       */
   /*    strid  :: The entry in `name' table identifying this style.        */
   /*                                                                       */
+  /*    psid   :: The entry in `name' table identifying a PostScript name  */
+  /*              for this style.                                          */
+  /*                                                                       */
   typedef struct  FT_Var_Named_Style_
   {
     FT_Fixed*  coords;
