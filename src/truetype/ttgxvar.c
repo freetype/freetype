@@ -2990,6 +2990,35 @@
   }
 
 
+  static void
+  ft_var_done_item_variation_store( TT_Face          face,
+                                    GX_ItemVarStore  itemStore )
+  {
+    FT_Memory  memory = FT_FACE_MEMORY( face );
+    FT_UInt    i;
+
+
+    if ( itemStore->varData )
+    {
+      for ( i = 0; i < itemStore->dataCount; i++ )
+      {
+        FT_FREE( itemStore->varData[i].regionIndices );
+        FT_FREE( itemStore->varData[i].deltaSet );
+      }
+
+      FT_FREE( itemStore->varData );
+    }
+
+    if ( itemStore->varRegionList )
+    {
+      for ( i = 0; i < itemStore->regionCount; i++ )
+        FT_FREE( itemStore->varRegionList[i].axisList );
+
+      FT_FREE( itemStore->varRegionList );
+    }
+  }
+
+
   /*************************************************************************/
   /*                                                                       */
   /* <Function>                                                            */
@@ -3025,22 +3054,8 @@
 
       if ( blend->hvar_table )
       {
-        if ( blend->hvar_table->itemStore.varData )
-        {
-          for ( i = 0; i < blend->hvar_table->itemStore.dataCount; i++ )
-          {
-            FT_FREE( blend->hvar_table->itemStore.varData[i].regionIndices );
-            FT_FREE( blend->hvar_table->itemStore.varData[i].deltaSet );
-          }
-          FT_FREE( blend->hvar_table->itemStore.varData );
-        }
-
-        if ( blend->hvar_table->itemStore.varRegionList )
-        {
-          for ( i = 0; i < blend->hvar_table->itemStore.regionCount; i++ )
-            FT_FREE( blend->hvar_table->itemStore.varRegionList[i].axisList );
-          FT_FREE( blend->hvar_table->itemStore.varRegionList );
-        }
+        ft_var_done_item_variation_store( face,
+                                          &blend->hvar_table->itemStore );
 
         FT_FREE( blend->hvar_table->widthMap.innerIndex );
         FT_FREE( blend->hvar_table->widthMap.outerIndex );

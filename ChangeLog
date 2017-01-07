@@ -1,5 +1,15 @@
 2017-01-06  Werner Lemberg  <wl@gnu.org>
 
+	[truetype] More GX code shuffling.
+
+	We need this later on for MVAR also.
+
+	* src/truetype/ttgxvar.c (tt_done_blend): Split off handling of item
+	variation store into...
+	(ft_var_done_item_variation_store): ...new function.
+
+2017-01-06  Werner Lemberg  <wl@gnu.org>
+
 	[truetype] More generalization of GX stuff.
 
 	We need this later on for MVAR also.
@@ -36,10 +46,10 @@
 
 	[truetype] Code shuffling.
 
-	* src/truetype/ttgxvar.c (): Split off loading of item variation
-	store and delta set index mapping into...
+	* src/truetype/ttgxvar.c (ft_var_load_hvar): Split off loading of
+	item variation store and delta set index mapping into...
 	(ft_var_load_item_variation_store,
-	ft_var_load_delta_set_index_mapping): ... new functions.
+	ft_var_load_delta_set_index_mapping): ...new functions.
 
 2017-01-06  Werner Lemberg  <wl@gnu.org>
 
