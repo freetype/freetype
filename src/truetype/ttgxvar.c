@@ -795,93 +795,26 @@
   }
 
 
-  /*************************************************************************/
-  /*                                                                       */
-  /* <Function>                                                            */
-  /*    tt_hadvance_adjust                                                 */
-  /*                                                                       */
-  /* <Description>                                                         */
-  /*    Apply HVAR advance width adjustment of a given glyph.              */
-  /*                                                                       */
-  /* <Input>                                                               */
-  /*    gindex :: The glyph index.                                         */
-  /*                                                                       */
-  /* <InOut>                                                               */
-  /*    face   :: The font face.                                           */
-  /*                                                                       */
-  /*    adelta :: Points to width value that gets modified.                */
-  /*                                                                       */
-  FT_LOCAL_DEF( FT_Error )
-  tt_hadvance_adjust( TT_Face  face,
-                      FT_UInt  gindex,
-                      FT_Int  *avalue )
+  static FT_Int
+  ft_var_get_item_delta( TT_Face          face,
+                         GX_ItemVarStore  itemStore,
+                         FT_UInt          outerIndex,
+                         FT_UInt          innerIndex )
   {
-    FT_Error  error = FT_Err_Ok;
-
     GX_ItemVarData  varData;
+    FT_Short*       deltaSet;
 
-    FT_UInt    master, j;
-    FT_Fixed   netAdjustment = 0;     /* accumulated adjustment */
-    FT_Fixed   scaledDelta;
-    FT_Short*  deltaSet;
-    FT_Fixed   delta;
+    FT_UInt   master, j;
+    FT_Fixed  netAdjustment = 0;     /* accumulated adjustment */
+    FT_Fixed  scaledDelta;
+    FT_Fixed  delta;
 
-
-    if ( !face->doblend || !face->blend )
-      goto Exit;
-
-    if ( !face->blend->hvar_loaded )
-    {
-      /* initialize hvar table */
-      face->blend->hvar_error = ft_var_load_hvar( face );
-    }
-
-    if ( !face->blend->hvar_checked )
-    {
-      error = face->blend->hvar_error;
-      goto Exit;
-    }
-
-    /* advance width adjustments are always present in an `HVAR' table, */
-    /* so need to test for this capability                              */
-
-    if ( face->blend->hvar_table->widthMap.innerIndex )
-    {
-      FT_UInt  innerIndex, outerIndex;
-
-
-      if ( gindex >= face->blend->hvar_table->widthMap.mapCount )
-      {
-        FT_TRACE2(( "gindex %d out of range\n", gindex ));
-        error = FT_THROW( Invalid_Argument );
-        goto Exit;
-      }
-
-      /* trust that HVAR parser has checked indices */
-      outerIndex = face->blend->hvar_table->widthMap.outerIndex[gindex];
-      innerIndex = face->blend->hvar_table->widthMap.innerIndex[gindex];
-      varData    = &face->blend->hvar_table->itemStore.varData[outerIndex];
-      deltaSet   = &varData->deltaSet[varData->regionIdxCount * innerIndex];
-    }
-    else
-    {
-      /* no widthMap data; use glyph index as inner index instead */
-      /* (and value 0 for outer index)                            */
-
-      varData = &face->blend->hvar_table->itemStore.varData[0];
-
-      if ( gindex >= varData->itemCount )
-      {
-        FT_TRACE2(( "gindex %d out of range\n", gindex ));
-        error = FT_THROW( Invalid_Argument );
-        goto Exit;
-      }
-
-      deltaSet = &varData->deltaSet[varData->regionIdxCount * gindex];
-    }
 
     /* See pseudo code from `Font Variations Overview' */
     /* in the OpenType specification.                  */
+
+    varData  = &itemStore->varData[outerIndex];
+    deltaSet = &varData->deltaSet[varData->regionIdxCount * innerIndex];
 
     /* outer loop steps through master designs to be blended */
     for ( master = 0; master < varData->regionIdxCount; master++ )
@@ -889,16 +822,11 @@
       FT_Fixed  scalar      = FT_FIXED_ONE;
       FT_UInt   regionIndex = varData->regionIndices[master];
 
-      GX_AxisCoords  axis = face->blend
-                              ->hvar_table
-                              ->itemStore.varRegionList[regionIndex]
-                                         .axisList;
+      GX_AxisCoords  axis = itemStore->varRegionList[regionIndex].axisList;
 
 
       /* inner loop steps through axes in this region */
-      for ( j = 0;
-            j < face->blend->hvar_table->itemStore.axisCount;
-            j++, axis++ )
+      for ( j = 0; j < itemStore->axisCount; j++, axis++ )
       {
         FT_Fixed  axisScalar;
 
@@ -952,12 +880,96 @@
 
     } /* per-region loop */
 
+    return FT_fixedToInt( netAdjustment );
+  }
+
+
+  /*************************************************************************/
+  /*                                                                       */
+  /* <Function>                                                            */
+  /*    tt_hadvance_adjust                                                 */
+  /*                                                                       */
+  /* <Description>                                                         */
+  /*    Apply HVAR advance width adjustment of a given glyph.              */
+  /*                                                                       */
+  /* <Input>                                                               */
+  /*    gindex :: The glyph index.                                         */
+  /*                                                                       */
+  /* <InOut>                                                               */
+  /*    face   :: The font face.                                           */
+  /*                                                                       */
+  /*    adelta :: Points to width value that gets modified.                */
+  /*                                                                       */
+  FT_LOCAL_DEF( FT_Error )
+  tt_hadvance_adjust( TT_Face  face,
+                      FT_UInt  gindex,
+                      FT_Int  *avalue )
+  {
+    FT_Error  error = FT_Err_Ok;
+    FT_UInt   innerIndex, outerIndex;
+    FT_Int    delta;
+
+
+    if ( !face->doblend || !face->blend )
+      goto Exit;
+
+    if ( !face->blend->hvar_loaded )
+    {
+      /* initialize hvar table */
+      face->blend->hvar_error = ft_var_load_hvar( face );
+    }
+
+    if ( !face->blend->hvar_checked )
+    {
+      error = face->blend->hvar_error;
+      goto Exit;
+    }
+
+    /* advance width adjustments are always present in an `HVAR' table, */
+    /* so need to test for this capability                              */
+
+    if ( face->blend->hvar_table->widthMap.innerIndex )
+    {
+      if ( gindex >= face->blend->hvar_table->widthMap.mapCount )
+      {
+        FT_TRACE2(( "gindex %d out of range\n", gindex ));
+        error = FT_THROW( Invalid_Argument );
+        goto Exit;
+      }
+
+      /* trust that HVAR parser has checked indices */
+      outerIndex = face->blend->hvar_table->widthMap.outerIndex[gindex];
+      innerIndex = face->blend->hvar_table->widthMap.innerIndex[gindex];
+    }
+    else
+    {
+      GX_ItemVarData  varData;
+
+
+      /* no widthMap data */
+      outerIndex = 0;
+      innerIndex = gindex;
+
+      varData = &face->blend->hvar_table->itemStore.varData[outerIndex];
+      if ( gindex >= varData->itemCount )
+      {
+        FT_TRACE2(( "gindex %d out of range\n", gindex ));
+        error = FT_THROW( Invalid_Argument );
+        goto Exit;
+      }
+    }
+
+    delta = ft_var_get_item_delta( face,
+                                   &face->blend->hvar_table->itemStore,
+                                   outerIndex,
+                                   innerIndex );
+
     /* apply the accumulated adjustment to derive the interpolated value */
     FT_TRACE5(( "horizontal width %d adjusted by %d units (HVAR)\n",
                 *avalue,
-                FT_fixedToInt( netAdjustment ) ));
+                delta ));
 
-    *avalue += FT_fixedToInt( netAdjustment );
+    *avalue += delta;
 
   Exit:
     return error;

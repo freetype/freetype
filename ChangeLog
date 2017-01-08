@@ -1,5 +1,15 @@
 2017-01-08  Werner Lemberg  <wl@gnu.org>
 
+	[truetype] Again some GX code shuffling.
+
+	We need this later on for MVAR also.
+
+	* src/truetype/ttgxvar.c (tt_hadvance_adjust): Split off computing
+	an item store variation delta into...
+	(ft_var_get_item_delta): ...new function.
+
+2017-01-08  Werner Lemberg  <wl@gnu.org>
+
 	[truetype] Adjust font variation flags for MVAR.
 
 	* include/freetype/internal/tttypes.h (TT_FACE_FLAG_VAR_XXX):
