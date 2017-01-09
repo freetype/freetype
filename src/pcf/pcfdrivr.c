@@ -691,22 +691,38 @@ THE SOFTWARE.
   }
 
 
+  FT_CALLBACK_DEF( FT_Error )
+  pcf_driver_init( FT_Module  module )      /* PCF_Driver */
+  {
+    FT_UNUSED( module );
+
+    return FT_Err_Ok;
+  }
+
+
+  FT_CALLBACK_DEF( void )
+  pcf_driver_done( FT_Module  module )      /* PCF_Driver */
+  {
+    FT_UNUSED( module );
+  }
+
+
   FT_CALLBACK_TABLE_DEF
   const FT_Driver_ClassRec  pcf_driver_class =
   {
     {
       FT_MODULE_FONT_DRIVER        |
       FT_MODULE_DRIVER_NO_OUTLINES,
-      sizeof ( FT_DriverRec ),
 
+      sizeof ( PCF_DriverRec ),
       "pcf",
       0x10000L,
       0x20000L,
 
-      NULL,    /* module-specific interface */
+      NULL,   /* module-specific interface */
 
-      NULL,                     /* FT_Module_Constructor  module_init   */
-      NULL,                     /* FT_Module_Destructor   module_done   */
+      pcf_driver_init,          /* FT_Module_Constructor  module_init   */
+      pcf_driver_done,          /* FT_Module_Destructor   module_done   */
       pcf_driver_requester      /* FT_Module_Requester    get_interface */
     },
 

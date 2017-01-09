@@ -1,3 +1,15 @@
+2017-01-09  Werner Lemberg  <wl@gnu.org>
+
+	[pcf] Introduce a driver structure.
+
+	To be filled later on with something useful.
+
+	* src/pcf/pcf.h (PCF_Driver): New structure.
+
+	* src/pcf/pcfdrivr.c (pcf_driver_init, pcf_driver_done): New dummy
+	functions.
+	(pcf_driver_class): Updated.
+
 2017-01-08  Werner Lemberg  <wl@gnu.org>
 
 	[truetype] Again some GX code shuffling.
