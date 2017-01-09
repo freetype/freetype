@@ -1393,57 +1393,75 @@ THE SOFTWARE.
       prop = pcf_find_property( face, "FAMILY_NAME" );
       if ( prop && prop->isString )
       {
-        /* Prepend the foundry name plus a space to the family name.      */
-        /* There are many fonts just called `Fixed' which look completely */
-        /* different, and which have nothing to do with each other.  When */
-        /* selecting `Fixed' in KDE or Gnome one gets results that appear */
-        /* rather random, the style changes often if one changes the size */
-        /* and one cannot select some fonts at all.                       */
-        /*                                                                */
-        /* We also check whether we have `wide' characters; all put       */
-        /* together, we get family names like `Sony Fixed' or `Misc Fixed */
-        /* Wide'.                                                         */
-        PCF_Property  foundry_prop, point_size_prop, average_width_prop;
 
-        int  l    = ft_strlen( prop->value.atom ) + 1;
-        int  wide = 0;
+#ifdef PCF_CONFIG_OPTION_LONG_FAMILY_NAMES
+
+        PCF_Driver  driver = (PCF_Driver)FT_FACE_DRIVER( face );
 
 
-        foundry_prop       = pcf_find_property( face, "FOUNDRY" );
-        point_size_prop    = pcf_find_property( face, "POINT_SIZE" );
-        average_width_prop = pcf_find_property( face, "AVERAGE_WIDTH" );
-
-        if ( point_size_prop && average_width_prop )
+        if ( !driver->no_long_family_names )
         {
-          if ( average_width_prop->value.l >= point_size_prop->value.l )
+          /* Prepend the foundry name plus a space to the family name.     */
+          /* There are many fonts just called `Fixed' which look           */
+          /* completely different, and which have nothing to do with each  */
+          /* other.  When selecting `Fixed' in KDE or Gnome one gets       */
+          /* results that appear rather random, the style changes often if */
+          /* one changes the size and one cannot select some fonts at all. */
+          /*                                                               */
+          /* We also check whether we have `wide' characters; all put      */
+          /* together, we get family names like `Sony Fixed' or `Misc      */
+          /* Fixed Wide'.                                                  */
+
+          PCF_Property  foundry_prop, point_size_prop, average_width_prop;
+
+          int  l    = ft_strlen( prop->value.atom ) + 1;
+          int  wide = 0;
+
+
+          foundry_prop       = pcf_find_property( face, "FOUNDRY" );
+          point_size_prop    = pcf_find_property( face, "POINT_SIZE" );
+          average_width_prop = pcf_find_property( face, "AVERAGE_WIDTH" );
+
+          if ( point_size_prop && average_width_prop )
           {
-            /* This font is at least square shaped or even wider */
-            wide = 1;
-            l   += ft_strlen( " Wide" );
+            if ( average_width_prop->value.l >= point_size_prop->value.l )
+            {
+              /* This font is at least square shaped or even wider */
+              wide = 1;
+              l   += ft_strlen( " Wide" );
+            }
           }
-        }
 
-        if ( foundry_prop && foundry_prop->isString )
-        {
-          l += ft_strlen( foundry_prop->value.atom ) + 1;
+          if ( foundry_prop && foundry_prop->isString )
+          {
+            l += ft_strlen( foundry_prop->value.atom ) + 1;
 
-          if ( FT_NEW_ARRAY( root->family_name, l ) )
-            goto Exit;
+            if ( FT_NEW_ARRAY( root->family_name, l ) )
+              goto Exit;
 
-          ft_strcpy( root->family_name, foundry_prop->value.atom );
-          ft_strcat( root->family_name, " " );
-          ft_strcat( root->family_name, prop->value.atom );
+            ft_strcpy( root->family_name, foundry_prop->value.atom );
+            ft_strcat( root->family_name, " " );
+            ft_strcat( root->family_name, prop->value.atom );
+          }
+          else
+          {
+            if ( FT_NEW_ARRAY( root->family_name, l ) )
+              goto Exit;
+
+            ft_strcpy( root->family_name, prop->value.atom );
+          }
+
+          if ( wide )
+            ft_strcat( root->family_name, " Wide" );
         }
         else
+
+#endif /* PCF_CONFIG_OPTION_LONG_FAMILY_NAMES */
+
         {
-          if ( FT_NEW_ARRAY( root->family_name, l ) )
+          if ( FT_STRDUP( root->family_name, prop->value.atom ) )
             goto Exit;
-
-          ft_strcpy( root->family_name, prop->value.atom );
         }
-
-        if ( wide )
-          ft_strcat( root->family_name, " Wide" );
       }
       else
         root->family_name = NULL;

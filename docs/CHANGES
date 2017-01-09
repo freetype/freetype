@@ -1,4 +1,20 @@
 
+CHANGES BETWEEN 2.7.1 and 2.7.2
+
+  I. IMPORTANT CHANGES
+
+    - The PCF change to show more `colourful' family names (introduced
+      in version 2.7.1) was too radical; it can now be configured with
+      PCF_CONFIG_OPTION_LONG_FAMILY_NAMES   at   compile   time.    If
+      activated, it can  be switched off at run time  with the new pcf
+      property  `no-long-family-names'.  If  the `FREETYPE_PROPERTIES'
+      environment variable is available, you can say
+
+        FREETYPE_PROPERTIES=pcf:no-long-family-names=1
+
+
+======================================================================
+
 CHANGES BETWEEN 2.7 and 2.7.1
 
   I. IMPORTANT CHANGES

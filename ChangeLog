@@ -1,5 +1,38 @@
 2017-01-09  Werner Lemberg  <wl@gnu.org>
 
+	[pcf] Make long family names configurable.
+
+	The change from 2016-09-29 was too radical (except for people using
+	the openSuSE GNU/Linux distribution).  To ameliorate the situation,
+	PCF_CONFIG_OPTION_LONG_FAMILY_NAMES gets introduced which controls
+	the feature; if set, a new PCF property option
+	`no-long-family-names' can be used to switch this feature off.
+
+	* include/freetype/config/ftoption.h, devel/ftoption.h
+	(PCF_CONFIG_OPTION_LONG_FAMILY_NAMES): New option.
+
+	* include/freetype/ftpcfdrv.h: New header file (only containing
+	comments currently, used for building the documentation).
+
+	* include/freetype/config/ftheader.h (FT_PCF_DRIVER_H): New macro.
+
+	* src/pcf/pcf.h (PCF_Driver): Add `no_long_family_names' field.
+
+	* src/pcf/pcfdrivr.c: Include FT_SERVICE_PROPERTIES_H and
+	FT_PCF_DRIVER_H.
+	(pcf_property_set, pcf_property_get): New functions.
+	(pcf_service_properties): New service.
+	(pcf_servives): Updated.
+	(pcf_driver_init) [PCF_CONFIG_OPTION_LONG_FAMILY_NAMES]: Handle
+	`no_long_family_names'.
+
+	* src/pcf/pcfread.c (pcf_load_font): Handle `no_long_family_names'
+	and PCF_CONFIG_OPTION_LONG_FAMILY_NAMES.
+
+	* docs/CHANGES: Updated.
+
+2017-01-09  Werner Lemberg  <wl@gnu.org>
+
 	[pcf] Introduce a driver structure.
 
 	To be filled later on with something useful.

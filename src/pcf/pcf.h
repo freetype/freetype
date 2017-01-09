@@ -167,6 +167,8 @@ FT_BEGIN_HEADER
   {
     FT_DriverRec  root;
 
+    FT_Bool  no_long_family_names;
+
   } PCF_DriverRec, *PCF_Driver;
 
 

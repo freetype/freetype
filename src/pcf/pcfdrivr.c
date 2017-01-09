@@ -49,6 +49,8 @@ THE SOFTWARE.
 
 #include FT_SERVICE_BDF_H
 #include FT_SERVICE_FONT_FORMAT_H
+#include FT_SERVICE_PROPERTIES_H
+#include FT_PCF_DRIVER_H
 
 
   /*************************************************************************/
@@ -667,6 +669,110 @@ THE SOFTWARE.
   };
 
 
+  /*
+   *  PROPERTY SERVICE
+   *
+   */
+  static FT_Error
+  pcf_property_set( FT_Module    module,         /* PCF_Driver */
+                    const char*  property_name,
+                    const void*  value,
+                    FT_Bool      value_is_string )
+  {
+#ifdef PCF_CONFIG_OPTION_LONG_FAMILY_NAMES
+
+    FT_Error    error  = FT_Err_Ok;
+    PCF_Driver  driver = (PCF_Driver)module;
+
+#ifndef FT_CONFIG_OPTION_ENVIRONMENT_PROPERTIES
+    FT_UNUSED( value_is_string );
+#endif
+
+
+    if ( !ft_strcmp( property_name, "no-long-family-names" ) )
+    {
+#ifdef FT_CONFIG_OPTION_ENVIRONMENT_PROPERTIES
+      if ( value_is_string )
+      {
+        const char*  s   = (const char*)value;
+        long         lfn = ft_strtol( s, NULL, 10 );
+
+
+        if ( lfn == 0 )
+          driver->no_long_family_names = 0;
+        else if ( lfn == 1 )
+          driver->no_long_family_names = 1;
+        else
+          return FT_THROW( Invalid_Argument );
+      }
+      else
+#endif
+      {
+        FT_Bool*  no_long_family_names = (FT_Bool*)value;
+
+
+        driver->no_long_family_names = *no_long_family_names;
+      }
+
+      return error;
+    }
+
+#else /* !PCF_CONFIG_OPTION_LONG_FAMILY_NAMES */
+
+    FT_UNUSED( module );
+    FT_UNUSED( value );
+    FT_UNUSED( value_is_string );
+
+#endif /* !PCF_CONFIG_OPTION_LONG_FAMILY_NAMES */
+
+    FT_TRACE0(( "pcf_property_set: missing property `%s'\n",
+                property_name ));
+    return FT_THROW( Missing_Property );
+  }
+
+
+  static FT_Error
+  pcf_property_get( FT_Module    module,         /* PCF_Driver */
+                    const char*  property_name,
+                    const void*  value )
+  {
+#ifdef PCF_CONFIG_OPTION_LONG_FAMILY_NAMES
+
+    FT_Error    error  = FT_Err_Ok;
+    PCF_Driver  driver = (PCF_Driver)module;
+
+
+    if ( !ft_strcmp( property_name, "no-long-family-names" ) )
+    {
+      FT_Bool   no_long_family_names = driver->no_long_family_names;
+      FT_Bool*  val                  = (FT_Bool*)value;
+
+
+      *val = no_long_family_names;
+
+      return error;
+    }
+
+#else /* !PCF_CONFIG_OPTION_LONG_FAMILY_NAMES */
+
+    FT_UNUSED( module );
+    FT_UNUSED( value );
+
+#endif /* !PCF_CONFIG_OPTION_LONG_FAMILY_NAMES */
+
+    FT_TRACE0(( "pcf_property_get: missing property `%s'\n",
+                property_name ));
+    return FT_THROW( Missing_Property );
+  }
+
+
+  FT_DEFINE_SERVICE_PROPERTIESREC(
+    pcf_service_properties,
+
+    (FT_Properties_SetFunc)pcf_property_set,      /* set_property */
+    (FT_Properties_GetFunc)pcf_property_get )     /* get_property */
+
+
  /*
   *
   *  SERVICE LIST
@@ -677,6 +783,7 @@ THE SOFTWARE.
   {
     { FT_SERVICE_ID_BDF,         &pcf_service_bdf },
     { FT_SERVICE_ID_FONT_FORMAT, FT_FONT_FORMAT_PCF },
+    { FT_SERVICE_ID_PROPERTIES,  &pcf_service_properties },
     { NULL, NULL }
   };
 
@@ -694,7 +801,14 @@ THE SOFTWARE.
   FT_CALLBACK_DEF( FT_Error )
   pcf_driver_init( FT_Module  module )      /* PCF_Driver */
   {
+#ifdef PCF_CONFIG_OPTION_LONG_FAMILY_NAMES
+    PCF_Driver  driver = (PCF_Driver)module;
+
+
+    driver->no_long_family_names = 0;
+#else
     FT_UNUSED( module );
+#endif
 
     return FT_Err_Ok;
   }

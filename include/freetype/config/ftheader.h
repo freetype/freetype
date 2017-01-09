@@ -357,6 +357,19 @@
   /*************************************************************************
    *
    * @macro:
+   *   FT_PCF_DRIVER_H
+   *
+   * @description:
+   *   A macro used in #include statements to name the file containing
+   *   structures and macros related to the PCF driver module.
+   *
+   */
+#define FT_PCF_DRIVER_H  <freetype/ftpcfdrv.h>
+
+
+  /*************************************************************************
+   *
+   * @macro:
    *   FT_TYPE1_TABLES_H
    *
    * @description:
