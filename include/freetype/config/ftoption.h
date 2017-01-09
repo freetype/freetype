@@ -856,7 +856,7 @@ FT_BEGIN_HEADER
   /* If this option is activated, it can be controlled with the            */
   /* `no-long-family-names' property of the pcf driver module.             */
   /*                                                                       */
-#define PCF_CONFIG_OPTION_LONG_FAMILY_NAMES
+/* #define PCF_CONFIG_OPTION_LONG_FAMILY_NAMES */
 
 
   /*************************************************************************/

@@ -1,5 +1,12 @@
 2017-01-09  Werner Lemberg  <wl@gnu.org>
 
+	[pcf] Disable long family names by default.
+
+	* include/freetype/config/ftoption.h
+	(PCF_CONFIG_OPTION_LONG_FAMILY_NAMES): Comment out.
+
+2017-01-09  Werner Lemberg  <wl@gnu.org>
+
 	[pcf] Make long family names configurable.
 
 	The change from 2016-09-29 was too radical (except for people using
