@@ -304,7 +304,7 @@
       /* use the scaled metrics, even when tt_size_reset fails */
       FT_Select_Metrics( size->face, strike_index );
 
-      tt_size_reset( ttsize ); /* ignore return value */
+      tt_size_reset( ttsize, 0 ); /* ignore return value */
     }
     else
     {
@@ -354,7 +354,7 @@
 
     if ( FT_IS_SCALABLE( size->face ) )
     {
-      error = tt_size_reset( ttsize );
+      error                = tt_size_reset( ttsize, 0 );
       ttsize->root.metrics = ttsize->metrics;
 
 #ifdef TT_USE_BYTECODE_INTERPRETER

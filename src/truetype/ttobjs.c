@@ -1198,13 +1198,15 @@
   /*    have been changed.                                                 */
   /*                                                                       */
   /* <Input>                                                               */
-  /*    size :: A handle to the target size object.                        */
+  /*    size        :: A handle to the target size object.                 */
+  /*                                                                       */
+  /*    only_height :: Only recompute ascender, descender, and height.     */
   /*                                                                       */
   FT_LOCAL_DEF( FT_Error )
-  tt_size_reset( TT_Size  size )
+  tt_size_reset( TT_Size  size,
+                 FT_Bool  only_height )
   {
     TT_Face           face;
-    FT_Error          error = FT_Err_Ok;
     FT_Size_Metrics*  metrics;
 
 
@@ -1226,17 +1228,26 @@
     /*                                                               */
     if ( face->header.Flags & 8 )
     {
-      metrics->x_scale = FT_DivFix( metrics->x_ppem << 6,
-                                    face->root.units_per_EM );
-      metrics->y_scale = FT_DivFix( metrics->y_ppem << 6,
-                                    face->root.units_per_EM );
-
       metrics->ascender =
         FT_PIX_ROUND( FT_MulFix( face->root.ascender, metrics->y_scale ) );
       metrics->descender =
         FT_PIX_ROUND( FT_MulFix( face->root.descender, metrics->y_scale ) );
       metrics->height =
         FT_PIX_ROUND( FT_MulFix( face->root.height, metrics->y_scale ) );
+    }
+
+    size->ttmetrics.valid = TRUE;
+
+    if ( only_height )
+      return FT_Err_Ok;
+
+    if ( face->header.Flags & 8 )
+    {
+      metrics->x_scale = FT_DivFix( metrics->x_ppem << 6,
+                                    face->root.units_per_EM );
+      metrics->y_scale = FT_DivFix( metrics->y_ppem << 6,
+                                    face->root.units_per_EM );
+
       metrics->max_advance =
         FT_PIX_ROUND( FT_MulFix( face->root.max_advance_width,
                                  metrics->x_scale ) );
@@ -1264,10 +1275,7 @@
     size->cvt_ready = -1;
 #endif /* TT_USE_BYTECODE_INTERPRETER */
 
-    if ( !error )
-      size->ttmetrics.valid = TRUE;
-
-    return error;
+    return FT_Err_Ok;
   }
 
 

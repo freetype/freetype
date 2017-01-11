@@ -389,7 +389,8 @@ FT_BEGIN_HEADER
 #endif /* TT_USE_BYTECODE_INTERPRETER */
 
   FT_LOCAL( FT_Error )
-  tt_size_reset( TT_Size  size );
+  tt_size_reset( TT_Size  size,
+                 FT_Bool  only_height );
 
 
   /*************************************************************************/

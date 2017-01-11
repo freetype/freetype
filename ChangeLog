@@ -1,3 +1,15 @@
+2017-01-11  Werner Lemberg  <wl@gnu.org>
+
+	[truetype] More preparations for MVAR support.
+
+	* src/truetype/ttobjs.c (tt_size_reset): Add argument to make
+	function only recompute ascender, descender, and height.
+
+	* src/truetype/ttobjs.h: Updated.
+
+	* src/truetype/ttdriver.c (tt_size_select, tt_size_request):
+	Updated.
+
 2017-01-09  Werner Lemberg  <wl@gnu.org>
 
 	[pcf] Disable long family names by default.
