@@ -1,5 +1,21 @@
 2017-01-11  Werner Lemberg  <wl@gnu.org>
 
+	[truetype] Parse `MVAR' table.
+
+	* src/truetype/ttgxvar.h (MVAR_TAG_XXX): New macros for MVAR tags.
+	(GX_Value, GX_MVarTable): New structures.
+	(GX_Blend): Add it.
+
+	* src/truetype/ttgxvar.c (GX_VALUE_SIZE, GX_VALUE_CASE,
+	GX_GASP_CASE): New macros.
+	(ft_var_get_value_pointer): New auxiliary function to get a pointer
+	to a value from various SFNT tables already stored in `TT_Face'.
+	(ft_var_load_mvar): New function.
+	(TT_Get_MM_Var): Call it.
+	(tt_done_blend): Updated.
+
+2017-01-11  Werner Lemberg  <wl@gnu.org>
+
 	[truetype] More preparations for MVAR support.
 
 	* src/truetype/ttobjs.c (tt_size_reset): Add argument to make

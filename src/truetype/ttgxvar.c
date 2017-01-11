@@ -744,6 +744,7 @@
     if ( FT_READ_USHORT( majorVersion ) ||
          FT_STREAM_SKIP( 2 )            )
       goto Exit;
+
     if ( majorVersion != 1 )
     {
       FT_TRACE2(( "bad table version %d\n", majorVersion ));
@@ -964,7 +965,6 @@
                                    outerIndex,
                                    innerIndex );
 
-    /* apply the accumulated adjustment to derive the interpolated value */
     FT_TRACE5(( "horizontal width %d adjusted by %d units (HVAR)\n",
                 *avalue,
                 delta ));
@@ -973,6 +973,205 @@
 
   Exit:
     return error;
+  }
+
+
+#define GX_VALUE_SIZE  8
+
+  /* all values are FT_Short or FT_UShort entities; */
+  /* we treat them consistently as FT_Short         */
+#define GX_VALUE_CASE( tag, dflt )      \
+          case MVAR_TAG_ ## tag :       \
+            p = (FT_Short*)&face->dflt; \
+            break
+
+#define GX_GASP_CASE( idx )                                       \
+          case MVAR_TAG_GASP_ ## idx :                            \
+            if ( idx < face->gasp.numRanges - 1 )                 \
+              p = (FT_Short*)&face->gasp.gaspRanges[idx].maxPPEM; \
+            else                                                  \
+              p = NULL;                                           \
+            break
+
+
+  static FT_Short*
+  ft_var_get_value_pointer( TT_Face   face,
+                            FT_ULong  mvar_tag )
+  {
+    FT_Short*  p;
+
+
+    switch ( mvar_tag )
+    {
+      GX_GASP_CASE( 0 );
+      GX_GASP_CASE( 1 );
+      GX_GASP_CASE( 2 );
+      GX_GASP_CASE( 3 );
+      GX_GASP_CASE( 4 );
+      GX_GASP_CASE( 5 );
+      GX_GASP_CASE( 6 );
+      GX_GASP_CASE( 7 );
+      GX_GASP_CASE( 8 );
+      GX_GASP_CASE( 9 );
+
+      GX_VALUE_CASE( CPHT, os2.sCapHeight );
+      GX_VALUE_CASE( HASC, os2.sTypoAscender );
+      GX_VALUE_CASE( HCLA, os2.usWinAscent );
+      GX_VALUE_CASE( HCLD, os2.usWinDescent );
+      GX_VALUE_CASE( HCOF, horizontal.caret_Offset );
+      GX_VALUE_CASE( HCRN, horizontal.caret_Slope_Run );
+      GX_VALUE_CASE( HCRS, horizontal.caret_Slope_Rise );
+      GX_VALUE_CASE( HDSC, os2.sTypoDescender );
+      GX_VALUE_CASE( HLGP, os2.sTypoLineGap );
+      GX_VALUE_CASE( SBXO, os2.ySubscriptXOffset);
+      GX_VALUE_CASE( SBXS, os2.ySubscriptXSize );
+      GX_VALUE_CASE( SBYO, os2.ySubscriptYOffset );
+      GX_VALUE_CASE( SBYS, os2.ySubscriptYSize );
+      GX_VALUE_CASE( SPXO, os2.ySuperscriptXOffset );
+      GX_VALUE_CASE( SPXS, os2.ySuperscriptXSize );
+      GX_VALUE_CASE( SPYO, os2.ySuperscriptYOffset );
+      GX_VALUE_CASE( SPYS, os2.ySuperscriptYSize );
+      GX_VALUE_CASE( STRO, os2.yStrikeoutPosition );
+      GX_VALUE_CASE( STRS, os2.yStrikeoutSize );
+      GX_VALUE_CASE( UNDO, postscript.underlinePosition );
+      GX_VALUE_CASE( UNDS, postscript.underlineThickness );
+      GX_VALUE_CASE( VASC, vertical.Ascender );
+      GX_VALUE_CASE( VCOF, vertical.caret_Offset );
+      GX_VALUE_CASE( VCRN, vertical.caret_Slope_Run );
+      GX_VALUE_CASE( VCRS, vertical.caret_Slope_Rise );
+      GX_VALUE_CASE( VDSC, vertical.Descender );
+      GX_VALUE_CASE( VLGP, vertical.Line_Gap );
+      GX_VALUE_CASE( XHGT, os2.sxHeight );
+
+    default:
+      /* ignore unknown tag */
+      p = NULL;
+    }
+
+    return p;
+  }
+
+
+  /*************************************************************************/
+  /*                                                                       */
+  /* <Function>                                                            */
+  /*    ft_var_load_mvar                                                   */
+  /*                                                                       */
+  /* <Description>                                                         */
+  /*    Parse the `MVAR' table.                                            */
+  /*                                                                       */
+  /*    Some memory may remain allocated on error; it is always freed in   */
+  /*    `tt_done_blend', however.                                          */
+  /*                                                                       */
+  /* <InOut>                                                               */
+  /*    face :: The font face.                                             */
+  /*                                                                       */
+  static void
+  ft_var_load_mvar( TT_Face  face )
+  {
+    FT_Stream  stream = FT_FACE_STREAM( face );
+    FT_Memory  memory = stream->memory;
+
+    GX_Blend         blend = face->blend;
+    GX_ItemVarStore  itemStore;
+    GX_Value         value, limit;
+
+    FT_Error   error;
+    FT_UShort  majorVersion;
+    FT_ULong   table_len;
+    FT_ULong   table_offset;
+    FT_UShort  store_offset;
+    FT_ULong   records_offset;
+
+
+    FT_TRACE2(( "MVAR " ));
+
+    error = face->goto_table( face, TTAG_MVAR, stream, &table_len );
+    if ( error )
+    {
+      FT_TRACE2(( "is missing\n" ));
+      return;
+    }
+
+    table_offset = FT_STREAM_POS();
+
+    /* skip minor version */
+    if ( FT_READ_USHORT( majorVersion ) ||
+         FT_STREAM_SKIP( 2 )            )
+      return;
+
+    if ( majorVersion != 1 )
+    {
+      FT_TRACE2(( "bad table version %d\n", majorVersion ));
+      return;
+    }
+
+    if ( FT_NEW( blend->mvar_table ) )
+      return;
+
+    /* skip value record size */
+    if ( FT_READ_USHORT( blend->mvar_table->axisCount )  ||
+         FT_STREAM_SKIP( 2 )                             ||
+         FT_READ_USHORT( blend->mvar_table->valueCount ) ||
+         FT_READ_USHORT( store_offset )                  )
+      return;
+
+    records_offset = FT_STREAM_POS();
+
+    error = ft_var_load_item_variation_store(
+              face,
+              table_offset + store_offset,
+              &blend->mvar_table->itemStore );
+    if ( error )
+      return;
+
+    if ( FT_NEW_ARRAY( blend->mvar_table->values,
+                       blend->mvar_table->valueCount ) )
+      return;
+
+    if ( FT_STREAM_SEEK( records_offset )                                ||
+         FT_FRAME_ENTER( blend->mvar_table->valueCount * GX_VALUE_SIZE ) )
+      return;
+
+    value     = blend->mvar_table->values;
+    limit     = value + blend->mvar_table->valueCount;
+    itemStore = &blend->mvar_table->itemStore;
+
+    for ( ; value < limit; value++ )
+    {
+      value->tag        = FT_GET_ULONG();
+      value->outerIndex = FT_GET_USHORT();
+      value->innerIndex = FT_GET_USHORT();
+
+      if ( value->outerIndex >= itemStore->dataCount                  ||
+           value->innerIndex >= itemStore->varData[value->outerIndex]
+                                                  .itemCount          )
+      {
+        error = FT_THROW( Invalid_Table );
+        break;
+      }
+    }
+
+    FT_FRAME_EXIT();
+
+    if ( error )
+      return;
+
+    FT_TRACE2(( "loaded\n" ));
+
+    value = blend->mvar_table->values;
+    limit = value + blend->mvar_table->valueCount;
+
+    /* save original values of the data MVAR is going to modify */
+    for ( ; value < limit; value++ )
+    {
+      FT_Short*  p = ft_var_get_value_pointer( face, value->tag );
+
+
+      value->unmodified = *p;
+    }
+
+    face->variation_support |= TT_FACE_FLAG_VAR_MVAR;
   }
 
 
@@ -1332,7 +1531,8 @@
   /*                                                                       */
   /* <Description>                                                         */
   /*    Check that the font's `fvar' table is valid, parse it, and return  */
-  /*    those data.                                                        */
+  /*    those data.  It also loads (and parses) the `MVAR' table, if       */
+  /*    possible.                                                          */
   /*                                                                       */
   /* <InOut>                                                               */
   /*    face   :: The font face.                                           */
@@ -1551,6 +1751,8 @@
 
         FT_FRAME_EXIT();
       }
+
+      ft_var_load_mvar( face );
     }
 
     /* fill the output array if requested */
@@ -3072,6 +3274,15 @@
         FT_FREE( blend->hvar_table->widthMap.innerIndex );
         FT_FREE( blend->hvar_table->widthMap.outerIndex );
         FT_FREE( blend->hvar_table );
+      }
+
+      if ( blend->mvar_table )
+      {
+        ft_var_done_item_variation_store( face,
+                                          &blend->mvar_table->itemStore );
+
+        FT_FREE( blend->mvar_table->values );
+        FT_FREE( blend->mvar_table );
       }
 
       FT_FREE( blend->tuplecoords );
