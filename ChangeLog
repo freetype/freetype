@@ -1,5 +1,18 @@
 2017-01-11  Werner Lemberg  <wl@gnu.org>
 
+	[truetype] Actually use metrics variation service.
+
+	* src/base/ftmm.c: Include FT_SERVICE_METRICS_VARIATIONS_H.
+	(ft_face_get_mvar_service): New auxiliary function to look up
+	metrics variation service.
+	(FT_Set_Var_Design_Coordinates, FT_Set_MM_Blend_Coordinates,
+	FT_Set_Var_Blend_Coordinates): Call metrics variation service.
+
+	* src/truetype/ttobjs.c (tt_face_init): Use metrics variations for
+	named instances.
+
+2017-01-11  Werner Lemberg  <wl@gnu.org>
+
 	[truetype] Provide metrics variation service.
 
 	* include/freetype/internal/services/svmetric.h

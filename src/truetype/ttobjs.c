@@ -664,6 +664,8 @@
                                      named_style->coords );
           if ( error )
             goto Exit;
+
+          tt_apply_mvar( face );
         }
       }
     }

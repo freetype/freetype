@@ -22,6 +22,7 @@
 #include FT_MULTIPLE_MASTERS_H
 #include FT_INTERNAL_OBJECTS_H
 #include FT_SERVICE_MULTIPLE_MASTERS_H
+#include FT_SERVICE_METRICS_VARIATIONS_H
 
 
   /*************************************************************************/
@@ -53,6 +54,34 @@
       FT_FACE_LOOKUP_SERVICE( face,
                               *aservice,
                               MULTI_MASTERS );
+
+      if ( *aservice )
+        error = FT_Err_Ok;
+    }
+
+    return error;
+  }
+
+
+  static FT_Error
+  ft_face_get_mvar_service( FT_Face                        face,
+                            FT_Service_MetricsVariations  *aservice )
+  {
+    FT_Error  error;
+
+
+    *aservice = NULL;
+
+    if ( !face )
+      return FT_THROW( Invalid_Face_Handle );
+
+    error = FT_ERR( Invalid_Argument );
+
+    if ( FT_HAS_MULTIPLE_MASTERS( face ) )
+    {
+      FT_FACE_LOOKUP_SERVICE( face,
+                              *aservice,
+                              METRICS_VARIATIONS );
 
       if ( *aservice )
         error = FT_Err_Ok;
@@ -158,8 +187,9 @@
                                  FT_UInt    num_coords,
                                  FT_Fixed*  coords )
   {
-    FT_Error                 error;
-    FT_Service_MultiMasters  service;
+    FT_Error                      error;
+    FT_Service_MultiMasters       service_mm;
+    FT_Service_MetricsVariations  service_mvar;
 
 
     /* check of `face' delayed to `ft_face_get_mm_service' */
@@ -167,12 +197,19 @@
     if ( !coords )
       return FT_THROW( Invalid_Argument );
 
-    error = ft_face_get_mm_service( face, &service );
+    error = ft_face_get_mm_service( face, &service_mm );
     if ( !error )
     {
       error = FT_ERR( Invalid_Argument );
-      if ( service->set_var_design )
-        error = service->set_var_design( face, num_coords, coords );
+      if ( service_mm->set_var_design )
+        error = service_mm->set_var_design( face, num_coords, coords );
+    }
+
+    error = ft_face_get_mvar_service( face, &service_mvar );
+    if ( !error )
+    {
+      if ( service_mvar->metrics_adjust )
+        service_mvar->metrics_adjust( face );
     }
 
     /* enforce recomputation of auto-hinting data */
@@ -221,8 +258,9 @@
                                FT_UInt    num_coords,
                                FT_Fixed*  coords )
   {
-    FT_Error                 error;
-    FT_Service_MultiMasters  service;
+    FT_Error                      error;
+    FT_Service_MultiMasters       service_mm;
+    FT_Service_MetricsVariations  service_mvar;
 
 
     /* check of `face' delayed to `ft_face_get_mm_service' */
@@ -230,12 +268,19 @@
     if ( !coords )
       return FT_THROW( Invalid_Argument );
 
-    error = ft_face_get_mm_service( face, &service );
+    error = ft_face_get_mm_service( face, &service_mm );
     if ( !error )
     {
       error = FT_ERR( Invalid_Argument );
-      if ( service->set_mm_blend )
-        error = service->set_mm_blend( face, num_coords, coords );
+      if ( service_mm->set_mm_blend )
+        error = service_mm->set_mm_blend( face, num_coords, coords );
+    }
+
+    error = ft_face_get_mvar_service( face, &service_mvar );
+    if ( !error )
+    {
+      if ( service_mvar->metrics_adjust )
+        service_mvar->metrics_adjust( face );
     }
 
     /* enforce recomputation of auto-hinting data */
@@ -259,8 +304,9 @@
                                 FT_UInt    num_coords,
                                 FT_Fixed*  coords )
   {
-    FT_Error                 error;
-    FT_Service_MultiMasters  service;
+    FT_Error                      error;
+    FT_Service_MultiMasters       service_mm;
+    FT_Service_MetricsVariations  service_mvar;
 
 
     /* check of `face' delayed to `ft_face_get_mm_service' */
@@ -268,12 +314,19 @@
     if ( !coords )
       return FT_THROW( Invalid_Argument );
 
-    error = ft_face_get_mm_service( face, &service );
+    error = ft_face_get_mm_service( face, &service_mm );
     if ( !error )
     {
       error = FT_ERR( Invalid_Argument );
-      if ( service->set_mm_blend )
-        error = service->set_mm_blend( face, num_coords, coords );
+      if ( service_mm->set_mm_blend )
+        error = service_mm->set_mm_blend( face, num_coords, coords );
+    }
+
+    error = ft_face_get_mvar_service( face, &service_mvar );
+    if ( !error )
+    {
+      if ( service_mvar->metrics_adjust )
+        service_mvar->metrics_adjust( face );
     }
 
     /* enforce recomputation of auto-hinting data */
