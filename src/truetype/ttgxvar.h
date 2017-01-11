@@ -332,6 +332,9 @@ FT_BEGIN_HEADER
                       FT_UInt  gindex,
                       FT_Int  *adelta );
 
+  FT_LOCAL( void )
+  tt_apply_mvar( TT_Face  face );
+
   FT_LOCAL( FT_Error )
   tt_get_var_blend( TT_Face      face,
                     FT_UInt     *num_coords,

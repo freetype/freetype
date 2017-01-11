@@ -50,6 +50,7 @@
 #include FT_INTERNAL_SFNT_H
 #include FT_TRUETYPE_TAGS_H
 #include FT_MULTIPLE_MASTERS_H
+#include FT_LIST_H
 
 #include "ttpload.h"
 #include "ttgxvar.h"
@@ -1172,6 +1173,102 @@
     }
 
     face->variation_support |= TT_FACE_FLAG_VAR_MVAR;
+  }
+
+
+  static FT_Error
+  tt_size_reset_iterator( FT_ListNode  node,
+                          void*        user )
+  {
+    TT_Size  size = (TT_Size)node->data;
+
+    FT_UNUSED( user );
+
+
+    tt_size_reset( size, 1 );
+
+    return FT_Err_Ok;
+  }
+
+
+  /*************************************************************************/
+  /*                                                                       */
+  /* <Function>                                                            */
+  /*    tt_apply_mvar                                                      */
+  /*                                                                       */
+  /* <Description>                                                         */
+  /*    Apply `MVAR' table adjustments.                                    */
+  /*                                                                       */
+  /* <InOut>                                                               */
+  /*    face :: The font face.                                             */
+  /*                                                                       */
+  FT_LOCAL_DEF( void )
+  tt_apply_mvar( TT_Face  face )
+  {
+    GX_Blend  blend = face->blend;
+    GX_Value  value, limit;
+
+
+    if ( !( face->variation_support & TT_FACE_FLAG_VAR_MVAR ) )
+      return;
+
+    value = blend->mvar_table->values;
+    limit = value + blend->mvar_table->valueCount;
+
+    for ( ; value < limit; value++ )
+    {
+      FT_Short*  p = ft_var_get_value_pointer( face, value->tag );
+      FT_Int     delta;
+
+
+      delta = ft_var_get_item_delta( face,
+                                     &blend->mvar_table->itemStore,
+                                     value->outerIndex,
+                                     value->innerIndex );
+
+      FT_TRACE5(( "value %c%c%c%c (%d units) adjusted by %d units (MVAR)\n",
+                  (FT_Char)( value->tag >> 24 ),
+                  (FT_Char)( value->tag >> 16 ),
+                  (FT_Char)( value->tag >> 8 ),
+                  (FT_Char)( value->tag ),
+                  value->unmodified,
+                  delta ));
+
+      /* since we handle both signed and unsigned values as FT_Short, */
+      /* ensure proper overflow arithmetic                            */
+      *p = (FT_Short)( value->unmodified + (FT_Short)delta );
+    }
+
+    /* adjust all derived values */
+    {
+      FT_Face  root = &face->root;
+
+
+      if ( face->os2.version != 0xFFFFU )
+      {
+        if ( face->os2.sTypoAscender || face->os2.sTypoDescender )
+        {
+          root->ascender  = face->os2.sTypoAscender;
+          root->descender = face->os2.sTypoDescender;
+
+          root->height = root->ascender - root->descender +
+                         face->os2.sTypoLineGap;
+        }
+        else
+        {
+          root->ascender  =  (FT_Short)face->os2.usWinAscent;
+          root->descender = -(FT_Short)face->os2.usWinDescent;
+
+          root->height = root->ascender - root->descender;
+        }
+      }
+
+      /* iterate over all FT_Size objects and call `tt_size_reset' */
+      /* to propagate the metrics changes                          */
+      FT_List_Iterate( &root->sizes_list,
+                       tt_size_reset_iterator,
+                       NULL );
+    }
   }
 
 

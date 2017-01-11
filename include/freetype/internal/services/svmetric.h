@@ -74,10 +74,8 @@ FT_BEGIN_HEADER
 
   /* MVAR */
 
-  typedef FT_Error
-  (*FT_Metrics_Adjust_Func)( FT_Face   face,
-                             FT_ULong  tag,
-                             FT_Int   *avalue );
+  typedef void
+  (*FT_Metrics_Adjust_Func)( FT_Face  face );
 
 
   FT_DEFINE_SERVICE( MetricsVariations )

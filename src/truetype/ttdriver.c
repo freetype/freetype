@@ -507,7 +507,7 @@
     (FT_BSB_Adjust_Func)     NULL,                   /* bsb_adjust      */
     (FT_VOrg_Adjust_Func)    NULL,                   /* vorg_adjust     */
 
-    (FT_Metrics_Adjust_Func) NULL                    /* metrics_adjust  */
+    (FT_Metrics_Adjust_Func) tt_apply_mvar           /* metrics_adjust  */
   )
 
 #endif /* TT_CONFIG_OPTION_GX_VAR_SUPPORT */

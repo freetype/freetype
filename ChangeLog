@@ -1,5 +1,24 @@
 2017-01-11  Werner Lemberg  <wl@gnu.org>
 
+	[truetype] Provide metrics variation service.
+
+	* include/freetype/internal/services/svmetric.h
+	(FT_Metrics_Adjust_Func): Reduce number of necessary parameters.
+
+	* src/truetype/ttgxvar.c: Include FT_LIST_H.
+	(tt_size_reset_iterator): New auxiliary function for...
+	(tt_apply_var): New function.
+
+	* src/truetype/ttgxvar.h: Updated.
+
+	* src/truetype/ttdriver.c (tt_service_metrics_variations): Add
+	`tt_apply_mvar'.
+
+	* include/freetype/internal/ftserv.h (FT_ServiceCache): Add metrics
+	variation service.
+
+2017-01-11  Werner Lemberg  <wl@gnu.org>
+
 	[truetype] Parse `MVAR' table.
 
 	* src/truetype/ttgxvar.h (MVAR_TAG_XXX): New macros for MVAR tags.
