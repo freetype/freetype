@@ -147,8 +147,8 @@ FT_BEGIN_HEADER
   /*                                                                       */
   /* <Note>                                                                */
   /*    The `string' array returned in the `aname' structure is not        */
-  /*    null-terminated.  The application should deallocate it if it is no */
-  /*    longer in use.                                                     */
+  /*    null-terminated.  Note that you don't have to deallocate `string'  */
+  /*    by yourself; FreeType takes care of it if you call @FT_Done_Face.  */
   /*                                                                       */
   /*    Use @FT_Get_Sfnt_Name_Count to get the total number of available   */
   /*    `name' table entries, then do a loop until you get the right       */
