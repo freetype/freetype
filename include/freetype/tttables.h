@@ -175,6 +175,8 @@ FT_BEGIN_HEADER
   /*    caret_Slope_Run        :: The run coefficient of the cursor's      */
   /*                              slope.                                   */
   /*                                                                       */
+  /*    caret_Offset           :: The cursor's offset for slanted fonts.   */
+  /*                                                                       */
   /*    Reserved               :: 8~reserved bytes.                        */
   /*                                                                       */
   /*    metric_Data_Format     :: Always~0.                                */
@@ -188,6 +190,11 @@ FT_BEGIN_HEADER
   /*    short_metrics          :: A pointer into the `hmtx' table.         */
   /*                                                                       */
   /* <Note>                                                                */
+  /*    For an OpenType variation font, the values of the following fields */
+  /*    can change after a call to @FT_Set_Var_Design_Coordinates (and     */
+  /*    friends) if the font contains an `MVAR' table: `caret_Slope_Rise', */
+  /*    `caret_Slope_Run', and `caret_Offset'.                             */
+  /*                                                                       */
   /*    IMPORTANT: The TT_HoriHeader and TT_VertHeader structures should   */
   /*               be identical except for the names of their fields,      */
   /*               which are different.                                    */
@@ -219,7 +226,7 @@ FT_BEGIN_HEADER
 
     /* The following fields are not defined by the TrueType specification */
     /* but they are used to connect the metrics header to the relevant    */
-    /* `HMTX' table.                                                      */
+    /* `hmtx' table.                                                      */
 
     void*      long_metrics;
     void*      short_metrics;
@@ -297,8 +304,6 @@ FT_BEGIN_HEADER
   /*                               slope.                                  */
   /*                                                                       */
   /*    caret_Offset            :: The cursor's offset for slanted fonts.  */
-  /*                               This value is `reserved' in vmtx        */
-  /*                               version 1.0.                            */
   /*                                                                       */
   /*    Reserved                :: 8~reserved bytes.                       */
   /*                                                                       */
@@ -309,11 +314,17 @@ FT_BEGIN_HEADER
   /*                               smaller than the total number of glyphs */
   /*                               in the font.                            */
   /*                                                                       */
-  /*    long_metrics           :: A pointer into the `vmtx' table.         */
+  /*    long_metrics            :: A pointer into the `vmtx' table.        */
   /*                                                                       */
-  /*    short_metrics          :: A pointer into the `vmtx' table.         */
+  /*    short_metrics           :: A pointer into the `vmtx' table.        */
   /*                                                                       */
   /* <Note>                                                                */
+  /*    For an OpenType variation font, the values of the following fields */
+  /*    can change after a call to @FT_Set_Var_Design_Coordinates (and     */
+  /*    friends) if the font contains an `MVAR' table: `Ascender',         */
+  /*    `Descender', `Line_Gap', `caret_Slope_Rise', `caret_Slope_Run',    */
+  /*    and `caret_Offset'.                                                */
+  /*                                                                       */
   /*    IMPORTANT: The TT_HoriHeader and TT_VertHeader structures should   */
   /*               be identical except for the names of their fields,      */
   /*               which are different.                                    */
@@ -344,8 +355,8 @@ FT_BEGIN_HEADER
     FT_UShort  number_Of_VMetrics;
 
     /* The following fields are not defined by the TrueType specification */
-    /* but they're used to connect the metrics header to the relevant     */
-    /* `HMTX' or `VMTX' table.                                            */
+    /* but they are used to connect the metrics header to the relevant    */
+    /* `hmtx' or `vmtx' table.                                            */
 
     void*      long_metrics;
     void*      short_metrics;
@@ -359,12 +370,22 @@ FT_BEGIN_HEADER
   /*    TT_OS2                                                             */
   /*                                                                       */
   /* <Description>                                                         */
-  /*    A structure used to model a TrueType OS/2 table.  All fields       */
+  /*    A structure used to model a TrueType `OS/2' table.  All fields     */
   /*    comply to the OpenType specification.                              */
   /*                                                                       */
   /*    Note that we now support old Mac fonts that do not include an OS/2 */
   /*    table.  In this case, the `version' field is always set to 0xFFFF. */
   /*                                                                       */
+  /*    For an OpenType variation font, the values of the following fields */
+  /*    can change after a call to @FT_Set_Var_Design_Coordinates (and     */
+  /*    friends) if the font contains an `MVAR' table: `sCapHeight',       */
+  /*    `sTypoAscender', `sTypoDescender', `sTypoLineGap', `sxHeight',     */
+  /*    `usWinAscent', `usWinDescent', `yStrikeoutPosition',               */
+  /*    `yStrikeoutSize', `ySubscriptXOffset', `ySubScriptXSize',          */
+  /*    `ySubscriptYOffset', `ySubscriptYSize', `ySuperscriptXOffset',     */
+  /*    `ySuperscriptXSize', `ySuperscriptYOffset', and                    */
+  /*    `ySuperscriptYSize'.                                               */
+
   typedef struct  TT_OS2_
   {
     FT_UShort  version;                /* 0x0001 - more or 0xFFFF */
@@ -429,10 +450,16 @@ FT_BEGIN_HEADER
   /*    TT_Postscript                                                      */
   /*                                                                       */
   /* <Description>                                                         */
-  /*    A structure used to model a TrueType PostScript table.  All fields */
+  /*    A structure used to model a TrueType `post' table.  All fields     */
   /*    comply to the TrueType specification.  This structure does not     */
   /*    reference the PostScript glyph names, which can be nevertheless    */
   /*    accessed with the `ttpost' module.                                 */
+  /*                                                                       */
+  /* <Note>                                                                */
+  /*    For an OpenType variation font, the values of the following fields */
+  /*    can change after a call to @FT_Set_Var_Design_Coordinates (and     */
+  /*    friends) if the font contains an `MVAR' table: `underlinePosition' */
+  /*    and `underlineThickness'.                                          */
   /*                                                                       */
   typedef struct  TT_Postscript_
   {
@@ -447,7 +474,7 @@ FT_BEGIN_HEADER
     FT_ULong  maxMemType1;
 
     /* Glyph names follow in the file, but we don't   */
-    /* load them by default.  See the ttpost.c file.  */
+    /* load them by default.  See file `ttpost.c'.    */
 
   } TT_Postscript;
 
@@ -458,7 +485,7 @@ FT_BEGIN_HEADER
   /*    TT_PCLT                                                            */
   /*                                                                       */
   /* <Description>                                                         */
-  /*    A structure used to model a TrueType PCLT table.  All fields       */
+  /*    A structure used to model a TrueType `PCLT' table.  All fields     */
   /*    comply to the TrueType specification.                              */
   /*                                                                       */
   typedef struct  TT_PCLT_
@@ -488,7 +515,7 @@ FT_BEGIN_HEADER
   /*    TT_MaxProfile                                                      */
   /*                                                                       */
   /* <Description>                                                         */
-  /*    The maximum profile is a table containing many max values, which   */
+  /*    The maximum profile (`maxp') table contains many max values, which */
   /*    can be used to pre-allocate arrays.  This ensures that no memory   */
   /*    allocation occurs during a glyph load.                             */
   /*                                                                       */

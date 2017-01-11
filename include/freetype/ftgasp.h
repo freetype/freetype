@@ -102,16 +102,24 @@
    *   FT_Get_Gasp
    *
    * @description:
-   *   Read the `gasp' table from a TrueType or OpenType font file and
-   *   return the entry corresponding to a given character pixel size.
+   *   For a TrueType or OpenType font file, return the rasterizer behaviour
+   *   flags from the font's `gasp' table corresponding to a given
+   *   character pixel size.
    *
    * @input:
    *   face :: The source face handle.
+   *
    *   ppem :: The vertical character pixel size.
    *
    * @return:
    *   Bit flags (see @FT_GASP_XXX), or @FT_GASP_NO_TABLE if there is no
    *   `gasp' table in the face.
+   *
+   * @note:
+   *   If you want to use the MM functionality of OpenType variation fonts
+   *   (i.e., using @FT_Set_Var_Design_Coordinates and friends), call this
+   *   function *after* setting an instance since the return values can
+   *   change.
    *
    * @since:
    *   2.3.0
