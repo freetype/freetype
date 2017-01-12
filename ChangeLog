@@ -1,5 +1,9 @@
 2017-01-11  Werner Lemberg  <wl@gnu.org>
 
+	* src/base/ftobjs.c (ft_open_face_internal): Improve tracing.
+
+2017-01-11  Werner Lemberg  <wl@gnu.org>
+
 	[truetype] Actually use metrics variation service.
 
 	* src/base/ftmm.c: Include FT_SERVICE_METRICS_VARIATIONS_H.

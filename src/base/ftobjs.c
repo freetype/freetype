@@ -2443,10 +2443,12 @@
 #ifdef FT_DEBUG_LEVEL_TRACE
     if ( !error && face_index < 0 )
     {
-      FT_TRACE3(( "FT_Open_Face: The font has %ld faces\n"
-                  "              and %ld named instances for face %ld\n",
+      FT_TRACE3(( "FT_Open_Face: The font has %ld face%s\n"
+                  "              and %ld named instance%s for face %ld\n",
                   face->num_faces,
+                  face->num_faces == 1 ? "" : "s",
                   face->style_flags >> 16,
+                  ( face->style_flags >> 16 ) == 1 ? "" : "s",
                   -face_index - 1 ));
     }
 #endif
