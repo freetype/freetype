@@ -16,6 +16,8 @@ I. Normal installation and upgrades
 
     GNU Make VERSION 3.80 OR NEWER IS NEEDED!
 
+    [For `cmake' see below.]
+
 
   2. On VMS with the `mms' build tool
 
