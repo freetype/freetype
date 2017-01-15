@@ -1263,6 +1263,10 @@
         }
       }
 
+      root->underline_position  = face->postscript.underlinePosition -
+                                  face->postscript.underlineThickness / 2;
+      root->underline_thickness = face->postscript.underlineThickness;
+
       /* iterate over all FT_Size objects and call `tt_size_reset' */
       /* to propagate the metrics changes                          */
       FT_List_Iterate( &root->sizes_list,

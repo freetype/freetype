@@ -1,3 +1,8 @@
+2017-01-15  Werner Lemberg  <wl@gnu.org>
+
+	* src/truetype/ttgxvar.c (tt_apply_var): Handle underline parameters
+	also.
+
 2017-01-11  Werner Lemberg  <wl@gnu.org>
 
 	* src/base/ftobjs.c (ft_open_face_internal): Improve tracing.
