@@ -2,7 +2,7 @@
 /*                                                                         */
 /*  ftsnames.h                                                             */
 /*                                                                         */
-/*    Simple interface to access SFNT name tables (which are used          */
+/*    Simple interface to access SFNT `name' tables (which are used        */
 /*    to hold font names, copyright info, notices, etc.) (specification).  */
 /*                                                                         */
 /*    This is _not_ used to retrieve glyph names!                          */
@@ -49,7 +49,7 @@ FT_BEGIN_HEADER
   /*                                                                       */
   /* <Description>                                                         */
   /*    The TrueType and OpenType specifications allow the inclusion of    */
-  /*    a special `names table' in font files.  This table contains        */
+  /*    a special names table (`name') in font files.  This table contains */
   /*    textual (and internationalized) information regarding the font,    */
   /*    like family name, copyright, version, etc.                         */
   /*                                                                       */
@@ -70,30 +70,29 @@ FT_BEGIN_HEADER
   /*                                                                       */
   /* <Fields>                                                              */
   /*    platform_id :: The platform ID for `string'.                       */
+  /*                   See @TT_PLATFORM_XXX for possible values.           */
   /*                                                                       */
   /*    encoding_id :: The encoding ID for `string'.                       */
+  /*                   See @TT_APPLE_ID_XXX, @TT_MAC_ID_XXX,               */
+  /*                   @TT_ISO_ID_XXX, @TT_MS_ID_XXX, and @TT_ADOBE_ID_XXX */
+  /*                   for possible values.                                */
   /*                                                                       */
   /*    language_id :: The language ID for `string'.                       */
+  /*                   See @TT_MAC_LANGID_XXX and @TT_MS_LANGID_XXX for    */
+  /*                   possible values.                                    */
   /*                                                                       */
   /*    name_id     :: An identifier for `string'.                         */
+  /*                   See @TT_NAME_ID_XXX for possible values.            */
   /*                                                                       */
   /*    string      :: The `name' string.  Note that its format differs    */
   /*                   depending on the (platform,encoding) pair.  It can  */
   /*                   be a Pascal String, a UTF-16 one, etc.              */
   /*                                                                       */
-  /*                   Generally speaking, the string is not               */
-  /*                   zero-terminated.  Please refer to the TrueType      */
-  /*                   specification for details.                          */
-  /*                                                                       */
   /*    string_len  :: The length of `string' in bytes.                    */
   /*                                                                       */
   /* <Note>                                                                */
-  /*    Possible values for `platform_id', `encoding_id', `language_id',   */
-  /*    and `name_id' are given in the file `ttnameid.h'.  For details     */
-  /*    please refer to the TrueType or OpenType specification.            */
-  /*                                                                       */
-  /*    See also @TT_PLATFORM_XXX, @TT_APPLE_ID_XXX, @TT_MAC_ID_XXX,       */
-  /*    @TT_ISO_ID_XXX, and @TT_MS_ID_XXX.                                 */
+  /*    Please refer to the TrueType or OpenType specification for more    */
+  /*    details.                                                           */
   /*                                                                       */
   typedef struct  FT_SfntName_
   {
@@ -103,7 +102,7 @@ FT_BEGIN_HEADER
     FT_UShort  name_id;
 
     FT_Byte*   string;      /* this string is *not* null-terminated! */
-    FT_UInt    string_len;  /* in bytes */
+    FT_UInt    string_len;  /* in bytes                              */
 
   } FT_SfntName;
 

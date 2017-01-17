@@ -30,6 +30,14 @@
 #include "sferrors.h"
 
 
+  /* IMPORTANT: The TT_HoriHeader and TT_VertHeader structures should   */
+  /*            be identical except for the names of their fields,      */
+  /*            which are different.                                    */
+  /*                                                                    */
+  /*            This ensures that `tt_face_load_hmtx' is able to read   */
+  /*            both the horizontal and vertical headers.               */
+
+
   /*************************************************************************/
   /*                                                                       */
   /* The macro FT_COMPONENT is used in trace mode.  It is an implicit      */

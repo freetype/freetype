@@ -36,7 +36,7 @@ FT_BEGIN_HEADER
   /*************************************************************************/
   /*                                                                       */
   /* Possible values for the `platform' identifier code in the name        */
-  /* records of the TTF `name' table.                                      */
+  /* records of an SFNT `name' table.                                      */
   /*                                                                       */
   /*************************************************************************/
 
@@ -142,42 +142,6 @@ FT_BEGIN_HEADER
    * @description:
    *   A list of valid values for the `encoding_id' for
    *   @TT_PLATFORM_MACINTOSH charmaps and name entries.
-   *
-   * @values:
-   *   TT_MAC_ID_ROMAN ::
-   *   TT_MAC_ID_JAPANESE ::
-   *   TT_MAC_ID_TRADITIONAL_CHINESE ::
-   *   TT_MAC_ID_KOREAN ::
-   *   TT_MAC_ID_ARABIC ::
-   *   TT_MAC_ID_HEBREW ::
-   *   TT_MAC_ID_GREEK ::
-   *   TT_MAC_ID_RUSSIAN ::
-   *   TT_MAC_ID_RSYMBOL ::
-   *   TT_MAC_ID_DEVANAGARI ::
-   *   TT_MAC_ID_GURMUKHI ::
-   *   TT_MAC_ID_GUJARATI ::
-   *   TT_MAC_ID_ORIYA ::
-   *   TT_MAC_ID_BENGALI ::
-   *   TT_MAC_ID_TAMIL ::
-   *   TT_MAC_ID_TELUGU ::
-   *   TT_MAC_ID_KANNADA ::
-   *   TT_MAC_ID_MALAYALAM ::
-   *   TT_MAC_ID_SINHALESE ::
-   *   TT_MAC_ID_BURMESE ::
-   *   TT_MAC_ID_KHMER ::
-   *   TT_MAC_ID_THAI ::
-   *   TT_MAC_ID_LAOTIAN ::
-   *   TT_MAC_ID_GEORGIAN ::
-   *   TT_MAC_ID_ARMENIAN ::
-   *   TT_MAC_ID_MALDIVIAN ::
-   *   TT_MAC_ID_SIMPLIFIED_CHINESE ::
-   *   TT_MAC_ID_TIBETAN ::
-   *   TT_MAC_ID_MONGOLIAN ::
-   *   TT_MAC_ID_GEEZ ::
-   *   TT_MAC_ID_SLAVIC ::
-   *   TT_MAC_ID_VIETNAMESE ::
-   *   TT_MAC_ID_SINDHI ::
-   *   TT_MAC_ID_UNINTERP ::
    */
 
 #define TT_MAC_ID_ROMAN                 0
@@ -252,33 +216,32 @@ FT_BEGIN_HEADER
    *
    * @values:
    *   TT_MS_ID_SYMBOL_CS ::
-   *     Corresponds to Microsoft symbol encoding. See
-   *     @FT_ENCODING_MS_SYMBOL.
+   *     Microsoft symbol encoding.  See @FT_ENCODING_MS_SYMBOL.
    *
    *   TT_MS_ID_UNICODE_CS ::
-   *     Corresponds to a Microsoft WGL4 charmap, matching Unicode.  See
+   *     Microsoft WGL4 charmap, matching Unicode.  See
    *     @FT_ENCODING_UNICODE.
    *
    *   TT_MS_ID_SJIS ::
-   *     Corresponds to SJIS Japanese encoding.  See @FT_ENCODING_SJIS.
+   *     Shift JIS Japanese encoding.  See @FT_ENCODING_SJIS.
    *
    *   TT_MS_ID_GB2312 ::
-   *     Corresponds to Simplified Chinese as used in Mainland China.  See
+   *     Simplified Chinese as used in Mainland China.  See
    *     @FT_ENCODING_GB2312.
    *
    *   TT_MS_ID_BIG_5 ::
-   *     Corresponds to Traditional Chinese as used in Taiwan and Hong Kong.
-   *     See @FT_ENCODING_BIG5.
+   *     Traditional Chinese as used in Taiwan and Hong Kong.  See
+   *     @FT_ENCODING_BIG5.
    *
    *   TT_MS_ID_WANSUNG ::
-   *     Corresponds to Korean Wansung encoding.  See @FT_ENCODING_WANSUNG.
+   *     Korean Extended Wansung encoding.  See @FT_ENCODING_WANSUNG.
    *
    *   TT_MS_ID_JOHAB ::
-   *     Corresponds to Johab encoding.  See @FT_ENCODING_JOHAB.
+   *     Korean Johab encoding.  See @FT_ENCODING_JOHAB.
    *
    *   TT_MS_ID_UCS_4 ::
-   *     Corresponds to UCS-4 or UTF-32 charmaps.  This has been added to
-   *     the OpenType specification version 1.4 (mid-2001.)
+   *     UCS-4 or UTF-32 charmaps.  This has been added to the OpenType
+   *     specification version 1.4 (mid-2001).
    */
 
 #define TT_MS_ID_SYMBOL_CS    0
@@ -317,17 +280,22 @@ FT_BEGIN_HEADER
 #define TT_ADOBE_ID_LATIN_1   3
 
 
-  /*************************************************************************/
-  /*                                                                       */
-  /* Possible values of the language identifier field in the name records  */
-  /* of the TTF `name' table if the `platform' identifier code is          */
-  /* TT_PLATFORM_MACINTOSH.  These values are also used as return values   */
-  /* for function @FT_Get_CMap_Language_ID.                                */
-  /*                                                                       */
-  /* The canonical source for the Apple assigned Language ID's is at       */
-  /*                                                                       */
-  /*   https://developer.apple.com/fonts/TrueType-Reference-Manual/RM06/Chap6name.html */
-  /*                                                                       */
+  /***********************************************************************
+   *
+   * @enum:
+   *   TT_MAC_LANGID_XXX
+   *
+   * @description:
+   *   Possible values of the language identifier field in the name records
+   *   of the SFNT `name' table if the `platform' identifier code is
+   *   @TT_PLATFORM_MACINTOSH.  These values are also used as return values
+   *   for function @FT_Get_CMap_Language_ID.
+   *
+   *   The canonical source for Apple's IDs is
+   *
+   *     https://developer.apple.com/fonts/TrueType-Reference-Manual/RM06/Chap6name.html
+   */
+
 #define TT_MAC_LANGID_ENGLISH                       0
 #define TT_MAC_LANGID_FRENCH                        1
 #define TT_MAC_LANGID_GERMAN                        2
@@ -438,15 +406,6 @@ FT_BEGIN_HEADER
 #define TT_MAC_LANGID_JAVANESE                    138
 #define TT_MAC_LANGID_SUNDANESE                   139
 
-
-#if 0  /* these seem to be errors that have been dropped */
-
-#define TT_MAC_LANGID_SCOTTISH_GAELIC             140
-#define TT_MAC_LANGID_IRISH_GAELIC                141
-
-#endif
-
-
   /* The following codes are new as of 2000-03-10 */
 #define TT_MAC_LANGID_GALICIAN                    140
 #define TT_MAC_LANGID_AFRIKAANS                   141
@@ -461,16 +420,29 @@ FT_BEGIN_HEADER
 #define TT_MAC_LANGID_AZERBAIJANI_ROMAN_SCRIPT    150
 
 
-  /*************************************************************************/
-  /*                                                                       */
-  /* Possible values of the language identifier field in the name records  */
-  /* of the TTF `name' table if the `platform' identifier code is          */
-  /* TT_PLATFORM_MICROSOFT.                                                */
-  /*                                                                       */
-  /* The canonical source for the MS assigned LCIDs is                     */
-  /*                                                                       */
-  /*   http://www.microsoft.com/globaldev/reference/lcid-all.mspx          */
-  /*                                                                       */
+  /***********************************************************************
+   *
+   * @enum:
+   *   TT_MS_LANGID_XXX
+   *
+   * @description:
+   *   Possible values of the language identifier field in the name records
+   *   of the SFNT `name' table if the `platform' identifier code is
+   *   @TT_PLATFORM_MICROSOFT.  These values are also used as return values
+   *   for function @FT_Get_CMap_Language_ID.
+   *
+   *   The canonical source for Microsoft's IDs is
+   *
+   *     http://www.microsoft.com/globaldev/reference/lcid-all.mspx ,
+   *
+   *   however, we only provide macros for language identifiers present in
+   *   the OpenType specification: Microsoft has abandoned the concept of
+   *   LCIDs (language code identifiers), and format~1 of the `name' table
+   *   provides a better mechanism for languages not covered here.
+   *
+   *   More legacy values not listed in the reference can be found in the
+   *   @FT_TRUETYPE_IDS_H header file.
+   */
 
 #define TT_MS_LANGID_ARABIC_SAUDI_ARABIA               0x0401
 #define TT_MS_LANGID_ARABIC_IRAQ                       0x0801
@@ -804,11 +776,16 @@ FT_BEGIN_HEADER
           TT_MS_LANGID_UIGHUR_PRC
 
 
-  /*************************************************************************/
-  /*                                                                       */
-  /* Possible values of the `name' identifier field in the name records of */
-  /* the TTF `name' table.  These values are platform independent.         */
-  /*                                                                       */
+  /***********************************************************************
+   *
+   * @enum:
+   *   TT_NAME_ID_XXX
+   *
+   * @description:
+   *   Possible values of the `name' identifier field in the name records of
+   *   an SFNT `name' table.  These values are platform independent.
+   */
+
 #define TT_NAME_ID_COPYRIGHT            0
 #define TT_NAME_ID_FONT_FAMILY          1
 #define TT_NAME_ID_FONT_SUBFAMILY       2
@@ -848,13 +825,21 @@ FT_BEGIN_HEADER
   /* This is new in OpenType 1.8 */
 #define TT_NAME_ID_VARIATIONS_PREFIX    25
 
+  /* */
 
-  /*************************************************************************/
-  /*                                                                       */
-  /* Bit mask values for the Unicode Ranges from the TTF `OS2 ' table.     */
-  /*                                                                       */
-  /* Updated 08-Nov-2008.                                                  */
-  /*                                                                       */
+
+  /***********************************************************************
+   *
+   * @enum:
+   *   TT_UCR_XXX
+   *
+   * @description:
+   *   Possible bit mask values for the `ulUnicodeRangeX' fields in an SFNT
+   *   `OS/2' table.
+   */
+
+  /* ulUnicodeRange1 */
+  /* --------------- */
 
   /* Bit  0   Basic Latin */
 #define TT_UCR_BASIC_LATIN                     (1L <<  0) /* U+0020-U+007E */
@@ -944,6 +929,10 @@ FT_BEGIN_HEADER
   /*          Supplemental Punctuation */
 #define TT_UCR_GENERAL_PUNCTUATION             (1L << 31) /* U+2000-U+206F */
                                                           /* U+2E00-U+2E7F */
+
+  /* ulUnicodeRange2 */
+  /* --------------- */
+
   /* Bit 32   Superscripts And Subscripts */
 #define TT_UCR_SUPERSCRIPTS_SUBSCRIPTS         (1L <<  0) /* U+2070-U+209F */
   /* Bit 33   Currency Symbols */
@@ -1016,13 +1005,13 @@ FT_BEGIN_HEADER
   /* Bit 57   High Surrogates              */
   /*          High Private Use Surrogates  */
   /*          Low Surrogates               */
-  /*                                       */
+
   /* According to OpenType specs v.1.3+,   */
   /* setting bit 57 implies that there is  */
   /* at least one codepoint beyond the     */
   /* Basic Multilingual Plane that is      */
   /* supported by this font.  So it really */
-  /* means >= U+10000                      */
+  /* means >= U+10000.                     */
 #define TT_UCR_SURROGATES                      (1L << 25) /* U+D800-U+DB7F */
                                                           /* U+DB80-U+DBFF */
                                                           /* U+DC00-U+DFFF */
@@ -1055,6 +1044,10 @@ FT_BEGIN_HEADER
 #define TT_UCR_ALPHABETIC_PRESENTATION_FORMS   (1L << 30) /* U+FB00-U+FB4F */
   /* Bit 63   Arabic Presentation Forms-A */
 #define TT_UCR_ARABIC_PRESENTATION_FORMS_A     (1L << 31) /* U+FB50-U+FDFF */
+
+  /* ulUnicodeRange3 */
+  /* --------------- */
+
   /* Bit 64   Combining Half Marks */
 #define TT_UCR_COMBINING_HALF_MARKS            (1L <<  0) /* U+FE20-U+FE2F */
   /* Bit 65   Vertical forms          */
@@ -1143,6 +1136,10 @@ FT_BEGIN_HEADER
 #define TT_UCR_TAI_LE                          (1L << 30) /* U+1950-U+197F */
   /* Bit 95   New Tai Lue */
 #define TT_UCR_NEW_TAI_LUE                     (1L << 31) /* U+1980-U+19DF */
+
+  /* ulUnicodeRange4 */
+  /* --------------- */
+
   /* Bit 96   Buginese */
 #define TT_UCR_BUGINESE                        (1L <<  0) /* U+1A00-U+1A1F */
   /* Bit 97   Glagolitic */
@@ -1211,6 +1208,7 @@ FT_BEGIN_HEADER
                                                           /*U+1F000-U+1F02F*/
   /* Bit 123-127 Reserved for process-internal usage */
 
+  /* */
 
   /* for backwards compatibility with older FreeType versions */
 #define TT_UCR_ARABIC_PRESENTATION_A         \

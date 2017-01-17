@@ -734,7 +734,7 @@ FT_BEGIN_HEADER
   /*    Russian).                                                          */
   /*                                                                       */
   /*    FT_ENCODING_NONE is set if `platform_id' is @TT_PLATFORM_MACINTOSH */
-  /*    and `encoding_id' is not @TT_MAC_ID_ROMAN (otherwise it is set to  */
+  /*    and `encoding_id' is not `TT_MAC_ID_ROMAN' (otherwise it is set to */
   /*    FT_ENCODING_APPLE_ROMAN).                                          */
   /*                                                                       */
   /*    If `platform_id' is @TT_PLATFORM_MACINTOSH, use the function       */
@@ -746,9 +746,9 @@ FT_BEGIN_HEADER
   /*    to get an idea how to do that.  Basically, if the language ID      */
   /*    is~0, don't use it, otherwise subtract 1 from the language ID.     */
   /*    Then examine `encoding_id'.  If, for example, `encoding_id' is     */
-  /*    @TT_MAC_ID_ROMAN and the language ID (minus~1) is                  */
+  /*    `TT_MAC_ID_ROMAN' and the language ID (minus~1) is                 */
   /*    `TT_MAC_LANGID_GREEK', it is the Greek encoding, not Roman.        */
-  /*    @TT_MAC_ID_ARABIC with `TT_MAC_LANGID_FARSI' means the Farsi       */
+  /*    `TT_MAC_ID_ARABIC' with `TT_MAC_LANGID_FARSI' means the Farsi      */
   /*    variant the Arabic encoding.                                       */
   /*                                                                       */
   typedef enum  FT_Encoding_
