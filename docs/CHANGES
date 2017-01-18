@@ -213,7 +213,7 @@ CHANGES BETWEEN 2.6.3 and 2.6.4
 
     - Type 42 fonts as created by LilyPond are now supported.
 
-    - Minor rendering improvments in the auto-hinter.
+    - Minor rendering improvements in the auto-hinter.
 
     - For experimental  reasons, the old  CFF engine now  supports all
       CFF operators except `random', including the deprecated Multiple
@@ -2572,7 +2572,7 @@ CHANGES BETWEEN 2.1.5 and 2.1.4
 
     - FT_ENCODING_MS_{SJIS,GB2312,BIG5,WANSUNG,JOHAB}      are     now
       deprecated               in               favour              of
-      FT_ENCODING_{SJIS,GB2312,GIB5,WANSONG,JOHAB}  -- those encodings
+      FT_ENCODING_{SJIS,GB2312,GIB5,WANSUNG,JOHAB}  -- those encodings
       are not specific to Microsoft.
 
 

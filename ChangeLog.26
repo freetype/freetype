@@ -460,7 +460,7 @@
 	[smooth] Shrink bisection stack.
 
 	The convergence of Bézier flatteners is fast with the deviation
-	from straight line being assymptotically cut 4-fold on each bisection.
+	from straight line being asymptotically cut 4-fold on each bisection.
 	This justifies smaller bisection stack size.
 
 	* src/smooth/ftgrays.c (gray_TWorker): Remove common `bez_stack'.

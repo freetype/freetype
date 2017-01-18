@@ -76,7 +76,7 @@
   FT_Global  global_ft;
 
 
-  // We want to select n values at random (without repitition),
+  // We want to select n values at random (without repetition),
   // with 0 < n <= N.  The algorithm is taken from TAoCP, Vol. 2
   // (Algorithm S, selection sampling technique)
   struct Random
