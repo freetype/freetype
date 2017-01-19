@@ -607,7 +607,7 @@
 	(ft_black_render): Initialize `worker->gray_lines' (problem found by
 	valgrind).
 
-	(FT_RASTER_OPTION_ANTI_ALIASING, DEBUG_RASTER): Dont' #undef, just
+	(FT_RASTER_OPTION_ANTI_ALIASING, DEBUG_RASTER): Don't #undef, just
 	comment out.
 
 2009-09-12  suzuki toshiya  <mpsuzuki@hiroshima-u.ac.jp>
@@ -4156,7 +4156,7 @@
 2008-09-05  suzuki toshiya  <mpsuzuki@hiroshima-u.ac.jp>
 
 	* builds/unix/configure.raw: Clear FT2_EXTRA_LIBS when Carbon or
-	ApplicationService framework is missing.  Although this value is not
+	ApplicationServices framework is missing.  Although this value is not
 	used in building of FreeType2, it is written in `freetype2.pc' and
 	`freetype-config'.
 
@@ -5383,7 +5383,7 @@
 	* include/freetype/ftotval.h (FT_VALIDATE_MATH): New macro.
 	(FT_VALIDATE_OT): Updated.
 
-	* src/otvalid/otmath.c: New file.
+	* src/otvalid/otvmath.c: New file.
 
 	* src/otvalid/otvalid.c: Include otvmath.c.
 	* src/otvalid/otvmod.c (otv_validate): Handle `MATH' table.
@@ -7366,7 +7366,7 @@
 	to recognize a few fonts that require the automatic unpatented
 	loader.
 
-	* src/smooth/ftgrays.c: Optmize the performance of the anti-aliased
+	* src/smooth/ftgrays.c: Optimize the performance of the anti-aliased
 	rasterizer.  The speed improvement is between 15% and 25%, depending
 	on the font data.
 

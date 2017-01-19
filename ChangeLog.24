@@ -5792,8 +5792,8 @@
 	* src/cff/cffobjs.c (cff_face_init): Check error value by
 	`FT_CMap_New'.
 	* src/pfr/pfrobjs.c (pfr_face_init): Ditto.
-	* src/type1/t1jobjs.c (T1_Face_Init): Ditto.
-	* src/type42/t42jobjs.c (T42_Face_Init): Ditto.
+	* src/type1/t1objs.c (T1_Face_Init): Ditto.
+	* src/type42/t42objs.c (T42_Face_Init): Ditto.
 
 2010-07-03  Werner Lemberg  <wl@gnu.org>
 

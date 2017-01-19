@@ -170,7 +170,7 @@
 	FTC_CACHE_TRYLOOP_END): New macros.
 
 	* src/cache/ftccache.c (FTC_Cache_NewNode), src/cache/ftcsbits.c
-	(ftc_snode_compare): Use FT_CACHE_TRYLOOP and FTC_CACE_TRYLOOP_END.
+	(ftc_snode_compare): Use FT_CACHE_TRYLOOP and FTC_CACHE_TRYLOOP_END.
 
 2005-05-23  Werner Lemberg  <wl@gnu.org>
 
@@ -4355,7 +4355,7 @@
 	new POSTSCRIPT_NAMES service.
 	* src/psaux/t1decode.h (t1_lookup_glyph_by_stdcharcode,
 	t1_decode_init): Use new POSTSCRIPT_NAMES service.
-	* src/psaux/t1cmap.h, src/psaux/t1decode.h: Dont' include
+	* src/psaux/t1cmap.h, src/psaux/t1decode.h: Don't include
 	FT_INTERNAL_POSTSCRIPT_NAMES_H.
 
 	* src/psnames/psmodule.c:  Don't include
@@ -8636,7 +8636,7 @@
 	src/pfr/*: New files.
 
 	* include/freetype/config/ftmodule.h,
-	include/freetype/internal/fttrace.h, src/Jamefile: Updated.
+	include/freetype/internal/fttrace.h, src/Jamfile: Updated.
 
 	* src/type1/t1gload.h (T1_Load_Glyph), src/type1/t1gload.c
 	(T1_Load_Glyph): Fixed incorrect parameter sign-ness in callback

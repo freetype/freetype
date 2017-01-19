@@ -5693,8 +5693,8 @@
         /* Special case: allow SHPIX to move points in the twilight zone.  */
         /* Otherwise, treat SHPIX the same as DELTAP.  Unbreaks various    */
         /* fonts such as older versions of Rokkitt and DTL Argo T Light    */
-        /* that would glitch severly after calling ALIGNRP after a blocked */
-        /* SHPIX.                                                          */
+        /* that would glitch severely after calling ALIGNRP after a        */
+        /* blocked SHPIX.                                                  */
         if ( in_twilight                                                ||
              ( !( exc->iupx_called && exc->iupy_called )              &&
                ( ( exc->is_composite && exc->GS.freeVector.y != 0 ) ||

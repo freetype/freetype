@@ -143,7 +143,7 @@
 	FT_PCF_DRIVER_H.
 	(pcf_property_set, pcf_property_get): New functions.
 	(pcf_service_properties): New service.
-	(pcf_servives): Updated.
+	(pcf_services): Updated.
 	(pcf_driver_init) [PCF_CONFIG_OPTION_LONG_FAMILY_NAMES]: Handle
 	`no_long_family_names'.
 
@@ -340,7 +340,7 @@
 
 	* src/psnames/pstables.h: Regenerated.
 
-	* src/psnames/psmodule.c: Inlude `pstables.h' twice to get both
+	* src/psnames/psmodule.c: Include `pstables.h' twice to get both
 	declaration and definition.
 
 	* src/truetype/ttgxvar.c (FT_fdot14ToFixed, FT_intToFixed): Fix
@@ -1275,7 +1275,7 @@
 
 	* src/type1/t1driver.c: Updated.
 
-	* src/type1/t1load.c (T1_Get_Var_Design): New dummp function to
+	* src/type1/t1load.c (T1_Get_Var_Design): New dump function to
 	handle `get_var_design' service.
 	* src/type1/t1load.h: Updated.
 
@@ -2454,7 +2454,7 @@
 
 	[sfnt] Fix `face_index' value in `FT_Face' for named instances.
 
-	* src/sfnt/sfobjc.s (sfnt_init_face): Don't strip off higher 16bits.
+	* src/sfnt/sfobjs.c (sfnt_init_face): Don't strip off higher 16bits.
 
 2016-07-14  Werner Lemberg  <wl@gnu.org>
 
