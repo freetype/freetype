@@ -453,7 +453,7 @@ FT_BEGIN_HEADER
   /*                                                                       */
   /*                                                                       */
   /*        // load glyph                                                  */
-  /*        error = FT_Load_Char( face, glyph_index, FT_LOAD_DEFAUT );     */
+  /*        error = FT_Load_Char( face, glyph_index, FT_LOAD_DEFAULT );    */
   /*                                                                       */
   /*        // extract glyph image                                         */
   /*        error = FT_Get_Glyph( face->glyph, &glyph );                   */

@@ -1120,7 +1120,7 @@ FT_BEGIN_HEADER
   /*      `num_fixed_sizes' and `available_sizes' fields of @FT_FaceRec.   */
   /*                                                                       */
   /*    FT_FACE_FLAG_FIXED_WIDTH ::                                        */
-  /*      The face contains fixed-width characters (like Courier, Lucido,  */
+  /*      The face contains fixed-width characters (like Courier, Lucida,  */
   /*      MonoType, etc.).                                                 */
   /*                                                                       */
   /*    FT_FACE_FLAG_SFNT ::                                               */

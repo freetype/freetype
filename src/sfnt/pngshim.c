@@ -26,7 +26,7 @@
 
 #ifdef FT_CONFIG_OPTION_USE_PNG
 
-  /* We always include <stjmp.h>, so make libpng shut up! */
+  /* We always include <setjmp.h>, so make libpng shut up! */
 #define PNG_SKIP_SETJMP_CHECK 1
 #include <png.h>
 #include "pngshim.h"

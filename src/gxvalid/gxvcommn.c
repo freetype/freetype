@@ -454,7 +454,7 @@
   }
 
 
-  /* ================= Segment Single Format 2 Loolup Table ============== */
+  /* ================= Segment Single Format 2 Lookup Table ============== */
   /*
    * Apple spec says:
    *

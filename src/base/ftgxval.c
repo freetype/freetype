@@ -2,7 +2,7 @@
 /*                                                                         */
 /*  ftgxval.c                                                              */
 /*                                                                         */
-/*    FreeType API for validating TrueTyepGX/AAT tables (body).            */
+/*    FreeType API for validating TrueTypeGX/AAT tables (body).            */
 /*                                                                         */
 /*  Copyright 2004-2017 by                                                 */
 /*  Masatake YAMATO, Redhat K.K,                                           */
