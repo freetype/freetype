@@ -194,7 +194,6 @@ FT_BEGIN_HEADER
   /*                                                                       */
   typedef struct  GX_MVarTableRec_
   {
-    FT_UShort  axisCount;
     FT_UShort  valueCount;
 
     GX_ItemVarStoreRec  itemStore;        /* Item Variation Store  */

@@ -1,5 +1,17 @@
 2017-01-23  Werner Lemberg  <wl@gnu.org>
 
+	[truetype] Minor updates for OpenType 1.8.1.
+
+	* src/truetype/ttgxvar.h (GX_MVarTable): `axisCount' has been
+	removed frem the specification; it is now reserved.
+
+	* src/truetype/ttgxvar.c (ft_var_load_mvar): Updated.
+	(GX_FVar_Head): Remove `countSizePairs'; the corresponding data
+	field in the `MVAR' table is now reserved.
+	(fvar_fields): Updated.
+
+2017-01-23  Werner Lemberg  <wl@gnu.org>
+
 	[truetype] Avoid segfault for invalid variation data.
 
 	* src/truetype/ttgxvar.c (ft_var_load_item_variation_store): Assure

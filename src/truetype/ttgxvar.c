@@ -22,10 +22,6 @@
   /*                                                                       */
   /*   https://developer.apple.com/fonts/TrueType-Reference-Manual/RM06/Chap6[fgca]var.html */
   /*                                                                       */
-  /* The documentation for `fvar' is inconsistent.  At one point it says   */
-  /* that `countSizePairs' should be 3, at another point 2.  It should     */
-  /* be 2.                                                                 */
-  /*                                                                       */
   /* The documentation for `gvar' is not intelligible; `cvar' refers you   */
   /* to `gvar' and is thus also incomprehensible.                          */
   /*                                                                       */
@@ -1119,9 +1115,8 @@
     if ( FT_NEW( blend->mvar_table ) )
       return;
 
-    /* skip value record size */
-    if ( FT_READ_USHORT( blend->mvar_table->axisCount )  ||
-         FT_STREAM_SKIP( 2 )                             ||
+    /* skip reserved entry and value record size */
+    if ( FT_STREAM_SKIP( 4 )                             ||
          FT_READ_USHORT( blend->mvar_table->valueCount ) ||
          FT_READ_USHORT( store_offset )                  )
       return;
@@ -1613,7 +1608,6 @@
   {
     FT_Long    version;
     FT_UShort  offsetToData;
-    FT_UShort  countSizePairs;
     FT_UShort  axisCount;
     FT_UShort  axisSize;
     FT_UShort  instanceCount;
@@ -1680,13 +1674,13 @@
 #define FT_STRUCTURE  GX_FVar_Head
 
       FT_FRAME_START( 16 ),
-        FT_FRAME_LONG  ( version ),
-        FT_FRAME_USHORT( offsetToData ),
-        FT_FRAME_USHORT( countSizePairs ),
-        FT_FRAME_USHORT( axisCount ),
-        FT_FRAME_USHORT( axisSize ),
-        FT_FRAME_USHORT( instanceCount ),
-        FT_FRAME_USHORT( instanceSize ),
+        FT_FRAME_LONG      ( version ),
+        FT_FRAME_USHORT    ( offsetToData ),
+        FT_FRAME_SKIP_SHORT,
+        FT_FRAME_USHORT    ( axisCount ),
+        FT_FRAME_USHORT    ( axisSize ),
+        FT_FRAME_USHORT    ( instanceCount ),
+        FT_FRAME_USHORT    ( instanceSize ),
       FT_FRAME_END
     };
 
