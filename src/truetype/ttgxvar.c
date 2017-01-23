@@ -431,7 +431,8 @@
 
     if ( format != 1 )
     {
-      FT_TRACE2(( "bad store format %d\n", format ));
+      FT_TRACE2(( "ft_var_load_item_variation_store: bad store format %d\n",
+                  format ));
       error = FT_THROW( Invalid_Table );
       goto Exit;
     }
@@ -440,6 +441,14 @@
     if ( FT_READ_ULONG( region_offset )         ||
          FT_READ_USHORT( itemStore->dataCount ) )
       goto Exit;
+
+    /* we need at least one entry in `itemStore->varData' */
+    if ( !itemStore->dataCount )
+    {
+      FT_TRACE2(( "ft_var_load_item_variation_store: missing varData\n" ));
+      error = FT_THROW( Invalid_Table );
+      goto Exit;
+    }
 
     /* make temporary copy of item variation data offsets; */
     /* we will parse region list first, then come back     */

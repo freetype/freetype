@@ -1,3 +1,14 @@
+2017-01-23  Werner Lemberg  <wl@gnu.org>
+
+	[truetype] Avoid segfault for invalid variation data.
+
+	* src/truetype/ttgxvar.c (ft_var_load_item_variation_store): Assure
+	`itemCount' is not zero.
+
+	Reported as
+
+	  https://bugs.chromium.org/p/oss-fuzz/issues/detail?id=441
+
 2017-01-20  Werner Lemberg  <wl@gnu.org>
 
 	* src/truetype/ttinterp.c (TT_RunIns): Adjust loop detector limits.
