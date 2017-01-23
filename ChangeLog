@@ -1882,7 +1882,7 @@
 
 2016-09-07  Alexei Podtelezhnikov  <apodtele@gmail.com>
 
-	* src/smooth/ftgrays.c (gray_hline): Microptimize.
+	* src/smooth/ftgrays.c (gray_hline): Micro-optimize.
 
 2016-09-06  Alexei Podtelezhnikov  <apodtele@gmail.com>
 
@@ -2058,7 +2058,7 @@
 	[smooth] Simplify span rendering more.
 
 	It turns out that there is significant cost associated with `FT_Span'
-	creation and calls to `gray_render_span' because it happerns so
+	creation and calls to `gray_render_span' because it happens so
 	frequently. This removes these steps from our internal use but leaves
 	it alone for `FT_RASTER_FLAG_DIRECT" to preserve API. The speed gain
 	is about 5%.
