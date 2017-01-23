@@ -1,5 +1,17 @@
 2017-01-23  Werner Lemberg  <wl@gnu.org>
 
+	[base] Add `FT_Set_Default_Properties' (#49187).
+
+	* include/freetype/ftmodapi.h: Add declaration.
+
+	* src/base/ftinit.c (ft_set_default_properties): Renamed to...
+	(FT_Set_Default_Properties): ... this.
+	(FT_Init_FreeType): Updated.
+
+	* docs/CHANGES: Updated.
+
+2017-01-23  Werner Lemberg  <wl@gnu.org>
+
 	[truetype] Minor updates for OpenType 1.8.1.
 
 	* src/truetype/ttgxvar.h (GX_MVarTable): `axisCount' has been

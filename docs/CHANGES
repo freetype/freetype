@@ -15,6 +15,15 @@ CHANGES BETWEEN 2.7.1 and 2.7.2
     - Variations font support now takes care of the `MVAR' table also.
 
 
+  II. MISCELLANEOUS
+
+    - A  new function  `FT_Set_Default_Properties' has  been added  to
+      parse    the    `FREETYPE_PROPERTIES'    environment    variable
+      (previously, it  was internal only).   `FT_Init_FreeType' always
+      call this  function, but  `FT_New_Library' does not  (similar to
+      `FT_Add_Default_Modules').
+
+
 ======================================================================
 
 CHANGES BETWEEN 2.7 and 2.7.1
