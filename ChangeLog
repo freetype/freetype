@@ -1,5 +1,12 @@
 2017-01-24  Werner Lemberg  <wl@gnu.org>
 
+	[sfnt] Fix Postscript name service for symbol fonts.
+
+	* src/sfnt/sfdriver.c (sfnt_get_ps_name): Accept PID/EID=3/0
+	entries also.
+
+2017-01-24  Werner Lemberg  <wl@gnu.org>
+
 	[truetype] For OpenType 1.7: s/preferred/typographic/ (sub)family.
 
 	* include/freetype/ftsnames.h

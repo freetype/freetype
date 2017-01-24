@@ -243,9 +243,10 @@
 
       if ( name->nameID == 6 && name->stringLength > 0 )
       {
-        if ( name->platformID == 3     &&
-             name->encodingID == 1     &&
-             name->languageID == 0x409 )
+        /* handling of PID/EID 3/0 and 3/1 is the same */
+        if ( name->platformID == 3                              &&
+             ( name->encodingID == 1 || name->encodingID == 0 ) &&
+             name->languageID == 0x409                          )
           found_win = n;
 
         if ( name->platformID == 1 &&
