@@ -786,46 +786,48 @@ FT_BEGIN_HEADER
    *   an SFNT `name' table.  These values are platform independent.
    */
 
-#define TT_NAME_ID_COPYRIGHT            0
-#define TT_NAME_ID_FONT_FAMILY          1
-#define TT_NAME_ID_FONT_SUBFAMILY       2
-#define TT_NAME_ID_UNIQUE_ID            3
-#define TT_NAME_ID_FULL_NAME            4
-#define TT_NAME_ID_VERSION_STRING       5
-#define TT_NAME_ID_PS_NAME              6
-#define TT_NAME_ID_TRADEMARK            7
+#define TT_NAME_ID_COPYRIGHT              0
+#define TT_NAME_ID_FONT_FAMILY            1
+#define TT_NAME_ID_FONT_SUBFAMILY         2
+#define TT_NAME_ID_UNIQUE_ID              3
+#define TT_NAME_ID_FULL_NAME              4
+#define TT_NAME_ID_VERSION_STRING         5
+#define TT_NAME_ID_PS_NAME                6
+#define TT_NAME_ID_TRADEMARK              7
 
   /* the following values are from the OpenType spec */
-#define TT_NAME_ID_MANUFACTURER         8
-#define TT_NAME_ID_DESIGNER             9
-#define TT_NAME_ID_DESCRIPTION          10
-#define TT_NAME_ID_VENDOR_URL           11
-#define TT_NAME_ID_DESIGNER_URL         12
-#define TT_NAME_ID_LICENSE              13
-#define TT_NAME_ID_LICENSE_URL          14
+#define TT_NAME_ID_MANUFACTURER           8
+#define TT_NAME_ID_DESIGNER               9
+#define TT_NAME_ID_DESCRIPTION            10
+#define TT_NAME_ID_VENDOR_URL             11
+#define TT_NAME_ID_DESIGNER_URL           12
+#define TT_NAME_ID_LICENSE                13
+#define TT_NAME_ID_LICENSE_URL            14
   /* number 15 is reserved */
-#define TT_NAME_ID_PREFERRED_FAMILY     16
-#define TT_NAME_ID_PREFERRED_SUBFAMILY  17
-#define TT_NAME_ID_MAC_FULL_NAME        18
+#define TT_NAME_ID_TYPOGRAPHIC_FAMILY     16
+#define TT_NAME_ID_TYPOGRAPHIC_SUBFAMILY  17
+#define TT_NAME_ID_MAC_FULL_NAME          18
 
   /* The following code is new as of 2000-01-21 */
-#define TT_NAME_ID_SAMPLE_TEXT          19
+#define TT_NAME_ID_SAMPLE_TEXT            19
 
   /* This is new in OpenType 1.3 */
-#define TT_NAME_ID_CID_FINDFONT_NAME    20
+#define TT_NAME_ID_CID_FINDFONT_NAME      20
 
   /* This is new in OpenType 1.5 */
-#define TT_NAME_ID_WWS_FAMILY           21
-#define TT_NAME_ID_WWS_SUBFAMILY        22
+#define TT_NAME_ID_WWS_FAMILY             21
+#define TT_NAME_ID_WWS_SUBFAMILY          22
 
   /* This is new in OpenType 1.7 */
-#define TT_NAME_ID_LIGHT_BACKGROUND     23
-#define TT_NAME_ID_DARK_BACKGROUND      24
+#define TT_NAME_ID_LIGHT_BACKGROUND       23
+#define TT_NAME_ID_DARK_BACKGROUND        24
 
   /* This is new in OpenType 1.8 */
-#define TT_NAME_ID_VARIATIONS_PREFIX    25
+#define TT_NAME_ID_VARIATIONS_PREFIX      25
 
-  /* */
+  /* these two values are deprecated */
+#define TT_NAME_ID_PREFERRED_FAMILY     TT_NAME_ID_TYPOGRAPHIC_FAMILY
+#define TT_NAME_ID_PREFERRED_SUBFAMILY  TT_NAME_ID_TYPOGRAPHIC_SUBFAMILY
 
 
   /***********************************************************************

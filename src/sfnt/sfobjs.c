@@ -1079,8 +1079,8 @@
     FT_Bool       has_outline;
     FT_Bool       is_apple_sbit;
     FT_Bool       is_apple_sbix;
-    FT_Bool       ignore_preferred_family    = FALSE;
-    FT_Bool       ignore_preferred_subfamily = FALSE;
+    FT_Bool       ignore_typographic_family    = FALSE;
+    FT_Bool       ignore_typographic_subfamily = FALSE;
 
     SFNT_Service  sfnt = (SFNT_Service)face->sfnt;
 
@@ -1095,10 +1095,10 @@
 
       for ( i = 0; i < num_params; i++ )
       {
-        if ( params[i].tag == FT_PARAM_TAG_IGNORE_PREFERRED_FAMILY )
-          ignore_preferred_family = TRUE;
-        else if ( params[i].tag == FT_PARAM_TAG_IGNORE_PREFERRED_SUBFAMILY )
-          ignore_preferred_subfamily = TRUE;
+        if ( params[i].tag == FT_PARAM_TAG_IGNORE_TYPOGRAPHIC_FAMILY )
+          ignore_typographic_family = TRUE;
+        else if ( params[i].tag == FT_PARAM_TAG_IGNORE_TYPOGRAPHIC_SUBFAMILY )
+          ignore_typographic_subfamily = TRUE;
       }
     }
 
@@ -1281,27 +1281,27 @@
     face->root.style_name  = NULL;
     if ( face->os2.version != 0xFFFFU && face->os2.fsSelection & 256 )
     {
-      if ( !ignore_preferred_family )
-        GET_NAME( PREFERRED_FAMILY, &face->root.family_name );
+      if ( !ignore_typographic_family )
+        GET_NAME( TYPOGRAPHIC_FAMILY, &face->root.family_name );
       if ( !face->root.family_name )
         GET_NAME( FONT_FAMILY, &face->root.family_name );
 
-      if ( !ignore_preferred_subfamily )
-        GET_NAME( PREFERRED_SUBFAMILY, &face->root.style_name );
+      if ( !ignore_typographic_subfamily )
+        GET_NAME( TYPOGRAPHIC_SUBFAMILY, &face->root.style_name );
       if ( !face->root.style_name )
         GET_NAME( FONT_SUBFAMILY, &face->root.style_name );
     }
     else
     {
       GET_NAME( WWS_FAMILY, &face->root.family_name );
-      if ( !face->root.family_name && !ignore_preferred_family )
-        GET_NAME( PREFERRED_FAMILY, &face->root.family_name );
+      if ( !face->root.family_name && !ignore_typographic_family )
+        GET_NAME( TYPOGRAPHIC_FAMILY, &face->root.family_name );
       if ( !face->root.family_name )
         GET_NAME( FONT_FAMILY, &face->root.family_name );
 
       GET_NAME( WWS_SUBFAMILY, &face->root.style_name );
-      if ( !face->root.style_name && !ignore_preferred_subfamily )
-        GET_NAME( PREFERRED_SUBFAMILY, &face->root.style_name );
+      if ( !face->root.style_name && !ignore_typographic_subfamily )
+        GET_NAME( TYPOGRAPHIC_SUBFAMILY, &face->root.style_name );
       if ( !face->root.style_name )
         GET_NAME( FONT_SUBFAMILY, &face->root.style_name );
     }

@@ -23,6 +23,22 @@ CHANGES BETWEEN 2.7.1 and 2.7.2
       call this  function, but  `FT_New_Library' does not  (similar to
       `FT_Add_Default_Modules').
 
+    - To be in sync with OpenType version 1.7 and newer, macros
+
+        FT_PARAM_TAG_IGNORE_PREFERRED_FAMILY,
+        FT_PARAM_TAG_IGNORE_PREFERRED_SUBFAMILY,
+        TT_NAME_ID_PREFERRED_FAMILY
+	TT_NAME_ID_PREFERRED_SUBFAMILY
+
+      are renamed to
+
+        FT_PARAM_TAG_IGNORE_TYPOGRAPHIC_FAMILY,
+        FT_PARAM_TAG_IGNORE_TYPOGRAPHIC_SUBFAMILY,
+        TT_NAME_ID_TYPOGRAPHIC_FAMILY
+        TT_NAME_ID_TYPOGRAPHIC_SUBFAMILY
+
+      The old macro names are deprecated (but still available).
+
 
 ======================================================================
 

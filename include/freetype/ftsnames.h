@@ -162,31 +162,43 @@ FT_BEGIN_HEADER
   /***************************************************************************
    *
    * @constant:
-   *   FT_PARAM_TAG_IGNORE_PREFERRED_FAMILY
+   *   FT_PARAM_TAG_IGNORE_TYPOGRAPHIC_FAMILY
    *
    * @description:
-   *   A constant used as the tag of @FT_Parameter structures to make
-   *   FT_Open_Face() ignore preferred family subfamily names in `name'
-   *   table since OpenType version 1.4.  For backwards compatibility with
-   *   legacy systems that have a 4-face-per-family restriction.
+   *   A tag for @FT_Parameter to make @FT_Open_Face ignore typographic
+   *   family names in the `name' table (introduced in OpenType version
+   *   1.4).  Use this for backwards compatibility with legacy systems that
+   *   have a four-faces-per-family restriction.
    *
    */
-#define FT_PARAM_TAG_IGNORE_PREFERRED_FAMILY  FT_MAKE_TAG( 'i', 'g', 'p', 'f' )
+#define FT_PARAM_TAG_IGNORE_TYPOGRAPHIC_FAMILY \
+          FT_MAKE_TAG( 'i', 'g', 'p', 'f' )
+
+
+  /* this constant is deprecated */
+#define FT_PARAM_TAG_IGNORE_PREFERRED_FAMILY \
+          FT_PARAM_TAG_IGNORE_TYPOGRAPHIC_FAMILY
 
 
   /***************************************************************************
    *
    * @constant:
-   *   FT_PARAM_TAG_IGNORE_PREFERRED_SUBFAMILY
+   *   FT_PARAM_TAG_IGNORE_TYPOGRAPHIC_SUBFAMILY
    *
    * @description:
-   *   A constant used as the tag of @FT_Parameter structures to make
-   *   FT_Open_Face() ignore preferred subfamily names in `name' table since
-   *   OpenType version 1.4.  For backwards compatibility with legacy
-   *   systems that have a 4-face-per-family restriction.
+   *   A tag for @FT_Parameter to make @FT_Open_Face ignore typographic
+   *   subfamily names in the `name' table (introduced in OpenType version
+   *   1.4).  Use this for backwards compatibility with legacy systems that
+   *   have a four-faces-per-family restriction.
    *
    */
-#define FT_PARAM_TAG_IGNORE_PREFERRED_SUBFAMILY  FT_MAKE_TAG( 'i', 'g', 'p', 's' )
+#define FT_PARAM_TAG_IGNORE_TYPOGRAPHIC_SUBFAMILY \
+          FT_MAKE_TAG( 'i', 'g', 'p', 's' )
+
+
+  /* this constant is deprecated */
+#define FT_PARAM_TAG_IGNORE_PREFERRED_SUBFAMILY \
+          FT_PARAM_TAG_IGNORE_TYPOGRAPHIC_SUBFAMILY
 
   /* */
 

@@ -1300,7 +1300,7 @@ FT_BEGIN_HEADER
   /*                                                                       */
   /*    sbit_table_size      :: The size of `sbit_table'.                  */
   /*                                                                       */
-  /*    sbit_table_type      :: The sbit table type (CBLC, SBIX, etc.).    */
+  /*    sbit_table_type      :: The sbit table type (CBLC, sbix, etc.).    */
   /*                                                                       */
   /*    sbit_num_strikes     :: The number of sbit strikes exposed by      */
   /*                            FreeType's API, omitting invalid strikes.  */

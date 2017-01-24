@@ -1,3 +1,22 @@
+2017-01-24  Werner Lemberg  <wl@gnu.org>
+
+	[truetype] For OpenType 1.7: s/preferred/typographic/ (sub)family.
+
+	* include/freetype/ftsnames.h
+	(FT_PARAM_TAG_IGNORE_TYPOGRAPHIC_FAMILY,
+	FT_PARAM_TAG_IGNORE_TYPOGRAPHIC_SUBFAMILY): New macros.
+	(FT_PARAM_TAG_IGNORE_PREFERRED_FAMILY,
+	FT_PARAM_TAG_IGNORE_PREFERRED_SUBFAMILY): Deprecated.
+
+	* include/freetype/ttnameid.h (TT_NAME_ID_TYPOGRAPHIC_FAMILY,
+	TT_NAME_ID_TYPOGRAPHIC_SUBFAMILY): New macros.
+	(TT_NAME_ID_PREFERRED_FAMILY, TT_NAME_ID_PREFERRED_SUBFAMILY):
+	Deprecated.
+
+	* src/sfnt/sfobjs.c (sfnt_load_face): Updated.
+
+	* docs/CHANGES: Updated.
+
 2017-01-23  Werner Lemberg  <wl@gnu.org>
 
 	[base] Add `FT_Set_Default_Properties' (#49187).
