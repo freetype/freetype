@@ -238,7 +238,7 @@
 
     for ( n = 0; n < face->num_names; n++ )
     {
-      TT_NameEntryRec*  name = face->name_table.names + n;
+      TT_Name  name = face->name_table.names + n;
 
 
       if ( name->nameID == 6 && name->stringLength > 0 )
@@ -258,10 +258,10 @@
 
     if ( found_win != -1 )
     {
-      FT_Memory         memory = face->root.memory;
-      TT_NameEntryRec*  name   = face->name_table.names + found_win;
-      FT_UInt           len    = name->stringLength / 2;
-      FT_Error          error  = FT_Err_Ok;
+      FT_Memory  memory = face->root.memory;
+      TT_Name    name   = face->name_table.names + found_win;
+      FT_UInt    len    = name->stringLength / 2;
+      FT_Error   error  = FT_Err_Ok;
 
       FT_UNUSED( error );
 
@@ -300,10 +300,10 @@
 
     if ( found_apple != -1 )
     {
-      FT_Memory         memory = face->root.memory;
-      TT_NameEntryRec*  name   = face->name_table.names + found_apple;
-      FT_UInt           len    = name->stringLength;
-      FT_Error          error  = FT_Err_Ok;
+      FT_Memory  memory = face->root.memory;
+      TT_Name    name   = face->name_table.names + found_apple;
+      FT_UInt    len    = name->stringLength;
+      FT_Error   error  = FT_Err_Ok;
 
       FT_UNUSED( error );
 

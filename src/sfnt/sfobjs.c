@@ -54,8 +54,8 @@
 
   /* convert a UTF-16 name entry to ASCII */
   static FT_String*
-  tt_name_entry_ascii_from_utf16( TT_NameEntry  entry,
-                                  FT_Memory     memory )
+  tt_name_ascii_from_utf16( TT_Name    entry,
+                            FT_Memory  memory )
   {
     FT_String*  string = NULL;
     FT_UInt     len, code, n;
@@ -89,8 +89,8 @@
 
   /* convert an Apple Roman or symbol name entry to ASCII */
   static FT_String*
-  tt_name_entry_ascii_from_other( TT_NameEntry  entry,
-                                  FT_Memory     memory )
+  tt_name_ascii_from_other( TT_Name    entry,
+                            FT_Memory  memory )
   {
     FT_String*  string = NULL;
     FT_UInt     len, code, n;
@@ -122,8 +122,8 @@
   }
 
 
-  typedef FT_String*  (*TT_NameEntry_ConvertFunc)( TT_NameEntry  entry,
-                                                   FT_Memory     memory );
+  typedef FT_String*  (*TT_Name_ConvertFunc)( TT_Name    entry,
+                                              FT_Memory  memory );
 
 
   /* documentation is in sfnt.h */
@@ -133,20 +133,21 @@
                     FT_UShort    nameid,
                     FT_String**  name )
   {
-    FT_Memory         memory = face->root.memory;
-    FT_Error          error  = FT_Err_Ok;
-    FT_String*        result = NULL;
-    FT_UShort         n;
-    TT_NameEntryRec*  rec;
-    FT_Int            found_apple         = -1;
-    FT_Int            found_apple_roman   = -1;
-    FT_Int            found_apple_english = -1;
-    FT_Int            found_win           = -1;
-    FT_Int            found_unicode       = -1;
+    FT_Memory   memory = face->root.memory;
+    FT_Error    error  = FT_Err_Ok;
+    FT_String*  result = NULL;
+    FT_UShort   n;
+    TT_Name     rec;
 
-    FT_Bool           is_english = 0;
+    FT_Int  found_apple         = -1;
+    FT_Int  found_apple_roman   = -1;
+    FT_Int  found_apple_english = -1;
+    FT_Int  found_win           = -1;
+    FT_Int  found_unicode       = -1;
 
-    TT_NameEntry_ConvertFunc  convert;
+    FT_Bool  is_english = 0;
+
+    TT_Name_ConvertFunc  convert;
 
 
     FT_ASSERT( name );
@@ -231,7 +232,7 @@
         /* all Unicode strings are encoded using UTF-16BE */
       case TT_MS_ID_UNICODE_CS:
       case TT_MS_ID_SYMBOL_CS:
-        convert = tt_name_entry_ascii_from_utf16;
+        convert = tt_name_ascii_from_utf16;
         break;
 
       case TT_MS_ID_UCS_4:
@@ -240,7 +241,7 @@
         /* MsGothic font shipped with Windows Vista shows that this really */
         /* means UTF-16 encoded names (UCS-4 values are only used within   */
         /* charmaps).                                                      */
-        convert = tt_name_entry_ascii_from_utf16;
+        convert = tt_name_ascii_from_utf16;
         break;
 
       default:
@@ -250,12 +251,12 @@
     else if ( found_apple >= 0 )
     {
       rec     = face->name_table.names + found_apple;
-      convert = tt_name_entry_ascii_from_other;
+      convert = tt_name_ascii_from_other;
     }
     else if ( found_unicode >= 0 )
     {
       rec     = face->name_table.names + found_unicode;
-      convert = tt_name_entry_ascii_from_utf16;
+      convert = tt_name_ascii_from_utf16;
     }
 
     if ( rec && convert )

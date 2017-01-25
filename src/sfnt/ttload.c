@@ -826,7 +826,7 @@
     static const FT_Frame_Field  name_record_fields[] =
     {
 #undef  FT_STRUCTURE
-#define FT_STRUCTURE  TT_NameEntryRec
+#define FT_STRUCTURE  TT_NameRec
 
       /* no FT_FRAME_START */
         FT_FRAME_USHORT( platformID ),
@@ -880,7 +880,7 @@
     /* Load the name records and determine how much storage is needed */
     /* to hold the strings themselves.                                */
     {
-      TT_NameEntryRec*  entry = table->names;
+      TT_Name  entry = table->names;
 
 
       for ( ; count > 0; count-- )
@@ -935,7 +935,7 @@
   {
     FT_Memory     memory = face->root.driver->root.memory;
     TT_NameTable  table  = &face->name_table;
-    TT_NameEntry  entry  = table->names;
+    TT_Name       entry  = table->names;
     FT_UInt       count  = table->numNameRecords;
 
 

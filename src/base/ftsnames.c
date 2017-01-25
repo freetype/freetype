@@ -54,7 +54,7 @@
 
       if ( idx < (FT_UInt)ttface->num_names )
       {
-        TT_NameEntryRec*  entry = ttface->name_table.names + idx;
+        TT_Name  entry = ttface->name_table.names + idx;
 
 
         /* load name on demand */

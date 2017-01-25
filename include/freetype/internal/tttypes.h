@@ -243,7 +243,7 @@ FT_BEGIN_HEADER
   /*************************************************************************/
   /*                                                                       */
   /* <Struct>                                                              */
-  /*    TT_NameEntryRec                                                    */
+  /*    TT_NameRec                                                         */
   /*                                                                       */
   /* <Description>                                                         */
   /*    A structure modeling TrueType name records.  Name records are used */
@@ -267,7 +267,7 @@ FT_BEGIN_HEADER
   /*    string       :: A pointer to the string's bytes.  Note that these  */
   /*                    are usually UTF-16 encoded characters.             */
   /*                                                                       */
-  typedef struct  TT_NameEntryRec_
+  typedef struct  TT_NameRec_
   {
     FT_UShort  platformID;
     FT_UShort  encodingID;
@@ -281,7 +281,7 @@ FT_BEGIN_HEADER
 
     FT_Byte*   string;
 
-  } TT_NameEntryRec, *TT_NameEntry;
+  } TT_NameRec, *TT_Name;
 
 
   /*************************************************************************/
@@ -306,11 +306,11 @@ FT_BEGIN_HEADER
   /*                                                                       */
   typedef struct  TT_NameTableRec_
   {
-    FT_UShort         format;
-    FT_UInt           numNameRecords;
-    FT_UInt           storageOffset;
-    TT_NameEntryRec*  names;
-    FT_Stream         stream;
+    FT_UShort    format;
+    FT_UInt      numNameRecords;
+    FT_UInt      storageOffset;
+    TT_NameRec*  names;
+    FT_Stream    stream;
 
   } TT_NameTableRec, *TT_NameTable;
 
