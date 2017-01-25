@@ -944,7 +944,7 @@
 
 	pfr: Fix a data type mismatching with its source.
 
-	* src/pfr/pfrtypes.h: The type of PFR_PhysFont->chars_offset
+	* src/pfr/pfrtypes.h: The type of PFR_PhyFont->chars_offset
 	is extended from FT_UInt32 to FT_Offset, because it is
 	calculated with the pointer difference in pfr_phy_font_load().
 

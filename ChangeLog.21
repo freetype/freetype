@@ -7239,7 +7239,7 @@
 	(ft_smooth_render, ft_smooth_render_lcd, ft_smooth_render_lcd_v):
 	New functions.
 
-	(ft_smooth_locd_renderer_class, ft_smooth_lcdv_renderer_class): New
+	(ft_smooth_lcd_renderer_class, ft_smooth_lcdv_renderer_class): New
 	classes.
 
 	* src/truetype/ttobjs.c (TT_{Done,New}_GlyphZone): Renamed to...

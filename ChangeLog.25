@@ -1223,7 +1223,7 @@
 
 2014-10-14  Werner Lemberg  <wl@gnu.org>
 
-	[autofit] Adjust Devenagari character range.
+	[autofit] Adjust Devanagari character range.
 
 	* src/autofit/afranges.c (af_deva_uniranges): Omit characters that
 	are common to all other Indic scripts.

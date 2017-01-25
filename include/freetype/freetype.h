@@ -1685,7 +1685,7 @@ FT_BEGIN_HEADER
   /*                         image if its format is                        */
   /*                         @FT_GLYPH_FORMAT_OUTLINE.  Once a glyph is    */
   /*                         loaded, `outline' can be transformed,         */
-  /*                         distorted, embolded, etc.  However, it must   */
+  /*                         distorted, emboldened, etc.  However, it must */
   /*                         not be freed.                                 */
   /*                                                                       */
   /*    num_subglyphs     :: The number of subglyphs in a composite glyph. */

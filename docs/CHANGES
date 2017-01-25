@@ -28,7 +28,7 @@ CHANGES BETWEEN 2.7.1 and 2.7.2
         FT_PARAM_TAG_IGNORE_PREFERRED_FAMILY,
         FT_PARAM_TAG_IGNORE_PREFERRED_SUBFAMILY,
         TT_NAME_ID_PREFERRED_FAMILY
-	TT_NAME_ID_PREFERRED_SUBFAMILY
+        TT_NAME_ID_PREFERRED_SUBFAMILY
 
       are renamed to
 
@@ -2187,7 +2187,7 @@ CHANGES BETWEEN 2.1.10 and 2.1.9
       probably using a different pitch, and to further manipulate it.
 
     - A new  API `FT_Outline_Embolden'  (in FT_OUTLINE_H) gives  finer
-      control how  outlines are embolded.
+      control how outlines are emboldened.
 
     - `FT_GlyphSlot_Embolden' (in FT_SYNTHESIS_H)  now handles bitmaps
       also (code contributed  by Chia I Wu).  Note that this  function
@@ -2597,7 +2597,7 @@ CHANGES BETWEEN 2.1.5 and 2.1.4
 
     - FT_ENCODING_MS_{SJIS,GB2312,BIG5,WANSUNG,JOHAB}      are     now
       deprecated               in               favour              of
-      FT_ENCODING_{SJIS,GB2312,GIB5,WANSUNG,JOHAB}  -- those encodings
+      FT_ENCODING_{SJIS,GB2312,BIG5,WANSUNG,JOHAB}  -- those encodings
       are not specific to Microsoft.
 
 

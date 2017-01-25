@@ -41,7 +41,7 @@
 	[truetype] Minor updates for OpenType 1.8.1.
 
 	* src/truetype/ttgxvar.h (GX_MVarTable): `axisCount' has been
-	removed frem the specification; it is now reserved.
+	removed from the specification; it is now reserved.
 
 	* src/truetype/ttgxvar.c (ft_var_load_mvar): Updated.
 	(GX_FVar_Head): Remove `countSizePairs'; the corresponding data

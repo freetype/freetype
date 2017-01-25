@@ -784,7 +784,7 @@
 	and `const' where appropriate.
 
 	(X_SCALING_Rules, X_SCALING_RULES_SIZE): Renamed to...
-	(spu_X_SCALING_Rules, SPH_X_SCALING_RULES_SIZE): This.
+	(sph_X_SCALING_Rules, SPH_X_SCALING_RULES_SIZE): This.
 	Update all users.
 
 2013-01-12  Alexei Podtelezhnikov  <apodtele@gmail.com>
@@ -2141,7 +2141,7 @@
 	* include/freetype/ftoutln.h (FT_Outline_EmboldenXY): Define it.
 
 	* src/base/ftoutln.c (FT_Outline_EmboldenXY): Implement it, using a
-	simplified embolding algorithm.
+	simplified emboldening algorithm.
 	(FT_Outline_Embolden): Make it a special case of
 	`FT_Outline_EmboldenXY'
 
@@ -3776,7 +3776,7 @@
 	[gxvalid] Fix gcc4.6 compiler warnings in gxvtrak.c.
 
 	* src/gxvalid/gxvtrak.c (gxv_trak_trackTable_validate):
-	Check different entries pointing same traking value.
+	Check different entries pointing same tracking value.
 	(gxv_trak_validate): Remove unused variable `table_size'.
 
 2011-06-14  suzuki toshiya  <mpsuzuki@hiroshima-u.ac.jp>
@@ -3788,12 +3788,12 @@
 	(gxv_morx_chain_validate): Conditionalize unvalidated
 	variable `defaultFlags'.
 
-	* src/gxvalid/gxmorx0.c
+	* src/gxvalid/gxvmorx0.c
 	(gxv_morx_subtable_type0_entry_validate):
 	Conditionalize unvalidated variables; `markFirst',
 	`dontAdvance', `markLast', `verb'.
 
-	* src/gxvalid/gxmorx1.c
+	* src/gxvalid/gxvmorx1.c
 	(gxv_morx_subtable_type1_entry_validate): Conditionalize
 	unvalidated variables; `setMark', `dontAdvance'.
 
@@ -3826,11 +3826,11 @@
 	(gxv_mort_chain_validate): Conditionalize unvalidated
 	variable `defaultFlags'.
 
-	* src/gxvalid/gxmort0.c
+	* src/gxvalid/gxvmort0.c
 	(gxv_mort_subtable_type0_entry_validate): Check the
 	conflict of the marks for the glyphs.
 
-	* src/gxvalid/gxmort1.c
+	* src/gxvalid/gxvmort1.c
 	(gxv_mort_subtable_type1_offset_to_subst_validate):
 	Local variables `min_gid', `max_gid' are replaced by
 	variables in the validator.
@@ -5669,7 +5669,7 @@
 	Use defined macros to set {platform,encoding}_id.
 
 	* src/bdf/bdfdrivr.c: Include ttnameid.h and use macros to
-	set charmap.{platfom,encoding}_id.
+	set charmap.{platform,encoding}_id.
 	* src/pcf/pcfdrivr.c: Ditto.
 	* src/winfonts/winfnt.c: Ditto.
 	* src/type1/t1objs.c: Ditto.

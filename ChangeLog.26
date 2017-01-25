@@ -5447,7 +5447,7 @@
 	[raster] Remove 5-level gray AA mode from monochrome rasterizer.
 
 	It was off by default and couldn't be turned on at runtime.  And the
-	smooth rasterizer superceded it over ten years ago.  No point in
+	smooth rasterizer superseded it over ten years ago.  No point in
 	keeping.  Comments suggested that it was there for compatibility
 	with FreeType 1.
 

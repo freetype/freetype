@@ -2458,8 +2458,8 @@
 
 	* src/gxvalid/gxvbsln.c (GXV_BSLN_VALUE_EMPTY): Add `U'.
 
-	* src/gxvalid/gxmort1.c (GXV_MORT_SUBTABLE_TYPE1_HEADER_SIZE),
-	src/gxvalid/gxmort2.c (GXV_MORT_SUBTABLE_TYPE2_HEADER_SIZE): Fix
+	* src/gxvalid/gxvmort1.c (GXV_MORT_SUBTABLE_TYPE1_HEADER_SIZE),
+	src/gxvalid/gxvmort2.c (GXV_MORT_SUBTABLE_TYPE2_HEADER_SIZE): Fix
 	typo.
 
 	* src/gxvalid/gxvmorx0.c, src/gxvalid/gxvmorx1.c,

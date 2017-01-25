@@ -99,7 +99,7 @@ LDFLAGS := @LDFLAGS@
 # export symbols
 #
 CCraw_build  := @CC_BUILD@	# native CC of building system
-E_BUILD      := @EXEEXT_BUILD@	# extension for exexutable on building system
+E_BUILD      := @EXEEXT_BUILD@	# extension for executable on building system
 EXPORTS_LIST := $(OBJ_DIR)/ftexport.sym
 CCexe        := $(CCraw_build)	# used to compile `apinames' only
 
