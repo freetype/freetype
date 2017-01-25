@@ -112,7 +112,7 @@
     /* Skip stem darkening for broken fonts. */
     if ( !face->units_per_EM )
     {
-      error = FT_Err_Corrupted_Font_Header;
+      error = FT_ERR( Corrupted_Font_Header );
       goto Exit;
     }
 
@@ -130,7 +130,7 @@
                                                    &stdVW );
     else
     {
-      error = FT_Err_Unimplemented_Feature;
+      error = FT_ERR( Unimplemented_Feature );
       goto Exit;
     }
 
