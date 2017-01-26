@@ -279,9 +279,39 @@ FT_BEGIN_HEADER
     /* this last field is not defined in the spec */
     /* but used by the FreeType engine            */
 
-    FT_Byte*   string;
+    FT_Byte*  string;
 
   } TT_NameRec, *TT_Name;
+
+
+  /*************************************************************************/
+  /*                                                                       */
+  /* <Struct>                                                              */
+  /*    TT_LangTagRec                                                      */
+  /*                                                                       */
+  /* <Description>                                                         */
+  /*    A structure modeling language tag records in SFNT `name' tables,   */
+  /*    introduced in OpenType version 1.6.                                */
+  /*                                                                       */
+  /* <Fields>                                                              */
+  /*    stringLength :: The length of the string in bytes.                 */
+  /*                                                                       */
+  /*    stringOffset :: The offset to the string in the `name' table.      */
+  /*                                                                       */
+  /*    string       :: A pointer to the string's bytes.  Note that these  */
+  /*                    are UTF-16BE encoded characters.                   */
+  /*                                                                       */
+  typedef struct TT_LangTagRec_
+  {
+    FT_UShort  stringLength;
+    FT_ULong   stringOffset;
+
+    /* this last field is not defined in the spec */
+    /* but used by the FreeType engine            */
+
+    FT_Byte*  string;
+
+  } TT_LangTagRec, *TT_LangTag;
 
 
   /*************************************************************************/
@@ -293,24 +323,30 @@ FT_BEGIN_HEADER
   /*    A structure modeling the TrueType name table.                      */
   /*                                                                       */
   /* <Fields>                                                              */
-  /*    format         :: The format of the name table.                    */
+  /*    format            :: The format of the name table.                 */
   /*                                                                       */
-  /*    numNameRecords :: The number of names in table.                    */
+  /*    numNameRecords    :: The number of names in table.                 */
   /*                                                                       */
-  /*    storageOffset  :: The offset of the name table in the `name'       */
-  /*                      TrueType table.                                  */
+  /*    storageOffset     :: The offset of the name table in the `name'    */
+  /*                         TrueType table.                               */
   /*                                                                       */
-  /*    names          :: An array of name records.                        */
+  /*    names             :: An array of name records.                     */
   /*                                                                       */
-  /*    stream         :: the file's input stream.                         */
+  /*    numLangTagRecords :: The number of language tags in table.         */
+  /*                                                                       */
+  /*    langTags          :: An array of language tag records.             */
+  /*                                                                       */
+  /*    stream            :: The file's input stream.                      */
   /*                                                                       */
   typedef struct  TT_NameTableRec_
   {
-    FT_UShort    format;
-    FT_UInt      numNameRecords;
-    FT_UInt      storageOffset;
-    TT_NameRec*  names;
-    FT_Stream    stream;
+    FT_UShort       format;
+    FT_UInt         numNameRecords;
+    FT_UInt         storageOffset;
+    TT_NameRec*     names;
+    FT_UInt         numLangTagRecords;
+    TT_LangTagRec*  langTags;
+    FT_Stream       stream;
 
   } TT_NameTableRec, *TT_NameTable;
 

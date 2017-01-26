@@ -1,3 +1,18 @@
+2017-01-26  Werner Lemberg  <wl@gnu.org>
+
+	[sfnt] Support `name' table format 1.
+
+	* include/freetype/internal/tttypes.h (TT_LangTagRec): New
+	structure.
+	(TT_NameTableRec): Add fields `numLangTagRecords' and `langTags'.
+
+	* src/sfnt/ttload.c (tt_face_load_name): Add support for language
+	tags.
+	Reduce array size of name strings in case of invalid entries.
+	(tt_face_free_name): Updated.
+
+	* docs/CHANGES: Updated.
+
 2017-01-25  Werner Lemberg  <wl@gnu.org>
 
 	[sfnt] s/TT_NameEntry/TT_Name/.

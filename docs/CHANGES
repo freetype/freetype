@@ -39,6 +39,13 @@ CHANGES BETWEEN 2.7.1 and 2.7.2
 
       The old macro names are deprecated (but still available).
 
+    - Support for SFNT `name' tables has been improved.
+
+      . Format 1 `name' tables are now supported.
+
+      . Language ID and name ID values have been updated to OpenType version
+        1.8.1.
+
 
 ======================================================================
 
