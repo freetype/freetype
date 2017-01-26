@@ -41,10 +41,11 @@ CHANGES BETWEEN 2.7.1 and 2.7.2
 
     - Support for SFNT `name' tables has been improved.
 
-      . Format 1 `name' tables are now supported.
+      . Format  1 `name' tables  are now supported.  Use  new function
+        `FT_Get_Sfnt_LangTag' to access associated language tags.
 
-      . Language ID and name ID values have been updated to OpenType version
-        1.8.1.
+      . Language ID  and name ID values have been  updated to OpenType
+        version 1.8.1.
 
 
 ======================================================================

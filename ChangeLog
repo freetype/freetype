@@ -1,5 +1,16 @@
 2017-01-26  Werner Lemberg  <wl@gnu.org>
 
+	[base] Add `FT_Get_Sfnt_LangTag' function.
+
+	* include/freetype/ftsnames.h (FT_SfntLangTag): New structure.
+	(FT_Get_Sfnt_LangTag): New declaration.
+
+	* src/base/ftsnames.c (FT_Get_Sfnt_LangTag): New funtion.
+
+	* docs/CHANGES: Updated.
+
+2017-01-26  Werner Lemberg  <wl@gnu.org>
+
 	[sfnt] Support `name' table format 1.
 
 	* include/freetype/internal/tttypes.h (TT_LangTagRec): New

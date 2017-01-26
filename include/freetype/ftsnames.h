@@ -81,12 +81,20 @@ FT_BEGIN_HEADER
   /*                   See @TT_MAC_LANGID_XXX and @TT_MS_LANGID_XXX for    */
   /*                   possible values.                                    */
   /*                                                                       */
+  /*                   Registered OpenType values for `language_id' are    */
+  /*                   always smaller than 0x8000; values equal or larger  */
+  /*                   than 0x8000 usually indicate a language tag string  */
+  /*                   (introduced in OpenType version 1.6).  Use function */
+  /*                   @FT_Get_Sfnt_LangTag with `language_id' as its      */
+  /*                   argument to retrieve the associated language tag.   */
+  /*                                                                       */
   /*    name_id     :: An identifier for `string'.                         */
   /*                   See @TT_NAME_ID_XXX for possible values.            */
   /*                                                                       */
   /*    string      :: The `name' string.  Note that its format differs    */
-  /*                   depending on the (platform,encoding) pair.  It can  */
-  /*                   be a Pascal String, a UTF-16 one, etc.              */
+  /*                   depending on the (platform,encoding) pair, being    */
+  /*                   either a string of bytes (without a terminating     */
+  /*                   NULL byte) or containing UTF-16BE entities.         */
   /*                                                                       */
   /*    string_len  :: The length of `string' in bytes.                    */
   /*                                                                       */
@@ -153,10 +161,78 @@ FT_BEGIN_HEADER
   /*    `name' table entries, then do a loop until you get the right       */
   /*    platform, encoding, and name ID.                                   */
   /*                                                                       */
+  /*    `name' table format~1 entries can use language tags also, see      */
+  /*    @FT_Get_Sfnt_LangTag.                                              */
+  /*                                                                       */
   FT_EXPORT( FT_Error )
   FT_Get_Sfnt_Name( FT_Face       face,
                     FT_UInt       idx,
                     FT_SfntName  *aname );
+
+
+  /*************************************************************************/
+  /*                                                                       */
+  /* <Struct>                                                              */
+  /*    FT_SfntLangTag                                                     */
+  /*                                                                       */
+  /* <Description>                                                         */
+  /*    A structure to model a language tag entry from an SFNT `name'      */
+  /*    table.                                                             */
+  /*                                                                       */
+  /* <Fields>                                                              */
+  /*    string      :: The language tag string, encoded in UTF-16BE        */
+  /*                   (without trailing NULL bytes).                      */
+  /*                                                                       */
+  /*    string_len  :: The length of `string' in *bytes*.                  */
+  /*                                                                       */
+  /* <Note>                                                                */
+  /*    Please refer to the TrueType or OpenType specification for more    */
+  /*    details.                                                           */
+  /*                                                                       */
+  typedef struct  FT_SfntLangTag_
+  {
+    FT_Byte*  string;      /* this string is *not* null-terminated! */
+    FT_UInt   string_len;  /* in bytes                              */
+
+  } FT_SfntLangTag;
+
+
+  /*************************************************************************/
+  /*                                                                       */
+  /* <Function>                                                            */
+  /*    FT_Get_Sfnt_LangTag                                                */
+  /*                                                                       */
+  /* <Description>                                                         */
+  /*    Retrieve the language tag associated with a language ID of an SFNT */
+  /*    `name' table entry.                                                */
+  /*                                                                       */
+  /* <Input>                                                               */
+  /*    face     :: A handle to the source face.                           */
+  /*                                                                       */
+  /*    langID   :: The language ID, as returned by @FT_Get_Sfnt_Name.     */
+  /*                This is always a value larger than 0x8000.             */
+  /*                                                                       */
+  /* <Output>                                                              */
+  /*    alangTag :: The language tag associated with the `name' table      */
+  /*                entry's language ID.                                   */
+  /*                                                                       */
+  /* <Return>                                                              */
+  /*    FreeType error code.  0~means success.                             */
+  /*                                                                       */
+  /* <Note>                                                                */
+  /*    The `string' array returned in the `alangTag' structure is not     */
+  /*    null-terminated.  Note that you don't have to deallocate `string'  */
+  /*    by yourself; FreeType takes care of it if you call @FT_Done_Face.  */
+  /*                                                                       */
+  /*    Only `name' table format~1 supports language tags.  For format~0   */
+  /*    tables, this function always returns FT_Err_Invalid_Table.  For    */
+  /*    invalid format~1 language ID values, FT_Err_Invalid_Argument is    */
+  /*    returned.                                                          */
+  /*                                                                       */
+  FT_EXPORT( FT_Error )
+  FT_Get_Sfnt_LangTag( FT_Face          face,
+                       FT_UInt          langID,
+                       FT_SfntLangTag  *alangTag );
 
 
   /***************************************************************************
