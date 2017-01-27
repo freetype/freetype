@@ -225,9 +225,10 @@ FT_BEGIN_HEADER
    *   TT_MS_ID_SJIS ::
    *     Shift JIS Japanese encoding.  See @FT_ENCODING_SJIS.
    *
-   *   TT_MS_ID_GB2312 ::
-   *     Simplified Chinese as used in Mainland China.  See
-   *     @FT_ENCODING_GB2312.
+   *   TT_MS_ID_PRC ::
+   *     Chinese encodings as used in the People's Republic of China (PRC).
+   *     This means the encodings GB~2312 and its supersets GBK and
+   *     GB~18030.  See @FT_ENCODING_PRC.
    *
    *   TT_MS_ID_BIG_5 ::
    *     Traditional Chinese as used in Taiwan and Hong Kong.  See
@@ -247,11 +248,14 @@ FT_BEGIN_HEADER
 #define TT_MS_ID_SYMBOL_CS    0
 #define TT_MS_ID_UNICODE_CS   1
 #define TT_MS_ID_SJIS         2
-#define TT_MS_ID_GB2312       3
+#define TT_MS_ID_PRC          3
 #define TT_MS_ID_BIG_5        4
 #define TT_MS_ID_WANSUNG      5
 #define TT_MS_ID_JOHAB        6
 #define TT_MS_ID_UCS_4       10
+
+  /* this value is deprecated */
+#define TT_MS_ID_GB2312  TT_MS_ID_PRC
 
 
   /***********************************************************************

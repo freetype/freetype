@@ -653,9 +653,10 @@ FT_BEGIN_HEADER
   /*      `http://en.wikipedia.org/wiki/Shift_JIS'.  See note on           */
   /*      multi-byte encodings below.                                      */
   /*                                                                       */
-  /*    FT_ENCODING_GB2312 ::                                              */
-  /*      Corresponds to an encoding system for Simplified Chinese as      */
-  /*      used in mainland China.                                          */
+  /*    FT_ENCODING_PRC ::                                                 */
+  /*      Corresponds to encoding systems mainly for Simplified Chinese as */
+  /*      used in People's Republic of China (PRC).  The encoding layout   */
+  /*      is based on GB~2312 and its supersets GBK and GB~18030.          */
   /*                                                                       */
   /*    FT_ENCODING_BIG5 ::                                                */
   /*      Corresponds to an encoding system for Traditional Chinese as     */
@@ -701,7 +702,7 @@ FT_BEGIN_HEADER
   /*      Same as FT_ENCODING_SJIS.  Deprecated.                           */
   /*                                                                       */
   /*    FT_ENCODING_MS_GB2312 ::                                           */
-  /*      Same as FT_ENCODING_GB2312.  Deprecated.                         */
+  /*      Same as FT_ENCODING_PRC.  Deprecated.                            */
   /*                                                                       */
   /*    FT_ENCODING_MS_BIG5 ::                                             */
   /*      Same as FT_ENCODING_BIG5.  Deprecated.                           */
@@ -759,14 +760,15 @@ FT_BEGIN_HEADER
     FT_ENC_TAG( FT_ENCODING_UNICODE,   'u', 'n', 'i', 'c' ),
 
     FT_ENC_TAG( FT_ENCODING_SJIS,    's', 'j', 'i', 's' ),
-    FT_ENC_TAG( FT_ENCODING_GB2312,  'g', 'b', ' ', ' ' ),
+    FT_ENC_TAG( FT_ENCODING_PRC,     'g', 'b', ' ', ' ' ),
     FT_ENC_TAG( FT_ENCODING_BIG5,    'b', 'i', 'g', '5' ),
     FT_ENC_TAG( FT_ENCODING_WANSUNG, 'w', 'a', 'n', 's' ),
     FT_ENC_TAG( FT_ENCODING_JOHAB,   'j', 'o', 'h', 'a' ),
 
     /* for backwards compatibility */
+    FT_ENCODING_GB2312     = FT_ENCODING_PRC,
     FT_ENCODING_MS_SJIS    = FT_ENCODING_SJIS,
-    FT_ENCODING_MS_GB2312  = FT_ENCODING_GB2312,
+    FT_ENCODING_MS_GB2312  = FT_ENCODING_PRC,
     FT_ENCODING_MS_BIG5    = FT_ENCODING_BIG5,
     FT_ENCODING_MS_WANSUNG = FT_ENCODING_WANSUNG,
     FT_ENCODING_MS_JOHAB   = FT_ENCODING_JOHAB,
@@ -791,7 +793,7 @@ FT_BEGIN_HEADER
 #define ft_encoding_latin_1         FT_ENCODING_ADOBE_LATIN_1
 #define ft_encoding_latin_2         FT_ENCODING_OLD_LATIN_2
 #define ft_encoding_sjis            FT_ENCODING_SJIS
-#define ft_encoding_gb2312          FT_ENCODING_GB2312
+#define ft_encoding_gb2312          FT_ENCODING_PRC
 #define ft_encoding_big5            FT_ENCODING_BIG5
 #define ft_encoding_wansung         FT_ENCODING_WANSUNG
 #define ft_encoding_johab           FT_ENCODING_JOHAB

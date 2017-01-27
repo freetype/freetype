@@ -1,3 +1,17 @@
+2017-01-27  Werner Lemberg  <wl@gnu.org>
+
+	s/GB2312/PRC/.
+
+	* include/freetype/freetype.h (FT_ENCODING_PRC): New enum value.
+	(FT_ENCODING_GB2312): Deprecated.
+
+	* include/freetype/ttnameid.h (TT_MS_ID_PRC): New macro.
+	(TT_MS_ID_GB2312): Deprecated.
+
+	* src/sfnt/sfobjs.c (sfnt_find_encoding): Updated.
+
+	* docs/CHANGES: Updated.
+
 2017-01-26  Werner Lemberg  <wl@gnu.org>
 
 	[base] Add `FT_Get_Sfnt_LangTag' function.
