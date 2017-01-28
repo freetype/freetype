@@ -3804,40 +3804,51 @@ FT_BEGIN_HEADER
   /*    glyph_variants                                                     */
   /*                                                                       */
   /* <Title>                                                               */
-  /*    Glyph Variants                                                     */
+  /*    Unicode Variation Sequences                                        */
   /*                                                                       */
   /* <Abstract>                                                            */
-  /*    The FreeType~2 interface to Unicode Ideographic Variation          */
-  /*    Sequences (IVS), using the SFNT cmap format~14.                    */
+  /*    The FreeType~2 interface to Unicode Variation Sequences (UVS),     */
+  /*    using the SFNT cmap format~14.                                     */
   /*                                                                       */
   /* <Description>                                                         */
-  /*    Many CJK characters have variant forms.  They are a sort of grey   */
-  /*    area somewhere between being totally irrelevant and semantically   */
-  /*    distinct; for this reason, the Unicode consortium decided to       */
-  /*    introduce Ideographic Variation Sequences (IVS), consisting of a   */
-  /*    Unicode base character and one of 240 variant selectors            */
-  /*    (U+E0100-U+E01EF), instead of further extending the already huge   */
-  /*    code range for CJK characters.                                     */
+  /*    Many characters, especially for CJK scripts, have variant forms.   */
+  /*    They are a sort of grey area somewhere between being totally       */
+  /*    irrelevant and semantically distinct; for this reason, the Unicode */
+  /*    consortium decided to introduce Variation Sequences (VS),          */
+  /*    consisting of a Unicode base character and a variation selector    */
+  /*    instead of further extending the already huge number of            */
+  /*    characters.                                                        */
   /*                                                                       */
-  /*    An IVS is registered and unique; for further details please refer  */
-  /*    to Unicode Technical Standard #37, the Ideographic Variation       */
-  /*    Database:                                                          */
+  /*    Unicode maintains two different sets, namely `Standardized         */
+  /*    Variation Sequences' and registered `Ideographic Variation         */
+  /*    Sequences' (IVS), collected in the `Ideographic Variation          */
+  /*    Database' (IVD).                                                   */
   /*                                                                       */
-  /*      http://www.unicode.org/reports/tr37/                             */
-  /*      http://www.unicode.org/ivd/                                      */
+  /*      http://unicode.org/Public/UCD/latest/ucd/StandardizedVariants.txt */
+  /*      http://unicode.org/reports/tr37/                                 */
+  /*      http://unicode.org/ivd/                                          */
   /*                                                                       */
-  /*    To date (January 2017), the character with the most variants is    */
-  /*    U+9089, having 32 such IVS.                                        */
+  /*    To date (January 2017), the character with the most ideographic    */
+  /*    variations is U+9089, having 32 such IVS.                          */
   /*                                                                       */
-  /*    Adobe and MS decided to support IVS with a new cmap subtable       */
-  /*    (format~14).  It is an odd subtable because it is not a mapping of */
-  /*    input code points to glyphs, but contains lists of all variants    */
-  /*    supported by the font.                                             */
+  /*    Three Mongolian Variation Selectors have the values U+180B-U+180D; */
+  /*    256 generic Variation Selectors are encoded in the ranges          */
+  /*    U+FE00-U+FE0F and U+E0100-U+E01EF.  IVS currently use Variation    */
+  /*    Selectors from the range U+E0100-U+E01EF only.                     */
   /*                                                                       */
-  /*    A variant may be either `default' or `non-default'.  A default     */
-  /*    variant is the one you will get for that code point if you look it */
-  /*    up in the standard Unicode cmap.  A non-default variant is a       */
-  /*    different glyph.                                                   */
+  /*    A VS consists of the base character value followed by a single     */
+  /*    Variation Selector.  For example, to get the first variation of    */
+  /*    U+9089, you have to write the character sequence `U+9089 U+E0100'. */
+  /*                                                                       */
+  /*    Adobe and MS decided to support both standardized and ideographic  */
+  /*    VS with a new cmap subtable (format~14).  It is an odd subtable    */
+  /*    because it is not a mapping of input code points to glyphs, but    */
+  /*    contains lists of all variations supported by the font.            */
+  /*                                                                       */
+  /*    A variation may be either `default' or `non-default' for a given   */
+  /*    font.  A default variation is the one you will get for that code   */
+  /*    point if you look it up in the standard Unicode cmap.  A           */
+  /*    non-default variation is a different glyph.                        */
   /*                                                                       */
   /*************************************************************************/
 
@@ -3893,8 +3904,8 @@ FT_BEGIN_HEADER
   /*    FT_Face_GetCharVariantIsDefault                                    */
   /*                                                                       */
   /* <Description>                                                         */
-  /*    Check whether this variant of this Unicode character is the one to */
-  /*    be found in the `cmap'.                                            */
+  /*    Check whether this variation of this Unicode character is the one  */
+  /*    to be found in the `cmap'.                                         */
   /*                                                                       */
   /* <Input>                                                               */
   /*    face ::                                                            */
@@ -3908,7 +3919,7 @@ FT_BEGIN_HEADER
   /*                                                                       */
   /* <Return>                                                              */
   /*    1~if found in the standard (Unicode) cmap, 0~if found in the       */
-  /*    variation selector cmap, or -1 if it is not a variant.             */
+  /*    variation selector cmap, or -1 if it is not a variation.           */
   /*                                                                       */
   /* <Note>                                                                */
   /*    This function is only meaningful if the font has a variation       */
@@ -3929,7 +3940,7 @@ FT_BEGIN_HEADER
   /*    FT_Face_GetVariantSelectors                                        */
   /*                                                                       */
   /* <Description>                                                         */
-  /*    Return a zero-terminated list of Unicode variant selectors found   */
+  /*    Return a zero-terminated list of Unicode variation selectors found */
   /*    in the font.                                                       */
   /*                                                                       */
   /* <Input>                                                               */
@@ -3938,7 +3949,7 @@ FT_BEGIN_HEADER
   /*                                                                       */
   /* <Return>                                                              */
   /*    A pointer to an array of selector code points, or NULL if there is */
-  /*    no valid variant selector cmap subtable.                           */
+  /*    no valid variation selector cmap subtable.                         */
   /*                                                                       */
   /* <Note>                                                                */
   /*    The last item in the array is~0; the array is owned by the         */
@@ -3958,7 +3969,7 @@ FT_BEGIN_HEADER
   /*    FT_Face_GetVariantsOfChar                                          */
   /*                                                                       */
   /* <Description>                                                         */
-  /*    Return a zero-terminated list of Unicode variant selectors found   */
+  /*    Return a zero-terminated list of Unicode variation selectors found */
   /*    for the specified character code.                                  */
   /*                                                                       */
   /* <Input>                                                               */
@@ -3969,7 +3980,7 @@ FT_BEGIN_HEADER
   /*      The character codepoint in Unicode.                              */
   /*                                                                       */
   /* <Return>                                                              */
-  /*    A pointer to an array of variant selector code points that are     */
+  /*    A pointer to an array of variation selector code points that are   */
   /*    active for the given character, or NULL if the corresponding list  */
   /*    is empty.                                                          */
   /*                                                                       */
@@ -3993,19 +4004,19 @@ FT_BEGIN_HEADER
   /*                                                                       */
   /* <Description>                                                         */
   /*    Return a zero-terminated list of Unicode character codes found for */
-  /*    the specified variant selector.                                    */
+  /*    the specified variation selector.                                  */
   /*                                                                       */
   /* <Input>                                                               */
   /*    face ::                                                            */
   /*      A handle to the source face object.                              */
   /*                                                                       */
   /*    variantSelector ::                                                 */
-  /*      The variant selector code point in Unicode.                      */
+  /*      The variation selector code point in Unicode.                    */
   /*                                                                       */
   /* <Return>                                                              */
   /*    A list of all the code points that are specified by this selector  */
   /*    (both default and non-default codes are returned) or NULL if there */
-  /*    is no valid cmap or the variant selector is invalid.               */
+  /*    is no valid cmap or the variation selector is invalid.             */
   /*                                                                       */
   /* <Note>                                                                */
   /*    The last item in the array is~0; the array is owned by the         */
