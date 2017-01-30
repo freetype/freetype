@@ -933,7 +933,7 @@
     }
 
     /* advance width adjustments are always present in an `HVAR' table, */
-    /* so need to test for this capability                              */
+    /* no need to test for this capability                              */
 
     if ( face->blend->hvar_table->widthMap.innerIndex )
     {
