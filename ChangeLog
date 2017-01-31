@@ -1,5 +1,28 @@
 2017-01-31  Werner Lemberg  <wl@gnu.org>
 
+	[cff] Provide metrics variation service interface (#50196).
+
+	Only now I've got an OTF with an HVAR table for testing...
+
+	The code in `ftmm.c' uses `FT_FACE_LOOKUP_SERVICE' to get the
+	metrics variations interface.  However, this didn't work with
+	`FT_FACE_FIND_GLOBAL_SERVICE' used in `sfnt_init_face'.
+
+	* src/cff/cffdrivr.c: Include FT_SERVICE_METRICS_VARIATIONS_H.
+	(cff_hadvance_adjust, cff_metrics_adjust): Wrapper functions for
+	metric service functions from the `truetype' module.
+	(cff_service_metrics_variations): New service.
+	(cff_services): Updated.
+
+	* src/cff/cffpic.h (CFF_SERVICE_METRICS_VAR_GET): New macro.
+	[FT_CONFIG_OPTION_PIC]: Synchronize code.
+
+	* src/sfnt/sfobjs.c (sfnt_init_face): Replace call to
+	FT_FACE_FIND_GLOBAL_SERVICE with `ft_module_get_service' to always
+	load the service from the `truetype' module.
+
+2017-01-31  Werner Lemberg  <wl@gnu.org>
+
 	Add framework to support services with 9 functions.
 
 	* include/freetype/internal/ftserv.h (FT_DEFINE_SERVICEDESCREC9):

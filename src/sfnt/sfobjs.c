@@ -894,7 +894,17 @@
                                         0 );
     }
 
-    FT_FACE_FIND_GLOBAL_SERVICE( face, face->var, METRICS_VARIATIONS );
+    if ( !face->var )
+    {
+      /* we want the metrics variations interface */
+      /* from the `truetype' module only          */
+      FT_Module  tt_module = FT_Get_Module( library, "truetype" );
+
+
+      face->var = ft_module_get_service( tt_module,
+                                         FT_SERVICE_ID_METRICS_VARIATIONS,
+                                         0 );
+    }
 #endif
 
     FT_TRACE2(( "SFNT driver\n" ));
