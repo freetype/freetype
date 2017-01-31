@@ -1,5 +1,12 @@
 2017-01-31  Werner Lemberg  <wl@gnu.org>
 
+	Add framework to support services with 9 functions.
+
+	* include/freetype/internal/ftserv.h (FT_DEFINE_SERVICEDESCREC9):
+	New macro.
+
+2017-01-31  Werner Lemberg  <wl@gnu.org>
+
 	[base] Fix error handing in MM functions.
 
 	* src/base/ftmm.c (FT_Set_Var_Design_Coordinates,

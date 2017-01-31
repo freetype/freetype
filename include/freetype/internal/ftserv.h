@@ -306,6 +306,30 @@ FT_BEGIN_HEADER
     { NULL, NULL }                                                          \
   };
 
+#define FT_DEFINE_SERVICEDESCREC9( class_,                                  \
+                                   serv_id_1, serv_data_1,                  \
+                                   serv_id_2, serv_data_2,                  \
+                                   serv_id_3, serv_data_3,                  \
+                                   serv_id_4, serv_data_4,                  \
+                                   serv_id_5, serv_data_5,                  \
+                                   serv_id_6, serv_data_6,                  \
+                                   serv_id_7, serv_data_7,                  \
+                                   serv_id_8, serv_data_8,                  \
+                                   serv_id_9, serv_data_9 )                 \
+  static const FT_ServiceDescRec  class_[] =                                \
+  {                                                                         \
+    { serv_id_1, serv_data_1 },                                             \
+    { serv_id_2, serv_data_2 },                                             \
+    { serv_id_3, serv_data_3 },                                             \
+    { serv_id_4, serv_data_4 },                                             \
+    { serv_id_5, serv_data_5 },                                             \
+    { serv_id_6, serv_data_6 },                                             \
+    { serv_id_7, serv_data_7 },                                             \
+    { serv_id_8, serv_data_8 },                                             \
+    { serv_id_9, serv_data_9 },                                             \
+    { NULL, NULL }                                                          \
+  };
+
 #else /* FT_CONFIG_OPTION_PIC */
 
 #define FT_DEFINE_SERVICEDESCREC1( class_,                                  \
@@ -672,6 +696,65 @@ FT_BEGIN_HEADER
     return FT_Err_Ok;                                                       \
   }
 
+#define FT_DEFINE_SERVICEDESCREC9( class_,                                  \
+                                   serv_id_1, serv_data_1,                  \
+                                   serv_id_2, serv_data_2,                  \
+                                   serv_id_3, serv_data_3,                  \
+                                   serv_id_4, serv_data_4,                  \
+                                   serv_id_5, serv_data_5,                  \
+                                   serv_id_6, serv_data_6,                  \
+                                   serv_id_7, serv_data_7,                  \
+                                   serv_id_8, serv_data_8,                  \
+                                   serv_id_9, serv_data_9 )                 \
+  void                                                                      \
+  FT_Destroy_Class_ ## class_( FT_Library          library,                 \
+                               FT_ServiceDescRec*  clazz )                  \
+  {                                                                         \
+    FT_Memory  memory = library->memory;                                    \
+                                                                            \
+                                                                            \
+    if ( clazz )                                                            \
+      FT_FREE( clazz );                                                     \
+  }                                                                         \
+                                                                            \
+  FT_Error                                                                  \
+  FT_Create_Class_ ## class_( FT_Library           library,                 \
+                              FT_ServiceDescRec**  output_class)            \
+  {                                                                         \
+    FT_ServiceDescRec*  clazz  = NULL;                                      \
+    FT_Error            error;                                              \
+    FT_Memory           memory = library->memory;                           \
+                                                                            \
+                                                                            \
+    if ( FT_ALLOC( clazz, sizeof ( *clazz ) * 10 ) )                        \
+      return error;                                                         \
+                                                                            \
+    clazz[0].serv_id   = serv_id_1;                                         \
+    clazz[0].serv_data = serv_data_1;                                       \
+    clazz[1].serv_id   = serv_id_2;                                         \
+    clazz[1].serv_data = serv_data_2;                                       \
+    clazz[2].serv_id   = serv_id_3;                                         \
+    clazz[2].serv_data = serv_data_3;                                       \
+    clazz[3].serv_id   = serv_id_4;                                         \
+    clazz[3].serv_data = serv_data_4;                                       \
+    clazz[4].serv_id   = serv_id_5;                                         \
+    clazz[4].serv_data = serv_data_5;                                       \
+    clazz[5].serv_id   = serv_id_6;                                         \
+    clazz[5].serv_data = serv_data_6;                                       \
+    clazz[6].serv_id   = serv_id_7;                                         \
+    clazz[6].serv_data = serv_data_7;                                       \
+    clazz[7].serv_id   = serv_id_8;                                         \
+    clazz[7].serv_data = serv_data_8;                                       \
+    clazz[8].serv_id   = serv_id_9;                                         \
+    clazz[8].serv_data = serv_data_9;                                       \
+    clazz[9].serv_id   = NULL;                                              \
+    clazz[9].serv_data = NULL;                                              \
+                                                                            \
+    *output_class = clazz;                                                  \
+                                                                            \
+    return FT_Err_Ok;                                                       \
+  }
+
 #endif /* FT_CONFIG_OPTION_PIC */
 
 
@@ -735,7 +818,7 @@ FT_BEGIN_HEADER
    *   FT_FACE_LOOKUP_SERVICE
    *
    * @description:
-   *   This macro is used to lookup a service from a face's driver module
+   *   This macro is used to look up a service from a face's driver module
    *   using its cache.
    *
    * @input:
