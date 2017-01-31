@@ -1,3 +1,11 @@
+2017-01-31  Werner Lemberg  <wl@gnu.org>
+
+	[autofit] Avoid uninitialized jumps (#50191).
+
+	* src/autofit/afcjk.c (af_cjk_metrics_check_digits),
+	src/autofit/aflatin.c (af_latin_metrics_check_digits): Initialize
+	`advance'.
+
 2017-01-27  Werner Lemberg  <wl@gnu.org>
 
 	s/GB2312/PRC/.

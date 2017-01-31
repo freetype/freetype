@@ -563,7 +563,7 @@
                                FT_Face        face )
   {
     FT_Bool   started = 0, same_width = 1;
-    FT_Fixed  advance, old_advance = 0;
+    FT_Fixed  advance = 0, old_advance = 0;
 
     void*  shaper_buf;
 
