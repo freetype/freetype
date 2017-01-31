@@ -1,5 +1,12 @@
 2017-01-31  Werner Lemberg  <wl@gnu.org>
 
+	[truetype] Fix sanity check for `gvar' table (#50184).
+
+	* src/truetype/ttgxvar.c (ft_var_load_gvar): There might be missing
+	variation data for some glyphs.
+
+2017-01-31  Werner Lemberg  <wl@gnu.org>
+
 	[autofit] Avoid uninitialized jumps (#50191).
 
 	* src/autofit/afcjk.c (af_cjk_metrics_check_digits),

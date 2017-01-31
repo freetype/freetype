@@ -1379,10 +1379,9 @@
       goto Exit;
     }
 
-    /* rough sanity check: offsets can be either 2 or 4 bytes, */
-    /* and a single variation needs at least 4 bytes per glyph */
+    /* rough sanity check: offsets can be either 2 or 4 bytes */
     if ( (FT_ULong)gvar_head.glyphCount *
-           ( ( gvar_head.flags & 1 ) ? 8 : 6 ) > table_len )
+           ( ( gvar_head.flags & 1 ) ? 4 : 2 ) > table_len )
     {
       FT_TRACE1(( "ft_var_load_gvar: invalid number of glyphs\n" ));
       error = FT_THROW( Invalid_Table );
