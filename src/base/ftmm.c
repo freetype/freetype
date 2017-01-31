@@ -205,7 +205,9 @@
         error = service_mm->set_var_design( face, num_coords, coords );
     }
 
-    error = ft_face_get_mvar_service( face, &service_mvar );
+    if ( !error )
+      error = ft_face_get_mvar_service( face, &service_mvar );
+
     if ( !error )
     {
       if ( service_mvar->metrics_adjust )
@@ -276,7 +278,9 @@
         error = service_mm->set_mm_blend( face, num_coords, coords );
     }
 
-    error = ft_face_get_mvar_service( face, &service_mvar );
+    if ( !error )
+      error = ft_face_get_mvar_service( face, &service_mvar );
+
     if ( !error )
     {
       if ( service_mvar->metrics_adjust )
@@ -322,7 +326,9 @@
         error = service_mm->set_mm_blend( face, num_coords, coords );
     }
 
-    error = ft_face_get_mvar_service( face, &service_mvar );
+    if ( !error )
+      error = ft_face_get_mvar_service( face, &service_mvar );
+
     if ( !error )
     {
       if ( service_mvar->metrics_adjust )

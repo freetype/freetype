@@ -1,5 +1,13 @@
 2017-01-31  Werner Lemberg  <wl@gnu.org>
 
+	[base] Fix error handing in MM functions.
+
+	* src/base/ftmm.c (FT_Set_Var_Design_Coordinates,
+	FT_Set_MM_Blend_Coordinates, FT_Set_Var_Blend_Coordinates):
+	Implement it.
+
+2017-01-31  Werner Lemberg  <wl@gnu.org>
+
 	[truetype] Fix sanity check for `gvar' table (#50184).
 
 	* src/truetype/ttgxvar.c (ft_var_load_gvar): There might be missing
