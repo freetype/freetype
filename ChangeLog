@@ -1,3 +1,7 @@
+2017-01-31  Alexei Podtelezhnikov  <apodtele@gmail.com>
+
+	* src/smooth/ftgrays.c (gray_render_scanline): Improve code.
+
 2017-01-31  Werner Lemberg  <wl@gnu.org>
 
 	[cff] Provide metrics variation service interface (#50196).

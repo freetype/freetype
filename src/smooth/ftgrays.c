@@ -600,7 +600,7 @@ typedef ptrdiff_t  FT_PtrDist;
                                  TPos    x2,
                                  TCoord  y2 )
   {
-    TCoord  ex1, ex2, fx1, fx2, first, delta, mod;
+    TCoord  ex1, ex2, fx1, fx2, first, dy, delta, mod;
     TPos    p, dx;
     int     incr;
 
@@ -617,31 +617,27 @@ typedef ptrdiff_t  FT_PtrDist;
 
     fx1   = (TCoord)( x1 - SUBPIXELS( ex1 ) );
     fx2   = (TCoord)( x2 - SUBPIXELS( ex2 ) );
-    delta = y2 - y1;
 
     /* everything is located in a single cell.  That is easy! */
     /*                                                        */
     if ( ex1 == ex2 )
-    {
-      ras.area  += (TArea)(( fx1 + fx2 ) * delta);
-      ras.cover += delta;
-      return;
-    }
+      goto End;
 
     /* ok, we'll have to render a run of adjacent cells on the same */
     /* scanline...                                                  */
     /*                                                              */
     dx = x2 - x1;
+    dy = y2 - y1;
 
     if ( dx > 0 )
     {
-      p     = ( ONE_PIXEL - fx1 ) * delta;
+      p     = ( ONE_PIXEL - fx1 ) * dy;
       first = ONE_PIXEL;
       incr  = 1;
     }
     else
     {
-      p     = fx1 * delta;
+      p     = fx1 * dy;
       first = 0;
       incr  = -1;
       dx    = -dx;
@@ -649,34 +645,31 @@ typedef ptrdiff_t  FT_PtrDist;
 
     FT_DIV_MOD( TCoord, p, dx, delta, mod );
 
-    ras.area  += (TArea)(( fx1 + first ) * delta);
+    ras.area  += (TArea)( ( fx1 + first ) * delta );
     ras.cover += delta;
-
-    ex1 += incr;
+    y1        += delta;
+    ex1       += incr;
     gray_set_cell( RAS_VAR_ ex1, ey );
-    y1  += delta;
 
     if ( ex1 != ex2 )
     {
       TCoord  lift, rem;
 
 
-      p = ONE_PIXEL * ( y2 - y1 + delta );
+      p = ONE_PIXEL * dy;
       FT_DIV_MOD( TCoord, p, dx, lift, rem );
-
-      mod -= (int)dx;
 
       do
       {
         delta = lift;
         mod  += rem;
-        if ( mod >= 0 )
+        if ( mod >= (TCoord)dx )
         {
           mod -= (TCoord)dx;
           delta++;
         }
 
-        ras.area  += (TArea)(ONE_PIXEL * delta);
+        ras.area  += (TArea)( ONE_PIXEL * delta );
         ras.cover += delta;
         y1        += delta;
         ex1       += incr;
@@ -684,9 +677,13 @@ typedef ptrdiff_t  FT_PtrDist;
       } while ( ex1 != ex2 );
     }
 
-    delta      = y2 - y1;
-    ras.area  += (TArea)(( fx2 + ONE_PIXEL - first ) * delta);
-    ras.cover += delta;
+    fx1 = ONE_PIXEL - first;
+
+  End:
+    dy = y2 - y1;
+
+    ras.area  += (TArea)( ( fx1 + fx2 ) * dy );
+    ras.cover += dy;
   }
 
 
@@ -798,13 +795,12 @@ typedef ptrdiff_t  FT_PtrDist;
 
       p    = ONE_PIXEL * dx;
       FT_DIV_MOD( TCoord, p, dy, lift, rem );
-      mod -= (TCoord)dy;
 
       do
       {
         delta = lift;
         mod  += rem;
-        if ( mod >= 0 )
+        if ( mod >= (TCoord)dy )
         {
           mod -= (TCoord)dy;
           delta++;
