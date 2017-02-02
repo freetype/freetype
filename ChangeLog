@@ -1,5 +1,17 @@
 2017-02-02  Werner Lemberg  <wl@gnu.org>
 
+	[truetype] Fix MVAR post-action handling.
+
+	Reported as
+
+	  https://bugs.chromium.org/p/oss-fuzz/issues/detail?id=509
+
+	* src/truetype/ttobjs.c (tt_size_reset): Do nothing for CFF2.  This
+	is important to make `tt_size_reset_iterator' (called in
+	`tt_apply_mvar') always work.
+
+2017-02-02  Werner Lemberg  <wl@gnu.org>
+
 	Make compilation with FT_CONFIG_OPTION_PIC work again.
 
 	All code committed here is guarded with `FT_CONFIG_OPTION_PIC'.

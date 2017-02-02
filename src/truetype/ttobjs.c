@@ -1212,9 +1212,13 @@
     FT_Size_Metrics*  metrics;
 
 
-    size->ttmetrics.valid = FALSE;
-
     face = (TT_Face)size->root.face;
+
+    /* nothing to do for CFF2 */
+    if ( face->isCFF2 )
+      return FT_Err_Ok;
+
+    size->ttmetrics.valid = FALSE;
 
     metrics = &size->metrics;
 
