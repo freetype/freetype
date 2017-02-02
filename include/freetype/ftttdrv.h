@@ -138,7 +138,6 @@ FT_BEGIN_HEADER
    *   interpreter-version
    *
    * @description:
-
    *   Currently, three versions are available, two representing the
    *   bytecode interpreter with subpixel hinting support (old `Infinality'
    *   code and new stripped-down and higher performance `minimal' code) and
