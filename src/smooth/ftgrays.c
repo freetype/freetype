@@ -341,7 +341,8 @@ typedef ptrdiff_t  FT_PtrDist;
 
   /* Compute `dividend / divisor' and return both its quotient and     */
   /* remainder, cast to a specific type.  This macro also ensures that */
-  /* the remainder is always positive.                                 */
+  /* the remainder is always positive.  We use the remainder to keep   */
+  /* track of accumulating errors and compensate for them.             */
 #define FT_DIV_MOD( type, dividend, divisor, quotient, remainder ) \
   FT_BEGIN_STMNT                                                   \
     (quotient)  = (type)( (dividend) / (divisor) );                \
