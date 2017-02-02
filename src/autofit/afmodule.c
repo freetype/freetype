@@ -104,6 +104,19 @@
   }
 
 
+#ifdef FT_CONFIG_OPTION_PIC
+
+#undef  AF_SCRIPT_CLASSES_GET
+#define AF_SCRIPT_CLASSES_GET  \
+          ( GET_PIC( ft_module->library )->af_script_classes )
+
+#undef  AF_STYLE_CLASSES_GET
+#define AF_STYLE_CLASSES_GET  \
+          ( GET_PIC( ft_module->library )->af_style_classes )
+
+#endif
+
+
   static FT_Error
   af_property_set( FT_Module    ft_module,
                    const char*  property_name,

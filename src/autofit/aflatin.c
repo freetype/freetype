@@ -1951,6 +1951,10 @@
     FT_Memory     memory = hints->memory;
     AF_LatinAxis  laxis  = &((AF_LatinMetrics)hints->metrics)->axis[dim];
 
+#ifdef FT_CONFIG_OPTION_PIC
+    AF_FaceGlobals  globals = hints->metrics->globals;
+#endif
+
     AF_StyleClass   style_class  = hints->metrics->style_class;
     AF_ScriptClass  script_class = AF_SCRIPT_CLASSES_GET
                                      [style_class->script];
@@ -2833,6 +2837,10 @@
     AF_Edge       edge;
     AF_Edge       anchor     = NULL;
     FT_Int        has_serifs = 0;
+
+#ifdef FT_CONFIG_OPTION_PIC
+    AF_FaceGlobals  globals = hints->metrics->globals;
+#endif
 
     AF_StyleClass   style_class  = hints->metrics->style_class;
     AF_ScriptClass  script_class = AF_SCRIPT_CLASSES_GET

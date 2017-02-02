@@ -138,7 +138,7 @@ FT_BEGIN_HEADER
     clazz->bsb_adjust      = bsb_adjust_;                             \
     clazz->vorg_adjust     = vorg_adjust_;                            \
     clazz->metrics_adjust  = metrics_adjust_;                         \
-  };
+  }
 
 #endif /* FT_CONFIG_OPTION_PIC */
 

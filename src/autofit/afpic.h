@@ -69,7 +69,7 @@ FT_BEGIN_HEADER
 
 
 #define GET_PIC( lib )  \
-          ( (AFModulePIC*)((lib)->pic_container.autofit) )
+          ( (AFModulePIC*)( (lib)->pic_container.autofit ) )
 
 #define AF_SERVICES_GET  \
           ( GET_PIC( library )->af_services )

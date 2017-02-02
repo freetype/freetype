@@ -575,6 +575,7 @@ extern void*  _af_debug_hints;
           m_init,                                                         \
           m_scale,                                                        \
           m_done,                                                         \
+          m_stdw,                                                         \
           h_init,                                                         \
           h_apply )                                                       \
   FT_LOCAL_DEF( void )                                                    \

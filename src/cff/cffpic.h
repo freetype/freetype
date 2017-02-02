@@ -63,7 +63,7 @@ FT_BEGIN_HEADER
     FT_Service_TTCMapsRec            cff_service_get_cmap_info;
     FT_Service_CIDRec                cff_service_cid_info;
     FT_Service_PropertiesRec         cff_service_properties;
-    FT_Service_MultiMastersRec       cff_service_multiple_masters;
+    FT_Service_MultiMastersRec       cff_service_multi_masters;
     FT_Service_MetricsVariationsRec  cff_service_metrics_variations;
     FT_CMap_ClassRec                 cff_cmap_encoding_class_rec;
     FT_CMap_ClassRec                 cff_cmap_unicode_class_rec;

@@ -1,3 +1,27 @@
+2017-02-02  Werner Lemberg  <wl@gnu.org>
+
+	Make compilation with FT_CONFIG_OPTION_PIC work again.
+
+	All code committed here is guarded with `FT_CONFIG_OPTION_PIC'.
+
+	* include/freetype/internal/services/svmetric.h
+	(FT_DEFINE_SERVICE_METRICSVARIATIONSREC): Remove trailing semicolon.
+
+	* src/autofit/aflatin.c (af_latin_hints_compute_edges,
+	af_latin_hint_edges): Provide `globals' variable.
+
+	* src/autofit/afloader.c (af_loader_load_glyph): Remove shadowing
+	variable.
+
+	* src/autofit/afmodule.c (AF_SCRIPT_CLASSES_GET,
+	AF_STYLE_CLASSES_GET): Redefine.
+
+	* src/autofit/aftypes.h (AF_DEFINE_WRITING_SYSTEM_CLASS): Fix typo.
+
+	* src/cff/cffparse.c (CFF_FIELD_BLEND): Provide it.
+
+	* src/cff/cffpic.h (CffModulePIC): Fix typo.
+
 2017-01-31  Alexei Podtelezhnikov  <apodtele@gmail.com>
 
 	* src/smooth/ftgrays.c (gray_render_scanline): Improve code.

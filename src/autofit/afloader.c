@@ -375,18 +375,11 @@
 
       /* now load the slot image into the auto-outline */
       /* and run the automatic hinting process         */
-      {
-#ifdef FT_CONFIG_OPTION_PIC
-        AF_FaceGlobals  globals = loader->globals;
-#endif
-
-
-        if ( writing_system_class->style_hints_apply )
-          writing_system_class->style_hints_apply( glyph_index,
-                                                   hints,
-                                                   &gloader->base.outline,
-                                                   style_metrics );
-      }
+      if ( writing_system_class->style_hints_apply )
+        writing_system_class->style_hints_apply( glyph_index,
+                                                 hints,
+                                                 &gloader->base.outline,
+                                                 style_metrics );
 
       /* we now need to adjust the metrics according to the change in */
       /* width/positioning that occurred during the hinting process   */

@@ -1125,6 +1125,8 @@
 #define CFF_FIELD_DELTA( code, name, max, id ) i++;
 #undef CFF_FIELD_CALLBACK
 #define CFF_FIELD_CALLBACK( code, name, id ) i++;
+#undef CFF_FIELD_BLEND
+#define CFF_FIELD_BLEND( code, id ) i++;
 
 #include "cfftoken.h"
 
@@ -1170,6 +1172,17 @@
           clazz[i].reader       = 0;                                \
           clazz[i].array_max    = max_;                             \
           clazz[i].count_offset = FT_FIELD_OFFSET( num_ ## name_ ); \
+          i++;
+
+#undef  CFF_FIELD_BLEND
+#define CFF_FIELD_BLEND( code_, id_ )              \
+          clazz[i].kind         = cff_kind_blend;  \
+          clazz[i].code         = code_ | CFFCODE; \
+          clazz[i].offset       = 0;               \
+          clazz[i].size         = 0;               \
+          clazz[i].reader       = cff_parse_blend; \
+          clazz[i].array_max    = 0;               \
+          clazz[i].count_offset = 0;               \
           i++;
 
 #include "cfftoken.h"
@@ -1220,6 +1233,18 @@
           clazz[i].array_max    = max_;                             \
           clazz[i].count_offset = FT_FIELD_OFFSET( num_ ## name_ ); \
           clazz[i].id           = id_;                              \
+          i++;
+
+#undef  CFF_FIELD_BLEND
+#define CFF_FIELD_BLEND( code_, id_ )              \
+          clazz[i].kind         = cff_kind_blend;  \
+          clazz[i].code         = code_ | CFFCODE; \
+          clazz[i].offset       = 0;               \
+          clazz[i].size         = 0;               \
+          clazz[i].reader       = cff_parse_blend; \
+          clazz[i].array_max    = 0;               \
+          clazz[i].count_offset = 0;               \
+          clazz[i].id           = id_;             \
           i++;
 
 #include "cfftoken.h"
