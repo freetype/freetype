@@ -222,10 +222,10 @@
     FT_Slot_Internal  internal = slot->internal;
     FT_GlyphLoader    gloader  = internal->loader;
 
-    AF_GlyphHints          hints          = loader->hints;
+    AF_GlyphHints          hints         = loader->hints;
     AF_ScalerRec           scaler;
     AF_StyleMetrics        style_metrics;
-    FT_UInt                style_options  = AF_STYLE_NONE_DFLT;
+    FT_UInt                style_options = AF_STYLE_NONE_DFLT;
     AF_StyleClass          style_class;
     AF_WritingSystemClass  writing_system_class;
 
@@ -241,11 +241,11 @@
 
     /*
      *  TODO: This code currently doesn't support fractional advance widths,
-     *  i.e.  placing hinted glyphs at anything other than integer
+     *  i.e., placing hinted glyphs at anything other than integer
      *  x-positions.  This is only relevant for the warper code, which
      *  scales and shifts glyphs to optimize blackness of stems (hinting on
      *  the x-axis by nature places things on pixel integers, hinting on the
-     *  y-axis only, i.e.  LIGHT mode, doesn't touch the x-axis).  The delta
+     *  y-axis only, i.e., LIGHT mode, doesn't touch the x-axis).  The delta
      *  values of the scaler would need to be adjusted.
      */
     scaler.face    = face;
@@ -257,6 +257,8 @@
     scaler.render_mode = FT_LOAD_TARGET_MODE( load_flags );
     scaler.flags       = 0;
 
+    /* note that the fallback style can't be changed anymore */
+    /* after the first call of `ta_loader_load_glyph'        */
     error = af_loader_reset( loader, module, face );
     if ( error )
       goto Exit;
@@ -401,6 +403,8 @@
           old_lsb = edge1->opos /* - loader->pp1.x */;
           new_lsb = edge1->pos;
 
+          /* remember unhinted values to later account */
+          /* for rounding errors                       */
           pp1x_uh = new_lsb    - old_lsb;
           pp2x_uh = edge2->pos + old_rsb;
 
