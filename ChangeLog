@@ -1,3 +1,9 @@
+2017-02-03  Werner Lemberg  <wl@gnu.org>
+
+	* include/freetype/ftgasp.h (FT_GASP_SYMMETRIC_GRIDFIT): Fix value.
+
+	Reported by Behdad.
+
 2017-02-02  Werner Lemberg  <wl@gnu.org>
 
 	[truetype] Fix MVAR post-action handling.
