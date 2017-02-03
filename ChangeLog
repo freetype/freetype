@@ -1,5 +1,9 @@
 2017-02-03  Werner Lemberg  <wl@gnu.org>
 
+	* src/autofit/afglobal.c (af_face_globals_free): Erase useless code.
+
+2017-02-03  Werner Lemberg  <wl@gnu.org>
+
 	* include/freetype/ftgasp.h (FT_GASP_SYMMETRIC_GRIDFIT): Fix value.
 
 	Reported by Behdad.
