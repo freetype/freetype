@@ -13,7 +13,7 @@ LC_ALL=C
 export LC_ALL
 
 
-# if `pkg-config' is available, use values from `freetype.pc'
+# if `pkg-config' is available, use values from `freetype2.pc'
 pkg-config --version >/dev/null 2>&1
 if test $? -eq 0 ; then
   # note that option `--variable' is not affected by the
