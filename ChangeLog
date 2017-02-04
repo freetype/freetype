@@ -1,5 +1,19 @@
 2017-02-04  Werner Lemberg  <wl@gnu.org>
 
+	Make `freetype-config' a wrapper of `pkg-config' if possible.
+
+	Based on ideas taken from
+
+	  http://pkgs.fedoraproject.org/cgit/rpms/freetype.git/tree/freetype-multilib.patch
+	  http://pkgs.fedoraproject.org/cgit/rpms/freetype.git/tree/freetype-2.5.3-freetype-config-prefix.patch
+
+	* builds/unix/freetype-config.in: Rewritten.  Use `pkg-config' to
+	set output variables if program is available.
+
+	* docs/CHANGES, docs/freetype-config.1: Updated.
+
+2017-02-04  Werner Lemberg  <wl@gnu.org>
+
 	* builds/unix/unix-def.in (freetype-config): Fix permissions.
 
 2017-02-03  Werner Lemberg  <wl@gnu.org>

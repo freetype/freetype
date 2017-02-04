@@ -47,6 +47,9 @@ CHANGES BETWEEN 2.7.1 and 2.7.2
       . Language, encoding, and name IDs have been updated to OpenType
         version 1.8.1.
 
+    - The `freetype-config' script is now a wrapper of `pkg-config' if
+      this program is available in the path.
+
 
 ======================================================================
 
