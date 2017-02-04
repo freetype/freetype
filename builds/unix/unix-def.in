@@ -111,7 +111,7 @@ $(OBJ_BUILD)/freetype-config: $(TOP_DIR)/builds/unix/freetype-config.in
 	    $<                                                 \
 	    > $@.tmp
 	chmod +x $@.tmp
-	chmod a-w $@.tmp
+	chmod go-w $@.tmp
 	mv $@.tmp $@
 
 # To support directory names with spaces (as might easily happen on Windows
