@@ -168,7 +168,9 @@
     '\0',
     'f', ' ', 'i', ' ', 'j', ' ', 'k', ' ', 'd', ' ', 'b', ' ', 'h',  /* f i j k d b h */
     '\0',
-    'x', ' ', 'z', ' ', 'r', ' ', 'o', ' ', 'e', ' ', 's', ' ', 'c',  /* x z r o e s c */
+    'u', ' ', 'v', ' ', 'x', ' ', 'z', ' ', 'o', ' ', 'e', ' ', 's', ' ', 'c',  /* u v x z o e s c */
+    '\0',
+    'n', ' ', 'r', ' ', 'x', ' ', 'z', ' ', 'o', ' ', 'e', ' ', 's', ' ', 'c',  /* n r x z o e s c */
     '\0',
     'p', ' ', 'q', ' ', 'g', ' ', 'j', ' ', 'y',  /* p q g j y */
     '\0',
@@ -392,9 +394,9 @@
     { AF_BLUE_STRING_LATIN_CAPITAL_TOP,     AF_BLUE_PROPERTY_LATIN_TOP        },
     { AF_BLUE_STRING_LATIN_CAPITAL_BOTTOM,  0                                 },
     { AF_BLUE_STRING_LATIN_SMALL_F_TOP,     AF_BLUE_PROPERTY_LATIN_TOP        },
-    { AF_BLUE_STRING_LATIN_SMALL,           AF_BLUE_PROPERTY_LATIN_TOP      |
+    { AF_BLUE_STRING_LATIN_SMALL_TOP,       AF_BLUE_PROPERTY_LATIN_TOP      |
                                             AF_BLUE_PROPERTY_LATIN_X_HEIGHT   },
-    { AF_BLUE_STRING_LATIN_SMALL,           0                                 },
+    { AF_BLUE_STRING_LATIN_SMALL_BOTTOM,    0                                 },
     { AF_BLUE_STRING_LATIN_SMALL_DESCENDER, 0                                 },
     { AF_BLUE_STRING_MAX,                   0                                 },
     { AF_BLUE_STRING_LATIN_SUBS_CAPITAL_TOP,     AF_BLUE_PROPERTY_LATIN_TOP        },

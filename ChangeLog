@@ -1,3 +1,24 @@
+2017-02-05  Werner Lemberg  <wl@gnu.org>
+
+	[autofit] Use better blue zone characters for lowercase latin.
+
+	The number of lowercase characters for computing the top flat blue
+	zone value was too small (in most cases only `x' and `z').  If one
+	of the two characters has a large serif, say, it can happen that
+	FreeType must select between two different values, having a 50%
+	chance to use the wrong one.  As a result, rendering at larger PPEM
+	values could yield uneven lowercase glyph heights.
+
+	Problem reported by Christoph Koeberlin <christoph@koe.berlin>.
+
+	* src/autofit/afblue.dat (AF_BLUE_STRING_LATIN_SMALL): Replaced
+	with...
+	(AF_BLUE_STRING_LATIN_SMALL_TOP, AF_BLUE_STRING_LATIN_SMALL_BOTTOM):
+	... New, extended sets.
+	(AF_BLUE_STRINGSET_LATN): Updated.
+
+	* src/autofit/afblue.c, scr/autofit/afblue.h: Regenerated.
+
 2017-02-04  Werner Lemberg  <wl@gnu.org>
 
 	Make `freetype-config' a wrapper of `pkg-config' if possible.
