@@ -1,3 +1,24 @@
+2017-02-06  Werner Lemberg  <wl@gnu.org>
+
+	[truetype] Implement `VVAR' table support.
+
+	* src/truetype/ttgxvar.h (GX_HVarTable): Renamed to...
+	(GX_HVVarTable): ...This.
+	(GX_Blend): Add fields for `VVAR' table handling.
+	Other minor updates.
+
+	* src/truetype/ttgxvar.c (ft_var_load_hvar): Renamed to...
+	(ft_var_load_hvvar): ...This.
+	Handle VVAR loading also (controlled by an additional parameter).
+	(tt_hadvance_adjust): Renamed to...
+	(tt_hvadvance_adjust): ...This.
+	Handle application of advance height also (controlled by an
+	additional parameter).
+	(tt_hadvance_adjust, tt_vadvance_adjust): Wrappers for
+	`tt_hvadvance_adjust'.
+
+	* src/truetype/ttdriver.c (tt_service_metrics_variations): Updated.
+
 2017-02-05  Werner Lemberg  <wl@gnu.org>
 
 	[autofit] Use better blue zone characters for lowercase latin.

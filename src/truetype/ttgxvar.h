@@ -115,21 +115,26 @@ FT_BEGIN_HEADER
   /*************************************************************************/
   /*                                                                       */
   /* <Struct>                                                              */
-  /*    GX_HVarTableRec                                                    */
+  /*    GX_HVVarTableRec                                                   */
   /*                                                                       */
   /* <Description>                                                         */
-  /*    Data from the `HVAR' table.                                        */
+  /*    Data from either the `HVAR' or `VVAR' table.                       */
   /*                                                                       */
-  typedef struct  GX_HVarTableRec_
+  typedef struct  GX_HVVarTableRec_
   {
     GX_ItemVarStoreRec    itemStore;        /* Item Variation Store  */
     GX_DeltaSetIdxMapRec  widthMap;         /* Advance Width Mapping */
+
 #if 0
     GX_DeltaSetIdxMapRec  lsbMap;           /* not implemented */
     GX_DeltaSetIdxMapRec  rsbMap;           /* not implemented */
+
+    GX_DeltaSetIdxMapRec  tsbMap;           /* not implemented */
+    GX_DeltaSetIdxMapRec  bsbMap;           /* not implemented */
+    GX_DeltaSetIdxMapRec  vorgMap;          /* not implemented */
 #endif
 
-  } GX_HVarTableRec, *GX_HVarTable;
+  } GX_HVVarTableRec, *GX_HVVarTable;
 
 
 #define MVAR_TAG_GASP_0  FT_MAKE_TAG( 'g', 's', 'p', '0' )
@@ -233,7 +238,12 @@ FT_BEGIN_HEADER
     FT_Bool         hvar_loaded;
     FT_Bool         hvar_checked;
     FT_Error        hvar_error;
-    GX_HVarTable    hvar_table;
+    GX_HVVarTable   hvar_table;
+
+    FT_Bool         vvar_loaded;
+    FT_Bool         vvar_checked;
+    FT_Error        vvar_error;
+    GX_HVVarTable   vvar_table;
 
     GX_MVarTable    mvar_table;
 
@@ -328,6 +338,11 @@ FT_BEGIN_HEADER
 
   FT_LOCAL( FT_Error )
   tt_hadvance_adjust( TT_Face  face,
+                      FT_UInt  gindex,
+                      FT_Int  *adelta );
+
+  FT_LOCAL( FT_Error )
+  tt_vadvance_adjust( TT_Face  face,
                       FT_UInt  gindex,
                       FT_Int  *adelta );
 

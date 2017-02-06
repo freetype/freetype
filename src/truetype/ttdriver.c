@@ -502,7 +502,7 @@
     (FT_LSB_Adjust_Func)     NULL,                   /* lsb_adjust      */
     (FT_RSB_Adjust_Func)     NULL,                   /* rsb_adjust      */
 
-    (FT_VAdvance_Adjust_Func)NULL,                   /* vadvance_adjust */
+    (FT_VAdvance_Adjust_Func)tt_vadvance_adjust,     /* vadvance_adjust */
     (FT_TSB_Adjust_Func)     NULL,                   /* tsb_adjust      */
     (FT_BSB_Adjust_Func)     NULL,                   /* bsb_adjust      */
     (FT_VOrg_Adjust_Func)    NULL,                   /* vorg_adjust     */

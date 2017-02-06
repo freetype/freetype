@@ -701,12 +701,16 @@
   /*************************************************************************/
   /*                                                                       */
   /* <Function>                                                            */
-  /*    ft_var_load_hvar                                                   */
+  /*    ft_var_load_hvvar                                                  */
   /*                                                                       */
   /* <Description>                                                         */
-  /*    Parse the `HVAR' table and set `blend->hvar_loaded' to TRUE.       */
+  /*    If `vertical' is zero, parse the `HVAR' table and set              */
+  /*    `blend->hvar_loaded' to TRUE.  On success, `blend->hvar_checked'   */
+  /*    is set to TRUE.                                                    */
   /*                                                                       */
-  /*    On success, `blend->hvar_checked' is set to TRUE.                  */
+  /*    If `vertical' is not zero, parse the `VVAR' table and set          */
+  /*    `blend->vvar_loaded' to TRUE.  On success, `blend->vvar_checked'   */
+  /*    is set to TRUE.                                                    */
   /*                                                                       */
   /*    Some memory may remain allocated on error; it is always freed in   */
   /*    `tt_done_blend', however.                                          */
@@ -718,12 +722,15 @@
   /*    FreeType error code.  0 means success.                             */
   /*                                                                       */
   static FT_Error
-  ft_var_load_hvar( TT_Face  face )
+  ft_var_load_hvvar( TT_Face  face,
+                     FT_Bool  vertical )
   {
     FT_Stream  stream = FT_FACE_STREAM( face );
     FT_Memory  memory = stream->memory;
 
     GX_Blend  blend = face->blend;
+
+    GX_HVVarTable  table;
 
     FT_Error   error;
     FT_UShort  majorVersion;
@@ -733,11 +740,23 @@
     FT_ULong   widthMap_offset;
 
 
-    blend->hvar_loaded = TRUE;
+    if ( vertical )
+    {
+      blend->vvar_loaded = TRUE;
 
-    FT_TRACE2(( "HVAR " ));
+      FT_TRACE2(( "VVAR " ));
 
-    error = face->goto_table( face, TTAG_HVAR, stream, &table_len );
+      error = face->goto_table( face, TTAG_VVAR, stream, &table_len );
+    }
+    else
+    {
+      blend->hvar_loaded = TRUE;
+
+      FT_TRACE2(( "HVAR " ));
+
+      error = face->goto_table( face, TTAG_HVAR, stream, &table_len );
+    }
+
     if ( error )
     {
       FT_TRACE2(( "is missing\n" ));
@@ -762,13 +781,23 @@
          FT_READ_ULONG( widthMap_offset ) )
       goto Exit;
 
-    if ( FT_NEW( blend->hvar_table ) )
-      goto Exit;
+    if ( vertical )
+    {
+      if ( FT_NEW( blend->vvar_table ) )
+        goto Exit;
+      table = blend->vvar_table;
+    }
+    else
+    {
+      if ( FT_NEW( blend->hvar_table ) )
+        goto Exit;
+      table = blend->hvar_table;
+    }
 
     error = ft_var_load_item_variation_store(
               face,
               table_offset + store_offset,
-              &blend->hvar_table->itemStore );
+              &table->itemStore );
     if ( error )
       goto Exit;
 
@@ -777,8 +806,8 @@
       error = ft_var_load_delta_set_index_mapping(
                 face,
                 table_offset + widthMap_offset,
-                &blend->hvar_table->widthMap,
-                &blend->hvar_table->itemStore );
+                &table->widthMap,
+                &table->itemStore );
       if ( error )
         goto Exit;
     }
@@ -789,13 +818,26 @@
   Exit:
     if ( !error )
     {
-      blend->hvar_checked = TRUE;
+      if ( vertical )
+      {
+        blend->vvar_checked = TRUE;
 
-      /* FreeType doesn't provide functions to quickly retrieve */
-      /* LSB or RSB values; we thus don't have to implement     */
-      /* support for those two item variation stores.           */
+        /* FreeType doesn't provide functions to quickly retrieve    */
+        /* TSB, BSB, or VORG values; we thus don't have to implement */
+        /* support for those three item variation stores.            */
 
-      face->variation_support |= TT_FACE_FLAG_VAR_HADVANCE;
+        face->variation_support |= TT_FACE_FLAG_VAR_VADVANCE;
+      }
+      else
+      {
+        blend->hvar_checked = TRUE;
+
+        /* FreeType doesn't provide functions to quickly retrieve */
+        /* LSB or RSB values; we thus don't have to implement     */
+        /* support for those two item variation stores.           */
+
+        face->variation_support |= TT_FACE_FLAG_VAR_HADVANCE;
+      }
     }
 
     return error;
@@ -894,50 +936,77 @@
   /*************************************************************************/
   /*                                                                       */
   /* <Function>                                                            */
-  /*    tt_hadvance_adjust                                                 */
+  /*    tt_hvadvance_adjust                                                */
   /*                                                                       */
   /* <Description>                                                         */
-  /*    Apply HVAR advance width adjustment of a given glyph.              */
+  /*    Apply `HVAR' advance width or `VVAR' advance height adjustment of  */
+  /*    a given glyph.                                                     */
   /*                                                                       */
   /* <Input>                                                               */
-  /*    gindex :: The glyph index.                                         */
+  /*    gindex   :: The glyph index.                                       */
+  /*                                                                       */
+  /*    vertical :: If set, handle `VVAR' table.                           */
   /*                                                                       */
   /* <InOut>                                                               */
-  /*    face   :: The font face.                                           */
+  /*    face     :: The font face.                                         */
   /*                                                                       */
-  /*    adelta :: Points to width value that gets modified.                */
+  /*    adelta   :: Points to width or height value that gets modified.    */
   /*                                                                       */
-  FT_LOCAL_DEF( FT_Error )
-  tt_hadvance_adjust( TT_Face  face,
-                      FT_UInt  gindex,
-                      FT_Int  *avalue )
+  static FT_Error
+  tt_hvadvance_adjust( TT_Face  face,
+                       FT_UInt  gindex,
+                       FT_Int  *avalue,
+                       FT_Bool  vertical )
   {
     FT_Error  error = FT_Err_Ok;
     FT_UInt   innerIndex, outerIndex;
     FT_Int    delta;
 
+    GX_HVVarTable  table;
+
 
     if ( !face->doblend || !face->blend )
       goto Exit;
 
-    if ( !face->blend->hvar_loaded )
+    if ( vertical )
     {
-      /* initialize hvar table */
-      face->blend->hvar_error = ft_var_load_hvar( face );
+      if ( !face->blend->vvar_loaded )
+      {
+        /* initialize vvar table */
+        face->blend->vvar_error = ft_var_load_hvvar( face, 1 );
+      }
+
+      if ( !face->blend->vvar_checked )
+      {
+        error = face->blend->vvar_error;
+        goto Exit;
+      }
+
+      table = face->blend->vvar_table;
+    }
+    else
+    {
+      if ( !face->blend->hvar_loaded )
+      {
+        /* initialize hvar table */
+        face->blend->hvar_error = ft_var_load_hvvar( face, 0 );
+      }
+
+      if ( !face->blend->hvar_checked )
+      {
+        error = face->blend->hvar_error;
+        goto Exit;
+      }
+
+      table = face->blend->hvar_table;
     }
 
-    if ( !face->blend->hvar_checked )
-    {
-      error = face->blend->hvar_error;
-      goto Exit;
-    }
+    /* advance width or height adjustments are always present in an */
+    /* `HVAR' or `VVAR' table; no need to test for this capability  */
 
-    /* advance width adjustments are always present in an `HVAR' table, */
-    /* no need to test for this capability                              */
-
-    if ( face->blend->hvar_table->widthMap.innerIndex )
+    if ( table->widthMap.innerIndex )
     {
-      if ( gindex >= face->blend->hvar_table->widthMap.mapCount )
+      if ( gindex >= table->widthMap.mapCount )
       {
         FT_TRACE2(( "gindex %d out of range\n", gindex ));
         error = FT_THROW( Invalid_Argument );
@@ -945,8 +1014,8 @@
       }
 
       /* trust that HVAR parser has checked indices */
-      outerIndex = face->blend->hvar_table->widthMap.outerIndex[gindex];
-      innerIndex = face->blend->hvar_table->widthMap.innerIndex[gindex];
+      outerIndex = table->widthMap.outerIndex[gindex];
+      innerIndex = table->widthMap.innerIndex[gindex];
     }
     else
     {
@@ -957,7 +1026,7 @@
       outerIndex = 0;
       innerIndex = gindex;
 
-      varData = &face->blend->hvar_table->itemStore.varData[outerIndex];
+      varData = &table->itemStore.varData[outerIndex];
       if ( gindex >= varData->itemCount )
       {
         FT_TRACE2(( "gindex %d out of range\n", gindex ));
@@ -967,18 +1036,38 @@
     }
 
     delta = ft_var_get_item_delta( face,
-                                   &face->blend->hvar_table->itemStore,
+                                   &table->itemStore,
                                    outerIndex,
                                    innerIndex );
 
-    FT_TRACE5(( "horizontal width %d adjusted by %d units (HVAR)\n",
+    FT_TRACE5(( "%s value %d adjusted by %d units (%s)\n",
+                vertical ? "vertical height" : "horizontal width",
                 *avalue,
-                delta ));
+                delta,
+                vertical ? "VVAR" : "HVAR" ));
 
     *avalue += delta;
 
   Exit:
     return error;
+  }
+
+
+  FT_LOCAL_DEF( FT_Error )
+  tt_hadvance_adjust( TT_Face  face,
+                      FT_UInt  gindex,
+                      FT_Int  *avalue )
+  {
+    return tt_hvadvance_adjust( face, gindex, avalue, 0 );
+  }
+
+
+  FT_LOCAL_DEF( FT_Error )
+  tt_vadvance_adjust( TT_Face  face,
+                      FT_UInt  gindex,
+                      FT_Int  *avalue )
+  {
+    return tt_hvadvance_adjust( face, gindex, avalue, 1 );
   }
 
 
