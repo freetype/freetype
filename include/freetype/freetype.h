@@ -305,6 +305,11 @@ FT_BEGIN_HEADER
   /*    `horiAdvance' or `vertAdvance'; you have to manually adjust these  */
   /*    values to account for the added width and height.                  */
   /*                                                                       */
+  /*    FreeType doesn't use the `VORG' table data for CFF fonts because   */
+  /*    it doesn't have an interface to quickly retrieve the glyph height. */
+  /*    The y~coordinate of the vertical origin can be simply computed as  */
+  /*    `vertBearingY + height' after loading a glyph.                     */
+  /*                                                                       */
   typedef struct  FT_Glyph_Metrics_
   {
     FT_Pos  width;
