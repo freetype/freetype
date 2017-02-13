@@ -265,6 +265,45 @@
   }
 
 
+  void
+  af_latin_sort_blue( FT_UInt        count,
+                      AF_LatinBlue*  table )
+  {
+    FT_UInt       i, j;
+    AF_LatinBlue  swap;
+
+
+    /* we sort from bottom to top */
+    for ( i = 1; i < count; i++ )
+    {
+      for ( j = i; j > 0; j-- )
+      {
+        FT_Pos  a, b;
+
+
+        if ( table[j - 1]->flags & ( AF_LATIN_BLUE_TOP     |
+                                     AF_LATIN_BLUE_SUB_TOP ) )
+          a = table[j - 1]->ref.org;
+        else
+          a = table[j - 1]->shoot.org;
+
+        if ( table[j]->flags & ( AF_LATIN_BLUE_TOP     |
+                                 AF_LATIN_BLUE_SUB_TOP ) )
+          b = table[j]->ref.org;
+        else
+          b = table[j]->shoot.org;
+
+        if ( b >= a )
+          break;
+
+        swap         = table[j];
+        table[j]     = table[j - 1];
+        table[j - 1] = swap;
+      }
+    }
+  }
+
+
   /* Find all blue zones.  Flat segments give the reference points, */
   /* round segments the overshoot positions.                        */
 
@@ -927,6 +966,60 @@
     } /* end for loop */
 
     af_shaper_buf_destroy( face, shaper_buf );
+
+    /* we finally check whether blue zones are ordered; */
+    /* `ref' and `shoot' values of two blue zones must not overlap */
+    if ( axis->blue_count )
+    {
+      FT_UInt       i;
+      AF_LatinBlue  blue_sorted[AF_BLUE_STRINGSET_MAX_LEN + 2];
+
+
+      for ( i = 0; i < axis->blue_count; i++ )
+        blue_sorted[i] = &axis->blues[i];
+
+      /* sort bottoms of blue zones... */
+      af_latin_sort_blue( axis->blue_count, blue_sorted );
+
+      /* ...and adjust top values if necessary */
+      for ( i = 0; i < axis->blue_count - 1; i++ )
+      {
+        FT_Pos*  a;
+        FT_Pos*  b;
+
+#ifdef FT_DEBUG_LEVEL_TRACE
+        FT_Bool  a_is_top = 0;
+#endif
+
+
+        if ( blue_sorted[i]->flags & ( AF_LATIN_BLUE_TOP     |
+                                       AF_LATIN_BLUE_SUB_TOP ) )
+        {
+          a = &blue_sorted[i]->shoot.org;
+#ifdef FT_DEBUG_LEVEL_TRACE
+          a_is_top = 1;
+#endif
+        }
+        else
+          a = &blue_sorted[i]->ref.org;
+
+        if ( blue_sorted[i + 1]->flags & ( AF_LATIN_BLUE_TOP     |
+                                           AF_LATIN_BLUE_SUB_TOP ) )
+          b = &blue_sorted[i + 1]->shoot.org;
+        else
+          b = &blue_sorted[i + 1]->ref.org;
+
+        if ( *a > *b )
+        {
+          *a = *b;
+          FT_TRACE5(( "blue zone overlap:"
+                      " adjusting %s %d to %ld\n",
+                      a_is_top ? "overshoot" : "reference",
+                      blue_sorted[i] - axis->blues,
+                      *a ));
+        }
+      }
+    }
 
     FT_TRACE5(( "\n" ));
 

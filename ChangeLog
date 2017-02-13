@@ -1,3 +1,30 @@
+2017-02-13  Werner Lemberg  <wl@gnu.org>
+
+	[autofit] Prevent overlapping blue zones.
+
+	Problem reported as
+
+	  https://github.com/google/fonts/issues/632
+
+	The font in question (Nunito) has values 705 and 713 for the
+	reference and overshoot values, respectively, of the first blue
+	zone.  Blue zone 2, however, has value 710 for both the reference
+	and overshoot.  At 12ppem, reference and overshoot of blue zone 0
+	becomes 8px, while blue zone 2 becomes 9px.
+
+	A peculiarity of this font is that the tops of isolated vertical
+	stems like `N' have a slight overshoot also.  The auto-hinter tries
+	to find the nearest blue zone using the *original* coordinates.  For
+	vertical stems, this is value 713.  For normal horizontal tops like
+	in character `E', this is value 710.  Since value 713 is mapped to
+	8px but value 710 to 9px, `N' and similar characters are one pixel
+	higher than `E', which looks very bad.
+
+	This commit sanitizes blue zones to avoid such a behaviour.
+
+	* src/autofit/aflatin.c (af_latin_sort_blue): New function.
+	(af_latin_metrics_init_blues): Sort blue values and remove overlaps.
+
 2017-02-12  Alexei Podtelezhnikov  <apodtele@gmail.com>
 
 	* src/smooth/ftgrays.c (gray_sweep): Improve code.
