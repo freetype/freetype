@@ -568,9 +568,6 @@ typedef ptrdiff_t  FT_PtrDist;
     /* Note that if a cell is to the left of the clipping region, it is    */
     /* actually set to the (min_ex-1) horizontal position.                 */
 
-    /* All cells that are on the left of the clipping region go to the */
-    /* min_ex - 1 horizontal position.                                 */
-
     if ( ex < ras.min_ex )
       ex = ras.min_ex - 1;
 
@@ -1304,21 +1301,18 @@ typedef ptrdiff_t  FT_PtrDist;
     for ( y = ras.min_ey; y < ras.max_ey; y++ )
     {
       PCell   cell  = ras.ycells[y - ras.min_ey];
-      TCoord  cover = 0;
       TCoord  x     = ras.min_ex;
+      TArea   cover = 0;
+      TArea   area;
 
 
       for ( ; cell != NULL; cell = cell->next )
       {
-        TArea  area;
-
-
         if ( cover != 0 && cell->x > x )
-          gray_hline( RAS_VAR_ x, y, (TArea)cover * ( ONE_PIXEL * 2 ),
-                      cell->x - x );
+          gray_hline( RAS_VAR_ x, y, cover, cell->x - x );
 
-        cover += cell->cover;
-        area   = (TArea)cover * ( ONE_PIXEL * 2 ) - cell->area;
+        cover += (TArea)cell->cover * ( ONE_PIXEL * 2 );
+        area   = cover - cell->area;
 
         if ( area != 0 && cell->x >= ras.min_ex )
           gray_hline( RAS_VAR_ cell->x, y, area, 1 );
@@ -1327,8 +1321,7 @@ typedef ptrdiff_t  FT_PtrDist;
       }
 
       if ( cover != 0 )
-        gray_hline( RAS_VAR_ x, y, (TArea)cover * ( ONE_PIXEL * 2 ),
-                    ras.max_ex - x );
+        gray_hline( RAS_VAR_ x, y, cover, ras.max_ex - x );
     }
 
     FT_TRACE7(( "gray_sweep: end\n" ));
