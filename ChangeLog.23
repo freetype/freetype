@@ -5965,7 +5965,7 @@
 	* include/freetype/config/ftstdlib.h,
 	include/freetype/internal/ftobjs.h: As suggested by Graham Asher,
 	ensure that ft_isalnum, ft_isdigit, etc., use hard-coded values
-	instead on relying on the locale-dependent functions provided by
+	instead of relying on the locale-dependent functions provided by
 	<ctypes.h>.
 
 2007-05-15  Graham Asher  <graham.asher@btinternet.com>

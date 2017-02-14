@@ -2159,7 +2159,7 @@
 
 	* include/freetype/internal/t2types.h,
 	include/freetype/internal/cfftypes.h: Changed the structures for
-	CFF_Encoding and CFF_Encoding for the new implementations of the
+	CFF_Charset and CFF_Encoding for the new implementations of the
 	charset and encoding parsers in the CFF driver.
 
 	* src/cff/t2gload.c (t2_lookup_glyph_by_stdcharcode,
