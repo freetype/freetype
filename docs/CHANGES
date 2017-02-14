@@ -12,7 +12,8 @@ CHANGES BETWEEN 2.7.1 and 2.7.2
 
         FREETYPE_PROPERTIES=pcf:no-long-family-names=1
 
-    - Variations font support now takes care of the `MVAR' table also.
+    - Variations font support now takes care of the `VVAR' and  `MVAR'
+      tables also.
 
 
   II. MISCELLANEOUS
