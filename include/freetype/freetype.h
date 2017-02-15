@@ -175,6 +175,7 @@ FT_BEGIN_HEADER
   /*    FT_Done_Face                                                       */
   /*    FT_Reference_Face                                                  */
   /*    FT_New_Memory_Face                                                 */
+  /*    FT_Face_Properties                                                 */
   /*    FT_Open_Face                                                       */
   /*    FT_Open_Args                                                       */
   /*    FT_Parameter                                                       */
@@ -1925,7 +1926,7 @@ FT_BEGIN_HEADER
   /*                                                                       */
   /* <Description>                                                         */
   /*    A simple structure to pass more or less generic parameters to      */
-  /*    @FT_Open_Face.                                                     */
+  /*    @FT_Open_Face and @FT_Face_Properties.                             */
   /*                                                                       */
   /* <Fields>                                                              */
   /*    tag  :: A four-byte identification tag.                            */
@@ -3610,6 +3611,42 @@ FT_BEGIN_HEADER
   FT_Get_Next_Char( FT_Face    face,
                     FT_ULong   char_code,
                     FT_UInt   *agindex );
+
+
+  /*************************************************************************
+   *
+   * @function:
+   *   FT_Face_Properties
+   *
+   * @description:
+   *   Set or override certain (library or module-wide) properties on a
+   *   face-by-face basis.  Useful for finer-grained control and avoiding
+   *   locks on shared structures (threads can modify their own faces as
+   *   they see fit).
+   *
+   *   Contrary to @FT_Property_Set, this function uses @FT_Parameter so
+   *   that you can pass multiple properties to the target face in one call.
+   *   Note that only a subset of the available properties can be
+   *   controlled.
+   *
+   * @input:
+   *   face ::
+   *     A handle to the source face object.
+   *
+   *   num_properties ::
+   *     The number of properties that follow.
+   *
+   *   properties ::
+   *     A handle to an @FT_Parameter array with `num_properties' elements.
+   *
+   * @return:
+   *   FreeType error code.  0~means success.
+   *
+   */
+  FT_EXPORT( FT_Error )
+  FT_Face_Properties( FT_Face        face,
+                      FT_UInt        num_properties,
+                      FT_Parameter*  properties );
 
 
   /*************************************************************************/

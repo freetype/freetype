@@ -1,3 +1,15 @@
+2017-02-14  Nikolaus Waxweiler  <madigens@gmail.com>
+	    Werner Lemberg  <wl@gnu.org>
+
+	Add new function `FT_Face_Properties'.
+
+	This commit provides the framework, to be filled with something
+	useful in the next commits.
+
+	* include/freetype/freetype.h (FT_Face_Properties): Declare.
+
+	* src/base/ftobjs.c (FT_Face_Properties): New function.
+
 2017-02-13  Werner Lemberg  <wl@gnu.org>
 
 	[autofit] Prevent overlapping blue zones.

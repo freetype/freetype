@@ -3591,6 +3591,38 @@
 
   /* documentation is in freetype.h */
 
+  FT_EXPORT_DEF( FT_Error )
+  FT_Face_Properties( FT_Face        face,
+                      FT_UInt        num_properties,
+                      FT_Parameter*  properties )
+  {
+    FT_Error  error = FT_Err_Ok;
+
+
+    if ( num_properties > 0 && !properties )
+    {
+      error = FT_THROW( Invalid_Argument );
+      goto Exit;
+    }
+
+    for ( ; num_properties > 0; num_properties-- )
+    {
+      error = FT_THROW( Invalid_Argument );
+      goto Exit;
+
+      if ( error )
+        break;
+
+      properties++;
+    }
+
+  Exit:
+    return error;
+  }
+
+
+  /* documentation is in freetype.h */
+
   FT_EXPORT_DEF( FT_UInt )
   FT_Face_GetCharVariantIndex( FT_Face   face,
                                FT_ULong  charcode,
