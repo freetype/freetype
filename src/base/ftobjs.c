@@ -2424,6 +2424,10 @@
       internal->transform_delta.y = 0;
 
       internal->refcount = 1;
+
+#ifdef FT_CONFIG_OPTION_SUBPIXEL_RENDERING
+      ft_memset( internal->lcd_weights, 0, FT_LCD_FILTER_FIVE_TAPS );
+#endif
     }
 
     if ( aface )
@@ -3607,8 +3611,31 @@
 
     for ( ; num_properties > 0; num_properties-- )
     {
-      error = FT_THROW( Invalid_Argument );
-      goto Exit;
+      if ( properties->tag == FT_PARAM_TAG_LCD_FILTER_WEIGHTS )
+      {
+#ifdef FT_CONFIG_OPTION_SUBPIXEL_RENDERING
+        if ( properties->data )
+          ft_memcpy( face->internal->lcd_weights,
+                     properties->data,
+                     FT_LCD_FILTER_FIVE_TAPS );
+        else
+        {
+          /* Value NULL indicates `no custom weights, use library        */
+          /* defaults', signaled by filling the weight field with zeros. */
+          ft_memset( face->internal->lcd_weights,
+                     0,
+                     FT_LCD_FILTER_FIVE_TAPS );
+        }
+#else
+        error = FT_THROW( Unimplemented_Feature );
+        goto Exit;
+#endif
+      }
+      else
+      {
+        error = FT_THROW( Invalid_Argument );
+        goto Exit;
+      }
 
       if ( error )
         break;

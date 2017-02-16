@@ -275,6 +275,37 @@ FT_BEGIN_HEADER
   FT_Library_SetLcdFilterWeights( FT_Library      library,
                                   unsigned char  *weights );
 
+
+  /*
+   * @constant:
+   *   FT_PARAM_TAG_LCD_FILTER_WEIGHTS
+   *
+   * @description:
+   *   An @FT_Parameter tag to be used with @FT_Face_Properties.  The
+   *   corresponding argument specifies the five LCD filter weights for a
+   *   given face (if using @FT_LOAD_TARGET_LCD, for example), overriding
+   *   the global default values or the values set up with
+   *   @FT_Library_Set_LcdFilterWeights.
+   *
+   */
+#define FT_PARAM_TAG_LCD_FILTER_WEIGHTS \
+          FT_MAKE_TAG( 'l', 'c', 'd', 'f' )
+
+
+  /*
+   * @type:
+   *   FT_LcdFiveTapFilter
+   *
+   * @description:
+   *   A typedef for passing the five LCD filter weights to
+   *   @FT_Face_Properties within an @FT_Parameter structure.
+   *
+   */
+#define FT_LCD_FILTER_FIVE_TAPS  5
+
+  typedef FT_Byte  FT_LcdFiveTapFilter[FT_LCD_FILTER_FIVE_TAPS];
+
+
   /* */
 
 

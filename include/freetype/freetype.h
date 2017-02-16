@@ -3629,6 +3629,12 @@ FT_BEGIN_HEADER
    *   Note that only a subset of the available properties can be
    *   controlled.
    *
+   *   * LCD filter weights (@FT_PARAM_TAG_LCD_FILTER_WEIGHTS, corresponding
+   *     to function @FT_Library_SetLcdFilterWeights).
+   *
+   *   Pass NULL as `data' in @FT_Parameter for a given tag to reset the
+   *   option and use the library or module default again.
+   *
    * @input:
    *   face ::
    *     A handle to the source face object.
