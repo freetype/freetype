@@ -304,12 +304,10 @@
         long         nsd = ft_strtol( s, NULL, 10 );
 
 
-        if ( nsd == 0 )
-          module->no_stem_darkening = 0;
-        else if ( nsd == 1 )
-          module->no_stem_darkening = 1;
+        if ( !nsd )
+          module->no_stem_darkening = FALSE;
         else
-          return FT_THROW( Invalid_Argument );
+          module->no_stem_darkening = TRUE;
       }
       else
 #endif

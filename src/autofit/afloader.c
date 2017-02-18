@@ -336,8 +336,14 @@
      *  `standard_{vertical,horizontal}_width' change.
      *
      *  Ignore errors and carry on without emboldening.
+     *
      */
-    if ( !module->no_stem_darkening )
+
+    /* stem darkening only works well in `light' mode */
+    if ( scaler.render_mode == FT_RENDER_MODE_LIGHT    &&
+         ( !face->internal->no_stem_darkening        ||
+           ( face->internal->no_stem_darkening < 0 &&
+             !module->no_stem_darkening            ) ) )
       af_loader_embolden_glyph_in_slot( loader, face, style_metrics );
 
     loader->transformed = internal->glyph_transformed;

@@ -340,6 +340,11 @@
       CFF_Builder*  builder = &decoder->builder;
       CFF_Driver    driver  = (CFF_Driver)FT_FACE_DRIVER( builder->face );
 
+      FT_Bool  no_stem_darkening_driver =
+                 driver->no_stem_darkening;
+      FT_Char  no_stem_darkening_font =
+                 builder->face->root.internal->no_stem_darkening;
+
       /* local error */
       FT_Error       error2 = FT_Err_Ok;
       CF2_BufferRec  buf;
@@ -373,7 +378,9 @@
       font->renderingFlags = 0;
       if ( hinted )
         font->renderingFlags |= CF2_FlagsHinted;
-      if ( scaled && !driver->no_stem_darkening )
+      if ( scaled && ( !no_stem_darkening_font        ||
+                       ( no_stem_darkening_font < 0 &&
+                         !no_stem_darkening_driver  ) ) )
         font->renderingFlags |= CF2_FlagsDarkened;
 
       font->darkenParams[0] = driver->darken_params[0];

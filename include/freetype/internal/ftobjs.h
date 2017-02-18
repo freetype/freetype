@@ -348,6 +348,11 @@ FT_BEGIN_HEADER
   /*      @FT_Done_Face only destroys a face if the counter is~1,          */
   /*      otherwise it simply decrements it.                               */
   /*                                                                       */
+  /*    no_stem_darkening ::                                               */
+  /*      Overrides the module-level default, see @stem-darkening[cff],    */
+  /*      for example.  FALSE and TRUE toggle stem darkening on and off,   */
+  /*      respectively, value~-1 means to use the module/driver default.   */
+  /*                                                                       */
   /*    lcd_weights ::                                                     */
   /*      Overrides the library default with custom weights for the 5-tap  */
   /*      FIR filter.  `{0, 0, 0, 0, 0}' means to use the library default. */
@@ -365,6 +370,8 @@ FT_BEGIN_HEADER
 #endif
 
     FT_Int              refcount;
+
+    FT_Char             no_stem_darkening;
 
 #ifdef FT_CONFIG_OPTION_SUBPIXEL_RENDERING
     FT_LcdFiveTapFilter  lcd_weights;  /* preset or custom filter weights */

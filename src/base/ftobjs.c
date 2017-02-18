@@ -37,6 +37,8 @@
 #include FT_SERVICE_KERNING_H
 #include FT_SERVICE_TRUETYPE_ENGINE_H
 
+#include FT_AUTOHINTER_H
+
 #ifdef FT_CONFIG_OPTION_MAC_FONTS
 #include "ftbase.h"
 #endif
@@ -2425,6 +2427,8 @@
 
       internal->refcount = 1;
 
+      internal->no_stem_darkening = -1;
+
 #ifdef FT_CONFIG_OPTION_SUBPIXEL_RENDERING
       ft_memset( internal->lcd_weights, 0, FT_LCD_FILTER_FIVE_TAPS );
 #endif
@@ -3611,7 +3615,22 @@
 
     for ( ; num_properties > 0; num_properties-- )
     {
-      if ( properties->tag == FT_PARAM_TAG_LCD_FILTER_WEIGHTS )
+      if ( properties->tag == FT_PARAM_TAG_STEM_DARKENING )
+      {
+        if ( properties->data )
+        {
+          if ( *( (FT_Bool*)properties->data ) == TRUE )
+            face->internal->no_stem_darkening = FALSE;
+          else
+            face->internal->no_stem_darkening = TRUE;
+        }
+        else
+        {
+          /* use module default */
+          face->internal->no_stem_darkening = -1;
+        }
+      }
+      else if ( properties->tag == FT_PARAM_TAG_LCD_FILTER_WEIGHTS )
       {
 #ifdef FT_CONFIG_OPTION_SUBPIXEL_RENDERING
         if ( properties->data )

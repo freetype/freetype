@@ -268,6 +268,9 @@ FT_BEGIN_HEADER
    *   defined in your build of the library, which should correspond to all
    *   default builds of FreeType.
    *
+   *   LCD filter weights can also be set per face using @FT_Face_Properties
+   *   with @FT_PARAM_TAG_LCD_FILTER_WEIGHTS.
+   *
    * @since:
    *   2.4.0
    */

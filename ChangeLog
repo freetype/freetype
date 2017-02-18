@@ -1,6 +1,28 @@
 2017-02-16  Nikolaus Waxweiler  <madigens@gmail.com>
 	    Werner Lemberg  <wl@gnu.org>
 
+	Add face property for stem darkening.
+
+	* include/freetype/ftautoh.h (FT_PARAM_TAG_STEM_DARKENING): New
+	macro.
+
+	* include/freetype/internal/ftobjs.h (FT_Face_InternalRec): Add
+	`no_stem_darkening' field.
+
+	* src/autofit/afloader.c (af_loader_load_glyph),
+	src/autofit/afmodule.c (af_property_set): Updated.
+
+	* src/base/ftobjs.c: Include FT_AUTOHINTER_H.
+	(ft_open_face_internal): Updated.
+	(FT_Face_Properties): Handle FT_PARAM_TAG_STEM_DARKENING.
+
+	* src/cff/cf2ft.c (cf2_decoder_parse_charstrings): Updated.
+
+	* src/cff/cffdrivr.c (cff_property_set): Updated.
+
+2017-02-16  Nikolaus Waxweiler  <madigens@gmail.com>
+	    Werner Lemberg  <wl@gnu.org>
+
 	Add face property for LCD filter weights.
 
 	* include/freetype/ftlcdfil.h (FT_PARAM_TAG_LCD_FILTER_WEIGHTS,

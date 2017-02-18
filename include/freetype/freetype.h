@@ -3629,6 +3629,10 @@ FT_BEGIN_HEADER
    *   Note that only a subset of the available properties can be
    *   controlled.
    *
+   *   * Stem darkening (@FT_PARAM_TAG_STEM_DARKENING, corresponding to the
+   *     property `no-stem-darkening' provided by the `autofit' and `cff'
+   *     modules; see @auto_hinter and @cff_driver).
+   *
    *   * LCD filter weights (@FT_PARAM_TAG_LCD_FILTER_WEIGHTS, corresponding
    *     to function @FT_Library_SetLcdFilterWeights).
    *
@@ -3647,6 +3651,43 @@ FT_BEGIN_HEADER
    *
    * @return:
    *   FreeType error code.  0~means success.
+   *
+   * @note:
+   *   Here an example that sets two properties.  You must define
+   *   FT_CONFIG_OPTION_SUBPIXEL_RENDERING to make the LCD filter examples
+   *   work.
+   *
+   *   {
+   *     FT_Parameter         property1;
+   *     FT_Bool              darken_stems = 1;
+   *
+   *     FT_Parameter         property2;
+   *     FT_LcdFiveTapFilter  custom_weight =
+   *                            { 0x10, 0x40, 0x70, 0x40, 0x10 };
+   *
+   *     FT_Parameter         properties[2] = { property1, property2 };
+   *
+   *
+   *     property1.tag  = FT_PARAM_TAG_STEM_DARKENING;
+   *     property1.data = &darken_stems;
+   *
+   *     property2.tag  = FT_PARAM_TAG_LCD_FILTER_WEIGHTS;
+   *     property2.data = custom_weight;
+   *
+   *     FT_Face_Properties( face, 2, properties );
+   *   }
+   *
+   *   The next example resets a single property to its default value.
+   *
+   *   {
+   *     FT_Parameter  property;
+   *
+   *
+   *     property.tag  = FT_PARAM_TAG_LCD_FILTER_WEIGHTS;
+   *     property.data = NULL;
+   *
+   *     FT_Face_Option( face, 1, &property );
+   *   }
    *
    */
   FT_EXPORT( FT_Error )

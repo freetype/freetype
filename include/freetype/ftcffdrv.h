@@ -203,6 +203,8 @@ FT_BEGIN_HEADER
    *
    *   This property can be set via the `FREETYPE_PROPERTIES' environment
    *   variable (using values 1 and 0 for `on' and `off', respectively).
+   *   It can also be set per face using @FT_Face_Properties with
+   *   @FT_PARAM_TAG_STEM_DARKENING.
    *
    */
 

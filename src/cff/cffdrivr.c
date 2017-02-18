@@ -854,12 +854,10 @@
         long         nsd = ft_strtol( s, NULL, 10 );
 
 
-        if ( nsd == 0 )
-          driver->no_stem_darkening = 0;
-        else if ( nsd == 1 )
-          driver->no_stem_darkening = 1;
+        if ( !nsd )
+          driver->no_stem_darkening = FALSE;
         else
-          return FT_THROW( Invalid_Argument );
+          driver->no_stem_darkening = TRUE;
       }
       else
 #endif
