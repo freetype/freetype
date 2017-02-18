@@ -833,6 +833,7 @@
       {
         FT_UInt*  hinting_engine = (FT_UInt*)value;
 
+
         if ( *hinting_engine == FT_CFF_HINTING_ADOBE
 #ifdef CFF_CONFIG_OPTION_OLD_ENGINE
              || *hinting_engine == FT_CFF_HINTING_FREETYPE

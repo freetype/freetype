@@ -389,6 +389,7 @@ FT_BEGIN_HEADER
     /* since version 2.4.12 */
     FT_Generic       cf2_instance;
 
+    /* since version 2.7.1 */
     CFF_VStoreRec    vstore;        /* parsed vstore structure */
 
   } CFF_FontRec;

@@ -342,12 +342,6 @@ FT_BEGIN_HEADER
   /*      this data when first opened.  This field exists only if          */
   /*      @FT_CONFIG_OPTION_INCREMENTAL is defined.                        */
   /*                                                                       */
-  /*    refcount ::                                                        */
-  /*      A counter initialized to~1 at the time an @FT_Face structure is  */
-  /*      created.  @FT_Reference_Face increments this counter, and        */
-  /*      @FT_Done_Face only destroys a face if the counter is~1,          */
-  /*      otherwise it simply decrements it.                               */
-  /*                                                                       */
   /*    no_stem_darkening ::                                               */
   /*      Overrides the module-level default, see @stem-darkening[cff],    */
   /*      for example.  FALSE and TRUE toggle stem darkening on and off,   */
@@ -357,11 +351,17 @@ FT_BEGIN_HEADER
   /*      Overrides the library default with custom weights for the 5-tap  */
   /*      FIR filter.  `{0, 0, 0, 0, 0}' means to use the library default. */
   /*                                                                       */
+  /*    refcount ::                                                        */
+  /*      A counter initialized to~1 at the time an @FT_Face structure is  */
+  /*      created.  @FT_Reference_Face increments this counter, and        */
+  /*      @FT_Done_Face only destroys a face if the counter is~1,          */
+  /*      otherwise it simply decrements it.                               */
+  /*                                                                       */
   typedef struct  FT_Face_InternalRec_
   {
-    FT_Matrix           transform_matrix;
-    FT_Vector           transform_delta;
-    FT_Int              transform_flags;
+    FT_Matrix  transform_matrix;
+    FT_Vector  transform_delta;
+    FT_Int     transform_flags;
 
     FT_ServiceCacheRec  services;
 
@@ -369,13 +369,12 @@ FT_BEGIN_HEADER
     FT_Incremental_InterfaceRec*  incremental_interface;
 #endif
 
-    FT_Int              refcount;
-
-    FT_Char             no_stem_darkening;
-
+    FT_Char              no_stem_darkening;
 #ifdef FT_CONFIG_OPTION_SUBPIXEL_RENDERING
     FT_LcdFiveTapFilter  lcd_weights;  /* preset or custom filter weights */
 #endif
+
+    FT_Int  refcount;
 
   } FT_Face_InternalRec;
 
@@ -843,14 +842,17 @@ FT_BEGIN_HEADER
   /*                        handle to the current renderer for the         */
   /*                        FT_GLYPH_FORMAT_OUTLINE format.                */
   /*                                                                       */
-  /*    auto_hinter      :: XXX                                            */
+  /*    auto_hinter      :: The auto-hinter module interface.              */
   /*                                                                       */
   /*    raster_pool      :: The raster object's render pool.  This can     */
   /*                        ideally be changed dynamically at run-time.    */
   /*                                                                       */
   /*    raster_pool_size :: The size of the render pool in bytes.          */
   /*                                                                       */
-  /*    debug_hooks      :: XXX                                            */
+  /*    debug_hooks      :: An array of four function pointers that allow  */
+  /*                        debuggers to hook into a font format's         */
+  /*                        interpreter.  Currently, only the TrueType     */
+  /*                        bytecode debugger uses this.                   */
   /*                                                                       */
   /*    lcd_filter       :: If subpixel rendering is activated, the        */
   /*                        selected LCD filter mode.                      */

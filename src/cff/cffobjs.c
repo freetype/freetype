@@ -684,61 +684,55 @@
       }
 #endif /* FT_DEBUG_LEVEL_TRACE */
 
-
-
 #ifdef TT_CONFIG_OPTION_GX_VAR_SUPPORT
-
-    {
-      FT_Service_MultiMasters  mm = (FT_Service_MultiMasters)face->mm;
-
-      FT_Int  instance_index = face_index >> 16;
-
-
-      if ( FT_HAS_MULTIPLE_MASTERS( cffface ) &&
-           mm                                 &&
-           instance_index > 0                 )
       {
-        FT_MM_Var*  mm_var;
+        FT_Service_MultiMasters  mm = (FT_Service_MultiMasters)face->mm;
+
+        FT_Int  instance_index = face_index >> 16;
 
 
-        error = mm->get_mm_var( cffface, NULL );
-        if ( error )
-          goto Exit;
-
-        mm->get_var_blend( cffface, NULL, NULL, &mm_var );
-
-        if ( mm_var->namedstyle )
+        if ( FT_HAS_MULTIPLE_MASTERS( cffface ) &&
+             mm                                 &&
+             instance_index > 0                 )
         {
-          FT_Var_Named_Style*  named_style;
-          FT_String*           style_name;
+          FT_MM_Var*  mm_var;
 
 
-          /* in `face_index', the instance index starts with value 1 */
-          named_style = mm_var->namedstyle + instance_index - 1;
-          error = sfnt->get_name( face,
-                                  (FT_UShort)named_style->strid,
-                                  &style_name );
+          error = mm->get_mm_var( cffface, NULL );
           if ( error )
             goto Exit;
 
-          /* set style name; if already set, replace it */
-          if ( face->root.style_name )
-            FT_FREE( face->root.style_name );
-          face->root.style_name = style_name;
+          mm->get_var_blend( cffface, NULL, NULL, &mm_var );
 
-          /* finally, select the named instance */
-          error = mm->set_var_design( cffface,
-                                      mm_var->num_axis,
-                                      named_style->coords );
-          if ( error )
-            goto Exit;
+          if ( mm_var->namedstyle )
+          {
+            FT_Var_Named_Style*  named_style;
+            FT_String*           style_name;
+
+
+            /* in `face_index', the instance index starts with value 1 */
+            named_style = mm_var->namedstyle + instance_index - 1;
+            error = sfnt->get_name( face,
+                                    (FT_UShort)named_style->strid,
+                                    &style_name );
+            if ( error )
+              goto Exit;
+
+            /* set style name; if already set, replace it */
+            if ( face->root.style_name )
+              FT_FREE( face->root.style_name );
+            face->root.style_name = style_name;
+
+            /* finally, select the named instance */
+            error = mm->set_var_design( cffface,
+                                        mm_var->num_axis,
+                                        named_style->coords );
+            if ( error )
+              goto Exit;
+          }
         }
       }
-    }
-
 #endif /* TT_CONFIG_OPTION_GX_VAR_SUPPORT */
-
-
 
       if ( !dict->has_font_matrix )
         dict->units_per_em = pure_cff ? 1000 : face->root.units_per_EM;
@@ -1022,7 +1016,6 @@
         cffface->style_flags = flags;
       }
 
-
 #ifndef FT_CONFIG_OPTION_NO_GLYPH_NAMES
       /* CID-keyed CFF fonts don't have glyph names -- the SFNT loader */
       /* has unset this flag because of the 3.0 `post' table.          */
@@ -1032,7 +1025,6 @@
 
       if ( dict->cid_registry != 0xFFFFU && pure_cff )
         cffface->face_flags |= FT_FACE_FLAG_CID_KEYED;
-
 
       /*******************************************************************/
       /*                                                                 */

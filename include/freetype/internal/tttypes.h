@@ -1457,7 +1457,7 @@ FT_BEGIN_HEADER
 
     /***********************************************************************/
     /*                                                                     */
-    /* TrueType-specific fields (ignored by the OTF-Type2 driver)          */
+    /* TrueType-specific fields (ignored by the CFF driver)                */
     /*                                                                     */
     /***********************************************************************/
 
