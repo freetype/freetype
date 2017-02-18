@@ -1,3 +1,14 @@
+2017-02-17  Werner Lemberg  <wl@gnu.org>
+
+	Remove clang warnings.
+
+	* src/autofit/aflatin.c (af_latin_sort_blue): Add missing `static'
+	keyword.
+
+	* src/base/ftmm.c (FT_Set_Var_Design_Coordinates,
+	FT_Set_MM_Blend_Coordinates, FT_Set_Var_Blend_Coordinates):
+	Initialize some variables.
+
 2017-02-16  Nikolaus Waxweiler  <madigens@gmail.com>
 	    Werner Lemberg  <wl@gnu.org>
 

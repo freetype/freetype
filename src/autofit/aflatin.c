@@ -265,7 +265,7 @@
   }
 
 
-  void
+  static void
   af_latin_sort_blue( FT_UInt        count,
                       AF_LatinBlue*  table )
   {

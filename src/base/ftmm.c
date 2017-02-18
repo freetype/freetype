@@ -188,8 +188,8 @@
                                  FT_Fixed*  coords )
   {
     FT_Error                      error;
-    FT_Service_MultiMasters       service_mm;
-    FT_Service_MetricsVariations  service_mvar;
+    FT_Service_MultiMasters       service_mm   = NULL;
+    FT_Service_MetricsVariations  service_mvar = NULL;
 
 
     /* check of `face' delayed to `ft_face_get_mm_service' */
@@ -261,8 +261,8 @@
                                FT_Fixed*  coords )
   {
     FT_Error                      error;
-    FT_Service_MultiMasters       service_mm;
-    FT_Service_MetricsVariations  service_mvar;
+    FT_Service_MultiMasters       service_mm   = NULL;
+    FT_Service_MetricsVariations  service_mvar = NULL;
 
 
     /* check of `face' delayed to `ft_face_get_mm_service' */
@@ -309,8 +309,8 @@
                                 FT_Fixed*  coords )
   {
     FT_Error                      error;
-    FT_Service_MultiMasters       service_mm;
-    FT_Service_MetricsVariations  service_mvar;
+    FT_Service_MultiMasters       service_mm   = NULL;
+    FT_Service_MetricsVariations  service_mvar = NULL;
 
 
     /* check of `face' delayed to `ft_face_get_mm_service' */
