@@ -347,6 +347,11 @@ FT_BEGIN_HEADER
   /*      for example.  FALSE and TRUE toggle stem darkening on and off,   */
   /*      respectively, value~-1 means to use the module/driver default.   */
   /*                                                                       */
+  /*    random_seed ::                                                     */
+  /*      If positive, override the seed value for the CFF `random'        */
+  /*      operator.  Value~0 means to use the font's value.  Value~-1      */
+  /*      means to use the CFF driver's default.                           */
+  /*                                                                       */
   /*    lcd_weights ::                                                     */
   /*      Overrides the library default with custom weights for the 5-tap  */
   /*      FIR filter.  `{0, 0, 0, 0, 0}' means to use the library default. */
@@ -370,6 +375,7 @@ FT_BEGIN_HEADER
 #endif
 
     FT_Char              no_stem_darkening;
+    FT_Int32             random_seed;
 #ifdef FT_CONFIG_OPTION_SUBPIXEL_RENDERING
     FT_LcdFiveTapFilter  lcd_weights;  /* preset or custom filter weights */
 #endif

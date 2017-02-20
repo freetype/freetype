@@ -3631,10 +3631,15 @@ FT_BEGIN_HEADER
    *
    *   * Stem darkening (@FT_PARAM_TAG_STEM_DARKENING, corresponding to the
    *     property `no-stem-darkening' provided by the `autofit' and `cff'
-   *     modules; see @auto_hinter and @cff_driver).
+   *     modules; see @no-stem-darkening[autofit] and
+   *     @no-stem-darkening[cff]).
    *
    *   * LCD filter weights (@FT_PARAM_TAG_LCD_FILTER_WEIGHTS, corresponding
    *     to function @FT_Library_SetLcdFilterWeights).
+   *
+   *   * Seed value for the CFF `random' operator
+   *     (@FT_PARAM_TAG_RANDOM_SEED, corresponding to the `random-seed'
+   *     property provided by the `cff' module; see @random-seed).
    *
    *   Pass NULL as `data' in @FT_Parameter for a given tag to reset the
    *   option and use the library or module default again.
@@ -3653,7 +3658,7 @@ FT_BEGIN_HEADER
    *   FreeType error code.  0~means success.
    *
    * @note:
-   *   Here an example that sets two properties.  You must define
+   *   Here an example that sets three properties.  You must define
    *   FT_CONFIG_OPTION_SUBPIXEL_RENDERING to make the LCD filter examples
    *   work.
    *
@@ -3665,7 +3670,12 @@ FT_BEGIN_HEADER
    *     FT_LcdFiveTapFilter  custom_weight =
    *                            { 0x10, 0x40, 0x70, 0x40, 0x10 };
    *
-   *     FT_Parameter         properties[2] = { property1, property2 };
+   *     FT_Parameter         property3;
+   *     FT_Int32             random_seed = 314159265;
+   *
+   *     FT_Parameter         properties[3] = { property1,
+   *                                            property2,
+   *                                            property3 };
    *
    *
    *     property1.tag  = FT_PARAM_TAG_STEM_DARKENING;
@@ -3674,7 +3684,10 @@ FT_BEGIN_HEADER
    *     property2.tag  = FT_PARAM_TAG_LCD_FILTER_WEIGHTS;
    *     property2.data = custom_weight;
    *
-   *     FT_Face_Properties( face, 2, properties );
+   *     property3.tag  = FT_PARAM_TAG_RANDOM_SEED;
+   *     property3.data = &random_seed;
+   *
+   *     FT_Face_Properties( face, 3, properties );
    *   }
    *
    *   The next example resets a single property to its default value.

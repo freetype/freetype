@@ -121,6 +121,7 @@ FT_BEGIN_HEADER
     FT_UInt   hinting_engine;
     FT_Bool   no_stem_darkening;
     FT_Int    darken_params[8];
+    FT_Int32  random_seed;
 
   } CFF_DriverRec;
 
