@@ -3,6 +3,11 @@ CHANGES BETWEEN 2.7.1 and 2.7.2
 
   I. IMPORTANT CHANGES
 
+    - A new  function `FT_Face_Properties' allows the  control of some
+      module  and   library  properties  per  font.    Currently,  the
+      following properties can be  handled: stem darkening, LCD filter
+      weights, and the random seed for the `random' CFF operator.
+
     - The PCF change to show more `colourful' family names (introduced
       in version 2.7.1) was too radical; it can now be configured with
       PCF_CONFIG_OPTION_LONG_FAMILY_NAMES   at   compile   time.    If
@@ -47,6 +52,12 @@ CHANGES BETWEEN 2.7.1 and 2.7.2
 
       . Language, encoding, and name IDs have been updated to OpenType
         version 1.8.1.
+
+    - The new CFF  engine now handles the `random'  operator.  All CFF
+      opcodes are now supported.
+
+    - The CFF module  has a new property `random-seed'  to control the
+      pseudo-random number generation for the `random' operator.
 
     - The `freetype-config' script is now a wrapper of `pkg-config' if
       this program is available in the path.
