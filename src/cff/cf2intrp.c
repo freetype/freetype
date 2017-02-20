@@ -60,12 +60,6 @@
 #define FT_COMPONENT  trace_cf2interp
 
 
-  /* some operators are not implemented yet */
-#define CF2_FIXME  FT_TRACE4(( "cf2_interpT2CharString:"            \
-                               " operator not implemented yet\n" ))
-
-
-
   FT_LOCAL_DEF( void )
   cf2_hintmask_init( CF2_HintMask  hintmask,
                      FT_Error*     error )
@@ -1268,10 +1262,23 @@
                   continue; /* do not clear the stack */
 
                 case cf2_escRANDOM: /* in spec */
-                  FT_TRACE4(( " random\n" ));
+                  {
+                    CF2_F16Dot16  r;
 
-                  CF2_FIXME;
-                  break;
+
+                    FT_TRACE4(( " random\n" ));
+
+                    /* only use the lower 16 bits of `random'  */
+                    /* to generate a number in the range (0;1] */
+                    r = (CF2_F16Dot16)
+                          ( ( decoder->current_subfont->random & 0xFFFF ) + 1 );
+
+                    decoder->current_subfont->random =
+                      cff_random( decoder->current_subfont->random );
+
+                    cf2_stack_pushFixed( opStack, r );
+                  }
+                  continue; /* do not clear the stack */
 
                 case cf2_escMUL:
                   {

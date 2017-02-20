@@ -1,5 +1,30 @@
 2017-02-20  Werner Lemberg  <wl@gnu.org>
 
+	[cff] Finish support for `random' operator.
+
+	* src/cff/cfftypes.h (CFF_SubFontRec): Add `random' field.
+
+	* src/cff/cffobjs.c: Updated.
+	(cff_driver_init): Initialize random seed value.
+
+	* src/cff/cffload.c (cff_random): New function.
+	(cff_subfont_load): Add `face' argument.
+	Update all callers.
+	Initialize random number generator with a proper seed value.
+	(cff_font_load): Add `face' argument.
+	Update all callers.
+
+	* src/cff/cffload.h: Updated.
+
+	* src/cff/cf2intrp.c (CF2_FIXME): Removed.
+	(cf2_interpT2CharString) <cf2_escRANDOM>: Implement opcode.
+
+	* src/cff/cffgload.c (cff_decoder_parse_charstrings): Don't
+	initialize random seed value.
+	<cff_op_random>: Use new random seed framework.
+
+2017-02-20  Werner Lemberg  <wl@gnu.org>
+
 	[cff] Sanitize `initialRandomSeed'.
 
 	* src/cff/cffload.c (cff_load_private_dict): Make

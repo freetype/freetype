@@ -1931,6 +1931,18 @@
   }
 
 
+  FT_LOCAL_DEF( FT_UInt32 )
+  cff_random( FT_UInt32  r )
+  {
+    /* a 32bit version of the `xorshift' algorithm */
+    r ^= r << 13;
+    r ^= r >> 17;
+    r ^= r << 5;
+
+    return r;
+  }
+
+
   /* There are 3 ways to call this function, distinguished by code.  */
   /*                                                                 */
   /* . CFF_CODE_TOPDICT for either a CFF Top DICT or a CFF Font DICT */
@@ -1944,7 +1956,8 @@
                     FT_Stream    stream,
                     FT_ULong     base_offset,
                     FT_UInt      code,
-                    CFF_Font     font )
+                    CFF_Font     font,
+                    CFF_Face     face )
   {
     FT_Error         error;
     CFF_ParserRec    parser;
@@ -2041,6 +2054,54 @@
     if ( error )
       goto Exit;
 
+    if ( !cff2 )
+    {
+      /*
+       * Initialize the random number generator.
+       *
+       * . If we have a face-specific seed, use it.
+       *   If non-zero, update it to a positive value.
+       *
+       * . Otherwise, use the seed from the CFF driver.
+       *   If non-zero, update it to a positive value.
+       *
+       * . If the random value is zero, use the seed given by the subfont's
+       *   `initialRandomSeed' value.
+       *
+       */
+      if ( face->root.internal->random_seed == -1 )
+      {
+        CFF_Driver  driver = (CFF_Driver)FT_FACE_DRIVER( face );
+
+
+        subfont->random = (FT_UInt32)driver->random_seed;
+        if ( driver->random_seed )
+        {
+          do
+          {
+            driver->random_seed = (FT_Int32)cff_random( driver->random_seed );
+
+          } while ( driver->random_seed < 0 );
+        }
+      }
+      else
+      {
+        subfont->random = (FT_UInt32)face->root.internal->random_seed;
+        if ( face->root.internal->random_seed )
+        {
+          do
+          {
+            face->root.internal->random_seed =
+              (FT_Int32)cff_random( face->root.internal->random_seed );
+
+          } while ( face->root.internal->random_seed < 0 );
+        }
+      }
+
+      if ( !subfont->random )
+        subfont->random = (FT_UInt32)priv->initial_random_seed;
+    }
+
     /* read the local subrs, if any */
     if ( priv->local_subrs_offset )
     {
@@ -2086,6 +2147,7 @@
                  FT_Stream  stream,
                  FT_Int     face_index,
                  CFF_Font   font,
+                 CFF_Face   face,
                  FT_Bool    pure_cff,
                  FT_Bool    cff2 )
   {
@@ -2283,7 +2345,8 @@
                               stream,
                               base_offset,
                               cff2 ? CFF2_CODE_TOPDICT : CFF_CODE_TOPDICT,
-                              font );
+                              font,
+                              face );
     if ( error )
       goto Exit;
 
@@ -2350,7 +2413,8 @@
                                   base_offset,
                                   cff2 ? CFF2_CODE_FONTDICT
                                        : CFF_CODE_TOPDICT,
-                                  font );
+                                  font,
+                                  face );
         if ( error )
           goto Fail_CID;
       }

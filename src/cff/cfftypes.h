@@ -321,6 +321,8 @@ FT_BEGIN_HEADER
     FT_Byte**     local_subrs; /* array of pointers           */
                                /* into Local Subrs INDEX data */
 
+    FT_UInt32  random;
+
   } CFF_SubFontRec;
 
 
