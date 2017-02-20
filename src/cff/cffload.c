@@ -1913,6 +1913,13 @@
     /* ensure that `num_blue_values' is even */
     priv->num_blue_values &= ~1;
 
+    /* sanitize `initialRandomSeed' to be a positive value, if necessary;  */
+    /* this is not mandated by the specification but by our implementation */
+    if ( priv->initial_random_seed < 0 )
+      priv->initial_random_seed = -priv->initial_random_seed;
+    else if ( priv->initial_random_seed == 0 )
+      priv->initial_random_seed = 987654321;
+
   Exit:
     /* clean up */
     cff_blend_clear( subfont ); /* clear blend stack */

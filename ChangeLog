@@ -1,5 +1,12 @@
 2017-02-20  Werner Lemberg  <wl@gnu.org>
 
+	[cff] Sanitize `initialRandomSeed'.
+
+	* src/cff/cffload.c (cff_load_private_dict): Make
+	`initial_random_seed' value always positive.
+
+2017-02-20  Werner Lemberg  <wl@gnu.org>
+
 	[cff] Introduce `random-seed' property (2/2).
 
 	* src/base/ftobjs.c: Include `FT_CFF_DRIVER_H'.
