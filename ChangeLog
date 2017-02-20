@@ -1,5 +1,16 @@
 2017-02-20  Werner Lemberg  <wl@gnu.org>
 
+	[cff] Introduce `random-seed' property (2/2).
+
+	* src/base/ftobjs.c: Include `FT_CFF_DRIVER_H'.
+	(open_face): Initialize `face->internal->random_seed'.
+	(FT_Face_Properties): Handle `FT_PARAM_TAG_RANDOM_SEED'.
+
+	* src/cff/cffdrivr.c (cff_property_set): Handle `random-seed'
+	property.
+
+2017-02-20  Werner Lemberg  <wl@gnu.org>
+
 	[cff] Introduce `random-seed' property (1/2).
 
 	We need this for support of the `random' operator.

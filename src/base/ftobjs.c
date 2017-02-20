@@ -38,6 +38,7 @@
 #include FT_SERVICE_TRUETYPE_ENGINE_H
 
 #include FT_AUTOHINTER_H
+#include FT_CFF_DRIVER_H
 
 #ifdef FT_CONFIG_OPTION_MAC_FONTS
 #include "ftbase.h"
@@ -1187,6 +1188,8 @@
             (FT_Incremental_Interface)params[i].data;
     }
 #endif
+
+    face->internal->random_seed = -1;
 
     if ( clazz->init_face )
       error = clazz->init_face( *astream,
@@ -3649,6 +3652,20 @@
         error = FT_THROW( Unimplemented_Feature );
         goto Exit;
 #endif
+      }
+      else if ( properties->tag == FT_PARAM_TAG_RANDOM_SEED )
+      {
+        if ( properties->data )
+        {
+          face->internal->random_seed = *( (FT_Int32*)properties->data );
+          if ( face->internal->random_seed < 0 )
+            face->internal->random_seed = 0;
+        }
+        else
+        {
+          /* use module default */
+          face->internal->random_seed = -1;
+        }
       }
       else
       {

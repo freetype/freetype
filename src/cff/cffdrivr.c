@@ -871,6 +871,30 @@
 
       return error;
     }
+    else if ( !ft_strcmp( property_name, "random-seed" ) )
+    {
+      FT_Int32  random_seed;
+
+
+#ifdef FT_CONFIG_OPTION_ENVIRONMENT_PROPERTIES
+      if ( value_is_string )
+      {
+        const char*  s = (const char*)value;
+
+
+        random_seed = (FT_Int32)ft_strtol( s, NULL, 10 );
+      }
+      else
+#endif
+        random_seed = *(FT_Int32*)value;
+
+      if ( random_seed < 0 )
+        random_seed = 0;
+
+      driver->random_seed = random_seed;
+
+      return error;
+    }
 
     FT_TRACE0(( "cff_property_set: missing property `%s'\n",
                 property_name ));
