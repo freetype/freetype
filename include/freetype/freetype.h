@@ -3668,7 +3668,7 @@ FT_BEGIN_HEADER
    *
    *     FT_Parameter         property2;
    *     FT_LcdFiveTapFilter  custom_weight =
-   *                            { 0x10, 0x40, 0x70, 0x40, 0x10 };
+   *                            { 0x11, 0x44, 0x56, 0x44, 0x11 };
    *
    *     FT_Parameter         property3;
    *     FT_Int32             random_seed = 314159265;
@@ -3699,7 +3699,7 @@ FT_BEGIN_HEADER
    *     property.tag  = FT_PARAM_TAG_LCD_FILTER_WEIGHTS;
    *     property.data = NULL;
    *
-   *     FT_Face_Option( face, 1, &property );
+   *     FT_Face_Properties( face, 1, &property );
    *   }
    *
    */
