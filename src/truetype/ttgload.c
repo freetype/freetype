@@ -886,7 +886,7 @@
 
 #ifdef TT_CONFIG_OPTION_GX_VAR_SUPPORT
 
-    if ( loader->face->doblend && !loader->face->is_default_instance )
+    if ( !loader->face->is_default_instance )
     {
       /* Deltas apply to the unscaled data. */
       error = TT_Vary_Apply_Glyph_Deltas( loader->face,
@@ -1574,7 +1574,7 @@
 
 #ifdef TT_CONFIG_OPTION_GX_VAR_SUPPORT
 
-      if ( loader->face->doblend && !loader->face->is_default_instance )
+      if ( !loader->face->is_default_instance )
       {
         /* a small outline structure with four elements for */
         /* communication with `TT_Vary_Apply_Glyph_Deltas'  */
@@ -1745,7 +1745,7 @@
 
 #ifdef TT_CONFIG_OPTION_GX_VAR_SUPPORT
 
-      if ( face->doblend && !face->is_default_instance )
+      if ( !face->is_default_instance )
       {
         short        i, limit;
         FT_SubGlyph  subglyph;

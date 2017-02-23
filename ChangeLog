@@ -1,5 +1,12 @@
 2017-02-23  Werner Lemberg  <wl@gnu.org>
 
+	[truetype] Minor improvement.
+
+	* src/truetype/ttgload.c (TT_Process_Simple_Glyph,
+	load_truetype_glyph): Remove unnecessary tests.
+
+2017-02-23  Werner Lemberg  <wl@gnu.org>
+
 	* include/freetype/internal/tttypes.h (TT_Face): s/isCFF2/is_cff2/.
 
 	For orthogonality with other structure field names.
