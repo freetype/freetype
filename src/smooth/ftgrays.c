@@ -1222,31 +1222,21 @@ typedef ptrdiff_t  FT_PtrDist;
   static void
   gray_hline( RAS_ARG_ TCoord  x,
                        TCoord  y,
-                       TArea   area,
+                       TArea   coverage,
                        TCoord  acount )
   {
-    int      coverage;
-    FT_Span  span;
-
-
-    /* compute the coverage line's coverage, depending on the    */
-    /* outline fill rule                                         */
-    /*                                                           */
-    /* the coverage percentage is area/(PIXEL_BITS*PIXEL_BITS*2) */
-    /*                                                           */
-    coverage = (int)( area >> ( PIXEL_BITS * 2 + 1 - 8 ) );
-                                                    /* use range 0..256 */
+    /* scale the coverage from 0..(ONE_PIXEL*ONE_PIXEL*2) to 0..256  */
+    coverage >>= PIXEL_BITS * 2 + 1 - 8;
     if ( coverage < 0 )
-      coverage = -coverage;
+      coverage = -coverage - 1;
 
+    /* compute the line's coverage depending on the outline fill rule */
     if ( ras.outline.flags & FT_OUTLINE_EVEN_ODD_FILL )
     {
       coverage &= 511;
 
-      if ( coverage > 256 )
-        coverage = 512 - coverage;
-      else if ( coverage == 256 )
-        coverage = 255;
+      if ( coverage >= 256 )
+        coverage = 511 - coverage;
     }
     else
     {
@@ -1257,6 +1247,9 @@ typedef ptrdiff_t  FT_PtrDist;
 
     if ( ras.render_span )  /* for FT_RASTER_FLAG_DIRECT only */
     {
+      FT_Span  span;
+
+
       span.x        = (short)x;
       span.len      = (unsigned short)acount;
       span.coverage = (unsigned char)coverage;
