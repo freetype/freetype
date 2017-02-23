@@ -220,6 +220,92 @@
    *
    */
 
+  /* handling of PID/EID 3/0 and 3/1 is the same */
+#define IS_WIN( n )  ( (n)->platformID == 3                             && \
+                       ( (n)->encodingID == 1 || (n)->encodingID == 0 ) && \
+                       (n)->languageID == 0x409                         )
+
+#define IS_APPLE( n )  ( (n)->platformID == 1 && \
+                         (n)->encodingID == 0 && \
+                         (n)->languageID == 0 )
+
+  static const char*
+  get_win_string( FT_Memory  memory,
+                  FT_Stream  stream,
+                  TT_Name    entry )
+  {
+    FT_Error  error = FT_Err_Ok;
+
+    const char*  result;
+    FT_String*   r;
+    FT_Char*     p;
+    FT_UInt      len;
+
+    FT_UNUSED( error );
+
+
+    if ( FT_ALLOC( result, entry->stringLength / 2 + 1 ) )
+      return NULL;
+
+    if ( FT_STREAM_SEEK( entry->stringOffset ) ||
+         FT_FRAME_ENTER( entry->stringLength ) )
+    {
+      FT_FREE( result );
+      entry->stringLength = 0;
+      entry->stringOffset = 0;
+      FT_FREE( entry->string );
+
+      return NULL;
+    }
+
+    r = (FT_String*)result;
+    p = (FT_Char*)stream->cursor;
+
+    for ( len = entry->stringLength / 2; len > 0; len--, p += 2 )
+    {
+      if ( p[0] == 0 && p[1] >= 32 )
+        *r++ = p[1];
+    }
+    *r = '\0';
+
+    FT_FRAME_EXIT();
+
+    return result;
+  }
+
+
+  static const char*
+  get_apple_string( FT_Memory  memory,
+                    FT_Stream  stream,
+                    TT_Name    entry )
+  {
+    FT_Error  error = FT_Err_Ok;
+
+    const char*  result;
+
+    FT_UNUSED( error );
+
+
+    if ( FT_ALLOC( result, entry->stringLength + 1 ) )
+      return NULL;
+
+    if ( FT_STREAM_SEEK( entry->stringOffset )         ||
+         FT_STREAM_READ( result, entry->stringLength ) )
+    {
+      FT_FREE( result );
+      entry->stringOffset = 0;
+      entry->stringLength = 0;
+      FT_FREE( entry->string );
+
+      return NULL;
+    }
+
+    ((char*)result)[entry->stringLength] = '\0';
+
+    return result;
+  }
+
+
   static const char*
   sfnt_get_ps_name( TT_Face  face )
   {
@@ -227,7 +313,6 @@
     const char*  result = NULL;
 
 
-    /* shouldn't happen, but just in case to avoid memory leaks */
     if ( face->postscript_name )
       return face->postscript_name;
 
@@ -243,91 +328,26 @@
 
       if ( name->nameID == 6 && name->stringLength > 0 )
       {
-        /* handling of PID/EID 3/0 and 3/1 is the same */
-        if ( name->platformID == 3                              &&
-             ( name->encodingID == 1 || name->encodingID == 0 ) &&
-             name->languageID == 0x409                          )
+        if ( IS_WIN( name ) )
           found_win = n;
 
-        if ( name->platformID == 1 &&
-             name->encodingID == 0 &&
-             name->languageID == 0 )
+        if ( IS_APPLE( name ) )
           found_apple = n;
       }
     }
 
+    /* prefer Windows entries over Apple */
     if ( found_win != -1 )
-    {
-      FT_Memory  memory = face->root.memory;
-      TT_Name    name   = face->name_table.names + found_win;
-      FT_UInt    len    = name->stringLength / 2;
-      FT_Error   error  = FT_Err_Ok;
+      result = get_win_string( face->root.memory,
+                               face->name_table.stream,
+                               face->name_table.names + found_win );
+    else if ( found_apple != -1 )
+      result = get_apple_string( face->root.memory,
+                                 face->name_table.stream,
+                                 face->name_table.names + found_apple );
 
-      FT_UNUSED( error );
-
-
-      if ( !FT_ALLOC( result, name->stringLength + 1 ) )
-      {
-        FT_Stream   stream = face->name_table.stream;
-        FT_String*  r      = (FT_String*)result;
-        FT_Char*    p;
-
-
-        if ( FT_STREAM_SEEK( name->stringOffset ) ||
-             FT_FRAME_ENTER( name->stringLength ) )
-        {
-          FT_FREE( result );
-          name->stringLength = 0;
-          name->stringOffset = 0;
-          FT_FREE( name->string );
-
-          goto Exit;
-        }
-
-        p = (FT_Char*)stream->cursor;
-
-        for ( ; len > 0; len--, p += 2 )
-        {
-          if ( p[0] == 0 && p[1] >= 32 )
-            *r++ = p[1];
-        }
-        *r = '\0';
-
-        FT_FRAME_EXIT();
-      }
-      goto Exit;
-    }
-
-    if ( found_apple != -1 )
-    {
-      FT_Memory  memory = face->root.memory;
-      TT_Name    name   = face->name_table.names + found_apple;
-      FT_UInt    len    = name->stringLength;
-      FT_Error   error  = FT_Err_Ok;
-
-      FT_UNUSED( error );
-
-
-      if ( !FT_ALLOC( result, len + 1 ) )
-      {
-        FT_Stream  stream = face->name_table.stream;
-
-
-        if ( FT_STREAM_SEEK( name->stringOffset ) ||
-             FT_STREAM_READ( result, len )        )
-        {
-          name->stringOffset = 0;
-          name->stringLength = 0;
-          FT_FREE( name->string );
-          FT_FREE( result );
-          goto Exit;
-        }
-        ((char*)result)[len] = '\0';
-      }
-    }
-
-  Exit:
     face->postscript_name = result;
+
     return result;
   }
 

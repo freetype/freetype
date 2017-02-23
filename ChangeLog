@@ -1,5 +1,14 @@
 2017-02-23  Werner Lemberg  <wl@gnu.org>
 
+	[sfnt] Modularize `sfnt_get_ps_name'.
+
+	* src/sfnt/sfdriver.c (sfnt_get_ps_name): Split off some
+	functionality into...
+	(IS_WIN, IS_APPLE): ... New macros.
+	(get_win_string, get_apple_string): ... New functions.
+
+2017-02-23  Werner Lemberg  <wl@gnu.org>
+
 	[truetype] Minor improvement.
 
 	* src/truetype/ttgload.c (TT_Process_Simple_Glyph,
