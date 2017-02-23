@@ -1215,7 +1215,7 @@
     face = (TT_Face)size->root.face;
 
     /* nothing to do for CFF2 */
-    if ( face->isCFF2 )
+    if ( face->is_cff2 )
       return FT_Err_Ok;
 
     size->ttmetrics.valid = FALSE;

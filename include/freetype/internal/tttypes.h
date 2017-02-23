@@ -1290,6 +1290,8 @@ FT_BEGIN_HEADER
   /*                                                                       */
   /*    glyf_offset          :: The file offset of the `glyf' table.       */
   /*                                                                       */
+  /*    is_cff2              :: Set if the font format is CFF2.            */
+  /*                                                                       */
   /*    doblend              :: A boolean which is set if the font should  */
   /*                            be blended (this is for GX var).           */
   /*                                                                       */
@@ -1492,7 +1494,7 @@ FT_BEGIN_HEADER
     FT_ULong              glyf_len;
     FT_ULong              glyf_offset;    /* since 2.7.1 */
 
-    FT_Bool               isCFF2;         /* since 2.7.1 */
+    FT_Bool               is_cff2;        /* since 2.7.1 */
 
 #ifdef TT_CONFIG_OPTION_GX_VAR_SUPPORT
     FT_Bool               doblend;

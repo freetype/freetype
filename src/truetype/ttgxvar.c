@@ -2083,7 +2083,7 @@
 
     FT_TRACE5(( "\n" ));
 
-    if ( !face->isCFF2 && !blend->glyphoffsets )
+    if ( !face->is_cff2 && !blend->glyphoffsets )
       if ( FT_SET_ERROR( ft_var_load_gvar( face ) ) )
         goto Exit;
 

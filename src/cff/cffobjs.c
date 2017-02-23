@@ -560,8 +560,8 @@
       error = face->goto_table( face, TTAG_CFF2, stream, 0 );
       if ( !error )
       {
-        cff2         = 1;
-        face->isCFF2 = cff2;
+        cff2          = 1;
+        face->is_cff2 = cff2;
       }
 
       if ( FT_ERR_EQ( error, Table_Missing ) )

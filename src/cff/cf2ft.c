@@ -373,7 +373,7 @@
                                &scaled );
 
       /* copy isCFF2 boolean from TT_Face to CF2_Font */
-      font->isCFF2 = builder->face->isCFF2;
+      font->isCFF2 = builder->face->is_cff2;
 
       font->renderingFlags = 0;
       if ( hinted )
