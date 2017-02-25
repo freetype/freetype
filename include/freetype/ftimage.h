@@ -619,7 +619,7 @@ FT_BEGIN_HEADER
   /*                                                                       */
   /*    {                                                                  */
   /*      x' = (x << shift) - delta                                        */
-  /*      y' = (x << shift) - delta                                        */
+  /*      y' = (y << shift) - delta                                        */
   /*    }                                                                  */
   /*                                                                       */
   /*    Set the values of `shift' and `delta' to~0 to get the original     */
