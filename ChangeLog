@@ -1,5 +1,13 @@
 2017-02-23  Werner Lemberg  <wl@gnu.org>
 
+	[sfnt] Split off another bit of `sfnt_get_ps_name'.
+
+	* src/sfnt/sfdriver.c (sfnt_get_ps_name): Split off some
+	functionality into...
+	(search_name_id): ... New function.
+
+2017-02-23  Werner Lemberg  <wl@gnu.org>
+
 	[sfnt] Modularize `sfnt_get_ps_name'.
 
 	* src/sfnt/sfdriver.c (sfnt_get_ps_name): Split off some

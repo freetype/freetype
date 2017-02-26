@@ -306,10 +306,41 @@
   }
 
 
+  static int
+  search_name_id( TT_Face  face,
+                  FT_Int   id,
+                  FT_Int  *win,
+                  FT_Int  *apple )
+  {
+    FT_Int  n;
+
+
+    *win   = -1;
+    *apple = -1;
+
+    for ( n = 0; n < face->num_names; n++ )
+    {
+      TT_Name  name = face->name_table.names + n;
+
+
+      if ( name->nameID == id && name->stringLength > 0 )
+      {
+        if ( IS_WIN( name ) )
+          *win = n;
+
+        if ( IS_APPLE( name ) )
+          *apple = n;
+      }
+    }
+
+    return *win || *apple;
+  }
+
+
   static const char*
   sfnt_get_ps_name( TT_Face  face )
   {
-    FT_Int       n, found_win, found_apple;
+    FT_Int       found_win, found_apple;
     const char*  result = NULL;
 
 
@@ -318,23 +349,7 @@
 
     /* scan the name table to see whether we have a Postscript name here, */
     /* either in Macintosh or Windows platform encodings                  */
-    found_win   = -1;
-    found_apple = -1;
-
-    for ( n = 0; n < face->num_names; n++ )
-    {
-      TT_Name  name = face->name_table.names + n;
-
-
-      if ( name->nameID == 6 && name->stringLength > 0 )
-      {
-        if ( IS_WIN( name ) )
-          found_win = n;
-
-        if ( IS_APPLE( name ) )
-          found_apple = n;
-      }
-    }
+    search_name_id( face, 6, &found_win, &found_apple );
 
     /* prefer Windows entries over Apple */
     if ( found_win != -1 )
