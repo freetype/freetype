@@ -1,5 +1,18 @@
 2017-02-23  Werner Lemberg  <wl@gnu.org>
 
+	[sfnt] Further generalize `sfnt_get_ps_name'; report invalid data.
+
+	* src/sfnt/sfdriver.c (sfnt_ps_map): New array.
+	(sfnt_is_postscript): New function.
+	(char_type_func): New typedef.
+	(get_win_string, get_apple_string): Add argument to specify
+	character checking function.
+	Add argument whether argument checking failures should be reported.
+	Update callers.
+	(search_name_id): Fix return value.
+
+2017-02-23  Werner Lemberg  <wl@gnu.org>
+
 	[sfnt] Split off another bit of `sfnt_get_ps_name'.
 
 	* src/sfnt/sfdriver.c (sfnt_get_ps_name): Split off some

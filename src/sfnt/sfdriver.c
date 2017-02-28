@@ -220,6 +220,39 @@
    *
    */
 
+  /* an array representing allowed ASCII characters in a PS string */
+  static const unsigned char sfnt_ps_map[16] =
+  {
+                /*             4        0        C        8 */
+    0x00, 0x00, /* 0x00: 0 0 0 0  0 0 0 0  0 0 0 0  0 0 0 0 */
+    0x00, 0x00, /* 0x10: 0 0 0 0  0 0 0 0  0 0 0 0  0 0 0 0 */
+    0xDE, 0x7C, /* 0x20: 1 1 0 1  1 1 1 0  0 1 1 1  1 1 0 0 */
+    0xFF, 0xAF, /* 0x30: 1 1 1 1  1 1 1 1  1 0 1 0  1 1 1 1 */
+    0xFF, 0xFF, /* 0x40: 1 1 1 1  1 1 1 1  1 1 1 1  1 1 1 1 */
+    0xFF, 0xD7, /* 0x50: 1 1 1 1  1 1 1 1  1 1 0 1  0 1 1 1 */
+    0xFF, 0xFF, /* 0x60: 1 1 1 1  1 1 1 1  1 1 1 1  1 1 1 1 */
+    0xFF, 0x57  /* 0x70: 1 1 1 1  1 1 1 1  0 1 0 1  0 1 1 1 */
+  };
+
+
+  static int
+  sfnt_is_postscript( int  c )
+  {
+    unsigned int  cc;
+
+
+    if ( c < 0 || c >= 0x80 )
+      return 0;
+
+    cc = (unsigned int)c;
+
+    return sfnt_ps_map[cc >> 3] & ( 1 << ( cc & 0x07 ) );
+  }
+
+
+  typedef int (*char_type_func)( int  c );
+
+
   /* handling of PID/EID 3/0 and 3/1 is the same */
 #define IS_WIN( n )  ( (n)->platformID == 3                             && \
                        ( (n)->encodingID == 1 || (n)->encodingID == 0 ) && \
@@ -230,9 +263,11 @@
                          (n)->languageID == 0 )
 
   static const char*
-  get_win_string( FT_Memory  memory,
-                  FT_Stream  stream,
-                  TT_Name    entry )
+  get_win_string( FT_Memory       memory,
+                  FT_Stream       stream,
+                  TT_Name         entry,
+                  char_type_func  char_type,
+                  FT_Bool         report_invalid_characters )
   {
     FT_Error  error = FT_Err_Ok;
 
@@ -263,8 +298,22 @@
 
     for ( len = entry->stringLength / 2; len > 0; len--, p += 2 )
     {
-      if ( p[0] == 0 && p[1] >= 32 )
-        *r++ = p[1];
+      if ( p[0] == 0 )
+      {
+        if ( char_type( p[1] ) )
+          *r++ = p[1];
+        else
+        {
+          if ( report_invalid_characters )
+          {
+            FT_TRACE0(( "get_win_string:"
+                        " Character `%c' (0x%X) invalid in PS name string\n",
+                        p[1], p[1] ));
+            /* it's not the job of FreeType to correct PS names... */
+            *r++ = p[1];
+          }
+        }
+      }
     }
     *r = '\0';
 
@@ -275,13 +324,18 @@
 
 
   static const char*
-  get_apple_string( FT_Memory  memory,
-                    FT_Stream  stream,
-                    TT_Name    entry )
+  get_apple_string( FT_Memory       memory,
+                    FT_Stream       stream,
+                    TT_Name         entry,
+                    char_type_func  char_type,
+                    FT_Bool         report_invalid_characters )
   {
     FT_Error  error = FT_Err_Ok;
 
     const char*  result;
+    FT_String*   r;
+    FT_Char*     p;
+    FT_UInt      len;
 
     FT_UNUSED( error );
 
@@ -289,8 +343,8 @@
     if ( FT_ALLOC( result, entry->stringLength + 1 ) )
       return NULL;
 
-    if ( FT_STREAM_SEEK( entry->stringOffset )         ||
-         FT_STREAM_READ( result, entry->stringLength ) )
+    if ( FT_STREAM_SEEK( entry->stringOffset ) ||
+         FT_FRAME_ENTER( entry->stringLength ) )
     {
       FT_FREE( result );
       entry->stringOffset = 0;
@@ -300,7 +354,28 @@
       return NULL;
     }
 
-    ((char*)result)[entry->stringLength] = '\0';
+    r = (FT_String*)result;
+    p = (FT_Char*)stream->cursor;
+
+    for ( len = entry->stringLength; len > 0; len--, p++ )
+    {
+      if ( char_type( *p ) )
+        *r++ = *p;
+      else
+      {
+        if ( report_invalid_characters )
+        {
+          FT_TRACE0(( "get_apple_string:"
+                      " Character `%c' (0x%X) invalid in PS name string\n",
+                      *p, *p ));
+          /* it's not the job of FreeType to correct PS names... */
+          *r++ = *p;
+        }
+      }
+    }
+    *r = '\0';
+
+    FT_FRAME_EXIT();
 
     return result;
   }
@@ -333,14 +408,14 @@
       }
     }
 
-    return *win || *apple;
+    return ( *win >= 0 ) || ( *apple >= 0 );
   }
 
 
   static const char*
   sfnt_get_ps_name( TT_Face  face )
   {
-    FT_Int       found_win, found_apple;
+    FT_Int       found, win, apple;
     const char*  result = NULL;
 
 
@@ -349,17 +424,24 @@
 
     /* scan the name table to see whether we have a Postscript name here, */
     /* either in Macintosh or Windows platform encodings                  */
-    search_name_id( face, 6, &found_win, &found_apple );
+    found = search_name_id( face, 6, &win, &apple );
 
-    /* prefer Windows entries over Apple */
-    if ( found_win != -1 )
-      result = get_win_string( face->root.memory,
-                               face->name_table.stream,
-                               face->name_table.names + found_win );
-    else if ( found_apple != -1 )
-      result = get_apple_string( face->root.memory,
+    if ( found )
+    {
+      /* prefer Windows entries over Apple */
+      if ( win != -1 )
+        result = get_win_string( face->root.memory,
                                  face->name_table.stream,
-                                 face->name_table.names + found_apple );
+                                 face->name_table.names + win,
+                                 sfnt_is_postscript,
+                                 1 );
+      else
+        result = get_apple_string( face->root.memory,
+                                   face->name_table.stream,
+                                   face->name_table.names + apple,
+                                   sfnt_is_postscript,
+                                   1 );
+    }
 
     face->postscript_name = result;
 
