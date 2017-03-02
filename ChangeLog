@@ -1,4 +1,15 @@
-2017-02-23  Werner Lemberg  <wl@gnu.org>
+2017-03-02  Werner Lemberg  <wl@gnu.org>
+
+	[truetype] Split off designer/normalized conversion routines.
+
+	* src/truetype/ttgxvar.c (TT_Set_Var_Design): Split off conversion
+	code designer->normalized coordinates to...
+	(ft_var_to_normalized): ... New function.
+	(TT_Get_Var_Design): Split off conversion code normalized->designer
+	coordinates to...
+	(ft_var_to_design): ... New function.
+
+2017-02-28  Werner Lemberg  <wl@gnu.org>
 
 	[sfnt] Further generalize `sfnt_get_ps_name'; report invalid data.
 

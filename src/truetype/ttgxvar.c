@@ -1683,6 +1683,190 @@
   }
 
 
+  /* convert from design coordinates to normalized coordinates */
+
+  static void
+  ft_var_to_normalized( TT_Face    face,
+                        FT_UInt    num_coords,
+                        FT_Fixed*  coords,
+                        FT_Fixed*  normalized )
+  {
+    GX_Blend        blend;
+    FT_MM_Var*      mmvar;
+    FT_UInt         i, j;
+    FT_Var_Axis*    a;
+    GX_AVarSegment  av;
+
+
+    blend = face->blend;
+    mmvar = blend->mmvar;
+
+    if ( num_coords > mmvar->num_axis )
+    {
+      FT_TRACE2(( "ft_var_to_normalized:"
+                  " only using first %d of %d coordinates\n",
+                  mmvar->num_axis, num_coords ));
+      num_coords = mmvar->num_axis;
+    }
+
+    /* Axis normalization is a two-stage process.  First we normalize */
+    /* based on the [min,def,max] values for the axis to be [-1,0,1]. */
+    /* Then, if there's an `avar' table, we renormalize this range.   */
+
+    FT_TRACE5(( "design coordinates:\n" ));
+
+    a = mmvar->axis;
+    for ( i = 0; i < num_coords; i++, a++ )
+    {
+      FT_Fixed  coord = coords[i];
+
+
+      FT_TRACE5(( "  %.5f\n", coord / 65536.0 ));
+      if ( coord > a->maximum || coord < a->minimum )
+      {
+        FT_TRACE1((
+          "ft_var_to_normalized: design coordinate %.5f\n"
+          "                      is out of range [%.5f;%.5f]; clamping\n",
+          coord / 65536.0,
+          a->minimum / 65536.0,
+          a->maximum / 65536.0 ));
+
+        if ( coord > a->maximum)
+          coord = a->maximum;
+        else
+          coord = a->minimum;
+      }
+
+      if ( coord < a->def )
+        normalized[i] = -FT_DivFix( coords[i] - a->def,
+                                    a->minimum - a->def );
+      else if ( coord > a->def )
+        normalized[i] = FT_DivFix( coords[i] - a->def,
+                                   a->maximum - a->def );
+      else
+        normalized[i] = 0;
+    }
+
+    FT_TRACE5(( "\n" ));
+
+    for ( ; i < mmvar->num_axis; i++ )
+      normalized[i] = 0;
+
+    if ( blend->avar_segment )
+    {
+      FT_TRACE5(( "normalized design coordinates"
+                  " before applying `avar' data:\n" ));
+
+      av = blend->avar_segment;
+      for ( i = 0; i < mmvar->num_axis; i++, av++ )
+      {
+        for ( j = 1; j < (FT_UInt)av->pairCount; j++ )
+        {
+          if ( normalized[i] < av->correspondence[j].fromCoord )
+          {
+            FT_TRACE5(( "  %.5f\n", normalized[i] / 65536.0 ));
+
+            normalized[i] =
+              FT_MulDiv( normalized[i] - av->correspondence[j - 1].fromCoord,
+                         av->correspondence[j].toCoord -
+                           av->correspondence[j - 1].toCoord,
+                         av->correspondence[j].fromCoord -
+                           av->correspondence[j - 1].fromCoord ) +
+              av->correspondence[j - 1].toCoord;
+            break;
+          }
+        }
+      }
+    }
+  }
+
+
+  /* convert from normalized coordinates to design coordinates */
+
+  static void
+  ft_var_to_design( TT_Face    face,
+                    FT_UInt    num_coords,
+                    FT_Fixed*  coords,
+                    FT_Fixed*  design )
+  {
+    GX_Blend      blend;
+    FT_MM_Var*    mmvar;
+    FT_Var_Axis*  a;
+
+    FT_UInt  i, j, nc;
+
+
+    blend = face->blend;
+
+    nc = num_coords;
+    if ( num_coords > blend->num_axis )
+    {
+      FT_TRACE2(( "ft_var_to_design:"
+                  " only using first %d of %d coordinates\n",
+                  blend->num_axis, num_coords ));
+      nc = blend->num_axis;
+    }
+
+    if ( face->doblend )
+    {
+      for ( i = 0; i < nc; i++ )
+        design[i] = coords[i];
+    }
+    else
+    {
+      for ( i = 0; i < nc; i++ )
+        design[i] = 0;
+    }
+
+    for ( ; i < num_coords; i++ )
+      design[i] = 0;
+
+    if ( blend->avar_segment )
+    {
+      GX_AVarSegment  av = blend->avar_segment;
+
+
+      FT_TRACE5(( "design coordinates"
+                  " after removing `avar' distortion:\n" ));
+
+      for ( i = 0; i < nc; i++, av++ )
+      {
+        for ( j = 1; j < (FT_UInt)av->pairCount; j++ )
+        {
+          if ( design[i] < av->correspondence[j].toCoord )
+          {
+            design[i] =
+              FT_MulDiv( design[i] - av->correspondence[j - 1].toCoord,
+                         av->correspondence[j].fromCoord -
+                           av->correspondence[j - 1].fromCoord,
+                         av->correspondence[j].toCoord -
+                           av->correspondence[j - 1].toCoord ) +
+              av->correspondence[j - 1].fromCoord;
+
+            FT_TRACE5(( "  %.5f\n", design[i] / 65536.0 ));
+            break;
+          }
+        }
+      }
+    }
+
+    mmvar = blend->mmvar;
+    a     = mmvar->axis;
+
+    for ( i = 0; i < nc; i++, a++ )
+    {
+      if ( design[i] < 0 )
+        design[i] = a->def + FT_MulFix( design[i],
+                                        a->def - a->minimum );
+      else if ( design[i] > 0 )
+        design[i] = a->def + FT_MulFix( design[i],
+                                        a->maximum - a->def );
+      else
+        design[i] = a->def;
+    }
+  }
+
+
   /*************************************************************************/
   /*************************************************************************/
   /*****                                                               *****/
@@ -2262,14 +2446,11 @@
                      FT_UInt    num_coords,
                      FT_Fixed*  coords )
   {
-    FT_Error        error      = FT_Err_Ok;
-    FT_Fixed*       normalized = NULL;
-    GX_Blend        blend;
-    FT_MM_Var*      mmvar;
-    FT_UInt         i, j;
-    FT_Var_Axis*    a;
-    GX_AVarSegment  av;
-    FT_Memory       memory = face->root.memory;
+    FT_Error   error  = FT_Err_Ok;
+    FT_Memory  memory = face->root.memory;
+
+    FT_Fixed*  normalized = NULL;
+    FT_UInt    num_axes;
 
 
     if ( !face->blend )
@@ -2278,94 +2459,17 @@
         goto Exit;
     }
 
-    blend = face->blend;
-    mmvar = blend->mmvar;
+    num_axes = face->blend->mmvar->num_axis;
 
-    if ( num_coords > mmvar->num_axis )
-    {
-      FT_TRACE2(( "TT_Set_Var_Design:"
-                  " only using first %d of %d coordinates\n",
-                  mmvar->num_axis, num_coords ));
-      num_coords = mmvar->num_axis;
-    }
-
-    /* Axis normalization is a two-stage process.  First we normalize */
-    /* based on the [min,def,max] values for the axis to be [-1,0,1]. */
-    /* Then, if there's an `avar' table, we renormalize this range.   */
-
-    if ( FT_NEW_ARRAY( normalized, mmvar->num_axis ) )
+    if ( FT_NEW_ARRAY( normalized, num_axes ) )
       goto Exit;
 
-    FT_TRACE5(( "design coordinates:\n" ));
-
-    a = mmvar->axis;
-    for ( i = 0; i < num_coords; i++, a++ )
-    {
-      FT_Fixed  coord = coords[i];
-
-
-      FT_TRACE5(( "  %.5f\n", coord / 65536.0 ));
-      if ( coord > a->maximum || coord < a->minimum )
-      {
-        FT_TRACE1((
-          "TT_Set_Var_Design: design coordinate %.5f\n"
-          "                   is out of range [%.5f;%.5f]; clamping\n",
-          coord / 65536.0,
-          a->minimum / 65536.0,
-          a->maximum / 65536.0 ));
-
-        if ( coord > a->maximum)
-          coord = a->maximum;
-        else
-          coord = a->minimum;
-      }
-
-      if ( coord < a->def )
-        normalized[i] = -FT_DivFix( coords[i] - a->def,
-                                    a->minimum - a->def );
-      else if ( coord > a->def )
-        normalized[i] = FT_DivFix( coords[i] - a->def,
-                                   a->maximum - a->def );
-      else
-        normalized[i] = 0;
-    }
-
-    FT_TRACE5(( "\n" ));
-
-    for ( ; i < mmvar->num_axis; i++ )
-      normalized[i] = 0;
-
-    if ( !blend->avar_checked )
+    if ( !face->blend->avar_checked )
       ft_var_load_avar( face );
 
-    if ( blend->avar_segment )
-    {
-      FT_TRACE5(( "normalized design coordinates"
-                  " before applying `avar' data:\n" ));
+    ft_var_to_normalized( face, num_coords, coords, normalized );
 
-      av = blend->avar_segment;
-      for ( i = 0; i < mmvar->num_axis; i++, av++ )
-      {
-        for ( j = 1; j < (FT_UInt)av->pairCount; j++ )
-        {
-          if ( normalized[i] < av->correspondence[j].fromCoord )
-          {
-            FT_TRACE5(( "  %.5f\n", normalized[i] / 65536.0 ));
-
-            normalized[i] =
-              FT_MulDiv( normalized[i] - av->correspondence[j - 1].fromCoord,
-                         av->correspondence[j].toCoord -
-                           av->correspondence[j - 1].toCoord,
-                         av->correspondence[j].fromCoord -
-                           av->correspondence[j - 1].fromCoord ) +
-              av->correspondence[j - 1].toCoord;
-            break;
-          }
-        }
-      }
-    }
-
-    error = TT_Set_MM_Blend( face, mmvar->num_axis, normalized );
+    error = TT_Set_MM_Blend( face, num_axes, normalized );
 
   Exit:
     FT_FREE( normalized );
@@ -2402,12 +2506,6 @@
   {
     FT_Error  error = FT_Err_Ok;
 
-    GX_Blend      blend;
-    FT_MM_Var*    mmvar;
-    FT_Var_Axis*  a;
-
-    FT_UInt  i, j, nc;
-
 
     if ( !face->blend )
     {
@@ -2415,76 +2513,13 @@
         return error;
     }
 
-    blend = face->blend;
-
-    nc = num_coords;
-    if ( num_coords > blend->num_axis )
-    {
-      FT_TRACE2(( "TT_Get_Var_Design: only using first %d of %d coordinates\n",
-                  blend->num_axis, num_coords ));
-      nc = blend->num_axis;
-    }
-
-    if ( face->doblend )
-    {
-      for ( i = 0; i < nc; i++ )
-        coords[i] = blend->normalizedcoords[i];
-    }
-    else
-    {
-      for ( i = 0; i < nc; i++ )
-        coords[i] = 0;
-    }
-
-    for ( ; i < num_coords; i++ )
-      coords[i] = 0;
-
-    if ( !blend->avar_checked )
+    if ( !face->blend->avar_checked )
       ft_var_load_avar( face );
 
-    if ( blend->avar_segment )
-    {
-      GX_AVarSegment  av = blend->avar_segment;
-
-
-      FT_TRACE5(( "design coordinates"
-                  " after removing `avar' distortion:\n" ));
-
-      for ( i = 0; i < nc; i++, av++ )
-      {
-        for ( j = 1; j < (FT_UInt)av->pairCount; j++ )
-        {
-          if ( coords[i] < av->correspondence[j].toCoord )
-          {
-            coords[i] =
-              FT_MulDiv( coords[i] - av->correspondence[j - 1].toCoord,
-                         av->correspondence[j].fromCoord -
-                           av->correspondence[j - 1].fromCoord,
-                         av->correspondence[j].toCoord -
-                           av->correspondence[j - 1].toCoord ) +
-              av->correspondence[j - 1].fromCoord;
-
-            FT_TRACE5(( "  %.5f\n", coords[i] / 65536.0 ));
-            break;
-          }
-        }
-      }
-    }
-
-    mmvar = blend->mmvar;
-    a     = mmvar->axis;
-
-    for ( i = 0; i < nc; i++, a++ )
-    {
-      if ( coords[i] < 0 )
-        coords[i] = a->def + FT_MulFix( coords[i],
-                                        a->def - a->minimum );
-      else if ( coords[i] > 0 )
-        coords[i] = a->def + FT_MulFix( coords[i],
-                                        a->maximum - a->def );
-      else
-        coords[i] = a->def;
-    }
+    ft_var_to_design( face,
+                      num_coords,
+                      face->blend->normalizedcoords,
+                      coords );
 
     return FT_Err_Ok;
   }
