@@ -232,6 +232,9 @@ FT_BEGIN_HEADER
     FT_MM_Var*      mmvar;
     FT_Offset       mmvar_len;
 
+    FT_Fixed*       normalized_stylecoords;
+                      /* normalized_stylecoords[num_namedstyles][num_axis] */
+
     FT_Bool         avar_checked;
     GX_AVarSegment  avar_segment;
 

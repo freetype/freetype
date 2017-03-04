@@ -1,3 +1,15 @@
+2017-03-04  Werner Lemberg  <wl@gnu.org>
+
+	[truetype] Make `TT_Set_MM_Blend' set named instance index.
+
+	* src/truetype/ttgxvar.h (GX_Blend): New array
+	`normalized_stylecoords'.
+
+	* src/truetype/ttgxvar.c (TT_Get_MM_Var): Allocate and fill
+	`normalized_stylecoords'.
+	(TT_Set_MM_Blend): Check instance tuple and adjust `face_index'
+	accordingly.
+
 2017-03-02  Werner Lemberg  <wl@gnu.org>
 
 	[truetype] Split off designer/normalized conversion routines.

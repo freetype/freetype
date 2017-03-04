@@ -1933,6 +1933,7 @@
     FT_Int               i, j;
     FT_MM_Var*           mmvar = NULL;
     FT_Fixed*            next_coords;
+    FT_Fixed*            nsc;
     FT_String*           next_name;
     FT_Var_Axis*         a;
     FT_Var_Named_Style*  ns;
@@ -2018,7 +2019,7 @@
       if ( FT_NEW( face->blend ) )
         goto Exit;
 
-      /* cannot overflow 32-bit arithmetic because of limits above */
+      /* cannot overflow 32-bit arithmetic because of the validity check */
       face->blend->mmvar_len =
         sizeof ( FT_MM_Var ) +
         fvar_head.axisCount * sizeof ( FT_Var_Axis ) +
@@ -2108,7 +2109,20 @@
 
       FT_TRACE5(( "\n" ));
 
-      ns = mmvar->namedstyle;
+      if ( fvar_head.instanceCount )
+      {
+        /* named instance coordinates are stored as design coordinates; */
+        /* we have to convert them to normalized coordinates also       */
+        if ( FT_NEW_ARRAY( face->blend->normalized_stylecoords,
+                           fvar_head.axisCount * fvar_head.instanceCount ) )
+          goto Exit;
+
+        if ( !face->blend->avar_checked )
+          ft_var_load_avar( face );
+      }
+
+      ns  = mmvar->namedstyle;
+      nsc = face->blend->normalized_stylecoords;
       for ( i = 0; i < fvar_head.instanceCount; i++, ns++ )
       {
         /* PostScript names add 2 bytes to the instance record size */
@@ -2124,6 +2138,12 @@
 
         if ( usePsName )
           ns->psid = FT_GET_USHORT();
+
+        ft_var_to_normalized( face,
+                              fvar_head.axisCount,
+                              ns->coords,
+                              nsc );
+        nsc += fvar_head.axisCount;
 
         FT_FRAME_EXIT();
       }
@@ -2216,7 +2236,7 @@
     FT_Error    error = FT_Err_Ok;
     GX_Blend    blend;
     FT_MM_Var*  mmvar;
-    FT_UInt     i;
+    FT_UInt     i, j;
     FT_Bool     is_default_instance = 1;
     FT_Memory   memory = face->root.memory;
 
@@ -2341,6 +2361,30 @@
         break;
       }
     }
+
+    /* check whether the current variation tuple coincides */
+    /* with a named instance                               */
+
+    for ( i = 0; i < blend->mmvar->num_namedstyles; i++ )
+    {
+      FT_Fixed*  nsc = blend->normalized_stylecoords + i * blend->num_axis;
+      FT_Fixed*  ns  = blend->normalizedcoords;
+
+
+      for ( j = 0; j < blend->num_axis; j++, nsc++, ns++ )
+      {
+        if ( *nsc != *ns )
+          break;
+      }
+
+      if ( j == blend->num_axis )
+        break;
+    }
+
+    /* adjust named instance index */
+    face->root.face_index &= 0xFFFF;
+    if ( i < blend->mmvar->num_namedstyles )
+      face->root.face_index |= ( i + 1 ) << 16;
 
     face->is_default_instance = is_default_instance;
 
