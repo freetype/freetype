@@ -1,5 +1,18 @@
 2017-03-04  Werner Lemberg  <wl@gnu.org>
 
+	[sfnt] Add `get_name_id' service.
+
+	* include/freetype/internal/sfnt.h (TT_Get_Name_ID_Func): New
+	typedef.
+	(SFNT_Interface): Add `get_name_id' field.
+	(FT_DEFINE_SFNT_INTERFACE): Updated.
+
+	* src/sfnt/sfdriver.c (search_name_id): Rename to...
+	(sfnt_get_name_id): ... this.
+	(sfnt_get_ps_name, sfnt_interface): Udpated.
+
+2017-03-04  Werner Lemberg  <wl@gnu.org>
+
 	[truetype] Make `TT_Set_MM_Blend' set named instance index.
 
 	* src/truetype/ttgxvar.h (GX_Blend): New array

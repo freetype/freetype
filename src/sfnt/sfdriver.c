@@ -381,11 +381,11 @@
   }
 
 
-  static int
-  search_name_id( TT_Face  face,
-                  FT_Int   id,
-                  FT_Int  *win,
-                  FT_Int  *apple )
+  static FT_Bool
+  sfnt_get_name_id( TT_Face    face,
+                    FT_UShort  id,
+                    FT_Int    *win,
+                    FT_Int    *apple )
   {
     FT_Int  n;
 
@@ -424,7 +424,7 @@
 
     /* scan the name table to see whether we have a Postscript name here, */
     /* either in Macintosh or Windows platform encodings                  */
-    found = search_name_id( face, 6, &win, &apple );
+    found = sfnt_get_name_id( face, 6, &win, &apple );
 
     if ( found )
     {
@@ -646,7 +646,8 @@
 
     tt_face_get_metrics,    /* TT_Get_Metrics_Func     get_metrics     */
 
-    tt_face_get_name        /* TT_Get_Name_Func        get_name        */
+    tt_face_get_name,       /* TT_Get_Name_Func        get_name        */
+    sfnt_get_name_id        /* TT_Get_Name_ID_Func     get_name_id     */
   )
 
 
