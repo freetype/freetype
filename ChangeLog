@@ -1,3 +1,10 @@
+2017-03-05  Werner Lemberg  <wl@gnu.org>
+
+	[sfnt] Remove redundant code.
+
+	* src/sfnt/sfobjs.c (sfnt_init_face): Remove second test for
+	`num_instances', which will always succeed.
+
 2017-03-04  Werner Lemberg  <wl@gnu.org>
 
 	[sfnt] Add `get_name_id' service.

@@ -999,15 +999,6 @@
       if ( !face->goto_table( face, TTAG_CFF, stream, 0 ) )
         num_instances = 0;
 
-      /* we support at most 2^15 - 1 instances */
-      if ( num_instances >= ( 1U << 15 ) - 1 )
-      {
-        if ( face_instance_index >= 0 )
-          return FT_THROW( Invalid_Argument );
-        else
-          num_instances = 0;
-      }
-
       /* instance indices in `face_instance_index' start with index 1, */
       /* thus `>' and not `>='                                         */
       if ( instance_index > num_instances )
