@@ -964,7 +964,7 @@
            fvar_len < 20                                          ||
            FT_READ_ULONG( version )                               ||
            FT_READ_USHORT( offset )                               ||
-           FT_STREAM_SKIP( 2 ) /* count_size_pairs */             ||
+           FT_STREAM_SKIP( 2 ) /* reserved */                     ||
            FT_READ_USHORT( num_axes )                             ||
            FT_READ_USHORT( axis_size )                            ||
            FT_READ_USHORT( num_instances )                        ||
@@ -980,18 +980,13 @@
 
       /* check that the data is bound by the table length */
       if ( version != 0x00010000UL                    ||
-#if 0
-           /* fonts like `JamRegular.ttf' have an incorrect value for   */
-           /* `count_size_pairs'; since value 2 is hard-coded in `fvar' */
-           /* version 1.0, we simply ignore it                          */
-           count_size_pairs != 2                      ||
-#endif
            axis_size != 20                            ||
            num_axes == 0                              ||
            /* `num_axes' limit implied by 16-bit `instance_size' */
            num_axes > 0x3FFE                          ||
            !( instance_size == 4 + 4 * num_axes ||
               instance_size == 6 + 4 * num_axes )     ||
+           /* `num_instances' limit implied by limited range of name IDs */
            num_instances > 0x7EFF                     ||
            offset                          +
              axis_size * num_axes          +
