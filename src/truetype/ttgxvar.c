@@ -45,6 +45,7 @@
 #include FT_INTERNAL_STREAM_H
 #include FT_INTERNAL_SFNT_H
 #include FT_TRUETYPE_TAGS_H
+#include FT_TRUETYPE_IDS_H
 #include FT_MULTIPLE_MASTERS_H
 #include FT_LIST_H
 
@@ -1930,15 +1931,17 @@
     FT_ULong             table_len;
     FT_Error             error  = FT_Err_Ok;
     FT_ULong             fvar_start;
-    FT_Int               i, j;
+    FT_UInt              i, j;
     FT_MM_Var*           mmvar = NULL;
     FT_Fixed*            next_coords;
     FT_Fixed*            nsc;
     FT_String*           next_name;
     FT_Var_Axis*         a;
+    FT_Fixed*            c;
     FT_Var_Named_Style*  ns;
     GX_FVar_Head         fvar_head;
     FT_Bool              usePsName;
+    FT_UInt              num_instances;
 
     static const FT_Frame_Field  fvar_fields[] =
     {
@@ -2019,12 +2022,18 @@
       if ( FT_NEW( face->blend ) )
         goto Exit;
 
-      /* cannot overflow 32-bit arithmetic because of the validity check */
+      /* `num_instances' holds the number of all named instances, */
+      /* including the default instance which might be missing    */
+      /* in fvar's table of named instances                       */
+      num_instances = face->root.style_flags >> 16;
+
+      /* cannot overflow 32-bit arithmetic because of the size limits */
+      /* used in the `fvar' table validity check in `sfnt_init_face'  */
       face->blend->mmvar_len =
         sizeof ( FT_MM_Var ) +
         fvar_head.axisCount * sizeof ( FT_Var_Axis ) +
-        fvar_head.instanceCount * sizeof ( FT_Var_Named_Style ) +
-        fvar_head.instanceCount * fvar_head.axisCount * sizeof ( FT_Fixed ) +
+        num_instances * sizeof ( FT_Var_Named_Style ) +
+        num_instances * fvar_head.axisCount * sizeof ( FT_Fixed ) +
         5 * fvar_head.axisCount;
 
       if ( FT_ALLOC( mmvar, face->blend->mmvar_len ) )
@@ -2041,15 +2050,15 @@
                                /* may have a different number of designs  */
                                /* (or tuples, as called by Apple)         */
       mmvar->num_namedstyles =
-        fvar_head.instanceCount;
+        num_instances;
       mmvar->axis =
         (FT_Var_Axis*)&( mmvar[1] );
       mmvar->namedstyle =
         (FT_Var_Named_Style*)&( mmvar->axis[fvar_head.axisCount] );
 
       next_coords =
-        (FT_Fixed*)&( mmvar->namedstyle[fvar_head.instanceCount] );
-      for ( i = 0; i < fvar_head.instanceCount; i++ )
+        (FT_Fixed*)&( mmvar->namedstyle[num_instances] );
+      for ( i = 0; i < num_instances; i++ )
       {
         mmvar->namedstyle[i].coords  = next_coords;
         next_coords                 += fvar_head.axisCount;
@@ -2109,17 +2118,14 @@
 
       FT_TRACE5(( "\n" ));
 
-      if ( fvar_head.instanceCount )
-      {
-        /* named instance coordinates are stored as design coordinates; */
-        /* we have to convert them to normalized coordinates also       */
-        if ( FT_NEW_ARRAY( face->blend->normalized_stylecoords,
-                           fvar_head.axisCount * fvar_head.instanceCount ) )
-          goto Exit;
+      /* named instance coordinates are stored as design coordinates; */
+      /* we have to convert them to normalized coordinates also       */
+      if ( FT_NEW_ARRAY( face->blend->normalized_stylecoords,
+                         fvar_head.axisCount * num_instances ) )
+        goto Exit;
 
-        if ( !face->blend->avar_checked )
-          ft_var_load_avar( face );
-      }
+      if ( fvar_head.instanceCount && !face->blend->avar_checked )
+        ft_var_load_avar( face );
 
       ns  = mmvar->namedstyle;
       nsc = face->blend->normalized_stylecoords;
@@ -2133,8 +2139,9 @@
         ns->strid       =    FT_GET_USHORT();
         (void) /* flags = */ FT_GET_USHORT();
 
-        for ( j = 0; j < fvar_head.axisCount; j++ )
-          ns->coords[j] = FT_GET_LONG();
+        c = ns->coords;
+        for ( j = 0; j < fvar_head.axisCount; j++, c++ )
+          *c = FT_GET_LONG();
 
         if ( usePsName )
           ns->psid = FT_GET_USHORT();
@@ -2146,6 +2153,55 @@
         nsc += fvar_head.axisCount;
 
         FT_FRAME_EXIT();
+      }
+
+      if ( num_instances != fvar_head.instanceCount )
+      {
+        SFNT_Service  sfnt = (SFNT_Service)face->sfnt;
+
+        FT_Int  found, win, apple;
+
+
+        /* the default instance is missing in array the   */
+        /* of named instances; try to synthesize an entry */
+        found = sfnt->get_name_id( face,
+                                   TT_NAME_ID_TYPOGRAPHIC_SUBFAMILY,
+                                   &win,
+                                   &apple );
+        if ( !found )
+          found = sfnt->get_name_id( face,
+                                     TT_NAME_ID_FONT_SUBFAMILY,
+                                     &win,
+                                     &apple );
+
+        if ( found )
+        {
+          FT_Int  strid = win >= 0 ? win : apple;
+
+
+          found = sfnt->get_name_id( face,
+                                     TT_NAME_ID_PS_NAME,
+                                     &win,
+                                     &apple );
+          if ( found )
+          {
+            FT_Int  psid = win >= 0 ? win : apple;
+
+
+            FT_TRACE5(( "TT_Get_MM_Var:"
+                        " Adding default instance to named instances\n" ));
+
+            ns = &mmvar->namedstyle[fvar_head.instanceCount];
+
+            ns->strid = strid;
+            ns->psid  = psid;
+
+            a = mmvar->axis;
+            c = ns->coords;
+            for ( j = 0; j < fvar_head.axisCount; j++, a++, c++ )
+              *c = a->def;
+          }
+        }
       }
 
       ft_var_load_mvar( face );
@@ -3528,6 +3584,7 @@
       num_axes = blend->mmvar->num_axis;
 
       FT_FREE( blend->normalizedcoords );
+      FT_FREE( blend->normalized_stylecoords );
       FT_FREE( blend->mmvar );
 
       if ( blend->avar_segment )

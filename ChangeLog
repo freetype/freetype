@@ -1,3 +1,26 @@
+2017-03-06  Werner Lemberg  <wl@gnu.org>
+
+	[sfnt, truetype] Always provide default instance.
+
+	As documented in the OpenType specification, an entry for the
+	default instance may be omitted in the named instance table.  In
+	particular this means that even if there is no named instance table
+	in the font we actually do have a named instance, namely the default
+	instance.
+
+	For consistency, we always want the default instance in our list of
+	named instances.  If it is missing, we try to synthesize it.
+
+	* src/sfnt/sfobjs.c (sfnt_init_face): Check whether the default
+	instance is in the table of named instances.  Otherwise adjust
+	number of instances.
+
+	* src/truetype/ttgxvar.c: Include FT_TRUETYPE_IDS_H.
+	(TT_Get_MM_Var): Use `face->root.style_flags' as the number of named
+	instances.
+	Sythesize a named instance entry if necessary.
+	(tt_done_blend): Free `normalized_stylecoords'.
+
 2017-03-05  Werner Lemberg  <wl@gnu.org>
 
 	[sfnt] Remove redundant code.

@@ -856,6 +856,7 @@
                   FT_Parameter*  params )
   {
     FT_Error      error;
+    FT_Memory     memory = face->root.memory;
     FT_Library    library = face->root.driver->root.library;
     SFNT_Service  sfnt;
     FT_Int        face_index;
@@ -954,6 +955,9 @@
 
       FT_Int  instance_index;
 
+      FT_Byte*  default_values  = NULL;
+      FT_Byte*  instance_values = NULL;
+
 
       face->is_default_instance = 1;
 
@@ -998,6 +1002,65 @@
       /* we don't support Multiple Master CFFs yet */
       if ( !face->goto_table( face, TTAG_CFF, stream, 0 ) )
         num_instances = 0;
+
+      /*
+       *  As documented in the OpenType specification, an entry for the
+       *  default instance may be omitted in the named instance table.  In
+       *  particular this means that even if there is no named instance
+       *  table in the font we actually do have a named instance, namely the
+       *  default instance.
+       *
+       *  For consistency, we always want the default instance in our list
+       *  of named instances.  If it is missing, we try to synthesize it
+       *  later on.  Here, we have to adjust `num_instances' accordingly.
+       */
+
+      if ( !( FT_ALLOC( default_values, num_axes * 2 )  ||
+              FT_ALLOC( instance_values, num_axes * 2 ) ) )
+      {
+        /* the current stream position is 16 bytes after the table start */
+        FT_ULong  array_start = FT_STREAM_POS() - 16 + offset;
+        FT_ULong  default_value_offset, instance_offset;
+
+        FT_Byte*  p;
+        FT_UInt   i;
+
+
+        default_value_offset = array_start + 8;
+        p                    = default_values;
+
+        for ( i = 0; i < num_axes; i++ )
+        {
+          (void)FT_STREAM_READ_AT( default_value_offset, p, 2 );
+
+          default_value_offset += axis_size;
+          p                    += 2;
+        }
+
+        instance_offset = array_start + axis_size * num_axes + 4;
+
+        for ( i = 0; i < num_instances; i++ )
+        {
+          (void)FT_STREAM_READ_AT( instance_offset,
+                                   instance_values,
+                                   num_axes * 2 );
+
+          if ( !ft_memcmp( default_values, instance_values, num_axes * 2 ) )
+            break;
+
+          instance_offset += instance_size;
+        }
+
+        if ( i == num_instances )
+        {
+          /* no default instance in named instance table; */
+          /* we thus have to synthesize it                */
+          num_instances++;
+        }
+      }
+
+      FT_FREE( default_values );
+      FT_FREE( instance_values );
 
       /* instance indices in `face_instance_index' start with index 1, */
       /* thus `>' and not `>='                                         */
