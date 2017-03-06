@@ -166,19 +166,19 @@ FT_BEGIN_HEADER
   /*    FT_Var_Named_Style                                                 */
   /*                                                                       */
   /* <Description>                                                         */
-  /*    A structure to model a named style in a TrueType GX or OpenType    */
+  /*    A structure to model a named instance in a TrueType GX or OpenType */
   /*    variation font.                                                    */
   /*                                                                       */
   /*    This structure can't be used for Adobe MM fonts.                   */
   /*                                                                       */
   /* <Fields>                                                              */
-  /*    coords :: The design coordinates for this style.                   */
+  /*    coords :: The design coordinates for this instance.                */
   /*              This is an array with one entry for each axis.           */
   /*                                                                       */
-  /*    strid  :: The entry in `name' table identifying this style.        */
+  /*    strid  :: The entry in `name' table identifying this instance.     */
   /*                                                                       */
   /*    psid   :: The entry in `name' table identifying a PostScript name  */
-  /*              for this style.                                          */
+  /*              for this instance.                                       */
   /*                                                                       */
   typedef struct  FT_Var_Named_Style_
   {
@@ -215,7 +215,8 @@ FT_BEGIN_HEADER
   /*                       a tuple of design coordinates that has a string */
   /*                       ID (in the `name' table) associated with it.    */
   /*                       The font can tell the user that, for example,   */
-  /*                       [Weight=1.5,Width=1.1] is `Bold'.               */
+  /*                       [Weight=1.5,Width=1.1] is `Bold'.  Another name */
+  /*                       for `named style' is `named instance'.          */
   /*                                                                       */
   /*                       For Adobe Multiple Masters fonts, this value is */
   /*                       always zero because the format does not support */
@@ -227,7 +228,7 @@ FT_BEGIN_HEADER
   /*                       Memory management of this pointer is done       */
   /*                       internally by FreeType.                         */
   /*                                                                       */
-  /*    namedstyle      :: A named style table.                            */
+  /*    namedstyle      :: A named style (instance) table.                 */
   /*                       Only meaningful for TrueType GX and OpenType    */
   /*                       variation fonts.  Memory management of this     */
   /*                       pointer is done internally by FreeType.         */

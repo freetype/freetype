@@ -911,7 +911,10 @@ FT_BEGIN_HEADER
   /*                           available for the current face if we have a */
   /*                           GX or OpenType variation (sub)font.  Bit 31 */
   /*                           is always zero (this is, `style_flags' is   */
-  /*                           always a positive value).                   */
+  /*                           always a positive value).  Note that a      */
+  /*                           variation font has always at least one      */
+  /*                           named instance, namely the default          */
+  /*                           instance.                                   */
   /*                                                                       */
   /*    num_glyphs          :: The number of glyphs in the face.  If the   */
   /*                           face is scalable and has sbits (see         */
