@@ -502,7 +502,7 @@ FT_BEGIN_HEADER
 #define FT_STREAM_READ_AT( position, buffer, count )            \
           FT_SET_ERROR( FT_Stream_ReadAt( stream,               \
                                           (FT_ULong)(position), \
-                                          (FT_Byte*)buffer,     \
+                                          (FT_Byte*)(buffer),   \
                                           (FT_ULong)(count) ) )
 
 #define FT_STREAM_READ_FIELDS( fields, object )                          \
