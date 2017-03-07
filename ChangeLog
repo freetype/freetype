@@ -1,3 +1,15 @@
+2017-03-07  Werner Lemberg  <wl@gnu.org>
+
+	[sfnt] Improve handling for buggy variation fonts.
+
+	Reported as
+
+	  https://bugs.chromium.org/p/oss-fuzz/issues/detail?id=738
+
+	* src/sfnt/sfobjs.c (sfnt_init_face): While setting number of
+	instances to zero for `CFF' fonts table, ensure that there is no `glyf'
+	present also (which gets priority).
+
 2017-03-06  Werner Lemberg  <wl@gnu.org>
 
 	[sfnt, truetype] Always provide default instance.

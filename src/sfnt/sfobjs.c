@@ -999,10 +999,6 @@
       else
         face->variation_support |= TT_FACE_FLAG_VAR_FVAR;
 
-      /* we don't support Multiple Master CFFs yet */
-      if ( !face->goto_table( face, TTAG_CFF, stream, 0 ) )
-        num_instances = 0;
-
       /*
        *  As documented in the OpenType specification, an entry for the
        *  default instance may be omitted in the named instance table.  In
@@ -1061,6 +1057,11 @@
 
       FT_FREE( default_values );
       FT_FREE( instance_values );
+
+      /* we don't support Multiple Master CFFs yet */
+      if ( face->goto_table( face, TTAG_glyf, stream, 0 ) &&
+           !face->goto_table( face, TTAG_CFF, stream, 0 ) )
+        num_instances = 0;
 
       /* instance indices in `face_instance_index' start with index 1, */
       /* thus `>' and not `>='                                         */
