@@ -247,7 +247,7 @@
 	(FT_Face_Properties): Handle FT_PARAM_TAG_LCD_FILTER_WEIGHTS.
 
 	* src/smooth/ftsmooth.c (ft_smooth_render_generic)
-	[FT_CONFIG_OPTION_SUBPIXEL_RENDERING: Handle LCD weights from
+	[FT_CONFIG_OPTION_SUBPIXEL_RENDERING]: Handle LCD weights from
 	`FT_Face_Internal'.
 
 2017-02-14  Nikolaus Waxweiler  <madigens@gmail.com>

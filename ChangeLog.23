@@ -671,7 +671,7 @@
 	* src/raster/rules.mk: Don't handle ftmisc.h.  It is needed for
 	stand-alone mode only.
 
-	* src/raster/ftmisc.h (FT_MemoryRec , FT_Alloc_Func, FT_Free_Func,
+	* src/raster/ftmisc.h (FT_MemoryRec, FT_Alloc_Func, FT_Free_Func,
 	FT_Realloc_Func): Copy declarations from ftsystem.h.
 
 2009-09-02  Bram Tassyns  <bramt@enfocus.be>

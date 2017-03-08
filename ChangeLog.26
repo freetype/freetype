@@ -3408,7 +3408,7 @@
 	[raster,smooth] Microoptimizations.
 
 	* src/raster/ftraster.c (Insert_Y_Turn, Finalize_Profile_Table,
-	Bezier_Up, ): Use do-while loops.
+	Bezier_Up): Use do-while loops.
 
 	* src/smooth/ftgrays.c (gray_render_scanline, gray_render_line,
 	gray_convert_glyph): Ditto.

@@ -677,7 +677,7 @@ FT_BEGIN_HEADER
   /*    FT_ENCODING_JOHAB ::                                               */
   /*      The Korean standard character set (KS~C 5601-1992), which        */
   /*      corresponds to MS Windows code page 1361.  This character set    */
-  /*      includes all possible Hangeul character combinations.            */
+  /*      includes all possible Hangul character combinations.             */
   /*                                                                       */
   /*    FT_ENCODING_ADOBE_LATIN_1 ::                                       */
   /*      Corresponds to a Latin-1 encoding as defined in a Type~1         */

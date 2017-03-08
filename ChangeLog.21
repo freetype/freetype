@@ -2528,7 +2528,7 @@
 	* src/truetype/ttgload.c [TT_CONFIG_OPTION_GX_VAR_SUPPORT]: Include
 	ttgxvar.h.
 	(TT_Process_Simple_Glyph, load_truetype_glyph)
-	[TT_CONFIG_OPTION_GX_VAR_SUPPORT] :Support GX var fonts.
+	[TT_CONFIG_OPTION_GX_VAR_SUPPORT]: Support GX var fonts.
 
 	* src/truetype/ttobjs.c [TT_CONFIG_OPTION_GX_VAR_SUPPORT]: Include
 	ttgxvar.h.
@@ -7581,7 +7581,7 @@
 
 	* include/freetype/cache/ftccache.h, src/cache/ftccache.i,
 	src/cache/ftccache.c [!FTC_CACHE_USE_LINEAR_HASHING]: Removed.
-	(FTC_CACHE_USE_LINEAR_HASHING: Removed also.
+	(FTC_CACHE_USE_LINEAR_HASHING): Removed also.
 
 	FT_CONFIG_OPTION_USE_CMAPS is now the default.
 
