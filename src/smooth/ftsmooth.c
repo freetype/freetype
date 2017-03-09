@@ -332,57 +332,97 @@
 
 #else /* !FT_CONFIG_OPTION_SUBPIXEL_RENDERING */
 
-    /* render outline into bitmap */
-    error = render->raster_render( render->raster, &params );
-    if ( error )
-      goto Exit;
-
-    /* expand it horizontally */
-    if ( hmul )
+    if ( hmul )  /* lcd */
     {
-      FT_Byte*  line = bitmap->buffer;
-      FT_UInt   hh;
+      FT_Byte*  line;
+      FT_Byte*  temp;
+      FT_Int    i, j;
 
+      /* Render 3 separate monochrome bitmaps, shifting the outline  */
+      /* by 1/3 pixel.                                               */
+      width /= 3;
 
-      for ( hh = height; hh > 0; hh--, line += pitch )
+      FT_Outline_Translate( outline,  21, 0 );
+
+      error = render->raster_render( render->raster, &params );
+      if ( error )
+        goto Exit;
+
+      FT_Outline_Translate( outline, -21, 0 );
+      bitmap->buffer += width;
+
+      error = render->raster_render( render->raster, &params );
+      if ( error )
+        goto Exit;
+
+      FT_Outline_Translate( outline, -21, 0 );
+      bitmap->buffer += width;
+
+      error = render->raster_render( render->raster, &params );
+      if ( error )
+        goto Exit;
+
+      FT_Outline_Translate( outline,  21, 0 );
+      bitmap->buffer -= 2 * width;
+
+      /* XXX: Rearrange the bytes according to FT_PIXEL_MODE_LCD.    */
+      /* XXX: It is more efficient to render every third byte above. */
+
+      if ( FT_ALLOC( temp, (FT_ULong)pitch ) )
+        goto Exit;
+
+      for ( i = 0; i < height; i++ )
       {
-        FT_UInt   xx;
-        FT_Byte*  end = line + width;
-
-
-        for ( xx = width / 3; xx > 0; xx-- )
+        line = bitmap->buffer + i * pitch;
+        for ( j = 0; j < width; j++ )
         {
-          FT_UInt  pixel = line[xx-1];
-
-
-          end[-3] = (FT_Byte)pixel;
-          end[-2] = (FT_Byte)pixel;
-          end[-1] = (FT_Byte)pixel;
-          end    -= 3;
+          temp[3 * j    ] = line[j];
+          temp[3 * j + 1] = line[j + width];
+          temp[3 * j + 2] = line[j + width + width];
         }
+        FT_MEM_COPY( line, temp, pitch );
       }
+
+      FT_FREE( temp );
     }
-
-    /* expand it vertically */
-    if ( vmul )
+    else if ( vmul )  /* lcd_v */
     {
-      FT_Byte*  read  = bitmap->buffer + ( height - height / 3 ) * pitch;
-      FT_Byte*  write = bitmap->buffer;
-      FT_UInt   hh;
+      /* Render 3 separate monochrome bitmaps, shifting the outline  */
+      /* by 1/3 pixel. Triple the pitch to render on each third row. */
+      bitmap->pitch *= 3;
+      bitmap->rows  /= 3;
 
+      FT_Outline_Translate( outline, 0,  21 );
+      bitmap->buffer += 2 * pitch;
 
-      for ( hh = height / 3; hh > 0; hh-- )
-      {
-        ft_memcpy( write, read, pitch );
-        write += pitch;
+      error = render->raster_render( render->raster, &params );
+      if ( error )
+        goto Exit;
 
-        ft_memcpy( write, read, pitch );
-        write += pitch;
+      FT_Outline_Translate( outline, 0, -21 );
+      bitmap->buffer -= pitch;
 
-        ft_memcpy( write, read, pitch );
-        write += pitch;
-        read  += pitch;
-      }
+      error = render->raster_render( render->raster, &params );
+      if ( error )
+        goto Exit;
+
+      FT_Outline_Translate( outline, 0, -21 );
+      bitmap->buffer -= pitch;
+
+      error = render->raster_render( render->raster, &params );
+      if ( error )
+        goto Exit;
+
+      FT_Outline_Translate( outline, 0,  21 );
+
+      bitmap->pitch /= 3;
+      bitmap->rows  *= 3;
+    }
+    else  /* grayscale */
+    {
+      error = render->raster_render( render->raster, &params );
+      if ( error )
+        goto Exit;
     }
 
 #endif /* !FT_CONFIG_OPTION_SUBPIXEL_RENDERING */
