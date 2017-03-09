@@ -1,3 +1,12 @@
+2017-03-08  Alexei Podtelezhnikov  <apodtele@gmail.com>
+
+	[smooth] Groundwork for Harmony.
+
+	* src/smooth/ftsmooth.c (ft_smooth_render_generic): Apply consistent
+	LCD padding regardless of `FT_CONFIG_OPTION_SUBPIXEL_RENDERING'.
+
+	* devel/ftoption.h: Comment out `FT_CONFIG_OPTION_SUBPIXEL_RENDERING'.
+
 2017-03-08  Werner Lemberg  <wl@gnu.org>
 
 	[sfnt] Another fix for buggy variation fonts.

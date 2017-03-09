@@ -107,13 +107,11 @@
     FT_Bitmap*   bitmap  = &slot->bitmap;
     FT_Memory    memory  = render->root.memory;
     FT_BBox      cbox;
+    FT_Int       lcd_extra = 2;
     FT_Pos       x_shift = 0;
     FT_Pos       y_shift = 0;
     FT_Pos       x_left, y_top;
     FT_Pos       width, height, pitch;
-#ifndef FT_CONFIG_OPTION_SUBPIXEL_RENDERING
-    FT_Pos       height_org, width_org;
-#endif
     FT_Int       hmul    = ( mode == FT_RENDER_MODE_LCD );
     FT_Int       vmul    = ( mode == FT_RENDER_MODE_LCD_V );
 
@@ -124,7 +122,6 @@
 
 #ifdef FT_CONFIG_OPTION_SUBPIXEL_RENDERING
 
-    FT_Int                   lcd_extra          = 0;
     FT_LcdFiveTapFilter      lcd_weights        = { 0 };
     FT_Bool                  have_custom_weight = FALSE;
     FT_Bitmap_LcdFilterFunc  lcd_filter_func    = NULL;
@@ -215,40 +212,22 @@
     width  = (FT_ULong)( cbox.xMax - cbox.xMin ) >> 6;
     height = (FT_ULong)( cbox.yMax - cbox.yMin ) >> 6;
 
-#ifndef FT_CONFIG_OPTION_SUBPIXEL_RENDERING
-    width_org  = width;
-    height_org = height;
-#endif
-
-    pitch = width;
     if ( hmul )
     {
-      width *= 3;
-      pitch  = FT_PAD_CEIL( width, 4 );
+      x_shift += 64 * ( lcd_extra >> 1 );
+      x_left  -= lcd_extra >> 1;
+      width    = 3 * ( width + lcd_extra );
+      pitch    = FT_PAD_CEIL( width, 4 );
     }
-
-    if ( vmul )
-      height *= 3;
-
-#ifdef FT_CONFIG_OPTION_SUBPIXEL_RENDERING
-    if ( lcd_filter_func )
+    else if ( vmul )
     {
-      if ( hmul )
-      {
-        x_shift += 64 * ( lcd_extra >> 1 );
-        x_left  -= lcd_extra >> 1;
-        width   += 3 * lcd_extra;
-        pitch    = FT_PAD_CEIL( width, 4 );
-      }
-
-      if ( vmul )
-      {
-        y_shift += 64 * ( lcd_extra >> 1 );
-        y_top   += lcd_extra >> 1;
-        height  += 3 * lcd_extra;
-      }
+      y_shift += 64 * ( lcd_extra >> 1 );
+      y_top   += lcd_extra >> 1;
+      height   = 3 * ( height + lcd_extra );
+      pitch = width;
     }
-#endif
+    else
+      pitch = width;
 
     /*
      * XXX: on 16bit system, we return an error for huge bitmap
@@ -365,13 +344,13 @@
       FT_UInt   hh;
 
 
-      for ( hh = height_org; hh > 0; hh--, line += pitch )
+      for ( hh = height; hh > 0; hh--, line += pitch )
       {
         FT_UInt   xx;
         FT_Byte*  end = line + width;
 
 
-        for ( xx = width_org; xx > 0; xx-- )
+        for ( xx = width / 3; xx > 0; xx-- )
         {
           FT_UInt  pixel = line[xx-1];
 
@@ -387,12 +366,12 @@
     /* expand it vertically */
     if ( vmul )
     {
-      FT_Byte*  read  = bitmap->buffer + ( height - height_org ) * pitch;
+      FT_Byte*  read  = bitmap->buffer + ( height - height / 3 ) * pitch;
       FT_Byte*  write = bitmap->buffer;
       FT_UInt   hh;
 
 
-      for ( hh = height_org; hh > 0; hh-- )
+      for ( hh = height / 3; hh > 0; hh-- )
       {
         ft_memcpy( write, read, pitch );
         write += pitch;
