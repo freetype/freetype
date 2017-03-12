@@ -214,15 +214,82 @@ FT_BEGIN_HEADER
   /*                                                                       */
   /* <Description>                                                         */
   /*    Data for interpolating a font from a distortable font specified    */
-  /*    by the GX *var tables ([fgca]var).                                 */
+  /*    by the GX *var tables ([fgcahvm]var).                              */
   /*                                                                       */
   /* <Fields>                                                              */
-  /*    num_axis         :: The number of axes along which interpolation   */
-  /*                         may happen                                    */
+  /*    num_axis ::                                                        */
+  /*      The number of axes along which interpolation may happen.         */
   /*                                                                       */
-  /*    normalizedcoords :: A normalized value (between [-1,1]) indicating */
-  /*                        the contribution along each axis to the final  */
-  /*                        interpolated font.                             */
+  /*    normalizedcoords ::                                                */
+  /*      An array of normalized values (between [-1,1]) indicating the    */
+  /*      contribution along each axis to the final interpolated font.     */
+  /*      `coords' holds the same values.                                  */
+  /*                                                                       */
+  /*    mmvar ::                                                           */
+  /*      Data from the `fvar' table.                                      */
+  /*                                                                       */
+  /*    mmvar_len ::                                                       */
+  /*      The length of the `mmvar' structure.                             */
+  /*                                                                       */
+  /*    normalized_stylecoords ::                                          */
+  /*      A two-dimensional array that holds the named instance data from  */
+  /*      `mmvar' as normalized values.                                    */
+  /*                                                                       */
+  /*    avar_loaded ::                                                     */
+  /*      A Boolean; if set, FreeType tried to load (and parse) the `avar' */
+  /*      table.                                                           */
+  /*                                                                       */
+  /*    avar_segment ::                                                    */
+  /*      Data from the `avar' table.                                      */
+  /*                                                                       */
+  /*    hvar_loaded ::                                                     */
+  /*      A Boolean; if set, FreeType tried to load (and parse) the `hvar' */
+  /*      table.                                                           */
+  /*                                                                       */
+  /*    hvar_checked ::                                                    */
+  /*      A Boolean; if set, FreeType successfully loaded and parsed the   */
+  /*      `hvar' table.                                                    */
+  /*                                                                       */
+  /*    hvar_error ::                                                      */
+  /*      If loading and parsing of the `hvar' table failed, this field    */
+  /*      holds the corresponding error code.                              */
+  /*                                                                       */
+  /*    hvar_table ::                                                      */
+  /*      Data from the `hvar' table.                                      */
+  /*                                                                       */
+  /*    vvar_loaded ::                                                     */
+  /*      A Boolean; if set, FreeType tried to load (and parse) the `vvar' */
+  /*      table.                                                           */
+  /*                                                                       */
+  /*    vvar_checked ::                                                    */
+  /*      A Boolean; if set, FreeType successfully loaded and parsed the   */
+  /*      `vvar' table.                                                    */
+  /*                                                                       */
+  /*    vvar_error ::                                                      */
+  /*      If loading and parsing of the `vvar' table failed, this field    */
+  /*      holds the corresponding error code.                              */
+  /*                                                                       */
+  /*    vvar_table ::                                                      */
+  /*      Data from the `vvar' table.                                      */
+  /*                                                                       */
+  /*    mvar_table ::                                                      */
+  /*      Data from the `mvar' table.                                      */
+  /*                                                                       */
+  /*    tuplecount ::                                                      */
+  /*      The number of shared tuples in the `gvar' table.                 */
+  /*                                                                       */
+  /*    tuplecoords ::                                                     */
+  /*      A two-dimensional array that holds the shared tuple coordinates  */
+  /*      in the `gvar' table.                                             */
+  /*                                                                       */
+  /*    gv_glyphcnt ::                                                     */
+  /*      The number of glyphs handled in the `gvar' table.                */
+  /*                                                                       */
+  /*    glyphoffsets ::                                                    */
+  /*      Offsets into the glyph variation data array.                     */
+  /*                                                                       */
+  /*    gvar_size ::                                                       */
+  /*      The size of the `gvar' table.                                    */
   /*                                                                       */
   typedef struct  GX_BlendRec_
   {
@@ -236,7 +303,7 @@ FT_BEGIN_HEADER
                       /* normalized_stylecoords[num_namedstyles][num_axis] */
 
     FT_Bool         avar_loaded;
-    GX_AVarSegment  avar_segment;
+    GX_AVarSegment  avar_segment;                /* avar_segment[num_axis] */
 
     FT_Bool         hvar_loaded;
     FT_Bool         hvar_checked;
@@ -250,11 +317,11 @@ FT_BEGIN_HEADER
 
     GX_MVarTable    mvar_table;
 
-    FT_UInt         tuplecount;      /* shared tuples in `gvar'           */
-    FT_Fixed*       tuplecoords;     /* tuplecoords[tuplecount][num_axis] */
+    FT_UInt         tuplecount;
+    FT_Fixed*       tuplecoords;      /* tuplecoords[tuplecount][num_axis] */
 
     FT_UInt         gv_glyphcnt;
-    FT_ULong*       glyphoffsets;
+    FT_ULong*       glyphoffsets;         /* glyphoffsets[gv_glyphcnt + 1] */
 
     FT_ULong        gvar_size;
 
