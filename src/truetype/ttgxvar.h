@@ -220,6 +220,11 @@ FT_BEGIN_HEADER
   /*    num_axis ::                                                        */
   /*      The number of axes along which interpolation may happen.         */
   /*                                                                       */
+  /*    coords ::                                                          */
+  /*      An array of design coordinates (in user space) indicating the    */
+  /*      contribution along each axis to the final interpolated font.     */
+  /*      `normalizedcoords' holds the same values.                        */
+  /*                                                                       */
   /*    normalizedcoords ::                                                */
   /*      An array of normalized values (between [-1,1]) indicating the    */
   /*      contribution along each axis to the final interpolated font.     */
@@ -294,6 +299,7 @@ FT_BEGIN_HEADER
   typedef struct  GX_BlendRec_
   {
     FT_UInt         num_axis;
+    FT_Fixed*       coords;
     FT_Fixed*       normalizedcoords;
 
     FT_MM_Var*      mmvar;
@@ -423,6 +429,7 @@ FT_BEGIN_HEADER
   tt_get_var_blend( TT_Face      face,
                     FT_UInt     *num_coords,
                     FT_Fixed*   *coords,
+                    FT_Fixed*   *normalizedcoords,
                     FT_MM_Var*  *mm_var );
 
   FT_LOCAL( void )

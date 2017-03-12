@@ -2259,35 +2259,11 @@
   }
 
 
-  /*************************************************************************/
-  /*                                                                       */
-  /* <Function>                                                            */
-  /*    TT_Set_MM_Blend                                                    */
-  /*                                                                       */
-  /* <Description>                                                         */
-  /*    Set the blend (normalized) coordinates for this instance of the    */
-  /*    font.  Check that the `gvar' table is reasonable and does some     */
-  /*    initial preparation.                                               */
-  /*                                                                       */
-  /* <InOut>                                                               */
-  /*    face       :: The font.                                            */
-  /*                  Initialize the blend structure with `gvar' data.     */
-  /*                                                                       */
-  /* <Input>                                                               */
-  /*    num_coords :: The number of available coordinates.  If it is       */
-  /*                  larger than the number of axes, ignore the excess    */
-  /*                  values.  If it is smaller than the number of axes,   */
-  /*                  use the default value (0) for the remaining axes.    */
-  /*                                                                       */
-  /*    coords     :: An array of `num_coords', each between [-1,1].       */
-  /*                                                                       */
-  /* <Return>                                                              */
-  /*    FreeType error code.  0 means success.                             */
-  /*                                                                       */
-  FT_LOCAL_DEF( FT_Error )
-  TT_Set_MM_Blend( TT_Face    face,
+  static FT_Error
+  tt_set_mm_blend( TT_Face    face,
                    FT_UInt    num_coords,
-                   FT_Fixed*  coords )
+                   FT_Fixed*  coords,
+                   FT_Bool    set_design_coords )
   {
     FT_Error    error = FT_Err_Ok;
     GX_Blend    blend;
@@ -2318,7 +2294,8 @@
 
     if ( num_coords > mmvar->num_axis )
     {
-      FT_TRACE2(( "TT_Set_MM_Blend: only using first %d of %d coordinates\n",
+      FT_TRACE2(( "TT_Set_MM_Blend:"
+                  " only using first %d of %d coordinates\n",
                   mmvar->num_axis, num_coords ));
       num_coords = mmvar->num_axis;
     }
@@ -2346,6 +2323,12 @@
     if ( !face->is_cff2 && !blend->glyphoffsets )
       if ( FT_SET_ERROR( ft_var_load_gvar( face ) ) )
         goto Exit;
+
+    if ( !blend->coords )
+    {
+      if ( FT_NEW_ARRAY( blend->coords, mmvar->num_axis ) )
+        goto Exit;
+    }
 
     if ( !blend->normalizedcoords )
     {
@@ -2390,6 +2373,12 @@
     FT_MEM_COPY( blend->normalizedcoords,
                  coords,
                  num_coords * sizeof ( FT_Fixed ) );
+
+    if ( set_design_coords )
+      ft_var_to_design( face,
+                        num_coords,
+                        blend->normalizedcoords,
+                        blend->coords );
 
     face->doblend = TRUE;
 
@@ -2452,6 +2441,40 @@
   /*************************************************************************/
   /*                                                                       */
   /* <Function>                                                            */
+  /*    TT_Set_MM_Blend                                                    */
+  /*                                                                       */
+  /* <Description>                                                         */
+  /*    Set the blend (normalized) coordinates for this instance of the    */
+  /*    font.  Check that the `gvar' table is reasonable and does some     */
+  /*    initial preparation.                                               */
+  /*                                                                       */
+  /* <InOut>                                                               */
+  /*    face       :: The font.                                            */
+  /*                  Initialize the blend structure with `gvar' data.     */
+  /*                                                                       */
+  /* <Input>                                                               */
+  /*    num_coords :: The number of available coordinates.  If it is       */
+  /*                  larger than the number of axes, ignore the excess    */
+  /*                  values.  If it is smaller than the number of axes,   */
+  /*                  use the default value (0) for the remaining axes.    */
+  /*                                                                       */
+  /*    coords     :: An array of `num_coords', each between [-1,1].       */
+  /*                                                                       */
+  /* <Return>                                                              */
+  /*    FreeType error code.  0 means success.                             */
+  /*                                                                       */
+  FT_LOCAL_DEF( FT_Error )
+  TT_Set_MM_Blend( TT_Face    face,
+                   FT_UInt    num_coords,
+                   FT_Fixed*  coords )
+  {
+    return tt_set_mm_blend( face, num_coords, coords, 1 );
+  }
+
+
+  /*************************************************************************/
+  /*                                                                       */
+  /* <Function>                                                            */
   /*    TT_Get_MM_Blend                                                    */
   /*                                                                       */
   /* <Description>                                                         */
@@ -2493,7 +2516,8 @@
     nc = num_coords;
     if ( num_coords > blend->num_axis )
     {
-      FT_TRACE2(( "TT_Get_MM_Blend: only using first %d of %d coordinates\n",
+      FT_TRACE2(( "TT_Get_MM_Blend:"
+                  " only using first %d of %d coordinates\n",
                   blend->num_axis, num_coords ));
       nc = blend->num_axis;
     }
@@ -2546,11 +2570,16 @@
                      FT_UInt    num_coords,
                      FT_Fixed*  coords )
   {
-    FT_Error   error  = FT_Err_Ok;
-    FT_Memory  memory = face->root.memory;
+    FT_Error    error  = FT_Err_Ok;
+    GX_Blend    blend;
+    FT_MM_Var*  mmvar;
+    FT_UInt     i;
+    FT_Memory   memory = face->root.memory;
+
+    FT_Var_Axis*  a;
+    FT_Fixed*     c;
 
     FT_Fixed*  normalized = NULL;
-    FT_UInt    num_axes;
 
 
     if ( !face->blend )
@@ -2559,9 +2588,33 @@
         goto Exit;
     }
 
-    num_axes = face->blend->mmvar->num_axis;
+    blend = face->blend;
+    mmvar = blend->mmvar;
 
-    if ( FT_NEW_ARRAY( normalized, num_axes ) )
+    if ( num_coords > mmvar->num_axis )
+    {
+      FT_TRACE2(( "TT_Set_Var_Design:"
+                  " only using first %d of %d coordinates\n",
+                  mmvar->num_axis, num_coords ));
+      num_coords = mmvar->num_axis;
+    }
+
+    if ( !blend->coords )
+    {
+      if ( FT_NEW_ARRAY( blend->coords, mmvar->num_axis ) )
+        goto Exit;
+    }
+
+    FT_MEM_COPY( blend->coords,
+                 coords,
+                 num_coords * sizeof ( FT_Fixed ) );
+
+    a = mmvar->axis + num_coords;
+    c = coords + num_coords;
+    for ( i = num_coords; i < mmvar->num_axis; i++, a++, c++ )
+      *c = a->def;
+
+    if ( FT_NEW_ARRAY( normalized, mmvar->num_axis ) )
       goto Exit;
 
     if ( !face->blend->avar_loaded )
@@ -2569,7 +2622,7 @@
 
     ft_var_to_normalized( face, num_coords, coords, normalized );
 
-    error = TT_Set_MM_Blend( face, num_axes, normalized );
+    error = tt_set_mm_blend( face, mmvar->num_axis, normalized, 0 );
 
   Exit:
     FT_FREE( normalized );
@@ -2605,6 +2658,8 @@
                      FT_Fixed*  coords )
   {
     FT_Error  error = FT_Err_Ok;
+    GX_Blend  blend;
+    FT_UInt   i, nc;
 
 
     if ( !face->blend )
@@ -2613,13 +2668,30 @@
         return error;
     }
 
-    if ( !face->blend->avar_loaded )
-      ft_var_load_avar( face );
+    blend = face->blend;
 
-    ft_var_to_design( face,
-                      num_coords,
-                      face->blend->normalizedcoords,
-                      coords );
+    nc = num_coords;
+    if ( num_coords > blend->num_axis )
+    {
+      FT_TRACE2(( "TT_Get_Var_Design:"
+                  " only using first %d of %d coordinates\n",
+                  blend->num_axis, num_coords ));
+      nc = blend->num_axis;
+    }
+
+    if ( face->doblend )
+    {
+      for ( i = 0; i < nc; i++ )
+        coords[i] = blend->coords[i];
+    }
+    else
+    {
+      for ( i = 0; i < nc; i++ )
+        coords[i] = 0;
+    }
+
+    for ( ; i < num_coords; i++ )
+      coords[i] = 0;
 
     return FT_Err_Ok;
   }
@@ -3506,16 +3578,19 @@
   tt_get_var_blend( TT_Face      face,
                     FT_UInt     *num_coords,
                     FT_Fixed*   *coords,
+                    FT_Fixed*   *normalizedcoords,
                     FT_MM_Var*  *mm_var )
   {
     if ( face->blend )
     {
       if ( num_coords )
-        *num_coords = face->blend->num_axis;
+        *num_coords       = face->blend->num_axis;
       if ( coords )
-        *coords     = face->blend->normalizedcoords;
+        *coords           = face->blend->coords;
+      if ( normalizedcoords )
+        *normalizedcoords = face->blend->normalizedcoords;
       if ( mm_var )
-        *mm_var     = face->blend->mmvar;
+        *mm_var           = face->blend->mmvar;
     }
     else
     {
@@ -3583,6 +3658,7 @@
       /* blend->num_axis might not be set up yet */
       num_axes = blend->mmvar->num_axis;
 
+      FT_FREE( blend->coords );
       FT_FREE( blend->normalizedcoords );
       FT_FREE( blend->normalized_stylecoords );
       FT_FREE( blend->mmvar );

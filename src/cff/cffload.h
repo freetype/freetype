@@ -112,6 +112,7 @@ FT_BEGIN_HEADER
   cff_get_var_blend( CFF_Face     face,
                      FT_UInt     *num_coords,
                      FT_Fixed*   *coords,
+                     FT_Fixed*   *normalizedcoords,
                      FT_MM_Var*  *mm_var );
 
   FT_LOCAL( void )

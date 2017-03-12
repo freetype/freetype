@@ -1,5 +1,31 @@
 2017-03-12  Werner Lemberg  <wl@gnu.org>
 
+	[truetype] Store and use design coordinates also.
+
+	* include/freetype/internal/services/svmm.h (FT_Get_Var_Blend_Func):
+	Add `normalizedcoords' argument.
+
+	* src/truetype/ttgxvar.h (GX_BlendRec): Add `coords' field to store
+	the design coordinates of the current instance.
+	Updated.
+
+	* src/truetype/ttgxvar.c (TT_Set_MM_Blend): Move functionality to...
+	(tt_set_mm_blend): ... New function.
+	Convert data in `normalizedcoords' array to `coords' array on
+	demand.
+	(TT_Set_Var_Design): Store argument data in `coords' array.
+	(TT_Get_Var_Design): Get data from `coords' array.
+	(tt_get_var_blend): Updated.
+	(tt_done_blend): Updated.
+
+	* src/cff/cffload.c, src/cff/cffload.h (cff_get_var_blend): Updated.
+
+	* src/cff/cf2ft.c (cf2_getNormalizedVector): Updated.
+
+	* src/cff/cffobjs.c (cff_face_init): Updated.
+
+2017-03-12  Werner Lemberg  <wl@gnu.org>
+
 	src/truetype/ttgxvar.[ch]: s/avar_checked/avar_loaded/.
 
 2017-03-08  Werner Lemberg  <wl@gnu.org>

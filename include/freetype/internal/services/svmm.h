@@ -72,6 +72,7 @@ FT_BEGIN_HEADER
   (*FT_Get_Var_Blend_Func)( FT_Face      face,
                             FT_UInt     *num_coords,
                             FT_Fixed*   *coords,
+                            FT_Fixed*   *normalizedcoords,
                             FT_MM_Var*  *mm_var );
 
   typedef void

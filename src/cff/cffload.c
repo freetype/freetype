@@ -1572,12 +1572,17 @@
   cff_get_var_blend( CFF_Face     face,
                      FT_UInt     *num_coords,
                      FT_Fixed*   *coords,
+                     FT_Fixed*   *normalizedcoords,
                      FT_MM_Var*  *mm_var )
   {
     FT_Service_MultiMasters  mm = (FT_Service_MultiMasters)face->mm;
 
 
-    return mm->get_var_blend( FT_FACE( face ), num_coords, coords, mm_var );
+    return mm->get_var_blend( FT_FACE( face ),
+                              num_coords,
+                              coords,
+                              normalizedcoords,
+                              mm_var );
   }
 
 

@@ -703,7 +703,7 @@
           if ( error )
             goto Exit;
 
-          mm->get_var_blend( cffface, NULL, NULL, &mm_var );
+          mm->get_var_blend( cffface, NULL, NULL, NULL, &mm_var );
 
           if ( mm_var->namedstyle )
           {
