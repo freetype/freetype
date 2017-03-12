@@ -1,3 +1,7 @@
+2017-03-12  Werner Lemberg  <wl@gnu.org>
+
+	src/truetype/ttgxvar.[ch]: s/avar_checked/avar_loaded/.
+
 2017-03-08  Werner Lemberg  <wl@gnu.org>
 
 	[sfnt] Another fix for buggy variation fonts.

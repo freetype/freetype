@@ -320,7 +320,7 @@
 
     FT_TRACE2(( "AVAR " ));
 
-    blend->avar_checked = TRUE;
+    blend->avar_loaded = TRUE;
     error = face->goto_table( face, TTAG_avar, stream, &table_len );
     if ( error )
     {
@@ -2124,7 +2124,7 @@
                          fvar_head.axisCount * num_instances ) )
         goto Exit;
 
-      if ( fvar_head.instanceCount && !face->blend->avar_checked )
+      if ( fvar_head.instanceCount && !face->blend->avar_loaded )
         ft_var_load_avar( face );
 
       ns  = mmvar->namedstyle;
@@ -2564,7 +2564,7 @@
     if ( FT_NEW_ARRAY( normalized, num_axes ) )
       goto Exit;
 
-    if ( !face->blend->avar_checked )
+    if ( !face->blend->avar_loaded )
       ft_var_load_avar( face );
 
     ft_var_to_normalized( face, num_coords, coords, normalized );
@@ -2613,7 +2613,7 @@
         return error;
     }
 
-    if ( !face->blend->avar_checked )
+    if ( !face->blend->avar_loaded )
       ft_var_load_avar( face );
 
     ft_var_to_design( face,

@@ -235,7 +235,7 @@ FT_BEGIN_HEADER
     FT_Fixed*       normalized_stylecoords;
                       /* normalized_stylecoords[num_namedstyles][num_axis] */
 
-    FT_Bool         avar_checked;
+    FT_Bool         avar_loaded;
     GX_AVarSegment  avar_segment;
 
     FT_Bool         hvar_loaded;
