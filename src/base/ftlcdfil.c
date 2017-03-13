@@ -377,7 +377,7 @@
     FT_UNUSED( library );
     FT_UNUSED( weights );
 
-    return FT_THROW( Unimplemented_Feature );
+    return FT_Err_Ok;
   }
 
 
@@ -388,7 +388,7 @@
     FT_UNUSED( library );
     FT_UNUSED( filter );
 
-    return FT_THROW( Unimplemented_Feature );
+    return FT_Err_Ok;
   }
 
 #endif /* !FT_CONFIG_OPTION_SUBPIXEL_RENDERING */

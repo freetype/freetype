@@ -229,10 +229,9 @@ FT_BEGIN_HEADER
    *   @FT_LCD_FILTER_NONE in order to enable it.
    *
    *   Due to *PATENTS* covering subpixel rendering, this function doesn't
-   *   do anything except returning `FT_Err_Unimplemented_Feature' if the
-   *   configuration macro FT_CONFIG_OPTION_SUBPIXEL_RENDERING is not
-   *   defined in your build of the library, which should correspond to all
-   *   default builds of FreeType.
+   *   do anything if FT_CONFIG_OPTION_SUBPIXEL_RENDERING is not defined
+   *   in your build of the library, which should correspond to all default
+   *   builds of FreeType.
    *
    * @since:
    *   2.3.0
@@ -264,10 +263,9 @@ FT_BEGIN_HEADER
    *
    * @note:
    *   Due to *PATENTS* covering subpixel rendering, this function doesn't
-   *   do anything except returning `FT_Err_Unimplemented_Feature' if the
-   *   configuration macro FT_CONFIG_OPTION_SUBPIXEL_RENDERING is not
-   *   defined in your build of the library, which should correspond to all
-   *   default builds of FreeType.
+   *   do anything if FT_CONFIG_OPTION_SUBPIXEL_RENDERING is not defined
+   *   in your build of the library, which should correspond to all default
+   *   builds of FreeType.
    *
    *   LCD filter weights can also be set per face using @FT_Face_Properties
    *   with @FT_PARAM_TAG_LCD_FILTER_WEIGHTS.
