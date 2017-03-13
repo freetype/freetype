@@ -1263,7 +1263,16 @@
       FT_Short*  p = ft_var_get_value_pointer( face, value->tag );
 
 
-      value->unmodified = *p;
+      if ( p )
+        value->unmodified = *p;
+#ifdef FT_DEBUG_LEVEL_TRACE
+      else
+        FT_TRACE1(( "ft_var_load_mvar: Ignoring unknown tag `%c%c%c%c'\n",
+                    (FT_Char)( value->tag >> 24 ),
+                    (FT_Char)( value->tag >> 16 ),
+                    (FT_Char)( value->tag >> 8 ),
+                    (FT_Char)( value->tag ) ));
+#endif
     }
 
     face->variation_support |= TT_FACE_FLAG_VAR_MVAR;
@@ -1320,17 +1329,20 @@
                                      value->outerIndex,
                                      value->innerIndex );
 
-      FT_TRACE5(( "value %c%c%c%c (%d units) adjusted by %d units (MVAR)\n",
-                  (FT_Char)( value->tag >> 24 ),
-                  (FT_Char)( value->tag >> 16 ),
-                  (FT_Char)( value->tag >> 8 ),
-                  (FT_Char)( value->tag ),
-                  value->unmodified,
-                  delta ));
+      if ( p )
+      {
+        FT_TRACE5(( "value %c%c%c%c (%d units) adjusted by %d units (MVAR)\n",
+                    (FT_Char)( value->tag >> 24 ),
+                    (FT_Char)( value->tag >> 16 ),
+                    (FT_Char)( value->tag >> 8 ),
+                    (FT_Char)( value->tag ),
+                    value->unmodified,
+                    delta ));
 
-      /* since we handle both signed and unsigned values as FT_Short, */
-      /* ensure proper overflow arithmetic                            */
-      *p = (FT_Short)( value->unmodified + (FT_Short)delta );
+        /* since we handle both signed and unsigned values as FT_Short, */
+        /* ensure proper overflow arithmetic                            */
+        *p = (FT_Short)( value->unmodified + (FT_Short)delta );
+      }
     }
 
     /* adjust all derived values */
