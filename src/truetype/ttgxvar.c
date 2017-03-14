@@ -2445,6 +2445,10 @@
 
     face->is_default_instance = is_default_instance;
 
+    /* enforce recomputation of the PostScript name; */
+    FT_FREE( face->postscript_name );
+    face->postscript_name = NULL;
+
   Exit:
     return error;
   }

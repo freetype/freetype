@@ -1755,6 +1755,7 @@
     face->root.num_fixed_sizes = 0;
 
     FT_FREE( face->postscript_name );
+    FT_FREE( face->var_postscript_prefix );
 
     face->sfnt = NULL;
   }

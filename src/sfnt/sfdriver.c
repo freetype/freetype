@@ -20,6 +20,7 @@
 #include FT_INTERNAL_DEBUG_H
 #include FT_INTERNAL_SFNT_H
 #include FT_INTERNAL_OBJECTS_H
+#include FT_TRUETYPE_IDS_H
 
 #include "sfdriver.h"
 #include "ttload.h"
@@ -252,6 +253,18 @@
 
 #ifdef TT_CONFIG_OPTION_GX_VAR_SUPPORT
 
+  /* Only ASCII letters and digits are taken for a variation font */
+  /* instance's PostScript name.                                  */
+  /*                                                              */
+  /* `ft_isalnum' is a macro, but we need a function here, thus   */
+  /* this definition.                                             */
+  static int
+  sfnt_is_alphanumeric( int  c )
+  {
+    return ft_isalnum( c );
+  }
+
+
   /* the implementation of MurmurHash3 is taken and adapted from          */
   /* https://github.com/aappleby/smhasher/blob/master/src/MurmurHash3.cpp */
 
@@ -451,7 +464,7 @@
                          (n)->encodingID == 0 && \
                          (n)->languageID == 0 )
 
-  static const char*
+  static char*
   get_win_string( FT_Memory       memory,
                   FT_Stream       stream,
                   TT_Name         entry,
@@ -460,10 +473,10 @@
   {
     FT_Error  error = FT_Err_Ok;
 
-    const char*  result;
-    FT_String*   r;
-    FT_Char*     p;
-    FT_UInt      len;
+    char*       result;
+    FT_String*  r;
+    FT_Char*    p;
+    FT_UInt     len;
 
     FT_UNUSED( error );
 
@@ -512,7 +525,7 @@
   }
 
 
-  static const char*
+  static char*
   get_apple_string( FT_Memory       memory,
                     FT_Stream       stream,
                     TT_Name         entry,
@@ -521,10 +534,10 @@
   {
     FT_Error  error = FT_Err_Ok;
 
-    const char*  result;
-    FT_String*   r;
-    FT_Char*     p;
-    FT_UInt      len;
+    char*       result;
+    FT_String*  r;
+    FT_Char*    p;
+    FT_UInt     len;
 
     FT_UNUSED( error );
 
@@ -602,6 +615,27 @@
 
 
 #ifdef TT_CONFIG_OPTION_GX_VAR_SUPPORT
+
+  /*
+      The maximum length of an axis value descriptor.
+
+      We need 65536 different values for the decimal fraction; this fits
+      nicely into five decimal places.  Consequently, it consists of
+
+        . the minus sign if the number is negative,
+        . up to five characters for the digits before the decimal point,
+        . the decimal point if there is a fractional part, and
+        . up to five characters for the digits after the decimal point.
+
+      We also need one byte for the leading `_' character and up to four
+      bytes for the axis tag.
+   */
+#define MAX_VALUE_DESCRIPTOR_LEN  ( 1 + 5 + 1 + 5 + 1 + 4 )
+
+
+  /* the maximum length of PostScript font names */
+#define MAX_PS_NAME_LEN  127
+
 
   /*
    *  Find the shortest decimal representation of a 16.16 fixed point
@@ -718,6 +752,262 @@
     return p + 1;
   }
 
+
+  static const char  hexdigits[16] =
+  {
+    '0', '1', '2', '3', '4', '5', '6', '7',
+    '8', '9', 'A', 'B', 'C', 'D', 'E', 'F'
+  };
+
+
+  static const char*
+  sfnt_get_var_ps_name( TT_Face  face )
+  {
+    FT_Error   error;
+    FT_Memory  memory = face->root.memory;
+
+    FT_Service_MultiMasters  mm = (FT_Service_MultiMasters)face->mm;
+
+    FT_UInt     num_coords;
+    FT_Fixed*   coords;
+    FT_MM_Var*  mm_var;
+
+    FT_Int   found, win, apple;
+    FT_UInt  i, j;
+
+    char*  result = NULL;
+    char*  p;
+
+
+    if ( !face->var_postscript_prefix )
+    {
+      FT_UInt  len;
+
+
+      /* check whether we have a Variations PostScript Name Prefix */
+      found = sfnt_get_name_id( face,
+                                TT_NAME_ID_VARIATIONS_PREFIX,
+                                &win,
+                                &apple );
+      if ( !found )
+      {
+        /* otherwise use the typographic family name */
+        found = sfnt_get_name_id( face,
+                                  TT_NAME_ID_TYPOGRAPHIC_FAMILY,
+                                  &win,
+                                  &apple );
+      }
+
+      if ( !found )
+      {
+        /* as a last resort we try the family name; note that this is */
+        /* not in the Adobe TechNote, but GX fonts (which predate the */
+        /* TechNote) benefit from this behaviour                      */
+        found = sfnt_get_name_id( face,
+                                  TT_NAME_ID_FONT_FAMILY,
+                                  &win,
+                                  &apple );
+      }
+
+      if ( !found )
+      {
+        FT_TRACE0(( "sfnt_get_var_ps_name:"
+                    " Can't construct PS name prefix for font instances\n" ));
+        return NULL;
+      }
+
+      /* prefer Windows entries over Apple */
+      if ( win != -1 )
+        result = get_win_string( face->root.memory,
+                                 face->name_table.stream,
+                                 face->name_table.names + win,
+                                 sfnt_is_alphanumeric,
+                                 0 );
+      else
+        result = get_apple_string( face->root.memory,
+                                   face->name_table.stream,
+                                   face->name_table.names + apple,
+                                   sfnt_is_alphanumeric,
+                                   0 );
+
+      len = ft_strlen( result );
+
+      /* sanitize if necessary; we reserve space for 36 bytes (a 128bit  */
+      /* checksum as a hex number, preceded by `-' and followed by three */
+      /* ASCII dots, to be used if the constructed PS name would be too  */
+      /* long); this is also sufficient for a single instance            */
+      if ( len > MAX_PS_NAME_LEN - ( 1 + 32 + 3 ) )
+      {
+        len         = MAX_PS_NAME_LEN - ( 1 + 32 + 3 );
+        result[len] = '\0';
+
+        FT_TRACE0(( "sfnt_get_var_ps_name:"
+                    " Shortening variation PS name prefix\n"
+                    "                     "
+                    " to %d characters\n", len ));
+      }
+
+      face->var_postscript_prefix     = result;
+      face->var_postscript_prefix_len = len;
+    }
+
+    mm->get_var_blend( FT_FACE( face ),
+                       &num_coords,
+                       &coords,
+                       NULL,
+                       &mm_var );
+
+    if ( FT_IS_NAMED_INSTANCE( FT_FACE( face ) ) )
+    {
+      SFNT_Service  sfnt = (SFNT_Service)face->sfnt;
+
+      FT_Long  instance = ( ( face->root.face_index & 0x7FFF0000L ) >> 16 ) - 1;
+      FT_UInt  psid     = mm_var->namedstyle[instance].psid;
+
+      char*  ps_name = NULL;
+
+
+      /* try first to load the name string with index `postScriptNameID' */
+      if ( psid == 6                      ||
+           ( psid > 255 && psid < 32768 ) )
+        (void)sfnt->get_name( face, (FT_UShort)psid, &ps_name );
+
+      if ( ps_name )
+      {
+        result = ps_name;
+        goto check_length;
+      }
+      else
+      {
+        /* otherwise construct a name using `subfamilyNameID' */
+        FT_UInt  strid = mm_var->namedstyle[instance].strid;
+
+        char*  subfamily_name;
+        char*  s;
+
+
+        (void)sfnt->get_name( face, (FT_UShort)strid, &subfamily_name );
+
+        if ( !subfamily_name )
+        {
+          FT_TRACE1(( "sfnt_get_var_ps_name:"
+                      " can't construct named instance PS name;\n"
+                      "                     "
+                      " trying to construct normal instance PS name\n" ));
+          goto construct_instance_name;
+        }
+
+        /* after the prefix we have character `-' followed by the   */
+        /* subfamily name (using only characters a-z, A-Z, and 0-9) */
+        if ( FT_ALLOC( result, face->var_postscript_prefix_len +
+                               1 + ft_strlen( subfamily_name ) + 1 ) )
+          return NULL;
+
+        ft_strcpy( result, face->var_postscript_prefix );
+
+        p = result + face->var_postscript_prefix_len;
+        *p++ = '-';
+
+        s = subfamily_name;
+        while ( *s )
+        {
+          if ( ft_isalnum( *s ) )
+            *p++ = *s;
+          s++;
+        }
+        *p++ = '\0';
+
+        FT_FREE( subfamily_name );
+      }
+    }
+    else
+    {
+      FT_Var_Axis*  axis;
+
+
+    construct_instance_name:
+      axis = mm_var->axis;
+
+      if ( FT_ALLOC( result,
+                     face->var_postscript_prefix_len +
+                       num_coords * MAX_VALUE_DESCRIPTOR_LEN + 1 ) )
+        return NULL;
+
+      p = result;
+
+      ft_strcpy( p, face->var_postscript_prefix );
+      p += face->var_postscript_prefix_len;
+
+      for ( i = 0; i < num_coords; i++, coords++, axis++ )
+      {
+        FT_ULong  t;
+
+
+        /* omit axis value descriptor if it is identical */
+        /* to the default axis value                     */
+        if ( *coords == axis->def )
+          continue;
+
+        *p++ = '_';
+        p    = fixed2float( *coords, p );
+
+        t = axis->tag >> 24 & 0xFF;
+        if ( t != ' ' && ft_isalnum( t ) )
+          *p++ = t;
+        t = axis->tag >> 16 & 0xFF;
+        if ( t != ' ' && ft_isalnum( t ) )
+          *p++ = t;
+        t = axis->tag >> 8 & 0xFF;
+        if ( t != ' ' && ft_isalnum( t ) )
+          *p++ = t;
+        t = axis->tag & 0xFF;
+        if ( t != ' ' && ft_isalnum( t ) )
+          *p++ = t;
+      }
+    }
+
+  check_length:
+    if ( p - result > MAX_PS_NAME_LEN )
+    {
+      /* the PS name is too long; replace the part after the prefix with */
+      /* a checksum; we use MurmurHash 3 with a hash length of 128 bit   */
+
+      FT_UInt32  seed = 123456789;
+
+      FT_UInt32   hash[4];
+      FT_UInt32*  h;
+
+
+      murmur_hash_3_128( result, p - result, seed, hash );
+
+      p = result + face->var_postscript_prefix_len;
+      *p++ = '-';
+
+      /* we convert the hash value to hex digits from back to front */
+      p += 32 + 3;
+      h  = hash + 3;
+
+      *p-- = '\0';
+      *p-- = '.';
+      *p-- = '.';
+      *p-- = '.';
+
+      for ( i = 0; i < 4; i++, h-- )
+      {
+        FT_UInt32  v = *h;
+
+
+        for ( j = 0; j < 8; j++ )
+        {
+          *p--   = hexdigits[v & 0xF];
+          v    >>= 4;
+        }
+      }
+    }
+
+    return result;
+  }
+
 #endif /* TT_CONFIG_OPTION_GX_VAR_SUPPORT */
 
 
@@ -731,26 +1021,33 @@
     if ( face->postscript_name )
       return face->postscript_name;
 
+#ifdef TT_CONFIG_OPTION_GX_VAR_SUPPORT
+    if ( face->blend )
+    {
+      face->postscript_name = sfnt_get_var_ps_name( face );
+      return face->postscript_name;
+    }
+#endif
+
     /* scan the name table to see whether we have a Postscript name here, */
     /* either in Macintosh or Windows platform encodings                  */
-    found = sfnt_get_name_id( face, 6, &win, &apple );
+    found = sfnt_get_name_id( face, TT_NAME_ID_PS_NAME, &win, &apple );
+    if ( !found )
+      return NULL;
 
-    if ( found )
-    {
-      /* prefer Windows entries over Apple */
-      if ( win != -1 )
-        result = get_win_string( face->root.memory,
+    /* prefer Windows entries over Apple */
+    if ( win != -1 )
+      result = get_win_string( face->root.memory,
+                               face->name_table.stream,
+                               face->name_table.names + win,
+                               sfnt_is_postscript,
+                               1 );
+    else
+      result = get_apple_string( face->root.memory,
                                  face->name_table.stream,
-                                 face->name_table.names + win,
+                                 face->name_table.names + apple,
                                  sfnt_is_postscript,
                                  1 );
-      else
-        result = get_apple_string( face->root.memory,
-                                   face->name_table.stream,
-                                   face->name_table.names + apple,
-                                   sfnt_is_postscript,
-                                   1 );
-    }
 
     face->postscript_name = result;
 

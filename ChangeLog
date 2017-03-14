@@ -1,5 +1,30 @@
 2017-03-14  Werner Lemberg  <wl@gnu.org>
 
+	[sfnt] Implement PS names for font instances [3/3].
+
+	Everything is guarded with TT_CONFIG_OPTION_GX_VAR_SUPPORT.
+
+	* include/freetype/internal/tttypes.h (TT_FaceRec): New fields
+	`var_postscript_prefix' and `var_postscript_prefix_len'.
+
+	* src/sfnt/sfdriver.c: Include FT_TRUETYPE_IDS_H.
+	(sfnt_is_alphanumeric): New wrapperfunction for `ft_isalnum'.
+	(get_win_string, get_apple_string): Remove `const' from return
+	value.
+	(MAX_VALUE_DESCRIPTOR_LEN, MAX_PS_NAME_LEN): New macros.
+	(hexdigits): New array.
+	(sfnt_get_var_ps_name): New function, implementing Adobe TechNote
+	5902 to construct a PS name for a variation font instance.
+	(sfnt_get_ps_name): Call `sfnt_get_var_ps_name' for font instances.
+
+	* src/sfnt/sfobjs.c (sfnt_done_face): Updated.
+
+	* src/truetype/ttgxvar.c (tt_set_mm_blend): Reset
+	`face->postscript_name' to trigger recalculation for new instance
+	parameters.
+
+2017-03-14  Werner Lemberg  <wl@gnu.org>
+
 	[sfnt] Implement PS names for font instances [2/3].
 
 	* src/sfnt/sfdriver.c (fix2float) [TT_CONFIG_OPTION_GX_VAR_SUPPORT]:
@@ -80,8 +105,8 @@
 	  https://bugs.chromium.org/p/oss-fuzz/issues/detail?id=738
 
 	* src/sfnt/sfobjs.c (sfnt_init_face): While setting number of
-	instances to zero for `CFF' fonts table, ensure that there is no `glyf'
-	present also (which gets priority).
+	instances to zero for `CFF' fonts table, ensure that there is no
+	`glyf' table present also (which gets priority).
 
 2017-03-06  Werner Lemberg  <wl@gnu.org>
 

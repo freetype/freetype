@@ -1309,6 +1309,15 @@ FT_BEGIN_HEADER
   /*                            For example, TT_FACE_FLAG_VAR_FVAR is only */
   /*                            set if we have at least one design axis.   */
   /*                                                                       */
+  /*    var_postscript_prefix ::                                           */
+  /*                            The PostScript name prefix needed for      */
+  /*                            constructing a variation font instance's   */
+  /*                            PS name .                                  */
+  /*                                                                       */
+  /*    var_postscript_prefix_len ::                                       */
+  /*                            The length of the `var_postscript_prefix'  */
+  /*                            string.                                    */
+  /*                                                                       */
   /*    horz_metrics_size    :: The size of the `hmtx' table.              */
   /*                                                                       */
   /*    vert_metrics_size    :: The size of the `vmtx' table.              */
@@ -1502,6 +1511,10 @@ FT_BEGIN_HEADER
 
     FT_Bool               is_default_instance;   /* since 2.7.1 */
     FT_UInt32             variation_support;     /* since 2.7.1 */
+
+    const char*           var_postscript_prefix;     /* since 2.7.2 */
+    FT_Int                var_postscript_prefix_len; /* since 2.7.2 */
+
 #endif
 
     /* since version 2.2 */
