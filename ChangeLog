@@ -1,5 +1,13 @@
 2017-03-14  Werner Lemberg  <wl@gnu.org>
 
+	[sfnt] Implement PS names for font instances [2/3].
+
+	* src/sfnt/sfdriver.c (fix2float) [TT_CONFIG_OPTION_GX_VAR_SUPPORT]:
+	New function to find the shortest representation of a 16.16
+	fractional number.
+
+2017-03-14  Werner Lemberg  <wl@gnu.org>
+
 	[sfnt] Implement PS names for font instances [1/3].
 
 	Add 128bit MurmurHash 3 function.

@@ -601,6 +601,126 @@
   }
 
 
+#ifdef TT_CONFIG_OPTION_GX_VAR_SUPPORT
+
+  /*
+   *  Find the shortest decimal representation of a 16.16 fixed point
+   *  number.  The function fills `buf' with the result, returning a pointer
+   *  to the position after the representation's last byte.
+   */
+
+  static char*
+  fixed2float( FT_Int  fixed,
+               char*   buf )
+  {
+    char*  p;
+    char*  q;
+    char   tmp[5];
+
+    FT_Int  int_part;
+    FT_Int  frac_part;
+
+    FT_Int  i;
+
+
+    p = buf;
+
+    if ( fixed == 0 )
+    {
+      *p++ = '0';
+      return p;
+    }
+
+    if ( fixed < 0 )
+    {
+      *p++ = '-';
+      fixed = -fixed;
+    }
+
+    int_part  = ( fixed >> 16 ) & 0xFFFF;
+    frac_part = fixed & 0xFFFF;
+
+    /* get digits of integer part (in reverse order) */
+    q = tmp;
+    while ( int_part > 0 )
+    {
+      *q++      = '0' + int_part % 10;
+      int_part /= 10;
+    }
+
+    /* copy digits in correct order to buffer */
+    while ( q > tmp )
+      *p++ = *--q;
+
+    if ( !frac_part )
+      return p;
+
+    /* save position of point */
+    q    = p;
+    *p++ = '.';
+
+    /* apply rounding */
+    frac_part = frac_part * 10 + 5;
+
+    /* get digits of fractional part */
+    for ( i = 0; i < 5; i++ )
+    {
+      *p++ = '0' + frac_part / 0x10000L;
+
+      frac_part %= 0x10000L;
+      if ( !frac_part )
+        break;
+
+      frac_part *= 10;
+    }
+
+    /*
+        If the remainder stored in `frac_part' (after the last FOR loop) is
+        smaller than 34480*10, the resulting decimal value minus 0.00001 is
+        an equivalent representation of `fixed'.
+
+        The above FOR loop always finds the larger of the two values; I
+        verified this by iterating over all possible fixed point numbers.
+
+        If the remainder is 17232*10, both values are equally good, and we
+        take the next even number (following IEEE 754's `round to nearest,
+        ties to even' rounding rule).
+
+        If the remainder is smaller than 17232*10, the lower of the two
+        numbers is nearer to the exact result (values 17232 and 34480 were
+        also found by testing all possible fixed point values).
+
+        We use this to find a shorter decimal representation.  If not ending
+        with digit zero, we take the representation with less error.
+     */
+    p--;
+    if ( p - q == 5 )  /* five digits? */
+    {
+      /* take the representation that has zero as the last digit */
+      if ( frac_part < 34480 * 10 &&
+           *p == '1'              )
+        *p = '0';
+
+      /* otherwise use the one with less error */
+      else if ( frac_part == 17232 * 10 &&
+                *p & 1                  )
+        *p -= 1;
+
+      else if ( frac_part < 17232 * 10 &&
+                *p != '0'              )
+        *p -= 1;
+    }
+
+    /* remove trailing zeros */
+    while ( *p == '0' )
+      *p-- = '\0';
+
+    return p + 1;
+  }
+
+#endif /* TT_CONFIG_OPTION_GX_VAR_SUPPORT */
+
+
   static const char*
   sfnt_get_ps_name( TT_Face  face )
   {
