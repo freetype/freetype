@@ -2308,7 +2308,7 @@
 
 2016-09-29  Werner Lemberg  <wl@gnu.org>
 
-	[truetype] Disallow bitmap strokes for non-default instances.
+	[truetype] Disallow bitmap strikes for non-default instances.
 
 	Also speed up access of default instances if GX variations are
 	active.
@@ -2695,12 +2695,12 @@
 
 2016-09-03  Werner Lemberg  <wl@gnu.org>
 
-	[base] Avoid negative bitmap stroke dimensions (#48985).
+	[base] Avoid negative bitmap strike dimensions (#48985).
 
 	* src/base/ftobjs.c (FT_Open_Face): Check whether negation was
 	actually successful.  For example, this can fail for value
 	-32768 if the type is `signed short'.  If there are problems,
-	disable the stroke.
+	disable the strike.
 
 2016-09-03  Werner Lemberg  <wl@gnu.org>
 

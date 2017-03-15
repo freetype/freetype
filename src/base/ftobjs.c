@@ -2404,7 +2404,7 @@
         if ( bsize->height < 0 || bsize->x_ppem < 0 || bsize->y_ppem < 0 )
         {
           FT_TRACE0(( "FT_Open_Face:"
-                      " Invalid bitmap dimensions for stroke %d,"
+                      " Invalid bitmap dimensions for strike %d,"
                       " now disabled\n", i ));
           bsize->width  = 0;
           bsize->height = 0;
