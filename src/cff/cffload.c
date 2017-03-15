@@ -2084,7 +2084,8 @@
         {
           do
           {
-            driver->random_seed = (FT_Int32)cff_random( driver->random_seed );
+            driver->random_seed =
+              (FT_Int32)cff_random( (FT_UInt32)driver->random_seed );
 
           } while ( driver->random_seed < 0 );
         }
@@ -2097,7 +2098,7 @@
           do
           {
             face->root.internal->random_seed =
-              (FT_Int32)cff_random( face->root.internal->random_seed );
+              (FT_Int32)cff_random( (FT_UInt32)face->root.internal->random_seed );
 
           } while ( face->root.internal->random_seed < 0 );
         }

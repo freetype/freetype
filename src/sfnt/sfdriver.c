@@ -271,7 +271,7 @@
 #define ROTL32( x, r )  ( x << r ) | ( x >> ( 32 - r ) )
 
 
-  FT_UInt32
+  static FT_UInt32
   fmix32( FT_UInt32  h )
   {
     h ^= h >> 16;
@@ -284,14 +284,14 @@
   }
 
 
-  void
-  murmur_hash_3_128( const void*  key,
-                     const int    len,
-                     FT_UInt32    seed,
-                     void*        out )
+  static void
+  murmur_hash_3_128( const void*         key,
+                     const unsigned int  len,
+                     FT_UInt32           seed,
+                     void*               out )
   {
     const FT_Byte*  data    = (const FT_Byte*)key;
-    const int       nblocks = len / 16;
+    const int       nblocks = (int)len / 16;
 
     FT_UInt32  h1 = seed;
     FT_UInt32  h2 = seed;
@@ -365,50 +365,50 @@
       switch ( len & 15 )
       {
       case 15:
-        k4 ^= tail[14] << 16;
+        k4 ^= (FT_UInt32)tail[14] << 16;
       case 14:
-        k4 ^= tail[13] << 8;
+        k4 ^= (FT_UInt32)tail[13] << 8;
       case 13:
-        k4 ^= tail[12] << 0;
+        k4 ^= (FT_UInt32)tail[12];
         k4 *= c4;
         k4  = ROTL32( k4, 18 );
         k4 *= c1;
         h4 ^= k4;
 
       case 12:
-        k3 ^= tail[11] << 24;
+        k3 ^= (FT_UInt32)tail[11] << 24;
       case 11:
-        k3 ^= tail[10] << 16;
+        k3 ^= (FT_UInt32)tail[10] << 16;
       case 10:
-        k3 ^= tail[9] << 8;
+        k3 ^= (FT_UInt32)tail[9] << 8;
       case 9:
-        k3 ^= tail[8] << 0;
+        k3 ^= (FT_UInt32)tail[8];
         k3 *= c3;
         k3  = ROTL32( k3, 17 );
         k3 *= c4;
         h3 ^= k3;
 
       case 8:
-        k2 ^= tail[7] << 24;
+        k2 ^= (FT_UInt32)tail[7] << 24;
       case 7:
-        k2 ^= tail[6] << 16;
+        k2 ^= (FT_UInt32)tail[6] << 16;
       case 6:
-        k2 ^= tail[5] << 8;
+        k2 ^= (FT_UInt32)tail[5] << 8;
       case 5:
-        k2 ^= tail[4] << 0;
+        k2 ^= (FT_UInt32)tail[4];
         k2 *= c2;
         k2  = ROTL32( k2, 16 );
         k2 *= c3;
         h2 ^= k2;
 
       case 4:
-        k1 ^= tail[3] << 24;
+        k1 ^= (FT_UInt32)tail[3] << 24;
       case 3:
-        k1 ^= tail[2] << 16;
+        k1 ^= (FT_UInt32)tail[2] << 16;
       case 2:
-        k1 ^= tail[1] << 8;
+        k1 ^= (FT_UInt32)tail[1] << 8;
       case 1:
-        k1 ^= tail[0] << 0;
+        k1 ^= (FT_UInt32)tail[0];
         k1 *= c1;
         k1  = ROTL32( k1, 15 );
         k1 *= c2;
@@ -699,7 +699,7 @@
     /* get digits of fractional part */
     for ( i = 0; i < 5; i++ )
     {
-      *p++ = '0' + frac_part / 0x10000L;
+      *p++ = '0' + (char)( frac_part / 0x10000L );
 
       frac_part %= 0x10000L;
       if ( !frac_part )
@@ -875,6 +875,8 @@
       if ( ps_name )
       {
         result = ps_name;
+        p      = result + ft_strlen( result ) + 1;
+
         goto check_length;
       }
       else
@@ -940,7 +942,7 @@
 
       for ( i = 0; i < num_coords; i++, coords++, axis++ )
       {
-        FT_ULong  t;
+        char  t;
 
 
         /* omit axis value descriptor if it is identical */
@@ -951,16 +953,16 @@
         *p++ = '_';
         p    = fixed2float( *coords, p );
 
-        t = axis->tag >> 24 & 0xFF;
+        t = (char)( axis->tag >> 24 );
         if ( t != ' ' && ft_isalnum( t ) )
           *p++ = t;
-        t = axis->tag >> 16 & 0xFF;
+        t = (char)( axis->tag >> 16 );
         if ( t != ' ' && ft_isalnum( t ) )
           *p++ = t;
-        t = axis->tag >> 8 & 0xFF;
+        t = (char)( axis->tag >> 8 );
         if ( t != ' ' && ft_isalnum( t ) )
           *p++ = t;
-        t = axis->tag & 0xFF;
+        t = (char)axis->tag;
         if ( t != ' ' && ft_isalnum( t ) )
           *p++ = t;
       }

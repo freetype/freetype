@@ -98,7 +98,6 @@
       if ( xx1min + w < warper->x2min )
         xx1min = warper->x2min - w;
 
-      xx1max = warper->x1max;
       if ( xx1max + w > warper->x2max )
         xx1max = warper->x2max - w;
 

@@ -2205,8 +2205,8 @@
 
             ns = &mmvar->namedstyle[fvar_head.instanceCount];
 
-            ns->strid = strid;
-            ns->psid  = psid;
+            ns->strid = (FT_UInt)strid;
+            ns->psid  = (FT_UInt)psid;
 
             a = mmvar->axis;
             c = ns->coords;

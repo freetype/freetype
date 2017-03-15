@@ -1513,7 +1513,7 @@ FT_BEGIN_HEADER
     FT_UInt32             variation_support;     /* since 2.7.1 */
 
     const char*           var_postscript_prefix;     /* since 2.7.2 */
-    FT_Int                var_postscript_prefix_len; /* since 2.7.2 */
+    FT_UInt               var_postscript_prefix_len; /* since 2.7.2 */
 
 #endif
 

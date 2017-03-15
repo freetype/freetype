@@ -1,5 +1,28 @@
 2017-03-15  Werner Lemberg  <wl@gnu.org>
 
+	Remove clang compiler warnings (#50548).
+
+	* include/freetype/internal/tttypes.h (TT_FaceRec): Make
+	`var_postscript_prefix_len' unsigned.
+
+	* src/autofit/afwarp.c (af_warper_compute_line_best): Remove
+	redundant assignment.
+
+	* src/cff/cffload.c (cff_subfont_load): Add casts.
+
+	* src/cff/cffparse.c (cff_parse_blend): Remove redundant assignment.
+
+	* src/sfnt/sfdriver.c (fmix32, murmur_hash_3_128): Add `static'
+	keyword.
+	Add casts.
+	(fixed2float): Add cast.
+	(sfnt_get_var_ps_name): Make `p' always initialized.
+	Add casts.
+
+	* src/truetype/ttgxvar.c (TT_Get_MM_Var): Add casts.
+
+2017-03-15  Werner Lemberg  <wl@gnu.org>
+
 	[ftfuzzer] Limit number of tested faces and instances.
 
 	This is inspired by the discussion in and analysis of

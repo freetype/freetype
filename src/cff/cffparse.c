@@ -894,8 +894,6 @@
     FT_Error     error;
 
 
-    error = FT_ERR( Stack_Underflow );
-
     if ( !priv || !priv->subfont )
     {
       error = FT_THROW( Invalid_File_Format );
