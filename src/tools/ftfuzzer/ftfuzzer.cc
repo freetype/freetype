@@ -315,18 +315,23 @@
         }
 
         // loop over an arbitrary size for outlines (index 0)
-        // and up to ten arbitrarily selected bitmap stroke sizes (index 1-10)
-        int  max_idx = face->num_fixed_sizes < 10
-                         ? face->num_fixed_sizes
-                         : 10;
+        // and up to ten arbitrarily selected bitmap strike sizes
+        // from the range [0;num_fixed_sizes - 1]
+        int  max_size_cnt = face->num_fixed_sizes < 10
+                              ? face->num_fixed_sizes
+                              : 10;
 
-        Random pool( max_idx, face->num_fixed_sizes );
+        Random sizes_pool( max_size_cnt, face->num_fixed_sizes );
 
-        for ( int  idx = 0; idx <= max_idx; idx++ )
+        for ( int  size_cnt = 0;
+              size_cnt <= max_size_cnt;
+              size_cnt++ )
         {
           FT_Int32  flags = load_flags;
 
-          if ( !idx )
+          int  size_index = 0;
+
+          if ( !size_cnt )
           {
             // set up 20pt at 72dpi as an arbitrary size
             if ( FT_Set_Char_Size( face, 20 * 64, 20 * 64, 72, 72 ) )
@@ -335,11 +340,13 @@
           }
           else
           {
-            // bitmap strokes are not active for glyph variations
+            // bitmap strikes are not active for font variations
             if ( instance_index )
               continue;
 
-            if ( FT_Select_Size( face, pool.get() - 1 ) )
+            size_index = sizes_pool.get() - 1;
+
+            if ( FT_Select_Size( face, size_index ) )
               continue;
             flags |= FT_LOAD_COLOR;
           }

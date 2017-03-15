@@ -1,3 +1,7 @@
+2017-03-15  Werner Lemberg  <wl@gnu.org>
+
+	* src/tools/ftfuzzer/ftfuzzer.cc: Improve readability; formatting.
+
 2017-03-14  Werner Lemberg  <wl@gnu.org>
 
 	[sfnt] Implement PS names for font instances [3/3].
