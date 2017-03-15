@@ -270,11 +270,20 @@
     long  num_faces = face->num_faces;
     FT_Done_Face( face );
 
-    // loop over all faces
-    for ( long  face_index = 0;
-          face_index < num_faces;
-          face_index++ )
+    // loop over up to 20 arbitrarily selected faces
+    // from index range [0;num-faces-1]
+    long  max_face_cnt = num_faces < 20
+                           ? num_faces
+                           : 20;
+
+    Random  faces_pool( max_face_cnt, num_faces );
+
+    for ( long  face_cnt = 0;
+          face_cnt < max_face_cnt;
+          face_cnt++ )
     {
+      long  face_index = faces_pool.get() - 1;
+
       // get number of instances
       if ( FT_New_Memory_Face( library,
                                files[0].data(),
@@ -285,17 +294,41 @@
       long  num_instances = face->style_flags >> 16;
       FT_Done_Face( face );
 
-      // load face with and without instances
-      for ( long  instance_index = 0;
-            instance_index < num_instances + 1;
-            instance_index++ )
+      // loop over the face without instance (index 0)
+      // and up to 20 arbitrarily selected instances
+      // from index range [1;num_instances]
+      long  max_instance_cnt = num_instances < 20
+                                 ? num_instances
+                                 : 20;
+
+      Random  instances_pool( max_instance_cnt, num_instances );
+
+      for ( long  instance_cnt = 0;
+            instance_cnt <= max_instance_cnt;
+            instance_cnt++ )
       {
-        if ( FT_New_Memory_Face( library,
-                                 files[0].data(),
-                                 (FT_Long)files[0].size(),
-                                 ( instance_index << 16 ) + face_index,
-                                 &face ) )
-          continue;
+        long  instance_index = 0;
+
+        if ( !instance_cnt )
+        {
+          if ( FT_New_Memory_Face( library,
+                                   files[0].data(),
+                                   (FT_Long)files[0].size(),
+                                   face_index,
+                                   &face ) )
+            continue;
+        }
+        else
+        {
+          instance_index = instances_pool.get();
+
+          if ( FT_New_Memory_Face( library,
+                                   files[0].data(),
+                                   (FT_Long)files[0].size(),
+                                   ( instance_index << 16 ) + face_index,
+                                   &face ) )
+            continue;
+        }
 
         // if we have more than a single input file coming from an archive,
         // attach them (starting with the second file) using the order given
@@ -314,7 +347,7 @@
           FT_Attach_Stream( face, &open_args );
         }
 
-        // loop over an arbitrary size for outlines (index 0)
+        // loop over an arbitrary size for outlines
         // and up to ten arbitrarily selected bitmap strike sizes
         // from the range [0;num_fixed_sizes - 1]
         int  max_size_cnt = face->num_fixed_sizes < 10

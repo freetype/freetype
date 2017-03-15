@@ -1,5 +1,17 @@
 2017-03-15  Werner Lemberg  <wl@gnu.org>
 
+	[ftfuzzer] Limit number of tested faces and instances.
+
+	This is inspired by the discussion in and analysis of
+
+	  https://bugs.chromium.org/p/oss-fuzz/issues/detail?id=859
+
+	* src/tools/ftfuzzer/ftfuzzer.cc (LLVMFuzzerTestOneInput): Use only
+	up to 20 face indices.
+	Use only up to 20 instance indices.
+
+2017-03-15  Werner Lemberg  <wl@gnu.org>
+
 	* src/tools/ftfuzzer/ftfuzzer.cc: Improve readability; formatting.
 
 2017-03-14  Werner Lemberg  <wl@gnu.org>
