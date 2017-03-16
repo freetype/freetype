@@ -3696,6 +3696,16 @@
         FT_FREE( blend->hvar_table );
       }
 
+      if ( blend->vvar_table )
+      {
+        ft_var_done_item_variation_store( face,
+                                          &blend->vvar_table->itemStore );
+
+        FT_FREE( blend->vvar_table->widthMap.innerIndex );
+        FT_FREE( blend->vvar_table->widthMap.outerIndex );
+        FT_FREE( blend->vvar_table );
+      }
+
       if ( blend->mvar_table )
       {
         ft_var_done_item_variation_store( face,

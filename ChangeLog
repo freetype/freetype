@@ -1,3 +1,11 @@
+2017-03-16  Werner Lemberg  <wl@gnu.org>
+
+	* src/truetype/ttgxvar.c (tt_done_blend): Free `vvar_table'.
+
+	Reported as
+
+	  https://bugs.chromium.org/p/oss-fuzz/issues/detail?id=883
+
 2017-03-15  Werner Lemberg  <wl@gnu.org>
 
 	Remove clang compiler warnings (#50548).
