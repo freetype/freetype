@@ -27,6 +27,11 @@
 #include FT_INTERNAL_SFNT_H
 #include FT_CFF_DRIVER_H
 
+#ifdef TT_CONFIG_OPTION_GX_VAR_SUPPORT
+#include FT_MULTIPLE_MASTERS_H
+#include FT_SERVICE_MULTIPLE_MASTERS_H
+#endif
+
 #include "cffobjs.h"
 #include "cffload.h"
 #include "cffcmap.h"

@@ -1,3 +1,16 @@
+2017-03-17  Werner Lemberg  <wl@gnu.org>
+
+	`make multi' fixes; compiler warnings.
+
+	* src/base/ftsnames.c: Include FT_INTERNAL_DEBUG_H.
+
+	* src/cff/cffobjs.c [TT_CONFIG_OPTION_GX_VAR_SUPPORT]: Include
+	FT_MULTIPLE_MASTERS_H and FT_SERVICE_MULTIPLE_MASTERS_H.
+
+	* src/sfnt/sfdriver.c [TT_CONFIG_OPTION_GX_VAR_SUPPORT]: Include
+	FT_MULTIPLE_MASTERS_H and FT_SERVICE_MULTIPLE_MASTERS_H.
+	(get_win_string, get_apple_string): Initialize `result'.
+
 2017-03-17  Dave Arnold <darnold@adobe.com>
 
 	[cff] Fix potential bugs in default NDV for CFF2.

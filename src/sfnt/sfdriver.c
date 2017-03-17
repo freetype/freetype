@@ -51,6 +51,11 @@
 #include FT_SERVICE_SFNT_H
 #include FT_SERVICE_TT_CMAP_H
 
+#ifdef TT_CONFIG_OPTION_GX_VAR_SUPPORT
+#include FT_MULTIPLE_MASTERS_H
+#include FT_SERVICE_MULTIPLE_MASTERS_H
+#endif
+
 
   /*************************************************************************/
   /*                                                                       */
@@ -473,7 +478,7 @@
   {
     FT_Error  error = FT_Err_Ok;
 
-    char*       result;
+    char*       result = NULL;
     FT_String*  r;
     FT_Char*    p;
     FT_UInt     len;
@@ -534,7 +539,7 @@
   {
     FT_Error  error = FT_Err_Ok;
 
-    char*       result;
+    char*       result = NULL;
     FT_String*  r;
     FT_Char*    p;
     FT_UInt     len;
