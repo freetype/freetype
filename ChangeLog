@@ -1,5 +1,13 @@
 2017-03-17  Werner Lemberg  <wl@gnu.org>
 
+	Fix preprocessor warning.
+
+	* devel/ftoption.h, include/freetype/config/ftoption.h: Test whether
+	TT_CONFIG_OPTION_SUBPIXEL_HINTING is defined before checking its
+	value.
+
+2017-03-17  Werner Lemberg  <wl@gnu.org>
+
 	`make multi' fixes; compiler warnings.
 
 	* src/base/ftsnames.c: Include FT_INTERNAL_DEBUG_H.
