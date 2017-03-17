@@ -1890,7 +1890,8 @@
     subfont->lenNDV = lenNDV;
     subfont->NDV    = NDV;
 
-    stackSize = font->cff2 ? font->top_font.font_dict.maxstack
+    /* add 1 for the operator */
+    stackSize = font->cff2 ? font->top_font.font_dict.maxstack + 1
                            : CFF_MAX_STACK_DEPTH + 1;
 
     if ( cff_parser_init( &parser,

@@ -1,3 +1,9 @@
+2017-03-17  Dave Arnold <darnold@adobe.com>
+
+	[cff] Fix CFF2 stack allocation.
+
+	* src/cff/cffparse.c (cff_parser_init) add 1 for operator.
+
 2017-03-16  Werner Lemberg  <wl@gnu.org>
 
 	* src/truetype/ttgxvar.c (tt_done_blend): Free `vvar_table'.
