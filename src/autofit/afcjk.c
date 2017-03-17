@@ -29,13 +29,13 @@
 #include "afglobal.h"
 #include "afpic.h"
 #include "aflatin.h"
+#include "afcjk.h"
 
 
 #ifdef AF_CONFIG_OPTION_CJK
 
 #undef AF_CONFIG_OPTION_CJK_BLUE_HANI_VERT
 
-#include "afcjk.h"
 #include "aferrors.h"
 
 

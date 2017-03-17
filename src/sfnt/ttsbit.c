@@ -1460,6 +1460,9 @@
     FT_Byte*  p;
 
     FT_UNUSED( map );
+#ifndef FT_CONFIG_OPTION_USE_PNG
+    FT_UNUSED( metrics_only );
+#endif
 
 
     strike_index = face->sbit_strike_map[strike_index];

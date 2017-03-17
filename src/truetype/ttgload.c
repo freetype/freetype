@@ -332,7 +332,6 @@
     FT_Outline*     outline;
     FT_UShort       n_ins;
     FT_Int          n_points;
-    FT_ULong        tmp;
 
     FT_Byte         *flag, *flag_limit;
     FT_Byte         c, count;
@@ -402,6 +401,9 @@
 
     if ( IS_HINTED( load->load_flags ) )
     {
+      FT_ULong  tmp;
+
+
       /* check instructions size */
       if ( ( limit - p ) < n_ins )
       {
@@ -2270,16 +2272,16 @@
                   FT_Int32      load_flags,
                   FT_Bool       glyf_table_only )
   {
-    FT_Error  error;
-
     TT_Face    face;
     FT_Stream  stream;
+
 #ifdef TT_USE_BYTECODE_INTERPRETER
+    FT_Error   error;
     FT_Bool    pedantic = FT_BOOL( load_flags & FT_LOAD_PEDANTIC );
-#endif
 #if defined TT_SUPPORT_SUBPIXEL_HINTING_INFINALITY || \
     defined TT_SUPPORT_SUBPIXEL_HINTING_MINIMAL
     TT_Driver  driver = (TT_Driver)FT_FACE_DRIVER( (TT_Face)glyph->face );
+#endif
 #endif
 
 

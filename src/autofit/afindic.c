@@ -18,13 +18,13 @@
 
 #include "aftypes.h"
 #include "aflatin.h"
+#include "afcjk.h"
 
 
 #ifdef AF_CONFIG_OPTION_INDIC
 
 #include "afindic.h"
 #include "aferrors.h"
-#include "afcjk.h"
 
 
 #ifdef AF_CONFIG_OPTION_USE_WARPER

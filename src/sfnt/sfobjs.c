@@ -856,7 +856,6 @@
                   FT_Parameter*  params )
   {
     FT_Error      error;
-    FT_Memory     memory = face->root.memory;
     FT_Library    library = face->root.driver->root.library;
     SFNT_Service  sfnt;
     FT_Int        face_index;
@@ -943,6 +942,8 @@
 
 #ifdef TT_CONFIG_OPTION_GX_VAR_SUPPORT
     {
+      FT_Memory  memory = face->root.memory;
+
       FT_ULong  fvar_len;
 
       FT_ULong  version;
@@ -1754,8 +1755,10 @@
     FT_FREE( face->sbit_strike_map );
     face->root.num_fixed_sizes = 0;
 
+#ifdef TT_CONFIG_OPTION_GX_VAR_SUPPORT
     FT_FREE( face->postscript_name );
     FT_FREE( face->var_postscript_prefix );
+#endif
 
     face->sfnt = NULL;
   }

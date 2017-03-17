@@ -1,5 +1,26 @@
 2017-03-17  Werner Lemberg  <wl@gnu.org>
 
+	Fixes for conditional compilation.
+
+	* src/autofit/afcjk.c, src/autofit/afindic.c: Include `afcjk.h'
+	earlier.
+
+	* src/sfnt/sfobjs.c (sfnt_init_face): Put `memory' variable into
+	TT_CONFIG_OPTION_GX_VAR_SUPPORT block.
+	(sfnt_done_face): Protect some code with
+	TT_CONFIG_OPTION_GX_VAR_SUPPORT.
+
+	* src/sfnt/ttsbit.c (tt_face_load_sbix_image): Remove compiler
+	warning.
+
+	* src/truetype/ttgload.c (TT_Load_Simple_Glyph): Put `tmp' variable
+	into TT_USE_BYTECODE_INTERPRETER block.
+
+	(tt_loader_init): Put `error' variable into
+	TT_USE_BYTECODE_INTERPRETER block.
+
+2017-03-17  Werner Lemberg  <wl@gnu.org>
+
 	Fix preprocessor warning.
 
 	* devel/ftoption.h, include/freetype/config/ftoption.h: Test whether
