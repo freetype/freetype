@@ -112,8 +112,8 @@ FT_BEGIN_HEADER
     FT_UInt  shortDeltaCount; /* not used; always zero */
 #endif
 
-    FT_UInt   regionIdxCount; /* number of regions in this var data */
-    FT_UInt*  regionIndices;  /* array of `regionCount' indices;    */
+    FT_UInt   regionIdxCount; /* number of region indexes           */
+    FT_UInt*  regionIndices;  /* array of `regionIdxCount' indices; */
                               /* these index `varRegionList'        */
   } CFF_VarData;
 

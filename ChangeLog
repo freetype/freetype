@@ -1,5 +1,13 @@
 2017-03-17  Dave Arnold <darnold@adobe.com>
 
+	[cff] Fix potential bugs in default NDV for CFF2.
+
+	* src/cff/cffload.c (cff_blend_build_vector): Explicitly build blend
+	vector when `lenNDV' is zero; don't rely on zero-init.
+	Save `lenNDV' as part of cache key even when `lenNDV' is zero.
+
+2017-03-17  Dave Arnold <darnold@adobe.com>
+
 	[cff] Fix CFF2 stack allocation.
 
 	* src/cff/cffparse.c (cff_parser_init) add 1 for operator.

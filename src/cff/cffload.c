@@ -1463,10 +1463,15 @@
 
       /* Note: `lenNDV' could be zero.                              */
       /*       In that case, build default blend vector (1,0,0...). */
-      /*       In the normal case, initialize each component to 1   */
-      /*       before inner loop.                                   */
-      if ( lenNDV != 0 )
-        blend->BV[master] = FT_FIXED_ONE; /* default */
+      if ( !lenNDV )
+      {
+        blend->BV[master] = 0;
+        continue;
+      }
+
+      /* In the normal case, initialize each component to 1 */
+      /* before inner loop.                                 */
+      blend->BV[master] = FT_FIXED_ONE; /* default */
 
       /* inner loop steps through axes in this region */
       for ( j = 0; j < lenNDV; j++ )
@@ -1529,12 +1534,12 @@
                        lenNDV * sizeof ( *NDV ) ) )
         goto Exit;
 
-      blend->lenNDV = lenNDV;
       FT_MEM_COPY( blend->lastNDV,
                    NDV,
                    lenNDV * sizeof ( *NDV ) );
     }
 
+    blend->lenNDV  = lenNDV;
     blend->builtBV = TRUE;
 
   Exit:
