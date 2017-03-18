@@ -7626,7 +7626,7 @@
                                           exc->cvtSize / 10 );
     else
       exc->loopcall_counter_max = FT_MAX( 100,
-                                          5 * exc->cvtSize );
+                                          10 * exc->cvtSize );
 
     /* as a protection against an unreasonable number of CVT entries  */
     /* we assume at most 100 control values per glyph for the counter */
