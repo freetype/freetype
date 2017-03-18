@@ -1,5 +1,16 @@
 2017-03-18  Werner Lemberg  <wl@gnu.org>
 
+	[truetype] Another limitation for bytecode loop count maximum.
+
+	Reported as
+
+	  https://bugs.chromium.org/p/oss-fuzz/issues/detail?id=900
+
+	* src/truetype/ttinterp.c (TT_RunIns): Limit `loopcall_counter_max'
+	by number of glyphs also.
+
+2017-03-18  Werner Lemberg  <wl@gnu.org>
+
 	[ftfuzzer] Minor improvement.
 
 	* src/tools/ftfuzzer/ftfuzzer.cc: Don't set intermediate axis if
