@@ -1,4 +1,11 @@
-2017-03-17  Werner Lemberg  <wl@gnu.org>
+2017-03-18  Werner Lemberg  <wl@gnu.org>
+
+	[ftfuzzer] Minor improvement.
+
+	* src/tools/ftfuzzer/ftfuzzer.cc: Don't set intermediate axis if
+	bitmap strikes are active.
+
+2017-03-18  Werner Lemberg  <wl@gnu.org>
 
 	Improve `make multi'.
 

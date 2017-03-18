@@ -385,7 +385,8 @@
           }
 
           // test MM interface only for a face without a selected instance
-          if ( instance_index == 0 )
+          // and without a selected bitmap strike
+          if ( !instance_index && !size_cnt )
             setIntermediateAxis( face );
 
           // loop over all glyphs
