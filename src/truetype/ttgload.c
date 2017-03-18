@@ -1711,7 +1711,7 @@
 
       /* check whether we already have a composite glyph with this index */
       if ( FT_List_Find( &loader->composites,
-                         (void*)(unsigned long)glyph_index ) )
+                         FT_UINT_TO_POINTER( glyph_index ) ) )
       {
         FT_TRACE1(( "TT_Load_Composite_Glyph:"
                     " infinite recursion detected\n" ));
@@ -1720,13 +1720,13 @@
       }
 
       else if ( node )
-        node->data = (void*)(unsigned long)glyph_index;
+        node->data = FT_UINT_TO_POINTER( glyph_index );
 
       else
       {
         if ( FT_NEW( node ) )
           goto Exit;
-        node->data = (void*)(unsigned long)glyph_index;
+        node->data = FT_UINT_TO_POINTER( glyph_index );
         FT_List_Add( &loader->composites, node );
       }
 

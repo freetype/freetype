@@ -1,5 +1,16 @@
 2017-03-18  Werner Lemberg  <wl@gnu.org>
 
+	Introduce FT_UINT_TO_POINTER macro (#50560).
+
+	We have to make a separate case for Windows 64's LLP64 data model.
+
+	* builds/unix/ftconfig.in, builds/vms/ftconfig.h,
+	include/freetype/config/ftconfig.h (FT_UINT_TO_POINTER): New macro.
+
+	* src/truetype/ttgload.c (load_truetype_glyph): Use it.
+
+2017-03-18  Werner Lemberg  <wl@gnu.org>
+
 	* src/truetype/ttinterp.c (TT_RunIns): Adjust loop counter (#50573).
 
 	The problematic font that exceeds the old limit is Lato-Regular,
