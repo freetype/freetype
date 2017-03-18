@@ -24,6 +24,8 @@
 #include "t1errors.h"
 
 
+#ifndef T1_CONFIG_OPTION_NO_AFM
+
   /*************************************************************************/
   /*                                                                       */
   /* The macro FT_COMPONENT is used in trace mode.  It is an implicit      */
@@ -401,6 +403,13 @@
 
     return FT_Err_Ok;
   }
+
+#else /* T1_CONFIG_OPTION_NO_AFM */
+
+  /* ANSI C doesn't like empty source files */
+  typedef int  _t1_afm_dummy;
+
+#endif /* T1_CONFIG_OPTION_NO_AFM */
 
 
 /* END */

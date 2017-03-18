@@ -23,6 +23,9 @@
 
 #include FT_ADVANCES_H
 
+
+#ifdef FT_OPTION_AUTOFIT2
+
 #include "afglobal.h"
 #include "aflatin.h"
 #include "aflatin2.h"
@@ -2418,6 +2421,13 @@
     (AF_WritingSystem_InitHintsFunc)   af_latin2_hints_init,          /* style_hints_init      */
     (AF_WritingSystem_ApplyHintsFunc)  af_latin2_hints_apply          /* style_hints_apply     */
   )
+
+#else /* !FT_OPTION_AUTOFIT2 */
+
+  /* ANSI C doesn't like empty source files */
+  typedef int  _af_latin2_dummy;
+
+#endif /* !FT_OPTION_AUTOFIT2 */
 
 
 /* END */

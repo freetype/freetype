@@ -1,5 +1,40 @@
 2017-03-17  Werner Lemberg  <wl@gnu.org>
 
+	Improve `make multi'.
+
+	* src/autofit/aflatin2.c: Guard file with FT_OPTION_AUTOFIT2.
+
+	* src/base/ftmac.c: Guard more parts of the file with FT_MACINTOSH.
+
+	* src/psaux/afmparse.c: Guard file with T1_CONFIG_OPTION_NO_AFM.
+
+	* src/sfnt/pngshim.c: Guard file with
+	TT_CONFIG_OPTION_EMBEDDED_BITMAPS also.
+
+	* src/sfnt/ttbdf.c: Avoid empty source file.
+	* src/sfnt/ttpost.c: Guard file with
+	TT_CONFIG_OPTION_POSTSCRIPT_NAMES.
+	* src/sfnt/ttsbit.c: Guard file with
+	TT_CONFIG_OPTION_EMBEDDED_BITMAPS.
+
+	* src/truetype/ttgxvar.c, src/truetype/ttinterp.c: Avoid empty
+	source file.
+
+	* src/truetype/ttsubpix.c: Guard file with
+	TT_USE_BYTECODE_INTERPRETER also.
+
+	* src/type1/t1afm.c: Guard file with T1_CONFIG_OPTION_NO_AFM.
+
+	* src/autofit/autofit.c, src/base/ftbase.c, src/cache/ftcache.c,
+	src/cff/cff.c, src/cid/type1cid.c, src/gxvalid/gxvalid.c,
+	src/pcf/pcf.c, src/pfr/pfr.c, src/psaux/psaux.c,
+	src/pshinter/pshinter.c, src/psnames/psnames.c, src/raster/raster.c,
+	src/sfnt/sfnt.c, src/smooth/smooth.c, src/truetype/truetype.c,
+	src/type1/type1.c, src/type42/type42.c: Remove conditionals; sort
+	entries.
+
+2017-03-17  Werner Lemberg  <wl@gnu.org>
+
 	Fixes for conditional compilation.
 
 	* src/autofit/afcjk.c, src/autofit/afindic.c: Include `afcjk.h'

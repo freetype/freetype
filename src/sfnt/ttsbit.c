@@ -24,6 +24,10 @@
 #include FT_INTERNAL_STREAM_H
 #include FT_TRUETYPE_TAGS_H
 #include FT_BITMAP_H
+
+
+#ifdef TT_CONFIG_OPTION_EMBEDDED_BITMAPS
+
 #include "ttsbit.h"
 
 #include "sferrors.h"
@@ -1650,5 +1654,12 @@
     return error;
   }
 
+#else /* !TT_CONFIG_OPTION_EMBEDDED_BITMAPS */
 
-/* EOF */
+  /* ANSI C doesn't like empty source files */
+  typedef int  _tt_sbit_dummy;
+
+#endif /* !TT_CONFIG_OPTION_EMBEDDED_BITMAPS */
+
+
+/* END */

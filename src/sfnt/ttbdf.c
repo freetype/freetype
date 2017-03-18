@@ -246,7 +246,12 @@
     return error;
   }
 
-#endif /* TT_CONFIG_OPTION_BDF */
+#else /* !TT_CONFIG_OPTION_BDF */
+
+  /* ANSI C doesn't like empty source files */
+  typedef int  _tt_bdf_dummy;
+
+#endif /* !TT_CONFIG_OPTION_BDF */
 
 
 /* END */

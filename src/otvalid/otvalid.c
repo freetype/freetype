@@ -15,8 +15,8 @@
 /*                                                                         */
 /***************************************************************************/
 
-#define FT_MAKE_OPTION_SINGLE_OBJECT
 
+#define FT_MAKE_OPTION_SINGLE_OBJECT
 #include <ft2build.h>
 
 #include "otvbase.c"
@@ -27,5 +27,6 @@
 #include "otvjstf.c"
 #include "otvmath.c"
 #include "otvmod.c"
+
 
 /* END */
