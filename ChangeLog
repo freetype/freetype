@@ -1,5 +1,11 @@
 2017-03-20  Werner Lemberg  <wl@gnu.org>
 
+	[sfnt] Don't add instances to non-variation fonts.
+
+	* src/sfnt/sfobjs.c (sfnt_init_face): Fix it.
+
+2017-03-20  Werner Lemberg  <wl@gnu.org>
+
 	* src/cff/cffgload.c (cff_builder_init): Add safety guard (#50578).
 
 2017-03-18  Werner Lemberg  <wl@gnu.org>

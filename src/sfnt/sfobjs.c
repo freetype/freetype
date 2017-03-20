@@ -1012,8 +1012,9 @@
        *  later on.  Here, we have to adjust `num_instances' accordingly.
        */
 
-      if ( !( FT_ALLOC( default_values, num_axes * 2 )  ||
-              FT_ALLOC( instance_values, num_axes * 2 ) ) )
+      if ( ( face->variation_support & TT_FACE_FLAG_VAR_FVAR ) &&
+           !( FT_ALLOC( default_values, num_axes * 2 )  ||
+              FT_ALLOC( instance_values, num_axes * 2 ) )      )
       {
         /* the current stream position is 16 bytes after the table start */
         FT_ULong  array_start = FT_STREAM_POS() - 16 + offset;
