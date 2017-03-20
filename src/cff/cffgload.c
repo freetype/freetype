@@ -281,8 +281,11 @@
         CFF_Internal  internal = (CFF_Internal)size->root.internal;
 
 
-        builder->hints_globals = (void *)internal->topfont;
-        builder->hints_funcs   = glyph->root.internal->glyph_hints;
+        if ( internal )
+        {
+          builder->hints_globals = (void *)internal->topfont;
+          builder->hints_funcs   = glyph->root.internal->glyph_hints;
+        }
       }
     }
 

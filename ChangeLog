@@ -1,3 +1,7 @@
+2017-03-20  Werner Lemberg  <wl@gnu.org>
+
+	* src/cff/cffgload.c (cff_builder_init): Add safety guard (#50578).
+
 2017-03-18  Werner Lemberg  <wl@gnu.org>
 
 	Introduce FT_UINT_TO_POINTER macro (#50560).
