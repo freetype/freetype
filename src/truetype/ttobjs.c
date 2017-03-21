@@ -792,14 +792,14 @@
     exec->pedantic_hinting = pedantic;
 
     {
-      FT_Size_Metrics*  metrics    = &exec->metrics;
-      TT_Size_Metrics*  tt_metrics = &exec->tt_metrics;
+      FT_Size_Metrics*  size_metrics = &exec->metrics;
+      TT_Size_Metrics*  tt_metrics   = &exec->tt_metrics;
 
 
-      metrics->x_ppem   = 0;
-      metrics->y_ppem   = 0;
-      metrics->x_scale  = 0;
-      metrics->y_scale  = 0;
+      size_metrics->x_ppem   = 0;
+      size_metrics->y_ppem   = 0;
+      size_metrics->x_scale  = 0;
+      size_metrics->y_scale  = 0;
 
       tt_metrics->ppem  = 0;
       tt_metrics->scale = 0;
@@ -1014,17 +1014,17 @@
 
     /* Set default metrics */
     {
-      TT_Size_Metrics*  metrics = &size->ttmetrics;
+      TT_Size_Metrics*  tt_metrics = &size->ttmetrics;
 
 
-      metrics->rotated   = FALSE;
-      metrics->stretched = FALSE;
+      tt_metrics->rotated   = FALSE;
+      tt_metrics->stretched = FALSE;
 
       /* set default engine compensation */
-      metrics->compensations[0] = 0;   /* gray     */
-      metrics->compensations[1] = 0;   /* black    */
-      metrics->compensations[2] = 0;   /* white    */
-      metrics->compensations[3] = 0;   /* reserved */
+      tt_metrics->compensations[0] = 0;   /* gray     */
+      tt_metrics->compensations[1] = 0;   /* black    */
+      tt_metrics->compensations[2] = 0;   /* white    */
+      tt_metrics->compensations[3] = 0;   /* reserved */
     }
 
     /* allocate function defs, instruction defs, cvt, and storage area */
@@ -1209,7 +1209,7 @@
                  FT_Bool  only_height )
   {
     TT_Face           face;
-    FT_Size_Metrics*  metrics;
+    FT_Size_Metrics*  size_metrics;
 
 
     face = (TT_Face)size->root.face;
@@ -1220,12 +1220,12 @@
 
     size->ttmetrics.valid = FALSE;
 
-    metrics = &size->metrics;
+    size_metrics = &size->metrics;
 
     /* copy the result from base layer */
-    *metrics = size->root.metrics;
+    *size_metrics = size->root.metrics;
 
-    if ( metrics->x_ppem < 1 || metrics->y_ppem < 1 )
+    if ( size_metrics->x_ppem < 1 || size_metrics->y_ppem < 1 )
       return FT_THROW( Invalid_PPem );
 
     /* This bit flag, if set, indicates that the ppems must be       */
@@ -1234,12 +1234,15 @@
     /*                                                               */
     if ( face->header.Flags & 8 )
     {
-      metrics->ascender =
-        FT_PIX_ROUND( FT_MulFix( face->root.ascender, metrics->y_scale ) );
-      metrics->descender =
-        FT_PIX_ROUND( FT_MulFix( face->root.descender, metrics->y_scale ) );
-      metrics->height =
-        FT_PIX_ROUND( FT_MulFix( face->root.height, metrics->y_scale ) );
+      size_metrics->ascender = FT_PIX_ROUND(
+                                 FT_MulFix( face->root.ascender,
+                                            size_metrics->y_scale ) );
+      size_metrics->descender = FT_PIX_ROUND(
+                                 FT_MulFix( face->root.descender,
+                                            size_metrics->y_scale ) );
+      size_metrics->height = FT_PIX_ROUND(
+                               FT_MulFix( face->root.height,
+                                          size_metrics->y_scale ) );
     }
 
     size->ttmetrics.valid = TRUE;
@@ -1249,31 +1252,31 @@
 
     if ( face->header.Flags & 8 )
     {
-      metrics->x_scale = FT_DivFix( metrics->x_ppem << 6,
-                                    face->root.units_per_EM );
-      metrics->y_scale = FT_DivFix( metrics->y_ppem << 6,
-                                    face->root.units_per_EM );
+      size_metrics->x_scale = FT_DivFix( size_metrics->x_ppem << 6,
+                                         face->root.units_per_EM );
+      size_metrics->y_scale = FT_DivFix( size_metrics->y_ppem << 6,
+                                         face->root.units_per_EM );
 
-      metrics->max_advance =
-        FT_PIX_ROUND( FT_MulFix( face->root.max_advance_width,
-                                 metrics->x_scale ) );
+      size_metrics->max_advance = FT_PIX_ROUND(
+                                    FT_MulFix( face->root.max_advance_width,
+                                               size_metrics->x_scale ) );
     }
 
     /* compute new transformation */
-    if ( metrics->x_ppem >= metrics->y_ppem )
+    if ( size_metrics->x_ppem >= size_metrics->y_ppem )
     {
-      size->ttmetrics.scale   = metrics->x_scale;
-      size->ttmetrics.ppem    = metrics->x_ppem;
+      size->ttmetrics.scale   = size_metrics->x_scale;
+      size->ttmetrics.ppem    = size_metrics->x_ppem;
       size->ttmetrics.x_ratio = 0x10000L;
-      size->ttmetrics.y_ratio = FT_DivFix( metrics->y_ppem,
-                                           metrics->x_ppem );
+      size->ttmetrics.y_ratio = FT_DivFix( size_metrics->y_ppem,
+                                           size_metrics->x_ppem );
     }
     else
     {
-      size->ttmetrics.scale   = metrics->y_scale;
-      size->ttmetrics.ppem    = metrics->y_ppem;
-      size->ttmetrics.x_ratio = FT_DivFix( metrics->x_ppem,
-                                           metrics->y_ppem );
+      size->ttmetrics.scale   = size_metrics->y_scale;
+      size->ttmetrics.ppem    = size_metrics->y_ppem;
+      size->ttmetrics.x_ratio = FT_DivFix( size_metrics->x_ppem,
+                                           size_metrics->y_ppem );
       size->ttmetrics.y_ratio = 0x10000L;
     }
 

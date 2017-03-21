@@ -308,11 +308,13 @@
     }
     else
     {
-      SFNT_Service      sfnt    = (SFNT_Service)ttface->sfnt;
-      FT_Size_Metrics*  metrics = &size->metrics;
+      SFNT_Service      sfnt         = (SFNT_Service)ttface->sfnt;
+      FT_Size_Metrics*  size_metrics = &size->metrics;
 
 
-      error = sfnt->load_strike_metrics( ttface, strike_index, metrics );
+      error = sfnt->load_strike_metrics( ttface,
+                                         strike_index,
+                                         size_metrics );
       if ( error )
         ttsize->strike_index = 0xFFFFFFFFUL;
     }

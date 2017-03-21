@@ -1,5 +1,22 @@
 2017-03-20  Werner Lemberg  <wl@gnu.org>
 
+	[truetype] Some variable renamings.
+
+	Too much local variables holding different structures were called
+	`metrics'.
+
+	* src/truetype/ttdriver.c (tt_size_select): s/metrics/size_metrics/.
+
+	* src/truetype/ttgload.c (tt_get_metrics_incr_overrids,
+	compute_glyph_metrics): s/metrics/incr_metrics/.
+	(load_sbit_image): s/metrics/sbit_metrics/.
+
+	* src/truetype/ttobjs.c (tt_size_run_fpgm): s/metrics/size_metrics/.
+	(tt_size_init_bytecode): s/metrics/tt_metrics/.
+	(tt_size_reset): s/metrics/size_metrics/.
+
+2017-03-20  Werner Lemberg  <wl@gnu.org>
+
 	[sfnt] Don't add instances to non-variation fonts.
 
 	* src/sfnt/sfobjs.c (sfnt_init_face): Fix it.
