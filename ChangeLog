@@ -1,3 +1,12 @@
+2017-03-23  Werner Lemberg  <wl@gnu.org>
+
+	Make MM fonts work (again).
+
+	* src/base/ftmm.c (FT_Set_Var_Design_Coordinates,
+	FT_Set_MM_Blend_Coordinates, FT_Set_Var_Blend_Coordinates): Ignore
+	return value of `ft_face_get_mvar_service'; instead, check whether a
+	service is actually returned.
+
 2017-03-20  Werner Lemberg  <wl@gnu.org>
 
 	[truetype] Some variable renamings.

@@ -206,11 +206,10 @@
     }
 
     if ( !error )
-      error = ft_face_get_mvar_service( face, &service_mvar );
-
-    if ( !error )
     {
-      if ( service_mvar->metrics_adjust )
+      (void)ft_face_get_mvar_service( face, &service_mvar );
+
+      if ( service_mvar && service_mvar->metrics_adjust )
         service_mvar->metrics_adjust( face );
     }
 
@@ -279,11 +278,10 @@
     }
 
     if ( !error )
-      error = ft_face_get_mvar_service( face, &service_mvar );
-
-    if ( !error )
     {
-      if ( service_mvar->metrics_adjust )
+      (void)ft_face_get_mvar_service( face, &service_mvar );
+
+      if ( service_mvar && service_mvar->metrics_adjust )
         service_mvar->metrics_adjust( face );
     }
 
@@ -327,11 +325,10 @@
     }
 
     if ( !error )
-      error = ft_face_get_mvar_service( face, &service_mvar );
-
-    if ( !error )
     {
-      if ( service_mvar->metrics_adjust )
+      (void)ft_face_get_mvar_service( face, &service_mvar );
+
+      if ( service_mvar && service_mvar->metrics_adjust )
         service_mvar->metrics_adjust( face );
     }
 
