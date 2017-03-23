@@ -1,5 +1,12 @@
 2017-03-23  Werner Lemberg  <wl@gnu.org>
 
+	[sfnt] Fix check for default named instance.
+
+	* src/sfnt/sfobjs.c (sfnt_init_face): A `fixed' number needs four
+	bytes, not two...
+
+2017-03-23  Werner Lemberg  <wl@gnu.org>
+
 	Make MM fonts work (again).
 
 	* src/base/ftmm.c (FT_Set_Var_Design_Coordinates,

@@ -1013,8 +1013,8 @@
        */
 
       if ( ( face->variation_support & TT_FACE_FLAG_VAR_FVAR ) &&
-           !( FT_ALLOC( default_values, num_axes * 2 )  ||
-              FT_ALLOC( instance_values, num_axes * 2 ) )      )
+           !( FT_ALLOC( default_values, num_axes * 4 )  ||
+              FT_ALLOC( instance_values, num_axes * 4 ) )      )
       {
         /* the current stream position is 16 bytes after the table start */
         FT_ULong  array_start = FT_STREAM_POS() - 16 + offset;
@@ -1029,10 +1029,10 @@
 
         for ( i = 0; i < num_axes; i++ )
         {
-          (void)FT_STREAM_READ_AT( default_value_offset, p, 2 );
+          (void)FT_STREAM_READ_AT( default_value_offset, p, 4 );
 
           default_value_offset += axis_size;
-          p                    += 2;
+          p                    += 4;
         }
 
         instance_offset = array_start + axis_size * num_axes + 4;
@@ -1041,9 +1041,9 @@
         {
           (void)FT_STREAM_READ_AT( instance_offset,
                                    instance_values,
-                                   num_axes * 2 );
+                                   num_axes * 4 );
 
-          if ( !ft_memcmp( default_values, instance_values, num_axes * 2 ) )
+          if ( !ft_memcmp( default_values, instance_values, num_axes * 4 ) )
             break;
 
           instance_offset += instance_size;
