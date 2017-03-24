@@ -780,10 +780,19 @@
             /* point without adding any point to the outline    */
             idx = decoder->num_flex_vectors++;
             if ( idx > 0 && idx < 7 )
+            {
+              /* in malformed fonts it is possible to have other */
+              /* opcodes in the middle of a flex (which don't    */
+              /* increase `num_flex_vectors'); we thus have to   */
+              /* check whether we can add a point                */
+              if ( FT_SET_ERROR( t1_builder_check_points( builder, 1 ) ) )
+                goto Syntax_Error;
+
               t1_builder_add_point( builder,
                                     x,
                                     y,
                                     (FT_Byte)( idx == 3 || idx == 6 ) );
+            }
           }
           break;
 

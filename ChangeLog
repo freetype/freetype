@@ -1,5 +1,20 @@
 2017-03-23  Werner Lemberg  <wl@gnu.org>
 
+	[psaux] Better protect `flex' handling.
+
+	Reported as
+
+	  https://bugs.chromium.org/p/oss-fuzz/issues/detail?id=935
+
+	* src/psaux/t1decode.c (t1_decoder_parse_charstrings)
+	<callothersubr>: Since there is not a single flex operator but a
+	series of subroutine calls, malformed fonts can call arbitrary other
+	operators after the start of a flex, possibly adding points.  For
+	this reason we have to check the available number of points before
+	inserting a point.
+
+2017-03-23  Werner Lemberg  <wl@gnu.org>
+
 	[sfnt] Fix check for default named instance.
 
 	* src/sfnt/sfobjs.c (sfnt_init_face): A `fixed' number needs four
