@@ -1,3 +1,11 @@
+2017-03-26  Werner Lemberg  <wl@gnu.org>
+
+	* src/psaux/psobjs.c (t1_builder_close_contour): Add safety guard.
+
+	Reported as
+
+	  https://bugs.chromium.org/p/oss-fuzz/issues/detail?id=941
+
 2017-03-23  Werner Lemberg  <wl@gnu.org>
 
 	[psaux] Better protect `flex' handling.
