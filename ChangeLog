@@ -1,3 +1,13 @@
+2017-03-27  Werner Lemberg  <wl@gnu.org>
+
+	[cid, truetype] Don't use `index' as a variable name.
+
+	At least on FreeBSD there is a global declaration of `index' in file
+	`/usr/include/strings.h'.
+
+	* src/cff/cf2intrp.c, src/truetype/ttgload.c: s/index/idx/ where
+	appropriate.
+
 2017-03-27  Wojciech Mamrak  <wmamrak@gmail.com>
 
 	[sfnt] Minor improvement for handling kern tables.

@@ -1394,7 +1394,7 @@
   /* a utility function to retrieve i-th node from given FT_List */
   static FT_ListNode
   ft_list_get_node_at( FT_List  list,
-                       FT_UInt  index )
+                       FT_UInt  idx )
   {
     FT_ListNode  cur;
 
@@ -1404,10 +1404,10 @@
 
     for ( cur = list->head; cur; cur = cur->next )
     {
-      if ( !index )
+      if ( !idx )
         return cur;
 
-      index--;
+      idx--;
     }
 
     return NULL;
