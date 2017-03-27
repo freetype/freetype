@@ -722,6 +722,9 @@ THE SOFTWARE.
     FT_UNUSED( module );
     FT_UNUSED( value );
     FT_UNUSED( value_is_string );
+#ifndef FT_DEBUG_LEVEL_TRACE
+    FT_UNUSED( property_name );
+#endif
 
 #endif /* !PCF_CONFIG_OPTION_LONG_FAMILY_NAMES */
 
@@ -757,6 +760,9 @@ THE SOFTWARE.
 
     FT_UNUSED( module );
     FT_UNUSED( value );
+#ifndef FT_DEBUG_LEVEL_TRACE
+    FT_UNUSED( property_name );
+#endif
 
 #endif /* !PCF_CONFIG_OPTION_LONG_FAMILY_NAMES */
 

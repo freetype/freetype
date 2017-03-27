@@ -1,3 +1,12 @@
+2017-03-27  Werner Lemberg  <wl@gnu.org>
+
+	[pcf] Fix compiler warnings.
+
+	Reported by Alexander Hedges <ahedges@student.ethz.ch>.
+
+	* src/pcf/pcfdrivr.c (pcf_property_set, pcf_property_get): Tag
+	`property_name' with `FT_UNUSED' where necessary.
+
 2017-03-26  Werner Lemberg  <wl@gnu.org>
 
 	* src/psaux/psobjs.c (t1_builder_close_contour): Add safety guard.
