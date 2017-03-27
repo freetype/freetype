@@ -1,3 +1,13 @@
+2017-03-27  Wojciech Mamrak  <wmamrak@gmail.com>
+
+	[sfnt] Minor improvement for handling kern tables.
+
+	* src/sfnt/ttkern.c (tt_face_load_kern): Don't check for
+	cross-stream kerning tables since we reject format 2 tables later
+	on anyways.
+	Modify code for limit test...
+	(tt_face_get_kerning): ... to avoid a limit test here.
+
 2017-03-27  Werner Lemberg  <wl@gnu.org>
 
 	[pcf] Fix compiler warnings.

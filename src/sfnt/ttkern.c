@@ -108,8 +108,8 @@
         p_next = p_limit;
 
       /* only use horizontal kerning tables */
-      if ( ( coverage & ~8U ) != 0x0001 ||
-           p + 8 > p_limit              )
+      if ( ( coverage & 3U ) != 0x0001 ||
+           p + 8 > p_next              )
         goto NextTable;
 
       num_pairs = FT_NEXT_USHORT( p );
@@ -214,8 +214,7 @@
       if ( ( face->kern_avail_bits & mask ) == 0 )
         goto NextTable;
 
-      if ( p + 8 > next )
-        goto NextTable;
+      FT_ASSERT( p + 8 <= next ); /* tested in tt_face_load_kern */
 
       num_pairs = FT_NEXT_USHORT( p );
       p        += 6;
