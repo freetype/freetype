@@ -1,3 +1,10 @@
+2017-03-29  Werner Lemberg  <wl@gnu.org>
+
+	[truetype] Fix thinko related to PS name of default named instance.
+
+	* src/truetype/ttgxvar.c (TT_Get_MM_Var): `strid' and `psid' are
+	name ID values, not indices into the array of name entries.
+
 2017-03-27  Werner Lemberg  <wl@gnu.org>
 
 	[cid, truetype] Don't use `index' as a variable name.

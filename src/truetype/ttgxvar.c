@@ -2171,42 +2171,43 @@
       {
         SFNT_Service  sfnt = (SFNT_Service)face->sfnt;
 
-        FT_Int  found, win, apple;
+        FT_Int   found, dummy1, dummy2;
+        FT_UInt  strid = 0xFFFFFFFFUL;
 
 
         /* the default instance is missing in array the   */
         /* of named instances; try to synthesize an entry */
         found = sfnt->get_name_id( face,
                                    TT_NAME_ID_TYPOGRAPHIC_SUBFAMILY,
-                                   &win,
-                                   &apple );
-        if ( !found )
+                                   &dummy1,
+                                   &dummy2 );
+        if ( found )
+          strid = TT_NAME_ID_TYPOGRAPHIC_SUBFAMILY;
+        else
+        {
           found = sfnt->get_name_id( face,
                                      TT_NAME_ID_FONT_SUBFAMILY,
-                                     &win,
-                                     &apple );
+                                     &dummy1,
+                                     &dummy2 );
+          if ( found )
+            strid = TT_NAME_ID_FONT_SUBFAMILY;
+        }
 
         if ( found )
         {
-          FT_Int  strid = win >= 0 ? win : apple;
-
-
           found = sfnt->get_name_id( face,
                                      TT_NAME_ID_PS_NAME,
-                                     &win,
-                                     &apple );
+                                     &dummy1,
+                                     &dummy2 );
           if ( found )
           {
-            FT_Int  psid = win >= 0 ? win : apple;
-
-
             FT_TRACE5(( "TT_Get_MM_Var:"
                         " Adding default instance to named instances\n" ));
 
             ns = &mmvar->namedstyle[fvar_head.instanceCount];
 
-            ns->strid = (FT_UInt)strid;
-            ns->psid  = (FT_UInt)psid;
+            ns->strid = strid;
+            ns->psid  = TT_NAME_ID_PS_NAME;
 
             a = mmvar->axis;
             c = ns->coords;
