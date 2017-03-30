@@ -2037,7 +2037,7 @@
 
     y_scale = 0x10000L;
     if ( ( loader->load_flags & FT_LOAD_NO_SCALE ) == 0 )
-      y_scale = size->root.metrics.y_scale;
+      y_scale = size->metrics.y_scale;
 
     if ( glyph->format != FT_GLYPH_FORMAT_COMPOSITE )
       FT_Outline_Get_CBox( &glyph->outline, &bbox );
@@ -2069,7 +2069,7 @@
 
 
       widthp = tt_face_get_device_metrics( face,
-                                           size->root.metrics.x_ppem,
+                                           size->metrics.x_ppem,
                                            glyph_index );
 
 #ifdef TT_SUPPORT_SUBPIXEL_HINTING_INFINALITY
@@ -2636,11 +2636,11 @@
           if ( !glyph->metrics.horiAdvance && glyph->linearHoriAdvance )
             glyph->metrics.horiAdvance =
               FT_MulFix( glyph->linearHoriAdvance,
-                         size->root.metrics.x_scale );
+                         size->metrics.x_scale );
           if ( !glyph->metrics.vertAdvance && glyph->linearVertAdvance )
             glyph->metrics.vertAdvance =
               FT_MulFix( glyph->linearVertAdvance,
-                         size->root.metrics.y_scale );
+                         size->metrics.y_scale );
         }
 
         return FT_Err_Ok;
@@ -2736,7 +2736,7 @@
     /* TrueType glyphs at all sizes using the bytecode interpreter. */
     /*                                                              */
     if ( !( load_flags & FT_LOAD_NO_SCALE ) &&
-         size->root.metrics.y_ppem < 24     )
+         size->metrics.y_ppem < 24          )
       glyph->outline.flags |= FT_OUTLINE_HIGH_PRECISION;
 
   Exit:

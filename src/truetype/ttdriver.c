@@ -356,8 +356,7 @@
 
     if ( FT_IS_SCALABLE( size->face ) )
     {
-      error                = tt_size_reset( ttsize, 0 );
-      ttsize->root.metrics = ttsize->metrics;
+      error = tt_size_reset( ttsize, 0 );
 
 #ifdef TT_USE_BYTECODE_INTERPRETER
       /* for the `MPS' bytecode instruction we need the point size */

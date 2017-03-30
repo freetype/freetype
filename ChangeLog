@@ -1,3 +1,16 @@
+2017-03-30  Werner Lemberg  <wl@gnu.org>
+
+	[truetype] Allow linear scaling for unhinted rendering (#50470).
+
+	* src/truetype/ttdriver.c (tt_size_request): Revert change from
+	2011-07-16; the intended metrics fix seems now to be implemented in
+	a different way, making the patch unnecessary.  Note that this
+	change was usually patched out by all major GNU/Linux distributions
+	due to heavy side effects.
+
+	* src/truetype/ttgload.c (compute_glyph_metrics, TT_Load_Glyph):
+	Refer to the metrics of the `TT_Size' object.
+
 2017-03-29  Werner Lemberg  <wl@gnu.org>
 
 	[truetype] Fix thinko related to PS name of default named instance.
