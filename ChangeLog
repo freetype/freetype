@@ -1,5 +1,11 @@
 2017-03-30  Werner Lemberg  <wl@gnu.org>
 
+	* src/cff/cffparse.h (CFF2_DEFAULT_STACK): Set to 513 also.
+
+	Requested by Dave Arnold.
+
+2017-03-30  Werner Lemberg  <wl@gnu.org>
+
 	[truetype] Fix HVAR and VVAR handling (#50678).
 
 	* src/truetype/ttgxvar.c (tt_hvadvance_adjust): Handle
