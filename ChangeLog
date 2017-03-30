@@ -1,5 +1,13 @@
 2017-03-30  Werner Lemberg  <wl@gnu.org>
 
+	[truetype] Fix HVAR and VVAR handling (#50678).
+
+	* src/truetype/ttgxvar.c (tt_hvadvance_adjust): Handle
+	glyph indices larger than `mapCount' as described in the
+	specification.
+
+2017-03-30  Werner Lemberg  <wl@gnu.org>
+
 	[truetype] Allow linear scaling for unhinted rendering (#50470).
 
 	* src/truetype/ttdriver.c (tt_size_request): Revert change from

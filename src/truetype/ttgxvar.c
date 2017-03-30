@@ -1007,16 +1007,15 @@
 
     if ( table->widthMap.innerIndex )
     {
-      if ( gindex >= table->widthMap.mapCount )
-      {
-        FT_TRACE2(( "gindex %d out of range\n", gindex ));
-        error = FT_THROW( Invalid_Argument );
-        goto Exit;
-      }
+      FT_UInt  idx = gindex;
+
+
+      if ( idx >= table->widthMap.mapCount )
+        idx = table->widthMap.mapCount - 1;
 
       /* trust that HVAR parser has checked indices */
-      outerIndex = table->widthMap.outerIndex[gindex];
-      innerIndex = table->widthMap.innerIndex[gindex];
+      outerIndex = table->widthMap.outerIndex[idx];
+      innerIndex = table->widthMap.innerIndex[idx];
     }
     else
     {
