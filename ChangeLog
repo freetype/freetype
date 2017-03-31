@@ -1,3 +1,12 @@
+2017-03-30  Alexei Podtelezhnikov  <apodtele@gmail.com>
+
+	[autofit] LCD equals LIGHT, LCD_V equals NORMAL.
+
+	* include/freetype/freetype.h (FT_LOAD_TARGET_XXX): Docs updated.
+	* src/autofit/afcjk.c (af_cjk_hints_init): Updated.
+	* src/autofit/aflatin.c (af_latin_hints_init): Updated.
+	* src/autofit/aflatin2.c (af_latin2_hints_init): Updated.
+
 2017-03-12  Alexei Podtelezhnikov  <apodtele@gmail.com>
 
 	[smooth] Dubious fix for Firefox.

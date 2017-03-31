@@ -2940,7 +2940,7 @@ FT_BEGIN_HEADER
    *     in non-monochrome modes.
    *
    *   FT_LOAD_TARGET_LCD ::
-   *     A variant of @FT_LOAD_TARGET_NORMAL optimized for horizontally
+   *     A variant of @FT_LOAD_TARGET_LIGHT optimized for horizontally
    *     decimated LCD displays.
    *
    *   FT_LOAD_TARGET_LCD_V ::
