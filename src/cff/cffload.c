@@ -2280,8 +2280,10 @@
         goto Exit;
       }
 
-      /* font names must not be empty */
-      if ( font->name_index.data_size < font->name_index.count )
+      /* if we have an empty font name,      */
+      /* it must be the only font in the CFF */
+      if ( font->name_index.count > 1                          &&
+           font->name_index.data_size < font->name_index.count )
       {
         /* for pure CFFs, we still haven't checked enough bytes */
         /* to be sure that it is a CFF at all                   */

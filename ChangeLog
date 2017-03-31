@@ -1,3 +1,13 @@
+2017-03-31  Werner Lemberg  <wl@gnu.org>
+
+	* src/cff/cffload.c (cff_font_load): Improve fix from 2017-01-04.
+
+	Allow CFFs containing a single font to have an empty font name.
+
+	Problem reported by 張俊芝 <418092625@qq.com> in
+
+	  http://lists.nongnu.org/archive/html/freetype-devel/2017-03/msg00074.html
+
 2017-03-30  Werner Lemberg  <wl@gnu.org>
 
 	* src/cff/cffparse.h (CFF2_DEFAULT_STACK): Set to 513 also.
