@@ -1,3 +1,11 @@
+2017-04-01  Werner Lemberg  <wl@gnu.org>
+
+	* src/truetype/ttgload.c: Include FT_CONFIG_CONFIG_H.
+
+	Otherwise FT_UINT_TO_POINTER might not be defined.
+
+	Problem reported by Alexei.
+
 2017-03-31  Alexei Podtelezhnikov  <apodtele@gmail.com>
 
 	[autofit] Disable stem adjustment for `FT_LOAD_TARGET_LCD'.
