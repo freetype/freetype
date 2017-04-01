@@ -1,3 +1,12 @@
+2017-03-31  Alexei Podtelezhnikov  <apodtele@gmail.com>
+
+	[autofit] Disable stem adjustment for `FT_LOAD_TARGET_LCD'.
+
+	* include/freetype/freetype.h (FT_LOAD_TARGET_LCD): Document it.
+	* src/autofit/afcjk.c (af_cjk_hints_init): Updated.
+	* src/autofit/aflatin.c (af_latin_hints_init): Ditto.
+	* src/autofit/aflatin2.c (af_latin2_hints_init): Ditto.
+
 2017-03-31  Werner Lemberg  <wl@gnu.org>
 
 	* src/cff/cffload.c (cff_font_load): Improve fix from 2017-01-04.

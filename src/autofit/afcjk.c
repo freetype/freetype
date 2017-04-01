@@ -1398,9 +1398,9 @@
       other_flags |= AF_LATIN_HINTS_VERT_SNAP;
 
     /*
-     *  We adjust stems to full pixels only if we don't use the `light' mode.
+     *  We adjust stems to full pixels unless in `light' or `lcd' mode.
      */
-    if ( mode != FT_RENDER_MODE_LIGHT )
+    if ( mode != FT_RENDER_MODE_LIGHT && mode != FT_RENDER_MODE_LCD )
       other_flags |= AF_LATIN_HINTS_STEM_ADJUST;
 
     if ( mode == FT_RENDER_MODE_MONO )
