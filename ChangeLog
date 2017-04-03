@@ -1,3 +1,10 @@
+2017-04-02  Alexei Podtelezhnikov  <apodtele@gmail.com>
+
+	[autofit] Disable metrics adjustment for `FT_LOAD_TARGET_LCD'.
+
+	* src/autofit/aflatin.c (af_latin_hints_init): Updated.
+	* src/autofit/aflatin2.c (af_latin2_hints_init): Ditto.
+
 2017-04-01  Werner Lemberg  <wl@gnu.org>
 
 	* src/truetype/ttgload.c: Include FT_CONFIG_CONFIG_H.
