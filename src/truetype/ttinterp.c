@@ -3564,6 +3564,13 @@
 #endif /* TT_SUPPORT_SUBPIXEL_HINTING_INFINALITY */
 
 
+    /* FDEF is only allowed in `prep' or `fpgm' */
+    if ( exc->curRange == tt_coderange_glyph )
+    {
+      exc->error = FT_THROW( DEF_In_Glyf_Bytecode );
+      return;
+    }
+
     /* some font programs are broken enough to redefine functions! */
     /* We will then parse the current table.                       */
 
@@ -3989,6 +3996,13 @@
     TT_DefRecord*  def;
     TT_DefRecord*  limit;
 
+
+    /* we enable IDEF only in `prep' or `fpgm' */
+    if ( exc->curRange == tt_coderange_glyph )
+    {
+      exc->error = FT_THROW( DEF_In_Glyf_Bytecode );
+      return;
+    }
 
     /*  First of all, look for the same function in our table */
 
@@ -8408,17 +8422,8 @@
     exc->error = FT_THROW( Code_Overflow );
 
   LErrorLabel_:
-    /* If any errors have occurred, function tables may be broken. */
-    /* Force a re-execution of `prep' and `fpgm' tables if no      */
-    /* bytecode debugger is run.                                   */
-    if ( exc->error                          &&
-         !exc->instruction_trap              &&
-         exc->curRange == tt_coderange_glyph )
-    {
+    if ( exc->error && !exc->instruction_trap )
       FT_TRACE1(( "  The interpreter returned error 0x%x\n", exc->error ));
-      exc->size->bytecode_ready = -1;
-      exc->size->cvt_ready      = -1;
-    }
 
     return exc->error;
   }

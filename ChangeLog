@@ -1,3 +1,21 @@
+2017-04-03  Werner Lemberg  <wl@gnu.org>
+
+	[truetype] Avoid reexecution of `fpgm' and `prep' in case of error.
+
+	Reported as
+
+	  https://bugs.chromium.org/p/oss-fuzz/issues/detail?id=981
+
+	* include/freetype/fterrdef.h (FT_Err_DEF_In_Glyf_Bytecode): New
+	error code.
+
+	* src/truetype/ttinterp.c (Ins_FDEF, Ins_IDEF): Prohibit execution
+	of these two opcodes in `glyf' bytecode.
+	(TT_RunIns): Don't enforce reexecution of `fpgm' and `prep' bytecode
+	in case of error since function tables can no longer be modified
+	(due to the changes in `Ins_FDEF' and `Ins_IDEF').  This change can
+	enormously speed up handling of broken fonts.
+
 2017-04-02  Alexei Podtelezhnikov  <apodtele@gmail.com>
 
 	[autofit] Disable metrics adjustment for `FT_LOAD_TARGET_LCD'.
