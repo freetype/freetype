@@ -1,3 +1,15 @@
+2017-04-02  Alexei Podtelezhnikov  <apodtele@gmail.com>
+
+	[autofit] Handle LCD lightly.
+
+	This commit explicitly disables stem adjustment and metrics changes
+	for FT_LOAD_TARGET_LCD, redoing the last commit.
+
+	* include/freetype/freetype.h (FT_LOAD_TARGET_XXX): Docs updated.
+	* src/autofit/afcjk.c (af_cjk_hints_init): Updated.
+	* src/autofit/aflatin.c (af_latin_hints_init): Updated.
+	* src/autofit/aflatin2.c (af_latin2_hints_init): Updated.
+
 2017-03-30  Alexei Podtelezhnikov  <apodtele@gmail.com>
 
 	[autofit] LCD equals LIGHT, LCD_V equals NORMAL.
