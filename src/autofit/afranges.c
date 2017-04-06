@@ -56,6 +56,19 @@
   /* of the corresponding `ta_xxxx_uniranges' ranges               */
 
 
+  const AF_Script_UniRangeRec  af_adlm_uniranges[] =
+  {
+    AF_UNIRANGE_REC( 0x1E900, 0x1E95F ),   /* Adlam */
+    AF_UNIRANGE_REC(       0,       0 )
+  };
+
+  const AF_Script_UniRangeRec  af_adlm_nonbase_uniranges[] =
+  {
+    AF_UNIRANGE_REC( 0x1D944, 0x1E94A ),
+    AF_UNIRANGE_REC(       0,       0 )
+  };
+
+
   const AF_Script_UniRangeRec  af_arab_uniranges[] =
   {
     AF_UNIRANGE_REC(  0x0600,  0x06FF ),  /* Arabic                                 */
@@ -515,13 +528,13 @@
   };
 
 
-  const AF_Script_UniRangeRec af_olck_uniranges[] =
+  const AF_Script_UniRangeRec  af_olck_uniranges[] =
   {
     AF_UNIRANGE_REC( 0x1C50, 0x1C7F ),    /* Ol Chiki */
     AF_UNIRANGE_REC(      0,      0 )
   };
 
-  const AF_Script_UniRangeRec af_olck_nonbase_uniranges[] =
+  const AF_Script_UniRangeRec  af_olck_nonbase_uniranges[] =
   {
     AF_UNIRANGE_REC( 0, 0 )
   };

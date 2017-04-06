@@ -30,6 +30,12 @@
   /* use `HB_SCRIPT_INVALID' as the HarfBuzz script name tag for      */
   /* them.                                                            */
 
+  SCRIPT( adlm, ADLM,
+          "Adlam",
+          HB_SCRIPT_ADLAM,
+          HINTING_BOTTOM_TO_TOP,
+          "\xF0\x9E\xA4\x8C \xF0\x9E\xA4\xAE" ) /* 𞤌 𞤮 */
+
   SCRIPT( arab, ARAB,
           "Arabic",
           HB_SCRIPT_ARABIC,

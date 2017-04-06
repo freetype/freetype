@@ -83,6 +83,13 @@
                        DEFAULT )
 
 
+  STYLE( adlm_dflt, ADLM_DFLT,
+         "Adlam default style",
+         AF_WRITING_SYSTEM_LATIN,
+         AF_SCRIPT_ADLM,
+         AF_BLUE_STRINGSET_ADLM,
+         AF_COVERAGE_DEFAULT )
+
   STYLE( arab_dflt, ARAB_DFLT,
          "Arabic default style",
          AF_WRITING_SYSTEM_LATIN,

@@ -26,6 +26,14 @@
   af_blue_strings[] =
   {
     /* */
+    '\xF0', '\x9E', '\xA4', '\x8C', ' ', '\xF0', '\x9E', '\xA4', '\x85', ' ', '\xF0', '\x9E', '\xA4', '\x88', ' ', '\xF0', '\x9E', '\xA4', '\x8F', ' ', '\xF0', '\x9E', '\xA4', '\x94', ' ', '\xF0', '\x9E', '\xA4', '\x9A',  /* 𞤌 𞤅 𞤈 𞤏 𞤔 𞤚 */
+    '\0',
+    '\xF0', '\x9E', '\xA4', '\x82', ' ', '\xF0', '\x9E', '\xA4', '\x96',  /* 𞤂 𞤖 */
+    '\0',
+    '\xF0', '\x9E', '\xA4', '\xAC', ' ', '\xF0', '\x9E', '\xA4', '\xAE', ' ', '\xF0', '\x9E', '\xA4', '\xBB', ' ', '\xF0', '\x9E', '\xA4', '\xBC', ' ', '\xF0', '\x9E', '\xA4', '\xBE',  /* 𞤬 𞤮 𞤻 𞤼 𞤾 */
+    '\0',
+    '\xF0', '\x9E', '\xA4', '\xA4', ' ', '\xF0', '\x9E', '\xA4', '\xA8', ' ', '\xF0', '\x9E', '\xA4', '\xA9', ' ', '\xF0', '\x9E', '\xA4', '\xAD', ' ', '\xF0', '\x9E', '\xA4', '\xB4', ' ', '\xF0', '\x9E', '\xA4', '\xB8', ' ', '\xF0', '\x9E', '\xA4', '\xBA', ' ', '\xF0', '\x9E', '\xA5', '\x80',  /* 𞤤 𞤨 𞤩 𞤭 𞤴 𞤸 𞤺 𞥀 */
+    '\0',
     '\xD8', '\xA7', ' ', '\xD8', '\xA5', ' ', '\xD9', '\x84', ' ', '\xD9', '\x83', ' ', '\xD8', '\xB7', ' ', '\xD8', '\xB8',  /* ا إ ل ك ط ظ */
     '\0',
     '\xD8', '\xAA', ' ', '\xD8', '\xAB', ' ', '\xD8', '\xB7', ' ', '\xD8', '\xB8', ' ', '\xD9', '\x83',  /* ت ث ط ظ ك */
@@ -285,6 +293,12 @@
   af_blue_stringsets[] =
   {
     /* */
+    { AF_BLUE_STRING_ADLAM_CAPITAL_TOP,    AF_BLUE_PROPERTY_LATIN_TOP        },
+    { AF_BLUE_STRING_ADLAM_CAPITAL_BOTTOM, 0                                 },
+    { AF_BLUE_STRING_ADLAM_SMALL_TOP,      AF_BLUE_PROPERTY_LATIN_TOP      |
+                                           AF_BLUE_PROPERTY_LATIN_X_HEIGHT   },
+    { AF_BLUE_STRING_ADLAM_SMALL_BOTTOM,   0                                 },
+    { AF_BLUE_STRING_MAX,                  0                                 },
     { AF_BLUE_STRING_ARABIC_TOP,    AF_BLUE_PROPERTY_LATIN_TOP     },
     { AF_BLUE_STRING_ARABIC_BOTTOM, 0                              },
     { AF_BLUE_STRING_ARABIC_JOIN,   AF_BLUE_PROPERTY_LATIN_NEUTRAL },
