@@ -171,6 +171,12 @@
           HINTING_BOTTOM_TO_TOP,
           "" )
 
+  SCRIPT( olck, OLCK,
+          "Ol Chiki",
+          HB_SCRIPT_OL_CHIKI,
+          HINTING_BOTTOM_TO_TOP,
+          "\xE1\xB1\x9B" ) /* ᱛ */
+
   SCRIPT( sinh, SINH,
           "Sinhala",
           HB_SCRIPT_SINHALA,

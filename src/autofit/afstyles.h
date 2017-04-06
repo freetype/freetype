@@ -238,6 +238,13 @@
          AF_BLUE_STRINGSET_NONE,
          AF_COVERAGE_DEFAULT )
 
+  STYLE( olck_dflt, OLCK_DFLT,
+         "Ol Chiki default style",
+         AF_WRITING_SYSTEM_LATIN,
+         AF_SCRIPT_OLCK,
+         AF_BLUE_STRINGSET_OLCK,
+         AF_COVERAGE_DEFAULT )
+
   STYLE( sinh_dflt, SINH_DFLT,
          "Sinhala default style",
          AF_WRITING_SYSTEM_LATIN,

@@ -1,3 +1,14 @@
+2017-04-06  Sascha Brawer  <sascha@google.com>
+
+	[autofit] Add support for Ol Chiki script.
+
+	* src/autofit/afblue.dat: Add blue zone data for Ol Chiki.
+	* src/autofit/afblue.c, src/autofit/afblue.h: Regenerated.
+
+	* src/autofit/afscript.h: Add Ol Chiki standard character.
+
+	* src/autofit/afranges.c, src/autofit/afstyles.h: Add Ol Chiki data.
+
 2017-04-03  Werner Lemberg  <wl@gnu.org>
 
 	[truetype] Avoid reexecution of `fpgm' and `prep' in case of error.

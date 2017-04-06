@@ -206,6 +206,8 @@
     '\0',
     '\xE1', '\x80', '\x89', ' ', '\xE1', '\x80', '\x8A', ' ', '\xE1', '\x80', '\xA5', ' ', '\xE1', '\x80', '\xA9', ' ', '\xE1', '\x80', '\xA8', ' ', '\xE1', '\x81', '\x82', ' ', '\xE1', '\x81', '\x85', ' ', '\xE1', '\x81', '\x89',  /* ဉ ည ဥ ဩ ဨ ၂ ၅ ၉ */
     '\0',
+    '\xE1', '\xB1', '\x9B', ' ', '\xE1', '\xB1', '\x9C', ' ', '\xE1', '\xB1', '\x9D', ' ', '\xE1', '\xB1', '\xA1', ' ', '\xE1', '\xB1', '\xA2', ' ', '\xE1', '\xB1', '\xA5',  /* ᱛ ᱜ ᱝ ᱡ ᱢ ᱥ */
+    '\0',
     '\xE0', '\xB6', '\x89', ' ', '\xE0', '\xB6', '\x9A', ' ', '\xE0', '\xB6', '\x9D', ' ', '\xE0', '\xB6', '\xB3', ' ', '\xE0', '\xB6', '\xB4', ' ', '\xE0', '\xB6', '\xBA', ' ', '\xE0', '\xB6', '\xBD', ' ', '\xE0', '\xB7', '\x86',  /* ඉ ක ඝ ඳ ප ය ල ෆ */
     '\0',
     '\xE0', '\xB6', '\x91', ' ', '\xE0', '\xB6', '\x94', ' ', '\xE0', '\xB6', '\x9D', ' ', '\xE0', '\xB6', '\xA2', ' ', '\xE0', '\xB6', '\xA7', ' ', '\xE0', '\xB6', '\xAE', ' ', '\xE0', '\xB6', '\xB0', ' ', '\xE0', '\xB6', '\xBB',  /* එ ඔ ඝ ජ ට ථ ධ ර */
@@ -425,6 +427,9 @@
     { AF_BLUE_STRING_MYANMAR_DESCENDER, 0                                 },
     { AF_BLUE_STRING_MAX,               0                                 },
     { AF_BLUE_STRING_MAX, 0 },
+    { AF_BLUE_STRING_OL_CHIKI, AF_BLUE_PROPERTY_LATIN_TOP },
+    { AF_BLUE_STRING_OL_CHIKI, 0                          },
+    { AF_BLUE_STRING_MAX,      0                          },
     { AF_BLUE_STRING_SINHALA_TOP,       AF_BLUE_PROPERTY_LATIN_TOP },
     { AF_BLUE_STRING_SINHALA_BOTTOM,    0                          },
     { AF_BLUE_STRING_SINHALA_DESCENDER, 0                          },

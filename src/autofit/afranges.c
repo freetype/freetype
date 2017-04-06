@@ -515,6 +515,18 @@
   };
 
 
+  const AF_Script_UniRangeRec af_olck_uniranges[] =
+  {
+    AF_UNIRANGE_REC( 0x1C50, 0x1C7F ),    /* Ol Chiki */
+    AF_UNIRANGE_REC(      0,      0 )
+  };
+
+  const AF_Script_UniRangeRec af_olck_nonbase_uniranges[] =
+  {
+    AF_UNIRANGE_REC( 0, 0 )
+  };
+
+
   const AF_Script_UniRangeRec  af_sinh_uniranges[] =
   {
     AF_UNIRANGE_REC(  0x0D80,  0x0DFF ),  /* Sinhala */
