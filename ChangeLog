@@ -1,6 +1,18 @@
 2017-04-06  Sascha Brawer  <sascha@google.com>
 	    Werner Lemberg  <wl@gnu.org
 
+	[autofit] Add support for Tai Viet script.
+
+	* src/autofit/afblue.dat: Add blue zone data for Tai Viet.
+	* src/autofit/afblue.c, src/autofit/afblue.h: Regenerated.
+
+	* src/autofit/afscript.h: Add Tai Viet standard characters.
+
+	* src/autofit/afranges.c, src/autofit/afstyles.h: Add Tai Viet data.
+
+2017-04-06  Sascha Brawer  <sascha@google.com>
+	    Werner Lemberg  <wl@gnu.org
+
 	[autofit] Add support for Tifinagh script.
 
 	* src/autofit/afblue.dat: Add blue zone data for Tifinagh.

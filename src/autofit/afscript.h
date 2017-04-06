@@ -202,6 +202,12 @@
           HINTING_BOTTOM_TO_TOP,
           "\xE0\xAF\xA6" ) /* ௦ */
 
+  SCRIPT( tavt, TAVT,
+          "Tai Viet",
+          HB_SCRIPT_TAI_VIET,
+          HINTING_BOTTOM_TO_TOP,
+          "\xEA\xAA\x92 \xEA\xAA\xAB" ) /* ꪒ ꪫ */
+
   /* there are no simple forms for letters; we thus use two digit shapes */
   SCRIPT( telu, TELU,
           "Telugu",

@@ -582,6 +582,23 @@
   };
 
 
+  const AF_Script_UniRangeRec  af_tavt_uniranges[] =
+  {
+    AF_UNIRANGE_REC(  0xAA80,  0xAADF ),   /* Tai Viet */
+    AF_UNIRANGE_REC(       0,       0 )
+  };
+
+  const AF_Script_UniRangeRec  af_tavt_nonbase_uniranges[] =
+  {
+    AF_UNIRANGE_REC(  0xAAB0,  0xAAB0 ),
+    AF_UNIRANGE_REC(  0xAAB2,  0xAAB4 ),
+    AF_UNIRANGE_REC(  0xAAB7,  0xAAB8 ),
+    AF_UNIRANGE_REC(  0xAABE,  0xAABF ),
+    AF_UNIRANGE_REC(  0xAAC1,  0xAAC1 ),
+    AF_UNIRANGE_REC(       0,       0 )
+  };
+
+
   const AF_Script_UniRangeRec  af_telu_uniranges[] =
   {
     AF_UNIRANGE_REC(  0x0C00,  0x0C7F ),  /* Telugu */

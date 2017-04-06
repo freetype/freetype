@@ -273,6 +273,13 @@
          AF_BLUE_STRINGSET_TAML,
          AF_COVERAGE_DEFAULT )
 
+  STYLE( tavt_dflt, TAVT_DFLT,
+         "Tai Viet default style",
+         AF_WRITING_SYSTEM_LATIN,
+         AF_SCRIPT_TAVT,
+         AF_BLUE_STRINGSET_TAVT,
+         AF_COVERAGE_DEFAULT )
+
   STYLE( telu_dflt, TELU_DFLT,
          "Telugu default style",
          AF_WRITING_SYSTEM_LATIN,
