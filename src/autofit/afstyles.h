@@ -148,6 +148,13 @@
          AF_BLUE_STRINGSET_GEOK,
          AF_COVERAGE_DEFAULT )
 
+  STYLE( glag_dflt, GLAG_DFLT,
+         "Glagolitic default style",
+         AF_WRITING_SYSTEM_LATIN,
+         AF_SCRIPT_GLAG,
+         AF_BLUE_STRINGSET_GLAG,
+         AF_COVERAGE_DEFAULT )
+
   META_STYLE_LATIN( grek, GREK, "Greek" )
 
   STYLE( gujr_dflt, GUJR_DFLT,

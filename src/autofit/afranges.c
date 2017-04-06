@@ -246,6 +246,19 @@
   };
 
 
+  const AF_Script_UniRangeRec  af_glag_uniranges[] =
+  {
+    AF_UNIRANGE_REC(  0x2C00,  0x2C5F ),  /* Glagolitic */
+    AF_UNIRANGE_REC( 0x1E000, 0x1E02F ),  /* Glagolitic Supplement */
+    AF_UNIRANGE_REC(       0,       0 )
+  };
+
+  const AF_Script_UniRangeRec  af_glag_nonbase_uniranges[] =
+  {
+    AF_UNIRANGE_REC( 0x1E000, 0x1E02F )
+  };
+
+
   const AF_Script_UniRangeRec  af_grek_uniranges[] =
   {
     AF_UNIRANGE_REC(  0x0370,  0x03FF ),  /* Greek and Coptic */

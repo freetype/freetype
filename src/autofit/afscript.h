@@ -91,6 +91,12 @@
           HINTING_BOTTOM_TO_TOP,
           "\xE1\x82\xB6 \xE1\x82\xB1 \xE2\xB4\x99" ) /* Ⴖ Ⴑ ⴙ */
 
+  SCRIPT( glag, GLAG,
+          "Glagolitic",
+          HB_SCRIPT_GLAGOLITIC,
+          HINTING_BOTTOM_TO_TOP,
+          "\xE2\xB0\x95 \xE2\xB1\x85" ) /* Ⱅ ⱅ */
+
   SCRIPT( grek, GREK,
           "Greek",
           HB_SCRIPT_GREEK,
