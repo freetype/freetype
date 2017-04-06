@@ -318,6 +318,21 @@ AF_BLUE_STRING_ENUM AF_BLUE_STRINGS_ARRAY AF_BLUE_STRING_MAX_LEN:
   AF_BLUE_STRING_OL_CHIKI
     "ᱛ ᱜ ᱝ ᱡ ᱢ ᱥ"
 
+  AF_BLUE_STRING_OSAGE_CAPITAL_TOP
+    "𐒾 𐓍 𐓒 𐓓 𐒻 𐓂 𐒵 𐓆"
+  AF_BLUE_STRING_OSAGE_CAPITAL_BOTTOM
+    "𐒰 𐓍 𐓂 𐒿 𐓎 𐒹"
+  AF_BLUE_STRING_OSAGE_CAPITAL_DESCENDER
+    "𐒼 𐒽 𐒾"
+  AF_BLUE_STRING_OSAGE_SMALL_TOP
+    "𐓵 𐓶 𐓺 𐓻 𐓝 𐓣 𐓪 𐓮"
+  AF_BLUE_STRING_OSAGE_SMALL_BOTTOM
+    "𐓘 𐓚 𐓣 𐓵 𐓡 𐓧 𐓪 𐓶"
+  AF_BLUE_STRING_OSAGE_SMALL_ASCENDER
+    "𐓤 𐓦 𐓸 𐓹 𐓛"
+  AF_BLUE_STRING_OSAGE_SMALL_DESCENDER
+    "𐓤 𐓥 𐓦"
+
   AF_BLUE_STRING_SINHALA_TOP
     "ඉ ක ඝ ඳ ප ය ල ෆ"
   AF_BLUE_STRING_SINHALA_BOTTOM
@@ -740,6 +755,17 @@ AF_BLUE_STRINGSET_ENUM AF_BLUE_STRINGSETS_ARRAY AF_BLUE_STRINGSET_MAX_LEN:
     { AF_BLUE_STRING_OL_CHIKI, AF_BLUE_PROPERTY_LATIN_TOP }
     { AF_BLUE_STRING_OL_CHIKI, 0                          }
     { AF_BLUE_STRING_MAX,      0                          }
+
+  AF_BLUE_STRINGSET_OSGE
+    { AF_BLUE_STRING_OSAGE_CAPITAL_TOP,       AF_BLUE_PROPERTY_LATIN_TOP       }
+    { AF_BLUE_STRING_OSAGE_CAPITAL_BOTTOM,    0                                }
+    { AF_BLUE_STRING_OSAGE_CAPITAL_DESCENDER, 0                                }
+    { AF_BLUE_STRING_OSAGE_SMALL_TOP,         AF_BLUE_PROPERTY_LATIN_TOP     |
+                                              AF_BLUE_PROPERTY_LATIN_X_HEIGHT  }
+    { AF_BLUE_STRING_OSAGE_SMALL_BOTTOM,      0                                }
+    { AF_BLUE_STRING_OSAGE_SMALL_ASCENDER,    AF_BLUE_PROPERTY_LATIN_TOP       }
+    { AF_BLUE_STRING_OSAGE_SMALL_DESCENDER,   0                                }
+    { AF_BLUE_STRING_MAX,                     0                                }
 
   AF_BLUE_STRINGSET_SINH
     { AF_BLUE_STRING_SINHALA_TOP,       AF_BLUE_PROPERTY_LATIN_TOP }

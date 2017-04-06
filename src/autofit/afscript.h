@@ -195,6 +195,12 @@
           HINTING_BOTTOM_TO_TOP,
           "\xE1\xB1\x9B" ) /* ᱛ */
 
+  SCRIPT( osge, OSGE,
+          "Osage",
+          HB_SCRIPT_OSAGE,
+          HINTING_BOTTOM_TO_TOP,
+          "\xF0\x90\x93\x82 \xF0\x90\x93\xAA" ) /* 𐓂 𐓪 */
+
   SCRIPT( sinh, SINH,
           "Sinhala",
           HB_SCRIPT_SINHALA,

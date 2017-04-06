@@ -266,6 +266,13 @@
          AF_BLUE_STRINGSET_OLCK,
          AF_COVERAGE_DEFAULT )
 
+  STYLE( osge_dflt, OSGE_DFLT,
+         "Osage default style",
+         AF_WRITING_SYSTEM_LATIN,
+         AF_SCRIPT_OSGE,
+         AF_BLUE_STRINGSET_OSGE,
+         AF_COVERAGE_DEFAULT )
+
   STYLE( sinh_dflt, SINH_DFLT,
          "Sinhala default style",
          AF_WRITING_SYSTEM_LATIN,

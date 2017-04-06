@@ -566,6 +566,18 @@
   };
 
 
+  const AF_Script_UniRangeRec  af_osge_uniranges[] =
+  {
+    AF_UNIRANGE_REC( 0x104B0, 0x104FF ),    /* Osage */
+    AF_UNIRANGE_REC(       0,       0 )
+  };
+
+  const AF_Script_UniRangeRec  af_osge_nonbase_uniranges[] =
+  {
+    AF_UNIRANGE_REC( 0, 0 )
+  };
+
+
   const AF_Script_UniRangeRec  af_sinh_uniranges[] =
   {
     AF_UNIRANGE_REC(  0x0D80,  0x0DFF ),  /* Sinhala */

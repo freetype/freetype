@@ -232,6 +232,20 @@
     '\0',
     '\xE1', '\xB1', '\x9B', ' ', '\xE1', '\xB1', '\x9C', ' ', '\xE1', '\xB1', '\x9D', ' ', '\xE1', '\xB1', '\xA1', ' ', '\xE1', '\xB1', '\xA2', ' ', '\xE1', '\xB1', '\xA5',  /* ᱛ ᱜ ᱝ ᱡ ᱢ ᱥ */
     '\0',
+    '\xF0', '\x90', '\x92', '\xBE', ' ', '\xF0', '\x90', '\x93', '\x8D', ' ', '\xF0', '\x90', '\x93', '\x92', ' ', '\xF0', '\x90', '\x93', '\x93', ' ', '\xF0', '\x90', '\x92', '\xBB', ' ', '\xF0', '\x90', '\x93', '\x82', ' ', '\xF0', '\x90', '\x92', '\xB5', ' ', '\xF0', '\x90', '\x93', '\x86',  /* 𐒾 𐓍 𐓒 𐓓 𐒻 𐓂 𐒵 𐓆 */
+    '\0',
+    '\xF0', '\x90', '\x92', '\xB0', ' ', '\xF0', '\x90', '\x93', '\x8D', ' ', '\xF0', '\x90', '\x93', '\x82', ' ', '\xF0', '\x90', '\x92', '\xBF', ' ', '\xF0', '\x90', '\x93', '\x8E', ' ', '\xF0', '\x90', '\x92', '\xB9',  /* 𐒰 𐓍 𐓂 𐒿 𐓎 𐒹 */
+    '\0',
+    '\xF0', '\x90', '\x92', '\xBC', ' ', '\xF0', '\x90', '\x92', '\xBD', ' ', '\xF0', '\x90', '\x92', '\xBE',  /* 𐒼 𐒽 𐒾 */
+    '\0',
+    '\xF0', '\x90', '\x93', '\xB5', ' ', '\xF0', '\x90', '\x93', '\xB6', ' ', '\xF0', '\x90', '\x93', '\xBA', ' ', '\xF0', '\x90', '\x93', '\xBB', ' ', '\xF0', '\x90', '\x93', '\x9D', ' ', '\xF0', '\x90', '\x93', '\xA3', ' ', '\xF0', '\x90', '\x93', '\xAA', ' ', '\xF0', '\x90', '\x93', '\xAE',  /* 𐓵 𐓶 𐓺 𐓻 𐓝 𐓣 𐓪 𐓮 */
+    '\0',
+    '\xF0', '\x90', '\x93', '\x98', ' ', '\xF0', '\x90', '\x93', '\x9A', ' ', '\xF0', '\x90', '\x93', '\xA3', ' ', '\xF0', '\x90', '\x93', '\xB5', ' ', '\xF0', '\x90', '\x93', '\xA1', ' ', '\xF0', '\x90', '\x93', '\xA7', ' ', '\xF0', '\x90', '\x93', '\xAA', ' ', '\xF0', '\x90', '\x93', '\xB6',  /* 𐓘 𐓚 𐓣 𐓵 𐓡 𐓧 𐓪 𐓶 */
+    '\0',
+    '\xF0', '\x90', '\x93', '\xA4', ' ', '\xF0', '\x90', '\x93', '\xA6', ' ', '\xF0', '\x90', '\x93', '\xB8', ' ', '\xF0', '\x90', '\x93', '\xB9', ' ', '\xF0', '\x90', '\x93', '\x9B',  /* 𐓤 𐓦 𐓸 𐓹 𐓛 */
+    '\0',
+    '\xF0', '\x90', '\x93', '\xA4', ' ', '\xF0', '\x90', '\x93', '\xA5', ' ', '\xF0', '\x90', '\x93', '\xA6',  /* 𐓤 𐓥 𐓦 */
+    '\0',
     '\xE0', '\xB6', '\x89', ' ', '\xE0', '\xB6', '\x9A', ' ', '\xE0', '\xB6', '\x9D', ' ', '\xE0', '\xB6', '\xB3', ' ', '\xE0', '\xB6', '\xB4', ' ', '\xE0', '\xB6', '\xBA', ' ', '\xE0', '\xB6', '\xBD', ' ', '\xE0', '\xB7', '\x86',  /* ඉ ක ඝ ඳ ප ය ල ෆ */
     '\0',
     '\xE0', '\xB6', '\x91', ' ', '\xE0', '\xB6', '\x94', ' ', '\xE0', '\xB6', '\x9D', ' ', '\xE0', '\xB6', '\xA2', ' ', '\xE0', '\xB6', '\xA7', ' ', '\xE0', '\xB6', '\xAE', ' ', '\xE0', '\xB6', '\xB0', ' ', '\xE0', '\xB6', '\xBB',  /* එ ඔ ඝ ජ ට ථ ධ ර */
@@ -478,6 +492,15 @@
     { AF_BLUE_STRING_OL_CHIKI, AF_BLUE_PROPERTY_LATIN_TOP },
     { AF_BLUE_STRING_OL_CHIKI, 0                          },
     { AF_BLUE_STRING_MAX,      0                          },
+    { AF_BLUE_STRING_OSAGE_CAPITAL_TOP,       AF_BLUE_PROPERTY_LATIN_TOP       },
+    { AF_BLUE_STRING_OSAGE_CAPITAL_BOTTOM,    0                                },
+    { AF_BLUE_STRING_OSAGE_CAPITAL_DESCENDER, 0                                },
+    { AF_BLUE_STRING_OSAGE_SMALL_TOP,         AF_BLUE_PROPERTY_LATIN_TOP     |
+                                              AF_BLUE_PROPERTY_LATIN_X_HEIGHT  },
+    { AF_BLUE_STRING_OSAGE_SMALL_BOTTOM,      0                                },
+    { AF_BLUE_STRING_OSAGE_SMALL_ASCENDER,    AF_BLUE_PROPERTY_LATIN_TOP       },
+    { AF_BLUE_STRING_OSAGE_SMALL_DESCENDER,   0                                },
+    { AF_BLUE_STRING_MAX,                     0                                },
     { AF_BLUE_STRING_SINHALA_TOP,       AF_BLUE_PROPERTY_LATIN_TOP },
     { AF_BLUE_STRING_SINHALA_BOTTOM,    0                          },
     { AF_BLUE_STRING_SINHALA_DESCENDER, 0                          },
