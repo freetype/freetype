@@ -238,6 +238,13 @@
          AF_BLUE_STRINGSET_MYMR,
          AF_COVERAGE_DEFAULT )
 
+  STYLE( nkoo_dflt, NKOO_DFLT,
+         "N'Ko default style",
+         AF_WRITING_SYSTEM_LATIN,
+         AF_SCRIPT_NKOO,
+         AF_BLUE_STRINGSET_NKOO,
+         AF_COVERAGE_DEFAULT )
+
   STYLE( none_dflt, NONE_DFLT,
          "no style",
          AF_WRITING_SYSTEM_DUMMY,

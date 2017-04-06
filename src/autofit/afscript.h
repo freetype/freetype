@@ -171,6 +171,12 @@
           HINTING_BOTTOM_TO_TOP,
           "\xE1\x80\x9D \xE1\x80\x84 \xE1\x80\x82" ) /* ဝ င ဂ */
 
+  SCRIPT( nkoo, NKOO,
+          "N'Ko",
+          HB_SCRIPT_NKO,
+          HINTING_BOTTOM_TO_TOP,
+          "\xDF\x8B \xDF\x80" ) /* ߋ ߀ */
+
   SCRIPT( none, NONE,
           "no script",
           HB_SCRIPT_INVALID,

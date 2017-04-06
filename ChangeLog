@@ -1,4 +1,16 @@
 2017-04-06  Sascha Brawer  <sascha@google.com>
+	    Werner Lemberg  <wl@gnu.org
+
+	[autofit] Add support for N'Ko script.
+
+	* src/autofit/afblue.dat: Add blue zone data for N'Ko.
+	* src/autofit/afblue.c, src/autofit/afblue.h: Regenerated.
+
+	* src/autofit/afscript.h: Add N'Ko standard characters.
+
+	* src/autofit/afranges.c, src/autofit/afstyles.h: Add N'Ko data.
+
+2017-04-06  Sascha Brawer  <sascha@google.com>
 
 	[autofit] Add support for Adlam script.
 

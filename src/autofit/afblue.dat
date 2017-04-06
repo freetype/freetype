@@ -297,6 +297,15 @@ AF_BLUE_STRING_ENUM AF_BLUE_STRINGS_ARRAY AF_BLUE_STRING_MAX_LEN:
   AF_BLUE_STRING_MYANMAR_DESCENDER
     "ဉ ည ဥ ဩ ဨ ၂ ၅ ၉"
 
+  AF_BLUE_STRING_NKO_TOP
+    "ߐ ߉ ߒ ߟ ߖ ߜ ߠ ߥ"
+  AF_BLUE_STRING_NKO_BOTTOM
+    "߀ ߘ ߡ ߠ ߥ"
+  AF_BLUE_STRING_NKO_SMALL_TOP
+    "ߏ ߛ ߋ"
+  AF_BLUE_STRING_NKO_SMALL_BOTTOM
+    "ߎ ߏ ߛ ߋ"
+
   AF_BLUE_STRING_OL_CHIKI
     "ᱛ ᱜ ᱝ ᱡ ᱢ ᱥ"
 
@@ -690,6 +699,14 @@ AF_BLUE_STRINGSET_ENUM AF_BLUE_STRINGSETS_ARRAY AF_BLUE_STRINGSET_MAX_LEN:
     { AF_BLUE_STRING_MYANMAR_ASCENDER,  AF_BLUE_PROPERTY_LATIN_TOP        }
     { AF_BLUE_STRING_MYANMAR_DESCENDER, 0                                 }
     { AF_BLUE_STRING_MAX,               0                                 }
+
+  AF_BLUE_STRINGSET_NKOO
+    { AF_BLUE_STRING_NKO_TOP,          AF_BLUE_PROPERTY_LATIN_TOP        }
+    { AF_BLUE_STRING_NKO_BOTTOM,       0                                 }
+    { AF_BLUE_STRING_NKO_SMALL_TOP,    AF_BLUE_PROPERTY_LATIN_TOP      |
+                                       AF_BLUE_PROPERTY_LATIN_X_HEIGHT   }
+    { AF_BLUE_STRING_NKO_SMALL_BOTTOM, 0                                 }
+    { AF_BLUE_STRING_MAX,              0                                 }
 
   AF_BLUE_STRINGSET_NONE
     { AF_BLUE_STRING_MAX, 0 }

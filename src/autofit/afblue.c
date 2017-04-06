@@ -214,6 +214,14 @@
     '\0',
     '\xE1', '\x80', '\x89', ' ', '\xE1', '\x80', '\x8A', ' ', '\xE1', '\x80', '\xA5', ' ', '\xE1', '\x80', '\xA9', ' ', '\xE1', '\x80', '\xA8', ' ', '\xE1', '\x81', '\x82', ' ', '\xE1', '\x81', '\x85', ' ', '\xE1', '\x81', '\x89',  /* ဉ ည ဥ ဩ ဨ ၂ ၅ ၉ */
     '\0',
+    '\xDF', '\x90', ' ', '\xDF', '\x89', ' ', '\xDF', '\x92', ' ', '\xDF', '\x9F', ' ', '\xDF', '\x96', ' ', '\xDF', '\x9C', ' ', '\xDF', '\xA0', ' ', '\xDF', '\xA5',  /* ߐ ߉ ߒ ߟ ߖ ߜ ߠ ߥ */
+    '\0',
+    '\xDF', '\x80', ' ', '\xDF', '\x98', ' ', '\xDF', '\xA1', ' ', '\xDF', '\xA0', ' ', '\xDF', '\xA5',  /* ߀ ߘ ߡ ߠ ߥ */
+    '\0',
+    '\xDF', '\x8F', ' ', '\xDF', '\x9B', ' ', '\xDF', '\x8B',  /* ߏ ߛ ߋ */
+    '\0',
+    '\xDF', '\x8E', ' ', '\xDF', '\x8F', ' ', '\xDF', '\x9B', ' ', '\xDF', '\x8B',  /* ߎ ߏ ߛ ߋ */
+    '\0',
     '\xE1', '\xB1', '\x9B', ' ', '\xE1', '\xB1', '\x9C', ' ', '\xE1', '\xB1', '\x9D', ' ', '\xE1', '\xB1', '\xA1', ' ', '\xE1', '\xB1', '\xA2', ' ', '\xE1', '\xB1', '\xA5',  /* ᱛ ᱜ ᱝ ᱡ ᱢ ᱥ */
     '\0',
     '\xE0', '\xB6', '\x89', ' ', '\xE0', '\xB6', '\x9A', ' ', '\xE0', '\xB6', '\x9D', ' ', '\xE0', '\xB6', '\xB3', ' ', '\xE0', '\xB6', '\xB4', ' ', '\xE0', '\xB6', '\xBA', ' ', '\xE0', '\xB6', '\xBD', ' ', '\xE0', '\xB7', '\x86',  /* ඉ ක ඝ ඳ ප ය ල ෆ */
@@ -440,6 +448,12 @@
     { AF_BLUE_STRING_MYANMAR_ASCENDER,  AF_BLUE_PROPERTY_LATIN_TOP        },
     { AF_BLUE_STRING_MYANMAR_DESCENDER, 0                                 },
     { AF_BLUE_STRING_MAX,               0                                 },
+    { AF_BLUE_STRING_NKO_TOP,          AF_BLUE_PROPERTY_LATIN_TOP        },
+    { AF_BLUE_STRING_NKO_BOTTOM,       0                                 },
+    { AF_BLUE_STRING_NKO_SMALL_TOP,    AF_BLUE_PROPERTY_LATIN_TOP      |
+                                       AF_BLUE_PROPERTY_LATIN_X_HEIGHT   },
+    { AF_BLUE_STRING_NKO_SMALL_BOTTOM, 0                                 },
+    { AF_BLUE_STRING_MAX,              0                                 },
     { AF_BLUE_STRING_MAX, 0 },
     { AF_BLUE_STRING_OL_CHIKI, AF_BLUE_PROPERTY_LATIN_TOP },
     { AF_BLUE_STRING_OL_CHIKI, 0                          },

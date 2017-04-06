@@ -493,27 +493,40 @@
 
   const AF_Script_UniRangeRec  af_mymr_uniranges[] =
   {
-    AF_UNIRANGE_REC( 0x1000, 0x109F ),    /* Myanmar            */
-    AF_UNIRANGE_REC( 0xA9E0, 0xA9FF ),    /* Myanmar Extended-B */
-    AF_UNIRANGE_REC( 0xAA60, 0xAA7F ),    /* Myanmar Extended-A */
-    AF_UNIRANGE_REC(      0,      0 )
+    AF_UNIRANGE_REC(  0x1000,  0x109F ),    /* Myanmar            */
+    AF_UNIRANGE_REC(  0xA9E0,  0xA9FF ),    /* Myanmar Extended-B */
+    AF_UNIRANGE_REC(  0xAA60,  0xAA7F ),    /* Myanmar Extended-A */
+    AF_UNIRANGE_REC(       0,       0 )
   };
 
   const AF_Script_UniRangeRec  af_mymr_nonbase_uniranges[] =
   {
-    AF_UNIRANGE_REC( 0x102D, 0x1030 ),
-    AF_UNIRANGE_REC( 0x1032, 0x1037 ),
-    AF_UNIRANGE_REC( 0x103A, 0x103A ),
-    AF_UNIRANGE_REC( 0x103D, 0x103E ),
-    AF_UNIRANGE_REC( 0x1058, 0x1059 ),
-    AF_UNIRANGE_REC( 0x105E, 0x1060 ),
-    AF_UNIRANGE_REC( 0x1071, 0x1074 ),
-    AF_UNIRANGE_REC( 0x1082, 0x1082 ),
-    AF_UNIRANGE_REC( 0x1085, 0x1086 ),
-    AF_UNIRANGE_REC( 0x108D, 0x108D ),
-    AF_UNIRANGE_REC( 0xA9E5, 0xA9E5 ),
-    AF_UNIRANGE_REC( 0xAA7C, 0xAA7C ),
-    AF_UNIRANGE_REC(      0,      0 )
+    AF_UNIRANGE_REC(  0x102D,  0x1030 ),
+    AF_UNIRANGE_REC(  0x1032,  0x1037 ),
+    AF_UNIRANGE_REC(  0x103A,  0x103A ),
+    AF_UNIRANGE_REC(  0x103D,  0x103E ),
+    AF_UNIRANGE_REC(  0x1058,  0x1059 ),
+    AF_UNIRANGE_REC(  0x105E,  0x1060 ),
+    AF_UNIRANGE_REC(  0x1071,  0x1074 ),
+    AF_UNIRANGE_REC(  0x1082,  0x1082 ),
+    AF_UNIRANGE_REC(  0x1085,  0x1086 ),
+    AF_UNIRANGE_REC(  0x108D,  0x108D ),
+    AF_UNIRANGE_REC(  0xA9E5,  0xA9E5 ),
+    AF_UNIRANGE_REC(  0xAA7C,  0xAA7C ),
+    AF_UNIRANGE_REC(       0,       0 )
+  };
+
+
+  const AF_Script_UniRangeRec  af_nkoo_uniranges[] =
+  {
+    AF_UNIRANGE_REC(  0x07C0,  0x07FF ),    /* N'Ko */
+    AF_UNIRANGE_REC(       0,       0 )
+  };
+
+  const AF_Script_UniRangeRec  af_nkoo_nonbase_uniranges[] =
+  {
+    AF_UNIRANGE_REC(  0x07EB,  0x07F5 ),
+    AF_UNIRANGE_REC(       0,       0 )
   };
 
 
@@ -530,8 +543,8 @@
 
   const AF_Script_UniRangeRec  af_olck_uniranges[] =
   {
-    AF_UNIRANGE_REC( 0x1C50, 0x1C7F ),    /* Ol Chiki */
-    AF_UNIRANGE_REC(      0,      0 )
+    AF_UNIRANGE_REC(  0x1C50,  0x1C7F ),    /* Ol Chiki */
+    AF_UNIRANGE_REC(       0,       0 )
   };
 
   const AF_Script_UniRangeRec  af_olck_nonbase_uniranges[] =
