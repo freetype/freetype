@@ -489,6 +489,18 @@
   };
 
 
+  const AF_Script_UniRangeRec  af_lisu_uniranges[] =
+  {
+    AF_UNIRANGE_REC(  0xA4D0,  0xA4FF ),    /* Lisu */
+    AF_UNIRANGE_REC(       0,       0 )
+  };
+
+  const AF_Script_UniRangeRec  af_lisu_nonbase_uniranges[] =
+  {
+    AF_UNIRANGE_REC( 0, 0 )
+  };
+
+
   const AF_Script_UniRangeRec  af_mlym_uniranges[] =
   {
     AF_UNIRANGE_REC(  0x0D00,  0x0D7F ),  /* Malayalam */

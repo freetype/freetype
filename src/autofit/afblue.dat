@@ -292,6 +292,11 @@ AF_BLUE_STRING_ENUM AF_BLUE_STRINGS_ARRAY AF_BLUE_STRING_MAX_LEN:
   AF_BLUE_STRING_LATIN_SUPS_SMALL_DESCENDER
     "ᵖ ʸ ᵍ"
 
+  AF_BLUE_STRING_LISU_TOP
+    "ꓡ ꓧ ꓱ ꓶ ꓩ ꓚ ꓵ ꓳ"
+  AF_BLUE_STRING_LISU_BOTTOM
+    "ꓕ ꓜ ꓞ ꓡ ꓛ ꓢ ꓳ ꓴ"
+
   AF_BLUE_STRING_MALAYALAM_TOP
     "ഒ ട ഠ റ ച പ ച്ച പ്പ"
   AF_BLUE_STRING_MALAYALAM_BOTTOM
@@ -726,6 +731,11 @@ AF_BLUE_STRINGSET_ENUM AF_BLUE_STRINGSETS_ARRAY AF_BLUE_STRINGSET_MAX_LEN:
     { AF_BLUE_STRING_LATIN_SUPS_SMALL,           0                                 }
     { AF_BLUE_STRING_LATIN_SUPS_SMALL_DESCENDER, 0                                 }
     { AF_BLUE_STRING_MAX,                        0                                 }
+
+  AF_BLUE_STRINGSET_LISU
+    { AF_BLUE_STRING_LISU_TOP,    AF_BLUE_PROPERTY_LATIN_TOP }
+    { AF_BLUE_STRING_LISU_BOTTOM, 0                          }
+    { AF_BLUE_STRING_MAX,         0                          }
 
   AF_BLUE_STRINGSET_MLYM
     { AF_BLUE_STRING_MALAYALAM_TOP,    AF_BLUE_PROPERTY_LATIN_TOP }

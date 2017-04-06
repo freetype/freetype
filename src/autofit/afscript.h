@@ -165,6 +165,12 @@
           HINTING_BOTTOM_TO_TOP,
           "\xE1\xB5\x92 \xE1\xB4\xBC \xE2\x81\xB0" ) /* ᵒ ᴼ ⁰ */
 
+  SCRIPT( lisu, LISU,
+          "Lisu",
+          HB_SCRIPT_LISU,
+          HINTING_BOTTOM_TO_TOP,
+          "\xEA\x93\xB3" ) /* ꓳ */
+
   SCRIPT( mlym, MLYM,
           "Malayalam",
           HB_SCRIPT_MALAYALAM,

@@ -231,6 +231,13 @@
          AF_COVERAGE_DEFAULT )
 #endif
 
+  STYLE( lisu_dflt, LISU_DFLT,
+         "Lisu default style",
+         AF_WRITING_SYSTEM_LATIN,
+         AF_SCRIPT_LISU,
+         AF_BLUE_STRINGSET_LISU,
+         AF_COVERAGE_DEFAULT )
+
   STYLE( mlym_dflt, MLYM_DFLT,
          "Malayalam default style",
          AF_WRITING_SYSTEM_LATIN,
