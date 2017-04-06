@@ -613,6 +613,18 @@
   };
 
 
+  const AF_Script_UniRangeRec  af_tfng_uniranges[] =
+  {
+    AF_UNIRANGE_REC(  0x2D30,  0x2D7F ),   /* Tifinagh */
+    AF_UNIRANGE_REC(       0,       0 )
+  };
+
+  const AF_Script_UniRangeRec  af_tfng_nonbase_uniranges[] =
+  {
+    AF_UNIRANGE_REC(       0,       0 )
+  };
+
+
 #ifdef AF_CONFIG_OPTION_INDIC
 
   const AF_Script_UniRangeRec  af_limb_uniranges[] =

@@ -1,6 +1,18 @@
 2017-04-06  Sascha Brawer  <sascha@google.com>
 	    Werner Lemberg  <wl@gnu.org
 
+	[autofit] Add support for Tifinagh script.
+
+	* src/autofit/afblue.dat: Add blue zone data for Tifinagh.
+	* src/autofit/afblue.c, src/autofit/afblue.h: Regenerated.
+
+	* src/autofit/afscript.h: Add Tifinagh standard characters.
+
+	* src/autofit/afranges.c, src/autofit/afstyles.h: Add Tifinagh data.
+
+2017-04-06  Sascha Brawer  <sascha@google.com>
+	    Werner Lemberg  <wl@gnu.org
+
 	[autofit] Add support for N'Ko script.
 
 	* src/autofit/afblue.dat: Add blue zone data for N'Ko.

@@ -287,6 +287,13 @@
          AF_BLUE_STRINGSET_THAI,
          AF_COVERAGE_DEFAULT )
 
+  STYLE( tfng_dflt, TFNG_DFLT,
+         "Tifinagh default style",
+         AF_WRITING_SYSTEM_LATIN,
+         AF_SCRIPT_TFNG,
+         AF_BLUE_STRINGSET_TFNG,
+         AF_COVERAGE_DEFAULT )
+
 #ifdef AF_CONFIG_OPTION_INDIC
 
   /* no blue stringset support for the Indic writing system yet */

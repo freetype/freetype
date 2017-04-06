@@ -341,6 +341,9 @@ AF_BLUE_STRING_ENUM AF_BLUE_STRINGS_ARRAY AF_BLUE_STRING_MAX_LEN:
   AF_BLUE_STRING_THAI_DIGIT_TOP
     "๐ ๑ ๓"
 
+  AF_BLUE_STRING_TIFINAGH
+    "ⵔ ⵙ ⵛ ⵞ ⴵ ⴼ ⴹ ⵎ"
+
 
 #ifdef AF_CONFIG_OPTION_CJK
 
@@ -742,6 +745,11 @@ AF_BLUE_STRINGSET_ENUM AF_BLUE_STRINGSETS_ARRAY AF_BLUE_STRINGSET_MAX_LEN:
     { AF_BLUE_STRING_THAI_LARGE_DESCENDER, 0                                 }
     { AF_BLUE_STRING_THAI_DIGIT_TOP,       0                                 }
     { AF_BLUE_STRING_MAX,                  0                                 }
+
+  AF_BLUE_STRINGSET_TFNG
+    { AF_BLUE_STRING_TIFINAGH, AF_BLUE_PROPERTY_LATIN_TOP }
+    { AF_BLUE_STRING_TIFINAGH, 0                          }
+    { AF_BLUE_STRING_MAX,      0                          }
 
 
 #ifdef AF_CONFIG_OPTION_CJK

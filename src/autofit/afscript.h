@@ -215,6 +215,12 @@
           HINTING_BOTTOM_TO_TOP,
           "\xE0\xB8\xB2 \xE0\xB9\x85 \xE0\xB9\x90" ) /* า ๅ ๐ */
 
+  SCRIPT( tfng, TFNG,
+          "Tifinagh",
+          HB_SCRIPT_TIFINAGH,
+          HINTING_BOTTOM_TO_TOP,
+          "\xE2\xB5\x94" ) /* ⵔ */
+
 #ifdef AF_CONFIG_OPTION_INDIC
 
   SCRIPT( limb, LIMB,
