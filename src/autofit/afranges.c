@@ -255,7 +255,8 @@
 
   const AF_Script_UniRangeRec  af_glag_nonbase_uniranges[] =
   {
-    AF_UNIRANGE_REC( 0x1E000, 0x1E02F )
+    AF_UNIRANGE_REC( 0x1E000, 0x1E02F ),
+    AF_UNIRANGE_REC(       0,       0 )
   };
 
 

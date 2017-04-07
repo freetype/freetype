@@ -1,5 +1,16 @@
 2017-04-07  Werner Lemberg  <wl@gnu.org>
 
+	[autofit] Fix invalid character range description (#50745).
+
+	Also reported as
+
+	  https://bugs.chromium.org/p/oss-fuzz/issues/detail?id=1034
+
+	* src/autofit/afranges.c (af_glag_nonbase_uniranges): Fix typo in
+	recent commit.
+
+2017-04-07  Werner Lemberg  <wl@gnu.org>
+
 	[ftfuzzer] Fix clang warnings.
 
 	* src/tools/ftfuzzer/ftfuzzer.cc (LLVMFuzzerTestOneInput): Add
