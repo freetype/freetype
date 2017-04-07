@@ -276,7 +276,7 @@
                            ? num_faces
                            : 20;
 
-    Random  faces_pool( max_face_cnt, num_faces );
+    Random  faces_pool( (int)max_face_cnt, (int)num_faces );
 
     for ( long  face_cnt = 0;
           face_cnt < max_face_cnt;
@@ -301,7 +301,7 @@
                                  ? num_instances
                                  : 20;
 
-      Random  instances_pool( max_instance_cnt, num_instances );
+      Random  instances_pool( (int)max_instance_cnt, (int)num_instances );
 
       for ( long  instance_cnt = 0;
             instance_cnt <= max_instance_cnt;

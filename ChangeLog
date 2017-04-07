@@ -1,3 +1,10 @@
+2017-04-07  Werner Lemberg  <wl@gnu.org>
+
+	[ftfuzzer] Fix clang warnings.
+
+	* src/tools/ftfuzzer/ftfuzzer.cc (LLVMFuzzerTestOneInput): Add
+	casts.
+
 2017-04-06  Sascha Brawer  <sascha@google.com>
 	    Werner Lemberg  <wl@gnu.org
 
