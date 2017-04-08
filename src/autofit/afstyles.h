@@ -294,6 +294,13 @@
          AF_BLUE_STRINGSET_OLCK,
          AF_COVERAGE_DEFAULT )
 
+  STYLE( orkh_dflt, ORKH_DFLT,
+         "Old Turkic default style",
+         AF_WRITING_SYSTEM_LATIN,
+         AF_SCRIPT_ORKH,
+         AF_BLUE_STRINGSET_ORKH,
+         AF_COVERAGE_DEFAULT )
+
   STYLE( osge_dflt, OSGE_DFLT,
          "Osage default style",
          AF_WRITING_SYSTEM_LATIN,

@@ -219,6 +219,12 @@
           HINTING_BOTTOM_TO_TOP,
           "\xE1\xB1\x9B" ) /* ᱛ */
 
+  SCRIPT( orkh, ORKH,
+          "Old Turkic",
+          HB_SCRIPT_OLD_TURKIC,
+          HINTING_BOTTOM_TO_TOP,
+          "\xF0\x90\xB0\x97" ) /* 𐰗 */
+
   SCRIPT( osge, OSGE,
           "Osage",
           HB_SCRIPT_OSAGE,

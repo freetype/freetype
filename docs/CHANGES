@@ -1,7 +1,9 @@
 
-CHANGES BETWEEN 2.7.1 and 2.7.2
+CHANGES BETWEEN 2.7.1 and 2.8
 
   I. IMPORTANT CHANGES
+
+    - Support for OpenType Variation Fonts is now complete.
 
     - A new  function `FT_Face_Properties' allows the  control of some
       module  and   library  properties  per  font.    Currently,  the
@@ -21,7 +23,14 @@ CHANGES BETWEEN 2.7.1 and 2.7.2
       tables also.
 
 
-  II. MISCELLANEOUS
+  II. IMPORTANT BUG FIXES
+
+    - If a TrueType font gets loaded with FT_LOAD_NO_HINTING, FreeType
+      now scales  the font linearly  again (bug introduced  in version
+      2.4.6).
+
+
+  III. MISCELLANEOUS
 
     - A  new function  `FT_Set_Default_Properties' has  been added  to
       parse    the    `FREETYPE_PROPERTIES'    environment    variable
@@ -61,6 +70,9 @@ CHANGES BETWEEN 2.7.1 and 2.7.2
 
     - The `freetype-config' script is now a wrapper of `pkg-config' if
       this program is available in the path.
+
+    - FT_LOAD_TARGET_LCD  is now  a  variant of  FT_LOAD_TARGET_LIGHT;
+      this should provide better rendering results.
 
 
 ======================================================================

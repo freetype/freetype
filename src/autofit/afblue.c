@@ -254,6 +254,10 @@
     '\0',
     '\xE1', '\xB1', '\x9B', ' ', '\xE1', '\xB1', '\x9C', ' ', '\xE1', '\xB1', '\x9D', ' ', '\xE1', '\xB1', '\xA1', ' ', '\xE1', '\xB1', '\xA2', ' ', '\xE1', '\xB1', '\xA5',  /* ᱛ ᱜ ᱝ ᱡ ᱢ ᱥ */
     '\0',
+    '\xF0', '\x90', '\xB0', '\x97', ' ', '\xF0', '\x90', '\xB0', '\x98', ' ', '\xF0', '\x90', '\xB0', '\xA7',  /* 𐰗 𐰘 𐰧 */
+    '\0',
+    '\xF0', '\x90', '\xB0', '\x89', ' ', '\xF0', '\x90', '\xB0', '\x97', ' ', '\xF0', '\x90', '\xB0', '\xA6', ' ', '\xF0', '\x90', '\xB0', '\xA7',  /* 𐰉 𐰗 𐰦 𐰧 */
+    '\0',
     '\xF0', '\x90', '\x92', '\xBE', ' ', '\xF0', '\x90', '\x93', '\x8D', ' ', '\xF0', '\x90', '\x93', '\x92', ' ', '\xF0', '\x90', '\x93', '\x93', ' ', '\xF0', '\x90', '\x92', '\xBB', ' ', '\xF0', '\x90', '\x93', '\x82', ' ', '\xF0', '\x90', '\x92', '\xB5', ' ', '\xF0', '\x90', '\x93', '\x86',  /* 𐒾 𐓍 𐓒 𐓓 𐒻 𐓂 𐒵 𐓆 */
     '\0',
     '\xF0', '\x90', '\x92', '\xB0', ' ', '\xF0', '\x90', '\x93', '\x8D', ' ', '\xF0', '\x90', '\x93', '\x82', ' ', '\xF0', '\x90', '\x92', '\xBF', ' ', '\xF0', '\x90', '\x93', '\x8E', ' ', '\xF0', '\x90', '\x92', '\xB9',  /* 𐒰 𐓍 𐓂 𐒿 𐓎 𐒹 */
@@ -531,6 +535,9 @@
     { AF_BLUE_STRING_OL_CHIKI, AF_BLUE_PROPERTY_LATIN_TOP },
     { AF_BLUE_STRING_OL_CHIKI, 0                          },
     { AF_BLUE_STRING_MAX,      0                          },
+    { AF_BLUE_STRING_OLD_TURKIC_TOP,    AF_BLUE_PROPERTY_LATIN_TOP },
+    { AF_BLUE_STRING_OLD_TURKIC_BOTTOM, 0                          },
+    { AF_BLUE_STRING_MAX,               0                          },
     { AF_BLUE_STRING_OSAGE_CAPITAL_TOP,       AF_BLUE_PROPERTY_LATIN_TOP       },
     { AF_BLUE_STRING_OSAGE_CAPITAL_BOTTOM,    0                                },
     { AF_BLUE_STRING_OSAGE_CAPITAL_DESCENDER, 0                                },

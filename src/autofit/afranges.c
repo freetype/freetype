@@ -615,6 +615,18 @@
   };
 
 
+  const AF_Script_UniRangeRec  af_orkh_uniranges[] =
+  {
+    AF_UNIRANGE_REC( 0x10C00, 0x10C4F ),    /* Old Turkic */
+    AF_UNIRANGE_REC(       0,       0 )
+  };
+
+  const AF_Script_UniRangeRec  af_orkh_nonbase_uniranges[] =
+  {
+    AF_UNIRANGE_REC( 0, 0 )
+  };
+
+
   const AF_Script_UniRangeRec  af_osge_uniranges[] =
   {
     AF_UNIRANGE_REC( 0x104B0, 0x104FF ),    /* Osage */
