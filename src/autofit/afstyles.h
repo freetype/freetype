@@ -127,6 +127,13 @@
          AF_BLUE_STRINGSET_DEVA,
          AF_COVERAGE_DEFAULT )
 
+  STYLE( dsrt_dflt, DSRT_DFLT,
+         "Deseret default style",
+         AF_WRITING_SYSTEM_LATIN,
+         AF_SCRIPT_DSRT,
+         AF_BLUE_STRINGSET_DSRT,
+         AF_COVERAGE_DEFAULT )
+
   STYLE( ethi_dflt, ETHI_DFLT,
          "Ethiopic default style",
          AF_WRITING_SYSTEM_LATIN,

@@ -133,6 +133,15 @@ AF_BLUE_STRING_ENUM AF_BLUE_STRINGS_ARRAY AF_BLUE_STRING_MAX_LEN:
   AF_BLUE_STRING_CYRILLIC_SMALL_DESCENDER
     "р у ф"
 
+  AF_BLUE_STRING_DESERET_CAPITAL_TOP
+    "𐐂 𐐄 𐐋 𐐗 𐐑"
+  AF_BLUE_STRING_DESERET_CAPITAL_BOTTOM
+    "𐐀 𐐂 𐐄 𐐗 𐐛"
+  AF_BLUE_STRING_DESERET_SMALL_TOP
+    "𐐪 𐐬 𐐳 𐐿 𐐹"
+  AF_BLUE_STRING_DESERET_SMALL_BOTTOM
+    "𐐨 𐐪 𐐬 𐐿 𐑃"
+
   AF_BLUE_STRING_DEVANAGARI_BASE
     "क म अ आ थ ध भ श"
   AF_BLUE_STRING_DEVANAGARI_TOP
@@ -604,6 +613,14 @@ AF_BLUE_STRINGSET_ENUM AF_BLUE_STRINGSETS_ARRAY AF_BLUE_STRINGSET_MAX_LEN:
     { AF_BLUE_STRING_DEVANAGARI_BASE,   0                                 }
     { AF_BLUE_STRING_DEVANAGARI_BOTTOM, 0                                 }
     { AF_BLUE_STRING_MAX,               0                                 }
+
+  AF_BLUE_STRINGSET_DSRT
+    { AF_BLUE_STRING_DESERET_CAPITAL_TOP,    AF_BLUE_PROPERTY_LATIN_TOP        }
+    { AF_BLUE_STRING_DESERET_CAPITAL_BOTTOM, 0                                 }
+    { AF_BLUE_STRING_DESERET_SMALL_TOP,      AF_BLUE_PROPERTY_LATIN_TOP      |
+                                             AF_BLUE_PROPERTY_LATIN_X_HEIGHT   }
+    { AF_BLUE_STRING_DESERET_SMALL_BOTTOM,   0                                 }
+    { AF_BLUE_STRING_MAX,                    0                                 }
 
   AF_BLUE_STRINGSET_ETHI
     { AF_BLUE_STRING_ETHIOPIC_TOP,    AF_BLUE_PROPERTY_LATIN_TOP }

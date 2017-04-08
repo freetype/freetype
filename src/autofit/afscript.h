@@ -73,6 +73,12 @@
           HINTING_TOP_TO_BOTTOM,
           "\xE0\xA4\xA0 \xE0\xA4\xB5 \xE0\xA4\x9F" ) /* ठ व ट */
 
+  SCRIPT( dsrt, DSRT,
+          "Deseret",
+          HB_SCRIPT_DESERET,
+          HINTING_BOTTOM_TO_TOP,
+          "\xF0\x90\x90\x84 \xF0\x90\x90\xAC") /* 𐐄 𐐬 */
+
   SCRIPT( ethi, ETHI,
           "Ethiopic",
           HB_SCRIPT_ETHIOPIC,

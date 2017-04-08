@@ -200,6 +200,18 @@
   };
 
 
+  const AF_Script_UniRangeRec  af_dsrt_uniranges[] =
+  {
+    AF_UNIRANGE_REC( 0x10400, 0x1044F ),  /* Deseret */
+    AF_UNIRANGE_REC(       0,       0 )
+  };
+
+  const AF_Script_UniRangeRec  af_dsrt_nonbase_uniranges[] =
+  {
+    AF_UNIRANGE_REC( 0, 0 )
+  };
+
+
   const AF_Script_UniRangeRec  af_ethi_uniranges[] =
   {
     AF_UNIRANGE_REC(  0x1200,  0x137F ),  /* Ethiopic            */

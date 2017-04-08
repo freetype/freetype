@@ -74,6 +74,14 @@
     '\0',
     '\xD1', '\x80', ' ', '\xD1', '\x83', ' ', '\xD1', '\x84',  /* р у ф */
     '\0',
+    '\xF0', '\x90', '\x90', '\x82', ' ', '\xF0', '\x90', '\x90', '\x84', ' ', '\xF0', '\x90', '\x90', '\x8B', ' ', '\xF0', '\x90', '\x90', '\x97', ' ', '\xF0', '\x90', '\x90', '\x91',  /* 𐐂 𐐄 𐐋 𐐗 𐐑 */
+    '\0',
+    '\xF0', '\x90', '\x90', '\x80', ' ', '\xF0', '\x90', '\x90', '\x82', ' ', '\xF0', '\x90', '\x90', '\x84', ' ', '\xF0', '\x90', '\x90', '\x97', ' ', '\xF0', '\x90', '\x90', '\x9B',  /* 𐐀 𐐂 𐐄 𐐗 𐐛 */
+    '\0',
+    '\xF0', '\x90', '\x90', '\xAA', ' ', '\xF0', '\x90', '\x90', '\xAC', ' ', '\xF0', '\x90', '\x90', '\xB3', ' ', '\xF0', '\x90', '\x90', '\xBF', ' ', '\xF0', '\x90', '\x90', '\xB9',  /* 𐐪 𐐬 𐐳 𐐿 𐐹 */
+    '\0',
+    '\xF0', '\x90', '\x90', '\xA8', ' ', '\xF0', '\x90', '\x90', '\xAA', ' ', '\xF0', '\x90', '\x90', '\xAC', ' ', '\xF0', '\x90', '\x90', '\xBF', ' ', '\xF0', '\x90', '\x91', '\x83',  /* 𐐨 𐐪 𐐬 𐐿 𐑃 */
+    '\0',
     '\xE0', '\xA4', '\x95', ' ', '\xE0', '\xA4', '\xAE', ' ', '\xE0', '\xA4', '\x85', ' ', '\xE0', '\xA4', '\x86', ' ', '\xE0', '\xA4', '\xA5', ' ', '\xE0', '\xA4', '\xA7', ' ', '\xE0', '\xA4', '\xAD', ' ', '\xE0', '\xA4', '\xB6',  /* क म अ आ थ ध भ श */
     '\0',
     '\xE0', '\xA4', '\x88', ' ', '\xE0', '\xA4', '\x90', ' ', '\xE0', '\xA4', '\x93', ' ', '\xE0', '\xA4', '\x94', ' ', '\xE0', '\xA4', '\xBF', ' ', '\xE0', '\xA5', '\x80', ' ', '\xE0', '\xA5', '\x8B', ' ', '\xE0', '\xA5', '\x8C',  /* ई ऐ ओ औ ि ी ो ौ */
@@ -381,6 +389,12 @@
     { AF_BLUE_STRING_DEVANAGARI_BASE,   0                                 },
     { AF_BLUE_STRING_DEVANAGARI_BOTTOM, 0                                 },
     { AF_BLUE_STRING_MAX,               0                                 },
+    { AF_BLUE_STRING_DESERET_CAPITAL_TOP,    AF_BLUE_PROPERTY_LATIN_TOP        },
+    { AF_BLUE_STRING_DESERET_CAPITAL_BOTTOM, 0                                 },
+    { AF_BLUE_STRING_DESERET_SMALL_TOP,      AF_BLUE_PROPERTY_LATIN_TOP      |
+                                             AF_BLUE_PROPERTY_LATIN_X_HEIGHT   },
+    { AF_BLUE_STRING_DESERET_SMALL_BOTTOM,   0                                 },
+    { AF_BLUE_STRING_MAX,                    0                                 },
     { AF_BLUE_STRING_ETHIOPIC_TOP,    AF_BLUE_PROPERTY_LATIN_TOP },
     { AF_BLUE_STRING_ETHIOPIC_BOTTOM, 0                          },
     { AF_BLUE_STRING_MAX,             0                          },
