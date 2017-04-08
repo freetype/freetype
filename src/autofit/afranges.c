@@ -284,6 +284,18 @@
   };
 
 
+  const AF_Script_UniRangeRec  af_goth_uniranges[] =
+  {
+    AF_UNIRANGE_REC( 0x10330, 0x1034F ),   /* Gothic */
+    AF_UNIRANGE_REC(       0,       0 )
+  };
+
+  const AF_Script_UniRangeRec  af_goth_nonbase_uniranges[] =
+  {
+    AF_UNIRANGE_REC( 0, 0 )
+  };
+
+
   const AF_Script_UniRangeRec  af_grek_uniranges[] =
   {
     AF_UNIRANGE_REC(  0x0370,  0x03FF ),  /* Greek and Coptic */

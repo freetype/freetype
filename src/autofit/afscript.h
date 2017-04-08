@@ -109,6 +109,12 @@
           HINTING_BOTTOM_TO_TOP,
           "\xE2\xB0\x95 \xE2\xB1\x85" ) /* Ⱅ ⱅ */
 
+  SCRIPT( goth, GOTH,
+          "Gothic",
+          HB_SCRIPT_GOTHIC,
+          HINTING_TOP_TO_BOTTOM,
+          "\xF0\x90\x8C\xB4 \xF0\x90\x8C\xBE \xF0\x90\x8D\x83") /* 𐌴 𐌾 𐍃 */
+
   SCRIPT( grek, GREK,
           "Greek",
           HB_SCRIPT_GREEK,

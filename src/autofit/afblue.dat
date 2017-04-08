@@ -198,6 +198,11 @@ AF_BLUE_STRING_ENUM AF_BLUE_STRINGS_ARRAY AF_BLUE_STRING_MAX_LEN:
   AF_BLUE_STRING_GLAGOLITIC_SMALL_BOTTOM
     "ⰵ ⰴ ⰲ ⱚ ⱎ ⱑ ⰺ ⱄ"
 
+  AF_BLUE_STRING_GOTHIC_TOP
+    "𐌲 𐌶 𐍀 𐍄 𐌴 𐍃 𐍈 𐌾"
+  AF_BLUE_STRING_GOTHIC_BOTTOM
+    "𐌶 𐌴 𐍃 𐍈"
+
   AF_BLUE_STRING_GREEK_CAPITAL_TOP
     "Γ Β Ε Ζ Θ Ο Ω"
   AF_BLUE_STRING_GREEK_CAPITAL_BOTTOM
@@ -667,6 +672,11 @@ AF_BLUE_STRINGSET_ENUM AF_BLUE_STRINGSETS_ARRAY AF_BLUE_STRINGSET_MAX_LEN:
                                                 AF_BLUE_PROPERTY_LATIN_X_HEIGHT   }
     { AF_BLUE_STRING_GLAGOLITIC_SMALL_BOTTOM,   0                                 }
     { AF_BLUE_STRING_MAX,                       0                                 }
+
+  AF_BLUE_STRINGSET_GOTH
+    { AF_BLUE_STRING_GOTHIC_TOP,    AF_BLUE_PROPERTY_LATIN_TOP }
+    { AF_BLUE_STRING_GOTHIC_BOTTOM, 0                          }
+    { AF_BLUE_STRING_MAX,           0                          }
 
   AF_BLUE_STRINGSET_GREK
     { AF_BLUE_STRING_GREEK_CAPITAL_TOP,     AF_BLUE_PROPERTY_LATIN_TOP        }
