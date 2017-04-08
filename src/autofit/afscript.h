@@ -61,6 +61,12 @@
           HINTING_BOTTOM_TO_TOP,
           "\xE1\x8E\xA4 \xE1\x8F\x85 \xEA\xAE\x95" ) /* Ꭴ Ꮕ ꮕ */
 
+  SCRIPT( cprt, CPRT,
+          "Cypriot",
+          HB_SCRIPT_CYPRIOT,
+          HINTING_BOTTOM_TO_TOP,
+          "\xF0\x90\xA0\x85 \xF0\x90\xA0\xA3" ) /* 𐠅 𐠣 */
+
   SCRIPT( cyrl, CYRL,
           "Cyrillic",
           HB_SCRIPT_CYRILLIC,

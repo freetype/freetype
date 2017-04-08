@@ -118,6 +118,13 @@
          AF_BLUE_STRINGSET_CHER,
          AF_COVERAGE_DEFAULT )
 
+  STYLE( cprt_dflt, CPRT_DFLT,
+         "Cypriot default style",
+         AF_WRITING_SYSTEM_LATIN,
+         AF_SCRIPT_CPRT,
+         AF_BLUE_STRINGSET_CPRT,
+         AF_COVERAGE_DEFAULT )
+
   META_STYLE_LATIN( cyrl, CYRL, "Cyrillic" )
 
   STYLE( deva_dflt, DEVA_DFLT,

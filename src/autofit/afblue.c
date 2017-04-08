@@ -66,6 +66,12 @@
     '\0',
     '\xE1', '\x8F', '\xB8', ' ', '\xEA', '\xAE', '\x90', ' ', '\xEA', '\xAD', '\xB9', ' ', '\xEA', '\xAD', '\xBB',  /* ᏸ ꮐ ꭹ ꭻ */
     '\0',
+    '\xF0', '\x90', '\xA0', '\x8D', ' ', '\xF0', '\x90', '\xA0', '\x99', ' ', '\xF0', '\x90', '\xA0', '\xB3', ' ', '\xF0', '\x90', '\xA0', '\xB1', ' ', '\xF0', '\x90', '\xA0', '\x85', ' ', '\xF0', '\x90', '\xA0', '\x93', ' ', '\xF0', '\x90', '\xA0', '\xA3', ' ', '\xF0', '\x90', '\xA0', '\xA6',  /* 𐠍 𐠙 𐠳 𐠱 𐠅 𐠓 𐠣 𐠦 */
+    '\0',
+    '\xF0', '\x90', '\xA0', '\x83', ' ', '\xF0', '\x90', '\xA0', '\x8A', ' ', '\xF0', '\x90', '\xA0', '\x9B', ' ', '\xF0', '\x90', '\xA0', '\xA3', ' ', '\xF0', '\x90', '\xA0', '\xB3', ' ', '\xF0', '\x90', '\xA0', '\xB5', ' ', '\xF0', '\x90', '\xA0', '\x90',  /* 𐠃 𐠊 𐠛 𐠣 𐠳 𐠵 𐠐 */
+    '\0',
+    '\xF0', '\x90', '\xA0', '\x88', ' ', '\xF0', '\x90', '\xA0', '\x8F', ' ', '\xF0', '\x90', '\xA0', '\x96',  /* 𐠈 𐠏 𐠖 */
+    '\0',
     '\xD0', '\x91', ' ', '\xD0', '\x92', ' ', '\xD0', '\x95', ' ', '\xD0', '\x9F', ' ', '\xD0', '\x97', ' ', '\xD0', '\x9E', ' ', '\xD0', '\xA1', ' ', '\xD0', '\xAD',  /* Б В Е П З О С Э */
     '\0',
     '\xD0', '\x91', ' ', '\xD0', '\x92', ' ', '\xD0', '\x95', ' ', '\xD0', '\xA8', ' ', '\xD0', '\x97', ' ', '\xD0', '\x9E', ' ', '\xD0', '\xA1', ' ', '\xD0', '\xAD',  /* Б В Е Ш З О С Э */
@@ -374,6 +380,11 @@
     { AF_BLUE_STRING_CHEROKEE_SMALL,           0                                 },
     { AF_BLUE_STRING_CHEROKEE_SMALL_DESCENDER, 0                                 },
     { AF_BLUE_STRING_MAX,                      0                                 },
+    { AF_BLUE_STRING_CYPRIOT_TOP,    AF_BLUE_PROPERTY_LATIN_TOP },
+    { AF_BLUE_STRING_CYPRIOT_BOTTOM, 0                          },
+    { AF_BLUE_STRING_CYPRIOT_SMALL,  AF_BLUE_PROPERTY_LATIN_TOP },
+    { AF_BLUE_STRING_CYPRIOT_SMALL,  0                          },
+    { AF_BLUE_STRING_MAX,            0                          },
     { AF_BLUE_STRING_CYRILLIC_CAPITAL_TOP,     AF_BLUE_PROPERTY_LATIN_TOP        },
     { AF_BLUE_STRING_CYRILLIC_CAPITAL_BOTTOM,  0                                 },
     { AF_BLUE_STRING_CYRILLIC_SMALL,           AF_BLUE_PROPERTY_LATIN_TOP      |

@@ -149,6 +149,18 @@
   };
 
 
+  const AF_Script_UniRangeRec  af_cprt_uniranges[] =
+  {
+    AF_UNIRANGE_REC( 0x10800, 0x1083F ),   /* Cypriot */
+    AF_UNIRANGE_REC(       0,       0 )
+  };
+
+  const AF_Script_UniRangeRec  af_cprt_nonbase_uniranges[] =
+  {
+    AF_UNIRANGE_REC( 0, 0 )
+  };
+
+
   const AF_Script_UniRangeRec  af_cyrl_uniranges[] =
   {
     AF_UNIRANGE_REC(  0x0400,  0x04FF ),  /* Cyrillic            */
