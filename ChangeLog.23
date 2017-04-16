@@ -7023,7 +7023,7 @@
 	(_ft_lcd_filter_fir): This.
 	Update parameters.
 	(_ft_lcd_filter_legacy) [USE_LEGACY]: New filter function.
-	(FT_Library_Set_LcdFilter): Update parameters.
+	(FT_Library_SetLcdFilter): Update parameters.
 	Handle new filter modes.
 
 	* include/internal/ftobjs.h: Include FT_LCD_FILTER_H.

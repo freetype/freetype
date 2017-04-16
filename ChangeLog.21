@@ -3361,7 +3361,7 @@
 
 	* src/base/ftstroke.c: Include FT_INTERNAL_OBJECTS_H.
 	(FT_Outline_GetOutsideBorder): Inverse result.
-	(FT_Stroker_Rewind, FT_Glyph_Stroke, FT_GlyphStrokeBorder): New
+	(FT_Stroker_Rewind, FT_Glyph_Stroke, FT_Glyph_StrokeBorder): New
 	functions.
 	(FT_Stroker_EndSubPath): Close path if needed.
 	(FT_Stroker_Set, FT_Stroker_ParseOutline): Use FT_Stroker_Rewind.
@@ -3493,8 +3493,8 @@
 2003-12-23  David Turner  <david@freetype.org>
 
 	* include/freetype/internal/ftobjs.h (FT_PAD_FLOOR, FT_PAD_ROUND,
-	FT_PAD_CEIL, FT_PIX_FLOOR, FT_PIX_ROUND, FT_CEIL): New macros.  They
-	are used to avoid compiler warnings with very pedantic compilers.
+	FT_PAD_CEIL, FT_PIX_FLOOR, FT_PIX_ROUND, FT_PIX_CEIL): New macros.
+	They are used to avoid compiler warnings with very pedantic compilers.
 	Note that `(x) & -64' causes a warning if (x) is not signed.  Use
 	`(x) & ~63' instead!
 	Updated all related code.
@@ -4231,7 +4231,7 @@
 	(t42_parse_encoding): Use `ft_isdigit'.
 
 
-	* src/base/ftmm.c (ft_face_get_mm_service): Return FT_Err_OK if
+	* src/base/ftmm.c (ft_face_get_mm_service): Return FT_Err_Ok if
 	success.
 
 2003-10-05  Werner Lemberg  <wl@gnu.org>
@@ -5916,7 +5916,7 @@
 2003-04-23  Werner Lemberg  <wl@gnu.org>
 
 	* src/pfr/pfrload.c (pfr_extra_item_load_font_id): Use FT_PtrDist
-	instead of FT_Uint for `len'.
+	instead of FT_UInt for `len'.
 
 2003-04-22  Werner Lemberg  <wl@gnu.org>
 

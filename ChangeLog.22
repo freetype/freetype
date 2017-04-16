@@ -189,7 +189,7 @@
 
 	* src/base/ftdbgmem.c (_ft_debug_file, _ft_debug_lineno)
 	[FT_DEBUG_MEMORY]: New global variables, replacing...
-	(FT_MemTable_Rec) [FT_DEBUG_MEMORY]: Remove `filename' and
+	(FT_MemTableRec) [FT_DEBUG_MEMORY]: Remove `filename' and
 	`line_no'.  Update all callers.
 	(ft_mem_debug_alloc) [FT_DEBUG_MEMORY]: Avoid possible integer
 	overflow.
@@ -494,7 +494,7 @@
 	FTC_MruList_Init, FTC_MruList_Reset, FTC_MruList_Done,
 	FTC_MruList_New, FTC_MruList_Remove, FTC_MruList_RemoveSelection):
 	Declare as FT_LOCAL_DEF.
-	(FTC_MruListFind, FTC_MruList_Lookup) [!FTC_INLINE]: Compile
+	(FTC_MruList_Find, FTC_MruList_Lookup) [!FTC_INLINE]: Compile
 	conditionally.
 	Declare as FT_LOCAL_DEF.
 
