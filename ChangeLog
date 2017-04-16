@@ -1,3 +1,11 @@
+2017-04-16  Hin-Tak Leung  <htl10@users.sourceforge.net>
+
+	Fix tracing messages.
+
+	* src/base/ftobjs.c (FT_Face_GetCharVariantIndex,
+	FT_Face_GetCharVariantIsDefault, FT_Face_GetVariantsOfChar): Print
+	correct function name.
+
 2017-04-08  Sascha Brawer  <sascha@google.com>
 	    Werner Lemberg  <wl@gnu.org
 
