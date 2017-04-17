@@ -5243,7 +5243,7 @@
 	functions related to cmap type 14 support to the
 	`FT_Object_ActionName' scheme:
 
-	  FT_Get_Char_Variant_index     -> FT_Face_GetCharVariantIndex
+	  FT_Get_Char_Variant_Index     -> FT_Face_GetCharVariantIndex
 	  FT_Get_Char_Variant_IsDefault -> FT_Face_GetCharVariantIsDefault
 	  FT_Get_Variant_Selectors      -> FT_Face_GetVariantSelectors
 	  FT_Get_Variants_Of_Char       -> FT_Face_GetVariantsOfChar

@@ -617,7 +617,7 @@
 	`ft_get_adobe_glyph_index', a new function defined in `pstables.h'.
 	(ps_get_macintosh_name, ps_get_standard_strings): Updated.
 
-	* src/base/ftobjs.c (FT_Set_Char_Sizes): Handle fractional sizes
+	* src/base/ftobjs.c (FT_Set_Char_Size): Handle fractional sizes
 	more carefully.  This fixes Savannah bug #12263.
 
 2005-03-06  David Turner  <david@freetype.org>
@@ -2101,7 +2101,7 @@
 
 2004-06-08  David Turner  <david@freetype.org>
 
-	* include/freetype/freetype.h (FT_GlyphMetrics): Move `lsb_delta'
+	* include/freetype/freetype.h (FT_Glyph_Metrics): Move `lsb_delta'
 	and `rsb_delta' elements to...
 	(FT_GlyphSlotRec): Here to retain binary compatibility with older
 	FreeType versions.
@@ -5024,7 +5024,7 @@
 	drivers.
 
 	* src/base/ftobjs.c (FT_Set_Char_Size): Remove redundant code.
-	(FT_Set_Pixel_Size): Assign value to `metrics' after validation of
+	(FT_Set_Pixel_Sizes): Assign value to `metrics' after validation of
 	arguments.
 
 2003-06-20  Werner Lemberg  <wl@gnu.org>

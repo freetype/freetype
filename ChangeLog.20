@@ -1524,7 +1524,7 @@
 
 	* src/base/ftcalc.c (FT_DivFix): Fixed a bug in the 64-bit code that
 	created incorrect scale factors!
-	(FT_Round_Fix, FT_CeilFix, FT_FloorFix): Minor improvements.
+	(FT_RoundFix, FT_CeilFix, FT_FloorFix): Minor improvements.
 
 2001-05-12  Werner Lemberg  <wl@gnu.org>
 

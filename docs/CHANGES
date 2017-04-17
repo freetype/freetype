@@ -2341,7 +2341,7 @@ CHANGES BETWEEN 2.1.8 and 2.1.7
       correctly  treated as a  CID, similar  to FreeType's  CID driver
       module.  Note that CID CMap support is still missing.
 
-    - The FT_FACE_FLAGS_GLYPH_NAMES flag is now  set correctly for all
+    - The FT_FACE_FLAG_GLYPH_NAMES flag  is now  set correctly for all
       font formats.
 
     - Some subsetted Type 1  fonts weren't parsed correctly.  This bug

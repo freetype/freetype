@@ -814,7 +814,7 @@
 	* include/freetype/ftcache.h (FTC_IMAGE_TYPE_COMPARE,
 	FTC_IMAGE_TYPE_HASH), src/cache/ftcbasic.c (FTC_OldFontRec,
 	FTC_OldImageDescRec, FTC_ImageCache_Lookup, FTC_Image_Cache_New,
-	FTC_OldImage_Desc, FTC_OLD_IMAGE_FORMAT, ftc_old_image_xxx,
+	FTC_OldImageDesc, FTC_OLD_IMAGE_FORMAT, ftc_old_image_xxx,
 	ftc_image_type_from_old_desc, FTC_Image_Cache_Lookup,
 	FTC_SBitCache_Lookup, FTC_SBit_Cache_New, FTC_SBit_Cache_Lookup)
 	[FT_CONFIG_OPTION_OLD_INTERNALS]: Try to revive old functions of the
