@@ -1338,7 +1338,7 @@
 	(cff_compute_bias): Use `U' for constant.
 	* src/cid/cidload.c (cid_decrypt): Ditto.
 	* src/psaux/psobjs.c (T1_Decrypt): Ditto.
-	* src/psaux/t1decode.c (T1_Decoder_Parse_CharStrings): Ditto.
+	* src/psaux/t1decode.c (T1_Decoder_Parse_Charstrings): Ditto.
 	* src/sfnt/ttload.c (TT_Load_Kern): Remove unused `version'
 	variable.
 	* src/sfnt/ttsbit.c (TT_Load_SBit_Image): Remove unused `top'

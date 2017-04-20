@@ -36,7 +36,7 @@ FT_BEGIN_HEADER
 
   FT_DECLARE_RENDERER( ft_smooth_lcd_renderer_class )
 
-  FT_DECLARE_RENDERER( ft_smooth_lcd_v_renderer_class )
+  FT_DECLARE_RENDERER( ft_smooth_lcdv_renderer_class )
 #endif
 
 

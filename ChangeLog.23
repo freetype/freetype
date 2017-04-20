@@ -929,7 +929,7 @@
 	type1: Fix a data type mismatching with its source.
 
 	* include/freetype/internal/t1types.h: The type of
-	T1_Face->buildchar is matched with T1_Decorder->top.
+	T1_Face->buildchar is matched with T1_Decoder->top.
 
 2009-07-31  suzuki toshiya  <mpsuzuki@hiroshima-u.ac.jp>
 
@@ -975,8 +975,8 @@
 	psaux: Fix a data type mismatching with its source.
 
 	* include/freetype/internal/psaux.h: The type of
-	T1_DecorderRec.buildchar is matched with
-	T1_DecorderRec.top.
+	T1_DecoderRec.buildchar is matched with
+	T1_DecoderRec.top.
 
 2009-07-31  suzuki toshiya  <mpsuzuki@hiroshima-u.ac.jp>
 
@@ -2125,7 +2125,7 @@
 	code unconditionally.
 	Add support for random numbers and update remaining code
 	accordingly; this should work now.
-	(t1_operator_seac): Updated.
+	(t1operator_seac): Updated.
 	* src/psaux/pshrec.c: Include FT_INTERNAL_CALC_H.
 	(ps_hints_t1stem3, t1_hints_stem): Updated.
 
@@ -2594,14 +2594,14 @@
 	Position Independent Code (PIC) support in smooth renderer.
 
 	* src/smooth/ftsmooth.h declare ft_smooth_renderer_class,
-	ft_smooth_lcd_renderer_class and ft_smooth_lcd_v_renderer_class
+	ft_smooth_lcd_renderer_class and ft_smooth_lcdv_renderer_class
 	using macros from ftrender.h,
 	when FT_CONFIG_OPTION_PIC is defined create and destroy
 	functions will be declared.
 	* src/smooth/ftsmooth.c when FT_CONFIG_OPTION_PIC is defined
 	the following structs:
 	ft_smooth_renderer_class, ft_smooth_lcd_renderer_class
-	and ft_smooth_lcd_v_renderer_class
+	and ft_smooth_lcdv_renderer_class
 	will have functions to init or create and destroy them
 	instead of being allocated in the global scope.
 	And macros will be used from ftspic.h in order to access
@@ -5530,7 +5530,7 @@
 	* src/truetype/ttinterp.c (Ins_IUP): Add missing variable
 	initialization.
 
-	* src/autofit/aflatin.c (af_latin_metric_init_blues): Get rid of an
+	* src/autofit/aflatin.c (af_latin_metrics_init_blues): Get rid of an
 	infinite loop in the case of degenerate fonts.
 
 2007-06-26  Rahul Bhalerao  <b.rahul.pm@gmail.com>

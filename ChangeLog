@@ -329,7 +329,7 @@
 
 	* src/truetype/ttdriver.c (tt_size_select): s/metrics/size_metrics/.
 
-	* src/truetype/ttgload.c (tt_get_metrics_incr_overrids,
+	* src/truetype/ttgload.c (tt_get_metrics_incr_overrides,
 	compute_glyph_metrics): s/metrics/incr_metrics/.
 	(load_sbit_image): s/metrics/sbit_metrics/.
 
@@ -860,7 +860,7 @@
 	(FT_LibraryRec): Updated.
 
 	* src/base/ftlcdfil.c (_ft_lcd_filter_fir): Renamed to...
-	(ft_lcd_filter_dir): ... this base function.
+	(ft_lcd_filter_fir): ... this base function.
 	Updated.
 	(_ft_lcd_filter_legacy): Updated.
 	(FT_Library_SetLcdFilterWeights, FT_Library_SetLcdFilter): Updated.
@@ -1139,7 +1139,7 @@
 	(TT_Name_ConvertFunc): This.
 	(tt_face_get_name): Updated.
 
-	* src/sfnt/ttload.c (tt_face_load_name, tt_face_free_names):
+	* src/sfnt/ttload.c (tt_face_load_name, tt_face_free_name):
 	Updated.
 
 2017-01-24  Werner Lemberg  <wl@gnu.org>

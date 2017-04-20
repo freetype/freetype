@@ -984,7 +984,7 @@
   /*************************************************************************/
   /*                                                                       */
   /* <Function>                                                            */
-  /*    tt_face_free_names                                                 */
+  /*    tt_face_free_name                                                  */
   /*                                                                       */
   /* <Description>                                                         */
   /*    Frees the name records.                                            */

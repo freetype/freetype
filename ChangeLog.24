@@ -2941,10 +2941,10 @@
 
 	[type42] Remove casts.
 
-	* src/type42/t42driver.c (t42_driver_class): Remove all casts and
+	* src/type42/t42drivr.c (t42_driver_class): Remove all casts and
 	update affected functions.
 
-	* src/type42/t42objs.c, src/type42/t42objs.h: Updated for t42driver
+	* src/type42/t42objs.c, src/type42/t42objs.h: Updated for t42 driver
 	changes.
 
 2011-11-30  Werner Lemberg  <wl@gnu.org>
@@ -4029,7 +4029,7 @@
 	af_latin_hints_compute_blue_edges.
 	(af_cjk_metrics_init_blues): New function, CJK version of
 	af_latin_metrics_init_blues.
-	(af_cjk_hints_edges): Add code to align the edge stems to blue zones.
+	(af_cjk_hint_edges): Add code to align the edge stems to blue zones.
 
 	* src/autofit/afindic.c (af_indic_metrics_init): Take AF_CJKMetric
 	instead of AF_LatinMetric, and initialize as af_cjk_metrics_init.
