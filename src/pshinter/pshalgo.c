@@ -2149,7 +2149,8 @@
       glyph->do_vert_snapping = FT_BOOL( hint_mode == FT_RENDER_MODE_MONO  ||
                                          hint_mode == FT_RENDER_MODE_LCD_V );
 
-      glyph->do_stem_adjust   = FT_BOOL( hint_mode != FT_RENDER_MODE_LIGHT );
+      glyph->do_stem_adjust = FT_BOOL( hint_mode != FT_RENDER_MODE_LIGHT  &&
+                                       hint_mode != FT_RENDER_MODE_SLIGHT );
 
       for ( dimension = 0; dimension < 2; dimension++ )
       {

@@ -221,6 +221,7 @@ FT_BEGIN_HEADER
   /*                                                                       */
   /*    FT_LOAD_TARGET_NORMAL                                              */
   /*    FT_LOAD_TARGET_LIGHT                                               */
+  /*    FT_LOAD_TARGET_SLIGHT                                              */
   /*    FT_LOAD_TARGET_MONO                                                */
   /*    FT_LOAD_TARGET_LCD                                                 */
   /*    FT_LOAD_TARGET_LCD_V                                               */
@@ -1755,7 +1756,8 @@ FT_BEGIN_HEADER
   /*    `slot->format' is also changed to @FT_GLYPH_FORMAT_BITMAP.         */
   /*                                                                       */
   /*    Here is a small pseudo code fragment that shows how to use         */
-  /*    `lsb_delta' and `rsb_delta':                                       */
+  /*    `lsb_delta' and `rsb_delta' to improve (integer) positioning of    */
+  /*    glyphs:                                                            */
   /*                                                                       */
   /*    {                                                                  */
   /*      FT_Pos  origin_x       = 0;                                      */
@@ -2941,6 +2943,18 @@ FT_BEGIN_HEADER
    *     driver, if the driver itself and the font support it, or by the
    *     auto-hinter.
    *
+   *     Use this hinting mode if you mainly need integer advance widths
+   *     and want to avoid sub-pixel rendering.
+   *
+   *   FT_LOAD_TARGET_SLIGHT ::
+   *     This is similar to @FT_LOAD_TARGET_LIGHT with a main difference:
+   *     Advance widths are not rounded to integer values; instead, the
+   *     linearly scaled values are used.  In particular this implies that
+   *     you have to apply sub-pixel rendering.
+   *
+   *     In general, this mode yields better results than
+   *     @FT_LOAD_TARGET_LIGHT.
+   *
    *   FT_LOAD_TARGET_MONO ::
    *     Strong hinting algorithm that should only be used for monochrome
    *     output.  The result is probably unpleasant if the glyph is rendered
@@ -2975,11 +2989,19 @@ FT_BEGIN_HEADER
    *       FT_Render_Glyph( face->glyph, FT_RENDER_MODE_LCD );
    *     }
    *
+   *   In general, you should stick with one rendering mode.  For example,
+   *   switching between @FT_LOAD_TARGET_LIGHT and @FT_LOAD_TARGET_SLIGHT
+   *   enforces a lot of recomputation, which is slow.  Another reason is
+   *   caching: Selecting a different mode usually causes changes in both
+   *   the outlines and the rasterized bitmaps; it is thus necessary to
+   *   empty the cache after a mode switch to avoid false hits.
+   *
    */
 #define FT_LOAD_TARGET_( x )   ( (FT_Int32)( (x) & 15 ) << 16 )
 
 #define FT_LOAD_TARGET_NORMAL  FT_LOAD_TARGET_( FT_RENDER_MODE_NORMAL )
 #define FT_LOAD_TARGET_LIGHT   FT_LOAD_TARGET_( FT_RENDER_MODE_LIGHT  )
+#define FT_LOAD_TARGET_SLIGHT  FT_LOAD_TARGET_( FT_RENDER_MODE_SLIGHT )
 #define FT_LOAD_TARGET_MONO    FT_LOAD_TARGET_( FT_RENDER_MODE_MONO   )
 #define FT_LOAD_TARGET_LCD     FT_LOAD_TARGET_( FT_RENDER_MODE_LCD    )
 #define FT_LOAD_TARGET_LCD_V   FT_LOAD_TARGET_( FT_RENDER_MODE_LCD_V  )
@@ -3060,6 +3082,12 @@ FT_BEGIN_HEADER
   /*      indirectly to define hinting algorithm selectors.  See           */
   /*      @FT_LOAD_TARGET_XXX for details.                                 */
   /*                                                                       */
+  /*    FT_RENDER_MODE_SLIGHT ::                                           */
+  /*      This is equivalent to @FT_RENDER_MODE_NORMAL.  It is only        */
+  /*      defined as a separate value because render modes are also used   */
+  /*      indirectly to define hinting algorithm selectors.  See           */
+  /*      @FT_LOAD_TARGET_XXX for details.                                 */
+  /*                                                                       */
   /*    FT_RENDER_MODE_MONO ::                                             */
   /*      This mode corresponds to 1-bit bitmaps (with 2~levels of         */
   /*      opacity).                                                        */
@@ -3092,6 +3120,7 @@ FT_BEGIN_HEADER
   {
     FT_RENDER_MODE_NORMAL = 0,
     FT_RENDER_MODE_LIGHT,
+    FT_RENDER_MODE_SLIGHT,
     FT_RENDER_MODE_MONO,
     FT_RENDER_MODE_LCD,
     FT_RENDER_MODE_LCD_V,

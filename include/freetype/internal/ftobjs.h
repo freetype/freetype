@@ -443,13 +443,20 @@ FT_BEGIN_HEADER
   /*    object.                                                            */
   /*                                                                       */
   /* <Fields>                                                              */
-  /*    module_data :: Data specific to a driver module.                   */
+  /*    module_data      :: Data specific to a driver module.              */
+  /*                                                                       */
+  /*    autohint_mode    :: The used auto-hinting mode.                    */
+  /*                                                                       */
+  /*    autohint_metrics :: Metrics used by the auto-hinter.               */
   /*                                                                       */
   /*************************************************************************/
 
   typedef struct  FT_Size_InternalRec_
   {
     void*  module_data;
+
+    FT_Render_Mode   autohint_mode;
+    FT_Size_Metrics  autohint_metrics;
 
   } FT_Size_InternalRec;
 

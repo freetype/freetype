@@ -1,5 +1,47 @@
 2017-04-22  Werner Lemberg  <wl@gnu.org>
 
+	Add new `slight' auto-hinting mode.
+
+	This mode uses fractional advance widths and doesn't scale glyphs
+	horizontally, only applying vertical scaling and hinting.
+
+	At the same time, the behaviour of the `light' auto-hinter gets
+	restored for backwards compatibility: Both vertical and horizontal
+	scaling is again based on rounded metrics values (this was changed
+	in a commit from 2017-03-30 as a side effect).  To be more precise,
+	the behaviour is restored for TrueType fonts only; for other font
+	formats like Type 1, this is a new feature of the `light' hinting
+	mode.
+
+	* include/freetype/freetype.h (FT_LOAD_TARGET_SLIGHT): New macro.
+	(FT_RENDER_MODE_SLIGHT): New render mode.
+
+	* include/freetype/internal/ftobjs.h (FT_Size_InternalRec): Add
+	`autohint_mode' and `autohint_metrics' fields.
+
+	* src/autofit/afcjk.c (af_cjk_hints_init), src/autofit/aflatin.c
+	(af_latin_hints_init), src/autofit/aflatin2 (af_latin2_hints_init):
+	Updated.
+
+	* src/autofit/afloader.c (af_loader_embolden_glyph_in_slot): Use
+	`autohint_metrics'.
+	(af_loader_load_glyph): s/internal/slot_internal/.
+	Initialize `autohint_metrics' and `autohint_mode' depending on
+	current auto-hint mode.
+	Use `autohint_metrics'.
+	Updated.
+
+	* src/base/ftadvanc.c (LOAD_ADVANCE_FAST_CHECK): Updated.
+
+	* src/base/ftobjs.c (FT_Load_Glyph): Updated.
+	(FT_New_Size): Allocate `internal' object.
+
+	* src/pshinter/pshalgo.c (ps_hints_apply): Updated.
+
+	* src/smooth/ftsmooth.c (ft_smooth_render): Updated.
+
+2017-04-22  Werner Lemberg  <wl@gnu.org>
+
 	Introduce `FT_Size_InternalRec' structure.
 
 	We are going to extend this later on.

@@ -433,7 +433,8 @@
                     FT_Render_Mode    mode,
                     const FT_Vector*  origin )
   {
-    if ( mode == FT_RENDER_MODE_LIGHT )
+    if ( mode == FT_RENDER_MODE_LIGHT  ||
+         mode == FT_RENDER_MODE_SLIGHT )
       mode = FT_RENDER_MODE_NORMAL;
 
     return ft_smooth_render_generic( render, slot, mode, origin,
