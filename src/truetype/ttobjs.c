@@ -1220,7 +1220,7 @@
 
     size->ttmetrics.valid = FALSE;
 
-    size_metrics = &size->metrics;
+    size_metrics = &size->hinted_metrics;
 
     /* copy the result from base layer */
     *size_metrics = size->root.metrics;
@@ -1279,6 +1279,8 @@
                                            size_metrics->y_ppem );
       size->ttmetrics.y_ratio = 0x10000L;
     }
+
+    size->metrics = size_metrics;
 
 #ifdef TT_USE_BYTECODE_INTERPRETER
     size->cvt_ready = -1;

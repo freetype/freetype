@@ -361,9 +361,10 @@
 #ifdef TT_USE_BYTECODE_INTERPRETER
       /* for the `MPS' bytecode instruction we need the point size */
       {
-        FT_UInt  resolution = ttsize->metrics.x_ppem > ttsize->metrics.y_ppem
-                                ? req->horiResolution
-                                : req->vertResolution;
+        FT_UInt  resolution =
+                   ttsize->metrics->x_ppem > ttsize->metrics->y_ppem
+                     ? req->horiResolution
+                     : req->vertResolution;
 
 
         /* if we don't have a resolution value, assume 72dpi */
@@ -456,6 +457,11 @@
       if ( !FT_IS_TRICKY( face ) )
         load_flags |= FT_LOAD_NO_HINTING;
     }
+
+    /* use hinted metrics only if we load a glyph with hinting */
+    size->metrics = ( load_flags & FT_LOAD_NO_HINTING )
+                      ? &ttsize->metrics
+                      : &size->hinted_metrics;
 
     /* now load the glyph outline if necessary */
     error = TT_Load_Glyph( size, slot, glyph_index, load_flags );

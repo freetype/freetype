@@ -1,5 +1,28 @@
 2017-04-22  Werner Lemberg  <wl@gnu.org>
 
+	[truetype] Do linear scaling for FT_LOAD_NO_HINTING (#50470).
+
+	* src/truetype/ttobs.h (TT_SizeRec): Add field `hinted_metrics' to
+	hold hinted metrics.
+	Make `metrics' a pointer so that `tt_glyph_load' can easily switch
+	between metrics.
+
+	* src/truetype/ttdriver.c (tt_size_request): Updated.
+	(tt_glyph_load): Use top-level metrics if FT_LOAD_NO_HINTING is
+	used.
+
+	* src/truetype/ttgload.c (TT_Hint_Glyph, TT_Process_Simple_Glyph,
+	TT_Process_Composite_Component, load_truetype_glyph,
+	compute_glyph_metrics, TT_Load_Glyph): Updated.
+
+	* src/truetype/ttinterp.c (TT_Load_Context): Updated.
+
+	* src/truetype/ttobjs.c (tt_size_reset): Updated.
+
+	* src/truetype/ttsubpix.c (sph_set_tweaks): Updated.
+
+2017-04-22  Werner Lemberg  <wl@gnu.org>
+
 	Add new `slight' auto-hinting mode.
 
 	This mode uses fractional advance widths and doesn't scale glyphs

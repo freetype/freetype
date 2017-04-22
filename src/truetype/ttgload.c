@@ -778,8 +778,8 @@
     }
     else
     {
-      loader->exec->metrics.x_scale = loader->size->metrics.x_scale;
-      loader->exec->metrics.y_scale = loader->size->metrics.y_scale;
+      loader->exec->metrics.x_scale = loader->size->metrics->x_scale;
+      loader->exec->metrics.y_scale = loader->size->metrics->y_scale;
     }
 #endif
 
@@ -926,7 +926,7 @@
       TT_Driver  driver = (TT_Driver)FT_FACE_DRIVER( face );
 
       FT_String*  family         = face->root.family_name;
-      FT_UInt     ppem           = loader->size->metrics.x_ppem;
+      FT_UInt     ppem           = loader->size->metrics->x_ppem;
       FT_String*  style          = face->root.style_name;
       FT_UInt     x_scale_factor = 1000;
 #endif
@@ -955,9 +955,9 @@
         if ( ( loader->load_flags & FT_LOAD_NO_SCALE ) == 0 ||
              x_scale_factor != 1000                         )
         {
-          x_scale = FT_MulDiv( loader->size->metrics.x_scale,
+          x_scale = FT_MulDiv( loader->size->metrics->x_scale,
                                (FT_Long)x_scale_factor, 1000 );
-          y_scale = loader->size->metrics.y_scale;
+          y_scale = loader->size->metrics->y_scale;
 
           /* compensate for any scaling by de/emboldening; */
           /* the amount was determined via experimentation */
@@ -977,8 +977,8 @@
         /* scale the glyph */
         if ( ( loader->load_flags & FT_LOAD_NO_SCALE ) == 0 )
         {
-          x_scale = loader->size->metrics.x_scale;
-          y_scale = loader->size->metrics.y_scale;
+          x_scale = loader->size->metrics->x_scale;
+          y_scale = loader->size->metrics->y_scale;
 
           do_scale = TRUE;
         }
@@ -1136,8 +1136,8 @@
 
       if ( !( loader->load_flags & FT_LOAD_NO_SCALE ) )
       {
-        FT_Fixed  x_scale = loader->size->metrics.x_scale;
-        FT_Fixed  y_scale = loader->size->metrics.y_scale;
+        FT_Fixed  x_scale = loader->size->metrics->x_scale;
+        FT_Fixed  y_scale = loader->size->metrics->y_scale;
 
 
         x = FT_MulFix( x, x_scale );
@@ -1470,8 +1470,8 @@
 
     if ( ( loader->load_flags & FT_LOAD_NO_SCALE ) == 0 )
     {
-      x_scale = loader->size->metrics.x_scale;
-      y_scale = loader->size->metrics.y_scale;
+      x_scale = loader->size->metrics->x_scale;
+      y_scale = loader->size->metrics->y_scale;
     }
     else
     {
@@ -2038,7 +2038,7 @@
 
     y_scale = 0x10000L;
     if ( ( loader->load_flags & FT_LOAD_NO_SCALE ) == 0 )
-      y_scale = size->metrics.y_scale;
+      y_scale = size->metrics->y_scale;
 
     if ( glyph->format != FT_GLYPH_FORMAT_COMPOSITE )
       FT_Outline_Get_CBox( &glyph->outline, &bbox );
@@ -2070,7 +2070,7 @@
 
 
       widthp = tt_face_get_device_metrics( face,
-                                           size->metrics.x_ppem,
+                                           size->metrics->x_ppem,
                                            glyph_index );
 
 #ifdef TT_SUPPORT_SUBPIXEL_HINTING_INFINALITY
@@ -2637,11 +2637,11 @@
           if ( !glyph->metrics.horiAdvance && glyph->linearHoriAdvance )
             glyph->metrics.horiAdvance =
               FT_MulFix( glyph->linearHoriAdvance,
-                         size->metrics.x_scale );
+                         size->metrics->x_scale );
           if ( !glyph->metrics.vertAdvance && glyph->linearVertAdvance )
             glyph->metrics.vertAdvance =
               FT_MulFix( glyph->linearVertAdvance,
-                         size->metrics.y_scale );
+                         size->metrics->y_scale );
         }
 
         return FT_Err_Ok;
@@ -2737,7 +2737,7 @@
     /* TrueType glyphs at all sizes using the bytecode interpreter. */
     /*                                                              */
     if ( !( load_flags & FT_LOAD_NO_SCALE ) &&
-         size->metrics.y_ppem < 24          )
+         size->metrics->y_ppem < 24          )
       glyph->outline.flags |= FT_OUTLINE_HIGH_PRECISION;
 
   Exit:

@@ -402,7 +402,7 @@
       exec->IDefs      = size->instruction_defs;
       exec->pointSize  = size->point_size;
       exec->tt_metrics = size->ttmetrics;
-      exec->metrics    = size->metrics;
+      exec->metrics    = *size->metrics;
 
       exec->maxFunc    = size->max_func;
       exec->maxIns     = size->max_ins;

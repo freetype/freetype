@@ -278,7 +278,8 @@ FT_BEGIN_HEADER
 
     /* we have our own copy of metrics so that we can modify */
     /* it without affecting auto-hinting (when used)         */
-    FT_Size_Metrics    metrics;
+    FT_Size_Metrics*   metrics;        /* for the current rendering mode */
+    FT_Size_Metrics    hinted_metrics; /* for the hinted rendering mode  */
 
     TT_Size_Metrics    ttmetrics;
 
