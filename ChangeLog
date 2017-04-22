@@ -1,3 +1,7 @@
+2017-04-21  Alexei Podtelezhnikov  <apodtele@gmail.com>
+
+	* src/smooth/ftsmooth.h: Remove unused guards and declaration.
+
 2017-04-16  Hin-Tak Leung  <htl10@users.sourceforge.net>
 
 	Fix tracing messages.

@@ -27,18 +27,11 @@
 FT_BEGIN_HEADER
 
 
-#ifndef FT_CONFIG_OPTION_NO_STD_RASTER
-  FT_DECLARE_RENDERER( ft_std_renderer_class )
-#endif
-
-#ifndef FT_CONFIG_OPTION_NO_SMOOTH_RASTER
   FT_DECLARE_RENDERER( ft_smooth_renderer_class )
 
   FT_DECLARE_RENDERER( ft_smooth_lcd_renderer_class )
 
   FT_DECLARE_RENDERER( ft_smooth_lcdv_renderer_class )
-#endif
-
 
 
 FT_END_HEADER
