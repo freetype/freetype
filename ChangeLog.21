@@ -1819,7 +1819,7 @@
 2004-08-11  Detlef Würkner  <TetiSoft@apg.lahn.de>
 
 	* src/base/ftrfork.c (FT_Raccess_Guess)
-	[!FT_CONFIG_OPTION_GUESSING_EMBEDDED_FORK]: Remove compiler
+	[!FT_CONFIG_OPTION_GUESSING_EMBEDDED_RFORK]: Remove compiler
 	warnings.
 
 2004-08-06  Adam Piotrowski  <st_intel@poczta.onet.pl>
@@ -4749,8 +4749,7 @@
 	* include/freetype/ttunpat.h: Fixing documentation comment.
 
 	* include/freetype/config/ftoption.h, devel/ftoption.h
-	(TT_CONFIG_OPTION_OPTION_COMPILE_UNPATENTED_HINTING): Replaced
-	with...
+	(TT_CONFIG_OPTION_COMPILE_UNPATENTED_HINTING): Replaced with...
 	(TT_CONFIG_OPTION_UNPATENTED_HINTING): This.  Updated all users.
 	(TT_CONFIG_OPTION_FORCE_UNPATENTED_HINTING): Removed.
 

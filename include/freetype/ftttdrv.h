@@ -225,7 +225,7 @@ FT_BEGIN_HEADER
    *   filtering.
    *
    *   If FreeType has not been compiled with the configuration option
-   *   FT_CONFIG_OPTION_SUBPIXEL_HINTING, selecting version~38 or~40 causes
+   *   TT_CONFIG_OPTION_SUBPIXEL_HINTING, selecting version~38 or~40 causes
    *   an `FT_Err_Unimplemented_Feature' error.
    *
    *   Depending on the graphics framework, Microsoft uses different

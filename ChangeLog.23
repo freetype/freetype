@@ -4861,7 +4861,7 @@
 2008-04-14  Werner Lemberg  <wl@gnu.org>
 
 	* src/pcf/pcfdrivr.c (PCF_Face_Init): Protect call to
-	`FT_Stream_OpenLZW' with `FT_CONFIG_OPTION_USE_LZ'.  From Savannah
+	`FT_Stream_OpenLZW' with `FT_CONFIG_OPTION_USE_LZW'.  From Savannah
 	bug #22909.
 
 2008-04-13  Werner Lemberg  <wl@gnu.org>
@@ -7857,7 +7857,7 @@
 2006-05-18  Werner Lemberg  <wl@gnu.org>
 
 	* src/truetype/ttgload.c (TT_Load_Composite_Glyph)
-	[FT_CONFIG_OPTION_BYTECODE_INTERPRETER]: Make it compilable again.
+	[TT_CONFIG_OPTION_BYTECODE_INTERPRETER]: Make it compilable again.
 
 2006-05-17  David Turner  <david@freetype.org>
 
