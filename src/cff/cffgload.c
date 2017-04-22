@@ -278,7 +278,8 @@
 
       if ( hinting && size )
       {
-        CFF_Internal  internal = (CFF_Internal)size->root.internal;
+        FT_Size       ftsize   = FT_SIZE( size );
+        CFF_Internal  internal = (CFF_Internal)ftsize->internal->module_data;
 
 
         if ( internal )
@@ -443,7 +444,8 @@
 
       if ( builder->hints_funcs && size )
       {
-        CFF_Internal  internal = (CFF_Internal)size->root.internal;
+        FT_Size       ftsize   = FT_SIZE( size );
+        CFF_Internal  internal = (CFF_Internal)ftsize->internal->module_data;
 
 
         /* for CFFs without subfonts, this value has already been set */

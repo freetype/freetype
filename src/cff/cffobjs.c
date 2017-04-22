@@ -54,9 +54,6 @@
   /*                                                                       */
   /*                            SIZE FUNCTIONS                             */
   /*                                                                       */
-  /*  Note that we store the global hints in the size's `internal' root    */
-  /*  field.                                                               */
-  /*                                                                       */
   /*************************************************************************/
 
 
@@ -80,10 +77,11 @@
   FT_LOCAL_DEF( void )
   cff_size_done( FT_Size  cffsize )        /* CFF_Size */
   {
+    FT_Memory     memory   = cffsize->face->memory;
     CFF_Size      size     = (CFF_Size)cffsize;
     CFF_Face      face     = (CFF_Face)size->root.face;
     CFF_Font      font     = (CFF_Font)face->extra.data;
-    CFF_Internal  internal = (CFF_Internal)cffsize->internal;
+    CFF_Internal  internal = (CFF_Internal)cffsize->internal->module_data;
 
 
     if ( internal )
@@ -103,7 +101,7 @@
           funcs->destroy( internal->subfonts[i - 1] );
       }
 
-      /* `internal' is freed by destroy_size (in ftobjs.c) */
+      FT_FREE( internal );
     }
   }
 
@@ -199,7 +197,7 @@
           goto Exit;
       }
 
-      cffsize->internal = (FT_Size_Internal)(void*)internal;
+      cffsize->internal->module_data = internal;
     }
 
     size->strike_index = 0xFFFFFFFFUL;
@@ -229,7 +227,7 @@
     {
       CFF_Face      face     = (CFF_Face)size->face;
       CFF_Font      font     = (CFF_Font)face->extra.data;
-      CFF_Internal  internal = (CFF_Internal)size->internal;
+      CFF_Internal  internal = (CFF_Internal)size->internal->module_data;
 
       FT_Long  top_upm  = (FT_Long)font->top_font.font_dict.units_per_em;
       FT_UInt  i;
@@ -301,7 +299,7 @@
     {
       CFF_Face      cffface  = (CFF_Face)size->face;
       CFF_Font      font     = (CFF_Font)cffface->extra.data;
-      CFF_Internal  internal = (CFF_Internal)size->internal;
+      CFF_Internal  internal = (CFF_Internal)size->internal->module_data;
 
       FT_Long  top_upm  = (FT_Long)font->top_font.font_dict.units_per_em;
       FT_UInt  i;

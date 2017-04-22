@@ -1,3 +1,32 @@
+2017-04-22  Werner Lemberg  <wl@gnu.org>
+
+	Introduce `FT_Size_InternalRec' structure.
+
+	We are going to extend this later on.
+
+	* include/freetype/internal/ftobjs.h (FT_Size_InternalRec): New
+	structure with a single field `module_data'.
+
+	* src/base/ftobjs.c (FT_New_Size): Allocate `internal' field of
+	`FT_Size' structure.
+
+	* src/cff/cffgload.c (cff_builder_init, cff_decoder_prepare): Use
+	`size->internal->module_data' instead of `size->internal'.
+
+	* src/cff/cffobjs.c (cff_size_done): Deallocate `module_data'.
+	(cff_size_init, cff_size_select, cff_size_request): Use
+	`size->internal->module_data' instead of `size->internal'.
+
+	* src/cif/cidobjs.c (cid_size_done, cid_size_init,
+	cid_size_request): Use `size->internal->module_data' instead of
+	`size->internal'.
+
+	* src/psaux/psobjs.c (t1_builder_ini): Use
+	`size->internal->module_data' instead of `size->internal'.
+
+	* src/type1/t1objs.c (T1_Size_Done, T1_Size_Init, T1_Size_Request):
+	Use `size->internal->module_data' instead of `size->internal'.
+
 2017-04-21  Alexei Podtelezhnikov  <apodtele@gmail.com>
 
 	* src/smooth/ftsmooth.h: Remove unused guards and declaration.
