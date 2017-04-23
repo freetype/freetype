@@ -3150,7 +3150,7 @@ FT_BEGIN_HEADER
   /*    this does not translate to 50% brightness for that pixel on our    */
   /*    sRGB and gamma~2.2 screens.  Due to their non-linearity, they      */
   /*    dwell longer in the darks and only a pixel value of about 186      */
-  /*    results in 50% brightness – 128 ends up too dark on both bright    */
+  /*    results in 50% brightness -- 128 ends up too dark on both bright   */
   /*    and dark backgrounds.  The net result is that dark text looks      */
   /*    burnt-out, pixely and blotchy on bright background, bright text    */
   /*    too frail on dark backgrounds, and colored text on colored         */
