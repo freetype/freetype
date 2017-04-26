@@ -29,8 +29,9 @@ CHANGES BETWEEN 2.7.1 and 2.8
       now scales  the font linearly  again (bug introduced  in version
       2.4.6).
 
-    - CVE-2017-8105: Older FreeType versions has an out-of-bounds write
-      caused by a heap-based buffer overflow related to the Type 1 fonts.
+    - CVE-2017-8105:  Older  FreeType  versions has  an  out-of-bounds
+      write caused by a heap-based buffer overflow related to the Type
+      1 fonts.
 
         http://cve.mitre.org/cgi-bin/cvename.cgi?name=CVE-2017-8105
 
@@ -100,6 +101,12 @@ CHANGES BETWEEN 2.7 and 2.7.1
 
     - Handling of  raw CID fonts was partially  broken (bug introduced
       in 2.6.4).
+
+    - CVE-2016-10328:  Older  FreeType versions had  an  out-of-bounds
+      write caused by a heap-based  buffer overflow related to the CFF
+      fonts.
+
+        http://cve.mitre.org/cgi-bin/cvename.cgi?name=CVE-2016-10328
 
 
   III. MISCELLANEOUS
