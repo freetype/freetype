@@ -1,3 +1,11 @@
+2017-04-26  Werner Lemberg  <wl@gnu.org>
+
+	* include/freetype/freetype.h (FT_Render_Mode): Fix order.
+
+	This retains backwards compatibility.
+
+	Noted by Alexei.
+
 2017-04-22  Werner Lemberg  <wl@gnu.org>
 
 	[truetype] Do linear scaling for FT_LOAD_NO_HINTING (#50470).
