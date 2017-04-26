@@ -1506,27 +1506,34 @@ FT_BEGIN_HEADER
   /*                    fractional pixels.  Only relevant for scalable     */
   /*                    font formats.                                      */
   /*                                                                       */
-  /*    ascender     :: The ascender in 26.6 fractional pixels.  See       */
-  /*                    @FT_FaceRec for the details.                       */
+  /*    ascender     :: The ascender in 26.6 fractional pixels, rounded up */
+  /*                    to an integer value.  See @FT_FaceRec for the      */
+  /*                    details.                                           */
   /*                                                                       */
-  /*    descender    :: The descender in 26.6 fractional pixels.  See      */
-  /*                    @FT_FaceRec for the details.                       */
+  /*    descender    :: The descender in 26.6 fractional pixels, rounded   */
+  /*                    down to an integer value.  See @FT_FaceRec for the */
+  /*                    details.                                           */
   /*                                                                       */
-  /*    height       :: The height in 26.6 fractional pixels.  See         */
-  /*                    @FT_FaceRec for the details.                       */
+  /*    height       :: The height in 26.6 fractional pixels, rounded to   */
+  /*                    an integer value.  See @FT_FaceRec for the         */
+  /*                    details.                                           */
   /*                                                                       */
   /*    max_advance  :: The maximum advance width in 26.6 fractional       */
-  /*                    pixels.  See @FT_FaceRec for the details.          */
+  /*                    pixels, rounded to an integer value.  See          */
+  /*                    @FT_FaceRec for the details.                       */
   /*                                                                       */
   /* <Note>                                                                */
   /*    The scaling values, if relevant, are determined first during a     */
   /*    size changing operation.  The remaining fields are then set by the */
   /*    driver.  For scalable formats, they are usually set to scaled      */
-  /*    values of the corresponding fields in @FT_FaceRec.                 */
+  /*    values of the corresponding fields in @FT_FaceRec.  Some values    */
+  /*    like ascender or descender are rounded for historical reasons;     */
+  /*    more precise values (for outline fonts) can be derived by scaling  */
+  /*    the corresponding @FT_FaceRec values manually.                     */
   /*                                                                       */
-  /*    Note that due to glyph hinting, these values might not be exact    */
-  /*    for certain fonts.  Thus they must be treated as unreliable        */
-  /*    with an error margin of at least one pixel!                        */
+  /*    Note that due to glyph hinting and the selected rendering mode     */
+  /*    these values are usually not exact; consequently, they must be     */
+  /*    treated as unreliable with an error margin of at least one pixel!  */
   /*                                                                       */
   /*    Indeed, the only way to get the exact metrics is to render _all_   */
   /*    glyphs.  As this would be a definite performance hit, it is up to  */
