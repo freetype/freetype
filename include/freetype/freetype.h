@@ -2933,27 +2933,34 @@ FT_BEGIN_HEADER
    *     rendering.  For monochrome output, use @FT_LOAD_TARGET_MONO
    *     instead.
    *
-   *   FT_LOAD_TARGET_LIGHT ::
-   *     A lighter hinting algorithm for gray-level modes.  Many generated
+   *   FT_LOAD_TARGET_SLIGHT ::
+   *     A slight hinting algorithm for gray-level modes.  Many generated
    *     glyphs are fuzzier but better resemble their original shape.  This
    *     is achieved by snapping glyphs to the pixel grid only vertically
-   *     (Y-axis), as is done by Microsoft's ClearType and Adobe's
-   *     proprietary font renderer.  This preserves inter-glyph spacing in
+   *     (Y-axis), as is done by FreeType's new CFF engine or Microsoft's
+   *     ClearType font renderer.  This preserves inter-glyph spacing in
    *     horizontal text.  The snapping is done either by the native font
    *     driver, if the driver itself and the font support it, or by the
    *     auto-hinter.
    *
-   *     Use this hinting mode if you mainly need integer advance widths
-   *     and want to avoid sub-pixel rendering.
+   *     Advance widths are not rounded to integer values; instead, metrics
+   *     are based on linearly scaled values.  In particular this implies
+   *     that you have to apply sub-pixel rendering.
    *
-   *   FT_LOAD_TARGET_SLIGHT ::
-   *     This is similar to @FT_LOAD_TARGET_LIGHT with a main difference:
-   *     Advance widths are not rounded to integer values; instead, the
-   *     linearly scaled values are used.  In particular this implies that
-   *     you have to apply sub-pixel rendering.
+   *   FT_LOAD_TARGET_LIGHT ::
+   *     This is similar to @FT_LOAD_TARGET_SLIGHT with a main difference:
+   *     It uses integer advance widths.
    *
-   *     In general, this mode yields better results than
-   *     @FT_LOAD_TARGET_LIGHT.
+   *     If configuration option AF_CONFIG_OPTION_TT_SIZE_METRICS is active,
+   *     TrueType-like metrics are used to make this mode behave similarly
+   *     as in unpatched FreeType versions between 2.4.6 and 2.7.1
+   *     (inclusive).
+   *
+   *     This hinting mode is deprecated.  In general,
+   *     @FT_LOAD_TARGET_SLIGHT always yields better results; additionally,
+   *     FT_LOAD_TARGET_LIGHT suffers from backwards compatibility issues
+   *     (see the documentation of AF_CONFIG_OPTION_TT_SIZE_METRICS in
+   *     `ftoption.h' for more details).
    *
    *   FT_LOAD_TARGET_MONO ::
    *     Strong hinting algorithm that should only be used for monochrome

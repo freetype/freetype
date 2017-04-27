@@ -886,7 +886,9 @@ FT_BEGIN_HEADER
 
   /*************************************************************************/
   /*                                                                       */
-  /* Compile autofit module with Indic script support.                     */
+  /* Compile autofit module with fallback Indic script support, covering   */
+  /* some scripts that the `latin' submodule of the autofit module doesn't */
+  /* (yet) handle.                                                         */
   /*                                                                       */
 #define AF_CONFIG_OPTION_INDIC
 
@@ -904,6 +906,22 @@ FT_BEGIN_HEADER
   /* information; by default it is switched off).                          */
   /*                                                                       */
 #define AF_CONFIG_OPTION_USE_WARPER
+
+  /*************************************************************************/
+  /*                                                                       */
+  /* Use TrueType-like size metrics for `light' auto-hinting.  This option */
+  /* exists mainly for backwards compatibility with GNU/Linux              */
+  /* distributions like Fedora that did not un-patch the following change  */
+  /* (which was present in FreeType between versions 2.4.6 and 2.7.1,      */
+  /* inclusive).                                                           */
+  /*                                                                       */
+  /*   2011-07-16  Steven Chu  <steven.f.chu@gmail.com>                    */
+  /*                                                                       */
+  /*     [truetype] Fix metrics on size request for scalable fonts.        */
+  /*                                                                       */
+  /* This problematic commit is now reverted (more or less).               */
+  /*                                                                       */
+/* #define AF_CONFIG_OPTION_TT_SIZE_METRICS */
 
   /* */
 

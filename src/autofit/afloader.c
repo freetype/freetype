@@ -252,6 +252,7 @@
       size_internal->autohint_mode    = FT_LOAD_TARGET_MODE( load_flags );
       size_internal->autohint_metrics = size->metrics;
 
+#ifdef AF_CONFIG_OPTION_TT_SIZE_METRICS
       if ( size_internal->autohint_mode != FT_RENDER_MODE_SLIGHT )
       {
         FT_Size_Metrics*  size_metrics = &size_internal->autohint_metrics;
@@ -278,6 +279,7 @@
                                       FT_MulFix( face->max_advance_width,
                                                  size_metrics->x_scale ) );
       }
+#endif /* AF_CONFIG_OPTION_TT_SIZE_METRICS */
     }
 
     /*
