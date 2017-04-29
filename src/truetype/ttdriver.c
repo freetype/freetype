@@ -360,6 +360,7 @@
 
 #ifdef TT_USE_BYTECODE_INTERPRETER
       /* for the `MPS' bytecode instruction we need the point size */
+      if ( !error )
       {
         FT_UInt  resolution =
                    ttsize->metrics->x_ppem > ttsize->metrics->y_ppem

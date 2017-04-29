@@ -1,3 +1,11 @@
+2017-04-29  Werner Lemberg  <wl@gnu.org>
+
+	* src/truetype/ttdriver.c (tt_size_request): Properly check `error'.
+
+	Reported by Earnestly <zibeon@googlemail.com> in
+
+	  http://lists.nongnu.org/archive/html/freetype/2017-04/msg00031.html
+
 2017-04-27  Werner Lemberg  <wl@gnu.org>
 
 	Introduce AF_CONFIG_OPTION_TT_SIZE_METRICS configuration option.

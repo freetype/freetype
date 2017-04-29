@@ -2549,6 +2549,10 @@ FT_BEGIN_HEADER
   /*    glyph relative to this size.  For more information refer to        */
   /*    `https://www.freetype.org/freetype2/docs/glyphs/glyphs-2.html'.    */
   /*                                                                       */
+  /*    Contrary to @FT_Set_Char_Size, this function doesn't have special  */
+  /*    code to normalize zero-valued widths, heights, or resolutions      */
+  /*    (which lead to errors in most cases).                              */
+  /*                                                                       */
   /*    Don't use this function if you are using the FreeType cache API.   */
   /*                                                                       */
   FT_EXPORT( FT_Error )
