@@ -3061,6 +3061,10 @@
          req->type >= FT_SIZE_REQUEST_TYPE_MAX )
       return FT_THROW( Invalid_Argument );
 
+    /* signal the auto-hinter to recompute its size metrics */
+    /* (if requested)                                       */
+    face->size->internal->autohint_metrics.x_scale = 0;
+
     clazz = face->driver->clazz;
 
     if ( clazz->request_size )

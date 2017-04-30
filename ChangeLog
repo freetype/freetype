@@ -1,3 +1,14 @@
+2017-04-30  Werner Lemberg  <wl@gnu.org>
+
+	[autofit] Fix metrics computation.
+
+	Problem reported by Markus Trippelsdorf <markus@trippelsdorf.de> and
+	Nikolaus Waxweiler <madigens@gmail.com>.
+
+	* src/base/ftobjs.c (FT_Request_Size): Trigger recomputation of
+	auto-hinter metrics.  Without this change, multiple size changing
+	calls for a single face fail.
+
 2017-04-29  Werner Lemberg  <wl@gnu.org>
 
 	* src/truetype/ttdriver.c (tt_size_request): Properly check `error'.
