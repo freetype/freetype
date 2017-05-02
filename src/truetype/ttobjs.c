@@ -1234,6 +1234,7 @@
     /*                                                               */
     if ( face->header.Flags & 8 )
     {
+      /* the TT spec always asks for ROUND, not FLOOR or CEIL */
       size_metrics->ascender = FT_PIX_ROUND(
                                  FT_MulFix( face->root.ascender,
                                             size_metrics->y_scale ) );
@@ -1252,6 +1253,8 @@
 
     if ( face->header.Flags & 8 )
     {
+      /* base scaling values on integer ppem values, */
+      /* as mandated by the TrueType specification   */
       size_metrics->x_scale = FT_DivFix( size_metrics->x_ppem << 6,
                                          face->root.units_per_EM );
       size_metrics->y_scale = FT_DivFix( size_metrics->y_ppem << 6,

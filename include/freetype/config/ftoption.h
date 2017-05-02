@@ -909,11 +909,15 @@ FT_BEGIN_HEADER
 
   /*************************************************************************/
   /*                                                                       */
-  /* Use TrueType-like size metrics for `light' auto-hinting.  This option */
-  /* exists mainly for backwards compatibility with GNU/Linux              */
-  /* distributions like Fedora that did not un-patch the following change  */
-  /* (which was present in FreeType between versions 2.4.6 and 2.7.1,      */
-  /* inclusive).                                                           */
+  /* Use TrueType-like size metrics for `light' auto-hinting.              */
+  /*                                                                       */
+  /* It is strongly recommended to avoid this option, which exists only to */
+  /* help some legacy applications retain its appearance and behaviour     */
+  /* with respect to auto-hinted TrueType fonts.                           */
+  /*                                                                       */
+  /* The very reason this option exists at all are GNU/Linux distributions */
+  /* like Fedora that did not un-patch the following change (which was     */
+  /* present in FreeType between versions 2.4.6 and 2.7.1, inclusive).     */
   /*                                                                       */
   /*   2011-07-16  Steven Chu  <steven.f.chu@gmail.com>                    */
   /*                                                                       */

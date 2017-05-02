@@ -245,15 +245,14 @@
     if ( !size_internal->autohint_metrics.x_scale                          ||
          size_internal->autohint_mode != FT_LOAD_TARGET_MODE( load_flags ) )
     {
-      /* switching between LIGHT and SLIGHT (and vice versa) usually means */
-      /* different scaling values; this later on enforces recomputation of */
-      /* everything related to the current size                            */
+      /* switching between hinting modes usually means different scaling */
+      /* values; this later on enforces recomputation of everything      */
+      /* related to the current size                                     */
 
       size_internal->autohint_mode    = FT_LOAD_TARGET_MODE( load_flags );
       size_internal->autohint_metrics = size->metrics;
 
 #ifdef AF_CONFIG_OPTION_TT_SIZE_METRICS
-      if ( size_internal->autohint_mode != FT_RENDER_MODE_SLIGHT )
       {
         FT_Size_Metrics*  size_metrics = &size_internal->autohint_metrics;
 
@@ -382,12 +381,11 @@
      *
      */
 
-    /* stem darkening only works well in `light' and `slight' modes */
-    if ( ( scaler.render_mode == FT_RENDER_MODE_LIGHT  ||
-           scaler.render_mode == FT_RENDER_MODE_SLIGHT ) &&
+    /* stem darkening only works well in `light' mode */
+    if ( scaler.render_mode == FT_RENDER_MODE_LIGHT    &&
          ( !face->internal->no_stem_darkening        ||
            ( face->internal->no_stem_darkening < 0 &&
-             !module->no_stem_darkening            ) )   )
+             !module->no_stem_darkening            ) ) )
       af_loader_embolden_glyph_in_slot( loader, face, style_metrics );
 
     loader->transformed = slot_internal->glyph_transformed;
@@ -435,8 +433,7 @@
 
       /* we now need to adjust the metrics according to the change in */
       /* width/positioning that occurred during the hinting process   */
-      if ( scaler.render_mode != FT_RENDER_MODE_LIGHT  &&
-           scaler.render_mode != FT_RENDER_MODE_SLIGHT )
+      if ( scaler.render_mode != FT_RENDER_MODE_LIGHT )
       {
         FT_Pos  old_rsb, old_lsb, new_lsb;
         FT_Pos  pp1x_uh, pp2x_uh;
@@ -494,9 +491,8 @@
         }
       }
       /* `light' mode uses integer advance widths */
-      /* (but sets `lsb_delta' and `rsb_delta'),  */
-      /* `slight' mode uses fractional values     */
-      else if ( scaler.render_mode == FT_RENDER_MODE_LIGHT )
+      /* but sets `lsb_delta' and `rsb_delta'     */
+      else
       {
         FT_Pos  pp1x = loader->pp1.x;
         FT_Pos  pp2x = loader->pp2.x;
@@ -507,11 +503,6 @@
 
         slot->lsb_delta = loader->pp1.x - pp1x;
         slot->rsb_delta = loader->pp2.x - pp2x;
-      }
-      else
-      {
-        slot->lsb_delta = 0;
-        slot->rsb_delta = 0;
       }
 
       break;
@@ -563,7 +554,6 @@
       /* to keep the original rounded advance width; ditto for     */
       /* digits if all have the same advance width                 */
       if ( scaler.render_mode != FT_RENDER_MODE_LIGHT                       &&
-           scaler.render_mode != FT_RENDER_MODE_SLIGHT                      &&
            ( FT_IS_FIXED_WIDTH( slot->face )                              ||
              ( af_face_globals_is_digit( loader->globals, glyph_index ) &&
                style_metrics->digits_have_same_width                    ) ) )
@@ -587,8 +577,7 @@
       slot->metrics.vertAdvance = FT_MulFix( slot->metrics.vertAdvance,
                                              style_metrics->scaler.y_scale );
 
-      if ( scaler.render_mode != FT_RENDER_MODE_SLIGHT )
-        slot->metrics.horiAdvance = FT_PIX_ROUND( slot->metrics.horiAdvance );
+      slot->metrics.horiAdvance = FT_PIX_ROUND( slot->metrics.horiAdvance );
       slot->metrics.vertAdvance = FT_PIX_ROUND( slot->metrics.vertAdvance );
 
       slot->format  = FT_GLYPH_FORMAT_OUTLINE;

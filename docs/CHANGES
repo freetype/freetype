@@ -3,7 +3,9 @@ CHANGES BETWEEN 2.7.1 and 2.8
 
   I. IMPORTANT CHANGES
 
-    - Support for OpenType Variation Fonts is now complete.
+    - Support for OpenType Variation Fonts is now complete.   The last
+      missing part was handling the `VVAR' and `MVAR' tables, which is
+      available with this release.
 
     - A new  function `FT_Face_Properties' allows the  control of some
       module  and   library  properties  per  font.    Currently,  the
@@ -19,11 +21,20 @@ CHANGES BETWEEN 2.7.1 and 2.8
 
         FREETYPE_PROPERTIES=pcf:no-long-family-names=1
 
-    - Variations font support now takes care of the `VVAR' and  `MVAR'
-      tables also.
-
 
   II. IMPORTANT BUG FIXES
+
+    - `Light' auto-hinting  mode no  longer uses TrueType  metrics for
+      TrueType  fonts.   This bug  was  introduced  in version  2.4.6,
+      causing   horizontal  scaling   also.    Almost  all   GNU/Linux
+      distributions (with Fedora as  a notable exception) disabled the
+      corresponding patch for good reasons; chances are thus high that
+      you won't notice a difference.
+
+      If  optical backward  compatibility for  legacy applications  is
+      necessary, you might enable the AF_CONFIG_OPTION_TT_SIZE_METRICS
+      configuration option.   However, it  is strongly  recommended to
+      avoid that, adjusting font sizes instead.
 
     - If a TrueType font gets loaded with FT_LOAD_NO_HINTING, FreeType
       now scales  the font linearly  again (bug introduced  in version

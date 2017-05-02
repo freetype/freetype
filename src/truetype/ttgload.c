@@ -2737,7 +2737,7 @@
     /* TrueType glyphs at all sizes using the bytecode interpreter. */
     /*                                                              */
     if ( !( load_flags & FT_LOAD_NO_SCALE ) &&
-         size->metrics->y_ppem < 24          )
+         size->metrics->y_ppem < 24         )
       glyph->outline.flags |= FT_OUTLINE_HIGH_PRECISION;
 
   Exit:

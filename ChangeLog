@@ -1,3 +1,35 @@
+2017-05-02  Werner Lemberg  <wl@gnu.org>
+
+	[autofit] Remove `slight' auto-hint mode again.
+
+	A poll on freetype-devel favoured changes directly applied to
+	`light'.
+
+	* include/freetype/freetype.h (FT_LOAD_TARGET_SLIGHT,
+	FT_RENDER_MODE_SLIGHT): Removed.
+
+	* src/autofit/afcjk.c (af_cjk_hints_init), src/autofit/aflatin.c
+	(af_latin_hints_init), src/autofit/aflatin2.c
+	(af_latin2_hints_init): Revert change from 2017-04-22.
+
+	* src/autofit/afloader.c (af_loader_load_glyph) Remove references to
+	FT_RENDER_MODE_SLIGHT.
+	[AF_CONFIG_OPTION_TT_SIZE_METRICS]: Enable TrueType-like metrics
+	unconditionally.
+
+	* src/base/ftadvanc.c (LOAD_ADVANCE_FAST_CHECK): Revert change from
+	2017-04-22.
+
+	* src/base/ftobjs.c (FT_Load_Glyph): Revert change from 2017-04-22.
+
+	* src/pshinter/pshalgo.c (ps_hints_apply): Revert change from
+	2017-04-22.
+
+	* src/smooth/ftsmooth.c (ft_smooth_render): Revert change from
+	2017-04-22.
+
+	* docs/CHANGES: Updated.
+
 2017-04-30  Werner Lemberg  <wl@gnu.org>
 
 	[autofit] Fix metrics computation.

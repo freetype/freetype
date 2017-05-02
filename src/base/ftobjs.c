@@ -668,8 +668,8 @@
      * - Then, auto-hint if FT_LOAD_FORCE_AUTOHINT is set or if we don't
      *   have a native font hinter.
      *
-     * - Otherwise, auto-hint for LIGHT or SLIGHT hinting mode or if there
-     *   isn't any hinting bytecode in the TrueType/OpenType font.
+     * - Otherwise, auto-hint for LIGHT hinting mode or if there isn't
+     *   any hinting bytecode in the TrueType/OpenType font.
      *
      * - Exception: The font is `tricky' and requires the native hinter to
      *   load properly.
@@ -702,9 +702,8 @@
         /* check the size of the `fpgm' and `prep' tables, too --    */
         /* the assumption is that there don't exist real TTFs where  */
         /* both `fpgm' and `prep' tables are missing                 */
-        if ( ( ( mode == FT_RENDER_MODE_LIGHT  ||
-                 mode == FT_RENDER_MODE_SLIGHT )              &&
-               !FT_DRIVER_HINTS_LIGHTLY( driver )             ) ||
+        if ( ( mode == FT_RENDER_MODE_LIGHT       &&
+               !FT_DRIVER_HINTS_LIGHTLY( driver ) )             ||
              ( FT_IS_SFNT( face )                             &&
                ttface->num_locations                          &&
                ttface->max_profile.maxSizeOfInstructions == 0 &&

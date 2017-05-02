@@ -221,7 +221,6 @@ FT_BEGIN_HEADER
   /*                                                                       */
   /*    FT_LOAD_TARGET_NORMAL                                              */
   /*    FT_LOAD_TARGET_LIGHT                                               */
-  /*    FT_LOAD_TARGET_SLIGHT                                              */
   /*    FT_LOAD_TARGET_MONO                                                */
   /*    FT_LOAD_TARGET_LCD                                                 */
   /*    FT_LOAD_TARGET_LCD_V                                               */
@@ -1756,12 +1755,37 @@ FT_BEGIN_HEADER
   /*    `slot->format' is also changed to @FT_GLYPH_FORMAT_BITMAP.         */
   /*                                                                       */
   /*    Here is a small pseudo code fragment that shows how to use         */
-  /*    `lsb_delta' and `rsb_delta' to improve (integer) positioning of    */
+  /*    `lsb_delta' and `rsb_delta' to do fractional positioning of        */
   /*    glyphs:                                                            */
   /*                                                                       */
   /*    {                                                                  */
-  /*      FT_Pos  origin_x       = 0;                                      */
-  /*      FT_Pos  prev_rsb_delta = 0;                                      */
+  /*      FT_GlyphSlot  slot     = face->glyph;                            */
+  /*      FT_Pos        origin_x = 0;                                      */
+  /*                                                                       */
+  /*                                                                       */
+  /*      for all glyphs do                                                */
+  /*        <load glyph with `FT_Load_Glyph'>                              */
+  /*                                                                       */
+  /*        FT_Outline_Translate( slot->outline, origin_x & 63, 0 );       */
+  /*                                                                       */
+  /*        <save glyph image, or render glyph, or ...>                    */
+  /*                                                                       */
+  /*        <compute kern between current and next glyph                   */
+  /*         and add it to `origin_x'>                                     */
+  /*                                                                       */
+  /*        origin_x += slot->advance.x;                                   */
+  /*        origin_x += slot->rsb_delta - slot->lsb_relta;                 */
+  /*      endfor                                                           */
+  /*    }                                                                  */
+  /*                                                                       */
+  /*    Here is another small pseudo code fragment that shows how to use   */
+  /*    `lsb_delta' and `rsb_delta' to improve integer positioning of      */
+  /*    glyphs:                                                            */
+  /*                                                                       */
+  /*    {                                                                  */
+  /*      FT_GlyphSlot  slot           = face->glyph;                      */
+  /*      FT_Pos        origin_x       = 0;                                */
+  /*      FT_Pos        prev_rsb_delta = 0;                                */
   /*                                                                       */
   /*                                                                       */
   /*      for all glyphs do                                                */
@@ -1770,16 +1794,16 @@ FT_BEGIN_HEADER
   /*                                                                       */
   /*        <load glyph with `FT_Load_Glyph'>                              */
   /*                                                                       */
-  /*        if ( prev_rsb_delta - face->glyph->lsb_delta >= 32 )           */
+  /*        if ( prev_rsb_delta - slot->lsb_delta >= 32 )                  */
   /*          origin_x -= 64;                                              */
-  /*        else if ( prev_rsb_delta - face->glyph->lsb_delta < -32 )      */
+  /*        else if ( prev_rsb_delta - slot->lsb_delta < -32 )             */
   /*          origin_x += 64;                                              */
   /*                                                                       */
-  /*        prev_rsb_delta = face->glyph->rsb_delta;                       */
+  /*        prev_rsb_delta = slot->rsb_delta;                              */
   /*                                                                       */
   /*        <save glyph image, or render glyph, or ...>                    */
   /*                                                                       */
-  /*        origin_x += face->glyph->advance.x;                            */
+  /*        origin_x += slot->advance.x;                                   */
   /*      endfor                                                           */
   /*    }                                                                  */
   /*                                                                       */
@@ -2937,8 +2961,8 @@ FT_BEGIN_HEADER
    *     rendering.  For monochrome output, use @FT_LOAD_TARGET_MONO
    *     instead.
    *
-   *   FT_LOAD_TARGET_SLIGHT ::
-   *     A slight hinting algorithm for gray-level modes.  Many generated
+   *   FT_LOAD_TARGET_LIGHT ::
+   *     A lighter hinting algorithm for gray-level modes.  Many generated
    *     glyphs are fuzzier but better resemble their original shape.  This
    *     is achieved by snapping glyphs to the pixel grid only vertically
    *     (Y-axis), as is done by FreeType's new CFF engine or Microsoft's
@@ -2947,24 +2971,15 @@ FT_BEGIN_HEADER
    *     driver, if the driver itself and the font support it, or by the
    *     auto-hinter.
    *
-   *     Advance widths are not rounded to integer values; instead, metrics
-   *     are based on linearly scaled values.  In particular this implies
-   *     that you have to apply sub-pixel rendering.
-   *
-   *   FT_LOAD_TARGET_LIGHT ::
-   *     This is similar to @FT_LOAD_TARGET_SLIGHT with a main difference:
-   *     It uses integer advance widths.
+   *     Advance widths are rounded to integer values; however, using the
+   *     `lsb_delta' and `rsb_delta' fields of @FT_GlyphSlotRec, it is
+   *     possible to get fractional advance widths for sub-pixel positioning
+   *     (which is recommended to use).
    *
    *     If configuration option AF_CONFIG_OPTION_TT_SIZE_METRICS is active,
    *     TrueType-like metrics are used to make this mode behave similarly
    *     as in unpatched FreeType versions between 2.4.6 and 2.7.1
    *     (inclusive).
-   *
-   *     This hinting mode is deprecated.  In general,
-   *     @FT_LOAD_TARGET_SLIGHT always yields better results; additionally,
-   *     FT_LOAD_TARGET_LIGHT suffers from backwards compatibility issues
-   *     (see the documentation of AF_CONFIG_OPTION_TT_SIZE_METRICS in
-   *     `ftoption.h' for more details).
    *
    *   FT_LOAD_TARGET_MONO ::
    *     Strong hinting algorithm that should only be used for monochrome
@@ -3001,18 +3016,17 @@ FT_BEGIN_HEADER
    *     }
    *
    *   In general, you should stick with one rendering mode.  For example,
-   *   switching between @FT_LOAD_TARGET_LIGHT and @FT_LOAD_TARGET_SLIGHT
-   *   enforces a lot of recomputation, which is slow.  Another reason is
-   *   caching: Selecting a different mode usually causes changes in both
-   *   the outlines and the rasterized bitmaps; it is thus necessary to
-   *   empty the cache after a mode switch to avoid false hits.
+   *   switching between @FT_LOAD_TARGET_NORMAL and @FT_LOAD_TARGET_MONO
+   *   enforces a lot of recomputation for TrueType fonts, which is slow.
+   *   Another reason is caching: Selecting a different mode usually causes
+   *   changes in both the outlines and the rasterized bitmaps; it is thus
+   *   necessary to empty the cache after a mode switch to avoid false hits.
    *
    */
 #define FT_LOAD_TARGET_( x )   ( (FT_Int32)( (x) & 15 ) << 16 )
 
 #define FT_LOAD_TARGET_NORMAL  FT_LOAD_TARGET_( FT_RENDER_MODE_NORMAL )
 #define FT_LOAD_TARGET_LIGHT   FT_LOAD_TARGET_( FT_RENDER_MODE_LIGHT  )
-#define FT_LOAD_TARGET_SLIGHT  FT_LOAD_TARGET_( FT_RENDER_MODE_SLIGHT )
 #define FT_LOAD_TARGET_MONO    FT_LOAD_TARGET_( FT_RENDER_MODE_MONO   )
 #define FT_LOAD_TARGET_LCD     FT_LOAD_TARGET_( FT_RENDER_MODE_LCD    )
 #define FT_LOAD_TARGET_LCD_V   FT_LOAD_TARGET_( FT_RENDER_MODE_LCD_V  )
@@ -3093,12 +3107,6 @@ FT_BEGIN_HEADER
   /*      indirectly to define hinting algorithm selectors.  See           */
   /*      @FT_LOAD_TARGET_XXX for details.                                 */
   /*                                                                       */
-  /*    FT_RENDER_MODE_SLIGHT ::                                           */
-  /*      This is equivalent to @FT_RENDER_MODE_NORMAL.  It is only        */
-  /*      defined as a separate value because render modes are also used   */
-  /*      indirectly to define hinting algorithm selectors.  See           */
-  /*      @FT_LOAD_TARGET_XXX for details.                                 */
-  /*                                                                       */
   /*    FT_RENDER_MODE_MONO ::                                             */
   /*      This mode corresponds to 1-bit bitmaps (with 2~levels of         */
   /*      opacity).                                                        */
@@ -3134,7 +3142,6 @@ FT_BEGIN_HEADER
     FT_RENDER_MODE_MONO,
     FT_RENDER_MODE_LCD,
     FT_RENDER_MODE_LCD_V,
-    FT_RENDER_MODE_SLIGHT,
 
     FT_RENDER_MODE_MAX
 
