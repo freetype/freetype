@@ -1,3 +1,18 @@
+2017-05-02  Behdad Esfahbod  <behdad@behdad.org>
+
+	[truetype] Make `IUP' gvar deltas do the same as Apple (#50832).
+
+	When points are not touched by gvar interpolation deltas, FreeType
+	gave a slightly different result than Apple's CoreText.
+
+	The OpenType working group will update the specification to document
+	the following behaviour: If the two points with deltas to the `left'
+	and `right' of the untouched point have the same coordinate, then
+	the inferred delta for the untouched point should be zero.
+
+	* src/truetype/ttgxvar.c (tt_delta_interpolate): Implement new
+	behaviour.
+
 2017-05-02  Werner Lemberg  <wl@gnu.org>
 
 	[autofit] Remove `slight' auto-hint mode again.
