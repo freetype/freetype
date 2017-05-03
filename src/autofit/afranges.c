@@ -52,8 +52,8 @@
   /* not be affected by blue zones, regardless of whether this is a       */
   /* spacing or no-spacing glyph                                          */
 
-  /* the `ta_xxxx_nonbase_uniranges' ranges must be strict subsets */
-  /* of the corresponding `ta_xxxx_uniranges' ranges               */
+  /* the `af_xxxx_nonbase_uniranges' ranges must be strict subsets */
+  /* of the corresponding `af_xxxx_uniranges' ranges               */
 
 
   const AF_Script_UniRangeRec  af_adlm_uniranges[] =
@@ -666,6 +666,21 @@
   };
 
 
+  const AF_Script_UniRangeRec  af_sund_uniranges[] =
+  {
+    AF_UNIRANGE_REC(  0x1B80,  0x1BBF ), /* Sundanese            */
+    AF_UNIRANGE_REC(  0x1CC0,  0x1CCF ), /* Sundanese Supplement */
+    AF_UNIRANGE_REC(       0,       0 )
+  };
+
+  const AF_Script_UniRangeRec  af_sund_nonbase_uniranges[] =
+  {
+    AF_UNIRANGE_REC(  0x1B80,  0x1B82 ),
+    AF_UNIRANGE_REC(  0x1BA1,  0x1BAD ),
+    AF_UNIRANGE_REC(       0,       0 )
+  };
+
+
   const AF_Script_UniRangeRec  af_taml_uniranges[] =
   {
     AF_UNIRANGE_REC(  0x0B80,  0x0BFF ),  /* Tamil */
@@ -772,21 +787,6 @@
     AF_UNIRANGE_REC(  0x0B41,  0x0B44 ),
     AF_UNIRANGE_REC(  0x0B4D,  0x0B56 ),
     AF_UNIRANGE_REC(  0x0B62,  0x0B63 ),
-    AF_UNIRANGE_REC(       0,       0 )
-  };
-
-
-  const AF_Script_UniRangeRec  af_sund_uniranges[] =
-  {
-    AF_UNIRANGE_REC(  0x1B80,  0x1BBF ),  /* Sundanese            */
-    AF_UNIRANGE_REC(  0x1CC0,  0x1CCF ),  /* Sundanese Supplement */
-    AF_UNIRANGE_REC(       0,       0 )
-  };
-
-  const AF_Script_UniRangeRec  af_sund_nonbase_uniranges[] =
-  {
-    AF_UNIRANGE_REC(  0x1B80,  0x1B82 ),
-    AF_UNIRANGE_REC(  0x1BA1,  0x1BAD ),
     AF_UNIRANGE_REC(       0,       0 )
   };
 

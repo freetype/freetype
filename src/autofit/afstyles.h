@@ -322,6 +322,13 @@
          AF_BLUE_STRINGSET_SINH,
          AF_COVERAGE_DEFAULT )
 
+  STYLE( sund_dflt, SUND_DFLT,
+         "Sundanese default style",
+         AF_WRITING_SYSTEM_LATIN,
+         AF_SCRIPT_SUND,
+         AF_BLUE_STRINGSET_SUND,
+         AF_COVERAGE_DEFAULT )
+
   STYLE( taml_dflt, TAML_DFLT,
          "Tamil default style",
          AF_WRITING_SYSTEM_LATIN,
@@ -371,7 +378,6 @@
 
   STYLE_DEFAULT_INDIC( limb, LIMB, "Limbu" )
   STYLE_DEFAULT_INDIC( orya, ORYA, "Oriya" )
-  STYLE_DEFAULT_INDIC( sund, SUND, "Sundanese" )
   STYLE_DEFAULT_INDIC( sylo, SYLO, "Syloti Nagri" )
   STYLE_DEFAULT_INDIC( tibt, TIBT, "Tibetan" )
 

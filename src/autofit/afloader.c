@@ -300,7 +300,7 @@
     scaler.flags       = 0;
 
     /* note that the fallback style can't be changed anymore */
-    /* after the first call of `ta_loader_load_glyph'        */
+    /* after the first call of `af_loader_load_glyph'        */
     error = af_loader_reset( loader, module, face );
     if ( error )
       goto Exit;

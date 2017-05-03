@@ -243,6 +243,13 @@
           HINTING_BOTTOM_TO_TOP,
           "\xE0\xB6\xA7" ) /* ට */
 
+  /* only digit zero has a simple (round) shape in the Sundanese script */
+  SCRIPT( sund, SUND,
+          "Sundanese",
+          HB_SCRIPT_SUNDANESE,
+          HINTING_BOTTOM_TO_TOP,
+          "\xE1\xAE\xB0" ) /* ᮰ */
+
   /* only digit zero has a simple (round) shape in the Tamil script */
   SCRIPT( taml, TAML,
           "Tamil",
@@ -286,12 +293,6 @@
   SCRIPT( orya, ORYA,
           "Oriya",
           HB_SCRIPT_ORIYA,
-          HINTING_BOTTOM_TO_TOP,
-          "o" ) /* XXX */
-
-  SCRIPT( sund, SUND,
-          "Sundanese",
-          HB_SCRIPT_SUNDANESE,
           HINTING_BOTTOM_TO_TOP,
           "o" ) /* XXX */
 
