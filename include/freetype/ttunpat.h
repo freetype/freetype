@@ -3,7 +3,7 @@
 /*  ttunpat.h                                                              */
 /*                                                                         */
 /*    Definitions for the unpatented TrueType hinting system.              */
-/*    Obsolete, retained for backwards compatibility.                      */
+/*    Obsolete, retained for backward compatibility.                       */
 /*                                                                         */
 /*  Copyright 2003-2017 by                                                 */
 /*  David Turner, Robert Wilhelm, and Werner Lemberg.                      */

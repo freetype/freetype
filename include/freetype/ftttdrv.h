@@ -110,7 +110,7 @@ FT_BEGIN_HEADER
    *   TrueType interpreter fully allows the advance width to be adjusted in
    *   this mode, just the DWrite client will ignore those changes.
    *
-   *   _ClearType_ _Backwards_ _Compatibility_
+   *   _ClearType_ _Backward_ _Compatibility_
    *
    *   This is a set of exceptions made in the TrueType interpreter to
    *   minimize hinting techniques that were problematic with the extra
@@ -118,9 +118,9 @@ FT_BEGIN_HEADER
    *   http://www.beatstamm.com/typography/RTRCh4.htm#Sec1 and
    *   http://www.microsoft.com/typography/cleartype/truetypecleartype.aspx.
    *   This technique is not to be confused with ClearType compatible
-   *   widths.  ClearType backwards compatibility has no direct impact on
+   *   widths.  ClearType backward compatibility has no direct impact on
    *   changing advance widths, but there might be an indirect impact on
-   *   disabling some deltas.  This could be worked around in backwards
+   *   disabling some deltas.  This could be worked around in backward
    *   compatibility mode.
    *
    *   _Native_ _ClearType_ _Mode_

@@ -244,7 +244,7 @@
 
 	All public FreeType enumeration and flag values are uppercase...
 
-	* include/tttables.h (FT_Sfnt_Tag): Implement it.  For backwards
+	* include/tttables.h (FT_Sfnt_Tag): Implement it.  For backward
 	compatibility, retain the old values as macros.
 
 	* src/base/ftfstype.c (FT_Get_FSType_Flags), src/sfnt/sfdriver.c

@@ -605,7 +605,7 @@
 
 	* docs/release: Minor additions and clarifications.
 
-	* docs/CHANGES: Updated to reflect many fixes for backwards
+	* docs/CHANGES: Updated to reflect many fixes for backward
 	compatibility.  Still incomplete.
 
 2006-02-26  David Turner  <david@freetype.org>
@@ -2787,7 +2787,7 @@
 2005-06-15  Kirill Smelkov  <kirr@mns.spb.ru>
 
 	The next release will be 2.2.0, so don't worry about source code
-	backwards compatibility.
+	backward compatibility.
 
 	* include/freetype/ftimage.h (FT_Outline_MoveToFunc,
 	FT_Outline_LineToFunc, FT_Outline_ConicToFunc,

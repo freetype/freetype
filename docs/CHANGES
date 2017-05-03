@@ -342,7 +342,7 @@ CHANGES BETWEEN 2.6.2 and 2.6.3
       to the user.   The exception to this  is `__FTERRORS_H__', which
       must be  sometimes undefined by  the user to get  FreeType error
       strings:  Both this  form and  the new  `FTERRORS_H_' macro  are
-      accepted for backwards compatibility.
+      accepted for backward compatibility.
 
     - Minor improvements mainly to the Type 1 driver.
 
@@ -583,17 +583,17 @@ CHANGES BETWEEN 2.5.5 and 2.6
       compiler warnings.
 
     - Function `FT_Bitmap_New'  has been renamed  to `FT_Bitmap_Init',
-      since  this name  better reflects  its function.   For backwards
+      since  this name  better reflects  its  function.   For backward
       compatibility, the old function name is still available.
 
     - Function   `FT_Get_X11_Font_Format'   has    been   renamed   to
       `FT_Get_Font_Format',  since  this   name  better  reflects  its
-      function.  For backwards compatibility, the old function name is
+      function.  For backward compatibility,  the old function name is
       still available.
 
       Additionally, the header  file macro for this  function has been
       renamed to  `FT_FONT_FORMATS_H' (the old name  `FT_XFREE86_H' is
-      retained for backwards compatibility).
+      retained for backward compatibility).
 
     - Various improvements to the `ftgrid' demo program.
 
@@ -1027,7 +1027,7 @@ index ebcf189..3f2ce6b 100644
   II. MISCELLANEOUS
 
     - The  (top-level)  `configure'  script   now  respects  the  MAKE
-      environment variable to specify a `make' binary.   For backwards
+      environment variable  to specify a `make' binary.   For backward
       compatibility, GNUMAKE still overrides MAKE, though.
 
     - The `ftview'  and `ftdiff'  demo programs have  been redesigned,

@@ -1383,7 +1383,7 @@ FT_BEGIN_HEADER
   /*                                                                       */
   /*    sph_compatibility_mode ::                                          */
   /*                            This flag is set if we are in ClearType    */
-  /*                            backwards compatibility mode (used by the  */
+  /*                            backward compatibility mode (used by the   */
   /*                            v38 implementation of the bytecode         */
   /*                            interpreter).                              */
   /*                                                                       */

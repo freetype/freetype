@@ -335,7 +335,7 @@
 
 	* include/freetype/ftmoderr.h: Fix commit from 2013-03-11.
 
-	The previous version was not backwards compatible.  Reported by
+	The previous version was not backward compatible.  Reported by
 	Behdad.
 
 2013-03-14  Werner Lemberg  <wl@gnu.org>

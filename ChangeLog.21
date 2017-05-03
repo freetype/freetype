@@ -9062,7 +9062,7 @@
 	  FT_Glyph_Name_Requester => FT_Face_GetGlyphNameFunc
 	  FT_Name_Index_Requester => FT_Face_GetGlyphNameIndexFunc
 
-	* src/base/ftapi.c: New file.  It contains backwards compatibility
+	* src/base/ftapi.c: New file.  It contains backward compatibility
 	functions.
 
 	* include/freetype/internal/psaux.h, src/cid/cidload.c,
@@ -9246,7 +9246,7 @@
 	  {
 	  } PS_StructRec, *PS_Struct;
 
-	  typedef PS_StructRec  T1_Struct;  /* backwards-compatibility */
+	  typedef PS_StructRec  T1_Struct;  /* backward compatibility */
 
 	Hence, we increase the coherency of the source code by effectively
 	using the `Rec' prefix for structure types.

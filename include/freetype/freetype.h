@@ -771,7 +771,7 @@ FT_BEGIN_HEADER
     FT_ENC_TAG( FT_ENCODING_WANSUNG, 'w', 'a', 'n', 's' ),
     FT_ENC_TAG( FT_ENCODING_JOHAB,   'j', 'o', 'h', 'a' ),
 
-    /* for backwards compatibility */
+    /* for backward compatibility */
     FT_ENCODING_GB2312     = FT_ENCODING_PRC,
     FT_ENCODING_MS_SJIS    = FT_ENCODING_SJIS,
     FT_ENCODING_MS_GB2312  = FT_ENCODING_PRC,
@@ -2037,7 +2037,7 @@ FT_BEGIN_HEADER
   /*    `num_params' and `params' is used.  They are ignored otherwise.    */
   /*                                                                       */
   /*    Ideally, both the `pathname' and `params' fields should be tagged  */
-  /*    as `const'; this is missing for API backwards compatibility.  In   */
+  /*    as `const'; this is missing for API backward compatibility.  In    */
   /*    other words, applications should treat them as read-only.          */
   /*                                                                       */
   typedef struct  FT_Open_Args_

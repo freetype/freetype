@@ -106,7 +106,7 @@
   /*                                                                   */
   /*   #undefine __FTERRORS_H__                                        */
   /*                                                                   */
-  /* work for backwards compatibility.                                 */
+  /* work for backward compatibility.                                  */
   /*                                                                   */
 #if !( defined( FTERRORS_H_ ) && defined ( __FTERRORS_H__ ) )
 #define FTERRORS_H_

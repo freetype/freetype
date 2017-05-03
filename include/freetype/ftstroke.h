@@ -136,7 +136,7 @@ FT_BEGIN_HEADER
    *     FT_STROKER_LINEJOIN_MITER_VARIABLE generates a mitered line
    *     join as used in XPS.  FT_STROKER_LINEJOIN_MITER is an alias
    *     for FT_STROKER_LINEJOIN_MITER_VARIABLE, retained for
-   *     backwards compatibility.
+   *     backward compatibility.
    */
   typedef enum  FT_Stroker_LineJoin_
   {

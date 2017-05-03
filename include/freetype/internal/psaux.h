@@ -817,7 +817,7 @@ FT_BEGIN_HEADER
 
   } PSAux_ServiceRec, *PSAux_Service;
 
-  /* backwards-compatible type definition */
+  /* backward compatible type definition */
   typedef PSAux_ServiceRec   PSAux_Interface;
 
 

@@ -1656,7 +1656,7 @@
   /*    zone     :: The affected glyph zone.                               */
   /*                                                                       */
   /* <Note>                                                                */
-  /*    See `ttinterp.h' for details on backwards compatibility mode.      */
+  /*    See `ttinterp.h' for details on backward compatibility mode.       */
   /*    `Touches' the point.                                               */
   /*                                                                       */
   static void
@@ -1684,7 +1684,7 @@
       /* Exception to the post-IUP curfew: Allow the x component of */
       /* diagonal moves, but only post-IUP.  DejaVu tries to adjust */
       /* diagonal stems like on `Z' and `z' post-IUP.               */
-      if ( SUBPIXEL_HINTING_MINIMAL && !exc->backwards_compatibility )
+      if ( SUBPIXEL_HINTING_MINIMAL && !exc->backward_compatibility )
         zone->cur[point].x += FT_MulDiv( distance, v, exc->F_dot_P );
       else
 #endif
@@ -1700,10 +1700,10 @@
     if ( v != 0 )
     {
 #ifdef TT_SUPPORT_SUBPIXEL_HINTING_MINIMAL
-      if ( !( SUBPIXEL_HINTING_MINIMAL     &&
-              exc->backwards_compatibility &&
-              exc->iupx_called             &&
-              exc->iupy_called             ) )
+      if ( !( SUBPIXEL_HINTING_MINIMAL    &&
+              exc->backward_compatibility &&
+              exc->iupx_called            &&
+              exc->iupy_called            ) )
 #endif
         zone->cur[point].y += FT_MulDiv( distance, v, exc->F_dot_P );
 
@@ -1756,7 +1756,7 @@
   /*                                                                       */
   /*   The following versions are used whenever both vectors are both      */
   /*   along one of the coordinate unit vectors, i.e. in 90% of the cases. */
-  /*   See `ttinterp.h' for details on backwards compatibility mode.       */
+  /*   See `ttinterp.h' for details on backward compatibility mode.        */
   /*                                                                       */
   /*************************************************************************/
 
@@ -1774,7 +1774,7 @@
 #endif /* TT_SUPPORT_SUBPIXEL_HINTING_INFINALITY */
 
 #ifdef TT_SUPPORT_SUBPIXEL_HINTING_MINIMAL
-    if ( SUBPIXEL_HINTING_MINIMAL && !exc->backwards_compatibility )
+    if ( SUBPIXEL_HINTING_MINIMAL && !exc->backward_compatibility )
       zone->cur[point].x += distance;
     else
 #endif
@@ -1796,7 +1796,7 @@
 
 #ifdef TT_SUPPORT_SUBPIXEL_HINTING_MINIMAL
     if ( !( SUBPIXEL_HINTING_MINIMAL             &&
-            exc->backwards_compatibility         &&
+            exc->backward_compatibility          &&
             exc->iupx_called && exc->iupy_called ) )
 #endif
       zone->cur[point].y += distance;
@@ -5126,11 +5126,11 @@
 #endif
 
 #ifdef TT_SUPPORT_SUBPIXEL_HINTING_MINIMAL
-      /* Native ClearType fonts sign a waiver that turns off all backwards */
+      /* Native ClearType fonts sign a waiver that turns off all backward  */
       /* compatibility hacks and lets them program points to the grid like */
       /* it's 1996.  They might sign a waiver for just one glyph, though.  */
       if ( SUBPIXEL_HINTING_MINIMAL )
-        exc->backwards_compatibility = !FT_BOOL( L == 4 );
+        exc->backward_compatibility = !FT_BOOL( L == 4 );
 #endif
     }
   }
@@ -5218,11 +5218,11 @@
 
 
 #ifdef TT_SUPPORT_SUBPIXEL_HINTING_MINIMAL
-    /* See `ttinterp.h' for details on backwards compatibility mode. */
-    if ( SUBPIXEL_HINTING_MINIMAL     &&
-         exc->backwards_compatibility &&
-         exc->iupx_called             &&
-         exc->iupy_called             )
+    /* See `ttinterp.h' for details on backward compatibility mode. */
+    if ( SUBPIXEL_HINTING_MINIMAL    &&
+         exc->backward_compatibility &&
+         exc->iupx_called            &&
+         exc->iupy_called            )
       goto Fail;
 #endif
 
@@ -5273,11 +5273,11 @@
 
 
 #ifdef TT_SUPPORT_SUBPIXEL_HINTING_MINIMAL
-    /* See `ttinterp.h' for details on backwards compatibility mode. */
-    if ( SUBPIXEL_HINTING_MINIMAL     &&
-         exc->backwards_compatibility &&
-         exc->iupx_called             &&
-         exc->iupy_called             )
+    /* See `ttinterp.h' for details on backward compatibility mode. */
+    if ( SUBPIXEL_HINTING_MINIMAL    &&
+         exc->backward_compatibility &&
+         exc->iupx_called            &&
+         exc->iupy_called            )
       return;
 #endif
 
@@ -5311,11 +5311,11 @@
 
 
 #ifdef TT_SUPPORT_SUBPIXEL_HINTING_MINIMAL
-    /* See `ttinterp.h' for details on backwards compatibility mode. */
-    if ( SUBPIXEL_HINTING_MINIMAL     &&
-         exc->backwards_compatibility &&
-         exc->iupx_called             &&
-         exc->iupy_called             )
+    /* See `ttinterp.h' for details on backward compatibility mode. */
+    if ( SUBPIXEL_HINTING_MINIMAL    &&
+         exc->backward_compatibility &&
+         exc->iupx_called            &&
+         exc->iupy_called            )
       return;
 #endif
 
@@ -5378,7 +5378,7 @@
   }
 
 
-  /* See `ttinterp.h' for details on backwards compatibility mode. */
+  /* See `ttinterp.h' for details on backward compatibility mode. */
   static void
   Move_Zp2_Point( TT_ExecContext  exc,
                   FT_UShort       point,
@@ -5389,8 +5389,8 @@
     if ( exc->GS.freeVector.x != 0 )
     {
 #ifdef TT_SUPPORT_SUBPIXEL_HINTING_MINIMAL
-      if ( !( SUBPIXEL_HINTING_MINIMAL     &&
-              exc->backwards_compatibility ) )
+      if ( !( SUBPIXEL_HINTING_MINIMAL    &&
+              exc->backward_compatibility ) )
 #endif
         exc->zp2.cur[point].x += dx;
 
@@ -5401,10 +5401,10 @@
     if ( exc->GS.freeVector.y != 0 )
     {
 #ifdef TT_SUPPORT_SUBPIXEL_HINTING_MINIMAL
-      if ( !( SUBPIXEL_HINTING_MINIMAL     &&
-              exc->backwards_compatibility &&
-              exc->iupx_called             &&
-              exc->iupy_called             ) )
+      if ( !( SUBPIXEL_HINTING_MINIMAL    &&
+              exc->backward_compatibility &&
+              exc->iupx_called            &&
+              exc->iupy_called            ) )
 #endif
         exc->zp2.cur[point].y += dy;
 
@@ -5701,8 +5701,8 @@
       else
 #endif
 #ifdef TT_SUPPORT_SUBPIXEL_HINTING_MINIMAL
-      if ( SUBPIXEL_HINTING_MINIMAL     &&
-           exc->backwards_compatibility )
+      if ( SUBPIXEL_HINTING_MINIMAL    &&
+           exc->backward_compatibility )
       {
         /* Special case: allow SHPIX to move points in the twilight zone.  */
         /* Otherwise, treat SHPIX the same as DELTAP.  Unbreaks various    */
@@ -6466,7 +6466,7 @@
       R.x = FT_MulDiv( val, dax, discriminant );
       R.y = FT_MulDiv( val, day, discriminant );
 
-      /* XXX: Block in backwards_compatibility and/or post-IUP? */
+      /* XXX: Block in backward_compatibility and/or post-IUP? */
       exc->zp2.cur[point].x = exc->zp1.cur[a0].x + R.x;
       exc->zp2.cur[point].y = exc->zp1.cur[a0].y + R.y;
     }
@@ -6474,7 +6474,7 @@
     {
       /* else, take the middle of the middles of A and B */
 
-      /* XXX: Block in backwards_compatibility and/or post-IUP? */
+      /* XXX: Block in backward_compatibility and/or post-IUP? */
       exc->zp2.cur[point].x = ( exc->zp1.cur[a0].x +
                                 exc->zp1.cur[a1].x +
                                 exc->zp0.cur[b0].x +
@@ -6866,11 +6866,11 @@
 
 
 #ifdef TT_SUPPORT_SUBPIXEL_HINTING_MINIMAL
-    /* See `ttinterp.h' for details on backwards compatibility mode. */
+    /* See `ttinterp.h' for details on backward compatibility mode.  */
     /* Allow IUP until it has been called on both axes.  Immediately */
     /* return on subsequent ones.                                    */
-    if ( SUBPIXEL_HINTING_MINIMAL     &&
-         exc->backwards_compatibility )
+    if ( SUBPIXEL_HINTING_MINIMAL    &&
+         exc->backward_compatibility )
     {
       if ( exc->iupx_called && exc->iupy_called )
         return;
@@ -7112,10 +7112,10 @@
           {
 
 #ifdef TT_SUPPORT_SUBPIXEL_HINTING_MINIMAL
-            /* See `ttinterp.h' for details on backwards compatibility */
-            /* mode.                                                   */
-            if ( SUBPIXEL_HINTING_MINIMAL     &&
-                 exc->backwards_compatibility )
+            /* See `ttinterp.h' for details on backward compatibility */
+            /* mode.                                                  */
+            if ( SUBPIXEL_HINTING_MINIMAL    &&
+                 exc->backward_compatibility )
             {
               if ( !( exc->iupx_called && exc->iupy_called )              &&
                    ( ( exc->is_composite && exc->GS.freeVector.y != 0 ) ||
@@ -7259,7 +7259,7 @@
     {
       if ( exc->ignore_x_mode )
       {
-        /* if in ClearType backwards compatibility mode,        */
+        /* if in ClearType backward compatibility mode,         */
         /* we sometimes change the TrueType version dynamically */
         K = exc->rasterizer_version;
         FT_TRACE6(( "Setting rasterizer version %d\n",
@@ -7589,15 +7589,15 @@
 #endif /* TT_SUPPORT_SUBPIXEL_HINTING_INFINALITY */
 
 #ifdef TT_SUPPORT_SUBPIXEL_HINTING_MINIMAL
-    /* Toggle backwards compatibility according to what font says, except  */
+    /* Toggle backward compatibility according to what font says, except   */
     /* when it's a `tricky' font that heavily relies on the interpreter to */
-    /* render glyphs correctly, e.g. DFKai-SB.  Backwards compatibility    */
+    /* render glyphs correctly, e.g. DFKai-SB.  Backward compatibility     */
     /* hacks may break it.                                                 */
     if ( SUBPIXEL_HINTING_MINIMAL          &&
          !FT_IS_TRICKY( &exc->face->root ) )
-      exc->backwards_compatibility = !( exc->GS.instruct_control & 4 );
+      exc->backward_compatibility = !( exc->GS.instruct_control & 4 );
     else
-      exc->backwards_compatibility = FALSE;
+      exc->backward_compatibility = FALSE;
 
     exc->iupx_called = FALSE;
     exc->iupy_called = FALSE;

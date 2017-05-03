@@ -1216,7 +1216,7 @@ FT_BEGIN_HEADER
 
   /* */
 
-  /* for backwards compatibility with older FreeType versions */
+  /* for backward compatibility with older FreeType versions */
 #define TT_UCR_ARABIC_PRESENTATION_A         \
           TT_UCR_ARABIC_PRESENTATION_FORMS_A
 #define TT_UCR_ARABIC_PRESENTATION_B         \

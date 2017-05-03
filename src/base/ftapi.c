@@ -38,7 +38,7 @@
   /*************************************************************************/
   /*************************************************************************/
 
-  /* backwards compatibility API */
+  /* backward compatibility API */
 
   FT_BASE_DEF( void )
   FT_New_Memory_Stream( FT_Library  library,

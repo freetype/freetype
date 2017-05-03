@@ -163,7 +163,7 @@
       /* This may not be the right place for this, but it works...  */
       /* Note that we have to unconditionally load the tweaks since */
       /* it is possible that glyphs individually switch ClearType's */
-      /* backwards compatibility mode on and off.                   */
+      /* backward compatibility mode on and off.                    */
       sph_set_tweaks( loader, glyph_index );
     }
 #endif /* TT_SUPPORT_SUBPIXEL_HINTING_INFINALITY */
@@ -821,11 +821,11 @@
 #endif
 
 #ifdef TT_SUPPORT_SUBPIXEL_HINTING_MINIMAL
-    /* Save possibly modified glyph phantom points unless in v40 backwards */
+    /* Save possibly modified glyph phantom points unless in v40 backward  */
     /* compatibility mode, where no movement on the x axis means no reason */
     /* to change bearings or advance widths.                               */
     if ( !( driver->interpreter_version == TT_INTERPRETER_VERSION_40 &&
-            !loader->exec->backwards_compatibility ) )
+            !loader->exec->backward_compatibility ) )
     {
 #endif
       loader->pp1 = zone->cur[zone->n_points - 4];
@@ -2053,18 +2053,18 @@
     glyph->metrics.horiBearingY = bbox.yMax;
     glyph->metrics.horiAdvance  = loader->pp2.x - loader->pp1.x;
 
-    /* Adjust advance width to the value contained in the hdmx table    */
-    /* unless FT_LOAD_COMPUTE_METRICS is set or backwards compatibility */
-    /* mode of the v40 interpreter is active.  See `ttinterp.h' for     */
-    /* details on backwards compatibility mode.                         */
+    /* Adjust advance width to the value contained in the hdmx table   */
+    /* unless FT_LOAD_COMPUTE_METRICS is set or backward compatibility */
+    /* mode of the v40 interpreter is active.  See `ttinterp.h' for    */
+    /* details on backward compatibility mode.                         */
     if (
 #ifdef TT_SUPPORT_SUBPIXEL_HINTING_MINIMAL
-         !( driver->interpreter_version == TT_INTERPRETER_VERSION_40 &&
-            ( loader->exec && loader->exec->backwards_compatibility  ) ) &&
+         !( driver->interpreter_version == TT_INTERPRETER_VERSION_40  &&
+            ( loader->exec && loader->exec->backward_compatibility  ) ) &&
 #endif
-         !face->postscript.isFixedPitch                                  &&
-         IS_HINTED( loader->load_flags )                                 &&
-         !( loader->load_flags & FT_LOAD_COMPUTE_METRICS )               )
+         !face->postscript.isFixedPitch                                 &&
+         IS_HINTED( loader->load_flags )                                &&
+         !( loader->load_flags & FT_LOAD_COMPUTE_METRICS )              )
     {
       FT_Byte*  widthp;
 

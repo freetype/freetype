@@ -1,3 +1,7 @@
+2017-05-03  Werner Lemberg  <wl@gnu.org>
+
+	*/*: s/backwards compatibility/backward compatibility/.
+
 2017-05-03  Sascha Brawer  <sascha@google.com>
 	    Werner Lemberg  <wl@gnu.org
 
@@ -127,7 +131,7 @@
 
 	* include/freetype/freetype.h (FT_Render_Mode): Fix order.
 
-	This retains backwards compatibility.
+	This retains backward compatibility.
 
 	Noted by Alexei.
 
@@ -162,7 +166,7 @@
 	horizontally, only applying vertical scaling and hinting.
 
 	At the same time, the behaviour of the `light' auto-hinter gets
-	restored for backwards compatibility: Both vertical and horizontal
+	restored for backward compatibility: Both vertical and horizontal
 	scaling is again based on rounded metrics values (this was changed
 	in a commit from 2017-03-30 as a side effect).  To be more precise,
 	the behaviour is restored for TrueType fonts only; for other font
