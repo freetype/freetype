@@ -108,6 +108,11 @@ AF_BLUE_STRING_ENUM AF_BLUE_STRINGS_ARRAY AF_BLUE_STRING_MAX_LEN:
   AF_BLUE_STRING_ARMENIAN_SMALL_DESCENDER
     "բ ը ի լ ղ պ փ ց"
 
+  AF_BLUE_STRING_AVESTAN_TOP
+    "𐬀 𐬁 𐬐 𐬛"
+  AF_BLUE_STRING_AVESTAN_BOTTOM
+    "𐬀 𐬁"
+
   AF_BLUE_STRING_BENGALI_BASE
     "অ ড ত ন ব ভ ল ক"
   AF_BLUE_STRING_BENGALI_TOP
@@ -592,6 +597,11 @@ AF_BLUE_STRINGSET_ENUM AF_BLUE_STRINGSETS_ARRAY AF_BLUE_STRINGSET_MAX_LEN:
     { AF_BLUE_STRING_ARMENIAN_SMALL_BOTTOM,    0                                 }
     { AF_BLUE_STRING_ARMENIAN_SMALL_DESCENDER, 0                                 }
     { AF_BLUE_STRING_MAX,                      0                                 }
+
+  AF_BLUE_STRINGSET_AVST
+    { AF_BLUE_STRING_AVESTAN_TOP,    AF_BLUE_PROPERTY_LATIN_TOP }
+    { AF_BLUE_STRING_AVESTAN_BOTTOM, 0                          }
+    { AF_BLUE_STRING_MAX,            0                          }
 
   AF_BLUE_STRINGSET_BENG
     { AF_BLUE_STRING_BENGALI_TOP,  AF_BLUE_PROPERTY_LATIN_TOP        }

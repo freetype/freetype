@@ -104,6 +104,13 @@
          AF_BLUE_STRINGSET_ARMN,
          AF_COVERAGE_DEFAULT )
 
+  STYLE( avst_dflt, AVST_DFLT,
+         "Avestan default style",
+         AF_WRITING_SYSTEM_LATIN,
+         AF_SCRIPT_AVST,
+         AF_BLUE_STRINGSET_AVST,
+         AF_COVERAGE_DEFAULT )
+
   STYLE( beng_dflt, BENG_DFLT,
          "Bengali default style",
          AF_WRITING_SYSTEM_LATIN,

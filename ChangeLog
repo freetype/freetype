@@ -1,3 +1,15 @@
+2017-05-03  Sascha Brawer  <sascha@google.com>
+	    Werner Lemberg  <wl@gnu.org
+
+	[autofit] Add support for Avestan script.
+
+	* src/autofit/afblue.dat: Add blue zone data for Avestan.
+	* src/autofit/afblue.c, src/autofit/afblue.h: Regenerated.
+
+	* src/autofit/afscript.h: Add Avestan standard character.
+
+	* src/autofit/afranges.c, src/autofit/afstyles.h: Add Avestan data.
+
 2017-05-02  Behdad Esfahbod  <behdad@behdad.org>
 
 	[truetype] Make `IUP' gvar deltas do the same as Apple (#50832).

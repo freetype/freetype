@@ -119,6 +119,19 @@
   };
 
 
+  const AF_Script_UniRangeRec  af_avst_uniranges[] =
+  {
+    AF_UNIRANGE_REC( 0x10B00,  0x10B3F ),  /* Avestan */
+    AF_UNIRANGE_REC(       0,        0 )
+  };
+
+  const AF_Script_UniRangeRec  af_avst_nonbase_uniranges[] =
+  {
+    AF_UNIRANGE_REC( 0x10B39,  0x10B3F ),
+    AF_UNIRANGE_REC(       0,        0 )
+  };
+
+
   const AF_Script_UniRangeRec  af_beng_uniranges[] =
   {
     AF_UNIRANGE_REC(  0x0980,  0x09FF ),  /* Bengali */

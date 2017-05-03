@@ -48,6 +48,12 @@
           HINTING_BOTTOM_TO_TOP,
           "\xD5\xBD \xD5\x8D" ) /* ս Ս */
 
+  SCRIPT( avst, AVST,
+          "Avestan",
+          HB_SCRIPT_AVESTAN,
+          HINTING_BOTTOM_TO_TOP,
+          "\xF0\x90\xAC\x9A" ) /* 𐬚 */
+
   /* there are no simple forms for letters; we thus use two digit shapes */
   SCRIPT( beng, BENG,
           "Bengali",
