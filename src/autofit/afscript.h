@@ -61,6 +61,12 @@
           HINTING_TOP_TO_BOTTOM,
           "\xE0\xA7\xA6 \xE0\xA7\xAA" ) /* ০ ৪ */
 
+  SCRIPT( cans, CANS,
+          "Canadian Syllabics",
+          HB_SCRIPT_CANADIAN_SYLLABICS,
+          HINTING_BOTTOM_TO_TOP,
+          "\xE1\x91\x8C \xE1\x93\x9A" ) /* ᑌ ᓚ */
+
   SCRIPT( cher, CHER,
           "Cherokee",
           HB_SCRIPT_CHEROKEE,

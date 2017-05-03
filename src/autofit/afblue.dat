@@ -120,6 +120,19 @@ AF_BLUE_STRING_ENUM AF_BLUE_STRINGS_ARRAY AF_BLUE_STRING_MAX_LEN:
   AF_BLUE_STRING_BENGALI_HEAD
     "ও এ ড ত ন ব ল ক"
 
+  AF_BLUE_STRING_CANADIAN_SYLLABICS_TOP
+    "ᗜ ᖴ ᐁ ᒣ ᑫ ᑎ ᔑ ᗰ"
+  AF_BLUE_STRING_CANADIAN_SYLLABICS_BOTTOM
+    "ᗶ ᖵ ᒧ ᐃ ᑌ ᒍ ᔑ ᗢ"
+  AF_BLUE_STRING_CANADIAN_SYLLABICS_SMALL_TOP
+    "ᓓ ᓕ ᓀ ᓂ ᓄ ᕄ ᕆ ᘣ"
+  AF_BLUE_STRING_CANADIAN_SYLLABICS_SMALL_BOTTOM
+    "ᕃ ᓂ ᓀ ᕂ ᓗ ᓚ ᕆ ᘣ"
+  AF_BLUE_STRING_CANADIAN_SYLLABICS_SUPS_TOP
+    "ᐪ ᙆ ᣘ ᐢ ᒾ ᣗ ᔆ"
+  AF_BLUE_STRING_CANADIAN_SYLLABICS_SUPS_BOTTOM
+    "ᙆ ᗮ ᒻ ᐞ ᔆ ᒡ ᒢ ᓑ"
+
   AF_BLUE_STRING_CHEROKEE_CAPITAL
     "Ꮖ Ꮋ Ꭼ Ꮓ Ꭴ Ꮳ Ꭶ Ꮥ"
   AF_BLUE_STRING_CHEROKEE_SMALL_ASCENDER
@@ -618,6 +631,16 @@ AF_BLUE_STRINGSET_ENUM AF_BLUE_STRINGSETS_ARRAY AF_BLUE_STRINGSET_MAX_LEN:
                                    AF_BLUE_PROPERTY_LATIN_X_HEIGHT   }
     { AF_BLUE_STRING_BENGALI_BASE, 0                                 }
     { AF_BLUE_STRING_MAX,          0                                 }
+
+  AF_BLUE_STRINGSET_CANADIAN_SYLLABICS
+    { AF_BLUE_STRING_CANADIAN_SYLLABICS_TOP,             AF_BLUE_PROPERTY_LATIN_TOP        }
+    { AF_BLUE_STRING_CANADIAN_SYLLABICS_BOTTOM,          0                                 }
+    { AF_BLUE_STRING_CANADIAN_SYLLABICS_SMALL_TOP,       AF_BLUE_PROPERTY_LATIN_TOP      |
+                                                         AF_BLUE_PROPERTY_LATIN_X_HEIGHT   }
+    { AF_BLUE_STRING_CANADIAN_SYLLABICS_SMALL_BOTTOM,    0                                 }
+    { AF_BLUE_STRING_CANADIAN_SYLLABICS_SUPS_TOP,        AF_BLUE_PROPERTY_LATIN_TOP        }
+    { AF_BLUE_STRING_CANADIAN_SYLLABICS_SUPS_BOTTOM,     0                                 }
+    { AF_BLUE_STRING_MAX,                                0                                 }
 
   AF_BLUE_STRINGSET_CHER
     { AF_BLUE_STRING_CHEROKEE_CAPITAL,         AF_BLUE_PROPERTY_LATIN_TOP        }

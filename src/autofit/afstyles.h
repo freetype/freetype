@@ -118,6 +118,13 @@
          AF_BLUE_STRINGSET_BENG,
          AF_COVERAGE_DEFAULT )
 
+  STYLE( cans_dflt, CANS_DFLT,
+         "Canadian Syllabics default style",
+         AF_WRITING_SYSTEM_LATIN,
+         AF_SCRIPT_CANS,
+         AF_BLUE_STRINGSET_CANADIAN_SYLLABICS,
+         AF_COVERAGE_DEFAULT )
+
   STYLE( cher_dflt, CHER_DFLT,
          "Cherokee default style",
          AF_WRITING_SYSTEM_LATIN,

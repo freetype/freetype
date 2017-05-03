@@ -149,6 +149,19 @@
   };
 
 
+  const AF_Script_UniRangeRec  af_cans_uniranges[] =
+  {
+    AF_UNIRANGE_REC(  0x1400,  0x167F ), /* Unified Canadian Aboriginal Syllabics          */
+    AF_UNIRANGE_REC(  0x18B0,  0x18FF ), /* Unified Canadian Aboriginal Syllabics Extended */
+    AF_UNIRANGE_REC(       0,       0 )
+  };
+
+  const AF_Script_UniRangeRec  af_cans_nonbase_uniranges[] =
+  {
+    AF_UNIRANGE_REC( 0, 0 )
+  };
+
+
   const AF_Script_UniRangeRec  af_cher_uniranges[] =
   {
     AF_UNIRANGE_REC(  0x13A0,  0x13FF ),  /* Cherokee            */
