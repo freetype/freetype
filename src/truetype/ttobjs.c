@@ -147,7 +147,7 @@
   {
 
 #define TRICK_NAMES_MAX_CHARACTERS  19
-#define TRICK_NAMES_COUNT            9
+#define TRICK_NAMES_COUNT           10
 
     static const char trick_names[TRICK_NAMES_COUNT]
                                  [TRICK_NAMES_MAX_CHARACTERS + 1] =
@@ -155,6 +155,7 @@
       "DFKaiSho-SB",        /* dfkaisb.ttf */
       "DFKaiShu",
       "DFKai-SB",           /* kaiu.ttf */
+      "DLCHayMedium",       /* dftt-b5.ttf */
       "HuaTianKaiTi?",      /* htkt2.ttf */
       "HuaTianSongTi?",     /* htst3.ttf */
       "Ming(for ISO10646)", /* hkscsiic.ttf & iicore.ttf */
