@@ -147,7 +147,7 @@
   {
 
 #define TRICK_NAMES_MAX_CHARACTERS  19
-#define TRICK_NAMES_COUNT           17
+#define TRICK_NAMES_COUNT           18
 
     static const char trick_names[TRICK_NAMES_COUNT]
                                  [TRICK_NAMES_MAX_CHARACTERS + 1] =
@@ -164,6 +164,7 @@
        */
 
       "cpop",               /* dftt-p7.ttf; version 1.00, 1992 [DLJGyShoMedium] */
+      "DFGirl-W6-WIN-BF",   /* dftt-h6.ttf; version 1.00, 1993 */
       "DFKaiSho-SB",        /* dfkaisb.ttf */
       "DFKaiShu",
       "DFKai-SB",           /* kaiu.ttf; version 3.00, 1998 [DFKaiShu-SB-Estd-BF] */

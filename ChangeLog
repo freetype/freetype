@@ -1,3 +1,11 @@
+2017-05-07  Werner Lemberg  <wl@gnu.org>
+
+	[truetype] Add tricky font `DFGirl-W6-WIN-BF' (from Dynalab).
+
+	Reported by Roy Tam <roytam@gmail.com>.
+
+	* src/truetype/ttobjs.c (tt_check_trickyness_family): Implement it.
+
 2017-05-07  Roy Tam  <roytam@gmail.com>
 	    Werner Lemberg  <wl@gnu.org>
 
