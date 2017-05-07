@@ -1,3 +1,11 @@
+2017-05-07  Roy Tam  <roytam@gmail.com>
+	    Werner Lemberg  <wl@gnu.org>
+
+	[truetype] More tricky fonts (mainly from Dynalab).
+
+	* src/truetype/ttobjs.c (tt_check_trickyness_family,
+	tt_check_trickyness_sfnt_ids): Add them.
+
 2017-05-07  Werner Lemberg  <wl@gnu.org>
 
 	[truetype] Add tricky font `DLCHayMedium' (from Dynalab).
