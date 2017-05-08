@@ -187,6 +187,19 @@
   };
 
 
+  const AF_Script_UniRangeRec  af_copt_uniranges[] =
+  {
+    AF_UNIRANGE_REC(  0x2C80,  0x2CFF ),   /* Coptic */
+    AF_UNIRANGE_REC(       0,       0 )
+  };
+
+  const AF_Script_UniRangeRec  af_copt_nonbase_uniranges[] =
+  {
+    AF_UNIRANGE_REC(  0x2CEF,  0x2CF1 ),
+    AF_UNIRANGE_REC(       0,       0 )
+  };
+
+
   const AF_Script_UniRangeRec  af_cprt_uniranges[] =
   {
     AF_UNIRANGE_REC( 0x10800, 0x1083F ),   /* Cypriot */

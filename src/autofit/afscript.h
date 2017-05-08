@@ -79,6 +79,12 @@
           HINTING_BOTTOM_TO_TOP,
           "\xE1\x8E\xA4 \xE1\x8F\x85 \xEA\xAE\x95" ) /* Ꭴ Ꮕ ꮕ */
 
+  SCRIPT( copt, COPT,
+          "Coptic",
+          HB_SCRIPT_COPTIC,
+          HINTING_BOTTOM_TO_TOP,
+          "\xE2\xB2\x9E \xE2\xB2\x9F" ) /* Ⲟ ⲟ */
+
   SCRIPT( cprt, CPRT,
           "Cypriot",
           HB_SCRIPT_CYPRIOT,

@@ -139,6 +139,13 @@
          AF_BLUE_STRINGSET_CHER,
          AF_COVERAGE_DEFAULT )
 
+  STYLE( copt_dflt, COPT_DFLT,
+         "Coptic default style",
+         AF_WRITING_SYSTEM_LATIN,
+         AF_SCRIPT_COPT,
+         AF_BLUE_STRINGSET_COPT,
+         AF_COVERAGE_DEFAULT )
+
   STYLE( cprt_dflt, CPRT_DFLT,
          "Cypriot default style",
          AF_WRITING_SYSTEM_LATIN,

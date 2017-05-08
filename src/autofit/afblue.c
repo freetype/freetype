@@ -86,6 +86,14 @@
     '\0',
     '\xE1', '\x8F', '\xB8', ' ', '\xEA', '\xAE', '\x90', ' ', '\xEA', '\xAD', '\xB9', ' ', '\xEA', '\xAD', '\xBB',  /* ᏸ ꮐ ꭹ ꭻ */
     '\0',
+    '\xE2', '\xB2', '\x8C', ' ', '\xE2', '\xB2', '\x8E', ' ', '\xE2', '\xB2', '\xA0', ' ', '\xE2', '\xB3', '\x9E', ' ', '\xE2', '\xB2', '\x9E', ' ', '\xE2', '\xB2', '\x90', ' ', '\xE2', '\xB2', '\xA4', ' ', '\xE2', '\xB3', '\x8A',  /* Ⲍ Ⲏ Ⲡ Ⳟ Ⲟ Ⲑ Ⲥ Ⳋ */
+    '\0',
+    '\xE2', '\xB3', '\x90', ' ', '\xE2', '\xB3', '\x98', ' ', '\xE2', '\xB3', '\x9E', ' ', '\xE2', '\xB2', '\x8E', ' ', '\xE2', '\xB2', '\x9E', ' ', '\xE2', '\xB2', '\x90', ' ', '\xE2', '\xB3', '\x9C', ' ', '\xE2', '\xB2', '\xB0',  /* Ⳑ Ⳙ Ⳟ Ⲏ Ⲟ Ⲑ Ⳝ Ⲱ */
+    '\0',
+    '\xE2', '\xB2', '\x8D', ' ', '\xE2', '\xB2', '\x8F', ' ', '\xE2', '\xB2', '\xA1', ' ', '\xE2', '\xB3', '\x9F', ' ', '\xE2', '\xB2', '\x9F', ' ', '\xE2', '\xB2', '\x91', ' ', '\xE2', '\xB2', '\xA5', ' ', '\xE2', '\xB3', '\x8B',  /* ⲍ ⲏ ⲡ ⳟ ⲟ ⲑ ⲥ ⳋ */
+    '\0',
+    '\xE2', '\xB3', '\x91', ' ', '\xE2', '\xB3', '\x99', ' ', '\xE2', '\xB3', '\x9F', ' ', '\xE2', '\xB2', '\x8F', ' ', '\xE2', '\xB2', '\x9F', ' ', '\xE2', '\xB2', '\x91', ' ', '\xE2', '\xB3', '\x9D', ' ', '\xE2', '\xB3', '\x92',  /* ⳑ ⳙ ⳟ ⲏ ⲟ ⲑ ⳝ Ⳓ */
+    '\0',
     '\xF0', '\x90', '\xA0', '\x8D', ' ', '\xF0', '\x90', '\xA0', '\x99', ' ', '\xF0', '\x90', '\xA0', '\xB3', ' ', '\xF0', '\x90', '\xA0', '\xB1', ' ', '\xF0', '\x90', '\xA0', '\x85', ' ', '\xF0', '\x90', '\xA0', '\x93', ' ', '\xF0', '\x90', '\xA0', '\xA3', ' ', '\xF0', '\x90', '\xA0', '\xA6',  /* 𐠍 𐠙 𐠳 𐠱 𐠅 𐠓 𐠣 𐠦 */
     '\0',
     '\xF0', '\x90', '\xA0', '\x83', ' ', '\xF0', '\x90', '\xA0', '\x8A', ' ', '\xF0', '\x90', '\xA0', '\x9B', ' ', '\xF0', '\x90', '\xA0', '\xA3', ' ', '\xF0', '\x90', '\xA0', '\xB3', ' ', '\xF0', '\x90', '\xA0', '\xB5', ' ', '\xF0', '\x90', '\xA0', '\x90',  /* 𐠃 𐠊 𐠛 𐠣 𐠳 𐠵 𐠐 */
@@ -428,6 +436,12 @@
     { AF_BLUE_STRING_CHEROKEE_SMALL,           0                                 },
     { AF_BLUE_STRING_CHEROKEE_SMALL_DESCENDER, 0                                 },
     { AF_BLUE_STRING_MAX,                      0                                 },
+    { AF_BLUE_STRING_COPTIC_CAPITAL_TOP,    AF_BLUE_PROPERTY_LATIN_TOP        },
+    { AF_BLUE_STRING_COPTIC_CAPITAL_BOTTOM, 0                                 },
+    { AF_BLUE_STRING_COPTIC_SMALL_TOP,      AF_BLUE_PROPERTY_LATIN_TOP      |
+                                            AF_BLUE_PROPERTY_LATIN_X_HEIGHT   },
+    { AF_BLUE_STRING_COPTIC_SMALL_BOTTOM,   0                                 },
+    { AF_BLUE_STRING_MAX,                   0                                 },
     { AF_BLUE_STRING_CYPRIOT_TOP,    AF_BLUE_PROPERTY_LATIN_TOP },
     { AF_BLUE_STRING_CYPRIOT_BOTTOM, 0                          },
     { AF_BLUE_STRING_CYPRIOT_SMALL,  AF_BLUE_PROPERTY_LATIN_TOP },
