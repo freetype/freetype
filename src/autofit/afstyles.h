@@ -336,6 +336,13 @@
          AF_BLUE_STRINGSET_OSGE,
          AF_COVERAGE_DEFAULT )
 
+  STYLE( osma_dflt, OSMA_DFLT,
+         "Osmanya default style",
+         AF_WRITING_SYSTEM_LATIN,
+         AF_SCRIPT_OSMA,
+         AF_BLUE_STRINGSET_OSMA,
+         AF_COVERAGE_DEFAULT )
+
   STYLE( sinh_dflt, SINH_DFLT,
          "Sinhala default style",
          AF_WRITING_SYSTEM_LATIN,

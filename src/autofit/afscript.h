@@ -107,7 +107,7 @@
           "Deseret",
           HB_SCRIPT_DESERET,
           HINTING_BOTTOM_TO_TOP,
-          "\xF0\x90\x90\x84 \xF0\x90\x90\xAC") /* 𐐄 𐐬 */
+          "\xF0\x90\x90\x84 \xF0\x90\x90\xAC" ) /* 𐐄 𐐬 */
 
   SCRIPT( ethi, ETHI,
           "Ethiopic",
@@ -137,7 +137,7 @@
           "Gothic",
           HB_SCRIPT_GOTHIC,
           HINTING_TOP_TO_BOTTOM,
-          "\xF0\x90\x8C\xB4 \xF0\x90\x8C\xBE \xF0\x90\x8D\x83") /* 𐌴 𐌾 𐍃 */
+          "\xF0\x90\x8C\xB4 \xF0\x90\x8C\xBE \xF0\x90\x8D\x83" ) /* 𐌴 𐌾 𐍃 */
 
   SCRIPT( grek, GREK,
           "Greek",
@@ -254,6 +254,12 @@
           HB_SCRIPT_OSAGE,
           HINTING_BOTTOM_TO_TOP,
           "\xF0\x90\x93\x82 \xF0\x90\x93\xAA" ) /* 𐓂 𐓪 */
+
+  SCRIPT( osma, OSMA,
+          "Osmanya",
+          HB_SCRIPT_OSMANYA,
+          HINTING_BOTTOM_TO_TOP,
+          "\xF0\x90\x92\x86 \xF0\x90\x92\xA0" ) /* 𐒆 𐒠 */
 
   SCRIPT( sinh, SINH,
           "Sinhala",
