@@ -67,6 +67,12 @@
           HINTING_BOTTOM_TO_TOP,
           "\xE1\x91\x8C \xE1\x93\x9A" ) /* ᑌ ᓚ */
 
+  SCRIPT( cari, CARI,
+          "Carian",
+          HB_SCRIPT_CARIAN,
+          HINTING_BOTTOM_TO_TOP,
+          "\xF0\x90\x8A\xAB \xF0\x90\x8B\x89" ) /* 𐊫 𐋉 */
+
   SCRIPT( cher, CHER,
           "Cherokee",
           HB_SCRIPT_CHEROKEE,

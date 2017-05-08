@@ -162,6 +162,18 @@
   };
 
 
+  const AF_Script_UniRangeRec  af_cari_uniranges[] =
+  {
+    AF_UNIRANGE_REC( 0x102A0, 0x102DF ),   /* Carian */
+    AF_UNIRANGE_REC(       0,       0 )
+  };
+
+  const AF_Script_UniRangeRec  af_cari_nonbase_uniranges[] =
+  {
+    AF_UNIRANGE_REC( 0, 0 )
+  };
+
+
   const AF_Script_UniRangeRec  af_cher_uniranges[] =
   {
     AF_UNIRANGE_REC(  0x13A0,  0x13FF ),  /* Cherokee            */

@@ -125,6 +125,13 @@
          AF_BLUE_STRINGSET_CANADIAN_SYLLABICS,
          AF_COVERAGE_DEFAULT )
 
+  STYLE( cari_dflt, CARI_DFLT,
+         "Carian default style",
+         AF_WRITING_SYSTEM_LATIN,
+         AF_SCRIPT_CARI,
+         AF_BLUE_STRINGSET_CARI,
+         AF_COVERAGE_DEFAULT )
+
   STYLE( cher_dflt, CHER_DFLT,
          "Cherokee default style",
          AF_WRITING_SYSTEM_LATIN,
