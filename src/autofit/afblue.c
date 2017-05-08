@@ -343,6 +343,10 @@
     '\xE0', '\xB9', '\x90', ' ', '\xE0', '\xB9', '\x91', ' ', '\xE0', '\xB9', '\x93',  /* ๐ ๑ ๓ */
     '\0',
     '\xE2', '\xB5', '\x94', ' ', '\xE2', '\xB5', '\x99', ' ', '\xE2', '\xB5', '\x9B', ' ', '\xE2', '\xB5', '\x9E', ' ', '\xE2', '\xB4', '\xB5', ' ', '\xE2', '\xB4', '\xBC', ' ', '\xE2', '\xB4', '\xB9', ' ', '\xE2', '\xB5', '\x8E',  /* ⵔ ⵙ ⵛ ⵞ ⴵ ⴼ ⴹ ⵎ */
+    '\0',
+    '\xEA', '\x97', '\x8D', ' ', '\xEA', '\x98', '\x96', ' ', '\xEA', '\x98', '\x99', ' ', '\xEA', '\x98', '\x9C', ' ', '\xEA', '\x96', '\x9C', ' ', '\xEA', '\x96', '\x9D', ' ', '\xEA', '\x94', '\x85', ' ', '\xEA', '\x95', '\xA2',  /* ꗍ ꘖ ꘙ ꘜ ꖜ ꖝ ꔅ ꕢ */
+    '\0',
+    '\xEA', '\x97', '\x8D', ' ', '\xEA', '\x98', '\x96', ' ', '\xEA', '\x98', '\x99', ' ', '\xEA', '\x97', '\x9E', ' ', '\xEA', '\x94', '\x85', ' ', '\xEA', '\x95', '\xA2', ' ', '\xEA', '\x96', '\x9C', ' ', '\xEA', '\x94', '\x86',  /* ꗍ ꘖ ꘙ ꗞ ꔅ ꕢ ꖜ ꔆ */
 #ifdef AF_CONFIG_OPTION_CJK
     '\0',
     '\xE4', '\xBB', '\x96', ' ', '\xE4', '\xBB', '\xAC', ' ', '\xE4', '\xBD', '\xA0', ' ', '\xE4', '\xBE', '\x86', ' ', '\xE5', '\x80', '\x91', ' ', '\xE5', '\x88', '\xB0', ' ', '\xE5', '\x92', '\x8C', ' ', '\xE5', '\x9C', '\xB0',  /* 他 们 你 來 們 到 和 地 */
@@ -637,6 +641,9 @@
     { AF_BLUE_STRING_TIFINAGH, AF_BLUE_PROPERTY_LATIN_TOP },
     { AF_BLUE_STRING_TIFINAGH, 0                          },
     { AF_BLUE_STRING_MAX,      0                          },
+    { AF_BLUE_STRING_VAI_TOP,    AF_BLUE_PROPERTY_LATIN_TOP },
+    { AF_BLUE_STRING_VAI_BOTTOM, 0                          },
+    { AF_BLUE_STRING_MAX,        0                          },
 #ifdef AF_CONFIG_OPTION_CJK
     { AF_BLUE_STRING_CJK_TOP,    AF_BLUE_PROPERTY_CJK_TOP     },
     { AF_BLUE_STRING_CJK_BOTTOM, 0                            },

@@ -448,6 +448,11 @@ AF_BLUE_STRING_ENUM AF_BLUE_STRINGS_ARRAY AF_BLUE_STRING_MAX_LEN:
   AF_BLUE_STRING_TIFINAGH
     "ⵔ ⵙ ⵛ ⵞ ⴵ ⴼ ⴹ ⵎ"
 
+  AF_BLUE_STRING_VAI_TOP
+    "ꗍ ꘖ ꘙ ꘜ ꖜ ꖝ ꔅ ꕢ"
+  AF_BLUE_STRING_VAI_BOTTOM
+    "ꗍ ꘖ ꘙ ꗞ ꔅ ꕢ ꖜ ꔆ"
+
 
 #ifdef AF_CONFIG_OPTION_CJK
 
@@ -948,6 +953,10 @@ AF_BLUE_STRINGSET_ENUM AF_BLUE_STRINGSETS_ARRAY AF_BLUE_STRINGSET_MAX_LEN:
     { AF_BLUE_STRING_TIFINAGH, 0                          }
     { AF_BLUE_STRING_MAX,      0                          }
 
+  AF_BLUE_STRINGSET_VAII
+    { AF_BLUE_STRING_VAI_TOP,    AF_BLUE_PROPERTY_LATIN_TOP }
+    { AF_BLUE_STRING_VAI_BOTTOM, 0                          }
+    { AF_BLUE_STRING_MAX,        0                          }
 
 #ifdef AF_CONFIG_OPTION_CJK
 

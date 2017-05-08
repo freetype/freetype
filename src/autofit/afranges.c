@@ -802,7 +802,19 @@
 
   const AF_Script_UniRangeRec  af_tfng_nonbase_uniranges[] =
   {
+    AF_UNIRANGE_REC( 0, 0 )
+  };
+
+
+  const AF_Script_UniRangeRec  af_vaii_uniranges[] =
+  {
+    AF_UNIRANGE_REC(  0xA500,  0xA63F ),   /* Vai */
     AF_UNIRANGE_REC(       0,       0 )
+  };
+
+  const AF_Script_UniRangeRec  af_vaii_nonbase_uniranges[] =
+  {
+    AF_UNIRANGE_REC( 0, 0 )
   };
 
 

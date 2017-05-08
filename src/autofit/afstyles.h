@@ -392,6 +392,13 @@
          AF_BLUE_STRINGSET_TFNG,
          AF_COVERAGE_DEFAULT )
 
+  STYLE( vaii_dflt, VAII_DFLT,
+         "Vai default style",
+         AF_WRITING_SYSTEM_LATIN,
+         AF_SCRIPT_VAII,
+         AF_BLUE_STRINGSET_VAII,
+         AF_COVERAGE_DEFAULT )
+
 #ifdef AF_CONFIG_OPTION_INDIC
 
   /* no blue stringset support for the Indic writing system yet */

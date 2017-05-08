@@ -306,6 +306,12 @@
           HINTING_BOTTOM_TO_TOP,
           "\xE2\xB5\x94" ) /* ⵔ */
 
+  SCRIPT( vaii, VAII,
+          "Vai",
+          HB_SCRIPT_VAI,
+          HINTING_BOTTOM_TO_TOP,
+          "\xEA\x98\x93 \xEA\x96\x9C \xEA\x96\xB4" ) /* ꘓ ꖜ ꖴ */
+
 #ifdef AF_CONFIG_OPTION_INDIC
 
   SCRIPT( limb, LIMB,
