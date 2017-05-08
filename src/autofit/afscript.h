@@ -261,6 +261,12 @@
           HINTING_BOTTOM_TO_TOP,
           "\xF0\x90\x92\x86 \xF0\x90\x92\xA0" ) /* 𐒆 𐒠 */
 
+  SCRIPT( shaw, SHAW,
+          "Shavian",
+          HB_SCRIPT_SHAVIAN,
+          HINTING_BOTTOM_TO_TOP,
+          "\xF0\x90\x91\xB4" ) /* 𐑴 */
+
   SCRIPT( sinh, SINH,
           "Sinhala",
           HB_SCRIPT_SINHALA,

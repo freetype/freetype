@@ -343,6 +343,13 @@
          AF_BLUE_STRINGSET_OSMA,
          AF_COVERAGE_DEFAULT )
 
+  STYLE( shaw_dflt, SHAW_DFLT,
+         "Shavian default style",
+         AF_WRITING_SYSTEM_LATIN,
+         AF_SCRIPT_SHAW,
+         AF_BLUE_STRINGSET_SHAW,
+         AF_COVERAGE_DEFAULT )
+
   STYLE( sinh_dflt, SINH_DFLT,
          "Sinhala default style",
          AF_WRITING_SYSTEM_LATIN,

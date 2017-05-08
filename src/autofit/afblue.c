@@ -304,6 +304,16 @@
     '\0',
     '\xF0', '\x90', '\x92', '\x80', ' ', '\xF0', '\x90', '\x92', '\x82', ' ', '\xF0', '\x90', '\x92', '\x86', ' ', '\xF0', '\x90', '\x92', '\x88', ' ', '\xF0', '\x90', '\x92', '\x8A', ' ', '\xF0', '\x90', '\x92', '\x92', ' ', '\xF0', '\x90', '\x92', '\xA0', ' ', '\xF0', '\x90', '\x92', '\xA9',  /* 𐒀 𐒂 𐒆 𐒈 𐒊 𐒒 𐒠 𐒩 */
     '\0',
+    '\xF0', '\x90', '\x91', '\x95', ' ', '\xF0', '\x90', '\x91', '\x99',  /* 𐑕 𐑙 */
+    '\0',
+    '\xF0', '\x90', '\x91', '\x94', ' ', '\xF0', '\x90', '\x91', '\x96', ' ', '\xF0', '\x90', '\x91', '\x97', ' ', '\xF0', '\x90', '\x91', '\xB9', ' ', '\xF0', '\x90', '\x91', '\xBB',  /* 𐑔 𐑖 𐑗 𐑹 𐑻 */
+    '\0',
+    '\xF0', '\x90', '\x91', '\x9F', ' ', '\xF0', '\x90', '\x91', '\xA3',  /* 𐑟 𐑣 */
+    '\0',
+    '\xF0', '\x90', '\x91', '\xB1', ' ', '\xF0', '\x90', '\x91', '\xB2', ' ', '\xF0', '\x90', '\x91', '\xB3', ' ', '\xF0', '\x90', '\x91', '\xB4', ' ', '\xF0', '\x90', '\x91', '\xB8', ' ', '\xF0', '\x90', '\x91', '\xBA', ' ', '\xF0', '\x90', '\x91', '\xBC',  /* 𐑱 𐑲 𐑳 𐑴 𐑸 𐑺 𐑼 */
+    '\0',
+    '\xF0', '\x90', '\x91', '\xB4', ' ', '\xF0', '\x90', '\x91', '\xBB', ' ', '\xF0', '\x90', '\x91', '\xB9',  /* 𐑴 𐑻 𐑹 */
+    '\0',
     '\xE0', '\xB6', '\x89', ' ', '\xE0', '\xB6', '\x9A', ' ', '\xE0', '\xB6', '\x9D', ' ', '\xE0', '\xB6', '\xB3', ' ', '\xE0', '\xB6', '\xB4', ' ', '\xE0', '\xB6', '\xBA', ' ', '\xE0', '\xB6', '\xBD', ' ', '\xE0', '\xB7', '\x86',  /* ඉ ක ඝ ඳ ප ය ල ෆ */
     '\0',
     '\xE0', '\xB6', '\x91', ' ', '\xE0', '\xB6', '\x94', ' ', '\xE0', '\xB6', '\x9D', ' ', '\xE0', '\xB6', '\xA2', ' ', '\xE0', '\xB6', '\xA7', ' ', '\xE0', '\xB6', '\xAE', ' ', '\xE0', '\xB6', '\xB0', ' ', '\xE0', '\xB6', '\xBB',  /* එ ඔ ඝ ජ ට ථ ධ ර */
@@ -612,6 +622,13 @@
     { AF_BLUE_STRING_OSMANYA_TOP,    AF_BLUE_PROPERTY_LATIN_TOP },
     { AF_BLUE_STRING_OSMANYA_BOTTOM, 0                          },
     { AF_BLUE_STRING_MAX,            0                          },
+    { AF_BLUE_STRING_SHAVIAN_TOP,          AF_BLUE_PROPERTY_LATIN_TOP        },
+    { AF_BLUE_STRING_SHAVIAN_BOTTOM,       0                                 },
+    { AF_BLUE_STRING_SHAVIAN_DESCENDER,    0                                 },
+    { AF_BLUE_STRING_SHAVIAN_SMALL_TOP,    AF_BLUE_PROPERTY_LATIN_TOP      |
+                                           AF_BLUE_PROPERTY_LATIN_X_HEIGHT   },
+    { AF_BLUE_STRING_SHAVIAN_SMALL_BOTTOM, 0                                 },
+    { AF_BLUE_STRING_MAX,                  0                                 },
     { AF_BLUE_STRING_SINHALA_TOP,       AF_BLUE_PROPERTY_LATIN_TOP },
     { AF_BLUE_STRING_SINHALA_BOTTOM,    0                          },
     { AF_BLUE_STRING_SINHALA_DESCENDER, 0                          },

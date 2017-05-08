@@ -401,6 +401,17 @@ AF_BLUE_STRING_ENUM AF_BLUE_STRINGS_ARRAY AF_BLUE_STRING_MAX_LEN:
   AF_BLUE_STRING_OSMANYA_BOTTOM
     "𐒀 𐒂 𐒆 𐒈 𐒊 𐒒 𐒠 𐒩"
 
+  AF_BLUE_STRING_SHAVIAN_TOP
+    "𐑕 𐑙"
+  AF_BLUE_STRING_SHAVIAN_BOTTOM
+    "𐑔 𐑖 𐑗 𐑹 𐑻"
+  AF_BLUE_STRING_SHAVIAN_DESCENDER
+    "𐑟 𐑣"
+  AF_BLUE_STRING_SHAVIAN_SMALL_TOP
+    "𐑱 𐑲 𐑳 𐑴 𐑸 𐑺 𐑼"
+  AF_BLUE_STRING_SHAVIAN_SMALL_BOTTOM
+    "𐑴 𐑻 𐑹"
+
   AF_BLUE_STRING_SINHALA_TOP
     "ඉ ක ඝ ඳ ප ය ල ෆ"
   AF_BLUE_STRING_SINHALA_BOTTOM
@@ -909,6 +920,15 @@ AF_BLUE_STRINGSET_ENUM AF_BLUE_STRINGSETS_ARRAY AF_BLUE_STRINGSET_MAX_LEN:
     { AF_BLUE_STRING_OSMANYA_TOP,    AF_BLUE_PROPERTY_LATIN_TOP }
     { AF_BLUE_STRING_OSMANYA_BOTTOM, 0                          }
     { AF_BLUE_STRING_MAX,            0                          }
+
+  AF_BLUE_STRINGSET_SHAW
+    { AF_BLUE_STRING_SHAVIAN_TOP,          AF_BLUE_PROPERTY_LATIN_TOP        }
+    { AF_BLUE_STRING_SHAVIAN_BOTTOM,       0                                 }
+    { AF_BLUE_STRING_SHAVIAN_DESCENDER,    0                                 }
+    { AF_BLUE_STRING_SHAVIAN_SMALL_TOP,    AF_BLUE_PROPERTY_LATIN_TOP      |
+                                           AF_BLUE_PROPERTY_LATIN_X_HEIGHT   }
+    { AF_BLUE_STRING_SHAVIAN_SMALL_BOTTOM, 0                                 }
+    { AF_BLUE_STRING_MAX,                  0                                 }
 
   AF_BLUE_STRINGSET_SINH
     { AF_BLUE_STRING_SINHALA_TOP,       AF_BLUE_PROPERTY_LATIN_TOP }
