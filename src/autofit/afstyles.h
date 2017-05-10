@@ -143,7 +143,7 @@
          "Canadian Syllabics default style",
          AF_WRITING_SYSTEM_LATIN,
          AF_SCRIPT_CANS,
-         AF_BLUE_STRINGSET_CANADIAN_SYLLABICS,
+         AF_BLUE_STRINGSET_CANS,
          AF_COVERAGE_DEFAULT )
 
   STYLE( cari_dflt, CARI_DFLT,
