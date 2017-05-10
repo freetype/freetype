@@ -61,6 +61,12 @@
           HINTING_TOP_TO_BOTTOM,
           "\xE0\xA7\xA6 \xE0\xA7\xAA" ) /* ০ ৪ */
 
+  SCRIPT( buhd, BUHD,
+          "Buhid",
+          HB_SCRIPT_BUHID,
+          HINTING_BOTTOM_TO_TOP,
+          "\xE1\x9D\x8B \xE1\x9D\x8F" ) /* ᝋ ᝏ */
+
   SCRIPT( cans, CANS,
           "Canadian Syllabics",
           HB_SCRIPT_CANADIAN_SYLLABICS,

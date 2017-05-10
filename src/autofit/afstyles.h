@@ -118,6 +118,13 @@
          AF_BLUE_STRINGSET_BENG,
          AF_COVERAGE_DEFAULT )
 
+  STYLE( buhd_dflt, BUHD_DFLT,
+         "Buhid default style",
+         AF_WRITING_SYSTEM_LATIN,
+         AF_SCRIPT_BUHD,
+         AF_BLUE_STRINGSET_BUHD,
+         AF_COVERAGE_DEFAULT )
+
   STYLE( cans_dflt, CANS_DFLT,
          "Canadian Syllabics default style",
          AF_WRITING_SYSTEM_LATIN,

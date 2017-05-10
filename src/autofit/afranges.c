@@ -149,6 +149,19 @@
   };
 
 
+  const AF_Script_UniRangeRec  af_buhd_uniranges[] =
+  {
+    AF_UNIRANGE_REC(  0x1740,  0x175F ),   /* Buhid */
+    AF_UNIRANGE_REC(       0,       0 )
+  };
+
+  const AF_Script_UniRangeRec  af_buhd_nonbase_uniranges[] =
+  {
+    AF_UNIRANGE_REC(  0x1752,  0x1753 ),
+    AF_UNIRANGE_REC(       0,       0 )
+  };
+
+
   const AF_Script_UniRangeRec  af_cans_uniranges[] =
   {
     AF_UNIRANGE_REC(  0x1400,  0x167F ), /* Unified Canadian Aboriginal Syllabics          */

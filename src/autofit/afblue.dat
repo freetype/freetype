@@ -120,6 +120,15 @@ AF_BLUE_STRING_ENUM AF_BLUE_STRINGS_ARRAY AF_BLUE_STRING_MAX_LEN:
   AF_BLUE_STRING_BENGALI_HEAD
     "ও এ ড ত ন ব ল ক"
 
+  AF_BLUE_STRING_BUHID_TOP
+    "ᝐ ᝈ"
+  AF_BLUE_STRING_BUHID_LARGE
+    "ᝅ ᝊ ᝎ"
+  AF_BLUE_STRING_BUHID_SMALL
+    "ᝂ ᝃ ᝉ ᝌ"
+  AF_BLUE_STRING_BUHID_BOTTOM
+    "ᝀ ᝃ ᝆ ᝉ ᝋ ᝏ ᝑ"
+
   AF_BLUE_STRING_CANADIAN_SYLLABICS_TOP
     "ᗜ ᖴ ᐁ ᒣ ᑫ ᑎ ᔑ ᗰ"
   AF_BLUE_STRING_CANADIAN_SYLLABICS_BOTTOM
@@ -665,6 +674,14 @@ AF_BLUE_STRINGSET_ENUM AF_BLUE_STRINGSETS_ARRAY AF_BLUE_STRINGSET_MAX_LEN:
                                    AF_BLUE_PROPERTY_LATIN_NEUTRAL  |
                                    AF_BLUE_PROPERTY_LATIN_X_HEIGHT   }
     { AF_BLUE_STRING_BENGALI_BASE, 0                                 }
+    { AF_BLUE_STRING_MAX,          0                                 }
+
+  AF_BLUE_STRINGSET_BUHD
+    { AF_BLUE_STRING_BUHID_TOP,    AF_BLUE_PROPERTY_LATIN_TOP        }
+    { AF_BLUE_STRING_BUHID_LARGE,  AF_BLUE_PROPERTY_LATIN_TOP        }
+    { AF_BLUE_STRING_BUHID_SMALL,  AF_BLUE_PROPERTY_LATIN_TOP      |
+                                   AF_BLUE_PROPERTY_LATIN_X_HEIGHT   }
+    { AF_BLUE_STRING_BUHID_BOTTOM, 0                                 }
     { AF_BLUE_STRING_MAX,          0                                 }
 
   AF_BLUE_STRINGSET_CANADIAN_SYLLABICS
