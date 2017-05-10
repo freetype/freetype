@@ -175,6 +175,12 @@
           HINTING_BOTTOM_TO_TOP,
           "\xD7\x9D" ) /* ם */
 
+  SCRIPT( kali, KALI,
+          "Kayah Li",
+          HB_SCRIPT_KAYAH_LI,
+          HINTING_BOTTOM_TO_TOP,
+          "\xEA\xA4\x8D \xEA\xA4\x80" ) /* ꤍ ꤀ */
+
   SCRIPT( knda, KNDA,
           "Kannada",
           HB_SCRIPT_KANNADA,

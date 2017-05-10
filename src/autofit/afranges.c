@@ -450,6 +450,19 @@
   };
 
 
+  const AF_Script_UniRangeRec  af_kali_uniranges[] =
+  {
+    AF_UNIRANGE_REC(  0xA900,  0xA92F ),   /* Kayah Li */
+    AF_UNIRANGE_REC(       0,       0 )
+  };
+
+  const AF_Script_UniRangeRec  af_kali_nonbase_uniranges[] =
+  {
+    AF_UNIRANGE_REC(  0xA926,  0xA92D ),
+    AF_UNIRANGE_REC(       0,       0 )
+  };
+
+
   const AF_Script_UniRangeRec  af_knda_uniranges[] =
   {
     AF_UNIRANGE_REC(  0x0C80,  0x0CFF ),  /* Kannada */

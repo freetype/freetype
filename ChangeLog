@@ -1,6 +1,18 @@
 2017-05-10  Sascha Brawer  <sascha@google.com>
 	    Werner Lemberg  <wl@gnu.org
 
+	[autofit] Add support for Kayah Li script.
+
+	* src/autofit/afblue.dat: Add blue zone data for Kayah Li.
+	* src/autofit/afblue.c, src/autofit/afblue.h: Regenerated.
+
+	* src/autofit/afscript.h: Add Kayah Li standard character.
+
+	* src/autofit/afranges.c, src/autofit/afstyles.h: Add Kayah Li data.
+
+2017-05-10  Sascha Brawer  <sascha@google.com>
+	    Werner Lemberg  <wl@gnu.org
+
 	[autofit] Add support for Bamum script.
 
 	* src/autofit/afblue.dat: Add blue zone data for Bamum.

@@ -212,6 +212,16 @@
     '\0',
     '\xE0', '\xB2', '\x85', ' ', '\xE0', '\xB2', '\x89', ' ', '\xE0', '\xB2', '\x8E', ' ', '\xE0', '\xB2', '\xB2', ' ', '\xE0', '\xB3', '\xA6', ' ', '\xE0', '\xB3', '\xA8', ' ', '\xE0', '\xB3', '\xAC', ' ', '\xE0', '\xB3', '\xAD',  /* ಅ ಉ ಎ ಲ ೦ ೨ ೬ ೭ */
     '\0',
+    '\xEA', '\xA4', '\x85', ' ', '\xEA', '\xA4', '\x8F', ' ', '\xEA', '\xA4', '\x81', ' ', '\xEA', '\xA4', '\x8B', ' ', '\xEA', '\xA4', '\x80', ' ', '\xEA', '\xA4', '\x8D',  /* ꤅ ꤏ ꤁ ꤋ ꤀ ꤍ */
+    '\0',
+    '\xEA', '\xA4', '\x88', ' ', '\xEA', '\xA4', '\x98', ' ', '\xEA', '\xA4', '\x80', ' ', '\xEA', '\xA4', '\x8D', ' ', '\xEA', '\xA4', '\xA2',  /* ꤈ ꤘ ꤀ ꤍ ꤢ */
+    '\0',
+    '\xEA', '\xA4', '\x96', ' ', '\xEA', '\xA4', '\xA1',  /* ꤖ ꤡ */
+    '\0',
+    '\xEA', '\xA4', '\x91', ' ', '\xEA', '\xA4', '\x9C', ' ', '\xEA', '\xA4', '\x9E',  /* ꤑ ꤜ ꤞ */
+    '\0',
+    '\xEA', '\xA4', '\x91', '\xEA', '\xA4', '\xAC', ' ', '\xEA', '\xA4', '\x9C', '\xEA', '\xA4', '\xAD', ' ', '\xEA', '\xA4', '\x94', '\xEA', '\xA4', '\xAC',  /* ꤑ꤬ ꤜ꤭ ꤔ꤬ */
+    '\0',
     '\xE1', '\x9E', '\x81', ' ', '\xE1', '\x9E', '\x91', ' ', '\xE1', '\x9E', '\x93', ' ', '\xE1', '\x9E', '\xA7', ' ', '\xE1', '\x9E', '\xA9', ' ', '\xE1', '\x9E', '\xB6',  /* ខ ទ ន ឧ ឩ ា */
     '\0',
     '\xE1', '\x9E', '\x80', '\xE1', '\x9F', '\x92', '\xE1', '\x9E', '\x80', ' ', '\xE1', '\x9E', '\x80', '\xE1', '\x9F', '\x92', '\xE1', '\x9E', '\x81', ' ', '\xE1', '\x9E', '\x80', '\xE1', '\x9F', '\x92', '\xE1', '\x9E', '\x82', ' ', '\xE1', '\x9E', '\x80', '\xE1', '\x9F', '\x92', '\xE1', '\x9E', '\x90',  /* ក្ក ក្ខ ក្គ ក្ថ */
@@ -565,6 +575,13 @@
     { AF_BLUE_STRING_HEBREW_BOTTOM,    0                             },
     { AF_BLUE_STRING_HEBREW_DESCENDER, 0                             },
     { AF_BLUE_STRING_MAX,              0                             },
+    { AF_BLUE_STRING_KAYAH_LI_TOP,             AF_BLUE_PROPERTY_LATIN_TOP      |
+                                               AF_BLUE_PROPERTY_LATIN_X_HEIGHT   },
+    { AF_BLUE_STRING_KAYAH_LI_BOTTOM,          0                                 },
+    { AF_BLUE_STRING_KAYAH_LI_ASCENDER,        AF_BLUE_PROPERTY_LATIN_TOP        },
+    { AF_BLUE_STRING_KAYAH_LI_DESCENDER,       0                                 },
+    { AF_BLUE_STRING_KAYAH_LI_LARGE_DESCENDER, 0                                 },
+    { AF_BLUE_STRING_MAX,                      0                                 },
     { AF_BLUE_STRING_KANNADA_TOP,    AF_BLUE_PROPERTY_LATIN_TOP },
     { AF_BLUE_STRING_KANNADA_BOTTOM, 0                          },
     { AF_BLUE_STRING_MAX,            0                          },

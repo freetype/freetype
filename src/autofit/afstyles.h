@@ -241,6 +241,13 @@
          AF_BLUE_STRINGSET_HEBR,
          AF_COVERAGE_DEFAULT )
 
+  STYLE( kali_dflt, KALI_DFLT,
+         "Kayah Li default style",
+         AF_WRITING_SYSTEM_LATIN,
+         AF_SCRIPT_KALI,
+         AF_BLUE_STRINGSET_KALI,
+         AF_COVERAGE_DEFAULT )
+
   STYLE( knda_dflt, KNDA_DFLT,
          "Kannada default style",
          AF_WRITING_SYSTEM_LATIN,
