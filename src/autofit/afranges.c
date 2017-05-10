@@ -180,6 +180,20 @@
   };
 
 
+  const AF_Script_UniRangeRec  af_cakm_uniranges[] =
+  {
+    AF_UNIRANGE_REC( 0x11100, 0x1114F ),   /* Chakma */
+    AF_UNIRANGE_REC(       0,       0 )
+  };
+
+  const AF_Script_UniRangeRec  af_cakm_nonbase_uniranges[] =
+  {
+    AF_UNIRANGE_REC( 0x11100, 0x11102 ),
+    AF_UNIRANGE_REC( 0x11127, 0x11134 ),
+    AF_UNIRANGE_REC(       0,       0 )
+  };
+
+
   const AF_Script_UniRangeRec  af_cans_uniranges[] =
   {
     AF_UNIRANGE_REC(  0x1400,  0x167F ), /* Unified Canadian Aboriginal Syllabics          */

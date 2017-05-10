@@ -73,6 +73,12 @@
           HINTING_BOTTOM_TO_TOP,
           "\xE1\x9D\x8B \xE1\x9D\x8F" ) /* ᝋ ᝏ */
 
+  SCRIPT( cakm, CAKM,
+          "Chakma",
+          HB_SCRIPT_CHAKMA,
+          HINTING_BOTTOM_TO_TOP,
+          "\xF0\x91\x84\xA4 \xF0\x91\x84\x89 \xF0\x91\x84\x9B" ) /* 𑄤 𑄉 𑄛 */
+
   SCRIPT( cans, CANS,
           "Canadian Syllabics",
           HB_SCRIPT_CANADIAN_SYLLABICS,

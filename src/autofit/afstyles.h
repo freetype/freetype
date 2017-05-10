@@ -132,6 +132,13 @@
          AF_BLUE_STRINGSET_BUHD,
          AF_COVERAGE_DEFAULT )
 
+  STYLE( cakm_dflt, CAKM_DFLT,
+         "Chakma default style",
+         AF_WRITING_SYSTEM_LATIN,
+         AF_SCRIPT_CAKM,
+         AF_BLUE_STRINGSET_CAKM,
+         AF_COVERAGE_DEFAULT )
+
   STYLE( cans_dflt, CANS_DFLT,
          "Canadian Syllabics default style",
          AF_WRITING_SYSTEM_LATIN,

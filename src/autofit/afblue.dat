@@ -152,6 +152,13 @@ AF_BLUE_STRING_ENUM AF_BLUE_STRINGS_ARRAY AF_BLUE_STRING_MAX_LEN:
   AF_BLUE_STRING_CARIAN_BOTTOM
     "𐊣 𐊧 𐊷 𐋀 𐊫 𐊸 𐋉"
 
+  AF_BLUE_STRING_CHAKMA_TOP
+    "𑄃 𑄅 𑄉 𑄙 𑄗"
+  AF_BLUE_STRING_CHAKMA_BOTTOM
+    "𑄅 𑄛 𑄝 𑄗 𑄓"
+  AF_BLUE_STRING_CHAKMA_DESCENDER
+    "𑄖𑄳𑄢 𑄘𑄳𑄢 𑄙𑄳𑄢 𑄤𑄳𑄢 𑄥𑄳𑄢"
+
   AF_BLUE_STRING_CHEROKEE_CAPITAL
     "Ꮖ Ꮋ Ꭼ Ꮓ Ꭴ Ꮳ Ꭶ Ꮥ"
   AF_BLUE_STRING_CHEROKEE_SMALL_ASCENDER
@@ -709,6 +716,12 @@ AF_BLUE_STRINGSET_ENUM AF_BLUE_STRINGSETS_ARRAY AF_BLUE_STRINGSET_MAX_LEN:
                                    AF_BLUE_PROPERTY_LATIN_X_HEIGHT   }
     { AF_BLUE_STRING_BUHID_BOTTOM, 0                                 }
     { AF_BLUE_STRING_MAX,          0                                 }
+
+  AF_BLUE_STRINGSET_CAKM
+    { AF_BLUE_STRING_CHAKMA_TOP,       AF_BLUE_PROPERTY_LATIN_TOP }
+    { AF_BLUE_STRING_CHAKMA_BOTTOM,    0                          }
+    { AF_BLUE_STRING_CHAKMA_DESCENDER, 0                          }
+    { AF_BLUE_STRING_MAX,              0                          }
 
   AF_BLUE_STRINGSET_CANADIAN_SYLLABICS
     { AF_BLUE_STRING_CANADIAN_SYLLABICS_TOP,             AF_BLUE_PROPERTY_LATIN_TOP        }
