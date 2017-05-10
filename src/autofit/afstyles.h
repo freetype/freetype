@@ -350,6 +350,13 @@
          AF_BLUE_STRINGSET_OSMA,
          AF_COVERAGE_DEFAULT )
 
+  STYLE( saur_dflt, SAUR_DFLT,
+         "Saurashtra default style",
+         AF_WRITING_SYSTEM_LATIN,
+         AF_SCRIPT_SAUR,
+         AF_BLUE_STRINGSET_SAUR,
+         AF_COVERAGE_DEFAULT )
+
   STYLE( shaw_dflt, SHAW_DFLT,
          "Shavian default style",
          AF_WRITING_SYSTEM_LATIN,

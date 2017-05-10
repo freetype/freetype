@@ -715,6 +715,20 @@
   };
 
 
+  const AF_Script_UniRangeRec  af_saur_uniranges[] =
+  {
+    AF_UNIRANGE_REC(  0xA880,  0xA8DF ),   /* Saurashtra */
+    AF_UNIRANGE_REC(       0,       0 )
+  };
+
+  const AF_Script_UniRangeRec  af_saur_nonbase_uniranges[] =
+  {
+    AF_UNIRANGE_REC(  0xA880,  0xA881 ),
+    AF_UNIRANGE_REC(  0xA8B4,  0xA8C5 ),
+    AF_UNIRANGE_REC(       0,       0 )
+  };
+
+
   const AF_Script_UniRangeRec  af_shaw_uniranges[] =
   {
     AF_UNIRANGE_REC( 0x10450, 0x1047F ),   /* Shavian */
