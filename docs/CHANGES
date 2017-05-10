@@ -21,6 +21,14 @@ CHANGES BETWEEN 2.7.1 and 2.8
 
         FREETYPE_PROPERTIES=pcf:no-long-family-names=1
 
+    - Support  for  the  following  scripts  has  been  added  to  the
+      auto-hinter.
+
+        Adlam, Avestan, Bamum, Buhid, Carian, Chakma, Coptic, Cypriot,
+        Deseret, Glagolitic, Gothic, Kayah, Lisu, N'Ko, Ol Chiki, Old
+        Turkic, Osage, Osmanya, Saurashtra, Shavian, Sundanese, Tai
+        Viet, Tifinagh, Unified Canadian Syllabics, Vai
+
 
   II. IMPORTANT BUG FIXES
 
