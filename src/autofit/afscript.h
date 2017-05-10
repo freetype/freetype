@@ -54,6 +54,12 @@
           HINTING_BOTTOM_TO_TOP,
           "\xF0\x90\xAC\x9A" ) /* 𐬚 */
 
+  SCRIPT( bamu, BAMU,
+          "Bamum",
+          HB_SCRIPT_BAMUM,
+          HINTING_BOTTOM_TO_TOP,
+          "\xEA\x9B\x81 \xEA\x9B\xAF" ) /* ꛁ ꛯ */
+
   /* there are no simple forms for letters; we thus use two digit shapes */
   SCRIPT( beng, BENG,
           "Bengali",

@@ -56,6 +56,10 @@
     '\0',
     '\xF0', '\x90', '\xAC', '\x80', ' ', '\xF0', '\x90', '\xAC', '\x81',  /* 𐬀 𐬁 */
     '\0',
+    '\xEA', '\x9A', '\xA7', ' ', '\xEA', '\x9A', '\xA8', ' ', '\xEA', '\x9B', '\x9B', ' ', '\xEA', '\x9B', '\x89', ' ', '\xEA', '\x9B', '\x81', ' ', '\xEA', '\x9B', '\x88', ' ', '\xEA', '\x9B', '\xAB', ' ', '\xEA', '\x9B', '\xAF',  /* ꚧ ꚨ ꛛ ꛉ ꛁ ꛈ ꛫ ꛯ */
+    '\0',
+    '\xEA', '\x9A', '\xAD', ' ', '\xEA', '\x9A', '\xB3', ' ', '\xEA', '\x9A', '\xB6', ' ', '\xEA', '\x9B', '\xAC', ' ', '\xEA', '\x9A', '\xA2', ' ', '\xEA', '\x9A', '\xBD', ' ', '\xEA', '\x9B', '\xAF', ' ', '\xEA', '\x9B', '\xB2',  /* ꚭ ꚳ ꚶ ꛬ ꚢ ꚽ ꛯ ꛲ */
+    '\0',
     '\xE0', '\xA6', '\x85', ' ', '\xE0', '\xA6', '\xA1', ' ', '\xE0', '\xA6', '\xA4', ' ', '\xE0', '\xA6', '\xA8', ' ', '\xE0', '\xA6', '\xAC', ' ', '\xE0', '\xA6', '\xAD', ' ', '\xE0', '\xA6', '\xB2', ' ', '\xE0', '\xA6', '\x95',  /* অ ড ত ন ব ভ ল ক */
     '\0',
     '\xE0', '\xA6', '\x87', ' ', '\xE0', '\xA6', '\x9F', ' ', '\xE0', '\xA6', '\xA0', ' ', '\xE0', '\xA6', '\xBF', ' ', '\xE0', '\xA7', '\x80', ' ', '\xE0', '\xA7', '\x88', ' ', '\xE0', '\xA7', '\x97',  /* ই ট ঠ ি ী ৈ ৗ */
@@ -440,6 +444,9 @@
     { AF_BLUE_STRING_AVESTAN_TOP,    AF_BLUE_PROPERTY_LATIN_TOP },
     { AF_BLUE_STRING_AVESTAN_BOTTOM, 0                          },
     { AF_BLUE_STRING_MAX,            0                          },
+    { AF_BLUE_STRING_BAMUM_TOP,    AF_BLUE_PROPERTY_LATIN_TOP },
+    { AF_BLUE_STRING_BAMUM_BOTTOM, 0                          },
+    { AF_BLUE_STRING_MAX,          0                          },
     { AF_BLUE_STRING_BENGALI_TOP,  AF_BLUE_PROPERTY_LATIN_TOP        },
     { AF_BLUE_STRING_BENGALI_HEAD, AF_BLUE_PROPERTY_LATIN_TOP        },
     { AF_BLUE_STRING_BENGALI_BASE, AF_BLUE_PROPERTY_LATIN_TOP      |

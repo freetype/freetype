@@ -132,6 +132,24 @@
   };
 
 
+  const AF_Script_UniRangeRec  af_bamu_uniranges[] =
+  {
+    AF_UNIRANGE_REC( 0xA6A0,   0xA6FF ),   /* Bamum */
+#if 0
+    /* The characters in the Bamum supplement are pictograms, */
+    /* not (directly) related to the syllabic Bamum script    */
+    AF_UNIRANGE_REC( 0x16800, 0x16A3F ),   /* Bamum Supplement */
+#endif
+    AF_UNIRANGE_REC(       0,       0 )
+  };
+
+  const AF_Script_UniRangeRec  af_bamu_nonbase_uniranges[] =
+  {
+    AF_UNIRANGE_REC(  0xA6F0,  0xA6F1 ),
+    AF_UNIRANGE_REC(       0,       0 )
+  };
+
+
   const AF_Script_UniRangeRec  af_beng_uniranges[] =
   {
     AF_UNIRANGE_REC(  0x0980,  0x09FF ),  /* Bengali */

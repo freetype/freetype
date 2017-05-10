@@ -111,6 +111,13 @@
          AF_BLUE_STRINGSET_AVST,
          AF_COVERAGE_DEFAULT )
 
+  STYLE( bamu_dflt, BAMU_DFLT,
+         "Bamum default style",
+         AF_WRITING_SYSTEM_LATIN,
+         AF_SCRIPT_BAMU,
+         AF_BLUE_STRINGSET_BAMU,
+         AF_COVERAGE_DEFAULT )
+
   STYLE( beng_dflt, BENG_DFLT,
          "Bengali default style",
          AF_WRITING_SYSTEM_LATIN,
