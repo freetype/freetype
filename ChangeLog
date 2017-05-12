@@ -1,3 +1,11 @@
+2017-05-12  Hin-Tak Leung  <htl10@users.sourceforge.net>
+
+	Fix `FT_UINT_TO_POINTER' macro for Windows.
+
+	* builds/unix/ftconfig.in, builds/vms/ftconfig.h,
+	include/freetype/config/ftconfig.h (FT_UINT_TO_POINTER) [_WIN64]:
+	Fix definition.
+
 2017-05-11  Sascha Brawer  <sascha@google.com>
 	    Werner Lemberg  <wl@gnu.org
 

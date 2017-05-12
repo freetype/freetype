@@ -309,7 +309,7 @@ FT_BEGIN_HEADER
 #ifdef _WIN64
   /* only 64bit Windows uses the LLP64 data model, i.e., */
   /* 32bit integers, 64bit pointers                      */
-#define FT_UINT_TO_POINTER( x ) (void*)(FT_UInt64)(x)
+#define FT_UINT_TO_POINTER( x ) (void*)(unsigned __int64)(x)
 #else
 #define FT_UINT_TO_POINTER( x ) (void*)(unsigned long)(x)
 #endif
