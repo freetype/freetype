@@ -448,7 +448,7 @@ FT_BEGIN_HEADER
    *   no-stem-darkening[autofit]
    *
    * @description:
-   *   *Experimental* *only,* *requires* *linear* *alpha* *blending* *and*
+   *   *Experimental* *only*, *requires* *linear* *alpha* *blending* *and*
    *   *gamma* *correction*
    *
    *   Stem darkening emboldens glyphs at smaller sizes to make them more
@@ -483,7 +483,8 @@ FT_BEGIN_HEADER
    */
 
 
-  /*
+  /**************************************************************************
+   *
    * @constant:
    *   FT_PARAM_TAG_STEM_DARKENING
    *

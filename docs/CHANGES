@@ -100,6 +100,9 @@ CHANGES BETWEEN 2.7.1 and 2.8
     - FT_LOAD_TARGET_LCD  is now  a  variant of  FT_LOAD_TARGET_LIGHT;
       this should provide better rendering results.
 
+    - A mode to display  light auto-hinting with sub-pixel positioning
+      has been added to `ftdiff'.
+
 
 ======================================================================
 

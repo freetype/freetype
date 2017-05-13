@@ -826,8 +826,8 @@ FT_BEGIN_HEADER
   /*                                                                       */
   /*    platform_id :: An ID number describing the platform for the        */
   /*                   following encoding ID.  This comes directly from    */
-  /*                   the TrueType specification gets emulated            */
-  /*                   for other formats.                                  */
+  /*                   the TrueType specification and gets emulated for    */
+  /*                   other formats.                                      */
   /*                                                                       */
   /*    encoding_id :: A platform specific encoding number.  This also     */
   /*                   comes from the TrueType specification and gets      */
@@ -4441,8 +4441,8 @@ FT_BEGIN_HEADER
    *
    */
 #define FREETYPE_MAJOR  2
-#define FREETYPE_MINOR  7
-#define FREETYPE_PATCH  1
+#define FREETYPE_MINOR  8
+#define FREETYPE_PATCH  0
 
 
   /*************************************************************************/

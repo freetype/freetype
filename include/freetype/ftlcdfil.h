@@ -279,7 +279,8 @@ FT_BEGIN_HEADER
                                   unsigned char  *weights );
 
 
-  /*
+  /**************************************************************************
+   *
    * @constant:
    *   FT_PARAM_TAG_LCD_FILTER_WEIGHTS
    *
