@@ -31,12 +31,7 @@
   static FT_Error
   ft_raster1_init( FT_Renderer  render )
   {
-    FT_Library  library = FT_MODULE_LIBRARY( render );
-
-
-    render->clazz->raster_class->raster_reset( render->raster,
-                                               library->raster_pool,
-                                               library->raster_pool_size );
+    render->clazz->raster_class->raster_reset( render->raster, NULL, 0 );
 
     return FT_Err_Ok;
   }

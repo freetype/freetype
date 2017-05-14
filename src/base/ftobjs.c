@@ -4973,10 +4973,6 @@
       goto Fail;
 #endif
 
-    /* we don't use raster_pool anymore. */
-    library->raster_pool_size = 0;
-    library->raster_pool      = NULL;
-
     library->version_major = FREETYPE_MAJOR;
     library->version_minor = FREETYPE_MINOR;
     library->version_patch = FREETYPE_PATCH;

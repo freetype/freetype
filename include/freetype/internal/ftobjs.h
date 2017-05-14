@@ -856,11 +856,6 @@ FT_BEGIN_HEADER
   /*                                                                       */
   /*    auto_hinter      :: The auto-hinter module interface.              */
   /*                                                                       */
-  /*    raster_pool      :: The raster object's render pool.  This can     */
-  /*                        ideally be changed dynamically at run-time.    */
-  /*                                                                       */
-  /*    raster_pool_size :: The size of the render pool in bytes.          */
-  /*                                                                       */
   /*    debug_hooks      :: An array of four function pointers that allow  */
   /*                        debuggers to hook into a font format's         */
   /*                        interpreter.  Currently, only the TrueType     */
@@ -902,10 +897,6 @@ FT_BEGIN_HEADER
     FT_ListRec         renderers;        /* list of renderers        */
     FT_Renderer        cur_renderer;     /* current outline renderer */
     FT_Module          auto_hinter;
-
-    FT_Byte*           raster_pool;      /* scan-line conversion */
-                                         /* render pool          */
-    FT_ULong           raster_pool_size; /* size of render pool in bytes */
 
     FT_DebugHook_Func  debug_hooks[4];
 

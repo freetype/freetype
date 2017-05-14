@@ -1,3 +1,13 @@
+2017-05-14  Werner Lemberg  <wl@gnu.org>
+
+	Remove remnants of raster pool.
+
+	* include/freetype/internal/ftobjs.h (FT_LibraryRec): Remove
+	`raster_pool' and `raster_pool_size' fields.
+
+	* src/base/ftobjs.c (FT_New_Library), src/raster/ftrend1.c
+	(ft_raster1_init), src/smooth/ftsmooth.c (ft_smooth_init): Updated.
+
 2017-05-13  Werner Lemberg  <wl@gnu.org>
 
 	* Version 2.8 released.
