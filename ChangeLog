@@ -1,3 +1,20 @@
+2017-05-15  Alexei Podtelezhnikov  <apodtele@gmail.com>
+
+	[autofit] Make autohint warping NORMAL option.
+
+	This moves warping option from LIGHT to NORMAL mode.  This makes LIGHT
+	truly void of hinting in x-direction, with left side bearing never
+	changed and right side bearing only altered by advance rounding.
+	Therefore, LIGHT is now ready to return fractional advance.  As a
+	NORMAL option, warping substitutes normal hinting.
+
+	* src/autofit/afcjk.c (af_cjk_hints_apply): Updated.
+	* src/autofit/aflatin.c (af_latin_hints_apply): Updated.
+	* src/autofit/aflatin2.c (af_latin2_hints_apply): Updated.
+
+	* src/autofit/afloader.c (af_loader_load_glyph): Handle warping
+	phantom points as normal.
+
 2017-05-14  Werner Lemberg  <wl@gnu.org>
 
 	Remove remnants of raster pool.
