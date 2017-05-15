@@ -1,5 +1,13 @@
 2017-05-15  Werner Lemberg  <wl@gnu.org>
 
+	[sfnt] Return proper scaling values for SBIX bitmaps.
+
+	Problem reported by Hin-Tak Leung <htl10@users.sourceforge.net>.
+
+	* src/sfnt/ttsbit.c (tt_face_load_strike_metrics): Implement it.
+
+2017-05-15  Werner Lemberg  <wl@gnu.org>
+
 	[truetype] Fix error handling for embedded bitmaps.
 
 	Problem reported by Hin-Tak Leung <htl10@users.sourceforge.net>.

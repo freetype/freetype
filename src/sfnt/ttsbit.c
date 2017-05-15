@@ -448,6 +448,15 @@
         metrics->max_advance =
           FT_MulDiv( hori->advance_Width_Max, ppem_ * 64, upem );
 
+        /* set the scale values (in 16.16 units) so advances */
+        /* from the hmtx and vmtx table are scaled correctly */
+        metrics->x_scale = FT_MulDiv( metrics->x_ppem,
+                                      64 * 0x10000,
+                                      face->header.Units_Per_EM );
+        metrics->y_scale = FT_MulDiv( metrics->y_ppem,
+                                      64 * 0x10000,
+                                      face->header.Units_Per_EM );
+
         return error;
       }
 
