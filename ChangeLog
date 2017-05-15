@@ -1,3 +1,13 @@
+2017-05-15  Werner Lemberg  <wl@gnu.org>
+
+	[truetype] Fix error handling for embedded bitmaps.
+
+	Problem reported by Hin-Tak Leung <htl10@users.sourceforge.net>.
+
+	* src/truetype/ttgload.c (TT_Load_Glyph)
+	[TT_CONFIG_OPTION_EMBEDDED_BITMAPS]: Handle error if font is not
+	scalable.
+
 2017-05-15  Alexei Podtelezhnikov  <apodtele@gmail.com>
 
 	[autofit] Make autohint warping NORMAL option.

@@ -2621,7 +2621,13 @@
          IS_DEFAULT_INSTANCE                     )
     {
       error = load_sbit_image( size, glyph, glyph_index, load_flags );
-      if ( !error )
+      if ( error )
+      {
+        /* return error if font is not scalable */
+        if ( !FT_IS_SCALABLE( glyph->face ) )
+          return error;
+      }
+      else
       {
         if ( FT_IS_SCALABLE( glyph->face ) )
         {
