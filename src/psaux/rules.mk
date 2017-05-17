@@ -33,12 +33,24 @@ PSAUX_DRV_SRC := $(PSAUX_DIR)/psobjs.c   \
                  $(PSAUX_DIR)/t1cmap.c   \
                  $(PSAUX_DIR)/afmparse.c \
                  $(PSAUX_DIR)/psconv.c   \
-                 $(PSAUX_DIR)/psauxmod.c
+                 $(PSAUX_DIR)/psauxmod.c \
+                 $(PSAUX_DIR)/cf2arrst.c \
+                 $(PSAUX_DIR)/cf2blues.c \
+                 $(PSAUX_DIR)/cf2error.c \
+                 $(PSAUX_DIR)/cf2font.c  \
+                 $(PSAUX_DIR)/cf2ft.c    \
+                 $(PSAUX_DIR)/cf2hints.c \
+                 $(PSAUX_DIR)/cf2intrp.c \
+                 $(PSAUX_DIR)/cf2read.c  \
+                 $(PSAUX_DIR)/cf2stack.c 
 
 # PSAUX driver headers
 #
 PSAUX_DRV_H := $(PSAUX_DRV_SRC:%c=%h)  \
-               $(PSAUX_DIR)/psauxerr.h
+               $(PSAUX_DIR)/psauxerr.h \
+               $(PSAUX_DIR)/cf2fixed.h \
+               $(PSAUX_DIR)/cf2glue.h  \
+               $(PSAUX_DIR)/cf2types.h
 
 
 # PSAUX driver object(s)

@@ -32,16 +32,7 @@ CFF_DRV_SRC := $(CFF_DIR)/cffcmap.c  \
                $(CFF_DIR)/cffload.c  \
                $(CFF_DIR)/cffobjs.c  \
                $(CFF_DIR)/cffparse.c \
-               $(CFF_DIR)/cffpic.c   \
-               $(CFF_DIR)/cf2arrst.c \
-               $(CFF_DIR)/cf2blues.c \
-               $(CFF_DIR)/cf2error.c \
-               $(CFF_DIR)/cf2font.c  \
-               $(CFF_DIR)/cf2ft.c    \
-               $(CFF_DIR)/cf2hints.c \
-               $(CFF_DIR)/cf2intrp.c \
-               $(CFF_DIR)/cf2read.c  \
-               $(CFF_DIR)/cf2stack.c
+               $(CFF_DIR)/cffpic.c
 
 
 # CFF driver headers
@@ -49,10 +40,7 @@ CFF_DRV_SRC := $(CFF_DIR)/cffcmap.c  \
 CFF_DRV_H := $(CFF_DRV_SRC:%.c=%.h) \
              $(CFF_DIR)/cfferrs.h   \
              $(CFF_DIR)/cfftoken.h  \
-             $(CFF_DIR)/cfftypes.h  \
-             $(CFF_DIR)/cf2fixed.h  \
-             $(CFF_DIR)/cf2glue.h   \
-             $(CFF_DIR)/cf2types.h
+             $(CFF_DIR)/cfftypes.h 
 
 
 # CFF driver object(s)
