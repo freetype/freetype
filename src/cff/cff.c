@@ -27,15 +27,4 @@
 #include "cffload.c"
 #include "cffobjs.c"
 
-#include "cf2arrst.c"
-#include "cf2blues.c"
-#include "cf2error.c"
-#include "cf2font.c"
-#include "cf2ft.c"
-#include "cf2hints.c"
-#include "cf2intrp.c"
-#include "cf2read.c"
-#include "cf2stack.c"
-
-
 /* END */
