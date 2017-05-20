@@ -1,3 +1,15 @@
+2017-05-20  Nikolaus Waxweiler  <madigens@gmail.com>
+
+	[truetype] Always use interpreter v35 for B/W rendering (#51051).
+
+	* src/truetype/ttgload.c (tt_loader_init)
+	[TT_SUPPORT_SUBPIXEL_HINTING_MINIMAL]: Adjust
+	`subpixel_hinting_lean', `grayscale_cleartype', and
+	`vertical_lcd_lean' accordingly.
+
+	* src/truetype/ttinterp.c (Ins_GETINFO): Updated.
+	(TT_RunIns): Update `backward_compatibility' flag.
+
 2017-05-20  Alexei Podtelezhnikov  <apodtele@gmail.com>
 
 	[smooth] Implement minimal dynamic padding for LCD filtering.

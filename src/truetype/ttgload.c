@@ -2339,13 +2339,19 @@
 #ifdef TT_SUPPORT_SUBPIXEL_HINTING_MINIMAL
       if ( driver->interpreter_version == TT_INTERPRETER_VERSION_40 )
       {
-        subpixel_hinting_lean   = TRUE;
-        grayscale_cleartype     = !FT_BOOL( load_flags         &
-                                            FT_LOAD_TARGET_LCD     ||
-                                            load_flags           &
-                                            FT_LOAD_TARGET_LCD_V   );
-        exec->vertical_lcd_lean = FT_BOOL( load_flags           &
-                                           FT_LOAD_TARGET_LCD_V );
+        subpixel_hinting_lean =
+          FT_BOOL( FT_LOAD_TARGET_MODE( load_flags ) !=
+                   FT_RENDER_MODE_MONO               );
+        grayscale_cleartype =
+          FT_BOOL( subpixel_hinting_lean         &&
+                   !( ( load_flags         &
+                        FT_LOAD_TARGET_LCD )   ||
+                      ( load_flags           &
+                        FT_LOAD_TARGET_LCD_V ) ) );
+        exec->vertical_lcd_lean =
+          FT_BOOL( subpixel_hinting_lean    &&
+                   ( load_flags           &
+                     FT_LOAD_TARGET_LCD_V ) );
       }
       else
       {
