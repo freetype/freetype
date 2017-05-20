@@ -119,7 +119,6 @@
 
 #ifdef FT_CONFIG_OPTION_SUBPIXEL_RENDERING
 
-    FT_Int                   lcd_extra          = 0;
     FT_LcdFiveTapFilter      lcd_weights        = { 0 };
     FT_Bool                  have_custom_weight = FALSE;
     FT_Bitmap_LcdFilterFunc  lcd_filter_func    = NULL;
@@ -147,13 +146,12 @@
     {
       /*
        * A per-font filter is set.  It always uses the default 5-tap
-       * in-place FIR filter that needs 2 extra pixels.
+       * in-place FIR filter.
        */
       ft_memcpy( lcd_weights,
                  slot->face->internal->lcd_weights,
                  FT_LCD_FILTER_FIVE_TAPS );
       lcd_filter_func = ft_lcd_filter_fir;
-      lcd_extra       = 2;
     }
     else
     {
@@ -167,7 +165,6 @@
                  slot->library->lcd_weights,
                  FT_LCD_FILTER_FIVE_TAPS );
       lcd_filter_func = slot->library->lcd_filter_func;
-      lcd_extra       = slot->library->lcd_extra;
     }
 
 #endif /*FT_CONFIG_OPTION_SUBPIXEL_RENDERING */
@@ -195,6 +192,28 @@
     /* compute the control box, and grid fit it */
     /* taking into account the origin shift     */
     FT_Outline_Get_CBox( outline, &cbox );
+
+#ifdef FT_CONFIG_OPTION_SUBPIXEL_RENDERING
+    /* add minimal padding for LCD filter depending on specific weights */
+    if ( lcd_filter_func)
+    {
+      if ( hmul )
+      {
+        cbox.xMax += lcd_weights[4] ? 43
+                                    : lcd_weights[3] ? 22 : 0;
+        cbox.xMin -= lcd_weights[0] ? 43
+                                    : lcd_weights[1] ? 22 : 0;
+      }
+
+      if ( vmul )
+      {
+        cbox.yMax += lcd_weights[0] ? 43
+                                    : lcd_weights[1] ? 22 : 0;
+        cbox.yMin -= lcd_weights[4] ? 43
+                                    : lcd_weights[3] ? 22 : 0;
+      }
+    }
+#endif
 
     cbox.xMin = FT_PIX_FLOOR( cbox.xMin + x_shift );
     cbox.yMin = FT_PIX_FLOOR( cbox.yMin + y_shift );
@@ -224,26 +243,6 @@
 
     if ( vmul )
       height *= 3;
-
-#ifdef FT_CONFIG_OPTION_SUBPIXEL_RENDERING
-    if ( lcd_filter_func )
-    {
-      if ( hmul )
-      {
-        x_shift += 64 * ( lcd_extra >> 1 );
-        x_left  -= lcd_extra >> 1;
-        width   += 3 * lcd_extra;
-        pitch    = FT_PAD_CEIL( width, 4 );
-      }
-
-      if ( vmul )
-      {
-        y_shift += 64 * ( lcd_extra >> 1 );
-        y_top   += lcd_extra >> 1;
-        height  += 3 * lcd_extra;
-      }
-    }
-#endif
 
     /*
      * XXX: on 16bit system, we return an error for huge bitmap

@@ -1,3 +1,24 @@
+2017-05-20  Alexei Podtelezhnikov  <apodtele@gmail.com>
+
+	[smooth] Implement minimal dynamic padding for LCD filtering.
+
+	Extra bitmap padding for LCD filtering depends on the filter.  The
+	default 5-tap filter needs 2 extra subpixels.  The light 3-tap filter
+	needs only 1 extra subpixel.  This space could be already available
+	due to rounding.  In order to optimize the padding, we now expand
+	CBox for the given filter weights before rounding.
+
+	This change breakes current Skia (and Firefox).
+
+	* include/freetype/internal/ftobjs.h (FT_LibraryRec)
+	[FT_CONFIG_OPTION_SUBPIXEL_RENDERING]: Remove `lcd_extra' field.
+
+	* src/base/ftlcdfil.c (FT_Library_SetLcdFilterWeights,
+	FT_Library_SetLcdFilter): Remove `lcd_extra' initializations.
+
+	* src/smooth/ftsmooth.c (ft_smooth_render_generic): Implement dymanic
+	LCD padding.
+
 2017-05-15  Werner Lemberg  <wl@gnu.org>
 
 	[sfnt] Return proper scaling values for SBIX bitmaps.

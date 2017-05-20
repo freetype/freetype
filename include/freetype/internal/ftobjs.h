@@ -864,9 +864,6 @@ FT_BEGIN_HEADER
   /*    lcd_filter       :: If subpixel rendering is activated, the        */
   /*                        selected LCD filter mode.                      */
   /*                                                                       */
-  /*    lcd_extra        :: If subpixel rendering is activated, the number */
-  /*                        of extra pixels needed for the LCD filter.     */
-  /*                                                                       */
   /*    lcd_weights      :: If subpixel rendering is activated, the LCD    */
   /*                        filter weights, if any.                        */
   /*                                                                       */
@@ -902,7 +899,6 @@ FT_BEGIN_HEADER
 
 #ifdef FT_CONFIG_OPTION_SUBPIXEL_RENDERING
     FT_LcdFilter             lcd_filter;
-    FT_Int                   lcd_extra;        /* number of extra pixels */
     FT_LcdFiveTapFilter      lcd_weights;      /* filter weights, if any */
     FT_Bitmap_LcdFilterFunc  lcd_filter_func;  /* filtering callback     */
 #endif
