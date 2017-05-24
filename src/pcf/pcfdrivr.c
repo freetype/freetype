@@ -387,7 +387,11 @@ THE SOFTWARE.
           if ( !ft_strcmp( s, "10646" )                      ||
                ( !ft_strcmp( s, "8859" ) &&
                  !ft_strcmp( face->charset_encoding, "1" ) ) )
-          unicode_charmap = 1;
+            unicode_charmap = 1;
+          /* another name for ASCII */
+          else if ( !ft_strcmp( s, "646.1991" )                 &&
+                    !ft_strcmp( face->charset_encoding, "IRV" ) )
+            unicode_charmap = 1;
         }
       }
 

@@ -1,3 +1,14 @@
+2017-05-24  Werner Lemberg  <wl@gnu.org>
+
+	[bdf, pcf] Support ISO646.1991-IRV character encoding (aka ASCII).
+
+	Problem reported by Marek Kašík <mkasik@redhat.com>, cf.
+
+	  https://bugzilla.redhat.com/show_bug.cgi?id=1451795
+
+	* src/bdf/bdfdrivr.c (BDF_Face_Init), src/pcf/pcfdrivr.c
+	(PCF_Face_Init): Implement it.
+
 2017-05-20  Nikolaus Waxweiler  <madigens@gmail.com>
 
 	[truetype] Always use interpreter v35 for B/W rendering (#51051).
