@@ -2281,7 +2281,10 @@
     GX_Blend    blend;
     FT_MM_Var*  mmvar;
     FT_UInt     i, j;
-    FT_Bool     is_default_instance = 1;
+
+    FT_Bool     is_default_instance = TRUE;
+    FT_Bool     all_design_coords   = FALSE;
+
     FT_Memory   memory = face->root.memory;
 
     enum
@@ -2327,7 +2330,7 @@
       }
 
       if ( coords[i] != 0 )
-        is_default_instance = 0;
+        is_default_instance = FALSE;
     }
 
     FT_TRACE5(( "\n" ));
@@ -2340,6 +2343,9 @@
     {
       if ( FT_NEW_ARRAY( blend->coords, mmvar->num_axis ) )
         goto Exit;
+
+      /* the first time we have to compute all design coordinates */
+      all_design_coords = TRUE;
     }
 
     if ( !blend->normalizedcoords )
@@ -2388,7 +2394,7 @@
 
     if ( set_design_coords )
       ft_var_to_design( face,
-                        num_coords,
+                        all_design_coords ? blend->num_axis : num_coords,
                         blend->normalizedcoords,
                         blend->coords );
 
@@ -2528,6 +2534,14 @@
     }
 
     blend = face->blend;
+
+    if ( !blend->coords )
+    {
+      /* select default instance coordinates */
+      /* if no instance is selected yet      */
+      if ( FT_SET_ERROR( tt_set_mm_blend( face, 0, NULL, 1 ) ) )
+        return error;
+    }
 
     nc = num_coords;
     if ( num_coords > blend->num_axis )
@@ -2685,6 +2699,14 @@
     }
 
     blend = face->blend;
+
+    if ( !blend->coords )
+    {
+      /* select default instance coordinates */
+      /* if no instance is selected yet      */
+      if ( FT_SET_ERROR( tt_set_mm_blend( face, 0, NULL, 1 ) ) )
+        return error;
+    }
 
     nc = num_coords;
     if ( num_coords > blend->num_axis )
