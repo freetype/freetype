@@ -408,8 +408,8 @@
       /* Note: constant changed from 0.5 to 0.6 to avoid a problem with */
       /*       10ppem Arial                                             */
 
-      blues->boost = cf2_floatToFixed( .6 ) -
-                       FT_MulDiv( cf2_floatToFixed ( .6 ),
+      blues->boost = cf2_doubleToFixed( .6 ) -
+                       FT_MulDiv( cf2_doubleToFixed ( .6 ),
                                   blues->scale,
                                   blues->blueScale );
       if ( blues->boost > 0x7FFF )

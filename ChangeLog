@@ -1,5 +1,17 @@
 2017-05-28  Werner Lemberg  <wl@gnu.org>
 
+	[cff] s/cf2_floatToFixed/cf2_doubleToFixed/.
+
+	The new name better describes what the macro actually does;
+	additionally, we don't need a trailing `f' for literals (there was
+	only a single such instance in the code, but this caused a clang
+	warning because the macro itself uses `double' literals).
+
+	* src/cff/cf2blues.c, src/cff/cf2blues.h, src/cff/cf2fixed.h,
+	src/cff/cf2font.c, src/cff/cf2hints.c: Updated.
+
+2017-05-28  Werner Lemberg  <wl@gnu.org>
+
 	Fix negation of INT_MIN and LONG_MIN (#46149).
 
 	* src/base/ftcalc.c (FT_MOVE_SIGN): Add argument to pass unsigned

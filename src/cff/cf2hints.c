@@ -1063,7 +1063,7 @@
                                      cf2_fixedAbs( glyphpath->yOffset ) );
 
     /* .1 character space unit */
-    glyphpath->snapThreshold = cf2_floatToFixed( 0.1f );
+    glyphpath->snapThreshold = cf2_doubleToFixed( 0.1 );
 
     glyphpath->moveIsPending = TRUE;
     glyphpath->pathIsOpen    = FALSE;
@@ -1489,9 +1489,9 @@
         else
         {
           /* +x +y */
-          *x = FT_MulFix( cf2_floatToFixed( 0.7 ),
+          *x = FT_MulFix( cf2_doubleToFixed( 0.7 ),
                           glyphpath->xOffset );
-          *y = FT_MulFix( cf2_floatToFixed( 1.0 - 0.7 ),
+          *y = FT_MulFix( cf2_doubleToFixed( 1.0 - 0.7 ),
                           glyphpath->yOffset );
         }
       }
@@ -1514,9 +1514,9 @@
         else
         {
           /* +x -y */
-          *x = FT_MulFix( cf2_floatToFixed( -0.7 ),
+          *x = FT_MulFix( cf2_doubleToFixed( -0.7 ),
                           glyphpath->xOffset );
-          *y = FT_MulFix( cf2_floatToFixed( 1.0 - 0.7 ),
+          *y = FT_MulFix( cf2_doubleToFixed( 1.0 - 0.7 ),
                           glyphpath->yOffset );
         }
       }
@@ -1542,9 +1542,9 @@
         else
         {
           /* -x +y */
-          *x = FT_MulFix( cf2_floatToFixed( 0.7 ),
+          *x = FT_MulFix( cf2_doubleToFixed( 0.7 ),
                           glyphpath->xOffset );
-          *y = FT_MulFix( cf2_floatToFixed( 1.0 + 0.7 ),
+          *y = FT_MulFix( cf2_doubleToFixed( 1.0 + 0.7 ),
                           glyphpath->yOffset );
         }
       }
@@ -1567,9 +1567,9 @@
         else
         {
           /* -x -y */
-          *x = FT_MulFix( cf2_floatToFixed( -0.7 ),
+          *x = FT_MulFix( cf2_doubleToFixed( -0.7 ),
                           glyphpath->xOffset );
-          *y = FT_MulFix( cf2_floatToFixed( 1.0 + 0.7 ),
+          *y = FT_MulFix( cf2_doubleToFixed( 1.0 + 0.7 ),
                           glyphpath->yOffset );
         }
       }

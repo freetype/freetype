@@ -117,7 +117,7 @@
       return;
 
     /* protect against range problems and divide by zero */
-    if ( emRatio < cf2_floatToFixed( .01 ) )
+    if ( emRatio < cf2_doubleToFixed( .01 ) )
       return;
 
     if ( stemDarkened )
