@@ -68,14 +68,15 @@
 #define FT_COMPONENT  trace_calc
 
 
-  /* transfer sign leaving a positive number */
-#define FT_MOVE_SIGN( x, s ) \
-  FT_BEGIN_STMNT             \
-    if ( x < 0 )             \
-    {                        \
-      x = -x;                \
-      s = -s;                \
-    }                        \
+  /* transfer sign, leaving a positive number;                        */
+  /* we need an unsigned value to safely negate INT_MIN (or LONG_MIN) */
+#define FT_MOVE_SIGN( x, x_unsigned, s ) \
+  FT_BEGIN_STMNT                         \
+    if ( x < 0 )                         \
+    {                                    \
+      x_unsigned = -x_unsigned;          \
+      s          = -s;                   \
+    }                                    \
   FT_END_STMNT
 
   /* The following three functions are available regardless of whether */
@@ -179,13 +180,13 @@
     FT_Long    d_;
 
 
-    FT_MOVE_SIGN( a_, s );
-    FT_MOVE_SIGN( b_, s );
-    FT_MOVE_SIGN( c_, s );
-
     a = (FT_UInt64)a_;
     b = (FT_UInt64)b_;
     c = (FT_UInt64)c_;
+
+    FT_MOVE_SIGN( a_, a, s );
+    FT_MOVE_SIGN( b_, b, s );
+    FT_MOVE_SIGN( c_, c, s );
 
     d = c > 0 ? ( a * b + ( c >> 1 ) ) / c
               : 0x7FFFFFFFUL;
@@ -208,13 +209,13 @@
     FT_Long    d_;
 
 
-    FT_MOVE_SIGN( a_, s );
-    FT_MOVE_SIGN( b_, s );
-    FT_MOVE_SIGN( c_, s );
-
     a = (FT_UInt64)a_;
     b = (FT_UInt64)b_;
     c = (FT_UInt64)c_;
+
+    FT_MOVE_SIGN( a_, a, s );
+    FT_MOVE_SIGN( b_, b, s );
+    FT_MOVE_SIGN( c_, c, s );
 
     d = c > 0 ? a * b / c
               : 0x7FFFFFFFUL;
@@ -257,11 +258,11 @@
     FT_Long    q_;
 
 
-    FT_MOVE_SIGN( a_, s );
-    FT_MOVE_SIGN( b_, s );
-
     a = (FT_UInt64)a_;
     b = (FT_UInt64)b_;
+
+    FT_MOVE_SIGN( a_, a, s );
+    FT_MOVE_SIGN( b_, a, s );
 
     q = b > 0 ? ( ( a << 16 ) + ( b >> 1 ) ) / b
               : 0x7FFFFFFFUL;
@@ -422,13 +423,13 @@
 
     /* XXX: this function does not allow 64-bit arguments */
 
-    FT_MOVE_SIGN( a_, s );
-    FT_MOVE_SIGN( b_, s );
-    FT_MOVE_SIGN( c_, s );
-
     a = (FT_UInt32)a_;
     b = (FT_UInt32)b_;
     c = (FT_UInt32)c_;
+
+    FT_MOVE_SIGN( a_, a, s );
+    FT_MOVE_SIGN( b_, b, s );
+    FT_MOVE_SIGN( c_, c, s );
 
     if ( c == 0 )
       a = 0x7FFFFFFFUL;
@@ -470,13 +471,13 @@
 
     /* XXX: this function does not allow 64-bit arguments */
 
-    FT_MOVE_SIGN( a_, s );
-    FT_MOVE_SIGN( b_, s );
-    FT_MOVE_SIGN( c_, s );
-
     a = (FT_UInt32)a_;
     b = (FT_UInt32)b_;
     c = (FT_UInt32)c_;
+
+    FT_MOVE_SIGN( a_, a, s );
+    FT_MOVE_SIGN( b_, b, s );
+    FT_MOVE_SIGN( c_, c, s );
 
     if ( c == 0 )
       a = 0x7FFFFFFFUL;
@@ -575,11 +576,11 @@
 
     /* XXX: this function does not allow 64-bit arguments */
 
-    FT_MOVE_SIGN( a_, s );
-    FT_MOVE_SIGN( b_, s );
-
     a = (FT_UInt32)a_;
     b = (FT_UInt32)b_;
+
+    FT_MOVE_SIGN( a_, a, s );
+    FT_MOVE_SIGN( b_, b, s );
 
     if ( a + ( b >> 8 ) <= 8190UL )
       a = ( a * b + 0x8000UL ) >> 16;
@@ -614,11 +615,11 @@
 
     /* XXX: this function does not allow 64-bit arguments */
 
-    FT_MOVE_SIGN( a_, s );
-    FT_MOVE_SIGN( b_, s );
-
     a = (FT_UInt32)a_;
     b = (FT_UInt32)b_;
+
+    FT_MOVE_SIGN( a_, a, s );
+    FT_MOVE_SIGN( b_, b, s );
 
     if ( b == 0 )
     {
@@ -770,11 +771,11 @@
     FT_Int     sx = 1, sy = 1, shift;
 
 
-    FT_MOVE_SIGN( x_, sx );
-    FT_MOVE_SIGN( y_, sy );
-
     x = (FT_UInt32)x_;
     y = (FT_UInt32)y_;
+
+    FT_MOVE_SIGN( x_, x, sx );
+    FT_MOVE_SIGN( y_, y, sy );
 
     /* trivial cases */
     if ( x == 0 )

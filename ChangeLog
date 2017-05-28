@@ -1,3 +1,12 @@
+2017-05-28  Werner Lemberg  <wl@gnu.org>
+
+	Fix negation of INT_MIN and LONG_MIN (#46149).
+
+	* src/base/ftcalc.c (FT_MOVE_SIGN): Add argument to pass unsigned
+	value, to be used as the result.
+	(FT_MulDiv, FT_MulDiv_No_Round, FT_DivFix, FT_MulFix,
+	FT_Vector_NormLen): Updated.
+
 2017-05-27  Werner Lemberg  <wl@gnu.org>
 
 	[truetype] Fix handling of design coordinates (#51127).
