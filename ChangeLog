@@ -1,5 +1,11 @@
 2017-05-28  Werner Lemberg  <wl@gnu.org>
 
+	* include/freetype/internal/ftcalc.h (FLOAT_TO_FIXED): Remove.
+
+	This macro is not used.
+
+2017-05-28  Werner Lemberg  <wl@gnu.org>
+
 	[cff] s/cf2_floatToFixed/cf2_doubleToFixed/.
 
 	The new name better describes what the macro actually does;
