@@ -4327,6 +4327,9 @@ FT_BEGIN_HEADER
   /*    `a' rounded to the nearest 16.16 fixed integer, halfway cases away */
   /*    from zero.                                                         */
   /*                                                                       */
+  /* <Note>                                                                */
+  /*    The function uses wrap-around arithmetic.                          */
+  /*                                                                       */
   FT_EXPORT( FT_Fixed )
   FT_RoundFix( FT_Fixed  a );
 
@@ -4344,6 +4347,9 @@ FT_BEGIN_HEADER
   /*                                                                       */
   /* <Return>                                                              */
   /*    `a' rounded towards plus infinity.                                 */
+  /*                                                                       */
+  /* <Note>                                                                */
+  /*    The function uses wrap-around arithmetic.                          */
   /*                                                                       */
   FT_EXPORT( FT_Fixed )
   FT_CeilFix( FT_Fixed  a );

@@ -87,7 +87,8 @@
   FT_EXPORT_DEF( FT_Fixed )
   FT_RoundFix( FT_Fixed  a )
   {
-    return ( a + 0x8000L - ( a < 0 ) ) & ~0xFFFFL;
+    return ( OVERFLOW_ADD_LONG( a,
+                                0x8000L - ( a < 0 ) ) ) & ~0xFFFFL;
   }
 
 
@@ -96,7 +97,7 @@
   FT_EXPORT_DEF( FT_Fixed )
   FT_CeilFix( FT_Fixed  a )
   {
-    return ( a + 0xFFFFL ) & ~0xFFFFL;
+    return ( OVERFLOW_ADD_LONG( a, 0xFFFFL ) ) & ~0xFFFFL;
   }
 
 
@@ -667,13 +668,19 @@
     if ( !a || !b )
       return;
 
-    xx = FT_MulFix( a->xx, b->xx ) + FT_MulFix( a->xy, b->yx );
-    xy = FT_MulFix( a->xx, b->xy ) + FT_MulFix( a->xy, b->yy );
-    yx = FT_MulFix( a->yx, b->xx ) + FT_MulFix( a->yy, b->yx );
-    yy = FT_MulFix( a->yx, b->xy ) + FT_MulFix( a->yy, b->yy );
+    xx = OVERFLOW_ADD_LONG( FT_MulFix( a->xx, b->xx ),
+                            FT_MulFix( a->xy, b->yx ) );
+    xy = OVERFLOW_ADD_LONG( FT_MulFix( a->xx, b->xy ),
+                            FT_MulFix( a->xy, b->yy ) );
+    yx = OVERFLOW_ADD_LONG( FT_MulFix( a->yx, b->xx ),
+                            FT_MulFix( a->yy, b->yx ) );
+    yy = OVERFLOW_ADD_LONG( FT_MulFix( a->yx, b->xy ),
+                            FT_MulFix( a->yy, b->yy ) );
 
-    b->xx = xx;  b->xy = xy;
-    b->yx = yx;  b->yy = yy;
+    b->xx = xx;
+    b->xy = xy;
+    b->yx = yx;
+    b->yy = yy;
   }
 
 
@@ -723,13 +730,19 @@
     if ( !a || !b )
       return;
 
-    xx = FT_MulDiv( a->xx, b->xx, val ) + FT_MulDiv( a->xy, b->yx, val );
-    xy = FT_MulDiv( a->xx, b->xy, val ) + FT_MulDiv( a->xy, b->yy, val );
-    yx = FT_MulDiv( a->yx, b->xx, val ) + FT_MulDiv( a->yy, b->yx, val );
-    yy = FT_MulDiv( a->yx, b->xy, val ) + FT_MulDiv( a->yy, b->yy, val );
+    xx = OVERFLOW_ADD_LONG( FT_MulDiv( a->xx, b->xx, val ),
+                            FT_MulDiv( a->xy, b->yx, val ) );
+    xy = OVERFLOW_ADD_LONG( FT_MulDiv( a->xx, b->xy, val ),
+                            FT_MulDiv( a->xy, b->yy, val ) );
+    yx = OVERFLOW_ADD_LONG( FT_MulDiv( a->yx, b->xx, val ),
+                            FT_MulDiv( a->yy, b->yx, val ) );
+    yy = OVERFLOW_ADD_LONG( FT_MulDiv( a->yx, b->xy, val ),
+                            FT_MulDiv( a->yy, b->yy, val ) );
 
-    b->xx = xx;  b->xy = xy;
-    b->yx = yx;  b->yy = yy;
+    b->xx = xx;
+    b->xy = xy;
+    b->yx = yx;
+    b->yy = yy;
   }
 
 
@@ -748,11 +761,10 @@
     if ( !vector || !matrix )
       return;
 
-    xz = FT_MulDiv( vector->x, matrix->xx, val ) +
-         FT_MulDiv( vector->y, matrix->xy, val );
-
-    yz = FT_MulDiv( vector->x, matrix->yx, val ) +
-         FT_MulDiv( vector->y, matrix->yy, val );
+    xz = OVERFLOW_ADD_LONG( FT_MulDiv( vector->x, matrix->xx, val ),
+                            FT_MulDiv( vector->y, matrix->xy, val ) );
+    yz = OVERFLOW_ADD_LONG( FT_MulDiv( vector->x, matrix->yx, val ),
+                            FT_MulDiv( vector->y, matrix->yy, val ) );
 
     vector->x = xz;
     vector->y = yz;
@@ -914,11 +926,13 @@
     FT_Int  result;
 
 
-    if ( (FT_ULong)FT_ABS( in_x ) + (FT_ULong)FT_ABS( out_y ) <= 131071UL &&
-         (FT_ULong)FT_ABS( in_y ) + (FT_ULong)FT_ABS( out_x ) <= 131071UL )
+    /* we silently ignore overflow errors, since such large values */
+    /* lead to even more (harmless) rendering errors later on      */
+    if ( OVERFLOW_ADD_LONG( FT_ABS( in_x ), FT_ABS( out_y ) ) <= 131071L &&
+         OVERFLOW_ADD_LONG( FT_ABS( in_y ), FT_ABS( out_x ) ) <= 131071L )
     {
-      FT_Long  z1 = in_x * out_y;
-      FT_Long  z2 = in_y * out_x;
+      FT_Long  z1 = OVERFLOW_MUL_LONG( in_x, out_y );
+      FT_Long  z2 = OVERFLOW_MUL_LONG( in_y, out_x );
 
 
       if ( z1 > z2 )

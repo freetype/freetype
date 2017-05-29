@@ -566,6 +566,9 @@ FT_BEGIN_HEADER
   /* <Note>                                                                */
   /*    The result is undefined if either `a' or `b' is zero.              */
   /*                                                                       */
+  /*    Since the function uses wrap-around arithmetic, results become     */
+  /*    meaningless if the arguments are very large.                       */
+  /*                                                                       */
   FT_EXPORT( void )
   FT_Matrix_Multiply( const FT_Matrix*  a,
                       FT_Matrix*        b );

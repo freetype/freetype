@@ -408,6 +408,29 @@ FT_BEGIN_HEADER
 #define ROUND_F26DOT6( x )     ( x >= 0 ? (    ( (x) + 32 ) & -64 )     \
                                         : ( -( ( 32 - (x) ) & -64 ) ) )
 
+  /*
+   *  The following macros have two purposes.
+   *
+   *  . Tag places where overflow is expected and harmless.
+   *
+   *  . Avoid run-time sanitizer errors.
+   *
+   *  Use with care!
+   */
+#define OVERFLOW_ADD_INT( a, b )                  \
+          (FT_Int)( (FT_UInt)(a) + (FT_UInt)(b) )
+#define OVERFLOW_SUB_INT( a, b )                  \
+          (FT_Int)( (FT_UInt)(a) - (FT_UInt)(b) )
+#define OVERFLOW_MUL_INT( a, b )                  \
+          (FT_Int)( (FT_UInt)(a) * (FT_UInt)(b) )
+
+#define OVERFLOW_ADD_LONG( a, b )                    \
+          (FT_Long)( (FT_ULong)(a) + (FT_ULong)(b) )
+#define OVERFLOW_SUB_LONG( a, b )                    \
+          (FT_Long)( (FT_ULong)(a) - (FT_ULong)(b) )
+#define OVERFLOW_MUL_LONG( a, b )                    \
+          (FT_Long)( (FT_ULong)(a) * (FT_ULong)(b) )
+
 
 FT_END_HEADER
 

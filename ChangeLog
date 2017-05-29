@@ -1,3 +1,28 @@
+2017-05-29  Werner Lemberg  <wl@gnu.org>
+
+	Handle some integer overflow run-time errors (#46149, #48979).
+
+	This commit (mainly for 32bit CPUs) is the first of a series of
+	similar commits to handle known integer overflows.  Basically, all
+	of them are harmless, since they affect rendering of glyphs only,
+	not posing security threats.  It is expected that fuzzying will show
+	up more overflows, to be fixed in due course.
+
+	The idea is to mark places where overflows can occur, using macros
+	that simply cast to unsigned integers, because overflow arithmetic
+	is well defined in this case.  Doing so suppresses run-time errors
+	of sanitizers without adding computational overhead.
+
+	* include/freetype/internal/ftcalc.h (OVERFLOW_ADD_INT,
+	OVERFLOW_SUB_INT, OVERFLOW_MUL_INT, OVERFLOW_ADD_LONG,
+	OVERFLOW_SUB_LONG, OVERFLOW_MUL_LONG): New macros.
+
+	* src/base/ftcalc.c (FT_RoundFix, FT_CeilFix, FT_Matrix_Multiply,
+	FT_Matrix_Multiply_Scaled, FT_Vector_Transform_Scaled,
+	ft_corner_orientation): Use new macros.
+
+	* src/base/ftoutln.c (FT_Outline_Get_Orientation): Use new macros.
+
 2017-05-28  Werner Lemberg  <wl@gnu.org>
 
 	* include/freetype/internal/ftcalc.h (FLOAT_TO_FIXED): Remove.

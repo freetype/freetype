@@ -1088,7 +1088,9 @@
         v_cur.x = points[n].x >> xshift;
         v_cur.y = points[n].y >> yshift;
 
-        area += ( v_cur.y - v_prev.y ) * ( v_cur.x + v_prev.x );
+        area = OVERFLOW_ADD_LONG(
+                 area,
+                 ( v_cur.y - v_prev.y ) * ( v_cur.x + v_prev.x ) );
 
         v_prev = v_cur;
       }
