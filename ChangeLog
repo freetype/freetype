@@ -1,5 +1,15 @@
 2017-05-29  Werner Lemberg  <wl@gnu.org>
 
+	[pcf] 32bit integer overflow run-time errors (#46149).
+
+	* src/pcf/pcfread.c (pcf_get_accel): Add sanity checks for
+	`fontAscent' and `fontDescent'.
+	(pcf_load_font): Add sanity checks for global height.
+	Add sanity checks for AVERAGE_WIDTH, POINT_SIZE, PIXEL_SIZE,
+	RESOLUTION_X, and RESOLUTION_Y properties.
+
+2017-05-29  Werner Lemberg  <wl@gnu.org>
+
 	Handle some integer overflow run-time errors (#46149, #48979).
 
 	This commit (mainly for 32bit CPUs) is the first of a series of
