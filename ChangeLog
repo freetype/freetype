@@ -1,5 +1,20 @@
 2017-05-30  Werner Lemberg  <wl@gnu.org>
 
+	[cff] 32bit integer overflow run-time errors 1/2 (#46149).
+
+	This commit handles the old engine.
+
+	* src/cff/cffgload.c: Include FT_INTERNAL_CALC_H.
+	(cff_decoder_parse_charstrings): Use OVERFLOW_ADD_LONG and
+	OVERFLOW_SUB_LONG where needed.
+
+	* src/cff/cffparse.c: Include FT_INTERNAL_CALC_H.
+	(power_ten_limits): New static array.
+	(do_fixed): Use it to prevent multiplication overflow.
+	(cff_parser_run): Use OVERFLOW_ADD_LONG.
+
+2017-05-30  Werner Lemberg  <wl@gnu.org>
+
 	[psaux] Correctly handle sequences of multiple number signs.
 
 	* src/psaux/psconv.c (PS_Conv_Strtol, PS_Conv_ToFixed): Return zero
