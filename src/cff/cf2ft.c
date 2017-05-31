@@ -267,8 +267,10 @@
 
     if ( *hinted )
     {
-      *x_scale = ( decoder->builder.glyph->x_scale + 32 ) / 64;
-      *y_scale = ( decoder->builder.glyph->y_scale + 32 ) / 64;
+      *x_scale = OVERFLOW_ADD_INT32( decoder->builder.glyph->x_scale,
+                                     32 ) / 64;
+      *y_scale = OVERFLOW_ADD_INT32( decoder->builder.glyph->y_scale,
+                                     32 ) / 64;
     }
     else
     {

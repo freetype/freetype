@@ -1,3 +1,26 @@
+2017-05-31  Werner Lemberg  <wl@gnu.org>
+
+	[cff] 32bit integer overflow run-time errors 2/2 (#46149).
+
+	This commit handles the new engine.
+
+	* include/freetype/internal/ftcalc.h (OVERFLOW_ADD_INT32,
+	OVERFLOW_SUB_INT32, OVERFLOW_MUL_INT32, NEG_INT, NEG_LONG,
+	NEG_INT32): New macros.
+
+	* src/cff/cf2ft.c (cf2_getScaleAndHintFlag): Use OVERFLOW_ADD_INT32.
+
+	* src/cff/cf2hints.c (cf2_getWindingMomentum, cf2_hint_init,
+	cf2_hintmap_map, cf2_glyphpath_hintPoint,
+	cf2_glyphpath_computeIntersection, cf2_glyphpath_computeOffset,
+	cf2_glyphpath_lineTo, cf2_glyphpath_curveTo): Use
+	OVERFLOW_ADD_INT32, OVERFLOW_SUB_INT32, OVERFLOW_MUL_INT32, and
+	NEG_INT32 where appropriate.
+
+	* src/cff/cf2intrp.c (cf2_doFlex, cf2_doBlend,
+	cf2_interpT2CharString): Ditto.
+	Also add some other code where needed to avoid overflow.
+
 2017-05-30  Werner Lemberg  <wl@gnu.org>
 
 	[cff] 32bit integer overflow run-time errors 1/2 (#46149).
