@@ -1,5 +1,12 @@
 2017-06-01  Werner Lemberg  <wl@gnu.org>
 
+	[psaux] 32bit integer overflow tun-time errors (#46149).
+
+	* src/psaux/t1decode.c (t1_decoder_parse_charstrings): Use
+	OVERFLOW_ADD_LONG and OVERFLOW_SUB_LONG where appropriate.
+
+2017-06-01  Werner Lemberg  <wl@gnu.org>
+
 	* src/truetype/ttinterp.c (TT_RunIns): Adjust loop counter again.
 
 	Problem reported by Marek Kašík <mkasik@redhat.com>.
