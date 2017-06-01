@@ -408,6 +408,19 @@
       goto Exit;
 
     /* copy advance while converting 26.6 to 16.16 format */
+    if ( slot->advance.x >=  0x8000L * 64 ||
+         slot->advance.x <= -0x8000L * 64 )
+    {
+      FT_ERROR(( "FT_Get_Glyph: advance width too large\n" ));
+      return FT_THROW( Invalid_Argument );
+    }
+    if ( slot->advance.y >=  0x8000L * 64 ||
+         slot->advance.y <= -0x8000L * 64 )
+    {
+      FT_ERROR(( "FT_Get_Glyph: advance height too large\n" ));
+      return FT_THROW( Invalid_Argument );
+    }
+
     glyph->advance.x = slot->advance.x * 1024;
     glyph->advance.y = slot->advance.y * 1024;
 

@@ -1,5 +1,9 @@
 2017-06-01  Werner Lemberg  <wl@gnu.org>
 
+	* src/base/ftglyph.c (FT_Get_Glyph): Check `slot->advance'.
+
+2017-06-01  Werner Lemberg  <wl@gnu.org>
+
 	[psaux] 32bit integer overflow tun-time errors (#46149).
 
 	* src/psaux/t1decode.c (t1_decoder_parse_charstrings): Use
