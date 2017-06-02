@@ -1,5 +1,16 @@
 2017-06-02  Werner Lemberg  <wl@gnu.org>
 
+	[bdf] Fix integer scanning routines.
+
+	Reported as
+
+	  https://bugs.chromium.org/p/oss-fuzz/issues/detail?id=2029
+
+	* src/bdf/bdflib.c (_bdf_atoul, _bdf_atol, _bdf_atous, _bdf_atos):
+	Stop scanning if result would overflow.
+
+2017-06-02  Werner Lemberg  <wl@gnu.org>
+
 	[cff] Fix integer overflows.
 
 	Reported as
