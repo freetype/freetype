@@ -638,14 +638,16 @@
       {
         /* Use hint map to position the center of stem, and nominal scale */
         /* to position the two edges.  This preserves the stem width.     */
-        CF2_Fixed  midpoint  = cf2_hintmap_map(
-                                 hintmap->initialHintMap,
-                                 ( secondHintEdge->csCoord +
-                                   firstHintEdge->csCoord ) / 2 );
-        CF2_Fixed  halfWidth = FT_MulFix(
-                                 ( secondHintEdge->csCoord -
-                                   firstHintEdge->csCoord ) / 2,
-                                 hintmap->scale );
+        CF2_Fixed  midpoint =
+                     cf2_hintmap_map(
+                       hintmap->initialHintMap,
+                       OVERFLOW_ADD_INT32( secondHintEdge->csCoord,
+                                           firstHintEdge->csCoord ) / 2 );
+        CF2_Fixed  halfWidth =
+                     FT_MulFix(
+                       OVERFLOW_SUB_INT32( secondHintEdge->csCoord,
+                                           firstHintEdge->csCoord ) / 2,
+                       hintmap->scale );
 
 
         firstHintEdge->dsCoord  = midpoint - halfWidth;

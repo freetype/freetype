@@ -358,8 +358,11 @@
 
     if ( doConditionalLastRead )
     {
-      FT_Bool    lastIsX = (FT_Bool)( cf2_fixedAbs( vals[10] - *curX ) >
-                                        cf2_fixedAbs( vals[11] - *curY ) );
+      FT_Bool    lastIsX = (FT_Bool)(
+                             cf2_fixedAbs( OVERFLOW_SUB_INT32( vals[10],
+                                                               *curX ) ) >
+                               cf2_fixedAbs( OVERFLOW_SUB_INT32( vals[11],
+                                                                 *curY ) ) );
       CF2_Fixed  lastVal = cf2_stack_getReal( opStack, idx );
 
 

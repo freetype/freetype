@@ -1,3 +1,15 @@
+2017-06-02  Werner Lemberg  <wl@gnu.org>
+
+	[cff] Fix integer overflows.
+
+	Reported as
+
+	  https://bugs.chromium.org/p/oss-fuzz/issues/detail?id=2027
+	  https://bugs.chromium.org/p/oss-fuzz/issues/detail?id=2028
+
+	* src/cff/cf2hints.c (cf2_hintmap_insertHint), src/cff/cf2intrp.c
+	(cf2_doFlex): Use OVERFLOW_ADD_INT32 and OVERFLOW_SUB_INT32.
+
 2017-06-01  Werner Lemberg  <wl@gnu.org>
 
 	[smooth] Some 32bit integer overflow run-time errors.
