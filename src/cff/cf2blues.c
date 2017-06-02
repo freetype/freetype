@@ -301,7 +301,8 @@
           /* top edge */
           flatFamilyEdge = cf2_blueToFixed( familyOtherBlues[j + 1] );
 
-          diff = cf2_fixedAbs( flatEdge - flatFamilyEdge );
+          diff = cf2_fixedAbs( OVERFLOW_SUB_INT32( flatEdge,
+                                                   flatFamilyEdge ) );
 
           if ( diff < minDiff && diff < csUnitsPerPixel )
           {
@@ -319,7 +320,8 @@
           /* top edge */
           flatFamilyEdge = cf2_blueToFixed( familyBlues[1] );
 
-          diff = cf2_fixedAbs( flatEdge - flatFamilyEdge );
+          diff = cf2_fixedAbs( OVERFLOW_SUB_INT32( flatEdge,
+                                                   flatFamilyEdge ) );
 
           if ( diff < minDiff && diff < csUnitsPerPixel )
             blues->zone[i].csFlatEdge = flatFamilyEdge;
@@ -342,7 +344,8 @@
           /* adjust edges of top zone upward by twice darkening amount */
           flatFamilyEdge += 2 * font->darkenY;      /* bottom edge */
 
-          diff = cf2_fixedAbs( flatEdge - flatFamilyEdge );
+          diff = cf2_fixedAbs( OVERFLOW_SUB_INT32( flatEdge,
+                                                   flatFamilyEdge ) );
 
           if ( diff < minDiff && diff < csUnitsPerPixel )
           {

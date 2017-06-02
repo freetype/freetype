@@ -1,5 +1,15 @@
 2017-06-02  Werner Lemberg  <wl@gnu.org>
 
+	[cff] More integer overflows.
+
+	Reported as
+
+	  https://bugs.chromium.org/p/oss-fuzz/issues/detail?id=2032
+
+	* src/cff/cf2blues.c (cf2_blues_init): Use OVERFLOW_SUB_INT32.
+
+2017-06-02  Werner Lemberg  <wl@gnu.org>
+
 	[bdf] Don't left-shift negative numbers.
 
 	Reported as
