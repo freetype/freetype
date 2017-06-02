@@ -304,10 +304,12 @@
       CF2_StemHintRec  stemhint;
 
 
-      stemhint.min  =
-        position   += cf2_stack_getReal( opStack, i );
-      stemhint.max  =
-        position   += cf2_stack_getReal( opStack, i + 1 );
+      stemhint.min =
+      position     = OVERFLOW_ADD_INT32( position,
+                                         cf2_stack_getReal( opStack, i ) );
+      stemhint.max =
+      position     = OVERFLOW_ADD_INT32( position,
+                                         cf2_stack_getReal( opStack, i + 1 ) );
 
       stemhint.used  = FALSE;
       stemhint.maxDS =
@@ -1617,8 +1619,8 @@
         if ( font->decoder->width_only )
           goto exit;
 
-        curY += cf2_stack_popFixed( opStack );
-        curX += cf2_stack_popFixed( opStack );
+        curY = OVERFLOW_ADD_INT32( curY, cf2_stack_popFixed( opStack ) );
+        curX = OVERFLOW_ADD_INT32( curX, cf2_stack_popFixed( opStack ) );
 
         cf2_glyphpath_moveTo( &glyphPath, curX, curY );
 

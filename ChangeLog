@@ -1,5 +1,16 @@
 2017-06-02  Werner Lemberg  <wl@gnu.org>
 
+	[cff] Even more integer overflows.
+
+	Reported as
+
+	  https://bugs.chromium.org/p/oss-fuzz/issues/detail?id=2046
+
+	* src/cff/cf2intrp.c (cf2_doStems, cf2_interpT2CharString): Use
+	OVERFLOW_ADD_INT32.
+
+2017-06-02  Werner Lemberg  <wl@gnu.org>
+
 	[cff] More integer overflows.
 
 	Reported as
