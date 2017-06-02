@@ -455,11 +455,11 @@ THE SOFTWARE.
           bsize->size =
             (FT_Pos)( ( prop->value.l * 64 * 7200 + 36135L ) / 72270L );
         else
-          bsize->size = bsize->width << 6;
+          bsize->size = bsize->width * 64;
 
         prop = bdf_get_font_property( font, "PIXEL_SIZE" );
         if ( prop )
-          bsize->y_ppem = (FT_Short)prop->value.l << 6;
+          bsize->y_ppem = (FT_Short)prop->value.l * 64;
 
         prop = bdf_get_font_property( font, "RESOLUTION_X" );
         if ( prop )

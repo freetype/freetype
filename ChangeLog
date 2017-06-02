@@ -1,5 +1,15 @@
 2017-06-02  Werner Lemberg  <wl@gnu.org>
 
+	[bdf] Don't left-shift negative numbers.
+
+	Reported as
+
+	  https://bugs.chromium.org/p/oss-fuzz/issues/detail?id=2031
+
+	* src/bdf/bdfdrivr.c (BDF_Face_Init): Use multiplication.
+
+2017-06-02  Werner Lemberg  <wl@gnu.org>
+
 	[bdf] Fix integer scanning routines.
 
 	Reported as
