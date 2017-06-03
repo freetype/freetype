@@ -399,10 +399,10 @@ FT_BEGIN_HEADER
 #endif /* 0 */
 
 
-#define INT_TO_F26DOT6( x )    ( (FT_Long)(x) << 6  )
-#define INT_TO_F2DOT14( x )    ( (FT_Long)(x) << 14 )
-#define INT_TO_FIXED( x )      ( (FT_Long)(x) << 16 )
-#define F2DOT14_TO_FIXED( x )  ( (FT_Long)(x) << 2  )
+#define INT_TO_F26DOT6( x )    ( (FT_Long)(x) * 64  )    /* << 6  */
+#define INT_TO_F2DOT14( x )    ( (FT_Long)(x) * 16384 )  /* << 14 */
+#define INT_TO_FIXED( x )      ( (FT_Long)(x) * 65536 )  /* << 16 */
+#define F2DOT14_TO_FIXED( x )  ( (FT_Long)(x) * 4 )      /* << 2  */
 #define FIXED_TO_INT( x )      ( FT_RoundFix( x ) >> 16 )
 
 #define ROUND_F26DOT6( x )     ( x >= 0 ? (    ( (x) + 32 ) & -64 )     \

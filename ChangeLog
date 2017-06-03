@@ -1,3 +1,14 @@
+2017-06-03  Werner Lemberg  <wl@gnu.org>
+
+	ftcalc.h: Avoid left-shift of negative numbers.
+
+	Reported as
+
+	  https://bugs.chromium.org/p/oss-fuzz/issues/detail?id=2055
+
+	* include/freetype/internal/ftcalc.h (INT_TO_F26DOT6,
+	INT_TO_F2DOT14, INT_TO_FIXED, F2DOT14_TO_FIXED): Use multiplication.
+
 2017-06-02  Werner Lemberg  <wl@gnu.org>
 
 	[cff] Even more integer overflows.
