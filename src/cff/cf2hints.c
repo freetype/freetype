@@ -343,7 +343,8 @@
          * Use edge[i], the highest entry where csCoord >= entry[i].csCoord
          */
         return OVERFLOW_ADD_INT32(
-                 FT_MulFix( csCoord - hintmap->edge[i].csCoord,
+                 FT_MulFix( OVERFLOW_SUB_INT32( csCoord,
+                                                hintmap->edge[i].csCoord ),
                             hintmap->edge[i].scale ),
                  hintmap->edge[i].dsCoord );
       }

@@ -2826,7 +2826,7 @@
   static void
   Ins_ADD( FT_Long*  args )
   {
-    args[0] += args[1];
+    args[0] = OVERFLOW_ADD_LONG( args[0], args[1] );
   }
 
 
@@ -2839,7 +2839,7 @@
   static void
   Ins_SUB( FT_Long*  args )
   {
-    args[0] -= args[1];
+    args[0] = OVERFLOW_SUB_LONG( args[0], args[1] );
   }
 
 
@@ -2895,7 +2895,7 @@
   static void
   Ins_NEG( FT_Long*  args )
   {
-    args[0] = -args[0];
+    args[0] = NEG_LONG( args[0] );
   }
 
 

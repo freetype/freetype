@@ -1,5 +1,20 @@
 2017-06-03  Werner Lemberg  <wl@gnu.org>
 
+	[cff, truetype] Integer overflows.
+
+	Reported as
+
+	  https://bugs.chromium.org/p/oss-fuzz/issues/detail?id=2047
+	  https://bugs.chromium.org/p/oss-fuzz/issues/detail?id=2057
+
+	* src/cff/cf2hints.c (cf2_hintmap_map): Use OVERFLOW_SUB_INT32.
+
+	* src/truetype/ttinterp.c (Ins_ADD): Use OVERFLOW_ADD_LONG.
+	(Ins_SUB): Use OVERFLOW_SUB_LONG.
+	(Ins_NEG): Use NEG_LONG.
+
+2017-06-03  Werner Lemberg  <wl@gnu.org>
+
 	ftcalc.h: Avoid left-shift of negative numbers.
 
 	Reported as
