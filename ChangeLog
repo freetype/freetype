@@ -1,5 +1,11 @@
 2017-06-03  Werner Lemberg  <wl@gnu.org>
 
+	* builds/unix/freetype-config.in: Fix pkg-config test (#51162).
+
+	Patch directly taken from bug report.
+
+2017-06-03  Werner Lemberg  <wl@gnu.org>
+
 	[bdf] Synchronize sanity checks with pcf driver.
 
 	Reported as
