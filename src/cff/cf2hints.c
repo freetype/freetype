@@ -512,8 +512,10 @@
         if ( hintmap->edge[i].csCoord != hintmap->edge[i - 1].csCoord )
           hintmap->edge[i - 1].scale =
             FT_DivFix(
-              hintmap->edge[i].dsCoord - hintmap->edge[i - 1].dsCoord,
-              hintmap->edge[i].csCoord - hintmap->edge[i - 1].csCoord );
+              OVERFLOW_SUB_INT32( hintmap->edge[i].dsCoord,
+                                  hintmap->edge[i - 1].dsCoord ),
+              OVERFLOW_SUB_INT32( hintmap->edge[i].csCoord,
+                                  hintmap->edge[i - 1].csCoord ) );
       }
 
       if ( isPair )
@@ -521,8 +523,10 @@
         if ( hintmap->edge[j].csCoord != hintmap->edge[j - 1].csCoord )
           hintmap->edge[j - 1].scale =
             FT_DivFix(
-              hintmap->edge[j].dsCoord - hintmap->edge[j - 1].dsCoord,
-              hintmap->edge[j].csCoord - hintmap->edge[j - 1].csCoord );
+              OVERFLOW_SUB_INT32( hintmap->edge[j].dsCoord,
+                                  hintmap->edge[j - 1].dsCoord ),
+              OVERFLOW_SUB_INT32( hintmap->edge[j].csCoord,
+                                  hintmap->edge[j - 1].csCoord ) );
 
         i += 1;     /* skip upper edge on next loop */
       }

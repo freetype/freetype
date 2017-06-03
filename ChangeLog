@@ -1,5 +1,30 @@
 2017-06-03  Werner Lemberg  <wl@gnu.org>
 
+	[base, cff, truetype] Integer overflows.
+
+	Reported as
+
+	  https://bugs.chromium.org/p/oss-fuzz/issues/detail?id=2060
+	  https://bugs.chromium.org/p/oss-fuzz/issues/detail?id=2062
+	  https://bugs.chromium.org/p/oss-fuzz/issues/detail?id=2063
+	  https://bugs.chromium.org/p/oss-fuzz/issues/detail?id=2068
+
+	* src/base/ftobjs.c (ft_glyphslot_grid_fit_metrics): Use
+	OVERFLOW_ADD_LONG and OVERFLOW_SUB_LONG.
+
+	* src/cff/cf2blues.c (cf2_blues_capture), src/cff/cf2hints.c
+	(cf2_hintmap_adjustHints): Use OVERFLOW_SUB_INT32.
+
+	* src/truetype/ttgload.c (compute_glyph_metrics): User
+	OVERFLOW_SUB_LONG.
+
+	* src/truetype/ttinterp.c (Direct_Move, Direct_Move_Orig,
+	Direct_Move_X, Direct_Move_Y, Direct_Move_Orig_X,
+	Direct_Move_Orig_Y, Move_Zp2_Point, Ins_MSIRP): Use
+	OVERFLOW_ADD_LONG and OVERFLOW_SUB_LONG.
+
+2017-06-03  Werner Lemberg  <wl@gnu.org>
+
 	* builds/unix/freetype-config.in: Fix pkg-config test (#51162).
 
 	Patch directly taken from bug report.
@@ -2855,7 +2880,7 @@
 	[cff] Implement CFF2 support (2/2).
 
 	The font variation code.  All parts dependent on the GX code in the
-	`truetype' module are guarded with TT_CONFIG_OPTION_GX_VAR_SUPPORT. 
+	`truetype' module are guarded with TT_CONFIG_OPTION_GX_VAR_SUPPORT.
 	In other words, you can still compile the `cff' module without
 	defining TT_CONFIG_OPTION_GX_VAR_SUPPORT (which brings you CFF2
 	support without font variation).

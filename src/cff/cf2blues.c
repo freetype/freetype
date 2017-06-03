@@ -502,7 +502,8 @@
           if ( blues->suppressOvershoot )
             dsNew = blues->zone[i].dsFlatEdge;
 
-          else if ( ( blues->zone[i].csTopEdge - bottomHintEdge->csCoord ) >=
+          else if ( OVERFLOW_SUB_INT32( blues->zone[i].csTopEdge,
+                                        bottomHintEdge->csCoord ) >=
                       blues->blueShift )
           {
             /* guarantee minimum of 1 pixel overshoot */

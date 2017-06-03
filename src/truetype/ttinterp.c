@@ -1676,7 +1676,9 @@
       if ( SUBPIXEL_HINTING_INFINALITY                            &&
            ( !exc->ignore_x_mode                                ||
              ( exc->sph_tweak_flags & SPH_TWEAK_ALLOW_X_DMOVE ) ) )
-        zone->cur[point].x += FT_MulDiv( distance, v, exc->F_dot_P );
+        zone->cur[point].x = OVERFLOW_ADD_LONG(
+                               zone->cur[point].x,
+                               FT_MulDiv( distance, v, exc->F_dot_P ) );
       else
 #endif /* TT_SUPPORT_SUBPIXEL_HINTING_INFINALITY */
 
@@ -1685,12 +1687,16 @@
       /* diagonal moves, but only post-IUP.  DejaVu tries to adjust */
       /* diagonal stems like on `Z' and `z' post-IUP.               */
       if ( SUBPIXEL_HINTING_MINIMAL && !exc->backward_compatibility )
-        zone->cur[point].x += FT_MulDiv( distance, v, exc->F_dot_P );
+        zone->cur[point].x = OVERFLOW_ADD_LONG(
+                               zone->cur[point].x,
+                               FT_MulDiv( distance, v, exc->F_dot_P ) );
       else
 #endif
 
       if ( NO_SUBPIXEL_HINTING )
-        zone->cur[point].x += FT_MulDiv( distance, v, exc->F_dot_P );
+        zone->cur[point].x = OVERFLOW_ADD_LONG(
+                               zone->cur[point].x,
+                               FT_MulDiv( distance, v, exc->F_dot_P ) );
 
       zone->tags[point] |= FT_CURVE_TAG_TOUCH_X;
     }
@@ -1705,7 +1711,9 @@
               exc->iupx_called            &&
               exc->iupy_called            ) )
 #endif
-        zone->cur[point].y += FT_MulDiv( distance, v, exc->F_dot_P );
+        zone->cur[point].y = OVERFLOW_ADD_LONG(
+                               zone->cur[point].y,
+                               FT_MulDiv( distance, v, exc->F_dot_P ) );
 
       zone->tags[point] |= FT_CURVE_TAG_TOUCH_Y;
     }
@@ -1741,12 +1749,16 @@
     v = exc->GS.freeVector.x;
 
     if ( v != 0 )
-      zone->org[point].x += FT_MulDiv( distance, v, exc->F_dot_P );
+      zone->org[point].x = OVERFLOW_ADD_LONG(
+                             zone->org[point].x,
+                             FT_MulDiv( distance, v, exc->F_dot_P ) );
 
     v = exc->GS.freeVector.y;
 
     if ( v != 0 )
-      zone->org[point].y += FT_MulDiv( distance, v, exc->F_dot_P );
+      zone->org[point].y = OVERFLOW_ADD_LONG(
+                             zone->org[point].y,
+                             FT_MulDiv( distance, v, exc->F_dot_P ) );
   }
 
 
@@ -1769,18 +1781,18 @@
   {
 #ifdef TT_SUPPORT_SUBPIXEL_HINTING_INFINALITY
     if ( SUBPIXEL_HINTING_INFINALITY && !exc->ignore_x_mode )
-      zone->cur[point].x += distance;
+      zone->cur[point].x = OVERFLOW_ADD_LONG( zone->cur[point].x, distance );
     else
 #endif /* TT_SUPPORT_SUBPIXEL_HINTING_INFINALITY */
 
 #ifdef TT_SUPPORT_SUBPIXEL_HINTING_MINIMAL
     if ( SUBPIXEL_HINTING_MINIMAL && !exc->backward_compatibility )
-      zone->cur[point].x += distance;
+      zone->cur[point].x = OVERFLOW_ADD_LONG( zone->cur[point].x, distance );
     else
 #endif
 
     if ( NO_SUBPIXEL_HINTING )
-      zone->cur[point].x += distance;
+      zone->cur[point].x = OVERFLOW_ADD_LONG( zone->cur[point].x, distance );
 
     zone->tags[point]  |= FT_CURVE_TAG_TOUCH_X;
   }
@@ -1799,7 +1811,7 @@
             exc->backward_compatibility          &&
             exc->iupx_called && exc->iupy_called ) )
 #endif
-      zone->cur[point].y += distance;
+      zone->cur[point].y = OVERFLOW_ADD_LONG( zone->cur[point].y, distance );
 
     zone->tags[point] |= FT_CURVE_TAG_TOUCH_Y;
   }
@@ -1823,7 +1835,7 @@
   {
     FT_UNUSED( exc );
 
-    zone->org[point].x += distance;
+    zone->org[point].x = OVERFLOW_ADD_LONG( zone->org[point].x, distance );
   }
 
 
@@ -1835,7 +1847,7 @@
   {
     FT_UNUSED( exc );
 
-    zone->org[point].y += distance;
+    zone->org[point].y = OVERFLOW_ADD_LONG( zone->org[point].y, distance );
   }
 
 
@@ -5392,7 +5404,8 @@
       if ( !( SUBPIXEL_HINTING_MINIMAL    &&
               exc->backward_compatibility ) )
 #endif
-        exc->zp2.cur[point].x += dx;
+        exc->zp2.cur[point].x = OVERFLOW_ADD_LONG( exc->zp2.cur[point].x,
+                                                   dx );
 
       if ( touch )
         exc->zp2.tags[point] |= FT_CURVE_TAG_TOUCH_X;
@@ -5406,7 +5419,8 @@
               exc->iupx_called            &&
               exc->iupy_called            ) )
 #endif
-        exc->zp2.cur[point].y += dy;
+        exc->zp2.cur[point].y = OVERFLOW_ADD_LONG( exc->zp2.cur[point].y,
+                                                   dy );
 
       if ( touch )
         exc->zp2.tags[point] |= FT_CURVE_TAG_TOUCH_Y;
@@ -5781,14 +5795,18 @@
 
 #ifdef TT_SUPPORT_SUBPIXEL_HINTING_INFINALITY
     /* subpixel hinting - make MSIRP respect CVT cut-in; */
-    if ( SUBPIXEL_HINTING_INFINALITY                         &&
-         exc->ignore_x_mode                                  &&
-         exc->GS.freeVector.x != 0                           &&
-         FT_ABS( distance - args[1] ) >= control_value_cutin )
+    if ( SUBPIXEL_HINTING_INFINALITY                                   &&
+         exc->ignore_x_mode                                            &&
+         exc->GS.freeVector.x != 0                                     &&
+         FT_ABS( OVERFLOW_SUB_LONG( distance,
+                                    args[1] ) ) >= control_value_cutin )
       distance = args[1];
 #endif /* TT_SUPPORT_SUBPIXEL_HINTING_INFINALITY */
 
-    exc->func_move( exc, &exc->zp1, point, args[1] - distance );
+    exc->func_move( exc,
+                    &exc->zp1,
+                    point,
+                    OVERFLOW_SUB_LONG( args[1], distance ) );
 
     exc->GS.rp1 = exc->GS.rp0;
     exc->GS.rp2 = point;
