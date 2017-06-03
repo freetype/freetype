@@ -1,5 +1,18 @@
 2017-06-03  Werner Lemberg  <wl@gnu.org>
 
+	[bdf] Synchronize sanity checks with pcf driver.
+
+	Reported as
+
+	  https://bugs.chromium.org/p/oss-fuzz/issues/detail?id=2054
+	  https://bugs.chromium.org/p/oss-fuzz/issues/detail?id=2058
+
+	* src/bdf/bdfdrivr.c (BDF_Face_Init): Check font ascent and descent.
+	Check AVERAGE_WIDTH, POINT_SIZE, PIXEL_SIZE, RESOLUTION_X, and
+	RESOLUTION_Y properties.
+
+2017-06-03  Werner Lemberg  <wl@gnu.org>
+
 	[cff, truetype] Integer overflows.
 
 	Reported as
