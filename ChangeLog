@@ -1,3 +1,17 @@
+2017-06-04  Werner Lemberg  <wl@gnu.org>
+
+	[cff, truetype] Integer overflows.
+
+	Reported as
+
+	  https://bugs.chromium.org/p/oss-fuzz/issues/detail?id=2075
+	  https://bugs.chromium.org/p/oss-fuzz/issues/detail?id=2088
+
+	* src/cff/cf2font.c (cf2_font_setup): Use OVERFLOW_MUL_INT32.
+
+	* src/truetype/ttinterp.c (Ins_ISECT): Use OVERFLOW_MUL_LONG,
+	OVERFLOW_ADD_LONG, and OVERFLOW_SUB_LONG.
+
 2017-06-03  Werner Lemberg  <wl@gnu.org>
 
 	[base, cff, truetype] Integer overflows.

@@ -447,7 +447,7 @@
       /* choose a constant for StdHW that depends on font contrast       */
       stdHW = cf2_getStdHW( decoder );
 
-      if ( stdHW > 0 && font->stdVW > 2 * stdHW )
+      if ( stdHW > 0 && font->stdVW > OVERFLOW_MUL_INT32( 2, stdHW ) )
         font->stdHW = FT_DivFix( cf2_intToFixed( 75 ), emRatio );
       else
       {

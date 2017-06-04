@@ -6455,19 +6455,19 @@
 
     /* Cramer's rule */
 
-    dbx = exc->zp0.cur[b1].x - exc->zp0.cur[b0].x;
-    dby = exc->zp0.cur[b1].y - exc->zp0.cur[b0].y;
+    dbx = OVERFLOW_SUB_LONG( exc->zp0.cur[b1].x, exc->zp0.cur[b0].x );
+    dby = OVERFLOW_SUB_LONG( exc->zp0.cur[b1].y, exc->zp0.cur[b0].y );
 
-    dax = exc->zp1.cur[a1].x - exc->zp1.cur[a0].x;
-    day = exc->zp1.cur[a1].y - exc->zp1.cur[a0].y;
+    dax = OVERFLOW_SUB_LONG( exc->zp1.cur[a1].x, exc->zp1.cur[a0].x );
+    day = OVERFLOW_SUB_LONG( exc->zp1.cur[a1].y, exc->zp1.cur[a0].y );
 
-    dx = exc->zp0.cur[b0].x - exc->zp1.cur[a0].x;
-    dy = exc->zp0.cur[b0].y - exc->zp1.cur[a0].y;
+    dx = OVERFLOW_SUB_LONG( exc->zp0.cur[b0].x, exc->zp1.cur[a0].x );
+    dy = OVERFLOW_SUB_LONG( exc->zp0.cur[b0].y, exc->zp1.cur[a0].y );
 
-    discriminant = FT_MulDiv( dax, -dby, 0x40 ) +
-                   FT_MulDiv( day, dbx, 0x40 );
-    dotproduct   = FT_MulDiv( dax, dbx, 0x40 ) +
-                   FT_MulDiv( day, dby, 0x40 );
+    discriminant = OVERFLOW_ADD_LONG( FT_MulDiv( dax, -dby, 0x40 ),
+                                      FT_MulDiv( day, dbx, 0x40 ) );
+    dotproduct   = OVERFLOW_ADD_LONG( FT_MulDiv( dax, dbx, 0x40 ),
+                                      FT_MulDiv( day, dby, 0x40 ) );
 
     /* The discriminant above is actually a cross product of vectors     */
     /* da and db. Together with the dot product, they can be used as     */
@@ -6477,30 +6477,34 @@
     /*       discriminant = |da||db|sin(angle)     .                     */
     /* We use these equations to reject grazing intersections by         */
     /* thresholding abs(tan(angle)) at 1/19, corresponding to 3 degrees. */
-    if ( 19 * FT_ABS( discriminant ) > FT_ABS( dotproduct ) )
+    if ( OVERFLOW_MUL_LONG( 19, FT_ABS( discriminant ) ) >
+           FT_ABS( dotproduct ) )
     {
-      val = FT_MulDiv( dx, -dby, 0x40 ) + FT_MulDiv( dy, dbx, 0x40 );
+      val = OVERFLOW_ADD_LONG( FT_MulDiv( dx, -dby, 0x40 ),
+                               FT_MulDiv( dy, dbx, 0x40 ) );
 
       R.x = FT_MulDiv( val, dax, discriminant );
       R.y = FT_MulDiv( val, day, discriminant );
 
       /* XXX: Block in backward_compatibility and/or post-IUP? */
-      exc->zp2.cur[point].x = exc->zp1.cur[a0].x + R.x;
-      exc->zp2.cur[point].y = exc->zp1.cur[a0].y + R.y;
+      exc->zp2.cur[point].x = OVERFLOW_ADD_LONG( exc->zp1.cur[a0].x, R.x );
+      exc->zp2.cur[point].y = OVERFLOW_ADD_LONG( exc->zp1.cur[a0].y, R.y );
     }
     else
     {
       /* else, take the middle of the middles of A and B */
 
       /* XXX: Block in backward_compatibility and/or post-IUP? */
-      exc->zp2.cur[point].x = ( exc->zp1.cur[a0].x +
-                                exc->zp1.cur[a1].x +
-                                exc->zp0.cur[b0].x +
-                                exc->zp0.cur[b1].x ) / 4;
-      exc->zp2.cur[point].y = ( exc->zp1.cur[a0].y +
-                                exc->zp1.cur[a1].y +
-                                exc->zp0.cur[b0].y +
-                                exc->zp0.cur[b1].y ) / 4;
+      exc->zp2.cur[point].x =
+        OVERFLOW_ADD_LONG( OVERFLOW_ADD_LONG( exc->zp1.cur[a0].x,
+                                              exc->zp1.cur[a1].x ),
+                           OVERFLOW_ADD_LONG( exc->zp0.cur[b0].x,
+                                              exc->zp0.cur[b1].x ) ) / 4;
+      exc->zp2.cur[point].y =
+        OVERFLOW_ADD_LONG( OVERFLOW_ADD_LONG( exc->zp1.cur[a0].y,
+                                              exc->zp1.cur[a1].y ),
+                           OVERFLOW_ADD_LONG( exc->zp0.cur[b0].y,
+                                              exc->zp0.cur[b1].y ) ) / 4;
     }
 
     exc->zp2.tags[point] |= FT_CURVE_TAG_TOUCH_BOTH;
