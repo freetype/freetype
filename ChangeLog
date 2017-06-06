@@ -1,3 +1,18 @@
+2017-06-06  Werner Lemberg  <wl@gnu.org>
+
+	[cff] Integer overflow.
+
+	Reported as
+
+	  https://bugs.chromium.org/p/oss-fuzz/issues/detail?id=2109
+	  https://bugs.chromium.org/p/oss-fuzz/issues/detail?id=2110
+	  https://bugs.chromium.org/p/oss-fuzz/issues/detail?id=2122
+
+	* src/cff/cf2blues.c (cf2_blues_init): Use OVERFLOW_SUB_INT32.
+
+	* src/cff/cf2hints.c (cf2_hintmap_map): Synchronize if-else
+	branches.
+
 2017-06-05  Werner Lemberg  <wl@gnu.org>
 
 	[cff] Integer overflow.

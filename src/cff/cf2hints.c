@@ -332,7 +332,8 @@
       {
         /* special case for points below first edge: use uniform scale */
         return OVERFLOW_ADD_INT32(
-                 FT_MulFix( csCoord - hintmap->edge[0].csCoord,
+                 FT_MulFix( OVERFLOW_SUB_INT32( csCoord,
+                                                hintmap->edge[0].csCoord ),
                             hintmap->scale ),
                  hintmap->edge[0].dsCoord );
       }
