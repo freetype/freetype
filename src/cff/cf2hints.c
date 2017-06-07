@@ -105,7 +105,7 @@
                                          stemHintArray,
                                          indexStemHint );
 
-    width = stemHint->max - stemHint->min;
+    width = OVERFLOW_SUB_INT32( stemHint->max, stemHint->min );
 
     if ( width == cf2_intToFixed( -21 ) )
     {

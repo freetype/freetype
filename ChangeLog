@@ -1,6 +1,20 @@
+2017-06-07  Werner Lemberg  <wl@gnu.org>
+
+	[cff, truetype] Integer overflows.
+
+	Reported as
+
+	  https://bugs.chromium.org/p/oss-fuzz/issues/detail?id=2133
+	  https://bugs.chromium.org/p/oss-fuzz/issues/detail?id=2137
+
+	* src/cff/cf2hints.c (cf2_hint_init): Use OVERFLOW_SUB_INT32.
+
+	* src/truetype/ttinterp.c (PROJECT, DUALPROJ): Use
+	OVERFLOW_SUB_LONG.
+
 2017-06-06  Werner Lemberg  <wl@gnu.org>
 
-	[cff] Integer overflow.
+	[cff] Integer overflows.
 
 	Reported as
 

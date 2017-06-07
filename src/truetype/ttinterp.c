@@ -65,11 +65,15 @@
             TT_INTERPRETER_VERSION_40 )
 #endif
 
-#define PROJECT( v1, v2 )                                                \
-          exc->func_project( exc, (v1)->x - (v2)->x, (v1)->y - (v2)->y )
+#define PROJECT( v1, v2 )                                            \
+          exc->func_project( exc,                                    \
+                             OVERFLOW_SUB_LONG( (v1)->x, (v2)->x ),  \
+                             OVERFLOW_SUB_LONG( (v1)->y, (v2)->y ) )
 
-#define DUALPROJ( v1, v2 )                                                \
-          exc->func_dualproj( exc, (v1)->x - (v2)->x, (v1)->y - (v2)->y )
+#define DUALPROJ( v1, v2 )                                            \
+          exc->func_dualproj( exc,                                    \
+                              OVERFLOW_SUB_LONG( (v1)->x, (v2)->x ),  \
+                              OVERFLOW_SUB_LONG( (v1)->y, (v2)->y ) )
 
 #define FAST_PROJECT( v )                          \
           exc->func_project( exc, (v)->x, (v)->y )
