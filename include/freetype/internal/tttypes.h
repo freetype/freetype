@@ -1445,6 +1445,9 @@ FT_BEGIN_HEADER
     void*                 var;
 #endif
 
+    /* a typeless pointer to the PostScript Aux service */
+    void*                 psaux;
+
 
     /***********************************************************************/
     /*                                                                     */
