@@ -381,6 +381,9 @@ FT_BEGIN_HEADER
     /* interface to Postscript Names service */
     FT_Service_PsCMaps  psnames;
 
+    /* interface to CFFLoad service */
+    const void*  cffload;
+
     /* since version 2.3.0 */
     PS_FontInfoRec*  font_info;   /* font info dictionary */
 

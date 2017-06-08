@@ -42,6 +42,7 @@
 #include "cf2font.h"
 #include "cf2error.h"
 
+#include FT_SERVICE_CFF_TABLE_LOAD_H
 
 #define CF2_MAX_SIZE  cf2_intToFixed( 2000 )    /* max ppem */
 
@@ -324,6 +325,7 @@
       font = (CF2_Font)decoder->cff->cf2_instance.data;
 
       font->memory = memory;
+      font->cffload = (FT_Service_CFFLoad)decoder->cff->cffload;
 
       /* initialize a client outline, to be shared by each glyph rendered */
       cf2_outline_init( &font->outline, font->memory, &font->error );
