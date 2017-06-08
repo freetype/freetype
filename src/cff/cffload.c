@@ -1945,18 +1945,6 @@
   }
 
 
-  FT_LOCAL_DEF( FT_UInt32 )
-  cff_random( FT_UInt32  r )
-  {
-    /* a 32bit version of the `xorshift' algorithm */
-    r ^= r << 13;
-    r ^= r >> 17;
-    r ^= r << 5;
-
-    return r;
-  }
-
-
   /* There are 3 ways to call this function, distinguished by code.  */
   /*                                                                 */
   /* . CFF_CODE_TOPDICT for either a CFF Top DICT or a CFF Font DICT */
@@ -1979,6 +1967,8 @@
     FT_ULong         dict_len;
     CFF_FontRecDict  top  = &subfont->font_dict;
     CFF_Private      priv = &subfont->private_dict;
+
+    PSAux_Service  psaux = (PSAux_Service)face->psaux;
 
     FT_Bool  cff2      = FT_BOOL( code == CFF2_CODE_TOPDICT  ||
                                   code == CFF2_CODE_FONTDICT );
@@ -2094,7 +2084,7 @@
           do
           {
             driver->random_seed =
-              (FT_Int32)cff_random( (FT_UInt32)driver->random_seed );
+              (FT_Int32)psaux->cff_random( (FT_UInt32)driver->random_seed );
 
           } while ( driver->random_seed < 0 );
         }
@@ -2107,7 +2097,7 @@
           do
           {
             face->root.internal->random_seed =
-              (FT_Int32)cff_random( (FT_UInt32)face->root.internal->random_seed );
+              (FT_Int32)psaux->cff_random( (FT_UInt32)face->root.internal->random_seed );
 
           } while ( face->root.internal->random_seed < 0 );
         }

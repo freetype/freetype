@@ -247,6 +247,10 @@ FT_BEGIN_HEADER
               FT_UShort  seed );
 
 
+  FT_LOCAL( FT_UInt32 )
+  cff_random( FT_UInt32  r );
+
+
 FT_END_HEADER
 
 #endif /* PSOBJS_H_ */

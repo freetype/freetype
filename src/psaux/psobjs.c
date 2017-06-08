@@ -2044,4 +2044,16 @@
   }
 
 
+  FT_LOCAL_DEF( FT_UInt32 )
+  cff_random( FT_UInt32  r )
+  {
+    /* a 32bit version of the `xorshift' algorithm */
+    r ^= r << 13;
+    r ^= r >> 17;
+    r ^= r << 5;
+
+    return r;
+  }
+
+
 /* END */
