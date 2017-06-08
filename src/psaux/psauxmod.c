@@ -21,6 +21,8 @@
 #include "psobjs.h"
 #include "t1decode.h"
 #include "t1cmap.h"
+#include "cf2ft.h"
+#include "cffdecode.h"
 
 #ifndef T1_CONFIG_OPTION_NO_AFM
 #include "afmparse.h"
@@ -104,6 +106,35 @@
   };
 
 
+  FT_CALLBACK_TABLE_DEF
+  const CFF_Builder_FuncsRec  cff_builder_funcs =
+  {
+    cff_builder_init,          /* init */
+    cff_builder_done,          /* done */
+
+    cff_check_points,          /* check_points  */
+    cff_builder_add_point,     /* add_point     */
+    cff_builder_add_point1,    /* add_point1    */
+    cff_builder_add_contour,   /* add_contour   */
+    cff_builder_start_point,   /* start_point   */
+    cff_builder_close_contour  /* close_contour */
+  };
+
+
+  FT_CALLBACK_TABLE_DEF
+  const CFF_Decoder_FuncsRec  cff_decoder_funcs =
+  {
+    cff_decoder_init,              /* init              */
+    cff_decoder_prepare,           /* prepare           */
+
+#ifdef CFF_CONFIG_OPTION_OLD_ENGINE
+    cff_decoder_parse_charstrings  /* parse_charstrings */
+#else
+    cf2_decoder_parse_charstrings
+#endif
+  };
+
+
   static
   const PSAux_Interface  psaux_interface =
   {
@@ -120,6 +151,8 @@
 #else
     0,
 #endif
+
+    &cff_decoder_funcs,
   };
 
 
