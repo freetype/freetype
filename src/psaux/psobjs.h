@@ -193,6 +193,48 @@ FT_BEGIN_HEADER
   /*************************************************************************/
   /*************************************************************************/
   /*****                                                               *****/
+  /*****                           CFF BUILDER                         *****/
+  /*****                                                               *****/
+  /*************************************************************************/
+  /*************************************************************************/
+
+  FT_LOCAL( void )
+  cff_builder_init( CFF_Builder*   builder,
+                    TT_Face        face,
+                    CFF_Size       size,
+                    CFF_GlyphSlot  glyph,
+                    FT_Bool        hinting );
+
+  FT_LOCAL( void )
+  cff_builder_done( CFF_Builder*  builder );
+
+  FT_LOCAL( FT_Error )
+  cff_check_points( CFF_Builder*  builder,
+                    FT_Int        count );
+
+  FT_LOCAL( void )
+  cff_builder_add_point( CFF_Builder*  builder,
+                         FT_Pos        x,
+                         FT_Pos        y,
+                         FT_Byte       flag );
+  FT_LOCAL( FT_Error )
+  cff_builder_add_point1( CFF_Builder*  builder,
+                          FT_Pos        x,
+                          FT_Pos        y );
+  FT_LOCAL( FT_Error )
+  cff_builder_start_point( CFF_Builder*  builder,
+                           FT_Pos        x,
+                           FT_Pos        y );
+  FT_LOCAL( void )
+  cff_builder_close_contour( CFF_Builder*  builder );
+
+  FT_LOCAL( FT_Error )
+  cff_builder_add_contour( CFF_Builder*  builder );
+
+
+  /*************************************************************************/
+  /*************************************************************************/
+  /*****                                                               *****/
   /*****                            OTHER                              *****/
   /*****                                                               *****/
   /*************************************************************************/
