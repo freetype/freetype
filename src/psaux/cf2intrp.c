@@ -47,6 +47,7 @@
 #include "cf2intrp.h"
 
 #include "cf2error.h"
+#include "psobjs.h"  /* for cff_random */
 
 
   /*************************************************************************/
