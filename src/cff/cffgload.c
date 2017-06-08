@@ -149,7 +149,7 @@
     *max_advance = 0;
 
     /* Initialize load decoder */
-    decoder_funcs->init( &decoder, face, 0, 0, 0, 0 );
+    decoder_funcs->init( &decoder, face, 0, 0, 0, 0, 0, 0 );
 
     decoder.builder.metrics_only = 1;
     decoder.builder.load_points  = 0;
@@ -404,7 +404,9 @@
 
 
       decoder_funcs->init( &decoder, face, size, glyph, hinting,
-                           FT_LOAD_TARGET_MODE( load_flags ) );
+                           FT_LOAD_TARGET_MODE( load_flags ),
+                           cff_get_glyph_data,
+                           cff_free_glyph_data );
 
       /* this is for pure CFFs */
       if ( load_flags & FT_LOAD_ADVANCE_ONLY )
