@@ -40,9 +40,10 @@
 #define CF2FONT_H_
 
 
+#include FT_SERVICE_CFF_TABLE_LOAD_H
+
 #include "cf2ft.h"
 #include "cf2blues.h"
-#include "cffload.h"
 
 
 FT_BEGIN_HEADER
@@ -111,6 +112,8 @@ FT_BEGIN_HEADER
                                            /* counterclockwise winding */
 
     CF2_BluesRec  blues;                         /* computed zone data */
+
+    FT_Service_CFFLoad  cffload;                  /* Pointer to cff functions */
   };
 
 

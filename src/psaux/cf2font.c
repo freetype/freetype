@@ -260,6 +260,7 @@
     CF2_UInt   lenNormalizedV = 0;
     FT_Fixed*  normalizedV    = NULL;
 
+    FT_Service_CFFLoad  cffload = (FT_Service_CFFLoad)font->cffload;
 
     /* clear previous error */
     font->error = FT_Err_Ok;
@@ -287,16 +288,16 @@
       if ( font->error )
         return;
 
-      if ( cff_blend_check_vector( &subFont->blend,
-                                   subFont->private_dict.vsindex,
-                                   lenNormalizedV,
-                                   normalizedV ) )
+      if ( cffload->blend_check_vector( &subFont->blend,
+                                        subFont->private_dict.vsindex,
+                                        lenNormalizedV,
+                                        normalizedV ) )
       {
         /* blend has changed, reparse */
-        cff_load_private_dict( decoder->cff,
-                               subFont,
-                               lenNormalizedV,
-                               normalizedV );
+        cffload->load_private_dict( decoder->cff,
+                                    subFont,
+                                    lenNormalizedV,
+                                    normalizedV );
         needExtraSetup = TRUE;
       }
 #endif

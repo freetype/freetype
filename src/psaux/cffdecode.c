@@ -1,6 +1,8 @@
 
 
 #include <ft2build.h>
+#include FT_INTERNAL_SERVICE_H
+#include FT_SERVICE_CFF_TABLE_LOAD_H
 
 #include "cffdecode.h"
 #include "psobjs.h"
@@ -390,7 +392,7 @@
   {
     FT_UInt    n;
     FT_UShort  glyph_sid;
-
+    FT_Service_CFFLoad  cffload;
 
     /* CID-keyed fonts don't have glyph names */
     if ( !cff->charset.sids )
@@ -400,8 +402,24 @@
     if ( charcode < 0 || charcode > 255 )
       return -1;
 
+#if 0
+    /* retrieve cffload from list of current modules */
+    FT_Service_CFFLoad  cffload;
+    {
+      FT_FACE_FIND_GLOBAL_SERVICE( face, cffload, CFF_LOAD );
+      if ( !cffload )
+      {
+        FT_ERROR(( "cff_lookup_glyph_by_stdcharcode:"
+                   " the `cffload' module is not available\n" ));
+        return FT_THROW( Unimplemented_Feature );
+      }
+    }
+#endif
+
+    cffload = (FT_Service_CFFLoad)cff->cffload;
+
     /* Get code to SID mapping from `cff_standard_encoding'. */
-    glyph_sid = cff_get_standard_encoding( (FT_UInt)charcode );
+    glyph_sid = cffload->get_standard_encoding( (FT_UInt)charcode );
 
     for ( n = 0; n < cff->num_glyphs; n++ )
     {
@@ -2271,11 +2289,12 @@
     CFF_SubFont   sub     = &cff->top_font;
     FT_Error      error   = FT_Err_Ok;
 
+    FT_Service_CFFLoad  cffload = (FT_Service_CFFLoad)cff->cffload;
 
     /* manage CID fonts */
     if ( cff->num_subfonts )
     {
-      FT_Byte  fd_index = cff_fd_select_get( &cff->fd_select, glyph_index );
+      FT_Byte  fd_index = cffload->fd_select_get( &cff->fd_select, glyph_index );
 
 
       if ( fd_index >= cff->num_subfonts )
