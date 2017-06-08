@@ -14,7 +14,9 @@ FT_BEGIN_HEADER
                     CFF_Size        size,
                     CFF_GlyphSlot   slot,
                     FT_Bool         hinting,
-                    FT_Render_Mode  hint_mode);
+                    FT_Render_Mode  hint_mode,
+                    CFF_Decoder_Get_Glyph_Callback   get_callback,
+                    CFF_Decoder_Free_Glyph_Callback  free_callback);
 
   FT_LOCAL( FT_Error )
   cff_decoder_prepare( CFF_Decoder*  decoder,

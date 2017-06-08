@@ -272,8 +272,8 @@
     FT_GlyphLoader_Prepare( builder->loader );
 
     /* First load `bchar' in builder */
-    error = cff_get_glyph_data( face, (FT_UInt)bchar_index,
-                                &charstring, &charstring_len );
+    error = decoder->get_glyph_callback( face, (FT_UInt)bchar_index,
+                                         &charstring, &charstring_len );
     if ( !error )
     {
       /* the seac operator must not be nested */
@@ -282,7 +282,7 @@
                                              charstring_len, 0 );
       decoder->seac = FALSE;
 
-      cff_free_glyph_data( face, &charstring, charstring_len );
+      decoder->free_glyph_callback( face, &charstring, charstring_len );
 
       if ( error )
         goto Exit;
@@ -302,8 +302,8 @@
     builder->pos_y = ady;
 
     /* Now load `achar' on top of the base outline. */
-    error = cff_get_glyph_data( face, (FT_UInt)achar_index,
-                                &charstring, &charstring_len );
+    error = decoder->get_glyph_callback( face, (FT_UInt)achar_index,
+                                         &charstring, &charstring_len );
     if ( !error )
     {
       /* the seac operator must not be nested */
@@ -312,7 +312,7 @@
                                              charstring_len, 0 );
       decoder->seac = FALSE;
 
-      cff_free_glyph_data( face, &charstring, charstring_len );
+      decoder->free_glyph_callback( face, &charstring, charstring_len );
 
       if ( error )
         goto Exit;
@@ -2231,7 +2231,9 @@
                     CFF_Size        size,
                     CFF_GlyphSlot   slot,
                     FT_Bool         hinting,
-                    FT_Render_Mode  hint_mode )
+                    FT_Render_Mode  hint_mode,
+                    CFF_Decoder_Get_Glyph_Callback   get_callback,
+                    CFF_Decoder_Free_Glyph_Callback  free_callback )
   {
     CFF_Font  cff = (CFF_Font)face->extra.data;
 
@@ -2251,6 +2253,9 @@
                               decoder->num_globals );
 
     decoder->hint_mode    = hint_mode;
+
+    decoder->get_glyph_callback  = get_callback;
+    decoder->free_glyph_callback = free_callback;
   }
 
 
