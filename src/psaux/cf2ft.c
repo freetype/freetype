@@ -42,6 +42,11 @@
 #include "cf2font.h"
 #include "cf2error.h"
 
+#ifdef TT_CONFIG_OPTION_GX_VAR_SUPPORT
+#include FT_MULTIPLE_MASTERS_H
+#include FT_SERVICE_MULTIPLE_MASTERS_H
+#endif
+
 #include FT_SERVICE_CFF_TABLE_LOAD_H
 
 #define CF2_MAX_SIZE  cf2_intToFixed( 2000 )    /* max ppem */
@@ -456,10 +461,16 @@
                            CF2_UInt     *len,
                            FT_Fixed*    *vec )
   {
+    TT_Face  face;
+    FT_Service_MultiMasters  mm;
+
     FT_ASSERT( decoder && decoder->builder.face );
     FT_ASSERT( vec && len );
-
-    return cff_get_var_blend( decoder->builder.face, len, NULL, vec, NULL );
+    
+    face = decoder->builder.face;
+    mm = (FT_Service_MultiMasters)face->mm;
+    
+    return mm->get_var_blend( FT_FACE( face ), len, NULL, vec, NULL );
   }
 #endif
 
