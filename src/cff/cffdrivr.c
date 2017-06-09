@@ -32,6 +32,7 @@
 #include "cffload.h"
 #include "cffcmap.h"
 #include "cffparse.h"
+#include "cffobjs.h"
 
 #ifdef TT_CONFIG_OPTION_GX_VAR_SUPPORT
 #include FT_SERVICE_MULTIPLE_MASTERS_H
