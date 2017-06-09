@@ -1,5 +1,12 @@
 2017-06-09  Werner Lemberg  <wl@gnu.org>
 
+	Remove unused macros.
+
+	* include/freetype/internal/ftcalc.h (ADD_INT, SUB_INT, MUL_INT,
+	NEG_INT): Deleted.
+
+2017-06-09  Werner Lemberg  <wl@gnu.org>
+
 	*/*: Remove `OVERFLOW_' prefix.
 
 	This increases readability.

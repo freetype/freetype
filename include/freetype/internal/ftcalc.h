@@ -417,15 +417,6 @@ FT_BEGIN_HEADER
    *
    *  Use with care!
    */
-#define ADD_INT( a, b )                           \
-          (FT_Int)( (FT_UInt)(a) + (FT_UInt)(b) )
-#define SUB_INT( a, b )                           \
-          (FT_Int)( (FT_UInt)(a) - (FT_UInt)(b) )
-#define MUL_INT( a, b )                           \
-          (FT_Int)( (FT_UInt)(a) * (FT_UInt)(b) )
-#define NEG_INT( a )                              \
-          (FT_Int)( -(FT_UInt)(a) )
-
 #define ADD_LONG( a, b )                             \
           (FT_Long)( (FT_ULong)(a) + (FT_ULong)(b) )
 #define SUB_LONG( a, b )                             \
