@@ -243,8 +243,8 @@
       blues->zone[blues->count].csTopEdge =
         cf2_blueToFixed( otherBlues[i + 1] );
 
-      zoneHeight = blues->zone[blues->count].csTopEdge -
-                   blues->zone[blues->count].csBottomEdge;
+      zoneHeight = SUB_INT32( blues->zone[blues->count].csTopEdge,
+                              blues->zone[blues->count].csBottomEdge );
 
       if ( zoneHeight < 0 )
       {

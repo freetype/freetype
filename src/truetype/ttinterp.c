@@ -1895,13 +1895,13 @@
 
     if ( distance >= 0 )
     {
-      val = distance + compensation;
+      val = ADD_LONG( distance, compensation );
       if ( val < 0 )
         val = 0;
     }
     else
     {
-      val = distance - compensation;
+      val = SUB_LONG( distance, compensation );
       if ( val > 0 )
         val = 0;
     }
@@ -1937,13 +1937,14 @@
 
     if ( distance >= 0 )
     {
-      val = FT_PIX_ROUND( distance + compensation );
+      val = FT_PIX_ROUND_LONG( ADD_LONG( distance, compensation ) );
       if ( val < 0 )
         val = 0;
     }
     else
     {
-      val = -FT_PIX_ROUND( compensation - distance );
+      val = NEG_LONG( FT_PIX_ROUND_LONG( SUB_LONG( compensation,
+                                                   distance ) ) );
       if ( val > 0 )
         val = 0;
     }
@@ -1980,13 +1981,16 @@
 
     if ( distance >= 0 )
     {
-      val = FT_PIX_FLOOR( distance + compensation ) + 32;
+      val = ADD_LONG( FT_PIX_FLOOR( ADD_LONG( distance, compensation ) ),
+                      32 );
       if ( val < 0 )
         val = 32;
     }
     else
     {
-      val = -( FT_PIX_FLOOR( compensation - distance ) + 32 );
+      val = NEG_LONG( ADD_LONG( FT_PIX_FLOOR( SUB_LONG( compensation,
+                                                        distance ) ),
+                                32 ) );
       if ( val > 0 )
         val = -32;
     }
@@ -2023,13 +2027,13 @@
 
     if ( distance >= 0 )
     {
-      val = FT_PIX_FLOOR( distance + compensation );
+      val = FT_PIX_FLOOR( ADD_LONG( distance, compensation ) );
       if ( val < 0 )
         val = 0;
     }
     else
     {
-      val = -FT_PIX_FLOOR( compensation - distance );
+      val = NEG_LONG( FT_PIX_FLOOR( SUB_LONG( compensation, distance ) ) );
       if ( val > 0 )
         val = 0;
     }
@@ -2066,13 +2070,14 @@
 
     if ( distance >= 0 )
     {
-      val = FT_PIX_CEIL( distance + compensation );
+      val = FT_PIX_CEIL_LONG( ADD_LONG( distance, compensation ) );
       if ( val < 0 )
         val = 0;
     }
     else
     {
-      val = -FT_PIX_CEIL( compensation - distance );
+      val = NEG_LONG( FT_PIX_CEIL_LONG( SUB_LONG( compensation,
+                                                  distance ) ) );
       if ( val > 0 )
         val = 0;
     }
@@ -2109,13 +2114,14 @@
 
     if ( distance >= 0 )
     {
-      val = FT_PAD_ROUND( distance + compensation, 32 );
+      val = FT_PAD_ROUND_LONG( ADD_LONG( distance, compensation ), 32 );
       if ( val < 0 )
         val = 0;
     }
     else
     {
-      val = -FT_PAD_ROUND( compensation - distance, 32 );
+      val = NEG_LONG( FT_PAD_ROUND_LONG( SUB_LONG( compensation, distance ),
+                                         32 ) );
       if ( val > 0 )
         val = 0;
     }
@@ -2156,7 +2162,8 @@
 
     if ( distance >= 0 )
     {
-      val = ( distance - exc->phase + exc->threshold + compensation ) &
+      val = ADD_LONG( distance,
+                      exc->threshold - exc->phase + compensation ) &
               -exc->period;
       val += exc->phase;
       if ( val < 0 )
@@ -2164,8 +2171,9 @@
     }
     else
     {
-      val = -( ( exc->threshold - exc->phase - distance + compensation ) &
-               -exc->period );
+      val = NEG_LONG( SUB_LONG( exc->threshold - exc->phase + compensation,
+                                distance ) &
+                        -exc->period );
       val -= exc->phase;
       if ( val > 0 )
         val = -exc->phase;
@@ -2205,7 +2213,8 @@
 
     if ( distance >= 0 )
     {
-      val = ( ( distance - exc->phase + exc->threshold + compensation ) /
+      val = ( ADD_LONG( distance,
+                        exc->threshold - exc->phase + compensation ) /
                 exc->period ) * exc->period;
       val += exc->phase;
       if ( val < 0 )
@@ -2213,8 +2222,9 @@
     }
     else
     {
-      val = -( ( ( exc->threshold - exc->phase - distance + compensation ) /
-                   exc->period ) * exc->period );
+      val = NEG_LONG( ( SUB_LONG( exc->threshold - exc->phase + compensation,
+                                  distance ) /
+                          exc->period ) * exc->period );
       val -= exc->phase;
       if ( val > 0 )
         val = -exc->phase;
@@ -4233,8 +4243,8 @@
     p1 = exc->zp1.cur + aIdx2;
     p2 = exc->zp2.cur + aIdx1;
 
-    A = p1->x - p2->x;
-    B = p1->y - p2->y;
+    A = SUB_LONG( p1->x, p2->x );
+    B = SUB_LONG( p1->y, p2->y );
 
     /* If p1 == p2, SPvTL and SFvTL behave the same as */
     /* SPvTCA[X] and SFvTCA[X], respectively.          */
@@ -6315,7 +6325,10 @@
     }
 #endif /* TT_SUPPORT_SUBPIXEL_HINTING_INFINALITY */
 
-    exc->func_move( exc, &exc->zp1, point, distance - cur_dist );
+    exc->func_move( exc,
+                    &exc->zp1,
+                    point,
+                    SUB_LONG( distance, cur_dist ) );
 
 #ifdef TT_SUPPORT_SUBPIXEL_HINTING_INFINALITY
     if ( SUBPIXEL_HINTING_INFINALITY )
@@ -6757,14 +6770,14 @@
     FT_F26Dot6  dx;
 
 
-    dx = worker->curs[p].x - worker->orgs[p].x;
+    dx = SUB_LONG( worker->curs[p].x, worker->orgs[p].x );
     if ( dx != 0 )
     {
       for ( i = p1; i < p; i++ )
-        worker->curs[i].x += dx;
+        worker->curs[i].x = ADD_LONG( worker->curs[i].x, dx );
 
       for ( i = p + 1; i <= p2; i++ )
-        worker->curs[i].x += dx;
+        worker->curs[i].x = ADD_LONG( worker->curs[i].x, dx );
     }
   }
 
