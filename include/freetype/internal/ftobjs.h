@@ -36,6 +36,7 @@
 #include FT_INTERNAL_AUTOHINT_H
 #include FT_INTERNAL_SERVICE_H
 #include FT_INTERNAL_PIC_H
+#include FT_INTERNAL_CALC_H
 
 #ifdef FT_CONFIG_OPTION_INCREMENTAL
 #include FT_INCREMENTAL_H
@@ -85,12 +86,28 @@ FT_BEGIN_HEADER
 
   /* we use FT_TYPEOF to suppress signedness compilation warnings */
 #define FT_PAD_FLOOR( x, n )  ( (x) & ~FT_TYPEOF( x )( (n)-1 ) )
-#define FT_PAD_ROUND( x, n )  FT_PAD_FLOOR( (x) + ((n)/2), n )
-#define FT_PAD_CEIL( x, n )   FT_PAD_FLOOR( (x) + ((n)-1), n )
+#define FT_PAD_ROUND( x, n )  FT_PAD_FLOOR( (x) + (n)/2, n )
+#define FT_PAD_CEIL( x, n )   FT_PAD_FLOOR( (x) + (n)-1, n )
 
 #define FT_PIX_FLOOR( x )     ( (x) & ~FT_TYPEOF( x )63 )
 #define FT_PIX_ROUND( x )     FT_PIX_FLOOR( (x) + 32 )
 #define FT_PIX_CEIL( x )      FT_PIX_FLOOR( (x) + 63 )
+
+  /* specialized versions (for signed values)                   */
+  /* that don't produce run-time errors due to integer overflow */
+#define FT_PAD_ROUND_LONG( x, n )  FT_PAD_FLOOR( ADD_LONG( (x), (n) / 2 ), \
+                                                 n )
+#define FT_PAD_CEIL_LONG( x, n )   FT_PAD_FLOOR( ADD_LONG( (x), (n) - 1 ), \
+                                                 n )
+#define FT_PIX_ROUND_LONG( x )     FT_PIX_FLOOR( ADD_LONG( (x), 32 ) )
+#define FT_PIX_CEIL_LONG( x )      FT_PIX_FLOOR( ADD_LONG( (x), 63 ) )
+
+#define FT_PAD_ROUND_INT32( x, n )  FT_PAD_FLOOR( ADD_INT32( (x), (n) / 2 ), \
+                                                  n )
+#define FT_PAD_CEIL_INT32( x, n )   FT_PAD_FLOOR( ADD_INT32( (x), (n) - 1 ), \
+                                                  n )
+#define FT_PIX_ROUND_INT32( x )     FT_PIX_FLOOR( ADD_INT32( (x), 32 ) )
+#define FT_PIX_CEIL_INT32( x )      FT_PIX_FLOOR( ADD_INT32( (x), 63 ) )
 
 
   /*

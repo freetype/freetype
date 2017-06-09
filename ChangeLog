@@ -1,5 +1,18 @@
 2017-06-09  Werner Lemberg  <wl@gnu.org>
 
+	Provide more macros for flooring, ceiling, and rounding.
+
+	These versions don't produce run-time errors due to integer
+	overflow.
+
+	* include/freetype/internal/ftobjs.h: Include FT_INTERNAL_CALC_H.
+	(FT_PAD_ROUND_LONG, FT_PAD_CEIL_LONG, FT_PIX_ROUND_LONG,
+	FT_PIX_CEIL_LONG): New macros.
+	(FT_PAD_ROUND_INT32, FT_PAD_CEIL_INT32, FT_PIX_ROUND_INT32,
+	FT_PIX_CEIL_INT32): New macros.
+
+2017-06-09  Werner Lemberg  <wl@gnu.org>
+
 	Remove unused macros.
 
 	* include/freetype/internal/ftcalc.h (ADD_INT, SUB_INT, MUL_INT,
