@@ -2,6 +2,7 @@
 #define SVCFFTL_H_
 
 #include FT_INTERNAL_SERVICE_H
+#include FT_INTERNAL_CFF_TYPES_H
 
 
 FT_BEGIN_HEADER

@@ -32,6 +32,7 @@
 #include FT_SERVICE_MULTIPLE_MASTERS_H
 #endif
 
+#include FT_INTERNAL_CFF_OBJECTS_TYPES_H
 #include "cffobjs.h"
 #include "cffload.h"
 #include "cffcmap.h"
