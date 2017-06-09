@@ -42,8 +42,8 @@
 
 #include FT_SERVICE_CFF_TABLE_LOAD_H
 
-#include "cf2ft.h"
-#include "cf2blues.h"
+#include "psft.h"
+#include "psblues.h"
 
 
 FT_BEGIN_HEADER

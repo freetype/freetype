@@ -41,10 +41,10 @@
 
 
 /* common includes for other modules */
-#include "cf2error.h"
-#include "cf2fixed.h"
-#include "cf2arrst.h"
-#include "cf2read.h"
+#include "pserror.h"
+#include "psfixed.h"
+#include "psarrst.h"
+#include "psread.h"
 
 
 FT_BEGIN_HEADER

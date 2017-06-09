@@ -36,11 +36,11 @@
 /***************************************************************************/
 
 
-#include "cf2ft.h"
+#include "psft.h"
 #include FT_INTERNAL_DEBUG_H
 
-#include "cf2font.h"
-#include "cf2error.h"
+#include "psfont.h"
+#include "pserror.h"
 
 #ifdef TT_CONFIG_OPTION_GX_VAR_SUPPORT
 #include FT_MULTIPLE_MASTERS_H

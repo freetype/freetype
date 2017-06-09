@@ -69,7 +69,7 @@
 #define CF2BLUES_H_
 
 
-#include "cf2glue.h"
+#include "psglue.h"
 
 
 FT_BEGIN_HEADER

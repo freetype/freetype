@@ -22,15 +22,15 @@ SubDir  FT2_TOP $(FT2_SRC_DIR) psaux ;
                psobjs
                t1cmap
                t1decode
-               cf2arrst
-               cf2blues
-               cf2error
-               cf2font
-               cf2ft
-               cf2hints
-               cf2intrp
-               cf2read
-               cf2stack
+               psarrst
+               psblues
+               pserror
+               psfont
+               psft
+               pshints
+               psintrp
+               psread
+               psstack
                ;
   }
   else

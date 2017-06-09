@@ -27,15 +27,15 @@
 #include "t1decode.c"
 #include "cffdecode.c"
 
-#include "cf2arrst.c"
-#include "cf2blues.c"
-#include "cf2error.c"
-#include "cf2font.c"
-#include "cf2ft.c"
-#include "cf2hints.c"
-#include "cf2intrp.c"
-#include "cf2read.c"
-#include "cf2stack.c"
+#include "psarrst.c"
+#include "psblues.c"
+#include "pserror.c"
+#include "psfont.c"
+#include "psft.c"
+#include "pshints.c"
+#include "psintrp.c"
+#include "psread.c"
+#include "psstack.c"
 
 
 /* END */

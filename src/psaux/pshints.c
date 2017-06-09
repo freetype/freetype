@@ -36,13 +36,13 @@
 /***************************************************************************/
 
 
-#include "cf2ft.h"
+#include "psft.h"
 #include FT_INTERNAL_DEBUG_H
 
-#include "cf2glue.h"
-#include "cf2font.h"
-#include "cf2hints.h"
-#include "cf2intrp.h"
+#include "psglue.h"
+#include "psfont.h"
+#include "pshints.h"
+#include "psintrp.h"
 
 
   /*************************************************************************/

@@ -40,7 +40,7 @@
 #define CF2FT_H_
 
 
-#include "cf2types.h"
+#include "pstypes.h"
 
 
   /* TODO: disable asserts for now */
@@ -49,7 +49,7 @@
 
 #include FT_SYSTEM_H
 
-#include "cf2glue.h"
+#include "psglue.h"
 #include FT_INTERNAL_POSTSCRIPT_AUX_H    /* for CFF_Decoder */
 
 
