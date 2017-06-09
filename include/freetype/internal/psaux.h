@@ -702,6 +702,76 @@ FT_BEGIN_HEADER
 
   } T1_DecoderRec;
 
+  /*************************************************************************/
+  /*****                                                               *****/
+  /*****                        CFF DECODER                            *****/
+  /*****                                                               *****/
+  /*************************************************************************/
+  /*************************************************************************/
+
+#define CFF_MAX_OPERANDS        48
+#define CFF_MAX_SUBRS_CALLS     16  /* maximum subroutine nesting;         */
+                                    /* only 10 are allowed but there exist */
+                                    /* fonts like `HiraKakuProN-W3.ttf'    */
+                                    /* (Hiragino Kaku Gothic ProN W3;      */
+                                    /* 8.2d6e1; 2014-12-19) that exceed    */
+                                    /* this limit                          */
+#define CFF_MAX_TRANS_ELEMENTS  32
+
+  /* execution context charstring zone */
+
+  typedef struct  CFF_Decoder_Zone_
+  {
+    FT_Byte*  base;
+    FT_Byte*  limit;
+    FT_Byte*  cursor;
+
+  } CFF_Decoder_Zone;
+
+
+  typedef struct  CFF_Decoder_
+  {
+    CFF_Builder        builder;
+    CFF_Font           cff;
+
+    FT_Fixed           stack[CFF_MAX_OPERANDS + 1];
+    FT_Fixed*          top;
+
+    CFF_Decoder_Zone   zones[CFF_MAX_SUBRS_CALLS + 1];
+    CFF_Decoder_Zone*  zone;
+
+    FT_Int             flex_state;
+    FT_Int             num_flex_vectors;
+    FT_Vector          flex_vectors[7];
+
+    FT_Pos             glyph_width;
+    FT_Pos             nominal_width;
+
+    FT_Bool            read_width;
+    FT_Bool            width_only;
+    FT_Int             num_hints;
+    FT_Fixed           buildchar[CFF_MAX_TRANS_ELEMENTS];
+
+    FT_UInt            num_locals;
+    FT_UInt            num_globals;
+
+    FT_Int             locals_bias;
+    FT_Int             globals_bias;
+
+    FT_Byte**          locals;
+    FT_Byte**          globals;
+
+    FT_Byte**          glyph_names;   /* for pure CFF fonts only  */
+    FT_UInt            num_glyphs;    /* number of glyphs in font */
+
+    FT_Render_Mode     hint_mode;
+
+    FT_Bool            seac;
+
+    CFF_SubFont        current_subfont; /* for current glyph_index */
+
+  } CFF_Decoder;
+
 
   /*************************************************************************/
   /*************************************************************************/
