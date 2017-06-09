@@ -417,29 +417,29 @@ FT_BEGIN_HEADER
    *
    *  Use with care!
    */
-#define OVERFLOW_ADD_INT( a, b )                  \
+#define ADD_INT( a, b )                           \
           (FT_Int)( (FT_UInt)(a) + (FT_UInt)(b) )
-#define OVERFLOW_SUB_INT( a, b )                  \
+#define SUB_INT( a, b )                           \
           (FT_Int)( (FT_UInt)(a) - (FT_UInt)(b) )
-#define OVERFLOW_MUL_INT( a, b )                  \
+#define MUL_INT( a, b )                           \
           (FT_Int)( (FT_UInt)(a) * (FT_UInt)(b) )
 #define NEG_INT( a )                              \
           (FT_Int)( -(FT_UInt)(a) )
 
-#define OVERFLOW_ADD_LONG( a, b )                    \
+#define ADD_LONG( a, b )                             \
           (FT_Long)( (FT_ULong)(a) + (FT_ULong)(b) )
-#define OVERFLOW_SUB_LONG( a, b )                    \
+#define SUB_LONG( a, b )                             \
           (FT_Long)( (FT_ULong)(a) - (FT_ULong)(b) )
-#define OVERFLOW_MUL_LONG( a, b )                    \
+#define MUL_LONG( a, b )                             \
           (FT_Long)( (FT_ULong)(a) * (FT_ULong)(b) )
 #define NEG_LONG( a )                                \
           (FT_Long)( -(FT_ULong)(a) )
 
-#define OVERFLOW_ADD_INT32( a, b )                      \
+#define ADD_INT32( a, b )                               \
           (FT_Int32)( (FT_UInt32)(a) + (FT_UInt32)(b) )
-#define OVERFLOW_SUB_INT32( a, b )                      \
+#define SUB_INT32( a, b )                               \
           (FT_Int32)( (FT_UInt32)(a) - (FT_UInt32)(b) )
-#define OVERFLOW_MUL_INT32( a, b )                      \
+#define MUL_INT32( a, b )                               \
           (FT_Int32)( (FT_UInt32)(a) * (FT_UInt32)(b) )
 #define NEG_INT32( a )                                  \
           (FT_Int32)( -(FT_UInt32)(a) )

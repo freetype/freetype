@@ -194,9 +194,8 @@
       blues->zone[blues->count].csTopEdge =
         cf2_blueToFixed( blueValues[i + 1] );
 
-      zoneHeight = OVERFLOW_SUB_INT32(
-                     blues->zone[blues->count].csTopEdge,
-                     blues->zone[blues->count].csBottomEdge );
+      zoneHeight = SUB_INT32( blues->zone[blues->count].csTopEdge,
+                              blues->zone[blues->count].csBottomEdge );
 
       if ( zoneHeight < 0 )
       {
@@ -302,8 +301,7 @@
           /* top edge */
           flatFamilyEdge = cf2_blueToFixed( familyOtherBlues[j + 1] );
 
-          diff = cf2_fixedAbs( OVERFLOW_SUB_INT32( flatEdge,
-                                                   flatFamilyEdge ) );
+          diff = cf2_fixedAbs( SUB_INT32( flatEdge, flatFamilyEdge ) );
 
           if ( diff < minDiff && diff < csUnitsPerPixel )
           {
@@ -321,8 +319,7 @@
           /* top edge */
           flatFamilyEdge = cf2_blueToFixed( familyBlues[1] );
 
-          diff = cf2_fixedAbs( OVERFLOW_SUB_INT32( flatEdge,
-                                                   flatFamilyEdge ) );
+          diff = cf2_fixedAbs( SUB_INT32( flatEdge, flatFamilyEdge ) );
 
           if ( diff < minDiff && diff < csUnitsPerPixel )
             blues->zone[i].csFlatEdge = flatFamilyEdge;
@@ -345,8 +342,7 @@
           /* adjust edges of top zone upward by twice darkening amount */
           flatFamilyEdge += 2 * font->darkenY;      /* bottom edge */
 
-          diff = cf2_fixedAbs( OVERFLOW_SUB_INT32( flatEdge,
-                                                   flatFamilyEdge ) );
+          diff = cf2_fixedAbs( SUB_INT32( flatEdge, flatFamilyEdge ) );
 
           if ( diff < minDiff && diff < csUnitsPerPixel )
           {
@@ -503,8 +499,8 @@
           if ( blues->suppressOvershoot )
             dsNew = blues->zone[i].dsFlatEdge;
 
-          else if ( OVERFLOW_SUB_INT32( blues->zone[i].csTopEdge,
-                                        bottomHintEdge->csCoord ) >=
+          else if ( SUB_INT32( blues->zone[i].csTopEdge,
+                               bottomHintEdge->csCoord ) >=
                       blues->blueShift )
           {
             /* guarantee minimum of 1 pixel overshoot */

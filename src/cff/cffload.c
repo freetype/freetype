@@ -1352,7 +1352,7 @@
       sum = cff_parse_num( parser, &parser->stack[i + base] ) * 65536;
 
       for ( j = 1; j < blend->lenBV; j++ )
-        sum = OVERFLOW_ADD_INT32(
+        sum = ADD_INT32(
                 sum,
                 FT_MulFix(
                   *weight++,

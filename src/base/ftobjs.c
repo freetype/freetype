@@ -581,36 +581,36 @@
       metrics->horiBearingX = FT_PIX_FLOOR( metrics->horiBearingX );
       metrics->horiBearingY = FT_PIX_CEIL ( metrics->horiBearingY );
 
-      right  = FT_PIX_CEIL( OVERFLOW_ADD_LONG( metrics->vertBearingX,
-                                               metrics->width ) );
-      bottom = FT_PIX_CEIL( OVERFLOW_ADD_LONG( metrics->vertBearingY,
-                                               metrics->height ) );
+      right  = FT_PIX_CEIL( ADD_LONG( metrics->vertBearingX,
+                                      metrics->width ) );
+      bottom = FT_PIX_CEIL( ADD_LONG( metrics->vertBearingY,
+                                      metrics->height ) );
 
       metrics->vertBearingX = FT_PIX_FLOOR( metrics->vertBearingX );
       metrics->vertBearingY = FT_PIX_FLOOR( metrics->vertBearingY );
 
-      metrics->width  = OVERFLOW_SUB_LONG( right,
-                                           metrics->vertBearingX );
-      metrics->height = OVERFLOW_SUB_LONG( bottom,
-                                           metrics->vertBearingY );
+      metrics->width  = SUB_LONG( right,
+                                  metrics->vertBearingX );
+      metrics->height = SUB_LONG( bottom,
+                                  metrics->vertBearingY );
     }
     else
     {
       metrics->vertBearingX = FT_PIX_FLOOR( metrics->vertBearingX );
       metrics->vertBearingY = FT_PIX_FLOOR( metrics->vertBearingY );
 
-      right  = FT_PIX_CEIL ( OVERFLOW_ADD_LONG( metrics->horiBearingX,
-                                                metrics->width ) );
-      bottom = FT_PIX_FLOOR( OVERFLOW_SUB_LONG( metrics->horiBearingY,
-                                                metrics->height ) );
+      right  = FT_PIX_CEIL ( ADD_LONG( metrics->horiBearingX,
+                                       metrics->width ) );
+      bottom = FT_PIX_FLOOR( SUB_LONG( metrics->horiBearingY,
+                                       metrics->height ) );
 
       metrics->horiBearingX = FT_PIX_FLOOR( metrics->horiBearingX );
       metrics->horiBearingY = FT_PIX_CEIL ( metrics->horiBearingY );
 
-      metrics->width  = OVERFLOW_SUB_LONG( right,
-                                           metrics->horiBearingX );
-      metrics->height = OVERFLOW_SUB_LONG( metrics->horiBearingY,
-                                           bottom );
+      metrics->width  = SUB_LONG( right,
+                                  metrics->horiBearingX );
+      metrics->height = SUB_LONG( metrics->horiBearingY,
+                                  bottom );
     }
 
     metrics->horiAdvance = FT_PIX_ROUND( metrics->horiAdvance );

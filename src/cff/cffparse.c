@@ -1610,8 +1610,7 @@
                 val = 0;
                 while ( num_args > 0 )
                 {
-                  val = OVERFLOW_ADD_LONG( val,
-                                           cff_parse_num( parser, data++ ) );
+                  val = ADD_LONG( val, cff_parse_num( parser, data++ ) );
                   switch ( field->size )
                   {
                   case (8 / FT_CHAR_BIT):

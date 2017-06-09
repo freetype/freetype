@@ -2100,8 +2100,8 @@
     }
 
     /* set glyph dimensions */
-    glyph->metrics.width  = OVERFLOW_SUB_LONG( bbox.xMax, bbox.xMin );
-    glyph->metrics.height = OVERFLOW_SUB_LONG( bbox.yMax, bbox.yMin );
+    glyph->metrics.width  = SUB_LONG( bbox.xMax, bbox.xMin );
+    glyph->metrics.height = SUB_LONG( bbox.yMax, bbox.yMin );
 
     /* Now take care of vertical metrics.  In the case where there is */
     /* no vertical information within the font (relatively common),   */
@@ -2137,8 +2137,8 @@
         /*       table in the font.  Otherwise, we use the     */
         /*       values defined in the horizontal header.      */
 
-        height = (FT_Short)FT_DivFix( OVERFLOW_SUB_LONG( bbox.yMax,
-                                                         bbox.yMin ),
+        height = (FT_Short)FT_DivFix( SUB_LONG( bbox.yMax,
+                                                bbox.yMin ),
                                       y_scale );
         if ( face->os2.version != 0xFFFFU )
           advance = (FT_Pos)( face->os2.sTypoAscender -

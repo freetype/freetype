@@ -141,11 +141,11 @@
 #define FT_INT_MAX    INT_MAX
 #define FT_ULONG_MAX  ULONG_MAX
 
-#define OVERFLOW_ADD_LONG( a, b )                           \
+#define ADD_LONG( a, b )                                    \
           (long)( (unsigned long)(a) + (unsigned long)(b) )
-#define OVERFLOW_SUB_LONG( a, b )                           \
+#define SUB_LONG( a, b )                                    \
           (long)( (unsigned long)(a) - (unsigned long)(b) )
-#define OVERFLOW_MUL_LONG( a, b )                           \
+#define MUL_LONG( a, b )                                    \
           (long)( (unsigned long)(a) * (unsigned long)(b) )
 #define NEG_LONG( a )                                       \
           (long)( -(unsigned long)(a) )
@@ -1146,8 +1146,7 @@ typedef ptrdiff_t  FT_PtrDist;
       /* s is L * the perpendicular distance from P1 to the line P0-P3. */
       dx1 = arc[1].x - arc[0].x;
       dy1 = arc[1].y - arc[0].y;
-      s = FT_ABS( OVERFLOW_SUB_LONG( OVERFLOW_MUL_LONG( dy, dx1 ),
-                                     OVERFLOW_MUL_LONG( dx, dy1 ) ) );
+      s = FT_ABS( SUB_LONG( MUL_LONG( dy, dx1 ), MUL_LONG( dx, dy1 ) ) );
 
       if ( s > s_limit )
         goto Split;
@@ -1155,8 +1154,7 @@ typedef ptrdiff_t  FT_PtrDist;
       /* s is L * the perpendicular distance from P2 to the line P0-P3. */
       dx2 = arc[2].x - arc[0].x;
       dy2 = arc[2].y - arc[0].y;
-      s = FT_ABS( OVERFLOW_SUB_LONG( OVERFLOW_MUL_LONG( dy, dx2 ),
-                                     OVERFLOW_MUL_LONG( dx, dy2 ) ) );
+      s = FT_ABS( SUB_LONG( MUL_LONG( dy, dx2 ), MUL_LONG( dx, dy2 ) ) );
 
       if ( s > s_limit )
         goto Split;

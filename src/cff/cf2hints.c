@@ -74,8 +74,8 @@
     /* cross product of pt1 position from origin with pt2 position from  */
     /* pt1; we reduce the precision so that the result fits into 32 bits */
 
-    return ( x1 >> 16 ) * ( OVERFLOW_SUB_INT32( y2, y1 ) >> 16 ) -
-           ( y1 >> 16 ) * ( OVERFLOW_SUB_INT32( x2, x1 ) >> 16 );
+    return ( x1 >> 16 ) * ( SUB_INT32( y2, y1 ) >> 16 ) -
+           ( y1 >> 16 ) * ( SUB_INT32( x2, x1 ) >> 16 );
   }
 
 
@@ -105,7 +105,7 @@
                                          stemHintArray,
                                          indexStemHint );
 
-    width = OVERFLOW_SUB_INT32( stemHint->max, stemHint->min );
+    width = SUB_INT32( stemHint->max, stemHint->min );
 
     if ( width == cf2_intToFixed( -21 ) )
     {
@@ -185,9 +185,9 @@
     /* darkening.  Bottoms are not changed; tops are incremented by twice */
     /* `darkenY'.                                                         */
     if ( cf2_hint_isTop( hint ) )
-      hint->csCoord = OVERFLOW_ADD_INT32( hint->csCoord, 2 * font->darkenY );
+      hint->csCoord = ADD_INT32( hint->csCoord, 2 * font->darkenY );
 
-    hint->csCoord = OVERFLOW_ADD_INT32( hint->csCoord, hintOrigin );
+    hint->csCoord = ADD_INT32( hint->csCoord, hintOrigin );
     hint->scale   = scale;
     hint->index   = indexStemHint;   /* index in original stem hint array */
 
@@ -331,11 +331,10 @@
       if ( i == 0 && csCoord < hintmap->edge[0].csCoord )
       {
         /* special case for points below first edge: use uniform scale */
-        return OVERFLOW_ADD_INT32(
-                 FT_MulFix( OVERFLOW_SUB_INT32( csCoord,
+        return ADD_INT32( FT_MulFix( SUB_INT32( csCoord,
                                                 hintmap->edge[0].csCoord ),
-                            hintmap->scale ),
-                 hintmap->edge[0].dsCoord );
+                                     hintmap->scale ),
+                          hintmap->edge[0].dsCoord );
       }
       else
       {
@@ -343,11 +342,10 @@
          * Note: entries with duplicate csCoord are allowed.
          * Use edge[i], the highest entry where csCoord >= entry[i].csCoord
          */
-        return OVERFLOW_ADD_INT32(
-                 FT_MulFix( OVERFLOW_SUB_INT32( csCoord,
+        return ADD_INT32( FT_MulFix( SUB_INT32( csCoord,
                                                 hintmap->edge[i].csCoord ),
-                            hintmap->edge[i].scale ),
-                 hintmap->edge[i].dsCoord );
+                                     hintmap->edge[i].scale ),
+                          hintmap->edge[i].dsCoord );
       }
     }
   }
@@ -512,10 +510,9 @@
       {
         if ( hintmap->edge[i].csCoord != hintmap->edge[i - 1].csCoord )
           hintmap->edge[i - 1].scale =
-            FT_DivFix(
-              OVERFLOW_SUB_INT32( hintmap->edge[i].dsCoord,
+            FT_DivFix( SUB_INT32( hintmap->edge[i].dsCoord,
                                   hintmap->edge[i - 1].dsCoord ),
-              OVERFLOW_SUB_INT32( hintmap->edge[i].csCoord,
+                       SUB_INT32( hintmap->edge[i].csCoord,
                                   hintmap->edge[i - 1].csCoord ) );
       }
 
@@ -523,10 +520,9 @@
       {
         if ( hintmap->edge[j].csCoord != hintmap->edge[j - 1].csCoord )
           hintmap->edge[j - 1].scale =
-            FT_DivFix(
-              OVERFLOW_SUB_INT32( hintmap->edge[j].dsCoord,
+            FT_DivFix( SUB_INT32( hintmap->edge[j].dsCoord,
                                   hintmap->edge[j - 1].dsCoord ),
-              OVERFLOW_SUB_INT32( hintmap->edge[j].csCoord,
+                       SUB_INT32( hintmap->edge[j].csCoord,
                                   hintmap->edge[j - 1].csCoord ) );
 
         i += 1;     /* skip upper edge on next loop */
@@ -647,13 +643,12 @@
         CF2_Fixed  midpoint =
                      cf2_hintmap_map(
                        hintmap->initialHintMap,
-                       OVERFLOW_ADD_INT32( secondHintEdge->csCoord,
-                                           firstHintEdge->csCoord ) / 2 );
+                       ADD_INT32( secondHintEdge->csCoord,
+                                  firstHintEdge->csCoord ) / 2 );
         CF2_Fixed  halfWidth =
-                     FT_MulFix(
-                       OVERFLOW_SUB_INT32( secondHintEdge->csCoord,
+                     FT_MulFix( SUB_INT32( secondHintEdge->csCoord,
                                            firstHintEdge->csCoord ) / 2,
-                       hintmap->scale );
+                                hintmap->scale );
 
 
         firstHintEdge->dsCoord  = midpoint - halfWidth;
@@ -1106,18 +1101,18 @@
     FT_Vector  pt;   /* hinted point in upright DS */
 
 
-    pt.x = OVERFLOW_ADD_INT32( FT_MulFix( glyphpath->scaleX, x ),
-                               FT_MulFix( glyphpath->scaleC, y ) );
+    pt.x = ADD_INT32( FT_MulFix( glyphpath->scaleX, x ),
+                      FT_MulFix( glyphpath->scaleC, y ) );
     pt.y = cf2_hintmap_map( hintmap, y );
 
-    ppt->x = OVERFLOW_ADD_INT32(
+    ppt->x = ADD_INT32(
                FT_MulFix( glyphpath->font->outerTransform.a, pt.x ),
-               OVERFLOW_ADD_INT32(
+               ADD_INT32(
                  FT_MulFix( glyphpath->font->outerTransform.c, pt.y ),
                  glyphpath->fractionalTranslation.x ) );
-    ppt->y = OVERFLOW_ADD_INT32(
+    ppt->y = ADD_INT32(
                FT_MulFix( glyphpath->font->outerTransform.b, pt.x ),
-               OVERFLOW_ADD_INT32(
+               ADD_INT32(
                  FT_MulFix( glyphpath->font->outerTransform.d, pt.y ),
                  glyphpath->fractionalTranslation.y ) );
   }
@@ -1169,12 +1164,12 @@
     CF2_Fixed  denominator, s;
 
 
-    u.x = CF2_CS_SCALE( OVERFLOW_SUB_INT32( u2->x, u1->x ) );
-    u.y = CF2_CS_SCALE( OVERFLOW_SUB_INT32( u2->y, u1->y ) );
-    v.x = CF2_CS_SCALE( OVERFLOW_SUB_INT32( v2->x, v1->x ) );
-    v.y = CF2_CS_SCALE( OVERFLOW_SUB_INT32( v2->y, v1->y ) );
-    w.x = CF2_CS_SCALE( OVERFLOW_SUB_INT32( v1->x, u1->x ) );
-    w.y = CF2_CS_SCALE( OVERFLOW_SUB_INT32( v1->y, u1->y ) );
+    u.x = CF2_CS_SCALE( SUB_INT32( u2->x, u1->x ) );
+    u.y = CF2_CS_SCALE( SUB_INT32( u2->y, u1->y ) );
+    v.x = CF2_CS_SCALE( SUB_INT32( v2->x, v1->x ) );
+    v.y = CF2_CS_SCALE( SUB_INT32( v2->y, v1->y ) );
+    w.x = CF2_CS_SCALE( SUB_INT32( v1->x, u1->x ) );
+    w.y = CF2_CS_SCALE( SUB_INT32( v1->y, u1->y ) );
 
     denominator = cf2_perp( u, v );
 
@@ -1183,12 +1178,10 @@
 
     s = FT_DivFix( cf2_perp( w, v ), denominator );
 
-    intersection->x = OVERFLOW_ADD_INT32(
-                        u1->x,
-                        FT_MulFix( s, OVERFLOW_SUB_INT32( u2->x, u1->x ) ) );
-    intersection->y = OVERFLOW_ADD_INT32(
-                        u1->y,
-                        FT_MulFix( s, OVERFLOW_SUB_INT32( u2->y, u1->y ) ) );
+    intersection->x = ADD_INT32( u1->x,
+                                 FT_MulFix( s, SUB_INT32( u2->x, u1->x ) ) );
+    intersection->y = ADD_INT32( u1->y,
+                                 FT_MulFix( s, SUB_INT32( u2->y, u1->y ) ) );
 
 
     /*
@@ -1200,35 +1193,29 @@
      *
      */
 
-    if ( u1->x == u2->x                                       &&
-         cf2_fixedAbs( OVERFLOW_SUB_INT32(
-                         intersection->x,
-                         u1->x ) ) < glyphpath->snapThreshold )
+    if ( u1->x == u2->x                                                &&
+         cf2_fixedAbs( SUB_INT32( intersection->x,
+                                  u1->x ) ) < glyphpath->snapThreshold )
       intersection->x = u1->x;
-    if ( u1->y == u2->y                                       &&
-         cf2_fixedAbs( OVERFLOW_SUB_INT32(
-                         intersection->y,
-                         u1->y ) ) < glyphpath->snapThreshold )
+    if ( u1->y == u2->y                                                &&
+         cf2_fixedAbs( SUB_INT32( intersection->y,
+                                  u1->y ) ) < glyphpath->snapThreshold )
       intersection->y = u1->y;
 
-    if ( v1->x == v2->x                                       &&
-         cf2_fixedAbs( OVERFLOW_SUB_INT32(
-                         intersection->x,
-                         v1->x ) ) < glyphpath->snapThreshold )
+    if ( v1->x == v2->x                                                &&
+         cf2_fixedAbs( SUB_INT32( intersection->x,
+                                  v1->x ) ) < glyphpath->snapThreshold )
       intersection->x = v1->x;
-    if ( v1->y == v2->y                                       &&
-         cf2_fixedAbs( OVERFLOW_SUB_INT32(
-                         intersection->y,
-                         v1->y ) ) < glyphpath->snapThreshold )
+    if ( v1->y == v2->y                                                &&
+         cf2_fixedAbs( SUB_INT32( intersection->y,
+                                  v1->y ) ) < glyphpath->snapThreshold )
       intersection->y = v1->y;
 
     /* limit the intersection distance from midpoint of u2 and v1 */
-    if ( cf2_fixedAbs( intersection->x -
-                       OVERFLOW_ADD_INT32( u2->x, v1->x ) / 2 ) >
-           glyphpath->miterLimit                                  ||
-         cf2_fixedAbs( intersection->y -
-                       OVERFLOW_ADD_INT32( u2->y, v1->y ) / 2 ) >
-           glyphpath->miterLimit                                  )
+    if ( cf2_fixedAbs( intersection->x - ADD_INT32( u2->x, v1->x ) / 2 ) >
+           glyphpath->miterLimit                                           ||
+         cf2_fixedAbs( intersection->y - ADD_INT32( u2->y, v1->y ) / 2 ) >
+           glyphpath->miterLimit                                           )
       return FALSE;
 
     return TRUE;
@@ -1476,8 +1463,8 @@
                                CF2_Fixed*     x,
                                CF2_Fixed*     y )
   {
-    CF2_Fixed  dx = OVERFLOW_SUB_INT32( x2, x1 );
-    CF2_Fixed  dy = OVERFLOW_SUB_INT32( y2, y1 );
+    CF2_Fixed  dx = SUB_INT32( x2, x1 );
+    CF2_Fixed  dy = SUB_INT32( y2, y1 );
 
 
     /* note: negative offsets don't work here; negate deltas to change */
@@ -1504,13 +1491,13 @@
       {
         /* first quadrant, +x +y */
 
-        if ( dx > OVERFLOW_MUL_INT32( 2, dy ) )
+        if ( dx > MUL_INT32( 2, dy ) )
         {
           /* +x */
           *x = 0;
           *y = 0;
         }
-        else if ( dy > OVERFLOW_MUL_INT32( 2, dx ) )
+        else if ( dy > MUL_INT32( 2, dx ) )
         {
           /* +y */
           *x = glyphpath->xOffset;
@@ -1529,13 +1516,13 @@
       {
         /* fourth quadrant, +x -y */
 
-        if ( dx > OVERFLOW_MUL_INT32( -2, dy ) )
+        if ( dx > MUL_INT32( -2, dy ) )
         {
           /* +x */
           *x = 0;
           *y = 0;
         }
-        else if ( NEG_INT32( dy ) > OVERFLOW_MUL_INT32( 2, dx ) )
+        else if ( NEG_INT32( dy ) > MUL_INT32( 2, dx ) )
         {
           /* -y */
           *x = NEG_INT32( glyphpath->xOffset );
@@ -1557,13 +1544,13 @@
       {
         /* second quadrant, -x +y */
 
-        if ( NEG_INT32( dx ) > OVERFLOW_MUL_INT32( 2, dy ) )
+        if ( NEG_INT32( dx ) > MUL_INT32( 2, dy ) )
         {
           /* -x */
           *x = 0;
-          *y = OVERFLOW_MUL_INT32( 2, glyphpath->yOffset );
+          *y = MUL_INT32( 2, glyphpath->yOffset );
         }
-        else if ( dy > OVERFLOW_MUL_INT32( -2, dx ) )
+        else if ( dy > MUL_INT32( -2, dx ) )
         {
           /* +y */
           *x = glyphpath->xOffset;
@@ -1582,13 +1569,13 @@
       {
         /* third quadrant, -x -y */
 
-        if ( NEG_INT32( dx ) > OVERFLOW_MUL_INT32( -2, dy ) )
+        if ( NEG_INT32( dx ) > MUL_INT32( -2, dy ) )
         {
           /* -x */
           *x = 0;
-          *y = OVERFLOW_MUL_INT32( 2, glyphpath->yOffset );
+          *y = MUL_INT32( 2, glyphpath->yOffset );
         }
-        else if ( NEG_INT32( dy ) > OVERFLOW_MUL_INT32( -2, dx ) )
+        else if ( NEG_INT32( dy ) > MUL_INT32( -2, dx ) )
         {
           /* -y */
           *x = NEG_INT32( glyphpath->xOffset );
@@ -1705,10 +1692,10 @@
                                  &yOffset );
 
     /* construct offset points */
-    P0.x = OVERFLOW_ADD_INT32( glyphpath->currentCS.x, xOffset );
-    P0.y = OVERFLOW_ADD_INT32( glyphpath->currentCS.y, yOffset );
-    P1.x = OVERFLOW_ADD_INT32( x, xOffset );
-    P1.y = OVERFLOW_ADD_INT32( y, yOffset );
+    P0.x = ADD_INT32( glyphpath->currentCS.x, xOffset );
+    P0.y = ADD_INT32( glyphpath->currentCS.y, yOffset );
+    P1.x = ADD_INT32( x, xOffset );
+    P1.y = ADD_INT32( y, yOffset );
 
     if ( glyphpath->moveIsPending )
     {
@@ -1787,15 +1774,15 @@
       cf2_getWindingMomentum( x1, y1, x2, y2 );
 
     /* construct offset points */
-    P0.x = OVERFLOW_ADD_INT32( glyphpath->currentCS.x, xOffset1 );
-    P0.y = OVERFLOW_ADD_INT32( glyphpath->currentCS.y, yOffset1 );
-    P1.x = OVERFLOW_ADD_INT32( x1, xOffset1 );
-    P1.y = OVERFLOW_ADD_INT32( y1, yOffset1 );
+    P0.x = ADD_INT32( glyphpath->currentCS.x, xOffset1 );
+    P0.y = ADD_INT32( glyphpath->currentCS.y, yOffset1 );
+    P1.x = ADD_INT32( x1, xOffset1 );
+    P1.y = ADD_INT32( y1, yOffset1 );
     /* note: preserve angle of final segment by using offset3 at both ends */
-    P2.x = OVERFLOW_ADD_INT32( x2, xOffset3 );
-    P2.y = OVERFLOW_ADD_INT32( y2, yOffset3 );
-    P3.x = OVERFLOW_ADD_INT32( x3, xOffset3 );
-    P3.y = OVERFLOW_ADD_INT32( y3, yOffset3 );
+    P2.x = ADD_INT32( x2, xOffset3 );
+    P2.y = ADD_INT32( y2, yOffset3 );
+    P3.x = ADD_INT32( x3, xOffset3 );
+    P3.y = ADD_INT32( y3, yOffset3 );
 
     if ( glyphpath->moveIsPending )
     {
