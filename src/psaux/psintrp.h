@@ -1,8 +1,8 @@
 /***************************************************************************/
 /*                                                                         */
-/*  cf2read.c                                                              */
+/*  cf2font.h                                                              */
 /*                                                                         */
-/*    Adobe's code for stream handling (body).                             */
+/*    Adobe's CFF Interpreter (specification).                             */
 /*                                                                         */
 /*  Copyright 2007-2013 Adobe Systems Incorporated.                        */
 /*                                                                         */
@@ -36,77 +36,48 @@
 /***************************************************************************/
 
 
-#include "cf2ft.h"
-#include FT_INTERNAL_DEBUG_H
-
-#include "cf2glue.h"
-
-#include "cf2error.h"
+#ifndef CF2INTRP_H_
+#define CF2INTRP_H_
 
 
-  /* Define CF2_IO_FAIL as 1 to enable random errors and random */
-  /* value errors in I/O.                                       */
-#define CF2_IO_FAIL  0
+#include "psft.h"
+#include "pshints.h"
 
 
-#if CF2_IO_FAIL
-
-  /* set the .00 value to a nonzero probability */
-  static int
-  randomError2( void )
-  {
-    /* for region buffer ReadByte (interp) function */
-    return (double)rand() / RAND_MAX < .00;
-  }
-
-  /* set the .00 value to a nonzero probability */
-  static CF2_Int
-  randomValue()
-  {
-    return (double)rand() / RAND_MAX < .00 ? rand() : 0;
-  }
-
-#endif /* CF2_IO_FAIL */
+FT_BEGIN_HEADER
 
 
-  /* Region Buffer                                      */
-  /*                                                    */
-  /* Can be constructed from a copied buffer managed by */
-  /* `FCM_getDatablock'.                                */
-  /* Reads bytes with check for end of buffer.          */
+  FT_LOCAL( void )
+  cf2_hintmask_init( CF2_HintMask  hintmask,
+                     FT_Error*     error );
+  FT_LOCAL( FT_Bool )
+  cf2_hintmask_isValid( const CF2_HintMask  hintmask );
+  FT_LOCAL( FT_Bool )
+  cf2_hintmask_isNew( const CF2_HintMask  hintmask );
+  FT_LOCAL( void )
+  cf2_hintmask_setNew( CF2_HintMask  hintmask,
+                       FT_Bool       val );
+  FT_LOCAL( FT_Byte* )
+  cf2_hintmask_getMaskPtr( CF2_HintMask  hintmask );
+  FT_LOCAL( void )
+  cf2_hintmask_setAll( CF2_HintMask  hintmask,
+                       size_t        bitCount );
 
-  /* reading past the end of the buffer sets error and returns zero */
-  FT_LOCAL_DEF( CF2_Int )
-  cf2_buf_readByte( CF2_Buffer  buf )
-  {
-    if ( buf->ptr < buf->end )
-    {
-#if CF2_IO_FAIL
-      if ( randomError2() )
-      {
-        CF2_SET_ERROR( buf->error, Invalid_Stream_Operation );
-        return 0;
-      }
-
-      return *(buf->ptr)++ + randomValue();
-#else
-      return *(buf->ptr)++;
-#endif
-    }
-    else
-    {
-      CF2_SET_ERROR( buf->error, Invalid_Stream_Operation );
-      return 0;
-    }
-  }
+  FT_LOCAL( void )
+  cf2_interpT2CharString( CF2_Font              font,
+                          CF2_Buffer            charstring,
+                          CF2_OutlineCallbacks  callbacks,
+                          const FT_Vector*      translation,
+                          FT_Bool               doingSeac,
+                          CF2_Fixed             curX,
+                          CF2_Fixed             curY,
+                          CF2_Fixed*            width );
 
 
-  /* note: end condition can occur without error */
-  FT_LOCAL_DEF( FT_Bool )
-  cf2_buf_isEnd( CF2_Buffer  buf )
-  {
-    return (FT_Bool)( buf->ptr >= buf->end );
-  }
+FT_END_HEADER
+
+
+#endif /* CF2INTRP_H_ */
 
 
 /* END */

@@ -36,17 +36,17 @@
 /***************************************************************************/
 
 
-#include "cf2ft.h"
+#include "psft.h"
 #include FT_INTERNAL_DEBUG_H
 #include FT_SERVICE_CFF_TABLE_LOAD_H
 
-#include "cf2glue.h"
-#include "cf2font.h"
-#include "cf2stack.h"
-#include "cf2hints.h"
-#include "cf2intrp.h"
+#include "psglue.h"
+#include "psfont.h"
+#include "psstack.h"
+#include "pshints.h"
+#include "psintrp.h"
 
-#include "cf2error.h"
+#include "pserror.h"
 #include "psobjs.h"  /* for cff_random */
 
 

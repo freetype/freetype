@@ -21,7 +21,7 @@
 #include "psobjs.h"
 #include "t1decode.h"
 #include "t1cmap.h"
-#include "cf2ft.h"
+#include "psft.h"
 #include "cffdecode.h"
 
 #ifndef T1_CONFIG_OPTION_NO_AFM

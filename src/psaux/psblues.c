@@ -36,12 +36,12 @@
 /***************************************************************************/
 
 
-#include "cf2ft.h"
+#include "psft.h"
 #include FT_INTERNAL_DEBUG_H
 
-#include "cf2blues.h"
-#include "cf2hints.h"
-#include "cf2font.h"
+#include "psblues.h"
+#include "pshints.h"
+#include "psfont.h"
 
 
   /*************************************************************************/
