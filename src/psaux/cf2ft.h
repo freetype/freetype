@@ -50,7 +50,7 @@
 #include FT_SYSTEM_H
 
 #include "cf2glue.h"
-#include "cffgload.h"    /* for CFF_Decoder */
+#include FT_INTERNAL_POSTSCRIPT_AUX_H    /* for CFF_Decoder */
 
 
 FT_BEGIN_HEADER
