@@ -1,5 +1,14 @@
 2017-06-10  Werner Lemberg  <wl@gnu.org>
 
+	[truetype] Fix TT_Set_Var_Design.
+
+	Reported by Nikolaus Waxweiler <madigens@gmail.com>.
+
+	* src/truetype/ttgxvar.c (TT_Set_Var_Design): Correctly handle the
+	case where we have less input coordinates than axes.
+
+2017-06-10  Werner Lemberg  <wl@gnu.org>
+
 	* src/base/ftcalc.c (FT_DivFix): Fix embarrassing typo.
 
 	Bug introduced 2017-05-28.

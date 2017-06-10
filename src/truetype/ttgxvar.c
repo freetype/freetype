@@ -2640,7 +2640,7 @@
                  num_coords * sizeof ( FT_Fixed ) );
 
     a = mmvar->axis + num_coords;
-    c = coords + num_coords;
+    c = blend->coords + num_coords;
     for ( i = num_coords; i < mmvar->num_axis; i++, a++, c++ )
       *c = a->def;
 
@@ -2650,7 +2650,7 @@
     if ( !face->blend->avar_loaded )
       ft_var_load_avar( face );
 
-    ft_var_to_normalized( face, num_coords, coords, normalized );
+    ft_var_to_normalized( face, num_coords, blend->coords, normalized );
 
     error = tt_set_mm_blend( face, mmvar->num_axis, normalized, 0 );
 
