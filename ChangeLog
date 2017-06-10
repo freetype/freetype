@@ -1,3 +1,9 @@
+2017-06-10  Werner Lemberg  <wl@gnu.org>
+
+	* src/base/ftcalc.c (FT_DivFix): Fix embarrassing typo.
+
+	Bug introduced 2017-05-28.
+
 2017-06-09  Werner Lemberg  <wl@gnu.org>
 
 	[cff, truetype] Integer overflows.

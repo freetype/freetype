@@ -262,7 +262,7 @@
     b = (FT_UInt64)b_;
 
     FT_MOVE_SIGN( a_, a, s );
-    FT_MOVE_SIGN( b_, a, s );
+    FT_MOVE_SIGN( b_, b, s );
 
     q = b > 0 ? ( ( a << 16 ) + ( b >> 1 ) ) / b
               : 0x7FFFFFFFUL;
