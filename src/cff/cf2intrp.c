@@ -768,7 +768,8 @@
         FT_TRACE4(( " vmoveto\n" ));
 
         if ( cf2_stack_count( opStack ) > 1 && !haveWidth )
-          *width = cf2_stack_getReal( opStack, 0 ) + nominalWidthX;
+          *width = ADD_INT32( cf2_stack_getReal( opStack, 0 ),
+                              nominalWidthX );
 
         /* width is defined or default after this */
         haveWidth = TRUE;

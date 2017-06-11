@@ -1,3 +1,18 @@
+2017-06-11  Werner Lemberg  <wl@gnu.org>
+
+	[cff] Integer overflows.
+
+	Reported as
+
+	  https://bugs.chromium.org/p/oss-fuzz/issues/detail?id=2200
+	  https://bugs.chromium.org/p/oss-fuzz/issues/detail?id=2210
+
+	* src/cff/cf2hints.c (cf2_hintmap_insertHint): Use SUB_INT32 and
+	ADD_INT32.
+
+	* src/cff/cf2intrp.c (cf2_interpT2CharString) <cf2_cmdVMOVETO>: Use
+	ADD_INT32.
+
 2017-06-10  Werner Lemberg  <wl@gnu.org>
 
 	[truetype] Fix TT_Set_Var_Design.

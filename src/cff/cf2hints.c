@@ -651,8 +651,8 @@
                                 hintmap->scale );
 
 
-        firstHintEdge->dsCoord  = midpoint - halfWidth;
-        secondHintEdge->dsCoord = midpoint + halfWidth;
+        firstHintEdge->dsCoord  = SUB_INT32( midpoint, halfWidth );
+        secondHintEdge->dsCoord = ADD_INT32( midpoint, halfWidth );
       }
       else
         firstHintEdge->dsCoord = cf2_hintmap_map( hintmap->initialHintMap,
@@ -721,7 +721,7 @@
 
       /* insert first edge */
       hintmap->edge[indexInsert] = *firstHintEdge;         /* copy struct */
-      hintmap->count += 1;
+      hintmap->count            += 1;
 
       if ( isPair )
       {
