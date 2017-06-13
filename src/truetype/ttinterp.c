@@ -6627,9 +6627,11 @@
         FT_Vector  vec;
 
 
-        vec.x = FT_MulFix( exc->zp1.orus[exc->GS.rp2].x - orus_base->x,
+        vec.x = FT_MulFix( SUB_LONG( exc->zp1.orus[exc->GS.rp2].x,
+                                     orus_base->x ),
                            exc->metrics.x_scale );
-        vec.y = FT_MulFix( exc->zp1.orus[exc->GS.rp2].y - orus_base->y,
+        vec.y = FT_MulFix( SUB_LONG( exc->zp1.orus[exc->GS.rp2].y,
+                                     orus_base->y ),
                            exc->metrics.y_scale );
 
         old_range = FAST_DUALPROJ( &vec );
@@ -6664,9 +6666,11 @@
         FT_Vector  vec;
 
 
-        vec.x = FT_MulFix( exc->zp2.orus[point].x - orus_base->x,
+        vec.x = FT_MulFix( SUB_LONG( exc->zp2.orus[point].x,
+                                     orus_base->x ),
                            exc->metrics.x_scale );
-        vec.y = FT_MulFix( exc->zp2.orus[point].y - orus_base->y,
+        vec.y = FT_MulFix( SUB_LONG( exc->zp2.orus[point].y,
+                                     orus_base->y ),
                            exc->metrics.y_scale );
 
         org_dist = FAST_DUALPROJ( &vec );
@@ -6705,7 +6709,7 @@
       exc->func_move( exc,
                       &exc->zp2,
                       (FT_UShort)point,
-                      new_dist - cur_dist );
+                      SUB_LONG( new_dist, cur_dist ) );
     }
 
   Fail:

@@ -1,3 +1,16 @@
+2017-06-13  Werner Lemberg  <wl@gnu.org>
+
+	[cff, truetype] Integer overflows.
+
+	Reported as
+
+	  https://bugs.chromium.org/p/oss-fuzz/issues/detail?id=2216
+	  https://bugs.chromium.org/p/oss-fuzz/issues/detail?id=2218
+
+	* src/cff/cf2fixed.h (cf2_fixedAbs): Use NEG_INT32.
+
+	* src/truetype/ttinterp.c (Ins_IP): Use SUB_LONG.
+
 2017-06-11  Werner Lemberg  <wl@gnu.org>
 
 	[cff] Integer overflows.
