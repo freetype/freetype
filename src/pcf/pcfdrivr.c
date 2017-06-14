@@ -413,12 +413,6 @@ THE SOFTWARE.
         }
 
         error = FT_CMap_New( &pcf_cmap_class, NULL, &charmap, NULL );
-
-#if 0
-        /* Select default charmap */
-        if ( pcfface->num_charmaps )
-          pcfface->charmap = pcfface->charmaps[0];
-#endif
       }
     }
 

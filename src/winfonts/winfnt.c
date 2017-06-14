@@ -859,10 +859,6 @@
                              NULL );
         if ( error )
           goto Fail;
-
-        /* Select default charmap */
-        if ( root->num_charmaps )
-          root->charmap = root->charmaps[0];
       }
 
       /* set up remaining flags */

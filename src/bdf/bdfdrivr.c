@@ -658,12 +658,6 @@ THE SOFTWARE.
               }
 
               error = FT_CMap_New( &bdf_cmap_class, NULL, &charmap, NULL );
-
-#if 0
-              /* Select default charmap */
-              if ( bdfface->num_charmaps )
-                bdfface->charmap = bdfface->charmaps[0];
-#endif
             }
 
             goto Exit;

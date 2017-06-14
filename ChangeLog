@@ -1,5 +1,11 @@
 2017-06-13  Werner Lemberg  <wl@gnu.org>
 
+	* src/winfonts/winfnt.c (FNT_Face_Init): Don't set active encoding.
+
+	FreeType only sets a default active encoding for Unicode.
+
+2017-06-13  Werner Lemberg  <wl@gnu.org>
+
 	[cff, truetype] Integer overflows.
 
 	Reported as
