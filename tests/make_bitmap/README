@@ -1,0 +1,7 @@
+To compile and execute
+
+gcc example1.c ksvsk.c murmur3.c -Wall -I /usr/local/include/freetype2/ -lfreetype -o example1 
+./example1 <font_file> <pt_size> <character>
+
+gcc example2.c ksvsk.c murmur3.c -Wall -I /usr/local/include/freetype2/ -lfreetype -o example2
+./example2 <font_file> <pt_size> 
