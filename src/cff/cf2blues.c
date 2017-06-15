@@ -489,10 +489,10 @@
       if ( blues->zone[i].bottomZone           &&
            cf2_hint_isBottom( bottomHintEdge ) )
       {
-        if ( ( blues->zone[i].csBottomEdge - csFuzz ) <=
-               bottomHintEdge->csCoord                   &&
+        if ( SUB_INT32( blues->zone[i].csBottomEdge, csFuzz ) <=
+               bottomHintEdge->csCoord                           &&
              bottomHintEdge->csCoord <=
-               ( blues->zone[i].csTopEdge + csFuzz )     )
+               ADD_INT32( blues->zone[i].csTopEdge, csFuzz )     )
         {
           /* bottom edge captured by bottom zone */
 
@@ -524,10 +524,10 @@
 
       if ( !blues->zone[i].bottomZone && cf2_hint_isTop( topHintEdge ) )
       {
-        if ( ( blues->zone[i].csBottomEdge - csFuzz ) <=
-               topHintEdge->csCoord                      &&
+        if ( ( SUB_INT32( blues->zone[i].csBottomEdge, csFuzz ) ) <=
+               topHintEdge->csCoord                                  &&
              topHintEdge->csCoord <=
-               ( blues->zone[i].csTopEdge + csFuzz )     )
+               ADD_INT32( blues->zone[i].csTopEdge, csFuzz )         )
         {
           /* top edge captured by top zone */
 

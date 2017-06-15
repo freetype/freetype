@@ -442,13 +442,13 @@ THE SOFTWARE.
         FT_ZERO( bsize );
 
         /* sanity checks */
-        if ( FT_ABS( font->font_ascent ) > 0x7FFF )
+        if ( font->font_ascent > 0x7FFF || font->font_ascent < -0x7FFF )
         {
           font->font_ascent = font->font_ascent < 0 ? -0x7FFF : 0x7FFF;
           FT_TRACE0(( "BDF_Face_Init: clamping font ascent to value %d\n",
                       font->font_ascent ));
         }
-        if ( FT_ABS( font->font_descent ) > 0x7FFF )
+        if ( font->font_descent > 0x7FFF || font->font_descent < -0x7FFF )
         {
           font->font_descent = font->font_descent < 0 ? -0x7FFF : 0x7FFF;
           FT_TRACE0(( "BDF_Face_Init: clamping font descent to value %d\n",
@@ -464,7 +464,8 @@ THE SOFTWARE.
           if ( prop->value.l < 0 )
             FT_TRACE0(( "BDF_Face_Init: negative average width\n" ));
 #endif
-          if ( ( FT_ABS( prop->value.l ) > 0x7FFFL * 10 - 5 ) )
+          if ( prop->value.l >    0x7FFFL * 10 - 5   ||
+               prop->value.l < -( 0x7FFFL * 10 - 5 ) )
           {
             bsize->width = 0x7FFF;
             FT_TRACE0(( "BDF_Face_Init: clamping average width to value %d\n",
@@ -487,7 +488,8 @@ THE SOFTWARE.
             FT_TRACE0(( "BDF_Face_Init: negative point size\n" ));
 #endif
           /* convert from 722.7 decipoints to 72 points per inch */
-          if ( FT_ABS( prop->value.l ) > 0x504C2L ) /* 0x7FFF * 72270/7200 */
+          if ( prop->value.l >  0x504C2L || /* 0x7FFF * 72270/7200 */
+               prop->value.l < -0x504C2L )
           {
             bsize->size = 0x7FFF;
             FT_TRACE0(( "BDF_Face_Init: clamping point size to value %d\n",
@@ -511,7 +513,7 @@ THE SOFTWARE.
           if ( prop->value.l < 0 )
             FT_TRACE0(( "BDF_Face_Init: negative pixel size\n" ));
 #endif
-          if ( FT_ABS( prop->value.l ) > 0x7FFF )
+          if ( prop->value.l > 0x7FFF || prop->value.l < -0x7FFF )
           {
             bsize->y_ppem = 0x7FFF << 6;
             FT_TRACE0(( "BDF_Face_Init: clamping pixel size to value %d\n",
@@ -528,7 +530,7 @@ THE SOFTWARE.
           if ( prop->value.l < 0 )
             FT_TRACE0(( "BDF_Face_Init: negative X resolution\n" ));
 #endif
-          if ( FT_ABS( prop->value.l ) > 0x7FFF )
+          if ( prop->value.l > 0x7FFF || prop->value.l < -0x7FFF )
           {
             resolution_x = 0x7FFF;
             FT_TRACE0(( "BDF_Face_Init: clamping X resolution to value %d\n",
@@ -545,7 +547,7 @@ THE SOFTWARE.
           if ( prop->value.l < 0 )
             FT_TRACE0(( "BDF_Face_Init: negative Y resolution\n" ));
 #endif
-          if ( FT_ABS( prop->value.l ) > 0x7FFF )
+          if ( prop->value.l > 0x7FFF || prop->value.l < -0x7FFF )
           {
             resolution_y = 0x7FFF;
             FT_TRACE0(( "BDF_Face_Init: clamping Y resolution to value %d\n",

@@ -1,3 +1,18 @@
+2017-06-15  Werner Lemberg  <wl@gnu.org>
+
+	[bdf, cff] Integer overflows.
+
+	Reported as
+
+	  https://bugs.chromium.org/p/oss-fuzz/issues/detail?id=2244
+	  https://bugs.chromium.org/p/oss-fuzz/issues/detail?id=2261
+
+	* src/bdf/bdfdrivr.c (BDF_Face_Init): Replace calls to FT_ABS with
+	direct code to avoid value negation.
+
+	* src/cff/cf2blues.c (cf2_blues_capture): Use SUB_INT32 and
+	ADD_INT32.
+
 2017-06-13  Werner Lemberg  <wl@gnu.org>
 
 	* src/winfonts/winfnt.c (FNT_Face_Init): Don't set active encoding.
