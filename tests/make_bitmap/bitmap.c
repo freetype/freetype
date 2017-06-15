@@ -160,13 +160,13 @@ void Write_Bitmap_Data_LCD_V_BGR (FT_Bitmap * bitmap) {
 
     int i,j,k,step;
     char value;
-    step = bitmap->rows - 1;
+    step = 0;
 
-    while ( step > 0 ){
+    while ( step < bitmap->rows ){
 
         for (i = 0; i < bitmap->width; i++)                   
         {
-            for (j = step - 2; j <= step; ++j) 
+            for (j = step ; j < step + 3; ++j) 
             {
                 value = 0xff - bitmap->buffer[(j * bitmap->pitch) + i];
                 fwrite (&value, 1, 1,fp);
@@ -177,7 +177,7 @@ void Write_Bitmap_Data_LCD_V_BGR (FT_Bitmap * bitmap) {
             value = 0xff;
             fwrite (&value, 1, 1,fp);
         }
-        step = step - 3;
+        step = step + 3;        // Jumping 3 rows up 
     }
 
     fclose(fp);
@@ -189,13 +189,13 @@ void Write_Bitmap_Data_LCD_V_RGB (FT_Bitmap * bitmap) {
 
     int i,j,k,step;
     char value;
-    step = bitmap->rows - 1;
+    step = 0;
 
-    while ( step > 0 ){
+    while ( step < bitmap->rows ){
 
         for (i = 0; i < bitmap->width; i++)                   
         {
-            for (j = step; j > step - 3; --j) 
+            for (j = step + 2 ; j >= step; --j) 
             {
                 value = 0xff - bitmap->buffer[(j * bitmap->pitch) + i];
                 fwrite (&value, 1, 1,fp);
@@ -206,7 +206,7 @@ void Write_Bitmap_Data_LCD_V_RGB (FT_Bitmap * bitmap) {
             value = 0xff;
             fwrite (&value, 1, 1,fp);
         }
-        step = step - 3; 
+        step = step + 3;        // Jumping 3 rows up
     }
 
     fclose(fp);
