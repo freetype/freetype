@@ -88,7 +88,7 @@ void Write_Bitmap_Header (FT_Bitmap * bitmap ) {
 
     header->info_header.info_header_size          = sizeof(BMP_INFO_HEADER);
     header->info_header.width                     = image_width ;
-    header->info_header.height                    = image_rows;
+    header->info_header.height                    =  - image_rows;
     header->info_header.planes                    = PLANES;
     header->info_header.bits_per_pixel            = Get_Bits_Per_Pixel( bitmap->pixel_mode );
     header->info_header.compression               = COMPRESSION;
@@ -106,23 +106,21 @@ void Write_Bitmap_Header (FT_Bitmap * bitmap ) {
 void Write_Bitmap_Data_LCD_RGB( FT_Bitmap * bitmap ){
 
     char value;
+    int i,j,k;
 
     FILE *fp = fopen("test.bmp","a");     
 
-    for (int i = bitmap->rows - 1; i >= 0  ; --i)
+    for (i = 0; i < bitmap->rows ; ++i)
     {
-        for (int j = 2; j < bitmap->width; j = j+3) 
+        for ( j = 2; j < bitmap->width; j = j+3) 
         {
-            value = 0xff - bitmap->buffer[( i * bitmap->pitch) + j];
-            fwrite (&value, 1, 1,fp);
-
-            value = 0xff - bitmap->buffer[( i * bitmap->pitch) + j - 1];
-            fwrite (&value, 1, 1,fp);
-
-            value = 0xff - bitmap->buffer[( i * bitmap->pitch) + j - 2];
-            fwrite (&value, 1, 1,fp);
+        	for ( k = 0; k < 3; ++k)
+        	{
+        		value = 0xff - bitmap->buffer[( i * bitmap->pitch) + j - k];
+            	fwrite (&value, 1, 1,fp);
+        	}
         }
-        for (int k = 0; k < Get_Padding(bitmap); ++k)
+        for ( k = 0; k < Get_Padding(bitmap); ++k)
         {
             value = 0xff;
             fwrite (&value, 1, 1,fp);           
@@ -135,23 +133,18 @@ void Write_Bitmap_Data_LCD_RGB( FT_Bitmap * bitmap ){
 void Write_Bitmap_Data_LCD_BGR( FT_Bitmap * bitmap ){
 
     char value;
+    int i,j,k;
 
     FILE *fp = fopen("test.bmp","a");     
 
-    for (int i = bitmap->rows - 1; i >= 0  ; --i)
+    for ( i = 0; i < bitmap->rows  ; ++i)
     {
-        for (int j = 0; j < bitmap->width; j = j+3) 
+        for ( j = 0; j < bitmap->width; j++) 
         {
             value = 0xff - bitmap->buffer[( i * bitmap->pitch) + j];
             fwrite (&value, 1, 1,fp);
-
-            value = 0xff - bitmap->buffer[( i * bitmap->pitch) + j + 1];
-            fwrite (&value, 1, 1,fp);
-
-            value = 0xff - bitmap->buffer[( i * bitmap->pitch) + j + 2];
-            fwrite (&value, 1, 1,fp);
         }
-        for (int k = 0; k < Get_Padding(bitmap); ++k)
+        for ( k = 0; k < Get_Padding(bitmap); ++k)
         {
             value = 0xff;
             fwrite (&value, 1, 1,fp);           
@@ -213,7 +206,7 @@ void Write_Bitmap_Data_LCD_V_RGB (FT_Bitmap * bitmap) {
             value = 0xff;
             fwrite (&value, 1, 1,fp);
         }
-        step = step - 3;
+        step = step - 3; 
     }
 
     fclose(fp);
@@ -223,7 +216,7 @@ void Write_Bitmap_Data_MONO (FT_Bitmap * bitmap) {
 
     FILE *fp = fopen("test.bmp","a");
 
-    int i,j;
+    int i;
     unsigned char value;
     for ( i = 0; i < 256; ++i)
     {
@@ -235,17 +228,15 @@ void Write_Bitmap_Data_MONO (FT_Bitmap * bitmap) {
         fwrite (&value,1,1,fp);
     }
 
-    for ( i = bitmap->rows - 1; i >= 0  ; --i)
+
+    for (int i = 0; i < bitmap->pitch * bitmap->rows; ++i)
     {
-        for ( j = 0; j < bitmap->pitch; ++j)
-        {
-            if ( bitmap->buffer[( i * bitmap->pitch) + j] != 0x00 ){
-                value = 0x00; // remember taking reverse
-                fwrite (&value, 1, 1,fp);
-            }else{
-                value = 0xff;
-                fwrite (&value, 1, 1,fp);
-            }
+        if ( bitmap->buffer[i] != 0x00 ){
+            value = 0x00; // remember taking reverse
+            fwrite (&value, 1, 1,fp);
+        }else{
+            value = 0xff;
+            fwrite (&value, 1, 1,fp);
         }
     }
 
@@ -255,7 +246,7 @@ void Write_Bitmap_Data_MONO (FT_Bitmap * bitmap) {
 void Write_Bitmap_Data_GRAY(FT_Bitmap * bitmap) {            
 
     FILE *fp = fopen("test.bmp","a");
-    int i,j;
+    int i;
 
     unsigned char value;
     for ( i = 0; i < 256; ++i)
@@ -268,13 +259,10 @@ void Write_Bitmap_Data_GRAY(FT_Bitmap * bitmap) {
         fwrite (&value,1,1,fp);
     }
 
-    for ( j = bitmap->rows - 1; j >= 0; --j)
+    for (int i = 0; i < bitmap->pitch * bitmap->rows; ++i)
     {
-        for ( i = 0; i < bitmap->pitch; ++i)
-        {
-            value = 255 - bitmap->buffer[j * bitmap->pitch + i];
-            fwrite(&value,1,1,fp);
-        }
+        value = 255 - bitmap->buffer[i];
+        fwrite(&value,1,1,fp);
     }
 
     fclose(fp);

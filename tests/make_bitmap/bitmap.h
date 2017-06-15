@@ -33,7 +33,7 @@ typedef struct{                 // Bitmap INFO Header
 
     FT_UInt32 info_header_size;
     FT_UInt32 width;
-    FT_UInt32 height;
+    FT_Int    height;
     FT_UInt16 planes;
     FT_UInt16 bits_per_pixel;
     FT_UInt32 compression;
