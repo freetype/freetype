@@ -1,3 +1,15 @@
+2017-06-16  Werner Lemberg  <wl@gnu.org>
+
+	[truetype] Integer overflows.
+
+	Reported as
+
+	  https://bugs.chromium.org/p/oss-fuzz/issues/detail?id=2270
+	  https://bugs.chromium.org/p/oss-fuzz/issues/detail?id=2278
+
+	* src/truetype/ttinterp.c (Ins_MDRP, _iup_worker_interpolate): Use
+	ADD_LONG and SUB_LONG.
+
 2017-06-15  Werner Lemberg  <wl@gnu.org>
 
 	[bdf, cff] Integer overflows.

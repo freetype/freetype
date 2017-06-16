@@ -6062,8 +6062,10 @@
         FT_Vector  vec;
 
 
-        vec.x = FT_MulFix( vec1->x - vec2->x, exc->metrics.x_scale );
-        vec.y = FT_MulFix( vec1->y - vec2->y, exc->metrics.y_scale );
+        vec.x = FT_MulFix( SUB_LONG( vec1->x, vec2->x ),
+                           exc->metrics.x_scale );
+        vec.y = FT_MulFix( SUB_LONG( vec1->y, vec2->y ),
+                           exc->metrics.y_scale );
 
         org_dist = FAST_DUALPROJ( &vec );
       }
@@ -6125,7 +6127,7 @@
 
     org_dist = PROJECT( exc->zp1.cur + point, exc->zp0.cur + exc->GS.rp0 );
 
-    exc->func_move( exc, &exc->zp1, point, distance - org_dist );
+    exc->func_move( exc, &exc->zp1, point, SUB_LONG( distance, org_dist ) );
 
   Fail:
     exc->GS.rp1 = exc->GS.rp0;
@@ -6826,8 +6828,8 @@
     org2   = worker->orgs[ref2].x;
     cur1   = worker->curs[ref1].x;
     cur2   = worker->curs[ref2].x;
-    delta1 = cur1 - org1;
-    delta2 = cur2 - org2;
+    delta1 = SUB_LONG( cur1, org1 );
+    delta2 = SUB_LONG( cur2, org2 );
 
     if ( cur1 == cur2 || orus1 == orus2 )
     {
@@ -6839,10 +6841,10 @@
 
 
         if ( x <= org1 )
-          x += delta1;
+          x = ADD_LONG( x, delta1 );
 
         else if ( x >= org2 )
-          x += delta2;
+          x = ADD_LONG( x, delta2 );
 
         else
           x = cur1;
@@ -6863,20 +6865,23 @@
 
 
         if ( x <= org1 )
-          x += delta1;
+          x = ADD_LONG( x, delta1 );
 
         else if ( x >= org2 )
-          x += delta2;
+          x = ADD_LONG( x, delta2 );
 
         else
         {
           if ( !scale_valid )
           {
             scale_valid = 1;
-            scale       = FT_DivFix( cur2 - cur1, orus2 - orus1 );
+            scale       = FT_DivFix( SUB_LONG( cur2, cur1 ),
+                                     SUB_LONG( orus2, orus1 ) );
           }
 
-          x = cur1 + FT_MulFix( worker->orus[i].x - orus1, scale );
+          x = ADD_LONG( cur1,
+                        FT_MulFix( SUB_LONG( worker->orus[i].x, orus1 ),
+                                   scale ) );
         }
         worker->curs[i].x = x;
       }
