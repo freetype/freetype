@@ -207,10 +207,10 @@
 
       if ( vmul )
       {
-        cbox.yMax += lcd_weights[0] ? 43
-                                    : lcd_weights[1] ? 22 : 0;
-        cbox.yMin -= lcd_weights[4] ? 43
+        cbox.yMax += lcd_weights[4] ? 43
                                     : lcd_weights[3] ? 22 : 0;
+        cbox.yMin -= lcd_weights[0] ? 43
+                                    : lcd_weights[1] ? 22 : 0;
       }
     }
 #endif
