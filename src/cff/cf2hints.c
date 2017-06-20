@@ -440,14 +440,16 @@
         /* is there room to move up?                                    */
         /* there is if we are at top of array or the next edge is at or */
         /* beyond proposed move up?                                     */
-        if ( j >= hintmap->count - 1                            ||
+        if ( j >= hintmap->count - 1                ||
              hintmap->edge[j + 1].dsCoord >=
-               hintmap->edge[j].dsCoord + moveUp + upMinCounter )
+               ADD_INT32( hintmap->edge[j].dsCoord,
+                          moveUp + upMinCounter )   )
         {
           /* there is room to move up; is there also room to move down? */
-          if ( i == 0                                                 ||
+          if ( i == 0                                   ||
                hintmap->edge[i - 1].dsCoord <=
-                 hintmap->edge[i].dsCoord + moveDown - downMinCounter )
+                 ADD_INT32( hintmap->edge[i].dsCoord,
+                            moveDown - downMinCounter ) )
           {
             /* move smaller absolute amount */
             move = ( -moveDown < moveUp ) ? moveDown : moveUp;  /* optimum */
@@ -458,9 +460,10 @@
         else
         {
           /* is there room to move down? */
-          if ( i == 0                                                 ||
+          if ( i == 0                                   ||
                hintmap->edge[i - 1].dsCoord <=
-                 hintmap->edge[i].dsCoord + moveDown - downMinCounter )
+                 ADD_INT32( hintmap->edge[i].dsCoord,
+                            moveDown - downMinCounter ) )
           {
             move     = moveDown;
             /* true if non-optimum move */
@@ -494,9 +497,11 @@
         }
 
         /* move the edge(s) */
-        hintmap->edge[i].dsCoord += move;
+        hintmap->edge[i].dsCoord = ADD_INT32( hintmap->edge[i].dsCoord,
+                                              move );
         if ( isPair )
-          hintmap->edge[j].dsCoord += move;
+          hintmap->edge[j].dsCoord = ADD_INT32( hintmap->edge[j].dsCoord,
+                                                move );
       }
 
       /* assert there are no overlaps in device space */
@@ -544,15 +549,18 @@
 
       /* is there room to move up? */
       if ( hintmap->edge[j + 1].dsCoord >=
-             hintmap->edge[j].dsCoord + hintMove->moveUp + CF2_MIN_COUNTER )
+             ADD_INT32( hintmap->edge[j].dsCoord,
+                        hintMove->moveUp + CF2_MIN_COUNTER ) )
       {
         /* there is more room now, move edge up */
-        hintmap->edge[j].dsCoord += hintMove->moveUp;
+        hintmap->edge[j].dsCoord = ADD_INT32( hintmap->edge[j].dsCoord,
+                                              hintMove->moveUp );
 
         if ( cf2_hint_isPair( &hintmap->edge[j] ) )
         {
           FT_ASSERT( j > 0 );
-          hintmap->edge[j - 1].dsCoord += hintMove->moveUp;
+          hintmap->edge[j - 1].dsCoord =
+            ADD_INT32( hintmap->edge[j - 1].dsCoord, hintMove->moveUp );
         }
       }
     }

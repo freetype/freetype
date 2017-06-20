@@ -1,3 +1,16 @@
+2017-06-16  Werner Lemberg  <wl@gnu.org>
+
+	[cff, truetype] Integer overflows.
+
+	Reported as
+
+	  https://bugs.chromium.org/p/oss-fuzz/issues/detail?id=2300
+	  https://bugs.chromium.org/p/oss-fuzz/issues/detail?id=2313
+
+	* src/cff/cf2hints.c (cf2_hintmap_adjustHints): Use ADD_INT32.
+
+	* src/truetype/ttinterp.c (Ins_ABS): Avoid FT_ABS.
+
 2017-06-17  Alexei Podtelezhnikov  <apodtele@gmail.com>
 
 	[base, smooth] LCD filtering cleanups.
