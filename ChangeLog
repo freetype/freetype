@@ -1,4 +1,13 @@
-2017-06-16  Werner Lemberg  <wl@gnu.org>
+2017-06-20  Tony Theodore  <tonyt@logyst.com>
+
+	Fix pkg-config in freetype-config for cross-compiling (#51274).
+
+	* builds/unix/unix-def.in (PKG_CONFIG): New variable.
+	(freetype-config): Use it in sed expression.
+
+	* builds/unix/freetype-config.in: s/pkg-config/%PKG_CONFIG%/.
+
+2017-06-20  Werner Lemberg  <wl@gnu.org>
 
 	[cff, truetype] Integer overflows.
 
