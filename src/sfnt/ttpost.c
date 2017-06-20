@@ -325,7 +325,6 @@
     FT_UNUSED( post_limit );
 
 
-    /* UNDOCUMENTED!  This value appears only in the Apple TT specs. */
     if ( FT_READ_USHORT( num_glyphs ) )
       goto Exit;
 
