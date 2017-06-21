@@ -56,7 +56,7 @@ int main()
 			for (x = 0; x < bmp.width; x++)
 			{
 				byte = bmp.buffer[bmp.pitch * y + x];
-				BMP_SetPixelRGB(qdbmp, x, y, byte, byte, byte);
+				BMP_SetPixelRGB(qdbmp, x, y, 255 - byte, 255 - byte, 255 - byte);
 				BMP_CHECK_ERROR(stdout, 1);
 			}
 		}
