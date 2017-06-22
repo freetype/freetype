@@ -1,3 +1,17 @@
+2017-06-22  Werner Lemberg  <wl@gnu.org>
+
+	[cff, truetype] Integer overflows.
+
+	Reported as
+
+	  https://bugs.chromium.org/p/oss-fuzz/issues/detail?id=2323
+	  https://bugs.chromium.org/p/oss-fuzz/issues/detail?id=2328
+
+	* src/cff/cf2blues.c (cf2_blues_capture): Use ADD_INT32 and
+	SUB_INT32.
+
+	* src/truetype/ttinterp.c (Ins_SDPVTL): Use SUB_LONG and NEG_LONG.
+
 2017-06-21  Alexei Podtelezhnikov  <apodtele@gmail.com>
 
 	[sfnt] Synthesize a Unicode charmap if one is missing.

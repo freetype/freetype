@@ -515,7 +515,7 @@
             dsNew = cf2_fixedRound( bottomHintEdge->dsCoord );
           }
 
-          dsMove   = dsNew - bottomHintEdge->dsCoord;
+          dsMove   = SUB_INT32( dsNew, bottomHintEdge->dsCoord );
           captured = TRUE;
 
           break;
@@ -549,7 +549,7 @@
             dsNew = cf2_fixedRound( topHintEdge->dsCoord );
           }
 
-          dsMove   = dsNew - topHintEdge->dsCoord;
+          dsMove   = SUB_INT32( dsNew, topHintEdge->dsCoord );
           captured = TRUE;
 
           break;
@@ -562,13 +562,14 @@
       /* move both edges and flag them `locked' */
       if ( cf2_hint_isValid( bottomHintEdge ) )
       {
-        bottomHintEdge->dsCoord += dsMove;
+        bottomHintEdge->dsCoord = ADD_INT32( bottomHintEdge->dsCoord,
+                                             dsMove );
         cf2_hint_lock( bottomHintEdge );
       }
 
       if ( cf2_hint_isValid( topHintEdge ) )
       {
-        topHintEdge->dsCoord += dsMove;
+        topHintEdge->dsCoord = ADD_INT32( topHintEdge->dsCoord, dsMove );
         cf2_hint_lock( topHintEdge );
       }
     }

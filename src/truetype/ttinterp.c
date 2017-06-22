@@ -4927,12 +4927,12 @@
     }
 
     {
-      FT_Vector* v1 = exc->zp1.org + p2;
-      FT_Vector* v2 = exc->zp2.org + p1;
+      FT_Vector*  v1 = exc->zp1.org + p2;
+      FT_Vector*  v2 = exc->zp2.org + p1;
 
 
-      A = v1->x - v2->x;
-      B = v1->y - v2->y;
+      A = SUB_LONG( v1->x, v2->x );
+      B = SUB_LONG( v1->y, v2->y );
 
       /* If v1 == v2, SDPvTL behaves the same as */
       /* SVTCA[X], respectively.                 */
@@ -4948,9 +4948,9 @@
 
     if ( ( opcode & 1 ) != 0 )
     {
-      C =  B;   /* counter clockwise rotation */
-      B =  A;
-      A = -C;
+      C = B;   /* counter clockwise rotation */
+      B = A;
+      A = NEG_LONG( C );
     }
 
     Normalize( A, B, &exc->GS.dualVector );
@@ -4960,8 +4960,8 @@
       FT_Vector*  v2 = exc->zp2.cur + p1;
 
 
-      A = v1->x - v2->x;
-      B = v1->y - v2->y;
+      A = SUB_LONG( v1->x, v2->x );
+      B = SUB_LONG( v1->y, v2->y );
 
       if ( A == 0 && B == 0 )
       {
@@ -4972,9 +4972,9 @@
 
     if ( ( opcode & 1 ) != 0 )
     {
-      C =  B;   /* counter clockwise rotation */
-      B =  A;
-      A = -C;
+      C = B;   /* counter clockwise rotation */
+      B = A;
+      A = NEG_LONG( C );
     }
 
     Normalize( A, B, &exc->GS.projVector );
