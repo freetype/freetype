@@ -327,7 +327,7 @@ FT_BEGIN_HEADER
   /*                                                                       */
   /*   - The TrueType driver will provide its own set of glyph names,      */
   /*     if you build it to support postscript names in the TrueType       */
-  /*     `post' table.                                                     */
+  /*     `post' table, but will not synthesize a missing Unicode charmap.  */
   /*                                                                       */
   /*   - The Type 1 driver will not be able to synthesize a Unicode        */
   /*     charmap out of the glyphs found in the fonts.                     */

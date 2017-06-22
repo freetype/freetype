@@ -1,3 +1,21 @@
+2017-06-21  Alexei Podtelezhnikov  <apodtele@gmail.com>
+
+	[sfnt] Synthesize a Unicode charmap if one is missing.
+
+	* src/sfnt/ttcmap.h (tt_cmap_unicode_class_rec): Declare it.
+	* src/sfnt/ttcmap.c (tt_get_glyph_name, tt_cmap_unicode_init,
+	tt_cmap_unicode_done, tt_cmap_unicode_char_index,
+	tt_cmap_unicode_char_next, tt_cmap_unicode_class_rec): Implement
+	synthetic Unicode charmap class.
+	(tt_get_cmap_info): Make sure the callback is available.
+
+	* src/sfnt/sfobjs.c (sfnt_load_face)
+	[FT_CONFIG_OPTION_POSTSCRIPT_NAMES]: If Unicode charmap is missing,
+	synthesize one.
+
+	* include/freetype/config/ftoption.h: Document it.
+	* devel/ftoption.h: Ditto.
+
 2017-06-20  Tony Theodore  <tonyt@logyst.com>
 
 	Fix pkg-config in freetype-config for cross-compiling (#51274).

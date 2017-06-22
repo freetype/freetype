@@ -1464,7 +1464,8 @@
       /* Polish the charmaps.                                              */
       /*                                                                   */
       /*   Try to set the charmap encoding according to the platform &     */
-      /*   encoding ID of each charmap.                                    */
+      /*   encoding ID of each charmap.  Emulate Unicode charmap if one    */
+      /*   is missing.                                                     */
       /*                                                                   */
 
       tt_face_build_cmaps( face );  /* ignore errors */
@@ -1472,7 +1473,10 @@
 
       /* set the encoding fields */
       {
-        FT_Int  m;
+        FT_Int   m;
+#ifdef FT_CONFIG_OPTION_POSTSCRIPT_NAMES
+        FT_Bool  has_unicode = FALSE;
+#endif
 
 
         for ( m = 0; m < root->num_charmaps; m++ )
@@ -1482,6 +1486,33 @@
 
           charmap->encoding = sfnt_find_encoding( charmap->platform_id,
                                                   charmap->encoding_id );
+
+#ifdef FT_CONFIG_OPTION_POSTSCRIPT_NAMES
+
+          if ( charmap->encoding == FT_ENCODING_UNICODE )
+            has_unicode = TRUE;
+        }
+
+        /* synthesize Unicode charmap if one is missing */
+        if ( !has_unicode )
+        {
+          FT_CharMapRec cmaprec;
+
+
+          cmaprec.face        = root;
+          cmaprec.platform_id = TT_PLATFORM_MICROSOFT;
+          cmaprec.encoding_id = TT_MS_ID_UNICODE_CS;
+          cmaprec.encoding    = FT_ENCODING_UNICODE;
+
+
+          error = FT_CMap_New( (FT_CMap_Class)&tt_cmap_unicode_class_rec,
+                               NULL, &cmaprec, NULL );
+          if ( error                                      &&
+               FT_ERR_NEQ( error, No_Unicode_Glyph_Name ) )
+            FT_TRACE2(( "sfnt_load_face: failed to emulate Unicode\n" ));
+
+#endif /* FT_CONFIG_OPTION_POSTSCRIPT_NAMES */
+
         }
       }
 
