@@ -6487,7 +6487,7 @@
     dx = SUB_LONG( exc->zp0.cur[b0].x, exc->zp1.cur[a0].x );
     dy = SUB_LONG( exc->zp0.cur[b0].y, exc->zp1.cur[a0].y );
 
-    discriminant = ADD_LONG( FT_MulDiv( dax, -dby, 0x40 ),
+    discriminant = ADD_LONG( FT_MulDiv( dax, NEG_LONG( dby ), 0x40 ),
                              FT_MulDiv( day, dbx, 0x40 ) );
     dotproduct   = ADD_LONG( FT_MulDiv( dax, dbx, 0x40 ),
                              FT_MulDiv( day, dby, 0x40 ) );
@@ -6502,7 +6502,7 @@
     /* thresholding abs(tan(angle)) at 1/19, corresponding to 3 degrees. */
     if ( MUL_LONG( 19, FT_ABS( discriminant ) ) > FT_ABS( dotproduct ) )
     {
-      val = ADD_LONG( FT_MulDiv( dx, -dby, 0x40 ),
+      val = ADD_LONG( FT_MulDiv( dx, NEG_LONG( dby ), 0x40 ),
                       FT_MulDiv( dy, dbx, 0x40 ) );
 
       R.x = FT_MulDiv( val, dax, discriminant );

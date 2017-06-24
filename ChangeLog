@@ -1,3 +1,13 @@
+2017-06-24  Werner Lemberg  <wl@gnu.org>
+
+	[truetype] Integer overflows.
+
+	Reported as
+
+	  https://bugs.chromium.org/p/oss-fuzz/issues/detail?id=2364
+
+	* src/truetype/ttinterp.c (Ins_ISECT): Use NEG_LONG.
+
 2017-06-22  Werner Lemberg  <wl@gnu.org>
 
 	[cff, truetype] Integer overflows.
