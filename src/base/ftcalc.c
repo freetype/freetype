@@ -193,7 +193,7 @@
 
     d_ = (FT_Long)d;
 
-    return s < 0 ? -d_ : d_;
+    return s < 0 ? NEG_LONG( d_ ) : d_;
   }
 
 
@@ -222,7 +222,7 @@
 
     d_ = (FT_Long)d;
 
-    return s < 0 ? -d_ : d_;
+    return s < 0 ? NEG_LONG( d_ ) : d_;
   }
 
 
@@ -269,7 +269,7 @@
 
     q_ = (FT_Long)q;
 
-    return s < 0 ? -q_ : q_;
+    return s < 0 ? NEG_LONG( q_ ) : q_;
   }
 
 
@@ -456,7 +456,7 @@
 
     a_ = (FT_Long)a;
 
-    return s < 0 ? -a_ : a_;
+    return s < 0 ? NEG_LONG( a_ ) : a_;
   }
 
 
@@ -499,7 +499,7 @@
 
     a_ = (FT_Long)a;
 
-    return s < 0 ? -a_ : a_;
+    return s < 0 ? NEG_LONG( a_ ) : a_;
   }
 
 
@@ -595,7 +595,7 @@
 
     a_ = (FT_Long)a;
 
-    return s < 0 ? -a_ : a_;
+    return s < 0 ? NEG_LONG( a_ ) : a_;
 
 #endif /* 0 */
 
@@ -648,7 +648,7 @@
 
     q_ = (FT_Long)q;
 
-    return s < 0 ? -q_ : q_;
+    return s < 0 ? NEG_LONG( q_ ) : q_;
   }
 
 

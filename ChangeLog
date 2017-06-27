@@ -1,3 +1,17 @@
+2017-06-27  Werner Lemberg  <wl@gnu.org>
+
+	[truetype] Integer overflows.
+
+	Reported as
+
+	  https://bugs.chromium.org/p/oss-fuzz/issues/detail?id=2384
+	  https://bugs.chromium.org/p/oss-fuzz/issues/detail?id=2391
+
+	* src/base/ftcalc.c (FT_MulDiv, FT_MulDiv_No_Round, FT_DivFix): Use
+	NEG_LONG.
+
+	* src/truetype/ttinterp.c (Ins_SxVTL): Use NEG_LONG.
+
 2017-06-24  Werner Lemberg  <wl@gnu.org>
 
 	[truetype] Integer overflows.
