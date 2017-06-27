@@ -504,7 +504,7 @@
       {
         if ( FT_ABS( val ) > power_ten_limits[scaling] )
         {
-          val = val > 0 ? 0x7FFFFFFFL : -0x7FFFFFFFFL;
+          val = val > 0 ? 0x7FFFFFFFL : -0x7FFFFFFFL;
           goto Overflow;
         }
 

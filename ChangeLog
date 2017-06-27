@@ -1,5 +1,11 @@
 2017-06-27  Werner Lemberg  <wl@gnu.org>
 
+	* src/cff/cffparse.c (do_fixed): Fix typo.
+
+	Spotted by chris <chris@gcjd.org>.
+
+2017-06-27  Werner Lemberg  <wl@gnu.org>
+
 	[truetype] Integer overflows.
 
 	Reported as
