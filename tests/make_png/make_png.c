@@ -26,7 +26,7 @@ int main (int argc, char const *argv[])
   {
     printf("\nTo generate 32-bit RGBA PNG(s) of all glyphs in a font\n");
     printf("Images will be saved in a file named \n\
-    		$(font)_$(pt_size)_$(render_mode)_$(glyph_index).png \n\n");
+    		  $(font)_$(pt_size)_$(render_mode)_$(glyph_index).png \n\n");
 
     printf("By default, hashes of 256-level gray bitmaps will be generated\n\n");
 
@@ -126,47 +126,48 @@ int main (int argc, char const *argv[])
 										                size,
 										                render_type);
 
-	for (i = 0; i <50; ++i)
+	for (i = 0; i <face->num_glyphs; ++i)
 	{
 		error = FT_Load_Glyph( face,
                            i, 
                            load_flag | target_flag);
-    	if(error){
-        printf("Error loading glyph\n");
-    	}
+  	if(error){
+      printf("Error loading glyph\n");
+  	}
 
-    	FT_Render_Glyph( slot, 
-                     	 render_flag);
-    	if(error){
-        printf("Error rendering the glyph\n");
-    	}
+  	FT_Render_Glyph( slot, 
+                   	 render_flag);
+  	if(error){
+      printf("Error rendering the glyph\n");
+  	}
 
-    	bitmap = &slot->bitmap;
+  	bitmap = &slot->bitmap;
 
-    	if (bitmap->width == 0 || bitmap->rows == 0)
-	    {
-	       continue;
-	    }
+  	if (bitmap->width == 0 || bitmap->rows == 0)
+    {
+       continue;
+    }
 
-	    FT_Bitmap       target;
-	    FT_Bitmap_Init( &target );
+    FT_Bitmap       target;
+    FT_Bitmap_Init( &target );
 
-	    if (bitmap->pixel_mode == 1)
-	    {
-      	int alignment = 4;
-      	error = FT_Bitmap_Convert(  library, 
-                                 		bitmap, 
-                                 		&target,
-                                 		alignment);
-      	if(error){
-          printf("Error converting the bitmap\n");
-      	}
-      	Make_PNG(&target,name,i,render_mode);
+    int alignment = 4;
+    error = FT_Bitmap_Convert(  library, 
+                                bitmap, 
+                                &target,
+                                alignment);
+    if(error){
+      printf("Error converting the bitmap\n");
+    }
+    
+    if (render_mode == 0)
+    {
+    	Make_PNG(&target,name,i,render_mode);
 
-	    }else{
+    }else{
 
-	    	Make_PNG(bitmap,name,i,render_mode);
-	    } 
+    	Make_PNG(bitmap,name,i,render_mode);
+    } 
 	}
 
 	FT_Done_Face    ( face );
