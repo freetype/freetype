@@ -48,6 +48,15 @@ int main (int argc, char const *argv[])
       printf("Error while initialising library\n");
   }
 
+  if (render_mode > 1 )
+  {
+    error = FT_Library_SetLcdFilter( library,
+                                      FT_LCD_FILTER_DEFAULT );
+    if(error){
+      printf("Error while setting LCD filter\n");
+    }
+  }
+  
   error = FT_New_Face( library, 
                        font_file, 
                        0, 
