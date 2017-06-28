@@ -133,8 +133,7 @@ void Make_PNG(FT_Bitmap* bitmap,char* name,int i,int render_mode){
 
   switch(render_mode){
 
-    case 0 :
-    case 1 :  fruit.width = bitmap->width;            // MONO and GRAY
+    case 0 :  fruit.width = bitmap->width;            // MONO and GRAY
               fruit.height  = bitmap->rows;
 
               fruit.pixels = calloc (fruit.width * fruit.height, sizeof (PIXEL));
@@ -146,6 +145,30 @@ void Make_PNG(FT_Bitmap* bitmap,char* name,int i,int render_mode){
                   p = (y * bitmap->pitch ) + x;
 
                   value = bitmap->buffer[p];
+                  
+                  if ( value != 0x00 ){
+                    value = 0xff;
+                  }else{
+                    value = 0x00;
+                  }
+
+                  pixel->red = 255- value;
+                  pixel->green = 255- value;
+                  pixel->blue = 255- value;
+                  pixel->alpha = 255;
+                }
+              }                    
+              break;
+    case 1 :  fruit.width = bitmap->width;            // MONO and GRAY
+              fruit.height  = bitmap->rows;
+
+              fruit.pixels = calloc (fruit.width * fruit.height, sizeof (PIXEL));
+
+              for (y = 0; y < fruit.height; y++) {
+                for (x = 0; x < fruit.width; x++) {
+
+                  PIXEL * pixel = Pixel_At (& fruit, x, y);
+                  p = (y * bitmap->pitch ) + x;
 
                   pixel->red = 255- value;
                   pixel->green = 255- value;

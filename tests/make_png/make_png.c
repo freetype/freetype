@@ -126,7 +126,7 @@ int main (int argc, char const *argv[])
 										                size,
 										                render_type);
 
-	for (i = 0; i <face->num_glyphs; ++i)
+	for (i = 0; i <50; ++i)
 	{
 		error = FT_Load_Glyph( face,
                            i, 
