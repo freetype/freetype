@@ -1,0 +1,16 @@
+To generate hashes and store it in the same folder,
+
+	1) sudo make 
+		(set resoluton in DPI by passing argument
+			example: sudo make DPI=100, if not specified,default is 72)
+
+	2) Usage   ./hash <font_file> <pt_size> <render_mode>
+	
+        Hashes will be saved in a file named $(font)_$(pt_size)_$(render_mode).hash 
+
+        By default, hashes of 256-level gray bitmaps will be generated
+
+        Values for render_mode    0 - monochrome
+                                  1 - anti-aliased
+                                  2 - lcd horizontal-RGB
+                                  3 - lcd vertical-RGB
