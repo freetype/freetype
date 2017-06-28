@@ -1,3 +1,15 @@
+2017-06-28  Ben Wagner  <bungeman@google.com>
+
+	Avoid Microsoft compiler warnings (#51331).
+
+	While clang's sanitizer recommends a cast to unsigned for safe
+	negation (to handle -INT_MIN), both MSVC and Visualc emit warning
+	C4146 if an unsigned value gets negated.
+
+	* include/freetype/internal/ftcalc.h (NEG_LONG, NEG_INT32),
+	src/base/ftcalc.c (FT_MOVE_SIGN): Replace negation with a
+	subtraction.
+
 2017-06-27  Werner Lemberg  <wl@gnu.org>
 
 	* src/cff/cffparse.c (do_fixed): Fix typo.

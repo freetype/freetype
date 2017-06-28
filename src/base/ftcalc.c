@@ -74,7 +74,7 @@
   FT_BEGIN_STMNT                         \
     if ( x < 0 )                         \
     {                                    \
-      x_unsigned = -x_unsigned;          \
+      x_unsigned = 0u - (x_unsigned);    \
       s          = -s;                   \
     }                                    \
   FT_END_STMNT
