@@ -126,7 +126,7 @@ int main (int argc, char const *argv[])
 										                size,
 										                render_type);
 
-	for (i = 0; i <50; ++i)
+	for (i = 0; i <face->num_glyphs; ++i)
 	{
 		error = FT_Load_Glyph( face,
                            i, 
@@ -145,7 +145,7 @@ int main (int argc, char const *argv[])
 
   	if (bitmap->width == 0 || bitmap->rows == 0)
     {
-       continue;
+      continue;
     }
 
     FT_Bitmap       target;

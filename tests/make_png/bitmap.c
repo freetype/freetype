@@ -170,6 +170,8 @@ void Make_PNG(FT_Bitmap* bitmap,char* name,int i,int render_mode){
                   PIXEL * pixel = Pixel_At (& fruit, x, y);
                   p = (y * bitmap->pitch ) + x;
 
+                  value = bitmap->buffer[p];
+                  
                   pixel->red = 255- value;
                   pixel->green = 255- value;
                   pixel->blue = 255- value;
