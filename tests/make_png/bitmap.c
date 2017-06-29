@@ -1,28 +1,40 @@
 #include "bitmap.h"
 
-HASH_128 * Generate_Hash_x64_128(FT_Bitmap * bitmap, HASH_128 * murmur)
+HASH_128 * Generate_Hash_x64_128( FT_Bitmap * bitmap, 
+                                  HASH_128 * murmur)
 {    
   int seed = 99; // Dont change
 
-  MurmurHash3_x64_128(bitmap->buffer, (bitmap->pitch * bitmap->rows), seed, murmur->hash);
+  MurmurHash3_x64_128(bitmap->buffer, 
+                      (bitmap->pitch * bitmap->rows),
+                      seed, 
+                      murmur->hash);
 
   return murmur;
 }
 
-HASH_128 * Generate_Hash_x86_128(FT_Bitmap * bitmap, HASH_128 * murmur)
+HASH_128 * Generate_Hash_x86_128( FT_Bitmap * bitmap,
+                                  HASH_128 * murmur)
 {    
   int seed = 99; // Dont change
 
-  MurmurHash3_x86_128(bitmap->buffer, (bitmap->pitch * bitmap->rows), seed, murmur->hash);
+  MurmurHash3_x86_128(bitmap->buffer,
+                      (bitmap->pitch * bitmap->rows),
+                      seed,
+                      murmur->hash);
 
   return murmur;
 }
 
-HASH_32 * Generate_Hash_x86_32(FT_Bitmap * bitmap, HASH_32 * murmur)
+HASH_32 * Generate_Hash_x86_32( FT_Bitmap * bitmap,
+                                HASH_32 * murmur)
 {    
   int seed = 99; // Dont change
 
-  MurmurHash3_x86_32(bitmap->buffer, (bitmap->pitch * bitmap->rows), seed, murmur->hash);
+  MurmurHash3_x86_32( bitmap->buffer,
+                      (bitmap->pitch * bitmap->rows),
+                      seed,
+                      murmur->hash);
 
   return murmur;
 }
@@ -32,7 +44,9 @@ PIXEL * Pixel_At (IMAGE * bitmap, int x, int y)
   return bitmap->pixels + bitmap->width * y + x;
 }
     
-int Generate_PNG (IMAGE *bitmap, const char *path,int render_mode)
+int Generate_PNG (IMAGE *bitmap,
+                  const char *path,
+                  int render_mode)
 {
   FILE * fp;
   png_structp png_ptr       = NULL;
@@ -51,7 +65,10 @@ int Generate_PNG (IMAGE *bitmap, const char *path,int render_mode)
     goto fopen_failed;
   }
 
-  png_ptr = png_create_write_struct (PNG_LIBPNG_VER_STRING, NULL, NULL, NULL);
+  png_ptr = png_create_write_struct ( PNG_LIBPNG_VER_STRING,
+                                      NULL,
+                                      NULL,
+                                      NULL);
   if (png_ptr == NULL) {
     goto png_create_write_struct_failed;
   }
@@ -75,11 +92,13 @@ int Generate_PNG (IMAGE *bitmap, const char *path,int render_mode)
                 PNG_COMPRESSION_TYPE_DEFAULT,
                 PNG_FILTER_TYPE_DEFAULT);
 
-  row_pointers = png_malloc (png_ptr, bitmap->height * sizeof (png_byte *));
+  row_pointers = png_malloc ( png_ptr,
+                              bitmap->height * sizeof (png_byte *));
 
   for (y = 0; y < bitmap->height; y++) {
 
-    png_byte *row = png_malloc (png_ptr, sizeof (uint8_t) * bitmap->width * pixel_size);
+    png_byte *row = png_malloc (png_ptr, 
+                                sizeof (uint8_t) * bitmap->width * pixel_size);
     row_pointers[y] = row;
 
     for (x = 0; x < bitmap->width; x++) {
@@ -102,9 +121,17 @@ int Generate_PNG (IMAGE *bitmap, const char *path,int render_mode)
     }
   }    
 
-  png_init_io (png_ptr, fp);
-  png_set_rows (png_ptr, info_ptr, row_pointers);
-  png_write_png (png_ptr, info_ptr, PNG_TRANSFORM_IDENTITY, NULL);
+  png_init_io ( png_ptr,
+                fp);
+
+  png_set_rows (png_ptr,
+                info_ptr,
+                row_pointers);
+
+  png_write_png ( png_ptr,
+                  info_ptr,
+                  PNG_TRANSFORM_IDENTITY,
+                  NULL);
 
   status = 0;
   
@@ -136,7 +163,8 @@ void Make_PNG(FT_Bitmap* bitmap,char* name,int i,int render_mode){
     case 0 :  fruit.width = bitmap->width;            // MONO and GRAY
               fruit.height  = bitmap->rows;
 
-              fruit.pixels = calloc (fruit.width * fruit.height, sizeof (PIXEL));
+              fruit.pixels = calloc ( fruit.width * fruit.height,
+                                      sizeof (PIXEL));
 
               for (y = 0; y < fruit.height; y++) {
                 for (x = 0; x < fruit.width; x++) {
@@ -162,7 +190,8 @@ void Make_PNG(FT_Bitmap* bitmap,char* name,int i,int render_mode){
     case 1 :  fruit.width = bitmap->width;            // MONO and GRAY
               fruit.height  = bitmap->rows;
 
-              fruit.pixels = calloc (fruit.width * fruit.height, sizeof (PIXEL));
+              fruit.pixels = calloc ( fruit.width * fruit.height,
+                                      sizeof (PIXEL));
 
               for (y = 0; y < fruit.height; y++) {
                 for (x = 0; x < fruit.width; x++) {
@@ -184,7 +213,8 @@ void Make_PNG(FT_Bitmap* bitmap,char* name,int i,int render_mode){
     case 3 :  fruit.width = bitmap->width / 3;        // LCD
               fruit.height  = bitmap->rows;
 
-              fruit.pixels = calloc (fruit.width * fruit.height, sizeof (PIXEL));
+              fruit.pixels = calloc ( fruit.width * fruit.height, 
+                                      sizeof (PIXEL));
 
               for (y = 0; y < fruit.height; y++) {
                 for (x = 0; x < fruit.width; x++) {
@@ -212,7 +242,8 @@ void Make_PNG(FT_Bitmap* bitmap,char* name,int i,int render_mode){
     case 5 :  fruit.width = bitmap->width;            // LCD_V
               fruit.height  = bitmap->rows / 3;
 
-              fruit.pixels = calloc (fruit.width * fruit.height, sizeof (PIXEL));
+              fruit.pixels = calloc ( fruit.width * fruit.height,
+                                      sizeof (PIXEL));
 
               for (y = 0; y < fruit.height; y++) {
                 for (x = 0; x < fruit.width; x++) {
@@ -243,9 +274,9 @@ void Make_PNG(FT_Bitmap* bitmap,char* name,int i,int render_mode){
 
   char * file_name = ( char * )calloc(150,sizeof(char));
 
-  sprintf(file_name, "%s_%d",name,i);
+  sprintf(file_name, "%s_%d", name, i);
 
-  Generate_PNG (& fruit, file_name,render_mode);
+  Generate_PNG (& fruit, file_name, render_mode);
 
   free (fruit.pixels);
 }

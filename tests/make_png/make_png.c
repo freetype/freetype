@@ -28,7 +28,7 @@ int main (int argc, char const *argv[])
     printf("Images will be saved in a file named \n\
     		  $(font)_$(pt_size)_$(render_mode)_$(glyph_index).png \n\n");
 
-    printf("By default, hashes of 256-level gray bitmaps will be generated\n\n");
+    printf("Default: hashes of 256-level gray bitmaps will be generated\n\n");
 
     printf("Usage   ./<exe> <font_file> <pt_size> <render_mode>\n\n");
 

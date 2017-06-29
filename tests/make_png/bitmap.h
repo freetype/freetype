@@ -50,17 +50,18 @@ typedef struct  {
   size_t height;
 } IMAGE;
     
-//-------------------------------------------------------------------------------
+//------------------------------------------------------------------------------
 
 HASH_32 * Generate_Hash_x86_32(FT_Bitmap * bitmap, HASH_32 * murmur);
 HASH_128 * Generate_Hash_x86_128(FT_Bitmap * bitmap, HASH_128 * murmur);
 HASH_128 * Generate_Hash_x64_128(FT_Bitmap * bitmap, HASH_128 * murmur);
 
-//-------------------------------------------------------------------------------
+//------------------------------------------------------------------------------
 
 PIXEL * Pixel_At (IMAGE * bitmap, int x, int y);  // Returns a pointer to pixel
                                                   // at (x,y) co-ordinate
-
-void Make_PNG(FT_Bitmap* bitmap,char* name,int i,int render_mode);  // buffer to image
-int Generate_PNG (IMAGE *bitmap, const char *path,int render_mode); // Image to file 
+// buffer to image
+void Make_PNG(FT_Bitmap* bitmap,char* name,int i,int render_mode);
+// Image to file  
+int Generate_PNG (IMAGE *bitmap, const char *path,int render_mode);  
 
