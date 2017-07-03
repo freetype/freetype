@@ -1,3 +1,17 @@
+2017-07-03  Werner Lemberg  <wl@gnu.org>
+
+	[truetype] Integer overflow.
+
+	Reported as
+
+	  https://bugs.chromium.org/p/oss-fuzz/issues/detail?id=2455
+
+	* src/truetype/ttinterp.c (Ins_SCFS): Use SUB_LONG.
+
+2017-07-01  Alexei Podtelezhnikov  <apodtele@gmail.com>
+
+	* src/sfnt/sfobjs.c (sfnt_load_face): Ignore No_Unicode_Glyph_Name.
+
 2017-06-28  Ben Wagner  <bungeman@google.com>
 
 	Avoid Microsoft compiler warnings (#51331).

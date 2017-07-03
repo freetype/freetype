@@ -1509,7 +1509,8 @@
                                NULL, &cmaprec, NULL );
           if ( error                                      &&
                FT_ERR_NEQ( error, No_Unicode_Glyph_Name ) )
-            FT_TRACE2(( "sfnt_load_face: failed to emulate Unicode\n" ));
+            goto Exit;
+          error = FT_Err_Ok;
 
 #endif /* FT_CONFIG_OPTION_POSTSCRIPT_NAMES */
 
