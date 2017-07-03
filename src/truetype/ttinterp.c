@@ -4803,7 +4803,7 @@
 
     K = FAST_PROJECT( &exc->zp2.cur[L] );
 
-    exc->func_move( exc, &exc->zp2, L, args[1] - K );
+    exc->func_move( exc, &exc->zp2, L, SUB_LONG( args[1], K ) );
 
     /* UNDOCUMENTED!  The MS rasterizer does that with */
     /* twilight points (confirmed by Greg Hitchcock)   */
