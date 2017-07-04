@@ -1,3 +1,9 @@
+2017-07-04  Werner Lemberg  <wl@gnu.org>
+
+	[truetype] Prevent address overflow (#51365).
+
+	* src/truetype/ttgxvar.c (FT_Stream_SeekSet): Add guard.
+
 2017-07-03  Alexei Podtelezhnikov  <apodtele@gmail.com>
 
 	* src/base/ftlcdfil.c (ft_lcd_filter_fir): Improve code.
