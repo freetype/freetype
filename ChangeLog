@@ -1,3 +1,7 @@
+2017-07-03  Alexei Podtelezhnikov  <apodtele@gmail.com>
+
+	* src/base/ftlcdfil.c (ft_lcd_filter_fir): Improve code.
+
 2017-07-03  Werner Lemberg  <wl@gnu.org>
 
 	[truetype] Integer overflow.
@@ -112,7 +116,7 @@
 
 	[base, smooth] LCD filtering cleanups.
 
-	* src/base/ftlcdlil.c (ft_lcd_filter_fir, _ft_lcd_filter_legacy):
+	* src/base/ftlcdfil.c (ft_lcd_filter_fir, _ft_lcd_filter_legacy):
 	Clean up, start filtering from the bottom-left origin.
 
 	* src/smooth/ftsmooth.c (ft_smooth_render_generic): Updated.

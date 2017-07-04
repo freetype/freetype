@@ -29,6 +29,8 @@
 /* define USE_LEGACY to implement the legacy filter */
 #define  USE_LEGACY
 
+#define FT_SHIFTCLAMP( x )  ( x >>= 8, (FT_Byte)( x > 255 ? 255 : x ) )
+
   /* FIR filter used by the default and light filters */
   FT_BASE( void )
   ft_lcd_filter_fir( FT_Bitmap*           bitmap,
@@ -80,18 +82,11 @@
           fir[3] = fir[4] + weights[3] * val;
           fir[4] =          weights[4] * val;
 
-          fir[0]     >>= 8;
-          fir[0]      |= (FT_UInt)-(FT_Int)( fir[0] >> 8 );
-          line[xx - 2] = (FT_Byte)fir[0];
+          line[xx - 2] = FT_SHIFTCLAMP( fir[0] );
         }
 
-        fir[1]     >>= 8;
-        fir[1]      |= (FT_UInt)-(FT_Int)( fir[1] >> 8 );
-        line[xx - 2] = (FT_Byte)fir[1];
-
-        fir[2]     >>= 8;
-        fir[2]      |= (FT_UInt)-(FT_Int)( fir[2] >> 8 );
-        line[xx - 1] = (FT_Byte)fir[2];
+        line[xx - 2] = FT_SHIFTCLAMP( fir[1] );
+        line[xx - 1] = FT_SHIFTCLAMP( fir[2] );
       }
     }
 
@@ -130,18 +125,11 @@
           fir[3] = fir[4] + weights[3] * val;
           fir[4] =          weights[4] * val;
 
-          fir[0]        >>= 8;
-          fir[0]         |= (FT_UInt)-(FT_Int)( fir[0] >> 8 );
-          col[pitch * 2]  = (FT_Byte)fir[0];
+          col[pitch * 2]  = FT_SHIFTCLAMP( fir[0] );
         }
 
-        fir[1]        >>= 8;
-        fir[1]         |= (FT_UInt)-(FT_Int)( fir[1] >> 8 );
-        col[pitch * 2]  = (FT_Byte)fir[1];
-
-        fir[2]        >>= 8;
-        fir[2]         |= (FT_UInt)-(FT_Int)( fir[2] >> 8 );
-        col[pitch]      = (FT_Byte)fir[2];
+        col[pitch * 2]  = FT_SHIFTCLAMP( fir[1] );
+        col[pitch]      = FT_SHIFTCLAMP( fir[2] );
       }
     }
   }
