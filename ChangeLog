@@ -1,5 +1,9 @@
 2017-07-05  Werner Lemberg  <wl@gnu.org>
 
+	* src/sfnt/ttcmap.c (tt_cmap_unicode_class_rec): Fix warning.
+
+2017-07-05  Werner Lemberg  <wl@gnu.org>
+
 	* src/truetype/ttgxvar.c (FT_Stream_SeekSet): Fix warning (#51395).
 
 2017-07-04  Werner Lemberg  <wl@gnu.org>

@@ -3719,7 +3719,7 @@
       (FT_CMap_CharVariantListFunc) NULL,  /* charvariant_list */
       (FT_CMap_VariantCharListFunc) NULL,  /* variantchar_list */
 
-    -1,
+    ~0U,
     (TT_CMap_ValidateFunc)NULL,  /* validate      */
     (TT_CMap_Info_GetFunc)NULL   /* get_cmap_info */
   )
