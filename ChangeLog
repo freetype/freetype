@@ -1,3 +1,7 @@
+2017-07-05  Werner Lemberg  <wl@gnu.org>
+
+	* src/truetype/ttgxvar.c (FT_Stream_SeekSet): Fix warning (#51395).
+
 2017-07-04  Werner Lemberg  <wl@gnu.org>
 
 	[truetype] Prevent address overflow (#51365).
