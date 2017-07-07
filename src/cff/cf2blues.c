@@ -524,17 +524,18 @@
 
       if ( !blues->zone[i].bottomZone && cf2_hint_isTop( topHintEdge ) )
       {
-        if ( ( SUB_INT32( blues->zone[i].csBottomEdge, csFuzz ) ) <=
-               topHintEdge->csCoord                                  &&
+        if ( SUB_INT32( blues->zone[i].csBottomEdge, csFuzz ) <=
+               topHintEdge->csCoord                              &&
              topHintEdge->csCoord <=
-               ADD_INT32( blues->zone[i].csTopEdge, csFuzz )         )
+               ADD_INT32( blues->zone[i].csTopEdge, csFuzz )     )
         {
           /* top edge captured by top zone */
 
           if ( blues->suppressOvershoot )
             dsNew = blues->zone[i].dsFlatEdge;
 
-          else if ( ( topHintEdge->csCoord - blues->zone[i].csBottomEdge ) >=
+          else if ( SUB_INT32( topHintEdge->csCoord,
+                               blues->zone[i].csBottomEdge ) >=
                       blues->blueShift )
           {
             /* guarantee minimum of 1 pixel overshoot */

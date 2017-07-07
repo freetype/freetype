@@ -1,3 +1,13 @@
+2017-07-07  Werner Lemberg  <wl@gnu.org>
+
+	[cff] Integer overflow.
+
+	Reported as
+
+	  https://bugs.chromium.org/p/oss-fuzz/issues/detail?id=2517
+
+	* src/cff/cf2blues.c (cf2_blues_capture): Use SUB_INT32.
+
 2017-07-05  Werner Lemberg  <wl@gnu.org>
 
 	* src/sfnt/ttcmap.c (tt_cmap_unicode_class_rec): Fix warning.
