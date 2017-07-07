@@ -1795,9 +1795,9 @@ FT_BEGIN_HEADER
   /*                                                                       */
   /*        <load glyph with `FT_Load_Glyph'>                              */
   /*                                                                       */
-  /*        if ( prev_rsb_delta - slot->lsb_delta >= 32 )                  */
+  /*        if ( prev_rsb_delta - slot->lsb_delta >  32 )                  */
   /*          origin_x -= 64;                                              */
-  /*        else if ( prev_rsb_delta - slot->lsb_delta < -32 )             */
+  /*        else if ( prev_rsb_delta - slot->lsb_delta < -31 )             */
   /*          origin_x += 64;                                              */
   /*                                                                       */
   /*        prev_rsb_delta = slot->rsb_delta;                              */
