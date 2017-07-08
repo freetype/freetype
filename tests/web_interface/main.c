@@ -1,17 +1,24 @@
+// 'main' takes in .so files for two versions of FT, the character size, and
+// a font directory. It uses 'bitmap' and 'murmur3' to compare hashes for all
+// glyphs in the font, using the base and test FT libraries, then renders
+// differing glyphs as PNGs. A webpage is generated with a table of these 
+// glyphs.
 #include "bitmap.h"
-#include <dlfcn.h>
-#include <math.h>
+#include <dlfcn.h> // for dynamic linking
+#include <math.h> // for glyph comparison
 
+// a single 'entry' is related to a single charcode for a glyph, as well as 
+// a row in the generated html table
 struct entry 
 {
-  int code;
-  char base_img[256];
-  char test_img[256];
-  char base_hash[33];
-  char test_hash[33];
-  double base_value;
-  double test_value;
-  double difference;
+  int code; // charcode
+  char base_img[256]; // filename of base png
+  char test_img[256]; // filename of test png
+  char base_hash[33]; // base mm3 hash
+  char test_hash[33]; // test mm3 hash
+  double base_value; // comparison metric for base glyph
+  double test_value; // comparison metric for test glyph
+  double difference; // difference holding the distance between glyphs
 };
 
 void render(const char*, const char*, FT_UInt32, int, struct entry (*entries)[], int*, int*);
@@ -155,6 +162,12 @@ void render(const char* ft_dir, const char* font, FT_UInt32 size, int mode, stru
 
   slot = face->glyph;
 
+  struct stat st = {0};
+
+  if (stat("./images/", &st) == -1) {
+      mkdir("./images/", 0777);
+  }
+
   for (i = 0; i < face->num_glyphs; ++i)
   {
     (*entries)[i].code = i;
@@ -203,12 +216,12 @@ void render(const char* ft_dir, const char* font, FT_UInt32 size, int mode, stru
       if (mode == 2)
       {
         *num = *num + 1;
-        Make_PNG(bitmap, "base", i, 1); 
-        sprintf((*entries)[i].base_img, "base_%d.png", i);
+        Make_PNG(bitmap, "./images/base", i, 1); 
+        sprintf((*entries)[i].base_img, "images/base_%d.png", i);
         (*entries)[i].base_value = (double)(rand() % 1000);
       } else if (mode == 3){
-        Make_PNG(bitmap, "test", i, 1);
-        sprintf((*entries)[i].test_img, "test_%d.png", i);
+        Make_PNG(bitmap, "./images/test", i, 1);
+        sprintf((*entries)[i].test_img, "images/test_%d.png", i);
         (*entries)[i].test_value = (double)(rand() % 1000);
         (*entries)[i].difference = fabs((*entries)[i].base_value- (*entries)[i].test_value);
       }
