@@ -1,269 +1,282 @@
 #include "bitmap.h"
 
-HASH_128 * Generate_Hash_x64_128(FT_Bitmap * bitmap, HASH_128 * murmur)
+HASH_128 * Generate_Hash_x64_128( FT_Bitmap * bitmap, 
+                                  HASH_128 * murmur)
 {    
-    int seed = 99; // Dont change
+  int seed = 99; // Dont change
 
-    MurmurHash3_x64_128(bitmap->buffer, (bitmap->pitch * bitmap->rows), seed, murmur->hash);
+  MurmurHash3_x64_128(bitmap->buffer, 
+                      (bitmap->pitch * bitmap->rows),
+                      seed, 
+                      murmur->hash);
 
-    return murmur;
+  return murmur;
 }
 
-HASH_128 * Generate_Hash_x86_128(FT_Bitmap * bitmap, HASH_128 * murmur)
+HASH_128 * Generate_Hash_x86_128( FT_Bitmap * bitmap,
+                                  HASH_128 * murmur)
 {    
-    int seed = 99; // Dont change
+  int seed = 99; // Dont change
 
-    MurmurHash3_x86_128(bitmap->buffer, (bitmap->pitch * bitmap->rows), seed, murmur->hash);
+  MurmurHash3_x86_128(bitmap->buffer,
+                      (bitmap->pitch * bitmap->rows),
+                      seed,
+                      murmur->hash);
 
-    return murmur;
+  return murmur;
 }
 
-HASH_32 * Generate_Hash_x86_32(FT_Bitmap * bitmap, HASH_32 * murmur)
+HASH_32 * Generate_Hash_x86_32( FT_Bitmap * bitmap,
+                                HASH_32 * murmur)
 {    
-    int seed = 99; // Dont change
+  int seed = 99; // Dont change
 
-    MurmurHash3_x86_32(bitmap->buffer, (bitmap->pitch * bitmap->rows), seed, murmur->hash);
+  MurmurHash3_x86_32( bitmap->buffer,
+                      (bitmap->pitch * bitmap->rows),
+                      seed,
+                      murmur->hash);
 
-    return murmur;
+  return murmur;
 }
 
-int Get_Padding( FT_Bitmap*	bitmap ){
-
-	int rem;
-	if (bitmap->pixel_mode == 6)
-	{
-		rem = ( 3 * bitmap->width ) % 4;
-	}else{
-		rem = ( bitmap->width ) % 4;
-	}
-	
-	if (!rem )
-    {
-        return rem;
-    }
-        return  (4 - rem);
+PIXEL * Pixel_At (IMAGE * bitmap, int x, int y)
+{
+  return bitmap->pixels + bitmap->width * y + x;
 }
-
-int Get_Bits_Per_Pixel ( unsigned char PIXEL_MODE) {
-	if (PIXEL_MODE < 5)
-	{
-		return BITS_PER_PIXEL_GRAY;
-	}else{
-		return BITS_PER_PIXEL_LCD;
-	}
-}
-
-void Write_Bitmap_Header (FT_Bitmap * bitmap, char * fname ) { 
     
-    FILE *fp = fopen(fname,"w");     // Bitmap File 
-    HEADER *header  = ( HEADER* ) calloc( 1 , sizeof( HEADER ));
+int Generate_PNG (IMAGE *bitmap,
+                  const char *path,
+                  int render_mode)
+{
+  FILE * fp;
+  png_structp png_ptr       = NULL;
+  png_infop info_ptr        = NULL;
 
-    unsigned char   pixel_mode = ( bitmap->pixel_mode );
-    FT_UInt			image_width;
-    FT_UInt			image_rows;
-    FT_UInt			color_table_size = 0;
+  size_t x, y;
+  png_byte ** row_pointers = NULL;
 
-    switch(pixel_mode){
+  int status = -1;
 
-    	case 5 :	image_width = bitmap->width / 3; 		// LCD
-    				image_rows 	= bitmap->rows;
-    				break;
+  int pixel_size = 4;
+  int depth = 8;
+  
+  fp = fopen (path, "wb");
+  if (! fp) {
+    goto fopen_failed;
+  }
 
-    	case 6 :	image_width = bitmap->width;			// LCD_V
-    				image_rows 	= bitmap->rows / 3;
-    				break;
+  png_ptr = png_create_write_struct ( PNG_LIBPNG_VER_STRING,
+                                      NULL,
+                                      NULL,
+                                      NULL);
+  if (png_ptr == NULL) {
+    goto png_create_write_struct_failed;
+  }
+  
+  info_ptr = png_create_info_struct (png_ptr);
+  if (info_ptr == NULL) {
+    goto png_create_info_struct_failed;
+  }
 
-    	default	:   image_width = bitmap->width;			// MONO and GRAY
-    				image_rows 	= bitmap->rows;
-    				color_table_size = 4* 256;
-    				break;
+  if (setjmp (png_jmpbuf (png_ptr))) {
+    goto png_failure;
+  }
+
+  png_set_IHDR (png_ptr,
+                info_ptr,
+                bitmap->width,
+                bitmap->height,
+                depth,
+                PNG_COLOR_TYPE_RGBA,
+                PNG_INTERLACE_NONE,
+                PNG_COMPRESSION_TYPE_DEFAULT,
+                PNG_FILTER_TYPE_DEFAULT);
+
+  row_pointers = png_malloc ( png_ptr,
+                              bitmap->height * sizeof (png_byte *));
+
+  for (y = 0; y < bitmap->height; y++) {
+
+    png_byte *row = png_malloc (png_ptr, 
+                                sizeof (uint8_t) * bitmap->width * pixel_size);
+    row_pointers[y] = row;
+
+    for (x = 0; x < bitmap->width; x++) {
+
+      PIXEL * pixel = Pixel_At (bitmap, x, y);
+
+        if (render_mode == 3 || render_mode == 5)
+        {
+          *row++ = pixel->blue;
+          *row++ = pixel->green;
+          *row++ = pixel->red;
+          *row++ = pixel->alpha;
+          continue;
+        }
+
+        *row++ = pixel->red;
+        *row++ = pixel->green;
+        *row++ = pixel->blue;
+        *row++ = pixel->alpha;
     }
+  }    
 
-    FT_Int  image_size; 
-    image_size = (image_rows * image_width );
+  png_init_io ( png_ptr,
+                fp);
 
-    header->file_header.type                      = 0x4D42;       
-    header->file_header.file_size                 = sizeof(HEADER) + color_table_size + image_size;
-    header->file_header.file_offset               = sizeof(HEADER) + color_table_size;
+  png_set_rows (png_ptr,
+                info_ptr,
+                row_pointers);
 
-    header->info_header.info_header_size          = sizeof(BMP_INFO_HEADER);
-    header->info_header.width                     = image_width ;
-    header->info_header.height                    =  - image_rows;
-    header->info_header.planes                    = PLANES;
-    header->info_header.bits_per_pixel            = Get_Bits_Per_Pixel( bitmap->pixel_mode );
-    header->info_header.compression               = COMPRESSION;
-    header->info_header.image_size                = image_size;
-    header->info_header.y_pixels_per_meter        = Y_PIXELS_PER_METER ;
-    header->info_header.x_pixels_per_meter        = X_PIXELS_PER_METER ;
-    header->info_header.used_colors               = USED_COLORS;
-    header->info_header.important_colors          = IMPORTANT_COLORS;
+  png_write_png ( png_ptr,
+                  info_ptr,
+                  PNG_TRANSFORM_IDENTITY,
+                  NULL);
 
-    fwrite (header, 1, sizeof(HEADER),fp);   
-    free(header);
-    fclose(fp);
+  status = 0;
+  
+  for (y = 0; y < bitmap->height; y++) {
+    png_free (png_ptr, row_pointers[y]);
+  }
+  png_free (png_ptr, row_pointers);
+  
+  png_failure:
+  png_create_info_struct_failed:
+    png_destroy_write_struct (&png_ptr, &info_ptr);
+  png_create_write_struct_failed:
+    fclose (fp);
+  fopen_failed:
+    return status;
 }
 
-void Write_Bitmap_Data_LCD_RGB( FT_Bitmap * bitmap, char * fname ){
+void Make_PNG(FT_Bitmap* bitmap,char* name,int i,int render_mode){
 
-    char value;
-    int i,j,k;
+  IMAGE fruit;
+  int x;
+  int y;
 
-    FILE *fp = fopen(fname,"a");     
+  unsigned char value;
+  int p;
 
-    for (i = 0; i < bitmap->rows ; ++i)
-    {
-        for ( j = 2; j < bitmap->width; j = j+3) 
-        {
-        	for ( k = 0; k < 3; ++k)
-        	{
-        		value = 0xff - bitmap->buffer[( i * bitmap->pitch) + j - k];
-            	fwrite (&value, 1, 1,fp);
-        	}
-        }
-        for ( k = 0; k < Get_Padding(bitmap); ++k)
-        {
-            value = 0xff;
-            fwrite (&value, 1, 1,fp);           
-        }
-    }
+  switch(render_mode){
 
-    fclose(fp);
-} 
+    case 0 :  fruit.width = bitmap->width;            // MONO and GRAY
+              fruit.height  = bitmap->rows;
 
-void Write_Bitmap_Data_LCD_BGR( FT_Bitmap * bitmap, char * fname ){
+              fruit.pixels = calloc ( fruit.width * fruit.height,
+                                      sizeof (PIXEL));
 
-    char value;
-    int i,j,k;
+              for (y = 0; y < fruit.height; y++) {
+                for (x = 0; x < fruit.width; x++) {
 
-    FILE *fp = fopen(fname,"a");     
+                  PIXEL * pixel = Pixel_At (& fruit, x, y);
+                  p = (y * bitmap->pitch ) + x;
 
-    for ( i = 0; i < bitmap->rows  ; ++i)
-    {
-        for ( j = 0; j < bitmap->width; j++) 
-        {
-            value = 0xff - bitmap->buffer[( i * bitmap->pitch) + j];
-            fwrite (&value, 1, 1,fp);
-        }
-        for ( k = 0; k < Get_Padding(bitmap); ++k)
-        {
-            value = 0xff;
-            fwrite (&value, 1, 1,fp);           
-        }
-    }
+                  value = bitmap->buffer[p];
+                  
+                  if ( value != 0x00 ){
+                    value = 0xff;
+                  }else{
+                    value = 0x00;
+                  }
 
-    fclose(fp);
-} 
+                  pixel->red = 255- value;
+                  pixel->green = 255- value;
+                  pixel->blue = 255- value;
+                  pixel->alpha = 255;
+                }
+              }                    
+              break;
+    case 1 :  fruit.width = bitmap->width;            // MONO and GRAY
+              fruit.height  = bitmap->rows;
 
-void Write_Bitmap_Data_LCD_V_BGR (FT_Bitmap * bitmap, char * fname) {            
+              fruit.pixels = calloc ( fruit.width * fruit.height,
+                                      sizeof (PIXEL));
 
-    FILE *fp = fopen(fname,"a"); 
+              for (y = 0; y < fruit.height; y++) {
+                for (x = 0; x < fruit.width; x++) {
 
-    int i,j,k,step;
-    char value;
-    step = 0;
+                  PIXEL * pixel = Pixel_At (& fruit, x, y);
+                  p = (y * bitmap->pitch ) + x;
 
-    while ( step < bitmap->rows ){
+                  value = bitmap->buffer[p];
+                  
+                  pixel->red = 255- value;
+                  pixel->green = 255- value;
+                  pixel->blue = 255- value;
+                  pixel->alpha = 255;
+                }
+              }                    
+              break;
 
-        for (i = 0; i < bitmap->width; i++)                   
-        {
-            for (j = step ; j < step + 3; ++j) 
-            {
-                value = 0xff - bitmap->buffer[(j * bitmap->pitch) + i];
-                fwrite (&value, 1, 1,fp);
-            }
-        }
-        for (k = 0; k < Get_Padding(bitmap); ++k)
-        {
-            value = 0xff;
-            fwrite (&value, 1, 1,fp);
-        }
-        step = step + 3;        // Jumping 3 rows up 
-    }
+    case 2 :
+    case 3 :  fruit.width = bitmap->width / 3;        // LCD
+              fruit.height  = bitmap->rows;
 
-    fclose(fp);
-} 
+              fruit.pixels = calloc ( fruit.width * fruit.height, 
+                                      sizeof (PIXEL));
 
-void Write_Bitmap_Data_LCD_V_RGB (FT_Bitmap * bitmap, char * fname) {            
+              for (y = 0; y < fruit.height; y++) {
+                for (x = 0; x < fruit.width; x++) {
 
-    FILE *fp = fopen(fname,"a"); 
+                  PIXEL * pixel = Pixel_At (& fruit, x, y);
+                  p = (y * bitmap->pitch ) + (x)*3;
 
-    int i,j,k,step;
-    char value;
-    step = 0;
+                  value = bitmap->buffer[p];
+                  pixel->red = 255- value;
+                  p++;
 
-    while ( step < bitmap->rows ){
+                  value = bitmap->buffer[p];
+                  pixel->green = 255- value;
+                  p++;
 
-        for (i = 0; i < bitmap->width; i++)                   
-        {
-            for (j = step + 2 ; j >= step; --j) 
-            {
-                value = 0xff - bitmap->buffer[(j * bitmap->pitch) + i];
-                fwrite (&value, 1, 1,fp);
-            }
-        }
-        for (k = 0; k < Get_Padding(bitmap); ++k)
-        {
-            value = 0xff;
-            fwrite (&value, 1, 1,fp);
-        }
-        step = step + 3;        // Jumping 3 rows up
-    }
+                  value = bitmap->buffer[p];
+                  pixel->blue = 255- value;
 
-    fclose(fp);
-} 
+                  pixel->alpha = 255;
+                }
+              }
+              break;
 
-void Write_Bitmap_Data_MONO (FT_Bitmap * bitmap, char * fname) {            
+    case 4 :
+    case 5 :  fruit.width = bitmap->width;            // LCD_V
+              fruit.height  = bitmap->rows / 3;
 
-    FILE *fp = fopen(fname,"a");
+              fruit.pixels = calloc ( fruit.width * fruit.height,
+                                      sizeof (PIXEL));
 
-    int i;
-    unsigned char value;
-    for ( i = 0; i < 256; ++i)
-    {
-        value = i;
-        fwrite (&value,1,1,fp);
-        fwrite (&value,1,1,fp);
-        fwrite (&value,1,1,fp);
-        value = 0;
-        fwrite (&value,1,1,fp);
-    }
+              for (y = 0; y < fruit.height; y++) {
+                for (x = 0; x < fruit.width; x++) {
 
+                  PIXEL * pixel = Pixel_At (& fruit, x, y);
+                  p = ((y*3) * bitmap->pitch ) + x;
 
-    for (int i = 0; i < bitmap->pitch * bitmap->rows; ++i)
-    {
-        if ( bitmap->buffer[i] != 0x00 ){
-            value = 0x00; // remember taking reverse
-            fwrite (&value, 1, 1,fp);
-        }else{
-            value = 0xff;
-            fwrite (&value, 1, 1,fp);
-        }
-    }
+                  value = bitmap->buffer[p];
+                  pixel->red = 255- value;
+                  p += bitmap->pitch;
 
-    fclose(fp);
-} 
+                  value = bitmap->buffer[p];
+                  pixel->green = 255- value;
+                  p += bitmap->pitch;
 
-void Write_Bitmap_Data_GRAY(FT_Bitmap * bitmap, char * fname) {            
+                  value = bitmap->buffer[p];
+                  pixel->blue = 255- value;
 
-    FILE *fp = fopen(fname,"a");
-    int i;
+                  pixel->alpha = 255;
+                }
+              }
+              break;
 
-    unsigned char value;
-    for ( i = 0; i < 256; ++i)
-    {
-        value = i;
-        fwrite (&value,1,1,fp);
-        fwrite (&value,1,1,fp);
-        fwrite (&value,1,1,fp);
-        value = 0;
-        fwrite (&value,1,1,fp);
-    }
+    default :   fruit.width = bitmap->width;           
+                fruit.height  = bitmap->rows;
+                break;
+  }
 
-    for (int i = 0; i < bitmap->pitch * bitmap->rows; ++i)
-    {
-        value = 255 - bitmap->buffer[i];
-        fwrite(&value,1,1,fp);
-    }
+  char * file_name = ( char * )calloc(150,sizeof(char));
 
-    fclose(fp);
+  sprintf(file_name, "%s_%d.png", name, i);
+
+  Generate_PNG (& fruit, file_name, render_mode);
+
+  free (fruit.pixels);
 }
