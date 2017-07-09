@@ -1,5 +1,5 @@
 Compile with current ft folder:
-gcc main.c bitmap.c murmur3.c -Wall -I /usr/local/include/freetype2/ -lfreetype -ldl -lpng -lm -o main
+gcc main.c bitmap.c murmur3.c -Wall -I ../../include/ -ldl -lpng -lm -o main
 
 Run 
 ./main <base libfreetype.so> <test libfreetype.so> <size> <font file>

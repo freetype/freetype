@@ -32,7 +32,7 @@ int main(int argc, char const *argv[])
   const char* test_ft; // path of test ft
   FT_UInt32 size; // char size
   const char* font; // path of font
-  int mode;
+  int mode; 
 
   // create array of structs with size 1
   struct entry* entries = malloc(1 * sizeof(struct entry));
@@ -190,8 +190,9 @@ void render(const char* ft_dir, const char* font, FT_UInt32 size, int mode, stru
       entries = &(*entries);
       *entries_len = *entries_len * 2;
     }
-
-    (*entries)[i].difference = 0.0; // initially assume no difference between glyphs
+    
+    // initially assume no difference between glyphs
+    (*entries)[i].difference = 0.0; 
 
     // if hashes are the same, move to the next glyph
     if (((mode == 2) || (mode == 3)) && 
