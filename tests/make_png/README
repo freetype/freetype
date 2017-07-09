@@ -1,6 +1,11 @@
+NOTE: First make freetype library (in the ../../ directory)
+  make devel
+  make
+
+
 To generate hashes and store it in the ./hashes folder,
 
-1) sudo make hash
+1)  make hash
 	(set resoluton in DPI by passing argument
 	example: sudo make DPI=100, if not specified,default is 72)
 
@@ -18,11 +23,11 @@ To generate hashes and store it in the ./hashes folder,
 
 To generate 32-bit RGBA PNG(s) of all glyphs in a font\n
   
-1) sudo make png
+1)  make png
 	(set resoluton in DPI by passing argument
   	example: sudo make DPI=100, if not specified,default is 72)
 
-2.Usage   ./<exe> <font_file> <pt_size> <render_mode>
+2) Usage   ./<exe> <font_file> <pt_size> <render_mode>
 
     Images will be saved in a file named 
     $(font)_$(pt_size)_$(render_mode)_$(glyph_index).png
