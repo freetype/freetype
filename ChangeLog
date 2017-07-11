@@ -1,3 +1,13 @@
+2017-07-12  Werner Lemberg  <wl@gnu.org>
+
+	* src/truetype/ttpload.c (tt_face_get_location): Off-by-one typo.
+
+	Also improve tracing message.
+
+	Problem reported as
+
+	  https://bugs.chromium.org/p/chromium/issues/detail?id=738919
+
 2017-07-07  Werner Lemberg  <wl@gnu.org>
 
 	[cff] Integer overflow.
