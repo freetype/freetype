@@ -2,7 +2,7 @@
 
 int main (int argc, char const *argv[])
 {
-	FT_Library       library;
+  FT_Library       library;
   FT_Face          face;
   FT_GlyphSlot     slot;
 
@@ -11,22 +11,22 @@ int main (int argc, char const *argv[])
   FT_Error         error;
 
   const char*      font_file;
-  int       		   size;
-  int     		     render_mode; // argument 
+  int              size;
+  int              render_mode; // argument 
 
-  int 			       load_flag;	 // FT_LOAD_XXX
+  int              load_flag;  // FT_LOAD_XXX
   int              render_flag; // FT_RENDER_MODE_XXX
-  int 			       target_flag; // FT_LOAD_TARGET_XXX
-	char* 			     render_type; // for file_name 	
+  int              target_flag; // FT_LOAD_TARGET_XXX
+  char*            render_type; // for file_name  
 
-	char 			       name[100]; // hashes file name
-	int              i; // for loop
+  char             name[100]; // hashes file name
+  int              i; // for loop
 
   if (argc != 4)
   {
     printf("\nTo generate 32-bit RGBA PNG(s) of all glyphs in a font\n");
     printf("Images will be saved in a file named \n\
-    		  $(font)_$(pt_size)_$(render_mode)_$(glyph_index).png \n\n");
+          $(font)_$(pt_size)_$(render_mode)_$(glyph_index).png \n\n");
 
     printf("Default: hashes of 256-level gray bitmaps will be generated\n\n");
 
@@ -42,8 +42,8 @@ int main (int argc, char const *argv[])
     return 1;
   }
 
-  font_file 	     =     argv[1];
-  size 		         =     atof(argv[2]); 
+  font_file        =     argv[1];
+  size             =     atof(argv[2]); 
   render_mode      =     atoi(argv[3]); 
 
   error = FT_Init_FreeType( &library );
@@ -78,72 +78,72 @@ int main (int argc, char const *argv[])
   }
 
   switch ( render_mode ) {
-  	case 0: render_flag 	= FT_RENDER_MODE_MONO;
-  			    load_flag 		= FT_LOAD_MONOCHROME;
-  			    target_flag 	= FT_LOAD_TARGET_MONO;
-  			    render_type   = "mono";
-  			    break;
+    case 0: render_flag   = FT_RENDER_MODE_MONO;
+            load_flag     = FT_LOAD_MONOCHROME;
+            target_flag   = FT_LOAD_TARGET_MONO;
+            render_type   = "mono";
+            break;
 
-  	case 1:	render_flag 	= FT_RENDER_MODE_NORMAL;
-  			    load_flag 		= FT_LOAD_DEFAULT;
-  			    target_flag 	= FT_LOAD_TARGET_NORMAL;
-  			    render_type   = "gray";
-  			    break;
+    case 1: render_flag   = FT_RENDER_MODE_NORMAL;
+            load_flag     = FT_LOAD_DEFAULT;
+            target_flag   = FT_LOAD_TARGET_NORMAL;
+            render_type   = "gray";
+            break;
 
-  	case 2:	render_flag 	= FT_RENDER_MODE_LCD;
-  			    load_flag 		= FT_LOAD_DEFAULT;
-  			    target_flag 	= FT_LOAD_TARGET_LCD;
-  			    render_type   = "lcd_rgb";
-  			    break;
+    case 2: render_flag   = FT_RENDER_MODE_LCD;
+            load_flag     = FT_LOAD_DEFAULT;
+            target_flag   = FT_LOAD_TARGET_LCD;
+            render_type   = "lcd_rgb";
+            break;
 
-  	case 3:	render_flag 	= FT_RENDER_MODE_LCD;
-  			    load_flag 		= FT_LOAD_DEFAULT;
-  			    target_flag 	= FT_LOAD_TARGET_LCD;
-  			    render_type   = "lcd_bgr";
-  			    break;
+    case 3: render_flag   = FT_RENDER_MODE_LCD;
+            load_flag     = FT_LOAD_DEFAULT;
+            target_flag   = FT_LOAD_TARGET_LCD;
+            render_type   = "lcd_bgr";
+            break;
 
-  	case 4:	render_flag 	= FT_RENDER_MODE_LCD_V;
-  			    load_flag 		= FT_LOAD_DEFAULT;
-  			    target_flag 	= FT_LOAD_TARGET_LCD_V;
-  			    render_type   = "lcd_ver_rgb";
-  			    break;
+    case 4: render_flag   = FT_RENDER_MODE_LCD_V;
+            load_flag     = FT_LOAD_DEFAULT;
+            target_flag   = FT_LOAD_TARGET_LCD_V;
+            render_type   = "lcd_ver_rgb";
+            break;
 
-  	case 5:	render_flag 	= FT_RENDER_MODE_LCD_V;
-  			    load_flag 		= FT_LOAD_DEFAULT;
-  			    target_flag 	= FT_LOAD_TARGET_LCD_V;
-  			    render_type   = "lcd_ver_bgr";
-  			    break;
+    case 5: render_flag   = FT_RENDER_MODE_LCD_V;
+            load_flag     = FT_LOAD_DEFAULT;
+            target_flag   = FT_LOAD_TARGET_LCD_V;
+            render_type   = "lcd_ver_bgr";
+            break;
 
-  	default:render_flag 	= FT_RENDER_MODE_NORMAL;
-  			    load_flag 		= FT_LOAD_DEFAULT;
-  			    target_flag 	= FT_LOAD_TARGET_NORMAL;
-  			    render_type   = "gray";
+    default:render_flag   = FT_RENDER_MODE_NORMAL;
+            load_flag     = FT_LOAD_DEFAULT;
+            target_flag   = FT_LOAD_TARGET_NORMAL;
+            render_type   = "gray";
   }
 
-	slot = face->glyph;
+  slot = face->glyph;
 
-	sprintf(name,"./images/%s_%d_%s", font_file,
-										                size,
-										                render_type);
+  sprintf(name,"./images/%s_%d_%s", font_file,
+                                    size,
+                                    render_type);
 
-	for (i = 0; i <face->num_glyphs; ++i)
-	{
-		error = FT_Load_Glyph( face,
+  for (i = 0; i <face->num_glyphs; ++i)
+  {
+    error = FT_Load_Glyph( face,
                            i, 
                            load_flag | target_flag);
-  	if(error){
+    if(error){
       printf("Error loading glyph\n");
-  	}
+    }
 
-  	FT_Render_Glyph( slot, 
-                   	 render_flag);
-  	if(error){
+    FT_Render_Glyph( slot, 
+                     render_flag);
+    if(error){
       printf("Error rendering the glyph\n");
-  	}
+    }
 
-  	bitmap = &slot->bitmap;
+    bitmap = &slot->bitmap;
 
-  	if (bitmap->width == 0 || bitmap->rows == 0)
+    if (bitmap->width == 0 || bitmap->rows == 0)
     {
       continue;
     }
@@ -160,17 +160,24 @@ int main (int argc, char const *argv[])
       printf("Error converting the bitmap\n");
     }
     
+    char * file_name = ( char * )calloc(150,sizeof(char));
+    sprintf(file_name, "%s_%d", name, i);
+
+    IMAGE fruit;
+
     if (render_mode == 0)
     {
-    	Make_PNG(&target,name,i,render_mode);
+      Make_PNG(&target, &fruit,i,render_mode);
+      Generate_PNG (& fruit, file_name, render_mode);
 
     }else{
 
-    	Make_PNG(bitmap,name,i,render_mode);
+      Make_PNG(bitmap, &fruit,i,render_mode);
+      Generate_PNG ( &fruit, file_name, render_mode);
     } 
-	}
+  }
 
-	FT_Done_Face    ( face );
+  FT_Done_Face    ( face );
   FT_Done_FreeType( library );
 
   return 0;

@@ -140,6 +140,8 @@ int Generate_PNG (IMAGE *bitmap,
   }
   png_free (png_ptr, row_pointers);
   
+  free (bitmap->pixels);
+
   png_failure:
   png_create_info_struct_failed:
     png_destroy_write_struct (&png_ptr, &info_ptr);
@@ -149,9 +151,8 @@ int Generate_PNG (IMAGE *bitmap,
     return status;
 }
 
-void Make_PNG(FT_Bitmap* bitmap,char* name,int i,int render_mode){
+void Make_PNG(FT_Bitmap* bitmap,IMAGE* fruit,int i,int render_mode){
 
-  IMAGE fruit;
   int x;
   int y;
 
@@ -160,16 +161,16 @@ void Make_PNG(FT_Bitmap* bitmap,char* name,int i,int render_mode){
 
   switch(render_mode){
 
-    case 0 :  fruit.width = bitmap->width;            // MONO and GRAY
-              fruit.height  = bitmap->rows;
+    case 0 :  fruit->width = bitmap->width;            // MONO and GRAY
+              fruit->height  = bitmap->rows;
 
-              fruit.pixels = calloc ( fruit.width * fruit.height,
+              fruit->pixels = calloc ( fruit->width * fruit->height,
                                       sizeof (PIXEL));
 
-              for (y = 0; y < fruit.height; y++) {
-                for (x = 0; x < fruit.width; x++) {
+              for (y = 0; y < fruit->height; y++) {
+                for (x = 0; x < fruit->width; x++) {
 
-                  PIXEL * pixel = Pixel_At (& fruit, x, y);
+                  PIXEL * pixel = Pixel_At ( fruit, x, y);
                   p = (y * bitmap->pitch ) + x;
 
                   value = bitmap->buffer[p];
@@ -187,16 +188,16 @@ void Make_PNG(FT_Bitmap* bitmap,char* name,int i,int render_mode){
                 }
               }                    
               break;
-    case 1 :  fruit.width = bitmap->width;            // MONO and GRAY
-              fruit.height  = bitmap->rows;
+    case 1 :  fruit->width = bitmap->width;            // MONO and GRAY
+              fruit->height  = bitmap->rows;
 
-              fruit.pixels = calloc ( fruit.width * fruit.height,
+              fruit->pixels = calloc ( fruit->width * fruit->height,
                                       sizeof (PIXEL));
 
-              for (y = 0; y < fruit.height; y++) {
-                for (x = 0; x < fruit.width; x++) {
+              for (y = 0; y < fruit->height; y++) {
+                for (x = 0; x < fruit->width; x++) {
 
-                  PIXEL * pixel = Pixel_At (& fruit, x, y);
+                  PIXEL * pixel = Pixel_At ( fruit, x, y);
                   p = (y * bitmap->pitch ) + x;
 
                   value = bitmap->buffer[p];
@@ -210,16 +211,16 @@ void Make_PNG(FT_Bitmap* bitmap,char* name,int i,int render_mode){
               break;
 
     case 2 :
-    case 3 :  fruit.width = bitmap->width / 3;        // LCD
-              fruit.height  = bitmap->rows;
+    case 3 :  fruit->width = bitmap->width / 3;        // LCD
+              fruit->height  = bitmap->rows;
 
-              fruit.pixels = calloc ( fruit.width * fruit.height, 
+              fruit->pixels = calloc ( fruit->width * fruit->height, 
                                       sizeof (PIXEL));
 
-              for (y = 0; y < fruit.height; y++) {
-                for (x = 0; x < fruit.width; x++) {
+              for (y = 0; y < fruit->height; y++) {
+                for (x = 0; x < fruit->width; x++) {
 
-                  PIXEL * pixel = Pixel_At (& fruit, x, y);
+                  PIXEL * pixel = Pixel_At ( fruit, x, y);
                   p = (y * bitmap->pitch ) + (x)*3;
 
                   value = bitmap->buffer[p];
@@ -239,16 +240,16 @@ void Make_PNG(FT_Bitmap* bitmap,char* name,int i,int render_mode){
               break;
 
     case 4 :
-    case 5 :  fruit.width = bitmap->width;            // LCD_V
-              fruit.height  = bitmap->rows / 3;
+    case 5 :  fruit->width = bitmap->width;            // LCD_V
+              fruit->height  = bitmap->rows / 3;
 
-              fruit.pixels = calloc ( fruit.width * fruit.height,
+              fruit->pixels = calloc ( fruit->width * fruit->height,
                                       sizeof (PIXEL));
 
-              for (y = 0; y < fruit.height; y++) {
-                for (x = 0; x < fruit.width; x++) {
+              for (y = 0; y < fruit->height; y++) {
+                for (x = 0; x < fruit->width; x++) {
 
-                  PIXEL * pixel = Pixel_At (& fruit, x, y);
+                  PIXEL * pixel = Pixel_At ( fruit, x, y);
                   p = ((y*3) * bitmap->pitch ) + x;
 
                   value = bitmap->buffer[p];
@@ -267,21 +268,13 @@ void Make_PNG(FT_Bitmap* bitmap,char* name,int i,int render_mode){
               }
               break;
 
-    default :   fruit.width = bitmap->width;           
-                fruit.height  = bitmap->rows;
+    default :   fruit->width = bitmap->width;           
+                fruit->height  = bitmap->rows;
                 break;
   }
-
-  char * file_name = ( char * )calloc(150,sizeof(char));
-
-  sprintf(file_name, "%s_%d", name, i);
-
-  Generate_PNG (& fruit, file_name, render_mode);
-
-  free (fruit.pixels);
 }
 
-void Read_PNG(char *filename, IMAGE * bitmap) {
+void Read_PNG(char *filename, IMAGE * after_effect) {
 
   int width, height;
   png_bytep *row_pointers;
@@ -305,8 +298,8 @@ void Read_PNG(char *filename, IMAGE * bitmap) {
   width      = png_get_image_width(png, info);
   height     = png_get_image_height(png, info);
 
-  bitmap->width = width;
-  bitmap->height = height;
+  after_effect->width = width;
+  after_effect->height = height;
 
   row_pointers = (png_bytep*)malloc(sizeof(png_bytep) * height);
   for(int y = 0; y < height; y++) {
@@ -315,7 +308,7 @@ void Read_PNG(char *filename, IMAGE * bitmap) {
 
   png_read_image(png, row_pointers);
 
-  bitmap->pixels = (PIXEL*)malloc(width * height * sizeof(PIXEL));
+  after_effect->pixels = (PIXEL*)malloc(width * height * sizeof(PIXEL));
 
   for(int y = 0; y < height; y++) {
 
@@ -325,7 +318,7 @@ void Read_PNG(char *filename, IMAGE * bitmap) {
 
       png_bytep px = &(row[x * 4]);
 
-      PIXEL * pixel = Pixel_At ( bitmap, x, y);
+      PIXEL * pixel = Pixel_At ( after_effect, x, y);
 
       pixel->red = px[0];
       pixel->green = px[1];
@@ -340,8 +333,6 @@ void Read_PNG(char *filename, IMAGE * bitmap) {
 void Add_effect_1(IMAGE* base, IMAGE* test, IMAGE* out){
 
   out->pixels = (PIXEL*)malloc(base->width * base->height * sizeof(PIXEL));
-
-  PIXEL temp;
 
   for(int y = 0; y < base->height; y++) {
     for(int x = 0; x < base->width; x++ ) {
@@ -376,42 +367,6 @@ void Add_effect_1(IMAGE* base, IMAGE* test, IMAGE* out){
         pixel_out->blue   = 0;
         pixel_out->alpha  = 255;
       }
-    }
-  }
-}
-
-void Stitch(IMAGE* left, IMAGE* right, IMAGE* result){
-
-  result->width = left->width + right->width;
-  result->height = left->height; // Horizontal clipping
-
-  result->pixels = (PIXEL*)malloc(result->width * result->height * sizeof(PIXEL));
-
-  for (int y = 0; y < left->height; ++y)
-  {
-    for (int x = 0; x < left->width; ++x)
-    {
-      PIXEL * pixel_left = Pixel_At ( left, x, y);
-      PIXEL * pixel_result = Pixel_At ( result, x, y);
-
-      pixel_result->red    = pixel_left->red;
-      pixel_result->green  = pixel_left->green;
-      pixel_result->blue   = pixel_left->blue;
-      pixel_result->alpha  = pixel_left->alpha;
-    }
-  }
-
-  for (int y = 0; y < right->height; ++y)
-  {
-    for (int x = left->width; x < result->width; ++x)
-    {
-      PIXEL * pixel_right = Pixel_At ( right, x - left->width, y);
-      PIXEL * pixel_result = Pixel_At ( result, x, y);
-
-      pixel_result->red    = pixel_right->red;
-      pixel_result->green  = pixel_right->green;
-      pixel_result->blue   = pixel_right->blue;
-      pixel_result->alpha  = pixel_right->alpha;
     }
   }
 }
