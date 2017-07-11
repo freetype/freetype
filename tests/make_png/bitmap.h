@@ -67,6 +67,9 @@ int Generate_PNG (IMAGE *bitmap, const char *path,int render_mode);
 // Read PNG
 void Read_PNG(char *filename, IMAGE * after_effect);
 // Add an effect using two PNG images
-// Base Glyph = Gray {127,0,0,255}
+// Base Glyph = Gray {127,0,0,255} OR as it is 
 // Differences = Red {255,0,0,255}
-void Add_effect_1(IMAGE* base, IMAGE* test, IMAGE* out);
+// Effect_ID = {1 or 2}
+void Add_effect(IMAGE* base, IMAGE* test, IMAGE* out, int Effect_ID); 
+// Stitch 2 PNG files
+void Stitch(IMAGE* left, IMAGE* right, IMAGE* result);

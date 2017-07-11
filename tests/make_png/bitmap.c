@@ -330,8 +330,8 @@ void Read_PNG(char *filename, IMAGE * after_effect) {
   fclose(fp);
 }
 
-void Add_effect_1(IMAGE* base, IMAGE* test, IMAGE* out){
-
+void Add_effect(IMAGE* base, IMAGE* test, IMAGE* out, int Effect_ID)
+{ 
   out->pixels = (PIXEL*)malloc(base->width * base->height * sizeof(PIXEL));
 
   for(int y = 0; y < base->height; y++) {
@@ -341,20 +341,23 @@ void Add_effect_1(IMAGE* base, IMAGE* test, IMAGE* out){
       PIXEL * pixel_test = Pixel_At ( test, x, y);
       PIXEL * pixel_out = Pixel_At ( out, x, y);
 
-      if (pixel_base->red   == 255 &&
-          pixel_base->green == 255 &&
-          pixel_base->blue  == 255 &&
-          pixel_base->alpha == 255 )
+      if (Effect_ID == 1)
       {
-        pixel_out->red    = 255;
-        pixel_out->green  = 255;
-        pixel_out->blue   = 255;
-        pixel_out->alpha  = 255;
-      }else{
-        pixel_out->red    = 127;
-        pixel_out->green  = 127;
-        pixel_out->blue   = 127;
-        pixel_out->alpha  = 255;
+        if (pixel_base->red   == 255 &&
+            pixel_base->green == 255 &&
+            pixel_base->blue  == 255 &&
+            pixel_base->alpha == 255 )
+        {
+          pixel_out->red    = 255;
+          pixel_out->green  = 255;
+          pixel_out->blue   = 255;
+          pixel_out->alpha  = 255;
+        }else{
+          pixel_out->red    = 127;
+          pixel_out->green  = 127;
+          pixel_out->blue   = 127;
+          pixel_out->alpha  = 255;
+        }
       }
 
       if (pixel_base->red   != pixel_test->red    ||
@@ -366,7 +369,51 @@ void Add_effect_1(IMAGE* base, IMAGE* test, IMAGE* out){
         pixel_out->green  = 0;
         pixel_out->blue   = 0;
         pixel_out->alpha  = 255;
+      }else{
+        if (Effect_ID == 2)
+        {
+          pixel_out->red    = pixel_base->red;
+          pixel_out->green  = pixel_base->green;
+          pixel_out->blue   = pixel_base->blue;
+          pixel_out->alpha  = pixel_base->alpha;
+        }
       }
+    }
+  }
+}
+
+void Stitch(IMAGE* left, IMAGE* right, IMAGE* result){
+
+  result->width = left->width + right->width;
+  result->height = left->height; // Horizontal clipping
+
+  result->pixels = (PIXEL*)malloc(result->width * result->height * sizeof(PIXEL));
+
+  for (int y = 0; y < left->height; ++y)
+  {
+    for (int x = 0; x < left->width; ++x)
+    {
+      PIXEL * pixel_left = Pixel_At ( left, x, y);
+      PIXEL * pixel_result = Pixel_At ( result, x, y);
+
+      pixel_result->red    = pixel_left->red;
+      pixel_result->green  = pixel_left->green;
+      pixel_result->blue   = pixel_left->blue;
+      pixel_result->alpha  = pixel_left->alpha; 
+    }
+  }
+
+  for (int y = 0; y < right->height; ++y)
+  {
+    for (int x = left->width; x < result->width; ++x)
+    {
+      PIXEL * pixel_right = Pixel_At ( right, x - left->width, y);
+      PIXEL * pixel_result = Pixel_At ( result, x, y);
+
+      pixel_result->red    = pixel_right->red;
+      pixel_result->green  = pixel_right->green;
+      pixel_result->blue   = pixel_right->blue;
+      pixel_result->alpha  = pixel_right->alpha; 
     }
   }
 }
