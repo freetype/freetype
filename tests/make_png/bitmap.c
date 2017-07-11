@@ -337,3 +337,45 @@ void Read_PNG(char *filename, IMAGE * after_effect) {
   fclose(fp);
 }
 
+void Add_effect_1(IMAGE* base, IMAGE* test, IMAGE* out){
+
+  out->pixels = (PIXEL*)malloc(base->width * base->height * sizeof(PIXEL));
+
+  PIXEL temp;
+
+  for(int y = 0; y < base->height; y++) {
+    for(int x = 0; x < base->width; x++ ) {
+
+      PIXEL * pixel_base = Pixel_At ( base, x, y);
+      PIXEL * pixel_test = Pixel_At ( test, x, y);
+      PIXEL * pixel_out = Pixel_At ( out, x, y);
+
+      if (pixel_base->red   == 255 &&
+          pixel_base->green == 255 &&
+          pixel_base->blue  == 255 &&
+          pixel_base->alpha == 255 )
+      {
+        pixel_out->red    = 255;
+        pixel_out->green  = 255;
+        pixel_out->blue   = 255;
+        pixel_out->alpha  = 255;
+      }else{
+        pixel_out->red    = 127;
+        pixel_out->green  = 127;
+        pixel_out->blue   = 127;
+        pixel_out->alpha  = 255;
+      }
+
+      if (pixel_base->red   != pixel_test->red    ||
+          pixel_base->green != pixel_test->green  ||
+          pixel_base->blue  != pixel_test->blue   ||
+          pixel_base->alpha != pixel_test->alpha  )
+      {
+        pixel_out->red    = 255;
+        pixel_out->green  = 0;
+        pixel_out->blue   = 0;
+        pixel_out->alpha  = 255;
+      }
+    }
+  }
+}

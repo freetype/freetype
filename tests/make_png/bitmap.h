@@ -66,3 +66,7 @@ void Make_PNG(FT_Bitmap* bitmap,char* name,int i,int render_mode);
 int Generate_PNG (IMAGE *bitmap, const char *path,int render_mode);  
 // Read PNG
 void Read_PNG(char *filename, IMAGE * after_effect);
+// Add an effect using two PNG images
+// Base Glyph = Gray {127,0,0,255}
+// Differences = Red {255,0,0,255}
+void Add_effect_1(IMAGE* base, IMAGE* test, IMAGE* out);
