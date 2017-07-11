@@ -280,3 +280,67 @@ void Make_PNG(FT_Bitmap* bitmap,char* name,int i,int render_mode){
 
   free (fruit.pixels);
 }
+
+void Read_PNG(char *filename, IMAGE * after_effect) {
+
+  int width, height;
+  png_bytep *row_pointers;
+
+  FILE *fp = fopen(filename, "rb");
+
+  png_structp png = png_create_read_struct(PNG_LIBPNG_VER_STRING, NULL, NULL, NULL);
+  if(!png) abort();
+
+  png_infop info = png_create_info_struct(png);
+  if(!info) abort();
+
+  if(setjmp(png_jmpbuf(png))) abort();
+
+  png_init_io(png, fp);
+
+  png_set_user_limits(png, 0x7fffffffL, 0x7fffffffL);
+
+  png_read_info(png, info);
+
+  width      = png_get_image_width(png, info);
+  height     = png_get_image_height(png, info);
+
+  after_effect->width = width;
+  after_effect->height = height;
+
+  printf("%d %d\n",width,height );
+
+  row_pointers = (png_bytep*)malloc(sizeof(png_bytep) * height);
+  for(int y = 0; y < height; y++) {
+    row_pointers[y] = (png_byte*)malloc(png_get_rowbytes(png,info));
+  }
+
+  png_read_image(png, row_pointers);
+
+  after_effect->pixels = (PIXEL*)malloc(width * height * sizeof(PIXEL));
+
+  for(int y = 0; y < height; y++) {
+
+    png_bytep row = row_pointers[y];
+
+    for(int x = 0; x < width; x++ ) {
+
+      png_bytep px = &(row[x * 4]);
+
+      PIXEL * pixel = Pixel_At ( after_effect, x, y);
+
+      pixel->red = px[0];
+      pixel->green = px[1];
+      pixel->blue = px[2];
+      pixel->alpha = px[3];
+
+      printf("%d %d %d %d\n", pixel->red,
+                              pixel->green,
+                              pixel->blue,
+                              pixel->alpha );
+    }
+  }
+
+  fclose(fp);
+}
+

@@ -64,4 +64,5 @@ PIXEL * Pixel_At (IMAGE * bitmap, int x, int y);  // Returns a pointer to pixel
 void Make_PNG(FT_Bitmap* bitmap,char* name,int i,int render_mode);
 // Image to file  
 int Generate_PNG (IMAGE *bitmap, const char *path,int render_mode);  
-
+// Read PNG
+void Read_PNG(char *filename, IMAGE * after_effect);
