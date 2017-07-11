@@ -308,8 +308,6 @@ void Read_PNG(char *filename, IMAGE * after_effect) {
   after_effect->width = width;
   after_effect->height = height;
 
-  printf("%d %d\n",width,height );
-
   row_pointers = (png_bytep*)malloc(sizeof(png_bytep) * height);
   for(int y = 0; y < height; y++) {
     row_pointers[y] = (png_byte*)malloc(png_get_rowbytes(png,info));
