@@ -281,7 +281,7 @@ void Make_PNG(FT_Bitmap* bitmap,char* name,int i,int render_mode){
   free (fruit.pixels);
 }
 
-void Read_PNG(char *filename, IMAGE * after_effect) {
+void Read_PNG(char *filename, IMAGE * bitmap) {
 
   int width, height;
   png_bytep *row_pointers;
@@ -305,8 +305,8 @@ void Read_PNG(char *filename, IMAGE * after_effect) {
   width      = png_get_image_width(png, info);
   height     = png_get_image_height(png, info);
 
-  after_effect->width = width;
-  after_effect->height = height;
+  bitmap->width = width;
+  bitmap->height = height;
 
   row_pointers = (png_bytep*)malloc(sizeof(png_bytep) * height);
   for(int y = 0; y < height; y++) {
@@ -315,7 +315,7 @@ void Read_PNG(char *filename, IMAGE * after_effect) {
 
   png_read_image(png, row_pointers);
 
-  after_effect->pixels = (PIXEL*)malloc(width * height * sizeof(PIXEL));
+  bitmap->pixels = (PIXEL*)malloc(width * height * sizeof(PIXEL));
 
   for(int y = 0; y < height; y++) {
 
@@ -325,7 +325,7 @@ void Read_PNG(char *filename, IMAGE * after_effect) {
 
       png_bytep px = &(row[x * 4]);
 
-      PIXEL * pixel = Pixel_At ( after_effect, x, y);
+      PIXEL * pixel = Pixel_At ( bitmap, x, y);
 
       pixel->red = px[0];
       pixel->green = px[1];
@@ -376,6 +376,42 @@ void Add_effect_1(IMAGE* base, IMAGE* test, IMAGE* out){
         pixel_out->blue   = 0;
         pixel_out->alpha  = 255;
       }
+    }
+  }
+}
+
+void Stitch(IMAGE* left, IMAGE* right, IMAGE* result){
+
+  result->width = left->width + right->width;
+  result->height = left->height; // Horizontal clipping
+
+  result->pixels = (PIXEL*)malloc(result->width * result->height * sizeof(PIXEL));
+
+  for (int y = 0; y < left->height; ++y)
+  {
+    for (int x = 0; x < left->width; ++x)
+    {
+      PIXEL * pixel_left = Pixel_At ( left, x, y);
+      PIXEL * pixel_result = Pixel_At ( result, x, y);
+
+      pixel_result->red    = pixel_left->red;
+      pixel_result->green  = pixel_left->green;
+      pixel_result->blue   = pixel_left->blue;
+      pixel_result->alpha  = pixel_left->alpha;
+    }
+  }
+
+  for (int y = 0; y < right->height; ++y)
+  {
+    for (int x = left->width; x < result->width; ++x)
+    {
+      PIXEL * pixel_right = Pixel_At ( right, x - left->width, y);
+      PIXEL * pixel_result = Pixel_At ( result, x, y);
+
+      pixel_result->red    = pixel_right->red;
+      pixel_result->green  = pixel_right->green;
+      pixel_result->blue   = pixel_right->blue;
+      pixel_result->alpha  = pixel_right->alpha;
     }
   }
 }

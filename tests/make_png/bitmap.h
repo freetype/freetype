@@ -70,3 +70,5 @@ void Read_PNG(char *filename, IMAGE * after_effect);
 // Base Glyph = Gray {127,0,0,255}
 // Differences = Red {255,0,0,255}
 void Add_effect_1(IMAGE* base, IMAGE* test, IMAGE* out);
+// Stitch two PNG files side by side
+void Stitch(IMAGE* left, IMAGE* right, IMAGE* result);
