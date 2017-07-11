@@ -333,11 +333,6 @@ void Read_PNG(char *filename, IMAGE * after_effect) {
       pixel->green = px[1];
       pixel->blue = px[2];
       pixel->alpha = px[3];
-
-      printf("%d %d %d %d\n", pixel->red,
-                              pixel->green,
-                              pixel->blue,
-                              pixel->alpha );
     }
   }
 
