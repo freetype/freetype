@@ -44,6 +44,20 @@ CHANGES BETWEEN 2.7.1 and 2.8
       configuration option.   However, it  is strongly  recommended to
       avoid that, adjusting font sizes instead.
 
+    - Global size  metrics values  in the  `FT_Size_Metrics' structure
+      can be  different for TrueType  fonts.  Reason is that  in older
+      FreeType  versions  the  metrics  were  rounded  differently  to
+      integer pixels compared  to all other font  formats, yielding an
+      inconsistent behaviour if you used non-native hinting.  Starting
+      with this  version, global size  metrics for TrueType  fonts are
+      handled the same as other  font formats: `ascender' gets rounded
+      up,  `descender'  gets  rounded  down,  `height'  gets  normally
+      rounded, and `max_advance' gets normally rounded, too.
+
+      If you need more precise values of (global) ascender, descender,
+      height, or  `max_advance', please take the  corresponding values
+      from the `FT_Face' structure and scale them manually.
+
     - If a TrueType font gets loaded with FT_LOAD_NO_HINTING, FreeType
       now scales  the font linearly  again (bug introduced  in version
       2.4.6).
