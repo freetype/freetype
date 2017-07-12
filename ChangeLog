@@ -1,5 +1,16 @@
 2017-07-12  Werner Lemberg  <wl@gnu.org>
 
+	[base] Integer overflow.
+
+	Reported as
+
+	  https://bugs.chromium.org/p/oss-fuzz/issues/detail?id=2573
+
+	* src/base/ftobjs.c (ft_glyphslot_grid_fit_metrics): Use
+	FT_PIX_CEIL_LONG and FT_PIX_ROUND_LONG.
+
+2017-07-12  Werner Lemberg  <wl@gnu.org>
+
 	* src/truetype/ttpload.c (tt_face_get_location): Off-by-one typo.
 
 	Also improve tracing message.
