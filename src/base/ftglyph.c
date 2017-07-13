@@ -412,13 +412,15 @@
          slot->advance.x <= -0x8000L * 64 )
     {
       FT_ERROR(( "FT_Get_Glyph: advance width too large\n" ));
-      return FT_THROW( Invalid_Argument );
+      error = FT_THROW( Invalid_Argument );
+      goto Exit2;
     }
     if ( slot->advance.y >=  0x8000L * 64 ||
          slot->advance.y <= -0x8000L * 64 )
     {
       FT_ERROR(( "FT_Get_Glyph: advance height too large\n" ));
-      return FT_THROW( Invalid_Argument );
+      error = FT_THROW( Invalid_Argument );
+      goto Exit2;
     }
 
     glyph->advance.x = slot->advance.x * 1024;
@@ -427,6 +429,7 @@
     /* now import the image from the glyph slot */
     error = clazz->glyph_init( glyph, slot );
 
+  Exit2:
     /* if an error occurred, destroy the glyph */
     if ( error )
       FT_Done_Glyph( glyph );
