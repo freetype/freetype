@@ -1230,7 +1230,9 @@
   /* <Input>                                                               */
   /*    size        :: A handle to the target size object.                 */
   /*                                                                       */
-  /*    only_height :: Only recompute ascender, descender, and height.     */
+  /*    only_height :: Only recompute ascender, descender, and height;     */
+  /*                   this flag is used for variation fonts where         */
+  /*                   `tt_size_reset' is used as an iterator function.    */
   /*                                                                       */
   FT_LOCAL_DEF( FT_Error )
   tt_size_reset( TT_Size  size,
@@ -1277,7 +1279,11 @@
     size->ttmetrics.valid = TRUE;
 
     if ( only_height )
+    {
+      /* we must not recompute the scaling values here since       */
+      /* `tt_size_reset' was already called (with only_height = 0) */
       return FT_Err_Ok;
+    }
 
     if ( face->header.Flags & 8 )
     {
