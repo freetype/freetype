@@ -59,6 +59,11 @@ int main(int argc, char const *argv[])
   IMAGE combi_effect_2;
   IMAGE output;
 
+  HASH_128 *  base_murmur = (HASH_128 *) malloc(sizeof(HASH_128)) ;
+  HASH_128 *  test_murmur = (HASH_128 *) malloc(sizeof(HASH_128)) ;  
+  char base_hash[32];
+  char test_hash[32];
+  int Is_Different;
 /*******************************************************************/
 
   FT_Error ( *Base_Init_FreeType )( FT_Library* );
@@ -337,8 +342,27 @@ int main(int argc, char const *argv[])
 // Need to write code to check the values in FT_Bitmap and compare
     if (base_bitmap->width == 0 || base_bitmap->rows == 0)
     {
+      printf("Empty Glyph in glyph-index %d\n", i);
       continue;
     }
+
+    Is_Different = 0;
+
+    base_murmur = Generate_Hash_x64_128(base_bitmap,base_murmur);
+    test_murmur = Generate_Hash_x64_128(test_bitmap,test_murmur);
+
+    sprintf(base_hash, "%08x%08x%08x%08x",base_murmur->hash[0], 
+                                          base_murmur->hash[1],
+                                          base_murmur->hash[2], 
+                                          base_murmur->hash[3]);
+
+    sprintf(test_hash, "%08x%08x%08x%08x",test_murmur->hash[0],
+                                          test_murmur->hash[1],
+                                          test_murmur->hash[2], 
+                                          test_murmur->hash[3]);
+
+    Is_Different = strcmp(base_hash, test_hash);
+    
 // Mono rendering not working right now, will put it today
     // Base_Bitmap_Init( &base_target );
     // Test_Bitmap_Init( &test_target );
@@ -362,35 +386,38 @@ int main(int argc, char const *argv[])
     
     sprintf( output_file_name, "./images/sprite_%d", i );
 
-    if (render_mode == 0)
+    if (Is_Different != 0)
     {
-      Make_PNG( &base_target, &base_png, i, render_mode );
-      Make_PNG( &test_target, &test_png, i, render_mode );
-// Will be used
-      // Add_effect( &base_png, &test_png, &after_effect_1, 1);
-      // Add_effect( &base_png, &test_png, &after_effect_2, 2);
+      if (render_mode == 0)
+      {
+        Make_PNG( &base_target, &base_png, i, render_mode );
+        Make_PNG( &test_target, &test_png, i, render_mode );
+  // Will be used
+        // Add_effect( &base_png, &test_png, &after_effect_1, 1);
+        // Add_effect( &base_png, &test_png, &after_effect_2, 2);
 
-      Stitch( &base_png, &test_png, &combi_effect_1);
-      // Stitch( &after_effect_1, &after_effect_2, &combi_effect_2);
+        Stitch( &base_png, &test_png, &combi_effect_1);
+        // Stitch( &after_effect_1, &after_effect_2, &combi_effect_2);
 
-      // Stitch( &combi_effect_1, &combi_effect_2, &output);
+        // Stitch( &combi_effect_1, &combi_effect_2, &output);
 
-      Generate_PNG ( &combi_effect_1, output_file_name, render_mode );
-    }else{
+        Generate_PNG ( &combi_effect_1, output_file_name, render_mode );
+      }else{
 
-      Make_PNG( base_bitmap, &base_png, i, render_mode );
-      Make_PNG( test_bitmap, &test_png, i, render_mode );
-// Will be used
-      // Add_effect( &base_png, &test_png, &after_effect_1, 1);
-      // Add_effect( &base_png, &test_png, &after_effect_2, 2);
+        Make_PNG( base_bitmap, &base_png, i, render_mode );
+        Make_PNG( test_bitmap, &test_png, i, render_mode );
+  // Will be used
+        // Add_effect( &base_png, &test_png, &after_effect_1, 1);
+        // Add_effect( &base_png, &test_png, &after_effect_2, 2);
 
-      Stitch( &base_png, &test_png, &combi_effect_1);
-      // Stitch( &after_effect_1, &after_effect_2, &combi_effect_2);
+        Stitch( &base_png, &test_png, &combi_effect_1);
+        // Stitch( &after_effect_1, &after_effect_2, &combi_effect_2);
 
-      // Stitch( &combi_effect_1, &combi_effect_2, &output);
+        // Stitch( &combi_effect_1, &combi_effect_2, &output);
 
-      Generate_PNG ( &combi_effect_1, output_file_name, render_mode );
-    } 
+        Generate_PNG ( &combi_effect_1, output_file_name, render_mode );
+      } 
+    }
   }
 
   error = Base_Done_Face(base_face);
