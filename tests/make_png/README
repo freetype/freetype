@@ -1,11 +1,10 @@
 NOTE: First make freetype library (in the ../../ directory)
   make devel
   make
-
-NOTE: 	Right now, the sprite sheets are generated stitching the base and test glyph 
-		together. 
+ 
 TODO:   Monochrome sprite sheets.
-		Sprite sheets with more sub-images (visual effects).
+
+/*******************************************************************/
 
 To generate hashes and store it in the ./hashes folder,
 
@@ -25,6 +24,8 @@ To generate hashes and store it in the ./hashes folder,
                               2 - lcd horizontal
                               3 - lcd vertical
 
+/*******************************************************************/
+
 To generate 32-bit RGBA PNG(s) of all glyphs in a font\n
   
 1)  make png
@@ -43,20 +44,25 @@ To generate 32-bit RGBA PNG(s) of all glyphs in a font\n
 	                            2 - lcd horizontal-RGB
 	                            3 - lcd horizontal-BGR
 	                            4 - lcd vertical-RGB
-                            5 - lcd vertical-BGR
+                              5 - lcd vertical-BGR
+
+/*******************************************************************/
 
 To generate sprite sheets,
-First compile and install two versions of the FreeType libray in different folders 
-(with SUBPIXEL_RENDERING enabled in ftoption.h)
+First compile and install two versions of the FreeType libray 
+in different folders (with SUBPIXEL_RENDERING enabled in ftoption.h)
 
 
 1)  make sprite
 		(set resoluton in DPI by passing argument
   	example: make DPI=100, if not specified,default is 72)
 
-2) 	Usage ./sprite <base_version .so> <test_version .so> <font_file> <pt_size> <render_mode>
+2) 	Usage ./sprite <a> <b> <font_file> <pt_size> <render_mode>
 
-		The path to the "shared library files" in usage should be absolute.
+		(<a> is the libfreetype.so from the base vesion )
+		(<b> is the libfreetype.so from the test vesion )
+
+		The path to the "shared library" in usage should be absolute.
 
 		Sprite Sheets will be saved as sprite_$(glyph_index).png
 
