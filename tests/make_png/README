@@ -11,7 +11,7 @@ To generate hashes and store it in the ./hashes folder,
 
 1)  make hash
 		(set resoluton in DPI by passing argument
-		example: sudo make DPI=100, if not specified,default is 72)
+		example: make DPI=100, if not specified,default is 72)
 
 2) 	Usage   ./hash <font_file> <pt_size> <render_mode>
 	
@@ -29,7 +29,7 @@ To generate 32-bit RGBA PNG(s) of all glyphs in a font\n
   
 1)  make png
 		(set resoluton in DPI by passing argument
-  	example: sudo make DPI=100, if not specified,default is 72)
+  	example: make DPI=100, if not specified,default is 72)
 
 2) 	Usage   ./<exe> <font_file> <pt_size> <render_mode>
 
@@ -52,7 +52,7 @@ First compile and install two versions of the FreeType libray in different folde
 
 1)  make sprite
 		(set resoluton in DPI by passing argument
-  	example: sudo make DPI=100, if not specified,default is 72)
+  	example: make DPI=100, if not specified,default is 72)
 
 2) 	Usage ./sprite <base_version .so> <test_version .so> <font_file> <pt_size> <render_mode>
 
