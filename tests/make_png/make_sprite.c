@@ -55,6 +55,8 @@ int main(int argc, char const *argv[])
   IMAGE test_png;
   IMAGE after_effect_1;
   IMAGE after_effect_2;
+  IMAGE combi_effect_1;
+  IMAGE combi_effect_2;
   IMAGE output;
 
 /*******************************************************************/
@@ -364,24 +366,30 @@ int main(int argc, char const *argv[])
     {
       Make_PNG( &base_target, &base_png, i, render_mode );
       Make_PNG( &test_target, &test_png, i, render_mode );
-// Will be added
+// Will be used
       // Add_effect( &base_png, &test_png, &after_effect_1, 1);
       // Add_effect( &base_png, &test_png, &after_effect_2, 2);
 
-      Stitch( &base_png, &test_png, &output);
+      Stitch( &base_png, &test_png, &combi_effect_1);
+      // Stitch( &after_effect_1, &after_effect_2, &combi_effect_2);
 
-      Generate_PNG ( &output, output_file_name, render_mode );
+      // Stitch( &combi_effect_1, &combi_effect_2, &output);
+
+      Generate_PNG ( &combi_effect_1, output_file_name, render_mode );
     }else{
 
       Make_PNG( base_bitmap, &base_png, i, render_mode );
       Make_PNG( test_bitmap, &test_png, i, render_mode );
-// Will be added
+// Will be used
       // Add_effect( &base_png, &test_png, &after_effect_1, 1);
       // Add_effect( &base_png, &test_png, &after_effect_2, 2);
 
-      Stitch( &base_png, &test_png, &output);
+      Stitch( &base_png, &test_png, &combi_effect_1);
+      // Stitch( &after_effect_1, &after_effect_2, &combi_effect_2);
 
-      Generate_PNG ( &output, output_file_name, render_mode );
+      // Stitch( &combi_effect_1, &combi_effect_2, &output);
+
+      Generate_PNG ( &combi_effect_1, output_file_name, render_mode );
     } 
   }
 
