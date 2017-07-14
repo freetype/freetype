@@ -11,7 +11,7 @@
 #include "murmur3.h"            // MurmurHash3_x64_128 header file
 
 #include <png.h>
-
+#include <dlfcn.h>
 
 #include FT_FREETYPE_H
 #include FT_MODULE_H

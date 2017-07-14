@@ -2,14 +2,18 @@ NOTE: First make freetype library (in the ../../ directory)
   make devel
   make
 
+NOTE: 	Right now, the sprite sheets are generated stitching the base and test glyph 
+		together. 
+TODO:   Monochrome sprite sheets.
+		Sprite sheets with more sub-images (visual effects).
 
 To generate hashes and store it in the ./hashes folder,
 
 1)  make hash
-	(set resoluton in DPI by passing argument
-	example: sudo make DPI=100, if not specified,default is 72)
+		(set resoluton in DPI by passing argument
+		example: sudo make DPI=100, if not specified,default is 72)
 
-2) Usage   ./hash <font_file> <pt_size> <render_mode>
+2) 	Usage   ./hash <font_file> <pt_size> <render_mode>
 	
     Hashes will be saved in a file named 
     $(font)_$(pt_size)_$(render_mode).hash 
@@ -24,19 +28,37 @@ To generate hashes and store it in the ./hashes folder,
 To generate 32-bit RGBA PNG(s) of all glyphs in a font\n
   
 1)  make png
-	(set resoluton in DPI by passing argument
+		(set resoluton in DPI by passing argument
   	example: sudo make DPI=100, if not specified,default is 72)
 
-2) Usage   ./<exe> <font_file> <pt_size> <render_mode>
+2) 	Usage   ./<exe> <font_file> <pt_size> <render_mode>
 
-    Images will be saved in a file named 
-    $(font)_$(pt_size)_$(render_mode)_$(glyph_index).png
+	  Images will be saved in a file named 
+	  $(font)_$(pt_size)_$(render_mode)_$(glyph_index).png
 
-    By default, hashes of 256-level gray bitmaps will be generated
+	  By default, hashes of 256-level gray bitmaps will be generated
 
-    Values for render_mode    0 - monochrome
-                              1 - anti-aliased
-                              2 - lcd horizontal-RGB
-                              3 - lcd horizontal-BGR
-                              4 - lcd vertical-RGB
-                              5 - lcd vertical-BGR
+	  Values for render_mode    0 - monochrome
+	                            1 - anti-aliased
+	                            2 - lcd horizontal-RGB
+	                            3 - lcd horizontal-BGR
+	                            4 - lcd vertical-RGB
+                            5 - lcd vertical-BGR
+
+To generate sprite sheets,
+First compile and install two versions of the FreeType libray in different folders 
+(with SUBPIXEL_RENDERING enabled in ftoption.h)
+
+
+1)  make sprite
+		(set resoluton in DPI by passing argument
+  	example: sudo make DPI=100, if not specified,default is 72)
+
+2) 	Usage ./sprite <base_version .so> <test_version .so> <font_file> <pt_size> <render_mode>
+
+		The path to the "shared library files" in usage should be absolute.
+
+		Sprite Sheets will be saved as sprite_$(glyph_index).png
+
+		Render modes similar to generating PNG(s).
+
