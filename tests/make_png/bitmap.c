@@ -330,8 +330,90 @@ void Read_PNG(char *filename, IMAGE * after_effect) {
   fclose(fp);
 }
 
+IMAGE* Adjust_Height(IMAGE* small, IMAGE* big){
+  
+  int h_delta;
+  IMAGE* result = (IMAGE*)malloc(sizeof(IMAGE));
+
+  result->height = big->height;
+  result->width = small->width; 
+  result->pixels = (PIXEL*)malloc(result->width * result->height * sizeof(PIXEL));
+
+  h_delta = big->height - small->height;
+
+  for (int y = 0; y < h_delta; ++y)
+  {
+    for (int x = 0; x < result->width; ++x)
+    {
+      PIXEL * pixel_result = Pixel_At ( result, x, y);
+
+      pixel_result->red    = 255;
+      pixel_result->green  = 255;
+      pixel_result->blue   = 255;
+      pixel_result->alpha  = 255; 
+    }
+  }
+
+  for (int y = h_delta; y < result->height; ++y)
+  {
+    for (int x = 0; x < result->width; ++x)
+    {
+      PIXEL * pixel_small = Pixel_At ( small, x, y - h_delta);
+      PIXEL * pixel_result = Pixel_At ( result, x, y);
+
+      pixel_result->red    = pixel_small->red;
+      pixel_result->green  = pixel_small->green;
+      pixel_result->blue   = pixel_small->blue;
+      pixel_result->alpha  = pixel_small->alpha; 
+    }
+  }
+  return result; 
+}
+
+IMAGE* Adjust_Width(IMAGE* small, IMAGE* big){
+  
+  int w_delta;
+  IMAGE* result = (IMAGE*)malloc(sizeof(IMAGE));
+
+  result->height = small->height;
+  result->width = big->width; 
+  result->pixels = (PIXEL*)malloc(result->width * result->height * sizeof(PIXEL));
+
+  w_delta = big->width - small->width;
+
+  for (int x = small->width; x < big->width; ++x)
+  {
+    for (int y = 0; y < result->height; ++y)
+    {
+      PIXEL * pixel_result = Pixel_At ( result, x, y);
+
+      pixel_result->red    = 255;
+      pixel_result->green  = 255;
+      pixel_result->blue   = 255;
+      pixel_result->alpha  = 255; 
+    }
+  }
+
+  for (int y = 0; y < result->height; ++y)
+  {
+    for (int x = 0; x < small->width; ++x)
+    {
+      PIXEL * pixel_small = Pixel_At ( small, x, y);
+      PIXEL * pixel_result = Pixel_At ( result, x, y);
+
+      pixel_result->red    = pixel_small->red;
+      pixel_result->green  = pixel_small->green;
+      pixel_result->blue   = pixel_small->blue;
+      pixel_result->alpha  = pixel_small->alpha; 
+    }
+  }
+  return result;
+}
+
 void Add_effect(IMAGE* base, IMAGE* test, IMAGE* out, int Effect_ID)
 { 
+  out->width = base->width;
+  out->height = base->height;
   out->pixels = (PIXEL*)malloc(base->width * base->height * sizeof(PIXEL));
 
   for(int y = 0; y < base->height; y++) {
@@ -385,9 +467,9 @@ void Add_effect(IMAGE* base, IMAGE* test, IMAGE* out, int Effect_ID)
 void Stitch(IMAGE* left, IMAGE* right, IMAGE* result){
 
   result->width = left->width + right->width;
-  result->height = left->height; // Horizontal clipping
+  result->height = MAX(left->height, right->height); // Horizontal clipping
 
-  result->pixels = (PIXEL*)malloc(result->width * result->height * sizeof(PIXEL));
+  result->pixels = (PIXEL*)calloc(result->width * result->height, sizeof(PIXEL));
 
   for (int y = 0; y < left->height; ++y)
   {
