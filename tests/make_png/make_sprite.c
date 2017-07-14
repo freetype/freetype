@@ -51,13 +51,13 @@ int main(int argc, char const *argv[])
   int alignment = 4;
   char * output_file_name = ( char * )calloc(20,sizeof(char));
 
-  IMAGE base_png;
-  IMAGE test_png;
-  IMAGE after_effect_1;
-  IMAGE after_effect_2;
-  IMAGE combi_effect_1;
-  IMAGE combi_effect_2;
-  IMAGE output;
+  IMAGE* base_png        = (IMAGE*)malloc(sizeof(IMAGE));
+  IMAGE* test_png        = (IMAGE*)malloc(sizeof(IMAGE));
+  IMAGE* after_effect_1  = (IMAGE*)malloc(sizeof(IMAGE));
+  IMAGE* after_effect_2  = (IMAGE*)malloc(sizeof(IMAGE));
+  IMAGE* combi_effect_1  = (IMAGE*)malloc(sizeof(IMAGE));
+  IMAGE* combi_effect_2  = (IMAGE*)malloc(sizeof(IMAGE));
+  IMAGE* output          = (IMAGE*)malloc(sizeof(IMAGE));
 
   HASH_128 *  base_murmur = (HASH_128 *) malloc(sizeof(HASH_128)) ;
   HASH_128 *  test_murmur = (HASH_128 *) malloc(sizeof(HASH_128)) ;  
@@ -384,38 +384,43 @@ int main(int argc, char const *argv[])
     //   exit(1);
     // }
     
-    sprintf( output_file_name, "./images/sprite_%d", i );
+    sprintf( output_file_name, "./images/sprite_%d.png", i );
 
-    if (Is_Different != 0)
+    if ( Is_Different != 0 )
     {
-      if (render_mode == 0)
+      if ( render_mode == 0 )
       {
-        Make_PNG( &base_target, &base_png, i, render_mode );
-        Make_PNG( &test_target, &test_png, i, render_mode );
-  // Will be used
-        // Add_effect( &base_png, &test_png, &after_effect_1, 1);
-        // Add_effect( &base_png, &test_png, &after_effect_2, 2);
-
-        Stitch( &base_png, &test_png, &combi_effect_1);
-        // Stitch( &after_effect_1, &after_effect_2, &combi_effect_2);
-
-        // Stitch( &combi_effect_1, &combi_effect_2, &output);
-
-        Generate_PNG ( &combi_effect_1, output_file_name, render_mode );
+        // Monochrome rendering to be added 
       }else{
 
-        Make_PNG( base_bitmap, &base_png, i, render_mode );
-        Make_PNG( test_bitmap, &test_png, i, render_mode );
-  // Will be used
-        // Add_effect( &base_png, &test_png, &after_effect_1, 1);
-        // Add_effect( &base_png, &test_png, &after_effect_2, 2);
+        Make_PNG( base_bitmap, base_png, i, render_mode );
+        Make_PNG( test_bitmap, test_png, i, render_mode );
 
-        Stitch( &base_png, &test_png, &combi_effect_1);
-        // Stitch( &after_effect_1, &after_effect_2, &combi_effect_2);
+        if ( base_png->height < test_png->height)
+        {
+          base_png = Adjust_Height(base_png, test_png );
+        }else if ( base_png->height > test_png->height )
+        {
+          test_png = Adjust_Height(test_png, base_png );
+        }
 
-        // Stitch( &combi_effect_1, &combi_effect_2, &output);
+        if ( base_png->width < test_png->width )
+        {
+          base_png = Adjust_Width(base_png, test_png );
+        }else if ( base_png->width > test_png->width )
+        {
+          test_png = Adjust_Width(test_png, base_png );
+        }
 
-        Generate_PNG ( &combi_effect_1, output_file_name, render_mode );
+        Add_effect( base_png, test_png, after_effect_1, 1 );
+        Add_effect( base_png, test_png, after_effect_2, 2 );
+
+        Stitch( base_png, test_png, combi_effect_1);
+        Stitch( after_effect_1, after_effect_2, combi_effect_2 );
+
+        Stitch( combi_effect_1, combi_effect_2, output );
+
+        Generate_PNG ( output, output_file_name, render_mode );
       } 
     }
   }
