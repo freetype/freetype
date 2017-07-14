@@ -362,66 +362,67 @@ int main(int argc, char const *argv[])
                                           test_murmur->hash[3]);
 
     Is_Different = strcmp(base_hash, test_hash);
-    
-// Mono rendering not working right now, will put it today
-    // Base_Bitmap_Init( &base_target );
-    // Test_Bitmap_Init( &test_target );
 
-    // error = Base_Bitmap_Convert(  base_library, 
-    //                               base_bitmap, 
-    //                               &base_target,
-    //                               alignment);
-    // if(error){
-    //   printf("Error converting the bitmap\n");
-    //   exit(1);
-    // }
-    // error = Test_Bitmap_Convert(  test_library, 
-    //                               test_bitmap, 
-    //                               &test_target,
-    //                               alignment);
-    // if(error){
-    //   printf("Error converting the bitmap\n");
-    //   exit(1);
-    // }
+    Base_Bitmap_Init( &base_target );
+    Test_Bitmap_Init( &test_target );
+
+    error = Base_Bitmap_Convert(  base_library, 
+                                  base_bitmap, 
+                                  &base_target,
+                                  alignment);
+    if(error){
+      printf("Error converting the bitmap\n");
+      exit(1);
+    }
+    error = Test_Bitmap_Convert(  test_library, 
+                                  test_bitmap, 
+                                  &test_target,
+                                  alignment);
+    if(error){
+      printf("Error converting the bitmap\n");
+      exit(1);
+    }
     
     sprintf( output_file_name, "./images/sprite_%d.png", i );
 
-    if ( Is_Different != 0 )
+    if (Is_Different != 0)
     {
-      if ( render_mode == 0 )
+      if (render_mode == 0)
       {
-        // Monochrome rendering to be added 
+        Make_PNG( &base_target, base_png, i, render_mode );
+        Make_PNG( &test_target, test_png, i, render_mode );
+
       }else{
 
         Make_PNG( base_bitmap, base_png, i, render_mode );
         Make_PNG( test_bitmap, test_png, i, render_mode );
+      }
+      
+      if (base_png->height < test_png->height)
+      {
+        base_png = Adjust_Height(base_png, test_png);
+      }else if (base_png->height > test_png->height)
+      {
+        test_png = Adjust_Height(test_png, base_png);
+      }
 
-        if ( base_png->height < test_png->height)
-        {
-          base_png = Adjust_Height(base_png, test_png );
-        }else if ( base_png->height > test_png->height )
-        {
-          test_png = Adjust_Height(test_png, base_png );
-        }
+      if (base_png->width < test_png->width)
+      {
+        base_png = Adjust_Width(base_png, test_png);
+      }else if (base_png->width > test_png->width)
+      {
+        test_png = Adjust_Width(test_png, base_png);
+      }
 
-        if ( base_png->width < test_png->width )
-        {
-          base_png = Adjust_Width(base_png, test_png );
-        }else if ( base_png->width > test_png->width )
-        {
-          test_png = Adjust_Width(test_png, base_png );
-        }
+      Add_effect( base_png, test_png, after_effect_1, 1);
+      Add_effect( base_png, test_png, after_effect_2, 2);
 
-        Add_effect( base_png, test_png, after_effect_1, 1 );
-        Add_effect( base_png, test_png, after_effect_2, 2 );
+      Stitch( base_png, test_png, combi_effect_1);
+      Stitch( after_effect_1, after_effect_2, combi_effect_2);
 
-        Stitch( base_png, test_png, combi_effect_1);
-        Stitch( after_effect_1, after_effect_2, combi_effect_2 );
+      Stitch( combi_effect_1, combi_effect_2, output);
 
-        Stitch( combi_effect_1, combi_effect_2, output );
-
-        Generate_PNG ( output, output_file_name, render_mode );
-      } 
+      Generate_PNG ( output, output_file_name, render_mode );
     }
   }
 

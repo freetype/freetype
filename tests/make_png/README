@@ -2,7 +2,7 @@ NOTE: First make freetype library (in the ../../ directory)
   make devel
   make
  
-TODO:   Monochrome sprite sheets.
+TODO:   Generate HTML page (testing going on)
 
 /*******************************************************************/
 
