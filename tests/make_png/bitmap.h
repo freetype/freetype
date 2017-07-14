@@ -12,6 +12,7 @@
 
 #include <png.h>
 #include <dlfcn.h>
+#include <math.h>
 
 #include FT_FREETYPE_H
 #include FT_MODULE_H
@@ -19,6 +20,7 @@
 #include FT_BITMAP_H
 
 #define BITS_PER_PIXEL_RGBA 32
+#define MAX(a, b) ((a) > (b) ? (a) : (b))
 
 typedef struct {                // To store 32bit Hash
   FT_UInt32 hash[1];
@@ -73,3 +75,7 @@ void Read_PNG(char *filename, IMAGE * after_effect);
 void Add_effect(IMAGE* base, IMAGE* test, IMAGE* out, int Effect_ID); 
 // Stitch 2 PNG files
 void Stitch(IMAGE* left, IMAGE* right, IMAGE* result);
+// Make the Height of both the PNG(s) same by filling with white pixels
+IMAGE* Adjust_Height(IMAGE* small, IMAGE* big );
+// Make the Width of both the PNG(s) same by filling with white pixels
+IMAGE* Adjust_Width(IMAGE* small, IMAGE* big );
