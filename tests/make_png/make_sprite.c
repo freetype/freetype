@@ -351,17 +351,7 @@ int main(int argc, char const *argv[])
     base_murmur = Generate_Hash_x64_128(base_bitmap,base_murmur);
     test_murmur = Generate_Hash_x64_128(test_bitmap,test_murmur);
 
-    sprintf(base_hash, "%08x%08x%08x%08x",base_murmur->hash[0], 
-                                          base_murmur->hash[1],
-                                          base_murmur->hash[2], 
-                                          base_murmur->hash[3]);
-
-    sprintf(test_hash, "%08x%08x%08x%08x",test_murmur->hash[0],
-                                          test_murmur->hash[1],
-                                          test_murmur->hash[2], 
-                                          test_murmur->hash[3]);
-
-    Is_Different = strcmp(base_hash, test_hash);
+    Is_Different = strcmp(base_murmur->hash, test_murmur->hash);
 
     Base_Bitmap_Init( &base_target );
     Test_Bitmap_Init( &test_target );

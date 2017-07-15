@@ -23,11 +23,11 @@
 #define MAX(a, b) ((a) > (b) ? (a) : (b))
 
 typedef struct {                // To store 32bit Hash
-  FT_UInt32 hash[1];
+  char hash[4];
 }HASH_32;
 
 typedef struct {                // To store 128bit Hash
-  FT_UInt32 hash[4];
+  char hash[16];
 }HASH_128;
 
 typedef struct {
