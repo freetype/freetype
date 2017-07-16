@@ -372,14 +372,11 @@ IMAGE* Adjust_Height(IMAGE* small, IMAGE* big){
 
 IMAGE* Adjust_Width(IMAGE* small, IMAGE* big){
   
-  int w_delta;
   IMAGE* result = (IMAGE*)malloc(sizeof(IMAGE));
 
   result->height = small->height;
   result->width = big->width; 
   result->pixels = (PIXEL*)malloc(result->width * result->height * sizeof(PIXEL));
-
-  w_delta = big->width - small->width;
 
   for (int x = small->width; x < big->width; ++x)
   {
@@ -410,8 +407,10 @@ IMAGE* Adjust_Width(IMAGE* small, IMAGE* big){
   return result;
 }
 
-void Add_effect(IMAGE* base, IMAGE* test, IMAGE* out, int Effect_ID)
+int Add_effect(IMAGE* base, IMAGE* test, IMAGE* out, int Effect_ID)
 { 
+  int pixel_diff = 0;
+
   out->width = base->width;
   out->height = base->height;
   out->pixels = (PIXEL*)malloc(base->width * base->height * sizeof(PIXEL));
@@ -451,6 +450,9 @@ void Add_effect(IMAGE* base, IMAGE* test, IMAGE* out, int Effect_ID)
         pixel_out->green  = 0;
         pixel_out->blue   = 0;
         pixel_out->alpha  = 255;
+
+        pixel_diff++;
+
       }else{
         if (Effect_ID == 2)
         {
@@ -462,6 +464,7 @@ void Add_effect(IMAGE* base, IMAGE* test, IMAGE* out, int Effect_ID)
       }
     }
   }
+  return pixel_diff;
 }
 
 void Stitch(IMAGE* left, IMAGE* right, IMAGE* result){
@@ -498,4 +501,16 @@ void Stitch(IMAGE* left, IMAGE* right, IMAGE* result){
       pixel_result->alpha  = pixel_right->alpha; 
     }
   }
+}
+
+void Print_Row( FILE* fp, int index, char* name, int diff){
+  fprintf(fp,
+
+    "<tr>\n\
+      <td>%04d</td>\n\
+      <td>%s</td>\n\
+      <td>%04d</td>\n\
+      <td><img id=\"sprite\" src=\"images/sprite_%04d.png\"></td>\n\
+      <td>To-be-displayed</td>\n\
+    </tr>\n", index, name, diff, index);
 }

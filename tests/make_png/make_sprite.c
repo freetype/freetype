@@ -61,9 +61,11 @@ int main(int argc, char const *argv[])
 
   HASH_128 *  base_murmur = (HASH_128 *) malloc(sizeof(HASH_128)) ;
   HASH_128 *  test_murmur = (HASH_128 *) malloc(sizeof(HASH_128)) ;  
-  char base_hash[32];
-  char test_hash[32];
+
   int Is_Different;
+  int pixel_diff;
+
+  char glyph_name[50] = ".not-def";
 /*******************************************************************/
 
   FT_Error ( *Base_Init_FreeType )( FT_Library* );
@@ -306,6 +308,49 @@ int main(int argc, char const *argv[])
   if (stat("./images/", &st) == -1) {
       mkdir("./images/", 0777);
   }
+
+  FILE* fp = fopen("index.html","w");
+
+  fprintf(fp,
+  "<html>\n\
+    <head>\n\
+      <title>\n\
+        Glyph_Diff\n\
+      </title>\n\
+      <script src=\"script.js\" type=\"text/javascript\"></script>\n\
+      <link rel=\"stylesheet\" type=\"text/css\" href=\"style.css\">\n\
+    </head>\n\
+    <body>\n\
+    <div class=\"freeze\">\n\
+      <h4>Font Family: %s</h4>\n\
+      <h4>Style:       %s</h4>\n\
+      <p><b>%d</b>pt at <b>%d</b>ppi</p>\n\
+    </div>\n\
+    <table>\n\
+    <thead>\n\
+      <tr>\n\
+      <th onclick=\"sort_t(data,0,asc1);asc1*=-1;asc2=1;asc3=1;\">\n\
+        <a href=\"#\">Glyph Index</a>\n\
+      </th>\n\
+      <th onclick=\"sort_t(data,1,asc2);asc2*=-1;asc3=1;asc1=1;\">\n\
+        <a href=\"#\">Glyph Name</a>\n\
+      </th>\n\
+      <th onclick=\"sort_t(data,2,asc3);asc3*=-1;asc1=1;asc2=1;\">\n\
+        <a href=\"#\">Difference</a>\n\
+      </th>\n\
+      <th>\n\
+        Images\n\
+      </th>\n\
+      <th>\n\
+        Hash-Values\n\
+      </th>\n\
+      </tr>\n\
+    </thead>\n\
+    <tbody id=\"data\">\n", base_face->family_name,
+                              base_face->style_name,
+                              size,
+                              DPI);
+
 // Need to write code to check the values in FT_Face and compare
   for (int i = 0; i < base_face->num_glyphs; ++i)
   {
@@ -373,10 +418,11 @@ int main(int argc, char const *argv[])
       exit(1);
     }
     
-    sprintf( output_file_name, "./images/sprite_%d.png", i );
+    sprintf( output_file_name, "./images/sprite_%04d.png", i );
 
     if (Is_Different != 0)
     {
+      pixel_diff = 0;
       if (render_mode == 0)
       {
         Make_PNG( &base_target, base_png, i, render_mode );
@@ -405,7 +451,7 @@ int main(int argc, char const *argv[])
       }
 
       Add_effect( base_png, test_png, after_effect_1, 1);
-      Add_effect( base_png, test_png, after_effect_2, 2);
+      pixel_diff = Add_effect( base_png, test_png, after_effect_2,2);
 
       Stitch( base_png, test_png, combi_effect_1);
       Stitch( after_effect_1, after_effect_2, combi_effect_2);
@@ -413,8 +459,26 @@ int main(int argc, char const *argv[])
       Stitch( combi_effect_1, combi_effect_2, output);
 
       Generate_PNG ( output, output_file_name, render_mode );
+
+      if (FT_HAS_GLYPH_NAMES(base_face))
+      {
+        FT_Get_Glyph_Name(  base_face,
+                            i,
+                            glyph_name,
+                            50 );
+      }
+
+      Print_Row(fp,i,glyph_name,pixel_diff);
     }
   }
+
+  fprintf(fp,
+        "</tbody>\n\
+        </table>\n\
+      </body>\n\
+    </html>\n" );
+
+  fclose(fp);
 
   error = Base_Done_Face(base_face);
   if(error){

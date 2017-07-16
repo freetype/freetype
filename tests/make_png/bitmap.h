@@ -72,10 +72,12 @@ void Read_PNG(char *filename, IMAGE * after_effect);
 // Base Glyph = Gray {127,0,0,255} OR as it is 
 // Differences = Red {255,0,0,255}
 // Effect_ID = {1 or 2}
-void Add_effect(IMAGE* base, IMAGE* test, IMAGE* out, int Effect_ID); 
+int Add_effect(IMAGE* base, IMAGE* test, IMAGE* out, int Effect_ID);
 // Stitch 2 PNG files
 void Stitch(IMAGE* left, IMAGE* right, IMAGE* result);
 // Make the Height of both the PNG(s) same by filling with white pixels
 IMAGE* Adjust_Height(IMAGE* small, IMAGE* big );
 // Make the Width of both the PNG(s) same by filling with white pixels
 IMAGE* Adjust_Width(IMAGE* small, IMAGE* big );
+// Print Row in a HTML file
+void Print_Row( FILE* fp, int index, char* name, int diff);

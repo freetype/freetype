@@ -48,7 +48,9 @@ To generate 32-bit RGBA PNG(s) of all glyphs in a font\n
 
 /*******************************************************************/
 
-To generate sprite sheets,
+To generate sprite sheets in the /images folder and to generate the
+"index.html" (List-View) of the glyphs.
+
 First compile and install two versions of the FreeType libray 
 in different folders (with SUBPIXEL_RENDERING enabled in ftoption.h)
 
@@ -67,4 +69,6 @@ in different folders (with SUBPIXEL_RENDERING enabled in ftoption.h)
 		Sprite Sheets will be saved as sprite_$(glyph_index).png
 
 		Render modes similar to generating PNG(s).
+
+
 
