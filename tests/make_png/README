@@ -51,6 +51,16 @@ To generate 32-bit RGBA PNG(s) of all glyphs in a font\n
 To generate sprite sheets in the /images folder and to generate the
 "index.html" (List-View) of the glyphs.
 
+By clicking on the Headers of the respective columns,they can be
+arranged (in increasing/decreasing order) based on
+->  Glyph-Index
+->  Name
+->  Difference Metric (right now it is the number of pixels that are
+    different between the base and the test glyph)
+
+It displays the whole sprite sheet right now (will be used later)
+Hashes will be dsplayed (To be implemented)
+
 First compile and install two versions of the FreeType libray 
 in different folders (with SUBPIXEL_RENDERING enabled in ftoption.h)
 
