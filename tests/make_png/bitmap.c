@@ -34,7 +34,7 @@ HASH_32 * Generate_Hash_x86_32( FT_Bitmap * bitmap,
   MurmurHash3_x86_32( bitmap->buffer,
                       (bitmap->pitch * bitmap->rows),
                       seed,
-                      murmur->hash);
+                      &murmur->hash);
 
   return murmur;
 }
@@ -97,8 +97,8 @@ int Generate_PNG (IMAGE *bitmap,
 
   for (y = 0; y < bitmap->height; y++) {
 
-    png_byte *row = png_malloc (png_ptr, 
-                                sizeof (uint8_t) * bitmap->width * pixel_size);
+    png_byte *row = 
+    png_malloc(png_ptr, sizeof(uint8_t) * bitmap->width * pixel_size);
     row_pointers[y] = row;
 
     for (x = 0; x < bitmap->width; x++) {
@@ -161,7 +161,7 @@ void Make_PNG(FT_Bitmap* bitmap,IMAGE* fruit,int i,int render_mode){
 
   switch(render_mode){
 
-    case 0 :  fruit->width = bitmap->width;            // MONO and GRAY
+    case 0 :  fruit->width = bitmap->width;           // MONO and GRAY
               fruit->height  = bitmap->rows;
 
               fruit->pixels = calloc ( fruit->width * fruit->height,
@@ -281,7 +281,10 @@ void Read_PNG(char *filename, IMAGE * after_effect) {
 
   FILE *fp = fopen(filename, "rb");
 
-  png_structp png = png_create_read_struct(PNG_LIBPNG_VER_STRING, NULL, NULL, NULL);
+  png_structp png = png_create_read_struct( PNG_LIBPNG_VER_STRING, 
+                                            NULL, 
+                                            NULL, 
+                                            NULL);
   if(!png) abort();
 
   png_infop info = png_create_info_struct(png);
@@ -308,7 +311,8 @@ void Read_PNG(char *filename, IMAGE * after_effect) {
 
   png_read_image(png, row_pointers);
 
-  after_effect->pixels = (PIXEL*)malloc(width * height * sizeof(PIXEL));
+  after_effect->pixels = 
+  (PIXEL*) malloc( width * height * sizeof(PIXEL));
 
   for(int y = 0; y < height; y++) {
 
@@ -337,7 +341,8 @@ IMAGE* Adjust_Height(IMAGE* small, IMAGE* big){
 
   result->height = big->height;
   result->width = small->width; 
-  result->pixels = (PIXEL*)malloc(result->width * result->height * sizeof(PIXEL));
+  result->pixels = 
+  (PIXEL*) malloc(result->width * result->height * sizeof(PIXEL));
 
   h_delta = big->height - small->height;
 
@@ -376,7 +381,8 @@ IMAGE* Adjust_Width(IMAGE* small, IMAGE* big){
 
   result->height = small->height;
   result->width = big->width; 
-  result->pixels = (PIXEL*)malloc(result->width * result->height * sizeof(PIXEL));
+  result->pixels = 
+  (PIXEL*) malloc(result->width * result->height * sizeof(PIXEL));
 
   for (int x = small->width; x < big->width; ++x)
   {
@@ -413,7 +419,8 @@ int Add_effect(IMAGE* base, IMAGE* test, IMAGE* out, int Effect_ID)
 
   out->width = base->width;
   out->height = base->height;
-  out->pixels = (PIXEL*)malloc(base->width * base->height * sizeof(PIXEL));
+  out->pixels = 
+  (PIXEL*)malloc(base->width * base->height * sizeof(PIXEL));
 
   for(int y = 0; y < base->height; y++) {
     for(int x = 0; x < base->width; x++ ) {
@@ -470,9 +477,10 @@ int Add_effect(IMAGE* base, IMAGE* test, IMAGE* out, int Effect_ID)
 void Stitch(IMAGE* left, IMAGE* right, IMAGE* result){
 
   result->width = left->width + right->width;
-  result->height = MAX(left->height, right->height); // Horizontal clipping
+  result->height = MAX(left->height, right->height); 
 
-  result->pixels = (PIXEL*)calloc(result->width * result->height, sizeof(PIXEL));
+  result->pixels = 
+  (PIXEL*)calloc(result->width * result->height, sizeof(PIXEL));
 
   for (int y = 0; y < left->height; ++y)
   {
@@ -503,14 +511,32 @@ void Stitch(IMAGE* left, IMAGE* right, IMAGE* result){
   }
 }
 
-void Print_Row( FILE* fp, int index, char* name, int diff){
-  fprintf(fp,
+int Compare_Hash(HASH_128* hash_b, HASH_128* hash_t){
+  if (hash_b->hash[0] != hash_t->hash[0] ||
+      hash_b->hash[1] != hash_t->hash[1] ||
+      hash_b->hash[2] != hash_t->hash[2] ||
+      hash_b->hash[3] != hash_t->hash[3] )
+  {
+    return 1;
+  }
+  return 0;
+}
 
+void Print_Row( FILE* fp, int index, char* name, int diff,
+                HASH_128* hash_b, HASH_128* hash_t){
+  fprintf(fp,
     "<tr>\n\
       <td>%04d</td>\n\
       <td>%s</td>\n\
       <td>%04d</td>\n\
+      <td id=\"hash\">%08x%08x%08x%08x<br>%08x%08x%08x%08x</td>\n\
       <td><img id=\"sprite\" src=\"images/sprite_%04d.png\"></td>\n\
-      <td>To-be-displayed</td>\n\
-    </tr>\n", index, name, diff, index);
+    </tr>\n", index, name, diff,hash_b->hash[0],
+                                hash_b->hash[1],
+                                hash_b->hash[2],
+                                hash_b->hash[3],
+                                hash_t->hash[0],
+                                hash_t->hash[1],
+                                hash_t->hash[2],
+                                hash_t->hash[3], index);
 }

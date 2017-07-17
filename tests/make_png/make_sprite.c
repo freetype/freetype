@@ -339,10 +339,10 @@ int main(int argc, char const *argv[])
         <a href=\"#\">Difference</a>\n\
       </th>\n\
       <th>\n\
-        Images\n\
+        128-bit Hash-values\n\
       </th>\n\
       <th>\n\
-        Hash-Values\n\
+        Images\n\
       </th>\n\
       </tr>\n\
     </thead>\n\
@@ -391,12 +391,10 @@ int main(int argc, char const *argv[])
       continue;
     }
 
-    Is_Different = 0;
-
     base_murmur = Generate_Hash_x64_128(base_bitmap,base_murmur);
     test_murmur = Generate_Hash_x64_128(test_bitmap,test_murmur);
 
-    Is_Different = strcmp(base_murmur->hash, test_murmur->hash);
+    Is_Different = Compare_Hash(base_murmur, test_murmur);
 
     Base_Bitmap_Init( &base_target );
     Test_Bitmap_Init( &test_target );
@@ -468,7 +466,8 @@ int main(int argc, char const *argv[])
                             50 );
       }
 
-      Print_Row(fp,i,glyph_name,pixel_diff);
+      Print_Row(fp,i,glyph_name,pixel_diff, base_murmur,
+                                            test_murmur );
     }
   }
 

@@ -23,11 +23,11 @@
 #define MAX(a, b) ((a) > (b) ? (a) : (b))
 
 typedef struct {                // To store 32bit Hash
-  char hash[4];
+  FT_UInt32 hash;
 }HASH_32;
 
 typedef struct {                // To store 128bit Hash
-  char hash[16];
+  FT_UInt32 hash[4];
 }HASH_128;
 
 typedef struct {
@@ -58,6 +58,8 @@ HASH_32 * Generate_Hash_x86_32(FT_Bitmap * bitmap, HASH_32 * murmur);
 HASH_128 * Generate_Hash_x86_128(FT_Bitmap * bitmap, HASH_128 * murmur);
 HASH_128 * Generate_Hash_x64_128(FT_Bitmap * bitmap, HASH_128 * murmur);
 
+int Compare_Hash(HASH_128* hash_b, HASH_128* hash_t);
+
 //------------------------------------------------------------------------------
 
 PIXEL * Pixel_At (IMAGE * bitmap, int x, int y);  // Returns a pointer to pixel
@@ -80,4 +82,5 @@ IMAGE* Adjust_Height(IMAGE* small, IMAGE* big );
 // Make the Width of both the PNG(s) same by filling with white pixels
 IMAGE* Adjust_Width(IMAGE* small, IMAGE* big );
 // Print Row in a HTML file
-void Print_Row( FILE* fp, int index, char* name, int diff);
+void Print_Row( FILE* fp, int index, char* name, int diff,
+                HASH_128* hash_b, HASH_128* hash_t);

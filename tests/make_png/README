@@ -5,7 +5,7 @@ NOTE: First make freetype library (in the ../../ directory)
 TODO:   Generate HTML page (testing going on)
 
 /*******************************************************************/
-
+(DEPRECATED)
 To generate hashes and store it in the ./hashes folder,
 
 1)  make hash
