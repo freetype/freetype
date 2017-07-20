@@ -242,11 +242,9 @@ FT_BEGIN_HEADER
   /*************************************************************************/
 
   FT_LOCAL( void )
-  ps_builder_init( PS_Builder*    builder,
-                   TT_Face        face,
-                   FT_Size        size,
-                   CFF_GlyphSlot  glyph,
-                   FT_Bool        hinting );
+  ps_builder_init( void*        builder,
+                   FT_Bool      is_t1,
+                   PS_Builder*  ps_builder );
 
   FT_LOCAL( void )
   ps_builder_done( PS_Builder*  builder );
