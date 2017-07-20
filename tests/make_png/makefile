@@ -21,7 +21,7 @@ all: png hash sprite
 png:$(SRC_PNG)
 	$(CC) $(CFLAGS) $(INCLUDE) -DDPI=$(DPI) -o $@  $(SRC_PNG) $(SRC_LIB) $(OBJS) $(LIBS)
 
-sprite:$(SRC_PNG)
+sprite:$(SRC_SPRITE)
 	$(CC) $(CFLAGS) $(INCLUDE) -DDPI=$(DPI) -o $@  $(SRC_SPRITE) $(SRC_LIB) $(OBJS) $(LIBS)
 
 hash:$(SRC_HASH)
