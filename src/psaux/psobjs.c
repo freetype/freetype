@@ -2052,12 +2052,63 @@
   /*    hinting :: Whether hinting should be applied.                      */
   /*                                                                       */
   FT_LOCAL_DEF( void )
-  ps_builder_init( PS_Builder*    builder,
-                   TT_Face        face,
-                   FT_Size        size,
-                   CFF_GlyphSlot  glyph,
-                   FT_Bool        hinting )
+  ps_builder_init( void*        builder,
+                   FT_Bool      is_t1,
+                   PS_Builder*  ps_builder )
   {
+    FT_ZERO( ps_builder );
+
+    if ( is_t1 )
+    {
+      T1_Builder  t1builder = (T1_Builder)builder;
+
+      ps_builder->face           = (TT_Face)t1builder->face;
+      ps_builder->glyph          = t1builder->glyph;
+      ps_builder->memory         =  t1builder->memory;
+      ps_builder->loader         =  t1builder->loader;
+      ps_builder->base           =  t1builder->base;
+      ps_builder->current        =  t1builder->current;
+
+      ps_builder->pos_x          = &t1builder->pos_x;
+      ps_builder->pos_y          = &t1builder->pos_y;
+
+      ps_builder->left_bearing   = &t1builder->left_bearing;
+      ps_builder->advance        = &t1builder->advance;
+
+      ps_builder->bbox           = &t1builder->bbox;
+      ps_builder->path_begun     =  0;
+      ps_builder->load_points    =  t1builder->load_points;
+      ps_builder->no_recurse     =  t1builder->no_recurse;
+
+      ps_builder->metrics_only   =  t1builder->metrics_only;
+    }
+    else
+    {
+      CFF_Builder*  cffbuilder = (CFF_Builder*)builder;
+
+      ps_builder->face           = cffbuilder->face;
+      ps_builder->memory         =  cffbuilder->memory;
+      ps_builder->glyph          =  cffbuilder->glyph;
+      ps_builder->loader         =  cffbuilder->loader;
+      ps_builder->base           =  cffbuilder->base;
+      ps_builder->current        =  cffbuilder->current;
+
+      ps_builder->pos_x          = &cffbuilder->pos_x;
+      ps_builder->pos_y          = &cffbuilder->pos_y;
+
+      ps_builder->left_bearing   = &cffbuilder->left_bearing;
+      ps_builder->advance        = &cffbuilder->advance;
+
+      ps_builder->bbox           = &cffbuilder->bbox;
+      ps_builder->path_begun     =  cffbuilder->path_begun;
+      ps_builder->load_points    =  cffbuilder->load_points;
+      ps_builder->no_recurse     =  cffbuilder->no_recurse;
+
+      ps_builder->metrics_only   =  cffbuilder->metrics_only;
+    }
+
+    ps_builder->is_t1            = is_t1;
+    ps_builder->funcs            = ps_builder_funcs;
   }
 
 

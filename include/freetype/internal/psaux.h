@@ -457,14 +457,12 @@ FT_BEGIN_HEADER
   typedef struct  PS_Builder_FuncsRec_
   {
     void
-    (*init)( PS_Builder    builder,
-             FT_Face       face,
-             FT_Size       size,
-             FT_GlyphSlot  slot,
-             FT_Bool       hinting );
+    (*init)( void*        builder,
+             FT_Bool      is_t1,
+             PS_Builder*  ps_builder );
 
     void
-    (*done)( PS_Builder   builder );
+    (*done)( PS_Builder*   builder );
 
   } PS_Builder_FuncsRec;
 
@@ -521,13 +519,13 @@ FT_BEGIN_HEADER
     FT_Outline*     base;
     FT_Outline*     current;
 
-    FT_Pos          pos_x;
-    FT_Pos          pos_y;
+    FT_Pos*         pos_x;
+    FT_Pos*         pos_y;
 
-    FT_Vector       left_bearing;
-    FT_Vector       advance;
+    FT_Vector*      left_bearing;
+    FT_Vector*      advance;
 
-    FT_BBox         bbox;          /* bounding box */
+    FT_BBox*        bbox;          /* bounding box */
     FT_Bool         path_begun;
     FT_Bool         load_points;
     FT_Bool         no_recurse;
@@ -536,6 +534,8 @@ FT_BEGIN_HEADER
 
     void*           hints_funcs;    /* hinter-specific */
     void*           hints_globals;  /* hinter-specific */
+
+    FT_Bool         is_t1;
 
     PS_Builder_FuncsRec  funcs;
 
@@ -570,15 +570,16 @@ FT_BEGIN_HEADER
 
 
   typedef FT_Error
-  (*PS_Decoder_Get_Glyph_Callback)( TT_Face    face,
-                                    FT_UInt    glyph_index,
-                                    FT_Byte**  pointer,
-                                    FT_ULong*  length );
+  (*CFF_Decoder_Get_Glyph_Callback)( TT_Face    face,
+                                     FT_UInt    glyph_index,
+                                     FT_Byte**  pointer,
+                                     FT_ULong*  length );
 
   typedef void
-  (*PS_Decoder_Free_Glyph_Callback)( TT_Face    face,
-                                     FT_Byte**  pointer,
-                                     FT_ULong   length );
+  (*CFF_Decoder_Free_Glyph_Callback)( TT_Face    face,
+                                      FT_Byte**  pointer,
+                                      FT_ULong   length );
+
 
   typedef struct  PS_Decoder_
   {
@@ -620,8 +621,8 @@ FT_BEGIN_HEADER
 
     FT_Bool            seac;
 
-    PS_Decoder_Get_Glyph_Callback   get_glyph_callback;
-    PS_Decoder_Free_Glyph_Callback  free_glyph_callback;
+    CFF_Decoder_Get_Glyph_Callback   get_glyph_callback;
+    CFF_Decoder_Free_Glyph_Callback  free_glyph_callback;
     
     /* Type 1 stuff */
     FT_Service_PsCMaps   psnames;      /* for seac */
@@ -637,6 +638,8 @@ FT_BEGIN_HEADER
 
     FT_Long*             buildchar;
     FT_UInt              len_buildchar;
+
+    void*                t1_parse_callback;
 
   } PS_Decoder;
 
@@ -1069,18 +1072,6 @@ FT_BEGIN_HEADER
   } CFF_Decoder_Zone;
 
 
-  typedef FT_Error
-  (*CFF_Decoder_Get_Glyph_Callback)( TT_Face    face,
-                                     FT_UInt    glyph_index,
-                                     FT_Byte**  pointer,
-                                     FT_ULong*  length );
-
-  typedef void
-  (*CFF_Decoder_Free_Glyph_Callback)( TT_Face    face,
-                                      FT_Byte**  pointer,
-                                      FT_ULong   length );
-
-
   typedef struct  CFF_Decoder_
   {
     CFF_Builder        builder;
@@ -1267,6 +1258,11 @@ FT_BEGIN_HEADER
 
     FT_UInt32
     (*cff_random)( FT_UInt32  r );
+
+    void
+    (*ps_decoder_init)( void*        decoder,
+                        FT_Bool      is_t1,
+                        PS_Decoder*  ps_decoder );
 
 
     T1_CMap_Classes  t1_cmap_classes;
