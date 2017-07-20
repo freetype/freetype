@@ -446,6 +446,204 @@ FT_BEGIN_HEADER
   /*************************************************************************/
   /*************************************************************************/
   /*****                                                               *****/
+  /*****                         PS BUILDER                            *****/
+  /*****                                                               *****/
+  /*************************************************************************/
+  /*************************************************************************/
+
+  typedef struct PS_Builder_  PS_Builder;
+  typedef const struct PS_Builder_FuncsRec_*  PS_Builder_Funcs;
+
+  typedef struct  PS_Builder_FuncsRec_
+  {
+    void
+    (*init)( PS_Builder    builder,
+             FT_Face       face,
+             FT_Size       size,
+             FT_GlyphSlot  slot,
+             FT_Bool       hinting );
+
+    void
+    (*done)( PS_Builder   builder );
+
+  } PS_Builder_FuncsRec;
+
+
+  /*************************************************************************/
+  /*                                                                       */
+  /* <Structure>                                                           */
+  /*    PS_Builder                                                         */
+  /*                                                                       */
+  /* <Description>                                                         */
+  /*     A structure used during glyph loading to store its outline.       */
+  /*                                                                       */
+  /* <Fields>                                                              */
+  /*    memory       :: The current memory object.                         */
+  /*                                                                       */
+  /*    face         :: The current face object.                           */
+  /*                                                                       */
+  /*    glyph        :: The current glyph slot.                            */
+  /*                                                                       */
+  /*    loader       :: XXX                                                */
+  /*                                                                       */
+  /*    base         :: The base glyph outline.                            */
+  /*                                                                       */
+  /*    current      :: The current glyph outline.                         */
+  /*                                                                       */
+  /*    pos_x        :: The horizontal translation (if composite glyph).   */
+  /*                                                                       */
+  /*    pos_y        :: The vertical translation (if composite glyph).     */
+  /*                                                                       */
+  /*    left_bearing :: The left side bearing point.                       */
+  /*                                                                       */
+  /*    advance      :: The horizontal advance vector.                     */
+  /*                                                                       */
+  /*    bbox         :: Unused.                                            */
+  /*                                                                       */
+  /*    path_begun   :: A flag which indicates that a new path has begun.  */
+  /*                                                                       */
+  /*    load_points  :: If this flag is not set, no points are loaded.     */
+  /*                                                                       */
+  /*    no_recurse   :: Set but not used.                                  */
+  /*                                                                       */
+  /*    metrics_only :: A boolean indicating that we only want to compute  */
+  /*                    the metrics of a given glyph, not load all of its  */
+  /*                    points.                                            */
+  /*                                                                       */
+  /*    funcs        :: An array of function pointers for the builder.     */
+  /*                                                                       */
+  struct  PS_Builder_
+  {
+    FT_Memory       memory;
+    TT_Face         face;
+    CFF_GlyphSlot   glyph;
+    FT_GlyphLoader  loader;
+    FT_Outline*     base;
+    FT_Outline*     current;
+
+    FT_Pos          pos_x;
+    FT_Pos          pos_y;
+
+    FT_Vector       left_bearing;
+    FT_Vector       advance;
+
+    FT_BBox         bbox;          /* bounding box */
+    FT_Bool         path_begun;
+    FT_Bool         load_points;
+    FT_Bool         no_recurse;
+
+    FT_Bool         metrics_only;
+
+    void*           hints_funcs;    /* hinter-specific */
+    void*           hints_globals;  /* hinter-specific */
+
+    PS_Builder_FuncsRec  funcs;
+
+  };
+
+
+  /*************************************************************************/
+  /*************************************************************************/
+  /*****                                                               *****/
+  /*****                            PS DECODER                         *****/
+  /*****                                                               *****/
+  /*************************************************************************/
+  /*************************************************************************/
+
+#define PS_MAX_OPERANDS        48
+#define PS_MAX_SUBRS_CALLS     16   /* maximum subroutine nesting;         */
+                                    /* only 10 are allowed but there exist */
+                                    /* fonts like `HiraKakuProN-W3.ttf'    */
+                                    /* (Hiragino Kaku Gothic ProN W3;      */
+                                    /* 8.2d6e1; 2014-12-19) that exceed    */
+                                    /* this limit                          */
+
+  /* execution context charstring zone */
+
+  typedef struct  PS_Decoder_Zone_
+  {
+    FT_Byte*  base;
+    FT_Byte*  limit;
+    FT_Byte*  cursor;
+
+  } PS_Decoder_Zone;
+
+
+  typedef FT_Error
+  (*PS_Decoder_Get_Glyph_Callback)( TT_Face    face,
+                                    FT_UInt    glyph_index,
+                                    FT_Byte**  pointer,
+                                    FT_ULong*  length );
+
+  typedef void
+  (*PS_Decoder_Free_Glyph_Callback)( TT_Face    face,
+                                     FT_Byte**  pointer,
+                                     FT_ULong   length );
+
+  typedef struct  PS_Decoder_
+  {
+    PS_Builder         builder;
+
+    FT_Fixed           stack[PS_MAX_OPERANDS + 1];
+    FT_Fixed*          top;
+
+    PS_Decoder_Zone    zones[PS_MAX_SUBRS_CALLS + 1];
+    PS_Decoder_Zone*   zone;
+
+    FT_Int             flex_state;
+    FT_Int             num_flex_vectors;
+    FT_Vector          flex_vectors[7];
+
+    CFF_Font           cff;
+    CFF_SubFont        current_subfont; /* for current glyph_index */
+    
+    FT_Pos             glyph_width;
+    FT_Pos             nominal_width;
+
+    FT_Bool            read_width;
+    FT_Bool            width_only;
+    FT_Int             num_hints;
+
+    FT_UInt            num_locals;
+    FT_UInt            num_globals;
+
+    FT_Int             locals_bias;
+    FT_Int             globals_bias;
+
+    FT_Byte**          locals;
+    FT_Byte**          globals;
+
+    FT_Byte**          glyph_names;   /* for pure CFF fonts only  */
+    FT_UInt            num_glyphs;    /* number of glyphs in font */
+
+    FT_Render_Mode     hint_mode;
+
+    FT_Bool            seac;
+
+    PS_Decoder_Get_Glyph_Callback   get_glyph_callback;
+    PS_Decoder_Free_Glyph_Callback  free_glyph_callback;
+    
+    /* Type 1 stuff */
+    FT_Service_PsCMaps   psnames;      /* for seac */
+
+    FT_Int               lenIV;        /* internal for sub routine calls */
+    FT_UInt*             locals_len;    /* array of subrs length (optional) */
+    FT_Hash              locals_hash;   /* used if `num_subrs' was massaged */
+
+    FT_Matrix            font_matrix;
+    FT_Vector            font_offset;
+
+    PS_Blend             blend;       /* for multiple master support */
+
+    FT_Long*             buildchar;
+    FT_UInt              len_buildchar;
+
+  } PS_Decoder;
+
+
+  /*************************************************************************/
+  /*************************************************************************/
+  /*****                                                               *****/
   /*****                         T1 BUILDER                            *****/
   /*****                                                               *****/
   /*************************************************************************/

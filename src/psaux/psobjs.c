@@ -2026,6 +2026,250 @@
   /*************************************************************************/
   /*************************************************************************/
   /*****                                                               *****/
+  /*****                            PS BUILDER                         *****/
+  /*****                                                               *****/
+  /*************************************************************************/
+  /*************************************************************************/
+
+  /*************************************************************************/
+  /*                                                                       */
+  /* <Function>                                                            */
+  /*    ps_builder_init                                                    */
+  /*                                                                       */
+  /* <Description>                                                         */
+  /*    Initializes a given glyph builder.                                 */
+  /*                                                                       */
+  /* <InOut>                                                               */
+  /*    builder :: A pointer to the glyph builder to initialize.           */
+  /*                                                                       */
+  /* <Input>                                                               */
+  /*    face    :: The current face object.                                */
+  /*                                                                       */
+  /*    size    :: The current size object.                                */
+  /*                                                                       */
+  /*    glyph   :: The current glyph object.                               */
+  /*                                                                       */
+  /*    hinting :: Whether hinting should be applied.                      */
+  /*                                                                       */
+  FT_LOCAL_DEF( void )
+  ps_builder_init( PS_Builder*    builder,
+                   TT_Face        face,
+                   FT_Size        size,
+                   CFF_GlyphSlot  glyph,
+                   FT_Bool        hinting )
+  {
+  }
+
+
+  /*************************************************************************/
+  /*                                                                       */
+  /* <Function>                                                            */
+  /*    ps_builder_done                                                    */
+  /*                                                                       */
+  /* <Description>                                                         */
+  /*    Finalizes a given glyph builder.  Its contents can still be used   */
+  /*    after the call, but the function saves important information       */
+  /*    within the corresponding glyph slot.                               */
+  /*                                                                       */
+  /* <Input>                                                               */
+  /*    builder :: A pointer to the glyph builder to finalize.             */
+  /*                                                                       */
+  FT_LOCAL_DEF( void )
+  ps_builder_done( PS_Builder*  builder )
+  {
+    CFF_GlyphSlot  glyph = builder->glyph;
+
+
+    if ( glyph )
+      glyph->root.outline = *builder->base;
+  }
+
+
+  /* check that there is enough space for `count' more points */
+  FT_LOCAL_DEF( FT_Error )
+  ps_builder_check_points( PS_Builder*  builder,
+                           FT_Int       count )
+  {
+    return FT_GLYPHLOADER_CHECK_POINTS( builder->loader, count, 0 );
+  }
+
+
+  /* add a new point, do not check space */
+  FT_LOCAL_DEF( void )
+  ps_builder_add_point( PS_Builder*  builder,
+                        FT_Pos       x,
+                        FT_Pos       y,
+                        FT_Byte      flag )
+  {
+    FT_Outline*  outline = builder->current;
+
+
+    if ( builder->load_points )
+    {
+      FT_Vector*  point   = outline->points + outline->n_points;
+      FT_Byte*    control = (FT_Byte*)outline->tags + outline->n_points;
+
+#ifdef CFF_CONFIG_OPTION_OLD_ENGINE
+      CFF_Driver  driver  = (CFF_Driver)FT_FACE_DRIVER( builder->face );
+
+
+      if ( driver->hinting_engine == FT_CFF_HINTING_FREETYPE )
+      {
+        point->x = x >> 16;
+        point->y = y >> 16;
+      }
+      else
+#endif
+#ifdef T1_CONFIG_OPTION_OLD_ENGINE
+      if ( builder->face->is_t1 )
+      {
+        point->x = FIXED_TO_INT( x );
+        point->y = FIXED_TO_INT( y );
+      }
+      else
+#endif
+      {
+        /* cf2_decoder_parse_charstrings uses 16.16 coordinates */
+        point->x = x >> 10;
+        point->y = y >> 10;
+      }
+      *control = (FT_Byte)( flag ? FT_CURVE_TAG_ON : FT_CURVE_TAG_CUBIC );
+    }
+    outline->n_points++;
+  }
+
+
+  /* check space for a new on-curve point, then add it */
+  FT_LOCAL_DEF( FT_Error )
+  ps_builder_add_point1( PS_Builder*  builder,
+                         FT_Pos       x,
+                         FT_Pos       y )
+  {
+    FT_Error  error;
+
+
+    error = ps_builder_check_points( builder, 1 );
+    if ( !error )
+      ps_builder_add_point( builder, x, y, 1 );
+
+    return error;
+  }
+
+
+  /* check space for a new contour, then add it */
+  FT_LOCAL_DEF( FT_Error )
+  ps_builder_add_contour( PS_Builder*  builder )
+  {
+    FT_Outline*  outline = builder->current;
+    FT_Error     error;
+
+
+    /* this might happen in invalid fonts */
+    if ( !outline )
+    {
+      FT_ERROR(( "t1_builder_add_contour: no outline to add points to\n" ));
+      return FT_THROW( Invalid_File_Format );
+    }
+
+    if ( !builder->load_points )
+    {
+      outline->n_contours++;
+      return FT_Err_Ok;
+    }
+
+    error = FT_GLYPHLOADER_CHECK_POINTS( builder->loader, 0, 1 );
+    if ( !error )
+    {
+      if ( outline->n_contours > 0 )
+        outline->contours[outline->n_contours - 1] =
+          (short)( outline->n_points - 1 );
+
+      outline->n_contours++;
+    }
+
+    return error;
+  }
+
+
+  /* if a path was begun, add its first on-curve point */
+  FT_LOCAL_DEF( FT_Error )
+  ps_builder_start_point( PS_Builder*  builder,
+                          FT_Pos       x,
+                          FT_Pos       y )
+  {
+    FT_Error  error = FT_Err_Ok;
+
+
+    /* test whether we are building a new contour */
+    if ( !builder->path_begun )
+    {
+      builder->path_begun = 1;
+      error = ps_builder_add_contour( builder );
+      if ( !error )
+        error = ps_builder_add_point1( builder, x, y );
+    }
+
+    return error;
+  }
+
+
+  /* close the current contour */
+  FT_LOCAL_DEF( void )
+  ps_builder_close_contour( PS_Builder*  builder )
+  {
+    FT_Outline*  outline = builder->current;
+    FT_Int       first;
+
+
+    if ( !outline )
+      return;
+
+    first = outline->n_contours <= 1
+            ? 0 : outline->contours[outline->n_contours - 2] + 1;
+
+    /* in malformed fonts it can happen that a contour was started */
+    /* but no points were added                                    */
+    if ( outline->n_contours && first == outline->n_points )
+    {
+      outline->n_contours--;
+      return;
+    }
+
+    /* We must not include the last point in the path if it */
+    /* is located on the first point.                       */
+    if ( outline->n_points > 1 )
+    {
+      FT_Vector*  p1      = outline->points + first;
+      FT_Vector*  p2      = outline->points + outline->n_points - 1;
+      FT_Byte*    control = (FT_Byte*)outline->tags + outline->n_points - 1;
+
+
+      /* `delete' last point only if it coincides with the first */
+      /* point and it is not a control point (which can happen). */
+      if ( p1->x == p2->x && p1->y == p2->y )
+        if ( *control == FT_CURVE_TAG_ON )
+          outline->n_points--;
+    }
+
+    if ( outline->n_contours > 0 )
+    {
+      /* Don't add contours only consisting of one point, i.e.,  */
+      /* check whether the first and the last point is the same. */
+      if ( first == outline->n_points - 1 )
+      {
+        outline->n_contours--;
+        outline->n_points--;
+      }
+      else
+        outline->contours[outline->n_contours - 1] =
+          (short)( outline->n_points - 1 );
+    }
+  }
+
+
+  /*************************************************************************/
+  /*************************************************************************/
+  /*****                                                               *****/
   /*****                            OTHER                              *****/
   /*****                                                               *****/
   /*************************************************************************/

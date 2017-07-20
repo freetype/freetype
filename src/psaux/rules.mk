@@ -36,6 +36,7 @@ PSAUX_DRV_SRC := $(PSAUX_DIR)/psobjs.c   \
                  $(PSAUX_DIR)/psauxmod.c \
                  $(PSAUX_DIR)/psarrst.c \
                  $(PSAUX_DIR)/psblues.c \
+                 $(PSAUX_DIR)/psdecode.c \
                  $(PSAUX_DIR)/pserror.c \
                  $(PSAUX_DIR)/psfont.c  \
                  $(PSAUX_DIR)/psft.c    \
