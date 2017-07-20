@@ -67,7 +67,7 @@
                   CF2_Font   font )
   {
     /* pointer to parsed font object */
-    CFF_Decoder*  decoder = font->decoder;
+    PS_Decoder*  decoder = font->decoder;
 
     CF2_Fixed  zoneHeight;
     CF2_Fixed  maxZoneHeight = 0;

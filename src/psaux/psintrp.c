@@ -476,7 +476,7 @@
     FT_Error  lastError = FT_Err_Ok;
 
     /* pointer to parsed font object */
-    CFF_Decoder*  decoder = font->decoder;
+    PS_Decoder*  decoder = font->decoder;
 
     FT_Error*  error  = &font->error;
     FT_Memory  memory = font->memory;
