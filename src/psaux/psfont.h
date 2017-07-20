@@ -90,7 +90,7 @@ FT_BEGIN_HEADER
 
     /* FreeType related members */
     CF2_OutlineRec  outline;       /* freetype glyph outline functions */
-    CFF_Decoder*    decoder;
+    PS_Decoder*     decoder;
     CFF_SubFont     lastSubfont;              /* FreeType parsed data; */
                                               /* top font or subfont   */
 

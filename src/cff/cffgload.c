@@ -169,10 +169,10 @@
       {
         error = decoder_funcs->prepare( &decoder, size, glyph_index );
         if ( !error )
-          error = decoder_funcs->parse_charstrings( &decoder,
-                                                    charstring,
-                                                    charstring_len,
-                                                    0 );
+          error = decoder_funcs->parse_charstrings_old( &decoder,
+                                                        charstring,
+                                                        charstring_len,
+                                                        0 );
 
         cff_free_glyph_data( face, &charstring, &charstring_len );
       }
@@ -198,6 +198,7 @@
   {
     FT_Error     error;
     CFF_Decoder  decoder;
+    PS_Decoder   psdecoder;
     TT_Face      face = (TT_Face)glyph->root.face;
     FT_Bool      hinting, scaled, force_scaling;
     CFF_Font     cff  = (CFF_Font)face->extra.data;
@@ -427,14 +428,16 @@
 #ifdef CFF_CONFIG_OPTION_OLD_ENGINE
       /* choose which CFF renderer to use */
       if ( driver->hinting_engine == FT_CFF_HINTING_FREETYPE )
-        error = decoder_funcs->parse_charstrings( &decoder,
-                                                  charstring,
-                                                  charstring_len,
-                                                  0 );
+        error = decoder_funcs->parse_charstrings_old( &decoder,
+                                                      charstring,
+                                                      charstring_len,
+                                                      0 );
       else
 #endif
       {
-        error = decoder_funcs->parse_charstrings( &decoder,
+        psaux->ps_decoder_init( &decoder, FALSE, &psdecoder );
+
+        error = decoder_funcs->parse_charstrings( &psdecoder,
                                                   charstring,
                                                   charstring_len );
 
@@ -449,7 +452,7 @@
           force_scaling = TRUE;
           glyph->hint   = hinting;
 
-          error = decoder_funcs->parse_charstrings( &decoder,
+          error = decoder_funcs->parse_charstrings( &psdecoder,
                                                     charstring,
                                                     charstring_len );
         }
