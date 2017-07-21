@@ -35,6 +35,22 @@
 FT_BEGIN_HEADER
 
 
+  /***********************************************************************/
+  /*                                                                     */
+  /* PostScript modules driver class.                                    */
+  /*                                                                     */
+  typedef struct  PS_DriverRec_
+  {
+    FT_DriverRec  root;
+
+    FT_UInt   hinting_engine;
+    FT_Bool   no_stem_darkening;
+    FT_Int    darken_params[8];
+    FT_Int32  random_seed;
+
+  } PS_DriverRec, *PS_Driver;
+
+
   /*************************************************************************/
   /*************************************************************************/
   /*****                                                               *****/
