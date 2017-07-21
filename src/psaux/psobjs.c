@@ -1888,7 +1888,7 @@
       FT_Byte*    control = (FT_Byte*)outline->tags + outline->n_points;
 
 #ifdef CFF_CONFIG_OPTION_OLD_ENGINE
-      CFF_Driver  driver  = (CFF_Driver)FT_FACE_DRIVER( builder->face );
+      PS_Driver  driver   = (PS_Driver)FT_FACE_DRIVER( builder->face );
 
 
       if ( driver->hinting_engine == FT_CFF_HINTING_FREETYPE )
@@ -2161,7 +2161,7 @@
       FT_Byte*    control = (FT_Byte*)outline->tags + outline->n_points;
 
 #ifdef CFF_CONFIG_OPTION_OLD_ENGINE
-      CFF_Driver  driver  = (CFF_Driver)FT_FACE_DRIVER( builder->face );
+      PS_Driver  driver   = (PS_Driver)FT_FACE_DRIVER( builder->face );
 
 
       if ( driver->hinting_engine == FT_CFF_HINTING_FREETYPE )

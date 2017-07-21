@@ -2075,7 +2075,7 @@
        */
       if ( face->root.internal->random_seed == -1 )
       {
-        CFF_Driver  driver = (CFF_Driver)FT_FACE_DRIVER( face );
+        PS_Driver  driver = (PS_Driver)FT_FACE_DRIVER( face );
 
 
         subfont->random = (FT_UInt32)driver->random_seed;

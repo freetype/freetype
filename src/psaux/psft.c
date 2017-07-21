@@ -350,7 +350,7 @@
       /* build parameters for Adobe engine */
 
       PS_Builder*  builder = &decoder->builder;
-      CFF_Driver   driver  = (CFF_Driver)FT_FACE_DRIVER( builder->face );
+      PS_Driver    driver  = (PS_Driver)FT_FACE_DRIVER( builder->face );
 
       FT_Bool  no_stem_darkening_driver =
                  driver->no_stem_darkening;

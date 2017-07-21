@@ -71,10 +71,10 @@ FT_BEGIN_HEADER
   /* Driver functions                                                      */
   /*                                                                       */
   FT_LOCAL( FT_Error )
-  cff_driver_init( FT_Module  module );         /* CFF_Driver */
+  cff_driver_init( FT_Module  module );         /* PS_Driver */
 
   FT_LOCAL( void )
-  cff_driver_done( FT_Module  module );         /* CFF_Driver */
+  cff_driver_done( FT_Module  module );         /* PS_Driver */
 
 
 FT_END_HEADER
