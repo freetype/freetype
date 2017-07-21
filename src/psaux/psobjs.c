@@ -2062,9 +2062,9 @@
     {
       T1_Builder  t1builder = (T1_Builder)builder;
 
-      ps_builder->face           = (TT_Face)t1builder->face;
-      ps_builder->glyph          = t1builder->glyph;
       ps_builder->memory         =  t1builder->memory;
+      ps_builder->face           = (FT_Face)t1builder->face;
+      ps_builder->glyph          = (CFF_GlyphSlot)t1builder->glyph;
       ps_builder->loader         =  t1builder->loader;
       ps_builder->base           =  t1builder->base;
       ps_builder->current        =  t1builder->current;
@@ -2086,8 +2086,8 @@
     {
       CFF_Builder*  cffbuilder = (CFF_Builder*)builder;
 
-      ps_builder->face           = cffbuilder->face;
       ps_builder->memory         =  cffbuilder->memory;
+      ps_builder->face           = (FT_Face)cffbuilder->face;
       ps_builder->glyph          =  cffbuilder->glyph;
       ps_builder->loader         =  cffbuilder->loader;
       ps_builder->base           =  cffbuilder->base;
@@ -2172,7 +2172,7 @@
       else
 #endif
 #ifdef T1_CONFIG_OPTION_OLD_ENGINE
-      if ( builder->face->is_t1 )
+      if ( builder->is_t1 )
       {
         point->x = FIXED_TO_INT( x );
         point->y = FIXED_TO_INT( y );
