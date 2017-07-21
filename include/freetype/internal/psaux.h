@@ -513,7 +513,7 @@ FT_BEGIN_HEADER
   struct  PS_Builder_
   {
     FT_Memory       memory;
-    TT_Face         face;
+    FT_Face         face;
     CFF_GlyphSlot   glyph;
     FT_GlyphLoader  loader;
     FT_Outline*     base;
@@ -531,9 +531,6 @@ FT_BEGIN_HEADER
     FT_Bool         no_recurse;
 
     FT_Bool         metrics_only;
-
-    void*           hints_funcs;    /* hinter-specific */
-    void*           hints_globals;  /* hinter-specific */
 
     FT_Bool         is_t1;
 
