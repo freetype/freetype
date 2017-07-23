@@ -713,7 +713,7 @@
       FT_MODULE_DRIVER_SCALABLE   |
       FT_MODULE_DRIVER_HAS_HINTER,
 
-      sizeof ( FT_DriverRec ),
+      sizeof ( PS_DriverRec ),
 
       "type1",
       0x10000L,

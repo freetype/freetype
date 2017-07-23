@@ -21,6 +21,7 @@
 #include FT_INTERNAL_DEBUG_H
 #include FT_INTERNAL_STREAM_H
 #include FT_TRUETYPE_IDS_H
+#include FT_TYPE1_DRIVER_H
 
 #include "t1gload.h"
 #include "t1load.h"
@@ -578,9 +579,38 @@
   /*    FreeType error code.  0 means success.                             */
   /*                                                                       */
   FT_LOCAL_DEF( FT_Error )
-  T1_Driver_Init( FT_Module  driver )
+  T1_Driver_Init( FT_Module  module )
   {
-    FT_UNUSED( driver );
+    PS_Driver  driver = (PS_Driver)module;
+
+    FT_UInt32  seed;
+
+
+    /* set default property values, cf. `ftt1drv.h' */
+    driver->hinting_engine = FT_T1_HINTING_FREETYPE;
+
+    driver->no_stem_darkening = TRUE;
+
+    driver->darken_params[0] = CFF_CONFIG_OPTION_DARKENING_PARAMETER_X1;
+    driver->darken_params[1] = CFF_CONFIG_OPTION_DARKENING_PARAMETER_Y1;
+    driver->darken_params[2] = CFF_CONFIG_OPTION_DARKENING_PARAMETER_X2;
+    driver->darken_params[3] = CFF_CONFIG_OPTION_DARKENING_PARAMETER_Y2;
+    driver->darken_params[4] = CFF_CONFIG_OPTION_DARKENING_PARAMETER_X3;
+    driver->darken_params[5] = CFF_CONFIG_OPTION_DARKENING_PARAMETER_Y3;
+    driver->darken_params[6] = CFF_CONFIG_OPTION_DARKENING_PARAMETER_X4;
+    driver->darken_params[7] = CFF_CONFIG_OPTION_DARKENING_PARAMETER_Y4;
+
+    /* compute random seed from some memory addresses */
+    seed = (FT_UInt32)( (FT_Offset)(char*)&seed          ^
+                        (FT_Offset)(char*)&module        ^
+                        (FT_Offset)(char*)module->memory );
+    seed = seed ^ ( seed >> 10 ) ^ ( seed >> 20 );
+
+    driver->random_seed = (FT_Int32)seed;
+    if ( driver->random_seed < 0 )
+      driver->random_seed = -driver->random_seed;
+    else if ( driver->random_seed == 0 )
+      driver->random_seed = 123456789;
 
     return FT_Err_Ok;
   }
