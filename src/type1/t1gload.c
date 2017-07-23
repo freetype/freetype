@@ -23,6 +23,7 @@
 #include FT_INTERNAL_STREAM_H
 #include FT_OUTLINE_H
 #include FT_INTERNAL_POSTSCRIPT_AUX_H
+#include FT_TYPE1_DRIVER_H
 
 #include "t1errors.h"
 
@@ -63,11 +64,16 @@
     T1_Font   type1 = &face->type1;
     FT_Error  error = FT_Err_Ok;
 
+    PSAux_Service            psaux         = (PSAux_Service)face->psaux;
+    const T1_Decoder_Funcs   decoder_funcs = psaux->t1_decoder_funcs;
+    PS_Decoder               psdecoder;
+
 #ifdef FT_CONFIG_OPTION_INCREMENTAL
     FT_Incremental_InterfaceRec *inc =
                       face->root.internal->incremental_interface;
 #endif
 
+    PS_Driver  driver = (PS_Driver)FT_FACE_DRIVER( face );
 
     decoder->font_matrix = type1->font_matrix;
     decoder->font_offset = type1->font_offset;
@@ -90,9 +96,40 @@
     }
 
     if ( !error )
-      error = decoder->funcs.parse_charstrings(
-                decoder, (FT_Byte*)char_string->pointer,
-                (FT_UInt)char_string->length );
+    {
+      /* choose which renderer to use */
+      if ( driver->hinting_engine == FT_T1_HINTING_FREETYPE )
+        error = decoder_funcs->parse_charstrings_old( decoder,
+                                                      (FT_Byte*)char_string->pointer,
+                                                      (FT_UInt)char_string->length );
+      else
+      {
+        psaux->ps_decoder_init( decoder, TRUE, &psdecoder );
+
+        error = decoder_funcs->parse_charstrings( &psdecoder,
+                                                  (FT_Byte*)char_string->pointer,
+                                                  (FT_ULong)char_string->length );
+
+#if 0 /* TODO(ewaldhew) */
+        /* Adobe's engine uses 16.16 numbers everywhere;              */
+        /* as a consequence, glyphs larger than 2000ppem get rejected */
+        if ( FT_ERR_EQ( error, Glyph_Too_Big ) )
+        {
+          /* this time, we retry unhinted and scale up the glyph later on */
+          /* (the engine uses and sets the hardcoded value 0x10000 / 64 = */
+          /* 0x400 for both `x_scale' and `y_scale' in this case)         */
+          hinting       = FALSE;
+          force_scaling = TRUE;
+          glyph->hint   = hinting;
+
+          error = decoder_funcs->parse_charstrings( &psdecoder,
+                                                    (FT_Byte*)char_string->pointer,
+                                                    (FT_ULong)char_string->length );
+        }
+#endif
+      }
+
+    }
 
 #ifdef FT_CONFIG_OPTION_INCREMENTAL
 

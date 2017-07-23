@@ -90,7 +90,8 @@
   {
     t1_decoder_init,              /* init              */
     t1_decoder_done,              /* done              */
-    t1_decoder_parse_charstrings  /* parse_charstrings */
+    t1_decoder_parse_charstrings, /* parse_charstrings_old */
+    cf2_decoder_parse_charstrings /* parse_charstrings */
   };
 
 

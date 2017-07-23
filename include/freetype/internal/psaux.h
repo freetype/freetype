@@ -872,9 +872,15 @@ FT_BEGIN_HEADER
     (*done)( T1_Decoder  decoder );
 
     FT_Error
-    (*parse_charstrings)( T1_Decoder  decoder,
-                          FT_Byte*    base,
-                          FT_UInt     len );
+    (*parse_charstrings_old)( T1_Decoder  decoder,
+                              FT_Byte*    base,
+                              FT_UInt     len );
+
+    FT_Error
+    (*parse_charstrings)( PS_Decoder*  decoder,
+                          FT_Byte*     charstring_base,
+                          FT_ULong     charstring_len );
+
 
   } T1_Decoder_FuncsRec;
 
