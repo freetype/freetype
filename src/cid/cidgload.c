@@ -169,7 +169,7 @@
       if ( decoder->lenIV >= 0 )
         psaux->t1_decrypt( charstring, glyph_length, 4330 );
 
-      error = decoder->funcs.parse_charstrings(
+      error = decoder->funcs.parse_charstrings_old(
                 decoder, charstring + cs_offset,
                 glyph_length - cs_offset );
     }
