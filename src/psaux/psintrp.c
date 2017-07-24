@@ -491,7 +491,7 @@
     /* Stuff for Type 1 */
     FT_Int     known_othersubr_result_cnt   = 0;
     FT_Int     unknown_othersubr_result_cnt = 0;
-    FT_Bool    large_int;
+    FT_Bool    large_int = FALSE;
 
     /* save this for hinting seac accents */
     CF2_Fixed  hintOriginY = curY;
@@ -1389,14 +1389,22 @@
 
                     FT_TRACE4(( " div\n" ));
 
-                    divisor  = cf2_stack_popFixed( opStack );
-                    dividend = cf2_stack_popFixed( opStack );
+                    if ( font->isT1 && large_int )
+                    {
+                      divisor  = (CF2_F16Dot16)cf2_stack_popInt( opStack );
+                      dividend = (CF2_F16Dot16)cf2_stack_popInt( opStack );
+
+                      large_int = FALSE;
+                    }
+                    else
+                    {
+                      divisor  = cf2_stack_popFixed( opStack );
+                      dividend = cf2_stack_popFixed( opStack );
+                    }
 
                     cf2_stack_pushFixed( opStack,
                                          FT_DivFix( dividend, divisor ) );
 
-                    if ( font->isT1 )
-                      large_int = FALSE;
                   }
                   continue; /* do not clear the stack */
 
@@ -2237,9 +2245,40 @@
                              ( byte3 <<  8 ) |
                                byte4         );
 
-            FT_TRACE4(( " %.5f", v / 65536.0 ));
+            /* For Type 1:                                                     */
+            /* According to the specification, values > 32000 or < -32000 must */
+            /* be followed by a `div' operator to make the result be in the    */
+            /* range [-32000;32000].  We expect that the second argument of    */
+            /* `div' is not a large number.  Additionally, we don't handle     */
+            /* stuff like `<large1> <large2> <num> div <num> div' or           */
+            /* <large1> <large2> <num> div div'.  This is probably not allowed */
+            /* anyway.                                                         */
+            /* <large> <num> <num>+ div is not checked but should not be       */
+            /* allowed as the large value remains untouched.                   */
+            if ( font->isT1 )
+            {
+              if ( v > 32000 || v < -32000 )
+              {
+                if ( large_int )
+                {
+                  FT_ERROR(( "cf2_interpT2CharString (Type 1 mode):"
+                             " no `div' after large integer\n" ));
+                }
+                else
+                  large_int = TRUE;
+              }
 
-            cf2_stack_pushFixed( opStack, v );
+              FT_TRACE4(( " %d", v ));
+
+              cf2_stack_pushInt( opStack, (CF2_Int)v );
+            }
+            else
+            {
+              FT_TRACE4(( " %.5fF", v / 65536.0 ));
+
+              cf2_stack_pushFixed( opStack, v );
+            }
+
           }
         }
         continue;   /* don't clear stack */
