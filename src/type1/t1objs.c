@@ -587,7 +587,7 @@
 
 
     /* set default property values, cf. `ftt1drv.h' */
-    driver->hinting_engine = FT_T1_HINTING_FREETYPE;
+    driver->hinting_engine = FT_T1_HINTING_ADOBE;
 
     driver->no_stem_darkening = TRUE;
 
