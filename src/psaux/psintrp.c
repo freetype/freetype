@@ -926,11 +926,9 @@
           FT_TRACE4(( " closepath" ));
 
           /* if there is no path, `closepath' is a no-op */
-          if ( builder->parse_state == T1_Parse_Have_Path   ||
-               builder->parse_state == T1_Parse_Have_Moveto )
-            t1_builder_close_contour( builder );
+          ps_builder_close_contour( &decoder->builder );
 
-          builder->parse_state = T1_Parse_Have_Width;
+          haveWidth = TRUE;
         }
         break;
 
