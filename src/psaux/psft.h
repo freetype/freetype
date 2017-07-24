@@ -131,6 +131,14 @@ FT_BEGIN_HEADER
   cf2_getNominalWidthX( PS_Decoder*  decoder );
 
 
+  FT_LOCAL( FT_Error )
+  cf2_getT1SeacComponent( PS_Decoder*  decoder,
+                          FT_UInt      glyph_index,
+                          CF2_Buffer   buf );
+  FT_LOCAL( void )
+  cf2_freeT1SeacComponent( PS_Decoder*  decoder,
+                           CF2_Buffer   buf );
+
   /*
    * FreeType client outline
    *

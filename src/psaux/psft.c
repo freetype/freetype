@@ -705,6 +705,74 @@
   }
 
 
+  FT_LOCAL_DEF( FT_Error )
+  cf2_getT1SeacComponent( PS_Decoder*  decoder,
+                          FT_UInt      glyph_index,
+                          CF2_Buffer   buf )
+  {
+    FT_Data   glyph_data;
+    FT_Error  error = FT_Err_Ok;
+    T1_Face   face  = (T1_Face)decoder->builder.face;
+    T1_Font   type1 = &face->type1;
+
+#ifdef FT_CONFIG_OPTION_INCREMENTAL
+    FT_Incremental_InterfaceRec *inc =
+      face->root.internal->incremental_interface;
+    /* For incremental fonts get the character data using the */
+    /* callback function.                                     */
+    if ( inc )
+      error = inc->funcs->get_glyph_data( inc->object,
+                                          glyph_index, &glyph_data );
+    else
+#endif
+      /* For ordinary fonts get the character data stored in the face record. */
+    {
+      glyph_data.pointer = type1->charstrings[glyph_index];
+      glyph_data.length  = (FT_Int)type1->charstrings_len[glyph_index];
+    }
+
+    if ( !error )
+    {
+      FT_Byte*  charstring_base = (FT_Byte*)glyph_data.pointer;
+      FT_ULong  charstring_len  = (FT_ULong)glyph_data.length;
+
+
+      FT_ASSERT( charstring_base + charstring_len >= charstring_base );
+
+      FT_ZERO( buf );
+      buf->start =
+      buf->ptr   = charstring_base;
+      buf->end   = charstring_base + charstring_len;
+    }
+
+    return error;
+  }
+
+
+  FT_LOCAL_DEF( void )
+  cf2_freeT1SeacComponent( PS_Decoder*  decoder,
+                           CF2_Buffer   buf )
+  {
+    T1_Face  face;
+    FT_Data  data;
+
+
+    FT_ASSERT( decoder );
+
+#ifdef FT_CONFIG_OPTION_INCREMENTAL
+    face = (T1_Face)decoder->builder.face;
+
+    data.pointer = buf->start;
+    data.length  = (FT_Int)( buf->end - buf->start );
+
+    if ( face->root.internal->incremental_interface )
+      face->root.internal->incremental_interface->funcs->free_glyph_data(
+        face->root.internal->incremental_interface->object,
+        &data );
+#endif /* FT_CONFIG_OPTION_INCREMENTAL */
+  }
+
+
   FT_LOCAL_DEF( CF2_Int )
   cf2_initLocalRegionBuffer( PS_Decoder*  decoder,
                              CF2_Int      subrNum,
