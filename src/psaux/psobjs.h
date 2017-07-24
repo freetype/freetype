@@ -285,7 +285,8 @@ FT_BEGIN_HEADER
   /*************************************************************************/
 
   FT_LOCAL( void )
-  t1_make_subfont( T1_Face      face,
+  t1_make_subfont( FT_Face      face,
+                   PS_Private   priv,
                    CFF_SubFont  subfont );
 
   FT_LOCAL( void )
