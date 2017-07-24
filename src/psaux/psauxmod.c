@@ -154,6 +154,7 @@
     t1_decrypt,
     cff_random,
     ps_decoder_init,
+    t1_make_subfont,
 
     (const T1_CMap_ClassesRec*) &t1_cmap_classes,
 
