@@ -112,7 +112,7 @@
 
         psaux->ps_decoder_init( decoder, TRUE, &psdecoder );
 
-        psaux->t1_make_subfont( face, &subfont );
+        psaux->t1_make_subfont( FT_FACE( face ), &face->type1.private_dict, &subfont );
         psdecoder.current_subfont = &subfont;
 
         error = decoder_funcs->parse_charstrings( &psdecoder,
