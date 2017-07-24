@@ -47,8 +47,9 @@
 #include "psintrp.h"
 
 #include "pserror.h"
-#include "psobjs.h"  /* for cff_random */
 
+#include "psobjs.h"   /* for cff_random */
+#include "t1decode.h" /* for t1  seac */
 
   /*************************************************************************/
   /*                                                                       */
@@ -1289,12 +1290,179 @@
                       FT_TRACE4(( " unknown op (12, %d)\n", op2 ));
                     else
                     {
-                      return t1operator_seac( decoder,
-                                              top[0],
-                                              top[1],
-                                              top[2],
-                                              Fix2Int( top[3] ),
-                                              Fix2Int( top[4] ) );
+                      FT_Error     error2;
+                      CF2_Int      bchar_index, achar_index;
+                      FT_Vector    left_bearing, advance;
+#ifdef FT_CONFIG_OPTION_INCREMENTAL
+                      T1_Face      face  = (T1_Face)decoder->builder.face;
+#endif
+                      CF2_BufferRec  component;
+                      CF2_Fixed      dummyWidth;
+
+                      CF2_Int  achar = cf2_stack_popInt( opStack );
+                      CF2_Int  bchar = cf2_stack_popInt( opStack );
+
+                      FT_Pos   ady   = cf2_stack_popFixed ( opStack );
+                      FT_Pos   adx   = cf2_stack_popFixed ( opStack );
+                      FT_Pos   asb   = cf2_stack_popFixed ( opStack );
+
+
+                      FT_TRACE4(( " seac\n" ));
+
+                      if ( doingSeac )
+                      {
+                        FT_ERROR(( " nested seac\n" ));
+                        lastError = FT_THROW( Invalid_Glyph_Format );
+                        goto exit;      /* nested seac */
+                      }
+
+                      if ( decoder->builder.metrics_only )
+                      {
+                        FT_ERROR(( " unexpected seac\n" ));
+                        lastError = FT_THROW( Invalid_Glyph_Format );
+                        goto exit;      /* unexpected seac */
+                      }
+
+                      /* `glyph_names' is set to 0 for CID fonts which do not */
+                      /* include an encoding.  How can we deal with these?    */
+#ifdef FT_CONFIG_OPTION_INCREMENTAL
+                      if ( decoder->glyph_names == 0                   &&
+                           !face->root.internal->incremental_interface )
+#else
+                        if ( decoder->glyph_names == 0 )
+#endif /* FT_CONFIG_OPTION_INCREMENTAL */
+                        {
+                          FT_ERROR(( "cf2_interpT2CharString: (Type 1 seac)"
+                                     " glyph names table not available in this font\n" ));
+                          lastError = FT_THROW( Invalid_Glyph_Format );
+                          goto exit;
+                        }
+
+
+                      /* seac weirdness */
+                      adx += decoder->builder.left_bearing->x;
+
+#ifdef FT_CONFIG_OPTION_INCREMENTAL
+                      if ( face->root.internal->incremental_interface )
+                      {
+                        /* the caller must handle the font encoding also */
+                        bchar_index = bchar;
+                        achar_index = achar;
+                      }
+                      else
+#endif
+                      {
+                        bchar_index = t1_lookup_glyph_by_stdcharcode_ps( decoder, bchar );
+                        achar_index = t1_lookup_glyph_by_stdcharcode_ps( decoder, achar );
+                      }
+
+                      if ( bchar_index < 0 || achar_index < 0 )
+                      {
+                        FT_ERROR(( "cf2_interpT2CharString: (Type 1 seac)"
+                                   " invalid seac character code arguments\n" ));
+                        lastError = FT_THROW( Invalid_Glyph_Format );
+                        goto exit;
+                      }
+
+                      /* if we are trying to load a composite glyph, do not load the */
+                      /* accent character and return the array of subglyphs.         */
+                      if ( decoder->builder.no_recurse )
+                      {
+                        FT_GlyphSlot    glyph  = (FT_GlyphSlot)decoder->builder.glyph;
+                        FT_GlyphLoader  loader = glyph->internal->loader;
+                        FT_SubGlyph     subg;
+
+
+                        /* reallocate subglyph array if necessary */
+                        error2 = FT_GlyphLoader_CheckSubGlyphs( loader, 2 );
+                        if ( error2 )
+                        {
+                          lastError = error2;      /* pass FreeType error through */
+                          goto exit;
+                        }
+
+                        subg = loader->current.subglyphs;
+
+                        /* subglyph 0 = base character */
+                        subg->index = bchar_index;
+                        subg->flags = FT_SUBGLYPH_FLAG_ARGS_ARE_XY_VALUES |
+                                      FT_SUBGLYPH_FLAG_USE_MY_METRICS;
+                        subg->arg1  = 0;
+                        subg->arg2  = 0;
+                        subg++;
+
+                        /* subglyph 1 = accent character */
+                        subg->index = achar_index;
+                        subg->flags = FT_SUBGLYPH_FLAG_ARGS_ARE_XY_VALUES;
+                        subg->arg1  = (FT_Int)FIXED_TO_INT( adx - asb );
+                        subg->arg2  = (FT_Int)FIXED_TO_INT( ady );
+
+                        /* set up remaining glyph fields */
+                        glyph->num_subglyphs = 2;
+                        glyph->subglyphs     = loader->base.subglyphs;
+                        glyph->format        = FT_GLYPH_FORMAT_COMPOSITE;
+
+                        loader->current.num_subglyphs = 2;
+
+                        goto exit;
+                      }
+
+                      /* First load `bchar' in builder */
+                      /* now load the unscaled outline */
+
+                      FT_GlyphLoader_Prepare( decoder->builder.loader );  /* prepare loader */
+
+                      error2 = cf2_getT1SeacComponent( decoder, (FT_UInt)bchar_index, &component );
+                      if ( error2 )
+                      {
+                        lastError = error2;      /* pass FreeType error through */
+                        goto exit;
+                      }
+                      cf2_interpT2CharString( font,
+                                              &component,
+                                              callbacks,
+                                              translation,
+                                              TRUE,
+                                              0,
+                                              0,
+                                              &dummyWidth );
+                      cf2_freeT1SeacComponent( decoder, &component );
+
+                      /* save the left bearing and width of the base character */
+                      /* as they will be erased by the next load.              */
+
+                      left_bearing = *decoder->builder.left_bearing;
+                      advance      = *decoder->builder.advance;
+
+                      decoder->builder.left_bearing->x = 0;
+                      decoder->builder.left_bearing->y = 0;
+
+                      /* Now load `achar' on top of */
+                      /* the base outline           */
+
+                      error2 = cf2_getT1SeacComponent( decoder, (FT_UInt)achar_index, &component );
+                      if ( error2 )
+                      {
+                        lastError = error2;      /* pass FreeType error through */
+                        goto exit;
+                      }
+                      cf2_interpT2CharString( font,
+                                              &component,
+                                              callbacks,
+                                              translation,
+                                              TRUE,
+                                              adx - asb,
+                                              ady,
+                                              &dummyWidth );
+                      cf2_freeT1SeacComponent( decoder, &component );
+
+                      /* restore the left side bearing and   */
+                      /* advance width of the base character */
+
+                      *decoder->builder.left_bearing = left_bearing;
+                      *decoder->builder.advance      = advance;
+
+                      goto exit;
                     }
                   }
                   break;

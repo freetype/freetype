@@ -31,6 +31,9 @@ FT_BEGIN_HEADER
   FT_CALLBACK_TABLE
   const T1_Decoder_FuncsRec  t1_decoder_funcs;
 
+  FT_LOCAL( FT_Int )
+  t1_lookup_glyph_by_stdcharcode_ps( PS_Decoder*  decoder,
+                                     FT_Int       charcode );
 
   FT_LOCAL( FT_Error )
   t1_decoder_parse_glyph( T1_Decoder  decoder,
