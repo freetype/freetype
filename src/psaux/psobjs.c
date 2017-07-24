@@ -2327,6 +2327,91 @@
   /*************************************************************************/
   /*************************************************************************/
 
+
+  FT_LOCAL_DEF( void )
+  t1_make_subfont( T1_Face      face,
+                   CFF_SubFont  subfont )
+  {
+    PS_Private   priv  = &face->type1.private_dict;
+    CFF_Private  cpriv = &subfont->private_dict;
+    FT_UInt      n, count;
+
+    FT_ZERO( subfont );
+    FT_ZERO( cpriv );
+
+    count = cpriv->num_blue_values = priv->num_blue_values;
+    for ( n = 0; n < count; n++ )
+      cpriv->blue_values[n] = (FT_Pos)priv->blue_values[n];
+
+    count = cpriv->num_other_blues = priv->num_other_blues;
+    for ( n = 0; n < count; n++ )
+      cpriv->other_blues[n] = (FT_Pos)priv->other_blues[n];
+
+    count = cpriv->num_family_blues = priv->num_family_blues;
+    for ( n = 0; n < count; n++ )
+      cpriv->family_blues[n] = (FT_Pos)priv->family_blues[n];
+
+    count = cpriv->num_family_other_blues = priv->num_family_other_blues;
+    for ( n = 0; n < count; n++ )
+      cpriv->family_other_blues[n] = (FT_Pos)priv->family_other_blues[n];
+
+    cpriv->blue_scale = priv->blue_scale;
+    cpriv->blue_shift = (FT_Pos)priv->blue_shift;
+    cpriv->blue_fuzz  = (FT_Pos)priv->blue_fuzz;
+
+    cpriv->standard_width     = (FT_Pos)priv->standard_width[0];
+    cpriv->standard_height    = (FT_Pos)priv->standard_height[0];
+
+    count = cpriv->num_snap_widths = priv->num_snap_widths;
+    for ( n = 0; n < count; n++ )
+      cpriv->snap_widths[n] = (FT_Pos)priv->snap_widths[n];
+
+    count = cpriv->num_snap_heights = priv->num_snap_heights;
+    for ( n = 0; n < count; n++ )
+      cpriv->snap_heights[n] = (FT_Pos)priv->snap_heights[n];
+
+    cpriv->force_bold       = priv->force_bold;
+    cpriv->lenIV            = priv->lenIV;
+    cpriv->language_group   = priv->language_group;
+    cpriv->expansion_factor = priv->expansion_factor;
+
+    cpriv->subfont          = subfont;
+
+
+    /* Initialize the random number generator. */
+    if ( face->root.internal->random_seed != -1 )
+    {
+      /* . If we have a face-specific seed, use it.    */
+      /*   If non-zero, update it to a positive value. */
+      subfont->random = (FT_UInt32)face->root.internal->random_seed;
+      if ( face->root.internal->random_seed )
+      {
+        do
+        {
+          face->root.internal->random_seed =
+            (FT_Int32)((PSAux_Service)face->psaux)->cff_random(
+              (FT_UInt32)face->root.internal->random_seed );
+
+        } while ( face->root.internal->random_seed < 0 );
+      }
+    }
+    if ( !subfont->random )
+    {
+      FT_UInt32  seed;
+
+      /* compute random seed from some memory addresses */
+      seed = (FT_UInt32)( (FT_Offset)(char*)&seed    ^
+                          (FT_Offset)(char*)&face    ^
+                          (FT_Offset)(char*)&subfont );
+      seed = seed ^ ( seed >> 10 ) ^ ( seed >> 20 );
+      if ( seed == 0 )
+        seed = 0x7384;
+
+      subfont->random = seed;
+    }
+  }
+
+
   FT_LOCAL_DEF( void )
   t1_decrypt( FT_Byte*   buffer,
               FT_Offset  length,
