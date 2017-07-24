@@ -59,7 +59,8 @@
   static FT_Error
   T1_Parse_Glyph_And_Get_Char_String( T1_Decoder  decoder,
                                       FT_UInt     glyph_index,
-                                      FT_Data*    char_string )
+                                      FT_Data*    char_string,
+                                      FT_Bool*    force_scaling )
   {
     T1_Face   face  = (T1_Face)decoder->builder.face;
     T1_Font   type1 = &face->type1;
@@ -99,7 +100,8 @@
     if ( !error )
     {
       /* choose which renderer to use */
-      if ( driver->hinting_engine == FT_T1_HINTING_FREETYPE )
+      if ( driver->hinting_engine == FT_T1_HINTING_FREETYPE ||
+           decoder->builder.metrics_only )
         error = decoder_funcs->parse_charstrings_old( decoder,
                                                       (FT_Byte*)char_string->pointer,
                                                       (FT_UInt)char_string->length );
@@ -117,7 +119,6 @@
                                                   (FT_Byte*)char_string->pointer,
                                                   (FT_ULong)char_string->length );
 
-#if 0 /* TODO(ewaldhew) */
         /* Adobe's engine uses 16.16 numbers everywhere;              */
         /* as a consequence, glyphs larger than 2000ppem get rejected */
         if ( FT_ERR_EQ( error, Glyph_Too_Big ) )
@@ -125,15 +126,14 @@
           /* this time, we retry unhinted and scale up the glyph later on */
           /* (the engine uses and sets the hardcoded value 0x10000 / 64 = */
           /* 0x400 for both `x_scale' and `y_scale' in this case)         */
-          hinting       = FALSE;
-          force_scaling = TRUE;
-          glyph->hint   = hinting;
+          ((T1_GlyphSlot)decoder->builder.glyph)->hint = FALSE;
+
+          *force_scaling = TRUE;
 
           error = decoder_funcs->parse_charstrings( &psdecoder,
                                                     (FT_Byte*)char_string->pointer,
                                                     (FT_ULong)char_string->length );
         }
-#endif
       }
 
     }
@@ -170,8 +170,10 @@
                   FT_UInt     glyph_index )
   {
     FT_Data   glyph_data;
+    FT_Bool   force_scaling = FALSE;
     FT_Error  error = T1_Parse_Glyph_And_Get_Char_String(
-                        decoder, glyph_index, &glyph_data );
+                        decoder, glyph_index, &glyph_data,
+                        &force_scaling );
 
 
 #ifdef FT_CONFIG_OPTION_INCREMENTAL
@@ -322,6 +324,8 @@
     T1_DecoderRec           decoder;
     T1_Face                 face = (T1_Face)t1glyph->face;
     FT_Bool                 hinting;
+    FT_Bool                 scaled;
+    FT_Bool                 force_scaling = FALSE;
     T1_Font                 type1         = &face->type1;
     PSAux_Service           psaux         = (PSAux_Service)face->psaux;
     const T1_Decoder_Funcs  decoder_funcs = psaux->t1_decoder_funcs;
@@ -369,7 +373,10 @@
 
     hinting = FT_BOOL( ( load_flags & FT_LOAD_NO_SCALE   ) == 0 &&
                        ( load_flags & FT_LOAD_NO_HINTING ) == 0 );
+    scaled  = FT_BOOL( ( load_flags & FT_LOAD_NO_SCALE   ) == 0 );
 
+    glyph->hint     = hinting;
+    glyph->scaled   = scaled;
     t1glyph->format = FT_GLYPH_FORMAT_OUTLINE;
 
     error = decoder_funcs->init( &decoder,
@@ -399,13 +406,15 @@
 
     /* now load the unscaled outline */
     error = T1_Parse_Glyph_And_Get_Char_String( &decoder, glyph_index,
-                                                &glyph_data );
+                                                &glyph_data,
+                                                &force_scaling );
     if ( error )
       goto Exit;
 #ifdef FT_CONFIG_OPTION_INCREMENTAL
     glyph_data_loaded = 1;
 #endif
 
+    hinting     = glyph->hint;
     font_matrix = decoder.font_matrix;
     font_offset = decoder.font_offset;
 
@@ -495,7 +504,7 @@
         }
 #endif
 
-        if ( ( load_flags & FT_LOAD_NO_SCALE ) == 0 )
+        if ( ( load_flags & FT_LOAD_NO_SCALE ) == 0 || force_scaling )
         {
           /* scale the outline and the metrics */
           FT_Int       n;
