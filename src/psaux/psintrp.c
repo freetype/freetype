@@ -503,6 +503,7 @@
     FT_Byte    op1;                       /* first opcode byte */
 
     CF2_F16Dot16  storage[CF2_STORAGE_SIZE];    /* for `put' and `get' */
+    CF2_F16Dot16  flexStore[6];                 /* for Type 1 flex */
 
     /* instruction limit; 20,000,000 matches Avalon */
     FT_UInt32  instructionLimit = 20000000UL;
@@ -526,6 +527,7 @@
 
     FT_ZERO( &storage );
     FT_ZERO( &results );
+    FT_ZERO( &flexStore );
 
     /* initialize the remaining objects */
     cf2_arrstack_init( &subrStack,
@@ -1518,8 +1520,7 @@
                       if ( arg_cnt != 0 )
                         goto Unexpected_OtherSubr;
 
-                      if ( ps_builder_start_point( &decoder->builder, curX, curY ) ||
-                           ps_builder_check_points( &decoder->builder, 6 )         )
+                      if ( ps_builder_check_points( &decoder->builder, 6 ) )
                         goto exit;
 
                       decoder->flex_state        = 1;
@@ -1529,6 +1530,7 @@
                     case 2:                     /* add flex vectors */
                     {
                       FT_Int  idx;
+                      FT_Int  idx2;
 
 
                       if ( arg_cnt != 0 )
@@ -1558,10 +1560,20 @@
                           goto exit;
                         }
 
-                        ps_builder_add_point( &decoder->builder,
-                                              curX,
-                                              curY,
-                                              (FT_Byte)( idx == 3 || idx == 6 ) );
+                        /* map: 1->2 2->4 3->6 4->2 5->4 6->6 */
+                        idx2 = ( idx > 3 ? idx - 3 : idx ) * 2;
+
+                        flexStore[idx2 - 2] = curX;
+                        flexStore[idx2 - 1] = curY;
+
+                        if ( idx == 3 || idx == 6 )
+                          cf2_glyphpath_curveTo( &glyphPath,
+                                                 flexStore[0],
+                                                 flexStore[1],
+                                                 flexStore[2],
+                                                 flexStore[3],
+                                                 flexStore[4],
+                                                 flexStore[5] );
                       }
                     }
                     break;
@@ -2371,7 +2383,8 @@
         curY = ADD_INT32( curY, cf2_stack_popFixed( opStack ) );
         curX = ADD_INT32( curX, cf2_stack_popFixed( opStack ) );
 
-        cf2_glyphpath_moveTo( &glyphPath, curX, curY );
+        if ( !decoder->flex_state )
+          cf2_glyphpath_moveTo( &glyphPath, curX, curY );
 
         break;
 
