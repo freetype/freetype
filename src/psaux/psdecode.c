@@ -41,13 +41,13 @@
                        is_t1,
                        &ps_decoder->builder );
 
+      ps_decoder->cf2_instance       = &t1_decoder->cf2_instance;
       ps_decoder->psnames            =  t1_decoder->psnames;
 
       ps_decoder->num_glyphs         =  t1_decoder->num_glyphs;
       ps_decoder->glyph_names        =  t1_decoder->glyph_names;
       ps_decoder->hint_mode          =  t1_decoder->hint_mode;
       ps_decoder->blend              =  t1_decoder->blend;
-      /* ps_decoder->t1_parse_callback  =  t1_decoder->parse_callback; */
 
       ps_decoder->num_locals         =  t1_decoder->num_subrs;
       ps_decoder->locals             =  t1_decoder->subrs;
@@ -68,6 +68,7 @@
                        &ps_decoder->builder );
 
       ps_decoder->cff                 =  cff_decoder->cff;
+      ps_decoder->cf2_instance        = &cff_decoder->cff->cf2_instance;
       ps_decoder->current_subfont     =  cff_decoder->current_subfont;
 
       ps_decoder->num_globals         =  cff_decoder->num_globals;

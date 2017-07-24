@@ -610,7 +610,8 @@ FT_BEGIN_HEADER
 
     CFF_Font           cff;
     CFF_SubFont        current_subfont; /* for current glyph_index */
-    
+    FT_Generic*        cf2_instance;
+
     FT_Pos             glyph_width;
     FT_Pos             nominal_width;
 
@@ -636,7 +637,7 @@ FT_BEGIN_HEADER
 
     CFF_Decoder_Get_Glyph_Callback   get_glyph_callback;
     CFF_Decoder_Free_Glyph_Callback  free_glyph_callback;
-    
+
     /* Type 1 stuff */
     FT_Service_PsCMaps   psnames;      /* for seac */
 
@@ -923,6 +924,8 @@ FT_BEGIN_HEADER
     FT_UInt              len_buildchar;
 
     FT_Bool              seac;
+
+    FT_Generic           cf2_instance;
 
   } T1_DecoderRec;
 
