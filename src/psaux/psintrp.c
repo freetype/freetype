@@ -1448,8 +1448,445 @@
                     FT_TRACE4(( " unknown op (12, %d)\n", op2 ));
                   else
                   {
+                    CF2_Int   subr_no;
+                    CF2_Int   arg_cnt;
+                    CF2_UInt  count;
+                    CF2_UInt  opIdx = 0;
+
+                    FT_TRACE4(( " callothersubr\n" ));
+
+                    subr_no = cf2_stack_popInt( opStack );
+                    arg_cnt = cf2_stack_popInt( opStack );
+
+                    /***********************************************************/
+                    /*                                                         */
+                    /* remove all operands to callothersubr from the stack     */
+                    /*                                                         */
+                    /* for handled othersubrs, where we know the number of     */
+                    /* arguments, we increase the stack by the value of        */
+                    /* known_othersubr_result_cnt                              */
+                    /*                                                         */
+                    /* for unhandled othersubrs the following pops adjust the  */
+                    /* stack pointer as necessary                              */
+
+                    count = cf2_stack_count( opStack );
+                    FT_ASSERT( arg_cnt <= count );
+
+                    opIdx += count - arg_cnt;
+
+                    known_othersubr_result_cnt = 0;
+                    result_cnt = 0;
+
+                    /* XXX TODO: The checks to `arg_count == <whatever>'       */
+                    /* might not be correct; an othersubr expects a certain    */
+                    /* number of operands on the PostScript stack (as opposed  */
+                    /* to the T1 stack) but it doesn't have to put them there  */
+                    /* by itself; previous othersubrs might have left the      */
+                    /* operands there if they were not followed by an          */
+                    /* appropriate number of pops                              */
+                    /*                                                         */
+                    /* On the other hand, Adobe Reader 7.0.8 for Linux doesn't */
+                    /* accept a font that contains charstrings like            */
+                    /*                                                         */
+                    /*     100 200 2 20 callothersubr                          */
+                    /*     300 1 20 callothersubr pop                          */
+                    /*                                                         */
+                    /* Perhaps this is the reason why BuildCharArray exists.   */
+
+                    switch ( subr_no )
+                    {
+                    case 0:                     /* end flex feature */
+                      if ( arg_cnt != 3 )
+                        goto Unexpected_OtherSubr;
+
+                      if ( !decoder->flex_state           ||
+                           decoder->num_flex_vectors != 7 )
+                      {
+                        FT_ERROR(( "cf2_interpT2CharString (Type 1 mode):"
+                                   " unexpected flex end\n" ));
+                        lastError = FT_THROW( Invalid_Glyph_Format );
+                        goto exit;
+                      }
+
+                      /* the two `results' are popped by the following setcurrentpoint */
+                      cf2_stack_pushFixed( opStack, curX );
+                      cf2_stack_pushFixed( opStack, curY );
+                      known_othersubr_result_cnt = 2;
+                      break;
+
+                    case 1:                     /* start flex feature */
+                      if ( arg_cnt != 0 )
+                        goto Unexpected_OtherSubr;
+
+                      if ( ps_builder_start_point( &decoder->builder, curX, curY ) ||
+                           ps_builder_check_points( &decoder->builder, 6 )         )
+                        goto exit;
+
+                      decoder->flex_state        = 1;
+                      decoder->num_flex_vectors  = 0;
+                      break;
+
+                    case 2:                     /* add flex vectors */
+                    {
+                      FT_Int  idx;
+
+
+                      if ( arg_cnt != 0 )
+                        goto Unexpected_OtherSubr;
+
+                      if ( !decoder->flex_state )
+                      {
+                        FT_ERROR(( "cf2_interpT2CharString (Type 1 mode):"
+                                   " missing flex start\n" ));
+                        lastError = FT_THROW( Invalid_Glyph_Format );
+                        goto exit;
+                      }
+
+                      /* note that we should not add a point for index 0; */
+                      /* this will move our current position to the flex  */
+                      /* point without adding any point to the outline    */
+                      idx = decoder->num_flex_vectors++;
+                      if ( idx > 0 && idx < 7 )
+                      {
+                        /* in malformed fonts it is possible to have other */
+                        /* opcodes in the middle of a flex (which don't    */
+                        /* increase `num_flex_vectors'); we thus have to   */
+                        /* check whether we can add a point                */
+                        if ( ps_builder_check_points( &decoder->builder, 1 ) )
+                        {
+                          lastError = FT_THROW( Invalid_Glyph_Format );
+                          goto exit;
+                        }
+
+                        ps_builder_add_point( &decoder->builder,
+                                              curX,
+                                              curY,
+                                              (FT_Byte)( idx == 3 || idx == 6 ) );
+                      }
+                    }
+                    break;
+
+                    case 3:                     /* change hints */
+                      if ( arg_cnt != 1 )
+                        goto Unexpected_OtherSubr;
+
+                      cf2_arrstack_clear( &vStemHintArray );
+                      cf2_arrstack_clear( &hStemHintArray );
+
+                      cf2_hintmask_init( &hintMask, error );
+                      hintMask.isValid = FALSE;
+                      hintMask.isNew   = TRUE;
+
+                      known_othersubr_result_cnt = 1;
+                      break;
+
+                    case 12:
+                    case 13:
+                      /* counter control hints, clear stack */
+                      cf2_stack_clear( opStack );
+                      break;
+
+                    case 14:
+                    case 15:
+                    case 16:
+                    case 17:
+                    case 18:                    /* multiple masters */
+                    {
+                      PS_Blend  blend = decoder->blend;
+                      FT_UInt   num_points, nn, mm;
+                      CF2_UInt  delta;
+                      CF2_UInt  values;
+
+
+                      if ( !blend )
+                      {
+                        FT_ERROR(( "t1_decoder_parse_charstrings:"
+                                   " unexpected multiple masters operator\n" ));
+                        lastError = FT_THROW( Invalid_Glyph_Format );
+                        goto exit;
+                      }
+
+                      num_points = (FT_UInt)subr_no - 13 + ( subr_no == 18 );
+                      if ( arg_cnt != (FT_Int)( num_points * blend->num_designs ) )
+                      {
+                        FT_ERROR(( "t1_decoder_parse_charstrings:"
+                                   " incorrect number of multiple masters arguments\n" ));
+                        lastError = FT_THROW( Invalid_Glyph_Format );
+                        goto exit;
+                      }
+
+                      /* We want to compute                                    */
+                      /*                                                       */
+                      /*   a0*w0 + a1*w1 + ... + ak*wk                         */
+                      /*                                                       */
+                      /* but we only have a0, a1-a0, a2-a0, ..., ak-a0.        */
+                      /*                                                       */
+                      /* However, given that w0 + w1 + ... + wk == 1, we can   */
+                      /* rewrite it easily as                                  */
+                      /*                                                       */
+                      /*   a0 + (a1-a0)*w1 + (a2-a0)*w2 + ... + (ak-a0)*wk     */
+                      /*                                                       */
+                      /* where k == num_designs-1.                             */
+                      /*                                                       */
+                      /* I guess that's why it's written in this `compact'     */
+                      /* form.                                                 */
+                      /*                                                       */
+                      delta  = opIdx + num_points;
+                      values = opIdx;
+                      for ( nn = 0; nn < num_points; nn++ )
+                      {
+                        CF2_Fixed  tmp = cf2_stack_getReal( opStack, values );
+
+
+                        for ( mm = 1; mm < blend->num_designs; mm++ )
+                          tmp = ADD_INT32( tmp,
+                                           FT_MulFix( cf2_stack_getReal( opStack, delta++ ),
+                                                      blend->weight_vector[mm] ) );
+
+                        cf2_stack_setReal( opStack, values++, tmp );
+                      }
+                      cf2_stack_pop( opStack,
+                                     arg_cnt - num_points );
+
+                      known_othersubr_result_cnt = (FT_Int)num_points;
+                      break;
+                    }
+
+                    case 19:
+                      /* <idx> 1 19 callothersubr                             */
+                      /* => replace elements starting from index cvi( <idx> ) */
+                      /*    of BuildCharArray with WeightVector               */
+                    {
+                      FT_Int    idx;
+                      PS_Blend  blend = decoder->blend;
+
+
+                      if ( arg_cnt != 1 || !blend )
+                        goto Unexpected_OtherSubr;
+
+                      idx = cf2_stack_popInt( opStack );
+
+                      if ( idx < 0                                                    ||
+                           (FT_UInt)idx + blend->num_designs > decoder->len_buildchar )
+                        goto Unexpected_OtherSubr;
+
+                      ft_memcpy( &decoder->buildchar[idx],
+                                 blend->weight_vector,
+                                 blend->num_designs *
+                                 sizeof ( blend->weight_vector[0] ) );
+                    }
+                    break;
+
+                    case 20:
+                      /* <arg1> <arg2> 2 20 callothersubr pop   */
+                      /* ==> push <arg1> + <arg2> onto T1 stack */
+                    {
+                      CF2_F16Dot16  summand1;
+                      CF2_F16Dot16  summand2;
+
+                      if ( arg_cnt != 2 )
+                        goto Unexpected_OtherSubr;
+
+                      summand2 = cf2_stack_popFixed( opStack );
+                      summand1 = cf2_stack_popFixed( opStack );
+
+                      cf2_stack_pushFixed( opStack,
+                                           ADD_INT32( summand1,
+                                                      summand2 ) );
+                      known_othersubr_result_cnt = 1;
+                    }
+                    break;
+
+                    case 21:
+                      /* <arg1> <arg2> 2 21 callothersubr pop   */
+                      /* ==> push <arg1> - <arg2> onto T1 stack */
+                    {
+                      CF2_F16Dot16  minuend;
+                      CF2_F16Dot16  subtrahend;
+
+                      if ( arg_cnt != 2 )
+                        goto Unexpected_OtherSubr;
+
+                      subtrahend = cf2_stack_popFixed( opStack );
+                      minuend    = cf2_stack_popFixed( opStack );
+
+                      cf2_stack_pushFixed( opStack,
+                                           SUB_INT32( minuend, subtrahend ) );
+                      known_othersubr_result_cnt = 1;
+                    }
+                    break;
+
+                    case 22:
+                      /* <arg1> <arg2> 2 22 callothersubr pop   */
+                      /* ==> push <arg1> * <arg2> onto T1 stack */
+                    {
+                      CF2_F16Dot16  factor1;
+                      CF2_F16Dot16  factor2;
+
+                      if ( arg_cnt != 2 )
+                        goto Unexpected_OtherSubr;
+
+                      factor2 = cf2_stack_popFixed( opStack );
+                      factor1 = cf2_stack_popFixed( opStack );
+
+                      cf2_stack_pushFixed( opStack,
+                                           FT_MulFix( factor1, factor2 ) );
+                      known_othersubr_result_cnt = 1;
+                    }
+                    break;
+
+                    case 23:
+                      /* <arg1> <arg2> 2 23 callothersubr pop   */
+                      /* ==> push <arg1> / <arg2> onto T1 stack */
+                    {
+                      CF2_F16Dot16  dividend;
+                      CF2_F16Dot16  divisor;
+
+                      if ( arg_cnt != 2 )
+                        goto Unexpected_OtherSubr;
+
+                      divisor  = cf2_stack_popFixed( opStack );
+                      dividend = cf2_stack_popFixed( opStack );
+
+                      if ( divisor == 0 )
+                        goto Unexpected_OtherSubr;
+
+                      cf2_stack_pushFixed( opStack,
+                                           FT_DivFix( dividend, divisor ) );
+                      known_othersubr_result_cnt = 1;
+                    }
+                    break;
+
+                    case 24:
+                      /* <val> <idx> 2 24 callothersubr               */
+                      /* ==> set BuildCharArray[cvi( <idx> )] = <val> */
+                    {
+                      CF2_Int   idx;
+                      PS_Blend  blend = decoder->blend;
+
+
+                      if ( arg_cnt != 2 || !blend )
+                        goto Unexpected_OtherSubr;
+
+                      idx = cf2_stack_popInt( opStack );
+
+                      if ( idx < 0 || (FT_UInt) idx >= decoder->len_buildchar )
+                        goto Unexpected_OtherSubr;
+
+                      decoder->buildchar[idx] = cf2_stack_popFixed( opStack );
+                    }
+                    break;
+
+                    case 25:
+                      /* <idx> 1 25 callothersubr pop        */
+                      /* ==> push BuildCharArray[cvi( idx )] */
+                      /*     onto T1 stack                   */
+                    {
+                      CF2_Int   idx;
+                      PS_Blend  blend = decoder->blend;
+
+
+                      if ( arg_cnt != 1 || !blend )
+                        goto Unexpected_OtherSubr;
+
+                      idx = cf2_stack_popInt( opStack );
+
+                      if ( idx < 0 || (FT_UInt) idx >= decoder->len_buildchar )
+                        goto Unexpected_OtherSubr;
+
+                      cf2_stack_pushFixed( opStack,
+                                           decoder->buildchar[idx] );
+                      known_othersubr_result_cnt = 1;
+                    }
+                    break;
+
+#if 0
+                    case 26:
+                      /* <val> mark <idx> ==> set BuildCharArray[cvi( <idx> )] = <val>, */
+                      /*                      leave mark on T1 stack                    */
+                      /* <val> <idx>      ==> set BuildCharArray[cvi( <idx> )] = <val>  */
+                      XXX which routine has left its mark on the (PostScript) stack?;
+                      break;
+#endif
+
+                    case 27:
+                      /* <res1> <res2> <val1> <val2> 4 27 callothersubr pop */
+                      /* ==> push <res1> onto T1 stack if <val1> <= <val2>, */
+                      /*     otherwise push <res2>                          */
+                    {
+                      CF2_F16Dot16  arg1;
+                      CF2_F16Dot16  arg2;
+                      CF2_F16Dot16  cond1;
+                      CF2_F16Dot16  cond2;
+
+                      if ( arg_cnt != 4 )
+                        goto Unexpected_OtherSubr;
+
+                      cond2 = cf2_stack_popFixed( opStack );
+                      cond1 = cf2_stack_popFixed( opStack );
+                      arg2  = cf2_stack_popFixed( opStack );
+                      arg1  = cf2_stack_popFixed( opStack );
+
+                      cf2_stack_pushFixed( opStack,
+                                           cond1 <= cond2 ? arg1 : arg2 );
+                      known_othersubr_result_cnt = 1;
+                    }
+                    break;
+
+                    case 28:
+                      /* 0 28 callothersubr pop                               */
+                      /* => push random value from interval [0, 1) onto stack */
+                    {
+                      CF2_F16Dot16  r;
+
+                      if ( arg_cnt != 0 )
+                        goto Unexpected_OtherSubr;
+
+                      /* only use the lower 16 bits of `random'  */
+                      /* to generate a number in the range (0;1] */
+                      r = (CF2_F16Dot16)
+                        ( ( decoder->current_subfont->random & 0xFFFF ) + 1 );
+
+                      decoder->current_subfont->random =
+                        cff_random( decoder->current_subfont->random );
+
+                      cf2_stack_pushFixed( opStack, r );
+                      known_othersubr_result_cnt = 1;
+                    }
+                    break;
+
+                    default:
+                      if ( arg_cnt >= 0 && subr_no >= 0 )
+                      {
+                        FT_UInt  i;
+
+                        FT_ERROR(( "cf2_interpT2CharString (Type 1 mode):"
+                                   " unknown othersubr [%d %d], wish me luck\n",
+                                   arg_cnt, subr_no ));
+
+                        /* Store the unused args for this unhandled OtherSubr */
+
+                        if ( arg_cnt > PS_STORAGE_SIZE )
+                          arg_cnt = PS_STORAGE_SIZE;
+                        result_cnt = arg_cnt;
+
+                        for ( i = 1; i <= arg_cnt; i++ )
+                        {
+                          results[result_cnt - i] = cf2_stack_popFixed( opStack );
+                        }
+
+                        break;
+                      }
+                      /* fall through */
+
+                    Unexpected_OtherSubr:
+                      FT_ERROR(( "cf2_interpT2CharString (Type 1 mode):"
+                                 " invalid othersubr [%d %d]\n", arg_cnt, subr_no ));
+                      lastError = FT_THROW( Invalid_Glyph_Format );
+                      goto exit;
+                    }
                   }
-                  break;
+                  continue; /* do not clear the stack */
 
                 case cf2_escPOP:
                   if ( !font->isT1 )
