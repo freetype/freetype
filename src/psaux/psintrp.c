@@ -754,12 +754,28 @@
       case cf2_cmdHSTEM:
         FT_TRACE4(( op1 == cf2_cmdHSTEMHM ? " hstemhm\n" : " hstem\n" ));
 
-        /* never add hints after the mask is computed */
-        if ( cf2_hintmask_isValid( &hintMask ) )
+        if ( !font->isT1 )
         {
-          FT_TRACE4(( "cf2_interpT2CharString:"
-                      " invalid horizontal hint mask\n" ));
-          break;
+          /* never add hints after the mask is computed */
+          /* except if in Type 1 mode (no hintmask op)  */
+          if ( cf2_hintmask_isValid( &hintMask ) )
+          {
+            FT_TRACE4(( "cf2_interpT2CharString:"
+                        " invalid horizontal hint mask\n" ));
+            break;
+          }
+        }
+        else
+        {
+          /* Do lsb correction */
+          CF2_F16Dot16  hint_pos;
+
+          FT_ASSERT( ( cf2_stack_count( opStack ) == 2 ) );
+
+          hint_pos = ADD_INT32( cf2_stack_getReal( opStack, 0 ),
+                                decoder->builder.left_bearing->y );
+
+          cf2_stack_setReal( opStack, 0, hint_pos );
         }
 
         cf2_doStems( font,
@@ -778,12 +794,28 @@
       case cf2_cmdVSTEM:
         FT_TRACE4(( op1 == cf2_cmdVSTEMHM ? " vstemhm\n" : " vstem\n" ));
 
-        /* never add hints after the mask is computed */
-        if ( cf2_hintmask_isValid( &hintMask ) )
+        if ( !font->isT1 )
         {
-          FT_TRACE4(( "cf2_interpT2CharString:"
-                      " invalid vertical hint mask\n" ));
-          break;
+          /* never add hints after the mask is computed */
+          /* except if in Type 1 mode (no hintmask op)  */
+          if ( cf2_hintmask_isValid( &hintMask ) )
+          {
+            FT_TRACE4(( "cf2_interpT2CharString:"
+                        " invalid vertical hint mask\n" ));
+            break;
+          }
+        }
+        else
+        {
+          /* Do lsb correction */
+          CF2_F16Dot16  hint_pos;
+
+          FT_ASSERT( ( cf2_stack_count( opStack ) == 2 ) );
+
+          hint_pos = ADD_INT32( cf2_stack_getReal( opStack, 0 ),
+                                decoder->builder.left_bearing->x );
+
+          cf2_stack_setReal( opStack, 0, hint_pos );
         }
 
         cf2_doStems( font,
@@ -1154,18 +1186,51 @@
                   break;
 
                 case cf2_escVSTEM3:
-                  if ( !font->isT1 )
-                    FT_TRACE4(( " unknown op (12, %d)\n", op2 ));
-                  else
-                  {
-                  }
-                  break;
-
                 case cf2_escHSTEM3:
-                  if ( !font->isT1 )
-                    FT_TRACE4(( " unknown op (12, %d)\n", op2 ));
-                  else
+                  /* Type 1:                     */ /* Type 2:                      */
+                  /* x0 dx0 x1 dx1 x2 dx2 vstem3 */ /* x dx {dxa dxb}* vstem        */
+                  /* y0 dy0 y1 dy1 y2 dy2 hstem3 */ /* y dy {dya dyb}* hstem        */
+                  /* relative to lsb point       */ /* relative to zero             */
                   {
+                    if ( !font->isT1 )
+                      FT_TRACE4(( " unknown op (12, %d)\n", op2 ));
+                    else
+                    {
+                      CF2_F16Dot16  v0, v1, v2;
+                      CF2_F16Dot16  lsb;
+
+                      FT_TRACE4(( op2 == cf2_escVSTEM3 ? " vstem3\n"
+                                                       : " hstem3\n" ));
+
+                      FT_ASSERT( ( cf2_stack_count( opStack ) == 6 ) );
+
+                      lsb = ( op2 == cf2_escVSTEM3 ? decoder->builder.left_bearing->x
+                                                   : decoder->builder.left_bearing->y );
+
+                      v0 = cf2_stack_getReal( opStack, 0 );
+                      v1 = cf2_stack_getReal( opStack, 2 );
+                      v2 = cf2_stack_getReal( opStack, 4 );
+
+                      cf2_stack_setReal( opStack, 0,
+                                         ADD_INT32( v0,
+                                                    lsb ) );
+                      cf2_stack_setReal( opStack, 2,
+                                         SUB_INT32( SUB_INT32( v1, v0 ),
+                                                    cf2_stack_getReal( opStack, 1 ) ) );
+                      cf2_stack_setReal( opStack, 4,
+                                         SUB_INT32( SUB_INT32( v2, v1 ),
+                                                    cf2_stack_getReal( opStack, 3 ) ) );
+
+                      cf2_doStems( font,
+                                   opStack,
+                                   op2 == cf2_escVSTEM3 ? &vStemHintArray : &hStemHintArray,
+                                   width,
+                                   &haveWidth,
+                                   0 );
+
+                      if ( decoder->width_only )
+                        goto exit;
+                    }
                   }
                   break;
 
