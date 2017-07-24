@@ -975,7 +975,8 @@
           FT_TRACE4(( op1 == cf2_cmdCALLGSUBR ? " callgsubr"
                                               : " callsubr" ));
 
-          if ( charstringIndex > CF2_MAX_SUBR )
+          if ( ( !font->isT1 && charstringIndex > CF2_MAX_SUBR ) ||
+               (  font->isT1 && charstringIndex > T1_MAX_SUBRS_CALLS ) )
           {
             /* max subr plus one for charstring */
             lastError = FT_THROW( Invalid_Glyph_Format );
@@ -991,10 +992,10 @@
           /* set up the new CFF region and pointer */
           subrNum = cf2_stack_popInt( opStack );
 
-          if ( font->isT1 && decoder->subrs_hash )
+          if ( font->isT1 && decoder->locals_hash )
           {
             size_t*  val = ft_hash_num_lookup( subrNum,
-                                               decoder->subrs_hash );
+                                               decoder->locals_hash );
 
             if ( val )
               subrNum = *val;
