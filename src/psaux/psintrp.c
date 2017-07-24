@@ -290,8 +290,12 @@
     /* variable accumulates delta values from operand stack */
     CF2_Fixed  position = hintOffset;
 
-
-    if ( hasWidthArg && !*haveWidth )
+    if ( font->isT1 && !font->decoder->flex_state && !*haveWidth )
+    {
+      FT_ERROR(( "cf2_doStems (Type 1 mode):"
+                 " No width. Use hsbw/sbw as first op\n" ));
+    }
+    if ( !font->isT1 && hasWidthArg && !*haveWidth )
       *width = cf2_stack_getReal( opStack, 0 ) +
                  cf2_getNominalWidthX( font->decoder );
 
@@ -485,7 +489,6 @@
     CF2_Fixed  nominalWidthX = cf2_getNominalWidthX( decoder );
 
     /* Stuff for Type 1 */
-    FT_Pos     orig_x, orig_y;
     FT_Int     known_othersubr_result_cnt   = 0;
     FT_Int     unknown_othersubr_result_cnt = 0;
     FT_Bool    large_int;
@@ -798,6 +801,12 @@
       case cf2_cmdVMOVETO:
         FT_TRACE4(( " vmoveto\n" ));
 
+        if ( font->isT1 && !decoder->flex_state && !haveWidth )
+        {
+          FT_ERROR(( "cf2_interpT2CharString (Type 1 mode):"
+                     " No width. Use hsbw/sbw as first op\n" ));
+        }
+
         if ( cf2_stack_count( opStack ) > 1 && !haveWidth )
           *width = ADD_INT32( cf2_stack_getReal( opStack, 0 ),
                               nominalWidthX );
@@ -807,13 +816,6 @@
 
         if ( font->decoder->width_only )
           goto exit;
-
-        if ( font->isT1 && !decoder->flex_state )
-        {
-          if ( builder->parse_state == T1_Parse_Start )
-            goto Syntax_Error;
-          builder->parse_state = T1_Parse_Have_Moveto;
-        }
 
         curY = ADD_INT32( curY, cf2_stack_popFixed( opStack ) );
 
@@ -1232,26 +1234,35 @@
                       FT_TRACE4(( " unknown op (12, %d)\n", op2 ));
                     else
                     {
+                      CF2_Fixed    lsb_x, lsb_y;
+                      PS_Builder*  builder;
+
+
                       FT_TRACE4(( " sbw" ));
 
-                      builder->parse_state = T1_Parse_Have_Width;
+                      builder = &decoder->builder;
 
-                      builder->left_bearing.x = ADD_LONG( builder->left_bearing.x,
-                                                          top[0] );
-                      builder->left_bearing.y = ADD_LONG( builder->left_bearing.y,
-                                                          top[1] );
+                      builder->advance->y = cf2_stack_popFixed( opStack );
+                      builder->advance->x = cf2_stack_popFixed( opStack );
 
-                      builder->advance.x = top[2];
-                      builder->advance.y = top[3];
+                      lsb_y = cf2_stack_popFixed( opStack );
+                      lsb_x = cf2_stack_popFixed( opStack );
 
-                      x = ADD_LONG( builder->pos_x, top[0] );
-                      y = ADD_LONG( builder->pos_y, top[1] );
+                      builder->left_bearing->x = ADD_INT32( builder->left_bearing->x,
+                                                            lsb_x );
+                      builder->left_bearing->y = ADD_INT32( builder->left_bearing->y,
+                                                            lsb_y );
+
+                      haveWidth = TRUE;
 
                       /* the `metrics_only' indicates that we only want to compute */
                       /* the glyph's metrics (lsb + advance width), not load the   */
                       /* rest of it; so exit immediately                           */
                       if ( builder->metrics_only )
-                        return FT_Err_Ok;
+                        goto exit;
+
+                      curX = ADD_INT32( curX, lsb_x );
+                      curY = ADD_INT32( curY, lsb_y );
                     }
                   }
                   break;
@@ -1643,26 +1654,31 @@
         }
         else
         {
+          CF2_Fixed    lsb_x;
+          PS_Builder*  builder;
+
+
           FT_TRACE4(( " hsbw" ));
 
-          builder->parse_state = T1_Parse_Have_Width;
+          builder = &decoder->builder;
 
-          builder->left_bearing.x = ADD_LONG( builder->left_bearing.x,
-                                              top[0] );
+          builder->advance->x = cf2_stack_popFixed( opStack );
+          builder->advance->y = 0;
 
-          builder->advance.x = top[1];
-          builder->advance.y = 0;
+          lsb_x = cf2_stack_popFixed( opStack );
 
-          orig_x = x = ADD_LONG( builder->pos_x, top[0] );
-          orig_y = y = builder->pos_y;
+          builder->left_bearing->x = ADD_INT32( builder->left_bearing->x,
+                                                lsb_x );
 
-          FT_UNUSED( orig_y );
+          haveWidth = TRUE;
 
           /* the `metrics_only' indicates that we only want to compute */
           /* the glyph's metrics (lsb + advance width), not load the   */
           /* rest of it; so exit immediately                           */
           if ( builder->metrics_only )
-            return FT_Err_Ok;
+            goto exit;
+
+          curX = ADD_INT32( curX, lsb_x );
         }
         break;
 
@@ -1821,6 +1837,12 @@
       case cf2_cmdRMOVETO:
         FT_TRACE4(( " rmoveto\n" ));
 
+        if ( font->isT1 && !decoder->flex_state && !haveWidth )
+        {
+          FT_ERROR(( "cf2_interpT2CharString (Type 1 mode):"
+                     " No width. Use hsbw/sbw as first op\n" ));
+        }
+
         if ( cf2_stack_count( opStack ) > 2 && !haveWidth )
           *width = ADD_INT32( cf2_stack_getReal( opStack, 0 ),
                               nominalWidthX );
@@ -1830,13 +1852,6 @@
 
         if ( font->decoder->width_only )
           goto exit;
-
-        if ( font->isT1 && !decoder->flex_state )
-        {
-          if ( builder->parse_state == T1_Parse_Start )
-            goto Syntax_Error;
-          builder->parse_state = T1_Parse_Have_Moveto;
-        }
 
         curY = ADD_INT32( curY, cf2_stack_popFixed( opStack ) );
         curX = ADD_INT32( curX, cf2_stack_popFixed( opStack ) );
@@ -1848,6 +1863,12 @@
       case cf2_cmdHMOVETO:
         FT_TRACE4(( " hmoveto\n" ));
 
+        if ( font->isT1 && !decoder->flex_state && !haveWidth )
+        {
+          FT_ERROR(( "cf2_interpT2CharString (Type 1 mode):"
+                     " No width. Use hsbw/sbw as first op\n" ));
+        }
+
         if ( cf2_stack_count( opStack ) > 1 && !haveWidth )
           *width = ADD_INT32( cf2_stack_getReal( opStack, 0 ),
                               nominalWidthX );
@@ -1858,13 +1879,6 @@
         if ( font->decoder->width_only )
           goto exit;
 
-        if ( font->isT1 && !decoder->flex_state )
-        {
-          if ( builder->parse_state == T1_Parse_Start )
-            goto Syntax_Error;
-          builder->parse_state = T1_Parse_Have_Moveto;
-        }
-        
         curX = ADD_INT32( curX, cf2_stack_popFixed( opStack ) );
 
         cf2_glyphpath_moveTo( &glyphPath, curX, curY );
