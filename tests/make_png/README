@@ -4,6 +4,11 @@ NOTE: First make freetype library (in the ../../ directory)
  
 TODO:   Generate HTML page (testing going on)
 
+Testing Right Now: Aligning 'base' and 'test' glyphs 
+1. Using the bottom-left non-white pixel as reference.
+2. Using the similarity between the glyphs ( maintaining a score based
+   on the number of non-white pixels overlapping )
+   
 /*******************************************************************/
 (DEPRECATED)
 To generate hashes and store it in the ./hashes folder,
