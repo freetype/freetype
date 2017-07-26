@@ -1489,8 +1489,9 @@
         return;
 
     /* add momentum for this path element */
-    glyphpath->callbacks->windingMomentum +=
-      cf2_getWindingMomentum( x1, y1, x2, y2 );
+    glyphpath->callbacks->windingMomentum =
+      ADD_INT32( glyphpath->callbacks->windingMomentum,
+                 cf2_getWindingMomentum( x1, y1, x2, y2 ) );
 
     /* note: allow mixed integer and fixed multiplication here */
     if ( dx >= 0 )
@@ -1778,8 +1779,9 @@
                                  &yOffset3 );
 
     /* add momentum from the middle segment */
-    glyphpath->callbacks->windingMomentum +=
-      cf2_getWindingMomentum( x1, y1, x2, y2 );
+    glyphpath->callbacks->windingMomentum =
+      ADD_INT32( glyphpath->callbacks->windingMomentum,
+                 cf2_getWindingMomentum( x1, y1, x2, y2 ) );
 
     /* construct offset points */
     P0.x = ADD_INT32( glyphpath->currentCS.x, xOffset1 );

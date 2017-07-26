@@ -1,3 +1,14 @@
+2017-07-26  Werner Lemberg  <wl@gnu.org>
+
+	[cff] Integer overflow.
+
+	Reported as
+
+	  https://bugs.chromium.org/p/oss-fuzz/issues/detail?id=2738
+
+	* src/cff/cf2hints.c (cf2_glyphpath_computeOffset,
+	cf2_glyphpath_curveTo): Use ADD_INT32.
+
 2017-07-13  Werner Lemberg  <wl@gnu.org>
 
 	[base] Fix memory leak.
