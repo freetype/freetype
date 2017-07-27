@@ -434,18 +434,18 @@ int main(int argc, char const *argv[])
       
       if (base_png->height < test_png->height)
       {
-        base_png = Adjust_Height(base_png, test_png);
+        base_png = Append_Rows(base_png, test_png);
       }else if (base_png->height > test_png->height)
       {
-        test_png = Adjust_Height(test_png, base_png);
+        test_png = Append_Rows(test_png, base_png);
       }
 
       if (base_png->width < test_png->width)
       {
-        base_png = Adjust_Width(base_png, test_png);
+        base_png = Append_Columns(base_png, test_png);
       }else if (base_png->width > test_png->width)
       {
-        test_png = Adjust_Width(test_png, base_png);
+        test_png = Append_Columns(test_png, base_png);
       }
 
       Add_effect( base_png, test_png, after_effect_1, 1);

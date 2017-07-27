@@ -334,85 +334,6 @@ void Read_PNG(char *filename, IMAGE * after_effect) {
   fclose(fp);
 }
 
-IMAGE* Adjust_Height(IMAGE* small, IMAGE* big){
-  
-  int h_delta;
-  IMAGE* result = (IMAGE*)malloc(sizeof(IMAGE));
-
-  result->height = big->height;
-  result->width = small->width; 
-  result->pixels = 
-  (PIXEL*) malloc(result->width * result->height * sizeof(PIXEL));
-
-  h_delta = big->height - small->height;
-
-  for (int y = 0; y < h_delta; ++y)
-  {
-    for (int x = 0; x < result->width; ++x)
-    {
-      PIXEL * pixel_result = Pixel_At ( result, x, y);
-
-      pixel_result->red    = 255;
-      pixel_result->green  = 255;
-      pixel_result->blue   = 255;
-      pixel_result->alpha  = 255; 
-    }
-  }
-
-  for (int y = h_delta; y < result->height; ++y)
-  {
-    for (int x = 0; x < result->width; ++x)
-    {
-      PIXEL * pixel_small = Pixel_At ( small, x, y - h_delta);
-      PIXEL * pixel_result = Pixel_At ( result, x, y);
-
-      pixel_result->red    = pixel_small->red;
-      pixel_result->green  = pixel_small->green;
-      pixel_result->blue   = pixel_small->blue;
-      pixel_result->alpha  = pixel_small->alpha; 
-    }
-  }
-  return result; 
-}
-
-IMAGE* Adjust_Width(IMAGE* small, IMAGE* big){
-  
-  IMAGE* result = (IMAGE*)malloc(sizeof(IMAGE));
-
-  result->height = small->height;
-  result->width = big->width; 
-  result->pixels = 
-  (PIXEL*) malloc(result->width * result->height * sizeof(PIXEL));
-
-  for (int x = small->width; x < big->width; ++x)
-  {
-    for (int y = 0; y < result->height; ++y)
-    {
-      PIXEL * pixel_result = Pixel_At ( result, x, y);
-
-      pixel_result->red    = 255;
-      pixel_result->green  = 255;
-      pixel_result->blue   = 255;
-      pixel_result->alpha  = 255; 
-    }
-  }
-
-  for (int y = 0; y < result->height; ++y)
-  {
-    for (int x = 0; x < small->width; ++x)
-    {
-      PIXEL * pixel_small = Pixel_At ( small, x, y);
-      PIXEL * pixel_result = Pixel_At ( result, x, y);
-
-      pixel_result->red    = pixel_small->red;
-      pixel_result->green  = pixel_small->green;
-      pixel_result->blue   = pixel_small->blue;
-      pixel_result->alpha  = pixel_small->alpha; 
-    }
-  }
-  return result;
-}
-
 int Add_effect(IMAGE* base, IMAGE* test, IMAGE* out, int Effect_ID)
 { 
   int pixel_diff = 0;
@@ -539,4 +460,156 @@ void Print_Row( FILE* fp, int index, char* name, int diff,
                                 hash_t->hash[1],
                                 hash_t->hash[2],
                                 hash_t->hash[3], index);
+}
+
+int First_Column(IMAGE* input){
+
+  for (int x = 0; x < input->width; ++x)
+  {
+    for (int y = 0; y < input->height; ++y)
+    {
+      PIXEL * pixel_result = Pixel_At ( input, x, y);
+
+      if ( pixel_result->red    == 255 &&
+           pixel_result->green  == 255 &&
+           pixel_result->blue   == 255 &&
+           pixel_result->alpha  == 255 )
+      {
+        continue;
+      }else{
+        return x;
+      }
+    }
+  }
+  return input->width;
+}
+
+int First_Row(IMAGE* input){
+
+  for (int y = 0; y < input->height; ++y)
+  {
+    for (int x = 0; x < input->width; ++x)
+    {
+      PIXEL * pixel_result = Pixel_At ( input, x, y);
+
+      if ( pixel_result->red    == 255 &&
+           pixel_result->green  == 255 &&
+           pixel_result->blue   == 255 &&
+           pixel_result->alpha  == 255 )
+      {
+        continue;
+      }else{
+        return y;
+      }
+    }
+  }
+  return input->height;
+}
+
+IMAGE* Append_Columns(IMAGE* small, IMAGE* big){
+  
+  IMAGE* result = (IMAGE*)malloc(sizeof(IMAGE));
+
+  result->height = small->height;
+  result->width = big->width; 
+  result->pixels = 
+  (PIXEL*) malloc(result->width * result->height * sizeof(PIXEL));
+
+  int first_col = First_Column(big);
+
+  for (int x = 0; x < first_col; ++x)
+  {
+    for (int y = 0; y < result->height; ++y)
+    {
+      PIXEL * pixel_result = Pixel_At ( result, x, y);
+
+      pixel_result->red    = 255;
+      pixel_result->green  = 255;
+      pixel_result->blue   = 255;
+      pixel_result->alpha  = 255; 
+    }
+  }
+
+  for (int y = 0; y < result->height; ++y)
+  {
+    for (int x = first_col; x < first_col + small->width; ++x)
+    {
+      PIXEL * pixel_small = Pixel_At ( small, (x - first_col), y);
+      PIXEL * pixel_result = Pixel_At ( result, x, y);
+
+      pixel_result->red    = pixel_small->red;
+      pixel_result->green  = pixel_small->green;
+      pixel_result->blue   = pixel_small->blue;
+      pixel_result->alpha  = pixel_small->alpha; 
+    }
+  }
+
+  for (int x = first_col + small->width; x < result->width; ++x)
+  {
+    for (int y = 0; y < result->height; ++y)
+    {
+      PIXEL * pixel_result = Pixel_At ( result, x, y);
+
+      pixel_result->red    = 255;
+      pixel_result->green  = 255;
+      pixel_result->blue   = 255;
+      pixel_result->alpha  = 255; 
+    }
+  }
+
+  return result;
+}
+
+IMAGE* Append_Rows(IMAGE* small, IMAGE* big){
+  
+  IMAGE* result = (IMAGE*)malloc(sizeof(IMAGE));
+
+  result->height = big->height;
+  result->width = small->width; 
+  result->pixels = 
+  (PIXEL*) malloc(result->width * result->height * sizeof(PIXEL));
+
+  int first_row = First_Row(big);
+
+  for (int y = 0; y < first_row; ++y)
+  {
+    for (int x = 0; x < result->width; ++x)
+    {
+      PIXEL * pixel_result = Pixel_At ( result, x, y);
+
+      pixel_result->red    = 255;
+      pixel_result->green  = 255;
+      pixel_result->blue   = 255;
+      pixel_result->alpha  = 255; 
+    }
+  }
+
+  for (int y = first_row; y < first_row + small->height; ++y)
+  {
+    for (int x = 0; x < result->width; ++x)
+    {
+      PIXEL * pixel_small = Pixel_At ( small, x, y - first_row);
+      PIXEL * pixel_result = Pixel_At ( result, x, y);
+
+      pixel_result->red    = pixel_small->red;
+      pixel_result->green  = pixel_small->green;
+      pixel_result->blue   = pixel_small->blue;
+      pixel_result->alpha  = pixel_small->alpha; 
+    }
+  }
+
+  for (int y = first_row + small->height; y < result->height; ++y)
+  {
+    for (int x = 0; x < result->width; ++x)
+    {
+      PIXEL * pixel_result = Pixel_At ( result, x, y);
+
+      pixel_result->red    = 255;
+      pixel_result->green  = 255;
+      pixel_result->blue   = 255;
+      pixel_result->alpha  = 255; 
+    }
+  }
+
+  return result; 
 }

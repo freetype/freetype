@@ -2,13 +2,47 @@ NOTE: First make freetype library (in the ../../ directory)
   make devel
   make
  
-TODO:   Generate HTML page (testing going on)
+TODO:   Generate HTML page for detailed comparison
 
-Testing Right Now: Aligning 'base' and 'test' glyphs 
-1. Using the bottom-left non-white pixel as reference.
-2. Using the similarity between the glyphs ( maintaining a score based
-   on the number of non-white pixels overlapping )
-   
+/*******************************************************************/
+
+To generate sprite sheets in the /images folder and to generate the
+"index.html" (List-View) of the glyphs.
+
+By clicking on the Headers of the respective columns,they can be
+arranged (in increasing/decreasing order) based on
+->  Glyph-Index
+->  Name
+->  Difference Metric (right now it is the number of pixels that are
+    different between the base and the test glyph)
+
+It displays the whole sprite sheet right now (will be used later)
+Hashes will be diplayed (To be implemented)
+
+First compile and install two versions of the FreeType libray 
+in different folders (with SUBPIXEL_RENDERING enabled in ftoption.h)
+
+
+1)  make sprite
+    (set resoluton in DPI by passing argument
+    example: make DPI=100, if not specified,default is 72)
+
+2)  Usage ./sprite <a> <b> <font_file> <pt_size> <render_mode>
+
+    (<a> is the libfreetype.so from the base vesion )
+    (<b> is the libfreetype.so from the test vesion )
+
+    The path to the "shared library" in usage should be absolute.
+
+    Sprite Sheets will be saved as sprite_$(glyph_index).png
+
+    Render modes similar to generating PNG(s).
+
+NOTE: If the dimensions of the two glyphs to be compared are
+different, comparison is done after aligning the glyphs.
+This alignment will effect the 'Difference Metric' based on the 
+number of rows/columns added.
+
 /*******************************************************************/
 (DEPRECATED)
 To generate hashes and store it in the ./hashes folder,
@@ -30,7 +64,7 @@ To generate hashes and store it in the ./hashes folder,
                               3 - lcd vertical
 
 /*******************************************************************/
-
+(DEPRECATED)
 To generate 32-bit RGBA PNG(s) of all glyphs in a font\n
   
 1)  make png
@@ -51,39 +85,7 @@ To generate 32-bit RGBA PNG(s) of all glyphs in a font\n
 	                            4 - lcd vertical-RGB
                               5 - lcd vertical-BGR
 
-/*******************************************************************/
 
-To generate sprite sheets in the /images folder and to generate the
-"index.html" (List-View) of the glyphs.
-
-By clicking on the Headers of the respective columns,they can be
-arranged (in increasing/decreasing order) based on
-->  Glyph-Index
-->  Name
-->  Difference Metric (right now it is the number of pixels that are
-    different between the base and the test glyph)
-
-It displays the whole sprite sheet right now (will be used later)
-Hashes will be dsplayed (To be implemented)
-
-First compile and install two versions of the FreeType libray 
-in different folders (with SUBPIXEL_RENDERING enabled in ftoption.h)
-
-
-1)  make sprite
-		(set resoluton in DPI by passing argument
-  	example: make DPI=100, if not specified,default is 72)
-
-2) 	Usage ./sprite <a> <b> <font_file> <pt_size> <render_mode>
-
-		(<a> is the libfreetype.so from the base vesion )
-		(<b> is the libfreetype.so from the test vesion )
-
-		The path to the "shared library" in usage should be absolute.
-
-		Sprite Sheets will be saved as sprite_$(glyph_index).png
-
-		Render modes similar to generating PNG(s).
 
 
 
