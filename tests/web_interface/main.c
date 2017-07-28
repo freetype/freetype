@@ -1,6 +1,4 @@
 #include "bitmap.h"
-#include <dlfcn.h>
-#include <math.h>
 
 struct entry 
 {
