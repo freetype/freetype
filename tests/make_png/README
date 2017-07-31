@@ -43,47 +43,6 @@ different, comparison is done after aligning the glyphs.
 This alignment will effect the 'Difference Metric' based on the 
 number of rows/columns added.
 
-/*******************************************************************/
-(DEPRECATED)
-To generate hashes and store it in the ./hashes folder,
-
-1)  make hash
-		(set resoluton in DPI by passing argument
-		example: make DPI=100, if not specified,default is 72)
-
-2) 	Usage   ./hash <font_file> <pt_size> <render_mode>
-	
-    Hashes will be saved in a file named 
-    $(font)_$(pt_size)_$(render_mode).hash 
-
-    By default, hashes of 256-level gray bitmaps will be generated
-
-    Values for render_mode    0 - monochrome
-                              1 - anti-aliased
-                              2 - lcd horizontal
-                              3 - lcd vertical
-
-/*******************************************************************/
-(DEPRECATED)
-To generate 32-bit RGBA PNG(s) of all glyphs in a font\n
-  
-1)  make png
-		(set resoluton in DPI by passing argument
-  	example: make DPI=100, if not specified,default is 72)
-
-2) 	Usage   ./<exe> <font_file> <pt_size> <render_mode>
-
-	  Images will be saved in a file named 
-	  $(font)_$(pt_size)_$(render_mode)_$(glyph_index).png
-
-	  By default, hashes of 256-level gray bitmaps will be generated
-
-	  Values for render_mode    0 - monochrome
-	                            1 - anti-aliased
-	                            2 - lcd horizontal-RGB
-	                            3 - lcd horizontal-BGR
-	                            4 - lcd vertical-RGB
-                              5 - lcd vertical-BGR
 
 
 
