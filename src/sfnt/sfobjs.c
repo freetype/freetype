@@ -1224,7 +1224,10 @@
         goto Exit;
     }
 
-    if ( face->header.Units_Per_EM == 0 )
+    /* OpenType 1.8.2 introduced limits to this value;    */
+    /* however, they make sense for older SFNT fonts also */
+    if ( face->header.Units_Per_EM <    16 ||
+         face->header.Units_Per_EM > 16384 )
     {
       error = FT_THROW( Invalid_Table );
 

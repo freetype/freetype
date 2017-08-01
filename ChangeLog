@@ -1,3 +1,15 @@
+2017-08-01  Werner Lemberg  <wl@gnu.org>
+
+	[sfnt, truetype] Minor adjustments for OpenType 1.8.2.
+
+	* src/sfnt/sfobjs.c (sfnt_load_face): The units per EM value has now
+	(tighter) limits.
+
+	* src/truetype/ttgload.c (load_truetype_glyph): The new OpenType
+	version explicitly allows all negative values for the number of
+	contours if we have a composite glyph (this is for better backwards
+	compatibility I guess), but it still recommends value -1.
+
 2017-07-26  Werner Lemberg  <wl@gnu.org>
 
 	[cff] Integer overflow.

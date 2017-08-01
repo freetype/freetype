@@ -1686,7 +1686,7 @@
     /***********************************************************************/
 
     /* otherwise, load a composite! */
-    else if ( loader->n_contours == -1 )
+    else if ( loader->n_contours < 0 )
     {
       FT_Memory  memory = face->root.memory;
 
@@ -1696,6 +1696,9 @@
 
       FT_ListNode  node, node2;
 
+
+      /* normalize the `n_contours' value */
+      loader->n_contours = -1;
 
       /*
        * We store the glyph index directly in the `node->data' pointer,
@@ -1990,12 +1993,6 @@
             goto Exit;
         }
       }
-    }
-    else
-    {
-      /* invalid composite count (negative but not -1) */
-      error = FT_THROW( Invalid_Outline );
-      goto Exit;
     }
 
     /***********************************************************************/
