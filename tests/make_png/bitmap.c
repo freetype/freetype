@@ -3,7 +3,7 @@
 HASH_128 * Generate_Hash_x64_128( FT_Bitmap * bitmap, 
                                   HASH_128 * murmur)
 {    
-  int seed = 99; // Dont change
+  int seed = 99; /* Dont change */
 
   MurmurHash3_x64_128(bitmap->buffer, 
                       (bitmap->pitch * bitmap->rows),
@@ -16,7 +16,7 @@ HASH_128 * Generate_Hash_x64_128( FT_Bitmap * bitmap,
 HASH_128 * Generate_Hash_x86_128( FT_Bitmap * bitmap,
                                   HASH_128 * murmur)
 {    
-  int seed = 99; // Dont change
+  int seed = 99; /* Dont change */
 
   MurmurHash3_x86_128(bitmap->buffer,
                       (bitmap->pitch * bitmap->rows),
@@ -29,7 +29,7 @@ HASH_128 * Generate_Hash_x86_128( FT_Bitmap * bitmap,
 HASH_32 * Generate_Hash_x86_32( FT_Bitmap * bitmap,
                                 HASH_32 * murmur)
 {    
-  int seed = 99; // Dont change
+  int seed = 99; /* Dont change */
 
   MurmurHash3_x86_32( bitmap->buffer,
                       (bitmap->pitch * bitmap->rows),
@@ -161,7 +161,7 @@ void Make_PNG(FT_Bitmap* bitmap,IMAGE* fruit,int i,int render_mode){
 
   switch(render_mode){
 
-    case 0 :  fruit->width = bitmap->width;           // MONO and GRAY
+    case 0 :  fruit->width = bitmap->width;           /* MONO and GRAY */
               fruit->height  = bitmap->rows;
 
               fruit->pixels = calloc ( fruit->width * fruit->height,
@@ -188,7 +188,7 @@ void Make_PNG(FT_Bitmap* bitmap,IMAGE* fruit,int i,int render_mode){
                 }
               }                    
               break;
-    case 1 :  fruit->width = bitmap->width;            // MONO and GRAY
+    case 1 :  fruit->width = bitmap->width;            /* MONO and GRAY */
               fruit->height  = bitmap->rows;
 
               fruit->pixels = calloc ( fruit->width * fruit->height,
@@ -211,7 +211,7 @@ void Make_PNG(FT_Bitmap* bitmap,IMAGE* fruit,int i,int render_mode){
               break;
 
     case 2 :
-    case 3 :  fruit->width = bitmap->width / 3;        // LCD
+    case 3 :  fruit->width = bitmap->width / 3;        /* LCD */
               fruit->height  = bitmap->rows;
 
               fruit->pixels = calloc ( fruit->width * fruit->height, 
@@ -240,7 +240,7 @@ void Make_PNG(FT_Bitmap* bitmap,IMAGE* fruit,int i,int render_mode){
               break;
 
     case 4 :
-    case 5 :  fruit->width = bitmap->width;            // LCD_V
+    case 5 :  fruit->width = bitmap->width;            /* LCD_V */
               fruit->height  = bitmap->rows / 3;
 
               fruit->pixels = calloc ( fruit->width * fruit->height,
@@ -276,7 +276,7 @@ void Make_PNG(FT_Bitmap* bitmap,IMAGE* fruit,int i,int render_mode){
 
 void Read_PNG(char *filename, IMAGE * after_effect) {
 
-  int width, height;
+  int width, height, x, y;
   png_bytep *row_pointers;
 
   FILE *fp = fopen(filename, "rb");
@@ -305,7 +305,7 @@ void Read_PNG(char *filename, IMAGE * after_effect) {
   after_effect->height = height;
 
   row_pointers = (png_bytep*)malloc(sizeof(png_bytep) * height);
-  for(int y = 0; y < height; y++) {
+  for( y = 0; y < height; y++) {
     row_pointers[y] = (png_byte*)malloc(png_get_rowbytes(png,info));
   }
 
@@ -314,11 +314,11 @@ void Read_PNG(char *filename, IMAGE * after_effect) {
   after_effect->pixels = 
   (PIXEL*) malloc( width * height * sizeof(PIXEL));
 
-  for(int y = 0; y < height; y++) {
+  for( y = 0; y < height; y++) {
 
     png_bytep row = row_pointers[y];
 
-    for(int x = 0; x < width; x++ ) {
+    for( x = 0; x < width; x++ ) {
 
       png_bytep px = &(row[x * 4]);
 
@@ -337,14 +337,15 @@ void Read_PNG(char *filename, IMAGE * after_effect) {
 int Add_effect(IMAGE* base, IMAGE* test, IMAGE* out, int Effect_ID)
 { 
   int pixel_diff = 0;
+  int x,y;
 
   out->width = base->width;
   out->height = base->height;
   out->pixels = 
   (PIXEL*)malloc(base->width * base->height * sizeof(PIXEL));
 
-  for(int y = 0; y < base->height; y++) {
-    for(int x = 0; x < base->width; x++ ) {
+  for( y = 0; y < base->height; y++) {
+    for( x = 0; x < base->width; x++ ) {
 
       PIXEL * pixel_base = Pixel_At ( base, x, y);
       PIXEL * pixel_test = Pixel_At ( test, x, y);
@@ -397,15 +398,17 @@ int Add_effect(IMAGE* base, IMAGE* test, IMAGE* out, int Effect_ID)
 
 void Stitch(IMAGE* left, IMAGE* right, IMAGE* result){
 
+  int x, y;
+
   result->width = left->width + right->width;
   result->height = MAX(left->height, right->height); 
 
   result->pixels = 
   (PIXEL*)calloc(result->width * result->height, sizeof(PIXEL));
 
-  for (int y = 0; y < left->height; ++y)
+  for ( y = 0; y < left->height; ++y)
   {
-    for (int x = 0; x < left->width; ++x)
+    for ( x = 0; x < left->width; ++x)
     {
       PIXEL * pixel_left = Pixel_At ( left, x, y);
       PIXEL * pixel_result = Pixel_At ( result, x, y);
@@ -417,9 +420,9 @@ void Stitch(IMAGE* left, IMAGE* right, IMAGE* result){
     }
   }
 
-  for (int y = 0; y < right->height; ++y)
+  for ( y = 0; y < right->height; ++y)
   {
-    for (int x = left->width; x < result->width; ++x)
+    for ( x = left->width; x < result->width; ++x)
     {
       PIXEL * pixel_right = Pixel_At ( right, x - left->width, y);
       PIXEL * pixel_result = Pixel_At ( result, x, y);
@@ -464,9 +467,11 @@ void Print_Row( FILE* fp, int index, char* name, int diff,
 
 int First_Column(IMAGE* input){
 
-  for (int x = 0; x < input->width; ++x)
+  int x, y;
+
+  for ( x = 0; x < input->width; ++x)
   {
-    for (int y = 0; y < input->height; ++y)
+    for ( y = 0; y < input->height; ++y)
     {
       PIXEL * pixel_result = Pixel_At ( input, x, y);
 
@@ -486,9 +491,11 @@ int First_Column(IMAGE* input){
 
 int First_Row(IMAGE* input){
 
-  for (int y = 0; y < input->height; ++y)
+  int x, y;
+  
+  for ( y = 0; y < input->height; ++y)
   {
-    for (int x = 0; x < input->width; ++x)
+    for ( x = 0; x < input->width; ++x)
     {
       PIXEL * pixel_result = Pixel_At ( input, x, y);
 
@@ -508,6 +515,8 @@ int First_Row(IMAGE* input){
 
 IMAGE* Append_Columns(IMAGE* small, IMAGE* big){
   
+  int x, y;
+
   IMAGE* result = (IMAGE*)malloc(sizeof(IMAGE));
 
   result->height = small->height;
@@ -517,9 +526,9 @@ IMAGE* Append_Columns(IMAGE* small, IMAGE* big){
 
   int first_col = First_Column(big);
 
-  for (int x = 0; x < first_col; ++x)
+  for ( x = 0; x < first_col; ++x)
   {
-    for (int y = 0; y < result->height; ++y)
+    for ( y = 0; y < result->height; ++y)
     {
       PIXEL * pixel_result = Pixel_At ( result, x, y);
 
@@ -530,9 +539,9 @@ IMAGE* Append_Columns(IMAGE* small, IMAGE* big){
     }
   }
 
-  for (int y = 0; y < result->height; ++y)
+  for ( y = 0; y < result->height; ++y)
   {
-    for (int x = first_col; x < first_col + small->width; ++x)
+    for ( x = first_col; x < first_col + small->width; ++x)
     {
       PIXEL * pixel_small = Pixel_At ( small, (x - first_col), y);
       PIXEL * pixel_result = Pixel_At ( result, x, y);
@@ -544,9 +553,9 @@ IMAGE* Append_Columns(IMAGE* small, IMAGE* big){
     }
   }
 
-  for (int x = first_col + small->width; x < result->width; ++x)
+  for ( x = first_col + small->width; x < result->width; ++x)
   {
-    for (int y = 0; y < result->height; ++y)
+    for ( y = 0; y < result->height; ++y)
     {
       PIXEL * pixel_result = Pixel_At ( result, x, y);
 
@@ -562,6 +571,8 @@ IMAGE* Append_Columns(IMAGE* small, IMAGE* big){
 
 IMAGE* Append_Rows(IMAGE* small, IMAGE* big){
   
+  int x, y;
+
   IMAGE* result = (IMAGE*)malloc(sizeof(IMAGE));
 
   result->height = big->height;
@@ -571,9 +582,9 @@ IMAGE* Append_Rows(IMAGE* small, IMAGE* big){
 
   int first_row = First_Row(big);
 
-  for (int y = 0; y < first_row; ++y)
+  for ( y = 0; y < first_row; ++y)
   {
-    for (int x = 0; x < result->width; ++x)
+    for ( x = 0; x < result->width; ++x)
     {
       PIXEL * pixel_result = Pixel_At ( result, x, y);
 
@@ -584,9 +595,9 @@ IMAGE* Append_Rows(IMAGE* small, IMAGE* big){
     }
   }
 
-  for (int y = first_row; y < first_row + small->height; ++y)
+  for ( y = first_row; y < first_row + small->height; ++y)
   {
-    for (int x = 0; x < result->width; ++x)
+    for ( x = 0; x < result->width; ++x)
     {
       PIXEL * pixel_small = Pixel_At ( small, x, y - first_row);
       PIXEL * pixel_result = Pixel_At ( result, x, y);
@@ -598,9 +609,9 @@ IMAGE* Append_Rows(IMAGE* small, IMAGE* big){
     }
   }
 
-  for (int y = first_row + small->height; y < result->height; ++y)
+  for ( y = first_row + small->height; y < result->height; ++y)
   {
-    for (int x = 0; x < result->width; ++x)
+    for ( x = 0; x < result->width; ++x)
     {
       PIXEL * pixel_result = Pixel_At ( result, x, y);
 

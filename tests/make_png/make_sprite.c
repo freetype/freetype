@@ -8,9 +8,9 @@ int main(int argc, char const *argv[])
   int              size;
   int              render_mode; 
 
-  int              load_flag;  // FT_LOAD_XXX
-  int              render_flag; // FT_RENDER_MODE_XXX
-  int              target_flag; // FT_LOAD_TARGET_XXX
+  int              load_flag;  /* FT_LOAD_XXX */
+  int              render_flag; /* FT_RENDER_MODE_XXX */
+  int              target_flag; /* FT_LOAD_TARGET_XXX */
 
   if(argc != 6)
   {
@@ -63,7 +63,7 @@ int main(int argc, char const *argv[])
   HASH_128 *  test_murmur = (HASH_128 *) malloc(sizeof(HASH_128)) ;  
 
   int Is_Different;
-  int pixel_diff;
+  int pixel_diff, i;
 
   char glyph_name[50] = ".not-def";
 /*******************************************************************/
@@ -351,8 +351,8 @@ int main(int argc, char const *argv[])
                               size,
                               DPI);
 
-// Need to write code to check the values in FT_Face and compare
-  for (int i = 0; i < base_face->num_glyphs; ++i)
+/* Need to write code to check the values in FT_Face and compare */
+  for ( i = 0; i < base_face->num_glyphs; ++i)
   {
     error = Base_Load_Glyph( base_face,
                              i, 
@@ -384,7 +384,7 @@ int main(int argc, char const *argv[])
 
     base_bitmap = &base_slot->bitmap;
     test_bitmap = &test_slot->bitmap;
-// Need to write code to check the values in FT_Bitmap and compare
+/* Need to write code to check the values in FT_Bitmap and compare */
     if (base_bitmap->width == 0 || base_bitmap->rows == 0)
     {
       printf("Empty Glyph in glyph-index %d\n", i);
