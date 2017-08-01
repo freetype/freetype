@@ -1,4 +1,22 @@
 
+CHANGES BETWEEN 2.8 and 2.8.1
+
+  I. IMPORTANT BUG FIXES
+
+    - B/W  hinting   of  TrueType   fonts  didn't  work   properly  if
+      interpreter version 38 or 40 was selected.
+
+    - Some severe  problems within the handling  of TrueType Variation
+      Fonts were found and fixed.
+
+
+  II. MISCELLANEOUS
+
+    - More sanity checks.
+
+
+======================================================================
+
 CHANGES BETWEEN 2.7.1 and 2.8
 
   I. IMPORTANT CHANGES
