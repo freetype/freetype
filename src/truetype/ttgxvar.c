@@ -2165,9 +2165,11 @@
         for ( j = 0; j < fvar_head.axisCount; j++, c++ )
           *c = FT_GET_LONG();
 
-        /* valid psid values are 6 and [256;32767] */
+        /* valid psid values are 6, [256;32767], and 0xFFFF */
         if ( usePsName )
           ns->psid = FT_GET_USHORT();
+        else
+          ns->psid = 0xFFFF;
 
         ft_var_to_normalized( face,
                               fvar_head.axisCount,

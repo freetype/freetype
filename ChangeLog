@@ -1,3 +1,7 @@
+2017-08-01  Werner Lemberg  <wl@gnu.org>
+
+	* src/truetype/ttgxvar.c (TT_Get_MM_Var): Fix thinko.
+
 2017-08-01  Behdad Esfahbod  <behdad@behdad.org>
 
 	[truetype] Fix loading of named instances.

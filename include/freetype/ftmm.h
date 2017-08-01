@@ -178,7 +178,8 @@ FT_BEGIN_HEADER
   /*    strid  :: The entry in `name' table identifying this instance.     */
   /*                                                                       */
   /*    psid   :: The entry in `name' table identifying a PostScript name  */
-  /*              for this instance.  Value 0 indicates a missing entry.   */
+  /*              for this instance.  Value 0xFFFF indicates a missing     */
+  /*              entry.                                                   */
   /*                                                                       */
   typedef struct  FT_Var_Named_Style_
   {
