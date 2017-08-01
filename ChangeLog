@@ -1,3 +1,10 @@
+2017-08-01  Behdad Esfahbod  <behdad@behdad.org>
+
+	[truetype] Fix loading of named instances.
+
+	* src/truetype/ttgxvar.c (TT_Get_MM_Var): Preserve file position
+	while loading the `avar' table.
+
 2017-08-01  Werner Lemberg  <wl@gnu.org>
 
 	[sfnt, truetype] Minor adjustments for OpenType 1.8.2.
