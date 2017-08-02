@@ -21,6 +21,7 @@
 
 #define BITS_PER_PIXEL_RGBA 32
 #define MAX(a, b) ((a) > (b) ? (a) : (b))
+#define MIN(a, b) ((a) < (b) ? (a) : (b))
 
 typedef struct {                /* To store 32bit Hash */
   FT_UInt32 hash;
@@ -89,3 +90,5 @@ int First_Row(IMAGE* input);
 IMAGE* Append_Columns(IMAGE* small, IMAGE* big);
 /* Appening white columns with image alignment */
 IMAGE* Append_Rows(IMAGE* small, IMAGE* big);
+/* calculating the Pixel Differences */
+int Image_Diff( IMAGE* base, IMAGE* test);

@@ -448,6 +448,8 @@ int main(int argc, char const *argv[])
         test_png = Append_Columns(test_png, base_png);
       }
 
+      pixel_diff += Image_Diff( base_png, test_png);
+
       Add_effect( base_png, test_png, after_effect_1, 1);
       pixel_diff = Add_effect( base_png, test_png, after_effect_2,2);
 

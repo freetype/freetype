@@ -624,3 +624,19 @@ IMAGE* Append_Rows(IMAGE* small, IMAGE* big){
 
   return result; 
 }
+
+int Image_Diff( IMAGE* base, IMAGE* test){
+
+  int diff = 0;
+
+  int max_width = MAX(base->width, test->width);
+  int min_width = MIN(base->width, test->width);
+
+  int max_height = MAX(base->height, test->height);
+  int min_height = MIN(base->height, test->height);
+
+  diff = (max_width - min_width) * max_height;
+  diff += (max_height - min_height) * min_width;
+
+  return diff;
+}
