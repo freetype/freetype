@@ -4,12 +4,12 @@ SHELL = /bin/sh
 
 SRC_SPRITE = make_sprite.c bitmap.c murmur3.c
 
-SRC_LIB = ../../objs/libfreetype.a
+SRC_LIB = ./base/lib/libfreetype.a
 OBJS = $(src:.c=.o)
 
 CFLAGS = -Wall -g
 CC = gcc
-INCLUDE = -I ../../include/
+INCLUDE = -I ./base/include/freetype2/
 LIBS = -lpng -lharfbuzz -lbz2 -ldl
 
 DPI = 72
@@ -22,7 +22,6 @@ sprite:$(SRC_SPRITE)
 .PHONY: clean
 clean:
 	-rm -f *.o
-
 
 
 

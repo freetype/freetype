@@ -446,23 +446,15 @@ int Compare_Hash(HASH_128* hash_b, HASH_128* hash_t){
   return 0;
 }
 
-void Print_Row( FILE* fp, int index, char* name, int diff,
-                HASH_128* hash_b, HASH_128* hash_t){
+void Print_Row( FILE* fp, int index, char* name, int diff )
+{
   fprintf(fp,
     "<tr>\n\
       <td>%04d</td>\n\
       <td>%s</td>\n\
       <td>%04d</td>\n\
-      <td id=\"hash\">%08x%08x%08x%08x<br>%08x%08x%08x%08x</td>\n\
-      <td><img id=\"sprite\" src=\"images/sprite_%04d.png\"></td>\n\
-    </tr>\n", index, name, diff,hash_b->hash[0],
-                                hash_b->hash[1],
-                                hash_b->hash[2],
-                                hash_b->hash[3],
-                                hash_t->hash[0],
-                                hash_t->hash[1],
-                                hash_t->hash[2],
-                                hash_t->hash[3], index);
+      <td id=\"image_row\"><img id=\"sprite\" src=\"images/sprite_%04d.png\"></td>\n\
+    </tr>\n", index, name, diff, index);
 }
 
 int First_Column(IMAGE* input){

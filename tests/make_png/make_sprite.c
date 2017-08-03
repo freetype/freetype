@@ -339,9 +339,6 @@ int main(int argc, char const *argv[])
         <a href=\"#\">Difference</a>\n\
       </th>\n\
       <th>\n\
-        128-bit Hash-values\n\
-      </th>\n\
-      <th>\n\
         Images\n\
       </th>\n\
       </tr>\n\
@@ -468,8 +465,7 @@ int main(int argc, char const *argv[])
                             50 );
       }
 
-      Print_Row(fp,i,glyph_name,pixel_diff, base_murmur,
-                                            test_murmur );
+      Print_Row(fp,i,glyph_name,pixel_diff );
     }
   }
 

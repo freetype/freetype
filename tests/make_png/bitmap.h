@@ -80,8 +80,7 @@ int Add_effect(IMAGE* base, IMAGE* test, IMAGE* out, int Effect_ID);
 /* Stitch 2 PNG files */
 void Stitch(IMAGE* left, IMAGE* right, IMAGE* result);
 /* Print the row in list-view webpage */
-void Print_Row( FILE* fp, int index, char* name, int diff,
-                HASH_128* hash_b, HASH_128* hash_t);
+void Print_Row( FILE* fp, int index, char* name, int diff );
 /* Finding the first non-empty (non-white) column */
 int First_Column(IMAGE* input);
 /* Finding the first non-empty (non-white) row */

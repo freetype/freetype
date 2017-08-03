@@ -1,48 +1,72 @@
-NOTE: First make freetype library (in the ../../ directory)
-  make devel
-  make
  
 TODO:   Generate HTML page for detailed comparison
 
-/*******************************************************************/
+---------------------------------------------------------------------
 
-To generate sprite sheets in the /images folder and to generate the
-"index.html" (List-View) of the glyphs.
+INSTRUCTIONS 
 
-By clicking on the Headers of the respective columns,they can be
-arranged (in increasing/decreasing order) based on
-->  Glyph-Index
-->  Name
-->  Difference Metric (right now it is the number of pixels that are
-    different between the base and the test glyph)
+NOTE: One version of FreeType is referred as "base" version and the 
+      other as the "test" version.
 
-It displays the whole sprite sheet right now (will be used later)
-Hashes will be diplayed (To be implemented)
+  1. Get the two versions ready
+  -------------------------------------
+    Make two folders named "test" and "base" preferably in the home 
+    directory.
 
-First compile and install two versions of the FreeType libray 
-in different folders (with SUBPIXEL_RENDERING enabled in ftoption.h)
+    Next, download an older version of FreeType (For example : 2.6.5)
+    ( This being the "test" version of the two)
+    Go to 'include/freetype/ftoption.h' and uncomment this line 
 
+        #define FT_CONFIG_OPTION_SUBPIXEL_RENDERING
+  
+  2. Install the two versions 
+  -------------------------------------     
+   Go to the "test" version's folder and change the default 
+   installation directory to the "test" folder created.
 
-1)  make sprite
-    (set resoluton in DPI by passing argument
+	./configure --prefix=<path>
+
+    Compile and install the library
+
+	make 
+ 	make install
+
+    Repeat step 2. for the "base" version as well.
+
+ 3. Compile the code
+  -------------------------------------     
+    Return to this folder and make the binary
+
+ 	make
+
+    (set resolution in DPI by passing argument
     example: make DPI=100, if not specified,default is 72)
 
-2)  Usage ./sprite <a> <b> <font_file> <pt_size> <render_mode>
+ 3. Run the executable
+  ------------------------------------- 
 
-    (<a> is the libfreetype.so from the base vesion )
-    (<b> is the libfreetype.so from the test vesion )
+	./sprite <a> <b> <font_file> <pt_size> <render_mode>
 
-    The path to the "shared library" in usage should be absolute.
+    <a> is the libfreetype.so from the base vesion. 
+    <b> is the libfreetype.so from the test vesion.
 
-    Sprite Sheets will be saved as sprite_$(glyph_index).png
+    ( <a> and <b> are in <base/test version's installation folder>/lib/ )
+    ( The path to these should be absolute. )
 
-    Render modes similar to generating PNG(s).
+	Open index.html for "list-view"
+---------------------------------------------------------------------
 
-NOTE: If the dimensions of the two glyphs to be compared are
-different, comparison is done after aligning the glyphs.
-This alignment will effect the 'Difference Metric' based on the 
-number of rows/columns added.
+FEATURES
 
+    Generates sprite sheets in the ./images folder.
+
+    Generates "list-view" web-page i.e index.html
+
+    By clicking on the Headers of the respective columns,they can be
+    arranged (in increasing/decreasing order) based on
+      ->  Glyph-Index
+      ->  Name
+      ->  Difference Metric 
 
 
 
