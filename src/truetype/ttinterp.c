@@ -7357,7 +7357,11 @@
       K |= 1 << 12;
 
 #ifdef TT_SUPPORT_SUBPIXEL_HINTING_MINIMAL
-    if ( SUBPIXEL_HINTING_MINIMAL )
+    /* Toggle the following flags only outside of monochrome mode.      */
+    /* Otherwise, instructions may behave weirdly and rendering results */
+    /* may differ between v35 and v40 mode, e.g., in `Times New Roman   */
+    /* Bold Italic'. */
+    if ( SUBPIXEL_HINTING_MINIMAL && exc->subpixel_hinting_lean )
     {
       /********************************/
       /* HINTING FOR SUBPIXEL         */
