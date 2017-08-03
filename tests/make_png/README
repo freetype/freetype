@@ -5,6 +5,10 @@ TODO:   Generate HTML page for detailed comparison
 
 INSTRUCTIONS 
 
+***
+FOR NOW JUST RUN ./runme.sh <path/to/older/freetype/library> test.tff <pt_size> <render_mode>
+***
+
 NOTE: One version of FreeType is referred as "base" version and the 
       other as the "test" version.
 
