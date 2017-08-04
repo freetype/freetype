@@ -1,5 +1,15 @@
 2017-08-03  Nikolaus Waxweiler  <madigens@gmail.com>
 
+	[truetype] Fix metrics of B/W hinting in v40 mode.
+
+	Phantom points are now saved outside v40 backwards compatibility
+	mode.  This fixes the jumping glyphs when switching between v35 and
+	v40 monochrome mode.
+
+	* src/truetype/ttgload.c (TT_Hint_Glyph): Fix inversed bool logic.
+
+2017-08-03  Nikolaus Waxweiler  <madigens@gmail.com>
+
 	[truetype] Do not set any ClearType flags in v40 monochrome mode.
 
 	This fixes weird behavior of instructions that resulted in rendering
