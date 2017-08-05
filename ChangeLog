@@ -1,3 +1,13 @@
+2017-06-27  Werner Lemberg  <wl@gnu.org>
+
+	[truetype] Integer overflow.
+
+	Reported as
+
+	  https://bugs.chromium.org/p/oss-fuzz/issues/detail?id=2868
+
+	* src/truetype/ttinterp.c (Ins_ALIGNRP): Use NEG_LONG.
+
 2017-08-05  Werner Lemberg  <wl@gnu.org>
 
 	[base, truetype] New function `FT_Get_Var_Axis_Flags'.

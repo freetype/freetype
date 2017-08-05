@@ -6421,7 +6421,7 @@
         distance = PROJECT( exc->zp1.cur + point,
                             exc->zp0.cur + exc->GS.rp0 );
 
-        exc->func_move( exc, &exc->zp1, point, -distance );
+        exc->func_move( exc, &exc->zp1, point, NEG_LONG( distance ) );
       }
 
       exc->GS.loop--;
