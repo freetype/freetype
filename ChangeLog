@@ -1,3 +1,23 @@
+2017-08-05  Werner Lemberg  <wl@gnu.org>
+
+	[base, truetype] New function `FT_Get_Var_Axis_Flags'.
+
+	The reserved `flags' field got a value in OpenType version 1.8.2;
+	unfortunately, the public `FT_Var_Axis' structure misses the
+	corresponding element.  Since we can't add a new field, we add an
+	access function.
+
+	* src/base/ftmm.c (FT_Get_Var_Axis_Flags): New function.
+
+	* include/freetype/ftmm.h (FT_VAR_AXIS_FLAG_HIDDEN): New macro.
+	Updated.
+
+	* src/truetype/ttgxvar.c (TT_Get_MM_Var): Increase allocated memory
+	of `mmvar' to hold axis flags.
+	Fill the axis flags array.
+
+	* docs/CHANGES: Updated.
+
 2017-08-03  Nikolaus Waxweiler  <madigens@gmail.com>
 
 	[truetype] Fix metrics of B/W hinting in v40 mode.

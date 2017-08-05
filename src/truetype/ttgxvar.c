@@ -395,14 +395,14 @@
 
 
   /* some macros we need */
-  #define FT_FIXED_ONE  ( (FT_Fixed)0x10000 )
+#define FT_FIXED_ONE  ( (FT_Fixed)0x10000 )
 
-  #define FT_fdot14ToFixed( x )                \
-          ( (FT_Fixed)( (FT_ULong)(x) << 2 ) )
-  #define FT_intToFixed( i )                    \
-          ( (FT_Fixed)( (FT_ULong)(i) << 16 ) )
-  #define FT_fixedToInt( x )                                   \
-          ( (FT_Short)( ( (FT_UInt32)(x) + 0x8000U ) >> 16 ) )
+#define FT_fdot14ToFixed( x )                \
+        ( (FT_Fixed)( (FT_ULong)(x) << 2 ) )
+#define FT_intToFixed( i )                    \
+        ( (FT_Fixed)( (FT_ULong)(i) << 16 ) )
+#define FT_fixedToInt( x )                                   \
+        ( (FT_Short)( ( (FT_UInt32)(x) + 0x8000U ) >> 16 ) )
 
 
   static FT_Error
@@ -1956,6 +1956,7 @@
     GX_FVar_Head         fvar_head;
     FT_Bool              usePsName;
     FT_UInt              num_instances;
+    FT_UShort*           axis_flags;
 
     static const FT_Frame_Field  fvar_fields[] =
     {
@@ -2041,14 +2042,16 @@
       /* in fvar's table of named instances                       */
       num_instances = face->root.style_flags >> 16;
 
-      /* cannot overflow 32-bit arithmetic because of the size limits */
-      /* used in the `fvar' table validity check in `sfnt_init_face'  */
+      /* prepare storage area for MM data; this cannot overflow   */
+      /* 32-bit arithmetic because of the size limits used in the */
+      /* `fvar' table validity check in `sfnt_init_face'          */
       face->blend->mmvar_len =
         sizeof ( FT_MM_Var ) +
+        fvar_head.axisCount * sizeof ( FT_UShort ) +
         fvar_head.axisCount * sizeof ( FT_Var_Axis ) +
         num_instances * sizeof ( FT_Var_Named_Style ) +
         num_instances * fvar_head.axisCount * sizeof ( FT_Fixed ) +
-        5 * fvar_head.axisCount;
+        fvar_head.axisCount * 5;
 
       if ( FT_ALLOC( mmvar, face->blend->mmvar_len ) )
         goto Exit;
@@ -2065,8 +2068,12 @@
                                /* (or tuples, as called by Apple)         */
       mmvar->num_namedstyles =
         num_instances;
+
+      /* alas, no public field in `FT_Var_Axis' for axis flags */
+      axis_flags =
+        (FT_UShort*)&( mmvar[1] );
       mmvar->axis =
-        (FT_Var_Axis*)&( mmvar[1] );
+        (FT_Var_Axis*)&( axis_flags[fvar_head.axisCount] );
       mmvar->namedstyle =
         (FT_Var_Named_Style*)&( mmvar->axis[fvar_head.axisCount] );
 
@@ -2110,6 +2117,8 @@
         a->name[3] = (FT_String)( ( a->tag       ) & 0xFF );
         a->name[4] = '\0';
 
+        *axis_flags = axis_rec.flags;
+
         if ( a->minimum > a->def ||
              a->def > a->maximum )
         {
@@ -2121,13 +2130,17 @@
           a->maximum = a->def;
         }
 
-        FT_TRACE5(( "  \"%s\": minimum=%.5f, default=%.5f, maximum=%.5f\n",
+        FT_TRACE5(( "  \"%s\":"
+                    " minimum=%.5f, default=%.5f, maximum=%.5f,"
+                    " flags=0x%04X\n",
                     a->name,
                     a->minimum / 65536.0,
                     a->def / 65536.0,
-                    a->maximum / 65536.0 ));
+                    a->maximum / 65536.0,
+                    *axis_flags ));
 
         a++;
+        axis_flags++;
       }
 
       FT_TRACE5(( "\n" ));
@@ -2244,13 +2257,15 @@
         goto Exit;
       FT_MEM_COPY( mmvar, face->blend->mmvar, face->blend->mmvar_len );
 
+      axis_flags =
+        (FT_UShort*)&( mmvar[1] );
       mmvar->axis =
-        (FT_Var_Axis*)&( mmvar[1] );
+        (FT_Var_Axis*)&( axis_flags[mmvar->num_axis] );
       mmvar->namedstyle =
         (FT_Var_Named_Style*)&( mmvar->axis[mmvar->num_axis] );
+
       next_coords =
         (FT_Fixed*)&( mmvar->namedstyle[mmvar->num_namedstyles] );
-
       for ( n = 0; n < mmvar->num_namedstyles; n++ )
       {
         mmvar->namedstyle[n].coords  = next_coords;

@@ -402,4 +402,28 @@
   }
 
 
+  /* documentation is in ftmm.h */
+
+  FT_EXPORT_DEF( FT_Error )
+  FT_Get_Var_Axis_Flags( FT_MM_Var*  master,
+                         FT_UInt     axis_index,
+                         FT_UInt*    flags )
+  {
+    FT_UShort*  axis_flags;
+
+
+    if ( !master || !flags )
+      return FT_THROW( Invalid_Argument );
+
+    if ( axis_index >= master->num_axis )
+      return FT_THROW( Invalid_Argument );
+
+    /* the axis flags array immediately follows the data of `master' */
+    axis_flags = (FT_UShort*)&( master[1] );
+    *flags     = axis_flags[axis_index];
+
+    return FT_Err_Ok;
+  }
+
+
 /* END */

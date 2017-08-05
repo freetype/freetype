@@ -12,6 +12,10 @@ CHANGES BETWEEN 2.8 and 2.8.1
 
   II. MISCELLANEOUS
 
+    - Using the  new function `FT_Get_Var_Axis_Flags',  an application
+      can access the `flags' field  of a variation axis (introduced in
+      OpenType version 1.8.2)
+
     - More sanity checks.
 
 
