@@ -453,8 +453,8 @@ void Print_Row( FILE* fp, int index, char* name, int diff )
       <td>%04d</td>\n\
       <td>%s</td>\n\
       <td>%04d</td>\n\
-      <td id=\"image_row\"><img id=\"sprite\" src=\"images/sprite_%04d.png\"></td>\n\
-    </tr>\n", index, name, diff, index);
+      <td id=\"image_row\"><img id=\"sprite\" src=\"images/%s.png\"></td>\n\
+    </tr>\n", index, name, diff, name);
 }
 
 int First_Column(IMAGE* input){

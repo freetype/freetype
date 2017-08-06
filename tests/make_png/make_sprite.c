@@ -49,7 +49,7 @@ int main(int argc, char const *argv[])
   FT_Error         error;
 
   int alignment = 4;
-  char * output_file_name = ( char * )calloc(20,sizeof(char));
+  char * output_file_name = ( char * )calloc(50,sizeof(char));
 
   IMAGE* base_png        = (IMAGE*)malloc(sizeof(IMAGE));
   IMAGE* test_png        = (IMAGE*)malloc(sizeof(IMAGE));
@@ -309,6 +309,10 @@ int main(int argc, char const *argv[])
       mkdir("./images/", 0777);
   }
 
+  if (stat("./html/images/", &st) == -1) {
+      mkdir("./html/images/", 0777);
+  }
+
   FILE* fp = fopen("index.html","w");
 
   fprintf(fp,
@@ -455,8 +459,6 @@ int main(int argc, char const *argv[])
 
       Stitch( combi_effect_1, combi_effect_2, output);
 
-      Generate_PNG ( output, output_file_name, render_mode );
-
       if (FT_HAS_GLYPH_NAMES(base_face))
       {
         FT_Get_Glyph_Name(  base_face,
@@ -464,6 +466,10 @@ int main(int argc, char const *argv[])
                             glyph_name,
                             50 );
       }
+
+      sprintf( output_file_name, "./html/images/%s.png", glyph_name );
+
+      Generate_PNG ( output, output_file_name, render_mode );
 
       Print_Row(fp,i,glyph_name,pixel_diff );
     }
