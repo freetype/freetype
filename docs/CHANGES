@@ -18,6 +18,11 @@ CHANGES BETWEEN 2.8 and 2.8.1
 
     - More sanity checks.
 
+    - The  internal representation  of buffers  for LCD  rendering has
+      changed (to be more precise, the amount of padding gets computed
+      differently).  Applications  that use  the FreeType API  are not
+      affected.
+
 
 ======================================================================
 
