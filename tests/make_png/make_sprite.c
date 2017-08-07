@@ -316,7 +316,8 @@ int main(int argc, char const *argv[])
       mkdir("./html/images/", 0777);
   }
 
-  FILE* fp = fopen("index.html","w");
+  /* Initialising file pointer for the list-view*/
+  FILE* fp = fopen("html/index.html","w");
  	
  	Print_Head(fp,base_face->family_name, base_face->style_name, size);
 
@@ -353,18 +354,19 @@ int main(int argc, char const *argv[])
 
     base_bitmap = &base_slot->bitmap;
     test_bitmap = &test_slot->bitmap;
-/* Need to write code to check the values in FT_Bitmap and compare */
+
     if (base_bitmap->width == 0 || base_bitmap->rows == 0)
     {
       printf("Empty Glyph in glyph-index %d\n", i);
       continue;
     }
-
+    /* Generating Hashes */
     base_murmur = Generate_Hash_x64_128(base_bitmap,base_murmur);
     test_murmur = Generate_Hash_x64_128(test_bitmap,test_murmur);
 
     Is_Different = Compare_Hash(base_murmur, test_murmur);
-
+ 	/* To convert 1-bit monochrome to 8-bit bitmap */
+ 	/* because we need 8-bit colour to generate images */
     Base_Bitmap_Init( &base_target );
     Test_Bitmap_Init( &test_target );
 
@@ -384,14 +386,12 @@ int main(int argc, char const *argv[])
       printf("Error converting the bitmap\n");
       exit(1);
     }
-    
-    sprintf( output_file_name, "./images/sprite_%04d.png", i );
 
-    if (Is_Different != 0)
+    if (Is_Different != 0) 
     {
-      pixel_diff = 0;
+      pixel_diff = 0; /* Difference metric*/
       if (render_mode == 0)
-      {
+      { /* If monochrome, take the converted image*/
         Make_PNG( &base_target, base_png, i, render_mode );
         Make_PNG( &test_target, test_png, i, render_mode );
 
@@ -400,7 +400,7 @@ int main(int argc, char const *argv[])
         Make_PNG( base_bitmap, base_png, i, render_mode );
         Make_PNG( test_bitmap, test_png, i, render_mode );
       }
-      
+      /* Aligning images and appending rows */
       if (base_png->height < test_png->height)
       {
         base_png = Append_Rows(base_png, test_png);
@@ -408,7 +408,7 @@ int main(int argc, char const *argv[])
       {
         test_png = Append_Rows(test_png, base_png);
       }
-
+      /* Aligning images and appending columns */
       if (base_png->width < test_png->width)
       {
         base_png = Append_Columns(base_png, test_png);
@@ -416,7 +416,7 @@ int main(int argc, char const *argv[])
       {
         test_png = Append_Columns(test_png, base_png);
       }
-
+      /* Updating Difference metric */
       pixel_diff += Image_Diff( base_png, test_png);
 
       Add_effect( base_png, test_png, after_effect_1, 1);
@@ -438,11 +438,11 @@ int main(int argc, char const *argv[])
       sprintf( output_file_name, "./html/images/%s.png", glyph_name );
 
       Generate_PNG ( output, output_file_name, render_mode );
-
+      /* To print table row to HTML file */
       Print_Row(fp,i,glyph_name,pixel_diff );
     }
   }
-
+ /* HTML footer */
   fprintf(fp,
         "</tbody>\n\
         </table>\n\
