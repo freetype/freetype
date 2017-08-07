@@ -305,8 +305,8 @@ int main(int argc, char const *argv[])
   test_slot = test_face->glyph;
 
   struct stat st = {0};
-  if (stat("./images/", &st) == -1) {
-      mkdir("./images/", 0777);
+  if (stat("./html/", &st) == -1) {
+      mkdir("./html/", 0777);
   }
 
   if (stat("./html/images/", &st) == -1) {

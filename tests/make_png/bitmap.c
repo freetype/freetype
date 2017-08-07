@@ -621,6 +621,46 @@ void Stitch(IMAGE* left, IMAGE* right, IMAGE* result){
   }
 }
 
+/* This prints table-headers to a HTML file for the list-view page */
+void Print_Head( FILE* fp, char* family, char* style, int size ){
+  fprintf(fp,
+  "<html>\n\
+    <head>\n\
+      <title>\n\
+        Glyph_Diff\n\
+      </title>\n\
+      <script src=\"script.js\" type=\"text/javascript\"></script>\n\
+      <link rel=\"stylesheet\" type=\"text/css\" href=\"style.css\">\n\
+    </head>\n\
+    <body>\n\
+    <div class=\"freeze\">\n\
+      <h4>Font Family: %s</h4>\n\
+      <h4>Style:       %s</h4>\n\
+      <p><b>%d</b>pt at <b>%d</b>ppi</p>\n\
+    </div>\n\
+    <table>\n\
+    <thead>\n\
+      <tr>\n\
+      <th onclick=\"sort_t(data,0,asc1);asc1*=-1;asc2=1;asc3=1;\">\n\
+        <a href=\"#\">Glyph Index</a>\n\
+      </th>\n\
+      <th onclick=\"sort_t(data,1,asc2);asc2*=-1;asc3=1;asc1=1;\">\n\
+        <a href=\"#\">Glyph Name</a>\n\
+      </th>\n\
+      <th onclick=\"sort_t(data,2,asc3);asc3*=-1;asc1=1;asc2=1;\">\n\
+        <a href=\"#\">Difference</a>\n\
+      </th>\n\
+      <th>\n\
+        Images\n\
+      </th>\n\
+      </tr>\n\
+    </thead>\n\
+    <tbody id=\"data\">\n", family,
+                             style,
+                              size,
+                               DPI );
+}
+
 /* This prints a row to the HTML file for the list-view page. */
 void Print_Row( FILE* fp, int index, char* name, int diff )
 {

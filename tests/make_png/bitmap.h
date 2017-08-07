@@ -72,15 +72,10 @@ void Make_PNG (FT_Bitmap* bitmap,IMAGE* fruit, int i,int render_mode);
 int Generate_PNG (IMAGE *bitmap, const char *path,int render_mode);   
 /* Read PNG */
 void Read_PNG(char *filename, IMAGE * after_effect);
-/* Add an effect using two PNG images */
-/* Base Glyph = Gray {127,0,0,255} OR as it is */
-/* Differences = Red {255,0,0,255} */
-/* Effect_ID = {1 or 2} */
+/* Add effects using two PNG images and generate an image*/
 int Add_effect(IMAGE* base, IMAGE* test, IMAGE* out, int Effect_ID);
 /* Stitch 2 PNG files */
 void Stitch(IMAGE* left, IMAGE* right, IMAGE* result);
-/* Print the row in list-view webpage */
-void Print_Row( FILE* fp, int index, char* name, int diff );
 /* Finding the first non-empty (non-white) column */
 int First_Column(IMAGE* input);
 /* Finding the first non-empty (non-white) row */
@@ -91,3 +86,7 @@ IMAGE* Append_Columns(IMAGE* small, IMAGE* big);
 IMAGE* Append_Rows(IMAGE* small, IMAGE* big);
 /* calculating the Pixel Differences */
 int Image_Diff( IMAGE* base, IMAGE* test);
+/* Print the row in list-view webpage */
+void Print_Row( FILE* fp, int index, char* name, int diff );
+/* Print the table-headers in list-view webpage */
+void Print_Head( FILE* fp, char* family, char* style, int size );
