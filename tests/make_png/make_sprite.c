@@ -2,16 +2,6 @@
 
 int main(int argc, char const *argv[])
 {
-  const char*      base_version; 
-  const char*      test_version; 
-  const char*      font_file;
-  int              size;
-  int              render_mode; 
-
-  int              load_flag;  /* FT_LOAD_XXX */
-  int              render_flag; /* FT_RENDER_MODE_XXX */
-  int              target_flag; /* FT_LOAD_TARGET_XXX */
-
   if(argc != 6)
   {
     printf("Usage: ./sprite <base .so> <test .so> \
@@ -26,6 +16,18 @@ int main(int argc, char const *argv[])
 
     return 0;
   }
+
+/*******************************************************************/
+  /* variables declaration */
+  const char*      base_version; 
+  const char*      test_version; 
+  const char*      font_file;
+  int              size;
+  int              render_mode; 
+
+  int              load_flag;  /* FT_LOAD_XXX */
+  int              render_flag; /* FT_RENDER_MODE_XXX */
+  int              target_flag; /* FT_LOAD_TARGET_XXX */
 
   base_version     = argv[1];
   test_version     = argv[2];
@@ -304,6 +306,7 @@ int main(int argc, char const *argv[])
   base_slot = base_face->glyph;
   test_slot = test_face->glyph;
 
+  /* If folders aren't there, create folders */
   struct stat st = {0};
   if (stat("./html/", &st) == -1) {
       mkdir("./html/", 0777);
@@ -314,43 +317,8 @@ int main(int argc, char const *argv[])
   }
 
   FILE* fp = fopen("index.html","w");
-
-  fprintf(fp,
-  "<html>\n\
-    <head>\n\
-      <title>\n\
-        Glyph_Diff\n\
-      </title>\n\
-      <script src=\"script.js\" type=\"text/javascript\"></script>\n\
-      <link rel=\"stylesheet\" type=\"text/css\" href=\"style.css\">\n\
-    </head>\n\
-    <body>\n\
-    <div class=\"freeze\">\n\
-      <h4>Font Family: %s</h4>\n\
-      <h4>Style:       %s</h4>\n\
-      <p><b>%d</b>pt at <b>%d</b>ppi</p>\n\
-    </div>\n\
-    <table>\n\
-    <thead>\n\
-      <tr>\n\
-      <th onclick=\"sort_t(data,0,asc1);asc1*=-1;asc2=1;asc3=1;\">\n\
-        <a href=\"#\">Glyph Index</a>\n\
-      </th>\n\
-      <th onclick=\"sort_t(data,1,asc2);asc2*=-1;asc3=1;asc1=1;\">\n\
-        <a href=\"#\">Glyph Name</a>\n\
-      </th>\n\
-      <th onclick=\"sort_t(data,2,asc3);asc3*=-1;asc1=1;asc2=1;\">\n\
-        <a href=\"#\">Difference</a>\n\
-      </th>\n\
-      <th>\n\
-        Images\n\
-      </th>\n\
-      </tr>\n\
-    </thead>\n\
-    <tbody id=\"data\">\n", base_face->family_name,
-                              base_face->style_name,
-                              size,
-                              DPI);
+ 	
+ 	Print_Head(fp,base_face->family_name, base_face->style_name, size);
 
 /* Need to write code to check the values in FT_Face and compare */
   for ( i = 0; i < base_face->num_glyphs; ++i)
