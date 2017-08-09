@@ -1,3 +1,20 @@
+2017-08-08  Werner Lemberg  <wl@gnu.org>
+
+	[psnames] Really fix issue #49949.
+
+	We now use a separate preprocessor macro to handle both definition
+	and declaration of the glyph name arrays.
+
+	* src/psnames/psmodule.c (DEFINE_PS_TABLE_DATA): New macro.
+
+	* src/tools/glnames.py (StringTable::dump,
+	StringTable::dump_sublist): Use `DEFINE_PS_TABLE_DATA'.
+	(dump_encoding): Ditto.
+	(main): Use `wb' mode for writing the output file, which works on
+	Windows also.
+
+	* src/psnames/pstables.h: Regenerated.
+
 2017-08-08  Alexei Podtelezhnikov  <apodtele@gmail.com>
 
 	[smooth] Harmony LCD rendering.
@@ -25,7 +42,7 @@
 
 	* src/sftnt/ttpost.c (format): Use otspec-compliant versions. 
 
-2017-06-27  Werner Lemberg  <wl@gnu.org>
+2017-08-05  Werner Lemberg  <wl@gnu.org>
 
 	[truetype] Integer overflow.
 
