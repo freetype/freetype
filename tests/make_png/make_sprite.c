@@ -2,18 +2,10 @@
 
 int main(int argc, char const *argv[])
 {
-  if(argc != 6)
+  if(argc != 5)
   {
-    printf("Usage: ./sprite <base .so> <test .so> \
-           <fnt_file> <pt_size> <render_mode>\n");
-
-    printf("Values for render_mode    0 - monochrome\n");
-    printf("                          1 - anti-aliased\n");
-    printf("                          2 - lcd horizontal-RGB\n");
-    printf("                          3 - lcd horizontal-BGR\n");
-    printf("                          4 - lcd vertical-RGB\n");
-    printf("                          5 - lcd vertical-BGR\n");
-
+    printf("Usage: ./tests <base .so> <test .so>\
+    <fnt_file> <pt_size>\n");
     return 0;
   }
 
@@ -22,8 +14,7 @@ int main(int argc, char const *argv[])
   const char*      base_version; 
   const char*      test_version; 
   const char*      font_file;
-  int              size;
-  int              render_mode; 
+  int              size; 
 
   int              load_flag;  /* FT_LOAD_XXX */
   int              render_flag; /* FT_RENDER_MODE_XXX */
@@ -34,7 +25,6 @@ int main(int argc, char const *argv[])
   
   font_file        = argv[3];
   size             = atoi(argv[4]);
-  render_mode      = atoi(argv[5]);
 
   FT_Library       base_library;
   FT_Face          base_face;
@@ -64,7 +54,7 @@ int main(int argc, char const *argv[])
   HASH_128 *  base_murmur = (HASH_128 *) malloc(sizeof(HASH_128)) ;
   HASH_128 *  test_murmur = (HASH_128 *) malloc(sizeof(HASH_128)) ;  
 
-  int Is_Different;
+  int Is_Different, total_count = 0;
   int pixel_diff, i;
 
   char glyph_name[50] = ".not-def";
@@ -203,8 +193,8 @@ int main(int argc, char const *argv[])
                                               "FT_Done_FreeType");
 
 /*******************************************************************/
-
-  switch ( render_mode ) {
+  
+  switch ( FT_TEST_RENDER_MODE ) {
   case 0: render_flag   = FT_RENDER_MODE_MONO;
           load_flag     = FT_LOAD_MONOCHROME;
           target_flag   = FT_LOAD_TARGET_MONO;
@@ -251,7 +241,7 @@ int main(int argc, char const *argv[])
     exit(1);
   }
 
-  if (render_mode > 1 )
+  if (FT_TEST_RENDER_MODE > 1 )
   {
     error = Base_Library_SetLcdFilter( base_library,
                                        FT_LCD_FILTER_DEFAULT );
@@ -389,16 +379,17 @@ int main(int argc, char const *argv[])
 
     if (Is_Different != 0) 
     {
+      total_count++;
       pixel_diff = 0; /* Difference metric*/
-      if (render_mode == 0)
+      if (FT_TEST_RENDER_MODE == 0)
       { /* If monochrome, take the converted image*/
-        Make_PNG( &base_target, base_png, i, render_mode );
-        Make_PNG( &test_target, test_png, i, render_mode );
+        Make_PNG( &base_target, base_png, i, FT_TEST_RENDER_MODE );
+        Make_PNG( &test_target, test_png, i, FT_TEST_RENDER_MODE );
 
       }else{
 
-        Make_PNG( base_bitmap, base_png, i, render_mode );
-        Make_PNG( test_bitmap, test_png, i, render_mode );
+        Make_PNG( base_bitmap, base_png, i, FT_TEST_RENDER_MODE );
+        Make_PNG( test_bitmap, test_png, i, FT_TEST_RENDER_MODE );
       }
       /* Aligning images and appending rows */
       if (base_png->height < test_png->height)
@@ -437,11 +428,13 @@ int main(int argc, char const *argv[])
 
       sprintf( output_file_name, "./html/images/%s.png", glyph_name );
 
-      Generate_PNG ( output, output_file_name, render_mode );
+      Generate_PNG ( output, output_file_name, FT_TEST_RENDER_MODE );
       /* To print table row to HTML file */
       Print_Row(fp,i,glyph_name,pixel_diff );
     }
   }
+  printf("Total   %ld\nFaulty  %d\n",base_face->num_glyphs,
+  							  total_count );
  /* HTML footer */
   fprintf(fp,
         "</tbody>\n\

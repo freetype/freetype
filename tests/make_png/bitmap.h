@@ -31,6 +31,7 @@ typedef struct {                /* To store 128bit Hash */
   FT_UInt32 hash[4];
 }HASH_128;
 
+/* A 32-bit pixel */
 typedef struct {
   unsigned char red;
   unsigned char green;
@@ -38,21 +39,16 @@ typedef struct {
   unsigned char alpha;
 } PIXEL;
 
-typedef struct {
-  unsigned char red;
-  unsigned char green;
-  unsigned char blue;
-  unsigned char alpha;
-} PIXEL_BGRA;
-
-/* A picture. */
-    
+/* A picture. */ 
 typedef struct  {
   PIXEL* pixels;
   size_t width;
   size_t height;
 } IMAGE;
-    
+
+/* Render modes */
+enum render_modes
+  { MONO, AA, RGB, BGR, VRGB, VBGR };    
 /*-----------------------------------------------------------------*/
 
 HASH_32* Generate_Hash_x86_32(FT_Bitmap* bitmap, HASH_32* murmur);
@@ -66,7 +62,7 @@ int Compare_Hash(HASH_128* hash_b, HASH_128* hash_t);
 /* Returns a pointer to pixel */
 /* at (x,y) co-ordinate */
 PIXEL* Pixel_At (IMAGE * bitmap, int x, int y);  
-/* buffer to image */
+/*Render mode string to render_mode code */
 void Make_PNG (FT_Bitmap* bitmap,IMAGE* fruit, int i,int render_mode);
 /* Image to file */
 int Generate_PNG (IMAGE *bitmap, const char *path,int render_mode);   

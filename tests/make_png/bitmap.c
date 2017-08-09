@@ -289,6 +289,7 @@ int Generate_PNG (IMAGE *bitmap,
 
   status = 0;
   
+  printf("Generated image   %s\n", path );
   for (y = 0; y < bitmap->height; y++) {
     png_free (png_ptr, row_pointers[y]);
   }

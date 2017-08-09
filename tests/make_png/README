@@ -5,10 +5,6 @@ TODO:   Generate HTML page for detailed comparison
 
 INSTRUCTIONS 
 
-***
-FOR NOW JUST RUN ./runme.sh <path/to/older/freetype/library> test.tff <pt_size> <render_mode>
-***
-
 NOTE: One version of FreeType is referred as "base" version and the 
       other as the "test" version.
 
@@ -18,51 +14,56 @@ NOTE: One version of FreeType is referred as "base" version and the
     directory.
 
     Next, download an older version of FreeType (For example : 2.6.5)
-    ( This being the "test" version of the two)
+    ( This being the "base" version of the two)
     Go to 'include/freetype/ftoption.h' and uncomment this line 
 
         #define FT_CONFIG_OPTION_SUBPIXEL_RENDERING
   
-  2. Install the two versions 
+  2. Compile the two versions 
   -------------------------------------     
-   Go to the "test" version's folder and change the default 
+   Go to the "base" version's folder and change the default 
    installation directory to the "test" folder created.
 
-	./configure --prefix=<path>
+	    ./configure
 
-    Compile and install the library
+    Compile the library
 
-	make 
- 	make install
+	    make 
 
-    Repeat step 2. for the "base" version as well.
+    Repeat step 2. for the "test" version as well.
 
  3. Compile the code
   -------------------------------------     
     Return to this folder and make the binary
 
- 	make
+ 	make tests [options]
 
-    (set resolution in DPI by passing argument
-    example: make DPI=100, if not specified,default is 72)
+    Set resolution in DPI by passing argument to variable DPI.
+    Example: make tests DPI=100, if not specified,default is 72.
 
- 3. Run the executable
+    Set the Rendering mode by passing FT_TEST_RENDER_MODE.
+    <render_mode> can take values 1. MONO
+    							  2. AA
+    							  3. RGB
+    							  4. BGR
+    							  5. VRGB
+    							  6. VBGR
+    ( Example: make tests FT_TEST_RENDER_MODE=RGB )
+
+ 4. Run the executable
   ------------------------------------- 
 
-	./sprite <a> <b> <font_file> <pt_size> <render_mode>
+	sh runme.sh <a> <font_file> <pt_size> 
 
-    <a> is the libfreetype.so from the base vesion. 
-    <b> is the libfreetype.so from the test vesion.
-
-    ( <a> and <b> are in <base/test version's installation folder>/lib/ )
+    <a> is directory of the 'base' FreeType version. 
     ( The path to these should be absolute. )
 
-	Open index.html for "list-view"
+	Open ./html/index.html for "list-view"
 ---------------------------------------------------------------------
 
 FEATURES
 
-    Generates sprite sheets in the ./images folder.
+    Generates sprite sheets in the ./html/images folder.
 
     Generates "list-view" web-page i.e index.html
 
@@ -71,8 +72,3 @@ FEATURES
       ->  Glyph-Index
       ->  Name
       ->  Difference Metric 
-
-
-
-
-
