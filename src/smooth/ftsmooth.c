@@ -106,9 +106,6 @@
     FT_Pos       y_shift = 0;
     FT_Pos       x_left, y_top;
     FT_Pos       width, height, pitch;
-#ifndef FT_CONFIG_OPTION_SUBPIXEL_RENDERING
-    FT_Pos       height_org, width_org;
-#endif
     FT_Int       hmul    = ( mode == FT_RENDER_MODE_LCD );
     FT_Int       vmul    = ( mode == FT_RENDER_MODE_LCD_V );
 
@@ -195,7 +192,7 @@
 
 #ifdef FT_CONFIG_OPTION_SUBPIXEL_RENDERING
     /* add minimal padding for LCD filter depending on specific weights */
-    if ( lcd_filter_func)
+    if ( lcd_filter_func )
     {
       if ( hmul )
       {
@@ -228,11 +225,6 @@
 
     width  = (FT_ULong)( cbox.xMax - cbox.xMin ) >> 6;
     height = (FT_ULong)( cbox.yMax - cbox.yMin ) >> 6;
-
-#ifndef FT_CONFIG_OPTION_SUBPIXEL_RENDERING
-    width_org  = width;
-    height_org = height;
-#endif
 
     pitch = width;
     if ( hmul )
@@ -359,13 +351,13 @@
       FT_UInt   hh;
 
 
-      for ( hh = height_org; hh > 0; hh--, line += pitch )
+      for ( hh = height; hh > 0; hh--, line += pitch )
       {
         FT_UInt   xx;
         FT_Byte*  end = line + width;
 
 
-        for ( xx = width_org; xx > 0; xx-- )
+        for ( xx = width / 3; xx > 0; xx-- )
         {
           FT_UInt  pixel = line[xx-1];
 
@@ -381,12 +373,12 @@
     /* expand it vertically */
     if ( vmul )
     {
-      FT_Byte*  read  = bitmap->buffer + ( height - height_org ) * pitch;
+      FT_Byte*  read  = bitmap->buffer + ( height - height / 3 ) * pitch;
       FT_Byte*  write = bitmap->buffer;
       FT_UInt   hh;
 
 
-      for ( hh = height_org; hh > 0; hh-- )
+      for ( hh = height / 3; hh > 0; hh-- )
       {
         ft_memcpy( write, read, pitch );
         write += pitch;

@@ -1,5 +1,9 @@
 2017-08-08  Alexei Podtelezhnikov  <apodtele@gmail.com>
 
+	* src/smooth/ftsmooth.c (ft_smooth_render_generic): Clean up.
+
+2017-08-08  Alexei Podtelezhnikov  <apodtele@gmail.com>
+
 	* src/sftnt/ttpost.c (format): Use otspec-compliant versions. 
 
 2017-06-27  Werner Lemberg  <wl@gnu.org>
