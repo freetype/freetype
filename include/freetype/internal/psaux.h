@@ -1286,9 +1286,9 @@ FT_BEGIN_HEADER
     (*cff_random)( FT_UInt32  r );
 
     void
-    (*ps_decoder_init)( void*        decoder,
-                        FT_Bool      is_t1,
-                        PS_Decoder*  ps_decoder );
+    (*ps_decoder_init)( PS_Decoder*  ps_decoder,
+                        void*        decoder,
+                        FT_Bool      is_t1 );
 
     void
     (*t1_make_subfont)( FT_Face      face,

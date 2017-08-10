@@ -285,6 +285,11 @@ FT_BEGIN_HEADER
   /*************************************************************************/
 
   FT_LOCAL( void )
+  ps_decoder_init( PS_Decoder*  ps_decoder,
+                   void*        decoder,
+                   FT_Bool      is_t1 );
+
+  FT_LOCAL( void )
   t1_make_subfont( FT_Face      face,
                    PS_Private   priv,
                    CFF_SubFont  subfont );
