@@ -21,13 +21,9 @@ NOTE: One version of FreeType is referred as "base" version and the
   
   2. Compile the two versions 
   -------------------------------------     
-   Go to the "base" version's folder and change the default 
-   installation directory to the "test" folder created.
+   Go to the "base" version's folder and compile the library
 
 	    ./configure
-
-    Compile the library
-
 	    make 
 
     Repeat step 2. for the "test" version as well.

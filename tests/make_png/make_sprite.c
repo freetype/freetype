@@ -90,6 +90,11 @@ int main(int argc, char const *argv[])
                                      FT_Bitmap*, 
                                      FT_Int);
 
+  FT_Error ( *Base_Get_Glyph_Name )( FT_Face,
+                                     FT_UInt,
+                                     FT_Pointer,
+                                     FT_UInt );
+
   FT_Error ( *Base_Done_Face )( FT_Face );
 
   FT_Error ( *Base_Done_FreeType )( FT_Library );
@@ -125,6 +130,11 @@ int main(int argc, char const *argv[])
                                      const FT_Bitmap*,
                                      FT_Bitmap*, 
                                      FT_Int);
+
+  FT_Error ( *Test_Get_Glyph_Name )( FT_Face,
+                                     FT_UInt,
+                                     FT_Pointer,
+                                     FT_UInt );
 
   FT_Error ( *Test_Done_Face )( FT_Face );
   
@@ -164,6 +174,8 @@ int main(int argc, char const *argv[])
                                               "FT_Bitmap_Init");
   *(void**)( & Base_Bitmap_Convert )  = dlsym(base_handle,
                                               "FT_Bitmap_Convert");
+  *(void**)( & Base_Get_Glyph_Name )  = dlsym(base_handle,
+                                              "FT_Get_Glyph_Name");
   *(void**)( & Base_Done_Face )       = dlsym(base_handle,
                                               "FT_Done_Face");
   *(void**)( & Base_Done_FreeType )   = dlsym(base_handle,
@@ -187,6 +199,8 @@ int main(int argc, char const *argv[])
                                               "FT_Bitmap_Init");
   *(void**)( & Test_Bitmap_Convert )  = dlsym(test_handle,
                                               "FT_Bitmap_Convert");
+  *(void**)( & Test_Get_Glyph_Name )  = dlsym(base_handle,
+                                              "FT_Get_Glyph_Name");
   *(void**)( & Test_Done_Face )       = dlsym(test_handle,
                                               "FT_Done_Face");
   *(void**)( & Test_Done_FreeType )   = dlsym(test_handle,
@@ -420,10 +434,10 @@ int main(int argc, char const *argv[])
 
       if (FT_HAS_GLYPH_NAMES(base_face))
       {
-        FT_Get_Glyph_Name(  base_face,
-                            i,
-                            glyph_name,
-                            50 );
+        Base_Get_Glyph_Name( base_face,
+                             i,
+                             glyph_name,
+                             50 );
       }
 
       sprintf( output_file_name, "./html/images/%s.png", glyph_name );
