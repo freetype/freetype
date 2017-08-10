@@ -653,7 +653,7 @@
         if ( result_cnt > 0 &&
              !( op1 == cf2_cmdCALLSUBR ||
                 op1 == cf2_cmdRETURN   ||
-                op1 == cf2_escPOP      ||
+                op1 == cf2_cmdESC      ||
                 op1 >= 32 /* Numbers */ ) )
         {
           /* all operands have been transferred by previous pops */
@@ -771,27 +771,16 @@
             break;
           }
         }
-        else
-        {
-          /* Do lsb correction */
-          CF2_F16Dot16  hint_pos;
-
-          FT_ASSERT( ( cf2_stack_count( opStack ) == 2 ) );
-
-          hint_pos = ADD_INT32( cf2_stack_getReal( opStack, 0 ),
-                                decoder->builder.left_bearing->y );
-
-          cf2_stack_setReal( opStack, 0, hint_pos );
-        }
 
         cf2_doStems( font,
                      opStack,
                      &hStemHintArray,
                      width,
                      &haveWidth,
-                     0 );
+                     font->isT1 ? decoder->builder.left_bearing->y
+                                : 0 );
 
-        if ( font->decoder->width_only )
+        if ( decoder->width_only )
           goto exit;
 
         break;
@@ -811,27 +800,16 @@
             break;
           }
         }
-        else
-        {
-          /* Do lsb correction */
-          CF2_F16Dot16  hint_pos;
-
-          FT_ASSERT( ( cf2_stack_count( opStack ) == 2 ) );
-
-          hint_pos = ADD_INT32( cf2_stack_getReal( opStack, 0 ),
-                                decoder->builder.left_bearing->x );
-
-          cf2_stack_setReal( opStack, 0, hint_pos );
-        }
 
         cf2_doStems( font,
                      opStack,
                      &vStemHintArray,
                      width,
                      &haveWidth,
-                     0 );
+                     font->isT1 ? decoder->builder.left_bearing->x
+                                : 0 );
 
-        if ( font->decoder->width_only )
+        if ( decoder->width_only )
           goto exit;
 
         break;
@@ -852,7 +830,7 @@
         /* width is defined or default after this */
         haveWidth = TRUE;
 
-        if ( font->decoder->width_only )
+        if ( decoder->width_only )
           goto exit;
 
         curY = ADD_INT32( curY, cf2_stack_popFixed( opStack ) );
@@ -1180,6 +1158,9 @@
             {
               if ( font->isCFF2 || op2 >= cf2_escRESERVED_38 )
                 FT_TRACE4(( " unknown op (12, %d)\n", op2 ));
+              else if ( font->isT1 && result_cnt > 0 && op2 != cf2_escPOP )
+                /* all operands have been transferred by previous pops */
+                result_cnt = 0;
               else
               {
                 /* second switch for 2-byte operators handles CFF and Type 1 */
@@ -1204,23 +1185,19 @@
                     else
                     {
                       CF2_F16Dot16  v0, v1, v2;
-                      CF2_F16Dot16  lsb;
 
-                      FT_TRACE4(( op2 == cf2_escVSTEM3 ? " vstem3\n"
-                                                       : " hstem3\n" ));
+                      FT_Bool isV = FT_BOOL( op2 == cf2_escVSTEM3 );
+
+
+                      FT_TRACE4(( isV ? " vstem3\n"
+                                      : " hstem3\n" ));
 
                       FT_ASSERT( ( cf2_stack_count( opStack ) == 6 ) );
-
-                      lsb = ( op2 == cf2_escVSTEM3 ? decoder->builder.left_bearing->x
-                                                   : decoder->builder.left_bearing->y );
 
                       v0 = cf2_stack_getReal( opStack, 0 );
                       v1 = cf2_stack_getReal( opStack, 2 );
                       v2 = cf2_stack_getReal( opStack, 4 );
 
-                      cf2_stack_setReal( opStack, 0,
-                                         ADD_INT32( v0,
-                                                    lsb ) );
                       cf2_stack_setReal( opStack, 2,
                                          SUB_INT32( SUB_INT32( v1, v0 ),
                                                     cf2_stack_getReal( opStack, 1 ) ) );
@@ -1230,10 +1207,11 @@
 
                       cf2_doStems( font,
                                    opStack,
-                                   op2 == cf2_escVSTEM3 ? &vStemHintArray : &hStemHintArray,
+                                   isV ? &vStemHintArray : &hStemHintArray,
                                    width,
                                    &haveWidth,
-                                   0 );
+                                   isV ? decoder->builder.left_bearing->x
+                                       : decoder->builder.left_bearing->y );
 
                       if ( decoder->width_only )
                         goto exit;
@@ -2391,7 +2369,7 @@
         /* width is defined or default after this */
         haveWidth = TRUE;
 
-        if ( font->decoder->width_only )
+        if ( decoder->width_only )
           goto exit;
 
         /* close path if still open */
@@ -2479,7 +2457,7 @@
                      &haveWidth,
                      0 );
 
-        if ( font->decoder->width_only )
+        if ( decoder->width_only )
           goto exit;
 
         if ( op1 == cf2_cmdHINTMASK )
@@ -2545,7 +2523,7 @@
         /* width is defined or default after this */
         haveWidth = TRUE;
 
-        if ( font->decoder->width_only )
+        if ( decoder->width_only )
           goto exit;
 
         curY = ADD_INT32( curY, cf2_stack_popFixed( opStack ) );
@@ -2572,7 +2550,7 @@
         /* width is defined or default after this */
         haveWidth = TRUE;
 
-        if ( font->decoder->width_only )
+        if ( decoder->width_only )
           goto exit;
 
         curX = ADD_INT32( curX, cf2_stack_popFixed( opStack ) );
