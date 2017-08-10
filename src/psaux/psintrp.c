@@ -492,6 +492,7 @@
     /* Stuff for Type 1 */
     FT_Int     known_othersubr_result_cnt   = 0;
     FT_Bool    large_int = FALSE;
+    FT_Bool    initial_map_ready = FALSE;
 #define PS_STORAGE_SIZE 3
     CF2_F16Dot16  results[PS_STORAGE_SIZE];   /* for othersubr results */
     FT_Int        result_cnt = 0;
@@ -650,6 +651,20 @@
 
       if ( font->isT1 )
       {
+        if ( !initial_map_ready &&
+             !( op1 == cf2_cmdHSTEM    ||
+                op1 == cf2_cmdVSTEM    ||
+                op1 == cf2_cmdHSBW     ||
+                op1 == cf2_cmdCALLSUBR ||
+                op1 == cf2_cmdRETURN   ||
+                op1 == cf2_cmdESC      ||
+                op1 == cf2_cmdENDCHAR  ||
+                op1 >= 32 /* Numbers */ ) )
+        {
+          cf2_stack_clear( opStack );
+          continue;
+        }
+
         if ( result_cnt > 0 &&
              !( op1 == cf2_cmdCALLSUBR ||
                 op1 == cf2_cmdRETURN   ||
@@ -1478,8 +1493,11 @@
                       if ( builder->metrics_only )
                         goto exit;
 
-                      curX = ADD_INT32( curX, lsb_x );
-                      curY = ADD_INT32( curY, lsb_y );
+                      if ( initial_map_ready )
+                      {
+                        curX = ADD_INT32( curX, lsb_x );
+                        curY = ADD_INT32( curY, lsb_y );
+                      }
                     }
                   }
                   break;
@@ -1647,8 +1665,9 @@
                       if ( arg_cnt != 3 )
                         goto Unexpected_OtherSubr;
 
-                      if ( !decoder->flex_state           ||
-                           decoder->num_flex_vectors != 7 )
+                      if ( initial_map_ready &&
+                           ( !decoder->flex_state           ||
+                             decoder->num_flex_vectors != 7 ) )
                       {
                         FT_ERROR(( "cf2_interpT2CharString (Type 1 mode):"
                                    " unexpected flex end\n" ));
@@ -1666,6 +1685,9 @@
                       if ( arg_cnt != 0 )
                         goto Unexpected_OtherSubr;
 
+                      if ( !initial_map_ready )
+                        break;
+
                       if ( ps_builder_check_points( &decoder->builder, 6 ) )
                         goto exit;
 
@@ -1681,6 +1703,9 @@
 
                       if ( arg_cnt != 0 )
                         goto Unexpected_OtherSubr;
+
+                      if ( !initial_map_ready )
+                        break;
 
                       if ( !decoder->flex_state )
                       {
@@ -1728,12 +1753,15 @@
                       if ( arg_cnt != 1 )
                         goto Unexpected_OtherSubr;
 
-                      cf2_arrstack_clear( &vStemHintArray );
-                      cf2_arrstack_clear( &hStemHintArray );
+                      if ( initial_map_ready )
+                      {
+                        cf2_arrstack_clear( &vStemHintArray );
+                        cf2_arrstack_clear( &hStemHintArray );
 
-                      cf2_hintmask_init( &hintMask, error );
-                      hintMask.isValid = FALSE;
-                      hintMask.isNew   = TRUE;
+                        cf2_hintmask_init( &hintMask, error );
+                        hintMask.isValid = FALSE;
+                        hintMask.isNew   = TRUE;
+                      }
 
                       known_othersubr_result_cnt = 1;
                       break;
@@ -2281,6 +2309,9 @@
                   {
                     FT_TRACE4(( " setcurrentpoint" ));
 
+                    if ( !initial_map_ready )
+                      break;
+
                     /* From the T1 specification, section 6.4:                */
                     /*                                                        */
                     /*   The setcurrentpoint command is used only in          */
@@ -2351,12 +2382,37 @@
           if ( builder->metrics_only )
             goto exit;
 
-          curX = ADD_INT32( curX, lsb_x );
+          if ( initial_map_ready )
+            curX = ADD_INT32( curX, lsb_x );
         }
         break;
 
       case cf2_cmdENDCHAR:
         FT_TRACE4(( " endchar\n" ));
+
+        if ( font->isT1 && !initial_map_ready )
+        {
+          FT_TRACE5(( "cf2_interpT2CharString (Type 1 mode): "
+                      "Build initial hintmap, rewinding...\n" ));
+
+          /* Trigger initial hintmap build */
+          cf2_glyphpath_moveTo( &glyphPath, curX, curY );
+
+          initial_map_ready = TRUE;
+
+          /* Change hints routine - clear for rewind */
+          cf2_arrstack_clear( &vStemHintArray );
+          cf2_arrstack_clear( &hStemHintArray );
+
+          cf2_hintmask_init( &hintMask, error );
+          hintMask.isValid = FALSE;
+          hintMask.isNew   = TRUE;
+
+          /* Rewind charstring */
+          charstring->ptr = charstring->start;
+
+          break;
+        }
 
         if ( cf2_stack_count( opStack ) == 1 ||
              cf2_stack_count( opStack ) == 5 )
