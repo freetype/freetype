@@ -23,7 +23,6 @@
 #include "t1cmap.h"
 #include "psft.h"
 #include "cffdecode.h"
-#include "psdecode.h"
 
 #ifndef T1_CONFIG_OPTION_NO_AFM
 #include "afmparse.h"

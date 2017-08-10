@@ -23,7 +23,6 @@ SubDir  FT2_TOP $(FT2_SRC_DIR) psaux ;
                t1cmap
                t1decode
                cffdecode
-               psdecode
                psarrst
                psblues
                pserror
