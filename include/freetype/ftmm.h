@@ -322,6 +322,11 @@ FT_BEGIN_HEADER
   /* <Return>                                                              */
   /*    FreeType error code.  0~means success.                             */
   /*                                                                       */
+  /* <Note>                                                                */
+  /*    To reset all axes to the default values, call the function with    */
+  /*    `num_coords' set to zero and `coords' set to NULL (new feature in  */
+  /*    FreeType version 2.8.1).                                           */
+  /*                                                                       */
   FT_EXPORT( FT_Error )
   FT_Set_MM_Design_Coordinates( FT_Face   face,
                                 FT_UInt   num_coords,
@@ -351,6 +356,11 @@ FT_BEGIN_HEADER
   /*                                                                       */
   /* <Return>                                                              */
   /*    FreeType error code.  0~means success.                             */
+  /*                                                                       */
+  /* <Note>                                                                */
+  /*    To reset all axes to the default values, call the function with    */
+  /*    `num_coords' set to zero and `coords' set to NULL (new feature in  */
+  /*    FreeType version 2.8.1).                                           */
   /*                                                                       */
   FT_EXPORT( FT_Error )
   FT_Set_Var_Design_Coordinates( FT_Face    face,
@@ -415,6 +425,11 @@ FT_BEGIN_HEADER
   /*                                                                       */
   /* <Return>                                                              */
   /*    FreeType error code.  0~means success.                             */
+  /*                                                                       */
+  /* <Note>                                                                */
+  /*    To reset all axes to the default values, call the function with    */
+  /*    `num_coords' set to zero and `coords' set to NULL (new feature in  */
+  /*    FreeType version 2.8.1).                                           */
   /*                                                                       */
   FT_EXPORT( FT_Error )
   FT_Set_MM_Blend_Coordinates( FT_Face    face,

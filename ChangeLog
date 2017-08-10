@@ -1,3 +1,13 @@
+2017-08-10  Werner Lemberg  <wl@gnu.org>
+
+	[base] Minor API improvement for default variation axis setting.
+
+	* src/base/ftmm.c (FT_Set_MM_Design_Coordinates,
+	FT_Set_Var_Design_Coordinates, FT_Set_MM_Blend_Coordinates,
+	FT_Set_Var_Blend_Coordinates): Allow coords==NULL if num_coords==0.
+
+	* docs/CHANGES: Updated.
+
 2017-08-08  Werner Lemberg  <wl@gnu.org>
 
 	[psnames] Really fix issue #49949.

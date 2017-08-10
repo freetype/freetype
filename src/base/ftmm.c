@@ -158,7 +158,7 @@
 
     /* check of `face' delayed to `ft_face_get_mm_service' */
 
-    if ( !coords )
+    if ( num_coords && !coords )
       return FT_THROW( Invalid_Argument );
 
     error = ft_face_get_mm_service( face, &service );
@@ -194,7 +194,7 @@
 
     /* check of `face' delayed to `ft_face_get_mm_service' */
 
-    if ( !coords )
+    if ( num_coords && !coords )
       return FT_THROW( Invalid_Argument );
 
     error = ft_face_get_mm_service( face, &service_mm );
@@ -266,7 +266,7 @@
 
     /* check of `face' delayed to `ft_face_get_mm_service' */
 
-    if ( !coords )
+    if ( num_coords && !coords )
       return FT_THROW( Invalid_Argument );
 
     error = ft_face_get_mm_service( face, &service_mm );
@@ -313,7 +313,7 @@
 
     /* check of `face' delayed to `ft_face_get_mm_service' */
 
-    if ( !coords )
+    if ( num_coords && !coords )
       return FT_THROW( Invalid_Argument );
 
     error = ft_face_get_mm_service( face, &service_mm );

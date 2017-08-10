@@ -9,6 +9,9 @@ CHANGES BETWEEN 2.8 and 2.8.1
     - Some severe  problems within the handling  of TrueType Variation
       Fonts were found and fixed.
 
+    - Function `FT_Set_Var_Design_Coordinates' didn't correctly handle
+      the case with less input coordinates than axes.
+
 
   II. MISCELLANEOUS
 
@@ -22,6 +25,14 @@ CHANGES BETWEEN 2.8 and 2.8.1
       changed (to be more precise, the amount of padding gets computed
       differently).  Applications  that use  the FreeType API  are not
       affected.
+
+    - To  reset all  design axis  values of  a variation  font to  its
+      default values you can now say
+
+        error = FT_Set_Var_Design_Coordinates( face, 0, NULL );
+
+      This  also works  with functions  `FT_Set_MM_Design_Coordinates'
+      and `FT_Set_MM_Blend_Coordinates'.
 
 
 ======================================================================
