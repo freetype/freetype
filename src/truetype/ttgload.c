@@ -87,7 +87,7 @@
   /*************************************************************************/
   /*                                                                       */
   /* Return the vertical metrics in font units for a given glyph.          */
-  /* See macro `TT_LOADER_SET_PP' below for explanations.                  */
+  /* See function `tt_loader_set_pp' below for explanations.               */
   /*                                                                       */
   FT_LOCAL_DEF( void )
   TT_Get_VMetrics( TT_Face     face,
@@ -2625,7 +2625,58 @@
          IS_DEFAULT_INSTANCE                     )
     {
       error = load_sbit_image( size, glyph, glyph_index, load_flags );
-      if ( error )
+      if ( FT_ERR_EQ( error, Missing_Bitmap ) )
+      {
+        /* the bitmap strike is incomplete and misses the requested glyph; */
+        /* if we have a bitmap-only font, return an empty glyph            */
+        if ( !FT_IS_SCALABLE( glyph->face ) )
+        {
+          TT_Face    face = (TT_Face)glyph->face;
+          FT_Short   left_bearing = 0, top_bearing = 0;
+          FT_UShort  advance_width = 0, advance_height = 0;
+
+
+          /* to return an empty glyph, however, we need metrics data   */
+          /* from the `hmtx' (or `vmtx') table; the assumption is that */
+          /* empty glyphs are missing intentionally, representing      */
+          /* whitespace - not having at least horizontal metrics is    */
+          /* thus considered an error                                  */
+          if ( !face->horz_metrics_size )
+            return error;
+
+          /* we now construct an empty bitmap glyph */
+          TT_Get_HMetrics( face, glyph_index,
+                           &left_bearing,
+                           &advance_width );
+          TT_Get_VMetrics( face, glyph_index,
+                           0,
+                           &top_bearing,
+                           &advance_height );
+
+          glyph->outline.n_points   = 0;
+          glyph->outline.n_contours = 0;
+
+          glyph->metrics.width  = 0;
+          glyph->metrics.height = 0;
+
+          glyph->metrics.horiBearingX = left_bearing;
+          glyph->metrics.horiBearingY = 0;
+          glyph->metrics.horiAdvance  = advance_width;
+
+          glyph->metrics.vertBearingX = 0;
+          glyph->metrics.vertBearingY = top_bearing;
+          glyph->metrics.vertAdvance  = advance_height;
+
+          glyph->format            = FT_GLYPH_FORMAT_BITMAP;
+          glyph->bitmap.pixel_mode = FT_PIXEL_MODE_MONO;
+
+          glyph->bitmap_left = 0;
+          glyph->bitmap_top  = 0;
+
+          return FT_Err_Ok;
+        }
+      }
+      else if ( error )
       {
         /* return error if font is not scalable */
         if ( !FT_IS_SCALABLE( glyph->face ) )

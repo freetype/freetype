@@ -1448,10 +1448,17 @@
     return FT_THROW( Invalid_Table );
 
   NoBitmap:
+    if ( recurse_count )
+    {
+      FT_TRACE4(( "tt_sbit_decoder_load_image:"
+                  " missing subglyph sbit with glyph index %d\n",
+                  glyph_index ));
+      return FT_THROW( Invalid_Composite );
+    }
+
     FT_TRACE4(( "tt_sbit_decoder_load_image:"
                 " no sbit found for glyph index %d\n", glyph_index ));
-
-    return FT_THROW( Invalid_Argument );
+    return FT_THROW( Missing_Bitmap );
   }
 
 

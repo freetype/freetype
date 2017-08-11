@@ -1,3 +1,25 @@
+2017-08-11  Werner Lemberg  <wl@gnu.org>
+
+	[sfnt, truetype] Improve handling of missing sbits.
+
+	Requested by Behdad.
+
+	Modern bitmap-only SFNTs like `NotoColorEmoji.ttf' don't contain
+	entries in the bitmap strike(s) for empty glyphs.  Instead, they
+	rely that a space glyph gets created from the font's metrics data.
+	This commit makes FreeType behave accordingly.
+
+	* include/freetype/fterrdef.h (FT_Err_Missing_Bitmap): New error
+	code.
+
+	* src/sfnt/ttsbit.c (tt_sbit_decoder_load_image): Change error codes
+	to make a distinction between a missing bitmap in a composite and a
+	simple missing bitmap.
+
+	* src/truetype/ttgload.c (TT_Load_Glyph): For a missing bitmap (in a
+	bitmap-only font), synthesize an empty bitmap glyph if metrics are
+	available.
+
 2017-08-10  Werner Lemberg  <wl@gnu.org>
 
 	[base] Minor API improvement for default variation axis setting.
