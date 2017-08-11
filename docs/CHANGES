@@ -34,6 +34,9 @@ CHANGES BETWEEN 2.8 and 2.8.1
       This  also works  with functions  `FT_Set_MM_Design_Coordinates'
       and `FT_Set_MM_Blend_Coordinates'.
 
+    - FreeType  now synthesizes  a  missing Unicode  cmap for  (older)
+      TrueType fonts also if glyph names are available.
+
 
 ======================================================================
 
