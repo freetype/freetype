@@ -275,7 +275,7 @@ if test "x$GCC" = xyes; then
             }
 
           ])],
-        [AC_MSG_RESULT([ok, add it to XX_ANSIFLAGS])
+        [AC_MSG_RESULT([ok, adding to XX_ANSIFLAGS])
          XX_ANSIFLAGS="${XX_ANSIFLAGS} ${a}"
         ],
         [AC_MSG_RESULT([no])])
