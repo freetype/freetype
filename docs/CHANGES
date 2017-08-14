@@ -13,7 +13,18 @@ CHANGES BETWEEN 2.8 and 2.8.1
       the case with less input coordinates than axes.
 
 
-  II. MISCELLANEOUS
+  II. IMPORTANT CHANGES
+
+    - By default,  FreeType  now offers  high  quality  LCD-optimized
+      output  without resorting to ClearType techniques of resolution
+      tripling and filtering.  In this method,  called Harmony,  each
+      color channel is generated separately  after shifting the glyph
+      outline,  capitalizing on the fact  that the color grids on LCD
+      panels  are  shifted  by  a third  of  a pixel.  This output is
+      indistinguishable from ClearType with a light 3-tap filter.
+
+
+  III. MISCELLANEOUS
 
     - Using the  new function `FT_Get_Var_Axis_Flags',  an application
       can access the `flags' field  of a variation axis (introduced in
