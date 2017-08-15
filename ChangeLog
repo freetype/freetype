@@ -1,3 +1,13 @@
+2017-08-15  Behdad Esfahbod  <behdad@behdad.org>
+
+	[sfnt] Speed up PNG image loading.
+
+	This reduces the overhead of `premultiply_data' by 60%.
+
+	* src/sfnt/pngshim.c (premultiply_data): Provide code which uses
+	gcc's (and clang's) `vector_byte' attribute to process 4 pixels at a
+	time.
+
 2017-08-11  Werner Lemberg  <wl@gnu.org>
 
 	[sfnt, truetype] Improve handling of missing sbits.

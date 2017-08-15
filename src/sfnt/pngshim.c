@@ -49,18 +49,65 @@
   }
 
 
-  /* Premultiplies data and converts RGBA bytes => native endian. */
+  /* Premultiplies data and converts RGBA bytes => BGRA. */
   static void
   premultiply_data( png_structp    png,
                     png_row_infop  row_info,
                     png_bytep      data )
   {
-    unsigned int  i;
+    unsigned int  i = 0, limit;
 
     FT_UNUSED( png );
 
+    /* the `vector_size' attribute was introduced in gcc 3.1, which */
+    /* predates clang; the `__BYTE_ORDER__' preprocessor symbol was */
+    /* introduced in gcc 4.6 and clang 3.2, respectively            */
+#if ( ( defined( __GNUC__ )                                &&             \
+        ( ( __GNUC__ >= 5 )                              ||               \
+        ( ( __GNUC__ == 4 ) && ( __GNUC_MINOR__ >= 6 ) ) ) )         ||   \
+      ( defined( __clang__ )                                       &&     \
+        ( ( __clang_major__ >= 4 )                               ||       \
+        ( ( __clang_major__ == 3 ) && ( __clang_minor__ >= 2 ) ) ) ) ) && \
+    defined( __OPTIMIZE__ )                                            && \
+    __BYTE_ORDER__ == __ORDER_LITTLE_ENDIAN__
 
-    for ( i = 0; i < row_info->rowbytes; i += 4 )
+    typedef unsigned short  v82 __attribute__(( vector_size( 16 ) ));
+
+
+    /* process blocks of 16 bytes in one rush, which gives a nice speed-up */
+    limit = row_info->rowbytes - 16 + 1;
+    for ( ; i < limit; i += 16 )
+    {
+      char*  base = &data[i];
+
+      v82  s, s0, s1, a;
+      v82  ma = { 1, 1, 3, 3, 5, 5, 7, 7 };
+      v82  o1 = { 0, 0xFF, 0, 0xFF, 0, 0xFF, 0, 0xFF };
+      v82  m0 = { 1, 0, 3, 2, 5, 4, 7, 6 };
+
+
+      memcpy( &s, base, 16 );               /* RGBA RGBA RGBA RGBA */
+      s0 = s & 0xFF;                        /*  R B  R B  R B  R B */
+      s1 = s >> 8;                          /*  G A  G A  G A  G A */
+
+      a  = __builtin_shuffle( s1, ma );     /*  A A  A A  A A  A A */
+      s1 |= o1;                             /*  G 1  G 1  G 1  G 1 */
+      s0 = __builtin_shuffle( s0, m0 );     /*  B R  B R  B R  B R */
+
+      s0 *= a;
+      s1 *= a;
+      s0 += 0x80;
+      s1 += 0x80;
+      s0 = ( s0 + ( s0 >> 8 ) ) >> 8;
+      s1 = ( s1 + ( s1 >> 8 ) ) >> 8;
+
+      s = s0 | ( s1 << 8 );
+      memcpy( base, &s, 16 );
+    }
+#endif /* use `vector_size' */
+
+    limit = row_info->rowbytes;
+    for ( ; i < limit; i += 4 )
     {
       unsigned char*  base  = &data[i];
       unsigned int    alpha = base[3];
