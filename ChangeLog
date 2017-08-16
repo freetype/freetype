@@ -1,3 +1,7 @@
+2017-08-16  Werner Lemberg  <wl@gnu.org>
+
+	* src/sfnt/pngshim.c (premultiply_data): Fix compiler warnings.
+
 2017-08-15  Behdad Esfahbod  <behdad@behdad.org>
 
 	[sfnt] Speed up PNG image loading.

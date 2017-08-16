@@ -57,8 +57,6 @@
   {
     unsigned int  i = 0, limit;
 
-    FT_UNUSED( png );
-
     /* the `vector_size' attribute was introduced in gcc 3.1, which */
     /* predates clang; the `__BYTE_ORDER__' preprocessor symbol was */
     /* introduced in gcc 4.6 and clang 3.2, respectively            */
@@ -78,7 +76,7 @@
     limit = row_info->rowbytes - 16 + 1;
     for ( ; i < limit; i += 16 )
     {
-      char*  base = &data[i];
+      unsigned char*  base = &data[i];
 
       v82  s, s0, s1, a;
       v82  ma = { 1, 1, 3, 3, 5, 5, 7, 7 };
@@ -105,6 +103,8 @@
       memcpy( base, &s, 16 );
     }
 #endif /* use `vector_size' */
+
+    FT_UNUSED( png );
 
     limit = row_info->rowbytes;
     for ( ; i < limit; i += 4 )
