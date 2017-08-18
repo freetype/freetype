@@ -1492,7 +1492,8 @@
 
 #ifdef FT_CONFIG_OPTION_POSTSCRIPT_NAMES
 
-          if ( charmap->encoding == FT_ENCODING_UNICODE )
+          if ( charmap->encoding == FT_ENCODING_UNICODE   ||
+               charmap->encoding == FT_ENCODING_MS_SYMBOL )  /* PUA */
             has_unicode = TRUE;
         }
 

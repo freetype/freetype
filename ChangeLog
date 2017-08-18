@@ -1,3 +1,13 @@
+2017-08-17  Alexei Podtelezhnikov  <apodtele@gmail.com>
+
+	[sfnt] Avoid synthetic unicode for symbol fonts with PUA.
+
+	Reported as
+
+	  https://bugs.chromium.org/p/chromium/issues/detail?id=754574
+
+	* src/sfnt/sfobjs.c (sfnt_load_face): Check for FT_ENCODING_MS_SYMBOL.
+
 2017-08-16  Werner Lemberg  <wl@gnu.org>
 
 	* src/sfnt/pngshim.c (premultiply_data): Fix compiler warnings.
