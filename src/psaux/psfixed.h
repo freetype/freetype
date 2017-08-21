@@ -1,6 +1,6 @@
 /***************************************************************************/
 /*                                                                         */
-/*  cf2fixed.h                                                             */
+/*  psfixed.h                                                              */
 /*                                                                         */
 /*    Adobe's code for Fixed Point Mathematics (specification only).       */
 /*                                                                         */

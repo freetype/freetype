@@ -1,6 +1,6 @@
 /***************************************************************************/
 /*                                                                         */
-/*  cf2glue.h                                                              */
+/*  psglue.h                                                               */
 /*                                                                         */
 /*    Adobe's code for shared stuff (specification only).                  */
 /*                                                                         */

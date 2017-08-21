@@ -2409,6 +2409,8 @@
   }
 
 
+  /* Synthesize a SubFont object for Type 1 fonts, for use in the  */
+  /* new interpreter to access Private dict data                   */
   FT_LOCAL_DEF( void )
   t1_make_subfont( FT_Face      face,
                    PS_Private   priv,

@@ -1,3 +1,14 @@
+/***************************************************************************/
+/*                                                                         */
+/*  cffotypes.h                                                            */
+/*                                                                         */
+/*    Basic OpenType/CFF object type definitions (specification).          */
+/*                                                                         */
+/*  Copyright notice here.                                                 */
+/*                                                                         */
+/***************************************************************************/
+
+
 #ifndef CFFOTYPES_H_
 #define CFFOTYPES_H_
 
@@ -84,4 +95,7 @@ FT_BEGIN_HEADER
 FT_END_HEADER
 
 
-#endif
+#endif /* CFFOTYPES_H_ */
+
+
+/* END */

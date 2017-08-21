@@ -1,6 +1,6 @@
 /***************************************************************************/
 /*                                                                         */
-/*  cf2arrst.h                                                             */
+/*  psarrst.h                                                              */
 /*                                                                         */
 /*    Adobe's code for Array Stacks (specification).                       */
 /*                                                                         */

@@ -383,6 +383,7 @@
     if ( error )
       goto Exit;
 
+    /* Copy flags back for forced scaling */
     hinting     = glyph->hint;
     scaled      = glyph->scaled;
 

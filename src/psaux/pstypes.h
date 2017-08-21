@@ -1,6 +1,6 @@
 /***************************************************************************/
 /*                                                                         */
-/*  cf2types.h                                                             */
+/*  pstypes.h                                                              */
 /*                                                                         */
 /*    Adobe's code for defining data types (specification only).           */
 /*                                                                         */

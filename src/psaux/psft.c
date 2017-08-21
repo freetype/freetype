@@ -1,6 +1,6 @@
 /***************************************************************************/
 /*                                                                         */
-/*  cf2ft.c                                                                */
+/*  psft.c                                                                 */
 /*                                                                         */
 /*    FreeType Glue Component to Adobe's Interpreter (body).               */
 /*                                                                         */
