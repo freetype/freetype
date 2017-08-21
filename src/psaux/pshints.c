@@ -814,6 +814,9 @@
     FT_Byte  maskByte;
 
 
+    if ( !hintmap )
+      return;
+
     /* check whether initial map is constructed */
     if ( !initialMap && !cf2_hintmap_isValid( hintmap->initialHintMap ) )
     {
@@ -1072,6 +1075,7 @@
                       /* CF2_Fixed  hShift, */
                       CF2_ArrStack          hStemHintArray,
                       CF2_ArrStack          vStemHintArray,
+                      CF2_HintData          hintData,
                       CF2_HintMask          hintMask,
                       CF2_Fixed             hintOriginY,
                       const CF2_Blues       blues,
@@ -1082,26 +1086,34 @@
     glyphpath->font      = font;
     glyphpath->callbacks = callbacks;
 
-    cf2_arrstack_init( &glyphpath->hintMoves,
-                       font->memory,
-                       &font->error,
-                       sizeof ( CF2_HintMoveRec ) );
+    if ( font->hinted )
+    {
+      cf2_arrstack_init( &hintData->hintMoves,
+                         font->memory,
+                         &font->error,
+                         sizeof ( CF2_HintMoveRec ) );
 
-    cf2_hintmap_init( &glyphpath->initialHintMap,
-                      font,
-                      &glyphpath->initialHintMap,
-                      &glyphpath->hintMoves,
-                      scaleY );
-    cf2_hintmap_init( &glyphpath->firstHintMap,
-                      font,
-                      &glyphpath->initialHintMap,
-                      &glyphpath->hintMoves,
-                      scaleY );
-    cf2_hintmap_init( &glyphpath->hintMap,
-                      font,
-                      &glyphpath->initialHintMap,
-                      &glyphpath->hintMoves,
-                      scaleY );
+      cf2_hintmap_init( &hintData->initialHintMap,
+                        font,
+                        &hintData->initialHintMap,
+                        &hintData->hintMoves,
+                        scaleY );
+      cf2_hintmap_init( &hintData->firstHintMap,
+                        font,
+                        &hintData->initialHintMap,
+                        &hintData->hintMoves,
+                        scaleY );
+      cf2_hintmap_init( &hintData->hintMap,
+                        font,
+                        &hintData->initialHintMap,
+                        &hintData->hintMoves,
+                        scaleY );
+
+      glyphpath->hintMap        = &hintData->hintMap;
+      glyphpath->firstHintMap   = &hintData->firstHintMap;
+      glyphpath->initialHintMap = &hintData->initialHintMap;
+      glyphpath->hintMoves      = &hintData->hintMoves;
+    }
 
     glyphpath->scaleX = font->innerTransform.a;
     glyphpath->scaleC = font->innerTransform.c;
@@ -1138,7 +1150,8 @@
   FT_LOCAL_DEF( void )
   cf2_glyphpath_finalize( CF2_GlyphPath  glyphpath )
   {
-    cf2_arrstack_finalize( &glyphpath->hintMoves );
+    if ( glyphpath->font->hinted )
+      cf2_arrstack_finalize( glyphpath->hintMoves );
   }
 
 
@@ -1160,7 +1173,9 @@
 
     pt.x = ADD_INT32( FT_MulFix( glyphpath->scaleX, x ),
                       FT_MulFix( glyphpath->scaleC, y ) );
-    pt.y = cf2_hintmap_map( hintmap, y );
+    pt.y = hintmap ? cf2_hintmap_map( hintmap, y )
+                   : FT_MulFix( glyphpath->scaleY, y );
+
 
     ppt->x = ADD_INT32(
                FT_MulFix( glyphpath->font->outerTransform.a, pt.x ),
@@ -1366,7 +1381,7 @@
       {
         /* use first hint map if closing */
         cf2_glyphpath_hintPoint( glyphpath,
-                                 &glyphpath->firstHintMap,
+                                 glyphpath->firstHintMap,
                                  &params.pt1,
                                  glyphpath->prevElemP1.x,
                                  glyphpath->prevElemP1.y );
@@ -1428,7 +1443,7 @@
         /* if we are closing the subpath, then nextP0 is in the first     */
         /* hint zone                                                      */
         cf2_glyphpath_hintPoint( glyphpath,
-                                 &glyphpath->firstHintMap,
+                                 glyphpath->firstHintMap,
                                  &params.pt1,
                                  nextP0->x,
                                  nextP0->y );
@@ -1478,7 +1493,8 @@
 
     /* Test if move has really happened yet; it would have called */
     /* `cf2_hintmap_build' to set `isValid'.                   */
-    if ( !cf2_hintmap_isValid( &glyphpath->hintMap ) )
+    if ( glyphpath->font->hinted                   &&
+         !cf2_hintmap_isValid( glyphpath->hintMap ) )
     {
       /* we are here iff first subpath is missing a moveto operator: */
       /* synthesize first moveTo to finish initialization of hintMap */
@@ -1488,7 +1504,7 @@
     }
 
     cf2_glyphpath_hintPoint( glyphpath,
-                             &glyphpath->hintMap,
+                             glyphpath->hintMap,
                              &params.pt1,
                              start.x,
                              start.y );
@@ -1677,18 +1693,21 @@
 
     glyphpath->moveIsPending = TRUE;
 
-    /* ensure we have a valid map with current mask */
-    if ( !cf2_hintmap_isValid( &glyphpath->hintMap ) ||
-         cf2_hintmask_isNew( glyphpath->hintMask )   )
-      cf2_hintmap_build( &glyphpath->hintMap,
-                         glyphpath->hStemHintArray,
-                         glyphpath->vStemHintArray,
-                         glyphpath->hintMask,
-                         glyphpath->hintOriginY,
-                         FALSE );
+    /* ensure we have a valid map with current mask, if hinting is on */
+    if ( glyphpath->font->hinted )
+    {
+      if ( !cf2_hintmap_isValid( glyphpath->hintMap ) ||
+           cf2_hintmask_isNew( glyphpath->hintMask )  )
+        cf2_hintmap_build( glyphpath->hintMap,
+                           glyphpath->hStemHintArray,
+                           glyphpath->vStemHintArray,
+                           glyphpath->hintMask,
+                           glyphpath->hintOriginY,
+                           FALSE );
 
-    /* save a copy of current HintMap to use when drawing initial point */
-    glyphpath->firstHintMap = glyphpath->hintMap;     /* structure copy */
+      /* save a copy of current HintMap to use when drawing initial point */
+      *glyphpath->firstHintMap = *glyphpath->hintMap;     /* structure copy */
+    }
   }
 
 
@@ -1768,11 +1787,12 @@
 
     if ( glyphpath->elemIsQueued )
     {
-      FT_ASSERT( cf2_hintmap_isValid( &glyphpath->hintMap ) ||
-                 glyphpath->hintMap.count == 0              );
+      FT_ASSERT( !glyphpath->font->hinted                  ||
+                 cf2_hintmap_isValid( glyphpath->hintMap ) ||
+                 glyphpath->hintMap->count == 0             );
 
       cf2_glyphpath_pushPrevElem( glyphpath,
-                                  &glyphpath->hintMap,
+                                  glyphpath->hintMap,
                                   &P0,
                                   P1,
                                   FALSE );
@@ -1786,7 +1806,7 @@
 
     /* update current map */
     if ( newHintMap )
-      cf2_hintmap_build( &glyphpath->hintMap,
+      cf2_hintmap_build( glyphpath->hintMap,
                          glyphpath->hStemHintArray,
                          glyphpath->vStemHintArray,
                          glyphpath->hintMask,
@@ -1856,11 +1876,12 @@
 
     if ( glyphpath->elemIsQueued )
     {
-      FT_ASSERT( cf2_hintmap_isValid( &glyphpath->hintMap ) ||
-                 glyphpath->hintMap.count == 0              );
+      FT_ASSERT( !glyphpath->font->hinted                  ||
+                 cf2_hintmap_isValid( glyphpath->hintMap ) ||
+                 glyphpath->hintMap->count == 0             );
 
       cf2_glyphpath_pushPrevElem( glyphpath,
-                                  &glyphpath->hintMap,
+                                  glyphpath->hintMap,
                                   &P0,
                                   P1,
                                   FALSE );
@@ -1876,7 +1897,7 @@
 
     /* update current map */
     if ( cf2_hintmask_isNew( glyphpath->hintMask ) )
-      cf2_hintmap_build( &glyphpath->hintMap,
+      cf2_hintmap_build( glyphpath->hintMap,
                          glyphpath->hStemHintArray,
                          glyphpath->vStemHintArray,
                          glyphpath->hintMask,
@@ -1907,7 +1928,7 @@
       /* empty the final element from the queue and close the path */
       if ( glyphpath->elemIsQueued )
         cf2_glyphpath_pushPrevElem( glyphpath,
-                                    &glyphpath->hintMap,
+                                    glyphpath->hintMap,
                                     &glyphpath->offsetStart0,
                                     glyphpath->offsetStart1,
                                     TRUE );

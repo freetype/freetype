@@ -173,6 +173,16 @@ FT_BEGIN_HEADER
                      FT_Bool       initialMap );
 
 
+  typedef struct  CF2_HintDataRec_
+  {
+    CF2_HintMapRec  hintMap;        /* current hint map            */
+    CF2_HintMapRec  firstHintMap;   /* saved copy                  */
+    CF2_HintMapRec  initialHintMap; /* based on all captured hints */
+
+    CF2_ArrStackRec  hintMoves;  /* list of hint moves for 2nd pass */
+
+  } CF2_HintDataRec, *CF2_HintData;
+
   /*
    * GlyphPath is a wrapper for drawing operations that scales the
    * coordinates according to the render matrix and HintMap.  It also tracks
@@ -181,17 +191,15 @@ FT_BEGIN_HEADER
    */
   typedef struct  CF2_GlyphPathRec_
   {
-    /* TODO: gather some of these into a hinting context */
-
     CF2_Font              font;           /* font instance    */
     CF2_OutlineCallbacks  callbacks;      /* outline consumer */
 
 
-    CF2_HintMapRec  hintMap;        /* current hint map            */
-    CF2_HintMapRec  firstHintMap;   /* saved copy                  */
-    CF2_HintMapRec  initialHintMap; /* based on all captured hints */
+    CF2_HintMap  hintMap;        /* ptr to current hint map     */
+    CF2_HintMap  firstHintMap;   /* ptr to saved copy           */
+    CF2_HintMap  initialHintMap; /* based on all captured hints */
 
-    CF2_ArrStackRec  hintMoves;  /* list of hint moves for 2nd pass */
+    CF2_ArrStack  hintMoves;  /* list of hint moves for 2nd pass */
 
     CF2_Fixed  scaleX;         /* matrix a */
     CF2_Fixed  scaleC;         /* matrix c */
@@ -253,6 +261,7 @@ FT_BEGIN_HEADER
                       /* CF2_Fixed hShift, */
                       CF2_ArrStack          hStemHintArray,
                       CF2_ArrStack          vStemHintArray,
+                      CF2_HintData          hintData,
                       CF2_HintMask          hintMask,
                       CF2_Fixed             hintOrigin,
                       const CF2_Blues       blues,

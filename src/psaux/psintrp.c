@@ -524,8 +524,8 @@
     CF2_ArrStackRec  vStemHintArray;
 
     CF2_HintMaskRec   hintMask;
+    CF2_HintDataRec   hintData;
     CF2_GlyphPathRec  glyphPath;
-
 
     FT_ZERO( &storage );
     FT_ZERO( &results );
@@ -560,6 +560,7 @@
                         /* hShift, */
                         &hStemHintArray,
                         &vStemHintArray,
+                        &hintData,
                         &hintMask,
                         hintOriginY,
                         &font->blues,
@@ -2504,6 +2505,10 @@
         /* `cf2_hintmask_read' (which also traces the mask bytes) */
         FT_TRACE4(( op1 == cf2_cmdCNTRMASK ? " cntrmask" : " hintmask" ));
 
+        /* disregard if not hinting */
+        if ( !font->hinted )
+          break;
+
         /* never add hints after the mask is computed */
         if ( cf2_stack_count( opStack ) > 1    &&
              cf2_hintmask_isValid( &hintMask ) )
@@ -2553,8 +2558,8 @@
 
           cf2_hintmap_init( &counterHintMap,
                             font,
-                            &glyphPath.initialHintMap,
-                            &glyphPath.hintMoves,
+                            glyphPath.initialHintMap,
+                            glyphPath.hintMoves,
                             scaleY );
           cf2_hintmask_init( &counterMask, error );
 
