@@ -1171,21 +1171,21 @@
     FT_Vector  pt;   /* hinted point in upright DS */
 
 
-    pt.x = ADD_INT32( FT_MulFix( glyphpath->scaleX, x ),
-                      FT_MulFix( glyphpath->scaleC, y ) );
+    pt.x = ADD_INT32( FT_MulFix( x, glyphpath->scaleX ),
+                      FT_MulFix( y, glyphpath->scaleC ) );
     pt.y = hintmap ? cf2_hintmap_map( hintmap, y )
-                   : FT_MulFix( glyphpath->scaleY, y );
+                   : FT_MulFix( y, glyphpath->scaleY );
 
 
     ppt->x = ADD_INT32(
-               FT_MulFix( glyphpath->font->outerTransform.a, pt.x ),
+               FT_MulFix( pt.x, glyphpath->font->outerTransform.a ),
                ADD_INT32(
-                 FT_MulFix( glyphpath->font->outerTransform.c, pt.y ),
+                 FT_MulFix( pt.y, glyphpath->font->outerTransform.c ),
                  glyphpath->fractionalTranslation.x ) );
     ppt->y = ADD_INT32(
-               FT_MulFix( glyphpath->font->outerTransform.b, pt.x ),
+               FT_MulFix( pt.x, glyphpath->font->outerTransform.b ),
                ADD_INT32(
-                 FT_MulFix( glyphpath->font->outerTransform.d, pt.y ),
+                 FT_MulFix( pt.y, glyphpath->font->outerTransform.d ),
                  glyphpath->fractionalTranslation.y ) );
   }
 
@@ -1580,10 +1580,10 @@
         else
         {
           /* +x +y */
-          *x = FT_MulFix( cf2_doubleToFixed( 0.7 ),
-                          glyphpath->xOffset );
-          *y = FT_MulFix( cf2_doubleToFixed( 1.0 - 0.7 ),
-                          glyphpath->yOffset );
+          *x = FT_MulFix( glyphpath->xOffset,
+                          cf2_doubleToFixed( 0.7 ) );
+          *y = FT_MulFix( glyphpath->yOffset,
+                          cf2_doubleToFixed( 1.0 - 0.7 ) );
         }
       }
       else
@@ -1605,10 +1605,10 @@
         else
         {
           /* +x -y */
-          *x = FT_MulFix( cf2_doubleToFixed( -0.7 ),
-                          glyphpath->xOffset );
-          *y = FT_MulFix( cf2_doubleToFixed( 1.0 - 0.7 ),
-                          glyphpath->yOffset );
+          *x = FT_MulFix( glyphpath->xOffset,
+                          cf2_doubleToFixed( -0.7 ) );
+          *y = FT_MulFix( glyphpath->yOffset,
+                          cf2_doubleToFixed( 1.0 - 0.7 ) );
         }
       }
     }
@@ -1633,10 +1633,10 @@
         else
         {
           /* -x +y */
-          *x = FT_MulFix( cf2_doubleToFixed( 0.7 ),
-                          glyphpath->xOffset );
-          *y = FT_MulFix( cf2_doubleToFixed( 1.0 + 0.7 ),
-                          glyphpath->yOffset );
+          *x = FT_MulFix( glyphpath->xOffset,
+                          cf2_doubleToFixed( 0.7 ) );
+          *y = FT_MulFix( glyphpath->yOffset,
+                          cf2_doubleToFixed( 1.0 + 0.7 ) );
         }
       }
       else
@@ -1658,10 +1658,10 @@
         else
         {
           /* -x -y */
-          *x = FT_MulFix( cf2_doubleToFixed( -0.7 ),
-                          glyphpath->xOffset );
-          *y = FT_MulFix( cf2_doubleToFixed( 1.0 + 0.7 ),
-                          glyphpath->yOffset );
+          *x = FT_MulFix( glyphpath->xOffset,
+                          cf2_doubleToFixed( -0.7 ) );
+          *y = FT_MulFix( glyphpath->yOffset,
+                          cf2_doubleToFixed( 1.0 + 0.7 ) );
         }
       }
     }
