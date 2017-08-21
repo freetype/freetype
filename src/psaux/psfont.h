@@ -1,6 +1,6 @@
 /***************************************************************************/
 /*                                                                         */
-/*  cf2font.h                                                              */
+/*  psfont.h                                                               */
 /*                                                                         */
 /*    Adobe's code for font instances (specification).                     */
 /*                                                                         */

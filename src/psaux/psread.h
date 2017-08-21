@@ -1,6 +1,6 @@
 /***************************************************************************/
 /*                                                                         */
-/*  cf2read.h                                                              */
+/*  psread.h                                                               */
 /*                                                                         */
 /*    Adobe's code for stream handling (specification).                    */
 /*                                                                         */

@@ -1,6 +1,6 @@
 /***************************************************************************/
 /*                                                                         */
-/*  cf2blues.h                                                             */
+/*  psblues.h                                                              */
 /*                                                                         */
 /*    Adobe's code for handling Blue Zones (specification).                */
 /*                                                                         */

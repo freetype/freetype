@@ -1,6 +1,6 @@
 /***************************************************************************/
 /*                                                                         */
-/*  cf2error.h                                                             */
+/*  pserror.h                                                              */
 /*                                                                         */
 /*    Adobe's code for error handling (specification).                     */
 /*                                                                         */

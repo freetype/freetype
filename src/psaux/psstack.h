@@ -1,6 +1,6 @@
 /***************************************************************************/
 /*                                                                         */
-/*  cf2stack.h                                                             */
+/*  psstack.h                                                              */
 /*                                                                         */
 /*    Adobe's code for emulating a CFF stack (specification).              */
 /*                                                                         */

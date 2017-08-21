@@ -1,3 +1,13 @@
+/***************************************************************************/
+/*                                                                         */
+/*  cffdecode.h                                                            */
+/*                                                                         */
+/*    PostScript CFF (Type 2) decoding routines (specification).           */
+/*                                                                         */
+/*  Copyright notice here.                                                 */
+/*                                                                         */
+/***************************************************************************/
+
 
 #ifndef CFFDECODE_H_
 #define CFFDECODE_H_
