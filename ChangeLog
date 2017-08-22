@@ -1,5 +1,14 @@
 2017-08-22  Werner Lemberg  <wl@gnu.org>
 
+	[base] Don't zero out allocated memory twice (#51816).
+
+	Patch applied from bug report.
+
+	* src/base/ftutil.c (ft_mem_qrealloc): Use low-level allocation to
+	avoid unnecessary overhead.
+
+2017-08-22  Werner Lemberg  <wl@gnu.org>
+
 	[truetype] Integer overflow.
 
 	Changes triggered by
