@@ -1,3 +1,14 @@
+2017-08-22  Werner Lemberg  <wl@gnu.org>
+
+	[truetype] Integer overflow.
+
+	Changes triggered by
+
+	  https://bugs.chromium.org/p/oss-fuzz/issues/detail?id=3107
+
+	* src/truetype/ttinterp.c (Ins_MDRP, Ins_MIRP, Ins_ALIGNPTS): Use
+	NEG_LONG.
+
 2017-08-17  Alexei Podtelezhnikov  <apodtele@gmail.com>
 
 	[sfnt] Avoid synthetic unicode for symbol fonts with PUA.
