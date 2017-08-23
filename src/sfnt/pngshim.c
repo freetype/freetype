@@ -69,6 +69,15 @@
     defined( __OPTIMIZE__ )                                            && \
     __BYTE_ORDER__ == __ORDER_LITTLE_ENDIAN__
 
+#ifdef __clang__
+    /* the clang documentation doesn't cover the two-argument case of */
+    /* `__builtin_shufflevector'; however, it is is implemented since */
+    /* version 2.8                                                    */
+#define vector_shuffle  __builtin_shufflevector
+#else
+#define vector_shuffle  __builtin_shuffle
+#endif
+
     typedef unsigned short  v82 __attribute__(( vector_size( 16 ) ));
 
 
@@ -79,27 +88,34 @@
       unsigned char*  base = &data[i];
 
       v82  s, s0, s1, a;
+
+      /* clang <= 3.9 can't apply scalar values to vectors */
+      /* (or rather, it needs a different syntax)          */
+      v82  n0x80 = { 0x80, 0x80, 0x80, 0x80, 0x80, 0x80, 0x80, 0x80 };
+      v82  n0xFF = { 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF };
+      v82  n8    = { 8, 8, 8, 8, 8, 8, 8, 8 };
+
       v82  ma = { 1, 1, 3, 3, 5, 5, 7, 7 };
       v82  o1 = { 0, 0xFF, 0, 0xFF, 0, 0xFF, 0, 0xFF };
       v82  m0 = { 1, 0, 3, 2, 5, 4, 7, 6 };
 
 
       memcpy( &s, base, 16 );               /* RGBA RGBA RGBA RGBA */
-      s0 = s & 0xFF;                        /*  R B  R B  R B  R B */
-      s1 = s >> 8;                          /*  G A  G A  G A  G A */
+      s0 = s & n0xFF;                       /*  R B  R B  R B  R B */
+      s1 = s >> n8;                         /*  G A  G A  G A  G A */
 
-      a  = __builtin_shuffle( s1, ma );     /*  A A  A A  A A  A A */
+      a   = vector_shuffle( s1, ma );       /*  A A  A A  A A  A A */
       s1 |= o1;                             /*  G 1  G 1  G 1  G 1 */
-      s0 = __builtin_shuffle( s0, m0 );     /*  B R  B R  B R  B R */
+      s0  = vector_shuffle( s0, m0 );       /*  B R  B R  B R  B R */
 
       s0 *= a;
       s1 *= a;
-      s0 += 0x80;
-      s1 += 0x80;
-      s0 = ( s0 + ( s0 >> 8 ) ) >> 8;
-      s1 = ( s1 + ( s1 >> 8 ) ) >> 8;
+      s0 += n0x80;
+      s1 += n0x80;
+      s0  = ( s0 + ( s0 >> n8 ) ) >> n8;
+      s1  = ( s1 + ( s1 >> n8 ) ) >> n8;
 
-      s = s0 | ( s1 << 8 );
+      s = s0 | ( s1 << n8 );
       memcpy( base, &s, 16 );
     }
 #endif /* use `vector_size' */
