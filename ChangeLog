@@ -4,8 +4,8 @@
 
 	* src/sfnt/pngshim.c (premultiply_data): Use vectors instead of
 	scalars.
-	(vector_shuffle): New macro to take of a different built-in function
-	name on clang.
+	(vector_shuffle): New macro to take care of a different built-in
+	function name on clang.
 
 2017-08-22  Werner Lemberg  <wl@gnu.org>
 
