@@ -85,4 +85,4 @@ int Image_Diff( IMAGE* base, IMAGE* test);
 /* Print the row in list-view webpage */
 void Print_Row( FILE* fp, int index, char* name, int diff );
 /* Print the table-headers in list-view webpage */
-void Print_Head( FILE* fp, char* family, char* style, int size );
+void Print_Head( FILE* fp, char* fam, char* style, int size, int dpi);

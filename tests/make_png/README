@@ -23,7 +23,7 @@ NOTE: One version of FreeType is referred as "base" version and the
   -------------------------------------     
    Go to the "base" version's folder and compile the library
 
-	    ./configure
+	    ./configure --enable-shared --disable-static
 	    make 
 
     Repeat step 2. for the "test" version as well.

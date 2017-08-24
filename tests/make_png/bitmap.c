@@ -289,7 +289,7 @@ int Generate_PNG (IMAGE *bitmap,
 
   status = 0;
   
-  printf("Generated image   %s\n", path );
+  printf("%s\n", path );
   for (y = 0; y < bitmap->height; y++) {
     png_free (png_ptr, row_pointers[y]);
   }
@@ -623,22 +623,18 @@ void Stitch(IMAGE* left, IMAGE* right, IMAGE* result){
 }
 
 /* This prints table-headers to a HTML file for the list-view page */
-void Print_Head( FILE* fp, char* family, char* style, int size ){
+void Print_Head( FILE* fp, char* fam, char* style, int size, int dpi){
+  printf("   *** Generating Images ***   \n");
   fprintf(fp,
   "<html>\n\
     <head>\n\
       <title>\n\
         Glyph_Diff\n\
       </title>\n\
-      <script src=\"script.js\" type=\"text/javascript\"></script>\n\
-      <link rel=\"stylesheet\" type=\"text/css\" href=\"style.css\">\n\
+      <script src=\"../../../../../scripts/top.js\" type=\"text/javascript\"></script>\n\
+      <link href=\"../../../../../styles/top.css\" rel=\"stylesheet\" type=\"text/css\" >\n\
     </head>\n\
     <body>\n\
-    <div class=\"freeze\">\n\
-      <h4>Font Family: %s</h4>\n\
-      <h4>Style:       %s</h4>\n\
-      <p><b>%d</b>pt at <b>%d</b>ppi</p>\n\
-    </div>\n\
     <table>\n\
     <thead>\n\
       <tr>\n\
@@ -656,10 +652,7 @@ void Print_Head( FILE* fp, char* family, char* style, int size ){
       </th>\n\
       </tr>\n\
     </thead>\n\
-    <tbody id=\"data\">\n", family,
-                             style,
-                              size,
-                               DPI );
+    <tbody id=\"data\">\n" );
 }
 
 /* This prints a row to the HTML file for the list-view page. */
@@ -670,7 +663,9 @@ void Print_Row( FILE* fp, int index, char* name, int diff )
       <td>%04d</td>\n\
       <td>%s</td>\n\
       <td>%04d</td>\n\
-      <td id=\"image_row\"><img id=\"sprite\" src=\"images/%s.png\"></td>\n\
+      <td id=\"image_row\">\
+        <img id=\"sprite\" src=\"images/%s.png\" onclick=\"frame_2_source(this)\">\
+      </td>\n\
     </tr>\n", index, name, diff, name);
 }
 

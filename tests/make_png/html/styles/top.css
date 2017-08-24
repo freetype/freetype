@@ -1,8 +1,3 @@
-.freeze{
-  height: 50px;
-  line-height: 60%;
-  padding: 4px 16px;
-}
 #sprite { 
     image-rendering: optimizeSpeed;             /* STOP SMOOTHING, GIVE ME SPEED  */
     image-rendering: -moz-crisp-edges;          /* Firefox                        */
@@ -11,14 +6,13 @@
     image-rendering: pixelated;                 /* Chrome */
     image-rendering: optimize-contrast;         /* CSS3 Proposed                  */
     -ms-interpolation-mode: nearest-neighbor;   /* IE8+                           */
-    width: 50%;
+    width: 70%;
     height: auto;
 }
 table {
   border-collapse: collapse;
   border: none;
   position: relative;
-  top: 60px;
 }
 th,
 td {
@@ -32,7 +26,40 @@ th {
   background-color: #C8C8C8;
   cursor: pointer;
 }
-#hash{
-  font-size: 12px;
+/*Top Page styling begins*/
+#frame_1{
+	width:49%;
+	height:500px;
+	align-self: right;
 }
+#frame_2{
+	width:49%;
+	height:500px;
+	align-self: left;
+}
+.select {
+  font-family: "Courier New", Courier, monospace;
+  font-size: 16px;
+  text-align: left;
+}
+.animation {
+  image-rendering: optimizeSpeed;
+  image-rendering: -moz-crisp-edges;
+  image-rendering: -o-crisp-edges;
+  image-rendering: -webkit-optimize-contrast;
+  image-rendering: pixelated;
+  image-rendering: optimize-contrast;
+  -ms-interpolation-mode: nearest-neighbor;
+
+  margin: auto;
+  display: block;
+
+  background: url("braceleft.png");
+  background-repeat: no-repeat;
+  background-size: cover;
+
+  width: 120px;
+  height: 130px;
+}
+
 

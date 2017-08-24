@@ -2,10 +2,9 @@
 
 int main(int argc, char const *argv[])
 {
-  if(argc != 5)
+  if(argc != 7)
   {
-    printf("Usage: ./tests <base .so> <test .so>\
-    <fnt_file> <pt_size>\n");
+    printf("Not enough arguments. Refer README\n");
     return 0;
   }
 
@@ -15,6 +14,8 @@ int main(int argc, char const *argv[])
   const char*      test_version; 
   const char*      font_file;
   int              size; 
+  int              render_mode;
+  int              dpi;
 
   int              load_flag;  /* FT_LOAD_XXX */
   int              render_flag; /* FT_RENDER_MODE_XXX */
@@ -25,6 +26,8 @@ int main(int argc, char const *argv[])
   
   font_file        = argv[3];
   size             = atoi(argv[4]);
+  render_mode      = atoi(argv[5]);
+  dpi              = atoi(argv[6]);
 
   FT_Library       base_library;
   FT_Face          base_face;
@@ -41,7 +44,7 @@ int main(int argc, char const *argv[])
   FT_Error         error;
 
   int alignment = 4;
-  char * output_file_name = ( char * )calloc(50,sizeof(char));
+  char * output_file_name = ( char * )calloc(100,sizeof(char));
 
   IMAGE* base_png        = (IMAGE*)malloc(sizeof(IMAGE));
   IMAGE* test_png        = (IMAGE*)malloc(sizeof(IMAGE));
@@ -208,7 +211,7 @@ int main(int argc, char const *argv[])
 
 /*******************************************************************/
   
-  switch ( FT_TEST_RENDER_MODE ) {
+  switch ( render_mode ) {
   case 0: render_flag   = FT_RENDER_MODE_MONO;
           load_flag     = FT_LOAD_MONOCHROME;
           target_flag   = FT_LOAD_TARGET_MONO;
@@ -255,7 +258,7 @@ int main(int argc, char const *argv[])
     exit(1);
   }
 
-  if (FT_TEST_RENDER_MODE > 1 )
+  if (render_mode > 1 )
   {
     error = Base_Library_SetLcdFilter( base_library,
                                        FT_LCD_FILTER_DEFAULT );
@@ -291,7 +294,7 @@ int main(int argc, char const *argv[])
   error = Base_Set_Char_Size( base_face,
                               size * 64, 
                               0, 
-                              DPI,
+                              dpi,
                               0 );
   if(error){
     printf("Error setting character size\n");
@@ -300,7 +303,7 @@ int main(int argc, char const *argv[])
   error = Test_Set_Char_Size( test_face,
                               size * 64, 
                               0, 
-                              DPI,
+                              dpi,
                               0 );
   if(error){
     printf("Error setting character size\n");
@@ -310,20 +313,12 @@ int main(int argc, char const *argv[])
   base_slot = base_face->glyph;
   test_slot = test_face->glyph;
 
-  /* If folders aren't there, create folders */
-  struct stat st = {0};
-  if (stat("./html/", &st) == -1) {
-      mkdir("./html/", 0777);
-  }
-
-  if (stat("./html/images/", &st) == -1) {
-      mkdir("./html/images/", 0777);
-  }
-
   /* Initialising file pointer for the list-view*/
-  FILE* fp = fopen("html/index.html","w");
- 	
- 	Print_Head(fp,base_face->family_name, base_face->style_name, size);
+  sprintf( output_file_name, "./html/pages/%d/%s/%d/%d/index.html",dpi, font_file, render_mode, size );
+
+  FILE* fp = fopen(output_file_name,"w");
+  
+  Print_Head(fp,base_face->family_name,base_face->style_name,size,dpi);
 
 /* Need to write code to check the values in FT_Face and compare */
   for ( i = 0; i < base_face->num_glyphs; ++i)
@@ -369,8 +364,8 @@ int main(int argc, char const *argv[])
     test_murmur = Generate_Hash_x64_128(test_bitmap,test_murmur);
 
     Is_Different = Compare_Hash(base_murmur, test_murmur);
- 	/* To convert 1-bit monochrome to 8-bit bitmap */
- 	/* because we need 8-bit colour to generate images */
+  /* To convert 1-bit monochrome to 8-bit bitmap */
+  /* because we need 8-bit colour to generate images */
     Base_Bitmap_Init( &base_target );
     Test_Bitmap_Init( &test_target );
 
@@ -395,15 +390,15 @@ int main(int argc, char const *argv[])
     {
       total_count++;
       pixel_diff = 0; /* Difference metric*/
-      if (FT_TEST_RENDER_MODE == 0)
+      if (render_mode == 0)
       { /* If monochrome, take the converted image*/
-        Make_PNG( &base_target, base_png, i, FT_TEST_RENDER_MODE );
-        Make_PNG( &test_target, test_png, i, FT_TEST_RENDER_MODE );
+        Make_PNG( &base_target, base_png, i, render_mode );
+        Make_PNG( &test_target, test_png, i, render_mode );
 
       }else{
 
-        Make_PNG( base_bitmap, base_png, i, FT_TEST_RENDER_MODE );
-        Make_PNG( test_bitmap, test_png, i, FT_TEST_RENDER_MODE );
+        Make_PNG( base_bitmap, base_png, i, render_mode );
+        Make_PNG( test_bitmap, test_png, i, render_mode );
       }
       /* Aligning images and appending rows */
       if (base_png->height < test_png->height)
@@ -440,15 +435,15 @@ int main(int argc, char const *argv[])
                              50 );
       }
 
-      sprintf( output_file_name, "./html/images/%s.png", glyph_name );
+      sprintf( output_file_name, "./html/pages/%d/%s/%d/%d/images/%s.png",dpi, font_file, render_mode, size, glyph_name );
 
-      Generate_PNG ( output, output_file_name, FT_TEST_RENDER_MODE );
+      Generate_PNG ( output, output_file_name, render_mode );
       /* To print table row to HTML file */
       Print_Row(fp,i,glyph_name,pixel_diff );
     }
   }
-  printf("Total   %ld\nFaulty  %d\n",base_face->num_glyphs,
-  							  total_count );
+  printf("Total      :  %ld\nFaulty     :  %d\n",base_face->num_glyphs,
+                  total_count );
  /* HTML footer */
   fprintf(fp,
         "</tbody>\n\

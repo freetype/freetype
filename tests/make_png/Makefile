@@ -13,20 +13,11 @@ CC = gcc
 INCLUDE = -I $(includedir)/freetype2
 LIBS = -lpng -lharfbuzz -lbz2 -ldl
 
-DPI ?= 72
-FT_TEST_RENDER_MODE ?= RGB
-
 all: tests
 
-tests: $(SRC_SPRITE) render_modes dpi
-	$(CC) $(CFLAGS) $(INCLUDE) -DDPI=$(DPI) -DFT_TEST_RENDER_MODE=$(FT_TEST_RENDER_MODE) -o $@  $(SRC_SPRITE) $(SRC_LIB) $(OBJS) $(LIBS)
+tests: $(SRC_SPRITE)
+	$(CC) $(CFLAGS) $(INCLUDE) -o $@  $(SRC_SPRITE) $(SRC_LIB) $(OBJS) $(LIBS)
 
 .PHONY: clean force
 clean:
 	-rm -f *.o
-
-render_modes: force
-	echo '$(FT_TEST_RENDER_MODE)' | cmp -s - $@ || echo '$(FT_TEST_RENDER_MODE)' > $@
-	
-dpi: force
-	echo '$(DPI)' | cmp -s - $@ || echo '$(DPI)' > $@
