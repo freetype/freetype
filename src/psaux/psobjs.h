@@ -242,9 +242,10 @@ FT_BEGIN_HEADER
   /*************************************************************************/
 
   FT_LOCAL( void )
-  ps_builder_init( void*        builder,
-                   FT_Bool      is_t1,
-                   PS_Builder*  ps_builder );
+  ps_builder_init( PS_Builder*  ps_builder,
+                   void*        builder,
+                   FT_Bool      is_t1 );
+                   
 
   FT_LOCAL( void )
   ps_builder_done( PS_Builder*  builder );

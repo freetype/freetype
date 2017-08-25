@@ -473,9 +473,9 @@ FT_BEGIN_HEADER
   typedef struct  PS_Builder_FuncsRec_
   {
     void
-    (*init)( void*        builder,
-             FT_Bool      is_t1,
-             PS_Builder*  ps_builder );
+    (*init)( PS_Builder*  ps_builder,
+             void*        builder,
+             FT_Bool      is_t1 );
 
     void
     (*done)( PS_Builder*   builder );
