@@ -315,6 +315,13 @@
     FT_ASSERT( decoder &&
                ( is_t1 || decoder->cff ) );
 
+    if ( is_t1 && !decoder->current_subfont )
+    {
+      FT_ERROR(( "cf2_decoder_parse_charstrings (Type 1): "
+                 "SubFont missing. Use `t1_make_subfont' first\n" ));
+      return FT_THROW( Invalid_Table );
+    }
+
     memory = decoder->builder.memory;
 
     /* CF2 data is saved here across glyphs */
