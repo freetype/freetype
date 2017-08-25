@@ -4,7 +4,6 @@ BUILD_DIR := $(TOP_DIR)/builds/unix
 include $(TOP_DIR)/builds/unix/unix-def.mk
 
 SRC_SPRITE = make_sprite.c bitmap.c murmur3.c
-SRC_LIB = $(libdir)/libfreetype.a
 
 OBJS = $(src:.c=.o)
 

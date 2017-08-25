@@ -13,7 +13,7 @@ int main(int argc, char const *argv[])
   const char*      base_version; 
   const char*      test_version; 
   const char*      font_file;
-  int              size; 
+  int              size;
   int              render_mode;
   int              dpi;
 
@@ -44,7 +44,9 @@ int main(int argc, char const *argv[])
   FT_Error         error;
 
   int alignment = 4;
-  char * output_file_name = ( char * )calloc(100,sizeof(char));
+  int output_file_size = 100 + strlen(argv[3]);
+  char * output_file_name = (char *)calloc( output_file_size,
+                                            sizeof(char));
 
   IMAGE* base_png        = (IMAGE*)malloc(sizeof(IMAGE));
   IMAGE* test_png        = (IMAGE*)malloc(sizeof(IMAGE));
@@ -61,6 +63,7 @@ int main(int argc, char const *argv[])
   int pixel_diff, i;
 
   char glyph_name[50] = ".not-def";
+
 /*******************************************************************/
 
   FT_Error ( *Base_Init_FreeType )( FT_Library* );
@@ -314,10 +317,27 @@ int main(int argc, char const *argv[])
   test_slot = test_face->glyph;
 
   /* Initialising file pointer for the list-view*/
-  sprintf( output_file_name, "./html/pages/%d/%s/%d/%d/index.html",dpi, font_file, render_mode, size );
+  if (snprintf( output_file_name,
+            output_file_size,
+            "./html/pages/%d/%s/%d/%d/index.html",
+            dpi,
+            font_file,
+            render_mode,
+            size )
+            > output_file_size )
+  {
+    printf("Buffer overflow. Increase output_file_size\n");
+    exit(1);
+  }
 
   FILE* fp = fopen(output_file_name,"w");
   
+  if (fp == NULL)
+  {
+    printf("Error opening file\n");
+    exit(1);
+  }
+
   Print_Head(fp,base_face->family_name,base_face->style_name,size,dpi);
 
 /* Need to write code to check the values in FT_Face and compare */
@@ -429,13 +449,29 @@ int main(int argc, char const *argv[])
 
       if (FT_HAS_GLYPH_NAMES(base_face))
       {
-        Base_Get_Glyph_Name( base_face,
-                             i,
-                             glyph_name,
-                             50 );
+        error = Base_Get_Glyph_Name( base_face,
+                                     i,
+                                     glyph_name,
+                                     50 );
+        if (error)
+        {
+          printf("Error setting glyph name\n");
+        }
       }
 
-      sprintf( output_file_name, "./html/pages/%d/%s/%d/%d/images/%s.png",dpi, font_file, render_mode, size, glyph_name );
+      if (snprintf( output_file_name,
+                    output_file_size,
+                    "./html/pages/%d/%s/%d/%d/images/%s.png",
+                    dpi,
+                    font_file,
+                    render_mode,
+                    size,
+                    glyph_name )
+                    > output_file_size)
+      {
+        printf("Buffer Overflow. Increase size of glyph_name\n");
+        exit(1);
+      }
 
       Generate_PNG ( output, output_file_name, render_mode );
       /* To print table row to HTML file */
