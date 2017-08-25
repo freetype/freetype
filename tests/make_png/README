@@ -3,19 +3,19 @@ TODO:   Generate HTML page for detailed comparison
 
 ---------------------------------------------------------------------
 
-INSTRUCTIONS 
+INSTRUCTIONS
 
-NOTE: One version of FreeType is referred as "base" version and the 
+NOTE: One version of FreeType is referred as "base" version and the
       other as the "test" version.
 
   1. Get the two versions ready
   -------------------------------------
-    Make two folders named "test" and "base" preferably in the home 
+    Make two folders named "test" and "base" preferably in the home
     directory.
 
     Next, download an older version of FreeType (For example : 2.6.5)
     ( This being the "base" version of the two)
-    Go to 'include/freetype/ftoption.h' and uncomment this line 
+    Go to 'include/freetype/ftoption.h' and uncomment this line
 
         #define FT_CONFIG_OPTION_SUBPIXEL_RENDERING
   
