@@ -65,7 +65,7 @@ echo '</select>
 #####################################################################
 echo '<label>Render Mode:<select name="mode" id="mode" onchange="change()">'>>./html/top.html;
 for i in $FT_TEST_RENDER_MODE; do
-  echo "  <option value= $i > $i </option>">>./html/top.html;
+  echo "  <option value= ${arr[$i]} > $i </option>">>./html/top.html;
 done
 echo '</select>
     </label><br>'>>./html/top.html;
