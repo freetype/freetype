@@ -3,7 +3,7 @@ rm -f ./html/top.html
 #####################################################################
 FT_TEST_DPI=${FT_TEST_DPI:-72 96};
 FT_TEST_FONT_FILE=${FT_TEST_FONT_FILE:-test.ttf};
-FT_TEST_RENDER_MODE=${FT_TEST_RENDER_MODE:-1 2};
+FT_TEST_RENDER_MODE=${FT_TEST_RENDER_MODE:-AA RGB};
 FT_TEST_PT_SIZE=${FT_TEST_PT_SIZE:-16 20};
 
 FT_TEST_BASE_DIR=${FT_TEST_BASE_DIR:-$HOME/base};
@@ -11,6 +11,10 @@ FT_TEST_TEST_DIR=${FT_TEST_TEST_DIR:-../..};
 
 FT_TEST_BASE_DLL=${FT_TEST_BASE_DLL:-$FT_TEST_BASE_DIR/objs/.libs/libfreetype.so};
 FT_TEST_TEST_DLL=$FT_TEST_TEST_DIR/objs/.libs/libfreetype.so
+#####################################################################
+declare -A arr
+arr["MONO"]=0
+arr+=(["AA"]=1 ["RGB"]=2 ["BGR"]=3 ["VRGB"]=4 ["VBGR"]=5)
 #####################################################################
 mkdir ./html/pages
 touch ./html/top.html;
@@ -35,11 +39,11 @@ for i in $FT_TEST_DPI; do
   for j in $FT_TEST_FONT_FILE; do
     mkdir ./html/pages/$i/$j
     for k in $FT_TEST_RENDER_MODE; do
-      mkdir ./html/pages/$i/$j/$k
+      mkdir ./html/pages/$i/$j/${arr[$k]}
       for l in $FT_TEST_PT_SIZE; do
-        mkdir ./html/pages/$i/$j/$k/$l
-        mkdir ./html/pages/$i/$j/$k/$l/images
-        ./tests $FT_TEST_BASE_DLL $FT_TEST_TEST_DLL $j $l $k $i
+        mkdir ./html/pages/$i/$j/${arr[$k]}/$l
+        mkdir ./html/pages/$i/$j/${arr[$k]}/$l/images
+        ./tests $FT_TEST_BASE_DLL $FT_TEST_TEST_DLL $j $l ${arr[$k]} $i
       done
     done
   done
