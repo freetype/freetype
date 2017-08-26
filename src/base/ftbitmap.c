@@ -226,7 +226,7 @@
     }
 
     /* otherwise allocate new buffer */
-    if ( FT_QALLOC_MULT( buffer, new_pitch, bitmap->rows + ypixels ) )
+    if ( FT_QALLOC_MULT( buffer, bitmap->rows + ypixels, new_pitch ) )
       return error;
 
     /* new rows get added at the top of the bitmap, */

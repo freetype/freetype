@@ -1091,7 +1091,7 @@
 
       /* note: since glyphs are stored in columns and not in rows we */
       /*       can't use ft_glyphslot_set_bitmap                     */
-      if ( FT_ALLOC_MULT( bitmap->buffer, pitch, bitmap->rows ) )
+      if ( FT_ALLOC_MULT( bitmap->buffer, bitmap->rows, pitch ) )
         goto Exit;
 
       column = (FT_Byte*)bitmap->buffer;

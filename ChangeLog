@@ -1,3 +1,11 @@
+2017-08-25  Alexei Podtelezhnikov  <apodtele@gmail.com>
+
+	Swap `ALLOC_MULT' arguments (#51833).
+
+	* src/base/ftbitmap.c (ft_bitmap_assure_buffer): Updated.
+	* src/winfonts/winfnt.c (FNT_Load_Glyph): Updated.
+	* src/raster/ftrend1.c (ft_raster1_render): Updated.
+
 2017-08-23  Werner Lemberg  <wl@gnu.org>
 
 	[sfnt] Fix clang compilation (#51788).

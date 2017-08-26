@@ -189,7 +189,7 @@
     bitmap->rows  = height;
     bitmap->pitch = (int)pitch;
 
-    if ( FT_ALLOC_MULT( bitmap->buffer, pitch, height ) )
+    if ( FT_ALLOC_MULT( bitmap->buffer, height, pitch ) )
       goto Exit;
 
     slot->internal->flags |= FT_GLYPH_OWN_BITMAP;
