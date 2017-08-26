@@ -13,8 +13,8 @@ int main(int argc, char const *argv[])
   const char*      base_version; 
   const char*      test_version; 
   const char*      font_file;
-  int              size;
-  int              render_mode;
+  const char*      mode;
+  int              pt_size;
   int              dpi;
 
   int              load_flag;  /* FT_LOAD_XXX */
@@ -25,8 +25,8 @@ int main(int argc, char const *argv[])
   test_version     = argv[2];
   
   font_file        = argv[3];
-  size             = atoi(argv[4]);
-  render_mode      = atoi(argv[5]);
+  pt_size          = atoi(argv[4]);
+  mode             = argv[5];
   dpi              = atoi(argv[6]);
 
   FT_Library       base_library;
@@ -43,7 +43,9 @@ int main(int argc, char const *argv[])
 
   FT_Error         error;
 
-  int alignment = 4;
+  int              render_mode;
+  int              alignment = 4;
+
   int output_file_size = 100 + strlen(argv[3]);
   char * output_file_name = (char *)calloc( output_file_size,
                                             sizeof(char));
@@ -213,7 +215,13 @@ int main(int argc, char const *argv[])
                                               "FT_Done_FreeType");
 
 /*******************************************************************/
-  
+  render_mode = Get_Render_Mode(mode);
+  if (render_mode < 0)
+  {
+    printf("Enter valid Render Mode.\n");
+    exit(1);
+  }
+
   switch ( render_mode ) {
   case 0: render_flag   = FT_RENDER_MODE_MONO;
           load_flag     = FT_LOAD_MONOCHROME;
@@ -295,7 +303,7 @@ int main(int argc, char const *argv[])
   }
 
   error = Base_Set_Char_Size( base_face,
-                              size * 64, 
+                              pt_size * 64,
                               0, 
                               dpi,
                               0 );
@@ -304,7 +312,7 @@ int main(int argc, char const *argv[])
     exit(1);
   }
   error = Test_Set_Char_Size( test_face,
-                              size * 64, 
+                              pt_size * 64,
                               0, 
                               dpi,
                               0 );
@@ -319,11 +327,11 @@ int main(int argc, char const *argv[])
   /* Initialising file pointer for the list-view*/
   if (snprintf( output_file_name,
             output_file_size,
-            "./html/pages/%d/%s/%d/%d/index.html",
+            "./html/pages/%d/%s/%s/%d/index.html",
             dpi,
             font_file,
-            render_mode,
-            size )
+            mode,
+            pt_size )
             > output_file_size )
   {
     printf("Buffer overflow. Increase output_file_size\n");
@@ -338,7 +346,7 @@ int main(int argc, char const *argv[])
     exit(1);
   }
 
-  Print_Head(fp,base_face->family_name,base_face->style_name,size,dpi);
+  Print_Head( fp );
 
 /* Need to write code to check the values in FT_Face and compare */
   for ( i = 0; i < base_face->num_glyphs; ++i)
@@ -461,11 +469,11 @@ int main(int argc, char const *argv[])
 
       if (snprintf( output_file_name,
                     output_file_size,
-                    "./html/pages/%d/%s/%d/%d/images/%s.png",
+                    "./html/pages/%d/%s/%s/%d/images/%s.png",
                     dpi,
                     font_file,
-                    render_mode,
-                    size,
+                    mode,
+                    pt_size,
                     glyph_name )
                     > output_file_size)
       {
@@ -478,7 +486,7 @@ int main(int argc, char const *argv[])
       Print_Row(fp,i,glyph_name,pixel_diff );
     }
   }
-  printf("Total      :  %ld\nFaulty     :  %d\n",base_face->num_glyphs,
+  printf("Total      :  %ld\nFaulty     :  %d\n\n",base_face->num_glyphs,
                   total_count );
  /* HTML footer */
   fprintf(fp,

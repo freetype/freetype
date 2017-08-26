@@ -59,7 +59,8 @@ HASH_128* Generate_Hash_x64_128(FT_Bitmap* bitmap, HASH_128* murmur);
 int Compare_Hash(HASH_128* hash_b, HASH_128* hash_t);
 
 /*-----------------------------------------------------------------*/
-
+/* Returns the render_mode */
+int Get_Render_Mode(const char* mode);
 /* Returns a pointer to pixel */
 /* at (x,y) co-ordinate */
 PIXEL* Pixel_At (IMAGE * bitmap, int x, int y);  
@@ -86,4 +87,4 @@ int Image_Diff( IMAGE* base, IMAGE* test);
 /* Print the row in list-view webpage */
 void Print_Row( FILE* fp, int index, char* name, int diff );
 /* Print the table-headers in list-view webpage */
-void Print_Head( FILE* fp, char* fam, char* style, int size, int dpi);
+void Print_Head( FILE* fp );

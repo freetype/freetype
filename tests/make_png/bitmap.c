@@ -42,6 +42,34 @@ HASH_32 * Generate_Hash_x86_32( FT_Bitmap * bitmap,
   return murmur;
 }
 
+/* This function takes the render mode argument and */
+/* returns the corresponding render_mode */
+int Get_Render_Mode(const char* mode){
+  /* Using -1 as the error code */
+  int render_mode = -1;
+
+  if ( strcmp(mode,"MONO") == 0 )
+  {
+    render_mode = 0;
+  }else if ( strcmp(mode,"AA") == 0 )
+  {
+    render_mode = 1;
+  }else if ( strcmp(mode,"RGB") == 0 )
+  {
+    render_mode = 2;
+  }else if ( strcmp(mode,"BGR") == 0 )
+  {
+    render_mode = 3;
+  }else if ( strcmp(mode,"VRGB") == 0 )
+  {
+    render_mode = 4;
+  }else if ( strcmp(mode,"VBGR") == 0 )
+  {
+    render_mode = 5;
+  }
+  return render_mode;
+}
+
 /* This function takes in the IMAGE data and returns the pointer */
 /* to the pixel at co-ordinates (x,y). This is used to access the */
 /* pixel data */
@@ -623,7 +651,7 @@ void Stitch(IMAGE* left, IMAGE* right, IMAGE* result){
 }
 
 /* This prints table-headers to a HTML file for the list-view page */
-void Print_Head( FILE* fp, char* fam, char* style, int size, int dpi){
+void Print_Head( FILE* fp ){
   printf("   *** Generating Images ***   \n");
   fprintf(fp,
   "<html>\n\
