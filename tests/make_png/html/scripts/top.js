@@ -49,7 +49,7 @@ function frame_2_source(image){
 
   //Using dimensions of the iFrame
   var win_w = window.innerWidth;
-  var win_h = window.innerHeight-60;
+  var win_h = window.innerHeight-40;
 
   // r_w and r_j represent the maximum times that the width or the
   // height can be multiplied so that we get the maximum image size
@@ -75,5 +75,20 @@ function frame_2_source(image){
   // Setting the division width and height.
   div.style.width= div_w/4 + "px";
   div.style.height= div_h + "px";
+}
+
+function class_one_two(){
+  var div = frame_2.document.getElementById('animation');
+  div.className = 'animation one_two';
+}
+
+function class_one_three(){
+  var div = frame_2.document.getElementById('animation');
+  div.className = 'animation one_three';
+}
+
+function class_one_four(){
+  var div = frame_2.document.getElementById('animation');
+  div.className = 'animation one_four';
 }
 

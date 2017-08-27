@@ -2,62 +2,10 @@
 <html id="body">
 <head>
 	<title>Detailed Comparison</title>
-	<script type="text/javascript" src ="scripts/jquery-3.2.1.js"></script>
-	<script type="text/javascript" src ="scripts/jquery.animateSprite.js"></script>
 	<script type="text/javascript" src ="scripts/top.js" ></script>
 	<link rel="stylesheet" type="text/css" href="styles/top.css">
 </head>
-  <p id="demo"></p>
   <div id="animation" class="animation"></div><br>
-
-  <button id="start">Start</button>
-  <button id="play">Play</button>
-  <button id="stop">Stop</button>
-  <button id="changeFPS">Change FPS</button><br>
-
-  <script>
-		/* global $ */
-	var currentFps = 1;
-	var animationSettings = {
-	    fps: currentFps,
-	    loop: true,
-	    autoplay: false,
-	    animations: {
-	        walkRight: [0, 3]
-	    }
-	};
-
-  $(document).ready(function(){
-    $("#start").click(function(){
-
-		$('.animation').animateSprite(animationSettings);
-
-		var play = function(){
-		    $('.animation').animateSprite('play');
-		}
-
-		$('#play').on('click', play);
-
-		$('#stop').on('click', function(){
-		    $('.animation').animateSprite('stop');
-		});
-
-		$('#changeFPS').on('click', function(){
-		    currentFps = (currentFps === 2) ? 1 : 2;
-		    $('.animation').animateSprite('fps', currentFps);
-		});
-
-		$('body').on('keydown', function(ev){
-		    if (ev.keyCode === 39){
-		        goRight();
-		    } else if (ev.keyCode === 37) {
-		        goLeft();
-		    }
-		    console.log('ev', ev.keyCode);
-		});
-    });
-});
-  </script>
 </body>
 </html>
 

@@ -74,16 +74,18 @@ FEATURES
   View lists of glyphs in tables in the left iFrame accessed by
   selecting values from the drop-box.
 
-    By clicking on the Headers of the respective columns,they can be
-    arranged (in increasing/decreasing order) based on
-      ->  Glyph-Index
-      ->  Name
-      ->  Difference Metric
+  By clicking on the Headers of the respective columns,they can be
+  arranged (in increasing/decreasing order) based on
+    ->  Glyph-Index
+    ->  Name
+    ->  Difference Metric
 
-    When clicked on any image in the table, a detailed visualization
-    page for the glyph is shown in the right iFrame.
+  When clicked on any image in the table, a detailed visualization
+  page for the glyph is shown in the right iFrame.
 
-    To be ADDED ...
+  Click on the Buttons below the iframe for the animations.
+
+  To be Added ...
 
 
 

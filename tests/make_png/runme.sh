@@ -17,20 +17,21 @@ FT_TEST_TEST_DLL=${FT_TEST_TEST_DLL:-$FT_TEST_TEST_DIR/objs/.libs/libfreetype.so
 mkdir ./html/pages
 touch ./html/top.html
 #####################################################################
-echo '
+echo "
 <!DOCTYPE html>
   <head>
-    <script type="text/javascript" src ="scripts/jquery-3.2.1.js"></script>
-    <script type="text/javascript" src ="scripts/jquery.animateSprite.js"></script>
-    <script type="text/javascript" src ="scripts/top.js" ></script>
-    <link rel="stylesheet" type="text/css" href="styles/top.css">
+    <script type=\"text/javascript\" src =\"scripts/top.js\" ></script>
+    <link rel=\"stylesheet\" type=\"text/css\" href=\"styles/top.css\">
   </head>
   <html>
-    <body onload="change()">
-      <iframe id="frame_1" name="frame_1" src="" ></iframe>
-      <iframe id="frame_2" name="frame_2" src="diff.html" ></iframe>
-      <div class="select">
-    '>./html/top.html
+    <body onload=\"change()\">
+      <div id=\"top_info\">
+        <p>Base Version: $FT_TEST_BASE_DLL<br>
+           Test Version: $FT_TEST_TEST_DLL
+        </p>
+      </div>
+      <iframe id=\"frame_1\" name=\"frame_1\" src=\"\" ></iframe>
+      <iframe id=\"frame_2\" name=\"frame_2\" src=\"diff.html\" ></iframe>">./html/top.html
 #####################################################################
 for i in $FT_TEST_DPI; do
   mkdir ./html/pages/$i
@@ -46,6 +47,13 @@ for i in $FT_TEST_DPI; do
     done
   done
 done
+#####################################################################
+echo '<div id="select_animation">
+        <button onclick="class_one_two()">One-Two</button>
+        <button onclick="class_one_three()">One-Three</button>
+        <button onclick="class_one_four()">One-Four</button>
+      </div>
+      <div class="select">'>>./html/top.html
 #####################################################################
 echo '<label>DPI&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp:<select name="dpi" id="dpi" onchange="change()">'>>./html/top.html
 for i in $FT_TEST_DPI; do

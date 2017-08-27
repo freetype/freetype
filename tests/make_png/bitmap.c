@@ -664,16 +664,20 @@ void Print_Head( FILE* fp ){
     </head>\n\
     <body>\n\
     <table>\n\
+      <colgroup>\n\
+        <col span=\"3\" style=\"background-color:white\">\n\
+        <col style=\"width:50%%\">\n\
+      </colgroup>\n\
     <thead>\n\
       <tr>\n\
       <th onclick=\"sort_t(data,0,asc1);asc1*=-1;asc2=1;asc3=1;\">\n\
-        <a href=\"#\">Glyph Index</a>\n\
+        <a href=\"#\">Index</a>\n\
       </th>\n\
       <th onclick=\"sort_t(data,1,asc2);asc2*=-1;asc3=1;asc1=1;\">\n\
-        <a href=\"#\">Glyph Name</a>\n\
+        <a href=\"#\">Name</a>\n\
       </th>\n\
       <th onclick=\"sort_t(data,2,asc3);asc3*=-1;asc1=1;asc2=1;\">\n\
-        <a href=\"#\">Difference</a>\n\
+        <a href=\"#\">Diff</a>\n\
       </th>\n\
       <th>\n\
         Images\n\
