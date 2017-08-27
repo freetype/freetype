@@ -663,6 +663,7 @@ void Print_Head( FILE* fp ){
       <link href=\"../../../../../styles/top.css\" rel=\"stylesheet\" type=\"text/css\" >\n\
     </head>\n\
     <body>\n\
+    <button onclick=\"topFunction()\" id=\"myBtn\" title=\"Go to top\">Top</button>\n\
     <table>\n\
       <colgroup>\n\
         <col span=\"3\" style=\"background-color:white\">\n\

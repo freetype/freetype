@@ -34,6 +34,19 @@ th {
   width: 50%;
   height: auto;
 }
+#myBtn {
+  display: none;
+  position: fixed;
+  bottom: 10px;
+  right: 10px;
+  z-index: 99;
+  cursor: pointer;
+  padding: 15px;
+  border-radius: 10px;
+  background-color: #555;
+  color: white;
+}
+
 /*Top Page styling begins*/
 #frame_1{
   width:49%;
