@@ -76,7 +76,7 @@ done
 echo '</select>
     </label><br>'>>./html/top.html
 #####################################################################
-echo '<label>Size&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp:<select name="size" id="size" onchange="change()">'>>./html/top.html
+echo '<label>Point Size&nbsp:<select name="size" id="size" onchange="change()">'>>./html/top.html
 for i in $FT_TEST_PT_SIZE; do
   echo "  <option value= $i > $i </option>">>./html/top.html
 done
