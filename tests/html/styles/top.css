@@ -84,6 +84,10 @@ th {
   height: 130px;
 }
 /*Animations*/
+.animation:active {
+  -webkit-animation-play-state: paused;
+  animation-play-state: paused;
+}
 .one_two {
     -webkit-animation: one_two 2s steps(2) infinite;
        -moz-animation: one_two 2s steps(2) infinite;
