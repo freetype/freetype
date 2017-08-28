@@ -43,7 +43,7 @@ HASH_32 * Generate_Hash_x86_32( FT_Bitmap * bitmap,
 }
 
 /* This function takes the render mode argument and */
-/* returns the corresponding render_mode */
+/* returns the corresponding render_mode code */
 int Get_Render_Mode(const char* mode){
   /* Using -1 as the error code */
   int render_mode = -1;

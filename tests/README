@@ -1,3 +1,5 @@
+Test-Framework for FreeType's Rendering output.
+
 INSTRUCTIONS
 
 NOTE: One version of FreeType is referred as "base" version and the
@@ -6,73 +8,85 @@ NOTE: One version of FreeType is referred as "base" version and the
   1. Get the two versions ready
   -------------------------------------
 
-    Download an older version of FreeType (For example : 2.6.5)
-    ( This being the "base" version of the two)
-    Go to 'include/freetype/ftoption.h' and uncomment this line
+  Download an older version of FreeType (For example : 2.6.5)
+  ( This being the "base" version of the two)
+  Go to 'include/freetype/ftoption.h' and uncomment this line
 
-        #define FT_CONFIG_OPTION_SUBPIXEL_RENDERING
+      #define FT_CONFIG_OPTION_SUBPIXEL_RENDERING
   
   2. Compile the two versions 
   -------------------------------------     
-   Go to the "base" version's folder and compile the library.
+  Go to the "base" version's folder and compile the library.
 
       ./configure --enable-shared --disable-static
       make
 
-    Repeat step 2. for the "test" version as well.
+  Repeat step 2. for the "test" version as well.
 
  3. Compile the code
   -------------------------------------     
-    Return to this folder and make the binary
+  Return to this folder and make the binary
 
       make tests
 
  4. Run the executable
   ------------------------------------- 
 
-    => Set resolution in DPI by passing argument to variable FT_TEST_DPI.
+  => Set resolution in DPI by passing argument to variable FT_TEST_DPI.
 
-    => Set the Rendering mode by passing FT_TEST_RENDER_MODE.
-       FT_TEST_RENDER_MODE can take values 1. MONO
-                             2. AA
-                             3. RGB
-                             4. BGR
-                             5. VRGB
-                             6. VBGR
+  => Set the Rendering mode by passing FT_TEST_RENDER_MODE.
+     FT_TEST_RENDER_MODE can take values 1. MONO
+                           2. AA
+                           3. RGB
+                           4. BGR
+                           5. VRGB
+                           6. VBGR
 
-    => Set the variables FT_TEST_BASE_DLL and FT_TEST_TEST_DLL to
-       point to the libfreetype.so file of the base and the test
-       versions respectively.
+  => Set the variables FT_TEST_BASE_DLL and FT_TEST_TEST_DLL to
+     point to the libfreetype.so file of the base and the test
+     versions respectively.
 
-       By default, the folders '$(HOME)/base/' and '$(HOME)/test/'
-       folders are set for FT_TEST_BASE_DIR and FT_TEST_TEST_DIR
-       respectively. If FT_TEST_XXX_DLL isn't defined, these values
-       are taken to search for DLL files.
+     By default, the folders '$(HOME)/base/' and '$(HOME)/test/'
+     folders are set for FT_TEST_BASE_DIR and FT_TEST_TEST_DIR
+     respectively. If FT_TEST_XXX_DLL isn't defined, these values
+     are taken to search for DLL files.
 
-    => Set FT_TEST_FONT_FILE to the path to font files needed.
+  => Set FT_TEST_FONT_FILE to the path to font files needed.
 
-    => set FT_TEST_PT_SIZE as a number to denote the font size.
+  => set FT_TEST_PT_SIZE as a number to denote the font size.
 
-    EXAMPLE:    FT_TEST_BASE_DIR=/home/wl/kushal/base \
-          FT_TEST_TEST_DIR=/home/wl/kushal/test \
-          FT_TEST_DPI="72 96" \
-          FT_TEST_FONT_FILE="test.ttf" \
-          FT_TEST_RENDER_MODE="AA RGB" \
-          FT_TEST_PT_SIZE="16 20" \
-          ./runme.sh
-    ( The values in the above example denote the default values
-    for the variables )
+	EXAMPLE:  FT_TEST_BASE_DIR=/home/wl/kushal/base \
+		        FT_TEST_TEST_DIR=/home/wl/kushal/test \
+		        FT_TEST_DPI="72 96" \
+		        FT_TEST_FONT_FILE="test.ttf" \
+		        FT_TEST_RENDER_MODE="AA RGB" \
+		        FT_TEST_PT_SIZE="16 20" \
+		        ./runme.sh
+  ( The values in the above example denote the default values
+  for the variables )
 
   Open ./html/top.html for the web interface.
 ---------------------------------------------------------------------
 
 FEATURES
 
-  Creates an interactive web interface to visualize glyphs.
-  (html/top.html)
+  An interactive web interface to visualize glyphs.(html/top.html)
 
   View lists of glyphs in tables in the left iFrame accessed by
   selecting values from the drop-box.
+  ( The list consists of all the glyphs whose images rendered on
+  the two versions of the FreeType library are different. )
+
+  NOTE: If there is no visual difference in the two images, this
+        means that the dimensions of the images rendered aren't
+        the same for both the versions.
+        This is because the smaller images are aligned and padded
+        and then compared.
+
+  Subimages in the sprite sheet.
+    1.  'Base' version's rendering of the glyph.
+    2.  'Test' version's rendering of the glyph.
+    3.  'Base' version glyph as Gray
 
   By clicking on the Headers of the respective columns,they can be
   arranged (in increasing/decreasing order) based on
@@ -85,7 +99,5 @@ FEATURES
 
   Click on the Buttons below the iframe for the animations.
 
-  To be Added ...
-
-
-
+  To pause the animation, click and hold on the image.
+  

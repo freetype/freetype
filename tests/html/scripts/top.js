@@ -1,3 +1,5 @@
+// If any value in the 'select' list(s) changes, the corresponding
+// HTML document is loaded in frame_1.
 function change() {
 	var dpi = document.getElementById('dpi').value;
 	var font = document.getElementById('font').value;
@@ -7,7 +9,7 @@ function change() {
   var string = "pages/"+dpi+"/"+font+"/"+mode+"/"+size+"/index.html";
   frame.src = string;
 }
-
+// Function to sort the columns of the table when you click on the header
 var people, asc1 = 1,asc2 = 1,asc3 = 1;
 
 function sort_t(tbody, col, asc){
@@ -30,7 +32,9 @@ function sort_t(tbody, col, asc){
   }
   tbody.innerHTML = "<tr>"+arr.join("</tr><tr>")+"</tr>";
 }
-
+// Function to change the source of the background image in the iframe
+// (frame_2). This function also fits the division according to the
+// size of the iframe such that the background image fits in the frame.
 function frame_2_source(image){
   var path = "url("+image.src+")";
 
@@ -76,7 +80,7 @@ function frame_2_source(image){
   div.style.width= div_w/4 + "px";
   div.style.height= div_h + "px";
 }
-
+// Functions to trigger the corresponding animations.
 function class_one_two(){
   var div = frame_2.document.getElementById('animation');
   div.className = 'animation one_two';
@@ -91,7 +95,7 @@ function class_one_four(){
   var div = frame_2.document.getElementById('animation');
   div.className = 'animation one_four';
 }
-
+// Functions for the 'Go to Top button'
 // When the user scrolls down 20px from the top of the document, show the button
 window.onscroll = function() {scrollFunction()};
 

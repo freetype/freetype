@@ -1,8 +1,9 @@
 #! /bin/bash
-
+# Remove all the previous files.
 rm -rf ./html/pages
 rm -f ./html/top.html
 #####################################################################
+# Setting Default values for the variables if not defined.
 FT_TEST_DPI=${FT_TEST_DPI:-72 96}
 FT_TEST_FONT_FILE=${FT_TEST_FONT_FILE:-test.ttf}
 FT_TEST_RENDER_MODE=${FT_TEST_RENDER_MODE:-AA RGB}
@@ -17,6 +18,7 @@ FT_TEST_TEST_DLL=${FT_TEST_TEST_DLL:-$FT_TEST_TEST_DIR/objs/.libs/libfreetype.so
 mkdir ./html/pages
 touch ./html/top.html
 #####################################################################
+# Generating top.html file
 echo "
 <!DOCTYPE html>
   <head>
@@ -33,6 +35,7 @@ echo "
       <iframe id=\"frame_1\" name=\"frame_1\" src=\"\" ></iframe>
       <iframe id=\"frame_2\" name=\"frame_2\" src=\"diff.html\" ></iframe>">./html/top.html
 #####################################################################
+# Filling html/top.html file with links to all the index.html files.
 for i in $FT_TEST_DPI; do
   mkdir ./html/pages/$i
   for j in $FT_TEST_FONT_FILE; do
@@ -48,6 +51,7 @@ for i in $FT_TEST_DPI; do
   done
 done
 #####################################################################
+# Buttons for animation selection
 echo '<div id="select_animation">
         <button onclick="class_one_two()">One-Two</button>
         <button onclick="class_one_three()">One-Three</button>
@@ -55,6 +59,7 @@ echo '<div id="select_animation">
       </div>
       <div class="select">'>>./html/top.html
 #####################################################################
+# Populating the selection lists with options
 echo '<label>DPI&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp:<select name="dpi" id="dpi" onchange="change()">'>>./html/top.html
 for i in $FT_TEST_DPI; do
   echo "  <option value= $i > $i </option>">>./html/top.html

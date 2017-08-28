@@ -4,6 +4,7 @@ int main(int argc, char const *argv[])
 {
   if(argc != 7)
   {
+    /* Not needed coz it is automated using runme.sh */
     printf("Not enough arguments. Refer README\n");
     return 0;
   }

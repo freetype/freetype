@@ -1,6 +1,8 @@
+/* Font for the whole document */
 * {
   font-family: "Courier New", Courier, monospace;
 }
+/* Sprite image in the table */
 #sprite { 
     image-rendering: optimizeSpeed;             /* STOP SMOOTHING, GIVE ME SPEED  */
     image-rendering: -moz-crisp-edges;          /* Firefox                        */
@@ -12,6 +14,7 @@
     width: 100%;
     height: auto;
 }
+/* Table style for the list view */
 table {
   border-collapse: collapse;
   border: none;
@@ -30,10 +33,12 @@ th {
   background-color: #C8C8C8;
   cursor: pointer;
 }
+/* Image column in a row */
 #image_row{
   width: 50%;
   height: auto;
 }
+/* Go to top button */
 #myBtn {
   display: none;
   position: fixed;
@@ -47,7 +52,7 @@ th {
   color: white;
 }
 
-/*Top Page styling begins*/
+/* Top Page styling begins */
 #frame_1{
   width:49%;
   height:500px;
@@ -58,6 +63,7 @@ th {
   height:500px;
   align-self: left;
 }
+/* Animation select buttons*/
 #select_animation{
   margin-left: 50%;
 }
@@ -65,6 +71,7 @@ th {
   font-size: 16px;
   text-align: left;
 }
+/* Animation div on the right iframe */
 .animation {
   image-rendering: optimizeSpeed;
   image-rendering: -moz-crisp-edges;
@@ -79,7 +86,7 @@ th {
   background: url("");
   background-repeat: no-repeat;
   background-size: cover;
-
+  /* Nominal Width on load */
   width: 120px;
   height: 130px;
 }
@@ -88,6 +95,7 @@ th {
   -webkit-animation-play-state: paused;
   animation-play-state: paused;
 }
+/* Transition between 1st and the 2nd sub-image */
 .one_two {
     -webkit-animation: one_two 2s steps(2) infinite;
        -moz-animation: one_two 2s steps(2) infinite;
@@ -95,6 +103,7 @@ th {
          -o-animation: one_two 2s steps(2) infinite;
             animation: one_two 2s steps(2) infinite;
 }
+/* Transition between 1st and the 2nd sub-image */
 .one_three {
     -webkit-animation: one_three 2s steps(2) infinite;
        -moz-animation: one_three 2s steps(2) infinite;
@@ -102,6 +111,7 @@ th {
          -o-animation: one_three 2s steps(2) infinite;
             animation: one_three 2s steps(2) infinite;
 }
+/* Transition between 1st and the 2nd sub-image */
 .one_four {
     -webkit-animation: one_four 2s steps(2) infinite;
        -moz-animation: one_four 2s steps(2) infinite;
@@ -111,15 +121,15 @@ th {
 }
 @-webkit-keyframes one_two {
    from { background-position:      0px; }
-     to { background-position:   66.66%; }
+     to { background-position:   66.66%; } /* Goes to 2nd sub-image */
 }
 @-webkit-keyframes one_three {
    from { background-position:      0px; }
-     to { background-position:  133.33%; }
+     to { background-position:  133.33%; } /* Goes to 3rd sub-image */
 }
 @-webkit-keyframes one_four {
    from { background-position:      0px; }
-     to { background-position:     200%; }
+     to { background-position:     200%; } /* Goes to 4rd sub-image */
 }
 
 @-moz-keyframes one_two {
