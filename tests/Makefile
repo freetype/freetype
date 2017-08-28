@@ -1,4 +1,4 @@
-TOP_DIR := ../..
+TOP_DIR := ..
 BUILD_DIR := $(TOP_DIR)/builds/unix
 
 include $(TOP_DIR)/builds/unix/unix-def.mk
