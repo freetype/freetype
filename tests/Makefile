@@ -8,7 +8,7 @@ SRC_SPRITE = make_sprite.c bitmap.c murmur3.c
 CFLAGS = -Wall -g
 CC = gcc
 INCLUDE = -I $(includedir)/freetype2
-LIBS = -lpng -lharfbuzz -lbz2 -ldl
+LIBS = -lpng -ldl
 
 all: tests
 
