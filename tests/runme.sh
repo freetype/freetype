@@ -55,7 +55,8 @@ done
 echo '<div id="select_animation">
         <button onclick="class_one_two()">One-Two</button>
         <button onclick="class_one_three()">One-Three</button>
-        <button onclick="class_one_four()">One-Four</button>
+        <button onclick="class_one_four()">One-Four</button>&nbsp&nbsp
+        <button onclick="pause_play()"> Pause|Play </button>
       </div>
       <div class="select">'>>./html/top.html
 #####################################################################

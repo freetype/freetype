@@ -111,3 +111,8 @@ function topFunction() {
     document.body.scrollTop = 0;
     document.documentElement.scrollTop = 0;
 }
+// Function to pause/play the animation
+function pause_play() {
+	var div = frame_2.document.getElementById('animation');
+	div.classList.toggle('pause');
+}

@@ -91,10 +91,6 @@ th {
   height: 130px;
 }
 /*Animations*/
-.animation:active {
-  -webkit-animation-play-state: paused;
-  animation-play-state: paused;
-}
 /* Transition between 1st and the 2nd sub-image */
 .one_two {
     -webkit-animation: one_two 2s steps(2) infinite;
@@ -118,6 +114,13 @@ th {
         -ms-animation: one_four 2s steps(2) infinite;
          -o-animation: one_four 2s steps(2) infinite;
             animation: one_four 2s steps(2) infinite;
+}
+/* Pause/Play the animation */
+.pause {
+  animation-play-state: paused;
+  -o-animation-play-state: paused;
+  -moz-animation-play-state: paused;
+  -webkit-animation-play-state: paused;
 }
 @-webkit-keyframes one_two {
    from { background-position:      0px; }
