@@ -71,6 +71,10 @@ th {
   font-size: 16px;
   text-align: left;
 }
+/* Pause/Play Button */
+#pause_btn{
+  float: right;
+}
 /* Animation div on the right iframe */
 .animation {
   image-rendering: optimizeSpeed;

@@ -22,14 +22,15 @@ touch ./html/top.html
 echo "
 <!DOCTYPE html>
   <head>
+    <title> FreeType Test Framework </title>
     <script type=\"text/javascript\" src =\"scripts/top.js\" ></script>
     <link rel=\"stylesheet\" type=\"text/css\" href=\"styles/top.css\">
   </head>
   <html>
     <body onload=\"change()\">
       <div id=\"top_info\">
-        <p>Base Version: $FT_TEST_BASE_DLL<br>
-           Test Version: $FT_TEST_TEST_DLL
+        <p><b>Base Version:</b> $FT_TEST_BASE_DLL<br>
+           <b>Test Version:</b> $FT_TEST_TEST_DLL
         </p>
       </div>
       <iframe id=\"frame_1\" name=\"frame_1\" src=\"\" ></iframe>
@@ -56,7 +57,7 @@ echo '<div id="select_animation">
         <button onclick="class_one_two()">One-Two</button>
         <button onclick="class_one_three()">One-Three</button>
         <button onclick="class_one_four()">One-Four</button>&nbsp&nbsp
-        <button onclick="pause_play()"> Pause|Play </button>
+        <button onclick="pause_play()" id="pause_btn"> Pause|Play </button>
       </div>
       <div class="select">'>>./html/top.html
 #####################################################################
