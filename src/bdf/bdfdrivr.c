@@ -437,6 +437,7 @@ THE SOFTWARE.
       {
         FT_Bitmap_Size*  bsize = bdfface->available_sizes;
         FT_Short         resolution_x = 0, resolution_y = 0;
+        long             value;
 
 
         FT_ZERO( bsize );
@@ -500,6 +501,17 @@ THE SOFTWARE.
                                      64 * 7200,
                                      72270L );
         }
+        else if ( font->point_size )
+        {
+          if ( font->point_size > 0x7FFF )
+          {
+            bsize->size = 0x7FFF;
+            FT_TRACE0(( "BDF_Face_Init: clamping point size to value %d\n",
+                        bsize->size ));
+          }
+          else
+            bsize->size = (FT_Pos)font->point_size << 6;
+        }
         else
         {
           /* this is a heuristical value */
@@ -525,36 +537,44 @@ THE SOFTWARE.
 
         prop = bdf_get_font_property( font, "RESOLUTION_X" );
         if ( prop )
+          value = prop->value.l;
+        else
+          value = (long)font->resolution_x;
+        if ( value )
         {
 #ifdef FT_DEBUG_LEVEL_TRACE
-          if ( prop->value.l < 0 )
+          if ( value < 0 )
             FT_TRACE0(( "BDF_Face_Init: negative X resolution\n" ));
 #endif
-          if ( prop->value.l > 0x7FFF || prop->value.l < -0x7FFF )
+          if ( value > 0x7FFF || value < -0x7FFF )
           {
             resolution_x = 0x7FFF;
             FT_TRACE0(( "BDF_Face_Init: clamping X resolution to value %d\n",
                         resolution_x ));
           }
           else
-            resolution_x = FT_ABS( (FT_Short)prop->value.l );
+            resolution_x = FT_ABS( (FT_Short)value );
         }
 
         prop = bdf_get_font_property( font, "RESOLUTION_Y" );
         if ( prop )
+          value = prop->value.l;
+        else
+          value = (long)font->resolution_y;
+        if ( value )
         {
 #ifdef FT_DEBUG_LEVEL_TRACE
-          if ( prop->value.l < 0 )
+          if ( value < 0 )
             FT_TRACE0(( "BDF_Face_Init: negative Y resolution\n" ));
 #endif
-          if ( prop->value.l > 0x7FFF || prop->value.l < -0x7FFF )
+          if ( value > 0x7FFF || value < -0x7FFF )
           {
             resolution_y = 0x7FFF;
             FT_TRACE0(( "BDF_Face_Init: clamping Y resolution to value %d\n",
                         resolution_y ));
           }
           else
-            resolution_y = FT_ABS( (FT_Short)prop->value.l );
+            resolution_y = FT_ABS( (FT_Short)value );
         }
 
         if ( bsize->y_ppem == 0 )

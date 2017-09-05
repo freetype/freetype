@@ -1,3 +1,13 @@
+2017-09-05  Werner Lemberg  <wl@gnu.org>
+
+	[bdf] Fix size and resolution handling.
+
+	* src/bdf/bdfdrivr.c (BDF_Face_Init): Use `SIZE' values if
+	`POINT_SIZE', `RESOLUTION_X', or `RESOLUTION_Y' properties are
+	missing.
+
+	* docs/CHANGES: Document it.
+
 2017-08-25  Alexei Podtelezhnikov  <apodtele@gmail.com>
 
 	Swap `ALLOC_MULT' arguments (#51833).

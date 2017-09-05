@@ -48,6 +48,12 @@ CHANGES BETWEEN 2.8 and 2.8.1
     - FreeType  now synthesizes  a  missing Unicode  cmap for  (older)
       TrueType fonts also if glyph names are available.
 
+    - FreeType  has  improved  handling   of  BDF  fonts  without  the
+      `POINT_SIZE', `RESOLUTION_X', or  `RESOLUTION_Y' properties; the
+      library now  uses the values of  the `SIZE' keyword if  they are
+      missing.   Previously,   `SIZE'  was  completely   ignored,  and
+      FreeType used heuristic values instead.
+
 
 ======================================================================
 
