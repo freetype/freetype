@@ -534,8 +534,7 @@
              (FT_ULong)target->rows > FT_ULONG_MAX / (FT_ULong)target_pitch )
           return FT_THROW( Invalid_Argument );
 
-        if ( target->rows * (FT_ULong)target_pitch > old_size              &&
-             FT_QREALLOC( target->buffer,
+        if ( FT_QREALLOC( target->buffer,
                           old_size, target->rows * (FT_UInt)target_pitch ) )
           return error;
 

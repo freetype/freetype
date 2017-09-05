@@ -1,5 +1,29 @@
 2017-09-05  Werner Lemberg  <wl@gnu.org>
 
+	Fix multiple calls of `FT_Bitmap_Convert'.
+
+	The documentation of `FT_Bitmap_Convert' says that multiple calls do
+	proper reallocation of the target FT_Bitmap object.  However, this
+	failed for the sequence
+
+	  non-empty bitmap
+	  empty bitmap
+	  non-empty bitmap
+
+	Reason was that `FT_Bitmap_Convert' only reallocated the bitmap
+	buffer if it became too small; it didn't make the buffer smaller.
+	For an empty bitmap following a non-empty one, only the buffer
+	dimension got set to zero, without deallocation.  If the next call
+	was a non-empty buffer again, an assertion in `ft_mem_qrealloc' was
+	triggered.
+
+	* src/base/ftbitmap.c (FT_Bitmap_Convert): Always reallocate target
+	buffer to the correct size.
+
+	* docs/CHANGES: Document it.
+
+2017-09-05  Werner Lemberg  <wl@gnu.org>
+
 	[bdf] Fix size and resolution handling.
 
 	* src/bdf/bdfdrivr.c (BDF_Face_Init): Use `SIZE' values if

@@ -54,6 +54,10 @@ CHANGES BETWEEN 2.8 and 2.8.1
       missing.   Previously,   `SIZE'  was  completely   ignored,  and
       FreeType used heuristic values instead.
 
+    - Multiple calls to `FT_Bitmap_Convert' do work now as advertised.
+      Previously,  they failed with an assertion error if there was an
+      empty bitmap between non-empty ones.
+
 
 ======================================================================
 
