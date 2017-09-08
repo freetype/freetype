@@ -1,5 +1,18 @@
 2017-09-08  suzuki toshiya  <mpsuzuki@hiroshima-u.ac.jp>
 
+	[base] Remove a check for resource ID in the resource fork driver.
+
+	LastResort.dfont has a marginal resource ID 0xFFFF for sfnt
+	resource.  Inside Macintosh: More Macintosh Toolbox, `Resource IDs'
+	(1-46), tells that some IDs are reserved and should not be used.
+	FreeType2 just uses resource ID to sort the fragmented resource.
+	To accept the marginal fonts, the checking is removed.
+
+	* src/base/ftrfork.c (FT_Raccess_Get_DataOffsets): Remove res_id
+	validity check, fix a trace message format.
+
+2017-09-08  suzuki toshiya  <mpsuzuki@hiroshima-u.ac.jp>
+
 	[sfnt, truetype] Register the tags for marginal fonts.
 
 	The first 32bit of standard TrueType variants is 0x00010000,
