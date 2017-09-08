@@ -824,7 +824,7 @@ CHANGES BETWEEN 2.5.2 and 2.5.3
            and install FreeType again.
 
       With FreeType's  `configure' script the procedure  boils down to
-      configure, build, and install Freetype, then configure, compile,
+      configure, build, and install FreeType, then configure, compile,
       and  install  HarfBuzz,  then configure,  compile,  and  install
       FreeType again (after executing `make distclean').
 

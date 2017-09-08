@@ -99,7 +99,7 @@ other release numbers.
 #include <ft2build.h>
 #include FT_FREETYPE_H
 #if (FREETYPE_MAJOR*1000 + FREETYPE_MINOR)*1000 + FREETYPE_PATCH < 2000009
-#error Freetype version too low.
+#error FreeType version too low.
 #endif
   ],
   [AC_MSG_RESULT(yes)
