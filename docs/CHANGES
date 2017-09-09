@@ -58,6 +58,8 @@ CHANGES BETWEEN 2.8 and 2.8.1
       Previously,  they failed with an assertion error if there was an
       empty bitmap between non-empty ones.
 
+    - Warping now works in `normal' hinting, replacing it.
+
 
 ======================================================================
 
