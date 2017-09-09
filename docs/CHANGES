@@ -60,6 +60,11 @@ CHANGES BETWEEN 2.8 and 2.8.1
 
     - Warping now works in `normal' hinting, replacing it.
 
+    - 16bit  compiler  support is  now  officially  ended.  We  didn't
+      provide any maintainance since many  years, and given that there
+      were no error  or problem reports either it seems  that it is no
+      longer needed.
+
 
 ======================================================================
 
