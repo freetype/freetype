@@ -1,3 +1,10 @@
+2017-09-09  Werner Lemberg  <wl@gnu.org>
+
+	[autofit] Improve communication with ftgrid.
+
+	* src/autofit/afhints.c (af_glyph_hints_get_segment_offset):
+	Provide values in font units.
+
 2017-09-08  suzuki toshiya  <mpsuzuki@hiroshima-u.ac.jp>
 
 	[base] Remove a check for resource ID in the resource fork driver.
