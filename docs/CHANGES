@@ -58,7 +58,9 @@ CHANGES BETWEEN 2.8 and 2.8.1
       Previously,  they failed with an assertion error if there was an
       empty bitmap between non-empty ones.
 
-    - Warping now works in `normal' hinting, replacing it.
+    - The warping option  has moved  from `light'  to `normal' hinting
+      where  it replaces  the original hinting algorithm.  The `light'
+      mode is now always void of any hinting in x-direction.
 
     - 16bit  compiler  support is  now  officially  ended.  We  didn't
       provide any maintainance since many  years, and given that there
