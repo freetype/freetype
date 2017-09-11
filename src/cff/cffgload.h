@@ -183,8 +183,8 @@ FT_BEGIN_HEADER
     FT_UInt            num_locals;
     FT_UInt            num_globals;
 
-    FT_Int             locals_bias;
-    FT_Int             globals_bias;
+    FT_Int32           locals_bias;
+    FT_Int32           globals_bias;
 
     FT_Byte**          locals;
     FT_Byte**          globals;

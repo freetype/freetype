@@ -342,11 +342,11 @@
   /*                                                                       */
   /* <Return>                                                              */
   /*    The bias value.                                                    */
-  static FT_Int
+  static FT_Int32
   cff_compute_bias( FT_Int   in_charstring_type,
                     FT_UInt  num_subrs )
   {
-    FT_Int  result;
+    FT_Int32  result;
 
 
     if ( in_charstring_type == 1 )
@@ -2326,7 +2326,7 @@
               end = FT_MIN( idx + count, CFF_MAX_TRANS_ELEMENTS );
 
               if ( idx < end )
-                decoder->buildchar[idx] = 1 << 16;
+                decoder->buildchar[idx] = (FT_Fixed)1 << 16;
 
               for ( i = idx + 1; i < end; i++ )
                 decoder->buildchar[i] = 0;
@@ -2526,7 +2526,7 @@
 
         case cff_op_callsubr:
           {
-            FT_UInt  idx = (FT_UInt)( ( args[0] >> 16 ) +
+            FT_UInt32  idx = (FT_UInt32)( ( args[0] >> 16 ) +
                                       decoder->locals_bias );
 
 
@@ -2570,7 +2570,7 @@
 
         case cff_op_callgsubr:
           {
-            FT_UInt  idx = (FT_UInt)( ( args[0] >> 16 ) +
+            FT_UInt32  idx = (FT_UInt32)( ( args[0] >> 16 ) +
                                       decoder->globals_bias );
 
 
