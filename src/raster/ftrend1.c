@@ -166,11 +166,13 @@
       height = (FT_UInt)( ( cbox.yMax - cbox.yMin ) >> 6 );
     }
 
+#if FT_UINT_MAX > 0xFFFFUL
     if ( width > FT_USHORT_MAX || height > FT_USHORT_MAX )
     {
       error = FT_THROW( Invalid_Argument );
       goto Exit;
     }
+#endif
 
     bitmap = &slot->bitmap;
     memory = render->root.memory;
