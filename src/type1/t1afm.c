@@ -60,9 +60,11 @@
     FT_Int   n;
 
 
+#if FT_UINT_MAX > 0xFFFFU
     /* PS string/name length must be < 16-bit */
     if ( len > 0xFFFFU )
       return 0;
+#endif
 
     for ( n = 0; n < type1->num_glyphs; n++ )
     {
