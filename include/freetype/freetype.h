@@ -1781,7 +1781,7 @@ FT_BEGIN_HEADER
   /*         and add it to `origin_x'>                                     */
   /*                                                                       */
   /*        origin_x += slot->advance.x;                                   */
-  /*        origin_x += slot->rsb_delta - slot->lsb_relta;                 */
+  /*        origin_x += slot->rsb_delta - slot->lsb_delta;                 */
   /*      endfor                                                           */
   /*    }                                                                  */
   /*                                                                       */
