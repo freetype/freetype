@@ -95,7 +95,7 @@
       val  <<= 1;
       mask >>= 1;
 
-      if ( --left <= 0 )
+      if ( --left == 0 )
       {
         cur[0] = (FT_Byte)c;
         left   = writer->width;
@@ -174,7 +174,7 @@
 
       mask >>= 1;
 
-      if ( --left <= 0 )
+      if ( --left == 0 )
       {
         cur[0] = (FT_Byte)c;
         left   = writer->width;
@@ -239,7 +239,7 @@
 
       mask >>= 1;
 
-      if ( --left <= 0 )
+      if ( --left == 0 )
       {
         cur[0] = (FT_Byte)c;
         c      = 0;
