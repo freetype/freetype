@@ -177,9 +177,9 @@ FT_BEGIN_HEADER
 #define LSBFirst  0
 #define MSBFirst  1
 
-#define PCF_FILE_VERSION        ( ( 'p' << 24 ) | \
-                                  ( 'c' << 16 ) | \
-                                  ( 'f' <<  8 ) | 1 )
+#define PCF_FILE_VERSION        ( ((FT_UInt32)'p' << 24 ) | \
+                                  ((FT_UInt32)'c' << 16 ) | \
+                                  ((FT_UInt32)'f' <<  8 ) | (FT_UInt32)1 )
 #define PCF_FORMAT_MASK         0xFFFFFF00UL
 
 #define PCF_DEFAULT_FORMAT      0x00000000UL
