@@ -270,7 +270,7 @@
     bdf_font_t*     font;
     bdf_options_t*  opts;
 
-    unsigned long   have[34816]; /* must be in sync with `nmod' and `umod' */
+    unsigned long*  have;        /* must be in sync with `nmod' and `umod' */
                                  /* arrays from `bdf_font_t' structure     */
     _bdf_list_t     list;
 
@@ -856,8 +856,10 @@
     FT_ZERO( p );
 
     n = ft_strlen( name ) + 1;
+#ifdef FT_LONG64
     if ( n > FT_ULONG_MAX )
       return FT_THROW( Invalid_Argument );
+#endif
 
     if ( FT_NEW_ARRAY( p->name, n ) )
       goto Exit;
@@ -1465,9 +1467,11 @@
 
       /* Check that the encoding is in the Unicode range because  */
       /* otherwise p->have (a bitmap with static size) overflows. */
-      if ( p->glyph_enc > 0                                      &&
-           (size_t)p->glyph_enc >= sizeof ( p->have ) /
-                                   sizeof ( unsigned long ) * 32 )
+      if ( p->glyph_enc > 0 
+#if SIZE_MAX > (BDF_SIZE_OF_ARRAY_MODIFIED_GLYPH * 32)
+          && (size_t)p->glyph_enc >= BDF_SIZE_OF_ARRAY_MODIFIED_GLYPH * 32
+#endif
+         )
       {
         FT_ERROR(( "_bdf_parse_glyphs: " ERRMSG5, lineno, "ENCODING" ));
         error = FT_THROW( Invalid_File_Format );
@@ -1960,6 +1964,10 @@
 
       if ( FT_NEW( font ) )
         goto Exit;
+      if ( FT_NEW_ARRAY( font->nmod, BDF_SIZE_OF_ARRAY_MODIFIED_GLYPH ) )
+        goto Exit;
+      if ( FT_NEW_ARRAY( font->umod, BDF_SIZE_OF_ARRAY_MODIFIED_GLYPH ) )
+        goto Exit;
       p->font = font;
 
       font->memory = p->memory;
@@ -2192,6 +2200,19 @@
     error = FT_THROW( Invalid_File_Format );
 
   Exit:
+    if ( font && error ) {
+      memory = font->memory;
+      if ( font->nmod )
+        FT_FREE( font->nmod );
+      if ( font->umod )
+        FT_FREE( font->umod );
+      if ( font->name )
+        FT_FREE( font->name );
+      if ( font->props )
+        FT_FREE( font->props );
+
+      FT_FREE( font );
+    }
     return error;
   }
 
@@ -2217,6 +2238,8 @@
 
 
     if ( FT_NEW( p ) )
+      goto Exit;
+    if ( FT_NEW_ARRAY( p->have, BDF_SIZE_OF_ARRAY_MODIFIED_GLYPH ) )
       goto Exit;
 
     memory    = NULL;
@@ -2345,6 +2368,7 @@
 
       memory = extmemory;
 
+      FT_FREE( p->have );
       FT_FREE( p->glyph_name );
       FT_FREE( p );
     }
@@ -2438,6 +2462,12 @@
     }
 
     FT_FREE( font->user_props );
+
+    if ( font->nmod )
+      FT_FREE( font->nmod );
+    if ( font->umod )
+      FT_FREE( font->umod );
+
 
     /* FREE( font ); */ /* XXX Fixme */
   }

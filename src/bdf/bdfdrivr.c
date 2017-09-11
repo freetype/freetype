@@ -170,6 +170,7 @@ THE SOFTWARE.
     }
 
   Exit:
+#ifdef FT_LONG64
     if ( charcode > 0xFFFFFFFFUL )
     {
       FT_TRACE1(( "bdf_cmap_char_next: charcode 0x%x > 32bit API" ));
@@ -177,6 +178,7 @@ THE SOFTWARE.
       /* XXX: result should be changed to indicate an overflow error */
     }
     else
+#endif
       *acharcode = (FT_UInt32)charcode;
     return result;
   }
@@ -888,21 +890,27 @@ THE SOFTWARE.
         break;
 
       case BDF_INTEGER:
+#ifdef FT_LONG64
         if ( prop->value.l > 0x7FFFFFFFL || prop->value.l < ( -1 - 0x7FFFFFFFL ) )
         {
           FT_TRACE1(( "bdf_get_bdf_property:"
-                      " too large integer 0x%x is truncated\n" ));
+                      " too large integer 0x%x is truncated\n",
+                      prop->value.l ));
         }
+#endif
         aproperty->type      = BDF_PROPERTY_TYPE_INTEGER;
         aproperty->u.integer = (FT_Int32)prop->value.l;
         break;
 
       case BDF_CARDINAL:
+#ifdef FT_LONG64
         if ( prop->value.ul > 0xFFFFFFFFUL )
         {
           FT_TRACE1(( "bdf_get_bdf_property:"
-                      " too large cardinal 0x%x is truncated\n" ));
+                      " too large cardinal 0x%x is truncated\n",
+                      prop->value.l ));
         }
+#endif
         aproperty->type       = BDF_PROPERTY_TYPE_CARDINAL;
         aproperty->u.cardinal = (FT_UInt32)prop->value.ul;
         break;

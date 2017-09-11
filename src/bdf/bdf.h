@@ -211,8 +211,9 @@ FT_BEGIN_HEADER
 
     /* The size of the next two arrays must be in sync with the */
     /* size of the `have' array in the `bdf_parse_t' structure. */
-    unsigned long    nmod[34816];    /* Bitmap indicating modified glyphs.  */
-    unsigned long    umod[34816];    /* Bitmap indicating modified          */
+#define BDF_SIZE_OF_ARRAY_MODIFIED_GLYPH 34816
+    unsigned long*   nmod;           /* Bitmap indicating modified glyphs.  */
+    unsigned long*   umod;           /* Bitmap indicating modified          */
                                      /* unencoded glyphs.                   */
     unsigned short   modified;       /* Boolean indicating font modified.   */
     unsigned short   bpp;            /* Bits per pixel.                     */
