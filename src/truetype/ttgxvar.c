@@ -2476,7 +2476,7 @@
     /* adjust named instance index */
     face->root.face_index &= 0xFFFF;
     if ( i < blend->mmvar->num_namedstyles )
-      face->root.face_index |= ( i + 1 ) << 16;
+      face->root.face_index |= ( i + 1L ) << 16;
 
     face->is_default_instance = is_default_instance;
 
