@@ -837,7 +837,7 @@
     {
       FT_TRACE3(( "sfnt_open_font: synthesize TTC\n" ));
 
-      face->ttc_header.version = 1 << 16;
+      face->ttc_header.version = (FT_Fixed)1 << 16;
       face->ttc_header.count   = 1;
 
       if ( FT_NEW( face->ttc_header.offsets ) )
