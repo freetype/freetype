@@ -1,3 +1,9 @@
+2017-09-11  Werner Lemberg  <wl@gnu.org>
+
+	* src/sfnt/ttkern.c (tt_face_load_kern): Reject format 2 tables.
+
+	Reported by Behdad.
+
 2017-09-09  Werner Lemberg  <wl@gnu.org>
 
 	[autofit] Improve communication with ftgrid.
