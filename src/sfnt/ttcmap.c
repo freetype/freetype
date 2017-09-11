@@ -836,8 +836,8 @@
                    (FT_Int)end + delta >= 0     )
                 charcode = (FT_UInt)( -delta );
 
-              else if ( (FT_Int)charcode + delta < 0x10000L &&
-                        (FT_Int)end + delta >= 0x10000L     )
+              else if ( (FT_Int32)charcode + delta < 0x10000L &&
+                        (FT_Int32)end + delta >= 0x10000L     )
                 charcode = (FT_UInt)( 0x10000L - delta );
 
               else
@@ -1169,8 +1169,8 @@
                  (FT_Int)end + delta >= 0     )
               charcode = (FT_UInt)( -delta );
 
-            else if ( (FT_Int)charcode + delta < 0x10000L &&
-                      (FT_Int)end + delta >= 0x10000L     )
+            else if ( (FT_Int32)charcode + delta < 0x10000L &&
+                      (FT_Int32)end + delta >= 0x10000L     )
               charcode = (FT_UInt)( 0x10000L - delta );
 
             else
@@ -1407,8 +1407,8 @@
                  (FT_Int)end + delta >= 0     )
               charcode = (FT_UInt)( -delta );
 
-            else if ( (FT_Int)charcode + delta < 0x10000L &&
-                      (FT_Int)end + delta >= 0x10000L     )
+            else if ( (FT_Int32)charcode + delta < 0x10000L &&
+                      (FT_Int32)end + delta >= 0x10000L     )
               charcode = (FT_UInt)( 0x10000L - delta );
           }
         }
