@@ -771,8 +771,8 @@
     /*      completely refer to the (already) hinted subglyphs.     */
     if ( is_composite )
     {
-      loader->exec->metrics.x_scale = 1 << 16;
-      loader->exec->metrics.y_scale = 1 << 16;
+      loader->exec->metrics.x_scale = (FT_Fixed)1 << 16;
+      loader->exec->metrics.y_scale = (FT_Fixed)1 << 16;
 
       FT_ARRAY_COPY( zone->orus, zone->cur, zone->n_points );
     }
