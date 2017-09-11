@@ -7390,7 +7390,7 @@
       /*                              */
       /* XXX: FreeType supports it, dependent on what client does? */
       if ( ( args[0] & 1024 ) != 0 )
-        K |= 1 << 17;
+        K |= 1L << 17;
 
       /********************************/
       /* SYMMETRICAL SMOOTHING        */
@@ -7400,7 +7400,7 @@
       /* The only smoothing method FreeType supports unless someone sets */
       /* FT_LOAD_TARGET_MONO.                                            */
       if ( ( args[0] & 2048 ) != 0 && exc->subpixel_hinting_lean )
-        K |= 1 << 18;
+        K |= 1L << 18;
 
       /********************************/
       /* CLEARTYPE HINTING AND        */
@@ -7411,7 +7411,7 @@
       /* Grayscale rendering is what FreeType does anyway unless someone */
       /* sets FT_LOAD_TARGET_MONO or FT_LOAD_TARGET_LCD(_V)              */
       if ( ( args[0] & 4096 ) != 0 && exc->grayscale_cleartype )
-        K |= 1 << 19;
+        K |= 1L << 19;
     }
 #endif
 
@@ -7456,7 +7456,7 @@
         /*                              */
         /* Functionality still needs to be added */
         if ( ( args[0] & 512 ) != 0 && exc->bgr )
-          K |= 1 << 16;
+          K |= 1L << 16;
 
         if ( exc->rasterizer_version >= 38 )
         {
@@ -7467,7 +7467,7 @@
           /*                              */
           /* Functionality still needs to be added */
           if ( ( args[0] & 1024 ) != 0 && exc->subpixel_positioned )
-            K |= 1 << 17;
+            K |= 1L << 17;
 
           /********************************/
           /* SYMMETRICAL SMOOTHING        */
@@ -7476,7 +7476,7 @@
           /*                              */
           /* Functionality still needs to be added */
           if ( ( args[0] & 2048 ) != 0 && exc->symmetrical_smoothing )
-            K |= 1 << 18;
+            K |= 1L << 18;
 
           /********************************/
           /* GRAY CLEARTYPE               */
@@ -7485,7 +7485,7 @@
           /*                              */
           /* Functionality still needs to be added */
           if ( ( args[0] & 4096 ) != 0 && exc->gray_cleartype )
-            K |= 1 << 19;
+            K |= 1L << 19;
         }
       }
     }
