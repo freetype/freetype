@@ -126,12 +126,14 @@ INCLUDES := $(subst /,$(COMPILER_SEP),$(OBJ_DIR) \
 
 INCLUDE_FLAGS := $(INCLUDES:%=$I%)
 
-ifdef DEVEL_DIR
-  # We assume that all library dependencies for FreeType are fulfilled for a
-  # development build, so we directly access the necessary include directory
-  # information using `pkg-config'.
-  INCLUDE_FLAGS += $(shell pkg-config --cflags libpng \
-                                               harfbuzz )
+ifndef _cc_opt_gcc_incompat
+  ifdef DEVEL_DIR
+    # We assume that all library dependencies for FreeType are fulfilled for a
+    # development build, so we directly access the necessary include directory
+    # information using `pkg-config'.
+    INCLUDE_FLAGS += $(shell pkg-config --cflags libpng \
+                                                 harfbuzz )
+  endif
 endif
 
 
@@ -157,10 +159,18 @@ endif
 
 # `CPPFLAGS' might be specified by the user in the environment.
 #
+# some broken C compiler cannot parse "<ftmodule.h>" correctly.
+# they should declare _no_cpp_opt_ftmodule_h
+ifdef _no_cpp_opt_ftmodule_h
+  CPPFLAGS += $(I)$(TOP_DIR)/include/freetype/config
+else
+  FTOPTION_FTMODULE_H := $(D)FT_CONFIG_MODULE_H="<ftmodule.h>"
+endif
+
 FT_CFLAGS  = $(CPPFLAGS) \
              $(CFLAGS) \
              $DFT2_BUILD_LIBRARY \
-             $DFT_CONFIG_MODULES_H="<ftmodule.h>" \
+             $(FTOPTION_FTMODULE_H) \
              $(FTOPTION_FLAG)
 
 
