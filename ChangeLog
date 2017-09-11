@@ -1,3 +1,10 @@
+2017-09-11  Azzuro  <azzuro@team-mediaportal.com>
+
+	[build] Improve builds with different MS Visual Studio versions.
+
+	* builds/windows/vc2010/freetype.vcxproj: Switch platform toolset
+	according to the Visual Studio version.
+
 2017-09-11  Werner Lemberg  <wl@gnu.org>
 
 	* src/sfnt/ttkern.c (tt_face_load_kern): Reject format 2 tables.
