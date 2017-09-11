@@ -711,7 +711,9 @@ FT_BEGIN_HEADER
   /* and avar tables).  This has many similarities to Type 1 Multiple      */
   /* Masters support.                                                      */
   /*                                                                       */
+#if FT_UINT_MAX > 0xFFFFUL
 #define TT_CONFIG_OPTION_GX_VAR_SUPPORT
+#endif
 
 
   /*************************************************************************/
