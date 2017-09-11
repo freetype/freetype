@@ -179,6 +179,7 @@ THE SOFTWARE.
     }
 
   Exit:
+#if FT_ULONG_MAX > 0xFFFFFFFFUL
     if ( charcode > 0xFFFFFFFFUL )
     {
       FT_TRACE1(( "pcf_cmap_char_next: charcode 0x%x > 32bit API" ));
@@ -186,6 +187,7 @@ THE SOFTWARE.
       /* XXX: result should be changed to indicate an overflow error */
     }
     else
+#endif
       *acharcode = (FT_UInt32)charcode;
     return result;
   }
@@ -625,12 +627,14 @@ THE SOFTWARE.
       }
       else
       {
+#if FT_ULONG_MAX > 0xFFFFFFFFUL
         if ( prop->value.l > 0x7FFFFFFFL          ||
              prop->value.l < ( -1 - 0x7FFFFFFFL ) )
         {
           FT_TRACE1(( "pcf_get_bdf_property:" ));
           FT_TRACE1(( " too large integer 0x%x is truncated\n" ));
         }
+#endif
 
         /*
          *  The PCF driver loads all properties as signed integers.
