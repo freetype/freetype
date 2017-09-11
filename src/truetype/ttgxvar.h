@@ -344,7 +344,11 @@ FT_BEGIN_HEADER
   /*                                                                       */
   typedef enum  GX_TupleCountFlags_
   {
+#if FT_UINT_MAX > 0xFFFFUL
     GX_TC_TUPLES_SHARE_POINT_NUMBERS = 0x8000,
+#else
+    GX_TC_TUPLES_SHARE_POINT_NUMBERS = (FT_Short)0x8000,
+#endif
     GX_TC_RESERVED_TUPLE_FLAGS       = 0x7000,
     GX_TC_TUPLE_COUNT_MASK           = 0x0FFF
 
@@ -362,7 +366,11 @@ FT_BEGIN_HEADER
   /*                                                                       */
   typedef enum  GX_TupleIndexFlags_
   {
+#if FT_UINT_MAX > 0xFFFFUL
     GX_TI_EMBEDDED_TUPLE_COORD  = 0x8000,
+#else
+    GX_TI_EMBEDDED_TUPLE_COORD  = (FT_Short)0x8000,
+#endif
     GX_TI_INTERMEDIATE_TUPLE    = 0x4000,
     GX_TI_PRIVATE_POINT_NUMBERS = 0x2000,
     GX_TI_RESERVED_TUPLE_FLAG   = 0x1000,
