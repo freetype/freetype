@@ -100,11 +100,16 @@ FT_BEGIN_HEADER
    * in `CF2_Blues', assuming 1000 units per em here.
    *
    */
+#if UINT_MAX > 0xFFFFUL
   enum
   {
     CF2_ICF_Top    = cf2_intToFixed(  880 ),
     CF2_ICF_Bottom = cf2_intToFixed( -120 )
   };
+#else
+#define CF2_ICF_Top	(cf2_intToFixed(  880 ))
+#define CF2_ICF_Bottom	(cf2_intToFixed( -120 ))
+#endif
 
 
   /*
