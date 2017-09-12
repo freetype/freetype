@@ -175,7 +175,7 @@ FT_BEGIN_HEADER
   /*                                                                       */
   /*   Define this macro if you want to enable this `feature'.             */
   /*                                                                       */
-#define FT_CONFIG_OPTION_USE_LZW
+/* #define FT_CONFIG_OPTION_USE_LZW */
 
 
   /*************************************************************************/
@@ -190,7 +190,7 @@ FT_BEGIN_HEADER
   /*   Define this macro if you want to enable this `feature'.  See also   */
   /*   the macro FT_CONFIG_OPTION_SYSTEM_ZLIB below.                       */
   /*                                                                       */
-#define FT_CONFIG_OPTION_USE_ZLIB
+/* #define FT_CONFIG_OPTION_USE_ZLIB */
 
 
   /*************************************************************************/
@@ -227,7 +227,7 @@ FT_BEGIN_HEADER
   /*                                                                       */
   /*   Define this macro if you want to enable this `feature'.             */
   /*                                                                       */
-#define FT_CONFIG_OPTION_USE_BZIP2
+/* #define FT_CONFIG_OPTION_USE_BZIP2 */
 
 
   /*************************************************************************/
@@ -252,7 +252,7 @@ FT_BEGIN_HEADER
   /*                                                                       */
   /*   Define this macro if you want to enable this `feature'.             */
   /*                                                                       */
-#define FT_CONFIG_OPTION_USE_PNG
+/* #define FT_CONFIG_OPTION_USE_PNG */
 
 
   /*************************************************************************/
@@ -265,7 +265,7 @@ FT_BEGIN_HEADER
   /*                                                                       */
   /*   Define this macro if you want to enable this `feature'.             */
   /*                                                                       */
-#define FT_CONFIG_OPTION_USE_HARFBUZZ
+/* #define FT_CONFIG_OPTION_USE_HARFBUZZ */
 
 
   /*************************************************************************/
@@ -702,7 +702,9 @@ FT_BEGIN_HEADER
   /* and avar tables).  This has many similarities to Type 1 Multiple      */
   /* Masters support.                                                      */
   /*                                                                       */
+#if FT_UINT_MAX > 0xFFFFUL
 #define TT_CONFIG_OPTION_GX_VAR_SUPPORT
+#endif
 
 
   /*************************************************************************/
