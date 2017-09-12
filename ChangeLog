@@ -1,3 +1,13 @@
+2017-09-12  suzuki toshiya  <mpsuzuki@hiroshima-u.ac.jp>
+
+	[autofit, sfnt] Fix for `make multi'.
+
+	* src/autofit/afshaper.c: Include FT_ADVANCE_H, to use
+	FT_Get_Advance() in it.
+	* src/sfnt/ttcmap.c: Include FT_SERVICE_POSTSCRIPT_CMAPS_H
+	to use PS_Unicodes in it, also include `ttpost.h' to use
+	tt_face_get_ps_name() in it.
+
 2017-09-11  Azzuro  <azzuro@team-mediaportal.com>
 
 	[build] Improve builds with different MS Visual Studio versions.

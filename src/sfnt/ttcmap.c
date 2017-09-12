@@ -23,8 +23,10 @@
 
 #include FT_INTERNAL_VALIDATE_H
 #include FT_INTERNAL_STREAM_H
+#include FT_SERVICE_POSTSCRIPT_CMAPS_H
 #include "ttload.h"
 #include "ttcmap.h"
+#include "ttpost.h"
 #include "sfntpic.h"
 
 
