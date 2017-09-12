@@ -95,6 +95,11 @@
     return error;
   }
 
+#else
+
+  /* ANSI C doesn't like empty source files */
+  int  _truetype_ttpic_dummy = 1;
+
 #endif /* FT_CONFIG_OPTION_PIC */
 
 

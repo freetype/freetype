@@ -137,6 +137,11 @@
     return error;
   }
 
+#else
+
+  /* ANSI C doesn't like empty source files */
+  int  _sfnt_sfntpic_dummy = 1;
+
 #endif /* FT_CONFIG_OPTION_PIC */
 
 

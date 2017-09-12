@@ -112,6 +112,11 @@
     ft_smooth_renderer_class_pic_free( library );
   }
 
+#else
+
+  /* ANSI C doesn't like empty source files */
+  int  _smooth_ftspic_dummy = 1;
+
 #endif /* FT_CONFIG_OPTION_PIC */
 
 
