@@ -149,7 +149,7 @@
    *  Prime numbers are ugly to handle.  It would be better to implement
    *  L-Hashing, which is 10% faster and doesn't require divisions.
    */
-  static const FT_Int  ft_mem_primes[] =
+  static const FT_Int32  ft_mem_primes[] =
   {
     7,
     11,
