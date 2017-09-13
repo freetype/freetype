@@ -1,3 +1,18 @@
+2017-09-13  suzuki toshiya  <mpsuzuki@hiroshima-u.ac.jp>
+
+	[cache] Fix a possible overflow by signed integer comparison.
+
+	Improve the code by 5d3ff05615dda6d1325ed612381a17a0df04c975 ,
+	issues are found by Behdad Esfahbod and Werner Lemberg.
+
+	* src/cache/ftcbasic.c (FTC_ImageCache_Lookup): Replace
+	a subtraction to check higher bit by a bit operation,
+	and cpp-conditionalize for appropriate systems.  Add better
+	documentation to the comment.
+	(FTC_ImageCache_LookupScaler): Ditto.
+	(FTC_SBitCache_Lookup): Ditto.
+	(FTC_SBitCache_LookupScaler): Ditto.
+
 2017-09-13  Werner Lemberg  <wl@gnu.org>
 
 	[autofit] Really fix #41334 (#52000).

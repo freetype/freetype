@@ -304,10 +304,19 @@
     if ( anode )
       *anode  = NULL;
 
-    if ( (FT_ULong)( type->flags - FT_INT_MIN ) > FT_UINT_MAX )
+/*
+ * internal FTC_BasicAttr->load_flags is typed FT_UInt,
+ * but public FT_ImageType->flags is typed FT_Int32
+ *
+ * On 16bit systems, higher bits of type->flags
+ * could not be handled.
+ */
+#if 0xFFFFFFFFUL > FT_UINT_MAX
+    if ( (type->flags & (FT_ULong)FT_UINT_MAX) )
       FT_TRACE1(( "FTC_ImageCache_Lookup:"
                   " higher bits in load_flags 0x%x are dropped\n",
                   (FT_ULong)type->flags & ~((FT_ULong)FT_UINT_MAX) ));
+#endif
 
     query.attrs.scaler.face_id = type->face_id;
     query.attrs.scaler.width   = type->width;
@@ -377,11 +386,19 @@
     if ( anode )
       *anode  = NULL;
 
-    /* `FT_Load_Glyph' and `FT_Load_Char' take FT_UInt flags */
+/*
+ * internal FTC_BasicAttr->load_flags is typed FT_UInt,
+ * but public FT_Face->face_flags is typed FT_Long.
+ *
+ * On long > int systems, higher bits of load_flags
+ * could not be handled.
+ */
+#if FT_ULONG_MAX > FT_UINT_MAX
     if ( load_flags > FT_UINT_MAX )
       FT_TRACE1(( "FTC_ImageCache_LookupScaler:"
                   " higher bits in load_flags 0x%x are dropped\n",
                   load_flags & ~((FT_ULong)FT_UINT_MAX) ));
+#endif
 
     query.attrs.scaler     = scaler[0];
     query.attrs.load_flags = (FT_UInt)load_flags;
@@ -487,10 +504,19 @@
 
     *ansbit = NULL;
 
-    if ( (FT_ULong)( type->flags - FT_INT_MIN ) > FT_UINT_MAX )
+/*
+ * internal FTC_BasicAttr->load_flags is typed FT_UInt,
+ * but public FT_ImageType->flags is typed FT_Int32
+ *
+ * On 16bit systems, higher bits of type->flags
+ * could not be handled.
+ */
+#if 0xFFFFFFFFUL > FT_UINT_MAX
+    if ( (type->flags & (FT_ULong)FT_UINT_MAX) )
       FT_TRACE1(( "FTC_ImageCache_Lookup:"
                   " higher bits in load_flags 0x%x are dropped\n",
                   (FT_ULong)type->flags & ~((FT_ULong)FT_UINT_MAX) ));
+#endif
 
     query.attrs.scaler.face_id = type->face_id;
     query.attrs.scaler.width   = type->width;
@@ -562,11 +588,19 @@
 
     *ansbit = NULL;
 
-    /* `FT_Load_Glyph' and `FT_Load_Char' take FT_UInt flags */
+/*
+ * internal FTC_BasicAttr->load_flags is typed FT_UInt,
+ * but public FT_Face->face_flags is typed FT_Long.
+ *
+ * On long > int systems, higher bits of load_flags
+ * could not be handled.
+ */
+#if FT_ULONG_MAX > FT_UINT_MAX
     if ( load_flags > FT_UINT_MAX )
       FT_TRACE1(( "FTC_ImageCache_LookupScaler:"
                   " higher bits in load_flags 0x%x are dropped\n",
                   load_flags & ~((FT_ULong)FT_UINT_MAX) ));
+#endif
 
     query.attrs.scaler     = scaler[0];
     query.attrs.load_flags = (FT_UInt)load_flags;
