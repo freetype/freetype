@@ -3543,11 +3543,14 @@
       FT_CMap  cmap = FT_CMAP( face->charmap );
 
 
+/* care for 64bit platforms */
+#if (FT_ULONG_MAX > 0xFFFFFFFFUL)
       if ( charcode > 0xFFFFFFFFUL )
       {
         FT_TRACE1(( "FT_Get_Char_Index: too large charcode" ));
         FT_TRACE1(( " 0x%x is truncated\n", charcode ));
       }
+#endif
 
       result = cmap->clazz->char_index( cmap, (FT_UInt32)charcode );
       if ( result >= (FT_UInt)face->num_glyphs )
@@ -3723,6 +3726,8 @@
         FT_CMap  vcmap = FT_CMAP( charmap );
 
 
+/* care for 64bit platforms */
+#if (FT_ULONG_MAX > 0xFFFFFFFFUL)
         if ( charcode > 0xFFFFFFFFUL )
         {
           FT_TRACE1(( "FT_Face_GetCharVariantIndex:"
@@ -3735,6 +3740,7 @@
                       " too large variantSelector" ));
           FT_TRACE1(( " 0x%x is truncated\n", variantSelector ));
         }
+#endif
 
         result = vcmap->clazz->char_var_index( vcmap, ucmap,
                                                (FT_UInt32)charcode,
@@ -3766,6 +3772,8 @@
         FT_CMap  vcmap = FT_CMAP( charmap );
 
 
+/* care for 64bit platforms */
+#if (FT_ULONG_MAX > 0xFFFFFFFFUL)
         if ( charcode > 0xFFFFFFFFUL )
         {
           FT_TRACE1(( "FT_Face_GetCharVariantIsDefault:"
@@ -3778,6 +3786,7 @@
                       " too large variantSelector" ));
           FT_TRACE1(( " 0x%x is truncated\n", variantSelector ));
         }
+#endif
 
         result = vcmap->clazz->char_var_default( vcmap,
                                                  (FT_UInt32)charcode,
@@ -3836,11 +3845,14 @@
         FT_Memory  memory = FT_FACE_MEMORY( face );
 
 
+/* care for 64bit platforms */
+#if (FT_ULONG_MAX > 0xFFFFFFFFUL)
         if ( charcode > 0xFFFFFFFFUL )
         {
           FT_TRACE1(( "FT_Face_GetVariantsOfChar: too large charcode" ));
           FT_TRACE1(( " 0x%x is truncated\n", charcode ));
         }
+#endif
 
         result = vcmap->clazz->charvariant_list( vcmap, memory,
                                                  (FT_UInt32)charcode );
@@ -3870,11 +3882,14 @@
         FT_Memory  memory = FT_FACE_MEMORY( face );
 
 
+/* care for 64bit platforms */
+#if (FT_ULONG_MAX > 0xFFFFFFFFUL)
         if ( variantSelector > 0xFFFFFFFFUL )
         {
           FT_TRACE1(( "FT_Get_Char_Index: too large variantSelector" ));
           FT_TRACE1(( " 0x%x is truncated\n", variantSelector ));
         }
+#endif
 
         result = vcmap->clazz->variantchar_list( vcmap, memory,
                                                  (FT_UInt32)variantSelector );
