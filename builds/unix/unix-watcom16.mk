@@ -1,5 +1,6 @@
 #
-# FreeType 2 Configuration rules for Unix + Bruce CC for ELKS
+# FreeType 2 Configuration rules for cross building by Watcom C compiler
+# for 16bit platforms.
 #
 #   Development version without optimizations & libtool
 #   and no installation.
