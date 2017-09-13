@@ -1,5 +1,16 @@
 2017-09-13  suzuki toshiya  <mpsuzuki@hiroshima-u.ac.jp>
 
+	[sfnt] lowest gcc for vectors ( e1d0249e ) is changed to 4.7.
+
+	__builtin_shuffle() was introduced in gcc-4.7.  The lowest
+	gcc to enable vector operation is delayed from 4.6 to 4.7.
+
+	* src/sfnt/pngshim.c (premultiply_data): Fix cpp-macro to
+	enable the vector operation, to change the lowest gcc version
+	from 4.6 to 4.7.
+
+2017-09-13  suzuki toshiya  <mpsuzuki@hiroshima-u.ac.jp>
+
 	[cache] Fix a possible overflow by signed integer comparison.
 
 	Improve the code by 5d3ff05615dda6d1325ed612381a17a0df04c975 ,
