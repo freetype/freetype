@@ -78,22 +78,22 @@
          head[12] >= 0x80 )
       return FT_THROW( Unknown_File_Format );
 
-    *rdata_pos = ( head[ 0] << 24 ) |
-                 ( head[ 1] << 16 ) |
-                 ( head[ 2] <<  8 ) |
-                   head[ 3];
-    map_pos    = ( head[ 4] << 24 ) |
-                 ( head[ 5] << 16 ) |
-                 ( head[ 6] <<  8 ) |
-                   head[ 7];
-    rdata_len  = ( head[ 8] << 24 ) |
-                 ( head[ 9] << 16 ) |
-                 ( head[10] <<  8 ) |
-                   head[11];
-    map_len    = ( head[12] << 24 ) |
-                 ( head[13] << 16 ) |
-                 ( head[14] <<  8 ) |
-                   head[15];
+    *rdata_pos = ( (FT_Long)head[ 0] << 24 ) |
+                 ( (FT_Long)head[ 1] << 16 ) |
+                 ( (FT_Long)head[ 2] <<  8 ) |
+                   (FT_Long)head[ 3];
+    map_pos    = ( (FT_Long)head[ 4] << 24 ) |
+                 ( (FT_Long)head[ 5] << 16 ) |
+                 ( (FT_Long)head[ 6] <<  8 ) |
+                   (FT_Long)head[ 7];
+    rdata_len  = ( (FT_Long)head[ 8] << 24 ) |
+                 ( (FT_Long)head[ 9] << 16 ) |
+                 ( (FT_Long)head[10] <<  8 ) |
+                   (FT_Long)head[11];
+    map_len    = ( (FT_Long)head[12] << 24 ) |
+                 ( (FT_Long)head[13] << 16 ) |
+                 ( (FT_Long)head[14] <<  8 ) |
+                   (FT_Long)head[15];
 
     /* the map must not be empty */
     if ( !map_pos )
@@ -519,10 +519,10 @@
                               char      **result_file_name,
                               FT_Long    *result_offset )
   {
-    FT_Int32  magic = ( 0x00 << 24 ) |
-                      ( 0x05 << 16 ) |
-                      ( 0x16 <<  8 ) |
-                        0x07;
+    FT_Int32  magic = ( (FT_Int32)0x00 << 24 ) |
+                      ( (FT_Int32)0x05 << 16 ) |
+                      ( (FT_Int32)0x16 <<  8 ) |
+                        (FT_Int32)0x07;
 
 
     *result_file_name = NULL;
@@ -541,10 +541,10 @@
                               char      **result_file_name,
                               FT_Long    *result_offset )
   {
-    FT_Int32  magic = ( 0x00 << 24 ) |
-                      ( 0x05 << 16 ) |
-                      ( 0x16 <<  8 ) |
-                        0x00;
+    FT_Int32  magic = ( (FT_Int32)0x00 << 24 ) |
+                      ( (FT_Int32)0x05 << 16 ) |
+                      ( (FT_Int32)0x16 <<  8 ) |
+                        (FT_Int32)0x00;
 
 
     *result_file_name = NULL;

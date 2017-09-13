@@ -1992,10 +1992,10 @@
                   header[0x53] > 0x7F )
       return FT_THROW( Unknown_File_Format );
 
-    dlen = ( header[0x53] << 24 ) |
-           ( header[0x54] << 16 ) |
-           ( header[0x55] <<  8 ) |
-             header[0x56];
+    dlen = ( (FT_Long)header[0x53] << 24 ) |
+           ( (FT_Long)header[0x54] << 16 ) |
+           ( (FT_Long)header[0x55] <<  8 ) |
+             (FT_Long)header[0x56];
 #if 0
     rlen = ( header[0x57] << 24 ) |
            ( header[0x58] << 16 ) |
