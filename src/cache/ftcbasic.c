@@ -304,13 +304,12 @@
     if ( anode )
       *anode  = NULL;
 
-/*
- * internal FTC_BasicAttr->load_flags is typed FT_UInt,
- * but public FT_ImageType->flags is typed FT_Int32
- *
- * On 16bit systems, higher bits of type->flags
- * could not be handled.
- */
+    /*
+     * Internal `FTC_BasicAttr->load_flags' is of type `FT_UInt',
+     * but public `FT_ImageType->flags' is of type `FT_Int32'
+     *
+     * On 16bit systems, higher bits of type->flags cannot be handled.
+     */
 #if 0xFFFFFFFFUL > FT_UINT_MAX
     if ( (type->flags & (FT_ULong)FT_UINT_MAX) )
       FT_TRACE1(( "FTC_ImageCache_Lookup:"
@@ -386,13 +385,12 @@
     if ( anode )
       *anode  = NULL;
 
-/*
- * internal FTC_BasicAttr->load_flags is typed FT_UInt,
- * but public FT_Face->face_flags is typed FT_Long.
- *
- * On long > int systems, higher bits of load_flags
- * could not be handled.
- */
+    /*
+     * Internal `FTC_BasicAttr->load_flags' is of type `FT_UInt',
+     * but public `FT_Face->face_flags' is of type `FT_Long'.
+     *
+     * On long > int systems, higher bits of load_flags cannot be handled.
+     */
 #if FT_ULONG_MAX > FT_UINT_MAX
     if ( load_flags > FT_UINT_MAX )
       FT_TRACE1(( "FTC_ImageCache_LookupScaler:"
@@ -504,13 +502,12 @@
 
     *ansbit = NULL;
 
-/*
- * internal FTC_BasicAttr->load_flags is typed FT_UInt,
- * but public FT_ImageType->flags is typed FT_Int32
- *
- * On 16bit systems, higher bits of type->flags
- * could not be handled.
- */
+    /*
+     * Internal `FTC_BasicAttr->load_flags' is of type `FT_UInt',
+     * but public `FT_ImageType->flags' is of type `FT_Int32'.
+     *
+     * On 16bit systems, higher bits of type->flags cannot be handled.
+     */
 #if 0xFFFFFFFFUL > FT_UINT_MAX
     if ( (type->flags & (FT_ULong)FT_UINT_MAX) )
       FT_TRACE1(( "FTC_ImageCache_Lookup:"
@@ -588,13 +585,12 @@
 
     *ansbit = NULL;
 
-/*
- * internal FTC_BasicAttr->load_flags is typed FT_UInt,
- * but public FT_Face->face_flags is typed FT_Long.
- *
- * On long > int systems, higher bits of load_flags
- * could not be handled.
- */
+    /*
+     * Internal `FTC_BasicAttr->load_flags' is of type `FT_UInt',
+     * but public `FT_Face->face_flags' is of type `FT_Long'.
+     *
+     * On long > int systems, higher bits of load_flags cannot be handled.
+     */
 #if FT_ULONG_MAX > FT_UINT_MAX
     if ( load_flags > FT_UINT_MAX )
       FT_TRACE1(( "FTC_ImageCache_LookupScaler:"
