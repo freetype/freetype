@@ -4457,7 +4457,7 @@ FT_BEGIN_HEADER
    */
 #define FREETYPE_MAJOR  2
 #define FREETYPE_MINOR  8
-#define FREETYPE_PATCH  0
+#define FREETYPE_PATCH  1
 
 
   /*************************************************************************/

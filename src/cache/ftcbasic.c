@@ -306,7 +306,7 @@
 
     /*
      * Internal `FTC_BasicAttr->load_flags' is of type `FT_UInt',
-     * but public `FT_ImageType->flags' is of type `FT_Int32'
+     * but public `FT_ImageType->flags' is of type `FT_Int32'.
      *
      * On 16bit systems, higher bits of type->flags cannot be handled.
      */

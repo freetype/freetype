@@ -57,10 +57,10 @@
   {
     unsigned int  i = 0, limit;
 
-    /* the `vector_size' attribute was introduced in gcc 3.1, which */
+    /* The `vector_size' attribute was introduced in gcc 3.1, which */
     /* predates clang; the `__BYTE_ORDER__' preprocessor symbol was */
     /* introduced in gcc 4.6 and clang 3.2, respectively.           */
-    /* __builtin_shuffle() for gcc was introduced in gcc 4.7.0.     */
+    /* `__builtin_shuffle' for gcc was introduced in gcc 4.7.0.     */
 #if ( ( defined( __GNUC__ )                                &&             \
         ( ( __GNUC__ >= 5 )                              ||               \
         ( ( __GNUC__ == 4 ) && ( __GNUC_MINOR__ >= 7 ) ) ) )         ||   \

@@ -362,6 +362,7 @@
       FT_Byte*  temp;
       FT_Int    i, j;
 
+
       /* Render 3 separate monochrome bitmaps, shifting the outline  */
       /* by 1/3 pixel.                                               */
       width /= 3;
