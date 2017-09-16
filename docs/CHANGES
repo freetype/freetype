@@ -63,7 +63,7 @@ CHANGES BETWEEN 2.8 and 2.8.1
       mode is now always void of any hinting in x-direction.
 
     - 16bit  compiler  support is  now  officially  ended.  We  didn't
-      provide any maintainance since many  years, and given that there
+      provide any maintenance  since many years,  and given that there
       were no error  or problem reports either it seems  that it is no
       longer needed.
 

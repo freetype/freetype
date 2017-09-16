@@ -265,7 +265,7 @@
 
 2017-08-08  Alexei Podtelezhnikov  <apodtele@gmail.com>
 
-	* src/sftnt/ttpost.c (format): Use otspec-compliant versions. 
+	* src/sfnt/ttpost.c (format): Use otspec-compliant versions.
 
 2017-08-05  Werner Lemberg  <wl@gnu.org>
 
@@ -1012,7 +1012,7 @@
 	due to rounding.  In order to optimize the padding, we now expand
 	CBox for the given filter weights before rounding.
 
-	This change breakes current Skia (and Firefox).
+	This change breaks current Skia (and Firefox).
 
 	* include/freetype/internal/ftobjs.h (FT_LibraryRec)
 	[FT_CONFIG_OPTION_SUBPIXEL_RENDERING]: Remove `lcd_extra' field.
@@ -1397,7 +1397,7 @@
 
 	[truetype] Do linear scaling for FT_LOAD_NO_HINTING (#50470).
 
-	* src/truetype/ttobs.h (TT_SizeRec): Add field `hinted_metrics' to
+	* src/truetype/ttobjs.h (TT_SizeRec): Add field `hinted_metrics' to
 	hold hinted metrics.
 	Make `metrics' a pointer so that `tt_glyph_load' can easily switch
 	between metrics.
@@ -2166,7 +2166,7 @@
 
 	* src/sfnt/sfdriver.c (search_name_id): Rename to...
 	(sfnt_get_name_id): ... this.
-	(sfnt_get_ps_name, sfnt_interface): Udpated.
+	(sfnt_get_ps_name, sfnt_interface): Updated.
 
 2017-03-04  Werner Lemberg  <wl@gnu.org>
 
@@ -2592,7 +2592,7 @@
 	* include/freetype/ftsnames.h (FT_SfntLangTag): New structure.
 	(FT_Get_Sfnt_LangTag): New declaration.
 
-	* src/base/ftsnames.c (FT_Get_Sfnt_LangTag): New funtion.
+	* src/base/ftsnames.c (FT_Get_Sfnt_LangTag): New function.
 
 	* docs/CHANGES: Updated.
 
@@ -4615,7 +4615,7 @@
 
 	  https://bugzilla.mozilla.org/show_bug.cgi?id=1270288
 
-	* src/cff/cf2interp.c (cf2_interpT2CharString): Initialize `storage'
+	* src/cff/cf2intrp.c (cf2_interpT2CharString): Initialize `storage'
 	array to handle a `get' opcode without a previous `put'.
 
 2016-09-05  Alexei Podtelezhnikov  <apodtele@gmail.com>
