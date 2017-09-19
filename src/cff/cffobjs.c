@@ -876,7 +876,8 @@
 
         cffface->height = (FT_Short)( ( cffface->units_per_EM * 12 ) / 10 );
         if ( cffface->height < cffface->ascender - cffface->descender )
-          cffface->height = (FT_Short)( cffface->ascender - cffface->descender );
+          cffface->height = (FT_Short)( cffface->ascender -
+                                        cffface->descender );
 
         cffface->underline_position  =
           (FT_Short)( dict->underline_position >> 16 );
@@ -884,27 +885,32 @@
           (FT_Short)( dict->underline_thickness >> 16 );
 
         /* retrieve font family & style name */
-        cffface->family_name = cff_index_get_name(
-                                 cff,
-                                 (FT_UInt)( face_index & 0xFFFF ) );
+        if ( dict->family_name )
+        {
+          char*  family_name;
+
+
+          family_name = cff_index_get_sid_string( cff, dict->family_name );
+          if ( family_name )
+            cffface->family_name = cff_strcpy( memory, family_name );
+        }
+
+        if ( !cffface->family_name )
+        {
+          cffface->family_name = cff_index_get_name(
+                                   cff,
+                                   (FT_UInt)( face_index & 0xFFFF ) );
+          if ( cffface->family_name )
+            remove_subset_prefix( cffface->family_name );
+        }
+
         if ( cffface->family_name )
         {
           char*  full   = cff_index_get_sid_string( cff,
                                                     dict->full_name );
           char*  fullp  = full;
           char*  family = cffface->family_name;
-          char*  family_name = NULL;
 
-
-          remove_subset_prefix( cffface->family_name );
-
-          if ( dict->family_name )
-          {
-            family_name = cff_index_get_sid_string( cff,
-                                                    dict->family_name );
-            if ( family_name )
-              family = family_name;
-          }
 
           /* We try to extract the style name from the full name.   */
           /* We need to ignore spaces and dashes during the search. */

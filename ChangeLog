@@ -1,3 +1,21 @@
+2017-09-19  John Tytgat  <John.Tytgat@esko.com>
+
+	[cff] Fix family name logic of pure CFF fontdata (#52056).
+
+	1. If `FamilyName' is present in the CFF font, use this for
+	   FT_Face's `family_name'.
+	2. Otherwise, use the face name and chop off any subset prefix.
+	3. If at this point FT_Face's `family_name' is set, use this
+	   together with the full name to determine the style.
+	4. Otherwise, use `CIDFontName' as FT_Face's `family_name'.
+	5. If we don't have a valid style, use "Regular".
+
+	Previously, FT_Face's `family_name' entry for pure CFF fontdata
+	nearly always was the fontname itself, instead of the `FamilyName'
+	entry in the CFF font (assuming there is one).
+
+	* src/cff/cffobjs.c (cff_face_init) [pure_cff]: Implement it.
+
 2017-09-18  Alexei Podtelezhnikov  <apodtele@gmail.com>
 
 	[build] Declutter Visual C++ 2010-2017 project.
