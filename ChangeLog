@@ -1,3 +1,10 @@
+2017-09-18  Alexei Podtelezhnikov  <apodtele@gmail.com>
+
+	[build] Declutter Visual C++ 2010-2017 project.
+
+	* build/windows/vc2010/freetype.vcxproj: Use MaxSpeed (/02)
+	optimization for Release configuration throughout the project.
+
 2017-09-16  Werner Lemberg  <wl@gnu.org>
 
 	* Version 2.8.1 released.
