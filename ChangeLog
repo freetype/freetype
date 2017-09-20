@@ -1,3 +1,14 @@
+2017-09-20  Werner Lemberg  <wl@gnu.org>
+
+	[truetype] Integer overflows.
+
+	Changes triggered by
+
+	  https://bugs.chromium.org/p/oss-fuzz/issues/detail?id=3429
+
+	* src/truetype/ttinterp.c (Ins_SHPIX, Ins_DELTAP): Use NEG_LONG.
+	(Ins_MIAP): Use SUB_LONG.
+
 2017-09-19  Alexei Podtelezhnikov  <apodtele@gmail.com>
 
 	[build] Fix DLL builds in Visual C++ project.

@@ -5690,7 +5690,11 @@
                    ( B1 & 63 ) != 0                                           &&
                    ( B2 & 63 ) != 0                                           &&
                    B1 != B2                                                   )
-                Move_Zp2_Point( exc, point, -dx, -dy, TRUE );
+                Move_Zp2_Point( exc,
+                                point,
+                                NEG_LONG( dx ),
+                                NEG_LONG( dy ),
+                                TRUE );
             }
           }
           else if ( exc->face->sph_compatibility_mode )
@@ -5722,7 +5726,7 @@
               if ( ( B1 & 63 ) == 0 &&
                    ( B2 & 63 ) != 0 &&
                    B1 != B2         )
-                Move_Zp2_Point( exc, point, 0, -dy, TRUE );
+                Move_Zp2_Point( exc, point, 0, NEG_LONG( dy ), TRUE );
             }
           }
           else if ( exc->sph_in_func_flags & SPH_FDEF_TYPEMAN_DIAGENDCTRL )
@@ -5991,7 +5995,7 @@
                                     exc->tt_metrics.compensations[0] );
     }
 
-    exc->func_move( exc, &exc->zp0, point, distance - org_dist );
+    exc->func_move( exc, &exc->zp0, point, SUB_LONG( distance, org_dist ) );
 
   Fail:
     exc->GS.rp0 = point;
@@ -7153,7 +7157,7 @@
                          SPH_TWEAK_SKIP_NONPIXEL_Y_MOVES_DELTAP ) &&
                        ( B1 & 63 ) != 0                           &&
                        ( B2 & 63 ) != 0                           ) ) )
-                exc->func_move( exc, &exc->zp0, A, -B );
+                exc->func_move( exc, &exc->zp0, A, NEG_LONG( B ) );
             }
           }
           else
