@@ -410,7 +410,9 @@ FT_BEGIN_HEADER
 
 #ifndef FT_EXPORT
 
-#ifdef __cplusplus
+#if defined( _DLL )
+#define FT_EXPORT( x )  __declspec(dllexport)  x
+#elif defined( __cplusplus )
 #define FT_EXPORT( x )  extern "C"  x
 #else
 #define FT_EXPORT( x )  extern  x
@@ -421,7 +423,9 @@ FT_BEGIN_HEADER
 
 #ifndef FT_EXPORT_DEF
 
-#ifdef __cplusplus
+#if defined( _DLL )
+#define FT_EXPORT_DEF( x )  __declspec(dllexport)  x
+#elif defined( __cplusplus )
 #define FT_EXPORT_DEF( x )  extern "C"  x
 #else
 #define FT_EXPORT_DEF( x )  extern  x

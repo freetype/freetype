@@ -1,3 +1,12 @@
+2017-09-19  Alexei Podtelezhnikov  <apodtele@gmail.com>
+
+	[build] Fix DLL builds in Visual C++ project.
+
+	* build/windows/vc2010/freetype.vcxproj: Use DynamicLibrary in Debug
+	and Release configurations.
+	* include/freetype/config/ftconfig.h (FT_EXPORT, FT_EXPORT_DEF)
+	[_DLL]: Use Visual C++ extensions.
+
 2017-09-19  John Tytgat  <John.Tytgat@esko.com>
 
 	[cff] Fix family name logic of pure CFF fontdata (#52056).
