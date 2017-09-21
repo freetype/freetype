@@ -1,5 +1,14 @@
 2017-09-21  Werner Lemberg  <wl@gnu.org>
 
+	[sfnt] Fix postscript name for default instance of variation fonts.
+
+	Problem reported by Behdad.
+
+	* src/sfnt/sfdriver.c (sfnt_get_ps_name): Test
+	`is_default_instance'.
+
+2017-09-21  Werner Lemberg  <wl@gnu.org>
+
 	[truetype] Fix `mmvar' array pointers, part 2.
 
 	The previous commit was incomplete.

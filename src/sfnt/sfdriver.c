@@ -1029,7 +1029,7 @@
       return face->postscript_name;
 
 #ifdef TT_CONFIG_OPTION_GX_VAR_SUPPORT
-    if ( face->blend )
+    if ( face->blend && !face->is_default_instance )
     {
       face->postscript_name = sfnt_get_var_ps_name( face );
       return face->postscript_name;
