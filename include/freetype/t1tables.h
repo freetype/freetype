@@ -554,6 +554,9 @@ FT_BEGIN_HEADER
   /*    T1_ENCODING_TYPE_ISOLATIN1 ::                                      */
   /*    T1_ENCODING_TYPE_EXPERT ::                                         */
   /*                                                                       */
+  /* <Since>                                                               */
+  /*    2.4.8                                                              */
+  /*                                                                       */
   typedef enum  T1_EncodingType_
   {
     T1_ENCODING_TYPE_NONE = 0,
@@ -621,6 +624,9 @@ FT_BEGIN_HEADER
   /*    PS_DICT_UNDERLINE_THICKNESS ::                                     */
   /*    PS_DICT_FS_TYPE ::                                                 */
   /*    PS_DICT_ITALIC_ANGLE ::                                            */
+  /*                                                                       */
+  /* <Since>                                                               */
+  /*    2.4.8                                                              */
   /*                                                                       */
   typedef enum  PS_Dict_Keys_
   {
@@ -742,6 +748,9 @@ FT_BEGIN_HEADER
    *
    *    If the font's format is not PostScript-based, this function returns
    *    the `FT_Err_Invalid_Argument' error code.
+   *
+   * @since:
+   *    2.4.8
    *
    */
   FT_EXPORT( FT_Long )

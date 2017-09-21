@@ -292,6 +292,9 @@ FT_BEGIN_HEADER
    *   the global default values or the values set up with
    *   @FT_Library_SetLcdFilterWeights.
    *
+   * @since:
+   *   2.8
+   *
    */
 #define FT_PARAM_TAG_LCD_FILTER_WEIGHTS \
           FT_MAKE_TAG( 'l', 'c', 'd', 'f' )
@@ -304,6 +307,9 @@ FT_BEGIN_HEADER
    * @description:
    *   A typedef for passing the five LCD filter weights to
    *   @FT_Face_Properties within an @FT_Parameter structure.
+   *
+   * @since:
+   *   2.8
    *
    */
 #define FT_LCD_FILTER_FIVE_TAPS  5

@@ -169,13 +169,13 @@ FT_BEGIN_HEADER
   /*      @FT_RENDER_MODE_LCD_V.                                           */
   /*                                                                       */
   /*    FT_PIXEL_MODE_BGRA ::                                              */
-  /*      An image with four 8-bit channels per pixel, representing a      */
-  /*      color image (such as emoticons) with alpha channel.  For each    */
-  /*      pixel, the format is BGRA, which means, the blue channel comes   */
-  /*      first in memory.  The color channels are pre-multiplied and in   */
-  /*      the sRGB colorspace.  For example, full red at half-translucent  */
-  /*      opacity will be represented as `00,00,80,80', not `00,00,FF,80'. */
-  /*      See also @FT_LOAD_COLOR.                                         */
+  /*      [Since 2.5] An image with four 8-bit channels per pixel,         */
+  /*      representing a color image (such as emoticons) with alpha        */
+  /*      channel.  For each pixel, the format is BGRA, which means, the   */
+  /*      blue channel comes first in memory.  The color channels are      */
+  /*      pre-multiplied and in the sRGB colorspace.  For example, full    */
+  /*      red at half-translucent opacity will be represented as           */
+  /*      `00,00,80,80', not `00,00,FF,80'.  See also @FT_LOAD_COLOR.      */
   /*                                                                       */
   typedef enum  FT_Pixel_Mode_
   {

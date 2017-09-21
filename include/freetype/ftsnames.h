@@ -189,6 +189,9 @@ FT_BEGIN_HEADER
   /*    Please refer to the TrueType or OpenType specification for more    */
   /*    details.                                                           */
   /*                                                                       */
+  /* <Since>                                                               */
+  /*    2.8                                                                */
+  /*                                                                       */
   typedef struct  FT_SfntLangTag_
   {
     FT_Byte*  string;      /* this string is *not* null-terminated! */
@@ -229,6 +232,9 @@ FT_BEGIN_HEADER
   /*    invalid format~1 language ID values, FT_Err_Invalid_Argument is    */
   /*    returned.                                                          */
   /*                                                                       */
+  /* <Since>                                                               */
+  /*    2.8                                                                */
+  /*                                                                       */
   FT_EXPORT( FT_Error )
   FT_Get_Sfnt_LangTag( FT_Face          face,
                        FT_UInt          langID,
@@ -245,6 +251,9 @@ FT_BEGIN_HEADER
    *   family names in the `name' table (introduced in OpenType version
    *   1.4).  Use this for backward compatibility with legacy systems that
    *   have a four-faces-per-family restriction.
+   *
+   * @since:
+   *   2.8
    *
    */
 #define FT_PARAM_TAG_IGNORE_TYPOGRAPHIC_FAMILY \
@@ -266,6 +275,9 @@ FT_BEGIN_HEADER
    *   subfamily names in the `name' table (introduced in OpenType version
    *   1.4).  Use this for backward compatibility with legacy systems that
    *   have a four-faces-per-family restriction.
+   *
+   * @since:
+   *   2.8
    *
    */
 #define FT_PARAM_TAG_IGNORE_TYPOGRAPHIC_SUBFAMILY \

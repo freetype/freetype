@@ -129,6 +129,9 @@ FT_BEGIN_HEADER
   * @note:
   *   This function may return `FT_Err_Unimplemented_Feature' if your build
   *   of FreeType was not compiled with zlib support.
+  *
+  * @since:
+  *   2.5.1
   */
   FT_EXPORT( FT_Error )
   FT_Gzip_Uncompress( FT_Memory       memory,

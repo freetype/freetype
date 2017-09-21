@@ -151,6 +151,9 @@ FT_BEGIN_HEADER
    *
    *   This property can be set via the `FREETYPE_PROPERTIES' environment
    *   variable (using values `adobe' or `freetype').
+   *
+   * @since:
+   *   2.4.12
    */
 
 
@@ -169,6 +172,9 @@ FT_BEGIN_HEADER
    *
    *   FT_CFF_HINTING_ADOBE ::
    *     Use the hinting engine contributed by Adobe.
+   *
+   * @since:
+   *   2.4.12
    *
    */
 #define FT_CFF_HINTING_FREETYPE  0
@@ -206,6 +212,9 @@ FT_BEGIN_HEADER
    *   variable (using values 1 and 0 for `on' and `off', respectively).
    *   It can also be set per face using @FT_Face_Properties with
    *   @FT_PARAM_TAG_STEM_DARKENING.
+   *
+   * @since:
+   *   2.4.12
    *
    */
 
@@ -264,6 +273,10 @@ FT_BEGIN_HEADER
    *     FREETYPE_PROPERTIES=\
    *     cff:darkening-parameters=500,300,1000,200,1500,100,2000,0
    *   }
+   *
+   * @since:
+   *   2.5.1
+   *
    */
 
 
@@ -290,6 +303,9 @@ FT_BEGIN_HEADER
    *   variable.  It can also be set per face using @FT_Face_Properties with
    *   @FT_PARAM_TAG_RANDOM_SEED.
    *
+   * @since:
+   *   2.8
+   *
    */
 
 
@@ -303,6 +319,9 @@ FT_BEGIN_HEADER
    *   corresponding 32bit signed integer argument overrides the CFF
    *   module's random seed value with a face-specific one; see
    *   @random-seed.
+   *
+   * @since:
+   *   2.8
    *
    */
 #define FT_PARAM_TAG_RANDOM_SEED \

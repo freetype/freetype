@@ -475,6 +475,9 @@ FT_BEGIN_HEADER
   /* <InOut>                                                               */
   /*    library :: A handle to a new library object.                       */
   /*                                                                       */
+  /* <Since>                                                               */
+  /*    2.8                                                                */
+  /*                                                                       */
   FT_EXPORT( void )
   FT_Set_Default_Properties( FT_Library  library );
 

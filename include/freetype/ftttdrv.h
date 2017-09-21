@@ -182,6 +182,9 @@ FT_BEGIN_HEADER
    *
    *   This property can be set via the `FREETYPE_PROPERTIES' environment
    *   variable (using values `35', `38', or `40').
+   *
+   * @since:
+   *   2.5
    */
 
 

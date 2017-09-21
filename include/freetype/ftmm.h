@@ -392,6 +392,9 @@ FT_BEGIN_HEADER
   /* <Return>                                                              */
   /*    FreeType error code.  0~means success.                             */
   /*                                                                       */
+  /* <Since>                                                               */
+  /*    2.7.1                                                              */
+  /*                                                                       */
   FT_EXPORT( FT_Error )
   FT_Get_Var_Design_Coordinates( FT_Face    face,
                                  FT_UInt    num_coords,
@@ -462,6 +465,9 @@ FT_BEGIN_HEADER
   /* <Return>                                                              */
   /*    FreeType error code.  0~means success.                             */
   /*                                                                       */
+  /* <Since>                                                               */
+  /*    2.7.1                                                              */
+  /*                                                                       */
   FT_EXPORT( FT_Error )
   FT_Get_MM_Blend_Coordinates( FT_Face    face,
                                FT_UInt    num_coords,
@@ -489,6 +495,9 @@ FT_BEGIN_HEADER
   /*                                                                       */
   /* <Description>                                                         */
   /*    This is another name of @FT_Get_MM_Blend_Coordinates.              */
+  /*                                                                       */
+  /* <Since>                                                               */
+  /*    2.7.1                                                              */
   /*                                                                       */
   FT_EXPORT( FT_Error )
   FT_Get_Var_Blend_Coordinates( FT_Face    face,
@@ -533,6 +542,9 @@ FT_BEGIN_HEADER
   /*                                                                       */
   /* <Return>                                                              */
   /*    FreeType error code.  0~means success.                             */
+  /*                                                                       */
+  /* <Since>                                                               */
+  /*    2.8.1                                                              */
   /*                                                                       */
   FT_EXPORT( FT_Error )
   FT_Get_Var_Axis_Flags( FT_MM_Var*  master,
