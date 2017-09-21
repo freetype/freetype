@@ -1,5 +1,14 @@
 2017-09-21  Werner Lemberg  <wl@gnu.org>
 
+	[truetype] Fix `mmvar' array pointers, part 2.
+
+	The previous commit was incomplete.
+
+	* src/truetype/ttgxvar.c: Properly initialize sub-array offsets for
+	`master' also.
+
+2017-09-21  Werner Lemberg  <wl@gnu.org>
+
 	[truetype] Fix `mmvar' array pointers.
 
 	Without this change, clang's AddressSanitizer reports many runtime
