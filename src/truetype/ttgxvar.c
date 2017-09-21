@@ -1997,6 +1997,14 @@
 
     if ( !face->blend )
     {
+      FT_Offset  mmvar_size;
+      FT_Offset  axis_flags_size;
+      FT_Offset  axis_size;
+      FT_Offset  namedstyle_size;
+      FT_Offset  next_coords_size;
+      FT_Offset  next_name_size;
+
+
       FT_TRACE2(( "FVAR " ));
 
       /* both `fvar' and `gvar' must be present */
@@ -2045,13 +2053,34 @@
       /* prepare storage area for MM data; this cannot overflow   */
       /* 32-bit arithmetic because of the size limits used in the */
       /* `fvar' table validity check in `sfnt_init_face'          */
-      face->blend->mmvar_len =
-        sizeof ( FT_MM_Var ) +
-        fvar_head.axisCount * sizeof ( FT_UShort ) +
-        fvar_head.axisCount * sizeof ( FT_Var_Axis ) +
-        num_instances * sizeof ( FT_Var_Named_Style ) +
-        num_instances * fvar_head.axisCount * sizeof ( FT_Fixed ) +
-        fvar_head.axisCount * 5;
+
+      /* the various `*_size' variables, which we also use as     */
+      /* offsets into the `mmlen' array, must be multiples of the */
+      /* pointer size (except the last one); without such an      */
+      /* alignment there might be runtime errors due to           */
+      /* misaligned addresses                                     */
+#undef  ALIGN_SIZE
+#define ALIGN_SIZE( n ) \
+          ( ( (n) + sizeof (void*) - 1 ) & ~( sizeof (void*) - 1 ) )
+
+      mmvar_size       = ALIGN_SIZE( sizeof ( FT_MM_Var ) );
+      axis_flags_size  = ALIGN_SIZE( fvar_head.axisCount *
+                                     sizeof ( FT_UShort ) );
+      axis_size        = ALIGN_SIZE( fvar_head.axisCount *
+                                     sizeof ( FT_Var_Axis ) );
+      namedstyle_size  = ALIGN_SIZE( num_instances *
+                                     sizeof ( FT_Var_Named_Style ) );
+      next_coords_size = ALIGN_SIZE( num_instances *
+                                     fvar_head.axisCount *
+                                     sizeof ( FT_Fixed ) );
+      next_name_size   = fvar_head.axisCount * 5;
+
+      face->blend->mmvar_len = mmvar_size       +
+                               axis_flags_size  +
+                               axis_size        +
+                               namedstyle_size  +
+                               next_coords_size +
+                               next_name_size;
 
       if ( FT_ALLOC( mmvar, face->blend->mmvar_len ) )
         goto Exit;
@@ -2071,21 +2100,22 @@
 
       /* alas, no public field in `FT_Var_Axis' for axis flags */
       axis_flags =
-        (FT_UShort*)&( mmvar[1] );
+        (FT_UShort*)( (char*)mmvar + mmvar_size );
       mmvar->axis =
-        (FT_Var_Axis*)&( axis_flags[fvar_head.axisCount] );
+        (FT_Var_Axis*)( (char*)axis_flags + axis_flags_size );
       mmvar->namedstyle =
-        (FT_Var_Named_Style*)&( mmvar->axis[fvar_head.axisCount] );
+        (FT_Var_Named_Style*)( (char*)mmvar->axis + axis_size );
 
-      next_coords =
-        (FT_Fixed*)&( mmvar->namedstyle[num_instances] );
+      next_coords = (FT_Fixed*)( (char*)mmvar->namedstyle +
+                                 namedstyle_size );
       for ( i = 0; i < num_instances; i++ )
       {
         mmvar->namedstyle[i].coords  = next_coords;
         next_coords                 += fvar_head.axisCount;
       }
 
-      next_name = (FT_String*)next_coords;
+      next_name = (FT_String*)( (char*)mmvar->namedstyle +
+                                namedstyle_size + next_coords_size );
       for ( i = 0; i < fvar_head.axisCount; i++ )
       {
         mmvar->axis[i].name  = next_name;

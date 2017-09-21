@@ -1,3 +1,13 @@
+2017-09-21  Werner Lemberg  <wl@gnu.org>
+
+	[truetype] Fix `mmvar' array pointers.
+
+	Without this change, clang's AddressSanitizer reports many runtime
+	errors due to misaligned addresses.
+
+	* src/truetype/ttgxvar.c (TT_Get_MM_Var): Use multiples of pointer
+	size for sub-array offsets into `mmvar'.
+
 2017-09-20  Werner Lemberg  <wl@gnu.org>
 
 	[truetype] Integer overflows.
