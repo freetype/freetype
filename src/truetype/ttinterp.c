@@ -6078,8 +6078,9 @@
 
     /* single width cut-in test */
 
-    if ( FT_ABS( org_dist - exc->GS.single_width_value ) <
-         exc->GS.single_width_cutin )
+    /* |org_dist - single_width_value| < single_width_cutin */
+    if ( org_dist < exc->GS.single_width_value + exc->GS.single_width_cutin ||
+         org_dist > exc->GS.single_width_value - exc->GS.single_width_cutin )
     {
       if ( org_dist >= 0 )
         org_dist = exc->GS.single_width_value;

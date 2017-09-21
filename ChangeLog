@@ -1,5 +1,11 @@
 2017-09-21  Werner Lemberg  <wl@gnu.org>
 
+	[truetype] Integer overflow (#52082).
+
+	* src/truetype/ttinterp.c (Ins_MDRP): Avoid FT_ABS.
+
+2017-09-21  Werner Lemberg  <wl@gnu.org>
+
 	[sfnt] Fix postscript name for default instance of variation fonts.
 
 	Problem reported by Behdad.
