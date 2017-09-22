@@ -67,7 +67,7 @@ FT_BEGIN_HEADER
 
 
 #undef  FT_INVALID_
-#define FT_INVALID_( _error ) \
+#define FT_INVALID_( _error )                                     \
           ft_validator_error( otvalid->root, FT_THROW( _error ) )
 
 #define OTV_OPTIONAL_TABLE( _table )  FT_UShort  _table;      \
@@ -79,17 +79,17 @@ FT_BEGIN_HEADER
             _offset       = FT_NEXT_USHORT( p ); \
           FT_END_STMNT
 
-#define OTV_LIMIT_CHECK( _count )                    \
-          FT_BEGIN_STMNT                             \
+#define OTV_LIMIT_CHECK( _count )                      \
+          FT_BEGIN_STMNT                               \
             if ( p + (_count) > otvalid->root->limit ) \
-              FT_INVALID_TOO_SHORT;                  \
+              FT_INVALID_TOO_SHORT;                    \
           FT_END_STMNT
 
 #define OTV_SIZE_CHECK( _size )                                     \
           FT_BEGIN_STMNT                                            \
             if ( _size > 0 && _size < table_size )                  \
             {                                                       \
-              if ( otvalid->root->level == FT_VALIDATE_PARANOID )     \
+              if ( otvalid->root->level == FT_VALIDATE_PARANOID )   \
                 FT_INVALID_OFFSET;                                  \
               else                                                  \
               {                                                     \
@@ -146,11 +146,11 @@ FT_BEGIN_HEADER
 
 #define OTV_INIT  otvalid->debug_indent = 0
 
-#define OTV_ENTER                                                              \
-          FT_BEGIN_STMNT                                                       \
-            otvalid->debug_indent += 2;                                        \
-            FT_TRACE4(( "%*.s", otvalid->debug_indent, 0 ));                   \
-            FT_TRACE4(( "%s table\n",                                          \
+#define OTV_ENTER                                                                \
+          FT_BEGIN_STMNT                                                         \
+            otvalid->debug_indent += 2;                                          \
+            FT_TRACE4(( "%*.s", otvalid->debug_indent, 0 ));                     \
+            FT_TRACE4(( "%s table\n",                                            \
                         otvalid->debug_function_name[otvalid->nesting_level] )); \
           FT_END_STMNT
 
