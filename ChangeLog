@@ -1,3 +1,10 @@
+2017-09-21  Alexei Podtelezhnikov  <apodtele@gmail.com>
+
+	[build] Simplify Visual C++ 2010 project.
+
+	* build/windows/vc2010/freetype.vcxproj: Remove fake singlethreaded
+	configurations and tweak.
+
 2017-09-21  Werner Lemberg  <wl@gnu.org>
 
 	[truetype] Integer overflow (#52082).
