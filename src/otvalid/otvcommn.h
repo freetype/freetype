@@ -73,10 +73,19 @@ FT_BEGIN_HEADER
 #define OTV_OPTIONAL_TABLE( _table )  FT_UShort  _table;      \
                                       FT_Bytes   _table ## _p
 
+#define OTV_OPTIONAL_TABLE32( _table )  FT_ULong  _table;       \
+                                        FT_Bytes   _table ## _p
+
 #define OTV_OPTIONAL_OFFSET( _offset )           \
           FT_BEGIN_STMNT                         \
             _offset ## _p = p;                   \
             _offset       = FT_NEXT_USHORT( p ); \
+          FT_END_STMNT
+
+#define OTV_OPTIONAL_OFFSET32( _offset )        \
+          FT_BEGIN_STMNT                        \
+            _offset ## _p = p;                  \
+            _offset       = FT_NEXT_ULONG( p ); \
           FT_END_STMNT
 
 #define OTV_LIMIT_CHECK( _count )                      \
@@ -102,8 +111,29 @@ FT_BEGIN_HEADER
                             " set to zero.\n"                       \
                             "\n", #_size ));                        \
                                                                     \
-                /* always assume 16bit entities */                  \
                 _size = pp[0] = pp[1] = 0;                          \
+              }                                                     \
+            }                                                       \
+          FT_END_STMNT
+
+#define OTV_SIZE_CHECK32( _size )                                   \
+          FT_BEGIN_STMNT                                            \
+            if ( _size > 0 && _size < table_size )                  \
+            {                                                       \
+              if ( otvalid->root->level == FT_VALIDATE_PARANOID )   \
+                FT_INVALID_OFFSET;                                  \
+              else                                                  \
+              {                                                     \
+                /* strip off `const' */                             \
+                FT_Byte*  pp = (FT_Byte*)_size ## _p;               \
+                                                                    \
+                                                                    \
+                FT_TRACE3(( "\n"                                    \
+                            "Invalid offset to optional table `%s'" \
+                            " set to zero.\n"                       \
+                            "\n", #_size ));                        \
+                                                                    \
+                _size = pp[0] = pp[1] = pp[2] = pp[3] = 0;          \
               }                                                     \
             }                                                       \
           FT_END_STMNT

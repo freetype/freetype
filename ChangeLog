@@ -1,3 +1,10 @@
+2017-09-22  Werner Lemberg  <wl@gnu.org>
+
+	[otvalid] Macros for 32bit offset support.
+
+	* src/otvalid/otvcommn.h (OTV_OPTIONAL_TABLE32,
+	OTV_OPTIONAL_OFFSET32, OTV_SIZE_CHECK32): New macros.
+
 2017-09-21  Alexei Podtelezhnikov  <apodtele@gmail.com>
 
 	[build] Simplify Visual C++ 2010 project.
