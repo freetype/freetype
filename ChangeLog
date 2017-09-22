@@ -1,5 +1,13 @@
 2017-09-22  Werner Lemberg  <wl@gnu.org>
 
+	[otvalid] Handle `BASE' v1.1 table.
+
+	No validation of variation stuff yet.
+
+	* src/otvalid/otvbase.c (otv_BASE_validate): Implement it.
+
+2017-09-22  Werner Lemberg  <wl@gnu.org>
+
 	[otvalid] Macros for 32bit offset support.
 
 	* src/otvalid/otvcommn.h (OTV_OPTIONAL_TABLE32,
