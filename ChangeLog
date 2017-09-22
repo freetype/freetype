@@ -1,3 +1,12 @@
+2017-09-23  Werner Lemberg  <wl@gnu.org>
+
+	[otvalid] Handle `GDEF' v1.2 and v1.3 tables.
+
+	No validation of variation stuff yet.
+
+	* src/otvalid/otvgdef.c (otv_MarkGlyphSets_validate): New function.
+	(otv_GDEF_validate): Implement it.
+
 2017-09-22  Werner Lemberg  <wl@gnu.org>
 
 	[otvalid] Handle `BASE' v1.1 table.
