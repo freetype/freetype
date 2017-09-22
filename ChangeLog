@@ -1,3 +1,9 @@
+2017-09-23  Ben Wagner  <bungeman@google.com>
+
+	[truetype] Really fix #52082.
+
+	* src/truetype/ttinterp.c (Ins_MDRP): Correct conditional.
+
 2017-09-23  Werner Lemberg  <wl@gnu.org>
 
 	[otvalid] Handle `GDEF' v1.2 and v1.3 tables.
