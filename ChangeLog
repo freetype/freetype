@@ -1,3 +1,10 @@
+2017-09-21  Alexei Podtelezhnikov  <apodtele@gmail.com>
+
+	[build] Windows-style DLL versioning.
+
+	* build/windows/ftver.rc: New VERSIONINFO resource.
+	* build/windows/vc2010/freetype.vcxproj: Further improvements.
+
 2017-09-23  Ben Wagner  <bungeman@google.com>
 
 	[truetype] Really fix #52082.
