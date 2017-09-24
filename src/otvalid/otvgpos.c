@@ -218,10 +218,6 @@
         OTV_LIMIT_CHECK( 2 );
         OTV_OPTIONAL_OFFSET( device );
 
-        /* XXX: this value is usually too small, especially if the current */
-        /* ValueRecord is part of an array -- getting the correct table    */
-        /* size is probably not worth the trouble                          */
-
         table_size = p - otvalid->extra3;
 
         OTV_SIZE_CHECK( device );
@@ -426,6 +422,8 @@
   /*************************************************************************/
   /*************************************************************************/
 
+  /* sets otvalid->extra3 (pointer to base table) */
+
   static void
   otv_PairSet_validate( FT_Bytes       table,
                         FT_UInt        format1,
@@ -437,6 +435,8 @@
 
 
     OTV_NAME_ENTER( "PairSet" );
+
+    otvalid->extra3 = table;
 
     OTV_LIMIT_CHECK( 2 );
     PairValueCount = FT_NEXT_USHORT( p );
@@ -482,8 +482,6 @@
     PosFormat = FT_NEXT_USHORT( p );
 
     OTV_TRACE(( " (format %d)\n", PosFormat ));
-
-    otvalid->extra3 = table;
 
     switch ( PosFormat )
     {
@@ -538,6 +536,8 @@
 
         OTV_LIMIT_CHECK( ClassCount1 * ClassCount2 *
                          ( len_value1 + len_value2 ) );
+
+        otvalid->extra3 = table;
 
         /* Class1Record */
         for ( ; ClassCount1 > 0; ClassCount1-- )

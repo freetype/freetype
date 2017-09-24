@@ -5,6 +5,18 @@
 	* build/windows/ftver.rc: New VERSIONINFO resource.
 	* build/windows/vc2010/freetype.vcxproj: Further improvements.
 
+2017-09-24  Werner Lemberg  <wl@gnu.org>
+
+	[otvalid] Fix handling of ValueRecords.
+
+	For GPOS pair positioning format 1 the description of ValueRecords
+	in the OpenType specification (1.8.2, from today) is wrong – the
+	offset has to be taken from the parent structure; in this case the
+	`PairSet' table.
+
+	* src/otvalid/otvgpos.c (otv_PairSet_validate): Set `extra3'.
+	(otv_PairPos_validate): Adjust.
+
 2017-09-23  Werner Lemberg  <wl@gnu.org>
 
 	[otvalid] Handle `GSUB' and `GPOS' v1.1 tables.
