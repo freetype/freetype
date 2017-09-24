@@ -42,7 +42,8 @@ PSAUX_DRV_SRC := $(PSAUX_DIR)/psobjs.c   \
                  $(PSAUX_DIR)/cf2hints.c \
                  $(PSAUX_DIR)/cf2intrp.c \
                  $(PSAUX_DIR)/cf2read.c  \
-                 $(PSAUX_DIR)/cf2stack.c 
+                 $(PSAUX_DIR)/cf2stack.c \
+                 $(PSAUX_DIR)/cffdecode.c 
 
 # PSAUX driver headers
 #

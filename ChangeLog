@@ -1,5 +1,30 @@
 2017-09-24  Ewald Hew  <ewaldhew@gmail.com>
 
+	[psaux, cff] Move CFF decoder components into `psaux' module.
+
+	NOTE: Does not compile!
+
+	* src/cff/cffgload.c (CFF_Operator,
+	CFF_COUNT_{CHECK_WIDTH,EXACT,CLEAR_STACK}, cff_argument_counts,
+	cff_operator_seac, cff_compute_bias,
+	cff_lookup_glyph_by_stdcharcode,
+	cff_decoder_{parse_charstrings,init,prepare}): Move to...
+	* src/psaux/cffdecode.c: This new file.
+
+	* src/cff/cffgload.h: Move corresponding declarations to...
+	* src/psaux/cffdecode.h: This new file.
+
+	* src/cff/cffgload.h (CFF_MAX_{OPERANDS,SUBRS_CALLS,TRANS_ELEMENTS},
+	CFF_Decoder_Zone, CFF_Decoder): Move declarations to...
+	* include/freetype/internal/psaux.h: Here.
+
+	* src/psaux/cf2ft.h: Update include.
+
+	* src/psaux/psaux.c, src/psaux/rules.mk (PSAUX_DRV_SRC): Update with
+	the new file.
+
+2017-09-24  Ewald Hew  <ewaldhew@gmail.com>
+
 	[psaux, cff] Move Adobe's engine components into `psaux' module.
 
 	This is the first patch of a sequence to move the Type 2 charstring
