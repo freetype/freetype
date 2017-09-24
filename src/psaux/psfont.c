@@ -39,12 +39,12 @@
 #include <ft2build.h>
 #include FT_INTERNAL_CALC_H
 
-#include "cf2ft.h"
+#include "psft.h"
 
-#include "cf2glue.h"
-#include "cf2font.h"
-#include "cf2error.h"
-#include "cf2intrp.h"
+#include "psglue.h"
+#include "psfont.h"
+#include "pserror.h"
+#include "psintrp.h"
 
 
   /* Compute a stem darkening amount in character space. */

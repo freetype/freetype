@@ -1,10 +1,10 @@
 /***************************************************************************/
 /*                                                                         */
-/*  cf2font.h                                                              */
+/*  cf2error.h                                                             */
 /*                                                                         */
-/*    Adobe's CFF Interpreter (specification).                             */
+/*    Adobe's code for error handling (specification).                     */
 /*                                                                         */
-/*  Copyright 2007-2013 Adobe Systems Incorporated.                        */
+/*  Copyright 2006-2013 Adobe Systems Incorporated.                        */
 /*                                                                         */
 /*  This software, and all works of authorship, whether in source or       */
 /*  object code form as indicated by the copyright notice(s) included      */
@@ -36,48 +36,84 @@
 /***************************************************************************/
 
 
-#ifndef CF2INTRP_H_
-#define CF2INTRP_H_
+#ifndef CF2ERROR_H_
+#define CF2ERROR_H_
 
 
-#include "cf2ft.h"
-#include "cf2hints.h"
+#include FT_MODULE_ERRORS_H
+
+#undef FTERRORS_H_
+
+#undef  FT_ERR_PREFIX
+#define FT_ERR_PREFIX  CF2_Err_
+#define FT_ERR_BASE    FT_Mod_Err_CF2
+
+
+#include FT_ERRORS_H
+#include "psft.h"
 
 
 FT_BEGIN_HEADER
 
 
-  FT_LOCAL( void )
-  cf2_hintmask_init( CF2_HintMask  hintmask,
-                     FT_Error*     error );
-  FT_LOCAL( FT_Bool )
-  cf2_hintmask_isValid( const CF2_HintMask  hintmask );
-  FT_LOCAL( FT_Bool )
-  cf2_hintmask_isNew( const CF2_HintMask  hintmask );
-  FT_LOCAL( void )
-  cf2_hintmask_setNew( CF2_HintMask  hintmask,
-                       FT_Bool       val );
-  FT_LOCAL( FT_Byte* )
-  cf2_hintmask_getMaskPtr( CF2_HintMask  hintmask );
-  FT_LOCAL( void )
-  cf2_hintmask_setAll( CF2_HintMask  hintmask,
-                       size_t        bitCount );
+  /*
+   * A poor-man error facility.
+   *
+   * This code being written in vanilla C, doesn't have the luxury of a
+   * language-supported exception mechanism such as the one available in
+   * Java.  Instead, we are stuck with using error codes that must be
+   * carefully managed and preserved.  However, it is convenient for us to
+   * model our error mechanism on a Java-like exception mechanism.
+   * When we assign an error code we are thus `throwing' an error.
+   *
+   * The preservation of an error code is done by coding convention.
+   * Upon a function call if the error code is anything other than
+   * `FT_Err_Ok', which is guaranteed to be zero, we
+   * will return without altering that error.  This will allow the
+   * error to propagate and be handled at the appropriate location in
+   * the code.
+   *
+   * This allows a style of code where the error code is initialized
+   * up front and a block of calls are made with the error code only
+   * being checked after the block.  If a new error occurs, the original
+   * error will be preserved and a functional no-op should result in any
+   * subsequent function that has an initial error code not equal to
+   * `FT_Err_Ok'.
+   *
+   * Errors are encoded by calling the `FT_THROW' macro.  For example,
+   *
+   * {
+   *   FT_Error  e;
+   *
+   *
+   *   ...
+   *   e = FT_THROW( Out_Of_Memory );
+   * }
+   *
+   */
 
+
+  /* Set error code to a particular value. */
   FT_LOCAL( void )
-  cf2_interpT2CharString( CF2_Font              font,
-                          CF2_Buffer            charstring,
-                          CF2_OutlineCallbacks  callbacks,
-                          const FT_Vector*      translation,
-                          FT_Bool               doingSeac,
-                          CF2_Fixed             curX,
-                          CF2_Fixed             curY,
-                          CF2_Fixed*            width );
+  cf2_setError( FT_Error*  error,
+                FT_Error   value );
+
+
+  /*
+   * A macro that conditionally sets an error code.
+   *
+   * This macro will first check whether `error' is set;
+   * if not, it will set it to `e'.
+   *
+  */
+#define CF2_SET_ERROR( error, e )              \
+          cf2_setError( error, FT_THROW( e ) )
 
 
 FT_END_HEADER
 
 
-#endif /* CF2INTRP_H_ */
+#endif /* CF2ERROR_H_ */
 
 
 /* END */

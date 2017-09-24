@@ -1,5 +1,21 @@
 2017-09-24  Ewald Hew  <ewaldhew@gmail.com>
 
+	[psaux] Rename files.
+
+	Replace the `cf2' file name prefix with `ps' as the Adobe engine
+	will be used for both PostScript Types 1 and 2 (CFF) instead of just
+	CFF.
+
+	s/cf2/ps/ for all following.
+
+	* src/psaux/cf2*: Rename files.
+	* src/psaux/*: Update includes.
+
+	* src/psaux/Jamfile (_sources), src/psaux/rules.mk (PSAUX_DRC_SRC,
+	PSAUX_DRV_H): Update file references.
+
+2017-09-24  Ewald Hew  <ewaldhew@gmail.com>
+
 	[psaux] Minor fix.
 
 	Use `MultiMasters' service in `psaux' instead of a call to `cff'. 

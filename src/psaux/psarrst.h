@@ -40,7 +40,7 @@
 #define CF2ARRST_H_
 
 
-#include "cf2error.h"
+#include "pserror.h"
 
 
 FT_BEGIN_HEADER
