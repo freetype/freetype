@@ -21,6 +21,7 @@
 #include FT_INTERNAL_STREAM_H
 #include FT_INTERNAL_SFNT_H
 #include FT_INTERNAL_CALC_H
+#include FT_INTERNAL_POSTSCRIPT_AUX_H
 #include FT_OUTLINE_H
 #include FT_CFF_DRIVER_H
 
@@ -39,8 +40,6 @@
   /*                                                                       */
 #undef  FT_COMPONENT
 #define FT_COMPONENT  trace_cffgload
-
-
 
 
   FT_LOCAL_DEF( FT_Error )
@@ -144,11 +143,13 @@
     FT_Int       glyph_index;
     CFF_Font     cff = (CFF_Font)face->other;
 
+    PSAux_Service            psaux         = (PSAux_Service)face->psaux;
+    const CFF_Decoder_Funcs  decoder_funcs = psaux->cff_decoder_funcs;
 
     *max_advance = 0;
 
     /* Initialize load decoder */
-    cff_decoder_init( &decoder, face, 0, 0, 0, 0 );
+    decoder_funcs->init( &decoder, face, 0, 0, 0, 0 );
 
     decoder.builder.metrics_only = 1;
     decoder.builder.load_points  = 0;
@@ -167,12 +168,12 @@
                                   &charstring, &charstring_len );
       if ( !error )
       {
-        error = cff_decoder_prepare( &decoder, size, glyph_index );
+        error = decoder_funcs->prepare( &decoder, size, glyph_index );
         if ( !error )
-          error = cff_decoder_parse_charstrings( &decoder,
-                                                 charstring,
-                                                 charstring_len,
-                                                 0 );
+          error = decoder_funcs->parse_charstrings( &decoder,
+                                                    charstring,
+                                                    charstring_len,
+                                                    0 );
 
         cff_free_glyph_data( face, &charstring, &charstring_len );
       }
@@ -201,6 +202,9 @@
     TT_Face      face = (TT_Face)glyph->root.face;
     FT_Bool      hinting, scaled, force_scaling;
     CFF_Font     cff  = (CFF_Font)face->extra.data;
+
+    PSAux_Service            psaux         = (PSAux_Service)face->psaux;
+    const CFF_Decoder_Funcs  decoder_funcs = psaux->cff_decoder_funcs;
 
     FT_Matrix    font_matrix;
     FT_Vector    font_offset;
@@ -399,8 +403,8 @@
       FT_ULong  charstring_len;
 
 
-      cff_decoder_init( &decoder, face, size, glyph, hinting,
-                        FT_LOAD_TARGET_MODE( load_flags ) );
+      decoder_funcs->init( &decoder, face, size, glyph, hinting,
+                           FT_LOAD_TARGET_MODE( load_flags ) );
 
       /* this is for pure CFFs */
       if ( load_flags & FT_LOAD_ADVANCE_ONLY )
@@ -415,23 +419,23 @@
       if ( error )
         goto Glyph_Build_Finished;
 
-      error = cff_decoder_prepare( &decoder, size, glyph_index );
+      error = decoder_funcs->prepare( &decoder, size, glyph_index );
       if ( error )
         goto Glyph_Build_Finished;
 
 #ifdef CFF_CONFIG_OPTION_OLD_ENGINE
       /* choose which CFF renderer to use */
       if ( driver->hinting_engine == FT_CFF_HINTING_FREETYPE )
-        error = cff_decoder_parse_charstrings( &decoder,
-                                               charstring,
-                                               charstring_len,
-                                               0 );
+        error = decoder_funcs->parse_charstrings( &decoder,
+                                                  charstring,
+                                                  charstring_len,
+                                                  0 );
       else
 #endif
       {
-        error = cf2_decoder_parse_charstrings( &decoder,
-                                               charstring,
-                                               charstring_len );
+        error = decoder_funcs->parse_charstrings( &decoder,
+                                                  charstring,
+                                                  charstring_len );
 
         /* Adobe's engine uses 16.16 numbers everywhere;              */
         /* as a consequence, glyphs larger than 2000ppem get rejected */
@@ -444,9 +448,9 @@
           force_scaling = TRUE;
           glyph->hint   = hinting;
 
-          error = cf2_decoder_parse_charstrings( &decoder,
-                                                 charstring,
-                                                 charstring_len );
+          error = decoder_funcs->parse_charstrings( &decoder,
+                                                    charstring,
+                                                    charstring_len );
         }
       }
 
@@ -484,7 +488,7 @@
   Glyph_Build_Finished:
       /* save new glyph tables, if no error */
       if ( !error )
-        cff_builder_done( &decoder.builder );
+        decoder.builder.funcs.done( &decoder.builder );
       /* XXX: anything to do for broken glyph entry? */
     }
 

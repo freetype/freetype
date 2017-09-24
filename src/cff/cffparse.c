@@ -21,10 +21,10 @@
 #include FT_INTERNAL_STREAM_H
 #include FT_INTERNAL_DEBUG_H
 #include FT_INTERNAL_CALC_H
+#include FT_INTERNAL_POSTSCRIPT_AUX_H
 
 #include "cfferrs.h"
 #include "cffpic.h"
-#include "cffgload.h"
 #include "cffload.h"
 
 
@@ -1305,6 +1305,7 @@
     FT_UNUSED( library );
 
 
+
     parser->top    = parser->stack;
     parser->start  = start;
     parser->limit  = limit;
@@ -1388,10 +1389,19 @@
         cff_rec.top_font.font_dict.num_axes    = parser->num_axes;
         decoder.cff                            = &cff_rec;
 
-        error = cff_decoder_parse_charstrings( &decoder,
-                                               charstring_base,
-                                               charstring_len,
-                                               1 );
+        psaux = (PSAux_Service)FT_Get_Module_Interface(
+                  library, "psaux" );
+        if ( !psaux )
+        {
+          FT_ERROR(( "cff_parser_run: cannot access `psaux' module\n" ));
+          error = FT_THROW( Missing_Module );
+          goto Exit;
+        }
+        
+        error = psaux->cff_decoder_funcs->parse_charstrings( &decoder,
+                                                             charstring_base,
+                                                             charstring_len,
+                                                             1 );
 
         /* Now copy the stack data in the temporary decoder object,    */
         /* converting it back to charstring number representations     */

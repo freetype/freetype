@@ -1,5 +1,28 @@
 2017-09-24  Ewald Hew  <ewaldhew@gmail.com>
 
+	[psaux, cff] Create new `PSAux' service interface entries.
+
+	NOTE: Does not compile!
+
+	* include/freetype/internal/psaux.h: Include
+	FT_INTERNAL_TRUETYPE_TYPES_H.
+	(CFF_Builder_FuncsRec, CFF_Decocer_FuncsRec): New function tables.
+	(CFF_Builder): Updated.
+	Fix for forward declaration.
+	(PSAux_ServiceRec): New field `cff_decoder_funcs'.
+
+	* src/psaux/psauxmod.c (cff_builder_funcs, cff_decoder_funcs): New
+	function tables.
+	(PSAux_Interface): Updated.
+
+	* include/freetype/internal/tttypes.h (TT_FaceRec): Add `psaux'
+	service interface.
+
+	* src/cff/cffgload.c, src/cff/cffobjs.c, src/cff/cffparse.c: Update
+	function calls to use psaux service.
+
+2017-09-24  Ewald Hew  <ewaldhew@gmail.com>
+
 	[psaux, cff] Move CFF builder components into `psaux' module.
 
 	NOTE: Does not compile!
