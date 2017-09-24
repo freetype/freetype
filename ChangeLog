@@ -1,5 +1,16 @@
 2017-09-24  Ewald Hew  <ewaldhew@gmail.com>
 
+	[psaux] Minor fix.
+
+	Use `MultiMasters' service in `psaux' instead of a call to `cff'. 
+	The project builds if CFF_CONFIG_OPTION_OLD_ENGINE is not defined.
+
+	* src/psaux/cf2ft.c: Update includes.
+	(cf2_getNormalizedVector): Use `mm->get_var_blend' instead of
+	`cff_get_var_blend'.
+
+2017-09-24  Ewald Hew  <ewaldhew@gmail.com>
+
 	[psaux, cff] Move `cff_random' into `psaux' service.
 
 	NOTE: Does not compile!
