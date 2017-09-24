@@ -23,6 +23,7 @@
 #include "t1cmap.h"
 #include "psft.h"
 #include "cffdecode.h"
+#include "psdecode.h"
 
 #ifndef T1_CONFIG_OPTION_NO_AFM
 #include "afmparse.h"
@@ -58,6 +59,14 @@
 
     ps_parser_load_field,       /* load_field       */
     ps_parser_load_field_table  /* load_field_table */
+  };
+
+
+  FT_CALLBACK_TABLE_DEF
+  const PS_Builder_FuncsRec  ps_builder_funcs =
+  {
+    ps_builder_init,          /* init */
+    ps_builder_done           /* done */
   };
 
 
@@ -144,6 +153,7 @@
     &t1_decoder_funcs,
     t1_decrypt,
     cff_random,
+    ps_decoder_init,
 
     (const T1_CMap_ClassesRec*) &t1_cmap_classes,
 

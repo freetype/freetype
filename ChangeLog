@@ -1,5 +1,28 @@
 2017-09-24  Ewald Hew  <ewaldhew@gmail.com>
 
+	[psaux] Objects for new interpreter (part 2).
+
+	Make the new objects copy over values.  They are essentially wrapper
+	types for the different decoders/builders.
+
+	* include/freetype/internal/psaux.h: Update declarations.
+	(PS_Builder): Add `is_t1' flag.
+	(PS_Decoder_{Get,Free}_Glyph_Callback): Renamed to...
+	(CFF_Decoder_{Get,Free}_Glyph_Callback: ... this.
+	(PS_Decoder): Updated.
+	Add `t1_parse_callback' member.
+	(PSAux_ServiceRec): Add `ps_decoder_init' member.
+
+	* src/psaux/psdecode.h, src/psaux/psobjs.h: Update declarations.
+
+	* src/psaux/psdecode.c, src/psaux/psobjs.c: Implement copy with two
+	modes.
+
+	* src/psaux/psauxmod.c: Add builder and decoder functions to `PSAux'
+	service.
+
+2017-09-24  Ewald Hew  <ewaldhew@gmail.com>
+
 	[psaux] Add objects for new interpreter.
 
 	Introduce `PS_Decoder' and `PS_Builder' which include all fields
