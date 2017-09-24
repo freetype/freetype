@@ -1,5 +1,31 @@
 2017-09-24  Ewald Hew  <ewaldhew@gmail.com>
 
+	[cff] Move struct declarations to `freetype/internal'.
+
+	NOTE: Does not compile!
+
+	This is so that the CFF functions moved to `psaux' can access the
+	same structs that they need.
+
+	* src/cff/cfftypes.h: Moved to...
+	* include/freetype/internal/cfftypes.h: ...Here.
+
+	* src/cff/cffobjs.h: Moved the struct declarations to...
+	* include/freetype/internal/cffotypes.h: ... this new file.
+
+	* include/freetype/internal/internal.h (FT_INTERNAL_CFF_TYPES_H,
+	FT_INTERNAL_CFF_OBJECT_TYPES_H): New macros.
+
+	* src/cff/cffcmap.h, src/cff/cffdrivr.c, src/cff/cffgload.c,
+	src/cff/cffgload.h, src/cff/cffload.h, src/cff/cffobjs.c,
+	src/cff/cffobjs.h, src/cff/cffparse.h, src/psaux/psobjs.h,
+	include/freetype/internal/psaux.h,
+	include/freetype/internal/services/svcfftl.h: Update includes.
+
+	* src/cff/rules.mk (CFF_DRV_H): Updated.
+
+2017-09-24  Ewald Hew  <ewaldhew@gmail.com>
+
 	[psaux, cff] Add new service for inter-module calls.
 
 	NOTE: Does not compile!
