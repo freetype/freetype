@@ -1,5 +1,22 @@
 2017-09-24  Ewald Hew  <ewaldhew@gmail.com>
 
+	[psaux, cff] Move CFF builder components into `psaux' module.
+
+	NOTE: Does not compile!
+
+	* src/cff/cffgload.c
+	(cff_builder_{init,done,add_point,add_point1,add_contour,start_point,close_contour},
+	cff_check_points): Move to...
+	* src/psaux/psobjs.c: Here.
+
+	* src/cff/cffgload.h: Move corresponding declarations to
+	`src/psaux/psobjs.h'.
+
+	* src/cff/cffgload.h (CFF_Builder): Move struct declaration to...
+	* include/freetype/internal/psaux.h: Here.
+
+2017-09-24  Ewald Hew  <ewaldhew@gmail.com>
+
 	[psaux, cff] Move CFF decoder components into `psaux' module.
 
 	NOTE: Does not compile!

@@ -703,6 +703,80 @@ FT_BEGIN_HEADER
   } T1_DecoderRec;
 
   /*************************************************************************/
+  /*************************************************************************/
+  /*                                                                       */
+  /* <Structure>                                                           */
+  /*    CFF_Builder                                                        */
+  /*                                                                       */
+  /* <Description>                                                         */
+  /*     A structure used during glyph loading to store its outline.       */
+  /*                                                                       */
+  /* <Fields>                                                              */
+  /*    memory        :: The current memory object.                        */
+  /*                                                                       */
+  /*    face          :: The current face object.                          */
+  /*                                                                       */
+  /*    glyph         :: The current glyph slot.                           */
+  /*                                                                       */
+  /*    loader        :: The current glyph loader.                         */
+  /*                                                                       */
+  /*    base          :: The base glyph outline.                           */
+  /*                                                                       */
+  /*    current       :: The current glyph outline.                        */
+  /*                                                                       */
+  /*    pos_x         :: The horizontal translation (if composite glyph).  */
+  /*                                                                       */
+  /*    pos_y         :: The vertical translation (if composite glyph).    */
+  /*                                                                       */
+  /*    left_bearing  :: The left side bearing point.                      */
+  /*                                                                       */
+  /*    advance       :: The horizontal advance vector.                    */
+  /*                                                                       */
+  /*    bbox          :: Unused.                                           */
+  /*                                                                       */
+  /*    path_begun    :: A flag which indicates that a new path has begun. */
+  /*                                                                       */
+  /*    load_points   :: If this flag is not set, no points are loaded.    */
+  /*                                                                       */
+  /*    no_recurse    :: Set but not used.                                 */
+  /*                                                                       */
+  /*    metrics_only  :: A boolean indicating that we only want to compute */
+  /*                     the metrics of a given glyph, not load all of its */
+  /*                     points.                                           */
+  /*                                                                       */
+  /*    hints_funcs   :: Auxiliary pointer for hinting.                    */
+  /*                                                                       */
+  /*    hints_globals :: Auxiliary pointer for hinting.                    */
+  /*                                                                       */
+  typedef struct  CFF_Builder_
+  {
+    FT_Memory       memory;
+    TT_Face         face;
+    CFF_GlyphSlot   glyph;
+    FT_GlyphLoader  loader;
+    FT_Outline*     base;
+    FT_Outline*     current;
+
+    FT_Pos          pos_x;
+    FT_Pos          pos_y;
+
+    FT_Vector       left_bearing;
+    FT_Vector       advance;
+
+    FT_BBox         bbox;          /* bounding box */
+    FT_Bool         path_begun;
+    FT_Bool         load_points;
+    FT_Bool         no_recurse;
+
+    FT_Bool         metrics_only;
+
+    void*           hints_funcs;    /* hinter-specific */
+    void*           hints_globals;  /* hinter-specific */
+  } CFF_Builder;
+
+
+  /*************************************************************************/
+  /*************************************************************************/
   /*****                                                               *****/
   /*****                        CFF DECODER                            *****/
   /*****                                                               *****/
