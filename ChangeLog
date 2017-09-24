@@ -1,5 +1,29 @@
 2017-09-24  Ewald Hew  <ewaldhew@gmail.com>
 
+	[psaux, cff] Add new service for inter-module calls.
+
+	NOTE: Does not compile!
+
+	This is to allow CFF functions moved to `psaux' to call functions
+	declared in `src/cff/cffload.h'.
+
+	* include/freetype/internal/services/svcfftl.h: New file, setting up
+	a `CFFLoad' service.
+
+	* include/freetype/internal/ftserv.h (FT_DEFINE_SERVICEDESCREC10,
+	FT_DEFINE_SERVICEDESCREC): New macros.
+	(FT_SERVICE_CFF_TABLE_LOAD_H): New macro.
+
+	* src/cff/cffdrivr.c, src/cff/cffpic.h: Register the new service.
+
+	* src/cff/cfftypes.h (CFF_FontRec), src/psaux/cf2font.h
+	(CF2_FontRec): Add service interface.
+
+	* src/cff/cffobjs.c, src/psaux/cf2font.c, src/psaux/cf2ft.c,
+	src/psaux/cf2intrp.c, src/psaux/cffdecode.c: Use the new service.
+
+2017-09-24  Ewald Hew  <ewaldhew@gmail.com>
+
 	[psaux, cff] Add callbacks for inter-module calls.
 
 	NOTE: Does not compile!

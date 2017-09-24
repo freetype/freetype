@@ -496,6 +496,7 @@
     FT_Service_PsCMaps  psnames;
     PSHinter_Service    pshinter;
     PSAux_Service       psaux;
+    FT_Service_CFFLoad  cffload;
     FT_Bool             pure_cff    = 1;
     FT_Bool             cff2        = 0;
     FT_Bool             sfnt_format = 0;
@@ -525,6 +526,8 @@
       goto Exit;
     }
     face->psaux = psaux;
+
+    FT_FACE_FIND_GLOBAL_SERVICE( face, cffload, CFF_LOAD );
 
     FT_TRACE2(( "CFF driver\n" ));
 
@@ -627,6 +630,7 @@
 
       cff->pshinter = pshinter;
       cff->psnames  = psnames;
+      cff->cffload  = cffload;
 
       cffface->face_index = face_index & 0xFFFF;
 
