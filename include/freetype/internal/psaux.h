@@ -1067,6 +1067,10 @@ FT_BEGIN_HEADER
                    FT_Offset  length,
                    FT_UShort  seed );
 
+    FT_UInt32
+    (*cff_random)( FT_UInt32  r );
+
+
     T1_CMap_Classes  t1_cmap_classes;
 
     /* fields after this comment line were added after version 2.1.10 */

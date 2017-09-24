@@ -1,5 +1,24 @@
 2017-09-24  Ewald Hew  <ewaldhew@gmail.com>
 
+	[psaux, cff] Move `cff_random' into `psaux' service.
+
+	NOTE: Does not compile!
+
+	Minor fix to allow both `cff' and `psaux' to use `cff_random'.
+
+	* src/cff/cffload.c (cff_random): Move to...
+	* src/psaux/psobjs.c: Here.
+	* src/cff/cffload.h: Move corresponding declaration to
+	`src/psaux/psobjs.h'.
+
+	* include/freetype/internal/psaux.h (PSAux_ServiceRec): Register the
+	function here...
+	* src/psaux/psauxmod.c: And here.
+
+	* src/cff/cffload.c, src/psaux/cf2intrp.c: Update code.
+
+2017-09-24  Ewald Hew  <ewaldhew@gmail.com>
+
 	[cff] Move struct declarations to `freetype/internal'.
 
 	NOTE: Does not compile!
