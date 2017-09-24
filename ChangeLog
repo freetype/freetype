@@ -1,5 +1,22 @@
 2017-09-24  Ewald Hew  <ewaldhew@gmail.com>
 
+	[psaux, cff] Add callbacks for inter-module calls.
+
+	NOTE: Does not compile!
+
+	* include/freetype/internal/psaux.h: Add function pointer
+	declarations.
+
+	* src/psaux/cffdecode.c (cff_decoder_init): Update to take in
+	callbacks.
+	* src/psaux/cffdecode.h: Ditto.
+
+	* src/cff/cffgload.c (cff_compute_max_advance, cff_slot_load):
+	Update calls to pass in callbacks.
+	* src/psaux/cf2ft.c, src/psaux/cffdecode.c: Use them.
+
+2017-09-24  Ewald Hew  <ewaldhew@gmail.com>
+
 	[psaux, cff] Create new `PSAux' service interface entries.
 
 	NOTE: Does not compile!

@@ -647,10 +647,10 @@
         return FT_THROW( Invalid_Glyph_Format );
     }
 
-    error = cff_get_glyph_data( decoder->builder.face,
-                                (CF2_UInt)gid,
-                                &charstring,
-                                &len );
+    error = decoder->get_glyph_callback( decoder->builder.face,
+                                         (CF2_UInt)gid,
+                                         &charstring,
+                                         &len );
     /* TODO: for now, just pass the FreeType error through */
     if ( error )
       return error;
@@ -672,9 +672,9 @@
   {
     FT_ASSERT( decoder );
 
-    cff_free_glyph_data( decoder->builder.face,
-                         (FT_Byte**)&buf->start,
-                         (FT_ULong)( buf->end - buf->start ) );
+    decoder->free_glyph_callback( decoder->builder.face,
+                                  (FT_Byte**)&buf->start,
+                                  (FT_ULong)( buf->end - buf->start ) );
   }
 
 
