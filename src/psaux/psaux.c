@@ -26,6 +26,7 @@
 #include "t1cmap.c"
 #include "t1decode.c"
 #include "cffdecode.c"
+#include "psdecode.c"
 
 #include "psarrst.c"
 #include "psblues.c"

@@ -1,5 +1,24 @@
 2017-09-24  Ewald Hew  <ewaldhew@gmail.com>
 
+	[psaux] Add objects for new interpreter.
+
+	Introduce `PS_Decoder' and `PS_Builder' which include all fields
+	from either Type 1 or CFF decoders/builders.
+
+	* include/freetype/internal/psaux.h (PS_Builder, PS_Decoder): New
+	structs.
+
+	* src/psaux/psobjs.c, src/psaux/psobjs.h: Add `PS_Builder'
+	functions.
+
+	* src/psaux/psdecode.c, src/psaux/psdecode.h: New files to hold
+	`PS_Decoder' initialization functions.
+
+	* src/psaux/psaux.c, src/psaux/Jamfile (_sources),
+	src/psaux/rules.mk (PSAUX_DRV_SRC): Updated.
+
+2017-09-24  Ewald Hew  <ewaldhew@gmail.com>
+
 	[psaux] Rename files.
 
 	Replace the `cf2' file name prefix with `ps' as the Adobe engine
