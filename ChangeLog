@@ -1,3 +1,10 @@
+2017-09-24  Jonathan Kew  <jfkthame@gmail.com>
+
+	[sfnt] Fix `premultiply_data' (#52092).
+
+	* src/sfnt/pngshim.c (premultiply_data): Don't use vector extension
+	if we have less than 16 bytes of data.
+
 2017-09-24  Werner Lemberg  <wl@gnu.org>
 
 	[otvalid] Fix handling of ValueRecords.
