@@ -1,5 +1,11 @@
 2017-09-25  Ewald Hew  <ewaldhew@gmail.com>
 
+	[type1] Switch to Adobe engine.
+
+	* src/type1/t1objs.c (T1_Driver_Init): Set default to Adobe engine.
+
+2017-09-25  Ewald Hew  <ewaldhew@gmail.com>
+
 	[psaux] Extend Adobe interpreter (seac).
 
 	This concludes the changes needed to add Type 1 support.
