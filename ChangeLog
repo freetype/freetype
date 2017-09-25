@@ -1,5 +1,26 @@
 2017-09-25  Ewald Hew  <ewaldhew@gmail.com>
 
+	[psaux, type1] Reorganize object fields.
+
+	Make some fields more generic, so that we can access them the same
+	way regardless of Type 1 or CFF.
+
+	* include/freetype/internal/psaux.h (PS_Builder): Change `TT_Face'
+	to `FT_Face'.
+	Remove unused fields.
+
+	* src/psaux/psft.c: Update all accesses of `PS_Builder.face'.
+	Add some asserts to guard against casting `T1_Face' as `TT_Face'.
+
+	* src/type1/t1objs.h (T1_GlyphSlot): Reorder fields to follow
+	`CFF_GlyphSlot', so that we can pretend they are the same in the
+	interpreter.
+
+	* src/psaux/psobjs.c (ps_builder_init, ps_builder_add_point):
+	Updated with above changes.
+
+2017-09-25  Ewald Hew  <ewaldhew@gmail.com>
+
 	[psaux] Prepare for Type 1 mode.
 
 	Add some checks for Type 1 data passing through.

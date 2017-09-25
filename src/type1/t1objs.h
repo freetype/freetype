@@ -120,11 +120,11 @@ FT_BEGIN_HEADER
     FT_Bool          hint;
     FT_Bool          scaled;
 
-    FT_Int           max_points;
-    FT_Int           max_contours;
-
     FT_Fixed         x_scale;
     FT_Fixed         y_scale;
+
+    FT_Int           max_points;
+    FT_Int           max_contours;
 
   } T1_GlyphSlotRec;
 
