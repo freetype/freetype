@@ -1183,7 +1183,7 @@
   FT_LOCAL_DEF( FT_Error )
   cff_driver_init( FT_Module  module )        /* CFF_Driver */
   {
-    CFF_Driver  driver = (CFF_Driver)module;
+    PS_Driver  driver = (PS_Driver)module;
 
     FT_UInt32  seed;
 

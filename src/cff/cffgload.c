@@ -395,7 +395,7 @@
 
     {
 #ifdef CFF_CONFIG_OPTION_OLD_ENGINE
-      CFF_Driver  driver = (CFF_Driver)FT_FACE_DRIVER( face );
+      PS_Driver  driver = (PS_Driver)FT_FACE_DRIVER( face );
 #endif
 
 

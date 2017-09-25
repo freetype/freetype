@@ -12,16 +12,6 @@
 FT_BEGIN_HEADER
 
 
-  /*************************************************************************/
-  /*                                                                       */
-  /* <Type>                                                                */
-  /*    CFF_Driver                                                         */
-  /*                                                                       */
-  /* <Description>                                                         */
-  /*    A handle to an OpenType driver object.                             */
-  /*                                                                       */
-  typedef struct CFF_DriverRec_*  CFF_Driver;
-
   typedef TT_Face  CFF_Face;
 
 
@@ -89,22 +79,6 @@ FT_BEGIN_HEADER
     FT_F26Dot6  ox, oy;     /* offsets        */
 
   } CFF_Transform;
-
-
-  /***********************************************************************/
-  /*                                                                     */
-  /* CFF driver class.                                                   */
-  /*                                                                     */
-  typedef struct  CFF_DriverRec_
-  {
-    FT_DriverRec  root;
-
-    FT_UInt   hinting_engine;
-    FT_Bool   no_stem_darkening;
-    FT_Int    darken_params[8];
-    FT_Int32  random_seed;
-
-  } CFF_DriverRec;
 
 
 FT_END_HEADER

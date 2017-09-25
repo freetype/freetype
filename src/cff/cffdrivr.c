@@ -21,6 +21,7 @@
 #include FT_INTERNAL_DEBUG_H
 #include FT_INTERNAL_STREAM_H
 #include FT_INTERNAL_SFNT_H
+#include FT_INTERNAL_POSTSCRIPT_AUX_H
 #include FT_SERVICE_CID_H
 #include FT_SERVICE_POSTSCRIPT_INFO_H
 #include FT_SERVICE_POSTSCRIPT_NAME_H
@@ -744,7 +745,7 @@
                     FT_Bool      value_is_string )
   {
     FT_Error    error  = FT_Err_Ok;
-    CFF_Driver  driver = (CFF_Driver)module;
+    PS_Driver   driver = (PS_Driver)module;
 
 #ifndef FT_CONFIG_OPTION_ENVIRONMENT_PROPERTIES
     FT_UNUSED( value_is_string );
@@ -910,7 +911,7 @@
                     const void*  value )
   {
     FT_Error    error  = FT_Err_Ok;
-    CFF_Driver  driver = (CFF_Driver)module;
+    PS_Driver   driver = (PS_Driver)module;
 
 
     if ( !ft_strcmp( property_name, "darkening-parameters" ) )
@@ -1229,7 +1230,7 @@
       FT_MODULE_DRIVER_HAS_HINTER    |
       FT_MODULE_DRIVER_HINTS_LIGHTLY,
 
-      sizeof ( CFF_DriverRec ),
+      sizeof ( PS_DriverRec ),
       "cff",
       0x10000L,
       0x20000L,

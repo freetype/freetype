@@ -1,5 +1,20 @@
 2017-09-25  Ewald Hew  <ewaldhew@gmail.com>
 
+	[cff] Move and rename `CFF_Driver'.
+
+	This is so that we can use the same hinting engine parameters for
+	Type 1.
+
+	* include/freetype/internal/cffotypes.h (CFF_Driver): Rename and
+	move to...
+	* include/freetype/internal/psaux.h (PS_Driver): ...here.
+
+	* src/cff/cffdrivr.c, src/cff/cffgload.c, src/cff/cffload.c,
+	src/cff/cffobjs.c, src/cff/cffobjs.h, src/psaux/psft.c,
+	src/psaux/psobjs.c: Update references.
+
+2017-09-25  Ewald Hew  <ewaldhew@gmail.com>
+
 	[psaux, type1] Reorganize object fields.
 
 	Make some fields more generic, so that we can access them the same
