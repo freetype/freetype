@@ -1621,8 +1621,9 @@
                       ...
 #endif
 
-                    x = top[0];
-                    y = top[1];
+                    curY = cf2_stack_popFixed( opStack );
+                    curX = cf2_stack_popFixed( opStack );
+
                     decoder->flex_state = 0;
                   }
                   break;
