@@ -1,5 +1,16 @@
 2017-09-25  Ewald Hew  <ewaldhew@gmail.com>
 
+	[psaux] Minor fixes.
+
+	* src/psaux/psintrp.c (cf2_interpT2CharString): Fix check for pop
+	results.
+	s/font->decoder/decoder/ where necessary.
+	<cf2_cmdHSTEM, cf2_cmdVSTEM, cf2_escHSTEM3, cf2_escVSTEM3>: Use
+	offset parameter in `cf2_doStems' instead of doing correction for
+	left-sidebearing.
+
+2017-09-25  Ewald Hew  <ewaldhew@gmail.com>
+
 	[cid] Use the new engine.
 
 	* src/cid/cidgload.c: Update includes.
