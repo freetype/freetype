@@ -1,5 +1,43 @@
 2017-09-25  Ewald Hew  <ewaldhew@gmail.com>
 
+	[psaux] Add Type 1 operations to Adobe CFF interpreter.
+
+	The following Type 1 specific ops have been added (copied from
+	`t1decode'):
+
+	  closepath
+	  vstem3
+	  hstem3
+	  seac
+	  sbw
+	  callothersubr
+	  pop
+	  setcurrentpoint
+	  hsbw
+
+	The following require a Type 1 mode, because of differences in
+	specification:
+
+	  hstem
+	  vstem
+	  vmoveto
+	  callsubr
+	  div
+	  rmoveto
+	  hmoveto
+	  Numbers
+
+	The subsequent commits will implement these changes and adapt
+	accesses of data and objects to the new interpreter.
+
+	NOTE: Will not compile in the meantime!
+
+	* src/psaux/psintrp.c: Add opcodes to enum.
+	(cf2_interpT2CharString): Copy relevant code over from
+	`t1_decoder_parse_charstrings' (in `t1decode.c').
+
+2017-09-25  Ewald Hew  <ewaldhew@gmail.com>
+
 	[type1] Fixes for rendering.
 
 	The Type 1 advance width calculation passes null for glyph slot,
