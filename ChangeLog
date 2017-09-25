@@ -1,5 +1,28 @@
 2017-09-25  Ewald Hew  <ewaldhew@gmail.com>
 
+	[psaux] Move `psdecode' into `psobjs'.
+
+	As the former only contains a single procedure, move it into
+	`psobjs' for simplicity.  Also change the parameter order to the
+	conventional one.
+
+	* src/psaux/psdecode.c (ps_decoder_init): Moved to...
+	* src/psaux/psobjs.c: ...Here.
+	* src/psaux/psdecode.h, src/psaux/psobjs.h: Ditto.
+
+	* include/freetype/internal/psaux.h (PSAux_ServiceRec): Update
+	`ps_decoder_init' function signature.
+
+	* src/cff/cffgload.c, src/cid/cidgload.c, src/type1/t1gload.c:
+	Update calls.
+
+	* src/psaux/psaux.c, src/psaux/psauxmod.c: Update includes.
+
+	* src/psaux/Jamfile (_sources), src/psaux/rules.mk (PSAUX_DRV_SRC):
+	Update file references.
+
+2017-09-25  Ewald Hew  <ewaldhew@gmail.com>
+
 	[psaux] Fix Type 1 hinting.
 
 	Type 1 hinting breaks sometimes when mid-charstring hints should

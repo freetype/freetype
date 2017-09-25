@@ -110,7 +110,7 @@
         CFF_SubFontRec  subfont;
 
 
-        psaux->ps_decoder_init( decoder, TRUE, &psdecoder );
+        psaux->ps_decoder_init( &psdecoder, decoder, TRUE );
 
         psaux->t1_make_subfont( FT_FACE( face ), &face->type1.private_dict, &subfont );
         psdecoder.current_subfont = &subfont;

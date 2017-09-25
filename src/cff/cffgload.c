@@ -435,7 +435,7 @@
       else
 #endif
       {
-        psaux->ps_decoder_init( &decoder, FALSE, &psdecoder );
+        psaux->ps_decoder_init( &psdecoder, &decoder, FALSE );
 
         error = decoder_funcs->parse_charstrings( &psdecoder,
                                                   charstring,
