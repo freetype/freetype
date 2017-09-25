@@ -1,3 +1,16 @@
+2017-09-25  Ewald Hew  <ewaldhew@gmail.com>
+
+	[psaux, cff] Use the new objects.
+
+	* include/freetype/internal/psaux.h, src/psaux/psauxmod.c: Fix
+	switching between new and old engines.
+
+	* src/cff/cffgload.c, src/cff/cffparse.c: Update calls.
+
+	* src/psaux/psblues.c, src/psaux/psfont.c, src/psaux/psfont.h,
+	src/psaux/psft.c, src/psaux/psft.h, src/psaux/psintrp.c: Update all
+	to use new objects.
+
 2017-09-24  Ewald Hew  <ewaldhew@gmail.com>
 
 	[psaux] Objects for new interpreter (part 2).

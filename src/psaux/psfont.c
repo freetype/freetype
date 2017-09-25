@@ -243,7 +243,7 @@
                   const CF2_Matrix*  transform )
   {
     /* pointer to parsed font object */
-    CFF_Decoder*  decoder = font->decoder;
+    PS_Decoder*  decoder = font->decoder;
 
     FT_Bool  needExtraSetup = FALSE;
 
