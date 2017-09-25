@@ -1,5 +1,24 @@
 2017-09-25  Ewald Hew  <ewaldhew@gmail.com>
 
+	[psaux] Extend Adobe interpreter (seac).
+
+	This concludes the changes needed to add Type 1 support.
+
+	* src/psaux/psintrp.c: Update includes.
+	(cf2_interpT2CharString) <cf2_escSEAC>: Implement this similarly to
+	implied seac for CFF.
+
+	* src/psaux/t1decode.c (t1_lookup_glyph_by_stdcharcode_ps): New
+	function to look up the glyph index.
+
+	* src/psaux/psft.c (cf2_getT1SeacComponent,
+	cf2_freeT1SeacComponent): New functions to get the charstrings for
+	seac components.
+
+	* src/psaux/t1decode.h, src/psaux/psft.h: Update declarations.
+
+2017-09-25  Ewald Hew  <ewaldhew@gmail.com>
+
 	[psaux] Extend Adobe interpreter (flex in callothersubr).
 
 	* src/psaux/psintrp.c (cf2_interpT2CharString)
