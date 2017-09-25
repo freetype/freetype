@@ -1,5 +1,15 @@
 2017-09-25  Ewald Hew  <ewaldhew@gmail.com>
 
+	[psaux] Extend Adobe interpreter (div, four-byte numbers).
+
+	* src/psaux/psintrp.c (cf2_interpT2CharString) <cf2_escDIV>: Add
+	Type 1 mode.  Type 1 requires large integers to be followed by
+	`div'; cf. `Adobe Type 1 Font Format', section 6.2.
+	<op == 255>: Push Type 1 four-byte numbers as `Int' always.  This is
+	to ensure `div' and `callsubr' get values they can use.
+
+2017-09-25  Ewald Hew  <ewaldhew@gmail.com>
+
 	Extend Adobe interpreter (hints).
 
 	* src/psaux/psintrp.c (cf2_interpT2CharString) <cf2_cmdHSTEM,
