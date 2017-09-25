@@ -1,3 +1,14 @@
+/***************************************************************************/
+/*                                                                         */
+/*  svcfftl.h                                                              */
+/*                                                                         */
+/*    The FreeType CFF tables loader service (specification).              */
+/*                                                                         */
+/*  Copyright notice here                                                  */
+/*                                                                         */
+/***************************************************************************/
+
+
 #ifndef SVCFFTL_H_
 #define SVCFFTL_H_
 

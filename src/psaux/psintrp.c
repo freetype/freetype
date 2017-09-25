@@ -1,6 +1,6 @@
 /***************************************************************************/
 /*                                                                         */
-/*  cf2intrp.c                                                             */
+/*  psintrp.c                                                              */
 /*                                                                         */
 /*    Adobe's CFF Interpreter (body).                                      */
 /*                                                                         */
@@ -661,6 +661,9 @@
                 op1 == cf2_cmdENDCHAR  ||
                 op1 >= 32 /* Numbers */ ) )
         {
+          /* Skip outline commands first time round.       */
+          /* `endchar' will trigger initial hintmap build  */
+          /* and rewind the charstring.                    */
           cf2_stack_clear( opStack );
           continue;
         }
@@ -787,6 +790,7 @@
           }
         }
 
+        /* Add left-sidebearing correction in Type 1 mode */
         cf2_doStems( font,
                      opStack,
                      &hStemHintArray,
@@ -816,6 +820,7 @@
           }
         }
 
+        /* Add left-sidebearing correction in Type 1 mode */
         cf2_doStems( font,
                      opStack,
                      &vStemHintArray,
@@ -1220,6 +1225,7 @@
                                          SUB_INT32( SUB_INT32( v2, v1 ),
                                                     cf2_stack_getReal( opStack, 3 ) ) );
 
+                      /* Add left-sidebearing correction */
                       cf2_doStems( font,
                                    opStack,
                                    isV ? &vStemHintArray : &hStemHintArray,
@@ -1755,6 +1761,8 @@
 
                       if ( initial_map_ready )
                       {
+                        /* do not clear hints if initial hintmap */
+                        /* is not ready - we need to collate all */
                         cf2_arrstack_clear( &vStemHintArray );
                         cf2_arrstack_clear( &hStemHintArray );
 
