@@ -1,3 +1,22 @@
+2017-09-24  Ewald Hew  <ewaldhew@gmail.com>
+
+	[psaux, cff] Move Adobe's engine components into `psaux' module.
+
+	This is the first patch of a sequence to move the Type 2 charstring
+	processing capability from the `cff' module to the `psaux' module.
+
+	NOTE: Does not compile!
+
+	* src/cff/cf2*: Move these files to...
+	* src/psaux/cf2*: Here.
+
+	* src/cff/Jamfile (_sources), src/cff/rules.mk (CFF_DRV_SRC,
+	CFF_DRV_H), src/cff/cff.c, src/cff/cffgload.c: Remove file
+	references.
+
+	* src/psaux/Jamfile (_sources), src/psaux/rules.mk, src/psaux/psaux.c
+	(PSAUX_DRV_SRC, PSAUX_DRV_H): Add file references.
+
 2017-09-24  Alexei Podtelezhnikov  <apodtele@gmail.com>
 
 	Tweak per-face LCD filtering controls.

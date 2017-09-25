@@ -27,7 +27,6 @@
 #include "cffobjs.h"
 #include "cffload.h"
 #include "cffgload.h"
-#include "cf2ft.h"      /* for cf2_decoder_parse_charstrings */
 
 #include "cfferrs.h"
 
