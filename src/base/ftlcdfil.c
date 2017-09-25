@@ -32,7 +32,7 @@
 #define FT_SHIFTCLAMP( x )  ( x >>= 8, (FT_Byte)( x > 255 ? 255 : x ) )
 
   /* FIR filter used by the default and light filters */
-  FT_BASE( void )
+  FT_BASE_DEF( void )
   ft_lcd_filter_fir( FT_Bitmap*           bitmap,
                      FT_Render_Mode       mode,
                      FT_LcdFiveTapFilter  weights )
@@ -304,8 +304,6 @@
     default:
       return FT_THROW( Invalid_Argument );
     }
-
-    library->lcd_filter = filter;
 
     return FT_Err_Ok;
   }

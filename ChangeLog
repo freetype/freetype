@@ -1,3 +1,24 @@
+2017-09-24  Alexei Podtelezhnikov  <apodtele@gmail.com>
+
+	Tweak per-face LCD filtering controls.
+
+	Thing are simpler with a NULL-function pointer.
+
+	* include/freetype/internal/ftobjs.h (FT_Face_InternalRec): New
+	pointer to the filter function.
+	(FT_LibraryRec): Remove unused `lcd_filter'.
+	(FT_Bitmap_LcdFilterFunc, ft_lcd_filter_fir):  Move from here...
+	* include/freetype/ftlcdfil.h (FT_Bitmap_LcdFilterFunc,
+	ft_lcd_filter_fir): ... to here.
+
+	* src/base/ftobjs.c (ft_open_face_internal): NULL-initialize the
+	per-face filter.
+	(FT_Face_Properties): Set it.
+	* src/smooth/ftsmooth.c (ft_smooth_render_generic): Simplify.
+
+	* src/base/ftlcdfil.c (ft_lcd_filter_fir, FT_Libary_SetLcdFilter):
+	Minor.
+
 2017-09-24  Jonathan Kew  <jfkthame@gmail.com>
 
 	[sfnt] Fix `premultiply_data' (#52092).
@@ -32,7 +53,7 @@
 	VariationIndex subtable.
 	(otv_Lookup_validate): Handle MarkFilteringSet.
 
-2017-09-21  Alexei Podtelezhnikov  <apodtele@gmail.com>
+2017-09-23  Alexei Podtelezhnikov  <apodtele@gmail.com>
 
 	[build] Windows-style DLL versioning.
 

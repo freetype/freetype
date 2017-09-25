@@ -115,56 +115,22 @@
     FT_Bool  have_buffer          = FALSE;
 
 #ifdef FT_CONFIG_OPTION_SUBPIXEL_RENDERING
-
-    FT_LcdFiveTapFilter      lcd_weights        = { 0 };
-    FT_Bool                  have_custom_weight = FALSE;
-    FT_Bitmap_LcdFilterFunc  lcd_filter_func    = NULL;
+    FT_Byte*                 lcd_weights;
+    FT_Bitmap_LcdFilterFunc  lcd_filter_func;
 
 
-    if ( slot->face )
+    /* Per-face LCD filtering takes priority if set up. */
+    if ( slot->face && slot->face->internal->lcd_filter_func )
     {
-      FT_Char  i;
-
-
-      for ( i = 0; i < FT_LCD_FILTER_FIVE_TAPS; i++ )
-        if ( slot->face->internal->lcd_weights[i] != 0 )
-        {
-          have_custom_weight = TRUE;
-          break;
-        }
-    }
-
-    /*
-     * The LCD filter can be set library-wide and per-face.  Face overrides
-     * library.  If the face filter weights are all zero (the default), it
-     * means that the library default should be used.
-     */
-    if ( have_custom_weight )
-    {
-      /*
-       * A per-font filter is set.  It always uses the default 5-tap
-       * in-place FIR filter.
-       */
-      ft_memcpy( lcd_weights,
-                 slot->face->internal->lcd_weights,
-                 FT_LCD_FILTER_FIVE_TAPS );
-      lcd_filter_func = ft_lcd_filter_fir;
+      lcd_weights     = slot->face->internal->lcd_weights;
+      lcd_filter_func = slot->face->internal->lcd_filter_func;
     }
     else
     {
-      /*
-       * The face's lcd_weights is {0, 0, 0, 0, 0}, meaning `use library
-       * default'.  If the library is set to use no LCD filtering
-       * (lcd_filter_func == NULL), `lcd_filter_func' here is also set to
-       * NULL and the tests further below pass over the filtering process.
-       */
-      ft_memcpy( lcd_weights,
-                 slot->library->lcd_weights,
-                 FT_LCD_FILTER_FIVE_TAPS );
+      lcd_weights     = slot->library->lcd_weights;
       lcd_filter_func = slot->library->lcd_filter_func;
     }
-
-#endif /*FT_CONFIG_OPTION_SUBPIXEL_RENDERING */
+#endif /* FT_CONFIG_OPTION_SUBPIXEL_RENDERING */
 
     /* check glyph image format */
     if ( slot->format != render->glyph_format )
@@ -208,7 +174,7 @@
 #else /* FT_CONFIG_OPTION_SUBPIXEL_RENDERING */
 
     /* add minimal padding for LCD filter depending on specific weights */
-    if ( lcd_filter_func )
+    if ( lcd_filter_func == ft_lcd_filter_fir )
     {
       if ( hmul )
       {

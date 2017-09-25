@@ -2441,7 +2441,8 @@
       internal->no_stem_darkening = -1;
 
 #ifdef FT_CONFIG_OPTION_SUBPIXEL_RENDERING
-      ft_memset( internal->lcd_weights, 0, FT_LCD_FILTER_FIVE_TAPS );
+      /* Per-face filtering can only be set up by FT_Face_Properties */
+      internal->lcd_filter_func = NULL;
 #endif
     }
 
@@ -3653,16 +3654,11 @@
       {
 #ifdef FT_CONFIG_OPTION_SUBPIXEL_RENDERING
         if ( properties->data )
+        {
           ft_memcpy( face->internal->lcd_weights,
                      properties->data,
                      FT_LCD_FILTER_FIVE_TAPS );
-        else
-        {
-          /* Value NULL indicates `no custom weights, use library        */
-          /* defaults', signaled by filling the weight field with zeros. */
-          ft_memset( face->internal->lcd_weights,
-                     0,
-                     FT_LCD_FILTER_FIVE_TAPS );
+          face->internal->lcd_filter_func = ft_lcd_filter_fir;
         }
 #else
         error = FT_THROW( Unimplemented_Feature );
