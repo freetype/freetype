@@ -1,5 +1,20 @@
 2017-09-25  Ewald Hew  <ewaldhew@gmail.com>
 
+	[type1] Add Adobe engine configuration.
+
+	Use the previously changed PS_Driver in type1 module to store
+	hinting engine configuration.
+
+	* include/freetype/ftt1drv.h: New file.
+	Duplicate and rename config options from CFF.
+	* include/freetype/config/ftheader.h (FT_TYPE1_DRIVER_H): New macro.
+
+	* src/type1/t1driver.c (t1_driver_class): Update declaration.
+	* src/type1/t1objs.c: Include FT_TYPE1_DRIVER_H.
+	(T1_Driver_Init): Update code.
+
+2017-09-25  Ewald Hew  <ewaldhew@gmail.com>
+
 	[cff] Move and rename `CFF_Driver'.
 
 	This is so that we can use the same hinting engine parameters for

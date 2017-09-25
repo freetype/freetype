@@ -370,6 +370,19 @@
   /*************************************************************************
    *
    * @macro:
+   *   FT_TYPE1_DRIVER_H
+   *
+   * @description:
+   *   A macro used in #include statements to name the file containing
+   *   structures and macros related to the Type~1 driver module.
+   *
+   */
+#define FT_TYPE1_DRIVER_H  <freetype/ftt1drv.h>
+
+
+  /*************************************************************************
+   *
+   * @macro:
    *   FT_TYPE1_TABLES_H
    *
    * @description:
