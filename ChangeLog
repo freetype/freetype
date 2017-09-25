@@ -1,5 +1,17 @@
 2017-09-25  Ewald Hew  <ewaldhew@gmail.com>
 
+	[psaux] Extend Adobe interpreter (hsbw, sbw).
+
+	* src/psaux/psintrp.c (cf2_doStems): `hsbw' or `sbw' must be the
+	first operation in a Type 1 charstring.
+	(cf2_interpT2CharString): Remove unused variables.
+	<cf2_cmdHMOVETO, cf2_cmdVMOVETO, cf2_cmdRMOVETO>: `hsbw' or `sbw'
+	must be the first operation in a Type 1 charstring.
+	<cf2_cmdHSBW, cf2_escSBW>: Fix data access and add correction for
+	left sidebearing.
+
+2017-09-25  Ewald Hew  <ewaldhew@gmail.com>
+
 	[psaux] Extend Adobe interpreter (setcurrentpoint).
 
 	* src/psaux/psintrp.c (cf2_interpT2CharString)
