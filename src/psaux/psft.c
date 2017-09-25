@@ -309,8 +309,11 @@
     FT_Error   error = FT_Err_Ok;
     CF2_Font   font;
 
+    FT_Bool    is_t1 = decoder->builder.is_t1;
 
-    FT_ASSERT( decoder && decoder->cff );
+
+    FT_ASSERT( decoder &&
+               ( is_t1 || decoder->cff ) );
 
     memory = decoder->builder.memory;
 
@@ -330,7 +333,9 @@
       font = (CF2_Font)decoder->cff->cf2_instance.data;
 
       font->memory = memory;
-      font->cffload = (FT_Service_CFFLoad)decoder->cff->cffload;
+
+      if ( !is_t1 )
+        font->cffload = (FT_Service_CFFLoad)decoder->cff->cffload;
 
       /* initialize a client outline, to be shared by each glyph rendered */
       cf2_outline_init( &font->outline, font->memory, &font->error );
@@ -381,6 +386,7 @@
 
       /* copy isCFF2 boolean from TT_Face to CF2_Font */
       font->isCFF2 = builder->face->is_cff2;
+      font->isT1   = is_t1;
 
       font->renderingFlags = 0;
       if ( hinted )

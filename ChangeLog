@@ -1,5 +1,19 @@
 2017-09-25  Ewald Hew  <ewaldhew@gmail.com>
 
+	[psaux] Prepare for Type 1 mode.
+
+	Add some checks for Type 1 data passing through.
+
+	* src/psaux/psfont.h (CF2_Font): Add `isT1' flag.
+	* src/psaux/psfont.c (cf2_font_setup): Skip the variations and blend
+	code which is not applicable for Type 1.
+
+	* src/psaux/psft.c (cf2_decoder_parse_charstrings): Avoid accessing
+	`decoder->cff' in Type 1 mode.
+	Copy `is_t1' flag to `CF2_Font'.
+
+2017-09-25  Ewald Hew  <ewaldhew@gmail.com>
+
 	[psaux, cff] Use the new objects.
 
 	* include/freetype/internal/psaux.h, src/psaux/psauxmod.c: Fix

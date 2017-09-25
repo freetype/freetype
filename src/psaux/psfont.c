@@ -260,8 +260,6 @@
     CF2_UInt   lenNormalizedV = 0;
     FT_Fixed*  normalizedV    = NULL;
 
-    FT_Service_CFFLoad  cffload = (FT_Service_CFFLoad)font->cffload;
-
     /* clear previous error */
     font->error = FT_Err_Ok;
 
@@ -274,46 +272,50 @@
       needExtraSetup    = TRUE;
     }
 
-    /* check for variation vectors */
-    vstore        = cf2_getVStore( decoder );
-    hasVariations = ( vstore->dataCount != 0 );
-
-    if ( hasVariations )
+    if ( !font->isT1 )
     {
-#ifdef TT_CONFIG_OPTION_GX_VAR_SUPPORT
-      /* check whether Private DICT in this subfont needs to be reparsed */
-      font->error = cf2_getNormalizedVector( decoder,
-                                             &lenNormalizedV,
-                                             &normalizedV );
-      if ( font->error )
-        return;
+      FT_Service_CFFLoad  cffload = (FT_Service_CFFLoad)font->cffload;
+      /* check for variation vectors */
+      vstore        = cf2_getVStore( decoder );
+      hasVariations = ( vstore->dataCount != 0 );
 
-      if ( cffload->blend_check_vector( &subFont->blend,
-                                        subFont->private_dict.vsindex,
-                                        lenNormalizedV,
-                                        normalizedV ) )
+      if ( hasVariations )
       {
-        /* blend has changed, reparse */
-        cffload->load_private_dict( decoder->cff,
-                                    subFont,
-                                    lenNormalizedV,
-                                    normalizedV );
-        needExtraSetup = TRUE;
-      }
+#ifdef TT_CONFIG_OPTION_GX_VAR_SUPPORT
+        /* check whether Private DICT in this subfont needs to be reparsed */
+        font->error = cf2_getNormalizedVector( decoder,
+                                               &lenNormalizedV,
+                                               &normalizedV );
+        if ( font->error )
+          return;
+
+        if ( cffload->blend_check_vector( &subFont->blend,
+                                          subFont->private_dict.vsindex,
+                                          lenNormalizedV,
+                                          normalizedV ) )
+        {
+          /* blend has changed, reparse */
+          cffload->load_private_dict( decoder->cff,
+                                      subFont,
+                                      lenNormalizedV,
+                                      normalizedV );
+          needExtraSetup = TRUE;
+        }
 #endif
 
-      /* copy from subfont */
-      font->blend.font = subFont->blend.font;
+        /* copy from subfont */
+        font->blend.font = subFont->blend.font;
 
-      /* clear state of charstring blend */
-      font->blend.usedBV = FALSE;
+        /* clear state of charstring blend */
+        font->blend.usedBV = FALSE;
 
-      /* initialize value for charstring */
-      font->vsindex = subFont->private_dict.vsindex;
+        /* initialize value for charstring */
+        font->vsindex = subFont->private_dict.vsindex;
 
-      /* store vector inputs for blends in charstring */
-      font->lenNDV = lenNormalizedV;
-      font->NDV    = normalizedV;
+        /* store vector inputs for blends in charstring */
+        font->lenNDV = lenNormalizedV;
+        font->NDV    = normalizedV;
+      }
     }
 
     /* if ppem has changed, we need to recompute some cached data         */
