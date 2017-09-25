@@ -1,5 +1,13 @@
 2017-09-25  Ewald Hew  <ewaldhew@gmail.com>
 
+	[cid] Use the new engine.
+
+	* src/cid/cidgload.c: Update includes.
+	(cid_load_glyph, cid_slot_load_glyph): Implement changes to glyph
+	loading code as with `type1' module.
+
+2017-09-25  Ewald Hew  <ewaldhew@gmail.com>
+
 	[cid] Add Adobe engine configuration.
 
 	This is similar to what was done in the `type1' module.
