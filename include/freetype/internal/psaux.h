@@ -1290,6 +1290,10 @@ FT_BEGIN_HEADER
                         FT_Bool      is_t1,
                         PS_Decoder*  ps_decoder );
 
+    void
+    (*t1_make_subfont)( T1_Face      face,
+                        CFF_SubFont  subfont );
+
 
     T1_CMap_Classes  t1_cmap_classes;
 

@@ -23,6 +23,7 @@
 #include FT_INTERNAL_STREAM_H
 #include FT_OUTLINE_H
 #include FT_INTERNAL_POSTSCRIPT_AUX_H
+#include FT_INTERNAL_CFF_TYPES_H
 #include FT_TYPE1_DRIVER_H
 
 #include "t1errors.h"
@@ -104,7 +105,13 @@
                                                       (FT_UInt)char_string->length );
       else
       {
+        CFF_SubFontRec  subfont;
+
+
         psaux->ps_decoder_init( decoder, TRUE, &psdecoder );
+
+        psaux->t1_make_subfont( face, &subfont );
+        psdecoder.current_subfont = &subfont;
 
         error = decoder_funcs->parse_charstrings( &psdecoder,
                                                   (FT_Byte*)char_string->pointer,

@@ -285,6 +285,10 @@ FT_BEGIN_HEADER
   /*************************************************************************/
 
   FT_LOCAL( void )
+  t1_make_subfont( T1_Face      face,
+                   CFF_SubFont  subfont );
+
+  FT_LOCAL( void )
   t1_decrypt( FT_Byte*   buffer,
               FT_Offset  length,
               FT_UShort  seed );

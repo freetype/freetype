@@ -1,5 +1,25 @@
 2017-09-25  Ewald Hew  <ewaldhew@gmail.com>
 
+	[psaux] Add missing objects (2/2).
+
+	Synthesize a `SubFont' object for Type 1 fonts.  This is used in the
+	interpreter to access Private dict data, which are stored in
+	different places for Type 1 and CFF.  This allows the same data to
+	be used in either mode.
+
+	* src/psaux/psobjs.c (t1_make_subfont): New procedure to copy
+	required values to a dummy `CFF_SubFont' object.  This is similar to
+	`cff_make_private_dict'.
+	* src/psaux/psobjs.h: Add the new declaration.
+
+	* include/freetype/internal/psaux.h, src/psaux/psauxmod.c: Ditto.
+	Add this to the PSAux Service for future use with CID fonts.
+
+	* src/type1/t1gload.c: Include FT_INTERNAL_CFF_TYPES_H.
+	(T1_Parse_Glyph_And_Get_Char_String): Add the call.
+
+2017-09-25  Ewald Hew  <ewaldhew@gmail.com>
+
 	[psaux] Add missing objects for Type 1 (1/2).
 
 	Move `CF2_Font' instance to `PS_Decoder'.  This is the context for
