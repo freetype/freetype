@@ -1,5 +1,15 @@
 2017-09-25  Ewald Hew  <ewaldhew@gmail.com>
 
+	[cid] Add Adobe engine configuration.
+
+	This is similar to what was done in the `type1' module.
+
+	* src/cid/cidriver.c (t1cid_driver_class): Update declaration.
+	* src/cid/cidobjs.c: Include FT_TYPE1_DRIVER_H.
+	(cid_driver_init): Update code.
+
+2017-09-25  Ewald Hew  <ewaldhew@gmail.com>
+
 	[psaux] Change subfont synthesis for CID fonts.
 
 	Change `t1_make_subfont' to take in the Private dict record as an
