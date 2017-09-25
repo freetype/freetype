@@ -1,5 +1,22 @@
 2017-09-25  Ewald Hew  <ewaldhew@gmail.com>
 
+	[type1] Fixes for rendering.
+
+	The Type 1 advance width calculation passes null for glyph slot,
+	etc, which can cause null pointer access in the new interpreter.
+	Fall back to the old one for now.
+
+	Fix the large glyph retry code and ensure hinting and scaling flags
+	are set properly.
+
+	* src/type1/t1gload.c (T1_Parse_Glyph_And_Get_Char_String): Add a
+	check for metrics_only.
+	Set the `force_scaling' flag.
+	(T1_Parse_Glyph): Updated.
+	(T1_Load_Glyph): Add `hinting' and `scaled' flags.
+
+2017-09-25  Ewald Hew  <ewaldhew@gmail.com>
+
 	[psaux] Add missing objects (2/2).
 
 	Synthesize a `SubFont' object for Type 1 fonts.  This is used in the
@@ -198,7 +215,7 @@
 
 	[psaux] Minor fix.
 
-	Use `MultiMasters' service in `psaux' instead of a call to `cff'. 
+	Use `MultiMasters' service in `psaux' instead of a call to `cff'.
 	The project builds if CFF_CONFIG_OPTION_OLD_ENGINE is not defined.
 
 	* src/psaux/cf2ft.c: Update includes.
