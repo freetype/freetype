@@ -318,19 +318,19 @@
     memory = decoder->builder.memory;
 
     /* CF2 data is saved here across glyphs */
-    font = (CF2_Font)decoder->cff->cf2_instance.data;
+    font = (CF2_Font)decoder->cf2_instance->data;
 
     /* on first glyph, allocate instance structure */
-    if ( !decoder->cff->cf2_instance.data )
+    if ( !decoder->cf2_instance->data )
     {
-      decoder->cff->cf2_instance.finalizer =
+      decoder->cf2_instance->finalizer =
         (FT_Generic_Finalizer)cf2_free_instance;
 
-      if ( FT_ALLOC( decoder->cff->cf2_instance.data,
+      if ( FT_ALLOC( decoder->cf2_instance->data,
                      sizeof ( CF2_FontRec ) ) )
         return FT_THROW( Out_Of_Memory );
 
-      font = (CF2_Font)decoder->cff->cf2_instance.data;
+      font = (CF2_Font)decoder->cf2_instance->data;
 
       font->memory = memory;
 

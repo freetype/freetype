@@ -1641,7 +1641,15 @@
   FT_LOCAL_DEF( void )
   t1_decoder_done( T1_Decoder  decoder )
   {
+    FT_Memory  memory = decoder->builder.memory;
+
     t1_builder_done( &decoder->builder );
+
+    if ( decoder->cf2_instance.finalizer )
+    {
+      decoder->cf2_instance.finalizer( decoder->cf2_instance.data );
+      FT_FREE( decoder->cf2_instance.data );
+    }
   }
 
 

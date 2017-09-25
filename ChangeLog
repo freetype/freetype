@@ -1,5 +1,23 @@
 2017-09-25  Ewald Hew  <ewaldhew@gmail.com>
 
+	[psaux] Add missing objects for Type 1 (1/2).
+
+	Move `CF2_Font' instance to `PS_Decoder'.  This is the context for
+	the interpreter and since it is currently stored in `CFF_Font', is
+	unavailable in Type 1 mode.
+
+	* include/freetype/internal/psaux.h (T1_Decoder, PS_Decoder): New
+	`cf2_instance' field.
+
+	* src/psaux/psdecode.c (ps_decoder_init): Copy `cf2_instance' to
+	`PS_Decoder'.
+
+	* src/psaux/t1decode.c (t1_decoder_done): Add finalization code.
+
+	* src/psaux/psft.c (cf2_decoder_parse_charstrings): Update accesses.
+
+2017-09-25  Ewald Hew  <ewaldhew@gmail.com>
+
 	Allow `type1' module to use the Adobe engine.
 
 	Add the callback and some conditionals to switch between the two
