@@ -1,5 +1,15 @@
 2017-09-25  Ewald Hew  <ewaldhew@gmail.com>
 
+	[psaux] Minor fixes.
+
+	* include/freetype/internal/psaux.h, src/psaux/psobjs.{c,h}:
+	Rearrange `ps_builder_init' arguments to conventional order.
+
+	* src/psaux/psft.c (cf2_decoder_parse_charstrings): Add a check and
+	notice for `SubFont' in Type 1 mode.
+
+2017-09-25  Ewald Hew  <ewaldhew@gmail.com>
+
 	[psaux] Move `psdecode' into `psobjs'.
 
 	As the former only contains a single procedure, move it into

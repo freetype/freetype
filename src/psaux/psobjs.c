@@ -2054,9 +2054,9 @@
   /*    hinting :: Whether hinting should be applied.                      */
   /*                                                                       */
   FT_LOCAL_DEF( void )
-  ps_builder_init( void*        builder,
-                   FT_Bool      is_t1,
-                   PS_Builder*  ps_builder )
+  ps_builder_init( PS_Builder*  ps_builder,
+                   void*        builder,
+                   FT_Bool      is_t1 )
   {
     FT_ZERO( ps_builder );
 
@@ -2356,9 +2356,9 @@
     {
       T1_Decoder  t1_decoder = (T1_Decoder)decoder;
 
-      ps_builder_init( &t1_decoder->builder,
-                       is_t1,
-                       &ps_decoder->builder );
+      ps_builder_init( &ps_decoder->builder,
+                       &t1_decoder->builder,
+                       is_t1 );
 
       ps_decoder->cf2_instance       = &t1_decoder->cf2_instance;
       ps_decoder->psnames            =  t1_decoder->psnames;
@@ -2382,9 +2382,9 @@
     {
       CFF_Decoder*  cff_decoder = (CFF_Decoder*)decoder;
 
-      ps_builder_init( &cff_decoder->builder,
-                       is_t1,
-                       &ps_decoder->builder );
+      ps_builder_init( &ps_decoder->builder,
+                       &cff_decoder->builder,
+                       is_t1 );
 
       ps_decoder->cff                 =  cff_decoder->cff;
       ps_decoder->cf2_instance        = &cff_decoder->cff->cf2_instance;
