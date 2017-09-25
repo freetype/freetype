@@ -1,5 +1,13 @@
 2017-09-25  Ewald Hew  <ewaldhew@gmail.com>
 
+	[psaux] Extend Adobe interpreter (`closepath').
+
+	* src/psaux/psintrp.c (cf2_interpT2CharString) <c2f_cmdCLOSEPATH>:
+	Use the right builder function.  We can use the `haveWidth' boolean
+	already present, instead of implementing `parse_state'.
+
+2017-09-25  Ewald Hew  <ewaldhew@gmail.com>
+
 	[psaux] Add Type 1 operations to Adobe CFF interpreter.
 
 	The following Type 1 specific ops have been added (copied from
