@@ -2368,7 +2368,7 @@
       ps_decoder->hint_mode          =  t1_decoder->hint_mode;
       ps_decoder->blend              =  t1_decoder->blend;
 
-      ps_decoder->num_locals         =  t1_decoder->num_subrs;
+      ps_decoder->num_locals         =  (FT_UInt)t1_decoder->num_subrs;
       ps_decoder->locals             =  t1_decoder->subrs;
       ps_decoder->locals_len         =  t1_decoder->subrs_len;
       ps_decoder->locals_hash        =  t1_decoder->subrs_hash;

@@ -1,3 +1,15 @@
+2017-09-25  Werner Lemberg  <wl@gnu.org>
+
+	[psaux] Fix compiler warnings.
+
+	* src/psaux/psft.c (cf2_initLocalRegionBuffer): Remove redundant
+	test.
+
+	* src/psaux/psintrp.c (cf2_interpT2CharString)
+	<cf2_escCALLOTHERSUBR>: Add casts.
+
+	* src/psaux/psobjs.c (ps_decoder_init): Add cast.
+
 2017-09-25  Ewald Hew  <ewaldhew@gmail.com>
 
 	[psaux] Minor fixes.

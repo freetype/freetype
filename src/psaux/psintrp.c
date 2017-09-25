@@ -1642,9 +1642,9 @@
                     /* stack pointer as necessary                              */
 
                     count = cf2_stack_count( opStack );
-                    FT_ASSERT( arg_cnt <= count );
+                    FT_ASSERT( (CF2_UInt)arg_cnt <= count );
 
-                    opIdx += count - arg_cnt;
+                    opIdx += count - (CF2_UInt)arg_cnt;
 
                     known_othersubr_result_cnt = 0;
                     result_cnt = 0;
@@ -1840,7 +1840,7 @@
                         cf2_stack_setReal( opStack, values++, tmp );
                       }
                       cf2_stack_pop( opStack,
-                                     arg_cnt - num_points );
+                                     (CF2_UInt)arg_cnt - num_points );
 
                       known_othersubr_result_cnt = (FT_Int)num_points;
                       break;
@@ -2052,7 +2052,7 @@
                     default:
                       if ( arg_cnt >= 0 && subr_no >= 0 )
                       {
-                        FT_UInt  i;
+                        FT_Int  i;
 
                         FT_ERROR(( "cf2_interpT2CharString (Type 1 mode):"
                                    " unknown othersubr [%d %d], wish me luck\n",

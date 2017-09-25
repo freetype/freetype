@@ -793,7 +793,7 @@
     FT_ZERO( buf );
 
     idx = (CF2_UInt)( subrNum + decoder->locals_bias );
-    if ( idx < 0 || idx >= decoder->num_locals )
+    if ( idx >= decoder->num_locals )
       return TRUE;     /* error */
 
     FT_ASSERT( decoder->locals );
