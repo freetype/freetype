@@ -1,5 +1,17 @@
 2017-09-25  Ewald Hew  <ewaldhew@gmail.com>
 
+	Extend Adobe interpreter (hints).
+
+	* src/psaux/psintrp.c (cf2_interpT2CharString) <cf2_cmdHSTEM,
+	cf2_cmdVSTEM>: Add correction for left sidebearing in Type 1 mode.
+	Allow adding hints mid-charstring.
+	<cf2_escVSTEM3, cf2_escHSTEM3>: Translate into equivalent commands
+	for three normal stem hints.  This requires some recalculation of
+	stem positions.
+	Correction for left sidebearing.
+
+2017-09-25  Ewald Hew  <ewaldhew@gmail.com>
+
 	[psaux] Extend Adobe interpreter (hsbw, sbw).
 
 	* src/psaux/psintrp.c (cf2_doStems): `hsbw' or `sbw' must be the
