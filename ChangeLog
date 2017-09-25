@@ -1,5 +1,15 @@
 2017-09-25  Ewald Hew  <ewaldhew@gmail.com>
 
+	[psaux] Extend Adobe interpreter (flex in callothersubr).
+
+	* src/psaux/psintrp.c (cf2_interpT2CharString)
+	<cf2_escCALLOTHERSUBR>: Fix Flex feature handling (OtherSubrs 0, 1,
+	2).
+	<cf2_cmdRMOVETO>: Do not actually move the `glyphPath' while doing
+	flex.  This is to avoid closing the current contour.
+
+2017-09-25  Ewald Hew  <ewaldhew@gmail.com>
+
 	[psaux] Extend Adobe interpreter (callothersubr).
 
 	* src/psaux/psintrp.c (cf2_interpT2CharString)
