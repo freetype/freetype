@@ -1,5 +1,16 @@
 2017-09-25  Ewald Hew  <ewaldhew@gmail.com>
 
+	[psaux] Extend Adobe interpreter (callothersubr).
+
+	* src/psaux/psintrp.c (cf2_interpT2CharString)
+	<cf2_escCALLOTHERSUBR>: Copy code from
+	`t1_decoder_parse_charstrings' (in `t1decode.c').
+	OtherSubr 3 (change hints) should reset the hintmask, so that the
+	new hints are applied.
+	Fix function calls and stack access.
+
+2017-09-25  Ewald Hew  <ewaldhew@gmail.com>
+
 	[psaux] Extend Adobe interpreter (pop).
 
 	* src/psaux/psintrp.c (cf2_interpT2CharString): Change how unhandled
@@ -30,7 +41,7 @@
 
 2017-09-25  Ewald Hew  <ewaldhew@gmail.com>
 
-	Extend Adobe interpreter (hints).
+	[psaux] Extend Adobe interpreter (hints).
 
 	* src/psaux/psintrp.c (cf2_interpT2CharString) <cf2_cmdHSTEM,
 	cf2_cmdVSTEM>: Add correction for left sidebearing in Type 1 mode.
@@ -61,7 +72,7 @@
 
 2017-09-25  Ewald Hew  <ewaldhew@gmail.com>
 
-	[psaux] Extend Adobe interpreter (`closepath').
+	[psaux] Extend Adobe interpreter (closepath).
 
 	* src/psaux/psintrp.c (cf2_interpT2CharString) <c2f_cmdCLOSEPATH>:
 	Use the right builder function.  We can use the `haveWidth' boolean
