@@ -1,5 +1,16 @@
 2017-09-25  Ewald Hew  <ewaldhew@gmail.com>
 
+	[psaux] Extend Adobe interpreter (pop).
+
+	* src/psaux/psintrp.c (cf2_interpT2CharString): Change how unhandled
+	OtherSubr results are stored.  Implement the PostScript stack using
+	an array.
+	<cf2_escPOP>: Ensure that the stack is not cleared after getting
+	`OtherSubr' results.
+	Fix stack access.
+
+2017-09-25  Ewald Hew  <ewaldhew@gmail.com>
+
 	[psaux] Extend Adobe interpreter (callsubr).
 
 	* src/psaux/psintrp.c (cf2_interpT2CharString) <cf2_cmdCALLSUBR>:

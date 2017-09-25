@@ -490,8 +490,10 @@
 
     /* Stuff for Type 1 */
     FT_Int     known_othersubr_result_cnt   = 0;
-    FT_Int     unknown_othersubr_result_cnt = 0;
     FT_Bool    large_int = FALSE;
+#define PS_STORAGE_SIZE 3
+    CF2_F16Dot16  results[PS_STORAGE_SIZE];   /* for othersubr results */
+    FT_Int        result_cnt = 0;
 
     /* save this for hinting seac accents */
     CF2_Fixed  hintOriginY = curY;
@@ -523,6 +525,7 @@
 
 
     FT_ZERO( &storage );
+    FT_ZERO( &results );
 
     /* initialize the remaining objects */
     cf2_arrstack_init( &subrStack,
@@ -618,7 +621,7 @@
       if ( font->isT1 )
       {
         FT_ASSERT( known_othersubr_result_cnt == 0   ||
-                   unknown_othersubr_result_cnt == 0 );
+                   result_cnt == 0 );
       }
 
       if ( cf2_buf_isEnd( charstring ) )
@@ -644,14 +647,14 @@
 
       if ( font->isT1 )
       {
-        if ( unknown_othersubr_result_cnt > 0 &&
+        if ( result_cnt > 0 &&
              !( op1 == cf2_cmdCALLSUBR ||
                 op1 == cf2_cmdRETURN   ||
                 op1 == cf2_escPOP      ||
                 op1 >= 32 /* Numbers */ ) )
         {
           /* all operands have been transferred by previous pops */
-          unknown_othersubr_result_cnt = 0;
+          result_cnt = 0;
         }
 
         if ( large_int && !( op1 >= 32 || op1 == cf2_escDIV ) )
@@ -1459,20 +1462,21 @@
                     {
                       known_othersubr_result_cnt--;
                       /* ignore, we pushed the operands ourselves */
-                      break;
+                      continue;
                     }
 
-                    if ( unknown_othersubr_result_cnt == 0 )
+                    if ( result_cnt == 0 )
                     {
                       FT_ERROR(( "cf2_interpT2CharString (Type 1 mode):"
                                  " no more operands for othersubr\n" ));
-                      goto Syntax_Error;
+                      lastError = FT_THROW( Invalid_Glyph_Format );
+                      goto exit;
                     }
 
-                    unknown_othersubr_result_cnt--;
-                    top++;   /* `push' the operand to callothersubr onto the stack */
+                    result_cnt--;
+                    cf2_stack_pushFixed( opStack, results[result_cnt] );
                   }
-                  break;
+                  continue; /* do not clear the stack */
 
                 case cf2_escDROP:
                   FT_TRACE4(( " drop\n" ));
