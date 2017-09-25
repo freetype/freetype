@@ -1,5 +1,25 @@
 2017-09-25  Ewald Hew  <ewaldhew@gmail.com>
 
+	[psaux] Change subfont synthesis for CID fonts.
+
+	Change `t1_make_subfont' to take in the Private dict record as an
+	argument.  This is because Type 1 and CID font records in FreeType
+	have this in different places.
+
+	* src/psaux/psobjs.c (t1_make_subfont): Change `T1_Face' to
+	`FT_Face' so that CID is also accepted.
+	Take `PS_Private' as an argument and let caller figure out where the
+	Private dict actually is.
+	Update references.
+
+	* include/freetype/internal/psaux.h, src/psaux/psobjs.h: Update
+	declaration.
+
+	* src/type1/t1gload.c (T1_Parse_Glyph_And_Get_Char_String): Update
+	call.
+
+2017-09-25  Ewald Hew  <ewaldhew@gmail.com>
+
 	[type1] Switch to Adobe engine.
 
 	* src/type1/t1objs.c (T1_Driver_Init): Set default to Adobe engine.

@@ -2329,10 +2329,10 @@
 
 
   FT_LOCAL_DEF( void )
-  t1_make_subfont( T1_Face      face,
+  t1_make_subfont( FT_Face      face,
+                   PS_Private   priv,
                    CFF_SubFont  subfont )
   {
-    PS_Private   priv  = &face->type1.private_dict;
     CFF_Private  cpriv = &subfont->private_dict;
     FT_UInt      n, count;
 
@@ -2379,20 +2379,18 @@
 
 
     /* Initialize the random number generator. */
-    if ( face->root.internal->random_seed != -1 )
+    if ( face->internal->random_seed != -1 )
     {
       /* . If we have a face-specific seed, use it.    */
       /*   If non-zero, update it to a positive value. */
-      subfont->random = (FT_UInt32)face->root.internal->random_seed;
-      if ( face->root.internal->random_seed )
+      subfont->random = (FT_UInt32)face->internal->random_seed;
+      if ( face->internal->random_seed )
       {
         do
         {
-          face->root.internal->random_seed =
-            (FT_Int32)((PSAux_Service)face->psaux)->cff_random(
-              (FT_UInt32)face->root.internal->random_seed );
-
-        } while ( face->root.internal->random_seed < 0 );
+          face->internal->random_seed = (FT_Int32)cff_random(
+            (FT_UInt32)face->internal->random_seed );
+        } while ( face->internal->random_seed < 0 );
       }
     }
     if ( !subfont->random )

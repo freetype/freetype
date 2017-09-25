@@ -1291,9 +1291,9 @@ FT_BEGIN_HEADER
                         PS_Decoder*  ps_decoder );
 
     void
-    (*t1_make_subfont)( T1_Face      face,
+    (*t1_make_subfont)( FT_Face      face,
+                        PS_Private   priv,
                         CFF_SubFont  subfont );
-
 
     T1_CMap_Classes  t1_cmap_classes;
 
