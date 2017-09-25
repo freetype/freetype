@@ -1,5 +1,19 @@
 2017-09-25  Ewald Hew  <ewaldhew@gmail.com>
 
+	[psaux] Fix Type 1 hinting.
+
+	Type 1 hinting breaks sometimes when mid-charstring hints should
+	have been in the initial hintmap.  This fix adds a preprocessing
+	pass that reads all hints and builds the correct initial hintmap
+	first, before proceeding to build the glyph outline.
+
+	* src/psaux/psintrp.c (cf2_interpT2CharString): New
+	`initial_map_ready' boolean flag.
+	Ignore outline commands and hint changes on first pass.
+	<cf2_cmdENDCHAR>: Add section to build hintmap and rewind.
+
+2017-09-25  Ewald Hew  <ewaldhew@gmail.com>
+
 	[psaux] Add tracing for hints.
 
 	* src/psaux/pshints.c (cf2_hintmap_dump): New function.
