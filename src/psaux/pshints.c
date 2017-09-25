@@ -299,6 +299,31 @@
   }
 
 
+  static void
+  cf2_hintmap_dump( CF2_HintMap  hintmap )
+  {
+    CF2_UInt  i;
+
+
+    FT_TRACE6(( "  index  csCoord  dsCoord  scale  flags\n" ));
+
+    for ( i = 0; i < hintmap->count; i++ )
+    {
+      CF2_Hint  hint = &hintmap->edge[i];
+
+      FT_TRACE6(( "  %3d    %7.2f  %7.2f  %5d  %s%s%s%s\n",
+                  hint->index,
+                  hint->csCoord / 65536.0,
+                  hint->dsCoord / (hint->scale * 1.0),
+                  hint->scale,
+                  ( cf2_hint_isPair( hint ) ? "p" : "g" ),
+                  ( cf2_hint_isTop( hint ) ? "t" : "b" ),
+                  ( cf2_hint_isLocked( hint ) ? "L" : ""),
+                  ( cf2_hint_isSynthetic( hint ) ? "S" : "" ) ));
+    }
+  }
+
+
   /* transform character space coordinate to device space using hint map */
   static CF2_Fixed
   cf2_hintmap_map( CF2_HintMap  hintmap,
@@ -612,6 +637,14 @@
         break;
     }
 
+    FT_TRACE7(( "  Got hint at %.2f (%.2f)\n",
+                firstHintEdge->csCoord / 65536.0,
+                firstHintEdge->dsCoord / 65536.0 ));
+    if ( isPair )
+    FT_TRACE7(( "  Got hint at %.2f (%.2f)\n",
+                secondHintEdge->csCoord / 65536.0,
+                secondHintEdge->dsCoord / 65536.0 ));
+
     /*
      * Discard any hints that overlap in character space.  Most often, this
      * is while building the initial map, where captured hints from all
@@ -730,12 +763,19 @@
       /* insert first edge */
       hintmap->edge[indexInsert] = *firstHintEdge;         /* copy struct */
       hintmap->count            += 1;
+      FT_TRACE7(( "  Inserting hint %.2f (%.2f)\n",
+                  firstHintEdge->csCoord / 65536.0,
+                  firstHintEdge->dsCoord / 65536.0 ));
 
       if ( isPair )
       {
         /* insert second edge */
         hintmap->edge[indexInsert + 1] = *secondHintEdge;  /* copy struct */
         hintmap->count                += 1;
+        FT_TRACE7(( "  Inserting hint %.2f (%.2f)\n",
+                    secondHintEdge->csCoord / 65536.0,
+                    secondHintEdge->dsCoord / 65536.0 ));
+
       }
     }
 
@@ -970,6 +1010,12 @@
       }
     }
 
+    FT_TRACE6(( initialMap ? "flags: [p]air [g]host [t]op "
+                             "[b]ottom [L]ocked [S]ynthetic\n"
+                             "Initial hintmap\n"
+                           : "Hints:\n" ));
+    cf2_hintmap_dump( hintmap );
+
     /*
      * Note: The following line is a convenient place to break when
      *       debugging hinting.  Examine `hintmap->edge' for the list of
@@ -981,6 +1027,9 @@
 
     /* adjust positions of hint edges that are not locked to blue zones */
     cf2_hintmap_adjustHints( hintmap );
+
+    FT_TRACE6(( "(adjusted)\n" ));
+    cf2_hintmap_dump( hintmap );
 
     /* save the position of all hints that were used in this hint map; */
     /* if we use them again, we'll locate them in the same position    */

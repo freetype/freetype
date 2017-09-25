@@ -1,5 +1,13 @@
 2017-09-25  Ewald Hew  <ewaldhew@gmail.com>
 
+	[psaux] Add tracing for hints.
+
+	* src/psaux/pshints.c (cf2_hintmap_dump): New function.
+	(cf2_hintmap_insertHint): Trace incoming and inserted hints.
+	(cf2_hintmap_build): Dump hintmap before and after hint adjustment.
+
+2017-09-25  Ewald Hew  <ewaldhew@gmail.com>
+
 	[psaux] Minor fixes.
 
 	* src/psaux/psintrp.c (cf2_interpT2CharString): Fix check for pop
