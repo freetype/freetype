@@ -1,5 +1,27 @@
 2017-09-25  Ewald Hew  <ewaldhew@gmail.com>
 
+	Allow `type1' module to use the Adobe engine.
+
+	Add the callback and some conditionals to switch between the two
+	engines.
+
+	* include/freetype/internal/psaux.h (T1_Decoder_FuncsRec): Change
+	function declarations.
+	* src/psaux/psauxmod.c (T1_Decoder_FuncsRec): Register the
+	callbacks.
+
+	* src/psaux/psobjs.c (ps_builder_add_point): Add conditionals for
+	number conversion.
+
+	* src/type1/t1gload.c (T1_Parse_Glyph_And_Get_Char_String): Add code
+	to choose which renderer to use.
+
+	* src/cid/cidgload.c (cid_load_glyph): Update call.
+	* src/base/ftobjs.c, src/psaux/psobjs.c, src/type1/t1gload.c: Update
+	includes.
+
+2017-09-25  Ewald Hew  <ewaldhew@gmail.com>
+
 	[type1] Add Adobe engine configuration.
 
 	Use the previously changed PS_Driver in type1 module to store
