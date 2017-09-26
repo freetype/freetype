@@ -4,7 +4,14 @@
 /*                                                                         */
 /*    The FreeType CFF tables loader service (specification).              */
 /*                                                                         */
-/*  Copyright notice here                                                  */
+/*  Copyright 2017 by                                                      */
+/*  David Turner, Robert Wilhelm, and Werner Lemberg.                      */
+/*                                                                         */
+/*  This file is part of the FreeType project, and may only be used,       */
+/*  modified, and distributed under the terms of the FreeType project      */
+/*  license, LICENSE.TXT.  By continuing to use, modify, or distribute     */
+/*  this file you indicate that you have read the license and              */
+/*  understand and accept it fully.                                        */
 /*                                                                         */
 /***************************************************************************/
 
@@ -96,9 +103,8 @@ FT_BEGIN_HEADER
 #endif /* FT_CONFIG_OPTION_PIC */
 
 
-
-
 FT_END_HEADER
+
 
 #endif
 

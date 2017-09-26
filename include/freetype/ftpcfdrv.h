@@ -69,7 +69,7 @@ FT_BEGIN_HEADER
    *   selecting `Fixed' in KDE or Gnome one gets results that appear rather
    *   random, the style changes often if one changes the size and one
    *   cannot select some fonts at all.  The improve this situation, the PCF
-   *   module prepends the foundry name (plus a space) to the family name. 
+   *   module prepends the foundry name (plus a space) to the family name.
    *   It also checks whether there are `wide' characters; all put together,
    *   family names like `Sony Fixed' or `Misc Fixed Wide' are constructed.
    *

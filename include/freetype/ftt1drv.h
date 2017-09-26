@@ -4,7 +4,7 @@
 /*                                                                         */
 /*    FreeType API for controlling the Type 1 driver (specification only). */
 /*                                                                         */
-/*  Copyright 2013-2017 by                                                 */
+/*  Copyright 2017 by                                                      */
 /*  David Turner, Robert Wilhelm, and Werner Lemberg.                      */
 /*                                                                         */
 /*  This file is part of the FreeType project, and may only be used,       */
@@ -30,7 +30,6 @@
 
 
 FT_BEGIN_HEADER
-
 
 
   /**************************************************************************
@@ -66,6 +65,10 @@ FT_BEGIN_HEADER
    *
    *   This property can be set via the `FREETYPE_PROPERTIES' environment
    *   variable (using values `adobe' or `freetype').
+   *
+   * @since:
+   *   2.8.2
+   *
    */
 
 
@@ -85,9 +88,13 @@ FT_BEGIN_HEADER
    *   FT_T1_HINTING_ADOBE ::
    *     Use the hinting engine contributed by Adobe.
    *
+   * @since:
+   *   2.8.2
+   *
    */
 #define FT_T1_HINTING_FREETYPE  0
 #define FT_T1_HINTING_ADOBE     1
+
 
   /**************************************************************************
    *

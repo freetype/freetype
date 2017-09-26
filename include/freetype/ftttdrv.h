@@ -155,7 +155,7 @@ FT_BEGIN_HEADER
    *
    *   Details on subpixel hinting and some of the necessary tweaks can be
    *   found in Greg Hitchcock's whitepaper at
-   *   `http://www.microsoft.com/typography/cleartype/truetypecleartype.aspx'. 
+   *   `http://www.microsoft.com/typography/cleartype/truetypecleartype.aspx'.
    *   Note that FreeType currently doesn't really `subpixel hint' (6x1, 6x2,
    *   or 6x5 supersampling) like discussed in the paper.  Depending on the
    *   chosen interpreter, it simply ignores instructions on vertical stems
@@ -216,7 +216,7 @@ FT_BEGIN_HEADER
    *   TT_INTERPRETER_VERSION_40 ::
    *     Version~40 corresponds to MS rasterizer v.2.1; it is roughly
    *     equivalent to the hinting provided by DirectWrite ClearType (as can
-   *     be found, for example, in Microsoft's Edge Browser on Windows~10). 
+   *     be found, for example, in Microsoft's Edge Browser on Windows~10).
    *     It is used in FreeType to select the `minimal' subpixel hinting
    *     code, a stripped-down and higher performance version of the
    *     `Infinality' code.

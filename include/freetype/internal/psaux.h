@@ -467,6 +467,7 @@ FT_BEGIN_HEADER
   /*************************************************************************/
   /*************************************************************************/
 
+
   typedef struct PS_Builder_  PS_Builder;
   typedef const struct PS_Builder_FuncsRec_*  PS_Builder_Funcs;
 
@@ -478,7 +479,7 @@ FT_BEGIN_HEADER
              FT_Bool      is_t1 );
 
     void
-    (*done)( PS_Builder*   builder );
+    (*done)( PS_Builder*  builder );
 
   } PS_Builder_FuncsRec;
 
@@ -524,6 +525,8 @@ FT_BEGIN_HEADER
   /*                    the metrics of a given glyph, not load all of its  */
   /*                    points.                                            */
   /*                                                                       */
+  /*    is_t1        :: Set if current font type is Type 1.                */
+  /*                                                                       */
   /*    funcs        :: An array of function pointers for the builder.     */
   /*                                                                       */
   struct  PS_Builder_
@@ -535,20 +538,19 @@ FT_BEGIN_HEADER
     FT_Outline*     base;
     FT_Outline*     current;
 
-    FT_Pos*         pos_x;
-    FT_Pos*         pos_y;
+    FT_Pos*  pos_x;
+    FT_Pos*  pos_y;
 
-    FT_Vector*      left_bearing;
-    FT_Vector*      advance;
+    FT_Vector*  left_bearing;
+    FT_Vector*  advance;
 
-    FT_BBox*        bbox;          /* bounding box */
-    FT_Bool         path_begun;
-    FT_Bool         load_points;
-    FT_Bool         no_recurse;
+    FT_BBox*  bbox;          /* bounding box */
+    FT_Bool   path_begun;
+    FT_Bool   load_points;
+    FT_Bool   no_recurse;
 
-    FT_Bool         metrics_only;
-
-    FT_Bool         is_t1;
+    FT_Bool  metrics_only;
+    FT_Bool  is_t1;
 
     PS_Builder_FuncsRec  funcs;
 
@@ -596,64 +598,64 @@ FT_BEGIN_HEADER
 
   typedef struct  PS_Decoder_
   {
-    PS_Builder         builder;
+    PS_Builder  builder;
 
-    FT_Fixed           stack[PS_MAX_OPERANDS + 1];
-    FT_Fixed*          top;
+    FT_Fixed   stack[PS_MAX_OPERANDS + 1];
+    FT_Fixed*  top;
 
-    PS_Decoder_Zone    zones[PS_MAX_SUBRS_CALLS + 1];
-    PS_Decoder_Zone*   zone;
+    PS_Decoder_Zone   zones[PS_MAX_SUBRS_CALLS + 1];
+    PS_Decoder_Zone*  zone;
 
-    FT_Int             flex_state;
-    FT_Int             num_flex_vectors;
-    FT_Vector          flex_vectors[7];
+    FT_Int     flex_state;
+    FT_Int     num_flex_vectors;
+    FT_Vector  flex_vectors[7];
 
-    CFF_Font           cff;
-    CFF_SubFont        current_subfont; /* for current glyph_index */
-    FT_Generic*        cf2_instance;
+    CFF_Font     cff;
+    CFF_SubFont  current_subfont; /* for current glyph_index */
+    FT_Generic*  cf2_instance;
 
-    FT_Pos             glyph_width;
-    FT_Pos             nominal_width;
+    FT_Pos  glyph_width;
+    FT_Pos  nominal_width;
 
-    FT_Bool            read_width;
-    FT_Bool            width_only;
-    FT_Int             num_hints;
+    FT_Bool  read_width;
+    FT_Bool  width_only;
+    FT_Int   num_hints;
 
-    FT_UInt            num_locals;
-    FT_UInt            num_globals;
+    FT_UInt  num_locals;
+    FT_UInt  num_globals;
 
-    FT_Int             locals_bias;
-    FT_Int             globals_bias;
+    FT_Int  locals_bias;
+    FT_Int  globals_bias;
 
-    FT_Byte**          locals;
-    FT_Byte**          globals;
+    FT_Byte**  locals;
+    FT_Byte**  globals;
 
-    FT_Byte**          glyph_names;   /* for pure CFF fonts only  */
-    FT_UInt            num_glyphs;    /* number of glyphs in font */
+    FT_Byte**  glyph_names;   /* for pure CFF fonts only  */
+    FT_UInt    num_glyphs;    /* number of glyphs in font */
 
-    FT_Render_Mode     hint_mode;
+    FT_Render_Mode  hint_mode;
 
-    FT_Bool            seac;
+    FT_Bool  seac;
 
     CFF_Decoder_Get_Glyph_Callback   get_glyph_callback;
     CFF_Decoder_Free_Glyph_Callback  free_glyph_callback;
 
     /* Type 1 stuff */
-    FT_Service_PsCMaps   psnames;      /* for seac */
+    FT_Service_PsCMaps  psnames;      /* for seac */
 
-    FT_Int               lenIV;        /* internal for sub routine calls */
-    FT_UInt*             locals_len;    /* array of subrs length (optional) */
-    FT_Hash              locals_hash;   /* used if `num_subrs' was massaged */
+    FT_Int    lenIV;         /* internal for sub routine calls   */
+    FT_UInt*  locals_len;    /* array of subrs length (optional) */
+    FT_Hash   locals_hash;   /* used if `num_subrs' was massaged */
 
-    FT_Matrix            font_matrix;
-    FT_Vector            font_offset;
+    FT_Matrix  font_matrix;
+    FT_Vector  font_offset;
 
-    PS_Blend             blend;       /* for multiple master support */
+    PS_Blend  blend;         /* for multiple master support */
 
-    FT_Long*             buildchar;
-    FT_UInt              len_buildchar;
+    FT_Long*  buildchar;
+    FT_UInt   len_buildchar;
 
-    void*                t1_parse_callback;
+    void*  t1_parse_callback;
 
   } PS_Decoder;
 
@@ -929,6 +931,7 @@ FT_BEGIN_HEADER
 
   } T1_DecoderRec;
 
+
   /*************************************************************************/
   /*************************************************************************/
   /*****                                                               *****/
@@ -938,7 +941,7 @@ FT_BEGIN_HEADER
   /*************************************************************************/
 
 
-  typedef struct  CFF_Builder_ CFF_Builder;
+  typedef struct CFF_Builder_  CFF_Builder;
 
 
   typedef FT_Error
@@ -1033,6 +1036,8 @@ FT_BEGIN_HEADER
   /*                                                                       */
   /*    hints_globals :: Auxiliary pointer for hinting.                    */
   /*                                                                       */
+  /*    funcs         :: A table of method pointers for this object.       */
+  /*                                                                       */
   struct  CFF_Builder_
   {
     FT_Memory       memory;
@@ -1042,24 +1047,24 @@ FT_BEGIN_HEADER
     FT_Outline*     base;
     FT_Outline*     current;
 
-    FT_Pos          pos_x;
-    FT_Pos          pos_y;
+    FT_Pos  pos_x;
+    FT_Pos  pos_y;
 
-    FT_Vector       left_bearing;
-    FT_Vector       advance;
+    FT_Vector  left_bearing;
+    FT_Vector  advance;
 
-    FT_BBox         bbox;          /* bounding box */
-    FT_Bool         path_begun;
-    FT_Bool         load_points;
-    FT_Bool         no_recurse;
+    FT_BBox  bbox;          /* bounding box */
 
-    FT_Bool         metrics_only;
+    FT_Bool  path_begun;
+    FT_Bool  load_points;
+    FT_Bool  no_recurse;
 
-    void*           hints_funcs;    /* hinter-specific */
-    void*           hints_globals;  /* hinter-specific */
+    FT_Bool  metrics_only;
+
+    void*  hints_funcs;     /* hinter-specific */
+    void*  hints_globals;   /* hinter-specific */
 
     CFF_Builder_FuncsRec  funcs;
-
   };
 
 
@@ -1070,6 +1075,7 @@ FT_BEGIN_HEADER
   /*****                                                               *****/
   /*************************************************************************/
   /*************************************************************************/
+
 
 #define CFF_MAX_OPERANDS        48
 #define CFF_MAX_SUBRS_CALLS     16  /* maximum subroutine nesting;         */
@@ -1093,61 +1099,62 @@ FT_BEGIN_HEADER
 
   typedef struct  CFF_Decoder_
   {
-    CFF_Builder        builder;
-    CFF_Font           cff;
+    CFF_Builder  builder;
+    CFF_Font     cff;
 
-    FT_Fixed           stack[CFF_MAX_OPERANDS + 1];
-    FT_Fixed*          top;
+    FT_Fixed   stack[CFF_MAX_OPERANDS + 1];
+    FT_Fixed*  top;
 
     CFF_Decoder_Zone   zones[CFF_MAX_SUBRS_CALLS + 1];
     CFF_Decoder_Zone*  zone;
 
-    FT_Int             flex_state;
-    FT_Int             num_flex_vectors;
-    FT_Vector          flex_vectors[7];
+    FT_Int     flex_state;
+    FT_Int     num_flex_vectors;
+    FT_Vector  flex_vectors[7];
 
-    FT_Pos             glyph_width;
-    FT_Pos             nominal_width;
+    FT_Pos  glyph_width;
+    FT_Pos  nominal_width;
 
-    FT_Bool            read_width;
-    FT_Bool            width_only;
-    FT_Int             num_hints;
-    FT_Fixed           buildchar[CFF_MAX_TRANS_ELEMENTS];
+    FT_Bool   read_width;
+    FT_Bool   width_only;
+    FT_Int    num_hints;
+    FT_Fixed  buildchar[CFF_MAX_TRANS_ELEMENTS];
 
-    FT_UInt            num_locals;
-    FT_UInt            num_globals;
+    FT_UInt  num_locals;
+    FT_UInt  num_globals;
 
-    FT_Int             locals_bias;
-    FT_Int             globals_bias;
+    FT_Int  locals_bias;
+    FT_Int  globals_bias;
 
-    FT_Byte**          locals;
-    FT_Byte**          globals;
+    FT_Byte**  locals;
+    FT_Byte**  globals;
 
-    FT_Byte**          glyph_names;   /* for pure CFF fonts only  */
-    FT_UInt            num_glyphs;    /* number of glyphs in font */
+    FT_Byte**  glyph_names;   /* for pure CFF fonts only  */
+    FT_UInt    num_glyphs;    /* number of glyphs in font */
 
-    FT_Render_Mode     hint_mode;
+    FT_Render_Mode  hint_mode;
 
-    FT_Bool            seac;
+    FT_Bool  seac;
 
-    CFF_SubFont        current_subfont; /* for current glyph_index */
+    CFF_SubFont  current_subfont; /* for current glyph_index */
 
     CFF_Decoder_Get_Glyph_Callback   get_glyph_callback;
     CFF_Decoder_Free_Glyph_Callback  free_glyph_callback;
 
   } CFF_Decoder;
 
+
   typedef const struct CFF_Decoder_FuncsRec_*  CFF_Decoder_Funcs;
 
   typedef struct  CFF_Decoder_FuncsRec_
   {
     void
-    (*init)( CFF_Decoder*    decoder,
-             TT_Face         face,
-             CFF_Size        size,
-             CFF_GlyphSlot   slot,
-             FT_Bool         hinting,
-             FT_Render_Mode  hint_mode,
+    (*init)( CFF_Decoder*                     decoder,
+             TT_Face                          face,
+             CFF_Size                         size,
+             CFF_GlyphSlot                    slot,
+             FT_Bool                          hinting,
+             FT_Render_Mode                   hint_mode,
              CFF_Decoder_Get_Glyph_Callback   get_callback,
              CFF_Decoder_Free_Glyph_Callback  free_callback );
 

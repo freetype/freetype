@@ -4,7 +4,14 @@
 /*                                                                         */
 /*    Basic OpenType/CFF object type definitions (specification).          */
 /*                                                                         */
-/*  Copyright notice here.                                                 */
+/*  Copyright 2017 by                                                      */
+/*  David Turner, Robert Wilhelm, and Werner Lemberg.                      */
+/*                                                                         */
+/*  This file is part of the FreeType project, and may only be used,       */
+/*  modified, and distributed under the terms of the FreeType project      */
+/*  license, LICENSE.TXT.  By continuing to use, modify, or distribute     */
+/*  this file you indicate that you have read the license and              */
+/*  understand and accept it fully.                                        */
 /*                                                                         */
 /***************************************************************************/
 
@@ -54,11 +61,11 @@ FT_BEGIN_HEADER
   {
     FT_GlyphSlotRec  root;
 
-    FT_Bool          hint;
-    FT_Bool          scaled;
+    FT_Bool  hint;
+    FT_Bool  scaled;
 
-    FT_Fixed         x_scale;
-    FT_Fixed         y_scale;
+    FT_Fixed  x_scale;
+    FT_Fixed  y_scale;
 
   } CFF_GlyphSlotRec, *CFF_GlyphSlot;
 
@@ -87,7 +94,7 @@ FT_BEGIN_HEADER
   {
     FT_Fixed    xx, xy;     /* transformation matrix coefficients */
     FT_Fixed    yx, yy;
-    FT_F26Dot6  ox, oy;     /* offsets        */
+    FT_F26Dot6  ox, oy;     /* offsets                            */
 
   } CFF_Transform;
 
