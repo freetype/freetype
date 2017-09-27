@@ -338,7 +338,7 @@
     SFNT_HeaderRec  sfnt;
     FT_Error        error;
     FT_Memory       memory = stream->memory;
-    FT_UShort       nn, valid_entries;
+    FT_UShort       nn, valid_entries = 0;
 
     static const FT_Frame_Field  offset_table_fields[] =
     {

@@ -1,3 +1,7 @@
+2017-09-27  Werner Lemberg  <wl@gnu.org>
+
+	* src/sfnt/ttload.c (tt_face_load_font_dir): Fix compiler warning.
+
 2017-09-25  Werner Lemberg  <wl@gnu.org>
 
 	[psaux] Fix compiler warnings.
