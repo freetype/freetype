@@ -335,6 +335,7 @@
     PSAux_Service  psaux = (PSAux_Service)face->psaux;
     FT_Matrix      font_matrix;
     FT_Vector      font_offset;
+    FT_Bool        must_finish_decoder = FALSE;
 
 
     if ( glyph_index >= (FT_UInt)face->root.num_glyphs )
@@ -375,6 +376,8 @@
     /* TODO: initialize decoder.len_buildchar and decoder.buildchar */
     /*       if we ever support CID-keyed multiple master fonts     */
 
+    must_finish_decoder = TRUE;
+
     /* set up the decoder */
     decoder.builder.no_recurse = FT_BOOL(
       ( ( load_flags & FT_LOAD_NO_RECURSE ) != 0 ) );
@@ -392,6 +395,8 @@
 
     /* save new glyph tables */
     psaux->t1_decoder_funcs->done( &decoder );
+
+    must_finish_decoder = FALSE;
 
     /* now set the metrics -- this is rather simple, as    */
     /* the left side bearing is the xMin, and the top side */
@@ -501,6 +506,10 @@
     }
 
   Exit:
+
+    if ( must_finish_decoder )
+      psaux->t1_decoder_funcs->done( &decoder );
+
     return error;
   }
 
