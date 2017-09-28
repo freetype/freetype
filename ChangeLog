@@ -1,3 +1,11 @@
+2017-09-28  Werner Lemberg  <wl@gnu.org>
+
+	* src/psaux/psintrp.c (cf2_doStems): Fix integer overflow.
+
+	Reported as
+
+	  https://bugs.chromium.org/p/oss-fuzz/issues/detail?id=3510
+
 2017-09-28  Ewald Hew  <ewaldhew@gmail.com>
 
 	* src/cid/cidgload.c (cid_slot_load_glyph): Fix memory leak.

@@ -297,8 +297,8 @@
                  " No width. Use hsbw/sbw as first op\n" ));
     }
     if ( !font->isT1 && hasWidthArg && !*haveWidth )
-      *width = cf2_stack_getReal( opStack, 0 ) +
-                 cf2_getNominalWidthX( font->decoder );
+      *width = ADD_INT32( cf2_stack_getReal( opStack, 0 ),
+                          cf2_getNominalWidthX( font->decoder ) );
 
     if ( font->decoder->width_only )
       goto exit;
