@@ -302,6 +302,7 @@
   static void
   cf2_hintmap_dump( CF2_HintMap  hintmap )
   {
+#ifdef FT_DEBUG_LEVEL_TRACE
     CF2_UInt  i;
 
 
@@ -321,6 +322,9 @@
                   ( cf2_hint_isLocked( hint ) ? "L" : ""),
                   ( cf2_hint_isSynthetic( hint ) ? "S" : "" ) ));
     }
+#else
+    FT_UNUSED( hintmap );
+#endif
   }
 
 

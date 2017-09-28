@@ -1,3 +1,10 @@
+2017-09-28  Ewald Hew  <ewaldhew@gmail.com>
+
+	[psaux] Fix compiler warning.
+
+	* src/psaux/pshints.c (cf2_hintmap_dump): Add switch for tracing
+	code.
+
 2017-09-27  Werner Lemberg  <wl@gnu.org>
 
 	* src/sfnt/ttload.c (tt_face_load_font_dir): Fix compiler warning.
