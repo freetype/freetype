@@ -1,3 +1,9 @@
+2017-09-28  Ben Wagner  <bungeman@google.com>
+
+	[truetype] Really, really fix #52082.
+
+	* src/truetype/ttinterp.c (Ins_MDRP): Correct conditional.
+
 2017-09-28  Werner Lemberg  <wl@gnu.org>
 
 	* src/psaux/psintrp.c (cf2_doStems): Fix integer overflow.
