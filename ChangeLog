@@ -1,3 +1,26 @@
+2017-09-28  Alexei Podtelezhnikov  <apodtele@gmail.com>
+
+	Bitmap metrics presetting [1/2].
+
+	This mainly just extracts the code for presetting the bitmap metrics
+	from the monochrome, grayscale, and LCD renderers into a separate
+	function.
+
+	* src/base/ftobjs.c (ft_glyphslot_preset_bitmap): New function that
+	calculates prespective bitmap metrics for the given rendering mode.
+	* include/freetype/internal/ftobjs.h (ft_glyphslot_preset_bitmap):
+	Declare it.
+
+	* src/base/ftlcdfil.c (ft_lcd_padding): New helper function that adds
+	padding to CBox taking into account pecularities of LCD rendering.
+	* include/freetype/ftlcdfil.h (ft_lcd_padding): Declare it.
+
+	* src/raster/ftrend1.c (ft_raster1_render): Reworked to use
+	`ft_glyphslot_preset_bitmap'.
+	* src/smooth/ftsmooth.c (ft_smooth_render_generic): Ditto.
+	(ft_smooth_render_lcd, ft_smooth_render_lcd): The pixel_mode setting
+	is moved to `ft_glyphslot_preset_bitmap'.
+
 2017-09-28  Ewald Hew  <ewaldhew@gmail.com>
 
 	[psaux] Fix compiler warning.

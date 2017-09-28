@@ -708,6 +708,12 @@ FT_BEGIN_HEADER
   ft_glyphslot_free_bitmap( FT_GlyphSlot  slot );
 
 
+  /* Preset bitmap metrics of an outline glyphslot prior to rendering.    */
+  FT_BASE( void )
+  ft_glyphslot_preset_bitmap( FT_GlyphSlot      slot,
+                              FT_Render_Mode    mode,
+                              const FT_Vector*  origin );
+
   /* Allocate a new bitmap buffer in a glyph slot. */
   FT_BASE( FT_Error )
   ft_glyphslot_alloc_bitmap( FT_GlyphSlot  slot,

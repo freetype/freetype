@@ -328,6 +328,135 @@
 
 
   FT_BASE_DEF( void )
+  ft_glyphslot_preset_bitmap( FT_GlyphSlot      slot,
+                              FT_Render_Mode    mode,
+                              const FT_Vector*  origin )
+  {
+    FT_Outline*  outline = &slot->outline;
+    FT_Bitmap*   bitmap  = &slot->bitmap;
+
+    FT_Pixel_Mode  pixel_mode;
+
+    FT_BBox      cbox;
+    FT_Pos       x_shift = 0;
+    FT_Pos       y_shift = 0;
+    FT_Pos       x_left, y_top;
+    FT_Pos       width, height, pitch;
+
+
+    if ( slot->internal && ( slot->internal->flags & FT_GLYPH_OWN_BITMAP ) )
+      return;
+
+    if ( origin )
+    {
+      x_shift = origin->x;
+      y_shift = origin->y;
+    }
+
+    /* compute the control box, and grid fit it */
+    /* taking into account the origin shift     */
+    FT_Outline_Get_CBox( outline, &cbox );
+
+    cbox.xMin += x_shift;
+    cbox.yMin += y_shift;
+    cbox.xMax += x_shift;
+    cbox.yMax += y_shift;
+
+    switch ( mode )
+    {
+    case FT_RENDER_MODE_MONO:
+      pixel_mode = FT_PIXEL_MODE_MONO;
+#if 1
+      /* undocumented but confirmed: bbox values get rounded    */
+      /* unless the rounded box can collapse for a narrow glyph */
+      if ( cbox.xMax - cbox.xMin < 64 )
+      {
+        cbox.xMin = FT_PIX_FLOOR( cbox.xMin );
+        cbox.xMax = FT_PIX_CEIL( cbox.xMax );
+      }
+      else
+      {
+        cbox.xMin = FT_PIX_ROUND( cbox.xMin );
+        cbox.xMax = FT_PIX_ROUND( cbox.xMax );
+      }
+
+      if ( cbox.yMax - cbox.yMin < 64 )
+      {
+        cbox.yMin = FT_PIX_FLOOR( cbox.yMin );
+        cbox.yMax = FT_PIX_CEIL( cbox.yMax );
+      }
+      else
+      {
+        cbox.yMin = FT_PIX_ROUND( cbox.yMin );
+        cbox.yMax = FT_PIX_ROUND( cbox.yMax );
+      }
+#else
+      cbox.xMin = FT_PIX_FLOOR( cbox.xMin );
+      cbox.yMin = FT_PIX_FLOOR( cbox.yMin );
+      cbox.xMax = FT_PIX_CEIL( cbox.xMax );
+      cbox.yMax = FT_PIX_CEIL( cbox.yMax );
+#endif
+      break;
+
+    case FT_RENDER_MODE_LCD:
+      pixel_mode = FT_PIXEL_MODE_LCD;
+      ft_lcd_padding( &cbox.xMin, &cbox.xMax, slot );
+      goto Round;
+
+    case FT_RENDER_MODE_LCD_V:
+      pixel_mode = FT_PIXEL_MODE_LCD_V;
+      ft_lcd_padding( &cbox.yMin, &cbox.yMax, slot );
+      goto Round;
+
+    case FT_RENDER_MODE_NORMAL:
+    case FT_RENDER_MODE_LIGHT:
+    default:
+      pixel_mode = FT_PIXEL_MODE_GRAY;
+    Round:
+      cbox.xMin = FT_PIX_FLOOR( cbox.xMin );
+      cbox.yMin = FT_PIX_FLOOR( cbox.yMin );
+      cbox.xMax = FT_PIX_CEIL( cbox.xMax );
+      cbox.yMax = FT_PIX_CEIL( cbox.yMax );
+    }
+
+    x_shift -= cbox.xMin;
+    y_shift -= cbox.yMin;
+
+    x_left  = cbox.xMin >> 6;
+    y_top   = cbox.yMax >> 6;
+
+    width  = (FT_ULong)( cbox.xMax - cbox.xMin ) >> 6;
+    height = (FT_ULong)( cbox.yMax - cbox.yMin ) >> 6;
+
+    switch ( pixel_mode )
+    {
+    case FT_PIXEL_MODE_MONO:
+      pitch  = ( ( width + 15 ) >> 4 ) << 1;
+      break;
+    case FT_PIXEL_MODE_LCD:
+      width *= 3;
+      pitch  = FT_PAD_CEIL( width, 4 );
+      break;
+    case FT_PIXEL_MODE_LCD_V:
+      height *= 3;
+      /* fall through */
+    case FT_PIXEL_MODE_GRAY:
+    default:
+      pitch = width;
+    }
+
+    slot->bitmap_left = (FT_Int)x_left;
+    slot->bitmap_top  = (FT_Int)y_top;
+
+    bitmap->pixel_mode = pixel_mode;
+    bitmap->num_grays  = 256;
+    bitmap->width      = (unsigned int)width;
+    bitmap->rows       = (unsigned int)height;
+    bitmap->pitch      = pitch;
+  }
+
+
+  FT_BASE_DEF( void )
   ft_glyphslot_set_bitmap( FT_GlyphSlot  slot,
                            FT_Byte*      buffer )
   {

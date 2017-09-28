@@ -31,6 +31,39 @@
 
 #define FT_SHIFTCLAMP( x )  ( x >>= 8, (FT_Byte)( x > 255 ? 255 : x ) )
 
+
+  /* add padding according to filter weights */
+  FT_BASE_DEF (void)
+  ft_lcd_padding( FT_Pos*       Min,
+                  FT_Pos*       Max,
+                  FT_GlyphSlot  slot )
+  {
+    FT_Byte*                 lcd_weights;
+    FT_Bitmap_LcdFilterFunc  lcd_filter_func;
+
+
+    /* Per-face LCD filtering takes priority if set up. */
+    if ( slot->face && slot->face->internal->lcd_filter_func )
+    {
+      lcd_weights     = slot->face->internal->lcd_weights;
+      lcd_filter_func = slot->face->internal->lcd_filter_func;
+    }
+    else
+    {
+      lcd_weights     = slot->library->lcd_weights;
+      lcd_filter_func = slot->library->lcd_filter_func;
+    }
+
+    if ( lcd_filter_func == ft_lcd_filter_fir )
+    {
+      *Min -= lcd_weights[0] ? 43 :
+              lcd_weights[1] ? 22 : 0;
+      *Max += lcd_weights[4] ? 43 :
+              lcd_weights[3] ? 22 : 0;
+    }
+  }
+
+
   /* FIR filter used by the default and light filters */
   FT_BASE_DEF( void )
   ft_lcd_filter_fir( FT_Bitmap*           bitmap,
@@ -310,14 +343,16 @@
 
 #else /* !FT_CONFIG_OPTION_SUBPIXEL_RENDERING */
 
-  FT_BASE( void )
-  ft_lcd_filter_fir( FT_Bitmap*           bitmap,
-                     FT_Render_Mode       mode,
-                     FT_LcdFiveTapFilter  weights )
+  /* add padding according to accommodate outline shifts */
+  FT_BASE_DEF (void)
+  ft_lcd_padding( FT_Pos*       Min,
+                  FT_Pos*       Max,
+                  FT_GlyphSlot  slot )
   {
-    FT_UNUSED( bitmap );
-    FT_UNUSED( mode );
-    FT_UNUSED( weights );
+    FT_UNUSED( slot );
+
+    *Min -= 21;
+    *Max += 21;
   }
 
 
