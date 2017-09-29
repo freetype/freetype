@@ -97,7 +97,7 @@
                      FT_Render_Mode    mode,
                      const FT_Vector*  origin )
   {
-    FT_Error     error;
+    FT_Error     error   = FT_Err_Ok;
     FT_Outline*  outline = &slot->outline;
     FT_Bitmap*   bitmap  = &slot->bitmap;
     FT_Memory    memory  = render->root.memory;
@@ -152,27 +152,23 @@
     /* set up parameters */
     params.target = bitmap;
     params.source = outline;
-    params.flags  = 0;
+    params.flags  = FT_RASTER_FLAG_DEFAULT;
 
     /* render outline into the bitmap */
     error = render->raster_render( render->raster, &params );
-    if ( error )
-      goto Exit;
-
-    /* everything is fine; the glyph is now officially a bitmap */
-    slot->format = FT_GLYPH_FORMAT_BITMAP;
-
-    error = FT_Err_Ok;
 
   Exit:
-    if ( x_shift || y_shift )
-      FT_Outline_Translate( outline, -x_shift, -y_shift );
-    if ( slot->format != FT_GLYPH_FORMAT_BITMAP      &&
-         slot->internal->flags & FT_GLYPH_OWN_BITMAP )
+    if ( !error )
+      /* everything is fine; the glyph is now officially a bitmap */
+      slot->format = FT_GLYPH_FORMAT_BITMAP;
+    else if ( slot->internal->flags & FT_GLYPH_OWN_BITMAP )
     {
       FT_FREE( bitmap->buffer );
       slot->internal->flags &= ~FT_GLYPH_OWN_BITMAP;
     }
+
+    if ( x_shift || y_shift )
+      FT_Outline_Translate( outline, -x_shift, -y_shift );
 
     return error;
   }

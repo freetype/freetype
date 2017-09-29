@@ -1,3 +1,12 @@
+2017-09-28  Alexei Podtelezhnikov  <apodtele@gmail.com>
+
+	[smooth, raster] Miscellaneous cleanups.
+
+	* src/raster/ftrend1.c (ft_raster1_render): Clean up the exit.
+	* src/smooth/ftsmooth.c (ft_smooth_render_generic): Reduce
+	translations and clean up the exit.
+	(ft_smooth_render_lcd, ft_smooth_render_lcd): Remove unused `error'.
+
 2017-09-28  Ben Wagner  <bungeman@google.com>
 
 	[truetype] Really, really fix #52082.

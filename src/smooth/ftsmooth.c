@@ -97,7 +97,7 @@
                             const FT_Vector*  origin,
                             FT_Render_Mode    required_mode )
   {
-    FT_Error     error;
+    FT_Error     error   = FT_Err_Ok;
     FT_Outline*  outline = &slot->outline;
     FT_Bitmap*   bitmap  = &slot->bitmap;
     FT_Memory    memory  = render->root.memory;
@@ -240,13 +240,6 @@
       /* by 1/3 pixel.                                               */
       width /= 3;
 
-      FT_Outline_Translate( outline,  21, 0 );
-
-      error = render->raster_render( render->raster, &params );
-      if ( error )
-        goto Exit;
-
-      FT_Outline_Translate( outline, -21, 0 );
       bitmap->buffer += width;
 
       error = render->raster_render( render->raster, &params );
@@ -254,14 +247,20 @@
         goto Exit;
 
       FT_Outline_Translate( outline, -21, 0 );
+      x_shift -= 21;
       bitmap->buffer += width;
 
       error = render->raster_render( render->raster, &params );
       if ( error )
         goto Exit;
 
-      FT_Outline_Translate( outline,  21, 0 );
+      FT_Outline_Translate( outline,  42, 0 );
+      x_shift += 42;
       bitmap->buffer -= 2 * width;
+
+      error = render->raster_render( render->raster, &params );
+      if ( error )
+        goto Exit;
 
       /* XXX: Rearrange the bytes according to FT_PIXEL_MODE_LCD.    */
       /* XXX: It is more efficient to render every third byte above. */
@@ -293,55 +292,48 @@
       bitmap->pitch *= 3;
       bitmap->rows  /= 3;
 
-      FT_Outline_Translate( outline, 0,  21 );
-      bitmap->buffer += 2 * pitch;
-
-      error = render->raster_render( render->raster, &params );
-      if ( error )
-        goto Exit;
-
-      FT_Outline_Translate( outline, 0, -21 );
-      bitmap->buffer -= pitch;
-
-      error = render->raster_render( render->raster, &params );
-      if ( error )
-        goto Exit;
-
-      FT_Outline_Translate( outline, 0, -21 );
-      bitmap->buffer -= pitch;
+      bitmap->buffer += pitch;
 
       error = render->raster_render( render->raster, &params );
       if ( error )
         goto Exit;
 
       FT_Outline_Translate( outline, 0,  21 );
+      y_shift += 21;
+      bitmap->buffer += pitch;
+
+      error = render->raster_render( render->raster, &params );
+      if ( error )
+        goto Exit;
+
+      FT_Outline_Translate( outline, 0, -42 );
+      y_shift -= 42;
+      bitmap->buffer -= 2 * pitch;
+
+      error = render->raster_render( render->raster, &params );
+      if ( error )
+        goto Exit;
 
       bitmap->pitch /= 3;
       bitmap->rows  *= 3;
     }
     else  /* grayscale */
-    {
       error = render->raster_render( render->raster, &params );
-      if ( error )
-        goto Exit;
-    }
 
 #endif /* !FT_CONFIG_OPTION_SUBPIXEL_RENDERING */
 
-    /* everything is fine; the glyph is now officially a bitmap */
-    slot->format = FT_GLYPH_FORMAT_BITMAP;
-
-    error = FT_Err_Ok;
-
   Exit:
-    if ( x_shift || y_shift )
-      FT_Outline_Translate( outline, -x_shift, -y_shift );
-    if ( slot->format != FT_GLYPH_FORMAT_BITMAP      &&
-         slot->internal->flags & FT_GLYPH_OWN_BITMAP )
+    if ( !error )
+      /* everything is fine; the glyph is now officially a bitmap */
+      slot->format = FT_GLYPH_FORMAT_BITMAP;
+    else if ( slot->internal->flags & FT_GLYPH_OWN_BITMAP )
     {
       FT_FREE( bitmap->buffer );
       slot->internal->flags &= ~FT_GLYPH_OWN_BITMAP;
     }
+
+    if ( x_shift || y_shift )
+      FT_Outline_Translate( outline, -x_shift, -y_shift );
 
     return error;
   }
@@ -369,8 +361,6 @@
                         FT_Render_Mode    mode,
                         const FT_Vector*  origin )
   {
-    FT_Error  error;
-
     return ft_smooth_render_generic( render, slot, mode, origin,
                                      FT_RENDER_MODE_LCD );
   }
@@ -383,8 +373,6 @@
                           FT_Render_Mode    mode,
                           const FT_Vector*  origin )
   {
-    FT_Error  error;
-
     return ft_smooth_render_generic( render, slot, mode, origin,
                                      FT_RENDER_MODE_LCD_V );
   }
