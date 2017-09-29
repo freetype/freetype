@@ -1,3 +1,11 @@
+2017-09-29  Alexei Podtelezhnikov  <apodtele@gmail.com>
+
+	Bitmap metrics presetting [2/2].
+
+	* src/base/ftobjs.c (FT_Load_Glyph): Preset the bitmap metrics when
+	appropriate but `FT_Render_Glyph' is not called.
+	* include/freetype/freetype.h (FT_GlyphSlotRec): Document the change.
+
 2017-09-28  Alexei Podtelezhnikov  <apodtele@gmail.com>
 
 	[smooth, raster] Miscellaneous cleanups.
@@ -38,7 +46,7 @@
 	function.
 
 	* src/base/ftobjs.c (ft_glyphslot_preset_bitmap): New function that
-	calculates prespective bitmap metrics for the given rendering mode.
+	calculates prospective bitmap metrics for the given rendering mode.
 	* include/freetype/internal/ftobjs.h (ft_glyphslot_preset_bitmap):
 	Declare it.
 

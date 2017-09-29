@@ -983,20 +983,22 @@
     FT_TRACE5(( "  linear x advance: %d\n" , slot->linearHoriAdvance ));
     FT_TRACE5(( "  linear y advance: %d\n" , slot->linearVertAdvance ));
 
-    /* do we need to render the image now? */
+    /* do we need to render the image or preset the bitmap now? */
     if ( !error                                    &&
          slot->format != FT_GLYPH_FORMAT_BITMAP    &&
-         slot->format != FT_GLYPH_FORMAT_COMPOSITE &&
-         load_flags & FT_LOAD_RENDER )
+         slot->format != FT_GLYPH_FORMAT_COMPOSITE )
     {
       FT_Render_Mode  mode = FT_LOAD_TARGET_MODE( load_flags );
 
 
-      if ( mode == FT_RENDER_MODE_NORMAL      &&
-           (load_flags & FT_LOAD_MONOCHROME ) )
+      if ( mode == FT_RENDER_MODE_NORMAL   &&
+           load_flags & FT_LOAD_MONOCHROME )
         mode = FT_RENDER_MODE_MONO;
 
-      error = FT_Render_Glyph( slot, mode );
+      if ( load_flags & FT_LOAD_RENDER )
+        error = FT_Render_Glyph( slot, mode );
+      else if ( ( load_flags & FT_LOAD_NO_SCALE ) == 0 )
+        ft_glyphslot_preset_bitmap( slot, mode, NULL );
     }
 
   Exit:

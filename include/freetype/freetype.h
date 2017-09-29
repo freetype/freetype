@@ -1696,17 +1696,13 @@ FT_BEGIN_HEADER
   /*                         @FT_GLYPH_FORMAT_COMPOSITE, but other values  */
   /*                         are possible.                                 */
   /*                                                                       */
-  /*    bitmap            :: This field is used as a bitmap descriptor     */
-  /*                         when the slot format is                       */
-  /*                         @FT_GLYPH_FORMAT_BITMAP.  Note that the       */
-  /*                         address and content of the bitmap buffer can  */
-  /*                         change between calls of @FT_Load_Glyph and a  */
-  /*                         few other functions.                          */
+  /*    bitmap            :: This field is used as a bitmap descriptor.    */
+  /*                         Note that the address and content of the      */
+  /*                         bitmap buffer can change between calls of     */
+  /*                         @FT_Load_Glyph and a few other functions.     */
   /*                                                                       */
   /*    bitmap_left       :: The bitmap's left bearing expressed in        */
-  /*                         integer pixels.  Only valid if the format is  */
-  /*                         @FT_GLYPH_FORMAT_BITMAP, this is, if the      */
-  /*                         glyph slot contains a bitmap.                 */
+  /*                         integer pixels.                               */
   /*                                                                       */
   /*    bitmap_top        :: The bitmap's top bearing expressed in integer */
   /*                         pixels.  This is the distance from the        */
@@ -1753,7 +1749,9 @@ FT_BEGIN_HEADER
   /*    If @FT_Load_Glyph is called with default flags (see                */
   /*    @FT_LOAD_DEFAULT) the glyph image is loaded in the glyph slot in   */
   /*    its native format (e.g., an outline glyph for TrueType and Type~1  */
-  /*    formats).                                                          */
+  /*    formats).  [Since 2.8.2] The prospective bitmap metrics are        */
+  /*    calculated according to @FT_LOAD_TARGET_XXX and other flags even   */
+  /*    for the outline glyph, even if @FT_LOAD_RENDER is not set.         */
   /*                                                                       */
   /*    This image can later be converted into a bitmap by calling         */
   /*    @FT_Render_Glyph.  This function searches the current renderer for */
