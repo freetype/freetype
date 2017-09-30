@@ -1692,6 +1692,7 @@
   {
     FT_Memory  memory = decoder->builder.memory;
 
+
     t1_builder_done( &decoder->builder );
 
     if ( decoder->cf2_instance.finalizer )

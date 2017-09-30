@@ -36,8 +36,8 @@
 /***************************************************************************/
 
 
-#ifndef CF2FT_H_
-#define CF2FT_H_
+#ifndef PSFT_H_
+#define PSFT_H_
 
 
 #include "pstypes.h"
@@ -161,7 +161,7 @@ FT_BEGIN_HEADER
 FT_END_HEADER
 
 
-#endif /* CF2FT_H_ */
+#endif /* PSFT_H_ */
 
 
 /* END */

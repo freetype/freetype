@@ -65,8 +65,8 @@
    */
 
 
-#ifndef CF2BLUES_H_
-#define CF2BLUES_H_
+#ifndef PSBLUES_H_
+#define PSBLUES_H_
 
 
 #include "psglue.h"
@@ -179,7 +179,7 @@ FT_BEGIN_HEADER
 FT_END_HEADER
 
 
-#endif /* CF2BLUES_H_ */
+#endif /* PSBLUES_H_ */
 
 
 /* END */

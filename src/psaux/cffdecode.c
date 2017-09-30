@@ -4,7 +4,14 @@
 /*                                                                         */
 /*    PostScript CFF (Type 2) decoding routines (body).                    */
 /*                                                                         */
-/*  Copyright notice here.                                                 */
+/*  Copyright 2017 by                                                      */
+/*  David Turner, Robert Wilhelm, and Werner Lemberg.                      */
+/*                                                                         */
+/*  This file is part of the FreeType project, and may only be used,       */
+/*  modified, and distributed under the terms of the FreeType project      */
+/*  license, LICENSE.TXT.  By continuing to use, modify, or distribute     */
+/*  this file you indicate that you have read the license and              */
+/*  understand and accept it fully.                                        */
 /*                                                                         */
 /***************************************************************************/
 
@@ -190,6 +197,7 @@
     2  /* setcurrentpoint */
   };
 
+
   static FT_Error
   cff_operator_seac( CFF_Decoder*  decoder,
                      FT_Pos        asb,
@@ -201,7 +209,7 @@
     FT_Error      error;
     CFF_Builder*  builder = &decoder->builder;
     FT_Int        bchar_index, achar_index;
-    TT_Face       face = decoder->builder.face;
+    TT_Face       face    = decoder->builder.face;
     FT_Vector     left_bearing, advance;
     FT_Byte*      charstring;
     FT_ULong      charstring_len;
@@ -342,7 +350,6 @@
     return error;
   }
 
-
 #endif /* CFF_CONFIG_OPTION_OLD_ENGINE */
 
 
@@ -401,7 +408,9 @@
   {
     FT_UInt    n;
     FT_UShort  glyph_sid;
+
     FT_Service_CFFLoad  cffload;
+
 
     /* CID-keyed fonts don't have glyph names */
     if ( !cff->charset.sids )
@@ -414,14 +423,14 @@
 #if 0
     /* retrieve cffload from list of current modules */
     FT_Service_CFFLoad  cffload;
+
+
+    FT_FACE_FIND_GLOBAL_SERVICE( face, cffload, CFF_LOAD );
+    if ( !cffload )
     {
-      FT_FACE_FIND_GLOBAL_SERVICE( face, cffload, CFF_LOAD );
-      if ( !cffload )
-      {
-        FT_ERROR(( "cff_lookup_glyph_by_stdcharcode:"
-                   " the `cffload' module is not available\n" ));
-        return FT_THROW( Unimplemented_Feature );
-      }
+      FT_ERROR(( "cff_lookup_glyph_by_stdcharcode:"
+                 " the `cffload' module is not available\n" ));
+      return FT_THROW( Unimplemented_Feature );
     }
 #endif
 
@@ -438,6 +447,7 @@
 
     return -1;
   }
+
 
 #ifdef CFF_CONFIG_OPTION_OLD_ENGINE
 
@@ -483,7 +493,7 @@
     FT_UShort          num_axes =
                          decoder->cff->top_font.font_dict.num_axes;
 
-    T2_Hints_Funcs     hinter;
+    T2_Hints_Funcs  hinter;
 
 
     /* set default width */
@@ -564,7 +574,7 @@
                             ( (FT_UInt32)ip[1] << 16 ) |
                             ( (FT_UInt32)ip[2] <<  8 ) |
                               (FT_UInt32)ip[3]         );
-          ip    += 4;
+          ip += 4;
           if ( charstring_type == 2 )
             shift = 0;
         }
@@ -630,119 +640,117 @@
           op = cff_op_return;
           break;
         case 12:
-          {
-            if ( ip >= limit )
-              goto Syntax_Error;
-            v = *ip++;
+          if ( ip >= limit )
+            goto Syntax_Error;
+          v = *ip++;
 
-            switch ( v )
-            {
-            case 0:
-              op = cff_op_dotsection;
-              break;
-            case 1: /* this is actually the Type1 vstem3 operator */
-              op = cff_op_vstem;
-              break;
-            case 2: /* this is actually the Type1 hstem3 operator */
-              op = cff_op_hstem;
-              break;
-            case 3:
-              op = cff_op_and;
-              break;
-            case 4:
-              op = cff_op_or;
-              break;
-            case 5:
-              op = cff_op_not;
-              break;
-            case 6:
-              op = cff_op_seac;
-              break;
-            case 7:
-              op = cff_op_sbw;
-              break;
-            case 8:
-              op = cff_op_store;
-              break;
-            case 9:
-              op = cff_op_abs;
-              break;
-            case 10:
-              op = cff_op_add;
-              break;
-            case 11:
-              op = cff_op_sub;
-              break;
-            case 12:
-              op = cff_op_div;
-              break;
-            case 13:
-              op = cff_op_load;
-              break;
-            case 14:
-              op = cff_op_neg;
-              break;
-            case 15:
-              op = cff_op_eq;
-              break;
-            case 16:
-              op = cff_op_callothersubr;
-              break;
-            case 17:
-              op = cff_op_pop;
-              break;
-            case 18:
-              op = cff_op_drop;
-              break;
-            case 20:
-              op = cff_op_put;
-              break;
-            case 21:
-              op = cff_op_get;
-              break;
-            case 22:
-              op = cff_op_ifelse;
-              break;
-            case 23:
-              op = cff_op_random;
-              break;
-            case 24:
-              op = cff_op_mul;
-              break;
-            case 26:
-              op = cff_op_sqrt;
-              break;
-            case 27:
-              op = cff_op_dup;
-              break;
-            case 28:
-              op = cff_op_exch;
-              break;
-            case 29:
-              op = cff_op_index;
-              break;
-            case 30:
-              op = cff_op_roll;
-              break;
-            case 33:
-              op = cff_op_setcurrentpoint;
-              break;
-            case 34:
-              op = cff_op_hflex;
-              break;
-            case 35:
-              op = cff_op_flex;
-              break;
-            case 36:
-              op = cff_op_hflex1;
-              break;
-            case 37:
-              op = cff_op_flex1;
-              break;
-            default:
-              FT_TRACE4(( " unknown op (12, %d)\n", v ));
-              break;
-            }
+          switch ( v )
+          {
+          case 0:
+            op = cff_op_dotsection;
+            break;
+          case 1: /* this is actually the Type1 vstem3 operator */
+            op = cff_op_vstem;
+            break;
+          case 2: /* this is actually the Type1 hstem3 operator */
+            op = cff_op_hstem;
+            break;
+          case 3:
+            op = cff_op_and;
+            break;
+          case 4:
+            op = cff_op_or;
+            break;
+          case 5:
+            op = cff_op_not;
+            break;
+          case 6:
+            op = cff_op_seac;
+            break;
+          case 7:
+            op = cff_op_sbw;
+            break;
+          case 8:
+            op = cff_op_store;
+            break;
+          case 9:
+            op = cff_op_abs;
+            break;
+          case 10:
+            op = cff_op_add;
+            break;
+          case 11:
+            op = cff_op_sub;
+            break;
+          case 12:
+            op = cff_op_div;
+            break;
+          case 13:
+            op = cff_op_load;
+            break;
+          case 14:
+            op = cff_op_neg;
+            break;
+          case 15:
+            op = cff_op_eq;
+            break;
+          case 16:
+            op = cff_op_callothersubr;
+            break;
+          case 17:
+            op = cff_op_pop;
+            break;
+          case 18:
+            op = cff_op_drop;
+            break;
+          case 20:
+            op = cff_op_put;
+            break;
+          case 21:
+            op = cff_op_get;
+            break;
+          case 22:
+            op = cff_op_ifelse;
+            break;
+          case 23:
+            op = cff_op_random;
+            break;
+          case 24:
+            op = cff_op_mul;
+            break;
+          case 26:
+            op = cff_op_sqrt;
+            break;
+          case 27:
+            op = cff_op_dup;
+            break;
+          case 28:
+            op = cff_op_exch;
+            break;
+          case 29:
+            op = cff_op_index;
+            break;
+          case 30:
+            op = cff_op_roll;
+            break;
+          case 33:
+            op = cff_op_setcurrentpoint;
+            break;
+          case 34:
+            op = cff_op_hflex;
+            break;
+          case 35:
+            op = cff_op_flex;
+            break;
+          case 36:
+            op = cff_op_hflex1;
+            break;
+          case 37:
+            op = cff_op_flex1;
+            break;
+          default:
+            FT_TRACE4(( " unknown op (12, %d)\n", v ));
+            break;
           }
           break;
         case 13:
@@ -984,7 +992,7 @@
 
 #ifdef FT_DEBUG_LEVEL_TRACE
           {
-            FT_UInt maskbyte;
+            FT_UInt  maskbyte;
 
 
             FT_TRACE4(( " (maskbytes:" ));
@@ -1386,7 +1394,7 @@
 
         case cff_op_hflex1:
           {
-            FT_Pos start_y;
+            FT_Pos  start_y;
 
 
             FT_TRACE4(( " hflex1\n" ));
@@ -1437,7 +1445,7 @@
 
         case cff_op_hflex:
           {
-            FT_Pos start_y;
+            FT_Pos  start_y;
 
 
             FT_TRACE4(( " hflex\n" ));
@@ -1577,19 +1585,19 @@
           break;
 
         case cff_op_seac:
-            FT_TRACE4(( " seac\n" ));
+          FT_TRACE4(( " seac\n" ));
 
-            error = cff_operator_seac( decoder,
-                                       args[0], args[1], args[2],
-                                       (FT_Int)( args[3] >> 16 ),
-                                       (FT_Int)( args[4] >> 16 ) );
+          error = cff_operator_seac( decoder,
+                                     args[0], args[1], args[2],
+                                     (FT_Int)( args[3] >> 16 ),
+                                     (FT_Int)( args[4] >> 16 ) );
 
-            /* add current outline to the glyph slot */
-            FT_GlyphLoader_Add( builder->loader );
+          /* add current outline to the glyph slot */
+          FT_GlyphLoader_Add( builder->loader );
 
-            /* return now! */
-            FT_TRACE4(( "\n" ));
-            return error;
+          /* return now! */
+          FT_TRACE4(( "\n" ));
+          return error;
 
         case cff_op_endchar:
           /* in dictionaries, `endchar' simply indicates end of data */
@@ -1813,7 +1821,7 @@
           FT_TRACE4(( " dup\n" ));
 
           args[1] = args[0];
-          args += 2;
+          args   += 2;
           break;
 
         case cff_op_put:
@@ -1855,7 +1863,7 @@
 
           /* since we currently don't handle interpolation of multiple */
           /* master fonts, this is a no-op                             */
-          FT_TRACE4(( " store\n"));
+          FT_TRACE4(( " store\n" ));
           break;
 
         case cff_op_load:
@@ -2253,12 +2261,12 @@
   /*    hint_mode :: The hinting mode.                                     */
   /*                                                                       */
   FT_LOCAL_DEF( void )
-  cff_decoder_init( CFF_Decoder*    decoder,
-                    TT_Face         face,
-                    CFF_Size        size,
-                    CFF_GlyphSlot   slot,
-                    FT_Bool         hinting,
-                    FT_Render_Mode  hint_mode,
+  cff_decoder_init( CFF_Decoder*                     decoder,
+                    TT_Face                          face,
+                    CFF_Size                         size,
+                    CFF_GlyphSlot                    slot,
+                    FT_Bool                          hinting,
+                    FT_Render_Mode                   hint_mode,
                     CFF_Decoder_Get_Glyph_Callback   get_callback,
                     CFF_Decoder_Free_Glyph_Callback  free_callback )
   {
@@ -2279,7 +2287,7 @@
                               cff->top_font.font_dict.charstring_type,
                               decoder->num_globals );
 
-    decoder->hint_mode    = hint_mode;
+    decoder->hint_mode = hint_mode;
 
     decoder->get_glyph_callback  = get_callback;
     decoder->free_glyph_callback = free_callback;
@@ -2300,10 +2308,12 @@
 
     FT_Service_CFFLoad  cffload = (FT_Service_CFFLoad)cff->cffload;
 
+
     /* manage CID fonts */
     if ( cff->num_subfonts )
     {
-      FT_Byte  fd_index = cffload->fd_select_get( &cff->fd_select, glyph_index );
+      FT_Byte  fd_index = cffload->fd_select_get( &cff->fd_select,
+                                                  glyph_index );
 
 
       if ( fd_index >= cff->num_subfonts )
@@ -2328,11 +2338,11 @@
       }
     }
 
-    decoder->num_locals    = sub->local_subrs_index.count;
-    decoder->locals        = sub->local_subrs;
-    decoder->locals_bias   = cff_compute_bias(
-                               decoder->cff->top_font.font_dict.charstring_type,
-                               decoder->num_locals );
+    decoder->num_locals  = sub->local_subrs_index.count;
+    decoder->locals      = sub->local_subrs;
+    decoder->locals_bias = cff_compute_bias(
+                             decoder->cff->top_font.font_dict.charstring_type,
+                             decoder->num_locals );
 
     decoder->glyph_width   = sub->private_dict.default_width;
     decoder->nominal_width = sub->private_dict.nominal_width;
@@ -2342,3 +2352,6 @@
   Exit:
     return error;
   }
+
+
+/* END */

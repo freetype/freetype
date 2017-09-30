@@ -312,10 +312,11 @@
     {
       CF2_Hint  hint = &hintmap->edge[i];
 
+
       FT_TRACE6(( "  %3d    %7.2f  %7.2f  %5d  %s%s%s%s\n",
                   hint->index,
                   hint->csCoord / 65536.0,
-                  hint->dsCoord / (hint->scale * 1.0),
+                  hint->dsCoord / ( hint->scale * 1.0 ),
                   hint->scale,
                   ( cf2_hint_isPair( hint ) ? "p" : "g" ),
                   ( cf2_hint_isTop( hint ) ? "t" : "b" ),
@@ -645,9 +646,9 @@
                 firstHintEdge->csCoord / 65536.0,
                 firstHintEdge->dsCoord / 65536.0 ));
     if ( isPair )
-    FT_TRACE7(( "  Got hint at %.2f (%.2f)\n",
-                secondHintEdge->csCoord / 65536.0,
-                secondHintEdge->dsCoord / 65536.0 ));
+      FT_TRACE7(( "  Got hint at %.2f (%.2f)\n",
+                  secondHintEdge->csCoord / 65536.0,
+                  secondHintEdge->dsCoord / 65536.0 ));
 
     /*
      * Discard any hints that overlap in character space.  Most often, this
@@ -767,6 +768,7 @@
       /* insert first edge */
       hintmap->edge[indexInsert] = *firstHintEdge;         /* copy struct */
       hintmap->count            += 1;
+
       FT_TRACE7(( "  Inserting hint %.2f (%.2f)\n",
                   firstHintEdge->csCoord / 65536.0,
                   firstHintEdge->dsCoord / 65536.0 ));
@@ -776,6 +778,7 @@
         /* insert second edge */
         hintmap->edge[indexInsert + 1] = *secondHintEdge;  /* copy struct */
         hintmap->count                += 1;
+
         FT_TRACE7(( "  Inserting hint %.2f (%.2f)\n",
                     secondHintEdge->csCoord / 65536.0,
                     secondHintEdge->dsCoord / 65536.0 ));

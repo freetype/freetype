@@ -36,8 +36,8 @@
 /***************************************************************************/
 
 
-#ifndef CF2GLUE_H_
-#define CF2GLUE_H_
+#ifndef PSGLUE_H_
+#define PSGLUE_H_
 
 
 /* common includes for other modules */
@@ -138,7 +138,7 @@ FT_BEGIN_HEADER
 FT_END_HEADER
 
 
-#endif /* CF2GLUE_H_ */
+#endif /* PSGLUE_H_ */
 
 
 /* END */

@@ -275,6 +275,8 @@
     if ( !font->isT1 )
     {
       FT_Service_CFFLoad  cffload = (FT_Service_CFFLoad)font->cffload;
+
+
       /* check for variation vectors */
       vstore        = cf2_getVStore( decoder );
       hasVariations = ( vstore->dataCount != 0 );

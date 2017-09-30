@@ -36,8 +36,8 @@
 /***************************************************************************/
 
 
-#ifndef CF2FONT_H_
-#define CF2FONT_H_
+#ifndef PSFONT_H_
+#define PSFONT_H_
 
 
 #include FT_SERVICE_CFF_TABLE_LOAD_H
@@ -114,7 +114,7 @@ FT_BEGIN_HEADER
 
     CF2_BluesRec  blues;                         /* computed zone data */
 
-    FT_Service_CFFLoad  cffload;                  /* Pointer to cff functions */
+    FT_Service_CFFLoad  cffload;           /* pointer to cff functions */
   };
 
 
@@ -128,7 +128,7 @@ FT_BEGIN_HEADER
 FT_END_HEADER
 
 
-#endif /* CF2FONT_H_ */
+#endif /* PSFONT_H_ */
 
 
 /* END */

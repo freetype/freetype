@@ -49,6 +49,7 @@
 
 #include FT_SERVICE_CFF_TABLE_LOAD_H
 
+
 #define CF2_MAX_SIZE  cf2_intToFixed( 2000 )    /* max ppem */
 
 
@@ -479,15 +480,16 @@
                            CF2_UInt     *len,
                            FT_Fixed*    *vec )
   {
-    TT_Face  face;
+    TT_Face                  face;
     FT_Service_MultiMasters  mm;
+
 
     FT_ASSERT( decoder && decoder->builder.face );
     FT_ASSERT( vec && len );
     FT_ASSERT( !decoder->builder.is_t1 );
 
     face = (TT_Face)decoder->builder.face;
-    mm = (FT_Service_MultiMasters)face->mm;
+    mm   = (FT_Service_MultiMasters)face->mm;
 
     return mm->get_var_blend( FT_FACE( face ), len, NULL, vec, NULL );
   }
@@ -498,8 +500,8 @@
   FT_LOCAL_DEF( CF2_Fixed )
   cf2_getPpemY( PS_Decoder*  decoder )
   {
-    FT_ASSERT( decoder                          &&
-               decoder->builder.face            &&
+    FT_ASSERT( decoder                     &&
+               decoder->builder.face       &&
                decoder->builder.face->size );
 
     /*
@@ -723,8 +725,10 @@
     T1_Font   type1 = &face->type1;
 
 #ifdef FT_CONFIG_OPTION_INCREMENTAL
-    FT_Incremental_InterfaceRec *inc =
+    FT_Incremental_InterfaceRec  *inc =
       face->root.internal->incremental_interface;
+
+
     /* For incremental fonts get the character data using the */
     /* callback function.                                     */
     if ( inc )
@@ -732,7 +736,7 @@
                                           glyph_index, &glyph_data );
     else
 #endif
-      /* For ordinary fonts get the character data stored in the face record. */
+    /* For ordinary fonts get the character data stored in the face record. */
     {
       glyph_data.pointer = type1->charstrings[glyph_index];
       glyph_data.length  = (FT_Int)type1->charstrings_len[glyph_index];
@@ -806,13 +810,13 @@
       /* The CID driver stores subroutines with seed bytes.  This     */
       /* case is taken care of when decoder->subrs_len == 0.          */
       if ( decoder->locals_len )
-        buf->end     = buf->start + decoder->locals_len[idx];
+        buf->end = buf->start + decoder->locals_len[idx];
       else
       {
         /* We are using subroutines from a CID font.  We must adjust */
         /* for the seed bytes.                                       */
-        buf->start  += ( decoder->lenIV >= 0 ? decoder->lenIV : 0 );
-        buf->end     = decoder->locals[idx + 1];
+        buf->start += ( decoder->lenIV >= 0 ? decoder->lenIV : 0 );
+        buf->end    = decoder->locals[idx + 1];
       }
 
       if ( !buf->start )
@@ -823,7 +827,7 @@
     }
     else
     {
-      buf->end   = decoder->locals[idx + 1];
+      buf->end = decoder->locals[idx + 1];
     }
 
     buf->ptr = buf->start;

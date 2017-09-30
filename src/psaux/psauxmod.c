@@ -87,10 +87,10 @@
   FT_CALLBACK_TABLE_DEF
   const T1_Decoder_FuncsRec  t1_decoder_funcs =
   {
-    t1_decoder_init,              /* init              */
-    t1_decoder_done,              /* done              */
-    t1_decoder_parse_charstrings, /* parse_charstrings_old */
-    cf2_decoder_parse_charstrings /* parse_charstrings */
+    t1_decoder_init,               /* init                  */
+    t1_decoder_done,               /* done                  */
+    t1_decoder_parse_charstrings,  /* parse_charstrings_old */
+    cf2_decoder_parse_charstrings  /* parse_charstrings     */
   };
 
 
@@ -133,13 +133,13 @@
   FT_CALLBACK_TABLE_DEF
   const CFF_Decoder_FuncsRec  cff_decoder_funcs =
   {
-    cff_decoder_init,              /* init              */
-    cff_decoder_prepare,           /* prepare           */
+    cff_decoder_init,              /* init    */
+    cff_decoder_prepare,           /* prepare */
 
 #ifdef CFF_CONFIG_OPTION_OLD_ENGINE
     cff_decoder_parse_charstrings, /* parse_charstrings_old */
 #endif
-    cf2_decoder_parse_charstrings  /* parse_charstrings */
+    cf2_decoder_parse_charstrings  /* parse_charstrings     */
   };
 
 

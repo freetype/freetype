@@ -36,8 +36,8 @@
 /***************************************************************************/
 
 
-#ifndef CF2INTRP_H_
-#define CF2INTRP_H_
+#ifndef PSINTRP_H_
+#define PSINTRP_H_
 
 
 #include "psft.h"
@@ -77,7 +77,7 @@ FT_BEGIN_HEADER
 FT_END_HEADER
 
 
-#endif /* CF2INTRP_H_ */
+#endif /* PSINTRP_H_ */
 
 
 /* END */

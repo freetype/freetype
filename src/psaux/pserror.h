@@ -36,8 +36,8 @@
 /***************************************************************************/
 
 
-#ifndef CF2ERROR_H_
-#define CF2ERROR_H_
+#ifndef PSERROR_H_
+#define PSERROR_H_
 
 
 #include FT_MODULE_ERRORS_H
@@ -113,7 +113,7 @@ FT_BEGIN_HEADER
 FT_END_HEADER
 
 
-#endif /* CF2ERROR_H_ */
+#endif /* PSERROR_H_ */
 
 
 /* END */

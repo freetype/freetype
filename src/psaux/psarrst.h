@@ -36,8 +36,8 @@
 /***************************************************************************/
 
 
-#ifndef CF2ARRST_H_
-#define CF2ARRST_H_
+#ifndef PSARRST_H_
+#define PSARRST_H_
 
 
 #include "pserror.h"
@@ -94,7 +94,7 @@ FT_BEGIN_HEADER
 FT_END_HEADER
 
 
-#endif /* CF2ARRST_H_ */
+#endif /* PSARRST_H_ */
 
 
 /* END */

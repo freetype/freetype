@@ -2064,53 +2064,55 @@
     {
       T1_Builder  t1builder = (T1_Builder)builder;
 
-      ps_builder->memory         =  t1builder->memory;
-      ps_builder->face           = (FT_Face)t1builder->face;
-      ps_builder->glyph          = (CFF_GlyphSlot)t1builder->glyph;
-      ps_builder->loader         =  t1builder->loader;
-      ps_builder->base           =  t1builder->base;
-      ps_builder->current        =  t1builder->current;
 
-      ps_builder->pos_x          = &t1builder->pos_x;
-      ps_builder->pos_y          = &t1builder->pos_y;
+      ps_builder->memory  = t1builder->memory;
+      ps_builder->face    = (FT_Face)t1builder->face;
+      ps_builder->glyph   = (CFF_GlyphSlot)t1builder->glyph;
+      ps_builder->loader  = t1builder->loader;
+      ps_builder->base    = t1builder->base;
+      ps_builder->current = t1builder->current;
 
-      ps_builder->left_bearing   = &t1builder->left_bearing;
-      ps_builder->advance        = &t1builder->advance;
+      ps_builder->pos_x = &t1builder->pos_x;
+      ps_builder->pos_y = &t1builder->pos_y;
 
-      ps_builder->bbox           = &t1builder->bbox;
-      ps_builder->path_begun     =  0;
-      ps_builder->load_points    =  t1builder->load_points;
-      ps_builder->no_recurse     =  t1builder->no_recurse;
+      ps_builder->left_bearing = &t1builder->left_bearing;
+      ps_builder->advance      = &t1builder->advance;
 
-      ps_builder->metrics_only   =  t1builder->metrics_only;
+      ps_builder->bbox        = &t1builder->bbox;
+      ps_builder->path_begun  = 0;
+      ps_builder->load_points = t1builder->load_points;
+      ps_builder->no_recurse  = t1builder->no_recurse;
+
+      ps_builder->metrics_only = t1builder->metrics_only;
     }
     else
     {
       CFF_Builder*  cffbuilder = (CFF_Builder*)builder;
 
-      ps_builder->memory         =  cffbuilder->memory;
-      ps_builder->face           = (FT_Face)cffbuilder->face;
-      ps_builder->glyph          =  cffbuilder->glyph;
-      ps_builder->loader         =  cffbuilder->loader;
-      ps_builder->base           =  cffbuilder->base;
-      ps_builder->current        =  cffbuilder->current;
 
-      ps_builder->pos_x          = &cffbuilder->pos_x;
-      ps_builder->pos_y          = &cffbuilder->pos_y;
+      ps_builder->memory  = cffbuilder->memory;
+      ps_builder->face    = (FT_Face)cffbuilder->face;
+      ps_builder->glyph   = cffbuilder->glyph;
+      ps_builder->loader  = cffbuilder->loader;
+      ps_builder->base    = cffbuilder->base;
+      ps_builder->current = cffbuilder->current;
 
-      ps_builder->left_bearing   = &cffbuilder->left_bearing;
-      ps_builder->advance        = &cffbuilder->advance;
+      ps_builder->pos_x = &cffbuilder->pos_x;
+      ps_builder->pos_y = &cffbuilder->pos_y;
 
-      ps_builder->bbox           = &cffbuilder->bbox;
-      ps_builder->path_begun     =  cffbuilder->path_begun;
-      ps_builder->load_points    =  cffbuilder->load_points;
-      ps_builder->no_recurse     =  cffbuilder->no_recurse;
+      ps_builder->left_bearing = &cffbuilder->left_bearing;
+      ps_builder->advance      = &cffbuilder->advance;
 
-      ps_builder->metrics_only   =  cffbuilder->metrics_only;
+      ps_builder->bbox        = &cffbuilder->bbox;
+      ps_builder->path_begun  = cffbuilder->path_begun;
+      ps_builder->load_points = cffbuilder->load_points;
+      ps_builder->no_recurse  = cffbuilder->no_recurse;
+
+      ps_builder->metrics_only = cffbuilder->metrics_only;
     }
 
-    ps_builder->is_t1            = is_t1;
-    ps_builder->funcs            = ps_builder_funcs;
+    ps_builder->is_t1 = is_t1;
+    ps_builder->funcs = ps_builder_funcs;
   }
 
 
@@ -2163,6 +2165,7 @@
       FT_Byte*    control = (FT_Byte*)outline->tags + outline->n_points;
 
       PS_Driver  driver   = (PS_Driver)FT_FACE_DRIVER( builder->face );
+
 
 #ifdef CFF_CONFIG_OPTION_OLD_ENGINE
       if ( !builder->is_t1 &&
@@ -2219,7 +2222,7 @@
     /* this might happen in invalid fonts */
     if ( !outline )
     {
-      FT_ERROR(( "t1_builder_add_contour: no outline to add points to\n" ));
+      FT_ERROR(( "ps_builder_add_contour: no outline to add points to\n" ));
       return FT_THROW( Invalid_File_Format );
     }
 
@@ -2356,61 +2359,63 @@
     {
       T1_Decoder  t1_decoder = (T1_Decoder)decoder;
 
+
       ps_builder_init( &ps_decoder->builder,
                        &t1_decoder->builder,
                        is_t1 );
 
-      ps_decoder->cf2_instance       = &t1_decoder->cf2_instance;
-      ps_decoder->psnames            =  t1_decoder->psnames;
+      ps_decoder->cf2_instance = &t1_decoder->cf2_instance;
+      ps_decoder->psnames      = t1_decoder->psnames;
 
-      ps_decoder->num_glyphs         =  t1_decoder->num_glyphs;
-      ps_decoder->glyph_names        =  t1_decoder->glyph_names;
-      ps_decoder->hint_mode          =  t1_decoder->hint_mode;
-      ps_decoder->blend              =  t1_decoder->blend;
+      ps_decoder->num_glyphs  = t1_decoder->num_glyphs;
+      ps_decoder->glyph_names = t1_decoder->glyph_names;
+      ps_decoder->hint_mode   = t1_decoder->hint_mode;
+      ps_decoder->blend       = t1_decoder->blend;
 
-      ps_decoder->num_locals         =  (FT_UInt)t1_decoder->num_subrs;
-      ps_decoder->locals             =  t1_decoder->subrs;
-      ps_decoder->locals_len         =  t1_decoder->subrs_len;
-      ps_decoder->locals_hash        =  t1_decoder->subrs_hash;
+      ps_decoder->num_locals  = (FT_UInt)t1_decoder->num_subrs;
+      ps_decoder->locals      = t1_decoder->subrs;
+      ps_decoder->locals_len  = t1_decoder->subrs_len;
+      ps_decoder->locals_hash = t1_decoder->subrs_hash;
 
-      ps_decoder->buildchar          =  t1_decoder->buildchar;
-      ps_decoder->len_buildchar      =  t1_decoder->len_buildchar;
+      ps_decoder->buildchar     = t1_decoder->buildchar;
+      ps_decoder->len_buildchar = t1_decoder->len_buildchar;
 
-      ps_decoder->lenIV              =  t1_decoder->lenIV;
+      ps_decoder->lenIV = t1_decoder->lenIV;
     }
     else
     {
       CFF_Decoder*  cff_decoder = (CFF_Decoder*)decoder;
 
+
       ps_builder_init( &ps_decoder->builder,
                        &cff_decoder->builder,
                        is_t1 );
 
-      ps_decoder->cff                 =  cff_decoder->cff;
-      ps_decoder->cf2_instance        = &cff_decoder->cff->cf2_instance;
-      ps_decoder->current_subfont     =  cff_decoder->current_subfont;
+      ps_decoder->cff             = cff_decoder->cff;
+      ps_decoder->cf2_instance    = &cff_decoder->cff->cf2_instance;
+      ps_decoder->current_subfont = cff_decoder->current_subfont;
 
-      ps_decoder->num_globals         =  cff_decoder->num_globals;
-      ps_decoder->globals             =  cff_decoder->globals;
-      ps_decoder->globals_bias        =  cff_decoder->globals_bias;
-      ps_decoder->num_locals          =  cff_decoder->num_locals;
-      ps_decoder->locals              =  cff_decoder->locals;
-      ps_decoder->locals_bias         =  cff_decoder->locals_bias;
+      ps_decoder->num_globals  = cff_decoder->num_globals;
+      ps_decoder->globals      = cff_decoder->globals;
+      ps_decoder->globals_bias = cff_decoder->globals_bias;
+      ps_decoder->num_locals   = cff_decoder->num_locals;
+      ps_decoder->locals       = cff_decoder->locals;
+      ps_decoder->locals_bias  = cff_decoder->locals_bias;
 
-      ps_decoder->glyph_width         =  cff_decoder->glyph_width;
-      ps_decoder->nominal_width       =  cff_decoder->nominal_width;
-      ps_decoder->width_only          =  cff_decoder->width_only;
+      ps_decoder->glyph_width   = cff_decoder->glyph_width;
+      ps_decoder->nominal_width = cff_decoder->nominal_width;
+      ps_decoder->width_only    = cff_decoder->width_only;
 
-      ps_decoder->hint_mode           =  cff_decoder->hint_mode;
+      ps_decoder->hint_mode = cff_decoder->hint_mode;
 
-      ps_decoder->get_glyph_callback  =  cff_decoder->get_glyph_callback;
-      ps_decoder->free_glyph_callback =  cff_decoder->free_glyph_callback;
+      ps_decoder->get_glyph_callback  = cff_decoder->get_glyph_callback;
+      ps_decoder->free_glyph_callback = cff_decoder->free_glyph_callback;
     }
   }
 
 
   /* Synthesize a SubFont object for Type 1 fonts, for use in the  */
-  /* new interpreter to access Private dict data                   */
+  /* new interpreter to access Private dict data.                  */
   FT_LOCAL_DEF( void )
   t1_make_subfont( FT_Face      face,
                    PS_Private   priv,
@@ -2418,6 +2423,7 @@
   {
     CFF_Private  cpriv = &subfont->private_dict;
     FT_UInt      n, count;
+
 
     FT_ZERO( subfont );
     FT_ZERO( cpriv );
@@ -2442,8 +2448,8 @@
     cpriv->blue_shift = (FT_Pos)priv->blue_shift;
     cpriv->blue_fuzz  = (FT_Pos)priv->blue_fuzz;
 
-    cpriv->standard_width     = (FT_Pos)priv->standard_width[0];
-    cpriv->standard_height    = (FT_Pos)priv->standard_height[0];
+    cpriv->standard_width  = (FT_Pos)priv->standard_width[0];
+    cpriv->standard_height = (FT_Pos)priv->standard_height[0];
 
     count = cpriv->num_snap_widths = priv->num_snap_widths;
     for ( n = 0; n < count; n++ )
@@ -2458,14 +2464,14 @@
     cpriv->language_group   = priv->language_group;
     cpriv->expansion_factor = priv->expansion_factor;
 
-    cpriv->subfont          = subfont;
+    cpriv->subfont = subfont;
 
 
     /* Initialize the random number generator. */
     if ( face->internal->random_seed != -1 )
     {
-      /* . If we have a face-specific seed, use it.    */
-      /*   If non-zero, update it to a positive value. */
+      /* If we have a face-specific seed, use it.    */
+      /* If non-zero, update it to a positive value. */
       subfont->random = (FT_UInt32)face->internal->random_seed;
       if ( face->internal->random_seed )
       {
@@ -2473,12 +2479,14 @@
         {
           face->internal->random_seed = (FT_Int32)cff_random(
             (FT_UInt32)face->internal->random_seed );
+
         } while ( face->internal->random_seed < 0 );
       }
     }
     if ( !subfont->random )
     {
       FT_UInt32  seed;
+
 
       /* compute random seed from some memory addresses */
       seed = (FT_UInt32)( (FT_Offset)(char*)&seed    ^
