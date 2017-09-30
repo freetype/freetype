@@ -1,3 +1,16 @@
+2017-09-30  Alexei Podtelezhnikov  <apodtele@gmail.com>
+
+	Signedness fixes in bitmap presetting.
+
+	Reported as
+
+	  https://bugs.chromium.org/p/oss-fuzz/issues/detail?id=3514.
+
+	* src/raster/ftrend1.c (ft_raster1_render): Exlicitly signed height.
+	* src/smooth/ftsmooth.c (ft_smooth_render_generic): Ditto.
+	* src/base/ftobjs.c (ft_glyphslot_preset_bitmap): Explicitly unsigned
+	subtraction.
+
 2017-09-29  Alexei Podtelezhnikov  <apodtele@gmail.com>
 
 	Bitmap metrics presetting [2/2].

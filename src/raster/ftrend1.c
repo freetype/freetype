@@ -137,7 +137,7 @@
     slot->internal->flags |= FT_GLYPH_OWN_BITMAP;
 
     x_shift = -slot->bitmap_left * 64;
-    y_shift = ( bitmap->rows - slot->bitmap_top ) * 64;
+    y_shift = ( (FT_Int)bitmap->rows - slot->bitmap_top ) * 64;
 
     if ( origin )
     {

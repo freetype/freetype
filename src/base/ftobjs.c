@@ -425,8 +425,8 @@
     x_left  = cbox.xMin >> 6;
     y_top   = cbox.yMax >> 6;
 
-    width  = (FT_ULong)( cbox.xMax - cbox.xMin ) >> 6;
-    height = (FT_ULong)( cbox.yMax - cbox.yMin ) >> 6;
+    width  = ( (FT_ULong)cbox.xMax - (FT_ULong)cbox.xMin ) >> 6;
+    height = ( (FT_ULong)cbox.yMax - (FT_ULong)cbox.yMin ) >> 6;
 
     switch ( pixel_mode )
     {

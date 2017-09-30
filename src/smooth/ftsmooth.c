@@ -141,9 +141,9 @@
     x_shift = 64 * -slot->bitmap_left;
     y_shift = 64 * -slot->bitmap_top;
     if ( bitmap->pixel_mode == FT_PIXEL_MODE_LCD_V )
-      y_shift += 64 * bitmap->rows / 3;
+      y_shift += 64 * (FT_Int)bitmap->rows / 3;
     else
-      y_shift += 64 * bitmap->rows;
+      y_shift += 64 * (FT_Int)bitmap->rows;
 
     if ( origin )
     {
