@@ -425,7 +425,7 @@ FT_BEGIN_HEADER
   /*    The address of the FreeType object that is under finalization.     */
   /*    Its client data is accessed through its `generic' field.           */
   /*                                                                       */
-  typedef void  (*FT_Generic_Finalizer)(void*  object);
+  typedef void  (*FT_Generic_Finalizer)( void*  object );
 
 
   /*************************************************************************/

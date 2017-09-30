@@ -210,7 +210,7 @@ extern "C++"
                                                   NULL,                 \
                                                   &error ) )
 
-#define FT_MEM_QREALLOC_MULT( ptr, oldcnt, newcnt, itmsz)            \
+#define FT_MEM_QREALLOC_MULT( ptr, oldcnt, newcnt, itmsz )           \
           FT_ASSIGNP_INNER( ptr, ft_mem_qrealloc( memory,            \
                                                   (FT_Long)(itmsz),  \
                                                   (FT_Long)(oldcnt), \

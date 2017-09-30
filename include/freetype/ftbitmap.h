@@ -97,7 +97,7 @@ FT_BEGIN_HEADER
   FT_EXPORT( FT_Error )
   FT_Bitmap_Copy( FT_Library        library,
                   const FT_Bitmap  *source,
-                  FT_Bitmap        *target);
+                  FT_Bitmap        *target );
 
 
   /*************************************************************************/

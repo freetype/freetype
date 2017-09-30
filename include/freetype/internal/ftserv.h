@@ -340,7 +340,7 @@ FT_BEGIN_HEADER
                                     serv_id_7, serv_data_7,                 \
                                     serv_id_8, serv_data_8,                 \
                                     serv_id_9, serv_data_9,                 \
-                                    serv_id_10, serv_data_10)               \
+                                    serv_id_10, serv_data_10 )              \
   static const FT_ServiceDescRec  class_[] =                                \
   {                                                                         \
     { serv_id_1, serv_data_1 },                                             \
@@ -583,7 +583,7 @@ FT_BEGIN_HEADER
                                                                             \
   FT_Error                                                                  \
   FT_Create_Class_ ## class_( FT_Library           library,                 \
-                              FT_ServiceDescRec**  output_class)            \
+                              FT_ServiceDescRec**  output_class )           \
   {                                                                         \
     FT_ServiceDescRec*  clazz  = NULL;                                      \
     FT_Error            error;                                              \
@@ -634,7 +634,7 @@ FT_BEGIN_HEADER
                                                                             \
   FT_Error                                                                  \
   FT_Create_Class_ ## class_( FT_Library           library,                 \
-                              FT_ServiceDescRec**  output_class)            \
+                              FT_ServiceDescRec**  output_class )           \
   {                                                                         \
     FT_ServiceDescRec*  clazz  = NULL;                                      \
     FT_Error            error;                                              \
@@ -688,7 +688,7 @@ FT_BEGIN_HEADER
                                                                             \
   FT_Error                                                                  \
   FT_Create_Class_ ## class_( FT_Library           library,                 \
-                              FT_ServiceDescRec**  output_class)            \
+                              FT_ServiceDescRec**  output_class )           \
   {                                                                         \
     FT_ServiceDescRec*  clazz  = NULL;                                      \
     FT_Error            error;                                              \
@@ -745,7 +745,7 @@ FT_BEGIN_HEADER
                                                                             \
   FT_Error                                                                  \
   FT_Create_Class_ ## class_( FT_Library           library,                 \
-                              FT_ServiceDescRec**  output_class)            \
+                              FT_ServiceDescRec**  output_class )           \
   {                                                                         \
     FT_ServiceDescRec*  clazz  = NULL;                                      \
     FT_Error            error;                                              \
@@ -805,7 +805,7 @@ FT_BEGIN_HEADER
                                                                             \
   FT_Error                                                                  \
   FT_Create_Class_ ## class_( FT_Library           library,                 \
-                              FT_ServiceDescRec**  output_class)            \
+                              FT_ServiceDescRec**  output_class )           \
   {                                                                         \
     FT_ServiceDescRec*  clazz  = NULL;                                      \
     FT_Error            error;                                              \

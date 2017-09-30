@@ -56,7 +56,7 @@ FT_BEGIN_HEADER
 
 #define FT_DEFINE_SERVICE_GLYPHDICTREC( class_,                        \
                                         get_name_,                     \
-                                        name_index_)                   \
+                                        name_index_ )                  \
   static const FT_Service_GlyphDictRec  class_ =                       \
   {                                                                    \
     get_name_, name_index_                                             \
@@ -66,7 +66,7 @@ FT_BEGIN_HEADER
 
 #define FT_DEFINE_SERVICE_GLYPHDICTREC( class_,                        \
                                         get_name_,                     \
-                                        name_index_)                   \
+                                        name_index_ )                  \
   void                                                                 \
   FT_Init_Class_ ## class_( FT_Library                library,         \
                             FT_Service_GlyphDictRec*  clazz )          \

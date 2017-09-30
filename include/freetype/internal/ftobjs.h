@@ -85,9 +85,9 @@ FT_BEGIN_HEADER
                   : y + ( 3 * x >> 3 ) )
 
   /* we use FT_TYPEOF to suppress signedness compilation warnings */
-#define FT_PAD_FLOOR( x, n )  ( (x) & ~FT_TYPEOF( x )( (n)-1 ) )
-#define FT_PAD_ROUND( x, n )  FT_PAD_FLOOR( (x) + (n)/2, n )
-#define FT_PAD_CEIL( x, n )   FT_PAD_FLOOR( (x) + (n)-1, n )
+#define FT_PAD_FLOOR( x, n )  ( (x) & ~FT_TYPEOF( x )( (n) - 1 ) )
+#define FT_PAD_ROUND( x, n )  FT_PAD_FLOOR( (x) + (n) / 2, n )
+#define FT_PAD_CEIL( x, n )   FT_PAD_FLOOR( (x) + (n) - 1, n )
 
 #define FT_PIX_FLOOR( x )     ( (x) & ~FT_TYPEOF( x )63 )
 #define FT_PIX_ROUND( x )     FT_PIX_FLOOR( (x) + 32 )
@@ -156,7 +156,7 @@ FT_BEGIN_HEADER
   } FT_CMapRec;
 
   /* typecase any pointer to a charmap handle */
-#define FT_CMAP( x )              ((FT_CMap)( x ))
+#define FT_CMAP( x )  ( (FT_CMap)( x ) )
 
   /* obvious macros */
 #define FT_CMAP_PLATFORM_ID( x )  FT_CMAP( x )->charmap.platform_id
@@ -519,7 +519,8 @@ FT_BEGIN_HEADER
 
 
   /* typecast an object to an FT_Module */
-#define FT_MODULE( x )          ((FT_Module)( x ))
+#define FT_MODULE( x )  ( (FT_Module)(x) )
+
 #define FT_MODULE_CLASS( x )    FT_MODULE( x )->clazz
 #define FT_MODULE_LIBRARY( x )  FT_MODULE( x )->library
 #define FT_MODULE_MEMORY( x )   FT_MODULE( x )->memory
@@ -605,9 +606,9 @@ FT_BEGIN_HEADER
 
   /* a few macros used to perform easy typecasts with minimal brain damage */
 
-#define FT_FACE( x )          ((FT_Face)(x))
-#define FT_SIZE( x )          ((FT_Size)(x))
-#define FT_SLOT( x )          ((FT_GlyphSlot)(x))
+#define FT_FACE( x )          ( (FT_Face)(x) )
+#define FT_SIZE( x )          ( (FT_Size)(x) )
+#define FT_SLOT( x )          ( (FT_GlyphSlot)(x) )
 
 #define FT_FACE_DRIVER( x )   FT_FACE( x )->driver
 #define FT_FACE_LIBRARY( x )  FT_FACE_DRIVER( x )->root.library
@@ -708,7 +709,7 @@ FT_BEGIN_HEADER
   ft_glyphslot_free_bitmap( FT_GlyphSlot  slot );
 
 
-  /* Preset bitmap metrics of an outline glyphslot prior to rendering.    */
+  /* Preset bitmap metrics of an outline glyphslot prior to rendering. */
   FT_BASE( void )
   ft_glyphslot_preset_bitmap( FT_GlyphSlot      slot,
                               FT_Render_Mode    mode,
@@ -740,10 +741,10 @@ FT_BEGIN_HEADER
   /*************************************************************************/
 
 
-#define FT_RENDERER( x )      ((FT_Renderer)( x ))
-#define FT_GLYPH( x )         ((FT_Glyph)( x ))
-#define FT_BITMAP_GLYPH( x )  ((FT_BitmapGlyph)( x ))
-#define FT_OUTLINE_GLYPH( x ) ((FT_OutlineGlyph)( x ))
+#define FT_RENDERER( x )       ( (FT_Renderer)(x) )
+#define FT_GLYPH( x )          ( (FT_Glyph)(x) )
+#define FT_BITMAP_GLYPH( x )   ( (FT_BitmapGlyph)(x) )
+#define FT_OUTLINE_GLYPH( x )  ( (FT_OutlineGlyph)(x) )
 
 
   typedef struct  FT_RendererRec_
@@ -774,7 +775,7 @@ FT_BEGIN_HEADER
 
 
   /* typecast a module into a driver easily */
-#define FT_DRIVER( x )        ((FT_Driver)(x))
+#define FT_DRIVER( x )  ( (FT_Driver)(x) )
 
   /* typecast a module as a driver, and get its driver class */
 #define FT_DRIVER_CLASS( x )  FT_DRIVER( x )->clazz

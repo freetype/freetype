@@ -87,7 +87,7 @@ FT_BEGIN_HEADER
   FT_Get_CID_Registry_Ordering_Supplement( FT_Face       face,
                                            const char*  *registry,
                                            const char*  *ordering,
-                                           FT_Int       *supplement);
+                                           FT_Int       *supplement );
 
 
   /**********************************************************************
