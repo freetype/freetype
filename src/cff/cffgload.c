@@ -145,6 +145,7 @@
     PSAux_Service            psaux         = (PSAux_Service)face->psaux;
     const CFF_Decoder_Funcs  decoder_funcs = psaux->cff_decoder_funcs;
 
+
     *max_advance = 0;
 
     /* Initialize load decoder */

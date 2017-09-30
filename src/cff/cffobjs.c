@@ -504,8 +504,8 @@
     FT_Library          library     = cffface->driver->root.library;
 
 
-    sfnt = (SFNT_Service)FT_Get_Module_Interface(
-             library, "sfnt" );
+    sfnt = (SFNT_Service)FT_Get_Module_Interface( library,
+                                                  "sfnt" );
     if ( !sfnt )
     {
       FT_ERROR(( "cff_face_init: cannot access `sfnt' module\n" ));
@@ -515,11 +515,11 @@
 
     FT_FACE_FIND_GLOBAL_SERVICE( face, psnames, POSTSCRIPT_CMAPS );
 
-    pshinter = (PSHinter_Service)FT_Get_Module_Interface(
-                 library, "pshinter" );
+    pshinter = (PSHinter_Service)FT_Get_Module_Interface( library,
+                                                          "pshinter" );
 
-    psaux = (PSAux_Service)FT_Get_Module_Interface(
-              library, "psaux" );
+    psaux = (PSAux_Service)FT_Get_Module_Interface( library,
+                                                    "psaux" );
     if ( !psaux )
     {
       FT_ERROR(( "cff_face_init: cannot access `psaux' module\n" ));

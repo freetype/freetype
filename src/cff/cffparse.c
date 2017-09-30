@@ -1303,12 +1303,11 @@
     PSAux_Service  psaux;
 #endif
 
-
     FT_Byte*    p       = start;
     FT_Error    error   = FT_Err_Ok;
     FT_Library  library = parser->library;
-    FT_UNUSED( library );
 
+    FT_UNUSED( library );
 
 
     parser->top    = parser->stack;
@@ -1394,8 +1393,7 @@
         cff_rec.top_font.font_dict.num_axes    = parser->num_axes;
         decoder.cff                            = &cff_rec;
 
-        psaux = (PSAux_Service)FT_Get_Module_Interface(
-                  library, "psaux" );
+        psaux = (PSAux_Service)FT_Get_Module_Interface( library, "psaux" );
         if ( !psaux )
         {
           FT_ERROR(( "cff_parser_run: cannot access `psaux' module\n" ));
@@ -1403,10 +1401,8 @@
           goto Exit;
         }
 
-        error = psaux->cff_decoder_funcs->parse_charstrings_old( &decoder,
-                                                                 charstring_base,
-                                                                 charstring_len,
-                                                                 1 );
+        error = psaux->cff_decoder_funcs->parse_charstrings_old(
+                  &decoder, charstring_base, charstring_len, 1 );
 
         /* Now copy the stack data in the temporary decoder object,    */
         /* converting it back to charstring number representations     */

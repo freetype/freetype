@@ -56,11 +56,11 @@
     FT_ULong       glyph_length = 0;
     PSAux_Service  psaux        = (PSAux_Service)face->psaux;
 
-    FT_Bool        force_scaling = FALSE;
+    FT_Bool  force_scaling = FALSE;
 
 #ifdef FT_CONFIG_OPTION_INCREMENTAL
-    FT_Incremental_InterfaceRec *inc =
-                                  face->root.internal->incremental_interface;
+    FT_Incremental_InterfaceRec  *inc =
+                                   face->root.internal->incremental_interface;
 #endif
 
 
@@ -176,11 +176,13 @@
         psaux->t1_decrypt( charstring, glyph_length, 4330 );
 
       /* choose which renderer to use */
-      if ( ((PS_Driver)FT_FACE_DRIVER( face ))->hinting_engine == FT_T1_HINTING_FREETYPE ||
-           decoder->builder.metrics_only )
-        error = psaux->t1_decoder_funcs->parse_charstrings_old( decoder,
-                                                                charstring + cs_offset,
-                                                                glyph_length - cs_offset );
+      if ( ( (PS_Driver)FT_FACE_DRIVER( face ) )->hinting_engine ==
+               FT_T1_HINTING_FREETYPE                               ||
+           decoder->builder.metrics_only                            )
+        error = psaux->t1_decoder_funcs->parse_charstrings_old(
+                  decoder,
+                  charstring + cs_offset,
+                  glyph_length - cs_offset );
       else
       {
         PS_Decoder      psdecoder;
@@ -189,12 +191,15 @@
 
         psaux->ps_decoder_init( &psdecoder, decoder, TRUE );
 
-        psaux->t1_make_subfont( FT_FACE( face ), &dict->private_dict, &subfont );
+        psaux->t1_make_subfont( FT_FACE( face ),
+                                &dict->private_dict,
+                                &subfont );
         psdecoder.current_subfont = &subfont;
 
-        error = psaux->t1_decoder_funcs->parse_charstrings( &psdecoder,
-                                                            charstring + cs_offset,
-                                                            glyph_length - cs_offset );
+        error = psaux->t1_decoder_funcs->parse_charstrings(
+                  &psdecoder,
+                  charstring + cs_offset,
+                  glyph_length - cs_offset );
 
         /* Adobe's engine uses 16.16 numbers everywhere;              */
         /* as a consequence, glyphs larger than 2000ppem get rejected */
@@ -207,9 +212,10 @@
 
           force_scaling = TRUE;
 
-          error = psaux->t1_decoder_funcs->parse_charstrings( &psdecoder,
-                                                              charstring + cs_offset,
-                                                              glyph_length - cs_offset );
+          error = psaux->t1_decoder_funcs->parse_charstrings(
+                    &psdecoder,
+                    charstring + cs_offset,
+                    glyph_length - cs_offset );
         }
       }
     }
@@ -386,9 +392,9 @@
     if ( error )
       goto Exit;
 
-    /* Copy flags back for forced scaling */
-    hinting     = glyph->hint;
-    scaled      = glyph->scaled;
+    /* copy flags back for forced scaling */
+    hinting = glyph->hint;
+    scaled  = glyph->scaled;
 
     font_matrix = decoder.font_matrix;
     font_offset = decoder.font_offset;

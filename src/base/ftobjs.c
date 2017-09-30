@@ -337,11 +337,11 @@
 
     FT_Pixel_Mode  pixel_mode;
 
-    FT_BBox      cbox;
-    FT_Pos       x_shift = 0;
-    FT_Pos       y_shift = 0;
-    FT_Pos       x_left, y_top;
-    FT_Pos       width, height, pitch;
+    FT_BBox  cbox;
+    FT_Pos   x_shift = 0;
+    FT_Pos   y_shift = 0;
+    FT_Pos   x_left, y_top;
+    FT_Pos   width, height, pitch;
 
 
     if ( slot->internal && ( slot->internal->flags & FT_GLYPH_OWN_BITMAP ) )
@@ -353,8 +353,8 @@
       y_shift = origin->y;
     }
 
-    /* compute the control box, and grid fit it */
-    /* taking into account the origin shift     */
+    /* compute the control box, and grid-fit it, */
+    /* taking into account the origin shift      */
     FT_Outline_Get_CBox( outline, &cbox );
 
     cbox.xMin += x_shift;
@@ -422,8 +422,8 @@
     x_shift -= cbox.xMin;
     y_shift -= cbox.yMin;
 
-    x_left  = cbox.xMin >> 6;
-    y_top   = cbox.yMax >> 6;
+    x_left = cbox.xMin >> 6;
+    y_top  = cbox.yMax >> 6;
 
     width  = ( (FT_ULong)cbox.xMax - (FT_ULong)cbox.xMin ) >> 6;
     height = ( (FT_ULong)cbox.yMax - (FT_ULong)cbox.yMin ) >> 6;
@@ -431,15 +431,18 @@
     switch ( pixel_mode )
     {
     case FT_PIXEL_MODE_MONO:
-      pitch  = ( ( width + 15 ) >> 4 ) << 1;
+      pitch = ( ( width + 15 ) >> 4 ) << 1;
       break;
+
     case FT_PIXEL_MODE_LCD:
       width *= 3;
       pitch  = FT_PAD_CEIL( width, 4 );
       break;
+
     case FT_PIXEL_MODE_LCD_V:
       height *= 3;
       /* fall through */
+
     case FT_PIXEL_MODE_GRAY:
     default:
       pitch = width;

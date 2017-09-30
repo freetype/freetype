@@ -2097,7 +2097,8 @@
           do
           {
             face->root.internal->random_seed =
-              (FT_Int32)psaux->cff_random( (FT_UInt32)face->root.internal->random_seed );
+              (FT_Int32)psaux->cff_random(
+                (FT_UInt32)face->root.internal->random_seed );
 
           } while ( face->root.internal->random_seed < 0 );
         }

@@ -744,8 +744,8 @@
                     const void*  value,
                     FT_Bool      value_is_string )
   {
-    FT_Error    error  = FT_Err_Ok;
-    PS_Driver   driver = (PS_Driver)module;
+    FT_Error   error  = FT_Err_Ok;
+    PS_Driver  driver = (PS_Driver)module;
 
 #ifndef FT_CONFIG_OPTION_ENVIRONMENT_PROPERTIES
     FT_UNUSED( value_is_string );
@@ -910,8 +910,8 @@
                     const char*  property_name,
                     const void*  value )
   {
-    FT_Error    error  = FT_Err_Ok;
-    PS_Driver   driver = (PS_Driver)module;
+    FT_Error   error  = FT_Err_Ok;
+    PS_Driver  driver = (PS_Driver)module;
 
 
     if ( !ft_strcmp( property_name, "darkening-parameters" ) )
@@ -1099,12 +1099,13 @@
   FT_DEFINE_SERVICE_CFFLOADREC(
     cff_service_cff_load,
 
-    (FT_Get_Standard_Encoding_Func) cff_get_standard_encoding,
-    (FT_Load_Private_Dict_Func)     cff_load_private_dict,
-    (FT_FD_Select_Get_Func)         cff_fd_select_get,
-    (FT_Blend_Check_Vector_Func)    cff_blend_check_vector,
-    (FT_Blend_Build_Vector_Func)    cff_blend_build_vector
+    (FT_Get_Standard_Encoding_Func)cff_get_standard_encoding,
+    (FT_Load_Private_Dict_Func)    cff_load_private_dict,
+    (FT_FD_Select_Get_Func)        cff_fd_select_get,
+    (FT_Blend_Check_Vector_Func)   cff_blend_check_vector,
+    (FT_Blend_Build_Vector_Func)   cff_blend_build_vector
   )
+
 
   /*************************************************************************/
   /*************************************************************************/
