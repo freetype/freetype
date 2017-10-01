@@ -231,9 +231,9 @@
       FT_Byte*  temp;
       FT_Int    i, j;
 
-      unsigned int    height = bitmap->rows;
-      unsigned int    width  = bitmap->width;
-      int             pitch  = bitmap->pitch;
+      unsigned int  height = bitmap->rows;
+      unsigned int  width  = bitmap->width;
+      int           pitch  = bitmap->pitch;
 
 
       /* Render 3 separate monochrome bitmaps, shifting the outline  */
@@ -247,7 +247,7 @@
         goto Exit;
 
       FT_Outline_Translate( outline, -21, 0 );
-      x_shift -= 21;
+      x_shift        -= 21;
       bitmap->buffer += width;
 
       error = render->raster_render( render->raster, &params );
@@ -255,7 +255,7 @@
         goto Exit;
 
       FT_Outline_Translate( outline,  42, 0 );
-      x_shift += 42;
+      x_shift        += 42;
       bitmap->buffer -= 2 * width;
 
       error = render->raster_render( render->raster, &params );
@@ -284,7 +284,7 @@
     }
     else if ( vmul )  /* lcd_v */
     {
-      int             pitch  = bitmap->pitch;
+      int  pitch  = bitmap->pitch;
 
 
       /* Render 3 separate monochrome bitmaps, shifting the outline  */
@@ -299,7 +299,7 @@
         goto Exit;
 
       FT_Outline_Translate( outline, 0,  21 );
-      y_shift += 21;
+      y_shift        += 21;
       bitmap->buffer += pitch;
 
       error = render->raster_render( render->raster, &params );
@@ -307,7 +307,7 @@
         goto Exit;
 
       FT_Outline_Translate( outline, 0, -42 );
-      y_shift -= 42;
+      y_shift        -= 42;
       bitmap->buffer -= 2 * pitch;
 
       error = render->raster_render( render->raster, &params );
@@ -324,8 +324,10 @@
 
   Exit:
     if ( !error )
+    {
       /* everything is fine; the glyph is now officially a bitmap */
       slot->format = FT_GLYPH_FORMAT_BITMAP;
+    }
     else if ( slot->internal->flags & FT_GLYPH_OWN_BITMAP )
     {
       FT_FREE( bitmap->buffer );

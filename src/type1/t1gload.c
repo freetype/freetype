@@ -49,9 +49,9 @@
     T1_Font   type1 = &face->type1;
     FT_Error  error = FT_Err_Ok;
 
-    PSAux_Service            psaux         = (PSAux_Service)face->psaux;
-    const T1_Decoder_Funcs   decoder_funcs = psaux->t1_decoder_funcs;
-    PS_Decoder               psdecoder;
+    PSAux_Service           psaux         = (PSAux_Service)face->psaux;
+    const T1_Decoder_Funcs  decoder_funcs = psaux->t1_decoder_funcs;
+    PS_Decoder              psdecoder;
 
 #ifdef FT_CONFIG_OPTION_INCREMENTAL
     FT_Incremental_InterfaceRec *inc =
@@ -59,6 +59,7 @@
 #endif
 
     PS_Driver  driver = (PS_Driver)FT_FACE_DRIVER( face );
+
 
     decoder->font_matrix = type1->font_matrix;
     decoder->font_offset = type1->font_offset;
@@ -84,10 +85,11 @@
     {
       /* choose which renderer to use */
       if ( driver->hinting_engine == FT_T1_HINTING_FREETYPE ||
-           decoder->builder.metrics_only )
-        error = decoder_funcs->parse_charstrings_old( decoder,
-                                                      (FT_Byte*)char_string->pointer,
-                                                      (FT_UInt)char_string->length );
+           decoder->builder.metrics_only                    )
+        error = decoder_funcs->parse_charstrings_old(
+                  decoder,
+                  (FT_Byte*)char_string->pointer,
+                  (FT_UInt)char_string->length );
       else
       {
         CFF_SubFontRec  subfont;
@@ -95,12 +97,14 @@
 
         psaux->ps_decoder_init( &psdecoder, decoder, TRUE );
 
-        psaux->t1_make_subfont( FT_FACE( face ), &face->type1.private_dict, &subfont );
+        psaux->t1_make_subfont( FT_FACE( face ),
+                                &face->type1.private_dict, &subfont );
         psdecoder.current_subfont = &subfont;
 
-        error = decoder_funcs->parse_charstrings( &psdecoder,
-                                                  (FT_Byte*)char_string->pointer,
-                                                  (FT_ULong)char_string->length );
+        error = decoder_funcs->parse_charstrings(
+                  &psdecoder,
+                  (FT_Byte*)char_string->pointer,
+                  (FT_ULong)char_string->length );
 
         /* Adobe's engine uses 16.16 numbers everywhere;              */
         /* as a consequence, glyphs larger than 2000ppem get rejected */
@@ -113,12 +117,12 @@
 
           *force_scaling = TRUE;
 
-          error = decoder_funcs->parse_charstrings( &psdecoder,
-                                                    (FT_Byte*)char_string->pointer,
-                                                    (FT_ULong)char_string->length );
+          error = decoder_funcs->parse_charstrings(
+                    &psdecoder,
+                    (FT_Byte*)char_string->pointer,
+                    (FT_ULong)char_string->length );
         }
       }
-
     }
 
 #ifdef FT_CONFIG_OPTION_INCREMENTAL
@@ -154,9 +158,9 @@
   {
     FT_Data   glyph_data;
     FT_Bool   force_scaling = FALSE;
-    FT_Error  error = T1_Parse_Glyph_And_Get_Char_String(
-                        decoder, glyph_index, &glyph_data,
-                        &force_scaling );
+    FT_Error  error         = T1_Parse_Glyph_And_Get_Char_String(
+                                decoder, glyph_index, &glyph_data,
+                                &force_scaling );
 
 
 #ifdef FT_CONFIG_OPTION_INCREMENTAL
