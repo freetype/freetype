@@ -15,12 +15,12 @@ CHANGES BETWEEN 2.8 and 2.8.1
 
   II. IMPORTANT CHANGES
 
-    - By default,  FreeType  now offers  high  quality  LCD-optimized
-      output  without resorting to ClearType techniques of resolution
-      tripling and filtering.  In this method,  called Harmony,  each
-      color channel is generated separately  after shifting the glyph
-      outline,  capitalizing on the fact  that the color grids on LCD
-      panels  are  shifted  by  a third  of  a pixel.  This output is
+    - By  default,  FreeType  now offers  high  quality  LCD-optimized
+      output without  resorting to ClearType techniques  of resolution
+      tripling and  filtering.  In  this method, called  Harmony, each
+      color channel  is generated separately after  shifting the glyph
+      outline, capitalizing  on the fact  that the color grids  on LCD
+      panels  are shifted  by  a third  of a  pixel.   This output  is
       indistinguishable from ClearType with a light 3-tap filter.
 
 
@@ -67,16 +67,16 @@ CHANGES BETWEEN 2.8 and 2.8.1
       were no error  or problem reports either it seems  that it is no
       longer needed.
 
-    - The `ftgrid' demo program can now toggle the display of grid lines
-      with the `G' key.
+    - The `ftgrid'  demo program  can now toggle  the display  of grid
+      lines with the `G' key.
 
-    - The `ftgrid' demo program can toggle a different set of colors
+    - The `ftgrid' demo  program can toggle a different  set of colors
       (suitable to color-blind people) with the `C' key.
 
-    - The `ftgrid' demo program now supports the `-e' command line option
-      to select a cmap.
+    - The `ftgrid'  demo program  now supports  the `-e'  command line
+      option to select a cmap.
 
-    - The `ftdump' demo program has a new command line option `-t' to
+    - The `ftdump' demo program has a  new command line option `-t' to
       output the SFNT table list.
 
 
