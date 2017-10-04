@@ -1,3 +1,16 @@
+2017-10-04  John Tytgat  <John.Tytgat@esko.com>
+
+	[cff] Add support for `FSType'.
+
+	* include/freetype/internal/cfftypes.h (CFF_FontRec): Add
+	`font_extra' entry.
+
+	* src/cff/cffdrivr.c (cff_ps_get_font_extra): New function to
+	retrieve FSType info from the embedded PostScript data.
+	(cff_service_ps_info): Register function.
+
+	* src/cff/cffload.c (cff_font_done): Free `font_extra'.
+
 2017-09-30  Alexei Podtelezhnikov  <apodtele@gmail.com>
 
 	Signedness fixes in bitmap presetting.

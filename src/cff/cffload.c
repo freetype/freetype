@@ -2539,6 +2539,8 @@
       font->cf2_instance.finalizer( font->cf2_instance.data );
       FT_FREE( font->cf2_instance.data );
     }
+
+    FT_FREE( font->font_extra );
   }
 
 
