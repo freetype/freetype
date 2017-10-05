@@ -1,5 +1,14 @@
 2017-10-05  Werner Lemberg  <wl@gnu.org>
 
+	* src/base/ftobjs.c (ft_glyphslot_preset_bitmap): Fix integer
+	overflow.
+
+	Reported as
+
+	  https://bugs.chromium.org/p/oss-fuzz/issues/detail?id=3539
+
+2017-10-05  Werner Lemberg  <wl@gnu.org>
+
 	Fix compiler warnings.
 
 	* src/cff/cffdrivr.c (cff_ps_get_font_extra): Avoid code that relies

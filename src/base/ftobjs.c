@@ -419,8 +419,8 @@
       cbox.yMax = FT_PIX_CEIL( cbox.yMax );
     }
 
-    x_shift -= cbox.xMin;
-    y_shift -= cbox.yMin;
+    x_shift = SUB_LONG( x_shift, cbox.xMin );
+    y_shift = SUB_LONG( y_shift, cbox.yMin );
 
     x_left = cbox.xMin >> 6;
     y_top  = cbox.yMax >> 6;
