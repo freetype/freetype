@@ -515,7 +515,7 @@
       if ( FT_ALLOC( font_extra, sizeof ( *font_extra ) ) )
         goto Fail;
 
-      font_extra->fs_type = 0u;
+      font_extra->fs_type = 0U;
 
       embedded_postscript = cff_index_get_sid_string(
                               cff,
@@ -542,17 +542,15 @@
           {
             if ( *s >= '0' && *s <= '9' )
             {
-              FT_UShort  prev_fs_type;
-
-
-              prev_fs_type        = font_extra->fs_type;
-              font_extra->fs_type = 10 * font_extra->fs_type + *s - '0';
-              if ( font_extra->fs_type < prev_fs_type )
+              if ( font_extra->fs_type >= ( FT_USHORT_MAX - 9 ) / 10 )
               {
                 /* Overflow - ignore the FSType value.  */
                 font_extra->fs_type = 0U;
                 break;
               }
+
+              font_extra->fs_type *= 10;
+              font_extra->fs_type += (FT_UShort)( *s - '0' );
             }
             else if ( *s != ' ' && *s != '\n' && *s != '\r' )
             {

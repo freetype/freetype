@@ -229,7 +229,7 @@
     {
       FT_Byte*  line;
       FT_Byte*  temp;
-      FT_Int    i, j;
+      FT_UInt   i, j;
 
       unsigned int  height = bitmap->rows;
       unsigned int  width  = bitmap->width;
@@ -270,7 +270,7 @@
 
       for ( i = 0; i < height; i++ )
       {
-        line = bitmap->buffer + i * pitch;
+        line = bitmap->buffer + i * (FT_ULong)pitch;
         for ( j = 0; j < width; j++ )
         {
           temp[3 * j    ] = line[j];

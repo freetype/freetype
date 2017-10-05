@@ -1,3 +1,14 @@
+2017-10-05  Werner Lemberg  <wl@gnu.org>
+
+	Fix compiler warnings.
+
+	* src/cff/cffdrivr.c (cff_ps_get_font_extra): Avoid code that relies
+	on numeric overflow.
+	Add cast.
+
+	* src/smooth/ftsmooth.c (ft_smooth_render_generic): Fix variable
+	types, add cast.
+
 2017-10-04  John Tytgat  <John.Tytgat@esko.com>
 
 	[cff] Add support for `FSType'.
