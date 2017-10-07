@@ -417,7 +417,19 @@
                    FT_UInt    num_coords,
                    FT_Fixed*  coords )
   {
-    return t1_set_mm_blend( face, num_coords, coords );
+    FT_Error  error;
+
+
+    error = t1_set_mm_blend( face, num_coords, coords );
+    if ( error )
+      return error;
+
+    if ( num_coords )
+      face->root.face_flags |= FT_FACE_FLAG_VARIATION;
+    else
+      face->root.face_flags &= ~FT_FACE_FLAG_VARIATION;
+
+    return FT_Err_Ok;
   }
 
 
@@ -461,6 +473,7 @@
                     FT_UInt   num_coords,
                     FT_Long*  coords )
   {
+    FT_Error  error;
     PS_Blend  blend = face->blend;
     FT_UInt   n, p;
     FT_Fixed  final_blends[T1_MAX_MM_DESIGNS];
@@ -527,7 +540,16 @@
       final_blends[n] = the_blend;
     }
 
-    return t1_set_mm_blend( face, blend->num_axis, final_blends );
+    error = t1_set_mm_blend( face, blend->num_axis, final_blends );
+    if ( error )
+      return error;
+
+    if ( num_coords )
+      face->root.face_flags |= FT_FACE_FLAG_VARIATION;
+    else
+      face->root.face_flags &= ~FT_FACE_FLAG_VARIATION;
+
+    return FT_Err_Ok;
   }
 
 

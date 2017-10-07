@@ -889,7 +889,8 @@
 
 #ifdef TT_CONFIG_OPTION_GX_VAR_SUPPORT
 
-    if ( !loader->face->is_default_instance )
+    if ( FT_IS_NAMED_INSTANCE( FT_FACE( loader->face ) ) ||
+         FT_IS_VARIATION( FT_FACE( loader->face ) )      )
     {
       /* Deltas apply to the unscaled data. */
       error = TT_Vary_Apply_Glyph_Deltas( loader->face,
@@ -1577,7 +1578,8 @@
 
 #ifdef TT_CONFIG_OPTION_GX_VAR_SUPPORT
 
-      if ( !loader->face->is_default_instance )
+      if ( FT_IS_NAMED_INSTANCE( FT_FACE( face ) ) ||
+           FT_IS_VARIATION( FT_FACE( face ) )      )
       {
         /* a small outline structure with four elements for */
         /* communication with `TT_Vary_Apply_Glyph_Deltas'  */
@@ -1751,7 +1753,8 @@
 
 #ifdef TT_CONFIG_OPTION_GX_VAR_SUPPORT
 
-      if ( !face->is_default_instance )
+      if ( FT_IS_NAMED_INSTANCE( FT_FACE( face ) ) ||
+           FT_IS_VARIATION( FT_FACE( face ) )      )
       {
         short        i, limit;
         FT_SubGlyph  subglyph;
@@ -2609,7 +2612,8 @@
     TT_LoaderRec  loader;
 
 #ifdef TT_CONFIG_OPTION_GX_VAR_SUPPORT
-#define IS_DEFAULT_INSTANCE  ( ( (TT_Face)glyph->face )->is_default_instance )
+#define IS_DEFAULT_INSTANCE  ( !( FT_IS_NAMED_INSTANCE( glyph->face ) ||  \
+                                  FT_IS_VARIATION( glyph->face )      ) )
 #else
 #define IS_DEFAULT_INSTANCE  1
 #endif

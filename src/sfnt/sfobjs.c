@@ -962,8 +962,6 @@
       FT_Byte*  instance_values = NULL;
 
 
-      face->is_default_instance = 1;
-
       instance_index = FT_ABS( face_instance_index ) >> 16;
 
       /* test whether current face is a GX font with named instances */

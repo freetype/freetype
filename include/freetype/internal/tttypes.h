@@ -1299,10 +1299,6 @@ FT_BEGIN_HEADER
   /*                            variation tables (rather like Multiple     */
   /*                            Master data).                              */
   /*                                                                       */
-  /*    is_default_instance  :: Set if the glyph outlines can be used      */
-  /*                            unmodified (i.e., without applying glyph   */
-  /*                            variation deltas).                         */
-  /*                                                                       */
   /*    variation_support    :: Flags that indicate which OpenType         */
   /*                            functionality related to font variation    */
   /*                            support is present, valid, and usable.     */
@@ -1512,7 +1508,6 @@ FT_BEGIN_HEADER
     FT_Bool               doblend;
     GX_Blend              blend;
 
-    FT_Bool               is_default_instance;   /* since 2.7.1 */
     FT_UInt32             variation_support;     /* since 2.7.1 */
 
     const char*           var_postscript_prefix;     /* since 2.7.2 */

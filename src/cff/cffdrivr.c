@@ -217,8 +217,8 @@
       {
 #ifdef TT_CONFIG_OPTION_GX_VAR_SUPPORT
         /* no fast retrieval for blended MM fonts without VVAR table */
-        if ( !ttface->is_default_instance                               &&
-             !( ttface->variation_support & TT_FACE_FLAG_VAR_VADVANCE ) )
+        if ( ( FT_IS_NAMED_INSTANCE( face ) || FT_IS_VARIATION( face ) ) &&
+             !( ttface->variation_support & TT_FACE_FLAG_VAR_VADVANCE )  )
           return FT_THROW( Unimplemented_Feature );
 #endif
 
@@ -249,8 +249,8 @@
       {
 #ifdef TT_CONFIG_OPTION_GX_VAR_SUPPORT
         /* no fast retrieval for blended MM fonts without HVAR table */
-        if ( !ttface->is_default_instance                               &&
-             !( ttface->variation_support & TT_FACE_FLAG_VAR_HADVANCE ) )
+        if ( ( FT_IS_NAMED_INSTANCE( face ) || FT_IS_VARIATION( face ) ) &&
+             !( ttface->variation_support & TT_FACE_FLAG_VAR_HADVANCE )  )
           return FT_THROW( Unimplemented_Feature );
 #endif
 

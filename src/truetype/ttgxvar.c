@@ -2350,8 +2350,7 @@
     FT_MM_Var*  mmvar;
     FT_UInt     i, j;
 
-    FT_Bool     is_default_instance = TRUE;
-    FT_Bool     all_design_coords   = FALSE;
+    FT_Bool     all_design_coords = FALSE;
 
     FT_Memory   memory = face->root.memory;
 
@@ -2396,9 +2395,6 @@
         error = FT_THROW( Invalid_Argument );
         goto Exit;
       }
-
-      if ( coords[i] != 0 )
-        is_default_instance = FALSE;
     }
 
     FT_TRACE5(( "\n" ));
@@ -2517,8 +2513,6 @@
     if ( i < blend->mmvar->num_namedstyles )
       face->root.face_index |= ( i + 1 ) << 16;
 
-    face->is_default_instance = is_default_instance;
-
     /* enforce recomputation of the PostScript name; */
     FT_FREE( face->postscript_name );
     face->postscript_name = NULL;
@@ -2558,7 +2552,19 @@
                    FT_UInt    num_coords,
                    FT_Fixed*  coords )
   {
-    return tt_set_mm_blend( face, num_coords, coords, 1 );
+    FT_Error  error;
+
+
+    error = tt_set_mm_blend( face, num_coords, coords, 1 );
+    if ( error )
+      return error;
+
+    if ( num_coords )
+      face->root.face_flags |= FT_FACE_FLAG_VARIATION;
+    else
+      face->root.face_flags &= ~FT_FACE_FLAG_VARIATION;
+
+    return FT_Err_Ok;
   }
 
 
@@ -2721,6 +2727,13 @@
     ft_var_to_normalized( face, num_coords, blend->coords, normalized );
 
     error = tt_set_mm_blend( face, mmvar->num_axis, normalized, 0 );
+    if ( error )
+      goto Exit;
+
+    if ( num_coords )
+      face->root.face_flags |= FT_FACE_FLAG_VARIATION;
+    else
+      face->root.face_flags &= ~FT_FACE_FLAG_VARIATION;
 
   Exit:
     FT_FREE( normalized );

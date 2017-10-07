@@ -1,5 +1,27 @@
 2017-10-07  Werner Lemberg  <wl@gnu.org>
 
+	Make `FT_FACE_FLAG_VARIATION' work.
+
+	* include/freetype/internal/tttypes.h (TT_Face): Remove
+	`is_default_instance'; this can be replaced with a combination of
+	`FT_IS_VARIATION' and `FT_IS_INSTANCE'.
+
+	* src/cff/cffdrivr.c (cff_get_advances): Updated.
+
+	* src/sfnt/sfdriver.c (sfnt_get_ps_name), src/sfnt/sfobjs.c
+	(sfnt_init_face): Updated.
+
+	* src/truetype/ttdriver.c (tt_get_advances), src/truetype/ttgload.c
+	(TT_Process_Simple_Glyph, load_truetype_glyph, IS_DEFAULT_INSTANCE),
+	src/truetype/ttgxvar.c (tt_set_mm_blend): Updated.
+	* src/truetype/ttgxvar.c (TT_Set_MM_Blend, TT_Set_Var_Design):
+	Handle `FT_FACE_FLAG_VARIATION'.
+
+	* src/type1/t1load.c (T1_Set_MM_Blend, T1_Set_MM_Design): Handle
+	`FT_FACE_FLAG_VARIATION'.
+
+2017-10-07  Werner Lemberg  <wl@gnu.org>
+
 	New function `FT_Set_Named_Instance'.
 
 	No effect yet.
