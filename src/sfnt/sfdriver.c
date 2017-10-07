@@ -862,7 +862,8 @@
                        NULL,
                        &mm_var );
 
-    if ( FT_IS_NAMED_INSTANCE( FT_FACE( face ) ) )
+    if ( FT_IS_NAMED_INSTANCE( FT_FACE( face ) ) &&
+         !FT_IS_VARIATION( FT_FACE( face ) )     )
     {
       SFNT_Service  sfnt = (SFNT_Service)face->sfnt;
 

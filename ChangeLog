@@ -1,5 +1,12 @@
 2017-10-07  Werner Lemberg  <wl@gnu.org>
 
+	[sfnt] Adjust behaviour of PS font names for variation fonts.
+
+	* src/sfnt/sfdriver.c (sfnt_get_var_ps_name): Use a named instance's
+	PS name only if no variation is applied.
+
+2017-10-07  Werner Lemberg  <wl@gnu.org>
+
 	[cff, truetype] Adjust behaviour of named instances.
 
 	This commit completely separates the interaction between named

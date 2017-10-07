@@ -3519,6 +3519,13 @@ FT_BEGIN_HEADER
   /*                                                                       */
   /*      http://wwwimages.adobe.com/content/dam/Adobe/en/devnet/font/pdfs/5902.AdobePSNameGeneration.html */
   /*                                                                       */
+  /*    [Since 2.8.2] Special PostScript names for named instances are     */
+  /*    only returned if the named instance is set with                    */
+  /*    @FT_Set_Named_Instance (and the font has corresponding entries in  */
+  /*    its `fvar' table).  If @FT_IS_VARIATION returns true, the          */
+  /*    algorithmically derived PostScript name is provided, not looking   */
+  /*    up special entries for named instances.                            */
+  /*                                                                       */
   FT_EXPORT( const char* )
   FT_Get_Postscript_Name( FT_Face  face );
 
