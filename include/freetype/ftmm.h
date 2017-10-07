@@ -323,9 +323,13 @@ FT_BEGIN_HEADER
   /*    FreeType error code.  0~means success.                             */
   /*                                                                       */
   /* <Note>                                                                */
-  /*    To reset all axes to the default values, call the function with    */
-  /*    `num_coords' set to zero and `coords' set to NULL (new feature in  */
-  /*    FreeType version 2.8.1).                                           */
+  /*    [Since 2.8.1] To reset all axes to the default values, call the    */
+  /*    function with `num_coords' set to zero and `coords' set to NULL.   */
+  /*                                                                       */
+  /*    [Since 2.8.2] If `num_coords' is larger than zero, this function   */
+  /*    sets the @FT_FACE_FLAG_VARIATION bit in @FT_Face's `face_flags'    */
+  /*    field (i.e., @FT_IS_VARIATION will return true).  If `num_coords'  */
+  /*    is zero, this bit flag gets unset.                                 */
   /*                                                                       */
   FT_EXPORT( FT_Error )
   FT_Set_MM_Design_Coordinates( FT_Face   face,
@@ -358,9 +362,15 @@ FT_BEGIN_HEADER
   /*    FreeType error code.  0~means success.                             */
   /*                                                                       */
   /* <Note>                                                                */
-  /*    To reset all axes to the default values, call the function with    */
-  /*    `num_coords' set to zero and `coords' set to NULL (new feature in  */
-  /*    FreeType version 2.8.1).                                           */
+  /*    [Since 2.8.1] To reset all axes to the default values, call the    */
+  /*    function with `num_coords' set to zero and `coords' set to NULL.   */
+  /*    [Since 2.8.2] `Default values' means the currently selected named  */
+  /*    instance (or the base font if no named instance is selected).      */
+  /*                                                                       */
+  /*    [Since 2.8.2] If `num_coords' is larger than zero, this function   */
+  /*    sets the @FT_FACE_FLAG_VARIATION bit in @FT_Face's `face_flags'    */
+  /*    field (i.e., @FT_IS_VARIATION will return true).  If `num_coords'  */
+  /*    is zero, this bit flag gets unset.                                 */
   /*                                                                       */
   FT_EXPORT( FT_Error )
   FT_Set_Var_Design_Coordinates( FT_Face    face,
@@ -430,9 +440,15 @@ FT_BEGIN_HEADER
   /*    FreeType error code.  0~means success.                             */
   /*                                                                       */
   /* <Note>                                                                */
-  /*    To reset all axes to the default values, call the function with    */
-  /*    `num_coords' set to zero and `coords' set to NULL (new feature in  */
-  /*    FreeType version 2.8.1).                                           */
+  /*    [Since 2.8.1] To reset all axes to the default values, call the    */
+  /*    function with `num_coords' set to zero and `coords' set to NULL.   */
+  /*    [Since 2.8.2] `Default values' means the currently selected named  */
+  /*    instance (or the base font if no named instance is selected).      */
+  /*                                                                       */
+  /*    [Since 2.8.2] If `num_coords' is larger than zero, this function   */
+  /*    sets the @FT_FACE_FLAG_VARIATION bit in @FT_Face's `face_flags'    */
+  /*    field (i.e., @FT_IS_VARIATION will return true).  If `num_coords'  */
+  /*    is zero, this bit flag gets unset.                                 */
   /*                                                                       */
   FT_EXPORT( FT_Error )
   FT_Set_MM_Blend_Coordinates( FT_Face    face,
@@ -517,6 +533,9 @@ FT_BEGIN_HEADER
   /* <Values>                                                              */
   /*    FT_VAR_AXIS_FLAG_HIDDEN ::                                         */
   /*      The variation axis should not be exposed to user interfaces.     */
+  /*                                                                       */
+  /* <Since>                                                               */
+  /*    2.8.1                                                              */
   /*                                                                       */
 #define FT_VAR_AXIS_FLAG_HIDDEN  1
 

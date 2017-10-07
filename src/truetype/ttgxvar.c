@@ -2057,7 +2057,7 @@
     /* `num_instances' holds the number of all named instances, */
     /* including the default instance which might be missing    */
     /* in fvar's table of named instances                       */
-    num_instances = face->root.style_flags >> 16;
+    num_instances = (FT_UInt)face->root.style_flags >> 16;
 
     /* prepare storage area for MM data; this cannot overflow   */
     /* 32-bit arithmetic because of the size limits used in the */
@@ -2348,7 +2348,7 @@
     FT_Error    error = FT_Err_Ok;
     GX_Blend    blend;
     FT_MM_Var*  mmvar;
-    FT_UInt     i, j;
+    FT_UInt     i;
 
     FT_Bool     all_design_coords = FALSE;
 
@@ -2488,30 +2488,6 @@
         break;
       }
     }
-
-    /* check whether the current variation tuple coincides */
-    /* with a named instance                               */
-
-    for ( i = 0; i < blend->mmvar->num_namedstyles; i++ )
-    {
-      FT_Fixed*  nsc = blend->normalized_stylecoords + i * blend->num_axis;
-      FT_Fixed*  ns  = blend->normalizedcoords;
-
-
-      for ( j = 0; j < blend->num_axis; j++, nsc++, ns++ )
-      {
-        if ( *nsc != *ns )
-          break;
-      }
-
-      if ( j == blend->num_axis )
-        break;
-    }
-
-    /* adjust named instance index */
-    face->root.face_index &= 0xFFFF;
-    if ( i < blend->mmvar->num_namedstyles )
-      face->root.face_index |= ( i + 1 ) << 16;
 
     /* enforce recomputation of the PostScript name; */
     FT_FREE( face->postscript_name );
@@ -2680,9 +2656,7 @@
     FT_UInt     i;
     FT_Memory   memory = face->root.memory;
 
-    FT_Var_Axis*  a;
-    FT_Fixed*     c;
-
+    FT_Fixed*  c;
     FT_Fixed*  normalized = NULL;
 
 
@@ -2713,10 +2687,31 @@
                  coords,
                  num_coords * sizeof ( FT_Fixed ) );
 
-    a = mmvar->axis + num_coords;
     c = blend->coords + num_coords;
-    for ( i = num_coords; i < mmvar->num_axis; i++, a++, c++ )
-      *c = a->def;
+
+    if ( FT_IS_NAMED_INSTANCE( FT_FACE( face ) ) )
+    {
+      FT_UInt              instance_index;
+      FT_Var_Named_Style*  named_style;
+      FT_Fixed*            n;
+
+
+      instance_index = (FT_UInt)face->root.face_index >> 16;
+      named_style    = mmvar->namedstyle + instance_index - 1;
+
+      n = named_style->coords + num_coords;
+      for ( i = num_coords; i < mmvar->num_axis; i++, n++, c++ )
+        *c = *n;
+    }
+    else
+    {
+      FT_Var_Axis*  a;
+
+
+      a = mmvar->axis + num_coords;
+      for ( i = num_coords; i < mmvar->num_axis; i++, a++, c++ )
+        *c = a->def;
+    }
 
     if ( FT_NEW_ARRAY( normalized, mmvar->num_axis ) )
       goto Exit;

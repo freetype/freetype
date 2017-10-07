@@ -904,6 +904,13 @@ FT_BEGIN_HEADER
   /*                           Bit 31 is always zero (this is,             */
   /*                           `face_index' is always a positive value).   */
   /*                                                                       */
+  /*                           [Since 2.8.2] Changing the design           */
+  /*                           coordinates with                            */
+  /*                           @FT_Set_Var_Design_Coordinates or           */
+  /*                           @FT_Set_Var_Blend_Coordinates does not      */
+  /*                           influence the named instance index value    */
+  /*                           (only @FT_Set_Named_Instance does that).    */
+  /*                                                                       */
   /*    face_flags          :: A set of bit flags that give important      */
   /*                           information about the face; see             */
   /*                           @FT_FACE_FLAG_XXX for the details.          */
@@ -1402,6 +1409,11 @@ FT_BEGIN_HEADER
    * @description:
    *   A macro that returns true whenever a face object is a named instance
    *   of a GX or OpenType variation font.
+   *
+   *   [Since 2.8.2] Changing the design coordinates with
+   *   @FT_Set_Var_Design_Coordinates or @FT_Set_Var_Blend_Coordinates does
+   *   not influence the return value of this macro (only
+   *   @FT_Set_Named_Instance does that).
    *
    * @since:
    *   2.7

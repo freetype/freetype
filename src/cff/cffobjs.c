@@ -708,50 +708,22 @@
 
 #ifdef TT_CONFIG_OPTION_GX_VAR_SUPPORT
       {
-        FT_Service_MultiMasters  mm = (FT_Service_MultiMasters)face->mm;
+        FT_Service_MultiMasters       mm  = (FT_Service_MultiMasters)face->mm;
+        FT_Service_MetricsVariations  var = (FT_Service_MetricsVariations)face->var;
 
-        FT_Int  instance_index = face_index >> 16;
+        FT_UInt  instance_index = (FT_UInt)face_index >> 16;
 
 
         if ( FT_HAS_MULTIPLE_MASTERS( cffface ) &&
              mm                                 &&
              instance_index > 0                 )
         {
-          FT_MM_Var*  mm_var;
-
-
-          error = mm->get_mm_var( cffface, NULL );
+          error = mm->set_instance( cffface, instance_index );
           if ( error )
             goto Exit;
 
-          mm->get_var_blend( cffface, NULL, NULL, NULL, &mm_var );
-
-          if ( mm_var->namedstyle )
-          {
-            FT_Var_Named_Style*  named_style;
-            FT_String*           style_name;
-
-
-            /* in `face_index', the instance index starts with value 1 */
-            named_style = mm_var->namedstyle + instance_index - 1;
-            error = sfnt->get_name( face,
-                                    (FT_UShort)named_style->strid,
-                                    &style_name );
-            if ( error )
-              goto Exit;
-
-            /* set style name; if already set, replace it */
-            if ( face->root.style_name )
-              FT_FREE( face->root.style_name );
-            face->root.style_name = style_name;
-
-            /* finally, select the named instance */
-            error = mm->set_var_design( cffface,
-                                        mm_var->num_axis,
-                                        named_style->coords );
-            if ( error )
-              goto Exit;
-          }
+          if ( var )
+            var->metrics_adjust( cffface );
         }
       }
 #endif /* TT_CONFIG_OPTION_GX_VAR_SUPPORT */

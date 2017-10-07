@@ -1,5 +1,28 @@
 2017-10-07  Werner Lemberg  <wl@gnu.org>
 
+	[cff, truetype] Adjust behaviour of named instances.
+
+	This commit completely separates the interaction between named
+	instances and variation functions.  In particular, resetting the
+	variation returns to the current named instance (if set) and not to
+	the base font.
+
+	As a side effect, variation functions no longer change the named
+	instance index.
+
+	* src/cff/cffobjs.c (cff_face_init): Use MM service's `set_instance'
+	function.
+	Also apply `MVAR' table to named instances.
+
+	* src/truetype/ttgxvar.c (TT_Get_MM_Var): Add cast.
+	(tt_set_mm_blend): No longer check whether requested variation
+	coincides with a named instance.
+	(TT_Set_Var_Design): Use current named instance for default
+	coordinates.
+	* src/truetype/ttobjs.c (tt_face_init): Use `TT_Set_Named_Instance'.
+
+2017-10-07  Werner Lemberg  <wl@gnu.org>
+
 	Make `FT_Set_Named_Instance' work.
 
 	* src/cff/cffdrivr.c (cff_set_instance): New function.
