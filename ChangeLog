@@ -1,5 +1,13 @@
 2017-10-07  Werner Lemberg  <wl@gnu.org>
 
+	Add macros for checking whether a font variation is active.
+
+	* include/freetype/freetype.h (FT_FACE_FLAG_VARIATION,
+	FT_IS_VARIATION): New macros.
+	No effect yet.
+
+2017-10-07  Werner Lemberg  <wl@gnu.org>
+
 	Add framework for setting named instance in MM service.
 
 	* include/freetype/internal/services/svmm.h (FT_Set_Instance_Func):

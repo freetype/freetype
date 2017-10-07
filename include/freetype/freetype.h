@@ -138,6 +138,7 @@ FT_BEGIN_HEADER
   /*    FT_FACE_FLAG_TRICKY                                                */
   /*    FT_FACE_FLAG_KERNING                                               */
   /*    FT_FACE_FLAG_MULTIPLE_MASTERS                                      */
+  /*    FT_FACE_FLAG_VARIATION                                             */
   /*    FT_FACE_FLAG_GLYPH_NAMES                                           */
   /*    FT_FACE_FLAG_EXTERNAL_STREAM                                       */
   /*    FT_FACE_FLAG_HINTER                                                */
@@ -147,14 +148,16 @@ FT_BEGIN_HEADER
   /*    FT_HAS_KERNING                                                     */
   /*    FT_HAS_FIXED_SIZES                                                 */
   /*    FT_HAS_GLYPH_NAMES                                                 */
-  /*    FT_HAS_MULTIPLE_MASTERS                                            */
   /*    FT_HAS_COLOR                                                       */
+  /*    FT_HAS_MULTIPLE_MASTERS                                            */
   /*                                                                       */
   /*    FT_IS_SFNT                                                         */
   /*    FT_IS_SCALABLE                                                     */
   /*    FT_IS_FIXED_WIDTH                                                  */
   /*    FT_IS_CID_KEYED                                                    */
   /*    FT_IS_TRICKY                                                       */
+  /*    FT_IS_NAMED_INSTANCE                                               */
+  /*    FT_IS_VARIATION                                                    */
   /*                                                                       */
   /*    FT_STYLE_FLAG_BOLD                                                 */
   /*    FT_STYLE_FLAG_ITALIC                                               */
@@ -909,7 +912,7 @@ FT_BEGIN_HEADER
   /*                           flags indicating the style of the face; see */
   /*                           @FT_STYLE_FLAG_XXX for the details.         */
   /*                                                                       */
-  /*                           [Since 2.6.1]  Bits 16-30 hold the number   */
+  /*                           [Since 2.6.1] Bits 16-30 hold the number    */
   /*                           of named instances available for the        */
   /*                           current face if we have a GX or OpenType    */
   /*                           variation (sub)font.  Bit 31 is always zero */
@@ -1216,6 +1219,13 @@ FT_BEGIN_HEADER
   /*      [Since 2.5.1] The face has color glyph tables.  To access color  */
   /*      glyphs use @FT_LOAD_COLOR.                                       */
   /*                                                                       */
+  /*    FT_FACE_FLAG_VARIATION ::                                          */
+  /*      [Since 2.8.2] Set if the current face (or named instance) has    */
+  /*      been altered with @FT_Set_MM_Design_Coordinates,                 */
+  /*      @FT_Set_Var_Design_Coordinates, or                               */
+  /*      @FT_Set_Var_Blend_Coordinates.  This flag is unset by a call to  */
+  /*      @FT_Set_Named_Instance.                                          */
+  /*                                                                       */
 #define FT_FACE_FLAG_SCALABLE          ( 1L <<  0 )
 #define FT_FACE_FLAG_FIXED_SIZES       ( 1L <<  1 )
 #define FT_FACE_FLAG_FIXED_WIDTH       ( 1L <<  2 )
@@ -1231,6 +1241,7 @@ FT_BEGIN_HEADER
 #define FT_FACE_FLAG_CID_KEYED         ( 1L << 12 )
 #define FT_FACE_FLAG_TRICKY            ( 1L << 13 )
 #define FT_FACE_FLAG_COLOR             ( 1L << 14 )
+#define FT_FACE_FLAG_VARIATION         ( 1L << 15 )
 
 
   /*************************************************************************
@@ -1398,6 +1409,24 @@ FT_BEGIN_HEADER
    */
 #define FT_IS_NAMED_INSTANCE( face ) \
           ( (face)->face_index & 0x7FFF0000L )
+
+
+  /*************************************************************************
+   *
+   * @macro:
+   *   FT_IS_VARIATION( face )
+   *
+   * @description:
+   *   A macro that returns true whenever a face object has been altered
+   *   by @FT_Set_MM_Design_Coordinates, @FT_Set_Var_Design_Coordinates, or
+   *   @FT_Set_Var_Blend_Coordinates.
+   *
+   * @since:
+   *   2.8.2
+   *
+   */
+#define FT_IS_VARIATION( face ) \
+          ( (face)->face_flags & FT_FACE_FLAG_VARIATION )
 
 
   /*************************************************************************
