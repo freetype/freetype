@@ -1,3 +1,11 @@
+2017-10-07  Werner Lemberg  <wl@gnu.org>
+
+	[type1] Minor code shuffling.
+
+	* src/type1/t1load.c (T1_Set_MM_Blend): Make it a wrapper of...
+	(t1_set_mm_blend): ...this new function.
+	(T1_Set_MM_Design): Use `t1_set_mm_blend'.
+
 2017-10-05  Werner Lemberg  <wl@gnu.org>
 
 	* src/base/ftobjs.c (ft_glyphslot_preset_bitmap): Fix integer

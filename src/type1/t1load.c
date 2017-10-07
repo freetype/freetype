@@ -366,8 +366,8 @@
   }
 
 
-  FT_LOCAL_DEF( FT_Error )
-  T1_Set_MM_Blend( T1_Face    face,
+  static FT_Error
+  t1_set_mm_blend( T1_Face    face,
                    FT_UInt    num_coords,
                    FT_Fixed*  coords )
   {
@@ -409,6 +409,15 @@
     }
 
     return FT_Err_Ok;
+  }
+
+
+  FT_LOCAL_DEF( FT_Error )
+  T1_Set_MM_Blend( T1_Face    face,
+                   FT_UInt    num_coords,
+                   FT_Fixed*  coords )
+  {
+    return t1_set_mm_blend( face, num_coords, coords );
   }
 
 
@@ -518,7 +527,7 @@
       final_blends[n] = the_blend;
     }
 
-    return T1_Set_MM_Blend( face, blend->num_axis, final_blends );
+    return t1_set_mm_blend( face, blend->num_axis, final_blends );
   }
 
 
