@@ -1119,6 +1119,7 @@
     (FT_Get_MM_Var_Func)    cff_get_mm_var,         /* get_mm_var     */
     (FT_Set_Var_Design_Func)cff_set_var_design,     /* set_var_design */
     (FT_Get_Var_Design_Func)cff_get_var_design,     /* get_var_design */
+    (FT_Set_Instance_Func)  NULL,                   /* set_instance   */
 
     (FT_Get_Var_Blend_Func) cff_get_var_blend,      /* get_var_blend  */
     (FT_Done_Blend_Func)    cff_done_blend          /* done_blend     */

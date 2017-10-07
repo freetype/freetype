@@ -1,5 +1,18 @@
 2017-10-07  Werner Lemberg  <wl@gnu.org>
 
+	Add framework for setting named instance in MM service.
+
+	* include/freetype/internal/services/svmm.h (FT_Set_Instance_Func):
+	New function typedef.
+	(MultiMasters): Add `set_instance' member.
+	(FT_DEFINE_SERVICE_MULTIMASTERSREC): Updated.
+
+	* src/cff/cffdrivr.c (cff_service_multi_masters),
+	src/truetype/ttdriver (tt_service_gx_multi_masters),
+	src/type1/t1driver.c (t1_service_multi_masters): Updated.
+
+2017-10-07  Werner Lemberg  <wl@gnu.org>
+
 	[type1] Minor code shuffling.
 
 	* src/type1/t1load.c (T1_Set_MM_Blend): Make it a wrapper of...

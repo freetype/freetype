@@ -126,6 +126,7 @@
     (FT_Get_MM_Var_Func)    T1_Get_MM_Var,         /* get_mm_var     */
     (FT_Set_Var_Design_Func)T1_Set_Var_Design,     /* set_var_design */
     (FT_Get_Var_Design_Func)T1_Get_Var_Design,     /* get_var_design */
+    (FT_Set_Instance_Func)  NULL,                  /* set_instance   */
 
     (FT_Get_Var_Blend_Func) NULL,                  /* get_var_blend  */
     (FT_Done_Blend_Func)    T1_Done_Blend          /* done_blend     */
