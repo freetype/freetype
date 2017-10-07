@@ -551,6 +551,43 @@ FT_BEGIN_HEADER
                          FT_UInt     axis_index,
                          FT_UInt*    flags );
 
+
+  /*************************************************************************/
+  /*                                                                       */
+  /* <Function>                                                            */
+  /*    FT_Set_Named_Instance                                              */
+  /*                                                                       */
+  /* <Description>                                                         */
+  /*    Set or change the current named instance.                          */
+  /*                                                                       */
+  /* <Input>                                                               */
+  /*    face           :: A handle to the source face.                     */
+  /*                                                                       */
+  /*    instance_index :: The index of the requested instance, starting    */
+  /*                      with value 1.  If set to value 0, FreeType       */
+  /*                      switches to font access without a named          */
+  /*                      instance.                                        */
+  /*                                                                       */
+  /* <Return>                                                              */
+  /*    FreeType error code.  0~means success.                             */
+  /*                                                                       */
+  /* <Note>                                                                */
+  /*    The function uses the value of `instance_index' to set bits 16-30  */
+  /*    of the face's `face_index' field.  It also resets any variation    */
+  /*    applied to the font, and the @FT_FACE_FLAG_VARIATION bit of the    */
+  /*    face's `face_flags' field gets reset to zero (i.e.,                */
+  /*    @FT_IS_VARIATION will return false).                               */
+  /*                                                                       */
+  /*    For Adobe MM fonts (which don't have named instances) this         */
+  /*    function simply resets the current face to the default instance.   */
+  /*                                                                       */
+  /* <Since>                                                               */
+  /*    2.8.2                                                              */
+  /*                                                                       */
+  FT_EXPORT( FT_Error )
+  FT_Set_Named_Instance( FT_Face  face,
+                         FT_UInt  instance_index );
+
   /* */
 
 

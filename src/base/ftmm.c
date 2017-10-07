@@ -426,4 +426,52 @@
   }
 
 
+  /* documentation is in ftmm.h */
+
+  FT_EXPORT_DEF( FT_Error )
+  FT_Set_Named_Instance( FT_Face  face,
+                         FT_UInt  instance_index )
+  {
+    FT_Error  error;
+
+    FT_Service_MultiMasters       service_mm   = NULL;
+    FT_Service_MetricsVariations  service_mvar = NULL;
+
+
+    /* check of `face' delayed to `ft_face_get_mm_service' */
+
+    error = ft_face_get_mm_service( face, &service_mm );
+    if ( !error )
+    {
+      error = FT_ERR( Invalid_Argument );
+      if ( service_mm->set_instance )
+        error = service_mm->set_instance( face, instance_index );
+    }
+
+    if ( !error )
+    {
+      (void)ft_face_get_mvar_service( face, &service_mvar );
+
+      if ( service_mvar && service_mvar->metrics_adjust )
+        service_mvar->metrics_adjust( face );
+    }
+
+    /* enforce recomputation of auto-hinting data */
+    if ( !error && face->autohint.finalizer )
+    {
+      face->autohint.finalizer( face->autohint.data );
+      face->autohint.data = NULL;
+    }
+
+    if ( !error )
+    {
+      face->face_index  = ( instance_index << 16 )        |
+                          ( face->face_index & 0xFFFFL );
+      face->face_flags &= ~FT_FACE_FLAG_VARIATION;
+    }
+
+    return error;
+  }
+
+
 /* END */

@@ -1,5 +1,15 @@
 2017-10-07  Werner Lemberg  <wl@gnu.org>
 
+	New function `FT_Set_Named_Instance'.
+
+	No effect yet.
+
+	* src/base/ftmm.c (FT_Set_Named_Instance): New function.
+
+	* include/freetype/ftmm.h: Updated.
+
+2017-10-07  Werner Lemberg  <wl@gnu.org>
+
 	Add macros for checking whether a font variation is active.
 
 	* include/freetype/freetype.h (FT_FACE_FLAG_VARIATION,
