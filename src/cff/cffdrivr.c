@@ -1109,6 +1109,17 @@
   }
 
 
+  static FT_Error
+  cff_set_instance( CFF_Face  face,
+                    FT_UInt   instance_index )
+  {
+    FT_Service_MultiMasters  mm = (FT_Service_MultiMasters)face->mm;
+
+
+    return mm->set_instance( FT_FACE( face ), instance_index );
+  }
+
+
   FT_DEFINE_SERVICE_MULTIMASTERSREC(
     cff_service_multi_masters,
 
@@ -1119,7 +1130,7 @@
     (FT_Get_MM_Var_Func)    cff_get_mm_var,         /* get_mm_var     */
     (FT_Set_Var_Design_Func)cff_set_var_design,     /* set_var_design */
     (FT_Get_Var_Design_Func)cff_get_var_design,     /* get_var_design */
-    (FT_Set_Instance_Func)  NULL,                   /* set_instance   */
+    (FT_Set_Instance_Func)  cff_set_instance,       /* set_instance   */
 
     (FT_Get_Var_Blend_Func) cff_get_var_blend,      /* get_var_blend  */
     (FT_Done_Blend_Func)    cff_done_blend          /* done_blend     */

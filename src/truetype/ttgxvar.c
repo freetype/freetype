@@ -2817,6 +2817,90 @@
 
 
   /*************************************************************************/
+  /*                                                                       */
+  /* <Function>                                                            */
+  /*    TT_Set_Named_Instance                                              */
+  /*                                                                       */
+  /* <Description>                                                         */
+  /*    Set the given named instance, also resetting any further           */
+  /*    variation.                                                         */
+  /*                                                                       */
+  /* <Input>                                                               */
+  /*    face           :: A handle to the source face.                     */
+  /*                                                                       */
+  /*    instance_index :: The instance index, starting with value 1.       */
+  /*                      Value 0 indicates to not use an instance.        */
+  /*                                                                       */
+  /* <Return>                                                              */
+  /*    FreeType error code.  0~means success.                             */
+  /*                                                                       */
+  FT_LOCAL_DEF( FT_Error )
+  TT_Set_Named_Instance( TT_Face  face,
+                         FT_UInt  instance_index )
+  {
+    FT_Error    error = FT_ERR( Invalid_Argument );
+    GX_Blend    blend;
+    FT_MM_Var*  mmvar;
+
+    FT_UInt  num_instances;
+
+
+    if ( !face->blend )
+    {
+      if ( FT_SET_ERROR( TT_Get_MM_Var( face, NULL ) ) )
+        goto Exit;
+    }
+
+    blend = face->blend;
+    mmvar = blend->mmvar;
+
+    num_instances = (FT_UInt)face->root.style_flags >> 16;
+
+    /* `instance_index' starts with value 1, thus `>' */
+    if ( instance_index > num_instances )
+      goto Exit;
+
+    if ( instance_index > 0 && mmvar->namedstyle )
+    {
+      FT_Memory     memory = face->root.memory;
+      SFNT_Service  sfnt   = (SFNT_Service)face->sfnt;
+
+      FT_Var_Named_Style*  named_style;
+      FT_String*           style_name;
+
+
+      named_style = mmvar->namedstyle + instance_index - 1;
+
+      error = sfnt->get_name( face,
+                              (FT_UShort)named_style->strid,
+                              &style_name );
+      if ( error )
+        goto Exit;
+
+      /* set (or replace) style name */
+      FT_FREE( face->root.style_name );
+      face->root.style_name = style_name;
+
+      /* finally, select the named instance */
+      error = TT_Set_Var_Design( face,
+                                 mmvar->num_axis,
+                                 named_style->coords );
+      if ( error )
+        goto Exit;
+    }
+    else
+      error = TT_Set_Var_Design( face, 0, NULL );
+
+    face->root.face_index  = ( instance_index << 16 )             |
+                             ( face->root.face_index & 0xFFFFL );
+    face->root.face_flags &= ~FT_FACE_FLAG_VARIATION;
+
+  Exit:
+    return error;
+  }
+
+
+  /*************************************************************************/
   /*************************************************************************/
   /*****                                                               *****/
   /*****                     GX VAR PARSING ROUTINES                   *****/

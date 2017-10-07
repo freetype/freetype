@@ -90,6 +90,10 @@ FT_BEGIN_HEADER
                     FT_Long*  coords );
 
   FT_LOCAL( FT_Error )
+  T1_Reset_MM_Blend( T1_Face  face,
+                     FT_UInt  instance_index );
+
+  FT_LOCAL( FT_Error )
   T1_Get_Var_Design( T1_Face    face,
                      FT_UInt    num_coords,
                      FT_Fixed*  coords );

@@ -402,6 +402,10 @@ FT_BEGIN_HEADER
                      FT_Fixed*  coords );
 
   FT_LOCAL( FT_Error )
+  TT_Set_Named_Instance( TT_Face  face,
+                         FT_UInt  instance_index );
+
+  FT_LOCAL( FT_Error )
   tt_face_vary_cvt( TT_Face    face,
                     FT_Stream  stream );
 

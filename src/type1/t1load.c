@@ -553,6 +553,18 @@
   }
 
 
+  /* MM fonts don't have named instances, so only the design is reset */
+
+  FT_LOCAL_DEF( FT_Error )
+  T1_Reset_MM_Blend( T1_Face  face,
+                     FT_UInt  instance_index )
+  {
+    FT_UNUSED( instance_index );
+
+    return T1_Set_MM_Blend( face, 0, NULL );
+  }
+
+
   /*************************************************************************/
   /*                                                                       */
   /* Just a wrapper around T1_Set_MM_Design to support the different       */

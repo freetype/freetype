@@ -1,5 +1,21 @@
 2017-10-07  Werner Lemberg  <wl@gnu.org>
 
+	Make `FT_Set_Named_Instance' work.
+
+	* src/cff/cffdrivr.c (cff_set_instance): New function.
+	(cff_service_multi_masters): Register it.
+
+	* src/truetype/ttgxvar.c (TT_Set_Named_Instance): New function.
+	* src/truetype/ttgxvar.h: Updated.
+	* src/truetype/ttdriver.c (tt_service_gx_multi_masters): Register
+	it.
+
+	* src/type1/t1load.c (T1_Reset_MM_Blend): New function.
+	* src/type1/t1load.h: Updated.
+	* src/type1/t1driver.c (t1_service_multi_masters): Register it.
+
+2017-10-07  Werner Lemberg  <wl@gnu.org>
+
 	Make `FT_FACE_FLAG_VARIATION' work.
 
 	* include/freetype/internal/tttypes.h (TT_Face): Remove
