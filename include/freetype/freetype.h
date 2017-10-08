@@ -1063,6 +1063,9 @@ FT_BEGIN_HEADER
   /*    `descender', `height', `underline_position', and                   */
   /*    `underline_thickness'.                                             */
   /*                                                                       */
+  /*    Especially for TrueType fonts see also the documentation for       */
+  /*    @FT_Size_Metrics.                                                  */
+  /*                                                                       */
   typedef struct  FT_FaceRec_
   {
     FT_Long           num_faces;
@@ -1582,7 +1585,7 @@ FT_BEGIN_HEADER
   /*    to the following.                                                  */
   /*                                                                       */
   /*    {                                                                  */
-  /*      scaled_ascender = FT_MulFix( face->root.ascender,                */
+  /*      scaled_ascender = FT_MulFix( face->ascender,                     */
   /*                                   size_metrics->y_scale );            */
   /*    }                                                                  */
   /*                                                                       */
@@ -1595,6 +1598,43 @@ FT_BEGIN_HEADER
   /*    client applications to perform such computations.                  */
   /*                                                                       */
   /*    The `FT_Size_Metrics' structure is valid for bitmap fonts also.    */
+  /*                                                                       */
+  /*                                                                       */
+  /*    *TrueType* *fonts* *with* *native* *bytecode* *hinting*            */
+  /*                                                                       */
+  /*    All applications that handle TrueType fonts with native hinting    */
+  /*    must be aware that TTFs expect different rounding of vertical font */
+  /*    dimensions.  The application has to cater for this, especially if  */
+  /*    it wants to rely on a TTF's vertical data (for example, to         */
+  /*    properly align box characters vertically).                         */
+  /*                                                                       */
+  /*    Only the application knows _in_ _advance_ that it is going to use  */
+  /*    native hinting for TTFs!  FreeType, on the other hand, selects the */
+  /*    hinting mode not at the time of creating an @FT_Size object but    */
+  /*    much later, namely while calling @FT_Load_Glyph.                   */
+  /*                                                                       */
+  /*    Here is some pseudo code that illustrates a possible solution.     */
+  /*                                                                       */
+  /*    {                                                                  */
+  /*      font_format = FT_Get_Font_Format( face );                        */
+  /*                                                                       */
+  /*      if ( !strcmp( font_format, "TrueType" ) &&                       */
+  /*           do_native_bytecode_hinting         )                        */
+  /*      {                                                                */
+  /*        ascender  = ROUND( FT_MulFix( face->ascender,                  */
+  /*                                      size_metrics->y_scale ) );       */
+  /*        descender = ROUND( FT_MulFix( face->descender,                 */
+  /*                                      size_metrics->y_scale ) );       */
+  /*      }                                                                */
+  /*      else                                                             */
+  /*      {                                                                */
+  /*        ascender  = size_metrics->ascender;                            */
+  /*        descender = size_metrics->descender;                           */
+  /*      }                                                                */
+  /*                                                                       */
+  /*      height      = size_metrics->height;                              */
+  /*      max_advance = size_metrics->max_advance;                         */
+  /*    }                                                                  */
   /*                                                                       */
   typedef struct  FT_Size_Metrics_
   {
