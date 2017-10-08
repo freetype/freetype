@@ -1,3 +1,11 @@
+2017-10-08  Werner Lemberg  <wl@gnu.org>
+
+	* src/base/ftobjs.c (ft_glyphslot_preset_bitmap): Integer overflows.
+
+	Reported as
+
+	  https://bugs.chromium.org/p/oss-fuzz/issues/detail?id=3579
+
 2017-10-07  Werner Lemberg  <wl@gnu.org>
 
 	[sfnt] Adjust behaviour of PS font names for variation fonts.

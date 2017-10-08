@@ -372,29 +372,29 @@
       if ( cbox.xMax - cbox.xMin < 64 )
       {
         cbox.xMin = FT_PIX_FLOOR( cbox.xMin );
-        cbox.xMax = FT_PIX_CEIL( cbox.xMax );
+        cbox.xMax = FT_PIX_CEIL_LONG( cbox.xMax );
       }
       else
       {
-        cbox.xMin = FT_PIX_ROUND( cbox.xMin );
-        cbox.xMax = FT_PIX_ROUND( cbox.xMax );
+        cbox.xMin = FT_PIX_ROUND_LONG( cbox.xMin );
+        cbox.xMax = FT_PIX_ROUND_LONG( cbox.xMax );
       }
 
       if ( cbox.yMax - cbox.yMin < 64 )
       {
         cbox.yMin = FT_PIX_FLOOR( cbox.yMin );
-        cbox.yMax = FT_PIX_CEIL( cbox.yMax );
+        cbox.yMax = FT_PIX_CEIL_LONG( cbox.yMax );
       }
       else
       {
-        cbox.yMin = FT_PIX_ROUND( cbox.yMin );
-        cbox.yMax = FT_PIX_ROUND( cbox.yMax );
+        cbox.yMin = FT_PIX_ROUND_LONG( cbox.yMin );
+        cbox.yMax = FT_PIX_ROUND_LONG( cbox.yMax );
       }
 #else
       cbox.xMin = FT_PIX_FLOOR( cbox.xMin );
       cbox.yMin = FT_PIX_FLOOR( cbox.yMin );
-      cbox.xMax = FT_PIX_CEIL( cbox.xMax );
-      cbox.yMax = FT_PIX_CEIL( cbox.yMax );
+      cbox.xMax = FT_PIX_CEIL_LONG( cbox.xMax );
+      cbox.yMax = FT_PIX_CEIL_LONG( cbox.yMax );
 #endif
       break;
 
@@ -415,8 +415,8 @@
     Round:
       cbox.xMin = FT_PIX_FLOOR( cbox.xMin );
       cbox.yMin = FT_PIX_FLOOR( cbox.yMin );
-      cbox.xMax = FT_PIX_CEIL( cbox.xMax );
-      cbox.yMax = FT_PIX_CEIL( cbox.yMax );
+      cbox.xMax = FT_PIX_CEIL_LONG( cbox.xMax );
+      cbox.yMax = FT_PIX_CEIL_LONG( cbox.yMax );
     }
 
     x_shift = SUB_LONG( x_shift, cbox.xMin );
