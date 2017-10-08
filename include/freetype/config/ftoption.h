@@ -75,7 +75,7 @@ FT_BEGIN_HEADER
   /*************************************************************************/
 
 
-  /*************************************************************************/
+  /*#***********************************************************************/
   /*                                                                       */
   /* If you enable this configuration option, FreeType recognizes an       */
   /* environment variable called `FREETYPE_PROPERTIES', which can be used  */
