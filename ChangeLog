@@ -1,3 +1,11 @@
+2017-10-09  Werner Lemberg  <wl@gnu.org>
+
+	* src/base/ftoutln.c (FT_Outline_Translate): Fix integer overflow.
+
+	Reported as
+
+	  https://bugs.chromium.org/p/chromium/issues/detail?id=772775
+
 2017-10-08  Werner Lemberg  <wl@gnu.org>
 
 	* src/base/ftobjs.c (ft_glyphslot_preset_bitmap): Integer overflows.
