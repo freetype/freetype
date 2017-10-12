@@ -90,6 +90,11 @@
                   decoder,
                   (FT_Byte*)char_string->pointer,
                   (FT_UInt)char_string->length );
+      else if ( decoder->builder.metrics_only )
+        error = decoder_funcs->parse_metrics(
+                  decoder,
+                  (FT_Byte*)char_string->pointer,
+                  (FT_UInt)char_string->length );
       else
       {
         CFF_SubFontRec  subfont;

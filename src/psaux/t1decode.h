@@ -43,6 +43,10 @@ FT_BEGIN_HEADER
   t1_decoder_parse_charstrings( T1_Decoder  decoder,
                                 FT_Byte*    base,
                                 FT_UInt     len );
+  FT_LOCAL( FT_Error )
+  t1_decoder_parse_metrics( T1_Decoder  decoder,
+                            FT_Byte*    charstring_base,
+                            FT_UInt     charstring_len );
 
   FT_LOCAL( FT_Error )
   t1_decoder_init( T1_Decoder           decoder,

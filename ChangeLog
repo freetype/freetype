@@ -1,3 +1,19 @@
+2017-10-12  Ewald Hew  <ewaldhew@gmail.com>
+
+	Extract width parsing from Type 1 parser.
+
+	Duplicate the fast advance width calculations from the old parser.
+	This is to facilitate adding options for compiling out the old parser.
+
+	* src/psaux/t1decode.{c,h} (t1_decoder_parse_metrics): New function.
+	* include/freetype/internal/psaux.h (T1_Decoder_Funcs): New entry
+	`parse_metrics'.
+	* src/psaux/psauxmod.c: Set the new entry.
+
+	* src/type1/t1gload.c (T1_Parse_Glyph_And_Get_Char_String),
+	src/cid/cidgload.c (cid_load_glyph): Separate
+	conditional for selecting engine.
+
 2017-10-09  Werner Lemberg  <wl@gnu.org>
 
 	* src/base/ftoutln.c (FT_Outline_Translate): Fix integer overflow.

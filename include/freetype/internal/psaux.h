@@ -880,6 +880,11 @@ FT_BEGIN_HEADER
                               FT_UInt     len );
 
     FT_Error
+    (*parse_metrics)( T1_Decoder  decoder,
+                      FT_Byte*    base,
+                      FT_UInt     len );
+
+    FT_Error
     (*parse_charstrings)( PS_Decoder*  decoder,
                           FT_Byte*     charstring_base,
                           FT_ULong     charstring_len );

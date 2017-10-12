@@ -183,6 +183,11 @@
                   decoder,
                   charstring + cs_offset,
                   glyph_length - cs_offset );
+      else if ( decoder->builder.metrics_only )
+        error = psaux->t1_decoder_funcs->parse_metrics(
+                  decoder,
+                  charstring + cs_offset,
+                  glyph_length - cs_offset );
       else
       {
         PS_Decoder      psdecoder;
