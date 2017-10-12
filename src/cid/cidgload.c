@@ -176,6 +176,7 @@
         psaux->t1_decrypt( charstring, glyph_length, 4330 );
 
       /* choose which renderer to use */
+#ifdef T1_CONFIG_OPTION_OLD_ENGINE
       if ( ( (PS_Driver)FT_FACE_DRIVER( face ) )->hinting_engine ==
                FT_T1_HINTING_FREETYPE                               ||
            decoder->builder.metrics_only                            )
@@ -183,11 +184,13 @@
                   decoder,
                   charstring + cs_offset,
                   glyph_length - cs_offset );
-      else if ( decoder->builder.metrics_only )
+#else
+      if ( decoder->builder.metrics_only )
         error = psaux->t1_decoder_funcs->parse_metrics(
                   decoder,
                   charstring + cs_offset,
                   glyph_length - cs_offset );
+#endif
       else
       {
         PS_Decoder      psdecoder;

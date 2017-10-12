@@ -655,8 +655,6 @@ FT_BEGIN_HEADER
     FT_Long*  buildchar;
     FT_UInt   len_buildchar;
 
-    void*  t1_parse_callback;
-
   } PS_Decoder;
 
 
@@ -874,15 +872,17 @@ FT_BEGIN_HEADER
     void
     (*done)( T1_Decoder  decoder );
 
+#ifdef T1_CONFIG_OPTION_OLD_ENGINE
     FT_Error
     (*parse_charstrings_old)( T1_Decoder  decoder,
                               FT_Byte*    base,
                               FT_UInt     len );
-
+#else
     FT_Error
     (*parse_metrics)( T1_Decoder  decoder,
                       FT_Byte*    base,
                       FT_UInt     len );
+#endif
 
     FT_Error
     (*parse_charstrings)( PS_Decoder*  decoder,

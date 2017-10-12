@@ -754,6 +754,16 @@ FT_BEGIN_HEADER
 
 
   /*************************************************************************/
+  /*                                                                       */
+  /* T1_CONFIG_OPTION_OLD_ENGINE controls whether the pre-Adobe Type 1     */
+  /* engine gets compiled into FreeType.  If defined, it is possible to    */
+  /* switch between the two engines using the `hinting-engine' property of */
+  /* the type1 driver module.                                              */
+  /*                                                                       */
+/* #define T1_CONFIG_OPTION_OLD_ENGINE */
+
+
+  /*************************************************************************/
   /*************************************************************************/
   /****                                                                 ****/
   /****         C F F   D R I V E R    C O N F I G U R A T I O N        ****/

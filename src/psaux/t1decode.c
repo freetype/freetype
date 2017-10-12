@@ -158,6 +158,7 @@
   }
 
 
+#ifdef T1_CONFIG_OPTION_OLD_ENGINE
   /*************************************************************************/
   /*                                                                       */
   /* <Function>                                                            */
@@ -204,6 +205,15 @@
     }
 
     return -1;
+  }
+
+
+  /* parse a single Type 1 glyph */
+  FT_LOCAL_DEF( FT_Error )
+  t1_decoder_parse_glyph( T1_Decoder  decoder,
+                          FT_UInt     glyph )
+  {
+    return decoder->parse_callback( decoder, glyph );
   }
 
 
@@ -1628,6 +1638,8 @@
     return FT_THROW( Stack_Underflow );
   }
 
+#else /* T1_CONFIG_OPTION_OLD_ENGINE */
+
   /*************************************************************************/
   /*                                                                       */
   /* <Function>                                                            */
@@ -1905,14 +1917,7 @@
   Stack_Underflow:
     return FT_THROW( Stack_Underflow );
   }
-
-  /* parse a single Type 1 glyph */
-  FT_LOCAL_DEF( FT_Error )
-  t1_decoder_parse_glyph( T1_Decoder  decoder,
-                          FT_UInt     glyph )
-  {
-    return decoder->parse_callback( decoder, glyph );
-  }
+#endif /* T1_CONFIG_OPTION_OLD_ENGINE */
 
 
   /* initialize T1 decoder */

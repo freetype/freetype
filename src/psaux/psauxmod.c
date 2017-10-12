@@ -89,8 +89,11 @@
   {
     t1_decoder_init,               /* init                  */
     t1_decoder_done,               /* done                  */
+#ifdef T1_CONFIG_OPTION_OLD_ENGINE
     t1_decoder_parse_charstrings,  /* parse_charstrings_old */
+#else
     t1_decoder_parse_metrics,      /* parse_metrics         */
+#endif
     cf2_decoder_parse_charstrings  /* parse_charstrings     */
   };
 

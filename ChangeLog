@@ -1,5 +1,25 @@
 2017-10-12  Ewald Hew  <ewaldhew@gmail.com>
 
+	Add T1_CONFIG_OPTION_OLD_ENGINE configuration option.
+
+	This controls whether the old Type 1 engine gets compiled into FreeType.
+	It is disabled by default.
+
+	* devel/ftoption.h, include/freetype/config/ftoption.h
+	(T1_CONFIG_OPTION_OLD_ENGINE): New macro.
+
+	* include/freetype/internal/psaux.h (PS_Decoder): Remove unused field.
+	* include/freetype/internal/psaux.h, src/cid/cidgload.c
+	(cid_load_glyph), src/psaux/psauxmod.c, src/psaux/psobjs.c
+	(ps_builder_add_point), src/psaux/t1decode.c
+	(t1_lookup_glyph_by_stdcharcode, t1_decoder_parse_glyph,
+	t1operator_seac, t1_decoder_parse_charstrings), src/psaux/t1decode.h,
+	src/type1/t1gload.c (T1_Parse_Glyph_And_Get_Char_String): Surround
+	relevant code with macro.
+	Minor code changes.
+
+2017-10-12  Ewald Hew  <ewaldhew@gmail.com>
+
 	Extract width parsing from Type 1 parser.
 
 	Duplicate the fast advance width calculations from the old parser.

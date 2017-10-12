@@ -35,6 +35,7 @@ FT_BEGIN_HEADER
   t1_lookup_glyph_by_stdcharcode_ps( PS_Decoder*  decoder,
                                      FT_Int       charcode );
 
+#ifdef T1_CONFIG_OPTION_OLD_ENGINE
   FT_LOCAL( FT_Error )
   t1_decoder_parse_glyph( T1_Decoder  decoder,
                           FT_UInt     glyph_index );
@@ -43,10 +44,12 @@ FT_BEGIN_HEADER
   t1_decoder_parse_charstrings( T1_Decoder  decoder,
                                 FT_Byte*    base,
                                 FT_UInt     len );
+#else
   FT_LOCAL( FT_Error )
   t1_decoder_parse_metrics( T1_Decoder  decoder,
                             FT_Byte*    charstring_base,
                             FT_UInt     charstring_len );
+#endif
 
   FT_LOCAL( FT_Error )
   t1_decoder_init( T1_Decoder           decoder,

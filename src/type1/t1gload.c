@@ -58,8 +58,9 @@
                       face->root.internal->incremental_interface;
 #endif
 
+#ifdef T1_CONFIG_OPTION_OLD_ENGINE
     PS_Driver  driver = (PS_Driver)FT_FACE_DRIVER( face );
-
+#endif
 
     decoder->font_matrix = type1->font_matrix;
     decoder->font_offset = type1->font_offset;
@@ -84,17 +85,20 @@
     if ( !error )
     {
       /* choose which renderer to use */
+#ifdef T1_CONFIG_OPTION_OLD_ENGINE
       if ( driver->hinting_engine == FT_T1_HINTING_FREETYPE ||
            decoder->builder.metrics_only                    )
         error = decoder_funcs->parse_charstrings_old(
                   decoder,
                   (FT_Byte*)char_string->pointer,
                   (FT_UInt)char_string->length );
-      else if ( decoder->builder.metrics_only )
+#else
+      if ( decoder->builder.metrics_only )
         error = decoder_funcs->parse_metrics(
                   decoder,
                   (FT_Byte*)char_string->pointer,
                   (FT_UInt)char_string->length );
+#endif
       else
       {
         CFF_SubFontRec  subfont;

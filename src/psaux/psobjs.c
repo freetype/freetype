@@ -2164,10 +2164,10 @@
       FT_Vector*  point   = outline->points + outline->n_points;
       FT_Byte*    control = (FT_Byte*)outline->tags + outline->n_points;
 
+#ifdef CFF_CONFIG_OPTION_OLD_ENGINE
       PS_Driver  driver   = (PS_Driver)FT_FACE_DRIVER( builder->face );
 
 
-#ifdef CFF_CONFIG_OPTION_OLD_ENGINE
       if ( !builder->is_t1 &&
            driver->hinting_engine == FT_CFF_HINTING_FREETYPE )
       {
@@ -2176,6 +2176,10 @@
       }
       else
 #endif
+#ifdef T1_CONFIG_OPTION_OLD_ENGINE
+#ifndef CFF_CONFIG_OPTION_OLD_ENGINE
+      PS_Driver  driver   = (PS_Driver)FT_FACE_DRIVER( builder->face );
+#endif
       if ( builder->is_t1 &&
            driver->hinting_engine == FT_T1_HINTING_FREETYPE )
       {
@@ -2183,6 +2187,7 @@
         point->y = FIXED_TO_INT( y );
       }
       else
+#endif
       {
         /* cf2_decoder_parse_charstrings uses 16.16 coordinates */
         point->x = x >> 10;
