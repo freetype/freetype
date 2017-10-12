@@ -1,5 +1,20 @@
 2017-10-12  Ewald Hew  <ewaldhew@gmail.com>
 
+	[type1, cid] Add hinting engine switch.
+
+	Implement property service in `type1' and `cid' drivers to allow
+	switching between FreeType or Adobe hinting engine when both are
+	available.
+
+	* src/cid/cidriver.c (cid_property_{set,get}, cid_services),
+	src/type1/t1driver.c (t1_property_{set,get}, t1_services): Add
+	Properties service.
+
+	* src/cid/cidobjs.c (cid_driver_init), src/type1/t1objs.c
+	(T1_Driver_Init): Add default property values.
+
+2017-10-12  Ewald Hew  <ewaldhew@gmail.com>
+
 	Add T1_CONFIG_OPTION_OLD_ENGINE configuration option.
 
 	This controls whether the old Type 1 engine gets compiled into FreeType.
