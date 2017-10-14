@@ -1,3 +1,13 @@
+2017-10-14  Behdad Esfahbod  <behdad@behdad.org>
+
+	[afshaper] Delay creating `hb_set' objects until needed.
+
+	In runs on Noto Naskh Arabic, this results in 89 sets created
+	instead of 340 before.  Makes auto-hinter setup with HarfBuzz
+	enabled 20% to 30% faster.
+
+	* src/autofit/afshaper.c (af_shaper_get_coverage): Implement it.
+
 2017-10-12  Ewald Hew  <ewaldhew@gmail.com>
 
 	[type1, cid] Add hinting engine switch.
