@@ -1300,8 +1300,6 @@ typedef ptrdiff_t  FT_PtrDist;
     int  y;
 
 
-    FT_TRACE7(( "gray_sweep: start\n" ));
-
     for ( y = ras.min_ey; y < ras.max_ey; y++ )
     {
       PCell   cell  = ras.ycells[y - ras.min_ey];
@@ -1327,8 +1325,6 @@ typedef ptrdiff_t  FT_PtrDist;
       if ( cover != 0 )
         gray_hline( RAS_VAR_ x, y, cover, ras.max_ex - x );
     }
-
-    FT_TRACE7(( "gray_sweep: end\n" ));
   }
 
 

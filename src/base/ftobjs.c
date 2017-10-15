@@ -1004,6 +1004,10 @@
         ft_glyphslot_preset_bitmap( slot, mode, NULL );
     }
 
+    FT_TRACE5(( "  bitmap pixel_mode: %d\n" ,    slot->bitmap.pixel_mode ));
+    FT_TRACE5(( "  bitmap dimensions: %dx%d\n" , slot->bitmap.width,
+                                                 slot->bitmap.rows  ));
+
   Exit:
     return error;
   }
@@ -4581,6 +4585,51 @@
 
         FT_Bitmap_Done( library, &bitmap );
       }
+    }
+
+    /*
+     * Dump bitmap in Netpbm format (PBM or PGM).
+     */
+
+    /* we use FT_TRACE2 in this block */
+    if ( ft_trace_levels[trace_bitmap] >= 2 &&
+         !error                             &&
+         slot->bitmap.rows  < 128U          &&
+         slot->bitmap.width < 128U          )
+    {
+      int  rows  = (int)slot->bitmap.rows;
+      int  width = (int)slot->bitmap.width;
+      int  pitch =      slot->bitmap.pitch;
+      int  i, j, m;
+      unsigned char*  topleft = slot->bitmap.buffer;
+
+      if ( pitch < 0 )
+        topleft -= pitch * ( rows - 1 );
+
+      FT_TRACE2(( "Netpbm image: start\n" ));
+      switch ( slot->bitmap.pixel_mode )
+      {
+      case FT_PIXEL_MODE_MONO:
+        FT_TRACE2(( "P1 %d %d\n", width, rows ));
+        for ( i = 0; i < rows; i++ )
+        {
+          for ( j = 0; j < width; )
+            for ( m = 128; m > 0 && j < width; m >>= 1, j++ )
+              FT_TRACE2(( " %d", ( topleft[i * pitch + j / 8] & m ) != 0 ));
+          FT_TRACE2(( "\n" ));
+        }
+        break;
+
+      default:
+        FT_TRACE2(( "P2 %d %d 255\n", width, rows ));
+        for ( i = 0; i < rows; i++ )
+        {
+          for ( j = 0; j < width; j += 1 )
+            FT_TRACE2(( " %3u", topleft[i * pitch + j] ));
+          FT_TRACE2(( "\n" ));
+        }
+      }
+      FT_TRACE2(( "Netpbm image: end\n" ));
     }
 
 #undef  FT_COMPONENT

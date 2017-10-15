@@ -1,5 +1,14 @@
 2017-10-14  Alexei Podtelezhnikov  <apodtele@gmail.com>
 
+	[base] Netpbm image tracing.
+
+	* src/base/ftobjs.c (FT_Load_Glyph): Trace bitmap size.
+	(FT_Render_Glyph_Internal): Trace bitmap in Netpbm format.
+
+	* src/smooth/ftgrays.c (gray_sweep): Sweep remnants of span tracing.
+
+2017-10-14  Alexei Podtelezhnikov  <apodtele@gmail.com>
+
 	* builds/windows/ftdebug.c (FT_Message): Print to stderr.
         * builds/wince/ftdebug.c (FT_Message): Ditto.
 
