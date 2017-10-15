@@ -451,7 +451,7 @@
     slot->bitmap_left = (FT_Int)x_left;
     slot->bitmap_top  = (FT_Int)y_top;
 
-    bitmap->pixel_mode = pixel_mode;
+    bitmap->pixel_mode = (unsigned char)pixel_mode;
     bitmap->num_grays  = 256;
     bitmap->width      = (unsigned int)width;
     bitmap->rows       = (unsigned int)height;
@@ -5174,9 +5174,9 @@
 #ifdef FT_CONFIG_OPTION_PIC
   Fail:
     ft_pic_container_destroy( library );
-#endif
     FT_FREE( library );
     return error;
+#endif
   }
 
 

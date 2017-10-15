@@ -1345,19 +1345,14 @@
     for ( i = 0; i < numBlends; i++ )
     {
       const FT_Int32*  weight = &blend->BV[1];
-      FT_Int32         sum;
+      FT_UInt32        sum;
 
 
       /* convert inputs to 16.16 fixed point */
-      sum = cff_parse_num( parser, &parser->stack[i + base] ) * 65536;
+      sum = cff_parse_num( parser, &parser->stack[i + base] ) * 0x10000;
 
       for ( j = 1; j < blend->lenBV; j++ )
-        sum = ADD_INT32(
-                sum,
-                FT_MulFix(
-                  *weight++,
-                  cff_parse_num( parser,
-                                 &parser->stack[delta++] ) * 65536 ) );
+        sum += cff_parse_num( parser, &parser->stack[delta++] ) * *weight++;
 
       /* point parser stack to new value on blend_stack */
       parser->stack[i + base] = subFont->blend_top;
@@ -1367,10 +1362,10 @@
       /* opcode in both CFF and CFF2 DICTs.  See `cff_parse_num' for    */
       /* decode of this, which rounds to an integer.                    */
       *subFont->blend_top++ = 255;
-      *subFont->blend_top++ = ( (FT_UInt32)sum & 0xFF000000U ) >> 24;
-      *subFont->blend_top++ = ( (FT_UInt32)sum & 0x00FF0000U ) >> 16;
-      *subFont->blend_top++ = ( (FT_UInt32)sum & 0x0000FF00U ) >>  8;
-      *subFont->blend_top++ =   (FT_UInt32)sum & 0x000000FFU;
+      *subFont->blend_top++ = (FT_Byte)( sum >> 24 );
+      *subFont->blend_top++ = (FT_Byte)( sum >> 16 );
+      *subFont->blend_top++ = (FT_Byte)( sum >>  8 );
+      *subFont->blend_top++ = (FT_Byte)sum;
     }
 
     /* leave only numBlends results on parser stack */

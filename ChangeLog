@@ -1,3 +1,12 @@
+2017-10-15  Alexei Podtelezhnikov  <apodtele@gmail.com>
+
+	[base, cff] Fix MSVC warnings.
+
+	* src/base/ftobjs.c (FT_New_Library): C4702: unreachable code.
+	(ft_glyphslot_preset_bitmap): C4244: possible loss of data.
+	* src/cff/cffload.c (cff_blend_doBlend): C4244: possible loss of data.
+	Turn `sum' into unsigned.
+
 2017-10-14  Alexei Podtelezhnikov  <apodtele@gmail.com>
 
 	[base] Netpbm image tracing.
