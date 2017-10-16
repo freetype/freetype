@@ -1595,7 +1595,8 @@
     FT_Service_MultiMasters  mm = (FT_Service_MultiMasters)face->mm;
 
 
-    mm->done_blend( FT_FACE( face ) );
+    if (mm)
+      mm->done_blend( FT_FACE( face ) );
   }
 
 #endif /* TT_CONFIG_OPTION_GX_VAR_SUPPORT */

@@ -1,3 +1,11 @@
+2017-10-12  Ewald Hew  <ewaldhew@gmail.com>
+
+	[cff] Fix segfault on missing `psaux' (#52218)
+
+	* src/cff/cffload.c (cff_done_blend): Add a check for possible nullptr.
+
+	* modules.cfg: Update dependency list.
+
 2017-10-15  Alexei Podtelezhnikov  <apodtele@gmail.com>
 
 	[base, cff] Fix MSVC warnings.
