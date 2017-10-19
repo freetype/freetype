@@ -4548,54 +4548,63 @@
      */
 
     /* we use FT_TRACE3 in this block */
-    if ( ft_trace_levels[trace_bitmap] >= 3 )
+    if ( !error                             &&
+         ft_trace_levels[trace_bitmap] >= 3 &&
+	 slot->bitmap.buffer                )
     {
+      FT_Bitmap  bitmap;
+      FT_Error   err;
+
+
+      FT_Bitmap_Init( &bitmap );
+
       /* we convert to a single bitmap format for computing the checksum */
-      if ( !error && slot->bitmap.buffer )
+      /* this also converts the bitmap flow to `down' (i.e., pitch > 0)  */
+      err = FT_Bitmap_Convert( library, &slot->bitmap, &bitmap, 1 );
+      if ( !err )
       {
-        FT_Bitmap  bitmap;
-        FT_Error   err;
+        MD5_CTX        ctx;
+        unsigned char  md5[16];
+        unsigned long  coverage = 0;
+        int            i, j;
+        int            rows  = (int)bitmap.rows;
+        int            pitch = bitmap.pitch;
 
 
-        FT_Bitmap_Init( &bitmap );
+        FT_TRACE3(( "FT_Render_Glyph: bitmap %dx%d, mode %d\n",
+                    rows, pitch, slot->bitmap.pixel_mode ));
 
-        /* this also converts the bitmap flow to `down' (i.e., pitch > 0) */
-        err = FT_Bitmap_Convert( library, &slot->bitmap, &bitmap, 1 );
-        if ( !err )
-        {
-          MD5_CTX        ctx;
-          unsigned char  md5[16];
-          int            i;
-          unsigned int   rows  = bitmap.rows;
-          unsigned int   pitch = (unsigned int)bitmap.pitch;
+        for ( i = 0; i < rows; i++ )
+          for ( j = 0; j < pitch; j++ )
+            coverage += bitmap.buffer[i * pitch + j];
 
+        FT_TRACE3(( "  Total coverage: %lu\n", coverage ));
 
-          MD5_Init( &ctx );
-          if ( bitmap.buffer )
-            MD5_Update( &ctx, bitmap.buffer, rows * pitch );
-          MD5_Final( md5, &ctx );
+        MD5_Init( &ctx );
+        if ( bitmap.buffer )
+          MD5_Update( &ctx, bitmap.buffer,
+                      (unsigned long)rows * (unsigned long)pitch );
+        MD5_Final( md5, &ctx );
 
-          FT_TRACE3(( "MD5 checksum for %dx%d bitmap:\n"
-                      "  ",
-                      rows, pitch ));
-          for ( i = 0; i < 16; i++ )
-            FT_TRACE3(( "%02X", md5[i] ));
-          FT_TRACE3(( "\n" ));
-        }
-
-        FT_Bitmap_Done( library, &bitmap );
+        FT_TRACE3(( "  MD5 checksum: " ));
+        for ( i = 0; i < 16; i++ )
+          FT_TRACE3(( "%02X", md5[i] ));
+        FT_TRACE3(( "\n" ));
       }
+
+      FT_Bitmap_Done( library, &bitmap );
     }
 
     /*
      * Dump bitmap in Netpbm format (PBM or PGM).
      */
 
-    /* we use FT_TRACE2 in this block */
-    if ( ft_trace_levels[trace_bitmap] >= 2 &&
-         !error                             &&
+    /* we use FT_TRACE7 in this block */
+    if ( !error                             &&
+         ft_trace_levels[trace_bitmap] >= 7 &&
          slot->bitmap.rows  < 128U          &&
-         slot->bitmap.width < 128U          )
+         slot->bitmap.width < 128U          &&
+	 slot->bitmap.buffer                )
     {
       int  rows  = (int)slot->bitmap.rows;
       int  width = (int)slot->bitmap.width;
@@ -4606,30 +4615,30 @@
       if ( pitch < 0 )
         topleft -= pitch * ( rows - 1 );
 
-      FT_TRACE2(( "Netpbm image: start\n" ));
+      FT_TRACE7(( "Netpbm image: start\n" ));
       switch ( slot->bitmap.pixel_mode )
       {
       case FT_PIXEL_MODE_MONO:
-        FT_TRACE2(( "P1 %d %d\n", width, rows ));
+        FT_TRACE7(( "P1 %d %d\n", width, rows ));
         for ( i = 0; i < rows; i++ )
         {
           for ( j = 0; j < width; )
             for ( m = 128; m > 0 && j < width; m >>= 1, j++ )
-              FT_TRACE2(( " %d", ( topleft[i * pitch + j / 8] & m ) != 0 ));
-          FT_TRACE2(( "\n" ));
+              FT_TRACE7(( " %d", ( topleft[i * pitch + j / 8] & m ) != 0 ));
+          FT_TRACE7(( "\n" ));
         }
         break;
 
       default:
-        FT_TRACE2(( "P2 %d %d 255\n", width, rows ));
+        FT_TRACE7(( "P2 %d %d 255\n", width, rows ));
         for ( i = 0; i < rows; i++ )
         {
           for ( j = 0; j < width; j += 1 )
-            FT_TRACE2(( " %3u", topleft[i * pitch + j] ));
-          FT_TRACE2(( "\n" ));
+            FT_TRACE7(( " %3u", topleft[i * pitch + j] ));
+          FT_TRACE7(( "\n" ));
         }
       }
-      FT_TRACE2(( "Netpbm image: end\n" ));
+      FT_TRACE7(( "Netpbm image: end\n" ));
     }
 
 #undef  FT_COMPONENT

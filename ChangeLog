@@ -1,4 +1,11 @@
-2017-10-12  Ewald Hew  <ewaldhew@gmail.com>
+2017-10-18  Alexei Podtelezhnikov  <apodtele@gmail.com>
+
+	[base] Improve tracing in FT_Render_Glyph.
+
+	* src/base/ftobjs.c (FT_Render_Glyph_Internal): Add total coverage
+	calculations and downgrade Netpbm dump to bitmap:7.
+
+2017-10-15  Ewald Hew  <ewaldhew@gmail.com>
 
 	[cff] Fix segfault on missing `psaux' (#52218)
 
