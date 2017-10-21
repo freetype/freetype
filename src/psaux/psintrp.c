@@ -2462,6 +2462,19 @@
           hintMask.isNew   = TRUE;
 
           /* rewind charstring */
+          /* some charstrings use endchar from a final subroutine call */
+          /* without returning, detect these and exit to the top level */
+          /* charstring                                                */
+          while ( charstringIndex > 0 )
+          {
+            FT_TRACE4(( " return (leaving level %d)\n", charstringIndex ));
+
+            /* restore position in previous charstring */
+            charstring = (CF2_Buffer)
+                           cf2_arrstack_getPointer(
+                             &subrStack,
+                             (CF2_UInt)--charstringIndex );
+          }
           charstring->ptr = charstring->start;
 
           break;

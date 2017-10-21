@@ -1,3 +1,16 @@
+2017-11-03  Ewald Hew  <ewaldhew@gmail.com>
+
+	[psaux] Fix PostScript interpreter rewinding in Type 1 mode. (#52251)
+
+	The interpreter in Type 1 mode rewinds the charstring after collecting
+	all hints for building the initial hintmap (commit d52dd7f). However,
+	some charstrings use `endchar' in a final subroutine call, rewinding to
+	the start of that subroutine, and only a small section of the actual
+	glyph is drawn.
+
+	* src/psaux/psintrp.c (cf2_interpT2CharString) <cf2_cmdENDCHAR>:
+	Ensure we are on the top level charstring before rewinding.
+
 2017-11-03  suzuki toshiya  <mpsuzuki@hiroshima-u.ac.jp>
 
 	[truetype] Add more tricky fonts.
