@@ -1,5 +1,17 @@
 2017-10-20  Alexei Podtelezhnikov  <apodtele@gmail.com>
 
+	[smooth] Improve complex rendering at high ppem.
+
+	At large sizes almost but not exactly horizontal segments can quickly
+	drain the rendering pool. This patch at least avoids filling the pool
+	with trivial cells. Beyond this, we can only increase the pool size.
+
+	Reported, analyzed, and tested by Colin Fahey.
+
+	* src/smooth/ftgrays.c (gray_set_cell): Do not record trivial cells.
+
+2017-10-20  Alexei Podtelezhnikov  <apodtele@gmail.com>
+
 	[base] Improve tracing in FT_Load_Glyph, FT_*_Size.
 
 	* src/base/ftobjs.c (FT_Load_Glyph): Tag tracing messages with
@@ -43,7 +55,7 @@
 2017-10-14  Alexei Podtelezhnikov  <apodtele@gmail.com>
 
 	* builds/windows/ftdebug.c (FT_Message): Print to stderr.
-        * builds/wince/ftdebug.c (FT_Message): Ditto.
+	* builds/wince/ftdebug.c (FT_Message): Ditto.
 
 2017-10-14  Behdad Esfahbod  <behdad@behdad.org>
 
