@@ -1,3 +1,16 @@
+2017-11-01  Alexei Podtelezhnikov  <apodtele@gmail.com>
+
+	[smooth] Fix complex rendering at high ppem.
+
+	We used to split large glyphs into horizontal bands and continue
+	bisecting them still horizontally if that was not enough.  This is
+	guaranteed to fail when a single scanline cannot fit into the
+	rendering memory pool.  Now we bisect the bands vertically so that
+	the smallest unit is a column of the band height, which is guranteed
+	to fit into memory.
+
+	* src/smooth/ftgrays.c (gray_convert_glyph): Implement it.
+
 2017-10-20  Alexei Podtelezhnikov  <apodtele@gmail.com>
 
 	[smooth] Improve complex rendering at high ppem.
