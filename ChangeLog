@@ -1,3 +1,17 @@
+2017-11-03  suzuki toshiya  <mpsuzuki@hiroshima-u.ac.jp>
+
+	[truetype] Add more tricky fonts.
+
+	See the report by Yang Yinsen.
+	https://lists.gnu.org/archive/html/freetype-devel/2017-11/msg00000.html
+
+	* src/truetype/ttobjs.c (trick_names): Add `DFGothic-EB',
+	`DFGyoSho-Lt', `DFHSGothic-W5', `DFHSMincho-W3' and `DFHSMincho-W7'.
+	(tt_check_trickyness_sfnt_ids): Add checksums for DFGothic-EB,
+	DFGyoSho-Lt, DFHSGothic-W5, DFHSMincho-W3 and DFHSMincho-W7.  Also
+	add checksums for DLCLiShu and DLCHayBold which their family names
+	were already listed but their checksums were previously unknown.
+
 2017-11-01  Alexei Podtelezhnikov  <apodtele@gmail.com>
 
 	[smooth] Fix complex rendering at high ppem.

@@ -147,7 +147,7 @@
   {
 
 #define TRICK_NAMES_MAX_CHARACTERS  19
-#define TRICK_NAMES_COUNT           18
+#define TRICK_NAMES_COUNT           23
 
     static const char trick_names[TRICK_NAMES_COUNT]
                                  [TRICK_NAMES_MAX_CHARACTERS + 1] =
@@ -165,6 +165,11 @@
 
       "cpop",               /* dftt-p7.ttf; version 1.00, 1992 [DLJGyShoMedium] */
       "DFGirl-W6-WIN-BF",   /* dftt-h6.ttf; version 1.00, 1993 */
+      "DFGothic-EB",        /* DynaLab Inc. 1992-1995 */
+      "DFGyoSho-Lt",        /* DynaLab Inc. 1992-1995 */
+      "DFHSGothic-W5",      /* DynaLab Inc. 1992-1995 */
+      "DFHSMincho-W3",      /* DynaLab Inc. 1992-1995 */
+      "DFHSMincho-W7",      /* DynaLab Inc. 1992-1995 */
       "DFKaiSho-SB",        /* dfkaisb.ttf */
       "DFKaiShu",
       "DFKai-SB",           /* kaiu.ttf; version 3.00, 1998 [DFKaiShu-SB-Estd-BF] */
@@ -265,7 +270,7 @@
   tt_check_trickyness_sfnt_ids( TT_Face  face )
   {
 #define TRICK_SFNT_IDS_PER_FACE   3
-#define TRICK_SFNT_IDS_NUM_FACES  19
+#define TRICK_SFNT_IDS_NUM_FACES  26
 
     static const tt_sfnt_id_rec sfnt_id[TRICK_SFNT_IDS_NUM_FACES]
                                        [TRICK_SFNT_IDS_PER_FACE] = {
@@ -284,6 +289,31 @@
         { 0x28233BF1UL, 0x000087C4UL }, /* fpgm */
         { 0xA344A1EBUL, 0x000001E1UL }  /* prep */
       },
+      { /* DFGothic-EB */
+        { 0x12C3EBB2UL, 0x00000350UL }, /* cvt  */
+        { 0xB680EE64UL, 0x000087A7UL }, /* fpgm */
+        { 0xCE939563UL, 0x00000758UL }  /* prep */
+      },
+      { /* DFGyoSho-Lt */
+        { 0x11E5EAD4UL, 0x00000350UL }, /* cvt  */
+        { 0xCE5956E9UL, 0x0000BC85UL }, /* fpgm */
+        { 0x8272F416UL, 0x00000045UL }  /* prep */
+      },
+      { /* DFHSGothic-W5 */
+        { 0x1262EB4EUL, 0x00000350UL }, /* cvt  */
+        { 0xE86A5D64UL, 0x00007940UL }, /* fpgm */
+        { 0x7850F729UL, 0x000005FFUL }  /* prep */
+      },
+      { /* DFHSMincho-W3 */
+        { 0x122DEB0AUL, 0x00000350UL }, /* cvt  */
+        { 0x3D16328AUL, 0x0000859BUL }, /* fpgm */
+        { 0xA93FC33BUL, 0x000002CBUL }  /* prep */
+      },
+      { /* DFHSMincho-W7 */
+        { 0x125FEB26UL, 0x00000350UL }, /* cvt  */
+        { 0xA5ACC982UL, 0x00007EE1UL }, /* fpgm */
+        { 0x90999196UL, 0x0000041FUL }  /* prep */
+      },
       { /* DFKaiShu */
         { 0x11E5EAD4UL, 0x00000350UL }, /* cvt  */
         { 0x5A30CA3BUL, 0x00009063UL }, /* fpgm */
@@ -293,6 +323,16 @@
         { 0x11E5EAD4UL, 0x00000350UL }, /* cvt  */
         { 0xA6E78C01UL, 0x00008998UL }, /* fpgm */
         { 0x13A42602UL, 0x0000007EUL }  /* prep */
+      },
+      { /* DLCLiShu */
+        { 0x07DCF546UL, 0x00000308UL }, /* cvt  */
+        { 0x40FE7C90UL, 0x00008E2AUL }, /* fpgm */
+        { 0x608174B5UL, 0x0000007AUL }  /* prep */
+      },
+      { /* DLCHayBold */
+        { 0xEB891238UL, 0x00000308UL }, /* cvt  */
+        { 0xD2E4DCD4UL, 0x0000676FUL }, /* fpgm */
+        { 0x8EA5F293UL, 0x000003B8UL }  /* prep */
       },
       { /* HuaTianKaiTi */
         { 0xFFFBFFFCUL, 0x00000008UL }, /* cvt  */
