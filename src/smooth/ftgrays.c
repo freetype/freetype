@@ -582,8 +582,8 @@ typedef ptrdiff_t  FT_PtrDist;
     if ( ex < ras.min_ex )
       ex = ras.min_ex - 1;
 
-    /* record the current one if it is substantial and valid */
-    if ( ( ras.area || ras.cover ) && !ras.invalid )
+    /* record the current one if it is valid and substantial */
+    if ( !ras.invalid && ( ras.area || ras.cover ) )
       gray_record_cell( RAS_VAR );
 
     ras.area  = 0;
