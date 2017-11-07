@@ -982,6 +982,7 @@
 
     /* do we need to render the image or preset the bitmap now? */
     if ( !error                                    &&
+         ( load_flags & FT_LOAD_NO_SCALE ) == 0    &&
          slot->format != FT_GLYPH_FORMAT_BITMAP    &&
          slot->format != FT_GLYPH_FORMAT_COMPOSITE )
     {
@@ -994,7 +995,7 @@
 
       if ( load_flags & FT_LOAD_RENDER )
         error = FT_Render_Glyph( slot, mode );
-      else if ( ( load_flags & FT_LOAD_NO_SCALE ) == 0 )
+      else
         ft_glyphslot_preset_bitmap( slot, mode, NULL );
     }
 

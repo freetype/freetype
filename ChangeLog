@@ -1,4 +1,8 @@
-2017-11-01  Alexei Podtelezhnikov  <apodtele@gmail.com>
+2017-11-06  Alexei Podtelezhnikov  <apodtele@gmail.com>
+
+	* src/base/ftobjs.c (FT_Load_Glyph): Relocate condition.
+
+2017-11-06  Alexei Podtelezhnikov  <apodtele@gmail.com>
 
 	* src/smooth/ftgrays.c (gray_set_cell): Fix uninitialized variables.
 
