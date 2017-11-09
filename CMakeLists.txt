@@ -331,7 +331,9 @@ if (BUILD_FRAMEWORK)
   )
 endif ()
 
-set(CMAKE_DEBUG_POSTFIX d)
+if (NOT DISABLE_FORCE_DEBUG_POSTFIX)
+  set(CMAKE_DEBUG_POSTFIX d)
+endif()
 
 add_library(freetype
   ${PUBLIC_HEADERS}
