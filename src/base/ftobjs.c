@@ -19,12 +19,16 @@
 #include <ft2build.h>
 #include FT_LIST_H
 #include FT_OUTLINE_H
+#include FT_FONT_FORMATS_H
+
 #include FT_INTERNAL_VALIDATE_H
 #include FT_INTERNAL_OBJECTS_H
 #include FT_INTERNAL_DEBUG_H
 #include FT_INTERNAL_RFORK_H
 #include FT_INTERNAL_STREAM_H
-#include FT_INTERNAL_SFNT_H    /* for SFNT_Load_Table_Func */
+#include FT_INTERNAL_SFNT_H            /* for SFNT_Load_Table_Func */
+#include FT_INTERNAL_POSTSCRIPT_AUX_H  /* for PS_Driver            */
+
 #include FT_TRUETYPE_TABLES_H
 #include FT_TRUETYPE_TAGS_H
 #include FT_TRUETYPE_IDS_H
@@ -39,6 +43,7 @@
 
 #include FT_AUTOHINTER_H
 #include FT_CFF_DRIVER_H
+#include FT_TYPE1_DRIVER_H
 
 #ifdef FT_CONFIG_OPTION_MAC_FONTS
 #include "ftbase.h"
@@ -801,9 +806,13 @@
      * Determine whether we need to auto-hint or not.
      * The general rules are:
      *
-     * - Do only auto-hinting if we have a hinter module, a scalable font
-     *   format dealing with outlines, and no transforms except simple
-     *   slants and/or rotations by integer multiples of 90 degrees.
+     * - Do only auto-hinting if we have
+     *
+     *   - a hinter module,
+     *   - a scalable font format dealing with outlines,
+     *   - not a tricky font, and
+     *   - no transforms except simple slants and/or rotations by
+     *     integer multiples of 90 degrees.
      *
      * - Then, auto-hint if FT_LOAD_FORCE_AUTOHINT is set or if we don't
      *   have a native font hinter.
@@ -833,7 +842,14 @@
       else
       {
         FT_Render_Mode  mode = FT_LOAD_TARGET_MODE( load_flags );
+        FT_Bool         is_light_type1;
 
+
+        /* only the new Adobe engine (for both CFF and Type 1) is `light'; */
+        /* we use `strstr' to catch both `Type 1' and `CID Type 1'         */
+        is_light_type1 =
+          ft_strstr( FT_Get_Font_Format( face ), "Type 1" ) != NULL   &&
+          ((PS_Driver)driver)->hinting_engine == FT_T1_HINTING_ADOBE;
 
         /* the check for `num_locations' assures that we actually    */
         /* test for instructions in a TTF and not in a CFF-based OTF */
@@ -842,8 +858,9 @@
         /* check the size of the `fpgm' and `prep' tables, too --    */
         /* the assumption is that there don't exist real TTFs where  */
         /* both `fpgm' and `prep' tables are missing                 */
-        if ( ( mode == FT_RENDER_MODE_LIGHT       &&
-               !FT_DRIVER_HINTS_LIGHTLY( driver ) )             ||
+        if ( ( mode == FT_RENDER_MODE_LIGHT           &&
+               ( !FT_DRIVER_HINTS_LIGHTLY( driver ) &&
+                 !is_light_type1                    ) )         ||
              ( FT_IS_SFNT( face )                             &&
                ttface->num_locations                          &&
                ttface->max_profile.maxSizeOfInstructions == 0 &&

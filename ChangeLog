@@ -1,3 +1,22 @@
+2017-11-14  Nikolaus Waxweiler  <madigens@gmail.com>
+
+	Use Adobe hinting engine for `light' hinting of both CFF and Type 1.
+
+	Since Ewald Hew factored the Adobe hinting engine out of the CFF
+	driver code, we can now use it on Type 1 (and CID) font formats, as
+	both have the same hinting philosophy.
+
+	This change activates the Adobe hinter when in LIGHT mode, and
+	therefore always unless explicitly asking for the auto-hinter.  This
+	makes LIGHT behavior consistent with CFF fonts.  As of this commit,
+	the hinting engine table looks as follows.
+
+	             LIGHT  NORMAL
+	  -------------------------
+	   TrueType  Auto   v40
+	   CFF       Adobe  Adobe
+	   Type 1    Adobe  Adobe
+
 2017-11-10  Yuri Levchenko  <yuri_levchenko@boolat.com>
 
 	* CMakeLists.txt: Add `DISABLE_FORCE_DEBUG_PREFIX' option.
