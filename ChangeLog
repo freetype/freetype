@@ -1,5 +1,13 @@
 2017-11-22  Ewald Hew  <ewaldhew@gmail.com>
 
+	* src/psaux/psft.c (cf2_setGlyphWidth): Check format before setting.
+
+	Reported as
+
+	  https://bugs.chromium.org/p/oss-fuzz/issues/detail?id=4377
+
+2017-11-22  Ewald Hew  <ewaldhew@gmail.com>
+
 	[psaux] Fix CFF advance widths. (#52466)
 
 	Glyph advance widths were being written to the new `PS_Decoder' but not
