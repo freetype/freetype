@@ -2407,8 +2407,7 @@
       ps_decoder->locals       = cff_decoder->locals;
       ps_decoder->locals_bias  = cff_decoder->locals_bias;
 
-      ps_decoder->glyph_width   = cff_decoder->glyph_width;
-      ps_decoder->nominal_width = cff_decoder->nominal_width;
+      ps_decoder->glyph_width   = &cff_decoder->glyph_width;
       ps_decoder->width_only    = cff_decoder->width_only;
 
       ps_decoder->hint_mode = cff_decoder->hint_mode;

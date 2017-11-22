@@ -95,7 +95,7 @@
 
     FT_ASSERT( decoder );
 
-    decoder->glyph_width = cf2_fixedToInt( width );
+    *decoder->glyph_width = cf2_fixedToInt( width );
   }
 
 

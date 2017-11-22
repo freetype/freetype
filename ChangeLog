@@ -1,3 +1,19 @@
+2017-11-22  Ewald Hew  <ewaldhew@gmail.com>
+
+	[psaux] Fix CFF advance widths. (#52466)
+
+	Glyph advance widths were being written to the new `PS_Decoder' but not
+	saved to the underlying format specific decoder. This caused pure CFF
+	fonts to have bad advance width.
+
+	* include/freetype/internal/psaux.h (PS_Decoder): Change `glyph_width'
+	field to pointer.
+	Remove unused fields.
+	* src/psaux/psobjs.c (ps_decoder_init): Change `glyph_width' from copy
+	to reference.
+	Remove unused.
+	* src/psaux/psft.c (cf2_setGlyphWidth): Update code.
+
 2017-11-15  Vlad Tsyrklevich  <vtsyrklevich@google.com>
 
 	* include/freetype/ftrender.h: Fix `FT_Renderer_RenderFunc' type.

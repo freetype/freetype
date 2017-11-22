@@ -614,10 +614,7 @@ FT_BEGIN_HEADER
     CFF_SubFont  current_subfont; /* for current glyph_index */
     FT_Generic*  cf2_instance;
 
-    FT_Pos  glyph_width;
-    FT_Pos  nominal_width;
-
-    FT_Bool  read_width;
+    FT_Pos*  glyph_width;
     FT_Bool  width_only;
     FT_Int   num_hints;
 
