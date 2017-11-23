@@ -478,7 +478,7 @@
   }
 
 
-#ifndef FT_MACINTOSH
+#if defined( FT_CONFIG_OPTION_MAC_FONTS ) && !defined( FT_MACINTOSH )
   static FT_RFork_Rule
   raccess_get_rule_type_from_rule_index( FT_Library  library,
                                          FT_UInt     rule_index )

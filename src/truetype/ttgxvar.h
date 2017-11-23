@@ -27,6 +27,8 @@
 FT_BEGIN_HEADER
 
 
+#ifdef TT_CONFIG_OPTION_GX_VAR_SUPPORT
+
   /*************************************************************************/
   /*                                                                       */
   /* <Struct>                                                              */
@@ -438,6 +440,8 @@ FT_BEGIN_HEADER
 
   FT_LOCAL( void )
   tt_done_blend( TT_Face  face );
+
+#endif /* TT_CONFIG_OPTION_GX_VAR_SUPPORT */
 
 
 FT_END_HEADER
