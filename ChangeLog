@@ -1,6 +1,6 @@
 2017-11-23  Tor Andersson  <tor.andersson@artifex.com>
 
-	Silence unused function warnings.
+	Silence unused function warnings (#52465).
 
 	Some static function declarations cause unused function warnings if
 	certain config options are turned off via `ftoption.h'.
