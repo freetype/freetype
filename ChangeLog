@@ -1,3 +1,25 @@
+2017-11-24  Werner Lemberg  <wl@gnu.org>
+
+	[unix] Install a massaged `ftoption.h' file (#51780).
+
+	* builds/unix/configure.raw (ftoption_set, ftoption_unset): New
+	auxiliary functions to construct...
+	(FTOPTION_H_SED): ... this new variable.
+	Apply it as a sed argument while copying `ftoption.h' to the
+	`builds/unix' directory (using `AC_CONFIG_FILES').
+	Simplify code of test that checks cpp's computation of bit length
+	(the test previously created an empty `ftoption.h' file and deleted
+	it immediately afterwards); without this change, it can happen on my
+	GNU/Linux box that `configure's execution of `config.status' doesn't
+	create `ftoption.h' (no idea why this happens).
+
+	* builds/unix/install.mk (install): Install
+	`builds/unix/ftoption.h'.
+
+	* builds/unix/unix-def.in (DISTCLEAN): Updated.
+
+	* builds/unix/.gitignore: Updated.
+
 2017-11-23  Tor Andersson  <tor.andersson@artifex.com>
 
 	Silence unused function warnings (#52465).

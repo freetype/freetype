@@ -43,6 +43,7 @@ DISTCLEAN += $(OBJ_BUILD)/config.cache  \
              $(OBJ_BUILD)/unix-def.mk   \
              $(OBJ_BUILD)/unix-cc.mk    \
              $(OBJ_BUILD)/ftconfig.h    \
+             $(OBJ_BUILD)/ftoption.h    \
              $(LIBTOOL)                 \
              $(OBJ_BUILD)/Makefile
 

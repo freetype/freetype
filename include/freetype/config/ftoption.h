@@ -211,6 +211,10 @@ FT_BEGIN_HEADER
   /*   Do not #undef this macro here since the build system might define   */
   /*   it for certain configurations only.                                 */
   /*                                                                       */
+  /*   If you use a build system like cmake or the `configure' script,     */
+  /*   options set by those programs have precendence, overwriting the     */
+  /*   value here with the configured one.                                 */
+  /*                                                                       */
 /* #define FT_CONFIG_OPTION_SYSTEM_ZLIB */
 
 
@@ -226,6 +230,10 @@ FT_BEGIN_HEADER
   /*   the system available bzip2 implementation.                          */
   /*                                                                       */
   /*   Define this macro if you want to enable this `feature'.             */
+  /*                                                                       */
+  /*   If you use a build system like cmake or the `configure' script,     */
+  /*   options set by those programs have precendence, overwriting the     */
+  /*   value here with the configured one.                                 */
   /*                                                                       */
 /* #define FT_CONFIG_OPTION_USE_BZIP2 */
 
@@ -252,6 +260,10 @@ FT_BEGIN_HEADER
   /*                                                                       */
   /*   Define this macro if you want to enable this `feature'.             */
   /*                                                                       */
+  /*   If you use a build system like cmake or the `configure' script,     */
+  /*   options set by those programs have precendence, overwriting the     */
+  /*   value here with the configured one.                                 */
+  /*                                                                       */
 /* #define FT_CONFIG_OPTION_USE_PNG */
 
 
@@ -264,6 +276,10 @@ FT_BEGIN_HEADER
   /*   by a font's character map will be hinted also.                      */
   /*                                                                       */
   /*   Define this macro if you want to enable this `feature'.             */
+  /*                                                                       */
+  /*   If you use a build system like cmake or the `configure' script,     */
+  /*   options set by those programs have precendence, overwriting the     */
+  /*   value here with the configured one.                                 */
   /*                                                                       */
 /* #define FT_CONFIG_OPTION_USE_HARFBUZZ */
 
