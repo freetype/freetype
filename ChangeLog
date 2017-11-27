@@ -1,3 +1,15 @@
+2017-11-27  Werner Lemberg  <wl@gnu.org>
+
+	Allow (again) encoding vectors with more than 256 elements (#52464).
+
+	In version 2.6.1, this has been disallowed to better reject
+	malformed fonts; however, this restriction was too strong.  This
+	time, we only take the first 256 elements into account, since
+	encoding arrays are always accessed with a 8bit integer, according
+	to the PostScript Language Reference.
+
+	* src/type1/t1load.c (parse_encoding): Implement it.
+
 2017-11-27  Jan Alexander Steffens (heftig)  <jan.steffens@gmail.com>
 
 	Fix last commit (#52522).
