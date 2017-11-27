@@ -1,3 +1,10 @@
+2017-11-27  Jan Alexander Steffens (heftig)  <jan.steffens@gmail.com>
+
+	Fix last commit (#52522).
+
+	* builds/freetype.mk: Set `FT_OPTION_H' and `FTOPTION_FLAG'
+	properly if we have `ftoption.h' in `BUILD_DIR'.
+
 2017-11-24  Werner Lemberg  <wl@gnu.org>
 
 	[unix] Install a massaged `ftoption.h' file (#51780).

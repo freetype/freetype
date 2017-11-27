@@ -153,6 +153,9 @@ endif
 ifneq ($(wildcard $(OBJ_DIR)/ftoption.h),)
   FTOPTION_H    := $(OBJ_DIR)/ftoption.h
   FTOPTION_FLAG := $DFT_CONFIG_OPTIONS_H="<ftoption.h>"
+else ifneq ($(wildcard $(BUILD_DIR)/ftoption.h),)
+  FTOPTION_H    := $(BUILD_DIR)/ftoption.h
+  FTOPTION_FLAG := $DFT_CONFIG_OPTIONS_H="<ftoption.h>"
 endif
 
 # `CPPFLAGS' might be specified by the user in the environment.
