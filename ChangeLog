@@ -1,6 +1,13 @@
+2017-11-28  Werner Lemberg  <wl@gnu.org>
+
+	[truetype] Improving tracing of composite glyphs.
+
+	* src/truetype/ttgload.c (TT_Load_Composite_Glyph)
+	[FT_DEBUG_LEVEL_TRACE]: Show composite glyph information.
+
 2017-11-27  Werner Lemberg  <wl@gnu.org>
 
-	Allow (again) encoding vectors with more than 256 elements (#52464).
+	[type1] Allow (again) `/Encoding' with >256 elements (#52464).
 
 	In version 2.6.1, this has been disallowed to better reject
 	malformed fonts; however, this restriction was too strong.  This

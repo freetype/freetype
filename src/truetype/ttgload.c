@@ -664,7 +664,52 @@
     } while ( subglyph->flags & MORE_COMPONENTS );
 
     gloader->current.num_subglyphs = num_subglyphs;
-    FT_TRACE5(( "  %d components\n", num_subglyphs ));
+    FT_TRACE5(( "  %d component%s\n",
+                num_subglyphs,
+                num_subglyphs > 1 ? "s" : "" ));
+
+#ifdef FT_DEBUG_LEVEL_TRACE
+    {
+      FT_UInt  i;
+
+
+      subglyph = gloader->current.subglyphs;
+
+      for ( i = 0; i < num_subglyphs; i++ )
+      {
+        if ( num_subglyphs > 1 )
+          FT_TRACE7(( "    subglyph %d:\n", i ));
+
+        FT_TRACE7(( "      glyph index: %d\n", subglyph->index ));
+
+        if ( subglyph->flags & ARGS_ARE_XY_VALUES )
+          FT_TRACE7(( "      offset: x=%d, y=%d\n",
+                      subglyph->arg1,
+                      subglyph->arg2 ));
+        else
+          FT_TRACE7(( "      matching points: base=%d, component=%d\n",
+                      subglyph->arg1,
+                      subglyph->arg2 ));
+
+        if ( subglyph->flags & WE_HAVE_A_SCALE )
+          FT_TRACE7(( "      scaling: %f\n",
+                      subglyph->transform.xx / 65536.0 ));
+        else if ( subglyph->flags & WE_HAVE_AN_XY_SCALE )
+          FT_TRACE7(( "      scaling: x=%f, y=%f\n",
+                      subglyph->transform.xx / 65536.0,
+                      subglyph->transform.yy / 65536.0 ));
+        else if ( subglyph->flags & WE_HAVE_A_2X2 )
+          FT_TRACE7(( "      scaling: xx=%f, yx=%f\n"
+                      "               xy=%f, yy=%f\n",
+                      subglyph->transform.xx / 65536.0,
+                      subglyph->transform.yx / 65536.0,
+                      subglyph->transform.xy / 65536.0,
+                      subglyph->transform.yy / 65536.0 ));
+
+        subglyph++;
+      }
+    }
+#endif /* FT_DEBUG_LEVEL_TRACE */
 
 #ifdef TT_USE_BYTECODE_INTERPRETER
 
