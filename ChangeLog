@@ -1,3 +1,11 @@
+2017-12-04  Werner Lemberg  <wl@gnu.org>
+
+	[truetype] Allow shared points in `cvar' table (#52532).
+
+	* src/truetype/ttgxvar.c (tt_face_vary_cvt): Implement it by copying
+	and adjusting the corresponding code from
+	`TT_Vary_Apply_Glyph_Deltas'.
+
 2017-11-28  Werner Lemberg  <wl@gnu.org>
 
 	[truetype] Improving tracing of composite glyphs.

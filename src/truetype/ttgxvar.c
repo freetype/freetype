@@ -2941,8 +2941,10 @@
     FT_Fixed*   im_start_coords = NULL;
     FT_Fixed*   im_end_coords   = NULL;
     GX_Blend    blend           = face->blend;
-    FT_UInt     point_count;
-    FT_UShort*  localpoints;
+    FT_UInt     point_count, spoint_count = 0;
+    FT_UShort*  sharedpoints = NULL;
+    FT_UShort*  localpoints  = NULL;
+    FT_UShort*  points;
     FT_Short*   deltas;
 
 
@@ -3011,9 +3013,19 @@
 
     offsetToData += table_start;
 
-    /* The documentation implies there are flags packed into              */
-    /* `tupleCount', but John Jenkins says that shared points don't apply */
-    /* to `cvar', and no other flags are defined.                         */
+    if ( tupleCount & GX_TC_TUPLES_SHARE_POINT_NUMBERS )
+    {
+      here = FT_Stream_FTell( stream );
+
+      FT_Stream_SeekSet( stream, offsetToData );
+
+      sharedpoints = ft_var_readpackedpoints( stream,
+                                              table_len,
+                                              &spoint_count );
+      offsetToData = FT_Stream_FTell( stream );
+
+      FT_Stream_SeekSet( stream, here );
+    }
 
     FT_TRACE5(( "cvar: there are %d tuples:\n", tupleCount & 0xFFF ));
 
@@ -3029,26 +3041,25 @@
       tupleDataSize = FT_GET_USHORT();
       tupleIndex    = FT_GET_USHORT();
 
-      /* There is no provision here for a global tuple coordinate section, */
-      /* so John says.  There are no tuple indices, just embedded tuples.  */
-
       if ( tupleIndex & GX_TI_EMBEDDED_TUPLE_COORD )
       {
         for ( j = 0; j < blend->num_axis; j++ )
           tuple_coords[j] = FT_GET_SHORT() * 4;  /* convert from        */
                                                  /* short frac to fixed */
       }
-      else
+      else if ( ( tupleIndex & GX_TI_TUPLE_INDEX_MASK ) >= blend->tuplecount )
       {
-        /* skip this tuple; it makes no sense */
+        FT_TRACE2(( "tt_face_vary_cvt:"
+                    " invalid tuple index\n" ));
 
-        if ( tupleIndex & GX_TI_INTERMEDIATE_TUPLE )
-          for ( j = 0; j < 2 * blend->num_axis; j++ )
-            (void)FT_GET_SHORT();
-
-        offsetToData += tupleDataSize;
-        continue;
+        error = FT_THROW( Invalid_Table );
+        goto Exit;
       }
+      else
+        FT_MEM_COPY(
+          tuple_coords,
+          &blend->tuplecoords[( tupleIndex & 0xFFF ) * blend->num_axis],
+          blend->num_axis * sizeof ( FT_Fixed ) );
 
       if ( tupleIndex & GX_TI_INTERMEDIATE_TUPLE )
       {
@@ -3063,11 +3074,8 @@
                                   tuple_coords,
                                   im_start_coords,
                                   im_end_coords );
-      if ( /* tuple isn't active for our blend */
-           apply == 0                                    ||
-           /* global points not allowed,           */
-           /* if they aren't local, makes no sense */
-           !( tupleIndex & GX_TI_PRIVATE_POINT_NUMBERS ) )
+
+      if ( apply == 0 )              /* tuple isn't active for our blend */
       {
         offsetToData += tupleDataSize;
         continue;
@@ -3077,14 +3085,24 @@
 
       FT_Stream_SeekSet( stream, offsetToData );
 
-      localpoints = ft_var_readpackedpoints( stream,
-                                             table_len,
-                                             &point_count );
-      deltas      = ft_var_readpackeddeltas( stream,
-                                             table_len,
-                                             point_count == 0 ? face->cvt_size
-                                                              : point_count );
-      if ( !localpoints || !deltas )
+      if ( tupleIndex & GX_TI_PRIVATE_POINT_NUMBERS )
+      {
+        localpoints = ft_var_readpackedpoints( stream,
+                                               table_len,
+                                               &point_count );
+        points      = localpoints;
+      }
+      else
+      {
+        points      = sharedpoints;
+        point_count = spoint_count;
+      }
+
+      deltas = ft_var_readpackeddeltas( stream,
+                                        table_len,
+                                        point_count == 0 ? face->cvt_size
+                                                         : point_count );
+      if ( !points || !deltas )
         ; /* failure, ignore it */
 
       else if ( localpoints == ALL_POINTS )
@@ -3136,7 +3154,7 @@
           FT_Long  orig_cvt;
 
 
-          pindex = localpoints[j];
+          pindex = points[j];
           if ( (FT_ULong)pindex >= face->cvt_size )
             continue;
 
@@ -3175,6 +3193,8 @@
     FT_FRAME_EXIT();
 
   Exit:
+    if ( sharedpoints != ALL_POINTS )
+      FT_FREE( sharedpoints );
     FT_FREE( tuple_coords );
     FT_FREE( im_start_coords );
     FT_FREE( im_end_coords );
@@ -3461,7 +3481,6 @@
     glyph_start = FT_Stream_FTell( stream );
 
     /* each set of glyph variation data is formatted similarly to `cvar' */
-    /* (except we get shared points and global tuples)                   */
 
     if ( FT_NEW_ARRAY( tuple_coords, blend->num_axis )    ||
          FT_NEW_ARRAY( im_start_coords, blend->num_axis ) ||
