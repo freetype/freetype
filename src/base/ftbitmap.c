@@ -444,7 +444,7 @@
      * A gamma of 2.2 is fair to assume.  And then, we need to
      * undo the premultiplication too.
      *
-     *   http://accessibility.kde.org/hsl-adjusted.php
+     *   https://accessibility.kde.org/hsl-adjusted.php
      *
      * We do the computation with integers only, applying a gamma of 2.0.
      * We guarantee 32-bit arithmetic to avoid overflow but the resulting

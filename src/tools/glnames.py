@@ -151,7 +151,7 @@ mac_standard_names = \
 # The list of standard `SID' glyph names.  For the official list,
 # see Annex A of document at
 #
-#   http://partners.adobe.com/public/developer/en/font/5176.CFF.pdf  .
+#   https://www.adobe.com/content/dam/acom/en/devnet/font/pdfs/5176.CFF.pdf  .
 #
 sid_standard_names = \
 [

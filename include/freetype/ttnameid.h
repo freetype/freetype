@@ -437,7 +437,7 @@ FT_BEGIN_HEADER
    *
    *   The canonical source for Microsoft's IDs is
    *
-   *     http://www.microsoft.com/globaldev/reference/lcid-all.mspx ,
+   *     https://www.microsoft.com/globaldev/reference/lcid-all.mspx ,
    *
    *   however, we only provide macros for language identifiers present in
    *   the OpenType specification: Microsoft has abandoned the concept of

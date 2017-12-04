@@ -116,7 +116,7 @@ FT_BEGIN_HEADER
    *   minimize hinting techniques that were problematic with the extra
    *   resolution of ClearType; see
    *   http://www.beatstamm.com/typography/RTRCh4.htm#Sec1 and
-   *   http://www.microsoft.com/typography/cleartype/truetypecleartype.aspx.
+   *   https://www.microsoft.com/typography/cleartype/truetypecleartype.aspx.
    *   This technique is not to be confused with ClearType compatible
    *   widths.  ClearType backward compatibility has no direct impact on
    *   changing advance widths, but there might be an indirect impact on
@@ -155,7 +155,7 @@ FT_BEGIN_HEADER
    *
    *   Details on subpixel hinting and some of the necessary tweaks can be
    *   found in Greg Hitchcock's whitepaper at
-   *   `http://www.microsoft.com/typography/cleartype/truetypecleartype.aspx'.
+   *   `https://www.microsoft.com/typography/cleartype/truetypecleartype.aspx'.
    *   Note that FreeType currently doesn't really `subpixel hint' (6x1, 6x2,
    *   or 6x5 supersampling) like discussed in the paper.  Depending on the
    *   chosen interpreter, it simply ignores instructions on vertical stems

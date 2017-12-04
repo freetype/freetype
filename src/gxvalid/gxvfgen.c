@@ -21,7 +21,7 @@
 /*  gxfeatreg.c                                                            */
 /*                                                                         */
 /*    Database of font features pre-defined by Apple Computer, Inc.        */
-/*    http://developer.apple.com/fonts/Registry/                           */
+/*    https://developer.apple.com/fonts/TrueType-Reference-Manual/RM09/AppendixF.html */
 /*    (body).                                                              */
 /*                                                                         */
 /*  Copyright 2003 by                                                      */

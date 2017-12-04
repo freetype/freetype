@@ -171,7 +171,7 @@ re_bold   = re.compile( r"\*((?:\w|-)(?:\w|'|-)*)\*(.*)" )   #  *bold*
 #
 # This regular expression code to identify an URL has been taken from
 #
-#   http://mail.python.org/pipermail/tutor/2002-September/017228.html
+#   https://mail.python.org/pipermail/tutor/2002-September/017228.html
 #
 # (with slight modifications).
 #

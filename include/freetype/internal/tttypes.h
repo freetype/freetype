@@ -148,7 +148,7 @@ FT_BEGIN_HEADER
   /* <Fields>                                                              */
   /*    See                                                                */
   /*                                                                       */
-  /*      http://www.w3.org/TR/WOFF/#WOFFHeader                            */
+  /*      https://www.w3.org/TR/WOFF/#WOFFHeader                           */
   /*                                                                       */
   typedef struct  WOFF_HeaderRec_
   {
