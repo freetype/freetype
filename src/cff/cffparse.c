@@ -949,7 +949,9 @@
       goto Exit;
     }
 
-    FT_TRACE4(( "   %d values blended\n", numBlends ));
+    FT_TRACE4(( "   %d value%s blended\n",
+                numBlends,
+                numBlends == 1 ? "" : "s" ));
 
     error = cff_blend_doBlend( subFont, parser, numBlends );
 

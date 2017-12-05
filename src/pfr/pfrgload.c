@@ -756,8 +756,10 @@
 
       count = glyph->num_subs - old_count;
 
-      FT_TRACE4(( "compound glyph with %d elements (offset %lu):\n",
-                  count, offset ));
+      FT_TRACE4(( "compound glyph with %d element%s (offset %lu):\n",
+                  count,
+                  count == 1 ? "" : "s",
+                  offset ));
 
       /* now, load each individual glyph */
       for ( n = 0; n < count; n++ )
@@ -810,7 +812,9 @@
         /* proceed to next sub-glyph */
       }
 
-      FT_TRACE4(( "end compound glyph with %d elements\n", count ));
+      FT_TRACE4(( "end compound glyph with %d element%s\n",
+                  count,
+                  count == 1 ? "" : "s" ));
     }
     else
     {

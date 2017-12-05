@@ -1718,8 +1718,11 @@ typedef ptrdiff_t  FT_PtrDist;
       if ( !ras.invalid )
         gray_record_cell( RAS_VAR );
 
-      FT_TRACE7(( "band [%d..%d]: %d cells\n",
-                  ras.min_ey, ras.max_ey, ras.num_cells ));
+      FT_TRACE7(( "band [%d..%d]: %d cell%s\n",
+                  ras.min_ey,
+                  ras.max_ey,
+                  ras.num_cells,
+                  ras.num_cells == 1 ? "" : "s" ));
     }
     else
     {

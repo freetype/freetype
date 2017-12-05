@@ -1297,7 +1297,9 @@
 
     if ( numOperands > count )
     {
-      FT_TRACE4(( " cff_blend_doBlend: Stack underflow %d args\n", count ));
+      FT_TRACE4(( " cff_blend_doBlend: Stack underflow %d argument%s\n",
+                  count,
+                  count == 1 ? "" : "s" ));
 
       error = FT_THROW( Stack_Underflow );
       goto Exit;

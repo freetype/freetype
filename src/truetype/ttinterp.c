@@ -8486,7 +8486,9 @@
     } while ( !exc->instruction_trap );
 
   LNo_Error_:
-    FT_TRACE4(( "  %d instructions executed\n", ins_counter ));
+    FT_TRACE4(( "  %d instruction%s executed\n",
+                ins_counter == 1 ? "" : "s",
+                ins_counter ));
     return FT_Err_Ok;
 
   LErrorCodeOverflow_:

@@ -1,3 +1,9 @@
+2017-12-05  Werner Lemberg  <wl@gnu.org>
+
+	Improve tracing messages by using singular and plural forms.
+
+	* src/*/*.c: Implement it.
+
 2017-12-04  Werner Lemberg  <wl@gnu.org>
 
 	[truetype] Allow shared points in `cvar' table (#52532).

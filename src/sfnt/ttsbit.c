@@ -1007,8 +1007,9 @@
       goto Fail;
     }
 
-    FT_TRACE3(( "tt_sbit_decoder_load_compound: loading %d components\n",
-                num_components ));
+    FT_TRACE3(( "tt_sbit_decoder_load_compound: loading %d component%s\n",
+                num_components,
+                num_components == 1 ? "" : "s" ));
 
     for ( nn = 0; nn < num_components; nn++ )
     {

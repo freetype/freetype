@@ -240,8 +240,10 @@
                                                        &dummy,
                                                        &ah );
 
-          FT_TRACE5(( "  idx %d: advance height %d font units\n",
-                      start + nn, ah ));
+          FT_TRACE5(( "  idx %d: advance height %d font unit%s\n",
+                      start + nn,
+                      ah,
+                      ah == 1 ? "" : "s" ));
           advances[nn] = ah;
         }
       }
@@ -269,8 +271,10 @@
                                                        &dummy,
                                                        &aw );
 
-          FT_TRACE5(( "  idx %d: advance width %d font units\n",
-                      start + nn, aw ));
+          FT_TRACE5(( "  idx %d: advance width %d font unit%s\n",
+                      start + nn,
+                      aw,
+                      aw == 1 ? "" : "s" ));
           advances[nn] = aw;
         }
       }

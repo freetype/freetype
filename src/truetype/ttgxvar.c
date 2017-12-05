@@ -1043,10 +1043,11 @@
                                    outerIndex,
                                    innerIndex );
 
-    FT_TRACE5(( "%s value %d adjusted by %d units (%s)\n",
+    FT_TRACE5(( "%s value %d adjusted by %d unit%s (%s)\n",
                 vertical ? "vertical height" : "horizontal width",
                 *avalue,
                 delta,
+                delta == 1 ? "" : "s",
                 vertical ? "VVAR" : "HVAR" ));
 
     *avalue += delta;
@@ -1333,13 +1334,15 @@
 
       if ( p )
       {
-        FT_TRACE5(( "value %c%c%c%c (%d units) adjusted by %d units (MVAR)\n",
+        FT_TRACE5(( "value %c%c%c%c (%d unit%s) adjusted by %d unit%s (MVAR)\n",
                     (FT_Char)( value->tag >> 24 ),
                     (FT_Char)( value->tag >> 16 ),
                     (FT_Char)( value->tag >> 8 ),
                     (FT_Char)( value->tag ),
                     value->unmodified,
-                    delta ));
+                    value->unmodified == 1 ? "" : "s",
+                    delta,
+                    delta == 1 ? "" : "s" ));
 
         /* since we handle both signed and unsigned values as FT_Short, */
         /* ensure proper overflow arithmetic                            */
@@ -1499,8 +1502,10 @@
     blend->gv_glyphcnt = gvar_head.glyphCount;
     offsetToData       = gvar_start + gvar_head.offsetToData;
 
-    FT_TRACE5(( "gvar: there are %d shared coordinates:\n",
-                blend->tuplecount ));
+    FT_TRACE5(( "gvar: there %s %d shared coordinate%s:\n",
+                blend->tuplecount == 1 ? "is" : "are",
+                blend->tuplecount,
+                blend->tuplecount == 1 ? "" : "s" ));
 
     if ( FT_NEW_ARRAY( blend->glyphoffsets, blend->gv_glyphcnt + 1 ) )
       goto Exit;
@@ -3027,7 +3032,10 @@
       FT_Stream_SeekSet( stream, here );
     }
 
-    FT_TRACE5(( "cvar: there are %d tuples:\n", tupleCount & 0xFFF ));
+    FT_TRACE5(( "cvar: there %s %d tuple%s:\n",
+                ( tupleCount & 0xFFF ) == 1 ? "is" : "are",
+                tupleCount & 0xFFF,
+                ( tupleCount & 0xFFF ) == 1 ? "" : "s" ));
 
     for ( i = 0; i < ( tupleCount & 0xFFF ); i++ )
     {
@@ -3517,8 +3525,10 @@
       FT_Stream_SeekSet( stream, here );
     }
 
-    FT_TRACE5(( "gvar: there are %d tuples:\n",
-                tupleCount & GX_TC_TUPLE_COUNT_MASK ));
+    FT_TRACE5(( "gvar: there %s %d tuple%s:\n",
+                ( tupleCount & GX_TC_TUPLE_COUNT_MASK ) == 1 ? "is" : "are",
+                tupleCount & GX_TC_TUPLE_COUNT_MASK,
+                ( tupleCount & GX_TC_TUPLE_COUNT_MASK ) == 1 ? "" : "s" ));
 
     for ( j = 0; j < n_points; j++ )
       points_org[j] = outline->points[j];
