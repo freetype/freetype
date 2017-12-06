@@ -3795,17 +3795,18 @@ FT_BEGIN_HEADER
    *   Note that only a subset of the available properties can be
    *   controlled.
    *
-   *   * Stem darkening (@FT_PARAM_TAG_STEM_DARKENING, corresponding to the
-   *     property `no-stem-darkening' provided by the `autofit' and `cff'
-   *     modules; see @no-stem-darkening[autofit] and
+   *   * @FT_PARAM_TAG_STEM_DARKENING (stem darkening, corresponding to the
+   *     property `no-stem-darkening' provided by the `autofit', `cff',
+   *     `type1', and `t1cid' modules; see @no-stem-darkening[autofit] and
    *     @no-stem-darkening[cff]).
    *
-   *   * LCD filter weights (@FT_PARAM_TAG_LCD_FILTER_WEIGHTS, corresponding
+   *   * @FT_PARAM_TAG_LCD_FILTER_WEIGHTS (LCD filter weights, corresponding
    *     to function @FT_Library_SetLcdFilterWeights).
    *
-   *   * Seed value for the CFF `random' operator
-   *     (@FT_PARAM_TAG_RANDOM_SEED, corresponding to the `random-seed'
-   *     property provided by the `cff' module; see @random-seed).
+   *   * @FT_PARAM_TAG_RANDOM_SEED (seed value for the CFF, Type~1, and CID
+   *     `random' operator, corresponding to the `random-seed' property
+   *     provided by the `cff', `type1', and `t1cid' modules; see
+   *     @random-seed).
    *
    *   Pass NULL as `data' in @FT_Parameter for a given tag to reset the
    *   option and use the library or module default again.

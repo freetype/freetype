@@ -781,7 +781,7 @@
    * @description:
    *   Deprecated.
    */
-#define FT_UNPATENTED_HINTING_H  <freetype/ttunpat.h>
+#define FT_UNPATENTED_HINTING_H  <freetype/ftparams.h>
 
 
   /*************************************************************************
@@ -823,6 +823,7 @@
   /* */
 
 #define FT_ERROR_DEFINITIONS_H  <freetype/fterrdef.h>
+#define FT_PARAMETER_TAGS_H     <freetype/ftparams.h>
 
 
   /* The internals of the cache sub-system are no longer exposed.  We */
@@ -840,7 +841,7 @@
 
 #define FT_INCREMENTAL_H          <freetype/ftincrem.h>
 
-#define FT_TRUETYPE_UNPATENTED_H  <freetype/ttunpat.h>
+#define FT_TRUETYPE_UNPATENTED_H  <freetype/ftparams.h>
 
 
   /*

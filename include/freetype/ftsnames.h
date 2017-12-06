@@ -25,6 +25,7 @@
 
 #include <ft2build.h>
 #include FT_FREETYPE_H
+#include FT_PARAMETER_TAGS_H
 
 #ifdef FREETYPE_H
 #error "freetype.h of FreeType 1 has been loaded!"
@@ -240,53 +241,6 @@ FT_BEGIN_HEADER
                        FT_UInt          langID,
                        FT_SfntLangTag  *alangTag );
 
-
-  /***************************************************************************
-   *
-   * @constant:
-   *   FT_PARAM_TAG_IGNORE_TYPOGRAPHIC_FAMILY
-   *
-   * @description:
-   *   A tag for @FT_Parameter to make @FT_Open_Face ignore typographic
-   *   family names in the `name' table (introduced in OpenType version
-   *   1.4).  Use this for backward compatibility with legacy systems that
-   *   have a four-faces-per-family restriction.
-   *
-   * @since:
-   *   2.8
-   *
-   */
-#define FT_PARAM_TAG_IGNORE_TYPOGRAPHIC_FAMILY \
-          FT_MAKE_TAG( 'i', 'g', 'p', 'f' )
-
-
-  /* this constant is deprecated */
-#define FT_PARAM_TAG_IGNORE_PREFERRED_FAMILY \
-          FT_PARAM_TAG_IGNORE_TYPOGRAPHIC_FAMILY
-
-
-  /***************************************************************************
-   *
-   * @constant:
-   *   FT_PARAM_TAG_IGNORE_TYPOGRAPHIC_SUBFAMILY
-   *
-   * @description:
-   *   A tag for @FT_Parameter to make @FT_Open_Face ignore typographic
-   *   subfamily names in the `name' table (introduced in OpenType version
-   *   1.4).  Use this for backward compatibility with legacy systems that
-   *   have a four-faces-per-family restriction.
-   *
-   * @since:
-   *   2.8
-   *
-   */
-#define FT_PARAM_TAG_IGNORE_TYPOGRAPHIC_SUBFAMILY \
-          FT_MAKE_TAG( 'i', 'g', 'p', 's' )
-
-
-  /* this constant is deprecated */
-#define FT_PARAM_TAG_IGNORE_PREFERRED_SUBFAMILY \
-          FT_PARAM_TAG_IGNORE_TYPOGRAPHIC_SUBFAMILY
 
   /* */
 

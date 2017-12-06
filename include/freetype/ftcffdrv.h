@@ -21,6 +21,7 @@
 
 #include <ft2build.h>
 #include FT_FREETYPE_H
+#include FT_PARAMETER_TAGS_H
 
 #ifdef FREETYPE_H
 #error "freetype.h of FreeType 1 has been loaded!"
@@ -307,25 +308,6 @@ FT_BEGIN_HEADER
    *   2.8
    *
    */
-
-
-  /**************************************************************************
-   *
-   * @constant:
-   *   FT_PARAM_TAG_RANDOM_SEED
-   *
-   * @description:
-   *   An @FT_Parameter tag to be used with @FT_Face_Properties.  The
-   *   corresponding 32bit signed integer argument overrides the CFF
-   *   module's random seed value with a face-specific one; see
-   *   @random-seed.
-   *
-   * @since:
-   *   2.8
-   *
-   */
-#define FT_PARAM_TAG_RANDOM_SEED \
-          FT_MAKE_TAG( 's', 'e', 'e', 'd' )
 
 
   /* */

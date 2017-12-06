@@ -22,6 +22,7 @@
 
 #include <ft2build.h>
 #include FT_FREETYPE_H
+#include FT_PARAMETER_TAGS_H
 
 #ifdef FREETYPE_H
 #error "freetype.h of FreeType 1 has been loaded!"
@@ -278,26 +279,6 @@ FT_BEGIN_HEADER
   FT_EXPORT( FT_Error )
   FT_Library_SetLcdFilterWeights( FT_Library      library,
                                   unsigned char  *weights );
-
-
-  /**************************************************************************
-   *
-   * @constant:
-   *   FT_PARAM_TAG_LCD_FILTER_WEIGHTS
-   *
-   * @description:
-   *   An @FT_Parameter tag to be used with @FT_Face_Properties.  The
-   *   corresponding argument specifies the five LCD filter weights for a
-   *   given face (if using @FT_LOAD_TARGET_LCD, for example), overriding
-   *   the global default values or the values set up with
-   *   @FT_Library_SetLcdFilterWeights.
-   *
-   * @since:
-   *   2.8
-   *
-   */
-#define FT_PARAM_TAG_LCD_FILTER_WEIGHTS \
-          FT_MAKE_TAG( 'l', 'c', 'd', 'f' )
 
 
   /*

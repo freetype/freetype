@@ -21,6 +21,7 @@
 
 #include <ft2build.h>
 #include FT_FREETYPE_H
+#include FT_PARAMETER_TAGS_H
 
 #ifdef FREETYPE_H
 #error "freetype.h of FreeType 1 has been loaded!"
@@ -499,30 +500,6 @@ FT_BEGIN_HEADER
    *   2.6.2
    *
    */
-
-
-  /**************************************************************************
-   *
-   * @constant:
-   *   FT_PARAM_TAG_STEM_DARKENING
-   *
-   * @description:
-   *   An @FT_Parameter tag to be used with @FT_Face_Properties.  The
-   *   corresponding Boolean argument specifies whether to apply stem
-   *   darkening, overriding the global default values or the values set up
-   *   with @FT_Property_Set (see @no-stem-darkening[autofit] and
-   *   @no-stem-darkening[cff]).
-   *
-   *   This is a passive setting that only takes effect if the font driver
-   *   or autohinter honors it, which the CFF driver always does, but the
-   *   autohinter only in `light' hinting mode (as of version 2.7.0).
-   *
-   * @since:
-   *   2.8
-   *
-   */
-#define FT_PARAM_TAG_STEM_DARKENING \
-          FT_MAKE_TAG( 'd', 'a', 'r', 'k' )
 
 
   /**************************************************************************
