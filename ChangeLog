@@ -1,5 +1,9 @@
 2017-12-06  Werner Lemberg  <wl@gnu.org>
 
+	* builds/symbian/bld.inf: Updated.
+
+2017-12-06  Werner Lemberg  <wl@gnu.org>
+
 	New header file `ftparams.h' that collects all parameter tags.
 
 	* include/freetype/config/ftheader.h (FT_PARAMETER_TAGS_H): New
