@@ -1,3 +1,10 @@
+2017-12-07  Werner Lemberg  <wl@gnu.org>
+
+	* include/freetype/config/ftheader.h: Some clean-up.
+
+	This commit removes documentation of deprecated macros and does some
+	minor streamlining.
+
 2017-12-06  Werner Lemberg  <wl@gnu.org>
 
 	* builds/symbian/bld.inf: Updated.
