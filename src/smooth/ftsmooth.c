@@ -228,7 +228,7 @@
     if ( hmul )  /* lcd */
     {
       FT_Byte*  line;
-      FT_Byte*  temp;
+      FT_Byte*  temp = NULL;
       FT_UInt   i, j;
 
       unsigned int  height = bitmap->rows;

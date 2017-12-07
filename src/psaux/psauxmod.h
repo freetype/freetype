@@ -33,7 +33,10 @@ FT_BEGIN_HEADER
 #endif
 
 
+  FT_CALLBACK_TABLE
   const CFF_Builder_FuncsRec  cff_builder_funcs;
+
+  FT_CALLBACK_TABLE
   const PS_Builder_FuncsRec   ps_builder_funcs;
 
 

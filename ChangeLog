@@ -1,5 +1,13 @@
 2017-12-07  Werner Lemberg  <wl@gnu.org>
 
+	Fix C++ compilation.
+
+	* src/psaux/psauxmod.h: Use FT_CALLBACK_TABLE macro where necessary.
+
+	* src/smooth/ftsmooth.c (ft_smooth_render_generic): Fix warning.
+
+2017-12-07  Werner Lemberg  <wl@gnu.org>
+
 	Fix `make multi'.
 
 	* include/freetype/internal/fttrace.h: Remove unused tracing macros.
