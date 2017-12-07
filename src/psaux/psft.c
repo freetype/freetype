@@ -41,6 +41,8 @@
 
 #include "psfont.h"
 #include "pserror.h"
+#include "psobjs.h"
+#include "cffdecode.h"
 
 #ifdef TT_CONFIG_OPTION_GX_VAR_SUPPORT
 #include FT_MULTIPLE_MASTERS_H

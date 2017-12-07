@@ -30,6 +30,8 @@
 #include FT_SERVICE_PROPERTIES_H
 #include FT_TYPE1_DRIVER_H
 
+#include FT_INTERNAL_POSTSCRIPT_AUX_H
+
 
   /*************************************************************************/
   /*                                                                       */

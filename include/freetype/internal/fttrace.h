@@ -66,20 +66,19 @@ FT_TRACE_DEF( ttgxvar )   /* TrueType GX var handler (ttgxvar.c)  */
 FT_TRACE_DEF( t1afm )
 FT_TRACE_DEF( t1driver )
 FT_TRACE_DEF( t1gload )
-FT_TRACE_DEF( t1hint )
 FT_TRACE_DEF( t1load )
 FT_TRACE_DEF( t1objs )
 FT_TRACE_DEF( t1parse )
 
   /* PostScript helper module `psaux' */
 FT_TRACE_DEF( t1decode )
+FT_TRACE_DEF( cffdecode )
 FT_TRACE_DEF( psobjs )
 FT_TRACE_DEF( psconv )
 
   /* PostScript hinting module `pshinter' */
 FT_TRACE_DEF( pshrec )
-FT_TRACE_DEF( pshalgo1 )
-FT_TRACE_DEF( pshalgo2 )
+FT_TRACE_DEF( pshalgo )
 
   /* Type 2 driver components */
 FT_TRACE_DEF( cffdriver )
@@ -96,7 +95,6 @@ FT_TRACE_DEF( cf2interp )
 FT_TRACE_DEF( t42 )
 
   /* CID driver components */
-FT_TRACE_DEF( cidafm )
 FT_TRACE_DEF( ciddriver )
 FT_TRACE_DEF( cidgload )
 FT_TRACE_DEF( cidload )

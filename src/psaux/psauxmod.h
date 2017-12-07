@@ -23,12 +23,18 @@
 #include <ft2build.h>
 #include FT_MODULE_H
 
+#include FT_INTERNAL_POSTSCRIPT_AUX_H
+
 
 FT_BEGIN_HEADER
 
 #ifdef FT_CONFIG_OPTION_PIC
 #error "this module does not support PIC yet"
 #endif
+
+
+  const CFF_Builder_FuncsRec  cff_builder_funcs;
+  const PS_Builder_FuncsRec   ps_builder_funcs;
 
 
   FT_EXPORT_VAR( const FT_Module_Class )  psaux_driver_class;

@@ -1,5 +1,29 @@
 2017-12-07  Werner Lemberg  <wl@gnu.org>
 
+	Fix `make multi'.
+
+	* include/freetype/internal/fttrace.h: Remove unused tracing macros.
+	s/pshalgo2/pshalgo/.
+	Add `trace_cffdecode'.
+	* src/pshinter/pshalgo.c (FT_COMPONENT): Updated.
+
+	* src/cff/cffload.c: Include FT_INTERNAL_POSTSCRIPT_AUX_H.
+	* src/cff/cffobjs.c: Include FT_SERVICE_METRICS_VARIATIONS_H and
+	FT_SERVICE_CFF_TABLE_LOAD_H.
+
+	* src/cid/cidriver.c: Include FT_INTERNAL_POSTSCRIPT_AUX_H.
+
+	* src/psaux/cffdecode.c: Include FT_FREETYPE_H and
+	FT_INTERNAL_DEBUG_H.
+	(FT_COMPONENT): Define.
+	* src/psaux/cffdecode.h: Include FT_INTERNAL_POSTSCRIPT_AUX_H.
+	* src/psaux/psauxmod.h: Include FT_INTERNAL_POSTSCRIPT_AUX_H.
+	Declare `cff_builder_funcs' and `ps_builder_funcs'.
+	* src/psaux/psft.c: Include `psobjs.h' and `cffdecode.h'.
+	* src/psaux/psobjs.c : Include `psauxmod.h'.
+
+2017-12-07  Werner Lemberg  <wl@gnu.org>
+
 	* include/freetype/config/ftheader.h: Some clean-up.
 
 	This commit removes documentation of deprecated macros and does some

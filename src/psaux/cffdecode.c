@@ -17,6 +17,8 @@
 
 
 #include <ft2build.h>
+#include FT_FREETYPE_H
+#include FT_INTERNAL_DEBUG_H
 #include FT_INTERNAL_SERVICE_H
 #include FT_SERVICE_CFF_TABLE_LOAD_H
 
@@ -24,6 +26,17 @@
 #include "psobjs.h"
 
 #include "psauxerr.h"
+
+
+  /*************************************************************************/
+  /*                                                                       */
+  /* The macro FT_COMPONENT is used in trace mode.  It is an implicit      */
+  /* parameter of the FT_TRACE() and FT_ERROR() macros, used to print/log  */
+  /* messages during execution.                                            */
+  /*                                                                       */
+#undef  FT_COMPONENT
+#define FT_COMPONENT  trace_cffdecode
+
 
 #ifdef CFF_CONFIG_OPTION_OLD_ENGINE
 

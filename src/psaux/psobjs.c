@@ -27,6 +27,7 @@
 #include "psconv.h"
 
 #include "psauxerr.h"
+#include "psauxmod.h"
 
 
   /*************************************************************************/

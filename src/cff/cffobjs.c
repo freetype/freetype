@@ -30,6 +30,7 @@
 #ifdef TT_CONFIG_OPTION_GX_VAR_SUPPORT
 #include FT_MULTIPLE_MASTERS_H
 #include FT_SERVICE_MULTIPLE_MASTERS_H
+#include FT_SERVICE_METRICS_VARIATIONS_H
 #endif
 
 #include FT_INTERNAL_CFF_OBJECTS_TYPES_H
@@ -41,6 +42,7 @@
 #include "cfferrs.h"
 
 #include FT_INTERNAL_POSTSCRIPT_AUX_H
+#include FT_SERVICE_CFF_TABLE_LOAD_H
 
 
   /*************************************************************************/
