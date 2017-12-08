@@ -60,7 +60,6 @@
 /*    pfr_fonts                                                            */
 /*    winfnt_fonts                                                         */
 /*    font_formats                                                         */
-/*    parameter_tags                                                       */
 /*    gasp_table                                                           */
 /*                                                                         */
 /***************************************************************************/
@@ -77,8 +76,11 @@
 /* <Sections>                                                              */
 /*    auto_hinter                                                          */
 /*    cff_driver                                                           */
+/*    t1_cid_driver                                                        */
 /*    tt_driver                                                            */
 /*    pcf_driver                                                           */
+/*    properties                                                           */
+/*    parameter_tags                                                       */
 /*                                                                         */
 /***************************************************************************/
 

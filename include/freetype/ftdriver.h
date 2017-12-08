@@ -175,7 +175,7 @@ FT_BEGIN_HEADER
    *   t1_cid_driver
    *
    * @title:
-   *   The Type~1 and CID drivers
+   *   The Type 1 and CID drivers
    *
    * @abstract:
    *   Controlling the Type~1 and CID driver modules.

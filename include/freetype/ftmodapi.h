@@ -323,16 +323,15 @@ FT_BEGIN_HEADER
    *       The module name.
    *
    *    property_name ::
-   *       The property name.  Properties are described in the `Synopsis'
-   *       subsection of the module's documentation.
+   *       The property name.  Properties are described in section
+   *       @properties.
    *
    *       Note that only a few modules have properties.
    *
    *    value ::
    *       A generic pointer to a variable or structure that gives the new
    *       value of the property.  The exact definition of `value' is
-   *       dependent on the property; see the `Synopsis' subsection of the
-   *       module's documentation.
+   *       dependent on the property; see section @properties.
    *
    * @return:
    *   FreeType error code.  0~means success.
@@ -390,15 +389,14 @@ FT_BEGIN_HEADER
    *       The module name.
    *
    *    property_name ::
-   *       The property name.  Properties are described in the `Synopsis'
-   *       subsection of the module's documentation.
+   *       The property name.  Properties are described in section
+   *       @properties.
    *
    * @inout:
    *    value ::
    *       A generic pointer to a variable or structure that gives the
    *       value of the property.  The exact definition of `value' is
-   *       dependent on the property; see the `Synopsis' subsection of the
-   *       module's documentation.
+   *       dependent on the property; see section @properties.
    *
    * @return:
    *   FreeType error code.  0~means success.
@@ -446,8 +444,8 @@ FT_BEGIN_HEADER
   /* <Description>                                                         */
   /*    If compilation option FT_CONFIG_OPTION_ENVIRONMENT_PROPERTIES is   */
   /*    set, this function reads the `FREETYPE_PROPERTIES' environment     */
-  /*    variable to control driver properties.  See sections @auto_hinter, */
-  /*    @cff_driver, @pcf_driver, and @tt_driver for more.                 */
+  /*    variable to control driver properties.  See section @properties    */
+  /*    for more.                                                          */
   /*                                                                       */
   /*    If the compilation option is not set, this function does nothing.  */
   /*                                                                       */
