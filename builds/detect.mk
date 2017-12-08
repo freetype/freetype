@@ -131,6 +131,9 @@ std_setup:
 
 # Special case for Dos, Windows, OS/2, where echo "" doesn't work correctly!
 #
+# For `cmd.exe', we have to escape (unquoted) special characters like `>' as
+# `^>', and we use 0xFF as a replacement character for a protected space.
+#
 dos_setup:
 	@type builds$(SEP)newline
 	@echo $(PROJECT_TITLE) build system -- automatic system detection
@@ -146,7 +149,7 @@ dos_setup:
 	@echo '$(CONFIG_MK)' from this directory then read the INSTALL file for help.
 	@type builds$(SEP)newline
 	@echo Otherwise, simply type 'make' again to build the library.
-	@echo or 'make refdoc' to build the API reference (this needs python >= 2.6).
+	@echo or 'make refdoc' to build the API reference (this needs python ^>= 2.6).
 	@type builds$(SEP)newline
 	@$(COPY) $(subst /,$(SEP),$(CONFIG_RULES) $(CONFIG_MK)) > nul
 

@@ -1,3 +1,10 @@
+2017-12-08  Werner Lemberg  <wl@gnu.org>
+
+	Fix `make setup dos' (#52622).
+
+	* builds/detect.mk (dos_setup): Properly escape literal `>'
+	character.
+
 2017-12-07  Werner Lemberg  <wl@gnu.org>
 
 	Fix C++ compilation.
