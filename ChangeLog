@@ -1,5 +1,15 @@
 2017-12-08  Werner Lemberg  <wl@gnu.org>
 
+	Move `ftdriver.h' to `ftdrv.h'.
+
+	* include/freetype/internal/ftdriver.h: Renamed to...
+	* include/freetype/internal/ftdrv.h: ... this name.
+
+	* include/freetype/internal/internal.h (FT_INTERNAL_DRIVER_H):
+	Updated.
+
+2017-12-08  Werner Lemberg  <wl@gnu.org>
+
 	Fix access to uninitalized memory (#52613).
 
 	Also reported as

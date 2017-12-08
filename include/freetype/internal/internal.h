@@ -31,7 +31,7 @@
 #define FT_INTERNAL_DEBUG_H               <freetype/internal/ftdebug.h>
 #define FT_INTERNAL_CALC_H                <freetype/internal/ftcalc.h>
 #define FT_INTERNAL_HASH_H                <freetype/internal/fthash.h>
-#define FT_INTERNAL_DRIVER_H              <freetype/internal/ftdriver.h>
+#define FT_INTERNAL_DRIVER_H              <freetype/internal/ftdrv.h>
 #define FT_INTERNAL_TRACE_H               <freetype/internal/fttrace.h>
 #define FT_INTERNAL_GLYPH_LOADER_H        <freetype/internal/ftgloadr.h>
 #define FT_INTERNAL_SFNT_H                <freetype/internal/sfnt.h>

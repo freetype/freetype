@@ -1,8 +1,8 @@
 /***************************************************************************/
 /*                                                                         */
-/*  ftdriver.h                                                             */
+/*  ftdrv.h                                                                */
 /*                                                                         */
-/*    FreeType font driver interface (specification).                      */
+/*    FreeType internal font driver interface (specification).             */
 /*                                                                         */
 /*  Copyright 1996-2017 by                                                 */
 /*  David Turner, Robert Wilhelm, and Werner Lemberg.                      */
@@ -16,8 +16,8 @@
 /***************************************************************************/
 
 
-#ifndef FTDRIVER_H_
-#define FTDRIVER_H_
+#ifndef FTDRV_H_
+#define FTDRV_H_
 
 
 #include <ft2build.h>
@@ -394,7 +394,7 @@ FT_BEGIN_HEADER
 
 FT_END_HEADER
 
-#endif /* FTDRIVER_H_ */
+#endif /* FTDRV_H_ */
 
 
 /* END */
