@@ -1,5 +1,17 @@
 2017-12-08  Werner Lemberg  <wl@gnu.org>
 
+	Fix access to uninitalized memory (#52613).
+
+	Also reported as
+
+	  https://bugs.chromium.org/p/chromium/issues/detail?id=791317
+
+	* src/base/ftbitmap.c (ft_bitmap_assure_buffer): If increasing the
+	bitmap size needs a larger bitmap buffer, assure that the new memory
+	areas are initialized also.
+
+2017-12-08  Werner Lemberg  <wl@gnu.org>
+
 	Fix `make setup dos' (#52622).
 
 	* builds/detect.mk (dos_setup): Properly escape literal `>'

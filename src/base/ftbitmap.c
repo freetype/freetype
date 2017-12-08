@@ -235,21 +235,48 @@
     {
       FT_UInt  len = ( width * bpp + 7 ) >> 3;
 
+      unsigned char*  in  = bitmap->buffer;
+      unsigned char*  out = buffer;
 
-      for ( i = 0; i < bitmap->rows; i++ )
-        FT_MEM_COPY( buffer + (FT_UInt)new_pitch * ( ypixels + i ),
-                     bitmap->buffer + (FT_UInt)pitch * i,
-                     len );
+      unsigned char*  limit = bitmap->buffer + pitch * bitmap->rows;
+      int             delta = new_pitch - pitch;
+
+
+      FT_MEM_ZERO( out, new_pitch * ypixels );
+      out += new_pitch * ypixels;
+
+      while ( in < limit )
+      {
+        FT_MEM_COPY( out, in, len );
+        in  += pitch;
+        out += pitch;
+
+        FT_MEM_ZERO( out, delta );
+        out += delta;
+      }
     }
     else
     {
       FT_UInt  len = ( width * bpp + 7 ) >> 3;
 
+      unsigned char*  in  = bitmap->buffer;
+      unsigned char*  out = buffer;
 
-      for ( i = 0; i < bitmap->rows; i++ )
-        FT_MEM_COPY( buffer + (FT_UInt)new_pitch * i,
-                     bitmap->buffer + (FT_UInt)pitch * i,
-                     len );
+      unsigned char*  limit = bitmap->buffer + pitch * bitmap->rows;
+      int             delta = new_pitch - pitch;
+
+
+      while ( in < limit )
+      {
+        FT_MEM_COPY( out, in, len );
+        in  += pitch;
+        out += pitch;
+
+        FT_MEM_ZERO( out, delta );
+        out += delta;
+      }
+
+      FT_MEM_ZERO( out, new_pitch * ypixels );
     }
 
     FT_FREE( bitmap->buffer );
