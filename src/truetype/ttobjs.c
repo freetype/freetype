@@ -21,7 +21,7 @@
 #include FT_INTERNAL_STREAM_H
 #include FT_TRUETYPE_TAGS_H
 #include FT_INTERNAL_SFNT_H
-#include FT_TRUETYPE_DRIVER_H
+#include FT_DRIVER_H
 
 #include "ttgload.h"
 #include "ttpload.h"

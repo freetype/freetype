@@ -26,7 +26,7 @@
 
 #include FT_INTERNAL_POSTSCRIPT_AUX_H
 #include FT_INTERNAL_CFF_TYPES_H
-#include FT_TYPE1_DRIVER_H
+#include FT_DRIVER_H
 
 #include "ciderrs.h"
 
@@ -178,7 +178,7 @@
       /* choose which renderer to use */
 #ifdef T1_CONFIG_OPTION_OLD_ENGINE
       if ( ( (PS_Driver)FT_FACE_DRIVER( face ) )->hinting_engine ==
-               FT_T1_HINTING_FREETYPE                               ||
+               FT_HINTING_FREETYPE                                  ||
            decoder->builder.metrics_only                            )
         error = psaux->t1_decoder_funcs->parse_charstrings_old(
                   decoder,

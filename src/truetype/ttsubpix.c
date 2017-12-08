@@ -22,7 +22,7 @@
 #include FT_INTERNAL_SFNT_H
 #include FT_TRUETYPE_TAGS_H
 #include FT_OUTLINE_H
-#include FT_TRUETYPE_DRIVER_H
+#include FT_DRIVER_H
 
 #include "ttsubpix.h"
 

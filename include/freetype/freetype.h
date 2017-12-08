@@ -3797,8 +3797,7 @@ FT_BEGIN_HEADER
    *
    *   * @FT_PARAM_TAG_STEM_DARKENING (stem darkening, corresponding to the
    *     property `no-stem-darkening' provided by the `autofit', `cff',
-   *     `type1', and `t1cid' modules; see @no-stem-darkening[autofit] and
-   *     @no-stem-darkening[cff]).
+   *     `type1', and `t1cid' modules; see @no-stem-darkening).
    *
    *   * @FT_PARAM_TAG_LCD_FILTER_WEIGHTS (LCD filter weights, corresponding
    *     to function @FT_Library_SetLcdFilterWeights).

@@ -161,8 +161,7 @@ FT_BEGIN_HEADER
    *   An @FT_Parameter tag to be used with @FT_Face_Properties.  The
    *   corresponding Boolean argument specifies whether to apply stem
    *   darkening, overriding the global default values or the values set up
-   *   with @FT_Property_Set (see @no-stem-darkening[autofit] and
-   *   @no-stem-darkening[cff]).
+   *   with @FT_Property_Set (see @no-stem-darkening).
    *
    *   This is a passive setting that only takes effect if the font driver
    *   or autohinter honors it, which the CFF, Type~1, and CID drivers

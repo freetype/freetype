@@ -1,5 +1,28 @@
 2017-12-08  Werner Lemberg  <wl@gnu.org>
 
+	New `ftdriver.h' file, covering all driver modules.
+
+	This reduces redundancy and increases synergy; it also reduces the
+	number of header files.
+
+	* include/freetype/config/ftheader.h (FT_DRIVER_H): New macro.
+	(FT_AUTOHINTER_H, FT_CFF_DRIVER_H, FT_TRUETYPE_DRIVER_H,
+	FT_PCF_DRIVER_H, FT_TYPE1_DRIVER_H): Make them aliases to
+	FT_DRIVER_H.
+
+	* include/freetype/ftautoh.h, include/freetype/ftcffdrv.h,
+	include/freetype/ftpcfdrv.h, include/freetype/ftt1drv.h,
+	include/freetype/ftttdrv.h: Replaced with...
+	* include/freetype/ftdriver.h: ...this new file.
+	(FT_CFF_HINTING_ADOBE, FT_T1_HINTING_ADOBE): Renamed to...
+	(FT_HINTING_ADOBE): ... this new macro.
+	(FT_CFF_HINTING_FREETYPE, FT_T1_HINTING_FREETYPE): Renamed to...
+	(FT_HINTING_FREETYPE): ... this new macro.
+
+	* src/*/*: Updated accordingly.
+
+2017-12-08  Werner Lemberg  <wl@gnu.org>
+
 	Move `ftdriver.h' to `ftdrv.h'.
 
 	* include/freetype/internal/ftdriver.h: Renamed to...

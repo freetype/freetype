@@ -318,14 +318,29 @@
   /*************************************************************************
    *
    * @macro:
+   *   FT_DRIVER_H
+   *
+   * @description:
+   *   A macro used in #include statements to name the file containing
+   *   structures and macros related to the driver modules.
+   *
+   */
+#define FT_DRIVER_H  <freetype/ftdriver.h>
+
+
+  /*************************************************************************
+   *
+   * @macro:
    *   FT_AUTOHINTER_H
    *
    * @description:
    *   A macro used in #include statements to name the file containing
    *   structures and macros related to the auto-hinting module.
    *
+   *   Deprecated since version 2.8.2; use @FT_DRIVER_H instead.
+   *
    */
-#define FT_AUTOHINTER_H  <freetype/ftautoh.h>
+#define FT_AUTOHINTER_H  FT_DRIVER_H
 
 
   /*************************************************************************
@@ -337,8 +352,10 @@
    *   A macro used in #include statements to name the file containing
    *   structures and macros related to the CFF driver module.
    *
+   *   Deprecated since version 2.8.2; use @FT_DRIVER_H instead.
+   *
    */
-#define FT_CFF_DRIVER_H  <freetype/ftcffdrv.h>
+#define FT_CFF_DRIVER_H  FT_DRIVER_H
 
 
   /*************************************************************************
@@ -350,8 +367,10 @@
    *   A macro used in #include statements to name the file containing
    *   structures and macros related to the TrueType driver module.
    *
+   *   Deprecated since version 2.8.2; use @FT_DRIVER_H instead.
+   *
    */
-#define FT_TRUETYPE_DRIVER_H  <freetype/ftttdrv.h>
+#define FT_TRUETYPE_DRIVER_H  FT_DRIVER_H
 
 
   /*************************************************************************
@@ -363,21 +382,10 @@
    *   A macro used in #include statements to name the file containing
    *   structures and macros related to the PCF driver module.
    *
-   */
-#define FT_PCF_DRIVER_H  <freetype/ftpcfdrv.h>
-
-
-  /*************************************************************************
-   *
-   * @macro:
-   *   FT_TYPE1_DRIVER_H
-   *
-   * @description:
-   *   A macro used in #include statements to name the file containing
-   *   structures and macros related to the Type~1 driver module.
+   *   Deprecated since version 2.8.2; use @FT_DRIVER_H instead.
    *
    */
-#define FT_TYPE1_DRIVER_H  <freetype/ftt1drv.h>
+#define FT_PCF_DRIVER_H  FT_DRIVER_H
 
 
   /*************************************************************************

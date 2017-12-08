@@ -24,7 +24,7 @@
 #include FT_OUTLINE_H
 #include FT_INTERNAL_POSTSCRIPT_AUX_H
 #include FT_INTERNAL_CFF_TYPES_H
-#include FT_TYPE1_DRIVER_H
+#include FT_DRIVER_H
 
 #include "t1errors.h"
 
@@ -86,8 +86,8 @@
     {
       /* choose which renderer to use */
 #ifdef T1_CONFIG_OPTION_OLD_ENGINE
-      if ( driver->hinting_engine == FT_T1_HINTING_FREETYPE ||
-           decoder->builder.metrics_only                    )
+      if ( driver->hinting_engine == FT_HINTING_FREETYPE ||
+           decoder->builder.metrics_only                 )
         error = decoder_funcs->parse_charstrings_old(
                   decoder,
                   (FT_Byte*)char_string->pointer,

@@ -20,8 +20,7 @@
 #include FT_INTERNAL_POSTSCRIPT_AUX_H
 #include FT_INTERNAL_DEBUG_H
 #include FT_INTERNAL_CALC_H
-#include FT_CFF_DRIVER_H
-#include FT_TYPE1_DRIVER_H
+#include FT_DRIVER_H
 
 #include "psobjs.h"
 #include "psconv.h"
@@ -1894,7 +1893,7 @@
       PS_Driver  driver   = (PS_Driver)FT_FACE_DRIVER( builder->face );
 
 
-      if ( driver->hinting_engine == FT_CFF_HINTING_FREETYPE )
+      if ( driver->hinting_engine == FT_HINTING_FREETYPE )
       {
         point->x = x >> 16;
         point->y = y >> 16;
@@ -2170,7 +2169,7 @@
 
 
       if ( !builder->is_t1 &&
-           driver->hinting_engine == FT_CFF_HINTING_FREETYPE )
+           driver->hinting_engine == FT_HINTING_FREETYPE )
       {
         point->x = x >> 16;
         point->y = y >> 16;
@@ -2182,7 +2181,7 @@
       PS_Driver  driver   = (PS_Driver)FT_FACE_DRIVER( builder->face );
 #endif
       if ( builder->is_t1 &&
-           driver->hinting_engine == FT_T1_HINTING_FREETYPE )
+           driver->hinting_engine == FT_HINTING_FREETYPE )
       {
         point->x = FIXED_TO_INT( x );
         point->y = FIXED_TO_INT( y );

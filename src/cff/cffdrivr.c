@@ -46,7 +46,7 @@
 #include FT_SERVICE_FONT_FORMAT_H
 #include FT_SERVICE_GLYPH_DICT_H
 #include FT_SERVICE_PROPERTIES_H
-#include FT_CFF_DRIVER_H
+#include FT_DRIVER_H
 
 
   /*************************************************************************/
@@ -905,10 +905,10 @@
 
 
         if ( !ft_strcmp( s, "adobe" ) )
-          driver->hinting_engine = FT_CFF_HINTING_ADOBE;
+          driver->hinting_engine = FT_HINTING_ADOBE;
 #ifdef CFF_CONFIG_OPTION_OLD_ENGINE
         else if ( !ft_strcmp( s, "freetype" ) )
-          driver->hinting_engine = FT_CFF_HINTING_FREETYPE;
+          driver->hinting_engine = FT_HINTING_FREETYPE;
 #endif
         else
           return FT_THROW( Invalid_Argument );
@@ -919,9 +919,9 @@
         FT_UInt*  hinting_engine = (FT_UInt*)value;
 
 
-        if ( *hinting_engine == FT_CFF_HINTING_ADOBE
+        if ( *hinting_engine == FT_HINTING_ADOBE
 #ifdef CFF_CONFIG_OPTION_OLD_ENGINE
-             || *hinting_engine == FT_CFF_HINTING_FREETYPE
+             || *hinting_engine == FT_HINTING_FREETYPE
 #endif
            )
           driver->hinting_engine = *hinting_engine;

@@ -31,7 +31,7 @@
 #include FT_SERVICE_TRUETYPE_ENGINE_H
 #include FT_SERVICE_TRUETYPE_GLYF_H
 #include FT_SERVICE_PROPERTIES_H
-#include FT_TRUETYPE_DRIVER_H
+#include FT_DRIVER_H
 
 #include "ttdriver.h"
 #include "ttgload.h"

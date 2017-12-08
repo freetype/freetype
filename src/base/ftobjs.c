@@ -41,9 +41,7 @@
 #include FT_SERVICE_KERNING_H
 #include FT_SERVICE_TRUETYPE_ENGINE_H
 
-#include FT_AUTOHINTER_H
-#include FT_CFF_DRIVER_H
-#include FT_TYPE1_DRIVER_H
+#include FT_DRIVER_H
 
 #ifdef FT_CONFIG_OPTION_MAC_FONTS
 #include "ftbase.h"
@@ -849,7 +847,7 @@
         /* we use `strstr' to catch both `Type 1' and `CID Type 1'         */
         is_light_type1 =
           ft_strstr( FT_Get_Font_Format( face ), "Type 1" ) != NULL   &&
-          ((PS_Driver)driver)->hinting_engine == FT_T1_HINTING_ADOBE;
+          ((PS_Driver)driver)->hinting_engine == FT_HINTING_ADOBE;
 
         /* the check for `num_locations' assures that we actually    */
         /* test for instructions in a TTF and not in a CFF-based OTF */

@@ -26,7 +26,7 @@
 #include FT_SERVICE_POSTSCRIPT_CMAPS_H
 #include FT_INTERNAL_POSTSCRIPT_AUX_H
 #include FT_INTERNAL_POSTSCRIPT_HINTS_H
-#include FT_TYPE1_DRIVER_H
+#include FT_DRIVER_H
 
 #include "ciderrs.h"
 
@@ -473,9 +473,9 @@
 
     /* set default property values, cf. `ftt1drv.h' */
 #ifdef T1_CONFIG_OPTION_OLD_ENGINE
-    driver->hinting_engine = FT_T1_HINTING_FREETYPE;
+    driver->hinting_engine = FT_HINTING_FREETYPE;
 #else
-    driver->hinting_engine = FT_T1_HINTING_ADOBE;
+    driver->hinting_engine = FT_HINTING_ADOBE;
 #endif
 
     driver->no_stem_darkening = TRUE;

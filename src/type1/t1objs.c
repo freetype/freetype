@@ -21,7 +21,7 @@
 #include FT_INTERNAL_DEBUG_H
 #include FT_INTERNAL_STREAM_H
 #include FT_TRUETYPE_IDS_H
-#include FT_TYPE1_DRIVER_H
+#include FT_DRIVER_H
 
 #include "t1gload.h"
 #include "t1load.h"
@@ -588,9 +588,9 @@
 
     /* set default property values, cf. `ftt1drv.h' */
 #ifdef T1_CONFIG_OPTION_OLD_ENGINE
-    driver->hinting_engine = FT_T1_HINTING_FREETYPE;
+    driver->hinting_engine = FT_HINTING_FREETYPE;
 #else
-    driver->hinting_engine = FT_T1_HINTING_ADOBE;
+    driver->hinting_engine = FT_HINTING_ADOBE;
 #endif
 
     driver->no_stem_darkening = TRUE;
