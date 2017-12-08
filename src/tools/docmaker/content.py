@@ -453,15 +453,32 @@ class  ContentProcessor:
         markup_lines = []
         first        = 1
 
+        margin  = -1
+        in_code = 0
+
         for line in content:
-            found = None
-            for t in re_markup_tags:
-                m = t.match( line )
+            if in_code:
+                m = re_code_end.match( line )
+                if m and len( m.group( 1 ) ) <= margin:
+                    in_code = 0
+                    margin  = -1
+            else:
+                m = re_code_start.match( line )
                 if m:
-                    found  = string.lower( m.group( 1 ) )
-                    prefix = len( m.group( 0 ) )
-                    line   = " " * prefix + line[prefix:]   # remove markup from line
-                    break
+                    in_code = 1
+                    margin  = len( m.group( 1 ) )
+
+            found = None
+
+            if not in_code:
+                for t in re_markup_tags:
+                    m = t.match( line )
+                    if m:
+                        found  = string.lower( m.group( 1 ) )
+                        prefix = len( m.group( 0 ) )
+                        # remove markup from line
+                        line   = " " * prefix + line[prefix:]
+                        break
 
             # is it the start of a new markup section ?
             if found:

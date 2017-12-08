@@ -1,5 +1,21 @@
 2017-12-08  Werner Lemberg  <wl@gnu.org>
 
+	[docmaker] Fix code section parsing.
+
+	Stuff like
+
+	  {
+	    <bla>
+	  }
+
+	confused the parser, which incorrectly treated `<bla>' as a markup
+	tag.
+
+	* src/tools/docmaker/content.py (ContentProcessor::process_content):
+	Apply `re_markup_tags' only outside of code sections.
+
+2017-12-08  Werner Lemberg  <wl@gnu.org>
+
 	New `ftdriver.h' file, covering all driver modules.
 
 	This reduces redundancy and increases synergy; it also reduces the
