@@ -1,5 +1,13 @@
 2017-12-08  Werner Lemberg  <wl@gnu.org>
 
+	Fix `make setup dos', second try (#52622).
+
+	* builds/detect.mk (dos_setup): Don't use literal `>' character at
+	all.  Mixing the different escaping rules from make, dos, and
+	windows is too fragile.
+
+2017-12-08  Werner Lemberg  <wl@gnu.org>
+
 	[docmaker] Fix code section parsing.
 
 	Stuff like
