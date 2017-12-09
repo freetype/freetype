@@ -1,3 +1,9 @@
+2017-12-08  Azzuro  <azzuro@team-mediaportal.com>
+
+	* builds/windows/vc2010/freetype.vcxproj: Adjust output directory.
+
+	This allows builds with different configurations in parallel.
+
 2017-12-08  Werner Lemberg  <wl@gnu.org>
 
 	Fix `make setup dos', second try (#52622).
