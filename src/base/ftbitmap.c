@@ -156,7 +156,7 @@
     int             pitch;
     int             new_pitch;
     FT_UInt         bpp;
-    FT_UInt         i, width, height;
+    FT_UInt         width, height;
     unsigned char*  buffer = NULL;
 
 

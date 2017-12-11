@@ -1,3 +1,10 @@
+2017-12-11  Werner Lemberg  <wl@gnu.org>
+
+	Fix compiler warning (#52640).
+
+	* src/base/ftbitmap.c (ft_bitmap_assure_buffer): Remove unused
+	variable.
+
 2017-12-08  Azzuro  <azzuro@team-mediaportal.com>
 
 	* builds/windows/vc2010/freetype.vcxproj: Adjust output directory.
