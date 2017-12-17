@@ -1,5 +1,12 @@
 2017-12-17  Jonathan Kew  <jfkthame@gmail.com>
 
+	[truetype] Correctly handle variation font phantom points (#52683).
+
+	* src/truetype/ttgxvar.c (TT_Vary_Apply_Glyph_Deltas): Fix phantom
+	point indices.
+
+2017-12-17  Jonathan Kew  <jfkthame@gmail.com>
+
 	Fix incorrect advance width scaling (#52683).
 
 	* src/base/ftadvance.c (FT_Get_Advances): Always respect the
