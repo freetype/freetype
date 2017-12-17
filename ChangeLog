@@ -1,3 +1,10 @@
+2017-12-17  Jonathan Kew  <jfkthame@gmail.com>
+
+	Fix incorrect advance width scaling (#52683).
+
+	* src/base/ftadvance.c (FT_Get_Advances): Always respect the
+	FT_LOAD_NO_SCALE flag if present.
+
 2017-12-16  Alexei Podtelezhnikov  <apodtele@gmail.com>
 
 	* builds/windows/vc2010/freetype.vcxproj: AfterBuild copy.
