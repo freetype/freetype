@@ -1,5 +1,9 @@
 2017-12-18  Werner Lemberg  <wl@gnu.org>
 
+	* src/truetype/ttgxvar.c (tt_face_vary_cvt): Add size guard (#52688).
+
+2017-12-18  Werner Lemberg  <wl@gnu.org>
+
 	[truetype] Fix previous commit.
 
 	* src/truetype/ttgload.c (TT_Process_Simple_Glyph): Correctly handle

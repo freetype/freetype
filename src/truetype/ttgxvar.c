@@ -3110,7 +3110,10 @@
                                         table_len,
                                         point_count == 0 ? face->cvt_size
                                                          : point_count );
-      if ( !points || !deltas )
+
+      if ( !points                                                        ||
+           !deltas                                                        ||
+           ( localpoints == ALL_POINTS && point_count != face->cvt_size ) )
         ; /* failure, ignore it */
 
       else if ( localpoints == ALL_POINTS )
