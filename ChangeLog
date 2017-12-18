@@ -1,3 +1,14 @@
+2017-12-18  Werner Lemberg  <wl@gnu.org>
+
+	[truetype] Don't apply HVAR and VVAR deltas twice (#52683).
+
+	* src/truetype/ttgload.c (TT_Process_Simple_Glyph): Always adjust
+	`pp1' to `pp4', except if we have an HVAR and/or VVAR table.
+
+	* src/truetype/ttgxvar.c (TT_Vary_Apply_Glyph_Deltas): Handle
+	alternative code branch identically w.r.t. presence of an HVAR
+	and/or VVAR table.
+
 2017-12-17  Jonathan Kew  <jfkthame@gmail.com>
 
 	[truetype] Correctly handle variation font phantom points (#52683).

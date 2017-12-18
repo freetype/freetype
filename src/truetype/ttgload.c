@@ -1037,9 +1037,22 @@
           vec->x = FT_MulFix( vec->x, x_scale );
           vec->y = FT_MulFix( vec->y, y_scale );
         }
+      }
 
+#ifdef TT_CONFIG_OPTION_GX_VAR_SUPPORT
+      /* if we have a HVAR table, `pp1' and/or `pp2' are already adjusted */
+      if ( !( loader->face->variation_support & TT_FACE_FLAG_VAR_HADVANCE ) )
+#endif
+      {
         loader->pp1 = outline->points[n_points - 4];
         loader->pp2 = outline->points[n_points - 3];
+      }
+
+#ifdef TT_CONFIG_OPTION_GX_VAR_SUPPORT
+      /* if we have a VVAR table, `pp3' and/or `pp4' are already adjusted */
+      if ( !( loader->face->variation_support & TT_FACE_FLAG_VAR_VADVANCE ) )
+#endif
+      {
         loader->pp3 = outline->points[n_points - 2];
         loader->pp4 = outline->points[n_points - 1];
       }
