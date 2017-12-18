@@ -16,11 +16,11 @@
 
 2017-12-18  Matthias Clasen  <matthias.clasen@gmail.com>
 
-	[truetype] Minor code beautification.
+	[truetype] Fix clamping, minor tracing code beautification.
 
 	* src/truetype/ttgxvar.c (ft_var_to_normalized): Trace number of
 	design coordinates.
-	Simplify code.
+	Use clamped value.
 
 2017-12-18  Werner Lemberg  <wl@gnu.org>
 

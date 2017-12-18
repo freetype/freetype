@@ -1753,7 +1753,7 @@
           a->minimum / 65536.0,
           a->maximum / 65536.0 ));
 
-        if ( coord > a->maximum)
+        if ( coord > a->maximum )
           coord = a->maximum;
         else
           coord = a->minimum;
