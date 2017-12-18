@@ -1556,13 +1556,13 @@
                           FT_UInt    lenNDV,
                           FT_Fixed*  NDV )
   {
-    if ( !blend->builtBV                             ||
-         blend->lastVsindex != vsindex               ||
-         blend->lenNDV != lenNDV                     ||
-         ( lenNDV                                  &&
-           memcmp( NDV,
-                   blend->lastNDV,
-                   lenNDV * sizeof ( *NDV ) ) != 0 ) )
+    if ( !blend->builtBV                                ||
+         blend->lastVsindex != vsindex                  ||
+         blend->lenNDV != lenNDV                        ||
+         ( lenNDV                                     &&
+           ft_memcmp( NDV,
+                      blend->lastNDV,
+                      lenNDV * sizeof ( *NDV ) ) != 0 ) )
     {
       /* need to build blend vector */
       return TRUE;

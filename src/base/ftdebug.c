@@ -161,7 +161,7 @@
   FT_BASE_DEF( void )
   ft_debug_init( void )
   {
-    const char*  ft2_debug = getenv( "FT2_DEBUG" );
+    const char*  ft2_debug = ft_getenv( "FT2_DEBUG" );
 
 
     if ( ft2_debug )

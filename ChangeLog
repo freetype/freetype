@@ -1,5 +1,9 @@
 2017-12-18  Werner Lemberg  <wl@gnu.org>
 
+	* src/*/*: Only use `ft_' and `FT_' variants of stdc library stuff.
+
+2017-12-18  Werner Lemberg  <wl@gnu.org>
+
 	* src/truetype/ttgxvar.c (tt_face_vary_cvt): Add size guard (#52688).
 
 2017-12-18  Werner Lemberg  <wl@gnu.org>

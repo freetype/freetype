@@ -413,7 +413,7 @@
   remove_subset_prefix( FT_String*  name )
   {
     FT_Int32  idx             = 0;
-    FT_Int32  length          = (FT_Int32)strlen( name ) + 1;
+    FT_Int32  length          = (FT_Int32)ft_strlen( name ) + 1;
     FT_Bool   continue_search = 1;
 
 
@@ -450,8 +450,8 @@
     FT_Int32  family_name_length, style_name_length;
 
 
-    family_name_length = (FT_Int32)strlen( family_name );
-    style_name_length  = (FT_Int32)strlen( style_name );
+    family_name_length = (FT_Int32)ft_strlen( family_name );
+    style_name_length  = (FT_Int32)ft_strlen( style_name );
 
     if ( family_name_length > style_name_length )
     {
