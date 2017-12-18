@@ -1,3 +1,11 @@
+2017-12-18  Matthias Clasen  <matthias.clasen@gmail.com>
+
+	[truetype] Minor code beautification.
+
+	* src/truetype/ttgxvar.c (ft_var_to_normalized): Trace number of
+	design coordinates.
+	Simplify code.
+
 2017-12-18  Werner Lemberg  <wl@gnu.org>
 
 	* src/*/*: Only use `ft_' and `FT_' variants of stdc library stuff.

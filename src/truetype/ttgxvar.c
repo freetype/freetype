@@ -1733,7 +1733,9 @@
     /* based on the [min,def,max] values for the axis to be [-1,0,1]. */
     /* Then, if there's an `avar' table, we renormalize this range.   */
 
-    FT_TRACE5(( "design coordinates:\n" ));
+    FT_TRACE5(( "%d design coordinate%s:\n",
+                num_coords,
+                num_coords == 1 ? "" : "s" ));
 
     a = mmvar->axis;
     for ( i = 0; i < num_coords; i++, a++ )
@@ -1758,10 +1760,10 @@
       }
 
       if ( coord < a->def )
-        normalized[i] = -FT_DivFix( coords[i] - a->def,
+        normalized[i] = -FT_DivFix( coord - a->def,
                                     a->minimum - a->def );
       else if ( coord > a->def )
-        normalized[i] = FT_DivFix( coords[i] - a->def,
+        normalized[i] = FT_DivFix( coord - a->def,
                                    a->maximum - a->def );
       else
         normalized[i] = 0;
