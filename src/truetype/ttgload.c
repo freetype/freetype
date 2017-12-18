@@ -801,7 +801,7 @@
     {
       FT_TRACE1(( "TT_Hint_Glyph: too long instructions" ));
       FT_TRACE1(( " (0x%lx byte) is truncated\n",
-                 loader->glyph->control_len ));
+                  loader->glyph->control_len ));
     }
     n_ins = loader->glyph->control_len;
 
@@ -1041,7 +1041,8 @@
 
 #ifdef TT_CONFIG_OPTION_GX_VAR_SUPPORT
       /* if we have a HVAR table, `pp1' and/or `pp2' are already adjusted */
-      if ( !( loader->face->variation_support & TT_FACE_FLAG_VAR_HADVANCE ) )
+      if ( !( loader->face->variation_support & TT_FACE_FLAG_VAR_HADVANCE ) ||
+           !IS_HINTED( loader->load_flags )                                 )
 #endif
       {
         loader->pp1 = outline->points[n_points - 4];
@@ -1050,7 +1051,8 @@
 
 #ifdef TT_CONFIG_OPTION_GX_VAR_SUPPORT
       /* if we have a VVAR table, `pp3' and/or `pp4' are already adjusted */
-      if ( !( loader->face->variation_support & TT_FACE_FLAG_VAR_VADVANCE ) )
+      if ( !( loader->face->variation_support & TT_FACE_FLAG_VAR_VADVANCE ) ||
+           !IS_HINTED( loader->load_flags )                                 )
 #endif
       {
         loader->pp3 = outline->points[n_points - 2];
@@ -1417,6 +1419,7 @@
 #ifdef TT_CONFIG_OPTION_SUBPIXEL_HINTING
     TT_Driver driver = (TT_Driver)FT_FACE_DRIVER( loader->face );
 #endif
+
 
 #ifdef TT_SUPPORT_SUBPIXEL_HINTING_INFINALITY
     if ( driver->interpreter_version == TT_INTERPRETER_VERSION_38 )

@@ -1,5 +1,12 @@
 2017-12-18  Werner Lemberg  <wl@gnu.org>
 
+	[truetype] Fix previous commit.
+
+	* src/truetype/ttgload.c (TT_Process_Simple_Glyph): Correctly handle
+	unhinted phantom points, which must be properly scaled.
+
+2017-12-18  Werner Lemberg  <wl@gnu.org>
+
 	[truetype] Don't apply HVAR and VVAR deltas twice (#52683).
 
 	* src/truetype/ttgload.c (TT_Process_Simple_Glyph): Always adjust
