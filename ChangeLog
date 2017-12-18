@@ -1,3 +1,19 @@
+2017-12-18  Werner Lemberg  <wl@gnu.org>
+
+	[sfnt] Fix charmap type 2 iterator (#52646).
+
+	The subsetted demo font of the report that exhibits the bug has a
+	very unusual type 2 cmap for Unicode(!): It contains only two
+	sub-headers, one for one-byte characters (covering the range 0x20 to
+	0xFA), and a second one for higher byte 0x01 (just for character
+	code U+0131).
+
+	Before this commit, the iterator wasn't able to correctly handle a
+	sub-header for higher byte 0x01.
+
+	* src/sfnt/ttcmap.c (tt_cmap2_char_next): Fix character increment
+	for outer loop.
+
 2017-12-18  Matthias Clasen  <matthias.clasen@gmail.com>
 
 	[truetype] Minor code beautification.
