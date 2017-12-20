@@ -2432,6 +2432,12 @@
     }
     else
     {
+      FT_Bool    have_diff = 0;
+      FT_UInt    j;
+      FT_Fixed*  c;
+      FT_Fixed*  n;
+
+
       manageCvt = mcvt_retain;
 
       for ( i = 0; i < num_coords; i++ )
@@ -2439,9 +2445,33 @@
         if ( blend->normalizedcoords[i] != coords[i] )
         {
           manageCvt = mcvt_load;
+          have_diff = 1;
           break;
         }
       }
+
+      if ( FT_IS_NAMED_INSTANCE( FT_FACE( face ) ) )
+      {
+        FT_UInt  idx = (FT_UInt)face->root.face_index >> 16;
+
+
+        c = blend->normalizedcoords + i;
+        n = blend->normalized_stylecoords + idx * mmvar->num_axis + i;
+        for ( j = i; j < mmvar->num_axis; j++, n++, c++ )
+          if ( *c != *n )
+            have_diff = 1;
+      }
+      else
+      {
+        c = blend->normalizedcoords + i;
+        for ( j = i; j < mmvar->num_axis; j++, c++ )
+          if ( *c != 0 )
+            have_diff = 1;
+      }
+
+      /* return value -1 indicates `no change' */
+      if ( !have_diff )
+        return -1;
 
       for ( ; i < mmvar->num_axis; i++ )
       {
@@ -2664,7 +2694,10 @@
     FT_Memory   memory = face->root.memory;
 
     FT_Fixed*  c;
+    FT_Fixed*  n;
     FT_Fixed*  normalized = NULL;
+
+    FT_Bool  have_diff = 0;
 
 
     if ( !face->blend )
@@ -2690,25 +2723,35 @@
         goto Exit;
     }
 
-    FT_MEM_COPY( blend->coords,
-                 coords,
-                 num_coords * sizeof ( FT_Fixed ) );
-
-    c = blend->coords + num_coords;
+    c = blend->coords;
+    n = coords;
+    for ( i = 0; i < num_coords; i++, n++, c++ )
+    {
+      if ( *c != *n )
+      {
+        *c        = *n;
+        have_diff = 1;
+      }
+    }
 
     if ( FT_IS_NAMED_INSTANCE( FT_FACE( face ) ) )
     {
       FT_UInt              instance_index;
       FT_Var_Named_Style*  named_style;
-      FT_Fixed*            n;
 
 
       instance_index = (FT_UInt)face->root.face_index >> 16;
       named_style    = mmvar->namedstyle + instance_index - 1;
 
       n = named_style->coords + num_coords;
-      for ( i = num_coords; i < mmvar->num_axis; i++, n++, c++ )
-        *c = *n;
+      for ( ; i < mmvar->num_axis; i++, n++, c++ )
+      {
+        if ( *c != *n )
+        {
+          *c        = *n;
+          have_diff = 1;
+        }
+      }
     }
     else
     {
@@ -2716,9 +2759,19 @@
 
 
       a = mmvar->axis + num_coords;
-      for ( i = num_coords; i < mmvar->num_axis; i++, a++, c++ )
-        *c = a->def;
+      for ( ; i < mmvar->num_axis; i++, a++, c++ )
+      {
+        if ( *c != a->def )
+        {
+          *c        = a->def;
+          have_diff = 1;
+        }
+      }
     }
+
+    /* return value -1 indicates `no change' */
+    if ( !have_diff )
+      return -1;
 
     if ( FT_NEW_ARRAY( normalized, mmvar->num_axis ) )
       goto Exit;

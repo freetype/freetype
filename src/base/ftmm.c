@@ -203,6 +203,10 @@
       error = FT_ERR( Invalid_Argument );
       if ( service_mm->set_var_design )
         error = service_mm->set_var_design( face, num_coords, coords );
+
+      /* internal error code -1 means `no change'; we can exit immediately */
+      if ( error == -1 )
+        return FT_Err_Ok;
     }
 
     if ( !error )
@@ -275,6 +279,10 @@
       error = FT_ERR( Invalid_Argument );
       if ( service_mm->set_mm_blend )
         error = service_mm->set_mm_blend( face, num_coords, coords );
+
+      /* internal error code -1 means `no change'; we can exit immediately */
+      if ( error == -1 )
+        return FT_Err_Ok;
     }
 
     if ( !error )
@@ -322,6 +330,10 @@
       error = FT_ERR( Invalid_Argument );
       if ( service_mm->set_mm_blend )
         error = service_mm->set_mm_blend( face, num_coords, coords );
+
+      /* internal error code -1 means `no change'; we can exit immediately */
+      if ( error == -1 )
+        return FT_Err_Ok;
     }
 
     if ( !error )

@@ -374,6 +374,8 @@
     PS_Blend  blend = face->blend;
     FT_UInt   n, m;
 
+    FT_Bool  have_diff = 0;
+
 
     if ( !blend )
       return FT_THROW( Invalid_Argument );
@@ -405,10 +407,16 @@
 
         result = FT_MulFix( result, factor );
       }
-      blend->weight_vector[n] = result;
+
+      if ( blend->weight_vector[n] != result )
+      {
+        blend->weight_vector[n] = result;
+        have_diff               = 1;
+      }
     }
 
-    return FT_Err_Ok;
+    /* return value -1 indicates `no change' */
+    return have_diff ? FT_Err_Ok : -1;
   }
 
 
