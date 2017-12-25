@@ -29,6 +29,7 @@
 #include "ftobjs.c"
 #include "ftoutln.c"
 #include "ftpic.c"
+#include "ftpsprop.c"
 #include "ftrfork.c"
 #include "ftsnames.c"
 #include "ftstream.c"

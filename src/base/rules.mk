@@ -45,6 +45,7 @@ BASE_SRC := $(BASE_DIR)/basepic.c  \
             $(BASE_DIR)/ftobjs.c   \
             $(BASE_DIR)/ftoutln.c  \
             $(BASE_DIR)/ftpic.c    \
+            $(BASE_DIR)/ftpsprop.c \
             $(BASE_DIR)/ftrfork.c  \
             $(BASE_DIR)/ftsnames.c \
             $(BASE_DIR)/ftstream.c \

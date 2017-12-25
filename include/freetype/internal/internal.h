@@ -44,6 +44,7 @@
 
 #define FT_INTERNAL_POSTSCRIPT_AUX_H      <freetype/internal/psaux.h>
 #define FT_INTERNAL_POSTSCRIPT_HINTS_H    <freetype/internal/pshints.h>
+#define FT_INTERNAL_POSTSCRIPT_PROPS_H    <freetype/internal/ftpsprop.h>
 
 #define FT_INTERNAL_AUTOHINT_H            <freetype/internal/autohint.h>
 

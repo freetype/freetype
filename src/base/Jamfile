@@ -26,6 +26,7 @@ SubDir  FT2_TOP $(FT2_SRC_DIR) base ;
                ftobjs
                ftoutln
                ftpic
+               ftpsprop
                ftrfork
                ftsnames
                ftstream
