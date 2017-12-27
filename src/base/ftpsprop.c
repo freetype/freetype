@@ -5,7 +5,15 @@
 /*    Get and set properties of PostScript drivers (body).                 */
 /*    See `ftdriver.h' for available properties.                           */
 /*                                                                         */
-/*  Copyright                                                              */
+/*  Copyright 2017 by                                                      */
+/*  David Turner, Robert Wilhelm, and Werner Lemberg.                      */
+/*                                                                         */
+/*  This file is part of the FreeType project, and may only be used,       */
+/*  modified, and distributed under the terms of the FreeType project      */
+/*  license, LICENSE.TXT.  By continuing to use, modify, or distribute     */
+/*  this file you indicate that you have read the license and              */
+/*  understand and accept it fully.                                        */
+/*                                                                         */
 /***************************************************************************/
 
 
@@ -86,9 +94,11 @@
 
       return error;
     }
+
     else if ( !ft_strcmp( property_name, "hinting-engine" ) )
     {
-#if defined(CFF_CONFIG_OPTION_OLD_ENGINE) || defined(T1_CONFIG_OPTION_OLD_ENGINE)
+#if defined( CFF_CONFIG_OPTION_OLD_ENGINE ) || \
+    defined( T1_CONFIG_OPTION_OLD_ENGINE  )
       const char*  module_name = module->clazz->module_name;
 #endif
 
@@ -101,17 +111,20 @@
 
         if ( !ft_strcmp( s, "adobe" ) )
           driver->hinting_engine = FT_HINTING_ADOBE;
+
 #ifdef CFF_CONFIG_OPTION_OLD_ENGINE
         else if ( !ft_strcmp( module_name, "cff" ) &&
-                  !ft_strcmp( s, "freetype" ) )
+                  !ft_strcmp( s, "freetype" )      )
           driver->hinting_engine = FT_HINTING_FREETYPE;
 #endif
+
 #ifdef T1_CONFIG_OPTION_OLD_ENGINE
         else if ( ( !ft_strcmp( module_name, "type1" ) ||
                     !ft_strcmp( module_name, "t1cid" ) ) &&
-                  !ft_strcmp( s, "freetype" ) )
+                  !ft_strcmp( s, "freetype" )            )
           driver->hinting_engine = FT_HINTING_FREETYPE;
 #endif
+
         else
           return FT_THROW( Invalid_Argument );
       }
@@ -124,7 +137,7 @@
         if ( *hinting_engine == FT_HINTING_ADOBE
 #ifdef CFF_CONFIG_OPTION_OLD_ENGINE
              || ( *hinting_engine == FT_HINTING_FREETYPE &&
-                  !ft_strcmp( module_name, "cff" ) )
+                  !ft_strcmp( module_name, "cff" )       )
 #endif
 #ifdef T1_CONFIG_OPTION_OLD_ENGINE
              || ( *hinting_engine == FT_HINTING_FREETYPE &&
@@ -139,6 +152,7 @@
         return error;
       }
     }
+
     else if ( !ft_strcmp( property_name, "no-stem-darkening" ) )
     {
 #ifdef FT_CONFIG_OPTION_ENVIRONMENT_PROPERTIES
@@ -164,6 +178,7 @@
 
       return error;
     }
+
     else if ( !ft_strcmp( property_name, "random-seed" ) )
     {
       FT_Int32  random_seed;
@@ -221,6 +236,7 @@
 
       return error;
     }
+
     else if ( !ft_strcmp( property_name, "hinting-engine" ) )
     {
       FT_UInt   hinting_engine    = driver->hinting_engine;
@@ -231,6 +247,7 @@
 
       return error;
     }
+
     else if ( !ft_strcmp( property_name, "no-stem-darkening" ) )
     {
       FT_Bool   no_stem_darkening = driver->no_stem_darkening;
@@ -247,3 +264,5 @@
     return FT_THROW( Missing_Property );
   }
 
+
+/* END */

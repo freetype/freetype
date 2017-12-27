@@ -621,6 +621,7 @@
    *  PROPERTY SERVICE
    *
    */
+
   FT_DEFINE_SERVICE_PROPERTIESREC(
     t1_service_properties,
 

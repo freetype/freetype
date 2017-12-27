@@ -821,6 +821,7 @@
    *  PROPERTY SERVICE
    *
    */
+
   FT_DEFINE_SERVICE_PROPERTIESREC(
     cff_service_properties,
 

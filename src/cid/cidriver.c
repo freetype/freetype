@@ -176,6 +176,7 @@
    *  PROPERTY SERVICE
    *
    */
+
   FT_DEFINE_SERVICE_PROPERTIESREC(
     cid_service_properties,
 

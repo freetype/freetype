@@ -1,3 +1,26 @@
+2017-12-25  Ewald Hew  <ewaldhew@gmail.com>
+
+	Move PostScript drivers' property handlers to `base'.
+
+	This reduces the amount of duplicated code across PostScript
+	drivers.
+
+	* src/cff/cffdrivr.c, src/cid/cidriver.c, src/type1/t1driver.c
+	({cff,cid,t1}_property_{get,set}): Moved to...
+	* include/freetype/internal/ftpsprop.h: ...this new file.
+	(ps_property_{get,set}): New functions to replace moved ones.
+
+	* src/base/ftpsprop.c: New file that implements above functions.
+
+	* include/freetype/internal/internal.h
+	(FT_INTERNAL_POSTSCRIPT_PROPS_H): New macro.
+
+	* src/cff/cffdrivr.c, src/cid/cidriver.c, src/type1/t1driver.c:
+	Updated.
+
+	* src/base/Jamfile, src/base/rules.mk (BASE_SRC), src/base/ftbase.c:
+	Updated.
+
 2017-12-20  Werner Lemberg  <wl@gnu.org>
 
 	Speed up FT_Set_Var_{Design,Blend}_Coordinates if curr == new.
