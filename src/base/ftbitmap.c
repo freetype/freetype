@@ -153,8 +153,8 @@
                            FT_UInt     ypixels )
   {
     FT_Error        error;
-    int             pitch;
-    int             new_pitch;
+    unsigned int    pitch;
+    unsigned int    new_pitch;
     FT_UInt         bpp;
     FT_UInt         width, height;
     unsigned char*  buffer = NULL;
@@ -162,29 +162,27 @@
 
     width  = bitmap->width;
     height = bitmap->rows;
-    pitch  = bitmap->pitch;
-    if ( pitch < 0 )
-      pitch = -pitch;
+    pitch  = (unsigned int)FT_ABS( bitmap->pitch );
 
     switch ( bitmap->pixel_mode )
     {
     case FT_PIXEL_MODE_MONO:
       bpp       = 1;
-      new_pitch = (int)( ( width + xpixels + 7 ) >> 3 );
+      new_pitch = ( width + xpixels + 7 ) >> 3;
       break;
     case FT_PIXEL_MODE_GRAY2:
       bpp       = 2;
-      new_pitch = (int)( ( width + xpixels + 3 ) >> 2 );
+      new_pitch = ( width + xpixels + 3 ) >> 2;
       break;
     case FT_PIXEL_MODE_GRAY4:
       bpp       = 4;
-      new_pitch = (int)( ( width + xpixels + 1 ) >> 1 );
+      new_pitch = ( width + xpixels + 1 ) >> 1;
       break;
     case FT_PIXEL_MODE_GRAY:
     case FT_PIXEL_MODE_LCD:
     case FT_PIXEL_MODE_LCD_V:
       bpp       = 8;
-      new_pitch = (int)( width + xpixels );
+      new_pitch = width + xpixels;
       break;
     default:
       return FT_THROW( Invalid_Glyph_Format );
@@ -194,7 +192,7 @@
     if ( ypixels == 0 && new_pitch <= pitch )
     {
       /* zero the padding */
-      FT_UInt  bit_width = (FT_UInt)pitch * 8;
+      FT_UInt  bit_width = pitch * 8;
       FT_UInt  bit_last  = ( width + xpixels ) * bpp;
 
 
@@ -239,7 +237,7 @@
       unsigned char*  out = buffer;
 
       unsigned char*  limit = bitmap->buffer + pitch * bitmap->rows;
-      int             delta = new_pitch - pitch;
+      unsigned int    delta = new_pitch - pitch;
 
 
       FT_MEM_ZERO( out, new_pitch * ypixels );
@@ -263,7 +261,7 @@
       unsigned char*  out = buffer;
 
       unsigned char*  limit = bitmap->buffer + pitch * bitmap->rows;
-      int             delta = new_pitch - pitch;
+      unsigned int    delta = new_pitch - pitch;
 
 
       while ( in < limit )
@@ -282,11 +280,11 @@
     FT_FREE( bitmap->buffer );
     bitmap->buffer = buffer;
 
-    if ( bitmap->pitch < 0 )
-      new_pitch = -new_pitch;
-
     /* set pitch only, width and height are left untouched */
-    bitmap->pitch = new_pitch;
+    if ( bitmap->pitch < 0 )
+      bitmap->pitch = -(int)new_pitch;
+    else
+      bitmap->pitch = (int)new_pitch;
 
     return FT_Err_Ok;
   }

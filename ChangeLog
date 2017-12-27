@@ -1,5 +1,14 @@
 2017-12-27  Werner Lemberg  <wl@gnu.org>
 
+	Fix compiler warnings.
+
+	* src/base/ftbitmap.c (ft_bitmap_assure_buffer): Make `pitch' and
+	`new_pitch' unsigned.
+
+	* src/base/ftpsprop.c: Include FT_INTERNAL_POSTSCRIPT_PROPS_H.
+
+2017-12-27  Werner Lemberg  <wl@gnu.org>
+
 	Fixes for `make multi'.
 
 	* include/freetype/internal/ftpsprop.h: Use `FT_BASE_CALLBACK'.
