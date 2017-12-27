@@ -17,8 +17,24 @@
 /***************************************************************************/
 
 
+#include <ft2build.h>
+#include FT_DRIVER_H
+#include FT_INTERNAL_DEBUG_H
+#include FT_INTERNAL_POSTSCRIPT_AUX_H
+#include FT_INTERNAL_OBJECTS_H
 
-  FT_Error
+
+  /*************************************************************************/
+  /*                                                                       */
+  /* The macro FT_COMPONENT is used in trace mode.  It is an implicit      */
+  /* parameter of the FT_TRACE() and FT_ERROR() macros, used to print/log  */
+  /* messages during execution.                                            */
+  /*                                                                       */
+#undef  FT_COMPONENT
+#define FT_COMPONENT  trace_psprops
+
+
+  FT_BASE_CALLBACK_DEF( FT_Error )
   ps_property_set( FT_Module    module,         /* PS_Driver */
                    const char*  property_name,
                    const void*  value,
@@ -210,10 +226,10 @@
   }
 
 
-  FT_Error
+  FT_BASE_CALLBACK_DEF( FT_Error )
   ps_property_get( FT_Module    module,         /* PS_Driver */
                    const char*  property_name,
-                   const void*  value )
+                   void*        value )
   {
     FT_Error   error  = FT_Err_Ok;
     PS_Driver  driver = (PS_Driver)module;

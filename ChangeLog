@@ -1,5 +1,21 @@
 2017-12-27  Werner Lemberg  <wl@gnu.org>
 
+	Fixes for `make multi'.
+
+	* include/freetype/internal/ftpsprop.h: Use `FT_BASE_CALLBACK'.
+	(ps_property_get): Harmonize declaration with corresponding
+	function typedef.
+
+	* include/freety[e/internal/fttrace.h: Add `trace_psprops'.
+
+	* src/base/ftpsprop.c: Include necessary header files.
+	(FT_COMPONENT): Define.
+	(ps_property_set): Tag with `FT_BASE_CALLBACK_DEF'.
+	(ps_property_get): Tag with `FT_BASE_CALLBACK_DEF'.
+	Harmonize declaration with corresponding function typedef.
+
+2017-12-27  Werner Lemberg  <wl@gnu.org>
+
 	Provide support for intra-module callback functions.
 
 	This is needed especially for `make multi' with C++.
