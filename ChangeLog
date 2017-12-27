@@ -1,3 +1,12 @@
+2017-12-27  Werner Lemberg  <wl@gnu.org>
+
+	Provide support for intra-module callback functions.
+
+	This is needed especially for `make multi' with C++.
+
+	* include/freetype/config/ftconfig.h (FT_BASE_CALLBACK,
+	FT_BASE_CALLBACK_DEF): New macros.
+
 2017-12-25  Ewald Hew  <ewaldhew@gmail.com>
 
 	Move PostScript drivers' property handlers to `base'.

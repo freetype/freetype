@@ -365,6 +365,14 @@ FT_BEGIN_HEADER
 #endif
 
 
+  /* Use FT_LOCAL and FT_LOCAL_DEF to declare and define, respectively, */
+  /* a function that gets used only within the scope of a module.       */
+  /* Normally, both the header and source code files for such a         */
+  /* function are within a single module directory.                     */
+  /*                                                                    */
+  /* Intra-module arrays should be tagged with FT_LOCAL_ARRAY and       */
+  /* FT_LOCAL_ARRAY_DEF.                                                */
+  /*                                                                    */
 #ifdef FT_MAKE_OPTION_SINGLE_OBJECT
 
 #define FT_LOCAL( x )      static  x
@@ -386,6 +394,12 @@ FT_BEGIN_HEADER
 #define FT_LOCAL_ARRAY_DEF( x )  const  x
 
 
+  /* Use FT_BASE and FT_BASE_DEF to declare and define, respectively, */
+  /* functions that are used in more than a single module.  In the    */
+  /* current setup this implies that the declaration is in a header   */
+  /* file in the `include/freetype/internal' directory, and the       */
+  /* function body is in a file in `src/base'.                        */
+  /*                                                                  */
 #ifndef FT_BASE
 
 #ifdef __cplusplus
@@ -437,6 +451,8 @@ FT_BEGIN_HEADER
   /*   You can provide your own implementation of FT_EXPORT and            */
   /*   FT_EXPORT_DEF here if you want.                                     */
   /*                                                                       */
+  /*   To export a variable, use FT_EXPORT_VAR.                            */
+  /*                                                                       */
 #ifndef FT_EXPORT
 
 #if defined( _DLL )
@@ -473,6 +489,7 @@ FT_BEGIN_HEADER
 
 #endif /* !FT_EXPORT_VAR */
 
+
   /* The following macros are needed to compile the library with a   */
   /* C++ compiler and with 16bit compilers.                          */
   /*                                                                 */
@@ -484,7 +501,13 @@ FT_BEGIN_HEADER
   /* functions which are accessed by (global) function pointers.     */
   /*                                                                 */
   /*                                                                 */
-  /* FT_CALLBACK_DEF is used to _define_ a callback function.        */
+  /* FT_CALLBACK_DEF is used to _define_ a callback function,        */
+  /* located in the same source code file as the structure that uses */
+  /* it.                                                             */
+  /*                                                                 */
+  /* FT_BASE_CALLBACK and FT_BASE_CALLBACK_DEF are used to declare   */
+  /* and define a callback function, respectively, in a similar way  */
+  /* as FT_BASE and FT_BASE_DEF work.                                */
   /*                                                                 */
   /* FT_CALLBACK_TABLE is used to _declare_ a constant variable that */
   /* contains pointers to callback functions.                        */
@@ -503,6 +526,16 @@ FT_BEGIN_HEADER
 #define FT_CALLBACK_DEF( x )  static  x
 #endif
 #endif /* FT_CALLBACK_DEF */
+
+#ifndef FT_BASE_CALLBACK
+#ifdef __cplusplus
+#define FT_BASE_CALLBACK( x )      extern "C"  x
+#define FT_BASE_CALLBACK_DEF( x )  extern "C"  x
+#else
+#define FT_BASE_CALLBACK( x )      extern  x
+#define FT_BASE_CALLBACK_DEF( x )  x
+#endif
+#endif /* FT_BASE_CALLBACK */
 
 #ifndef FT_CALLBACK_TABLE
 #ifdef __cplusplus
