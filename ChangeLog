@@ -1,3 +1,7 @@
+2017-12-30  Werner Lemberg  <wl@gnu.org>
+
+	* builds/vms/ftconfig.h: Synchronize with unix `ftconfig.in' file.
+
 2017-12-28  Werner Lemberg  <wl@gnu.org>
 
 	* builds/unix/ftconfig.in: Synchronize with main `ftconfig.h' file.
