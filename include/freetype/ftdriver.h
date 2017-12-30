@@ -1096,6 +1096,9 @@ FT_BEGIN_HEADER
    *   an @FT_Face structure but not loaded any glyph (using the
    *   auto-hinter), a change of the default script will affect this face.
    *
+   * @since:
+   *   2.5.3
+   *
    */
 
 
@@ -1203,6 +1206,9 @@ FT_BEGIN_HEADER
    *   Since warping is a global property of the auto-hinter it is best to
    *   change its value before rendering any face.  Otherwise, you should
    *   reload all faces that get auto-hinted in `normal' hinting mode.
+   *
+   * @since:
+   *   2.6
    *
    */
 

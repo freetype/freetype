@@ -1,4 +1,78 @@
 
+CHANGES BETWEEN 2.8.1 and 2.8.2
+
+  I. IMPORTANT BUG FIXES
+
+    - Advance width values of variation fonts were often wrong.
+
+    - More fixes for variation font support; you should update to this
+      version if you want to support them.
+
+
+  II. IMPORTANT CHANGES
+
+    - As a GSoC project, Ewald Hew extended the new (Adobe) CFF engine
+      to  handle  Type  1  fonts  also,  thus  greatly  improving  the
+      rendering of  this format.   This is the  new default.   The old
+      engine   is  still   available   if   the  configuration   macro
+      `T1_CONFIG_OPTION_OLD_ENGINE'    gets    defined;   using    the
+      `hinting-engine' property  of the `type1' driver  module you can
+      then switch between the two engines.
+
+    - A new function,  `FT_Set_Named_Instance', can be used  to set or
+      change the current named instance.
+
+    - Starting  with   this  FreeType  version,   resetting  variation
+      coordinates  will   return  to  the  currently   selected  named
+      instance.  Previously, FreeType returned to the base font (i.e.,
+      no instance set).
+
+
+  III. MISCELLANEOUS
+
+    - The `face_flags' field of the `FT_Face' structure has a new bit,
+      `FT_FACE_FLAG_VARIATION', which  is set if a  variation font has
+      been      altered      with      `FT_Set_MM_Design_Coordinates',
+      `FT_Set_Var_Design_Coordinates',                              or
+      `FT_Set_Var_Blend_Coordinates'.
+
+    - If  the  current  face  is  a  named  instance,  the  new  macro
+      `FT_IS_NAMED_INSTANCE' returns true.
+
+    - `FT_IS_VARIATION' is  a new macro  that returns true  whenever a
+      face object has  been altered by `FT_Set_MM_Design_Coordinates',
+      `FT_Set_Var_Design_Coordinates',                              or
+      `FT_Set_Var_Blend_Coordinates'.
+
+    - Changing  the  design  coordinates  of  a  variation  font  with
+      `FT_Set_Var_Design_Coordinates'                               or
+      `FT_Set_Var_Blend_Coordinates'  does  not  influence  the  named
+      instance index value (only `FT_Set_Named_Instance' does that).
+
+    - Special PostScript  names for named instances  are only returned
+      if the  named instance is set  with `FT_Set_Named_Instance' (and
+      the font  has corresponding  entries in  its `fvar'  table).  If
+      `FT_IS_VARIATION'  returns  true,  the  algorithmically  derived
+      PostScript name is provided, not  looking up special entries for
+      named instances.
+
+    - On  platforms  using  the   `configure'  script,  the  installed
+      `ftoption.h' file  now correctly reflects  configuration options
+      like `--with-harfbuzz'.
+
+    - Better  support to  build FreeType  as  a DLL  on Windows  using
+      Visual C.
+
+    - All data specific to driver modules is now collected in a single
+      file,      `FT_DRIVER_H'.      Consequently,      the     macros
+      `FT_AUTOHINTER_H',   `FT_CFF_DRIVER_H',  `FT_TRUETYPE_DRIVER_H',
+      and `FT_PCF_DRIVER_H' still work but are deprecated.
+
+    - Some fuzzer fixes to better reject malformed fonts.
+
+
+======================================================================
+
 CHANGES BETWEEN 2.8 and 2.8.1
 
   I. IMPORTANT BUG FIXES

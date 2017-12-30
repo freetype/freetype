@@ -155,8 +155,8 @@ which isn't supported yet please send a mail too.
 [1] Support should  be rather simple since this is  identical to `CFF'
     but in a PS wrapper.
 
-[2] Official PFR specification is no longer available, but archive.org
-    has arvchived it:
+[2] The  official  PFR  specification  is  no  longer  available,  but
+    archive.org has archived it:
 
       https://web.archive.org/web/20091014062300/http://www.bitstream.com/font_rendering/products/truedoc/pfrspec.html
       https://web.archive.org/web/20081115152605/http://www.bitstream.com/font_rendering/pdfs/pfrspec1.3.pdf
