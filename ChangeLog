@@ -1,3 +1,15 @@
+2017-12-31  Werner Lemberg  <wl@gnu.org>
+
+	Update Visual C 2010 project files.
+
+	Problem reported by Hin-Tak.
+
+	* builds/windows/vc2010/freetype.vcxproj: Add files `ftbdf.c' and
+	`ftcid.c'.
+	Sort entries.
+	* builds/windows/vc2010/freetype.vcxproj.filter: Ditto.
+	Fix members of `FT_MODULE' group.
+
 2017-12-30  Werner Lemberg  <wl@gnu.org>
 
 	* builds/vms/ftconfig.h: Synchronize with unix `ftconfig.in' file.
