@@ -70,6 +70,18 @@ CHANGES BETWEEN 2.8.1 and 2.8.2
 
     - Some fuzzer fixes to better reject malformed fonts.
 
+    - The `ftbench' demo program has a new test for opening a new face
+      and loading some glyphs.
+
+    - The `ftbench' demo program has a  new option `-j' to specify the
+      last glyph index to be used in the tests.
+
+    - The  `ftgrid' demo  program has  a new  option `-n'  to suppress
+      display of named instances of variation fonts.
+
+    - The `ttdebug' demo program can now  show a stack trace (key `K')
+      and switch  between hexadecimal and decimal  display of integers
+      (key `I').
 
 ======================================================================
 
