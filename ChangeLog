@@ -1,5 +1,11 @@
 2017-12-31  Werner Lemberg  <wl@gnu.org>
 
+	Synchronize other Windows project files.
+
+	* builds/windows/*: Add missing files.
+
+2017-12-31  Werner Lemberg  <wl@gnu.org>
+
 	Update Visual C 2010 project files.
 
 	Problem reported by Hin-Tak.

@@ -226,6 +226,10 @@ SOURCE=..\..\..\src\base\ftbitmap.c
 # End Source File
 # Begin Source File
 
+SOURCE=..\..\..\src\base\ftcid.c
+# End Source File
+# Begin Source File
+
 SOURCE=..\..\..\src\base\ftfntfmt.c
 # End Source File
 # Begin Source File
@@ -267,6 +271,10 @@ SOURCE=..\..\..\src\base\ftinit.c
 # End Source File
 # Begin Source File
 
+SOURCE=..\..\..\src\base\ftlcdfil.c
+# End Source File
+# Begin Source File
+
 SOURCE=..\..\..\src\lzw\ftlzw.c
 # End Source File
 # Begin Source File
@@ -277,6 +285,10 @@ SOURCE=..\..\..\src\base\ftmm.c
 # Begin Source File
 
 SOURCE=..\..\..\src\base\ftotval.c
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\src\base\ftpatent.c
 # End Source File
 # Begin Source File
 

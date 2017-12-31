@@ -8262,6 +8262,14 @@
 					>
 				</File>
 				<File
+					RelativePath="..\..\..\src\base\ftbdf.c"
+					>
+				</File>
+				<File
+					RelativePath="..\..\..\src\base\ftcid.c"
+					>
+				</File>
+				<File
 					RelativePath="..\..\..\src\base\ftfntfmt.c"
 					>
 				</File>
