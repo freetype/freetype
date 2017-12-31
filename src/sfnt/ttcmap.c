@@ -518,7 +518,11 @@
 
 
         if ( offset == 0 )
+        {
+          if ( charcode == 0x100 )
+            goto Exit; /* this happens only for a malformed cmap */
           goto Next_SubHeader;
+        }
 
         if ( char_lo < start )
         {

@@ -1,5 +1,13 @@
 2017-12-31  Werner Lemberg  <wl@gnu.org>
 
+	* src/sfnt/ttcmap.c (tt_cmap2_char_next): Fix endless loop.
+
+	Reported as
+
+	  https://bugs.chromium.org/p/oss-fuzz/issues/detail?id=4838
+
+2017-12-31  Werner Lemberg  <wl@gnu.org>
+
 	Synchronize other Windows project files.
 
 	* builds/windows/*: Add missing files.
