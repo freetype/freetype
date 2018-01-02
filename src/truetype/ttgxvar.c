@@ -2493,13 +2493,13 @@
                  coords,
                  num_coords * sizeof ( FT_Fixed ) );
 
+    face->doblend = TRUE;
+
     if ( set_design_coords )
       ft_var_to_design( face,
                         all_design_coords ? blend->num_axis : num_coords,
                         blend->normalizedcoords,
                         blend->coords );
-
-    face->doblend = TRUE;
 
     if ( face->cvt )
     {

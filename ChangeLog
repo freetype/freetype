@@ -1,3 +1,13 @@
+2018-01-03  Werner Lemberg  <wl@gnu.org>
+
+	[truetype] Make blend/design coordinate round-tripping work.
+
+	Behdad reported that setting blend coordinates, then getting design
+	coordinates did incorrectly return the default instance's
+	coordinates.
+
+	* src/truetype/ttgxvar.c (tt_set_mm_blend): Fix it.
+
 2017-12-31  Werner Lemberg  <wl@gnu.org>
 
 	* src/sfnt/ttcmap.c (tt_cmap2_char_next): Fix endless loop.
