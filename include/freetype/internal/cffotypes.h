@@ -4,7 +4,7 @@
 /*                                                                         */
 /*    Basic OpenType/CFF object type definitions (specification).          */
 /*                                                                         */
-/*  Copyright 2017 by                                                      */
+/*  Copyright 2017-2018 by                                                 */
 /*  David Turner, Robert Wilhelm, and Werner Lemberg.                      */
 /*                                                                         */
 /*  This file is part of the FreeType project, and may only be used,       */
