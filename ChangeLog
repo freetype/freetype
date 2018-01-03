@@ -1,3 +1,10 @@
+2018-01-03  Werner Lemberg  <wl@gnu.org>
+
+	* src/truetype/ttgxvar.c (ft_var_to_design): Remove dead code.
+
+	This is a better fix than the previous commit, which is now
+	reverted.
+
 2018-01-03  Alexei Podtelezhnikov  <apodtele@gmail.com>
 
 	Move internal LCD-related declarations.

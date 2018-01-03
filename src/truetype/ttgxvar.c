@@ -1829,16 +1829,8 @@
       nc = blend->num_axis;
     }
 
-    if ( face->doblend )
-    {
-      for ( i = 0; i < nc; i++ )
-        design[i] = coords[i];
-    }
-    else
-    {
-      for ( i = 0; i < nc; i++ )
-        design[i] = 0;
-    }
+    for ( i = 0; i < nc; i++ )
+      design[i] = coords[i];
 
     for ( ; i < num_coords; i++ )
       design[i] = 0;
@@ -2493,13 +2485,13 @@
                  coords,
                  num_coords * sizeof ( FT_Fixed ) );
 
-    face->doblend = TRUE;
-
     if ( set_design_coords )
       ft_var_to_design( face,
                         all_design_coords ? blend->num_axis : num_coords,
                         blend->normalizedcoords,
                         blend->coords );
+
+    face->doblend = TRUE;
 
     if ( face->cvt )
     {
