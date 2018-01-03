@@ -1,5 +1,13 @@
 2018-01-03  Alexei Podtelezhnikov  <apodtele@gmail.com>
 
+	Move internal LCD-related declarations.
+
+	* include/freetype/ftlcdfil.h (ft_lcd_padding, ft_lcd_filter_fir):
+	Move from here...
+	* include/freetype/internal/ftobjs.h: ... to here.
+
+2018-01-03  Alexei Podtelezhnikov  <apodtele@gmail.com>
+
 	* include/freetype/config/ftconfig.h (FT_EXPORT, FT_EXPORT_DEF)
 	[_MSC_VER]: Limit Visual C++ attributes.
 

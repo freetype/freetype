@@ -298,27 +298,6 @@ FT_BEGIN_HEADER
   typedef FT_Byte  FT_LcdFiveTapFilter[FT_LCD_FILTER_FIVE_TAPS];
 
 
-  FT_BASE( void )
-  ft_lcd_padding( FT_Pos*       Min,
-                  FT_Pos*       Max,
-                  FT_GlyphSlot  slot );
-
-#ifdef FT_CONFIG_OPTION_SUBPIXEL_RENDERING
-
-  typedef void  (*FT_Bitmap_LcdFilterFunc)( FT_Bitmap*      bitmap,
-                                            FT_Render_Mode  render_mode,
-                                            FT_Byte*        weights );
-
-
-  /* This is the default LCD filter, an in-place, 5-tap FIR filter. */
-  FT_BASE( void )
-  ft_lcd_filter_fir( FT_Bitmap*           bitmap,
-                     FT_Render_Mode       mode,
-                     FT_LcdFiveTapFilter  weights );
-
-#endif /* FT_CONFIG_OPTION_SUBPIXEL_RENDERING */
-
-
   /* */
 
 
