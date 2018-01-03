@@ -1,3 +1,8 @@
+2018-01-03  Alexei Podtelezhnikov  <apodtele@gmail.com>
+
+	* include/freetype/config/ftconfig.h (FT_EXPORT, FT_EXPORT_DEF)
+	[_MSC_VER]: Limit Visual C++ attributes.
+
 2018-01-03  Werner Lemberg  <wl@gnu.org>
 
 	[truetype] Make blend/design coordinate round-tripping work.

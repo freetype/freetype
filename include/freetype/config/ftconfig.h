@@ -455,12 +455,19 @@ FT_BEGIN_HEADER
   /*                                                                       */
 #ifndef FT_EXPORT
 
-#if defined( _DLL )
-#define FT_EXPORT( x )  __declspec( dllexport )  x
-#elif defined( __cplusplus )
+#ifdef __cplusplus
 #define FT_EXPORT( x )  extern "C"  x
 #else
 #define FT_EXPORT( x )  extern  x
+#endif
+
+#ifdef _MSC_VER
+#undef FT_EXPORT
+#ifdef _DLL
+#define FT_EXPORT( x )  __declspec( dllexport )  x
+#else
+#define FT_EXPORT( x )  __declspec( dllimport )  x
+#endif
 #endif
 
 #endif /* !FT_EXPORT */
@@ -468,9 +475,7 @@ FT_BEGIN_HEADER
 
 #ifndef FT_EXPORT_DEF
 
-#if defined( _DLL )
-#define FT_EXPORT_DEF( x )  __declspec( dllexport )  x
-#elif defined( __cplusplus )
+#ifdef __cplusplus
 #define FT_EXPORT_DEF( x )  extern "C"  x
 #else
 #define FT_EXPORT_DEF( x )  extern  x
