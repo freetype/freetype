@@ -148,6 +148,25 @@
   /* documentation is in ftmm.h */
 
   FT_EXPORT_DEF( FT_Error )
+  FT_Done_MM_Var( FT_Library  library,
+                  FT_MM_Var*  amaster )
+  {
+    FT_Memory  memory;
+
+
+    if ( !library )
+      return FT_THROW( Invalid_Library_Handle );
+
+    memory = library->memory;
+    FT_FREE( amaster );
+
+    return FT_Err_Ok;
+  }
+
+
+  /* documentation is in ftmm.h */
+
+  FT_EXPORT_DEF( FT_Error )
   FT_Set_MM_Design_Coordinates( FT_Face   face,
                                 FT_UInt   num_coords,
                                 FT_Long*  coords )

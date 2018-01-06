@@ -1,3 +1,16 @@
+2018-01-06  Werner Lemberg  <wl@gnu.org>
+
+	Add `FT_Done_MM_Var'.
+
+	This is necessary in case the application's memory routines differ
+	from FreeType.  A typical example is a Python application on Windows
+	that calls FreeType compiled as a DLL via the `ctypes' interface.
+
+	* include/freetype/ftmm.h, src/base/ftmm.c (FT_Done_MM_Var): Declare
+	and define.
+
+	* docs/CHANGES: Updated.
+
 2018-01-03  Werner Lemberg  <wl@gnu.org>
 
 	[truetype] Round offsets of glyph components only if hinting is on.

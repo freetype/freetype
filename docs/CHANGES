@@ -56,6 +56,9 @@ CHANGES BETWEEN 2.8.1 and 2.8.2
       PostScript name is provided, not  looking up special entries for
       named instances.
 
+    - A new function  `FT_Done_MM_Var' is provided to  free the memory
+      returned in a call to `FT_Get_MM_Var'.
+
     - On  platforms  using  the   `configure'  script,  the  installed
       `ftoption.h' file  now correctly reflects  configuration options
       like `--with-harfbuzz'.

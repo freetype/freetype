@@ -286,7 +286,7 @@ FT_BEGIN_HEADER
   /* <Output>                                                              */
   /*    amaster :: The variation descriptor.                               */
   /*               Allocates a data structure, which the user must         */
-  /*               deallocate with `free' after use.                       */
+  /*               deallocate with a call to @FT_Done_MM_Var after use.    */
   /*                                                                       */
   /* <Return>                                                              */
   /*    FreeType error code.  0~means success.                             */
@@ -294,6 +294,26 @@ FT_BEGIN_HEADER
   FT_EXPORT( FT_Error )
   FT_Get_MM_Var( FT_Face      face,
                  FT_MM_Var*  *amaster );
+
+
+  /*************************************************************************/
+  /*                                                                       */
+  /* <Function>                                                            */
+  /*    FT_Done_MM_Var                                                     */
+  /*                                                                       */
+  /* <Description>                                                         */
+  /*    Free the memory allocated by @FT_Get_MM_Var.                       */
+  /*                                                                       */
+  /* <Input>                                                               */
+  /*    library :: A handle of the face's parent library object that was   */
+  /*               used in the call to @FT_Get_MM_Var to create `amaster'. */
+  /*                                                                       */
+  /* <Return>                                                              */
+  /*    FreeType error code.  0~means success.                             */
+  /*                                                                       */
+  FT_EXPORT( FT_Error )
+  FT_Done_MM_Var( FT_Library   library,
+                  FT_MM_Var   *amaster );
 
 
   /*************************************************************************/
