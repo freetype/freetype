@@ -1981,8 +1981,8 @@ FT_BEGIN_HEADER
   /*                                                                       */
   /*    If compilation option FT_CONFIG_OPTION_ENVIRONMENT_PROPERTIES is   */
   /*    set, this function reads the `FREETYPE_PROPERTIES' environment     */
-  /*    variable to control driver properties.  See sections @auto_hinter, */
-  /*    @cff_driver, @pcf_driver, and @tt_driver for more.                 */
+  /*    variable to control driver properties.  See section @properties    */
+  /*    for more.                                                          */
   /*                                                                       */
   FT_EXPORT( FT_Error )
   FT_Init_FreeType( FT_Library  *alibrary );

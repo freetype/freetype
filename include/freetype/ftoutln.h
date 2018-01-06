@@ -190,9 +190,6 @@ FT_BEGIN_HEADER
   /*    If the outline's `owner' field is not set, only the outline        */
   /*    descriptor will be released.                                       */
   /*                                                                       */
-  /*    The reason why this function takes an `library' parameter is       */
-  /*    simply to use ft_mem_free().                                       */
-  /*                                                                       */
   FT_EXPORT( FT_Error )
   FT_Outline_Done( FT_Library   library,
                    FT_Outline*  outline );
