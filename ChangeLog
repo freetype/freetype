@@ -1,3 +1,16 @@
+2018-01-07  Ewald Hew  <ewaldhew@gmail.com>
+
+	[psaux] Fix Type 1 glyphs with too many stem hints.
+
+	According to the CFF specification, charstrings can have up to 96 stem
+	hints. Due to hint replacement routines in Type 1 charstrings, some
+	glyphs are rejected by the Adobe engine, which implements the above
+	limit. This fix turns off hinting for such glyphs.
+
+	* src/psaux/pshints.c (cf2_hintmap_build): Reset the error from calling
+	`cf2_hintmask_setAll' on a problematic Type 1 charstring and turn off
+	hinting.
+
 2018-01-06  Werner Lemberg  <wl@gnu.org>
 
 	Add `FT_Done_MM_Var'.

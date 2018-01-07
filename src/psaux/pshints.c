@@ -842,7 +842,15 @@
                            cf2_arrstack_size( hStemHintArray ) +
                              cf2_arrstack_size( vStemHintArray ) );
       if ( !cf2_hintmask_isValid( hintMask ) )
+      {
+        if ( font->isT1 )
+        {
+          /* no error, just continue unhinted */
+          *hintMask->error = FT_Err_Ok;
+          hintmap->hinted  = FALSE;
+        }
         return;                   /* too many stem hints */
+      }
     }
 
     /* begin by clearing the map */
