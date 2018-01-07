@@ -1,3 +1,12 @@
+2018-01-07  Werner Lemberg  <wl@gnu.org>
+
+	Add check for librt, needed for `ftbench' (#52824).
+
+	* builds/unix/configure.raw (LIB_CLOCK_GETTIME): Define; this will
+	hold `-lrt' if necessary.
+
+	* builds/unix/unix-cc.in (LIB_CLOCK_GETTIME): New variable.
+
 2018-01-07  Ewald Hew  <ewaldhew@gmail.com>
 
 	[psaux] Fix Type 1 glyphs with too many stem hints.

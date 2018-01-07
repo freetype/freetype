@@ -93,7 +93,8 @@ CC    := $(LIBTOOL) --mode=compile $(CCraw)
 
 # Linker flags.
 #
-LDFLAGS := @LDFLAGS@
+LDFLAGS           := @LDFLAGS@
+LIB_CLOCK_GETTIME := @LIB_CLOCK_GETTIME@  # for ftbench
 
 
 # export symbols

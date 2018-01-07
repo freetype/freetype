@@ -509,6 +509,21 @@ if test x"$with_harfbuzz" = xyes -a "$have_harfbuzz" = no; then
 fi
 
 
+# check for librt
+#
+# We need `clock_gettime' for the `ftbench' demo program.
+#
+# The code is modeled after gnulib's file `clock_time.m4', ignoring
+# very old Solaris systems.
+
+LIB_CLOCK_GETTIME=
+AC_SEARCH_LIBS([clock_gettime],
+               [rt],
+               [test "$ac_cv_search_clock_gettime" = "none required" \
+                || LIB_CLOCK_GETTIME=$ac_cv_search_clock_gettime])
+AC_SUBST([LIB_CLOCK_GETTIME])
+
+
 # Some options handling SDKs/archs in CFLAGS should be copied
 # to LDFLAGS. Apple TechNote 2137 recommends to include these
 # options in CFLAGS but not in LDFLAGS.
