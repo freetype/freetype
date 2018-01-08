@@ -1,3 +1,37 @@
+2018-01-08  Werner Lemberg  <wl@gnu.org>
+
+	* Version 2.9 released.
+	=======================
+
+
+	Tag sources with `VER-2-9'.
+
+	* docs/VERSION.TXT: Add entry for version 2.9.
+
+	* README, Jamfile (RefDoc), builds/windows/vc2005/freetype.vcproj,
+	builds/windows/vc2005/index.html,
+	builds/windows/vc2008/freetype.vcproj,
+	builds/windows/vc2008/index.html,
+	builds/windows/vc2010/freetype.vcxproj,
+	builds/windows/vc2010/index.html,
+	builds/windows/visualc/freetype.dsp,
+	builds/windows/visualc/freetype.vcproj,
+	builds/windows/visualc/index.html,
+	builds/windows/visualce/freetype.dsp,
+	builds/windows/visualce/freetype.vcproj,
+	builds/windows/visualce/index.html,
+	builds/windows/ftver.rc,
+	builds/wince/vc2005-ce/freetype.vcproj,
+	builds/wince/vc2005-ce/index.html,
+	builds/wince/vc2008-ce/freetype.vcproj,
+	builds/wince/vc2008-ce/index.html: s/2.8.1/2.9/, s/281/29/.
+
+	* include/freetype/freetype.h (FREETYPE_MINOR): Set to 9.
+	(FREETYPE_PATCH): Set to 0.
+
+	* builds/unix/configure.raw (version_info): Set to 22:0:16.
+	* CMakeLists.txt (VERSION_PATCH): Set to 1.
+
 2018-01-07  Werner Lemberg  <wl@gnu.org>
 
 	Add check for librt, needed for `ftbench' (#52824).
