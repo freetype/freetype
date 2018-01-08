@@ -398,7 +398,7 @@ FT_BEGIN_HEADER
     /* since version 2.7.1 */
     CFF_VStoreRec    vstore;        /* parsed vstore structure */
 
-    /* since version 2.8.2 */
+    /* since version 2.9 */
     PS_FontExtraRec*  font_extra;
 
   } CFF_FontRec;

@@ -339,7 +339,7 @@ FT_BEGIN_HEADER
    *     Use the hinting engine contributed by Adobe.
    *
    * @since:
-   *   2.8.2
+   *   2.9
    *
    */
 #define FT_HINTING_FREETYPE  0
@@ -394,7 +394,7 @@ FT_BEGIN_HEADER
    * @since:
    *   2.4.12 (for `cff' module)
    *
-   *   2.8.2 (for `type1' and `t1cid' modules)
+   *   2.9 (for `type1' and `t1cid' modules)
    *
    */
 
@@ -466,7 +466,7 @@ FT_BEGIN_HEADER
    *
    *   2.6.2 (for `autofitter' module)
    *
-   *   2.8.2 (for `type1' and `t1cid' modules)
+   *   2.9 (for `type1' and `t1cid' modules)
    *
    */
 
@@ -536,7 +536,7 @@ FT_BEGIN_HEADER
    *
    *   2.6.2 (for `autofitter' module)
    *
-   *   2.8.2 (for `type1' and `t1cid' modules)
+   *   2.9 (for `type1' and `t1cid' modules)
    *
    */
 
@@ -569,7 +569,7 @@ FT_BEGIN_HEADER
    * @since:
    *   2.8 (for `cff' module)
    *
-   *   2.8.2 (for `type1' and `t1cid' modules)
+   *   2.9 (for `type1' and `t1cid' modules)
    *
    */
 

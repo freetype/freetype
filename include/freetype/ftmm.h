@@ -346,7 +346,7 @@ FT_BEGIN_HEADER
   /*    [Since 2.8.1] To reset all axes to the default values, call the    */
   /*    function with `num_coords' set to zero and `coords' set to NULL.   */
   /*                                                                       */
-  /*    [Since 2.8.2] If `num_coords' is larger than zero, this function   */
+  /*    [Since 2.9] If `num_coords' is larger than zero, this function     */
   /*    sets the @FT_FACE_FLAG_VARIATION bit in @FT_Face's `face_flags'    */
   /*    field (i.e., @FT_IS_VARIATION will return true).  If `num_coords'  */
   /*    is zero, this bit flag gets unset.                                 */
@@ -384,10 +384,10 @@ FT_BEGIN_HEADER
   /* <Note>                                                                */
   /*    [Since 2.8.1] To reset all axes to the default values, call the    */
   /*    function with `num_coords' set to zero and `coords' set to NULL.   */
-  /*    [Since 2.8.2] `Default values' means the currently selected named  */
+  /*    [Since 2.9] `Default values' means the currently selected named    */
   /*    instance (or the base font if no named instance is selected).      */
   /*                                                                       */
-  /*    [Since 2.8.2] If `num_coords' is larger than zero, this function   */
+  /*    [Since 2.9] If `num_coords' is larger than zero, this function     */
   /*    sets the @FT_FACE_FLAG_VARIATION bit in @FT_Face's `face_flags'    */
   /*    field (i.e., @FT_IS_VARIATION will return true).  If `num_coords'  */
   /*    is zero, this bit flag gets unset.                                 */
@@ -462,10 +462,10 @@ FT_BEGIN_HEADER
   /* <Note>                                                                */
   /*    [Since 2.8.1] To reset all axes to the default values, call the    */
   /*    function with `num_coords' set to zero and `coords' set to NULL.   */
-  /*    [Since 2.8.2] `Default values' means the currently selected named  */
+  /*    [Since 2.9] `Default values' means the currently selected named    */
   /*    instance (or the base font if no named instance is selected).      */
   /*                                                                       */
-  /*    [Since 2.8.2] If `num_coords' is larger than zero, this function   */
+  /*    [Since 2.9] If `num_coords' is larger than zero, this function     */
   /*    sets the @FT_FACE_FLAG_VARIATION bit in @FT_Face's `face_flags'    */
   /*    field (i.e., @FT_IS_VARIATION will return true).  If `num_coords'  */
   /*    is zero, this bit flag gets unset.                                 */
@@ -621,7 +621,7 @@ FT_BEGIN_HEADER
   /*    function simply resets the current face to the default instance.   */
   /*                                                                       */
   /* <Since>                                                               */
-  /*    2.8.2                                                              */
+  /*    2.9                                                                */
   /*                                                                       */
   FT_EXPORT( FT_Error )
   FT_Set_Named_Instance( FT_Face  face,

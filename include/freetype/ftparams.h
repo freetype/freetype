@@ -166,7 +166,7 @@ FT_BEGIN_HEADER
    *   This is a passive setting that only takes effect if the font driver
    *   or autohinter honors it, which the CFF, Type~1, and CID drivers
    *   always do, but the autohinter only in `light' hinting mode (as of
-   *   version 2.8.2).
+   *   version 2.9).
    *
    * @since:
    *   2.8

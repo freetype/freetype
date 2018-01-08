@@ -904,9 +904,8 @@ FT_BEGIN_HEADER
   /*                           Bit 31 is always zero (this is,             */
   /*                           `face_index' is always a positive value).   */
   /*                                                                       */
-  /*                           [Since 2.8.2] Changing the design           */
-  /*                           coordinates with                            */
-  /*                           @FT_Set_Var_Design_Coordinates or           */
+  /*                           [Since 2.9] Changing the design coordinates */
+  /*                           with @FT_Set_Var_Design_Coordinates or      */
   /*                           @FT_Set_Var_Blend_Coordinates does not      */
   /*                           influence the named instance index value    */
   /*                           (only @FT_Set_Named_Instance does that).    */
@@ -1230,8 +1229,8 @@ FT_BEGIN_HEADER
   /*      glyphs use @FT_LOAD_COLOR.                                       */
   /*                                                                       */
   /*    FT_FACE_FLAG_VARIATION ::                                          */
-  /*      [Since 2.8.2] Set if the current face (or named instance) has    */
-  /*      been altered with @FT_Set_MM_Design_Coordinates,                 */
+  /*      [Since 2.9] Set if the current face (or named instance) has been */
+  /*      altered with @FT_Set_MM_Design_Coordinates,                      */
   /*      @FT_Set_Var_Design_Coordinates, or                               */
   /*      @FT_Set_Var_Blend_Coordinates.  This flag is unset by a call to  */
   /*      @FT_Set_Named_Instance.                                          */
@@ -1413,7 +1412,7 @@ FT_BEGIN_HEADER
    *   A macro that returns true whenever a face object is a named instance
    *   of a GX or OpenType variation font.
    *
-   *   [Since 2.8.2] Changing the design coordinates with
+   *   [Since 2.9] Changing the design coordinates with
    *   @FT_Set_Var_Design_Coordinates or @FT_Set_Var_Blend_Coordinates does
    *   not influence the return value of this macro (only
    *   @FT_Set_Named_Instance does that).
@@ -1437,7 +1436,7 @@ FT_BEGIN_HEADER
    *   @FT_Set_Var_Blend_Coordinates.
    *
    * @since:
-   *   2.8.2
+   *   2.9
    *
    */
 #define FT_IS_VARIATION( face ) \
@@ -1830,7 +1829,7 @@ FT_BEGIN_HEADER
   /*    If @FT_Load_Glyph is called with default flags (see                */
   /*    @FT_LOAD_DEFAULT) the glyph image is loaded in the glyph slot in   */
   /*    its native format (e.g., an outline glyph for TrueType and Type~1  */
-  /*    formats).  [Since 2.8.2] The prospective bitmap metrics are        */
+  /*    formats).  [Since 2.9] The prospective bitmap metrics are          */
   /*    calculated according to @FT_LOAD_TARGET_XXX and other flags even   */
   /*    for the outline glyph, even if @FT_LOAD_RENDER is not set.         */
   /*                                                                       */
@@ -3559,12 +3558,12 @@ FT_BEGIN_HEADER
   /*                                                                       */
   /*      https://download.macromedia.com/pub/developer/opentype/tech-notes/5902.AdobePSNameGeneration.html */
   /*                                                                       */
-  /*    [Since 2.8.2] Special PostScript names for named instances are     */
-  /*    only returned if the named instance is set with                    */
-  /*    @FT_Set_Named_Instance (and the font has corresponding entries in  */
-  /*    its `fvar' table).  If @FT_IS_VARIATION returns true, the          */
-  /*    algorithmically derived PostScript name is provided, not looking   */
-  /*    up special entries for named instances.                            */
+  /*    [Since 2.9] Special PostScript names for named instances are only  */
+  /*    returned if the named instance is set with @FT_Set_Named_Instance  */
+  /*    (and the font has corresponding entries in its `fvar' table).  If  */
+  /*    @FT_IS_VARIATION returns true, the algorithmically derived         */
+  /*    PostScript name is provided, not looking up special entries for    */
+  /*    named instances.                                                   */
   /*                                                                       */
   FT_EXPORT( const char* )
   FT_Get_Postscript_Name( FT_Face  face );
