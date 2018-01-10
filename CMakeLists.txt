@@ -162,6 +162,9 @@ set(SHARED_LIBRARY_VERSION ${VERSION_MAJOR}.${VERSION_MINOR})
 
 # Compiler definitions for building the library
 add_definitions(-DFT2_BUILD_LIBRARY)
+if (WIN32)
+  add_definitions(-D_CRT_SECURE_NO_WARNINGS)
+endif ()
 
 
 # Find dependencies

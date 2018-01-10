@@ -1,3 +1,7 @@
+2018-01-10  Steve Robinson  <ssrobins@gmail.com>
+
+	* CMakeLists.txt [win32]: Suppress warnings for POSIX functions.
+
 2018-01-10  Ewald Hew  <ewaldhew@gmail.com>
 
 	[psaux] Correctly handle Flex features (#52846).
