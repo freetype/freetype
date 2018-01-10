@@ -1,3 +1,7 @@
+2018-01-09  Alexei Podtelezhnikov  <apodtele@gmail.com>
+
+	* builds/windows/vc2010/freetype.sln: Synchronize with the project.
+
 2018-01-08  Werner Lemberg  <wl@gnu.org>
 
 	* Version 2.9 released.
