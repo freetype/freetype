@@ -1,3 +1,11 @@
+2018-01-12  Alexei Podtelezhnikov  <apodtele@gmail.com>
+
+	[build] Improve and document MSVC build.
+
+	* include/freetype/config/ftconfig.h: Guard dllexport/dllimport
+	attributes with _DLL and FT2_DLLIMPORT.
+	* builds/windows/vc2010/index.html: Update documentation.
+
 2018-01-10  Steve Robinson  <ssrobins@gmail.com>
 
 	* CMakeLists.txt [win32]: Suppress warnings for POSIX functions.

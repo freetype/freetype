@@ -462,10 +462,11 @@ FT_BEGIN_HEADER
 #endif
 
 #ifdef _MSC_VER
+#if defined( FT2_BUILD_LIBRARY ) && defined( _DLL )
 #undef FT_EXPORT
-#ifdef _DLL
 #define FT_EXPORT( x )  __declspec( dllexport )  x
-#else
+#elif defined( FT2_DLLIMPORT )
+#undef FT_EXPORT
 #define FT_EXPORT( x )  __declspec( dllimport )  x
 #endif
 #endif
