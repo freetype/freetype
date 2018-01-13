@@ -1,5 +1,14 @@
 2018-01-12  Alexei Podtelezhnikov  <apodtele@gmail.com>
 
+	[build] Expand dllexport/dllimport to Cygwin/MinGW.
+
+	* include/freetype/config/ftconfig.h: Respect DLL_EXPORT,
+	s/_MSC_VER/_WIN32/.
+	* builds/unix/ftconfig.in: Replicate here.
+	* builds/vms/ftconfig.h: Replicate here.
+
+2018-01-12  Alexei Podtelezhnikov  <apodtele@gmail.com>
+
 	[build] Improve and document MSVC build.
 
 	* include/freetype/config/ftconfig.h: Guard dllexport/dllimport
