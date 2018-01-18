@@ -1,3 +1,11 @@
+2018-01-18  Alexei Podtelezhnikov  <apodtele@gmail.com>
+
+	[build] Move VERSIONINFO resource.
+
+	* builds/windows/vc2010/freetype.vcxproj: Updated.
+	* builds/windows/ftver.rc: Move file from here...
+	* src/base/ftver.rc: ... to here.
+
 2018-01-12  Alexei Podtelezhnikov  <apodtele@gmail.com>
 
 	[build] Expand dllexport/dllimport to Cygwin/MinGW.
