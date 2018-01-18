@@ -248,6 +248,22 @@ $(FTINIT_OBJ): $(FTINIT_SRC) $(FREETYPE_H)
 	$(FT_COMPILE) $T$(subst /,$(COMPILER_SEP),$@ $<)
 
 
+# ftver component
+#
+#  The VERSIONINFO resource `ftver.rc' contains version and copyright
+#  to be compiled by windres and tagged into DLL usually.
+#
+ifneq ($(RC),)
+  FTVER_SRC := $(BASE_DIR)/ftver.rc
+  FTVER_OBJ := $(OBJ_DIR)/ftver.$O
+
+  OBJECTS_LIST += $(FTVER_OBJ)
+
+  $(FTVER_OBJ): $(FTVER_SRC)
+	$(RC) -o $@ $<
+endif
+
+
 # All FreeType library objects.
 #
 OBJ_M := $(BASE_OBJ_M) $(BASE_EXT_OBJ) $(DRV_OBJS_M)

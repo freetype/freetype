@@ -1,3 +1,21 @@
+/***************************************************************************/
+/*                                                                         */
+/*  ftver.rc                                                               */
+/*                                                                         */
+/*    FreeType VERSIONINFO resource for Windows DLLs.                      */
+/*                                                                         */
+/*  Copyright 2018 by                                                      */
+/*  David Turner, Robert Wilhelm, and Werner Lemberg.                      */
+/*                                                                         */
+/*  This file is part of the FreeType project, and may only be used,       */
+/*  modified, and distributed under the terms of the FreeType project      */
+/*  license, LICENSE.TXT.  By continuing to use, modify, or distribute     */
+/*  this file you indicate that you have read the license and              */
+/*  understand and accept it fully.                                        */
+/*                                                                         */
+/***************************************************************************/
+
+
 #include<Windows.h>
 
 #define FT_VERSION      2,9,0,0
@@ -27,7 +45,7 @@ BEGIN
       VALUE "FileVersion",      FT_VERSION_STR
       VALUE "ProductName",      "FreeType"
       VALUE "ProductVersion",   FT_VERSION_STR
-      VALUE "LegalCopyright",   "© 2017 The FreeType Project www.freetype.org. All rights reserved."
+      VALUE "LegalCopyright",   "© 2018 The FreeType Project www.freetype.org. All rights reserved."
       VALUE "InternalName",     "freetype"
       VALUE "OriginalFilename", FT_FILENAME
     END

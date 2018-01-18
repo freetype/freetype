@@ -1,5 +1,14 @@
 2018-01-18  Alexei Podtelezhnikov  <apodtele@gmail.com>
 
+	[build] Enable VERSIONINFO resource for Cygwin/MinGW.
+
+	* builds/unix/configure.raw: Check for resource compiler.
+	* builds/unix/unix-cc.in: Conditionally set up resource compiler.
+	* builds/freetype.mk: Add conditional rule for `ftver.rc'.
+	* src/base/ftver.rc: Copyright notice and year update.
+
+2018-01-18  Alexei Podtelezhnikov  <apodtele@gmail.com>
+
 	[build] Move VERSIONINFO resource.
 
 	* builds/windows/vc2010/freetype.vcxproj: Updated.
