@@ -16,7 +16,7 @@
 /***************************************************************************/
 
 
-#include<Windows.h>
+#include<windows.h>
 
 #define FT_VERSION      2,9,0,0
 #define FT_VERSION_STR  "2.9.0"
@@ -45,7 +45,7 @@ BEGIN
       VALUE "FileVersion",      FT_VERSION_STR
       VALUE "ProductName",      "FreeType"
       VALUE "ProductVersion",   FT_VERSION_STR
-      VALUE "LegalCopyright",   "© 2018 The FreeType Project www.freetype.org. All rights reserved."
+      VALUE "LegalCopyright",   "\251 2018 The FreeType Project www.freetype.org. All rights reserved."
       VALUE "InternalName",     "freetype"
       VALUE "OriginalFilename", FT_FILENAME
     END

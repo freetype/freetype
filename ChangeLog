@@ -1,5 +1,9 @@
 2018-01-18  Alexei Podtelezhnikov  <apodtele@gmail.com>
 
+	* src/base/ftver.rc: Fix mingw-w64 compilation.
+
+2018-01-18  Alexei Podtelezhnikov  <apodtele@gmail.com>
+
 	[build] Enable VERSIONINFO resource for Cygwin/MinGW.
 
 	* builds/unix/configure.raw: Check for resource compiler.
