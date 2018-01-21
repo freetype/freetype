@@ -88,13 +88,11 @@ check:
 # Unix cleaning and distclean rules.
 #
 clean_project_unix:
-	-$(DELETE) $(BASE_OBJECTS) $(OBJ_M) $(OBJ_S)
-	-$(DELETE) $(patsubst %.$O,%.$(SO),$(BASE_OBJECTS) $(OBJ_M) $(OBJ_S)) \
-                   $(CLEAN)
+	-$(LIBTOOL) --mode=clean $(RM) $(OBJECTS_LIST)
+	-$(DELETE) $(CLEAN)
 
 distclean_project_unix: clean_project_unix
-	-$(DELETE) $(PROJECT_LIBRARY)
-	-$(DELDIR) $(OBJ_DIR)/.libs
+	-$(LIBTOOL) --mode=clean $(RM) $(PROJECT_LIBRARY)
 	-$(DELETE) *.orig *~ core *.core $(DISTCLEAN)
 
 # EOF

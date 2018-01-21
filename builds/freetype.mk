@@ -345,10 +345,9 @@ remove_ftmodule_h:
 
 .PHONY: clean distclean
 
-# The `config.mk' file must define `clean_freetype' and
-# `distclean_freetype'.  Implementations may use to relay these to either
-# the `std' or `dos' versions from above, or simply provide their own
-# implementation.
+# The `config.mk' file must define `clean_project' and `distclean_project'.
+# Implementations may use to relay these to either the `std' or `dos'
+# versions from above, or simply provide their own implementation.
 #
 clean: clean_project
 distclean: distclean_project remove_config_mk remove_ftmodule_h

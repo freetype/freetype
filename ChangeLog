@@ -1,3 +1,11 @@
+2018-01-21  Alexei Podtelezhnikov  <apodtele@gmail.com>
+
+	[unix] Call libtool to clean up.
+
+	* builds/unix/install.mk (clean_project_unix, distclean_project_unix):
+	Use libtool.
+	* builds/freetype.mk: Minor.
+
 2018-01-18  Alexei Podtelezhnikov  <apodtele@gmail.com>
 
 	* src/base/ftver.rc: Fix mingw-w64 compilation.
