@@ -1,3 +1,13 @@
+2018-01-23  Alexei Podtelezhnikov  <apodtele@gmail.com>
+
+	[apinames] Anonymous version map for GNU linker.
+
+	* src/tools/apinames.c (PROGRAM_VERSION): Set to 0.3.
+	(OutputFormat): Add `OUTPUT_GNU_VERMAP'.
+	(names_dump): Handle it.
+	(usage): Updated.
+	(main): Handle new command line flag `-wL'.
+
 2018-01-21  Alexei Podtelezhnikov  <apodtele@gmail.com>
 
 	[unix] Call libtool to clean up.
