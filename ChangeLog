@@ -1,3 +1,11 @@
+2018-01-26  Ben Wagner  <bungeman@google.com>
+
+	[truetype] Fix multiple calls of `FT_Get_MM_Var' (#52955).
+
+	* src/truetype/ttgxvar.c (TT_Get_MM_Var): Set
+	`face->blend->num_axis' in case we have to initialize the
+	`face->blend'.
+
 2018-01-23  Alexei Podtelezhnikov  <apodtele@gmail.com>
 
 	[apinames] Anonymous version map for GNU linker.
