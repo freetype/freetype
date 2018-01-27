@@ -1,5 +1,18 @@
 2018-01-27  Werner Lemberg  <wl@gnu.org>
 
+	[truetype] Better protection against invalid VF data.
+
+	Reported as
+
+	  https://bugs.chromium.org/p/oss-fuzz/issues/detail?id=5739
+
+	Bug introduced in commit 08cd62deedefe217f2ea50e392923ce8b5bc7ac7.
+
+	* src/truetype/ttgxvar.c (TT_Set_Var_Design): Always initialize
+	`normalizedcoords'.
+
+2018-01-27  Werner Lemberg  <wl@gnu.org>
+
 	* src/truetype/ttinterp.c (Ins_GETVARIATION): Avoid NULL reference.
 
 	Reported as
