@@ -2440,7 +2440,7 @@
       num_coords = mmvar->num_axis;
     }
 
-    FT_TRACE5(( "TT_Set_MM_Blend:"
+    FT_TRACE5(( "TT_Set_MM_Blend:\n"
                 "  normalized design coordinates:\n" ));
 
     for ( i = 0; i < num_coords; i++ )
