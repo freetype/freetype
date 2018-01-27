@@ -1,5 +1,14 @@
 2018-01-27  Werner Lemberg  <wl@gnu.org>
 
+	[truetype] Better trace VF instances.
+
+	* src/truetype/ttgxvar.c (ft_var_to_normalized): Don't emit number
+	of coordinates.
+	(TT_Get_MM_Var): Trace instance indices names.
+	(TT_Set_Var_Design): Updated.
+
+2018-01-27  Werner Lemberg  <wl@gnu.org>
+
 	[truetype] Beautify tracing of VF axis records.
 
 	* src/truetype/ttgxvar.c (TT_Get_MM_Var): Show axis records in a

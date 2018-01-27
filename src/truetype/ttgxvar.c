@@ -1733,17 +1733,13 @@
     /* based on the [min,def,max] values for the axis to be [-1,0,1]. */
     /* Then, if there's an `avar' table, we renormalize this range.   */
 
-    FT_TRACE5(( "%d design coordinate%s:\n",
-                num_coords,
-                num_coords == 1 ? "" : "s" ));
-
     a = mmvar->axis;
     for ( i = 0; i < num_coords; i++, a++ )
     {
       FT_Fixed  coord = coords[i];
 
 
-      FT_TRACE5(( "  %.5f\n", coord / 65536.0 ));
+      FT_TRACE5(( "    %d: %.5f\n", i, coord / 65536.0 ));
       if ( coord > a->maximum || coord < a->minimum )
       {
         FT_TRACE1((
@@ -2218,6 +2214,10 @@
           goto Exit;
       }
 
+      FT_TRACE5(( "%d instance%s\n",
+                  fvar_head.instanceCount,
+                  fvar_head.instanceCount == 1 ? "" : "s" ));
+
       ns  = mmvar->namedstyle;
       nsc = face->blend->normalized_stylecoords;
       for ( i = 0; i < fvar_head.instanceCount; i++, ns++ )
@@ -2239,6 +2239,49 @@
           ns->psid = FT_GET_USHORT();
         else
           ns->psid = 0xFFFF;
+
+#ifdef FT_DEBUG_LEVEL_TRACE
+        {
+          SFNT_Service  sfnt = (SFNT_Service)face->sfnt;
+
+          FT_String*  strname = NULL;
+          FT_String*  psname  = NULL;
+
+          FT_ULong  pos;
+
+
+          pos = FT_STREAM_POS();
+
+          if ( ns->strid != 0xFFFF )
+          {
+            (void)sfnt->get_name( face,
+                                  (FT_UShort)ns->strid,
+                                  &strname );
+            if ( strname && !ft_strcmp( strname, ".notdef" ) )
+              strname = NULL;
+          }
+
+          if ( ns->psid != 0xFFFF )
+          {
+            (void)sfnt->get_name( face,
+                                  (FT_UShort)ns->psid,
+                                  &psname );
+            if ( psname && !ft_strcmp( psname, ".notdef" ) )
+              psname = NULL;
+          }
+
+          (void)FT_STREAM_SEEK( pos );
+
+          FT_TRACE5(( "  instance %d (%s%s%s, %s%s%s)\n",
+                      i,
+                      strname ? "name: `" : "",
+                      strname ? strname : "unnamed",
+                      strname ? "'" : "",
+                      psname ? "PS name: `" : "",
+                      psname ? psname : "no PS name",
+                      psname ? "'" : "" ));
+        }
+#endif /* FT_DEBUG_LEVEL_TRACE */
 
         ft_var_to_normalized( face, num_axes, ns->coords, nsc );
         nsc += num_axes;
@@ -2787,6 +2830,8 @@
     if ( !face->blend->avar_loaded )
       ft_var_load_avar( face );
 
+    FT_TRACE5(( "TT_Set_Var_Design:\n"
+                "  normalized design coordinates:\n" ));
     ft_var_to_normalized( face, num_coords, blend->coords, normalized );
 
     error = tt_set_mm_blend( face, mmvar->num_axis, normalized, 0 );
