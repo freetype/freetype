@@ -7532,8 +7532,16 @@
       return;
     }
 
-    for ( i = 0; i < num_axes; i++ )
-      args[i] = coords[i] >> 2; /* convert 16.16 to 2.14 format */
+    if ( coords )
+    {
+      for ( i = 0; i < num_axes; i++ )
+        args[i] = coords[i] >> 2; /* convert 16.16 to 2.14 format */
+    }
+    else
+    {
+      for ( i = 0; i < num_axes; i++ )
+        args[i] = 0;
+    }
   }
 
 

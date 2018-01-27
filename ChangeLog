@@ -1,5 +1,13 @@
 2018-01-27  Werner Lemberg  <wl@gnu.org>
 
+	* src/truetype/ttinterp.c (Ins_GETVARIATION): Avoid NULL reference.
+
+	Reported as
+
+	  https://bugs.chromium.org/p/oss-fuzz/issues/detail?id=5736
+
+2018-01-27  Werner Lemberg  <wl@gnu.org>
+
 	* src/truetype/ttgxvar.c (tt_set_mm_blend): Minor.
 
 2018-01-27  Werner Lemberg  <wl@gnu.org>
