@@ -2440,11 +2440,12 @@
       num_coords = mmvar->num_axis;
     }
 
-    FT_TRACE5(( "normalized design coordinates:\n" ));
+    FT_TRACE5(( "TT_Set_MM_Blend:"
+                "  normalized design coordinates:\n" ));
 
     for ( i = 0; i < num_coords; i++ )
     {
-      FT_TRACE5(( "  %.5f\n", coords[i] / 65536.0 ));
+      FT_TRACE5(( "    %.5f\n", coords[i] / 65536.0 ));
       if ( coords[i] < -0x00010000L || coords[i] > 0x00010000L )
       {
         FT_TRACE1(( "TT_Set_MM_Blend: normalized design coordinate %.5f\n"

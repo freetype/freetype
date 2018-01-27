@@ -1,5 +1,9 @@
 2018-01-27  Werner Lemberg  <wl@gnu.org>
 
+	* src/truetype/ttgxvar.c (tt_set_mm_blend): Minor.
+
+2018-01-27  Werner Lemberg  <wl@gnu.org>
+
 	[truetype] Better trace VF instances.
 
 	* src/truetype/ttgxvar.c (ft_var_to_normalized): Don't emit number
