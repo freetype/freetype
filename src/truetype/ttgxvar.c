@@ -2043,7 +2043,9 @@
 
       FT_TRACE2(( "loaded\n" ));
 
-      FT_TRACE5(( "number of GX style axes: %d\n", fvar_head.axisCount ));
+      FT_TRACE5(( "%d variation ax%s\n",
+                  fvar_head.axisCount,
+                  fvar_head.axisCount == 1 ? "is" : "es" ));
 
       if ( FT_NEW( face->blend ) )
         goto Exit;
@@ -2143,6 +2145,10 @@
       {
         GX_FVar_Axis  axis_rec;
 
+#ifdef FT_DEBUG_LEVEL_TRACE
+        int  invalid = 0;
+#endif
+
 
         if ( FT_STREAM_READ_FIELDS( fvaraxis_fields, &axis_rec ) )
           goto Exit;
@@ -2163,22 +2169,31 @@
         if ( a->minimum > a->def ||
              a->def > a->maximum )
         {
-          FT_TRACE2(( "TT_Get_MM_Var:"
-                      " invalid \"%s\" axis record; disabling\n",
-                      a->name ));
-
           a->minimum = a->def;
           a->maximum = a->def;
+
+#ifdef FT_DEBUG_LEVEL_TRACE
+          invalid = 1;
+#endif
         }
 
-        FT_TRACE5(( "  \"%s\":"
-                    " minimum=%.5f, default=%.5f, maximum=%.5f,"
-                    " flags=0x%04X\n",
+#ifdef FT_DEBUG_LEVEL_TRACE
+        if ( i == 0 )
+          FT_TRACE5(( "  idx   tag  "
+                   /* "  XXX  `XXXX'" */
+                      "    minimum     default     maximum   flags\n" ));
+                   /* "  XXXX.XXXXX  XXXX.XXXXX  XXXX.XXXXX  0xXXXX" */
+
+        FT_TRACE5(( "  %3d  `%s'"
+                    "  %10.5f  %10.5f  %10.5f  0x%04X%s\n",
+                    i,
                     a->name,
                     a->minimum / 65536.0,
                     a->def / 65536.0,
                     a->maximum / 65536.0,
-                    *axis_flags ));
+                    *axis_flags,
+                    invalid ? " (invalid, disabled)" : "" ));
+#endif
 
         a++;
         axis_flags++;

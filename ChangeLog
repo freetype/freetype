@@ -1,3 +1,10 @@
+2018-01-27  Werner Lemberg  <wl@gnu.org>
+
+	[truetype] Beautify tracing of VF axis records.
+
+	* src/truetype/ttgxvar.c (TT_Get_MM_Var): Show axis records in a
+	table-like manner.
+
 2018-01-26  Ben Wagner  <bungeman@google.com>
 
 	[truetype] Fix multiple calls of `FT_Get_MM_Var' (#52955).
