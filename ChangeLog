@@ -1,3 +1,17 @@
+2018-02-04  Alexei Podtelezhnikov  <apodtele@gmail.com>
+
+	[unix] Use -fvisibility=hidden.
+
+	It is now widely recommended that ELF shared libraries hide symbols
+	except those with explicit __attribute__((visibility("default"))).
+	This is supported by all major compilers and should rather be an
+	option in libtool.
+
+	* builds/unix/configure.raw: Add -fvisibility=hidden to CFLAGS.
+	* builds/unix/ftconfig.in, builds/vms/ftconfig.h,
+	include/freetype/config/ftconfig.h (FT_EXPORT): Use visibility
+	attribute.
+
 2018-01-27  Werner Lemberg  <wl@gnu.org>
 
 	[truetype] Better protection against invalid VF data.

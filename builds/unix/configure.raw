@@ -299,6 +299,18 @@ AC_SUBST([XX_CFLAGS])
 AC_SUBST([XX_ANSIFLAGS])
 
 
+# It is recommended that shared libraries hide symbols except those with
+# explicit __attribute__((visibility("default"))).
+#
+AC_MSG_CHECKING([for -fvisibility=hidden compiler flag])
+orig_CFLAGS="${CFLAGS}"
+CFLAGS="${CFLAGS} -fvisibility=hidden"
+AC_COMPILE_IFELSE([AC_LANG_PROGRAM([],[])],
+                  AC_MSG_RESULT(yes),
+                  CFLAGS="${orig_CFLAGS}"
+                  AC_MSG_RESULT(no))
+
+
 # All library tests below try `pkg-config' first.  If that fails, a function
 # from the library is tested in the traditional autoconf way (zlib, bzip2),
 # or a config script is called (libpng).
