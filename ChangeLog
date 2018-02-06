@@ -1,3 +1,14 @@
+2018-02-06  Werner Lemberg  <wl@gnu.org>
+
+	[truetype] Integer overflow issues.
+
+	Reported as
+
+	  https://bugs.chromium.org/p/oss-fuzz/issues/detail?id=6027
+
+	* src/truetype/ttinterp.c (Ins_MSIRP, Ins_MIAP, Ins_MIRP): Use
+	SUB_LONG; avoid FT_ABS.
+
 2018-02-04  Alexei Podtelezhnikov  <apodtele@gmail.com>
 
 	[unix] Use -fvisibility=hidden.
