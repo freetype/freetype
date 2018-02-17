@@ -1219,7 +1219,7 @@
              * Theoretically, a glyph's bytecode can toggle ClearType's
              * `backward compatibility' mode, which would allow modification
              * of the advance width.  In reality, however, applications
-             * neither allow nor expect modified advance widths if sub-pixel
+             * neither allow nor expect modified advance widths if subpixel
              * rendering is active.
              *
              */

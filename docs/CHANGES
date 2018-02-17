@@ -286,7 +286,7 @@ CHANGES BETWEEN 2.7.1 and 2.8
     - FT_LOAD_TARGET_LCD  is now  a  variant of  FT_LOAD_TARGET_LIGHT;
       this should provide better rendering results.
 
-    - A mode to display  light auto-hinting with sub-pixel positioning
+    - A mode to display  light auto-hinting with  subpixel positioning
       has been added to `ftdiff'.
 
 
@@ -616,8 +616,8 @@ CHANGES BETWEEN 2.6.1 and 2.6.2
 
     - The smooth renderer has been made faster.
 
-    - The `ftstring'  demo program  now supports  sub-pixel rendering;
-      use key `l' to cycle through the LCD modes.
+    - The `ftstring' demo program now supports subpixel rendering; use
+      key `l' to cycle through the LCD modes.
 
     - The `ftstring'  demo program now supports  colour rendering; use
       the `space' key to cycle through various colour combinations.
@@ -3055,12 +3055,12 @@ CHANGES BETWEEN 2.1.3 and 2.1.2
         FT_LOAD_TARGET_MONO   :: Hint and render for 1-bit displays.
 
         FT_LOAD_TARGET_LCD    :: Hint and render for horizontal RGB or
-                                 BGR sub-pixel displays (like LCD
+                                 BGR subpixel displays (like LCD
                                  screens).  THIS IS STILL
                                  EXPERIMENTAL!
 
         FT_LOAD_TARGET_LCD_V  :: Same as FT_LOAD_TARGET_LCD, for
-                                 vertical sub-pixel displays (like
+                                 vertical subpixel displays (like
                                  rotated LCD screens).  THIS IS STILL
                                  EXPERIMENTAL!
 

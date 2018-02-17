@@ -3065,7 +3065,7 @@ FT_BEGIN_HEADER
    *
    *     Advance widths are rounded to integer values; however, using the
    *     `lsb_delta' and `rsb_delta' fields of @FT_GlyphSlotRec, it is
-   *     possible to get fractional advance widths for sub-pixel positioning
+   *     possible to get fractional advance widths for subpixel positioning
    *     (which is recommended to use).
    *
    *     If configuration option AF_CONFIG_OPTION_TT_SIZE_METRICS is active,
@@ -3204,13 +3204,13 @@ FT_BEGIN_HEADER
   /*      opacity).                                                        */
   /*                                                                       */
   /*    FT_RENDER_MODE_LCD ::                                              */
-  /*      This mode corresponds to horizontal RGB and BGR sub-pixel        */
+  /*      This mode corresponds to horizontal RGB and BGR subpixel         */
   /*      displays like LCD screens.  It produces 8-bit bitmaps that are   */
   /*      3~times the width of the original glyph outline in pixels, and   */
   /*      which use the @FT_PIXEL_MODE_LCD mode.                           */
   /*                                                                       */
   /*    FT_RENDER_MODE_LCD_V ::                                            */
-  /*      This mode corresponds to vertical RGB and BGR sub-pixel displays */
+  /*      This mode corresponds to vertical RGB and BGR subpixel displays  */
   /*      (like PDA screens, rotated LCD displays, etc.).  It produces     */
   /*      8-bit bitmaps that are 3~times the height of the original        */
   /*      glyph outline in pixels and use the @FT_PIXEL_MODE_LCD_V mode.   */
