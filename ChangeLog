@@ -1,3 +1,9 @@
+2018-02-23  Werner Lemberg  <wl@gnu.org>
+
+	* builds/unix/configure.raw: Need HarfBuzz 1.3.0 or newer.
+
+	Problem reported by Alan Coopersmith <alan.coopersmith@oracle.com>.
+
 2018-02-17  Werner Lemberg  <wl@gnu.org>
 
 	[sfnt] Prefer `CBDT'/`CBLC' over `glyf' table (#53154).
