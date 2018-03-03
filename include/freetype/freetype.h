@@ -2833,6 +2833,10 @@ FT_BEGIN_HEADER
   /*    since its glyph indices are not listed in any of the font's        */
   /*    charmaps.                                                          */
   /*                                                                       */
+  /*    If no active cmap is set up (i.e., `face->charmap' is zero), the   */
+  /*    call to @FT_Get_Char_Index is omitted, and the function behaves    */
+  /*    identically to @FT_Load_Glyph.                                     */
+  /*                                                                       */
   FT_EXPORT( FT_Error )
   FT_Load_Char( FT_Face   face,
                 FT_ULong  char_code,
