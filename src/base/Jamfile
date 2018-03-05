@@ -21,6 +21,7 @@ SubDir  FT2_TOP $(FT2_SRC_DIR) base ;
                ftadvanc
                ftcalc
                ftdbgmem
+               ftfntfmt
                ftgloadr
                fthash
                ftobjs
@@ -51,7 +52,6 @@ SubDir  FT2_TOP $(FT2_SRC_DIR) base ;
                     ftbitmap
                     ftcid
                     ftdebug
-                    ftfntfmt
                     ftfstype
                     ftgasp
                     ftglyph

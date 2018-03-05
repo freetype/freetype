@@ -1,3 +1,19 @@
+2018-03-05  Werner Lemberg  <wl@gnu.org>
+
+	Make `ftfntfmt.c' part of the `base' module.
+
+	`ftobjs.c' needs `FT_Get_Font_Format'.
+
+	Problem reported by duhuanpeng <548708880@qq.com>.
+
+	* modules.cfg (BASE_EXTENSIONS): Don't include `ftfntfmt.c'.
+
+	* src/base/ftbase.c: Include `ftfntfmt.c'.
+	* src/base/rules.mk (BASE_SRC): Add `ftfntfmt.c'.
+	* src/base/Jamfile (_sources): Adjusted.
+
+	* docs/INSTALL.ANY: Updated.
+
 2018-03-01  Werner Lemberg  <wl@gnu.org>
 
 	* src/truetype/ttinterp.c (TT_RunIns): Fix tracing arguments.
