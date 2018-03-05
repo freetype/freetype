@@ -42,7 +42,6 @@ I. Standard procedure
       src/base/ftfstype.c     -- optional
       src/base/ftgasp.c       -- optional, see <ftgasp.h>
       src/base/ftgxval.c      -- optional, see <ftgxval.h>
-      src/base/ftlcdfil.c     -- optional, see <ftlcdfil.h>
       src/base/ftmm.c         -- optional, see <ftmm.h>
       src/base/ftotval.c      -- optional, see <ftotval.h>
       src/base/ftpatent.c     -- optional

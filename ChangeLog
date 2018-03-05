@@ -1,5 +1,21 @@
 2018-03-05  Werner Lemberg  <wl@gnu.org>
 
+	Make `ftlcdfil.c' part of the `base' module.
+
+	`ftobjs.c' needs `ft_lcd_padding'.
+
+	Problem reported by duhuanpeng <548708880@qq.com>.
+
+	* modules.cfg (BASE_EXTENSIONS): Don't include `ftlcdfil.c'.
+
+	* src/base/ftbase.c: Include `ftlcdfil.c'.
+	* src/base/rules.mk (BASE_SRC): Add `ftlcdfil.c'.
+	* src/base/Jamfile (_sources): Adjusted.
+
+	* docs/INSTALL.ANY: Updated.
+
+2018-03-05  Werner Lemberg  <wl@gnu.org>
+
 	Make `ftfntfmt.c' part of the `base' module.
 
 	`ftobjs.c' needs `FT_Get_Font_Format'.

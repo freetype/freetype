@@ -26,6 +26,7 @@
 #include "ftfntfmt.c"
 #include "ftgloadr.c"
 #include "fthash.c"
+#include "ftlcdfil.c"
 #include "ftmac.c"
 #include "ftobjs.c"
 #include "ftoutln.c"
