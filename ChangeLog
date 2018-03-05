@@ -1,3 +1,11 @@
+2018-03-09  Chun-wei Fan  <fanc999@yahoo.com.tw>
+
+	* CMakeLists.txt [win32]: Allow MSVC DLL builds (#53287).
+
+	Do not limit DLL builds to MinGW, since we already have
+	`__declspec(dllexport)' directives in `ftconfig.h'.
+	Also suppress more warnings for POSIX functions.
+
 2018-03-08  Hugh McMaster  <hugh.mcmaster@outlook.com>
 
 	Make installation of `freetype-config' optional (#53093).
