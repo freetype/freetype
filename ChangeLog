@@ -1,3 +1,12 @@
+2018-03-08  Hugh McMaster  <hugh.mcmaster@outlook.com>
+
+	Make installation of `freetype-config' optional (#53093).
+
+	* bulds/unix/configure.raw: Add option `--enable-freetype-config'
+	and set `INSTALL_FT2_CONFIG'.
+	* builds/unix/unix-def.in (INSTALL_FT2_CONFIG): Define.
+	* builds/unix/install.mk (install): Handle it.
+
 2018-03-05  Werner Lemberg  <wl@gnu.org>
 
 	Make `ftlcdfil.c' part of the `base' module.

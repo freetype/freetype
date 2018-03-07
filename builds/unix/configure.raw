@@ -177,6 +177,15 @@ fi
 
 CPPFLAGS="${orig_CPPFLAGS}"
 
+AC_ARG_ENABLE([freetype-config],
+  AS_HELP_STRING([--enable-freetype-config], [install freetype-config]),
+  [case "${enableval}" in
+    yes) enable_freetype_config="TRUE" ;;
+    no)  enable_freetype_config="FALSE" ;;
+    *)   AC_MSG_ERROR([unknown value '${enableval}' passed with --enable-freetype-config]) ;;
+   esac], [enable_freetype_config="FALSE"])
+
+AC_SUBST(INSTALL_FT2_CONFIG, [$enable_freetype_config])
 
 # checks for library functions
 
