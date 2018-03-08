@@ -1,3 +1,21 @@
+CHANGES BETWEEN 2.9 and 2.9.1
+
+  I. IMPORTANT BUG FIXES
+
+    - Type  1  fonts  containing   flex  features  were  not  rendered
+      correctly (bug introduced in version 2.9).
+
+
+  II. MISCELLANEOUS
+
+    - Bug fix: Multiple calls to `FT_Get_MM_Var' returned garbage.
+
+    - The base  extensions `ftlcdfil' and  `ftfntfmt' are now  part of
+      the  base  module  (and  thus no  longer  configurable  in  file
+      `modules.cfg').
+
+
+======================================================================
 
 CHANGES BETWEEN 2.8.1 and 2.9
 
@@ -85,6 +103,7 @@ CHANGES BETWEEN 2.8.1 and 2.9
     - The `ttdebug' demo program can now  show a stack trace (key `K')
       and switch  between hexadecimal and decimal  display of integers
       (key `I').
+
 
 ======================================================================
 
