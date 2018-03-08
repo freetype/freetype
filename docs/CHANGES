@@ -14,6 +14,16 @@ CHANGES BETWEEN 2.9 and 2.9.1
       the  base  module  (and  thus no  longer  configurable  in  file
       `modules.cfg').
 
+    - Use  of  the `freetype-config'  script  to  get compilation  and
+      linking  options   is  deprecated   since  it   doesn't  support
+      cross-compiling, among other  deficiencies.  Instead, you should
+      use the `pkg-config' interface.
+
+      The `configure'  script no longer installs  `freetype-config' by
+      default.  For  backwards compatibility,  a new  configure option
+      `--enable-freetype-config'   is  provided   that  reverts   this
+      decision.
+
 
 ======================================================================
 
