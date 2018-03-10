@@ -1,3 +1,7 @@
+2018-03-10  Nikolaus Waxweiler  <madigens@gmail.com>
+
+	* CMakeLists.txt (BASE_SRCS): Update to changes from 2018-03-05.
+
 2018-03-09  Chun-wei Fan  <fanc999@yahoo.com.tw>
 
 	* CMakeLists.txt [win32]: Allow MSVC DLL builds (#53287).

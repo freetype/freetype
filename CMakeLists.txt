@@ -278,13 +278,11 @@ set(BASE_SRCS
   src/base/ftbdf.c
   src/base/ftbitmap.c
   src/base/ftcid.c
-  src/base/ftfntfmt.c
   src/base/ftfstype.c
   src/base/ftgasp.c
   src/base/ftglyph.c
   src/base/ftgxval.c
   src/base/ftinit.c
-  src/base/ftlcdfil.c
   src/base/ftmm.c
   src/base/ftotval.c
   src/base/ftpatent.c
