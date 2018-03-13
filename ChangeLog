@@ -1,3 +1,11 @@
+2018-03-13  Werner Lemberg  <wl@gnu.org>
+
+	Fix cmap format 2 handling (#53320).
+
+	The patch introduced for #52646 was not correct.
+
+	* src/sfnt/ttcmap.c (tt_cmap2_char_next): Adjust condition.
+
 2018-03-10  Nikolaus Waxweiler  <madigens@gmail.com>
 
 	* CMakeLists.txt (BASE_SRCS): Update to changes from 2018-03-05.

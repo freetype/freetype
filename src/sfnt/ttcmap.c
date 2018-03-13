@@ -549,19 +549,18 @@
             }
           }
         }
+
+        /* if unsuccessful, avoid `charcode' leaving */
+        /* the current 256-character block           */
+        if ( count )
+          charcode--;
       }
 
-      /* If `charcode' is <= 0xFF, retry with `charcode + 1'.  If        */
-      /* `charcode' is 0x100 after the loop, do nothing since we have    */
-      /* just reached the first sub-header for two-byte character codes. */
-      /*                                                                 */
-      /* For all other cases, we jump to the next sub-header and adjust  */
-      /* `charcode' accordingly.                                         */
+      /* If `charcode' is <= 0xFF, retry with `charcode + 1'.      */
+      /* Otherwise jump to the next 256-character block and retry. */
     Next_SubHeader:
       if ( charcode <= 0xFF )
         charcode++;
-      else if ( charcode == 0x100 )
-        ;
       else
         charcode = FT_PAD_FLOOR( charcode, 0x100 ) + 0x100;
     }
