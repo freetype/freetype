@@ -1,5 +1,10 @@
 2018-03-13  Werner Lemberg  <wl@gnu.org>
 
+	* src/sfnt/ttcmap.c (tt_cmap2_validate): Fix potential numeric
+	overflow.
+
+2018-03-13  Werner Lemberg  <wl@gnu.org>
+
 	Fix cmap format 2 handling (#53320).
 
 	The patch introduced for #52646 was not correct.
