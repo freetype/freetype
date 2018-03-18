@@ -23,8 +23,8 @@ echo "
 <!DOCTYPE html>
   <head>
     <title> FreeType Test Framework </title>
-    <script type=\"text/javascript\" src =\"scripts/top.js\" ></script>
-    <link rel=\"stylesheet\" type=\"text/css\" href=\"styles/top.css\">
+    <script type=\"text/javascript\" src =\"source/scripts/top.js\" ></script>
+    <link rel=\"stylesheet\" type=\"text/css\" href=\"source/styles/top.css\">
   </head>
   <html>
     <body onload=\"change()\">
@@ -34,7 +34,7 @@ echo "
         </p>
       </div>
       <iframe id=\"frame_1\" name=\"frame_1\" src=\"\" ></iframe>
-      <iframe id=\"frame_2\" name=\"frame_2\" src=\"diff.html\" ></iframe>">./html/top.html
+      <iframe id=\"frame_2\" name=\"frame_2\" src=\"source/diff.html\" ></iframe>">./html/top.html
 #####################################################################
 # Filling html/top.html file with links to all the index.html files.
 for i in $FT_TEST_DPI; do

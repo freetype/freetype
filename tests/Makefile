@@ -17,4 +17,4 @@ tests: $(SRC_SPRITE)
 
 .PHONY: clean force
 clean:
-	-rm -f *.o
+	-rm -rf *.o html/top.html html/pages

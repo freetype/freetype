@@ -659,8 +659,8 @@ void Print_Head( FILE* fp ){
       <title>\n\
         Glyph_Diff\n\
       </title>\n\
-      <script src=\"../../../../../scripts/top.js\" type=\"text/javascript\"></script>\n\
-      <link href=\"../../../../../styles/top.css\" rel=\"stylesheet\" type=\"text/css\" >\n\
+      <script src=\"../../../../../source/scripts/top.js\" type=\"text/javascript\"></script>\n\
+      <link href=\"../../../../../source/styles/top.css\" rel=\"stylesheet\" type=\"text/css\" >\n\
     </head>\n\
     <body>\n\
     <button onclick=\"topFunction()\" id=\"myBtn\" title=\"Go to top\">Top</button>\n\
