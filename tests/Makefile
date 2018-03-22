@@ -15,6 +15,6 @@ all: tests
 tests: $(SRC_SPRITE)
 	$(CC) $(CFLAGS) $(INCLUDE) -o $@  $^ $(LIBS)
 
-.PHONY: clean force
+.PHONY: clean
 clean:
-	-rm -rf *.o html/top.html html/pages
+	-rm -rf *.o html/top.html html/pages tests

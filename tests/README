@@ -55,17 +55,23 @@ NOTE: One version of FreeType is referred as "base" version and the
 
   => set FT_TEST_PT_SIZE as a number to denote the font size.
 
-	EXAMPLE:  FT_TEST_BASE_DIR=/home/wl/kushal/base \
-		        FT_TEST_TEST_DIR=/home/wl/kushal/test \
-		        FT_TEST_DPI="72 96" \
-		        FT_TEST_FONT_FILE="test.ttf" \
-		        FT_TEST_RENDER_MODE="AA RGB" \
-		        FT_TEST_PT_SIZE="16 20" \
-		        ./runme.sh
+	EXAMPLE:  FT_TEST_BASE_DIR=$(HOME)/base \
+		  FT_TEST_TEST_DIR=$(HOME)/test \
+		  FT_TEST_DPI="72 96" \
+		  FT_TEST_FONT_FILE="test.ttf" \
+		  FT_TEST_RENDER_MODE="AA RGB" \
+		  FT_TEST_PT_SIZE="16 20" \
+		  ./runme.sh
   ( The values in the above example denote the default values
-  for the variables )
+  for the variables. )
 
   Open ./html/top.html for the web interface.
+
+ 5. Run the executable
+  -------------------------------------
+  To clean the html folder / to remove all the generated files,
+      make clean
+
 ---------------------------------------------------------------------
 
 FEATURES
@@ -100,4 +106,4 @@ FEATURES
   Click on the Buttons below the iframe for the animations.
 
   To pause the animation, click and hold on the image.
-  
+
