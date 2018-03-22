@@ -1,12 +1,14 @@
 // If any value in the 'select' list(s) changes, the corresponding
 // HTML document is loaded in frame_1.
 function change() {
-	var dpi = document.getElementById('dpi').value;
-	var font = document.getElementById('font').value;
-	var mode = document.getElementById('mode').value;
-	var size = document.getElementById('size').value;
-	var frame = document.getElementById('frame_1');
-  var string = "pages/"+dpi+"/"+font+"/"+mode+"/"+size+"/index.html";
+  var dpi = document.getElementById('dpi').value;
+  var font = document.getElementById('font').value;
+  var mode = document.getElementById('mode').value;
+  var size = document.getElementById('size').value;
+  var frame = document.getElementById('frame_1');
+  var font_type = font.substring(font.indexOf('.')+1) // Font file extension
+  var font_name = font.split('.')[0] // Font name without extension
+  var string = "pages/"+dpi+"/"+font_type+"/"+font_name+"/"+mode+"/"+size+"/index.html";
   frame.src = string;
 }
 // Function to sort the columns of the table when you click on the header
@@ -113,6 +115,6 @@ function topFunction() {
 }
 // Function to pause/play the animation
 function pause_play() {
-	var div = frame_2.document.getElementById('animation');
-	div.classList.toggle('pause');
+  var div = frame_2.document.getElementById('animation');
+  div.classList.toggle('pause');
 }
