@@ -67,6 +67,9 @@ int main(int argc, char const *argv[])
 
   char glyph_name[50] = ".not-def";
 
+  char* font_file_name = Get_Font_File_Name(font_file);
+  char* font_file_type = Get_Font_File_Type(font_file);
+
 /*******************************************************************/
 
   FT_Error ( *Base_Init_FreeType )( FT_Library* );
@@ -328,9 +331,10 @@ int main(int argc, char const *argv[])
   /* Initialising file pointer for the list-view*/
   if (snprintf( output_file_name,
             output_file_size,
-            "./html/pages/%d/%s/%s/%d/index.html",
+            "./html/pages/%d/%s/%s/%s/%d/index.html",
             dpi,
-            font_file,
+            font_file_type,
+            font_file_name,
             mode,
             pt_size )
             > output_file_size )
@@ -470,9 +474,10 @@ int main(int argc, char const *argv[])
 
       if (snprintf( output_file_name,
                     output_file_size,
-                    "./html/pages/%d/%s/%s/%d/images/%s.png",
+                    "./html/pages/%d/%s/%s/%s/%d/images/%s.png",
                     dpi,
-                    font_file,
+                    font_file_type,
+                    font_file_name,
                     mode,
                     pt_size,
                     glyph_name )
