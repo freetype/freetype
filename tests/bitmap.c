@@ -659,8 +659,8 @@ void Print_Head( FILE* fp ){
       <title>\n\
         Glyph_Diff\n\
       </title>\n\
-      <script src=\"../../../../../source/scripts/top.js\" type=\"text/javascript\"></script>\n\
-      <link href=\"../../../../../source/styles/top.css\" rel=\"stylesheet\" type=\"text/css\" >\n\
+      <script src=\"../../../../../../source/scripts/top.js\" type=\"text/javascript\"></script>\n\
+      <link href=\"../../../../../../source/styles/top.css\" rel=\"stylesheet\" type=\"text/css\" >\n\
     </head>\n\
     <body>\n\
     <button onclick=\"topFunction()\" id=\"myBtn\" title=\"Go to top\">Top</button>\n\
@@ -703,7 +703,7 @@ void Print_Row( FILE* fp, int index, char* name, int diff )
 }
 
 /* To calculate the Difference-Metric used in the list-view page */
-int Image_Diff( IMAGE* base, IMAGE* test){
+int Image_Diff(IMAGE* base, IMAGE* test){
 
   int diff = 0;
 
@@ -718,4 +718,39 @@ int Image_Diff( IMAGE* base, IMAGE* test){
 
   return diff;
 }
+
+/* This function takes font file name and returns the font name     */
+/* Returns a string */
+char* Get_Font_File_Name(const char* font_file_full_name){
+  int file_name_length = strlen(font_file_full_name);
+  char* name = (char*)malloc(file_name_length*sizeof(char));
+
+  int count = 0;
+  while(font_file_full_name[count] != '.'){
+    name[count] = font_file_full_name[count];
+    count++;
+  }
+  name[count] = '\0'; /* Ending the String */
+
+  return name;
+}
+
+/* This function takes font file name and returns the file extension*/
+/* Returns a string */
+char* Get_Font_File_Type(const char* font_file_full_name){
+  int file_name_length = strlen(font_file_full_name);
+  char* extension = (char*)malloc(file_name_length*sizeof(char));
+
+  int count = 0;
+  while(font_file_full_name[count++] != '.'){}
+
+  int i = 0;
+  while(count < file_name_length){
+    extension[i++] = font_file_full_name[count++];
+  }
+  extension[i] = '\0'; /* Ending the String */
+
+  return extension;
+}
+
 /* For more information on the list-view page, go to README */

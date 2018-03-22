@@ -88,3 +88,7 @@ int Image_Diff( IMAGE* base, IMAGE* test);
 void Print_Row( FILE* fp, int index, char* name, int diff );
 /* Print the table-headers in list-view webpage */
 void Print_Head( FILE* fp );
+/* Returns the name of the font file without the extension */
+char* Get_Font_File_Name(const char* font_file_full_name);
+/* Returns the file extension of the font file */
+char* Get_Font_File_Type(const char* font_file_full_name);
