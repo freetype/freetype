@@ -7872,15 +7872,7 @@
 					>
 				</File>
 				<File
-					RelativePath="..\..\..\src\base\ftfntfmt.c"
-					>
-				</File>
-				<File
 					RelativePath="..\..\..\src\base\ftgxval.c"
-					>
-				</File>
-				<File
-					RelativePath="..\..\..\src\base\ftlcdfil.c"
 					>
 				</File>
 				<File

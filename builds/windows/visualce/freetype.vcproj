@@ -8270,10 +8270,6 @@
 					>
 				</File>
 				<File
-					RelativePath="..\..\..\src\base\ftfntfmt.c"
-					>
-				</File>
-				<File
 					RelativePath="..\..\..\src\base\ftmm.c"
 					>
 					<FileConfiguration
@@ -8714,10 +8710,6 @@
 				</File>
 				<File
 					RelativePath="..\..\..\src\base\ftwinfnt.c"
-					>
-				</File>
-				<File
-					RelativePath="..\..\..\src\base\ftlcdfil.c"
 					>
 				</File>
 				<File

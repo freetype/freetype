@@ -2135,11 +2135,7 @@
         </File>
         <File RelativePath="..\..\..\src\base\ftcid.c">
         </File>
-        <File RelativePath="..\..\..\src\base\ftfntfmt.c">
-        </File>
         <File RelativePath="..\..\..\src\base\ftgxval.c">
-        </File>
-        <File RelativePath="..\..\..\src\base\ftlcdfil.c">
         </File>
         <File RelativePath="..\..\..\src\base\ftmm.c">
           <FileConfiguration Name="Release|Pocket PC 2003 (ARMV4)">

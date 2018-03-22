@@ -230,10 +230,6 @@ SOURCE=..\..\..\src\base\ftcid.c
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\src\base\ftfntfmt.c
-# End Source File
-# Begin Source File
-
 SOURCE=..\..\..\src\base\ftfstype.c
 # End Source File
 # Begin Source File
@@ -268,10 +264,6 @@ SOURCE=..\..\..\src\gzip\ftgzip.c
 
 SOURCE=..\..\..\src\base\ftinit.c
 # SUBTRACT CPP /Fr
-# End Source File
-# Begin Source File
-
-SOURCE=..\..\..\src\base\ftlcdfil.c
 # End Source File
 # Begin Source File
 
