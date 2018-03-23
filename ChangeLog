@@ -1,3 +1,10 @@
+2018-03-23  Ben Wagner  <bungeman@google.com>
+
+	[truetype] Fix advance of empty glyphs in bitmap fonts (#53393).
+
+	* src/truetype/ttgload.c (TT_Load_Glyph): Apply scaling to metrics
+	for empty bitmaps.
+
 2018-03-22  Werner Lemberg  <wl@gnu.org>
 
 	Remove `ftlcdfil.c' and `ftfntfmt.c' from build files (#53415).
