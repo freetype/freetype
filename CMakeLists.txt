@@ -26,11 +26,11 @@
 #
 # For a dynamic library, use
 #
-#   cmake <path-to-freetype2-src-dir> -D BUILD_SHARED_LIBS:BOOL=true
+#   cmake -D BUILD_SHARED_LIBS:BOOL=true <path-to-freetype2-src-dir>
 #
 # For a framework on OS X, use
 #
-#   cmake <path-to-freetype2-src-dir> -D BUILD_FRAMEWORK:BOOL=true -G Xcode
+#   cmake -D BUILD_FRAMEWORK:BOOL=true -G Xcode <path-to-freetype2-src-dir>
 #
 # instead.
 #
