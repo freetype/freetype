@@ -2280,6 +2280,9 @@
                       psname ? "PS name: `" : "",
                       psname ? psname : "no PS name",
                       psname ? "'" : "" ));
+
+          FT_FREE( strname );
+          FT_FREE( psname );
         }
 #endif /* FT_DEBUG_LEVEL_TRACE */
 

@@ -1,3 +1,10 @@
+2018-03-30  Werner Lemberg  <wl@gnu.org>
+
+	[truetype] Fix memory leak (only if tracing is on).
+
+	* src/truetype/ttgxvar.c (TT_Get_MM_Var) [FT_DEBUG_LEVEL_TRACE}: Fix
+	it.
+
 2018-03-23  Ben Wagner  <bungeman@google.com>
 
 	[sfnt] Correctly handle missing bitmaps in sbix format (#53404).
