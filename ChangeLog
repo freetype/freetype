@@ -1,3 +1,12 @@
+2018-04-01  Werner Lemberg  <wl@gnu.org>
+
+	* builds/toplevel.mk (work): Use $(SEP).
+
+	This fixes the `make refdoc' using Cygwin: $(CAT) is `type' on this
+	platform, and this program only understands backslashes in paths.
+
+	Reported by Nikhil Ramakrishnan <ramakrishnan.nikhil@gmail.com>.
+
 2018-03-30  Werner Lemberg  <wl@gnu.org>
 
 	[truetype] Fix memory leak (only if tracing is on).
