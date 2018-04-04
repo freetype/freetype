@@ -1,3 +1,10 @@
+2018-04-04  Ben Wagner  <bungeman@google.com>
+
+	* src/truetype/ttobjs.c (trick_names): Add 3 tricky fonts (#53554),
+	`DFHei-Md-HK-BF', `DFKaiShu-Md-HK-BF' and `DFMing-Bd-HK-BF'.
+	(tt_check_trickyness_sfnt_ids): Add checksums for 3 tricky fonts
+	in above.
+
 2018-04-01  Werner Lemberg  <wl@gnu.org>
 
 	* builds/toplevel.mk (work): Use $(SEP).
