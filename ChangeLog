@@ -1,3 +1,17 @@
+2018-04-04  Werner Lemberg  <wl@gnu.org>
+
+	[cff, type1] Sanitize `BlueFuzz' and `BlueShift'.
+
+	Reported as
+
+	  https://bugs.chromium.org/p/oss-fuzz/issues/detail?id=7371
+
+	* src/cff/cffload.c (cff_load_private_dict): Sanitize
+	`priv->blue_shift' and `priv->blue_fuzz' to avoid overflows later
+	on.
+
+	* src/type1/t1load.c (T1_Open_Face): Ditto.
+
 2018-04-04  Ben Wagner  <bungeman@google.com>
 
 	* src/truetype/ttobjs.c (trick_names): Add 3 tricky fonts (#53554),
