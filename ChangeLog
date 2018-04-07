@@ -1,3 +1,40 @@
+2018-04-10  Nikolaus Waxweiler  <madigens@gmail.com>
+
+ 	* CMakeLists.txt, builds/cmake/FindHarfBuzz.cmake: Extensive 
+	modernization measures.
+
+	This brings up the minimum required CMake version to 2.8.12.
+
+	The installation paths follow the GNU defaults now, e.g. installing on a
+	64 bit host will place binaries into the lib64/ folder on e.g. Fedora.
+
+	Symbols are hidden by default (e.g. `-fvisibility=hidden' on GCC).
+
+	CMake will no longer look for a C++ compiler.
+
+	Library and .so version now match the Autotools build.
+
+	Comments in the build file and informational messages now use platform
+	agnostic example commands.
+
+	ftoption.h and ftconfig.h are written directly without a redundant `-new'
+	copy.
+
+	External dependencies are expressed as option()s and will turn up as such
+	in cmake-gui.
+
+	Internal: Properties such as dependencies and include directories are now
+	privately set on the freetype library instead of globally.
+
+	The CPack definitions have been cleaned up, the `make dist' has been
+	removed. Source packages generated with CPack don't contain Autotools
+	files and aren't used by the maintainters anyway.
+
+	On Windows, src/base/ftver.rc is compiled to decorate the library with
+	version and copyright information.
+
+	A pkg-config file is now generated and installed.
+
 2018-04-09  Werner Lemberg  <wl@gnu.org>
 
 	[truetype] Integer overflow issues.
