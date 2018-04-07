@@ -200,17 +200,14 @@ SOURCE=..\..\..\src\autofit\autofit.c
 # Begin Source File
 
 SOURCE=..\..\..\src\bdf\bdf.c
-# SUBTRACT CPP /Fr
 # End Source File
 # Begin Source File
 
 SOURCE=..\..\..\src\cff\cff.c
-# SUBTRACT CPP /Fr
 # End Source File
 # Begin Source File
 
 SOURCE=..\..\..\src\base\ftbase.c
-# SUBTRACT CPP /Fr
 # End Source File
 # Begin Source File
 
@@ -239,18 +236,15 @@ SOURCE=..\..\..\src\base\ftgasp.c
 # Begin Source File
 
 SOURCE=..\..\..\src\cache\ftcache.c
-# SUBTRACT CPP /Fr
 # End Source File
 # Begin Source File
 
 SOURCE=..\ftdebug.c
 # ADD CPP /Ze
-# SUBTRACT CPP /Fr
 # End Source File
 # Begin Source File
 
 SOURCE=..\..\..\src\base\ftglyph.c
-# SUBTRACT CPP /Fr
 # End Source File
 # Begin Source File
 
@@ -263,7 +257,6 @@ SOURCE=..\..\..\src\gzip\ftgzip.c
 # Begin Source File
 
 SOURCE=..\..\..\src\base\ftinit.c
-# SUBTRACT CPP /Fr
 # End Source File
 # Begin Source File
 
@@ -272,7 +265,6 @@ SOURCE=..\..\..\src\lzw\ftlzw.c
 # Begin Source File
 
 SOURCE=..\..\..\src\base\ftmm.c
-# SUBTRACT CPP /Fr
 # End Source File
 # Begin Source File
 
@@ -297,7 +289,6 @@ SOURCE=..\..\..\src\base\ftsynth.c
 # Begin Source File
 
 SOURCE=..\..\..\src\base\ftsystem.c
-# SUBTRACT CPP /Fr
 # End Source File
 # Begin Source File
 
@@ -310,7 +301,6 @@ SOURCE=..\..\..\src\base\ftwinfnt.c
 # Begin Source File
 
 SOURCE=..\..\..\src\pcf\pcf.c
-# SUBTRACT CPP /Fr
 # End Source File
 # Begin Source File
 
@@ -319,57 +309,46 @@ SOURCE=..\..\..\src\pfr\pfr.c
 # Begin Source File
 
 SOURCE=..\..\..\src\psaux\psaux.c
-# SUBTRACT CPP /Fr
 # End Source File
 # Begin Source File
 
 SOURCE=..\..\..\src\pshinter\pshinter.c
-# SUBTRACT CPP /Fr
 # End Source File
 # Begin Source File
 
 SOURCE=..\..\..\src\psnames\psmodule.c
-# SUBTRACT CPP /Fr
 # End Source File
 # Begin Source File
 
 SOURCE=..\..\..\src\raster\raster.c
-# SUBTRACT CPP /Fr
 # End Source File
 # Begin Source File
 
 SOURCE=..\..\..\src\sfnt\sfnt.c
-# SUBTRACT CPP /Fr
 # End Source File
 # Begin Source File
 
 SOURCE=..\..\..\src\smooth\smooth.c
-# SUBTRACT CPP /Fr
 # End Source File
 # Begin Source File
 
 SOURCE=..\..\..\src\truetype\truetype.c
-# SUBTRACT CPP /Fr
 # End Source File
 # Begin Source File
 
 SOURCE=..\..\..\src\type1\type1.c
-# SUBTRACT CPP /Fr
 # End Source File
 # Begin Source File
 
 SOURCE=..\..\..\src\cid\type1cid.c
-# SUBTRACT CPP /Fr
 # End Source File
 # Begin Source File
 
 SOURCE=..\..\..\src\type42\type42.c
-# SUBTRACT CPP /Fr
 # End Source File
 # Begin Source File
 
 SOURCE=..\..\..\src\winfonts\winfnt.c
-# SUBTRACT CPP /Fr
 # End Source File
 # End Group
 # Begin Group "Header Files"

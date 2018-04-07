@@ -1,3 +1,16 @@
+2018-04-06  Alexei Podtelezhnikov  <apodtele@gmail.com>
+
+	[windows, wince] Clean up legacy project files.
+
+	* builds/wince/vc2005-ce/freetype.vcproj,
+	builds/wince/vc2008-ce/freetype.vcproj,
+	builds/windows/vc2005/freetype.vcproj,
+	builds/windows/vc2008/freetype.vcproj,
+	builds/windows/visualce/freetype.vcproj,
+	builds/windows/visualce/freetype.dsp,
+	builds/windows/visualc/freetype.vcproj, 
+	builds/windows/visualc/freetype.dsp: Remove per-file compile flags.
+
 2018-04-04  Werner Lemberg  <wl@gnu.org>
 
 	[cff, type1] Sanitize `BlueFuzz' and `BlueShift'.
