@@ -1,3 +1,16 @@
+2018-04-14  Werner Lemberg  <wl@gnu.org>
+
+	[autofit] Update to Unicode 11.0.0.
+
+	But no support new scripts (volunteers welcomed).
+
+	* src/autofit/afranges.c (af_arab_nonbase_uniranges,
+	af_beng_nonbase_uniranges, af_cakm_nonbase_uniranges,
+	af_deva_nonbase_uniranges, af_geor_uniranges,
+	af_gujr_nonbase_uniranges, af_mlym_nonbase_uniranges,
+	af_nkoo_nonbase_uniranges, af_telu_nonbase_uniranges,
+	af_hani_uniranges): Add new data.
+
 2018-04-10  Nikolaus Waxweiler  <madigens@gmail.com>
 
  	* CMakeLists.txt, builds/cmake/FindHarfBuzz.cmake: Extensive 
