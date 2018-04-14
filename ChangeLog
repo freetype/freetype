@@ -1,5 +1,15 @@
 2018-04-14  Werner Lemberg  <wl@gnu.org>
 
+	[truetype] Integer overflow issues.
+
+	Reported as
+
+	  https://bugs.chromium.org/p/oss-fuzz/issues/detail?id=7652
+
+	* src/truetype/ttinterp.c (Ins_MDAP): Use SUB_LONG.
+
+2018-04-14  Werner Lemberg  <wl@gnu.org>
+
 	[autofit] Update to Unicode 11.0.0.
 
 	But no support new scripts (volunteers welcomed).

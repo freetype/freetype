@@ -5874,16 +5874,18 @@
       if ( SUBPIXEL_HINTING_INFINALITY &&
            exc->ignore_x_mode          &&
            exc->GS.freeVector.x != 0   )
-        distance = Round_None(
-                     exc,
-                     cur_dist,
-                     exc->tt_metrics.compensations[0] ) - cur_dist;
+        distance = SUB_LONG(
+                     Round_None( exc,
+                                 cur_dist,
+                                 exc->tt_metrics.compensations[0] ),
+                     cur_dist );
       else
 #endif
-        distance = exc->func_round(
-                     exc,
-                     cur_dist,
-                     exc->tt_metrics.compensations[0] ) - cur_dist;
+        distance = SUB_LONG(
+                     exc->func_round( exc,
+                                      cur_dist,
+                                      exc->tt_metrics.compensations[0] ),
+                     cur_dist );
     }
     else
       distance = 0;
