@@ -1,3 +1,16 @@
+2018-04-15  Alexei Podtelezhnikov  <apodtele@gmail.com>
+
+	[build] Use `info' function of make 3.81.
+
+	* configure, docs/INSTALL, docs/INSTALL.CROSS, docs/INSTALL.GNU,
+	docs/INSTALL.UNIX, docs/MAKEPP: Bump make version requirements.
+
+	* builds/detect.mk (std_setup): Replace `echo' with `info'.
+	(dos_setup): Removed.
+	* builds/unix/install.mk, builds/modules.mk, builds/dos/detect.mk,
+	builds/windows/detect.mk, builds/os2/detect.mk: Updated.
+	* builds/newline: No longer needed.
+
 2018-04-15  Werner Lemberg  <wl@gnu.org>
 
 	[truetype]: Limit `SLOOP' bytecode argument to 16 bits.
@@ -33,7 +46,7 @@
 
 2018-04-10  Nikolaus Waxweiler  <madigens@gmail.com>
 
- 	* CMakeLists.txt, builds/cmake/FindHarfBuzz.cmake: Extensive 
+	* CMakeLists.txt, builds/cmake/FindHarfBuzz.cmake: Extensive 
 	modernization measures.
 
 	This brings up the minimum required CMake version to 2.8.12.

@@ -84,7 +84,7 @@ uninstall:
 
 
 check:
-	@echo There is no validation suite for this package.
+	$(info There is no validation suite for this package.)
 
 
 .PHONY: clean_project_unix distclean_project_unix
