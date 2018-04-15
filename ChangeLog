@@ -1,3 +1,13 @@
+2018-04-15  Werner Lemberg  <wl@gnu.org>
+
+	[truetype]: Limit `SLOOP' bytecode argument to 16 bits.
+
+	This fixes
+
+	  https://bugs.chromium.org/p/oss-fuzz/issues/detail?id=7707
+
+	* src/truetype/ttinterp.c (Ins_SLOOP): Do it.
+
 2018-04-14  Werner Lemberg  <wl@gnu.org>
 
 	[truetype] Integer overflow issues.

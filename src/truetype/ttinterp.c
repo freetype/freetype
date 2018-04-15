@@ -3289,7 +3289,10 @@
     if ( args[0] < 0 )
       exc->error = FT_THROW( Bad_Argument );
     else
-      exc->GS.loop = args[0];
+    {
+      /* we heuristically limit the number of loops to 16 bits */
+      exc->GS.loop = args[0] > 0xFFFFL ? 0xFFFFL : args[0];
+    }
   }
 
 
