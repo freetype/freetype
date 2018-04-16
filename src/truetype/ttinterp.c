@@ -6193,7 +6193,7 @@
     minimum_distance    = exc->GS.minimum_distance;
     control_value_cutin = exc->GS.control_value_cutin;
     point               = (FT_UShort)args[0];
-    cvtEntry            = (FT_ULong)( args[1] + 1 );
+    cvtEntry            = (FT_ULong)( ADD_LONG( args[1], 1 ) );
 
 #ifdef TT_SUPPORT_SUBPIXEL_HINTING_INFINALITY
     if ( SUBPIXEL_HINTING_INFINALITY                        &&

@@ -1,3 +1,13 @@
+2018-04-16  Werner Lemberg  <wl@gnu.org>
+
+	[truetype] Integer overflow issues.
+
+	Reported as
+
+	  https://bugs.chromium.org/p/oss-fuzz/issues/detail?id=7718
+
+	* src/truetype/ttinterp.c (Ins_MIRP): Use ADD_LONG.
+
 2018-04-15  Alexei Podtelezhnikov  <apodtele@gmail.com>
 
 	[build] Use `info' function of make 3.81.
@@ -46,7 +56,7 @@
 
 2018-04-10  Nikolaus Waxweiler  <madigens@gmail.com>
 
-	* CMakeLists.txt, builds/cmake/FindHarfBuzz.cmake: Extensive 
+	* CMakeLists.txt, builds/cmake/FindHarfBuzz.cmake: Extensive
 	modernization measures.
 
 	This brings up the minimum required CMake version to 2.8.12.
@@ -102,7 +112,7 @@
 	builds/windows/vc2008/freetype.vcproj,
 	builds/windows/visualce/freetype.vcproj,
 	builds/windows/visualce/freetype.dsp,
-	builds/windows/visualc/freetype.vcproj, 
+	builds/windows/visualc/freetype.vcproj,
 	builds/windows/visualc/freetype.dsp: Remove per-file compile flags.
 
 2018-04-04  Werner Lemberg  <wl@gnu.org>
