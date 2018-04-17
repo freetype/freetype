@@ -2954,7 +2954,7 @@
   static void
   Ins_CEILING( FT_Long*  args )
   {
-    args[0] = FT_PIX_CEIL( args[0] );
+    args[0] = FT_PIX_CEIL_LONG( args[0] );
   }
 
 

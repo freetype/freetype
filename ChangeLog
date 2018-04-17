@@ -1,3 +1,13 @@
+2018-04-17  Werner Lemberg  <wl@gnu.org>
+
+	[truetype] Integer overflow issues.
+
+	Reported as
+
+	  https://bugs.chromium.org/p/oss-fuzz/issues/detail?id=7739
+
+	* src/truetype/ttinterp.c (Ins_CEILING): Use FT_PIX_CEIL_LONG.
+
 2018-04-16  Werner Lemberg  <wl@gnu.org>
 
 	[truetype] Integer overflow issues.
