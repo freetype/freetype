@@ -7,7 +7,7 @@
 #include <sys/types.h>
 #include <sys/stat.h>
 
-#include <ft2build.h>
+#include "../include/ft2build.h"
 
 #include "murmur3.h"            /* MurmurHash3_x64_128 header file */
 
