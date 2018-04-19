@@ -518,6 +518,13 @@
         FT_UInt   pos, idx;
 
 
+        if ( char_lo > start + count )
+        {
+          /* this happens only for a malformed cmap */
+          charcode = 0x100;
+          continue;
+        }
+
         if ( offset == 0 )
         {
           if ( charcode == 0x100 )
