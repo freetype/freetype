@@ -1,3 +1,16 @@
+2018-04-22  Werner Lemberg  <wl@gnu.org>
+
+	Another fix for handling invalid format 2 cmaps.
+
+	The previous commit was incomplete.
+
+	Reported as
+
+	  https://bugs.chromium.org/p/oss-fuzz/issues/detail?id=7928
+
+	* src/sfnt/ttcmap.c (tt_cmap2_char_next): Adjust condition to avoid
+	an endless loop.
+
 2018-04-19  Werner Lemberg  <wl@gnu.org
 
 	[autofit] Add support for Georgian Mtavruli characters.
@@ -9,7 +22,7 @@
 
 	* src/autofit/afscript.h: Add Mtavruli standard character.
 
-2018-03-13  Werner Lemberg  <wl@gnu.org>
+2018-04-18  Werner Lemberg  <wl@gnu.org>
 
 	Fix handling of invalid format 2 cmaps.
 
