@@ -1,3 +1,7 @@
+2018-04-22  Werner Lemberg  <wl@gnu.org>
+
+	* src/base/ftoutln.c (FT_Outline_Decompose): Improve error tracing.
+
 2018-04-22  Alexei Podtelezhnikov  <apodtele@gmail.com>
 
 	[base] Fix bitmap emboldening.
