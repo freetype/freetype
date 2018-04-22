@@ -1,3 +1,13 @@
+2018-04-22  Alexei Podtelezhnikov  <apodtele@gmail.com>
+
+	[base] Fix bitmap emboldening.
+
+	Bug introduced after release 2.8.
+
+	* src/base/ftbitmap.c (ft_bitmap_assure_buffer): We use
+	`FT_QALLOC_MULT', which doesn't zero out the buffer.  Adjust the
+	bitmap copying code to take care of this fact.
+
 2018-04-22  Werner Lemberg  <wl@gnu.org>
 
 	Another fix for handling invalid format 2 cmaps.
