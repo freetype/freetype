@@ -1,5 +1,11 @@
 2018-04-22  Werner Lemberg  <wl@gnu.org>
 
+	[base] Fix bitmap copying where the new pitch is smaller.
+
+	* src/base/ftbitmap.c (ft_bitmap_assure_buffer): Handle it.
+
+2018-04-22  Werner Lemberg  <wl@gnu.org>
+
 	Another fix for handling invalid format 2 cmaps.
 
 	The previous commit was incomplete.

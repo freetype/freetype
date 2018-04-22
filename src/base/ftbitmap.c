@@ -237,20 +237,35 @@
       unsigned char*  out = buffer;
 
       unsigned char*  limit = bitmap->buffer + pitch * bitmap->rows;
-      unsigned int    delta = new_pitch - pitch;
 
 
       FT_MEM_ZERO( out, new_pitch * ypixels );
       out += new_pitch * ypixels;
 
-      while ( in < limit )
+      if ( new_pitch > pitch )
       {
-        FT_MEM_COPY( out, in, len );
-        in  += pitch;
-        out += pitch;
+        unsigned int  delta = new_pitch - pitch;
 
-        FT_MEM_ZERO( out, delta );
-        out += delta;
+
+        while ( in < limit )
+        {
+          FT_MEM_COPY( out, in, len );
+          in  += pitch;
+          out += pitch;
+
+          /* we have to zero out the new (unused) pitch bytes */
+          FT_MEM_ZERO( out, delta );
+          out += delta;
+        }
+      }
+      else
+      {
+        while ( in < limit )
+        {
+          FT_MEM_COPY( out, in, len );
+          in  += pitch;
+          out += new_pitch;
+        }
       }
     }
     else
@@ -261,17 +276,32 @@
       unsigned char*  out = buffer;
 
       unsigned char*  limit = bitmap->buffer + pitch * bitmap->rows;
-      unsigned int    delta = new_pitch - pitch;
 
 
-      while ( in < limit )
+      if ( new_pitch > pitch )
       {
-        FT_MEM_COPY( out, in, len );
-        in  += pitch;
-        out += pitch;
+        unsigned int  delta = new_pitch - pitch;
 
-        FT_MEM_ZERO( out, delta );
-        out += delta;
+
+        while ( in < limit )
+        {
+          FT_MEM_COPY( out, in, len );
+          in  += pitch;
+          out += pitch;
+
+          /* we have to zero out the new (unused) pitch bytes */
+          FT_MEM_ZERO( out, delta );
+          out += delta;
+        }
+      }
+      else
+      {
+        while ( in < limit )
+        {
+          FT_MEM_COPY( out, in, len );
+          in  += pitch;
+          out += new_pitch;
+        }
       }
 
       FT_MEM_ZERO( out, new_pitch * ypixels );
