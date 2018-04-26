@@ -518,7 +518,7 @@
         FT_UInt   pos, idx;
 
 
-        if ( char_lo > start + count && charcode <= 0xFF )
+        if ( char_lo >= start + count && charcode <= 0xFF )
         {
           /* this happens only for a malformed cmap */
           charcode = 0x100;

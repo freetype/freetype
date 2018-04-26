@@ -1,3 +1,16 @@
+2018-04-26  Werner Lemberg  <wl@gnu.org>
+
+	Another fix for handling invalid format 2 cmaps.
+
+	Sigh.
+
+	Reported as
+
+	  https://bugs.chromium.org/p/oss-fuzz/issues/detail?id=8003
+
+	* src/sfnt/ttcmap.c (tt_cmap2_char_next): Adjust condition to avoid
+	an endless loop.
+
 2018-04-24  Ben Wagner  <bungeman@google.com>
 
 	[base] Avoid undefined behaviour in lcd filtering code (#53727).
