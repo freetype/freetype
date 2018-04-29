@@ -4,7 +4,7 @@
 /*                                                                         */
 /*    OpenType and CFF data/program tables loader (body).                  */
 /*                                                                         */
-/*  Copyright 1996-2017 by                                                 */
+/*  Copyright 1996-2018 by                                                 */
 /*  David Turner, Robert Wilhelm, and Werner Lemberg.                      */
 /*                                                                         */
 /*  This file is part of the FreeType project, and may only be used,       */
@@ -22,6 +22,7 @@
 #include FT_INTERNAL_STREAM_H
 #include FT_TRUETYPE_TAGS_H
 #include FT_TYPE1_TABLES_H
+#include FT_INTERNAL_POSTSCRIPT_AUX_H
 
 #ifdef TT_CONFIG_OPTION_GX_VAR_SUPPORT
 #include FT_MULTIPLE_MASTERS_H
@@ -1297,7 +1298,9 @@
 
     if ( numOperands > count )
     {
-      FT_TRACE4(( " cff_blend_doBlend: Stack underflow %d args\n", count ));
+      FT_TRACE4(( " cff_blend_doBlend: Stack underflow %d argument%s\n",
+                  count,
+                  count == 1 ? "" : "s" ));
 
       error = FT_THROW( Stack_Underflow );
       goto Exit;
@@ -1345,16 +1348,14 @@
     for ( i = 0; i < numBlends; i++ )
     {
       const FT_Int32*  weight = &blend->BV[1];
-      FT_Int32         sum;
+      FT_UInt32        sum;
 
 
       /* convert inputs to 16.16 fixed point */
-      sum = cff_parse_num( parser, &parser->stack[i + base] ) * 65536;
+      sum = cff_parse_num( parser, &parser->stack[i + base] ) * 0x10000;
 
       for ( j = 1; j < blend->lenBV; j++ )
-        sum += FT_MulFix( *weight++,
-                          cff_parse_num( parser,
-                                         &parser->stack[delta++] ) * 65536 );
+        sum += cff_parse_num( parser, &parser->stack[delta++] ) * *weight++;
 
       /* point parser stack to new value on blend_stack */
       parser->stack[i + base] = subFont->blend_top;
@@ -1364,10 +1365,10 @@
       /* opcode in both CFF and CFF2 DICTs.  See `cff_parse_num' for    */
       /* decode of this, which rounds to an integer.                    */
       *subFont->blend_top++ = 255;
-      *subFont->blend_top++ = ( (FT_UInt32)sum & 0xFF000000U ) >> 24;
-      *subFont->blend_top++ = ( (FT_UInt32)sum & 0x00FF0000U ) >> 16;
-      *subFont->blend_top++ = ( (FT_UInt32)sum & 0x0000FF00U ) >>  8;
-      *subFont->blend_top++ =   (FT_UInt32)sum & 0x000000FFU;
+      *subFont->blend_top++ = (FT_Byte)( sum >> 24 );
+      *subFont->blend_top++ = (FT_Byte)( sum >> 16 );
+      *subFont->blend_top++ = (FT_Byte)( sum >>  8 );
+      *subFont->blend_top++ = (FT_Byte)sum;
     }
 
     /* leave only numBlends results on parser stack */
@@ -1463,10 +1464,15 @@
 
       /* Note: `lenNDV' could be zero.                              */
       /*       In that case, build default blend vector (1,0,0...). */
-      /*       In the normal case, initialize each component to 1   */
-      /*       before inner loop.                                   */
-      if ( lenNDV != 0 )
-        blend->BV[master] = FT_FIXED_ONE; /* default */
+      if ( !lenNDV )
+      {
+        blend->BV[master] = 0;
+        continue;
+      }
+
+      /* In the normal case, initialize each component to 1 */
+      /* before inner loop.                                 */
+      blend->BV[master] = FT_FIXED_ONE; /* default */
 
       /* inner loop steps through axes in this region */
       for ( j = 0; j < lenNDV; j++ )
@@ -1529,12 +1535,12 @@
                        lenNDV * sizeof ( *NDV ) ) )
         goto Exit;
 
-      blend->lenNDV = lenNDV;
       FT_MEM_COPY( blend->lastNDV,
                    NDV,
                    lenNDV * sizeof ( *NDV ) );
     }
 
+    blend->lenNDV  = lenNDV;
     blend->builtBV = TRUE;
 
   Exit:
@@ -1550,13 +1556,13 @@
                           FT_UInt    lenNDV,
                           FT_Fixed*  NDV )
   {
-    if ( !blend->builtBV                             ||
-         blend->lastVsindex != vsindex               ||
-         blend->lenNDV != lenNDV                     ||
-         ( lenNDV                                  &&
-           memcmp( NDV,
-                   blend->lastNDV,
-                   lenNDV * sizeof ( *NDV ) ) != 0 ) )
+    if ( !blend->builtBV                                ||
+         blend->lastVsindex != vsindex                  ||
+         blend->lenNDV != lenNDV                        ||
+         ( lenNDV                                     &&
+           ft_memcmp( NDV,
+                      blend->lastNDV,
+                      lenNDV * sizeof ( *NDV ) ) != 0 ) )
     {
       /* need to build blend vector */
       return TRUE;
@@ -1572,12 +1578,17 @@
   cff_get_var_blend( CFF_Face     face,
                      FT_UInt     *num_coords,
                      FT_Fixed*   *coords,
+                     FT_Fixed*   *normalizedcoords,
                      FT_MM_Var*  *mm_var )
   {
     FT_Service_MultiMasters  mm = (FT_Service_MultiMasters)face->mm;
 
 
-    return mm->get_var_blend( FT_FACE( face ), num_coords, coords, mm_var );
+    return mm->get_var_blend( FT_FACE( face ),
+                              num_coords,
+                              coords,
+                              normalizedcoords,
+                              mm_var );
   }
 
 
@@ -1587,7 +1598,8 @@
     FT_Service_MultiMasters  mm = (FT_Service_MultiMasters)face->mm;
 
 
-    mm->done_blend( FT_FACE( face ) );
+    if (mm)
+      mm->done_blend( FT_FACE( face ) );
   }
 
 #endif /* TT_CONFIG_OPTION_GX_VAR_SUPPORT */
@@ -1885,7 +1897,8 @@
     subfont->lenNDV = lenNDV;
     subfont->NDV    = NDV;
 
-    stackSize = font->cff2 ? font->top_font.font_dict.maxstack
+    /* add 1 for the operator */
+    stackSize = font->cff2 ? font->top_font.font_dict.maxstack + 1
                            : CFF_MAX_STACK_DEPTH + 1;
 
     if ( cff_parser_init( &parser,
@@ -1920,6 +1933,24 @@
     else if ( priv->initial_random_seed == 0 )
       priv->initial_random_seed = 987654321;
 
+    /* some sanitizing to avoid overflows later on; */
+    /* the upper limits are ad-hoc values           */
+    if ( priv->blue_shift > 1000 || priv->blue_shift < 0 )
+    {
+      FT_TRACE2(( "cff_load_private_dict:"
+                  " setting unlikely BlueShift value %d to default (7)\n",
+                  priv->blue_shift ));
+      priv->blue_shift = 7;
+    }
+
+    if ( priv->blue_fuzz > 1000 || priv->blue_fuzz < 0 )
+    {
+      FT_TRACE2(( "cff_load_private_dict:"
+                  " setting unlikely BlueFuzz value %d to default (1)\n",
+                  priv->blue_fuzz ));
+      priv->blue_fuzz = 1;
+    }
+
   Exit:
     /* clean up */
     cff_blend_clear( subfont ); /* clear blend stack */
@@ -1928,18 +1959,6 @@
   Exit2:
     /* no clean up (parser not initialized) */
     return error;
-  }
-
-
-  FT_LOCAL_DEF( FT_UInt32 )
-  cff_random( FT_UInt32  r )
-  {
-    /* a 32bit version of the `xorshift' algorithm */
-    r ^= r << 13;
-    r ^= r >> 17;
-    r ^= r << 5;
-
-    return r;
   }
 
 
@@ -1965,6 +1984,8 @@
     FT_ULong         dict_len;
     CFF_FontRecDict  top  = &subfont->font_dict;
     CFF_Private      priv = &subfont->private_dict;
+
+    PSAux_Service  psaux = (PSAux_Service)face->psaux;
 
     FT_Bool  cff2      = FT_BOOL( code == CFF2_CODE_TOPDICT  ||
                                   code == CFF2_CODE_FONTDICT );
@@ -2071,7 +2092,7 @@
        */
       if ( face->root.internal->random_seed == -1 )
       {
-        CFF_Driver  driver = (CFF_Driver)FT_FACE_DRIVER( face );
+        PS_Driver  driver = (PS_Driver)FT_FACE_DRIVER( face );
 
 
         subfont->random = (FT_UInt32)driver->random_seed;
@@ -2079,7 +2100,8 @@
         {
           do
           {
-            driver->random_seed = (FT_Int32)cff_random( driver->random_seed );
+            driver->random_seed =
+              (FT_Int32)psaux->cff_random( (FT_UInt32)driver->random_seed );
 
           } while ( driver->random_seed < 0 );
         }
@@ -2092,7 +2114,8 @@
           do
           {
             face->root.internal->random_seed =
-              (FT_Int32)cff_random( face->root.internal->random_seed );
+              (FT_Int32)psaux->cff_random(
+                (FT_UInt32)face->root.internal->random_seed );
 
           } while ( face->root.internal->random_seed < 0 );
         }
@@ -2268,8 +2291,10 @@
         goto Exit;
       }
 
-      /* font names must not be empty */
-      if ( font->name_index.data_size < font->name_index.count )
+      /* if we have an empty font name,      */
+      /* it must be the only font in the CFF */
+      if ( font->name_index.count > 1                          &&
+           font->name_index.data_size < font->name_index.count )
       {
         /* for pure CFFs, we still haven't checked enough bytes */
         /* to be sure that it is a CFF at all                   */
@@ -2531,6 +2556,8 @@
       font->cf2_instance.finalizer( font->cf2_instance.data );
       FT_FREE( font->cf2_instance.data );
     }
+
+    FT_FREE( font->font_extra );
   }
 
 

@@ -50,7 +50,7 @@ THE SOFTWARE.
 #include FT_SERVICE_BDF_H
 #include FT_SERVICE_FONT_FORMAT_H
 #include FT_SERVICE_PROPERTIES_H
-#include FT_PCF_DRIVER_H
+#include FT_DRIVER_H
 
 
   /*************************************************************************/
@@ -387,7 +387,11 @@ THE SOFTWARE.
           if ( !ft_strcmp( s, "10646" )                      ||
                ( !ft_strcmp( s, "8859" ) &&
                  !ft_strcmp( face->charset_encoding, "1" ) ) )
-          unicode_charmap = 1;
+            unicode_charmap = 1;
+          /* another name for ASCII */
+          else if ( !ft_strcmp( s, "646.1991" )                 &&
+                    !ft_strcmp( face->charset_encoding, "IRV" ) )
+            unicode_charmap = 1;
         }
       }
 
@@ -409,12 +413,6 @@ THE SOFTWARE.
         }
 
         error = FT_CMap_New( &pcf_cmap_class, NULL, &charmap, NULL );
-
-#if 0
-        /* Select default charmap */
-        if ( pcfface->num_charmaps )
-          pcfface->charmap = pcfface->charmaps[0];
-#endif
       }
     }
 
@@ -722,6 +720,9 @@ THE SOFTWARE.
     FT_UNUSED( module );
     FT_UNUSED( value );
     FT_UNUSED( value_is_string );
+#ifndef FT_DEBUG_LEVEL_TRACE
+    FT_UNUSED( property_name );
+#endif
 
 #endif /* !PCF_CONFIG_OPTION_LONG_FAMILY_NAMES */
 
@@ -757,6 +758,9 @@ THE SOFTWARE.
 
     FT_UNUSED( module );
     FT_UNUSED( value );
+#ifndef FT_DEBUG_LEVEL_TRACE
+    FT_UNUSED( property_name );
+#endif
 
 #endif /* !PCF_CONFIG_OPTION_LONG_FAMILY_NAMES */
 

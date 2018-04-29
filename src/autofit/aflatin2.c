@@ -9,7 +9,7 @@
 /*                                                                         */
 /*    Auto-fitter hinting routines for latin writing system (body).        */
 /*                                                                         */
-/*  Copyright 2003-2017 by                                                 */
+/*  Copyright 2003-2018 by                                                 */
 /*  David Turner, Robert Wilhelm, and Werner Lemberg.                      */
 /*                                                                         */
 /*  This file is part of the FreeType project, and may only be used,       */
@@ -22,6 +22,9 @@
 
 
 #include FT_ADVANCES_H
+
+
+#ifdef FT_OPTION_AUTOFIT2
 
 #include "afglobal.h"
 #include "aflatin.h"
@@ -2337,13 +2340,7 @@
       goto Exit;
 
     /* analyze glyph outline */
-#ifdef AF_CONFIG_OPTION_USE_WARPER
-    if ( ( metrics->root.scaler.render_mode == FT_RENDER_MODE_LIGHT &&
-           AF_HINTS_DO_WARP( hints )                                ) ||
-         AF_HINTS_DO_HORIZONTAL( hints )                              )
-#else
     if ( AF_HINTS_DO_HORIZONTAL( hints ) )
-#endif
     {
       error = af_latin2_hints_detect_features( hints, AF_DIMENSION_HORZ );
       if ( error )
@@ -2363,9 +2360,9 @@
     for ( dim = 0; dim < AF_DIMENSION_MAX; dim++ )
     {
 #ifdef AF_CONFIG_OPTION_USE_WARPER
-      if ( dim == AF_DIMENSION_HORZ                                 &&
-           metrics->root.scaler.render_mode == FT_RENDER_MODE_LIGHT &&
-           AF_HINTS_DO_WARP( hints )                                )
+      if ( dim == AF_DIMENSION_HORZ                                  &&
+           metrics->root.scaler.render_mode == FT_RENDER_MODE_NORMAL &&
+           AF_HINTS_DO_WARP( hints )                                 )
       {
         AF_WarperRec  warper;
         FT_Fixed      scale;
@@ -2418,6 +2415,13 @@
     (AF_WritingSystem_InitHintsFunc)   af_latin2_hints_init,          /* style_hints_init      */
     (AF_WritingSystem_ApplyHintsFunc)  af_latin2_hints_apply          /* style_hints_apply     */
   )
+
+#else /* !FT_OPTION_AUTOFIT2 */
+
+  /* ANSI C doesn't like empty source files */
+  typedef int  _af_latin2_dummy;
+
+#endif /* !FT_OPTION_AUTOFIT2 */
 
 
 /* END */

@@ -5,7 +5,7 @@
 /*    Basic SFNT/TrueType type definitions and interface (specification    */
 /*    only).                                                               */
 /*                                                                         */
-/*  Copyright 1996-2017 by                                                 */
+/*  Copyright 1996-2018 by                                                 */
 /*  David Turner, Robert Wilhelm, and Werner Lemberg.                      */
 /*                                                                         */
 /*  This file is part of the FreeType project, and may only be used,       */
@@ -148,7 +148,7 @@ FT_BEGIN_HEADER
   /* <Fields>                                                              */
   /*    See                                                                */
   /*                                                                       */
-  /*      http://www.w3.org/TR/WOFF/#WOFFHeader                            */
+  /*      https://www.w3.org/TR/WOFF/#WOFFHeader                           */
   /*                                                                       */
   typedef struct  WOFF_HeaderRec_
   {
@@ -1299,15 +1299,20 @@ FT_BEGIN_HEADER
   /*                            variation tables (rather like Multiple     */
   /*                            Master data).                              */
   /*                                                                       */
-  /*    is_default_instance  :: Set if the glyph outlines can be used      */
-  /*                            unmodified (i.e., without applying glyph   */
-  /*                            variation deltas).                         */
-  /*                                                                       */
   /*    variation_support    :: Flags that indicate which OpenType         */
   /*                            functionality related to font variation    */
   /*                            support is present, valid, and usable.     */
   /*                            For example, TT_FACE_FLAG_VAR_FVAR is only */
   /*                            set if we have at least one design axis.   */
+  /*                                                                       */
+  /*    var_postscript_prefix ::                                           */
+  /*                            The PostScript name prefix needed for      */
+  /*                            constructing a variation font instance's   */
+  /*                            PS name .                                  */
+  /*                                                                       */
+  /*    var_postscript_prefix_len ::                                       */
+  /*                            The length of the `var_postscript_prefix'  */
+  /*                            string.                                    */
   /*                                                                       */
   /*    horz_metrics_size    :: The size of the `hmtx' table.              */
   /*                                                                       */
@@ -1374,7 +1379,7 @@ FT_BEGIN_HEADER
   /*                                                                       */
   /*    sph_compatibility_mode ::                                          */
   /*                            This flag is set if we are in ClearType    */
-  /*                            backwards compatibility mode (used by the  */
+  /*                            backward compatibility mode (used by the   */
   /*                            v38 implementation of the bytecode         */
   /*                            interpreter).                              */
   /*                                                                       */
@@ -1435,6 +1440,9 @@ FT_BEGIN_HEADER
     /* used to handle the HVAR, VVAR, and MVAR OpenType tables         */
     void*                 var;
 #endif
+
+    /* a typeless pointer to the PostScript Aux service */
+    void*                 psaux;
 
 
     /***********************************************************************/
@@ -1500,8 +1508,11 @@ FT_BEGIN_HEADER
     FT_Bool               doblend;
     GX_Blend              blend;
 
-    FT_Bool               is_default_instance;   /* since 2.7.1 */
     FT_UInt32             variation_support;     /* since 2.7.1 */
+
+    const char*           var_postscript_prefix;     /* since 2.7.2 */
+    FT_UInt               var_postscript_prefix_len; /* since 2.7.2 */
+
 #endif
 
     /* since version 2.2 */

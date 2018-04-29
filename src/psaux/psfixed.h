@@ -1,6 +1,6 @@
 /***************************************************************************/
 /*                                                                         */
-/*  cf2fixed.h                                                             */
+/*  psfixed.h                                                              */
 /*                                                                         */
 /*    Adobe's code for Fixed Point Mathematics (specification only).       */
 /*                                                                         */
@@ -36,8 +36,8 @@
 /***************************************************************************/
 
 
-#ifndef CF2FIXED_H_
-#define CF2FIXED_H_
+#ifndef PSFIXED_H_
+#define PSFIXED_H_
 
 
 FT_BEGIN_HEADER
@@ -63,10 +63,10 @@ FT_BEGIN_HEADER
           ( (FT_Short)( ( (FT_UInt32)(x) + 0x8000U ) >> 16 ) )
 #define cf2_fixedRound( x )                                              \
           ( (CF2_Fixed)( ( (FT_UInt32)(x) + 0x8000U ) & 0xFFFF0000UL ) )
-#define cf2_floatToFixed( f )                                            \
+#define cf2_doubleToFixed( f )                                           \
           ( (CF2_Fixed)( (f) * 65536.0 + 0.5 ) )
 #define cf2_fixedAbs( x )                                                \
-          ( (x) < 0 ? -(x) : (x) )
+          ( (x) < 0 ? NEG_INT32( x ) : (x) )
 #define cf2_fixedFloor( x )                                              \
           ( (CF2_Fixed)( (FT_UInt32)(x) & 0xFFFF0000UL ) )
 #define cf2_fixedFraction( x )                                           \
@@ -89,7 +89,7 @@ FT_BEGIN_HEADER
 FT_END_HEADER
 
 
-#endif /* CF2FIXED_H_ */
+#endif /* PSFIXED_H_ */
 
 
 /* END */

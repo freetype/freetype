@@ -1,8 +1,8 @@
 /***************************************************************************/
 /*                                                                         */
-/*  cf2arrst.h                                                             */
+/*  psstack.h                                                              */
 /*                                                                         */
-/*    Adobe's code for Array Stacks (specification).                       */
+/*    Adobe's code for emulating a CFF stack (specification).              */
 /*                                                                         */
 /*  Copyright 2007-2013 Adobe Systems Incorporated.                        */
 /*                                                                         */
@@ -36,65 +36,86 @@
 /***************************************************************************/
 
 
-#ifndef CF2ARRST_H_
-#define CF2ARRST_H_
-
-
-#include "cf2error.h"
+#ifndef PSSTACK_H_
+#define PSSTACK_H_
 
 
 FT_BEGIN_HEADER
 
 
-  /* need to define the struct here (not opaque) so it can be allocated by */
-  /* clients                                                               */
-  typedef struct  CF2_ArrStackRec_
+  /* CFF operand stack; specified maximum of 48 or 192 values */
+  typedef struct  CF2_StackNumber_
   {
-    FT_Memory  memory;
-    FT_Error*  error;
+    union
+    {
+      CF2_Fixed  r;      /* 16.16 fixed point */
+      CF2_Frac   f;      /* 2.30 fixed point (for font matrix) */
+      CF2_Int    i;
+    } u;
 
-    size_t  sizeItem;       /* bytes per element             */
-    size_t  allocated;      /* items allocated               */
-    size_t  chunk;          /* allocation increment in items */
-    size_t  count;          /* number of elements allocated  */
-    size_t  totalSize;      /* total bytes allocated         */
+    CF2_NumberType  type;
 
-    void*  ptr;             /* ptr to data                   */
+  } CF2_StackNumber;
 
-  } CF2_ArrStackRec, *CF2_ArrStack;
 
+  typedef struct  CF2_StackRec_
+  {
+    FT_Memory         memory;
+    FT_Error*         error;
+    CF2_StackNumber*  buffer;
+    CF2_StackNumber*  top;
+    FT_UInt           stackSize;
+
+  } CF2_StackRec, *CF2_Stack;
+
+
+  FT_LOCAL( CF2_Stack )
+  cf2_stack_init( FT_Memory  memory,
+                  FT_Error*  error,
+                  FT_UInt    stackSize );
+  FT_LOCAL( void )
+  cf2_stack_free( CF2_Stack  stack );
+
+  FT_LOCAL( CF2_UInt )
+  cf2_stack_count( CF2_Stack  stack );
 
   FT_LOCAL( void )
-  cf2_arrstack_init( CF2_ArrStack  arrstack,
-                     FT_Memory     memory,
-                     FT_Error*     error,
-                     size_t        sizeItem );
+  cf2_stack_pushInt( CF2_Stack  stack,
+                     CF2_Int    val );
   FT_LOCAL( void )
-  cf2_arrstack_finalize( CF2_ArrStack  arrstack );
+  cf2_stack_pushFixed( CF2_Stack  stack,
+                       CF2_Fixed  val );
+
+  FT_LOCAL( CF2_Int )
+  cf2_stack_popInt( CF2_Stack  stack );
+  FT_LOCAL( CF2_Fixed )
+  cf2_stack_popFixed( CF2_Stack  stack );
+
+  FT_LOCAL( CF2_Fixed )
+  cf2_stack_getReal( CF2_Stack  stack,
+                     CF2_UInt   idx );
+  FT_LOCAL( void )
+  cf2_stack_setReal( CF2_Stack  stack,
+                     CF2_UInt   idx,
+                     CF2_Fixed  val );
 
   FT_LOCAL( void )
-  cf2_arrstack_setCount( CF2_ArrStack  arrstack,
-                         size_t        numElements );
-  FT_LOCAL( void )
-  cf2_arrstack_clear( CF2_ArrStack  arrstack );
-  FT_LOCAL( size_t )
-  cf2_arrstack_size( const CF2_ArrStack  arrstack );
-
-  FT_LOCAL( void* )
-  cf2_arrstack_getBuffer( const CF2_ArrStack  arrstack );
-  FT_LOCAL( void* )
-  cf2_arrstack_getPointer( const CF2_ArrStack  arrstack,
-                           size_t              idx );
+  cf2_stack_pop( CF2_Stack  stack,
+                 CF2_UInt   num );
 
   FT_LOCAL( void )
-  cf2_arrstack_push( CF2_ArrStack  arrstack,
-                     const void*   ptr );
+  cf2_stack_roll( CF2_Stack  stack,
+                  CF2_Int    count,
+                  CF2_Int    idx );
+
+  FT_LOCAL( void )
+  cf2_stack_clear( CF2_Stack  stack );
 
 
 FT_END_HEADER
 
 
-#endif /* CF2ARRST_H_ */
+#endif /* PSSTACK_H_ */
 
 
 /* END */
