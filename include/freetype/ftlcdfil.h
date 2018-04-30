@@ -36,10 +36,10 @@ FT_BEGIN_HEADER
   /***************************************************************************
    *
    * @section:
-   *   lcd_filtering
+   *   lcd_rendering
    *
    * @title:
-   *   LCD Filtering
+   *   LCD Rendering
    *
    * @abstract:
    *   Reduce color fringes of subpixel-rendered bitmaps.
@@ -230,9 +230,10 @@ FT_BEGIN_HEADER
    *   @FT_LCD_FILTER_NONE in order to enable it.
    *
    *   Due to *PATENTS* covering subpixel rendering, this function doesn't
-   *   do anything if FT_CONFIG_OPTION_SUBPIXEL_RENDERING is not defined
-   *   in your build of the library, which should correspond to all default
-   *   builds of FreeType.
+   *   do anything except returning `FT_Err_Unimplemented_Feature' if the
+   *   configuration macro FT_CONFIG_OPTION_SUBPIXEL_RENDERING is not
+   *   defined in your build of the library, which should correspond to all
+   *   default builds of FreeType.
    *
    * @since:
    *   2.3.0
@@ -264,9 +265,10 @@ FT_BEGIN_HEADER
    *
    * @note:
    *   Due to *PATENTS* covering subpixel rendering, this function doesn't
-   *   do anything if FT_CONFIG_OPTION_SUBPIXEL_RENDERING is not defined
-   *   in your build of the library, which should correspond to all default
-   *   builds of FreeType.
+   *   do anything except returning `FT_Err_Unimplemented_Feature' if the
+   *   configuration macro FT_CONFIG_OPTION_SUBPIXEL_RENDERING is not
+   *   defined in your build of the library, which should correspond to all
+   *   default builds of FreeType.
    *
    *   LCD filter weights can also be set per face using @FT_Face_Properties
    *   with @FT_PARAM_TAG_LCD_FILTER_WEIGHTS.
@@ -294,6 +296,54 @@ FT_BEGIN_HEADER
 #define FT_LCD_FILTER_FIVE_TAPS  5
 
   typedef FT_Byte  FT_LcdFiveTapFilter[FT_LCD_FILTER_FIVE_TAPS];
+
+
+  /**************************************************************************
+   *
+   * @func:
+   *   FT_Library_SetLcdGeometry
+   *
+   * @description:
+   *   This function can be used to modify default positions of color
+   *   subpixels, which controls Harmony LCD rendering.
+   *
+   * @input:
+   *   library ::
+   *     A handle to the target library instance.
+   *
+   *   sub ::
+   *     A pointer to an array of 3 vectors in 26.6 fractional pixel format;
+   *     the function modifies the default values, see the note below.
+   *
+   * @return:
+   *   FreeType error code.  0~means success.
+   *
+   * @note:
+   *   This function does nothing and returns `FT_Err_Unimplemented_Feature'
+   *   in the context of ClearType-style subpixel rendering when
+   *   FT_CONFIG_OPTION_SUBPIXEL_RENDERING is defined in your build of the
+   *   library.
+   *
+   *   Subpixel geometry examples:
+   *
+   *   - {{-21, 0}, {0, 0}, {21, 0}} is the default, corresponding 3 color
+   *   stripes shifted by a third of a pixel. This could be an RGB panel.
+   *
+   *   - {{21, 0}, {0, 0}, {-21, 0}} looks the same as the default but
+   *   offers you possibility to specify that this is a BGR panel instead,
+   *   while keeping the bitmap in the same RGB888 format.
+   *
+   *   - {{0, 21}, {0, 0}, {0, -21}} is the vertical RGB, but the bitmap
+   *   stays RGB888 as a result.
+   *
+   *   - {{32, -21}, {-32, -21}, {0, 42}} is a certain PenTile arrangement.
+   *
+   * @since:
+   *   2.9.x
+   */
+  FT_EXPORT( FT_Error )
+  FT_Library_SetLcdGeometry( FT_Library  library,
+                             FT_Vector*  sub );
 
 
   /* */

@@ -351,6 +351,16 @@
     return FT_Err_Ok;
   }
 
+  FT_EXPORT_DEF( FT_Error )
+  FT_Library_SetLcdGeometry( FT_Library  library,
+                             FT_Vector*  sub )
+  {
+    FT_UNUSED( library );
+    FT_UNUSED( sub );
+
+    return FT_THROW( Unimplemented_Feature );
+  }
+
 #else /* !FT_CONFIG_OPTION_SUBPIXEL_RENDERING */
 
   /* add padding to accommodate outline shifts */
@@ -379,13 +389,29 @@
 
 
   FT_EXPORT_DEF( FT_Error )
+  FT_Library_SetLcdGeometry( FT_Library  library,
+                             FT_Vector*  sub )
+  {
+    if ( !library )
+      return FT_THROW( Invalid_Library_Handle );
+
+    if ( !sub )
+      return FT_THROW( Invalid_Argument );
+
+    ft_memcpy( library->lcd_geometry, sub, 6 * sizeof( FT_Vector ) );
+
+    return FT_THROW( Unimplemented_Feature );
+  }
+
+
+  FT_EXPORT_DEF( FT_Error )
   FT_Library_SetLcdFilterWeights( FT_Library      library,
                                   unsigned char  *weights )
   {
     FT_UNUSED( library );
     FT_UNUSED( weights );
 
-    return FT_Err_Ok;
+    return FT_THROW( Unimplemented_Feature );
   }
 
 
@@ -396,7 +422,7 @@
     FT_UNUSED( library );
     FT_UNUSED( filter );
 
-    return FT_Err_Ok;
+    return FT_THROW( Unimplemented_Feature );
   }
 
 #endif /* !FT_CONFIG_OPTION_SUBPIXEL_RENDERING */
