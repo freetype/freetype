@@ -398,7 +398,7 @@
     if ( !sub )
       return FT_THROW( Invalid_Argument );
 
-    ft_memcpy( library->lcd_geometry, sub, 6 * sizeof( FT_Vector ) );
+    ft_memcpy( library->lcd_geometry, sub, 3 * sizeof( FT_Vector ) );
 
     return FT_THROW( Unimplemented_Feature );
   }
