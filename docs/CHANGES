@@ -5,7 +5,7 @@ CHANGES BETWEEN 2.9 and 2.9.1
     - Type  1  fonts  containing   flex  features  were  not  rendered
       correctly (bug introduced in version 2.9).
 
-    - CVE-2018-6942: Older FreeType versions can crash with certain
+    - CVE-2018-6942: Older  FreeType versions  can crash  with certain
       malformed variation fonts.
 
         http://cve.mitre.org/cgi-bin/cvename.cgi?name=CVE-2018-6942
@@ -19,6 +19,9 @@ CHANGES BETWEEN 2.9 and 2.9.1
       the  base  module  (and  thus no  longer  configurable  in  file
       `modules.cfg').
 
+    - Emboldening of bitmaps didn't work correctly sometimes,  showing
+      various artifacts (bug introduced in version 2.8.1).
+
     - Use  of  the `freetype-config'  script  to  get compilation  and
       linking  options   is  deprecated   since  it   doesn't  support
       cross-compiling, among other  deficiencies.  Instead, you should
@@ -28,6 +31,17 @@ CHANGES BETWEEN 2.9 and 2.9.1
       default.  For  backwards compatibility,  a new  configure option
       `--enable-freetype-config'   is  provided   that  reverts   this
       decision.
+
+    - The auto-hinter script ranges have  been updated for Unicode 11.
+      No support  for new scripts  have been added, however,  with the
+      exception of Georgian Mtavruli.
+
+    - Support for cmake has been improved.
+
+    - The next  release will  remove support for  Position Independent
+      Code  as  needed  by  systems that  prohibit  automatic  address
+      fixups, such  as BREW.  [Compilation with  modern compilers that
+      use flags like `-fPIC' or `-fPIE' is not affected.]
 
 
 ======================================================================
