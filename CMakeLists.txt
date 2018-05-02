@@ -229,9 +229,12 @@ if (UNIX)
   endif ()
   string(REPLACE "/undef " "#undef "
     FTCONFIG_H "${FTCONFIG_H}")
-  file(WRITE "${PROJECT_BINARY_DIR}/include/freetype/config/ftconfig.h"
-    "${FTCONFIG_H}")
+else()
+  file(READ "${PROJECT_SOURCE_DIR}/include/freetype/config/ftconfig.h"
+    FTCONFIG_H)
 endif ()
+file(WRITE "${PROJECT_BINARY_DIR}/include/freetype/config/ftconfig.h"
+  "${FTCONFIG_H}")
 
 
 # Create the options file
