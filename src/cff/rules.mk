@@ -31,8 +31,7 @@ CFF_DRV_SRC := $(CFF_DIR)/cffcmap.c  \
                $(CFF_DIR)/cffgload.c \
                $(CFF_DIR)/cffload.c  \
                $(CFF_DIR)/cffobjs.c  \
-               $(CFF_DIR)/cffparse.c \
-               $(CFF_DIR)/cffpic.c
+               $(CFF_DIR)/cffparse.c
 
 
 # CFF driver headers

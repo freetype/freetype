@@ -43,10 +43,6 @@
 
 #ifdef FT_CONFIG_OPTION_USE_BZIP2
 
-#ifdef FT_CONFIG_OPTION_PIC
-#error "bzip2 code does not support PIC yet"
-#endif
-
 #define BZ_NO_STDIO /* Do not need FILE */
 #include <bzlib.h>
 

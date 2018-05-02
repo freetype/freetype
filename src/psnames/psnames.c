@@ -20,7 +20,6 @@
 #include <ft2build.h>
 
 #include "psmodule.c"
-#include "pspic.c"
 
 
 /* END */

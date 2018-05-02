@@ -31,7 +31,6 @@ PSHINTER_COMPILE := $(CC) $(ANSIFLAGS)                                 \
 PSHINTER_DRV_SRC := $(PSHINTER_DIR)/pshalgo.c \
                     $(PSHINTER_DIR)/pshglob.c \
                     $(PSHINTER_DIR)/pshmod.c  \
-                    $(PSHINTER_DIR)/pshpic.c  \
                     $(PSHINTER_DIR)/pshrec.c
 
 

@@ -26,9 +26,7 @@
 
 FT_BEGIN_HEADER
 
-
   FT_DECLARE_MODULE( sfnt_module_class )
-
 
 FT_END_HEADER
 

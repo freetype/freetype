@@ -1,3 +1,22 @@
+2018-05-02  Werner Lemberg  <wl@gnu.org>
+
+	Remove FT_CONFIG_OPTION_PIC and related code.
+
+	*/* [FT_CONFIG_OPTION_PIC]: Remove all code guarded by this
+	preprocessor symbol.
+
+	*/*: Replace `XXX_GET' macros (which could be either a function in
+	PIC mode or an array in non-PIC mode) with `xxx' arrays.
+
+	* include/freetype/internal/ftpic.h, src/autofit/afpic.c,
+	src/autofit/afpic.h, src/base/basepic.c, src/base/basepic.h,
+	src/base/ftpic.c, src/cff/cffpic.c, src/cff/cffpic.h,
+	src/pshinter/pshpic.c, src/pshinter/pshpic.h, src/psnames/pspic.c,
+	src/psnames/pspic.h, src/raster/rastpic.c, src/raster/rastpic.h,
+	src/sfnt/sfntpic.c, src/sfnt/sfntpic.h, src/smooth/ftspic.c,
+	src/smooth/ftspic.h, src/truetype/ttpic.c, src/truetype/ttpic.h:
+	Removed.
+
 2018-05-01  Werner Lemberg  <wl@gnu.org>
 
 	* Version 2.9.1 released.

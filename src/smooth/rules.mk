@@ -29,8 +29,7 @@ SMOOTH_COMPILE := $(CC) $(ANSIFLAGS)                               \
 # smooth driver sources (i.e., C files)
 #
 SMOOTH_DRV_SRC := $(SMOOTH_DIR)/ftgrays.c  \
-                  $(SMOOTH_DIR)/ftsmooth.c \
-                  $(SMOOTH_DIR)/ftspic.c
+                  $(SMOOTH_DIR)/ftsmooth.c
 
 
 # smooth driver headers

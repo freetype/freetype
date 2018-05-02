@@ -28,8 +28,7 @@ RASTER_COMPILE := $(CC) $(ANSIFLAGS)                               \
 # raster driver sources (i.e., C files)
 #
 RASTER_DRV_SRC := $(RASTER_DIR)/ftraster.c \
-                  $(RASTER_DIR)/ftrend1.c  \
-                  $(RASTER_DIR)/rastpic.c
+                  $(RASTER_DIR)/ftrend1.c
 
 
 # raster driver headers

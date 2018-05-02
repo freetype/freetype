@@ -468,35 +468,6 @@ FT_BEGIN_HEADER
 
 
   /*************************************************************************/
-  /*                                                                       */
-  /* Position Independent Code                                             */
-  /*                                                                       */
-  /*   If this macro is set (which is _not_ the default), FreeType2 will   */
-  /*   avoid creating constants that require address fixups.  Instead the  */
-  /*   constants will be moved into a struct and additional intialization  */
-  /*   code will be used.                                                  */
-  /*                                                                       */
-  /*   Setting this macro is needed for systems that prohibit address      */
-  /*   fixups, such as BREW.  [Note that standard compilers like gcc or    */
-  /*   clang handle PIC generation automatically; you don't have to set    */
-  /*   FT_CONFIG_OPTION_PIC, which is only necessary for very special      */
-  /*   compilers.]                                                         */
-  /*                                                                       */
-  /*   Note that FT_CONFIG_OPTION_PIC support is not available for all     */
-  /*   modules (see `modules.cfg' for a complete list).  For building with */
-  /*   FT_CONFIG_OPTION_PIC support, do the following.                     */
-  /*                                                                       */
-  /*     0. Clone the repository.                                          */
-  /*     1. Define FT_CONFIG_OPTION_PIC.                                   */
-  /*     2. Remove all subdirectories in `src' that don't have             */
-  /*        FT_CONFIG_OPTION_PIC support.                                  */
-  /*     3. Comment out the corresponding modules in `modules.cfg'.        */
-  /*     4. Compile.                                                       */
-  /*                                                                       */
-/* #define FT_CONFIG_OPTION_PIC */
-
-
-  /*************************************************************************/
   /*************************************************************************/
   /****                                                                 ****/
   /****        S F N T   D R I V E R    C O N F I G U R A T I O N       ****/

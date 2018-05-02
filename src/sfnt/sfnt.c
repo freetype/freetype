@@ -21,7 +21,6 @@
 
 #include "pngshim.c"
 #include "sfdriver.c"
-#include "sfntpic.c"
 #include "sfobjs.c"
 #include "ttbdf.c"
 #include "ttcmap.c"
