@@ -461,6 +461,8 @@ FT_BEGIN_HEADER
 #define FT_EXPORT( x )  __declspec( dllexport )  x
 #elif defined( __GNUC__ ) && __GNUC__ >= 4
 #define FT_EXPORT( x )  __attribute__(( visibility( "default" ) ))  x
+#elif defined( __SUNPRO_C ) && __SUNPRO_C >= 0x550
+#define FT_EXPORT( x )  __global  x
 #elif defined( __cplusplus )
 #define FT_EXPORT( x )  extern "C"  x
 #else

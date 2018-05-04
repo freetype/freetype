@@ -1,3 +1,20 @@
+2018-05-04  suzuki toshiya  <mpsuzuki@hiroshima-u.ac.jp>
+
+	Support symbol visibility features of Sun / Oracle C compilers.
+	Reported by Kiyoshi Kanazawa:
+	https://lists.gnu.org/archive/html/freetype-devel/2018-05/msg00008.html
+	Thanks to the suggestions by Alexei and Alan Coopersmith.
+
+	* builds/unix/configure.raw: Check if "-xldscope=hidden" is
+	accepted, and if so, it is added to CFLAGS.  This is the option
+	making Sun / Oracle C compilers hide the symbols from global
+	scope.
+	* include/freetype/config/ftconfig.h: Use "__global" prefix
+	for FT_EXPORT() macro, if SunPro C is newer than Sun ONE
+	Studio 8 (2003).
+	* builds/unix/ftconfig.in: Ditto.
+	* builds/vms/ftconfig.h: Ditto.
+
 2018-05-02  Nikolaus Waxweiler  <madigens@gmail.com>
 
 	Unbreak CMake Windows installation

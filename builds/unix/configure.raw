@@ -311,6 +311,14 @@ AC_SUBST([XX_ANSIFLAGS])
 # It is recommended that shared libraries hide symbols except those with
 # explicit __attribute__((visibility("default"))).
 #
+AC_MSG_CHECKING([for -xldscope=hidden compiler flag])
+orig_CFLAGS="${CFLAGS}"
+CFLAGS="${CFLAGS} -xldscope=hidden"
+AC_COMPILE_IFELSE([AC_LANG_PROGRAM([],[])],
+                  AC_MSG_RESULT(yes),
+                  CFLAGS="${orig_CFLAGS}"
+                  AC_MSG_RESULT(no))
+
 AC_MSG_CHECKING([for -fvisibility=hidden compiler flag])
 orig_CFLAGS="${CFLAGS}"
 CFLAGS="${CFLAGS} -fvisibility=hidden"
