@@ -1,3 +1,18 @@
+2018-05-07  Werner Lemberg  <wl@gnu.org>
+
+	[build] Suppress configure's `nothing to be done' message.
+
+	This is due to calling the configure script via `make' (within the
+	top-level `configure' wrapper script).  The same can happen for all
+	other secondary make targets that are used to only modify the
+	primary one, e.g., `make setup devel'.
+
+	* builds/dos/detect.mk (emx, turboc, watcom, borlandc, borlandc16),
+	builds/os2/detect (visualage, watcom, borlandc, devel),
+	builds/unix/detect.mk (devel, lcc, unix), builds/windows/detect.mk
+	(visualc, watcom, visualage, lcc, mingw32, bcc32, devel-bcc,
+	devel-gcc): Use no-op recipe.
+
 2018-05-04  suzuki toshiya  <mpsuzuki@hiroshima-u.ac.jp>
 
 	Support symbol visibility features of Sun / Oracle C compilers.
