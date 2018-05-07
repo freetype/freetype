@@ -1,3 +1,11 @@
+2018-05-07  Nikolaus Waxweiler  <madigens@gmail.com>
+
+	CMake: Allow using project as subfolder in other project
+
+	* CMakeLists.txt: Test for CMake build directory being diffent from source
+	directory. Provide other parts of the build system access the full include
+	directory.
+
 2018-05-07  Werner Lemberg  <wl@gnu.org>
 
 	[build] Suppress configure's `nothing to be done' message.

@@ -153,7 +153,7 @@ option(FT_WITH_HARFBUZZ "Improve auto-hinting of OpenType fonts." OFF)
 
 
 # Disallow in-source builds
-if ("${PROJECT_BINARY_DIR}" STREQUAL "${PROJECT_SOURCE_DIR}")
+if ("${CMAKE_BINARY_DIR}" STREQUAL "${CMAKE_SOURCE_DIR}")
   message(FATAL_ERROR
     "In-source builds are not permitted!  Make a separate folder for"
     " building, e.g.,\n"
@@ -356,17 +356,17 @@ if (BUILD_SHARED_LIBS)
     SOVERSION ${LIBRARY_SOVERSION})
 endif ()
 
-target_include_directories(
-  freetype BEFORE  # Pick up ftconfig.h and ftoption.h generated above.
-    PRIVATE "${PROJECT_BINARY_DIR}/include")
-
+# Pick up ftconfig.h and ftoption.h generated above, first.
 target_include_directories(
   freetype
-    PRIVATE "${PROJECT_SOURCE_DIR}/include")
+    PUBLIC
+      $<INSTALL_INTERFACE:include/freetype2>
+      $<BUILD_INTERFACE:${CMAKE_CURRENT_BINARY_DIR}/include>
+      $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
+    PRIVATE 
+      ${CMAKE_CURRENT_BINARY_DIR}/include
+      ${CMAKE_CURRENT_SOURCE_DIR}/include)
 
-target_include_directories(
-  freetype
-    PUBLIC $<INSTALL_INTERFACE:include/freetype2>)
 
 if (BUILD_FRAMEWORK)
   set_property(SOURCE ${PUBLIC_CONFIG_HEADERS}
