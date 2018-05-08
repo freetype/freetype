@@ -591,14 +591,9 @@
   void*
   af_shaper_buf_create( FT_Face  face )
   {
-    FT_Error   error;
-    FT_Memory  memory = face->memory;
-    FT_ULong*  buf;
+    FT_UNUSED( face );
 
-
-    FT_MEM_ALLOC( buf, sizeof ( FT_ULong ) );
-
-    return (void*)buf;
+    return NULL;
   }
 
 
@@ -606,10 +601,8 @@
   af_shaper_buf_destroy( FT_Face  face,
                          void*    buf )
   {
-    FT_Memory  memory = face->memory;
-
-
-    FT_FREE( buf );
+    FT_UNUSED( face );
+    FT_UNUSED( buf );
   }
 
 

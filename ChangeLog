@@ -1,10 +1,29 @@
+2018-05-08  Werner Lemberg  <wl@gnu.org>
+
+	[autofit] Avoid potential SEGV if running out of memory.
+
+	Problem reported by Shailesh Mistry <shailesh.mistry@hotmail.co.uk>.
+
+	* src/autofit/afshaper.c (af_shaper_buf_create,
+	af_shaper_buf_destroy) [!FT_CONFIG_OPTION_USE_HARFBUZZ]: Don't
+	allocate and free a four-byte buffer.  Instead, make those functions
+	no-ops; the calling functions will provide a pointer to a buffer
+	instead.
+
+	* src/autofit/afcjk.c (af_cjk_metrics_init_widths,
+	af_cjk_metrics_init_blues, af_cjk_metrics_check_digits),
+	src/autofit/aflatin.c (af_latin_metrics_init_widths,
+	af_latin_metrics_init_blues, af_latin_metrics_check_digits)
+	[!FT_CONFIG_OPTION_USE_HARFBUZZ]: Use pointer to local variable for
+	`shaper_buf'.
+
 2018-05-07  Nikolaus Waxweiler  <madigens@gmail.com>
 
-	CMake: Allow using project as subfolder in other project
+	[cmake] Allow using project as subfolder in other project.
 
-	* CMakeLists.txt: Test for CMake build directory being diffent from source
-	directory. Provide other parts of the build system access the full include
-	directory.
+	* CMakeLists.txt: Test for CMake build directory being different
+	from source directory.  Provide other parts of the build system
+	access the full include directory.
 
 2018-05-07  Werner Lemberg  <wl@gnu.org>
 
@@ -24,6 +43,7 @@
 2018-05-04  suzuki toshiya  <mpsuzuki@hiroshima-u.ac.jp>
 
 	Support symbol visibility features of Sun / Oracle C compilers.
+
 	Reported by Kiyoshi Kanazawa:
 	https://lists.gnu.org/archive/html/freetype-devel/2018-05/msg00008.html
 	Thanks to the suggestions by Alexei and Alan Coopersmith.
@@ -43,7 +63,6 @@
 	Unbreak CMake Windows installation
 
 	* CMakeLists.txt: Generate ftconfig.h on non-UNIX.
-
 
 2018-05-02  Werner Lemberg  <wl@gnu.org>
 

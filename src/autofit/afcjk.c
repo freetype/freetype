@@ -94,15 +94,26 @@
       AF_StyleClass   style_class  = metrics->root.style_class;
       AF_ScriptClass  script_class = af_script_classes[style_class->script];
 
-      void*        shaper_buf;
+      /* If HarfBuzz is not available, we need a pointer to a single */
+      /* unsigned long value.                                        */
+#ifdef FT_CONFIG_OPTION_USE_HARFBUZZ
+      void*     shaper_buf;
+#else
+      FT_ULong  shaper_buf_;
+      void*     shaper_buf = &shaper_buf_;
+#endif
+
       const char*  p;
 
 #ifdef FT_DEBUG_LEVEL_TRACE
       FT_ULong  ch = 0;
 #endif
 
-      p          = script_class->standard_charstring;
+      p = script_class->standard_charstring;
+
+#ifdef FT_CONFIG_OPTION_USE_HARFBUZZ
       shaper_buf = af_shaper_buf_create( face );
+#endif
 
       /* We check a list of standard characters.  The first match wins. */
 
@@ -290,7 +301,14 @@
     AF_Blue_Stringset         bss = sc->blue_stringset;
     const AF_Blue_StringRec*  bs  = &af_blue_stringsets[bss];
 
-    void*  shaper_buf;
+    /* If HarfBuzz is not available, we need a pointer to a single */
+    /* unsigned long value.                                        */
+#ifdef FT_CONFIG_OPTION_USE_HARFBUZZ
+    void*     shaper_buf;
+#else
+    FT_ULong  shaper_buf_;
+    void*     shaper_buf = &shaper_buf_;
+#endif
 
 
     /* we walk over the blue character strings as specified in the   */
@@ -301,7 +319,9 @@
                 "==========================\n"
                 "\n" ));
 
+#ifdef FT_CONFIG_OPTION_USE_HARFBUZZ
     shaper_buf = af_shaper_buf_create( face );
+#endif
 
     for ( ; bs->string != AF_BLUE_STRING_MAX; bs++ )
     {
@@ -559,15 +579,25 @@
     FT_Bool   started = 0, same_width = 1;
     FT_Fixed  advance = 0, old_advance = 0;
 
-    void*  shaper_buf;
+    /* If HarfBuzz is not available, we need a pointer to a single */
+    /* unsigned long value.                                        */
+#ifdef FT_CONFIG_OPTION_USE_HARFBUZZ
+    void*     shaper_buf;
+#else
+    FT_ULong  shaper_buf_;
+    void*     shaper_buf = &shaper_buf_;
+#endif
 
     /* in all supported charmaps, digits have character codes 0x30-0x39 */
     const char   digits[] = "0 1 2 3 4 5 6 7 8 9";
     const char*  p;
 
 
-    p          = digits;
+    p = digits;
+
+#ifdef FT_CONFIG_OPTION_USE_HARFBUZZ
     shaper_buf = af_shaper_buf_create( face );
+#endif
 
     while ( *p )
     {
