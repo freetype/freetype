@@ -182,7 +182,7 @@ THE SOFTWARE.
      *  `offset' + `size' must not exceed the stream size.
      *
      *  Note, however, that X11's `pcfWriteFont' routine (used by the
-     *  `bdftopcf' program to create PDF font files) has two special
+     *  `bdftopcf' program to create PCF font files) has two special
      *  features.
      *
      *  - It always assigns the accelerator table a size of 100 bytes in the
