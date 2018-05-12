@@ -1,3 +1,10 @@
+2018-05-12  Arkady Shapkin  <arkady.shapkin@gmail.com>
+
+	Use MS VC++'s _BitScanReverse to calculate MSB (patch #9636).
+
+	* include/freetype/internal/ftcalc.h (FT_MSB) [_MSC_VER]: Implement
+	it.
+
 2018-05-10  Alan Coopersmith  <alan.coopersmith@oracle.com>
 
 	Fix DLL compilation on Solaris.
