@@ -46,6 +46,8 @@ FT_BEGIN_HEADER
 #define TTAG_CFF2  FT_MAKE_TAG( 'C', 'F', 'F', '2' )
 #define TTAG_CID   FT_MAKE_TAG( 'C', 'I', 'D', ' ' )
 #define TTAG_cmap  FT_MAKE_TAG( 'c', 'm', 'a', 'p' )
+#define TTAG_COLR  FT_MAKE_TAG( 'C', 'O', 'L', 'R' )
+#define TTAG_CPAL  FT_MAKE_TAG( 'C', 'P', 'A', 'L' )
 #define TTAG_cvar  FT_MAKE_TAG( 'c', 'v', 'a', 'r' )
 #define TTAG_cvt   FT_MAKE_TAG( 'c', 'v', 't', ' ' )
 #define TTAG_DSIG  FT_MAKE_TAG( 'D', 'S', 'I', 'G' )

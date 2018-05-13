@@ -1352,6 +1352,10 @@ FT_BEGIN_HEADER
   /*                            exposed by the API and the indices used in */
   /*                            the font's sbit table.                     */
   /*                                                                       */
+  /*    colr_and_cpal        :: A pointer to data related to `COLR' and    */
+  /*                            `CPAL' tables.  NULL if tables are not     */
+  /*                            available.                                 */
+  /*                                                                       */
   /*    kern_table           :: A pointer to the `kern' table.             */
   /*                                                                       */
   /*    kern_table_size      :: The size of the `kern' table.              */
@@ -1535,6 +1539,7 @@ FT_BEGIN_HEADER
     FT_UInt               sbit_num_strikes;
     FT_UInt*              sbit_strike_map;
 
+    void*                 colr_and_cpal;
     FT_Byte*              kern_table;
     FT_ULong              kern_table_size;
     FT_UInt               num_kern_tables;

@@ -1341,6 +1341,12 @@
     if ( sfnt->load_eblc )
       LOAD_( eblc );
 
+    if ( sfnt->load_colr )
+    {
+      /* Ignore error.  Missing optional colr/cpal is okay. */
+      LOAD_( colr );
+    }
+
     /* consider the pclt, kerning, and gasp tables as optional */
     LOAD_( pclt );
     LOAD_( gasp );
@@ -1394,7 +1400,8 @@
       /* Compute face flags.                                               */
       /*                                                                   */
       if ( face->sbit_table_type == TT_SBIT_TABLE_TYPE_CBLC ||
-           face->sbit_table_type == TT_SBIT_TABLE_TYPE_SBIX )
+           face->sbit_table_type == TT_SBIT_TABLE_TYPE_SBIX ||
+           face->colr_and_cpal                              )
         flags |= FT_FACE_FLAG_COLOR;      /* color glyphs */
 
       if ( has_outline == TRUE )
@@ -1737,6 +1744,10 @@
       /* destroy the embedded bitmaps table if it is loaded */
       if ( sfnt->free_eblc )
         sfnt->free_eblc( face );
+
+      /* destroy color table data if it is loaded */
+      if ( sfnt->free_colr )
+        sfnt->free_colr( face );
     }
 
 #ifdef TT_CONFIG_OPTION_BDF

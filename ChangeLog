@@ -1,3 +1,57 @@
+2018-05-13  Shao Yu Zhang  <shaozhang@fb.com>
+	    Werner Lemberg  <wl@gnu.org>
+
+	[sfnt] Preliminary support of coloured layer outlines.
+
+	This commit enables OpenType's COLR/CPAL table handling; a typical
+	application are color emojis that can be scaled to any size.
+
+	If the color palette does not exist or is invalid, the rendering
+	step rasterizes the outline instead.  The current implementation
+	assumes that the foreground is black.
+
+	Enable this by defining option TT_CONFIG_OPTION_COLOR_LAYERS.
+
+	There are still some issues with metrics; additionally, an API to
+	fetch color layers is missing.
+
+	* devel/ftoption.h, include/freetype/config/ftoption.h
+	(TT_CONFIG_OPTION_COLOR_LAYERS): New macro.
+
+	* include/freetype/internal/ftobjs.h (FT_Glyph_LayerRec,
+	FT_Colr_InternalRec): New structures.
+	(FT_Slot_InternalRec): Add `color_layers' field.
+
+	* include/freetype/internal/sfnt.h (TT_Load_Colr_Layer_Func,
+	TT_Blend_Colr_Func): New function types.
+	(SFNT_Interface): Add `load_colr', `free_colr', `load_colr_layer',
+	and `colr_blend' fields.
+
+	* include/freetype/internal/tttypes.h (TT_FaceRec): Add
+	`colr_and_cpal' field.
+
+	* include/freetype/internal/tttags. (TTAG_COLR, TTAG_CPAL): New
+	macros.
+
+	* src/sfnt/ttcolr.c, src/sfnt/ttcolr.h: New files.
+
+	* src/base/ftobjs.c (ft_glyphslot_done, FT_Render_Glyph_Internal):
+	Handle glyph color layers.
+
+	* src/sfnt/Jamfile (_sources), src/sfnt/rules.mk (SFNT_DRV_SRC): Add
+	`ttcolr.c'.
+
+	* src/sfnt/sfdriver.c: Include `ttcolr.h'.
+	(PUT_COLOR_LAYERS): New macro.
+	Update call to `FT_DEFINE_SFNT_INTERFACE'.
+
+	* src/sfnt/sfnt.c: Include `ttcolr.c'.
+
+	* src/sfnt/sfobjs.c (sfnt_load_face): Load `COLR' and `CPAL' tables.
+	(sfnt_done_face): Updated.
+
+	* src/truetype/ttgload.c (TT_Load_Glyph): Handle color layers.
+
 2018-05-12  Arkady Shapkin  <arkady.shapkin@gmail.com>
 
 	Use MS VC++'s _BitScanReverse to calculate MSB (patch #9636).

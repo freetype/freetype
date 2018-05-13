@@ -463,7 +463,7 @@
                       ? &ttsize->metrics
                       : &size->hinted_metrics;
 
-    /* now load the glyph outline if necessary */
+    /* now fill in the glyph slot with outline/bitmap/layered */
     error = TT_Load_Glyph( size, slot, glyph_index, load_flags );
 
     /* force drop-out mode to 2 - irrelevant now */

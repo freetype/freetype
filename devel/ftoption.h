@@ -487,6 +487,15 @@ FT_BEGIN_HEADER
 
   /*************************************************************************/
   /*                                                                       */
+  /* Define TT_CONFIG_OPTION_COLOR_LAYERS if you want to support coloured  */
+  /* outlines (from the COLR/CPAL tables) in all formats using the SFNT    */
+  /* module (namely TrueType & OpenType).                                  */
+  /*                                                                       */
+#define TT_CONFIG_OPTION_COLOR_LAYERS
+
+
+  /*************************************************************************/
+  /*                                                                       */
   /* Define TT_CONFIG_OPTION_POSTSCRIPT_NAMES if you want to be able to    */
   /* load and enumerate the glyph Postscript names in a TrueType or        */
   /* OpenType file.                                                        */

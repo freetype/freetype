@@ -32,6 +32,7 @@ SFNT_DRV_SRC := $(SFNT_DIR)/ttload.c   \
                 $(SFNT_DIR)/ttmtx.c    \
                 $(SFNT_DIR)/ttcmap.c   \
                 $(SFNT_DIR)/ttsbit.c   \
+                $(SFNT_DIR)/ttcolr.c   \
                 $(SFNT_DIR)/ttpost.c   \
                 $(SFNT_DIR)/ttkern.c   \
                 $(SFNT_DIR)/ttbdf.c    \

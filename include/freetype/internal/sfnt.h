@@ -431,6 +431,68 @@ FT_BEGIN_HEADER
   /*************************************************************************/
   /*                                                                       */
   /* <FuncType>                                                            */
+  /*    TT_Load_Colr_Layer_Func                                            */
+  /*                                                                       */
+  /* <Description>                                                         */
+  /*    Load the color layer data given a glyph index.                     */
+  /*                                                                       */
+  /* <Input>                                                               */
+  /*    face       :: The target face object.                              */
+  /*                                                                       */
+  /*    idx        :: The glyph index.                                     */
+  /*                                                                       */
+  /* <Output>                                                              */
+  /*    layers     :: The layer info with color index and glyph index.     */
+  /*                  Deallocate with `FT_FREE'.                           */
+  /*                                                                       */
+  /*    num_layers :: Number of layers.                                    */
+  /*                                                                       */
+  /* <Return>                                                              */
+  /*    FreeType error code.  0 means success.  Returns an error if no     */
+  /*    color layer information exists for `idx'.                          */
+  /*                                                                       */
+  typedef FT_Error
+  (*TT_Load_Colr_Layer_Func)( TT_Face              face,
+                              FT_Int               idx,
+                              FT_Glyph_LayerRec*  *layers,
+                              FT_UShort*           num_layers );
+
+
+  /*************************************************************************/
+  /*                                                                       */
+  /* <FuncType>                                                            */
+  /*    TT_Blend_Colr_Func                                                 */
+  /*                                                                       */
+  /* <Description>                                                         */
+  /*    Blend the bitmap in `new_glyph' into `base_glyph' using the color  */
+  /*    specified by `color_index'.                                        */
+  /*                                                                       */
+  /*    XXX: Handle foregound color                                        */
+  /*                                                                       */
+  /* <Input>                                                               */
+  /*    face        :: The target face object.                             */
+  /*                                                                       */
+  /*    color_index :: Color index from the COLR table.                    */
+  /*                                                                       */
+  /*    base_glyph  :: Slot for bitmap to be merged into.  The underlying  */
+  /*                   bitmap may get reallocated.                         */
+  /*                                                                       */
+  /*    new_glyph   :: Slot to be incooperated into `base_glyph'.          */
+  /*                                                                       */
+  /* <Return>                                                              */
+  /*    FreeType error code.  0 means success.  Returns an error if        */
+  /*    color_index is invalid or reallocation fails.                      */
+  /*                                                                       */
+  typedef FT_Error
+  (*TT_Blend_Colr_Func)( TT_Face       face,
+                         FT_Int        color_index,
+                         FT_GlyphSlot  base_glyph,
+                         FT_GlyphSlot  new_glyph );
+
+
+  /*************************************************************************/
+  /*                                                                       */
+  /* <FuncType>                                                            */
   /*    TT_Get_Name_Func                                                   */
   /*                                                                       */
   /* <Description>                                                         */
@@ -616,6 +678,11 @@ FT_BEGIN_HEADER
     TT_Set_SBit_Strike_Func      set_sbit_strike;
     TT_Load_Strike_Metrics_Func  load_strike_metrics;
 
+    TT_Load_Table_Func           load_colr;
+    TT_Free_Table_Func           free_colr;
+    TT_Load_Colr_Layer_Func      load_colr_layer;
+    TT_Blend_Colr_Func           colr_blend;
+
     TT_Get_Metrics_Func          get_metrics;
 
     TT_Get_Name_Func             get_name;
@@ -658,6 +725,10 @@ FT_BEGIN_HEADER
           free_eblc_,                    \
           set_sbit_strike_,              \
           load_strike_metrics_,          \
+          load_colr_,                    \
+          free_colr_,                    \
+          load_colr_layer_,              \
+          colr_blend_,                   \
           get_metrics_,                  \
           get_name_,                     \
           get_name_id_ )                 \
@@ -691,6 +762,10 @@ FT_BEGIN_HEADER
     free_eblc_,                          \
     set_sbit_strike_,                    \
     load_strike_metrics_,                \
+    load_colr_,                          \
+    free_colr_,                          \
+    load_colr_layer_,                    \
+    colr_blend_,                         \
     get_metrics_,                        \
     get_name_,                           \
     get_name_id_                         \

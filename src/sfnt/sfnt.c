@@ -24,6 +24,8 @@
 #include "sfobjs.c"
 #include "ttbdf.c"
 #include "ttcmap.c"
+#include "ttcolr.c"
+
 #include "ttkern.c"
 #include "ttload.c"
 #include "ttmtx.c"

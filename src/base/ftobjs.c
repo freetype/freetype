@@ -538,6 +538,16 @@
     /* free bitmap buffer if needed */
     ft_glyphslot_free_bitmap( slot );
 
+    /* free glyph color layers if needed */
+    if ( slot->internal->color_layers )
+    {
+      FT_Colr_InternalRec*  color_layers = slot->internal->color_layers;
+
+
+      FT_FREE( color_layers->layers );
+      FT_FREE( slot->internal->color_layers );
+    }
+
     /* slot->internal might be NULL in out-of-memory situations */
     if ( slot->internal )
     {
@@ -4497,6 +4507,61 @@
       break;
 
     default:
+      if ( slot->internal->color_layers != NULL )
+      {
+        FT_Face  face = slot->face;
+
+
+        error = FT_New_GlyphSlot( face, NULL );
+        if ( !error )
+        {
+          TT_Face       ttface = (TT_Face)face;
+          SFNT_Service  sfnt   = (SFNT_Service)ttface->sfnt;
+
+          FT_Glyph_LayerRec*  glyph_layers =
+                                slot->internal->color_layers->layers;
+
+          FT_Int  idx;
+
+
+          for ( idx = 0;
+                idx < slot->internal->color_layers->num_layers;
+                idx++ )
+          {
+            FT_Int  load_flags;
+
+
+            load_flags  = slot->internal->color_layers->load_flags
+                          & ~FT_LOAD_COLOR;
+            load_flags |= FT_LOAD_RENDER;
+
+            error = FT_Load_Glyph( face,
+                                   glyph_layers[idx].glyph_index,
+                                   load_flags );
+            if ( error )
+              break;
+
+            error = sfnt->colr_blend( ttface,
+                                      glyph_layers[idx].color_index,
+                                      slot,
+                                      face->glyph );
+            if ( error )
+              break;
+          }
+
+          if ( !error )
+            slot->format = FT_GLYPH_FORMAT_BITMAP;
+
+          FT_Done_GlyphSlot( face->glyph );
+        }
+
+        if ( !error )
+          return error;
+
+        /* Failed to do the colored layer.  Draw outline instead. */
+        slot->format = FT_GLYPH_FORMAT_OUTLINE;
+      }
+
       {
         FT_ListNode  node = NULL;
 

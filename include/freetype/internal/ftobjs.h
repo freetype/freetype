@@ -384,6 +384,23 @@ FT_BEGIN_HEADER
   } FT_Face_InternalRec;
 
 
+  typedef struct  FT_Glyph_LayerRec_
+  {
+    FT_UShort  glyph_index;
+    FT_UShort  color_index;
+
+  } FT_Glyph_LayerRec;
+
+
+  typedef struct  FT_Colr_InternalRec_
+  {
+    FT_Glyph_LayerRec*  layers;
+    FT_UShort           num_layers;
+    FT_Int              load_flags;
+
+  } FT_Colr_InternalRec, *FT_Colr_Internal;
+
+
   /*************************************************************************/
   /*                                                                       */
   /* <Struct>                                                              */
@@ -417,6 +434,8 @@ FT_BEGIN_HEADER
   /*                                                                       */
   /*    glyph_hints       :: Format-specific glyph hints management.       */
   /*                                                                       */
+  /*    color_layers      :: Data from (SFNT) COLR/CPAL tables.            */
+  /*                                                                       */
 
 #define FT_GLYPH_OWN_BITMAP  0x1U
 
@@ -428,6 +447,8 @@ FT_BEGIN_HEADER
     FT_Matrix       glyph_matrix;
     FT_Vector       glyph_delta;
     void*           glyph_hints;
+
+    FT_Colr_Internal  color_layers;
 
   } FT_GlyphSlot_InternalRec;
 
