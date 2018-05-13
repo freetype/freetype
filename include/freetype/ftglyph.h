@@ -495,7 +495,7 @@ FT_BEGIN_HEADER
   /*                                                                       */
   /*        for ( idx = 0; i < MAX_GLYPHS; i++ )                           */
   /*          error = FT_Load_Glyph( face, idx, FT_LOAD_DEFAULT ) ||       */
-  /*                  FT_Get_Glyph ( face->glyph, &glyph[idx] );           */
+  /*                  FT_Get_Glyph ( face->glyph, &glyphs[idx] );          */
   /*                                                                       */
   /*        ...                                                            */
   /*                                                                       */
