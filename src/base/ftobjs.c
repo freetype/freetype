@@ -1024,17 +1024,34 @@
         ft_glyphslot_preset_bitmap( slot, mode, NULL );
     }
 
-    FT_TRACE5(( "FT_Load_Glyph: index %d, flags %x\n",
-                glyph_index, load_flags               ));
-    FT_TRACE5(( "  x advance: %f\n", slot->advance.x / 64.0 ));
-    FT_TRACE5(( "  y advance: %f\n", slot->advance.y / 64.0 ));
-    FT_TRACE5(( "  linear x advance: %f\n",
-                slot->linearHoriAdvance / 65536.0 ));
-    FT_TRACE5(( "  linear y advance: %f\n",
-                slot->linearVertAdvance / 65536.0 ));
-    FT_TRACE5(( "  bitmap %dx%d, mode %d\n",
-                slot->bitmap.width, slot->bitmap.rows,
-                slot->bitmap.pixel_mode               ));
+#ifdef FT_DEBUG_LEVEL_TRACE
+    {
+      const char*  pixel_modes[] = { "none",
+                                     "monochrome bitmap",
+                                     "gray 8-bit bitmap",
+                                     "gray 2-bit bitmap",
+                                     "gray 4-bit bitmap",
+                                     "LCD 8-bit bitmap",
+                                     "vertical LCD 8-bit bitmap",
+                                     "BGRA 32-bit color image bitmap"
+                                   };
+
+
+      FT_TRACE5(( "FT_Load_Glyph: index %d, flags 0x%x\n",
+                  glyph_index, load_flags ));
+      FT_TRACE5(( "  x advance: %f\n", slot->advance.x / 64.0 ));
+      FT_TRACE5(( "  y advance: %f\n", slot->advance.y / 64.0 ));
+      FT_TRACE5(( "  linear x advance: %f\n",
+                  slot->linearHoriAdvance / 65536.0 ));
+      FT_TRACE5(( "  linear y advance: %f\n",
+                  slot->linearVertAdvance / 65536.0 ));
+      FT_TRACE5(( "  bitmap %dx%d, %s (mode %d)\n",
+                  slot->bitmap.width,
+                  slot->bitmap.rows,
+                  pixel_modes[slot->bitmap.pixel_mode],
+                  slot->bitmap.pixel_mode ));
+    }
+#endif
 
   Exit:
     return error;

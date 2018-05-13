@@ -1,3 +1,7 @@
+2018-05-13  Werner Lemberg  <wl@gnu.org>
+
+	* src/base/ftobjs.c (FT_Load_Glyph): Improve tracing.
+
 2018-05-13  Shao Yu Zhang  <shaozhang@fb.com>
 	    Werner Lemberg  <wl@gnu.org>
 
