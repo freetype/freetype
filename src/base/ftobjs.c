@@ -1026,15 +1026,17 @@
 
 #ifdef FT_DEBUG_LEVEL_TRACE
     {
-      const char*  pixel_modes[] = { "none",
-                                     "monochrome bitmap",
-                                     "gray 8-bit bitmap",
-                                     "gray 2-bit bitmap",
-                                     "gray 4-bit bitmap",
-                                     "LCD 8-bit bitmap",
-                                     "vertical LCD 8-bit bitmap",
-                                     "BGRA 32-bit color image bitmap"
-                                   };
+      static const char* const  pixel_modes[] =
+      {
+        "none",
+        "monochrome bitmap",
+        "gray 8-bit bitmap",
+        "gray 2-bit bitmap",
+        "gray 4-bit bitmap",
+        "LCD 8-bit bitmap",
+        "vertical LCD 8-bit bitmap",
+        "BGRA 32-bit color image bitmap"
+      };
 
 
       FT_TRACE5(( "FT_Load_Glyph: index %d, flags 0x%x\n",
