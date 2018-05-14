@@ -142,7 +142,45 @@
   }
 
 
-#endif /* TT_CONFIG_OPTION_SFNT_NAMES */
+#else /* !TT_CONFIG_OPTION_SFNT_NAMES */
+
+
+  FT_EXPORT_DEF( FT_UInt )
+  FT_Get_Sfnt_Name_Count( FT_Face  face )
+  {
+    FT_UNUSED( face );
+
+    return 0;
+  }
+
+
+  FT_EXPORT_DEF( FT_Error )
+  FT_Get_Sfnt_Name( FT_Face       face,
+                    FT_UInt       idx,
+                    FT_SfntName  *aname )
+  {
+    FT_UNUSED( face );
+    FT_UNUSED( idx );
+    FT_UNUSED( aname );
+
+    return FT_THROW( Unimplemented_Feature );
+  }
+
+
+  FT_EXPORT_DEF( FT_Error )
+  FT_Get_Sfnt_LangTag( FT_Face          face,
+                       FT_UInt          langID,
+                       FT_SfntLangTag  *alangTag )
+  {
+    FT_UNUSED( face );
+    FT_UNUSED( langID );
+    FT_UNUSED( alangTag );
+
+    return FT_THROW( Unimplemented_Feature );
+  }
+
+
+#endif /* !TT_CONFIG_OPTION_SFNT_NAMES */
 
 
 /* END */

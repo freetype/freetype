@@ -130,6 +130,10 @@ FT_BEGIN_HEADER
   /* <Return>                                                              */
   /*    The number of strings in the `name' table.                         */
   /*                                                                       */
+  /* <Note>                                                                */
+  /*    This function always returns an error if the config macro          */
+  /*    `TT_CONFIG_OPTION_SFNT_NAMES' is not defined in `ftoption.h'.      */
+  /*                                                                       */
   FT_EXPORT( FT_UInt )
   FT_Get_Sfnt_Name_Count( FT_Face  face );
 
@@ -164,6 +168,9 @@ FT_BEGIN_HEADER
   /*                                                                       */
   /*    `name' table format~1 entries can use language tags also, see      */
   /*    @FT_Get_Sfnt_LangTag.                                              */
+  /*                                                                       */
+  /*    This function always returns an error if the config macro          */
+  /*    `TT_CONFIG_OPTION_SFNT_NAMES' is not defined in `ftoption.h'.      */
   /*                                                                       */
   FT_EXPORT( FT_Error )
   FT_Get_Sfnt_Name( FT_Face       face,
@@ -232,6 +239,9 @@ FT_BEGIN_HEADER
   /*    tables, this function always returns FT_Err_Invalid_Table.  For    */
   /*    invalid format~1 language ID values, FT_Err_Invalid_Argument is    */
   /*    returned.                                                          */
+  /*                                                                       */
+  /*    This function always returns an error if the config macro          */
+  /*    `TT_CONFIG_OPTION_SFNT_NAMES' is not defined in `ftoption.h'.      */
   /*                                                                       */
   /* <Since>                                                               */
   /*    2.8                                                                */

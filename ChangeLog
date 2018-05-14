@@ -1,3 +1,9 @@
+2018-05-14  Werner Lemberg  <wl@gnu.org>
+
+	Provide dummy functions if `TT_CONFIG_OPTION_SFNT_NAMES' is not set.
+
+	* src/base/ftsnames.c [!TT_CONFIG_OPTION_SFNT_NAMES]: Implement it.
+
 2018-05-13  Werner Lemberg  <wl@gnu.org>
 
 	* src/base/ftobjs.c (FT_Load_Glyph): Improve tracing.
