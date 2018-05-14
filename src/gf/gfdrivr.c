@@ -20,12 +20,10 @@
 #include FT_INTERNAL_DEBUG_H
 #include FT_INTERNAL_STREAM_H
 #include FT_INTERNAL_OBJECTS_H
-#include FT_GF_H
 
 
 #include "gf.h"
 #include "gfdrivr.h"
-
 #include "gferror.h"
 
 

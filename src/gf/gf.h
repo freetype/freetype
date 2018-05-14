@@ -25,7 +25,6 @@
 #include FT_INTERNAL_STREAM_H
 
 
-
 FT_BEGIN_HEADER
 
 #define  FONT_DRIVER_GF   1
