@@ -767,13 +767,14 @@
   cf2_freeT1SeacComponent( PS_Decoder*  decoder,
                            CF2_Buffer   buf )
   {
+#ifdef FT_CONFIG_OPTION_INCREMENTAL
+
     T1_Face  face;
     FT_Data  data;
 
 
     FT_ASSERT( decoder );
 
-#ifdef FT_CONFIG_OPTION_INCREMENTAL
     face = (T1_Face)decoder->builder.face;
 
     data.pointer = buf->start;
@@ -783,7 +784,13 @@
       face->root.internal->incremental_interface->funcs->free_glyph_data(
         face->root.internal->incremental_interface->object,
         &data );
-#endif /* FT_CONFIG_OPTION_INCREMENTAL */
+
+#else /* !FT_CONFIG_OPTION_INCREMENTAL */
+
+    FT_UNUSED( decoder );
+    FT_UNUSED( buf );
+
+#endif /* !FT_CONFIG_OPTION_INCREMENTAL */
   }
 
 

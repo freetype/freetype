@@ -1,5 +1,11 @@
 2018-05-15  Werner Lemberg  <wl@gnu.org>
 
+	[psaux] Fix compiler warning (#53915).
+
+	* src/psaux/psft.c (cf2_freeT1SeacComponent): Do it.
+
+2018-05-15  Werner Lemberg  <wl@gnu.org>
+
 	[sfnt] Fix memory leak in handling `COLR' data.
 
 	* src/truetype/ttgload.c (TT_Load_Glyph): Free old `layers' array
