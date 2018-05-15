@@ -268,7 +268,7 @@
       FT_Int    mid = min + ( max - min ) / 2;
       FT_Byte*  p   = base_glyph_begin + mid * BASE_GLYPH_SIZE;
 
-      FT_UShort  gid  = FT_NEXT_USHORT( p );
+      FT_UShort  gid = FT_NEXT_USHORT( p );
 
 
       if ( gid < glyph_id )

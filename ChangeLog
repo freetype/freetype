@@ -1,5 +1,13 @@
 2018-05-15  Werner Lemberg  <wl@gnu.org>
 
+	[sfnt] Fix memory leak in handling `COLR' data.
+
+	* src/truetype/ttgload.c (TT_Load_Glyph): Free old `layers' array
+	before reassigning allocated memory.
+	Only allocate `color_layers' if we don't have one already.
+
+2018-05-15  Werner Lemberg  <wl@gnu.org>
+
 	[sfnt] If `COLR' is present, don't assume that all glyphs use it.
 
 	* src/sfnt/ttcolr.c (tt_face_load_colr_layers): Return FT_Err_Ok if

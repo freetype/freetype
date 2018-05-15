@@ -2903,7 +2903,6 @@
 
       FT_Glyph_LayerRec*  glyph_layers;
       FT_UShort           num_glyph_layers;
-      FT_Colr_Internal    color_layers;
 
 
       error = sfnt->load_colr_layer( face,
@@ -2913,17 +2912,17 @@
       if ( error )
         return error;
 
-      if ( num_glyph_layers )
+      if ( !glyph->internal->color_layers )
       {
-        if ( FT_NEW( color_layers ) )
+        if ( FT_NEW( glyph->internal->color_layers ) )
           return error;
-
-        color_layers->layers     = glyph_layers;
-        color_layers->num_layers = num_glyph_layers;
-        color_layers->load_flags = load_flags;
-
-        glyph->internal->color_layers = color_layers;
       }
+
+      FT_FREE( glyph->internal->color_layers->layers );
+
+      glyph->internal->color_layers->layers     = glyph_layers;
+      glyph->internal->color_layers->num_layers = num_glyph_layers;
+      glyph->internal->color_layers->load_flags = load_flags;
     }
 
   Exit:
