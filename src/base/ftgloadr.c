@@ -99,12 +99,12 @@
   }
 
 
-  /* reset the glyph loader, frees all allocated tables */
-  /* and starts from zero                               */
+  /* reset glyph loader, free all allocated tables, */
+  /* and start from zero                            */
   FT_BASE_DEF( void )
   FT_GlyphLoader_Reset( FT_GlyphLoader  loader )
   {
-    FT_Memory memory = loader->memory;
+    FT_Memory  memory = loader->memory;
 
 
     FT_FREE( loader->base.outline.points );
@@ -129,7 +129,7 @@
   {
     if ( loader )
     {
-      FT_Memory memory = loader->memory;
+      FT_Memory  memory = loader->memory;
 
 
       FT_GlyphLoader_Reset( loader );
