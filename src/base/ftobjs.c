@@ -4526,7 +4526,7 @@
       break;
 
     default:
-      if ( slot->internal->color_layers != NULL )
+      if ( slot->internal->color_layers )
       {
         FT_Face  face = slot->face;
 

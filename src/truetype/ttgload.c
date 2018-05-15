@@ -2913,14 +2913,17 @@
       if ( error )
         return error;
 
-      if ( FT_NEW( color_layers ) )
-        return error;
+      if ( num_glyph_layers )
+      {
+        if ( FT_NEW( color_layers ) )
+          return error;
 
-      color_layers->layers     = glyph_layers;
-      color_layers->num_layers = num_glyph_layers;
-      color_layers->load_flags = load_flags;
+        color_layers->layers     = glyph_layers;
+        color_layers->num_layers = num_glyph_layers;
+        color_layers->load_flags = load_flags;
 
-      glyph->internal->color_layers = color_layers;
+        glyph->internal->color_layers = color_layers;
+      }
     }
 
   Exit:

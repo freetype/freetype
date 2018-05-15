@@ -315,7 +315,12 @@
                                   colr->num_base_glyphs,
                                   glyph_id,
                                   &glyph_record ) )
-      return FT_THROW ( Invalid_Table );
+    {
+      *ret_layers     = NULL;
+      *ret_num_layers = 0;
+
+      return FT_Err_Ok;
+    }
 
     /* Load all colors for the glyphs; this would be stored in the slot. */
     layer_record_ptr = colr->layers +
