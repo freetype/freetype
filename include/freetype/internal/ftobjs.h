@@ -384,19 +384,11 @@ FT_BEGIN_HEADER
   } FT_Face_InternalRec;
 
 
-  typedef struct  FT_Glyph_LayerRec_
-  {
-    FT_UShort  glyph_index;
-    FT_UShort  color_index;
-
-  } FT_Glyph_LayerRec;
-
-
   typedef struct  FT_Colr_InternalRec_
   {
-    FT_Glyph_LayerRec*  layers;
-    FT_UShort           num_layers;
-    FT_Int              load_flags;
+    FT_Glyph_Layer  layers;
+    FT_UShort       num_layers;
+    FT_Int          load_flags;
 
   } FT_Colr_InternalRec, *FT_Colr_Internal;
 

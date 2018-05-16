@@ -2894,15 +2894,15 @@
 
     /* The outline based algorithm took care of metrics. */
     /* Read additional color info if requested.          */
-    if ( ( load_flags & FT_LOAD_COLOR )            &&
-         ( (TT_Face)(glyph->face) )->colr_and_cpal )
+    if ( ( load_flags & FT_LOAD_COLOR )          &&
+         ( (TT_Face)glyph->face )->colr_and_cpal )
     {
       TT_Face       face   = (TT_Face)glyph->face;
       FT_Memory     memory = face->root.memory;
       SFNT_Service  sfnt   = (SFNT_Service)face->sfnt;
 
-      FT_Glyph_LayerRec*  glyph_layers;
-      FT_UShort           num_glyph_layers;
+      FT_Glyph_Layer  glyph_layers;
+      FT_UShort       num_glyph_layers;
 
 
       error = sfnt->load_colr_layer( face,

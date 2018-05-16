@@ -3986,6 +3986,101 @@ FT_BEGIN_HEADER
                         FT_Matrix    *p_transform );
 
 
+  /**********************************************************************
+   *
+   * @type:
+   *    FT_Glyph_Layer
+   *
+   * @description:
+   *    A handle to an @FT_Glyph_LayerRec structure to model a given
+   *    colored glyph layer.
+   */
+  typedef struct FT_Glyph_LayerRec_*  FT_Glyph_Layer;
+
+
+  /**********************************************************************
+   *
+   * @struct:
+   *   FT_Glyph_LayerRec
+   *
+   * @description:
+   *   This structure models a given colored glyph layer as defined in the
+   *   OpenType `COLR' table.  It is used by @FT_Get_GlyphLayers.
+   *
+   * @fields:
+   *   glyph_index ::
+   *     The glyph index of the current glyph layer.
+   *
+   *   color_index ::
+   *     The color index into the font face's color palette, which can be
+   *     retrieved with @FT_Palette_Select.  The value 0xFFFF is special; it
+   *     doesn't reference a palette entry but indicates that the text
+   *     foreground color should be used instead (to be set up by the
+   *     application outside of FreeType).
+   */
+  typedef struct  FT_Glyph_LayerRec_
+  {
+    FT_UShort  glyph_index;
+    FT_UShort  color_index;
+
+  } FT_Glyph_LayerRec;
+
+
+  /*************************************************************************
+   *
+   * @func:
+   *   FT_Get_GlyphLayers
+   *
+   * @description:
+   *   This is an interface to the `COLR' table in OpenType fonts to
+   *   retrieve the colored glyph layers array associated with the current
+   *   glyph slot.
+   *
+   *     https://docs.microsoft.com/en-us/typography/opentype/spec/colr
+   *
+   *   The glyph layer data for a given glyph slot, if present, provides an
+   *   alternative, multi-colour glyph representation: Instead of rendering
+   *   the outline or bitmap in the glyph slot, glyphs with the indices and
+   *   colors returned in the @FT_GlyphLayer array are rendered layer by
+   *   layer.
+   *
+   * @input:
+   *   glyph ::
+   *     The source glyph slot.
+   *
+   * @output:
+   *   anum_layers ::
+   *     The number of colored glyph layers for `glyph'.
+   *
+   *   alayers ::
+   *     An @FT_GlyphLayer array with `anum_layers' elements.  NULL if there
+   *     aren't glyph layers.
+   *
+   *     The elements are ordered in the z~direction from bottom to top; an
+   *     element `n' should be rendered with the associated palette color
+   *     and blended on top of the already rendered layers (elements 0, 1,
+   *     ..., n-1).
+   *
+   * @return:
+   *   FreeType error code.  0~means success.
+   *
+   * @note:
+   *   The data in `alayers' is owned and managed by the glyph slot.
+   *
+   *   This function is necessary if you want to handle glyph layers by
+   *   yourself.  In particular, functions that operate with @FT_GlyphRec
+   *   objects (like @FT_Get_Glyph or @FT_Glyph_To_Bitmap) don't have access
+   *   to this information.
+   *
+   *   @FT_Render_Glyph, however, handles colored glyph layers
+   *   automatically.
+   */
+  FT_EXPORT( FT_Error )
+  FT_Get_GlyphLayers( FT_GlyphSlot     glyph,
+                      FT_UShort       *anum_layers,
+                      FT_Glyph_Layer  *alayers );
+
+
   /*************************************************************************/
   /*                                                                       */
   /* <Enum>                                                                */

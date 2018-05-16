@@ -290,10 +290,10 @@
 
 
   FT_LOCAL_DEF( FT_Error )
-  tt_face_load_colr_layers( TT_Face              face,
-                            FT_Int               glyph_id,
-                            FT_Glyph_LayerRec*  *ret_layers,
-                            FT_UShort*           ret_num_layers )
+  tt_face_load_colr_layers( TT_Face          face,
+                            FT_Int           glyph_id,
+                            FT_Glyph_Layer  *ret_layers,
+                            FT_UShort*       ret_num_layers )
   {
     FT_Error   error;
     FT_Memory  memory = face->root.memory;
@@ -302,10 +302,10 @@
     Colr*      colr          = &colr_and_cpal->colr;
     Cpal*      cpal          = &colr_and_cpal->cpal;
 
-    BaseGlyphRecord     glyph_record;
-    FT_Glyph_LayerRec*  layers;
-    int                 layer_idx;
-    FT_Byte*            layer_record_ptr;
+    BaseGlyphRecord  glyph_record;
+    FT_Glyph_Layer   layers;
+    int              layer_idx;
+    FT_Byte*         layer_record_ptr;
 
 
     if ( !ret_layers || !ret_num_layers )

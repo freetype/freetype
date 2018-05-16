@@ -452,10 +452,10 @@ FT_BEGIN_HEADER
   /*    color layer information exists for `idx'.                          */
   /*                                                                       */
   typedef FT_Error
-  (*TT_Load_Colr_Layer_Func)( TT_Face              face,
-                              FT_Int               idx,
-                              FT_Glyph_LayerRec*  *layers,
-                              FT_UShort*           num_layers );
+  (*TT_Load_Colr_Layer_Func)( TT_Face          face,
+                              FT_Int           idx,
+                              FT_Glyph_Layer  *layers,
+                              FT_UShort*       num_layers );
 
 
   /*************************************************************************/

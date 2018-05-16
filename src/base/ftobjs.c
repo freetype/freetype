@@ -4531,8 +4531,8 @@
           TT_Face       ttface = (TT_Face)face;
           SFNT_Service  sfnt   = (SFNT_Service)ttface->sfnt;
 
-          FT_Glyph_LayerRec*  glyph_layers =
-                                slot->internal->color_layers->layers;
+          FT_Glyph_Layer  glyph_layers =
+                            slot->internal->color_layers->layers;
 
           FT_Int  idx;
 
@@ -5458,6 +5458,31 @@
     }
 
     return error;
+  }
+
+
+  /* documentation is in freetype.h */
+
+  FT_EXPORT_DEF( FT_Error )
+  FT_Get_GlyphLayers( FT_GlyphSlot     glyph,
+                      FT_UShort       *anum_layers,
+                      FT_Glyph_Layer  *alayers )
+  {
+    if ( !glyph )
+      return FT_THROW( Invalid_Argument );
+
+    if ( glyph->internal->color_layers )
+    {
+      *anum_layers = glyph->internal->color_layers->num_layers;
+      *alayers     = glyph->internal->color_layers->layers;
+    }
+    else
+    {
+      *anum_layers = 0;
+      *alayers     = NULL;
+    }
+
+    return FT_Err_Ok;
   }
 
 

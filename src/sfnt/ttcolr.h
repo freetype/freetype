@@ -37,10 +37,10 @@ FT_BEGIN_HEADER
   tt_face_free_colr( TT_Face  face );
 
   FT_LOCAL( FT_Error )
-  tt_face_load_colr_layers( TT_Face              face,
-                            FT_Int               glyph_id,
-                            FT_Glyph_LayerRec*  *ret_layers,
-                            FT_UShort*           ret_num_layers );
+  tt_face_load_colr_layers( TT_Face          face,
+                            FT_Int           glyph_id,
+                            FT_Glyph_Layer  *ret_layers,
+                            FT_UShort*       ret_num_layers );
 
   FT_LOCAL( FT_Error )
   tt_face_colr_blend_layer( TT_Face       face,

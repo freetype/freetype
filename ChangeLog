@@ -1,3 +1,16 @@
+2018-05-16  Werner Lemberg  <wl@gnu.org>
+
+	Add function `FT_Get_GlyphLayers' to access `COLR' table data.
+
+	* include/freetype/internal/ftobjs.h (FT_Glyph_LayerRec): Move this
+	structure to...
+	* include/freetype/freetype.h (FT_Glyph_LayerRec): ... this
+	header file.
+	(FT_Glyph_Layer): New typedef.
+	Update code to use it where appropriate.
+
+	* src/base/ftobjs.c (FT_Get_GlyphLayers): New function.
+
 2018-05-15  Alexei Podtelezhnikov  <apodtele@gmail.com>
 
 	[base] Fix mono bitmap presetting (#53896).
