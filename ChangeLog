@@ -1,3 +1,17 @@
+2018-05-15  Alexei Podtelezhnikov  <apodtele@gmail.com>
+
+	[base] Fix mono bitmap presetting (#53896).
+
+	It is rather fundamental to set monochrome bitmap based on rounded
+	CBox because the b/w rasterizer turns on pixels when their centers are
+	inside the glyph outline. The dropout control is unpredictable and can
+	distort narrow glyphs if the bitmap is too wide.
+
+	Reported by Chris Liddell.
+
+	* src/base/ftobjs.c (ft_glyphslot_preset_bitmap): If BBox boundaries
+	are too close, adjust them before rounding.
+
 2018-05-15  Werner Lemberg  <wl@gnu.org>
 
 	[psaux] Fix compiler warning (#53915).
