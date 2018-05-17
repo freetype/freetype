@@ -1,3 +1,11 @@
+2018-05-17  Werner Lemberg  <wl@gnu.org>
+
+	s/inline/__inline/ for MSVC.
+
+	Reported by John Emmas <john@creativepost.co.uk>.
+
+	* include/freetype/internal/ftcalc.h (FT_MSB) [_MSC_VER]: Do it.
+
 2018-05-16  Werner Lemberg  <wl@gnu.org>
 
 	Add function `FT_Get_GlyphLayers' to access `COLR' table data.

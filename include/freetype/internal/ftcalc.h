@@ -362,7 +362,7 @@ FT_BEGIN_HEADER
 
 #include <intrin.h>
 
-  static inline FT_Int32
+  static __inline FT_Int32
   FT_MSB_i386( FT_UInt32  x )
   {
     unsigned long  where;
