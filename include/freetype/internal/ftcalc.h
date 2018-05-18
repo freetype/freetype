@@ -356,7 +356,7 @@ FT_BEGIN_HEADER
 #endif /* __GNUC__ */
 
 
-#elif defined( _MSC_VER ) && ( _MSC_VER >= 1800 )
+#elif defined( _MSC_VER ) && ( _MSC_VER >= 1400 )
 
 #if FT_SIZEOF_INT == 4
 

@@ -1,3 +1,9 @@
+2018-05-18  Alexei Podtelezhnikov  <apodtele@gmail.com>
+
+	* include/freetype/internal/ftcalc.h (FT_MSB): Verified `_MSC_VER'.
+
+	Actually `_BitScanReverse' is available since VS2005.
+
 2018-05-18  Werner Lemberg  <wl@gnu.org>
 
 	* include/freetype/internal/ftcalc.h (FT_MSB): Use `_MSC_VER' value.
