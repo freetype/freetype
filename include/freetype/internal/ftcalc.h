@@ -353,10 +353,10 @@ FT_BEGIN_HEADER
 
 #define FT_MSB( x )  ( 31 - __builtin_clzl( x ) )
 
-#endif
+#endif /* __GNUC__ */
 
 
-#elif defined( _MSC_VER )
+#elif defined( _MSC_VER ) && ( _MSC_VER >= 1800 )
 
 #if FT_SIZEOF_INT == 4
 
@@ -368,6 +368,7 @@ FT_BEGIN_HEADER
     unsigned long  where;
 
 
+    /* not available in older VC versions */
     _BitScanReverse( &where, x );
 
     return (FT_Int32)where;
@@ -377,7 +378,8 @@ FT_BEGIN_HEADER
 
 #endif
 
-#endif
+#endif /* _MSC_VER */
+
 
 #endif /* !FT_CONFIG_OPTION_NO_ASSEMBLER */
 

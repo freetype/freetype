@@ -1,3 +1,12 @@
+2018-05-18  Werner Lemberg  <wl@gnu.org>
+
+	* include/freetype/internal/ftcalc.h (FT_MSB): Use `_MSC_VER' value.
+
+	Older VC versions don't provide `_BitScanReverse'.  We test for VC
+	2013.
+
+	Reported by John Emmas <john@creativepost.co.uk>.
+
 2018-05-17  Werner Lemberg  <wl@gnu.org>
 
 	s/inline/__inline/ for MSVC.
