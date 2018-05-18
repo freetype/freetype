@@ -150,7 +150,7 @@ FT_BEGIN_HEADER
   /* <Description>                                                         */
   /*    Convert a bitmap object with depth 1bpp, 2bpp, 4bpp, 8bpp or 32bpp */
   /*    to a bitmap object with depth 8bpp, making the number of used      */
-  /*    bytes line (a.k.a. the `pitch') a multiple of `alignment'.         */
+  /*    bytes per line (a.k.a. the `pitch') a multiple of `alignment'.     */
   /*                                                                       */
   /* <Input>                                                               */
   /*    library   :: A handle to a library object.                         */
@@ -158,7 +158,7 @@ FT_BEGIN_HEADER
   /*    source    :: The source bitmap.                                    */
   /*                                                                       */
   /*    alignment :: The pitch of the bitmap is a multiple of this         */
-  /*                 parameter.  Common values are 1, 2, or 4.             */
+  /*                 argument.  Common values are 1, 2, or 4.              */
   /*                                                                       */
   /* <Output>                                                              */
   /*    target    :: The target bitmap.                                    */
