@@ -382,6 +382,8 @@
         goto Invalid_Outline;
     }
 
+    FT_TRACE5(( "  # of points: %d\n", n_points ));
+
     /* note that we will add four phantom points later */
     error = FT_GLYPHLOADER_CHECK_POINTS( gloader, n_points + 4, 0 );
     if ( error )
