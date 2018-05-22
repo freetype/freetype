@@ -561,9 +561,10 @@
   TT_Load_Composite_Glyph( TT_Loader  loader )
   {
     FT_Error        error;
-    FT_Byte*        p       = loader->cursor;
-    FT_Byte*        limit   = loader->limit;
-    FT_GlyphLoader  gloader = loader->gloader;
+    FT_Byte*        p          = loader->cursor;
+    FT_Byte*        limit      = loader->limit;
+    FT_GlyphLoader  gloader    = loader->gloader;
+    FT_Long         num_glyphs = loader->face->root.num_glyphs;
     FT_SubGlyph     subglyph;
     FT_UInt         num_subglyphs;
 
@@ -591,6 +592,11 @@
 
       subglyph->flags = FT_NEXT_USHORT( p );
       subglyph->index = FT_NEXT_USHORT( p );
+
+      /* we reject composites that have components */
+      /* with invalid glyph indices                */
+      if ( subglyph->index >= num_glyphs )
+        goto Invalid_Composite;
 
       /* check space */
       count = 2;

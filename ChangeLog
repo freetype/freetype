@@ -1,5 +1,15 @@
 2018-05-22  Werner Lemberg  <wl@gnu.org>
 
+	[truetype] Reject elements of composites with invalid glyph indices.
+
+	Reported as
+
+	  https://bugs.chromium.org/p/oss-fuzz/issues/detail?id=8413
+
+	* src/truetype/ttgload.c (TT_Load_Composite_Glyph): Implement it.
+
+2018-05-22  Werner Lemberg  <wl@gnu.org>
+
 	* src/truetype/ttgload.c (TT_Load_Simple_Glyph): Trace # of points.
 
 2018-05-20  Werner Lemberg  <wl@gnu.org>

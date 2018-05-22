@@ -22,6 +22,7 @@
 
 #include <ft2build.h>
 #include FT_FREETYPE_H
+#include FT_COLOR_H
 
 #ifdef FREETYPE_H
 #error "freetype.h of FreeType 1 has been loaded!"
@@ -180,6 +181,43 @@ FT_BEGIN_HEADER
                      const FT_Bitmap  *source,
                      FT_Bitmap        *target,
                      FT_Int            alignment );
+
+
+  /*************************************************************************/
+  /*                                                                       */
+  /* <Function>                                                            */
+  /*    FT_Bitmap_Blend                                                    */
+  /*                                                                       */
+  /* <Description>                                                         */
+  /*    Blend a bitmap object from an `FT_GlyphSlot' structure onto a      */
+  /*    bitmap in an `FT_Bitmap' structure, using a given color and        */
+  /*    offset.                                                            */
+  /*                                                                       */
+  /* <InOut>                                                               */
+  /*    target    :: A handle to a bitmap object.  Its type must be        */
+  /*                 @FT_PIXEL_MODE_BGRA.                                  */
+  /*                                                                       */
+  /* <Input>                                                               */
+  /*    source    :: The glyph slot's source bitmap, which can have any    */
+  /*                 @FT_Pixel_Mode format.                                */
+  /*                                                                       */
+  /*    color     :: The color used to draw `source' onto `target'.        */
+  /*                                                                       */
+  /*    topleft   :: A vector from the topleft corner of `source' to the   */
+  /*                 topleft corner of `target'.                           */
+  /*                                                                       */
+  /* <Return>                                                              */
+  /*    FreeType error code.  0~means success.                             */
+  /*                                                                       */
+  /* <Note>                                                                */
+  /*    This function reallocates the target bitmap if necessary; it       */
+  /*    doesn't perform clipping.                                          */
+  /*                                                                       */
+  FT_EXPORT( FT_Error )
+  FT_Bitmap_Blend( FT_Bitmap     target,
+                   FT_GlyphSlot  source,
+                   FT_Color      color,
+                   FT_Vector     topleft );
 
 
   /*************************************************************************/
