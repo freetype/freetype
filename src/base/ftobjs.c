@@ -397,12 +397,12 @@
 
     case FT_RENDER_MODE_LCD:
       pixel_mode = FT_PIXEL_MODE_LCD;
-      ft_lcd_padding( &cbox.xMin, &cbox.xMax, slot );
+      ft_lcd_padding( &cbox, slot, mode );
       goto Round;
 
     case FT_RENDER_MODE_LCD_V:
       pixel_mode = FT_PIXEL_MODE_LCD_V;
-      ft_lcd_padding( &cbox.yMin, &cbox.yMax, slot );
+      ft_lcd_padding( &cbox, slot, mode );
       goto Round;
 
     case FT_RENDER_MODE_NORMAL:

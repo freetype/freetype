@@ -1,3 +1,24 @@
+2018-05-24  Alexei Podtelezhnikov  <apodtele@gmail.com>
+
+	[smooth] Formalize Harmony LCD rendering.
+
+	This generalizes magic outline shifts that make Harmony LCD
+	rendering work in terms of precise two-dimensional RGB subpixel
+	positions. These coordinates are now set in time of the `smooth'
+	module initialization and later used to shift a glyph outline for
+	rendering. FT_RENDER_MODE_LCD and FT_RENDER_MODE_LCD_V use the same
+	coordinates. The letter, however, rotates them before using.
+	The LCD bitmap padding is also calculated using these coordinates.
+
+	* include/freetype/internal/ftobjs.h (FT_LibraryRec): New array field
+	`lcd_geometry'.
+	* src/base/ftlcdfil.c (ft_lcd_padding): Reworked.
+	* src/base/ftobjs.c (ft_glyphslot_preset_bitmap): Updated accordingly.
+
+	* src/smooth/ftsmooth.c [!FT_CONFIG_OPTION_SUBPIXEL_RENDERING]
+	(ft_smooth_init): Initialize `lcd_geometry'.
+	(ft_smooth_render_generic): Formalize outline shifts.
+
 2018-05-22  Werner Lemberg  <wl@gnu.org>
 
 	[truetype] Reject elements of composites with invalid glyph indices.

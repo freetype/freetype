@@ -270,11 +270,11 @@ FT_BEGIN_HEADER
   FT_CMap_Done( FT_CMap  cmap );
 
 
-  /* adds LCD padding to Min and Max boundaries */
+  /* add LCD padding to CBox */
   FT_BASE( void )
-  ft_lcd_padding( FT_Pos*       Min,
-                  FT_Pos*       Max,
-                  FT_GlyphSlot  slot );
+  ft_lcd_padding( FT_BBox*        cbox,
+                  FT_GlyphSlot    slot,
+                  FT_Render_Mode  mode );
 
 #ifdef FT_CONFIG_OPTION_SUBPIXEL_RENDERING
 
@@ -350,8 +350,8 @@ FT_BEGIN_HEADER
   /*                                                                       */
   /*    lcd_weights      ::                                                */
   /*    lcd_filter_func  ::                                                */
-  /*      If subpixel rendering is activated, the LCD filtering weights    */
-  /*      and callback function.                                           */
+  /*      These fields specify the LCD filtering weights and callback      */
+  /*      function for ClearType-style subpixel rendering.                 */
   /*                                                                       */
   /*    refcount ::                                                        */
   /*      A counter initialized to~1 at the time an @FT_Face structure is  */
@@ -868,11 +868,15 @@ FT_BEGIN_HEADER
   /*                        interpreter.  Currently, only the TrueType     */
   /*                        bytecode debugger uses this.                   */
   /*                                                                       */
-  /*    lcd_weights      :: If subpixel rendering is activated, the LCD    */
-  /*                        filter weights, if any.                        */
+  /*    lcd_weights      :: The LCD filter weights for ClearType-style     */
+  /*                        subpixel rendering.                            */
   /*                                                                       */
-  /*    lcd_filter_func  :: If subpixel rendering is activated, the LCD    */
-  /*                        filtering callback function.                   */
+  /*    lcd_filter_func  :: The LCD filtering callback function for        */
+  /*                        for ClearType-style subpixel rendering.        */
+  /*                                                                       */
+  /*    lcd_geometry     :: This array specifies LCD subpixel geometry     */
+  /*                        and controls Harmony LCD rendering technique,  */
+  /*                        alternative to ClearType.                      */
   /*                                                                       */
   /*    pic_container    :: Contains global structs and tables, instead    */
   /*                        of defining them globally.                     */
@@ -904,6 +908,8 @@ FT_BEGIN_HEADER
 #ifdef FT_CONFIG_OPTION_SUBPIXEL_RENDERING
     FT_LcdFiveTapFilter      lcd_weights;      /* filter weights, if any */
     FT_Bitmap_LcdFilterFunc  lcd_filter_func;  /* filtering callback     */
+#else
+    FT_Vector                lcd_geometry[3];  /* RGB subpixel positions */
 #endif
 
     FT_Int             refcount;
