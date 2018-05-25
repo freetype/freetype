@@ -1,3 +1,14 @@
+2018-05-25  Nikhil Ramakrishnan  <ramakrishnan.nikhil@gmail.com>
+
+	[docmaker] Fix missing `Defined in (...)' under Windows/Cygwin.
+
+	This platform uses backslashes for paths, which docmaker didn't
+	understand correctly.
+
+	* src/tools/docmaker/tohtml.py (HtmlFormatter::blockEnter): Use
+	`os.path.normpath' to normalize the path for the platform being
+	used.
+
 2018-05-24  Alexei Podtelezhnikov  <apodtele@gmail.com>
 
 	[smooth] Formalize Harmony LCD rendering.

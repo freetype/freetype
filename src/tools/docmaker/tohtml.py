@@ -676,7 +676,8 @@ class  HtmlFormatter( Formatter ):
         if block.code:
             header = ''
             for f in self.headers.keys():
-                if block.source.filename.find( f ) >= 0:
+                header_filename = os.path.normpath(block.source.filename)
+                if header_filename.find( os.path.normpath( f ) ) >= 0:
                     header = self.headers[f] + ' (' + f + ')'
                     break
 
