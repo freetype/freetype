@@ -1,3 +1,9 @@
+2018-05-31  Werner Lemberg  <wl@gnu.org>
+
+	[sfnt] Get colors from `CPAL' table in right order (#54015).
+
+	* src/sfnt/ttcolr.c (tt_face_find_color): Fix it.
+
 2018-05-30  Werner Lemberg  <wl@gnu.org>
 
 	ftcolor.h: Improve API design, fix typos (#54011, #54014).

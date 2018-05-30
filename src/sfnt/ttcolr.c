@@ -384,9 +384,9 @@
 
     p = cpal->colors + color_offset + COLOR_SIZE * color_index;
 
-    *red   = FT_NEXT_BYTE( p );
-    *green = FT_NEXT_BYTE( p );
     *blue  = FT_NEXT_BYTE( p );
+    *green = FT_NEXT_BYTE( p );
+    *red   = FT_NEXT_BYTE( p );
     *alpha = FT_NEXT_BYTE( p );
 
     return 1;
