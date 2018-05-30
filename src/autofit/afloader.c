@@ -434,13 +434,14 @@
         FT_Pos  pp1x_uh, pp2x_uh;
 
         AF_AxisHints  axis  = &hints->axis[AF_DIMENSION_HORZ];
-        AF_Edge       edge1 = axis->edges;         /* leftmost edge  */
-        AF_Edge       edge2 = edge1 +
-                              axis->num_edges - 1; /* rightmost edge */
+        AF_Edge       edge1 = axis->edges; /* leftmost edge  */
+        AF_Edge       edge2;               /* rightmost edge */
 
 
         if ( axis->num_edges > 1 && AF_HINTS_DO_ADVANCE( hints ) )
         {
+          edge2 = edge1 + axis->num_edges - 1;
+
           old_rsb = loader->pp2.x - edge2->opos;
           /* loader->pp1.x is always zero at this point of time */
           old_lsb = edge1->opos /* - loader->pp1.x */;

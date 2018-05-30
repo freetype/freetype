@@ -1,3 +1,13 @@
+2018-05-30  Armin Hasitzka  <prince.cherusker@gmail.com>
+
+	Fix pointer underflow.
+
+	The declaration of `edge2' can be reached with `edge1 == NULL' and
+	`axis->edges == 0' which results in undefined behaviour.
+
+	* src/autofit/afloader.c (af_loader_load_glyph): Initialise `edge2'
+	after checking `axis->num_edges > 1'.  `edge1 != NULL' can be assumed.
+
 2018-05-30  Werner Lemberg  <wl@gnu.org>
 
 	Various minor color fixes.
