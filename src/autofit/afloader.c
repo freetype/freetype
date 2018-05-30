@@ -430,27 +430,25 @@
       /* width/positioning that occurred during the hinting process   */
       if ( scaler.render_mode != FT_RENDER_MODE_LIGHT )
       {
-        FT_Pos  old_rsb, old_lsb, new_lsb;
-        FT_Pos  pp1x_uh, pp2x_uh;
-
         AF_AxisHints  axis  = &hints->axis[AF_DIMENSION_HORZ];
-        AF_Edge       edge1 = axis->edges; /* leftmost edge  */
-        AF_Edge       edge2;               /* rightmost edge */
 
 
         if ( axis->num_edges > 1 && AF_HINTS_DO_ADVANCE( hints ) )
         {
-          edge2 = edge1 + axis->num_edges - 1;
+          AF_Edge  edge1 = axis->edges;         /* leftmost edge  */
+          AF_Edge  edge2 = edge1 +
+                           axis->num_edges - 1; /* rightmost edge */
 
-          old_rsb = loader->pp2.x - edge2->opos;
+          FT_Pos  old_rsb = loader->pp2.x - edge2->opos;
           /* loader->pp1.x is always zero at this point of time */
-          old_lsb = edge1->opos /* - loader->pp1.x */;
-          new_lsb = edge1->pos;
+          FT_Pos  old_lsb = edge1->opos;     /* - loader->pp1.x */
+          FT_Pos  new_lsb = edge1->pos;
 
           /* remember unhinted values to later account */
           /* for rounding errors                       */
-          pp1x_uh = new_lsb    - old_lsb;
-          pp2x_uh = edge2->pos + old_rsb;
+          FT_Pos  pp1x_uh = new_lsb    - old_lsb;
+          FT_Pos  pp2x_uh = edge2->pos + old_rsb;
+
 
           /* prefer too much space over too little space */
           /* for very small sizes                        */

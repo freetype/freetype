@@ -1,5 +1,12 @@
 2018-05-30  Armin Hasitzka  <prince.cherusker@gmail.com>
 
+	Beautify a3cfed5e87232c933bdc64f43e8ebebcfd18b41b.
+
+	* src/autofit/afloader.c (af_loader_load_glyph): Move the
+	initialisationand declaration of variables into the if-block.
+
+2018-05-30  Armin Hasitzka  <prince.cherusker@gmail.com>
+
 	Fix pointer underflow.
 
 	The declaration of `edge2' can be reached with `edge1 == NULL' and
