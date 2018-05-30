@@ -1,3 +1,27 @@
+2018-05-30  Werner Lemberg  <wl@gnu.org>
+
+	Various minor color fixes.
+
+	* include/freetype/config/ftheader.h (FT_COLOR_H): New macro.
+
+	* include/freetype/internal/ftobjs.h (FT_Colr_Internal): Change
+	type of `load_flags' to `FT_Int32'.
+
+	* include/freetype/internal/sfnt.h (TT_Load_Colr_Layer_Func): Change
+	type of `idx' to `FT_UInt'.
+	(TT_Blend_Colr_Func): Change type of `color_index' to `FT_UInt'.
+
+	* src/base/ftobjs.c (FT_Render_Glyph_Internal): Change type of
+	`load_flags' to `FT_Int32'.
+
+	* src/sfnt/ttcolr.c (find_base_glyph_record,
+	tt_face_load_colr_layers): Change type of `glyph_id' to `FT_UInt'.
+	(tt_face_find_color, tt_face_colr_blend_layer): Change type of
+	`color_index' to `FT_UInt'.
+	Fix signedness and type issues.
+
+	* src/sfnt/ttcolr.h: Updated.
+
 2018-05-25  Nikhil Ramakrishnan  <ramakrishnan.nikhil@gmail.com>
 
 	[docmaker] Fix missing `Defined in (...)' under Windows/Cygwin.

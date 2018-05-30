@@ -256,7 +256,7 @@
   static FT_Bool
   find_base_glyph_record( FT_Byte*          base_glyph_begin,
                           FT_Int            num_base_glyph,
-                          FT_UShort         glyph_id,
+                          FT_UInt           glyph_id,
                           BaseGlyphRecord*  record )
   {
     FT_Int  min = 0;
@@ -291,7 +291,7 @@
 
   FT_LOCAL_DEF( FT_Error )
   tt_face_load_colr_layers( TT_Face          face,
-                            FT_Int           glyph_id,
+                            FT_UInt          glyph_id,
                             FT_Glyph_Layer  *ret_layers,
                             FT_UShort*       ret_num_layers )
   {
@@ -360,12 +360,12 @@
 
 
   static FT_Bool
-  tt_face_find_color( TT_Face    face,
-                      FT_UShort  color_index,
-                      FT_Byte*   blue,
-                      FT_Byte*   green,
-                      FT_Byte*   red,
-                      FT_Byte*   alpha )
+  tt_face_find_color( TT_Face   face,
+                      FT_UInt   color_index,
+                      FT_Byte*  blue,
+                      FT_Byte*  green,
+                      FT_Byte*  red,
+                      FT_Byte*  alpha )
   {
     ColrCpal*  colr_and_cpal = (ColrCpal *)face->colr_and_cpal;
     Cpal*      cpal          = &colr_and_cpal->cpal;
@@ -378,7 +378,7 @@
     if ( color_index >= cpal->num_palettes_entries )
       return 0;
 
-    p = cpal->color_indices + palette_index * sizeof ( FT_UShort );
+    p = cpal->color_indices + palette_index * (int)sizeof ( FT_UShort );
 
     color_offset = FT_NEXT_USHORT( p );
 
@@ -395,7 +395,7 @@
 
   FT_LOCAL_DEF( FT_Error )
   tt_face_colr_blend_layer( TT_Face       face,
-                            FT_Int        color_index,
+                            FT_UInt       color_index,
                             FT_GlyphSlot  dstSlot,
                             FT_GlyphSlot  srcSlot )
   {
@@ -404,7 +404,7 @@
     FT_UInt  x, y;
     FT_Byte  b, g, r, alpha;
 
-    FT_Long   size;
+    FT_ULong  size;
     FT_Byte*  src;
     FT_Byte*  dst;
 
@@ -419,10 +419,10 @@
       dstSlot->bitmap.width      = srcSlot->bitmap.width;
       dstSlot->bitmap.rows       = srcSlot->bitmap.rows;
       dstSlot->bitmap.pixel_mode = FT_PIXEL_MODE_BGRA;
-      dstSlot->bitmap.pitch      = dstSlot->bitmap.width * 4;
+      dstSlot->bitmap.pitch      = (int)dstSlot->bitmap.width * 4;
       dstSlot->bitmap.num_grays  = 256;
 
-      size = dstSlot->bitmap.rows * dstSlot->bitmap.pitch;
+      size = dstSlot->bitmap.rows * (unsigned int)dstSlot->bitmap.pitch;
 
       error = ft_glyphslot_alloc_bitmap( dstSlot, size );
       if ( error )
@@ -451,8 +451,8 @@
       {
         FT_Memory  memory = face->root.memory;
 
-        FT_UInt  width = x_max - x_min;
-        FT_UInt  rows  = y_max - y_min;
+        FT_UInt  width = (FT_UInt)( x_max - x_min );
+        FT_UInt  rows  = (FT_UInt)( y_max - y_min );
         FT_UInt  pitch = width * 4;
 
         FT_Byte*  buf;
@@ -466,7 +466,7 @@
 
         p = dstSlot->bitmap.buffer;
         q = buf +
-            pitch * ( y_max - dstSlot->bitmap_top ) +
+            (int)pitch * ( y_max - dstSlot->bitmap_top ) +
             4 * ( dstSlot->bitmap_left - x_min );
 
         for ( y = 0; y < dstSlot->bitmap.rows; y++ )
@@ -484,7 +484,7 @@
 
         dstSlot->bitmap.width = width;
         dstSlot->bitmap.rows  = rows;
-        dstSlot->bitmap.pitch = pitch;
+        dstSlot->bitmap.pitch = (int)pitch;
 
         dstSlot->internal->flags |= FT_GLYPH_OWN_BITMAP;
         dstSlot->format           = FT_GLYPH_FORMAT_BITMAP;
@@ -528,10 +528,10 @@
         int  ba = dst[4 * x + 3];
 
 
-        dst[4 * x + 0] = bb * ba2 / 255 + fb;
-        dst[4 * x + 1] = bg * ba2 / 255 + fg;
-        dst[4 * x + 2] = br * ba2 / 255 + fr;
-        dst[4 * x + 3] = ba * ba2 / 255 + fa;
+        dst[4 * x + 0] = (FT_Byte)( bb * ba2 / 255 + fb );
+        dst[4 * x + 1] = (FT_Byte)( bg * ba2 / 255 + fg );
+        dst[4 * x + 2] = (FT_Byte)( br * ba2 / 255 + fr );
+        dst[4 * x + 3] = (FT_Byte)( ba * ba2 / 255 + fa );
       }
 
       src += srcSlot->bitmap.pitch;

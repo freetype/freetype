@@ -760,6 +760,18 @@
 #define FT_ADVANCES_H  <freetype/ftadvanc.h>
 
 
+  /*************************************************************************
+   *
+   * @macro:
+   *   FT_COLOR_H
+   *
+   * @description:
+   *   A macro used in #include statements to name the file containing the
+   *   FreeType~2 API which handles the OpenType CPAL table.
+   */
+#define FT_COLOR_H  <freetype/ftcolor.h>
+
+
   /* */
 
   /* These header files don't need to be included by the user. */

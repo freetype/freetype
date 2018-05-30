@@ -388,7 +388,7 @@ FT_BEGIN_HEADER
   {
     FT_Glyph_Layer  layers;
     FT_UShort       num_layers;
-    FT_Int          load_flags;
+    FT_Int32        load_flags;
 
   } FT_Colr_InternalRec, *FT_Colr_Internal;
 

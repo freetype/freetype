@@ -74,7 +74,7 @@ FT_BEGIN_HEADER
    *     Alpha value, giving the red, green, and blue color's opacity.
    *
    * @since:
-   *   2.10.0
+   *   2.10
    */
   typedef struct  FT_Color_
   {
@@ -114,7 +114,7 @@ FT_BEGIN_HEADER
    *   `TT_CONFIG_OPTION_COLOR_LAYERS' is not defined in `ftoption.h'.
    *
    * @since:
-   *   2.10.0
+   *   2.10
    */
   FT_EXPORT( FT_Error )
   FT_Palette_Get_Size( FT_Face     face,
@@ -153,7 +153,7 @@ FT_BEGIN_HEADER
    *   `TT_CONFIG_OPTION_COLOR_LAYERS' is not defined in `ftoption.h'.
    *
    * @since:
-   *   2.10.0
+   *   2.10
    */
   FT_EXPORT( FT_Error )
   FT_Palette_Get_Names( FT_Face                  face,
@@ -184,7 +184,7 @@ FT_BEGIN_HEADER
    *   @FT_Palette_Get_Size.
    *
    * @since:
-   *   2.10.0
+   *   2.10
    */
 #define FT_PALETTE_USABLE_WITH_LIGHT_BACKGROUND  0x01
 #define FT_PALETTE_USABLE_WITH_DARK_BACKGROUND   0x02
@@ -220,7 +220,7 @@ FT_BEGIN_HEADER
    *   `TT_CONFIG_OPTION_COLOR_LAYERS' is not defined in `ftoption.h'.
    *
    * @since:
-   *   2.10.0
+   *   2.10
    */
   FT_EXPORT( FT_Error )
   FT_Palette_Get_Types( FT_Face           face,
@@ -263,7 +263,7 @@ FT_BEGIN_HEADER
    *   `TT_CONFIG_OPTION_COLOR_LAYERS' is not defined in `ftoption.h'.
    *
    * @since:
-   *   2.10.0
+   *   2.10
    */
   FT_EXPORT( FT_Error )
   FT_Palette_Get_Entry_Names( FT_Face                  face,
@@ -316,7 +316,7 @@ FT_BEGIN_HEADER
    *   `TT_CONFIG_OPTION_COLOR_LAYERS' is not defined in `ftoption.h'.
    *
    * @since:
-   *   2.10.0
+   *   2.10
    */
   FT_EXPORT( FT_Error )
   FT_Palette_Select( FT_Face     face,
@@ -348,7 +348,7 @@ FT_BEGIN_HEADER
    *   `TT_CONFIG_OPTION_COLOR_LAYERS' is not defined in `ftoption.h'.
    *
    * @since:
-   *   2.10.0
+   *   2.10
    */
   FT_EXPORT( FT_Error )
   FT_Palette_Set_Foreground_COlor( FT_Face   face,

@@ -4541,7 +4541,7 @@
                 idx < slot->internal->color_layers->num_layers;
                 idx++ )
           {
-            FT_Int  load_flags;
+            FT_Int32  load_flags;
 
 
             load_flags  = slot->internal->color_layers->load_flags

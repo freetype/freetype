@@ -453,7 +453,7 @@ FT_BEGIN_HEADER
   /*                                                                       */
   typedef FT_Error
   (*TT_Load_Colr_Layer_Func)( TT_Face          face,
-                              FT_Int           idx,
+                              FT_UInt          idx,
                               FT_Glyph_Layer  *layers,
                               FT_UShort*       num_layers );
 
@@ -485,7 +485,7 @@ FT_BEGIN_HEADER
   /*                                                                       */
   typedef FT_Error
   (*TT_Blend_Colr_Func)( TT_Face       face,
-                         FT_Int        color_index,
+                         FT_UInt       color_index,
                          FT_GlyphSlot  base_glyph,
                          FT_GlyphSlot  new_glyph );
 
