@@ -125,20 +125,22 @@ FT_BEGIN_HEADER
   /**************************************************************************
    *
    * @func:
-   *   FT_Palette_Get_Names
+   *   FT_Palette_Get_Name_IDs
    *
    * @description:
-   *   Get the palette names, for example `dark' or `light'.
+   *   Get the palette name IDs, which correspond to entries like `dark' or
+   *   `light' in the font's `name' table.
    *
    * @input:
    *   face ::
    *     The source face handle.
    *
    * @output:
-   *   apalette_names ::
-   *     A read-only array of palette names, taken from the font's `name'
-   *     table.  NULL if the font's `CPAL' table doesn't contain appropriate
-   *     data.
+   *   palette_name_ids ::
+   *     A read-only array of palette name IDs.  NULL if the font's `CPAL'
+   *     table doesn't contain appropriate data.
+   *
+   *     Use function @FT_Get_Sfnt_Name to map name IDs to a name strings.
    *
    * @return:
    *   FreeType error code.  0~means success.
@@ -146,8 +148,8 @@ FT_BEGIN_HEADER
    * @note:
    *   The number of palettes can be retrieved with @FT_Palette_Get_Size.
    *
-   *   An empty name entry in the `CPAL' table gets represented as an empty
-   *   string.
+   *   An empty name ID in the `CPAL' table gets represented as value
+   *   0xFFFF.
    *
    *   This function always returns an error if the config macro
    *   `TT_CONFIG_OPTION_COLOR_LAYERS' is not defined in `ftoption.h'.
@@ -156,8 +158,8 @@ FT_BEGIN_HEADER
    *   2.10
    */
   FT_EXPORT( FT_Error )
-  FT_Palette_Get_Names( FT_Face                  face,
-                        const FT_String* const*  apalette_names );
+  FT_Palette_Get_Name_IDs( FT_Face           face,
+                           const FT_UShort*  palette_name_ids );
 
 
   /**************************************************************************
@@ -230,14 +232,15 @@ FT_BEGIN_HEADER
   /**************************************************************************
    *
    * @func:
-   *   FT_Palette_Get_Entry_Names
+   *   FT_Palette_Get_Entry_Name_IDs
    *
    * @description:
-   *   Get the palette entry names.  In each palette, entries with the same
-   *   index have the same function.  For example, index~0 might be the
-   *   string `outline' to indicate that this palette entry is used for
-   *   outlines, index~1 might be `fill' to indicate the filling color
-   *   palette entry, etc.
+   *   Get the palette entry name IDs.  In each palette, entries with the
+   *   same index have the same function.  For example, index~0 might
+   *   correspond to string `outline' in the font's `name' table to indicate
+   *   that this palette entry is used for outlines, index~1 might
+   *   correspond to `fill' to indicate the filling color palette entry,
+   *   etc.
    *
    * @input:
    *   face ::
@@ -245,9 +248,11 @@ FT_BEGIN_HEADER
    *
    * @output:
    *   aentry_names ::
-   *     A read-only array of palette entry names, taken from the font's
-   *     `name' table.  NULL if the font's `CPAL' table doesn't contain
-   *     appropriate data.
+   *     A read-only array of palette entry name IDs.  NULL if the font's
+   *     `CPAL' table doesn't contain appropriate data.
+   *
+   *     Use function @FT_Get_Sfnt_Name to map entry name IDs to a name
+   *     strings.
    *
    * @return:
    *   FreeType error code.  0~means success.
@@ -256,8 +261,8 @@ FT_BEGIN_HEADER
    *   The number of palette entries can be retrieved with
    *   @FT_Palette_Get_Size.
    *
-   *   An empty name entry in the `CPAL' table gets represented as an empty
-   *   string.
+   *   An empty entry name ID in the `CPAL' table gets represented as value
+   *   0xFFFF.
    *
    *   This function always returns an error if the config macro
    *   `TT_CONFIG_OPTION_COLOR_LAYERS' is not defined in `ftoption.h'.
@@ -266,8 +271,8 @@ FT_BEGIN_HEADER
    *   2.10
    */
   FT_EXPORT( FT_Error )
-  FT_Palette_Get_Entry_Names( FT_Face                  face,
-                              const FT_String* const*  aentry_names );
+  FT_Palette_Get_Entry_Name_IDs( FT_Face           face,
+                                 const FT_UShort*  palette_entry_name_ids );
 
 
   /**************************************************************************
@@ -351,7 +356,7 @@ FT_BEGIN_HEADER
    *   2.10
    */
   FT_EXPORT( FT_Error )
-  FT_Palette_Set_Foreground_COlor( FT_Face   face,
+  FT_Palette_Set_Foreground_Color( FT_Face   face,
                                    FT_Color  foreground_color );
 
   /* */

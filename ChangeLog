@@ -1,3 +1,13 @@
+2018-05-30  Werner Lemberg  <wl@gnu.org>
+
+	ftcolor.h: Improve API design, fix typos (#54011, #54014).
+
+	* include/freetype/ftcolor.h (FT_Palette_Get_Names): Replace with...
+	(FT_Palette_Get_Name_IDs): ... this function.
+	(FT_Palette_Get_Entry_Names): Replace with...
+	(FT_Palette_Get_Entry_Name_IDs): ... this function
+	s/FT_Palette_Set_Foreground_COlor/FT_Palette_Set_Foreground_Color/.
+
 2018-05-30  Armin Hasitzka  <prince.cherusker@gmail.com>
 
 	Beautify a3cfed5e87232c933bdc64f43e8ebebcfd18b41b.
