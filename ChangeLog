@@ -1,5 +1,11 @@
 2018-05-31  Werner Lemberg  <wl@gnu.org>
 
+	* src/raster/ftraster.c (black_TWorker_): Remove `gTarget' field.
+
+	This is no longer used.
+
+2018-05-31  Werner Lemberg  <wl@gnu.org>
+
 	[sfnt] Get colors from `CPAL' table in right order (#54015).
 
 	* src/sfnt/ttcolr.c (tt_face_find_color): Fix it.

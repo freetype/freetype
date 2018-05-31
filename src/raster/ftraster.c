@@ -494,7 +494,6 @@
 
     UShort      bWidth;             /* target bitmap width                 */
     PByte       bTarget;            /* target bitmap buffer                */
-    PByte       gTarget;            /* target pixmap buffer                */
 
     Long        lastX, lastY;
     Long        minY, maxY;
