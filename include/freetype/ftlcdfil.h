@@ -42,7 +42,7 @@ FT_BEGIN_HEADER
    *   LCD Filtering
    *
    * @abstract:
-   *   Reduce color fringes of subpixel-rendered bitmaps.
+   *   Remove color fringes of subpixel-rendered bitmaps.
    *
    * @description:
    *   Should you #define FT_CONFIG_OPTION_SUBPIXEL_RENDERING in your
@@ -54,73 +54,42 @@ FT_BEGIN_HEADER
    *
    *   ClearType-style LCD rendering exploits the color-striped structure of
    *   LCD pixels, increasing the available resolution in the direction of
-   *   the stripe (usually horizontal RGB) by a factor of~3.  Since these
-   *   subpixels are color pixels, using them unfiltered creates severe
-   *   color fringes.  Use the @FT_Library_SetLcdFilter API to specify a
-   *   low-pass filter, which is then applied to subpixel-rendered bitmaps
-   *   generated through @FT_Render_Glyph.  The filter sacrifices some of
-   *   the higher resolution to reduce color fringes, making the glyph image
-   *   slightly blurrier.  Positional improvements will remain.
+   *   the stripe (usually horizontal RGB) by a factor of~3.  Using the
+   *   subpixels coverages unfiltered can create severe color fringes
+   *   especially when rendering thin features.  Indeed, to produce
+   *   black-on-white text, the color components must be dimmed equally.
    *
-   *   A filter should have two properties:
+   *   A good 5-tap FIR filter should be applied to subpixel coverages
+   *   regardless of pixel boundaries and should have these properties:
    *
-   *   1) It should be normalized, meaning the sum of the 5~components
-   *      should be 256 (0x100).  It is possible to go above or under this
-   *      target sum, however: going under means tossing out contrast, going
-   *      over means invoking clamping and thereby non-linearities that
-   *      increase contrast somewhat at the expense of greater distortion
-   *      and color-fringing.  Contrast is better enhanced through stem
-   *      darkening.
+   *   1) It should be symmetrical, like {~a, b, c, b, a~}, to avoid
+   *      any shifts in appearance.
    *
-   *   2) It should be color-balanced, meaning a filter `{~a, b, c, b, a~}'
-   *      where a~+ b~=~c.  It distributes the computed coverage for one
-   *      subpixel to all subpixels equally, sacrificing some won resolution
-   *      but drastically reducing color-fringing.  Positioning improvements
-   *      remain!  Note that color-fringing can only really be minimized
-   *      when using a color-balanced filter and alpha-blending the glyph
-   *      onto a surface in linear space; see @FT_Render_Glyph.
+   *   2) It should be color-balanced, meaning a~+ b~=~c, to reduce color
+   *      fringes by distributing the computed coverage for one subpixel to
+   *      all subpixels equally.
    *
-   *   Regarding the form, a filter can be a `boxy' filter or a `beveled'
-   *   filter.  Boxy filters are sharper but are less forgiving of non-ideal
-   *   gamma curves of a screen (viewing angles!), beveled filters are
-   *   fuzzier but more tolerant.
+   *   3) It should be normalized, meaning 2a~+ 2b~+ c~=~1.0 to maintain
+   *      overall brightness.
    *
-   *   Examples:
-   *
-   *   - [0x10 0x40 0x70 0x40 0x10] is beveled and neither balanced nor
-   *     normalized.
-   *
-   *   - [0x1A 0x33 0x4D 0x33 0x1A] is beveled and balanced but not
-   *     normalized.
-   *
-   *   - [0x19 0x33 0x66 0x4c 0x19] is beveled and normalized but not
-   *     balanced.
-   *
-   *   - [0x00 0x4c 0x66 0x4c 0x00] is boxily beveled and normalized but not
-   *     balanced.
-   *
-   *   - [0x00 0x55 0x56 0x55 0x00] is boxy, normalized, and almost
-   *     balanced.
-   *
-   *   - [0x08 0x4D 0x56 0x4D 0x08] is beveled, normalized and, almost
-   *     balanced.
-   *
-   *   The filter affects glyph bitmaps rendered through @FT_Render_Glyph,
-   *   @FT_Load_Glyph, and @FT_Load_Char.  It does _not_ affect the output
-   *   of @FT_Outline_Render and @FT_Outline_Get_Bitmap.
+   *   Use the @FT_Library_SetLcdFilter API to specify a low-pass filter,
+   *   which is then applied to subpixel-rendered bitmaps generated through
+   *   @FT_Render_Glyph.  The filter affects glyph bitmaps rendered through
+   *   @FT_Render_Glyph, @FT_Load_Glyph, and @FT_Load_Char.  It does _not_
+   *   affect the output of @FT_Outline_Render and @FT_Outline_Get_Bitmap.
    *
    *   If this feature is activated, the dimensions of LCD glyph bitmaps are
    *   either wider or taller than the dimensions of the corresponding
    *   outline with regard to the pixel grid.  For example, for
-   *   @FT_RENDER_MODE_LCD, the filter adds 3~subpixels to the left, and
-   *   3~subpixels to the right.  The bitmap offset values are adjusted
+   *   @FT_RENDER_MODE_LCD, the filter adds 2~subpixels to the left, and
+   *   2~subpixels to the right.  The bitmap offset values are adjusted
    *   accordingly, so clients shouldn't need to modify their layout and
    *   glyph positioning code when enabling the filter.
    *
-   *   It is important to understand that linear alpha blending and gamma
-   *   correction is critical for correctly rendering glyphs onto surfaces
-   *   without artifacts and even more critical when subpixel rendering is
-   *   involved.
+   *   Only filtering along with gamma-corrected alpha blending can completely
+   *   remove color fringes.  Boxy 3-tap filter {0, 1/3, 1/3, 1/3, 0} is
+   *   sharper but is less forgiving of non-ideal gamma curves of a screen
+   *   (viewing angles!), beveled filters are fuzzier but more tolerant.
    *
    *   Each of the 3~alpha values (subpixels) is independently used to blend
    *   one color channel.  That is, red alpha blends the red channel of the
@@ -145,44 +114,23 @@ FT_BEGIN_HEADER
    *     results in sometimes severe color fringes.
    *
    *   FT_LCD_FILTER_DEFAULT ::
-   *     The default filter reduces color fringes considerably, at the cost
-   *     of a slight blurriness in the output.
-   *
-   *     It is a beveled, normalized, and color-balanced five-tap filter
-   *     that is more forgiving to screens with non-ideal gamma curves and
-   *     viewing angles.  Note that while color-fringing is reduced, it can
-   *     only be minimized by using linear alpha blending and gamma
-   *     correction to render glyphs onto surfaces.  The default filter
-   *     weights are [0x08 0x4D 0x56 0x4D 0x08].
+   *     This is a beveled, normalized, and color-balanced five-tap filter
+   *     with weights of [0x08 0x4D 0x56 0x4D 0x08] in 1/256th units.
    *
    *   FT_LCD_FILTER_LIGHT ::
-   *     The light filter is a variant that is sharper at the cost of
-   *     slightly more color fringes than the default one.
-   *
-   *     It is a boxy, normalized, and color-balanced three-tap filter that
-   *     is less forgiving to screens with non-ideal gamma curves and
-   *     viewing angles.  This filter works best when the rendering system
-   *     uses linear alpha blending and gamma correction to render glyphs
-   *     onto surfaces.  The light filter weights are
-   *     [0x00 0x55 0x56 0x55 0x00].
+   *     this is a boxy, normalized, and color-balanced three-tap filter
+   *     with weights of [0x00 0x55 0x56 0x55 0x00] in 1/256th units.
    *
    *   FT_LCD_FILTER_LEGACY ::
+   *   FT_LCD_FILTER_LEGACY1 ::
    *     This filter corresponds to the original libXft color filter.  It
    *     provides high contrast output but can exhibit really bad color
    *     fringes if glyphs are not extremely well hinted to the pixel grid.
-   *     In other words, it only works well if the TrueType bytecode
-   *     interpreter is enabled *and* high-quality hinted fonts are used.
-   *
    *     This filter is only provided for comparison purposes, and might be
-   *     disabled or stay unsupported in the future.
-   *
-   *   FT_LCD_FILTER_LEGACY1 ::
-   *     For historical reasons, the FontConfig library returns a different
-   *     enumeration value for legacy LCD filtering.  To make code work that
-   *     (incorrectly) forwards FontConfig's enumeration value to
-   *     @FT_Library_SetLcdFilter without proper mapping, it is thus easiest
-   *     to have another enumeration value, which is completely equal to
-   *     `FT_LCD_FILTER_LEGACY'.
+   *     disabled or stay unsupported in the future. The second value is
+   *     provided for compatibility with FontConfig, which historically
+   *     used different enumeration, sometimes incorrectly forwarded to
+   *     FreeType.
    *
    * @since:
    *   2.3.0 (`FT_LCD_FILTER_LEGACY1' since 2.6.2)
@@ -258,7 +206,7 @@ FT_BEGIN_HEADER
    *
    *   weights ::
    *     A pointer to an array; the function copies the first five bytes and
-   *     uses them to specify the filter weights.
+   *     uses them to specify the filter weights in 1/256th units.
    *
    * @return:
    *   FreeType error code.  0~means success.
