@@ -39,45 +39,114 @@
 
   typedef struct  GF_CMapRec_
   {
-		//TO-DO
+    FT_CMapRec        cmap;		
+		FT_UInt32 				bc;				/*Beginning Character*/
+		FT_UInt32         ec;				/*End Character*/
   } GF_CMapRec, *GF_CMap;
 
 
   FT_CALLBACK_DEF( FT_Error )
-  gf_cmap_init  ( FT_CMap     gcmap,
+  gf_cmap_init(  FT_CMap     gfcmap,
                  FT_Pointer  init_data )
   {
-   //TO-DO
+		GF_CMap  cmap = (GF_CMap)gfcmap;
+    FT_UNUSED( init_data );
+
+    cmap->bc     = 0;
+    cmap->ec     = 255;
+
+    return FT_Err_Ok;
   }
 
 
   FT_CALLBACK_DEF( void )
   gf_cmap_done( FT_CMap  gfcmap )
   {
-    //TO-DO
+		GF_CMap  cmap = (GF_CMap)gfcmap;
+
+    cmap->bc     =  0;
+    cmap->ec     = -1;
+
   }
 
 
-  FT_CALLBACK_DEF( void )
-  GF_Face_Done( FT_Face  bdfface )         /* GF_Face */
+  FT_CALLBACK_DEF( FT_UInt )
+  gf_cmap_char_index(  FT_CMap    gfcmap,
+                       FT_UInt32  char_code )
   {
-    //TO-DO
+		FT_UInt  gindex = 0;
+		GF_CMap  cmap   = (GF_CMap)gfcmap;
+		
+		char_code -= cmap->bc;
+   
+    if ( char_code < cmap->ec - cmap->bc + 1 )
+      gindex = (FT_UInt)( char_code );
+    
+    return gindex;
+  }
+
+  FT_CALLBACK_DEF( FT_UInt )
+  gf_cmap_char_next(  FT_CMap     gfcmap,
+                      FT_UInt32  *achar_code )
+  {
+		FT_UInt    gindex = 0;
+    FT_UInt32  result = 0;
+    FT_UInt32  char_code = *achar_code + 1;
+
+
+    if ( char_code <= cmap->bc )
+    {
+      result = cmap->bc;
+      gindex = 1;
+    }
+    else
+    {
+      char_code -= cmap->bc;
+      if ( char_code < cmap->ec - cmap->bc + 1 )
+      {
+        result = char_code;
+        gindex = (FT_UInt)( char_code );
+      }
+    }
+
+    *achar_code = result;
+    return gindex;
+  }
+
+
+  static
+  const FT_CMap_ClassRec  gf_cmap_class =
+  {
+    sizeof ( GF_CMapRec ),
+    gf_cmap_init,
+    gf_cmap_done,
+    gf_cmap_char_index,
+    gf_cmap_char_next,
+
+    NULL, NULL, NULL, NULL, NULL
+  };
+
+
+  FT_CALLBACK_DEF( void )
+  GF_Face_Done( FT_Face        gfface )         /* GF_Face */
+  {
+		//TO-DO
   }
 
 
   FT_CALLBACK_DEF( FT_Error )
-  GF_Face_Init( FT_Stream      stream,
-                 FT_Face        bdfface,        /* GF_Face */
+  GF_Face_Init(  FT_Stream      stream,
+                 FT_Face        gfface,         /* GF_Face */
                  FT_Int         face_index,
                  FT_Int         num_params,
                  FT_Parameter*  params )
   {
-    //TO-DO
+		//TO-DO
   }
 
 
   FT_CALLBACK_DEF( FT_Error )
-  GF_Size_Request( FT_Size          size,
+  GF_Size_Request(  FT_Size          size,
                     FT_Size_Request  req )
   {
 		//TO-DO
@@ -86,7 +155,7 @@
 
 
   FT_CALLBACK_DEF( FT_Error )
-  GF_Glyph_Load( FT_GlyphSlot  slot,
+  GF_Glyph_Load(  FT_GlyphSlot  slot,
                   FT_Size       size,
                   FT_UInt       glyph_index,
                   FT_Int32      load_flags )
