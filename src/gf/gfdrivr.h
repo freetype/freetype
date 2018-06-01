@@ -6,7 +6,6 @@
 /*                                                                         */
 /*  Copyright 1996-2018 by                                                 */
 /*  David Turner, Robert Wilhelm, and Werner Lemberg.                      */
-/*  Copyright 2007 Dmitry Timoshkov for Codeweavers                        */
 /*                                                                         */
 /*  This file is part of the FreeType project, and may only be used,       */
 /*  modified, and distributed under the terms of the FreeType project      */
@@ -28,19 +27,33 @@
 
 FT_BEGIN_HEADER
 
+	/* BitmapRec for GF format specific glyphs  */
+	typedef struct GF_BitmapRec_ 
+	{
+		int              bbx_width, bbx_height;   
+		int              off_x, off_y;            
+		int              mv_x,  mv_y;            
+		unsigned char    *bitmap;
+		int              raster;
+	} GF_BitmapRec, *GF_Bitmap;
+	
 
-  typedef struct  GF_encoding_el_
-  {
-    FT_Long    enc;
-    FT_UShort  glyph;
-    
-  } GF_encoding_el;
+	typedef struct GF_Glyph_ 
+	{
+		int         code_min, code_max; 
+		VF_BITMAP   bm_table;
+		double      ds, hppp, vppp;
+		int         font_bbx_w, font_bbx_h;
+		int         font_bbx_xoff, font_bbx_yoff;
+	}GF_Glyph, *GF_Glyph;
 
 
   typedef struct  GF_FaceRec_
   {
     FT_FaceRec        root;
-    //TO-DO
+    GF_Glyph          gf_glyph;
+    GF_BitmapRec      gf_bitmap;
+    
   } GF_FaceRec, *GF_Face;
 
 
