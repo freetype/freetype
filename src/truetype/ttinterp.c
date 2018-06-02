@@ -6189,6 +6189,8 @@
     FT_Bool     reverse_move = FALSE;
 #endif /* TT_SUPPORT_SUBPIXEL_HINTING_INFINALITY */
 
+    FT_F26Dot6  delta;
+
 
     minimum_distance    = exc->GS.minimum_distance;
     control_value_cutin = exc->GS.control_value_cutin;
@@ -6221,8 +6223,11 @@
 
     /* single width test */
 
-    if ( FT_ABS( cvt_dist - exc->GS.single_width_value ) <
-         exc->GS.single_width_cutin )
+    delta = SUB_LONG( cvt_dist, exc->GS.single_width_value );
+    if ( delta < 0 )
+      delta = NEG_LONG( delta );
+
+    if ( delta < exc->GS.single_width_cutin )
     {
       if ( cvt_dist >= 0 )
         cvt_dist =  exc->GS.single_width_value;
@@ -6276,9 +6281,6 @@
 
       if ( exc->GS.gep0 == exc->GS.gep1 )
       {
-        FT_F26Dot6  delta;
-
-
         /* XXX: According to Greg Hitchcock, the following wording is */
         /*      the right one:                                        */
         /*                                                            */
@@ -6313,9 +6315,6 @@
            exc->ignore_x_mode           &&
            exc->GS.gep0 == exc->GS.gep1 )
       {
-        FT_F26Dot6  delta;
-
-
         delta = SUB_LONG( cvt_dist, org_dist );
         if ( delta < 0 )
           delta = NEG_LONG( delta );
