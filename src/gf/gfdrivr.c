@@ -40,8 +40,8 @@
   typedef struct  GF_CMapRec_
   {
     FT_CMapRec        cmap;		
-		FT_UInt32 				bc;				/*Beginning Character*/
-		FT_UInt32         ec;				/*End Character*/
+    FT_UInt32         bc;       /* Beginning Character */
+    FT_UInt32         ec;       /* End Character */
   } GF_CMapRec, *GF_CMap;
 
 
@@ -49,7 +49,7 @@
   gf_cmap_init(  FT_CMap     gfcmap,
                  FT_Pointer  init_data )
   {
-		GF_CMap  cmap = (GF_CMap)gfcmap;
+    GF_CMap  cmap = (GF_CMap)gfcmap;
     FT_UNUSED( init_data );
 
     cmap->bc     = 0;
@@ -62,7 +62,7 @@
   FT_CALLBACK_DEF( void )
   gf_cmap_done( FT_CMap  gfcmap )
   {
-		GF_CMap  cmap = (GF_CMap)gfcmap;
+    GF_CMap  cmap = (GF_CMap)gfcmap;
 
     cmap->bc     =  0;
     cmap->ec     = -1;
@@ -74,10 +74,10 @@
   gf_cmap_char_index(  FT_CMap    gfcmap,
                        FT_UInt32  char_code )
   {
-		FT_UInt  gindex = 0;
-		GF_CMap  cmap   = (GF_CMap)gfcmap;
+    FT_UInt  gindex = 0;
+    GF_CMap  cmap   = (GF_CMap)gfcmap;
 		
-		char_code -= cmap->bc;
+    char_code -= cmap->bc;
    
     if ( char_code < cmap->ec - cmap->bc + 1 )
       gindex = (FT_UInt)( char_code );
@@ -89,7 +89,7 @@
   gf_cmap_char_next(  FT_CMap     gfcmap,
                       FT_UInt32  *achar_code )
   {
-		FT_UInt    gindex = 0;
+    FT_UInt    gindex = 0;
     FT_UInt32  result = 0;
     FT_UInt32  char_code = *achar_code + 1;
 
@@ -130,7 +130,7 @@
   FT_CALLBACK_DEF( void )
   GF_Face_Done( FT_Face        gfface )         /* GF_Face */
   {
-		//TO-DO
+    //TO-DO
   }
 
 
@@ -141,15 +141,14 @@
                  FT_Int         num_params,
                  FT_Parameter*  params )
   {
-		//TO-DO
+    //TO-DO
   }
-
 
   FT_CALLBACK_DEF( FT_Error )
   GF_Size_Request(  FT_Size          size,
                     FT_Size_Request  req )
   {
-		//TO-DO
+    //TO-DO
   }
 
 
