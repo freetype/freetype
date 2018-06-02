@@ -1,3 +1,7 @@
+2018-06-02  Werner Lemberg  <wl@gnu.org>
+
+	* src/autofit/afwarp.h: Use AF_CONFIG_OPTION_USE_WARPER (#54033).
+
 2018-05-31  Werner Lemberg  <wl@gnu.org>
 
 	* src/raster/ftraster.c (black_TWorker_): Remove `gTarget' field.

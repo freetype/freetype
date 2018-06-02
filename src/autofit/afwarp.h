@@ -47,12 +47,14 @@ FT_BEGIN_HEADER
   } AF_WarperRec, *AF_Warper;
 
 
+#ifdef AF_CONFIG_OPTION_USE_WARPER
   FT_LOCAL( void )
   af_warper_compute( AF_Warper      warper,
                      AF_GlyphHints  hints,
                      AF_Dimension   dim,
                      FT_Fixed      *a_scale,
                      FT_Fixed      *a_delta );
+#endif
 
 
 FT_END_HEADER
