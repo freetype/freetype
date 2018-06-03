@@ -16,8 +16,12 @@
 /***************************************************************************/
 
 
+#define FT_MAKE_OPTION_SINGLE_OBJECT
 
 #include <ft2build.h>
+
+#include "gflib.c"
+#include "gfdrivr.c"
 
 
 /* END */
