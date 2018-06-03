@@ -1,51 +1,51 @@
-/***************************************************************************/
-/*                                                                         */
-/*  ftraster.c                                                             */
-/*                                                                         */
-/*    The FreeType glyph rasterizer (body).                                */
-/*                                                                         */
-/*  Copyright 1996-2018 by                                                 */
-/*  David Turner, Robert Wilhelm, and Werner Lemberg.                      */
-/*                                                                         */
-/*  This file is part of the FreeType project, and may only be used,       */
-/*  modified, and distributed under the terms of the FreeType project      */
-/*  license, LICENSE.TXT.  By continuing to use, modify, or distribute     */
-/*  this file you indicate that you have read the license and              */
-/*  understand and accept it fully.                                        */
-/*                                                                         */
-/***************************************************************************/
+/****************************************************************************
+ *
+ * ftraster.c
+ *
+ *   The FreeType glyph rasterizer (body).
+ *
+ * Copyright 1996-2018 by
+ * David Turner, Robert Wilhelm, and Werner Lemberg.
+ *
+ * This file is part of the FreeType project, and may only be used,
+ * modified, and distributed under the terms of the FreeType project
+ * license, LICENSE.TXT.  By continuing to use, modify, or distribute
+ * this file you indicate that you have read the license and
+ * understand and accept it fully.
+ *
+ */
 
-  /*************************************************************************/
-  /*                                                                       */
-  /* This file can be compiled without the rest of the FreeType engine, by */
-  /* defining the STANDALONE_ macro when compiling it.  You also need to   */
-  /* put the files `ftimage.h' and `ftmisc.h' into the $(incdir)           */
-  /* directory.  Typically, you should do something like                   */
-  /*                                                                       */
-  /* - copy `src/raster/ftraster.c' (this file) to your current directory  */
-  /*                                                                       */
-  /* - copy `include/freetype/ftimage.h' and `src/raster/ftmisc.h' to your */
-  /*   current directory                                                   */
-  /*                                                                       */
-  /* - compile `ftraster' with the STANDALONE_ macro defined, as in        */
-  /*                                                                       */
-  /*     cc -c -DSTANDALONE_ ftraster.c                                    */
-  /*                                                                       */
-  /* The renderer can be initialized with a call to                        */
-  /* `ft_standard_raster.raster_new'; a bitmap can be generated            */
-  /* with a call to `ft_standard_raster.raster_render'.                    */
-  /*                                                                       */
-  /* See the comments and documentation in the file `ftimage.h' for more   */
-  /* details on how the raster works.                                      */
-  /*                                                                       */
-  /*************************************************************************/
+  /**************************************************************************
+   *
+   * This file can be compiled without the rest of the FreeType engine, by
+   * defining the STANDALONE_ macro when compiling it.  You also need to
+   * put the files `ftimage.h' and `ftmisc.h' into the $(incdir)
+   * directory.  Typically, you should do something like
+   *
+   * - copy `src/raster/ftraster.c' (this file) to your current directory
+   *
+   * - copy `include/freetype/ftimage.h' and `src/raster/ftmisc.h' to your
+   *   current directory
+   *
+   * - compile `ftraster' with the STANDALONE_ macro defined, as in
+   *
+   *     cc -c -DSTANDALONE_ ftraster.c
+   *
+   * The renderer can be initialized with a call to
+   * `ft_standard_raster.raster_new'; a bitmap can be generated
+   * with a call to `ft_standard_raster.raster_render'.
+   *
+   * See the comments and documentation in the file `ftimage.h' for more
+   * details on how the raster works.
+   *
+   */
 
 
-  /*************************************************************************/
-  /*                                                                       */
-  /* This is a rewrite of the FreeType 1.x scan-line converter             */
-  /*                                                                       */
-  /*************************************************************************/
+  /**************************************************************************
+   *
+   * This is a rewrite of the FreeType 1.x scan-line converter
+   *
+   */
 
 #ifdef STANDALONE_
 
@@ -69,76 +69,76 @@
 #endif /* !STANDALONE_ */
 
 
-  /*************************************************************************/
-  /*                                                                       */
-  /* A simple technical note on how the raster works                       */
-  /* -----------------------------------------------                       */
-  /*                                                                       */
-  /*   Converting an outline into a bitmap is achieved in several steps:   */
-  /*                                                                       */
-  /*   1 - Decomposing the outline into successive `profiles'.  Each       */
-  /*       profile is simply an array of scanline intersections on a given */
-  /*       dimension.  A profile's main attributes are                     */
-  /*                                                                       */
-  /*       o its scanline position boundaries, i.e. `Ymin' and `Ymax'      */
-  /*                                                                       */
-  /*       o an array of intersection coordinates for each scanline        */
-  /*         between `Ymin' and `Ymax'                                     */
-  /*                                                                       */
-  /*       o a direction, indicating whether it was built going `up' or    */
-  /*         `down', as this is very important for filling rules           */
-  /*                                                                       */
-  /*       o its drop-out mode                                             */
-  /*                                                                       */
-  /*   2 - Sweeping the target map's scanlines in order to compute segment */
-  /*       `spans' which are then filled.  Additionally, this pass         */
-  /*       performs drop-out control.                                      */
-  /*                                                                       */
-  /*   The outline data is parsed during step 1 only.  The profiles are    */
-  /*   built from the bottom of the render pool, used as a stack.  The     */
-  /*   following graphics shows the profile list under construction:       */
-  /*                                                                       */
-  /*     __________________________________________________________ _ _    */
-  /*    |         |                 |         |                 |          */
-  /*    | profile | coordinates for | profile | coordinates for |-->       */
-  /*    |    1    |  profile 1      |    2    |  profile 2      |-->       */
-  /*    |_________|_________________|_________|_________________|__ _ _    */
-  /*                                                                       */
-  /*    ^                                                       ^          */
-  /*    |                                                       |          */
-  /* start of render pool                                      top         */
-  /*                                                                       */
-  /*   The top of the profile stack is kept in the `top' variable.         */
-  /*                                                                       */
-  /*   As you can see, a profile record is pushed on top of the render     */
-  /*   pool, which is then followed by its coordinates/intersections.  If  */
-  /*   a change of direction is detected in the outline, a new profile is  */
-  /*   generated until the end of the outline.                             */
-  /*                                                                       */
-  /*   Note that when all profiles have been generated, the function       */
-  /*   Finalize_Profile_Table() is used to record, for each profile, its   */
-  /*   bottom-most scanline as well as the scanline above its upmost       */
-  /*   boundary.  These positions are called `y-turns' because they (sort  */
-  /*   of) correspond to local extrema.  They are stored in a sorted list  */
-  /*   built from the top of the render pool as a downwards stack:         */
-  /*                                                                       */
-  /*      _ _ _______________________________________                      */
-  /*                            |                    |                     */
-  /*                         <--| sorted list of     |                     */
-  /*                         <--|  extrema scanlines |                     */
-  /*      _ _ __________________|____________________|                     */
-  /*                                                                       */
-  /*                            ^                    ^                     */
-  /*                            |                    |                     */
-  /*                         maxBuff           sizeBuff = end of pool      */
-  /*                                                                       */
-  /*   This list is later used during the sweep phase in order to          */
-  /*   optimize performance (see technical note on the sweep below).       */
-  /*                                                                       */
-  /*   Of course, the raster detects whether the two stacks collide and    */
-  /*   handles the situation properly.                                     */
-  /*                                                                       */
-  /*************************************************************************/
+  /**************************************************************************
+   *
+   * A simple technical note on how the raster works
+   * -----------------------------------------------
+   *
+   *   Converting an outline into a bitmap is achieved in several steps:
+   *
+   *   1 - Decomposing the outline into successive `profiles'.  Each
+   *       profile is simply an array of scanline intersections on a given
+   *       dimension.  A profile's main attributes are
+   *
+   *       o its scanline position boundaries, i.e. `Ymin' and `Ymax'
+   *
+   *       o an array of intersection coordinates for each scanline
+   *         between `Ymin' and `Ymax'
+   *
+   *       o a direction, indicating whether it was built going `up' or
+   *         `down', as this is very important for filling rules
+   *
+   *       o its drop-out mode
+   *
+   *   2 - Sweeping the target map's scanlines in order to compute segment
+   *       `spans' which are then filled.  Additionally, this pass
+   *       performs drop-out control.
+   *
+   *   The outline data is parsed during step 1 only.  The profiles are
+   *   built from the bottom of the render pool, used as a stack.  The
+   *   following graphics shows the profile list under construction:
+   *
+   *     __________________________________________________________ _ _
+   *   |         |                 |         |                 |
+   *   | profile | coordinates for | profile | coordinates for |-->
+   *   |    1    |  profile 1      |    2    |  profile 2      |-->
+   *   |_________|_________________|_________|_________________|__ _ _
+   *
+   *   ^                                                       ^
+   *   |                                                       |
+   * start of render pool                                      top
+   *
+   *   The top of the profile stack is kept in the `top' variable.
+   *
+   *   As you can see, a profile record is pushed on top of the render
+   *   pool, which is then followed by its coordinates/intersections.  If
+   *   a change of direction is detected in the outline, a new profile is
+   *   generated until the end of the outline.
+   *
+   *   Note that when all profiles have been generated, the function
+   *   Finalize_Profile_Table() is used to record, for each profile, its
+   *   bottom-most scanline as well as the scanline above its upmost
+   *   boundary.  These positions are called `y-turns' because they (sort
+   *   of) correspond to local extrema.  They are stored in a sorted list
+   *   built from the top of the render pool as a downwards stack:
+   *
+   *     _ _ _______________________________________
+   *                           |                    |
+   *                         <--| sorted list of     |
+   *                         <--|  extrema scanlines |
+   *     _ _ __________________|____________________|
+   *
+   *                           ^                    ^
+   *                           |                    |
+   *                         maxBuff           sizeBuff = end of pool
+   *
+   *   This list is later used during the sweep phase in order to
+   *   optimize performance (see technical note on the sweep below).
+   *
+   *   Of course, the raster detects whether the two stacks collide and
+   *   handles the situation properly.
+   *
+   */
 
 
   /*************************************************************************/
@@ -161,12 +161,12 @@
   /*************************************************************************/
   /*************************************************************************/
 
-  /*************************************************************************/
-  /*                                                                       */
-  /* The macro FT_COMPONENT is used in trace mode.  It is an implicit      */
-  /* parameter of the FT_TRACE() and FT_ERROR() macros, used to print/log  */
-  /* messages during execution.                                            */
-  /*                                                                       */
+  /**************************************************************************
+   *
+   * The macro FT_COMPONENT is used in trace mode.  It is an implicit
+   * parameter of the FT_TRACE() and FT_ERROR() macros, used to print/log
+   * messages during execution.
+   */
 #undef  FT_COMPONENT
 #define FT_COMPONENT  trace_raster
 
@@ -569,18 +569,19 @@
   /*************************************************************************/
 
 
-  /*************************************************************************/
-  /*                                                                       */
-  /* <Function>                                                            */
-  /*    Set_High_Precision                                                 */
-  /*                                                                       */
-  /* <Description>                                                         */
-  /*    Set precision variables according to param flag.                   */
-  /*                                                                       */
-  /* <Input>                                                               */
-  /*    High :: Set to True for high precision (typically for ppem < 24),  */
-  /*            false otherwise.                                           */
-  /*                                                                       */
+  /**************************************************************************
+   *
+   * @Function:
+   *   Set_High_Precision
+   *
+   * @Description:
+   *   Set precision variables according to param flag.
+   *
+   * @Input:
+   *   High ::
+   *     Set to True for high precision (typically for ppem < 24),
+   *     false otherwise.
+   */
   static void
   Set_High_Precision( RAS_ARGS Int  High )
   {
@@ -627,24 +628,26 @@
   }
 
 
-  /*************************************************************************/
-  /*                                                                       */
-  /* <Function>                                                            */
-  /*    New_Profile                                                        */
-  /*                                                                       */
-  /* <Description>                                                         */
-  /*    Create a new profile in the render pool.                           */
-  /*                                                                       */
-  /* <Input>                                                               */
-  /*    aState    :: The state/orientation of the new profile.             */
-  /*                                                                       */
-  /*    overshoot :: Whether the profile's unrounded start position        */
-  /*                 differs by at least a half pixel.                     */
-  /*                                                                       */
-  /* <Return>                                                              */
-  /*   SUCCESS on success.  FAILURE in case of overflow or of incoherent   */
-  /*   profile.                                                            */
-  /*                                                                       */
+  /**************************************************************************
+   *
+   * @Function:
+   *   New_Profile
+   *
+   * @Description:
+   *   Create a new profile in the render pool.
+   *
+   * @Input:
+   *   aState ::
+   *     The state/orientation of the new profile.
+   *
+   *   overshoot ::
+   *     Whether the profile's unrounded start position
+   *     differs by at least a half pixel.
+   *
+   * @Return:
+   *  SUCCESS on success.  FAILURE in case of overflow or of incoherent
+   *  profile.
+   */
   static Bool
   New_Profile( RAS_ARGS TStates  aState,
                         Bool     overshoot )
@@ -703,21 +706,22 @@
   }
 
 
-  /*************************************************************************/
-  /*                                                                       */
-  /* <Function>                                                            */
-  /*    End_Profile                                                        */
-  /*                                                                       */
-  /* <Description>                                                         */
-  /*    Finalize the current profile.                                      */
-  /*                                                                       */
-  /* <Input>                                                               */
-  /*    overshoot :: Whether the profile's unrounded end position differs  */
-  /*                 by at least a half pixel.                             */
-  /*                                                                       */
-  /* <Return>                                                              */
-  /*    SUCCESS on success.  FAILURE in case of overflow or incoherency.   */
-  /*                                                                       */
+  /**************************************************************************
+   *
+   * @Function:
+   *   End_Profile
+   *
+   * @Description:
+   *   Finalize the current profile.
+   *
+   * @Input:
+   *   overshoot ::
+   *     Whether the profile's unrounded end position differs
+   *     by at least a half pixel.
+   *
+   * @Return:
+   *   SUCCESS on success.  FAILURE in case of overflow or incoherency.
+   */
   static Bool
   End_Profile( RAS_ARGS Bool  overshoot )
   {
@@ -775,21 +779,21 @@
   }
 
 
-  /*************************************************************************/
-  /*                                                                       */
-  /* <Function>                                                            */
-  /*    Insert_Y_Turn                                                      */
-  /*                                                                       */
-  /* <Description>                                                         */
-  /*    Insert a salient into the sorted list placed on top of the render  */
-  /*    pool.                                                              */
-  /*                                                                       */
-  /* <Input>                                                               */
-  /*    New y scanline position.                                           */
-  /*                                                                       */
-  /* <Return>                                                              */
-  /*    SUCCESS on success.  FAILURE in case of overflow.                  */
-  /*                                                                       */
+  /**************************************************************************
+   *
+   * @Function:
+   *   Insert_Y_Turn
+   *
+   * @Description:
+   *   Insert a salient into the sorted list placed on top of the render
+   *   pool.
+   *
+   * @Input:
+   *   New y scanline position.
+   *
+   * @Return:
+   *   SUCCESS on success.  FAILURE in case of overflow.
+   */
   static Bool
   Insert_Y_Turn( RAS_ARGS Int  y )
   {
@@ -831,17 +835,17 @@
   }
 
 
-  /*************************************************************************/
-  /*                                                                       */
-  /* <Function>                                                            */
-  /*    Finalize_Profile_Table                                             */
-  /*                                                                       */
-  /* <Description>                                                         */
-  /*    Adjust all links in the profiles list.                             */
-  /*                                                                       */
-  /* <Return>                                                              */
-  /*    SUCCESS on success.  FAILURE in case of overflow.                  */
-  /*                                                                       */
+  /**************************************************************************
+   *
+   * @Function:
+   *   Finalize_Profile_Table
+   *
+   * @Description:
+   *   Adjust all links in the profiles list.
+   *
+   * @Return:
+   *   SUCCESS on success.  FAILURE in case of overflow.
+   */
   static Bool
   Finalize_Profile_Table( RAS_ARG )
   {
@@ -891,22 +895,22 @@
   }
 
 
-  /*************************************************************************/
-  /*                                                                       */
-  /* <Function>                                                            */
-  /*    Split_Conic                                                        */
-  /*                                                                       */
-  /* <Description>                                                         */
-  /*    Subdivide one conic Bezier into two joint sub-arcs in the Bezier   */
-  /*    stack.                                                             */
-  /*                                                                       */
-  /* <Input>                                                               */
-  /*    None (subdivided Bezier is taken from the top of the stack).       */
-  /*                                                                       */
-  /* <Note>                                                                */
-  /*    This routine is the `beef' of this component.  It is  _the_ inner  */
-  /*    loop that should be optimized to hell to get the best performance. */
-  /*                                                                       */
+  /**************************************************************************
+   *
+   * @Function:
+   *   Split_Conic
+   *
+   * @Description:
+   *   Subdivide one conic Bezier into two joint sub-arcs in the Bezier
+   *   stack.
+   *
+   * @Input:
+   *   None (subdivided Bezier is taken from the top of the stack).
+   *
+   * @Note:
+   *   This routine is the `beef' of this component.  It is  _the_ inner
+   *   loop that should be optimized to hell to get the best performance.
+   */
   static void
   Split_Conic( TPoint*  base )
   {
@@ -930,20 +934,20 @@
   }
 
 
-  /*************************************************************************/
-  /*                                                                       */
-  /* <Function>                                                            */
-  /*    Split_Cubic                                                        */
-  /*                                                                       */
-  /* <Description>                                                         */
-  /*    Subdivide a third-order Bezier arc into two joint sub-arcs in the  */
-  /*    Bezier stack.                                                      */
-  /*                                                                       */
-  /* <Note>                                                                */
-  /*    This routine is the `beef' of the component.  It is one of _the_   */
-  /*    inner loops that should be optimized like hell to get the best     */
-  /*    performance.                                                       */
-  /*                                                                       */
+  /**************************************************************************
+   *
+   * @Function:
+   *   Split_Cubic
+   *
+   * @Description:
+   *   Subdivide a third-order Bezier arc into two joint sub-arcs in the
+   *   Bezier stack.
+   *
+   * @Note:
+   *   This routine is the `beef' of the component.  It is one of _the_
+   *   inner loops that should be optimized like hell to get the best
+   *   performance.
+   */
   static void
   Split_Cubic( TPoint*  base )
   {
@@ -972,31 +976,37 @@
   }
 
 
-  /*************************************************************************/
-  /*                                                                       */
-  /* <Function>                                                            */
-  /*    Line_Up                                                            */
-  /*                                                                       */
-  /* <Description>                                                         */
-  /*    Compute the x-coordinates of an ascending line segment and store   */
-  /*    them in the render pool.                                           */
-  /*                                                                       */
-  /* <Input>                                                               */
-  /*    x1   :: The x-coordinate of the segment's start point.             */
-  /*                                                                       */
-  /*    y1   :: The y-coordinate of the segment's start point.             */
-  /*                                                                       */
-  /*    x2   :: The x-coordinate of the segment's end point.               */
-  /*                                                                       */
-  /*    y2   :: The y-coordinate of the segment's end point.               */
-  /*                                                                       */
-  /*    miny :: A lower vertical clipping bound value.                     */
-  /*                                                                       */
-  /*    maxy :: An upper vertical clipping bound value.                    */
-  /*                                                                       */
-  /* <Return>                                                              */
-  /*    SUCCESS on success, FAILURE on render pool overflow.               */
-  /*                                                                       */
+  /**************************************************************************
+   *
+   * @Function:
+   *   Line_Up
+   *
+   * @Description:
+   *   Compute the x-coordinates of an ascending line segment and store
+   *   them in the render pool.
+   *
+   * @Input:
+   *   x1 ::
+   *     The x-coordinate of the segment's start point.
+   *
+   *   y1 ::
+   *     The y-coordinate of the segment's start point.
+   *
+   *   x2 ::
+   *     The x-coordinate of the segment's end point.
+   *
+   *   y2 ::
+   *     The y-coordinate of the segment's end point.
+   *
+   *   miny ::
+   *     A lower vertical clipping bound value.
+   *
+   *   maxy ::
+   *     An upper vertical clipping bound value.
+   *
+   * @Return:
+   *   SUCCESS on success, FAILURE on render pool overflow.
+   */
   static Bool
   Line_Up( RAS_ARGS Long  x1,
                     Long  y1,
@@ -1111,31 +1121,37 @@
   }
 
 
-  /*************************************************************************/
-  /*                                                                       */
-  /* <Function>                                                            */
-  /*    Line_Down                                                          */
-  /*                                                                       */
-  /* <Description>                                                         */
-  /*    Compute the x-coordinates of an descending line segment and store  */
-  /*    them in the render pool.                                           */
-  /*                                                                       */
-  /* <Input>                                                               */
-  /*    x1   :: The x-coordinate of the segment's start point.             */
-  /*                                                                       */
-  /*    y1   :: The y-coordinate of the segment's start point.             */
-  /*                                                                       */
-  /*    x2   :: The x-coordinate of the segment's end point.               */
-  /*                                                                       */
-  /*    y2   :: The y-coordinate of the segment's end point.               */
-  /*                                                                       */
-  /*    miny :: A lower vertical clipping bound value.                     */
-  /*                                                                       */
-  /*    maxy :: An upper vertical clipping bound value.                    */
-  /*                                                                       */
-  /* <Return>                                                              */
-  /*    SUCCESS on success, FAILURE on render pool overflow.               */
-  /*                                                                       */
+  /**************************************************************************
+   *
+   * @Function:
+   *   Line_Down
+   *
+   * @Description:
+   *   Compute the x-coordinates of an descending line segment and store
+   *   them in the render pool.
+   *
+   * @Input:
+   *   x1 ::
+   *     The x-coordinate of the segment's start point.
+   *
+   *   y1 ::
+   *     The y-coordinate of the segment's start point.
+   *
+   *   x2 ::
+   *     The x-coordinate of the segment's end point.
+   *
+   *   y2 ::
+   *     The y-coordinate of the segment's end point.
+   *
+   *   miny ::
+   *     A lower vertical clipping bound value.
+   *
+   *   maxy ::
+   *     An upper vertical clipping bound value.
+   *
+   * @Return:
+   *   SUCCESS on success, FAILURE on render pool overflow.
+   */
   static Bool
   Line_Down( RAS_ARGS Long  x1,
                       Long  y1,
@@ -1162,27 +1178,31 @@
   typedef void  (*TSplitter)( TPoint*  base );
 
 
-  /*************************************************************************/
-  /*                                                                       */
-  /* <Function>                                                            */
-  /*    Bezier_Up                                                          */
-  /*                                                                       */
-  /* <Description>                                                         */
-  /*    Compute the x-coordinates of an ascending Bezier arc and store     */
-  /*    them in the render pool.                                           */
-  /*                                                                       */
-  /* <Input>                                                               */
-  /*    degree   :: The degree of the Bezier arc (either 2 or 3).          */
-  /*                                                                       */
-  /*    splitter :: The function to split Bezier arcs.                     */
-  /*                                                                       */
-  /*    miny     :: A lower vertical clipping bound value.                 */
-  /*                                                                       */
-  /*    maxy     :: An upper vertical clipping bound value.                */
-  /*                                                                       */
-  /* <Return>                                                              */
-  /*    SUCCESS on success, FAILURE on render pool overflow.               */
-  /*                                                                       */
+  /**************************************************************************
+   *
+   * @Function:
+   *   Bezier_Up
+   *
+   * @Description:
+   *   Compute the x-coordinates of an ascending Bezier arc and store
+   *   them in the render pool.
+   *
+   * @Input:
+   *   degree ::
+   *     The degree of the Bezier arc (either 2 or 3).
+   *
+   *   splitter ::
+   *     The function to split Bezier arcs.
+   *
+   *   miny ::
+   *     A lower vertical clipping bound value.
+   *
+   *   maxy ::
+   *     An upper vertical clipping bound value.
+   *
+   * @Return:
+   *   SUCCESS on success, FAILURE on render pool overflow.
+   */
   static Bool
   Bezier_Up( RAS_ARGS Int        degree,
                       TSplitter  splitter,
@@ -1295,27 +1315,31 @@
   }
 
 
-  /*************************************************************************/
-  /*                                                                       */
-  /* <Function>                                                            */
-  /*    Bezier_Down                                                        */
-  /*                                                                       */
-  /* <Description>                                                         */
-  /*    Compute the x-coordinates of an descending Bezier arc and store    */
-  /*    them in the render pool.                                           */
-  /*                                                                       */
-  /* <Input>                                                               */
-  /*    degree   :: The degree of the Bezier arc (either 2 or 3).          */
-  /*                                                                       */
-  /*    splitter :: The function to split Bezier arcs.                     */
-  /*                                                                       */
-  /*    miny     :: A lower vertical clipping bound value.                 */
-  /*                                                                       */
-  /*    maxy     :: An upper vertical clipping bound value.                */
-  /*                                                                       */
-  /* <Return>                                                              */
-  /*    SUCCESS on success, FAILURE on render pool overflow.               */
-  /*                                                                       */
+  /**************************************************************************
+   *
+   * @Function:
+   *   Bezier_Down
+   *
+   * @Description:
+   *   Compute the x-coordinates of an descending Bezier arc and store
+   *   them in the render pool.
+   *
+   * @Input:
+   *   degree ::
+   *     The degree of the Bezier arc (either 2 or 3).
+   *
+   *   splitter ::
+   *     The function to split Bezier arcs.
+   *
+   *   miny ::
+   *     A lower vertical clipping bound value.
+   *
+   *   maxy ::
+   *     An upper vertical clipping bound value.
+   *
+   * @Return:
+   *   SUCCESS on success, FAILURE on render pool overflow.
+   */
   static Bool
   Bezier_Down( RAS_ARGS Int        degree,
                         TSplitter  splitter,
@@ -1344,25 +1368,27 @@
   }
 
 
-  /*************************************************************************/
-  /*                                                                       */
-  /* <Function>                                                            */
-  /*    Line_To                                                            */
-  /*                                                                       */
-  /* <Description>                                                         */
-  /*    Inject a new line segment and adjust the Profiles list.            */
-  /*                                                                       */
-  /* <Input>                                                               */
-  /*   x :: The x-coordinate of the segment's end point (its start point   */
-  /*        is stored in `lastX').                                         */
-  /*                                                                       */
-  /*   y :: The y-coordinate of the segment's end point (its start point   */
-  /*        is stored in `lastY').                                         */
-  /*                                                                       */
-  /* <Return>                                                              */
-  /*   SUCCESS on success, FAILURE on render pool overflow or incorrect    */
-  /*   profile.                                                            */
-  /*                                                                       */
+  /**************************************************************************
+   *
+   * @Function:
+   *   Line_To
+   *
+   * @Description:
+   *   Inject a new line segment and adjust the Profiles list.
+   *
+   * @Input:
+   *  x ::
+   *    The x-coordinate of the segment's end point (its start point
+   *    is stored in `lastX').
+   *
+   *  y ::
+   *    The y-coordinate of the segment's end point (its start point
+   *    is stored in `lastY').
+   *
+   * @Return:
+   *  SUCCESS on success, FAILURE on render pool overflow or incorrect
+   *  profile.
+   */
   static Bool
   Line_To( RAS_ARGS Long  x,
                     Long  y )
@@ -1438,29 +1464,33 @@
   }
 
 
-  /*************************************************************************/
-  /*                                                                       */
-  /* <Function>                                                            */
-  /*    Conic_To                                                           */
-  /*                                                                       */
-  /* <Description>                                                         */
-  /*    Inject a new conic arc and adjust the profile list.                */
-  /*                                                                       */
-  /* <Input>                                                               */
-  /*   cx :: The x-coordinate of the arc's new control point.              */
-  /*                                                                       */
-  /*   cy :: The y-coordinate of the arc's new control point.              */
-  /*                                                                       */
-  /*   x  :: The x-coordinate of the arc's end point (its start point is   */
-  /*         stored in `lastX').                                           */
-  /*                                                                       */
-  /*   y  :: The y-coordinate of the arc's end point (its start point is   */
-  /*         stored in `lastY').                                           */
-  /*                                                                       */
-  /* <Return>                                                              */
-  /*   SUCCESS on success, FAILURE on render pool overflow or incorrect    */
-  /*   profile.                                                            */
-  /*                                                                       */
+  /**************************************************************************
+   *
+   * @Function:
+   *   Conic_To
+   *
+   * @Description:
+   *   Inject a new conic arc and adjust the profile list.
+   *
+   * @Input:
+   *  cx ::
+   *    The x-coordinate of the arc's new control point.
+   *
+   *  cy ::
+   *    The y-coordinate of the arc's new control point.
+   *
+   *  x ::
+   *    The x-coordinate of the arc's end point (its start point is
+   *    stored in `lastX').
+   *
+   *  y ::
+   *    The y-coordinate of the arc's end point (its start point is
+   *    stored in `lastY').
+   *
+   * @Return:
+   *  SUCCESS on success, FAILURE on render pool overflow or incorrect
+   *  profile.
+   */
   static Bool
   Conic_To( RAS_ARGS Long  cx,
                      Long  cy,
@@ -1555,33 +1585,39 @@
   }
 
 
-  /*************************************************************************/
-  /*                                                                       */
-  /* <Function>                                                            */
-  /*    Cubic_To                                                           */
-  /*                                                                       */
-  /* <Description>                                                         */
-  /*    Inject a new cubic arc and adjust the profile list.                */
-  /*                                                                       */
-  /* <Input>                                                               */
-  /*   cx1 :: The x-coordinate of the arc's first new control point.       */
-  /*                                                                       */
-  /*   cy1 :: The y-coordinate of the arc's first new control point.       */
-  /*                                                                       */
-  /*   cx2 :: The x-coordinate of the arc's second new control point.      */
-  /*                                                                       */
-  /*   cy2 :: The y-coordinate of the arc's second new control point.      */
-  /*                                                                       */
-  /*   x   :: The x-coordinate of the arc's end point (its start point is  */
-  /*          stored in `lastX').                                          */
-  /*                                                                       */
-  /*   y   :: The y-coordinate of the arc's end point (its start point is  */
-  /*          stored in `lastY').                                          */
-  /*                                                                       */
-  /* <Return>                                                              */
-  /*   SUCCESS on success, FAILURE on render pool overflow or incorrect    */
-  /*   profile.                                                            */
-  /*                                                                       */
+  /**************************************************************************
+   *
+   * @Function:
+   *   Cubic_To
+   *
+   * @Description:
+   *   Inject a new cubic arc and adjust the profile list.
+   *
+   * @Input:
+   *  cx1 ::
+   *    The x-coordinate of the arc's first new control point.
+   *
+   *  cy1 ::
+   *    The y-coordinate of the arc's first new control point.
+   *
+   *  cx2 ::
+   *    The x-coordinate of the arc's second new control point.
+   *
+   *  cy2 ::
+   *    The y-coordinate of the arc's second new control point.
+   *
+   *  x ::
+   *    The x-coordinate of the arc's end point (its start point is
+   *    stored in `lastX').
+   *
+   *  y ::
+   *    The y-coordinate of the arc's end point (its start point is
+   *    stored in `lastY').
+   *
+   * @Return:
+   *  SUCCESS on success, FAILURE on render pool overflow or incorrect
+   *  profile.
+   */
   static Bool
   Cubic_To( RAS_ARGS Long  cx1,
                      Long  cy1,
@@ -1702,27 +1738,30 @@
                        } while ( 0 )
 
 
-  /*************************************************************************/
-  /*                                                                       */
-  /* <Function>                                                            */
-  /*    Decompose_Curve                                                    */
-  /*                                                                       */
-  /* <Description>                                                         */
-  /*    Scan the outline arrays in order to emit individual segments and   */
-  /*    Beziers by calling Line_To() and Bezier_To().  It handles all      */
-  /*    weird cases, like when the first point is off the curve, or when   */
-  /*    there are simply no `on' points in the contour!                    */
-  /*                                                                       */
-  /* <Input>                                                               */
-  /*    first   :: The index of the first point in the contour.            */
-  /*                                                                       */
-  /*    last    :: The index of the last point in the contour.             */
-  /*                                                                       */
-  /*    flipped :: If set, flip the direction of the curve.                */
-  /*                                                                       */
-  /* <Return>                                                              */
-  /*    SUCCESS on success, FAILURE on error.                              */
-  /*                                                                       */
+  /**************************************************************************
+   *
+   * @Function:
+   *   Decompose_Curve
+   *
+   * @Description:
+   *   Scan the outline arrays in order to emit individual segments and
+   *   Beziers by calling Line_To() and Bezier_To().  It handles all
+   *   weird cases, like when the first point is off the curve, or when
+   *   there are simply no `on' points in the contour!
+   *
+   * @Input:
+   *   first ::
+   *     The index of the first point in the contour.
+   *
+   *   last ::
+   *     The index of the last point in the contour.
+   *
+   *   flipped ::
+   *     If set, flip the direction of the curve.
+   *
+   * @Return:
+   *   SUCCESS on success, FAILURE on error.
+   */
   static Bool
   Decompose_Curve( RAS_ARGS UShort  first,
                             UShort  last,
@@ -1931,22 +1970,23 @@
   }
 
 
-  /*************************************************************************/
-  /*                                                                       */
-  /* <Function>                                                            */
-  /*    Convert_Glyph                                                      */
-  /*                                                                       */
-  /* <Description>                                                         */
-  /*    Convert a glyph into a series of segments and arcs and make a      */
-  /*    profiles list with them.                                           */
-  /*                                                                       */
-  /* <Input>                                                               */
-  /*    flipped :: If set, flip the direction of curve.                    */
-  /*                                                                       */
-  /* <Return>                                                              */
-  /*    SUCCESS on success, FAILURE if any error was encountered during    */
-  /*    rendering.                                                         */
-  /*                                                                       */
+  /**************************************************************************
+   *
+   * @Function:
+   *   Convert_Glyph
+   *
+   * @Description:
+   *   Convert a glyph into a series of segments and arcs and make a
+   *   profiles list with them.
+   *
+   * @Input:
+   *   flipped ::
+   *     If set, flip the direction of curve.
+   *
+   * @Return:
+   *   SUCCESS on success, FAILURE if any error was encountered during
+   *   rendering.
+   */
   static Bool
   Convert_Glyph( RAS_ARGS Int  flipped )
   {
@@ -2025,12 +2065,12 @@
   /*************************************************************************/
 
 
-  /*************************************************************************/
-  /*                                                                       */
-  /*  Init_Linked                                                          */
-  /*                                                                       */
-  /*    Initializes an empty linked list.                                  */
-  /*                                                                       */
+  /**************************************************************************
+   *
+   * Init_Linked
+   *
+   *   Initializes an empty linked list.
+   */
   static void
   Init_Linked( TProfileList*  l )
   {
@@ -2038,12 +2078,12 @@
   }
 
 
-  /*************************************************************************/
-  /*                                                                       */
-  /*  InsNew                                                               */
-  /*                                                                       */
-  /*    Inserts a new profile in a linked list.                            */
-  /*                                                                       */
+  /**************************************************************************
+   *
+   * InsNew
+   *
+   *   Inserts a new profile in a linked list.
+   */
   static void
   InsNew( PProfileList  list,
           PProfile      profile )
@@ -2069,12 +2109,12 @@
   }
 
 
-  /*************************************************************************/
-  /*                                                                       */
-  /*  DelOld                                                               */
-  /*                                                                       */
-  /*    Removes an old profile from a linked list.                         */
-  /*                                                                       */
+  /**************************************************************************
+   *
+   * DelOld
+   *
+   *   Removes an old profile from a linked list.
+   */
   static void
   DelOld( PProfileList  list,
           PProfile      profile )
@@ -2102,14 +2142,14 @@
   }
 
 
-  /*************************************************************************/
-  /*                                                                       */
-  /*  Sort                                                                 */
-  /*                                                                       */
-  /*    Sorts a trace list.  In 95%, the list is already sorted.  We need  */
-  /*    an algorithm which is fast in this case.  Bubble sort is enough    */
-  /*    and simple.                                                        */
-  /*                                                                       */
+  /**************************************************************************
+   *
+   * Sort
+   *
+   *   Sorts a trace list.  In 95%, the list is already sorted.  We need
+   *   an algorithm which is fast in this case.  Bubble sort is enough
+   *   and simple.
+   */
   static void
   Sort( PProfileList  list )
   {
@@ -2160,14 +2200,14 @@
   }
 
 
-  /*************************************************************************/
-  /*                                                                       */
-  /*  Vertical Sweep Procedure Set                                         */
-  /*                                                                       */
-  /*  These four routines are used during the vertical black/white sweep   */
-  /*  phase by the generic Draw_Sweep() function.                          */
-  /*                                                                       */
-  /*************************************************************************/
+  /**************************************************************************
+   *
+   * Vertical Sweep Procedure Set
+   *
+   * These four routines are used during the vertical black/white sweep
+   * phase by the generic Draw_Sweep() function.
+   *
+   */
 
   static void
   Vertical_Sweep_Init( RAS_ARGS Short*  min,
@@ -2428,14 +2468,14 @@
   }
 
 
-  /***********************************************************************/
-  /*                                                                     */
-  /*  Horizontal Sweep Procedure Set                                     */
-  /*                                                                     */
-  /*  These four routines are used during the horizontal black/white     */
-  /*  sweep phase by the generic Draw_Sweep() function.                  */
-  /*                                                                     */
-  /***********************************************************************/
+  /************************************************************************
+   *
+   * Horizontal Sweep Procedure Set
+   *
+   * These four routines are used during the horizontal black/white
+   * sweep phase by the generic Draw_Sweep() function.
+   *
+   */
 
   static void
   Horizontal_Sweep_Init( RAS_ARGS Short*  min,
@@ -2639,11 +2679,11 @@
   }
 
 
-  /*************************************************************************/
-  /*                                                                       */
-  /*  Generic Sweep Drawing routine                                        */
-  /*                                                                       */
-  /*************************************************************************/
+  /**************************************************************************
+   *
+   * Generic Sweep Drawing routine
+   *
+   */
 
   static Bool
   Draw_Sweep( RAS_ARG )
@@ -2885,20 +2925,21 @@
   }
 
 
-  /*************************************************************************/
-  /*                                                                       */
-  /* <Function>                                                            */
-  /*    Render_Single_Pass                                                 */
-  /*                                                                       */
-  /* <Description>                                                         */
-  /*    Perform one sweep with sub-banding.                                */
-  /*                                                                       */
-  /* <Input>                                                               */
-  /*    flipped :: If set, flip the direction of the outline.              */
-  /*                                                                       */
-  /* <Return>                                                              */
-  /*    Renderer error code.                                               */
-  /*                                                                       */
+  /**************************************************************************
+   *
+   * @Function:
+   *   Render_Single_Pass
+   *
+   * @Description:
+   *   Perform one sweep with sub-banding.
+   *
+   * @Input:
+   *   flipped ::
+   *     If set, flip the direction of the outline.
+   *
+   * @Return:
+   *   Renderer error code.
+   */
   static int
   Render_Single_Pass( RAS_ARGS Bool  flipped )
   {
@@ -2960,17 +3001,17 @@
   }
 
 
-  /*************************************************************************/
-  /*                                                                       */
-  /* <Function>                                                            */
-  /*    Render_Glyph                                                       */
-  /*                                                                       */
-  /* <Description>                                                         */
-  /*    Render a glyph in a bitmap.  Sub-banding if needed.                */
-  /*                                                                       */
-  /* <Return>                                                              */
-  /*    FreeType error code.  0 means success.                             */
-  /*                                                                       */
+  /**************************************************************************
+   *
+   * @Function:
+   *   Render_Glyph
+   *
+   * @Description:
+   *   Render a glyph in a bitmap.  Sub-banding if needed.
+   *
+   * @Return:
+   *   FreeType error code.  0 means success.
+   */
   static FT_Error
   Render_Glyph( RAS_ARG )
   {

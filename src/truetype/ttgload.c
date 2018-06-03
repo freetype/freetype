@@ -1,19 +1,19 @@
-/***************************************************************************/
-/*                                                                         */
-/*  ttgload.c                                                              */
-/*                                                                         */
-/*    TrueType Glyph Loader (body).                                        */
-/*                                                                         */
-/*  Copyright 1996-2018 by                                                 */
-/*  David Turner, Robert Wilhelm, and Werner Lemberg.                      */
-/*                                                                         */
-/*  This file is part of the FreeType project, and may only be used,       */
-/*  modified, and distributed under the terms of the FreeType project      */
-/*  license, LICENSE.TXT.  By continuing to use, modify, or distribute     */
-/*  this file you indicate that you have read the license and              */
-/*  understand and accept it fully.                                        */
-/*                                                                         */
-/***************************************************************************/
+/****************************************************************************
+ *
+ * ttgload.c
+ *
+ *   TrueType Glyph Loader (body).
+ *
+ * Copyright 1996-2018 by
+ * David Turner, Robert Wilhelm, and Werner Lemberg.
+ *
+ * This file is part of the FreeType project, and may only be used,
+ * modified, and distributed under the terms of the FreeType project
+ * license, LICENSE.TXT.  By continuing to use, modify, or distribute
+ * this file you indicate that you have read the license and
+ * understand and accept it fully.
+ *
+ */
 
 
 #include <ft2build.h>
@@ -38,20 +38,20 @@
 #include "ttsubpix.h"
 
 
-  /*************************************************************************/
-  /*                                                                       */
-  /* The macro FT_COMPONENT is used in trace mode.  It is an implicit      */
-  /* parameter of the FT_TRACE() and FT_ERROR() macros, used to print/log  */
-  /* messages during execution.                                            */
-  /*                                                                       */
+  /**************************************************************************
+   *
+   * The macro FT_COMPONENT is used in trace mode.  It is an implicit
+   * parameter of the FT_TRACE() and FT_ERROR() macros, used to print/log
+   * messages during execution.
+   */
 #undef  FT_COMPONENT
 #define FT_COMPONENT  trace_ttgload
 
 
-  /*************************************************************************/
-  /*                                                                       */
-  /* Composite glyph flags.                                                */
-  /*                                                                       */
+  /**************************************************************************
+   *
+   * Composite glyph flags.
+   */
 #define ARGS_ARE_WORDS             0x0001
 #define ARGS_ARE_XY_VALUES         0x0002
 #define ROUND_XY_TO_GRID           0x0004
@@ -67,10 +67,10 @@
 #define UNSCALED_COMPONENT_OFFSET  0x1000
 
 
-  /*************************************************************************/
-  /*                                                                       */
-  /* Return the horizontal metrics in font units for a given glyph.        */
-  /*                                                                       */
+  /**************************************************************************
+   *
+   * Return the horizontal metrics in font units for a given glyph.
+   */
   FT_LOCAL_DEF( void )
   TT_Get_HMetrics( TT_Face     face,
                    FT_UInt     idx,
@@ -84,11 +84,11 @@
   }
 
 
-  /*************************************************************************/
-  /*                                                                       */
-  /* Return the vertical metrics in font units for a given glyph.          */
-  /* See function `tt_loader_set_pp' below for explanations.               */
-  /*                                                                       */
+  /**************************************************************************
+   *
+   * Return the vertical metrics in font units for a given glyph.
+   * See function `tt_loader_set_pp' below for explanations.
+   */
   FT_LOCAL_DEF( void )
   TT_Get_VMetrics( TT_Face     face,
                    FT_UInt     idx,
@@ -250,13 +250,13 @@
 #endif /* FT_CONFIG_OPTION_INCREMENTAL */
 
 
-  /*************************************************************************/
-  /*                                                                       */
-  /* The following functions are used by default with TrueType fonts.      */
-  /* However, they can be replaced by alternatives if we need to support   */
-  /* TrueType-compressed formats (like MicroType) in the future.           */
-  /*                                                                       */
-  /*************************************************************************/
+  /**************************************************************************
+   *
+   * The following functions are used by default with TrueType fonts.
+   * However, they can be replaced by alternatives if we need to support
+   * TrueType-compressed formats (like MicroType) in the future.
+   *
+   */
 
   FT_CALLBACK_DEF( FT_Error )
   TT_Access_Glyph_Frame( TT_Loader  loader,
@@ -776,15 +776,15 @@
   }
 
 
-  /*************************************************************************/
-  /*                                                                       */
-  /* <Function>                                                            */
-  /*    TT_Hint_Glyph                                                      */
-  /*                                                                       */
-  /* <Description>                                                         */
-  /*    Hint the glyph using the zone prepared by the caller.  Note that   */
-  /*    the zone is supposed to include four phantom points.               */
-  /*                                                                       */
+  /**************************************************************************
+   *
+   * @Function:
+   *   TT_Hint_Glyph
+   *
+   * @Description:
+   *   Hint the glyph using the zone prepared by the caller.  Note that
+   *   the zone is supposed to include four phantom points.
+   */
   static FT_Error
   TT_Hint_Glyph( TT_Loader  loader,
                  FT_Bool    is_composite )
@@ -904,16 +904,16 @@
   }
 
 
-  /*************************************************************************/
-  /*                                                                       */
-  /* <Function>                                                            */
-  /*    TT_Process_Simple_Glyph                                            */
-  /*                                                                       */
-  /* <Description>                                                         */
-  /*    Once a simple glyph has been loaded, it needs to be processed.     */
-  /*    Usually, this means scaling and hinting through bytecode           */
-  /*    interpretation.                                                    */
-  /*                                                                       */
+  /**************************************************************************
+   *
+   * @Function:
+   *   TT_Process_Simple_Glyph
+   *
+   * @Description:
+   *   Once a simple glyph has been loaded, it needs to be processed.
+   *   Usually, this means scaling and hinting through bytecode
+   *   interpretation.
+   */
   static FT_Error
   TT_Process_Simple_Glyph( TT_Loader  loader )
   {
@@ -1079,15 +1079,15 @@
   }
 
 
-  /*************************************************************************/
-  /*                                                                       */
-  /* <Function>                                                            */
-  /*    TT_Process_Composite_Component                                     */
-  /*                                                                       */
-  /* <Description>                                                         */
-  /*    Once a composite component has been loaded, it needs to be         */
-  /*    processed.  Usually, this means transforming and translating.      */
-  /*                                                                       */
+  /**************************************************************************
+   *
+   * @Function:
+   *   TT_Process_Composite_Component
+   *
+   * @Description:
+   *   Once a composite component has been loaded, it needs to be
+   *   processed.  Usually, this means transforming and translating.
+   */
   static FT_Error
   TT_Process_Composite_Component( TT_Loader    loader,
                                   FT_SubGlyph  subglyph,
@@ -1161,10 +1161,10 @@
 
 #if 0
 
-        /*******************************************************************/
-        /*                                                                 */
-        /* This algorithm is what Apple documents.  But it doesn't work.   */
-        /*                                                                 */
+        /********************************************************************
+         *
+         * This algorithm is what Apple documents.  But it doesn't work.
+         */
         int  a = subglyph->transform.xx > 0 ?  subglyph->transform.xx
                                             : -subglyph->transform.xx;
         int  b = subglyph->transform.yx > 0 ?  subglyph->transform.yx
@@ -1186,10 +1186,10 @@
 
 #else /* 1 */
 
-        /*******************************************************************/
-        /*                                                                 */
-        /* This algorithm is a guess and works much better than the above. */
-        /*                                                                 */
+        /********************************************************************
+         *
+         * This algorithm is a guess and works much better than the above.
+         */
         FT_Fixed  mac_xscale = FT_Hypot( subglyph->transform.xx,
                                          subglyph->transform.xy );
         FT_Fixed  mac_yscale = FT_Hypot( subglyph->transform.yy,
@@ -1247,16 +1247,16 @@
   }
 
 
-  /*************************************************************************/
-  /*                                                                       */
-  /* <Function>                                                            */
-  /*    TT_Process_Composite_Glyph                                         */
-  /*                                                                       */
-  /* <Description>                                                         */
-  /*    This is slightly different from TT_Process_Simple_Glyph, in that   */
-  /*    its sole purpose is to hint the glyph.  Thus this function is      */
-  /*    only available when bytecode interpreter is enabled.               */
-  /*                                                                       */
+  /**************************************************************************
+   *
+   * @Function:
+   *   TT_Process_Composite_Glyph
+   *
+   * @Description:
+   *   This is slightly different from TT_Process_Simple_Glyph, in that
+   *   its sole purpose is to hint the glyph.  Thus this function is
+   *   only available when bytecode interpreter is enabled.
+   */
   static FT_Error
   TT_Process_Composite_Glyph( TT_Loader  loader,
                               FT_UInt    start_point,
@@ -1505,15 +1505,15 @@
   }
 
 
-  /*************************************************************************/
-  /*                                                                       */
-  /* <Function>                                                            */
-  /*    load_truetype_glyph                                                */
-  /*                                                                       */
-  /* <Description>                                                         */
-  /*    Loads a given truetype glyph.  Handles composites and uses a       */
-  /*    TT_Loader object.                                                  */
-  /*                                                                       */
+  /**************************************************************************
+   *
+   * @Function:
+   *   load_truetype_glyph
+   *
+   * @Description:
+   *   Loads a given truetype glyph.  Handles composites and uses a
+   *   TT_Loader object.
+   */
   static FT_Error
   load_truetype_glyph( TT_Loader  loader,
                        FT_UInt    glyph_index,
@@ -2664,33 +2664,37 @@
   }
 
 
-  /*************************************************************************/
-  /*                                                                       */
-  /* <Function>                                                            */
-  /*    TT_Load_Glyph                                                      */
-  /*                                                                       */
-  /* <Description>                                                         */
-  /*    A function used to load a single glyph within a given glyph slot,  */
-  /*    for a given size.                                                  */
-  /*                                                                       */
-  /* <Input>                                                               */
-  /*    glyph       :: A handle to a target slot object where the glyph    */
-  /*                   will be loaded.                                     */
-  /*                                                                       */
-  /*    size        :: A handle to the source face size at which the glyph */
-  /*                   must be scaled/loaded.                              */
-  /*                                                                       */
-  /*    glyph_index :: The index of the glyph in the font file.            */
-  /*                                                                       */
-  /*    load_flags  :: A flag indicating what to load for this glyph.  The */
-  /*                   FT_LOAD_XXX constants can be used to control the    */
-  /*                   glyph loading process (e.g., whether the outline    */
-  /*                   should be scaled, whether to load bitmaps or not,   */
-  /*                   whether to hint the outline, etc).                  */
-  /*                                                                       */
-  /* <Return>                                                              */
-  /*    FreeType error code.  0 means success.                             */
-  /*                                                                       */
+  /**************************************************************************
+   *
+   * @Function:
+   *   TT_Load_Glyph
+   *
+   * @Description:
+   *   A function used to load a single glyph within a given glyph slot,
+   *   for a given size.
+   *
+   * @Input:
+   *   glyph ::
+   *     A handle to a target slot object where the glyph
+   *     will be loaded.
+   *
+   *   size ::
+   *     A handle to the source face size at which the glyph
+   *     must be scaled/loaded.
+   *
+   *   glyph_index ::
+   *     The index of the glyph in the font file.
+   *
+   *   load_flags ::
+   *     A flag indicating what to load for this glyph.  The
+   *     FT_LOAD_XXX constants can be used to control the
+   *     glyph loading process (e.g., whether the outline
+   *     should be scaled, whether to load bitmaps or not,
+   *     whether to hint the outline, etc).
+   *
+   * @Return:
+   *   FreeType error code.  0 means success.
+   */
   FT_LOCAL_DEF( FT_Error )
   TT_Load_Glyph( TT_Size       size,
                  TT_GlyphSlot  glyph,

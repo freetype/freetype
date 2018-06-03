@@ -1,19 +1,19 @@
-/***************************************************************************/
-/*                                                                         */
-/*  sfobjs.c                                                               */
-/*                                                                         */
-/*    SFNT object management (base).                                       */
-/*                                                                         */
-/*  Copyright 1996-2018 by                                                 */
-/*  David Turner, Robert Wilhelm, and Werner Lemberg.                      */
-/*                                                                         */
-/*  This file is part of the FreeType project, and may only be used,       */
-/*  modified, and distributed under the terms of the FreeType project      */
-/*  license, LICENSE.TXT.  By continuing to use, modify, or distribute     */
-/*  this file you indicate that you have read the license and              */
-/*  understand and accept it fully.                                        */
-/*                                                                         */
-/***************************************************************************/
+/****************************************************************************
+ *
+ * sfobjs.c
+ *
+ *   SFNT object management (base).
+ *
+ * Copyright 1996-2018 by
+ * David Turner, Robert Wilhelm, and Werner Lemberg.
+ *
+ * This file is part of the FreeType project, and may only be used,
+ * modified, and distributed under the terms of the FreeType project
+ * license, LICENSE.TXT.  By continuing to use, modify, or distribute
+ * this file you indicate that you have read the license and
+ * understand and accept it fully.
+ *
+ */
 
 
 #include <ft2build.h>
@@ -41,12 +41,12 @@
 #endif
 
 
-  /*************************************************************************/
-  /*                                                                       */
-  /* The macro FT_COMPONENT is used in trace mode.  It is an implicit      */
-  /* parameter of the FT_TRACE() and FT_ERROR() macros, used to print/log  */
-  /* messages during execution.                                            */
-  /*                                                                       */
+  /**************************************************************************
+   *
+   * The macro FT_COMPONENT is used in trace mode.  It is an implicit
+   * parameter of the FT_TRACE() and FT_ERROR() macros, used to print/log
+   * messages during execution.
+   */
 #undef  FT_COMPONENT
 #define FT_COMPONENT  trace_sfobjs
 
@@ -1001,15 +1001,15 @@
         face->variation_support |= TT_FACE_FLAG_VAR_FVAR;
 
       /*
-       *  As documented in the OpenType specification, an entry for the
-       *  default instance may be omitted in the named instance table.  In
-       *  particular this means that even if there is no named instance
-       *  table in the font we actually do have a named instance, namely the
-       *  default instance.
+       * As documented in the OpenType specification, an entry for the
+       * default instance may be omitted in the named instance table.  In
+       * particular this means that even if there is no named instance
+       * table in the font we actually do have a named instance, namely the
+       * default instance.
        *
-       *  For consistency, we always want the default instance in our list
-       *  of named instances.  If it is missing, we try to synthesize it
-       *  later on.  Here, we have to adjust `num_instances' accordingly.
+       * For consistency, we always want the default instance in our list
+       * of named instances.  If it is missing, we try to synthesize it
+       * later on.  Here, we have to adjust `num_instances' accordingly.
        */
 
       if ( ( face->variation_support & TT_FACE_FLAG_VAR_FVAR ) &&
@@ -1395,10 +1395,10 @@
       FT_Long  flags = root->face_flags;
 
 
-      /*********************************************************************/
-      /*                                                                   */
-      /* Compute face flags.                                               */
-      /*                                                                   */
+      /**********************************************************************
+       *
+       * Compute face flags.
+       */
       if ( face->sbit_table_type == TT_SBIT_TABLE_TYPE_CBLC ||
            face->sbit_table_type == TT_SBIT_TABLE_TYPE_SBIX ||
            face->colr_and_cpal                              )
@@ -1445,10 +1445,10 @@
 
       root->face_flags = flags;
 
-      /*********************************************************************/
-      /*                                                                   */
-      /* Compute style flags.                                              */
-      /*                                                                   */
+      /**********************************************************************
+       *
+       * Compute style flags.
+       */
 
       flags = 0;
       if ( has_outline == TRUE && face->os2.version != 0xFFFFU )
@@ -1478,14 +1478,14 @@
 
       root->style_flags |= flags;
 
-      /*********************************************************************/
-      /*                                                                   */
-      /* Polish the charmaps.                                              */
-      /*                                                                   */
-      /*   Try to set the charmap encoding according to the platform &     */
-      /*   encoding ID of each charmap.  Emulate Unicode charmap if one    */
-      /*   is missing.                                                     */
-      /*                                                                   */
+      /**********************************************************************
+       *
+       * Polish the charmaps.
+       *
+       *   Try to set the charmap encoding according to the platform &
+       *   encoding ID of each charmap.  Emulate Unicode charmap if one
+       *   is missing.
+       */
 
       tt_face_build_cmaps( face );  /* ignore errors */
 
@@ -1540,9 +1540,9 @@
 #ifdef TT_CONFIG_OPTION_EMBEDDED_BITMAPS
 
       /*
-       *  Now allocate the root array of FT_Bitmap_Size records and
-       *  populate them.  Unfortunately, it isn't possible to indicate bit
-       *  depths in the FT_Bitmap_Size record.  This is a design error.
+       * Now allocate the root array of FT_Bitmap_Size records and
+       * populate them.  Unfortunately, it isn't possible to indicate bit
+       * depths in the FT_Bitmap_Size record.  This is a design error.
        */
       {
         FT_UInt  count;
@@ -1622,10 +1622,10 @@
         root->face_flags |= FT_FACE_FLAG_SCALABLE;
 
 
-      /*********************************************************************/
-      /*                                                                   */
-      /*  Set up metrics.                                                  */
-      /*                                                                   */
+      /**********************************************************************
+       *
+       * Set up metrics.
+       */
       if ( FT_IS_SCALABLE( root ) )
       {
         /* XXX What about if outline header is missing */

@@ -1,19 +1,19 @@
-/***************************************************************************/
-/*                                                                         */
-/*  pshalgo.c                                                              */
-/*                                                                         */
-/*    PostScript hinting algorithm (body).                                 */
-/*                                                                         */
-/*  Copyright 2001-2018 by                                                 */
-/*  David Turner, Robert Wilhelm, and Werner Lemberg.                      */
-/*                                                                         */
-/*  This file is part of the FreeType project, and may only be used        */
-/*  modified and distributed under the terms of the FreeType project       */
-/*  license, LICENSE.TXT.  By continuing to use, modify, or distribute     */
-/*  this file you indicate that you have read the license and              */
-/*  understand and accept it fully.                                        */
-/*                                                                         */
-/***************************************************************************/
+/****************************************************************************
+ *
+ * pshalgo.c
+ *
+ *   PostScript hinting algorithm (body).
+ *
+ * Copyright 2001-2018 by
+ * David Turner, Robert Wilhelm, and Werner Lemberg.
+ *
+ * This file is part of the FreeType project, and may only be used
+ * modified and distributed under the terms of the FreeType project
+ * license, LICENSE.TXT.  By continuing to use, modify, or distribute
+ * this file you indicate that you have read the license and
+ * understand and accept it fully.
+ *
+ */
 
 
 #include <ft2build.h>
@@ -658,8 +658,8 @@
 #if 0  /* not used for now, experimental */
 
  /*
-  *  A variant to perform "light" hinting (i.e. FT_RENDER_MODE_LIGHT)
-  *  of stems
+  * A variant to perform "light" hinting (i.e. FT_RENDER_MODE_LIGHT)
+  * of stems
   */
   static void
   psh_hint_align_light( PSH_Hint     hint,

@@ -1,19 +1,19 @@
-/***************************************************************************/
-/*                                                                         */
-/*  afglobal.c                                                             */
-/*                                                                         */
-/*    Auto-fitter routines to compute global hinting values (body).        */
-/*                                                                         */
-/*  Copyright 2003-2018 by                                                 */
-/*  David Turner, Robert Wilhelm, and Werner Lemberg.                      */
-/*                                                                         */
-/*  This file is part of the FreeType project, and may only be used,       */
-/*  modified, and distributed under the terms of the FreeType project      */
-/*  license, LICENSE.TXT.  By continuing to use, modify, or distribute     */
-/*  this file you indicate that you have read the license and              */
-/*  understand and accept it fully.                                        */
-/*                                                                         */
-/***************************************************************************/
+/****************************************************************************
+ *
+ * afglobal.c
+ *
+ *   Auto-fitter routines to compute global hinting values (body).
+ *
+ * Copyright 2003-2018 by
+ * David Turner, Robert Wilhelm, and Werner Lemberg.
+ *
+ * This file is part of the FreeType project, and may only be used,
+ * modified, and distributed under the terms of the FreeType project
+ * license, LICENSE.TXT.  By continuing to use, modify, or distribute
+ * this file you indicate that you have read the license and
+ * understand and accept it fully.
+ *
+ */
 
 
 #include "afglobal.h"
@@ -22,12 +22,12 @@
 #include FT_INTERNAL_DEBUG_H
 
 
-  /*************************************************************************/
-  /*                                                                       */
-  /* The macro FT_COMPONENT is used in trace mode.  It is an implicit      */
-  /* parameter of the FT_TRACE() and FT_ERROR() macros, used to print/log  */
-  /* messages during execution.                                            */
-  /*                                                                       */
+  /**************************************************************************
+   *
+   * The macro FT_COMPONENT is used in trace mode.  It is an implicit
+   * parameter of the FT_TRACE() and FT_ERROR() macros, used to print/log
+   * messages during execution.
+   */
 #undef  FT_COMPONENT
 #define FT_COMPONENT  trace_afglobal
 
@@ -167,8 +167,8 @@
         continue;
 
       /*
-       *  Scan all Unicode points in the range and set the corresponding
-       *  glyph style index.
+       * Scan all Unicode points in the range and set the corresponding
+       * glyph style index.
        */
       if ( style_class->coverage == AF_COVERAGE_DEFAULT )
       {
@@ -265,8 +265,8 @@
 
   Exit:
     /*
-     *  By default, all uncovered glyphs are set to the fallback style.
-     *  XXX: Shouldn't we disable hinting or do something similar?
+     * By default, all uncovered glyphs are set to the fallback style.
+     * XXX: Shouldn't we disable hinting or do something similar?
      */
     if ( globals->module->fallback_style != AF_STYLE_UNASSIGNED )
     {

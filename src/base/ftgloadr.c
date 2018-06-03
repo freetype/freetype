@@ -1,19 +1,19 @@
-/***************************************************************************/
-/*                                                                         */
-/*  ftgloadr.c                                                             */
-/*                                                                         */
-/*    The FreeType glyph loader (body).                                    */
-/*                                                                         */
-/*  Copyright 2002-2018 by                                                 */
-/*  David Turner, Robert Wilhelm, and Werner Lemberg                       */
-/*                                                                         */
-/*  This file is part of the FreeType project, and may only be used,       */
-/*  modified, and distributed under the terms of the FreeType project      */
-/*  license, LICENSE.TXT.  By continuing to use, modify, or distribute     */
-/*  this file you indicate that you have read the license and              */
-/*  understand and accept it fully.                                        */
-/*                                                                         */
-/***************************************************************************/
+/****************************************************************************
+ *
+ * ftgloadr.c
+ *
+ *   The FreeType glyph loader (body).
+ *
+ * Copyright 2002-2018 by
+ * David Turner, Robert Wilhelm, and Werner Lemberg
+ *
+ * This file is part of the FreeType project, and may only be used,
+ * modified, and distributed under the terms of the FreeType project
+ * license, LICENSE.TXT.  By continuing to use, modify, or distribute
+ * this file you indicate that you have read the license and
+ * understand and accept it fully.
+ *
+ */
 
 
 #include <ft2build.h>
@@ -38,31 +38,31 @@
   /*************************************************************************/
   /*************************************************************************/
 
-  /*************************************************************************/
-  /*                                                                       */
-  /* The glyph loader is a simple object which is used to load a set of    */
-  /* glyphs easily.  It is critical for the correct loading of composites. */
-  /*                                                                       */
-  /* Ideally, one can see it as a stack of abstract `glyph' objects.       */
-  /*                                                                       */
-  /*   loader.base     Is really the bottom of the stack.  It describes a  */
-  /*                   single glyph image made of the juxtaposition of     */
-  /*                   several glyphs (those `in the stack').              */
-  /*                                                                       */
-  /*   loader.current  Describes the top of the stack, on which a new      */
-  /*                   glyph can be loaded.                                */
-  /*                                                                       */
-  /*   Rewind          Clears the stack.                                   */
-  /*   Prepare         Set up `loader.current' for addition of a new glyph */
-  /*                   image.                                              */
-  /*   Add             Add the `current' glyph image to the `base' one,    */
-  /*                   and prepare for another one.                        */
-  /*                                                                       */
-  /* The glyph loader is now a base object.  Each driver used to           */
-  /* re-implement it in one way or the other, which wasted code and        */
-  /* energy.                                                               */
-  /*                                                                       */
-  /*************************************************************************/
+  /**************************************************************************
+   *
+   * The glyph loader is a simple object which is used to load a set of
+   * glyphs easily.  It is critical for the correct loading of composites.
+   *
+   * Ideally, one can see it as a stack of abstract `glyph' objects.
+   *
+   *   loader.base     Is really the bottom of the stack.  It describes a
+   *                   single glyph image made of the juxtaposition of
+   *                   several glyphs (those `in the stack').
+   *
+   *   loader.current  Describes the top of the stack, on which a new
+   *                   glyph can be loaded.
+   *
+   *   Rewind          Clears the stack.
+   *   Prepare         Set up `loader.current' for addition of a new glyph
+   *                   image.
+   *   Add             Add the `current' glyph image to the `base' one,
+   *                   and prepare for another one.
+   *
+   * The glyph loader is now a base object.  Each driver used to
+   * re-implement it in one way or the other, which wasted code and
+   * energy.
+   *
+   */
 
 
   /* create a new glyph loader */

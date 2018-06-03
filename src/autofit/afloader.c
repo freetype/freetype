@@ -1,19 +1,19 @@
-/***************************************************************************/
-/*                                                                         */
-/*  afloader.c                                                             */
-/*                                                                         */
-/*    Auto-fitter glyph loading routines (body).                           */
-/*                                                                         */
-/*  Copyright 2003-2018 by                                                 */
-/*  David Turner, Robert Wilhelm, and Werner Lemberg.                      */
-/*                                                                         */
-/*  This file is part of the FreeType project, and may only be used,       */
-/*  modified, and distributed under the terms of the FreeType project      */
-/*  license, LICENSE.TXT.  By continuing to use, modify, or distribute     */
-/*  this file you indicate that you have read the license and              */
-/*  understand and accept it fully.                                        */
-/*                                                                         */
-/***************************************************************************/
+/****************************************************************************
+ *
+ * afloader.c
+ *
+ *   Auto-fitter glyph loading routines (body).
+ *
+ * Copyright 2003-2018 by
+ * David Turner, Robert Wilhelm, and Werner Lemberg.
+ *
+ * This file is part of the FreeType project, and may only be used,
+ * modified, and distributed under the terms of the FreeType project
+ * license, LICENSE.TXT.  By continuing to use, modify, or distribute
+ * this file you indicate that you have read the license and
+ * understand and accept it fully.
+ *
+ */
 
 
 #include "afglobal.h"
@@ -118,9 +118,9 @@
     }
 
     /*
-     *  We depend on the writing system (script analyzers) to supply
-     *  standard widths for the script of the glyph we are looking at.  If
-     *  it can't deliver, stem darkening is disabled.
+     * We depend on the writing system (script analyzers) to supply
+     * standard widths for the script of the glyph we are looking at.  If
+     * it can't deliver, stem darkening is disabled.
      */
     writing_system_class =
       af_writing_system_classes[style_metrics->style_class->writing_system];
@@ -173,22 +173,22 @@
       globals->darken_y                  = af_fixedToInt( darken_y );
 
       /*
-       *  Scale outlines down on the Y-axis to keep them inside their blue
-       *  zones.  The stronger the emboldening, the stronger the downscaling
-       *  (plus heuristical padding to prevent outlines still falling out
-       *  their zones due to rounding).
+       * Scale outlines down on the Y-axis to keep them inside their blue
+       * zones.  The stronger the emboldening, the stronger the downscaling
+       * (plus heuristical padding to prevent outlines still falling out
+       * their zones due to rounding).
        *
-       *  Reason: `FT_Outline_Embolden' works by shifting the rightmost
-       *  points of stems farther to the right, and topmost points farther
-       *  up.  This positions points on the Y-axis outside their
-       *  pre-computed blue zones and leads to distortion when applying the
-       *  hints in the code further below.  Code outside this emboldening
-       *  block doesn't know we are presenting it with modified outlines the
-       *  analyzer didn't see!
+       * Reason: `FT_Outline_Embolden' works by shifting the rightmost
+       * points of stems farther to the right, and topmost points farther
+       * up.  This positions points on the Y-axis outside their
+       * pre-computed blue zones and leads to distortion when applying the
+       * hints in the code further below.  Code outside this emboldening
+       * block doesn't know we are presenting it with modified outlines the
+       * analyzer didn't see!
        *
-       *  An unfortunate side effect of downscaling is that the emboldening
-       *  effect is slightly decreased.  The loss becomes more pronounced
-       *  versus the CFF driver at smaller sizes, e.g., at 9ppem and below.
+       * An unfortunate side effect of downscaling is that the emboldening
+       * effect is slightly decreased.  The loss becomes more pronounced
+       * versus the CFF driver at smaller sizes, e.g., at 9ppem and below.
        */
       globals->scale_down_factor =
         FT_DivFix( em_size - ( darken_by_font_units_y + af_intToFixed( 8 ) ),
@@ -277,13 +277,13 @@
     }
 
     /*
-     *  TODO: This code currently doesn't support fractional advance widths,
-     *  i.e., placing hinted glyphs at anything other than integer
-     *  x-positions.  This is only relevant for the warper code, which
-     *  scales and shifts glyphs to optimize blackness of stems (hinting on
-     *  the x-axis by nature places things on pixel integers, hinting on the
-     *  y-axis only, i.e., LIGHT mode, doesn't touch the x-axis).  The delta
-     *  values of the scaler would need to be adjusted.
+     * TODO: This code currently doesn't support fractional advance widths,
+     * i.e., placing hinted glyphs at anything other than integer
+     * x-positions.  This is only relevant for the warper code, which
+     * scales and shifts glyphs to optimize blackness of stems (hinting on
+     * the x-axis by nature places things on pixel integers, hinting on the
+     * y-axis only, i.e., LIGHT mode, doesn't touch the x-axis).  The delta
+     * values of the scaler would need to be adjusted.
      */
     scaler.face    = face;
     scaler.x_scale = size_internal->autohint_metrics.x_scale;
@@ -307,10 +307,10 @@
 #endif
 
     /*
-     *  Glyphs (really code points) are assigned to scripts.  Script
-     *  analysis is done lazily: For each glyph that passes through here,
-     *  the corresponding script analyzer is called, but returns immediately
-     *  if it has been run already.
+     * Glyphs (really code points) are assigned to scripts.  Script
+     * analysis is done lazily: For each glyph that passes through here,
+     * the corresponding script analyzer is called, but returns immediately
+     * if it has been run already.
      */
     error = af_face_globals_get_metrics( loader->globals, glyph_index,
                                          style_options, &style_metrics );
@@ -337,11 +337,11 @@
     }
 
     /*
-     *  Do the main work of `af_loader_load_glyph'.  Note that we never have
-     *  to deal with composite glyphs as those get loaded into
-     *  FT_GLYPH_FORMAT_OUTLINE by the recursed `FT_Load_Glyph' function.
-     *  In the rare cases where FT_LOAD_NO_RECURSE is set, it implies
-     *  FT_LOAD_NO_SCALE and as such the auto-hinter is never called.
+     * Do the main work of `af_loader_load_glyph'.  Note that we never have
+     * to deal with composite glyphs as those get loaded into
+     * FT_GLYPH_FORMAT_OUTLINE by the recursed `FT_Load_Glyph' function.
+     * In the rare cases where FT_LOAD_NO_RECURSE is set, it implies
+     * FT_LOAD_NO_SCALE and as such the auto-hinter is never called.
      */
     load_flags |=  FT_LOAD_NO_SCALE         |
                    FT_LOAD_IGNORE_TRANSFORM |
@@ -353,26 +353,26 @@
       goto Exit;
 
     /*
-     *  Apply stem darkening (emboldening) here before hints are applied to
-     *  the outline.  Glyphs are scaled down proportionally to the
-     *  emboldening so that curve points don't fall outside their
-     *  precomputed blue zones.
+     * Apply stem darkening (emboldening) here before hints are applied to
+     * the outline.  Glyphs are scaled down proportionally to the
+     * emboldening so that curve points don't fall outside their
+     * precomputed blue zones.
      *
-     *  Any emboldening done by the font driver (e.g., the CFF driver)
-     *  doesn't reach here because the autohinter loads the unprocessed
-     *  glyphs in font units for analysis (functions `af_*_metrics_init_*')
-     *  and then above to prepare it for the rasterizers by itself,
-     *  independently of the font driver.  So emboldening must be done here,
-     *  within the autohinter.
+     * Any emboldening done by the font driver (e.g., the CFF driver)
+     * doesn't reach here because the autohinter loads the unprocessed
+     * glyphs in font units for analysis (functions `af_*_metrics_init_*')
+     * and then above to prepare it for the rasterizers by itself,
+     * independently of the font driver.  So emboldening must be done here,
+     * within the autohinter.
      *
-     *  All glyphs to be autohinted pass through here one by one.  The
-     *  standard widths can therefore change from one glyph to the next,
-     *  depending on what script a glyph is assigned to (each script has its
-     *  own set of standard widths and other metrics).  The darkening amount
-     *  must therefore be recomputed for each size and
-     *  `standard_{vertical,horizontal}_width' change.
+     * All glyphs to be autohinted pass through here one by one.  The
+     * standard widths can therefore change from one glyph to the next,
+     * depending on what script a glyph is assigned to (each script has its
+     * own set of standard widths and other metrics).  The darkening amount
+     * must therefore be recomputed for each size and
+     * `standard_{vertical,horizontal}_width' change.
      *
-     *  Ignore errors and carry on without emboldening.
+     * Ignore errors and carry on without emboldening.
      *
      */
 

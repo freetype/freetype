@@ -1,19 +1,19 @@
-/***************************************************************************/
-/*                                                                         */
-/*  cffdecode.c                                                            */
-/*                                                                         */
-/*    PostScript CFF (Type 2) decoding routines (body).                    */
-/*                                                                         */
-/*  Copyright 2017-2018 by                                                 */
-/*  David Turner, Robert Wilhelm, and Werner Lemberg.                      */
-/*                                                                         */
-/*  This file is part of the FreeType project, and may only be used,       */
-/*  modified, and distributed under the terms of the FreeType project      */
-/*  license, LICENSE.TXT.  By continuing to use, modify, or distribute     */
-/*  this file you indicate that you have read the license and              */
-/*  understand and accept it fully.                                        */
-/*                                                                         */
-/***************************************************************************/
+/****************************************************************************
+ *
+ * cffdecode.c
+ *
+ *   PostScript CFF (Type 2) decoding routines (body).
+ *
+ * Copyright 2017-2018 by
+ * David Turner, Robert Wilhelm, and Werner Lemberg.
+ *
+ * This file is part of the FreeType project, and may only be used,
+ * modified, and distributed under the terms of the FreeType project
+ * license, LICENSE.TXT.  By continuing to use, modify, or distribute
+ * this file you indicate that you have read the license and
+ * understand and accept it fully.
+ *
+ */
 
 
 #include <ft2build.h>
@@ -28,12 +28,12 @@
 #include "psauxerr.h"
 
 
-  /*************************************************************************/
-  /*                                                                       */
-  /* The macro FT_COMPONENT is used in trace mode.  It is an implicit      */
-  /* parameter of the FT_TRACE() and FT_ERROR() macros, used to print/log  */
-  /* messages during execution.                                            */
-  /*                                                                       */
+  /**************************************************************************
+   *
+   * The macro FT_COMPONENT is used in trace mode.  It is an implicit
+   * parameter of the FT_TRACE() and FT_ERROR() macros, used to print/log
+   * messages during execution.
+   */
 #undef  FT_COMPONENT
 #define FT_COMPONENT  trace_cffdecode
 
@@ -378,23 +378,25 @@
   /*************************************************************************/
   /*************************************************************************/
 
-  /*************************************************************************/
-  /*                                                                       */
-  /* <Function>                                                            */
-  /*    cff_compute_bias                                                   */
-  /*                                                                       */
-  /* <Description>                                                         */
-  /*    Computes the bias value in dependence of the number of glyph       */
-  /*    subroutines.                                                       */
-  /*                                                                       */
-  /* <Input>                                                               */
-  /*    in_charstring_type :: The `CharstringType' value of the top DICT   */
-  /*                          dictionary.                                  */
-  /*                                                                       */
-  /*    num_subrs          :: The number of glyph subroutines.             */
-  /*                                                                       */
-  /* <Return>                                                              */
-  /*    The bias value.                                                    */
+  /**************************************************************************
+   *
+   * @Function:
+   *   cff_compute_bias
+   *
+   * @Description:
+   *   Computes the bias value in dependence of the number of glyph
+   *   subroutines.
+   *
+   * @Input:
+   *   in_charstring_type ::
+   *     The `CharstringType' value of the top DICT
+   *     dictionary.
+   *
+   *   num_subrs ::
+   *     The number of glyph subroutines.
+   *
+   * @Return:
+   */
   static FT_Int
   cff_compute_bias( FT_Int   in_charstring_type,
                     FT_UInt  num_subrs )
@@ -464,28 +466,32 @@
 
 #ifdef CFF_CONFIG_OPTION_OLD_ENGINE
 
-  /*************************************************************************/
-  /*                                                                       */
-  /* <Function>                                                            */
-  /*    cff_decoder_parse_charstrings                                      */
-  /*                                                                       */
-  /* <Description>                                                         */
-  /*    Parses a given Type 2 charstrings program.                         */
-  /*                                                                       */
-  /* <InOut>                                                               */
-  /*    decoder         :: The current Type 1 decoder.                     */
-  /*                                                                       */
-  /* <Input>                                                               */
-  /*    charstring_base :: The base of the charstring stream.              */
-  /*                                                                       */
-  /*    charstring_len  :: The length in bytes of the charstring stream.   */
-  /*                                                                       */
-  /*    in_dict         :: Set to 1 if function is called from top or      */
-  /*                       private DICT (needed for Multiple Master CFFs). */
-  /*                                                                       */
-  /* <Return>                                                              */
-  /*    FreeType error code.  0 means success.                             */
-  /*                                                                       */
+  /**************************************************************************
+   *
+   * @Function:
+   *   cff_decoder_parse_charstrings
+   *
+   * @Description:
+   *   Parses a given Type 2 charstrings program.
+   *
+   * @InOut:
+   *   decoder ::
+   *     The current Type 1 decoder.
+   *
+   * @Input:
+   *   charstring_base ::
+   *     The base of the charstring stream.
+   *
+   *   charstring_len ::
+   *     The length in bytes of the charstring stream.
+   *
+   *   in_dict ::
+   *     Set to 1 if function is called from top or
+   *     private DICT (needed for Multiple Master CFFs).
+   *
+   * @Return:
+   *   FreeType error code.  0 means success.
+   */
   FT_LOCAL_DEF( FT_Error )
   cff_decoder_parse_charstrings( CFF_Decoder*  decoder,
                                  FT_Byte*      charstring_base,
@@ -543,10 +549,10 @@
       FT_Byte       v;
 
 
-      /********************************************************************/
-      /*                                                                  */
-      /* Decode operator or operand                                       */
-      /*                                                                  */
+      /*********************************************************************
+       *
+       * Decode operator or operand
+       */
       v = *ip++;
       if ( v >= 32 || v == 28 )
       {
@@ -2251,28 +2257,34 @@
 #endif /* CFF_CONFIG_OPTION_OLD_ENGINE */
 
 
-  /*************************************************************************/
-  /*                                                                       */
-  /* <Function>                                                            */
-  /*    cff_decoder_init                                                   */
-  /*                                                                       */
-  /* <Description>                                                         */
-  /*    Initializes a given glyph decoder.                                 */
-  /*                                                                       */
-  /* <InOut>                                                               */
-  /*    decoder :: A pointer to the glyph builder to initialize.           */
-  /*                                                                       */
-  /* <Input>                                                               */
-  /*    face      :: The current face object.                              */
-  /*                                                                       */
-  /*    size      :: The current size object.                              */
-  /*                                                                       */
-  /*    slot      :: The current glyph object.                             */
-  /*                                                                       */
-  /*    hinting   :: Whether hinting is active.                            */
-  /*                                                                       */
-  /*    hint_mode :: The hinting mode.                                     */
-  /*                                                                       */
+  /**************************************************************************
+   *
+   * @Function:
+   *   cff_decoder_init
+   *
+   * @Description:
+   *   Initializes a given glyph decoder.
+   *
+   * @InOut:
+   *   decoder ::
+   *     A pointer to the glyph builder to initialize.
+   *
+   * @Input:
+   *   face ::
+   *     The current face object.
+   *
+   *   size ::
+   *     The current size object.
+   *
+   *   slot ::
+   *     The current glyph object.
+   *
+   *   hinting ::
+   *     Whether hinting is active.
+   *
+   *   hint_mode ::
+   *     The hinting mode.
+   */
   FT_LOCAL_DEF( void )
   cff_decoder_init( CFF_Decoder*                     decoder,
                     TT_Face                          face,

@@ -1,19 +1,19 @@
-/***************************************************************************/
-/*                                                                         */
-/*  ttbdf.c                                                                */
-/*                                                                         */
-/*    TrueType and OpenType embedded BDF properties (body).                */
-/*                                                                         */
-/*  Copyright 2005-2018 by                                                 */
-/*  David Turner, Robert Wilhelm, and Werner Lemberg.                      */
-/*                                                                         */
-/*  This file is part of the FreeType project, and may only be used,       */
-/*  modified, and distributed under the terms of the FreeType project      */
-/*  license, LICENSE.TXT.  By continuing to use, modify, or distribute     */
-/*  this file you indicate that you have read the license and              */
-/*  understand and accept it fully.                                        */
-/*                                                                         */
-/***************************************************************************/
+/****************************************************************************
+ *
+ * ttbdf.c
+ *
+ *   TrueType and OpenType embedded BDF properties (body).
+ *
+ * Copyright 2005-2018 by
+ * David Turner, Robert Wilhelm, and Werner Lemberg.
+ *
+ * This file is part of the FreeType project, and may only be used,
+ * modified, and distributed under the terms of the FreeType project
+ * license, LICENSE.TXT.  By continuing to use, modify, or distribute
+ * this file you indicate that you have read the license and
+ * understand and accept it fully.
+ *
+ */
 
 
 #include <ft2build.h>
@@ -27,12 +27,12 @@
 
 #ifdef TT_CONFIG_OPTION_BDF
 
-  /*************************************************************************/
-  /*                                                                       */
-  /* The macro FT_COMPONENT is used in trace mode.  It is an implicit      */
-  /* parameter of the FT_TRACE() and FT_ERROR() macros, used to print/log  */
-  /* messages during execution.                                            */
-  /*                                                                       */
+  /**************************************************************************
+   *
+   * The macro FT_COMPONENT is used in trace mode.  It is an implicit
+   * parameter of the FT_TRACE() and FT_ERROR() macros, used to print/log
+   * messages during execution.
+   */
 #undef  FT_COMPONENT
 #define FT_COMPONENT  trace_ttbdf
 
@@ -111,8 +111,8 @@
         FT_UInt  num_items = FT_PEEK_USHORT( p + 2 );
 
         /*
-         *  We don't need to check the value sets themselves, since this
-         *  is done later.
+         * We don't need to check the value sets themselves, since this
+         * is done later.
          */
         strike += 10 * num_items;
 

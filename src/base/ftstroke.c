@@ -1,19 +1,19 @@
-/***************************************************************************/
-/*                                                                         */
-/*  ftstroke.c                                                             */
-/*                                                                         */
-/*    FreeType path stroker (body).                                        */
-/*                                                                         */
-/*  Copyright 2002-2018 by                                                 */
-/*  David Turner, Robert Wilhelm, and Werner Lemberg.                      */
-/*                                                                         */
-/*  This file is part of the FreeType project, and may only be used,       */
-/*  modified, and distributed under the terms of the FreeType project      */
-/*  license, LICENSE.TXT.  By continuing to use, modify, or distribute     */
-/*  this file you indicate that you have read the license and              */
-/*  understand and accept it fully.                                        */
-/*                                                                         */
-/***************************************************************************/
+/****************************************************************************
+ *
+ * ftstroke.c
+ *
+ *   FreeType path stroker (body).
+ *
+ * Copyright 2002-2018 by
+ * David Turner, Robert Wilhelm, and Werner Lemberg.
+ *
+ * This file is part of the FreeType project, and may only be used,
+ * modified, and distributed under the terms of the FreeType project
+ * license, LICENSE.TXT.  By continuing to use, modify, or distribute
+ * this file you indicate that you have read the license and
+ * understand and accept it fully.
+ *
+ */
 
 
 #include <ft2build.h>
@@ -2082,8 +2082,8 @@
   /* documentation is in ftstroke.h */
 
   /*
-   *  The following is very similar to FT_Outline_Decompose, except
-   *  that we do support opened paths, and do not scale the outline.
+   * The following is very similar to FT_Outline_Decompose, except
+   * that we do support opened paths, and do not scale the outline.
    */
   FT_EXPORT_DEF( FT_Error )
   FT_Stroker_ParseOutline( FT_Stroker   stroker,

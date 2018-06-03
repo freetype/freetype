@@ -1,19 +1,19 @@
-/***************************************************************************/
-/*                                                                         */
-/*  psmodule.c                                                             */
-/*                                                                         */
-/*    PSNames module implementation (body).                                */
-/*                                                                         */
-/*  Copyright 1996-2018 by                                                 */
-/*  David Turner, Robert Wilhelm, and Werner Lemberg.                      */
-/*                                                                         */
-/*  This file is part of the FreeType project, and may only be used,       */
-/*  modified, and distributed under the terms of the FreeType project      */
-/*  license, LICENSE.TXT.  By continuing to use, modify, or distribute     */
-/*  this file you indicate that you have read the license and              */
-/*  understand and accept it fully.                                        */
-/*                                                                         */
-/***************************************************************************/
+/****************************************************************************
+ *
+ * psmodule.c
+ *
+ *   PSNames module implementation (body).
+ *
+ * Copyright 1996-2018 by
+ * David Turner, Robert Wilhelm, and Werner Lemberg.
+ *
+ * This file is part of the FreeType project, and may only be used,
+ * modified, and distributed under the terms of the FreeType project
+ * license, LICENSE.TXT.  By continuing to use, modify, or distribute
+ * this file you indicate that you have read the license and
+ * understand and accept it fully.
+ *
+ */
 
 
 #include <ft2build.h>
@@ -24,16 +24,16 @@
 #include "psmodule.h"
 
   /*
-   *  The file `pstables.h' with its arrays and its function
-   *  `ft_get_adobe_glyph_index' is useful for other projects also (for
-   *  example, `pdfium' is using it).  However, if used as a C++ header,
-   *  including it in two different source files makes it necessary to use
-   *  `extern const' for the declaration of its arrays, otherwise the data
-   *  would be duplicated as mandated by the C++ standard.
+   * The file `pstables.h' with its arrays and its function
+   * `ft_get_adobe_glyph_index' is useful for other projects also (for
+   * example, `pdfium' is using it).  However, if used as a C++ header,
+   * including it in two different source files makes it necessary to use
+   * `extern const' for the declaration of its arrays, otherwise the data
+   * would be duplicated as mandated by the C++ standard.
    *
-   *  For this reason, we use `DEFINE_PS_TABLES' to guard the function
-   *  definitions, and `DEFINE_PS_TABLES_DATA' to provide both proper array
-   *  declarations and definitions.
+   * For this reason, we use `DEFINE_PS_TABLES' to guard the function
+   * definitions, and `DEFINE_PS_TABLES_DATA' to provide both proper array
+   * declarations and definitions.
    */
 #include "pstables.h"
 #define  DEFINE_PS_TABLES

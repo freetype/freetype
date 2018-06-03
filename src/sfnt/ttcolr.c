@@ -1,31 +1,31 @@
-/***************************************************************************/
-/*                                                                         */
-/*  ttcolr.c                                                               */
-/*                                                                         */
-/*    TrueType and OpenType color outline support.                         */
-/*                                                                         */
-/*  Copyright 2018 by                                                      */
-/*  David Turner, Robert Wilhelm, and Werner Lemberg.                      */
-/*                                                                         */
-/*  Written by Shao Yu Zhang <shaozhang@fb.com>.                           */
-/*                                                                         */
-/*  This file is part of the FreeType project, and may only be used,       */
-/*  modified, and distributed under the terms of the FreeType project      */
-/*  license, LICENSE.TXT.  By continuing to use, modify, or distribute     */
-/*  this file you indicate that you have read the license and              */
-/*  understand and accept it fully.                                        */
-/*                                                                         */
-/***************************************************************************/
+/****************************************************************************
+ *
+ * ttcolr.c
+ *
+ *   TrueType and OpenType color outline support.
+ *
+ * Copyright 2018 by
+ * David Turner, Robert Wilhelm, and Werner Lemberg.
+ *
+ * Written by Shao Yu Zhang <shaozhang@fb.com>.
+ *
+ * This file is part of the FreeType project, and may only be used,
+ * modified, and distributed under the terms of the FreeType project
+ * license, LICENSE.TXT.  By continuing to use, modify, or distribute
+ * this file you indicate that you have read the license and
+ * understand and accept it fully.
+ *
+ */
 
 
-  /*************************************************************************/
-  /*                                                                       */
-  /* `COLR' and `CPAL' table specification:                                */
-  /*                                                                       */
-  /*   https://www.microsoft.com/typography/otspec/colr.htm                */
-  /*   https://www.microsoft.com/typography/otspec/cpal.htm                */
-  /*                                                                       */
-  /*************************************************************************/
+  /**************************************************************************
+   *
+   * `COLR' and `CPAL' table specification:
+   *
+   *   https://www.microsoft.com/typography/otspec/colr.htm
+   *   https://www.microsoft.com/typography/otspec/cpal.htm
+   *
+   */
 
 
 #include <ft2build.h>
@@ -100,12 +100,12 @@
   } ColrCpal;
 
 
-  /*************************************************************************/
-  /*                                                                       */
-  /* The macro FT_COMPONENT is used in trace mode.  It is an implicit      */
-  /* parameter of the FT_TRACE() and FT_ERROR() macros, used to print/log  */
-  /* messages during execution.                                            */
-  /*                                                                       */
+  /**************************************************************************
+   *
+   * The macro FT_COMPONENT is used in trace mode.  It is an implicit
+   * parameter of the FT_TRACE() and FT_ERROR() macros, used to print/log
+   * messages during execution.
+   */
 #undef  FT_COMPONENT
 #define FT_COMPONENT  trace_ttcolrcpal
 

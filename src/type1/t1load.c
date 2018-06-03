@@ -1,63 +1,63 @@
-/***************************************************************************/
-/*                                                                         */
-/*  t1load.c                                                               */
-/*                                                                         */
-/*    Type 1 font loader (body).                                           */
-/*                                                                         */
-/*  Copyright 1996-2018 by                                                 */
-/*  David Turner, Robert Wilhelm, and Werner Lemberg.                      */
-/*                                                                         */
-/*  This file is part of the FreeType project, and may only be used,       */
-/*  modified, and distributed under the terms of the FreeType project      */
-/*  license, LICENSE.TXT.  By continuing to use, modify, or distribute     */
-/*  this file you indicate that you have read the license and              */
-/*  understand and accept it fully.                                        */
-/*                                                                         */
-/***************************************************************************/
+/****************************************************************************
+ *
+ * t1load.c
+ *
+ *   Type 1 font loader (body).
+ *
+ * Copyright 1996-2018 by
+ * David Turner, Robert Wilhelm, and Werner Lemberg.
+ *
+ * This file is part of the FreeType project, and may only be used,
+ * modified, and distributed under the terms of the FreeType project
+ * license, LICENSE.TXT.  By continuing to use, modify, or distribute
+ * this file you indicate that you have read the license and
+ * understand and accept it fully.
+ *
+ */
 
 
-  /*************************************************************************/
-  /*                                                                       */
-  /* This is the new and improved Type 1 data loader for FreeType 2.  The  */
-  /* old loader has several problems: it is slow, complex, difficult to    */
-  /* maintain, and contains incredible hacks to make it accept some        */
-  /* ill-formed Type 1 fonts without hiccup-ing.  Moreover, about 5% of    */
-  /* the Type 1 fonts on my machine still aren't loaded correctly by it.   */
-  /*                                                                       */
-  /* This version is much simpler, much faster and also easier to read and */
-  /* maintain by a great order of magnitude.  The idea behind it is to     */
-  /* _not_ try to read the Type 1 token stream with a state machine (i.e.  */
-  /* a Postscript-like interpreter) but rather to perform simple pattern   */
-  /* matching.                                                             */
-  /*                                                                       */
-  /* Indeed, nearly all data definitions follow a simple pattern like      */
-  /*                                                                       */
-  /*  ... /Field <data> ...                                                */
-  /*                                                                       */
-  /* where <data> can be a number, a boolean, a string, or an array of     */
-  /* numbers.  There are a few exceptions, namely the encoding, font name, */
-  /* charstrings, and subrs; they are handled with a special pattern       */
-  /* matching routine.                                                     */
-  /*                                                                       */
-  /* All other common cases are handled very simply.  The matching rules   */
-  /* are defined in the file `t1tokens.h' through the use of several       */
-  /* macros calls PARSE_XXX.  This file is included twice here; the first  */
-  /* time to generate parsing callback functions, the second time to       */
-  /* generate a table of keywords (with pointers to the associated         */
-  /* callback functions).                                                  */
-  /*                                                                       */
-  /* The function `parse_dict' simply scans *linearly* a given dictionary  */
-  /* (either the top-level or private one) and calls the appropriate       */
-  /* callback when it encounters an immediate keyword.                     */
-  /*                                                                       */
-  /* This is by far the fastest way one can find to parse and read all     */
-  /* data.                                                                 */
-  /*                                                                       */
-  /* This led to tremendous code size reduction.  Note that later, the     */
-  /* glyph loader will also be _greatly_ simplified, and the automatic     */
-  /* hinter will replace the clumsy `t1hinter'.                            */
-  /*                                                                       */
-  /*************************************************************************/
+  /**************************************************************************
+   *
+   * This is the new and improved Type 1 data loader for FreeType 2.  The
+   * old loader has several problems: it is slow, complex, difficult to
+   * maintain, and contains incredible hacks to make it accept some
+   * ill-formed Type 1 fonts without hiccup-ing.  Moreover, about 5% of
+   * the Type 1 fonts on my machine still aren't loaded correctly by it.
+   *
+   * This version is much simpler, much faster and also easier to read and
+   * maintain by a great order of magnitude.  The idea behind it is to
+   * _not_ try to read the Type 1 token stream with a state machine (i.e.
+   * a Postscript-like interpreter) but rather to perform simple pattern
+   * matching.
+   *
+   * Indeed, nearly all data definitions follow a simple pattern like
+   *
+   * ... /Field <data> ...
+   *
+   * where <data> can be a number, a boolean, a string, or an array of
+   * numbers.  There are a few exceptions, namely the encoding, font name,
+   * charstrings, and subrs; they are handled with a special pattern
+   * matching routine.
+   *
+   * All other common cases are handled very simply.  The matching rules
+   * are defined in the file `t1tokens.h' through the use of several
+   * macros calls PARSE_XXX.  This file is included twice here; the first
+   * time to generate parsing callback functions, the second time to
+   * generate a table of keywords (with pointers to the associated
+   * callback functions).
+   *
+   * The function `parse_dict' simply scans *linearly* a given dictionary
+   * (either the top-level or private one) and calls the appropriate
+   * callback when it encounters an immediate keyword.
+   *
+   * This is by far the fastest way one can find to parse and read all
+   * data.
+   *
+   * This led to tremendous code size reduction.  Note that later, the
+   * glyph loader will also be _greatly_ simplified, and the automatic
+   * hinter will replace the clumsy `t1hinter'.
+   *
+   */
 
 
 #include <ft2build.h>
@@ -79,12 +79,12 @@
 #endif
 
 
-  /*************************************************************************/
-  /*                                                                       */
-  /* The macro FT_COMPONENT is used in trace mode.  It is an implicit      */
-  /* parameter of the FT_TRACE() and FT_ERROR() macros, used to print/log  */
-  /* messages during execution.                                            */
-  /*                                                                       */
+  /**************************************************************************
+   *
+   * The macro FT_COMPONENT is used in trace mode.  It is an implicit
+   * parameter of the FT_TRACE() and FT_ERROR() macros, used to print/log
+   * messages during execution.
+   */
 #undef  FT_COMPONENT
 #define FT_COMPONENT  trace_t1load
 
@@ -222,11 +222,11 @@
   }
 
 
-  /*************************************************************************/
-  /*                                                                       */
-  /* Given a normalized (blend) coordinate, figure out the design          */
-  /* coordinate appropriate for that value.                                */
-  /*                                                                       */
+  /**************************************************************************
+   *
+   * Given a normalized (blend) coordinate, figure out the design
+   * coordinate appropriate for that value.
+   */
   static FT_Fixed
   mm_axis_unmap( PS_DesignMap  axismap,
                  FT_Fixed      ncv )
@@ -251,11 +251,11 @@
   }
 
 
-  /*************************************************************************/
-  /*                                                                       */
-  /* Given a vector of weights, one for each design, figure out the        */
-  /* normalized axis coordinates which gave rise to those weights.         */
-  /*                                                                       */
+  /**************************************************************************
+   *
+   * Given a vector of weights, one for each design, figure out the
+   * normalized axis coordinates which gave rise to those weights.
+   */
   static void
   mm_weights_unmap( FT_Fixed*  weights,
                     FT_Fixed*  axiscoords,
@@ -293,11 +293,11 @@
   }
 
 
-  /*************************************************************************/
-  /*                                                                       */
-  /* Just a wrapper around T1_Get_Multi_Master to support the different    */
-  /*  arguments needed by the GX var distortable fonts.                    */
-  /*                                                                       */
+  /**************************************************************************
+   *
+   * Just a wrapper around T1_Get_Multi_Master to support the different
+   * arguments needed by the GX var distortable fonts.
+   */
   FT_LOCAL_DEF( FT_Error )
   T1_Get_MM_Var( T1_Face      face,
                  FT_MM_Var*  *master )
@@ -573,11 +573,11 @@
   }
 
 
-  /*************************************************************************/
-  /*                                                                       */
-  /* Just a wrapper around T1_Set_MM_Design to support the different       */
-  /* arguments needed by the GX var distortable fonts.                     */
-  /*                                                                       */
+  /**************************************************************************
+   *
+   * Just a wrapper around T1_Set_MM_Design to support the different
+   * arguments needed by the GX var distortable fonts.
+   */
   FT_LOCAL_DEF( FT_Error )
   T1_Set_Var_Design( T1_Face    face,
                      FT_UInt    num_coords,
@@ -2024,12 +2024,12 @@
   }
 
 
-  /*************************************************************************/
-  /*                                                                       */
-  /* Define the token field static variables.  This is a set of            */
-  /* T1_FieldRec variables.                                                */
-  /*                                                                       */
-  /*************************************************************************/
+  /**************************************************************************
+   *
+   * Define the token field static variables.  This is a set of
+   * T1_FieldRec variables.
+   *
+   */
 
 
   static

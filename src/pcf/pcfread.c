@@ -37,12 +37,12 @@ THE SOFTWARE.
 #include "pcferror.h"
 
 
-  /*************************************************************************/
-  /*                                                                       */
-  /* The macro FT_COMPONENT is used in trace mode.  It is an implicit      */
-  /* parameter of the FT_TRACE() and FT_ERROR() macros, used to print/log  */
-  /* messages during execution.                                            */
-  /*                                                                       */
+  /**************************************************************************
+   *
+   * The macro FT_COMPONENT is used in trace mode.  It is an implicit
+   * parameter of the FT_TRACE() and FT_ERROR() macros, used to print/log
+   * messages during execution.
+   */
 #undef  FT_COMPONENT
 #define FT_COMPONENT  trace_pcfread
 
@@ -178,23 +178,23 @@ THE SOFTWARE.
     }
 
     /*
-     *  We now check whether the `size' and `offset' values are reasonable:
-     *  `offset' + `size' must not exceed the stream size.
+     * We now check whether the `size' and `offset' values are reasonable:
+     * `offset' + `size' must not exceed the stream size.
      *
-     *  Note, however, that X11's `pcfWriteFont' routine (used by the
-     *  `bdftopcf' program to create PCF font files) has two special
-     *  features.
+     * Note, however, that X11's `pcfWriteFont' routine (used by the
+     * `bdftopcf' program to create PCF font files) has two special
+     * features.
      *
-     *  - It always assigns the accelerator table a size of 100 bytes in the
-     *    TOC, regardless of its real size, which can vary between 34 and 72
-     *    bytes.
+     * - It always assigns the accelerator table a size of 100 bytes in the
+     *   TOC, regardless of its real size, which can vary between 34 and 72
+     *   bytes.
      *
-     *  - Due to the way the routine is designed, it ships out the last font
-     *    table with its real size, ignoring the TOC's size value.  Since
-     *    the TOC size values are always rounded up to a multiple of 4, the
-     *    difference can be up to three bytes for all tables except the
-     *    accelerator table, for which the difference can be as large as 66
-     *    bytes.
+     * - Due to the way the routine is designed, it ships out the last font
+     *   table with its real size, ignoring the TOC's size value.  Since
+     *   the TOC size values are always rounded up to a multiple of 4, the
+     *   difference can be up to three bytes for all tables except the
+     *   accelerator table, for which the difference can be as large as 66
+     *   bytes.
      *
      */
 

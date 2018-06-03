@@ -22,13 +22,13 @@
  * THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-  /*************************************************************************/
-  /*                                                                       */
-  /*  This file is based on bdf.c,v 1.22 2000/03/16 20:08:50               */
-  /*                                                                       */
-  /*  taken from Mark Leisher's xmbdfed package                            */
-  /*                                                                       */
-  /*************************************************************************/
+  /**************************************************************************
+   *
+   * This file is based on bdf.c,v 1.22 2000/03/16 20:08:50
+   *
+   * taken from Mark Leisher's xmbdfed package
+   *
+   */
 
 
 #include <ft2build.h>
@@ -42,21 +42,21 @@
 #include "bdferror.h"
 
 
-  /*************************************************************************/
-  /*                                                                       */
-  /* The macro FT_COMPONENT is used in trace mode.  It is an implicit      */
-  /* parameter of the FT_TRACE() and FT_ERROR() macros, used to print/log  */
-  /* messages during execution.                                            */
-  /*                                                                       */
+  /**************************************************************************
+   *
+   * The macro FT_COMPONENT is used in trace mode.  It is an implicit
+   * parameter of the FT_TRACE() and FT_ERROR() macros, used to print/log
+   * messages during execution.
+   */
 #undef  FT_COMPONENT
 #define FT_COMPONENT  trace_bdflib
 
 
-  /*************************************************************************/
-  /*                                                                       */
-  /* Default BDF font options.                                             */
-  /*                                                                       */
-  /*************************************************************************/
+  /**************************************************************************
+   *
+   * Default BDF font options.
+   *
+   */
 
 
   static const bdf_options_t  _bdf_opts =
@@ -68,11 +68,11 @@
   };
 
 
-  /*************************************************************************/
-  /*                                                                       */
-  /* Builtin BDF font properties.                                          */
-  /*                                                                       */
-  /*************************************************************************/
+  /**************************************************************************
+   *
+   * Builtin BDF font properties.
+   *
+   */
 
   /* List of most properties that might appear in a font.  Doesn't include */
   /* the RAW_* and AXIS_* properties in X11R6 polymorphic fonts.           */
@@ -219,11 +219,11 @@
 #define DBGMSG2  " (0x%lX)\n"
 
 
-  /*************************************************************************/
-  /*                                                                       */
-  /* Utility types and functions.                                          */
-  /*                                                                       */
-  /*************************************************************************/
+  /**************************************************************************
+   *
+   * Utility types and functions.
+   *
+   */
 
 
   /* Function type for parsing lines of a BDF font. */
@@ -900,11 +900,11 @@
   }
 
 
-  /*************************************************************************/
-  /*                                                                       */
-  /* BDF font file parsing flags and functions.                            */
-  /*                                                                       */
-  /*************************************************************************/
+  /**************************************************************************
+   *
+   * BDF font file parsing flags and functions.
+   *
+   */
 
 
   /* Parse flags. */
@@ -2196,11 +2196,11 @@
   }
 
 
-  /*************************************************************************/
-  /*                                                                       */
-  /* API.                                                                  */
-  /*                                                                       */
-  /*************************************************************************/
+  /**************************************************************************
+   *
+   * API.
+   *
+   */
 
 
   FT_LOCAL_DEF( FT_Error )

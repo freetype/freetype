@@ -41,12 +41,12 @@ THE SOFTWARE.
 #include "bdferror.h"
 
 
-  /*************************************************************************/
-  /*                                                                       */
-  /* The macro FT_COMPONENT is used in trace mode.  It is an implicit      */
-  /* parameter of the FT_TRACE() and FT_ERROR() macros, used to print/log  */
-  /* messages during execution.                                            */
-  /*                                                                       */
+  /**************************************************************************
+   *
+   * The macro FT_COMPONENT is used in trace mode.  It is an implicit
+   * parameter of the FT_TRACE() and FT_ERROR() macros, used to print/log
+   * messages during execution.
+   */
 #undef  FT_COMPONENT
 #define FT_COMPONENT  trace_bdfdriver
 
@@ -863,7 +863,7 @@ THE SOFTWARE.
 
  /*
   *
-  *  BDF SERVICE
+  * BDF SERVICE
   *
   */
 
@@ -939,7 +939,7 @@ THE SOFTWARE.
 
  /*
   *
-  *  SERVICES LIST
+  * SERVICES LIST
   *
   */
 

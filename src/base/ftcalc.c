@@ -1,35 +1,35 @@
-/***************************************************************************/
-/*                                                                         */
-/*  ftcalc.c                                                               */
-/*                                                                         */
-/*    Arithmetic computations (body).                                      */
-/*                                                                         */
-/*  Copyright 1996-2018 by                                                 */
-/*  David Turner, Robert Wilhelm, and Werner Lemberg.                      */
-/*                                                                         */
-/*  This file is part of the FreeType project, and may only be used,       */
-/*  modified, and distributed under the terms of the FreeType project      */
-/*  license, LICENSE.TXT.  By continuing to use, modify, or distribute     */
-/*  this file you indicate that you have read the license and              */
-/*  understand and accept it fully.                                        */
-/*                                                                         */
-/***************************************************************************/
+/****************************************************************************
+ *
+ * ftcalc.c
+ *
+ *   Arithmetic computations (body).
+ *
+ * Copyright 1996-2018 by
+ * David Turner, Robert Wilhelm, and Werner Lemberg.
+ *
+ * This file is part of the FreeType project, and may only be used,
+ * modified, and distributed under the terms of the FreeType project
+ * license, LICENSE.TXT.  By continuing to use, modify, or distribute
+ * this file you indicate that you have read the license and
+ * understand and accept it fully.
+ *
+ */
 
-  /*************************************************************************/
-  /*                                                                       */
-  /* Support for 1-complement arithmetic has been totally dropped in this  */
-  /* release.  You can still write your own code if you need it.           */
-  /*                                                                       */
-  /*************************************************************************/
+  /**************************************************************************
+   *
+   * Support for 1-complement arithmetic has been totally dropped in this
+   * release.  You can still write your own code if you need it.
+   *
+   */
 
-  /*************************************************************************/
-  /*                                                                       */
-  /* Implementing basic computation routines.                              */
-  /*                                                                       */
-  /* FT_MulDiv(), FT_MulFix(), FT_DivFix(), FT_RoundFix(), FT_CeilFix(),   */
-  /* and FT_FloorFix() are declared in freetype.h.                         */
-  /*                                                                       */
-  /*************************************************************************/
+  /**************************************************************************
+   *
+   * Implementing basic computation routines.
+   *
+   * FT_MulDiv(), FT_MulFix(), FT_DivFix(), FT_RoundFix(), FT_CeilFix(),
+   * and FT_FloorFix() are declared in freetype.h.
+   *
+   */
 
 
 #include <ft2build.h>
@@ -58,12 +58,12 @@
 #endif /* !FT_LONG64 */
 
 
-  /*************************************************************************/
-  /*                                                                       */
-  /* The macro FT_COMPONENT is used in trace mode.  It is an implicit      */
-  /* parameter of the FT_TRACE() and FT_ERROR() macros, used to print/log  */
-  /* messages during execution.                                            */
-  /*                                                                       */
+  /**************************************************************************
+   *
+   * The macro FT_COMPONENT is used in trace mode.  It is an implicit
+   * parameter of the FT_TRACE() and FT_ERROR() macros, used to print/log
+   * messages during execution.
+   */
 #undef  FT_COMPONENT
 #define FT_COMPONENT  trace_calc
 
@@ -516,10 +516,10 @@
 #elif 0
 
     /*
-     *  This code is nonportable.  See comment below.
+     * This code is nonportable.  See comment below.
      *
-     *  However, on a platform where right-shift of a signed quantity fills
-     *  the leftmost bits by copying the sign bit, it might be faster.
+     * However, on a platform where right-shift of a signed quantity fills
+     * the leftmost bits by copying the sign bit, it might be faster.
      */
 
     FT_Long    sa, sb;
@@ -527,22 +527,22 @@
 
 
     /*
-     *  This is a clever way of converting a signed number `a' into its
-     *  absolute value (stored back into `a') and its sign.  The sign is
-     *  stored in `sa'; 0 means `a' was positive or zero, and -1 means `a'
-     *  was negative.  (Similarly for `b' and `sb').
+     * This is a clever way of converting a signed number `a' into its
+     * absolute value (stored back into `a') and its sign.  The sign is
+     * stored in `sa'; 0 means `a' was positive or zero, and -1 means `a'
+     * was negative.  (Similarly for `b' and `sb').
      *
-     *  Unfortunately, it doesn't work (at least not portably).
+     * Unfortunately, it doesn't work (at least not portably).
      *
-     *  It makes the assumption that right-shift on a negative signed value
-     *  fills the leftmost bits by copying the sign bit.  This is wrong.
-     *  According to K&R 2nd ed, section `A7.8 Shift Operators' on page 206,
-     *  the result of right-shift of a negative signed value is
-     *  implementation-defined.  At least one implementation fills the
-     *  leftmost bits with 0s (i.e., it is exactly the same as an unsigned
-     *  right shift).  This means that when `a' is negative, `sa' ends up
-     *  with the value 1 rather than -1.  After that, everything else goes
-     *  wrong.
+     * It makes the assumption that right-shift on a negative signed value
+     * fills the leftmost bits by copying the sign bit.  This is wrong.
+     * According to K&R 2nd ed, section `A7.8 Shift Operators' on page 206,
+     * the result of right-shift of a negative signed value is
+     * implementation-defined.  At least one implementation fills the
+     * leftmost bits with 0s (i.e., it is exactly the same as an unsigned
+     * right shift).  This means that when `a' is negative, `sa' ends up
+     * with the value 1 rather than -1.  After that, everything else goes
+     * wrong.
      */
     sa = ( a_ >> ( sizeof ( a_ ) * 8 - 1 ) );
     a  = ( a_ ^ sa ) - sa;

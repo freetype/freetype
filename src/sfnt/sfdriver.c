@@ -1,19 +1,19 @@
-/***************************************************************************/
-/*                                                                         */
-/*  sfdriver.c                                                             */
-/*                                                                         */
-/*    High-level SFNT driver interface (body).                             */
-/*                                                                         */
-/*  Copyright 1996-2018 by                                                 */
-/*  David Turner, Robert Wilhelm, and Werner Lemberg.                      */
-/*                                                                         */
-/*  This file is part of the FreeType project, and may only be used,       */
-/*  modified, and distributed under the terms of the FreeType project      */
-/*  license, LICENSE.TXT.  By continuing to use, modify, or distribute     */
-/*  this file you indicate that you have read the license and              */
-/*  understand and accept it fully.                                        */
-/*                                                                         */
-/***************************************************************************/
+/****************************************************************************
+ *
+ * sfdriver.c
+ *
+ *   High-level SFNT driver interface (body).
+ *
+ * Copyright 1996-2018 by
+ * David Turner, Robert Wilhelm, and Werner Lemberg.
+ *
+ * This file is part of the FreeType project, and may only be used,
+ * modified, and distributed under the terms of the FreeType project
+ * license, LICENSE.TXT.  By continuing to use, modify, or distribute
+ * this file you indicate that you have read the license and
+ * understand and accept it fully.
+ *
+ */
 
 
 #include <ft2build.h>
@@ -60,18 +60,18 @@
 #endif
 
 
-  /*************************************************************************/
-  /*                                                                       */
-  /* The macro FT_COMPONENT is used in trace mode.  It is an implicit      */
-  /* parameter of the FT_TRACE() and FT_ERROR() macros, used to print/log  */
-  /* messages during execution.                                            */
-  /*                                                                       */
+  /**************************************************************************
+   *
+   * The macro FT_COMPONENT is used in trace mode.  It is an implicit
+   * parameter of the FT_TRACE() and FT_ERROR() macros, used to print/log
+   * messages during execution.
+   */
 #undef  FT_COMPONENT
 #define FT_COMPONENT  trace_sfdriver
 
 
   /*
-   *  SFNT TABLE SERVICE
+   * SFNT TABLE SERVICE
    *
    */
 
@@ -158,7 +158,7 @@
 #ifdef TT_CONFIG_OPTION_POSTSCRIPT_NAMES
 
   /*
-   *  GLYPH DICT SERVICE
+   * GLYPH DICT SERVICE
    *
    */
 
@@ -225,7 +225,7 @@
 
 
   /*
-   *  POSTSCRIPT NAME SERVICE
+   * POSTSCRIPT NAME SERVICE
    *
    */
 
@@ -646,9 +646,9 @@
 
 
   /*
-   *  Find the shortest decimal representation of a 16.16 fixed point
-   *  number.  The function fills `buf' with the result, returning a pointer
-   *  to the position after the representation's last byte.
+   * Find the shortest decimal representation of a 16.16 fixed point
+   * number.  The function fills `buf' with the result, returning a pointer
+   * to the position after the representation's last byte.
    */
 
   static char*
@@ -1076,7 +1076,7 @@
 
 
   /*
-   *  TT CMAP INFO
+   * TT CMAP INFO
    */
   FT_DEFINE_SERVICE_TTCMAPSREC(
     tt_service_get_cmap_info,
@@ -1135,7 +1135,7 @@
 
 
   /*
-   *  SERVICE LIST
+   * SERVICE LIST
    */
 
 #if defined TT_CONFIG_OPTION_POSTSCRIPT_NAMES && defined TT_CONFIG_OPTION_BDF

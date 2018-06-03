@@ -53,12 +53,12 @@ THE SOFTWARE.
 #include FT_DRIVER_H
 
 
-  /*************************************************************************/
-  /*                                                                       */
-  /* The macro FT_COMPONENT is used in trace mode.  It is an implicit      */
-  /* parameter of the FT_TRACE() and FT_ERROR() macros, used to print/log  */
-  /* messages during execution.                                            */
-  /*                                                                       */
+  /**************************************************************************
+   *
+   * The macro FT_COMPONENT is used in trace mode.  It is an implicit
+   * parameter of the FT_TRACE() and FT_ERROR() macros, used to print/log
+   * messages during execution.
+   */
 #undef  FT_COMPONENT
 #define FT_COMPONENT  trace_pcfdriver
 
@@ -601,11 +601,11 @@ THE SOFTWARE.
   }
 
 
- /*
-  *
-  *  BDF SERVICE
-  *
-  */
+  /*
+   *
+   * BDF SERVICE
+   *
+   */
 
   static FT_Error
   pcf_get_bdf_property( PCF_Face          face,
@@ -633,9 +633,9 @@ THE SOFTWARE.
         }
 
         /*
-         *  The PCF driver loads all properties as signed integers.
-         *  This really doesn't seem to be a problem, because this is
-         *  sufficient for any meaningful values.
+         * The PCF driver loads all properties as signed integers.
+         * This really doesn't seem to be a problem, because this is
+         * sufficient for any meaningful values.
          */
         aproperty->type      = BDF_PROPERTY_TYPE_INTEGER;
         aproperty->u.integer = (FT_Int32)prop->value.l;
@@ -668,7 +668,7 @@ THE SOFTWARE.
 
 
   /*
-   *  PROPERTY SERVICE
+   * PROPERTY SERVICE
    *
    */
   static FT_Error
@@ -777,11 +777,11 @@ THE SOFTWARE.
     (FT_Properties_GetFunc)pcf_property_get )     /* get_property */
 
 
- /*
-  *
-  *  SERVICE LIST
-  *
-  */
+  /*
+   *
+   * SERVICE LIST
+   *
+   */
 
   static const FT_ServiceDescRec  pcf_services[] =
   {
