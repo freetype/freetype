@@ -1767,8 +1767,8 @@ typedef ptrdiff_t  FT_PtrDist;
       ras.max_ey = FT_MIN( y, yMax );
 
       band    = bands;
-      band[1] = xMin;
-      band[0] = xMax;
+      band[1] = ras.min_ey;
+      band[0] = ras.max_ey;
 
       do
       {
@@ -1780,8 +1780,8 @@ typedef ptrdiff_t  FT_PtrDist;
 
         ras.num_cells = 0;
         ras.invalid   = 1;
-        ras.min_ex    = band[1];
-        ras.max_ex    = band[0];
+        ras.min_ey    = band[1];
+        ras.max_ey    = band[0];
 
         error = gray_convert_glyph_inner( RAS_VAR );
 

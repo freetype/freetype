@@ -1,3 +1,13 @@
+2018-06-02  Alexei Podtelezhnikov  <apodtele@gmail.com>
+
+	[smooth] Attempt to mitigate bug #54019.
+
+	The robust rendering of estra large glyphs came with unbearable cost.
+	The old way of bisecting should fail but fail faster.
+
+	* src/smooth/ftgrays.c (gray_convert_glyph): Switch back to bisecting
+	in y-direction.
+
 2018-06-02  Werner Lemberg  <wl@gnu.org>
 
 	* src/truetype/ttinterp.c (Ins_MIRP): Use SUB_LONG; avoid FT_ABS.
