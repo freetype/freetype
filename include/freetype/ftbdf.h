@@ -1,19 +1,19 @@
-/***************************************************************************/
-/*                                                                         */
-/*  ftbdf.h                                                                */
-/*                                                                         */
-/*    FreeType API for accessing BDF-specific strings (specification).     */
-/*                                                                         */
-/*  Copyright 2002-2018 by                                                 */
-/*  David Turner, Robert Wilhelm, and Werner Lemberg.                      */
-/*                                                                         */
-/*  This file is part of the FreeType project, and may only be used,       */
-/*  modified, and distributed under the terms of the FreeType project      */
-/*  license, LICENSE.TXT.  By continuing to use, modify, or distribute     */
-/*  this file you indicate that you have read the license and              */
-/*  understand and accept it fully.                                        */
-/*                                                                         */
-/***************************************************************************/
+/****************************************************************************
+ *
+ * ftbdf.h
+ *
+ *   FreeType API for accessing BDF-specific strings (specification).
+ *
+ * Copyright 2002-2018 by
+ * David Turner, Robert Wilhelm, and Werner Lemberg.
+ *
+ * This file is part of the FreeType project, and may only be used,
+ * modified, and distributed under the terms of the FreeType project
+ * license, LICENSE.TXT.  By continuing to use, modify, or distribute
+ * this file you indicate that you have read the license and
+ * understand and accept it fully.
+ *
+ */
 
 
 #ifndef FTBDF_H_
@@ -32,22 +32,22 @@
 FT_BEGIN_HEADER
 
 
-  /*************************************************************************/
-  /*                                                                       */
-  /* <Section>                                                             */
-  /*    bdf_fonts                                                          */
-  /*                                                                       */
-  /* <Title>                                                               */
-  /*    BDF and PCF Files                                                  */
-  /*                                                                       */
-  /* <Abstract>                                                            */
-  /*    BDF and PCF specific API.                                          */
-  /*                                                                       */
-  /* <Description>                                                         */
-  /*    This section contains the declaration of functions specific to BDF */
-  /*    and PCF fonts.                                                     */
-  /*                                                                       */
-  /*************************************************************************/
+  /**************************************************************************
+   *
+   * @Section:
+   *   bdf_fonts
+   *
+   * @Title:
+   *   BDF and PCF Files
+   *
+   * @Abstract:
+   *   BDF and PCF specific API.
+   *
+   * @Description:
+   *   This section contains the declaration of functions specific to BDF
+   *   and PCF fonts.
+   *
+   */
 
 
   /**********************************************************************
@@ -139,14 +139,14 @@ FT_BEGIN_HEADER
   *
   * @input:
   *    face ::
-  *       A handle to the input face.
+  *      A handle to the input face.
   *
   * @output:
   *    acharset_encoding ::
-  *       Charset encoding, as a C~string, owned by the face.
+  *      Charset encoding, as a C~string, owned by the face.
   *
   *    acharset_registry ::
-  *       Charset registry, as a C~string, owned by the face.
+  *      Charset registry, as a C~string, owned by the face.
   *
   * @return:
   *   FreeType error code.  0~means success.
@@ -169,12 +169,15 @@ FT_BEGIN_HEADER
   *    Retrieve a BDF property from a BDF or PCF font file.
   *
   * @input:
-  *    face :: A handle to the input face.
+  *    face ::
+  *      A handle to the input face.
   *
-  *    name :: The property name.
+  *    name ::
+  *      The property name.
   *
   * @output:
-  *    aproperty :: The property.
+  *    aproperty ::
+  *      The property.
   *
   * @return:
   *   FreeType error code.  0~means success.

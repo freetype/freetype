@@ -1,31 +1,31 @@
-/***************************************************************************/
-/*                                                                         */
-/*  ftserv.h                                                               */
-/*                                                                         */
-/*    The FreeType services (specification only).                          */
-/*                                                                         */
-/*  Copyright 2003-2018 by                                                 */
-/*  David Turner, Robert Wilhelm, and Werner Lemberg.                      */
-/*                                                                         */
-/*  This file is part of the FreeType project, and may only be used,       */
-/*  modified, and distributed under the terms of the FreeType project      */
-/*  license, LICENSE.TXT.  By continuing to use, modify, or distribute     */
-/*  this file you indicate that you have read the license and              */
-/*  understand and accept it fully.                                        */
-/*                                                                         */
-/***************************************************************************/
+/****************************************************************************
+ *
+ * ftserv.h
+ *
+ *   The FreeType services (specification only).
+ *
+ * Copyright 2003-2018 by
+ * David Turner, Robert Wilhelm, and Werner Lemberg.
+ *
+ * This file is part of the FreeType project, and may only be used,
+ * modified, and distributed under the terms of the FreeType project
+ * license, LICENSE.TXT.  By continuing to use, modify, or distribute
+ * this file you indicate that you have read the license and
+ * understand and accept it fully.
+ *
+ */
 
-  /*************************************************************************/
-  /*                                                                       */
-  /*  Each module can export one or more `services'.  Each service is      */
-  /*  identified by a constant string and modeled by a pointer; the latter */
-  /*  generally corresponds to a structure containing function pointers.   */
-  /*                                                                       */
-  /*  Note that a service's data cannot be a mere function pointer because */
-  /*  in C it is possible that function pointers might be implemented      */
-  /*  differently than data pointers (e.g. 48 bits instead of 32).         */
-  /*                                                                       */
-  /*************************************************************************/
+  /**************************************************************************
+   *
+   * Each module can export one or more `services'.  Each service is
+   * identified by a constant string and modeled by a pointer; the latter
+   * generally corresponds to a structure containing function pointers.
+   *
+   * Note that a service's data cannot be a mere function pointer because
+   * in C it is possible that function pointers might be implemented
+   * differently than data pointers (e.g. 48 bits instead of 32).
+   *
+   */
 
 
 #ifndef FTSERV_H_
@@ -34,7 +34,8 @@
 
 FT_BEGIN_HEADER
 
-  /*
+  /**************************************************************************
+   *
    * @macro:
    *   FT_FACE_FIND_SERVICE
    *
@@ -85,7 +86,8 @@ FT_BEGIN_HEADER
 #endif /* !C++ */
 
 
-  /*
+  /**************************************************************************
+   *
    * @macro:
    *   FT_FACE_FIND_GLOBAL_SERVICE
    *
@@ -144,8 +146,8 @@ FT_BEGIN_HEADER
   /*************************************************************************/
 
   /*
-   *  The following structure is used to _describe_ a given service
-   *  to the library.  This is useful to build simple static service lists.
+   * The following structure is used to _describe_ a given service
+   * to the library.  This is useful to build simple static service lists.
    */
   typedef struct  FT_ServiceDescRec_
   {
@@ -157,26 +159,26 @@ FT_BEGIN_HEADER
   typedef const FT_ServiceDescRec*  FT_ServiceDesc;
 
 
-  /*************************************************************************/
-  /*                                                                       */
-  /* <Macro>                                                               */
-  /*    FT_DEFINE_SERVICEDESCREC1                                          */
-  /*    FT_DEFINE_SERVICEDESCREC2                                          */
-  /*    FT_DEFINE_SERVICEDESCREC3                                          */
-  /*    FT_DEFINE_SERVICEDESCREC4                                          */
-  /*    FT_DEFINE_SERVICEDESCREC5                                          */
-  /*    FT_DEFINE_SERVICEDESCREC6                                          */
-  /*    FT_DEFINE_SERVICEDESCREC7                                          */
-  /*    FT_DEFINE_SERVICEDESCREC8                                          */
-  /*    FT_DEFINE_SERVICEDESCREC9                                          */
-  /*    FT_DEFINE_SERVICEDESCREC10                                         */
-  /*                                                                       */
-  /* <Description>                                                         */
-  /*    Used to initialize an array of FT_ServiceDescRec structures.       */
-  /*                                                                       */
-  /*    The array will be allocated in the global scope (or the scope      */
-  /*    where the macro is used).                                           */
-  /*                                                                       */
+  /**************************************************************************
+   *
+   * @Macro:
+   *   FT_DEFINE_SERVICEDESCREC1
+   *   FT_DEFINE_SERVICEDESCREC2
+   *   FT_DEFINE_SERVICEDESCREC3
+   *   FT_DEFINE_SERVICEDESCREC4
+   *   FT_DEFINE_SERVICEDESCREC5
+   *   FT_DEFINE_SERVICEDESCREC6
+   *   FT_DEFINE_SERVICEDESCREC7
+   *   FT_DEFINE_SERVICEDESCREC8
+   *   FT_DEFINE_SERVICEDESCREC9
+   *   FT_DEFINE_SERVICEDESCREC10
+   *
+   * @Description:
+   *   Used to initialize an array of FT_ServiceDescRec structures.
+   *
+   *   The array will be allocated in the global scope (or the scope
+   *   where the macro is used).
+   */
 #define FT_DEFINE_SERVICEDESCREC1( class_,                                  \
                                    serv_id_1, serv_data_1 )                 \
   static const FT_ServiceDescRec  class_[] =                                \
@@ -349,13 +351,13 @@ FT_BEGIN_HEADER
 
 
   /*
-   *  Parse a list of FT_ServiceDescRec descriptors and look for
-   *  a specific service by ID.  Note that the last element in the
-   *  array must be { NULL, NULL }, and that the function should
-   *  return NULL if the service isn't available.
+   * Parse a list of FT_ServiceDescRec descriptors and look for
+   * a specific service by ID.  Note that the last element in the
+   * array must be { NULL, NULL }, and that the function should
+   * return NULL if the service isn't available.
    *
-   *  This function can be used by modules to implement their
-   *  `get_service' method.
+   * This function can be used by modules to implement their
+   * `get_service' method.
    */
   FT_BASE( FT_Pointer )
   ft_service_list_lookup( FT_ServiceDesc  service_descriptors,
@@ -371,16 +373,16 @@ FT_BEGIN_HEADER
   /*************************************************************************/
 
   /*
-   *  This structure is used to store a cache for several frequently used
-   *  services.  It is the type of `face->internal->services'.  You
-   *  should only use FT_FACE_LOOKUP_SERVICE to access it.
+   * This structure is used to store a cache for several frequently used
+   * services.  It is the type of `face->internal->services'.  You
+   * should only use FT_FACE_LOOKUP_SERVICE to access it.
    *
-   *  All fields should have the type FT_Pointer to relax compilation
-   *  dependencies.  We assume the developer isn't completely stupid.
+   * All fields should have the type FT_Pointer to relax compilation
+   * dependencies.  We assume the developer isn't completely stupid.
    *
-   *  Each field must be named `service_XXXX' where `XXX' corresponds to
-   *  the correct FT_SERVICE_ID_XXXX macro.  See the definition of
-   *  FT_FACE_LOOKUP_SERVICE below how this is implemented.
+   * Each field must be named `service_XXXX' where `XXX' corresponds to
+   * the correct FT_SERVICE_ID_XXXX macro.  See the definition of
+   * FT_FACE_LOOKUP_SERVICE below how this is implemented.
    *
    */
   typedef struct  FT_ServiceCacheRec_
@@ -396,14 +398,15 @@ FT_BEGIN_HEADER
 
 
   /*
-   *  A magic number used within the services cache.
+   * A magic number used within the services cache.
    */
 
   /* ensure that value `1' has the same width as a pointer */
 #define FT_SERVICE_UNAVAILABLE  ((FT_Pointer)~(FT_PtrDist)1)
 
 
-  /*
+  /**************************************************************************
+   *
    * @macro:
    *   FT_FACE_LOOKUP_SERVICE
    *
@@ -471,7 +474,7 @@ FT_BEGIN_HEADER
 #endif /* !C++ */
 
   /*
-   *  A macro used to define new service structure types.
+   * A macro used to define new service structure types.
    */
 
 #define FT_DEFINE_SERVICE( name )            \
@@ -484,7 +487,7 @@ FT_BEGIN_HEADER
   /* */
 
   /*
-   *  The header files containing the services.
+   * The header files containing the services.
    */
 
 #define FT_SERVICE_BDF_H                <freetype/internal/services/svbdf.h>

@@ -1,19 +1,19 @@
-/***************************************************************************/
-/*                                                                         */
-/*  ftgasp.h                                                               */
-/*                                                                         */
-/*    Access of TrueType's `gasp' table (specification).                   */
-/*                                                                         */
-/*  Copyright 2007-2018 by                                                 */
-/*  David Turner, Robert Wilhelm, and Werner Lemberg.                      */
-/*                                                                         */
-/*  This file is part of the FreeType project, and may only be used,       */
-/*  modified, and distributed under the terms of the FreeType project      */
-/*  license, LICENSE.TXT.  By continuing to use, modify, or distribute     */
-/*  this file you indicate that you have read the license and              */
-/*  understand and accept it fully.                                        */
-/*                                                                         */
-/***************************************************************************/
+/****************************************************************************
+ *
+ * ftgasp.h
+ *
+ *   Access of TrueType's `gasp' table (specification).
+ *
+ * Copyright 2007-2018 by
+ * David Turner, Robert Wilhelm, and Werner Lemberg.
+ *
+ * This file is part of the FreeType project, and may only be used,
+ * modified, and distributed under the terms of the FreeType project
+ * license, LICENSE.TXT.  By continuing to use, modify, or distribute
+ * this file you indicate that you have read the license and
+ * understand and accept it fully.
+ *
+ */
 
 
 #ifndef FTGASP_H_
@@ -110,9 +110,11 @@ FT_BEGIN_HEADER
    *   character pixel size.
    *
    * @input:
-   *   face :: The source face handle.
+   *   face ::
+   *     The source face handle.
    *
-   *   ppem :: The vertical character pixel size.
+   *   ppem ::
+   *     The vertical character pixel size.
    *
    * @return:
    *   Bit flags (see @FT_GASP_XXX), or @FT_GASP_NO_TABLE if there is no

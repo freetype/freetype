@@ -1,19 +1,19 @@
-/***************************************************************************/
-/*                                                                         */
-/*  ftbzip2.h                                                              */
-/*                                                                         */
-/*    Bzip2-compressed stream support.                                     */
-/*                                                                         */
-/*  Copyright 2010-2018 by                                                 */
-/*  Joel Klinghed.                                                         */
-/*                                                                         */
-/*  This file is part of the FreeType project, and may only be used,       */
-/*  modified, and distributed under the terms of the FreeType project      */
-/*  license, LICENSE.TXT.  By continuing to use, modify, or distribute     */
-/*  this file you indicate that you have read the license and              */
-/*  understand and accept it fully.                                        */
-/*                                                                         */
-/***************************************************************************/
+/****************************************************************************
+ *
+ * ftbzip2.h
+ *
+ *   Bzip2-compressed stream support.
+ *
+ * Copyright 2010-2018 by
+ * Joel Klinghed.
+ *
+ * This file is part of the FreeType project, and may only be used,
+ * modified, and distributed under the terms of the FreeType project
+ * license, LICENSE.TXT.  By continuing to use, modify, or distribute
+ * this file you indicate that you have read the license and
+ * understand and accept it fully.
+ *
+ */
 
 
 #ifndef FTBZIP2_H_
@@ -31,21 +31,21 @@
 
 FT_BEGIN_HEADER
 
-  /*************************************************************************/
-  /*                                                                       */
-  /* <Section>                                                             */
-  /*    bzip2                                                              */
-  /*                                                                       */
-  /* <Title>                                                               */
-  /*    BZIP2 Streams                                                      */
-  /*                                                                       */
-  /* <Abstract>                                                            */
-  /*    Using bzip2-compressed font files.                                 */
-  /*                                                                       */
-  /* <Description>                                                         */
-  /*    This section contains the declaration of Bzip2-specific functions. */
-  /*                                                                       */
-  /*************************************************************************/
+  /**************************************************************************
+   *
+   * @Section:
+   *   bzip2
+   *
+   * @Title:
+   *   BZIP2 Streams
+   *
+   * @Abstract:
+   *   Using bzip2-compressed font files.
+   *
+   * @Description:
+   *   This section contains the declaration of Bzip2-specific functions.
+   *
+   */
 
 
  /************************************************************************

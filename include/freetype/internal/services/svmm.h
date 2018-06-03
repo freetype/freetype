@@ -1,19 +1,19 @@
-/***************************************************************************/
-/*                                                                         */
-/*  svmm.h                                                                 */
-/*                                                                         */
-/*    The FreeType Multiple Masters and GX var services (specification).   */
-/*                                                                         */
-/*  Copyright 2003-2018 by                                                 */
-/*  David Turner, Robert Wilhelm, and Werner Lemberg.                      */
-/*                                                                         */
-/*  This file is part of the FreeType project, and may only be used,       */
-/*  modified, and distributed under the terms of the FreeType project      */
-/*  license, LICENSE.TXT.  By continuing to use, modify, or distribute     */
-/*  this file you indicate that you have read the license and              */
-/*  understand and accept it fully.                                        */
-/*                                                                         */
-/***************************************************************************/
+/****************************************************************************
+ *
+ * svmm.h
+ *
+ *   The FreeType Multiple Masters and GX var services (specification).
+ *
+ * Copyright 2003-2018 by
+ * David Turner, Robert Wilhelm, and Werner Lemberg.
+ *
+ * This file is part of the FreeType project, and may only be used,
+ * modified, and distributed under the terms of the FreeType project
+ * license, LICENSE.TXT.  By continuing to use, modify, or distribute
+ * this file you indicate that you have read the license and
+ * understand and accept it fully.
+ *
+ */
 
 
 #ifndef SVMM_H_
@@ -26,9 +26,9 @@ FT_BEGIN_HEADER
 
 
   /*
-   *  A service used to manage multiple-masters data in a given face.
+   * A service used to manage multiple-masters data in a given face.
    *
-   *  See the related APIs in `ftmm.h' (FT_MULTIPLE_MASTERS_H).
+   * See the related APIs in `ftmm.h' (FT_MULTIPLE_MASTERS_H).
    *
    */
 

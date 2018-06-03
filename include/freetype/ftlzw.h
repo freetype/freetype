@@ -1,19 +1,19 @@
-/***************************************************************************/
-/*                                                                         */
-/*  ftlzw.h                                                                */
-/*                                                                         */
-/*    LZW-compressed stream support.                                       */
-/*                                                                         */
-/*  Copyright 2004-2018 by                                                 */
-/*  David Turner, Robert Wilhelm, and Werner Lemberg.                      */
-/*                                                                         */
-/*  This file is part of the FreeType project, and may only be used,       */
-/*  modified, and distributed under the terms of the FreeType project      */
-/*  license, LICENSE.TXT.  By continuing to use, modify, or distribute     */
-/*  this file you indicate that you have read the license and              */
-/*  understand and accept it fully.                                        */
-/*                                                                         */
-/***************************************************************************/
+/****************************************************************************
+ *
+ * ftlzw.h
+ *
+ *   LZW-compressed stream support.
+ *
+ * Copyright 2004-2018 by
+ * David Turner, Robert Wilhelm, and Werner Lemberg.
+ *
+ * This file is part of the FreeType project, and may only be used,
+ * modified, and distributed under the terms of the FreeType project
+ * license, LICENSE.TXT.  By continuing to use, modify, or distribute
+ * this file you indicate that you have read the license and
+ * understand and accept it fully.
+ *
+ */
 
 
 #ifndef FTLZW_H_
@@ -31,21 +31,21 @@
 
 FT_BEGIN_HEADER
 
-  /*************************************************************************/
-  /*                                                                       */
-  /* <Section>                                                             */
-  /*    lzw                                                                */
-  /*                                                                       */
-  /* <Title>                                                               */
-  /*    LZW Streams                                                        */
-  /*                                                                       */
-  /* <Abstract>                                                            */
-  /*    Using LZW-compressed font files.                                   */
-  /*                                                                       */
-  /* <Description>                                                         */
-  /*    This section contains the declaration of LZW-specific functions.   */
-  /*                                                                       */
-  /*************************************************************************/
+  /**************************************************************************
+   *
+   * @Section:
+   *   lzw
+   *
+   * @Title:
+   *   LZW Streams
+   *
+   * @Abstract:
+   *   Using LZW-compressed font files.
+   *
+   * @Description:
+   *   This section contains the declaration of LZW-specific functions.
+   *
+   */
 
  /************************************************************************
   *
@@ -58,9 +58,11 @@ FT_BEGIN_HEADER
   *   with XFree86.
   *
   * @input:
-  *   stream :: The target embedding stream.
+  *   stream ::
+  *     The target embedding stream.
   *
-  *   source :: The source stream.
+  *   source ::
+  *     The source stream.
   *
   * @return:
   *   FreeType error code.  0~means success.

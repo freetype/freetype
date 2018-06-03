@@ -1,19 +1,19 @@
-/***************************************************************************/
-/*                                                                         */
-/*  ftpfr.h                                                                */
-/*                                                                         */
-/*    FreeType API for accessing PFR-specific data (specification only).   */
-/*                                                                         */
-/*  Copyright 2002-2018 by                                                 */
-/*  David Turner, Robert Wilhelm, and Werner Lemberg.                      */
-/*                                                                         */
-/*  This file is part of the FreeType project, and may only be used,       */
-/*  modified, and distributed under the terms of the FreeType project      */
-/*  license, LICENSE.TXT.  By continuing to use, modify, or distribute     */
-/*  this file you indicate that you have read the license and              */
-/*  understand and accept it fully.                                        */
-/*                                                                         */
-/***************************************************************************/
+/****************************************************************************
+ *
+ * ftpfr.h
+ *
+ *   FreeType API for accessing PFR-specific data (specification only).
+ *
+ * Copyright 2002-2018 by
+ * David Turner, Robert Wilhelm, and Werner Lemberg.
+ *
+ * This file is part of the FreeType project, and may only be used,
+ * modified, and distributed under the terms of the FreeType project
+ * license, LICENSE.TXT.  By continuing to use, modify, or distribute
+ * this file you indicate that you have read the license and
+ * understand and accept it fully.
+ *
+ */
 
 
 #ifndef FTPFR_H_
@@ -32,21 +32,21 @@
 FT_BEGIN_HEADER
 
 
-  /*************************************************************************/
-  /*                                                                       */
-  /* <Section>                                                             */
-  /*    pfr_fonts                                                          */
-  /*                                                                       */
-  /* <Title>                                                               */
-  /*    PFR Fonts                                                          */
-  /*                                                                       */
-  /* <Abstract>                                                            */
-  /*    PFR/TrueDoc specific API.                                          */
-  /*                                                                       */
-  /* <Description>                                                         */
-  /*    This section contains the declaration of PFR-specific functions.   */
-  /*                                                                       */
-  /*************************************************************************/
+  /**************************************************************************
+   *
+   * @Section:
+   *   pfr_fonts
+   *
+   * @Title:
+   *   PFR Fonts
+   *
+   * @Abstract:
+   *   PFR/TrueDoc specific API.
+   *
+   * @Description:
+   *   This section contains the declaration of PFR-specific functions.
+   *
+   */
 
 
  /**********************************************************************
@@ -58,7 +58,8 @@ FT_BEGIN_HEADER
   *    Return the outline and metrics resolutions of a given PFR face.
   *
   * @input:
-  *    face :: Handle to the input face.  It can be a non-PFR face.
+  *    face ::
+  *      Handle to the input face.  It can be a non-PFR face.
   *
   * @output:
   *    aoutline_resolution ::
@@ -105,14 +106,18 @@ FT_BEGIN_HEADER
   *    @FT_Get_Kerning.
   *
   * @input:
-  *    face  :: A handle to the input face.
+  *    face ::
+  *      A handle to the input face.
   *
-  *    left  :: Index of the left glyph.
+  *    left ::
+  *      Index of the left glyph.
   *
-  *    right :: Index of the right glyph.
+  *    right ::
+  *      Index of the right glyph.
   *
   * @output:
-  *    avector :: A kerning vector.
+  *    avector ::
+  *      A kerning vector.
   *
   * @return:
   *    FreeType error code.  0~means success.
@@ -142,12 +147,15 @@ FT_BEGIN_HEADER
   *    from a PFR font.
   *
   * @input:
-  *    face   :: A handle to the input face.
+  *    face ::
+  *      A handle to the input face.
   *
-  *    gindex :: The glyph index.
+  *    gindex ::
+  *      The glyph index.
   *
   * @output:
-  *    aadvance :: The glyph advance in metrics units.
+  *    aadvance ::
+  *      The glyph advance in metrics units.
   *
   * @return:
   *    FreeType error code.  0~means success.

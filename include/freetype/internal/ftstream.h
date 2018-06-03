@@ -1,19 +1,19 @@
-/***************************************************************************/
-/*                                                                         */
-/*  ftstream.h                                                             */
-/*                                                                         */
-/*    Stream handling (specification).                                     */
-/*                                                                         */
-/*  Copyright 1996-2018 by                                                 */
-/*  David Turner, Robert Wilhelm, and Werner Lemberg.                      */
-/*                                                                         */
-/*  This file is part of the FreeType project, and may only be used,       */
-/*  modified, and distributed under the terms of the FreeType project      */
-/*  license, LICENSE.TXT.  By continuing to use, modify, or distribute     */
-/*  this file you indicate that you have read the license and              */
-/*  understand and accept it fully.                                        */
-/*                                                                         */
-/***************************************************************************/
+/****************************************************************************
+ *
+ * ftstream.h
+ *
+ *   Stream handling (specification).
+ *
+ * Copyright 1996-2018 by
+ * David Turner, Robert Wilhelm, and Werner Lemberg.
+ *
+ * This file is part of the FreeType project, and may only be used,
+ * modified, and distributed under the terms of the FreeType project
+ * license, LICENSE.TXT.  By continuing to use, modify, or distribute
+ * this file you indicate that you have read the license and
+ * understand and accept it fully.
+ *
+ */
 
 
 #ifndef FTSTREAM_H_
@@ -147,11 +147,11 @@ FT_BEGIN_HEADER
 #define FT_FRAME_SKIP_BYTES( count )  { ft_frame_skip, count, 0 }
 
 
-  /*************************************************************************/
-  /*                                                                       */
-  /* Integer extraction macros -- the `buffer' parameter must ALWAYS be of */
-  /* type `char*' or equivalent (1-byte elements).                         */
-  /*                                                                       */
+  /**************************************************************************
+   *
+   * Integer extraction macros -- the `buffer' parameter must ALWAYS be of
+   * type `char*' or equivalent (1-byte elements).
+   */
 
 #define FT_BYTE_( p, i )  ( ((const FT_Byte*)(p))[(i)] )
 
@@ -258,10 +258,10 @@ FT_BEGIN_HEADER
           ( (unsigned long)( buffer += 4, FT_PEEK_ULONG_LE( buffer - 4 ) ) )
 
 
-  /*************************************************************************/
-  /*                                                                       */
-  /* Each GET_xxxx() macro uses an implicit `stream' variable.             */
-  /*                                                                       */
+  /**************************************************************************
+   *
+   * Each GET_xxxx() macro uses an implicit `stream' variable.
+   */
 #if 0
 #define FT_GET_MACRO( type )    FT_NEXT_ ## type ( stream->cursor )
 

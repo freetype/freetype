@@ -1,19 +1,19 @@
-/***************************************************************************/
-/*                                                                         */
-/*  ftwinfnt.h                                                             */
-/*                                                                         */
-/*    FreeType API for accessing Windows fnt-specific data.                */
-/*                                                                         */
-/*  Copyright 2003-2018 by                                                 */
-/*  David Turner, Robert Wilhelm, and Werner Lemberg.                      */
-/*                                                                         */
-/*  This file is part of the FreeType project, and may only be used,       */
-/*  modified, and distributed under the terms of the FreeType project      */
-/*  license, LICENSE.TXT.  By continuing to use, modify, or distribute     */
-/*  this file you indicate that you have read the license and              */
-/*  understand and accept it fully.                                        */
-/*                                                                         */
-/***************************************************************************/
+/****************************************************************************
+ *
+ * ftwinfnt.h
+ *
+ *   FreeType API for accessing Windows fnt-specific data.
+ *
+ * Copyright 2003-2018 by
+ * David Turner, Robert Wilhelm, and Werner Lemberg.
+ *
+ * This file is part of the FreeType project, and may only be used,
+ * modified, and distributed under the terms of the FreeType project
+ * license, LICENSE.TXT.  By continuing to use, modify, or distribute
+ * this file you indicate that you have read the license and
+ * understand and accept it fully.
+ *
+ */
 
 
 #ifndef FTWINFNT_H_
@@ -32,22 +32,22 @@
 FT_BEGIN_HEADER
 
 
-  /*************************************************************************/
-  /*                                                                       */
-  /* <Section>                                                             */
-  /*    winfnt_fonts                                                       */
-  /*                                                                       */
-  /* <Title>                                                               */
-  /*    Window FNT Files                                                   */
-  /*                                                                       */
-  /* <Abstract>                                                            */
-  /*    Windows FNT specific API.                                          */
-  /*                                                                       */
-  /* <Description>                                                         */
-  /*    This section contains the declaration of Windows FNT specific      */
-  /*    functions.                                                         */
-  /*                                                                       */
-  /*************************************************************************/
+  /**************************************************************************
+   *
+   * @Section:
+   *   winfnt_fonts
+   *
+   * @Title:
+   *   Window FNT Files
+   *
+   * @Abstract:
+   *   Windows FNT specific API.
+   *
+   * @Description:
+   *   This section contains the declaration of Windows FNT specific
+   *   functions.
+   *
+   */
 
 
   /*************************************************************************
@@ -80,26 +80,26 @@ FT_BEGIN_HEADER
    *   FT_WinFNT_ID_OEM ::
    *     From Michael Poettgen <michael@poettgen.de>:
    *
-   *       The `Windows Font Mapping' article says that FT_WinFNT_ID_OEM
-   *       is used for the charset of vector fonts, like `modern.fon',
-   *       `roman.fon', and `script.fon' on Windows.
+   *     The `Windows Font Mapping' article says that FT_WinFNT_ID_OEM
+   *     is used for the charset of vector fonts, like `modern.fon',
+   *     `roman.fon', and `script.fon' on Windows.
    *
-   *       The `CreateFont' documentation says: The FT_WinFNT_ID_OEM value
-   *       specifies a character set that is operating-system dependent.
+   *     The `CreateFont' documentation says: The FT_WinFNT_ID_OEM value
+   *     specifies a character set that is operating-system dependent.
    *
-   *       The `IFIMETRICS' documentation from the `Windows Driver
-   *       Development Kit' says: This font supports an OEM-specific
-   *       character set.  The OEM character set is system dependent.
+   *     The `IFIMETRICS' documentation from the `Windows Driver
+   *     Development Kit' says: This font supports an OEM-specific
+   *     character set.  The OEM character set is system dependent.
    *
-   *       In general OEM, as opposed to ANSI (i.e., cp1252), denotes the
-   *       second default codepage that most international versions of
-   *       Windows have.  It is one of the OEM codepages from
+   *     In general OEM, as opposed to ANSI (i.e., cp1252), denotes the
+   *     second default codepage that most international versions of
+   *     Windows have.  It is one of the OEM codepages from
    *
-   *         https://msdn.microsoft.com/en-us/goglobal/bb964655,
+   *     https://msdn.microsoft.com/en-us/goglobal/bb964655,
    *
-   *       and is used for the `DOS boxes', to support legacy applications.
-   *       A German Windows version for example usually uses ANSI codepage
-   *       1252 and OEM codepage 850.
+   *     and is used for the `DOS boxes', to support legacy applications.
+   *     A German Windows version for example usually uses ANSI codepage
+   *     1252 and OEM codepage 850.
    *
    *   FT_WinFNT_ID_CP874 ::
    *     A superset of Thai TIS 620 and ISO 8859-11.
@@ -173,14 +173,14 @@ FT_BEGIN_HEADER
 #define FT_WinFNT_ID_OEM     255
 
 
-  /*************************************************************************/
-  /*                                                                       */
-  /* <Struct>                                                              */
-  /*    FT_WinFNT_HeaderRec                                                */
-  /*                                                                       */
-  /* <Description>                                                         */
-  /*    Windows FNT Header info.                                           */
-  /*                                                                       */
+  /**************************************************************************
+   *
+   * @Struct:
+   *   FT_WinFNT_HeaderRec
+   *
+   * @Description:
+   *   Windows FNT Header info.
+   */
   typedef struct  FT_WinFNT_HeaderRec_
   {
     FT_UShort  version;
@@ -223,14 +223,14 @@ FT_BEGIN_HEADER
   } FT_WinFNT_HeaderRec;
 
 
-  /*************************************************************************/
-  /*                                                                       */
-  /* <Struct>                                                              */
-  /*    FT_WinFNT_Header                                                   */
-  /*                                                                       */
-  /* <Description>                                                         */
-  /*    A handle to an @FT_WinFNT_HeaderRec structure.                     */
-  /*                                                                       */
+  /**************************************************************************
+   *
+   * @Struct:
+   *   FT_WinFNT_Header
+   *
+   * @Description:
+   *   A handle to an @FT_WinFNT_HeaderRec structure.
+   */
   typedef struct FT_WinFNT_HeaderRec_*  FT_WinFNT_Header;
 
 
@@ -243,10 +243,12 @@ FT_BEGIN_HEADER
    *    Retrieve a Windows FNT font info header.
    *
    * @input:
-   *    face    :: A handle to the input face.
+   *    face ::
+   *      A handle to the input face.
    *
    * @output:
-   *    aheader :: The WinFNT header.
+   *    aheader ::
+   *      The WinFNT header.
    *
    * @return:
    *   FreeType error code.  0~means success.

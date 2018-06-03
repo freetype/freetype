@@ -1,19 +1,19 @@
-/***************************************************************************/
-/*                                                                         */
-/*  svttglyf.h                                                             */
-/*                                                                         */
-/*    The FreeType TrueType glyph service.                                 */
-/*                                                                         */
-/*  Copyright 2007-2018 by                                                 */
-/*  David Turner.                                                          */
-/*                                                                         */
-/*  This file is part of the FreeType project, and may only be used,       */
-/*  modified, and distributed under the terms of the FreeType project      */
-/*  license, LICENSE.TXT.  By continuing to use, modify, or distribute     */
-/*  this file you indicate that you have read the license and              */
-/*  understand and accept it fully.                                        */
-/*                                                                         */
-/***************************************************************************/
+/****************************************************************************
+ *
+ * svttglyf.h
+ *
+ *   The FreeType TrueType glyph service.
+ *
+ * Copyright 2007-2018 by
+ * David Turner.
+ *
+ * This file is part of the FreeType project, and may only be used,
+ * modified, and distributed under the terms of the FreeType project
+ * license, LICENSE.TXT.  By continuing to use, modify, or distribute
+ * this file you indicate that you have read the license and
+ * understand and accept it fully.
+ *
+ */
 
 #ifndef SVTTGLYF_H_
 #define SVTTGLYF_H_

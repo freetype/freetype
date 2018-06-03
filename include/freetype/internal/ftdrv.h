@@ -1,19 +1,19 @@
-/***************************************************************************/
-/*                                                                         */
-/*  ftdrv.h                                                                */
-/*                                                                         */
-/*    FreeType internal font driver interface (specification).             */
-/*                                                                         */
-/*  Copyright 1996-2018 by                                                 */
-/*  David Turner, Robert Wilhelm, and Werner Lemberg.                      */
-/*                                                                         */
-/*  This file is part of the FreeType project, and may only be used,       */
-/*  modified, and distributed under the terms of the FreeType project      */
-/*  license, LICENSE.TXT.  By continuing to use, modify, or distribute     */
-/*  this file you indicate that you have read the license and              */
-/*  understand and accept it fully.                                        */
-/*                                                                         */
-/***************************************************************************/
+/****************************************************************************
+ *
+ * ftdrv.h
+ *
+ *   FreeType internal font driver interface (specification).
+ *
+ * Copyright 1996-2018 by
+ * David Turner, Robert Wilhelm, and Werner Lemberg.
+ *
+ * This file is part of the FreeType project, and may only be used,
+ * modified, and distributed under the terms of the FreeType project
+ * license, LICENSE.TXT.  By continuing to use, modify, or distribute
+ * this file you indicate that you have read the license and
+ * understand and accept it fully.
+ *
+ */
 
 
 #ifndef FTDRV_H_
@@ -87,73 +87,89 @@ FT_BEGIN_HEADER
                               FT_Fixed*  advances );
 
 
-  /*************************************************************************/
-  /*                                                                       */
-  /* <Struct>                                                              */
-  /*    FT_Driver_ClassRec                                                 */
-  /*                                                                       */
-  /* <Description>                                                         */
-  /*    The font driver class.  This structure mostly contains pointers to */
-  /*    driver methods.                                                    */
-  /*                                                                       */
-  /* <Fields>                                                              */
-  /*    root             :: The parent module.                             */
-  /*                                                                       */
-  /*    face_object_size :: The size of a face object in bytes.            */
-  /*                                                                       */
-  /*    size_object_size :: The size of a size object in bytes.            */
-  /*                                                                       */
-  /*    slot_object_size :: The size of a glyph object in bytes.           */
-  /*                                                                       */
-  /*    init_face        :: The format-specific face constructor.          */
-  /*                                                                       */
-  /*    done_face        :: The format-specific face destructor.           */
-  /*                                                                       */
-  /*    init_size        :: The format-specific size constructor.          */
-  /*                                                                       */
-  /*    done_size        :: The format-specific size destructor.           */
-  /*                                                                       */
-  /*    init_slot        :: The format-specific slot constructor.          */
-  /*                                                                       */
-  /*    done_slot        :: The format-specific slot destructor.           */
-  /*                                                                       */
-  /*                                                                       */
-  /*    load_glyph       :: A function handle to load a glyph to a slot.   */
-  /*                        This field is mandatory!                       */
-  /*                                                                       */
-  /*    get_kerning      :: A function handle to return the unscaled       */
-  /*                        kerning for a given pair of glyphs.  Can be    */
-  /*                        set to 0 if the format doesn't support         */
-  /*                        kerning.                                       */
-  /*                                                                       */
-  /*    attach_file      :: This function handle is used to read           */
-  /*                        additional data for a face from another        */
-  /*                        file/stream.  For example, this can be used to */
-  /*                        add data from AFM or PFM files on a Type 1     */
-  /*                        face, or a CIDMap on a CID-keyed face.         */
-  /*                                                                       */
-  /*    get_advances     :: A function handle used to return advance       */
-  /*                        widths of `count' glyphs (in font units),      */
-  /*                        starting at `first'.  The `vertical' flag must */
-  /*                        be set to get vertical advance heights.  The   */
-  /*                        `advances' buffer is caller-allocated.         */
-  /*                        The idea of this function is to be able to     */
-  /*                        perform device-independent text layout without */
-  /*                        loading a single glyph image.                  */
-  /*                                                                       */
-  /*    request_size     :: A handle to a function used to request the new */
-  /*                        character size.  Can be set to 0 if the        */
-  /*                        scaling done in the base layer suffices.       */
-  /*                                                                       */
-  /*    select_size      :: A handle to a function used to select a new    */
-  /*                        fixed size.  It is used only if                */
-  /*                        @FT_FACE_FLAG_FIXED_SIZES is set.  Can be set  */
-  /*                        to 0 if the scaling done in the base layer     */
-  /*                        suffices.                                      */
-  /* <Note>                                                                */
-  /*    Most function pointers, with the exception of `load_glyph', can be */
-  /*    set to 0 to indicate a default behaviour.                          */
-  /*                                                                       */
+  /**************************************************************************
+   *
+   * @Struct:
+   *   FT_Driver_ClassRec
+   *
+   * @Description:
+   *   The font driver class.  This structure mostly contains pointers to
+   *   driver methods.
+   *
+   * @Fields:
+   *   root ::
+   *     The parent module.
+   *
+   *   face_object_size ::
+   *     The size of a face object in bytes.
+   *
+   *   size_object_size ::
+   *     The size of a size object in bytes.
+   *
+   *   slot_object_size ::
+   *     The size of a glyph object in bytes.
+   *
+   *   init_face ::
+   *     The format-specific face constructor.
+   *
+   *   done_face ::
+   *     The format-specific face destructor.
+   *
+   *   init_size ::
+   *     The format-specific size constructor.
+   *
+   *   done_size ::
+   *     The format-specific size destructor.
+   *
+   *   init_slot ::
+   *     The format-specific slot constructor.
+   *
+   *   done_slot ::
+   *     The format-specific slot destructor.
+   *
+   *
+   *   load_glyph ::
+   *     A function handle to load a glyph to a slot.
+   *     This field is mandatory!
+   *
+   *   get_kerning ::
+   *     A function handle to return the unscaled
+   *     kerning for a given pair of glyphs.  Can be
+   *     set to 0 if the format doesn't support
+   *     kerning.
+   *
+   *   attach_file ::
+   *     This function handle is used to read
+   *     additional data for a face from another
+   *     file/stream.  For example, this can be used to
+   *     add data from AFM or PFM files on a Type 1
+   *     face, or a CIDMap on a CID-keyed face.
+   *
+   *   get_advances ::
+   *     A function handle used to return advance
+   *     widths of `count' glyphs (in font units),
+   *     starting at `first'.  The `vertical' flag must
+   *     be set to get vertical advance heights.  The
+   *     `advances' buffer is caller-allocated.
+   *     The idea of this function is to be able to
+   *     perform device-independent text layout without
+   *     loading a single glyph image.
+   *
+   *   request_size ::
+   *     A handle to a function used to request the new
+   *     character size.  Can be set to 0 if the
+   *     scaling done in the base layer suffices.
+   *
+   *   select_size ::
+   *     A handle to a function used to select a new
+   *     fixed size.  It is used only if
+   *     @FT_FACE_FLAG_FIXED_SIZES is set.  Can be set
+   *     to 0 if the scaling done in the base layer
+   *     suffices.
+   * @Note:
+   *   Most function pointers, with the exception of `load_glyph', can be
+   *   set to 0 to indicate a default behaviour.
+   */
   typedef struct  FT_Driver_ClassRec_
   {
     FT_Module_Class          root;
@@ -184,28 +200,28 @@ FT_BEGIN_HEADER
   } FT_Driver_ClassRec, *FT_Driver_Class;
 
 
-  /*************************************************************************/
-  /*                                                                       */
-  /* <Macro>                                                               */
-  /*    FT_DECLARE_DRIVER                                                  */
-  /*                                                                       */
-  /* <Description>                                                         */
-  /*    Used to create a forward declaration of an FT_Driver_ClassRec      */
-  /*    struct instance.                                                   */
-  /*                                                                       */
-  /* <Macro>                                                               */
-  /*    FT_DEFINE_DRIVER                                                   */
-  /*                                                                       */
-  /* <Description>                                                         */
-  /*    Used to initialize an instance of FT_Driver_ClassRec struct.       */
-  /*                                                                       */
-  /*    `ftinit.c' (ft_create_default_module_classes) already contains a   */
-  /*    mechanism to call these functions for the default modules          */
-  /*    described in `ftmodule.h'.                                         */
-  /*                                                                       */
-  /*    The struct will be allocated in the global scope (or the scope     */
-  /*    where the macro is used).                                          */
-  /*                                                                       */
+  /**************************************************************************
+   *
+   * @Macro:
+   *   FT_DECLARE_DRIVER
+   *
+   * @Description:
+   *   Used to create a forward declaration of an FT_Driver_ClassRec
+   *   struct instance.
+   *
+   * @Macro:
+   *   FT_DEFINE_DRIVER
+   *
+   * @Description:
+   *   Used to initialize an instance of FT_Driver_ClassRec struct.
+   *
+   *   `ftinit.c' (ft_create_default_module_classes) already contains a
+   *   mechanism to call these functions for the default modules
+   *   described in `ftmodule.h'.
+   *
+   *   The struct will be allocated in the global scope (or the scope
+   *   where the macro is used).
+   */
 #define FT_DECLARE_DRIVER( class_ )  \
   FT_CALLBACK_TABLE                  \
   const FT_Driver_ClassRec  class_;

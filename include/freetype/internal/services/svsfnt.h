@@ -1,19 +1,19 @@
-/***************************************************************************/
-/*                                                                         */
-/*  svsfnt.h                                                               */
-/*                                                                         */
-/*    The FreeType SFNT table loading service (specification).             */
-/*                                                                         */
-/*  Copyright 2003-2018 by                                                 */
-/*  David Turner, Robert Wilhelm, and Werner Lemberg.                      */
-/*                                                                         */
-/*  This file is part of the FreeType project, and may only be used,       */
-/*  modified, and distributed under the terms of the FreeType project      */
-/*  license, LICENSE.TXT.  By continuing to use, modify, or distribute     */
-/*  this file you indicate that you have read the license and              */
-/*  understand and accept it fully.                                        */
-/*                                                                         */
-/***************************************************************************/
+/****************************************************************************
+ *
+ * svsfnt.h
+ *
+ *   The FreeType SFNT table loading service (specification).
+ *
+ * Copyright 2003-2018 by
+ * David Turner, Robert Wilhelm, and Werner Lemberg.
+ *
+ * This file is part of the FreeType project, and may only be used,
+ * modified, and distributed under the terms of the FreeType project
+ * license, LICENSE.TXT.  By continuing to use, modify, or distribute
+ * this file you indicate that you have read the license and
+ * understand and accept it fully.
+ *
+ */
 
 
 #ifndef SVSFNT_H_
@@ -27,7 +27,7 @@ FT_BEGIN_HEADER
 
 
   /*
-   *  SFNT table loading service.
+   * SFNT table loading service.
    */
 
 #define FT_SERVICE_ID_SFNT_TABLE  "sfnt-table"

@@ -1,19 +1,19 @@
-/***************************************************************************/
-/*                                                                         */
-/*  ftheader.h                                                             */
-/*                                                                         */
-/*    Build macros of the FreeType 2 library.                              */
-/*                                                                         */
-/*  Copyright 1996-2018 by                                                 */
-/*  David Turner, Robert Wilhelm, and Werner Lemberg.                      */
-/*                                                                         */
-/*  This file is part of the FreeType project, and may only be used,       */
-/*  modified, and distributed under the terms of the FreeType project      */
-/*  license, LICENSE.TXT.  By continuing to use, modify, or distribute     */
-/*  this file you indicate that you have read the license and              */
-/*  understand and accept it fully.                                        */
-/*                                                                         */
-/***************************************************************************/
+/****************************************************************************
+ *
+ * ftheader.h
+ *
+ *   Build macros of the FreeType 2 library.
+ *
+ * Copyright 1996-2018 by
+ * David Turner, Robert Wilhelm, and Werner Lemberg.
+ *
+ * This file is part of the FreeType project, and may only be used,
+ * modified, and distributed under the terms of the FreeType project
+ * license, LICENSE.TXT.  By continuing to use, modify, or distribute
+ * this file you indicate that you have read the license and
+ * understand and accept it fully.
+ *
+ */
 
 #ifndef FTHEADER_H_
 #define FTHEADER_H_
@@ -55,43 +55,43 @@
 #endif
 
 
-  /*************************************************************************/
-  /*                                                                       */
-  /* Aliases for the FreeType 2 public and configuration files.            */
-  /*                                                                       */
-  /*************************************************************************/
+  /**************************************************************************
+   *
+   * Aliases for the FreeType 2 public and configuration files.
+   *
+   */
 
-  /*************************************************************************/
-  /*                                                                       */
-  /* <Section>                                                             */
-  /*    header_file_macros                                                 */
-  /*                                                                       */
-  /* <Title>                                                               */
-  /*    Header File Macros                                                 */
-  /*                                                                       */
-  /* <Abstract>                                                            */
-  /*    Macro definitions used to #include specific header files.          */
-  /*                                                                       */
-  /* <Description>                                                         */
-  /*    The following macros are defined to the name of specific           */
-  /*    FreeType~2 header files.  They can be used directly in #include    */
-  /*    statements as in:                                                  */
-  /*                                                                       */
-  /*    {                                                                  */
-  /*      #include FT_FREETYPE_H                                           */
-  /*      #include FT_MULTIPLE_MASTERS_H                                   */
-  /*      #include FT_GLYPH_H                                              */
-  /*    }                                                                  */
-  /*                                                                       */
-  /*    There are several reasons why we are now using macros to name      */
-  /*    public header files.  The first one is that such macros are not    */
-  /*    limited to the infamous 8.3~naming rule required by DOS (and       */
-  /*    `FT_MULTIPLE_MASTERS_H' is a lot more meaningful than `ftmm.h').   */
-  /*                                                                       */
-  /*    The second reason is that it allows for more flexibility in the    */
-  /*    way FreeType~2 is installed on a given system.                     */
-  /*                                                                       */
-  /*************************************************************************/
+  /**************************************************************************
+   *
+   * @Section:
+   *   header_file_macros
+   *
+   * @Title:
+   *   Header File Macros
+   *
+   * @Abstract:
+   *   Macro definitions used to #include specific header files.
+   *
+   * @Description:
+   *   The following macros are defined to the name of specific
+   *   FreeType~2 header files.  They can be used directly in #include
+   *   statements as in:
+   *
+   *   {
+   *     #include FT_FREETYPE_H
+   *     #include FT_MULTIPLE_MASTERS_H
+   *     #include FT_GLYPH_H
+   *   }
+   *
+   *   There are several reasons why we are now using macros to name
+   *   public header files.  The first one is that such macros are not
+   *   limited to the infamous 8.3~naming rule required by DOS (and
+   *   `FT_MULTIPLE_MASTERS_H' is a lot more meaningful than `ftmm.h').
+   *
+   *   The second reason is that it allows for more flexibility in the
+   *   way FreeType~2 is installed on a given system.
+   *
+   */
 
 
   /* configuration files */

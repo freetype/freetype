@@ -1,19 +1,19 @@
-/***************************************************************************/
-/*                                                                         */
-/*  ftsystem.h                                                             */
-/*                                                                         */
-/*    FreeType low-level system interface definition (specification).      */
-/*                                                                         */
-/*  Copyright 1996-2018 by                                                 */
-/*  David Turner, Robert Wilhelm, and Werner Lemberg.                      */
-/*                                                                         */
-/*  This file is part of the FreeType project, and may only be used,       */
-/*  modified, and distributed under the terms of the FreeType project      */
-/*  license, LICENSE.TXT.  By continuing to use, modify, or distribute     */
-/*  this file you indicate that you have read the license and              */
-/*  understand and accept it fully.                                        */
-/*                                                                         */
-/***************************************************************************/
+/****************************************************************************
+ *
+ * ftsystem.h
+ *
+ *   FreeType low-level system interface definition (specification).
+ *
+ * Copyright 1996-2018 by
+ * David Turner, Robert Wilhelm, and Werner Lemberg.
+ *
+ * This file is part of the FreeType project, and may only be used,
+ * modified, and distributed under the terms of the FreeType project
+ * license, LICENSE.TXT.  By continuing to use, modify, or distribute
+ * this file you indicate that you have read the license and
+ * understand and accept it fully.
+ *
+ */
 
 
 #ifndef FTSYSTEM_H_
@@ -26,31 +26,31 @@
 FT_BEGIN_HEADER
 
 
-  /*************************************************************************/
-  /*                                                                       */
-  /* <Section>                                                             */
-  /*   system_interface                                                    */
-  /*                                                                       */
-  /* <Title>                                                               */
-  /*   System Interface                                                    */
-  /*                                                                       */
-  /* <Abstract>                                                            */
-  /*   How FreeType manages memory and i/o.                                */
-  /*                                                                       */
-  /* <Description>                                                         */
-  /*   This section contains various definitions related to memory         */
-  /*   management and i/o access.  You need to understand this             */
-  /*   information if you want to use a custom memory manager or you own   */
-  /*   i/o streams.                                                        */
-  /*                                                                       */
-  /*************************************************************************/
+  /**************************************************************************
+   *
+   * @Section:
+   *  system_interface
+   *
+   * @Title:
+   *  System Interface
+   *
+   * @Abstract:
+   *  How FreeType manages memory and i/o.
+   *
+   * @Description:
+   *  This section contains various definitions related to memory
+   *  management and i/o access.  You need to understand this
+   *  information if you want to use a custom memory manager or you own
+   *  i/o streams.
+   *
+   */
 
 
-  /*************************************************************************/
-  /*                                                                       */
-  /*                  M E M O R Y   M A N A G E M E N T                    */
-  /*                                                                       */
-  /*************************************************************************/
+  /**************************************************************************
+   *
+   *                 M E M O R Y   M A N A G E M E N T
+   *
+   */
 
 
   /*************************************************************************
@@ -177,11 +177,11 @@ FT_BEGIN_HEADER
   };
 
 
-  /*************************************************************************/
-  /*                                                                       */
-  /*                       I / O   M A N A G E M E N T                     */
-  /*                                                                       */
-  /*************************************************************************/
+  /**************************************************************************
+   *
+   *                      I / O   M A N A G E M E N T
+   *
+   */
 
 
   /*************************************************************************
@@ -265,7 +265,7 @@ FT_BEGIN_HEADER
    *
    * @input:
    *  stream ::
-   *     A handle to the target stream.
+   *    A handle to the target stream.
    *
    */
   typedef void

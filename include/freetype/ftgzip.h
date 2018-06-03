@@ -1,19 +1,19 @@
-/***************************************************************************/
-/*                                                                         */
-/*  ftgzip.h                                                               */
-/*                                                                         */
-/*    Gzip-compressed stream support.                                      */
-/*                                                                         */
-/*  Copyright 2002-2018 by                                                 */
-/*  David Turner, Robert Wilhelm, and Werner Lemberg.                      */
-/*                                                                         */
-/*  This file is part of the FreeType project, and may only be used,       */
-/*  modified, and distributed under the terms of the FreeType project      */
-/*  license, LICENSE.TXT.  By continuing to use, modify, or distribute     */
-/*  this file you indicate that you have read the license and              */
-/*  understand and accept it fully.                                        */
-/*                                                                         */
-/***************************************************************************/
+/****************************************************************************
+ *
+ * ftgzip.h
+ *
+ *   Gzip-compressed stream support.
+ *
+ * Copyright 2002-2018 by
+ * David Turner, Robert Wilhelm, and Werner Lemberg.
+ *
+ * This file is part of the FreeType project, and may only be used,
+ * modified, and distributed under the terms of the FreeType project
+ * license, LICENSE.TXT.  By continuing to use, modify, or distribute
+ * this file you indicate that you have read the license and
+ * understand and accept it fully.
+ *
+ */
 
 
 #ifndef FTGZIP_H_
@@ -31,21 +31,21 @@
 
 FT_BEGIN_HEADER
 
-  /*************************************************************************/
-  /*                                                                       */
-  /* <Section>                                                             */
-  /*    gzip                                                               */
-  /*                                                                       */
-  /* <Title>                                                               */
-  /*    GZIP Streams                                                       */
-  /*                                                                       */
-  /* <Abstract>                                                            */
-  /*    Using gzip-compressed font files.                                  */
-  /*                                                                       */
-  /* <Description>                                                         */
-  /*    This section contains the declaration of Gzip-specific functions.  */
-  /*                                                                       */
-  /*************************************************************************/
+  /**************************************************************************
+   *
+   * @Section:
+   *   gzip
+   *
+   * @Title:
+   *   GZIP Streams
+   *
+   * @Abstract:
+   *   Using gzip-compressed font files.
+   *
+   * @Description:
+   *   This section contains the declaration of Gzip-specific functions.
+   *
+   */
 
 
  /************************************************************************
@@ -112,7 +112,7 @@ FT_BEGIN_HEADER
   *     The length of the input buffer.
   *
   * @output:
-  *   output::
+  *   output ::
   *     The output buffer.
   *
   * @inout:

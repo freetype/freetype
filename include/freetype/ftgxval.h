@@ -1,28 +1,28 @@
-/***************************************************************************/
-/*                                                                         */
-/*  ftgxval.h                                                              */
-/*                                                                         */
-/*    FreeType API for validating TrueTypeGX/AAT tables (specification).   */
-/*                                                                         */
-/*  Copyright 2004-2018 by                                                 */
-/*  Masatake YAMATO, Redhat K.K,                                           */
-/*  David Turner, Robert Wilhelm, and Werner Lemberg.                      */
-/*                                                                         */
-/*  This file is part of the FreeType project, and may only be used,       */
-/*  modified, and distributed under the terms of the FreeType project      */
-/*  license, LICENSE.TXT.  By continuing to use, modify, or distribute     */
-/*  this file you indicate that you have read the license and              */
-/*  understand and accept it fully.                                        */
-/*                                                                         */
-/***************************************************************************/
+/****************************************************************************
+ *
+ * ftgxval.h
+ *
+ *   FreeType API for validating TrueTypeGX/AAT tables (specification).
+ *
+ * Copyright 2004-2018 by
+ * Masatake YAMATO, Redhat K.K,
+ * David Turner, Robert Wilhelm, and Werner Lemberg.
+ *
+ * This file is part of the FreeType project, and may only be used,
+ * modified, and distributed under the terms of the FreeType project
+ * license, LICENSE.TXT.  By continuing to use, modify, or distribute
+ * this file you indicate that you have read the license and
+ * understand and accept it fully.
+ *
+ */
 
-/***************************************************************************/
-/*                                                                         */
-/* gxvalid is derived from both gxlayout module and otvalid module.        */
-/* Development of gxlayout is supported by the Information-technology      */
-/* Promotion Agency(IPA), Japan.                                           */
-/*                                                                         */
-/***************************************************************************/
+/****************************************************************************
+ *
+ * gxvalid is derived from both gxlayout module and otvalid module.
+ * Development of gxlayout is supported by the Information-technology
+ * Promotion Agency(IPA), Japan.
+ *
+ */
 
 
 #ifndef FTGXVAL_H_
@@ -41,43 +41,43 @@
 FT_BEGIN_HEADER
 
 
-  /*************************************************************************/
-  /*                                                                       */
-  /* <Section>                                                             */
-  /*    gx_validation                                                      */
-  /*                                                                       */
-  /* <Title>                                                               */
-  /*    TrueTypeGX/AAT Validation                                          */
-  /*                                                                       */
-  /* <Abstract>                                                            */
-  /*    An API to validate TrueTypeGX/AAT tables.                          */
-  /*                                                                       */
-  /* <Description>                                                         */
-  /*    This section contains the declaration of functions to validate     */
-  /*    some TrueTypeGX tables (feat, mort, morx, bsln, just, kern, opbd,  */
-  /*    trak, prop, lcar).                                                 */
-  /*                                                                       */
-  /* <Order>                                                               */
-  /*    FT_TrueTypeGX_Validate                                             */
-  /*    FT_TrueTypeGX_Free                                                 */
-  /*                                                                       */
-  /*    FT_ClassicKern_Validate                                            */
-  /*    FT_ClassicKern_Free                                                */
-  /*                                                                       */
-  /*    FT_VALIDATE_GX_LENGTH                                              */
-  /*    FT_VALIDATE_GXXXX                                                  */
-  /*    FT_VALIDATE_CKERNXXX                                               */
-  /*                                                                       */
-  /*************************************************************************/
+  /**************************************************************************
+   *
+   * @Section:
+   *   gx_validation
+   *
+   * @Title:
+   *   TrueTypeGX/AAT Validation
+   *
+   * @Abstract:
+   *   An API to validate TrueTypeGX/AAT tables.
+   *
+   * @Description:
+   *   This section contains the declaration of functions to validate
+   *   some TrueTypeGX tables (feat, mort, morx, bsln, just, kern, opbd,
+   *   trak, prop, lcar).
+   *
+   * @Order:
+   *   FT_TrueTypeGX_Validate
+   *   FT_TrueTypeGX_Free
+   *
+   *   FT_ClassicKern_Validate
+   *   FT_ClassicKern_Free
+   *
+   *   FT_VALIDATE_GX_LENGTH
+   *   FT_VALIDATE_GXXXX
+   *   FT_VALIDATE_CKERNXXX
+   *
+   */
 
-  /*************************************************************************/
-  /*                                                                       */
-  /*                                                                       */
-  /* Warning: Use FT_VALIDATE_XXX to validate a table.                     */
-  /*          Following definitions are for gxvalid developers.            */
-  /*                                                                       */
-  /*                                                                       */
-  /*************************************************************************/
+  /**************************************************************************
+   *
+   *
+   * Warning: Use FT_VALIDATE_XXX to validate a table.
+   *         Following definitions are for gxvalid developers.
+   *
+   *
+   */
 
 #define FT_VALIDATE_feat_INDEX     0
 #define FT_VALIDATE_mort_INDEX     1
@@ -194,20 +194,20 @@ FT_BEGIN_HEADER
   *
   * @input:
   *    face ::
-  *       A handle to the input face.
+  *      A handle to the input face.
   *
   *    validation_flags ::
-  *       A bit field that specifies the tables to be validated.  See
-  *       @FT_VALIDATE_GXXXX for possible values.
+  *      A bit field that specifies the tables to be validated.  See
+  *      @FT_VALIDATE_GXXXX for possible values.
   *
   *    table_length ::
-  *       The size of the `tables' array.  Normally, @FT_VALIDATE_GX_LENGTH
-  *       should be passed.
+  *      The size of the `tables' array.  Normally, @FT_VALIDATE_GX_LENGTH
+  *      should be passed.
   *
   * @output:
   *    tables ::
-  *       The array where all validated sfnt tables are stored.
-  *       The array itself must be allocated by a client.
+  *      The array where all validated sfnt tables are stored.
+  *      The array itself must be allocated by a client.
   *
   * @return:
   *   FreeType error code.  0~means success.
@@ -239,11 +239,11 @@ FT_BEGIN_HEADER
   *
   * @input:
   *    face ::
-  *       A handle to the input face.
+  *      A handle to the input face.
   *
   *    table ::
-  *       The pointer to the buffer allocated by
-  *       @FT_TrueTypeGX_Validate.
+  *      The pointer to the buffer allocated by
+  *      @FT_TrueTypeGX_Validate.
   *
   * @note:
   *   This function must be used to free the buffer allocated by
@@ -298,15 +298,15 @@ FT_BEGIN_HEADER
   *
   * @input:
   *    face ::
-  *       A handle to the input face.
+  *      A handle to the input face.
   *
   *    validation_flags ::
-  *       A bit field that specifies the dialect to be validated.  See
-  *       @FT_VALIDATE_CKERNXXX for possible values.
+  *      A bit field that specifies the dialect to be validated.  See
+  *      @FT_VALIDATE_CKERNXXX for possible values.
   *
   * @output:
   *    ckern_table ::
-  *       A pointer to the kern table.
+  *      A pointer to the kern table.
   *
   * @return:
   *   FreeType error code.  0~means success.
@@ -332,11 +332,11 @@ FT_BEGIN_HEADER
   *
   * @input:
   *    face ::
-  *       A handle to the input face.
+  *      A handle to the input face.
   *
   *    table ::
-  *       The pointer to the buffer that is allocated by
-  *       @FT_ClassicKern_Validate.
+  *      The pointer to the buffer that is allocated by
+  *      @FT_ClassicKern_Validate.
   *
   * @note:
   *   This function must be used to free the buffer allocated by

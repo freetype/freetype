@@ -1,19 +1,19 @@
-/***************************************************************************/
-/*                                                                         */
-/*  ftdriver.h                                                             */
-/*                                                                         */
-/*    FreeType API for controlling driver modules (specification only).    */
-/*                                                                         */
-/*  Copyright 2017-2018 by                                                 */
-/*  David Turner, Robert Wilhelm, and Werner Lemberg.                      */
-/*                                                                         */
-/*  This file is part of the FreeType project, and may only be used,       */
-/*  modified, and distributed under the terms of the FreeType project      */
-/*  license, LICENSE.TXT.  By continuing to use, modify, or distribute     */
-/*  this file you indicate that you have read the license and              */
-/*  understand and accept it fully.                                        */
-/*                                                                         */
-/***************************************************************************/
+/****************************************************************************
+ *
+ * ftdriver.h
+ *
+ *   FreeType API for controlling driver modules (specification only).
+ *
+ * Copyright 2017-2018 by
+ * David Turner, Robert Wilhelm, and Werner Lemberg.
+ *
+ * This file is part of the FreeType project, and may only be used,
+ * modified, and distributed under the terms of the FreeType project
+ * license, LICENSE.TXT.  By continuing to use, modify, or distribute
+ * this file you indicate that you have read the license and
+ * understand and accept it fully.
+ *
+ */
 
 
 #ifndef FTDRIVER_H_
@@ -428,7 +428,7 @@ FT_BEGIN_HEADER
    *   at smaller sizes.
    *
    *   By default, the Adobe engines for CFF, Type~1, and CID fonts darken
-   *   stems at smaller sizes, regardless of hinting, to enhance contrast. 
+   *   stems at smaller sizes, regardless of hinting, to enhance contrast.
    *   Setting this property, stem darkening gets switched off.
    *
    *   For the auto-hinter, stem-darkening is experimental currently and

@@ -1,30 +1,30 @@
-/***************************************************************************/
-/*                                                                         */
-/*  ftotval.h                                                              */
-/*                                                                         */
-/*    FreeType API for validating OpenType tables (specification).         */
-/*                                                                         */
-/*  Copyright 2004-2018 by                                                 */
-/*  David Turner, Robert Wilhelm, and Werner Lemberg.                      */
-/*                                                                         */
-/*  This file is part of the FreeType project, and may only be used,       */
-/*  modified, and distributed under the terms of the FreeType project      */
-/*  license, LICENSE.TXT.  By continuing to use, modify, or distribute     */
-/*  this file you indicate that you have read the license and              */
-/*  understand and accept it fully.                                        */
-/*                                                                         */
-/***************************************************************************/
+/****************************************************************************
+ *
+ * ftotval.h
+ *
+ *   FreeType API for validating OpenType tables (specification).
+ *
+ * Copyright 2004-2018 by
+ * David Turner, Robert Wilhelm, and Werner Lemberg.
+ *
+ * This file is part of the FreeType project, and may only be used,
+ * modified, and distributed under the terms of the FreeType project
+ * license, LICENSE.TXT.  By continuing to use, modify, or distribute
+ * this file you indicate that you have read the license and
+ * understand and accept it fully.
+ *
+ */
 
 
-/***************************************************************************/
-/*                                                                         */
-/*                                                                         */
-/* Warning: This module might be moved to a different library in the       */
-/*          future to avoid a tight dependency between FreeType and the    */
-/*          OpenType specification.                                        */
-/*                                                                         */
-/*                                                                         */
-/***************************************************************************/
+/****************************************************************************
+ *
+ *
+ * Warning: This module might be moved to a different library in the
+ *         future to avoid a tight dependency between FreeType and the
+ *         OpenType specification.
+ *
+ *
+ */
 
 
 #ifndef FTOTVAL_H_
@@ -43,28 +43,28 @@
 FT_BEGIN_HEADER
 
 
-  /*************************************************************************/
-  /*                                                                       */
-  /* <Section>                                                             */
-  /*    ot_validation                                                      */
-  /*                                                                       */
-  /* <Title>                                                               */
-  /*    OpenType Validation                                                */
-  /*                                                                       */
-  /* <Abstract>                                                            */
-  /*    An API to validate OpenType tables.                                */
-  /*                                                                       */
-  /* <Description>                                                         */
-  /*    This section contains the declaration of functions to validate     */
-  /*    some OpenType tables (BASE, GDEF, GPOS, GSUB, JSTF, MATH).         */
-  /*                                                                       */
-  /* <Order>                                                               */
-  /*    FT_OpenType_Validate                                               */
-  /*    FT_OpenType_Free                                                   */
-  /*                                                                       */
-  /*    FT_VALIDATE_OTXXX                                                  */
-  /*                                                                       */
-  /*************************************************************************/
+  /**************************************************************************
+   *
+   * @Section:
+   *   ot_validation
+   *
+   * @Title:
+   *   OpenType Validation
+   *
+   * @Abstract:
+   *   An API to validate OpenType tables.
+   *
+   * @Description:
+   *   This section contains the declaration of functions to validate
+   *   some OpenType tables (BASE, GDEF, GPOS, GSUB, JSTF, MATH).
+   *
+   * @Order:
+   *   FT_OpenType_Validate
+   *   FT_OpenType_Free
+   *
+   *   FT_VALIDATE_OTXXX
+   *
+   */
 
 
  /**********************************************************************
@@ -126,27 +126,27 @@ FT_BEGIN_HEADER
   *
   * @input:
   *    face ::
-  *       A handle to the input face.
+  *      A handle to the input face.
   *
   *    validation_flags ::
-  *       A bit field that specifies the tables to be validated.  See
-  *       @FT_VALIDATE_OTXXX for possible values.
+  *      A bit field that specifies the tables to be validated.  See
+  *      @FT_VALIDATE_OTXXX for possible values.
   *
   * @output:
   *    BASE_table ::
-  *       A pointer to the BASE table.
+  *      A pointer to the BASE table.
   *
   *    GDEF_table ::
-  *       A pointer to the GDEF table.
+  *      A pointer to the GDEF table.
   *
   *    GPOS_table ::
-  *       A pointer to the GPOS table.
+  *      A pointer to the GPOS table.
   *
   *    GSUB_table ::
-  *       A pointer to the GSUB table.
+  *      A pointer to the GSUB table.
   *
   *    JSTF_table ::
-  *       A pointer to the JSTF table.
+  *      A pointer to the JSTF table.
   *
   * @return:
   *   FreeType error code.  0~means success.
@@ -179,11 +179,11 @@ FT_BEGIN_HEADER
   *
   * @input:
   *    face ::
-  *       A handle to the input face.
+  *      A handle to the input face.
   *
   *    table ::
-  *       The pointer to the buffer that is allocated by
-  *       @FT_OpenType_Validate.
+  *      The pointer to the buffer that is allocated by
+  *      @FT_OpenType_Validate.
   *
   * @note:
   *   This function must be used to free the buffer allocated by

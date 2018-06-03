@@ -1,19 +1,19 @@
-/***************************************************************************/
-/*                                                                         */
-/*  svgldict.h                                                             */
-/*                                                                         */
-/*    The FreeType glyph dictionary services (specification).              */
-/*                                                                         */
-/*  Copyright 2003-2018 by                                                 */
-/*  David Turner, Robert Wilhelm, and Werner Lemberg.                      */
-/*                                                                         */
-/*  This file is part of the FreeType project, and may only be used,       */
-/*  modified, and distributed under the terms of the FreeType project      */
-/*  license, LICENSE.TXT.  By continuing to use, modify, or distribute     */
-/*  this file you indicate that you have read the license and              */
-/*  understand and accept it fully.                                        */
-/*                                                                         */
-/***************************************************************************/
+/****************************************************************************
+ *
+ * svgldict.h
+ *
+ *   The FreeType glyph dictionary services (specification).
+ *
+ * Copyright 2003-2018 by
+ * David Turner, Robert Wilhelm, and Werner Lemberg.
+ *
+ * This file is part of the FreeType project, and may only be used,
+ * modified, and distributed under the terms of the FreeType project
+ * license, LICENSE.TXT.  By continuing to use, modify, or distribute
+ * this file you indicate that you have read the license and
+ * understand and accept it fully.
+ *
+ */
 
 
 #ifndef SVGLDICT_H_
@@ -26,8 +26,8 @@ FT_BEGIN_HEADER
 
 
   /*
-   *  A service used to retrieve glyph names, as well as to find the
-   *  index of a given glyph name in a font.
+   * A service used to retrieve glyph names, as well as to find the
+   * index of a given glyph name in a font.
    *
    */
 
