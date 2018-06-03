@@ -130,7 +130,18 @@
   FT_CALLBACK_DEF( void )
   GF_Face_Done( FT_Face        gfface )         /* GF_Face */
   {
-    //TO-DO
+    GF_Face    face = (GF_Face)gfface;
+    FT_Memory  memory;
+
+
+    if ( !face )
+      return;
+
+    memory = FT_FACE_MEMORY( face );
+
+    gf_free_font( face->gf_glyph );
+
+    FT_FREE( /*  */ );
   }
 
 
@@ -141,7 +152,107 @@
                  FT_Int         num_params,
                  FT_Parameter*  params )
   {
-    //TO-DO
+    GF_Face   face   = (GF_Face)gfface;
+    FT_Error   error;
+    FT_Memory  memory = FT_FACE_MEMORY( face );
+
+    FT_UNUSED( num_params );
+    FT_UNUSED( params );
+
+    FT_TRACE2(( "GF driver\n" ));
+
+    /* load font */
+    error = gf_load_font( stream, face );
+    if ( !error )
+      goto Exit;
+
+    if ( FT_ERR_EQ( error, Unknown_File_Format ) )
+    {
+      goto Exit
+    }
+
+    /* sanity check */
+    if ( !face-> /*  */ )
+    {
+      FT_TRACE2(( "/*  */" ));
+      error = FT_THROW( Invalid_File_Format );
+      goto Fail;
+    }
+
+    /* we now need to fill the root FT_Face fields */
+    /* with relevant information                   */
+    {
+      FT_Face   root = FT_FACE( face );
+      GF_Face   font = face->font;
+
+
+      root->face_index  = /*  */  ;
+
+      root->face_flags |= /*  */ ;
+
+      /* set up the `fixed_sizes' array */
+      if ( FT_NEW_ARRAY( root->available_sizes, 1 ) )
+        goto Fail;
+
+      root->num_fixed_sizes = 1;
+
+      {
+        FT_Bitmap_Size*  bsize = root->available_sizes;
+        FT_UShort        x_res, y_res;
+
+        bsize->width  = (FT_Short) /*  */ ;
+        bsize->height = (FT_Short) /*  */ ;
+        bsize->size   =            /*  */ ;
+
+        x_res = /*  */ ;
+        y_res = /*  */ ;
+
+        bsize->y_ppem = /*  */ ;
+        bsize->x_ppem = /*  */ ;
+      }
+
+      /* Charmaps */
+
+      {
+        FT_CharMapRec  charmap;
+
+
+        charmap.encoding    = FT_ENCODING_NONE;
+        /* initial platform/encoding should indicate unset status? */
+        charmap.platform_id = TT_PLATFORM_APPLE_UNICODE;
+        charmap.encoding_id = TT_APPLE_ID_DEFAULT;
+        charmap.face        = root;
+
+        error = FT_CMap_New( gf_cmap_class, NULL, &charmap, NULL );
+
+        if ( error )
+          goto Fail;
+      }
+
+
+      /* reserve one slot for the .notdef glyph at index 0 */
+      root->num_glyphs = /*  */ ;
+
+      root->family_name = /*  */;
+      root->style_name  = /*  */;
+
+      if ( root->style_flags & FT_STYLE_FLAG_BOLD )
+      {
+        if ( root->style_flags & FT_STYLE_FLAG_ITALIC )
+          root->style_name = (char *)"Bold Italic";
+        else
+          root->style_name = (char *)"Bold";
+      }
+      else if ( root->style_flags & FT_STYLE_FLAG_ITALIC )
+        root->style_name = (char *)"Italic";
+    }
+    goto Exit;
+
+  Fail:
+    GF_Face_Done( gfface );
+
+  Exit:
+    return error;
   }
 
   FT_CALLBACK_DEF( FT_Error )
@@ -207,7 +318,59 @@
                   FT_UInt       glyph_index,
                   FT_Int32      load_flags )
   {
-    //TO-DO
+    GF_Face      gf     = (GF_Face)FT_SIZE_FACE( size );
+    FT_Face      face   = FT_FACE( gf );
+    FT_Error     error  = FT_Err_Ok;
+    FT_Bitmap*   bitmap = &slot->bitmap;
+    GF_BitmapRec glyph ;
+
+    FT_UNUSED( load_flags );
+
+
+    if ( !face )
+    {
+      error = FT_THROW( Invalid_Face_Handle );
+      goto Exit;
+    }
+
+    if ( glyph_index >= (FT_UInt)face->num_glyphs )
+    {
+      error = FT_THROW( Invalid_Argument );
+      goto Exit;
+    }
+
+    FT_TRACE1(( "GF_Glyph_Load: glyph index %d\n", glyph_index ));
+
+    if ( glyph_index > 0 )
+      glyph_index--;                           /* revert to real index */
+    else
+      glyph_index = /*  */;                    /* the `.notdef' glyph  */
+
+    /* slot, bitmap => freetype, glyph => gflib */
+    glyph = gf->gf_glyph->bm_table[glyph_index];
+
+    bitmap->rows  = /*  */ ;
+    bitmap->width = /*  */ ;
+    bitmap->pitch = /*  */ ;     /* (In BDF) same as FT_Bitmap.pitch */
+
+    /* note: we don't allocate a new array to hold the bitmap; */
+    /*       we can simply point to it                         */
+    ft_glyphslot_set_bitmap( slot, glyph.bitmap );
+
+    slot->format      = FT_GLYPH_FORMAT_BITMAP;
+    slot->bitmap_left = glyph.bbx.x_offset;
+    slot->bitmap_top  = glyph.bbx.ascent;
+
+    slot->metrics.horiAdvance  = (FT_Pos) /*  */ ;
+    slot->metrics.horiBearingX = (FT_Pos) /*  */ ;
+    slot->metrics.horiBearingY = (FT_Pos) /*  */ ;
+    slot->metrics.width        = (FT_Pos) /*  */ ;
+    slot->metrics.height       = (FT_Pos) /*  */ ;
+
+    ft_synthesize_vertical_metrics( &slot->metrics, /*  */ );
+
+  Exit:
+    return error;
   }
 
 
