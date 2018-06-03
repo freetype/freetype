@@ -1,3 +1,7 @@
+2018-06-03  Armin Hasitzka  <prince.cherusker@gmail.com>
+
+	* src/smooth/ftgrays.c (gray_convert_glyph): Remove unused variables.
+
 2018-06-03  Werner Lemberg  <wl@gnu.org>
 
 	* src/tools/glnames.py (main): Emit header in `light' comment style.

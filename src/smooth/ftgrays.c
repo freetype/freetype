@@ -1739,8 +1739,6 @@ typedef ptrdiff_t  FT_PtrDist;
   {
     const TCoord  yMin = ras.min_ey;
     const TCoord  yMax = ras.max_ey;
-    const TCoord  xMin = ras.min_ex;
-    const TCoord  xMax = ras.max_ex;
 
     TCell    buffer[FT_MAX_GRAY_POOL];
     size_t   height = (size_t)( yMax - yMin );
