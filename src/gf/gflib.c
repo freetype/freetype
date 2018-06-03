@@ -23,6 +23,7 @@
 #include FT_INTERNAL_OBJECTS_H
 
 #include "gf.h"
+#include "gfdrivr.h"
 #include "gferror.h"
 
 
@@ -42,7 +43,7 @@
   /*                                                                       */
   /*************************************************************************/
 
-  long           gf_read_intn(FILE*,int);	
+  long           gf_read_intn(FILE*,int);
   unsigned long  gf_read_uintn(FILE*,int);
   void           gf_skip_n(FILE*,int);
 
@@ -97,13 +98,13 @@
   void
   gf_skip_n(FILE* fp, int size)
   {
-	
+
     while (size > 0)
     {
       (void)getc(fp);
       --size;
     }
-    
+
   }
 
   unsigned long
@@ -168,6 +169,7 @@
         min_n = READ_INT4(fp);
         max_n = READ_INT4(fp);
         break;
+
       case GF_BOC1:
         SKIP_N(fp, 1);
         del_m = (INT4)READ_UINT1(fp);
@@ -177,24 +179,25 @@
         min_m = max_m - del_m;
         min_n = max_n - del_n;
         break;
+
       default:
-        return -1;
+        goto Exit;
     }
 
     w = max_m - min_m + 1;
     h = max_n - min_n + 1;
     if ((w < 0) || (h < 0))
     {
-      vf_error = VF_ERR_ILL_FONT_FILE;
-      return -1;
+      error = FT_THROW( Invalid_File_Format );
+      goto Exit;
     }
 
     if ((bm->bitmap = (unsigned char*)malloc(h*((w+7)/8))) == NULL)
     {
-      vf_error = VF_ERR_NO_MEMORY;
-      return -1;
+      error = FT_THROW( Invalid_File_Format );
+      goto Exit;
     }
-		
+
     memclr(bm->bitmap, h*((w+7)/8));
     bm->raster     = (w+7)/8;
     bm->bbx_width  = w;
@@ -214,19 +217,19 @@
       if (instr == GF_PAINT_0)
       {
         paint_sw = 1 - paint_sw;
-      } 
+      }
       else if ((GF_NEW_ROW_0 <= instr) && (instr <= GF_NEW_ROW_164))
       {
         m        = min_m + (instr - GF_NEW_ROW_0);
         n        = n - 1;
         paint_sw = 1;
-      } 
+      }
       else if ((GF_PAINT_1 <= instr) && (instr <= GF_PAINT_63))
       {
         d = (instr - GF_PAINT_1 + 1);
         goto Paint;
-      } 
-      else 
+      }
+      else
       {
         switch ((int)instr)
         {
@@ -234,36 +237,37 @@
           case GF_PAINT2:
           case GF_PAINT3:
           d = (UINT4)READ_UINTN(fp, (instr - GF_PAINT1 + 1));
+
           Paint:
-          if (paint_sw == 0)
-          {
-            m = m + d; 
-          } 
-          else 
-          {
-            ptr = &bm->bitmap[(max_n - n) * bm->raster + (m - min_m)/8];
-            m_b = (m - min_m) % 8;
-            while (d > 0)
+            if (paint_sw == 0)
             {
-              *ptr |= bit_table[m_b];
-              m++;
-              if (++m_b >= 8)
-              {
-                m_b = 0; 
-                ++ptr;
-              }
-              d--;
+              m = m + d;
             }
-          }
-          paint_sw = 1 - paint_sw;
+            else
+            {
+              ptr = &bm->bitmap[(max_n - n) * bm->raster + (m - min_m)/8];
+              m_b = (m - min_m) % 8;
+              while (d > 0)
+              {
+                *ptr |= bit_table[m_b];
+                m++;
+                if (++m_b >= 8)
+                {
+                  m_b = 0;
+                  ++ptr;
+                }
+                d--;
+              }
+            }
+            paint_sw = 1 - paint_sw;
           break;
-					
+
 					case GF_SKIP0:
           m = min_m;
           n = n - 1;
           paint_sw = 0;
           break;
-					
+
           case GF_SKIP1:
           case GF_SKIP2:
           case GF_SKIP3:
@@ -271,7 +275,7 @@
           n = n - (UINT4)READ_UINTN(fp, (instr - GF_SKIP1 + 1)) - 1;
           paint_sw = 0;
           break;
-					
+
           case GF_XXX1:
           case GF_XXX2:
           case GF_XXX3:
@@ -279,24 +283,25 @@
           k = READ_UINTN(fp, instr - GF_XXX1 + 1);
           SKIP_N(fp, k);
           break;
-					
+
           case GF_YYY:
           SKIP_N(fp, 4);
           break;
-					
+
           case GF_NO_OP:
           break;
-							
+
           default:
-          vf_free(bm->bitmap);
+          FT_FREE(bm->bitmap);
           bm->bitmap = NULL;
-          vf_error = VF_ERR_ILL_FONT_FILE;
-          return -1;
+          error = FT_THROW( Invalid_File_Format );
+          goto Exit;
          }
       }
     }
 
-    return 0; 
+    Exit:
+      return error;
   }
 
 
@@ -304,45 +309,48 @@
   gf_load_font(  FT_Stream       stream,
                  GF_Face         face  )
   {
-    GF_GLYPH    go;
-    GF_BITMAP   bm;
-    UINT1       instr, d;
-    UINT4       ds, check_sum, hppp, vppp;
-    INT4        min_m, max_m, min_n, max_n;
-    INT4        w;
-    UINT4       code;
-    double      dx, dy;
-    long        ptr_post, ptr_p, ptr, optr, gptr;
-    int         bc, ec, nchars, i;
+    GF_GLYPH        go;
+    GF_BITMAP       bm;
+    UINT1           instr, d;
+    UINT4           ds, check_sum, hppp, vppp;
+    INT4            min_m, max_m, min_n, max_n;
+    INT4            w;
+    UINT4           code;
+    double          dx, dy;
+    long            ptr_post, ptr_p, ptr, optr, gptr;
+    int             bc, ec, nchars, i;
+    FT_Error        error  = FT_Err_Ok;
+
     FT_FILE *fp = stream->descriptor.pointer
+
     go = NULL;
     nchars = -1;
 
     /* seek to post_post instr. */
     ft_fseek(fp, -1, SEEK_END);
-		
+
     while ((d = READ_UINT1(fp)) == 223)
       fseek(fp, -2, SEEK_CUR);
-		
+
     if (d != GF_ID)
     {
-      vf_error = VF_ERR_ILL_FONT_FILE;
+      error = FT_THROW( Invalid_File_Format );
       goto ErrExit;
     }
-		
+
     fseek(fp, -6, SEEK_CUR);
 
     /* check if the code is post_post */
     if (READ_UINT1(fp) != GF_POST_POST)
     {
-      vf_error = VF_ERR_ILL_FONT_FILE;
+      error = FT_THROW( Invalid_File_Format );
       goto ErrExit;
     }
 
     /* read pointer to post instr. */
     if ((ptr_post = READ_UINT4(fp)) == -1)
     {
-      vf_error = VF_ERR_ILL_FONT_FILE;
+      error = FT_THROW( Invalid_File_Format );
       goto ErrExit;
     }
 
@@ -350,10 +358,10 @@
     fseek(fp, ptr_post, SEEK_SET);
     if (READ_UINT1(fp) != GF_POST)
     {
-      vf_error = VF_ERR_ILL_FONT_FILE;
+      error = FT_THROW( Invalid_File_Format );
       goto ErrExit;
     }
-		
+
     ptr_p     = READ_UINT4(fp);
     ds        = READ_UINT4(fp);
     check_sum = READ_UINT4(fp);
@@ -377,20 +385,20 @@
         if (instr == GF_POST_POST)
         {
           break;
-        } 
+        }
         else if (instr == GF_CHAR_LOC)
         {
           code = READ_UINT1(fp);
           (void)SKIP_N(fp, 16);
-        } 
+        }
         else if (instr == GF_CHAR_LOC0)
         {
           code = READ_UINT1(fp);
           (void)SKIP_N(fp, 9);
-        } 
-        else 
+        }
+        else
         {
-          vf_error = VF_ERR_ILL_FONT_FILE;
+          error = FT_THROW( Invalid_File_Format );
           goto ErrExit;
         }
         if (code < bc)
@@ -404,20 +412,15 @@
     #endif
 
     nchars = ec - bc + 1;
-    ALLOC_IF_ERR(go, struct s_gf_glyph)
-    {
-      vf_error = VF_ERR_NO_MEMORY;
+    FT_ALLOC(go, GF_GlyphRec)
       goto ErrExit;
-    }
-    ALLOCN_IF_ERR(go->bm_table, struct vf_s_bitmap, nchars)
-    {
-      vf_error = VF_ERR_NO_MEMORY;
+
+    FT_ALLOC_MULT(go->bm_table, GF_BitmapRec, nchars)
       goto ErrExit;
-    }
 
     for (i = 0; i < nchars; i++)
       go->bm_table[i].bitmap = NULL;
-		  
+
     go->ds   = (double)ds/(1<<20);
     go->hppp = (double)hppp/(1<<16);
     go->vppp = (double)vppp/(1<<16);
@@ -432,13 +435,14 @@
     #if 0
       fseek(fp, gptr, SEEK_SET);
     #endif
+
     for (  ;  ;  )
     {
       if ((instr = READ_UINT1(fp)) == GF_POST_POST)
         break;
       switch ((int)instr)
       {
-		  
+
         case GF_CHAR_LOC:
           code = READ_UINT1(fp);
           dx   = (double)READ_INT4(fp)/(double)(1<<16);
@@ -446,7 +450,7 @@
           w    = READ_INT4(fp);
           ptr  = READ_INT4(fp);
           break;
-		    
+
         case GF_CHAR_LOC0:
           code = READ_UINT1(fp);
           dx   = (double)READ_INT1(fp);
@@ -454,25 +458,26 @@
           w    = READ_INT4(fp);
           ptr  = READ_INT4(fp);
           break;
-		    
+
         default:
-          vf_error = VF_ERR_ILL_FONT_FILE;
+          error = FT_THROW( Invalid_File_Format );
           goto ErrExit;
-		    
+
       }
-      optr = ftell(fp);
-      fseek(fp, ptr, SEEK_SET);
-		  
+
+      optr = ft_ftell(fp);
+      ft_fseek(fp, ptr, SEEK_SET);
+
       bm = &go->bm_table[code - bc];
       if (gf_read_glyph(fp, bm) < 0)
         goto ErrExit;
-		    
+
       bm->mv_x = dx;
       bm->mv_y = dy;
-      fseek(fp, optr, SEEK_SET);
+      ft_fseek(fp, optr, SEEK_SET);
     }
     return go;
-		
+
 		ErrExit:
       printf("*ERROR\n");
       if (go != NULL)
@@ -480,11 +485,11 @@
         if (go->bm_table != NULL)
         {
           for (i = 0; i < nchars; i++)
-            vf_free(go->bm_table[i].bitmap);
+            FT_FREE(go->bm_table[i].bitmap);
         }
-        vf_free(go->bm_table);
+        FT_FREE(go->bm_table);
       }
-      vf_free(go);
+      FT_FREE(go);
       return NULL;
   }
 
@@ -497,11 +502,11 @@
       if (go->bm_table != NULL)
       {
         for (i = 0; i < nchars; i++)
-          vf_free(go->bm_table[i].bitmap);
+          FT_FREE(go->bm_table[i].bitmap);
       }
-      vf_free(go->bm_table);
+      FT_FREE(go->bm_table);
     }
-    vf_free(go);
+    FT_FREE(go);
   }
 
 
