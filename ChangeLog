@@ -1,3 +1,7 @@
+2018-06-03  Werner Lemberg  <wl@gnu.org>
+
+	* src/tools/glnames.py (main): Emit header in `light' comment style.
+
 2018-06-02  Alexei Podtelezhnikov  <apodtele@gmail.com>
 
 	[smooth] Attempt to mitigate bug #54019.
