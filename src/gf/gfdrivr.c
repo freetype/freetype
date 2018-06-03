@@ -134,7 +134,7 @@
     FT_Memory  memory;
 
 
-    if ( !face )
+    if ( !face h )
       return;
 
     memory = FT_FACE_MEMORY( face );
