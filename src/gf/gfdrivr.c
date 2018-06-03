@@ -39,7 +39,7 @@
 
   typedef struct  GF_CMapRec_
   {
-    FT_CMapRec        cmap;		
+    FT_CMapRec        cmap;
     FT_UInt32         bc;       /* Beginning Character */
     FT_UInt32         ec;       /* End Character */
   } GF_CMapRec, *GF_CMap;
@@ -76,12 +76,12 @@
   {
     FT_UInt  gindex = 0;
     GF_CMap  cmap   = (GF_CMap)gfcmap;
-		
+
     char_code -= cmap->bc;
-   
+
     if ( char_code < cmap->ec - cmap->bc + 1 )
       gindex = (FT_UInt)( char_code );
-    
+
     return gindex;
   }
 
@@ -145,10 +145,58 @@
   }
 
   FT_CALLBACK_DEF( FT_Error )
+  GF_Size_Select(  FT_Size   size,
+                   FT_ULong  strike_index )
+  {
+    GF_Face        face   = (GF_Face)size->face;
+
+    FT_UNUSED( strike_index );
+
+
+    FT_Select_Metrics( size->face, 0 );
+
+    size->metrics.ascender    =  /*  */  ;
+    size->metrics.descender   =  /*  */  ;
+    size->metrics.max_advance =  /*  */  ;
+
+    return FT_Err_Ok;
+
+  }
+
+  FT_CALLBACK_DEF( FT_Error )
   GF_Size_Request(  FT_Size          size,
                     FT_Size_Request  req )
   {
-    //TO-DO
+    GF_Face           face    = (GF_Face)size->face;
+    FT_Bitmap_Size*   bsize   = size->face->available_sizes;
+    FT_Error          error   = FT_ERR( Invalid_Pixel_Size );
+    FT_Long           height;
+
+
+    height = FT_REQUEST_HEIGHT( req );
+    height = ( height + 32 ) >> 6;
+
+    switch ( req->type )
+    {
+    case FT_SIZE_REQUEST_TYPE_NOMINAL:
+      if ( height == ( ( bsize->y_ppem + 32 ) >> 6 ) )
+        error = FT_Err_Ok;
+      break;
+
+    case FT_SIZE_REQUEST_TYPE_REAL_DIM:
+      if ( height == /*  */ )
+        error = FT_Err_Ok;
+      break;
+
+    default:
+      error = FT_THROW( Unimplemented_Feature );
+      break;
+    }
+
+    if ( error )
+      return error;
+    else
+      return GF_Size_Select( size, 0 );
   }
 
 
