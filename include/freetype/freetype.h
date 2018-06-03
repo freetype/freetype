@@ -4062,7 +4062,7 @@ FT_BEGIN_HEADER
    *   The glyph layer data for a given glyph slot, if present, provides an
    *   alternative, multi-colour glyph representation: Instead of rendering
    *   the outline or bitmap in the glyph slot, glyphs with the indices and
-   *   colors returned in the @FT_GlyphLayer array are rendered layer by
+   *   colors returned in the @FT_Glyph_Layer array are rendered layer by
    *   layer.
    *
    * @input:
@@ -4074,7 +4074,7 @@ FT_BEGIN_HEADER
    *     The number of colored glyph layers for `glyph'.
    *
    *   alayers ::
-   *     An @FT_GlyphLayer array with `anum_layers' elements.  NULL if there
+   *     An @FT_Glyph_Layer array with `anum_layers' elements.  NULL if there
    *     aren't glyph layers.
    *
    *     The elements are ordered in the z~direction from bottom to top; an
