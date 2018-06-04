@@ -7446,6 +7446,7 @@
      * Selector Bit:  3
      * Return Bit(s): 10
      *
+     * XXX: UNDOCUMENTED!
      */
     if ( (args[0] & 8 ) != 0 && exc->face->blend )
       K |= 1 << 10;
@@ -7472,6 +7473,7 @@
        * Selector Bit:  6
        * Return Bit(s): 13
        *
+       * v40 does subpixel hinting by default.
        */
       if ( ( args[0] & 64 ) != 0 )
         K |= 1 << 13;
@@ -7489,6 +7491,7 @@
        * Selector Bit:  10
        * Return Bit(s): 17
        *
+       * XXX: FreeType supports it, dependent on what client does?
        */
       if ( ( args[0] & 1024 ) != 0 )
         K |= 1 << 17;
@@ -7499,6 +7502,7 @@
        * Return Bit(s): 18
        *
        * The only smoothing method FreeType supports unless someone sets
+       * FT_LOAD_TARGET_MONO.
        */
       if ( ( args[0] & 2048 ) != 0 && exc->subpixel_hinting_lean )
         K |= 1 << 18;
@@ -7510,6 +7514,7 @@
        * Return Bit(s): 19
        *
        * Grayscale rendering is what FreeType does anyway unless someone
+       * sets FT_LOAD_TARGET_MONO or FT_LOAD_TARGET_LCD(_V)
        */
       if ( ( args[0] & 4096 ) != 0 && exc->grayscale_cleartype )
         K |= 1 << 19;
@@ -7537,6 +7542,7 @@
          * Selector Bit:  7
          * Return Bit(s): 14
          *
+         * Functionality still needs to be added
          */
         if ( ( args[0] & 128 ) != 0 && exc->compatible_widths )
           K |= 1 << 14;
@@ -7546,6 +7552,7 @@
          * Selector Bit:  8
          * Return Bit(s): 15
          *
+         * Functionality still needs to be added
          */
         if ( ( args[0] & 256 ) != 0 && exc->vertical_lcd )
           K |= 1 << 15;
@@ -7555,6 +7562,7 @@
          * Selector Bit:  9
          * Return Bit(s): 16
          *
+         * Functionality still needs to be added
          */
         if ( ( args[0] & 512 ) != 0 && exc->bgr )
           K |= 1 << 16;
@@ -7566,6 +7574,7 @@
            * Selector Bit:  10
            * Return Bit(s): 17
            *
+           * Functionality still needs to be added
            */
           if ( ( args[0] & 1024 ) != 0 && exc->subpixel_positioned )
             K |= 1 << 17;
@@ -7575,6 +7584,7 @@
            * Selector Bit:  11
            * Return Bit(s): 18
            *
+           * Functionality still needs to be added
            */
           if ( ( args[0] & 2048 ) != 0 && exc->symmetrical_smoothing )
             K |= 1 << 18;
@@ -7584,6 +7594,7 @@
            * Selector Bit:  12
            * Return Bit(s): 19
            *
+           * Functionality still needs to be added
            */
           if ( ( args[0] & 4096 ) != 0 && exc->gray_cleartype )
             K |= 1 << 19;

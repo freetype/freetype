@@ -32,7 +32,6 @@ FT_BEGIN_HEADER
    *
    * Uncomment the following line if you are using ftraster.c as a
    * standalone module, fully independent of FreeType.
-   *
    */
 /* #define STANDALONE_ */
 

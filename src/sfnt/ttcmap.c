@@ -2941,6 +2941,7 @@
    *                                this range
    *   GID            3     USHORT  and its GID
    *
+   * Ranges are sorted by `uniStart'.
    */
 
 #ifdef TT_CONFIG_CMAP_FORMAT_14

@@ -396,6 +396,7 @@
    *     The number of glyph subroutines.
    *
    * @Return:
+   *   The bias value.
    */
   static FT_Int
   cff_compute_bias( FT_Int   in_charstring_type,

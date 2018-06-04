@@ -118,7 +118,6 @@ FT_BEGIN_HEADER
    * When this macro is not defined, FreeType offers alternative LCD
    * rendering technology that produces excellent output without LCD
    * filtering.
-   *
    */
 /* #define FT_CONFIG_OPTION_SUBPIXEL_RENDERING */
 
@@ -212,7 +211,6 @@ FT_BEGIN_HEADER
    *
    *   Do not #undef this macro here since the build system might define
    *   it for certain configurations only.
-   *
    */
 /* #define FT_CONFIG_OPTION_SYSTEM_ZLIB */
 
@@ -240,7 +238,6 @@ FT_BEGIN_HEADER
    * systems that have multiple system libraries, some with or without
    * file stream support, in the cases where file stream support is not
    * necessary such as memory loading of font files.
-   *
    */
 /* #define FT_CONFIG_OPTION_DISABLE_STREAM_SUPPORT */
 
@@ -532,6 +529,7 @@ FT_BEGIN_HEADER
    * TrueType CMap support
    *
    *   Here you can fine-tune which TrueType CMap table format shall be
+   *   supported.
    */
 #define TT_CONFIG_CMAP_FORMAT_0
 #define TT_CONFIG_CMAP_FORMAT_2
@@ -612,7 +610,6 @@ FT_BEGIN_HEADER
    * defined.
    *
    * [1] https://www.microsoft.com/typography/cleartype/truetypecleartype.aspx
-   *
    */
 /* #define TT_CONFIG_OPTION_SUBPIXEL_HINTING  1     */
 /* #define TT_CONFIG_OPTION_SUBPIXEL_HINTING  2     */

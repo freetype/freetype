@@ -1653,6 +1653,7 @@
                      * known_othersubr_result_cnt
                      *
                      * for unhandled othersubrs the following pops adjust
+                     * the stack pointer as necessary
                      */
 
                     count = cf2_stack_count( opStack );

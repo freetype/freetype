@@ -774,6 +774,7 @@
          * known_othersubr_result_cnt
          *
          * for unhandled othersubrs the following pops adjust the
+         * stack pointer as necessary
          */
 
         if ( arg_cnt > top - decoder->stack )

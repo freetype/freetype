@@ -121,7 +121,6 @@ FT_BEGIN_HEADER
    * When this macro is not defined, FreeType offers alternative LCD
    * rendering technology that produces excellent output without LCD
    * filtering.
-   *
    */
 /* #define FT_CONFIG_OPTION_SUBPIXEL_RENDERING */
 
@@ -219,7 +218,6 @@ FT_BEGIN_HEADER
    *   If you use a build system like cmake or the `configure' script,
    *   options set by those programs have precendence, overwriting the
    *   value here with the configured one.
-   *
    */
 /* #define FT_CONFIG_OPTION_SYSTEM_ZLIB */
 
@@ -240,7 +238,6 @@ FT_BEGIN_HEADER
    *   If you use a build system like cmake or the `configure' script,
    *   options set by those programs have precendence, overwriting the
    *   value here with the configured one.
-   *
    */
 /* #define FT_CONFIG_OPTION_USE_BZIP2 */
 
@@ -252,7 +249,6 @@ FT_BEGIN_HEADER
    * systems that have multiple system libraries, some with or without
    * file stream support, in the cases where file stream support is not
    * necessary such as memory loading of font files.
-   *
    */
 /* #define FT_CONFIG_OPTION_DISABLE_STREAM_SUPPORT */
 
@@ -271,7 +267,6 @@ FT_BEGIN_HEADER
    *   If you use a build system like cmake or the `configure' script,
    *   options set by those programs have precendence, overwriting the
    *   value here with the configured one.
-   *
    */
 /* #define FT_CONFIG_OPTION_USE_PNG */
 
@@ -289,7 +284,6 @@ FT_BEGIN_HEADER
    *   If you use a build system like cmake or the `configure' script,
    *   options set by those programs have precendence, overwriting the
    *   value here with the configured one.
-   *
    */
 /* #define FT_CONFIG_OPTION_USE_HARFBUZZ */
 
@@ -418,7 +412,6 @@ FT_BEGIN_HEADER
    *
    *   Do not #undef these macros here since the build system might define
    *   them for certain configurations only.
-   *
    */
 /* #define FT_DEBUG_LEVEL_ERROR */
 /* #define FT_DEBUG_LEVEL_TRACE */
@@ -455,7 +448,6 @@ FT_BEGIN_HEADER
    *
    *   Do not #undef these macros here since the build system might define
    *   them for certain configurations only.
-   *
    */
 /* #define FT_DEBUG_AUTOFIT */
 
@@ -474,7 +466,6 @@ FT_BEGIN_HEADER
    *
    *   Do not #undef this macro here since the build system might define
    *   it for certain configurations only.
-   *
    */
 /* #define FT_DEBUG_MEMORY */
 
@@ -557,6 +548,7 @@ FT_BEGIN_HEADER
    * TrueType CMap support
    *
    *   Here you can fine-tune which TrueType CMap table format shall be
+   *   supported.
    */
 #define TT_CONFIG_CMAP_FORMAT_0
 #define TT_CONFIG_CMAP_FORMAT_2
@@ -646,7 +638,6 @@ FT_BEGIN_HEADER
    * defined.
    *
    * [1] https://www.microsoft.com/typography/cleartype/truetypecleartype.aspx
-   *
    */
 /* #define TT_CONFIG_OPTION_SUBPIXEL_HINTING  1         */
 #define TT_CONFIG_OPTION_SUBPIXEL_HINTING  2
@@ -769,7 +760,6 @@ FT_BEGIN_HEADER
    * engine gets compiled into FreeType.  If defined, it is possible to
    * switch between the two engines using the `hinting-engine' property of
    * the type1 driver module.
-   *
    */
 /* #define T1_CONFIG_OPTION_OLD_ENGINE */
 
@@ -813,7 +803,6 @@ FT_BEGIN_HEADER
    * engine gets compiled into FreeType.  If defined, it is possible to
    * switch between the two engines using the `hinting-engine' property of
    * the cff driver module.
-   *
    */
 /* #define CFF_CONFIG_OPTION_OLD_ENGINE */
 
@@ -841,7 +830,6 @@ FT_BEGIN_HEADER
    *
    * If this option is activated, it can be controlled with the
    * `no-long-family-names' property of the pcf driver module.
-   *
    */
 /* #define PCF_CONFIG_OPTION_LONG_FAMILY_NAMES */
 
@@ -902,7 +890,6 @@ FT_BEGIN_HEADER
    *     [truetype] Fix metrics on size request for scalable fonts.
    *
    * This problematic commit is now reverted (more or less).
-   *
    */
 /* #define AF_CONFIG_OPTION_TT_SIZE_METRICS */
 

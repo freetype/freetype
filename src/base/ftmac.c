@@ -1005,6 +1005,7 @@
    *   accepts an FSRef instead of a path.
    *
    * This function is deprecated because Carbon data types (FSRef)
+   * are not cross-platform, and thus not suitable for the FreeType API.
    */
   FT_EXPORT_DEF( FT_Error )
   FT_New_Face_From_FSRef( FT_Library    library,
@@ -1049,6 +1050,7 @@
    *   FT_New_Face_From_FSSpec is identical to FT_New_Face except it
    *   accepts an FSSpec instead of a path.
    *
+   * This function is deprecated because FSSpec is deprecated in Mac OS X
    */
   FT_EXPORT_DEF( FT_Error )
   FT_New_Face_From_FSSpec( FT_Library     library,
