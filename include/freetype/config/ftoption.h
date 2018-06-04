@@ -123,6 +123,7 @@ FT_BEGIN_HEADER
    * filtering.
    *
    */
+/* #define FT_CONFIG_OPTION_SUBPIXEL_RENDERING */
 
 
   /**************************************************************************
@@ -152,6 +153,7 @@ FT_BEGIN_HEADER
    * that to verify that the assembler function works properly, or to
    * execute benchmark tests of the various implementations.
    */
+/* #define FT_CONFIG_OPTION_NO_ASSEMBLER */
 
 
   /**************************************************************************
@@ -219,6 +221,7 @@ FT_BEGIN_HEADER
    *   value here with the configured one.
    *
    */
+/* #define FT_CONFIG_OPTION_SYSTEM_ZLIB */
 
 
   /**************************************************************************
@@ -239,6 +242,7 @@ FT_BEGIN_HEADER
    *   value here with the configured one.
    *
    */
+/* #define FT_CONFIG_OPTION_USE_BZIP2 */
 
 
   /**************************************************************************
@@ -250,6 +254,7 @@ FT_BEGIN_HEADER
    * necessary such as memory loading of font files.
    *
    */
+/* #define FT_CONFIG_OPTION_DISABLE_STREAM_SUPPORT */
 
 
   /**************************************************************************
@@ -268,6 +273,7 @@ FT_BEGIN_HEADER
    *   value here with the configured one.
    *
    */
+/* #define FT_CONFIG_OPTION_USE_PNG */
 
 
   /**************************************************************************
@@ -285,6 +291,7 @@ FT_BEGIN_HEADER
    *   value here with the configured one.
    *
    */
+/* #define FT_CONFIG_OPTION_USE_HARFBUZZ */
 
 
   /**************************************************************************
@@ -412,8 +419,9 @@ FT_BEGIN_HEADER
    *   Do not #undef these macros here since the build system might define
    *   them for certain configurations only.
    *
- * #define FT_DEBUG_LEVEL_ERROR
    */
+/* #define FT_DEBUG_LEVEL_ERROR */
+/* #define FT_DEBUG_LEVEL_TRACE */
 
 
   /**************************************************************************
@@ -449,6 +457,7 @@ FT_BEGIN_HEADER
    *   them for certain configurations only.
    *
    */
+/* #define FT_DEBUG_AUTOFIT */
 
 
   /**************************************************************************
@@ -467,6 +476,7 @@ FT_BEGIN_HEADER
    *   it for certain configurations only.
    *
    */
+/* #define FT_DEBUG_MEMORY */
 
 
   /**************************************************************************
@@ -638,6 +648,7 @@ FT_BEGIN_HEADER
    * [1] https://www.microsoft.com/typography/cleartype/truetypecleartype.aspx
    *
    */
+/* #define TT_CONFIG_OPTION_SUBPIXEL_HINTING  1         */
 #define TT_CONFIG_OPTION_SUBPIXEL_HINTING  2
 /* #define TT_CONFIG_OPTION_SUBPIXEL_HINTING  ( 1 | 2 ) */
 
@@ -760,6 +771,7 @@ FT_BEGIN_HEADER
    * the type1 driver module.
    *
    */
+/* #define T1_CONFIG_OPTION_OLD_ENGINE */
 
 
   /*************************************************************************/
@@ -803,6 +815,7 @@ FT_BEGIN_HEADER
    * the cff driver module.
    *
    */
+/* #define CFF_CONFIG_OPTION_OLD_ENGINE */
 
 
   /*************************************************************************/
@@ -830,6 +843,7 @@ FT_BEGIN_HEADER
    * `no-long-family-names' property of the pcf driver module.
    *
    */
+/* #define PCF_CONFIG_OPTION_LONG_FAMILY_NAMES */
 
 
   /*************************************************************************/
@@ -890,6 +904,7 @@ FT_BEGIN_HEADER
    * This problematic commit is now reverted (more or less).
    *
    */
+/* #define AF_CONFIG_OPTION_TT_SIZE_METRICS */
 
   /* */
 

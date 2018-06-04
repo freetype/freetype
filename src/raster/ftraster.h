@@ -34,6 +34,7 @@ FT_BEGIN_HEADER
    * standalone module, fully independent of FreeType.
    *
    */
+/* #define STANDALONE_ */
 
   FT_EXPORT_VAR( const FT_Raster_Funcs )  ft_standard_raster;
 

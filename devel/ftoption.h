@@ -120,6 +120,7 @@ FT_BEGIN_HEADER
    * filtering.
    *
    */
+/* #define FT_CONFIG_OPTION_SUBPIXEL_RENDERING */
 
 
   /**************************************************************************
@@ -149,6 +150,7 @@ FT_BEGIN_HEADER
    * that to verify that the assembler function works properly, or to
    * execute benchmark tests of the various implementations.
    */
+/* #define FT_CONFIG_OPTION_NO_ASSEMBLER */
 
 
   /**************************************************************************
@@ -212,6 +214,7 @@ FT_BEGIN_HEADER
    *   it for certain configurations only.
    *
    */
+/* #define FT_CONFIG_OPTION_SYSTEM_ZLIB */
 
 
   /**************************************************************************
@@ -239,6 +242,7 @@ FT_BEGIN_HEADER
    * necessary such as memory loading of font files.
    *
    */
+/* #define FT_CONFIG_OPTION_DISABLE_STREAM_SUPPORT */
 
 
   /**************************************************************************
@@ -609,8 +613,9 @@ FT_BEGIN_HEADER
    *
    * [1] https://www.microsoft.com/typography/cleartype/truetypecleartype.aspx
    *
- * #define TT_CONFIG_OPTION_SUBPIXEL_HINTING  1
    */
+/* #define TT_CONFIG_OPTION_SUBPIXEL_HINTING  1     */
+/* #define TT_CONFIG_OPTION_SUBPIXEL_HINTING  2     */
 #define TT_CONFIG_OPTION_SUBPIXEL_HINTING     ( 1 | 2 )
 
 
