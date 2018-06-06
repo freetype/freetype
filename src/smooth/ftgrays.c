@@ -1899,6 +1899,11 @@ typedef ptrdiff_t  FT_PtrDist;
     cbox.xMax = ( cbox.xMax + 63 ) >> 6;
     cbox.yMax = ( cbox.yMax + 63 ) >> 6;
 
+    /* reject too large glyphs */
+    if ( cbox.xMax - cbox.xMin > 0xFFFF ||
+         cbox.yMax - cbox.yMin > 0xFFFF )
+      return FT_THROW( Invalid_Outline );
+
     /* compute clipping box */
     if ( !( params->flags & FT_RASTER_FLAG_DIRECT ) )
     {

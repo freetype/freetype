@@ -65,6 +65,7 @@
 #include <ft2build.h>
 #include "ftraster.h"
 #include FT_INTERNAL_CALC_H   /* for FT_MulDiv and FT_MulDiv_No_Round */
+#include FT_OUTLINE_H         /* for FT_Outline_Get_CBox              */
 
 #endif /* !STANDALONE_ */
 
@@ -2925,6 +2926,94 @@
   }
 
 
+#ifdef STANDALONE_
+
+  /**************************************************************************
+   *
+   * The following functions should only compile in stand-alone mode,
+   * i.e., when building this component without the rest of FreeType.
+   *
+   */
+
+  /**************************************************************************
+   *
+   * @Function:
+   *   FT_Outline_Get_CBox
+   *
+   * @Description:
+   *   Return an outline's `control box'.  The control box encloses all
+   *   the outline's points, including Bézier control points.  Though it
+   *   coincides with the exact bounding box for most glyphs, it can be
+   *   slightly larger in some situations (like when rotating an outline
+   *   that contains Bézier outside arcs).
+   *
+   *   Computing the control box is very fast, while getting the bounding
+   *   box can take much more time as it needs to walk over all segments
+   *   and arcs in the outline.  To get the latter, you can use the
+   *   `ftbbox' component, which is dedicated to this single task.
+   *
+   * @Input:
+   *   outline ::
+   *     A pointer to the source outline descriptor.
+   *
+   * @Output:
+   *   acbox ::
+   *     The outline's control box.
+   *
+   * @Note:
+   *   See @FT_Glyph_Get_CBox for a discussion of tricky fonts.
+   */
+
+  static void
+  FT_Outline_Get_CBox( const FT_Outline*  outline,
+                       FT_BBox           *acbox )
+  {
+    Long  xMin, yMin, xMax, yMax;
+
+
+    if ( outline && acbox )
+    {
+      if ( outline->n_points == 0 )
+      {
+        xMin = 0;
+        yMin = 0;
+        xMax = 0;
+        yMax = 0;
+      }
+      else
+      {
+        FT_Vector*  vec   = outline->points;
+        FT_Vector*  limit = vec + outline->n_points;
+
+
+        xMin = xMax = vec->x;
+        yMin = yMax = vec->y;
+        vec++;
+
+        for ( ; vec < limit; vec++ )
+        {
+          Long  x, y;
+
+
+          x = vec->x;
+          if ( x < xMin ) xMin = x;
+          if ( x > xMax ) xMax = x;
+
+          y = vec->y;
+          if ( y < yMin ) yMin = y;
+          if ( y > yMax ) yMax = y;
+        }
+      }
+      acbox->xMin = xMin;
+      acbox->xMax = xMax;
+      acbox->yMin = yMin;
+      acbox->yMax = yMax;
+    }
+  }
+
+#endif /* STANDALONE_ */
+
+
   /**************************************************************************
    *
    * @Function:
@@ -3183,6 +3272,7 @@
   {
     const FT_Outline*  outline    = (const FT_Outline*)params->source;
     const FT_Bitmap*   target_map = params->target;
+    FT_BBox            cbox;
 
     black_TWorker  worker[1];
 
@@ -3223,19 +3313,23 @@
     if ( !target_map->buffer )
       return FT_THROW( Invalid );
 
+    FT_Outline_Get_CBox( outline, &cbox );
+
     /* reject too large outline coordinates */
-    {
-      FT_Vector*  vec   = outline->points;
-      FT_Vector*  limit = vec + outline->n_points;
+    if ( cbox.xMin < -0x1000000L || cbox.xMax > 0x1000000L ||
+         cbox.yMin < -0x1000000L || cbox.yMax > 0x1000000L )
+      return FT_THROW( Invalid );
 
+    /* truncate the bounding box to integer pixels */
+    cbox.xMin = cbox.xMin >> 6;
+    cbox.yMin = cbox.yMin >> 6;
+    cbox.xMax = ( cbox.xMax + 63 ) >> 6;
+    cbox.yMax = ( cbox.yMax + 63 ) >> 6;
 
-      for ( ; vec < limit; vec++ )
-      {
-        if ( vec->x < -0x1000000L || vec->x > 0x1000000L ||
-             vec->y < -0x1000000L || vec->y > 0x1000000L )
-         return FT_THROW( Invalid );
-      }
-    }
+    /* reject too large glyphs */
+    if ( cbox.xMax - cbox.xMin > 0xFFFF ||
+         cbox.yMax - cbox.yMin > 0xFFFF )
+      return FT_THROW( Invalid );
 
     ras.outline = *outline;
     ras.target  = *target_map;

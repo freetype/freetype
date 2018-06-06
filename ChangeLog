@@ -1,3 +1,16 @@
+2018-06-06  Werner Lemberg  <wl@gnu.org>
+
+	[smooth, raster] Limit bitmap size (#54019).
+
+	* src/raster/ftraster.c [STANDALONE] (FT_Outline_Get_CBox): Add
+	function.
+	[!STANDALONE]: Include FT_OUTLINE_H.
+	(ft_black_render): Compute CBox and reject glyphs larger than
+	0xFFFF x 0xFFFF.
+
+	* src/smooth/ftgrays.c (gray_raster_render): Reject glyphs larger
+	than 0xFFFF x 0xFFFF.
+
 2018-06-03  Armin Hasitzka  <prince.cherusker@gmail.com>
 
 	* src/smooth/ftgrays.c (gray_convert_glyph): Remove unused variables.
