@@ -167,7 +167,7 @@ FT_BEGIN_HEADER
    * @since:
    *   2.10
    */
-  typedef FT_Palette_ {
+  typedef struct  FT_Palette_ {
     FT_UShort         num_palettes;
     const FT_UShort*  palette_name_ids;
     const FT_UShort*  palette_types;
@@ -176,6 +176,39 @@ FT_BEGIN_HEADER
     const FT_UShort*  palette_entry_name_ids;
 
   } FT_Palette;
+
+
+  /**************************************************************************
+   *
+   * @func:
+   *   FT_Palette_Get
+   *
+   * @description:
+   *   Retrieve the face's color palette data.
+   *
+   * @input:
+   *   face ::
+   *     The source face handle.
+   *
+   * @output:
+   *   apalette ::
+   *     A pointer to an @FT_Palette structure.
+   *
+   * @return:
+   *   FreeType error code.  0~means success.
+   *
+   * @note:
+   *   All arrays in the returned @FT_Palette structure are read-only.
+   *
+   *   This function always returns an error if the config macro
+   *   `TT_CONFIG_OPTION_COLOR_LAYERS' is not defined in `ftoption.h'.
+   *
+   * @since:
+   *   2.10
+   */
+  FT_EXPORT( FT_Error )
+  FT_Palette_Get( FT_Face      face,
+                  FT_Palette  *apalette );
 
 
   /**************************************************************************

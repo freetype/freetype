@@ -1,3 +1,12 @@
+2018-06-06  Werner Lemberg  <wl@gnu.org>
+
+	ftcolor.h: Redesign API.
+
+	While going to implement it I noticed that I need access to most of
+	the `CPAL' elements; I thus plan to add a `cpal' field to
+	`TT_FaceRec', which makes most of the previously suggested API
+	functions obsolete because the fields will be directly accessable.
+
 2018-06-06  Parth Wazurkar  <parthwazurkar@gmail.com>
 
 	[bdf, pcf] Remove deprecated FT_FACE_FLAG_FAST_GLYPHS flag.
