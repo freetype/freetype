@@ -1,10 +1,12 @@
 2018-06-06  Parth Wazurkar  <parthwazurkar@gmail.com>
 
-	[bdf, pcf] Removed deprecated FT_FACE_FLAG_FAST_GLYPHS flag.
+	[bdf, pcf] Remove deprecated FT_FACE_FLAG_FAST_GLYPHS flag.
 
-	* src/bdf/bdfdrivr.c (BDF_Face_Init): Removed deprecated FT_FACE_FLAG_FAST_GLYPHS flag.
+	* src/bdf/bdfdrivr.c (BDF_Face_Init): Remove deprecated
+	FT_FACE_FLAG_FAST_GLYPHS flag.
 
-  * src/pcf/pcfread.c  (pcf_load_font): Removed deprecated FT_FACE_FLAG_FAST_GLYPHS flag.
+	* src/pcf/pcfread.c (pcf_load_font): Remove deprecated
+	FT_FACE_FLAG_FAST_GLYPHS flag.
 
 2018-06-06  Werner Lemberg  <wl@gnu.org>
 
