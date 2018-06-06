@@ -1397,8 +1397,7 @@ THE SOFTWARE.
 
 
       root->face_flags |= FT_FACE_FLAG_FIXED_SIZES |
-                          FT_FACE_FLAG_HORIZONTAL  |
-                          FT_FACE_FLAG_FAST_GLYPHS;
+                          FT_FACE_FLAG_HORIZONTAL;
 
       if ( face->accel.constantWidth )
         root->face_flags |= FT_FACE_FLAG_FIXED_WIDTH;

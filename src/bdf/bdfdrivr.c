@@ -401,8 +401,7 @@ THE SOFTWARE.
       bdfface->face_index = 0;
 
       bdfface->face_flags |= FT_FACE_FLAG_FIXED_SIZES |
-                             FT_FACE_FLAG_HORIZONTAL  |
-                             FT_FACE_FLAG_FAST_GLYPHS;
+                             FT_FACE_FLAG_HORIZONTAL;
 
       prop = bdf_get_font_property( font, "SPACING" );
       if ( prop && prop->format == BDF_ATOM                             &&
