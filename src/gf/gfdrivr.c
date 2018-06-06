@@ -152,7 +152,7 @@
                  FT_Int         num_params,
                  FT_Parameter*  params )
   {
-    GF_Face   face   = (GF_Face)gfface;
+    GF_Face    face   = (GF_Face)gfface;
     FT_Error   error;
     FT_Memory  memory = FT_FACE_MEMORY( face );
 
@@ -166,49 +166,53 @@
     if ( !error )
       goto Exit;
 
-    if ( FT_ERR_EQ( error, Unknown_File_Format ) )
-    {
+    if ( FT_ERR_EQ( error, Unknown_File_Format )
       goto Exit
+
+    /* we have a gf font: let's construct the face object */
+
+    /* GF cannot have multiple faces in a single font file.
+     * XXX: non-zero face_index is already invalid argument, but
+     *      Type1, Type42 driver has a convention to return
+     *      an invalid argument error when the font could be
+     *      opened by the specified driver.
+     */
+    if ( face_index > 0 && ( face_index & 0xFFFF ) > 0 )
+    {
+      FT_ERROR(( "GF_Face_Init: invalid face index\n" ));
+      BDF_Face_Done( gfface );
+      return FT_THROW( Invalid_Argument );
     }
 
-    /* sanity check */
-    if ( !face-> /*  */ )
-    {
-      FT_TRACE2(( "/*  */" ));
-      error = FT_THROW( Invalid_File_Format );
-      goto Fail;
-    }
+    gfface->num_faces  = 1;
+    gfface->face_index = 0;
+    gfface->face_flags |= FT_FACE_FLAG_FIXED_SIZES |
+                             FT_FACE_FLAG_HORIZONTAL ;
+    /*
+     * XXX: TO-DO: gfface->face_flags |= FT_FACE_FLAG_FIXED_WIDTH;
+     * XXX: I have to check for this.
+     */
 
-    /* we now need to fill the root FT_Face fields */
-    /* with relevant information                   */
-    {
-      FT_Face   root = FT_FACE( face );
-      GF_Face   font = face->font;
-
-
-      root->face_index  = /*  */  ;
-
-      root->face_flags |= /*  */ ;
-
-      /* set up the `fixed_sizes' array */
-      if ( FT_NEW_ARRAY( root->available_sizes, 1 ) )
-        goto Fail;
-
-      root->num_fixed_sizes = 1;
+    gfface->family_name = NULL;
+    gfface->num_glyphs = (FT_Long)( sizeof(face->gf_glyph->bm_table) );
+    gfface->num_fixed_sizes = 1;
+    if ( FT_NEW_ARRAY( gfface->available_sizes, 1 ) )
+      goto Exit;
 
       {
-        FT_Bitmap_Size*  bsize = root->available_sizes;
+        FT_Bitmap_Size*  bsize = gfface->available_sizes;
         FT_UShort        x_res, y_res;
 
-        bsize->width  = (FT_Short) /*  */ ;
-        bsize->height = (FT_Short) /*  */ ;
-        bsize->size   =            /*  */ ;
+        FT_ZERO( bsize );
+        bsize->width  = (FT_Short) face->gf_glyph->font_bbx_w    ;
+        bsize->height = (FT_Short) face->gf_glyph->font_bbx_h    ;
+        bsize->size   =            face->gf_glyph->font_bbx_xoff ;
 
-        x_res = /*  */ ;
-        y_res = /*  */ ;
+        x_res =  ;
+        y_res =  ;
 
-        bsize->y_ppem = /*  */ ;
-        bsize->x_ppem = /*  */ ;
+        bsize->y_ppem = face->gf_glyph->font_bbx_yoff ;
+        bsize->x_ppem = face->gf_glyph->font_bbx_xoff ;
       }
 
       /* Charmaps */
@@ -228,25 +232,6 @@
         if ( error )
           goto Fail;
       }
-
-
-      /* reserve one slot for the .notdef glyph at index 0 */
-      root->num_glyphs = /*  */ ;
-
-      root->family_name = /*  */;
-      root->style_name  = /*  */;
-
-      if ( root->style_flags & FT_STYLE_FLAG_BOLD )
-      {
-        if ( root->style_flags & FT_STYLE_FLAG_ITALIC )
-          root->style_name = (char *)"Bold Italic";
-        else
-          root->style_name = (char *)"Bold";
-      }
-      else if ( root->style_flags & FT_STYLE_FLAG_ITALIC )
-        root->style_name = (char *)"Italic";
-    }
-    goto Exit;
 
   Fail:
     GF_Face_Done( gfface );
@@ -358,8 +343,8 @@
     ft_glyphslot_set_bitmap( slot, glyph.bitmap );
 
     slot->format      = FT_GLYPH_FORMAT_BITMAP;
-    slot->bitmap_left = glyph.bbx.x_offset;
-    slot->bitmap_top  = glyph.bbx.ascent;
+    slot->bitmap_left = /*  */ ;
+    slot->bitmap_top  = /*  */ ;
 
     slot->metrics.horiAdvance  = (FT_Pos) /*  */ ;
     slot->metrics.horiBearingX = (FT_Pos) /*  */ ;

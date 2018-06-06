@@ -322,6 +322,7 @@
     FT_Error        error  = FT_Err_Ok;
 
     FT_FILE *fp = stream->descriptor.pointer
+    go          = face->gf_glyph;
 
     go = NULL;
     nchars = -1;
@@ -495,7 +496,7 @@
 
 
   FT_LOCAL_DEF( void )
-  gf_free_font( GF_Glyph  gf_glyph )
+  gf_free_font( GF_Glyph  go )
   {
     if (go != NULL)
     {
