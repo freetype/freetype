@@ -36,28 +36,29 @@ FT_BEGIN_HEADER
   /***************************************************************************
    *
    * @section:
-   *   lcd_filtering
+   *   lcd_rendering
    *
    * @title:
-   *   LCD Filtering
+   *   Subpixel Rendering
    *
    * @abstract:
-   *   Remove color fringes of subpixel-rendered bitmaps.
+   *   API to control subpixel rendering.
    *
    * @description:
+   *   FreeType provides two alternative subpixel rendering technologies.
    *   Should you #define FT_CONFIG_OPTION_SUBPIXEL_RENDERING in your
-   *   `ftoption.h', which enables patented ClearType-style rendering,
-   *   the LCD-optimized glyph bitmaps should be filtered to reduce color
-   *   fringes inherent to this technology.  The default FreeType LCD
-   *   rendering uses different technology, and API described below,
-   *   although available, does nothing.
+   *   `ftoption.h', this enables patented ClearType-style rendering.
+   *   Otherwise, Harmony LCD rendering is enabled.  These technologies are
+   *   controlled differently and API described below, although always
+   *   available, performs its function when appropriate method is enabled
+   *   and does nothing otherwise.
    *
    *   ClearType-style LCD rendering exploits the color-striped structure of
    *   LCD pixels, increasing the available resolution in the direction of
    *   the stripe (usually horizontal RGB) by a factor of~3.  Using the
    *   subpixels coverages unfiltered can create severe color fringes
    *   especially when rendering thin features.  Indeed, to produce
-   *   black-on-white text, the color components must be dimmed equally.
+   *   black-on-white text, the nearby color subpixels must be dimmed equally.
    *
    *   A good 5-tap FIR filter should be applied to subpixel coverages
    *   regardless of pixel boundaries and should have these properties:
@@ -72,31 +73,54 @@ FT_BEGIN_HEADER
    *   3) It should be normalized, meaning 2a~+ 2b~+ c~=~1.0 to maintain
    *      overall brightness.
    *
-   *   Use the @FT_Library_SetLcdFilter API to specify a low-pass filter,
-   *   which is then applied to subpixel-rendered bitmaps generated through
-   *   @FT_Render_Glyph.  The filter affects glyph bitmaps rendered through
-   *   @FT_Render_Glyph, @FT_Load_Glyph, and @FT_Load_Char.  It does _not_
-   *   affect the output of @FT_Outline_Render and @FT_Outline_Get_Bitmap.
+   *   The distribution of density values by the color-balanced filter assumes
+   *   alpha blending is done in linear space; only then color artifacts
+   *   cancel out. Boxy 3-tap filter {0, 1/3, 1/3, 1/3, 0} is sharper but is
+   *   less forgiving of non-ideal gamma curves of a screen (viewing angles!),
+   *   beveled filters are fuzzier but more tolerant.
    *
-   *   If this feature is activated, the dimensions of LCD glyph bitmaps are
-   *   either wider or taller than the dimensions of the corresponding
-   *   outline with regard to the pixel grid.  For example, for
-   *   @FT_RENDER_MODE_LCD, the filter adds 2~subpixels to the left, and
+   *   Use the @FT_Library_SetLcdFilter or @FT_Library_SetLcdFilterWeights
+   *   API to specify a low-pass filter, which is then applied to
+   *   subpixel-rendered bitmaps generated through @FT_Render_Glyph.
+   *
+   *   Harmony LCD rendering is suitable to panels with any regular subpixel
+   *   structure, not just monitors with 3 color striped subpixels, as long as
+   *   the color subpixels have fixed positions relative to the pixel center.
+   *   In this case, each color channel is then rendered separately after
+   *   shifting the outline opposite to the subpixel shift so that the
+   *   coverage maps are aligned.  This method is immune to color fringes
+   *   because the shifts do not change integral coverage.
+   *
+   *   The subpixel geometry must be specified by xy-coordinates for each
+   *   subpixel. By convention they may come in the RGB order:
+   *
+   *   {{-1/3, 0}, {0, 0}, {1/3, 0}} for hRGB striped panel (default),
+   *   {{1/3, 0}, {0, 0}, {-1/3, 0}} for hBGR striped panel,
+   *   {{0, 1/3}, {0, 0}, {0, -1/3}} for vRGB striped panel,
+   *   {{-1/6, 1/4}, {-1/6, -1/4}, {1/3, 0}} for a certain PenTile panel.
+   *
+   *   Use the @FT_Library_SetLcdGeometry API to specify subpixel positions.
+   *   If one follows the RGB order convention, the same order applies
+   *   to the resulting @FT_PIXEL_MODE_LCD and @FT_PIXEL_MODE_LCD_V bitmaps.
+   *   Note, however, that the coordinate frame for the latter must be rotated
+   *   clockwise.  Harmony with default LCD geometry is equivalent to
+   *   ClearType with light filter.
+   *
+   *   As a result of ClearType filtering or Harmony rendering, the dimensions
+   *   of LCD bitmaps can be either wider or taller than the dimensions of
+   *   the corresponding outline with regard to the pixel grid.  For example,
+   *   for @FT_RENDER_MODE_LCD, the filter adds 2~subpixels to the left, and
    *   2~subpixels to the right.  The bitmap offset values are adjusted
    *   accordingly, so clients shouldn't need to modify their layout and
    *   glyph positioning code when enabling the filter.
    *
-   *   Only filtering along with gamma-corrected alpha blending can completely
-   *   remove color fringes.  Boxy 3-tap filter {0, 1/3, 1/3, 1/3, 0} is
-   *   sharper but is less forgiving of non-ideal gamma curves of a screen
-   *   (viewing angles!), beveled filters are fuzzier but more tolerant.
-   *
-   *   Each of the 3~alpha values (subpixels) is independently used to blend
-   *   one color channel.  That is, red alpha blends the red channel of the
-   *   text color with the red channel of the background pixel.  The
-   *   distribution of density values by the color-balanced filter assumes
-   *   alpha blending is done in linear space; only then color artifacts
-   *   cancel out.
+   *   The ClearType and Harmony rendering is applicable to glyph bitmaps
+   *   rendered through @FT_Render_Glyph, @FT_Load_Glyph, and @FT_Load_Char.
+   *   @FT_RENDER_MODE_LCD or @FT_RENDER_MODE_LCD_V and these technologies do
+   *   not apply to @FT_Outline_Render and @FT_Outline_Get_Bitmap directly.
+   *   Each of the 3~alpha values (subpixels) must by independently used to
+   *   blend one color channel.  That is, red alpha blends the red channel of
+   *   the text color with the red channel of the background pixel.
    */
 
 
@@ -246,6 +270,53 @@ FT_BEGIN_HEADER
 
   typedef FT_Byte  FT_LcdFiveTapFilter[FT_LCD_FILTER_FIVE_TAPS];
 
+
+  /**************************************************************************
+   *
+   * @func:
+   *   FT_Library_SetLcdGeometry
+   *
+   * @description:
+   *   This function can be used to modify default positions of color
+   *   subpixels, which controls Harmony LCD rendering.
+   *
+   * @input:
+   *   library ::
+   *     A handle to the target library instance.
+   *
+   *   sub ::
+   *     A pointer to an array of 3 vectors in 26.6 fractional pixel format;
+   *     the function modifies the default values, see the note below.
+   *
+   * @return:
+   *   FreeType error code.  0~means success.
+   *
+   * @note:
+   *   Subpixel geometry examples:
+   *
+   *   - {{-21, 0}, {0, 0}, {21, 0}} is the default, corresponding 3 color
+   *   stripes shifted by a third of a pixel. This could be an RGB panel.
+   *
+   *   - {{21, 0}, {0, 0}, {-21, 0}} looks the same as the default but
+   *   can specify a BGR panel instead, while keeping the bitmap in the same
+   *   RGB888 format.
+   *
+   *   - {{0, 21}, {0, 0}, {0, -21}} is the vertical RGB, but the bitmap
+   *   stays RGB888 as a result.
+   *
+   *   - {{-11, 16}, {-11, -16}, {22, 0}} is a certain PenTile arrangement.
+   *
+   *   This function does nothing and returns `FT_Err_Unimplemented_Feature'
+   *   in the context of ClearType-style subpixel rendering when
+   *   FT_CONFIG_OPTION_SUBPIXEL_RENDERING is defined in your build of the
+   *   library.
+   *
+   * @since:
+   *   2.10.0
+   */
+  FT_EXPORT( FT_Error )
+  FT_Library_SetLcdGeometry( FT_Library  library,
+                             FT_Vector   sub[3] );
 
   /* */
 

@@ -1,3 +1,15 @@
+2018-06-07  Alexei Podtelezhnikov  <apodtele@gmail.com>
+
+	[base] API for Harmony LCD rendering.
+
+	This introduces `FT_Library_SetLcdGeometry' for setting up arbitrary
+	LCD subpixel geometry including non-striped patterns.
+
+	* src/base/ftlcdfil.c (FT_Library_SetLcdGeometry): New function.
+	* include/freetype/ftlcdfil.h: Document it.
+	* include/freetype/freetype.h: Minor.
+	* include/freetype/ftchapters.h: Minor.
+
 2018-06-06  Werner Lemberg  <wl@gnu.org>
 
 	ftcolor.h: Redesign API.
@@ -5,7 +17,7 @@
 	While going to implement it I noticed that I need access to most of
 	the `CPAL' elements; I thus plan to add a `cpal' field to
 	`TT_FaceRec', which makes most of the previously suggested API
-	functions obsolete because the fields will be directly accessable.
+	functions obsolete because the fields will be directly accessible.
 
 2018-06-06  Parth Wazurkar  <parthwazurkar@gmail.com>
 
@@ -657,7 +669,7 @@
 
 	The CPack definitions have been cleaned up, the `make dist' has been
 	removed. Source packages generated with CPack don't contain Autotools
-	files and aren't used by the maintainters anyway.
+	files and aren't used by the maintainers anyway.
 
 	On Windows, src/base/ftver.rc is compiled to decorate the library with
 	version and copyright information.
@@ -1872,7 +1884,7 @@
 
 	  https://bugs.chromium.org/p/oss-fuzz/issues/detail?id=3514.
 
-	* src/raster/ftrend1.c (ft_raster1_render): Exlicitly signed height.
+	* src/raster/ftrend1.c (ft_raster1_render): Explicitly signed height.
 	* src/smooth/ftsmooth.c (ft_smooth_render_generic): Ditto.
 	* src/base/ftobjs.c (ft_glyphslot_preset_bitmap): Explicitly unsigned
 	subtraction.

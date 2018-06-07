@@ -285,6 +285,8 @@
 #endif /* USE_LEGACY */
 
 
+  /* documentation in ftlcdfil.h */
+
   FT_EXPORT_DEF( FT_Error )
   FT_Library_SetLcdFilterWeights( FT_Library      library,
                                   unsigned char  *weights )
@@ -301,6 +303,8 @@
     return FT_Err_Ok;
   }
 
+
+  /* documentation in ftlcdfil.h */
 
   FT_EXPORT_DEF( FT_Error )
   FT_Library_SetLcdFilter( FT_Library    library,
@@ -351,6 +355,17 @@
     return FT_Err_Ok;
   }
 
+
+  FT_EXPORT_DEF( FT_Error )
+  FT_Library_SetLcdGeometry( FT_Library  library,
+                             FT_Vector*  sub )
+  {
+    FT_UNUSED( library );
+    FT_UNUSED( sub );
+
+    return FT_THROW( Unimplemented_Feature );
+  }
+
 #else /* !FT_CONFIG_OPTION_SUBPIXEL_RENDERING */
 
   /* add padding to accommodate outline shifts */
@@ -395,6 +410,24 @@
   {
     FT_UNUSED( library );
     FT_UNUSED( filter );
+
+    return FT_THROW( Unimplemented_Feature );
+  }
+
+
+  /* documentation in ftlcdfil.h */
+
+  FT_EXPORT_DEF( FT_Error )
+  FT_Library_SetLcdGeometry( FT_Library  library,
+                             FT_Vector   sub[3] )
+  {
+    if ( !library )
+      return FT_THROW( Invalid_Library_Handle );
+
+    if ( !sub )
+      return FT_THROW( Invalid_Argument );
+
+    ft_memcpy( library->lcd_geometry, sub, 3 * sizeof( FT_Vector ) );
 
     return FT_THROW( Unimplemented_Feature );
   }

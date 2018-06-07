@@ -3500,7 +3500,7 @@ FT_BEGIN_HEADER
    *   with subpixel-rendered glyphs to prevent color-fringing!  A
    *   subpixel-rendered glyph must first be filtered with a filter that
    *   gives equal weight to the three color primaries and does not
-   *   exceed a sum of 0x100, see section @lcd_filtering.  Then the
+   *   exceed a sum of 0x100, see section @lcd_rendering.  Then the
    *   only difference to gray linear blending is that subpixel-rendered
    *   linear blending is done 3~times per pixel: red foreground subpixel
    *   to red background subpixel and so on for green and blue.

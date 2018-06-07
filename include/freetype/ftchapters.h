@@ -120,7 +120,7 @@
  *   gzip
  *   lzw
  *   bzip2
- *   lcd_filtering
+ *   lcd_rendering
  *
  */
 
