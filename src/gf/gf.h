@@ -1,19 +1,19 @@
-/***************************************************************************/
-/*                                                                         */
-/*  gf.h                                                                   */
-/*                                                                         */
-/*    FreeType font driver for TeX's GF FONT files                         */
-/*                                                                         */
-/*  Copyright 1996-2018 by                                                 */
-/*  David Turner, Robert Wilhelm, and Werner Lemberg.                      */
-/*                                                                         */
-/*  This file is part of the FreeType project, and may only be used,       */
-/*  modified, and distributed under the terms of the FreeType project      */
-/*  license, LICENSE.TXT.  By continuing to use, modify, or distribute     */
-/*  this file you indicate that you have read the license and              */
-/*  understand and accept it fully.                                        */
-/*                                                                         */
-/***************************************************************************/
+/****************************************************************************
+ *
+ * gf.h
+ *
+ *   FreeType font driver for TeX's GF FONT files
+ *
+ * Copyright 1996-2018 by
+ * David Turner, Robert Wilhelm, and Werner Lemberg.
+ *
+ * This file is part of the FreeType project, and may only be used,
+ * modified, and distributed under the terms of the FreeType project
+ * license, LICENSE.TXT.  By continuing to use, modify, or distribute
+ * this file you indicate that you have read the license and
+ * understand and accept it fully.
+ *
+ */
 
 
 #ifndef GF_H_
@@ -50,7 +50,7 @@ FT_BEGIN_HEADER
 #define  GF_SKIP2         72
 #define  GF_SKIP3         73
 #define  GF_NEW_ROW_0     74
-#define  GF_NEW_ROW_164  238 
+#define  GF_NEW_ROW_164  238
 #define  GF_XXX1         239
 #define  GF_XXX2         240
 #define  GF_XXX3         241

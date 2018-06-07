@@ -1,19 +1,19 @@
-/***************************************************************************/
-/*                                                                         */
-/*  gfdrivr.h                                                              */
-/*                                                                         */
-/*    FreeType font driver for TeX's GF FONT files                         */
-/*                                                                         */
-/*  Copyright 1996-2018 by                                                 */
-/*  David Turner, Robert Wilhelm, and Werner Lemberg.                      */
-/*                                                                         */
-/*  This file is part of the FreeType project, and may only be used,       */
-/*  modified, and distributed under the terms of the FreeType project      */
-/*  license, LICENSE.TXT.  By continuing to use, modify, or distribute     */
-/*  this file you indicate that you have read the license and              */
-/*  understand and accept it fully.                                        */
-/*                                                                         */
-/***************************************************************************/
+/****************************************************************************
+ *
+ * gfdrivr.h
+ *
+ *   FreeType font driver for TeX's GF FONT files
+ *
+ * Copyright 1996-2018 by
+ * David Turner, Robert Wilhelm, and Werner Lemberg.
+ *
+ * This file is part of the FreeType project, and may only be used,
+ * modified, and distributed under the terms of the FreeType project
+ * license, LICENSE.TXT.  By continuing to use, modify, or distribute
+ * this file you indicate that you have read the license and
+ * understand and accept it fully.
+ *
+ */
 
 #include <ft2build.h>
 
@@ -27,21 +27,21 @@
 #include "gferror.h"
 
 
-  /*************************************************************************/
-  /*                                                                       */
-  /* The macro FT_COMPONENT is used in trace mode.  It is an implicit      */
-  /* parameter of the FT_TRACE() and FT_ERROR() macros, used to print/log  */
-  /* messages during execution.                                            */
-  /*                                                                       */
+  /**************************************************************************
+   *
+   * The macro FT_COMPONENT is used in trace mode.  It is an implicit
+   * parameter of the FT_TRACE() and FT_ERROR() macros, used to print/log
+   * messages during execution.
+   */
 #undef  FT_COMPONENT
 #define FT_COMPONENT  trace_gflib
 
 
-  /*************************************************************************/
-  /*                                                                       */
-  /*  GF font utility functions.                                           */
-  /*                                                                       */
-  /*************************************************************************/
+  /**************************************************************************
+   *
+   * GF font utility functions.
+   *
+   */
 
   long           gf_read_intn(FILE*,int);
   unsigned long  gf_read_uintn(FILE*,int);
@@ -142,11 +142,11 @@
 
 
 
-  /*************************************************************************/
-  /*                                                                       */
-  /* API.                                                                  */
-  /*                                                                       */
-  /*************************************************************************/
+  /**************************************************************************
+   *
+   * API.
+   *
+   */
 
   FT_LOCAL_DEF( FT_Error )
   gf_read_glyph(FT_FILE* fp, GF_BITMAP bm)
