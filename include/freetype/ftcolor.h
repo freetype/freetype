@@ -286,7 +286,11 @@ FT_BEGIN_HEADER
    *
    * @note:
    *   If this function isn't called, the text foreground color is set to
-   *   black (BGRA value 0xFFFFFFFF).
+   *   white opaque (BGRA value 0xFFFFFFFF) if
+   *   @FT_PALETTE_USABLE_WITH_DARK_BACKGROUND is present for the current
+   *   palette, and black opaque (BGRA value 0x000000FF) otherwise,
+   *   including the case that no palette types are available in the `CPAL'
+   *   table.
    *
    *   This function always returns an error if the config macro
    *   `TT_CONFIG_OPTION_COLOR_LAYERS' is not defined in `ftoption.h'.
