@@ -24,6 +24,7 @@
 #include <ft2build.h>
 #include FT_TRUETYPE_TABLES_H
 #include FT_INTERNAL_OBJECTS_H
+#include FT_COLOR_H
 
 #ifdef TT_CONFIG_OPTION_GX_VAR_SUPPORT
 #include FT_MULTIPLE_MASTERS_H
@@ -1657,6 +1658,9 @@ FT_BEGIN_HEADER
     /* postscript names table */
     TT_Post_NamesRec      postscript_names;
 
+    /* glyph colors */
+    FT_Palette            palette;              /* since 2.10 */
+
 
     /************************************************************************
      *
@@ -1728,7 +1732,6 @@ FT_BEGIN_HEADER
     FT_UInt               sbit_num_strikes;
     FT_UInt*              sbit_strike_map;
 
-    void*                 colr_and_cpal;
     FT_Byte*              kern_table;
     FT_ULong              kern_table_size;
     FT_UInt               num_kern_tables;
@@ -1755,6 +1758,9 @@ FT_BEGIN_HEADER
     FT_ULong              ebdt_start;  /* either `CBDT', `EBDT', or `bdat' */
     FT_ULong              ebdt_size;
 #endif
+
+    /* since 2.10 */
+    void*                 colr_and_cpal;
 
   } TT_FaceRec;
 

@@ -1,3 +1,19 @@
+2018-06-09  Werner Lemberg  <wl@gnu.org>
+
+	[sfnt] Read `CPAL' version 1 tables.
+
+	* include/freetype/internal.tttypes.h: Include FT_COLOR_H.
+	(TT_FaceRec): Add `palette' field.
+
+	* src/sfnt/ttcolr.c: Include FT_COLOR_H.
+	(Cpal): Remove all data covered by the new `palette' field in
+	`TT_FaceRec'.
+	(tt_face_load_colr): Updated.
+	Read `CPAL' version 1 data.
+	(tt_face_load_colr_layers, tt_face_find_color): Updated.
+
+	* src/sfnt/sfobjs.c (sfnt_done_face): Free glyph color palette data.
+
 2018-06-07  Alexei Podtelezhnikov  <apodtele@gmail.com>
 
 	[base] API for Harmony LCD rendering.

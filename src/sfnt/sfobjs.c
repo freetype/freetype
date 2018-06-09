@@ -1808,6 +1808,11 @@
     FT_FREE( face->var_postscript_prefix );
 #endif
 
+    /* freeing glyph color palette data */
+    FT_FREE( face->palette.palette_name_ids );
+    FT_FREE( face->palette.palette_types );
+    FT_FREE( face->palette.palette_entry_name_ids );
+
     face->sfnt = NULL;
   }
 

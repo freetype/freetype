@@ -32,6 +32,7 @@
 #include FT_INTERNAL_DEBUG_H
 #include FT_INTERNAL_STREAM_H
 #include FT_TRUETYPE_TAGS_H
+#include FT_COLOR_H
 
 
 #ifdef TT_CONFIG_OPTION_COLOR_LAYERS
@@ -68,21 +69,15 @@
   } Colr;
 
 
+  /* all data from `CPAL' not covered in FT_Palette */
   typedef struct Cpal_
   {
     FT_UShort  version;        /* Table version number (0 or 1 supported). */
-    FT_UShort  num_palettes_entries;      /* # of entries in each palette. */
-    FT_UShort  num_palettes;                /* # of palettes in the table. */
     FT_UShort  num_colors;               /* Total number of color records, */
                                          /* combined for all palettes.     */
     FT_Byte*  colors;                              /* RGBA array of colors */
     FT_Byte*  color_indices; /* Index of each palette's first color record */
                              /* in the combined color record array.        */
-
-    /* version 1 fields */
-    FT_ULong*   palette_types;
-    FT_UShort*  palette_labels;
-    FT_UShort*  palette_entry_labels;
 
   } Cpal;
 
@@ -126,11 +121,13 @@
     ColrCpal*  cc = NULL;
 
     FT_ULong  base_glyph_begin, base_glyph_end, layer_begin, layer_end;
-    FT_ULong  colors_begin, colors_end;
+    FT_ULong  colors_offset;
     FT_ULong  table_size;
 
 
-    face->colr_and_cpal = NULL;
+    /*
+     * COLR
+     */
 
     error = face->goto_table( face, TTAG_COLR, stream, &table_size );
     if ( error )
@@ -173,6 +170,10 @@
     if ( colr.base_glyphs < colr_table || colr.layers < colr_table )
       goto InvalidTable;
 
+    /*
+     * CPAL
+     */
+
     error = face->goto_table( face, TTAG_CPAL, stream, &table_size );
     if ( error )
       goto NoColor;
@@ -186,28 +187,99 @@
     p = cpal_table;
 
     FT_ZERO( &cpal );
-    cpal.version              = FT_NEXT_USHORT( p );
-    cpal.num_palettes_entries = FT_NEXT_USHORT( p );
-    cpal.num_palettes         = FT_NEXT_USHORT( p );
-    cpal.num_colors           = FT_NEXT_USHORT( p );
+    cpal.version = FT_NEXT_USHORT( p );
+    if ( cpal.version > 1 )
+      goto InvalidTable;
 
-    colors_begin = FT_NEXT_ULONG( p );
+    face->palette.num_palette_entries = FT_NEXT_USHORT( p );
+    face->palette.num_palettes        = FT_NEXT_USHORT( p );
+
+    cpal.num_colors = FT_NEXT_USHORT( p );
+    colors_offset   = FT_NEXT_ULONG( p );
+
+    if ( colors_offset >= table_size )
+      goto InvalidTable;
+    if ( cpal.num_colors * COLOR_SIZE > table_size - colors_offset )
+      goto InvalidTable;
 
     cpal.color_indices = p;
-    cpal.colors        = (FT_Byte*)cpal_table + colors_begin;
+    cpal.colors        = (FT_Byte*)cpal_table + colors_offset;
 
-    if ( cpal.version != 0 && cpal.version != 1 )
-      goto InvalidTable;
+    if ( cpal.version == 1 )
+    {
+      FT_ULong    type_offset, label_offset, entry_label_offset;
+      FT_UShort*  array;
+      FT_UShort*  limit;
+      FT_UShort*  q;
 
-    colors_end = colors_begin + cpal.num_colors * COLOR_SIZE;
 
-    /* Ensure variable length tables lies within the COLR table.      */
-    /* We wrap around FT_ULong at most once since count is FT_UShort. */
-    if ( colors_end < colors_begin || colors_end > table_size )
-      goto InvalidTable;
+      p += face->palette.num_palettes * 2;
 
-    if ( cpal.colors < cpal_table )
-      goto InvalidTable;
+      type_offset        = FT_NEXT_ULONG( p );
+      label_offset       = FT_NEXT_ULONG( p );
+      entry_label_offset = FT_NEXT_ULONG( p );
+
+      if ( type_offset )
+      {
+        if ( type_offset >= table_size )
+          goto InvalidTable;
+        if ( face->palette.num_palettes * 2 > table_size - type_offset )
+          goto InvalidTable;
+
+        if ( FT_QNEW_ARRAY( array, face->palette.num_palettes ) )
+          goto NoColor;
+
+        p     = cpal_table + type_offset;
+        q     = array;
+        limit = q + face->palette.num_palettes * sizeof ( FT_UShort );
+
+        while ( q < limit )
+          *q++ = FT_NEXT_USHORT( p );
+
+        face->palette.palette_types = array;
+      }
+
+      if ( label_offset )
+      {
+        if ( label_offset >= table_size )
+          goto InvalidTable;
+        if ( face->palette.num_palettes * 2 > table_size - label_offset )
+          goto InvalidTable;
+
+        if ( FT_QNEW_ARRAY( array, face->palette.num_palettes ) )
+          goto NoColor;
+
+        p     = cpal_table + label_offset;
+        q     = array;
+        limit = q + face->palette.num_palettes * sizeof ( FT_UShort );
+
+        while ( q < limit )
+          *q++ = FT_NEXT_USHORT( p );
+
+        face->palette.palette_name_ids = array;
+      }
+
+      if ( entry_label_offset )
+      {
+        if ( entry_label_offset >= table_size )
+          goto InvalidTable;
+        if ( face->palette.num_palette_entries * 2 >
+               table_size - entry_label_offset )
+          goto InvalidTable;
+
+        if ( FT_QNEW_ARRAY( array, face->palette.num_palette_entries ) )
+          goto NoColor;
+
+        p     = cpal_table + entry_label_offset;
+        q     = array;
+        limit = q + face->palette.num_palette_entries * sizeof ( FT_UShort );
+
+        while ( q < limit )
+          *q++ = FT_NEXT_USHORT( p );
+
+        face->palette.palette_entry_name_ids = array;
+      }
+    }
 
     if ( FT_NEW( cc ) )
       goto NoColor;
@@ -225,10 +297,10 @@
     error = FT_THROW( Invalid_File_Format );
 
   NoColor:
-    if ( colr_table )
-      FT_FRAME_RELEASE( colr_table );
-    if ( cpal_table )
-      FT_FRAME_RELEASE( cpal_table );
+    FT_FRAME_RELEASE( colr_table );
+    FT_FRAME_RELEASE( cpal_table );
+
+    /* arrays in `face->palette' are freed in `sfnt_face_done' */
 
     return error;
   }
@@ -300,7 +372,6 @@
 
     ColrCpal*  colr_and_cpal = (ColrCpal *)face->colr_and_cpal;
     Colr*      colr          = &colr_and_cpal->colr;
-    Cpal*      cpal          = &colr_and_cpal->cpal;
 
     BaseGlyphRecord  glyph_record;
     FT_Glyph_Layer   layers;
@@ -335,8 +406,8 @@
       FT_UShort  palette_index = FT_NEXT_USHORT( layer_record_ptr );
 
 
-      if ( palette_index != 0xFFFF                     &&
-           palette_index >= cpal->num_palettes_entries )
+      if ( palette_index != 0xFFFF                            &&
+           palette_index >= face->palette.num_palette_entries )
       {
         error = FT_THROW( Invalid_File_Format );
         goto Error;
@@ -375,7 +446,7 @@
     FT_Int    color_offset;
 
 
-    if ( color_index >= cpal->num_palettes_entries )
+    if ( color_index >= face->palette.num_palette_entries )
       return 0;
 
     p = cpal->color_indices + palette_index * (int)sizeof ( FT_UShort );
