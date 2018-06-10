@@ -20,6 +20,7 @@ SubDir  FT2_TOP $(FT2_SRC_DIR) base ;
     _sources = basepic
                ftadvanc
                ftcalc
+               ftcolor
                ftdbgmem
                ftfntfmt
                ftgloadr
