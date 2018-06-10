@@ -1,5 +1,12 @@
 2018-06-10  Werner Lemberg  <wl@gnu.org>
 
+	[sfnt] Fix compiler warnings.
+
+	* src/sfnt/ttcolr.c (tt_face_load_colr, tt_face_load_colr_layers,
+	tt_face_colr_blend_layer): Add `NULL' initializers.
+
+2018-06-10  Werner Lemberg  <wl@gnu.org>
+
 	s/FT_Palette/FT_Palette_Data/, s/palette/palette_data/.
 
 	* include/freetype/ftcolor.h, include/freetype/internal/tttypes.h,

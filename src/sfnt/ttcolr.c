@@ -203,7 +203,7 @@
     if ( cpal.version == 1 )
     {
       FT_ULong    type_offset, label_offset, entry_label_offset;
-      FT_UShort*  array;
+      FT_UShort*  array = NULL;
       FT_UShort*  limit;
       FT_UShort*  q;
 
@@ -372,7 +372,7 @@
     Colr*      colr          = &colr_and_cpal->colr;
 
     BaseGlyphRecord  glyph_record;
-    FT_Glyph_Layer   layers;
+    FT_Glyph_Layer   layers = NULL;
     int              layer_idx;
     FT_Byte*         layer_record_ptr;
 
@@ -524,7 +524,7 @@
         FT_UInt  rows  = (FT_UInt)( y_max - y_min );
         FT_UInt  pitch = width * 4;
 
-        FT_Byte*  buf;
+        FT_Byte*  buf = NULL;
         FT_Byte*  p;
         FT_Byte*  q;
 
