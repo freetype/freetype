@@ -1,3 +1,7 @@
+2018-06-10  Werner Lemberg  <wl@gnu.org>
+
+	* src/sfnt/ttcolr.c (tt_face_load_colr): Improve overflow checks.
+
 2018-06-09  Alexei Podtelezhnikov  <apodtele@gmail.com>
 
 	[raster] Deal with pitch sign earlier.

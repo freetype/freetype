@@ -120,8 +120,7 @@
     Cpal       cpal;
     ColrCpal*  cc = NULL;
 
-    FT_ULong  base_glyph_begin, base_glyph_end, layer_begin, layer_end;
-    FT_ULong  colors_offset;
+    FT_ULong  base_glyph_offset, layer_offset, colors_offset;
     FT_ULong  table_size;
 
 
@@ -133,7 +132,7 @@
     if ( error )
       goto NoColor;
 
-    if ( table_size < sizeof ( COLR_HEADER_SIZE ) )
+    if ( table_size < COLR_HEADER_SIZE )
       goto InvalidTable;
 
     if ( FT_FRAME_EXTRACT( table_size, colr_table ) )
@@ -142,33 +141,29 @@
     p = colr_table;
 
     FT_ZERO( &colr );
-    colr.version         = FT_NEXT_USHORT( p );
-    colr.num_base_glyphs = FT_NEXT_USHORT( p );
-
-    base_glyph_begin = FT_NEXT_ULONG( p );
-    layer_begin      = FT_NEXT_ULONG( p );
-
-    colr.num_layers  = FT_NEXT_USHORT( p );
-    colr.base_glyphs = (FT_Byte*)( colr_table + base_glyph_begin );
-    colr.layers      = (FT_Byte*)( colr_table + layer_begin      );
-
+    colr.version = FT_NEXT_USHORT( p );
     if ( colr.version != 0 )
       goto InvalidTable;
 
-    /* Ensure variable length tables lies within the COLR table.      */
-    /* We wrap around FT_ULong at most once since count is FT_UShort. */
+    colr.num_base_glyphs = FT_NEXT_USHORT( p );
+    base_glyph_offset    = FT_NEXT_ULONG( p );
 
-    base_glyph_end = base_glyph_begin +
-                     colr.num_base_glyphs * BASE_GLYPH_SIZE;
-    layer_end      = layer_begin +
-                     colr.num_layers * LAYER_SIZE;
-    if ( base_glyph_end < base_glyph_begin || base_glyph_end > table_size ||
-         layer_end      < layer_begin      || layer_end      > table_size )
+    if ( base_glyph_offset >= table_size )
+      goto InvalidTable;
+    if ( colr.num_base_glyphs * BASE_GLYPH_SIZE >
+           table_size - base_glyph_offset )
       goto InvalidTable;
 
-    /* Ensure pointers don't wrap. */
-    if ( colr.base_glyphs < colr_table || colr.layers < colr_table )
+    layer_offset    = FT_NEXT_ULONG( p );
+    colr.num_layers = FT_NEXT_USHORT( p );
+
+    if ( layer_offset >= table_size )
       goto InvalidTable;
+    if ( colr.num_layers * LAYER_SIZE > table_size - layer_offset )
+      goto InvalidTable;
+
+    colr.base_glyphs = (FT_Byte*)( colr_table + base_glyph_offset );
+    colr.layers      = (FT_Byte*)( colr_table + layer_offset      );
 
     /*
      * CPAL
@@ -203,7 +198,7 @@
       goto InvalidTable;
 
     cpal.color_indices = p;
-    cpal.colors        = (FT_Byte*)cpal_table + colors_offset;
+    cpal.colors        = (FT_Byte*)( cpal_table + colors_offset );
 
     if ( cpal.version == 1 )
     {
