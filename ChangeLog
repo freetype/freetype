@@ -1,3 +1,13 @@
+2018-06-10  Nikolaus Waxweiler  <madigens@gmail.com>
+
+	CMakeLists: also accept IOS_PLATFORM=SIMULATOR64
+
+	This might be needed to build FreeType for the iOS simulator. See
+	https://savannah.nongnu.org/bugs/index.php?54048. Patch contributed
+	by Steve Robinson.
+
+	* CMakeLists.txt: Accept IOS_PLATFORM=SIMULATOR64
+
 2018-06-10  Werner Lemberg  <wl@gnu.org>
 
 	Implement `FT_Palette_Get'.

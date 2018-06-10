@@ -35,6 +35,10 @@
 #
 #   cmake -E chdir build cmake -G Xcode -D IOS_PLATFORM=SIMULATOR ..
 #
+# or
+#
+#   cmake -E chdir build cmake -G Xcode -D IOS_PLATFORM=SIMULATOR64 ..
+#
 # Finally, build the project with:
 #
 #   cmake --build build
@@ -96,9 +100,10 @@ include(CheckIncludeFile)
 if (APPLE)
   if (DEFINED IOS_PLATFORM)
     if (NOT "${IOS_PLATFORM}" STREQUAL "OS"
-        AND NOT "${IOS_PLATFORM}" STREQUAL "SIMULATOR")
+        AND NOT "${IOS_PLATFORM}" STREQUAL "SIMULATOR"
+        AND NOT "${IOS_PLATFORM}" STREQUAL "SIMULATOR64")
       message(FATAL_ERROR
-        "IOS_PLATFORM must be set to either OS or SIMULATOR")
+        "IOS_PLATFORM must be set to either OS, SIMULATOR, or SIMULATOR64")
     endif ()
     if (NOT "${CMAKE_GENERATOR}" STREQUAL "Xcode")
       message(AUTHOR_WARNING
