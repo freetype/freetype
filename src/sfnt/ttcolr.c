@@ -69,7 +69,7 @@
   } Colr;
 
 
-  /* all data from `CPAL' not covered in FT_Palette */
+  /* all data from `CPAL' not covered in FT_Palette_Data */
   typedef struct Cpal_
   {
     FT_UShort  version;        /* Table version number (0 or 1 supported). */
@@ -186,8 +186,8 @@
     if ( cpal.version > 1 )
       goto InvalidTable;
 
-    face->palette.num_palette_entries = FT_NEXT_USHORT( p );
-    face->palette.num_palettes        = FT_NEXT_USHORT( p );
+    face->palette_data.num_palette_entries = FT_NEXT_USHORT( p );
+    face->palette_data.num_palettes        = FT_NEXT_USHORT( p );
 
     cpal.num_colors = FT_NEXT_USHORT( p );
     colors_offset   = FT_NEXT_ULONG( p );
@@ -208,7 +208,7 @@
       FT_UShort*  q;
 
 
-      p += face->palette.num_palettes * 2;
+      p += face->palette_data.num_palettes * 2;
 
       type_offset        = FT_NEXT_ULONG( p );
       label_offset       = FT_NEXT_ULONG( p );
@@ -218,61 +218,64 @@
       {
         if ( type_offset >= table_size )
           goto InvalidTable;
-        if ( face->palette.num_palettes * 2 > table_size - type_offset )
+        if ( face->palette_data.num_palettes * 2 >
+               table_size - type_offset )
           goto InvalidTable;
 
-        if ( FT_QNEW_ARRAY( array, face->palette.num_palettes ) )
+        if ( FT_QNEW_ARRAY( array, face->palette_data.num_palettes ) )
           goto NoColor;
 
         p     = cpal_table + type_offset;
         q     = array;
-        limit = q + face->palette.num_palettes * sizeof ( FT_UShort );
+        limit = q + face->palette_data.num_palettes * sizeof ( FT_UShort );
 
         while ( q < limit )
           *q++ = FT_NEXT_USHORT( p );
 
-        face->palette.palette_types = array;
+        face->palette_data.palette_types = array;
       }
 
       if ( label_offset )
       {
         if ( label_offset >= table_size )
           goto InvalidTable;
-        if ( face->palette.num_palettes * 2 > table_size - label_offset )
+        if ( face->palette_data.num_palettes * 2 >
+               table_size - label_offset )
           goto InvalidTable;
 
-        if ( FT_QNEW_ARRAY( array, face->palette.num_palettes ) )
+        if ( FT_QNEW_ARRAY( array, face->palette_data.num_palettes ) )
           goto NoColor;
 
         p     = cpal_table + label_offset;
         q     = array;
-        limit = q + face->palette.num_palettes * sizeof ( FT_UShort );
+        limit = q + face->palette_data.num_palettes * sizeof ( FT_UShort );
 
         while ( q < limit )
           *q++ = FT_NEXT_USHORT( p );
 
-        face->palette.palette_name_ids = array;
+        face->palette_data.palette_name_ids = array;
       }
 
       if ( entry_label_offset )
       {
         if ( entry_label_offset >= table_size )
           goto InvalidTable;
-        if ( face->palette.num_palette_entries * 2 >
+        if ( face->palette_data.num_palette_entries * 2 >
                table_size - entry_label_offset )
           goto InvalidTable;
 
-        if ( FT_QNEW_ARRAY( array, face->palette.num_palette_entries ) )
+        if ( FT_QNEW_ARRAY( array, face->palette_data.num_palette_entries ) )
           goto NoColor;
 
         p     = cpal_table + entry_label_offset;
         q     = array;
-        limit = q + face->palette.num_palette_entries * sizeof ( FT_UShort );
+        limit = q + face->palette_data.num_palette_entries *
+                    sizeof ( FT_UShort );
 
         while ( q < limit )
           *q++ = FT_NEXT_USHORT( p );
 
-        face->palette.palette_entry_name_ids = array;
+        face->palette_data.palette_entry_name_ids = array;
       }
     }
 
@@ -295,7 +298,7 @@
     FT_FRAME_RELEASE( colr_table );
     FT_FRAME_RELEASE( cpal_table );
 
-    /* arrays in `face->palette' are freed in `sfnt_face_done' */
+    /* arrays in `face->palette_data' are freed in `sfnt_face_done' */
 
     return error;
   }
@@ -401,8 +404,8 @@
       FT_UShort  palette_index = FT_NEXT_USHORT( layer_record_ptr );
 
 
-      if ( palette_index != 0xFFFF                            &&
-           palette_index >= face->palette.num_palette_entries )
+      if ( palette_index != 0xFFFF                                 &&
+           palette_index >= face->palette_data.num_palette_entries )
       {
         error = FT_THROW( Invalid_File_Format );
         goto Error;
@@ -441,7 +444,7 @@
     FT_Int    color_offset;
 
 
-    if ( color_index >= face->palette.num_palette_entries )
+    if ( color_index >= face->palette_data.num_palette_entries )
       return 0;
 
     p = cpal->color_indices + palette_index * (int)sizeof ( FT_UShort );

@@ -93,8 +93,8 @@ FT_BEGIN_HEADER
    *
    * @description:
    *   A list of bit field constants used in the `palette_types' array of
-   *   the @FT_Palette structure to indicate for which background a palette
-   *   with a given index is usable.
+   *   the @FT_Palette_Data structure to indicate for which background a
+   *   palette with a given index is usable.
    *
    * @values:
    *   FT_PALETTE_USABLE_WITH_LIGHT_BACKGROUND ::
@@ -115,7 +115,7 @@ FT_BEGIN_HEADER
   /**************************************************************************
    *
    * @struct:
-   *   FT_Palette
+   *   FT_Palette_Data
    *
    * @description:
    *   This structure holds the data of the `CPAL' table.
@@ -167,7 +167,7 @@ FT_BEGIN_HEADER
    * @since:
    *   2.10
    */
-  typedef struct  FT_Palette_ {
+  typedef struct  FT_Palette_Data_ {
     FT_UShort         num_palettes;
     const FT_UShort*  palette_name_ids;
     const FT_UShort*  palette_types;
@@ -175,13 +175,13 @@ FT_BEGIN_HEADER
     FT_UShort         num_palette_entries;
     const FT_UShort*  palette_entry_name_ids;
 
-  } FT_Palette;
+  } FT_Palette_Data;
 
 
   /**************************************************************************
    *
    * @func:
-   *   FT_Palette_Get
+   *   FT_Palette_Data_Get
    *
    * @description:
    *   Retrieve the face's color palette data.
@@ -192,13 +192,13 @@ FT_BEGIN_HEADER
    *
    * @output:
    *   apalette ::
-   *     A pointer to an @FT_Palette structure.
+   *     A pointer to an @FT_Palette_Data structure.
    *
    * @return:
    *   FreeType error code.  0~means success.
    *
    * @note:
-   *   All arrays in the returned @FT_Palette structure are read-only.
+   *   All arrays in the returned @FT_Palette_Data structure are read-only.
    *
    *   This function always returns an error if the config macro
    *   `TT_CONFIG_OPTION_COLOR_LAYERS' is not defined in `ftoption.h'.
@@ -207,8 +207,8 @@ FT_BEGIN_HEADER
    *   2.10
    */
   FT_EXPORT( FT_Error )
-  FT_Palette_Get( FT_Face      face,
-                  FT_Palette  *apalette );
+  FT_Palette_Data_Get( FT_Face           face,
+                       FT_Palette_Data  *apalette );
 
 
   /**************************************************************************
@@ -243,12 +243,14 @@ FT_BEGIN_HEADER
    *     If `apalette_entries' is set to NULL, no array gets returned (and
    *     no color entries can be modified).
    *
+   *     In case the font doesn't support color palettes, NULL is returned.
+   *
    * @return:
    *   FreeType error code.  0~means success.
    *
    * @note:
    *   The number of color entries is given by the `num_palette_entries'
-   *   field in the @FT_Palette structure.
+   *   field in the @FT_Palette_Data structure.
    *
    *   The array pointed to by `apalette_entries' is owned and managed by
    *   FreeType.

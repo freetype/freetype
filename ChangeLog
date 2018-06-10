@@ -1,3 +1,10 @@
+2018-06-10  Werner Lemberg  <wl@gnu.org>
+
+	s/FT_Palette/FT_Palette_Data/, s/palette/palette_data/.
+
+	* include/freetype/ftcolor.h, include/freetype/internal/tttypes.h,
+	src/base/ftcolor.c, src/sfnt/sfobjs.c, src/sfnt/ttcolr.c: Updated.
+
 2018-06-10  Nikolaus Waxweiler  <madigens@gmail.com>
 
 	CMakeLists: also accept IOS_PLATFORM=SIMULATOR64

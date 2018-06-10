@@ -1659,7 +1659,7 @@ FT_BEGIN_HEADER
     TT_Post_NamesRec      postscript_names;
 
     /* glyph colors */
-    FT_Palette            palette;              /* since 2.10 */
+    FT_Palette_Data       palette_data;         /* since 2.10 */
 
 
     /************************************************************************

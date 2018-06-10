@@ -25,24 +25,24 @@
 #ifdef TT_CONFIG_OPTION_COLOR_LAYERS
 
   static
-  const FT_Palette  null_palette = { 0, NULL, NULL, 0, NULL };
+  const FT_Palette_Data  null_palette_data = { 0, NULL, NULL, 0, NULL };
 
 
   /* documentation is in ftcolor.h */
 
   FT_EXPORT_DEF( FT_Error )
-  FT_Palette_Get( FT_Face      face,
-                  FT_Palette  *apalette )
+  FT_Palette_Data_Get( FT_Face           face,
+                       FT_Palette_Data  *apalette_data )
   {
     if ( !face )
       return FT_THROW( Invalid_Face_Handle );
-    if ( !apalette)
+    if ( !apalette_data)
       return FT_THROW( Invalid_Argument );
 
     if ( FT_IS_SFNT( face ) )
-      *apalette = ( (TT_Face)face )->palette;
+      *apalette_data = ( (TT_Face)face )->palette_data;
     else
-      *apalette = null_palette;
+      *apalette_data = null_palette_data;
 
     return FT_Err_Ok;
   }
@@ -50,8 +50,8 @@
 #else /* !TT_CONFIG_OPTION_COLOR_LAYERS */
 
   FT_EXPORT_DEF( FT_Error )
-  FT_Palette_Get( FT_Face      face,
-                  FT_Palette  *apalette )
+  FT_Palette_Data_Get( FT_Face           face,
+                       FT_Palette_Data  *apalette_data )
   {
     FT_UNUSED( face );
     FT_UNUSED( apalette );
