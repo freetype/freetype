@@ -494,7 +494,7 @@
     TPoint*     arc;                /* current Bezier arc pointer          */
 
     UShort      bWidth;             /* target bitmap width                 */
-    PByte       bTarget;            /* target bitmap buffer                */
+    PByte       bOrigin;            /* target bitmap bottom-left origin    */
 
     Long        lastX, lastY;
     Long        minY, maxY;
@@ -517,8 +517,6 @@
     FT_Outline  outline;
 
     Long        traceOfs;           /* current offset in target bitmap     */
-    Long        traceG;             /* current offset in target pixmap     */
-
     Short       traceIncr;          /* sweep's increment in target bitmap  */
 
     /* dispatch variables */
@@ -2221,8 +2219,6 @@
 
     ras.traceIncr = (Short)-pitch;
     ras.traceOfs  = -*min * pitch;
-    if ( pitch > 0 )
-      ras.traceOfs += (Long)( ras.target.rows - 1 ) * pitch;
   }
 
 
@@ -2280,7 +2276,7 @@
       f1 = (Byte)  ( 0xFF >> ( e1 & 7 ) );
       f2 = (Byte) ~( 0x7F >> ( e2 & 7 ) );
 
-      target = ras.bTarget + ras.traceOfs + c1;
+      target = ras.bOrigin + ras.traceOfs + c1;
       c2 -= c1;
 
       if ( c2 > 0 )
@@ -2438,7 +2434,7 @@
         f1 = (Short)( e1 &  7 );
 
         if ( e1 >= 0 && e1 < ras.bWidth                      &&
-             ras.bTarget[ras.traceOfs + c1] & ( 0x80 >> f1 ) )
+             ras.bOrigin[ras.traceOfs + c1] & ( 0x80 >> f1 ) )
           goto Exit;
       }
       else
@@ -2454,7 +2450,7 @@
       c1 = (Short)( e1 >> 3 );
       f1 = (Short)( e1 & 7 );
 
-      ras.bTarget[ras.traceOfs + c1] |= (char)( 0x80 >> f1 );
+      ras.bOrigin[ras.traceOfs + c1] |= (char)( 0x80 >> f1 );
     }
 
   Exit:
@@ -2521,19 +2517,14 @@
         {
           Byte   f1;
           PByte  bits;
-          PByte  p;
 
 
           FT_TRACE7(( " -> y=%d (drop-out)", e1 ));
 
-          bits = ras.bTarget + ( y >> 3 );
+          bits = ras.bOrigin + ( y >> 3 ) - e1 * ras.target.pitch;
           f1   = (Byte)( 0x80 >> ( y & 7 ) );
-          p    = bits - e1 * ras.target.pitch;
 
-          if ( ras.target.pitch > 0 )
-            p += (Long)( ras.target.rows - 1 ) * ras.target.pitch;
-
-          p[0] |= f1;
+          bits[0] |= f1;
         }
       }
 
@@ -2635,12 +2626,8 @@
 
         e1 = TRUNC( e1 );
 
-        bits = ras.bTarget + ( y >> 3 );
+        bits = ras.bOrigin + ( y >> 3 ) - e1 * ras.target.pitch;
         f1   = (Byte)( 0x80 >> ( y & 7 ) );
-
-        bits -= e1 * ras.target.pitch;
-        if ( ras.target.pitch > 0 )
-          bits += (Long)( ras.target.rows - 1 ) * ras.target.pitch;
 
         if ( e1 >= 0                     &&
              (ULong)e1 < ras.target.rows &&
@@ -2657,12 +2644,8 @@
     {
       FT_TRACE7(( " -> y=%d (drop-out)", e1 ));
 
-      bits  = ras.bTarget + ( y >> 3 );
+      bits  = ras.bOrigin + ( y >> 3 ) - e1 * ras.target.pitch;
       f1    = (Byte)( 0x80 >> ( y & 7 ) );
-      bits -= e1 * ras.target.pitch;
-
-      if ( ras.target.pitch > 0 )
-        bits += (Long)( ras.target.rows - 1 ) * ras.target.pitch;
 
       bits[0] |= f1;
     }
@@ -3140,7 +3123,10 @@
     ras.band_stack[0].y_max = (Short)( ras.target.rows - 1 );
 
     ras.bWidth  = (UShort)ras.target.width;
-    ras.bTarget = (Byte*)ras.target.buffer;
+    ras.bOrigin = (Byte*)ras.target.buffer;
+
+    if ( ras.target.pitch > 0 )
+      ras.bOrigin += (Long)( ras.target.rows - 1 ) * ras.target.pitch;
 
     if ( ( error = Render_Single_Pass( RAS_VARS 0 ) ) != 0 )
       return error;
