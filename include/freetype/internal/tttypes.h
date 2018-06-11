@@ -1400,6 +1400,22 @@ FT_BEGIN_HEADER
    *     file  `ttconfig.h' for comments on the
    *     TT_CONFIG_OPTION_POSTSCRIPT_NAMES option.
    *
+   *   palette_data ::
+   *     Some fields from the `CPAL' table that are directly indexed.
+   *
+   *   palette_index ::
+   *     The current palette index, as set by @FT_Palette_Select.
+   *
+   *   palette ::
+   *     An array containing the current palette's colors.
+   *
+   *   have_foreground_color ::
+   *     There was a call to @FT_Palette_Set_Foreground_Color.
+   *
+   *   foreground_color ::
+   *     The current foreground color corresponding to `CPAL' color index
+   *     0xFFFF.  Only valid if `have_foreground_color' is set.
+   *
    *   font_program_size ::
    *     Size in bytecodes of the face's font
    *     program.  0 if none defined.  Ignored for
@@ -1660,6 +1676,10 @@ FT_BEGIN_HEADER
 
     /* glyph colors */
     FT_Palette_Data       palette_data;         /* since 2.10 */
+    FT_UShort             palette_index;
+    FT_Color*             palette;
+    FT_Bool               have_foreground_color;
+    FT_Color              foreground_color;
 
 
     /************************************************************************

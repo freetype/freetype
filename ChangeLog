@@ -1,5 +1,13 @@
 2018-06-12  Werner Lemberg  <wl@gnu.org>
 
+	Finish CPAL/COLR support (1/4).
+
+	* include/freetype/internal/tttypes.h (TT_FaceRec): New fields
+	`palette_index', `palette', `have_foreground_color' and
+	`foreground_color'.
+
+2018-06-12  Werner Lemberg  <wl@gnu.org>
+
 	[sfnt] Minor.
 
 	* src/sfnt/ttcolr.c (tt_face_load_colr_layers):
