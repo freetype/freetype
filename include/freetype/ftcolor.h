@@ -238,10 +238,10 @@ FT_BEGIN_HEADER
    *     The palette index.
    *
    * @output:
-   *   apalette_entries ::
+   *   apalette ::
    *     An array of color entries for a palette with index `palette_index'.
-   *     If `apalette_entries' is set to NULL, no array gets returned (and
-   *     no color entries can be modified).
+   *     If `apalette' is set to NULL, no array gets returned (and no color
+   *     entries can be modified).
    *
    *     In case the font doesn't support color palettes, NULL is returned.
    *
@@ -264,7 +264,7 @@ FT_BEGIN_HEADER
   FT_EXPORT( FT_Error )
   FT_Palette_Select( FT_Face     face,
                      FT_UShort   palette_index,
-                     FT_Color*  *apalette_entries );
+                     FT_Color*  *apalette );
 
 
   /**************************************************************************
@@ -273,8 +273,8 @@ FT_BEGIN_HEADER
    *   FT_Palette_Set_Foreground_Color
    *
    * @description:
-   *   `CPAL' uses color index 0xFFFF to indicate a `text foreground color'.
-   *   This function sets this value.
+   *   `COLR' uses palette index 0xFFFF to indicate a `text foreground
+   *   color'.  This function sets this value.
    *
    * @input:
    *   face ::
