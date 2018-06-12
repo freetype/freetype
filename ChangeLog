@@ -1,5 +1,13 @@
 2018-06-12  Werner Lemberg  <wl@gnu.org>
 
+	Finish CPAL/COLR support (3/4).
+
+	* src/base/ftcolor.c: Include FT_INTERNAL_SFNT_H.
+	(FT_Palette_Select, FT_Palette_Set_Foreground_Color): Implement
+	functions.
+
+2018-06-12  Werner Lemberg  <wl@gnu.org>
+
 	Finish CPAL/COLR support (2/4).
 
 	* src/sfnt/ttcolr.c (tt_face_palette_set): New function.

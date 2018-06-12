@@ -533,9 +533,12 @@ FT_BEGIN_HEADER
    *
    * @Description:
    *   Blend the bitmap in `new_glyph' into `base_glyph' using the color
-   *   specified by `color_index'.
-   *
-   *   XXX: Handle foregound color
+   *   specified by `color_index'.  If `color_index' is 0xFFFF, use
+   *   `face->foreground_color' if `face->have_foreground_color' is set.
+   *   Otherwise check `face->palette_data.palette_type': If present and
+   *   @FT_PALETTE_USABLE_WITH_DARK_BACKGROUND is set, use BGRA value
+   *   0xFFFFFFFF (white opaque).  Otherwise use BGRA value 0x000000FF
+   *   (black opaque).
    *
    * @Input:
    *   face ::
