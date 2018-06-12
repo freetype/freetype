@@ -438,40 +438,6 @@
   }
 
 
-  static FT_Bool
-  tt_face_find_color( TT_Face   face,
-                      FT_UInt   color_index,
-                      FT_Byte*  blue,
-                      FT_Byte*  green,
-                      FT_Byte*  red,
-                      FT_Byte*  alpha )
-  {
-    ColrCpal*  colr_and_cpal = (ColrCpal *)face->colr_and_cpal;
-    Cpal*      cpal          = &colr_and_cpal->cpal;
-
-    FT_Int    palette_index = 0;
-    FT_Byte*  p;
-    FT_Int    color_offset;
-
-
-    if ( color_index >= face->palette_data.num_palette_entries )
-      return 0;
-
-    p = cpal->color_indices + palette_index * (int)sizeof ( FT_UShort );
-
-    color_offset = FT_NEXT_USHORT( p );
-
-    p = cpal->colors + color_offset + COLOR_SIZE * color_index;
-
-    *blue  = FT_NEXT_BYTE( p );
-    *green = FT_NEXT_BYTE( p );
-    *red   = FT_NEXT_BYTE( p );
-    *alpha = FT_NEXT_BYTE( p );
-
-    return 1;
-  }
-
-
   FT_LOCAL_DEF( FT_Error )
   tt_face_palette_set( TT_Face  face,
                        FT_UInt  palette_index )
@@ -607,16 +573,43 @@
       }
     }
 
-    /* Default assignments to pacify compiler. */
-    r = g = b = 0;
-    alpha = 255;
-
-    if ( color_index != 0xFFFF )
-      tt_face_find_color( face, color_index, &b, &g, &r, &alpha );
+    if ( color_index == 0xFFFF )
+    {
+      if ( face->have_foreground_color )
+      {
+        b     = face->foreground_color.blue;
+        g     = face->foreground_color.green;
+        r     = face->foreground_color.red;
+        alpha = face->foreground_color.alpha;
+      }
+      else
+      {
+        if ( face->palette_data.palette_types                          &&
+             ( face->palette_data.palette_types[face->palette_index] &
+                 FT_PALETTE_USABLE_WITH_DARK_BACKGROUND              ) )
+        {
+          /* white opaque */
+          b     = 0xFF;
+          g     = 0xFF;
+          r     = 0xFF;
+          alpha = 0xFF;
+        }
+        else
+        {
+          /* black opaque */
+          b     = 0x00;
+          g     = 0x00;
+          r     = 0x00;
+          alpha = 0xFF;
+        }
+      }
+    }
     else
     {
-      /* TODO. foreground color from argument?                */
-      /* Add public FT_Render_Glyph_Color() with color value? */
+      b     = face->palette[color_index].blue;
+      g     = face->palette[color_index].green;
+      r     = face->palette[color_index].red;
+      alpha = face->palette[color_index].alpha;
     }
 
     /* XXX Convert if srcSlot.bitmap is not grey? */

@@ -1,5 +1,14 @@
 2018-06-12  Werner Lemberg  <wl@gnu.org>
 
+	Finish CPAL/COLR support (4/4).
+
+	* src/sfnt/ttcolr.c (tt_face_find_color): Removed.
+	(tt_face_colr_blend_layer): Use `face->palette' instead of calling
+	`tt_face_find_color'.
+	Use and set text foreground color.
+
+2018-06-12  Werner Lemberg  <wl@gnu.org>
+
 	Finish CPAL/COLR support (3/4).
 
 	* src/base/ftcolor.c: Include FT_INTERNAL_SFNT_H.
