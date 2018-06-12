@@ -227,7 +227,7 @@
 
         p     = cpal_table + type_offset;
         q     = array;
-        limit = q + face->palette_data.num_palettes * sizeof ( FT_UShort );
+        limit = q + face->palette_data.num_palettes;
 
         while ( q < limit )
           *q++ = FT_NEXT_USHORT( p );
@@ -248,7 +248,7 @@
 
         p     = cpal_table + label_offset;
         q     = array;
-        limit = q + face->palette_data.num_palettes * sizeof ( FT_UShort );
+        limit = q + face->palette_data.num_palettes;
 
         while ( q < limit )
           *q++ = FT_NEXT_USHORT( p );
@@ -269,8 +269,7 @@
 
         p     = cpal_table + entry_label_offset;
         q     = array;
-        limit = q + face->palette_data.num_palette_entries *
-                    sizeof ( FT_UShort );
+        limit = q + face->palette_data.num_palette_entries;
 
         while ( q < limit )
           *q++ = FT_NEXT_USHORT( p );
@@ -459,7 +458,7 @@
     p      = cpal->colors + COLOR_SIZE * FT_PEEK_USHORT( offset );
 
     q     = face->palette;
-    limit = q + face->palette_data.num_palette_entries * sizeof ( FT_Color );
+    limit = q + face->palette_data.num_palette_entries;
 
     while ( q < limit )
     {

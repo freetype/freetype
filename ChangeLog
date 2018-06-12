@@ -1,5 +1,12 @@
 2018-06-12  Werner Lemberg  <wl@gnu.org>
 
+	[sfnt] Fix `sizeof' thinko.
+
+	* src/sfnt/ttcolr.c (tt_face_load_colr, tt_face_palette_set): Don't
+	use `sizeof' for computing array limit.
+
+2018-06-12  Werner Lemberg  <wl@gnu.org>
+
 	Finish CPAL/COLR support (4/4).
 
 	* src/sfnt/ttcolr.c (tt_face_find_color): Removed.
