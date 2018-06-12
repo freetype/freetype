@@ -1,3 +1,11 @@
+2018-06-12  Werner Lemberg  <wl@gnu.org>
+
+	[sfnt] Minor.
+
+	* src/sfnt/ttcolr.c (tt_face_load_colr_layers):
+	s/palette_index/palette_entry_index/ for consistency.
+	Adjust return error code in case of error.
+
 2018-06-11  Alexei Podtelezhnikov  <apodtele@gmail.com>
 
 	[raster] Clean up.

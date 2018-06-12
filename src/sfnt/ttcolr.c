@@ -400,18 +400,18 @@
 
     for ( layer_idx = 0; layer_idx < glyph_record.num_layers; layer_idx++ )
     {
-      FT_UShort  gid           = FT_NEXT_USHORT( layer_record_ptr );
-      FT_UShort  palette_index = FT_NEXT_USHORT( layer_record_ptr );
+      FT_UShort  gid                 = FT_NEXT_USHORT( layer_record_ptr );
+      FT_UShort  palette_entry_index = FT_NEXT_USHORT( layer_record_ptr );
 
 
-      if ( palette_index != 0xFFFF                                 &&
-           palette_index >= face->palette_data.num_palette_entries )
+      if ( palette_entry_index != 0xFFFF                                 &&
+           palette_entry_index >= face->palette_data.num_palette_entries )
       {
-        error = FT_THROW( Invalid_File_Format );
+        error = FT_THROW( Invalid_Table );
         goto Error;
       }
 
-      layers[layer_idx].color_index = palette_index;
+      layers[layer_idx].color_index = palette_entry_index;
       layers[layer_idx].glyph_index = gid;
     }
 
