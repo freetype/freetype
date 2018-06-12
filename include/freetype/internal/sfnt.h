@@ -472,6 +472,29 @@ FT_BEGIN_HEADER
   /**************************************************************************
    *
    * @FuncType:
+   *   TT_Set_Palette_Func
+   *
+   * @Description:
+   *   Load the colors into `face->palette' for a given palette index.
+   *
+   * @Input:
+   *   face ::
+   *     The target face object.
+   *
+   *   idx ::
+   *     The palette index.
+   *
+   * @Return:
+   *   FreeType error code.  0 means success.
+   */
+  typedef FT_Error
+  (*TT_Set_Palette_Func)( TT_Face  face,
+                          FT_UInt  idx );
+
+
+  /**************************************************************************
+   *
+   * @FuncType:
    *   TT_Load_Colr_Layer_Func
    *
    * @Description:
@@ -739,6 +762,7 @@ FT_BEGIN_HEADER
 
     TT_Load_Table_Func           load_colr;
     TT_Free_Table_Func           free_colr;
+    TT_Set_Palette_Func          set_palette;
     TT_Load_Colr_Layer_Func      load_colr_layer;
     TT_Blend_Colr_Func           colr_blend;
 
@@ -786,6 +810,7 @@ FT_BEGIN_HEADER
           load_strike_metrics_,          \
           load_colr_,                    \
           free_colr_,                    \
+          set_palette_,                  \
           load_colr_layer_,              \
           colr_blend_,                   \
           get_metrics_,                  \
@@ -823,6 +848,7 @@ FT_BEGIN_HEADER
     load_strike_metrics_,                \
     load_colr_,                          \
     free_colr_,                          \
+    set_palette_,                        \
     load_colr_layer_,                    \
     colr_blend_,                         \
     get_metrics_,                        \

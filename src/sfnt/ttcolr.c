@@ -289,16 +289,26 @@
 
     face->colr_and_cpal = cc;
 
+    /* set up default palette */
+    if ( FT_NEW_ARRAY( face->palette,
+                       face->palette_data.num_palette_entries ) )
+      goto NoColor;
+
+    tt_face_palette_set( face, 0 );
+
     return FT_Err_Ok;
 
   InvalidTable:
-    error = FT_THROW( Invalid_File_Format );
+    error = FT_THROW( Invalid_Table );
 
   NoColor:
     FT_FRAME_RELEASE( colr_table );
     FT_FRAME_RELEASE( cpal_table );
 
-    /* arrays in `face->palette_data' are freed in `sfnt_face_done' */
+    FT_FREE( cc );
+
+    /* arrays in `face->palette_data' and `face->palette' */
+    /* are freed in `sfnt_done_face'                      */
 
     return error;
   }
@@ -459,6 +469,43 @@
     *alpha = FT_NEXT_BYTE( p );
 
     return 1;
+  }
+
+
+  FT_LOCAL_DEF( FT_Error )
+  tt_face_palette_set( TT_Face  face,
+                       FT_UInt  palette_index )
+  {
+    ColrCpal*  colr_and_cpal = (ColrCpal *)face->colr_and_cpal;
+    Cpal*      cpal          = &colr_and_cpal->cpal;
+
+    FT_Byte*   offset;
+    FT_Byte*   p;
+
+    FT_Color*  q;
+    FT_Color*  limit;
+
+
+    if ( palette_index >= face->palette_data.num_palettes )
+      return FT_THROW( Invalid_Argument );
+
+    offset = cpal->color_indices + 2 * palette_index;
+    p      = cpal->colors + COLOR_SIZE * FT_PEEK_USHORT( offset );
+
+    q     = face->palette;
+    limit = q + face->palette_data.num_palette_entries * sizeof ( FT_Color );
+
+    while ( q < limit )
+    {
+      q->blue  = FT_NEXT_BYTE( p );
+      q->green = FT_NEXT_BYTE( p );
+      q->red   = FT_NEXT_BYTE( p );
+      q->alpha = FT_NEXT_BYTE( p );
+
+      q++;
+    }
+
+    return FT_Err_Ok;
   }
 
 

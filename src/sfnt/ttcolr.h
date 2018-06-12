@@ -43,6 +43,10 @@ FT_BEGIN_HEADER
                             FT_UShort*       ret_num_layers );
 
   FT_LOCAL( FT_Error )
+  tt_face_palette_set( TT_Face  face,
+                       FT_UInt  palette_index );
+
+  FT_LOCAL( FT_Error )
   tt_face_colr_blend_layer( TT_Face       face,
                             FT_UInt       color_index,
                             FT_GlyphSlot  dstSlot,
