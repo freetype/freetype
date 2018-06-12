@@ -451,9 +451,9 @@
 #define CEILING( x )  ( ( (x) + ras.precision - 1 ) & -ras.precision )
 #define TRUNC( x )    ( (Long)(x) >> ras.precision_bits )
 #define FRAC( x )     ( (x) & ( ras.precision - 1 ) )
-#define SCALED( x )   ( ( (x) < 0 ? -( -(x) << ras.scale_shift )   \
-                                  :  (  (x) << ras.scale_shift ) ) \
-                        - ras.precision_half )
+
+  /* scale and shift grid to pixel centers */
+#define SCALED( x )   ( (x) * ras.precision_scale - ras.precision_half )
 
 #define IS_BOTTOM_OVERSHOOT( x ) \
           (Bool)( CEILING( x ) - x >= ras.precision_half )
@@ -475,12 +475,9 @@
     Int         precision_bits;     /* precision related variables         */
     Int         precision;
     Int         precision_half;
-    Int         precision_shift;
+    Int         precision_scale;
     Int         precision_step;
     Int         precision_jitter;
-
-    Int         scale_shift;        /* == precision_shift   for bitmaps    */
-                                    /* == precision_shift+1 for pixmaps    */
 
     PLong       buff;               /* The profiles buffer                 */
     PLong       sizeBuff;           /* Render pool size                    */
@@ -622,8 +619,8 @@
     FT_TRACE6(( "Set_High_Precision(%s)\n", High ? "true" : "false" ));
 
     ras.precision       = 1 << ras.precision_bits;
-    ras.precision_half  = ras.precision / 2;
-    ras.precision_shift = ras.precision_bits - Pixel_Bits;
+    ras.precision_half  = ras.precision >> 1;
+    ras.precision_scale = ras.precision >> Pixel_Bits;
   }
 
 
@@ -2286,12 +2283,9 @@
         /* memset() is slower than the following code on many platforms. */
         /* This is due to the fact that, in the vast majority of cases,  */
         /* the span length in bytes is relatively small.                 */
-        c2--;
-        while ( c2 > 0 )
-        {
+        while ( --c2 > 0 )
           *(++target) = 0xFF;
-          c2--;
-        }
+
         target[1] |= f2;
       }
       else
@@ -3092,7 +3086,6 @@
 
     Set_High_Precision( RAS_VARS ras.outline.flags &
                                  FT_OUTLINE_HIGH_PRECISION );
-    ras.scale_shift = ras.precision_shift;
 
     if ( ras.outline.flags & FT_OUTLINE_IGNORE_DROPOUTS )
       ras.dropOutControl = 2;

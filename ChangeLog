@@ -1,3 +1,11 @@
+2018-06-11  Alexei Podtelezhnikov  <apodtele@gmail.com>
+
+	[raster] Clean up.
+
+	* src/raster/ftraster.c (black_TWorker, SCALED, Set_High_Precision):
+	Clean up after 5-level gray removal (8dc8635874).
+	(Vertical_Sweep_Span): Be brief.
+
 2018-06-10  Werner Lemberg  <wl@gnu.org>
 
 	[sfnt] Fix compiler warnings.
