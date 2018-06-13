@@ -81,6 +81,7 @@
  *   pcf_driver
  *   properties
  *   parameter_tags
+ *   lcd_rendering
  *
  */
 
@@ -120,7 +121,6 @@
  *   gzip
  *   lzw
  *   bzip2
- *   lcd_rendering
  *
  */
 

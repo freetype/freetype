@@ -64,9 +64,9 @@ FT_BEGIN_HEADER
    *
    *   A compiler and its preprocessor only needs an include path to find
    *   the file `ft2build.h'; the exact locations and names of the other
-   *   FreeType header files are hidden by preprocessor macro names,
-   *   loaded by `ft2build.h'.  The API documentation always gives the
-   *   header macro name needed for a particular function.
+   *   FreeType header files are hidden by @header_file_macros, loaded by
+   *   `ft2build.h'.  The API documentation always gives the header macro
+   *   name needed for a particular function.
    *
    */
 

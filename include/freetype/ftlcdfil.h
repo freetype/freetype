@@ -73,10 +73,8 @@ FT_BEGIN_HEADER
    *   3) It should be normalized, meaning 2a~+ 2b~+ c~=~1.0 to maintain
    *      overall brightness.
    *
-   *   The distribution of density values by the color-balanced filter assumes
-   *   alpha blending is done in linear space; only then color artifacts
-   *   cancel out. Boxy 3-tap filter {0, 1/3, 1/3, 1/3, 0} is sharper but is
-   *   less forgiving of non-ideal gamma curves of a screen (viewing angles!),
+   *   Boxy 3-tap filter {0, 1/3, 1/3, 1/3, 0} is sharper but is less
+   *   forgiving of non-ideal gamma curves of a screen (and viewing angles),
    *   beveled filters are fuzzier but more tolerant.
    *
    *   Use the @FT_Library_SetLcdFilter or @FT_Library_SetLcdFilterWeights
@@ -93,10 +91,7 @@ FT_BEGIN_HEADER
    *
    *   The subpixel geometry must be specified by xy-coordinates for each
    *   subpixel. By convention they may come in the RGB order:
-   *
-   *   {{-1/3, 0}, {0, 0}, {1/3, 0}} for hRGB striped panel (default),
-   *   {{1/3, 0}, {0, 0}, {-1/3, 0}} for hBGR striped panel,
-   *   {{0, 1/3}, {0, 0}, {0, -1/3}} for vRGB striped panel,
+   *   {{-1/3, 0}, {0, 0}, {1/3, 0}} for standard RGB striped panel or
    *   {{-1/6, 1/4}, {-1/6, -1/4}, {1/3, 0}} for a certain PenTile panel.
    *
    *   Use the @FT_Library_SetLcdGeometry API to specify subpixel positions.
@@ -115,9 +110,13 @@ FT_BEGIN_HEADER
    *   glyph positioning code when enabling the filter.
    *
    *   The ClearType and Harmony rendering is applicable to glyph bitmaps
-   *   rendered through @FT_Render_Glyph, @FT_Load_Glyph, and @FT_Load_Char.
-   *   @FT_RENDER_MODE_LCD or @FT_RENDER_MODE_LCD_V and these technologies do
-   *   not apply to @FT_Outline_Render and @FT_Outline_Get_Bitmap directly.
+   *   rendered through @FT_Render_Glyph, @FT_Load_Glyph, @FT_Load_Char, and
+   *   @FT_Glyph_To_Bitmap, when @FT_RENDER_MODE_LCD or @FT_RENDER_MODE_LCD_V
+   *   is specified.  This API does not control @FT_Outline_Render and
+   *   @FT_Outline_Get_Bitmap.
+   *
+   *   The described algorithms can completely remove color artefacts when
+   *   combined with gamma-corrected alpha blending in linear space.
    *   Each of the 3~alpha values (subpixels) must by independently used to
    *   blend one color channel.  That is, red alpha blends the red channel of
    *   the text color with the red channel of the background pixel.
@@ -294,7 +293,7 @@ FT_BEGIN_HEADER
    * @note:
    *   Subpixel geometry examples:
    *
-   *   - {{-21, 0}, {0, 0}, {21, 0}} is the default, corresponding 3 color
+   *   - {{-21, 0}, {0, 0}, {21, 0}} is the default, corresponding to 3 color
    *   stripes shifted by a third of a pixel. This could be an RGB panel.
    *
    *   - {{21, 0}, {0, 0}, {-21, 0}} looks the same as the default but
