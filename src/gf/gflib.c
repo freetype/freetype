@@ -1,6 +1,6 @@
 /****************************************************************************
  *
- * gfdrivr.h
+ * gflib.c
  *
  *   FreeType font driver for TeX's GF FONT files
  *
@@ -21,6 +21,10 @@
 #include FT_INTERNAL_DEBUG_H
 #include FT_INTERNAL_STREAM_H
 #include FT_INTERNAL_OBJECTS_H
+#include FT_SYSTEM_H
+#include FT_CONFIG_CONFIG_H
+#include FT_ERRORS_H
+#include FT_TYPES_H
 
 #include "gf.h"
 #include "gfdrivr.h"
@@ -36,6 +40,8 @@
 #undef  FT_COMPONENT
 #define FT_COMPONENT  trace_gflib
 
+unsigned char   bit_table[] = {
+  0x80, 0x40, 0x20, 0x10, 0x08, 0x04, 0x02, 0x01 };
 
   /**************************************************************************
    *
@@ -67,7 +73,6 @@
   gf_read_uintn(FILE* fp, int size)
   {
     unsigned long  v;
-
     v = 0L;
     while (size >= 1)
     {
@@ -149,7 +154,7 @@
    */
 
   FT_LOCAL_DEF( FT_Error )
-  gf_read_glyph(FT_FILE* fp, GF_BITMAP bm)
+  gf_read_glyph(FT_FILE* fp, GF_Bitmap bm)
   {
     long           m, n;
     int            paint_sw;
@@ -158,30 +163,29 @@
     long           w, h, d;
     int            m_b, k;
     unsigned char  *ptr;
+    FT_Error        error  = FT_Err_Ok;
 
     switch (READ_UINT1(fp))
     {
-      case GF_BOC:
-        SKIP_N(fp, 4);
-        SKIP_N(fp, 4);
-        min_m = READ_INT4(fp);
-        max_m = READ_INT4(fp);
-        min_n = READ_INT4(fp);
-        max_n = READ_INT4(fp);
-        break;
-
-      case GF_BOC1:
-        SKIP_N(fp, 1);
-        del_m = (INT4)READ_UINT1(fp);
-        max_m = (INT4)READ_UINT1(fp);
-        del_n = (INT4)READ_UINT1(fp);
-        max_n = (INT4)READ_UINT1(fp);
-        min_m = max_m - del_m;
-        min_n = max_n - del_n;
-        break;
-
-      default:
-        goto Exit;
+    case GF_BOC:
+      SKIP_N(fp, 4);
+      SKIP_N(fp, 4);
+      min_m = READ_INT4(fp);
+      max_m = READ_INT4(fp);
+      min_n = READ_INT4(fp);
+      max_n = READ_INT4(fp);
+      break;
+    case GF_BOC1:
+      SKIP_N(fp, 1);
+      del_m = (INT4)READ_UINT1(fp);
+      max_m = (INT4)READ_UINT1(fp);
+      del_n = (INT4)READ_UINT1(fp);
+      max_n = (INT4)READ_UINT1(fp);
+      min_m = max_m - del_m;
+      min_n = max_n - del_n;
+      break;
+    default:
+      goto Exit;
     }
 
     w = max_m - min_m + 1;
@@ -198,7 +202,7 @@
       goto Exit;
     }
 
-    memclr(bm->bitmap, h*((w+7)/8));
+    memset(bm->bitmap, 0, h*((w+7)/8));
     bm->raster     = (w+7)/8;
     bm->bbx_width  = w;
     bm->bbx_height = h;
@@ -233,11 +237,10 @@
       {
         switch ((int)instr)
         {
-          case GF_PAINT1:
-          case GF_PAINT2:
-          case GF_PAINT3:
+        case GF_PAINT1:
+        case GF_PAINT2:
+        case GF_PAINT3:
           d = (UINT4)READ_UINTN(fp, (instr - GF_PAINT1 + 1));
-
           Paint:
             if (paint_sw == 0)
             {
@@ -261,38 +264,32 @@
             }
             paint_sw = 1 - paint_sw;
           break;
-
-					case GF_SKIP0:
+			  case GF_SKIP0:
           m = min_m;
           n = n - 1;
           paint_sw = 0;
           break;
-
-          case GF_SKIP1:
-          case GF_SKIP2:
-          case GF_SKIP3:
+        case GF_SKIP1:
+        case GF_SKIP2:
+        case GF_SKIP3:
           m = min_m;
           n = n - (UINT4)READ_UINTN(fp, (instr - GF_SKIP1 + 1)) - 1;
           paint_sw = 0;
           break;
-
-          case GF_XXX1:
-          case GF_XXX2:
-          case GF_XXX3:
-          case GF_XXX4:
+        case GF_XXX1:
+        case GF_XXX2:
+        case GF_XXX3:
+        case GF_XXX4:
           k = READ_UINTN(fp, instr - GF_XXX1 + 1);
           SKIP_N(fp, k);
           break;
-
-          case GF_YYY:
+        case GF_YYY:
           SKIP_N(fp, 4);
           break;
-
-          case GF_NO_OP:
+        case GF_NO_OP:
           break;
-
-          default:
-          FT_FREE(bm->bitmap);
+        default:
+          /* FT_FREE(bm->bitmap); */ /* Returning unnecessary errors TO BE CHECKED */
           bm->bitmap = NULL;
           error = FT_THROW( Invalid_File_Format );
           goto Exit;
@@ -309,8 +306,8 @@
   gf_load_font(  FT_Stream       stream,
                  GF_Face         face  )
   {
-    GF_GLYPH        go;
-    GF_BITMAP       bm;
+    GF_Glyph        go;
+    GF_Bitmap       bm;
     UINT1           instr, d;
     UINT4           ds, check_sum, hppp, vppp;
     INT4            min_m, max_m, min_n, max_n;
@@ -321,23 +318,35 @@
     int             bc, ec, nchars, i;
     FT_Error        error  = FT_Err_Ok;
 
-    FT_FILE *fp = stream->descriptor.pointer
+    FT_FILE *fp = (FT_FILE*)stream->descriptor.pointer ;/* Errors with STREAM_FILE( stream )
+    stream->descriptor.pointer is not allocating the file pointer properly*/
     go          = face->gf_glyph;
+
+    char* st =  (char*)stream->pathname.pointer;
+    fp=fopen(st,"rb");
+
+    printf("\nHi I am here in gf_load_font 1 stream->pathname: %s %p\n\n", stream->pathname.pointer, *fp);
 
     go = NULL;
     nchars = -1;
 
     /* seek to post_post instr. */
-    ft_fseek(fp, -1, SEEK_END);
+    fseek(fp, -5, SEEK_END);
+
+printf("\nHi I am here in gf_load_font -1\n\n");
 
     while ((d = READ_UINT1(fp)) == 223)
       fseek(fp, -2, SEEK_CUR);
+
+printf("\nHi I am here in gf_load_font 0\n\n");
+printf("\nHi I am here in gf_load_font d instr is %d\n\n",d);
 
     if (d != GF_ID)
     {
       error = FT_THROW( Invalid_File_Format );
       goto ErrExit;
     }
+    printf("\nHi I am here in gf_load_font 1\n\n");
 
     fseek(fp, -6, SEEK_CUR);
 
@@ -348,12 +357,16 @@
       goto ErrExit;
     }
 
+printf("\nHi I am here in gf_load_font 2\n\n");
+
     /* read pointer to post instr. */
     if ((ptr_post = READ_UINT4(fp)) == -1)
     {
       error = FT_THROW( Invalid_File_Format );
       goto ErrExit;
     }
+
+printf("\nHi I am here in gf_load_font 3\n\n");
 
     /* goto post instr. and read it */
     fseek(fp, ptr_post, SEEK_SET);
@@ -362,6 +375,8 @@
       error = FT_THROW( Invalid_File_Format );
       goto ErrExit;
     }
+
+printf("\nHi I am here in gf_load_font 4\n\n");
 
     ptr_p     = READ_UINT4(fp);
     ds        = READ_UINT4(fp);
@@ -373,8 +388,9 @@
     min_n     = READ_INT4(fp);
     max_n     = READ_INT4(fp);
 
+printf("\nHi I am here in gf_load_font 5\n\n");
     gptr = ftell(fp);
-
+printf("\nHi I am here in gf_load_font 6\n\n");
 
     #if 0
       /* read min & max char code */
@@ -413,14 +429,19 @@
     #endif
 
     nchars = ec - bc + 1;
-    FT_ALLOC(go, GF_GlyphRec)
-      goto ErrExit;
+    go= (GF_Glyph)malloc(sizeof(GF_GlyphRec)); /* FT_ALLOC(go, sizeof(GF_GlyphRec)); goto ErrExit; */
+                                               /* Returning unnecessary errors TO BE CHECKED */
 
-    FT_ALLOC_MULT(go->bm_table, GF_BitmapRec, nchars)
-      goto ErrExit;
+printf("\nHi I am here in gf_load_font 7\n\n");
 
-    for (i = 0; i < nchars; i++)
-      go->bm_table[i].bitmap = NULL;
+    go->bm_table = (GF_Bitmap)malloc(nchars* sizeof(GF_BitmapRec));/* FT_ALLOC_MULT(go->bm_table, sizeof(GF_BitmapRec), nchars); goto ErrExit; */
+                                                                   /* Returning unnecessary errors TO BE CHECKED */
+printf("\nHi I am here in gf_load_font 8\n\n");
+
+    /*for (i = 0; i < nchars; i++)
+      go->bm_table[i] = NULL;*/
+
+printf("\nHi I am here in gf_load_font 9\n\n");
 
     go->ds   = (double)ds/(1<<20);
     go->hppp = (double)hppp/(1<<16);
@@ -437,47 +458,46 @@
       fseek(fp, gptr, SEEK_SET);
     #endif
 
+printf("\nHi I am here in gf_load_font 9.5\n");
+
     for (  ;  ;  )
     {
       if ((instr = READ_UINT1(fp)) == GF_POST_POST)
         break;
+        printf("\nHi I am here in gf_load_font 9.6 instr is %d\n\n", instr);
       switch ((int)instr)
       {
-
-        case GF_CHAR_LOC:
-          code = READ_UINT1(fp);
-          dx   = (double)READ_INT4(fp)/(double)(1<<16);
-          dy   = (double)READ_INT4(fp)/(double)(1<<16);
-          w    = READ_INT4(fp);
-          ptr  = READ_INT4(fp);
-          break;
-
-        case GF_CHAR_LOC0:
-          code = READ_UINT1(fp);
-          dx   = (double)READ_INT1(fp);
-          dy   = (double)0;
-          w    = READ_INT4(fp);
-          ptr  = READ_INT4(fp);
-          break;
-
-        default:
-          error = FT_THROW( Invalid_File_Format );
-          goto ErrExit;
-
+      case GF_CHAR_LOC:
+        code = READ_UINT1(fp);
+        dx   = (double)READ_INT4(fp)/(double)(1<<16);
+        dy   = (double)READ_INT4(fp)/(double)(1<<16);
+        w    = READ_INT4(fp);
+        ptr  = READ_INT4(fp);
+        break;
+        printf("\nHi I am here in gf_load_font 9.7\n\n");
+      case GF_CHAR_LOC0:
+        code = READ_UINT1(fp);
+        dx   = (double)READ_INT1(fp);
+        dy   = (double)0;
+        w    = READ_INT4(fp);
+        ptr  = READ_INT4(fp);
+        break;
+      default:
+        error = FT_THROW( Invalid_File_Format );
+        goto ErrExit;
       }
-
+printf("\nHi I am here in gf_load_font 10\n\n");
       optr = ft_ftell(fp);
       ft_fseek(fp, ptr, SEEK_SET);
 
       bm = &go->bm_table[code - bc];
       if (gf_read_glyph(fp, bm) < 0)
         goto ErrExit;
-
+printf("\nHi I am here in gf_load_font 11\n\n");
       bm->mv_x = dx;
       bm->mv_y = dy;
       ft_fseek(fp, optr, SEEK_SET);
     }
-    return go;
 
 		ErrExit:
       printf("*ERROR\n");
@@ -485,29 +505,29 @@
       {
         if (go->bm_table != NULL)
         {
-          for (i = 0; i < nchars; i++)
-            FT_FREE(go->bm_table[i].bitmap);
+          for (i = 0; i < nchars; i++){}
+           /* FT_FREE(go->bm_table[i].bitmap); */
         }
-        FT_FREE(go->bm_table);
+        /* FT_FREE(go->bm_table); */ /* Returning unnecessary errors TO BE CHECKED */
       }
-      FT_FREE(go);
-      return NULL;
+      /* FT_FREE(go); */ /* Returning unnecessary errors TO BE CHECKED */
   }
 
 
   FT_LOCAL_DEF( void )
   gf_free_font( GF_Glyph  go )
   {
+    int i=0, nchars =sizeof(go->bm_table);
     if (go != NULL)
     {
       if (go->bm_table != NULL)
       {
-        for (i = 0; i < nchars; i++)
-          FT_FREE(go->bm_table[i].bitmap);
+        for (i = 0; i < nchars; i++){}
+          /* FT_FREE(go->bm_table[i].bitmap); */ /* To be verified from Vflib */
       }
-      FT_FREE(go->bm_table);
+      /* FT_FREE(go->bm_table); */ /* Returning unnecessary errors TO BE CHECKED */
     }
-    FT_FREE(go);
+    /* FT_FREE(go); */ /* Returning unnecessary errors TO BE CHECKED */
   }
 
 

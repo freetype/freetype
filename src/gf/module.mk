@@ -16,7 +16,7 @@ FTMODULE_H_COMMANDS += GF_DRIVER
 
 define GF_DRIVER
 $(OPEN_DRIVER) FT_Driver_ClassRec, gf_driver_class $(CLOSE_DRIVER)
-$(ECHO_DRIVER)gf       $(ECHO_DRIVER_DESC)gf TeX's bitmap fonts$(ECHO_DRIVER_DONE)
+$(ECHO_DRIVER)gf        $(ECHO_DRIVER_DESC)gf TeX's bitmap fonts$(ECHO_DRIVER_DONE)
 endef
 
 # EOF

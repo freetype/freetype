@@ -42,7 +42,7 @@ FT_BEGIN_HEADER
   typedef struct GF_GlyphRec_
   {
     FT_UInt         code_min, code_max;
-    GF_BITMAP       bm_table;
+    GF_Bitmap       bm_table;
     double          ds, hppp, vppp;
     FT_UInt         font_bbx_w, font_bbx_h;
     FT_UInt         font_bbx_xoff, font_bbx_yoff;

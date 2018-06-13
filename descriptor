@@ -1,0 +1,483 @@
+ChangeLog.21:	* src/base/ftstream.c (FT_Stream_Close): Don't reset stream->close
+builds/mac/ftmac.c:      resource fork.  So we just grab the stream->pathname field.
+builds/mac/ftmac.c:#define STREAM_FILE( stream )  ( (FT_FILE*)stream->descriptor.pointer )
+builds/mac/ftmac.c:    stream->descriptor.pointer = NULL;
+builds/mac/ftmac.c:    stream->size               = 0;
+builds/mac/ftmac.c:    stream->base               = 0;
+builds/unix/ftsystem.c:#define STREAM_FILE( stream )  ( (FILE*)stream->descriptor.pointer )
+builds/unix/ftsystem.c:    munmap( (MUNMAP_ARG_CAST)stream->descriptor.pointer, stream->size );
+builds/unix/ftsystem.c:    stream->descriptor.pointer = NULL;
+builds/unix/ftsystem.c:    stream->size               = 0;
+builds/unix/ftsystem.c:    stream->base               = 0;
+builds/unix/ftsystem.c:    ft_free( NULL, stream->descriptor.pointer );
+builds/unix/ftsystem.c:    stream->descriptor.pointer = NULL;
+builds/unix/ftsystem.c:    stream->size               = 0;
+builds/unix/ftsystem.c:    stream->base               = 0;
+builds/unix/ftsystem.c:    /* `stream->size' is typedef'd to unsigned long (in `ftsystem.h'); */
+builds/unix/ftsystem.c:    stream->size = (unsigned long)stat_buf.st_size;
+builds/unix/ftsystem.c:    stream->pos  = 0;
+builds/unix/ftsystem.c:    stream->base = (unsigned char *)mmap( NULL,
+builds/unix/ftsystem.c:                                          stream->size,
+builds/unix/ftsystem.c:    if ( (long)stream->base != -1 && stream->base != NULL )
+builds/unix/ftsystem.c:      stream->close = ft_close_stream_by_munmap;
+builds/unix/ftsystem.c:      stream->base = (unsigned char*)ft_alloc( NULL, stream->size );
+builds/unix/ftsystem.c:      if ( !stream->base )
+builds/unix/ftsystem.c:                           stream->base + total_read_count,
+builds/unix/ftsystem.c:                           stream->size - total_read_count );
+builds/unix/ftsystem.c:      } while ( (unsigned long)total_read_count != stream->size );
+builds/unix/ftsystem.c:      stream->close = ft_close_stream_by_free;
+builds/unix/ftsystem.c:    stream->descriptor.pointer = stream->base;
+builds/unix/ftsystem.c:    stream->pathname.pointer   = (char*)filepathname;
+builds/unix/ftsystem.c:    stream->read = 0;
+builds/unix/ftsystem.c:                filepathname, stream->size ));
+builds/unix/ftsystem.c:    ft_free( NULL, stream->base );
+builds/unix/ftsystem.c:    stream->base = NULL;
+builds/unix/ftsystem.c:    stream->size = 0;
+builds/unix/ftsystem.c:    stream->pos  = 0;
+builds/vms/ftsystem.c:#define STREAM_FILE( stream )  ( (FILE*)stream->descriptor.pointer )
+builds/vms/ftsystem.c:    munmap( (MUNMAP_ARG_CAST)stream->descriptor.pointer, stream->size );
+builds/vms/ftsystem.c:    stream->descriptor.pointer = NULL;
+builds/vms/ftsystem.c:    stream->size               = 0;
+builds/vms/ftsystem.c:    stream->base               = 0;
+builds/vms/ftsystem.c:    stream->size = stat_buf.st_size;
+builds/vms/ftsystem.c:    if ( !stream->size )
+builds/vms/ftsystem.c:    stream->pos  = 0;
+builds/vms/ftsystem.c:    stream->base = (unsigned char *)mmap( NULL,
+builds/vms/ftsystem.c:                                          stream->size,
+builds/vms/ftsystem.c:    if ( (long)stream->base == -1 )
+builds/vms/ftsystem.c:    stream->descriptor.pointer = stream->base;
+builds/vms/ftsystem.c:    stream->pathname.pointer   = (char*)filepathname;
+builds/vms/ftsystem.c:    stream->close = ft_close_stream;
+builds/vms/ftsystem.c:    stream->read  = 0;
+builds/vms/ftsystem.c:                filepathname, stream->size ));
+builds/vms/ftsystem.c:    stream->base = NULL;
+builds/vms/ftsystem.c:    stream->size = 0;
+builds/vms/ftsystem.c:    stream->pos  = 0;
+builds/amiga/src/base/ftsystem.c:#define STREAM_FILE( stream )  ( (struct SysFile *)stream->descriptor.pointer )
+builds/amiga/src/base/ftsystem.c:    stream->descriptor.pointer = NULL;
+builds/amiga/src/base/ftsystem.c:    stream->size               = 0;
+builds/amiga/src/base/ftsystem.c:    stream->base               = 0;
+builds/amiga/src/base/ftsystem.c:    stream->size = fib->fib_Size;
+builds/amiga/src/base/ftsystem.c:    stream->descriptor.pointer = (void *)sysfile;
+builds/amiga/src/base/ftsystem.c:    stream->pathname.pointer   = (char*)filepathname;
+builds/amiga/src/base/ftsystem.c:    stream->pos                = 0;
+builds/amiga/src/base/ftsystem.c:    stream->read  = ft_amiga_stream_io;
+builds/amiga/src/base/ftsystem.c:    stream->close = ft_amiga_stream_close;
+builds/amiga/src/base/ftsystem.c:    if ( !stream->size )
+builds/amiga/src/base/ftsystem.c:                filepathname, stream->size ));
+include/freetype/internal/ftstream.h:#define FT_GET_MACRO( type )    FT_NEXT_ ## type ( stream->cursor )
+include/freetype/internal/cfftypes.h:    FT_Memory        memory;        /* TODO: take this from stream->memory? */
+src/type1/t1parse.c:      if ( ft_memcmp( stream->cursor, header_string, header_length ) != 0 )
+src/type1/t1parse.c:      size = stream->size;
+src/type1/t1parse.c:    if ( !stream->read )
+src/type1/t1parse.c:      parser->base_dict = (FT_Byte*)stream->base + stream->pos;
+src/type1/t1afm.c:    FT_Memory     memory = stream->memory;
+src/type1/t1afm.c:    start = (FT_Byte*)stream->cursor;
+src/type1/t1afm.c:    limit = (FT_Byte*)stream->limit;
+src/type1/t1afm.c:    FT_Memory      memory  = stream->memory;
+src/type1/t1afm.c:         FT_FRAME_ENTER( stream->size ) )
+src/type1/t1afm.c:                                             stream->memory,
+src/type1/t1afm.c:                                             stream->cursor,
+src/type1/t1afm.c:                                             stream->limit );
+src/type1/t1afm.c:      FT_Byte*  start = stream->cursor;
+src/type1/t1afm.c:      if ( stream->size > 6                              &&
+src/type1/t1afm.c:           FT_PEEK_ULONG_LE( start + 2 ) == stream->size )
+src/cid/cidload.c:    if ( (FT_ULong)num_dicts > stream->size / 100 )
+src/cid/cidload.c:                  stream->size / 100 ));
+src/cid/cidload.c:      num_dicts = (FT_Long)( stream->size / 100 );
+src/cid/cidload.c:      p = (FT_Byte*)stream->cursor;
+src/cid/cidload.c:      if ( offsets[num_subrs] > stream->size - cid->data_offset )
+src/cid/cidload.c:        FT_ULong  size   = stream->size - oldpos;
+src/cid/cidload.c:             face->root.stream->size - parser->data_offset )
+src/cid/cidload.c:                    face->root.stream->size - parser->data_offset ));
+src/cid/cidload.c:        parser->binary_length = face->root.stream->size -
+src/cid/cidload.c:    binary_length = face->cid_stream->size - cid->data_offset;
+src/cid/cidparse.c:    if ( ft_strncmp( (char *)stream->cursor,
+src/cid/cidparse.c:        stream_len = stream->size - FT_STREAM_POS();
+src/cid/cidgload.c:      p         = (FT_Byte*)stream->cursor;
+src/cid/cidgload.c:           off2 > stream->size                   ||
+src/sfnt/ttload.c:      if ( table.Offset > stream->size )
+src/sfnt/ttload.c:      else if ( table.Length > stream->size - table.Offset )
+src/sfnt/ttload.c:    FT_Memory       memory = stream->memory;
+src/sfnt/ttload.c:      if ( entry.Offset > stream->size )
+src/sfnt/ttload.c:      else if ( entry.Length > stream->size - entry.Offset )
+src/sfnt/ttload.c:          entry.Length = ( stream->size - entry.Offset ) & ~3U;
+src/sfnt/ttload.c:      size = face->root.stream->size;
+src/sfnt/ttload.c:    FT_Memory     memory = stream->memory;
+src/sfnt/ttload.c:    FT_Memory  memory = stream->memory;
+src/sfnt/sfobjs.c:    FT_Memory  memory = stream->memory;
+src/sfnt/sfobjs.c:    FT_FREE( stream->base );
+src/sfnt/sfobjs.c:    stream->size  = 0;
+src/sfnt/sfobjs.c:    stream->base  = NULL;
+src/sfnt/sfobjs.c:    stream->close = NULL;
+src/sfnt/sfobjs.c:    FT_Memory       memory = stream->memory;
+src/sfnt/sfobjs.c:    if ( woff.length != stream->size                              ||
+src/sfnt/sfobjs.c:                   stream->cursor,
+src/sfnt/sfobjs.c:                                    stream->cursor, table->CompLength );
+src/sfnt/sfobjs.c:    sfnt_stream->memory = stream->memory;
+src/sfnt/sfobjs.c:    sfnt_stream->close  = sfnt_stream_close;
+src/sfnt/sfobjs.c:    FT_Memory  memory = stream->memory;
+src/sfnt/sfobjs.c:      if ( (FT_ULong)face->ttc_header.count > stream->size / ( 28 + 4 ) )
+src/sfnt/sfobjs.c:          FT_Memory        memory   = face->root.stream->memory;
+src/sfnt/ttsbit.c:                           decoder->stream->memory,
+src/sfnt/ttsbit.c:                             stream->memory,
+src/sfnt/ttsbit.c:                             stream->cursor,
+src/sfnt/ttpost.c:    FT_Memory   memory = stream->memory;
+src/sfnt/ttpost.c:    FT_Memory  memory = stream->memory;
+src/sfnt/pngshim.c:    ft_memcpy( data, stream->cursor, length );
+src/sfnt/sfdriver.c:    p = (FT_Char*)stream->cursor;
+src/sfnt/sfdriver.c:    p = (FT_Char*)stream->cursor;
+src/tools/test_afm.c:    error = FT_Stream_EnterFrame( stream, stream->size );
+src/tools/test_afm.c:                                           stream->cursor,
+src/tools/test_afm.c:                                           stream->limit );
+src/pfr/pfrload.c:         2 + count * 5 >= stream->size - section_offset ||
+src/pfr/pfrload.c:         95 + count * ( 5 + 18 ) >= stream->size        )
+src/pfr/pfrload.c:      p     = stream->cursor;
+src/pfr/pfrload.c:    FT_Memory  memory = stream->memory;
+src/pfr/pfrload.c:    phy_font->cursor = stream->cursor;
+src/pfr/pfrload.c:    p     = stream->cursor;
+src/pfr/pfrload.c:      phy_font->chars_offset = offset + (FT_Offset)( p - stream->cursor );
+src/pfr/pfrgload.c:    p     = (FT_Byte*)stream->cursor;
+src/pfr/pfrobjs.c:        FT_Memory        memory = pfrface->stream->memory;
+src/pfr/pfrobjs.c:        FT_Byte*   base        = stream->cursor;
+src/pfr/pfrsbit.c:      pfr_lookup_bitmap_data( stream->cursor,
+src/pfr/pfrsbit.c:                              stream->limit,
+src/pfr/pfrsbit.c:      p     = stream->cursor;
+src/pfr/pfrsbit.c:      error = pfr_load_bitmap_metrics( &p, stream->limit,
+src/pfr/pfrsbit.c:                      stream->limit,
+src/gzip/ftgzip.c:    zip->memory = stream->memory;
+src/gzip/ftgzip.c:    zstream->zalloc = (alloc_func)ft_gzip_alloc;
+src/gzip/ftgzip.c:    zstream->zfree  = (free_func) ft_gzip_free;
+src/gzip/ftgzip.c:    zstream->opaque = stream->memory;
+src/gzip/ftgzip.c:    zstream->avail_in = 0;
+src/gzip/ftgzip.c:    zstream->next_in  = zip->buffer;
+src/gzip/ftgzip.c:         !zstream->next_in                           )
+src/gzip/ftgzip.c:    zstream->zalloc    = NULL;
+src/gzip/ftgzip.c:    zstream->zfree     = NULL;
+src/gzip/ftgzip.c:    zstream->opaque    = NULL;
+src/gzip/ftgzip.c:    zstream->next_in   = NULL;
+src/gzip/ftgzip.c:    zstream->next_out  = NULL;
+src/gzip/ftgzip.c:    zstream->avail_in  = 0;
+src/gzip/ftgzip.c:    zstream->avail_out = 0;
+src/gzip/ftgzip.c:      zstream->avail_in  = 0;
+src/gzip/ftgzip.c:      zstream->next_in   = zip->input;
+src/gzip/ftgzip.c:      zstream->avail_out = 0;
+src/gzip/ftgzip.c:      zstream->next_out  = zip->buffer;
+src/gzip/ftgzip.c:    if ( stream->read )
+src/gzip/ftgzip.c:      size = stream->read( stream, stream->pos, zip->input,
+src/gzip/ftgzip.c:      size = stream->size - stream->pos;
+src/gzip/ftgzip.c:      FT_MEM_COPY( zip->input, stream->base + stream->pos, size );
+src/gzip/ftgzip.c:    stream->pos += size;
+src/gzip/ftgzip.c:    zstream->next_in  = zip->input;
+src/gzip/ftgzip.c:    zstream->avail_in = size;
+src/gzip/ftgzip.c:    zstream->next_out  = zip->cursor;
+src/gzip/ftgzip.c:    zstream->avail_out = FT_GZIP_BUFFER_SIZE;
+src/gzip/ftgzip.c:    while ( zstream->avail_out > 0 )
+src/gzip/ftgzip.c:      if ( zstream->avail_in == 0 )
+src/gzip/ftgzip.c:        zip->limit = zstream->next_out;
+src/gzip/ftgzip.c:    FT_GZipFile  zip    = (FT_GZipFile)stream->descriptor.pointer;
+src/gzip/ftgzip.c:    FT_Memory    memory = stream->memory;
+src/gzip/ftgzip.c:      stream->descriptor.pointer = NULL;
+src/gzip/ftgzip.c:    if ( !stream->read )
+src/gzip/ftgzip.c:      FT_FREE( stream->base );
+src/gzip/ftgzip.c:    FT_GZipFile  zip = (FT_GZipFile)stream->descriptor.pointer;
+src/gzip/ftgzip.c:    old_pos = stream->pos;
+src/gzip/ftgzip.c:    if ( !FT_Stream_Seek( stream, stream->size - 4 ) )
+src/gzip/ftgzip.c:    stream->memory = memory;
+src/gzip/ftgzip.c:      stream->descriptor.pointer = zip;
+src/gzip/ftgzip.c:            stream->descriptor.pointer = NULL;
+src/gzip/ftgzip.c:            stream->size  = zip_size;
+src/gzip/ftgzip.c:            stream->pos   = 0;
+src/gzip/ftgzip.c:            stream->base  = zip_buff;
+src/gzip/ftgzip.c:            stream->read  = NULL;
+src/gzip/ftgzip.c:            stream->close = ft_gzip_stream_close;
+src/gzip/ftgzip.c:        stream->size = zip_size;
+src/gzip/ftgzip.c:        stream->size  = 0x7FFFFFFFL;  /* don't know the real size! */
+src/gzip/ftgzip.c:    stream->pos   = 0;
+src/gzip/ftgzip.c:    stream->base  = NULL;
+src/gzip/ftgzip.c:    stream->read  = ft_gzip_stream_io;
+src/gzip/ftgzip.c:    stream->close = ft_gzip_stream_close;
+src/gzip/zlib.h:   basic stream-oriented functions. To simplify the interface, some
+src/bdf/bdflib.c:    FT_Memory         memory = stream->memory;
+src/bdf/bdflib.c:    p->size   = stream->size;
+src/gf/gflib.c:    FT_FILE *fp = stream->descriptor.pointer ; /* (FT_FILE*)stream->descriptor.pointer XXX Unforseen errors with STREAM_FILE( stream ) */
+src/gf/gflib.c:    printf("\nHi I am here in gf_load_font 1 stream->pathname: %s %p\n\n", stream->pathname, *fp);
+src/psaux/afmparse.c:      stream->status = AFM_STREAM_STATUS_EOL;
+src/psaux/afmparse.c:      stream->status = AFM_STREAM_STATUS_EOC;
+src/psaux/afmparse.c:      stream->status = AFM_STREAM_STATUS_EOF;
+src/psaux/afmparse.c:        stream->status = AFM_STREAM_STATUS_EOL;
+src/psaux/afmparse.c:        stream->status = AFM_STREAM_STATUS_EOC;
+src/psaux/afmparse.c:        stream->status = AFM_STREAM_STATUS_EOF;
+src/psaux/afmparse.c:        stream->status = AFM_STREAM_STATUS_EOL;
+src/psaux/afmparse.c:        stream->status = AFM_STREAM_STATUS_EOF;
+src/psaux/afmparse.c:        stream->status = AFM_STREAM_STATUS_NORMAL;
+src/psaux/afmparse.c:        stream->status = AFM_STREAM_STATUS_NORMAL;
+src/psaux/afmparse.c:    stream->cursor = stream->base = base;
+src/psaux/afmparse.c:    stream->limit  = limit;
+src/psaux/afmparse.c:    stream->status = AFM_STREAM_STATUS_EOL;
+src/bzip2/ftbzip2.c:    zip->memory = stream->memory;
+src/bzip2/ftbzip2.c:    bzstream->bzalloc = (alloc_func)ft_bzip2_alloc;
+src/bzip2/ftbzip2.c:    bzstream->bzfree  = (free_func) ft_bzip2_free;
+src/bzip2/ftbzip2.c:    bzstream->opaque  = zip->memory;
+src/bzip2/ftbzip2.c:    bzstream->avail_in = 0;
+src/bzip2/ftbzip2.c:    bzstream->next_in  = (char*)zip->buffer;
+src/bzip2/ftbzip2.c:         !bzstream->next_in                              )
+src/bzip2/ftbzip2.c:    bzstream->bzalloc   = NULL;
+src/bzip2/ftbzip2.c:    bzstream->bzfree    = NULL;
+src/bzip2/ftbzip2.c:    bzstream->opaque    = NULL;
+src/bzip2/ftbzip2.c:    bzstream->next_in   = NULL;
+src/bzip2/ftbzip2.c:    bzstream->next_out  = NULL;
+src/bzip2/ftbzip2.c:    bzstream->avail_in  = 0;
+src/bzip2/ftbzip2.c:    bzstream->avail_out = 0;
+src/bzip2/ftbzip2.c:      bzstream->avail_in  = 0;
+src/bzip2/ftbzip2.c:      bzstream->next_in   = (char*)zip->input;
+src/bzip2/ftbzip2.c:      bzstream->avail_out = 0;
+src/bzip2/ftbzip2.c:      bzstream->next_out  = (char*)zip->buffer;
+src/bzip2/ftbzip2.c:    if ( stream->read )
+src/bzip2/ftbzip2.c:      size = stream->read( stream, stream->pos, zip->input,
+src/bzip2/ftbzip2.c:      size = stream->size - stream->pos;
+src/bzip2/ftbzip2.c:      FT_MEM_COPY( zip->input, stream->base + stream->pos, size );
+src/bzip2/ftbzip2.c:    stream->pos += size;
+src/bzip2/ftbzip2.c:    bzstream->next_in  = (char*)zip->input;
+src/bzip2/ftbzip2.c:    bzstream->avail_in = size;
+src/bzip2/ftbzip2.c:    bzstream->next_out  = (char*)zip->cursor;
+src/bzip2/ftbzip2.c:    bzstream->avail_out = FT_BZIP2_BUFFER_SIZE;
+src/bzip2/ftbzip2.c:    while ( bzstream->avail_out > 0 )
+src/bzip2/ftbzip2.c:      if ( bzstream->avail_in == 0 )
+src/bzip2/ftbzip2.c:        zip->limit = (FT_Byte*)bzstream->next_out;
+src/bzip2/ftbzip2.c:    FT_BZip2File  zip    = (FT_BZip2File)stream->descriptor.pointer;
+src/bzip2/ftbzip2.c:    FT_Memory     memory = stream->memory;
+src/bzip2/ftbzip2.c:      stream->descriptor.pointer = NULL;
+src/bzip2/ftbzip2.c:    FT_BZip2File  zip = (FT_BZip2File)stream->descriptor.pointer;
+src/bzip2/ftbzip2.c:    stream->memory = memory;
+src/bzip2/ftbzip2.c:      stream->descriptor.pointer = zip;
+src/bzip2/ftbzip2.c:    stream->size  = 0x7FFFFFFFL;  /* don't know the real size! */
+src/bzip2/ftbzip2.c:    stream->pos   = 0;
+src/bzip2/ftbzip2.c:    stream->base  = 0;
+src/bzip2/ftbzip2.c:    stream->read  = ft_bzip2_stream_io;
+src/bzip2/ftbzip2.c:    stream->close = ft_bzip2_stream_close;
+src/winfonts/winfnt.c:                          (FT_ULong)( stream->cursor - stream->limit );
+src/winfonts/winfnt.c:          stream->cursor += 4 + count * 12;
+src/winfonts/winfnt.c:        if ( font_count * 118UL > stream->size )
+src/winfonts/winfnt.c:        stream->cursor += 8;
+src/winfonts/winfnt.c:      font->fnt_size = stream->size;
+src/cff/cffload.c:    FT_Memory  memory = stream->memory;
+src/cff/cffload.c:      FT_Memory  memory = stream->memory;
+src/cff/cffload.c:    FT_Memory  memory = stream->memory;
+src/cff/cffload.c:      p      = (FT_Byte*)stream->cursor;
+src/cff/cffload.c:    FT_Memory  memory    = idx->stream->memory;
+src/cff/cffload.c:      if ( off2 > stream->size + 1                    ||
+src/cff/cffload.c:           idx->data_offset > stream->size - off2 + 1 )
+src/cff/cffload.c:                   off2, stream->size - idx->data_offset + 1 ));
+src/cff/cffload.c:        off2 = stream->size - idx->data_offset + 1;
+src/cff/cffload.c:    memory = idx->stream->memory;
+src/cff/cffload.c:    FT_Memory  memory = stream->memory;
+src/cff/cffload.c:    FT_Memory  memory = stream->memory;
+src/cff/cffload.c:    FT_Memory  memory = stream->memory;
+src/cff/cffload.c:          p = (FT_Byte*)stream->cursor;
+src/cff/cffload.c:                                          stream->memory );
+src/cff/cffload.c:                            (FT_Byte*)stream->cursor,
+src/cff/cffload.c:                            (FT_Byte*)stream->limit );
+src/cff/cffload.c:    FT_Memory        memory = stream->memory;
+src/truetype/ttgxvar.c:    FT_Memory  memory = stream->memory;
+src/truetype/ttgxvar.c:    FT_Memory  memory = stream->memory;
+src/truetype/ttgxvar.c:    FT_Memory       memory = stream->memory;
+src/truetype/ttgxvar.c:    FT_Memory  memory = stream->memory;
+src/truetype/ttgxvar.c:    FT_Memory  memory = stream->memory;
+src/truetype/ttgxvar.c:    FT_Memory  memory = stream->memory;
+src/truetype/ttgxvar.c:    FT_Memory  memory = stream->memory;
+src/truetype/ttgxvar.c:    FT_Memory     memory = stream->memory;
+src/truetype/ttgxvar.c:    FT_Memory   memory = stream->memory;
+src/truetype/ttgxvar.c:    FT_Memory   memory = stream->memory;
+src/truetype/ttpload.c:          dist = (FT_Long)stream->size - pos;
+src/truetype/ttpload.c:    FT_Memory  memory = stream->memory;
+src/truetype/ttpload.c:    FT_Memory  memory = stream->memory;
+src/truetype/ttpload.c:    FT_Memory  memory = stream->memory;
+src/truetype/ttgload.c:    loader->cursor = stream->cursor;
+src/truetype/ttgload.c:    loader->limit  = stream->limit;
+src/pcf/pcfread.c:    if ( stream->size < 16 )
+src/pcf/pcfread.c:    if ( toc->count > ( stream->size >> 4 ) ||
+src/pcf/pcfread.c:                  FT_MIN( stream->size >> 4, 9 ) ));
+src/pcf/pcfread.c:      toc->count = FT_MIN( stream->size >> 4, 9 );
+src/pcf/pcfread.c:    size   = stream->size;
+src/pcf/pcfread.c:        if ( stream->pos > tables[i].offset )
+src/pcf/pcfread.c:        if ( FT_STREAM_SKIP( tables[i].offset - stream->pos ) )
+src/pcf/pcfread.c:        face->metrics[i].bits = stream->pos + (FT_ULong)offsets[i];
+src/lzw/ftlzw.c:    zip->memory = stream->memory;
+src/lzw/ftlzw.c:    FT_LZWFile  zip    = (FT_LZWFile)stream->descriptor.pointer;
+src/lzw/ftlzw.c:    FT_Memory   memory = stream->memory;
+src/lzw/ftlzw.c:      stream->descriptor.pointer = NULL;
+src/lzw/ftlzw.c:    FT_LZWFile  zip = (FT_LZWFile)stream->descriptor.pointer;
+src/lzw/ftlzw.c:    stream->memory = memory;
+src/lzw/ftlzw.c:      stream->descriptor.pointer = zip;
+src/lzw/ftlzw.c:    stream->size  = 0x7FFFFFFFL;  /* don't know the real size! */
+src/lzw/ftlzw.c:    stream->pos   = 0;
+src/lzw/ftlzw.c:    stream->base  = 0;
+src/lzw/ftlzw.c:    stream->read  = ft_lzw_stream_io;
+src/lzw/ftlzw.c:    stream->close = ft_lzw_stream_close;
+src/type42/t42parse.c:    if ( ft_memcmp( stream->cursor, "%!PS-TrueTypeFont", 17 ) != 0 )
+src/type42/t42parse.c:    size = (FT_Long)stream->size;
+src/type42/t42parse.c:    if ( !stream->read )
+src/type42/t42parse.c:      parser->base_dict = (FT_Byte*)stream->base + stream->pos;
+src/base/ftmac.c:      resource fork.  So we just grab the stream->pathname field.
+src/base/ftrfork.c:         (FT_ULong)( rfork_offset + *rdata_pos + rdata_len ) > stream->size ||
+src/base/ftrfork.c:         (FT_ULong)( rfork_offset + map_pos + map_len ) > stream->size      )
+src/base/ftstream.c:    stream->base   = (FT_Byte*) base;
+src/base/ftstream.c:    stream->size   = size;
+src/base/ftstream.c:    stream->pos    = 0;
+src/base/ftstream.c:    stream->cursor = NULL;
+src/base/ftstream.c:    stream->read   = NULL;
+src/base/ftstream.c:    stream->close  = NULL;
+src/base/ftstream.c:    if ( stream && stream->close )
+src/base/ftstream.c:      stream->close( stream );
+src/base/ftstream.c:    if ( stream->read )
+src/base/ftstream.c:      if ( stream->read( stream, pos, 0, 0 ) )
+src/base/ftstream.c:                   pos, stream->size ));
+src/base/ftstream.c:    else if ( pos > stream->size )
+src/base/ftstream.c:                 pos, stream->size ));
+src/base/ftstream.c:      stream->pos = pos;
+src/base/ftstream.c:    return FT_Stream_Seek( stream, stream->pos + (FT_ULong)distance );
+src/base/ftstream.c:    return stream->pos;
+src/base/ftstream.c:    return FT_Stream_ReadAt( stream, stream->pos, buffer, count );
+src/base/ftstream.c:    if ( pos >= stream->size )
+src/base/ftstream.c:                 pos, stream->size ));
+src/base/ftstream.c:    if ( stream->read )
+src/base/ftstream.c:      read_bytes = stream->read( stream, pos, buffer, count );
+src/base/ftstream.c:      read_bytes = stream->size - pos;
+src/base/ftstream.c:      FT_MEM_COPY( buffer, stream->base + pos, read_bytes );
+src/base/ftstream.c:    stream->pos = pos + read_bytes;
+src/base/ftstream.c:    if ( stream->pos >= stream->size )
+src/base/ftstream.c:    if ( stream->read )
+src/base/ftstream.c:      read_bytes = stream->read( stream, stream->pos, buffer, count );
+src/base/ftstream.c:      read_bytes = stream->size - stream->pos;
+src/base/ftstream.c:      FT_MEM_COPY( buffer, stream->base + stream->pos, read_bytes );
+src/base/ftstream.c:    stream->pos += read_bytes;
+src/base/ftstream.c:      *pbytes = (FT_Byte*)stream->cursor;
+src/base/ftstream.c:      stream->cursor = NULL;
+src/base/ftstream.c:      stream->limit  = NULL;
+src/base/ftstream.c:    if ( stream && stream->read )
+src/base/ftstream.c:      FT_Memory  memory = stream->memory;
+src/base/ftstream.c:    FT_ASSERT( stream && stream->cursor == 0 );
+src/base/ftstream.c:    if ( stream->read )
+src/base/ftstream.c:      FT_Memory  memory = stream->memory;
+src/base/ftstream.c:      if ( count > stream->size )
+src/base/ftstream.c:                   count, stream->size ));
+src/base/ftstream.c:      stream->base = (unsigned char*)ft_mem_qalloc( memory,
+src/base/ftstream.c:      if ( FT_QALLOC( stream->base, count ) )
+src/base/ftstream.c:      read_bytes = stream->read( stream, stream->pos,
+src/base/ftstream.c:                                 stream->base, count );
+src/base/ftstream.c:        FT_FREE( stream->base );
+src/base/ftstream.c:      stream->cursor = stream->base;
+src/base/ftstream.c:      stream->limit  = stream->cursor + count;
+src/base/ftstream.c:      stream->pos   += read_bytes;
+src/base/ftstream.c:      if ( stream->pos >= stream->size        ||
+src/base/ftstream.c:           stream->size - stream->pos < count )
+src/base/ftstream.c:                   stream->pos, count, stream->size ));
+src/base/ftstream.c:      stream->cursor = stream->base + stream->pos;
+src/base/ftstream.c:      stream->limit  = stream->cursor + count;
+src/base/ftstream.c:      stream->pos   += count;
+src/base/ftstream.c:    /* IMPORTANT: The assertion stream->cursor != 0 was removed, given    */
+src/base/ftstream.c:    if ( stream->read )
+src/base/ftstream.c:      FT_Memory  memory = stream->memory;
+src/base/ftstream.c:      ft_mem_free( memory, stream->base );
+src/base/ftstream.c:      stream->base = NULL;
+src/base/ftstream.c:      FT_FREE( stream->base );
+src/base/ftstream.c:    stream->cursor = NULL;
+src/base/ftstream.c:    stream->limit  = NULL;
+src/base/ftstream.c:    FT_ASSERT( stream && stream->cursor );
+src/base/ftstream.c:    if ( stream->cursor < stream->limit )
+src/base/ftstream.c:      result = (FT_Char)*stream->cursor++;
+src/base/ftstream.c:    FT_ASSERT( stream && stream->cursor );
+src/base/ftstream.c:    p              = stream->cursor;
+src/base/ftstream.c:    if ( p + 1 < stream->limit )
+src/base/ftstream.c:    stream->cursor = p;
+src/base/ftstream.c:    FT_ASSERT( stream && stream->cursor );
+src/base/ftstream.c:    p              = stream->cursor;
+src/base/ftstream.c:    if ( p + 1 < stream->limit )
+src/base/ftstream.c:    stream->cursor = p;
+src/base/ftstream.c:    FT_ASSERT( stream && stream->cursor );
+src/base/ftstream.c:    p              = stream->cursor;
+src/base/ftstream.c:    if ( p + 2 < stream->limit )
+src/base/ftstream.c:    stream->cursor = p;
+src/base/ftstream.c:    FT_ASSERT( stream && stream->cursor );
+src/base/ftstream.c:    p              = stream->cursor;
+src/base/ftstream.c:    if ( p + 3 < stream->limit )
+src/base/ftstream.c:    stream->cursor = p;
+src/base/ftstream.c:    FT_ASSERT( stream && stream->cursor );
+src/base/ftstream.c:    p              = stream->cursor;
+src/base/ftstream.c:    if ( p + 3 < stream->limit )
+src/base/ftstream.c:    stream->cursor = p;
+src/base/ftstream.c:    if ( stream->read )
+src/base/ftstream.c:      if ( stream->read( stream, stream->pos, &result, 1L ) != 1L )
+src/base/ftstream.c:      if ( stream->pos < stream->size )
+src/base/ftstream.c:        result = stream->base[stream->pos];
+src/base/ftstream.c:    stream->pos++;
+src/base/ftstream.c:               stream->pos, stream->size ));
+src/base/ftstream.c:    if ( stream->pos + 1 < stream->size )
+src/base/ftstream.c:      if ( stream->read )
+src/base/ftstream.c:        if ( stream->read( stream, stream->pos, reads, 2L ) != 2L )
+src/base/ftstream.c:        p = stream->base + stream->pos;
+src/base/ftstream.c:    stream->pos += 2;
+src/base/ftstream.c:               stream->pos, stream->size ));
+src/base/ftstream.c:    if ( stream->pos + 1 < stream->size )
+src/base/ftstream.c:      if ( stream->read )
+src/base/ftstream.c:        if ( stream->read( stream, stream->pos, reads, 2L ) != 2L )
+src/base/ftstream.c:        p = stream->base + stream->pos;
+src/base/ftstream.c:    stream->pos += 2;
+src/base/ftstream.c:               stream->pos, stream->size ));
+src/base/ftstream.c:    if ( stream->pos + 2 < stream->size )
+src/base/ftstream.c:      if ( stream->read )
+src/base/ftstream.c:        if (stream->read( stream, stream->pos, reads, 3L ) != 3L )
+src/base/ftstream.c:        p = stream->base + stream->pos;
+src/base/ftstream.c:    stream->pos += 3;
+src/base/ftstream.c:               stream->pos, stream->size ));
+src/base/ftstream.c:    if ( stream->pos + 3 < stream->size )
+src/base/ftstream.c:      if ( stream->read )
+src/base/ftstream.c:        if ( stream->read( stream, stream->pos, reads, 4L ) != 4L )
+src/base/ftstream.c:        p = stream->base + stream->pos;
+src/base/ftstream.c:    stream->pos += 4;
+src/base/ftstream.c:               stream->pos, stream->size ));
+src/base/ftstream.c:    if ( stream->pos + 3 < stream->size )
+src/base/ftstream.c:      if ( stream->read )
+src/base/ftstream.c:        if ( stream->read( stream, stream->pos, reads, 4L ) != 4L )
+src/base/ftstream.c:        p = stream->base + stream->pos;
+src/base/ftstream.c:    stream->pos += 4;
+src/base/ftstream.c:               stream->pos, stream->size ));
+src/base/ftstream.c:    cursor = stream->cursor;
+src/base/ftstream.c:        cursor         = stream->cursor;
+src/base/ftstream.c:          if ( cursor + len > stream->limit )
+src/base/ftstream.c:        stream->cursor = cursor;
+src/base/ftsystem.c:#define STREAM_FILE( stream )  ( (FT_FILE*)stream->descriptor.pointer )
+src/base/ftsystem.c:    stream->descriptor.pointer = NULL;
+src/base/ftsystem.c:    stream->size               = 0;
+src/base/ftsystem.c:    stream->base               = NULL;
+src/base/ftsystem.c:    if ( !count && offset > stream->size )
+src/base/ftsystem.c:    if ( stream->pos != offset )
+src/base/ftsystem.c:    stream->descriptor.pointer = NULL;
+src/base/ftsystem.c:    stream->pathname.pointer   = (char*)filepathname;
+src/base/ftsystem.c:    stream->base               = NULL;
+src/base/ftsystem.c:    stream->pos                = 0;
+src/base/ftsystem.c:    stream->read               = NULL;
+src/base/ftsystem.c:    stream->close              = NULL;
+src/base/ftsystem.c:    stream->size = (unsigned long)ft_ftell( file );
+src/base/ftsystem.c:    if ( !stream->size )
+src/base/ftsystem.c:    stream->descriptor.pointer = file;
+src/base/ftsystem.c:    stream->read  = ft_ansi_stream_io;
+src/base/ftsystem.c:    stream->close = ft_ansi_stream_close;
+src/base/ftsystem.c:                filepathname, stream->size ));
+src/base/ftobjs.c:    stream->memory = memory;
+src/base/ftobjs.c:      stream->pathname.pointer = args->pathname;
+src/base/ftobjs.c:      stream->memory = memory;  /* just to be certain */
+src/base/ftobjs.c:      FT_Memory  memory = stream->memory;
+src/base/ftobjs.c:    FT_Memory  memory = stream->memory;
+src/base/ftobjs.c:    FT_FREE( stream->base );
+src/base/ftobjs.c:    stream->size  = 0;
+src/base/ftobjs.c:    stream->base  = NULL;
+src/base/ftobjs.c:    stream->close = NULL;
+src/base/ftobjs.c:    stream->close = close;
+src/base/ftobjs.c:    if ( offset > stream->size )
+src/base/ftobjs.c:    else if ( length > stream->size - offset )
+Binary file objs/gf.o matches
+Binary file objs/.libs/libfreetype.so.6.16.1 matches
+Binary file objs/.libs/gf.o matches
+Binary file objs/.libs/libfreetype.a matches

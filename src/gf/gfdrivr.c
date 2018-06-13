@@ -1,6 +1,6 @@
 /****************************************************************************
  *
- * gfdrivr.h
+ * gfdrivr.c
  *
  *   FreeType font driver for TeX's GF FONT files
  *
@@ -20,6 +20,8 @@
 #include FT_INTERNAL_DEBUG_H
 #include FT_INTERNAL_STREAM_H
 #include FT_INTERNAL_OBJECTS_H
+#include FT_TRUETYPE_IDS_H
+#include FT_SERVICE_FONT_FORMAT_H
 
 
 #include "gf.h"
@@ -89,6 +91,7 @@
   gf_cmap_char_next(  FT_CMap     gfcmap,
                       FT_UInt32  *achar_code )
   {
+    GF_CMap    cmap   = (GF_CMap)gfcmap;
     FT_UInt    gindex = 0;
     FT_UInt32  result = 0;
     FT_UInt32  char_code = *achar_code + 1;
@@ -134,14 +137,14 @@
     FT_Memory  memory;
 
 
-    if ( !face h )
+    if ( !face )
       return;
 
     memory = FT_FACE_MEMORY( face );
 
     gf_free_font( face->gf_glyph );
 
-    FT_FREE( /*  */ );
+    /* FT_FREE(  ); */
   }
 
 
@@ -160,14 +163,14 @@
     FT_UNUSED( params );
 
     FT_TRACE2(( "GF driver\n" ));
-
+    printf("\nHi I am here\n\n");
     /* load font */
     error = gf_load_font( stream, face );
     if ( !error )
       goto Exit;
 
-    if ( FT_ERR_EQ( error, Unknown_File_Format )
-      goto Exit
+    if ( FT_ERR_EQ( error, Unknown_File_Format ) )
+      goto Exit;
 
     /* we have a gf font: let's construct the face object */
 
@@ -180,7 +183,7 @@
     if ( face_index > 0 && ( face_index & 0xFFFF ) > 0 )
     {
       FT_ERROR(( "GF_Face_Init: invalid face index\n" ));
-      BDF_Face_Done( gfface );
+      GF_Face_Done( gfface );
       return FT_THROW( Invalid_Argument );
     }
 
@@ -199,39 +202,39 @@
     if ( FT_NEW_ARRAY( gfface->available_sizes, 1 ) )
       goto Exit;
 
-      {
-        FT_Bitmap_Size*  bsize = gfface->available_sizes;
-        FT_UShort        x_res, y_res;
+    {
+      FT_Bitmap_Size*  bsize = gfface->available_sizes;
+      FT_UShort        x_res, y_res;
 
-        FT_ZERO( bsize );
-        bsize->width  = (FT_Short) face->gf_glyph->font_bbx_w    ;
-        bsize->height = (FT_Short) face->gf_glyph->font_bbx_h    ;
-        bsize->size   =            face->gf_glyph->font_bbx_xoff ;
+      FT_ZERO( bsize );
+      bsize->width  = (FT_Short) face->gf_glyph->font_bbx_w    ;
+      bsize->height = (FT_Short) face->gf_glyph->font_bbx_h    ;
+      bsize->size   =            face->gf_glyph->font_bbx_xoff ;
 
-        x_res =  ;
-        y_res =  ;
-
-        bsize->y_ppem = face->gf_glyph->font_bbx_yoff ;
-        bsize->x_ppem = face->gf_glyph->font_bbx_xoff ;
-      }
+      /*x_res =  ;
+      y_res =  ;
+      */
+      bsize->y_ppem = face->gf_glyph->font_bbx_yoff ;
+      bsize->x_ppem = face->gf_glyph->font_bbx_xoff ;
+    }
 
       /* Charmaps */
 
-      {
-        FT_CharMapRec  charmap;
+    {
+      FT_CharMapRec  charmap;
 
 
-        charmap.encoding    = FT_ENCODING_NONE;
-        /* initial platform/encoding should indicate unset status? */
-        charmap.platform_id = TT_PLATFORM_APPLE_UNICODE;
-        charmap.encoding_id = TT_APPLE_ID_DEFAULT;
-        charmap.face        = root;
+      charmap.encoding    = FT_ENCODING_NONE;
+      /* initial platform/encoding should indicate unset status? */
+      charmap.platform_id = TT_PLATFORM_APPLE_UNICODE;
+      charmap.encoding_id = TT_APPLE_ID_DEFAULT;
+      charmap.face        = face;
 
-        error = FT_CMap_New( gf_cmap_class, NULL, &charmap, NULL );
+      error = FT_CMap_New( &gf_cmap_class, NULL, &charmap, NULL );
 
-        if ( error )
-          goto Fail;
-      }
+      if ( error )
+        goto Fail;
+    }
 
   Fail:
     GF_Face_Done( gfface );
@@ -244,17 +247,16 @@
   GF_Size_Select(  FT_Size   size,
                    FT_ULong  strike_index )
   {
-    GF_Face        face   = (GF_Face)size->face;
 
     FT_UNUSED( strike_index );
 
 
     FT_Select_Metrics( size->face, 0 );
-
-    size->metrics.ascender    =  /*  */  ;
-    size->metrics.descender   =  /*  */  ;
-    size->metrics.max_advance =  /*  */  ;
-
+/*
+    size->metrics.ascender    =    ;
+    size->metrics.descender   =    ;
+    size->metrics.max_advance =    ;
+*/
     return FT_Err_Ok;
 
   }
@@ -278,12 +280,10 @@
       if ( height == ( ( bsize->y_ppem + 32 ) >> 6 ) )
         error = FT_Err_Ok;
       break;
-
     case FT_SIZE_REQUEST_TYPE_REAL_DIM:
-      if ( height == /*  */ )
+      if ( height == face->gf_glyph->font_bbx_h )  /* Preliminary */
         error = FT_Err_Ok;
       break;
-
     default:
       error = FT_THROW( Unimplemented_Feature );
       break;
@@ -329,31 +329,31 @@
     if ( glyph_index > 0 )
       glyph_index--;                           /* revert to real index */
     else
-      glyph_index = /*  */;                    /* the `.notdef' glyph  */
+      glyph_index = 0;                    /* the `.notdef' glyph  */
 
     /* slot, bitmap => freetype, glyph => gflib */
     glyph = gf->gf_glyph->bm_table[glyph_index];
-
-    bitmap->rows  = /*  */ ;
-    bitmap->width = /*  */ ;
-    bitmap->pitch = /*  */ ;     /* (In BDF) same as FT_Bitmap.pitch */
+/*
+    bitmap->rows  = ;
+    bitmap->width = ;
+    bitmap->pitch = ;     *//* (In BDF) same as FT_Bitmap.pitch */
 
     /* note: we don't allocate a new array to hold the bitmap; */
     /*       we can simply point to it                         */
     ft_glyphslot_set_bitmap( slot, glyph.bitmap );
 
     slot->format      = FT_GLYPH_FORMAT_BITMAP;
-    slot->bitmap_left = /*  */ ;
-    slot->bitmap_top  = /*  */ ;
+    /*slot->bitmap_left = ;
+    slot->bitmap_top  = ;
 
-    slot->metrics.horiAdvance  = (FT_Pos) /*  */ ;
-    slot->metrics.horiBearingX = (FT_Pos) /*  */ ;
-    slot->metrics.horiBearingY = (FT_Pos) /*  */ ;
-    slot->metrics.width        = (FT_Pos) /*  */ ;
-    slot->metrics.height       = (FT_Pos) /*  */ ;
+    slot->metrics.horiAdvance  = (FT_Pos) ;
+    slot->metrics.horiBearingX = (FT_Pos) ;
+    slot->metrics.horiBearingY = (FT_Pos) ;
+    slot->metrics.width        = (FT_Pos) ;
+    slot->metrics.height       = (FT_Pos) ;
 
-    ft_synthesize_vertical_metrics( &slot->metrics, /*  */ );
-
+    ft_synthesize_vertical_metrics( &slot->metrics,  );
+    */
   Exit:
     return error;
   }
