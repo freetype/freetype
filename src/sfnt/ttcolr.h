@@ -30,8 +30,15 @@ FT_BEGIN_HEADER
 
 
   FT_LOCAL( FT_Error )
+  tt_face_load_cpal( TT_Face    face,
+                     FT_Stream  stream );
+
+  FT_LOCAL( FT_Error )
   tt_face_load_colr( TT_Face    face,
                      FT_Stream  stream );
+
+  FT_LOCAL( void )
+  tt_face_free_cpal( TT_Face  face );
 
   FT_LOCAL( void )
   tt_face_free_colr( TT_Face  face );

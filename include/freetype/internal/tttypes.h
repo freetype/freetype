@@ -1546,10 +1546,13 @@ FT_BEGIN_HEADER
    *     exposed by the API and the indices used in
    *     the font's sbit table.
    *
-   *   colr_and_cpal ::
-   *     A pointer to data related to `COLR' and
-   *     `CPAL' tables.  NULL if tables are not
-   *     available.
+   *   cpal ::
+   *     A pointer to data related to the `CPAL' table.  NULL if the table
+   *     is not available.
+   *
+   *   colr ::
+   *     A pointer to data related to the `COLR' table.  NULL if the table
+   *     is not available.
    *
    *   kern_table ::
    *     A pointer to the `kern' table.
@@ -1780,7 +1783,8 @@ FT_BEGIN_HEADER
 #endif
 
     /* since 2.10 */
-    void*                 colr_and_cpal;
+    void*                 cpal;
+    void*                 colr;
 
   } TT_FaceRec;
 

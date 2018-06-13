@@ -1341,9 +1341,10 @@
     if ( sfnt->load_eblc )
       LOAD_( eblc );
 
-    if ( sfnt->load_colr )
+    /* colored glyph support */
+    if ( sfnt->load_cpal )
     {
-      /* Ignore error.  Missing optional colr/cpal is okay. */
+      LOAD_( cpal );
       LOAD_( colr );
     }
 
@@ -1401,7 +1402,7 @@
        */
       if ( face->sbit_table_type == TT_SBIT_TABLE_TYPE_CBLC ||
            face->sbit_table_type == TT_SBIT_TABLE_TYPE_SBIX ||
-           face->colr_and_cpal                              )
+           face->colr                                       )
         flags |= FT_FACE_FLAG_COLOR;      /* color glyphs */
 
       if ( has_outline == TRUE )
@@ -1746,8 +1747,11 @@
         sfnt->free_eblc( face );
 
       /* destroy color table data if it is loaded */
-      if ( sfnt->free_colr )
+      if ( sfnt->free_cpal )
+      {
+        sfnt->free_cpal( face );
         sfnt->free_colr( face );
+      }
     }
 
 #ifdef TT_CONFIG_OPTION_BDF

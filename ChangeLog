@@ -1,3 +1,33 @@
+2018-06-13  Werner Lemberg  <wl@gnu.org>
+
+	[sfnt] Separate `CPAL' and `COLR' table handling.
+
+	Later on we want to support the `SVG' table also, which needs `CPAL'
+	(but not `COLR').
+
+	* include/freetype/internal/sfnt.h (SFNT_Interface): Add `load_cpal'
+	and `free_cpal' fields.
+	(FT_DEFINE_SFNT_INTERFACE): Updated.
+
+	* include/freetype/internal/tttypes.h (TT_FaceRec): Replace
+	`colr_and_cpal' fields with `cpal' and `colr'.
+
+	* src/sfnt/sfdriver.c (sfnt_interface): Updated.
+
+	* src/sfnt/sfobjs.c (sfnt_load_face, sfnt_done_face): Updated.
+
+	* src/sfnt/ttcolr.c (Colr, Cpal): Add `table' field.
+	(ColrCpal): Removed.
+	(tt_face_load_colr): Split off CPAL handling into...
+	(tt_face_load_cpal): ... this new function.
+	(tt_face_free_colr): Split off CPAL handling into...
+	(tt_face_free_cpal): ... this new function.
+	(tt_face_load_colr_layers, tt_face_palette_set): Updated.
+
+	* src/sfnt/ttcolr.h: Updated.
+
+	* src/truetype/ttgload.c (TT_Load_Glyph): Updated.
+
 2018-06-12  Werner Lemberg  <wl@gnu.org>
 
 	[sfnt] Fix `sizeof' thinko.

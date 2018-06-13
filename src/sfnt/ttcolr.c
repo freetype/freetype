@@ -57,18 +57,6 @@
   } BaseGlyphRecord;
 
 
-  typedef struct Colr_
-  {
-    FT_UShort  version;
-    FT_UShort  num_base_glyphs;
-    FT_UShort  num_layers;
-
-    FT_Byte*  base_glyphs;
-    FT_Byte*  layers;
-
-  } Colr;
-
-
   /* all data from `CPAL' not covered in FT_Palette_Data */
   typedef struct Cpal_
   {
@@ -79,20 +67,25 @@
     FT_Byte*  color_indices; /* Index of each palette's first color record */
                              /* in the combined color record array.        */
 
+    /* The memory which backs up the `CPAL' table. */
+    void*  table;
+
   } Cpal;
 
 
-  typedef struct ColrCpal_
+  typedef struct Colr_
   {
-    /* Accessors into the colr/cpal tables. */
-    Colr  colr;
-    Cpal  cpal;
+    FT_UShort  version;
+    FT_UShort  num_base_glyphs;
+    FT_UShort  num_layers;
 
-    /* The memory which backs up colr/cpal tables. */
-    void*  colr_table;
-    void*  cpal_table;
+    FT_Byte*  base_glyphs;
+    FT_Byte*  layers;
 
-  } ColrCpal;
+    /* The memory which backs up the `COLR' table. */
+    void*  table;
+
+  } Colr;
 
 
   /**************************************************************************
@@ -106,101 +99,55 @@
 
 
   FT_LOCAL_DEF( FT_Error )
-  tt_face_load_colr( TT_Face    face,
+  tt_face_load_cpal( TT_Face    face,
                      FT_Stream  stream )
   {
     FT_Error   error;
     FT_Memory  memory = face->root.memory;
 
-    FT_Byte*  colr_table = NULL;
-    FT_Byte*  cpal_table = NULL;
-    FT_Byte*  p          = NULL;
+    FT_Byte*  table = NULL;
+    FT_Byte*  p     = NULL;
 
-    Colr       colr;
-    Cpal       cpal;
-    ColrCpal*  cc = NULL;
+    Cpal*  cpal = NULL;
 
-    FT_ULong  base_glyph_offset, layer_offset, colors_offset;
+    FT_ULong  colors_offset;
     FT_ULong  table_size;
 
 
-    /*
-     * COLR
-     */
-
-    error = face->goto_table( face, TTAG_COLR, stream, &table_size );
-    if ( error )
-      goto NoColor;
-
-    if ( table_size < COLR_HEADER_SIZE )
-      goto InvalidTable;
-
-    if ( FT_FRAME_EXTRACT( table_size, colr_table ) )
-      goto NoColor;
-
-    p = colr_table;
-
-    FT_ZERO( &colr );
-    colr.version = FT_NEXT_USHORT( p );
-    if ( colr.version != 0 )
-      goto InvalidTable;
-
-    colr.num_base_glyphs = FT_NEXT_USHORT( p );
-    base_glyph_offset    = FT_NEXT_ULONG( p );
-
-    if ( base_glyph_offset >= table_size )
-      goto InvalidTable;
-    if ( colr.num_base_glyphs * BASE_GLYPH_SIZE >
-           table_size - base_glyph_offset )
-      goto InvalidTable;
-
-    layer_offset    = FT_NEXT_ULONG( p );
-    colr.num_layers = FT_NEXT_USHORT( p );
-
-    if ( layer_offset >= table_size )
-      goto InvalidTable;
-    if ( colr.num_layers * LAYER_SIZE > table_size - layer_offset )
-      goto InvalidTable;
-
-    colr.base_glyphs = (FT_Byte*)( colr_table + base_glyph_offset );
-    colr.layers      = (FT_Byte*)( colr_table + layer_offset      );
-
-    /*
-     * CPAL
-     */
-
     error = face->goto_table( face, TTAG_CPAL, stream, &table_size );
     if ( error )
-      goto NoColor;
+      goto NoCpal;
 
     if ( table_size < CPAL_V0_HEADER_BASE_SIZE )
       goto InvalidTable;
 
-    if ( FT_FRAME_EXTRACT( table_size, cpal_table ) )
-      goto NoColor;
+    if ( FT_FRAME_EXTRACT( table_size, table ) )
+      goto NoCpal;
 
-    p = cpal_table;
+    p = table;
 
-    FT_ZERO( &cpal );
-    cpal.version = FT_NEXT_USHORT( p );
-    if ( cpal.version > 1 )
+    if ( FT_NEW( cpal ) )
+      goto NoCpal;
+
+    cpal->version = FT_NEXT_USHORT( p );
+    if ( cpal->version > 1 )
       goto InvalidTable;
 
     face->palette_data.num_palette_entries = FT_NEXT_USHORT( p );
     face->palette_data.num_palettes        = FT_NEXT_USHORT( p );
 
-    cpal.num_colors = FT_NEXT_USHORT( p );
-    colors_offset   = FT_NEXT_ULONG( p );
+    cpal->num_colors = FT_NEXT_USHORT( p );
+    colors_offset    = FT_NEXT_ULONG( p );
 
     if ( colors_offset >= table_size )
       goto InvalidTable;
-    if ( cpal.num_colors * COLOR_SIZE > table_size - colors_offset )
+    if ( cpal->num_colors * COLOR_SIZE > table_size - colors_offset )
       goto InvalidTable;
 
-    cpal.color_indices = p;
-    cpal.colors        = (FT_Byte*)( cpal_table + colors_offset );
+    cpal->color_indices = p;
+    cpal->colors        = (FT_Byte*)( table + colors_offset );
 
-    if ( cpal.version == 1 )
+    if ( cpal->version == 1 )
     {
       FT_ULong    type_offset, label_offset, entry_label_offset;
       FT_UShort*  array = NULL;
@@ -223,9 +170,9 @@
           goto InvalidTable;
 
         if ( FT_QNEW_ARRAY( array, face->palette_data.num_palettes ) )
-          goto NoColor;
+          goto NoCpal;
 
-        p     = cpal_table + type_offset;
+        p     = table + type_offset;
         q     = array;
         limit = q + face->palette_data.num_palettes;
 
@@ -244,9 +191,9 @@
           goto InvalidTable;
 
         if ( FT_QNEW_ARRAY( array, face->palette_data.num_palettes ) )
-          goto NoColor;
+          goto NoCpal;
 
-        p     = cpal_table + label_offset;
+        p     = table + label_offset;
         q     = array;
         limit = q + face->palette_data.num_palettes;
 
@@ -265,9 +212,9 @@
           goto InvalidTable;
 
         if ( FT_QNEW_ARRAY( array, face->palette_data.num_palette_entries ) )
-          goto NoColor;
+          goto NoCpal;
 
-        p     = cpal_table + entry_label_offset;
+        p     = table + entry_label_offset;
         q     = array;
         limit = q + face->palette_data.num_palette_entries;
 
@@ -278,20 +225,14 @@
       }
     }
 
-    if ( FT_NEW( cc ) )
-      goto NoColor;
+    cpal->table = table;
 
-    cc->colr       = colr;
-    cc->cpal       = cpal;
-    cc->colr_table = colr_table;
-    cc->cpal_table = cpal_table;
-
-    face->colr_and_cpal = cc;
+    face->cpal = cpal;
 
     /* set up default palette */
     if ( FT_NEW_ARRAY( face->palette,
                        face->palette_data.num_palette_entries ) )
-      goto NoColor;
+      goto NoCpal;
 
     tt_face_palette_set( face, 0 );
 
@@ -300,16 +241,106 @@
   InvalidTable:
     error = FT_THROW( Invalid_Table );
 
-  NoColor:
-    FT_FRAME_RELEASE( colr_table );
-    FT_FRAME_RELEASE( cpal_table );
-
-    FT_FREE( cc );
+  NoCpal:
+    FT_FRAME_RELEASE( table );
+    FT_FREE( cpal );
 
     /* arrays in `face->palette_data' and `face->palette' */
     /* are freed in `sfnt_done_face'                      */
 
     return error;
+  }
+
+
+  FT_LOCAL_DEF( FT_Error )
+  tt_face_load_colr( TT_Face    face,
+                     FT_Stream  stream )
+  {
+    FT_Error   error;
+    FT_Memory  memory = face->root.memory;
+
+    FT_Byte*  table = NULL;
+    FT_Byte*  p     = NULL;
+
+    Colr*  colr = NULL;
+
+    FT_ULong  base_glyph_offset, layer_offset;
+    FT_ULong  table_size;
+
+
+    /* `COLR' always needs `CPAL' */
+    if ( !face->cpal )
+      return FT_THROW( Invalid_File_Format );
+
+    error = face->goto_table( face, TTAG_COLR, stream, &table_size );
+    if ( error )
+      goto NoColr;
+
+    if ( table_size < COLR_HEADER_SIZE )
+      goto InvalidTable;
+
+    if ( FT_FRAME_EXTRACT( table_size, table ) )
+      goto NoColr;
+
+    p = table;
+
+    if ( FT_NEW( colr ) )
+      goto NoColr;
+
+    colr->version = FT_NEXT_USHORT( p );
+    if ( colr->version != 0 )
+      goto InvalidTable;
+
+    colr->num_base_glyphs = FT_NEXT_USHORT( p );
+    base_glyph_offset     = FT_NEXT_ULONG( p );
+
+    if ( base_glyph_offset >= table_size )
+      goto InvalidTable;
+    if ( colr->num_base_glyphs * BASE_GLYPH_SIZE >
+           table_size - base_glyph_offset )
+      goto InvalidTable;
+
+    layer_offset     = FT_NEXT_ULONG( p );
+    colr->num_layers = FT_NEXT_USHORT( p );
+
+    if ( layer_offset >= table_size )
+      goto InvalidTable;
+    if ( colr->num_layers * LAYER_SIZE > table_size - layer_offset )
+      goto InvalidTable;
+
+    colr->base_glyphs = (FT_Byte*)( table + base_glyph_offset );
+    colr->layers      = (FT_Byte*)( table + layer_offset      );
+    colr->table       = table;
+
+    face->colr = colr;
+
+    return FT_Err_Ok;
+
+  InvalidTable:
+    error = FT_THROW( Invalid_Table );
+
+  NoColr:
+    FT_FRAME_RELEASE( table );
+    FT_FREE( colr );
+
+    return error;
+  }
+
+
+  FT_LOCAL_DEF( void )
+  tt_face_free_cpal( TT_Face  face )
+  {
+    FT_Stream  stream = face->root.stream;
+    FT_Memory  memory = face->root.memory;
+
+    Cpal*  cpal = (Cpal*)face->cpal;
+
+
+    if ( cpal )
+    {
+      FT_FRAME_RELEASE( cpal->table );
+      FT_FREE( cpal );
+    }
   }
 
 
@@ -319,15 +350,13 @@
     FT_Stream  stream = face->root.stream;
     FT_Memory  memory = face->root.memory;
 
-    ColrCpal*  colr_and_cpal = (ColrCpal*)face->colr_and_cpal;
+    Colr*  colr = (Colr*)face->colr;
 
 
-    if ( colr_and_cpal )
+    if ( colr )
     {
-      FT_FRAME_RELEASE( colr_and_cpal->colr_table );
-      FT_FRAME_RELEASE( colr_and_cpal->cpal_table );
-
-      FT_FREE( face->colr_and_cpal );
+      FT_FRAME_RELEASE( colr->table );
+      FT_FREE( colr );
     }
   }
 
@@ -377,8 +406,7 @@
     FT_Error   error;
     FT_Memory  memory = face->root.memory;
 
-    ColrCpal*  colr_and_cpal = (ColrCpal *)face->colr_and_cpal;
-    Colr*      colr          = &colr_and_cpal->colr;
+    Colr*  colr = (Colr*)face->colr;
 
     BaseGlyphRecord  glyph_record;
     FT_Glyph_Layer   layers = NULL;
@@ -441,8 +469,7 @@
   tt_face_palette_set( TT_Face  face,
                        FT_UInt  palette_index )
   {
-    ColrCpal*  colr_and_cpal = (ColrCpal *)face->colr_and_cpal;
-    Cpal*      cpal          = &colr_and_cpal->cpal;
+    Cpal*  cpal = (Cpal*)face->cpal;
 
     FT_Byte*   offset;
     FT_Byte*   p;

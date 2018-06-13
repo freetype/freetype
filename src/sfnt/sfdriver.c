@@ -1257,8 +1257,12 @@
     PUT_EMBEDDED_BITMAPS( tt_face_load_strike_metrics ),
                    /* TT_Load_Strike_Metrics_Func  load_strike_metrics */
 
+    PUT_COLOR_LAYERS( tt_face_load_cpal ),
+                            /* TT_Load_Table_Func      load_cpal       */
     PUT_COLOR_LAYERS( tt_face_load_colr ),
                             /* TT_Load_Table_Func      load_colr       */
+    PUT_COLOR_LAYERS( tt_face_free_cpal ),
+                            /* TT_Free_Table_Func      free_cpal       */
     PUT_COLOR_LAYERS( tt_face_free_colr ),
                             /* TT_Free_Table_Func      free_colr       */
     PUT_COLOR_LAYERS( tt_face_palette_set ),

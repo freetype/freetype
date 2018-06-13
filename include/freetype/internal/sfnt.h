@@ -763,7 +763,9 @@ FT_BEGIN_HEADER
     TT_Set_SBit_Strike_Func      set_sbit_strike;
     TT_Load_Strike_Metrics_Func  load_strike_metrics;
 
+    TT_Load_Table_Func           load_cpal;
     TT_Load_Table_Func           load_colr;
+    TT_Free_Table_Func           free_cpal;
     TT_Free_Table_Func           free_colr;
     TT_Set_Palette_Func          set_palette;
     TT_Load_Colr_Layer_Func      load_colr_layer;
@@ -811,7 +813,9 @@ FT_BEGIN_HEADER
           free_eblc_,                    \
           set_sbit_strike_,              \
           load_strike_metrics_,          \
+          load_cpal_,                    \
           load_colr_,                    \
+          free_cpal_,                    \
           free_colr_,                    \
           set_palette_,                  \
           load_colr_layer_,              \
@@ -849,7 +853,9 @@ FT_BEGIN_HEADER
     free_eblc_,                          \
     set_sbit_strike_,                    \
     load_strike_metrics_,                \
+    load_cpal_,                          \
     load_colr_,                          \
+    free_cpal_,                          \
     free_colr_,                          \
     set_palette_,                        \
     load_colr_layer_,                    \

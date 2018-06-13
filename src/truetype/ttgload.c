@@ -2906,8 +2906,8 @@
 
     /* The outline based algorithm took care of metrics. */
     /* Read additional color info if requested.          */
-    if ( ( load_flags & FT_LOAD_COLOR )          &&
-         ( (TT_Face)glyph->face )->colr_and_cpal )
+    if ( ( load_flags & FT_LOAD_COLOR ) &&
+         ( (TT_Face)glyph->face )->colr )
     {
       TT_Face       face   = (TT_Face)glyph->face;
       FT_Memory     memory = face->root.memory;
