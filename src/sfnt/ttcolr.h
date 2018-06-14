@@ -42,6 +42,12 @@ FT_BEGIN_HEADER
                             FT_Glyph_Layer  *ret_layers,
                             FT_UShort*       ret_num_layers );
 
+  FT_LOCAL( FT_UInt )
+  tt_face_get_colr_layer( TT_Face            face,
+                          FT_UInt            base_glyph,
+                          FT_UInt           *acolor_index,
+                          FT_LayerIterator*  iterator );
+
   FT_LOCAL( FT_Error )
   tt_face_colr_blend_layer( TT_Face       face,
                             FT_UInt       color_index,

@@ -3101,7 +3101,7 @@ FT_BEGIN_HEADER
    *     blending of the color glyph layers associated with the glyph index,
    *     using the same bitmap format as embedded color bitmap images.  This
    *     is mainly for convenience; for full control of color layers use
-   *     @FT_Get_GlyphLayers and FreeType's color functions like
+   *     @FT_Get_Color_Glyph_Layer and FreeType's color functions like
    *     @FT_Palette_Select instead of setting FT_LOAD_COLOR for rendering
    *     so that the client application can handle blending by itself.
    *
@@ -4262,6 +4262,101 @@ FT_BEGIN_HEADER
   FT_Get_GlyphLayers( FT_GlyphSlot     glyph,
                       FT_UShort       *anum_layers,
                       FT_Glyph_Layer  *alayers );
+
+
+  /**********************************************************************
+   *
+   * @struct:
+   *   FT_LayerIterator
+   *
+   * @description:
+   *   This iterator object is needed for @FT_Get_Color_Glyph_Layer.
+   *
+   * @fields:
+   *   num_layers ::
+   *     The number of glyph layers for the requested glyph index.  Will be
+   *     set by @FT_Get_Color_Glyph_Layer.
+   *
+   *   layer ::
+   *     The current layer.  Will be set by @FT_Get_Color_Glyph_Layer.
+   *
+   *   p ::
+   *     An opaque pointer into `COLR' table data.  The caller must set this
+   *     to NULL before the first call of @FT_Get_Color_Glyph_Layer.
+   */
+  typedef struct  FT_LayerIterator_
+  {
+    FT_UInt   num_layers;
+    FT_UInt   layer;
+    FT_Byte*  p;
+
+  } FT_LayerIterator;
+
+
+  /*************************************************************************
+   *
+   * @func:
+   *   FT_Get_Color_Glyph_Layer
+   *
+   * @description:
+   *   This is an interface to the `COLR' table in OpenType fonts to
+   *   iteratively retrieve the colored glyph layers associated with the
+   *   current glyph slot.
+   *
+   *     https://docs.microsoft.com/en-us/typography/opentype/spec/colr
+   *
+   *   The glyph layer data for a given glyph index, if present, provides an
+   *   alternative, multi-colour glyph representation: Instead of rendering
+   *   the outline or bitmap with the given glyph index, glyphs with the
+   *   indices and colors returned by this function are rendered layer by
+   *   layer.
+   *
+   *   The returned elements are ordered in the z~direction from bottom to
+   *   top; the `n'th element should be rendered with the associated palette
+   *   color and blended on top of the already rendered layers (elements 0,
+   *   1, ..., n-1).
+   *
+   * @input:
+   *   face ::
+   *     A handle to the parent face object.
+   *
+   *   base_glyph ::
+   *     The glyph index the colored glyph layers are associated with.
+   *
+   * @inout:
+   *   iterator ::
+   *     An @FT_LayerIterator object.  For the first call you should set
+   *     `iterator->p' to NULL.  For all following calls, simply use the
+   *     same object again.
+   *
+   * @output:
+   *   acolor_index ::
+   *     The color index into the font face's color palette of the current
+   *     layer.  The value 0xFFFF is special; it doesn't reference a palette
+   *     entry but indicates that the text foreground color should be used
+   *     instead (to be set up by the application outside of FreeType).
+   *
+   *     The color palette can be retrieved with @FT_Palette_Select.
+   *
+   * @return:
+   *     The glyph index of the current layer.  If there are no more layers
+   *     (or if there are no layers at all), value~0 gets returned.  In case
+   *     of an error, value~0 is returned also.
+   *
+   * @note:
+   *   This function is necessary if you want to handle glyph layers by
+   *   yourself.  In particular, functions that operate with @FT_GlyphRec
+   *   objects (like @FT_Get_Glyph or @FT_Glyph_To_Bitmap) don't have access
+   *   to this information.
+   *
+   *   @FT_Render_Glyph, however, handles colored glyph layers
+   *   automatically if the @FT_LOAD_COLOR flag is passed to it.
+   */
+  FT_EXPORT( FT_UInt )
+  FT_Get_Color_Glyph_Layer( FT_Face            face,
+                            FT_UInt            base_glyph,
+                            FT_UInt           *acolor_index,
+                            FT_LayerIterator*  iterator );
 
 
   /**************************************************************************

@@ -529,6 +529,46 @@ FT_BEGIN_HEADER
   /**************************************************************************
    *
    * @FuncType:
+   *   TT_Get_Colr_Layer_Func
+   *
+   * @Description:
+   *   Iteratively get the color layer data of a given glyph index.
+   *
+   * @Input:
+   *   face ::
+   *     The target face object.
+   *
+   *   base_glyph ::
+   *     The glyph index the colored glyph layers are associated with.
+   *
+   * @inout:
+   *   iterator ::
+   *     An @FT_LayerIterator object.  For the first call you should set
+   *     `iterator->p' to NULL.  For all following calls, simply use the
+   *     same object again.
+   *
+   * @output:
+   *   acolor_index ::
+   *     The color index into the font face's color palette of the current
+   *     layer.  The value 0xFFFF is special; it doesn't reference a palette
+   *     entry but indicates that the text foreground color should be used
+   *     instead (to be set up by the application outside of FreeType).
+   *
+   * @return:
+   *   The glyph index of the current layer.  If there are no more layers
+   *   (or if there are no layers at all), value~0 gets returned.  In case
+   *   of an error, value~0 is returned also.
+   */
+  typedef FT_UInt
+  (*TT_Get_Colr_Layer_Func)( TT_Face            face,
+                             FT_UInt            base_glyph,
+                             FT_UInt           *acolor_index,
+                             FT_LayerIterator*  iterator );
+
+
+  /**************************************************************************
+   *
+   * @FuncType:
    *   TT_Blend_Colr_Func
    *
    * @Description:
@@ -769,6 +809,7 @@ FT_BEGIN_HEADER
     TT_Free_Table_Func           free_colr;
     TT_Set_Palette_Func          set_palette;
     TT_Load_Colr_Layer_Func      load_colr_layer;
+    TT_Get_Colr_Layer_Func       get_colr_layer;
     TT_Blend_Colr_Func           colr_blend;
 
     TT_Get_Metrics_Func          get_metrics;
@@ -819,6 +860,7 @@ FT_BEGIN_HEADER
           free_colr_,                    \
           set_palette_,                  \
           load_colr_layer_,              \
+          get_colr_layer_,               \
           colr_blend_,                   \
           get_metrics_,                  \
           get_name_,                     \
@@ -859,6 +901,7 @@ FT_BEGIN_HEADER
     free_colr_,                          \
     set_palette_,                        \
     load_colr_layer_,                    \
+    get_colr_layer_,                     \
     colr_blend_,                         \
     get_metrics_,                        \
     get_name_,                           \

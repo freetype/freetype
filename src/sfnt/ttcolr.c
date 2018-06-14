@@ -275,6 +275,54 @@
   }
 
 
+  FT_LOCAL_DEF( FT_UInt )
+  tt_face_get_colr_layer( TT_Face            face,
+                          FT_UInt            base_glyph,
+                          FT_UInt           *acolor_index,
+                          FT_LayerIterator*  iterator )
+  {
+    Colr*            colr   = (Colr*)face->colr;
+    BaseGlyphRecord  glyph_record;
+    FT_UInt          glyph_index;
+
+
+    if ( !iterator->p )
+    {
+      /* first call to function */
+      iterator->layer = 0;
+
+      if ( !find_base_glyph_record( colr->base_glyphs,
+                                    colr->num_base_glyphs,
+                                    base_glyph,
+                                    &glyph_record ) )
+        return 0;
+
+      iterator->p = colr->layers +
+                      LAYER_SIZE * glyph_record.first_layer_index;
+
+      if ( glyph_record.num_layers )
+        iterator->num_layers = glyph_record.num_layers;
+      else
+        return 0;
+    }
+
+    if ( iterator->layer >= iterator->num_layers )
+      return 0;
+
+    glyph_index   = FT_NEXT_USHORT( iterator->p );
+    *acolor_index = FT_NEXT_USHORT( iterator->p );
+
+    if ( glyph_index >= FT_FACE( face )->num_glyphs                  ||
+         ( *acolor_index != 0xFFFF                                 &&
+           *acolor_index >= face->palette_data.num_palette_entries ) )
+      return 0;
+
+    iterator->layer++;
+
+    return glyph_index;
+  }
+
+
   FT_LOCAL_DEF( FT_Error )
   tt_face_colr_blend_layer( TT_Face       face,
                             FT_UInt       color_index,

@@ -5490,4 +5490,35 @@
   }
 
 
+  /* documentation is in freetype.h */
+
+  FT_EXPORT_DEF( FT_UInt )
+  FT_Get_Color_Glyph_Layer( FT_Face            face,
+                            FT_UInt            base_glyph,
+                            FT_UInt           *acolor_index,
+                            FT_LayerIterator*  iterator )
+  {
+    TT_Face       ttface;
+    SFNT_Service  sfnt;
+
+
+    if ( !face                                   ||
+         !acolor_index                           ||
+         !iterator                               ||
+         base_glyph >= (FT_UInt)face->num_glyphs )
+      return 0;
+
+    if ( !FT_IS_SFNT( face ) )
+      return 0;
+
+    ttface = (TT_Face)face;
+    sfnt   = (SFNT_Service)ttface->sfnt;
+
+    return sfnt->get_colr_layer( ttface,
+                                 base_glyph,
+                                 acolor_index,
+                                 iterator );
+  }
+
+
 /* END */
