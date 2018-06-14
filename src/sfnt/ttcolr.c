@@ -2,12 +2,12 @@
  *
  * ttcolr.c
  *
- *   TrueType and OpenType color outline support.
+ *   TrueType and OpenType colored glyph layer support (body).
  *
  * Copyright 2018 by
  * David Turner, Robert Wilhelm, and Werner Lemberg.
  *
- * Written by Shao Yu Zhang <shaozhang@fb.com>.
+ * Originally written by Shao Yu Zhang <shaozhang@fb.com>.
  *
  * This file is part of the FreeType project, and may only be used,
  * modified, and distributed under the terms of the FreeType project
@@ -20,10 +20,9 @@
 
   /**************************************************************************
    *
-   * `COLR' and `CPAL' table specification:
+   * `COLR' table specification:
    *
    *   https://www.microsoft.com/typography/otspec/colr.htm
-   *   https://www.microsoft.com/typography/otspec/cpal.htm
    *
    */
 
@@ -44,8 +43,6 @@
 #define BASE_GLYPH_SIZE            6
 #define LAYER_SIZE                 4
 #define COLR_HEADER_SIZE          14
-#define CPAL_V0_HEADER_BASE_SIZE  12
-#define COLOR_SIZE                 4
 
 
   typedef struct BaseGlyphRecord_
@@ -55,22 +52,6 @@
     FT_UShort  num_layers;
 
   } BaseGlyphRecord;
-
-
-  /* all data from `CPAL' not covered in FT_Palette_Data */
-  typedef struct Cpal_
-  {
-    FT_UShort  version;        /* Table version number (0 or 1 supported). */
-    FT_UShort  num_colors;               /* Total number of color records, */
-                                         /* combined for all palettes.     */
-    FT_Byte*  colors;                              /* RGBA array of colors */
-    FT_Byte*  color_indices; /* Index of each palette's first color record */
-                             /* in the combined color record array.        */
-
-    /* The memory which backs up the `CPAL' table. */
-    void*  table;
-
-  } Cpal;
 
 
   typedef struct Colr_
@@ -95,161 +76,7 @@
    * messages during execution.
    */
 #undef  FT_COMPONENT
-#define FT_COMPONENT  trace_ttcolrcpal
-
-
-  FT_LOCAL_DEF( FT_Error )
-  tt_face_load_cpal( TT_Face    face,
-                     FT_Stream  stream )
-  {
-    FT_Error   error;
-    FT_Memory  memory = face->root.memory;
-
-    FT_Byte*  table = NULL;
-    FT_Byte*  p     = NULL;
-
-    Cpal*  cpal = NULL;
-
-    FT_ULong  colors_offset;
-    FT_ULong  table_size;
-
-
-    error = face->goto_table( face, TTAG_CPAL, stream, &table_size );
-    if ( error )
-      goto NoCpal;
-
-    if ( table_size < CPAL_V0_HEADER_BASE_SIZE )
-      goto InvalidTable;
-
-    if ( FT_FRAME_EXTRACT( table_size, table ) )
-      goto NoCpal;
-
-    p = table;
-
-    if ( FT_NEW( cpal ) )
-      goto NoCpal;
-
-    cpal->version = FT_NEXT_USHORT( p );
-    if ( cpal->version > 1 )
-      goto InvalidTable;
-
-    face->palette_data.num_palette_entries = FT_NEXT_USHORT( p );
-    face->palette_data.num_palettes        = FT_NEXT_USHORT( p );
-
-    cpal->num_colors = FT_NEXT_USHORT( p );
-    colors_offset    = FT_NEXT_ULONG( p );
-
-    if ( colors_offset >= table_size )
-      goto InvalidTable;
-    if ( cpal->num_colors * COLOR_SIZE > table_size - colors_offset )
-      goto InvalidTable;
-
-    cpal->color_indices = p;
-    cpal->colors        = (FT_Byte*)( table + colors_offset );
-
-    if ( cpal->version == 1 )
-    {
-      FT_ULong    type_offset, label_offset, entry_label_offset;
-      FT_UShort*  array = NULL;
-      FT_UShort*  limit;
-      FT_UShort*  q;
-
-
-      p += face->palette_data.num_palettes * 2;
-
-      type_offset        = FT_NEXT_ULONG( p );
-      label_offset       = FT_NEXT_ULONG( p );
-      entry_label_offset = FT_NEXT_ULONG( p );
-
-      if ( type_offset )
-      {
-        if ( type_offset >= table_size )
-          goto InvalidTable;
-        if ( face->palette_data.num_palettes * 2 >
-               table_size - type_offset )
-          goto InvalidTable;
-
-        if ( FT_QNEW_ARRAY( array, face->palette_data.num_palettes ) )
-          goto NoCpal;
-
-        p     = table + type_offset;
-        q     = array;
-        limit = q + face->palette_data.num_palettes;
-
-        while ( q < limit )
-          *q++ = FT_NEXT_USHORT( p );
-
-        face->palette_data.palette_types = array;
-      }
-
-      if ( label_offset )
-      {
-        if ( label_offset >= table_size )
-          goto InvalidTable;
-        if ( face->palette_data.num_palettes * 2 >
-               table_size - label_offset )
-          goto InvalidTable;
-
-        if ( FT_QNEW_ARRAY( array, face->palette_data.num_palettes ) )
-          goto NoCpal;
-
-        p     = table + label_offset;
-        q     = array;
-        limit = q + face->palette_data.num_palettes;
-
-        while ( q < limit )
-          *q++ = FT_NEXT_USHORT( p );
-
-        face->palette_data.palette_name_ids = array;
-      }
-
-      if ( entry_label_offset )
-      {
-        if ( entry_label_offset >= table_size )
-          goto InvalidTable;
-        if ( face->palette_data.num_palette_entries * 2 >
-               table_size - entry_label_offset )
-          goto InvalidTable;
-
-        if ( FT_QNEW_ARRAY( array, face->palette_data.num_palette_entries ) )
-          goto NoCpal;
-
-        p     = table + entry_label_offset;
-        q     = array;
-        limit = q + face->palette_data.num_palette_entries;
-
-        while ( q < limit )
-          *q++ = FT_NEXT_USHORT( p );
-
-        face->palette_data.palette_entry_name_ids = array;
-      }
-    }
-
-    cpal->table = table;
-
-    face->cpal = cpal;
-
-    /* set up default palette */
-    if ( FT_NEW_ARRAY( face->palette,
-                       face->palette_data.num_palette_entries ) )
-      goto NoCpal;
-
-    tt_face_palette_set( face, 0 );
-
-    return FT_Err_Ok;
-
-  InvalidTable:
-    error = FT_THROW( Invalid_Table );
-
-  NoCpal:
-    FT_FRAME_RELEASE( table );
-    FT_FREE( cpal );
-
-    /* arrays in `face->palette_data' and `face->palette' */
-    /* are freed in `sfnt_done_face'                      */
-
-    return error;
-  }
+#define FT_COMPONENT  trace_ttcolr
 
 
   FT_LOCAL_DEF( FT_Error )
@@ -324,23 +151,6 @@
     FT_FREE( colr );
 
     return error;
-  }
-
-
-  FT_LOCAL_DEF( void )
-  tt_face_free_cpal( TT_Face  face )
-  {
-    FT_Stream  stream = face->root.stream;
-    FT_Memory  memory = face->root.memory;
-
-    Cpal*  cpal = (Cpal*)face->cpal;
-
-
-    if ( cpal )
-    {
-      FT_FRAME_RELEASE( cpal->table );
-      FT_FREE( cpal );
-    }
   }
 
 
@@ -462,42 +272,6 @@
       FT_FREE( layers );
 
     return error;
-  }
-
-
-  FT_LOCAL_DEF( FT_Error )
-  tt_face_palette_set( TT_Face  face,
-                       FT_UInt  palette_index )
-  {
-    Cpal*  cpal = (Cpal*)face->cpal;
-
-    FT_Byte*   offset;
-    FT_Byte*   p;
-
-    FT_Color*  q;
-    FT_Color*  limit;
-
-
-    if ( palette_index >= face->palette_data.num_palettes )
-      return FT_THROW( Invalid_Argument );
-
-    offset = cpal->color_indices + 2 * palette_index;
-    p      = cpal->colors + COLOR_SIZE * FT_PEEK_USHORT( offset );
-
-    q     = face->palette;
-    limit = q + face->palette_data.num_palette_entries;
-
-    while ( q < limit )
-    {
-      q->blue  = FT_NEXT_BYTE( p );
-      q->green = FT_NEXT_BYTE( p );
-      q->red   = FT_NEXT_BYTE( p );
-      q->alpha = FT_NEXT_BYTE( p );
-
-      q++;
-    }
-
-    return FT_Err_Ok;
   }
 
 

@@ -34,6 +34,7 @@
 
 #ifdef TT_CONFIG_OPTION_COLOR_LAYERS
 #include "ttcolr.h"
+#include "ttcpal.h"
 #endif
 
 #ifdef TT_CONFIG_OPTION_POSTSCRIPT_NAMES

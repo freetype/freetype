@@ -25,6 +25,7 @@
 #include "ttbdf.c"
 #include "ttcmap.c"
 #include "ttcolr.c"
+#include "ttcpal.c"
 
 #include "ttkern.c"
 #include "ttload.c"

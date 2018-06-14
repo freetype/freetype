@@ -1,3 +1,20 @@
+2018-06-14  Werner Lemberg  <wl@gnu.org>
+
+	[sfnt] Move `CPAL' stuff into separate files.
+
+	* src/sfnt/sfdriver.c: Include `ttcpal.h'.
+	* src/sfnt/sfnt.c: Include `ttcpal.c'.
+
+	* src/sfnt/ttcolr.c, src/sfnt/ttcolr.h: Move CPAL stuff to ...
+	* src/sfnt/ttcpal.c, src/sfnt/ttcpal.c: ... these new files.
+
+	* src/sfnt/Jamfile (_sources), src/sfnt/rules.mk (SFNT_DRV_SRC):
+	Updated.
+
+	* include/freetype/internal/fttrace.h: Add support for `colr' and
+	`cpal'.
+	Sort entries.
+
 2018-06-13  Werner Lemberg  <wl@gnu.org>
 
 	[sfnt] Separate `CPAL' and `COLR' table handling.

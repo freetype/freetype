@@ -1,8 +1,8 @@
 /****************************************************************************
  *
- * ttcolr.h
+ * ttcpal.h
  *
- *   TrueType and OpenType colored glyph layer support (specification).
+ *   TrueType and OpenType color palette support (specification).
  *
  * Copyright 2018 by
  * David Turner, Robert Wilhelm, and Werner Lemberg.
@@ -18,8 +18,8 @@
  */
 
 
-#ifndef __TTCOLR_H__
-#define __TTCOLR_H__
+#ifndef __TTCPAL_H__
+#define __TTCPAL_H__
 
 
 #include <ft2build.h>
@@ -30,28 +30,20 @@ FT_BEGIN_HEADER
 
 
   FT_LOCAL( FT_Error )
-  tt_face_load_colr( TT_Face    face,
+  tt_face_load_cpal( TT_Face    face,
                      FT_Stream  stream );
 
   FT_LOCAL( void )
-  tt_face_free_colr( TT_Face  face );
+  tt_face_free_cpal( TT_Face  face );
 
   FT_LOCAL( FT_Error )
-  tt_face_load_colr_layers( TT_Face          face,
-                            FT_UInt          glyph_id,
-                            FT_Glyph_Layer  *ret_layers,
-                            FT_UShort*       ret_num_layers );
-
-  FT_LOCAL( FT_Error )
-  tt_face_colr_blend_layer( TT_Face       face,
-                            FT_UInt       color_index,
-                            FT_GlyphSlot  dstSlot,
-                            FT_GlyphSlot  srcSlot );
+  tt_face_palette_set( TT_Face  face,
+                       FT_UInt  palette_index );
 
 
 FT_END_HEADER
 
 
-#endif /* __TTCOLR_H__ */
+#endif /* __TTCPAL_H__ */
 
 /* END */
