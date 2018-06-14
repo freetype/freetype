@@ -1,5 +1,34 @@
 2018-06-14  Werner Lemberg  <wl@gnu.org>
 
+	Replace `FT_Get_GlyphLayers' with `FT_Get_Color_Glyph_Layer'.
+
+	This avoids any additional allocation of COLR related structures in
+	a glyph slot.
+
+	* include/freetype/freetype.h (FT_Glyph_Layer, FT_Glyph_LayerRec,
+	FT_Get_GlyphLayers): Removed.
+
+	* include/freetype/internal/ftobjs.h (FT_Colr_InternalRec): Removed.
+	(FT_Slot_InternalRec): Remove `color_layers'.
+
+	* include/freetype/internal/sfnt.h (TT_Load_Colr_Layer_Func):
+	Removed.
+	(SFNT_Interface, FT_DEFINE_SFNT_INTERFACE): Remove
+	`load_colr_layer'.
+
+	* src/base/ftobjs.c (ft_glyph_slot_done): Updated.
+	(FT_Render_Glyph_Internal): Use `FT_Get_Color_Glyph_Layer'.
+	(FT_Get_GlyphLayers): Removed.
+
+	* src/sfnt/sfdriver.c (sfnt_interface): Updated.
+
+	* src/sfnt/ttcolr.c (tt_face_load_colr_layers): Removed.
+	* src/sfnt/ttcolr.h: Updated.
+
+	* src/truetype/ttgload.c (TT_Load_Glyph): Updated.
+
+2018-06-14  Werner Lemberg  <wl@gnu.org>
+
 	Provide iterative API to access `COLR' data.
 
 	This solution doesn't store any data in an `FT_GlyphSlot' object.

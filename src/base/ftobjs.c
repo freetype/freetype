@@ -532,16 +532,6 @@
     /* free bitmap buffer if needed */
     ft_glyphslot_free_bitmap( slot );
 
-    /* free glyph color layers if needed */
-    if ( slot->internal->color_layers )
-    {
-      FT_Colr_InternalRec*  color_layers = slot->internal->color_layers;
-
-
-      FT_FREE( color_layers->layers );
-      FT_FREE( slot->internal->color_layers );
-    }
-
     /* slot->internal might be NULL in out-of-memory situations */
     if ( slot->internal )
     {
@@ -4513,69 +4503,85 @@
                             FT_Render_Mode  render_mode )
   {
     FT_Error     error = FT_Err_Ok;
+    FT_Face      face  = slot->face;
     FT_Renderer  renderer;
 
 
-    /* if it is already a bitmap, no need to do anything */
     switch ( slot->format )
     {
     case FT_GLYPH_FORMAT_BITMAP:   /* already a bitmap, don't do anything */
       break;
 
     default:
-      if ( slot->internal->color_layers )
+      if ( slot->internal->load_flags & FT_LOAD_COLOR )
       {
-        FT_Face  face = slot->face;
+        FT_LayerIterator  iterator;
+
+        FT_UInt  base_glyph = slot->glyph_index;
+
+        FT_UInt  glyph_index;
+        FT_UInt  color_index;
 
 
-        error = FT_New_GlyphSlot( face, NULL );
-        if ( !error )
+        /* check whether we have colored glyph layers */
+        iterator.p  = NULL;
+        glyph_index = FT_Get_Color_Glyph_Layer( face,
+                                                base_glyph,
+                                                &color_index,
+                                                &iterator );
+        if ( glyph_index )
         {
-          TT_Face       ttface = (TT_Face)face;
-          SFNT_Service  sfnt   = (SFNT_Service)ttface->sfnt;
-
-          FT_Glyph_Layer  glyph_layers =
-                            slot->internal->color_layers->layers;
-
-          FT_Int  idx;
-
-
-          for ( idx = 0;
-                idx < slot->internal->color_layers->num_layers;
-                idx++ )
+          error = FT_New_GlyphSlot( face, NULL );
+          if ( !error )
           {
-            FT_Int32  load_flags;
+            TT_Face       ttface = (TT_Face)face;
+            SFNT_Service  sfnt   = (SFNT_Service)ttface->sfnt;
 
 
-            load_flags  = slot->internal->color_layers->load_flags
-                          & ~FT_LOAD_COLOR;
-            load_flags |= FT_LOAD_RENDER;
+            do
+            {
+              FT_Int32  load_flags = slot->internal->load_flags;
 
-            error = FT_Load_Glyph( face,
-                                   glyph_layers[idx].glyph_index,
-                                   load_flags );
-            if ( error )
-              break;
 
-            error = sfnt->colr_blend( ttface,
-                                      glyph_layers[idx].color_index,
-                                      slot,
-                                      face->glyph );
-            if ( error )
-              break;
+              /* disable the `FT_LOAD_COLOR' flag to avoid recursion */
+              /* right here in this function                         */
+              load_flags &= ~FT_LOAD_COLOR;
+
+              /* render into the new `face->glyph' glyph slot */
+              load_flags |=  FT_LOAD_RENDER;
+
+              error = FT_Load_Glyph( face, glyph_index, load_flags );
+              if ( error )
+                break;
+
+              /* blend new `face->glyph' into old `slot'; */
+              /* at the first call, `slot' is still empty */
+              error = sfnt->colr_blend( ttface,
+                                        color_index,
+                                        slot,
+                                        face->glyph );
+              if ( error )
+                break;
+
+            } while ( ( glyph_index =
+                          FT_Get_Color_Glyph_Layer( face,
+                                                    base_glyph,
+                                                    &color_index,
+                                                    &iterator ) ) != 0 );
+
+            if ( !error )
+              slot->format = FT_GLYPH_FORMAT_BITMAP;
+
+            /* this call also restores `slot' as the glyph slot */
+            FT_Done_GlyphSlot( face->glyph );
           }
 
           if ( !error )
-            slot->format = FT_GLYPH_FORMAT_BITMAP;
+            return error;
 
-          FT_Done_GlyphSlot( face->glyph );
+          /* Failed to do the colored layer.  Draw outline instead. */
+          slot->format = FT_GLYPH_FORMAT_OUTLINE;
         }
-
-        if ( !error )
-          return error;
-
-        /* Failed to do the colored layer.  Draw outline instead. */
-        slot->format = FT_GLYPH_FORMAT_OUTLINE;
       }
 
       {
@@ -5462,31 +5468,6 @@
     }
 
     return error;
-  }
-
-
-  /* documentation is in freetype.h */
-
-  FT_EXPORT_DEF( FT_Error )
-  FT_Get_GlyphLayers( FT_GlyphSlot     glyph,
-                      FT_UShort       *anum_layers,
-                      FT_Glyph_Layer  *alayers )
-  {
-    if ( !glyph )
-      return FT_THROW( Invalid_Argument );
-
-    if ( glyph->internal->color_layers )
-    {
-      *anum_layers = glyph->internal->color_layers->num_layers;
-      *alayers     = glyph->internal->color_layers->layers;
-    }
-    else
-    {
-      *anum_layers = 0;
-      *alayers     = NULL;
-    }
-
-    return FT_Err_Ok;
   }
 
 

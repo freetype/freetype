@@ -36,12 +36,6 @@ FT_BEGIN_HEADER
   FT_LOCAL( void )
   tt_face_free_colr( TT_Face  face );
 
-  FT_LOCAL( FT_Error )
-  tt_face_load_colr_layers( TT_Face          face,
-                            FT_UInt          glyph_id,
-                            FT_Glyph_Layer  *ret_layers,
-                            FT_UShort*       ret_num_layers );
-
   FT_LOCAL( FT_UInt )
   tt_face_get_colr_layer( TT_Face            face,
                           FT_UInt            base_glyph,

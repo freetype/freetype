@@ -495,40 +495,6 @@ FT_BEGIN_HEADER
   /**************************************************************************
    *
    * @FuncType:
-   *   TT_Load_Colr_Layer_Func
-   *
-   * @Description:
-   *   Load the color layer data given a glyph index.
-   *
-   * @Input:
-   *   face ::
-   *     The target face object.
-   *
-   *   idx ::
-   *     The glyph index.
-   *
-   * @Output:
-   *   layers ::
-   *     The layer info with color index and glyph index.
-   *     Deallocate with `FT_FREE'.
-   *
-   *   num_layers ::
-   *     Number of layers.
-   *
-   * @Return:
-   *   FreeType error code.  0 means success.  Returns an error if no
-   *   color layer information exists for `idx'.
-   */
-  typedef FT_Error
-  (*TT_Load_Colr_Layer_Func)( TT_Face          face,
-                              FT_UInt          idx,
-                              FT_Glyph_Layer  *layers,
-                              FT_UShort*       num_layers );
-
-
-  /**************************************************************************
-   *
-   * @FuncType:
    *   TT_Get_Colr_Layer_Func
    *
    * @Description:
@@ -808,7 +774,6 @@ FT_BEGIN_HEADER
     TT_Free_Table_Func           free_cpal;
     TT_Free_Table_Func           free_colr;
     TT_Set_Palette_Func          set_palette;
-    TT_Load_Colr_Layer_Func      load_colr_layer;
     TT_Get_Colr_Layer_Func       get_colr_layer;
     TT_Blend_Colr_Func           colr_blend;
 
@@ -859,7 +824,6 @@ FT_BEGIN_HEADER
           free_cpal_,                    \
           free_colr_,                    \
           set_palette_,                  \
-          load_colr_layer_,              \
           get_colr_layer_,               \
           colr_blend_,                   \
           get_metrics_,                  \
@@ -900,7 +864,6 @@ FT_BEGIN_HEADER
     free_cpal_,                          \
     free_colr_,                          \
     set_palette_,                        \
-    load_colr_layer_,                    \
     get_colr_layer_,                     \
     colr_blend_,                         \
     get_metrics_,                        \

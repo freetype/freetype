@@ -1268,8 +1268,6 @@
                             /* TT_Free_Table_Func      free_colr       */
     PUT_COLOR_LAYERS( tt_face_palette_set ),
                             /* TT_Set_Palette_Func     set_palette     */
-    PUT_COLOR_LAYERS( tt_face_load_colr_layers ),
-                            /* TT_Load_Colr_Layer_Func load_colr_layer */
     PUT_COLOR_LAYERS( tt_face_get_colr_layer ),
                             /* TT_Get_Colr_Layer_Func  get_colr_layer  */
     PUT_COLOR_LAYERS( tt_face_colr_blend_layer ),
