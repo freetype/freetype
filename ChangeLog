@@ -1,5 +1,17 @@
 2018-06-14  Werner Lemberg  <wl@gnu.org>
 
+	Add glyph index and glyph load flags to glyph slot.
+
+	* include/freetype/freetype.h (FT_GlyphSlotRec): Rename unused
+	`reserved' field to `glyph_index'.
+
+	* include/freetype/internal/ftobjs.h (FT_Slot_InternalRec): Add
+	`load_flags' field.
+
+	* src/base/ftobjs.c (FT_Load_Glyph): Set new fields.
+
+2018-06-14  Werner Lemberg  <wl@gnu.org>
+
 	[sfnt] Move `CPAL' stuff into separate files.
 
 	* src/sfnt/sfdriver.c: Include `ttcpal.h'.

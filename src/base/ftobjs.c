@@ -999,6 +999,9 @@
       }
     }
 
+    slot->glyph_index          = glyph_index;
+    slot->internal->load_flags = load_flags;
+
     /* do we need to render the image or preset the bitmap now? */
     if ( !error                                    &&
          ( load_flags & FT_LOAD_NO_SCALE ) == 0    &&

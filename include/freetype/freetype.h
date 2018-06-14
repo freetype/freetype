@@ -1781,6 +1781,10 @@ FT_BEGIN_HEADER
    *     listed through a direct, single-linked list
    *     using its `next' field.
    *
+   *   glyph_index ::
+   *     The glyph index passed as an argument to @FT_Load_Glyph while
+   *     initializeing the glyph slot (since FreeType version 2.10).
+   *
    *   generic ::
    *     A typeless pointer unused by the FreeType
    *     library or any of its drivers.  It can be
@@ -1975,7 +1979,7 @@ FT_BEGIN_HEADER
     FT_Library        library;
     FT_Face           face;
     FT_GlyphSlot      next;
-    FT_UInt           reserved;       /* retained for binary compatibility */
+    FT_UInt           glyph_index; /* new in 2.10; was reserved previously */
     FT_Generic        generic;
 
     FT_Glyph_Metrics  metrics;

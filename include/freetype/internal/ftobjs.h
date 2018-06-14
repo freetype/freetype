@@ -434,6 +434,10 @@ FT_BEGIN_HEADER
    *
    *   color_layers ::
    *     Data from (SFNT) COLR/CPAL tables.
+   *
+   *   load_flags ::
+   *     The load flags passed as an argument to @FT_Load_Glyph while
+   *     initializing the glyph slot.
    */
 
 #define FT_GLYPH_OWN_BITMAP  0x1U
@@ -448,6 +452,8 @@ FT_BEGIN_HEADER
     void*           glyph_hints;
 
     FT_Colr_Internal  color_layers;
+
+    FT_Int32        load_flags;
 
   } FT_GlyphSlot_InternalRec;
 
