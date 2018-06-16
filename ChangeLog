@@ -1,5 +1,13 @@
 2018-06-16  Werner Lemberg  <wl@gnu.org>
 
+	[sfnt] Fix color glyph layer loading.
+
+	* src/sfnt/ttcolr.c (Colr): Add `table_size' field.
+	(tt_face_load_colr): Set it.
+	(tt_face_get_colr_layer): Check pointer limit for layer entries.
+
+2018-06-16  Werner Lemberg  <wl@gnu.org>
+
 	[sfnt] Fix color palette loading.
 
 	Reported as

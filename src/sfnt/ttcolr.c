@@ -64,7 +64,8 @@
     FT_Byte*  layers;
 
     /* The memory which backs up the `COLR' table. */
-    void*  table;
+    void*     table;
+    FT_ULong  table_size;
 
   } Colr;
 
@@ -138,6 +139,7 @@
     colr->base_glyphs = (FT_Byte*)( table + base_glyph_offset );
     colr->layers      = (FT_Byte*)( table + layer_offset      );
     colr->table       = table;
+    colr->table_size  = table_size;
 
     face->colr = colr;
 
@@ -220,6 +222,9 @@
 
     if ( !iterator->p )
     {
+      FT_ULong  offset;
+
+
       /* first call to function */
       iterator->layer = 0;
 
@@ -229,13 +234,16 @@
                                     &glyph_record ) )
         return 0;
 
-      iterator->p = colr->layers +
-                      LAYER_SIZE * glyph_record.first_layer_index;
-
       if ( glyph_record.num_layers )
         iterator->num_layers = glyph_record.num_layers;
       else
         return 0;
+
+      offset = LAYER_SIZE * glyph_record.first_layer_index;
+      if ( offset + LAYER_SIZE * glyph_record.num_layers > colr->table_size )
+        return 0;
+
+      iterator->p = colr->layers + offset;
     }
 
     if ( iterator->layer >= iterator->num_layers )
