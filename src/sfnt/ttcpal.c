@@ -55,7 +55,8 @@
                              /* in the combined color record array.        */
 
     /* The memory which backs up the `CPAL' table. */
-    void*  table;
+    void*     table;
+    FT_ULong  table_size;
 
   } Cpal;
 
@@ -197,7 +198,8 @@
       }
     }
 
-    cpal->table = table;
+    cpal->table      = table;
+    cpal->table_size = table_size;
 
     face->cpal = cpal;
 
@@ -253,13 +255,20 @@
     FT_Color*  q;
     FT_Color*  limit;
 
+    FT_ULong  record_offset;
+
 
     if ( palette_index >= face->palette_data.num_palettes )
       return FT_THROW( Invalid_Argument );
 
-    offset = cpal->color_indices + 2 * palette_index;
-    p      = cpal->colors + COLOR_SIZE * FT_PEEK_USHORT( offset );
+    offset        = cpal->color_indices + 2 * palette_index;
+    record_offset = COLOR_SIZE * FT_PEEK_USHORT( offset );
 
+    if ( record_offset + COLOR_SIZE * face->palette_data.num_palette_entries >
+           cpal->table_size )
+      return FT_THROW( Invalid_Table );
+
+    p     = cpal->colors + record_offset;
     q     = face->palette;
     limit = q + face->palette_data.num_palette_entries;
 

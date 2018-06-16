@@ -1,5 +1,17 @@
 2018-06-16  Werner Lemberg  <wl@gnu.org>
 
+	[sfnt] Fix color palette loading.
+
+	Reported as
+
+	  https://bugs.chromium.org/p/oss-fuzz/issues/detail?id=8933
+
+	* src/sfnt/ttcpal.c (Cpal): Add `table_size' field.
+	(tt_face_load_cpal): Set it.
+	(tt_face_palette_set): Check pointer limit for color entries.
+
+2018-06-16  Werner Lemberg  <wl@gnu.org>
+
 	* src/base/ftbitmap.c (FT_Bitmap_Blend): Avoid integer overflow.
 
 2018-06-16  Werner Lemberg  <wl@gnu.org>
