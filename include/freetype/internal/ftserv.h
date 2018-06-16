@@ -415,7 +415,7 @@ FT_BEGIN_HEADER
    *   using its cache.
    *
    * @input:
-   *   face::
+   *   face ::
    *     The source face handle containing the cache.
    *
    *   field ::

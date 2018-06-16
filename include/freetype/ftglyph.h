@@ -244,7 +244,7 @@ FT_BEGIN_HEADER
    *   FreeType error code.  0~means success.
    *
    * @Note:
-   *   Because `*aglyph->advance.x' and '*aglyph->advance.y' are 16.16
+   *   Because `*aglyph->advance.x' and `*aglyph->advance.y' are 16.16
    *   fixed-point numbers, `slot->advance.x' and `slot->advance.y'
    *   (which are in 26.6 fixed-point format) must be in the range
    *   ]-32768;32768[.
