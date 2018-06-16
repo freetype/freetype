@@ -901,8 +901,11 @@
     source_llx -= final_llx;
     source_lly -= final_lly;
 
-    target_llx -= final_llx;
-    target_lly -= final_lly;
+    if ( target->width && target->rows )
+    {
+      target_llx -= final_llx;
+      target_lly -= final_lly;
+    }
 
     /* set up target bitmap */
     if ( target->pixel_mode == FT_PIXEL_MODE_NONE )

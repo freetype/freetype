@@ -1,5 +1,9 @@
 2018-06-16  Werner Lemberg  <wl@gnu.org>
 
+	* src/base/ftbitmap.c (FT_Bitmap_Blend): Avoid integer overflow.
+
+2018-06-16  Werner Lemberg  <wl@gnu.org>
+
 	Add `FT_Bitmap_Blend' API.
 
 	Still missing: Support for negative bitmap pitch and subpixel offset
