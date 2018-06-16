@@ -22,6 +22,7 @@
 
 #include <ft2build.h>
 #include FT_FREETYPE_H
+#include FT_COLOR_H
 
 #ifdef FREETYPE_H
 #error "freetype.h of FreeType 1 has been loaded!"
@@ -192,6 +193,64 @@ FT_BEGIN_HEADER
                      const FT_Bitmap  *source,
                      FT_Bitmap        *target,
                      FT_Int            alignment );
+
+
+  /**************************************************************************
+   *
+   * @Function:
+   *   FT_Bitmap_Blend
+   *
+   * @Description:
+   *   Blend a bitmap onto another bitmap, using a given color.
+   *
+   * @Input:
+   *   library ::
+   *     A handle to a library object.
+   *
+   *   source ::
+   *     The source bitmap, which can have any @FT_Pixel_Mode format.
+   *
+   *   source_offset ::
+   *     The offset vector to the upper left corner of the source bitmap in
+   *     26.6 pixel format.  This can be a fractional pixel value.
+   *
+   *   color ::
+   *     The color used to draw `source' onto `target'.
+   *
+   * @InOut:
+   *   target ::
+   *     A handle to an `FT_Bitmap' object.  It should be either initialized
+   *     as empty with a call to @FT_Bitmap_Init, or it should be of type
+   *     @FT_PIXEL_MODE_BGRA.
+   *
+   *   atarget_offset ::
+   *     The offset vector to the upper left corner of the target bitmap in
+   *     26.6 pixel format.  It should represent an integer offset; the
+   *     function will set the lowest six bits to zero to enforce that.
+   *
+   * @Return:
+   *   FreeType error code.  0~means success.
+   *
+   * @Note:
+   *   This function doesn't perform clipping.
+   *
+   *   The bitmap in `target' gets allocated or reallocated as needed; the
+   *   vector `atarget_offset' is updated accordingly.
+   *
+   *   In case of allocation or reallocation, the bitmap's pitch is set to
+   *   `4~*~width'.  Both `source' and `target' must have the same bitmap
+   *   flow (as indicated by the sign of the `pitch' field).
+   *
+   * @Since:
+   *   2.10
+   */
+  FT_EXPORT( FT_Error )
+  FT_Bitmap_Blend( FT_Library         library,
+                   const FT_Bitmap*   source,
+                   const FT_Vector    source_offset,
+                   FT_Bitmap*         target,
+                   FT_Vector         *atarget_offset,
+                   FT_Color           color );
 
 
   /**************************************************************************

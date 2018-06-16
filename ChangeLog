@@ -1,3 +1,13 @@
+2018-06-16  Werner Lemberg  <wl@gnu.org>
+
+	Add `FT_Bitmap_Blend' API.
+
+	Still missing: Support for negative bitmap pitch and subpixel offset
+	of source bitmap.
+
+	* include/freetype/ftbitmap.h, src/base/ftbitmap.c
+	(FT_Bitmap_Blend): New function.
+
 2018-06-14  Werner Lemberg  <wl@gnu.org>
 
 	Replace `FT_Get_GlyphLayers' with `FT_Get_Color_Glyph_Layer'.
