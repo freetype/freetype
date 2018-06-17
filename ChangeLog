@@ -1,3 +1,12 @@
+2018-06-17  Werner Lemberg  <wl@gnu.org>
+
+	s/trace_bitmap/trace_checksum/.
+
+	* include/freetype/internal/fttrace.h: s/bitmap/checksum/.
+
+	* src/base/ftobjs.c (FT_COMPONENT): s/trace_bitmap/trace_checksum/.
+	Adjust code.
+
 2018-06-16  Werner Lemberg  <wl@gnu.org>
 
 	[sfnt] Fix color glyph layer loading.

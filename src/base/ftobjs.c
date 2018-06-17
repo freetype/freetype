@@ -4619,7 +4619,7 @@
 #ifdef FT_DEBUG_LEVEL_TRACE
 
 #undef  FT_COMPONENT
-#define FT_COMPONENT  trace_bitmap
+#define FT_COMPONENT  trace_checksum
 
     /*
      * Computing the MD5 checksum is expensive, unnecessarily distorting a
@@ -4629,9 +4629,9 @@
      */
 
     /* we use FT_TRACE3 in this block */
-    if ( !error                             &&
-         ft_trace_levels[trace_bitmap] >= 3 &&
-         slot->bitmap.buffer                )
+    if ( !error                               &&
+         ft_trace_levels[trace_checksum] >= 3 &&
+         slot->bitmap.buffer                  )
     {
       FT_Bitmap  bitmap;
       FT_Error   err;
@@ -4681,11 +4681,11 @@
      */
 
     /* we use FT_TRACE7 in this block */
-    if ( !error                             &&
-         ft_trace_levels[trace_bitmap] >= 7 &&
-         slot->bitmap.rows  < 128U          &&
-         slot->bitmap.width < 128U          &&
-         slot->bitmap.buffer                )
+    if ( !error                               &&
+         ft_trace_levels[trace_checksum] >= 7 &&
+         slot->bitmap.rows  < 128U            &&
+         slot->bitmap.width < 128U            &&
+         slot->bitmap.buffer                  )
     {
       int  rows  = (int)slot->bitmap.rows;
       int  width = (int)slot->bitmap.width;

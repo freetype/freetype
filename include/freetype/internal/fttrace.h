@@ -33,7 +33,7 @@ FT_TRACE_DEF( objs )      /* base objects            (ftobjs.c)   */
 FT_TRACE_DEF( outline )   /* outline management      (ftoutln.c)  */
 FT_TRACE_DEF( stream )    /* stream manager          (ftstream.c) */
 
-FT_TRACE_DEF( bitmap )    /* bitmap checksum         (ftobjs.c)   */
+FT_TRACE_DEF( checksum )  /* bitmap checksum         (ftobjs.c)   */
 FT_TRACE_DEF( mm )        /* MM interface            (ftmm.c)     */
 FT_TRACE_DEF( psprops )   /* PS driver properties    (ftpsprop.c) */
 FT_TRACE_DEF( raccess )   /* resource fork accessor  (ftrfork.c)  */
