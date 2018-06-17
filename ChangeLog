@@ -1,3 +1,14 @@
+2018-06-17  Armin Hasitzka  <prince.cherusker@gmail.com>
+
+	[bdf] Fix underflow of an unsigned value.
+
+	bdflib.c:1562 could be reached with `font->glyphs_used == 0'.  That
+	caused an underflow of the unsigned value which results in undefined
+	behaviour.
+
+	* src/bdf/bdflib.c (src/bdf/bdflib.c): Bail out earlier than before
+	if the `ENCODING' keyword cannot be found.
+
 2018-06-17  Werner Lemberg  <wl@gnu.org>
 
 	[base] Add tracing for `FT_Bitmap_Blend'.

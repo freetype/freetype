@@ -1556,6 +1556,9 @@
       goto Exit;
     }
 
+    if ( !( p->flags & BDF_ENCODING_ ) )
+      goto Missing_Encoding;
+
     /* Point at the glyph being constructed. */
     if ( p->glyph_enc == -1 )
       glyph = font->unencoded + ( font->unencoded_used - 1 );
@@ -1626,9 +1629,6 @@
     /* Expect the SWIDTH (scalable width) field next. */
     if ( _bdf_strncmp( line, "SWIDTH", 6 ) == 0 )
     {
-      if ( !( p->flags & BDF_ENCODING_ ) )
-        goto Missing_Encoding;
-
       error = _bdf_list_split( &p->list, (char *)" +", line, linelen );
       if ( error )
         goto Exit;
@@ -1642,9 +1642,6 @@
     /* Expect the DWIDTH (scalable width) field next. */
     if ( _bdf_strncmp( line, "DWIDTH", 6 ) == 0 )
     {
-      if ( !( p->flags & BDF_ENCODING_ ) )
-        goto Missing_Encoding;
-
       error = _bdf_list_split( &p->list, (char *)" +", line, linelen );
       if ( error )
         goto Exit;
@@ -1670,9 +1667,6 @@
     /* Expect the BBX field next. */
     if ( _bdf_strncmp( line, "BBX", 3 ) == 0 )
     {
-      if ( !( p->flags & BDF_ENCODING_ ) )
-        goto Missing_Encoding;
-
       error = _bdf_list_split( &p->list, (char *)" +", line, linelen );
       if ( error )
         goto Exit;
