@@ -24,6 +24,16 @@
 #include FT_INTERNAL_OBJECTS_H
 
 
+  /**************************************************************************
+   *
+   * The macro FT_COMPONENT is used in trace mode.  It is an implicit
+   * parameter of the FT_TRACE() and FT_ERROR() macros, used to print/log
+   * messages during execution.
+   */
+#undef  FT_COMPONENT
+#define FT_COMPONENT  trace_bitmap
+
+
   static
   const FT_Bitmap  null_bitmap = { 0, 0, 0, NULL, 0, 0, 0, NULL };
 
@@ -829,7 +839,7 @@
 
     /* pitches must have the same sign */
     if ( target->pixel_mode == FT_PIXEL_MODE_BGRA &&
-         ( source_->pitch ^ target->pitch ) < 0    )
+         ( source_->pitch ^ target->pitch ) < 0   )
       return FT_THROW( Invalid_Argument );
 
     if ( !( source_->width && source_->rows ) )
@@ -851,11 +861,19 @@
     /* get source bitmap dimensions */
     source_llx = source_offset.x;
     if ( FT_LONG_MIN + ( source_->rows << 6 ) + 64 > source_offset.y )
+    {
+      FT_TRACE5((
+        "FT_Bitmap_Blend: y coordinate overflow in source bitmap\n" ));
       return FT_THROW( Invalid_Argument );
+    }
     source_lly = source_offset.y - ( source_->rows << 6 );
 
     if ( FT_LONG_MAX - ( source_->width << 6 ) - 64 < source_llx )
+    {
+      FT_TRACE5((
+        "FT_Bitmap_Blend: x coordinate overflow in source bitmap\n" ));
       return FT_THROW( Invalid_Argument );
+    }
     source_urx = source_llx + ( source_->width << 6 );
     source_ury = source_offset.y;
 
@@ -864,11 +882,19 @@
     {
       target_llx = target_offset.x;
       if ( FT_LONG_MIN + ( target->rows << 6 ) > target_offset.y )
+      {
+        FT_TRACE5((
+          "FT_Bitmap_Blend: y coordinate overflow in target bitmap\n" ));
         return FT_THROW( Invalid_Argument );
+      }
       target_lly = target_offset.y - ( target->rows << 6 );
 
       if ( FT_LONG_MAX - ( target->width << 6 ) < target_llx )
+      {
+        FT_TRACE5((
+          "FT_Bitmap_Blend: x coordinate overflow in target bitmap\n" ));
         return FT_THROW( Invalid_Argument );
+      }
       target_urx = target_llx + ( target->width << 6 );
       target_ury = target_offset.y;
     }
@@ -896,6 +922,31 @@
     final_width = ( final_urx - final_llx ) >> 6;
     final_rows  = ( final_ury - final_lly ) >> 6;
 
+#ifdef FT_DEBUG_LEVEL_TRACE
+    FT_TRACE5(( "FT_Bitmap_Blend:\n"
+                "  source bitmap: (%d, %d) -- (%d, %d); %d x %d\n",
+      source_llx / 64, source_lly / 64,
+      source_urx / 64, source_ury / 64,
+      source_->width, source_->rows ));
+
+    if ( frac_offset.x || frac_offset.y )
+      FT_TRACE5(( "    fractional offset: (%d/64, %d/64)\n",
+                  frac_offset.x, frac_offset.y ));
+
+    if ( target->width && target->rows )
+      FT_TRACE5(( "  target bitmap: (%d, %d) -- (%d, %d); %d x %d\n",
+        target_llx / 64, target_lly / 64,
+        target_urx / 64, target_ury / 64,
+        target->width, target->rows ));
+    else
+      FT_TRACE5(( "  target bitmap: empty\n" ));
+
+    FT_TRACE5(( "  final bitmap: (%d, %d) -- (%d, %d); %d x %d\n",
+      final_llx / 64, final_lly / 64,
+      final_urx / 64, final_ury / 64,
+      final_width, final_rows ));
+#endif /* FT_DEBUG_LEVEL_TRACE */
+
     /* for blending, set offset vector of final bitmap */
     /* temporarily to (0,0)                            */
     source_llx -= final_llx;
@@ -918,7 +969,11 @@
       target->num_grays  = 256;
 
       if ( FT_LONG_MAX / target->pitch < target->rows )
+      {
+        FT_TRACE5(( "FT_Blend_Bitmap: target bitmap too large (%d x %d)\n",
+                     final_width, final_rows ));
         return FT_THROW( Invalid_Argument );
+      }
 
       if ( FT_ALLOC( target->buffer, target->pitch * (int)target->rows ) )
         return error;
@@ -941,7 +996,11 @@
       new_pitch = (int)final_width * 4;
 
       if ( FT_LONG_MAX / new_pitch < final_rows )
+      {
+        FT_TRACE5(( "FT_Blend_Bitmap: target bitmap too large (%d x %d)\n",
+                     final_width, final_rows ));
         return FT_THROW( Invalid_Argument );
+      }
 
       /* TODO: provide an in-buffer solution for large bitmaps */
       /*       to avoid allocation of a new buffer             */
