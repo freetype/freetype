@@ -35,21 +35,21 @@ FT_BEGIN_HEADER
 
   /**************************************************************************
    *
-   * @Section:
+   * @section:
    *   truetype_tables
    *
-   * @Title:
+   * @title:
    *   TrueType Tables
    *
-   * @Abstract:
+   * @abstract:
    *   TrueType specific table types and functions.
    *
-   * @Description:
+   * @description:
    *   This section contains definitions of some basic tables specific to
    *   TrueType and OpenType as well as some routines used to access and
    *   process them.
    *
-   * @Order:
+   * @order:
    *   TT_Header
    *   TT_HoriHeader
    *   TT_VertHeader
@@ -73,10 +73,10 @@ FT_BEGIN_HEADER
 
   /**************************************************************************
    *
-   * @Struct:
+   * @struct:
    *   TT_Header
    *
-   * @Description:
+   * @description:
    *   A structure to model a TrueType font header table.  All fields
    *   follow the OpenType specification.
    */
@@ -111,15 +111,15 @@ FT_BEGIN_HEADER
 
   /**************************************************************************
    *
-   * @Struct:
+   * @struct:
    *   TT_HoriHeader
    *
-   * @Description:
+   * @description:
    *   A structure to model a TrueType horizontal header, the `hhea'
    *   table, as well as the corresponding horizontal metrics table,
    *   `hmtx'.
    *
-   * @Fields:
+   * @fields:
    *   Version ::
    *     The table version.
    *
@@ -206,7 +206,7 @@ FT_BEGIN_HEADER
    *   short_metrics ::
    *     A pointer into the `hmtx' table.
    *
-   * @Note:
+   * @note:
    *   For an OpenType variation font, the values of the following fields
    *   can change after a call to @FT_Set_Var_Design_Coordinates (and
    *   friends) if the font contains an `MVAR' table: `caret_Slope_Rise',
@@ -245,15 +245,15 @@ FT_BEGIN_HEADER
 
   /**************************************************************************
    *
-   * @Struct:
+   * @struct:
    *   TT_VertHeader
    *
-   * @Description:
+   * @description:
    *   A structure used to model a TrueType vertical header, the `vhea'
    *   table, as well as the corresponding vertical metrics table,
    *   `vmtx'.
    *
-   * @Fields:
+   * @fields:
    *   Version ::
    *     The table version.
    *
@@ -343,7 +343,7 @@ FT_BEGIN_HEADER
    *   short_metrics ::
    *     A pointer into the `vmtx' table.
    *
-   * @Note:
+   * @note:
    *   For an OpenType variation font, the values of the following fields
    *   can change after a call to @FT_Set_Var_Design_Coordinates (and
    *   friends) if the font contains an `MVAR' table: `Ascender',
@@ -383,10 +383,10 @@ FT_BEGIN_HEADER
 
   /**************************************************************************
    *
-   * @Struct:
+   * @struct:
    *   TT_OS2
    *
-   * @Description:
+   * @description:
    *   A structure to model a TrueType `OS/2' table.  All fields comply
    *   to the OpenType specification.
    *
@@ -394,7 +394,7 @@ FT_BEGIN_HEADER
    *   `OS/2' table.  In this case, the `version' field is always set to
    *   0xFFFF.
    *
-   * @Note:
+   * @note:
    *   For an OpenType variation font, the values of the following fields
    *   can change after a call to @FT_Set_Var_Design_Coordinates (and
    *   friends) if the font contains an `MVAR' table: `sCapHeight',
@@ -469,16 +469,16 @@ FT_BEGIN_HEADER
 
   /**************************************************************************
    *
-   * @Struct:
+   * @struct:
    *   TT_Postscript
    *
-   * @Description:
+   * @description:
    *   A structure to model a TrueType `post' table.  All fields comply
    *   to the OpenType specification.  This structure does not reference
    *   a font's PostScript glyph names; use @FT_Get_Glyph_Name to
    *   retrieve them.
    *
-   * @Note:
+   * @note:
    *   For an OpenType variation font, the values of the following fields
    *   can change after a call to @FT_Set_Var_Design_Coordinates (and
    *   friends) if the font contains an `MVAR' table: `underlinePosition'
@@ -504,10 +504,10 @@ FT_BEGIN_HEADER
 
   /**************************************************************************
    *
-   * @Struct:
+   * @struct:
    *   TT_PCLT
    *
-   * @Description:
+   * @description:
    *   A structure to model a TrueType `PCLT' table.  All fields comply
    *   to the OpenType specification.
    */
@@ -534,15 +534,15 @@ FT_BEGIN_HEADER
 
   /**************************************************************************
    *
-   * @Struct:
+   * @struct:
    *   TT_MaxProfile
    *
-   * @Description:
+   * @description:
    *   The maximum profile (`maxp') table contains many max values, which
    *   can be used to pre-allocate arrays for speeding up glyph loading
    *   and hinting.
    *
-   * @Fields:
+   * @fields:
    *   version ::
    *     The version number.
    *
@@ -608,7 +608,7 @@ FT_BEGIN_HEADER
    *     The maximum nesting depth of composite
    *     glyphs.
    *
-   * @Note:
+   * @note:
    *   This structure is only used during font loading.
    */
   typedef struct  TT_MaxProfile_
@@ -634,15 +634,15 @@ FT_BEGIN_HEADER
 
   /**************************************************************************
    *
-   * @Enum:
+   * @enum:
    *   FT_Sfnt_Tag
    *
-   * @Description:
+   * @description:
    *   An enumeration to specify indices of SFNT tables loaded and parsed
    *   by FreeType during initialization of an SFNT font.  Used in the
    *   @FT_Get_Sfnt_Table API function.
    *
-   * @Values:
+   * @values:
    *   FT_SFNT_HEAD ::
    *     To access the font's @TT_Header structure.
    *
@@ -691,20 +691,20 @@ FT_BEGIN_HEADER
 
   /**************************************************************************
    *
-   * @Function:
+   * @function:
    *   FT_Get_Sfnt_Table
    *
-   * @Description:
+   * @description:
    *   Return a pointer to a given SFNT table stored within a face.
    *
-   * @Input:
+   * @input:
    *   face ::
    *     A handle to the source.
    *
    *   tag ::
    *     The index of the SFNT table.
    *
-   * @Return:
+   * @return:
    *   A type-less pointer to the table.  This will be NULL in case of
    *   error, or if the corresponding table was not found *OR* loaded
    *   from the file.
@@ -712,7 +712,7 @@ FT_BEGIN_HEADER
    *   Use a typecast according to `tag' to access the structure
    *   elements.
    *
-   * @Note:
+   * @note:
    *   The table is owned by the face object and disappears with it.
    *
    *   This function is only useful to access SFNT tables that are loaded
@@ -850,18 +850,18 @@ FT_BEGIN_HEADER
 
   /**************************************************************************
    *
-   * @Function:
+   * @function:
    *   FT_Get_CMap_Language_ID
    *
-   * @Description:
+   * @description:
    *   Return cmap language ID as specified in the OpenType standard.
    *   Definitions of language ID values are in file @FT_TRUETYPE_IDS_H.
    *
-   * @Input:
+   * @input:
    *   charmap ::
    *     The target charmap.
    *
-   * @Return:
+   * @return:
    *   The language ID of `charmap'.  If `charmap' doesn't belong to an
    *   SFNT face, just return~0 as the default value.
    *
@@ -874,17 +874,17 @@ FT_BEGIN_HEADER
 
   /**************************************************************************
    *
-   * @Function:
+   * @function:
    *   FT_Get_CMap_Format
    *
-   * @Description:
+   * @description:
    *   Return the format of an SFNT `cmap' table.
    *
-   * @Input:
+   * @input:
    *   charmap ::
    *     The target charmap.
    *
-   * @Return:
+   * @return:
    *   The format of `charmap'.  If `charmap' doesn't belong to an SFNT
    *   face, return -1.
    */

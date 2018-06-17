@@ -48,16 +48,16 @@ FT_BEGIN_HEADER
 
   /**************************************************************************
    *
-   * @Section:
+   * @section:
    *   glyph_management
    *
-   * @Title:
+   * @title:
    *   Glyph Management
    *
-   * @Abstract:
+   * @abstract:
    *   Generic interface to manage individual glyph data.
    *
-   * @Description:
+   * @description:
    *   This section contains definitions used to manage glyph data
    *   through generic FT_Glyph objects.  Each of them can contain a
    *   bitmap, a vector outline, or even images in other formats.
@@ -71,15 +71,15 @@ FT_BEGIN_HEADER
 
   /**************************************************************************
    *
-   * @Type:
+   * @type:
    *   FT_Glyph
    *
-   * @Description:
+   * @description:
    *   Handle to an object used to model generic glyph images.  It is a
    *   pointer to the @FT_GlyphRec structure and can contain a glyph
    *   bitmap or pointer.
    *
-   * @Note:
+   * @note:
    *   Glyph objects are not owned by the library.  You must thus release
    *   them manually (through @FT_Done_Glyph) _before_ calling
    *   @FT_Done_FreeType.
@@ -89,14 +89,14 @@ FT_BEGIN_HEADER
 
   /**************************************************************************
    *
-   * @Struct:
+   * @struct:
    *   FT_GlyphRec
    *
-   * @Description:
+   * @description:
    *   The root glyph structure contains a given glyph image plus its
    *   advance width in 16.16 fixed-point format.
    *
-   * @Fields:
+   * @fields:
    *   library ::
    *     A handle to the FreeType library object.
    *
@@ -121,10 +121,10 @@ FT_BEGIN_HEADER
 
   /**************************************************************************
    *
-   * @Type:
+   * @type:
    *   FT_BitmapGlyph
    *
-   * @Description:
+   * @description:
    *   A handle to an object used to model a bitmap glyph image.  This is
    *   a sub-class of @FT_Glyph, and a pointer to @FT_BitmapGlyphRec.
    */
@@ -133,14 +133,14 @@ FT_BEGIN_HEADER
 
   /**************************************************************************
    *
-   * @Struct:
+   * @struct:
    *   FT_BitmapGlyphRec
    *
-   * @Description:
+   * @description:
    *   A structure used for bitmap glyph images.  This really is a
    *   `sub-class' of @FT_GlyphRec.
    *
-   * @Fields:
+   * @fields:
    *   root ::
    *     The root @FT_Glyph fields.
    *
@@ -157,7 +157,7 @@ FT_BEGIN_HEADER
    *   bitmap ::
    *     A descriptor for the bitmap.
    *
-   * @Note:
+   * @note:
    *   You can typecast an @FT_Glyph to @FT_BitmapGlyph if you have
    *   `glyph->format == FT_GLYPH_FORMAT_BITMAP'.  This lets you access
    *   the bitmap's contents easily.
@@ -177,10 +177,10 @@ FT_BEGIN_HEADER
 
   /**************************************************************************
    *
-   * @Type:
+   * @type:
    *   FT_OutlineGlyph
    *
-   * @Description:
+   * @description:
    *   A handle to an object used to model an outline glyph image.  This
    *   is a sub-class of @FT_Glyph, and a pointer to @FT_OutlineGlyphRec.
    */
@@ -189,21 +189,21 @@ FT_BEGIN_HEADER
 
   /**************************************************************************
    *
-   * @Struct:
+   * @struct:
    *   FT_OutlineGlyphRec
    *
-   * @Description:
+   * @description:
    *   A structure used for outline (vectorial) glyph images.  This
    *   really is a `sub-class' of @FT_GlyphRec.
    *
-   * @Fields:
+   * @fields:
    *   root ::
    *     The root @FT_Glyph fields.
    *
    *   outline ::
    *     A descriptor for the outline.
    *
-   * @Note:
+   * @note:
    *   You can typecast an @FT_Glyph to @FT_OutlineGlyph if you have
    *   `glyph->format == FT_GLYPH_FORMAT_OUTLINE'.  This lets you access
    *   the outline's content easily.
@@ -225,25 +225,25 @@ FT_BEGIN_HEADER
 
   /**************************************************************************
    *
-   * @Function:
+   * @function:
    *   FT_Get_Glyph
    *
-   * @Description:
+   * @description:
    *   A function used to extract a glyph image from a slot.  Note that
    *   the created @FT_Glyph object must be released with @FT_Done_Glyph.
    *
-   * @Input:
+   * @input:
    *   slot ::
    *     A handle to the source glyph slot.
    *
-   * @Output:
+   * @output:
    *   aglyph ::
    *     A handle to the glyph object.
    *
-   * @Return:
+   * @return:
    *   FreeType error code.  0~means success.
    *
-   * @Note:
+   * @note:
    *   Because `*aglyph->advance.x' and `*aglyph->advance.y' are 16.16
    *   fixed-point numbers, `slot->advance.x' and `slot->advance.y'
    *   (which are in 26.6 fixed-point format) must be in the range
@@ -256,23 +256,23 @@ FT_BEGIN_HEADER
 
   /**************************************************************************
    *
-   * @Function:
+   * @function:
    *   FT_Glyph_Copy
    *
-   * @Description:
+   * @description:
    *   A function used to copy a glyph image.  Note that the created
    *   @FT_Glyph object must be released with @FT_Done_Glyph.
    *
-   * @Input:
+   * @input:
    *   source ::
    *     A handle to the source glyph object.
    *
-   * @Output:
+   * @output:
    *   target ::
    *     A handle to the target glyph object.  0~in case of
    *     error.
    *
-   * @Return:
+   * @return:
    *   FreeType error code.  0~means success.
    */
   FT_EXPORT( FT_Error )
@@ -282,17 +282,17 @@ FT_BEGIN_HEADER
 
   /**************************************************************************
    *
-   * @Function:
+   * @function:
    *   FT_Glyph_Transform
    *
-   * @Description:
+   * @description:
    *   Transform a glyph image if its format is scalable.
    *
-   * @InOut:
+   * @inout:
    *   glyph ::
    *     A handle to the target glyph object.
    *
-   * @Input:
+   * @input:
    *   matrix ::
    *     A pointer to a 2x2 matrix to apply.
    *
@@ -300,10 +300,10 @@ FT_BEGIN_HEADER
    *     A pointer to a 2d vector to apply.  Coordinates are
    *     expressed in 1/64th of a pixel.
    *
-   * @Return:
+   * @return:
    *   FreeType error code (if not 0, the glyph format is not scalable).
    *
-   * @Note:
+   * @note:
    *   The 2x2 transformation matrix is also applied to the glyph's
    *   advance vector.
    */
@@ -315,13 +315,13 @@ FT_BEGIN_HEADER
 
   /**************************************************************************
    *
-   * @Enum:
+   * @enum:
    *   FT_Glyph_BBox_Mode
    *
-   * @Description:
+   * @description:
    *   The mode how the values of @FT_Glyph_Get_CBox are returned.
    *
-   * @Values:
+   * @values:
    *   FT_GLYPH_BBOX_UNSCALED ::
    *     Return unscaled font units.
    *
@@ -359,10 +359,10 @@ FT_BEGIN_HEADER
 
   /**************************************************************************
    *
-   * @Function:
+   * @function:
    *   FT_Glyph_Get_CBox
    *
-   * @Description:
+   * @description:
    *   Return a glyph's `control box'.  The control box encloses all the
    *   outline's points, including Bezier control points.  Though it
    *   coincides with the exact bounding box for most glyphs, it can be
@@ -374,7 +374,7 @@ FT_BEGIN_HEADER
    *   and arcs in the outline.  To get the latter, you can use the
    *   `ftbbox' component, which is dedicated to this single task.
    *
-   * @Input:
+   * @input:
    *   glyph ::
    *     A handle to the source glyph object.
    *
@@ -382,12 +382,12 @@ FT_BEGIN_HEADER
    *     The mode that indicates how to interpret the returned
    *     bounding box values.
    *
-   * @Output:
+   * @output:
    *   acbox ::
    *     The glyph coordinate bounding box.  Coordinates are
    *     expressed in 1/64th of pixels if it is grid-fitted.
    *
-   * @Note:
+   * @note:
    *   Coordinates are relative to the glyph origin, using the y~upwards
    *   convention.
    *
@@ -437,17 +437,17 @@ FT_BEGIN_HEADER
 
   /**************************************************************************
    *
-   * @Function:
+   * @function:
    *   FT_Glyph_To_Bitmap
    *
-   * @Description:
+   * @description:
    *   Convert a given glyph object to a bitmap glyph object.
    *
-   * @InOut:
+   * @inout:
    *   the_glyph ::
    *     A pointer to a handle to the target glyph.
    *
-   * @Input:
+   * @input:
    *   render_mode ::
    *     An enumeration that describes how the data is
    *     rendered.
@@ -463,10 +463,10 @@ FT_BEGIN_HEADER
    *     image should be destroyed by this function.  It is
    *     never destroyed in case of error.
    *
-   * @Return:
+   * @return:
    *   FreeType error code.  0~means success.
    *
-   * @Note:
+   * @note:
    *   This function does nothing if the glyph format isn't scalable.
    *
    *   The glyph image is translated with the `origin' vector before
@@ -554,13 +554,13 @@ FT_BEGIN_HEADER
 
   /**************************************************************************
    *
-   * @Function:
+   * @function:
    *   FT_Done_Glyph
    *
-   * @Description:
+   * @description:
    *   Destroy a given glyph.
    *
-   * @Input:
+   * @input:
    *   glyph ::
    *     A handle to the target glyph object.
    */
@@ -574,7 +574,7 @@ FT_BEGIN_HEADER
 
   /**************************************************************************
    *
-   * @Section:
+   * @section:
    *   computations
    *
    */
@@ -582,21 +582,21 @@ FT_BEGIN_HEADER
 
   /**************************************************************************
    *
-   * @Function:
+   * @function:
    *   FT_Matrix_Multiply
    *
-   * @Description:
+   * @description:
    *   Perform the matrix operation `b = a*b'.
    *
-   * @Input:
+   * @input:
    *   a ::
    *     A pointer to matrix `a'.
    *
-   * @InOut:
+   * @inout:
    *   b ::
    *     A pointer to matrix `b'.
    *
-   * @Note:
+   * @note:
    *   The result is undefined if either `a' or `b' is zero.
    *
    *   Since the function uses wrap-around arithmetic, results become
@@ -609,18 +609,18 @@ FT_BEGIN_HEADER
 
   /**************************************************************************
    *
-   * @Function:
+   * @function:
    *   FT_Matrix_Invert
    *
-   * @Description:
+   * @description:
    *   Invert a 2x2 matrix.  Return an error if it can't be inverted.
    *
-   * @InOut:
+   * @inout:
    *   matrix ::
    *     A pointer to the target matrix.  Remains untouched in
    *     case of error.
    *
-   * @Return:
+   * @return:
    *   FreeType error code.  0~means success.
    */
   FT_EXPORT( FT_Error )

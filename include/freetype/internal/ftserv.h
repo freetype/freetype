@@ -161,7 +161,7 @@ FT_BEGIN_HEADER
 
   /**************************************************************************
    *
-   * @Macro:
+   * @macro:
    *   FT_DEFINE_SERVICEDESCREC1
    *   FT_DEFINE_SERVICEDESCREC2
    *   FT_DEFINE_SERVICEDESCREC3
@@ -173,7 +173,7 @@ FT_BEGIN_HEADER
    *   FT_DEFINE_SERVICEDESCREC9
    *   FT_DEFINE_SERVICEDESCREC10
    *
-   * @Description:
+   * @description:
    *   Used to initialize an array of FT_ServiceDescRec structures.
    *
    *   The array will be allocated in the global scope (or the scope

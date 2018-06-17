@@ -8,13 +8,13 @@
 
   /****************************************************************************
    *
-   * @Chapter:
+   * @chapter:
    *   general_remarks
    *
-   * @Title:
+   * @title:
    *   General Remarks
    *
-   * @Sections:
+   * @sections:
    *   header_inclusion
    *   user_allocation
    *
@@ -23,13 +23,13 @@
 
   /****************************************************************************
    *
-   * @Chapter:
+   * @chapter:
    *   core_api
    *
-   * @Title:
+   * @title:
    *   Core API
    *
-   * @Sections:
+   * @sections:
    *   version
    *   basic_types
    *   base_interface
@@ -44,13 +44,13 @@
 
   /****************************************************************************
    *
-   * @Chapter:
+   * @chapter:
    *   format_specific
    *
-   * @Title:
+   * @title:
    *   Format-Specific API
    *
-   * @Sections:
+   * @sections:
    *   multiple_masters
    *   truetype_tables
    *   type1_tables
@@ -67,13 +67,13 @@
 
   /****************************************************************************
    *
-   * @Chapter:
+   * @chapter:
    *   module_specific
    *
-   * @Title:
+   * @title:
    *   Controlling FreeType Modules
    *
-   * @Sections:
+   * @sections:
    *   auto_hinter
    *   cff_driver
    *   t1_cid_driver
@@ -88,13 +88,13 @@
 
   /****************************************************************************
    *
-   * @Chapter:
+   * @chapter:
    *   cache_subsystem
    *
-   * @Title:
+   * @title:
    *   Cache Sub-System
    *
-   * @Sections:
+   * @sections:
    *   cache_subsystem
    *
    */
@@ -102,13 +102,13 @@
 
   /****************************************************************************
    *
-   * @Chapter:
+   * @chapter:
    *   support_api
    *
-   * @Title:
+   * @title:
    *   Support API
    *
-   * @Sections:
+   * @sections:
    *   computations
    *   list_processing
    *   outline_processing
@@ -127,13 +127,13 @@
 
   /****************************************************************************
    *
-   * @Chapter:
+   * @chapter:
    *   error_codes
    *
-   * @Title:
+   * @title:
    *   Error Codes
    *
-   * @Sections:
+   * @sections:
    *   error_enumerations
    *   error_code_values
    *

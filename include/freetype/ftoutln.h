@@ -36,21 +36,21 @@ FT_BEGIN_HEADER
 
   /**************************************************************************
    *
-   * @Section:
+   * @section:
    *   outline_processing
    *
-   * @Title:
+   * @title:
    *   Outline Processing
    *
-   * @Abstract:
+   * @abstract:
    *   Functions to create, transform, and render vectorial glyph images.
    *
-   * @Description:
+   * @description:
    *   This section contains routines used to create and destroy scalable
    *   glyph images known as `outlines'.  These can also be measured,
    *   transformed, and converted into bitmaps and pixmaps.
    *
-   * @Order:
+   * @order:
    *   FT_Outline
    *   FT_Outline_New
    *   FT_Outline_Done
@@ -84,15 +84,15 @@ FT_BEGIN_HEADER
 
   /**************************************************************************
    *
-   * @Function:
+   * @function:
    *   FT_Outline_Decompose
    *
-   * @Description:
+   * @description:
    *   Walk over an outline's structure to decompose it into individual
    *   segments and Bezier arcs.  This function also emits `move to'
    *   operations to indicate the start of new contours in the outline.
    *
-   * @Input:
+   * @input:
    *   outline ::
    *     A pointer to the source target.
    *
@@ -101,17 +101,17 @@ FT_BEGIN_HEADER
    *     called during decomposition to indicate path
    *     operations.
    *
-   * @InOut:
+   * @inout:
    *   user ::
    *     A typeless pointer that is passed to each
    *     emitter during the decomposition.  It can be
    *     used to store the state during the
    *     decomposition.
    *
-   * @Return:
+   * @return:
    *   FreeType error code.  0~means success.
    *
-   * @Note:
+   * @note:
    *   A contour that contains a single point only is represented by a
    *   `move to' operation followed by `line to' to the same point.  In
    *   most cases, it is best to filter this out before using the
@@ -130,13 +130,13 @@ FT_BEGIN_HEADER
 
   /**************************************************************************
    *
-   * @Function:
+   * @function:
    *   FT_Outline_New
    *
-   * @Description:
+   * @description:
    *   Create a new outline of a given size.
    *
-   * @Input:
+   * @input:
    *   library ::
    *     A handle to the library object from where the
    *     outline is allocated.  Note however that the new
@@ -151,14 +151,14 @@ FT_BEGIN_HEADER
    *     The maximum number of contours within the outline.
    *     This value must be in the range 0 to `numPoints'.
    *
-   * @Output:
+   * @output:
    *   anoutline ::
    *     A handle to the new outline.
    *
-   * @Return:
+   * @return:
    *   FreeType error code.  0~means success.
    *
-   * @Note:
+   * @note:
    *   The reason why this function takes a `library' parameter is simply
    *   to use the library's memory allocator.
    */
@@ -178,13 +178,13 @@ FT_BEGIN_HEADER
 
   /**************************************************************************
    *
-   * @Function:
+   * @function:
    *   FT_Outline_Done
    *
-   * @Description:
+   * @description:
    *   Destroy an outline created with @FT_Outline_New.
    *
-   * @Input:
+   * @input:
    *   library ::
    *     A handle of the library object used to allocate the
    *     outline.
@@ -192,10 +192,10 @@ FT_BEGIN_HEADER
    *   outline ::
    *     A pointer to the outline object to be discarded.
    *
-   * @Return:
+   * @return:
    *   FreeType error code.  0~means success.
    *
-   * @Note:
+   * @note:
    *   If the outline's `owner' field is not set, only the outline
    *   descriptor will be released.
    */
@@ -211,20 +211,20 @@ FT_BEGIN_HEADER
 
   /**************************************************************************
    *
-   * @Function:
+   * @function:
    *   FT_Outline_Check
    *
-   * @Description:
+   * @description:
    *   Check the contents of an outline descriptor.
    *
-   * @Input:
+   * @input:
    *   outline ::
    *     A handle to a source outline.
    *
-   * @Return:
+   * @return:
    *   FreeType error code.  0~means success.
    *
-   * @Note:
+   * @note:
    *   An empty outline, or an outline with a single point only is also
    *   valid.
    */
@@ -234,10 +234,10 @@ FT_BEGIN_HEADER
 
   /**************************************************************************
    *
-   * @Function:
+   * @function:
    *   FT_Outline_Get_CBox
    *
-   * @Description:
+   * @description:
    *   Return an outline's `control box'.  The control box encloses all
    *   the outline's points, including Bezier control points.  Though it
    *   coincides with the exact bounding box for most glyphs, it can be
@@ -249,15 +249,15 @@ FT_BEGIN_HEADER
    *   and arcs in the outline.  To get the latter, you can use the
    *   `ftbbox' component, which is dedicated to this single task.
    *
-   * @Input:
+   * @input:
    *   outline ::
    *     A pointer to the source outline descriptor.
    *
-   * @Output:
+   * @output:
    *   acbox ::
    *     The outline's control box.
    *
-   * @Note:
+   * @note:
    *   See @FT_Glyph_Get_CBox for a discussion of tricky fonts.
    */
   FT_EXPORT( void )
@@ -267,17 +267,17 @@ FT_BEGIN_HEADER
 
   /**************************************************************************
    *
-   * @Function:
+   * @function:
    *   FT_Outline_Translate
    *
-   * @Description:
+   * @description:
    *   Apply a simple translation to the points of an outline.
    *
-   * @InOut:
+   * @inout:
    *   outline ::
    *     A pointer to the target outline descriptor.
    *
-   * @Input:
+   * @input:
    *   xOffset ::
    *     The horizontal offset.
    *
@@ -292,23 +292,23 @@ FT_BEGIN_HEADER
 
   /**************************************************************************
    *
-   * @Function:
+   * @function:
    *   FT_Outline_Copy
    *
-   * @Description:
+   * @description:
    *   Copy an outline into another one.  Both objects must have the
    *   same sizes (number of points & number of contours) when this
    *   function is called.
    *
-   * @Input:
+   * @input:
    *   source ::
    *     A handle to the source outline.
    *
-   * @Output:
+   * @output:
    *   target ::
    *     A handle to the target outline.
    *
-   * @Return:
+   * @return:
    *   FreeType error code.  0~means success.
    */
   FT_EXPORT( FT_Error )
@@ -318,22 +318,22 @@ FT_BEGIN_HEADER
 
   /**************************************************************************
    *
-   * @Function:
+   * @function:
    *   FT_Outline_Transform
    *
-   * @Description:
+   * @description:
    *   Apply a simple 2x2 matrix to all of an outline's points.  Useful
    *   for applying rotations, slanting, flipping, etc.
    *
-   * @InOut:
+   * @inout:
    *   outline ::
    *     A pointer to the target outline descriptor.
    *
-   * @Input:
+   * @input:
    *   matrix ::
    *     A pointer to the transformation matrix.
    *
-   * @Note:
+   * @note:
    *   You can use @FT_Outline_Translate if you need to translate the
    *   outline's points.
    */
@@ -344,10 +344,10 @@ FT_BEGIN_HEADER
 
   /**************************************************************************
    *
-   * @Function:
+   * @function:
    *   FT_Outline_Embolden
    *
-   * @Description:
+   * @description:
    *   Embolden an outline.  The new outline will be at most 4~times
    *   `strength' pixels wider and higher.  You may think of the left and
    *   bottom borders as unchanged.
@@ -355,19 +355,19 @@ FT_BEGIN_HEADER
    *   Negative `strength' values to reduce the outline thickness are
    *   possible also.
    *
-   * @InOut:
+   * @inout:
    *   outline ::
    *     A handle to the target outline.
    *
-   * @Input:
+   * @input:
    *   strength ::
    *     How strong the glyph is emboldened.  Expressed in
    *     26.6 pixel format.
    *
-   * @Return:
+   * @return:
    *   FreeType error code.  0~means success.
    *
-   * @Note:
+   * @note:
    *   The used algorithm to increase or decrease the thickness of the
    *   glyph doesn't change the number of points; this means that certain
    *   situations like acute angles or intersections are sometimes
@@ -394,16 +394,16 @@ FT_BEGIN_HEADER
 
   /**************************************************************************
    *
-   * @Function:
+   * @function:
    *   FT_Outline_EmboldenXY
    *
-   * @Description:
+   * @description:
    *   Embolden an outline.  The new outline will be `xstrength' pixels
    *   wider and `ystrength' pixels higher.  Otherwise, it is similar to
    *   @FT_Outline_Embolden, which uses the same strength in both
    *   directions.
    *
-   * @Since:
+   * @since:
    *   2.4.10
    */
   FT_EXPORT( FT_Error )
@@ -414,18 +414,18 @@ FT_BEGIN_HEADER
 
   /**************************************************************************
    *
-   * @Function:
+   * @function:
    *   FT_Outline_Reverse
    *
-   * @Description:
+   * @description:
    *   Reverse the drawing direction of an outline.  This is used to
    *   ensure consistent fill conventions for mirrored glyphs.
    *
-   * @InOut:
+   * @inout:
    *   outline ::
    *     A pointer to the target outline descriptor.
    *
-   * @Note:
+   * @note:
    *   This function toggles the bit flag @FT_OUTLINE_REVERSE_FILL in
    *   the outline's `flags' field.
    *
@@ -438,28 +438,28 @@ FT_BEGIN_HEADER
 
   /**************************************************************************
    *
-   * @Function:
+   * @function:
    *   FT_Outline_Get_Bitmap
    *
-   * @Description:
+   * @description:
    *   Render an outline within a bitmap.  The outline's image is simply
    *   OR-ed to the target bitmap.
    *
-   * @Input:
+   * @input:
    *   library ::
    *     A handle to a FreeType library object.
    *
    *   outline ::
    *     A pointer to the source outline descriptor.
    *
-   * @InOut:
+   * @inout:
    *   abitmap ::
    *     A pointer to the target bitmap descriptor.
    *
-   * @Return:
+   * @return:
    *   FreeType error code.  0~means success.
    *
-   * @Note:
+   * @note:
    *   This function does NOT CREATE the bitmap, it only renders an
    *   outline image within the one you pass to it!  Consequently, the
    *   various fields in `abitmap' should be set accordingly.
@@ -478,31 +478,31 @@ FT_BEGIN_HEADER
 
   /**************************************************************************
    *
-   * @Function:
+   * @function:
    *   FT_Outline_Render
    *
-   * @Description:
+   * @description:
    *   Render an outline within a bitmap using the current scan-convert.
    *   This function uses an @FT_Raster_Params structure as an argument,
    *   allowing advanced features like direct composition, translucency,
    *   etc.
    *
-   * @Input:
+   * @input:
    *   library ::
    *     A handle to a FreeType library object.
    *
    *   outline ::
    *     A pointer to the source outline descriptor.
    *
-   * @InOut:
+   * @inout:
    *   params ::
    *     A pointer to an @FT_Raster_Params structure used to
    *     describe the rendering operation.
    *
-   * @Return:
+   * @return:
    *   FreeType error code.  0~means success.
    *
-   * @Note:
+   * @note:
    *   You should know what you are doing and how @FT_Raster_Params works
    *   to use this function.
    *

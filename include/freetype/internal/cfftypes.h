@@ -35,13 +35,13 @@ FT_BEGIN_HEADER
 
   /**************************************************************************
    *
-   * @Struct:
+   * @struct:
    *   CFF_IndexRec
    *
-   * @Description:
+   * @description:
    *   A structure used to model a CFF Index table.
    *
-   * @Fields:
+   * @fields:
    *   stream ::
    *     The source input stream.
    *

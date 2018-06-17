@@ -61,7 +61,7 @@ FT_BEGIN_HEADER
    * @enum:
    *   FT_ADVANCE_FLAG_FAST_ONLY
    *
-   * @Description:
+   * @description:
    *   A bit-flag to be OR-ed with the `flags' parameter of the
    *   @FT_Get_Advance and @FT_Get_Advances functions.
    *
@@ -82,14 +82,14 @@ FT_BEGIN_HEADER
 
   /**************************************************************************
    *
-   * @Function:
+   * @function:
    *   FT_Get_Advance
    *
-   * @Description:
+   * @description:
    *   Retrieve the advance value of a given glyph outline in an
    *   @FT_Face.
    *
-   * @Input:
+   * @input:
    *   face ::
    *     The source @FT_Face handle.
    *
@@ -100,7 +100,7 @@ FT_BEGIN_HEADER
    *     A set of bit flags similar to those used when
    *     calling @FT_Load_Glyph, used to determine what kind
    *     of advances you need.
-   * @Output:
+   * @output:
    *   padvance ::
    *     The advance value.  If scaling is performed (based on
    *     the value of `load_flags'), the advance value is in
@@ -111,10 +111,10 @@ FT_BEGIN_HEADER
    *     Otherwise, it is the horizontal advance in a
    *     horizontal layout.
    *
-   * @Return:
+   * @return:
    *   FreeType error code.  0 means success.
    *
-   * @Note:
+   * @note:
    *   This function may fail if you use @FT_ADVANCE_FLAG_FAST_ONLY and
    *   if the corresponding font backend doesn't have a quick way to
    *   retrieve the advances.
@@ -131,14 +131,14 @@ FT_BEGIN_HEADER
 
   /**************************************************************************
    *
-   * @Function:
+   * @function:
    *   FT_Get_Advances
    *
-   * @Description:
+   * @description:
    *   Retrieve the advance values of several glyph outlines in an
    *   @FT_Face.
    *
-   * @Input:
+   * @input:
    *   face ::
    *     The source @FT_Face handle.
    *
@@ -152,7 +152,7 @@ FT_BEGIN_HEADER
    *     A set of bit flags similar to those used when
    *     calling @FT_Load_Glyph.
    *
-   * @Output:
+   * @output:
    *   padvance ::
    *     The advance values.  This array, to be provided by the
    *     caller, must contain at least `count' elements.
@@ -166,10 +166,10 @@ FT_BEGIN_HEADER
    *     Otherwise, they are the horizontal advances in a
    *     horizontal layout.
    *
-   * @Return:
+   * @return:
    *   FreeType error code.  0 means success.
    *
-   * @Note:
+   * @note:
    *   This function may fail if you use @FT_ADVANCE_FLAG_FAST_ONLY and
    *   if the corresponding font backend doesn't have a quick way to
    *   retrieve the advances.

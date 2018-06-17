@@ -43,20 +43,20 @@ FT_BEGIN_HEADER
 
   /**************************************************************************
    *
-   * @Section:
+   * @section:
    *   list_processing
    *
-   * @Title:
+   * @title:
    *   List Processing
    *
-   * @Abstract:
+   * @abstract:
    *   Simple management of lists.
    *
-   * @Description:
+   * @description:
    *   This section contains various definitions related to list
    *   processing using doubly-linked nodes.
    *
-   * @Order:
+   * @order:
    *   FT_List
    *   FT_ListNode
    *   FT_ListRec
@@ -77,19 +77,19 @@ FT_BEGIN_HEADER
 
   /**************************************************************************
    *
-   * @Function:
+   * @function:
    *   FT_List_Find
    *
-   * @Description:
+   * @description:
    *   Find the list node for a given listed object.
    *
-   * @Input:
+   * @input:
    *   list ::
    *     A pointer to the parent list.
    *   data ::
    *     The address of the listed object.
    *
-   * @Return:
+   * @return:
    *   List node.  NULL if it wasn't found.
    */
   FT_EXPORT( FT_ListNode )
@@ -99,13 +99,13 @@ FT_BEGIN_HEADER
 
   /**************************************************************************
    *
-   * @Function:
+   * @function:
    *   FT_List_Add
    *
-   * @Description:
+   * @description:
    *   Append an element to the end of a list.
    *
-   * @InOut:
+   * @inout:
    *   list ::
    *     A pointer to the parent list.
    *   node ::
@@ -118,13 +118,13 @@ FT_BEGIN_HEADER
 
   /**************************************************************************
    *
-   * @Function:
+   * @function:
    *   FT_List_Insert
    *
-   * @Description:
+   * @description:
    *   Insert an element at the head of a list.
    *
-   * @InOut:
+   * @inout:
    *   list ::
    *     A pointer to parent list.
    *   node ::
@@ -137,18 +137,18 @@ FT_BEGIN_HEADER
 
   /**************************************************************************
    *
-   * @Function:
+   * @function:
    *   FT_List_Remove
    *
-   * @Description:
+   * @description:
    *   Remove a node from a list.  This function doesn't check whether
    *   the node is in the list!
    *
-   * @Input:
+   * @input:
    *   node ::
    *     The node to remove.
    *
-   * @InOut:
+   * @inout:
    *   list ::
    *     A pointer to the parent list.
    */
@@ -159,14 +159,14 @@ FT_BEGIN_HEADER
 
   /**************************************************************************
    *
-   * @Function:
+   * @function:
    *   FT_List_Up
    *
-   * @Description:
+   * @description:
    *   Move a node to the head/top of a list.  Used to maintain LRU
    *   lists.
    *
-   * @InOut:
+   * @inout:
    *   list ::
    *     A pointer to the parent list.
    *   node ::
@@ -179,14 +179,14 @@ FT_BEGIN_HEADER
 
   /**************************************************************************
    *
-   * @FuncType:
+   * @functype:
    *   FT_List_Iterator
    *
-   * @Description:
+   * @description:
    *   An FT_List iterator function that is called during a list parse
    *   by @FT_List_Iterate.
    *
-   * @Input:
+   * @input:
    *   node ::
    *     The current iteration list node.
    *
@@ -201,15 +201,15 @@ FT_BEGIN_HEADER
 
   /**************************************************************************
    *
-   * @Function:
+   * @function:
    *   FT_List_Iterate
    *
-   * @Description:
+   * @description:
    *   Parse a list and calls a given iterator function on each element.
    *   Note that parsing is stopped as soon as one of the iterator calls
    *   returns a non-zero value.
    *
-   * @Input:
+   * @input:
    *   list ::
    *     A handle to the list.
    *   iterator ::
@@ -218,7 +218,7 @@ FT_BEGIN_HEADER
    *     A user-supplied field that is passed as the second
    *     argument to the iterator.
    *
-   * @Return:
+   * @return:
    *   The result (a FreeType error code) of the last iterator call.
    */
   FT_EXPORT( FT_Error )
@@ -229,15 +229,15 @@ FT_BEGIN_HEADER
 
   /**************************************************************************
    *
-   * @FuncType:
+   * @functype:
    *   FT_List_Destructor
    *
-   * @Description:
+   * @description:
    *   An @FT_List iterator function that is called during a list
    *   finalization by @FT_List_Finalize to destroy all elements in a
    *   given list.
    *
-   * @Input:
+   * @input:
    *   system ::
    *     The current system object.
    *
@@ -256,13 +256,13 @@ FT_BEGIN_HEADER
 
   /**************************************************************************
    *
-   * @Function:
+   * @function:
    *   FT_List_Finalize
    *
-   * @Description:
+   * @description:
    *   Destroy all elements in the list as well as the list itself.
    *
-   * @Input:
+   * @input:
    *   list ::
    *     A handle to the list.
    *
@@ -277,7 +277,7 @@ FT_BEGIN_HEADER
    *     A user-supplied field that is passed as the last
    *     argument to the destructor.
    *
-   * @Note:
+   * @note:
    *   This function expects that all nodes added by @FT_List_Add or
    *   @FT_List_Insert have been dynamically allocated.
    */

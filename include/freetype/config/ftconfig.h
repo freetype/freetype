@@ -153,7 +153,7 @@ FT_BEGIN_HEADER
 
   /**************************************************************************
    *
-   * @Section:
+   * @section:
    *   basic_types
    *
    */
@@ -161,10 +161,10 @@ FT_BEGIN_HEADER
 
   /**************************************************************************
    *
-   * @Type:
+   * @type:
    *   FT_Int16
    *
-   * @Description:
+   * @description:
    *   A typedef for a 16bit signed integer type.
    */
   typedef signed short  FT_Int16;
@@ -172,10 +172,10 @@ FT_BEGIN_HEADER
 
   /**************************************************************************
    *
-   * @Type:
+   * @type:
    *   FT_UInt16
    *
-   * @Description:
+   * @description:
    *   A typedef for a 16bit unsigned integer type.
    */
   typedef unsigned short  FT_UInt16;
@@ -188,10 +188,10 @@ FT_BEGIN_HEADER
 
   /**************************************************************************
    *
-   * @Type:
+   * @type:
    *   FT_Int32
    *
-   * @Description:
+   * @description:
    *   A typedef for a 32bit signed integer type.  The size depends on
    *   the configuration.
    */
@@ -200,7 +200,7 @@ FT_BEGIN_HEADER
 
   /**************************************************************************
    *
-   * @Type:
+   * @type:
    *   FT_UInt32
    *
    *   A typedef for a 32bit unsigned integer type.  The size depends on
@@ -211,7 +211,7 @@ FT_BEGIN_HEADER
 
   /**************************************************************************
    *
-   * @Type:
+   * @type:
    *   FT_Int64
    *
    *   A typedef for a 64bit signed integer type.  The size depends on
@@ -223,7 +223,7 @@ FT_BEGIN_HEADER
 
   /**************************************************************************
    *
-   * @Type:
+   * @type:
    *   FT_UInt64
    *
    *   A typedef for a 64bit unsigned integer type.  The size depends on

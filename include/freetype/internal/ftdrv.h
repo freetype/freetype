@@ -89,14 +89,14 @@ FT_BEGIN_HEADER
 
   /**************************************************************************
    *
-   * @Struct:
+   * @struct:
    *   FT_Driver_ClassRec
    *
-   * @Description:
+   * @description:
    *   The font driver class.  This structure mostly contains pointers to
    *   driver methods.
    *
-   * @Fields:
+   * @fields:
    *   root ::
    *     The parent module.
    *
@@ -166,7 +166,7 @@ FT_BEGIN_HEADER
    *     @FT_FACE_FLAG_FIXED_SIZES is set.  Can be set
    *     to 0 if the scaling done in the base layer
    *     suffices.
-   * @Note:
+   * @note:
    *   Most function pointers, with the exception of `load_glyph', can be
    *   set to 0 to indicate a default behaviour.
    */
@@ -202,17 +202,17 @@ FT_BEGIN_HEADER
 
   /**************************************************************************
    *
-   * @Macro:
+   * @macro:
    *   FT_DECLARE_DRIVER
    *
-   * @Description:
+   * @description:
    *   Used to create a forward declaration of an FT_Driver_ClassRec
    *   struct instance.
    *
-   * @Macro:
+   * @macro:
    *   FT_DEFINE_DRIVER
    *
-   * @Description:
+   * @description:
    *   Used to initialize an instance of FT_Driver_ClassRec struct.
    *
    *   `ftinit.c' (ft_create_default_module_classes) already contains a

@@ -29,16 +29,16 @@ FT_BEGIN_HEADER
 
   /**************************************************************************
    *
-   * @Section:
+   * @section:
    *   multiple_masters
    *
-   * @Title:
+   * @title:
    *   Multiple Masters
    *
-   * @Abstract:
+   * @abstract:
    *   How to manage Multiple Masters fonts.
    *
-   * @Description:
+   * @description:
    *   The following types and functions are used to manage Multiple
    *   Master fonts, i.e., the selection of specific design instances by
    *   setting design axis coordinates.
@@ -53,17 +53,17 @@ FT_BEGIN_HEADER
 
   /**************************************************************************
    *
-   * @Struct:
+   * @struct:
    *   FT_MM_Axis
    *
-   * @Description:
+   * @description:
    *   A structure to model a given axis in design space for Multiple
    *   Masters fonts.
    *
    *   This structure can't be used for TrueType GX or OpenType variation
    *   fonts.
    *
-   * @Fields:
+   * @fields:
    *   name ::
    *     The axis's name.
    *
@@ -84,17 +84,17 @@ FT_BEGIN_HEADER
 
   /**************************************************************************
    *
-   * @Struct:
+   * @struct:
    *   FT_Multi_Master
    *
-   * @Description:
+   * @description:
    *   A structure to model the axes and space of a Multiple Masters
    *   font.
    *
    *   This structure can't be used for TrueType GX or OpenType variation
    *   fonts.
    *
-   * @Fields:
+   * @fields:
    *   num_axis ::
    *     Number of axes.  Cannot exceed~4.
    *
@@ -118,14 +118,14 @@ FT_BEGIN_HEADER
 
   /**************************************************************************
    *
-   * @Struct:
+   * @struct:
    *   FT_Var_Axis
    *
-   * @Description:
+   * @description:
    *   A structure to model a given axis in design space for Multiple
    *   Masters, TrueType GX, and OpenType variation fonts.
    *
-   * @Fields:
+   * @fields:
    *   name ::
    *     The axis's name.
    *     Not always meaningful for TrueType GX or OpenType
@@ -153,7 +153,7 @@ FT_BEGIN_HEADER
    *     field for TrueType GX or OpenType variation fonts.  Not
    *     meaningful for Adobe MM fonts.
    *
-   * @Note:
+   * @note:
    *   The fields `minimum', `def', and `maximum' are 16.16 fractional
    *   values for TrueType GX and OpenType variation fonts.  For Adobe MM
    *   fonts, the values are integers.
@@ -174,16 +174,16 @@ FT_BEGIN_HEADER
 
   /**************************************************************************
    *
-   * @Struct:
+   * @struct:
    *   FT_Var_Named_Style
    *
-   * @Description:
+   * @description:
    *   A structure to model a named instance in a TrueType GX or OpenType
    *   variation font.
    *
    *   This structure can't be used for Adobe MM fonts.
    *
-   * @Fields:
+   * @fields:
    *   coords ::
    *     The design coordinates for this instance.
    *     This is an array with one entry for each axis.
@@ -207,16 +207,16 @@ FT_BEGIN_HEADER
 
   /**************************************************************************
    *
-   * @Struct:
+   * @struct:
    *   FT_MM_Var
    *
-   * @Description:
+   * @description:
    *   A structure to model the axes and space of an Adobe MM, TrueType
    *   GX, or OpenType variation font.
    *
    *   Some fields are specific to one format and not to the others.
    *
-   * @Fields:
+   * @fields:
    *   num_axis ::
    *     The number of axes.  The maximum value is~4 for
    *     Adobe MM fonts; no limit in TrueType GX or
@@ -267,24 +267,24 @@ FT_BEGIN_HEADER
 
   /**************************************************************************
    *
-   * @Function:
+   * @function:
    *   FT_Get_Multi_Master
    *
-   * @Description:
+   * @description:
    *   Retrieve a variation descriptor of a given Adobe MM font.
    *
    *   This function can't be used with TrueType GX or OpenType variation
    *   fonts.
    *
-   * @Input:
+   * @input:
    *   face ::
    *     A handle to the source face.
    *
-   * @Output:
+   * @output:
    *   amaster ::
    *     The Multiple Masters descriptor.
    *
-   * @Return:
+   * @return:
    *   FreeType error code.  0~means success.
    */
   FT_EXPORT( FT_Error )
@@ -294,25 +294,25 @@ FT_BEGIN_HEADER
 
   /**************************************************************************
    *
-   * @Function:
+   * @function:
    *   FT_Get_MM_Var
    *
-   * @Description:
+   * @description:
    *   Retrieve a variation descriptor for a given font.
    *
    *   This function works with all supported variation formats.
    *
-   * @Input:
+   * @input:
    *   face ::
    *     A handle to the source face.
    *
-   * @Output:
+   * @output:
    *   amaster ::
    *     The variation descriptor.
    *     Allocates a data structure, which the user must
    *     deallocate with a call to @FT_Done_MM_Var after use.
    *
-   * @Return:
+   * @return:
    *   FreeType error code.  0~means success.
    */
   FT_EXPORT( FT_Error )
@@ -322,18 +322,18 @@ FT_BEGIN_HEADER
 
   /**************************************************************************
    *
-   * @Function:
+   * @function:
    *   FT_Done_MM_Var
    *
-   * @Description:
+   * @description:
    *   Free the memory allocated by @FT_Get_MM_Var.
    *
-   * @Input:
+   * @input:
    *   library ::
    *     A handle of the face's parent library object that was
    *     used in the call to @FT_Get_MM_Var to create `amaster'.
    *
-   * @Return:
+   * @return:
    *   FreeType error code.  0~means success.
    */
   FT_EXPORT( FT_Error )
@@ -343,21 +343,21 @@ FT_BEGIN_HEADER
 
   /**************************************************************************
    *
-   * @Function:
+   * @function:
    *   FT_Set_MM_Design_Coordinates
    *
-   * @Description:
+   * @description:
    *   For Adobe MM fonts, choose an interpolated font design through
    *   design coordinates.
    *
    *   This function can't be used with TrueType GX or OpenType variation
    *   fonts.
    *
-   * @InOut:
+   * @inout:
    *   face ::
    *     A handle to the source face.
    *
-   * @Input:
+   * @input:
    *   num_coords ::
    *     The number of available design coordinates.  If it
    *     is larger than the number of axes, ignore the excess
@@ -367,10 +367,10 @@ FT_BEGIN_HEADER
    *   coords ::
    *     An array of design coordinates.
    *
-   * @Return:
+   * @return:
    *   FreeType error code.  0~means success.
    *
-   * @Note:
+   * @note:
    *   [Since 2.8.1] To reset all axes to the default values, call the
    *   function with `num_coords' set to zero and `coords' set to NULL.
    *
@@ -387,19 +387,19 @@ FT_BEGIN_HEADER
 
   /**************************************************************************
    *
-   * @Function:
+   * @function:
    *   FT_Set_Var_Design_Coordinates
    *
-   * @Description:
+   * @description:
    *   Choose an interpolated font design through design coordinates.
    *
    *   This function works with all supported variation formats.
    *
-   * @InOut:
+   * @inout:
    *   face ::
    *     A handle to the source face.
    *
-   * @Input:
+   * @input:
    *   num_coords ::
    *     The number of available design coordinates.  If it
    *     is larger than the number of axes, ignore the excess
@@ -409,10 +409,10 @@ FT_BEGIN_HEADER
    *   coords ::
    *     An array of design coordinates.
    *
-   * @Return:
+   * @return:
    *   FreeType error code.  0~means success.
    *
-   * @Note:
+   * @note:
    *   [Since 2.8.1] To reset all axes to the default values, call the
    *   function with `num_coords' set to zero and `coords' set to NULL.
    *   [Since 2.9] `Default values' means the currently selected named
@@ -431,16 +431,16 @@ FT_BEGIN_HEADER
 
   /**************************************************************************
    *
-   * @Function:
+   * @function:
    *   FT_Get_Var_Design_Coordinates
    *
-   * @Description:
+   * @description:
    *   Get the design coordinates of the currently selected interpolated
    *   font.
    *
    *   This function works with all supported variation formats.
    *
-   * @Input:
+   * @input:
    *   face ::
    *     A handle to the source face.
    *
@@ -449,14 +449,14 @@ FT_BEGIN_HEADER
    *     is larger than the number of axes, set the excess
    *     values to~0.
    *
-   * @Output:
+   * @output:
    *   coords ::
    *     The design coordinates array.
    *
-   * @Return:
+   * @return:
    *   FreeType error code.  0~means success.
    *
-   * @Since:
+   * @since:
    *   2.7.1
    */
   FT_EXPORT( FT_Error )
@@ -467,20 +467,20 @@ FT_BEGIN_HEADER
 
   /**************************************************************************
    *
-   * @Function:
+   * @function:
    *   FT_Set_MM_Blend_Coordinates
    *
-   * @Description:
+   * @description:
    *   Choose an interpolated font design through normalized blend
    *   coordinates.
    *
    *   This function works with all supported variation formats.
    *
-   * @InOut:
+   * @inout:
    *   face ::
    *     A handle to the source face.
    *
-   * @Input:
+   * @input:
    *   num_coords ::
    *     The number of available design coordinates.  If it
    *     is larger than the number of axes, ignore the excess
@@ -493,10 +493,10 @@ FT_BEGIN_HEADER
    *     -1.0 and 1.0 for TrueType GX and OpenType variation
    *     fonts).
    *
-   * @Return:
+   * @return:
    *   FreeType error code.  0~means success.
    *
-   * @Note:
+   * @note:
    *   [Since 2.8.1] To reset all axes to the default values, call the
    *   function with `num_coords' set to zero and `coords' set to NULL.
    *   [Since 2.9] `Default values' means the currently selected named
@@ -515,16 +515,16 @@ FT_BEGIN_HEADER
 
   /**************************************************************************
    *
-   * @Function:
+   * @function:
    *   FT_Get_MM_Blend_Coordinates
    *
-   * @Description:
+   * @description:
    *   Get the normalized blend coordinates of the currently selected
    *   interpolated font.
    *
    *   This function works with all supported variation formats.
    *
-   * @Input:
+   * @input:
    *   face ::
    *     A handle to the source face.
    *
@@ -534,14 +534,14 @@ FT_BEGIN_HEADER
    *     set the excess values to~0.5 for Adobe MM fonts, and
    *     to~0 for TrueType GX and OpenType variation fonts.
    *
-   * @Output:
+   * @output:
    *   coords ::
    *     The normalized blend coordinates array.
    *
-   * @Return:
+   * @return:
    *   FreeType error code.  0~means success.
    *
-   * @Since:
+   * @since:
    *   2.7.1
    */
   FT_EXPORT( FT_Error )
@@ -552,10 +552,10 @@ FT_BEGIN_HEADER
 
   /**************************************************************************
    *
-   * @Function:
+   * @function:
    *   FT_Set_Var_Blend_Coordinates
    *
-   * @Description:
+   * @description:
    *   This is another name of @FT_Set_MM_Blend_Coordinates.
    */
   FT_EXPORT( FT_Error )
@@ -566,13 +566,13 @@ FT_BEGIN_HEADER
 
   /**************************************************************************
    *
-   * @Function:
+   * @function:
    *   FT_Get_Var_Blend_Coordinates
    *
-   * @Description:
+   * @description:
    *   This is another name of @FT_Get_MM_Blend_Coordinates.
    *
-   * @Since:
+   * @since:
    *   2.7.1
    */
   FT_EXPORT( FT_Error )
@@ -583,18 +583,18 @@ FT_BEGIN_HEADER
 
   /**************************************************************************
    *
-   * @Enum:
+   * @enum:
    *   FT_VAR_AXIS_FLAG_XXX
    *
-   * @Description:
+   * @description:
    *   A list of bit flags used in the return value of
    *   @FT_Get_Var_Axis_Flags.
    *
-   * @Values:
+   * @values:
    *   FT_VAR_AXIS_FLAG_HIDDEN ::
    *     The variation axis should not be exposed to user interfaces.
    *
-   * @Since:
+   * @since:
    *   2.8.1
    */
 #define FT_VAR_AXIS_FLAG_HIDDEN  1
@@ -602,30 +602,30 @@ FT_BEGIN_HEADER
 
   /**************************************************************************
    *
-   * @Function:
+   * @function:
    *   FT_Get_Var_Axis_Flags
    *
-   * @Description:
+   * @description:
    *   Get the `flags' field of an OpenType Variation Axis Record.
    *
    *   Not meaningful for Adobe MM fonts (`*flags' is always zero).
    *
-   * @Input:
+   * @input:
    *   master ::
    *     The variation descriptor.
    *
    *   axis_index ::
    *     The index of the requested variation axis.
    *
-   * @Output:
+   * @output:
    *   flags ::
    *     The `flags' field.  See @FT_VAR_AXIS_FLAG_XXX for
    *     possible values.
    *
-   * @Return:
+   * @return:
    *   FreeType error code.  0~means success.
    *
-   * @Since:
+   * @since:
    *   2.8.1
    */
   FT_EXPORT( FT_Error )
@@ -636,13 +636,13 @@ FT_BEGIN_HEADER
 
   /**************************************************************************
    *
-   * @Function:
+   * @function:
    *   FT_Set_Named_Instance
    *
-   * @Description:
+   * @description:
    *   Set or change the current named instance.
    *
-   * @Input:
+   * @input:
    *   face ::
    *     A handle to the source face.
    *
@@ -652,10 +652,10 @@ FT_BEGIN_HEADER
    *     switches to font access without a named
    *     instance.
    *
-   * @Return:
+   * @return:
    *   FreeType error code.  0~means success.
    *
-   * @Note:
+   * @note:
    *   The function uses the value of `instance_index' to set bits 16-30
    *   of the face's `face_index' field.  It also resets any variation
    *   applied to the font, and the @FT_FACE_FLAG_VARIATION bit of the
@@ -665,7 +665,7 @@ FT_BEGIN_HEADER
    *   For Adobe MM fonts (which don't have named instances) this
    *   function simply resets the current face to the default instance.
    *
-   * @Since:
+   * @since:
    *   2.9
    */
   FT_EXPORT( FT_Error )

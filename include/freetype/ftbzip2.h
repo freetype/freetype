@@ -33,16 +33,16 @@ FT_BEGIN_HEADER
 
   /**************************************************************************
    *
-   * @Section:
+   * @section:
    *   bzip2
    *
-   * @Title:
+   * @title:
    *   BZIP2 Streams
    *
-   * @Abstract:
+   * @abstract:
    *   Using bzip2-compressed font files.
    *
-   * @Description:
+   * @description:
    *   This section contains the declaration of Bzip2-specific functions.
    *
    */

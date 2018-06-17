@@ -49,14 +49,14 @@ FT_BEGIN_HEADER
 
   /**************************************************************************
    *
-   * @Struct:
+   * @struct:
    *   TTC_HeaderRec
    *
-   * @Description:
+   * @description:
    *   TrueType collection header.  This table contains the offsets of
    *   the font headers of each distinct TrueType face in the file.
    *
-   * @Fields:
+   * @fields:
    *   tag ::
    *     Must be `ttc ' to indicate a TrueType collection.
    *
@@ -84,13 +84,13 @@ FT_BEGIN_HEADER
 
   /**************************************************************************
    *
-   * @Struct:
+   * @struct:
    *   SFNT_HeaderRec
    *
-   * @Description:
+   * @description:
    *   SFNT file format header.
    *
-   * @Fields:
+   * @fields:
    *   format_tag ::
    *     The font format tag.
    *
@@ -121,13 +121,13 @@ FT_BEGIN_HEADER
 
   /**************************************************************************
    *
-   * @Struct:
+   * @struct:
    *   TT_TableRec
    *
-   * @Description:
+   * @description:
    *   This structure describes a given table of a TrueType font.
    *
-   * @Fields:
+   * @fields:
    *   Tag ::
    *     A four-bytes tag describing the table.
    *
@@ -153,13 +153,13 @@ FT_BEGIN_HEADER
 
   /**************************************************************************
    *
-   * @Struct:
+   * @struct:
    *   WOFF_HeaderRec
    *
-   * @Description:
+   * @description:
    *   WOFF file format header.
    *
-   * @Fields:
+   * @fields:
    *   See
    *
    *     https://www.w3.org/TR/WOFF/#WOFFHeader
@@ -185,13 +185,13 @@ FT_BEGIN_HEADER
 
   /**************************************************************************
    *
-   * @Struct:
+   * @struct:
    *   WOFF_TableRec
    *
-   * @Description:
+   * @description:
    *   This structure describes a given table of a WOFF font.
    *
-   * @Fields:
+   * @fields:
    *   Tag ::
    *     A four-bytes tag describing the table.
    *
@@ -228,14 +228,14 @@ FT_BEGIN_HEADER
 
   /**************************************************************************
    *
-   * @Struct:
+   * @struct:
    *   TT_LongMetricsRec
    *
-   * @Description:
+   * @description:
    *   A structure modeling the long metrics of the `hmtx' and `vmtx'
    *   TrueType tables.  The values are expressed in font units.
    *
-   * @Fields:
+   * @fields:
    *   advance ::
    *     The advance width or height for the glyph.
    *
@@ -252,10 +252,10 @@ FT_BEGIN_HEADER
 
   /**************************************************************************
    *
-   * @Type:
+   * @type:
    *   TT_ShortMetrics
    *
-   * @Description:
+   * @description:
    *   A simple type to model the short metrics of the `hmtx' and `vmtx'
    *   tables.
    */
@@ -264,16 +264,16 @@ FT_BEGIN_HEADER
 
   /**************************************************************************
    *
-   * @Struct:
+   * @struct:
    *   TT_NameRec
    *
-   * @Description:
+   * @description:
    *   A structure modeling TrueType name records.  Name records are used
    *   to store important strings like family name, style name,
    *   copyright, etc. in _localized_ versions (i.e., language, encoding,
    *   etc).
    *
-   * @Fields:
+   * @fields:
    *   platformID ::
    *     The ID of the name's encoding platform.
    *
@@ -315,14 +315,14 @@ FT_BEGIN_HEADER
 
   /**************************************************************************
    *
-   * @Struct:
+   * @struct:
    *   TT_LangTagRec
    *
-   * @Description:
+   * @description:
    *   A structure modeling language tag records in SFNT `name' tables,
    *   introduced in OpenType version 1.6.
    *
-   * @Fields:
+   * @fields:
    *   stringLength ::
    *     The length of the string in bytes.
    *
@@ -348,13 +348,13 @@ FT_BEGIN_HEADER
 
   /**************************************************************************
    *
-   * @Struct:
+   * @struct:
    *   TT_NameTableRec
    *
-   * @Description:
+   * @description:
    *   A structure modeling the TrueType name table.
    *
-   * @Fields:
+   * @fields:
    *   format ::
    *     The format of the name table.
    *
@@ -405,14 +405,14 @@ FT_BEGIN_HEADER
 
   /**************************************************************************
    *
-   * @Struct:
+   * @struct:
    *   TT_GaspRangeRec
    *
-   * @Description:
+   * @description:
    *   A tiny structure used to model a gasp range according to the
    *   TrueType specification.
    *
-   * @Fields:
+   * @fields:
    *   maxPPEM ::
    *     The maximum ppem value to which `gaspFlag' applies.
    *
@@ -434,14 +434,14 @@ FT_BEGIN_HEADER
 
   /**************************************************************************
    *
-   * @Struct:
+   * @struct:
    *   TT_GaspRec
    *
-   * @Description:
+   * @description:
    *   A structure modeling the TrueType `gasp' table used to specify
    *   grid-fitting and anti-aliasing behaviour.
    *
-   * @Fields:
+   * @fields:
    *   version ::
    *     The version number.
    *
@@ -475,15 +475,15 @@ FT_BEGIN_HEADER
 
   /**************************************************************************
    *
-   * @Struct:
+   * @struct:
    *   TT_SBit_MetricsRec
    *
-   * @Description:
+   * @description:
    *   A structure used to hold the big metrics of a given glyph bitmap
    *   in a TrueType or OpenType font.  These are usually found in the
    *   `EBDT' (Microsoft) or `bloc' (Apple) table.
    *
-   * @Fields:
+   * @fields:
    *   height ::
    *     The glyph height in pixels.
    *
@@ -526,15 +526,15 @@ FT_BEGIN_HEADER
 
   /**************************************************************************
    *
-   * @Struct:
+   * @struct:
    *   TT_SBit_SmallMetricsRec
    *
-   * @Description:
+   * @description:
    *   A structure used to hold the small metrics of a given glyph bitmap
    *   in a TrueType or OpenType font.  These are usually found in the
    *   `EBDT' (Microsoft) or the `bdat' (Apple) table.
    *
-   * @Fields:
+   * @fields:
    *   height ::
    *     The glyph height in pixels.
    *
@@ -564,14 +564,14 @@ FT_BEGIN_HEADER
 
   /**************************************************************************
    *
-   * @Struct:
+   * @struct:
    *   TT_SBit_LineMetricsRec
    *
-   * @Description:
+   * @description:
    *   A structure used to describe the text line metrics of a given
    *   bitmap strike, for either a horizontal or vertical layout.
    *
-   * @Fields:
+   * @fields:
    *   ascender ::
    *     The ascender in pixels.
    *
@@ -643,14 +643,14 @@ FT_BEGIN_HEADER
 
   /**************************************************************************
    *
-   * @Struct:
+   * @struct:
    *   TT_SBit_RangeRec
    *
-   * @Description:
+   * @description:
    *   A TrueType/OpenType subIndexTable as defined in the `EBLC'
    *   (Microsoft) or `bloc' (Apple) tables.
    *
-   * @Fields:
+   * @fields:
    *   first_glyph ::
    *     The first glyph index in the range.
    *
@@ -712,14 +712,14 @@ FT_BEGIN_HEADER
 
   /**************************************************************************
    *
-   * @Struct:
+   * @struct:
    *   TT_SBit_StrikeRec
    *
-   * @Description:
+   * @description:
    *   A structure used describe a given bitmap strike in the `EBLC'
    *   (Microsoft) or `bloc' (Apple) tables.
    *
-   * @Fields:
+   * @fields:
    *  num_index_ranges ::
    *    The number of index ranges.
    *
@@ -787,13 +787,13 @@ FT_BEGIN_HEADER
 
   /**************************************************************************
    *
-   * @Struct:
+   * @struct:
    *   TT_SBit_ComponentRec
    *
-   * @Description:
+   * @description:
    *   A simple structure to describe a compound sbit element.
    *
-   * @Fields:
+   * @fields:
    *   glyph_code ::
    *     The element's glyph index.
    *
@@ -814,14 +814,14 @@ FT_BEGIN_HEADER
 
   /**************************************************************************
    *
-   * @Struct:
+   * @struct:
    *   TT_SBit_ScaleRec
    *
-   * @Description:
+   * @description:
    *   A structure used describe a given bitmap scaling table, as defined
    *   in the `EBSC' table.
    *
-   * @Fields:
+   * @fields:
    *   hori ::
    *     The horizontal line metrics.
    *
@@ -869,14 +869,14 @@ FT_BEGIN_HEADER
 
   /**************************************************************************
    *
-   * @Struct:
+   * @struct:
    *   TT_Post_20Rec
    *
-   * @Description:
+   * @description:
    *   Postscript names sub-table, format 2.0.  Stores the PS name of
    *   each glyph in the font face.
    *
-   * @Fields:
+   * @fields:
    *   num_glyphs ::
    *     The number of named glyphs in the table.
    *
@@ -901,14 +901,14 @@ FT_BEGIN_HEADER
 
   /**************************************************************************
    *
-   * @Struct:
+   * @struct:
    *   TT_Post_25Rec
    *
-   * @Description:
+   * @description:
    *   Postscript names sub-table, format 2.5.  Stores the PS name of
    *   each glyph in the font face.
    *
-   * @Fields:
+   * @fields:
    *   num_glyphs ::
    *     The number of glyphs in the table.
    *
@@ -926,13 +926,13 @@ FT_BEGIN_HEADER
 
   /**************************************************************************
    *
-   * @Struct:
+   * @struct:
    *   TT_Post_NamesRec
    *
-   * @Description:
+   * @description:
    *   Postscript names table, either format 2.0 or 2.5.
    *
-   * @Fields:
+   * @fields:
    *   loaded ::
    *     A flag to indicate whether the PS names are loaded.
    *
@@ -1066,15 +1066,15 @@ FT_BEGIN_HEADER
 
   /**************************************************************************
    *
-   * @Type:
+   * @type:
    *   TT_Face
    *
-   * @Description:
+   * @description:
    *   A handle to a TrueType face/font object.  A TT_Face encapsulates
    *   the resolution and scaling independent parts of a TrueType font
    *   resource.
    *
-   * @Note:
+   * @note:
    *   The TT_Face structure is also used as a `parent class' for the
    *   OpenType-CFF class (T2_Face).
    */
@@ -1091,13 +1091,13 @@ FT_BEGIN_HEADER
 
   /**************************************************************************
    *
-   * @FuncType:
+   * @functype:
    *   TT_Loader_GotoTableFunc
    *
-   * @Description:
+   * @description:
    *   Seeks a stream to the start of a given TrueType table.
    *
-   * @Input:
+   * @input:
    *   face ::
    *     A handle to the target face object.
    *
@@ -1107,15 +1107,15 @@ FT_BEGIN_HEADER
    *   stream ::
    *     The input stream.
    *
-   * @Output:
+   * @output:
    *   length ::
    *     The length of the table in bytes.  Set to 0 if not
    *     needed.
    *
-   * @Return:
+   * @return:
    *   FreeType error code.  0 means success.
    *
-   * @Note:
+   * @note:
    *   The stream cursor must be at the font file's origin.
    */
   typedef FT_Error
@@ -1127,14 +1127,14 @@ FT_BEGIN_HEADER
 
   /**************************************************************************
    *
-   * @FuncType:
+   * @functype:
    *   TT_Loader_StartGlyphFunc
    *
-   * @Description:
+   * @description:
    *   Seeks a stream to the start of a given glyph element, and opens a
    *   frame for it.
    *
-   * @Input:
+   * @input:
    *   loader ::
    *     The current TrueType glyph loader object.
    *
@@ -1147,10 +1147,10 @@ FT_BEGIN_HEADER
    *   byte_count ::
    *     The size of the frame in bytes.
    *
-   * @Return:
+   * @return:
    *   FreeType error code.  0 means success.
    *
-   * @Note:
+   * @note:
    *   This function is normally equivalent to FT_STREAM_SEEK(offset)
    *   followed by FT_FRAME_ENTER(byte_count) with the loader's stream,
    *   but alternative formats (e.g. compressed ones) might use something
@@ -1165,18 +1165,18 @@ FT_BEGIN_HEADER
 
   /**************************************************************************
    *
-   * @FuncType:
+   * @functype:
    *   TT_Loader_ReadGlyphFunc
    *
-   * @Description:
+   * @description:
    *   Reads one glyph element (its header, a simple glyph, or a
    *   composite) from the loader's current stream frame.
    *
-   * @Input:
+   * @input:
    *   loader ::
    *     The current TrueType glyph loader object.
    *
-   * @Return:
+   * @return:
    *   FreeType error code.  0 means success.
    */
   typedef FT_Error
@@ -1185,13 +1185,13 @@ FT_BEGIN_HEADER
 
   /**************************************************************************
    *
-   * @FuncType:
+   * @functype:
    *   TT_Loader_EndGlyphFunc
    *
-   * @Description:
+   * @description:
    *   Closes the current loader stream frame for the glyph.
    *
-   * @Input:
+   * @input:
    *   loader ::
    *     The current TrueType glyph loader object.
    */
@@ -1245,14 +1245,14 @@ FT_BEGIN_HEADER
    *
    *                        TrueType Face Type
    *
-   * @Struct:
+   * @struct:
    *   TT_Face
    *
-   * @Description:
+   * @description:
    *   The TrueType face class.  These objects model the resolution and
    *   point-size independent data found in a TrueType font file.
    *
-   * @Fields:
+   * @fields:
    *   root ::
    *     The base FT_Face structure, managed by the
    *     base layer.
@@ -1791,14 +1791,14 @@ FT_BEGIN_HEADER
 
   /**************************************************************************
    *
-   * @Struct:
+   * @struct:
    *    TT_GlyphZoneRec
    *
-   * @Description:
+   * @description:
    *   A glyph zone is used to load, scale and hint glyph outline
    *   coordinates.
    *
-   * @Fields:
+   * @fields:
    *   memory ::
    *     A handle to the memory manager.
    *
@@ -1856,10 +1856,10 @@ FT_BEGIN_HEADER
 
   /**************************************************************************
    *
-   * @Type:
+   * @type:
    *   TT_Size
    *
-   * @Description:
+   * @description:
    *   A handle to a TrueType size object.
    */
   typedef struct TT_SizeRec_*  TT_Size;

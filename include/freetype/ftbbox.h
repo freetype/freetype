@@ -46,7 +46,7 @@ FT_BEGIN_HEADER
 
   /**************************************************************************
    *
-   * @Section:
+   * @section:
    *   outline_processing
    *
    */
@@ -54,28 +54,28 @@ FT_BEGIN_HEADER
 
   /**************************************************************************
    *
-   * @Function:
+   * @function:
    *   FT_Outline_Get_BBox
    *
-   * @Description:
+   * @description:
    *   Compute the exact bounding box of an outline.  This is slower
    *   than computing the control box.  However, it uses an advanced
    *   algorithm that returns _very_ quickly when the two boxes
    *   coincide.  Otherwise, the outline Bezier arcs are traversed to
    *   extract their extrema.
    *
-   * @Input:
+   * @input:
    *   outline ::
    *     A pointer to the source outline.
    *
-   * @Output:
+   * @output:
    *   abbox ::
    *     The outline's exact bounding box.
    *
-   * @Return:
+   * @return:
    *   FreeType error code.  0~means success.
    *
-   * @Note:
+   * @note:
    *   If the font is tricky and the glyph has been loaded with
    *   @FT_LOAD_NO_SCALE, the resulting BBox is meaningless.  To get
    *   reasonable values for the BBox it is necessary to load the glyph

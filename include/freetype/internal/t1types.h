@@ -47,13 +47,13 @@ FT_BEGIN_HEADER
 
   /**************************************************************************
    *
-   * @Struct:
+   * @struct:
    *   T1_EncodingRec
    *
-   * @Description:
+   * @description:
    *   A structure modeling a custom encoding.
    *
-   * @Fields:
+   * @fields:
    *   num_chars ::
    *     The number of character codes in the encoding.
    *     Usually 256.

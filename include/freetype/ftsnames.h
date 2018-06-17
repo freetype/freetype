@@ -39,16 +39,16 @@ FT_BEGIN_HEADER
 
   /**************************************************************************
    *
-   * @Section:
+   * @section:
    *   sfnt_names
    *
-   * @Title:
+   * @title:
    *   SFNT Names
    *
-   * @Abstract:
+   * @abstract:
    *   Access the names embedded in TrueType and OpenType files.
    *
-   * @Description:
+   * @description:
    *   The TrueType and OpenType specifications allow the inclusion of
    *   a special names table (`name') in font files.  This table contains
    *   textual (and internationalized) information regarding the font,
@@ -63,13 +63,13 @@ FT_BEGIN_HEADER
 
   /**************************************************************************
    *
-   * @Struct:
+   * @struct:
    *   FT_SfntName
    *
-   * @Description:
+   * @description:
    *   A structure used to model an SFNT `name' table entry.
    *
-   * @Fields:
+   * @fields:
    *   platform_id ::
    *     The platform ID for `string'.
    *     See @TT_PLATFORM_XXX for possible values.
@@ -105,7 +105,7 @@ FT_BEGIN_HEADER
    *   string_len ::
    *     The length of `string' in bytes.
    *
-   * @Note:
+   * @note:
    *   Please refer to the TrueType or OpenType specification for more
    *   details.
    */
@@ -124,20 +124,20 @@ FT_BEGIN_HEADER
 
   /**************************************************************************
    *
-   * @Function:
+   * @function:
    *   FT_Get_Sfnt_Name_Count
    *
-   * @Description:
+   * @description:
    *   Retrieve the number of name strings in the SFNT `name' table.
    *
-   * @Input:
+   * @input:
    *   face ::
    *     A handle to the source face.
    *
-   * @Return:
+   * @return:
    *   The number of strings in the `name' table.
    *
-   * @Note:
+   * @note:
    *   This function always returns an error if the config macro
    *   `TT_CONFIG_OPTION_SFNT_NAMES' is not defined in `ftoption.h'.
    */
@@ -147,27 +147,27 @@ FT_BEGIN_HEADER
 
   /**************************************************************************
    *
-   * @Function:
+   * @function:
    *   FT_Get_Sfnt_Name
    *
-   * @Description:
+   * @description:
    *   Retrieve a string of the SFNT `name' table for a given index.
    *
-   * @Input:
+   * @input:
    *   face ::
    *     A handle to the source face.
    *
    *   idx ::
    *     The index of the `name' string.
    *
-   * @Output:
+   * @output:
    *   aname ::
    *     The indexed @FT_SfntName structure.
    *
-   * @Return:
+   * @return:
    *   FreeType error code.  0~means success.
    *
-   * @Note:
+   * @note:
    *   The `string' array returned in the `aname' structure is not
    *   null-terminated.  Note that you don't have to deallocate `string'
    *   by yourself; FreeType takes care of it if you call @FT_Done_Face.
@@ -190,14 +190,14 @@ FT_BEGIN_HEADER
 
   /**************************************************************************
    *
-   * @Struct:
+   * @struct:
    *   FT_SfntLangTag
    *
-   * @Description:
+   * @description:
    *   A structure to model a language tag entry from an SFNT `name'
    *   table.
    *
-   * @Fields:
+   * @fields:
    *   string ::
    *     The language tag string, encoded in UTF-16BE
    *     (without trailing NULL bytes).
@@ -205,11 +205,11 @@ FT_BEGIN_HEADER
    *   string_len ::
    *     The length of `string' in *bytes*.
    *
-   * @Note:
+   * @note:
    *   Please refer to the TrueType or OpenType specification for more
    *   details.
    *
-   * @Since:
+   * @since:
    *   2.8
    */
   typedef struct  FT_SfntLangTag_
@@ -222,14 +222,14 @@ FT_BEGIN_HEADER
 
   /**************************************************************************
    *
-   * @Function:
+   * @function:
    *   FT_Get_Sfnt_LangTag
    *
-   * @Description:
+   * @description:
    *   Retrieve the language tag associated with a language ID of an SFNT
    *   `name' table entry.
    *
-   * @Input:
+   * @input:
    *   face ::
    *     A handle to the source face.
    *
@@ -237,15 +237,15 @@ FT_BEGIN_HEADER
    *     The language ID, as returned by @FT_Get_Sfnt_Name.
    *     This is always a value larger than 0x8000.
    *
-   * @Output:
+   * @output:
    *   alangTag ::
    *     The language tag associated with the `name' table
    *     entry's language ID.
    *
-   * @Return:
+   * @return:
    *   FreeType error code.  0~means success.
    *
-   * @Note:
+   * @note:
    *   The `string' array returned in the `alangTag' structure is not
    *   null-terminated.  Note that you don't have to deallocate `string'
    *   by yourself; FreeType takes care of it if you call @FT_Done_Face.
@@ -258,7 +258,7 @@ FT_BEGIN_HEADER
    *   This function always returns an error if the config macro
    *   `TT_CONFIG_OPTION_SFNT_NAMES' is not defined in `ftoption.h'.
    *
-   * @Since:
+   * @since:
    *   2.8
    */
   FT_EXPORT( FT_Error )

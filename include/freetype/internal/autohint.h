@@ -82,23 +82,23 @@ FT_BEGIN_HEADER
 
   /**************************************************************************
    *
-   * @FuncType:
+   * @functype:
    *   FT_AutoHinter_GlobalGetFunc
    *
-   * @Description:
+   * @description:
    *   Retrieve the global hints computed for a given face object.  The
    *   resulting data is dissociated from the face and will survive a
    *   call to FT_Done_Face().  It must be discarded through the API
    *   FT_AutoHinter_GlobalDoneFunc().
    *
-   * @Input:
+   * @input:
    *   hinter ::
    *     A handle to the source auto-hinter.
    *
    *   face ::
    *     A handle to the source face object.
    *
-   * @Output:
+   * @output:
    *   global_hints ::
    *     A typeless pointer to the global hints.
    *
@@ -114,15 +114,15 @@ FT_BEGIN_HEADER
 
   /**************************************************************************
    *
-   * @FuncType:
+   * @functype:
    *   FT_AutoHinter_GlobalDoneFunc
    *
-   * @Description:
+   * @description:
    *   Discard the global hints retrieved through
    *   FT_AutoHinter_GlobalGetFunc().  This is the only way these hints
    *   are freed from memory.
    *
-   * @Input:
+   * @input:
    *   hinter ::
    *     A handle to the auto-hinter module.
    *
@@ -136,15 +136,15 @@ FT_BEGIN_HEADER
 
   /**************************************************************************
    *
-   * @FuncType:
+   * @functype:
    *   FT_AutoHinter_GlobalResetFunc
    *
-   * @Description:
+   * @description:
    *   This function is used to recompute the global metrics in a given
    *   font.  This is useful when global font data changes (e.g. Multiple
    *   Masters fonts where blend coordinates change).
    *
-   * @Input:
+   * @input:
    *   hinter ::
    *     A handle to the source auto-hinter.
    *
@@ -158,14 +158,14 @@ FT_BEGIN_HEADER
 
   /**************************************************************************
    *
-   * @FuncType:
+   * @functype:
    *   FT_AutoHinter_GlyphLoadFunc
    *
-   * @Description:
+   * @description:
    *   This function is used to load, scale, and automatically hint a
    *   glyph from a given face.
    *
-   * @Input:
+   * @input:
    *   face ::
    *     A handle to the face.
    *
@@ -175,7 +175,7 @@ FT_BEGIN_HEADER
    *   load_flags ::
    *     The load flags.
    *
-   * @Note:
+   * @note:
    *   This function is capable of loading composite glyphs by hinting
    *   each sub-glyph independently (which improves quality).
    *
@@ -192,10 +192,10 @@ FT_BEGIN_HEADER
 
   /**************************************************************************
    *
-   * @Struct:
+   * @struct:
    *   FT_AutoHinter_InterfaceRec
    *
-   * @Description:
+   * @description:
    *   The auto-hinter module's interface.
    */
   typedef struct  FT_AutoHinter_InterfaceRec_

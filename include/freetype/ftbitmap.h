@@ -36,16 +36,16 @@ FT_BEGIN_HEADER
 
   /**************************************************************************
    *
-   * @Section:
+   * @section:
    *   bitmap_handling
    *
-   * @Title:
+   * @title:
    *   Bitmap Handling
    *
-   * @Abstract:
+   * @abstract:
    *   Handling FT_Bitmap objects.
    *
-   * @Description:
+   * @description:
    *   This section contains functions for handling @FT_Bitmap objects.
    *   Note that none of the functions changes the bitmap's `flow' (as
    *   indicated by the sign of the `pitch' field in `FT_Bitmap').
@@ -55,17 +55,17 @@ FT_BEGIN_HEADER
 
   /**************************************************************************
    *
-   * @Function:
+   * @function:
    *   FT_Bitmap_Init
    *
-   * @Description:
+   * @description:
    *   Initialize a pointer to an @FT_Bitmap structure.
    *
-   * @InOut:
+   * @inout:
    *   abitmap ::
    *     A pointer to the bitmap structure.
    *
-   * @Note:
+   * @note:
    *   A deprecated name for the same function is `FT_Bitmap_New'.
    */
   FT_EXPORT( void )
@@ -79,24 +79,24 @@ FT_BEGIN_HEADER
 
   /**************************************************************************
    *
-   * @Function:
+   * @function:
    *   FT_Bitmap_Copy
    *
-   * @Description:
+   * @description:
    *   Copy a bitmap into another one.
    *
-   * @Input:
+   * @input:
    *   library ::
    *     A handle to a library object.
    *
    *   source ::
    *     A handle to the source bitmap.
    *
-   * @Output:
+   * @output:
    *   target ::
    *     A handle to the target bitmap.
    *
-   * @Return:
+   * @return:
    *   FreeType error code.  0~means success.
    */
   FT_EXPORT( FT_Error )
@@ -107,15 +107,15 @@ FT_BEGIN_HEADER
 
   /**************************************************************************
    *
-   * @Function:
+   * @function:
    *   FT_Bitmap_Embolden
    *
-   * @Description:
+   * @description:
    *   Embolden a bitmap.  The new bitmap will be about `xStrength'
    *   pixels wider and `yStrength' pixels higher.  The left and bottom
    *   borders are kept unchanged.
    *
-   * @Input:
+   * @input:
    *   library ::
    *     A handle to a library object.
    *
@@ -127,14 +127,14 @@ FT_BEGIN_HEADER
    *     How strong the glyph is emboldened vertically.
    *     Expressed in 26.6 pixel format.
    *
-   * @InOut:
+   * @inout:
    *   bitmap ::
    *     A handle to the target bitmap.
    *
-   * @Return:
+   * @return:
    *   FreeType error code.  0~means success.
    *
-   * @Note:
+   * @note:
    *   The current implementation restricts `xStrength' to be less than
    *   or equal to~8 if bitmap is of pixel_mode @FT_PIXEL_MODE_MONO.
    *
@@ -153,15 +153,15 @@ FT_BEGIN_HEADER
 
   /**************************************************************************
    *
-   * @Function:
+   * @function:
    *   FT_Bitmap_Convert
    *
-   * @Description:
+   * @description:
    *   Convert a bitmap object with depth 1bpp, 2bpp, 4bpp, 8bpp or 32bpp
    *   to a bitmap object with depth 8bpp, making the number of used
    *   bytes per line (a.k.a. the `pitch') a multiple of `alignment'.
    *
-   * @Input:
+   * @input:
    *   library ::
    *     A handle to a library object.
    *
@@ -172,14 +172,14 @@ FT_BEGIN_HEADER
    *     The pitch of the bitmap is a multiple of this
    *     argument.  Common values are 1, 2, or 4.
    *
-   * @Output:
+   * @output:
    *   target ::
    *     The target bitmap.
    *
-   * @Return:
+   * @return:
    *   FreeType error code.  0~means success.
    *
-   * @Note:
+   * @note:
    *   It is possible to call @FT_Bitmap_Convert multiple times without
    *   calling @FT_Bitmap_Done (the memory is simply reallocated).
    *
@@ -197,13 +197,13 @@ FT_BEGIN_HEADER
 
   /**************************************************************************
    *
-   * @Function:
+   * @function:
    *   FT_Bitmap_Blend
    *
-   * @Description:
+   * @description:
    *   Blend a bitmap onto another bitmap, using a given color.
    *
-   * @Input:
+   * @input:
    *   library ::
    *     A handle to a library object.
    *
@@ -217,7 +217,7 @@ FT_BEGIN_HEADER
    *   color ::
    *     The color used to draw `source' onto `target'.
    *
-   * @InOut:
+   * @inout:
    *   target ::
    *     A handle to an `FT_Bitmap' object.  It should be either initialized
    *     as empty with a call to @FT_Bitmap_Init, or it should be of type
@@ -228,10 +228,10 @@ FT_BEGIN_HEADER
    *     26.6 pixel format.  It should represent an integer offset; the
    *     function will set the lowest six bits to zero to enforce that.
    *
-   * @Return:
+   * @return:
    *   FreeType error code.  0~means success.
    *
-   * @Note:
+   * @note:
    *   This function doesn't perform clipping.
    *
    *   The bitmap in `target' gets allocated or reallocated as needed; the
@@ -241,7 +241,7 @@ FT_BEGIN_HEADER
    *   `4~*~width'.  Both `source' and `target' must have the same bitmap
    *   flow (as indicated by the sign of the `pitch' field).
    *
-   * @Since:
+   * @since:
    *   2.10
    */
   FT_EXPORT( FT_Error )
@@ -255,20 +255,20 @@ FT_BEGIN_HEADER
 
   /**************************************************************************
    *
-   * @Function:
+   * @function:
    *   FT_GlyphSlot_Own_Bitmap
    *
-   * @Description:
+   * @description:
    *   Make sure that a glyph slot owns `slot->bitmap'.
    *
-   * @Input:
+   * @input:
    *   slot ::
    *     The glyph slot.
    *
-   * @Return:
+   * @return:
    *   FreeType error code.  0~means success.
    *
-   * @Note:
+   * @note:
    *   This function is to be used in combination with
    *   @FT_Bitmap_Embolden.
    */
@@ -278,23 +278,23 @@ FT_BEGIN_HEADER
 
   /**************************************************************************
    *
-   * @Function:
+   * @function:
    *   FT_Bitmap_Done
    *
-   * @Description:
+   * @description:
    *   Destroy a bitmap object initialized with @FT_Bitmap_Init.
    *
-   * @Input:
+   * @input:
    *   library ::
    *     A handle to a library object.
    *
    *   bitmap ::
    *     The bitmap object to be freed.
    *
-   * @Return:
+   * @return:
    *   FreeType error code.  0~means success.
    *
-   * @Note:
+   * @note:
    *   The `library' argument is taken to have access to FreeType's
    *   memory handling functions.
    */

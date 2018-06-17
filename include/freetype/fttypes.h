@@ -33,21 +33,21 @@ FT_BEGIN_HEADER
 
   /**************************************************************************
    *
-   * @Section:
+   * @section:
    *   basic_types
    *
-   * @Title:
+   * @title:
    *   Basic Data Types
    *
-   * @Abstract:
+   * @abstract:
    *   The basic data types defined by the library.
    *
-   * @Description:
+   * @description:
    *   This section contains the basic data types defined by FreeType~2,
    *   ranging from simple scalar types to bitmap descriptors.  More
    *   font-specific structures are defined in a different section.
    *
-   * @Order:
+   * @order:
    *   FT_Byte
    *   FT_Bytes
    *   FT_Char
@@ -98,10 +98,10 @@ FT_BEGIN_HEADER
 
   /**************************************************************************
    *
-   * @Type:
+   * @type:
    *   FT_Bool
    *
-   * @Description:
+   * @description:
    *   A typedef of unsigned char, used for simple booleans.  As usual,
    *   values 1 and~0 represent true and false, respectively.
    */
@@ -110,10 +110,10 @@ FT_BEGIN_HEADER
 
   /**************************************************************************
    *
-   * @Type:
+   * @type:
    *   FT_FWord
    *
-   * @Description:
+   * @description:
    *   A signed 16-bit integer used to store a distance in original font
    *   units.
    */
@@ -122,10 +122,10 @@ FT_BEGIN_HEADER
 
   /**************************************************************************
    *
-   * @Type:
+   * @type:
    *   FT_UFWord
    *
-   * @Description:
+   * @description:
    *   An unsigned 16-bit integer used to store a distance in original
    *   font units.
    */
@@ -134,10 +134,10 @@ FT_BEGIN_HEADER
 
   /**************************************************************************
    *
-   * @Type:
+   * @type:
    *   FT_Char
    *
-   * @Description:
+   * @description:
    *   A simple typedef for the _signed_ char type.
    */
   typedef signed char  FT_Char;
@@ -145,10 +145,10 @@ FT_BEGIN_HEADER
 
   /**************************************************************************
    *
-   * @Type:
+   * @type:
    *   FT_Byte
    *
-   * @Description:
+   * @description:
    *   A simple typedef for the _unsigned_ char type.
    */
   typedef unsigned char  FT_Byte;
@@ -156,10 +156,10 @@ FT_BEGIN_HEADER
 
   /**************************************************************************
    *
-   * @Type:
+   * @type:
    *   FT_Bytes
    *
-   * @Description:
+   * @description:
    *   A typedef for constant memory areas.
    */
   typedef const FT_Byte*  FT_Bytes;
@@ -167,10 +167,10 @@ FT_BEGIN_HEADER
 
   /**************************************************************************
    *
-   * @Type:
+   * @type:
    *   FT_Tag
    *
-   * @Description:
+   * @description:
    *   A typedef for 32-bit tags (as used in the SFNT format).
    */
   typedef FT_UInt32  FT_Tag;
@@ -178,10 +178,10 @@ FT_BEGIN_HEADER
 
   /**************************************************************************
    *
-   * @Type:
+   * @type:
    *   FT_String
    *
-   * @Description:
+   * @description:
    *   A simple typedef for the char type, usually used for strings.
    */
   typedef char  FT_String;
@@ -189,10 +189,10 @@ FT_BEGIN_HEADER
 
   /**************************************************************************
    *
-   * @Type:
+   * @type:
    *   FT_Short
    *
-   * @Description:
+   * @description:
    *   A typedef for signed short.
    */
   typedef signed short  FT_Short;
@@ -200,10 +200,10 @@ FT_BEGIN_HEADER
 
   /**************************************************************************
    *
-   * @Type:
+   * @type:
    *   FT_UShort
    *
-   * @Description:
+   * @description:
    *   A typedef for unsigned short.
    */
   typedef unsigned short  FT_UShort;
@@ -211,10 +211,10 @@ FT_BEGIN_HEADER
 
   /**************************************************************************
    *
-   * @Type:
+   * @type:
    *   FT_Int
    *
-   * @Description:
+   * @description:
    *   A typedef for the int type.
    */
   typedef signed int  FT_Int;
@@ -222,10 +222,10 @@ FT_BEGIN_HEADER
 
   /**************************************************************************
    *
-   * @Type:
+   * @type:
    *   FT_UInt
    *
-   * @Description:
+   * @description:
    *   A typedef for the unsigned int type.
    */
   typedef unsigned int  FT_UInt;
@@ -233,10 +233,10 @@ FT_BEGIN_HEADER
 
   /**************************************************************************
    *
-   * @Type:
+   * @type:
    *   FT_Long
    *
-   * @Description:
+   * @description:
    *   A typedef for signed long.
    */
   typedef signed long  FT_Long;
@@ -244,10 +244,10 @@ FT_BEGIN_HEADER
 
   /**************************************************************************
    *
-   * @Type:
+   * @type:
    *   FT_ULong
    *
-   * @Description:
+   * @description:
    *   A typedef for unsigned long.
    */
   typedef unsigned long  FT_ULong;
@@ -255,10 +255,10 @@ FT_BEGIN_HEADER
 
   /**************************************************************************
    *
-   * @Type:
+   * @type:
    *   FT_F2Dot14
    *
-   * @Description:
+   * @description:
    *   A signed 2.14 fixed-point type used for unit vectors.
    */
   typedef signed short  FT_F2Dot14;
@@ -266,10 +266,10 @@ FT_BEGIN_HEADER
 
   /**************************************************************************
    *
-   * @Type:
+   * @type:
    *   FT_F26Dot6
    *
-   * @Description:
+   * @description:
    *   A signed 26.6 fixed-point type used for vectorial pixel
    *   coordinates.
    */
@@ -278,10 +278,10 @@ FT_BEGIN_HEADER
 
   /**************************************************************************
    *
-   * @Type:
+   * @type:
    *   FT_Fixed
    *
-   * @Description:
+   * @description:
    *   This type is used to store 16.16 fixed-point values, like scaling
    *   values or matrix coefficients.
    */
@@ -290,10 +290,10 @@ FT_BEGIN_HEADER
 
   /**************************************************************************
    *
-   * @Type:
+   * @type:
    *   FT_Error
    *
-   * @Description:
+   * @description:
    *   The FreeType error code type.  A value of~0 is always interpreted
    *   as a successful operation.
    */
@@ -302,10 +302,10 @@ FT_BEGIN_HEADER
 
   /**************************************************************************
    *
-   * @Type:
+   * @type:
    *   FT_Pointer
    *
-   * @Description:
+   * @description:
    *   A simple typedef for a typeless pointer.
    */
   typedef void*  FT_Pointer;
@@ -313,10 +313,10 @@ FT_BEGIN_HEADER
 
   /**************************************************************************
    *
-   * @Type:
+   * @type:
    *   FT_Offset
    *
-   * @Description:
+   * @description:
    *   This is equivalent to the ANSI~C `size_t' type, i.e., the largest
    *   _unsigned_ integer type used to express a file size or position,
    *   or a memory block size.
@@ -326,10 +326,10 @@ FT_BEGIN_HEADER
 
   /**************************************************************************
    *
-   * @Type:
+   * @type:
    *   FT_PtrDist
    *
-   * @Description:
+   * @description:
    *   This is equivalent to the ANSI~C `ptrdiff_t' type, i.e., the
    *   largest _signed_ integer type used to express the distance
    *   between two pointers.
@@ -339,14 +339,14 @@ FT_BEGIN_HEADER
 
   /**************************************************************************
    *
-   * @Struct:
+   * @struct:
    *   FT_UnitVector
    *
-   * @Description:
+   * @description:
    *   A simple structure used to store a 2D vector unit vector.  Uses
    *   FT_F2Dot14 types.
    *
-   * @Fields:
+   * @fields:
    *   x ::
    *     Horizontal coordinate.
    *
@@ -363,10 +363,10 @@ FT_BEGIN_HEADER
 
   /**************************************************************************
    *
-   * @Struct:
+   * @struct:
    *   FT_Matrix
    *
-   * @Description:
+   * @description:
    *   A simple structure used to store a 2x2 matrix.  Coefficients are
    *   in 16.16 fixed-point format.  The computation performed is:
    *
@@ -375,7 +375,7 @@ FT_BEGIN_HEADER
    *         y' = x*yx + y*yy
    *      }
    *
-   * @Fields:
+   * @fields:
    *   xx ::
    *     Matrix coefficient.
    *
@@ -398,13 +398,13 @@ FT_BEGIN_HEADER
 
   /**************************************************************************
    *
-   * @Struct:
+   * @struct:
    *   FT_Data
    *
-   * @Description:
+   * @description:
    *   Read-only binary data represented as a pointer and a length.
    *
-   * @Fields:
+   * @fields:
    *   pointer ::
    *     The data.
    *
@@ -421,15 +421,15 @@ FT_BEGIN_HEADER
 
   /**************************************************************************
    *
-   * @FuncType:
+   * @functype:
    *   FT_Generic_Finalizer
    *
-   * @Description:
+   * @description:
    *   Describe a function used to destroy the `client' data of any
    *   FreeType object.  See the description of the @FT_Generic type for
    *   details of usage.
    *
-   * @Input:
+   * @input:
    *   The address of the FreeType object that is under finalization.
    *   Its client data is accessed through its `generic' field.
    */
@@ -438,10 +438,10 @@ FT_BEGIN_HEADER
 
   /**************************************************************************
    *
-   * @Struct:
+   * @struct:
    *   FT_Generic
    *
-   * @Description:
+   * @description:
    *   Client applications often need to associate their own data to a
    *   variety of FreeType core objects.  For example, a text layout API
    *   might want to associate a glyph cache to a given size object.
@@ -456,7 +456,7 @@ FT_BEGIN_HEADER
    *   client example would put the address of the glyph cache destructor
    *   in the `finalizer' field).
    *
-   * @Fields:
+   * @fields:
    *   data ::
    *     A typeless pointer to any client-specified data. This
    *     field is completely ignored by the FreeType library.
@@ -476,14 +476,14 @@ FT_BEGIN_HEADER
 
   /**************************************************************************
    *
-   * @Macro:
+   * @macro:
    *   FT_MAKE_TAG
    *
-   * @Description:
+   * @description:
    *   This macro converts four-letter tags that are used to label
    *   TrueType tables into an unsigned long, to be used within FreeType.
    *
-   * @Note:
+   * @note:
    *   The produced values *must* be 32-bit integers.  Don't redefine
    *   this macro.
    */
@@ -506,7 +506,7 @@ FT_BEGIN_HEADER
 
   /**************************************************************************
    *
-   * @Section:
+   * @section:
    *   list_processing
    *
    */
@@ -514,10 +514,10 @@ FT_BEGIN_HEADER
 
   /**************************************************************************
    *
-   * @Type:
+   * @type:
    *   FT_ListNode
    *
-   * @Description:
+   * @description:
    *    Many elements and objects in FreeType are listed through an
    *    @FT_List record (see @FT_ListRec).  As its name suggests, an
    *    FT_ListNode is a handle to a single list element.
@@ -527,10 +527,10 @@ FT_BEGIN_HEADER
 
   /**************************************************************************
    *
-   * @Type:
+   * @type:
    *   FT_List
    *
-   * @Description:
+   * @description:
    *   A handle to a list record (see @FT_ListRec).
    */
   typedef struct FT_ListRec_*  FT_List;
@@ -538,13 +538,13 @@ FT_BEGIN_HEADER
 
   /**************************************************************************
    *
-   * @Struct:
+   * @struct:
    *   FT_ListNodeRec
    *
-   * @Description:
+   * @description:
    *   A structure used to hold a single list element.
    *
-   * @Fields:
+   * @fields:
    *   prev ::
    *     The previous element in the list.  NULL if first.
    *
@@ -565,14 +565,14 @@ FT_BEGIN_HEADER
 
   /**************************************************************************
    *
-   * @Struct:
+   * @struct:
    *   FT_ListRec
    *
-   * @Description:
+   * @description:
    *   A structure used to hold a simple doubly-linked list.  These are
    *   used in many parts of FreeType.
    *
-   * @Fields:
+   * @fields:
    *   head ::
    *     The head (first element) of doubly-linked list.
    *

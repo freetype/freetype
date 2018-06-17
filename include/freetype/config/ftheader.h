@@ -63,16 +63,16 @@
 
   /**************************************************************************
    *
-   * @Section:
+   * @section:
    *   header_file_macros
    *
-   * @Title:
+   * @title:
    *   Header File Macros
    *
-   * @Abstract:
+   * @abstract:
    *   Macro definitions used to #include specific header files.
    *
-   * @Description:
+   * @description:
    *   The following macros are defined to the name of specific
    *   FreeType~2 header files.  They can be used directly in #include
    *   statements as in:

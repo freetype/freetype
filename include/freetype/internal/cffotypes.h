@@ -35,10 +35,10 @@ FT_BEGIN_HEADER
 
   /**************************************************************************
    *
-   * @Type:
+   * @type:
    *   CFF_Size
    *
-   * @Description:
+   * @description:
    *   A handle to an OpenType size object.
    */
   typedef struct  CFF_SizeRec_
@@ -51,10 +51,10 @@ FT_BEGIN_HEADER
 
   /**************************************************************************
    *
-   * @Type:
+   * @type:
    *   CFF_GlyphSlot
    *
-   * @Description:
+   * @description:
    *   A handle to an OpenType glyph slot object.
    */
   typedef struct  CFF_GlyphSlotRec_
@@ -72,10 +72,10 @@ FT_BEGIN_HEADER
 
   /**************************************************************************
    *
-   * @Type:
+   * @type:
    *   CFF_Internal
    *
-   * @Description:
+   * @description:
    *   The interface to the `internal' field of `FT_Size'.
    */
   typedef struct  CFF_InternalRec_

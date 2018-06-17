@@ -33,16 +33,16 @@ FT_BEGIN_HEADER
 
   /**************************************************************************
    *
-   * @Section:
+   * @section:
    *   gzip
    *
-   * @Title:
+   * @title:
    *   GZIP Streams
    *
-   * @Abstract:
+   * @abstract:
    *   Using gzip-compressed font files.
    *
-   * @Description:
+   * @description:
    *   This section contains the declaration of Gzip-specific functions.
    *
    */

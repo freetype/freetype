@@ -18,16 +18,16 @@
 
   /**************************************************************************
    *
-   * @Section:
+   * @section:
    *  error_enumerations
    *
-   * @Title:
+   * @title:
    *  Error Enumerations
    *
-   * @Abstract:
+   * @abstract:
    *  How to handle errors and error strings.
    *
-   * @Description:
+   * @description:
    *  The header file `fterrors.h' (which is automatically included by
    *  `freetype.h' defines the handling of FreeType's enumeration
    *  constants.  It can also be used to generate error message strings

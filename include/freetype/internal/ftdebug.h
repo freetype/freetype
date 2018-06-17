@@ -99,17 +99,17 @@ FT_BEGIN_HEADER
 
   /**************************************************************************
    *
-   * @Function:
+   * @function:
    *   FT_Trace_Get_Count
    *
-   * @Description:
+   * @description:
    *   Return the number of available trace components.
    *
-   * @Return:
+   * @return:
    *   The number of trace components.  0 if FreeType 2 is not built with
    *   FT_DEBUG_LEVEL_TRACE definition.
    *
-   * @Note:
+   * @note:
    *   This function may be useful if you want to access elements of
    *   the internal `ft_trace_levels' array by an index.
    */
@@ -119,21 +119,21 @@ FT_BEGIN_HEADER
 
   /**************************************************************************
    *
-   * @Function:
+   * @function:
    *   FT_Trace_Get_Name
    *
-   * @Description:
+   * @description:
    *   Return the name of a trace component.
    *
-   * @Input:
+   * @input:
    *   The index of the trace component.
    *
-   * @Return:
+   * @return:
    *   The name of the trace component.  This is a statically allocated
    *   C string, so do not free it after use.  NULL if FreeType 2 is not
    *   built with FT_DEBUG_LEVEL_TRACE definition.
    *
-   * @Note:
+   * @note:
    *   Use @FT_Trace_Get_Count to get the number of available trace
    *   components.
    *

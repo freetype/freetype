@@ -36,20 +36,20 @@ FT_BEGIN_HEADER
 
   /**************************************************************************
    *
-   * @Section:
+   * @section:
    *   type1_tables
    *
-   * @Title:
+   * @title:
    *   Type 1 Tables
    *
-   * @Abstract:
+   * @abstract:
    *   Type~1 (PostScript) specific font tables.
    *
-   * @Description:
+   * @description:
    *   This section contains the definition of Type 1-specific tables,
    *   including structures related to other PostScript font formats.
    *
-   * @Order:
+   * @order:
    *   PS_FontInfoRec
    *   PS_FontInfo
    *   PS_PrivateRec
@@ -78,10 +78,10 @@ FT_BEGIN_HEADER
 
   /**************************************************************************
    *
-   * @Struct:
+   * @struct:
    *   PS_FontInfoRec
    *
-   * @Description:
+   * @description:
    *   A structure used to model a Type~1 or Type~2 FontInfo dictionary.
    *   Note that for Multiple Master fonts, each instance has its own
    *   FontInfo dictionary.
@@ -103,10 +103,10 @@ FT_BEGIN_HEADER
 
   /**************************************************************************
    *
-   * @Struct:
+   * @struct:
    *   PS_FontInfo
    *
-   * @Description:
+   * @description:
    *   A handle to a @PS_FontInfoRec structure.
    */
   typedef struct PS_FontInfoRec_*  PS_FontInfo;
@@ -114,10 +114,10 @@ FT_BEGIN_HEADER
 
   /**************************************************************************
    *
-   * @Struct:
+   * @struct:
    *   T1_FontInfo
    *
-   * @Description:
+   * @description:
    *   This type is equivalent to @PS_FontInfoRec.  It is deprecated but
    *   kept to maintain source compatibility between various versions of
    *   FreeType.
@@ -127,10 +127,10 @@ FT_BEGIN_HEADER
 
   /**************************************************************************
    *
-   * @Struct:
+   * @struct:
    *   PS_PrivateRec
    *
-   * @Description:
+   * @description:
    *   A structure used to model a Type~1 or Type~2 private dictionary.
    *   Note that for Multiple Master fonts, each instance has its own
    *   Private dictionary.
@@ -178,10 +178,10 @@ FT_BEGIN_HEADER
 
   /**************************************************************************
    *
-   * @Struct:
+   * @struct:
    *   PS_Private
    *
-   * @Description:
+   * @description:
    *   A handle to a @PS_PrivateRec structure.
    */
   typedef struct PS_PrivateRec_*  PS_Private;
@@ -189,10 +189,10 @@ FT_BEGIN_HEADER
 
   /**************************************************************************
    *
-   * @Struct:
+   * @struct:
    *   T1_Private
    *
-   * @Description:
+   * @description:
    *  This type is equivalent to @PS_PrivateRec.  It is deprecated but
    *  kept to maintain source compatibility between various versions of
    *  FreeType.
@@ -202,15 +202,15 @@ FT_BEGIN_HEADER
 
   /**************************************************************************
    *
-   * @Enum:
+   * @enum:
    *   T1_Blend_Flags
    *
-   * @Description:
+   * @description:
    *   A set of flags used to indicate which fields are present in a
    *   given blend dictionary (font info or private).  Used to support
    *   Multiple Masters fonts.
    *
-   * @Values:
+   * @values:
    *   T1_BLEND_UNDERLINE_POSITION ::
    *   T1_BLEND_UNDERLINE_THICKNESS ::
    *   T1_BLEND_ITALIC_ANGLE ::
@@ -332,10 +332,10 @@ FT_BEGIN_HEADER
 
   /**************************************************************************
    *
-   * @Struct:
+   * @struct:
    *   CID_FaceDictRec
    *
-   * @Description:
+   * @description:
    *   A structure used to represent data in a CID top-level dictionary.
    */
   typedef struct  CID_FaceDictRec_
@@ -361,10 +361,10 @@ FT_BEGIN_HEADER
 
   /**************************************************************************
    *
-   * @Struct:
+   * @struct:
    *   CID_FaceDict
    *
-   * @Description:
+   * @description:
    *   A handle to a @CID_FaceDictRec structure.
    */
   typedef struct CID_FaceDictRec_*  CID_FaceDict;
@@ -372,10 +372,10 @@ FT_BEGIN_HEADER
 
   /**************************************************************************
    *
-   * @Struct:
+   * @struct:
    *   CID_FontDict
    *
-   * @Description:
+   * @description:
    *   This type is equivalent to @CID_FaceDictRec.  It is deprecated but
    *   kept to maintain source compatibility between various versions of
    *   FreeType.
@@ -385,10 +385,10 @@ FT_BEGIN_HEADER
 
   /**************************************************************************
    *
-   * @Struct:
+   * @struct:
    *   CID_FaceInfoRec
    *
-   * @Description:
+   * @description:
    *   A structure used to represent CID Face information.
    */
   typedef struct  CID_FaceInfoRec_
@@ -423,10 +423,10 @@ FT_BEGIN_HEADER
 
   /**************************************************************************
    *
-   * @Struct:
+   * @struct:
    *   CID_FaceInfo
    *
-   * @Description:
+   * @description:
    *   A handle to a @CID_FaceInfoRec structure.
    */
   typedef struct CID_FaceInfoRec_*  CID_FaceInfo;
@@ -434,10 +434,10 @@ FT_BEGIN_HEADER
 
   /**************************************************************************
    *
-   * @Struct:
+   * @struct:
    *   CID_Info
    *
-   * @Description:
+   * @description:
    *  This type is equivalent to @CID_FaceInfoRec.  It is deprecated but
    *  kept to maintain source compatibility between various versions of
    *  FreeType.
@@ -540,21 +540,21 @@ FT_BEGIN_HEADER
 
   /**************************************************************************
    *
-   * @Enum:
+   * @enum:
    *   T1_EncodingType
    *
-   * @Description:
+   * @description:
    *   An enumeration describing the `Encoding' entry in a Type 1
    *   dictionary.
    *
-   * @Values:
+   * @values:
    *   T1_ENCODING_TYPE_NONE ::
    *   T1_ENCODING_TYPE_ARRAY ::
    *   T1_ENCODING_TYPE_STANDARD ::
    *   T1_ENCODING_TYPE_ISOLATIN1 ::
    *   T1_ENCODING_TYPE_EXPERT ::
    *
-   * @Since:
+   * @since:
    *   2.4.8
    */
   typedef enum  T1_EncodingType_
@@ -570,14 +570,14 @@ FT_BEGIN_HEADER
 
   /**************************************************************************
    *
-   * @Enum:
+   * @enum:
    *   PS_Dict_Keys
    *
-   * @Description:
+   * @description:
    *   An enumeration used in calls to @FT_Get_PS_Font_Value to identify
    *   the Type~1 dictionary entry to retrieve.
    *
-   * @Values:
+   * @values:
    *   PS_DICT_FONT_TYPE ::
    *   PS_DICT_FONT_MATRIX ::
    *   PS_DICT_FONT_BBOX ::
@@ -625,7 +625,7 @@ FT_BEGIN_HEADER
    *   PS_DICT_FS_TYPE ::
    *   PS_DICT_ITALIC_ANGLE ::
    *
-   * @Since:
+   * @since:
    *   2.4.8
    */
   typedef enum  PS_Dict_Keys_

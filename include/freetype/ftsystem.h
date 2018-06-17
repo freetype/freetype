@@ -28,16 +28,16 @@ FT_BEGIN_HEADER
 
   /**************************************************************************
    *
-   * @Section:
+   * @section:
    *  system_interface
    *
-   * @Title:
+   * @title:
    *  System Interface
    *
-   * @Abstract:
+   * @abstract:
    *  How FreeType manages memory and i/o.
    *
-   * @Description:
+   * @description:
    *  This section contains various definitions related to memory
    *  management and i/o access.  You need to understand this
    *  information if you want to use a custom memory manager or you own

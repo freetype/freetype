@@ -34,16 +34,16 @@ FT_BEGIN_HEADER
 
   /**************************************************************************
    *
-   * @Section:
+   * @section:
    *  font_formats
    *
-   * @Title:
+   * @title:
    *  Font Formats
    *
-   * @Abstract:
+   * @abstract:
    *  Getting the font format.
    *
-   * @Description:
+   * @description:
    *  The single function in this section can be used to get the font
    *  format.  Note that this information is not needed normally;
    *  however, there are special cases (like in PDF devices) where it is
@@ -54,24 +54,24 @@ FT_BEGIN_HEADER
 
   /**************************************************************************
    *
-   * @Function:
+   * @function:
    *  FT_Get_Font_Format
    *
-   * @Description:
+   * @description:
    *  Return a string describing the format of a given face.  Possible
    *  values are `TrueType', `Type~1', `BDF', `PCF', `Type~42',
    *  `CID~Type~1', `CFF', `PFR', and `Windows~FNT'.
    *
    *  The return value is suitable to be used as an X11 FONT_PROPERTY.
    *
-   * @Input:
+   * @input:
    *  face ::
    *    Input face handle.
    *
-   * @Return:
+   * @return:
    *  Font format string.  NULL in case of error.
    *
-   * @Note:
+   * @note:
    *  A deprecated name for the same function is
    *  `FT_Get_X11_Font_Format'.
    */

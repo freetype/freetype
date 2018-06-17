@@ -34,15 +34,15 @@ FT_BEGIN_HEADER
 
   /**************************************************************************
    *
-   * @Struct:
+   * @struct:
    *   TT_CMapInfo
    *
-   * @Description:
+   * @description:
    *   A structure used to store TrueType/sfnt specific cmap information
    *   which is not covered by the generic @FT_CharMap structure.  This
    *   structure can be accessed with the @FT_Get_TT_CMap_Info function.
    *
-   * @Fields:
+   * @fields:
    *   language ::
    *     The language ID used in Mac fonts.  Definitions of values are in
    *     `ttnameid.h'.

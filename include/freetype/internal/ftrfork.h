@@ -94,17 +94,17 @@ FT_BEGIN_HEADER
 
   /**************************************************************************
    *
-   * @Function:
+   * @function:
    *   FT_Raccess_Guess
    *
-   * @Description:
+   * @description:
    *   Guess a file name and offset where the actual resource fork is
    *   stored.  The macro FT_RACCESS_N_RULES holds the number of
    *   guessing rules;  the guessed result for the Nth rule is
    *   represented as a triplet: a new file name (new_names[N]), a file
    *   offset (offsets[N]), and an error code (errors[N]).
    *
-   * @Input:
+   * @input:
    *   library ::
    *     A FreeType library instance.
    *
@@ -115,7 +115,7 @@ FT_BEGIN_HEADER
    *     The (base) file name of the resource fork used for some
    *     guessing rules.
    *
-   * @Output:
+   * @output:
    *   new_names ::
    *     An array of guessed file names in which the resource forks may
    *     exist.  If `new_names[N]' is NULL, the guessed file name is
@@ -142,16 +142,16 @@ FT_BEGIN_HEADER
 
   /**************************************************************************
    *
-   * @Function:
+   * @function:
    *   FT_Raccess_Get_HeaderInfo
    *
-   * @Description:
+   * @description:
    *   Get the information from the header of resource fork.  The
    *   information includes the file offset where the resource map
    *   starts, and the file offset where the resource data starts.
    *   `FT_Raccess_Get_DataOffsets' requires these two data.
    *
-   * @Input:
+   * @input:
    *   library ::
    *     A FreeType library instance.
    *
@@ -161,14 +161,14 @@ FT_BEGIN_HEADER
    *   rfork_offset ::
    *     The file offset where the resource fork starts.
    *
-   * @Output:
+   * @output:
    *   map_offset ::
    *     The file offset where the resource map starts.
    *
    *   rdata_pos ::
    *     The file offset where the resource data starts.
    *
-   * @Return:
+   * @return:
    *   FreeType error code.  FT_Err_Ok means success.
    */
   FT_BASE( FT_Error )
@@ -181,15 +181,15 @@ FT_BEGIN_HEADER
 
   /**************************************************************************
    *
-   * @Function:
+   * @function:
    *   FT_Raccess_Get_DataOffsets
    *
-   * @Description:
+   * @description:
    *   Get the data offsets for a tag in a resource fork.  Offsets are
    *   stored in an array because, in some cases, resources in a resource
    *   fork have the same tag.
    *
-   * @Input:
+   * @input:
    *   library ::
    *     A FreeType library instance.
    *
@@ -212,7 +212,7 @@ FT_BEGIN_HEADER
    *     may induce a different order of the faces in comparison to that
    *     by QuickDraw API.
    *
-   * @Output:
+   * @output:
    *   offsets ::
    *     The stream offsets for the resource data specified by `tag'.
    *     This array is allocated by the function, so you have to call
@@ -221,10 +221,10 @@ FT_BEGIN_HEADER
    *   count ::
    *     The length of offsets array.
    *
-   * @Return:
+   * @return:
    *   FreeType error code.  FT_Err_Ok means success.
    *
-   * @Note:
+   * @note:
    *   Normally you should use `FT_Raccess_Get_HeaderInfo' to get the
    *   value for `map_offset' and `rdata_pos'.
    */

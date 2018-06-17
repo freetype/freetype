@@ -66,13 +66,13 @@ FT_BEGIN_HEADER
 
   /**************************************************************************
    *
-   * @Struct:
+   * @struct:
    *   PS_Table_FuncsRec
    *
-   * @Description:
+   * @description:
    *   A set of function pointers to manage PS_Table objects.
    *
-   * @Fields:
+   * @fields:
    *   table_init ::
    *     Used to initialize a table.
    *
@@ -109,14 +109,14 @@ FT_BEGIN_HEADER
 
   /**************************************************************************
    *
-   * @Struct:
+   * @struct:
    *   PS_TableRec
    *
-   * @Description:
+   * @description:
    *   A PS_Table is a simple object used to store an array of objects in
    *   a single memory block.
    *
-   * @Fields:
+   * @fields:
    *   block ::
    *     The address in memory of the growheap's block.  This
    *     can change between two object adds, due to
@@ -441,13 +441,13 @@ FT_BEGIN_HEADER
 
   /**************************************************************************
    *
-   * @Struct:
+   * @struct:
    *   PS_ParserRec
    *
-   * @Description:
+   * @description:
    *   A PS_Parser is an object used to parse a Type 1 font very quickly.
    *
-   * @Fields:
+   * @fields:
    *   cursor ::
    *     The current position in the text.
    *
@@ -506,13 +506,13 @@ FT_BEGIN_HEADER
 
   /**************************************************************************
    *
-   * @Struct:
+   * @struct:
    *   PS_Builder
    *
-   * @Description:
+   * @description:
    *    A structure used during glyph loading to store its outline.
    *
-   * @Fields:
+   * @fields:
    *   memory ::
    *     The current memory object.
    *
@@ -768,13 +768,13 @@ FT_BEGIN_HEADER
 
   /**************************************************************************
    *
-   * @Struct:
+   * @struct:
    *   T1_BuilderRec
    *
-   * @Description:
+   * @description:
    *    A structure used during glyph loading to store its outline.
    *
-   * @Fields:
+   * @fields:
    *   memory ::
    *     The current memory object.
    *
@@ -1050,13 +1050,13 @@ FT_BEGIN_HEADER
 
   /**************************************************************************
    *
-   * @Struct:
+   * @struct:
    *   CFF_Builder
    *
-   * @Description:
+   * @description:
    *    A structure used during glyph loading to store its outline.
    *
-   * @Fields:
+   * @fields:
    *   memory ::
    *     The current memory object.
    *
@@ -1286,13 +1286,13 @@ FT_BEGIN_HEADER
 
   /**************************************************************************
    *
-   * @Struct:
+   * @struct:
    *   AFM_ParserRec
    *
-   * @Description:
+   * @description:
    *   An AFM_Parser is a parser for the AFM files.
    *
-   * @Fields:
+   * @fields:
    *   memory ::
    *     The object used for memory operations (alloc and
    *     realloc).

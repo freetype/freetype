@@ -248,10 +248,10 @@ FT_BEGIN_HEADER
 
   /**************************************************************************
    *
-   * @Function:
+   * @function:
    *   FT_MulDiv_No_Round
    *
-   * @Description:
+   * @description:
    *   A very simple function used to perform the computation `(a*b)/c'
    *   (without rounding) with maximum accuracy (it uses a 64-bit
    *   intermediate integer whenever necessary).
@@ -259,7 +259,7 @@ FT_BEGIN_HEADER
    *   This function isn't necessarily as fast as some processor specific
    *   operations, but is at least completely portable.
    *
-   * @Input:
+   * @input:
    *   a ::
    *     The first multiplier.
    *   b ::
@@ -267,7 +267,7 @@ FT_BEGIN_HEADER
    *   c ::
    *     The divisor.
    *
-   * @Return:
+   * @return:
    *   The result of `(a*b)/c'.  This function never traps when trying to
    *   divide by zero; it simply returns `MaxInt' or `MinInt' depending
    *   on the signs of `a' and `b'.
@@ -407,20 +407,20 @@ FT_BEGIN_HEADER
 
   /**************************************************************************
    *
-   * @Function:
+   * @function:
    *   FT_SqrtFixed
    *
-   * @Description:
+   * @description:
    *   Computes the square root of a 16.16 fixed-point value.
    *
-   * @Input:
+   * @input:
    *   x ::
    *     The value to compute the root for.
    *
-   * @Return:
+   * @return:
    *   The result of `sqrt(x)'.
    *
-   * @Note:
+   * @note:
    *   This function is not very fast.
    */
   FT_BASE( FT_Int32 )

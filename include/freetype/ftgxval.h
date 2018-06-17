@@ -43,21 +43,21 @@ FT_BEGIN_HEADER
 
   /**************************************************************************
    *
-   * @Section:
+   * @section:
    *   gx_validation
    *
-   * @Title:
+   * @title:
    *   TrueTypeGX/AAT Validation
    *
-   * @Abstract:
+   * @abstract:
    *   An API to validate TrueTypeGX/AAT tables.
    *
-   * @Description:
+   * @description:
    *   This section contains the declaration of functions to validate
    *   some TrueTypeGX tables (feat, mort, morx, bsln, just, kern, opbd,
    *   trak, prop, lcar).
    *
-   * @Order:
+   * @order:
    *   FT_TrueTypeGX_Validate
    *   FT_TrueTypeGX_Free
    *

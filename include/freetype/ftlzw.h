@@ -33,16 +33,16 @@ FT_BEGIN_HEADER
 
   /**************************************************************************
    *
-   * @Section:
+   * @section:
    *   lzw
    *
-   * @Title:
+   * @title:
    *   LZW Streams
    *
-   * @Abstract:
+   * @abstract:
    *   Using LZW-compressed font files.
    *
-   * @Description:
+   * @description:
    *   This section contains the declaration of LZW-specific functions.
    *
    */

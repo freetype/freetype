@@ -135,7 +135,7 @@ FT_BEGIN_HEADER
    *     NULL if the font's `CPAL' table doesn't contain appropriate data.
    *
    *   palette_types ::
-   *     A read-only array of palette types with `num_palettes' elements. 
+   *     A read-only array of palette types with `num_palettes' elements.
    *     Possible values are an ORed combination of
    *     @FT_PALETTE_USABLE_WITH_LIGHT_BACKGROUND and
    *     @FT_PALETTE_USABLE_WITH_DARK_BACKGROUND.

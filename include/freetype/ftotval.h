@@ -45,20 +45,20 @@ FT_BEGIN_HEADER
 
   /**************************************************************************
    *
-   * @Section:
+   * @section:
    *   ot_validation
    *
-   * @Title:
+   * @title:
    *   OpenType Validation
    *
-   * @Abstract:
+   * @abstract:
    *   An API to validate OpenType tables.
    *
-   * @Description:
+   * @description:
    *   This section contains the declaration of functions to validate
    *   some OpenType tables (BASE, GDEF, GPOS, GSUB, JSTF, MATH).
    *
-   * @Order:
+   * @order:
    *   FT_OpenType_Validate
    *   FT_OpenType_Free
    *

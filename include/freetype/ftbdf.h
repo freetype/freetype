@@ -34,16 +34,16 @@ FT_BEGIN_HEADER
 
   /**************************************************************************
    *
-   * @Section:
+   * @section:
    *   bdf_fonts
    *
-   * @Title:
+   * @title:
    *   BDF and PCF Files
    *
-   * @Abstract:
+   * @abstract:
    *   BDF and PCF specific API.
    *
-   * @Description:
+   * @description:
    *   This section contains the declaration of functions specific to BDF
    *   and PCF fonts.
    *

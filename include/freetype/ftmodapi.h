@@ -35,16 +35,16 @@ FT_BEGIN_HEADER
 
   /**************************************************************************
    *
-   * @Section:
+   * @section:
    *   module_management
    *
-   * @Title:
+   * @title:
    *   Module Management
    *
-   * @Abstract:
+   * @abstract:
    *   How to add, upgrade, remove, and control modules from FreeType.
    *
-   * @Description:
+   * @description:
    *   The definitions below are used to manage modules within FreeType.
    *   Modules can be added, upgraded, and removed at runtime.
    *   Additionally, some module properties can be controlled also.
@@ -75,7 +75,7 @@ FT_BEGIN_HEADER
    *
    *   Note that the FreeType Cache sub-system is not a FreeType module.
    *
-   * @Order:
+   * @order:
    *   FT_Module
    *   FT_Module_Constructor
    *   FT_Module_Destructor
@@ -139,13 +139,13 @@ FT_BEGIN_HEADER
 
   /**************************************************************************
    *
-   * @FuncType:
+   * @functype:
    *   FT_Module_Constructor
    *
-   * @Description:
+   * @description:
    *   A function used to initialize (not create) a new module object.
    *
-   * @Input:
+   * @input:
    *   module ::
    *     The module to initialize.
    */
@@ -155,13 +155,13 @@ FT_BEGIN_HEADER
 
   /**************************************************************************
    *
-   * @FuncType:
+   * @functype:
    *   FT_Module_Destructor
    *
-   * @Description:
+   * @description:
    *   A function used to finalize (not destroy) a given module object.
    *
-   * @Input:
+   * @input:
    *   module ::
    *     The module to finalize.
    */
@@ -171,13 +171,13 @@ FT_BEGIN_HEADER
 
   /**************************************************************************
    *
-   * @FuncType:
+   * @functype:
    *   FT_Module_Requester
    *
-   * @Description:
+   * @description:
    *   A function used to query a given module for a specific interface.
    *
-   * @Input:
+   * @input:
    *   module ::
    *     The module to be searched.
    *
@@ -191,13 +191,13 @@ FT_BEGIN_HEADER
 
   /**************************************************************************
    *
-   * @Struct:
+   * @struct:
    *   FT_Module_Class
    *
-   * @Description:
+   * @description:
    *   The module class descriptor.
    *
-   * @Fields:
+   * @fields:
    *   module_flags ::
    *     Bit flags describing the module.
    *
@@ -245,24 +245,24 @@ FT_BEGIN_HEADER
 
   /**************************************************************************
    *
-   * @Function:
+   * @function:
    *   FT_Add_Module
    *
-   * @Description:
+   * @description:
    *   Add a new module to a given library instance.
    *
-   * @InOut:
+   * @inout:
    *   library ::
    *     A handle to the library object.
    *
-   * @Input:
+   * @input:
    *   clazz ::
    *     A pointer to class descriptor for the module.
    *
-   * @Return:
+   * @return:
    *   FreeType error code.  0~means success.
    *
-   * @Note:
+   * @note:
    *   An error will be returned if a module already exists by that name,
    *   or if the module requires a version of FreeType that is too great.
    */
@@ -273,23 +273,23 @@ FT_BEGIN_HEADER
 
   /**************************************************************************
    *
-   * @Function:
+   * @function:
    *   FT_Get_Module
    *
-   * @Description:
+   * @description:
    *   Find a module by its name.
    *
-   * @Input:
+   * @input:
    *   library ::
    *     A handle to the library object.
    *
    *   module_name ::
    *     The module's name (as an ASCII string).
    *
-   * @Return:
+   * @return:
    *   A module handle.  0~if none was found.
    *
-   * @Note:
+   * @note:
    *   FreeType's internal modules aren't documented very well, and you
    *   should look up the source code for details.
    */
@@ -300,24 +300,24 @@ FT_BEGIN_HEADER
 
   /**************************************************************************
    *
-   * @Function:
+   * @function:
    *   FT_Remove_Module
    *
-   * @Description:
+   * @description:
    *   Remove a given module from a library instance.
    *
-   * @InOut:
+   * @inout:
    *   library ::
    *     A handle to a library object.
    *
-   * @Input:
+   * @input:
    *   module ::
    *     A handle to a module object.
    *
-   * @Return:
+   * @return:
    *   FreeType error code.  0~means success.
    *
-   * @Note:
+   * @note:
    *   The module object is destroyed by the function in case of success.
    */
   FT_EXPORT( FT_Error )
@@ -456,10 +456,10 @@ FT_BEGIN_HEADER
 
   /**************************************************************************
    *
-   * @Function:
+   * @function:
    *   FT_Set_Default_Properties
    *
-   * @Description:
+   * @description:
    *   If compilation option FT_CONFIG_OPTION_ENVIRONMENT_PROPERTIES is
    *   set, this function reads the `FREETYPE_PROPERTIES' environment
    *   variable to control driver properties.  See section @properties
@@ -488,11 +488,11 @@ FT_BEGIN_HEADER
    *                         autofitter:warping=1
    *   }
    *
-   * @InOut:
+   * @inout:
    *   library ::
    *     A handle to a new library object.
    *
-   * @Since:
+   * @since:
    *   2.8
    */
   FT_EXPORT( void )
@@ -501,10 +501,10 @@ FT_BEGIN_HEADER
 
   /**************************************************************************
    *
-   * @Function:
+   * @function:
    *   FT_Reference_Library
    *
-   * @Description:
+   * @description:
    *   A counter gets initialized to~1 at the time an @FT_Library
    *   structure is created.  This function increments the counter.
    *   @FT_Done_Library then only destroys a library if the counter is~1,
@@ -513,14 +513,14 @@ FT_BEGIN_HEADER
    *   This function helps in managing life-cycles of structures that
    *   reference @FT_Library objects.
    *
-   * @Input:
+   * @input:
    *   library ::
    *     A handle to a target library object.
    *
-   * @Return:
+   * @return:
    *   FreeType error code.  0~means success.
    *
-   * @Since:
+   * @since:
    *   2.4.2
    */
   FT_EXPORT( FT_Error )
@@ -529,10 +529,10 @@ FT_BEGIN_HEADER
 
   /**************************************************************************
    *
-   * @Function:
+   * @function:
    *   FT_New_Library
    *
-   * @Description:
+   * @description:
    *   This function is used to create a new FreeType library instance
    *   from a given memory object.  It is thus possible to use libraries
    *   with distinct memory allocators within the same program.  Note,
@@ -547,18 +547,18 @@ FT_BEGIN_HEADER
    *   Don't use @FT_Done_FreeType but @FT_Done_Library to destroy a
    *   library instance.
    *
-   * @Input:
+   * @input:
    *   memory ::
    *     A handle to the original memory object.
    *
-   * @Output:
+   * @output:
    *   alibrary ::
    *     A pointer to handle of a new library object.
    *
-   * @Return:
+   * @return:
    *   FreeType error code.  0~means success.
    *
-   * @Note:
+   * @note:
    *   See the discussion of reference counters in the description of
    *   @FT_Reference_Library.
    */
@@ -569,21 +569,21 @@ FT_BEGIN_HEADER
 
   /**************************************************************************
    *
-   * @Function:
+   * @function:
    *   FT_Done_Library
    *
-   * @Description:
+   * @description:
    *   Discard a given library object.  This closes all drivers and
    *   discards all resource objects.
    *
-   * @Input:
+   * @input:
    *   library ::
    *     A handle to the target library.
    *
-   * @Return:
+   * @return:
    *   FreeType error code.  0~means success.
    *
-   * @Note:
+   * @note:
    *   See the discussion of reference counters in the description of
    *   @FT_Reference_Library.
    */
@@ -598,18 +598,18 @@ FT_BEGIN_HEADER
 
   /**************************************************************************
    *
-   * @Function:
+   * @function:
    *   FT_Set_Debug_Hook
    *
-   * @Description:
+   * @description:
    *   Set a debug hook function for debugging the interpreter of a font
    *   format.
    *
-   * @InOut:
+   * @inout:
    *   library ::
    *     A handle to the library object.
    *
-   * @Input:
+   * @input:
    *   hook_index ::
    *     The index of the debug hook.  You should use the
    *     values defined in `ftobjs.h', e.g.,
@@ -618,7 +618,7 @@ FT_BEGIN_HEADER
    *   debug_hook ::
    *     The function used to debug the interpreter.
    *
-   * @Note:
+   * @note:
    *   Currently, four debug hook slots are available, but only two (for
    *   the TrueType and the Type~1 interpreter) are defined.
    *
@@ -634,15 +634,15 @@ FT_BEGIN_HEADER
 
   /**************************************************************************
    *
-   * @Function:
+   * @function:
    *   FT_Add_Default_Modules
    *
-   * @Description:
+   * @description:
    *   Add the set of default drivers to a given library object.
    *   This is only useful when you create a library object with
    *   @FT_New_Library (usually to plug a custom memory manager).
    *
-   * @InOut:
+   * @inout:
    *   library ::
    *     A handle to a new library object.
    */

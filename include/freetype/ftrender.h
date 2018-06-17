@@ -30,7 +30,7 @@ FT_BEGIN_HEADER
 
   /**************************************************************************
    *
-   * @Section:
+   * @section:
    *   module_management
    *
    */
@@ -118,13 +118,13 @@ FT_BEGIN_HEADER
 
   /**************************************************************************
    *
-   * @Struct:
+   * @struct:
    *   FT_Renderer_Class
    *
-   * @Description:
+   * @description:
    *   The renderer module class descriptor.
    *
-   * @Fields:
+   * @fields:
    *   root ::
    *     The root @FT_Module_Class fields.
    *
@@ -167,23 +167,23 @@ FT_BEGIN_HEADER
 
   /**************************************************************************
    *
-   * @Function:
+   * @function:
    *   FT_Get_Renderer
    *
-   * @Description:
+   * @description:
    *   Retrieve the current renderer for a given glyph format.
    *
-   * @Input:
+   * @input:
    *   library ::
    *     A handle to the library object.
    *
    *   format ::
    *     The glyph format.
    *
-   * @Return:
+   * @return:
    *   A renderer handle.  0~if none found.
    *
-   * @Note:
+   * @note:
    *   An error will be returned if a module already exists by that name,
    *   or if the module requires a version of FreeType that is too great.
    *
@@ -197,17 +197,17 @@ FT_BEGIN_HEADER
 
   /**************************************************************************
    *
-   * @Function:
+   * @function:
    *   FT_Set_Renderer
    *
-   * @Description:
+   * @description:
    *   Set the current renderer to use, and set additional mode.
    *
-   * @InOut:
+   * @inout:
    *   library ::
    *     A handle to the library object.
    *
-   * @Input:
+   * @input:
    *   renderer ::
    *     A handle to the renderer object.
    *
@@ -217,10 +217,10 @@ FT_BEGIN_HEADER
    *   parameters ::
    *     Additional parameters.
    *
-   * @Return:
+   * @return:
    *   FreeType error code.  0~means success.
    *
-   * @Note:
+   * @note:
    *   In case of success, the renderer will be used to convert glyph
    *   images in the renderer's known format into bitmaps.
    *

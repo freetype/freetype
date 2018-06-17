@@ -18,16 +18,16 @@
 
   /**************************************************************************
    *
-   * @Section:
+   * @section:
    *  error_code_values
    *
-   * @Title:
+   * @title:
    *  Error Code Values
    *
-   * @Abstract:
+   * @abstract:
    *  All possible error codes returned by FreeType functions.
    *
-   * @Description:
+   * @description:
    *  The list below is taken verbatim from the file `fterrdef.h'
    *  (loaded automatically by including `FT_FREETYPE_H').  The first
    *  argument of the `FT_ERROR_DEF_' macro is the error label; by
@@ -49,7 +49,7 @@
 
   /**************************************************************************
    *
-   * @Enum:
+   * @enum:
    *   FT_Err_XXX
    *
    */

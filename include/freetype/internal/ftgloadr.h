@@ -29,10 +29,10 @@ FT_BEGIN_HEADER
 
   /**************************************************************************
    *
-   * @Struct:
+   * @struct:
    *   FT_GlyphLoader
    *
-   * @Description:
+   * @description:
    *   The glyph loader is an internal object used to load several glyphs
    *   together (for example, in the case of composites).
    */
