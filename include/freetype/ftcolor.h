@@ -180,7 +180,7 @@ FT_BEGIN_HEADER
 
   /**************************************************************************
    *
-   * @func:
+   * @function:
    *   FT_Palette_Data_Get
    *
    * @description:
@@ -213,7 +213,7 @@ FT_BEGIN_HEADER
 
   /**************************************************************************
    *
-   * @func:
+   * @function:
    *   FT_Palette_Select
    *
    * @description:
@@ -269,7 +269,7 @@ FT_BEGIN_HEADER
 
   /**************************************************************************
    *
-   * @func:
+   * @function:
    *   FT_Palette_Set_Foreground_Color
    *
    * @description:

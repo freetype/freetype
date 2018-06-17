@@ -173,7 +173,7 @@ FT_BEGIN_HEADER
 
   /**************************************************************************
    *
-   * @func:
+   * @function:
    *   FT_Library_SetLcdFilter
    *
    * @description:
@@ -216,7 +216,7 @@ FT_BEGIN_HEADER
 
   /**************************************************************************
    *
-   * @func:
+   * @function:
    *   FT_Library_SetLcdFilterWeights
    *
    * @description:
@@ -272,7 +272,7 @@ FT_BEGIN_HEADER
 
   /**************************************************************************
    *
-   * @func:
+   * @function:
    *   FT_Library_SetLcdGeometry
    *
    * @description:

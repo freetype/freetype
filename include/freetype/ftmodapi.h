@@ -380,8 +380,8 @@ FT_BEGIN_HEADER
    *    sub-system itself with FT_Property_Set; use @FTC_Property_Set
    *    instead.
    *
-   *  @since:
-   *    2.4.11
+   * @since:
+   *   2.4.11
    *
    */
   FT_EXPORT( FT_Error )
@@ -443,8 +443,8 @@ FT_BEGIN_HEADER
    *    It is not possible to retrieve properties of the FreeType Cache
    *    sub-system with FT_Property_Get; use @FTC_Property_Get instead.
    *
-   *  @since:
-   *    2.4.11
+   * @since:
+   *   2.4.11
    *
    */
   FT_EXPORT( FT_Error )
@@ -671,28 +671,28 @@ FT_BEGIN_HEADER
 
   /**************************************************************************
    *
-   *  @enum:
-   *     FT_TrueTypeEngineType
+   * @enum:
+   *    FT_TrueTypeEngineType
    *
-   *  @description:
-   *     A list of values describing which kind of TrueType bytecode
-   *     engine is implemented in a given FT_Library instance.  It is used
-   *     by the @FT_Get_TrueType_Engine_Type function.
+   * @description:
+   *    A list of values describing which kind of TrueType bytecode
+   *    engine is implemented in a given FT_Library instance.  It is used
+   *    by the @FT_Get_TrueType_Engine_Type function.
    *
-   *  @values:
-   *     FT_TRUETYPE_ENGINE_TYPE_NONE ::
-   *       The library doesn't implement any kind of bytecode interpreter.
+   * @values:
+   *    FT_TRUETYPE_ENGINE_TYPE_NONE ::
+   *      The library doesn't implement any kind of bytecode interpreter.
    *
-   *     FT_TRUETYPE_ENGINE_TYPE_UNPATENTED ::
-   *       Deprecated and removed.
+   *    FT_TRUETYPE_ENGINE_TYPE_UNPATENTED ::
+   *      Deprecated and removed.
    *
-   *     FT_TRUETYPE_ENGINE_TYPE_PATENTED ::
-   *       The library implements a bytecode interpreter that covers
-   *       the full instruction set of the TrueType virtual machine (this
-   *       was governed by patents until May 2010, hence the name).
+   *    FT_TRUETYPE_ENGINE_TYPE_PATENTED ::
+   *      The library implements a bytecode interpreter that covers
+   *      the full instruction set of the TrueType virtual machine (this
+   *      was governed by patents until May 2010, hence the name).
    *
-   *  @since:
-   *     2.2
+   * @since:
+   *    2.2
    *
    */
   typedef enum  FT_TrueTypeEngineType_
@@ -706,22 +706,22 @@ FT_BEGIN_HEADER
 
   /**************************************************************************
    *
-   *  @func:
-   *     FT_Get_TrueType_Engine_Type
+   * @function:
+   *    FT_Get_TrueType_Engine_Type
    *
-   *  @description:
-   *     Return an @FT_TrueTypeEngineType value to indicate which level of
-   *     the TrueType virtual machine a given library instance supports.
+   * @description:
+   *    Return an @FT_TrueTypeEngineType value to indicate which level of
+   *    the TrueType virtual machine a given library instance supports.
    *
-   *  @input:
-   *     library ::
-   *       A library instance.
+   * @input:
+   *    library ::
+   *      A library instance.
    *
-   *  @return:
-   *     A value indicating which level is supported.
+   * @return:
+   *    A value indicating which level is supported.
    *
-   *  @since:
-   *     2.2
+   * @since:
+   *    2.2
    *
    */
   FT_EXPORT( FT_TrueTypeEngineType )

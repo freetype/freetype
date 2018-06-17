@@ -92,7 +92,7 @@ FT_BEGIN_HEADER
    * @Return:
    *   FreeType error code.  0~means success.
    *
-   * @Notes:
+   * @Note:
    *   This function can be used to create @FT_Face objects from fonts
    *   that are installed in the system as follows.
    *

@@ -792,22 +792,22 @@ FT_BEGIN_HEADER
    *   The root font driver class.  A font driver is responsible for
    *   managing and loading font files of a given format.
    *
-   *  @Fields:
-   *    root ::
-   *      Contains the fields of the root module class.
+   * @Fields:
+   *   root ::
+   *     Contains the fields of the root module class.
    *
-   *    clazz ::
-   *      A pointer to the font driver's class.  Note that
-   *      this is NOT root.clazz.  `class' wasn't used
-   *      as it is a reserved word in C++.
+   *   clazz ::
+   *     A pointer to the font driver's class.  Note that
+   *     this is NOT root.clazz.  `class' wasn't used
+   *     as it is a reserved word in C++.
    *
-   *    faces_list ::
-   *      The list of faces currently opened by this
-   *      driver.
+   *   faces_list ::
+   *     The list of faces currently opened by this
+   *     driver.
    *
-   *    glyph_loader ::
-   *      Unused.  Used to be glyph loader for all faces
-   *      managed by this driver.
+   *   glyph_loader ::
+   *     Unused.  Used to be glyph loader for all faces
+   *     managed by this driver.
    */
   typedef struct  FT_DriverRec_
   {

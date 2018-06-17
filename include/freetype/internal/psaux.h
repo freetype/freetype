@@ -506,7 +506,7 @@ FT_BEGIN_HEADER
 
   /**************************************************************************
    *
-   * @Structure:
+   * @Struct:
    *   PS_Builder
    *
    * @Description:
@@ -768,7 +768,7 @@ FT_BEGIN_HEADER
 
   /**************************************************************************
    *
-   * @Structure:
+   * @Struct:
    *   T1_BuilderRec
    *
    * @Description:
@@ -1050,7 +1050,7 @@ FT_BEGIN_HEADER
 
   /**************************************************************************
    *
-   * @Structure:
+   * @Struct:
    *   CFF_Builder
    *
    * @Description:

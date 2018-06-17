@@ -521,41 +521,41 @@ FT_BEGIN_HEADER
                      FT_Raster_Params*  params );
 
 
- /**************************************************************************
-  *
-  * @enum:
-  *   FT_Orientation
-  *
-  * @description:
-  *   A list of values used to describe an outline's contour orientation.
-  *
-  *   The TrueType and PostScript specifications use different conventions
-  *   to determine whether outline contours should be filled or unfilled.
-  *
-  * @values:
-  *   FT_ORIENTATION_TRUETYPE ::
-  *     According to the TrueType specification, clockwise contours must
-  *     be filled, and counter-clockwise ones must be unfilled.
-  *
-  *   FT_ORIENTATION_POSTSCRIPT ::
-  *     According to the PostScript specification, counter-clockwise contours
-  *     must be filled, and clockwise ones must be unfilled.
-  *
-  *   FT_ORIENTATION_FILL_RIGHT ::
-  *     This is identical to @FT_ORIENTATION_TRUETYPE, but is used to
-  *     remember that in TrueType, everything that is to the right of
-  *     the drawing direction of a contour must be filled.
-  *
-  *   FT_ORIENTATION_FILL_LEFT ::
-  *     This is identical to @FT_ORIENTATION_POSTSCRIPT, but is used to
-  *     remember that in PostScript, everything that is to the left of
-  *     the drawing direction of a contour must be filled.
-  *
-  *   FT_ORIENTATION_NONE ::
-  *     The orientation cannot be determined.  That is, different parts of
-  *     the glyph have different orientation.
-  *
-  */
+  /**************************************************************************
+   *
+   * @enum:
+   *   FT_Orientation
+   *
+   * @description:
+   *   A list of values used to describe an outline's contour orientation.
+   *
+   *   The TrueType and PostScript specifications use different conventions
+   *   to determine whether outline contours should be filled or unfilled.
+   *
+   * @values:
+   *   FT_ORIENTATION_TRUETYPE ::
+   *     According to the TrueType specification, clockwise contours must
+   *     be filled, and counter-clockwise ones must be unfilled.
+   *
+   *   FT_ORIENTATION_POSTSCRIPT ::
+   *     According to the PostScript specification, counter-clockwise contours
+   *     must be filled, and clockwise ones must be unfilled.
+   *
+   *   FT_ORIENTATION_FILL_RIGHT ::
+   *     This is identical to @FT_ORIENTATION_TRUETYPE, but is used to
+   *     remember that in TrueType, everything that is to the right of
+   *     the drawing direction of a contour must be filled.
+   *
+   *   FT_ORIENTATION_FILL_LEFT ::
+   *     This is identical to @FT_ORIENTATION_POSTSCRIPT, but is used to
+   *     remember that in PostScript, everything that is to the left of
+   *     the drawing direction of a contour must be filled.
+   *
+   *   FT_ORIENTATION_NONE ::
+   *     The orientation cannot be determined.  That is, different parts of
+   *     the glyph have different orientation.
+   *
+   */
   typedef enum  FT_Orientation_
   {
     FT_ORIENTATION_TRUETYPE   = 0,
@@ -567,32 +567,33 @@ FT_BEGIN_HEADER
   } FT_Orientation;
 
 
- /**************************************************************************
-  *
-  * @function:
-  *   FT_Outline_Get_Orientation
-  *
-  * @description:
-  *   This function analyzes a glyph outline and tries to compute its
-  *   fill orientation (see @FT_Orientation).  This is done by integrating
-  *   the total area covered by the outline. The positive integral
-  *   corresponds to the clockwise orientation and @FT_ORIENTATION_POSTSCRIPT
-  *   is returned. The negative integral corresponds to the counter-clockwise
-  *   orientation and @FT_ORIENTATION_TRUETYPE is returned.
-  *
-  *   Note that this will return @FT_ORIENTATION_TRUETYPE for empty
-  *   outlines.
-  *
-  * @input:
-  *   outline ::
-  *     A handle to the source outline.
-  *
-  * @return:
-  *   The orientation.
-  *
-  */
+  /**************************************************************************
+   *
+   * @function:
+   *   FT_Outline_Get_Orientation
+   *
+   * @description:
+   *   This function analyzes a glyph outline and tries to compute its
+   *   fill orientation (see @FT_Orientation).  This is done by integrating
+   *   the total area covered by the outline. The positive integral
+   *   corresponds to the clockwise orientation and @FT_ORIENTATION_POSTSCRIPT
+   *   is returned. The negative integral corresponds to the counter-clockwise
+   *   orientation and @FT_ORIENTATION_TRUETYPE is returned.
+   *
+   *   Note that this will return @FT_ORIENTATION_TRUETYPE for empty
+   *   outlines.
+   *
+   * @input:
+   *   outline ::
+   *     A handle to the source outline.
+   *
+   * @return:
+   *   The orientation.
+   *
+   */
   FT_EXPORT( FT_Orientation )
   FT_Outline_Get_Orientation( FT_Outline*  outline );
+
 
   /* */
 

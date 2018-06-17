@@ -308,7 +308,7 @@ FT_BEGIN_HEADER
    *   FreeType error code.  0 means success.  Returns an error if no
    *   glyph sbit exists for the index.
    *
-   *  @Note:
+   * @Note:
    *   The `map.buffer' field is always freed before the glyph is loaded.
    */
   typedef FT_Error
@@ -617,7 +617,7 @@ FT_BEGIN_HEADER
    *   nameid ::
    *     The name id of the name record to return.
    *
-   * @Out:
+   * @Output:
    *   win ::
    *     If non-negative, an index into the `name' table with
    *     the corresponding (3,1) or (3,0) Windows entry.

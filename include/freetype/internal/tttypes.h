@@ -1794,41 +1794,41 @@ FT_BEGIN_HEADER
    * @Struct:
    *    TT_GlyphZoneRec
    *
-   *  @Description:
-   *    A glyph zone is used to load, scale and hint glyph outline
-   *    coordinates.
+   * @Description:
+   *   A glyph zone is used to load, scale and hint glyph outline
+   *   coordinates.
    *
-   *  @Fields:
-   *    memory ::
-   *      A handle to the memory manager.
+   * @Fields:
+   *   memory ::
+   *     A handle to the memory manager.
    *
-   *    max_points ::
-   *      The maximum size in points of the zone.
+   *   max_points ::
+   *     The maximum size in points of the zone.
    *
-   *    max_contours ::
-   *      Max size in links contours of the zone.
+   *   max_contours ::
+   *     Max size in links contours of the zone.
    *
-   *    n_points ::
-   *      The current number of points in the zone.
+   *   n_points ::
+   *     The current number of points in the zone.
    *
-   *    n_contours ::
-   *      The current number of contours in the zone.
+   *   n_contours ::
+   *     The current number of contours in the zone.
    *
-   *    org ::
-   *      The original glyph coordinates (font
-   *      units/scaled).
+   *   org ::
+   *     The original glyph coordinates (font
+   *     units/scaled).
    *
-   *    cur ::
-   *      The current glyph coordinates (scaled/hinted).
+   *   cur ::
+   *     The current glyph coordinates (scaled/hinted).
    *
-   *    tags ::
-   *      The point control tags.
+   *   tags ::
+   *     The point control tags.
    *
-   *    contours ::
-   *      The contours end points.
+   *   contours ::
+   *     The contours end points.
    *
-   *    first_point ::
-   *      Offset of the current subglyph's first point.
+   *   first_point ::
+   *     Offset of the current subglyph's first point.
    */
   typedef struct  TT_GlyphZoneRec_
   {

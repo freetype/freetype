@@ -58,7 +58,7 @@ FT_BEGIN_HEADER
 
   /**************************************************************************
    *
-   * @Const:
+   * @enum:
    *   FT_ADVANCE_FLAG_FAST_ONLY
    *
    * @Description:

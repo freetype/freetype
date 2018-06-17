@@ -1528,7 +1528,7 @@ FT_BEGIN_HEADER
 
   /**************************************************************************
    *
-   * @Const:
+   * @enum:
    *   FT_STYLE_FLAG_XXX
    *
    * @Description:
@@ -4118,7 +4118,7 @@ FT_BEGIN_HEADER
 
   /*************************************************************************
    *
-   * @func:
+   * @function:
    *   FT_Get_SubGlyph_Info
    *
    * @description:
@@ -4200,7 +4200,7 @@ FT_BEGIN_HEADER
 
   /*************************************************************************
    *
-   * @func:
+   * @function:
    *   FT_Get_Color_Glyph_Layer
    *
    * @description:
