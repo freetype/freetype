@@ -4186,7 +4186,7 @@ FT_BEGIN_HEADER
    * @description:
    *   The functions described here allow access of colored glyph layer data
    *   in OpenType's `COLR' tables.
-   *
+   */
 
 
   /**********************************************************************
