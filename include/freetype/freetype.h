@@ -4256,6 +4256,43 @@ FT_BEGIN_HEADER
    *
    *   @FT_Render_Glyph, however, handles colored glyph layers
    *   automatically if the @FT_LOAD_COLOR flag is passed to it.
+   *
+   * @example:
+   *   {
+   *     FT_Color*         palette;
+   *     FT_LayerIterator  iterator;
+   *
+   *     FT_UInt  layer_glyph_index;
+   *     FT_UInt  layer_color_index;
+   *
+   *
+   *     error = FT_Palette_Select( face, palette_index, &palette );
+   *     if ( error )
+   *       palette = NULL;
+   *
+   *     iterator.p        = NULL;
+   *     layer_glyph_index = FT_Get_Color_Glyph_Layer( face,
+   *                                                   glyph_index,
+   *                                                   &layer_color_index,
+   *                                                   &iterator );
+   *
+   *     if ( palette && layer_glyph_index )
+   *     {
+   *       do
+   *       {
+   *         FT_Color  layer_color = palette[layer_color_index];
+   *
+   *
+   *         // Load and render glyph `layer_glyph_index', then
+   *         // blend resulting pixmap with previously created pixmaps.
+   *
+   *       } while ( ( layer_glyph_index =
+   *                     FT_Get_Color_Glyph_Layer( face,
+   *                                               glyph_index,
+   *                                               &layer_color_index,
+   *                                               &iterator ) ) != 0 );
+   *     }
+   *   }
    */
   FT_EXPORT( FT_UInt )
   FT_Get_Color_Glyph_Layer( FT_Face            face,
