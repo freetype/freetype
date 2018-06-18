@@ -376,16 +376,17 @@ FT_BEGIN_HEADER
    *   If you need `better' metrics values you should call
    *   @FT_Outline_Get_CBox or @FT_Outline_Get_BBox.
    *
-   *   Example call:
+   *   To get meaningful results, font scaling values must be set with
+   *   functions like @FT_Set_Char_Size before calling FT_Render_Glyph.
    *
+   * @example:
    *   {
    *     FT_Load_Glyph( face, index, FT_LOAD_DEFAULT );
+   *
    *     if ( face->glyph->format == FT_GLYPH_FORMAT_OUTLINE )
    *       FT_Outline_Embolden( &face->glyph->outline, strength );
    *   }
    *
-   *   To get meaningful results, font scaling values must be set with
-   *   functions like @FT_Set_Char_Size before calling FT_Render_Glyph.
    */
   FT_EXPORT( FT_Error )
   FT_Outline_Embolden( FT_Outline*  outline,

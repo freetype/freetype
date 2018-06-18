@@ -2391,6 +2391,7 @@ FT_BEGIN_HEADER
    *   See the discussion of reference counters in the description of
    *   @FT_Reference_Face.
    *
+   * @example:
    *   To loop over all faces, use code similar to the following snippet
    *   (omitting the error handling).
    *
@@ -4008,7 +4009,7 @@ FT_BEGIN_HEADER
    * @return:
    *   FreeType error code.  0~means success.
    *
-   * @note:
+   * @example:
    *   Here an example that sets three properties.  You must define
    *   FT_CONFIG_OPTION_SUBPIXEL_RENDERING to make the LCD filter examples
    *   work.

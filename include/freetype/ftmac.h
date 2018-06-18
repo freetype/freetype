@@ -92,12 +92,12 @@ FT_BEGIN_HEADER
    * @return:
    *   FreeType error code.  0~means success.
    *
-   * @note:
+   * @example:
    *   This function can be used to create @FT_Face objects from fonts
    *   that are installed in the system as follows.
    *
    *   {
-   *     fond = GetResource( 'FOND', fontName );
+   *     fond  = GetResource( 'FOND', fontName );
    *     error = FT_New_Face_From_FOND( library, fond, 0, &face );
    *   }
    */

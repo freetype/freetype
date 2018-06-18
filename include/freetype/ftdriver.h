@@ -371,6 +371,13 @@ FT_BEGIN_HEADER
    *   `freetype' if T1_CONFIG_OPTION_OLD_ENGINE is defined, and `adobe'
    *   otherwise.
    *
+   * @note:
+   *   This property can be used with @FT_Property_Get also.
+   *
+   *   This property can be set via the `FREETYPE_PROPERTIES' environment
+   *   variable (using values `adobe' or `freetype').
+   *
+   * @example:
    *   The following example code demonstrates how to select Adobe's hinting
    *   engine for the `cff' module (omitting the error handling).
    *
@@ -384,12 +391,6 @@ FT_BEGIN_HEADER
    *     FT_Property_Set( library, "cff",
    *                               "hinting-engine", &hinting_engine );
    *   }
-   *
-   * @note:
-   *   This property can be used with @FT_Property_Get also.
-   *
-   *   This property can be set via the `FREETYPE_PROPERTIES' environment
-   *   variable (using values `adobe' or `freetype').
    *
    * @since:
    *   2.4.12 (for `cff' module)
@@ -442,6 +443,15 @@ FT_BEGIN_HEADER
    *   Note that stem darkening is never applied if @FT_LOAD_NO_SCALE is
    *   set.
    *
+   * @note:
+   *   This property can be used with @FT_Property_Get also.
+   *
+   *   This property can be set via the `FREETYPE_PROPERTIES' environment
+   *   variable (using values 1 and 0 for `on' and `off', respectively).
+   *   It can also be set per face using @FT_Face_Properties with
+   *   @FT_PARAM_TAG_STEM_DARKENING.
+   *
+   * @example:
    *   {
    *     FT_Library  library;
    *     FT_Bool     no_stem_darkening = TRUE;
@@ -452,14 +462,6 @@ FT_BEGIN_HEADER
    *     FT_Property_Set( library, "cff",
    *                               "no-stem-darkening", &no_stem_darkening );
    *   }
-   *
-   * @note:
-   *   This property can be used with @FT_Property_Get also.
-   *
-   *   This property can be set via the `FREETYPE_PROPERTIES' environment
-   *   variable (using values 1 and 0 for `on' and `off', respectively).
-   *   It can also be set per face using @FT_Face_Properties with
-   *   @FT_PARAM_TAG_STEM_DARKENING.
    *
    * @since:
    *   2.4.12 (for `cff' module)
@@ -492,22 +494,8 @@ FT_BEGIN_HEADER
    *   control points can be set with the macro
    *   `CFF_CONFIG_OPTION_DARKENING_PARAMETERS'; the CFF, Type~1, and CID
    *   drivers share these values.  At runtime, the control points can be
-   *   changed using the `darkening-parameters' property, as the following
-   *   example demonstrates for the Type~1 driver.
-   *
-   *   {
-   *     FT_Library  library;
-   *     FT_Int      darken_params[8] = {  500, 300,   // x1, y1
-   *                                      1000, 200,   // x2, y2
-   *                                      1500, 100,   // x3, y3
-   *                                      2000,   0 }; // x4, y4
-   *
-   *
-   *     FT_Init_FreeType( &library );
-   *
-   *     FT_Property_Set( library, "type1",
-   *                               "darkening-parameters", darken_params );
-   *   }
+   *   changed using the `darkening-parameters' property (see the example
+   *   below that demonstrates this for the Type~1 driver).
    *
    *   The x~values give the stem width, and the y~values the darkening
    *   amount.  The unit is 1000th of pixels.  All coordinate values must be
@@ -529,6 +517,21 @@ FT_BEGIN_HEADER
    *   {
    *     FREETYPE_PROPERTIES=\
    *     type1:darkening-parameters=500,300,1000,200,1500,100,2000,0
+   *   }
+   *
+   * @example:
+   *   {
+   *     FT_Library  library;
+   *     FT_Int      darken_params[8] = {  500, 300,   // x1, y1
+   *                                      1000, 200,   // x2, y2
+   *                                      1500, 100,   // x3, y3
+   *                                      2000,   0 }; // x4, y4
+   *
+   *
+   *     FT_Init_FreeType( &library );
+   *
+   *     FT_Property_Set( library, "type1",
+   *                               "darkening-parameters", darken_params );
    *   }
    *
    * @since:
@@ -594,6 +597,13 @@ FT_BEGIN_HEADER
    *
    *   If `no-long-family-names' is set, this feature gets switched off.
    *
+   * @note:
+   *   This property can be used with @FT_Property_Get also.
+   *
+   *   This property can be set via the `FREETYPE_PROPERTIES' environment
+   *   variable (using values 1 and 0 for `on' and `off', respectively).
+   *
+   * @example:
    *   {
    *     FT_Library  library;
    *     FT_Bool     no_long_family_names = TRUE;
@@ -605,12 +615,6 @@ FT_BEGIN_HEADER
    *                               "no-long-family-names",
    *                               &no_long_family_names );
    *   }
-   *
-   * @note:
-   *   This property can be used with @FT_Property_Get also.
-   *
-   *   This property can be set via the `FREETYPE_PROPERTIES' environment
-   *   variable (using values 1 and 0 for `on' and `off', respectively).
    *
    * @since:
    *   2.8
@@ -778,6 +782,13 @@ FT_BEGIN_HEADER
    *   chosen interpreter, it simply ignores instructions on vertical stems
    *   to arrive at very similar results.
    *
+   * @note:
+   *   This property can be used with @FT_Property_Get also.
+   *
+   *   This property can be set via the `FREETYPE_PROPERTIES' environment
+   *   variable (using values `35', `38', or `40').
+   *
+   * @example:
    *   The following example code demonstrates how to deactivate subpixel
    *   hinting (omitting the error handling).
    *
@@ -793,12 +804,6 @@ FT_BEGIN_HEADER
    *                               "interpreter-version",
    *                               &interpreter_version );
    *   }
-   *
-   * @note:
-   *   This property can be used with @FT_Property_Get also.
-   *
-   *   This property can be set via the `FREETYPE_PROPERTIES' environment
-   *   variable (using values `35', `38', or `40').
    *
    * @since:
    *   2.5
@@ -834,6 +839,7 @@ FT_BEGIN_HEADER
    *   the auto-hinter so that the global analysis of the font shapes
    *   actually uses the modified mapping.
    *
+   * @example:
    *   The following example code demonstrates how to access it (omitting
    *   the error handling).
    *
@@ -1026,17 +1032,6 @@ FT_BEGIN_HEADER
    *   @FT_AUTOHINTER_SCRIPT_CJK.  Using the `fallback-script' property,
    *   this fallback value can be changed.
    *
-   *   {
-   *     FT_Library  library;
-   *     FT_UInt     fallback_script = FT_AUTOHINTER_SCRIPT_NONE;
-   *
-   *
-   *     FT_Init_FreeType( &library );
-   *
-   *     FT_Property_Set( library, "autofitter",
-   *                               "fallback-script", &fallback_script );
-   *   }
-   *
    * @note:
    *   This property can be used with @FT_Property_Get also.
    *
@@ -1047,6 +1042,18 @@ FT_BEGIN_HEADER
    *   any glyph from that face.  In particular, if you have already created
    *   an @FT_Face structure but not loaded any glyph (using the
    *   auto-hinter), a change of the fallback script will affect this face.
+   *
+   * @example:
+   *   {
+   *     FT_Library  library;
+   *     FT_UInt     fallback_script = FT_AUTOHINTER_SCRIPT_NONE;
+   *
+   *
+   *     FT_Init_FreeType( &library );
+   *
+   *     FT_Property_Set( library, "autofitter",
+   *                               "fallback-script", &fallback_script );
+   *   }
    *
    * @since:
    *   2.4.11
@@ -1074,17 +1081,6 @@ FT_BEGIN_HEADER
    *   By default, this is @FT_AUTOHINTER_SCRIPT_LATIN.  Using the
    *   `default-script' property, this default value can be changed.
    *
-   *   {
-   *     FT_Library  library;
-   *     FT_UInt     default_script = FT_AUTOHINTER_SCRIPT_NONE;
-   *
-   *
-   *     FT_Init_FreeType( &library );
-   *
-   *     FT_Property_Set( library, "autofitter",
-   *                               "default-script", &default_script );
-   *   }
-   *
    * @note:
    *   This property can be used with @FT_Property_Get also.
    *
@@ -1095,6 +1091,18 @@ FT_BEGIN_HEADER
    *   any glyph from that face.  In particular, if you have already created
    *   an @FT_Face structure but not loaded any glyph (using the
    *   auto-hinter), a change of the default script will affect this face.
+   *
+   * @example:
+   *   {
+   *     FT_Library  library;
+   *     FT_UInt     default_script = FT_AUTOHINTER_SCRIPT_NONE;
+   *
+   *
+   *     FT_Init_FreeType( &library );
+   *
+   *     FT_Property_Set( library, "autofitter",
+   *                               "default-script", &default_script );
+   *   }
    *
    * @since:
    *   2.5.3
@@ -1114,6 +1122,13 @@ FT_BEGIN_HEADER
    *   this property to improve the legibility of small font sizes if
    *   necessary.
    *
+   * @note:
+   *   This property can be used with @FT_Property_Get also.
+   *
+   *   Set this value right after calling @FT_Set_Char_Size, but before
+   *   loading any glyph (using the auto-hinter).
+   *
+   * @example:
    *   {
    *     FT_Library               library;
    *     FT_Face                  face;
@@ -1130,12 +1145,6 @@ FT_BEGIN_HEADER
    *     FT_Property_Set( library, "autofitter",
    *                               "increase-x-height", &prop );
    *   }
-   *
-   * @note:
-   *   This property can be used with @FT_Property_Get also.
-   *
-   *   Set this value right after calling @FT_Set_Char_Size, but before
-   *   loading any glyph (using the auto-hinter).
    *
    * @since:
    *   2.4.11
@@ -1179,20 +1188,7 @@ FT_BEGIN_HEADER
    *   To find out a glyph's optimal scaling and shifting value, various
    *   parameter combinations are tried and scored.
    *
-   *   By default, warping is off.  The example below shows how to switch on
-   *   warping (omitting the error handling).
-   *
-   *   {
-   *     FT_Library  library;
-   *     FT_Bool     warping = 1;
-   *
-   *
-   *     FT_Init_FreeType( &library );
-   *
-   *     FT_Property_Set( library, "autofitter",
-   *                               "warping", &warping );
-   *   }
-   *
+   *   By default, warping is off.
    * @note:
    *   This property can be used with @FT_Property_Get also.
    *
@@ -1206,6 +1202,20 @@ FT_BEGIN_HEADER
    *   Since warping is a global property of the auto-hinter it is best to
    *   change its value before rendering any face.  Otherwise, you should
    *   reload all faces that get auto-hinted in `normal' hinting mode.
+   *
+   * @example:
+   *   This example shows how to switch on warping (omitting the error
+   *   handling).
+   *
+   *   {
+   *     FT_Library  library;
+   *     FT_Bool     warping = 1;
+   *
+   *
+   *     FT_Init_FreeType( &library );
+   *
+   *     FT_Property_Set( library, "autofitter", "warping", &warping );
+   *   }
    *
    * @since:
    *   2.6

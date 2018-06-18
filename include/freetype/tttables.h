@@ -719,7 +719,8 @@ FT_BEGIN_HEADER
    *   by the sfnt, truetype, and opentype drivers.  See @FT_Sfnt_Tag for
    *   a list.
    *
-   *   Here an example how to access the `vhea' table:
+   * @example:
+   *   Here an example how to access the `vhea' table.
    *
    *   {
    *     TT_VertHeader*  vert_header;
