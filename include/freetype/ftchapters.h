@@ -34,6 +34,8 @@
    *   basic_types
    *   base_interface
    *   glyph_variants
+   *   color_management
+   *   layer_management
    *   glyph_management
    *   mac_specific
    *   sizes_management

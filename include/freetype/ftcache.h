@@ -145,6 +145,7 @@ FT_BEGIN_HEADER
   /*************************************************************************
    *
    * @type:
+   *   FTC_FaceID
    *
    * @description:
    *   An opaque pointer type that is used to identity face objects.  The

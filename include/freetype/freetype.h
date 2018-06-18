@@ -4098,6 +4098,8 @@ FT_BEGIN_HEADER
    *   meaning of the various flags (which get synthesized for
    *   non-OpenType subglyphs).
    *
+   *     https://docs.microsoft.com/en-us/typography/opentype/spec/glyf#composite-glyph-description
+   *
    * @values:
    *   FT_SUBGLYPH_FLAG_ARGS_ARE_WORDS ::
    *   FT_SUBGLYPH_FLAG_ARGS_ARE_XY_VALUES ::
@@ -4168,6 +4170,23 @@ FT_BEGIN_HEADER
                         FT_Int       *p_arg1,
                         FT_Int       *p_arg2,
                         FT_Matrix    *p_transform );
+
+
+  /**************************************************************************
+   *
+   * @section:
+   *   layer_management
+   *
+   * @title:
+   *   Glyph Layer Management
+   *
+   * @abstract:
+   *   Retrieving and manipulating OpenType's `COLR' table data.
+   *
+   * @description:
+   *   The functions described here allow access of colored glyph layer data
+   *   in OpenType's `COLR' tables.
+   *
 
 
   /**********************************************************************
@@ -4301,6 +4320,13 @@ FT_BEGIN_HEADER
                             FT_UInt           *acolor_index,
                             FT_LayerIterator*  iterator );
 
+
+  /**************************************************************************
+   *
+   * @section:
+   *   base_interface
+   *
+   */
 
   /**************************************************************************
    *
@@ -4858,8 +4884,6 @@ FT_BEGIN_HEADER
    *
    *   FT_Face_CheckTrueTypePatents
    *   FT_Face_SetUnpatentedHinting
-   *
-   *   FREETYPE_XXX
    *
    */
 

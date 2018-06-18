@@ -45,7 +45,7 @@ FT_BEGIN_HEADER
    *
    * @description:
    *   The functions described here allow access and manipulation of color
-   *   palette entries in OpenType's `CPAL' table.
+   *   palette entries in OpenType's `CPAL' tables.
    */
 
 

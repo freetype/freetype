@@ -226,25 +226,28 @@ FT_BEGIN_HEADER
   /**************************************************************************
    *
    * @function:
-   *    FT_New_Glyph
+   *   FT_New_Glyph
    *
    * @description:
-   *    A function used to create a new empty glyph image.  Note that
-   *    the created @FT_Glyph object must be released with @FT_Done_Glyph.
+   *   A function used to create a new empty glyph image.  Note that the
+   *   created @FT_Glyph object must be released with @FT_Done_Glyph.
    *
    * @input:
-   *    library :: A handle to the FreeType library object.
+   *   library ::
+   *     A handle to the FreeType library object.
    *
-   *    format  :: The format of the glyph's image.
+   *   format ::
+   *     The format of the glyph's image.
    *
    * @output:
-   *    aglyph :: A handle to the glyph object.
+   *   aglyph ::
+   *     A handle to the glyph object.
    *
    * @return:
-   *    FreeType error code.  0~means success.
+   *   FreeType error code.  0~means success.
    *
-   * @since
-   *    2.10
+   * @since:
+   *   2.10
    */
   FT_EXPORT( FT_Error )
   FT_New_Glyph( FT_Library       library,
