@@ -358,37 +358,28 @@
 
   /* documentation is in ftglyph.h */
 
-  FT_EXPORT_DEF( FT_Error )
-  FT_Get_Glyph( FT_GlyphSlot  slot,
-                FT_Glyph     *aglyph )
+  FT_EXPORT( FT_Error )
+  FT_New_Glyph( FT_Library       library,
+                FT_Glyph_Format  format,
+                FT_Glyph        *aglyph )
   {
-    FT_Library  library;
-    FT_Error    error;
-    FT_Glyph    glyph;
-
     const FT_Glyph_Class*  clazz = NULL;
 
-
-    if ( !slot )
-      return FT_THROW( Invalid_Slot_Handle );
-
-    library = slot->library;
-
-    if ( !aglyph )
+    if ( !library || !aglyph )
       return FT_THROW( Invalid_Argument );
 
     /* if it is a bitmap, that's easy :-) */
-    if ( slot->format == FT_GLYPH_FORMAT_BITMAP )
+    if ( format == FT_GLYPH_FORMAT_BITMAP )
       clazz = &ft_bitmap_glyph_class;
 
     /* if it is an outline */
-    else if ( slot->format == FT_GLYPH_FORMAT_OUTLINE )
+    else if ( format == FT_GLYPH_FORMAT_OUTLINE )
       clazz = &ft_outline_glyph_class;
 
     else
     {
       /* try to find a renderer that supports the glyph image format */
-      FT_Renderer  render = FT_Lookup_Renderer( library, slot->format, 0 );
+      FT_Renderer  render = FT_Lookup_Renderer( library, format, 0 );
 
 
       if ( render )
@@ -396,13 +387,31 @@
     }
 
     if ( !clazz )
-    {
-      error = FT_THROW( Invalid_Glyph_Format );
-      goto Exit;
-    }
+      return FT_THROW( Invalid_Glyph_Format );
 
     /* create FT_Glyph object */
-    error = ft_new_glyph( library, clazz, &glyph );
+    return ft_new_glyph( library, clazz, aglyph );
+  }
+
+
+  /* documentation is in ftglyph.h */
+
+  FT_EXPORT_DEF( FT_Error )
+  FT_Get_Glyph( FT_GlyphSlot  slot,
+                FT_Glyph     *aglyph )
+  {
+    FT_Error    error;
+    FT_Glyph    glyph;
+
+
+    if ( !slot )
+      return FT_THROW( Invalid_Slot_Handle );
+
+    if ( !aglyph )
+      return FT_THROW( Invalid_Argument );
+
+    /* create FT_Glyph object */
+    error = FT_New_Glyph( slot->library, slot->format, &glyph );
     if ( error )
       goto Exit;
 
@@ -426,7 +435,7 @@
     glyph->advance.y = slot->advance.y * 1024;
 
     /* now import the image from the glyph slot */
-    error = clazz->glyph_init( glyph, slot );
+    error = glyph->clazz->glyph_init( glyph, slot );
 
   Exit2:
     /* if an error occurred, destroy the glyph */

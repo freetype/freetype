@@ -1,3 +1,16 @@
+2018-06-17  Alexei Podtelezhnikov  <apodtele@gmail.com>
+
+	[base] Introduce `FT_New_Glyph'.
+
+	This function facilitates access to full capabilities of FreeType
+	rendering engine for custom glyphs. This can be quite useful for
+	consistent rendering of mathematical and chemical formulas, e.g.
+
+	  https://bugs.chromium.org/p/chromium/issues/detail?id=757078
+
+	* include/freetype/ftglyph.h, src/base/ftglyph.c (FT_New_Glyph): New
+	function.
+
 2018-06-17  Armin Hasitzka  <prince.cherusker@gmail.com>
 
 	[bdf] Fix underflow of an unsigned value.
