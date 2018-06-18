@@ -1290,7 +1290,7 @@ FT_BEGIN_HEADER
   /*************************************************************************
    *
    * @macro:
-   *   FT_HAS_HORIZONTAL( face )
+   *   FT_HAS_HORIZONTAL
    *
    * @description:
    *   A macro that returns true whenever a face object contains
@@ -1307,7 +1307,7 @@ FT_BEGIN_HEADER
   /*************************************************************************
    *
    * @macro:
-   *   FT_HAS_VERTICAL( face )
+   *   FT_HAS_VERTICAL
    *
    * @description:
    *   A macro that returns true whenever a face object contains real
@@ -1321,7 +1321,7 @@ FT_BEGIN_HEADER
   /*************************************************************************
    *
    * @macro:
-   *   FT_HAS_KERNING( face )
+   *   FT_HAS_KERNING
    *
    * @description:
    *   A macro that returns true whenever a face object contains kerning
@@ -1335,7 +1335,7 @@ FT_BEGIN_HEADER
   /*************************************************************************
    *
    * @macro:
-   *   FT_IS_SCALABLE( face )
+   *   FT_IS_SCALABLE
    *
    * @description:
    *   A macro that returns true whenever a face object contains a scalable
@@ -1350,7 +1350,7 @@ FT_BEGIN_HEADER
   /*************************************************************************
    *
    * @macro:
-   *   FT_IS_SFNT( face )
+   *   FT_IS_SFNT
    *
    * @description:
    *   A macro that returns true whenever a face object contains a font
@@ -1369,7 +1369,7 @@ FT_BEGIN_HEADER
   /*************************************************************************
    *
    * @macro:
-   *   FT_IS_FIXED_WIDTH( face )
+   *   FT_IS_FIXED_WIDTH
    *
    * @description:
    *   A macro that returns true whenever a face object contains a font face
@@ -1384,7 +1384,7 @@ FT_BEGIN_HEADER
   /*************************************************************************
    *
    * @macro:
-   *   FT_HAS_FIXED_SIZES( face )
+   *   FT_HAS_FIXED_SIZES
    *
    * @description:
    *   A macro that returns true whenever a face object contains some
@@ -1399,7 +1399,7 @@ FT_BEGIN_HEADER
   /*************************************************************************
    *
    * @macro:
-   *   FT_HAS_FAST_GLYPHS( face )
+   *   FT_HAS_FAST_GLYPHS
    *
    * @description:
    *   Deprecated.
@@ -1411,7 +1411,7 @@ FT_BEGIN_HEADER
   /*************************************************************************
    *
    * @macro:
-   *   FT_HAS_GLYPH_NAMES( face )
+   *   FT_HAS_GLYPH_NAMES
    *
    * @description:
    *   A macro that returns true whenever a face object contains some glyph
@@ -1425,7 +1425,7 @@ FT_BEGIN_HEADER
   /*************************************************************************
    *
    * @macro:
-   *   FT_HAS_MULTIPLE_MASTERS( face )
+   *   FT_HAS_MULTIPLE_MASTERS
    *
    * @description:
    *   A macro that returns true whenever a face object contains some
@@ -1440,7 +1440,7 @@ FT_BEGIN_HEADER
   /*************************************************************************
    *
    * @macro:
-   *   FT_IS_NAMED_INSTANCE( face )
+   *   FT_IS_NAMED_INSTANCE
    *
    * @description:
    *   A macro that returns true whenever a face object is a named instance
@@ -1462,7 +1462,7 @@ FT_BEGIN_HEADER
   /*************************************************************************
    *
    * @macro:
-   *   FT_IS_VARIATION( face )
+   *   FT_IS_VARIATION
    *
    * @description:
    *   A macro that returns true whenever a face object has been altered
@@ -1480,7 +1480,7 @@ FT_BEGIN_HEADER
   /*************************************************************************
    *
    * @macro:
-   *   FT_IS_CID_KEYED( face )
+   *   FT_IS_CID_KEYED
    *
    * @description:
    *   A macro that returns true whenever a face object contains a CID-keyed
@@ -1498,7 +1498,7 @@ FT_BEGIN_HEADER
   /*************************************************************************
    *
    * @macro:
-   *   FT_IS_TRICKY( face )
+   *   FT_IS_TRICKY
    *
    * @description:
    *   A macro that returns true whenever a face represents a `tricky' font.
@@ -1512,7 +1512,7 @@ FT_BEGIN_HEADER
   /*************************************************************************
    *
    * @macro:
-   *   FT_HAS_COLOR( face )
+   *   FT_HAS_COLOR
    *
    * @description:
    *   A macro that returns true whenever a face object contains
@@ -4089,7 +4089,7 @@ FT_BEGIN_HEADER
 
   /*************************************************************************
    *
-   * @macro:
+   * @enum:
    *   FT_SUBGLYPH_FLAG_XXX
    *
    * @description:
