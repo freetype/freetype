@@ -30,13 +30,13 @@ FT_BEGIN_HEADER
   /*************************************************************************
    *
    * @section:
-   *    cache_subsystem
+   *   cache_subsystem
    *
    * @title:
-   *    Cache Sub-System
+   *   Cache Sub-System
    *
    * @abstract:
-   *    How to cache face, size, and glyph data with FreeType~2.
+   *   How to cache face, size, and glyph data with FreeType~2.
    *
    * @description:
    *   This section describes the FreeType~2 cache sub-system, which is used
