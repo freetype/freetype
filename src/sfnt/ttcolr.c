@@ -220,6 +220,9 @@
     FT_UInt          glyph_index;
 
 
+    if ( !colr )
+      return 0;
+
     if ( !iterator->p )
     {
       FT_ULong  offset;

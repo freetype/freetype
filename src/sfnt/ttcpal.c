@@ -258,7 +258,7 @@
     FT_ULong  record_offset;
 
 
-    if ( palette_index >= face->palette_data.num_palettes )
+    if ( !cpal || palette_index >= face->palette_data.num_palettes )
       return FT_THROW( Invalid_Argument );
 
     offset        = cpal->color_indices + 2 * palette_index;

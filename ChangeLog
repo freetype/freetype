@@ -1,3 +1,15 @@
+2018-06-19  Werner Lemberg  <wl@gnu.org>
+
+	Doh.  Don't use CPAL or COLR data if tables are missing.
+
+	Reported by Alexei.
+
+	* src/sfnt/ttcolr.c (tt_face_get_colr_layer): Return immediately if
+	`colr' is NULL.
+
+	* src/sfnt/ttcpal.c (tt_face_palette_set): Return immediately, if
+	`cpal' is NULL.
+
 2018-06-17  Alexei Podtelezhnikov  <apodtele@gmail.com>
 
 	[base] Introduce `FT_New_Glyph'.
