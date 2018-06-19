@@ -128,6 +128,9 @@
       FT_UShort*  q;
 
 
+      if ( face->palette_data.num_palettes * 2 + 3U * 4 > table_size )
+        goto InvalidTable;
+
       p += face->palette_data.num_palettes * 2;
 
       type_offset        = FT_NEXT_ULONG( p );

@@ -1,5 +1,16 @@
 2018-06-19  Werner Lemberg  <wl@gnu.org>
 
+	[sfnt] Fix CPAL heap buffer overflow.
+
+	Reported as
+
+	  https://bugs.chromium.org/p/oss-fuzz/issues/detail?id=8968
+
+	* src/sfnt/ttcpal.c (tt_face_load_cpal): Guard CPAL version 1
+	offsets.
+
+2018-06-19  Werner Lemberg  <wl@gnu.org>
+
 	Doh.  Don't use CPAL or COLR data if tables are missing.
 
 	Reported by Alexei.
