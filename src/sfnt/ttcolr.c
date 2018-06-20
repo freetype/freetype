@@ -377,7 +377,7 @@
       {
         if ( face->palette_data.palette_types                          &&
              ( face->palette_data.palette_types[face->palette_index] &
-                 FT_PALETTE_USABLE_WITH_DARK_BACKGROUND              ) )
+                 FT_PALETTE_FOR_DARK_BACKGROUND                      ) )
         {
           /* white opaque */
           b     = 0xFF;

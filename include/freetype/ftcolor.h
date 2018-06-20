@@ -97,19 +97,19 @@ FT_BEGIN_HEADER
    *   palette with a given index is usable.
    *
    * @values:
-   *   FT_PALETTE_USABLE_WITH_LIGHT_BACKGROUND ::
+   *   FT_PALETTE_FOR_LIGHT_BACKGROUND ::
    *     The palette is appropriate to use when displaying the font on a
    *     light background such as white.
    *
-   *   FT_PALETTE_USABLE_WITH_DARK_BACKGROUND ::
+   *   FT_PALETTE_FOR_DARK_BACKGROUND ::
    *     The palette is appropriate to use when displaying the font on a
    *     dark background such as black.
    *
    * @since:
    *   2.10
    */
-#define FT_PALETTE_USABLE_WITH_LIGHT_BACKGROUND  0x01
-#define FT_PALETTE_USABLE_WITH_DARK_BACKGROUND   0x02
+#define FT_PALETTE_FOR_LIGHT_BACKGROUND  0x01
+#define FT_PALETTE_FOR_DARK_BACKGROUND   0x02
 
 
   /**************************************************************************
@@ -137,8 +137,8 @@ FT_BEGIN_HEADER
    *   palette_types ::
    *     A read-only array of palette types with `num_palettes' elements.
    *     Possible values are an ORed combination of
-   *     @FT_PALETTE_USABLE_WITH_LIGHT_BACKGROUND and
-   *     @FT_PALETTE_USABLE_WITH_DARK_BACKGROUND.
+   *     @FT_PALETTE_FOR_LIGHT_BACKGROUND and
+   *     @FT_PALETTE_FOR_DARK_BACKGROUND.
    *
    *     NULL if the font's `CPAL' table doesn't contain appropriate data.
    *
@@ -289,7 +289,7 @@ FT_BEGIN_HEADER
    * @note:
    *   If this function isn't called, the text foreground color is set to
    *   white opaque (BGRA value 0xFFFFFFFF) if
-   *   @FT_PALETTE_USABLE_WITH_DARK_BACKGROUND is present for the current
+   *   @FT_PALETTE_FOR_DARK_BACKGROUND is present for the current
    *   palette, and black opaque (BGRA value 0x000000FF) otherwise,
    *   including the case that no palette types are available in the `CPAL'
    *   table.

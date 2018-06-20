@@ -1,3 +1,10 @@
+2018-06-21  Werner Lemberg  <wl@gnu.org>
+
+	s/FT_PALETTE_USABLE_WITH_/FT_PALETTE_FOR_/.
+
+	* include/freetype/ftcolor.h, include/freetype/internal/sfnt.h,
+	src/sfnt/ttcolr.c: Do it.
+
 2018-06-19  Werner Lemberg  <wl@gnu.org>
 
 	[sfnt] Fix CPAL heap buffer overflow.
