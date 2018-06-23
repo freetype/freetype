@@ -119,7 +119,7 @@
                        FT_Palette_Data  *apalette_data )
   {
     FT_UNUSED( face );
-    FT_UNUSED( apalette );
+    FT_UNUSED( apalette_data );
 
 
     return FT_THROW( Unimplemented_Feature );

@@ -1,3 +1,12 @@
+2018-06-23  Werner Lemberg  <wl@gnu.org>
+
+	Fix typo.
+
+	Reported by Behdad.
+
+	* src/base/ftcolor.c (FT_Palette_Data_Get)
+	[!TT_CONFIG_OPTION_COLOR_LAYERS]: s/apalette/apalette_data/.
+
 2018-06-21  Werner Lemberg  <wl@gnu.org>
 
 	s/FT_PALETTE_USABLE_WITH_/FT_PALETTE_FOR_/.
