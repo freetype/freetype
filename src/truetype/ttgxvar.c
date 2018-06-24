@@ -67,6 +67,17 @@
                         : (stream)->limit
 
 
+  /* some macros we need */
+#define FT_FIXED_ONE  ( (FT_Fixed)0x10000 )
+
+#define FT_fdot14ToFixed( x )                \
+        ( (FT_Fixed)( (FT_ULong)(x) << 2 ) )
+#define FT_intToFixed( i )                    \
+        ( (FT_Fixed)( (FT_ULong)(i) << 16 ) )
+#define FT_fixedToInt( x )                                   \
+        ( (FT_Short)( ( (FT_UInt32)(x) + 0x8000U ) >> 16 ) )
+
+
   /**************************************************************************
    *
    * The macro FT_COMPONENT is used in trace mode.  It is an implicit
@@ -234,17 +245,21 @@
    *     The number of deltas to be read.
    *
    * @Return:
-   *   An array of FT_Short containing the deltas for the affected
+   *   An array of FT_Fixed containing the deltas for the affected
    *   points.  (This only gets the deltas for one dimension.  It will
    *   generally be called twice, once for x, once for y.  When used in
    *   cvt table, it will only be called once.)
+   *
+   *   We use FT_Fixed to avoid accumulation errors while summing up all
+   *   deltas (the rounding to integer values happens as the very last
+   *   step).
    */
-  static FT_Short*
+  static FT_Fixed*
   ft_var_readpackeddeltas( FT_Stream  stream,
                            FT_ULong   size,
                            FT_UInt    delta_cnt )
   {
-    FT_Short  *deltas = NULL;
+    FT_Fixed  *deltas = NULL;
     FT_UInt    runcnt, cnt;
     FT_UInt    i, j;
     FT_Memory  memory = stream->memory;
@@ -278,13 +293,13 @@
       {
         /* `runcnt' shorts from the stack */
         for ( j = 0; j <= cnt && i < delta_cnt; j++ )
-          deltas[i++] = FT_GET_SHORT();
+          deltas[i++] = FT_intToFixed( FT_GET_SHORT() );
       }
       else
       {
         /* `runcnt' signed bytes from the stack */
         for ( j = 0; j <= cnt && i < delta_cnt; j++ )
-          deltas[i++] = FT_GET_CHAR();
+          deltas[i++] = FT_intToFixed( FT_GET_CHAR() );
       }
 
       if ( j <= cnt )
@@ -399,17 +414,6 @@
   Exit:
     FT_FRAME_EXIT();
   }
-
-
-  /* some macros we need */
-#define FT_FIXED_ONE  ( (FT_Fixed)0x10000 )
-
-#define FT_fdot14ToFixed( x )                \
-        ( (FT_Fixed)( (FT_ULong)(x) << 2 ) )
-#define FT_intToFixed( i )                    \
-        ( (FT_Fixed)( (FT_ULong)(i) << 16 ) )
-#define FT_fixedToInt( x )                                   \
-        ( (FT_Short)( ( (FT_UInt32)(x) + 0x8000U ) >> 16 ) )
 
 
   static FT_Error
@@ -3101,7 +3105,9 @@
     FT_UShort*  sharedpoints = NULL;
     FT_UShort*  localpoints  = NULL;
     FT_UShort*  points;
-    FT_Short*   deltas;
+
+    FT_Fixed*  deltas;
+    FT_Fixed*  cvt_deltas;
 
 
     FT_TRACE2(( "CVAR " ));
@@ -3187,6 +3193,9 @@
                 ( tupleCount & 0xFFF ) == 1 ? "is" : "are",
                 tupleCount & 0xFFF,
                 ( tupleCount & 0xFFF ) == 1 ? "" : "s" ));
+
+    if ( FT_NEW_ARRAY( cvt_deltas, face->cvt_size ) )
+      goto FExit;
 
     for ( i = 0; i < ( tupleCount & 0xFFF ); i++ )
     {
@@ -3279,17 +3288,21 @@
         /* this means that there are deltas for every entry in cvt */
         for ( j = 0; j < face->cvt_size; j++ )
         {
-          FT_Long  orig_cvt = face->cvt[j];
+          FT_Fixed  old_cvt_delta;
 
 
-          face->cvt[j] = (FT_Short)( orig_cvt +
-                                     FT_MulFix( deltas[j], apply ) );
+          old_cvt_delta = cvt_deltas[j];
+          cvt_deltas[j] = old_cvt_delta + FT_MulFix( deltas[j], apply );
 
 #ifdef FT_DEBUG_LEVEL_TRACE
-          if ( orig_cvt != face->cvt[j] )
+          if ( old_cvt_delta != cvt_deltas[j] )
           {
-            FT_TRACE7(( "      %d: %d -> %d\n",
-                        j, orig_cvt, face->cvt[j] ));
+            FT_TRACE7(( "      %d: %f -> %f\n",
+                        j,
+                        ( FT_intToFixed( face->cvt[j] ) +
+                          old_cvt_delta ) / 65536.0,
+                        ( FT_intToFixed( face->cvt[j] ) +
+                          cvt_deltas[j] ) / 65536.0 ));
             count++;
           }
 #endif
@@ -3312,23 +3325,26 @@
 
         for ( j = 0; j < point_count; j++ )
         {
-          int      pindex;
-          FT_Long  orig_cvt;
+          int       pindex;
+          FT_Fixed  old_cvt_delta;
 
 
           pindex = points[j];
           if ( (FT_ULong)pindex >= face->cvt_size )
             continue;
 
-          orig_cvt          = face->cvt[pindex];
-          face->cvt[pindex] = (FT_Short)( orig_cvt +
-                                          FT_MulFix( deltas[j], apply ) );
+          old_cvt_delta      = cvt_deltas[pindex];
+          cvt_deltas[pindex] = old_cvt_delta + FT_MulFix( deltas[j], apply );
 
 #ifdef FT_DEBUG_LEVEL_TRACE
-          if ( orig_cvt != face->cvt[pindex] )
+          if ( old_cvt_delta != cvt_deltas[pindex] )
           {
-            FT_TRACE7(( "      %d: %d -> %d\n",
-                        pindex, orig_cvt, face->cvt[pindex] ));
+            FT_TRACE7(( "      %d: %f -> %f\n",
+                        pindex,
+                        ( FT_intToFixed( face->cvt[pindex] ) +
+                          old_cvt_delta ) / 65536.0,
+                        ( FT_intToFixed( face->cvt[pindex] ) +
+                          cvt_deltas[pindex] ) / 65536.0 ));
             count++;
           }
 #endif
@@ -3351,6 +3367,9 @@
 
     FT_TRACE5(( "\n" ));
 
+    for ( i = 0; i < face->cvt_size; i++ )
+      face->cvt[i] += FT_fixedToInt( cvt_deltas[i] );
+
   FExit:
     FT_FRAME_EXIT();
 
@@ -3360,6 +3379,7 @@
     FT_FREE( tuple_coords );
     FT_FREE( im_start_coords );
     FT_FREE( im_end_coords );
+    FT_FREE( cvt_deltas );
 
     return error;
   }
@@ -3602,8 +3622,8 @@
     FT_Memory   memory = stream->memory;
     GX_Blend    blend  = face->blend;
 
-    FT_Vector*  points_org = NULL;
-    FT_Vector*  points_out = NULL;
+    FT_Vector*  points_org = NULL;  /* coordinates in 16.16 format */
+    FT_Vector*  points_out = NULL;  /* coordinates in 16.16 format */
     FT_Bool*    has_delta  = NULL;
 
     FT_Error    error;
@@ -3619,7 +3639,11 @@
     FT_UShort*  sharedpoints = NULL;
     FT_UShort*  localpoints  = NULL;
     FT_UShort*  points;
-    FT_Short    *deltas_x, *deltas_y;
+
+    FT_Fixed*  deltas_x;
+    FT_Fixed*  deltas_y;
+    FT_Fixed*  point_deltas_x;
+    FT_Fixed*  point_deltas_y;
 
 
     if ( !face->doblend || !blend )
@@ -3688,8 +3712,15 @@
                 tupleCount & GX_TC_TUPLE_COUNT_MASK,
                 ( tupleCount & GX_TC_TUPLE_COUNT_MASK ) == 1 ? "" : "s" ));
 
+    if ( FT_NEW_ARRAY( point_deltas_x, n_points ) ||
+         FT_NEW_ARRAY( point_deltas_y, n_points ) )
+      goto Fail3;
+
     for ( j = 0; j < n_points; j++ )
-      points_org[j] = outline->points[j];
+    {
+      points_org[j].x = FT_intToFixed( outline->points[j].x );
+      points_org[j].y = FT_intToFixed( outline->points[j].y );
+    }
 
     for ( i = 0; i < ( tupleCount & GX_TC_TUPLE_COUNT_MASK ); i++ )
     {
@@ -3784,14 +3815,17 @@
         /* this means that there are deltas for every point in the glyph */
         for ( j = 0; j < n_points; j++ )
         {
-          FT_Pos  delta_x = FT_MulFix( deltas_x[j], apply );
-          FT_Pos  delta_y = FT_MulFix( deltas_y[j], apply );
+          FT_Fixed  old_point_delta_x = point_deltas_x[j];
+          FT_Fixed  old_point_delta_y = point_deltas_y[j];
+
+          FT_Fixed  point_delta_x = FT_MulFix( deltas_x[j], apply );
+          FT_Fixed  point_delta_y = FT_MulFix( deltas_y[j], apply );
 
 
           if ( j < n_points - 4 )
           {
-            outline->points[j].x += delta_x;
-            outline->points[j].y += delta_y;
+            point_deltas_x[j] = old_point_delta_x + point_delta_x;
+            point_deltas_y[j] = old_point_delta_y + point_delta_y;
           }
           else
           {
@@ -3801,33 +3835,37 @@
             if ( j == ( n_points - 4 )        &&
                  !( face->variation_support &
                     TT_FACE_FLAG_VAR_LSB    ) )
-              outline->points[j].x += delta_x;
+              point_deltas_x[j] = old_point_delta_x + point_delta_x;
 
             else if ( j == ( n_points - 3 )          &&
                       !( face->variation_support   &
                          TT_FACE_FLAG_VAR_HADVANCE ) )
-              outline->points[j].x += delta_x;
+              point_deltas_x[j] = old_point_delta_x + point_delta_x;
 
             else if ( j == ( n_points - 2 )        &&
                       !( face->variation_support &
                          TT_FACE_FLAG_VAR_TSB    ) )
-              outline->points[j].y += delta_y;
+              point_deltas_y[j] = old_point_delta_y + point_delta_y;
 
             else if ( j == ( n_points - 1 )          &&
                       !( face->variation_support   &
                          TT_FACE_FLAG_VAR_VADVANCE ) )
-              outline->points[j].y += delta_y;
+              point_deltas_y[j] = old_point_delta_y + point_delta_y;
           }
 
 #ifdef FT_DEBUG_LEVEL_TRACE
-          if ( delta_x || delta_y )
+          if ( point_delta_x || point_delta_y )
           {
-            FT_TRACE7(( "      %d: (%d, %d) -> (%d, %d)\n",
+            FT_TRACE7(( "      %d: (%f, %f) -> (%f, %f)\n",
                         j,
-                        outline->points[j].x - delta_x,
-                        outline->points[j].y - delta_y,
-                        outline->points[j].x,
-                        outline->points[j].y ));
+                        ( FT_intToFixed( outline->points[j].x ) +
+                          old_point_delta_x ) / 65536.0,
+                        ( FT_intToFixed( outline->points[j].y ) +
+                          old_point_delta_y ) / 65536.0,
+                        ( FT_intToFixed( outline->points[j].x ) +
+                          point_deltas_x[j] ) / 65536.0,
+                        ( FT_intToFixed( outline->points[j].y ) +
+                          point_deltas_y[j] ) / 65536.0 ));
             count++;
           }
 #endif
@@ -3879,14 +3917,17 @@
 
         for ( j = 0; j < n_points; j++ )
         {
-          FT_Pos  delta_x = points_out[j].x - points_org[j].x;
-          FT_Pos  delta_y = points_out[j].y - points_org[j].y;
+          FT_Fixed  old_point_delta_x = point_deltas_x[j];
+          FT_Fixed  old_point_delta_y = point_deltas_y[j];
+
+          FT_Pos  point_delta_x = points_out[j].x - points_org[j].x;
+          FT_Pos  point_delta_y = points_out[j].y - points_org[j].y;
 
 
           if ( j < n_points - 4 )
           {
-            outline->points[j].x += delta_x;
-            outline->points[j].y += delta_y;
+            point_deltas_x[j] = old_point_delta_x + point_delta_x;
+            point_deltas_y[j] = old_point_delta_y + point_delta_y;
           }
           else
           {
@@ -3896,33 +3937,37 @@
             if ( j == ( n_points - 4 )        &&
                  !( face->variation_support &
                     TT_FACE_FLAG_VAR_LSB    ) )
-              outline->points[j].x += delta_x;
+              point_deltas_x[j] = old_point_delta_x + point_delta_x;
 
             else if ( j == ( n_points - 3 )          &&
                       !( face->variation_support   &
                          TT_FACE_FLAG_VAR_HADVANCE ) )
-              outline->points[j].x += delta_x;
+              point_deltas_x[j] = old_point_delta_x + point_delta_x;
 
             else if ( j == ( n_points - 2 )        &&
                       !( face->variation_support &
                          TT_FACE_FLAG_VAR_TSB    ) )
-              outline->points[j].y += delta_y;
+              point_deltas_y[j] = old_point_delta_y + point_delta_y;
 
             else if ( j == ( n_points - 1 )          &&
                       !( face->variation_support   &
                          TT_FACE_FLAG_VAR_VADVANCE ) )
-              outline->points[j].y += delta_y;
+              point_deltas_y[j] = old_point_delta_y + point_delta_y;
           }
 
 #ifdef FT_DEBUG_LEVEL_TRACE
-          if ( delta_x || delta_y )
+          if ( point_delta_x || point_delta_y )
           {
-            FT_TRACE7(( "      %d: (%d, %d) -> (%d, %d)\n",
+            FT_TRACE7(( "      %d: (%f, %f) -> (%f, %f)\n",
                         j,
-                        outline->points[j].x - delta_x,
-                        outline->points[j].y - delta_y,
-                        outline->points[j].x,
-                        outline->points[j].y ));
+                        ( FT_intToFixed( outline->points[j].x ) +
+                          old_point_delta_x ) / 65536.0,
+                        ( FT_intToFixed( outline->points[j].y ) +
+                          old_point_delta_y ) / 65536.0,
+                        ( FT_intToFixed( outline->points[j].x ) +
+                          point_deltas_x[j] ) / 65536.0,
+                        ( FT_intToFixed( outline->points[j].y ) +
+                          point_deltas_y[j] ) / 65536.0 ));
             count++;
           }
 #endif
@@ -3945,6 +3990,16 @@
     }
 
     FT_TRACE5(( "\n" ));
+
+    for ( i = 0; i < n_points; i++ )
+    {
+      outline->points[i].x += FT_fixedToInt( point_deltas_x[i] );
+      outline->points[i].y += FT_fixedToInt( point_deltas_y[i] );
+    }
+
+  Fail3:
+    FT_FREE( point_deltas_x );
+    FT_FREE( point_deltas_y );
 
   Fail2:
     if ( sharedpoints != ALL_POINTS )

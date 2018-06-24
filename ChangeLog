@@ -1,5 +1,27 @@
 2018-06-24  Werner Lemberg  <wl@gnu.org>
 
+	[truetype] Increase precision while applying VF deltas.
+
+	It turned out that we incorrectly round CVT and glyph point deltas
+	before accumulation, leading to severe positioning errors if there
+	are many delta values to sum up.
+
+	Problem reported by Akiem Helmling <akiem@underware.nl> and analyzed
+	by Behdad.
+
+	* src/truetype/ttgxvar.c (ft_var_readpackeddelta): Return deltas in
+	16.16 format.
+	(tt_face_var_cvt): Collect deltas in `cvt_deltas', which is a 16.16
+	format array, and add the accumulated values to the CVT at the end
+	of the function.
+	(TT_Vary_Apply_Glyph_Deltas): Store data in `points_org' and
+	`points_out' in 16.16 format.
+	Collect deltas in `point_deltas_x' and `point_deltas_y', which are
+	16.16 format arrays, and add the accumulated values to the glyph
+	coordinates at the end of the function.
+
+2018-06-24  Werner Lemberg  <wl@gnu.org>
+
 	New base function `FT_Matrix_Check' (#54019).
 
 	* src/base/ftcalc.c (FT_Matrix_Check): New base function to properly
