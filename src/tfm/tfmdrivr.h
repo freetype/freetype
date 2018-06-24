@@ -27,6 +27,26 @@
 
 FT_BEGIN_HEADER
 
+typedef struct s_tfm  *TFM;
+struct s_tfm {
+  /* Font Info */
+  int             type;         /* METRIC_TYPE_xxx */
+  int             type_aux;     /* METRIC_TYPE_AUX_xxx */
+  UINT4           cs;
+  /* Metrics */
+  UINT4           ds;
+  double          design_size;
+  double          slant;
+  unsigned int    begin_char, end_char;
+  INT4            *width, *height, *depth;
+  unsigned int    *ct_kcode, *ct_ctype;   /* JFM only */
+  int             nt;                     /* JFM only */
+  /* Font bounding box */
+  double          font_bbx_w, font_bbx_h;
+  double          font_bbx_xoff, font_bbx_yoff;
+};
+
+
   typedef struct  TFM_FaceRec_
   {
     FT_FaceRec        root;
