@@ -33,7 +33,7 @@ FT_BEGIN_HEADER
     FT_UInt              bbx_width, bbx_height;
     FT_UInt              off_x, off_y;
     FT_UInt              mv_x,  mv_y;
-    unsigned char        *bitmap;
+    FT_Byte              *bitmap;
     FT_UInt              raster;
 
   } GF_BitmapRec, *GF_Bitmap;
