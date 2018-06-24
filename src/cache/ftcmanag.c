@@ -321,14 +321,15 @@
 
     /* we break encapsulation for the sake of speed */
 #ifdef FTC_INLINE
-
+printf("Hi I am here in FTC_Manager_LookupFace 0\n");
     FTC_MRULIST_LOOKUP_CMP( &manager->faces, face_id, ftc_face_node_compare,
                             mrunode, error );
 
 #else
+printf("Hi I am here in FTC_Manager_LookupFace 1\n");
     error = FTC_MruList_Lookup( &manager->faces, face_id, &mrunode );
 #endif
-
+printf("Hi I am here in FTC_Manager_LookupFace 2\n");
     if ( !error )
       *aface = FTC_FACE_NODE( mrunode )->face;
 

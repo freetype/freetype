@@ -77,12 +77,12 @@
 
 
     FT_ASSERT( first );
-
+printf("Hi I am here in FTC_MruNode_Up 0\n");
     if ( first != node )
     {
       FTC_MruNode  prev, next, last;
 
-
+printf("Hi I am here in FTC_MruNode_Up 1\n");
 #ifdef FT_DEBUG_ERROR
       {
         FTC_MruNode  cnode = first;

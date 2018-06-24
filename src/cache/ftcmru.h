@@ -166,7 +166,7 @@ FT_BEGIN_HEADER
     FTC_MruNode*             _pfirst  = &(list)->nodes;                     \
     FTC_MruNode_CompareFunc  _compare = (FTC_MruNode_CompareFunc)(compare); \
     FTC_MruNode              _first, _node;                                 \
-                                                                            \
+                printf("Hi I am here in FTC_MRULIST_LOOKUP_CMP 0\n");                                                            \
                                                                             \
     error  = FT_Err_Ok;                                                     \
     _first = *(_pfirst);                                                    \
@@ -181,16 +181,16 @@ FT_BEGIN_HEADER
         {                                                                   \
           if ( _node != _first )                                            \
             FTC_MruNode_Up( _pfirst, _node );                               \
-                                                                            \
+                printf("Hi I am here in FTC_MRULIST_LOOKUP_CMP 1\n");                                                            \
           node = _node;                                                     \
           goto MruOk_;                                                      \
         }                                                                   \
         _node = _node->next;                                                \
-                                                                            \
+                      printf("Hi I am here in FTC_MRULIST_LOOKUP_CMP 2\n");                                                      \
       } while ( _node != _first);                                           \
     }                                                                       \
                                                                             \
-    error = FTC_MruList_New( (list), (key), (FTC_MruNode*)(void*)&(node) ); \
+    error = FTC_MruList_New( (list), (key), (FTC_MruNode*)(void*)&(node) ); printf("Hi I am here in FTC_MRULIST_LOOKUP_CMP 3\n");\
   MruOk_:                                                                   \
     ;                                                                       \
   FT_END_STMNT
