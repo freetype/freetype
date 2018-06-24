@@ -604,7 +604,6 @@
     FT_Vector*       offset = &dict->font_offset;
     FT_ULong*        upm    = &dict->units_per_em;
     FT_Byte**        data   = parser->stack;
-    FT_Error         error  = FT_ERR( Stack_Underflow );
 
 
     if ( parser->top >= parser->stack + 6 )
@@ -615,8 +614,6 @@
       FT_Long  min_scaling, max_scaling;
       int      i;
 
-
-      error = FT_Err_Ok;
 
       dict->has_font_matrix = TRUE;
 
@@ -646,22 +643,11 @@
            ( max_scaling - min_scaling ) < 0 ||
            ( max_scaling - min_scaling ) > 9 )
       {
-        /* Return default matrix in case of unlikely values. */
-
         FT_TRACE1(( "cff_parse_font_matrix:"
                     " strange scaling values (minimum %d, maximum %d),\n"
                     "                      "
                     " using default matrix\n", min_scaling, max_scaling ));
-
-        matrix->xx = 0x10000L;
-        matrix->yx = 0;
-        matrix->xy = 0;
-        matrix->yy = 0x10000L;
-        offset->x  = 0;
-        offset->y  = 0;
-        *upm       = 1;
-
-        goto Exit;
+        goto Unlikely;
       }
 
       for ( i = 0; i < 6; i++ )
@@ -708,10 +694,31 @@
                   (double)matrix->yy / *upm / 65536,
                   (double)offset->x  / *upm / 65536,
                   (double)offset->y  / *upm / 65536 ));
-    }
 
-  Exit:
-    return error;
+      if ( !FT_Matrix_Check( matrix ) )
+      {
+        FT_TRACE1(( "cff_parse_font_matrix:"
+                    " degenerate values, using default matrix\n" ));
+        goto Unlikely;
+      }
+
+      return FT_Err_Ok;
+    }
+    else
+      return FT_THROW( Stack_Underflow );
+
+  Unlikely:
+    /* Return default matrix in case of unlikely values. */
+
+    matrix->xx = 0x10000L;
+    matrix->yx = 0;
+    matrix->xy = 0;
+    matrix->yy = 0x10000L;
+    offset->x  = 0;
+    offset->y  = 0;
+    *upm       = 1;
+
+    return FT_Err_Ok;
   }
 
 

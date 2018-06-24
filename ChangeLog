@@ -1,3 +1,17 @@
+2018-06-24  Werner Lemberg  <wl@gnu.org>
+
+	New base function `FT_Matrix_Check' (#54019).
+
+	* src/base/ftcalc.c (FT_Matrix_Check): New base function to properly
+	reject degenerate font matrices.
+
+	* include/freetype/internal/ftcalc.h: Updated.
+
+	* src/cff/cffparse.c (cff_parse_font_matrix), src/cid/cidload.c
+	(cid_parse_font_matrix), src/type1/t1load.c (t1_parse_font_matrix),
+	src/type42/t42parse.c (t42_parse_font_matrix): Use
+	`FT_Matrix_Check'.
+
 2018-06-23  Werner Lemberg  <wl@gnu.org>
 
 	Fix typo.

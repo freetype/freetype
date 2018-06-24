@@ -747,6 +747,72 @@
 
   /* documentation is in ftcalc.h */
 
+  FT_BASE_DEF( FT_Bool )
+  FT_Matrix_Check( const FT_Matrix*  matrix )
+  {
+    FT_Matrix  m;
+    FT_Fixed   val[4];
+    FT_Fixed   nonzero_minval, maxval;
+    FT_Fixed   temp1, temp2;
+    FT_UInt    i;
+
+
+    if ( !matrix )
+      return 0;
+
+    val[0] = FT_ABS( matrix->xx );
+    val[1] = FT_ABS( matrix->xy );
+    val[2] = FT_ABS( matrix->yx );
+    val[3] = FT_ABS( matrix->yy );
+
+    /*
+     * To avoid overflow, we ensure that each value is not larger than
+     *
+     *   int(sqrt(2^31 / 4)) = 23170  ;
+     *
+     * we also check that no value becomes zero if we have to scale.
+     */
+
+    maxval         = 0;
+    nonzero_minval = FT_LONG_MAX;
+
+    for ( i = 0; i < 4; i++ )
+    {
+      if ( val[i] > maxval )
+        maxval = val[i];
+      if ( val[i] && val[i] < nonzero_minval )
+        nonzero_minval = val[i];
+    }
+
+    if ( maxval > 23170 )
+    {
+      FT_Fixed  scale = FT_DivFix( maxval, 23170 );
+
+
+      if ( !FT_DivFix( nonzero_minval, scale ) )
+        return 0;    /* value range too large */
+
+      m.xx = FT_DivFix( matrix->xx, scale );
+      m.xy = FT_DivFix( matrix->xy, scale );
+      m.yx = FT_DivFix( matrix->yx, scale );
+      m.yy = FT_DivFix( matrix->yy, scale );
+    }
+    else
+      m = *matrix;
+
+    temp1 = FT_ABS( m.xx * m.yy - m.xy * m.yx );
+    temp2 = m.xx * m.xx + m.xy * m.xy + m.yx * m.yx + m.yy * m.yy;
+
+    if ( temp1 == 0         ||
+         temp2 / temp1 > 50 )
+      return 0;
+
+    return 1;
+  }
+
+
+  /* documentation is in ftcalc.h */
+
   FT_BASE_DEF( void )
   FT_Vector_Transform_Scaled( FT_Vector*        vector,
                               const FT_Matrix*  matrix,

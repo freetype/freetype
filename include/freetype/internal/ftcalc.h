@@ -293,6 +293,21 @@ FT_BEGIN_HEADER
 
 
   /*
+   * Check a matrix.  If the transformation would lead to extreme shear or
+   * extreme scaling, for example, return 0.  If everything is OK, return 1.
+   *
+   * Based on geometric considerations we use the following inequality to
+   * identify a degenerate matrix.
+   *
+   *   50 * abs(xx*yy - xy*yx) < xx^2 + xy^2 + yx^2 + yy^2
+   *
+   * Value 50 is heuristic.
+   */
+  FT_BASE( FT_Bool )
+  FT_Matrix_Check( const FT_Matrix*  matrix );
+
+
+  /*
    * A variant of FT_Vector_Transform.  See comments for
    * FT_Matrix_Multiply_Scaled.
    */
