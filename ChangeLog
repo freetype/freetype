@@ -1,3 +1,11 @@
+2018-06-25  Werner Lemberg  <wl@gnu.org>
+
+	* src/truetype/ttgxvar.c (tt_face_vary_cvt): Add initializers.
+
+	Reported as
+
+	  https://bugs.chromium.org/p/oss-fuzz/issues/detail?id=9070
+
 2018-06-24  Werner Lemberg  <wl@gnu.org>
 
 	[truetype] Increase precision while applying VF deltas.

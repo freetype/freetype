@@ -3089,25 +3089,33 @@
   tt_face_vary_cvt( TT_Face    face,
                     FT_Stream  stream )
   {
-    FT_Error    error;
-    FT_Memory   memory = stream->memory;
-    FT_ULong    table_start;
-    FT_ULong    table_len;
-    FT_UInt     tupleCount;
-    FT_ULong    offsetToData;
-    FT_ULong    here;
-    FT_UInt     i, j;
-    FT_Fixed*   tuple_coords    = NULL;
-    FT_Fixed*   im_start_coords = NULL;
-    FT_Fixed*   im_end_coords   = NULL;
-    GX_Blend    blend           = face->blend;
-    FT_UInt     point_count, spoint_count = 0;
+    FT_Error   error;
+    FT_Memory  memory = stream->memory;
+
+    FT_ULong  table_start;
+    FT_ULong  table_len;
+
+    FT_UInt   tupleCount;
+    FT_ULong  offsetToData;
+
+    FT_ULong  here;
+    FT_UInt   i, j;
+
+    FT_Fixed*  tuple_coords    = NULL;
+    FT_Fixed*  im_start_coords = NULL;
+    FT_Fixed*  im_end_coords   = NULL;
+
+    GX_Blend  blend = face->blend;
+
+    FT_UInt  point_count;
+    FT_UInt  spoint_count = 0;
+
     FT_UShort*  sharedpoints = NULL;
     FT_UShort*  localpoints  = NULL;
     FT_UShort*  points;
 
-    FT_Fixed*  deltas;
-    FT_Fixed*  cvt_deltas;
+    FT_Fixed*  deltas     = NULL;
+    FT_Fixed*  cvt_deltas = NULL;
 
 
     FT_TRACE2(( "CVAR " ));
