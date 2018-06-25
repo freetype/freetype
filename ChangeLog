@@ -1,5 +1,16 @@
 2018-06-25  Werner Lemberg  <wl@gnu.org>
 
+	[truetype] Fix memory leak.
+
+	* src/truetype/ttgxvar.c (TT_Vary_Apply_Glyph_Deltas): Add initializers.
+	Fix typo in `goto' destination.
+
+	Reported as
+
+	  https://bugs.chromium.org/p/oss-fuzz/issues/detail?id=9071
+
+2018-06-25  Werner Lemberg  <wl@gnu.org>
+
 	* src/truetype/ttgxvar.c (tt_face_vary_cvt): Add initializers.
 
 	Reported as

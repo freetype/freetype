@@ -3626,32 +3626,39 @@
                               FT_Outline*  outline,
                               FT_UInt      n_points )
   {
-    FT_Stream   stream = face->root.stream;
-    FT_Memory   memory = stream->memory;
-    GX_Blend    blend  = face->blend;
+    FT_Error   error;
+    FT_Stream  stream = face->root.stream;
+    FT_Memory  memory = stream->memory;
 
     FT_Vector*  points_org = NULL;  /* coordinates in 16.16 format */
     FT_Vector*  points_out = NULL;  /* coordinates in 16.16 format */
     FT_Bool*    has_delta  = NULL;
 
-    FT_Error    error;
-    FT_ULong    glyph_start;
-    FT_UInt     tupleCount;
-    FT_ULong    offsetToData;
-    FT_ULong    here;
-    FT_UInt     i, j;
-    FT_Fixed*   tuple_coords    = NULL;
-    FT_Fixed*   im_start_coords = NULL;
-    FT_Fixed*   im_end_coords   = NULL;
-    FT_UInt     point_count, spoint_count = 0;
+    FT_ULong  glyph_start;
+
+    FT_UInt   tupleCount;
+    FT_ULong  offsetToData;
+
+    FT_ULong  here;
+    FT_UInt   i, j;
+
+    FT_Fixed*  tuple_coords    = NULL;
+    FT_Fixed*  im_start_coords = NULL;
+    FT_Fixed*  im_end_coords   = NULL;
+
+    GX_Blend  blend = face->blend;
+
+    FT_UInt  point_count;
+    FT_UInt  spoint_count = 0;
+
     FT_UShort*  sharedpoints = NULL;
     FT_UShort*  localpoints  = NULL;
     FT_UShort*  points;
 
-    FT_Fixed*  deltas_x;
-    FT_Fixed*  deltas_y;
-    FT_Fixed*  point_deltas_x;
-    FT_Fixed*  point_deltas_y;
+    FT_Fixed*  deltas_x       = NULL;
+    FT_Fixed*  deltas_y       = NULL;
+    FT_Fixed*  point_deltas_x = NULL;
+    FT_Fixed*  point_deltas_y = NULL;
 
 
     if ( !face->doblend || !blend )
@@ -3754,7 +3761,7 @@
                     " invalid tuple index\n" ));
 
         error = FT_THROW( Invalid_Table );
-        goto Fail2;
+        goto Fail3;
       }
       else
         FT_MEM_COPY(
