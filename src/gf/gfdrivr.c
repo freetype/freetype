@@ -140,8 +140,6 @@
     memory = FT_FACE_MEMORY( face );
 
     gf_free_font( face->gf_glyph );
-
-    FT_FREE( /*  */ );
   }
 
 
@@ -152,63 +150,48 @@
                  FT_Int         num_params,
                  FT_Parameter*  params )
   {
-    GF_Face   face   = (GF_Face)gfface;
-    FT_Error   error;
-    FT_Memory  memory = FT_FACE_MEMORY( face );
+    GF_Face     face   = (GF_Face)gfface;
+    FT_Error    error;
+    FT_Memory   memory = FT_FACE_MEMORY( face );
+    GF_Glyph    go;
 
+    face->gf_glyph = &go ;
     FT_UNUSED( num_params );
     FT_UNUSED( params );
 
     FT_TRACE2(( "GF driver\n" ));
 
     /* load font */
-    error = gf_load_font( stream, face );
-    if ( !error )
+    error = gf_load_font( stream, memory, &go );
+    if ( error )
       goto Exit;
-
-    if ( FT_ERR_EQ( error, Unknown_File_Format ) )
-    {
-      goto Exit
-    }
-
-    /* sanity check */
-    if ( !face-> /*  */ )
-    {
-      FT_TRACE2(( "/*  */" ));
-      error = FT_THROW( Invalid_File_Format );
-      goto Fail;
-    }
 
     /* we now need to fill the root FT_Face fields */
     /* with relevant information                   */
-    {
-      FT_Face   root = FT_FACE( face );
-      GF_Face   font = face->font;
 
+    gfface->num_faces       = 1;
+    gfface->face_index      = 0;
+    gfface->face_flags |    = FT_FACE_FLAG_FIXED_SIZES | FT_FACE_FLAG_HORIZONTAL ;
+    gfface->family_name     = NULL;
+    gfface->num_glyphs      = (FT_Long)(go->code_max - go->code_min + 1 );
+    gfface->num_fixed_sizes = 1;
 
-      root->face_index  = /*  */  ;
-
-      root->face_flags |= /*  */ ;
-
-      /* set up the `fixed_sizes' array */
-      if ( FT_NEW_ARRAY( root->available_sizes, 1 ) )
-        goto Fail;
-
-      root->num_fixed_sizes = 1;
+    if ( FT_NEW_ARRAY( gfface->available_sizes, 1 ) )
+      goto Exit;
 
       {
-        FT_Bitmap_Size*  bsize = root->available_sizes;
+        FT_Bitmap_Size*  bsize = gfface->available_sizes;
         FT_UShort        x_res, y_res;
 
-        bsize->width  = (FT_Short) /*  */ ;
-        bsize->height = (FT_Short) /*  */ ;
-        bsize->size   =            /*  */ ;
+        bsize->width  = (FT_Short) face->gf_glyph->font_bbx_w ;
+        bsize->height = (FT_Short) face->gf_glyph->font_bbx_h ;
+        bsize->size   = (FT_Short) face->gf_glyph->ds ; /* Preliminary to be checked for 26.6 fractional points*/
 
-        x_res = /*  */ ;
-        y_res = /*  */ ;
+        /*x_res =  ;  To be Checked for x_resolution and y_resolution
+        y_res =  ;*/
 
-        bsize->y_ppem = /*  */ ;
-        bsize->x_ppem = /*  */ ;
+        bsize->y_ppem = face->gf_glyph->font_bbx_yoff ;
+        bsize->x_ppem = face->gf_glyph->font_bbx_xoff ;
       }
 
       /* Charmaps */
@@ -219,34 +202,15 @@
 
         charmap.encoding    = FT_ENCODING_NONE;
         /* initial platform/encoding should indicate unset status? */
-        charmap.platform_id = TT_PLATFORM_APPLE_UNICODE;
+        charmap.platform_id = TT_PLATFORM_APPLE_UNICODE;  /*Preliminary */
         charmap.encoding_id = TT_APPLE_ID_DEFAULT;
         charmap.face        = root;
 
-        error = FT_CMap_New( gf_cmap_class, NULL, &charmap, NULL );
+        error = FT_CMap_New( &gf_cmap_class, NULL, &charmap, NULL );
 
         if ( error )
           goto Fail;
       }
-
-
-      /* reserve one slot for the .notdef glyph at index 0 */
-      root->num_glyphs = /*  */ ;
-
-      root->family_name = /*  */;
-      root->style_name  = /*  */;
-
-      if ( root->style_flags & FT_STYLE_FLAG_BOLD )
-      {
-        if ( root->style_flags & FT_STYLE_FLAG_ITALIC )
-          root->style_name = (char *)"Bold Italic";
-        else
-          root->style_name = (char *)"Bold";
-      }
-      else if ( root->style_flags & FT_STYLE_FLAG_ITALIC )
-        root->style_name = (char *)"Italic";
-    }
-    goto Exit;
 
   Fail:
     GF_Face_Done( gfface );
@@ -266,9 +230,9 @@
 
     FT_Select_Metrics( size->face, 0 );
 
-    size->metrics.ascender    =  /*  */  ;
-    size->metrics.descender   =  /*  */  ;
-    size->metrics.max_advance =  /*  */  ;
+    size->metrics.ascender    = face->gf_glyph->font_bbx_xoff    * 64;
+    size->metrics.descender   = face->gf_glyph->font_bbx_yoff    * 64;
+    size->metrics.max_advance = face->gf_glyph->font_bbx_w       * 64;
 
     return FT_Err_Ok;
 
@@ -295,7 +259,7 @@
       break;
 
     case FT_SIZE_REQUEST_TYPE_REAL_DIM:
-      if ( height == /*  */ )
+      if ( height == face->gf_glyph->font_bbx_h )  /* Preliminary */
         error = FT_Err_Ok;
       break;
 
@@ -341,33 +305,38 @@
 
     FT_TRACE1(( "GF_Glyph_Load: glyph index %d\n", glyph_index ));
 
+    #if 0
     if ( glyph_index > 0 )
-      glyph_index--;                           /* revert to real index */
+      glyph_index--;
     else
-      glyph_index = /*  */;                    /* the `.notdef' glyph  */
+      glyph_index = /*  */;
+    #endif
+
+    if ( glyph_index < 0 )
+      glyph_index = 0;
 
     /* slot, bitmap => freetype, glyph => gflib */
     glyph = gf->gf_glyph->bm_table[glyph_index];
 
-    bitmap->rows  = /*  */ ;
-    bitmap->width = /*  */ ;
-    bitmap->pitch = /*  */ ;     /* (In BDF) same as FT_Bitmap.pitch */
+    bitmap->rows  = bm.mv_y ; /* Prelimiary */
+    bitmap->width = bm.mv_x ; /* Prelimiary */
+    /* bitmap->pitch =  ; */
 
     /* note: we don't allocate a new array to hold the bitmap; */
     /*       we can simply point to it                         */
-    ft_glyphslot_set_bitmap( slot, glyph.bitmap );
+    ft_glyphslot_set_bitmap( slot, bm.bitmap );
 
     slot->format      = FT_GLYPH_FORMAT_BITMAP;
-    slot->bitmap_left = glyph.bbx.x_offset;
-    slot->bitmap_top  = glyph.bbx.ascent;
+    slot->bitmap_left = bm.off_x ; /* Prelimiary */
+    slot->bitmap_top  = bm.off_y ; /* Prelimiary */
 
-    slot->metrics.horiAdvance  = (FT_Pos) /*  */ ;
-    slot->metrics.horiBearingX = (FT_Pos) /*  */ ;
-    slot->metrics.horiBearingY = (FT_Pos) /*  */ ;
-    slot->metrics.width        = (FT_Pos) /*  */ ;
-    slot->metrics.height       = (FT_Pos) /*  */ ;
+    slot->metrics.horiAdvance  = (FT_Pos) bm.bbx_width - bm.off_x       ; /* Prelimiary */
+    slot->metrics.horiBearingX = (FT_Pos) bm.off_x                      ; /* Prelimiary */
+    slot->metrics.horiBearingY = (FT_Pos) bm.off_y                      ; /* Prelimiary */
+    slot->metrics.width        = (FT_Pos) ( bitmap->width * 64 )        ; /* Prelimiary */
+    slot->metrics.height       = (FT_Pos) ( bitmap->rows * 64 )         ; /* Prelimiary */
 
-    ft_synthesize_vertical_metrics( &slot->metrics, /*  */ );
+    ft_synthesize_vertical_metrics( &slot->metrics, bm.bbx_height * 64  );
 
   Exit:
     return error;
