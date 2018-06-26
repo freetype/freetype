@@ -142,7 +142,7 @@
 
     memory = FT_FACE_MEMORY( face );
 
-    gf_free_font( face->gf_glyph );
+    gf_free_font( face->gf_glyph, memory );
 
     /* FT_FREE(  ); */
   }
@@ -167,7 +167,7 @@
     FT_TRACE2(( "GF driver\n" ));
 
     /* load font */
-    error = gf_load_font( stream, memory, &go );/*printf("face->gf_glyph->code_max %d",go->code_max);printf("Hi I am here1\n");*/
+    error = gf_load_font( stream, memory, &go );printf("face->gf_glyph->code_max %d",go->code_max);printf("Hi I am here1\n");
 
     if ( error )
       goto Exit;
@@ -195,14 +195,14 @@
      * XXX: TO-DO: gfface->face_flags |= FT_FACE_FLAG_FIXED_WIDTH;
      * XXX: I have to check for this.
      */
-/*printf("Hi I am here2\n");*/
+printf("Hi I am here2\n");
     gfface->family_name = NULL;
     gfface->num_glyphs = (FT_Long)(go->code_max - go->code_min + 1 );
     gfface->num_fixed_sizes = 1;
-/*printf("Hi I am here3\n");*/
+printf("Hi I am here3\n");
     if ( FT_NEW_ARRAY( gfface->available_sizes, 1 ) )
       goto Exit;
-/*printf("Hi I am here4\n");*/
+printf("Hi I am here4\n");
     {
       FT_Bitmap_Size*  bsize = gfface->available_sizes;
       FT_UShort        x_res, y_res;
@@ -218,7 +218,7 @@
       bsize->y_ppem = face->gf_glyph->font_bbx_yoff ;
       bsize->x_ppem = face->gf_glyph->font_bbx_xoff ;
     }
-/*printf("Hi I am here5\n");*/
+printf("Hi I am here5\n");
 
       /* Charmaps */
 
@@ -236,14 +236,14 @@
 
       if ( error )
         goto Fail;
-            /*printf("Hi I am here completed GF_Face_Init1\n");*/
+            printf("Hi I am here completed GF_Face_Init1\n");
     }
-/*printf("Hi I am here6\n");*/
+printf("Hi I am here6\n");
   Fail:
-    GF_Face_Done( gfface );
+  /*  GF_Face_Done( gfface ); */
 
   Exit:
-/*    printf("Hi I am here completed GF_Face_Init2 %ld\n",gfface->num_glyphs);*/
+   printf("Hi I am here completed GF_Face_Init2 %ld\n",gfface->num_glyphs);
     return error;
   }
 
