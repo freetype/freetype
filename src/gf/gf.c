@@ -20,7 +20,7 @@
 
 #include <ft2build.h>
 
-#include "gflib.c"
+#include "gflibfp.c"
 #include "gfdrivr.c"
 
 
