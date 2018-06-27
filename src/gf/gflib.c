@@ -43,28 +43,37 @@
 unsigned char   bit_table[] = {
   0x80, 0x40, 0x20, 0x10, 0x08, 0x04, 0x02, 0x01 };
 
-  long           gf_read_intn(FT_Stream,int);
-  void           gf_skip_n(FT_Stream,int);
+  /**************************************************************************
+   *
+   * GF font utility functions.
+   *
+   */
 
-#define READ_INT1( stream )          (INT1)gf_read_intn(( stream ), 1)
-#define READ_INT2( stream )          (INT2)gf_read_intn(( stream ), 2)
-#define READ_INT3( stream )          (INT3)gf_read_intn(( stream ), 3)
-#define READ_INT4( stream )          (INT4)gf_read_intn(( stream ), 4)
-#define READ_INTN( stream ,n)        (INT4)gf_read_intn(( stream ), (n))
-#define SKIP_N( stream ,k)            gf_skip_n(( stream ), (k))
-#define READ_UINTN( stream ,n)       (UINT4)gf_read_uintn(( stream ), (n))
+  long           gf_read_intn(FT_Stream,int);
+  unsigned long  gf_read_uintn(FT_Stream,int);
+
+#define READ_UINT1( stream )    (UINT1)gf_read_uintn( stream, 1)
+#define READ_UINTN( stream,n)   (UINT4)gf_read_uintn( stream, n)
+#define READ_INT1( stream )     (INT1)gf_read_intn( stream, 1)
+#define READ_INT4( stream )     (INT4)gf_read_intn( stream, 4)
 
 /*
- * Reading a Number from stream
+ * Reading a Number from file
  */
   unsigned long
-  READ_UINT1(FT_Stream stream)
+  gf_read_uintn(FT_Stream stream, int size)
   {
     unsigned long  v,k;
-    FT_Error error= FT_Err_Ok;
+    FT_Error error = FT_Err_Ok;
     FT_Byte tp;
-    FT_READ_BYTE(tp);
-    v =(unsigned long)tp;
+    v = 0L;
+    while (size >= 1)
+    {
+      FT_READ_BYTE(tp);
+      k =(unsigned long)tp;
+      v = v*256L + k;
+      --size;
+    }
     return v;
   }
 
@@ -91,36 +100,6 @@ unsigned char   bit_table[] = {
     return v;
   }
 
-  unsigned long
-  gf_read_uintn(FT_Stream stream, int size)
-  {
-    unsigned long  v,k;
-    FT_Error error = FT_Err_Ok;
-    FT_Byte tp;
-    v = 0L;
-    while (size >= 1)
-    {
-      FT_READ_BYTE(tp);
-      k =(unsigned long)tp;
-      v = v*256L + (unsigned long)k;
-      --size;
-    }
-    return v;
-  }
-
-  void
-  gf_skip_n(FT_Stream stream, int size)
-  {
-    FT_Stream_Skip(stream, (FT_Long)size );
-    #if 0
-    while (size > 0)
-    {
-      (void)getc(fp);
-      --size;
-    }
-    #endif
-  }
-
   /**************************************************************************
    *
    * API.
@@ -128,7 +107,7 @@ unsigned char   bit_table[] = {
    */
 
   FT_LOCAL_DEF( FT_Error )
-  gf_read_glyph(FT_Stream stream, GF_Bitmap bm)
+  gf_read_glyph(FT_Stream stream, GF_Bitmap bm, FT_Memory memory)
   {
     long           m, n;
     int            paint_sw;
@@ -137,29 +116,29 @@ unsigned char   bit_table[] = {
     long           w, h, d;
     int            m_b, k;
     unsigned char  *ptr;
-    FT_Error        error  = FT_Err_Ok;
+    FT_Error       error  = FT_Err_Ok;
 
     switch (READ_UINT1( stream ))
     {
     case GF_BOC:
-      SKIP_N( stream , 4);
-      SKIP_N( stream , 4);
+      FT_STREAM_SKIP( 4 );
+      FT_STREAM_SKIP( 4 );
       min_m = READ_INT4( stream );
       max_m = READ_INT4( stream );
       min_n = READ_INT4( stream );
       max_n = READ_INT4( stream );
-
       break;
+
     case GF_BOC1:
-      SKIP_N( stream , 1);
+      FT_STREAM_SKIP( 1 );
       del_m = (INT4)READ_UINT1( stream );
       max_m = (INT4)READ_UINT1( stream );
       del_n = (INT4)READ_UINT1( stream );
       max_n = (INT4)READ_UINT1( stream );
       min_m = max_m - del_m;
       min_n = max_n - del_n;
-
       break;
+
     default:
       return -1;
     }
@@ -240,7 +219,7 @@ unsigned char   bit_table[] = {
             }
             paint_sw = 1 - paint_sw;
           break;
-			  case GF_SKIP0:
+        case GF_SKIP0:
           m = min_m;
           n = n - 1;
           paint_sw = 0;
@@ -257,23 +236,22 @@ unsigned char   bit_table[] = {
         case GF_XXX3:
         case GF_XXX4:
           k = READ_UINTN( stream, instr - GF_XXX1 + 1);
-          SKIP_N( stream, k);
+          FT_STREAM_SKIP( k );
           break;
         case GF_YYY:
-          SKIP_N( stream, 4);
+          FT_STREAM_SKIP( 4 );
           break;
         case GF_NO_OP:
           break;
         default:
-          /* FT_FREE(bm->bitmap); */ /* Returning unnecessary errors TO BE CHECKED */
+          FT_FREE(bm->bitmap);
           bm->bitmap = NULL;
           error = FT_THROW( Invalid_File_Format );
           return -1;
          }
       }
     }
-
-      return 0;
+    return 0;
   }
 
 
@@ -301,16 +279,13 @@ unsigned char   bit_table[] = {
     nchars = -1;
 
     /* seek to post_post instr. */
-    /* fseek(fp, -5, SEEK_END); */
+    /* fseek(fp, -1, SEEK_END); */
     FT_STREAM_SEEK( stream->size - 1 );
 
-
     while ( d= READ_UINT1( stream ) == 223)
-    {
       FT_STREAM_SEEK( stream->pos -2 );
-
       /* fseek(fp, -2, SEEK_CUR); */
-    }
+
     FT_STREAM_SEEK( stream->pos -1 );
     d= READ_UINT1( stream );
 
@@ -320,19 +295,15 @@ unsigned char   bit_table[] = {
       goto ErrExit;
     }
 
-
     /* fseek(fp, -6, SEEK_CUR); */
     FT_STREAM_SEEK( stream->pos -6 );
 
-
     /* check if the code is post_post */
-
     if (READ_UINT1( stream ) != GF_POST_POST)
     {
       error = FT_THROW( Invalid_File_Format );
       goto ErrExit;
     }
-
 
     /* read pointer to post instr. */
     FT_READ_ULONG( ptr_post );
@@ -342,30 +313,27 @@ unsigned char   bit_table[] = {
       goto ErrExit;
     }
 
-
     /* goto post instr. and read it */
     /* fseek(fp, ptr_post, SEEK_SET); */
     FT_STREAM_SEEK( ptr_post );
-
     if (READ_UINT1( stream ) != GF_POST)
     {
       error = FT_THROW( Invalid_File_Format );
       goto ErrExit;
     }
 
-
-    FT_READ_ULONG( ptr_p )    ;printf("\nptr_p is %d\n",ptr_p);
-    FT_READ_ULONG( ds )       ;printf("\nds is %d\n",ds);
-    FT_READ_ULONG( check_sum );printf("\ncheck_sum is %d\n",check_sum);
-    FT_READ_ULONG( hppp )     ;printf("\nhppp is %d\n",hppp);
-    FT_READ_ULONG( vppp )     ;printf("\nvppp is %d\n",vppp);
-    min_m     = READ_INT4( stream );printf("\nmin_m is %d\n",min_m);
-    max_m     = READ_INT4( stream );printf("\nmax_m is %d\n",max_m);
-    min_n     = READ_INT4( stream );printf("\nmin_n is %d\n",min_n);
-    max_n     = READ_INT4( stream );printf("\nmax_n is %d\n",max_n);
+    FT_READ_ULONG( ptr_p )    ;
+    FT_READ_ULONG( ds )       ;
+    FT_READ_ULONG( check_sum );
+    FT_READ_ULONG( hppp )     ;
+    FT_READ_ULONG( vppp )     ;
+    min_m     = READ_INT4( stream );
+    max_m     = READ_INT4( stream );
+    min_n     = READ_INT4( stream );
+    max_n     = READ_INT4( stream );
 
     #if 0
-      gptr = ftell(fp);
+    gptr = ftell(fp);
     #endif
 
     #if 0
@@ -409,24 +377,22 @@ unsigned char   bit_table[] = {
     if( FT_ALLOC(go, sizeof(GF_GlyphRec)) )
       goto ErrExit;
 
-
     /*go->bm_table = (GF_Bitmap)malloc(nchars* sizeof(GF_BitmapRec));*/
     if( FT_ALLOC_MULT(go->bm_table, sizeof(GF_BitmapRec), nchars) )
       goto ErrExit;
 
-
     for (i = 0; i < nchars; i++)
       go->bm_table[i].bitmap = NULL;
 
-    go->ds   = (double)ds/(1<<20);printf("\ngo->ds is %d\n",go->ds);
-    go->hppp = (double)hppp/(1<<16);printf("\ngo->hppp is %d\n",go->hppp);
-    go->vppp = (double)vppp/(1<<16);printf("\ngo->vppp is %d\n",go->vppp);
-    go->font_bbx_w = max_m - min_m;printf("\ngo->font_bbx_w is %d\n",go->font_bbx_w);
-    go->font_bbx_h = max_n - min_n;printf("\ngo->font_bbx_h is %d\n",go->font_bbx_h);
-    go->font_bbx_xoff = min_m;printf("\ngo->font_bbx_xoff is %d\n",go->font_bbx_xoff);
-    go->font_bbx_yoff = min_n;printf("\ngo->font_bbx_yoff is %d\n",go->font_bbx_yoff);
-    go->code_min = bc;printf("\ngo->code_min is %d\n",go->code_min);
-    go->code_max = ec;printf("\ngo->code_max is %d\n",go->code_max);
+    go->ds   = (double)ds/(1<<20);
+    go->hppp = (double)hppp/(1<<16);
+    go->vppp = (double)vppp/(1<<16);
+    go->font_bbx_w = max_m - min_m;
+    go->font_bbx_h = max_n - min_n;
+    go->font_bbx_xoff = min_m;
+    go->font_bbx_yoff = min_n;
+    go->code_min = bc;
+    go->code_max = ec;
 
     /* read glyph */
     #if 0
@@ -447,11 +413,11 @@ unsigned char   bit_table[] = {
         ptr  = READ_INT4( stream );
         break;
       case GF_CHAR_LOC0:
-        code = READ_UINT1( stream );printf("code is %d\n",code);
-        dx   = (double)READ_INT1( stream );printf("dx is %d\n",dx);
+        code = READ_UINT1( stream );
+        dx   = (double)READ_INT1( stream );
         dy   = (double)0;
-        w    = READ_INT4( stream );printf("w is %d\n",w);
-        ptr  = READ_INT4( stream );printf("ptr is %d\n",ptr);
+        w    = READ_INT4( stream );
+        ptr  = READ_INT4( stream );
         break;
       default:
         error = FT_THROW( Invalid_File_Format );
@@ -464,7 +430,7 @@ unsigned char   bit_table[] = {
       FT_STREAM_SEEK( ptr );
 
       bm = &go->bm_table[code - bc];
-      if (gf_read_glyph( stream, bm ) < 0)
+      if (gf_read_glyph( stream, bm, memory ) < 0)
         goto ErrExit;
 
       bm->mv_x = dx;
@@ -473,7 +439,6 @@ unsigned char   bit_table[] = {
       FT_STREAM_SEEK( optr );
     }
     *goptr          = go;
-printf("\nHi I was here in gf_load_font\n");
   return error;
 
 		ErrExit:
@@ -488,11 +453,12 @@ printf("\nHi I was here in gf_load_font\n");
         FT_FREE(go->bm_table);
       }
       FT_FREE(go);
+      return NULL;
   }
 
 
   FT_LOCAL_DEF( void )
-  gf_free_font( GF_Glyph  go, FT_Memory memory)
+  gf_free_font( GF_Glyph  go, FT_Memory memory )
   {
     int i=0, nchars =sizeof(go->bm_table);
     if (go != NULL)
@@ -500,7 +466,7 @@ printf("\nHi I was here in gf_load_font\n");
       if (go->bm_table != NULL)
       {
         for (i = 0; i < nchars; i++)
-          FT_FREE(go->bm_table[i].bitmap);  /* To be verified from Vflib */
+          FT_FREE(go->bm_table[i].bitmap);
       }
       FT_FREE(go->bm_table);
     }
