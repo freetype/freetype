@@ -189,8 +189,8 @@ FT_BEGIN_HEADER
                       printf("Hi I am here in FTC_MRULIST_LOOKUP_CMP 2\n");                                                      \
       } while ( _node != _first);                                           \
     }                                                                       \
-                                                                            \
-    error = FTC_MruList_New( (list), (key), (FTC_MruNode*)(void*)&(node) ); printf("Hi I am here in FTC_MRULIST_LOOKUP_CMP 3\n");\
+                         printf("Hi I am here in FTC_MRULIST_LOOKUP_CMP 3\n");                                                   \
+    error = FTC_MruList_New( (list), (key), (FTC_MruNode*)(void*)&(node) ); printf("Hi I am here in FTC_MRULIST_LOOKUP_CMP 4\n");\
   MruOk_:                                                                   \
     ;                                                                       \
   FT_END_STMNT

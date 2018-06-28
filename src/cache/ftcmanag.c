@@ -40,7 +40,7 @@
     FT_Size   size = NULL;
     FT_Error  error;
 
-
+printf("Hi I am here in ftc_scaler_lookup_size 1\n");
     error = FTC_Manager_LookupFace( manager, scaler->face_id, &face );
     if ( error )
       goto Exit;
@@ -122,7 +122,7 @@
     FTC_SizeNode  node    = (FTC_SizeNode)ftcnode;
     FTC_Scaler    scaler  = (FTC_Scaler)ftcscaler;
     FTC_Manager   manager = (FTC_Manager)ftcmanager;
-
+printf("Hi I am here in ftc_size_node_init 1\n");
 
     node->scaler = scaler[0];
 

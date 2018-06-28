@@ -128,7 +128,6 @@ unsigned char   bit_table[] = {
       min_n = READ_INT4( stream );
       max_n = READ_INT4( stream );
       break;
-
     case GF_BOC1:
       FT_STREAM_SKIP( 1 );
       del_m = (INT4)READ_UINT1( stream );
@@ -138,7 +137,6 @@ unsigned char   bit_table[] = {
       min_m = max_m - del_m;
       min_n = max_n - del_n;
       break;
-
     default:
       return -1;
     }
@@ -447,30 +445,32 @@ unsigned char   bit_table[] = {
       {
         if (go->bm_table != NULL)
         {
-          for (i = 0; i < nchars; i++)
-            FT_FREE(go->bm_table[i].bitmap);
+          for (i = 0; i < nchars; i++){}
+            /* FT_FREE(go->bm_table[i].bitmap); */
         }
-        FT_FREE(go->bm_table);
+        /* FT_FREE(go->bm_table); */
       }
-      FT_FREE(go);
-      return NULL;
+      /* FT_FREE(go); */
   }
 
 
   FT_LOCAL_DEF( void )
-  gf_free_font( GF_Glyph  go, FT_Memory memory )
+  gf_free_font( FT_Face gfface, FT_Memory memory )
   {
-    int i=0, nchars =sizeof(go->bm_table);
+    GF_Face    gf = (GF_Face)gfface;
+    GF_Glyph   go;
+    go = gf->gf_glyph;
+    int i=0, nchars =gfface->num_glyphs;
     if (go != NULL)
     {
       if (go->bm_table != NULL)
       {
-        for (i = 0; i < nchars; i++)
-          FT_FREE(go->bm_table[i].bitmap);
+        for (i = 0; i < nchars; i++){}
+          /* FT_FREE(go->bm_table[i].bitmap); */
       }
-      FT_FREE(go->bm_table);
+      /* FT_FREE(go->bm_table); */
     }
-    FT_FREE(go);
+    /* FT_FREE(go); */
   }
 
 
