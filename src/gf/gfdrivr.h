@@ -28,32 +28,33 @@
 FT_BEGIN_HEADER
 
   /* BitmapRec for GF format specific glyphs  */
-  typedef struct GF_BitmapRec_ 
+  typedef struct GF_BitmapRec_
   {
-    int              bbx_width, bbx_height;   
-    int              off_x, off_y;            
-    int              mv_x,  mv_y;            
-    unsigned char    *bitmap;
-    int              raster;
-  } GF_BitmapRec, *GF_Bitmap;
-	
+    FT_UInt              bbx_width, bbx_height;
+    FT_UInt              off_x, off_y;
+    FT_UInt              mv_x,  mv_y;
+    FT_Byte              *bitmap;
+    FT_UInt              raster;
 
-  typedef struct GF_Glyph_ 
+  } GF_BitmapRec, *GF_Bitmap;
+
+
+  typedef struct GF_GlyphRec_
   {
-    int         code_min, code_max; 
-    GF_BITMAP   bm_table;
-    double      ds, hppp, vppp;
-    int         font_bbx_w, font_bbx_h;
-    int         font_bbx_xoff, font_bbx_yoff;
-  } GF_Glyph, *GF_Glyph;
+    FT_UInt         code_min, code_max;
+    GF_Bitmap       bm_table;
+    double          ds, hppp, vppp;
+    FT_UInt         font_bbx_w, font_bbx_h;
+    FT_UInt         font_bbx_xoff, font_bbx_yoff;
+
+  } GF_GlyphRec, *GF_Glyph;
 
 
   typedef struct  GF_FaceRec_
   {
     FT_FaceRec        root;
     GF_Glyph          gf_glyph;
-    GF_BitmapRec      gf_bitmap;
-    
+
   } GF_FaceRec, *GF_Face;
 
 

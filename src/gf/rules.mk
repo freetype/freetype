@@ -26,27 +26,27 @@ GF_COMPILE := $(CC) $(ANSIFLAGS)                            \
 
 # gf driver sources (i.e., C files)
 #
-BDF_DRV_SRC := $(BDF_DIR)/gflib.c \
-               $(BDF_DIR)/gfdrivr.c
+GF_DRV_SRC := $(GF_DIR)/gflib.c \
+               $(GF_DIR)/gfdrivr.c
 
 
 # gf driver headers
 #
-GF_DRV_H :=  $(BDF_DIR)/gf.h \
-             $(BDF_DIR)/gfdrivr.h \
-             $(BDF_DIR)/gferror.h
+GF_DRV_H :=  $(GF_DIR)/gf.h \
+             $(GF_DIR)/gfdrivr.h \
+             $(GF_DIR)/gferror.h
 
 # gf driver object(s)
 #
 #   GF_DRV_OBJ_M is used during `multi' builds
 #   GF_DRV_OBJ_S is used during `single' builds
 #
-GF_DRV_OBJ_M := $(GF_DRV_SRC:$(BDF_DIR)/%.c=$(OBJ_DIR)/%.$O)
+GF_DRV_OBJ_M := $(GF_DRV_SRC:$(GF_DIR)/%.c=$(OBJ_DIR)/%.$O)
 GF_DRV_OBJ_S := $(OBJ_DIR)/gf.$O
 
 # gf driver source file for single build
 #
-GF_DRV_SRC_S := $(BDF_DIR)/gf.c
+GF_DRV_SRC_S := $(GF_DIR)/gf.c
 
 
 # gf driver - single object
@@ -57,7 +57,7 @@ $(GF_DRV_OBJ_S): $(GF_DRV_SRC_S) $(GF_DRV_SRC) $(FREETYPE_H) $(GF_DRV_H)
 
 # gf driver - multiple objects
 #
-$(OBJ_DIR)/%.$O: $(GF_DIR)/%.c $(FREETYPE_H) $(BDF_DRV_H)
+$(OBJ_DIR)/%.$O: $(GF_DIR)/%.c $(FREETYPE_H) $(GF_DRV_H)
 	$(GF_COMPILE) $T$(subst /,$(COMPILER_SEP),$@ $<)
 
 

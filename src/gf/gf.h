@@ -23,6 +23,7 @@
 #include <ft2build.h>
 #include FT_INTERNAL_OBJECTS_H
 #include FT_INTERNAL_STREAM_H
+#include FT_SYSTEM_H
 
 
 FT_BEGIN_HEADER

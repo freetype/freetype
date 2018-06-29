@@ -1,6 +1,6 @@
 /****************************************************************************
  *
- * gfdrivr.h
+ * gfdrivr.c
  *
  *   FreeType font driver for TeX's GF FONT files
  *
@@ -20,7 +20,8 @@
 #include FT_INTERNAL_DEBUG_H
 #include FT_INTERNAL_STREAM_H
 #include FT_INTERNAL_OBJECTS_H
-
+#include FT_TRUETYPE_IDS_H
+#include FT_SERVICE_FONT_FORMAT_H
 
 #include "gf.h"
 #include "gfdrivr.h"
@@ -50,10 +51,11 @@
                  FT_Pointer  init_data )
   {
     GF_CMap  cmap = (GF_CMap)gfcmap;
+    GF_Face  face = (GF_Face)FT_CMAP_FACE( cmap );
     FT_UNUSED( init_data );
 
-    cmap->bc     = 0;
-    cmap->ec     = 255;
+    cmap->bc     = face->gf_glyph->code_min;
+    cmap->ec     = face->gf_glyph->code_max;
 
     return FT_Err_Ok;
   }
@@ -89,6 +91,7 @@
   gf_cmap_char_next(  FT_CMap     gfcmap,
                       FT_UInt32  *achar_code )
   {
+    GF_CMap    cmap   = (GF_CMap)gfcmap;
     FT_UInt    gindex = 0;
     FT_UInt32  result = 0;
     FT_UInt32  char_code = *achar_code + 1;
@@ -131,7 +134,7 @@
   GF_Face_Done( FT_Face        gfface )         /* GF_Face */
   {
     GF_Face    face = (GF_Face)gfface;
-    FT_Memory  memory;
+    FT_Memory  memory= FT_FACE_MEMORY( gfface );
 
 
     if ( !face )
@@ -139,7 +142,8 @@
 
     memory = FT_FACE_MEMORY( face );
 
-    gf_free_font( face->gf_glyph );
+    gf_free_font( face->gf_glyph, memory );
+    /* FT_FREE(  ); */
   }
 
 
@@ -154,6 +158,7 @@
     FT_Error    error;
     FT_Memory   memory = FT_FACE_MEMORY( face );
     GF_Glyph    go;
+    int i,count;
 
     face->gf_glyph = &go ;
     FT_UNUSED( num_params );
@@ -171,9 +176,20 @@
 
     gfface->num_faces       = 1;
     gfface->face_index      = 0;
-    gfface->face_flags |    = FT_FACE_FLAG_FIXED_SIZES | FT_FACE_FLAG_HORIZONTAL ;
+    gfface->face_flags     |= FT_FACE_FLAG_FIXED_SIZES |
+                             FT_FACE_FLAG_HORIZONTAL ;
+    /*
+     * XXX: TO-DO: gfface->face_flags |= FT_FACE_FLAG_FIXED_WIDTH;
+     * XXX: I have to check for this.
+     */
     gfface->family_name     = NULL;
-    gfface->num_glyphs      = (FT_Long)(go->code_max - go->code_min + 1 );
+    count=0;
+    for (i = 0; i < 256; i++)
+    {
+      if(go->bm_table[i].bitmap != NULL)
+        count++;
+    }
+    gfface->num_glyphs      = (FT_Long)count;
     gfface->num_fixed_sizes = 1;
 
     if ( FT_NEW_ARRAY( gfface->available_sizes, 1 ) )
@@ -185,7 +201,7 @@
 
         bsize->width  = (FT_Short) face->gf_glyph->font_bbx_w ;
         bsize->height = (FT_Short) face->gf_glyph->font_bbx_h ;
-        bsize->size   = (FT_Short) face->gf_glyph->ds ; /* Preliminary to be checked for 26.6 fractional points*/
+        bsize->size   = (FT_Short) face->gf_glyph->ds         ; /* Preliminary to be checked for 26.6 fractional points*/
 
         /*x_res =  ;  To be Checked for x_resolution and y_resolution
         y_res =  ;*/
@@ -204,7 +220,7 @@
         /* initial platform/encoding should indicate unset status? */
         charmap.platform_id = TT_PLATFORM_APPLE_UNICODE;  /*Preliminary */
         charmap.encoding_id = TT_APPLE_ID_DEFAULT;
-        charmap.face        = root;
+        charmap.face        = face;
 
         error = FT_CMap_New( &gf_cmap_class, NULL, &charmap, NULL );
 
@@ -286,7 +302,10 @@
     FT_Face      face   = FT_FACE( gf );
     FT_Error     error  = FT_Err_Ok;
     FT_Bitmap*   bitmap = &slot->bitmap;
-    GF_BitmapRec glyph ;
+    GF_BitmapRec bm ;
+    GF_Glyph    go;
+
+    go = gf->gf_glyph;
 
     FT_UNUSED( load_flags );
 
@@ -305,26 +324,25 @@
 
     FT_TRACE1(( "GF_Glyph_Load: glyph index %d\n", glyph_index ));
 
-    #if 0
-    if ( glyph_index > 0 )
-      glyph_index--;
-    else
-      glyph_index = /*  */;
-    #endif
-
     if ( glyph_index < 0 )
       glyph_index = 0;
 
-    /* slot, bitmap => freetype, glyph => gflib */
-    glyph = gf->gf_glyph->bm_table[glyph_index];
+    if ((glyph_index < go->code_min) || (go->code_max < glyph_index))
+    {
+      error = FT_THROW( Invalid_Argument );
+      goto Exit;
+    }
 
-    bitmap->rows  = bm.mv_y ; /* Prelimiary */
-    bitmap->width = bm.mv_x ; /* Prelimiary */
-    /* bitmap->pitch =  ; */
+    /* slot, bitmap => freetype, glyph => gflib */
+    bm = gf->gf_glyph->bm_table[glyph_index];
+
+    bitmap->rows  = bm.mv_y   ; /* Prelimiary */
+    bitmap->width = bm.mv_x   ; /* Prelimiary */
+    bitmap->pitch = bm.raster ; /* Prelimiary */
 
     /* note: we don't allocate a new array to hold the bitmap; */
     /*       we can simply point to it                         */
-    ft_glyphslot_set_bitmap( slot, bm.bitmap );
+    ft_glyphslot_set_bitmap( slot, bm.bitmap ); /* TO CHECK for column and row? like winfont.*/
 
     slot->format      = FT_GLYPH_FORMAT_BITMAP;
     slot->bitmap_left = bm.off_x ; /* Prelimiary */
@@ -336,7 +354,7 @@
     slot->metrics.width        = (FT_Pos) ( bitmap->width * 64 )        ; /* Prelimiary */
     slot->metrics.height       = (FT_Pos) ( bitmap->rows * 64 )         ; /* Prelimiary */
 
-    ft_synthesize_vertical_metrics( &slot->metrics, bm.bbx_height * 64  );
+    ft_synthesize_vertical_metrics( &slot->metrics, bm.bbx_height * 64 );
 
   Exit:
     return error;

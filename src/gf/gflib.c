@@ -1,6 +1,6 @@
 /****************************************************************************
  *
- * gfdrivr.h
+ * gflib.c
  *
  *   FreeType font driver for TeX's GF FONT files
  *
@@ -107,7 +107,7 @@ unsigned char   bit_table[] = {
    */
 
   FT_LOCAL_DEF( FT_Error )
-  gf_read_glyph(FT_Stream stream, GF_Bitmap bm)
+  gf_read_glyph(FT_Stream stream, GF_Bitmap bm, FT_Memory memory)
   {
     long           m, n;
     int            paint_sw;
@@ -116,33 +116,31 @@ unsigned char   bit_table[] = {
     long           w, h, d;
     int            m_b, k;
     unsigned char  *ptr;
-    FT_Error    error  = FT_Err_Ok;
-    FT_Face     face   = FT_FACE_STREAM( stream );
-    FT_Memory   memory = FT_FACE_MEMORY( face );
+    FT_Error       error  = FT_Err_Ok;
 
     switch (READ_UINT1( stream ))
     {
-      case GF_BOC:
-        FT_STREAM_SKIP( 4 );
-        FT_STREAM_SKIP( 4 );
-        min_m = READ_INT4( stream );
-        max_m = READ_INT4( stream );
-        min_n = READ_INT4( stream );
-        max_n = READ_INT4( stream );
-        break;
+    case GF_BOC:
+      FT_STREAM_SKIP( 4 );
+      FT_STREAM_SKIP( 4 );
+      min_m = READ_INT4( stream );
+      max_m = READ_INT4( stream );
+      min_n = READ_INT4( stream );
+      max_n = READ_INT4( stream );
+      break;
 
-      case GF_BOC1:
-        FT_STREAM_SKIP( 1 );
-        del_m = (INT4)READ_UINT1( stream );
-        max_m = (INT4)READ_UINT1( stream );
-        del_n = (INT4)READ_UINT1( stream );
-        max_n = (INT4)READ_UINT1( stream );
-        min_m = max_m - del_m;
-        min_n = max_n - del_n;
-        break;
+    case GF_BOC1:
+      FT_STREAM_SKIP( 1 );
+      del_m = (INT4)READ_UINT1( stream );
+      max_m = (INT4)READ_UINT1( stream );
+      del_n = (INT4)READ_UINT1( stream );
+      max_n = (INT4)READ_UINT1( stream );
+      min_m = max_m - del_m;
+      min_n = max_n - del_n;
+      break;
 
-      default:
-        goto Fail;
+    default:
+      return -1;
     }
 
     w = max_m - min_m + 1;
@@ -150,13 +148,13 @@ unsigned char   bit_table[] = {
     if ((w < 0) || (h < 0))
     {
       error = FT_THROW( Invalid_File_Format );
-      goto Fail;
+      return -1;
     }
 
     if ((bm->bitmap = (unsigned char*)malloc(h*((w+7)/8))) == NULL)
     {
       error = FT_THROW( Invalid_File_Format );
-      goto Fail;
+      return -1;
     }
 
     memset(bm->bitmap, 0, h*((w+7)/8));
@@ -194,11 +192,10 @@ unsigned char   bit_table[] = {
       {
         switch ((int)instr)
         {
-          case GF_PAINT1:
-          case GF_PAINT2:
-          case GF_PAINT3:
+        case GF_PAINT1:
+        case GF_PAINT2:
+        case GF_PAINT3:
           d = (UINT4)READ_UINTN( stream, (instr - GF_PAINT1 + 1));
-
           Paint:
             if (paint_sw == 0)
             {
@@ -222,50 +219,39 @@ unsigned char   bit_table[] = {
             }
             paint_sw = 1 - paint_sw;
           break;
-
-					case GF_SKIP0:
+        case GF_SKIP0:
           m = min_m;
           n = n - 1;
           paint_sw = 0;
           break;
-
-          case GF_SKIP1:
-          case GF_SKIP2:
-          case GF_SKIP3:
+        case GF_SKIP1:
+        case GF_SKIP2:
+        case GF_SKIP3:
           m = min_m;
           n = n - (UINT4)READ_UINTN( stream, (instr - GF_SKIP1 + 1)) - 1;
           paint_sw = 0;
           break;
-
-          case GF_XXX1:
-          case GF_XXX2:
-          case GF_XXX3:
-          case GF_XXX4:
+        case GF_XXX1:
+        case GF_XXX2:
+        case GF_XXX3:
+        case GF_XXX4:
           k = READ_UINTN( stream, instr - GF_XXX1 + 1);
           FT_STREAM_SKIP( k );
           break;
-
-          case GF_YYY:
+        case GF_YYY:
           FT_STREAM_SKIP( 4 );
           break;
-
-          case GF_NO_OP:
+        case GF_NO_OP:
           break;
-
-          default:
+        default:
           FT_FREE(bm->bitmap);
           bm->bitmap = NULL;
           error = FT_THROW( Invalid_File_Format );
-          goto Exit;
+          return -1;
          }
       }
     }
-
-    Fail:
-      return -1;
-
-    Exit:
-      return error;
+    return 0;
   }
 
 
@@ -444,7 +430,7 @@ unsigned char   bit_table[] = {
       FT_STREAM_SEEK( ptr );
 
       bm = &go->bm_table[code - bc];
-      if (gf_read_glyph( stream, bm ) < 0)
+      if (gf_read_glyph( stream, bm, memory ) < 0)
         goto ErrExit;
 
       bm->mv_x = dx;
@@ -453,7 +439,6 @@ unsigned char   bit_table[] = {
       FT_STREAM_SEEK( optr );
     }
     *goptr          = go;
-
   return error;
 
 		ErrExit:
@@ -462,30 +447,32 @@ unsigned char   bit_table[] = {
       {
         if (go->bm_table != NULL)
         {
-          for (i = 0; i < nchars; i++)
-            FT_FREE(go->bm_table[i].bitmap);
+          for (i = 0; i < nchars; i++){}
+            /* FT_FREE(go->bm_table[i].bitmap); */
         }
-        FT_FREE(go->bm_table);
+        /* FT_FREE(go->bm_table); */
       }
-      FT_FREE(go);
-      return NULL;
+      /* FT_FREE(go); */
   }
 
 
   FT_LOCAL_DEF( void )
-  gf_free_font( GF_Glyph  go, FT_Memory memory )
+  gf_free_font( FT_Face gfface, FT_Memory memory )
   {
-    int i=0, nchars =sizeof(go->bm_table);
+    GF_Face    gf = (GF_Face)gfface;
+    GF_Glyph   go;
+    go = gf->gf_glyph;
+    int i=0, nchars =gfface->num_glyphs;
     if (go != NULL)
     {
       if (go->bm_table != NULL)
       {
-        for (i = 0; i < nchars; i++)
-          FT_FREE(go->bm_table[i].bitmap);
+        for (i = 0; i < nchars; i++){}
+          /* FT_FREE(go->bm_table[i].bitmap); */
       }
-      FT_FREE(go->bm_table);
+      /* FT_FREE(go->bm_table); */
     }
-    FT_FREE(go);
+    /* FT_FREE(go); */
   }
 
 
