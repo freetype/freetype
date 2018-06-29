@@ -3526,14 +3526,12 @@
     if ( !cur || !charmap )
       return FT_THROW( Invalid_CharMap_Handle );
 
-    if ( FT_Get_CMap_Format( charmap ) == 14 )
-      return FT_THROW( Invalid_Argument );
-
     limit = cur + face->num_charmaps;
 
     for ( ; cur < limit; cur++ )
     {
-      if ( cur[0] == charmap )
+      if ( cur[0] == charmap                    &&
+           FT_Get_CMap_Format ( charmap ) != 14 )
       {
         face->charmap = cur[0];
         return FT_Err_Ok;
