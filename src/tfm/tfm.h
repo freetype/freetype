@@ -27,7 +27,21 @@
 
 FT_BEGIN_HEADER
 
-/* TO-DO */
+/* Temporary TO BE REMOVED */
+
+/* IMPORTANT ASSUMPTION:
+ *   char:  at least 8 bits
+ *   int:   at least 16 bits
+ *   long:  at least 32 bits
+ */
+typedef  char           INT1;
+typedef  unsigned char  UINT1;
+typedef  int            INT2;
+typedef  unsigned int   UINT2;
+typedef  long           INT3;
+typedef  unsigned long  UINT3;
+typedef  long           INT4;
+typedef  unsigned long  UINT4;
 
 FT_END_HEADER
 
