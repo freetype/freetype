@@ -49,9 +49,8 @@
   long           tfm_read_intn(FT_Stream,int);
   unsigned long  tfm_read_uintn(FT_Stream,int);
 
-#define READ_UINT1( stream )    (UINT1)tfm_read_uintn( stream, 1)
-#define READ_UINTN( stream,n)   (UINT4)tfm_read_uintn( stream, n)
-#define READ_INT1( stream )     (INT1)tfm_read_intn( stream, 1)
+#define READ_UINT2( stream )    (UINT1)tfm_read_uintn( stream, 2)
+#define READ_UINT4( stream )    (UINT1)tfm_read_uintn( stream, 4)
 #define READ_INT4( stream )     (INT4)tfm_read_intn( stream, 4)
 
 /*
@@ -133,7 +132,8 @@
     tfm->font_bbx_yoff = 0.0;
 
     err = 0;
-    rewind(fp);
+    /* rewind(fp); */
+    FT_STREAM_SEEK( 0 );
     lf = (UINT4)READ_UINT2( stream );
     #if 0
     if ((lf == 11) || (lf == 9))
@@ -173,7 +173,7 @@
     /* Traditional TeX Metric File */
     tfm->type        = METRIC_TYPE_TFM;
     tfm->type_aux    = 0;
-    lh               = (int)READ_UINT2(fp);
+    lh               = (int)READ_UINT2( stream );
     offset_header    = 4*6;
     offset_char_info = 4*(6+lh);
 
@@ -203,17 +203,17 @@
     else
     { }
     #endif
-    tfm->begin_char  = (int)READ_UINT2(fp);
-    tfm->end_char    = (int)READ_UINT2(fp);
-    nw   = (UINT4)READ_UINT2(fp);
-    nh   = (UINT4)READ_UINT2(fp);
-    nd   = (UINT4)READ_UINT2(fp);
+    tfm->begin_char  = (int)READ_UINT2( stream );
+    tfm->end_char    = (int)READ_UINT2( stream );
+    nw   = (UINT4)READ_UINT2( stream );
+    nh   = (UINT4)READ_UINT2( stream );
+    nd   = (UINT4)READ_UINT2( stream );
 
-    ni   = (UINT4)READ_UINT2(fp);
-    nl   = (UINT4)READ_UINT2(fp);
-    nk   = (UINT4)READ_UINT2(fp);
-    neng = (UINT4)READ_UINT2(fp);
-    np   = (UINT4)READ_UINT2(fp);
+    ni   = (UINT4)READ_UINT2( stream );
+    nl   = (UINT4)READ_UINT2( stream );
+    nk   = (UINT4)READ_UINT2( stream );
+    neng = (UINT4)READ_UINT2( stream );
+    np   = (UINT4)READ_UINT2( stream );
 
     if (tfm->type == METRIC_TYPE_TFM)
     {
@@ -225,9 +225,10 @@
       }
     }
 
-    fseek(fp, offset_header, SEEK_SET);
-    tfm->cs          = READ_UINT4(fp);
-    tfm->ds          = READ_UINT4(fp);
+    /* fseek(fp, offset_header, SEEK_SET); */
+    FT_STREAM_SEEK( offset_header );
+    tfm->cs          = READ_UINT4( stream );
+    tfm->ds          = READ_UINT4( stream );
     tfm->design_size = (double)(tfm->ds)/(double)(1<<20);
 
     nc  = tfm->end_char - tfm->begin_char + 1;
@@ -245,16 +246,20 @@
       error = FT_THROW( Invalid_Argument );
       goto Exit;
     }
-    fseek(fp, offset_char_info, SEEK_SET);
+    /* fseek(fp, offset_char_info, SEEK_SET); */
+    FT_STREAM_SEEK( offset_char_info );
     for (i = 0; i < nci; i++)
-      ci[i] = READ_UINT4(fp);
-    offset_param = ftell(fp) + 4*(nw + nh + nd + ni + nl + nk + neng);
+      ci[i] = READ_UINT4( stream );
+
+    /* offset_param = ftell(fp) + 4*(nw + nh + nd + ni + nl + nk + neng); */
+    offset_param = stream->pos + 4*(nw + nh + nd + ni + nl + nk + neng);
+
     for (i = 0; i < nw; i++)
-      w[i] = READ_INT4(fp);
+      w[i] = READ_INT4( stream );
     for (i = 0; i < nh; i++)
-      h[i] = READ_INT4(fp);
+      h[i] = READ_INT4( stream );
     for (i = 0; i < nd; i++)
-      d[i] = READ_INT4(fp);
+      d[i] = READ_INT4( stream );
 
     tfm->width  = (INT4*)calloc(nc, sizeof(INT4));
     tfm->height = (INT4*)calloc(nc, sizeof(INT4));
@@ -339,8 +344,10 @@
     }
     #endif
 
-    fseek(fp, offset_param, SEEK_SET);
-    tfm->slant = (double)READ_INT4(fp)/(double)(1<<20);
+    /* fseek(fp, offset_param, SEEK_SET); */
+    FT_STREAM_SEEK( offset_param );
+    FT_READ_ULONG(tfm->slant);
+    tfm->slant = (double)tfm->slant/(double)(1<<20);
 
   Exit:
     FT_FREE(ci);
