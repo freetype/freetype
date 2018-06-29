@@ -42,7 +42,8 @@
   typedef struct  TFM_CMapRec_
   {
     FT_CMapRec        cmap;
-    /* TO-DO */
+    FT_UInt32         begin_char;       /* Beginning Character */
+    FT_UInt32         end_char  ;       /* End Character */
   } TFM_CMapRec, *TFM_CMap;
 
 
@@ -50,14 +51,24 @@
   tfm_cmap_init(  FT_CMap     tfmcmap,
                   FT_Pointer  init_data )
   {
-    /* TO-DO */
+    TFM_CMap  cmap = (TFM_CMap)tfmcmap;
+    TFM_Face  face = (TFM_Face)FT_CMAP_FACE( cmap );
+    FT_UNUSED( init_data );
+
+    cmap->begin_char     = ;
+    cmap->end_char       = ;
+
+    return FT_Err_Ok;
   }
 
 
   FT_CALLBACK_DEF( void )
   tfm_cmap_done( FT_CMap  tfmcmap )
   {
-    /* TO-DO */
+    TFM_CMap  cmap = (TFM_CMap)tfmcmap;
+
+    cmap->begin_char     = ;
+    cmap->end_char       = ;
   }
 
 
@@ -65,14 +76,44 @@
   tfm_cmap_char_index(  FT_CMap    tfmcmap,
                         FT_UInt32  char_code )
   {
-    /* TO-DO */
+    FT_UInt  gindex = 0;
+    TFM_CMap  cmap   = (TFM_CMap)tfmcmap;
+
+    char_code -= cmap->begin_char;
+
+    if ( char_code < cmap->end_char - cmap->begin_char + 1 )
+      gindex = (FT_UInt)( char_code );
+
+    return gindex;
   }
 
   FT_CALLBACK_DEF( FT_UInt )
   tfm_cmap_char_next(  FT_CMap     tfmcmap,
                        FT_UInt32  *achar_code )
   {
-    /* TO-DO */
+    TFM_CMap    cmap      = (TFM_CMap)tfmcmap;
+    FT_UInt     gindex    = 0;
+    FT_UInt32   result    = 0;
+    FT_UInt32   char_code = *achar_code + 1;
+
+
+    if ( char_code <= cmap->begin_char )
+    {
+      result = cmap->bc;
+      gindex = 1;
+    }
+    else
+    {
+      char_code -= cmap->begin_char;
+      if ( char_code < cmap->end_char - cmap->begin_char + 1 )
+      {
+        result = char_code;
+        gindex = (FT_UInt)( char_code );
+      }
+    }
+
+    *achar_code = result;
+    return gindex;
   }
 
 
