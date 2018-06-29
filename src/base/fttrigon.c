@@ -325,10 +325,10 @@
   FT_EXPORT_DEF( FT_Fixed )
   FT_Tan( FT_Angle  angle )
   {
-    FT_Vector  v;
+    FT_Vector  v = { 1 << 24, 0 };
 
 
-    FT_Vector_Unit( &v, angle );
+    ft_trig_pseudo_rotate( &v, angle );
 
     return FT_DivFix( v.y, v.x );
   }
@@ -372,14 +372,6 @@
   }
 
 
-  /* these macros return 0 for positive numbers,
-     and -1 for negative ones */
-#define FT_SIGN_LONG( x )   ( (x) >> ( FT_SIZEOF_LONG * 8 - 1 ) )
-#define FT_SIGN_INT( x )    ( (x) >> ( FT_SIZEOF_INT * 8 - 1 ) )
-#define FT_SIGN_INT32( x )  ( (x) >> 31 )
-#define FT_SIGN_INT16( x )  ( (x) >> 15 )
-
-
   /* documentation is in fttrigon.h */
 
   FT_EXPORT_DEF( void )
@@ -408,8 +400,8 @@
       FT_Int32  half = (FT_Int32)1L << ( shift - 1 );
 
 
-      vec->x = ( v.x + half + FT_SIGN_LONG( v.x ) ) >> shift;
-      vec->y = ( v.y + half + FT_SIGN_LONG( v.y ) ) >> shift;
+      vec->x = ( v.x + half - ( v.x < 0 ) ) >> shift;
+      vec->y = ( v.y + half - ( v.y < 0 ) ) >> shift;
     }
     else
     {

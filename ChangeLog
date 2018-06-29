@@ -1,5 +1,10 @@
 2018-06-28  Alexei Podtelezhnikov  <apodtele@gmail.com>
 
+	* src/base/fttrigon.c (FT_Tan): Improve accuracy.
+	(FT_Vector_Rotate): Simplify.
+
+2018-06-28  Alexei Podtelezhnikov  <apodtele@gmail.com>
+
 	* src/base/ftobjs.c (FT_Set_Charmap): Robustify.
 
 2018-06-25  Werner Lemberg  <wl@gnu.org>
