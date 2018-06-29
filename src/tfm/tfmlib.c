@@ -115,6 +115,8 @@
     UINT4  *ci, v;
     UINT4  i;
     INT4   bbxw, bbxh, xoff, yoff;
+    FT_Error        error  =FT_Err_Ok;
+    FT_Memory       memory = extmemory; /* needed for FT_NEW */
 
     if( FT_ALLOC(tfm, sizeof(TFM_GlyphRec)) )
       goto ErrExit;
@@ -194,8 +196,8 @@
       if (((signed)(tfm->begin_char-1) > (signed)tfm->end_char) ||
         (tfm->end_char > 65535))
       {
-        vf_error = VF_ERR_INVALID_METRIC;
-        return NULL;
+        error = FT_THROW( Invalid_Argument );
+        goto Exit;
       }
     }
     else
@@ -218,8 +220,8 @@
       if (((signed)(tfm->begin_char-1) > (signed)tfm->end_char) ||
          (tfm->end_char > 255))
       {
-        vf_error = VF_ERR_INVALID_METRIC;
-        return NULL;
+        error = FT_THROW( Invalid_Argument );
+        goto Exit;
       }
     }
 
@@ -240,7 +242,7 @@
     d  = (INT4*)calloc(nd,  sizeof(UINT4));
     if ((ci == NULL) || (w == NULL) || (h == NULL) || (d == NULL))
     {
-      err = VF_ERR_NO_MEMORY;
+      error = FT_THROW( Invalid_Argument );
       goto Exit;
     }
     fseek(fp, offset_char_info, SEEK_SET);
@@ -259,7 +261,7 @@
     tfm->depth  = (INT4*)calloc(nc, sizeof(INT4));
     if ((tfm->width == NULL) || (tfm->height == NULL) || (tfm->depth == NULL))
     {
-      err = VF_ERR_NO_MEMORY;
+      error = FT_THROW( Invalid_Argument );
       goto Exit;
     }
     bbxw = 0;
@@ -323,7 +325,7 @@
       tfm->ct_ctype = (unsigned int*)calloc(tfm->nt+1, sizeof(unsigned int));
       if ((tfm->ct_kcode == NULL) || (tfm->ct_ctype == NULL))
       {
-        err = VF_ERR_NO_MEMORY;
+        error = FT_THROW( Invalid_Argument );
         goto Exit;
       }
       for (i = 0; i < tfm->nt; i++)
@@ -341,18 +343,16 @@
     tfm->slant = (double)READ_INT4(fp)/(double)(1<<20);
 
   Exit:
-    vf_free(ci);
-    vf_free(w);
-    vf_free(h);
-    vf_free(d);
+    FT_FREE(ci);
+    FT_FREE(w);
+    FT_FREE(h);
+    FT_FREE(d);
 
     if (err != 0)
     {
-      vf_tfm_free(tfm);
-      vf_error = err;
-      return NULL;
+      tfm_free_font(tfm, memory);
+      error = err;
     }
-    return tfm;
   }
 
   FT_LOCAL_DEF( void )
@@ -361,15 +361,12 @@
     if (tfm == NULL)
       return;
 
-    if ((tfm_table->unlink_by_id)(tfm_table, tfm_id) <= 0)
-    {
-      vf_free(tfm->width);
-      vf_free(tfm->height);
-      vf_free(tfm->depth);
-      vf_free(tfm->ct_kcode);
-      vf_free(tfm->ct_ctype);
-      vf_free(tfm);
-    }
+      FT_FREE(tfm->width);
+      FT_FREE(tfm->height);
+      FT_FREE(tfm->depth);
+      FT_FREE(tfm->ct_kcode);
+      FT_FREE(tfm->ct_ctype);
+      FT_FREE(tfm);
   }
 
 /* END */
