@@ -5493,10 +5493,17 @@
     ttface = (TT_Face)face;
     sfnt   = (SFNT_Service)ttface->sfnt;
 
-    return sfnt->get_colr_layer( ttface,
-                                 base_glyph,
-                                 acolor_index,
-                                 iterator );
+    if ( sfnt->get_colr_layer )
+      return sfnt->get_colr_layer( ttface,
+                                   base_glyph,
+                                   acolor_index,
+                                   iterator );
+    else
+    {
+      *acolor_index = 0;
+
+      return 0;
+    }
   }
 
 
