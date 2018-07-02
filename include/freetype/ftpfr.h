@@ -41,7 +41,7 @@ FT_BEGIN_HEADER
    *   PFR Fonts
    *
    * @abstract:
-   *   PFR/TrueDoc specific API.
+   *   PFR/TrueDoc-specific API.
    *
    * @description:
    *   This section contains the declaration of PFR-specific functions.

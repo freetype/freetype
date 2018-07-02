@@ -41,10 +41,10 @@ FT_BEGIN_HEADER
    *   CID Fonts
    *
    * @abstract:
-   *   CID-keyed font specific API.
+   *   CID-keyed font-specific API.
    *
    * @description:
-   *   This section contains the declaration of CID-keyed font specific
+   *   This section contains the declaration of CID-keyed font-specific
    *   functions.
    *
    */

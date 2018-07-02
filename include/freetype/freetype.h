@@ -843,9 +843,8 @@ FT_BEGIN_HEADER
    *     other formats.
    *
    *   encoding_id ::
-   *     A platform specific encoding number.  This also
-   *     comes from the TrueType specification and gets
-   *     emulated similarly.
+   *     A platform-specific encoding number.  This also comes from the
+   *     TrueType specification and gets emulated similarly.
    */
   typedef struct  FT_CharMapRec_
   {
@@ -952,17 +951,13 @@ FT_BEGIN_HEADER
    *     used in the font.
    *
    *   family_name ::
-   *     The face's family name.  This is an ASCII
-   *     string, usually in English, that describes
-   *     the typeface's family (like `Times New
-   *     Roman', `Bodoni', `Garamond', etc).  This
-   *     is a least common denominator used to list
-   *     fonts.  Some formats (TrueType & OpenType)
-   *     provide localized and Unicode versions of
-   *     this string.  Applications should use the
-   *     format specific interface to access them.
-   *     Can be NULL (e.g., in fonts embedded in a
-   *     PDF file).
+   *     The face's family name.  This is an ASCII string, usually in
+   *     English, that describes the typeface's family (like `Times New
+   *     Roman', `Bodoni', `Garamond', etc).  This is a least common
+   *     denominator used to list fonts.  Some formats (TrueType & OpenType)
+   *     provide localized and Unicode versions of this string.
+   *     Applications should use the format-specific interface to access
+   *     them.  Can be NULL (e.g., in fonts embedded in a PDF file).
    *
    *     In case the font doesn't provide a specific
    *     family name entry, FreeType tries to
@@ -970,16 +965,13 @@ FT_BEGIN_HEADER
    *     entries.
    *
    *   style_name ::
-   *     The face's style name.  This is an ASCII
-   *     string, usually in English, that describes
-   *     the typeface's style (like `Italic',
-   *     `Bold', `Condensed', etc).  Not all font
-   *     formats provide a style name, so this field
-   *     is optional, and can be set to NULL.  As
-   *     for `family_name', some formats provide
-   *     localized and Unicode versions of this
-   *     string.  Applications should use the format
-   *     specific interface to access them.
+   *     The face's style name.  This is an ASCII string, usually in
+   *     English, that describes the typeface's style (like `Italic',
+   *     `Bold', `Condensed', etc).  Not all font formats provide a style
+   *     name, so this field is optional, and can be set to NULL.  As for
+   *     `family_name', some formats provide localized and Unicode versions
+   *     of this string.  Applications should use the format-specific
+   *     interface to access them.
    *
    *   num_fixed_sizes ::
    *     The number of bitmap strikes in the face.
@@ -4699,7 +4691,7 @@ FT_BEGIN_HEADER
    *   Compute `(a*b)/c' with maximum accuracy, using a 64-bit
    *   intermediate integer whenever necessary.
    *
-   *   This function isn't necessarily as fast as some processor specific
+   *   This function isn't necessarily as fast as some processor-specific
    *   operations, but is at least completely portable.
    *
    * @input:

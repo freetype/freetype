@@ -41,10 +41,10 @@ FT_BEGIN_HEADER
    *   Window FNT Files
    *
    * @abstract:
-   *   Windows FNT specific API.
+   *   Windows FNT-specific API.
    *
    * @description:
-   *   This section contains the declaration of Windows FNT specific
+   *   This section contains the declaration of Windows FNT-specific
    *   functions.
    *
    */

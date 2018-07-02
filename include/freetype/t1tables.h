@@ -43,10 +43,10 @@ FT_BEGIN_HEADER
    *   Type 1 Tables
    *
    * @abstract:
-   *   Type~1 (PostScript) specific font tables.
+   *   Type~1-specific font tables.
    *
    * @description:
-   *   This section contains the definition of Type 1-specific tables,
+   *   This section contains the definition of Type~1-specific tables,
    *   including structures related to other PostScript font formats.
    *
    * @order:

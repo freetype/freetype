@@ -42,7 +42,7 @@ FT_BEGIN_HEADER
    *   TrueType Tables
    *
    * @abstract:
-   *   TrueType specific table types and functions.
+   *   TrueType-specific table types and functions.
    *
    * @description:
    *   This section contains definitions of some basic tables specific to

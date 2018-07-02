@@ -256,7 +256,7 @@ FT_BEGIN_HEADER
    *   (without rounding) with maximum accuracy (it uses a 64-bit
    *   intermediate integer whenever necessary).
    *
-   *   This function isn't necessarily as fast as some processor specific
+   *   This function isn't necessarily as fast as some processor-specific
    *   operations, but is at least completely portable.
    *
    * @input:
