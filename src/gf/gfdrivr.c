@@ -182,6 +182,7 @@
      * XXX: TO-DO: gfface->face_flags |= FT_FACE_FLAG_FIXED_WIDTH;
      * XXX: I have to check for this.
      */
+     printf("Hi I am here2\n");
     gfface->family_name     = NULL;
     count=0;
     for (i = 0; i < 256; i++)
@@ -191,10 +192,10 @@
     }
     gfface->num_glyphs      = (FT_Long)count;printf("count is %d", count);
 
-
+printf("Hi I am here3\n");
     if ( FT_NEW_ARRAY( gfface->available_sizes, 1 ) )
       goto Exit;
-
+printf("Hi I am here4\n");
     {
       FT_Bitmap_Size*  bsize = gfface->available_sizes;
 
@@ -208,7 +209,7 @@
       bsize->y_ppem = face->gf_glyph->font_bbx_yoff ;
       bsize->x_ppem = face->gf_glyph->font_bbx_xoff ;
     }
-
+printf("Hi I am here5\n");
       /* Charmaps */
 
       {
@@ -225,12 +226,14 @@
 
         if ( error )
           goto Fail;
+printf("Hi I am here completed GF_Face_Init1\n");
       }
-
+printf("Hi I am here6\n");
   Fail:
     GF_Face_Done( gfface );
 
   Exit:
+  printf("Hi I am here completed GF_Face_Init2 %ld\n",gfface->num_glyphs);
     return error;
   }
 
