@@ -1814,7 +1814,7 @@
 
     /* freeing glyph color palette data */
     FT_FREE( face->palette_data.palette_name_ids );
-    FT_FREE( face->palette_data.palette_types );
+    FT_FREE( face->palette_data.palette_flags );
     FT_FREE( face->palette_data.palette_entry_name_ids );
     FT_FREE( face->palette );
 

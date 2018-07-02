@@ -375,8 +375,8 @@
       }
       else
       {
-        if ( face->palette_data.palette_types                          &&
-             ( face->palette_data.palette_types[face->palette_index] &
+        if ( face->palette_data.palette_flags                          &&
+             ( face->palette_data.palette_flags[face->palette_index] &
                  FT_PALETTE_FOR_DARK_BACKGROUND                      ) )
         {
           /* white opaque */

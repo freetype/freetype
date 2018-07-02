@@ -1,5 +1,11 @@
 2018-07-02  Werner Lemberg  <wl@gnu.org>
 
+	s/palette_types/palette_flags/.
+
+	Suggested by Behdad.
+
+2018-07-02  Werner Lemberg  <wl@gnu.org>
+
 	Make `FT_Get_Color_Glyph_Layer' return FT_Bool.
 
 	* include/freetype/freetype.h, src/base/ftobjs.c

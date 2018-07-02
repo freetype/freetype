@@ -92,7 +92,7 @@ FT_BEGIN_HEADER
    *   FT_PALETTE_XXX
    *
    * @description:
-   *   A list of bit field constants used in the `palette_types' array of
+   *   A list of bit field constants used in the `palette_flags' array of
    *   the @FT_Palette_Data structure to indicate for which background a
    *   palette with a given index is usable.
    *
@@ -134,8 +134,8 @@ FT_BEGIN_HEADER
    *
    *     NULL if the font's `CPAL' table doesn't contain appropriate data.
    *
-   *   palette_types ::
-   *     A read-only array of palette types with `num_palettes' elements.
+   *   palette_flags ::
+   *     A read-only array of palette flags with `num_palettes' elements.
    *     Possible values are an ORed combination of
    *     @FT_PALETTE_FOR_LIGHT_BACKGROUND and
    *     @FT_PALETTE_FOR_DARK_BACKGROUND.
@@ -170,7 +170,7 @@ FT_BEGIN_HEADER
   typedef struct  FT_Palette_Data_ {
     FT_UShort         num_palettes;
     const FT_UShort*  palette_name_ids;
-    const FT_UShort*  palette_types;
+    const FT_UShort*  palette_flags;
 
     FT_UShort         num_palette_entries;
     const FT_UShort*  palette_entry_name_ids;

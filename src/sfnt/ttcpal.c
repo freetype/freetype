@@ -155,7 +155,7 @@
         while ( q < limit )
           *q++ = FT_NEXT_USHORT( p );
 
-        face->palette_data.palette_types = array;
+        face->palette_data.palette_flags = array;
       }
 
       if ( label_offset )
