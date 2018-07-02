@@ -142,7 +142,7 @@
 
     memory = FT_FACE_MEMORY( face );
 
-    gf_free_font( face->gf_glyph, memory );
+    gf_free_font( gfface, memory );
     /* FT_FREE(  ); */
   }
 
@@ -160,10 +160,9 @@
     GF_Glyph    go;
     int i,count;
 
-    face->gf_glyph = &go ;
     FT_UNUSED( num_params );
     FT_UNUSED( params );
-
+    go=NULL;
     FT_TRACE2(( "GF driver\n" ));
 
     /* load font */
@@ -171,6 +170,7 @@
     if ( error )
       goto Exit;
 
+    face->gf_glyph = go ;
     /* we now need to fill the root FT_Face fields */
     /* with relevant information                   */
 
@@ -189,26 +189,25 @@
       if(go->bm_table[i].bitmap != NULL)
         count++;
     }
-    gfface->num_glyphs      = (FT_Long)count;
-    gfface->num_fixed_sizes = 1;
+    gfface->num_glyphs      = (FT_Long)count;printf("count is %d", count);
+
 
     if ( FT_NEW_ARRAY( gfface->available_sizes, 1 ) )
       goto Exit;
 
-      {
-        FT_Bitmap_Size*  bsize = gfface->available_sizes;
-        FT_UShort        x_res, y_res;
+    {
+      FT_Bitmap_Size*  bsize = gfface->available_sizes;
 
-        bsize->width  = (FT_Short) face->gf_glyph->font_bbx_w ;
-        bsize->height = (FT_Short) face->gf_glyph->font_bbx_h ;
-        bsize->size   = (FT_Short) face->gf_glyph->ds         ; /* Preliminary to be checked for 26.6 fractional points*/
+      bsize->width  = (FT_Short) face->gf_glyph->font_bbx_w ;
+      bsize->height = (FT_Short) face->gf_glyph->font_bbx_h ;
+      bsize->size   = (FT_Short) face->gf_glyph->ds         ; /* Preliminary to be checked for 26.6 fractional points*/
 
-        /*x_res =  ;  To be Checked for x_resolution and y_resolution
-        y_res =  ;*/
+      /*x_res =  ;  To be Checked for x_resolution and y_resolution
+      y_res =  ;*/
 
-        bsize->y_ppem = face->gf_glyph->font_bbx_yoff ;
-        bsize->x_ppem = face->gf_glyph->font_bbx_xoff ;
-      }
+      bsize->y_ppem = face->gf_glyph->font_bbx_yoff ;
+      bsize->x_ppem = face->gf_glyph->font_bbx_xoff ;
+    }
 
       /* Charmaps */
 
@@ -220,7 +219,7 @@
         /* initial platform/encoding should indicate unset status? */
         charmap.platform_id = TT_PLATFORM_APPLE_UNICODE;  /*Preliminary */
         charmap.encoding_id = TT_APPLE_ID_DEFAULT;
-        charmap.face        = face;
+        charmap.face        = FT_FACE( face );
 
         error = FT_CMap_New( &gf_cmap_class, NULL, &charmap, NULL );
 
