@@ -64,12 +64,13 @@ unsigned char   bit_table[] = {
   gf_read_uintn(FT_Stream stream, int size)
   {
     unsigned long  v,k;
-    FT_Error error = FT_Err_Ok;
+    FT_Error error;
     FT_Byte tp;
     v = 0L;
     while (size >= 1)
     {
-      FT_READ_BYTE(tp);
+      if ( FT_READ_BYTE(tp) )
+        return 0; /* To be changed */
       k =(unsigned long)tp;
       v = v*256L + k;
       --size;
@@ -82,9 +83,10 @@ unsigned char   bit_table[] = {
   {
     long           v;
     FT_Byte tp;
-    FT_Error error= FT_Err_Ok;
+    FT_Error error;
     unsigned long z ;
-    FT_READ_BYTE(tp);
+    if ( FT_READ_BYTE(tp) )
+        return 0;/* To be changed */
     z= (unsigned long)tp;
     v = (long)z & 0xffL;
     if (v & 0x80L)
@@ -92,7 +94,8 @@ unsigned char   bit_table[] = {
     --size;
     while (size >= 1)
     {
-      FT_READ_BYTE(tp);
+      if ( FT_READ_BYTE(tp) )
+        return 0;/* To be changed */
       z= (unsigned long)tp;
       v = v*256L + z;
       --size;
@@ -121,15 +124,19 @@ unsigned char   bit_table[] = {
     switch (READ_UINT1( stream ))
     {
     case GF_BOC:
-      FT_STREAM_SKIP( 4 );
-      FT_STREAM_SKIP( 4 );
+      if ( FT_STREAM_SKIP( 4 ) )
+        return -1;
+      if ( FT_STREAM_SKIP( 4 ) )
+        return -1;
       min_m = READ_INT4( stream );
       max_m = READ_INT4( stream );
       min_n = READ_INT4( stream );
       max_n = READ_INT4( stream );
       break;
+
     case GF_BOC1:
-      FT_STREAM_SKIP( 1 );
+      if ( FT_STREAM_SKIP( 1 ) )
+        return -1;
       del_m = (INT4)READ_UINT1( stream );
       max_m = (INT4)READ_UINT1( stream );
       del_n = (INT4)READ_UINT1( stream );
@@ -137,10 +144,13 @@ unsigned char   bit_table[] = {
       min_m = max_m - del_m;
       min_n = max_n - del_n;
       break;
+
     default:
       return -1;
     }
 
+    if(error != FT_Err_Ok)
+      return -1;
     w = max_m - min_m + 1;
     h = max_n - min_n + 1;
     if ((w < 0) || (h < 0))
@@ -234,10 +244,12 @@ unsigned char   bit_table[] = {
         case GF_XXX3:
         case GF_XXX4:
           k = READ_UINTN( stream, instr - GF_XXX1 + 1);
-          FT_STREAM_SKIP( k );
+          if ( FT_STREAM_SKIP( k ) )
+            return -1;
           break;
         case GF_YYY:
-          FT_STREAM_SKIP( 4 );
+          if ( FT_STREAM_SKIP( 4 ) )
+            return -1;
           break;
         case GF_NO_OP:
           break;
@@ -266,25 +278,31 @@ unsigned char   bit_table[] = {
     INT4            w;
     UINT4           code;
     double          dx, dy;
-    long            ptr_post, ptr_p, ptr, optr, gptr;
+    long            ptr_post, ptr_p, ptr, optr;
     int             bc, ec, nchars, i;
-    FT_Error        error  = FT_Err_Ok, error1;
+    FT_Error        error  = FT_Err_Ok;
     FT_Memory       memory = extmemory; /* needed for FT_NEW */
-    FT_ULong        offset;
-    FT_Byte tp;
 
     go = NULL;
     nchars = -1;
 
     /* seek to post_post instr. */
     /* fseek(fp, -1, SEEK_END); */
-    FT_STREAM_SEEK( stream->size - 1 );
+    if( FT_STREAM_SEEK( stream->size - 1 ) )
+      goto ErrExit;
+    if( FT_STREAM_SEEK( stream->size - 1 ) )
+      goto ErrExit;
 
-    while ( d= READ_UINT1( stream ) == 223)
-      FT_STREAM_SEEK( stream->pos -2 );
+    while ( READ_UINT1( stream ) == 223)
+    {
+      if( FT_STREAM_SEEK( stream->pos -2 ) )
+        goto ErrExit;
       /* fseek(fp, -2, SEEK_CUR); */
+    }
 
-    FT_STREAM_SEEK( stream->pos -1 );
+
+    if( FT_STREAM_SEEK( stream->pos -1 ) )
+        goto ErrExit;
     d= READ_UINT1( stream );
 
     if (d != GF_ID)
@@ -294,7 +312,8 @@ unsigned char   bit_table[] = {
     }
 
     /* fseek(fp, -6, SEEK_CUR); */
-    FT_STREAM_SEEK( stream->pos -6 );
+    if(FT_STREAM_SEEK( stream->pos -6 ))
+      goto ErrExit;
 
     /* check if the code is post_post */
     if (READ_UINT1( stream ) != GF_POST_POST)
@@ -304,7 +323,9 @@ unsigned char   bit_table[] = {
     }
 
     /* read pointer to post instr. */
-    FT_READ_ULONG( ptr_post );
+    if(FT_READ_ULONG( ptr_post ))
+      goto ErrExit;
+
     if (ptr_post == -1)
     {
       error = FT_THROW( Invalid_File_Format );
@@ -313,18 +334,25 @@ unsigned char   bit_table[] = {
 
     /* goto post instr. and read it */
     /* fseek(fp, ptr_post, SEEK_SET); */
-    FT_STREAM_SEEK( ptr_post );
+    if(FT_STREAM_SEEK( ptr_post ))
+      goto ErrExit;
+
     if (READ_UINT1( stream ) != GF_POST)
     {
       error = FT_THROW( Invalid_File_Format );
       goto ErrExit;
     }
 
-    FT_READ_ULONG( ptr_p )    ;
-    FT_READ_ULONG( ds )       ;
-    FT_READ_ULONG( check_sum );
-    FT_READ_ULONG( hppp )     ;
-    FT_READ_ULONG( vppp )     ;
+    if(FT_READ_ULONG( ptr_p ))
+      goto ErrExit;
+    if(FT_READ_ULONG( ds ))
+      goto ErrExit;
+    if(FT_READ_ULONG( check_sum ))
+      goto ErrExit;
+    if(FT_READ_ULONG( hppp ))
+      goto ErrExit;
+    if(FT_READ_ULONG( vppp ))
+      goto ErrExit;
     min_m     = READ_INT4( stream );
     max_m     = READ_INT4( stream );
     min_n     = READ_INT4( stream );
@@ -425,7 +453,8 @@ unsigned char   bit_table[] = {
       /* optr = ft_ftell(fp); */
       optr = stream->pos;
       /* ft_fseek(fp, ptr, SEEK_SET); */
-      FT_STREAM_SEEK( ptr );
+      if( FT_STREAM_SEEK( ptr ) )
+        goto ErrExit;
 
       bm = &go->bm_table[code - bc];
       if (gf_read_glyph( stream, bm, memory ) < 0)
@@ -434,7 +463,8 @@ unsigned char   bit_table[] = {
       bm->mv_x = dx;
       bm->mv_y = dy;
       /* ft_fseek(fp, optr, SEEK_SET); */
-      FT_STREAM_SEEK( optr );
+      if(FT_STREAM_SEEK( optr ))
+        goto ErrExit;
     }
     *goptr          = go;
   return error;
@@ -460,17 +490,7 @@ unsigned char   bit_table[] = {
     GF_Face    gf = (GF_Face)gfface;
     GF_Glyph   go;
     go = gf->gf_glyph;
-    int i=0, nchars =gfface->num_glyphs;
-    if (go != NULL)
-    {
-      if (go->bm_table != NULL)
-      {
-        for (i = 0; i < nchars; i++){}
-          /* FT_FREE(go->bm_table[i].bitmap); */
-      }
-      /* FT_FREE(go->bm_table); */
-    }
-    /* FT_FREE(go); */
+
   }
 
 
