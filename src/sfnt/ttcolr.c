@@ -209,15 +209,15 @@
   }
 
 
-  FT_LOCAL_DEF( FT_UInt )
+  FT_LOCAL_DEF( FT_Bool )
   tt_face_get_colr_layer( TT_Face            face,
                           FT_UInt            base_glyph,
+                          FT_UInt           *aglyph_index,
                           FT_UInt           *acolor_index,
                           FT_LayerIterator*  iterator )
   {
-    Colr*            colr   = (Colr*)face->colr;
+    Colr*            colr = (Colr*)face->colr;
     BaseGlyphRecord  glyph_record;
-    FT_UInt          glyph_index;
 
 
     if ( !colr )
@@ -252,17 +252,17 @@
     if ( iterator->layer >= iterator->num_layers )
       return 0;
 
-    glyph_index   = FT_NEXT_USHORT( iterator->p );
+    *aglyph_index = FT_NEXT_USHORT( iterator->p );
     *acolor_index = FT_NEXT_USHORT( iterator->p );
 
-    if ( glyph_index >= FT_FACE( face )->num_glyphs                  ||
+    if ( *aglyph_index >= FT_FACE( face )->num_glyphs                ||
          ( *acolor_index != 0xFFFF                                 &&
            *acolor_index >= face->palette_data.num_palette_entries ) )
       return 0;
 
     iterator->layer++;
 
-    return glyph_index;
+    return 1;
   }
 
 

@@ -514,6 +514,9 @@ FT_BEGIN_HEADER
    *     same object again.
    *
    * @output:
+   *   aglyph_index ::
+   *     The glyph index of the current layer.
+   *
    *   acolor_index ::
    *     The color index into the font face's color palette of the current
    *     layer.  The value 0xFFFF is special; it doesn't reference a palette
@@ -521,13 +524,14 @@ FT_BEGIN_HEADER
    *     instead (to be set up by the application outside of FreeType).
    *
    * @return:
-   *   The glyph index of the current layer.  If there are no more layers
-   *   (or if there are no layers at all), value~0 gets returned.  In case
-   *   of an error, value~0 is returned also.
+   *   Value~1 if everything is OK.  If there are no more layers (or if
+   *   there are no layers at all), value~0 gets returned.  In case of an
+   *   error, value~0 is returned also.
    */
-  typedef FT_UInt
+  typedef FT_Bool
   (*TT_Get_Colr_Layer_Func)( TT_Face            face,
                              FT_UInt            base_glyph,
+                             FT_UInt           *aglyph_index,
                              FT_UInt           *acolor_index,
                              FT_LayerIterator*  iterator );
 

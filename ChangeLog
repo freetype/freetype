@@ -1,3 +1,14 @@
+2018-07-02  Werner Lemberg  <wl@gnu.org>
+
+	Make `FT_Get_Color_Glyph_Layer' return FT_Bool.
+
+	* include/freetype/freetype.h, src/base/ftobjs.c
+	(FT_Get_Color_Glyph_Layer, FT_Render_Glyph_Internal): Updated.
+
+	* include/freetype/internal/sfnt.h (TT_Get_Colr_Layer_Func),
+	src/sfnt/ttcolr.h, src/sfnt/ttcolr.c (tt_face_get_colr_layer):
+	Updated.
+
 2018-07-01  Werner Lemberg  <wl@gnu.org>
 
 	* src/base/ftobjs.c (FT_Get_Color_Glyph_Layer): Guard SFNT function.

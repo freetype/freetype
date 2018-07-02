@@ -4517,17 +4517,19 @@
 
         FT_UInt  base_glyph = slot->glyph_index;
 
+        FT_Bool  have_layers;
         FT_UInt  glyph_index;
         FT_UInt  color_index;
 
 
         /* check whether we have colored glyph layers */
         iterator.p  = NULL;
-        glyph_index = FT_Get_Color_Glyph_Layer( face,
+        have_layers = FT_Get_Color_Glyph_Layer( face,
                                                 base_glyph,
+                                                &glyph_index,
                                                 &color_index,
                                                 &iterator );
-        if ( glyph_index )
+        if ( have_layers )
         {
           error = FT_New_GlyphSlot( face, NULL );
           if ( !error )
@@ -4546,7 +4548,7 @@
               load_flags &= ~FT_LOAD_COLOR;
 
               /* render into the new `face->glyph' glyph slot */
-              load_flags |=  FT_LOAD_RENDER;
+              load_flags |= FT_LOAD_RENDER;
 
               error = FT_Load_Glyph( face, glyph_index, load_flags );
               if ( error )
@@ -4561,11 +4563,11 @@
               if ( error )
                 break;
 
-            } while ( ( glyph_index =
-                          FT_Get_Color_Glyph_Layer( face,
-                                                    base_glyph,
-                                                    &color_index,
-                                                    &iterator ) ) != 0 );
+            } while ( FT_Get_Color_Glyph_Layer( face,
+                                                base_glyph,
+                                                &glyph_index,
+                                                &color_index,
+                                                &iterator ) );
 
             if ( !error )
               slot->format = FT_GLYPH_FORMAT_BITMAP;
@@ -5471,9 +5473,10 @@
 
   /* documentation is in freetype.h */
 
-  FT_EXPORT_DEF( FT_UInt )
+  FT_EXPORT_DEF( FT_Bool )
   FT_Get_Color_Glyph_Layer( FT_Face            face,
                             FT_UInt            base_glyph,
+                            FT_UInt           *aglyph_index,
                             FT_UInt           *acolor_index,
                             FT_LayerIterator*  iterator )
   {
@@ -5482,6 +5485,7 @@
 
 
     if ( !face                                   ||
+         !aglyph_index                           ||
          !acolor_index                           ||
          !iterator                               ||
          base_glyph >= (FT_UInt)face->num_glyphs )
@@ -5496,14 +5500,11 @@
     if ( sfnt->get_colr_layer )
       return sfnt->get_colr_layer( ttface,
                                    base_glyph,
+                                   aglyph_index,
                                    acolor_index,
                                    iterator );
     else
-    {
-      *acolor_index = 0;
-
       return 0;
-    }
   }
 
 

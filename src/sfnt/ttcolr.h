@@ -36,9 +36,10 @@ FT_BEGIN_HEADER
   FT_LOCAL( void )
   tt_face_free_colr( TT_Face  face );
 
-  FT_LOCAL( FT_UInt )
+  FT_LOCAL( FT_Bool )
   tt_face_get_colr_layer( TT_Face            face,
                           FT_UInt            base_glyph,
+                          FT_UInt           *aglyph_index,
                           FT_UInt           *acolor_index,
                           FT_LayerIterator*  iterator );
 
