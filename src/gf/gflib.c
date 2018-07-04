@@ -155,6 +155,7 @@ unsigned char   bit_table[] = {
     h = max_n - min_n + 1;
     if ((w < 0) || (h < 0))
     {
+      FT_ERROR(( "gf_read_glyph: invalid w and h values\n" ));
       error = FT_THROW( Invalid_File_Format );
       return -1;
     }
@@ -289,75 +290,89 @@ unsigned char   bit_table[] = {
     /* seek to post_post instr. */
     /* fseek(fp, -1, SEEK_END); */
     if( FT_STREAM_SEEK( stream->size - 1 ) )
-      goto ErrExit;
+      goto Exit;
     if( FT_STREAM_SEEK( stream->size - 1 ) )
-      goto ErrExit;
+      goto Exit;
 
     while ( READ_UINT1( stream ) == 223)
     {
       if( FT_STREAM_SEEK( stream->pos -2 ) )
-        goto ErrExit;
+        goto Exit;
       /* fseek(fp, -2, SEEK_CUR); */
     }
 
 
     if( FT_STREAM_SEEK( stream->pos -1 ) )
-        goto ErrExit;
+        goto Exit;
     d= READ_UINT1( stream );
 
     if (d != GF_ID)
     {
+      FT_ERROR(( "gf_load_font: missing GF_ID(131) field\n" ));
       error = FT_THROW( Invalid_File_Format );
-      goto ErrExit;
+      goto Exit;
     }
+
+    FT_TRACE2(( "gf_load_font: GF_ID(131) found " ));
 
     /* fseek(fp, -6, SEEK_CUR); */
     if(FT_STREAM_SEEK( stream->pos -6 ))
-      goto ErrExit;
+      goto Exit;
 
     /* check if the code is post_post */
     if (READ_UINT1( stream ) != GF_POST_POST)
     {
+      FT_ERROR(( "gf_load_font: missing GF_POST_POST(249) field\n" ));
       error = FT_THROW( Invalid_File_Format );
-      goto ErrExit;
+      goto Exit;
     }
+
+    FT_TRACE2(( "gf_load_font: GF_POST_POST(249) found\n" ));
 
     /* read pointer to post instr. */
     if(FT_READ_ULONG( ptr_post ))
-      goto ErrExit;
+      goto Exit;
 
     if (ptr_post == -1)
     {
+      FT_ERROR(( "gf_load_font: invalid postamble pointer\n" ));
       error = FT_THROW( Invalid_File_Format );
-      goto ErrExit;
+      goto Exit;
     }
 
     /* goto post instr. and read it */
     /* fseek(fp, ptr_post, SEEK_SET); */
     if(FT_STREAM_SEEK( ptr_post ))
-      goto ErrExit;
+      goto Exit;
 
     if (READ_UINT1( stream ) != GF_POST)
     {
+      FT_ERROR(( "gf_load_font: missing GF_POST(248) field\n" ));
       error = FT_THROW( Invalid_File_Format );
-      goto ErrExit;
+      goto Exit;
     }
+    FT_TRACE2(( "gf_load_font: GF Postamble found\n" ));FT_TRACE2(( "gf_load_font: GF Postamble found\n" ));
 
     if(FT_READ_ULONG( ptr_p ))
-      goto ErrExit;
+      goto Exit;
     if(FT_READ_ULONG( ds ))
-      goto ErrExit;
+      goto Exit;
     if(FT_READ_ULONG( check_sum ))
-      goto ErrExit;
+      goto Exit;
     if(FT_READ_ULONG( hppp ))
-      goto ErrExit;
+      goto Exit;
     if(FT_READ_ULONG( vppp ))
-      goto ErrExit;
+      goto Exit;
     min_m     = READ_INT4( stream );
     max_m     = READ_INT4( stream );
     min_n     = READ_INT4( stream );
     max_n     = READ_INT4( stream );
 
+    if( ptr_p < 0 )
+    {
+      FT_ERROR(( "gf_load_font: invalid pointer in postamble\n" ));
+      goto Exit;
+    }
     #if 0
     gptr = ftell(fp);
     #endif
@@ -386,7 +401,7 @@ unsigned char   bit_table[] = {
         else
         {
           error = FT_THROW( Invalid_File_Format );
-          goto ErrExit;
+          goto Exit;
         }
         if (code < bc)
           bc = code;
@@ -401,11 +416,13 @@ unsigned char   bit_table[] = {
     nchars = ec - bc + 1;
     /*go= malloc(sizeof(GF_GlyphRec));*/
     if( FT_ALLOC(go, sizeof(GF_GlyphRec)) )
-      goto ErrExit;
+      goto Exit;
 
     /*go->bm_table = (GF_Bitmap)malloc(nchars* sizeof(GF_BitmapRec));*/
     if( FT_ALLOC_MULT(go->bm_table, sizeof(GF_BitmapRec), nchars) )
-      goto ErrExit;
+      goto Exit;
+
+    FT_TRACE2(( "gf_load_font: Allocated bitmap table\n" ));
 
     for (i = 0; i < nchars; i++)
       go->bm_table[i].bitmap = NULL;
@@ -446,41 +463,38 @@ unsigned char   bit_table[] = {
         ptr  = READ_INT4( stream );
         break;
       default:
+        FT_ERROR(( "gf_load_font: missing character locators in postamble\n" ));
         error = FT_THROW( Invalid_File_Format );
-        goto ErrExit;
+        goto Exit;
       }
 
       /* optr = ft_ftell(fp); */
       optr = stream->pos;
       /* ft_fseek(fp, ptr, SEEK_SET); */
       if( FT_STREAM_SEEK( ptr ) )
-        goto ErrExit;
+        goto Exit;
 
       bm = &go->bm_table[code - bc];
       if (gf_read_glyph( stream, bm, memory ) < 0)
-        goto ErrExit;
+        goto Exit;
 
       bm->mv_x = dx;
       bm->mv_y = dy;
       /* ft_fseek(fp, optr, SEEK_SET); */
       if(FT_STREAM_SEEK( optr ))
-        goto ErrExit;
+        goto Exit;
     }
     *goptr          = go;
   return error;
 
-		ErrExit:
+		Exit:
       printf("*ERROR\n");
       if (go != NULL)
       {
-        if (go->bm_table != NULL)
-        {
-          for (i = 0; i < nchars; i++){}
-            /* FT_FREE(go->bm_table[i].bitmap); */
-        }
-        /* FT_FREE(go->bm_table); */
+        FT_FREE(go->bm_table);
+        FT_FREE(go);
       }
-      /* FT_FREE(go); */
+      return error;
   }
 
 
@@ -490,7 +504,11 @@ unsigned char   bit_table[] = {
     GF_Face    gf = (GF_Face)gfface;
     GF_Glyph   go;
     go = gf->gf_glyph;
-
+    if (go != NULL)
+    {
+      FT_FREE(go->bm_table);
+      FT_FREE(go);
+    }
   }
 
 
