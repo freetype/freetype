@@ -255,7 +255,7 @@
     *aglyph_index = FT_NEXT_USHORT( iterator->p );
     *acolor_index = FT_NEXT_USHORT( iterator->p );
 
-    if ( *aglyph_index >= FT_FACE( face )->num_glyphs                ||
+    if ( *aglyph_index >= (FT_UInt)( FT_FACE( face )->num_glyphs )   ||
          ( *acolor_index != 0xFFFF                                 &&
            *acolor_index >= face->palette_data.num_palette_entries ) )
       return 0;

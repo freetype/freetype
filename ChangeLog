@@ -1,3 +1,12 @@
+2018-07-04  Werner Lemberg  <wl@gnu.org>
+
+	Fix 32bit build warnings (#54239).
+
+	* src/base/ftbitmap.c (FT_Bitmap_Blend): Add casts to avoid signed
+	vs. unsigned comparisons.
+
+	* srb/sfnt/ttcolr.c (tt_face_get_colr_layer): Ditto.
+
 2018-07-02  Jeff Carey  <Jeff.Carey@monotype.com>
 
 	* src/psnames/psmodule.c (ps_unicodes_init): Fix alloc debugging.

@@ -860,7 +860,7 @@
 
     /* get source bitmap dimensions */
     source_llx = source_offset.x;
-    if ( FT_LONG_MIN + ( source_->rows << 6 ) + 64 > source_offset.y )
+    if ( FT_LONG_MIN + (FT_Pos)( source_->rows << 6 ) + 64 > source_offset.y )
     {
       FT_TRACE5((
         "FT_Bitmap_Blend: y coordinate overflow in source bitmap\n" ));
@@ -868,7 +868,7 @@
     }
     source_lly = source_offset.y - ( source_->rows << 6 );
 
-    if ( FT_LONG_MAX - ( source_->width << 6 ) - 64 < source_llx )
+    if ( FT_LONG_MAX - (FT_Pos)( source_->width << 6 ) - 64 < source_llx )
     {
       FT_TRACE5((
         "FT_Bitmap_Blend: x coordinate overflow in source bitmap\n" ));
@@ -881,7 +881,7 @@
     if ( target->width && target->rows )
     {
       target_llx = target_offset.x;
-      if ( FT_LONG_MIN + ( target->rows << 6 ) > target_offset.y )
+      if ( FT_LONG_MIN + (FT_Pos)( target->rows << 6 ) > target_offset.y )
       {
         FT_TRACE5((
           "FT_Bitmap_Blend: y coordinate overflow in target bitmap\n" ));
@@ -889,7 +889,7 @@
       }
       target_lly = target_offset.y - ( target->rows << 6 );
 
-      if ( FT_LONG_MAX - ( target->width << 6 ) < target_llx )
+      if ( FT_LONG_MAX - (FT_Pos)( target->width << 6 ) < target_llx )
       {
         FT_TRACE5((
           "FT_Bitmap_Blend: x coordinate overflow in target bitmap\n" ));
@@ -968,7 +968,7 @@
       target->pitch      = (int)final_width * 4;
       target->num_grays  = 256;
 
-      if ( FT_LONG_MAX / target->pitch < target->rows )
+      if ( FT_LONG_MAX / target->pitch < (int)target->rows )
       {
         FT_TRACE5(( "FT_Blend_Bitmap: target bitmap too large (%d x %d)\n",
                      final_width, final_rows ));
@@ -995,7 +995,7 @@
 
       new_pitch = (int)final_width * 4;
 
-      if ( FT_LONG_MAX / new_pitch < final_rows )
+      if ( FT_LONG_MAX / new_pitch < (int)final_rows )
       {
         FT_TRACE5(( "FT_Blend_Bitmap: target bitmap too large (%d x %d)\n",
                      final_width, final_rows ));
