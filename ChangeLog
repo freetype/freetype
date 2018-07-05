@@ -1,3 +1,13 @@
+2018-07-05  Werner Lemberg  <wl@gnu.org>
+
+	Fix more 32bit issues (#54208)
+
+	* src/cff/cffload.c (cff_blend_build_vector): Convert assertion into
+	run-time error.
+
+	* src/truetype/ttgxvar.c (ft_var_to_normalized): Protect against
+	numeric overflow.
+
 2018-07-04  Werner Lemberg  <wl@gnu.org>
 
 	Fix 32bit build warnings (#54239).

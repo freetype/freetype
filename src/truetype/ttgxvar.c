@@ -1780,11 +1780,11 @@
       }
 
       if ( coord < a->def )
-        normalized[i] = -FT_DivFix( coord - a->def,
-                                    a->minimum - a->def );
+        normalized[i] = -FT_DivFix( SUB_LONG( coord, a->def ),
+                                    SUB_LONG( a->minimum, a->def ) );
       else if ( coord > a->def )
-        normalized[i] = FT_DivFix( coord - a->def,
-                                   a->maximum - a->def );
+        normalized[i] = FT_DivFix( SUB_LONG( coord, a->def ),
+                                   SUB_LONG( a->maximum, a->def ) );
       else
         normalized[i] = 0;
     }
