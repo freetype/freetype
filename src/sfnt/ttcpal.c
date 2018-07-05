@@ -112,6 +112,10 @@
     cpal->num_colors = FT_NEXT_USHORT( p );
     colors_offset    = FT_NEXT_ULONG( p );
 
+    if ( CPAL_V0_HEADER_BASE_SIZE             +
+         face->palette_data.num_palettes * 2U > table_size )
+      goto InvalidTable;
+
     if ( colors_offset >= table_size )
       goto InvalidTable;
     if ( cpal->num_colors * COLOR_SIZE > table_size - colors_offset )
@@ -128,7 +132,9 @@
       FT_UShort*  q;
 
 
-      if ( face->palette_data.num_palettes * 2 + 3U * 4 > table_size )
+      if ( CPAL_V0_HEADER_BASE_SIZE             +
+           face->palette_data.num_palettes * 2U +
+           3U * 4                               > table_size )
         goto InvalidTable;
 
       p += face->palette_data.num_palettes * 2;
