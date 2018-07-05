@@ -146,6 +146,9 @@
   {
     FT_UNUSED( face );
     FT_UNUSED( foreground_color );
+
+
+    return FT_THROW( Unimplemented_Feature );
   }
 
 #endif /* !TT_CONFIG_OPTION_COLOR_LAYERS */

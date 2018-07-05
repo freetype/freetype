@@ -1,12 +1,19 @@
 2018-07-05  Werner Lemberg  <wl@gnu.org>
 
+	Fix typo (#54238).
+
+	* src/base/ftcolor.c (FT_Palette_Set_Foreground_Color)
+	[!TT_CONFIG_OPTION_COLOR_LAYERS]: Add return value.
+
+2018-07-05  Werner Lemberg  <wl@gnu.org>
+
 	Adjust table size comparisons (#54242).
 
 	* src/sfnt/ttcpal.c (tt_face_load_cpal): Implement it.
 
 2018-07-05  Werner Lemberg  <wl@gnu.org>
 
-	Fix more 32bit issues (#54208)
+	Fix more 32bit issues (#54208).
 
 	* src/cff/cffload.c (cff_blend_build_vector): Convert assertion into
 	run-time error.
