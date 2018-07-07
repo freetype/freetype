@@ -43,7 +43,7 @@ FT_BEGIN_HEADER
   {
     FT_UInt         code_min, code_max;
     GF_Bitmap       bm_table;
-    double          ds, hppp, vppp;
+    FT_UInt         ds, hppp, vppp;
     FT_UInt         font_bbx_w, font_bbx_h;
     FT_UInt         font_bbx_xoff, font_bbx_yoff;
 
