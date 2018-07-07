@@ -160,6 +160,7 @@ unsigned char   bit_table[] = {
       return -1;
     }
 
+    /* allocate and build bitmap */
     if ((bm->bitmap = (unsigned char*)malloc(h*((w+7)/8))) == NULL)
     {
       error = FT_THROW( Invalid_File_Format );
@@ -167,7 +168,7 @@ unsigned char   bit_table[] = {
     }
 
     memset(bm->bitmap, 0, h*((w+7)/8));
-    bm->raster     = (w+7)/8;
+    bm->raster     = (FT_UInt)(w+7)/8;
     bm->bbx_width  = w;
     bm->bbx_height = h;
     bm->off_x      = -min_m;
@@ -278,7 +279,7 @@ unsigned char   bit_table[] = {
     INT4            min_m, max_m, min_n, max_n;
     INT4            w;
     UINT4           code;
-    double          dx, dy;
+    FT_UInt         dx, dy;
     long            ptr_post, ptr_p, ptr, optr;
     int             bc, ec, nchars, i;
     FT_Error        error  = FT_Err_Ok;
@@ -309,11 +310,11 @@ unsigned char   bit_table[] = {
     if (d != GF_ID)
     {
       FT_ERROR(( "gf_load_font: missing GF_ID(131) field\n" ));
-      error = FT_THROW( Invalid_File_Format );
+      error = FT_THROW( Unknown_File_Format );
       goto Exit;
     }
 
-    FT_TRACE2(( "gf_load_font: GF_ID(131) found " ));
+    FT_TRACE2(( "gf_load_font: GF_ID(131) found\n" ));
 
     /* fseek(fp, -6, SEEK_CUR); */
     if(FT_STREAM_SEEK( stream->pos -6 ))
@@ -323,7 +324,7 @@ unsigned char   bit_table[] = {
     if (READ_UINT1( stream ) != GF_POST_POST)
     {
       FT_ERROR(( "gf_load_font: missing GF_POST_POST(249) field\n" ));
-      error = FT_THROW( Invalid_File_Format );
+      error = FT_THROW( Unknown_File_Format );
       goto Exit;
     }
 
@@ -336,7 +337,7 @@ unsigned char   bit_table[] = {
     if (ptr_post == -1)
     {
       FT_ERROR(( "gf_load_font: invalid postamble pointer\n" ));
-      error = FT_THROW( Invalid_File_Format );
+      error = FT_THROW( Unknown_File_Format );
       goto Exit;
     }
 
@@ -348,10 +349,10 @@ unsigned char   bit_table[] = {
     if (READ_UINT1( stream ) != GF_POST)
     {
       FT_ERROR(( "gf_load_font: missing GF_POST(248) field\n" ));
-      error = FT_THROW( Invalid_File_Format );
+      error = FT_THROW( Unknown_File_Format );
       goto Exit;
     }
-    FT_TRACE2(( "gf_load_font: GF Postamble found\n" ));FT_TRACE2(( "gf_load_font: GF Postamble found\n" ));
+    FT_TRACE2(( "gf_load_font: GF Postamble found\n" ));
 
     if(FT_READ_ULONG( ptr_p ))
       goto Exit;
@@ -427,9 +428,9 @@ unsigned char   bit_table[] = {
     for (i = 0; i < nchars; i++)
       go->bm_table[i].bitmap = NULL;
 
-    go->ds   = (double)ds/(1<<20);
-    go->hppp = (double)hppp/(1<<16);
-    go->vppp = (double)vppp/(1<<16);
+    go->ds   = (FT_UInt)ds/(1<<20);
+    go->hppp = (FT_UInt)hppp/(1<<16);
+    go->vppp = (FT_UInt)vppp/(1<<16);
     go->font_bbx_w = max_m - min_m;
     go->font_bbx_h = max_n - min_n;
     go->font_bbx_xoff = min_m;
@@ -450,21 +451,21 @@ unsigned char   bit_table[] = {
       {
       case GF_CHAR_LOC:
         code = READ_UINT1( stream );
-        dx   = (double)READ_INT4( stream )/(double)(1<<16);
-        dy   = (double)READ_INT4( stream )/(double)(1<<16);
+        dx   = (FT_UInt)READ_INT4( stream )/(FT_UInt)(1<<16);
+        dy   = (FT_UInt)READ_INT4( stream )/(FT_UInt)(1<<16);
         w    = READ_INT4( stream );
         ptr  = READ_INT4( stream );
         break;
       case GF_CHAR_LOC0:
         code = READ_UINT1( stream );
-        dx   = (double)READ_INT1( stream );
-        dy   = (double)0;
+        dx   = (FT_UInt)READ_INT1( stream );
+        dy   = (FT_UInt)0;
         w    = READ_INT4( stream );
         ptr  = READ_INT4( stream );
         break;
       default:
         FT_ERROR(( "gf_load_font: missing character locators in postamble\n" ));
-        error = FT_THROW( Invalid_File_Format );
+        error = FT_THROW( Unknown_File_Format );
         goto Exit;
       }
 
