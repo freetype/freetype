@@ -1,5 +1,5 @@
 #
-# FreeType 2 PK Font module definition
+# FreeType 2 VF Font module definition
 #
 
 
@@ -12,11 +12,11 @@
 # indicate that you have read the license and understand and accept it
 # fully.
 
-FTMODULE_H_COMMANDS += PK_DRIVER
+FTMODULE_H_COMMANDS += VF_DRIVER
 
-define PK_DRIVER
-$(OPEN_DRIVER) FT_Driver_ClassRec, pk_driver_class $(CLOSE_DRIVER)
-$(ECHO_DRIVER)pk        $(ECHO_DRIVER_DESC)METAFONT bitmap fonts$(ECHO_DRIVER_DONE)
+define VF_DRIVER
+$(OPEN_DRIVER) FT_Driver_ClassRec, vf_driver_class $(CLOSE_DRIVER)
+$(ECHO_DRIVER)vf        $(ECHO_DRIVER_DESC)METAFONT bitmap fonts$(ECHO_DRIVER_DONE)
 endef
 
 # EOF
