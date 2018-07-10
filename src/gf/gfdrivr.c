@@ -133,8 +133,8 @@
   FT_CALLBACK_DEF( void )
   GF_Face_Done( FT_Face        gfface )         /* GF_Face */
   {
-    GF_Face    face = (GF_Face)gfface;
-    FT_Memory  memory= FT_FACE_MEMORY( gfface );
+    GF_Face    face   = (GF_Face)gfface;
+    FT_Memory  memory;
 
 
     if ( !face )
@@ -142,7 +142,10 @@
 
     memory = FT_FACE_MEMORY( face );
 
-    gf_free_font( gfface, memory );
+    /*gf_free_font( face );*/
+
+    /*FT_FREE( gfface->available_sizes );*/
+
   }
 
 
@@ -409,8 +412,8 @@
     slot->bitmap_left = bm.off_x / go->hppp;
     slot->bitmap_top  = ascent ;
 
-    slot->metrics.horiAdvance  = (FT_Pos) bm.mv_x * 64;
-    slot->metrics.horiBearingX = (FT_Pos) bm.off_x * 64;
+    slot->metrics.horiAdvance  = (FT_Pos) (bm.mv_x / go->hppp) * 64;
+    slot->metrics.horiBearingX = (FT_Pos) (bm.off_x / go->hppp) * 64;
     slot->metrics.horiBearingY = (FT_Pos) ascent * 64;
     slot->metrics.width        = (FT_Pos) ( bitmap->width * 64 );
     slot->metrics.height       = (FT_Pos) ( bitmap->rows * 64 );

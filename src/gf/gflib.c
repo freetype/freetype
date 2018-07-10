@@ -133,7 +133,6 @@ unsigned char   bit_table[] = {
       min_n = READ_INT4( stream );
       max_n = READ_INT4( stream );
       break;
-
     case GF_BOC1:
       if ( FT_STREAM_SKIP( 1 ) )
         return -1;
@@ -144,7 +143,6 @@ unsigned char   bit_table[] = {
       min_m = max_m - del_m;
       min_n = max_n - del_n;
       break;
-
     default:
       return -1;
     }
@@ -489,7 +487,6 @@ unsigned char   bit_table[] = {
   return error;
 
 		Exit:
-      printf("*ERROR\n");
       if (go != NULL)
       {
         FT_FREE(go->bm_table);
@@ -500,16 +497,22 @@ unsigned char   bit_table[] = {
 
 
   FT_LOCAL_DEF( void )
-  gf_free_font( FT_Face gfface, FT_Memory memory )
+  gf_free_font( GF_Face face )
   {
-    GF_Face    gf = (GF_Face)gfface;
-    GF_Glyph   go;
-    go = gf->gf_glyph;
-    if (go != NULL)
+    FT_Memory  memory = FT_FACE( face )->memory;
+    GF_Glyph   go     = face->gf_glyph;
+    FT_UInt    nchars = FT_FACE( face )->num_glyphs,i;
+
+    if ( !go )
+      return;
+
+    if( go->bm_table )
     {
-      FT_FREE(go->bm_table);
-      FT_FREE(go);
+      for (i = 0; i < nchars; i++)
+	      FT_FREE(go->bm_table[i].bitmap);
     }
+    FT_FREE(go->bm_table);
+    FT_FREE(go);
   }
 
 
