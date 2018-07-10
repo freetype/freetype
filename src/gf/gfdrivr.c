@@ -142,9 +142,9 @@
 
     memory = FT_FACE_MEMORY( face );
 
-    /*gf_free_font( face );*/
+    gf_free_font( face );
 
-    /*FT_FREE( gfface->available_sizes );*/
+    FT_FREE( gfface->available_sizes );
 
   }
 
@@ -186,7 +186,7 @@
     {
       FT_TRACE2(( "glyph bitmaps not allocated\n" ));
       error = FT_THROW( Invalid_File_Format );
-      goto Fail;
+      goto Exit;
     }
 
     /* GF cannot have multiple faces in a single font file.
@@ -229,7 +229,7 @@
     {
       FT_ERROR(( "GF_Face_Init: glyphs not allocated\n" ));
       error = FT_THROW( Invalid_File_Format );
-      goto Fail;
+      goto Exit;
     }
 
     gfface->num_fixed_sizes = 1;
@@ -264,21 +264,22 @@
       error = FT_CMap_New( &gf_cmap_class, NULL, &charmap, NULL );
 
       if ( error )
-        goto Fail;
+        goto Exit;
     }
 
     if ( go->code_max < go->code_min )
     {
       FT_TRACE2(( "invalid number of glyphs\n" ));
       error = FT_THROW( Invalid_File_Format );
-      goto Fail;
+      goto Exit;
     }
-
-  Fail:
-    GF_Face_Done( gfface );
 
   Exit:
     return error;
+
+  Fail:
+    GF_Face_Done( gfface );
+    return FT_THROW( Unknown_File_Format );
   }
 
   FT_CALLBACK_DEF( FT_Error )
