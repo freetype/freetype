@@ -55,9 +55,9 @@
     TFM_Face  face = (TFM_Face)FT_CMAP_FACE( cmap );
     FT_UNUSED( init_data );
 
-    cmap->begin_char     = ;
+    /*cmap->begin_char     = ;
     cmap->end_char       = ;
-
+    */
     return FT_Err_Ok;
   }
 
@@ -67,8 +67,9 @@
   {
     TFM_CMap  cmap = (TFM_CMap)tfmcmap;
 
-    cmap->begin_char     = ;
+    /*cmap->begin_char     = ;
     cmap->end_char       = ;
+    */
   }
 
 
@@ -99,7 +100,7 @@
 
     if ( char_code <= cmap->begin_char )
     {
-      result = cmap->bc;
+      result = cmap->begin_char;
       gindex = 1;
     }
     else

@@ -40,7 +40,6 @@ FT_BEGIN_HEADER
   typedef struct TFM_GlyphRec_
   {
     /* Font Info */
-    int             type;         /* METRIC_TYPE_xxx */
     int             type_aux;     /* METRIC_TYPE_AUX_xxx */
     UINT4           cs;
     /* Metrics */

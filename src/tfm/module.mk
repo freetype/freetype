@@ -16,7 +16,7 @@ FTMODULE_H_COMMANDS += TFM_DRIVER
 
 define TFM_DRIVER
 $(OPEN_DRIVER) FT_Driver_ClassRec, tfm_driver_class $(CLOSE_DRIVER)
-$(ECHO_DRIVER)tfm        $(ECHO_DRIVER_DESC)tfm TeX's bitmap fonts$(ECHO_DRIVER_DONE)
+$(ECHO_DRIVER)tfm       $(ECHO_DRIVER_DESC)METAFONT bitmap fonts$(ECHO_DRIVER_DONE)
 endef
 
 # EOF
