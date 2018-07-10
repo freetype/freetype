@@ -391,8 +391,8 @@
     /* slot, bitmap => freetype, bm => gflib */
     bm = gf->gf_glyph->bm_table[glyph_index];
 
-    bitmap->rows       = bm.bbx_height / go->vppp;
-    bitmap->width      = bm.bbx_width  / go->hppp;
+    bitmap->rows       = bm.bbx_height;
+    bitmap->width      = bm.bbx_width;
     bitmap->pixel_mode = FT_PIXEL_MODE_MONO;
 
     if ( !bm.raster )
@@ -408,13 +408,13 @@
     /*       we can simply point to it                         */
     ft_glyphslot_set_bitmap( slot, bm.bitmap );
 
-    ascent = (bm.bbx_height + bm.off_y) / go->vppp;
+    ascent = (bm.bbx_height + bm.off_y);
     slot->format      = FT_GLYPH_FORMAT_BITMAP;
-    slot->bitmap_left = bm.off_x / go->hppp;
+    slot->bitmap_left = bm.off_x ;
     slot->bitmap_top  = ascent ;
 
-    slot->metrics.horiAdvance  = (FT_Pos) (bm.mv_x / go->hppp) * 64;
-    slot->metrics.horiBearingX = (FT_Pos) (bm.off_x / go->hppp) * 64;
+    slot->metrics.horiAdvance  = (FT_Pos) (bm.mv_x ) * 64;
+    slot->metrics.horiBearingX = (FT_Pos) (bm.off_x ) * 64;
     slot->metrics.horiBearingY = (FT_Pos) ascent * 64;
     slot->metrics.width        = (FT_Pos) ( bitmap->width * 64 );
     slot->metrics.height       = (FT_Pos) ( bitmap->rows * 64 );
