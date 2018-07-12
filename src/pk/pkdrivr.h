@@ -37,12 +37,21 @@ FT_BEGIN_HEADER
 
   } PK_BitmapRec, *PK_Bitmap;
 
+  typedef struct PK_GlyphRec_
+  {
+    FT_UInt         code_min, code_max;
+    PK_Bitmap       bm_table;
+    FT_UInt         ds, hppp, vppp;
+    FT_UInt         font_bbx_w, font_bbx_h;
+    FT_UInt         font_bbx_xoff, font_bbx_yoff;
+
+  } PK_GlyphRec, *PK_Glyph;
+
   typedef struct  PK_FaceRec_
   {
     FT_FaceRec        root;
-    /* TO-DO */
+    PK_Glyph          pk_glyph;
   } PK_FaceRec, *PK_Face;
-
 
   FT_EXPORT_VAR( const FT_Driver_ClassRec )  pk_driver_class;
 
