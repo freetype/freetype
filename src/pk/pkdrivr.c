@@ -42,7 +42,8 @@
   typedef struct  PK_CMapRec_
   {
     FT_CMapRec        cmap;
-    /* TO-DO */
+    FT_UInt32         bc;       /* Beginning Character */
+    FT_UInt32         ec;       /* End Character */
   } PK_CMapRec, *PK_CMap;
 
 
@@ -50,7 +51,13 @@
   pk_cmap_init(  FT_CMap     pkcmap,
                  FT_Pointer  init_data )
   {
-    /* TO-DO */
+    PK_CMap  cmap = (PK_CMap)pkcmap;
+    PK_Face  face = (PK_Face)FT_CMAP_FACE( cmap );
+    FT_UNUSED( init_data );
+
+    cmap->bc     = face->pk_glyph->code_min;
+    cmap->ec     = face->pk_glyph->code_max;
+
     return FT_Err_Ok;
   }
 
@@ -58,7 +65,10 @@
   FT_CALLBACK_DEF( void )
   pk_cmap_done( FT_CMap  pkcmap )
   {
-    /* TO-DO */
+    PK_CMap  cmap = (PK_CMap)pkcmap;
+
+    cmap->bc     =  0;
+    cmap->ec     = -1;
   }
 
 
@@ -66,7 +76,14 @@
   pk_cmap_char_index(  FT_CMap    pkcmap,
                        FT_UInt32  char_code )
   {
-    /* TO-DO */
+    FT_UInt  gindex = 0;
+    PK_CMap  cmap   = (PK_CMap)pkcmap;
+
+    char_code -= cmap->bc;
+
+    if ( char_code < cmap->ec - cmap->bc + 1 )
+      gindex = (FT_UInt)( char_code );
+
     return gindex;
   }
 
@@ -74,7 +91,28 @@
   pk_cmap_char_next(  FT_CMap    pkcmap,
                        FT_UInt32  *achar_code )
   {
-    /* To-DO */
+    PK_CMap    cmap   = (PK_CMap)pkcmap;
+    FT_UInt    gindex = 0;
+    FT_UInt32  result = 0;
+    FT_UInt32  char_code = *achar_code + 1;
+
+
+    if ( char_code <= cmap->bc )
+    {
+      result = cmap->bc;
+      gindex = 1;
+    }
+    else
+    {
+      char_code -= cmap->bc;
+      if ( char_code < cmap->ec - cmap->bc + 1 )
+      {
+        result = char_code;
+        gindex = (FT_UInt)( char_code );
+      }
+    }
+
+    *achar_code = result;
     return gindex;
   }
 
