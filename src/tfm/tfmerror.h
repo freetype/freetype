@@ -17,7 +17,7 @@
 
   /**************************************************************************
    *
-   * This file is used to define the GF error enumeration constants.
+   * This file is used to define the TFM error enumeration constants.
    *
    */
 

@@ -1,5 +1,5 @@
 #
-# FreeType 2 GF Font module definition
+# FreeType 2 TFM Font module definition
 #
 
 

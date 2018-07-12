@@ -134,7 +134,18 @@
   FT_CALLBACK_DEF( void )
   TFM_Face_Done( FT_Face        tfmface )         /* TFM_Face */
   {
-    /* TO-DO */
+    TFM_Face    face   = (TFM_Face)face;
+    FT_Memory   memory;
+
+
+    if ( !face )
+      return;
+
+    memory = FT_FACE_MEMORY( face );
+
+    tfm_free_font( face );
+
+    FT_FREE( tfmface->available_sizes );
   }
 
 
@@ -145,21 +156,156 @@
                   FT_Int         num_params,
                   FT_Parameter*  params )
   {
-    /* TO-DO */
+    TFM_Face    face   = (TFM_Face)tfmface;
+    FT_Error    error  = FT_Err_Ok;
+    FT_Memory   memory = FT_FACE_MEMORY( face );
+    TFM_Glyph   tfm=NULL;
+    FT_UInt16   i,count;
+
+    FT_UNUSED( num_params );
+    FT_UNUSED( params );
+
+
+    FT_TRACE2(( "TFM driver\n" ));
+
+    /* load font */
+    error = tfm_load_font( stream, memory, &tfm );
+    if ( FT_ERR_EQ( error, Unknown_File_Format ) )
+    {
+      FT_TRACE2(( "  not a TFM file\n" ));
+      goto Fail;
+    }
+    else if ( error )
+      goto Exit;
+
+    /* we have a tfm font: let's construct the face object */
+    face->tfm_glyph = tfm ;
+
+    /* TFM cannot have multiple faces in a single font file.
+     * XXX: non-zero face_index is already invalid argument, but
+     *      Type1, Type42 driver has a convention to return
+     *      an invalid argument error when the font could be
+     *      opened by the specified driver.
+     */
+    if ( face_index > 0 && ( face_index & 0xFFFF ) > 0 )
+    {
+      FT_ERROR(( "TFM_Face_Init: invalid face index\n" ));
+      TFM_Face_Done( tfmface );
+      return FT_THROW( Invalid_Argument );
+    }
+
+    /* we now need to fill the root FT_Face fields */
+    /* with relevant information                   */
+
+    tfmface->num_faces       = 1;
+    tfmface->face_index      = 0;
+    tfmface->face_flags     |= FT_FACE_FLAG_FIXED_SIZES |
+                             FT_FACE_FLAG_HORIZONTAL ;
+
+    tfmface->family_name     = NULL;
+
+    FT_TRACE4(( "  number of glyphs: allocated %d\n",tfmface->num_glyphs ));
+
+    if ( tfmface->num_glyphs <= 0 )
+    {
+      FT_ERROR(( "TFM_Face_Init: glyphs not allocated\n" ));
+      error = FT_THROW( Invalid_File_Format );
+      goto Exit;
+    }
+
+    tfmface->num_fixed_sizes = 1;
+    if ( FT_NEW_ARRAY( tfmface->available_sizes, 1 ) )
+      goto Exit;
+
+    {
+      FT_Bitmap_Size*  bsize = tfmface->available_sizes;
+      FT_UShort        x_res, y_res;
+
+      bsize->height = (FT_Short)/* TO-DO */ ;
+      bsize->width  = (FT_Short)/* TO-DO */ ;
+      bsize->size   = (FT_Pos)  /* TO-DO */ ;
+
+      x_res = /* TO-DO */;
+      y_res = /* TO-DO */;
+
+      bsize->y_ppem = (FT_Pos) /* TO-DO */;
+      bsize->x_ppem = (FT_Pos) /* TO-DO */;
+    }
+
+    /* Charmaps */
+    {
+      FT_CharMapRec  charmap;
+
+      /* Unicode Charmap */
+      charmap.encoding    = FT_ENCODING_UNICODE;
+      charmap.platform_id = TT_PLATFORM_MICROSOFT;
+      charmap.encoding_id = TT_MS_ID_UNICODE_CS;
+      charmap.face        = FT_FACE( face );
+
+      error = FT_CMap_New( &tfm_cmap_class, NULL, &charmap, NULL );
+
+      if ( error )
+        goto Exit;
+    }
+
+  Exit:
+    return error;
+
+  Fail:
+    TFM_Face_Done( tfmface );
+    return FT_THROW( Unknown_File_Format );
   }
 
   FT_CALLBACK_DEF( FT_Error )
   TFM_Size_Select(  FT_Size   size,
                     FT_ULong  strike_index )
   {
-    /* TO-DO */
+    TFM_Face     face  = (TFM_Face)size->face;
+    FT_UNUSED( strike_index );
+
+    FT_Select_Metrics( size->face, 0 );
+
+    size->metrics.ascender    = /* TO-DO */;
+    size->metrics.descender   = /* TO-DO */;
+    size->metrics.max_advance = /* TO-DO */;
+
+    return FT_Err_Ok;
   }
 
   FT_CALLBACK_DEF( FT_Error )
   TFM_Size_Request(  FT_Size          size,
                      FT_Size_Request  req )
   {
-    /* TO-DO */
+    TFM_Face           face    = (TFM_Face)size->face;
+    FT_Bitmap_Size*   bsize   = size->face->available_sizes;
+    FT_Error          error   = FT_ERR( Invalid_Pixel_Size );
+    FT_Long           height;
+
+
+    height = FT_REQUEST_HEIGHT( req );
+    height = ( height + 32 ) >> 6;
+
+    switch ( req->type )
+    {
+    case FT_SIZE_REQUEST_TYPE_NOMINAL:
+      if ( height == ( ( bsize->y_ppem + 32 ) >> 6 ) )
+        error = FT_Err_Ok;
+      break;
+
+    case FT_SIZE_REQUEST_TYPE_REAL_DIM:
+      if ( height == /* TO-DO */ )
+        error = FT_Err_Ok;
+      break;
+
+    default:
+      error = FT_THROW( Unimplemented_Feature );
+      break;
+    }
+
+    if ( error )
+      return error;
+    else
+      return TFM_Size_Select( size, 0 );
   }
 
 
@@ -170,7 +316,56 @@
                    FT_UInt       glyph_index,
                    FT_Int32      load_flags )
   {
-    /* TO-DO */
+    TFM_Face      tfm     = (TFM_Face)FT_SIZE_FACE( size );
+    FT_Face       face   = FT_FACE( tfm );
+    FT_Error      error  = FT_Err_Ok;
+    FT_Bitmap*    bitmap = &slot->bitmap;
+
+    FT_UNUSED( load_flags );
+
+    if ( !face )
+    {
+      error = FT_THROW( Invalid_Face_Handle );
+      goto Exit;
+    }
+
+    if ( glyph_index >= (FT_UInt)( face->num_glyphs ) )
+    {
+      error = FT_THROW( Invalid_Argument );
+      goto Exit;
+    }
+
+    FT_TRACE1(( "TFM_Glyph_Load: glyph index %d\n", glyph_index ));
+
+    if ( glyph_index < 0 )
+      glyph_index = 0;
+
+    /* slot, bitmap => freetype, bm => tfmlib */
+
+    bitmap->rows       = /* TO-DO */;
+    bitmap->width      = /* TO-DO */;
+    bitmap->pixel_mode = FT_PIXEL_MODE_MONO;
+
+    bitmap->pitch = (int)/* TO-DO */;
+
+    /* note: we don't allocate a new array to hold the bitmap; */
+    /*       we can simply point to it                         */
+    ft_glyphslot_set_bitmap( slot, /* TO-DO */);
+
+    slot->format      = FT_GLYPH_FORMAT_BITMAP;
+    slot->bitmap_left = /* TO-DO */ ;
+    slot->bitmap_top  = /* TO-DO */ ;
+
+    slot->metrics.horiAdvance  = (FT_Pos) /* TO-DO */ * 64;
+    slot->metrics.horiBearingX = (FT_Pos) /* TO-DO */ * 64;
+    slot->metrics.horiBearingY = (FT_Pos) /* TO-DO */ * 64;
+    slot->metrics.width        = (FT_Pos) ( bitmap->width * 64 );
+    slot->metrics.height       = (FT_Pos) ( bitmap->rows * 64 );
+
+    ft_synthesize_vertical_metrics( &slot->metrics, /* TO-DO */ * 64 );
+
+  Exit:
+    return error;
   }
 
 
