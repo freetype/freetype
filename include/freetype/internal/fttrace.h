@@ -123,6 +123,10 @@ FT_TRACE_DEF( gflib )
   /* TFM helper module components */
 FT_TRACE_DEF( tfmobjs )
 
+  /* PK font components */
+FT_TRACE_DEF( pkdriver )
+FT_TRACE_DEF( pklib )
+
   /* PFR font component */
 FT_TRACE_DEF( pfr )
 
