@@ -53,6 +53,9 @@ unsigned char   bit_table[] = {
   unsigned long  gf_read_uintn(FT_Stream,int);
 
 #define READ_UINT1( stream )    (UINT1)gf_read_uintn( stream, 1)
+#define READ_UINT2( stream )    (UINT1)gf_read_uintn( stream, 2)
+#define READ_UINT3( stream )    (UINT1)gf_read_uintn( stream, 3)
+#define READ_UINT4( stream )    (UINT1)gf_read_uintn( stream, 4)
 #define READ_UINTN( stream,n)   (UINT4)gf_read_uintn( stream, n)
 #define READ_INT1( stream )     (INT1)gf_read_intn( stream, 1)
 #define READ_INT4( stream )     (INT4)gf_read_intn( stream, 4)
@@ -114,153 +117,187 @@ unsigned char   bit_table[] = {
   {
     long           m, n;
     int            paint_sw;
-    int            instr;
+    int            instr,inst;
     INT4           min_m, max_m, min_n, max_n, del_m, del_n;
     long           w, h, d;
     int            m_b, k;
     unsigned char  *ptr;
     FT_Error       error  = FT_Err_Ok;
 
-    switch (READ_UINT1( stream ))
+    for (  ;  ;  )
     {
-    case GF_BOC:
-      if ( FT_STREAM_SKIP( 4 ) )
-        return -1;
-      if ( FT_STREAM_SKIP( 4 ) )
-        return -1;
-      min_m = READ_INT4( stream );
-      max_m = READ_INT4( stream );
-      min_n = READ_INT4( stream );
-      max_n = READ_INT4( stream );
-      break;
-    case GF_BOC1:
-      if ( FT_STREAM_SKIP( 1 ) )
-        return -1;
-      del_m = (INT4)READ_UINT1( stream );
-      max_m = (INT4)READ_UINT1( stream );
-      del_n = (INT4)READ_UINT1( stream );
-      max_n = (INT4)READ_UINT1( stream );
-      min_m = max_m - del_m;
-      min_n = max_n - del_n;
-      break;
-    default:
-      return -1;
-    }
-
-    if(error != FT_Err_Ok)
-      return -1;
-    w = max_m - min_m + 1;
-    h = max_n - min_n + 1;
-    if ((w < 0) || (h < 0))
-    {
-      FT_ERROR(( "gf_read_glyph: invalid w and h values\n" ));
-      error = FT_THROW( Invalid_File_Format );
-      return -1;
-    }
-
-    /* allocate and build bitmap */
-    if ((bm->bitmap = (unsigned char*)malloc(h*((w+7)/8))) == NULL)
-    {
-      error = FT_THROW( Invalid_File_Format );
-      return -1;
-    }
-
-    memset(bm->bitmap, 0, h*((w+7)/8));
-    bm->raster     = (FT_UInt)(w+7)/8;
-    bm->bbx_width  = w;
-    bm->bbx_height = h;
-    bm->off_x      = -min_m;
-    bm->off_y      = max_n;
-    #if 0
-      bm->mv_x       = -min_m;
-      bm->mv_y       = max_n;
-    #endif
-
-    m        = min_m;
-    n        = max_n;
-    paint_sw = 0;
-    while ((instr = (int)READ_UINT1( stream )) != GF_EOC)
-    {
-      if (instr == GF_PAINT_0)
+      inst = READ_UINT1( stream );
+      switch ((int)inst)
       {
-        paint_sw = 1 - paint_sw;
-      }
-      else if ((GF_NEW_ROW_0 <= instr) && (instr <= GF_NEW_ROW_164))
-      {
-        m        = min_m + (instr - GF_NEW_ROW_0);
-        n        = n - 1;
-        paint_sw = 1;
-      }
-      else if ((GF_PAINT_1 <= instr) && (instr <= GF_PAINT_63))
-      {
-        d = (instr - GF_PAINT_1 + 1);
-        goto Paint;
-      }
-      else
-      {
-        switch ((int)instr)
-        {
-        case GF_PAINT1:
-        case GF_PAINT2:
-        case GF_PAINT3:
-          d = (UINT4)READ_UINTN( stream, (instr - GF_PAINT1 + 1));
-          Paint:
-            if (paint_sw == 0)
-            {
-              m = m + d;
-            }
-            else
-            {
-              ptr = &bm->bitmap[(max_n - n) * bm->raster + (m - min_m)/8];
-              m_b = (m - min_m) % 8;
-              while (d > 0)
-              {
-                *ptr |= bit_table[m_b];
-                m++;
-                if (++m_b >= 8)
-                {
-                  m_b = 0;
-                  ++ptr;
-                }
-                d--;
-              }
-            }
-            paint_sw = 1 - paint_sw;
-          break;
-        case GF_SKIP0:
-          m = min_m;
-          n = n - 1;
-          paint_sw = 0;
-          break;
-        case GF_SKIP1:
-        case GF_SKIP2:
-        case GF_SKIP3:
-          m = min_m;
-          n = n - (UINT4)READ_UINTN( stream, (instr - GF_SKIP1 + 1)) - 1;
-          paint_sw = 0;
-          break;
-        case GF_XXX1:
-        case GF_XXX2:
-        case GF_XXX3:
-        case GF_XXX4:
-          k = READ_UINTN( stream, instr - GF_XXX1 + 1);
-          if ( FT_STREAM_SKIP( k ) )
-            return -1;
-          break;
-        case GF_YYY:
-          if ( FT_STREAM_SKIP( 4 ) )
-            return -1;
-          break;
-        case GF_NO_OP:
-          break;
-        default:
-          FT_FREE(bm->bitmap);
-          bm->bitmap = NULL;
-          error = FT_THROW( Invalid_File_Format );
+      case GF_BOC:
+        if ( FT_STREAM_SKIP( 4 ) )
           return -1;
-         }
+        if ( FT_STREAM_SKIP( 4 ) )
+          return -1;
+        min_m = READ_INT4( stream );
+        max_m = READ_INT4( stream );
+        min_n = READ_INT4( stream );
+        max_n = READ_INT4( stream );
+        goto BOC;
+        break;
+      case GF_BOC1:
+        if ( FT_STREAM_SKIP( 1 ) )
+          return -1;
+        del_m = (INT4)READ_UINT1( stream );
+        max_m = (INT4)READ_UINT1( stream );
+        del_n = (INT4)READ_UINT1( stream );
+        max_n = (INT4)READ_UINT1( stream );
+        min_m = max_m - del_m;
+        min_n = max_n - del_n;
+        goto BOC;
+        break;
+      case GF_XXX1:
+        k = (UINT4)READ_UINT1( stream );
+        if ( FT_STREAM_SKIP( k ) )
+          return -1;
+        break;
+      case GF_XXX2:
+        k = (UINT4)READ_UINT2( stream );
+        if ( FT_STREAM_SKIP( k ) )
+          return -1;
+        break;
+      case GF_XXX3:
+        k = (UINT4)READ_UINT3( stream );
+        if ( FT_STREAM_SKIP( k ) )
+          return -1;
+        break;
+      case GF_XXX4:
+        k = (UINT4)READ_UINT4( stream );
+        if ( FT_STREAM_SKIP( k ) )
+          return -1;
+        break;
+      case GF_YYY :
+        if ( FT_STREAM_SKIP( 4 ) )
+          return -1;
+        break;
+      case GF_NO_OP:
+        break;
+      default:
+        return -1;
       }
     }
+
+    return 0;
+    BOC:
+      if(error != FT_Err_Ok)
+        return -1;
+      w = max_m - min_m + 1;
+      h = max_n - min_n + 1;
+      if ((w < 0) || (h < 0))
+      {
+        FT_ERROR(( "gf_read_glyph: invalid w and h values\n" ));
+        error = FT_THROW( Invalid_File_Format );
+        return -1;
+      }
+
+      /* allocate and build bitmap */
+      if ((bm->bitmap = (unsigned char*)malloc(h*((w+7)/8))) == NULL)
+      {
+        error = FT_THROW( Invalid_File_Format );
+        return -1;
+      }
+
+      memset(bm->bitmap, 0, h*((w+7)/8));
+      bm->raster     = (FT_UInt)(w+7)/8;
+      bm->bbx_width  = w;
+      bm->bbx_height = h;
+      bm->off_x      = -min_m;
+      bm->off_y      = max_n;
+      #if 0
+        bm->mv_x       = -min_m;
+        bm->mv_y       = max_n;
+      #endif
+
+      m        = min_m;
+      n        = max_n;
+      paint_sw = 0;
+      while ((instr = (int)READ_UINT1( stream )) != GF_EOC)
+      {
+        if (instr == GF_PAINT_0)
+        {
+          paint_sw = 1 - paint_sw;
+        }
+        else if ((GF_NEW_ROW_0 <= instr) && (instr <= GF_NEW_ROW_164))
+        {
+          m        = min_m + (instr - GF_NEW_ROW_0);
+          n        = n - 1;
+          paint_sw = 1;
+        }
+        else if ((GF_PAINT_1 <= instr) && (instr <= GF_PAINT_63))
+        {
+          d = (instr - GF_PAINT_1 + 1);
+          goto Paint;
+        }
+        else
+        {
+          switch ((int)instr)
+          {
+          case GF_PAINT1:
+          case GF_PAINT2:
+          case GF_PAINT3:
+            d = (UINT4)READ_UINTN( stream, (instr - GF_PAINT1 + 1));
+            Paint:
+              if (paint_sw == 0)
+              {
+                m = m + d;
+              }
+              else
+              {
+                ptr = &bm->bitmap[(max_n - n) * bm->raster + (m - min_m)/8];
+                m_b = (m - min_m) % 8;
+                while (d > 0)
+                {
+                  *ptr |= bit_table[m_b];
+                  m++;
+                  if (++m_b >= 8)
+                  {
+                    m_b = 0;
+                    ++ptr;
+                  }
+                  d--;
+                }
+              }
+              paint_sw = 1 - paint_sw;
+            break;
+          case GF_SKIP0:
+            m = min_m;
+            n = n - 1;
+            paint_sw = 0;
+            break;
+          case GF_SKIP1:
+          case GF_SKIP2:
+          case GF_SKIP3:
+            m = min_m;
+            n = n - (UINT4)READ_UINTN( stream, (instr - GF_SKIP1 + 1)) - 1;
+            paint_sw = 0;
+            break;
+          case GF_XXX1:
+          case GF_XXX2:
+          case GF_XXX3:
+          case GF_XXX4:
+            k = READ_UINTN( stream, instr - GF_XXX1 + 1);
+            if ( FT_STREAM_SKIP( k ) )
+              return -1;
+            break;
+          case GF_YYY:
+            if ( FT_STREAM_SKIP( 4 ) )
+              return -1;
+            break;
+          case GF_NO_OP:
+            break;
+          default:
+            FT_FREE(bm->bitmap);
+            bm->bitmap = NULL;
+            error = FT_THROW( Invalid_File_Format );
+            return -1;
+           }
+        }
+      }
     return 0;
   }
 
