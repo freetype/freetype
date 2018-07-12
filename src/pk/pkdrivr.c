@@ -133,7 +133,18 @@
   FT_CALLBACK_DEF( void )
   PK_Face_Done( FT_Face        pkface )         /* PK_Face */
   {
-    /* TO-DO */
+    PK_Face    face   = (PK_Face)pkface;
+    FT_Memory  memory;
+
+
+    if ( !face )
+      return;
+
+    memory = FT_FACE_MEMORY( face );
+
+    pk_free_font( face );
+
+    FT_FREE( pkface->available_sizes );
   }
 
 
@@ -144,21 +155,183 @@
                   FT_Int         num_params,
                   FT_Parameter*  params )
   {
-    /* TO-DO */
+    PK_Face     face   = (PK_Face)pkface;
+    FT_Error    error  = FT_Err_Ok;
+    FT_Memory   memory = FT_FACE_MEMORY( face );
+    PK_Glyph    go=NULL;
+    FT_UInt16   i,count;
+
+    FT_UNUSED( num_params );
+    FT_UNUSED( params );
+
+
+    FT_TRACE2(( "PK driver\n" ));
+
+    /* load font */
+    error = pk_load_font( stream, memory, &go );
+    if ( FT_ERR_EQ( error, Unknown_File_Format ) )
+    {
+      FT_TRACE2(( "  not a PK file\n" ));
+      goto Fail;
+    }
+    else if ( error )
+      goto Exit;
+
+    /* we have a pk font: let's construct the face object */
+    face->pk_glyph = go ;
+
+    /* sanity check */
+    if ( !face->pk_glyph->bm_table )
+    {
+      FT_TRACE2(( "glyph bitmaps not allocated\n" ));
+      error = FT_THROW( Invalid_File_Format );
+      goto Exit;
+    }
+
+    /* PK cannot have multiple faces in a single font file.
+     * XXX: non-zero face_index is already invalid argument, but
+     *      Type1, Type42 driver has a convention to return
+     *      an invalid argument error when the font could be
+     *      opened by the specified driver.
+     */
+    if ( face_index > 0 && ( face_index & 0xFFFF ) > 0 )
+    {
+      FT_ERROR(( "PK_Face_Init: invalid face index\n" ));
+      PK_Face_Done( pkface );
+      return FT_THROW( Invalid_Argument );
+    }
+
+    /* we now need to fill the root FT_Face fields */
+    /* with relevant information                   */
+
+    pkface->num_faces       = 1;
+    pkface->face_index      = 0;
+    pkface->face_flags     |= FT_FACE_FLAG_FIXED_SIZES |
+                             FT_FACE_FLAG_HORIZONTAL ;
+    /*
+     * XXX: TO-DO: pkface->face_flags |= FT_FACE_FLAG_FIXED_WIDTH;
+     * XXX: I have to check for this.
+     */
+
+    pkface->family_name     = NULL;
+    count=0;
+    for (i = 0; i < 256; i++)
+    {
+      if(go->bm_table[i].bitmap != NULL)
+        count++;
+    }
+    pkface->num_glyphs      = (FT_Long)count;
+
+    FT_TRACE4(( "  number of glyphs: allocated %d\n",pkface->num_glyphs ));
+
+    if ( pkface->num_glyphs <= 0 )
+    {
+      FT_ERROR(( "PK_Face_Init: glyphs not allocated\n" ));
+      error = FT_THROW( Invalid_File_Format );
+      goto Exit;
+    }
+
+    pkface->num_fixed_sizes = 1;
+    if ( FT_NEW_ARRAY( pkface->available_sizes, 1 ) )
+      goto Exit;
+
+    {
+      FT_Bitmap_Size*  bsize = pkface->available_sizes;
+      /* FT_UShort        x_res, y_res; */
+
+      bsize->height = (FT_Short) face->pk_glyph->font_bbx_h ;
+      bsize->width  = (FT_Short) face->pk_glyph->font_bbx_w ;
+      bsize->size   = (FT_Pos)   face->pk_glyph->ds << 6    ;
+
+      /* x_res = toint( go->hppp * 72.27 ); */
+      /* y_res = toint( go->vppp * 72.27 ); */
+
+      bsize->y_ppem = (FT_Pos)(bsize->size/10) << 6 ;
+      bsize->x_ppem = (FT_Pos)bsize->y_ppem ;
+    }
+
+    /* Charmaps */
+    {
+      FT_CharMapRec  charmap;
+
+      /* Unicode Charmap */
+      charmap.encoding    = FT_ENCODING_UNICODE;
+      charmap.platform_id = TT_PLATFORM_MICROSOFT;
+      charmap.encoding_id = TT_MS_ID_UNICODE_CS;
+      charmap.face        = FT_FACE( face );
+
+      error = FT_CMap_New( &pk_cmap_class, NULL, &charmap, NULL );
+
+      if ( error )
+        goto Exit;
+    }
+
+    if ( go->code_max < go->code_min )
+    {
+      FT_TRACE2(( "invalid number of glyphs\n" ));
+      error = FT_THROW( Invalid_File_Format );
+      goto Exit;
+    }
+
+  Exit:
+    return error;
+
+  Fail:
+    PK_Face_Done( pkface );
+    return FT_THROW( Unknown_File_Format );
   }
 
   FT_CALLBACK_DEF( FT_Error )
   PK_Size_Select(  FT_Size   size,
                    FT_ULong  strike_index )
   {
-    /* TO-DO */
+    PK_Face     face  = (PK_Face)size->face;
+    PK_Glyph    go    = face->pk_glyph;
+    FT_UNUSED( strike_index );
+
+    FT_Select_Metrics( size->face, 0 );
+
+    size->metrics.ascender    = (go->font_bbx_h - go->font_bbx_yoff) * 64;
+    size->metrics.descender   = -go->font_bbx_yoff * 64;
+    size->metrics.max_advance = go->font_bbx_w * 64;
+
+    return FT_Err_Ok;
   }
 
   FT_CALLBACK_DEF( FT_Error )
   PK_Size_Request( FT_Size          size,
                    FT_Size_Request  req )
   {
-    /* TO-DO */
+    PK_Face           face    = (PK_Face)size->face;
+    FT_Bitmap_Size*   bsize   = size->face->available_sizes;
+    FT_Error          error   = FT_ERR( Invalid_Pixel_Size );
+    FT_Long           height;
+
+
+    height = FT_REQUEST_HEIGHT( req );
+    height = ( height + 32 ) >> 6;
+
+    switch ( req->type )
+    {
+    case FT_SIZE_REQUEST_TYPE_NOMINAL:
+      if ( height == ( ( bsize->y_ppem + 32 ) >> 6 ) )
+        error = FT_Err_Ok;
+      break;
+
+    case FT_SIZE_REQUEST_TYPE_REAL_DIM:
+      if ( height == face->pk_glyph->font_bbx_h )
+        error = FT_Err_Ok;
+      break;
+
+    default:
+      error = FT_THROW( Unimplemented_Feature );
+      break;
+    }
+
+    if ( error )
+      return error;
+    else
+      return PK_Size_Select( size, 0 );
   }
 
 
@@ -169,7 +342,85 @@
                    FT_UInt       glyph_index,
                    FT_Int32      load_flags )
   {
-    /* TO-DO */
+    PK_Face      pk     = (PK_Face)FT_SIZE_FACE( size );
+    FT_Face      face   = FT_FACE( pk );
+    FT_Error     error  = FT_Err_Ok;
+    FT_Bitmap*   bitmap = &slot->bitmap;
+    PK_BitmapRec bm;
+    PK_Glyph     go;
+    FT_Int       ascent;
+
+    go = pk->pk_glyph;
+
+    FT_UNUSED( load_flags );
+
+    if ( !face )
+    {
+      error = FT_THROW( Invalid_Face_Handle );
+      goto Exit;
+    }
+
+    if ( !go                                         ||
+         glyph_index >= (FT_UInt)( face->num_glyphs ) )
+    {
+      error = FT_THROW( Invalid_Argument );
+      goto Exit;
+    }
+
+    FT_TRACE1(( "PK_Glyph_Load: glyph index %d\n", glyph_index ));
+
+    if ( glyph_index < 0 )
+      glyph_index = 0;
+
+    if ((glyph_index < go->code_min) || (go->code_max < glyph_index))
+    {
+      FT_TRACE2(( "invalid glyph index\n" ));
+      error = FT_THROW( Invalid_Argument );
+      goto Exit;
+    }
+
+    if ( !go->bm_table )
+    {
+      FT_TRACE2(( "invalid bitmap table\n" ));
+      error = FT_THROW( Invalid_File_Format );
+      goto Exit;
+    }
+
+    /* slot, bitmap => freetype, bm => pklib */
+    bm = pk->pk_glyph->bm_table[glyph_index];
+
+    bitmap->rows       = bm.bbx_height;
+    bitmap->width      = bm.bbx_width;
+    bitmap->pixel_mode = FT_PIXEL_MODE_MONO;
+
+    if ( !bm.raster )
+    {
+      FT_TRACE2(( "invalid bitmap width\n" ));
+      error = FT_THROW( Invalid_File_Format );
+      goto Exit;
+    }
+
+    bitmap->pitch = (int)bm.raster ;
+
+    /* note: we don't allocate a new array to hold the bitmap; */
+    /*       we can simply point to it                         */
+    ft_glyphslot_set_bitmap( slot, bm.bitmap );
+
+    ascent = (bm.bbx_height + bm.off_y);
+    slot->format      = FT_GLYPH_FORMAT_BITMAP;
+    slot->bitmap_left = bm.off_x ;
+    slot->bitmap_top  = ascent ;
+
+    slot->metrics.horiAdvance  = (FT_Pos) (bm.mv_x ) * 64;
+    slot->metrics.horiBearingX = (FT_Pos) (bm.off_x ) * 64;
+    slot->metrics.horiBearingY = (FT_Pos) ascent * 64;
+    slot->metrics.width        = (FT_Pos) ( bitmap->width * 64 );
+    slot->metrics.height       = (FT_Pos) ( bitmap->rows * 64 );
+
+    ft_synthesize_vertical_metrics( &slot->metrics, bm.bbx_height * 64 );
+
+  Exit:
+    return error;
   }
 
 
