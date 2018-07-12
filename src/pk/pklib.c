@@ -54,8 +54,12 @@ unsigned char   bit_table[] = {
   unsigned long  pk_read_uintn(FT_Stream,int);
 
 #define READ_UINT1( stream )    (UINT1)pk_read_uintn( stream, 1)
+#define READ_UINT2( stream )    (UINT1)pk_read_uintn( stream, 2)
+#define READ_UINT3( stream )    (UINT1)pk_read_uintn( stream, 3)
+#define READ_UINT4( stream )    (UINT1)pk_read_uintn( stream, 4)
 #define READ_UINTN( stream,n)   (UINT4)pk_read_uintn( stream, n)
 #define READ_INT1( stream )     (INT1)pk_read_intn( stream, 1)
+#define READ_INT2( stream )     (INT1)pk_read_intn( stream, 2)
 #define READ_INT4( stream )     (INT4)pk_read_intn( stream, 4)
 
 /*
@@ -102,6 +106,72 @@ unsigned char   bit_table[] = {
       --size;
 		}
     return v;
+  }
+
+  int  pk_read_nyble_rest_cnt;
+  int  pk_read_nyble_max_bytes;
+
+  void
+  pk_read_nyble_init(int max)
+  {
+    pk_read_nyble_rest_cnt  = 0;
+    pk_read_nyble_max_bytes = max;
+  }
+
+  int
+  pk_read_nyble(FT_Stream stream)
+  {
+    static UINT1  d;
+    int           v;
+
+    switch (pk_read_nyble_rest_cnt)
+    {
+    case 0:
+      d = READ_UINT1( stream );
+      if (--pk_read_nyble_max_bytes < 0)
+        return -1L;
+      v = d / 0x10;
+      d = d % 0x10;
+      pk_read_nyble_rest_cnt = 1;
+      break;
+    case 1:
+    default:
+      v = d;
+      pk_read_nyble_rest_cnt = 0;
+      break;
+    }
+  return v;
+  }
+
+  long
+  pk_read_packed_number(long* repeat, FT_Stream stream, int dyn_f)
+  {
+    int   d, n;
+    long  di;
+
+    entry:
+      d = pk_read_nyble( stream );
+      if (d == 0)
+      {
+        n = 0;
+        do
+        {
+          di = pk_read_nyble( stream );
+          n++;
+        }
+        while (di == 0);
+        for ( ; n > 0; n--)
+          di = di*16 + pk_read_nyble( stream );
+        return di - 15 + (13 - dyn_f)*16 + dyn_f;
+      }
+    if (d <= dyn_f)
+      return d;
+    if (d <= 13)
+      return (d - dyn_f - 1)*16 + pk_read_nyble( stream ) + dyn_f + 1;
+    *repeat = 1;
+    if (d == 14)
+      *repeat = pk_read_packed_number(repeat, stream, dyn_f);
+    goto entry;
   }
 
   int
@@ -205,73 +275,6 @@ unsigned char   bit_table[] = {
     return 0;
   }
 
-  long
-  pk_read_packed_number(long* repeat, FT_Stream, int dyn_f)
-  {
-    int   d, n;
-    long  di;
-
-    entry:
-      d = pk_read_nyble( stream );
-      if (d == 0)
-      {
-        n = 0;
-        do
-        {
-          di = pk_read_nyble( stream );
-          n++;
-        }
-        while (di == 0);
-        for ( ; n > 0; n--)
-          di = di*16 + pk_read_nyble( stream );
-        return di - 15 + (13 - dyn_f)*16 + dyn_f;
-      }
-    if (d <= dyn_f)
-      return d;
-    if (d <= 13)
-      return (d - dyn_f - 1)*16 + pk_read_nyble( stream ) + dyn_f + 1;
-    *repeat = 1;
-    if (d == 14)
-      *repeat = pk_read_packed_number(repeat, stream, dyn_f);
-    goto entry;
-  }
-
-  int  pk_read_nyble_rest_cnt;
-  int  pk_read_nyble_max_bytes;
-
-  void
-  pk_read_nyble_init(int max)
-  {
-    pk_read_nyble_rest_cnt  = 0;
-    pk_read_nyble_max_bytes = max;
-  }
-
-  int
-  pk_read_nyble(FT_Stream stream)
-  {
-    static UINT1  d;
-    int           v;
-
-    switch (pk_read_nyble_rest_cnt)
-    {
-    case 0:
-      d = READ_UINT1( stream );
-      if (--pk_read_nyble_max_bytes < 0)
-        return -1L;
-      v = d / 0x10;
-      d = d % 0x10;
-      pk_read_nyble_rest_cnt = 1;
-      break;
-    case 1:
-    default:
-      v = d;
-      pk_read_nyble_rest_cnt = 0;
-      break;
-    }
-  return v;
-  }
-
-
   /**************************************************************************
    *
    * API.
@@ -291,8 +294,13 @@ unsigned char   bit_table[] = {
     INT4          hoff, voff, mv_x, mv_y;
     long          gptr;
     int           bc, ec, nchars, index, i;
+    FT_Error      error  = FT_Err_Ok;
+    FT_Memory     memory = extmemory; /* needed for FT_NEW */
 
-    k         = READ_UINT1( stream );
+    go = NULL;
+    nchars = -1;
+
+    k = READ_UINT1( stream );
     if ( FT_STREAM_SKIP( k ) )
       goto Exit;
     ds        = READ_UINT4( stream );
@@ -518,13 +526,14 @@ unsigned char   bit_table[] = {
       }
       FT_FREE(go->bm_table);
       FT_FREE(go);
+      return error;
   }
 
   FT_LOCAL_DEF( void )
   pk_free_font( PK_Face face )
   {
     FT_Memory  memory = FT_FACE( face )->memory;
-    GF_Glyph   go     = face->pk_glyph;
+    PK_Glyph   go     = face->pk_glyph;
     FT_UInt    nchars = FT_FACE( face )->num_glyphs,i;
 
     if ( !go )

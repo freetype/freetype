@@ -116,6 +116,10 @@ FT_TRACE_DEF( pcfread )
 FT_TRACE_DEF( bdfdriver )
 FT_TRACE_DEF( bdflib )
 
+  /* PK font components */
+FT_TRACE_DEF( pkdriver )
+FT_TRACE_DEF( pklib )
+
   /* PFR font component */
 FT_TRACE_DEF( pfr )
 
