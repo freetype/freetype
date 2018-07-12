@@ -1,3 +1,13 @@
+2018-07-12  Werner Lemberg  <wl@gnu.org>
+
+	* src/base/ftoutln.c (FT_Outline_Get_Orientation): Init `cbox'.
+
+	Taken from patch #9667, written by Steve Langasek
+	<vorlon@debian.org>.
+
+	This fixes a build failure (most probably a bug in gcc) on ppc64el
+	when building with -O3.
+
 2018-07-05  Werner Lemberg  <wl@gnu.org>
 
 	Fix typo (#54238).
