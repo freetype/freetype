@@ -238,14 +238,14 @@
 
     {
       FT_Bitmap_Size*  bsize = gfface->available_sizes;
-      FT_UShort        x_res, y_res;
+      /* FT_UShort        x_res, y_res; */
 
       bsize->height = (FT_Short) face->gf_glyph->font_bbx_h ;
       bsize->width  = (FT_Short) face->gf_glyph->font_bbx_w ;
       bsize->size   = (FT_Pos)   face->gf_glyph->ds << 6    ;
 
-      x_res = toint( go->hppp * 72.27 );
-      y_res = toint( go->vppp * 72.27 );
+      /* x_res = toint( go->hppp * 72.27 ); */
+      /* y_res = toint( go->vppp * 72.27 ); */
 
       bsize->y_ppem = (FT_Pos)(bsize->size/10) << 6 ;
       bsize->x_ppem = (FT_Pos)bsize->y_ppem ;
