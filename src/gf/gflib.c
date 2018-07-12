@@ -404,9 +404,15 @@ unsigned char   bit_table[] = {
     min_n     = READ_INT4( stream );
     max_n     = READ_INT4( stream );
 
-    if( ptr_p < 0 )
+    if( ptr_p < 0 ) /* Defined to use ptr_p */
     {
       FT_ERROR(( "gf_load_font: invalid pointer in postamble\n" ));
+      goto Exit;
+    }
+
+    if( check_sum < 0 ) /* Defined to use check_sum */
+    {
+      FT_ERROR(( "gf_load_font: invalid check sum value\n" ));
       goto Exit;
     }
     #if 0
@@ -504,6 +510,11 @@ unsigned char   bit_table[] = {
         goto Exit;
       }
 
+      if( w > max_m)
+      {
+        FT_ERROR(( "gf_load_font: invalid width in charloc\n" ));
+        goto Exit;
+      }
       /* optr = ft_ftell(fp); */
       optr = stream->pos;
       /* ft_fseek(fp, ptr, SEEK_SET); */
@@ -521,11 +532,16 @@ unsigned char   bit_table[] = {
         goto Exit;
     }
     *goptr          = go;
-  return error;
+    return error;
 
-		Exit:
+    Exit:
       if (go != NULL)
       {
+        if( go->bm_table )
+        {
+          for (i = 0; i < nchars; i++)
+	          FT_FREE(go->bm_table[i].bitmap);
+        }
         FT_FREE(go->bm_table);
         FT_FREE(go);
       }
