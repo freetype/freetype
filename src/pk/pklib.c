@@ -287,7 +287,7 @@ unsigned char   bit_table[] = {
                PK_Glyph        *goptr )
   {
     PK_Glyph      go;
-    UINT1         instr;
+    UINT1         instr, pre, id;;
     UINT4         ds, check_sum, hppp, vppp, k;
     unsigned int  flag, dny_f, bw, ess, size;
     UINT4         cc, tfm, dx, dy, dm, w, h, rs;
@@ -299,6 +299,25 @@ unsigned char   bit_table[] = {
 
     go = NULL;
     nchars = -1;
+
+    if( FT_STREAM_SEEK( 0 ) )
+      goto Exit;
+
+    pre = READ_UINT1( stream );
+    if (pre != PK_PRE)
+    {
+      FT_ERROR(( "pk_load_font: missing PK_PRE(247) field\n" ));
+      error = FT_THROW( Unknown_File_Format );
+      goto Exit;
+    }
+
+    id = READ_UINT1( stream );
+    if (id != PK_ID)
+    {
+      FT_ERROR(( "pk_load_font: missing PK_ID(89) field\n" ));
+      error = FT_THROW( Unknown_File_Format );
+      goto Exit;
+    }
 
     k = READ_UINT1( stream );
     if ( FT_STREAM_SKIP( k ) )
@@ -469,6 +488,7 @@ unsigned char   bit_table[] = {
 	        error = FT_THROW( Invalid_File_Format );
 	        goto Exit;
         }
+
         index = cc - go->code_min;
         go->bm_table[index].bbx_width  = w;
         go->bm_table[index].bbx_height = h;
