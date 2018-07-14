@@ -238,17 +238,21 @@
 
     {
       FT_Bitmap_Size*  bsize = gfface->available_sizes;
-      /* FT_UShort        x_res, y_res; */
+      FT_UShort        x_res, y_res;
 
       bsize->height = (FT_Short) face->gf_glyph->font_bbx_h ;
       bsize->width  = (FT_Short) face->gf_glyph->font_bbx_w ;
-      bsize->size   = (FT_Pos)   face->gf_glyph->ds << 6    ;
+      bsize->size   = (FT_Pos)   FT_MulDiv( FT_ABS( face->gf_glyph->ds ),
+                                     64 * 7200,
+                                     72270L );
 
-      /* x_res = toint( go->hppp * 72.27 ); */
-      /* y_res = toint( go->vppp * 72.27 ); */
+      x_res = toint( go->hppp * 72.27 );
+      y_res = toint( go->vppp * 72.27 );
 
-      bsize->y_ppem = (FT_Pos)(bsize->size/10) << 6 ;
-      bsize->x_ppem = (FT_Pos)bsize->y_ppem ;
+      bsize->y_ppem = (FT_Pos) toint((face->gf_glyph->ds * y_res)/ 72.27) << 6 ;
+      bsize->x_ppem = (FT_Pos)FT_MulDiv( bsize->y_ppem,
+                                         x_res,
+                                         y_res ); ;
     }
 
     /* Charmaps */
