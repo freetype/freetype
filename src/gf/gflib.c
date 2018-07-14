@@ -309,7 +309,7 @@ unsigned char   bit_table[] = {
   {
     GF_Glyph        go;
     GF_Bitmap       bm;
-    UINT1           instr, d;
+    UINT1           instr, d, pre, id, k;
     UINT4           ds, check_sum, hppp, vppp;
     INT4            min_m, max_m, min_n, max_n;
     INT4            w;
@@ -322,6 +322,29 @@ unsigned char   bit_table[] = {
 
     go = NULL;
     nchars = -1;
+
+    if( FT_STREAM_SEEK( 0 ) )
+      goto Exit;
+
+    pre = READ_UINT1( stream );
+    if (pre != GF_PRE)
+    {
+      FT_ERROR(( "gf_load_font: missing GF_PRE(247) field\n" ));
+      error = FT_THROW( Unknown_File_Format );
+      goto Exit;
+    }
+
+    id = READ_UINT1( stream );
+    if (id != GF_ID)
+    {
+      FT_ERROR(( "gf_load_font: missing GF_ID(131) field\n" ));
+      error = FT_THROW( Unknown_File_Format );
+      goto Exit;
+    }
+
+    k = READ_UINT1( stream );
+    if ( FT_STREAM_SKIP( k ) )
+      goto Exit;
 
     /* seek to post_post instr. */
     /* fseek(fp, -1, SEEK_END); */
@@ -510,11 +533,14 @@ unsigned char   bit_table[] = {
         goto Exit;
       }
 
+      /*
       if( w > max_m)
       {
         FT_ERROR(( "gf_load_font: invalid width in charloc\n" ));
         goto Exit;
       }
+      */
+
       /* optr = ft_ftell(fp); */
       optr = stream->pos;
       /* ft_fseek(fp, ptr, SEEK_SET); */
