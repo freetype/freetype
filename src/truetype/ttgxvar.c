@@ -2533,11 +2533,14 @@
 
       if ( FT_IS_NAMED_INSTANCE( FT_FACE( face ) ) )
       {
-        FT_UInt  idx = (FT_UInt)face->root.face_index >> 16;
+        FT_UInt  instance_index = (FT_UInt)face->root.face_index >> 16;
 
 
         c = blend->normalizedcoords + i;
-        n = blend->normalized_stylecoords + idx * mmvar->num_axis + i;
+        n = blend->normalized_stylecoords            +
+            ( instance_index - 1 ) * mmvar->num_axis +
+            i;
+
         for ( j = i; j < mmvar->num_axis; j++, n++, c++ )
           if ( *c != *n )
             have_diff = 1;

@@ -1,3 +1,11 @@
+2018-07-16  Werner Lemberg  <wl@gnu.org>
+
+	* src/truetype/ttgxvar.c (tt_set_mm_blend): Fix off-by-one error.
+
+	Reported as
+
+	  https://bugs.chromium.org/p/oss-fuzz/issues/detail?id=9412
+
 2018-07-12  Werner Lemberg  <wl@gnu.org>
 
 	* src/base/ftoutln.c (FT_Outline_Get_Orientation): Init `cbox'.
