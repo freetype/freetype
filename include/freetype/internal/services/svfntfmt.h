@@ -42,6 +42,7 @@ FT_BEGIN_HEADER
 #define FT_FONT_FORMAT_CFF       "CFF"
 #define FT_FONT_FORMAT_PFR       "PFR"
 #define FT_FONT_FORMAT_WINFNT    "Windows FNT"
+#define FT_FONT_FORMAT_GF        "GF"
 
   /* */
 
