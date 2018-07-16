@@ -677,7 +677,7 @@
     if ( fixed < 0 )
     {
       *p++ = '-';
-      fixed = -fixed;
+      fixed = NEG_INT( fixed );
     }
 
     int_part  = ( fixed >> 16 ) & 0xFFFF;
