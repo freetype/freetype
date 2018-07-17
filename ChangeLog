@@ -1,3 +1,7 @@
+2018-07-17  Werner Lemberg  <wl@gnu.org>
+
+	* src/pcf/pcfread.c (pcf_get_encodings): Trace `defaultChar'.
+
 2018-07-16  Armin Hasitzka  <prince.cherusker@gmail.com>
 
 	* include/freetype/internal/ftcalc.h: Add macros for handling

@@ -992,9 +992,11 @@ THE SOFTWARE.
       return FT_THROW( Invalid_File_Format );
 
     FT_TRACE4(( "  firstCol 0x%X, lastCol 0x%X\n"
-                "  firstRow 0x%X, lastRow 0x%X\n",
+                "  firstRow 0x%X, lastRow 0x%X\n"
+                "  defaultChar 0x%X\n",
                 firstCol, lastCol,
-                firstRow, lastRow ));
+                firstRow, lastRow,
+                face->defaultChar ));
 
     /* sanity checks; we limit numbers of rows and columns to 256 */
     if ( firstCol < 0       ||
