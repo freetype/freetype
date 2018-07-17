@@ -2,7 +2,7 @@
  *
  * gfdrivr.h
  *
- *   FreeType font driver for TeX's GF FONT files
+ *   FreeType font driver for METAFONT GF FONT files
  *
  * Copyright 1996-2018 by
  * David Turner, Robert Wilhelm, and Werner Lemberg.
