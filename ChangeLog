@@ -1,5 +1,14 @@
 2018-07-17  Werner Lemberg  <wl@gnu.org>
 
+	Allow FT_ENCODING_NONE for `FT_Select_Charmap'.
+
+	This is a valid encoding tag for BDF, PCF, and Windows FNT, and
+	there is no reason to disallow it for these formats.
+
+	* src/base/ftobjs.c (FT_Select_Charmap): Implement it.
+
+2018-07-17  Werner Lemberg  <wl@gnu.org>
+
 	* src/pcf/pcfread.c (pcf_get_encodings): Trace `defaultChar'.
 
 2018-07-16  Armin Hasitzka  <prince.cherusker@gmail.com>
