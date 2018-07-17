@@ -120,8 +120,9 @@
   FT_LOCAL_DEF( FT_Error )
   tfm_load_font(  FT_Stream       stream,
                   FT_Memory       extmemory,
-                  TFM_Glyph       tfm  )
+                  TFM_Glyph       *tfmptr  )
   {
+    TFM_Glyph  tfm;
     UINT4  lf, lh, nc, nci, err;
     UINT4  offset_header, offset_char_info, offset_param;
     UINT4  nw,  nh,  nd,  ni, nl, nk, neng, np, dir;
@@ -366,7 +367,7 @@
     if (FT_READ_ULONG(tfm->slant) )
       return error;
     tfm->slant = (double)tfm->slant/(double)(1<<20);
-
+    *tfmptr          = tfm;
   Exit:
     FT_FREE(ci);
     FT_FREE(w);
@@ -378,6 +379,7 @@
       tfm_free_font(tfm, memory);
       error = err;
     }
+    return error;
   }
 
 /* END */

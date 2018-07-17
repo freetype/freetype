@@ -55,9 +55,9 @@
     TFM_Face  face = (TFM_Face)FT_CMAP_FACE( cmap );
     FT_UNUSED( init_data );
 
-    /*cmap->begin_char     = ;
-    cmap->end_char       = ;
-    */
+    cmap->begin_char     = face->tfm_glyph->begin_char;;
+    cmap->end_char       = face->tfm_glyph->end_char;
+
     return FT_Err_Ok;
   }
 
@@ -67,9 +67,9 @@
   {
     TFM_CMap  cmap = (TFM_CMap)tfmcmap;
 
-    /*cmap->begin_char     = ;
-    cmap->end_char       = ;
-    */
+    cmap->begin_char     = 0;
+    cmap->end_char       = -1;
+
   }
 
 
@@ -134,7 +134,7 @@
   FT_CALLBACK_DEF( void )
   TFM_Face_Done( FT_Face        tfmface )         /* TFM_Face */
   {
-    TFM_Face    face   = (TFM_Face)face;
+    TFM_Face    face   = (TFM_Face)tfmface;
     FT_Memory   memory;
 
 
@@ -143,7 +143,7 @@
 
     memory = FT_FACE_MEMORY( face );
 
-    tfm_free_font( face );
+    tfm_free_font( face->tfm_glyph, memory );
 
     FT_FREE( tfmface->available_sizes );
   }
@@ -160,7 +160,6 @@
     FT_Error    error  = FT_Err_Ok;
     FT_Memory   memory = FT_FACE_MEMORY( face );
     TFM_Glyph   tfm=NULL;
-    FT_UInt16   i,count;
 
     FT_UNUSED( num_params );
     FT_UNUSED( params );
@@ -219,17 +218,18 @@
 
     {
       FT_Bitmap_Size*  bsize = tfmface->available_sizes;
-      FT_UShort        x_res, y_res;
+      /* FT_UShort        x_res, y_res; */
 
-      bsize->height = (FT_Short)/* TO-DO */ ;
-      bsize->width  = (FT_Short)/* TO-DO */ ;
-      bsize->size   = (FT_Pos)  /* TO-DO */ ;
+      bsize->height = (FT_Short)face->tfm_glyph->font_bbx_h ;
+      bsize->width  = (FT_Short)face->tfm_glyph->font_bbx_w ;
+      bsize->size   = (FT_Pos)  face->tfm_glyph->design_size ;
 
-      x_res = /* TO-DO */;
-      y_res = /* TO-DO */;
+      /*x_res = ;
+      y_res = ;
+      */
 
-      bsize->y_ppem = (FT_Pos) /* TO-DO */;
-      bsize->x_ppem = (FT_Pos) /* TO-DO */;
+      bsize->y_ppem = (FT_Pos) (bsize->size/10) << 6;
+      bsize->x_ppem = (FT_Pos) bsize->y_ppem;
     }
 
     /* Charmaps */
@@ -261,13 +261,14 @@
                     FT_ULong  strike_index )
   {
     TFM_Face     face  = (TFM_Face)size->face;
+    TFM_Glyph    go    = face->tfm_glyph;
     FT_UNUSED( strike_index );
 
     FT_Select_Metrics( size->face, 0 );
 
-    size->metrics.ascender    = /* TO-DO */;
-    size->metrics.descender   = /* TO-DO */;
-    size->metrics.max_advance = /* TO-DO */;
+    size->metrics.ascender    = (go->font_bbx_h - go->font_bbx_yoff) * 64;
+    size->metrics.descender   = -go->font_bbx_yoff * 64;
+    size->metrics.max_advance = go->font_bbx_w * 64;
 
     return FT_Err_Ok;
   }
@@ -293,7 +294,7 @@
       break;
 
     case FT_SIZE_REQUEST_TYPE_REAL_DIM:
-      if ( height == /* TO-DO */ )
+      if ( height == face->tfm_glyph->font_bbx_h )
         error = FT_Err_Ok;
       break;
 
@@ -316,10 +317,12 @@
                    FT_UInt       glyph_index,
                    FT_Int32      load_flags )
   {
-    TFM_Face      tfm     = (TFM_Face)FT_SIZE_FACE( size );
+    TFM_Face      tfm    = (TFM_Face)FT_SIZE_FACE( size );
     FT_Face       face   = FT_FACE( tfm );
     FT_Error      error  = FT_Err_Ok;
     FT_Bitmap*    bitmap = &slot->bitmap;
+    TFM_Glyph     go     = tfm->tfm_glyph;
+    FT_Int       ascent;
 
     FT_UNUSED( load_flags );
 
@@ -342,27 +345,28 @@
 
     /* slot, bitmap => freetype, bm => tfmlib */
 
-    bitmap->rows       = /* TO-DO */;
-    bitmap->width      = /* TO-DO */;
+    bitmap->rows       = go->font_bbx_h;
+    bitmap->width      = go->font_bbx_w;
     bitmap->pixel_mode = FT_PIXEL_MODE_MONO;
 
-    bitmap->pitch = (int)/* TO-DO */;
+    /*bitmap->pitch = (int);*/
 
     /* note: we don't allocate a new array to hold the bitmap; */
     /*       we can simply point to it                         */
-    ft_glyphslot_set_bitmap( slot, /* TO-DO */);
+    /*ft_glyphslot_set_bitmap( slot, );*/
 
+    ascent = (go->font_bbx_h + go->font_bbx_yoff);
     slot->format      = FT_GLYPH_FORMAT_BITMAP;
-    slot->bitmap_left = /* TO-DO */ ;
-    slot->bitmap_top  = /* TO-DO */ ;
+    slot->bitmap_left = go->font_bbx_xoff ;
+    slot->bitmap_top  = ascent ;
 
-    slot->metrics.horiAdvance  = (FT_Pos) /* TO-DO */ * 64;
-    slot->metrics.horiBearingX = (FT_Pos) /* TO-DO */ * 64;
-    slot->metrics.horiBearingY = (FT_Pos) /* TO-DO */ * 64;
+    slot->metrics.horiAdvance  = (FT_Pos) (go->font_bbx_xoff ) * 64;
+    slot->metrics.horiBearingX = (FT_Pos) (go->font_bbx_xoff ) * 64;
+    slot->metrics.horiBearingY = (FT_Pos) ascent * 64;
     slot->metrics.width        = (FT_Pos) ( bitmap->width * 64 );
     slot->metrics.height       = (FT_Pos) ( bitmap->rows * 64 );
 
-    ft_synthesize_vertical_metrics( &slot->metrics, /* TO-DO */ * 64 );
+    ft_synthesize_vertical_metrics( &slot->metrics, go->font_bbx_h * 64 );
 
   Exit:
     return error;
