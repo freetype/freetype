@@ -444,49 +444,49 @@ unsigned char   bit_table[] = {
           dny_f = flag % 0x10;
         if (ess == 0)
         {                          /* short */
-	        rs = (UINT4)(size*256) + (UINT4)READ_UINT1( stream ) - (UINT4)8;
-	        cc   = (UINT4)READ_UINT1( stream );
-	        tfm  = (UINT4)READ_UINT3( stream );
-	        dm   = (UINT4)READ_UINT1( stream );
-	        w    = (UINT4)READ_UINT1( stream );
-	        h    = (UINT4)READ_UINT1( stream );
-	        hoff = (INT4)READ_INT1( stream );
-	        voff = (INT4)READ_INT1( stream );
-	        mv_x = dm;
-	        mv_y = 0;
+          rs = (UINT4)(size*256) + (UINT4)READ_UINT1( stream ) - (UINT4)8;
+          cc   = (UINT4)READ_UINT1( stream );
+          tfm  = (UINT4)READ_UINT3( stream );
+          dm   = (UINT4)READ_UINT1( stream );
+          w    = (UINT4)READ_UINT1( stream );
+          h    = (UINT4)READ_UINT1( stream );
+          hoff = (INT4)READ_INT1( stream );
+          voff = (INT4)READ_INT1( stream );
+          mv_x = dm;
+          mv_y = 0;
         }
         else if ((ess == 1) && (size != 3))
         {                          /* extended short */
-	        rs = (UINT4)(size*65536) + (UINT4)READ_UINT2( stream ) - (UINT4)13;
-	        cc   = (UINT4)READ_UINT1( stream );
-	        tfm  = (UINT4)READ_UINT3( stream );
-	        dm   = (UINT4)READ_UINT2( stream );
-	        w    = (UINT4)READ_UINT2( stream );
-	        h    = (UINT4)READ_UINT2( stream );
-	        hoff = (INT4)READ_INT2( stream );
-	        voff = (INT4)READ_INT2( stream );
-	        mv_x = dm;
-	        mv_y = 0;
+          rs = (UINT4)(size*65536) + (UINT4)READ_UINT2( stream ) - (UINT4)13;
+          cc   = (UINT4)READ_UINT1( stream );
+          tfm  = (UINT4)READ_UINT3( stream );
+          dm   = (UINT4)READ_UINT2( stream );
+          w    = (UINT4)READ_UINT2( stream );
+          h    = (UINT4)READ_UINT2( stream );
+          hoff = (INT4)READ_INT2( stream );
+          voff = (INT4)READ_INT2( stream );
+          mv_x = dm;
+          mv_y = 0;
         }
         else
         {                           /* standard */
-	        rs   = READ_UINT4( stream ) - (UINT4)28;
-	        cc   = READ_UINT4( stream );
-	        tfm  = READ_UINT4( stream );
-	        dx   = READ_UINT4( stream );
-	        dy   = READ_UINT4( stream );
+          rs   = READ_UINT4( stream ) - (UINT4)28;
+          cc   = READ_UINT4( stream );
+          tfm  = READ_UINT4( stream );
+          dx   = READ_UINT4( stream );
+          dy   = READ_UINT4( stream );
 	        w    = READ_UINT4( stream );
-	        h    = READ_UINT4( stream );
-	        hoff = READ_INT4( stream );
-	        voff = READ_INT4( stream );
-	        mv_x = (FT_UInt)dx/(FT_UInt)(1<<16);
-	        mv_y = (FT_UInt)dy/(FT_UInt)(1<<16);
+          h    = READ_UINT4( stream );
+          hoff = READ_INT4( stream );
+          voff = READ_INT4( stream );
+          mv_x = (FT_UInt)dx/(FT_UInt)(1<<16);
+          mv_y = (FT_UInt)dy/(FT_UInt)(1<<16);
         }
 
         if ((cc < go->code_min) || (go->code_max < cc))
         {
-	        error = FT_THROW( Invalid_File_Format );
-	        goto Exit;
+          error = FT_THROW( Invalid_File_Format );
+          goto Exit;
         }
 
         index = cc - go->code_min;
@@ -501,38 +501,38 @@ unsigned char   bit_table[] = {
 
         if (go->bm_table[index].bitmap == NULL)
         {
-	        error = FT_THROW( Invalid_File_Format );
-	        goto Exit;
+          error = FT_THROW( Invalid_File_Format );
+          goto Exit;
         }
 
         memset(go->bm_table[index].bitmap, 0, h*((w+7)/8));
 
         if (dny_f == 14)
         {
-	        if (pk_read_14(stream, dny_f, bw, rs, &(go->bm_table[index]), cc) < 0)
-	        {
-	          /* vf_error = VF_ERR_ILL_FONT_FILE; (FOR TRACING) */
-	          error = FT_THROW( Invalid_File_Format );
-	          goto Exit;
-	        }
+          if (pk_read_14(stream, dny_f, bw, rs, &(go->bm_table[index]), cc) < 0)
+          {
+            /* vf_error = VF_ERR_ILL_FONT_FILE; (FOR TRACING) */
+            error = FT_THROW( Invalid_File_Format );
+            goto Exit;
+          }
         }
         else
         {
-	        if (pk_read_n14(stream, dny_f, bw, rs, &(go->bm_table[index]), cc) < 0)
-	        {
-	          /* vf_error = VF_ERR_ILL_FONT_FILE; (FOR TRACING) */
-	          error = FT_THROW( Invalid_File_Format );
-	          goto Exit;
-	        }
+          if (pk_read_n14(stream, dny_f, bw, rs, &(go->bm_table[index]), cc) < 0)
+          {
+            /* vf_error = VF_ERR_ILL_FONT_FILE; (FOR TRACING) */
+            error = FT_THROW( Invalid_File_Format );
+            goto Exit;
+          }
         }
         if (go->font_bbx_w < w)
-	        go->font_bbx_w = w;
+          go->font_bbx_w = w;
         if (go->font_bbx_h < h)
-	        go->font_bbx_h = h;
+          go->font_bbx_h = h;
         if (go->font_bbx_xoff > -hoff)
-	        go->font_bbx_xoff = -hoff;
+          go->font_bbx_xoff = -hoff;
         if (go->font_bbx_yoff > (voff - h))
-	        go->font_bbx_yoff = (voff - h);
+          go->font_bbx_yoff = (voff - h);
       }
     }
     *goptr          = go;
@@ -562,10 +562,10 @@ unsigned char   bit_table[] = {
     if( go->bm_table )
     {
       for (i = 0; i < nchars; i++)
-	    {
-	      if (go->bm_table[i].bitmap != NULL)
+      {
+        if (go->bm_table[i].bitmap != NULL)
           FT_FREE(go->bm_table[i].bitmap);
-	    }
+       }
     }
     FT_FREE(go->bm_table);
     FT_FREE(go);
