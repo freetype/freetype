@@ -39,6 +39,8 @@ FT_BEGIN_HEADER
 #define  PK_POST  245
 #define  PK_NO_OP 246
 
+#define toint(x)  (int)(((x)>0)?(x+0.5):(x-0.5))
+
 /* Temporary TO BE REMOVED */
 
 typedef  char           INT1;

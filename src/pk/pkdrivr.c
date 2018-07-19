@@ -21,6 +21,8 @@
 #include FT_INTERNAL_STREAM_H
 #include FT_INTERNAL_OBJECTS_H
 #include FT_TRUETYPE_IDS_H
+
+#include FT_SERVICE_PK_H
 #include FT_SERVICE_FONT_FORMAT_H
 
 
@@ -237,17 +239,21 @@
 
     {
       FT_Bitmap_Size*  bsize = pkface->available_sizes;
-      /* FT_UShort        x_res, y_res; */
+      FT_UShort        x_res, y_res;
 
       bsize->height = (FT_Short) face->pk_glyph->font_bbx_h ;
       bsize->width  = (FT_Short) face->pk_glyph->font_bbx_w ;
-      bsize->size   = (FT_Pos)   face->pk_glyph->ds << 6    ;
+      bsize->size   = (FT_Pos)   FT_MulDiv( FT_ABS( face->pk_glyph->ds ),
+                                     64 * 7200,
+                                     72270L );
 
-      /* x_res = toint( go->hppp * 72.27 ); */
-      /* y_res = toint( go->vppp * 72.27 ); */
+      x_res = toint( face->pk_glyph->hppp * 72.27 );
+      y_res = toint( face->pk_glyph->vppp * 72.27 );
 
-      bsize->y_ppem = (FT_Pos)(bsize->size/10) << 6 ;
-      bsize->x_ppem = (FT_Pos)bsize->y_ppem ;
+      bsize->y_ppem = (FT_Pos) toint((face->pk_glyph->ds * y_res)/ 72.27) << 6 ;
+      bsize->x_ppem = (FT_Pos)FT_MulDiv( bsize->y_ppem,
+                                         x_res,
+                                         y_res ); ;
     }
 
     /* Charmaps */
@@ -423,6 +429,29 @@
     return error;
   }
 
+ /*
+  *
+  * SERVICES LIST
+  *
+  */
+
+  static const FT_ServiceDescRec  pk_services[] =
+  {
+    { FT_SERVICE_ID_PK,          NULL },
+    { FT_SERVICE_ID_FONT_FORMAT, FT_FONT_FORMAT_PK },
+    { NULL, NULL }
+  };
+
+
+  FT_CALLBACK_DEF( FT_Module_Interface )
+  pk_driver_requester( FT_Module    module,
+                        const char*  name )
+  {
+    FT_UNUSED( module );
+
+    return ft_service_list_lookup( pk_services, name );
+  }
+
 
    FT_CALLBACK_TABLE_DEF
   const FT_Driver_ClassRec  pk_driver_class =
@@ -440,7 +469,7 @@
 
       NULL,                     /* FT_Module_Constructor  module_init   */
       NULL,                     /* FT_Module_Destructor   module_done   */
-      NULL      								/* FT_Module_Requester    get_interface */
+      pk_driver_requester       /* FT_Module_Requester    get_interface */
     },
 
     sizeof ( PK_FaceRec ),

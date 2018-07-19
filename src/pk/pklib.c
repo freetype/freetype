@@ -288,7 +288,7 @@ unsigned char   bit_table[] = {
   {
     PK_Glyph      go;
     UINT1         instr, pre, id;;
-    UINT4         ds, check_sum, hppp, vppp, k;
+    unsigned long ds, check_sum, hppp, vppp, k;
     unsigned int  flag, dny_f, bw, ess, size;
     UINT4         cc, tfm, dx, dy, dm, w, h, rs;
     INT4          hoff, voff, mv_x, mv_y;
@@ -389,9 +389,9 @@ unsigned char   bit_table[] = {
     for (i = 0; i < nchars; i++)
       go->bm_table[i].bitmap = NULL;
 
-    go->ds   = (double)ds/(1<<20);
-    go->hppp = (double)hppp/(1<<16);
-    go->vppp = (double)vppp/(1<<16);
+    go->ds   = (FT_UInt)ds/(1<<20);
+    go->hppp = (FT_UInt)hppp/(1<<16);
+    go->vppp = (FT_UInt)vppp/(1<<16);
     go->font_bbx_w = 0;
     go->font_bbx_h = 0;
     go->font_bbx_xoff = 0;
@@ -479,8 +479,8 @@ unsigned char   bit_table[] = {
 	        h    = READ_UINT4( stream );
 	        hoff = READ_INT4( stream );
 	        voff = READ_INT4( stream );
-	        mv_x = (double)dx/(double)(1<<16);
-	        mv_y = (double)dy/(double)(1<<16);
+	        mv_x = (FT_UInt)dx/(FT_UInt)(1<<16);
+	        mv_y = (FT_UInt)dy/(FT_UInt)(1<<16);
         }
 
         if ((cc < go->code_min) || (go->code_max < cc))
