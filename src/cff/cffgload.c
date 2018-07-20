@@ -280,16 +280,16 @@
           glyph->root.outline.n_points   = 0;
           glyph->root.outline.n_contours = 0;
 
-          glyph->root.metrics.width  = (FT_Pos)metrics.width  << 6;
-          glyph->root.metrics.height = (FT_Pos)metrics.height << 6;
+          glyph->root.metrics.width  = (FT_Pos)metrics.width  * 64;
+          glyph->root.metrics.height = (FT_Pos)metrics.height * 64;
 
-          glyph->root.metrics.horiBearingX = (FT_Pos)metrics.horiBearingX << 6;
-          glyph->root.metrics.horiBearingY = (FT_Pos)metrics.horiBearingY << 6;
-          glyph->root.metrics.horiAdvance  = (FT_Pos)metrics.horiAdvance  << 6;
+          glyph->root.metrics.horiBearingX = (FT_Pos)metrics.horiBearingX * 64;
+          glyph->root.metrics.horiBearingY = (FT_Pos)metrics.horiBearingY * 64;
+          glyph->root.metrics.horiAdvance  = (FT_Pos)metrics.horiAdvance  * 64;
 
-          glyph->root.metrics.vertBearingX = (FT_Pos)metrics.vertBearingX << 6;
-          glyph->root.metrics.vertBearingY = (FT_Pos)metrics.vertBearingY << 6;
-          glyph->root.metrics.vertAdvance  = (FT_Pos)metrics.vertAdvance  << 6;
+          glyph->root.metrics.vertBearingX = (FT_Pos)metrics.vertBearingX * 64;
+          glyph->root.metrics.vertBearingY = (FT_Pos)metrics.vertBearingY * 64;
+          glyph->root.metrics.vertAdvance  = (FT_Pos)metrics.vertAdvance  * 64;
 
           glyph->root.format = FT_GLYPH_FORMAT_BITMAP;
 
