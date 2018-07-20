@@ -1,3 +1,14 @@
+2018-07-20  Armin Hasitzka  <prince.cherusker@gmail.com>
+
+	Move the legacy fuzz target to the `freetype-testing' repository.
+
+	It can now be found at
+
+	  https://github.com/freetype/freetype2-testing/tree/master/fuzzing/src/legacy
+
+	* src/tools/ftfuzzer: Remove this folder and its contents from the
+	repository.
+
 2018-07-20  Werner Lemberg  <wl@gnu.org>
 
 	[cff] Avoid left-shift of negative numbers (#54322).
