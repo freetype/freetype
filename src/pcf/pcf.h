@@ -124,10 +124,14 @@ FT_BEGIN_HEADER
   } PCF_AccelRec, *PCF_Accel;
 
 
+  /*
+   * This file uses X11 terminology for PCF data; an `encoding' in X11 speak
+   * is the same as a `character code' in FreeType speak.
+   */
   typedef struct  PCF_EncodingRec_
   {
     FT_Long    enc;
-    FT_UShort  glyph;
+    FT_UShort  glyph;  /* an index into PCF_Face's `metrics' array */
 
   } PCF_EncodingRec, *PCF_Encoding;
 
@@ -153,7 +157,7 @@ FT_BEGIN_HEADER
     FT_ULong       nencodings;
     PCF_Encoding   encodings;
 
-    FT_Short       defaultChar;
+    FT_UShort      defaultChar;
 
     FT_ULong       bitmapsFormat;
 

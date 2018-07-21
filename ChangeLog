@@ -1,3 +1,24 @@
+2018-07-21  Werner Lemberg  <wl@gnu.org>
+
+	[pcf] Fix handling of the undefined glyph.
+
+	This change makes the driver use the `defaultChar' property of PCF
+	files.
+
+	* src/pcf/pcf.h (PCF_FaceRec): Change type of `defaultChar' to
+	unsigned.
+
+	* src/pcf/pcfread.c (pcf_get_encodings): Read `defaultChar' as
+	unsigned.
+	Validate `defaultChar'.
+	If `defaultChar' doesn't point to glyph index zero, swap glyphs with
+	index zero and index `defaultChar' and adjust the encodings
+	accordingly.
+
+	* src/pcf/pcfdrivr.c (pcf_cmap_char_index, pcf_cmap_char_next,
+	PCF_Glyph_Load): Undo change from 2002-06-16 which always enforced
+	the first character in the font to be the default character.
+
 2018-07-20  Armin Hasitzka  <prince.cherusker@gmail.com>
 
 	Move the legacy fuzz target to the `freetype-testing' repository.
