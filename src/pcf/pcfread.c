@@ -1538,14 +1538,7 @@ THE SOFTWARE.
       else
         root->family_name = NULL;
 
-      /*
-       * Note: We shift all glyph indices by +1 since we must
-       * respect the convention that glyph 0 always corresponds
-       * to the `missing glyph'.
-       *
-       * This implies bumping the number of `available' glyphs by 1.
-       */
-      root->num_glyphs = (FT_Long)( face->nmetrics + 1 );
+      root->num_glyphs = (FT_Long)face->nmetrics;
 
       root->num_fixed_sizes = 1;
       if ( FT_NEW_ARRAY( root->available_sizes, 1 ) )
