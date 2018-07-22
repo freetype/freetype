@@ -95,7 +95,7 @@ FT_BEGIN_HEADER
    *     second default codepage that most international versions of
    *     Windows have.  It is one of the OEM codepages from
    *
-   *     https://msdn.microsoft.com/en-us/goglobal/bb964655,
+   *     https://docs.microsoft.com/en-us/windows/desktop/intl/code-page-identifiers ,
    *
    *     and is used for the `DOS boxes', to support legacy applications.
    *     A German Windows version for example usually uses ANSI codepage
