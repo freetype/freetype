@@ -1,5 +1,13 @@
 2018-07-22  Werner Lemberg  <wl@gnu.org>
 
+	* src/pcf/pcfread.c (pcf_get_encodings): Check index of defaultChar.
+
+	Reported as
+
+	  https://bugs.chromium.org/p/oss-fuzz/issues/detail?id=9527
+
+2018-07-22  Werner Lemberg  <wl@gnu.org>
+
 	* src/pcf/pcfread.c (pcf_load_font): Fix number of glyphs.
 
 	This is an oversight of the module change 2018-07-21.

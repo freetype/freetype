@@ -1059,6 +1059,14 @@ THE SOFTWARE.
     else
       defaultCharEncodingOffset = FT_PEEK_USHORT_LE( pos );
 
+    if ( defaultCharEncodingOffset >= face->nmetrics )
+    {
+      FT_TRACE0(( "pcf_get_encodings:"
+                  " Invalid glyph index for default character,"
+                  " setting to zero\n" ));
+      defaultCharEncodingOffset = 0;
+    }
+
     if ( defaultCharEncodingOffset )
     {
       /* do the swapping */
