@@ -1,3 +1,11 @@
+2018-07-24  Hin-Tak Leung  <htl10@users.sourceforge.net>
+
+	[truetype] Match ttdebug's naming of instruction mnemonics.
+
+	* src/truetype/ttinterp.c: The form used in ttdebug,
+	"MDRP[G,B,W,?]", etc., is slightly more readable than
+	"MDRP[00,01,02,03]".
+
 2018-07-24  Werner Lemberg  <wl@gnu.org>
 
 	* src/pcf/pcfread.c (pcf_get_encodings): Thinko.
