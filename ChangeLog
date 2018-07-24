@@ -1,3 +1,11 @@
+2018-07-24  Werner Lemberg  <wl@gnu.org>
+
+	* src/pcf/pcfread.c (pcf_get_encodings): Thinko.
+
+	Reported as
+
+	  https://bugs.chromium.org/p/oss-fuzz/issues/detail?id=9561
+
 2018-07-22  Werner Lemberg  <wl@gnu.org>
 
 	* src/pcf/pcfread.c (pcf_get_encodings): Check index of defaultChar.

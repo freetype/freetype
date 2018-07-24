@@ -1041,6 +1041,9 @@ THE SOFTWARE.
       FT_TRACE0(( "pcf_get_encodings:"
                   " Invalid default character set to %d\n",
                   face->defaultChar ));
+
+      defaultCharRow = face->defaultChar >> 8;
+      defaultCharCol = face->defaultChar & 0xFF;
     }
 
     /* FreeType mandates that glyph index 0 is the `undefined glyph',  */
