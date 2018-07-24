@@ -348,16 +348,13 @@
         mmvar->axis[i].tag = FT_MAKE_TAG( 'o', 'p', 's', 'z' );
     }
 
-    if ( blend->num_designs == ( 1U << blend->num_axis ) )
-    {
-      mm_weights_unmap( blend->default_weight_vector,
-                        axiscoords,
-                        blend->num_axis );
+    mm_weights_unmap( blend->default_weight_vector,
+                      axiscoords,
+                      blend->num_axis );
 
-      for ( i = 0; i < mmaster.num_axis; i++ )
-        mmvar->axis[i].def = mm_axis_unmap( &blend->design_map[i],
-                                            axiscoords[i] );
-    }
+    for ( i = 0; i < mmaster.num_axis; i++ )
+      mmvar->axis[i].def = mm_axis_unmap( &blend->design_map[i],
+                                          axiscoords[i] );
 
     *master = mmvar;
 
@@ -2355,6 +2352,16 @@
     priv->num_blue_values &= ~1;
 
 #ifndef T1_CONFIG_OPTION_NO_MM_SUPPORT
+
+    /* we don't support Multiple Master fonts with intermediate designs; */
+    /* this implies that `num_designs' must be equal to `2^^num_axis'    */
+    if ( face->blend                                                 &&
+         face->blend->num_designs != ( 1U << face->blend->num_axis ) )
+    {
+      FT_ERROR(( "T1_Open_Face:"
+                 " number-of-designs != 2 ^^ number-of-axes\n" ));
+      T1_Done_Blend( face );
+    }
 
     if ( face->blend                                                     &&
          face->blend->num_default_design_vector != 0                     &&

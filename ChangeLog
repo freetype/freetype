@@ -1,3 +1,19 @@
+2018-07-24  Werner Lemberg  <wl@gnu.org>
+
+	[type1] Check relationship between number of axes and designs.
+
+	For Multiple Masters fonts We don't support intermediate designs;
+	this implies that
+
+	  number_of_designs == 2 ^^ number_of_axes
+
+	Reported as
+
+	  https://bugs.chromium.org/p/oss-fuzz/issues/detail?id=9557
+
+	* src/type1/t1load.c (T1_Open_Face): Ensure above constraint.
+	(T1_Get_MM_Var): Remove now redundant test.
+
 2018-07-24  Hin-Tak Leung  <htl10@users.sourceforge.net>
 
 	[truetype] Match ttdebug's naming of instruction mnemonics.
