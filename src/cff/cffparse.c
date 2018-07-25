@@ -1146,6 +1146,7 @@
     {
       FT_UInt  v = *p;
 
+
       /* Opcode 31 is legacy MM T2 operator, not a number.      */
       /* Opcode 255 is reserved and should not appear in fonts; */
       /* it is used internally for CFF2 blends.                 */

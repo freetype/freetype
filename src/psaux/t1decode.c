@@ -479,9 +479,6 @@
     if ( decoder->buildchar && decoder->len_buildchar > 0 )
       FT_ARRAY_ZERO( decoder->buildchar, decoder->len_buildchar );
 
-    FT_TRACE4(( "\n"
-                "Start charstring\n" ));
-
     zone->base           = charstring_base;
     limit = zone->limit  = charstring_base + charstring_len;
     ip    = zone->cursor = zone->base;
@@ -1237,7 +1234,10 @@
           /* the glyph's metrics (lsb + advance width), not load the   */
           /* rest of it; so exit immediately                           */
           if ( builder->metrics_only )
+          {
+            FT_TRACE4(( "\n" ));
             return FT_Err_Ok;
+          }
 
           break;
 

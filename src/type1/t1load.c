@@ -716,6 +716,8 @@
     if ( error )
       goto Exit;
 
+    FT_TRACE4(( " [" ));
+
     blend  = face->blend;
     memory = face->root.memory;
 
@@ -738,11 +740,13 @@
         goto Exit;
       }
 
+      FT_TRACE4(( " /%.*s", len, token->start ));
+
       name = (FT_Byte*)blend->axis_names[n];
       if ( name )
       {
         FT_TRACE0(( "parse_blend_axis_types:"
-                    " overwriting axis name `%s' with `%*.s'\n",
+                    " overwriting axis name `%s' with `%.*s'\n",
                     name, len, token->start ));
         FT_FREE( name );
       }
@@ -754,6 +758,8 @@
       FT_MEM_COPY( name, token->start, len );
       name[len] = '\0';
     }
+
+    FT_TRACE4(( "]\n" ));
 
   Exit:
     loader->parser.root.error = error;
@@ -799,6 +805,8 @@
       blend    = face->blend;
       num_axis = 0;  /* make compiler happy */
 
+      FT_TRACE4(( " [" ));
+
       for ( n = 0; n < num_designs; n++ )
       {
         T1_TokenRec  axis_tokens[T1_MAX_MM_AXIS];
@@ -839,6 +847,7 @@
         }
 
         /* now read each axis token into the design position */
+        FT_TRACE4(( " [" )) ;
         for ( axis = 0; axis < n_axis; axis++ )
         {
           T1_Token  token2 = axis_tokens + axis;
@@ -847,8 +856,12 @@
           parser->root.cursor = token2->start;
           parser->root.limit  = token2->limit;
           blend->design_pos[n][axis] = T1_ToFixed( parser, 0 );
+          FT_TRACE4(( " %f", (double)blend->design_pos[n][axis] / 65536 ));
         }
+        FT_TRACE4(( "]" )) ;
       }
+
+      FT_TRACE4(( "]\n" ));
 
       loader->parser.root.cursor = old_cursor;
       loader->parser.root.limit  = old_limit;
@@ -896,6 +909,8 @@
       goto Exit;
     blend = face->blend;
 
+    FT_TRACE4(( " [" ));
+
     /* now read each axis design map */
     for ( n = 0; n < num_axis; n++ )
     {
@@ -911,6 +926,8 @@
       parser->root.limit  = axis_token->limit;
       T1_ToTokenArray( parser, point_tokens,
                        T1_MAX_MM_MAP_POINTS, &num_points );
+
+      FT_TRACE4(( " [" ));
 
       if ( num_points <= 0 || num_points > T1_MAX_MM_MAP_POINTS )
       {
@@ -945,8 +962,16 @@
 
         map->design_points[p] = T1_ToInt( parser );
         map->blend_points [p] = T1_ToFixed( parser, 0 );
+
+        FT_TRACE4(( " [%d %f]",
+                    map->design_points[p],
+                    (double)map->blend_points[p] / 65536 ));
       }
+
+      FT_TRACE4(( "]" ));
     }
+
+    FT_TRACE4(( "]\n" ));
 
     parser->root.cursor = old_cursor;
     parser->root.limit  = old_limit;
@@ -1007,6 +1032,8 @@
     old_cursor = parser->root.cursor;
     old_limit  = parser->root.limit;
 
+    FT_TRACE4(( "[" ));
+
     for ( n = 0; n < num_designs; n++ )
     {
       token = design_tokens + n;
@@ -1015,7 +1042,11 @@
 
       blend->default_weight_vector[n] =
       blend->weight_vector[n]         = T1_ToFixed( parser, 0 );
+
+      FT_TRACE4(( " %f", (float)blend->weight_vector[n] / 65536 ));
     }
+
+    FT_TRACE4(( "]\n" ));
 
     parser->root.cursor = old_cursor;
     parser->root.limit  = old_limit;
@@ -1031,8 +1062,16 @@
   parse_buildchar( T1_Face    face,
                    T1_Loader  loader )
   {
+    FT_UInt  i;
+
+
     face->len_buildchar = (FT_UInt)T1_ToFixedArray( &loader->parser,
                                                     0, NULL, 0 );
+    FT_TRACE4(( " [" ));
+    for ( i = 0; i < face->len_buildchar; i++ )
+      FT_TRACE4(( " 0" ));
+
+    FT_TRACE4(( "]\n" ));
     return;
   }
 
@@ -1068,6 +1107,8 @@
     /* if the keyword has a dedicated callback, call it */
     if ( field->type == T1_FIELD_TYPE_CALLBACK )
     {
+      FT_TRACE4(( "  %s", field->ident ));
+
       field->reader( (FT_Face)face, loader );
       error = loader->parser.root.error;
       goto Exit;
@@ -1145,6 +1186,8 @@
       max_objects  = 0;
     }
 
+    FT_TRACE4(( "  %s", field->ident ));
+
     if ( *objects )
     {
       if ( field->type == T1_FIELD_TYPE_INTEGER_ARRAY ||
@@ -1164,6 +1207,8 @@
       error = FT_Err_Ok;
     }
 
+    FT_TRACE4(( "\n" ));
+
   Exit:
     return error;
   }
@@ -1176,6 +1221,8 @@
     FT_UNUSED( face );
 
     loader->keywords_encountered |= T1_PRIVATE;
+
+    FT_TRACE4(( "\n" ));
   }
 
 
@@ -1255,6 +1302,14 @@
       return;
     }
 
+    FT_TRACE4(( " [%f %f %f %f %f %f]\n",
+                (double)temp[0] / 65536 / 1000,
+                (double)temp[1] / 65536 / 1000,
+                (double)temp[2] / 65536 / 1000,
+                (double)temp[3] / 65536 / 1000,
+                (double)temp[4] / 65536 / 1000,
+                (double)temp[5] / 65536 / 1000));
+
     temp_scale = FT_ABS( temp[3] );
 
     if ( temp_scale == 0 )
@@ -1277,7 +1332,6 @@
       temp[5] = FT_DivFix( temp[5], temp_scale );
       temp[3] = temp[3] < 0 ? -0x10000L : 0x10000L;
     }
-
     matrix->xx = temp[0];
     matrix->yx = temp[1];
     matrix->xy = temp[2];
@@ -1498,6 +1552,15 @@
         T1_Skip_Spaces( parser );
       }
 
+#ifdef FT_DEBUG_LEVEL_TRACE
+      FT_TRACE4(( " [" ));
+
+      /* XXX show encoding vector */
+      FT_TRACE4(( "..." ));
+
+      FT_TRACE4(( "]\n" ));
+#endif
+
       face->type1.encoding_type = T1_ENCODING_TYPE_ARRAY;
       parser->root.cursor       = cur;
     }
@@ -1508,18 +1571,30 @@
     {
       if ( cur + 17 < limit                                            &&
            ft_strncmp( (const char*)cur, "StandardEncoding", 16 ) == 0 )
+      {
         face->type1.encoding_type = T1_ENCODING_TYPE_STANDARD;
+        FT_TRACE4(( " StandardEncoding\n" ));
+      }
 
       else if ( cur + 15 < limit                                          &&
                 ft_strncmp( (const char*)cur, "ExpertEncoding", 14 ) == 0 )
+      {
         face->type1.encoding_type = T1_ENCODING_TYPE_EXPERT;
+        FT_TRACE4(( " ExpertEncoding\n" ));
+      }
 
       else if ( cur + 18 < limit                                             &&
                 ft_strncmp( (const char*)cur, "ISOLatin1Encoding", 17 ) == 0 )
+      {
         face->type1.encoding_type = T1_ENCODING_TYPE_ISOLATIN1;
+        FT_TRACE4(( " ISOLatin1Encoding\n" ));
+      }
 
       else
+      {
         parser->root.error = FT_ERR( Ignore );
+        FT_TRACE4(( "<unknown>\n" ));
+      }
     }
   }
 
@@ -1699,6 +1774,15 @@
 
     if ( !loader->num_subrs )
       loader->num_subrs = num_subrs;
+
+#ifdef FT_DEBUG_LEVEL_TRACE
+      FT_TRACE4(( " <" ));
+
+      /* XXX show subrs? */
+      FT_TRACE4(( "%d elements", num_subrs ));
+
+      FT_TRACE4(( ">\n" ));
+#endif
 
     return;
 
@@ -2021,6 +2105,15 @@
       loader->num_glyphs += 1;
     }
 
+#ifdef FT_DEBUG_LEVEL_TRACE
+      FT_TRACE4(( " <" ));
+
+      /* XXX show charstrings? */
+      FT_TRACE4(( "%d elements", loader->num_glyphs ));
+
+      FT_TRACE4(( ">\n" ));
+#endif
+
     return;
 
   Fail:
@@ -2220,6 +2313,7 @@
                     ? T1_FIELD_DICT_PRIVATE
                     : T1_FIELD_DICT_FONTDICT;
 
+
               if ( !( dict & keyword->dict ) )
               {
                 FT_TRACE1(( "parse_dict: found `%s' but ignoring it"
@@ -2334,6 +2428,7 @@
     if ( error )
       goto Exit;
 
+    FT_TRACE4(( " top dictionary:\n" ));
     error = parse_dict( face, &loader,
                         parser->base_dict, parser->base_len );
     if ( error )
@@ -2343,6 +2438,7 @@
     if ( error )
       goto Exit;
 
+    FT_TRACE4(( " private dictionary:\n" ));
     error = parse_dict( face, &loader,
                         parser->private_dict, parser->private_len );
     if ( error )

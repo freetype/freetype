@@ -1,5 +1,32 @@
 2018-07-25  Werner Lemberg  <wl@gnu.org>
 
+	[psaux, type1] Trace PostScript dictionaries and other things.
+
+	The tracing of /Encoding, /Subrs, and /Charstrings is rudimentary
+	right now.
+
+	* src/psaux/psobjs.c (ps_parser_load_field,
+	ps_parser_load_field_table): Add tracing calls.
+
+	* src/psaux/t1decode.c (t1_decoder_parse_charstrings): Make tracing
+	output more compact.
+
+	* src/type1/t1gload.c (T1_Compute_Max_Advance, T1_Get_Advances): Add
+	tracing messages.
+
+	* src/type1/t1load.c (parse_blend_axis_types,
+	parse_blend_design_positions, parse_blend_design_map,
+	parse_weight_vector, t1_load_keyword, t1_parse_font_matrix,
+	parse_encoding, parse_subrs, parse_charstrings, T1_Open_Face): Add
+	tracing calls.
+
+	* src/type1/t1objs.c (T1_Face_Init): Add tracing call.
+
+	* src/sfnt/sfobjs.c (sfnt_init_face): Make tracing message more
+	verbose.
+
+2018-07-25  Werner Lemberg  <wl@gnu.org>
+
 	Fix minor ASAN run-time warnings.
 
 	* src/base/ftutil.c (ft_mem_alloc, ft_mem_realloc): Only call
