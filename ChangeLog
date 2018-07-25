@@ -1,3 +1,18 @@
+2018-07-24  Alexei Podtelezhnikov  <apodtele@gmail.com>
+
+	[build] Fortify dllexport/dllimport attributes (#53969,#54330).
+
+	We no longer use predefined _DLL, which can be defined for static
+	builds too with /MD. We use DLL_EXPORT and DLL_IMPORT instead,
+	following libtool convention.
+
+	* CMakeLists.txt [WIN32], builds/windows/vc2010/freetype.vcxproj:
+	Define DLL_EXPORT manually.
+
+	* include/freetype/config/ftconfig.h, builds/unix/ftconfig.in,
+	builds/vms/ftconfig.h, builds/windows/vc2010/index.html,
+	src/base/ftver.rc: /_DLL/d, s/FT2_DLLIMPORT/DLL_IMPORT/.
+
 2018-07-24  Werner Lemberg  <wl@gnu.org>
 
 	[type1] Check relationship between number of axes and designs.

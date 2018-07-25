@@ -28,7 +28,7 @@ FILEFLAGSMASK        VS_FFI_FILEFLAGSMASK
 #ifdef _DEBUG
 FILEFLAGS            VS_FF_DEBUG
 #endif
-#ifdef _DLL
+#ifdef DLL_EXPORT
 FILETYPE             VFT_DLL
 #define FT_FILENAME  "freetype.dll"
 #else
