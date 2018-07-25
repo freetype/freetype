@@ -54,7 +54,7 @@
     FT_Error    error;
     FT_Pointer  block = ft_mem_qalloc( memory, size, &error );
 
-    if ( !error && size > 0 )
+    if ( !error && block && size > 0 )
       FT_MEM_ZERO( block, size );
 
     *p_error = error;
@@ -101,7 +101,7 @@
 
     block = ft_mem_qrealloc( memory, item_size,
                              cur_count, new_count, block, &error );
-    if ( !error && new_count > cur_count )
+    if ( !error && block && new_count > cur_count )
       FT_MEM_ZERO( (char*)block + cur_count * item_size,
                    ( new_count - cur_count ) * item_size );
 
@@ -185,7 +185,7 @@
     FT_Pointer  p = ft_mem_qalloc( memory, (FT_Long)size, &error );
 
 
-    if ( !error && address )
+    if ( !error && address && size > 0 )
       ft_memcpy( p, address, size );
 
     *p_error = error;

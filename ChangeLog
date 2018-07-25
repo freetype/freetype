@@ -1,3 +1,11 @@
+2018-07-25  Werner Lemberg  <wl@gnu.org>
+
+	Fix minor ASAN run-time warnings.
+
+	* src/base/ftutil.c (ft_mem_alloc, ft_mem_realloc): Only call
+	`FT_MEM_ZERO' if we actually have a buffer.
+	(ft_mem_dup): Only call `ft_memcpy' if we actually have a buffer.
+
 2018-07-24  Alexei Podtelezhnikov  <apodtele@gmail.com>
 
 	[build] Fortify dllexport/dllimport attributes (#53969,#54330).
