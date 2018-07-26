@@ -1,0 +1,5 @@
+mistune==0.8.3
+mkdocs<=0.17.5,>=0.17.3
+mkdocs-material<=2.9.1,>=2.9.0
+pymdown-extensions<=4.11,>=4.10.2
+PyYAML>=3.10
