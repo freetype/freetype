@@ -120,6 +120,9 @@ FT_TRACE_DEF( bdflib )
 FT_TRACE_DEF( pkdriver )
 FT_TRACE_DEF( pklib )
 
+  /* TFM helper module components */
+FT_TRACE_DEF( tfmobjs )
+
   /* PFR font component */
 FT_TRACE_DEF( pfr )
 
