@@ -293,14 +293,20 @@ library: $(PROJECT_LIBRARY)
 # Option `-B' disables generation of .pyc files (available since python 2.6)
 #
 refdoc:
-	python -B $(SRC_DIR)/tools/docmaker/docmaker.py \
+	@echo Installing requirements...
+	python -m pip install --user -r \
+                        $(SRC_DIR)/tools/docwriter/requirements.txt
+	@echo "Running docwriter..."
+	python -B $(SRC_DIR)/tools/docwriter/docwriter.py \
                   --prefix=ft2                          \
                   --title=FreeType-$(version)           \
                   --output=$(DOC_DIR)                   \
                   $(PUBLIC_DIR)/*.h                     \
                   $(PUBLIC_DIR)/config/*.h              \
                   $(PUBLIC_DIR)/cache/*.h
-
+	@echo Building static site...
+	cd $(DOC_DIR) && mkdocs build
+	@echo Done.
 
 .PHONY: clean_project_std distclean_project_std
 
