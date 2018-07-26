@@ -1,1 +1,9 @@
+# Static site folder
+site/
+
+# HTML and Markdown files
 *.html
+*.md
+
+# MkDocs Config file
+mkdocs.yml
