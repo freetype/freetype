@@ -226,7 +226,7 @@ FT_BEGIN_HEADER
    *
    *   This doesn't change the current renderer for other formats.
    *
-   *   Currently, no FreeType renderer module uses `parameters'; you
+   *   Currently, no FreeType renderer module uses 'parameters'; you
    *   should thus always pass NULL as the value.
    */
   FT_EXPORT( FT_Error )

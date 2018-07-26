@@ -49,10 +49,10 @@ FT_BEGIN_HEADER
    *   Modules can be added, upgraded, and removed at runtime.
    *   Additionally, some module properties can be controlled also.
    *
-   *   Here is a list of possible values of the `module_name' field in
+   *   Here is a list of possible values of the `module_name` field in
    *   the @FT_Module_Class structure.
    *
-   *   {
+   *   ```
    *     autofitter
    *     bdf
    *     cff
@@ -71,7 +71,7 @@ FT_BEGIN_HEADER
    *     type42
    *     t1cid
    *     winfonts
-   *   }
+   *   ```
    *
    *   Note that the FreeType Cache sub-system is not a FreeType module.
    *
@@ -219,7 +219,7 @@ FT_BEGIN_HEADER
    *   module_interface ::
    *     A typeless pointer to a structure (which varies between different
    *     modules) that holds the module's interface functions.  This is
-   *     essentially what `get_interface' returns.
+   *     essentially what `get_interface` returns.
    *
    *   module_init ::
    *     The initializing function.
@@ -352,27 +352,27 @@ FT_BEGIN_HEADER
    *
    *    value ::
    *      A generic pointer to a variable or structure that gives the new
-   *      value of the property.  The exact definition of `value' is
+   *      value of the property.  The exact definition of 'value' is
    *      dependent on the property; see section @properties.
    *
    * @return:
    *   FreeType error code.  0~means success.
    *
    * @note:
-   *    If `module_name' isn't a valid module name, or `property_name'
-   *    doesn't specify a valid property, or if `value' doesn't represent a
+   *    If `module_name` isn't a valid module name, or `property_name`
+   *    doesn't specify a valid property, or if 'value' doesn't represent a
    *    valid value for the given property, an error is returned.
    *
-   *    The following example sets property `bar' (a simple integer) in
-   *    module `foo' to value~1.
+   *    The following example sets property 'bar' (a simple integer) in
+   *    module 'foo' to value~1.
    *
-   *    {
+   *    ```
    *      FT_UInt  bar;
    *
    *
    *      bar = 1;
    *      FT_Property_Set( library, "foo", "bar", &bar );
-   *    }
+   *    ```
    *
    *    Note that the FreeType Cache sub-system doesn't recognize module
    *    property changes.  To avoid glyph lookup confusion within the cache
@@ -417,20 +417,20 @@ FT_BEGIN_HEADER
    * @inout:
    *    value ::
    *      A generic pointer to a variable or structure that gives the
-   *      value of the property.  The exact definition of `value' is
+   *      value of the property.  The exact definition of 'value' is
    *      dependent on the property; see section @properties.
    *
    * @return:
    *   FreeType error code.  0~means success.
    *
    * @note:
-   *    If `module_name' isn't a valid module name, or `property_name'
-   *    doesn't specify a valid property, or if `value' doesn't represent a
+   *    If `module_name` isn't a valid module name, or `property_name`
+   *    doesn't specify a valid property, or if 'value' doesn't represent a
    *    valid value for the given property, an error is returned.
    *
-   *    The following example gets property `baz' (a range) in module `foo'.
+   *    The following example gets property 'baz' (a range) in module 'foo'.
    *
-   *    {
+   *    ```
    *      typedef  range_
    *      {
    *        FT_Int32  min;
@@ -442,7 +442,7 @@ FT_BEGIN_HEADER
    *
    *
    *      FT_Property_Get( library, "foo", "baz", &baz );
-   *    }
+   *    ```
    *
    *    It is not possible to retrieve properties of the FreeType Cache
    *    sub-system with FT_Property_Get; use @FTC_Property_Get instead.
@@ -465,16 +465,16 @@ FT_BEGIN_HEADER
    *
    * @description:
    *   If compilation option FT_CONFIG_OPTION_ENVIRONMENT_PROPERTIES is
-   *   set, this function reads the `FREETYPE_PROPERTIES' environment
+   *   set, this function reads the `FREETYPE_PROPERTIES` environment
    *   variable to control driver properties.  See section @properties
    *   for more.
    *
    *   If the compilation option is not set, this function does nothing.
    *
-   *   `FREETYPE_PROPERTIES' has the following syntax form (broken here
+   *   `FREETYPE_PROPERTIES` has the following syntax form (broken here
    *   into multiple lines for better readability).
    *
-   *   {
+   *   ```
    *     <optional whitespace>
    *     <module-name1> ':'
    *     <property-name1> '=' <property-value1>
@@ -482,15 +482,15 @@ FT_BEGIN_HEADER
    *     <module-name2> ':'
    *     <property-name2> '=' <property-value2>
    *     ...
-   *   }
+   *   ```
    *
    *   Example:
    *
-   *   {
+   *   ```
    *     FREETYPE_PROPERTIES=truetype:interpreter-version=35 \
    *                         cff:no-stem-darkening=1 \
    *                         autofitter:warping=1
-   *   }
+   *   ```
    *
    * @inout:
    *   library ::
@@ -616,8 +616,8 @@ FT_BEGIN_HEADER
    * @input:
    *   hook_index ::
    *     The index of the debug hook.  You should use the
-   *     values defined in `ftobjs.h', e.g.,
-   *     `FT_DEBUG_HOOK_TRUETYPE'.
+   *     values defined in `ftobjs.h`, e.g.,
+   *     `FT_DEBUG_HOOK_TRUETYPE`.
    *
    *   debug_hook ::
    *     The function used to debug the interpreter.
@@ -627,7 +627,7 @@ FT_BEGIN_HEADER
    *   the TrueType and the Type~1 interpreter) are defined.
    *
    *   Since the internal headers of FreeType are no longer installed,
-   *   the symbol `FT_DEBUG_HOOK_TRUETYPE' isn't available publicly.
+   *   the symbol `FT_DEBUG_HOOK_TRUETYPE` isn't available publicly.
    *   This is a bug and will be fixed in a forthcoming release.
    */
   FT_EXPORT( void )

@@ -147,10 +147,10 @@ FT_BEGIN_HEADER
    *
    *   get_advances ::
    *     A function handle used to return advance
-   *     widths of `count' glyphs (in font units),
-   *     starting at `first'.  The `vertical' flag must
+   *     widths of 'count' glyphs (in font units),
+   *     starting at 'first'.  The 'vertical' flag must
    *     be set to get vertical advance heights.  The
-   *     `advances' buffer is caller-allocated.
+   *     'advances' buffer is caller-allocated.
    *     The idea of this function is to be able to
    *     perform device-independent text layout without
    *     loading a single glyph image.
@@ -167,7 +167,7 @@ FT_BEGIN_HEADER
    *     to 0 if the scaling done in the base layer
    *     suffices.
    * @note:
-   *   Most function pointers, with the exception of `load_glyph', can be
+   *   Most function pointers, with the exception of `load_glyph`, can be
    *   set to 0 to indicate a default behaviour.
    */
   typedef struct  FT_Driver_ClassRec_
@@ -215,9 +215,9 @@ FT_BEGIN_HEADER
    * @description:
    *   Used to initialize an instance of FT_Driver_ClassRec struct.
    *
-   *   `ftinit.c' (ft_create_default_module_classes) already contains a
+   *   `ftinit.c` (ft_create_default_module_classes) already contains a
    *   mechanism to call these functions for the default modules
-   *   described in `ftmodule.h'.
+   *   described in `ftmodule.h`.
    *
    *   The struct will be allocated in the global scope (or the scope
    *   where the macro is used).

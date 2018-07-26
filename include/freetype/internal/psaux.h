@@ -130,7 +130,7 @@ FT_BEGIN_HEADER
    *     1kByte chunks.
    *
    *   init ::
-   *     Set to 0xDEADBEEF if `elements' and `lengths' have
+   *     Set to 0xDEADBEEF if 'elements' and 'lengths' have
    *     been allocated.
    *
    *   max_elems ::

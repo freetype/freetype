@@ -58,7 +58,7 @@ FT_BEGIN_HEADER
    *
    * @description:
    *   A tag for @FT_Parameter to make @FT_Open_Face ignore typographic
-   *   family names in the `name' table (introduced in OpenType version
+   *   family names in the 'name' table (introduced in OpenType version
    *   1.4).  Use this for backward compatibility with legacy systems that
    *   have a four-faces-per-family restriction.
    *
@@ -82,7 +82,7 @@ FT_BEGIN_HEADER
    *
    * @description:
    *   A tag for @FT_Parameter to make @FT_Open_Face ignore typographic
-   *   subfamily names in the `name' table (introduced in OpenType version
+   *   subfamily names in the 'name' table (introduced in OpenType version
    *   1.4).  Use this for backward compatibility with legacy systems that
    *   have a four-faces-per-family restriction.
    *
@@ -165,7 +165,7 @@ FT_BEGIN_HEADER
    *
    *   This is a passive setting that only takes effect if the font driver
    *   or autohinter honors it, which the CFF, Type~1, and CID drivers
-   *   always do, but the autohinter only in `light' hinting mode (as of
+   *   always do, but the autohinter only in 'light' hinting mode (as of
    *   version 2.9).
    *
    * @since:

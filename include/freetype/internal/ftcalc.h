@@ -252,7 +252,7 @@ FT_BEGIN_HEADER
    *   FT_MulDiv_No_Round
    *
    * @description:
-   *   A very simple function used to perform the computation `(a*b)/c'
+   *   A very simple function used to perform the computation '(a*b)/c'
    *   (without rounding) with maximum accuracy (it uses a 64-bit
    *   intermediate integer whenever necessary).
    *
@@ -268,9 +268,9 @@ FT_BEGIN_HEADER
    *     The divisor.
    *
    * @return:
-   *   The result of `(a*b)/c'.  This function never traps when trying to
-   *   divide by zero; it simply returns `MaxInt' or `MinInt' depending
-   *   on the signs of `a' and `b'.
+   *   The result of '(a*b)/c'.  This function never traps when trying to
+   *   divide by zero; it simply returns 'MaxInt' or 'MinInt' depending
+   *   on the signs of 'a' and 'b'.
    */
   FT_BASE( FT_Long )
   FT_MulDiv_No_Round( FT_Long  a,
@@ -433,7 +433,7 @@ FT_BEGIN_HEADER
    *     The value to compute the root for.
    *
    * @return:
-   *   The result of `sqrt(x)'.
+   *   The result of 'sqrt(x)'.
    *
    * @note:
    *   This function is not very fast.

@@ -76,7 +76,7 @@ FT_BEGIN_HEADER
    *   CFF_Internal
    *
    * @description:
-   *   The interface to the `internal' field of `FT_Size'.
+   *   The interface to the 'internal' field of `FT_Size`.
    */
   typedef struct  CFF_InternalRec_
   {

@@ -34,7 +34,7 @@ FT_BEGIN_HEADER
    *   FT_SET_ERROR
    *
    * @description:
-   *   This macro is used to set an implicit `error' variable to a given
+   *   This macro is used to set an implicit 'error' variable to a given
    *   expression's value (usually a function call), and convert it to a
    *   boolean which is set whenever the value is != 0.
    */

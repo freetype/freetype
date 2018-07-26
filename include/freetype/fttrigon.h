@@ -210,7 +210,7 @@ FT_BEGIN_HEADER
    *     Second angle.
    *
    * @return:
-   *   Constrained value of `value2-value1'.
+   *   Constrained value of 'value2-value1'.
    *
    */
   FT_EXPORT( FT_Angle )
@@ -225,8 +225,8 @@ FT_BEGIN_HEADER
    *
    * @description:
    *   Return the unit vector corresponding to a given angle.  After the
-   *   call, the value of `vec.x' will be `cos(angle)', and the value of
-   *   `vec.y' will be `sin(angle)'.
+   *   call, the value of `vec.x` will be 'cos(angle)', and the value of
+   *   `vec.y` will be 'sin(angle)'.
    *
    *   This function is useful to retrieve both the sinus and cosinus of a
    *   given angle quickly.

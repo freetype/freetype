@@ -47,7 +47,7 @@ FT_BEGIN_HEADER
    *
    * @description:
    *   This section contains routines used to create and destroy scalable
-   *   glyph images known as `outlines'.  These can also be measured,
+   *   glyph images known as 'outlines'.  These can also be measured,
    *   transformed, and converted into bitmaps and pixmaps.
    *
    * @order:
@@ -89,7 +89,7 @@ FT_BEGIN_HEADER
    *
    * @description:
    *   Walk over an outline's structure to decompose it into individual
-   *   segments and Bezier arcs.  This function also emits `move to'
+   *   segments and Bezier arcs.  This function also emits 'move to'
    *   operations to indicate the start of new contours in the outline.
    *
    * @input:
@@ -97,7 +97,7 @@ FT_BEGIN_HEADER
    *     A pointer to the source target.
    *
    *   func_interface ::
-   *     A table of `emitters', i.e., function pointers
+   *     A table of 'emitters', i.e., function pointers
    *     called during decomposition to indicate path
    *     operations.
    *
@@ -113,7 +113,7 @@ FT_BEGIN_HEADER
    *
    * @note:
    *   A contour that contains a single point only is represented by a
-   *   `move to' operation followed by `line to' to the same point.  In
+   *   'move to' operation followed by 'line to' to the same point.  In
    *   most cases, it is best to filter this out before using the
    *   outline for stroking purposes (otherwise it would result in a
    *   visible dot when round caps are used).
@@ -140,7 +140,7 @@ FT_BEGIN_HEADER
    *   library ::
    *     A handle to the library object from where the
    *     outline is allocated.  Note however that the new
-   *     outline will *not* necessarily be *freed*, when
+   *     outline will **not** necessarily be **freed**, when
    *     destroying the library, by @FT_Done_FreeType.
    *
    *   numPoints ::
@@ -149,7 +149,7 @@ FT_BEGIN_HEADER
    *
    *   numContours ::
    *     The maximum number of contours within the outline.
-   *     This value must be in the range 0 to `numPoints'.
+   *     This value must be in the range 0 to `numPoints`.
    *
    * @output:
    *   anoutline ::
@@ -159,7 +159,7 @@ FT_BEGIN_HEADER
    *   FreeType error code.  0~means success.
    *
    * @note:
-   *   The reason why this function takes a `library' parameter is simply
+   *   The reason why this function takes a 'library' parameter is simply
    *   to use the library's memory allocator.
    */
   FT_EXPORT( FT_Error )
@@ -196,7 +196,7 @@ FT_BEGIN_HEADER
    *   FreeType error code.  0~means success.
    *
    * @note:
-   *   If the outline's `owner' field is not set, only the outline
+   *   If the outline's 'owner' field is not set, only the outline
    *   descriptor will be released.
    */
   FT_EXPORT( FT_Error )
@@ -238,7 +238,7 @@ FT_BEGIN_HEADER
    *   FT_Outline_Get_CBox
    *
    * @description:
-   *   Return an outline's `control box'.  The control box encloses all
+   *   Return an outline's 'control box'.  The control box encloses all
    *   the outline's points, including Bezier control points.  Though it
    *   coincides with the exact bounding box for most glyphs, it can be
    *   slightly larger in some situations (like when rotating an outline
@@ -247,7 +247,7 @@ FT_BEGIN_HEADER
    *   Computing the control box is very fast, while getting the bounding
    *   box can take much more time as it needs to walk over all segments
    *   and arcs in the outline.  To get the latter, you can use the
-   *   `ftbbox' component, which is dedicated to this single task.
+   *   'ftbbox' component, which is dedicated to this single task.
    *
    * @input:
    *   outline ::
@@ -349,10 +349,10 @@ FT_BEGIN_HEADER
    *
    * @description:
    *   Embolden an outline.  The new outline will be at most 4~times
-   *   `strength' pixels wider and higher.  You may think of the left and
+   *   'strength' pixels wider and higher.  You may think of the left and
    *   bottom borders as unchanged.
    *
-   *   Negative `strength' values to reduce the outline thickness are
+   *   Negative 'strength' values to reduce the outline thickness are
    *   possible also.
    *
    * @inout:
@@ -373,19 +373,19 @@ FT_BEGIN_HEADER
    *   situations like acute angles or intersections are sometimes
    *   handled incorrectly.
    *
-   *   If you need `better' metrics values you should call
+   *   If you need 'better' metrics values you should call
    *   @FT_Outline_Get_CBox or @FT_Outline_Get_BBox.
    *
    *   To get meaningful results, font scaling values must be set with
    *   functions like @FT_Set_Char_Size before calling FT_Render_Glyph.
    *
    * @example:
-   *   {
+   *   ```
    *     FT_Load_Glyph( face, index, FT_LOAD_DEFAULT );
    *
    *     if ( face->glyph->format == FT_GLYPH_FORMAT_OUTLINE )
    *       FT_Outline_Embolden( &face->glyph->outline, strength );
-   *   }
+   *   ```
    *
    */
   FT_EXPORT( FT_Error )
@@ -399,8 +399,8 @@ FT_BEGIN_HEADER
    *   FT_Outline_EmboldenXY
    *
    * @description:
-   *   Embolden an outline.  The new outline will be `xstrength' pixels
-   *   wider and `ystrength' pixels higher.  Otherwise, it is similar to
+   *   Embolden an outline.  The new outline will be 'xstrength' pixels
+   *   wider and 'ystrength' pixels higher.  Otherwise, it is similar to
    *   @FT_Outline_Embolden, which uses the same strength in both
    *   directions.
    *
@@ -428,7 +428,7 @@ FT_BEGIN_HEADER
    *
    * @note:
    *   This function toggles the bit flag @FT_OUTLINE_REVERSE_FILL in
-   *   the outline's `flags' field.
+   *   the outline's 'flags' field.
    *
    *   It shouldn't be used by a normal client application, unless it
    *   knows what it is doing.
@@ -463,11 +463,11 @@ FT_BEGIN_HEADER
    * @note:
    *   This function does NOT CREATE the bitmap, it only renders an
    *   outline image within the one you pass to it!  Consequently, the
-   *   various fields in `abitmap' should be set accordingly.
+   *   various fields in 'abitmap' should be set accordingly.
    *
    *   It will use the raster corresponding to the default glyph format.
    *
-   *   The value of the `num_grays' field in `abitmap' is ignored.  If
+   *   The value of the `num_grays` field in 'abitmap' is ignored.  If
    *   you select the gray-level rasterizer, and you want less than 256
    *   gray levels, you have to use @FT_Outline_Render directly.
    */
@@ -507,13 +507,13 @@ FT_BEGIN_HEADER
    *   You should know what you are doing and how @FT_Raster_Params works
    *   to use this function.
    *
-   *   The field `params.source' will be set to `outline' before the scan
+   *   The field `params.source` will be set to 'outline' before the scan
    *   converter is called, which means that the value you give to it is
    *   actually ignored.
    *
    *   The gray-level rasterizer always uses 256 gray levels.  If you
    *   want less gray levels, you have to provide your own span callback.
-   *   See the @FT_RASTER_FLAG_DIRECT value of the `flags' field in the
+   *   See the @FT_RASTER_FLAG_DIRECT value of the 'flags' field in the
    *   @FT_Raster_Params structure for more details.
    */
   FT_EXPORT( FT_Error )

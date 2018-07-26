@@ -330,7 +330,7 @@ FT_BEGIN_HEADER
    *
    *   services ::
    *     A cache for frequently used services.  It should be only
-   *     accessed with the macro `FT_FACE_LOOKUP_SERVICE'.
+   *     accessed with the macro `FT_FACE_LOOKUP_SERVICE`.
    *
    *   incremental_interface ::
    *     If non-null, the interface through which glyph data and metrics
@@ -344,7 +344,7 @@ FT_BEGIN_HEADER
    *     respectively, value~-1 means to use the module/driver default.
    *
    *   random_seed ::
-   *     If positive, override the seed value for the CFF `random'
+   *     If positive, override the seed value for the CFF 'random'
    *     operator.  Value~0 means to use the font's value.  Value~-1
    *     means to use the CFF driver's default.
    *
@@ -798,7 +798,7 @@ FT_BEGIN_HEADER
    *
    *   clazz ::
    *     A pointer to the font driver's class.  Note that
-   *     this is NOT root.clazz.  `class' wasn't used
+   *     this is NOT root.clazz.  'class' wasn't used
    *     as it is a reserved word in C++.
    *
    *   faces_list ::

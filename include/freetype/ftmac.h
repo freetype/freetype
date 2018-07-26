@@ -82,7 +82,7 @@ FT_BEGIN_HEADER
    *     A FOND resource.
    *
    *   face_index ::
-   *     Only supported for the -1 `sanity check' special
+   *     Only supported for the -1 'sanity check' special
    *     case.
    *
    * @output:
@@ -96,10 +96,10 @@ FT_BEGIN_HEADER
    *   This function can be used to create @FT_Face objects from fonts
    *   that are installed in the system as follows.
    *
-   *   {
+   *   ```
    *     fond  = GetResource( 'FOND', fontName );
    *     error = FT_New_Face_From_FOND( library, fond, 0, &face );
-   *   }
+   *   ```
    */
   FT_EXPORT( FT_Error )
   FT_New_Face_From_FOND( FT_Library  library,
@@ -192,7 +192,7 @@ FT_BEGIN_HEADER
    *     buffer before calling this function.
    *
    *   maxPathSize ::
-   *     Lengths of the buffer `path' that client allocated.
+   *     Lengths of the buffer 'path' that client allocated.
    *
    *   face_index ::
    *     Index of the face.  For passing to @FT_New_Face.

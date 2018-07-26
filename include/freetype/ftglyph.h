@@ -138,7 +138,7 @@ FT_BEGIN_HEADER
    *
    * @description:
    *   A structure used for bitmap glyph images.  This really is a
-   *   `sub-class' of @FT_GlyphRec.
+   *   'sub-class' of @FT_GlyphRec.
    *
    * @fields:
    *   root ::
@@ -159,7 +159,7 @@ FT_BEGIN_HEADER
    *
    * @note:
    *   You can typecast an @FT_Glyph to @FT_BitmapGlyph if you have
-   *   `glyph->format == FT_GLYPH_FORMAT_BITMAP'.  This lets you access
+   *   `glyph->format == FT_GLYPH_FORMAT_BITMAP`.  This lets you access
    *   the bitmap's contents easily.
    *
    *   The corresponding pixel buffer is always owned by @FT_BitmapGlyph
@@ -194,7 +194,7 @@ FT_BEGIN_HEADER
    *
    * @description:
    *   A structure used for outline (vectorial) glyph images.  This
-   *   really is a `sub-class' of @FT_GlyphRec.
+   *   really is a 'sub-class' of @FT_GlyphRec.
    *
    * @fields:
    *   root ::
@@ -205,7 +205,7 @@ FT_BEGIN_HEADER
    *
    * @note:
    *   You can typecast an @FT_Glyph to @FT_OutlineGlyph if you have
-   *   `glyph->format == FT_GLYPH_FORMAT_OUTLINE'.  This lets you access
+   *   `glyph->format == FT_GLYPH_FORMAT_OUTLINE`.  This lets you access
    *   the outline's content easily.
    *
    *   As the outline is extracted from a glyph slot, its coordinates are
@@ -276,8 +276,8 @@ FT_BEGIN_HEADER
    *   FreeType error code.  0~means success.
    *
    * @note:
-   *   Because `*aglyph->advance.x' and `*aglyph->advance.y' are 16.16
-   *   fixed-point numbers, `slot->advance.x' and `slot->advance.y'
+   *   Because `*aglyph->advance.x` and `*aglyph->advance.y` are 16.16
+   *   fixed-point numbers, `slot->advance.x` and `slot->advance.y`
    *   (which are in 26.6 fixed-point format) must be in the range
    *   ]-32768;32768[.
    */
@@ -395,7 +395,7 @@ FT_BEGIN_HEADER
    *   FT_Glyph_Get_CBox
    *
    * @description:
-   *   Return a glyph's `control box'.  The control box encloses all the
+   *   Return a glyph's 'control box'.  The control box encloses all the
    *   outline's points, including Bezier control points.  Though it
    *   coincides with the exact bounding box for most glyphs, it can be
    *   slightly larger in some situations (like when rotating an outline
@@ -404,7 +404,7 @@ FT_BEGIN_HEADER
    *   Computing the control box is very fast, while getting the bounding
    *   box can take much more time as it needs to walk over all segments
    *   and arcs in the outline.  To get the latter, you can use the
-   *   `ftbbox' component, which is dedicated to this single task.
+   *   'ftbbox' component, which is dedicated to this single task.
    *
    * @input:
    *   glyph ::
@@ -423,7 +423,7 @@ FT_BEGIN_HEADER
    *   Coordinates are relative to the glyph origin, using the y~upwards
    *   convention.
    *
-   *   If the glyph has been loaded with @FT_LOAD_NO_SCALE, `bbox_mode'
+   *   If the glyph has been loaded with @FT_LOAD_NO_SCALE, `bbox_mode`
    *   must be set to @FT_GLYPH_BBOX_UNSCALED to get unscaled font
    *   units in 26.6 pixel format.  The value @FT_GLYPH_BBOX_SUBPIXELS
    *   is another name for this constant.
@@ -439,26 +439,26 @@ FT_BEGIN_HEADER
    *   one can compute the width and height of the glyph image (be it in
    *   integer or 26.6 pixels) as:
    *
-   *   {
+   *   ```
    *     width  = bbox.xMax - bbox.xMin;
    *     height = bbox.yMax - bbox.yMin;
-   *   }
+   *   ```
    *
-   *   Note also that for 26.6 coordinates, if `bbox_mode' is set to
+   *   Note also that for 26.6 coordinates, if `bbox_mode` is set to
    *   @FT_GLYPH_BBOX_GRIDFIT, the coordinates will also be grid-fitted,
    *   which corresponds to:
    *
-   *   {
+   *   ```
    *     bbox.xMin = FLOOR(bbox.xMin);
    *     bbox.yMin = FLOOR(bbox.yMin);
    *     bbox.xMax = CEILING(bbox.xMax);
    *     bbox.yMax = CEILING(bbox.yMax);
-   *   }
+   *   ```
    *
-   *   To get the bbox in pixel coordinates, set `bbox_mode' to
+   *   To get the bbox in pixel coordinates, set `bbox_mode` to
    *   @FT_GLYPH_BBOX_TRUNCATE.
    *
-   *   To get the bbox in grid-fitted pixel coordinates, set `bbox_mode'
+   *   To get the bbox in grid-fitted pixel coordinates, set `bbox_mode`
    *   to @FT_GLYPH_BBOX_PIXELS.
    */
   FT_EXPORT( void )
@@ -501,7 +501,7 @@ FT_BEGIN_HEADER
    * @note:
    *   This function does nothing if the glyph format isn't scalable.
    *
-   *   The glyph image is translated with the `origin' vector before
+   *   The glyph image is translated with the 'origin' vector before
    *   rendering.
    *
    *   The first parameter is a pointer to an @FT_Glyph handle, that will
@@ -509,7 +509,7 @@ FT_BEGIN_HEADER
    *   Typically, you would use (omitting error handling):
    *
    *
-   *     {
+   *     ```
    *       FT_Glyph        glyph;
    *       FT_BitmapGlyph  glyph_bitmap;
    *
@@ -537,13 +537,13 @@ FT_BEGIN_HEADER
    *
    *       // discard glyph image (bitmap or not)
    *       FT_Done_Glyph( glyph );
-   *     }
+   *     ```
    *
    *
    *   Here another example, again without error handling:
    *
    *
-   *     {
+   *     ```
    *       FT_Glyph  glyphs[MAX_GLYPHS]
    *
    *
@@ -575,7 +575,7 @@ FT_BEGIN_HEADER
    *
    *       for ( idx = 0; i < MAX_GLYPHS; i++ )
    *         FT_Done_Glyph( glyphs[idx] );
-   *     }
+   *     ```
    */
   FT_EXPORT( FT_Error )
   FT_Glyph_To_Bitmap( FT_Glyph*       the_glyph,
@@ -618,18 +618,18 @@ FT_BEGIN_HEADER
    *   FT_Matrix_Multiply
    *
    * @description:
-   *   Perform the matrix operation `b = a*b'.
+   *   Perform the matrix operation 'b = a*b'.
    *
    * @input:
    *   a ::
-   *     A pointer to matrix `a'.
+   *     A pointer to matrix 'a'.
    *
    * @inout:
    *   b ::
-   *     A pointer to matrix `b'.
+   *     A pointer to matrix 'b'.
    *
    * @note:
-   *   The result is undefined if either `a' or `b' is zero.
+   *   The result is undefined if either 'a' or 'b' is zero.
    *
    *   Since the function uses wrap-around arithmetic, results become
    *   meaningless if the arguments are very large.

@@ -49,8 +49,8 @@ FT_BEGIN_HEADER
    *   id ::
    *     A string describing the service as defined in the service's
    *     header files (e.g. FT_SERVICE_ID_MULTI_MASTERS which expands to
-   *     `multi-masters').  It is automatically prefixed with
-   *     `FT_SERVICE_ID_'.
+   *     'multi-masters').  It is automatically prefixed with
+   *     `FT_SERVICE_ID_`.
    *
    * @output:
    *   ptr ::
@@ -101,8 +101,8 @@ FT_BEGIN_HEADER
    *   id ::
    *     A string describing the service as defined in the service's
    *     header files (e.g. FT_SERVICE_ID_MULTI_MASTERS which expands to
-   *     `multi-masters').  It is automatically prefixed with
-   *     `FT_SERVICE_ID_'.
+   *     'multi-masters').  It is automatically prefixed with
+   *     `FT_SERVICE_ID_`.
    *
    * @output:
    *   ptr ::

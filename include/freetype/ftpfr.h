@@ -63,21 +63,21 @@ FT_BEGIN_HEADER
    *
    * @output:
    *    aoutline_resolution ::
-   *      Outline resolution.  This is equivalent to `face->units_per_EM'
+   *      Outline resolution.  This is equivalent to `face->units_per_EM`
    *      for non-PFR fonts.  Optional (parameter can be NULL).
    *
    *    ametrics_resolution ::
-   *      Metrics resolution.  This is equivalent to `outline_resolution'
+   *      Metrics resolution.  This is equivalent to `outline_resolution`
    *      for non-PFR fonts.  Optional (parameter can be NULL).
    *
    *    ametrics_x_scale ::
    *      A 16.16 fixed-point number used to scale distance expressed
    *      in metrics units to device subpixels.  This is equivalent to
-   *      `face->size->x_scale', but for metrics only.  Optional (parameter
+   *      `face->size->x_scale`, but for metrics only.  Optional (parameter
    *      can be NULL).
    *
    *    ametrics_y_scale ::
-   *      Same as `ametrics_x_scale' but for the vertical direction.
+   *      Same as `ametrics_x_scale` but for the vertical direction.
    *      optional (parameter can be NULL).
    *
    * @return:
@@ -127,7 +127,7 @@ FT_BEGIN_HEADER
    *    units.  This is unlike @FT_Get_Kerning with the @FT_KERNING_UNSCALED
    *    mode, which always returns distances converted to outline units.
    *
-   *    You can use the value of the `x_scale' and `y_scale' parameters
+   *    You can use the value of the `x_scale` and `y_scale` parameters
    *    returned by @FT_Get_PFR_Metrics to scale these to device subpixels.
    */
   FT_EXPORT( FT_Error )
@@ -161,7 +161,7 @@ FT_BEGIN_HEADER
    *    FreeType error code.  0~means success.
    *
    * @note:
-   *    You can use the `x_scale' or `y_scale' results of @FT_Get_PFR_Metrics
+   *    You can use the `x_scale` or `y_scale` results of @FT_Get_PFR_Metrics
    *    to convert the advance to device subpixels (i.e., 1/64th of pixels).
    */
   FT_EXPORT( FT_Error )

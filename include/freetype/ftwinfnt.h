@@ -56,7 +56,7 @@ FT_BEGIN_HEADER
    *   FT_WinFNT_ID_XXX
    *
    * @description:
-   *   A list of valid values for the `charset' byte in
+   *   A list of valid values for the 'charset' byte in
    *   @FT_WinFNT_HeaderRec.  Exact mapping tables for the various cpXXXX
    *   encodings (except for cp1361) can be found at
    *   ftp://ftp.unicode.org/Public in the MAPPINGS/VENDORS/MICSFT/WINDOWS
@@ -66,7 +66,7 @@ FT_BEGIN_HEADER
    * @values:
    *   FT_WinFNT_ID_DEFAULT ::
    *     This is used for font enumeration and font creation as a
-   *     `don't care' value.  Valid font files don't contain this value.
+   *     'don't care' value.  Valid font files don't contain this value.
    *     When querying for information about the character set of the font
    *     that is currently selected into a specified device context, this
    *     return value (of the related Windows API) simply denotes failure.
@@ -80,14 +80,14 @@ FT_BEGIN_HEADER
    *   FT_WinFNT_ID_OEM ::
    *     From Michael Poettgen <michael@poettgen.de>:
    *
-   *     The `Windows Font Mapping' article says that FT_WinFNT_ID_OEM
-   *     is used for the charset of vector fonts, like `modern.fon',
-   *     `roman.fon', and `script.fon' on Windows.
+   *     The 'Windows Font Mapping' article says that FT_WinFNT_ID_OEM
+   *     is used for the charset of vector fonts, like `modern.fon`,
+   *     `roman.fon`, and `script.fon` on Windows.
    *
-   *     The `CreateFont' documentation says: The FT_WinFNT_ID_OEM value
+   *     The 'CreateFont' documentation says: The FT_WinFNT_ID_OEM value
    *     specifies a character set that is operating-system dependent.
    *
-   *     The `IFIMETRICS' documentation from the `Windows Driver
+   *     The 'IFIMETRICS' documentation from the 'Windows Driver
    *     Development Kit' says: This font supports an OEM-specific
    *     character set.  The OEM character set is system dependent.
    *
@@ -97,7 +97,7 @@ FT_BEGIN_HEADER
    *
    *     https://docs.microsoft.com/en-us/windows/desktop/intl/code-page-identifiers ,
    *
-   *     and is used for the `DOS boxes', to support legacy applications.
+   *     and is used for the 'DOS boxes', to support legacy applications.
    *     A German Windows version for example usually uses ANSI codepage
    *     1252 and OEM codepage 850.
    *

@@ -56,7 +56,7 @@ FT_BEGIN_HEADER
    * @description:
    *   When creating a new face object (e.g., with @FT_New_Face), an
    *   @FT_Size object is automatically created and used to store all
-   *   pixel-size dependent information, available in the `face->size'
+   *   pixel-size dependent information, available in the `face->size`
    *   field.
    *
    *   It is however possible to create more sizes for a given face,
@@ -64,7 +64,7 @@ FT_BEGIN_HEADER
    *   same font family and style.  See @FT_New_Size and @FT_Done_Size.
    *
    *   Note that @FT_Set_Pixel_Sizes and @FT_Set_Char_Size only
-   *   modify the contents of the current `active' size; you thus need
+   *   modify the contents of the current 'active' size; you thus need
    *   to use @FT_Activate_Size to change it.
    *
    *   99% of applications won't need the functions provided here,
@@ -133,9 +133,9 @@ FT_BEGIN_HEADER
    *   Even though it is possible to create several size objects for a
    *   given face (see @FT_New_Size for details), functions like
    *   @FT_Load_Glyph or @FT_Load_Char only use the one that has been
-   *   activated last to determine the `current character pixel size'.
+   *   activated last to determine the 'current character pixel size'.
    *
-   *   This function can be used to `activate' a previously created size
+   *   This function can be used to 'activate' a previously created size
    *   object.
    *
    * @input:
@@ -146,8 +146,8 @@ FT_BEGIN_HEADER
    *   FreeType error code.  0~means success.
    *
    * @note:
-   *   If `face' is the size's parent face object, this function changes
-   *   the value of `face->size' to the input size handle.
+   *   If 'face' is the size's parent face object, this function changes
+   *   the value of `face->size` to the input size handle.
    */
   FT_EXPORT( FT_Error )
   FT_Activate_Size( FT_Size  size );

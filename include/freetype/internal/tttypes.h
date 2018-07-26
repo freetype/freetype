@@ -58,7 +58,7 @@ FT_BEGIN_HEADER
    *
    * @fields:
    *   tag ::
-   *     Must be `ttc ' to indicate a TrueType collection.
+   *     Must be 'ttc ' to indicate a TrueType collection.
    *
    *   version ::
    *     The version number.
@@ -98,13 +98,13 @@ FT_BEGIN_HEADER
    *     The number of tables in file.
    *
    *   search_range ::
-   *     Must be `16 * (max power of 2 <= num_tables)'.
+   *     Must be '16 * (max power of 2 <= num_tables)'.
    *
    *   entry_selector ::
-   *     Must be log2 of `search_range / 16'.
+   *     Must be log2 of 'search_range / 16'.
    *
    *   range_shift ::
-   *     Must be `num_tables * 16 - search_range'.
+   *     Must be 'num_tables * 16 - search_range'.
    */
   typedef struct  SFNT_HeaderRec_
   {
@@ -232,7 +232,7 @@ FT_BEGIN_HEADER
    *   TT_LongMetricsRec
    *
    * @description:
-   *   A structure modeling the long metrics of the `hmtx' and `vmtx'
+   *   A structure modeling the long metrics of the 'hmtx' and 'vmtx'
    *   TrueType tables.  The values are expressed in font units.
    *
    * @fields:
@@ -256,7 +256,7 @@ FT_BEGIN_HEADER
    *   TT_ShortMetrics
    *
    * @description:
-   *   A simple type to model the short metrics of the `hmtx' and `vmtx'
+   *   A simple type to model the short metrics of the 'hmtx' and 'vmtx'
    *   tables.
    */
   typedef FT_Short  TT_ShortMetrics;
@@ -290,7 +290,7 @@ FT_BEGIN_HEADER
    *     The length of the string in bytes.
    *
    *   stringOffset ::
-   *     The offset to the string in the `name' table.
+   *     The offset to the string in the 'name' table.
    *
    *   string ::
    *     A pointer to the string's bytes.  Note that these
@@ -319,7 +319,7 @@ FT_BEGIN_HEADER
    *   TT_LangTagRec
    *
    * @description:
-   *   A structure modeling language tag records in SFNT `name' tables,
+   *   A structure modeling language tag records in SFNT 'name' tables,
    *   introduced in OpenType version 1.6.
    *
    * @fields:
@@ -327,7 +327,7 @@ FT_BEGIN_HEADER
    *     The length of the string in bytes.
    *
    *   stringOffset ::
-   *     The offset to the string in the `name' table.
+   *     The offset to the string in the 'name' table.
    *
    *   string ::
    *     A pointer to the string's bytes.  Note that these
@@ -362,7 +362,7 @@ FT_BEGIN_HEADER
    *     The number of names in table.
    *
    *   storageOffset ::
-   *     The offset of the name table in the `name'
+   *     The offset of the name table in the 'name'
    *     TrueType table.
    *
    *   names ::
@@ -414,7 +414,7 @@ FT_BEGIN_HEADER
    *
    * @fields:
    *   maxPPEM ::
-   *     The maximum ppem value to which `gaspFlag' applies.
+   *     The maximum ppem value to which `gaspFlag` applies.
    *
    *   gaspFlag ::
    *     A flag describing the grid-fitting and anti-aliasing
@@ -438,7 +438,7 @@ FT_BEGIN_HEADER
    *   TT_GaspRec
    *
    * @description:
-   *   A structure modeling the TrueType `gasp' table used to specify
+   *   A structure modeling the TrueType 'gasp' table used to specify
    *   grid-fitting and anti-aliasing behaviour.
    *
    * @fields:
@@ -481,7 +481,7 @@ FT_BEGIN_HEADER
    * @description:
    *   A structure used to hold the big metrics of a given glyph bitmap
    *   in a TrueType or OpenType font.  These are usually found in the
-   *   `EBDT' (Microsoft) or `bloc' (Apple) table.
+   *   'EBDT' (Microsoft) or 'bloc' (Apple) table.
    *
    * @fields:
    *   height ::
@@ -532,7 +532,7 @@ FT_BEGIN_HEADER
    * @description:
    *   A structure used to hold the small metrics of a given glyph bitmap
    *   in a TrueType or OpenType font.  These are usually found in the
-   *   `EBDT' (Microsoft) or the `bdat' (Apple) table.
+   *   'EBDT' (Microsoft) or the 'bdat' (Apple) table.
    *
    * @fields:
    *   height ::
@@ -647,8 +647,8 @@ FT_BEGIN_HEADER
    *   TT_SBit_RangeRec
    *
    * @description:
-   *   A TrueType/OpenType subIndexTable as defined in the `EBLC'
-   *   (Microsoft) or `bloc' (Apple) tables.
+   *   A TrueType/OpenType subIndexTable as defined in the 'EBLC'
+   *   (Microsoft) or 'bloc' (Apple) tables.
    *
    * @fields:
    *   first_glyph ::
@@ -662,10 +662,10 @@ FT_BEGIN_HEADER
    *     to 5.
    *
    *   image_format ::
-   *     The format of `EBDT' image data.
+   *     The format of 'EBDT' image data.
    *
    *   image_offset ::
-   *     The offset to image data in `EBDT'.
+   *     The offset to image data in 'EBDT'.
    *
    *   image_size ::
    *     For index formats 2 and 5.  This is the size in
@@ -686,7 +686,7 @@ FT_BEGIN_HEADER
    *     For index formats 4 and 5.
    *
    *   table_offset ::
-   *     The offset of the index table in the `EBLC'
+   *     The offset of the index table in the 'EBLC'
    *     table.  Only used during strike loading.
    */
   typedef struct  TT_SBit_RangeRec_
@@ -716,8 +716,8 @@ FT_BEGIN_HEADER
    *   TT_SBit_StrikeRec
    *
    * @description:
-   *   A structure used describe a given bitmap strike in the `EBLC'
-   *   (Microsoft) or `bloc' (Apple) tables.
+   *   A structure used describe a given bitmap strike in the 'EBLC'
+   *   (Microsoft) or 'bloc' (Apple) tables.
    *
    * @fields:
    *  num_index_ranges ::
@@ -727,7 +727,7 @@ FT_BEGIN_HEADER
    *    An array of glyph index ranges.
    *
    *  color_ref ::
-   *    Unused.  `color_ref' is put in for future
+   *    Unused.  `color_ref` is put in for future
    *    enhancements, but these fields are already
    *    in use by other platforms (e.g. Newton).
    *    For details, please see
@@ -819,7 +819,7 @@ FT_BEGIN_HEADER
    *
    * @description:
    *   A structure used describe a given bitmap scaling table, as defined
-   *   in the `EBSC' table.
+   *   in the 'EBSC' table.
    *
    * @fields:
    *   hori ::
@@ -1075,7 +1075,7 @@ FT_BEGIN_HEADER
    *   resource.
    *
    * @note:
-   *   The TT_Face structure is also used as a `parent class' for the
+   *   The TT_Face structure is also used as a 'parent class' for the
    *   OpenType-CFF class (T2_Face).
    */
   typedef struct TT_FaceRec_*  TT_Face;
@@ -1142,7 +1142,7 @@ FT_BEGIN_HEADER
    *
    *   offset ::
    *     The offset of the glyph according to the
-   *     `locations' table.
+   *     'locations' table.
    *
    *   byte_count ::
    *     The size of the frame in bytes.
@@ -1259,9 +1259,9 @@ FT_BEGIN_HEADER
    *
    *   ttc_header ::
    *     The TrueType collection header, used when
-   *     the file is a `ttc' rather than a `ttf'.
+   *     the file is a 'ttc' rather than a 'ttf'.
    *     For ordinary font files, the field
-   *     `ttc_header.count' is set to 0.
+   *     `ttc_header.count` is set to 0.
    *
    *   format_tag ::
    *     The font format tag.
@@ -1275,14 +1275,14 @@ FT_BEGIN_HEADER
    *     font file.
    *
    *   header ::
-   *     The font's font header (`head' table).
+   *     The font's font header ('head' table).
    *     Read on font opening.
    *
    *   horizontal ::
-   *     The font's horizontal header (`hhea'
+   *     The font's horizontal header ('hhea'
    *     table).  This field also contains the
    *     associated horizontal metrics table
-   *     (`hmtx').
+   *     ('hmtx').
    *
    *   max_profile ::
    *     The font's maximum profile table.  Read on
@@ -1294,15 +1294,15 @@ FT_BEGIN_HEADER
    *   vertical_info ::
    *     A boolean which is set when the font file
    *     contains vertical metrics.  If not, the
-   *     value of the `vertical' field is
+   *     value of the 'vertical' field is
    *     undefined.
    *
    *   vertical ::
-   *     The font's vertical header (`vhea' table).
+   *     The font's vertical header ('vhea' table).
    *     This field also contains the associated
-   *     vertical metrics table (`vmtx'), if found.
+   *     vertical metrics table ('vmtx'), if found.
    *     IMPORTANT: The contents of this field is
-   *     undefined if the `vertical_info' field is
+   *     undefined if the `vertical_info` field is
    *     unset.
    *
    *   num_names ::
@@ -1310,23 +1310,23 @@ FT_BEGIN_HEADER
    *     TrueType font.
    *
    *   name_table ::
-   *     The table of name records (`name').
+   *     The table of name records ('name').
    *
    *   os2 ::
-   *     The font's OS/2 table (`OS/2').
+   *     The font's OS/2 table ('OS/2').
    *
    *   postscript ::
-   *     The font's PostScript table (`post'
+   *     The font's PostScript table ('post'
    *     table).  The PostScript glyph names are
    *     not loaded by the driver on face opening.
-   *     See the `ttpost' module for more details.
+   *     See the 'ttpost' module for more details.
    *
    *   cmap_table ::
-   *     Address of the face's `cmap' SFNT table
+   *     Address of the face's 'cmap' SFNT table
    *     in memory (it's an extracted frame).
    *
    *   cmap_size ::
-   *     The size in bytes of the `cmap_table'
+   *     The size in bytes of the `cmap_table`
    *     described above.
    *
    *   goto_table ::
@@ -1347,18 +1347,18 @@ FT_BEGIN_HEADER
    *
    *   read_glyph_header ::
    *     A function used to read a glyph header.
-   *     It must be called between an `access' and
-   *     `forget'.
+   *     It must be called between an 'access' and
+   *     'forget'.
    *
    *   read_simple_glyph ::
    *     A function used to read a simple glyph.
    *     It must be called after the header was
-   *     read, and before the `forget'.
+   *     read, and before the 'forget'.
    *
    *   read_composite_glyph ::
    *     A function used to read a composite glyph.
    *     It must be called after the header was
-   *     read, and before the `forget'.
+   *     read, and before the 'forget'.
    *
    *   sfnt ::
    *     A pointer to the SFNT service.
@@ -1375,16 +1375,16 @@ FT_BEGIN_HEADER
    *
    *   hdmx ::
    *     The face's horizontal device metrics
-   *     (`hdmx' table).  This table is optional in
+   *     ('hdmx' table).  This table is optional in
    *     TrueType/OpenType fonts.
    *
    *   gasp ::
    *     The grid-fitting and scaling properties
-   *     table (`gasp').  This table is optional in
+   *     table ('gasp').  This table is optional in
    *     TrueType/OpenType fonts.
    *
    *   pclt ::
-   *     The `pclt' SFNT table.
+   *     The 'pclt' SFNT table.
    *
    *   num_sbit_scales ::
    *     The number of sbit scales for this font.
@@ -1397,11 +1397,11 @@ FT_BEGIN_HEADER
    *   postscript_names ::
    *     A table used to store the Postscript names
    *     of  the glyphs for this font.  See the
-   *     file  `ttconfig.h' for comments on the
+   *     file  `ttconfig.h` for comments on the
    *     TT_CONFIG_OPTION_POSTSCRIPT_NAMES option.
    *
    *   palette_data ::
-   *     Some fields from the `CPAL' table that are directly indexed.
+   *     Some fields from the 'CPAL' table that are directly indexed.
    *
    *   palette_index ::
    *     The current palette index, as set by @FT_Palette_Select.
@@ -1413,8 +1413,8 @@ FT_BEGIN_HEADER
    *     There was a call to @FT_Palette_Set_Foreground_Color.
    *
    *   foreground_color ::
-   *     The current foreground color corresponding to `CPAL' color index
-   *     0xFFFF.  Only valid if `have_foreground_color' is set.
+   *     The current foreground color corresponding to 'CPAL' color index
+   *     0xFFFF.  Only valid if `have_foreground_color` is set.
    *
    *   font_program_size ::
    *     Size in bytecodes of the face's font
@@ -1424,7 +1424,7 @@ FT_BEGIN_HEADER
    *   font_program ::
    *     The face's font program (bytecode stream)
    *     executed at load time, also used during
-   *     glyph rendering.  Comes from the `fpgm'
+   *     glyph rendering.  Comes from the 'fpgm'
    *     table.  Ignored for Type 2 font fonts.
    *
    *   cvt_program_size ::
@@ -1434,7 +1434,7 @@ FT_BEGIN_HEADER
    *   cvt_program ::
    *     The face's cvt program (bytecode stream)
    *     executed each time an instance/size is
-   *     changed/reset.  Comes from the `prep'
+   *     changed/reset.  Comes from the 'prep'
    *     table.  Ignored for Type 2 fonts.
    *
    *   cvt_size ::
@@ -1444,13 +1444,13 @@ FT_BEGIN_HEADER
    *   cvt ::
    *     The face's original control value table.
    *     Coordinates are expressed in unscaled font
-   *     units.  Comes from the `cvt ' table.
+   *     units.  Comes from the 'cvt ' table.
    *     Ignored for Type 2 fonts.
    *
    *   interpreter ::
    *     A pointer to the TrueType bytecode
    *     interpreters field is also used to hook
-   *     the debugger in `ttdebug'.
+   *     the debugger in 'ttdebug'.
    *
    *   extra ::
    *     Reserved for third-party font drivers.
@@ -1460,11 +1460,11 @@ FT_BEGIN_HEADER
    *     postscript name service.
    *
    *   glyf_len ::
-   *     The length of the `glyf' table.  Needed
-   *     for malformed `loca' tables.
+   *     The length of the 'glyf' table.  Needed
+   *     for malformed 'loca' tables.
    *
    *   glyf_offset ::
-   *     The file offset of the `glyf' table.
+   *     The file offset of the 'glyf' table.
    *
    *   is_cff2 ::
    *     Set if the font format is CFF2.
@@ -1491,14 +1491,14 @@ FT_BEGIN_HEADER
    *     PS name .
    *
    *   var_postscript_prefix_len ::
-   *     The length of the `var_postscript_prefix'
+   *     The length of the `var_postscript_prefix`
    *     string.
    *
    *   horz_metrics_size ::
-   *     The size of the `hmtx' table.
+   *     The size of the 'hmtx' table.
    *
    *   vert_metrics_size ::
-   *     The size of the `vmtx' table.
+   *     The size of the 'vmtx' table.
    *
    *   num_locations ::
    *     The number of glyph locations in this
@@ -1508,14 +1508,14 @@ FT_BEGIN_HEADER
    *
    *   glyph_locations ::
    *     An array of longs.  These are offsets to
-   *     glyph data within the `glyf' table.
+   *     glyph data within the 'glyf' table.
    *     Ignored for Type 2 font faces.
    *
    *   hdmx_table ::
-   *     A pointer to the `hdmx' table.
+   *     A pointer to the 'hdmx' table.
    *
    *   hdmx_table_size ::
-   *     The size of the `hdmx' table.
+   *     The size of the 'hdmx' table.
    *
    *   hdmx_record_count ::
    *     The number of hdmx records.
@@ -1525,14 +1525,14 @@ FT_BEGIN_HEADER
    *
    *   hdmx_record_sizes ::
    *     An array holding the ppem sizes available
-   *     in the `hdmx' table.
+   *     in the 'hdmx' table.
    *
    *   sbit_table ::
    *     A pointer to the font's embedded bitmap
    *     location table.
    *
    *   sbit_table_size ::
-   *     The size of `sbit_table'.
+   *     The size of `sbit_table`.
    *
    *   sbit_table_type ::
    *     The sbit table type (CBLC, sbix, etc.).
@@ -1547,18 +1547,18 @@ FT_BEGIN_HEADER
    *     the font's sbit table.
    *
    *   cpal ::
-   *     A pointer to data related to the `CPAL' table.  NULL if the table
+   *     A pointer to data related to the 'CPAL' table.  NULL if the table
    *     is not available.
    *
    *   colr ::
-   *     A pointer to data related to the `COLR' table.  NULL if the table
+   *     A pointer to data related to the 'COLR' table.  NULL if the table
    *     is not available.
    *
    *   kern_table ::
-   *     A pointer to the `kern' table.
+   *     A pointer to the 'kern' table.
    *
    *   kern_table_size ::
-   *     The size of the `kern' table.
+   *     The size of the 'kern' table.
    *
    *   num_kern_tables ::
    *     The number of supported kern subtables
@@ -1574,14 +1574,14 @@ FT_BEGIN_HEADER
    *     if bit n is set, table n is sorted.
    *
    *   bdf ::
-   *     Data related to an SFNT font's `bdf'
-   *     table; see `tttypes.h'.
+   *     Data related to an SFNT font's 'bdf'
+   *     table; see `tttypes.h`.
    *
    *   horz_metrics_offset ::
-   *     The file offset of the `hmtx' table.
+   *     The file offset of the 'hmtx' table.
    *
    *   vert_metrics_offset ::
-   *     The file offset of the `vmtx' table.
+   *     The file offset of the 'vmtx' table.
    *
    *   sph_found_func_flags ::
    *     Flags identifying special bytecode

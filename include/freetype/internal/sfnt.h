@@ -63,7 +63,7 @@ FT_BEGIN_HEADER
    * @note:
    *   The stream cursor must be at the font file's origin.
    *
-   *   This function recognizes fonts embedded in a `TrueType
+   *   This function recognizes fonts embedded in a 'TrueType
    *   collection'.
    *
    *   Once the format tag has been validated by the font driver, it
@@ -167,16 +167,16 @@ FT_BEGIN_HEADER
    *
    *     If length == NULL:
    *     Loads the whole table.  Returns an error if
-   *     `offset' == 0!
+   *     'offset' == 0!
    *
    *     If *length == 0:
    *     Exits immediately; returning the length of the given
    *     table or of the font file, depending on the value of
-   *     `tag'.
+   *     'tag'.
    *
    *     If *length != 0:
-   *     Loads the next `length' bytes of table or font,
-   *     starting at offset `offset' (in table or font too).
+   *     Loads the next 'length' bytes of table or font,
+   *     starting at offset 'offset' (in table or font too).
    *
    * @output:
    *   buffer ::
@@ -199,7 +199,7 @@ FT_BEGIN_HEADER
    *   TT_Find_SBit_Image_Func
    *
    * @description:
-   *   Check whether an embedded bitmap (an `sbit') exists for a given
+   *   Check whether an embedded bitmap (an 'sbit') exists for a given
    *   glyph, at a given strike.
    *
    * @input:
@@ -220,7 +220,7 @@ FT_BEGIN_HEADER
    *     The SBit strike containing the glyph index.
    *
    *   aglyph_offset ::
-   *     The offset of the glyph data in `EBDT' table.
+   *     The offset of the glyph data in 'EBDT' table.
    *
    * @return:
    *   FreeType error code.  0 means success.  Returns
@@ -260,10 +260,10 @@ FT_BEGIN_HEADER
    *
    * @note:
    *   The stream cursor must be positioned at the glyph's offset within
-   *   the `EBDT' table before the call.
+   *   the 'EBDT' table before the call.
    *
    *   If the image format uses variable metrics, the stream cursor is
-   *   positioned just after the metrics header in the `EBDT' table on
+   *   positioned just after the metrics header in the 'EBDT' table on
    *   function exit.
    */
   typedef FT_Error
@@ -309,7 +309,7 @@ FT_BEGIN_HEADER
    *   glyph sbit exists for the index.
    *
    * @note:
-   *   The `map.buffer' field is always freed before the glyph is loaded.
+   *   The `map.buffer` field is always freed before the glyph is loaded.
    */
   typedef FT_Error
   (*TT_Load_SBit_Image_Func)( TT_Face              face,
@@ -475,7 +475,7 @@ FT_BEGIN_HEADER
    *   TT_Set_Palette_Func
    *
    * @description:
-   *   Load the colors into `face->palette' for a given palette index.
+   *   Load the colors into `face->palette` for a given palette index.
    *
    * @input:
    *   face ::
@@ -510,7 +510,7 @@ FT_BEGIN_HEADER
    * @inout:
    *   iterator ::
    *     An @FT_LayerIterator object.  For the first call you should set
-   *     `iterator->p' to NULL.  For all following calls, simply use the
+   *     `iterator->p` to NULL.  For all following calls, simply use the
    *     same object again.
    *
    * @output:
@@ -542,10 +542,10 @@ FT_BEGIN_HEADER
    *   TT_Blend_Colr_Func
    *
    * @description:
-   *   Blend the bitmap in `new_glyph' into `base_glyph' using the color
-   *   specified by `color_index'.  If `color_index' is 0xFFFF, use
-   *   `face->foreground_color' if `face->have_foreground_color' is set.
-   *   Otherwise check `face->palette_data.palette_flags': If present and
+   *   Blend the bitmap in `new_glyph` into `base_glyph` using the color
+   *   specified by `color_index`.  If `color_index` is 0xFFFF, use
+   *   `face->foreground_color` if `face->have_foreground_color` is set.
+   *   Otherwise check `face->palette_data.palette_flags`: If present and
    *   @FT_PALETTE_FOR_DARK_BACKGROUND is set, use BGRA value 0xFFFFFFFF
    *   (white opaque).  Otherwise use BGRA value 0x000000FF (black opaque).
    *
@@ -561,7 +561,7 @@ FT_BEGIN_HEADER
    *     bitmap may get reallocated.
    *
    *   new_glyph ::
-   *     Slot to be incooperated into `base_glyph'.
+   *     Slot to be incooperated into `base_glyph`.
    *
    * @return:
    *   FreeType error code.  0 means success.  Returns an error if
@@ -580,7 +580,7 @@ FT_BEGIN_HEADER
    *   TT_Get_Name_Func
    *
    * @description:
-   *   From the `name' table, return a given ENGLISH name record in
+   *   From the 'name' table, return a given ENGLISH name record in
    *   ASCII.
    *
    * @input:
@@ -611,7 +611,7 @@ FT_BEGIN_HEADER
    *
    * @description:
    *   Search whether an ENGLISH version for a given name ID is in the
-   *   `name' table.
+   *   'name' table.
    *
    * @input:
    *   face ::
@@ -622,11 +622,11 @@ FT_BEGIN_HEADER
    *
    * @output:
    *   win ::
-   *     If non-negative, an index into the `name' table with
+   *     If non-negative, an index into the 'name' table with
    *     the corresponding (3,1) or (3,0) Windows entry.
    *
    *   apple ::
-   *     If non-negative, an index into the `name' table with
+   *     If non-negative, an index into the 'name' table with
    *     the corresponding (1,0) Apple entry.
    *
    * @return:
@@ -658,7 +658,7 @@ FT_BEGIN_HEADER
    *   FreeType error code.  0 means success.
    *
    * @note:
-   *   The function uses `face->goto_table' to seek the stream to the
+   *   The function uses `face->goto_table` to seek the stream to the
    *   start of the table, except while loading the font directory.
    */
   typedef FT_Error
@@ -710,7 +710,7 @@ FT_BEGIN_HEADER
    *
    * @description:
    *   This structure holds pointers to the functions used to load and
-   *   free the basic tables that are required in a `sfnt' font file.
+   *   free the basic tables that are required in a 'sfnt' font file.
    *
    * @fields:
    *   Check the various xxx_Func() descriptions for details.

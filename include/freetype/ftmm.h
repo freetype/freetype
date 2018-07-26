@@ -143,18 +143,18 @@ FT_BEGIN_HEADER
    *     The axis's maximum design coordinate.
    *
    *   tag ::
-   *     The axis's tag (the equivalent to `name' for TrueType
+   *     The axis's tag (the equivalent to 'name' for TrueType
    *     GX and OpenType variation fonts).  FreeType provides
    *     default values for Adobe MM fonts if possible.
    *
    *   strid ::
-   *     The axis name entry in the font's `name' table.  This
-   *     is another (and often better) version of the `name'
+   *     The axis name entry in the font's 'name' table.  This
+   *     is another (and often better) version of the 'name'
    *     field for TrueType GX or OpenType variation fonts.  Not
    *     meaningful for Adobe MM fonts.
    *
    * @note:
-   *   The fields `minimum', `def', and `maximum' are 16.16 fractional
+   *   The fields 'minimum', 'def', and 'maximum' are 16.16 fractional
    *   values for TrueType GX and OpenType variation fonts.  For Adobe MM
    *   fonts, the values are integers.
    */
@@ -189,10 +189,10 @@ FT_BEGIN_HEADER
    *     This is an array with one entry for each axis.
    *
    *   strid ::
-   *     The entry in `name' table identifying this instance.
+   *     The entry in 'name' table identifying this instance.
    *
    *   psid ::
-   *     The entry in `name' table identifying a PostScript name
+   *     The entry in 'name' table identifying a PostScript name
    *     for this instance.  Value 0xFFFF indicates a missing
    *     entry.
    */
@@ -230,12 +230,12 @@ FT_BEGIN_HEADER
    *     number of designs).
    *
    *   num_namedstyles ::
-   *     The number of named styles; a `named style' is
+   *     The number of named styles; a 'named style' is
    *     a tuple of design coordinates that has a string
-   *     ID (in the `name' table) associated with it.
+   *     ID (in the 'name' table) associated with it.
    *     The font can tell the user that, for example,
-   *     [Weight=1.5,Width=1.1] is `Bold'.  Another name
-   *     for `named style' is `named instance'.
+   *     [Weight=1.5,Width=1.1] is 'Bold'.  Another name
+   *     for 'named style' is 'named instance'.
    *
    *     For Adobe Multiple Masters fonts, this value is
    *     always zero because the format does not support
@@ -331,7 +331,7 @@ FT_BEGIN_HEADER
    * @input:
    *   library ::
    *     A handle of the face's parent library object that was
-   *     used in the call to @FT_Get_MM_Var to create `amaster'.
+   *     used in the call to @FT_Get_MM_Var to create 'amaster'.
    *
    * @return:
    *   FreeType error code.  0~means success.
@@ -372,11 +372,11 @@ FT_BEGIN_HEADER
    *
    * @note:
    *   [Since 2.8.1] To reset all axes to the default values, call the
-   *   function with `num_coords' set to zero and `coords' set to NULL.
+   *   function with `num_coords` set to zero and 'coords' set to NULL.
    *
-   *   [Since 2.9] If `num_coords' is larger than zero, this function
-   *   sets the @FT_FACE_FLAG_VARIATION bit in @FT_Face's `face_flags'
-   *   field (i.e., @FT_IS_VARIATION will return true).  If `num_coords'
+   *   [Since 2.9] If `num_coords` is larger than zero, this function
+   *   sets the @FT_FACE_FLAG_VARIATION bit in @FT_Face's `face_flags`
+   *   field (i.e., @FT_IS_VARIATION will return true).  If `num_coords`
    *   is zero, this bit flag gets unset.
    */
   FT_EXPORT( FT_Error )
@@ -414,13 +414,13 @@ FT_BEGIN_HEADER
    *
    * @note:
    *   [Since 2.8.1] To reset all axes to the default values, call the
-   *   function with `num_coords' set to zero and `coords' set to NULL.
-   *   [Since 2.9] `Default values' means the currently selected named
+   *   function with `num_coords` set to zero and 'coords' set to NULL.
+   *   [Since 2.9] 'Default values' means the currently selected named
    *   instance (or the base font if no named instance is selected).
    *
-   *   [Since 2.9] If `num_coords' is larger than zero, this function
-   *   sets the @FT_FACE_FLAG_VARIATION bit in @FT_Face's `face_flags'
-   *   field (i.e., @FT_IS_VARIATION will return true).  If `num_coords'
+   *   [Since 2.9] If `num_coords` is larger than zero, this function
+   *   sets the @FT_FACE_FLAG_VARIATION bit in @FT_Face's `face_flags`
+   *   field (i.e., @FT_IS_VARIATION will return true).  If `num_coords`
    *   is zero, this bit flag gets unset.
    */
   FT_EXPORT( FT_Error )
@@ -498,13 +498,13 @@ FT_BEGIN_HEADER
    *
    * @note:
    *   [Since 2.8.1] To reset all axes to the default values, call the
-   *   function with `num_coords' set to zero and `coords' set to NULL.
-   *   [Since 2.9] `Default values' means the currently selected named
+   *   function with `num_coords` set to zero and 'coords' set to NULL.
+   *   [Since 2.9] 'Default values' means the currently selected named
    *   instance (or the base font if no named instance is selected).
    *
-   *   [Since 2.9] If `num_coords' is larger than zero, this function
-   *   sets the @FT_FACE_FLAG_VARIATION bit in @FT_Face's `face_flags'
-   *   field (i.e., @FT_IS_VARIATION will return true).  If `num_coords'
+   *   [Since 2.9] If `num_coords` is larger than zero, this function
+   *   sets the @FT_FACE_FLAG_VARIATION bit in @FT_Face's `face_flags`
+   *   field (i.e., @FT_IS_VARIATION will return true).  If `num_coords`
    *   is zero, this bit flag gets unset.
    */
   FT_EXPORT( FT_Error )
@@ -606,9 +606,9 @@ FT_BEGIN_HEADER
    *   FT_Get_Var_Axis_Flags
    *
    * @description:
-   *   Get the `flags' field of an OpenType Variation Axis Record.
+   *   Get the 'flags' field of an OpenType Variation Axis Record.
    *
-   *   Not meaningful for Adobe MM fonts (`*flags' is always zero).
+   *   Not meaningful for Adobe MM fonts ('*flags' is always zero).
    *
    * @input:
    *   master ::
@@ -619,7 +619,7 @@ FT_BEGIN_HEADER
    *
    * @output:
    *   flags ::
-   *     The `flags' field.  See @FT_VAR_AXIS_FLAG_XXX for
+   *     The 'flags' field.  See @FT_VAR_AXIS_FLAG_XXX for
    *     possible values.
    *
    * @return:
@@ -656,10 +656,10 @@ FT_BEGIN_HEADER
    *   FreeType error code.  0~means success.
    *
    * @note:
-   *   The function uses the value of `instance_index' to set bits 16-30
-   *   of the face's `face_index' field.  It also resets any variation
+   *   The function uses the value of `instance_index` to set bits 16-30
+   *   of the face's `face_index` field.  It also resets any variation
    *   applied to the font, and the @FT_FACE_FLAG_VARIATION bit of the
-   *   face's `face_flags' field gets reset to zero (i.e.,
+   *   face's `face_flags` field gets reset to zero (i.e.,
    *   @FT_IS_VARIATION will return false).
    *
    *   For Adobe MM fonts (which don't have named instances) this

@@ -62,7 +62,7 @@ FT_BEGIN_HEADER
    *   FT_ADVANCE_FLAG_FAST_ONLY
    *
    * @description:
-   *   A bit-flag to be OR-ed with the `flags' parameter of the
+   *   A bit-flag to be OR-ed with the 'flags' parameter of the
    *   @FT_Get_Advance and @FT_Get_Advances functions.
    *
    *   If set, it indicates that you want these functions to fail if the
@@ -103,7 +103,7 @@ FT_BEGIN_HEADER
    * @output:
    *   padvance ::
    *     The advance value.  If scaling is performed (based on
-   *     the value of `load_flags'), the advance value is in
+   *     the value of `load_flags`), the advance value is in
    *     16.16 format.  Otherwise, it is in font units.
    *
    *     If @FT_LOAD_VERTICAL_LAYOUT is set, this is the
@@ -155,10 +155,10 @@ FT_BEGIN_HEADER
    * @output:
    *   padvance ::
    *     The advance values.  This array, to be provided by the
-   *     caller, must contain at least `count' elements.
+   *     caller, must contain at least 'count' elements.
    *
    *     If scaling is performed (based on the value of
-   *     `load_flags'), the advance values are in 16.16 format.
+   *     `load_flags`), the advance values are in 16.16 format.
    *     Otherwise, they are in font units.
    *
    *     If @FT_LOAD_VERTICAL_LAYOUT is set, these are the

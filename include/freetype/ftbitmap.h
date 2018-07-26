@@ -47,8 +47,8 @@ FT_BEGIN_HEADER
    *
    * @description:
    *   This section contains functions for handling @FT_Bitmap objects.
-   *   Note that none of the functions changes the bitmap's `flow' (as
-   *   indicated by the sign of the `pitch' field in `FT_Bitmap').
+   *   Note that none of the functions changes the bitmap's 'flow' (as
+   *   indicated by the sign of the 'pitch' field in `FT_Bitmap`).
    *
    */
 
@@ -66,7 +66,7 @@ FT_BEGIN_HEADER
    *     A pointer to the bitmap structure.
    *
    * @note:
-   *   A deprecated name for the same function is `FT_Bitmap_New'.
+   *   A deprecated name for the same function is `FT_Bitmap_New`.
    */
   FT_EXPORT( void )
   FT_Bitmap_Init( FT_Bitmap  *abitmap );
@@ -111,8 +111,8 @@ FT_BEGIN_HEADER
    *   FT_Bitmap_Embolden
    *
    * @description:
-   *   Embolden a bitmap.  The new bitmap will be about `xStrength'
-   *   pixels wider and `yStrength' pixels higher.  The left and bottom
+   *   Embolden a bitmap.  The new bitmap will be about `xStrength`
+   *   pixels wider and `yStrength` pixels higher.  The left and bottom
    *   borders are kept unchanged.
    *
    * @input:
@@ -135,7 +135,7 @@ FT_BEGIN_HEADER
    *   FreeType error code.  0~means success.
    *
    * @note:
-   *   The current implementation restricts `xStrength' to be less than
+   *   The current implementation restricts `xStrength` to be less than
    *   or equal to~8 if bitmap is of pixel_mode @FT_PIXEL_MODE_MONO.
    *
    *   If you want to embolden the bitmap owned by a @FT_GlyphSlotRec,
@@ -159,7 +159,7 @@ FT_BEGIN_HEADER
    * @description:
    *   Convert a bitmap object with depth 1bpp, 2bpp, 4bpp, 8bpp or 32bpp
    *   to a bitmap object with depth 8bpp, making the number of used
-   *   bytes per line (a.k.a. the `pitch') a multiple of `alignment'.
+   *   bytes per line (a.k.a. the 'pitch') a multiple of 'alignment'.
    *
    * @input:
    *   library ::
@@ -185,7 +185,7 @@ FT_BEGIN_HEADER
    *
    *   Use @FT_Bitmap_Done to finally remove the bitmap object.
    *
-   *   The `library' argument is taken to have access to FreeType's
+   *   The 'library' argument is taken to have access to FreeType's
    *   memory handling functions.
    */
   FT_EXPORT( FT_Error )
@@ -215,11 +215,11 @@ FT_BEGIN_HEADER
    *     26.6 pixel format.  This can be a fractional pixel value.
    *
    *   color ::
-   *     The color used to draw `source' onto `target'.
+   *     The color used to draw 'source' onto 'target'.
    *
    * @inout:
    *   target ::
-   *     A handle to an `FT_Bitmap' object.  It should be either initialized
+   *     A handle to an `FT_Bitmap` object.  It should be either initialized
    *     as empty with a call to @FT_Bitmap_Init, or it should be of type
    *     @FT_PIXEL_MODE_BGRA.
    *
@@ -234,12 +234,12 @@ FT_BEGIN_HEADER
    * @note:
    *   This function doesn't perform clipping.
    *
-   *   The bitmap in `target' gets allocated or reallocated as needed; the
-   *   vector `atarget_offset' is updated accordingly.
+   *   The bitmap in 'target' gets allocated or reallocated as needed; the
+   *   vector `atarget_offset` is updated accordingly.
    *
    *   In case of allocation or reallocation, the bitmap's pitch is set to
-   *   `4~*~width'.  Both `source' and `target' must have the same bitmap
-   *   flow (as indicated by the sign of the `pitch' field).
+   *   '4~*~width'.  Both 'source' and 'target' must have the same bitmap
+   *   flow (as indicated by the sign of the 'pitch' field).
    *
    * @since:
    *   2.10
@@ -259,7 +259,7 @@ FT_BEGIN_HEADER
    *   FT_GlyphSlot_Own_Bitmap
    *
    * @description:
-   *   Make sure that a glyph slot owns `slot->bitmap'.
+   *   Make sure that a glyph slot owns `slot->bitmap`.
    *
    * @input:
    *   slot ::
@@ -295,7 +295,7 @@ FT_BEGIN_HEADER
    *   FreeType error code.  0~means success.
    *
    * @note:
-   *   The `library' argument is taken to have access to FreeType's
+   *   The 'library' argument is taken to have access to FreeType's
    *   memory handling functions.
    */
   FT_EXPORT( FT_Error )

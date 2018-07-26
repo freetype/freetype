@@ -111,7 +111,7 @@ FT_BEGIN_HEADER
    *
    * @note:
    *   This function may be useful if you want to access elements of
-   *   the internal `ft_trace_levels' array by an index.
+   *   the internal `ft_trace_levels` array by an index.
    */
   FT_BASE( FT_Int )
   FT_Trace_Get_Count( void );

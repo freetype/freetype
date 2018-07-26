@@ -45,7 +45,7 @@ FT_BEGIN_HEADER
    * @fields:
    *   language ::
    *     The language ID used in Mac fonts.  Definitions of values are in
-   *     `ttnameid.h'.
+   *     `ttnameid.h`.
    *
    *   format ::
    *     The cmap format.  OpenType 1.6 defines the formats 0 (byte

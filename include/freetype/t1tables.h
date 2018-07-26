@@ -497,7 +497,7 @@ FT_BEGIN_HEADER
    *    in the font's FontInfo dictionary are represented by NULL pointers.
    *
    *    If the font's format is not PostScript-based, this function will
-   *    return the `FT_Err_Invalid_Argument' error code.
+   *    return the `FT_Err_Invalid_Argument` error code.
    *
    */
   FT_EXPORT( FT_Error )
@@ -530,7 +530,7 @@ FT_BEGIN_HEADER
    *    the face and don't need to be freed by the caller.
    *
    *    If the font's format is not PostScript-based, this function returns
-   *    the `FT_Err_Invalid_Argument' error code.
+   *    the `FT_Err_Invalid_Argument` error code.
    *
    */
   FT_EXPORT( FT_Error )
@@ -544,7 +544,7 @@ FT_BEGIN_HEADER
    *   T1_EncodingType
    *
    * @description:
-   *   An enumeration describing the `Encoding' entry in a Type 1
+   *   An enumeration describing the 'Encoding' entry in a Type 1
    *   dictionary.
    *
    * @values:
@@ -721,18 +721,18 @@ FT_BEGIN_HEADER
    *
    * @note:
    *    The values returned are not pointers into the internal structures of
-   *    the face, but are `fresh' copies, so that the memory containing them
+   *    the face, but are 'fresh' copies, so that the memory containing them
    *    belongs to the calling application.  This also enforces the
-   *    `read-only' nature of these values, i.e., this function cannot be
+   *    'read-only' nature of these values, i.e., this function cannot be
    *    used to manipulate the face.
    *
-   *    `value' is a void pointer because the values returned can be of
+   *    'value' is a void pointer because the values returned can be of
    *    various types.
    *
-   *    If either `value' is NULL or `value_len' is too small, just the
+   *    If either 'value' is NULL or `value_len` is too small, just the
    *    required memory size for the requested entry is returned.
    *
-   *    The `idx' parameter is used, not only to retrieve elements of, for
+   *    The 'idx' parameter is used, not only to retrieve elements of, for
    *    example, the FontMatrix or FontBBox, but also to retrieve name keys
    *    from the CharStrings dictionary, and the charstrings themselves.  It
    *    is ignored for atomic values.
@@ -747,7 +747,7 @@ FT_BEGIN_HEADER
    *    available either.
    *
    *    If the font's format is not PostScript-based, this function returns
-   *    the `FT_Err_Invalid_Argument' error code.
+   *    the `FT_Err_Invalid_Argument` error code.
    *
    * @since:
    *    2.4.8

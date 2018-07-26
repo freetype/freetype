@@ -99,7 +99,7 @@ FT_BEGIN_HEADER
    *
    * @description:
    *   The number of tables checked in this module.  Use it as a parameter
-   *   for the `table-length' argument of function @FT_TrueTypeGX_Validate.
+   *   for the 'table-length' argument of function @FT_TrueTypeGX_Validate.
    */
 #define FT_VALIDATE_GX_LENGTH  ( FT_VALIDATE_GX_LAST_INDEX + 1 )
 
@@ -123,34 +123,34 @@ FT_BEGIN_HEADER
    *
    * @values:
    *    FT_VALIDATE_feat ::
-   *      Validate `feat' table.
+   *      Validate 'feat' table.
    *
    *    FT_VALIDATE_mort ::
-   *      Validate `mort' table.
+   *      Validate 'mort' table.
    *
    *    FT_VALIDATE_morx ::
-   *      Validate `morx' table.
+   *      Validate 'morx' table.
    *
    *    FT_VALIDATE_bsln ::
-   *      Validate `bsln' table.
+   *      Validate 'bsln' table.
    *
    *    FT_VALIDATE_just ::
-   *      Validate `just' table.
+   *      Validate 'just' table.
    *
    *    FT_VALIDATE_kern ::
-   *      Validate `kern' table.
+   *      Validate 'kern' table.
    *
    *    FT_VALIDATE_opbd ::
-   *      Validate `opbd' table.
+   *      Validate 'opbd' table.
    *
    *    FT_VALIDATE_trak ::
-   *      Validate `trak' table.
+   *      Validate 'trak' table.
    *
    *    FT_VALIDATE_prop ::
-   *      Validate `prop' table.
+   *      Validate 'prop' table.
    *
    *    FT_VALIDATE_lcar ::
-   *      Validate `lcar' table.
+   *      Validate 'lcar' table.
    *
    *    FT_VALIDATE_GX ::
    *      Validate all TrueTypeGX tables (feat, mort, morx, bsln, just, kern,
@@ -201,7 +201,7 @@ FT_BEGIN_HEADER
    *      @FT_VALIDATE_GXXXX for possible values.
    *
    *    table_length ::
-   *      The size of the `tables' array.  Normally, @FT_VALIDATE_GX_LENGTH
+   *      The size of the 'tables' array.  Normally, @FT_VALIDATE_GX_LENGTH
    *      should be passed.
    *
    * @output:
@@ -217,7 +217,7 @@ FT_BEGIN_HEADER
    *   otherwise.
    *
    *   After use, the application should deallocate the buffers pointed to by
-   *   each `tables' element, by calling @FT_TrueTypeGX_Free.  A NULL value
+   *   each 'tables' element, by calling @FT_TrueTypeGX_Free.  A NULL value
    *   indicates that the table either doesn't exist in the font, the
    *   application hasn't asked for validation, or the validator doesn't have
    *   the ability to validate the sfnt table.
@@ -267,13 +267,13 @@ FT_BEGIN_HEADER
    *
    * @values:
    *    FT_VALIDATE_MS ::
-   *      Handle the `kern' table as a classic Microsoft kern table.
+   *      Handle the 'kern' table as a classic Microsoft kern table.
    *
    *    FT_VALIDATE_APPLE ::
-   *      Handle the `kern' table as a classic Apple kern table.
+   *      Handle the 'kern' table as a classic Apple kern table.
    *
    *    FT_VALIDATE_CKERN ::
-   *      Handle the `kern' as either classic Apple or Microsoft kern table.
+   *      Handle the 'kern' as either classic Apple or Microsoft kern table.
    */
 #define FT_VALIDATE_MS     ( FT_VALIDATE_GX_START << 0 )
 #define FT_VALIDATE_APPLE  ( FT_VALIDATE_GX_START << 1 )
@@ -292,7 +292,7 @@ FT_BEGIN_HEADER
    *    actually does the text layout can access those tables without error
    *    checking (which can be quite time consuming).
    *
-   *    The `kern' table validator in @FT_TrueTypeGX_Validate deals with both
+   *    The 'kern' table validator in @FT_TrueTypeGX_Validate deals with both
    *    the new 32-bit format and the classic 16-bit format, while
    *    FT_ClassicKern_Validate only supports the classic 16-bit format.
    *
@@ -313,7 +313,7 @@ FT_BEGIN_HEADER
    *
    * @note:
    *   After use, the application should deallocate the buffers pointed to by
-   *   `ckern_table', by calling @FT_ClassicKern_Free.  A NULL value
+   *   `ckern_table`, by calling @FT_ClassicKern_Free.  A NULL value
    *   indicates that the table doesn't exist in the font.
    */
   FT_EXPORT( FT_Error )

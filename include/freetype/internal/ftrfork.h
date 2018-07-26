@@ -118,18 +118,18 @@ FT_BEGIN_HEADER
    * @output:
    *   new_names ::
    *     An array of guessed file names in which the resource forks may
-   *     exist.  If `new_names[N]' is NULL, the guessed file name is
-   *     equal to `base_name'.
+   *     exist.  If 'new_names[N]' is NULL, the guessed file name is
+   *     equal to `base_name`.
    *
    *   offsets ::
-   *     An array of guessed file offsets.  `offsets[N]' holds the file
+   *     An array of guessed file offsets.  'offsets[N]' holds the file
    *     offset of the possible start of the resource fork in file
-   *     `new_names[N]'.
+   *     'new_names[N]'.
    *
    *   errors ::
-   *     An array of FreeType error codes.  `errors[N]' is the error
-   *     code of Nth guessing rule function.  If `errors[N]' is not
-   *     FT_Err_Ok, `new_names[N]' and `offsets[N]' are meaningless.
+   *     An array of FreeType error codes.  'errors[N]' is the error
+   *     code of Nth guessing rule function.  If 'errors[N]' is not
+   *     FT_Err_Ok, 'new_names[N]' and 'offsets[N]' are meaningless.
    */
   FT_BASE( void )
   FT_Raccess_Guess( FT_Library  library,
@@ -149,7 +149,7 @@ FT_BEGIN_HEADER
    *   Get the information from the header of resource fork.  The
    *   information includes the file offset where the resource map
    *   starts, and the file offset where the resource data starts.
-   *   `FT_Raccess_Get_DataOffsets' requires these two data.
+   *   `FT_Raccess_Get_DataOffsets` requires these two data.
    *
    * @input:
    *   library ::
@@ -207,14 +207,14 @@ FT_BEGIN_HEADER
    *
    *   sort_by_res_id ::
    *     A Boolean to sort the fragmented resource by their ids.
-   *     The fragmented resources for `POST' resource should be sorted
-   *     to restore Type1 font properly.  For `sfnt' resources, sorting
+   *     The fragmented resources for 'POST' resource should be sorted
+   *     to restore Type1 font properly.  For 'sfnt' resources, sorting
    *     may induce a different order of the faces in comparison to that
    *     by QuickDraw API.
    *
    * @output:
    *   offsets ::
-   *     The stream offsets for the resource data specified by `tag'.
+   *     The stream offsets for the resource data specified by 'tag'.
    *     This array is allocated by the function, so you have to call
    *     @ft_mem_free after use.
    *
@@ -225,8 +225,8 @@ FT_BEGIN_HEADER
    *   FreeType error code.  FT_Err_Ok means success.
    *
    * @note:
-   *   Normally you should use `FT_Raccess_Get_HeaderInfo' to get the
-   *   value for `map_offset' and `rdata_pos'.
+   *   Normally you should use `FT_Raccess_Get_HeaderInfo` to get the
+   *   value for `map_offset` and `rdata_pos`.
    */
   FT_BASE( FT_Error )
   FT_Raccess_Get_DataOffsets( FT_Library  library,

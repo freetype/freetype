@@ -317,7 +317,7 @@ FT_BEGIN_HEADER
    *   FT_Offset
    *
    * @description:
-   *   This is equivalent to the ANSI~C `size_t' type, i.e., the largest
+   *   This is equivalent to the ANSI~C `size_t` type, i.e., the largest
    *   _unsigned_ integer type used to express a file size or position,
    *   or a memory block size.
    */
@@ -330,7 +330,7 @@ FT_BEGIN_HEADER
    *   FT_PtrDist
    *
    * @description:
-   *   This is equivalent to the ANSI~C `ptrdiff_t' type, i.e., the
+   *   This is equivalent to the ANSI~C `ptrdiff_t` type, i.e., the
    *   largest _signed_ integer type used to express the distance
    *   between two pointers.
    */
@@ -370,10 +370,10 @@ FT_BEGIN_HEADER
    *   A simple structure used to store a 2x2 matrix.  Coefficients are
    *   in 16.16 fixed-point format.  The computation performed is:
    *
-   *      {
+   *      ```
    *         x' = x*xx + y*xy
    *         y' = x*yx + y*yy
-   *      }
+   *      ```
    *
    * @fields:
    *   xx ::
@@ -425,13 +425,13 @@ FT_BEGIN_HEADER
    *   FT_Generic_Finalizer
    *
    * @description:
-   *   Describe a function used to destroy the `client' data of any
+   *   Describe a function used to destroy the 'client' data of any
    *   FreeType object.  See the description of the @FT_Generic type for
    *   details of usage.
    *
    * @input:
    *   The address of the FreeType object that is under finalization.
-   *   Its client data is accessed through its `generic' field.
+   *   Its client data is accessed through its 'generic' field.
    */
   typedef void  (*FT_Generic_Finalizer)( void*  object );
 
@@ -446,15 +446,15 @@ FT_BEGIN_HEADER
    *   variety of FreeType core objects.  For example, a text layout API
    *   might want to associate a glyph cache to a given size object.
    *
-   *   Some FreeType object contains a `generic' field, of type
+   *   Some FreeType object contains a 'generic' field, of type
    *   FT_Generic, which usage is left to client applications and font
    *   servers.
    *
    *   It can be used to store a pointer to client-specific data, as well
-   *   as the address of a `finalizer' function, which will be called by
+   *   as the address of a 'finalizer' function, which will be called by
    *   FreeType when the object is destroyed (for example, the previous
    *   client example would put the address of the glyph cache destructor
-   *   in the `finalizer' field).
+   *   in the 'finalizer' field).
    *
    * @fields:
    *   data ::
@@ -462,7 +462,7 @@ FT_BEGIN_HEADER
    *     field is completely ignored by the FreeType library.
    *
    *   finalizer ::
-   *     A pointer to a `generic finalizer' function, which
+   *     A pointer to a 'generic finalizer' function, which
    *     will be called when the object is destroyed.  If this
    *     field is set to NULL, no code will be called.
    */
@@ -484,7 +484,7 @@ FT_BEGIN_HEADER
    *   TrueType tables into an unsigned long, to be used within FreeType.
    *
    * @note:
-   *   The produced values *must* be 32-bit integers.  Don't redefine
+   *   The produced values **must** be 32-bit integers.  Don't redefine
    *   this macro.
    */
 #define FT_MAKE_TAG( _x1, _x2, _x3, _x4 ) \

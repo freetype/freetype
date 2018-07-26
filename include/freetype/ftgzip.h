@@ -55,7 +55,7 @@ FT_BEGIN_HEADER
    *
    * @description:
    *   Open a new stream to parse gzip-compressed font files.  This is
-   *   mainly used to support the compressed `*.pcf.gz' fonts that come
+   *   mainly used to support the compressed `*.pcf.gz` fonts that come
    *   with XFree86.
    *
    * @input:
@@ -71,8 +71,8 @@ FT_BEGIN_HEADER
    * @note:
    *   The source stream must be opened _before_ calling this function.
    *
-   *   Calling the internal function `FT_Stream_Close' on the new stream will
-   *   *not* call `FT_Stream_Close' on the source stream.  None of the stream
+   *   Calling the internal function `FT_Stream_Close` on the new stream will
+   *   **not** call `FT_Stream_Close` on the source stream.  None of the stream
    *   objects will be released to the heap.
    *
    *   The stream implementation is very basic and resets the decompression
@@ -84,7 +84,7 @@ FT_BEGIN_HEADER
    *   compressed file, the library will try to open a gzipped stream from
    *   it and re-open the face with it.
    *
-   *   This function may return `FT_Err_Unimplemented_Feature' if your build
+   *   This function may return `FT_Err_Unimplemented_Feature` if your build
    *   of FreeType was not compiled with zlib support.
    */
   FT_EXPORT( FT_Error )
@@ -99,7 +99,7 @@ FT_BEGIN_HEADER
    *
    * @description:
    *   Decompress a zipped input buffer into an output buffer.  This function
-   *   is modeled after zlib's `uncompress' function.
+   *   is modeled after zlib's 'uncompress' function.
    *
    * @input:
    *   memory ::
@@ -120,14 +120,14 @@ FT_BEGIN_HEADER
    *     Before calling the function, this is the total size of the output
    *     buffer, which must be large enough to hold the entire uncompressed
    *     data (so the size of the uncompressed data must be known in
-   *     advance).  After calling the function, `output_len' is the size of
-   *     the used data in `output'.
+   *     advance).  After calling the function, `output_len` is the size of
+   *     the used data in 'output'.
    *
    * @return:
    *   FreeType error code.  0~means success.
    *
    * @note:
-   *   This function may return `FT_Err_Unimplemented_Feature' if your build
+   *   This function may return `FT_Err_Unimplemented_Feature` if your build
    *   of FreeType was not compiled with zlib support.
    *
    * @since:

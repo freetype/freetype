@@ -59,8 +59,8 @@ FT_BEGIN_HEADER
    *
    * @description:
    *  Return a string describing the format of a given face.  Possible
-   *  values are `TrueType', `Type~1', `BDF', `PCF', `Type~42',
-   *  `CID~Type~1', `CFF', `PFR', and `Windows~FNT'.
+   *  values are 'TrueType', 'Type~1', 'BDF', 'PCF', 'Type~42',
+   *  'CID~Type~1', 'CFF', 'PFR', and 'Windows~FNT'.
    *
    *  The return value is suitable to be used as an X11 FONT_PROPERTY.
    *
@@ -73,7 +73,7 @@ FT_BEGIN_HEADER
    *
    * @note:
    *  A deprecated name for the same function is
-   *  `FT_Get_X11_Font_Format'.
+   *  `FT_Get_X11_Font_Format`.
    */
   FT_EXPORT( const char* )
   FT_Get_Font_Format( FT_Face  face );

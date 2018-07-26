@@ -77,16 +77,16 @@
    *   FreeType~2 header files.  They can be used directly in #include
    *   statements as in:
    *
-   *   {
+   *   ```
    *     #include FT_FREETYPE_H
    *     #include FT_MULTIPLE_MASTERS_H
    *     #include FT_GLYPH_H
-   *   }
+   *   ```
    *
    *   There are several reasons why we are now using macros to name
    *   public header files.  The first one is that such macros are not
    *   limited to the infamous 8.3~naming rule required by DOS (and
-   *   `FT_MULTIPLE_MASTERS_H' is a lot more meaningful than `ftmm.h').
+   *   `FT_MULTIPLE_MASTERS_H` is a lot more meaningful than `ftmm.h`).
    *
    *   The second reason is that it allows for more flexibility in the
    *   way FreeType~2 is installed on a given system.
@@ -436,7 +436,7 @@
    *
    * @description:
    *   A macro used in #include statements to name the file containing the
-   *   definitions of TrueType four-byte `tags' which identify blocks in
+   *   definitions of TrueType four-byte 'tags' which identify blocks in
    *   SFNT-based font formats (i.e., TrueType and OpenType).
    *
    */
@@ -612,7 +612,7 @@
    *
    * @description:
    *   A macro used in #include statements to name the file containing the
-   *   optional FreeType~2 API which accesses embedded `name' strings in
+   *   optional FreeType~2 API which accesses embedded 'name' strings in
    *   SFNT-based font formats (i.e., TrueType and OpenType).
    *
    */

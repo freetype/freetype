@@ -45,7 +45,7 @@ FT_BEGIN_HEADER
    *
    * @description:
    *   This section contains various functions used to perform so-called
-   *   `incremental' glyph loading.  This is a mode where all glyphs loaded
+   *   'incremental' glyph loading.  This is a mode where all glyphs loaded
    *   from a given @FT_Face are provided by the client application.
    *
    *   Apart from that, all other tables are loaded normally from the font
@@ -67,7 +67,7 @@ FT_BEGIN_HEADER
    *
    * @description:
    *   An opaque type describing a user-provided object used to implement
-   *   `incremental' glyph loading within FreeType.  This is used to support
+   *   'incremental' glyph loading within FreeType.  This is used to support
    *   embedded fonts in certain environments (e.g., PostScript interpreters),
    *   where the glyph data isn't in the font file, or must be overridden by
    *   different values.
@@ -109,7 +109,7 @@ FT_BEGIN_HEADER
    *
    * @note:
    *   These correspond to horizontal or vertical metrics depending on the
-   *   value of the `vertical' argument to the function
+   *   value of the 'vertical' argument to the function
    *   @FT_Incremental_GetGlyphMetricsFunc.
    *
    */
@@ -147,8 +147,8 @@ FT_BEGIN_HEADER
    *
    *   Note that the format of the glyph's data bytes depends on the font
    *   file format.  For TrueType, it must correspond to the raw bytes within
-   *   the `glyf' table.  For PostScript formats, it must correspond to the
-   *   *unencrypted* charstring bytes, without any `lenIV' header.  It is
+   *   the 'glyf' table.  For PostScript formats, it must correspond to the
+   *   **unencrypted** charstring bytes, without any `lenIV` header.  It is
    *   undefined for any other format.
    *
    * @input:
@@ -286,7 +286,7 @@ FT_BEGIN_HEADER
    *   wants to support incremental glyph loading.  You should use it with
    *   @FT_PARAM_TAG_INCREMENTAL as in the following example:
    *
-   *     {
+   *     ```
    *       FT_Incremental_InterfaceRec  inc_int;
    *       FT_Parameter                 parameter;
    *       FT_Open_Args                 open_args;
@@ -309,7 +309,7 @@ FT_BEGIN_HEADER
    *       // open the font
    *       error = FT_Open_Face( library, &open_args, index, &face );
    *       ...
-   *     }
+   *     ```
    *
    */
   typedef struct  FT_Incremental_InterfaceRec_
