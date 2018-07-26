@@ -21,6 +21,7 @@
 #include FT_INTERNAL_STREAM_H
 #include FT_INTERNAL_OBJECTS_H
 #include FT_TRUETYPE_IDS_H
+#include FT_INTERNAL_TFM_H
 
 #include FT_SERVICE_GF_H
 #include FT_SERVICE_FONT_FORMAT_H
@@ -431,6 +432,76 @@
     return error;
   }
 
+  FT_LOCAL_DEF( void )
+  TFM_Done_Metrics( FT_Memory     memory,
+                    TFM_FontInfo  fi )
+  {
+    FT_FREE(fi->width);
+    FT_FREE(fi->height);
+    FT_FREE(fi->depth);
+    FT_FREE( fi );
+  }
+
+  /* parse a TFM metrics file */
+  FT_LOCAL_DEF( FT_Error )
+  TFM_Read_Metrics( FT_Face    gf_face,
+                    FT_Stream  stream )
+  {
+    TFM_Service    tfm;
+    FT_Memory      memory  = stream->memory;
+    TFM_ParserRec  parser;
+    TFM_FontInfo   fi      = NULL;
+    FT_Error       error   = FT_ERR( Unknown_File_Format );
+    GF_Face        face    = (GF_Face)gf_face;
+    GF_Glyph       gf_glyph= face->gf_glyph;
+
+
+    if ( face->tfm_data )
+    {
+      FT_TRACE1(( "TFM_Read_Metrics:"
+                  " Freeing previously attached metrics data.\n" ));
+      TFM_Done_Metrics( memory, (TFM_FontInfo)face->tfm_data );
+
+      face->tfm_data = NULL;
+    }
+
+    if ( FT_NEW( fi ) )
+      goto Exit;
+
+    tfm = (TFM_Service)face->tfm;
+    if ( tfm->init )
+    {
+      error = tfm->init( &parser,
+                         memory,
+                         stream );
+
+      if ( !error )
+      {
+        parser.FontInfo  = fi;
+        parser.user_data = gf_glyph;
+
+        error = tfm->parse_metrics( &parser );
+        tfm->done( &parser );
+      }
+    }
+
+    if ( !error )
+    {
+      /* Modify GF_Glyph data according to TFM metric values */
+
+      /* TO-DO */
+
+      face->tfm_data       = fi;
+      fi                   = NULL;
+    }
+
+  Exit:
+    if ( fi )
+      TFM_Done_Metrics( memory, fi );
+
+    return error;
+  }
+
  /*
   *
   * SERVICES LIST
@@ -487,7 +558,7 @@
     GF_Glyph_Load,              /* FT_Slot_LoadFunc  load_glyph */
 
     NULL,                       /* FT_Face_GetKerningFunc   get_kerning  */
-    NULL,                       /* FT_Face_AttachFunc       attach_file  */
+    TFM_Read_Metrics,           /* FT_Face_AttachFunc       attach_file  */
     NULL,                       /* FT_Face_GetAdvancesFunc  get_advances */
 
     GF_Size_Request,           /* FT_Size_RequestFunc  request_size */
