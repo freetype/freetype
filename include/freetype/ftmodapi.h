@@ -195,27 +195,31 @@ FT_BEGIN_HEADER
    *   FT_Module_Class
    *
    * @description:
-   *   The module class descriptor.
+   *   The module class descriptor.  While being a public structure
+   *   necessary for FreeType's module bookkeeping, most of the fields are
+   *   essentially internal, not to be used directly by an application.
    *
    * @fields:
    *   module_flags ::
    *     Bit flags describing the module.
    *
    *   module_size ::
-   *     The size of one module object/instance in
-   *     bytes.
+   *     The size of one module object/instance in bytes.
    *
    *   module_name ::
    *     The name of the module.
    *
    *   module_version ::
-   *     The version, as a 16.16 fixed number
-   *     (major.minor).
+   *     The version, as a 16.16 fixed number (major.minor).
    *
    *   module_requires ::
-   *     The version of FreeType this module requires,
-   *     as a 16.16 fixed number (major.minor).  Starts
-   *     at version 2.0, i.e., 0x20000.
+   *     The version of FreeType this module requires, as a 16.16 fixed
+   *     number (major.minor).  Starts at version 2.0, i.e., 0x20000.
+   *
+   *   module_interface ::
+   *     A typeless pointer to a structure (which varies between different
+   *     modules) that holds the module's interface functions.  This is
+   *     essentially what `get_interface' returns.
    *
    *   module_init ::
    *     The initializing function.
