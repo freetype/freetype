@@ -50,6 +50,8 @@
 #define FT_INTERNAL_CFF_TYPES_H           <freetype/internal/cfftypes.h>
 #define FT_INTERNAL_CFF_OBJECTS_TYPES_H   <freetype/internal/cffotypes.h>
 
+#define FT_INTERNAL_TFM_H                 <freetype/internal/tfm.h>
+
 
 #if defined( _MSC_VER )      /* Visual C++ (and Intel C++) */
 
