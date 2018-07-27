@@ -663,6 +663,7 @@
           /* Skip outline commands first time round.       */
           /* `endchar' will trigger initial hintmap build  */
           /* and rewind the charstring.                    */
+          FT_TRACE4(( " <outline command skipped>\n" ));
           cf2_stack_clear( opStack );
           continue;
         }

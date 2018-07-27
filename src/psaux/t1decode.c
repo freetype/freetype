@@ -161,6 +161,7 @@
 
 
 #ifdef T1_CONFIG_OPTION_OLD_ENGINE
+
   /**************************************************************************
    *
    * @Function:
@@ -1269,7 +1270,10 @@
           /* the glyph's metrics (lsb + advance width), not load the   */
           /* rest of it; so exit immediately                           */
           if ( builder->metrics_only )
+          {
+            FT_TRACE4(( "\n" ));
             return FT_Err_Ok;
+          }
 
           break;
 
@@ -1652,7 +1656,9 @@
     return FT_THROW( Stack_Underflow );
   }
 
-#else /* T1_CONFIG_OPTION_OLD_ENGINE */
+
+#else /* !T1_CONFIG_OPTION_OLD_ENGINE */
+
 
   /**************************************************************************
    *
@@ -1696,9 +1702,6 @@
     zone          = decoder->zones;
 
     builder->parse_state = T1_Parse_Start;
-
-    FT_TRACE4(( "\n"
-                "Start charstring: get width\n" ));
 
     zone->base           = charstring_base;
     limit = zone->limit  = charstring_base + charstring_len;
@@ -1892,6 +1895,7 @@
           /* we only want to compute the glyph's metrics */
           /* (lsb + advance width), not load the rest of */
           /* it; so exit immediately                     */
+          FT_TRACE4(( "\n" ));
           return FT_Err_Ok;
 
         case op_sbw:
@@ -1910,6 +1914,7 @@
           /* we only want to compute the glyph's metrics */
           /* (lsb + advance width), not load the rest of */
           /* it; so exit immediately                     */
+          FT_TRACE4(( "\n" ));
           return FT_Err_Ok;
 
         default:
@@ -1934,7 +1939,8 @@
   Stack_Underflow:
     return FT_THROW( Stack_Underflow );
   }
-#endif /* T1_CONFIG_OPTION_OLD_ENGINE */
+
+#endif /* !T1_CONFIG_OPTION_OLD_ENGINE */
 
 
   /* initialize T1 decoder */

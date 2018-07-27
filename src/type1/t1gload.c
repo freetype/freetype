@@ -250,7 +250,7 @@
 
     *max_advance = 0;
 
-    FT_TRACE6(( "T1_Compute_Max_Advance: start parsing glyphs\n" ));
+    FT_TRACE6(( "T1_Compute_Max_Advance:\n" ));
 
     /* for each glyph, parse the glyph charstring and extract */
     /* the advance width                                      */
@@ -264,8 +264,7 @@
       /* ignore the error if one occurred - skip to next glyph */
     }
 
-    FT_TRACE6(( "T1_Compute_Max_Advance: parsing glyphs done\n"
-                "                        max advance: %f\n",
+    FT_TRACE6(( "T1_Compute_Max_Advance: max advance: %f\n",
                 *max_advance / 65536.0 ));
 
     psaux->t1_decoder_funcs->done( &decoder );
@@ -288,6 +287,8 @@
     FT_UInt        nn;
     FT_Error       error;
 
+
+    FT_TRACE5(( "T1_Get_Advances:\n" ));
 
     if ( load_flags & FT_LOAD_VERTICAL_LAYOUT )
     {

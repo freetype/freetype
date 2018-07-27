@@ -1,3 +1,17 @@
+2018-07-27  Werner Lemberg  <wl@gnu.org>
+
+	[psaux, type1]: More tracing improvements.
+
+	* src/psaux/psintrp.c (cf2_interpT2CharString): Trace skipped
+	outline commands.
+
+	* src/psaux/t1decode.c (t1_decoder_parse_charstring): Fix
+	missing case.
+	(t1_decoder_parse_metrics): Make tracing output more compact.
+
+	* src/type1/t1gload.c (T1_Compute_Max_Advance): Be less verbose.
+	(T1_Get_Advances): Add tracing.
+
 2018-07-25  Werner Lemberg  <wl@gnu.org>
 
 	[psaux, type1] Trace PostScript dictionaries and other things.
