@@ -1,5 +1,13 @@
 2018-07-27  Werner Lemberg  <wl@gnu.org>
 
+	[truetype] Make `TT_Set_MM_Blend' idempotent (#54388).
+
+	* src/truetype/ttgxvar.c (tt_set_mm_blend): Correctly set
+	`face->doblend' if the current call to the function yields the same
+	blend coordinates as the previous call.
+
+2018-07-27  Werner Lemberg  <wl@gnu.org>
+
 	[psaux, type1]: More tracing improvements.
 
 	* src/psaux/psintrp.c (cf2_interpT2CharString): Trace skipped

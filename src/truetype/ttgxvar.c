@@ -2555,7 +2555,11 @@
 
       /* return value -1 indicates `no change' */
       if ( !have_diff )
+      {
+        face->doblend = TRUE;
+
         return -1;
+      }
 
       for ( ; i < mmvar->num_axis; i++ )
       {
