@@ -75,7 +75,7 @@
 # The targets `objects' and `library' are defined at the end of this
 # Makefile after all other rules have been included.
 #
-.PHONY: single multi objects library refdoc
+.PHONY: single multi objects library refdoc refdoc-venv
 
 # default target -- build single objects and library
 #
@@ -296,6 +296,28 @@ refdoc:
 	@echo Installing requirements...
 	python -m pip install --user -r \
                         $(SRC_DIR)/tools/docwriter/requirements.txt
+	@echo "Running docwriter..."
+	python -B $(SRC_DIR)/tools/docwriter/docwriter.py \
+                  --prefix=ft2                          \
+                  --title=FreeType-$(version)           \
+                  --output=$(DOC_DIR)                   \
+                  $(PUBLIC_DIR)/*.h                     \
+                  $(PUBLIC_DIR)/config/*.h              \
+                  $(PUBLIC_DIR)/cache/*.h
+	@echo Building static site...
+	cd $(DOC_DIR) && mkdocs build
+	@echo Done.
+
+VENV_NAME     := env
+VENV_ACTIVATE := $(VENV_NAME)$(SEP)$(BIN)$(SEP)activate
+PYTHON        := $(VENV_NAME)$(SEP)$(BIN)$(SEP)python
+PIP           := $(VENV_NAME)$(SEP)$(BIN)$(SEP)pip
+
+refdoc-venv:
+	@echo Setting up virtualenv for Python...
+	virtualenv $(VENV_NAME)
+	@echo Installing requirements...
+	$(PIP) install -r $(SRC_DIR)/tools/docwriter/requirements.txt
 	@echo "Running docwriter..."
 	python -B $(SRC_DIR)/tools/docwriter/docwriter.py \
                   --prefix=ft2                          \

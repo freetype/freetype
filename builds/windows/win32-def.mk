@@ -16,6 +16,7 @@
 DELETE    := del
 CAT       := type
 SEP       := $(strip \ )
+BIN       := Scripts
 BUILD_DIR := $(TOP_DIR)/builds/windows
 PLATFORM  := windows
 

@@ -22,6 +22,7 @@ PLATFORM := unix
 DELETE := rm -f
 CAT    := cat
 SEP    := /
+BIN    := bin
 
 # we use a special devel ftoption.h
 DEVEL_DIR := $(TOP_DIR)/devel

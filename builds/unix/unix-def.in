@@ -20,6 +20,7 @@ DELETE := rm -f
 DELDIR := rm -rf
 CAT    := cat
 SEP    := /
+BIN    := bin
 
 # this is used for `make distclean' and `make install'
 OBJ_BUILD ?= $(BUILD_DIR)

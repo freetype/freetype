@@ -16,6 +16,7 @@
 DELETE    := del
 CAT       := type
 SEP       := $(strip \ )
+BIN       := Scripts
 BUILD_DIR := $(TOP_DIR)/builds/os2
 PLATFORM  := os2
 
