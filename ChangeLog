@@ -1,3 +1,13 @@
+2018-07-28  Werner Lemberg  <wl@gnu.org>
+
+	[type1] Avoid segfaults with `FT_Get_PS_Font_Value'.
+
+	Reported as
+
+	  https://bugs.chromium.org/p/oss-fuzz/issues/detail?id=9610
+
+	* src/type1/t1driver.c (t1_ps_get_font_value): Protect against NULL.
+
 2018-07-27  Werner Lemberg  <wl@gnu.org>
 
 	[truetype] Make `TT_Set_MM_Blend' idempotent (#54388).
