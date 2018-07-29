@@ -312,9 +312,9 @@ AC_SUBST([XX_ANSIFLAGS])
 # explicit __attribute__((visibility("default"))).
 #
 found_visibility_flag=no
-AC_MSG_CHECKING([for -xldscope=hidden compiler flag])
+AC_MSG_CHECKING([for -fvisibility=hidden compiler flag])
 orig_CFLAGS="${CFLAGS}"
-CFLAGS="${CFLAGS} -xldscope=hidden"
+CFLAGS="${CFLAGS} -fvisibility=hidden"
 AC_LINK_IFELSE([AC_LANG_PROGRAM([],[])],
                [found_visibility_flag=yes
                 AC_MSG_RESULT(yes)],
@@ -322,9 +322,9 @@ AC_LINK_IFELSE([AC_LANG_PROGRAM([],[])],
                 AC_MSG_RESULT(no)])
 
 if test "${found_visibility_flag}" = "no"; then
-  AC_MSG_CHECKING([for -fvisibility=hidden compiler flag])
+  AC_MSG_CHECKING([for -xldscope=hidden compiler flag])
   orig_CFLAGS="${CFLAGS}"
-  CFLAGS="${CFLAGS} -fvisibility=hidden"
+  CFLAGS="${CFLAGS} -xldscope=hidden"
   AC_LINK_IFELSE([AC_LANG_PROGRAM([],[])],
                  [found_visibility_flag=yes
                   AC_MSG_RESULT(yes)],
