@@ -1054,7 +1054,8 @@ THE SOFTWARE.
     /* `stream->cursor' still points at the beginning of the frame; */
     /* we can thus easily get the offset to the default character   */
     pos = stream->cursor +
-            2 * ( ( defaultCharRow - (FT_UShort)firstRow ) * 256 +
+            2 * ( ( defaultCharRow - (FT_UShort)firstRow ) *
+                    ( lastCol - firstCol + 1 ) +
                   defaultCharCol - (FT_UShort)firstCol );
 
     if ( PCF_BYTE_ORDER( format ) == MSBFirst )

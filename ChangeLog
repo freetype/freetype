@@ -1,3 +1,11 @@
+2018-07-29  Werner Lemberg  <wl@gnu.org>
+
+	* src/pcf/pcfread.c (pcf_get_encodings): Another thinko.
+
+	Reported as
+
+	  https://bugs.chromium.org/p/oss-fuzz/issues/detail?id=9608
+
 2018-07-28  Alexei Podtelezhnikov  <apodtele@gmail.com>
 
 	[smooth] Fix Harmony memory management.
