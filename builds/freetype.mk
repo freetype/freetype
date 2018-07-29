@@ -308,18 +308,24 @@ refdoc:
 	cd $(DOC_DIR) && mkdocs build
 	@echo Done.
 
+# Variables for running refdoc with Python's `virtualenv'.
+# The env is created in `DOC_DIR/env' and is gitignored.
+# We still need to cd into `DOC_DIR' to build mkdocs because
+# paths in mkdocs.yml are relative to cwd.
+#
 VENV_NAME     := env
-VENV_ACTIVATE := $(VENV_NAME)$(SEP)$(BIN)$(SEP)activate
-PYTHON        := $(VENV_NAME)$(SEP)$(BIN)$(SEP)python
-PIP           := $(VENV_NAME)$(SEP)$(BIN)$(SEP)pip
+IN_VENV       := $(DOC_DIR)$(SEP)$(VENV_NAME)
+VENV_ACTIVATE := $(IN_VENV)$(SEP)$(BIN)$(SEP)activate
+PYTHON        := $(IN_VENV)$(SEP)$(BIN)$(SEP)python
+PIP           := $(IN_VENV)$(SEP)$(BIN)$(SEP)pip
 
 refdoc-venv:
 	@echo Setting up virtualenv for Python...
-	virtualenv $(VENV_NAME)
+	virtualenv $(IN_VENV)
 	@echo Installing requirements...
 	$(PIP) install -r $(SRC_DIR)/tools/docwriter/requirements.txt
 	@echo "Running docwriter..."
-	python -B $(SRC_DIR)/tools/docwriter/docwriter.py \
+	$(PYTHON) -B $(SRC_DIR)/tools/docwriter/docwriter.py  \
                   --prefix=ft2                          \
                   --title=FreeType-$(version)           \
                   --output=$(DOC_DIR)                   \
@@ -327,7 +333,7 @@ refdoc-venv:
                   $(PUBLIC_DIR)/config/*.h              \
                   $(PUBLIC_DIR)/cache/*.h
 	@echo Building static site...
-	cd $(DOC_DIR) && mkdocs build
+	cd $(DOC_DIR) && $(VENV_NAME)$(SEP)$(BIN)$(SEP)python -m mkdocs build
 	@echo Done.
 
 .PHONY: clean_project_std distclean_project_std
