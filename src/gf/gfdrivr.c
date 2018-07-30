@@ -165,9 +165,21 @@
     GF_Glyph    go=NULL;
     FT_UInt16   i,count;
 
+    TFM_Service tfm;
+
     FT_UNUSED( num_params );
     FT_UNUSED( params );
 
+
+    face->tfm = FT_Get_Module_Interface( FT_FACE_LIBRARY( face ),
+                                           "tfm" );
+    tfm = (TFM_Service)face->tfm;
+    if ( !tfm )
+    {
+      FT_ERROR(( "GF_Face_Init: cannot access `tfm' module\n" ));
+      error = FT_THROW( Missing_Module );
+      goto Exit;
+    }
 
     FT_TRACE2(( "GF driver\n" ));
 
@@ -378,7 +390,7 @@
 
     FT_TRACE1(( "GF_Glyph_Load: glyph index %d\n", glyph_index ));
 
-    if ( glyph_index < 0 )
+    if ( (FT_Int)glyph_index < 0 )
       glyph_index = 0;
 
     if ((glyph_index < go->code_min) || (go->code_max < glyph_index))
@@ -468,28 +480,45 @@
     if ( FT_NEW( fi ) )
       goto Exit;
 
+    FT_TRACE4(( "TFM_Read_Metrics: Invoking TFM_Service.\n" ));
+
     tfm = (TFM_Service)face->tfm;
-    if ( tfm->init )
+
+    /* Initialise TFM Service */
+    error = tfm->init( &parser,
+                       memory,
+                       stream );
+
+    if ( !error )
     {
-      error = tfm->init( &parser,
-                         memory,
-                         stream );
+      FT_TRACE4(( "TFM_Read_Metrics: Initialised tfm metric data.\n" ));
+      parser.FontInfo  = fi;
+      parser.user_data = gf_glyph;
 
-      if ( !error )
-      {
-        parser.FontInfo  = fi;
-        parser.user_data = gf_glyph;
+      error = tfm->parse_metrics( &parser );
+      if( !error )
+        FT_TRACE4(( "TFM_Read_Metrics: parsing TFM metric information done.\n" ));
 
-        error = tfm->parse_metrics( &parser );
-        tfm->done( &parser );
-      }
+      FT_TRACE6(( "TFM_Read_Metrics: TFM Metric Information:\n"
+                  "                  Check Sum  : %ld\n"
+                  "                  Design Size: %ld\n"
+                  "                  Begin Char : %d\n"
+                  "                  End Char   : %d\n"
+                  "                  font_bbx_w : %d\n"
+                  "                  font_bbx_h : %d\n"
+                  "                  slant      : %d\n", parser.FontInfo->cs, parser.FontInfo->design_size, parser.FontInfo->begin_char,
+                                                         parser.FontInfo->end_char, parser.FontInfo->font_bbx_w,
+                                                         parser.FontInfo->font_bbx_h, parser.FontInfo->slant ));
+      tfm->done( &parser );
     }
 
     if ( !error )
     {
       /* Modify GF_Glyph data according to TFM metric values */
 
-      /* TO-DO */
+      /*face->gf_glyph->font_bbx_w = fi->font_bbx_w;
+      face->gf_glyph->font_bbx_h = fi->font_bbx_h;
+      */
 
       face->tfm_data       = fi;
       fi                   = NULL;
