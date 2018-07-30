@@ -18,6 +18,7 @@
 
 #include <ft2build.h>
 #include "tfmmod.h"
+#include "tfmobjs.h"
 
 
   static
@@ -25,7 +26,6 @@
   {
     tfm_init,           /* init          */
     tfm_parse_metrics,  /* parse metrics */
-    tfm_parse_kerns,    /* parse kerns   */
     tfm_close,          /* done          */
   };
 
