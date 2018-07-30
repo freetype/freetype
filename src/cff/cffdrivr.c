@@ -795,7 +795,7 @@
         goto Fail;
       }
 
-      if ( glyph_index > cff->num_glyphs )
+      if ( glyph_index >= cff->num_glyphs )
       {
         error = FT_THROW( Invalid_Argument );
         goto Fail;

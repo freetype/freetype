@@ -1,3 +1,14 @@
+2018-07-30  Werner Lemberg  <wl@gnu.org>
+
+	[cff] Fix typo.
+
+	Reported as
+
+	  https://bugs.chromium.org/p/oss-fuzz/issues/detail?id=9409
+
+	* src/cff/cffdrivr.c (cff_get_cid_from_glyph_index): Fix boundary
+	check.
+
 2018-07-29  Werner Lemberg  <wl@gnu.org>
 
 	* src/pcf/pcfread.c (pcf_get_encodings): Another thinko.
