@@ -46,9 +46,9 @@ FT_BEGIN_HEADER
   typedef struct  TFM_FontInfoRec_
   {
     /* Font Info */
-    FT_ULong       cs;
+    FT_Long        cs; /* Check Sum */
     /* Metrics */
-    FT_ULong       ds;
+    FT_ULong       ds; /* Design Size */
     FT_UInt        design_size;
     FT_UInt        slant;
     FT_UInt        begin_char, end_char;
@@ -58,6 +58,8 @@ FT_BEGIN_HEADER
     FT_UInt        font_bbx_xoff, font_bbx_yoff;
 
   } TFM_FontInfoRec, *TFM_FontInfo;
+
+  #define RDS2PT(rds)    (tfm->design_size * ((FT_Long)(rds)/(FT_Long)(1<<20)))
 
   /*************************************************************************/
   /*************************************************************************/
@@ -117,9 +119,6 @@ FT_BEGIN_HEADER
 
     FT_Error
     (*parse_metrics)( TFM_Parser  parser );
-
-    FT_Error
-    (*parse_kern)( TFM_Parser  parser );
 
     void
     (*done)( TFM_Parser  parser );

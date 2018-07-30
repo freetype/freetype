@@ -317,7 +317,7 @@ FT_Byte  bit_table[] = {
     GF_Glyph        go;
     GF_Bitmap       bm;
     FT_Byte         instr, d, pre, id, k, code;
-    FT_ULong        ds, check_sum, hppp, vppp;
+    FT_Long         ds, check_sum, hppp, vppp;
     FT_Long         min_m, max_m, min_n, max_n, w;
     FT_UInt         dx, dy;
     FT_Long         ptr_post, ptr_p, ptr, optr;
@@ -334,7 +334,6 @@ FT_Byte  bit_table[] = {
     pre = READ_UINT1( stream );
     if (pre != GF_PRE)
     {
-      FT_ERROR(( "gf_load_font: missing GF_PRE(247) field\n" ));
       error = FT_THROW( Unknown_File_Format );
       goto Exit;
     }
@@ -342,7 +341,6 @@ FT_Byte  bit_table[] = {
     id = READ_UINT1( stream );
     if (id != GF_ID)
     {
-      FT_ERROR(( "gf_load_font: missing GF_ID(131) field\n" ));
       error = FT_THROW( Unknown_File_Format );
       goto Exit;
     }
@@ -427,6 +425,8 @@ FT_Byte  bit_table[] = {
     max_m     = READ_INT4( stream );
     min_n     = READ_INT4( stream );
     max_n     = READ_INT4( stream );
+
+    FT_TRACE5(( "gf_load_font: checksum is %ld\n",check_sum ));
 
     if( ptr_p < 0 )     /* Defined to use ptr_p */
     {
