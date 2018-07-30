@@ -12,9 +12,10 @@
 # indicate that you have read the license and understand and accept it
 # fully.
 
+
 FTMODULE_H_COMMANDS += PK_DRIVER
 
-define GF_DRIVER
+define PK_DRIVER
 $(OPEN_DRIVER) FT_Driver_ClassRec, pk_driver_class $(CLOSE_DRIVER)
 $(ECHO_DRIVER)pk        $(ECHO_DRIVER_DESC)METAFONT bitmap fonts$(ECHO_DRIVER_DONE)
 endef

@@ -40,7 +40,7 @@
 #undef  FT_COMPONENT
 #define FT_COMPONENT  trace_pklib
 
-unsigned char   bit_table[] = {
+unsigned char   bits_table[] = {
   0x80, 0x40, 0x20, 0x10, 0x08, 0x04, 0x02, 0x01 };
 
 
@@ -253,7 +253,7 @@ unsigned char   bit_table[] = {
 	          return -1;
         }
         if (bw == 1)
-	        *p = *p | bit_table[b_p];
+	        *p = *p | bits_table[b_p];
         --bits;
         if (++b_p >= 8)
         {
