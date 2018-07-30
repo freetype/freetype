@@ -20,6 +20,7 @@
 #include <ft2build.h>
 
 #include "tfmmod.c"
+#include "tfmobjs.c"
 
 
 /* END */

@@ -29,6 +29,7 @@ TFM_COMPILE := $(CC) $(ANSIFLAGS)                              \
 # TFM driver sources (i.e., C files)
 #
 TFM_DRV_SRC := $(TFM_DIR)/tfmmod.c   \
+               $(TFM_DIR)/tfmobjs.c   \
 
 # TFM driver headers
 #
