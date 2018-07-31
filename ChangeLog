@@ -1,3 +1,14 @@
+2018-07-31  Werner Lemberg  <wl@gnu.org>
+
+	[cid] Trace PostScript dictionaries.
+
+	* src/cid/cidload.c: Include FT_INTERNAL_POSTSCRIPT_AUX_H
+	(cid_load_keyword, cid_parse_font_matrix, parse_fd_array,
+	parse_expansion_factor, cid_parse_dict): Add tracing calls.
+	(parse_font_name): New function to trace `/FontName' keywords in
+	/FDArray dict.
+	(cid_field_records): Register `parse_font_name'.
+
 2018-07-30  Werner Lemberg  <wl@gnu.org>
 
 	[cff] Fix typo.

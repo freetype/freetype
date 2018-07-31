@@ -21,6 +21,7 @@
 #include FT_CONFIG_CONFIG_H
 #include FT_MULTIPLE_MASTERS_H
 #include FT_INTERNAL_TYPE1_TYPES_H
+#include FT_INTERNAL_POSTSCRIPT_AUX_H
 
 #include "cidload.h"
 
@@ -81,6 +82,8 @@
     /* if the keyword has a dedicated callback, call it */
     if ( keyword->type == T1_FIELD_TYPE_CALLBACK )
     {
+      FT_TRACE4(( "  %s", keyword->ident ));
+
       keyword->reader( (FT_Face)face, parser );
       error = parser->root.error;
       goto Exit;
@@ -131,6 +134,8 @@
       }
     }
 
+    FT_TRACE4(( "  %s", keyword->ident ));
+
     dummy_object = object;
 
     /* now, load the keyword data in the object's field(s) */
@@ -141,6 +146,9 @@
     else
       error = cid_parser_load_field( &loader->parser,
                                      keyword, &dummy_object );
+
+    FT_TRACE4(( "\n" ));
+
   Exit:
     return error;
   }
@@ -172,6 +180,14 @@
 
       if ( result < 6 )
         return FT_THROW( Invalid_File_Format );
+
+      FT_TRACE4(( " [%f %f %f %f %f %f]\n",
+                  (double)temp[0] / 65536 / 1000,
+                  (double)temp[1] / 65536 / 1000,
+                  (double)temp[2] / 65536 / 1000,
+                  (double)temp[3] / 65536 / 1000,
+                  (double)temp[4] / 65536 / 1000,
+                  (double)temp[5] / 65536 / 1000 ));
 
       temp_scale = FT_ABS( temp[3] );
 
@@ -235,6 +251,8 @@
       goto Exit;
     }
 
+    FT_TRACE4(( " %d\n", num_dicts ));
+
     /*
      * A single entry in the FDArray must (at least) contain the following
      * structure elements.
@@ -290,9 +308,9 @@
   }
 
 
-  /* by mistake, `expansion_factor' appears both in PS_PrivateRec */
+  /* By mistake, `expansion_factor' appears both in PS_PrivateRec */
   /* and CID_FaceDictRec (both are public header files and can't  */
-  /* changed); we simply copy the value                           */
+  /* changed).  We simply copy the value.                         */
 
   FT_CALLBACK_DEF( FT_Error )
   parse_expansion_factor( CID_Face     face,
@@ -307,7 +325,41 @@
 
       dict->expansion_factor              = cid_parser_to_fixed( parser, 0 );
       dict->private_dict.expansion_factor = dict->expansion_factor;
+
+      FT_TRACE4(( "%d\n", dict->expansion_factor ));
     }
+
+    return FT_Err_Ok;
+  }
+
+
+  /* By mistake, `CID_FaceDictRec' doesn't contain a field for the */
+  /* `FontName' keyword.  FreeType doesn't need it, but it is nice */
+  /* to catch it for producing better trace output.                */
+
+  FT_CALLBACK_DEF( FT_Error )
+  parse_font_name( CID_Face     face,
+                   CID_Parser*  parser )
+  {
+#ifdef FT_DEBUG_LEVEL_TRACE
+    if ( parser->num_dict >= 0 && parser->num_dict < face->cid.num_dicts )
+    {
+      T1_TokenRec  token;
+      FT_UInt      len;
+
+
+      cid_parser_to_token( parser, &token );
+
+      len = (FT_UInt)( token.limit - token.start );
+      if ( len )
+        FT_TRACE4(( " %.*s\n", len, token.start ));
+      else
+        FT_TRACE4(( " <no value>\n" ));
+    }
+#else
+    FT_UNUSED( face );
+    FT_UNUSED( parser );
+#endif
 
     return FT_Err_Ok;
   }
@@ -322,6 +374,7 @@
     T1_FIELD_CALLBACK( "FDArray",         parse_fd_array, 0 )
     T1_FIELD_CALLBACK( "FontMatrix",      cid_parse_font_matrix, 0 )
     T1_FIELD_CALLBACK( "ExpansionFactor", parse_expansion_factor, 0 )
+    T1_FIELD_CALLBACK( "FontName",        parse_font_name, 0 )
 
     { 0, T1_FIELD_LOCATION_CID_INFO, T1_FIELD_TYPE_NONE, 0, 0, 0, 0, 0, 0 }
   };
@@ -367,7 +420,16 @@
             /* if /FDArray was found, then cid->num_dicts is > 0, and */
             /* we can start increasing parser->num_dict               */
             if ( face->cid.num_dicts > 0 )
+            {
               parser->num_dict++;
+
+#ifdef FT_DEBUG_LEVEL_TRACE
+              FT_TRACE4(( " FontDict %d", parser->num_dict ));
+              if ( parser->num_dict > face->cid.num_dicts )
+                FT_TRACE4(( " (ignored)" ));
+              FT_TRACE4(( "\n" ));
+#endif
+            }
           }
         }
 
