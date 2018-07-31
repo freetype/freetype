@@ -1,9 +1,6 @@
+# FreeType 2 src/tfm Jamfile
 #
-# FreeType 2 TFM module definition
-#
-
-
-# Copyright 1996-2018 by
+# Copyright 2001-2018 by
 # David Turner, Robert Wilhelm, and Werner Lemberg.
 #
 # This file is part of the FreeType project, and may only be used, modified,
@@ -12,12 +9,22 @@
 # indicate that you have read the license and understand and accept it
 # fully.
 
+SubDir  FT2_TOP $(FT2_SRC_DIR) tfm ;
 
-FTMODULE_H_COMMANDS += TFM_MODULE
+{
+  local  _sources ;
 
-define TFM_MODULE
-$(OPEN_DRIVER) FT_Module_Class, tfm_module_class $(CLOSE_DRIVER)
-$(ECHO_DRIVER)tfm       $(ECHO_DRIVER_DESC)TFM helper module$(ECHO_DRIVER_DONE)
-endef
+  if $(FT2_MULTI)
+  {
+    _sources = tfmmod
+               ;
+  }
+  else
+  {
+    _sources = tfm ;
+  }
 
-# EOF
+  Library  $(FT2_LIB) : $(_sources).c ;
+}
+
+# end of src/tfm Jamfile

@@ -1,5 +1,5 @@
 #
-# FreeType 2 TFM module definition
+# FreeType 2 PK Font module definition
 #
 
 
@@ -13,11 +13,11 @@
 # fully.
 
 
-FTMODULE_H_COMMANDS += TFM_MODULE
+FTMODULE_H_COMMANDS += PK_DRIVER
 
-define TFM_MODULE
-$(OPEN_DRIVER) FT_Module_Class, tfm_module_class $(CLOSE_DRIVER)
-$(ECHO_DRIVER)tfm       $(ECHO_DRIVER_DESC)TFM helper module$(ECHO_DRIVER_DONE)
+define PK_DRIVER
+$(OPEN_DRIVER) FT_Driver_ClassRec, pk_driver_class $(CLOSE_DRIVER)
+$(ECHO_DRIVER)pk        $(ECHO_DRIVER_DESC)METAFONT bitmap fonts$(ECHO_DRIVER_DONE)
 endef
 
 # EOF

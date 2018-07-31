@@ -26,7 +26,7 @@ GF_COMPILE := $(CC) $(ANSIFLAGS)                            \
 
 # gf driver sources (i.e., C files)
 #
-GF_DRV_SRC :=  $(GF_DIR)/gflib.c \
+GF_DRV_SRC := $(GF_DIR)/gflib.c \
                $(GF_DIR)/gfdrivr.c
 
 

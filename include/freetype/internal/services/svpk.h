@@ -1,10 +1,10 @@
 /****************************************************************************
  *
- * tfm.c
+ * svpk.h
  *
- *   FreeType auxiliary TFM module.
+ *   The FreeType PK services (specification).
  *
- * Copyright 1996-2018 by
+ * Copyright 2003-2018 by
  * David Turner, Robert Wilhelm, and Werner Lemberg.
  *
  * This file is part of the FreeType project, and may only be used,
@@ -16,11 +16,25 @@
  */
 
 
-#define FT_MAKE_OPTION_SINGLE_OBJECT
-#include <ft2build.h>
+#ifndef SVPK_H_
+#define SVPK_H_
 
-#include "tfmmod.c"
-#include "tfmobjs.c"
+
+#include FT_INTERNAL_SERVICE_H
+
+
+FT_BEGIN_HEADER
+
+
+#define FT_SERVICE_ID_PK  "pk"
+
+  /* */
+
+
+FT_END_HEADER
+
+
+#endif /* SVPK_H_ */
 
 
 /* END */

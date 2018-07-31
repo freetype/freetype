@@ -642,7 +642,8 @@ FT_BEGIN_HEADER
    *
    * @values:
    *   FT_ENCODING_NONE ::
-   *     The encoding value~0 is reserved.
+   *     The encoding value~0 is reserved for all formats except BDF, PCF,
+   *     and Windows FNT; see below for more information.
    *
    *   FT_ENCODING_UNICODE ::
    *     The Unicode character set.  This value covers all versions of

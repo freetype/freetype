@@ -1,8 +1,8 @@
 /****************************************************************************
  *
- * tfmlib.c
+ * tfmobjs.c
  *
- *   FreeType font driver for TeX's TFM FONT files
+ *   FreeType auxiliary TFM module.
  *
  * Copyright 1996-2018 by
  * David Turner, Robert Wilhelm, and Werner Lemberg.
@@ -15,20 +15,19 @@
  *
  */
 
+
 #include <ft2build.h>
-
 #include FT_FREETYPE_H
-#include FT_INTERNAL_DEBUG_H
 #include FT_INTERNAL_STREAM_H
-#include FT_INTERNAL_OBJECTS_H
-#include FT_SYSTEM_H
-#include FT_CONFIG_CONFIG_H
-#include FT_ERRORS_H
-#include FT_TYPES_H
+#include FT_INTERNAL_DEBUG_H
+#include FT_INTERNAL_TFM_H
 
-#include "tfm.h"
-#include "tfmdrivr.h"
-#include "tfmerror.h"
+#include "tfmobjs.h"
+#include "tfmmod.h"
+#include "tfmerr.h"
+
+
+
 
 
   /**************************************************************************
@@ -38,9 +37,10 @@
    * messages during execution.
    */
 #undef  FT_COMPONENT
-#define FT_COMPONENT  trace_tfmlib
+#define FT_COMPONENT  trace_tfmobjs
 
-  /**************************************************************************
+
+ /**************************************************************************
    *
    * TFM font utility functions.
    *
@@ -49,9 +49,9 @@
   long           tfm_read_intn(FT_Stream,int);
   unsigned long  tfm_read_uintn(FT_Stream,int);
 
-#define READ_UINT2( stream )    (UINT1)tfm_read_uintn( stream, 2)
-#define READ_UINT4( stream )    (UINT1)tfm_read_uintn( stream, 4)
-#define READ_INT4( stream )     (INT4)tfm_read_intn( stream, 4)
+#define READ_UINT2( stream )    (FT_Byte)tfm_read_uintn( stream, 2)
+#define READ_UINT4( stream )    (FT_Byte)tfm_read_uintn( stream, 4)
+#define READ_INT4( stream )     (FT_Long)tfm_read_intn( stream, 4)
 
 /*
  * Reading a Number from file
@@ -105,60 +105,78 @@
    *
    */
 
-  FT_LOCAL_DEF( void )
-  tfm_free_font( TFM_Glyph tfm, FT_Memory memory )
+  FT_LOCAL_DEF( FT_Error )
+  tfm_init( TFM_Parser  parser,
+            FT_Memory   memory,
+            FT_Stream   stream )
   {
-    if (tfm == NULL)
-      return;
+    parser->memory    = memory;
+    parser->stream    = stream;
+    parser->FontInfo  = NULL;
+    parser->user_data = NULL;
 
-      FT_FREE(tfm->width);
-      FT_FREE(tfm->height);
-      FT_FREE(tfm->depth);
-      FT_FREE(tfm);
+    return FT_Err_Ok;
   }
 
-  FT_LOCAL_DEF( FT_Error )
-  tfm_load_font(  FT_Stream       stream,
-                  FT_Memory       extmemory,
-                  TFM_Glyph       *tfmptr  )
+
+  FT_LOCAL( void )
+  tfm_close( TFM_Parser  parser )
   {
-    TFM_Glyph  tfm;
-    UINT4  lf, lh, nc, nci, err;
-    UINT4  offset_header, offset_char_info, offset_param;
-    UINT4  nw,  nh,  nd,  ni, nl, nk, neng, np, dir;
-    INT4   *w,  *h,  *d;
-    UINT4  *ci, v;
-    UINT4  i;
-    INT4   bbxw, bbxh, xoff, yoff;
-    FT_Error        error  =FT_Err_Ok;
-    FT_Memory       memory = extmemory; /* needed for FT_NEW */
+    FT_Memory  memory = parser->memory;
 
-    if( FT_ALLOC(tfm, sizeof(TFM_GlyphRec)) )
-      goto Exit;
+    FT_FREE( parser->stream );
+  }
 
-    tfm->width  = NULL;
-    tfm->height = NULL;
-    tfm->depth  = NULL;
 
-    tfm->font_bbx_w = 0.0;
-    tfm->font_bbx_h = 0.0;
-    tfm->font_bbx_xoff = 0.0;
-    tfm->font_bbx_yoff = 0.0;
+  FT_LOCAL_DEF( FT_Error )
+  tfm_parse_metrics( TFM_Parser  parser )
+  {
+    FT_Memory     memory = parser->memory;
+    TFM_FontInfo  fi     = parser->FontInfo;
+    FT_Stream     stream = parser->stream;
+    FT_Error      error  = FT_ERR( Syntax_Error );
 
-    err = 0;
+    FT_ULong      lf, lh, nc, nci;
+    FT_ULong      offset_header, offset_char_info, offset_param;
+    FT_ULong      nw,  nh,  nd,  ni, nl, nk, neng, np;
+
+    FT_Long       *w,  *h,  *d;
+    FT_ULong      *ci, v;
+
+    FT_ULong      i;
+    FT_Long       bbxw, bbxh, xoff, yoff;
+
+    if ( !fi )
+      return FT_THROW( Invalid_Argument );
+
+    fi->width  = NULL;
+    fi->height = NULL;
+    fi->depth  = NULL;
+    ci         = NULL;
+    w          = NULL;
+    h          = NULL;
+    d          = NULL;
+
+    fi->font_bbx_w = 0.0;
+    fi->font_bbx_h = 0.0;
+    fi->font_bbx_xoff = 0.0;
+    fi->font_bbx_yoff = 0.0;
+
     /* rewind(fp); */
     if( FT_STREAM_SEEK( 0 ) )
       return error;
-    lf = (UINT4)READ_UINT2( stream );
+
+    lf = (FT_ULong)READ_UINT2( stream );
+
     #if 0
     if ((lf == 11) || (lf == 9))
     {
       /* JFM file of Japanese TeX by ASCII Coop. */
       tfm->type        = METRIC_TYPE_JFM;
       tfm->type_aux    = (lf == 11)?METRIC_TYPE_JFM_AUX_H:METRIC_TYPE_JFM_AUX_V;
-      tfm->nt          = (UINT4)READ_UINT2(fp);
-      lf               = (UINT4)READ_UINT2(fp);
-      lh               = (UINT4)READ_UINT2(fp);
+      tfm->nt          = (FT_ULong)READ_UINT2(fp);
+      lf               = (FT_ULong)READ_UINT2(fp);
+      lh               = (FT_ULong)READ_UINT2(fp);
       offset_header    = 4*7;
       offset_char_info = 4*(7+tfm->nt+lh);
     }
@@ -185,8 +203,8 @@
     else
     { }
     #endif
+
     /* Traditional TeX Metric File */
-    tfm->type_aux    = 0;
     lh               = (int)READ_UINT2( stream );
     offset_header    = 4*6;
     offset_char_info = 4*(6+lh);
@@ -217,24 +235,26 @@
     else
     { }
     #endif
-    tfm->begin_char  = (int)READ_UINT2( stream );
-    tfm->end_char    = (int)READ_UINT2( stream );
-    nw   = (UINT4)READ_UINT2( stream );
-    nh   = (UINT4)READ_UINT2( stream );
-    nd   = (UINT4)READ_UINT2( stream );
 
-    ni   = (UINT4)READ_UINT2( stream );
-    nl   = (UINT4)READ_UINT2( stream );
-    nk   = (UINT4)READ_UINT2( stream );
-    neng = (UINT4)READ_UINT2( stream );
-    np   = (UINT4)READ_UINT2( stream );
+    fi->begin_char  = (int)READ_UINT2( stream );
+    fi->end_char    = (int)READ_UINT2( stream );
+
+    nw   = (FT_ULong)READ_UINT2( stream );
+    nh   = (FT_ULong)READ_UINT2( stream );
+    nd   = (FT_ULong)READ_UINT2( stream );
+
+    ni   = (FT_ULong)READ_UINT2( stream );
+    nl   = (FT_ULong)READ_UINT2( stream );
+    nk   = (FT_ULong)READ_UINT2( stream );
+    neng = (FT_ULong)READ_UINT2( stream );
+    np   = (FT_ULong)READ_UINT2( stream );
 
     #if 0
       if (tfm->type == METRIC_TYPE_TFM)
         {}
     #endif
-    if (((signed)(tfm->begin_char-1) > (signed)tfm->end_char) ||
-       (tfm->end_char > 255))
+    if (((signed)(fi->begin_char-1) > (signed)fi->end_char) ||
+       (fi->end_char > 255))
     {
       error = FT_THROW( Invalid_Argument );
       goto Exit;
@@ -243,28 +263,34 @@
     /* fseek(fp, offset_header, SEEK_SET); */
     if (FT_STREAM_SEEK( offset_header ) )
       goto Exit;
-    tfm->cs          = READ_UINT4( stream );
-    tfm->ds          = READ_UINT4( stream );
-    tfm->design_size = (double)(tfm->ds)/(double)(1<<20);
+    fi->cs          = READ_UINT4( stream ); /* Check Sum  */
+    fi->ds          = READ_UINT4( stream ); /* Design Size */
 
-    nc  = tfm->end_char - tfm->begin_char + 1;
+    fi->design_size = (FT_ULong)((double)(fi->ds)/(double)(1<<20));
+
+    nc  = fi->end_char - fi->begin_char + 1;
     nci = nc;
+
     #if 0
     if (tfm->type == METRIC_TYPE_OFM)
       nci *= 2;
     #endif
-    ci = (UINT4*)calloc(nci, sizeof(UINT4));
-    w  = (INT4*)calloc(nw,  sizeof(UINT4));
-    h  = (INT4*)calloc(nh,  sizeof(UINT4));
-    d  = (INT4*)calloc(nd,  sizeof(UINT4));
+
+    ci = (FT_ULong*)calloc(nci, sizeof(FT_ULong));
+    w  = (FT_Long*)calloc(nw,  sizeof(FT_ULong));
+    h  = (FT_Long*)calloc(nh,  sizeof(FT_ULong));
+    d  = (FT_Long*)calloc(nd,  sizeof(FT_ULong));
+
     if ((ci == NULL) || (w == NULL) || (h == NULL) || (d == NULL))
     {
       error = FT_THROW( Invalid_Argument );
       goto Exit;
     }
+
     /* fseek(fp, offset_char_info, SEEK_SET); */
-    if( FT_STREAM_SEEK( offset_char_info ) )
+    if( FT_STREAM_SEEK( offset_char_info ) ) /* Skip over coding scheme and font family name */
       goto Exit;
+
     for (i = 0; i < nci; i++)
       ci[i] = READ_UINT4( stream );
 
@@ -278,18 +304,21 @@
     for (i = 0; i < nd; i++)
       d[i] = READ_INT4( stream );
 
-    tfm->width  = (INT4*)calloc(nc, sizeof(INT4));
-    tfm->height = (INT4*)calloc(nc, sizeof(INT4));
-    tfm->depth  = (INT4*)calloc(nc, sizeof(INT4));
-    if ((tfm->width == NULL) || (tfm->height == NULL) || (tfm->depth == NULL))
+    fi->width  = (FT_Long*)calloc(nc, sizeof(FT_Long));
+    fi->height = (FT_Long*)calloc(nc, sizeof(FT_Long));
+    fi->depth  = (FT_Long*)calloc(nc, sizeof(FT_Long));
+
+    if ((fi->width == NULL) || (fi->height == NULL) || (fi->depth == NULL))
     {
       error = FT_THROW( Invalid_Argument );
       goto Exit;
     }
+
     bbxw = 0;
     bbxh = 0;
     xoff = 0;
     yoff = 0;
+
     #if 0
     if (tfm->type == METRIC_TYPE_OFM)
     {
@@ -316,28 +345,28 @@
     else
     { }
     #endif
+
     for (i = 0; i < nc; i++)
     {
       v = ci[i] / 0x10000L;
-      tfm->depth[i]  = d[v & 0xf];  v >>= 4;
-      tfm->height[i] = h[v & 0xf];  v >>= 4;
-      tfm->width[i]  = w[v & 0xff];
-      if (bbxw < tfm->width[i])
-	      bbxw = tfm->width[i];
-      if (bbxh < (tfm->height[i] + tfm->depth[i]))
-	      bbxh = tfm->height[i] + tfm->depth[i];
-      if (yoff > -tfm->depth[i])
-	      yoff = -tfm->depth[i];
-      #if 0
-        printf("** %.3f %.3f\n",
-	      (double)tfm->height[i]/(double)(1<<20),
-	      (double)tfm->depth[i]/(double)(1<<20));
-      #endif
+      fi->depth[i]  = d[v & 0xf];  v >>= 4;
+      fi->height[i] = h[v & 0xf];  v >>= 4;
+      fi->width[i]  = w[v & 0xff];
+
+      if (bbxw < fi->width[i])
+	      bbxw = fi->width[i];
+
+      if (bbxh < (fi->height[i] + fi->depth[i]))
+	      bbxh = fi->height[i] + fi->depth[i];
+
+      if (yoff > -fi->depth[i])
+	      yoff = -fi->depth[i];
     }
-    tfm->font_bbx_w = tfm->design_size * ((double)bbxw / (double)(1<<20));
-    tfm->font_bbx_h = tfm->design_size * ((double)bbxh / (double)(1<<20));
-    tfm->font_bbx_xoff = tfm->design_size * ((double)xoff / (double)(1<<20));
-    tfm->font_bbx_yoff = tfm->design_size * ((double)yoff / (double)(1<<20));
+
+    fi->font_bbx_w = (FT_ULong)(fi->design_size * ((double)bbxw / (double)(1<<20)));
+    fi->font_bbx_h = (FT_ULong)(fi->design_size * ((FT_ULong)bbxh / (double)(1<<20)));
+    fi->font_bbx_xoff = (FT_ULong)(fi->design_size * ((double)xoff / (double)(1<<20)));
+    fi->font_bbx_yoff = (FT_ULong)(fi->design_size * ((double)yoff / (double)(1<<20)));
 
     #if 0
     if (tfm->type == METRIC_TYPE_JFM)
@@ -364,22 +393,20 @@
     /* fseek(fp, offset_param, SEEK_SET); */
     if( FT_STREAM_SEEK( offset_param ) )
       return error; /* To be changed */
-    if (FT_READ_ULONG(tfm->slant) )
+    if (FT_READ_ULONG(fi->slant) )
       return error;
-    tfm->slant = (double)tfm->slant/(double)(1<<20);
-    *tfmptr          = tfm;
-  Exit:
-    FT_FREE(ci);
-    FT_FREE(w);
-    FT_FREE(h);
-    FT_FREE(d);
+    fi->slant = (FT_ULong)((double)fi->slant/(double)(1<<20));
 
-    if (err != 0)
+  Exit:
+    if( !ci || !w || !h || !d )
     {
-      tfm_free_font(tfm, memory);
-      error = err;
+      FT_FREE(ci);
+      FT_FREE(w);
+      FT_FREE(h);
+      FT_FREE(d);
     }
     return error;
   }
+
 
 /* END */

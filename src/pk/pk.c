@@ -1,8 +1,8 @@
 /****************************************************************************
  *
- * tfm.c
+ * pk.c
  *
- *   FreeType auxiliary TFM module.
+ *   FreeType font driver for TeX's PK FONT files.
  *
  * Copyright 1996-2018 by
  * David Turner, Robert Wilhelm, and Werner Lemberg.
@@ -17,10 +17,11 @@
 
 
 #define FT_MAKE_OPTION_SINGLE_OBJECT
+
 #include <ft2build.h>
 
-#include "tfmmod.c"
-#include "tfmobjs.c"
+#include "pklib.c"
+#include "pkdrivr.c"
 
 
 /* END */

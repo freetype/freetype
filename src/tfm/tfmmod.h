@@ -1,10 +1,10 @@
 /****************************************************************************
  *
- * tfm.c
+ * tfmmod.h
  *
  *   FreeType auxiliary TFM module.
  *
- * Copyright 1996-2018 by
+ * Copyright 2000-2018 by
  * David Turner, Robert Wilhelm, and Werner Lemberg.
  *
  * This file is part of the FreeType project, and may only be used,
@@ -16,11 +16,24 @@
  */
 
 
-#define FT_MAKE_OPTION_SINGLE_OBJECT
-#include <ft2build.h>
+#ifndef TFMMOD_H_
+#define TFMMOD_H_
 
-#include "tfmmod.c"
-#include "tfmobjs.c"
+
+#include <ft2build.h>
+#include FT_MODULE_H
+
+#include FT_INTERNAL_TFM_H
+
+FT_BEGIN_HEADER
+
+
+  FT_EXPORT_VAR( const FT_Module_Class )  tfm_driver_class;
+
+
+FT_END_HEADER
+
+#endif /* TFMMOD_H_ */
 
 
 /* END */

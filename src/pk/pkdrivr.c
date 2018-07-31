@@ -1,8 +1,8 @@
 /****************************************************************************
  *
- * gfdrivr.c
+ * pkdrivr.c
  *
- *   FreeType font driver for METAFONT GF FONT files
+ *   FreeType font driver for TeX's PK FONT files.
  *
  * Copyright 1996-2018 by
  * David Turner, Robert Wilhelm, and Werner Lemberg.
@@ -23,12 +23,12 @@
 #include FT_TRUETYPE_IDS_H
 #include FT_INTERNAL_TFM_H
 
-#include FT_SERVICE_GF_H
+#include FT_SERVICE_PK_H
 #include FT_SERVICE_FONT_FORMAT_H
 
-#include "gf.h"
-#include "gfdrivr.h"
-#include "gferror.h"
+#include "pk.h"
+#include "pkdrivr.h"
+#include "pkerror.h"
 
 
   /**************************************************************************
@@ -38,49 +38,48 @@
    * messages during execution.
    */
 #undef  FT_COMPONENT
-#define FT_COMPONENT  trace_gfdriver
+#define FT_COMPONENT  trace_pkdriver
 
 
-  typedef struct  GF_CMapRec_
+  typedef struct  PK_CMapRec_
   {
     FT_CMapRec        cmap;
     FT_UInt32         bc;       /* Beginning Character */
     FT_UInt32         ec;       /* End Character */
-  } GF_CMapRec, *GF_CMap;
+  } PK_CMapRec, *PK_CMap;
 
 
   FT_CALLBACK_DEF( FT_Error )
-  gf_cmap_init(  FT_CMap     gfcmap,
+  pk_cmap_init(  FT_CMap     pkcmap,
                  FT_Pointer  init_data )
   {
-    GF_CMap  cmap = (GF_CMap)gfcmap;
-    GF_Face  face = (GF_Face)FT_CMAP_FACE( cmap );
+    PK_CMap  cmap = (PK_CMap)pkcmap;
+    PK_Face  face = (PK_Face)FT_CMAP_FACE( cmap );
     FT_UNUSED( init_data );
 
-    cmap->bc     = face->gf_glyph->code_min;
-    cmap->ec     = face->gf_glyph->code_max;
+    cmap->bc     = face->pk_glyph->code_min;
+    cmap->ec     = face->pk_glyph->code_max;
 
     return FT_Err_Ok;
   }
 
 
   FT_CALLBACK_DEF( void )
-  gf_cmap_done( FT_CMap  gfcmap )
+  pk_cmap_done( FT_CMap  pkcmap )
   {
-    GF_CMap  cmap = (GF_CMap)gfcmap;
+    PK_CMap  cmap = (PK_CMap)pkcmap;
 
     cmap->bc     =  0;
     cmap->ec     = -1;
-
   }
 
 
   FT_CALLBACK_DEF( FT_UInt )
-  gf_cmap_char_index(  FT_CMap    gfcmap,
+  pk_cmap_char_index(  FT_CMap    pkcmap,
                        FT_UInt32  char_code )
   {
     FT_UInt  gindex = 0;
-    GF_CMap  cmap   = (GF_CMap)gfcmap;
+    PK_CMap  cmap   = (PK_CMap)pkcmap;
 
     char_code -= cmap->bc;
 
@@ -91,10 +90,10 @@
   }
 
   FT_CALLBACK_DEF( FT_UInt )
-  gf_cmap_char_next(  FT_CMap     gfcmap,
-                      FT_UInt32  *achar_code )
+  pk_cmap_char_next(  FT_CMap    pkcmap,
+                       FT_UInt32  *achar_code )
   {
-    GF_CMap    cmap   = (GF_CMap)gfcmap;
+    PK_CMap    cmap   = (PK_CMap)pkcmap;
     FT_UInt    gindex = 0;
     FT_UInt32  result = 0;
     FT_UInt32  char_code = *achar_code + 1;
@@ -121,22 +120,22 @@
 
 
   static
-  const FT_CMap_ClassRec  gf_cmap_class =
+  const FT_CMap_ClassRec  pk_cmap_class =
   {
-    sizeof ( GF_CMapRec ),
-    gf_cmap_init,
-    gf_cmap_done,
-    gf_cmap_char_index,
-    gf_cmap_char_next,
+    sizeof ( PK_CMapRec ),
+    pk_cmap_init,
+    pk_cmap_done,
+    pk_cmap_char_index,
+    pk_cmap_char_next,
 
     NULL, NULL, NULL, NULL, NULL
   };
 
 
   FT_CALLBACK_DEF( void )
-  GF_Face_Done( FT_Face        gfface )         /* GF_Face */
+  PK_Face_Done( FT_Face        pkface )         /* PK_Face */
   {
-    GF_Face    face   = (GF_Face)gfface;
+    PK_Face    face   = (PK_Face)pkface;
     FT_Memory  memory;
 
 
@@ -145,31 +144,29 @@
 
     memory = FT_FACE_MEMORY( face );
 
-    gf_free_font( face );
+    pk_free_font( face );
 
-    FT_FREE( gfface->available_sizes );
-
+    FT_FREE( pkface->available_sizes );
   }
 
 
   FT_CALLBACK_DEF( FT_Error )
-  GF_Face_Init(  FT_Stream      stream,
-                 FT_Face        gfface,         /* GF_Face */
-                 FT_Int         face_index,
-                 FT_Int         num_params,
-                 FT_Parameter*  params )
+  PK_Face_Init(   FT_Stream      stream,
+                  FT_Face        pkface,         /* PK_Face */
+                  FT_Int         face_index,
+                  FT_Int         num_params,
+                  FT_Parameter*  params )
   {
-    GF_Face     face   = (GF_Face)gfface;
+    PK_Face     face   = (PK_Face)pkface;
     FT_Error    error  = FT_Err_Ok;
     FT_Memory   memory = FT_FACE_MEMORY( face );
-    GF_Glyph    go=NULL;
+    PK_Glyph    go=NULL;
     FT_UInt16   i,count;
 
     TFM_Service tfm;
 
     FT_UNUSED( num_params );
     FT_UNUSED( params );
-
 
     face->tfm = FT_Get_Module_Interface( FT_FACE_LIBRARY( face ),
                                            "tfm" );
@@ -181,30 +178,30 @@
       goto Exit;
     }
 
-    FT_TRACE2(( "GF driver\n" ));
+    FT_TRACE2(( "PK driver\n" ));
 
     /* load font */
-    error = gf_load_font( stream, memory, &go );
+    error = pk_load_font( stream, memory, &go );
     if ( FT_ERR_EQ( error, Unknown_File_Format ) )
     {
-      FT_TRACE2(( "  not a GF file\n" ));
+      FT_TRACE2(( "  not a PK file\n" ));
       goto Fail;
     }
     else if ( error )
       goto Exit;
 
-    /* we have a gf font: let's construct the face object */
-    face->gf_glyph = go ;
+    /* we have a pk font: let's construct the face object */
+    face->pk_glyph = go ;
 
     /* sanity check */
-    if ( !face->gf_glyph->bm_table )
+    if ( !face->pk_glyph->bm_table )
     {
       FT_TRACE2(( "glyph bitmaps not allocated\n" ));
       error = FT_THROW( Invalid_File_Format );
       goto Exit;
     }
 
-    /* GF cannot have multiple faces in a single font file.
+    /* PK cannot have multiple faces in a single font file.
      * XXX: non-zero face_index is already invalid argument, but
      *      Type1, Type42 driver has a convention to return
      *      an invalid argument error when the font could be
@@ -212,59 +209,59 @@
      */
     if ( face_index > 0 && ( face_index & 0xFFFF ) > 0 )
     {
-      FT_ERROR(( "GF_Face_Init: invalid face index\n" ));
-      GF_Face_Done( gfface );
+      FT_ERROR(( "PK_Face_Init: invalid face index\n" ));
+      PK_Face_Done( pkface );
       return FT_THROW( Invalid_Argument );
     }
 
     /* we now need to fill the root FT_Face fields */
     /* with relevant information                   */
 
-    gfface->num_faces       = 1;
-    gfface->face_index      = 0;
-    gfface->face_flags     |= FT_FACE_FLAG_FIXED_SIZES |
+    pkface->num_faces       = 1;
+    pkface->face_index      = 0;
+    pkface->face_flags     |= FT_FACE_FLAG_FIXED_SIZES |
                              FT_FACE_FLAG_HORIZONTAL ;
     /*
-     * XXX: TO-DO: gfface->face_flags |= FT_FACE_FLAG_FIXED_WIDTH;
+     * XXX: TO-DO: pkface->face_flags |= FT_FACE_FLAG_FIXED_WIDTH;
      * XXX: I have to check for this.
      */
 
-    gfface->family_name     = NULL;
+    pkface->family_name     = NULL;
     count=0;
     for (i = 0; i < 256; i++)
     {
       if(go->bm_table[i].bitmap != NULL)
         count++;
     }
-    gfface->num_glyphs      = (FT_Long)count;
+    pkface->num_glyphs      = (FT_Long)count;
 
-    FT_TRACE4(( "  number of glyphs: allocated %d\n",gfface->num_glyphs ));
+    FT_TRACE4(( "  number of glyphs: allocated %d\n",pkface->num_glyphs ));
 
-    if ( gfface->num_glyphs <= 0 )
+    if ( pkface->num_glyphs <= 0 )
     {
-      FT_ERROR(( "GF_Face_Init: glyphs not allocated\n" ));
+      FT_ERROR(( "PK_Face_Init: glyphs not allocated\n" ));
       error = FT_THROW( Invalid_File_Format );
       goto Exit;
     }
 
-    gfface->num_fixed_sizes = 1;
-    if ( FT_NEW_ARRAY( gfface->available_sizes, 1 ) )
+    pkface->num_fixed_sizes = 1;
+    if ( FT_NEW_ARRAY( pkface->available_sizes, 1 ) )
       goto Exit;
 
     {
-      FT_Bitmap_Size*  bsize = gfface->available_sizes;
+      FT_Bitmap_Size*  bsize = pkface->available_sizes;
       FT_UShort        x_res, y_res;
 
-      bsize->height = (FT_Short) face->gf_glyph->font_bbx_h ;
-      bsize->width  = (FT_Short) face->gf_glyph->font_bbx_w ;
-      bsize->size   = (FT_Pos)   FT_MulDiv( FT_ABS( face->gf_glyph->ds ),
+      bsize->height = (FT_Short) face->pk_glyph->font_bbx_h ;
+      bsize->width  = (FT_Short) face->pk_glyph->font_bbx_w ;
+      bsize->size   = (FT_Pos)   FT_MulDiv( FT_ABS( face->pk_glyph->ds ),
                                      64 * 7200,
                                      72270L );
 
-      x_res = toint( go->hppp * 72.27 );
-      y_res = toint( go->vppp * 72.27 );
+      x_res = toint( face->pk_glyph->hppp * 72.27 );
+      y_res = toint( face->pk_glyph->vppp * 72.27 );
 
-      bsize->y_ppem = (FT_Pos) toint((face->gf_glyph->ds * y_res)/ 72.27) << 6 ;
+      bsize->y_ppem = (FT_Pos) toint((face->pk_glyph->ds * y_res)/ 72.27) << 6 ;
       bsize->x_ppem = (FT_Pos)FT_MulDiv( bsize->y_ppem,
                                          x_res,
                                          y_res ); ;
@@ -280,7 +277,7 @@
       charmap.encoding_id = TT_MS_ID_UNICODE_CS;
       charmap.face        = FT_FACE( face );
 
-      error = FT_CMap_New( &gf_cmap_class, NULL, &charmap, NULL );
+      error = FT_CMap_New( &pk_cmap_class, NULL, &charmap, NULL );
 
       if ( error )
         goto Exit;
@@ -297,16 +294,16 @@
     return error;
 
   Fail:
-    GF_Face_Done( gfface );
+    PK_Face_Done( pkface );
     return FT_THROW( Unknown_File_Format );
   }
 
   FT_CALLBACK_DEF( FT_Error )
-  GF_Size_Select(  FT_Size   size,
+  PK_Size_Select(  FT_Size   size,
                    FT_ULong  strike_index )
   {
-    GF_Face     face  = (GF_Face)size->face;
-    GF_Glyph    go    = face->gf_glyph;
+    PK_Face     face  = (PK_Face)size->face;
+    PK_Glyph    go    = face->pk_glyph;
     FT_UNUSED( strike_index );
 
     FT_Select_Metrics( size->face, 0 );
@@ -316,14 +313,13 @@
     size->metrics.max_advance = go->font_bbx_w * 64;
 
     return FT_Err_Ok;
-
   }
 
   FT_CALLBACK_DEF( FT_Error )
-  GF_Size_Request(  FT_Size          size,
-                    FT_Size_Request  req )
+  PK_Size_Request( FT_Size          size,
+                   FT_Size_Request  req )
   {
-    GF_Face           face    = (GF_Face)size->face;
+    PK_Face           face    = (PK_Face)size->face;
     FT_Bitmap_Size*   bsize   = size->face->available_sizes;
     FT_Error          error   = FT_ERR( Invalid_Pixel_Size );
     FT_Long           height;
@@ -340,7 +336,7 @@
       break;
 
     case FT_SIZE_REQUEST_TYPE_REAL_DIM:
-      if ( height == face->gf_glyph->font_bbx_h )
+      if ( height == face->pk_glyph->font_bbx_h )
         error = FT_Err_Ok;
       break;
 
@@ -352,26 +348,26 @@
     if ( error )
       return error;
     else
-      return GF_Size_Select( size, 0 );
+      return PK_Size_Select( size, 0 );
   }
 
 
 
   FT_CALLBACK_DEF( FT_Error )
-  GF_Glyph_Load(  FT_GlyphSlot  slot,
-                  FT_Size       size,
-                  FT_UInt       glyph_index,
-                  FT_Int32      load_flags )
+  PK_Glyph_Load(   FT_GlyphSlot  slot,
+                   FT_Size       size,
+                   FT_UInt       glyph_index,
+                   FT_Int32      load_flags )
   {
-    GF_Face      gf     = (GF_Face)FT_SIZE_FACE( size );
-    FT_Face      face   = FT_FACE( gf );
+    PK_Face      pk     = (PK_Face)FT_SIZE_FACE( size );
+    FT_Face      face   = FT_FACE( pk );
     FT_Error     error  = FT_Err_Ok;
     FT_Bitmap*   bitmap = &slot->bitmap;
-    GF_BitmapRec bm;
-    GF_Glyph     go;
+    PK_BitmapRec bm;
+    PK_Glyph     go;
     FT_Int       ascent;
 
-    go = gf->gf_glyph;
+    go = pk->pk_glyph;
 
     FT_UNUSED( load_flags );
 
@@ -388,9 +384,9 @@
       goto Exit;
     }
 
-    FT_TRACE1(( "GF_Glyph_Load: glyph index %d\n", glyph_index ));
+    FT_TRACE1(( "PK_Glyph_Load: glyph index %d\n", glyph_index ));
 
-    if ( (FT_Int)glyph_index < 0 )
+    if ( glyph_index < 0 )
       glyph_index = 0;
 
     if ((glyph_index < go->code_min) || (go->code_max < glyph_index))
@@ -407,8 +403,8 @@
       goto Exit;
     }
 
-    /* slot, bitmap => freetype, bm => gflib */
-    bm = gf->gf_glyph->bm_table[glyph_index];
+    /* slot, bitmap => freetype, bm => pklib */
+    bm = pk->pk_glyph->bm_table[glyph_index];
 
     bitmap->rows       = bm.bbx_height;
     bitmap->width      = bm.bbx_width;
@@ -456,7 +452,7 @@
 
   /* parse a TFM metrics file */
   FT_LOCAL_DEF( FT_Error )
-  TFM_Read_Metrics( FT_Face    gf_face,
+  TFM_Read_Metrics( FT_Face    pk_face,
                     FT_Stream  stream )
   {
     TFM_Service    tfm;
@@ -464,8 +460,8 @@
     TFM_ParserRec  parser;
     TFM_FontInfo   fi      = NULL;
     FT_Error       error   = FT_ERR( Unknown_File_Format );
-    GF_Face        face    = (GF_Face)gf_face;
-    GF_Glyph       gf_glyph= face->gf_glyph;
+    PK_Face        face    = (PK_Face)pk_face;
+    PK_Glyph       pk_glyph= face->pk_glyph;
 
 
     if ( face->tfm_data )
@@ -493,7 +489,7 @@
     {
       FT_TRACE4(( "TFM_Read_Metrics: Initialised tfm metric data.\n" ));
       parser.FontInfo  = fi;
-      parser.user_data = gf_glyph;
+      parser.user_data = pk_glyph;
 
       error = tfm->parse_metrics( &parser );
       if( !error )
@@ -514,10 +510,10 @@
 
     if ( !error )
     {
-      /* Modify GF_Glyph data according to TFM metric values */
+      /* Modify PK_Glyph data according to TFM metric values */
 
-      /*face->gf_glyph->font_bbx_w = fi->font_bbx_w;
-      face->gf_glyph->font_bbx_h = fi->font_bbx_h;
+      /*face->pk_glyph->font_bbx_w = fi->font_bbx_w;
+      face->pk_glyph->font_bbx_h = fi->font_bbx_h;
       */
 
       face->tfm_data       = fi;
@@ -537,32 +533,33 @@
   *
   */
 
-  static const FT_ServiceDescRec  gf_services[] =
+  static const FT_ServiceDescRec  pk_services[] =
   {
-    { FT_SERVICE_ID_GF,          NULL },
-    { FT_SERVICE_ID_FONT_FORMAT, FT_FONT_FORMAT_GF },
+    { FT_SERVICE_ID_PK,          NULL },
+    { FT_SERVICE_ID_FONT_FORMAT, FT_FONT_FORMAT_PK },
     { NULL, NULL }
   };
 
+
   FT_CALLBACK_DEF( FT_Module_Interface )
-  gf_driver_requester( FT_Module    module,
+  pk_driver_requester( FT_Module    module,
                         const char*  name )
   {
     FT_UNUSED( module );
 
-    return ft_service_list_lookup( gf_services, name );
+    return ft_service_list_lookup( pk_services, name );
   }
 
 
    FT_CALLBACK_TABLE_DEF
-  const FT_Driver_ClassRec  gf_driver_class =
+  const FT_Driver_ClassRec  pk_driver_class =
   {
     {
       FT_MODULE_FONT_DRIVER         |
       FT_MODULE_DRIVER_NO_OUTLINES,
       sizeof ( FT_DriverRec ),
 
-      "gf",
+      "pk",
       0x10000L,
       0x20000L,
 
@@ -570,28 +567,28 @@
 
       NULL,                     /* FT_Module_Constructor  module_init   */
       NULL,                     /* FT_Module_Destructor   module_done   */
-      gf_driver_requester     	/* FT_Module_Requester    get_interface */
+      pk_driver_requester       /* FT_Module_Requester    get_interface */
     },
 
-    sizeof ( GF_FaceRec ),
+    sizeof ( PK_FaceRec ),
     sizeof ( FT_SizeRec ),
     sizeof ( FT_GlyphSlotRec ),
 
-    GF_Face_Init,               /* FT_Face_InitFunc  init_face */
-    GF_Face_Done,               /* FT_Face_DoneFunc  done_face */
+    PK_Face_Init,               /* FT_Face_InitFunc  init_face */
+    PK_Face_Done,               /* FT_Face_DoneFunc  done_face */
     NULL,                       /* FT_Size_InitFunc  init_size */
     NULL,                       /* FT_Size_DoneFunc  done_size */
     NULL,                       /* FT_Slot_InitFunc  init_slot */
     NULL,                       /* FT_Slot_DoneFunc  done_slot */
 
-    GF_Glyph_Load,              /* FT_Slot_LoadFunc  load_glyph */
+    PK_Glyph_Load,              /* FT_Slot_LoadFunc  load_glyph */
 
     NULL,                       /* FT_Face_GetKerningFunc   get_kerning  */
     TFM_Read_Metrics,           /* FT_Face_AttachFunc       attach_file  */
     NULL,                       /* FT_Face_GetAdvancesFunc  get_advances */
 
-    GF_Size_Request,           /* FT_Size_RequestFunc  request_size */
-    GF_Size_Select             /* FT_Size_SelectFunc   select_size  */
+    PK_Size_Request,           /* FT_Size_RequestFunc  request_size */
+    PK_Size_Select             /* FT_Size_SelectFunc   select_size  */
   };
 
 

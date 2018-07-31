@@ -165,6 +165,10 @@ FT_BEGIN_HEADER
 #define FT_BYTE_U32( p, i, s )  ( FT_UINT32( FT_BYTE_( p, i ) ) << (s) )
 
 
+  /*
+   * `FT_PEEK_XXX' are generic macros to get data from a buffer position.
+   * No safety checks are performed.
+   */
 #define FT_PEEK_SHORT( p )  FT_INT16( FT_BYTE_U16( p, 0, 8 ) | \
                                       FT_BYTE_U16( p, 1, 0 ) )
 
@@ -213,7 +217,10 @@ FT_BEGIN_HEADER
                                           FT_BYTE_U32( p, 1,  8 ) | \
                                           FT_BYTE_U32( p, 0,  0 ) )
 
-
+  /*
+   * `FT_NEXT_XXX' are generic macros to get data from a buffer position
+   * which is then increased appropriately.  No safety checks are performed.
+   */
 #define FT_NEXT_CHAR( buffer )       \
           ( (signed char)*buffer++ )
 
@@ -260,7 +267,11 @@ FT_BEGIN_HEADER
 
   /**************************************************************************
    *
-   * Each GET_xxxx() macro uses an implicit `stream' variable.
+   * The `FT_GET_XXX' macros use an implicit `stream' variable.
+   *
+   * Note that a call to `FT_STREAM_SEEK' or `FT_STREAM_POS' has *no* effect
+   * on `FT_GET_XXX'!  They operate on `stream->pos', while `FT_GET_XXX' use
+   * `stream->cursor'.
    */
 #if 0
 #define FT_GET_MACRO( type )    FT_NEXT_ ## type ( stream->cursor )
@@ -299,10 +310,18 @@ FT_BEGIN_HEADER
 #define FT_GET_ULONG_LE()   FT_GET_MACRO( FT_Stream_GetULongLE, FT_ULong )
 #endif
 
+
 #define FT_READ_MACRO( func, type, var )        \
           ( var = (type)func( stream, &error ), \
             error != FT_Err_Ok )
 
+  /*
+   * The `FT_READ_XXX' macros use implicit `stream' and `error' variables.
+   *
+   * `FT_READ_XXX' can be controlled with `FT_STREAM_SEEK' and
+   * `FT_STREAM_POS'.  They use the full machinery to check whether a read
+   * is valid.
+   */
 #define FT_READ_BYTE( var )       FT_READ_MACRO( FT_Stream_ReadChar, FT_Byte, var )
 #define FT_READ_CHAR( var )       FT_READ_MACRO( FT_Stream_ReadChar, FT_Char, var )
 #define FT_READ_SHORT( var )      FT_READ_MACRO( FT_Stream_ReadUShort, FT_Short, var )
@@ -387,10 +406,10 @@ FT_BEGIN_HEADER
 
   /* Enter a frame of `count' consecutive bytes in a stream.  Returns an */
   /* error if the frame could not be read/accessed.  The caller can use  */
-  /* the FT_Stream_Get_XXX functions to retrieve frame data without      */
+  /* the `FT_Stream_Get_XXX' functions to retrieve frame data without    */
   /* error checks.                                                       */
   /*                                                                     */
-  /* You must _always_ call FT_Stream_ExitFrame() once you have entered  */
+  /* You must _always_ call `FT_Stream_ExitFrame' once you have entered  */
   /* a stream frame!                                                     */
   /*                                                                     */
   FT_BASE( FT_Error )
@@ -415,7 +434,7 @@ FT_BEGIN_HEADER
                           FT_ULong   count,
                           FT_Byte**  pbytes );
 
-  /* release an extract frame (see FT_Stream_ExtractFrame) */
+  /* release an extract frame (see `FT_Stream_ExtractFrame') */
   FT_BASE( void )
   FT_Stream_ReleaseFrame( FT_Stream  stream,
                           FT_Byte**  pbytes );

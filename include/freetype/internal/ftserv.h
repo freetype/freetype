@@ -511,6 +511,7 @@ FT_BEGIN_HEADER
 #define FT_SERVICE_TT_CMAP_H            <freetype/internal/services/svttcmap.h>
 #define FT_SERVICE_WINFNT_H             <freetype/internal/services/svwinfnt.h>
 #define FT_SERVICE_GF_H                 <freetype/internal/services/svgf.h>
+#define FT_SERVICE_PK_H                 <freetype/internal/services/svpk.h>
 
  /* */
 

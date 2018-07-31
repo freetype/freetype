@@ -13,49 +13,51 @@
 # fully.
 
 
-# tfm driver directory
+# TFM driver directory
 #
 TFM_DIR := $(SRC_DIR)/tfm
 
 
-TFM_COMPILE := $(CC) $(ANSIFLAGS)                            \
-                     $I$(subst /,$(COMPILER_SEP),$(TFM_DIR)) \
-                     $(INCLUDE_FLAGS)                        \
-                     $(FT_CFLAGS)
-
-
-# tfm driver sources (i.e., C files)
+# compilation flags for the driver
 #
-TFM_DRV_SRC :=  $(TFM_DIR)/tfmlib.c \
-               $(TFM_DIR)/tfmdrivr.c
+TFM_COMPILE := $(CC) $(ANSIFLAGS)                              \
+                       $I$(subst /,$(COMPILER_SEP),$(TFM_DIR)) \
+                       $(INCLUDE_FLAGS)                          \
+                       $(FT_CFLAGS)
 
 
-# tfm driver headers
+# TFM driver sources (i.e., C files)
 #
-TFM_DRV_H :=  $(TFM_DIR)/tfm.h \
-             $(TFM_DIR)/tfmdrivr.h \
-             $(TFM_DIR)/tfmerror.h
+TFM_DRV_SRC := $(TFM_DIR)/tfmmod.c   \
+               $(TFM_DIR)/tfmobjs.c   \
 
-# tfm driver object(s)
+# TFM driver headers
 #
-#   TFM_DRV_OBJ_M is used during `multi' builds
-#   TFM_DRV_OBJ_S is used during `single' builds
+TFM_DRV_H := $(TFM_DRV_SRC:%c=%h)  \
+               $(TFM_DIR)/tfmerr.h \
+
+
+# TFM driver object(s)
+#
+#   TFM_DRV_OBJ_M is used during `multi' builds.
+#   TFM_DRV_OBJ_S is used during `single' builds.
 #
 TFM_DRV_OBJ_M := $(TFM_DRV_SRC:$(TFM_DIR)/%.c=$(OBJ_DIR)/%.$O)
 TFM_DRV_OBJ_S := $(OBJ_DIR)/tfm.$O
 
-# tfm driver source file for single build
+# TFM driver source file for single build
 #
 TFM_DRV_SRC_S := $(TFM_DIR)/tfm.c
 
 
-# tfm driver - single object
+# TFM driver - single object
 #
-$(TFM_DRV_OBJ_S): $(TFM_DRV_SRC_S) $(TFM_DRV_SRC) $(FREETYPE_H) $(TFM_DRV_H)
+$(TFM_DRV_OBJ_S): $(TFM_DRV_SRC_S) $(TFM_DRV_SRC) \
+                   $(FREETYPE_H) $(TFM_DRV_H)
 	$(TFM_COMPILE) $T$(subst /,$(COMPILER_SEP),$@ $(TFM_DRV_SRC_S))
 
 
-# tfm driver - multiple objects
+# TFM driver - multiple objects
 #
 $(OBJ_DIR)/%.$O: $(TFM_DIR)/%.c $(FREETYPE_H) $(TFM_DRV_H)
 	$(TFM_COMPILE) $T$(subst /,$(COMPILER_SEP),$@ $<)
