@@ -49,8 +49,12 @@ FT_BEGIN_HEADER
 
   typedef struct  PK_FaceRec_
   {
-    FT_FaceRec        root;
-    PK_Glyph          pk_glyph;
+    FT_FaceRec      root;
+    PK_Glyph        pk_glyph;
+
+    const void*     tfm;
+    const void*     tfm_data;
+
   } PK_FaceRec, *PK_Face;
 
   FT_EXPORT_VAR( const FT_Driver_ClassRec )  pk_driver_class;
