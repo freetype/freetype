@@ -1308,7 +1308,7 @@
                 (double)temp[2] / 65536 / 1000,
                 (double)temp[3] / 65536 / 1000,
                 (double)temp[4] / 65536 / 1000,
-                (double)temp[5] / 65536 / 1000));
+                (double)temp[5] / 65536 / 1000 ));
 
     temp_scale = FT_ABS( temp[3] );
 
