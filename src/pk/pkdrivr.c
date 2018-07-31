@@ -21,10 +21,10 @@
 #include FT_INTERNAL_STREAM_H
 #include FT_INTERNAL_OBJECTS_H
 #include FT_TRUETYPE_IDS_H
+#include FT_INTERNAL_TFM_H
 
 #include FT_SERVICE_PK_H
 #include FT_SERVICE_FONT_FORMAT_H
-
 
 #include "pk.h"
 #include "pkdrivr.h"
@@ -163,9 +163,20 @@
     PK_Glyph    go=NULL;
     FT_UInt16   i,count;
 
+    TFM_Service tfm;
+
     FT_UNUSED( num_params );
     FT_UNUSED( params );
 
+    face->tfm = FT_Get_Module_Interface( FT_FACE_LIBRARY( face ),
+                                           "tfm" );
+    tfm = (TFM_Service)face->tfm;
+    if ( !tfm )
+    {
+      FT_ERROR(( "GF_Face_Init: cannot access `tfm' module\n" ));
+      error = FT_THROW( Missing_Module );
+      goto Exit;
+    }
 
     FT_TRACE2(( "PK driver\n" ));
 
@@ -429,6 +440,93 @@
     return error;
   }
 
+  FT_LOCAL_DEF( void )
+  TFM_Done_Metrics( FT_Memory     memory,
+                    TFM_FontInfo  fi )
+  {
+    FT_FREE(fi->width);
+    FT_FREE(fi->height);
+    FT_FREE(fi->depth);
+    FT_FREE( fi );
+  }
+
+  /* parse a TFM metrics file */
+  FT_LOCAL_DEF( FT_Error )
+  TFM_Read_Metrics( FT_Face    pk_face,
+                    FT_Stream  stream )
+  {
+    TFM_Service    tfm;
+    FT_Memory      memory  = stream->memory;
+    TFM_ParserRec  parser;
+    TFM_FontInfo   fi      = NULL;
+    FT_Error       error   = FT_ERR( Unknown_File_Format );
+    PK_Face        face    = (PK_Face)pk_face;
+    PK_Glyph       pk_glyph= face->pk_glyph;
+
+
+    if ( face->tfm_data )
+    {
+      FT_TRACE1(( "TFM_Read_Metrics:"
+                  " Freeing previously attached metrics data.\n" ));
+      TFM_Done_Metrics( memory, (TFM_FontInfo)face->tfm_data );
+
+      face->tfm_data = NULL;
+    }
+
+    if ( FT_NEW( fi ) )
+      goto Exit;
+
+    FT_TRACE4(( "TFM_Read_Metrics: Invoking TFM_Service.\n" ));
+
+    tfm = (TFM_Service)face->tfm;
+
+    /* Initialise TFM Service */
+    error = tfm->init( &parser,
+                       memory,
+                       stream );
+
+    if ( !error )
+    {
+      FT_TRACE4(( "TFM_Read_Metrics: Initialised tfm metric data.\n" ));
+      parser.FontInfo  = fi;
+      parser.user_data = pk_glyph;
+
+      error = tfm->parse_metrics( &parser );
+      if( !error )
+        FT_TRACE4(( "TFM_Read_Metrics: parsing TFM metric information done.\n" ));
+
+      FT_TRACE6(( "TFM_Read_Metrics: TFM Metric Information:\n"
+                  "                  Check Sum  : %ld\n"
+                  "                  Design Size: %ld\n"
+                  "                  Begin Char : %d\n"
+                  "                  End Char   : %d\n"
+                  "                  font_bbx_w : %d\n"
+                  "                  font_bbx_h : %d\n"
+                  "                  slant      : %d\n", parser.FontInfo->cs, parser.FontInfo->design_size, parser.FontInfo->begin_char,
+                                                         parser.FontInfo->end_char, parser.FontInfo->font_bbx_w,
+                                                         parser.FontInfo->font_bbx_h, parser.FontInfo->slant ));
+      tfm->done( &parser );
+    }
+
+    if ( !error )
+    {
+      /* Modify PK_Glyph data according to TFM metric values */
+
+      /*face->pk_glyph->font_bbx_w = fi->font_bbx_w;
+      face->pk_glyph->font_bbx_h = fi->font_bbx_h;
+      */
+
+      face->tfm_data       = fi;
+      fi                   = NULL;
+    }
+
+  Exit:
+    if ( fi )
+      TFM_Done_Metrics( memory, fi );
+
+    return error;
+  }
+
  /*
   *
   * SERVICES LIST
@@ -486,7 +584,7 @@
     PK_Glyph_Load,              /* FT_Slot_LoadFunc  load_glyph */
 
     NULL,                       /* FT_Face_GetKerningFunc   get_kerning  */
-    NULL,                       /* FT_Face_AttachFunc       attach_file  */
+    TFM_Read_Metrics,           /* FT_Face_AttachFunc       attach_file  */
     NULL,                       /* FT_Face_GetAdvancesFunc  get_advances */
 
     PK_Size_Request,           /* FT_Size_RequestFunc  request_size */
