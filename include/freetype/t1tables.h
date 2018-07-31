@@ -336,7 +336,16 @@ FT_BEGIN_HEADER
    *   CID_FaceDictRec
    *
    * @description:
-   *   A structure used to represent data in a CID top-level dictionary.
+   *   A structure used to represent data in a CID top-level dictionary.  In
+   *   most cases, they are part of the font's `/FDArray' array.  Within a
+   *   CID font file, such (internal) subfont dictionaries are enclosed by
+   *   `%ADOBeginFontDict' and `%ADOEndFontDict' comments.
+   *
+   *   Note that `CID_FaceDictRec' misses a field for the `/FontName'
+   *   keyword, specifying the subfont's name (the top-level font name is
+   *   given by the `/CIDFontName' keyword).  This is an oversight, but it
+   *   doesn't limit the `cid' font module's functionality because FreeType
+   *   neither needs this entry nor gives access to CID subfonts.
    */
   typedef struct  CID_FaceDictRec_
   {
@@ -345,8 +354,8 @@ FT_BEGIN_HEADER
     FT_UInt        len_buildchar;
     FT_Fixed       forcebold_threshold;
     FT_Pos         stroke_width;
-    FT_Fixed       expansion_factor;
-
+    FT_Fixed       expansion_factor;   /* this is a duplicate of           */
+                                       /* `private_dict->expansion_factor' */
     FT_Byte        paint_type;
     FT_Byte        font_type;
     FT_Matrix      font_matrix;
