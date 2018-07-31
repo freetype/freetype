@@ -306,7 +306,6 @@ unsigned char   bits_table[] = {
     pre = READ_UINT1( stream );
     if (pre != PK_PRE)
     {
-      FT_ERROR(( "pk_load_font: missing PK_PRE(247) field\n" ));
       error = FT_THROW( Unknown_File_Format );
       goto Exit;
     }
@@ -314,7 +313,6 @@ unsigned char   bits_table[] = {
     id = READ_UINT1( stream );
     if (id != PK_ID)
     {
-      FT_ERROR(( "pk_load_font: missing PK_ID(89) field\n" ));
       error = FT_THROW( Unknown_File_Format );
       goto Exit;
     }
@@ -512,7 +510,7 @@ unsigned char   bits_table[] = {
           if (pk_read_14(stream, dny_f, bw, rs, &(go->bm_table[index]), cc) < 0)
           {
             /* vf_error = VF_ERR_ILL_FONT_FILE; (FOR TRACING) */
-            error = FT_THROW( Invalid_File_Format );
+            error = FT_THROW( Unknown_File_Format );
             goto Exit;
           }
         }
@@ -521,7 +519,7 @@ unsigned char   bits_table[] = {
           if (pk_read_n14(stream, dny_f, bw, rs, &(go->bm_table[index]), cc) < 0)
           {
             /* vf_error = VF_ERR_ILL_FONT_FILE; (FOR TRACING) */
-            error = FT_THROW( Invalid_File_Format );
+            error = FT_THROW( Unknown_File_Format );
             goto Exit;
           }
         }
@@ -539,13 +537,16 @@ unsigned char   bits_table[] = {
     return error;
 
     Exit:
-      for (i = 0; i < nchars; i++)
+      if (go != NULL)
       {
-        if (go->bm_table[i].bitmap != NULL)
-         FT_FREE(go->bm_table[i].bitmap);
+        for (i = 0; i < nchars; i++)
+        {
+          if (go->bm_table[i].bitmap != NULL)
+           FT_FREE(go->bm_table[i].bitmap);
+        }
+        FT_FREE(go->bm_table);
+        FT_FREE(go);
       }
-      FT_FREE(go->bm_table);
-      FT_FREE(go);
       return error;
   }
 
