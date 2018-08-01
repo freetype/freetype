@@ -167,6 +167,7 @@
       return error;
 
     lf = (FT_ULong)READ_UINT2( stream );
+    fi->fs = 4*lf - 1 ;
 
     #if 0
     if ((lf == 11) || (lf == 9))
