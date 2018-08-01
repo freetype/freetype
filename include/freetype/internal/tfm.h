@@ -48,7 +48,7 @@ FT_BEGIN_HEADER
     /* Font Info */
     FT_Long        cs; /* Check Sum */
     /* Metrics */
-    FT_ULong       ds; /* Design Size */
+    FT_ULong       ds, fs; /* Design Size */
     FT_UInt        design_size;
     FT_UInt        slant;
     FT_UInt        begin_char, end_char;
