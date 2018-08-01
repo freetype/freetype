@@ -320,10 +320,10 @@ unsigned char   bits_table[] = {
     k = READ_UINT1( stream );
     if ( FT_STREAM_SKIP( k ) )
       goto Exit;
-    ds        = READ_UINT4( stream );
-    check_sum = READ_UINT4( stream );
-    hppp      = READ_UINT4( stream );
-    vppp      = READ_UINT4( stream );
+    ds        = READ_INT4( stream );
+    check_sum = READ_INT4( stream );
+    hppp      = READ_INT4( stream );
+    vppp      = READ_INT4( stream );
 
     /* gptr = ftell(fp); */
     gptr = stream->pos;
@@ -510,6 +510,7 @@ unsigned char   bits_table[] = {
           if (pk_read_14(stream, dny_f, bw, rs, &(go->bm_table[index]), cc) < 0)
           {
             /* vf_error = VF_ERR_ILL_FONT_FILE; (FOR TRACING) */
+            FT_ERROR(( "pk_load_font: error in `pk_read_14'\n" ));
             error = FT_THROW( Unknown_File_Format );
             goto Exit;
           }
@@ -519,6 +520,7 @@ unsigned char   bits_table[] = {
           if (pk_read_n14(stream, dny_f, bw, rs, &(go->bm_table[index]), cc) < 0)
           {
             /* vf_error = VF_ERR_ILL_FONT_FILE; (FOR TRACING) */
+            FT_ERROR(( "pk_load_font: error in `pk_read_n14'\n" ));
             error = FT_THROW( Unknown_File_Format );
             goto Exit;
           }
