@@ -77,12 +77,12 @@
 
 
     FT_ASSERT( first );
-printf("Hi I am here in FTC_MruNode_Up 0\n");
+
     if ( first != node )
     {
       FTC_MruNode  prev, next, last;
 
-printf("Hi I am here in FTC_MruNode_Up 1\n");
+
 #ifdef FT_DEBUG_ERROR
       {
         FTC_MruNode  cnode = first;
@@ -240,39 +240,39 @@ printf("Hi I am here in FTC_MruNode_Up 1\n");
     FT_Error     error;
     FTC_MruNode  node   = NULL;
     FT_Memory    memory = list->memory;
-printf("Hi I am here in FTC_MruList_New 0\n");
+
 
     if ( list->num_nodes >= list->max_nodes && list->max_nodes > 0 )
     {
       node = list->nodes->prev;
 
       FT_ASSERT( node );
-printf("Hi I am here in FTC_MruList_New 1\n");
+
       if ( list->clazz.node_reset )
-      {printf("Hi I am here in FTC_MruList_New 2\n");
+      {
         FTC_MruNode_Up( &list->nodes, node );
-printf("Hi I am here in FTC_MruList_New 3\n");
-        error = list->clazz.node_reset( node, key, list->data );printf("Hi I am here in FTC_MruList_New 4\n");
+
+        error = list->clazz.node_reset( node, key, list->data );
         if ( !error )
           goto Exit;
       }
-printf("Hi I am here in FTC_MruList_New 5\n");
+
       FTC_MruNode_Remove( &list->nodes, node );
       list->num_nodes--;
-printf("Hi I am here in FTC_MruList_New 6\n");
+
       if ( list->clazz.node_done )
         list->clazz.node_done( node, list->data );
     }
     else if ( FT_ALLOC( node, list->clazz.node_size ) )
       goto Exit;
-printf("Hi I am here in FTC_MruList_New 7\n");
-    error = list->clazz.node_init( node, key, list->data );printf("Hi I am here in FTC_MruList_New 7.1\n");
+
+    error = list->clazz.node_init( node, key, list->data );
     if ( error )
       goto Fail;
-printf("Hi I am here in FTC_MruList_New 8\n");
+
     FTC_MruNode_Prepend( &list->nodes, node );
     list->num_nodes++;
-printf("Hi I am here in FTC_MruList_New 9\n");
+
   Exit:
     *anode = node;
     return error;

@@ -40,7 +40,6 @@
     FT_Size   size = NULL;
     FT_Error  error;
 
-printf("Hi I am here in ftc_scaler_lookup_size 1\n");
     error = FTC_Manager_LookupFace( manager, scaler->face_id, &face );
     if ( error )
       goto Exit;
@@ -122,7 +121,6 @@ printf("Hi I am here in ftc_scaler_lookup_size 1\n");
     FTC_SizeNode  node    = (FTC_SizeNode)ftcnode;
     FTC_Scaler    scaler  = (FTC_Scaler)ftcscaler;
     FTC_Manager   manager = (FTC_Manager)ftcmanager;
-printf("Hi I am here in ftc_size_node_init 1\n");
 
     node->scaler = scaler[0];
 
@@ -321,15 +319,12 @@ printf("Hi I am here in ftc_size_node_init 1\n");
 
     /* we break encapsulation for the sake of speed */
 #ifdef FTC_INLINE
-printf("Hi I am here in FTC_Manager_LookupFace 0\n");
     FTC_MRULIST_LOOKUP_CMP( &manager->faces, face_id, ftc_face_node_compare,
                             mrunode, error );
 
 #else
-printf("Hi I am here in FTC_Manager_LookupFace 1\n");
     error = FTC_MruList_Lookup( &manager->faces, face_id, &mrunode );
 #endif
-printf("Hi I am here in FTC_Manager_LookupFace 2\n");
     if ( !error )
       *aface = FTC_FACE_NODE( mrunode )->face;
 
