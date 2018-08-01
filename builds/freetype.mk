@@ -289,49 +289,50 @@ objects: $(OBJECTS_LIST)
 
 library: $(PROJECT_LIBRARY)
 
-
+# Run `docwriter' in the current Python environment.
+# We first check if package is installed using the pip option `show'
 # Option `-B' disables generation of .pyc files (available since python 2.6)
 #
+
+PYTHON ?= python
+PIP    ?= pip
+
 refdoc:
-	@echo Installing requirements...
-	python -m pip install --user -r \
-                        $(SRC_DIR)/tools/docwriter/requirements.txt
-	@echo "Running docwriter..."
-	python -B $(SRC_DIR)/tools/docwriter/docwriter.py \
-                  --prefix=ft2                          \
-                  --title=FreeType-$(version)           \
-                  --output=$(DOC_DIR)                   \
-                  $(PUBLIC_DIR)/*.h                     \
-                  $(PUBLIC_DIR)/config/*.h              \
-                  $(PUBLIC_DIR)/cache/*.h
+	@echo Running docwriter...
+	$(PYTHON) -m docwriter                          \
+				--prefix=ft2                        \
+				--title=FreeType-$(version)         \
+				--output=$(DOC_DIR)                 \
+				$(PUBLIC_DIR)/*.h                   \
+				$(PUBLIC_DIR)/config/*.h            \
+				$(PUBLIC_DIR)/cache/*.h
 	@echo Building static site...
 	cd $(DOC_DIR) && mkdocs build
 	@echo Done.
 
-# Variables for running refdoc with Python's `virtualenv'.
-# The env is created in `DOC_DIR/env' and is gitignored.
-# We still need to cd into `DOC_DIR' to build mkdocs because
-# paths in mkdocs.yml are relative to cwd.
+# Variables for running refdoc with Python's `virtualenv'. The env is
+# created in `DOC_DIR/env' and is gitignored.
+# We still need to cd into `DOC_DIR' to build mkdocs because paths in
+# mkdocs.yml are relative to cwd.
 #
-VENV_NAME     := env
-IN_VENV       := $(DOC_DIR)$(SEP)$(VENV_NAME)
-VENV_ACTIVATE := $(IN_VENV)$(SEP)$(BIN)$(SEP)activate
-PYTHON        := $(IN_VENV)$(SEP)$(BIN)$(SEP)python
-PIP           := $(IN_VENV)$(SEP)$(BIN)$(SEP)pip
+VENV_NAME  := env
+VENV_DIR   := $(DOC_DIR)$(SEP)$(VENV_NAME)
+ENV_PYTHON := $(VENV_DIR)$(SEP)$(BIN)$(SEP)$(PYTHON)
+ENV_PIP    := $(VENV_DIR)$(SEP)$(BIN)$(SEP)$(PIP)
 
 refdoc-venv:
 	@echo Setting up virtualenv for Python...
-	virtualenv $(IN_VENV)
-	@echo Installing requirements...
-	$(PIP) install -r $(SRC_DIR)/tools/docwriter/requirements.txt
-	@echo "Running docwriter..."
-	$(PYTHON) -B $(SRC_DIR)/tools/docwriter/docwriter.py  \
-                  --prefix=ft2                          \
-                  --title=FreeType-$(version)           \
-                  --output=$(DOC_DIR)                   \
-                  $(PUBLIC_DIR)/*.h                     \
-                  $(PUBLIC_DIR)/config/*.h              \
-                  $(PUBLIC_DIR)/cache/*.h
+	virtualenv $(VENV_DIR)
+	@echo Installing docwriter...
+	$(ENV_PIP) install docwriter
+	@echo Running docwriter...
+	$(ENV_PYTHON) -m docwriter                      \
+					--prefix=ft2                    \
+					--title=FreeType-$(version)     \
+					--output=$(DOC_DIR)             \
+					$(PUBLIC_DIR)/*.h               \
+					$(PUBLIC_DIR)/config/*.h        \
+					$(PUBLIC_DIR)/cache/*.h
 	@echo Building static site...
 	cd $(DOC_DIR) && $(VENV_NAME)$(SEP)$(BIN)$(SEP)python -m mkdocs build
 	@echo Done.
