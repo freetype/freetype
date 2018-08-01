@@ -970,10 +970,10 @@ esac
 
 # Check for python and docwriter
 
-AC_CHECK_PROGS([PYTHON], [python python2 python3], [missing])
+AC_CHECK_PROGS([PYTHON], [python3 python2 python], [missing])
 have_docwriter=no
 if test "x$PYTHON" != "xmissing"; then
-  AC_CHECK_PROGS([PIP], [pip pip2 pip3], [missing])
+  AC_CHECK_PROGS([PIP], [pip3 pip2 pip], [missing])
 
   if test "x$PIP" != "xmissing"; then
     AC_MSG_CHECKING([for \`docwriter' Python module])

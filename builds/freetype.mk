@@ -299,13 +299,13 @@ PIP    ?= pip
 
 refdoc:
 	@echo Running docwriter...
-	$(PYTHON) -m docwriter                          \
-				--prefix=ft2                        \
-				--title=FreeType-$(version)         \
-				--output=$(DOC_DIR)                 \
-				$(PUBLIC_DIR)/*.h                   \
-				$(PUBLIC_DIR)/config/*.h            \
-				$(PUBLIC_DIR)/cache/*.h
+	$(PYTHON) -m docwriter                      \
+			--prefix=ft2                        \
+			--title=FreeType-$(version)         \
+			--output=$(DOC_DIR)                 \
+			$(PUBLIC_DIR)/*.h                   \
+			$(PUBLIC_DIR)/config/*.h            \
+			$(PUBLIC_DIR)/cache/*.h
 	@echo Building static site...
 	cd $(DOC_DIR) && mkdocs build
 	@echo Done.
@@ -326,13 +326,13 @@ refdoc-venv:
 	@echo Installing docwriter...
 	$(ENV_PIP) install docwriter
 	@echo Running docwriter...
-	$(ENV_PYTHON) -m docwriter                      \
-					--prefix=ft2                    \
-					--title=FreeType-$(version)     \
-					--output=$(DOC_DIR)             \
-					$(PUBLIC_DIR)/*.h               \
-					$(PUBLIC_DIR)/config/*.h        \
-					$(PUBLIC_DIR)/cache/*.h
+	$(ENV_PYTHON) -m docwriter              \
+			--prefix=ft2                    \
+			--title=FreeType-$(version)     \
+			--output=$(DOC_DIR)             \
+			$(PUBLIC_DIR)/*.h               \
+			$(PUBLIC_DIR)/config/*.h        \
+			$(PUBLIC_DIR)/cache/*.h
 	@echo Building static site...
 	cd $(DOC_DIR) && $(VENV_NAME)$(SEP)$(BIN)$(SEP)python -m mkdocs build
 	@echo Done.
