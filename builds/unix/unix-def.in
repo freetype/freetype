@@ -21,7 +21,7 @@ DELDIR := rm -rf
 CAT    := cat
 SEP    := /
 
-# this is used for `make refdoc' and `make refdoc-venv'
+# This is used for `make refdoc' and `make refdoc-venv'
 #
 PYTHON := @PYTHON@
 PIP    := @PIP@

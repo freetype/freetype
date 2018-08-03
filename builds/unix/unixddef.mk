@@ -22,6 +22,9 @@ PLATFORM := unix
 DELETE := rm -f
 CAT    := cat
 SEP    := /
+
+# This is used for `make refdoc' and `make refdoc-venv'
+#
 BIN    := bin
 
 # we use a special devel ftoption.h

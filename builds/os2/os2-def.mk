@@ -16,9 +16,12 @@
 DELETE    := del
 CAT       := type
 SEP       := $(strip \ )
-BIN       := Scripts
 BUILD_DIR := $(TOP_DIR)/builds/os2
 PLATFORM  := os2
+
+# This is used for `make refdoc' and `make refdoc-venv'
+#
+BIN    := Scripts
 
 # The executable file extension (for tools), *with* leading dot.
 #
