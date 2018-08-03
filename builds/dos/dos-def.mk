@@ -21,7 +21,7 @@ PLATFORM  := dos
 
 # This is used for `make refdoc' and `make refdoc-venv'
 #
-BIN    := Scripts
+BIN := Scripts
 
 # The executable file extension (for tools), *with* leading dot.
 #
