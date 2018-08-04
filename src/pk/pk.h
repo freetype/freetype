@@ -2,7 +2,7 @@
  *
  * pk.h
  *
- *   FreeType font driver for TeX's PK FONT files.
+ *   FreeType font driver for METAFONT PK FONT files.
  *
  * Copyright 1996-2018 by
  * David Turner, Robert Wilhelm, and Werner Lemberg.
@@ -27,7 +27,6 @@
 
 FT_BEGIN_HEADER
 
-#define  FONT_DRIVER_PK   1
 
 #define  PK_PRE   247
 #define  PK_ID    89
@@ -40,17 +39,6 @@ FT_BEGIN_HEADER
 #define  PK_NO_OP 246
 
 #define toint(x)  (int)(((x)>0)?(x+0.5):(x-0.5))
-
-/* Temporary TO BE REMOVED */
-
-typedef  char           INT1;
-typedef  unsigned char  UINT1;
-typedef  int            INT2;
-typedef  unsigned int   UINT2;
-typedef  long           INT3;
-typedef  unsigned long  UINT3;
-typedef  long           INT4;
-typedef  unsigned long  UINT4;
 
 
 FT_END_HEADER

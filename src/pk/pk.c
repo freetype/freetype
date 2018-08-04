@@ -2,7 +2,7 @@
  *
  * pk.c
  *
- *   FreeType font driver for TeX's PK FONT files.
+ *   FreeType font driver METAFONT PK FONT files.
  *
  * Copyright 1996-2018 by
  * David Turner, Robert Wilhelm, and Werner Lemberg.

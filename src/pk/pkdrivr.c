@@ -2,7 +2,7 @@
  *
  * pkdrivr.c
  *
- *   FreeType font driver for TeX's PK FONT files.
+ *   FreeType font driver for METAFONT PK FONT files.
  *
  * Copyright 1996-2018 by
  * David Turner, Robert Wilhelm, and Werner Lemberg.
@@ -88,6 +88,7 @@
 
     return gindex;
   }
+
 
   FT_CALLBACK_DEF( FT_UInt )
   pk_cmap_char_next(  FT_CMap    pkcmap,
@@ -262,7 +263,7 @@
       y_res = toint( face->pk_glyph->vppp * 72.27 );
 
       bsize->y_ppem = (FT_Pos) toint((face->pk_glyph->ds * y_res)/ 72.27) << 6 ;
-      bsize->x_ppem = (FT_Pos)FT_MulDiv( bsize->y_ppem,
+      bsize->x_ppem = (FT_Pos) FT_MulDiv( bsize->y_ppem,
                                          x_res,
                                          y_res ); ;
     }
@@ -298,6 +299,7 @@
     return FT_THROW( Unknown_File_Format );
   }
 
+
   FT_CALLBACK_DEF( FT_Error )
   PK_Size_Select(  FT_Size   size,
                    FT_ULong  strike_index )
@@ -314,6 +316,7 @@
 
     return FT_Err_Ok;
   }
+
 
   FT_CALLBACK_DEF( FT_Error )
   PK_Size_Request( FT_Size          size,
@@ -350,7 +353,6 @@
     else
       return PK_Size_Select( size, 0 );
   }
-
 
 
   FT_CALLBACK_DEF( FT_Error )
@@ -440,6 +442,7 @@
     return error;
   }
 
+
   FT_LOCAL_DEF( void )
   TFM_Done_Metrics( FT_Memory     memory,
                     TFM_FontInfo  fi )
@@ -449,6 +452,7 @@
     FT_FREE(fi->depth);
     FT_FREE( fi );
   }
+
 
   /* parse a TFM metrics file */
   FT_LOCAL_DEF( FT_Error )

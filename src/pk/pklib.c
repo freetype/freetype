@@ -2,7 +2,7 @@
  *
  * pklib.c
  *
- *   FreeType font driver for TeX's PK FONT files.
+ *   FreeType font driver for METAFONT PK FONT files.
  *
  * Copyright 1996-2018 by
  * David Turner, Robert Wilhelm, and Werner Lemberg.
@@ -40,7 +40,7 @@
 #undef  FT_COMPONENT
 #define FT_COMPONENT  trace_pklib
 
-unsigned char   bits_table[] = {
+FT_Byte  bits_table[] = {
   0x80, 0x40, 0x20, 0x10, 0x08, 0x04, 0x02, 0x01 };
 
 
@@ -50,79 +50,80 @@ unsigned char   bits_table[] = {
    *
    */
 
-  long           pk_read_intn(FT_Stream,int);
-  unsigned long  pk_read_uintn(FT_Stream,int);
+  FT_Long   pk_read_intn( FT_Stream, FT_Int );
+  FT_ULong  pk_read_uintn( FT_Stream, FT_Int );
 
-#define READ_UINT1( stream )    (UINT1)pk_read_uintn( stream, 1)
-#define READ_UINT2( stream )    (UINT1)pk_read_uintn( stream, 2)
-#define READ_UINT3( stream )    (UINT1)pk_read_uintn( stream, 3)
-#define READ_UINT4( stream )    (UINT1)pk_read_uintn( stream, 4)
-#define READ_UINTN( stream,n)   (UINT4)pk_read_uintn( stream, n)
-#define READ_INT1( stream )     (INT1)pk_read_intn( stream, 1)
-#define READ_INT2( stream )     (INT1)pk_read_intn( stream, 2)
-#define READ_INT4( stream )     (INT4)pk_read_intn( stream, 4)
+#define READ_UINT1( stream )    (FT_Byte)pk_read_uintn( stream, 1)
+#define READ_UINT2( stream )    (FT_Byte)pk_read_uintn( stream, 2)
+#define READ_UINT3( stream )    (FT_Byte)pk_read_uintn( stream, 3)
+#define READ_UINT4( stream )    (FT_Byte)pk_read_uintn( stream, 4)
+#define READ_UINTN( stream,n)   (FT_ULong)pk_read_uintn( stream, n)
+#define READ_INT1( stream )     (FT_String)pk_read_intn( stream, 1)
+#define READ_INT2( stream )     (FT_String)pk_read_intn( stream, 2)
+#define READ_INT4( stream )     (FT_Long)pk_read_intn( stream, 4)
 
 /*
  * Reading a Number from file
  */
-  unsigned long
-  pk_read_uintn(FT_Stream stream, int size)
+  FT_ULong
+  pk_read_uintn(FT_Stream stream, FT_Int size)
   {
-    unsigned long  v,k;
-    FT_Error error;
+    FT_ULong  v,k;
+    FT_Error  error;
     FT_Byte tp;
     v = 0L;
     while (size >= 1)
     {
       if ( FT_READ_BYTE(tp) )
-        return 0; /* To be changed */
-      k =(unsigned long)tp;
+        return 0;
+      k =(FT_ULong)tp;
       v = v*256L + k;
       --size;
     }
     return v;
   }
 
-  long
-  pk_read_intn(FT_Stream stream, int size)
+  FT_Long
+  pk_read_intn(FT_Stream stream, FT_Int size)
   {
-    long           v;
-    FT_Byte tp;
+    FT_Long  v;
+    FT_Byte  tp;
     FT_Error error;
-    unsigned long z ;
+    FT_ULong z ;
+
     if ( FT_READ_BYTE(tp) )
-        return 0;/* To be changed */
-    z= (unsigned long)tp;
-    v = (long)z & 0xffL;
+        return 0;
+    z= (FT_ULong)tp;
+    v = (FT_Long)z & 0xffL;
     if (v & 0x80L)
       v = v - 256L;
     --size;
     while (size >= 1)
     {
       if ( FT_READ_BYTE(tp) )
-        return 0;/* To be changed */
-      z= (unsigned long)tp;
+        return 0;
+      z= (FT_ULong)tp;
       v = v*256L + z;
       --size;
 		}
     return v;
   }
 
-  int  pk_read_nyble_rest_cnt;
-  int  pk_read_nyble_max_bytes;
+  FT_Int  pk_read_nyble_rest_cnt;
+  FT_Int  pk_read_nyble_max_bytes;
 
   void
-  pk_read_nyble_init(int max)
+  pk_read_nyble_init( FT_Int max )
   {
     pk_read_nyble_rest_cnt  = 0;
     pk_read_nyble_max_bytes = max;
   }
 
-  int
+  FT_Int
   pk_read_nyble(FT_Stream stream)
   {
-    static UINT1  d;
-    int           v;
+    static FT_Byte  d;
+    FT_Int          v;
 
     switch (pk_read_nyble_rest_cnt)
     {
@@ -143,11 +144,11 @@ unsigned char   bits_table[] = {
   return v;
   }
 
-  long
-  pk_read_packed_number(long* repeat, FT_Stream stream, int dyn_f)
+  FT_Long
+  pk_read_packed_number(FT_Long* repeat, FT_Stream stream, int dyn_f)
   {
-    int   d, n;
-    long  di;
+    FT_Int   d, n;
+    FT_Long  di;
 
     entry:
       d = pk_read_nyble( stream );
@@ -174,14 +175,20 @@ unsigned char   bits_table[] = {
     goto entry;
   }
 
-  int
-  pk_read_14(FT_Stream stream, int dyn_f, int bw, UINT4 rs, PK_Bitmap bm, long cc)
+  FT_Int
+  pk_read_14( FT_Stream stream,
+              FT_Int dyn_f,
+              FT_Int bw,
+              FT_ULong rs,
+              PK_Bitmap bm,
+              FT_Long cc )
   {
-    long           x, y, x8, xm;
-    unsigned char  *bm_ptr;
-    unsigned long  bit16_buff;
-    int            rest_bit16_buff;
-    static unsigned int mask_table[] =
+    FT_Long   x, y, x8, xm;
+    FT_Byte   *bm_ptr;
+    FT_ULong  bit16_buff;
+    FT_Int    rest_bit16_buff;
+
+    static FT_UInt mask_table[] =
       { 0xdead,   0x80,   0xc0,   0xe0,   0xf0,   0xf8,   0xfc,   0xfe, 0xdead };
 
     if (rs == 0)
@@ -228,12 +235,17 @@ unsigned char   bits_table[] = {
     return 0;
   }
 
-  int
-  pk_read_n14(FT_Stream stream, int dyn_f, int bw, UINT4 rs, PK_Bitmap bm, long cc)
+  FT_Int
+  pk_read_n14( FT_Stream stream,
+               FT_Int dyn_f,
+               FT_Int bw,
+               FT_ULong rs,
+               PK_Bitmap bm,
+               FT_Long cc )
   {
-    long           x, y, xx, yy, repeat;
-    int            bits, b_p;
-    unsigned char  *p, *p0, *p1;
+    FT_Long   x, y, xx, yy, repeat;
+    FT_Int    bits, b_p;
+    FT_Byte   *p, *p0, *p1;
 
     pk_read_nyble_init(rs);
     p    = bm->bitmap;
@@ -286,16 +298,15 @@ unsigned char   bits_table[] = {
                FT_Memory       extmemory,
                PK_Glyph        *goptr )
   {
-    PK_Glyph      go;
-    UINT1         instr, pre, id;;
-    unsigned long ds, check_sum, hppp, vppp, k;
-    unsigned int  flag, dny_f, bw, ess, size;
-    UINT4         cc, tfm, dx, dy, dm, w, h, rs;
-    INT4          hoff, voff, mv_x, mv_y;
-    long          gptr;
-    int           bc, ec, nchars, index, i;
-    FT_Error      error  = FT_Err_Ok;
-    FT_Memory     memory = extmemory; /* needed for FT_NEW */
+    PK_Glyph   go;
+    FT_Byte    instr, pre, id;;
+    FT_ULong   ds, check_sum, hppp, vppp, k;
+    FT_UInt    flag, dny_f, bw, ess, size;
+    FT_ULong   cc, tfm, dx, dy, dm, w, h, rs;
+    FT_Long    hoff, voff, mv_x, mv_y, gptr;
+    FT_Int     bc, ec, nchars, index, i;
+    FT_Error   error  = FT_Err_Ok;
+    FT_Memory  memory = extmemory; /* needed for FT_NEW */
 
     go = NULL;
     nchars = -1;
@@ -320,12 +331,12 @@ unsigned char   bits_table[] = {
     k = READ_UINT1( stream );
     if ( FT_STREAM_SKIP( k ) )
       goto Exit;
+
     ds        = READ_INT4( stream );
     check_sum = READ_INT4( stream );
     hppp      = READ_INT4( stream );
     vppp      = READ_INT4( stream );
 
-    /* gptr = ftell(fp); */
     gptr = stream->pos;
 
     #if 0
@@ -339,10 +350,10 @@ unsigned char   bits_table[] = {
         break;
         switch ((int) instr)
         {
-          case PK_XXX1:  k = (UINT4)READ_UINT1( stream ); if ( FT_STREAM_SKIP( k ) ) goto Exit; break;
-          case PK_XXX2:  k = (UINT4)READ_UINT2( stream ); if ( FT_STREAM_SKIP( k ) ) goto Exit; break;
-          case PK_XXX3:  k = (UINT4)READ_UINT3( stream ); if ( FT_STREAM_SKIP( k ) ) goto Exit; break;
-          case PK_XXX4:  k = (UINT4)READ_UINT4( stream ); if ( FT_STREAM_SKIP( k ) ) goto Exit; break;
+          case PK_XXX1:  k = (FT_ULong)READ_UINT1( stream ); if ( FT_STREAM_SKIP( k ) ) goto Exit; break;
+          case PK_XXX2:  k = (FT_ULong)READ_UINT2( stream ); if ( FT_STREAM_SKIP( k ) ) goto Exit; break;
+          case PK_XXX3:  k = (FT_ULong)READ_UINT3( stream ); if ( FT_STREAM_SKIP( k ) ) goto Exit; break;
+          case PK_XXX4:  k = (FT_ULong)READ_UINT4( stream ); if ( FT_STREAM_SKIP( k ) ) goto Exit; break;
           case PK_YYY:   if ( FT_STREAM_SKIP( 4 ) ) goto Exit; break;
           case PK_NO_OP: break;
           default:
@@ -350,18 +361,18 @@ unsigned char   bits_table[] = {
             ess   = instr & 0x1;
           if (ess == 0)
           {                          /* short */
-	          rs = (UINT4)(size*256) + (UINT4)READ_UINT1( stream );
-	          cc   = (UINT4)READ_UINT1( stream );
+	          rs = (FT_ULong)(size*256) + (FT_ULong)READ_UINT1( stream );
+	          cc   = (FT_ULong)READ_UINT1( stream );
           }
           else if ((ess == 1) && (size != 3))
           {                          /* extended short */
-	          rs = (UINT4)(size*65536) + (UINT4)READ_UINT2( stream );
-	          cc   = (UINT4)READ_UINT1( stream );
+	          rs = (FT_ULong)(size*65536) + (FT_ULong)READ_UINT2( stream );
+	          cc   = (FT_ULong)READ_UINT1( stream );
           }
           else
           {                          /* standard */
 	          rs   = READ_UINT4( stream );
-	          cc   = (UINT4)READ_UINT4( stream );
+	          cc   = (FT_ULong)READ_UINT4( stream );
           }
           if ( FT_STREAM_SKIP( rs ) )
             goto Exit;
@@ -398,7 +409,6 @@ unsigned char   bits_table[] = {
     go->code_max = ec;
 
     /* read glyphs */
-    /* fseek(fp, gptr, SEEK_SET); */
     if( FT_STREAM_SEEK( gptr ) )
         goto Exit;
 
@@ -406,25 +416,25 @@ unsigned char   bits_table[] = {
     {
       if ((instr = READ_UINT1( stream )) == PK_POST)
         break;
-      switch ((int)instr)
+      switch ((FT_Int)instr)
       {
         case PK_XXX1:
-          k = (UINT4)READ_UINT1( stream );
+          k = (FT_ULong)READ_UINT1( stream );
           if ( FT_STREAM_SKIP( k ) )
             goto Exit;
           break;
         case PK_XXX2:
-          k = (UINT4)READ_UINT2( stream );
+          k = (FT_ULong)READ_UINT2( stream );
           if ( FT_STREAM_SKIP( k ) )
             goto Exit;
           break;
         case PK_XXX3:
-          k = (UINT4)READ_UINT3( stream );
+          k = (FT_ULong)READ_UINT3( stream );
           if ( FT_STREAM_SKIP( k ) )
             goto Exit;
           break;
         case PK_XXX4:
-          k = (UINT4)READ_UINT4( stream );
+          k = (FT_ULong)READ_UINT4( stream );
           if ( FT_STREAM_SKIP( k ) )
             goto Exit;
           break;
@@ -442,33 +452,33 @@ unsigned char   bits_table[] = {
           dny_f = flag % 0x10;
         if (ess == 0)
         {                          /* short */
-          rs = (UINT4)(size*256) + (UINT4)READ_UINT1( stream ) - (UINT4)8;
-          cc   = (UINT4)READ_UINT1( stream );
-          tfm  = (UINT4)READ_UINT3( stream );
-          dm   = (UINT4)READ_UINT1( stream );
-          w    = (UINT4)READ_UINT1( stream );
-          h    = (UINT4)READ_UINT1( stream );
-          hoff = (INT4)READ_INT1( stream );
-          voff = (INT4)READ_INT1( stream );
+          rs = (FT_ULong)(size*256) + (FT_ULong)READ_UINT1( stream ) - (FT_ULong)8;
+          cc   = (FT_ULong)READ_UINT1( stream );
+          tfm  = (FT_ULong)READ_UINT3( stream );
+          dm   = (FT_ULong)READ_UINT1( stream );
+          w    = (FT_ULong)READ_UINT1( stream );
+          h    = (FT_ULong)READ_UINT1( stream );
+          hoff = (FT_Long)READ_INT1( stream );
+          voff = (FT_Long)READ_INT1( stream );
           mv_x = dm;
           mv_y = 0;
         }
         else if ((ess == 1) && (size != 3))
         {                          /* extended short */
-          rs = (UINT4)(size*65536) + (UINT4)READ_UINT2( stream ) - (UINT4)13;
-          cc   = (UINT4)READ_UINT1( stream );
-          tfm  = (UINT4)READ_UINT3( stream );
-          dm   = (UINT4)READ_UINT2( stream );
-          w    = (UINT4)READ_UINT2( stream );
-          h    = (UINT4)READ_UINT2( stream );
-          hoff = (INT4)READ_INT2( stream );
-          voff = (INT4)READ_INT2( stream );
+          rs = (FT_ULong)(size*65536) + (FT_ULong)READ_UINT2( stream ) - (FT_ULong)13;
+          cc   = (FT_ULong)READ_UINT1( stream );
+          tfm  = (FT_ULong)READ_UINT3( stream );
+          dm   = (FT_ULong)READ_UINT2( stream );
+          w    = (FT_ULong)READ_UINT2( stream );
+          h    = (FT_ULong)READ_UINT2( stream );
+          hoff = (FT_Long)READ_INT2( stream );
+          voff = (FT_Long)READ_INT2( stream );
           mv_x = dm;
           mv_y = 0;
         }
         else
         {                           /* standard */
-          rs   = READ_UINT4( stream ) - (UINT4)28;
+          rs   = READ_UINT4( stream ) - (FT_ULong)28;
           cc   = READ_UINT4( stream );
           tfm  = READ_UINT4( stream );
           dx   = READ_UINT4( stream );
@@ -509,7 +519,6 @@ unsigned char   bits_table[] = {
         {
           if (pk_read_14(stream, dny_f, bw, rs, &(go->bm_table[index]), cc) < 0)
           {
-            /* vf_error = VF_ERR_ILL_FONT_FILE; (FOR TRACING) */
             FT_ERROR(( "pk_load_font: error in `pk_read_14'\n" ));
             error = FT_THROW( Unknown_File_Format );
             goto Exit;
@@ -519,7 +528,6 @@ unsigned char   bits_table[] = {
         {
           if (pk_read_n14(stream, dny_f, bw, rs, &(go->bm_table[index]), cc) < 0)
           {
-            /* vf_error = VF_ERR_ILL_FONT_FILE; (FOR TRACING) */
             FT_ERROR(( "pk_load_font: error in `pk_read_n14'\n" ));
             error = FT_THROW( Unknown_File_Format );
             goto Exit;

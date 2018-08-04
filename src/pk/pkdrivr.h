@@ -2,7 +2,7 @@
  *
  * pkdrivr.h
  *
- *   FreeType font driver for TeX's PK FONT files.
+ *   FreeType font driver for METAFONT PK FONT files.
  *
  * Copyright 1996-2018 by
  * David Turner, Robert Wilhelm, and Werner Lemberg.
@@ -29,11 +29,11 @@ FT_BEGIN_HEADER
 
   typedef struct PK_BitmapRec_
   {
-    FT_UInt              bbx_width, bbx_height;
-    FT_UInt              off_x, off_y;
-    FT_UInt              mv_x,  mv_y;
-    FT_Byte              *bitmap;
-    FT_UInt              raster;
+    FT_UInt         bbx_width, bbx_height;
+    FT_UInt         off_x, off_y;
+    FT_UInt         mv_x,  mv_y;
+    FT_Byte         *bitmap;
+    FT_UInt         raster;
 
   } PK_BitmapRec, *PK_Bitmap;
 
