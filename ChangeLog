@@ -1,5 +1,9 @@
 2018-08-04  Werner Lemberg  <wl@gnu.org>
 
+	* src/truetype/ttinterp.c (opcode_name): Fix typos.
+
+2018-08-04  Werner Lemberg  <wl@gnu.org>
+
 	Fix clang warnings.
 
 	* src/base/ftoutln.c (FT_Outline_EmboldenXY): Fix type of

@@ -1205,22 +1205,22 @@
     "9 MIRP[mrW]",
     "9 MIRP[mr?]",
 
-    "7 MIRP[pG]",
-    "7 MIRP[pB]",
-    "7 MIRP[pW]",
-    "7 MIRP[p?]",
-    "8 MIRP[prG]",
-    "8 MIRP[prB]",
-    "8 MIRP[prW]",
-    "8 MIRP[pr?]",
-    "8 MIRP[pmG]",
-    "8 MIRP[pmB]",
-    "8 MIRP[pmW]",
-    "8 MIRP[pm?]",
-    "9 MIRP[pmrG]",
-    "9 MIRP[pmrB]",
-    "9 MIRP[pmrW]",
-    "9 MIRP[pmr?]"
+    "8 MIRP[pG]",
+    "8 MIRP[pB]",
+    "8 MIRP[pW]",
+    "8 MIRP[p?]",
+    "9 MIRP[prG]",
+    "9 MIRP[prB]",
+    "9 MIRP[prW]",
+    "9 MIRP[pr?]",
+    "9 MIRP[pmG]",
+    "9 MIRP[pmB]",
+    "9 MIRP[pmW]",
+    "9 MIRP[pm?]",
+    "A MIRP[pmrG]",
+    "A MIRP[pmrB]",
+    "A MIRP[pmrW]",
+    "A MIRP[pmr?]"
   };
 
 #endif /* FT_DEBUG_LEVEL_TRACE */
