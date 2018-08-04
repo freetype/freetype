@@ -208,12 +208,13 @@ rule RefDoc
 
 actions RefDoc
 {
-  python $(FT2_SRC)/tools/docmaker/docmaker.py
+  python -m docwriter
          --prefix=ft2
          --title=FreeType-2.9.1
          --output=$(DOC_DIR)
          $(FT2_INCLUDE)/freetype/*.h
          $(FT2_INCLUDE)/freetype/config/*.h
+         $(FT2_INCLUDE)/freetype/cache/*.h
 }
 
 RefDoc  refdoc ;
