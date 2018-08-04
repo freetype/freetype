@@ -2,7 +2,7 @@
  *
  * pklib.c
  *
- *   FreeType font driver for METAFONT PK FONT files.
+ *   FreeType font driver for TeX's PK FONT files.
  *
  * Copyright 1996-2018 by
  * David Turner, Robert Wilhelm, and Werner Lemberg.
@@ -445,14 +445,14 @@ FT_Byte  bits_table[] = {
         case PK_NO_OP:
           break;
         default:
-          flag = instr;
+          flag  = instr;
           size  = flag % 0x04;  flag = flag >> 2;
           ess   = flag % 0x02;  flag = flag >> 1;
           bw    = flag % 0x02;  flag = flag >> 1;
           dny_f = flag % 0x10;
         if (ess == 0)
         {                          /* short */
-          rs = (FT_ULong)(size*256) + (FT_ULong)READ_UINT1( stream ) - (FT_ULong)8;
+          rs   = (FT_ULong)(size*256) + (FT_ULong)READ_UINT1( stream ) - (FT_ULong)8;
           cc   = (FT_ULong)READ_UINT1( stream );
           tfm  = (FT_ULong)READ_UINT3( stream );
           dm   = (FT_ULong)READ_UINT1( stream );
@@ -465,7 +465,7 @@ FT_Byte  bits_table[] = {
         }
         else if ((ess == 1) && (size != 3))
         {                          /* extended short */
-          rs = (FT_ULong)(size*65536) + (FT_ULong)READ_UINT2( stream ) - (FT_ULong)13;
+          rs   = (FT_ULong)(size*65536) + (FT_ULong)READ_UINT2( stream ) - (FT_ULong)13;
           cc   = (FT_ULong)READ_UINT1( stream );
           tfm  = (FT_ULong)READ_UINT3( stream );
           dm   = (FT_ULong)READ_UINT2( stream );

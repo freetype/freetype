@@ -2,7 +2,7 @@
  *
  * pkdrivr.c
  *
- *   FreeType font driver for METAFONT PK FONT files.
+ *   FreeType font driver for TeX's PK FONT files.
  *
  * Copyright 1996-2018 by
  * David Turner, Robert Wilhelm, and Werner Lemberg.
@@ -265,7 +265,7 @@
       bsize->y_ppem = (FT_Pos) toint((face->pk_glyph->ds * y_res)/ 72.27) << 6 ;
       bsize->x_ppem = (FT_Pos) FT_MulDiv( bsize->y_ppem,
                                          x_res,
-                                         y_res ); ;
+                                         y_res );
     }
 
     /* Charmaps */
