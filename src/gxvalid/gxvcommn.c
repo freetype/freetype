@@ -384,8 +384,8 @@
           ( P += 2, gxv_lookup_value_load( P - 2, SIGNSPEC ) )
 
   static GXV_LookupValueDesc
-  gxv_lookup_value_load( FT_Bytes  p,
-                         int       signspec )
+  gxv_lookup_value_load( FT_Bytes                  p,
+                         GXV_LookupValue_SignSpec  signspec )
   {
     GXV_LookupValueDesc  v;
 

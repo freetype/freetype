@@ -1,3 +1,17 @@
+2018-08-04  Werner Lemberg  <wl@gnu.org>
+
+	Fix clang warnings.
+
+	* src/base/ftoutln.c (FT_Outline_EmboldenXY): Fix type of
+	`orientation'.
+
+	* src/gxvalid/gxvcommn.c (gx_lookup_value_read): Fix signature.
+
+	* src/pcf/pcfread.c (pcf_get_encodings): Fix type of some variables.
+	Add cast.
+
+	* src/type1/t1load.c (parse_weight_vector): Fix cast.
+
 2018-07-31  Werner Lemberg  <wl@gnu.org>
 
 	* src/cid/cidtoken.h: Handle `XUID' keyword.

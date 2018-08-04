@@ -1043,7 +1043,7 @@
       blend->default_weight_vector[n] =
       blend->weight_vector[n]         = T1_ToFixed( parser, 0 );
 
-      FT_TRACE4(( " %f", (float)blend->weight_vector[n] / 65536 ));
+      FT_TRACE4(( " %f", (double)blend->weight_vector[n] / 65536 ));
     }
 
     FT_TRACE4(( "]\n" ));

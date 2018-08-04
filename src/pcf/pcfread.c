@@ -944,12 +944,12 @@ THE SOFTWARE.
     FT_Error      error;
     FT_Memory     memory = FT_FACE( face )->memory;
     FT_ULong      format, size;
-    int           firstCol, lastCol;
-    int           firstRow, lastRow;
+    FT_Short      firstCol, lastCol;
+    FT_Short      firstRow, lastRow;
     FT_ULong      nencoding;
     FT_UShort     defaultCharRow, defaultCharCol;
     FT_UShort     encodingOffset, defaultCharEncodingOffset;
-    int           i, j;
+    FT_Short      i, j;
     FT_Byte*      pos;
     FT_ULong      k;
     PCF_Encoding  encoding = NULL;
@@ -1037,7 +1037,7 @@ THE SOFTWARE.
          defaultCharCol < (FT_UShort)firstCol ||
          defaultCharCol > (FT_UShort)lastCol  )
     {
-      face->defaultChar = firstRow * 256 + firstCol;
+      face->defaultChar = (FT_UShort)firstRow * 256U + (FT_UShort)firstCol;
       FT_TRACE0(( "pcf_get_encodings:"
                   " Invalid default character set to %d\n",
                   face->defaultChar ));

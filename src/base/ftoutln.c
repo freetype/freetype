@@ -911,9 +911,9 @@
                          FT_Pos       xstrength,
                          FT_Pos       ystrength )
   {
-    FT_Vector*  points;
-    FT_Int      c, first, last;
-    FT_Int      orientation;
+    FT_Vector*      points;
+    FT_Int          c, first, last;
+    FT_Orientation  orientation;
 
 
     if ( !outline )
