@@ -21,12 +21,18 @@
 #include "tfmobjs.h"
 
 
-  static
-  const TFM_Interface  tfm_interface =
+  FT_CALLBACK_TABLE_DEF
+  const TFM_Parser_FuncsRec  tfm_parser_funcs =
   {
     tfm_init,           /* init          */
     tfm_parse_metrics,  /* parse metrics */
     tfm_close,          /* done          */
+  };
+
+  static
+  const TFM_Interface  tfm_interface =
+  {
+    &tfm_parser_funcs,
   };
 
 
