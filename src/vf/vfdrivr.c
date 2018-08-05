@@ -42,7 +42,8 @@
   typedef struct  VF_CMapRec_
   {
     FT_CMapRec        cmap;
-    /* TO-DO */
+    FT_UInt32         bc;       /* Beginning Character */
+    FT_UInt32         ec;       /* End Character */
   } VF_CMapRec, *VF_CMap;
 
 
@@ -50,7 +51,13 @@
   vf_cmap_init(  FT_CMap     vfcmap,
                  FT_Pointer  init_data )
   {
-    /* TO-DO */
+    VF_CMap  cmap = (VF_CMap)vfcmap;
+    VF_Face  face = (VF_Face)FT_CMAP_FACE( cmap );
+    FT_UNUSED( init_data );
+
+    cmap->bc     = ;
+    cmap->ec     = ;
+
     return FT_Err_Ok;
   }
 
@@ -58,7 +65,10 @@
   FT_CALLBACK_DEF( void )
   vf_cmap_done( FT_CMap  vfcmap )
   {
-    /* TO-DO */
+    VF_CMap  cmap = (VF_CMap)vfcmap;
+
+    cmap->bc     =  0;
+    cmap->ec     = -1;
   }
 
 
@@ -66,7 +76,14 @@
   vf_cmap_char_index(  FT_CMap    vfcmap,
                        FT_UInt32  char_code )
   {
-    /* TO-DO */
+    FT_UInt  gindex = 0;
+    VF_CMap  cmap   = (VF_CMap)vfcmap;
+
+    char_code -= cmap->bc;
+
+    if ( char_code < cmap->ec - cmap->bc + 1 )
+      gindex = (FT_UInt)( char_code );
+
     return gindex;
   }
 
@@ -74,7 +91,28 @@
   vf_cmap_char_next(  FT_CMap    vfcmap,
                        FT_UInt32  *achar_code )
   {
-    /* To-DO */
+    VF_CMap    cmap   = (VF_CMap)vfcmap;
+    FT_UInt    gindex = 0;
+    FT_UInt32  result = 0;
+    FT_UInt32  char_code = *achar_code + 1;
+
+
+    if ( char_code <= cmap->bc )
+    {
+      result = cmap->bc;
+      gindex = 1;
+    }
+    else
+    {
+      char_code -= cmap->bc;
+      if ( char_code < cmap->ec - cmap->bc + 1 )
+      {
+        result = char_code;
+        gindex = (FT_UInt)( char_code );
+      }
+    }
+
+    *achar_code = result;
     return gindex;
   }
 
@@ -135,7 +173,7 @@
   }
 
 
-   FT_CALLBACK_TABLE_DEF
+  FT_CALLBACK_TABLE_DEF
   const FT_Driver_ClassRec  vf_driver_class =
   {
     {
