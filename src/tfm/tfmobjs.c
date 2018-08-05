@@ -39,8 +39,16 @@
 #undef  FT_COMPONENT
 #define FT_COMPONENT  trace_tfmobjs
 
+   /**************************************************************************
+   *
+   * Global TFM parameters.
+   *
+   */
+#define tfm_size  30000 /* maximum length of tfm data, in bytes */
+#define lig_size  5000 /* maximum length of lig kern program, in words */
+#define hash_size 5003
 
- /**************************************************************************
+  /**************************************************************************
    *
    * TFM font utility functions.
    *
@@ -49,8 +57,9 @@
   long           tfm_read_intn(FT_Stream,int);
   unsigned long  tfm_read_uintn(FT_Stream,int);
 
-#define READ_UINT2( stream )    (FT_Byte)tfm_read_uintn( stream, 2)
-#define READ_UINT4( stream )    (FT_Byte)tfm_read_uintn( stream, 4)
+#define READ_UINT1( stream )    (FT_ULong)tfm_read_uintn( stream, 1)
+#define READ_UINT2( stream )    (FT_ULong)tfm_read_uintn( stream, 2)
+#define READ_UINT4( stream )    (FT_ULong)tfm_read_uintn( stream, 4)
 #define READ_INT4( stream )     (FT_Long)tfm_read_intn( stream, 4)
 
 /*
@@ -66,7 +75,7 @@
     while (size >= 1)
     {
       if ( FT_READ_BYTE(tp) )
-        return 0; /* To be changed */
+        return 0;
       k =(unsigned long)tp;
       v = v*256L + k;
       --size;
@@ -82,7 +91,7 @@
     FT_Error error= FT_Err_Ok;
     unsigned long z ;
     if ( FT_READ_BYTE(tp) )
-        return 0; /* To be changed */
+        return 0;
     z= (unsigned long)tp;
     v = (long)z & 0xffL;
     if (v & 0x80L)
@@ -91,7 +100,7 @@
     while (size >= 1)
     {
       if ( FT_READ_BYTE(tp) )
-        return 0; /* To be changed */
+        return 0;
       z= (unsigned long)tp;
       v = v*256L + z;
       --size;
@@ -137,8 +146,8 @@
     FT_Error      error  = FT_ERR( Syntax_Error );
 
     FT_ULong      lf, lh, nc, nci;
-    FT_ULong      offset_header, offset_char_info, offset_param;
-    FT_ULong      nw,  nh,  nd,  ni, nl, nk, neng, np;
+    FT_ULong      offset_char_info, offset_param;
+    FT_ULong      nw, nh, nd, ni, nl, nk, ne, np, bc, ec;
 
     FT_Long       *w,  *h,  *d;
     FT_ULong      *ci, v;
@@ -162,120 +171,109 @@
     fi->font_bbx_xoff = 0.0;
     fi->font_bbx_yoff = 0.0;
 
-    /* rewind(fp); */
     if( FT_STREAM_SEEK( 0 ) )
       return error;
 
-    lf = (FT_ULong)READ_UINT2( stream );
-    fi->fs = 4*lf - 1 ;
-
-    #if 0
-    if ((lf == 11) || (lf == 9))
+    /* Checking the correctness of the TFM file */
+    if( READ_UINT1( stream ) > 127 )
     {
-      /* JFM file of Japanese TeX by ASCII Coop. */
-      tfm->type        = METRIC_TYPE_JFM;
-      tfm->type_aux    = (lf == 11)?METRIC_TYPE_JFM_AUX_H:METRIC_TYPE_JFM_AUX_V;
-      tfm->nt          = (FT_ULong)READ_UINT2(fp);
-      lf               = (FT_ULong)READ_UINT2(fp);
-      lh               = (FT_ULong)READ_UINT2(fp);
-      offset_header    = 4*7;
-      offset_char_info = 4*(7+tfm->nt+lh);
-    }
-    else if (lf == 0)
-    {
-      /* Omega Metric File */
-      tfm->type        = METRIC_TYPE_OFM;
-      tfm->type_aux    = READ_INT2(fp);    /* ofm_level */
-      if ((tfm->type_aux < 0) || (1 < tfm->type_aux))
-        tfm->type_aux = 0;  /* broken, maybe */
-      lf               = READ_UINT4(fp);
-      lh               = READ_UINT4(fp);
-      if (tfm->type_aux == 0)
-      {   /* level 0 OFM */
-        offset_header    = 4*14;
-        offset_char_info = 4*(14+lh);
-      }
-      else
-      {                   /* level 1 OFM: *** NOT SUPPORTED YET *** */
-        offset_header    = 4*29;
-        offset_char_info = 4*(29+lh);
-      }
-    }
-    else
-    { }
-    #endif
-
-    /* Traditional TeX Metric File */
-    lh               = (int)READ_UINT2( stream );
-    offset_header    = 4*6;
-    offset_char_info = 4*(6+lh);
-
-    #if 0
-    if (tfm->type == METRIC_TYPE_OFM)
-    {
-      tfm->begin_char  = READ_UINT4(fp);
-      tfm->end_char    = READ_UINT4(fp);
-      nw   = READ_UINT4(fp);
-      nh   = READ_UINT4(fp);
-      nd   = READ_UINT4(fp);
-
-      ni   = READ_UINT4(fp);
-      nl   = READ_UINT4(fp);
-      nk   = READ_UINT4(fp);
-      neng = READ_UINT4(fp);
-      np   = READ_UINT4(fp);
-      dir  = READ_UINT4(fp);
-
-      if (((signed)(tfm->begin_char-1) > (signed)tfm->end_char) ||
-        (tfm->end_char > 65535))
-      {
-        error = FT_THROW( Invalid_Argument );
-        goto Exit;
-      }
-    }
-    else
-    { }
-    #endif
-
-    fi->begin_char  = (int)READ_UINT2( stream );
-    fi->end_char    = (int)READ_UINT2( stream );
-
-    nw   = (FT_ULong)READ_UINT2( stream );
-    nh   = (FT_ULong)READ_UINT2( stream );
-    nd   = (FT_ULong)READ_UINT2( stream );
-
-    ni   = (FT_ULong)READ_UINT2( stream );
-    nl   = (FT_ULong)READ_UINT2( stream );
-    nk   = (FT_ULong)READ_UINT2( stream );
-    neng = (FT_ULong)READ_UINT2( stream );
-    np   = (FT_ULong)READ_UINT2( stream );
-
-    #if 0
-      if (tfm->type == METRIC_TYPE_TFM)
-        {}
-    #endif
-    if (((signed)(fi->begin_char-1) > (signed)fi->end_char) ||
-       (fi->end_char > 255))
-    {
-      error = FT_THROW( Invalid_Argument );
+      FT_ERROR(( "Malformed TFM file: The first byte of the input file exceeds 127!\n" ));
+      error = FT_THROW( Unknown_File_Format );
       goto Exit;
     }
 
-    /* fseek(fp, offset_header, SEEK_SET); */
-    if (FT_STREAM_SEEK( offset_header ) )
-      goto Exit;
-    fi->cs          = READ_UINT4( stream ); /* Check Sum  */
-    fi->ds          = READ_UINT4( stream ); /* Design Size */
+    if( FT_STREAM_SEEK( 0 ) )
+      return error;
 
+    lf  = READ_UINT2( stream );
+    lh  = READ_UINT2( stream );
+    bc  = READ_UINT2( stream );
+    ec  = READ_UINT2( stream );
+    nw  = READ_UINT2( stream );
+    nh  = READ_UINT2( stream );
+    nd  = READ_UINT2( stream );
+    ni  = READ_UINT2( stream );
+    nl  = READ_UINT2( stream );
+    nk  = READ_UINT2( stream );
+    ne  = READ_UINT2( stream );
+    np  = READ_UINT2( stream );
+
+    /* Uncomment this to check for the tfm file's header info if this program returns malformed tfm file */
+    /*
+    FT_TRACE6(( "tfm_parse_metrics: First 24 bytes in the tfm file:\n"
+                    "                  lf : %ld\n"
+                    "                  lh : %ld\n"
+                    "                  bc : %d\n"
+                    "                  ec : %d\n"
+                    "                  nw : %d\n"
+                    "                  nh : %d\n"
+                    "                  nd : %d\n"
+                    "                  ni : %d\n"
+                    "                  nl : %d\n"
+                    "                  nk : %d\n"
+                    "                  ne : %d\n"
+                    "                  np : %d\n", lf, lh, bc, ec, nw, nh, nd, ni, nl, nk, ne, np ));
+    */
+
+    if( lf == 0 || ((4*lf) - 1) > tfm_size)
+    {
+      FT_ERROR(( "Malformed TFM file: The file claims to have length zero, but that's impossible!\n" ));
+      error = FT_THROW( Unknown_File_Format );
+      goto Exit;
+    }
+
+    if(lh < 2)
+    {
+      FT_ERROR(( "Malformed TFM file: The header length is only %ld\n",lh ));
+      error = FT_THROW( Unknown_File_Format );
+      goto Exit;
+    }
+
+    if( nl > lig_size )
+    {
+      FT_ERROR(( "Malformed TFM file: The lig/kern program is longer than I can handle!\n" ));
+      error = FT_THROW( Unknown_File_Format );
+      goto Exit;
+    }
+
+    if( ne > 256 )
+    {
+      FT_ERROR(( "Malformed TFM file: There are %ld extensible recipes!\n",ne ));
+      error = FT_THROW( Unknown_File_Format );
+      goto Exit;
+    }
+
+    if ( ((signed)(fi->begin_char-1) > (signed)fi->end_char) ||
+       ( fi->end_char > 255) ||
+       ( ne > 256 ) )
+    {
+      FT_ERROR(( "tfm_parse_metrics: Incorrect header information in `tfm' file.\n" ));
+      error = FT_THROW( Unknown_File_Format );
+      goto Exit;
+    }
+
+    if ( lf != 6 + lh + (ec - bc + 1) + nw + nh + nd + ni + nl + nk + ne + np )
+    {
+      FT_ERROR(( "tfm_parse_metrics: Incorrect header information in `tfm' file.\n" ));
+      error = FT_THROW( Unknown_File_Format );
+      goto Exit;
+    }
+
+    fi->begin_char  = bc;
+    fi->end_char    = ec;
+    fi->cs          = READ_INT4( stream ); /* Check Sum  */
+    fi->ds          = READ_INT4( stream ); /* Design Size */
     fi->design_size = (FT_ULong)((double)(fi->ds)/(double)(1<<20));
+
+    printf("fi->cs is %ld\n",fi->cs);
+    if( fi->cs <= 0 )
+    {
+      error = FT_THROW( Unknown_File_Format );
+      goto Exit;
+    }
 
     nc  = fi->end_char - fi->begin_char + 1;
     nci = nc;
-
-    #if 0
-    if (tfm->type == METRIC_TYPE_OFM)
-      nci *= 2;
-    #endif
 
     ci = (FT_ULong*)calloc(nci, sizeof(FT_ULong));
     w  = (FT_Long*)calloc(nw,  sizeof(FT_ULong));
@@ -288,15 +286,14 @@
       goto Exit;
     }
 
-    /* fseek(fp, offset_char_info, SEEK_SET); */
+    offset_char_info = 4*(6+lh);
     if( FT_STREAM_SEEK( offset_char_info ) ) /* Skip over coding scheme and font family name */
       goto Exit;
 
     for (i = 0; i < nci; i++)
       ci[i] = READ_UINT4( stream );
 
-    /* offset_param = ftell(fp) + 4*(nw + nh + nd + ni + nl + nk + neng); */
-    offset_param = stream->pos + 4*(nw + nh + nd + ni + nl + nk + neng);
+    offset_param = stream->pos + 4*(nw + nh + nd + ni + nl + nk + ne);
 
     for (i = 0; i < nw; i++)
       w[i] = READ_INT4( stream );
@@ -320,33 +317,6 @@
     xoff = 0;
     yoff = 0;
 
-    #if 0
-    if (tfm->type == METRIC_TYPE_OFM)
-    {
-      for (i = 0; i < nc; i++)
-      {
-        v = ci[2*i];
-        tfm->depth[i]  = d[v & 0xff]; v >>= 8;
-        tfm->height[i] = h[v & 0xff]; v >>= 8;
-        tfm->width[i]  = w[v & 0xffff];
-        if (bbxw < tfm->width[i])
-	        bbxw = tfm->width[i];
-        if (bbxh < (tfm->height[i] + tfm->depth[i]))
-	        bbxh = tfm->height[i] + tfm->depth[i];
-        if (yoff > -tfm->depth[i])
-	        yoff = -tfm->depth[i];
-        #if 0
-         printf("** %.3f %.3f %.3f\n",
-	       (double)tfm->width[i]/(double)(1<<20),
-	       (double)tfm->height[i]/(double)(1<<20),
-	       (double)tfm->depth[i]/(double)(1<<20));
-        #endif
-      }
-    }
-    else
-    { }
-    #endif
-
     for (i = 0; i < nc; i++)
     {
       v = ci[i] / 0x10000L;
@@ -369,31 +339,8 @@
     fi->font_bbx_xoff = (FT_ULong)(fi->design_size * ((double)xoff / (double)(1<<20)));
     fi->font_bbx_yoff = (FT_ULong)(fi->design_size * ((double)yoff / (double)(1<<20)));
 
-    #if 0
-    if (tfm->type == METRIC_TYPE_JFM)
-    {
-      fseek(fp, 4*(7+lh), SEEK_SET);
-      tfm->ct_kcode = (unsigned int*)calloc(tfm->nt+1, sizeof(unsigned int));
-      tfm->ct_ctype = (unsigned int*)calloc(tfm->nt+1, sizeof(unsigned int));
-      if ((tfm->ct_kcode == NULL) || (tfm->ct_ctype == NULL))
-      {
-        error = FT_THROW( Invalid_Argument );
-        goto Exit;
-      }
-      for (i = 0; i < tfm->nt; i++)
-      {
-        v = READ_UINT4(fp);
-        tfm->ct_kcode[i] = v/0x10000L;
-        tfm->ct_ctype[i] = v%0x10000L;
-      }
-      tfm->ct_kcode[tfm->nt] = 0; /* sentinel */
-      tfm->ct_ctype[tfm->nt] = 0;
-    }
-    #endif
-
-    /* fseek(fp, offset_param, SEEK_SET); */
     if( FT_STREAM_SEEK( offset_param ) )
-      return error; /* To be changed */
+      return error;
     if (FT_READ_ULONG(fi->slant) )
       return error;
     fi->slant = (FT_ULong)((double)fi->slant/(double)(1<<20));
