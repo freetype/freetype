@@ -50,12 +50,12 @@ FT_BEGIN_HEADER
     /* Metrics */
     FT_ULong       ds, fs; /* Design Size */
     FT_UInt        design_size;
-    FT_UInt        slant;
+    FT_ULong       slant;
     FT_UInt        begin_char, end_char;
     FT_Long        *width, *height, *depth;
     /* Font bounding box */
-    FT_UInt        font_bbx_w, font_bbx_h;
-    FT_UInt        font_bbx_xoff, font_bbx_yoff;
+    FT_Long        font_bbx_w, font_bbx_h;
+    FT_Long        font_bbx_xoff, font_bbx_yoff;
 
   } TFM_FontInfoRec, *TFM_FontInfo;
 
@@ -70,6 +70,22 @@ FT_BEGIN_HEADER
   /*************************************************************************/
 
   typedef struct TFM_ParserRec_*  TFM_Parser;
+
+  typedef struct  TFM_Parser_FuncsRec_
+  {
+    FT_Error
+    (*init)( TFM_Parser  parser,
+             FT_Memory   memory,
+             FT_Stream   stream );
+
+    FT_Error
+    (*parse_metrics)( TFM_Parser  parser );
+
+    void
+    (*done)( TFM_Parser  parser );
+
+  } TFM_Parser_FuncsRec;
+
 
   /**************************************************************************
    *
@@ -112,16 +128,7 @@ FT_BEGIN_HEADER
 
   typedef struct  TFM_ServiceRec_
   {
-    FT_Error
-    (*init)( TFM_Parser  parser,
-             FT_Memory   memory,
-             FT_Stream   stream );
-
-    FT_Error
-    (*parse_metrics)( TFM_Parser  parser );
-
-    void
-    (*done)( TFM_Parser  parser );
+    const TFM_Parser_FuncsRec*  tfm_parser_funcs;
 
   } TFM_ServiceRec, *TFM_Service;
 
