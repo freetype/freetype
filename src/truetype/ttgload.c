@@ -2284,13 +2284,13 @@
       /* XXX: for now, we have no better algorithm for the lsb, but it */
       /*      should work fine.                                        */
       /*                                                               */
-      glyph->metrics.vertBearingX = glyph->metrics.horiBearingX -
-                                      glyph->metrics.horiAdvance / 2;
+      glyph->metrics.vertBearingX = SUB_LONG( glyph->metrics.horiBearingX,
+                                              glyph->metrics.horiAdvance / 2 );
       glyph->metrics.vertBearingY = top;
       glyph->metrics.vertAdvance  = advance;
     }
 
-    return 0;
+    return FT_Err_Ok;
   }
 
 

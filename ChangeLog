@@ -1,3 +1,11 @@
+2018-08-05  Werner Lemberg  <wl@gnu.org>
+
+	* src/truetype/ttgload.c (compute_glyph_metrics): Fix overflow.
+
+	Reported as
+
+	  https://bugs.chromium.org/p/chromium/issues/detail?id=777151
+
 2018-08-04  Werner Lemberg  <wl@gnu.org>
 
 	* src/truetype/ttinterp.c (opcode_name): Fix typos.
