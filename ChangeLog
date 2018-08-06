@@ -1,3 +1,11 @@
+2018-08-06  Alexei Podtelezhnikov  <apodtele@gmail.com>
+
+	[pcf] Use unsigned types.
+
+	* src/pcf/pcf.h (PCF_Encoding): Use unsigned `enc'.
+	* src/pcf/pcfdrivr.c (pcf_cmap_char_{index,next}): Ditto.
+	* src/pcf/pcfread.c (pcf_get_encodings): Use unsigned types.
+
 2018-08-05  Werner Lemberg  <wl@gnu.org>
 
 	* src/truetype/ttgload.c (compute_glyph_metrics): Fix overflow.

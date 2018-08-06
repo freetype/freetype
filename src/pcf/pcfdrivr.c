@@ -123,7 +123,7 @@ THE SOFTWARE.
 
 
       mid  = ( min + max ) >> 1;
-      code = (FT_ULong)encodings[mid].enc;
+      code = encodings[mid].enc;
 
       if ( charcode == code )
       {
@@ -161,7 +161,7 @@ THE SOFTWARE.
 
 
       mid  = ( min + max ) >> 1;
-      code = (FT_ULong)encodings[mid].enc;
+      code = encodings[mid].enc;
 
       if ( charcode == code )
       {
@@ -178,7 +178,7 @@ THE SOFTWARE.
     charcode = 0;
     if ( min < cmap->num_encodings )
     {
-      charcode = (FT_ULong)encodings[min].enc;
+      charcode = encodings[min].enc;
       result   = encodings[min].glyph;
     }
 

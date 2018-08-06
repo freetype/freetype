@@ -130,7 +130,7 @@ FT_BEGIN_HEADER
    */
   typedef struct  PCF_EncodingRec_
   {
-    FT_Long    enc;
+    FT_ULong   enc;
     FT_UShort  glyph;  /* an index into PCF_Face's `metrics' array */
 
   } PCF_EncodingRec, *PCF_Encoding;
