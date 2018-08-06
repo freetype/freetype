@@ -3239,12 +3239,12 @@ FT_BEGIN_HEADER
    *   hinting algorithm and have the results rendered in horizontal LCD
    *   pixel mode, with code like
    *
-   *     {
-   *       FT_Load_Glyph( face, glyph_index,
-   *                      load_flags | FT_LOAD_TARGET_LIGHT );
+   *   {
+   *     FT_Load_Glyph( face, glyph_index,
+   *                    load_flags | FT_LOAD_TARGET_LIGHT );
    *
-   *       FT_Render_Glyph( face->glyph, FT_RENDER_MODE_LCD );
-   *     }
+   *     FT_Render_Glyph( face->glyph, FT_RENDER_MODE_LCD );
+   *   }
    *
    *   In general, you should stick with one rendering mode.  For example,
    *   switching between @FT_LOAD_TARGET_NORMAL and @FT_LOAD_TARGET_MONO

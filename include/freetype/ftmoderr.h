@@ -73,20 +73,20 @@
    * It can also be used to create a module error message table easily
    * with something like
    *
+   * {
+   *   #undef FTMODERR_H_
+   *   #define FT_MODERRDEF( e, v, s )  { FT_Mod_Err_ ## e, s },
+   *   #define FT_MODERR_START_LIST     {
+   *   #define FT_MODERR_END_LIST       { 0, 0 } };
+   *
+   *   const struct
    *   {
-   *     #undef FTMODERR_H_
-   *     #define FT_MODERRDEF( e, v, s )  { FT_Mod_Err_ ## e, s },
-   *     #define FT_MODERR_START_LIST     {
-   *     #define FT_MODERR_END_LIST       { 0, 0 } };
+   *     int          mod_err_offset;
+   *     const char*  mod_err_msg
+   *   } ft_mod_errors[] =
    *
-   *     const struct
-   *     {
-   *       int          mod_err_offset;
-   *       const char*  mod_err_msg
-   *     } ft_mod_errors[] =
-   *
-   *     #include FT_MODULE_ERRORS_H
-   *   }
+   *   #include FT_MODULE_ERRORS_H
+   * }
    *
    */
 

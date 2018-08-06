@@ -370,10 +370,10 @@ FT_BEGIN_HEADER
    *   A simple structure used to store a 2x2 matrix.  Coefficients are
    *   in 16.16 fixed-point format.  The computation performed is:
    *
-   *      {
-   *         x' = x*xx + y*xy
-   *         y' = x*yx + y*yy
-   *      }
+   *   {
+   *     x' = x*xx + y*xy
+   *     y' = x*yx + y*yy
+   *   }
    *
    * @fields:
    *   xx ::

@@ -779,19 +779,19 @@ FT_BEGIN_HEADER
    *   If you need to determine the table's length you should first call this
    *   function with `*length' set to~0, as in the following example:
    *
-   *     {
-   *       FT_ULong  length = 0;
+   *   {
+   *     FT_ULong  length = 0;
    *
    *
-   *       error = FT_Load_Sfnt_Table( face, tag, 0, NULL, &length );
-   *       if ( error ) { ... table does not exist ... }
+   *     error = FT_Load_Sfnt_Table( face, tag, 0, NULL, &length );
+   *     if ( error ) { ... table does not exist ... }
    *
-   *       buffer = malloc( length );
-   *       if ( buffer == NULL ) { ... not enough memory ... }
+   *     buffer = malloc( length );
+   *     if ( buffer == NULL ) { ... not enough memory ... }
    *
-   *       error = FT_Load_Sfnt_Table( face, tag, 0, buffer, &length );
-   *       if ( error ) { ... could not load table ... }
-   *     }
+   *     error = FT_Load_Sfnt_Table( face, tag, 0, buffer, &length );
+   *     if ( error ) { ... could not load table ... }
+   *   }
    *
    *   Note that structures like @TT_Header or @TT_OS2 can't be used with
    *   this function; they are limited to @FT_Get_Sfnt_Table.  Reason is that
