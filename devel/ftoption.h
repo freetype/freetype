@@ -75,32 +75,38 @@ FT_BEGIN_HEADER
   /*************************************************************************/
 
 
-  /**************************************************************************
+  /*#************************************************************************
    *
    * If you enable this configuration option, FreeType recognizes an
-   * environment variable called `FREETYPE_PROPERTIES', which can be used
-   * to control the various font drivers and modules.  The controllable
-   * properties are listed in the section `Controlling FreeType Modules'
-   * in the reference's table of contents; currently there are properties
-   * for the auto-hinter (file `ftautoh.h'), CFF (file `ftcffdrv.h'),
-   * TrueType (file `ftttdrv.h'), and PCF (file `ftpcfdrv.h').
+   * environment variable called `FREETYPE_PROPERTIES', which can be used to
+   * control the various font drivers and modules.  The controllable
+   * properties are listed in the section @properties.
+   *
+   * You have to undefine this configuration option on platforms that lack
+   * the concept of environment variables (and thus don't have the `getenv'
+   * function), for example Windows CE.
    *
    * `FREETYPE_PROPERTIES' has the following syntax form (broken here into
    * multiple lines for better readability).
    *
+   * {
    *   <optional whitespace>
    *   <module-name1> ':'
-   *   @property-name1: '=' <property-value1>
-   *   @whitespace:
-   *  <module-name2> ':'
-   *   @property-name2: '=' <property-value2>
-   *  ...
+   *   <property-name1> '=' <property-value1>
+   *   <whitespace>
+   *   <module-name2> ':'
+   *   <property-name2> '=' <property-value2>
+   *   ...
+   * }
    *
    * Example:
    *
-   *  FREETYPE_PROPERTIES=truetype:interpreter-version=35 \
-   *                      cff:no-stem-darkening=1 \
-   *                      autofitter:warping=1
+   * {
+   *   FREETYPE_PROPERTIES=truetype:interpreter-version=35 \
+   *                       cff:no-stem-darkening=1 \
+   *                       autofitter:warping=1
+   * }
+   *
    */
 #define FT_CONFIG_OPTION_ENVIRONMENT_PROPERTIES
 
@@ -211,6 +217,10 @@ FT_BEGIN_HEADER
    *
    *   Do not #undef this macro here since the build system might define
    *   it for certain configurations only.
+   *
+   *   If you use a build system like cmake or the `configure' script,
+   *   options set by those programs have precendence, overwriting the
+   *   value here with the configured one.
    */
 /* #define FT_CONFIG_OPTION_SYSTEM_ZLIB */
 
@@ -227,6 +237,10 @@ FT_BEGIN_HEADER
    *   the system available bzip2 implementation.
    *
    *   Define this macro if you want to enable this `feature'.
+   *
+   *   If you use a build system like cmake or the `configure' script,
+   *   options set by those programs have precendence, overwriting the
+   *   value here with the configured one.
    */
 #define FT_CONFIG_OPTION_USE_BZIP2
 
@@ -252,6 +266,10 @@ FT_BEGIN_HEADER
    *   supported regardless of this configuration.
    *
    *   Define this macro if you want to enable this `feature'.
+   *
+   *   If you use a build system like cmake or the `configure' script,
+   *   options set by those programs have precendence, overwriting the
+   *   value here with the configured one.
    */
 #define FT_CONFIG_OPTION_USE_PNG
 
@@ -265,6 +283,10 @@ FT_BEGIN_HEADER
    *   by a font's character map will be hinted also.
    *
    *   Define this macro if you want to enable this `feature'.
+   *
+   *   If you use a build system like cmake or the `configure' script,
+   *   options set by those programs have precendence, overwriting the
+   *   value here with the configured one.
    */
 #define FT_CONFIG_OPTION_USE_HARFBUZZ
 
@@ -577,17 +599,21 @@ FT_BEGIN_HEADER
    * [1] for a technical overview on what this means.  See `ttinterp.h'
    * for more details on the LEAN option.
    *
-   * There are three options.
+   * There are three possible values.
    *
-   * 1. This option is associated with the `Infinality' moniker.
-   *   Contributed by an individual nicknamed Infinality with the goal of
+   * Value 1:
+   *   This value is associated with the `Infinality' moniker,
+   *   contributed by an individual nicknamed Infinality with the goal of
    *   making TrueType fonts render better than on Windows.  A high
    *   amount of configurability and flexibility, down to rules for
    *   single glyphs in fonts, but also very slow.  Its experimental and
    *   slow nature and the original developer losing interest meant that
    *   this option was never enabled in default builds.
    *
-   * 2. The new default mode for the TrueType driver.  The Infinality code
+   *   The corresponding interpreter version is v38.
+   *
+   * Value 2:
+   *   The new default mode for the TrueType driver.  The Infinality code
    *   base was stripped to the bare minimum and all configurability
    *   removed in the name of speed and simplicity.  The configurability
    *   was mainly aimed at legacy fonts like Arial, Times New Roman, or
@@ -597,14 +623,19 @@ FT_BEGIN_HEADER
    *   that modern and web fonts render well while legacy fonts render
    *   okay.
    *
-   * 3. Compile both.
+   *   The corresponding interpreter version is v40.
+   *
+   * Value 3:
+   *   Compile both, making both v38 and v40 available (the latter is the
+   *   default).
    *
    * By undefining these, you get rendering behavior like on Windows
    * without ClearType, i.e., Windows XP without ClearType enabled and
    * Win9x (interpreter version v35).  Or not, depending on how much
    * hinting blood and testing tears the font designer put into a given
    * font.  If you define one or both subpixel hinting options, you can
-   * switch between between v35 and the ones you define.
+   * switch between between v35 and the ones you define (using
+   * `FT_Property_Set').
    *
    * This option requires TT_CONFIG_OPTION_BYTECODE_INTERPRETER to be
    * defined.
@@ -751,8 +782,8 @@ FT_BEGIN_HEADER
    * possible to set up the default values of the four control points that
    * define the stem darkening behaviour of the (new) CFF engine.  For
    * more details please read the documentation of the
-   * `darkening-parameters' property of the cff driver module (file
-   * `ftcffdrv.h'), which allows the control at run-time.
+   * `darkening-parameters' property (file `ftdriver.h'), which allows the
+   * control at run-time.
    *
    * Do *not* undefine these macros!
    */
@@ -824,7 +855,9 @@ FT_BEGIN_HEADER
 
   /**************************************************************************
    *
-   * Compile autofit module with Indic script support.
+   * Compile autofit module with fallback Indic script support, covering
+   * some scripts that the `latin' submodule of the autofit module doesn't
+   * (yet) handle.
    */
 #define AF_CONFIG_OPTION_INDIC
 
@@ -838,10 +871,30 @@ FT_BEGIN_HEADER
    *
    * This experimental option is active only if the rendering mode is
    * FT_RENDER_MODE_LIGHT; you can switch warping on and off with the
-   * `warping' property of the auto-hinter (see file `ftautoh.h' for more
+   * `warping' property of the auto-hinter (see file `ftdriver.h' for more
    * information; by default it is switched off).
    */
 #define AF_CONFIG_OPTION_USE_WARPER
+
+  /**************************************************************************
+   *
+   * Use TrueType-like size metrics for `light' auto-hinting.
+   *
+   * It is strongly recommended to avoid this option, which exists only to
+   * help some legacy applications retain its appearance and behaviour
+   * with respect to auto-hinted TrueType fonts.
+   *
+   * The very reason this option exists at all are GNU/Linux distributions
+   * like Fedora that did not un-patch the following change (which was
+   * present in FreeType between versions 2.4.6 and 2.7.1, inclusive).
+   *
+   *   2011-07-16  Steven Chu  <steven.f.chu@gmail.com>
+   *
+   *     [truetype] Fix metrics on size request for scalable fonts.
+   *
+   * This problematic commit is now reverted (more or less).
+   */
+/* #define AF_CONFIG_OPTION_TT_SIZE_METRICS */
 
   /* */
 

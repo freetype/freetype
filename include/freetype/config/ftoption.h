@@ -75,36 +75,39 @@ FT_BEGIN_HEADER
   /*************************************************************************/
 
 
-  /*#***********************************************************************/
-  /*                                                                       */
-  /* If you enable this configuration option, FreeType recognizes an       */
-  /* environment variable called `FREETYPE_PROPERTIES', which can be used  */
-  /* to control the various font drivers and modules.  The controllable    */
-  /* properties are listed in the section @properties.                     */
-  /*                                                                       */
-  /* You have to undefine this configuration option on platforms that lack */
-  /* the concept of environment variables (and thus don't have the         */
-  /* `getenv' function), for example Windows CE.                           */
-  /*                                                                       */
-  /* `FREETYPE_PROPERTIES' has the following syntax form (broken here into */
-  /* multiple lines for better readability).                               */
-  /*                                                                       */
-  /* {                                                                     */
-  /*   <optional whitespace>                                               */
-  /*   <module-name1> ':'                                                  */
-  /*   <property-name1> '=' <property-value1>                              */
-  /*   <whitespace>                                                        */
-  /*   <module-name2> ':'                                                  */
-  /*   <property-name2> '=' <property-value2>                              */
-  /*   ...                                                                 */
-  /* }                                                                     */
-  /*                                                                       */
-  /* Example:                                                              */
-  /*                                                                       */
-  /*   FREETYPE_PROPERTIES=truetype:interpreter-version=35 \               */
-  /*                       cff:no-stem-darkening=1 \                       */
-  /*                       autofitter:warping=1                            */
-  /*                                                                       */
+  /*#************************************************************************
+   *
+   * If you enable this configuration option, FreeType recognizes an
+   * environment variable called `FREETYPE_PROPERTIES', which can be used to
+   * control the various font drivers and modules.  The controllable
+   * properties are listed in the section @properties.
+   *
+   * You have to undefine this configuration option on platforms that lack
+   * the concept of environment variables (and thus don't have the `getenv'
+   * function), for example Windows CE.
+   *
+   * `FREETYPE_PROPERTIES' has the following syntax form (broken here into
+   * multiple lines for better readability).
+   *
+   * {
+   *   <optional whitespace>
+   *   <module-name1> ':'
+   *   <property-name1> '=' <property-value1>
+   *   <whitespace>
+   *   <module-name2> ':'
+   *   <property-name2> '=' <property-value2>
+   *   ...
+   * }
+   *
+   * Example:
+   *
+   * {
+   *   FREETYPE_PROPERTIES=truetype:interpreter-version=35 \
+   *                       cff:no-stem-darkening=1 \
+   *                       autofitter:warping=1
+   * }
+   *
+   */
 #define FT_CONFIG_OPTION_ENVIRONMENT_PROPERTIES
 
 
