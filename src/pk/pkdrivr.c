@@ -365,7 +365,6 @@
     FT_Bitmap*   bitmap = &slot->bitmap;
     PK_BitmapRec bm;
     PK_Glyph     go;
-    FT_Int       ascent;
 
     go = pk->pk_glyph;
 
@@ -423,14 +422,13 @@
     /*       we can simply point to it                         */
     ft_glyphslot_set_bitmap( slot, bm.bitmap );
 
-    ascent = (bm.bbx_height + bm.off_y);
     slot->format      = FT_GLYPH_FORMAT_BITMAP;
     slot->bitmap_left = bm.off_x ;
-    slot->bitmap_top  = ascent ;
+    slot->bitmap_top  = bm.off_y ;
 
     slot->metrics.horiAdvance  = (FT_Pos) (bm.mv_x ) * 64;
     slot->metrics.horiBearingX = (FT_Pos) (bm.off_x ) * 64;
-    slot->metrics.horiBearingY = (FT_Pos) ascent * 64;
+    slot->metrics.horiBearingY = (FT_Pos) (bm.bbx_height) * 64;
     slot->metrics.width        = (FT_Pos) ( bitmap->width * 64 );
     slot->metrics.height       = (FT_Pos) ( bitmap->rows * 64 );
 
