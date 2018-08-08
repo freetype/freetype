@@ -113,9 +113,9 @@ FT_BEGIN_HEADER
     FT_Byte        inkInside;
     FT_Byte        inkMetrics;
     FT_Byte        drawDirection;
-    FT_Long        fontAscent;
-    FT_Long        fontDescent;
-    FT_Long        maxOverlap;
+    FT_ULong       fontAscent;
+    FT_ULong       fontDescent;
+    FT_ULong       maxOverlap;
     PCF_MetricRec  minbounds;
     PCF_MetricRec  maxbounds;
     PCF_MetricRec  ink_minbounds;

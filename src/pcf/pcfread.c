@@ -1139,9 +1139,9 @@ THE SOFTWARE.
       FT_FRAME_BYTE      ( inkMetrics ),
       FT_FRAME_BYTE      ( drawDirection ),
       FT_FRAME_SKIP_BYTES( 1 ),
-      FT_FRAME_LONG_LE   ( fontAscent ),
-      FT_FRAME_LONG_LE   ( fontDescent ),
-      FT_FRAME_LONG_LE   ( maxOverlap ),
+      FT_FRAME_ULONG_LE  ( fontAscent ),
+      FT_FRAME_ULONG_LE  ( fontDescent ),
+      FT_FRAME_ULONG_LE  ( maxOverlap ),
     FT_FRAME_END
   };
 
@@ -1161,9 +1161,9 @@ THE SOFTWARE.
       FT_FRAME_BYTE      ( inkMetrics ),
       FT_FRAME_BYTE      ( drawDirection ),
       FT_FRAME_SKIP_BYTES( 1 ),
-      FT_FRAME_LONG      ( fontAscent ),
-      FT_FRAME_LONG      ( fontDescent ),
-      FT_FRAME_LONG      ( maxOverlap ),
+      FT_FRAME_ULONG     ( fontAscent ),
+      FT_FRAME_ULONG     ( fontDescent ),
+      FT_FRAME_ULONG     ( maxOverlap ),
     FT_FRAME_END
   };
 
@@ -1217,7 +1217,7 @@ THE SOFTWARE.
     FT_TRACE5(( "  noOverlap=%s, constantMetrics=%s,"
                 " terminalFont=%s, constantWidth=%s\n"
                 "  inkInside=%s, inkMetrics=%s, drawDirection=%s\n"
-                "  fontAscent=%ld, fontDescent=%ld, maxOverlap=%ld\n",
+                "  fontAscent=%lu, fontDescent=%lu, maxOverlap=%lu\n",
                 accel->noOverlap ? "yes" : "no",
                 accel->constantMetrics ? "yes" : "no",
                 accel->terminalFont ? "yes" : "no",
@@ -1229,17 +1229,17 @@ THE SOFTWARE.
                 accel->fontDescent,
                 accel->maxOverlap ));
 
-    /* sanity checks */
-    if ( FT_ABS( accel->fontAscent ) > 0x7FFF )
+    /* sanity checks so that combined height can fit short */
+    if ( accel->fontAscent > 0x3FFFU )
     {
-      accel->fontAscent = accel->fontAscent < 0 ? -0x7FFF : 0x7FFF;
-      FT_TRACE0(( "pfc_get_accel: clamping font ascent to value %d\n",
+      accel->fontAscent = 0x3FFFU;
+      FT_TRACE0(( "pfc_get_accel: clamping font ascent to value %u\n",
                   accel->fontAscent ));
     }
-    if ( FT_ABS( accel->fontDescent ) > 0x7FFF )
+    if ( accel->fontDescent > 0x3FFFU )
     {
-      accel->fontDescent = accel->fontDescent < 0 ? -0x7FFF : 0x7FFF;
-      FT_TRACE0(( "pfc_get_accel: clamping font descent to value %d\n",
+      accel->fontDescent = 0x3FFFU;
+      FT_TRACE0(( "pfc_get_accel: clamping font descent to value %u\n",
                   accel->fontDescent ));
     }
 
@@ -1565,20 +1565,8 @@ THE SOFTWARE.
         bsize->height = face->accel.maxbounds.ascent << 6;
 #endif
 
-#ifdef FT_DEBUG_LEVEL_TRACE
-        if ( face->accel.fontAscent + face->accel.fontDescent < 0 )
-          FT_TRACE0(( "pcf_load_font: negative height\n" ));
-#endif
-        if ( FT_ABS( face->accel.fontAscent +
-                     face->accel.fontDescent ) > 0x7FFF )
-        {
-          bsize->height = 0x7FFF;
-          FT_TRACE0(( "pcf_load_font: clamping height to value %d\n",
-                      bsize->height ));
-        }
-        else
-          bsize->height = FT_ABS( (FT_Short)( face->accel.fontAscent +
-                                              face->accel.fontDescent ) );
+        bsize->height = (FT_Short)( face->accel.fontAscent +
+                                    face->accel.fontDescent );
 
         prop = pcf_find_property( face, "AVERAGE_WIDTH" );
         if ( prop )

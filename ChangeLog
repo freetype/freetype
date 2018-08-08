@@ -1,4 +1,18 @@
-2018-08-06  Alexei Podtelezhnikov  <apodtele@gmail.com>
+2018-08-08  Alexei Podtelezhnikov  <apodtele@gmail.com>
+
+	[pcf] Massive unsigning (part 1).
+
+	Unofficial specifications hesitate to use unsigned 32-bit integers.
+	Negative values caused a lot of trouble in the past and it is safer
+	and easier to treat some properties as unsigned.
+
+	* src/pcf/pcf.h (PCF_AccelRec): Use unsigned values for `fontAscent',
+	`fontDescent', and `maxOverlap'.
+	* src/pcf/pcfread.c (pcf_load_font, pcf_get_accel): Updated.
+	* src/pcf/pcfdrivr.c (PCF_Glyph_Load, PCF_Size_Select,
+	PCF_Size_Request): Updated.
+
+2018-08-07  Alexei Podtelezhnikov  <apodtele@gmail.com>
 
 	* src/pcf/pcfread.c (pcf_get_bitmaps): Unsign `offsets' and
 	`bitmapSizes'.
