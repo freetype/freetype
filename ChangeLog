@@ -1,5 +1,23 @@
 2018-08-08  Werner Lemberg  <wl@gnu.org>
 
+	Add internal functions `FT_Trace_Disable' and `FT_Trace_Enable'.
+
+	It sometimes makes sense to suppress tracing informations, for
+	example, if it outputs identical messages again and again.
+
+	* include/freetype/internal/ftdebug.h: Make `ft_trace_levels' a
+	pointer.
+	(FT_Trace_Disable, FT_Trace_Enable): New declarations.
+
+	* src/base/ftdebug.c (ft_trace_levels): Rename to...
+	(ft_trace_levels_enabled): ... this.
+	(ft_trace_levels_disabled): New array.
+	(ft_trace_levels): New pointer.
+	(FT_Trace_Disable, FT_Trace_Enable): Implement.
+	(ft_debug_init): Updated.
+
+2018-08-08  Werner Lemberg  <wl@gnu.org>
+
 	Debugging improvements.
 
 	* src/base/ftobjs.c (pixel_modes): Move this array to top level

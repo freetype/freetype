@@ -62,8 +62,9 @@ FT_BEGIN_HEADER
   } FT_Trace;
 
 
-  /* defining the array of trace levels, provided by `src/base/ftdebug.c' */
-  extern int  ft_trace_levels[trace_count];
+  /* a pointer to the array of trace levels, */
+  /* provided by `src/base/ftdebug.c'        */
+  extern int*  ft_trace_levels;
 
 #undef FT_TRACE_DEF
 
@@ -111,7 +112,7 @@ FT_BEGIN_HEADER
    *
    * @note:
    *   This function may be useful if you want to access elements of
-   *   the internal `ft_trace_levels' array by an index.
+   *   the internal trace levels array by an index.
    */
   FT_BASE( FT_Int )
   FT_Trace_Get_Count( void );
@@ -130,18 +131,41 @@ FT_BEGIN_HEADER
    *
    * @return:
    *   The name of the trace component.  This is a statically allocated
-   *   C string, so do not free it after use.  NULL if FreeType 2 is not
-   *   built with FT_DEBUG_LEVEL_TRACE definition.
+   *   C~string, so do not free it after use.  NULL if FreeType is not built
+   *   with FT_DEBUG_LEVEL_TRACE definition.
    *
    * @note:
    *   Use @FT_Trace_Get_Count to get the number of available trace
    *   components.
-   *
-   *   This function may be useful if you want to control FreeType 2's
-   *   debug level in your application.
    */
   FT_BASE( const char* )
   FT_Trace_Get_Name( FT_Int  idx );
+
+
+  /**************************************************************************
+   *
+   * @function:
+   *   FT_Trace_Disable
+   *
+   * @description:
+   *   Switch off tracing temporarily.  It can be activated again with
+   *   @FT_Trace_Enable.
+   */
+  FT_BASE( void )
+  FT_Trace_Disable( void );
+
+
+  /**************************************************************************
+   *
+   * @function:
+   *   FT_Trace_Enable
+   *
+   * @description:
+   *   Activate tracing.  Use it after tracing has been switched off with
+   *   @FT_Trace_Disable.
+   */
+  FT_BASE( void )
+  FT_Trace_Enable( void );
 
 
   /**************************************************************************
