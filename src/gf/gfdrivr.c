@@ -481,40 +481,44 @@
     FT_TRACE4(( "TFM_Read_Metrics: Invoking TFM_Service.\n" ));
 
     tfm = (TFM_Service)face->tfm;
-
-    /* Initialise TFM Service */
-    error = tfm->init( &parser,
-                       memory,
-                       stream );
-
-    if ( !error )
+    if ( tfm->tfm_parser_funcs )
     {
-      FT_TRACE4(( "TFM_Read_Metrics: Initialised tfm metric data.\n" ));
-      parser.FontInfo  = fi;
-      parser.user_data = gf_glyph;
+      /* Initialise TFM Service */
+      error = tfm->tfm_parser_funcs->init( &parser,
+                                           memory,
+                                           stream );
 
-      error = tfm->parse_metrics( &parser );
-      if( !error )
-        FT_TRACE4(( "TFM_Read_Metrics: parsing TFM metric information done.\n" ));
+      if ( !error )
+      {
+        FT_TRACE4(( "TFM_Read_Metrics: Initialised tfm metric data.\n" ));
+        parser.FontInfo  = fi;
+        parser.user_data = gf_glyph;
 
-      FT_TRACE6(( "TFM_Read_Metrics: TFM Metric Information:\n"
-                  "                  Check Sum  : %ld\n"
-                  "                  Design Size: %ld\n"
-                  "                  Begin Char : %d\n"
-                  "                  End Char   : %d\n"
-                  "                  font_bbx_w : %d\n"
-                  "                  font_bbx_h : %d\n"
-                  "                  slant      : %d\n", parser.FontInfo->cs, parser.FontInfo->design_size, parser.FontInfo->begin_char,
-                                                         parser.FontInfo->end_char, parser.FontInfo->font_bbx_w,
-                                                         parser.FontInfo->font_bbx_h, parser.FontInfo->slant ));
-      tfm->done( &parser );
+        error = tfm->tfm_parser_funcs->parse_metrics( &parser );
+        if( !error )
+          FT_TRACE4(( "TFM_Read_Metrics: parsing TFM metric information done.\n" ));
+
+        FT_TRACE6(( "TFM_Read_Metrics: TFM Metric Information:\n"
+                    "                  Check Sum  : %ld\n"
+                    "                  Design Size: %ld\n"
+                    "                  Begin Char : %d\n"
+                    "                  End Char   : %d\n"
+                    "                  font_bbx_w : %d\n"
+                    "                  font_bbx_h : %d\n"
+                    "                  slant      : %d\n", parser.FontInfo->cs, parser.FontInfo->design_size, parser.FontInfo->begin_char,
+                                                           parser.FontInfo->end_char, parser.FontInfo->font_bbx_w,
+                                                           parser.FontInfo->font_bbx_h, parser.FontInfo->slant ));
+        tfm->tfm_parser_funcs->done( &parser );
+      }
     }
 
     if ( !error )
     {
+      printf("Hi I reached here\n");
       /* Modify GF_Glyph data according to TFM metric values */
 
-      /*face->gf_glyph->font_bbx_w = fi->font_bbx_w;
+      /*
+      face->gf_glyph->font_bbx_w = fi->font_bbx_w;
       face->gf_glyph->font_bbx_h = fi->font_bbx_h;
       */
 
