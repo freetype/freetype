@@ -1,3 +1,8 @@
+2018-08-06  Alexei Podtelezhnikov  <apodtele@gmail.com>
+
+	* src/pcf/pcfread.c (pcf_get_bitmaps): Unsign `offsets' and
+	`bitmapSizes'.
+
 2018-08-06  Werner Lemberg  <wl@gnu.org>
 
 	* devel/ftoption.h: Synchronize with main `ftoption.h'.

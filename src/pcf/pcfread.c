@@ -810,8 +810,8 @@ THE SOFTWARE.
   {
     FT_Error   error;
     FT_Memory  memory  = FT_FACE( face )->memory;
-    FT_Long*   offsets = NULL;
-    FT_Long    bitmapSizes[GLYPHPADOPTIONS];
+    FT_ULong*  offsets = NULL;
+    FT_ULong   bitmapSizes[GLYPHPADOPTIONS];
     FT_ULong   format, size;
     FT_ULong   nbitmaps, orig_nbitmaps, i, sizebitmaps = 0;
 
@@ -878,11 +878,11 @@ THE SOFTWARE.
     for ( i = 0; i < nbitmaps; i++ )
     {
       if ( PCF_BYTE_ORDER( format ) == MSBFirst )
-        (void)FT_READ_LONG( offsets[i] );
+        (void)FT_READ_ULONG( offsets[i] );
       else
-        (void)FT_READ_LONG_LE( offsets[i] );
+        (void)FT_READ_ULONG_LE( offsets[i] );
 
-      FT_TRACE5(( "  bitmap %ld: offset %ld (0x%lX)\n",
+      FT_TRACE5(( "  bitmap %lu: offset %lu (0x%lX)\n",
                   i, offsets[i], offsets[i] ));
     }
     if ( error )
@@ -891,22 +891,22 @@ THE SOFTWARE.
     for ( i = 0; i < GLYPHPADOPTIONS; i++ )
     {
       if ( PCF_BYTE_ORDER( format ) == MSBFirst )
-        (void)FT_READ_LONG( bitmapSizes[i] );
+        (void)FT_READ_ULONG( bitmapSizes[i] );
       else
-        (void)FT_READ_LONG_LE( bitmapSizes[i] );
+        (void)FT_READ_ULONG_LE( bitmapSizes[i] );
       if ( error )
         goto Bail;
 
-      sizebitmaps = (FT_ULong)bitmapSizes[PCF_GLYPH_PAD_INDEX( format )];
+      sizebitmaps = bitmapSizes[PCF_GLYPH_PAD_INDEX( format )];
 
-      FT_TRACE4(( "  %ld-bit padding implies a size of %ld\n",
+      FT_TRACE4(( "  %ld-bit padding implies a size of %lu\n",
                   8 << i, bitmapSizes[i] ));
     }
 
-    FT_TRACE4(( "  %ld bitmaps, using %ld-bit padding\n",
+    FT_TRACE4(( "  %lu bitmaps, using %ld-bit padding\n",
                 nbitmaps,
                 8 << PCF_GLYPH_PAD_INDEX( format ) ));
-    FT_TRACE4(( "  bitmap size: %ld\n", sizebitmaps ));
+    FT_TRACE4(( "  bitmap size: %lu\n", sizebitmaps ));
 
     FT_UNUSED( sizebitmaps );       /* only used for debugging */
 
@@ -915,14 +915,13 @@ THE SOFTWARE.
     for ( i = 0; i < nbitmaps; i++ )
     {
       /* rough estimate */
-      if ( ( offsets[i] < 0 )              ||
-           ( (FT_ULong)offsets[i] > size ) )
+      if ( offsets[i] > size )
       {
         FT_TRACE0(( "pcf_get_bitmaps:"
-                    " invalid offset to bitmap data of glyph %ld\n", i ));
+                    " invalid offset to bitmap data of glyph %lu\n", i ));
       }
       else
-        face->metrics[i].bits = stream->pos + (FT_ULong)offsets[i];
+        face->metrics[i].bits = stream->pos + offsets[i];
     }
 
     face->bitmapsFormat = format;
