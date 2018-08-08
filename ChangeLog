@@ -1,3 +1,13 @@
+2018-08-08  Werner Lemberg  <wl@gnu.org>
+
+	Debugging improvements.
+
+	* src/base/ftobjs.c (pixel_modes): Move this array to top level
+	from ...
+	(FT_Load_Glyph): ... here.
+	(FT_Render_Glyph_Internal): Use `width' x `height' in trace message.
+	Use `pixel_modes'.
+
 2018-08-08  Alexei Podtelezhnikov  <apodtele@gmail.com>
 
 	[pcf] Massive unsigning (part 2).
