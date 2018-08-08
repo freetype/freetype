@@ -1705,14 +1705,20 @@ typedef ptrdiff_t  FT_PtrDist;
 
 
   static int
-  gray_convert_glyph_inner( RAS_ARG )
+  gray_convert_glyph_inner( RAS_ARG,
+                            int  continued )
   {
     volatile int  error = 0;
 
 
     if ( ft_setjmp( ras.jump_buffer ) == 0 )
     {
+      if ( continued )
+        FT_Trace_Disable();
       error = FT_Outline_Decompose( &ras.outline, &func_interface, &ras );
+      if ( continued )
+        FT_Trace_Enable();
+
       if ( !ras.invalid )
         gray_record_cell( RAS_VAR );
 
@@ -1746,6 +1752,8 @@ typedef ptrdiff_t  FT_PtrDist;
     TCoord   y;
     TCoord   bands[32];  /* enough to accommodate bisections */
     TCoord*  band;
+
+    int  continued = 0;
 
 
     /* set up vertical bands */
@@ -1786,7 +1794,8 @@ typedef ptrdiff_t  FT_PtrDist;
         ras.min_ey    = band[1];
         ras.max_ey    = band[0];
 
-        error = gray_convert_glyph_inner( RAS_VAR );
+        error     = gray_convert_glyph_inner( RAS_VAR, continued );
+        continued = 1;
 
         if ( !error )
         {

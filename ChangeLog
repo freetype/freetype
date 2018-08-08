@@ -1,5 +1,13 @@
 2018-08-08  Werner Lemberg  <wl@gnu.org>
 
+	[smooth] Improve tracing.
+
+	* src/smooth/ftgrays.c (gray_convert_glyph_inner): Only use tracing
+	if called the first time.
+	(gray_convert_glyph): Updated.
+
+2018-08-08  Werner Lemberg  <wl@gnu.org>
+
 	Add internal functions `FT_Trace_Disable' and `FT_Trace_Enable'.
 
 	It sometimes makes sense to suppress tracing informations, for
