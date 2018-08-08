@@ -57,9 +57,9 @@ FT_BEGIN_HEADER
 
   typedef struct  PCF_ParsePropertyRec_
   {
-    FT_Long  name;
-    FT_Byte  isString;
-    FT_Long  value;
+    FT_ULong  name;
+    FT_Byte   isString;
+    FT_ULong  value;
 
   } PCF_ParsePropertyRec, *PCF_ParseProperty;
 

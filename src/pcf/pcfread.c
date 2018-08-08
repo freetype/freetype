@@ -239,7 +239,7 @@ THE SOFTWARE.
       {
         for ( j = 0; j < sizeof ( tableNames ) / sizeof ( tableNames[0] );
               j++ )
-          if ( tables[i].type == (FT_UInt)( 1 << j ) )
+          if ( tables[i].type == ( 1U << j ) )
             name = tableNames[j];
 
         FT_TRACE4(( "  %d: type=%s, format=0x%X,"
@@ -433,9 +433,9 @@ THE SOFTWARE.
 #define FT_STRUCTURE  PCF_ParsePropertyRec
 
     FT_FRAME_START( PCF_PROPERTY_SIZE ),
-      FT_FRAME_LONG_LE( name ),
-      FT_FRAME_BYTE   ( isString ),
-      FT_FRAME_LONG_LE( value ),
+      FT_FRAME_ULONG_LE( name ),
+      FT_FRAME_BYTE    ( isString ),
+      FT_FRAME_ULONG_LE( value ),
     FT_FRAME_END
   };
 
@@ -447,9 +447,9 @@ THE SOFTWARE.
 #define FT_STRUCTURE  PCF_ParsePropertyRec
 
     FT_FRAME_START( PCF_PROPERTY_SIZE ),
-      FT_FRAME_LONG( name ),
-      FT_FRAME_BYTE( isString ),
-      FT_FRAME_LONG( value ),
+      FT_FRAME_ULONG( name ),
+      FT_FRAME_BYTE ( isString ),
+      FT_FRAME_ULONG( value ),
     FT_FRAME_END
   };
 
@@ -623,11 +623,10 @@ THE SOFTWARE.
     FT_TRACE4(( "\n" ));
     for ( i = 0; i < nprops; i++ )
     {
-      FT_Long  name_offset = props[i].name;
+      FT_ULong  name_offset = props[i].name;
 
 
-      if ( ( name_offset < 0 )                     ||
-           ( (FT_ULong)name_offset > string_size ) )
+      if ( name_offset > string_size )
       {
         error = FT_THROW( Invalid_Offset );
         goto Bail;
@@ -642,11 +641,10 @@ THE SOFTWARE.
 
       if ( props[i].isString )
       {
-        FT_Long  value_offset = props[i].value;
+        FT_ULong  value_offset = props[i].value;
 
 
-        if ( ( value_offset < 0 )                     ||
-             ( (FT_ULong)value_offset > string_size ) )
+        if ( value_offset > string_size )
         {
           error = FT_THROW( Invalid_Offset );
           goto Bail;
@@ -659,7 +657,7 @@ THE SOFTWARE.
       }
       else
       {
-        properties[i].value.l = props[i].value;
+        properties[i].value.ul = props[i].value;
 
         FT_TRACE4(( " %d\n", properties[i].value.l ));
       }
@@ -1571,94 +1569,72 @@ THE SOFTWARE.
         prop = pcf_find_property( face, "AVERAGE_WIDTH" );
         if ( prop )
         {
-#ifdef FT_DEBUG_LEVEL_TRACE
-          if ( prop->value.l < 0 )
-            FT_TRACE0(( "pcf_load_font: negative average width\n" ));
-#endif
-          if ( ( FT_ABS( prop->value.l ) > 0x7FFFL * 10 - 5 ) )
+          if ( prop->value.ul > 0x7FFFUL * 10 - 5 )
           {
             bsize->width = 0x7FFF;
-            FT_TRACE0(( "pcf_load_font: clamping average width to value %d\n",
+            FT_TRACE0(( "pcf_load_font: clamping average width to value %hd\n",
                         bsize->width ));
           }
           else
-            bsize->width = FT_ABS( (FT_Short)( ( prop->value.l + 5 ) / 10 ) );
+            bsize->width = (FT_Short)( ( prop->value.ul + 5 ) / 10 );
         }
         else
         {
           /* this is a heuristical value */
-          bsize->width = (FT_Short)FT_MulDiv( bsize->height, 2, 3 );
+          bsize->width = bsize->height - bsize->height / 3;
         }
 
         prop = pcf_find_property( face, "POINT_SIZE" );
         if ( prop )
         {
-#ifdef FT_DEBUG_LEVEL_TRACE
-          if ( prop->value.l < 0 )
-            FT_TRACE0(( "pcf_load_font: negative point size\n" ));
-#endif
           /* convert from 722.7 decipoints to 72 points per inch */
-          if ( FT_ABS( prop->value.l ) > 0x504C2L ) /* 0x7FFF * 72270/7200 */
+          if ( prop->value.ul > 0x504C2UL ) /* 0x7FFF * 72270/7200 */
           {
             bsize->size = 0x7FFF;
             FT_TRACE0(( "pcf_load_font: clamping point size to value %d\n",
                         bsize->size ));
           }
           else
-            bsize->size = FT_MulDiv( FT_ABS( prop->value.l ),
-                                     64 * 7200,
-                                     72270L );
+            bsize->size = FT_MulDiv( prop->value.l, 64 * 7200, 72270L );
         }
 
         prop = pcf_find_property( face, "PIXEL_SIZE" );
         if ( prop )
         {
-#ifdef FT_DEBUG_LEVEL_TRACE
-          if ( prop->value.l < 0 )
-            FT_TRACE0(( "pcf_load_font: negative pixel size\n" ));
-#endif
-          if ( FT_ABS( prop->value.l ) > 0x7FFF )
+          if ( prop->value.ul > 0x7FFFU )
           {
-            bsize->y_ppem = 0x7FFF << 6;
+            bsize->y_ppem = 0x7FFF * 64;
             FT_TRACE0(( "pcf_load_font: clamping pixel size to value %d\n",
                         bsize->y_ppem ));
           }
           else
-            bsize->y_ppem = FT_ABS( (FT_Short)prop->value.l ) << 6;
+            bsize->y_ppem = (FT_Pos)prop->value.ul * 64;
         }
 
         prop = pcf_find_property( face, "RESOLUTION_X" );
         if ( prop )
         {
-#ifdef FT_DEBUG_LEVEL_TRACE
-          if ( prop->value.l < 0 )
-            FT_TRACE0(( "pcf_load_font: negative X resolution\n" ));
-#endif
-          if ( FT_ABS( prop->value.l ) > 0x7FFF )
+          if ( prop->value.ul > 0x7FFFU )
           {
             resolution_x = 0x7FFF;
-            FT_TRACE0(( "pcf_load_font: clamping X resolution to value %d\n",
+            FT_TRACE0(( "pcf_load_font: clamping X resolution to value %hd\n",
                         resolution_x ));
           }
           else
-            resolution_x = FT_ABS( (FT_Short)prop->value.l );
+            resolution_x = (FT_Short)prop->value.ul;
         }
 
         prop = pcf_find_property( face, "RESOLUTION_Y" );
         if ( prop )
         {
-#ifdef FT_DEBUG_LEVEL_TRACE
-          if ( prop->value.l < 0 )
-            FT_TRACE0(( "pcf_load_font: negative Y resolution\n" ));
-#endif
-          if ( FT_ABS( prop->value.l ) > 0x7FFF )
+          if ( prop->value.ul > 0x7FFFU )
           {
             resolution_y = 0x7FFF;
             FT_TRACE0(( "pcf_load_font: clamping Y resolution to value %d\n",
                         resolution_y ));
           }
           else
-            resolution_y = FT_ABS( (FT_Short)prop->value.l );
+            resolution_y = (FT_Short)prop->value.ul;
         }
 
         if ( bsize->y_ppem == 0 )

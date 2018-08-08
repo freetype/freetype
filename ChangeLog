@@ -1,5 +1,17 @@
 2018-08-08  Alexei Podtelezhnikov  <apodtele@gmail.com>
 
+	[pcf] Massive unsigning (part 2).
+
+	Treat all size related properties as unsigned values.
+
+	* src/pcf/pcf.h (PCF_ParsePropertyRec): Use unsigned `name' and
+	`value'.
+	* src/pcf/pcfread.c (pcf_get_propeerties, pcf_load_font): Updated
+	parsing code and handling of AVERAGE_WIDTH, POINT_SIZE, PIXEL_SIZE,
+	RESOLUTION_X and RESOLUTION_Y.
+
+2018-08-08  Alexei Podtelezhnikov  <apodtele@gmail.com>
+
 	[pcf] Massive unsigning (part 1).
 
 	Unofficial specifications hesitate to use unsigned 32-bit integers.
