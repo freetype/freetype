@@ -239,7 +239,7 @@ THE SOFTWARE.
       {
         for ( j = 0; j < sizeof ( tableNames ) / sizeof ( tableNames[0] );
               j++ )
-          if ( tables[i].type == ( 1U << j ) )
+          if ( tables[i].type == (FT_UInt)( 1 << j ) )
             name = tableNames[j];
 
         FT_TRACE4(( "  %d: type=%s, format=0x%X,"
@@ -433,9 +433,9 @@ THE SOFTWARE.
 #define FT_STRUCTURE  PCF_ParsePropertyRec
 
     FT_FRAME_START( PCF_PROPERTY_SIZE ),
-      FT_FRAME_ULONG_LE( name ),
-      FT_FRAME_BYTE    ( isString ),
-      FT_FRAME_ULONG_LE( value ),
+      FT_FRAME_LONG_LE( name ),
+      FT_FRAME_BYTE   ( isString ),
+      FT_FRAME_LONG_LE( value ),
     FT_FRAME_END
   };
 
@@ -447,9 +447,9 @@ THE SOFTWARE.
 #define FT_STRUCTURE  PCF_ParsePropertyRec
 
     FT_FRAME_START( PCF_PROPERTY_SIZE ),
-      FT_FRAME_ULONG( name ),
-      FT_FRAME_BYTE ( isString ),
-      FT_FRAME_ULONG( value ),
+      FT_FRAME_LONG( name ),
+      FT_FRAME_BYTE( isString ),
+      FT_FRAME_LONG( value ),
     FT_FRAME_END
   };
 
@@ -623,10 +623,11 @@ THE SOFTWARE.
     FT_TRACE4(( "\n" ));
     for ( i = 0; i < nprops; i++ )
     {
-      FT_ULong  name_offset = props[i].name;
+      FT_Long  name_offset = props[i].name;
 
 
-      if ( name_offset > string_size )
+      if ( ( name_offset < 0 )                     ||
+           ( (FT_ULong)name_offset > string_size ) )
       {
         error = FT_THROW( Invalid_Offset );
         goto Bail;
@@ -641,10 +642,11 @@ THE SOFTWARE.
 
       if ( props[i].isString )
       {
-        FT_ULong  value_offset = props[i].value;
+        FT_Long  value_offset = props[i].value;
 
 
-        if ( value_offset > string_size )
+        if ( ( value_offset < 0 )                     ||
+             ( (FT_ULong)value_offset > string_size ) )
         {
           error = FT_THROW( Invalid_Offset );
           goto Bail;
@@ -657,7 +659,7 @@ THE SOFTWARE.
       }
       else
       {
-        properties[i].value.ul = props[i].value;
+        properties[i].value.l = props[i].value;
 
         FT_TRACE4(( " %d\n", properties[i].value.l ));
       }
@@ -1137,9 +1139,9 @@ THE SOFTWARE.
       FT_FRAME_BYTE      ( inkMetrics ),
       FT_FRAME_BYTE      ( drawDirection ),
       FT_FRAME_SKIP_BYTES( 1 ),
-      FT_FRAME_ULONG_LE  ( fontAscent ),
-      FT_FRAME_ULONG_LE  ( fontDescent ),
-      FT_FRAME_ULONG_LE  ( maxOverlap ),
+      FT_FRAME_LONG_LE   ( fontAscent ),
+      FT_FRAME_LONG_LE   ( fontDescent ),
+      FT_FRAME_LONG_LE   ( maxOverlap ),
     FT_FRAME_END
   };
 
@@ -1159,9 +1161,9 @@ THE SOFTWARE.
       FT_FRAME_BYTE      ( inkMetrics ),
       FT_FRAME_BYTE      ( drawDirection ),
       FT_FRAME_SKIP_BYTES( 1 ),
-      FT_FRAME_ULONG     ( fontAscent ),
-      FT_FRAME_ULONG     ( fontDescent ),
-      FT_FRAME_ULONG     ( maxOverlap ),
+      FT_FRAME_LONG      ( fontAscent ),
+      FT_FRAME_LONG      ( fontDescent ),
+      FT_FRAME_LONG      ( maxOverlap ),
     FT_FRAME_END
   };
 
@@ -1215,7 +1217,7 @@ THE SOFTWARE.
     FT_TRACE5(( "  noOverlap=%s, constantMetrics=%s,"
                 " terminalFont=%s, constantWidth=%s\n"
                 "  inkInside=%s, inkMetrics=%s, drawDirection=%s\n"
-                "  fontAscent=%lu, fontDescent=%lu, maxOverlap=%lu\n",
+                "  fontAscent=%ld, fontDescent=%ld, maxOverlap=%ld\n",
                 accel->noOverlap ? "yes" : "no",
                 accel->constantMetrics ? "yes" : "no",
                 accel->terminalFont ? "yes" : "no",
@@ -1227,17 +1229,17 @@ THE SOFTWARE.
                 accel->fontDescent,
                 accel->maxOverlap ));
 
-    /* sanity checks so that combined height can fit short */
-    if ( accel->fontAscent > 0x3FFFU )
+    /* sanity checks */
+    if ( FT_ABS( accel->fontAscent ) > 0x7FFF )
     {
-      accel->fontAscent = 0x3FFFU;
-      FT_TRACE0(( "pfc_get_accel: clamping font ascent to value %u\n",
+      accel->fontAscent = accel->fontAscent < 0 ? -0x7FFF : 0x7FFF;
+      FT_TRACE0(( "pfc_get_accel: clamping font ascent to value %d\n",
                   accel->fontAscent ));
     }
-    if ( accel->fontDescent > 0x3FFFU )
+    if ( FT_ABS( accel->fontDescent ) > 0x7FFF )
     {
-      accel->fontDescent = 0x3FFFU;
-      FT_TRACE0(( "pfc_get_accel: clamping font descent to value %u\n",
+      accel->fontDescent = accel->fontDescent < 0 ? -0x7FFF : 0x7FFF;
+      FT_TRACE0(( "pfc_get_accel: clamping font descent to value %d\n",
                   accel->fontDescent ));
     }
 
@@ -1563,78 +1565,112 @@ THE SOFTWARE.
         bsize->height = face->accel.maxbounds.ascent << 6;
 #endif
 
-        bsize->height = (FT_Short)( face->accel.fontAscent +
-                                    face->accel.fontDescent );
+#ifdef FT_DEBUG_LEVEL_TRACE
+        if ( face->accel.fontAscent + face->accel.fontDescent < 0 )
+          FT_TRACE0(( "pcf_load_font: negative height\n" ));
+#endif
+        if ( FT_ABS( face->accel.fontAscent +
+                     face->accel.fontDescent ) > 0x7FFF )
+        {
+          bsize->height = 0x7FFF;
+          FT_TRACE0(( "pcf_load_font: clamping height to value %d\n",
+                      bsize->height ));
+        }
+        else
+          bsize->height = FT_ABS( (FT_Short)( face->accel.fontAscent +
+                                              face->accel.fontDescent ) );
 
         prop = pcf_find_property( face, "AVERAGE_WIDTH" );
         if ( prop )
         {
-          if ( prop->value.ul > 0x7FFFUL * 10 - 5 )
+#ifdef FT_DEBUG_LEVEL_TRACE
+          if ( prop->value.l < 0 )
+            FT_TRACE0(( "pcf_load_font: negative average width\n" ));
+#endif
+          if ( ( FT_ABS( prop->value.l ) > 0x7FFFL * 10 - 5 ) )
           {
             bsize->width = 0x7FFF;
-            FT_TRACE0(( "pcf_load_font: clamping average width to value %hd\n",
+            FT_TRACE0(( "pcf_load_font: clamping average width to value %d\n",
                         bsize->width ));
           }
           else
-            bsize->width = (FT_Short)( ( prop->value.ul + 5 ) / 10 );
+            bsize->width = FT_ABS( (FT_Short)( ( prop->value.l + 5 ) / 10 ) );
         }
         else
         {
           /* this is a heuristical value */
-          bsize->width = bsize->height - bsize->height / 3;
+          bsize->width = (FT_Short)FT_MulDiv( bsize->height, 2, 3 );
         }
 
         prop = pcf_find_property( face, "POINT_SIZE" );
         if ( prop )
         {
+#ifdef FT_DEBUG_LEVEL_TRACE
+          if ( prop->value.l < 0 )
+            FT_TRACE0(( "pcf_load_font: negative point size\n" ));
+#endif
           /* convert from 722.7 decipoints to 72 points per inch */
-          if ( prop->value.ul > 0x504C2UL ) /* 0x7FFF * 72270/7200 */
+          if ( FT_ABS( prop->value.l ) > 0x504C2L ) /* 0x7FFF * 72270/7200 */
           {
             bsize->size = 0x7FFF;
             FT_TRACE0(( "pcf_load_font: clamping point size to value %d\n",
                         bsize->size ));
           }
           else
-            bsize->size = FT_MulDiv( prop->value.l, 64 * 7200, 72270L );
+            bsize->size = FT_MulDiv( FT_ABS( prop->value.l ),
+                                     64 * 7200,
+                                     72270L );
         }
 
         prop = pcf_find_property( face, "PIXEL_SIZE" );
         if ( prop )
         {
-          if ( prop->value.ul > 0x7FFFU )
+#ifdef FT_DEBUG_LEVEL_TRACE
+          if ( prop->value.l < 0 )
+            FT_TRACE0(( "pcf_load_font: negative pixel size\n" ));
+#endif
+          if ( FT_ABS( prop->value.l ) > 0x7FFF )
           {
-            bsize->y_ppem = 0x7FFF * 64;
+            bsize->y_ppem = 0x7FFF << 6;
             FT_TRACE0(( "pcf_load_font: clamping pixel size to value %d\n",
                         bsize->y_ppem ));
           }
           else
-            bsize->y_ppem = (FT_Pos)prop->value.ul * 64;
+            bsize->y_ppem = FT_ABS( (FT_Short)prop->value.l ) << 6;
         }
 
         prop = pcf_find_property( face, "RESOLUTION_X" );
         if ( prop )
         {
-          if ( prop->value.ul > 0x7FFFU )
+#ifdef FT_DEBUG_LEVEL_TRACE
+          if ( prop->value.l < 0 )
+            FT_TRACE0(( "pcf_load_font: negative X resolution\n" ));
+#endif
+          if ( FT_ABS( prop->value.l ) > 0x7FFF )
           {
             resolution_x = 0x7FFF;
-            FT_TRACE0(( "pcf_load_font: clamping X resolution to value %hd\n",
+            FT_TRACE0(( "pcf_load_font: clamping X resolution to value %d\n",
                         resolution_x ));
           }
           else
-            resolution_x = (FT_Short)prop->value.ul;
+            resolution_x = FT_ABS( (FT_Short)prop->value.l );
         }
 
         prop = pcf_find_property( face, "RESOLUTION_Y" );
         if ( prop )
         {
-          if ( prop->value.ul > 0x7FFFU )
+#ifdef FT_DEBUG_LEVEL_TRACE
+          if ( prop->value.l < 0 )
+            FT_TRACE0(( "pcf_load_font: negative Y resolution\n" ));
+#endif
+          if ( FT_ABS( prop->value.l ) > 0x7FFF )
           {
             resolution_y = 0x7FFF;
             FT_TRACE0(( "pcf_load_font: clamping Y resolution to value %d\n",
                         resolution_y ));
           }
           else
-            resolution_y = (FT_Short)prop->value.ul;
+            resolution_y = FT_ABS( (FT_Short)prop->value.l );
         }
 
         if ( bsize->y_ppem == 0 )

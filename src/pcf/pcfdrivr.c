@@ -441,8 +441,8 @@ THE SOFTWARE.
 
     FT_Select_Metrics( size->face, strike_index );
 
-    size->metrics.ascender    =  (FT_Pos)accel->fontAscent * 64;
-    size->metrics.descender   = -(FT_Pos)accel->fontDescent * 64;
+    size->metrics.ascender    =  accel->fontAscent * 64;
+    size->metrics.descender   = -accel->fontDescent * 64;
     size->metrics.max_advance =  accel->maxbounds.characterWidth * 64;
 
     return FT_Err_Ok;
@@ -470,8 +470,8 @@ THE SOFTWARE.
       break;
 
     case FT_SIZE_REQUEST_TYPE_REAL_DIM:
-      if ( (FT_ULong)height == ( face->accel.fontAscent +
-                                 face->accel.fontDescent ) )
+      if ( height == ( face->accel.fontAscent +
+                       face->accel.fontDescent ) )
         error = FT_Err_Ok;
       break;
 
@@ -560,8 +560,8 @@ THE SOFTWARE.
     slot->metrics.height       = (FT_Pos)( bitmap->rows * 64 );
 
     ft_synthesize_vertical_metrics( &slot->metrics,
-                                    (FT_Pos)( face->accel.fontAscent +
-                                              face->accel.fontDescent ) * 64 );
+                                    ( face->accel.fontAscent +
+                                      face->accel.fontDescent ) * 64 );
 
     if ( load_flags & FT_LOAD_BITMAP_METRICS_ONLY )
       goto Exit;

@@ -1,3 +1,7 @@
+2018-08-08  Alexei Podtelezhnikov  <apodtele@gmail.com>
+
+	[pcf] Revert massive unsigning.
+
 2018-08-08  Werner Lemberg  <wl@gnu.org>
 
 	[smooth] Improve tracing.

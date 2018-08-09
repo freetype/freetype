@@ -57,9 +57,9 @@ FT_BEGIN_HEADER
 
   typedef struct  PCF_ParsePropertyRec_
   {
-    FT_ULong  name;
-    FT_Byte   isString;
-    FT_ULong  value;
+    FT_Long  name;
+    FT_Byte  isString;
+    FT_Long  value;
 
   } PCF_ParsePropertyRec, *PCF_ParseProperty;
 
@@ -113,9 +113,9 @@ FT_BEGIN_HEADER
     FT_Byte        inkInside;
     FT_Byte        inkMetrics;
     FT_Byte        drawDirection;
-    FT_ULong       fontAscent;
-    FT_ULong       fontDescent;
-    FT_ULong       maxOverlap;
+    FT_Long        fontAscent;
+    FT_Long        fontDescent;
+    FT_Long        maxOverlap;
     PCF_MetricRec  minbounds;
     PCF_MetricRec  maxbounds;
     PCF_MetricRec  ink_minbounds;
