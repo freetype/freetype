@@ -111,25 +111,115 @@ FT_Byte  bit_table[] = {
     return v;
   }
 
+  static int
+  compare( FT_Long*  a,
+           FT_Long*  b )
+  {
+    if ( *a < *b )
+      return -1;
+    else if ( *a > *b )
+      return 1;
+    else
+      return 0;
+  }
+
   /**************************************************************************
    *
    * API.
    *
    */
 
+  static FT_Error
+  gf_set_encodings( GF_Glyph   go,
+                    FT_Memory  memory )
+  {
+    FT_Error      error;
+    FT_ULong      nencoding;
+    FT_UInt       i, j;
+    FT_ULong      k;
+    GF_Encoding   encoding = NULL;
+    GF_Metric     metric;
+    FT_Long       *tosort;
+
+    nencoding = go->nglyphs;
+    FT_TRACE2(( "gf_set_encodings: Reached here.\n" ));
+
+    if ( FT_NEW_ARRAY( metric, go->code_max - go->code_min + 1  ) )
+      return error;
+
+    if ( FT_NEW_ARRAY( encoding, nencoding ) )
+      return error;
+
+    if ( FT_NEW_ARRAY( tosort, nencoding ) )
+      return error;
+
+
+    FT_TRACE2(( "gf_set_encodings: Allocated sufficient memory.\n" ));
+
+    for( i = 0 ; i < 256 ; i++ )
+    {
+      if( go->metrics[i].char_offset >= 0 )
+        tosort[i] = go->metrics[i].char_offset;
+    }
+
+    ft_qsort( (void*)tosort, go->nglyphs, sizeof(FT_Long),
+               (int(*)(const void*, const void*) )compare );
+
+    for( i = 0 ; i < go->nglyphs ; i++ )
+    {
+      /* FT_TRACE2(( "tosort[%d]is %ld\n",i,tosort[i] )); */
+    }
+
+    k = 0;
+    for ( i = 0; i < go->nglyphs; i++ )
+    {
+      for ( j = 0; j < 256; j++ )
+      {
+        if( go->metrics[j].char_offset == tosort[i] )
+        break;
+      }
+      metric[k].char_offset = go->metrics[j].char_offset;
+      metric[k].code = go->metrics[j].code;
+      /* FT_TRACE2(( "metric[%d].char_offset is %ld %ld% ld\n",k,metric[k].char_offset,metric[k].code,k  )); */
+      encoding[k].enc   = go->metrics[j].code;
+      encoding[k].glyph = k;
+      k++;
+    }
+
+    for( i = 0 ; i < go->nglyphs ; i++ )
+    {
+      go->metrics[i].char_offset = metric[i].char_offset;
+      go->metrics[i].code        = metric[i].code;
+      /* FT_TRACE2(( "Hi I am here go->metrics[%d].char_offset is %ld %ld% ld\n",i,
+                      go->metrics[i].char_offset,go->metrics[i].code,i  )); */
+    }
+
+    FT_FREE(metric);
+
+    go->nencodings = k;
+    go->encodings  = encoding;
+
+    return error;
+  }
+
   FT_LOCAL_DEF( FT_Error )
   gf_read_glyph( FT_Stream    stream,
-                 GF_Bitmap    bm,
-                 FT_Memory    memory )
+                 GF_MetricRec *metrics )
   {
     FT_Long        m, n;
     FT_Int         paint_sw;
     FT_Int         instr,inst;
     FT_Long        min_m, max_m, min_n, max_n, del_m, del_n;
     FT_Long        w, h, d;
-    FT_Int         m_b, k;
-    FT_Byte        *ptr;
+    FT_Int         k;
+    /* FT_Int      m_b;
+    FT_Byte        *ptr; */
     FT_Error       error  = FT_Err_Ok;
+
+    if( FT_STREAM_SEEK( metrics->char_offset ) )
+      return 0;
+
+    FT_TRACE2(( "In gf_read_glyph\n" ));
 
     for (  ;  ;  )
     {
@@ -203,19 +293,25 @@ FT_Byte  bit_table[] = {
         return -1;
       }
 
+      /* FT_TRACE2(( "w      is %ld\n"
+                     "h      is %ld\n"
+                     "-min_m is %ld\n"
+                     "max_n  is %ld\n\n", w, h, -min_m, max_n ));
+      */
+
       /* allocate and build bitmap */
-      if ((bm->bitmap = (FT_Byte*)malloc(h*((w+7)/8))) == NULL)
+      if ((metrics->bitmap = (FT_Byte*)malloc(h*((w+7)/8))) == NULL)
       {
         error = FT_THROW( Invalid_File_Format );
         return -1;
       }
 
-      memset(bm->bitmap, 0, h*((w+7)/8));
-      bm->raster     = (FT_UInt)(w+7)/8;
-      bm->bbx_width  = w;
-      bm->bbx_height = h;
-      bm->off_x      = -min_m;
-      bm->off_y      = max_n;
+      memset(metrics->bitmap, 0, h*((w+7)/8));
+      metrics->raster     = (FT_UInt)(w+7)/8;
+      metrics->bbx_width  = w;
+      metrics->bbx_height = h;
+      metrics->off_x      = -min_m;
+      metrics->off_y      = max_n;
       #if 0
         bm->mv_x       = -min_m;
         bm->mv_y       = max_n;
@@ -256,6 +352,7 @@ FT_Byte  bit_table[] = {
               }
               else
               {
+                /*
                 ptr = &bm->bitmap[(max_n - n) * bm->raster + (m - min_m)/8];
                 m_b = (m - min_m) % 8;
                 while (d > 0)
@@ -269,6 +366,7 @@ FT_Byte  bit_table[] = {
                   }
                   d--;
                 }
+                */
               }
               paint_sw = 1 - paint_sw;
             break;
@@ -299,8 +397,6 @@ FT_Byte  bit_table[] = {
           case GF_NO_OP:
             break;
           default:
-            FT_FREE(bm->bitmap);
-            bm->bitmap = NULL;
             error = FT_THROW( Invalid_File_Format );
             return -1;
            }
@@ -315,12 +411,11 @@ FT_Byte  bit_table[] = {
                  GF_Glyph     *goptr  )
   {
     GF_Glyph        go;
-    GF_Bitmap       bm;
     FT_Byte         instr, d, pre, id, k, code;
     FT_Long         ds, check_sum, hppp, vppp;
     FT_Long         min_m, max_m, min_n, max_n, w;
     FT_UInt         dx, dy;
-    FT_Long         ptr_post, ptr_p, ptr, optr;
+    FT_Long         ptr_post, ptr_p, ptr;
     FT_Int          bc, ec, nchars, i;
     FT_Error        error  = FT_Err_Ok;
     FT_Memory       memory = extmemory; /* needed for FT_NEW */
@@ -428,70 +523,29 @@ FT_Byte  bit_table[] = {
 
     FT_TRACE5(( "gf_load_font: checksum is %ld\n",check_sum ));
 
-    if( ptr_p < 0 )     /* Defined to use ptr_p */
+    if( ptr_p < 0 )
     {
       FT_ERROR(( "gf_load_font: invalid pointer in postamble\n" ));
       goto Exit;
     }
 
-    if( check_sum < 0 ) /* Defined to use check_sum */
+    if( check_sum < 0 )
     {
       FT_ERROR(( "gf_load_font: invalid check sum value\n" ));
       goto Exit;
     }
-    #if 0
-      gptr = ftell(fp);
-    #endif
 
-    #if 0
-      /* read min & max char code */
-      bc = 256;
-      ec = -1;
-      for (  ;  ;  )
-      {
-        instr = READ_UINT1(fp);
-        if (instr == GF_POST_POST)
-        {
-          break;
-        }
-        else if (instr == GF_CHAR_LOC)
-        {
-          code = READ_UINT1(fp);
-          (void)SKIP_N(fp, 16);
-        }
-        else if (instr == GF_CHAR_LOC0)
-        {
-          code = READ_UINT1(fp);
-          (void)SKIP_N(fp, 9);
-        }
-        else
-        {
-          error = FT_THROW( Invalid_File_Format );
-          goto Exit;
-        }
-        if (code < bc)
-          bc = code;
-        if (code > ec)
-          ec = code;
-      }
-    #else
-      bc = 0;
-      ec = 255;
-    #endif
+    bc = 0;
+    ec = 255;
 
     nchars = ec - bc + 1;
 
     if( FT_ALLOC(go, sizeof(GF_GlyphRec)) )
       goto Exit;
 
-    if( FT_ALLOC_MULT(go->bm_table, sizeof(GF_BitmapRec), nchars) )
-      goto Exit;
+    FT_TRACE5(( "gf_load_font: Allocated GF_GlyphRec\n" ));
 
-    FT_TRACE2(( "gf_load_font: Allocated bitmap table\n" ));
-
-    for (i = 0; i < nchars; i++)
-      go->bm_table[i].bitmap = NULL;
-
+    go->check_sum = check_sum;
     go->ds   = (FT_UInt)ds/(1<<20);
     go->hppp = (FT_UInt)hppp/(1<<16);
     go->vppp = (FT_UInt)vppp/(1<<16);
@@ -502,10 +556,15 @@ FT_Byte  bit_table[] = {
     go->code_min = bc;
     go->code_max = ec;
 
-    /* read glyph */
-    #if 0
-      fseek(fp, gptr, SEEK_SET);
-    #endif
+    go->nglyphs = 0;
+
+    if ( FT_NEW_ARRAY( go->metrics, nchars ) )
+      goto Exit;
+
+    FT_TRACE5(( "gf_load_font: Allocated go->metrics array\n" ));
+
+    for( i = 0; i < 256 ; i++)
+      go->metrics[i].char_offset = -1;
 
     for (  ;  ;  )
     {
@@ -533,39 +592,27 @@ FT_Byte  bit_table[] = {
         goto Exit;
       }
 
-      /*
-      if( w > max_m)   Defined to use w
-      {
-        FT_ERROR(( "gf_load_font: invalid width in charloc\n" ));
-        goto Exit;
-      }
-      */
-
-      optr = stream->pos;
-      if( FT_STREAM_SEEK( ptr ) )
-        goto Exit;
-
-      bm = &go->bm_table[code - bc];
-      if (gf_read_glyph( stream, bm, memory ) < 0)
-        goto Exit;
-
-      bm->mv_x = dx;
-      bm->mv_y = dy;
-      if(FT_STREAM_SEEK( optr ))
-        goto Exit;
+      go->metrics[code - bc].mv_x        = dx;
+      go->metrics[code - bc].mv_y        = dy;
+      go->metrics[code - bc].char_offset = (FT_ULong)ptr;
+      go->metrics[code - bc].code        = (FT_UShort)code;
+      go->nglyphs                       += 1;
     }
+
+    error = gf_set_encodings( go, memory );
+    if( error )
+      goto Exit;
+
     *goptr          = go;
     return error;
 
     Exit:
       if (go != NULL)
       {
-        if( go->bm_table )
+        if(go->metrics != NULL)
         {
-          for (i = 0; i < nchars; i++)
-	          FT_FREE(go->bm_table[i].bitmap);
+          FT_FREE(go->metrics);
         }
-        FT_FREE(go->bm_table);
         FT_FREE(go);
       }
       return error;
@@ -577,17 +624,14 @@ FT_Byte  bit_table[] = {
   {
     FT_Memory  memory = FT_FACE( face )->memory;
     GF_Glyph   go     = face->gf_glyph;
-    FT_UInt    nchars = FT_FACE( face )->num_glyphs,i;
 
     if ( !go )
       return;
 
-    if( go->bm_table )
+    if(go->metrics != NULL)
     {
-      for (i = 0; i < nchars; i++)
-	      FT_FREE(go->bm_table[i].bitmap);
+      FT_FREE(go->metrics);
     }
-    FT_FREE(go->bm_table);
     FT_FREE(go);
   }
 

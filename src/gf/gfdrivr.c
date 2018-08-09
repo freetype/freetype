@@ -43,9 +43,9 @@
 
   typedef struct  GF_CMapRec_
   {
-    FT_CMapRec        cmap;
-    FT_UInt32         bc;       /* Beginning Character */
-    FT_UInt32         ec;       /* End Character */
+    FT_CMapRec      cmap;
+    FT_ULong        num_encodings;
+    GF_Encoding     encodings;
   } GF_CMapRec, *GF_CMap;
 
 
@@ -57,8 +57,8 @@
     GF_Face  face = (GF_Face)FT_CMAP_FACE( cmap );
     FT_UNUSED( init_data );
 
-    cmap->bc     = face->gf_glyph->code_min;
-    cmap->ec     = face->gf_glyph->code_max;
+    cmap->num_encodings = face->gf_glyph->nencodings;
+    cmap->encodings     = face->gf_glyph->encodings;
 
     return FT_Err_Ok;
   }
@@ -69,54 +69,98 @@
   {
     GF_CMap  cmap = (GF_CMap)gfcmap;
 
-    cmap->bc     =  0;
-    cmap->ec     = -1;
+    cmap->encodings     = NULL;
+    cmap->num_encodings = 0;
 
   }
 
 
   FT_CALLBACK_DEF( FT_UInt )
   gf_cmap_char_index(  FT_CMap    gfcmap,
-                       FT_UInt32  char_code )
+                       FT_UInt32  charcode )
   {
-    FT_UInt  gindex = 0;
-    GF_CMap  cmap   = (GF_CMap)gfcmap;
+    GF_CMap       cmap      = (GF_CMap)gfcmap;
+    GF_Encoding   encodings = cmap->encodings;
+    FT_ULong      min, max, mid;
+    FT_UInt       result    = 0;
 
-    char_code -= cmap->bc;
+    min = 0;
+    max = cmap->num_encodings;
 
-    if ( char_code < cmap->ec - cmap->bc + 1 )
-      gindex = (FT_UInt)( char_code );
+    while ( min < max )
+    {
+      FT_ULong  code;
 
-    return gindex;
+
+      mid  = ( min + max ) >> 1;
+      code = (FT_ULong)encodings[mid].enc;
+
+      if ( charcode == code )
+      {
+        result = encodings[mid].glyph;
+        break;
+      }
+
+      if ( charcode < code )
+        max = mid;
+      else
+        min = mid + 1;
+    }
+
+    return result;
   }
 
   FT_CALLBACK_DEF( FT_UInt )
   gf_cmap_char_next(  FT_CMap     gfcmap,
-                      FT_UInt32  *achar_code )
+                      FT_UInt32  *acharcode )
   {
-    GF_CMap    cmap   = (GF_CMap)gfcmap;
-    FT_UInt    gindex = 0;
-    FT_UInt32  result = 0;
-    FT_UInt32  char_code = *achar_code + 1;
+    GF_CMap       cmap      = (GF_CMap)gfcmap;
+    GF_Encoding   encodings = cmap->encodings;
+    FT_ULong      min, max, mid;
+    FT_ULong      charcode  = *acharcode + 1;
+    FT_UInt       result    = 0;
 
 
-    if ( char_code <= cmap->bc )
+    min = 0;
+    max = cmap->num_encodings;
+
+    while ( min < max )
     {
-      result = cmap->bc;
-      gindex = 1;
+      FT_ULong  code;
+
+
+      mid  = ( min + max ) >> 1;
+      code = (FT_ULong)encodings[mid].enc;
+
+      if ( charcode == code )
+      {
+        result = encodings[mid].glyph + 1;
+        goto Exit;
+      }
+
+      if ( charcode < code )
+        max = mid;
+      else
+        min = mid + 1;
+    }
+
+    charcode = 0;
+    if ( min < cmap->num_encodings )
+    {
+      charcode = (FT_ULong)encodings[min].enc;
+      result   = encodings[min].glyph ;
+    }
+
+  Exit:
+    if ( charcode > 0xFFFFFFFFUL )
+    {
+      FT_TRACE1(( "gf_cmap_char_next: charcode 0x%x > 32bit API" ));
+      *acharcode = 0;
+      /* XXX: result should be changed to indicate an overflow error */
     }
     else
-    {
-      char_code -= cmap->bc;
-      if ( char_code < cmap->ec - cmap->bc + 1 )
-      {
-        result = char_code;
-        gindex = (FT_UInt)( char_code );
-      }
-    }
-
-    *achar_code = result;
-    return gindex;
+      *acharcode = (FT_UInt32)charcode;
+    return result;
   }
 
 
@@ -163,7 +207,6 @@
     FT_Error    error  = FT_Err_Ok;
     FT_Memory   memory = FT_FACE_MEMORY( face );
     GF_Glyph    go=NULL;
-    FT_UInt16   i,count;
 
     TFM_Service tfm;
 
@@ -197,9 +240,9 @@
     face->gf_glyph = go ;
 
     /* sanity check */
-    if ( !face->gf_glyph->bm_table )
+    if ( !face->gf_glyph->metrics )
     {
-      FT_TRACE2(( "glyph bitmaps not allocated\n" ));
+      FT_TRACE2(( "glyph metrics missing\n" ));
       error = FT_THROW( Invalid_File_Format );
       goto Exit;
     }
@@ -230,13 +273,7 @@
      */
 
     gfface->family_name     = NULL;
-    count=0;
-    for (i = 0; i < 256; i++)
-    {
-      if(go->bm_table[i].bitmap != NULL)
-        count++;
-    }
-    gfface->num_glyphs      = (FT_Long)count;
+    gfface->num_glyphs      = (FT_Long)face->gf_glyph->nglyphs;
 
     FT_TRACE4(( "  number of glyphs: allocated %d\n",gfface->num_glyphs ));
 
@@ -270,15 +307,36 @@
                                          y_res ); ;
     }
 
+    /* set up charmap */
+    {
+      /* FT_Bool     unicode_charmap ; */
+
+      /* XXX: TO-DO
+         Currently the unicode_charmap is set to `0'
+         The functionality of extracting coding scheme
+         from `xxx' and `yyy' commands will be used to
+         set the unicode_charmap.
+      */
+    }
+
     /* Charmaps */
     {
       FT_CharMapRec  charmap;
+      FT_Bool        unicode_charmap = 0;
 
-      /* Unicode Charmap */
-      charmap.encoding    = FT_ENCODING_UNICODE;
-      charmap.platform_id = TT_PLATFORM_MICROSOFT;
-      charmap.encoding_id = TT_MS_ID_UNICODE_CS;
       charmap.face        = FT_FACE( face );
+      charmap.encoding    = FT_ENCODING_NONE;
+      /* initial platform/encoding should indicate unset status? */
+      charmap.platform_id = TT_PLATFORM_APPLE_UNICODE;
+      charmap.encoding_id = TT_APPLE_ID_DEFAULT;
+
+      if( unicode_charmap )
+      {
+        /* Unicode Charmap */
+        charmap.encoding    = FT_ENCODING_UNICODE;
+        charmap.platform_id = TT_PLATFORM_MICROSOFT;
+        charmap.encoding_id = TT_MS_ID_UNICODE_CS;
+      }
 
       error = FT_CMap_New( &gf_cmap_class, NULL, &charmap, NULL );
 
@@ -365,10 +423,13 @@
   {
     GF_Face      gf     = (GF_Face)FT_SIZE_FACE( size );
     FT_Face      face   = FT_FACE( gf );
+    FT_Stream    stream;
     FT_Error     error  = FT_Err_Ok;
     FT_Bitmap*   bitmap = &slot->bitmap;
-    GF_BitmapRec bm;
+    GF_MetricRec metric;
     GF_Glyph     go;
+    FT_ULong     bytes;
+    FT_Byte      *bitmp;
 
     go = gf->gf_glyph;
 
@@ -387,7 +448,7 @@
       goto Exit;
     }
 
-    FT_TRACE1(( "GF_Glyph_Load: glyph index %d\n", glyph_index ));
+    FT_TRACE1(( "GF_Glyph_Load: glyph index %d and charcode is %d\n", glyph_index, go->metrics[glyph_index].code ));
 
     if ( (FT_Int)glyph_index < 0 )
       glyph_index = 0;
@@ -399,44 +460,36 @@
       goto Exit;
     }
 
-    if ( !go->bm_table )
-    {
-      FT_TRACE2(( "invalid bitmap table\n" ));
-      error = FT_THROW( Invalid_File_Format );
-      goto Exit;
-    }
+    stream = gf->root.stream;
+    metric = gf->gf_glyph->metrics[glyph_index];
 
-    /* slot, bitmap => freetype, bm => gflib */
-    bm = gf->gf_glyph->bm_table[glyph_index];
+    error = gf_read_glyph( stream,
+                           &metric );
 
-    bitmap->rows       = bm.bbx_height;
-    bitmap->width      = bm.bbx_width;
+    bitmap->rows       = metric.bbx_height;
+    bitmap->width      = metric.bbx_width;
     bitmap->pixel_mode = FT_PIXEL_MODE_MONO;
 
-    if ( !bm.raster )
-    {
-      FT_TRACE2(( "invalid bitmap width\n" ));
-      error = FT_THROW( Invalid_File_Format );
-      goto Exit;
-    }
-
-    bitmap->pitch = (int)bm.raster ;
+    bitmap->pitch = (int)( metric.raster );
 
     /* note: we don't allocate a new array to hold the bitmap; */
     /*       we can simply point to it                         */
-    ft_glyphslot_set_bitmap( slot, bm.bitmap );
+    ft_glyphslot_set_bitmap( slot, metric.bitmap );
+
 
     slot->format      = FT_GLYPH_FORMAT_BITMAP;
-    slot->bitmap_left = bm.off_x ;
-    slot->bitmap_top  = bm.off_y ;
+    slot->bitmap_left = metric.off_x ;
+    slot->bitmap_top  = metric.off_y ;
 
-    slot->metrics.horiAdvance  = (FT_Pos) (bm.mv_x ) * 64;
-    slot->metrics.horiBearingX = (FT_Pos) (bm.off_x ) * 64;
-    slot->metrics.horiBearingY = (FT_Pos) (bm.bbx_height) * 64;
+    slot->metrics.horiAdvance  = (FT_Pos) ( metric.mv_x ) * 64;
+    slot->metrics.horiBearingX = (FT_Pos) ( metric.off_x ) * 64;
+    slot->metrics.horiBearingY = (FT_Pos) ( metric.bbx_height) * 64;
     slot->metrics.width        = (FT_Pos) ( bitmap->width * 64 );
     slot->metrics.height       = (FT_Pos) ( bitmap->rows * 64 );
 
-    ft_synthesize_vertical_metrics( &slot->metrics, bm.bbx_height * 64 );
+    ft_synthesize_vertical_metrics( &slot->metrics, metric.bbx_height * 64 );
+
+    /* XXX: to do: are there cases that need repadding the bitmap? */
 
   Exit:
     return error;

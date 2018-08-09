@@ -27,25 +27,43 @@
 
 FT_BEGIN_HEADER
 
-  /* BitmapRec for GF format specific glyphs  */
-  typedef struct GF_BitmapRec_
+
+  typedef struct  GF_EncodingRec_
   {
-    FT_Int          bbx_width, bbx_height;
-    FT_Int          off_x, off_y;
-    FT_Int          mv_x,  mv_y;
+    FT_Long   enc;
+    FT_UShort  glyph;
+
+  } GF_EncodingRec, *GF_Encoding;
+
+  /* BitmapRec for GF format specific glyphs  */
+  typedef struct GF_MetricRec_
+  {
+    FT_Long         bbx_width, bbx_height;
+    FT_Long         off_x, off_y;
+    FT_Long         mv_x,  mv_y;
     FT_Byte         *bitmap;
     FT_UInt         raster;
+    FT_Long         char_offset;
+    FT_UShort       code;
 
-  } GF_BitmapRec, *GF_Bitmap;
-
+  } GF_MetricRec, *GF_Metric;
 
   typedef struct GF_GlyphRec_
   {
     FT_UInt         code_min, code_max;
-    GF_Bitmap       bm_table;
+
+    FT_ULong        nmetrics;
+    GF_Metric       metrics;
+    FT_ULong        nglyphs;
+    FT_ULong        nencodings;
+    GF_Encoding     encodings;
+
+    FT_Short        defaultChar; /* To be checked */
+
     FT_Int          ds, hppp, vppp;
-    FT_Int         font_bbx_w, font_bbx_h;
-    FT_Int         font_bbx_xoff, font_bbx_yoff;
+    FT_Int          font_bbx_w, font_bbx_h;
+    FT_Int          font_bbx_xoff, font_bbx_yoff;
+    FT_Int          check_sum;
 
   } GF_GlyphRec, *GF_Glyph;
 
