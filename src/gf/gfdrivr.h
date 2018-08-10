@@ -30,9 +30,9 @@ FT_BEGIN_HEADER
   /* BitmapRec for GF format specific glyphs  */
   typedef struct GF_BitmapRec_
   {
-    FT_Int          bbx_width, bbx_height;
-    FT_Int          off_x, off_y;
-    FT_Int          mv_x,  mv_y;
+    FT_Long         bbx_width, bbx_height;
+    FT_Long         off_x, off_y;
+    FT_Long         mv_x,  mv_y;
     FT_Byte         *bitmap;
     FT_UInt         raster;
 

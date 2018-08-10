@@ -436,6 +436,15 @@
     slot->metrics.width        = (FT_Pos) ( bitmap->width * 64 );
     slot->metrics.height       = (FT_Pos) ( bitmap->rows * 64 );
 
+    FT_TRACE2(( "Glyph metric values are: bm.bbx_height is %ld\n"
+                "                         bm.bbx_width  is %ld\n"
+                "                         bm.off_x      is %ld\n"
+                "                         bm.off_y      is %ld\n"
+                "                         bm.mv_x       is %ld\n"
+                "                         bm.mv_y       is %ld\n", bm.bbx_height, bm.bbx_width,
+                                                                       bm.off_x, bm.off_y, bm.mv_x,
+                                                                       bm.mv_y ));
+
     ft_synthesize_vertical_metrics( &slot->metrics, bm.bbx_height * 64 );
 
   Exit:
