@@ -514,7 +514,6 @@
 
     if ( !error )
     {
-      printf("Hi I reached here\n");
       /* Modify GF_Glyph data according to TFM metric values */
 
       /*
