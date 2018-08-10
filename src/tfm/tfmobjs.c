@@ -131,9 +131,9 @@
   FT_LOCAL( void )
   tfm_close( TFM_Parser  parser )
   {
-    FT_Memory  memory = parser->memory;
+    FT_UNUSED( parser );
 
-    FT_FREE( parser->stream );
+    /* nothing */
   }
 
 
@@ -346,13 +346,10 @@
     fi->slant = (FT_ULong)((double)fi->slant/(double)(1<<20));
 
   Exit:
-    if( !ci || !w || !h || !d )
-    {
-      FT_FREE(ci);
-      FT_FREE(w);
-      FT_FREE(h);
-      FT_FREE(d);
-    }
+    FT_FREE(ci);
+    FT_FREE(w);
+    FT_FREE(h);
+    FT_FREE(d);
     return error;
   }
 

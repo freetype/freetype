@@ -517,7 +517,6 @@
       */
 
       face->tfm_data       = fi;
-      fi                   = NULL;
     }
 
   Exit:

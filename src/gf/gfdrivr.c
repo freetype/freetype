@@ -189,10 +189,10 @@
 
     memory = FT_FACE_MEMORY( face );
 
-    gf_free_font( face );
-
     FT_FREE( gfface->available_sizes );
-
+    FT_FREE( face->gf_glyph->encodings );
+    FT_FREE( face->gf_glyph->metrics );
+    gf_free_font( face );
   }
 
 
@@ -429,7 +429,6 @@
     GF_MetricRec metric;
     GF_Glyph     go;
     FT_ULong     bytes;
-    FT_Byte      *bitmp;
 
     go = gf->gf_glyph;
 
@@ -470,12 +469,7 @@
     bitmap->width      = metric.bbx_width;
     bitmap->pixel_mode = FT_PIXEL_MODE_MONO;
 
-    bitmap->pitch = (int)( metric.raster );
-
-    /* note: we don't allocate a new array to hold the bitmap; */
-    /*       we can simply point to it                         */
-    ft_glyphslot_set_bitmap( slot, metric.bitmap );
-
+    bitmap->pitch = (int)( ( bitmap->width + 7 ) >> 3 );
 
     slot->format      = FT_GLYPH_FORMAT_BITMAP;
     slot->bitmap_left = metric.off_x ;
@@ -489,7 +483,13 @@
 
     ft_synthesize_vertical_metrics( &slot->metrics, metric.bbx_height * 64 );
 
-    /* XXX: to do: are there cases that need repadding the bitmap? */
+    if ( load_flags & FT_LOAD_BITMAP_METRICS_ONLY )
+      goto Exit;
+
+    bytes = (FT_ULong)bitmap->pitch * bitmap->rows;
+
+    error = ft_glyphslot_alloc_bitmap( slot, (FT_ULong)bytes );
+    memset( slot->bitmap.buffer, 0, bytes );
 
   Exit:
     return error;
@@ -567,7 +567,6 @@
 
     if ( !error )
     {
-      printf("Hi I reached here\n");
       /* Modify GF_Glyph data according to TFM metric values */
 
       /*face->gf_glyph->font_bbx_w = fi->font_bbx_w;
@@ -575,7 +574,6 @@
       */
 
       face->tfm_data       = fi;
-      fi                   = NULL;
     }
 
   Exit:

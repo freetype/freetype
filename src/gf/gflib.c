@@ -195,6 +195,7 @@ FT_Byte  bit_table[] = {
     }
 
     FT_FREE(metric);
+    FT_FREE(tosort);
 
     go->nencodings = k;
     go->encodings  = encoding;
@@ -283,14 +284,14 @@ FT_Byte  bit_table[] = {
 
     BOC:
       if(error != FT_Err_Ok)
-        return -1;
+        return error;
       w = max_m - min_m + 1;
       h = max_n - min_n + 1;
       if ((w < 0) || (h < 0))
       {
         FT_ERROR(( "gf_read_glyph: invalid w and h values\n" ));
         error = FT_THROW( Invalid_File_Format );
-        return -1;
+        return error;
       }
 
       /* FT_TRACE2(( "w      is %ld\n"
@@ -300,14 +301,21 @@ FT_Byte  bit_table[] = {
       */
 
       /* allocate and build bitmap */
+      /*
       if ((metrics->bitmap = (FT_Byte*)malloc(h*((w+7)/8))) == NULL)
       {
         error = FT_THROW( Invalid_File_Format );
-        return -1;
+        return error;
       }
+      */
 
+      /* if( FT_ALLOC( metrics->bitmap, (h*((w+7)/8)) ) )
+        return error;
+      */
+      /*
       memset(metrics->bitmap, 0, h*((w+7)/8));
       metrics->raster     = (FT_UInt)(w+7)/8;
+      */
       metrics->bbx_width  = w;
       metrics->bbx_height = h;
       metrics->off_x      = -min_m;
@@ -596,6 +604,12 @@ FT_Byte  bit_table[] = {
       go->metrics[code - bc].mv_y        = dy;
       go->metrics[code - bc].char_offset = (FT_ULong)ptr;
       go->metrics[code - bc].code        = (FT_UShort)code;
+      go->metrics[code - bc].bbx_width   = 0; /* Initialize other metrics here */
+      go->metrics[code - bc].bbx_height  = 0;
+      go->metrics[code - bc].off_x       = 0;
+      go->metrics[code - bc].off_y       = 0;
+      go->metrics[code - bc].raster      = 0;
+      go->metrics[code - bc].bitmap      = NULL;
       go->nglyphs                       += 1;
     }
 
@@ -628,10 +642,6 @@ FT_Byte  bit_table[] = {
     if ( !go )
       return;
 
-    if(go->metrics != NULL)
-    {
-      FT_FREE(go->metrics);
-    }
     FT_FREE(go);
   }
 
