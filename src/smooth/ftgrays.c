@@ -1611,83 +1611,6 @@ typedef ptrdiff_t  FT_PtrDist;
     return FT_THROW( Invalid_Outline );
   }
 
-
-  /**************************************************************************
-   *
-   * @Function:
-   *   FT_Outline_Get_CBox
-   *
-   * @Description:
-   *   Return an outline's `control box'.  The control box encloses all
-   *   the outline's points, including Bézier control points.  Though it
-   *   coincides with the exact bounding box for most glyphs, it can be
-   *   slightly larger in some situations (like when rotating an outline
-   *   that contains Bézier outside arcs).
-   *
-   *   Computing the control box is very fast, while getting the bounding
-   *   box can take much more time as it needs to walk over all segments
-   *   and arcs in the outline.  To get the latter, you can use the
-   *   `ftbbox' component, which is dedicated to this single task.
-   *
-   * @Input:
-   *   outline ::
-   *     A pointer to the source outline descriptor.
-   *
-   * @Output:
-   *   acbox ::
-   *     The outline's control box.
-   *
-   * @Note:
-   *   See @FT_Glyph_Get_CBox for a discussion of tricky fonts.
-   */
-
-  static void
-  FT_Outline_Get_CBox( const FT_Outline*  outline,
-                       FT_BBox           *acbox )
-  {
-    TPos  xMin, yMin, xMax, yMax;
-
-
-    if ( outline && acbox )
-    {
-      if ( outline->n_points == 0 )
-      {
-        xMin = 0;
-        yMin = 0;
-        xMax = 0;
-        yMax = 0;
-      }
-      else
-      {
-        FT_Vector*  vec   = outline->points;
-        FT_Vector*  limit = vec + outline->n_points;
-
-
-        xMin = xMax = vec->x;
-        yMin = yMax = vec->y;
-        vec++;
-
-        for ( ; vec < limit; vec++ )
-        {
-          TPos  x, y;
-
-
-          x = vec->x;
-          if ( x < xMin ) xMin = x;
-          if ( x > xMax ) xMax = x;
-
-          y = vec->y;
-          if ( y < yMin ) yMin = y;
-          if ( y > yMax ) yMax = y;
-        }
-      }
-      acbox->xMin = xMin;
-      acbox->xMax = xMax;
-      acbox->yMin = yMin;
-      acbox->yMax = yMax;
-    }
-  }
-
 #endif /* STANDALONE_ */
 
 
@@ -1832,7 +1755,7 @@ typedef ptrdiff_t  FT_PtrDist;
   {
     const FT_Outline*  outline    = (const FT_Outline*)params->source;
     const FT_Bitmap*   target_map = params->target;
-    FT_BBox            cbox, clip;
+    FT_BBox            clip;
 
 #ifndef FT_STATIC_RASTER
     gray_TWorker  worker[1];
@@ -1895,26 +1818,11 @@ typedef ptrdiff_t  FT_PtrDist;
       ras.render_span_data = NULL;
     }
 
-    FT_Outline_Get_CBox( outline, &cbox );
-
-    /* reject too large outline coordinates */
-    if ( cbox.xMin < -0x1000000L || cbox.xMax > 0x1000000L ||
-         cbox.yMin < -0x1000000L || cbox.yMax > 0x1000000L )
-      return FT_THROW( Invalid_Outline );
-
-    /* truncate the bounding box to integer pixels */
-    cbox.xMin = cbox.xMin >> 6;
-    cbox.yMin = cbox.yMin >> 6;
-    cbox.xMax = ( cbox.xMax + 63 ) >> 6;
-    cbox.yMax = ( cbox.yMax + 63 ) >> 6;
-
-    /* reject too large glyphs */
-    if ( cbox.xMax - cbox.xMin > 0xFFFF ||
-         cbox.yMax - cbox.yMin > 0xFFFF )
-      return FT_THROW( Invalid_Outline );
-
     /* compute clipping box */
-    if ( !( params->flags & FT_RASTER_FLAG_DIRECT ) )
+    if ( params->flags & FT_RASTER_FLAG_DIRECT &&
+         params->flags & FT_RASTER_FLAG_CLIP   )
+      clip = params->clip_box;
+    else
     {
       /* compute clip box from target pixmap */
       clip.xMin = 0;
@@ -1922,21 +1830,12 @@ typedef ptrdiff_t  FT_PtrDist;
       clip.xMax = (FT_Pos)target_map->width;
       clip.yMax = (FT_Pos)target_map->rows;
     }
-    else if ( params->flags & FT_RASTER_FLAG_CLIP )
-      clip = params->clip_box;
-    else
-    {
-      clip.xMin = -32768L;
-      clip.yMin = -32768L;
-      clip.xMax =  32767L;
-      clip.yMax =  32767L;
-    }
 
     /* clip to target bitmap, exit if nothing to do */
-    ras.min_ex = FT_MAX( cbox.xMin, clip.xMin );
-    ras.min_ey = FT_MAX( cbox.yMin, clip.yMin );
-    ras.max_ex = FT_MIN( cbox.xMax, clip.xMax );
-    ras.max_ey = FT_MIN( cbox.yMax, clip.yMax );
+    ras.min_ex = clip.xMin;
+    ras.min_ey = clip.yMin;
+    ras.max_ex = clip.xMax;
+    ras.max_ey = clip.yMax;
 
     if ( ras.max_ex <= ras.min_ex || ras.max_ey <= ras.min_ey )
       return 0;

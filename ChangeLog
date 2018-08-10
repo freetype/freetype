@@ -1,3 +1,19 @@
+2018-08-09  Alexei Podtelezhnikov  <apodtele@gmail.com>
+
+	[raster, smooth] Reinstate bitmap size limits.
+
+	This again moves outline and bitmap size checks one level up.
+
+	* src/base/ftoutln.c (FT_Outline_Render): Explicitly reject enormous
+	outlines.
+	* src/raster/ftrend1.c (ft_raster1_render): Reject enormous bitmaps
+	and, therefore, outlines that require them.
+	* src/smooth/ftsmooth.c (ft_smooth_render_generic): Ditto.
+
+	* src/raster/ftraster.c (ft_black_render): Remove outline size checks.
+	* src/smooth/ftgrays.c (gray_raster_render): Ditto.
+	[STANDALONE]: Remove `FT_Outline_Get_CBox' copy.
+
 2018-08-08  Alexei Podtelezhnikov  <apodtele@gmail.com>
 
 	[pcf] Revert massive unsigning.

@@ -147,6 +147,14 @@
 
     ft_glyphslot_preset_bitmap( slot, mode, origin );
 
+    if ( bitmap->width > 0x7FFF || bitmap->rows > 0x7FFF )
+    {
+      FT_ERROR(( "ft_smooth_render_generic: glyph is too large: %u x %u\n",
+                 bitmap->width, bitmap->rows ));
+      error = FT_THROW( Raster_Overflow );
+      goto Exit;
+    }
+
     /* allocate new one */
     if ( FT_ALLOC_MULT( bitmap->buffer, bitmap->rows, bitmap->pitch ) )
       goto Exit;

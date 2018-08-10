@@ -3251,7 +3251,6 @@
   {
     const FT_Outline*  outline    = (const FT_Outline*)params->source;
     const FT_Bitmap*   target_map = params->target;
-    FT_BBox            cbox;
 
     black_TWorker  worker[1];
 
@@ -3290,24 +3289,6 @@
       return Raster_Err_None;
 
     if ( !target_map->buffer )
-      return FT_THROW( Invalid );
-
-    FT_Outline_Get_CBox( outline, &cbox );
-
-    /* reject too large outline coordinates */
-    if ( cbox.xMin < -0x1000000L || cbox.xMax > 0x1000000L ||
-         cbox.yMin < -0x1000000L || cbox.yMax > 0x1000000L )
-      return FT_THROW( Invalid );
-
-    /* truncate the bounding box to integer pixels */
-    cbox.xMin = cbox.xMin >> 6;
-    cbox.yMin = cbox.yMin >> 6;
-    cbox.xMax = ( cbox.xMax + 63 ) >> 6;
-    cbox.yMax = ( cbox.yMax + 63 ) >> 6;
-
-    /* reject too large glyphs */
-    if ( cbox.xMax - cbox.xMin > 0xFFFF ||
-         cbox.yMax - cbox.yMin > 0xFFFF )
       return FT_THROW( Invalid );
 
     ras.outline = *outline;
