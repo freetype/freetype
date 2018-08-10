@@ -4683,44 +4683,51 @@
 
     /* we use FT_TRACE7 in this block */
     if ( !error                               &&
-         ft_trace_levels[trace_checksum] >= 7 &&
-         slot->bitmap.rows  < 128U            &&
-         slot->bitmap.width < 128U            &&
-         slot->bitmap.buffer                  )
+         ft_trace_levels[trace_checksum] >= 7 )
     {
-      int  rows  = (int)slot->bitmap.rows;
-      int  width = (int)slot->bitmap.width;
-      int  pitch =      slot->bitmap.pitch;
-      int  i, j, m;
-      unsigned char*  topleft = slot->bitmap.buffer;
-
-      if ( pitch < 0 )
-        topleft -= pitch * ( rows - 1 );
-
-      FT_TRACE7(( "Netpbm image: start\n" ));
-      switch ( slot->bitmap.pixel_mode )
+      if ( slot->bitmap.rows  < 128U &&
+           slot->bitmap.width < 128U &&
+           slot->bitmap.buffer       )
       {
-      case FT_PIXEL_MODE_MONO:
-        FT_TRACE7(( "P1 %d %d\n", width, rows ));
-        for ( i = 0; i < rows; i++ )
-        {
-          for ( j = 0; j < width; )
-            for ( m = 128; m > 0 && j < width; m >>= 1, j++ )
-              FT_TRACE7(( " %d", ( topleft[i * pitch + j / 8] & m ) != 0 ));
-          FT_TRACE7(( "\n" ));
-        }
-        break;
+        int  rows  = (int)slot->bitmap.rows;
+        int  width = (int)slot->bitmap.width;
+        int  pitch =      slot->bitmap.pitch;
+        int  i, j, m;
 
-      default:
-        FT_TRACE7(( "P2 %d %d 255\n", width, rows ));
-        for ( i = 0; i < rows; i++ )
+        unsigned char*  topleft = slot->bitmap.buffer;
+
+
+        if ( pitch < 0 )
+          topleft -= pitch * ( rows - 1 );
+
+        FT_TRACE7(( "Netpbm image: start\n" ));
+        switch ( slot->bitmap.pixel_mode )
         {
-          for ( j = 0; j < width; j += 1 )
-            FT_TRACE7(( " %3u", topleft[i * pitch + j] ));
-          FT_TRACE7(( "\n" ));
+        case FT_PIXEL_MODE_MONO:
+          FT_TRACE7(( "P1 %d %d\n", width, rows ));
+          for ( i = 0; i < rows; i++ )
+          {
+            for ( j = 0; j < width; )
+              for ( m = 128; m > 0 && j < width; m >>= 1, j++ )
+                FT_TRACE7(( " %d",
+                            ( topleft[i * pitch + j / 8] & m ) != 0 ));
+            FT_TRACE7(( "\n" ));
+          }
+          break;
+
+        default:
+          FT_TRACE7(( "P2 %d %d 255\n", width, rows ));
+          for ( i = 0; i < rows; i++ )
+          {
+            for ( j = 0; j < width; j += 1 )
+              FT_TRACE7(( " %3u", topleft[i * pitch + j] ));
+            FT_TRACE7(( "\n" ));
+          }
         }
+        FT_TRACE7(( "Netpbm image: end\n" ));
       }
-      FT_TRACE7(( "Netpbm image: end\n" ));
+      else
+        FT_TRACE7(( "Netpbm image: too large, omitted\n" ));
     }
 
 #undef  FT_COMPONENT

@@ -1,5 +1,9 @@
 2018-08-10  Werner Lemberg  <wl@gnu.org>
 
+	* src/base/ftobjs.c (FT_Render_Glyph_Internal): Improve tracing.
+
+2018-08-10  Werner Lemberg  <wl@gnu.org>
+
 	Fix clang warnings.
 
 	* src/base/ftdebug.c (ft_trace_level_enabled,
