@@ -1189,6 +1189,7 @@ FT_BEGIN_HEADER
    *   parameter combinations are tried and scored.
    *
    *   By default, warping is off.
+   *
    * @note:
    *   This property can be used with @FT_Property_Get also.
    *
