@@ -481,6 +481,15 @@
     slot->metrics.width        = (FT_Pos) ( bitmap->width * 64 );
     slot->metrics.height       = (FT_Pos) ( bitmap->rows * 64 );
 
+    FT_TRACE2(( "Glyph metric values are: metric.bbx_height is %ld\n"
+                "                         metric.bbx_width  is %ld\n"
+                "                         metric.off_x      is %ld\n"
+                "                         metric.off_y      is %ld\n"
+                "                         metric.mv_x       is %ld\n"
+                "                         metric.mv_y       is %ld\n", metric.bbx_height, metric.bbx_width,
+                                                                       metric.off_x, metric.off_y, metric.mv_x,
+                                                                       metric.mv_y ));
+
     ft_synthesize_vertical_metrics( &slot->metrics, metric.bbx_height * 64 );
 
     if ( load_flags & FT_LOAD_BITMAP_METRICS_ONLY )
