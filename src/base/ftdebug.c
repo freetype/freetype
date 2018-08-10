@@ -102,10 +102,10 @@
 
   /* array of trace levels, initialized to 0; */
   /* this gets adjusted at run-time           */
-  int  ft_trace_levels_enabled[trace_count];
+  static int  ft_trace_levels_enabled[trace_count];
 
   /* array of trace levels, always initialized to 0 */
-  int  ft_trace_levels_disabled[trace_count];
+  static int  ft_trace_levels_disabled[trace_count];
 
   /* a pointer to either `ft_trace_levels_enabled' */
   /* or `ft_trace_levels_disabled'                 */

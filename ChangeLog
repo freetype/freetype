@@ -1,3 +1,10 @@
+2018-08-10  Werner Lemberg  <wl@gnu.org>
+
+	Fix clang warnings.
+
+	* src/base/ftdebug.c (ft_trace_level_enabled,
+	ft_trace_level_disabled): Add `static' keyword.
+
 2018-08-09  Alexei Podtelezhnikov  <apodtele@gmail.com>
 
 	[raster, smooth] Reinstate bitmap size limits.
