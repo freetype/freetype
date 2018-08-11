@@ -1,3 +1,11 @@
+2018-08-11  Werner Lemberg  <wl@gnu.org>
+
+	* src/base/ftcalc.c (FT_Matrix_Check): Fix integer overflow.
+
+	Reported as
+
+	  https://bugs.chromium.org/p/oss-fuzz/issues/detail?id=9811
+
 2018-08-10  Alexei Podtelezhnikov  <apodtele@gmail.com>
 
 	* src/sfnt/ttsbit.c (tt_sbit_decoder_load_compound): Follow specs.

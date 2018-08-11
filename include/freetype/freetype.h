@@ -4669,6 +4669,11 @@ FT_BEGIN_HEADER
    *   This section contains various functions used to perform
    *   computations on 16.16 fixed-float numbers or 2d vectors.
    *
+   *   *Attention*: Most arithmetic functions take `FT_Long' as arguments.
+   *   For historical reasons, FreeType was designed under the assumption
+   *   that `FT_Long' is a 32-bit integer; results can thus be undefined
+   *   if the arguments don't fit into 32 bits.
+   *
    * @order:
    *   FT_MulDiv
    *   FT_MulFix

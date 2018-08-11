@@ -701,8 +701,8 @@
     if ( !delta )
       return FT_THROW( Invalid_Argument );  /* matrix can't be inverted */
 
-    matrix->xy = - FT_DivFix( matrix->xy, delta );
-    matrix->yx = - FT_DivFix( matrix->yx, delta );
+    matrix->xy = -FT_DivFix( matrix->xy, delta );
+    matrix->yx = -FT_DivFix( matrix->yx, delta );
 
     xx = matrix->xx;
     yy = matrix->yy;
@@ -783,6 +783,10 @@
       if ( val[i] && val[i] < nonzero_minval )
         nonzero_minval = val[i];
     }
+
+    /* we only handle 32bit values */
+    if ( maxval > 0x7FFFFFFFL )
+      return 0;
 
     if ( maxval > 23170 )
     {
