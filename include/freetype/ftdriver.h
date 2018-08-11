@@ -383,7 +383,7 @@ FT_BEGIN_HEADER
    *
    *   {
    *     FT_Library  library;
-   *     FT_UInt     hinting_engine = FT_CFF_HINTING_ADOBE;
+   *     FT_UInt     hinting_engine = FT_HINTING_ADOBE;
    *
    *
    *     FT_Init_FreeType( &library );
