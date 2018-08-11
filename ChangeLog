@@ -1,3 +1,7 @@
+2018-08-10  Alexei Podtelezhnikov  <apodtele@gmail.com>
+
+	* src/sfnt/ttsbit.c (tt_sbit_decoder_load_compound): Follow specs.
+
 2018-08-10  Ben Wagner  <bungeman@google.com>
 
 	* src/sfnt/sfobjs.c (sfnt_done_face): Fix memory leak (#54435).

@@ -1014,8 +1014,8 @@
     for ( nn = 0; nn < num_components; nn++ )
     {
       FT_UInt  gindex = FT_NEXT_USHORT( p );
-      FT_Byte  dx     = FT_NEXT_BYTE( p );
-      FT_Byte  dy     = FT_NEXT_BYTE( p );
+      FT_Char  dx     = FT_NEXT_CHAR( p );
+      FT_Char  dy     = FT_NEXT_CHAR( p );
 
 
       /* NB: a recursive call */
