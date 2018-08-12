@@ -27,6 +27,14 @@
 
 FT_BEGIN_HEADER
 
+
+  typedef struct  PK_EncodingRec_
+  {
+    FT_Long   enc;
+    FT_UShort glyph;
+
+  } PK_EncodingRec, *PK_Encoding;
+
   typedef struct PK_BitmapRec_
   {
     FT_Int          bbx_width, bbx_height;
@@ -34,6 +42,7 @@ FT_BEGIN_HEADER
     FT_Int          mv_x,  mv_y;
     FT_Byte         *bitmap;
     FT_UInt         raster;
+    FT_UShort       code;
 
   } PK_BitmapRec, *PK_Bitmap;
 
@@ -44,6 +53,11 @@ FT_BEGIN_HEADER
     FT_Int          ds, hppp, vppp;
     FT_UInt         font_bbx_w, font_bbx_h;
     FT_UInt         font_bbx_xoff, font_bbx_yoff;
+
+    FT_ULong        nencodings;
+    PK_Encoding     encodings;
+
+    FT_ULong        nglyphs;
 
   } PK_GlyphRec, *PK_Glyph;
 

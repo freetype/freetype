@@ -43,9 +43,9 @@
 
   typedef struct  PK_CMapRec_
   {
-    FT_CMapRec        cmap;
-    FT_UInt32         bc;       /* Beginning Character */
-    FT_UInt32         ec;       /* End Character */
+    FT_CMapRec      cmap;
+    FT_ULong        num_encodings;
+    PK_Encoding     encodings;
   } PK_CMapRec, *PK_CMap;
 
 
@@ -57,8 +57,8 @@
     PK_Face  face = (PK_Face)FT_CMAP_FACE( cmap );
     FT_UNUSED( init_data );
 
-    cmap->bc     = face->pk_glyph->code_min;
-    cmap->ec     = face->pk_glyph->code_max;
+    cmap->num_encodings = face->pk_glyph->nencodings;
+    cmap->encodings     = face->pk_glyph->encodings;
 
     return FT_Err_Ok;
   }
@@ -69,54 +69,98 @@
   {
     PK_CMap  cmap = (PK_CMap)pkcmap;
 
-    cmap->bc     =  0;
-    cmap->ec     = -1;
+    cmap->encodings     = NULL;
+    cmap->num_encodings = 0;
   }
 
 
   FT_CALLBACK_DEF( FT_UInt )
   pk_cmap_char_index(  FT_CMap    pkcmap,
-                       FT_UInt32  char_code )
+                       FT_UInt32  charcode )
   {
-    FT_UInt  gindex = 0;
-    PK_CMap  cmap   = (PK_CMap)pkcmap;
+    PK_CMap       cmap      = (PK_CMap)pkcmap;
+    PK_Encoding   encodings = cmap->encodings;
+    FT_ULong      min, max, mid;
+    FT_UInt       result    = 0;
 
-    char_code -= cmap->bc;
+    min = 0;
+    max = cmap->num_encodings;
 
-    if ( char_code < cmap->ec - cmap->bc + 1 )
-      gindex = (FT_UInt)( char_code );
+    while ( min < max )
+    {
+      FT_ULong  code;
 
-    return gindex;
+
+      mid  = ( min + max ) >> 1;
+      code = (FT_ULong)encodings[mid].enc;
+
+      if ( charcode == code )
+      {
+        result = encodings[mid].glyph;
+        break;
+      }
+
+      if ( charcode < code )
+        max = mid;
+      else
+        min = mid + 1;
+    }
+
+    return result;
   }
 
 
   FT_CALLBACK_DEF( FT_UInt )
   pk_cmap_char_next(  FT_CMap    pkcmap,
-                       FT_UInt32  *achar_code )
+                       FT_UInt32  *acharcode )
   {
-    PK_CMap    cmap   = (PK_CMap)pkcmap;
-    FT_UInt    gindex = 0;
-    FT_UInt32  result = 0;
-    FT_UInt32  char_code = *achar_code + 1;
+    PK_CMap       cmap      = (PK_CMap)pkcmap;
+    PK_Encoding   encodings = cmap->encodings;
+    FT_ULong      min, max, mid;
+    FT_ULong      charcode  = *acharcode + 1;
+    FT_UInt       result    = 0;
 
 
-    if ( char_code <= cmap->bc )
+    min = 0;
+    max = cmap->num_encodings;
+
+    while ( min < max )
     {
-      result = cmap->bc;
-      gindex = 1;
+      FT_ULong  code;
+
+
+      mid  = ( min + max ) >> 1;
+      code = (FT_ULong)encodings[mid].enc;
+
+      if ( charcode == code )
+      {
+        result = encodings[mid].glyph + 1;
+        goto Exit;
+      }
+
+      if ( charcode < code )
+        max = mid;
+      else
+        min = mid + 1;
+    }
+
+    charcode = 0;
+    if ( min < cmap->num_encodings )
+    {
+      charcode = (FT_ULong)encodings[min].enc;
+      result   = encodings[min].glyph ;
+    }
+
+  Exit:
+    if ( charcode > 0xFFFFFFFFUL )
+    {
+      FT_TRACE1(( "gf_cmap_char_next: charcode 0x%x > 32bit API" ));
+      *acharcode = 0;
+      /* XXX: result should be changed to indicate an overflow error */
     }
     else
-    {
-      char_code -= cmap->bc;
-      if ( char_code < cmap->ec - cmap->bc + 1 )
-      {
-        result = char_code;
-        gindex = (FT_UInt)( char_code );
-      }
-    }
-
-    *achar_code = result;
-    return gindex;
+      *acharcode = (FT_UInt32)charcode;
+    return result;
   }
 
 
@@ -268,15 +312,38 @@
                                          y_res );
     }
 
+    /* set up charmap */
+    {
+      /* FT_Bool     unicode_charmap ; */
+
+      /*
+       * XXX: TO-DO
+       * Currently the unicode_charmap is set to `0'
+       * The functionality of extracting coding scheme
+       * from `xxx' and `yyy' commands will be used to
+       * set the unicode_charmap.
+      */
+    }
+
     /* Charmaps */
     {
       FT_CharMapRec  charmap;
+      FT_Bool        unicode_charmap = 0;
 
-      /* Unicode Charmap */
-      charmap.encoding    = FT_ENCODING_UNICODE;
-      charmap.platform_id = TT_PLATFORM_MICROSOFT;
-      charmap.encoding_id = TT_MS_ID_UNICODE_CS;
       charmap.face        = FT_FACE( face );
+      charmap.encoding    = FT_ENCODING_NONE;
+      /* initial platform/encoding should indicate unset status? */
+      charmap.platform_id = TT_PLATFORM_APPLE_UNICODE;
+      charmap.encoding_id = TT_APPLE_ID_DEFAULT;
+
+      if( unicode_charmap )
+      {
+        /* Unicode Charmap */
+        charmap.encoding    = FT_ENCODING_UNICODE;
+        charmap.platform_id = TT_PLATFORM_MICROSOFT;
+        charmap.encoding_id = TT_MS_ID_UNICODE_CS;
+      }
+
 
       error = FT_CMap_New( &pk_cmap_class, NULL, &charmap, NULL );
 
