@@ -208,7 +208,6 @@
     FT_Error    error  = FT_Err_Ok;
     FT_Memory   memory = FT_FACE_MEMORY( face );
     GF_Glyph    go=NULL;
-    FT_UInt16   i,count;
 
     TFM_Service tfm;
 
@@ -275,13 +274,7 @@
      */
 
     gfface->family_name     = NULL;
-    count=0;
-    for (i = 0; i < 256; i++)
-    {
-      if(go->bm_table[i].bitmap != NULL)
-        count++;
-    }
-    gfface->num_glyphs      = (FT_Long)count;
+    gfface->num_glyphs      = (FT_Long)go->nglyphs;
 
     FT_TRACE4(( "  number of glyphs: allocated %d\n",gfface->num_glyphs ));
 
