@@ -307,6 +307,7 @@ FT_Byte  bits_table[] = {
     FT_Int     bc, ec, nchars, index, i;
     FT_Error   error  = FT_Err_Ok;
     FT_Memory  memory = extmemory; /* needed for FT_NEW */
+    PK_Encoding   encoding = NULL;
 
     go = NULL;
     nchars = -1;
@@ -388,15 +389,15 @@ FT_Byte  bits_table[] = {
       ec = 255;
     #endif
 
-    nchars = ec - bc + 1;
+    nchars    = ec - bc + 1;
     if( FT_ALLOC(go, sizeof(PK_GlyphRec)) )
       goto Exit;
 
     if( FT_ALLOC_MULT(go->bm_table, sizeof(PK_BitmapRec), nchars) )
       goto Exit;
 
-    for (i = 0; i < nchars; i++)
-      go->bm_table[i].bitmap = NULL;
+    if ( FT_NEW_ARRAY( encoding, nchars ) )
+      return error;
 
     go->ds   = (FT_UInt)ds/(1<<20);
     go->hppp = (FT_UInt)hppp/(1<<16);
@@ -412,6 +413,8 @@ FT_Byte  bits_table[] = {
     if( FT_STREAM_SEEK( gptr ) )
         goto Exit;
 
+    index = 0;
+    go->nglyphs = 0;
     for (;;)
     {
       if ((instr = READ_UINT1( stream )) == PK_POST)
@@ -497,7 +500,6 @@ FT_Byte  bits_table[] = {
           goto Exit;
         }
 
-        index = cc - go->code_min;
         go->bm_table[index].bbx_width  = w;
         go->bm_table[index].bbx_height = h;
         go->bm_table[index].raster = (w+7)/8;
@@ -506,6 +508,12 @@ FT_Byte  bits_table[] = {
         go->bm_table[index].mv_x   = mv_x;
         go->bm_table[index].mv_y   = mv_y;
         go->bm_table[index].bitmap = (unsigned char*)malloc(h*((w+7)/8));
+        go->bm_table[index].code   = cc ; /* For backward compatibility */
+        go->nglyphs               += 1;
+
+        encoding[index].enc   = cc ;
+        encoding[index].glyph = index;
+
 
         if (go->bm_table[index].bitmap == NULL)
         {
@@ -541,8 +549,14 @@ FT_Byte  bits_table[] = {
           go->font_bbx_xoff = -hoff;
         if (go->font_bbx_yoff > (voff - h))
           go->font_bbx_yoff = (voff - h);
+
+        index++;
       }
     }
+
+    go->nencodings = go->nglyphs;
+    go->encodings  = encoding;
+
     *goptr          = go;
     return error;
 

@@ -31,7 +31,7 @@ FT_BEGIN_HEADER
   typedef struct  GF_EncodingRec_
   {
     FT_Long   enc;
-    FT_UShort  glyph;
+    FT_UShort glyph;
 
   } GF_EncodingRec, *GF_Encoding;
 
@@ -44,7 +44,6 @@ FT_BEGIN_HEADER
     FT_Byte         *bitmap;
     FT_UInt         raster;
     FT_UShort       code;
-    FT_ULong        nglyphs;
 
   } GF_BitmapRec, *GF_Bitmap;
 
