@@ -43,6 +43,14 @@
 FT_Byte  bit_table[] = {
   0x80, 0x40, 0x20, 0x10, 0x08, 0x04, 0x02, 0x01 };
 
+  typedef struct GF_CharOffsetRec_
+  {
+    FT_Long         char_offset;
+    FT_UShort       code;
+    FT_Short        gid;
+
+  } GF_CharOffsetRec, *GF_CharOffset;
+
   /**************************************************************************
    *
    * GF font utility functions.
@@ -111,11 +119,79 @@ FT_Byte  bit_table[] = {
     return v;
   }
 
+  static int
+  compare( FT_Long*  a,
+           FT_Long*  b )
+  {
+    if ( *a < *b )
+      return -1;
+    else if ( *a > *b )
+      return 1;
+    else
+      return 0;
+  }
+
   /**************************************************************************
    *
    * API.
    *
    */
+
+  static FT_Error
+  gf_set_encodings( GF_CharOffset of,
+                    FT_Int        ngphs,
+                    GF_Glyph      go,
+                    FT_Memory     memory )
+  {
+    FT_Error      error;
+    FT_ULong      nencoding;
+    FT_Int        i, j;
+    FT_ULong      k;
+    GF_Encoding   encoding = NULL;
+    FT_Long       *tosort;
+
+    nencoding = ngphs;
+    FT_TRACE2(( "gf_set_encodings: Reached here.\n" ));
+
+    if ( FT_NEW_ARRAY( encoding, nencoding ) )
+      return error;
+
+    if ( FT_NEW_ARRAY( tosort, nencoding ) )
+      return error;
+
+
+    FT_TRACE2(( "gf_set_encodings: Allocated sufficient memory.\n" ));
+
+    for( i = 0 ; i < 256 ; i++ )
+    {
+      if( of[i].char_offset >= 0 )
+        tosort[i] = of[i].char_offset;
+    }
+
+    ft_qsort( (void*)tosort, ngphs, sizeof(FT_Long),
+               (int(*)(const void*, const void*) )compare );
+
+    k = 0;
+    for ( i = 0; i < ngphs; i++ )
+    {
+      for ( j = 0; j < 256; j++ )
+      {
+        if( of[j].char_offset == tosort[i] )
+        break;
+      }
+      encoding[k].enc   = of[j].code;
+      encoding[k].glyph = k;
+      of[j].gid         = k;
+      k++;
+    }
+
+    FT_FREE(tosort);
+
+    go->nencodings = k;
+    go->encodings  = encoding;
+
+    return error;
+  }
 
   FT_LOCAL_DEF( FT_Error )
   gf_read_glyph( FT_Stream    stream,
@@ -314,16 +390,17 @@ FT_Byte  bit_table[] = {
                  FT_Memory    extmemory,
                  GF_Glyph     *goptr  )
   {
-    GF_Glyph        go;
-    GF_Bitmap       bm;
-    FT_Byte         instr, d, pre, id, k, code;
-    FT_Long         ds, check_sum, hppp, vppp;
-    FT_Long         min_m, max_m, min_n, max_n, w;
-    FT_UInt         dx, dy;
-    FT_Long         ptr_post, ptr_p, ptr, optr;
-    FT_Int          bc, ec, nchars, i;
-    FT_Error        error  = FT_Err_Ok;
-    FT_Memory       memory = extmemory; /* needed for FT_NEW */
+    GF_Glyph         go;
+    GF_Bitmap        bm;
+    GF_CharOffset    of;
+    FT_Byte          instr, d, pre, id, k, code;
+    FT_Long          ds, check_sum, hppp, vppp;
+    FT_Long          min_m, max_m, min_n, max_n, w;
+    FT_UInt          dx, dy;
+    FT_Long          ptr_post, ptr_p, ptr, optr, rptr;
+    FT_Int           bc, ec, nchars, i, ngphs, idx;
+    FT_Error         error  = FT_Err_Ok;
+    FT_Memory        memory = extmemory; /* needed for FT_NEW */
 
     go = NULL;
     nchars = -1;
@@ -502,10 +579,55 @@ FT_Byte  bit_table[] = {
     go->code_min = bc;
     go->code_max = ec;
 
-    /* read glyph */
-    #if 0
-      fseek(fp, gptr, SEEK_SET);
-    #endif
+    go->nglyphs = 0;
+
+    if( FT_ALLOC_MULT(of, sizeof(GF_CharOffsetRec), nchars) )
+      goto Exit;
+
+    for( i = 0; i < 256 ; i++)
+      of[i].char_offset = -1;
+
+    rptr = stream->pos;
+    i=0; ngphs=0;
+    for (  ;  ;  )
+    {
+      if ((instr = READ_UINT1( stream )) == GF_POST_POST)
+        break;
+      switch ((FT_Int)instr)
+      {
+      case GF_CHAR_LOC:
+        code = READ_UINT1( stream );
+        dx   = (FT_UInt)READ_INT4( stream )/(FT_UInt)(1<<16);
+        dy   = (FT_UInt)READ_INT4( stream )/(FT_UInt)(1<<16);
+        w    = READ_INT4( stream );
+        ptr  = READ_INT4( stream );
+        break;
+      case GF_CHAR_LOC0:
+        code = READ_UINT1( stream );
+        dx   = (FT_UInt)READ_INT1( stream );
+        dy   = (FT_UInt)0;
+        w    = READ_INT4( stream );
+        ptr  = READ_INT4( stream );
+        break;
+      default:
+        FT_ERROR(( "gf_load_font: missing character locators in postamble\n" ));
+        error = FT_THROW( Unknown_File_Format );
+        goto Exit;
+      }
+
+      of[i].char_offset = (FT_ULong)ptr;
+      of[i].code        = (FT_UShort)code;
+      of[i].gid         = -1;
+      ngphs            += 1;
+      i++;
+    }
+
+    error = gf_set_encodings( of, ngphs, go, memory );
+    if( error )
+      goto Exit;
+
+    if( FT_STREAM_SEEK( rptr ) )
+        goto Exit;
 
     for (  ;  ;  )
     {
@@ -533,27 +655,33 @@ FT_Byte  bit_table[] = {
         goto Exit;
       }
 
-      /*
-      if( w > max_m)   Defined to use w
-      {
-        FT_ERROR(( "gf_load_font: invalid width in charloc\n" ));
-        goto Exit;
-      }
-      */
-
       optr = stream->pos;
       if( FT_STREAM_SEEK( ptr ) )
         goto Exit;
 
-      bm = &go->bm_table[code - bc];
+      for ( i = 0; i < 256; i++ )
+      {
+        if( of[i].code == code && of[i].char_offset == ptr )
+        {
+          idx = of[i].gid;
+          break;
+        }
+      }
+      bm = &go->bm_table[idx];
+
+      bm->mv_x     = dx;
+      bm->mv_y     = dy;
+      bm->code     = code;
+      go->nglyphs += 1;
+
       if (gf_read_glyph( stream, bm, memory ) < 0)
         goto Exit;
 
-      bm->mv_x = dx;
-      bm->mv_y = dy;
       if(FT_STREAM_SEEK( optr ))
         goto Exit;
     }
+
+    FT_FREE(of);
     *goptr          = go;
     return error;
 
