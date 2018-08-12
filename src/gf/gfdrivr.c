@@ -190,7 +190,9 @@
     memory = FT_FACE_MEMORY( face );
 
     FT_FREE( gfface->available_sizes );
-    FT_FREE( face->gf_glyph->encodings );
+
+    if( face->gf_glyph )
+      FT_FREE( face->gf_glyph->encodings );
 
     gf_free_font( face );
 
@@ -238,7 +240,7 @@
       goto Exit;
 
     /* we have a gf font: let's construct the face object */
-    face->gf_glyph = go ;
+    face->gf_glyph = go;
 
     /* sanity check */
     if ( !face->gf_glyph->bm_table )
