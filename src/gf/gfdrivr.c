@@ -429,7 +429,7 @@
     FT_Face      face   = FT_FACE( gf );
     FT_Error     error  = FT_Err_Ok;
     FT_Bitmap*   bitmap = &slot->bitmap;
-    GF_BitmapRec bm;
+    GF_Bitmap    bm;
     GF_Glyph     go;
 
     go = gf->gf_glyph;
@@ -454,13 +454,6 @@
     if ( (FT_Int)glyph_index < 0 )
       glyph_index = 0;
 
-    if ((glyph_index < go->code_min) || (go->code_max < glyph_index))
-    {
-      FT_TRACE2(( "invalid glyph index\n" ));
-      error = FT_THROW( Invalid_Argument );
-      goto Exit;
-    }
-
     if ( !go->bm_table )
     {
       FT_TRACE2(( "invalid bitmap table\n" ));
@@ -469,45 +462,45 @@
     }
 
     /* slot, bitmap => freetype, bm => gflib */
-    bm = gf->gf_glyph->bm_table[glyph_index];
+    bm = &gf->gf_glyph->bm_table[glyph_index];
 
-    bitmap->rows       = bm.bbx_height;
-    bitmap->width      = bm.bbx_width;
+    bitmap->rows       = bm->bbx_height;
+    bitmap->width      = bm->bbx_width;
     bitmap->pixel_mode = FT_PIXEL_MODE_MONO;
 
-    if ( !bm.raster )
+    if ( !bm->raster )
     {
       FT_TRACE2(( "invalid bitmap width\n" ));
       error = FT_THROW( Invalid_File_Format );
       goto Exit;
     }
 
-    bitmap->pitch = (int)bm.raster ;
+    bitmap->pitch = (int)bm->raster ;
 
     /* note: we don't allocate a new array to hold the bitmap; */
     /*       we can simply point to it                         */
-    ft_glyphslot_set_bitmap( slot, bm.bitmap );
+    ft_glyphslot_set_bitmap( slot, bm->bitmap );
 
     slot->format      = FT_GLYPH_FORMAT_BITMAP;
-    slot->bitmap_left = bm.off_x ;
-    slot->bitmap_top  = bm.off_y ;
+    slot->bitmap_left = bm->off_x ;
+    slot->bitmap_top  = bm->off_y ;
 
-    slot->metrics.horiAdvance  = (FT_Pos) (bm.mv_x ) * 64;
-    slot->metrics.horiBearingX = (FT_Pos) (bm.off_x ) * 64;
-    slot->metrics.horiBearingY = (FT_Pos) (bm.bbx_height) * 64;
+    slot->metrics.horiAdvance  = (FT_Pos) (bm->mv_x ) * 64;
+    slot->metrics.horiBearingX = (FT_Pos) (bm->off_x ) * 64;
+    slot->metrics.horiBearingY = (FT_Pos) (bm->bbx_height) * 64;
     slot->metrics.width        = (FT_Pos) ( bitmap->width * 64 );
     slot->metrics.height       = (FT_Pos) ( bitmap->rows * 64 );
 
-    FT_TRACE2(( "Glyph metric values are: bm.bbx_height is %ld\n"
-                "                         bm.bbx_width  is %ld\n"
-                "                         bm.off_x      is %ld\n"
-                "                         bm.off_y      is %ld\n"
-                "                         bm.mv_x       is %ld\n"
-                "                         bm.mv_y       is %ld\n", bm.bbx_height, bm.bbx_width,
-                                                                       bm.off_x, bm.off_y, bm.mv_x,
-                                                                       bm.mv_y ));
+    FT_TRACE2(( "Glyph metric values are: bm->bbx_height is %ld\n"
+                "                         bm->bbx_width  is %ld\n"
+                "                         bm->off_x      is %ld\n"
+                "                         bm->off_y      is %ld\n"
+                "                         bm->mv_x       is %ld\n"
+                "                         bm->mv_y       is %ld\n", bm->bbx_height, bm->bbx_width,
+                                                                    bm->off_x, bm->off_y, bm->mv_x,
+                                                                    bm->mv_y ));
 
-    ft_synthesize_vertical_metrics( &slot->metrics, bm.bbx_height * 64 );
+    ft_synthesize_vertical_metrics( &slot->metrics, bm->bbx_height * 64 );
 
   Exit:
     return error;
