@@ -162,7 +162,7 @@ FT_Byte  bit_table[] = {
 
     FT_TRACE2(( "gf_set_encodings: Allocated sufficient memory.\n" ));
 
-    for( i = 0 ; i < 256 ; i++ )
+    for( i = 0 ; i < ngphs ; i++ )
     {
       if( of[i].char_offset >= 0 )
         tosort[i] = of[i].char_offset;
@@ -174,7 +174,7 @@ FT_Byte  bit_table[] = {
     k = 0;
     for ( i = 0; i < ngphs; i++ )
     {
-      for ( j = 0; j < 256; j++ )
+      for ( j = 0; j < ngphs; j++ )
       {
         if( of[j].char_offset == tosort[i] )
         break;
@@ -561,13 +561,7 @@ FT_Byte  bit_table[] = {
     if( FT_ALLOC(go, sizeof(GF_GlyphRec)) )
       goto Exit;
 
-    if( FT_ALLOC_MULT(go->bm_table, sizeof(GF_BitmapRec), nchars) )
-      goto Exit;
-
     FT_TRACE2(( "gf_load_font: Allocated bitmap table\n" ));
-
-    for (i = 0; i < nchars; i++)
-      go->bm_table[i].bitmap = NULL;
 
     go->ds   = (FT_UInt)ds/(1<<20);
     go->hppp = (FT_UInt)hppp/(1<<16);
@@ -584,11 +578,10 @@ FT_Byte  bit_table[] = {
     if( FT_ALLOC_MULT(of, sizeof(GF_CharOffsetRec), nchars) )
       goto Exit;
 
-    for( i = 0; i < 256 ; i++)
-      of[i].char_offset = -1;
-
     rptr = stream->pos;
-    i=0; ngphs=0;
+    i    =0;
+    ngphs=0;
+
     for (  ;  ;  )
     {
       if ((instr = READ_UINT1( stream )) == GF_POST_POST)
@@ -621,6 +614,9 @@ FT_Byte  bit_table[] = {
       ngphs            += 1;
       i++;
     }
+
+    if( FT_ALLOC_MULT(go->bm_table, sizeof(GF_BitmapRec), ngphs) )
+      goto Exit;
 
     error = gf_set_encodings( of, ngphs, go, memory );
     if( error )
