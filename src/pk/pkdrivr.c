@@ -432,7 +432,7 @@
     FT_Face      face   = FT_FACE( pk );
     FT_Error     error  = FT_Err_Ok;
     FT_Bitmap*   bitmap = &slot->bitmap;
-    PK_BitmapRec bm;
+    PK_Bitmap    bm;
     PK_Glyph     go;
 
     go = pk->pk_glyph;
@@ -454,16 +454,6 @@
 
     FT_TRACE1(( "PK_Glyph_Load: glyph index %d\n", glyph_index ));
 
-    if ( glyph_index < 0 )
-      glyph_index = 0;
-
-    if ((glyph_index < go->code_min) || (go->code_max < glyph_index))
-    {
-      FT_TRACE2(( "invalid glyph index\n" ));
-      error = FT_THROW( Invalid_Argument );
-      goto Exit;
-    }
-
     if ( !go->bm_table )
     {
       FT_TRACE2(( "invalid bitmap table\n" ));
@@ -472,36 +462,36 @@
     }
 
     /* slot, bitmap => freetype, bm => pklib */
-    bm = pk->pk_glyph->bm_table[glyph_index];
+    bm = &pk->pk_glyph->bm_table[glyph_index];
 
-    bitmap->rows       = bm.bbx_height;
-    bitmap->width      = bm.bbx_width;
+    bitmap->rows       = bm->bbx_height;
+    bitmap->width      = bm->bbx_width;
     bitmap->pixel_mode = FT_PIXEL_MODE_MONO;
 
-    if ( !bm.raster )
+    if ( !bm->raster )
     {
       FT_TRACE2(( "invalid bitmap width\n" ));
       error = FT_THROW( Invalid_File_Format );
       goto Exit;
     }
 
-    bitmap->pitch = (int)bm.raster ;
+    bitmap->pitch = (int)bm->raster ;
 
     /* note: we don't allocate a new array to hold the bitmap; */
     /*       we can simply point to it                         */
-    ft_glyphslot_set_bitmap( slot, bm.bitmap );
+    ft_glyphslot_set_bitmap( slot, bm->bitmap );
 
     slot->format      = FT_GLYPH_FORMAT_BITMAP;
-    slot->bitmap_left = bm.off_x ;
-    slot->bitmap_top  = bm.off_y ;
+    slot->bitmap_left = bm->off_x ;
+    slot->bitmap_top  = bm->off_y ;
 
-    slot->metrics.horiAdvance  = (FT_Pos) (bm.mv_x ) * 64;
-    slot->metrics.horiBearingX = (FT_Pos) (bm.off_x ) * 64;
-    slot->metrics.horiBearingY = (FT_Pos) (bm.bbx_height) * 64;
+    slot->metrics.horiAdvance  = (FT_Pos) (bm->mv_x ) * 64;
+    slot->metrics.horiBearingX = (FT_Pos) (bm->off_x ) * 64;
+    slot->metrics.horiBearingY = (FT_Pos) (bm->bbx_height) * 64;
     slot->metrics.width        = (FT_Pos) ( bitmap->width * 64 );
     slot->metrics.height       = (FT_Pos) ( bitmap->rows * 64 );
 
-    ft_synthesize_vertical_metrics( &slot->metrics, bm.bbx_height * 64 );
+    ft_synthesize_vertical_metrics( &slot->metrics, bm->bbx_height * 64 );
 
   Exit:
     return error;
