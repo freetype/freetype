@@ -147,7 +147,7 @@ FT_BEGIN_HEADER
   typedef struct  bdf_glyph_t_
   {
     char*           name;        /* Glyph name.                          */
-    long            encoding;    /* Glyph encoding.                      */
+    unsigned long   encoding;    /* Glyph encoding.                      */
     unsigned short  swidth;      /* Scalable width.                      */
     unsigned short  dwidth;      /* Device width.                        */
     bdf_bbx_t       bbx;         /* Glyph bounding box.                  */
@@ -185,7 +185,7 @@ FT_BEGIN_HEADER
 
     unsigned short   monowidth;      /* Logical width for monowidth font.   */
 
-    long             default_char;   /* Encoding of the default glyph.      */
+    unsigned long    default_char;   /* Encoding of the default glyph.      */
 
     long             font_ascent;    /* Font ascent.                        */
     long             font_descent;   /* Font descent.                       */

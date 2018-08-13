@@ -1,3 +1,15 @@
+2018-08-13  Alexei Podtelezhnikov  <apodtele@gmail.com>
+
+	[bdf] Use unsigned types.
+
+	* src/bdf/bdf.h (bdf_glyph_t): Unsign `encoding'.
+	(bdf_font_t): Unsign `default_char'.
+	* src/bdf/bdfdrivr.h (BDF_encoding_el): Unsign `enc'.
+
+	* src/bdf/bdflib.c (_bdf_add_property, _bdf_parse_glyphs,
+	_bdf_parse_start): Updated accordingly.
+	* src/bdf/bdfdrivr.c (bdf_cmap_char_{index,next}): Ditto.
+
 2018-08-13  Werner Lemberg  <wl@gnu.org>
 
 	* src/type42/t42parse.c (t42_parse_sfnts): One more format check.
@@ -97,7 +109,7 @@
 
 	* src/pcf/pcf.h (PCF_ParsePropertyRec): Use unsigned `name' and
 	`value'.
-	* src/pcf/pcfread.c (pcf_get_propeerties, pcf_load_font): Updated
+	* src/pcf/pcfread.c (pcf_get_properties, pcf_load_font): Updated
 	parsing code and handling of AVERAGE_WIDTH, POINT_SIZE, PIXEL_SIZE,
 	RESOLUTION_X and RESOLUTION_Y.
 

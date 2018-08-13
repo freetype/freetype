@@ -197,10 +197,10 @@
 #define ACMSG10  "DWIDTH field missing at line %ld.  Set to glyph width.\n"
 #define ACMSG11  "SIZE bits per pixel field adjusted to %hd.\n"
 #define ACMSG12  "Duplicate encoding %ld (%s) changed to unencoded.\n"
-#define ACMSG13  "Glyph %ld extra rows removed.\n"
-#define ACMSG14  "Glyph %ld extra columns removed.\n"
+#define ACMSG13  "Glyph %lu extra rows removed.\n"
+#define ACMSG14  "Glyph %lu extra columns removed.\n"
 #define ACMSG15  "Incorrect glyph count: %ld indicated but %ld found.\n"
-#define ACMSG16  "Glyph %ld missing columns padded with zero bits.\n"
+#define ACMSG16  "Glyph %lu missing columns padded with zero bits.\n"
 #define ACMSG17  "Adjusting number of glyphs to %ld.\n"
 
   /* Error messages. */
@@ -1232,7 +1232,7 @@
     /* present, and the SPACING property should override the default       */
     /* spacing.                                                            */
     if ( _bdf_strncmp( name, "DEFAULT_CHAR", 12 ) == 0 )
-      font->default_char = fp->value.l;
+      font->default_char = fp->value.ul;
     else if ( _bdf_strncmp( name, "FONT_ASCENT", 11 ) == 0 )
       font->font_ascent = fp->value.l;
     else if ( _bdf_strncmp( name, "FONT_DESCENT", 12 ) == 0 )
@@ -1508,7 +1508,7 @@
 
         glyph           = font->glyphs + font->glyphs_used++;
         glyph->name     = p->glyph_name;
-        glyph->encoding = p->glyph_enc;
+        glyph->encoding = (unsigned long)p->glyph_enc;
 
         /* Reset the initial glyph info. */
         p->glyph_name = NULL;
@@ -1532,7 +1532,7 @@
 
           glyph           = font->unencoded + font->unencoded_used;
           glyph->name     = p->glyph_name;
-          glyph->encoding = (long)font->unencoded_used++;
+          glyph->encoding = font->unencoded_used++;
 
           /* Reset the initial glyph info. */
           p->glyph_name = NULL;
@@ -1983,7 +1983,7 @@
       if ( error )
         goto Exit;
       p->font->spacing      = p->opts->font_spacing;
-      p->font->default_char = -1;
+      p->font->default_char = ~0UL;
 
       goto Exit;
     }
