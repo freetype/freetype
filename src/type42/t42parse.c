@@ -595,6 +595,14 @@
 
       else if ( *cur == '<' )
       {
+        if ( string_buf && !allocated )
+        {
+          FT_ERROR(( "t42_parse_sfnts: "
+                     "can't handle mixed binary and hex strings\n" ));
+          error = FT_THROW( Invalid_File_Format );
+          goto Fail;
+        }
+
         T1_Skip_PS_Token( parser );
         if ( parser->root.error )
           goto Exit;

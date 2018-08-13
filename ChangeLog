@@ -1,3 +1,11 @@
+2018-08-13  Werner Lemberg  <wl@gnu.org>
+
+	* src/type42/t42parse.c (t42_parse_sfnts): One more format check.
+
+	Reported as
+
+	  https://bugs.chromium.org/p/oss-fuzz/issues/detail?id=9832
+
 2018-08-11  Werner Lemberg  <wl@gnu.org>
 
 	* src/base/ftcalc.c (FT_Matrix_Check): Fix integer overflow.
