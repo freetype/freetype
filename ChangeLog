@@ -1,5 +1,17 @@
 2018-08-14  Werner Lemberg  <wl@gnu.org>
 
+	[cff] Fix another segv in old engine.
+
+	Reported as
+
+	  https://bugs.chromium.org/p/oss-fuzz/issues/detail?id=9872
+
+	* src/psaux/cffdecode.c (cff_decoder_parse_charstrings)
+	[CFF_CONFIG_OPTION_OLD_ENGINE]: Disallow invalid T1 opcodes in
+	dictionaries.
+
+2018-08-14  Werner Lemberg  <wl@gnu.org>
+
 	[cff] Fix missing error handling.
 
 	Reported as
@@ -20,7 +32,7 @@
 
 2018-08-14  Werner Lemberg  <wl@gnu.org>
 
-	[cff] Fix segv.
+	[cff] Fix segv in old engine.
 
 	Reported as
 

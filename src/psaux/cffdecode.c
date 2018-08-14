@@ -860,6 +860,15 @@
           case cff_op_flex1:
           case cff_op_callsubr:
           case cff_op_callgsubr:
+            /* depracated opcodes */
+          case cff_op_dotsection:
+            /* invalid Type 1 opcodes */
+          case cff_op_hsbw:
+          case cff_op_closepath:
+          case cff_op_callothersubr:
+          case cff_op_seac:
+          case cff_op_sbw:
+          case cff_op_setcurrentpoint:
             goto MM_Error;
 
           default:
