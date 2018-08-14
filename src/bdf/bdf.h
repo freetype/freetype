@@ -158,20 +158,6 @@ FT_BEGIN_HEADER
   } bdf_glyph_t;
 
 
-  typedef struct  bdf_glyphlist_t_
-  {
-    unsigned short  pad;          /* Pad to 4-byte boundary.              */
-    unsigned short  bpp;          /* Bits per pixel.                      */
-    long            start;        /* Beginning encoding value of glyphs.  */
-    long            end;          /* Ending encoding value of glyphs.     */
-    bdf_glyph_t*    glyphs;       /* Glyphs themselves.                   */
-    unsigned long   glyphs_size;  /* Glyph structures allocated.          */
-    unsigned long   glyphs_used;  /* Glyph structures used.               */
-    bdf_bbx_t       bbx;          /* Overall bounding box of glyphs.      */
-
-  } bdf_glyphlist_t;
-
-
   typedef struct  bdf_font_t_
   {
     char*            name;           /* Name of the font.                   */
@@ -204,8 +190,6 @@ FT_BEGIN_HEADER
 
     char*            comments;       /* Font comments.                      */
     unsigned long    comments_len;   /* Length of comment string.           */
-
-    bdf_glyphlist_t  overflow;       /* Storage used for glyph insertion.   */
 
     void*            internal;       /* Internal data for the font.         */
 

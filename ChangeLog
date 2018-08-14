@@ -1,3 +1,11 @@
+2018-08-14  Alexei Podtelezhnikov  <apodtele@gmail.com>
+
+	[bdf] Remove unused overflow storage.
+
+	* src/bdf/bdf.h (bdf_glyphlist_t): Remove this type.
+	(bdf_font_t): Remove `overflow' field.
+	* src/bdf/bdflib.c (bdf_free_font): Remove `overflow' freeing.
+
 2018-08-14  Werner Lemberg  <wl@gnu.org>
 
 	[cff] Fix segv.

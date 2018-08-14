@@ -2409,16 +2409,6 @@
     FT_FREE( font->glyphs );
     FT_FREE( font->unencoded );
 
-    /* Free up the overflow storage if it was used. */
-    for ( i = 0, glyphs = font->overflow.glyphs;
-          i < font->overflow.glyphs_used; i++, glyphs++ )
-    {
-      FT_FREE( glyphs->name );
-      FT_FREE( glyphs->bitmap );
-    }
-
-    FT_FREE( font->overflow.glyphs );
-
     /* bdf_cleanup */
     ft_hash_str_free( &(font->proptbl), memory );
 
