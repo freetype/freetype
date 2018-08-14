@@ -1231,6 +1231,8 @@
 
         error = psaux->cff_decoder_funcs->parse_charstrings_old(
                   &decoder, charstring_base, charstring_len, 1 );
+        if ( error )
+          goto Exit;
 
         /* Now copy the stack data in the temporary decoder object,    */
         /* converting it back to charstring number representations     */

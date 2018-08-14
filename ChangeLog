@@ -1,3 +1,15 @@
+2018-08-14  Werner Lemberg  <wl@gnu.org>
+
+	[cff] Fix missing error handling.
+
+	Reported as
+
+	  https://bugs.chromium.org/p/oss-fuzz/issues/detail?id=9865
+
+	* src/psaux/cffparse.c (cff_parser_run)
+	[CFF_CONFIG_OPTION_OLD_ENGINE]: Don't ignore return value of
+	`parse_charstrings_old'.
+
 2018-08-14  Alexei Podtelezhnikov  <apodtele@gmail.com>
 
 	[bdf] Remove unused overflow storage.
