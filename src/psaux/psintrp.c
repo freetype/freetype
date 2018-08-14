@@ -776,7 +776,8 @@
 
       case cf2_cmdHSTEMHM:
       case cf2_cmdHSTEM:
-        FT_TRACE4(( op1 == cf2_cmdHSTEMHM ? " hstemhm\n" : " hstem\n" ));
+        FT_TRACE4(( "%s\n", op1 == cf2_cmdHSTEMHM ? " hstemhm"
+                                                  : " hstem" ));
 
         if ( !font->isT1 )
         {
@@ -806,7 +807,8 @@
 
       case cf2_cmdVSTEMHM:
       case cf2_cmdVSTEM:
-        FT_TRACE4(( op1 == cf2_cmdVSTEMHM ? " vstemhm\n" : " vstem\n" ));
+        FT_TRACE4(( "%s\n", op1 == cf2_cmdVSTEMHM ? " vstemhm"
+                                                  : " vstem" ));
 
         if ( !font->isT1 )
         {
@@ -889,7 +891,7 @@
           FT_Bool  isX = FT_BOOL( op1 == cf2_cmdHLINETO );
 
 
-          FT_TRACE4(( isX ? " hlineto\n" : " vlineto\n" ));
+          FT_TRACE4(( "%s\n", isX ? " hlineto" : " vlineto" ));
 
           for ( idx = 0; idx < count; idx++ )
           {
@@ -917,8 +919,8 @@
           CF2_UInt  idx   = 0;
 
 
-          FT_TRACE4(( op1 == cf2_cmdRCURVELINE ? " rcurveline\n"
-                                               : " rrcurveto\n" ));
+          FT_TRACE4(( "%s\n", op1 == cf2_cmdRCURVELINE ? " rcurveline"
+                                                       : " rrcurveto" ));
 
           while ( idx + 6 <= count )
           {
@@ -973,8 +975,8 @@
           CF2_Int  subrNum;
 
 
-          FT_TRACE4(( op1 == cf2_cmdCALLGSUBR ? " callgsubr"
-                                              : " callsubr" ));
+          FT_TRACE4(( "%s", op1 == cf2_cmdCALLGSUBR ? " callgsubr"
+                                                    : " callsubr" ));
 
           if ( ( !font->isT1 && charstringIndex > CF2_MAX_SUBR )       ||
                (  font->isT1 && charstringIndex > T1_MAX_SUBRS_CALLS ) )
@@ -1213,8 +1215,8 @@
                       FT_Bool  isV = FT_BOOL( op2 == cf2_escVSTEM3 );
 
 
-                      FT_TRACE4(( isV ? " vstem3\n"
-                                      : " hstem3\n" ));
+                      FT_TRACE4(( "%s\n", isV ? " vstem3"
+                                              : " hstem3" ));
 
                       FT_ASSERT( cf2_stack_count( opStack ) == 6 );
 
@@ -2564,7 +2566,7 @@
       case cf2_cmdHINTMASK:
         /* the final \n in the tracing message gets added in      */
         /* `cf2_hintmask_read' (which also traces the mask bytes) */
-        FT_TRACE4(( op1 == cf2_cmdCNTRMASK ? " cntrmask" : " hintmask" ));
+        FT_TRACE4(( "%s", op1 == cf2_cmdCNTRMASK ? " cntrmask" : " hintmask" ));
 
         /* never add hints after the mask is computed */
         if ( cf2_stack_count( opStack ) > 1    &&
@@ -2830,7 +2832,7 @@
           count = count1 & ~2U;
           idx  += count1 - count;
 
-          FT_TRACE4(( alternate ? " hvcurveto\n" : " vhcurveto\n" ));
+          FT_TRACE4(( "%s\n", alternate ? " hvcurveto" : " vhcurveto" ));
 
           while ( idx < count )
           {

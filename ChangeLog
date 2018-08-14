@@ -1,3 +1,19 @@
+2018-08-14  Werner Lemberg  <wl@gnu.org>
+
+	Use formatting string in FT_TRACEX calls for non-simple arguments.
+
+	* src/psaux/cffdecode.c (cff_decoder_parse_charstrings)
+	<cff_op_hstem, cff_op_hintmask, cff_op_hlineto, cff_op_vhcurveto>:
+	Do it.
+
+	* src/psaux/pshints.c (cf2_hintmap_build): Ditto.
+
+	* src/psaux/psintrp.c (cf2_interpT2CharString) <cf2_cmdHSTEM,
+	cf2_cmdVSTEM, cf2_cmdHLINETO, cf2_cmdRRCURVETO, cf2_cmdCALLSUBR,
+	cf2_escHSTEM3, cf2_cmdHINTMASK, cf2_cmdHVCURVETO>: Ditto.
+
+	* src/truetype/ttinterp.c (TT_RunIns): Ditto.
+
 2018-08-14  Alexei Podtelezhnikov  <apodtele@gmail.com>
 
 	[bdf] Remove unused fields.

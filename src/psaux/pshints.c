@@ -1025,10 +1025,10 @@
       }
     }
 
-    FT_TRACE6(( initialMap ? "flags: [p]air [g]host [t]op "
-                             "[b]ottom [L]ocked [S]ynthetic\n"
-                             "Initial hintmap\n"
-                           : "Hints:\n" ));
+    FT_TRACE6(( "%s\n", initialMap ? "flags: [p]air [g]host [t]op"
+                                     " [b]ottom [L]ocked [S]ynthetic\n"
+                                     "Initial hintmap"
+                                   : "Hints:" ));
     cf2_hintmap_dump( hintmap );
 
     /*

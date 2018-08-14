@@ -964,10 +964,10 @@
         case cff_op_hstemhm:
         case cff_op_vstemhm:
           /* the number of arguments is always even here */
-          FT_TRACE4((
-              op == cff_op_hstem   ? " hstem\n"   :
-            ( op == cff_op_vstem   ? " vstem\n"   :
-            ( op == cff_op_hstemhm ? " hstemhm\n" : " vstemhm\n" ) ) ));
+          FT_TRACE4(( "%s\n",
+              op == cff_op_hstem   ? " hstem"   :
+            ( op == cff_op_vstem   ? " vstem"   :
+            ( op == cff_op_hstemhm ? " hstemhm" : " vstemhm" ) ) ));
 
           if ( hinter )
             hinter->stems( hinter->hints,
@@ -981,7 +981,8 @@
 
         case cff_op_hintmask:
         case cff_op_cntrmask:
-          FT_TRACE4(( op == cff_op_hintmask ? " hintmask" : " cntrmask" ));
+          FT_TRACE4(( "%s", op == cff_op_hintmask ? " hintmask"
+                                                  : " cntrmask" ));
 
           /* implement vstem when needed --                        */
           /* the specification doesn't say it, but this also works */
@@ -1094,8 +1095,8 @@
             FT_Int  phase = ( op == cff_op_hlineto );
 
 
-            FT_TRACE4(( op == cff_op_hlineto ? " hlineto\n"
-                                             : " vlineto\n" ));
+            FT_TRACE4(( "%s\n", op == cff_op_hlineto ? " hlineto"
+                                                     : " vlineto" ));
 
             if ( num_args < 0 )
               goto Stack_Underflow;
@@ -1266,8 +1267,8 @@
             FT_Int  nargs;
 
 
-            FT_TRACE4(( op == cff_op_vhcurveto ? " vhcurveto\n"
-                                               : " hvcurveto\n" ));
+            FT_TRACE4(( "%s\n", op == cff_op_vhcurveto ? " vhcurveto"
+                                                       : " hvcurveto" ));
 
             if ( cff_builder_start_point( builder, x, y ) )
               goto Fail;
