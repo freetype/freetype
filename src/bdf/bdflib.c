@@ -270,8 +270,8 @@
     bdf_font_t*     font;
     bdf_options_t*  opts;
 
-    unsigned long   have[34816]; /* must be in sync with `nmod' and `umod' */
-                                 /* arrays from `bdf_font_t' structure     */
+    unsigned long   have[34816];
+
     _bdf_list_t     list;
 
     FT_Memory       memory;
@@ -1486,7 +1486,6 @@
           FT_TRACE2(( "_bdf_parse_glyphs: " ACMSG12,
                       p->glyph_enc, p->glyph_name ));
           p->glyph_enc = -1;
-          font->modified = 1;
         }
         else
           _bdf_set_glyph_modified( p->have, p->glyph_enc );
@@ -1576,7 +1575,6 @@
         {
           FT_TRACE2(( "_bdf_parse_glyphs: " ACMSG13, glyph->encoding ));
           p->flags |= BDF_GLYPH_HEIGHT_CHECK_;
-          font->modified = 1;
         }
 
         goto Exit;
@@ -1604,7 +1602,6 @@
       {
         FT_TRACE2(( "_bdf_parse_glyphs: " ACMSG16, glyph->encoding ));
         p->flags       |= BDF_GLYPH_WIDTH_CHECK_;
-        font->modified  = 1;
       }
 
       /* Remove possible garbage at the right. */
@@ -1619,7 +1616,6 @@
       {
         FT_TRACE2(( "_bdf_parse_glyphs: " ACMSG14, glyph->encoding ));
         p->flags       |= BDF_GLYPH_WIDTH_CHECK_;
-        font->modified  = 1;
       }
 
       p->row++;
@@ -1714,14 +1710,7 @@
         {
           glyph->swidth = sw;
 
-          if ( p->glyph_enc == -1 )
-            _bdf_set_glyph_modified( font->umod,
-                                     font->unencoded_used - 1 );
-          else
-            _bdf_set_glyph_modified( font->nmod, glyph->encoding );
-
           p->flags       |= BDF_SWIDTH_ADJ_;
-          font->modified  = 1;
         }
       }
 
@@ -1823,7 +1812,6 @@
           goto Exit;
 
         FT_TRACE2(( "_bdf_parse_properties: " ACMSG1, p->font->bbx.ascent ));
-        p->font->modified = 1;
       }
 
       if ( bdf_get_font_property( p->font, "FONT_DESCENT" ) == 0 )
@@ -1836,7 +1824,6 @@
           goto Exit;
 
         FT_TRACE2(( "_bdf_parse_properties: " ACMSG2, p->font->bbx.descent ));
-        p->font->modified = 1;
       }
 
       p->flags &= ~BDF_PROPS_;
@@ -2173,8 +2160,6 @@
         goto Exit;
       FT_TRACE2(( "_bdf_parse_properties: " ACMSG2, p->font->bbx.descent ));
 
-      p->font->modified = 1;
-
       *next = _bdf_parse_glyphs;
 
       /* A special return value. */
@@ -2240,7 +2225,6 @@
       {
         FT_TRACE2(( "bdf_load_font: " ACMSG15, p->cnt,
                     p->font->glyphs_used + p->font->unencoded_used ));
-        p->font->modified = 1;
       }
 
       /* Once the font has been loaded, adjust the overall font metrics if */
@@ -2253,7 +2237,6 @@
           FT_TRACE2(( "bdf_load_font: " ACMSG3,
                       p->font->bbx.width, p->maxrb - p->minlb ));
           p->font->bbx.width = (unsigned short)( p->maxrb - p->minlb );
-          p->font->modified  = 1;
         }
 
         if ( p->font->bbx.x_offset != p->minlb )
@@ -2261,7 +2244,6 @@
           FT_TRACE2(( "bdf_load_font: " ACMSG4,
                       p->font->bbx.x_offset, p->minlb ));
           p->font->bbx.x_offset = p->minlb;
-          p->font->modified     = 1;
         }
 
         if ( p->font->bbx.ascent != p->maxas )
@@ -2269,7 +2251,6 @@
           FT_TRACE2(( "bdf_load_font: " ACMSG5,
                       p->font->bbx.ascent, p->maxas ));
           p->font->bbx.ascent = p->maxas;
-          p->font->modified   = 1;
         }
 
         if ( p->font->bbx.descent != p->maxds )
@@ -2278,7 +2259,6 @@
                       p->font->bbx.descent, p->maxds ));
           p->font->bbx.descent  = p->maxds;
           p->font->bbx.y_offset = (short)( -p->maxds );
-          p->font->modified     = 1;
         }
 
         if ( p->maxas + p->maxds != p->font->bbx.height )

@@ -193,12 +193,6 @@ FT_BEGIN_HEADER
 
     void*            internal;       /* Internal data for the font.         */
 
-    /* The size of the next two arrays must be in sync with the */
-    /* size of the `have' array in the `bdf_parse_t' structure. */
-    unsigned long    nmod[34816];    /* Bitmap indicating modified glyphs.  */
-    unsigned long    umod[34816];    /* Bitmap indicating modified          */
-                                     /* unencoded glyphs.                   */
-    unsigned short   modified;       /* Boolean indicating font modified.   */
     unsigned short   bpp;            /* Bits per pixel.                     */
 
     FT_Memory        memory;

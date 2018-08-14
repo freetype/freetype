@@ -1,3 +1,12 @@
+2018-08-14  Alexei Podtelezhnikov  <apodtele@gmail.com>
+
+	[bdf] Remove unused fields.
+
+	* src/bdf/bdf.h (bdf_font_t): Remove `nmod', `umod', and `modified',
+	which were set but never used.
+	* src/bdf/bdflib.c (_bdf_parse_{glyphs,properties}, bdf_load_font):
+	Updated accordingly.
+
 2018-08-14  Werner Lemberg  <wl@gnu.org>
 
 	[cff] Fix another segv in old engine.
