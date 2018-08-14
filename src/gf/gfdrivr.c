@@ -81,33 +81,21 @@
   {
     GF_CMap       cmap      = (GF_CMap)gfcmap;
     GF_Encoding   encodings = cmap->encodings;
-    FT_ULong      min, max, mid;
-    FT_UInt       result    = 0;
+    FT_UInt       max, code, result    = 0, i;
 
-    min = 0;
     max = cmap->num_encodings;
 
-    while ( min < max )
+    for( i = 0; i < max; i++ )
     {
-      FT_ULong  code;
-
-
-      mid  = ( min + max ) >> 1;
-      code = (FT_ULong)encodings[mid].enc;
-
+      code = (FT_ULong)encodings[i].enc;
       if ( charcode == code )
       {
-        result = encodings[mid].glyph;
-        break;
+        result = encodings[i].glyph;
+        goto Exit;
       }
-
-      if ( charcode < code )
-        max = mid;
-      else
-        min = mid + 1;
     }
-
-    return result;
+    Exit:
+      return result;
   }
 
   FT_CALLBACK_DEF( FT_UInt )
@@ -116,39 +104,19 @@
   {
     GF_CMap       cmap      = (GF_CMap)gfcmap;
     GF_Encoding   encodings = cmap->encodings;
-    FT_ULong      min, max, mid;
+    FT_UInt       result    = 0, i, code, max;
     FT_ULong      charcode  = *acharcode + 1;
-    FT_UInt       result    = 0;
 
-
-    min = 0;
     max = cmap->num_encodings;
 
-    while ( min < max )
+    for( i = 0; i < max; i++ )
     {
-      FT_ULong  code;
-
-
-      mid  = ( min + max ) >> 1;
-      code = (FT_ULong)encodings[mid].enc;
-
+      code = (FT_ULong)encodings[i].enc;
       if ( charcode == code )
       {
-        result = encodings[mid].glyph + 1;
+        result = encodings[i].glyph + 1;
         goto Exit;
       }
-
-      if ( charcode < code )
-        max = mid;
-      else
-        min = mid + 1;
-    }
-
-    charcode = 0;
-    if ( min < cmap->num_encodings )
-    {
-      charcode = (FT_ULong)encodings[min].enc;
-      result   = encodings[min].glyph ;
     }
 
   Exit:
