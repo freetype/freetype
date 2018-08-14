@@ -1712,16 +1712,20 @@
           break;
 
         case cff_op_random:
-          FT_TRACE4(( " random\n" ));
+          {
+            FT_UInt32*  randval = in_dict ? &decoder->cff->top_font.random
+                                          : &decoder->current_subfont->random;
 
-          /* only use the lower 16 bits of `random'  */
-          /* to generate a number in the range (0;1] */
-          args[0] = (FT_Fixed)
-                      ( ( decoder->current_subfont->random & 0xFFFF ) + 1 );
-          args++;
 
-          decoder->current_subfont->random =
-            cff_random( decoder->current_subfont->random );
+            FT_TRACE4(( " random\n" ));
+
+            /* only use the lower 16 bits of `random'  */
+            /* to generate a number in the range (0;1] */
+            args[0] = (FT_Fixed)( ( *randval & 0xFFFF ) + 1 );
+            args++;
+
+            *randval = cff_random( *randval );
+          }
           break;
 
         case cff_op_mul:

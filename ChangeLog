@@ -1,3 +1,15 @@
+2018-08-14  Werner Lemberg  <wl@gnu.org>
+
+	[cff] Fix segv.
+
+	Reported as
+
+	  https://bugs.chromium.org/p/oss-fuzz/issues/detail?id=9864
+
+	* src/psaux/cffdecode.c (cff_decoder_parse_charstrings)
+	<cff_op_random> [CFF_CONFIG_OPTION_OLD_ENGINE]: Use top dict's
+	`random' field directly if parsing dictionaries.
+
 2018-08-13  Alexei Podtelezhnikov  <apodtele@gmail.com>
 
 	[bdf] Use unsigned types.
