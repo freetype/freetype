@@ -196,7 +196,6 @@ FT_Byte  bits_table[] = {
     bm_ptr = bm->bitmap;
 
     bit16_buff = READ_UINT1( stream ) << 8;
-    FT_TRACE2(( "pk_read_14: bit16_buff is %ld\n",bit16_buff ));
     rest_bit16_buff = 8;
     --rs;
 
@@ -295,16 +294,16 @@ FT_Byte  bits_table[] = {
                FT_Memory       extmemory,
                PK_Glyph        *goptr )
   {
-    PK_Glyph    go;
-    FT_Byte     instr, pre, id;
-    FT_Long     ds, check_sum, hppp, vppp, k;
-    FT_Long     cc, tfm, dx, dy, dm, w, h, rs;
-    FT_Int      flag, dny_f, bw, ess, size;
-    FT_Long     hoff, voff, mv_x, mv_y, gptr;
-    FT_Int      bc, ec, nchars, index, i;
-    FT_Error    error  = FT_Err_Ok;
-    FT_Memory   memory = extmemory; /* needed for FT_NEW */
-    PK_Encoding encoding = NULL;
+    PK_Glyph   go;
+    FT_Byte    instr, pre, id;
+    FT_ULong   ds, check_sum, hppp, vppp, k;
+    FT_UInt    flag, dny_f, bw, ess, size;
+    FT_ULong   cc, tfm, dx, dy, dm, w, h, rs;
+    FT_Long    hoff, voff, mv_x, mv_y, gptr;
+    FT_Int     bc, ec, nchars, index, i;
+    FT_Error   error  = FT_Err_Ok;
+    FT_Memory  memory = extmemory; /* needed for FT_NEW */
+    PK_Encoding   encoding = NULL;
 
     go = NULL;
     nchars = -1;
@@ -325,8 +324,6 @@ FT_Byte  bits_table[] = {
       error = FT_THROW( Unknown_File_Format );
       goto Exit;
     }
-
-    FT_TRACE2(( "pk_load_font: PK_ID(89) found\n" ));
 
     k = READ_UINT1( stream );
     if ( FT_STREAM_SKIP( k ) )
@@ -394,17 +391,11 @@ FT_Byte  bits_table[] = {
     if( FT_ALLOC(go, sizeof(PK_GlyphRec)) )
       goto Exit;
 
-    FT_TRACE2(( "pk_load_font: Allocated sufficient memory in go\n" ));
-
     if( FT_ALLOC_MULT(go->bm_table, sizeof(PK_BitmapRec), nchars) )
       goto Exit;
 
-    FT_TRACE2(( "pk_load_font: Allocated sufficient memory in go->bm_table\n" ));
-
     if ( FT_NEW_ARRAY( encoding, nchars ) )
       return error;
-
-    FT_TRACE2(( "pk_load_font: Allocated sufficient memory in encoding\n" ));
 
     go->ds   = (FT_UInt)ds/(1<<20);
     go->hppp = (FT_UInt)hppp/(1<<16);
@@ -514,27 +505,12 @@ FT_Byte  bits_table[] = {
         go->bm_table[index].off_y  = voff;
         go->bm_table[index].mv_x   = mv_x;
         go->bm_table[index].mv_y   = mv_y;
-        go->bm_table[index].bitmap = (unsigned char*)malloc(h*( (w+7)>>3 ));
+        go->bm_table[index].bitmap = (unsigned char*)malloc(h*((w+7)/8));
         go->bm_table[index].code   = cc ; /* For backward compatibility */
         go->nglyphs               += 1;
 
         encoding[index].enc   = cc ;
         encoding[index].glyph = index;
-
-        FT_TRACE6(( "pk_load_font: go->bm_table values are :\n"
-                    "                       go->bm_table[%d].bbx_width  : %ld\n"
-                    "                       go->bm_table[%d].bbx_height : %ld\n"
-                    "                       go->bm_table[%d].raster     : %d\n"
-                    "                       go->bm_table[%d].off_x      : %d\n"
-                    "                       go->bm_table[%d].off_y      : %d\n"
-                    "                       go->bm_table[%d].mv_x       : %d\n"
-                    "                       go->bm_table[%d].mv_y       : %d\n", index, go->bm_table[index].bbx_width, index,
-                                                                                 go->bm_table[index].bbx_height, index,
-                                                                                 go->bm_table[index].raster, index,
-                                                                                 go->bm_table[index].off_x, index,
-                                                                                 go->bm_table[index].off_y, index,
-                                                                                 go->bm_table[index].mv_x, index,
-                                                                                 go->bm_table[index].mv_y, index ));
 
 
         if (go->bm_table[index].bitmap == NULL)
@@ -547,7 +523,7 @@ FT_Byte  bits_table[] = {
 
         if (dny_f == 14)
         {
-          if (pk_read_14(stream, rs, &(go->bm_table[index])) < 0)
+          if ( pk_read_14(stream, rs, &(go->bm_table[index]) ) < 0)
           {
             FT_ERROR(( "pk_load_font: error in `pk_read_14'\n" ));
             error = FT_THROW( Unknown_File_Format );
@@ -556,7 +532,7 @@ FT_Byte  bits_table[] = {
         }
         else
         {
-          if (pk_read_n14(stream, dny_f, bw, rs, &(go->bm_table[index])) < 0)
+          if (pk_read_n14(stream, dny_f, bw, rs, &(go->bm_table[index]) ) < 0)
           {
             FT_ERROR(( "pk_load_font: error in `pk_read_n14'\n" ));
             error = FT_THROW( Unknown_File_Format );
