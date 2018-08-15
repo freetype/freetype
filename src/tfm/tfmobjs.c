@@ -265,7 +265,6 @@
     fi->ds          = READ_INT4( stream ); /* Design Size */
     fi->design_size = (FT_ULong)((double)(fi->ds)/(double)(1<<20));
 
-    printf("fi->cs is %ld\n",fi->cs);
     if( fi->cs <= 0 )
     {
       error = FT_THROW( Unknown_File_Format );
