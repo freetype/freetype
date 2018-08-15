@@ -37,7 +37,7 @@
    * messages during execution.
    */
 #undef  FT_COMPONENT
-#define FT_COMPONENT  trace_winfnt
+#define FT_COMPONENT  winfnt
 
 
   static const FT_Frame_Field  winmz_header_fields[] =

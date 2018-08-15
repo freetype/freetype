@@ -23,7 +23,7 @@
 #include FT_INTERNAL_OBJECTS_H
 
 #undef  FT_COMPONENT
-#define FT_COMPONENT  trace_gloader
+#define FT_COMPONENT  gloader
 
 
   /*************************************************************************/

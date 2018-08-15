@@ -52,7 +52,7 @@
    * messages during execution.
    */
 #undef  FT_COMPONENT
-#define FT_COMPONENT  trace_cf2hints
+#define FT_COMPONENT  cf2hints
 
 
   typedef struct  CF2_HintMoveRec_

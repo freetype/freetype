@@ -50,7 +50,7 @@
    * messages during execution.
    */
 #undef  FT_COMPONENT
-#define FT_COMPONENT  trace_afcjk
+#define FT_COMPONENT  afcjk
 
 
   /*************************************************************************/

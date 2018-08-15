@@ -51,7 +51,7 @@
    * messages during execution.
    */
 #undef  FT_COMPONENT
-#define FT_COMPONENT  trace_ttdriver
+#define FT_COMPONENT  ttdriver
 
 
   /*

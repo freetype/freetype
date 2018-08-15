@@ -38,7 +38,7 @@
    * messages during execution.
    */
 #undef  FT_COMPONENT
-#define FT_COMPONENT  trace_gxvjust
+#define FT_COMPONENT  gxvjust
 
   /*
    * referred `just' table format specification:

@@ -28,7 +28,7 @@
 
 
 #undef  FT_COMPONENT
-#define FT_COMPONENT  trace_cache
+#define FT_COMPONENT  cache
 
 
   static FT_Error

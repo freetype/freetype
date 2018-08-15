@@ -36,7 +36,7 @@
    * messages during execution.
    */
 #undef  FT_COMPONENT
-#define FT_COMPONENT  trace_gxvmorx
+#define FT_COMPONENT  gxvmorx
 
 
   typedef struct  GXV_morx_subtable_type2_StateOptRec_

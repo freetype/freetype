@@ -44,7 +44,7 @@
    * messages during execution.
    */
 #undef  FT_COMPONENT
-#define FT_COMPONENT  trace_aflatin2
+#define FT_COMPONENT  aflatin2
 
 
   FT_LOCAL_DEF( FT_Error )

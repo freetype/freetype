@@ -35,7 +35,7 @@
    * messages during execution.
    */
 #undef  FT_COMPONENT
-#define FT_COMPONENT  trace_otvmodule
+#define FT_COMPONENT  otvmodule
 
 
   static FT_Error

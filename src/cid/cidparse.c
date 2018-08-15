@@ -33,7 +33,7 @@
    * messages during execution.
    */
 #undef  FT_COMPONENT
-#define FT_COMPONENT  trace_cidparse
+#define FT_COMPONENT  cidparse
 
 
   /*************************************************************************/

@@ -37,7 +37,7 @@
    * messages during execution.
    */
 #undef  FT_COMPONENT
-#define FT_COMPONENT  trace_gxvfeat
+#define FT_COMPONENT  gxvfeat
 
 
   /*************************************************************************/

@@ -169,7 +169,7 @@
    * messages during execution.
    */
 #undef  FT_COMPONENT
-#define FT_COMPONENT  trace_raster
+#define FT_COMPONENT  raster
 
 
 #ifdef STANDALONE_

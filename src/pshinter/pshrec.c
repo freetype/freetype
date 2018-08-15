@@ -28,7 +28,7 @@
 #include "pshnterr.h"
 
 #undef  FT_COMPONENT
-#define FT_COMPONENT  trace_pshrec
+#define FT_COMPONENT  pshrec
 
 #ifdef DEBUG_HINTER
   PS_Hints  ps_debug_hints         = NULL;

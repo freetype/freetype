@@ -65,7 +65,7 @@
    * messages during execution.
    */
 #undef  FT_COMPONENT
-#define FT_COMPONENT  trace_calc
+#define FT_COMPONENT  calc
 
 
   /* transfer sign, leaving a positive number;                        */

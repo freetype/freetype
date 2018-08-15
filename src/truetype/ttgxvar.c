@@ -85,7 +85,7 @@
    * messages during execution.
    */
 #undef  FT_COMPONENT
-#define FT_COMPONENT  trace_ttgxvar
+#define FT_COMPONENT  ttgxvar
 
 
   /*************************************************************************/

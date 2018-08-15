@@ -34,7 +34,7 @@
    * messages during execution.
    */
 #undef  FT_COMPONENT
-#define FT_COMPONENT  trace_ttbdf
+#define FT_COMPONENT  ttbdf
 
 
   FT_LOCAL_DEF( void )

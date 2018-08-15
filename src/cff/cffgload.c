@@ -38,7 +38,7 @@
    * messages during execution.
    */
 #undef  FT_COMPONENT
-#define FT_COMPONENT  trace_cffgload
+#define FT_COMPONENT  cffgload
 
 
   FT_LOCAL_DEF( FT_Error )

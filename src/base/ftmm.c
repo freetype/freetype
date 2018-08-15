@@ -32,7 +32,7 @@
    * messages during execution.
    */
 #undef  FT_COMPONENT
-#define FT_COMPONENT  trace_mm
+#define FT_COMPONENT  mm
 
 
   static FT_Error

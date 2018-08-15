@@ -56,7 +56,7 @@
    * messages during execution.
    */
 #undef  FT_COMPONENT
-#define FT_COMPONENT  trace_cffdriver
+#define FT_COMPONENT  cffdriver
 
 
   /*************************************************************************/

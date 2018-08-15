@@ -31,7 +31,7 @@
    * messages during execution.
    */
 #undef  FT_COMPONENT
-#define FT_COMPONENT  trace_psconv
+#define FT_COMPONENT  psconv
 
 
   /* The following array is used by various functions to quickly convert */

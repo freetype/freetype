@@ -32,7 +32,7 @@
    * messages during execution.
    */
 #undef  FT_COMPONENT
-#define FT_COMPONENT  trace_psprops
+#define FT_COMPONENT  psprops
 
 
   FT_BASE_CALLBACK_DEF( FT_Error )

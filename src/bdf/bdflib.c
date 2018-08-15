@@ -49,7 +49,7 @@
    * messages during execution.
    */
 #undef  FT_COMPONENT
-#define FT_COMPONENT  trace_bdflib
+#define FT_COMPONENT  bdflib
 
 
   /**************************************************************************

@@ -26,7 +26,7 @@
 
 
 #undef  FT_COMPONENT
-#define FT_COMPONENT  trace_pshalgo
+#define FT_COMPONENT  pshalgo
 
 
 #ifdef DEBUG_HINTER

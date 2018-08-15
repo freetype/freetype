@@ -1,3 +1,13 @@
+2018-08-15  Werner Lemberg  <wl@gnu.org>
+
+	Don't use `trace_' prefix for FT_COMPONENT arguments.
+
+	* include/freetype/internal/ftdebug.h (FT_TRACE_COMP,
+	FT_TRACE_COMP_): New auxiliary macros to add `trace_' prefix.
+	(FT_TRACE): Use `FT_TRACE_COMP'.
+
+	*/* (FT_COMPONENT): Updated.
+
 2018-08-14  Werner Lemberg  <wl@gnu.org>
 
 	Use formatting string in FT_TRACEX calls for non-simple arguments.

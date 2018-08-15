@@ -39,7 +39,7 @@
    * messages during execution.
    */
 #undef  FT_COMPONENT
-#define FT_COMPONENT  trace_gxvkern
+#define FT_COMPONENT  gxvkern
 
 
   /*************************************************************************/

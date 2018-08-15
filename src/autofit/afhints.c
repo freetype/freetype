@@ -29,7 +29,7 @@
    * messages during execution.
    */
 #undef  FT_COMPONENT
-#define FT_COMPONENT  trace_afhints
+#define FT_COMPONENT  afhints
 
 
   /* Get new segment for given axis. */

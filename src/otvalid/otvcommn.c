@@ -26,7 +26,7 @@
    * messages during execution.
    */
 #undef  FT_COMPONENT
-#define FT_COMPONENT  trace_otvcommon
+#define FT_COMPONENT  otvcommon
 
 
   /*************************************************************************/

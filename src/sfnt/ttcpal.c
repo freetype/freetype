@@ -68,7 +68,7 @@
    * messages during execution.
    */
 #undef  FT_COMPONENT
-#define FT_COMPONENT  trace_ttcpal
+#define FT_COMPONENT  ttcpal
 
 
   FT_LOCAL_DEF( FT_Error )

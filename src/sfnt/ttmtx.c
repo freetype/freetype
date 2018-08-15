@@ -45,7 +45,7 @@
    * messages during execution.
    */
 #undef  FT_COMPONENT
-#define FT_COMPONENT  trace_ttmtx
+#define FT_COMPONENT  ttmtx
 
 
   /**************************************************************************

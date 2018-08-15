@@ -45,7 +45,7 @@ THE SOFTWARE.
 #include "pcfutil.h"
 
 #undef  FT_COMPONENT
-#define FT_COMPONENT  trace_pcfread
+#define FT_COMPONENT  pcfread
 
 #include FT_SERVICE_BDF_H
 #include FT_SERVICE_FONT_FORMAT_H
@@ -60,7 +60,7 @@ THE SOFTWARE.
    * messages during execution.
    */
 #undef  FT_COMPONENT
-#define FT_COMPONENT  trace_pcfdriver
+#define FT_COMPONENT  pcfdriver
 
 
   /*

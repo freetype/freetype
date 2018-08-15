@@ -28,7 +28,7 @@
    * messages during execution.
    */
 #undef  FT_COMPONENT
-#define FT_COMPONENT  trace_stream
+#define FT_COMPONENT  stream
 
 
   FT_BASE_DEF( void )

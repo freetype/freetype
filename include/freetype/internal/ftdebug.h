@@ -84,11 +84,15 @@ FT_BEGIN_HEADER
 
 #ifdef FT_DEBUG_LEVEL_TRACE
 
-#define FT_TRACE( level, varformat )                      \
-          do                                              \
-          {                                               \
-            if ( ft_trace_levels[FT_COMPONENT] >= level ) \
-              FT_Message varformat;                       \
+  /* we need two macros here to make cpp expand `FT_COMPONENT' */
+#define FT_TRACE_COMP( x )   FT_TRACE_COMP_( x )
+#define FT_TRACE_COMP_( x )  trace_ ## x
+
+#define FT_TRACE( level, varformat )                                       \
+          do                                                               \
+          {                                                                \
+            if ( ft_trace_levels[FT_TRACE_COMP( FT_COMPONENT )] >= level ) \
+              FT_Message varformat;                                        \
           } while ( 0 )
 
 #else /* !FT_DEBUG_LEVEL_TRACE */

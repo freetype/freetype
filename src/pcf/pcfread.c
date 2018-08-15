@@ -44,7 +44,7 @@ THE SOFTWARE.
    * messages during execution.
    */
 #undef  FT_COMPONENT
-#define FT_COMPONENT  trace_pcfread
+#define FT_COMPONENT  pcfread
 
 
 #ifdef FT_DEBUG_LEVEL_TRACE

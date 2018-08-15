@@ -36,7 +36,7 @@
    * messages during execution.
    */
 #undef  FT_COMPONENT
-#define FT_COMPONENT  trace_t1gload
+#define FT_COMPONENT  t1gload
 
 
   static FT_Error

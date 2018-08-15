@@ -30,7 +30,7 @@
    * messages during execution.
    */
 #undef  FT_COMPONENT
-#define FT_COMPONENT  trace_memory
+#define FT_COMPONENT  memory
 
 
   /*************************************************************************/
@@ -236,7 +236,7 @@
   /*************************************************************************/
 
 #undef  FT_COMPONENT
-#define FT_COMPONENT  trace_list
+#define FT_COMPONENT  list
 
   /* documentation is in ftlist.h */
 

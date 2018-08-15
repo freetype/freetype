@@ -35,7 +35,7 @@
    * messages during execution.
    */
 #undef  FT_COMPONENT
-#define FT_COMPONENT  trace_cidload
+#define FT_COMPONENT  cidload
 
 
   /* read a single offset */

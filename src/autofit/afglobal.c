@@ -29,7 +29,7 @@
    * messages during execution.
    */
 #undef  FT_COMPONENT
-#define FT_COMPONENT  trace_afglobal
+#define FT_COMPONENT  afglobal
 
 
   /* get writing system specific header files */

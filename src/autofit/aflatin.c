@@ -37,7 +37,7 @@
    * messages during execution.
    */
 #undef  FT_COMPONENT
-#define FT_COMPONENT  trace_aflatin
+#define FT_COMPONENT  aflatin
 
 
   /* needed for computation of round vs. flat segments */

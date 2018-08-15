@@ -51,7 +51,7 @@
    * messages during execution.
    */
 #undef  FT_COMPONENT
-#define FT_COMPONENT  trace_init
+#define FT_COMPONENT  init
 
 
 #undef  FT_USE_MODULE

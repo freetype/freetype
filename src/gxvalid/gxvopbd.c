@@ -36,7 +36,7 @@
    * messages during execution.
    */
 #undef  FT_COMPONENT
-#define FT_COMPONENT  trace_gxvopbd
+#define FT_COMPONENT  gxvopbd
 
 
   /*************************************************************************/

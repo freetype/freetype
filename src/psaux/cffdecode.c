@@ -35,7 +35,7 @@
    * messages during execution.
    */
 #undef  FT_COMPONENT
-#define FT_COMPONENT  trace_cffdecode
+#define FT_COMPONENT  cffdecode
 
 
 #ifdef CFF_CONFIG_OPTION_OLD_ENGINE

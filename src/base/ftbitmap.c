@@ -31,7 +31,7 @@
    * messages during execution.
    */
 #undef  FT_COMPONENT
-#define FT_COMPONENT  trace_bitmap
+#define FT_COMPONENT  bitmap
 
 
   static

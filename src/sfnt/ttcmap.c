@@ -36,7 +36,7 @@
    * messages during execution.
    */
 #undef  FT_COMPONENT
-#define FT_COMPONENT  trace_ttcmap
+#define FT_COMPONENT  ttcmap
 
 
 #define TT_PEEK_SHORT   FT_PEEK_SHORT

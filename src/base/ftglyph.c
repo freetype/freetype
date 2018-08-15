@@ -44,7 +44,7 @@
    * messages during execution.
    */
 #undef  FT_COMPONENT
-#define FT_COMPONENT  trace_glyph
+#define FT_COMPONENT  glyph
 
 
   /*************************************************************************/

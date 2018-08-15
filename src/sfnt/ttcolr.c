@@ -77,7 +77,7 @@
    * messages during execution.
    */
 #undef  FT_COMPONENT
-#define FT_COMPONENT  trace_ttcolr
+#define FT_COMPONENT  ttcolr
 
 
   FT_LOCAL_DEF( FT_Error )

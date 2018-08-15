@@ -34,7 +34,7 @@
    * messages during execution.
    */
 #undef  FT_COMPONENT
-#define FT_COMPONENT  trace_afwarp
+#define FT_COMPONENT  afwarp
 
 
   /* The weights cover the range 0/64 - 63/64 of a pixel.  Obviously, */

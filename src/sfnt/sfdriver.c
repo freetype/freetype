@@ -68,7 +68,7 @@
    * messages during execution.
    */
 #undef  FT_COMPONENT
-#define FT_COMPONENT  trace_sfdriver
+#define FT_COMPONENT  sfdriver
 
 
   /*

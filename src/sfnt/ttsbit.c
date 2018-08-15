@@ -43,7 +43,7 @@
    * messages during execution.
    */
 #undef  FT_COMPONENT
-#define FT_COMPONENT  trace_ttsbit
+#define FT_COMPONENT  ttsbit
 
 
   FT_LOCAL_DEF( FT_Error )

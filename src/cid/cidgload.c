@@ -38,7 +38,7 @@
    * messages during execution.
    */
 #undef  FT_COMPONENT
-#define FT_COMPONENT  trace_cidgload
+#define FT_COMPONENT  cidgload
 
 
   FT_CALLBACK_DEF( FT_Error )

@@ -27,7 +27,7 @@
    * messages during execution.
    */
 #undef  FT_COMPONENT
-#define FT_COMPONENT  trace_otvgsub
+#define FT_COMPONENT  otvgsub
 
 
   /*************************************************************************/

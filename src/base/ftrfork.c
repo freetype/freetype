@@ -32,7 +32,7 @@
 #include "ftbase.h"
 
 #undef  FT_COMPONENT
-#define FT_COMPONENT  trace_raccess
+#define FT_COMPONENT  raccess
 
 
   /*************************************************************************/

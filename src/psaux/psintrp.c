@@ -59,7 +59,7 @@
    * messages during execution.
    */
 #undef  FT_COMPONENT
-#define FT_COMPONENT  trace_cf2interp
+#define FT_COMPONENT  cf2interp
 
 
   FT_LOCAL_DEF( void )

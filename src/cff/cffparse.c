@@ -34,7 +34,7 @@
    * messages during execution.
    */
 #undef  FT_COMPONENT
-#define FT_COMPONENT  trace_cffparse
+#define FT_COMPONENT  cffparse
 
 
   FT_LOCAL_DEF( FT_Error )
@@ -808,7 +808,7 @@
 
 #ifdef FT_DEBUG_LEVEL_TRACE
     /* beautify tracing message */
-    if ( ft_trace_levels[FT_COMPONENT] < 4 )
+    if ( ft_trace_levels[FT_TRACE_COMP( FT_COMPONENT )] < 4 )
       FT_TRACE1(( "Multiple Master CFFs not supported yet,"
                   " handling first master design only\n" ));
     else

@@ -203,7 +203,7 @@
    * messages during execution.
    */
 #undef  FT_COMPONENT
-#define FT_COMPONENT  trace_cffload
+#define FT_COMPONENT  cffload
 
 
   /* read an offset from the index's stream current position */

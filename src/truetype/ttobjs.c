@@ -43,7 +43,7 @@
    * messages during execution.
    */
 #undef  FT_COMPONENT
-#define FT_COMPONENT  trace_ttobjs
+#define FT_COMPONENT  ttobjs
 
 
 #ifdef TT_USE_BYTECODE_INTERPRETER

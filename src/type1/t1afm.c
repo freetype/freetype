@@ -33,7 +33,7 @@
    * messages during execution.
    */
 #undef  FT_COMPONENT
-#define FT_COMPONENT  trace_t1afm
+#define FT_COMPONENT  t1afm
 
 
   FT_LOCAL_DEF( void )

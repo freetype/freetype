@@ -45,7 +45,7 @@
    * messages during execution.
    */
 #undef  FT_COMPONENT
-#define FT_COMPONENT  trace_ttpost
+#define FT_COMPONENT  ttpost
 
 
   /* If this configuration macro is defined, we rely on the `PSNames' */

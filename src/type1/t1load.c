@@ -86,7 +86,7 @@
    * messages during execution.
    */
 #undef  FT_COMPONENT
-#define FT_COMPONENT  trace_t1load
+#define FT_COMPONENT  t1load
 
 
 #ifndef T1_CONFIG_OPTION_NO_MM_SUPPORT

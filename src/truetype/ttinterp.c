@@ -46,7 +46,7 @@
    * messages during execution.
    */
 #undef  FT_COMPONENT
-#define FT_COMPONENT  trace_ttinterp
+#define FT_COMPONENT  ttinterp
 
 
 #define NO_SUBPIXEL_HINTING                                                  \

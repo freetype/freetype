@@ -48,7 +48,7 @@ THE SOFTWARE.
    * messages during execution.
    */
 #undef  FT_COMPONENT
-#define FT_COMPONENT  trace_bdfdriver
+#define FT_COMPONENT  bdfdriver
 
 
   typedef struct  BDF_CMapRec_
