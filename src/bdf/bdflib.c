@@ -1,6 +1,6 @@
 /*
  * Copyright 2000 Computing Research Labs, New Mexico State University
- * Copyright 2001-2014
+ * Copyright 2001-2018
  *   Francesco Zappa Nardelli
  *
  * Permission is hereby granted, free of charge, to any person obtaining a
@@ -207,6 +207,7 @@
 #define ERRMSG2  "[line %ld] Font header corrupted or missing fields.\n"
 #define ERRMSG3  "[line %ld] Font glyphs corrupted or missing fields.\n"
 #define ERRMSG4  "[line %ld] BBX too big.\n"
+#define ERRMSG5  "[line %ld] `%s' value too big.\n"
 #define ERRMSG6  "[line %ld] Input line too long.\n"
 #define ERRMSG7  "[line %ld] Font name too long.\n"
 #define ERRMSG8  "[line %ld] Invalid `%s' value.\n"

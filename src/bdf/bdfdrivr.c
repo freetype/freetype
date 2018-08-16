@@ -2,8 +2,7 @@
 
     FreeType font driver for bdf files
 
-    Copyright (C) 2001-2008, 2011, 2013, 2014 by
-    Francesco Zappa Nardelli
+    Copyright (C) 2001-2018 Francesco Zappa Nardelli
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
