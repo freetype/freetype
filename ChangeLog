@@ -1,3 +1,7 @@
+2018-08-16  Werner Lemberg  <wl@gnu.org>
+
+	* builds/*/ftsystem.c (FT_COMPONENT): Updated also.
+
 2018-08-15  Alexei Podtelezhnikov  <apodtele@gmail.com>
 
 	[bdf] Don't track duplicate encodings.
