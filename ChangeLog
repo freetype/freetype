@@ -1,3 +1,9 @@
+2018-08-16  Young Xiao  <yangx92@hotmail.com>
+
+	* builds/mac/ftmac.c (parse_fond): Fix buffer overrun.
+
+	Reported as bug #54515, duplicate of #43540.
+
 2018-08-16  Werner Lemberg  <wl@gnu.org>
 
 	* builds/*/ftsystem.c (FT_COMPONENT): Updated also.
