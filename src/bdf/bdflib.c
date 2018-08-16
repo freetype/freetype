@@ -196,7 +196,6 @@
 #define ACMSG9   "SWIDTH field missing at line %ld.  Set automatically.\n"
 #define ACMSG10  "DWIDTH field missing at line %ld.  Set to glyph width.\n"
 #define ACMSG11  "SIZE bits per pixel field adjusted to %hd.\n"
-#define ACMSG12  "Duplicate encoding %ld (%s) changed to unencoded.\n"
 #define ACMSG13  "Glyph %lu extra rows removed.\n"
 #define ACMSG14  "Glyph %lu extra columns removed.\n"
 #define ACMSG15  "Incorrect glyph count: %ld indicated but %ld found.\n"
@@ -208,7 +207,6 @@
 #define ERRMSG2  "[line %ld] Font header corrupted or missing fields.\n"
 #define ERRMSG3  "[line %ld] Font glyphs corrupted or missing fields.\n"
 #define ERRMSG4  "[line %ld] BBX too big.\n"
-#define ERRMSG5  "[line %ld] `%s' value too big.\n"
 #define ERRMSG6  "[line %ld] Input line too long.\n"
 #define ERRMSG7  "[line %ld] Font name too long.\n"
 #define ERRMSG8  "[line %ld] Invalid `%s' value.\n"
@@ -269,8 +267,6 @@
 
     bdf_font_t*     font;
     bdf_options_t*  opts;
-
-    unsigned long   have[34816];
 
     _bdf_list_t     list;
 
@@ -1458,38 +1454,10 @@
       if ( p->glyph_enc == -1 && p->list.used > 2 )
         p->glyph_enc = _bdf_atol( p->list.field[2] );
 
-      if ( p->glyph_enc < -1 )
+      if ( p->glyph_enc < -1 || p->glyph_enc >= 0x110000L )
         p->glyph_enc = -1;
 
       FT_TRACE4(( DBGMSG2, p->glyph_enc ));
-
-      /* Check that the encoding is in the Unicode range because  */
-      /* otherwise p->have (a bitmap with static size) overflows. */
-      if ( p->glyph_enc > 0                                      &&
-           (size_t)p->glyph_enc >= sizeof ( p->have ) /
-                                   sizeof ( unsigned long ) * 32 )
-      {
-        FT_ERROR(( "_bdf_parse_glyphs: " ERRMSG5, lineno, "ENCODING" ));
-        error = FT_THROW( Invalid_File_Format );
-        goto Exit;
-      }
-
-      /* Check whether this encoding has already been encountered. */
-      /* If it has then change it to unencoded so it gets added if */
-      /* indicated.                                                */
-      if ( p->glyph_enc >= 0 )
-      {
-        if ( _bdf_glyph_modified( p->have, p->glyph_enc ) )
-        {
-          /* Emit a message saying a glyph has been moved to the */
-          /* unencoded area.                                     */
-          FT_TRACE2(( "_bdf_parse_glyphs: " ACMSG12,
-                      p->glyph_enc, p->glyph_name ));
-          p->glyph_enc = -1;
-        }
-        else
-          _bdf_set_glyph_modified( p->have, p->glyph_enc );
-      }
 
       if ( p->glyph_enc >= 0 )
       {

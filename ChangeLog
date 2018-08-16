@@ -1,3 +1,13 @@
+2018-08-15  Alexei Podtelezhnikov  <apodtele@gmail.com>
+
+	[bdf] Don't track duplicate encodings.
+
+	There is no harm except some umbiguity in broken fonts with duplicate
+	encodings.
+
+	* src/bdf/bdflib.c (_bdf_parse_glyphs): Remove duplicate tracking.
+	(_bdf_parse_t): Remove large `have' bitfield.
+
 2018-08-15  Werner Lemberg  <wl@gnu.org>
 
 	Don't use `trace_' prefix for FT_COMPONENT arguments.
