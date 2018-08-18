@@ -1935,6 +1935,7 @@
         case cff_op_blend:
           /* this operator was removed from the Type2 specification */
           /* in version 16-March-2000                               */
+          if ( num_designs )
           {
             FT_Int  num_results = (FT_Int)( args[0] >> 16 );
 
@@ -1953,6 +1954,8 @@
             args     -= num_results * ( num_designs - 1 );
             num_args -= num_results * ( num_designs - 1 );
           }
+          else
+            goto Syntax_Error;
           break;
 
         case cff_op_dotsection:

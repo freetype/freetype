@@ -1,3 +1,15 @@
+2018-08-14  Werner Lemberg  <wl@gnu.org>
+
+	[cff] Fix heap buffer overflow in old engine.
+
+	Reported as
+
+	  https://bugs.chromium.org/p/oss-fuzz/issues/detail?id=9967
+
+	* src/psaux/cffdecode.c (cff_decoder_parse_charstrings)
+	<cff_op_blend> [CFF_CONFIG_OPTION_OLD_ENGINE]: `num_designs' must be
+	non-zero.
+
 2018-08-16  Young Xiao  <yangx92@hotmail.com>
 
 	* builds/mac/ftmac.c (parse_fond): Fix buffer overrun.
