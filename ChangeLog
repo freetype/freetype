@@ -1,4 +1,15 @@
-2018-08-14  Werner Lemberg  <wl@gnu.org>
+2018-08-18  Werner Lemberg  <wl@gnu.org>
+
+	[psaux] Avoid slow PS font parsing in case of error.
+
+	Reported as
+
+	  https://bugs.chromium.org/p/oss-fuzz/issues/detail?id=9955
+
+	* src/psaux/psobjs.c (ps_parser_to_bytes): Set `parser->cursor' even
+	in case of error to avoid potential re-scanning.
+
+2018-08-18  Werner Lemberg  <wl@gnu.org>
 
 	[cff] Fix heap buffer overflow in old engine.
 
