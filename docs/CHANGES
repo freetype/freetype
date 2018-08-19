@@ -1,3 +1,58 @@
+
+CHANGES BETWEEN 2.9.1 and 2.10
+
+  I. IMPORTANT BUG FIXES
+
+
+  II. IMPORTANT CHANGES
+
+    - A bunch of new functions has been added to access and process
+      COLR/CPAL data of OpenType fonts with coloured glyph layers.
+
+        FT_Palette_Data_Get
+        FT_Palette_Select
+        FT_Palette_Set_Foreground_Color
+        FT_Get_Color_Glyph_Layer
+        FT_Bitmap_Blend
+
+
+  III. MISCELLANEOUS
+
+    - `TT_Set_MM_Blend' could fail if call repeatedly with the same
+      arguments.
+
+    - The precision of handling deltas in Variation Fonts has been
+      increased.  The problem did only show up with multidimensional
+      designspaces.
+
+    - New function `FT_Library_SetLcdGeometry' to set up the geometry
+      of LCD subpixels.
+
+    - FreeType now uses the `defaultChar' property of PCF fonts to set
+      the glyph for the undefined character at glyph index 0 (as
+      FreeType already does for all other supported font formats).  As
+      a consequence, the order of glyphs of a PCF font if accessed with
+      FreeType can be different now compared to previous versions.
+
+      This change doesn't affect PCF font access with cmaps.
+
+    - `FT_Select_Charmap' has been changed to allow parameter value
+      `FT_ENCODING_NONE', which is valid for BDF, PCF, and Windows FNT
+      formats to access built-in cmaps that don't have a predefined
+      `FT_Encoding' value.
+
+    - A previously reserved field in the `FT_GlyphSlotRec' structure
+      now holds the glyph index.
+
+    - On Win32 platforms, the use of `_DLL' to build the library has
+      been replaced with `DLL_EXPORT' and `DLL_IMPORT'.
+
+    - The usual round of fuzzer bug fixes to better reject malformed
+      fonts.
+
+
+======================================================================
+
 CHANGES BETWEEN 2.9 and 2.9.1
 
   I. IMPORTANT BUG FIXES

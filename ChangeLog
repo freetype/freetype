@@ -423,7 +423,7 @@
 
 	[type1] Check relationship between number of axes and designs.
 
-	For Multiple Masters fonts We don't support intermediate designs;
+	For Multiple Masters fonts we don't support intermediate designs;
 	this implies that
 
 	  number_of_designs == 2 ^^ number_of_axes

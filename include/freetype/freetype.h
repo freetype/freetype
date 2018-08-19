@@ -1776,7 +1776,7 @@ FT_BEGIN_HEADER
    *
    *   glyph_index ::
    *     The glyph index passed as an argument to @FT_Load_Glyph while
-   *     initializeing the glyph slot (since FreeType version 2.10).
+   *     initializing the glyph slot (since FreeType version 2.10).
    *
    *   generic ::
    *     A typeless pointer unused by the FreeType
