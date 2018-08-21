@@ -121,6 +121,9 @@
     if ( cpal->num_colors * COLOR_SIZE > table_size - colors_offset )
       goto InvalidTable;
 
+    if ( face->palette_data.num_palette_entries > cpal->num_colors )
+      goto InvalidTable;
+
     cpal->color_indices = p;
     cpal->colors        = (FT_Byte*)( table + colors_offset );
 
