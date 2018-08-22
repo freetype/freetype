@@ -50,6 +50,21 @@
 
   /**************************************************************************
    *
+   * Simple glyph flags.
+   */
+#define ON_CURVE_POINT  0x01  /* same value as FT_CURVE_TAG_ON            */
+#define X_SHORT_VECTOR  0x02
+#define Y_SHORT_VECTOR  0x04
+#define REPEAT_FLAG     0x08
+#define X_POSITIVE      0x10  /* two meanings depending on X_SHORT_VECTOR */
+#define SAME_X          0x10
+#define Y_POSITIVE      0x20  /* two meanings depending on Y_SHORT_VECTOR */
+#define SAME_Y          0x20
+#define OVERLAP_SIMPLE  0x40  /* we ignore this value                     */
+
+
+  /**************************************************************************
+   *
    * Composite glyph flags.
    */
 #define ARGS_ARE_WORDS             0x0001
@@ -62,7 +77,7 @@
 #define WE_HAVE_A_2X2              0x0080
 #define WE_HAVE_INSTR              0x0100
 #define USE_MY_METRICS             0x0200
-#define OVERLAP_COMPOUND           0x0400
+#define OVERLAP_COMPOUND           0x0400  /* we ignore this value */
 #define SCALED_COMPONENT_OFFSET    0x0800
 #define UNSCALED_COMPONENT_OFFSET  0x1000
 
@@ -337,7 +352,7 @@
     FT_Byte         *flag, *flag_limit;
     FT_Byte         c, count;
     FT_Vector       *vec, *vec_limit;
-    FT_Pos          x;
+    FT_Pos          x, y;
     FT_Short        *cont, *cont_limit, prev_cont;
     FT_Int          xy_size = 0;
 
@@ -454,7 +469,7 @@
         goto Invalid_Outline;
 
       *flag++ = c = FT_NEXT_BYTE( p );
-      if ( c & 8 )
+      if ( c & REPEAT_FLAG )
       {
         if ( p + 1 > limit )
           goto Invalid_Outline;
@@ -480,31 +495,29 @@
 
     for ( ; vec < vec_limit; vec++, flag++ )
     {
-      FT_Pos   y = 0;
-      FT_Byte  f = *flag;
+      FT_Pos   delta = 0;
+      FT_Byte  f     = *flag;
 
 
-      if ( f & 2 )
+      if ( f & X_SHORT_VECTOR )
       {
         if ( p + 1 > limit )
           goto Invalid_Outline;
 
-        y = (FT_Pos)FT_NEXT_BYTE( p );
-        if ( ( f & 16 ) == 0 )
-          y = -y;
+        delta = (FT_Pos)FT_NEXT_BYTE( p );
+        if ( !( f & X_POSITIVE ) )
+          delta = -delta;
       }
-      else if ( ( f & 16 ) == 0 )
+      else if ( !( f & SAME_X ) )
       {
         if ( p + 2 > limit )
           goto Invalid_Outline;
 
-        y = (FT_Pos)FT_NEXT_SHORT( p );
+        delta = (FT_Pos)FT_NEXT_SHORT( p );
       }
 
-      x     += y;
+      x     += delta;
       vec->x = x;
-      /* the cast is for stupid compilers */
-      *flag  = (FT_Byte)( f & ~( 2 | 16 ) );
     }
 
     /* reading the Y coordinates */
@@ -512,35 +525,36 @@
     vec       = gloader->current.outline.points;
     vec_limit = vec + n_points;
     flag      = (FT_Byte*)outline->tags;
-    x         = 0;
+    y         = 0;
 
     for ( ; vec < vec_limit; vec++, flag++ )
     {
-      FT_Pos   y = 0;
-      FT_Byte  f = *flag;
+      FT_Pos   delta = 0;
+      FT_Byte  f     = *flag;
 
 
-      if ( f & 4 )
+      if ( f & Y_SHORT_VECTOR )
       {
         if ( p + 1 > limit )
           goto Invalid_Outline;
 
-        y = (FT_Pos)FT_NEXT_BYTE( p );
-        if ( ( f & 32 ) == 0 )
-          y = -y;
+        delta = (FT_Pos)FT_NEXT_BYTE( p );
+        if ( !( f & Y_POSITIVE ) )
+          delta = -delta;
       }
-      else if ( ( f & 32 ) == 0 )
+      else if ( !( f & SAME_Y ) )
       {
         if ( p + 2 > limit )
           goto Invalid_Outline;
 
-        y = (FT_Pos)FT_NEXT_SHORT( p );
+        delta = (FT_Pos)FT_NEXT_SHORT( p );
       }
 
-      x     += y;
-      vec->y = x;
+      y     += delta;
+      vec->y = y;
+
       /* the cast is for stupid compilers */
-      *flag  = (FT_Byte)( f & FT_CURVE_TAG_ON );
+      *flag  = (FT_Byte)( f & ON_CURVE_POINT );
     }
 
     outline->n_points   = (FT_Short)n_points;

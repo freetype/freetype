@@ -1,3 +1,13 @@
+2018-08-22  Werner Lemberg  <wl@gnu.org>
+
+	[truetype] Improve legibility of `glyf' parsing.
+
+	* src/truetype/ttgload.c (ON_CURVE_POINT, X_SHORT_VECTOR,
+	Y_SHORT_VECTOR, REPEAT_FLAG, X_POSITIVE, SAME_X, Y_POSITIVE, SAME_Y,
+	OVERLAP_SIMPLE): New macros.
+	(TT_Load_Simple_Glyph): Use new macros to make code more readable.
+	Remove useless adjustment of `outline->tags' elements.
+
 2018-08-21  Werner Lemberg  <wl@gnu.org>
 
 	* src/sfnt/ttcpal.c (tt_face_load_cpal): Add missing safety check.
