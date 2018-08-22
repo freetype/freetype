@@ -378,7 +378,7 @@ FT_BEGIN_HEADER
    *   FT_OUTLINE_XXX
    *
    * @description:
-   *   A list of bit-field constants use for the flags in an outline's
+   *   A list of bit-field constants used for the flags in an outline's
    *   `flags' field.
    *
    * @values:
@@ -468,20 +468,25 @@ FT_BEGIN_HEADER
 
   /* */
 
-#define FT_CURVE_TAG( flag )  ( flag & 3 )
+#define FT_CURVE_TAG( flag )  ( flag & 0x03 )
 
-#define FT_CURVE_TAG_ON            1
-#define FT_CURVE_TAG_CONIC         0
-#define FT_CURVE_TAG_CUBIC         2
+  /* see the `tags' field in `FT_Outline' for a description of the values */
+#define FT_CURVE_TAG_ON            0x01
+#define FT_CURVE_TAG_CONIC         0x00
+#define FT_CURVE_TAG_CUBIC         0x02
 
-#define FT_CURVE_TAG_HAS_SCANMODE  4
+#define FT_CURVE_TAG_HAS_SCANMODE  0x04
 
-#define FT_CURVE_TAG_TOUCH_X       8  /* reserved for the TrueType hinter */
-#define FT_CURVE_TAG_TOUCH_Y      16  /* reserved for the TrueType hinter */
+#define FT_CURVE_TAG_TOUCH_X       0x08  /* reserved for TrueType hinter */
+#define FT_CURVE_TAG_TOUCH_Y       0x10  /* reserved for TrueType hinter */
 
 #define FT_CURVE_TAG_TOUCH_BOTH    ( FT_CURVE_TAG_TOUCH_X | \
                                      FT_CURVE_TAG_TOUCH_Y )
+  /* values 0x20, 0x40, and 0x80 are reserved */
 
+
+  /* these constants are deprecated; use the corresponding */
+  /* `FT_CURVE_TAG_XXX' values instead                     */
 #define FT_Curve_Tag_On       FT_CURVE_TAG_ON
 #define FT_Curve_Tag_Conic    FT_CURVE_TAG_CONIC
 #define FT_Curve_Tag_Cubic    FT_CURVE_TAG_CUBIC

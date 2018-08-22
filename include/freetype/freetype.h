@@ -407,11 +407,10 @@ FT_BEGIN_HEADER
    *   It also embeds a memory manager (see @FT_Memory), as well as a
    *   scan-line converter object (see @FT_Raster).
    *
-   *   In multi-threaded applications it is easiest to use one
-   *   `FT_Library' object per thread.  In case this is too cumbersome,
-   *   a single `FT_Library' object across threads is possible also
-   *   (since FreeType version 2.5.6), as long as a mutex lock is used
-   *   around @FT_New_Face and @FT_Done_Face.
+   *   [Since 2.5.6] In multi-threaded applications it is easiest to use one
+   *   `FT_Library' object per thread.  In case this is too cumbersome, a
+   *   single `FT_Library' object across threads is possible also, as long
+   *   as a mutex lock is used around @FT_New_Face and @FT_Done_Face.
    *
    * @note:
    *   Library objects are normally created by @FT_Init_FreeType, and
@@ -1775,8 +1774,8 @@ FT_BEGIN_HEADER
    *     using its `next' field.
    *
    *   glyph_index ::
-   *     The glyph index passed as an argument to @FT_Load_Glyph while
-   *     initializing the glyph slot (since FreeType version 2.10).
+   *     [Since 2.10] The glyph index passed as an argument to
+   *     @FT_Load_Glyph while initializing the glyph slot.
    *
    *   generic ::
    *     A typeless pointer unused by the FreeType
