@@ -983,9 +983,13 @@
                          FT_Pos  out_x,
                          FT_Pos  out_y )
   {
+    /* we silently ignore overflow errors since such large values */
+    /* lead to even more (harmless) rendering errors later on     */
+
 #ifdef FT_LONG64
 
-    FT_Int64  delta = (FT_Int64)in_x * out_y - (FT_Int64)in_y * out_x;
+    FT_Int64  delta = SUB_INT64( MUL_INT64( in_x, out_y ),
+                                 MUL_INT64( in_y, out_x ) );
 
 
     return ( delta > 0 ) - ( delta < 0 );
@@ -995,8 +999,6 @@
     FT_Int  result;
 
 
-    /* we silently ignore overflow errors, since such large values */
-    /* lead to even more (harmless) rendering errors later on      */
     if ( ADD_LONG( FT_ABS( in_x ), FT_ABS( out_y ) ) <= 131071L &&
          ADD_LONG( FT_ABS( in_y ), FT_ABS( out_x ) ) <= 131071L )
     {
