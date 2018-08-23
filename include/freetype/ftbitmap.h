@@ -46,10 +46,16 @@ FT_BEGIN_HEADER
    *   Handling FT_Bitmap objects.
    *
    * @description:
-   *   This section contains functions for handling @FT_Bitmap objects.
-   *   Note that none of the functions changes the bitmap's `flow' (as
-   *   indicated by the sign of the `pitch' field in `FT_Bitmap').
+   *   This section contains functions for handling @FT_Bitmap objects,
+   *   automatically adjusting the target's bitmap buffer size as needed.
    *
+   *   Note that none of the functions changes the bitmap's `flow' (as
+   *   indicated by the sign of the `pitch' field in @FT_Bitmap).
+   *
+   *   To set the flow, assign an appropriate positive or negative value to
+   *   the `pitch' field of the target @FT_Bitmap object after calling
+   *   @FT_Bitmap_Init but before calling any of the other functions
+   *   described here.
    */
 
 
@@ -98,6 +104,10 @@ FT_BEGIN_HEADER
    *
    * @return:
    *   FreeType error code.  0~means success.
+   *
+   * @note:
+   *   `source->buffer' and `target->buffer' must neither be equal nor
+   *   overlap.
    */
   FT_EXPORT( FT_Error )
   FT_Bitmap_Copy( FT_Library        library,
@@ -187,6 +197,9 @@ FT_BEGIN_HEADER
    *
    *   The `library' argument is taken to have access to FreeType's
    *   memory handling functions.
+   *
+   *   `source->buffer' and `target->buffer' must neither be equal nor
+   *   overlap.
    */
   FT_EXPORT( FT_Error )
   FT_Bitmap_Convert( FT_Library        library,
@@ -240,6 +253,9 @@ FT_BEGIN_HEADER
    *   In case of allocation or reallocation, the bitmap's pitch is set to
    *   `4~*~width'.  Both `source' and `target' must have the same bitmap
    *   flow (as indicated by the sign of the `pitch' field).
+   *
+   *   `source->buffer' and `target->buffer' must neither be equal nor
+   *   overlap.
    *
    * @since:
    *   2.10
