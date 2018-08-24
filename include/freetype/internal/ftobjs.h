@@ -73,9 +73,9 @@ FT_BEGIN_HEADER
 #define FT_ABS( a )     ( (a) < 0 ? -(a) : (a) )
 
   /*
-   * Approximate sqrt(x*x+y*y) using the `alpha max plus beta min'
-   * algorithm.  We use alpha = 1, beta = 3/8, giving us results with a
-   * largest error less than 7% compared to the exact value.
+   * Approximate sqrt(x*x+y*y) using the `alpha max plus beta min' algorithm.
+   * We use alpha = 1, beta = 3/8, giving us results with a largest error
+   * less than 7% compared to the exact value.
    */
 #define FT_HYPOT( x, y )                 \
           ( x = FT_ABS( x ),             \
@@ -110,9 +110,8 @@ FT_BEGIN_HEADER
 
 
   /*
-   * character classification functions -- since these are used to parse
-   * font files, we must not use those in <ctypes.h> which are
-   * locale-dependent
+   * character classification functions -- since these are used to parse font
+   * files, we must not use those in <ctypes.h> which are locale-dependent
    */
 #define  ft_isdigit( x )   ( ( (unsigned)(x) - '0' ) < 10U )
 
@@ -297,67 +296,65 @@ FT_BEGIN_HEADER
    *   FT_Face_InternalRec
    *
    * @description:
-   *   This structure contains the internal fields of each FT_Face
-   *   object.  These fields may change between different releases of
-   *   FreeType.
+   *   This structure contains the internal fields of each FT_Face object.
+   *   These fields may change between different releases of FreeType.
    *
    * @fields:
    *   max_points ::
-   *     The maximum number of points used to store the vectorial outline
+   *     The maximum number of points used to store the vectorial outline of
+   *     any glyph in this face.  If this value cannot be known in advance,
+   *     or if the face isn't scalable, this should be set to 0.  Only
+   *     relevant for scalable formats.
+   *
+   *   max_contours ::
+   *     The maximum number of contours used to store the vectorial outline
    *     of any glyph in this face.  If this value cannot be known in
    *     advance, or if the face isn't scalable, this should be set to 0.
    *     Only relevant for scalable formats.
    *
-   *   max_contours ::
-   *     The maximum number of contours used to store the vectorial
-   *     outline of any glyph in this face.  If this value cannot be
-   *     known in advance, or if the face isn't scalable, this should be
-   *     set to 0.  Only relevant for scalable formats.
-   *
    *   transform_matrix ::
-   *     A 2x2 matrix of 16.16 coefficients used to transform glyph
-   *     outlines after they are loaded from the font.  Only used by the
-   *     convenience functions.
+   *     A 2x2 matrix of 16.16 coefficients used to transform glyph outlines
+   *     after they are loaded from the font.  Only used by the convenience
+   *     functions.
    *
    *   transform_delta ::
-   *     A translation vector used to transform glyph outlines after they
-   *     are loaded from the font.  Only used by the convenience
-   *     functions.
+   *     A translation vector used to transform glyph outlines after they are
+   *     loaded from the font.  Only used by the convenience functions.
    *
    *   transform_flags ::
    *     Some flags used to classify the transform.  Only used by the
    *     convenience functions.
    *
    *   services ::
-   *     A cache for frequently used services.  It should be only
-   *     accessed with the macro `FT_FACE_LOOKUP_SERVICE'.
+   *     A cache for frequently used services.  It should be only accessed
+   *     with the macro `FT_FACE_LOOKUP_SERVICE`.
    *
    *   incremental_interface ::
-   *     If non-null, the interface through which glyph data and metrics
-   *     are loaded incrementally for faces that do not provide all of
-   *     this data when first opened.  This field exists only if
+   *     If non-null, the interface through which glyph data and metrics are
+   *     loaded incrementally for faces that do not provide all of this data
+   *     when first opened.  This field exists only if
    *     @FT_CONFIG_OPTION_INCREMENTAL is defined.
    *
    *   no_stem_darkening ::
-   *     Overrides the module-level default, see @stem-darkening[cff],
-   *     for example.  FALSE and TRUE toggle stem darkening on and off,
+   *     Overrides the module-level default, see @stem-darkening[cff], for
+   *     example.  FALSE and TRUE toggle stem darkening on and off,
    *     respectively, value~-1 means to use the module/driver default.
    *
    *   random_seed ::
-   *     If positive, override the seed value for the CFF `random'
-   *     operator.  Value~0 means to use the font's value.  Value~-1
-   *     means to use the CFF driver's default.
+   *     If positive, override the seed value for the CFF 'random' operator.
+   *     Value~0 means to use the font's value.  Value~-1 means to use the
+   *     CFF driver's default.
    *
    *   lcd_weights ::
    *   lcd_filter_func ::
-   *     These fields specify the LCD filtering weights and callback
-   *     function for ClearType-style subpixel rendering.
+   *     These fields specify the LCD filtering weights and callback function
+   *     for ClearType-style subpixel rendering.
    *
    *   refcount ::
    *     A counter initialized to~1 at the time an @FT_Face structure is
    *     created.  @FT_Reference_Face increments this counter, and
-   *     @FT_Done_Face only destroys a face if the counter is~1,
-   *     otherwise it simply decrements it.
+   *     @FT_Done_Face only destroys a face if the counter is~1, otherwise it
+   *     simply decrements it.
    */
   typedef struct  FT_Face_InternalRec_
   {
@@ -396,29 +393,24 @@ FT_BEGIN_HEADER
    *
    * @fields:
    *   loader ::
-   *     The glyph loader object used to load outlines
-   *     into the glyph slot.
+   *     The glyph loader object used to load outlines into the glyph slot.
    *
    *   flags ::
-   *     Possible values are zero or
-   *     FT_GLYPH_OWN_BITMAP.  The latter indicates
-   *     that the FT_GlyphSlot structure owns the
-   *     bitmap buffer.
+   *     Possible values are zero or FT_GLYPH_OWN_BITMAP.  The latter
+   *     indicates that the FT_GlyphSlot structure owns the bitmap buffer.
    *
    *   glyph_transformed ::
-   *     Boolean.  Set to TRUE when the loaded glyph
-   *     must be transformed through a specific
-   *     font transformation.  This is _not_ the same
-   *     as the face transform set through
-   *     FT_Set_Transform().
+   *     Boolean.  Set to TRUE when the loaded glyph must be transformed
+   *     through a specific font transformation.  This is _not_ the same as
+   *     the face transform set through FT_Set_Transform().
    *
    *   glyph_matrix ::
-   *     The 2x2 matrix corresponding to the glyph
-   *     transformation, if necessary.
+   *     The 2x2 matrix corresponding to the glyph transformation, if
+   *     necessary.
    *
    *   glyph_delta ::
-   *     The 2d translation vector corresponding to
-   *     the glyph transformation, if necessary.
+   *     The 2d translation vector corresponding to the glyph transformation,
+   *     if necessary.
    *
    *   glyph_hints ::
    *     Format-specific glyph hints management.
@@ -450,8 +442,7 @@ FT_BEGIN_HEADER
    *   FT_Size_InternalRec
    *
    * @description:
-   *   This structure contains the internal fields of each FT_Size
-   *   object.
+   *   This structure contains the internal fields of each FT_Size object.
    *
    * @fields:
    *   module_data ::
@@ -568,8 +559,8 @@ FT_BEGIN_HEADER
    *   A module-specific interface if available, 0 otherwise.
    *
    * @note:
-   *   You should better be familiar with FreeType internals to know
-   *   which module to look for, and what its interface is :-)
+   *   You should better be familiar with FreeType internals to know which
+   *   module to look for, and what its interface is :-)
    */
   FT_BASE( const void* )
   FT_Get_Module_Interface( FT_Library   library,
@@ -627,10 +618,9 @@ FT_BEGIN_HEADER
    *   FT_New_GlyphSlot
    *
    * @description:
-   *   It is sometimes useful to have more than one glyph slot for a
-   *   given face object.  This function is used to create additional
-   *   slots.  All of them are automatically discarded when the face is
-   *   destroyed.
+   *   It is sometimes useful to have more than one glyph slot for a given
+   *   face object.  This function is used to create additional slots.  All
+   *   of them are automatically discarded when the face is destroyed.
    *
    * @input:
    *   face ::
@@ -655,8 +645,8 @@ FT_BEGIN_HEADER
    *
    * @description:
    *   Destroys a given glyph slot.  Remember however that all slots are
-   *   automatically destroyed with its parent.  Using this function is
-   *   not always mandatory.
+   *   automatically destroyed with its parent.  Using this function is not
+   *   always mandatory.
    *
    * @input:
    *   slot ::
@@ -789,25 +779,23 @@ FT_BEGIN_HEADER
    *   FT_DriverRec
    *
    * @description:
-   *   The root font driver class.  A font driver is responsible for
-   *   managing and loading font files of a given format.
+   *   The root font driver class.  A font driver is responsible for managing
+   *   and loading font files of a given format.
    *
    * @fields:
    *   root ::
    *     Contains the fields of the root module class.
    *
    *   clazz ::
-   *     A pointer to the font driver's class.  Note that
-   *     this is NOT root.clazz.  `class' wasn't used
-   *     as it is a reserved word in C++.
+   *     A pointer to the font driver's class.  Note that this is NOT
+   *     root.clazz.  'class' wasn't used as it is a reserved word in C++.
    *
    *   faces_list ::
-   *     The list of faces currently opened by this
-   *     driver.
+   *     The list of faces currently opened by this driver.
    *
    *   glyph_loader ::
-   *     Unused.  Used to be glyph loader for all faces
-   *     managed by this driver.
+   *     Unused.  Used to be glyph loader for all faces managed by this
+   *     driver.
    */
   typedef struct  FT_DriverRec_
   {
@@ -843,14 +831,13 @@ FT_BEGIN_HEADER
    *   FT_LibraryRec
    *
    * @description:
-   *   The FreeType library class.  This is the root of all FreeType
-   *   data.  Use FT_New_Library() to create a library object, and
-   *   FT_Done_Library() to discard it and all child objects.
+   *   The FreeType library class.  This is the root of all FreeType data.
+   *   Use FT_New_Library() to create a library object, and FT_Done_Library()
+   *   to discard it and all child objects.
    *
    * @fields:
    *   memory ::
-   *     The library's memory object.  Manages memory
-   *     allocation.
+   *     The library's memory object.  Manages memory allocation.
    *
    *   version_major ::
    *     The major version number of the library.
@@ -862,60 +849,52 @@ FT_BEGIN_HEADER
    *     The current patch level of the library.
    *
    *   num_modules ::
-   *     The number of modules currently registered
-   *     within this library.  This is set to 0 for new
-   *     libraries.  New modules are added through the
-   *     FT_Add_Module() API function.
+   *     The number of modules currently registered within this library.
+   *     This is set to 0 for new libraries.  New modules are added through
+   *     the FT_Add_Module() API function.
    *
    *   modules ::
-   *     A table used to store handles to the currently
-   *     registered modules. Note that each font driver
-   *     contains a list of its opened faces.
+   *     A table used to store handles to the currently registered
+   *     modules. Note that each font driver contains a list of its opened
+   *     faces.
    *
    *   renderers ::
-   *     The list of renderers currently registered
-   *     within the library.
+   *     The list of renderers currently registered within the library.
    *
    *   cur_renderer ::
-   *     The current outline renderer.  This is a
-   *     shortcut used to avoid parsing the list on
-   *     each call to FT_Outline_Render().  It is a
-   *     handle to the current renderer for the
-   *     FT_GLYPH_FORMAT_OUTLINE format.
+   *     The current outline renderer.  This is a shortcut used to avoid
+   *     parsing the list on each call to FT_Outline_Render().  It is a
+   *     handle to the current renderer for the FT_GLYPH_FORMAT_OUTLINE
+   *     format.
    *
    *   auto_hinter ::
    *     The auto-hinter module interface.
    *
    *   debug_hooks ::
-   *     An array of four function pointers that allow
-   *     debuggers to hook into a font format's
-   *     interpreter.  Currently, only the TrueType
-   *     bytecode debugger uses this.
+   *     An array of four function pointers that allow debuggers to hook into
+   *     a font format's interpreter.  Currently, only the TrueType bytecode
+   *     debugger uses this.
    *
    *   lcd_weights ::
-   *     The LCD filter weights for ClearType-style
-   *     subpixel rendering.
+   *     The LCD filter weights for ClearType-style subpixel rendering.
    *
    *   lcd_filter_func ::
-   *     The LCD filtering callback function for
-   *     for ClearType-style subpixel rendering.
+   *     The LCD filtering callback function for for ClearType-style subpixel
+   *     rendering.
    *
    *   lcd_geometry ::
-   *     This array specifies LCD subpixel geometry
-   *     and controls Harmony LCD rendering technique,
-   *     alternative to ClearType.
+   *     This array specifies LCD subpixel geometry and controls Harmony LCD
+   *     rendering technique, alternative to ClearType.
    *
    *   pic_container ::
-   *     Contains global structs and tables, instead
-   *     of defining them globally.
+   *     Contains global structs and tables, instead of defining them
+   *     globally.
    *
    *   refcount ::
-   *     A counter initialized to~1 at the time an
-   *     @FT_Library structure is created.
-   *     @FT_Reference_Library increments this counter,
-   *     and @FT_Done_Library only destroys a library
-   *     if the counter is~1, otherwise it simply
-   *     decrements it.
+   *     A counter initialized to~1 at the time an @FT_Library structure is
+   *     created.  @FT_Reference_Library increments this counter, and
+   *     @FT_Done_Library only destroys a library if the counter is~1,
+   *     otherwise it simply decrements it.
    */
   typedef struct  FT_LibraryRec_
   {
@@ -1022,9 +1001,9 @@ FT_BEGIN_HEADER
    *   FT_DEFINE_OUTLINE_FUNCS
    *
    * @description:
-   *   Used to initialize an instance of FT_Outline_Funcs struct.
-   *   The struct will be allocated in the global scope (or the scope
-   *   where the macro is used).
+   *   Used to initialize an instance of FT_Outline_Funcs struct.  The struct
+   *   will be allocated in the global scope (or the scope where the macro is
+   *   used).
    */
 #define FT_DEFINE_OUTLINE_FUNCS(           \
           class_,                          \
@@ -1051,9 +1030,9 @@ FT_BEGIN_HEADER
    *   FT_DEFINE_RASTER_FUNCS
    *
    * @description:
-   *   Used to initialize an instance of FT_Raster_Funcs struct.
-   *   The struct will be allocated in the global scope (or the scope
-   *   where the macro is used).
+   *   Used to initialize an instance of FT_Raster_Funcs struct.  The struct
+   *   will be allocated in the global scope (or the scope where the macro is
+   *   used).
    */
 #define FT_DEFINE_RASTER_FUNCS(    \
           class_,                  \
@@ -1081,8 +1060,8 @@ FT_BEGIN_HEADER
    *   FT_DEFINE_GLYPH
    *
    * @description:
-   *   The struct will be allocated in the global scope (or the scope
-   *   where the macro is used).
+   *   The struct will be allocated in the global scope (or the scope where
+   *   the macro is used).
    */
 #define FT_DEFINE_GLYPH(          \
           class_,                 \
@@ -1114,8 +1093,8 @@ FT_BEGIN_HEADER
    *   FT_DECLARE_RENDERER
    *
    * @description:
-   *   Used to create a forward declaration of a
-   *   FT_Renderer_Class struct instance.
+   *   Used to create a forward declaration of a FT_Renderer_Class struct
+   *   instance.
    *
    * @macro:
    *   FT_DEFINE_RENDERER
@@ -1123,8 +1102,8 @@ FT_BEGIN_HEADER
    * @description:
    *   Used to initialize an instance of FT_Renderer_Class struct.
    *
-   *   The struct will be allocated in the global scope (or the scope
-   *   where the macro is used).
+   *   The struct will be allocated in the global scope (or the scope where
+   *   the macro is used).
    */
 #define FT_DECLARE_RENDERER( class_ )               \
   FT_EXPORT_VAR( const FT_Renderer_Class ) class_;
@@ -1175,8 +1154,8 @@ FT_BEGIN_HEADER
    *   FT_DECLARE_MODULE
    *
    * @description:
-   *   Used to create a forward declaration of a
-   *   FT_Module_Class struct instance.
+   *   Used to create a forward declaration of a FT_Module_Class struct
+   *   instance.
    *
    * @macro:
    *   FT_DEFINE_MODULE
@@ -1184,16 +1163,16 @@ FT_BEGIN_HEADER
    * @description:
    *   Used to initialize an instance of an FT_Module_Class struct.
    *
-   *   The struct will be allocated in the global scope (or the scope
-   *   where the macro is used).
+   *   The struct will be allocated in the global scope (or the scope where
+   *   the macro is used).
    *
    * @macro:
    *   FT_DEFINE_ROOT_MODULE
    *
    * @description:
    *   Used to initialize an instance of an FT_Module_Class struct inside
-   *   another struct that contains it or in a function that initializes
-   *   that containing struct.
+   *   another struct that contains it or in a function that initializes that
+   *   containing struct.
    */
 #define FT_DECLARE_MODULE( class_ )  \
   FT_CALLBACK_TABLE                  \

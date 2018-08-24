@@ -72,8 +72,8 @@ FT_BEGIN_HEADER
   } FT_RFork_Rule;
 
   /* For fast translation between rule index and rule type,
-   * the macros FT_RFORK_xxx should be kept consistent with
-   * the raccess_guess_funcs table
+   * the macros FT_RFORK_xxx should be kept consistent with the
+   * raccess_guess_funcs table
    */
   typedef struct ft_raccess_guess_rec_ {
     ft_raccess_guess_func  func;
@@ -98,11 +98,11 @@ FT_BEGIN_HEADER
    *   FT_Raccess_Guess
    *
    * @description:
-   *   Guess a file name and offset where the actual resource fork is
-   *   stored.  The macro FT_RACCESS_N_RULES holds the number of
-   *   guessing rules;  the guessed result for the Nth rule is
-   *   represented as a triplet: a new file name (new_names[N]), a file
-   *   offset (offsets[N]), and an error code (errors[N]).
+   *   Guess a file name and offset where the actual resource fork is stored.
+   *   The macro FT_RACCESS_N_RULES holds the number of guessing rules; the
+   *   guessed result for the Nth rule is represented as a triplet: a new
+   *   file name (new_names[N]), a file offset (offsets[N]), and an error
+   *   code (errors[N]).
    *
    * @input:
    *   library ::
@@ -112,24 +112,24 @@ FT_BEGIN_HEADER
    *     A file stream containing the resource fork.
    *
    *   base_name ::
-   *     The (base) file name of the resource fork used for some
-   *     guessing rules.
+   *     The (base) file name of the resource fork used for some guessing
+   *     rules.
    *
    * @output:
    *   new_names ::
    *     An array of guessed file names in which the resource forks may
-   *     exist.  If `new_names[N]' is NULL, the guessed file name is
-   *     equal to `base_name'.
+   *     exist.  If 'new_names[N]' is NULL, the guessed file name is equal to
+   *     `base_name`.
    *
    *   offsets ::
-   *     An array of guessed file offsets.  `offsets[N]' holds the file
+   *     An array of guessed file offsets.  'offsets[N]' holds the file
    *     offset of the possible start of the resource fork in file
-   *     `new_names[N]'.
+   *     'new_names[N]'.
    *
    *   errors ::
-   *     An array of FreeType error codes.  `errors[N]' is the error
-   *     code of Nth guessing rule function.  If `errors[N]' is not
-   *     FT_Err_Ok, `new_names[N]' and `offsets[N]' are meaningless.
+   *     An array of FreeType error codes.  'errors[N]' is the error code of
+   *     Nth guessing rule function.  If 'errors[N]' is not FT_Err_Ok,
+   *     'new_names[N]' and 'offsets[N]' are meaningless.
    */
   FT_BASE( void )
   FT_Raccess_Guess( FT_Library  library,
@@ -146,10 +146,10 @@ FT_BEGIN_HEADER
    *   FT_Raccess_Get_HeaderInfo
    *
    * @description:
-   *   Get the information from the header of resource fork.  The
-   *   information includes the file offset where the resource map
-   *   starts, and the file offset where the resource data starts.
-   *   `FT_Raccess_Get_DataOffsets' requires these two data.
+   *   Get the information from the header of resource fork.  The information
+   *   includes the file offset where the resource map starts, and the file
+   *   offset where the resource data starts.  `FT_Raccess_Get_DataOffsets`
+   *   requires these two data.
    *
    * @input:
    *   library ::
@@ -185,9 +185,9 @@ FT_BEGIN_HEADER
    *   FT_Raccess_Get_DataOffsets
    *
    * @description:
-   *   Get the data offsets for a tag in a resource fork.  Offsets are
-   *   stored in an array because, in some cases, resources in a resource
-   *   fork have the same tag.
+   *   Get the data offsets for a tag in a resource fork.  Offsets are stored
+   *   in an array because, in some cases, resources in a resource fork have
+   *   the same tag.
    *
    * @input:
    *   library ::
@@ -206,17 +206,16 @@ FT_BEGIN_HEADER
    *     The resource tag.
    *
    *   sort_by_res_id ::
-   *     A Boolean to sort the fragmented resource by their ids.
-   *     The fragmented resources for `POST' resource should be sorted
-   *     to restore Type1 font properly.  For `sfnt' resources, sorting
-   *     may induce a different order of the faces in comparison to that
-   *     by QuickDraw API.
+   *     A Boolean to sort the fragmented resource by their ids.  The
+   *     fragmented resources for 'POST' resource should be sorted to restore
+   *     Type1 font properly.  For 'sfnt' resources, sorting may induce a
+   *     different order of the faces in comparison to that by QuickDraw API.
    *
    * @output:
    *   offsets ::
-   *     The stream offsets for the resource data specified by `tag'.
-   *     This array is allocated by the function, so you have to call
-   *     @ft_mem_free after use.
+   *     The stream offsets for the resource data specified by 'tag'.  This
+   *     array is allocated by the function, so you have to call @ft_mem_free
+   *     after use.
    *
    *   count ::
    *     The length of offsets array.
@@ -225,8 +224,8 @@ FT_BEGIN_HEADER
    *   FreeType error code.  FT_Err_Ok means success.
    *
    * @note:
-   *   Normally you should use `FT_Raccess_Get_HeaderInfo' to get the
-   *   value for `map_offset' and `rdata_pos'.
+   *   Normally you should use `FT_Raccess_Get_HeaderInfo` to get the value
+   *   for `map_offset` and `rdata_pos`.
    */
   FT_BASE( FT_Error )
   FT_Raccess_Get_DataOffsets( FT_Library  library,

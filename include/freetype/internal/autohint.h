@@ -2,7 +2,7 @@
  *
  * autohint.h
  *
- *   High-level `autohint' module-specific interface (specification).
+ *   High-level 'autohint' module-specific interface (specification).
  *
  * Copyright 1996-2018 by
  * David Turner, Robert Wilhelm, and Werner Lemberg.
@@ -30,31 +30,31 @@
 
   /**************************************************************************
    *
-   * A small technical note regarding automatic hinting in order to
-   * clarify this module interface.
+   * A small technical note regarding automatic hinting in order to clarify
+   * this module interface.
    *
    * An automatic hinter might compute two kinds of data for a given face:
    *
    * - global hints: Usually some metrics that describe global properties
    *                 of the face.  It is computed by scanning more or less
    *                 aggressively the glyphs in the face, and thus can be
-   *                 very slow to compute (even if the size of global
-   *                 hints is really small).
+   *                 very slow to compute (even if the size of global hints
+   *                 is really small).
    *
-   * - glyph hints:  These describe some important features of the glyph
+   * - glyph hints: These describe some important features of the glyph
    *                 outline, as well as how to align them.  They are
    *                 generally much faster to compute than global hints.
    *
-   * The current FreeType auto-hinter does a pretty good job while
-   * performing fast computations for both global and glyph hints.
-   * However, we might be interested in introducing more complex and
-   * powerful algorithms in the future, like the one described in the John
-   * D. Hobby paper, which unfortunately requires a lot more horsepower.
+   * The current FreeType auto-hinter does a pretty good job while performing
+   * fast computations for both global and glyph hints.  However, we might be
+   * interested in introducing more complex and powerful algorithms in the
+   * future, like the one described in the John D. Hobby paper, which
+   * unfortunately requires a lot more horsepower.
    *
    * Because a sufficiently sophisticated font management system would
-   * typically implement an LRU cache of opened face objects to reduce
-   * memory usage, it is a good idea to be able to avoid recomputing
-   * global hints every time the same face is re-opened.
+   * typically implement an LRU cache of opened face objects to reduce memory
+   * usage, it is a good idea to be able to avoid recomputing global hints
+   * every time the same face is re-opened.
    *
    * We thus provide the ability to cache global hints outside of the face
    * object, in order to speed up font re-opening time.  Of course, this
@@ -62,10 +62,10 @@
    * it.
    *
    * I initially thought that it would be a good idea to cache the glyph
-   * hints too.  However, my general idea now is that if you really need
-   * to cache these too, you are simply in need of a new font format,
-   * where all this information could be stored within the font file and
-   * decoded on the fly.
+   * hints too.  However, my general idea now is that if you really need to
+   * cache these too, you are simply in need of a new font format, where all
+   * this information could be stored within the font file and decoded on the
+   * fly.
    *
    */
 
@@ -87,8 +87,8 @@ FT_BEGIN_HEADER
    *
    * @description:
    *   Retrieve the global hints computed for a given face object.  The
-   *   resulting data is dissociated from the face and will survive a
-   *   call to FT_Done_Face().  It must be discarded through the API
+   *   resulting data is dissociated from the face and will survive a call to
+   *   FT_Done_Face().  It must be discarded through the API
    *   FT_AutoHinter_GlobalDoneFunc().
    *
    * @input:
@@ -119,8 +119,8 @@ FT_BEGIN_HEADER
    *
    * @description:
    *   Discard the global hints retrieved through
-   *   FT_AutoHinter_GlobalGetFunc().  This is the only way these hints
-   *   are freed from memory.
+   *   FT_AutoHinter_GlobalGetFunc().  This is the only way these hints are
+   *   freed from memory.
    *
    * @input:
    *   hinter ::
@@ -140,9 +140,9 @@ FT_BEGIN_HEADER
    *   FT_AutoHinter_GlobalResetFunc
    *
    * @description:
-   *   This function is used to recompute the global metrics in a given
-   *   font.  This is useful when global font data changes (e.g. Multiple
-   *   Masters fonts where blend coordinates change).
+   *   This function is used to recompute the global metrics in a given font.
+   *   This is useful when global font data changes (e.g. Multiple Masters
+   *   fonts where blend coordinates change).
    *
    * @input:
    *   hinter ::
@@ -162,8 +162,8 @@ FT_BEGIN_HEADER
    *   FT_AutoHinter_GlyphLoadFunc
    *
    * @description:
-   *   This function is used to load, scale, and automatically hint a
-   *   glyph from a given face.
+   *   This function is used to load, scale, and automatically hint a glyph
+   *   from a given face.
    *
    * @input:
    *   face ::
@@ -176,8 +176,8 @@ FT_BEGIN_HEADER
    *     The load flags.
    *
    * @note:
-   *   This function is capable of loading composite glyphs by hinting
-   *   each sub-glyph independently (which improves quality).
+   *   This function is capable of loading composite glyphs by hinting each
+   *   sub-glyph independently (which improves quality).
    *
    *   It will call the font driver with @FT_Load_Glyph, with
    *   @FT_LOAD_NO_SCALE set.

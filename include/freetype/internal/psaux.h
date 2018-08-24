@@ -113,25 +113,22 @@ FT_BEGIN_HEADER
    *   PS_TableRec
    *
    * @description:
-   *   A PS_Table is a simple object used to store an array of objects in
-   *   a single memory block.
+   *   A PS_Table is a simple object used to store an array of objects in a
+   *   single memory block.
    *
    * @fields:
    *   block ::
-   *     The address in memory of the growheap's block.  This
-   *     can change between two object adds, due to
-   *     reallocation.
+   *     The address in memory of the growheap's block.  This can change
+   *     between two object adds, due to reallocation.
    *
    *   cursor ::
    *     The current top of the grow heap within its block.
    *
    *   capacity ::
-   *     The current size of the heap block.  Increments by
-   *     1kByte chunks.
+   *     The current size of the heap block.  Increments by 1kByte chunks.
    *
    *   init ::
-   *     Set to 0xDEADBEEF if `elements' and `lengths' have
-   *     been allocated.
+   *     Set to 0xDEADBEEF if 'elements' and 'lengths' have been allocated.
    *
    *   max_elems ::
    *     The maximum number of elements in table.
@@ -146,8 +143,7 @@ FT_BEGIN_HEADER
    *     A table of element sizes within the block.
    *
    *   memory ::
-   *     The object used for memory operations
-   *     (alloc/realloc).
+   *     The object used for memory operations (alloc/realloc).
    *
    *   funcs ::
    *     A table of method pointers for this object.
@@ -556,9 +552,8 @@ FT_BEGIN_HEADER
    *     Set but not used.
    *
    *   metrics_only ::
-   *     A boolean indicating that we only want to compute
-   *     the metrics of a given glyph, not load all of its
-   *     points.
+   *     A boolean indicating that we only want to compute the metrics of a
+   *     given glyph, not load all of its points.
    *
    *   is_t1 ::
    *     Set if current font type is Type 1.
@@ -815,8 +810,7 @@ FT_BEGIN_HEADER
    *     Unused.
    *
    *   parse_state ::
-   *     An enumeration which controls the charstring
-   *     parsing state.
+   *     An enumeration which controls the charstring parsing state.
    *
    *   load_points ::
    *     If this flag is not set, no points are loaded.
@@ -825,9 +819,8 @@ FT_BEGIN_HEADER
    *     Set but not used.
    *
    *   metrics_only ::
-   *     A boolean indicating that we only want to compute
-   *     the metrics of a given glyph, not load all of its
-   *     points.
+   *     A boolean indicating that we only want to compute the metrics of a
+   *     given glyph, not load all of its points.
    *
    *   funcs ::
    *     An array of function pointers for the builder.
@@ -1100,9 +1093,8 @@ FT_BEGIN_HEADER
    *     Set but not used.
    *
    *   metrics_only ::
-   *     A boolean indicating that we only want to compute
-   *     the metrics of a given glyph, not load all of its
-   *     points.
+   *     A boolean indicating that we only want to compute the metrics of a
+   *     given glyph, not load all of its points.
    *
    *   hints_funcs ::
    *     Auxiliary pointer for hinting.
@@ -1294,8 +1286,7 @@ FT_BEGIN_HEADER
    *
    * @fields:
    *   memory ::
-   *     The object used for memory operations (alloc and
-   *     realloc).
+   *     The object used for memory operations (alloc and realloc).
    *
    *   stream ::
    *     This is an opaque object.
@@ -1304,8 +1295,7 @@ FT_BEGIN_HEADER
    *     The result will be stored here.
    *
    *   get_index ::
-   *     A user provided function to get a glyph index by its
-   *     name.
+   *     A user provided function to get a glyph index by its name.
    */
   typedef struct  AFM_ParserRec_
   {

@@ -58,9 +58,9 @@ FT_BEGIN_HEADER
    *
    * @description:
    *   A tag for @FT_Parameter to make @FT_Open_Face ignore typographic
-   *   family names in the `name' table (introduced in OpenType version
-   *   1.4).  Use this for backward compatibility with legacy systems that
-   *   have a four-faces-per-family restriction.
+   *   family names in the 'name' table (introduced in OpenType version 1.4).
+   *   Use this for backward compatibility with legacy systems that have a
+   *   four-faces-per-family restriction.
    *
    * @since:
    *   2.8
@@ -82,7 +82,7 @@ FT_BEGIN_HEADER
    *
    * @description:
    *   A tag for @FT_Parameter to make @FT_Open_Face ignore typographic
-   *   subfamily names in the `name' table (introduced in OpenType version
+   *   subfamily names in the 'name' table (introduced in OpenType version
    *   1.4).  Use this for backward compatibility with legacy systems that
    *   have a four-faces-per-family restriction.
    *
@@ -121,8 +121,8 @@ FT_BEGIN_HEADER
    * @description:
    *   An @FT_Parameter tag to be used with @FT_Face_Properties.  The
    *   corresponding argument specifies the five LCD filter weights for a
-   *   given face (if using @FT_LOAD_TARGET_LCD, for example), overriding
-   *   the global default values or the values set up with
+   *   given face (if using @FT_LOAD_TARGET_LCD, for example), overriding the
+   *   global default values or the values set up with
    *   @FT_Library_SetLcdFilterWeights.
    *
    * @since:
@@ -141,8 +141,7 @@ FT_BEGIN_HEADER
    * @description:
    *   An @FT_Parameter tag to be used with @FT_Face_Properties.  The
    *   corresponding 32bit signed integer argument overrides the font
-   *   driver's random seed value with a face-specific one; see
-   *   @random-seed.
+   *   driver's random seed value with a face-specific one; see @random-seed.
    *
    * @since:
    *   2.8
@@ -163,10 +162,10 @@ FT_BEGIN_HEADER
    *   darkening, overriding the global default values or the values set up
    *   with @FT_Property_Set (see @no-stem-darkening).
    *
-   *   This is a passive setting that only takes effect if the font driver
-   *   or autohinter honors it, which the CFF, Type~1, and CID drivers
-   *   always do, but the autohinter only in `light' hinting mode (as of
-   *   version 2.9).
+   *   This is a passive setting that only takes effect if the font driver or
+   *   autohinter honors it, which the CFF, Type~1, and CID drivers always
+   *   do, but the autohinter only in 'light' hinting mode (as of version
+   *   2.9).
    *
    * @since:
    *   2.8
@@ -184,9 +183,9 @@ FT_BEGIN_HEADER
    * @description:
    *   Deprecated, no effect.
    *
-   *   Previously: A constant used as the tag of an @FT_Parameter structure to
-   *   indicate that unpatented methods only should be used by the TrueType
-   *   bytecode interpreter for a typeface opened by @FT_Open_Face.
+   *   Previously: A constant used as the tag of an @FT_Parameter structure
+   *   to indicate that unpatented methods only should be used by the
+   *   TrueType bytecode interpreter for a typeface opened by @FT_Open_Face.
    *
    */
 #define FT_PARAM_TAG_UNPATENTED_HINTING \

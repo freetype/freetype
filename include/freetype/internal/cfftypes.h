@@ -46,8 +46,7 @@ FT_BEGIN_HEADER
    *     The source input stream.
    *
    *   start ::
-   *     The position of the first index byte in the
-   *     input stream.
+   *     The position of the first index byte in the input stream.
    *
    *   count ::
    *     The number of elements in the index.
@@ -56,15 +55,13 @@ FT_BEGIN_HEADER
    *     The size in bytes of object offsets in index.
    *
    *   data_offset ::
-   *     The position of first data byte in the index's
-   *     bytes.
+   *     The position of first data byte in the index's bytes.
    *
    *   data_size ::
    *     The size of the data table in this index.
    *
    *   offsets ::
-   *     A table of element offsets in the index.  Must be
-   *     loaded explicitly.
+   *     A table of element offsets in the index.  Must be loaded explicitly.
    *
    *   bytes ::
    *     If the index is loaded in memory, its bytes.

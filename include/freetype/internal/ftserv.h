@@ -17,13 +17,13 @@
 
   /**************************************************************************
    *
-   * Each module can export one or more `services'.  Each service is
+   * Each module can export one or more 'services'.  Each service is
    * identified by a constant string and modeled by a pointer; the latter
    * generally corresponds to a structure containing function pointers.
    *
-   * Note that a service's data cannot be a mere function pointer because
-   * in C it is possible that function pointers might be implemented
-   * differently than data pointers (e.g. 48 bits instead of 32).
+   * Note that a service's data cannot be a mere function pointer because in
+   * C it is possible that function pointers might be implemented differently
+   * than data pointers (e.g. 48 bits instead of 32).
    *
    */
 
@@ -47,15 +47,15 @@ FT_BEGIN_HEADER
    *     The source face handle.
    *
    *   id ::
-   *     A string describing the service as defined in the service's
-   *     header files (e.g. FT_SERVICE_ID_MULTI_MASTERS which expands to
-   *     `multi-masters').  It is automatically prefixed with
-   *     `FT_SERVICE_ID_'.
+   *     A string describing the service as defined in the service's header
+   *     files (e.g. FT_SERVICE_ID_MULTI_MASTERS which expands to
+   *     'multi-masters').  It is automatically prefixed with
+   *     `FT_SERVICE_ID_`.
    *
    * @output:
    *   ptr ::
-   *     A variable that receives the service pointer.  Will be NULL
-   *     if not found.
+   *     A variable that receives the service pointer.  Will be NULL if not
+   *     found.
    */
 #ifdef __cplusplus
 
@@ -99,15 +99,15 @@ FT_BEGIN_HEADER
    *     The source face handle.
    *
    *   id ::
-   *     A string describing the service as defined in the service's
-   *     header files (e.g. FT_SERVICE_ID_MULTI_MASTERS which expands to
-   *     `multi-masters').  It is automatically prefixed with
-   *     `FT_SERVICE_ID_'.
+   *     A string describing the service as defined in the service's header
+   *     files (e.g. FT_SERVICE_ID_MULTI_MASTERS which expands to
+   *     'multi-masters').  It is automatically prefixed with
+   *     `FT_SERVICE_ID_`.
    *
    * @output:
    *   ptr ::
-   *     A variable that receives the service pointer.  Will be NULL
-   *     if not found.
+   *     A variable that receives the service pointer.  Will be NULL if not
+   *     found.
    */
 #ifdef __cplusplus
 
@@ -146,8 +146,8 @@ FT_BEGIN_HEADER
   /*************************************************************************/
 
   /*
-   * The following structure is used to _describe_ a given service
-   * to the library.  This is useful to build simple static service lists.
+   * The following structure is used to _describe_ a given service to the
+   * library.  This is useful to build simple static service lists.
    */
   typedef struct  FT_ServiceDescRec_
   {
@@ -176,8 +176,8 @@ FT_BEGIN_HEADER
    * @description:
    *   Used to initialize an array of FT_ServiceDescRec structures.
    *
-   *   The array will be allocated in the global scope (or the scope
-   *   where the macro is used).
+   *   The array will be allocated in the global scope (or the scope where
+   *   the macro is used).
    */
 #define FT_DEFINE_SERVICEDESCREC1( class_,                                  \
                                    serv_id_1, serv_data_1 )                 \
@@ -351,13 +351,13 @@ FT_BEGIN_HEADER
 
 
   /*
-   * Parse a list of FT_ServiceDescRec descriptors and look for
-   * a specific service by ID.  Note that the last element in the
-   * array must be { NULL, NULL }, and that the function should
-   * return NULL if the service isn't available.
+   * Parse a list of FT_ServiceDescRec descriptors and look for a specific
+   * service by ID.  Note that the last element in the array must be { NULL,
+   * NULL }, and that the function should return NULL if the service isn't
+   * available.
    *
-   * This function can be used by modules to implement their
-   * `get_service' method.
+   * This function can be used by modules to implement their `get_service'
+   * method.
    */
   FT_BASE( FT_Pointer )
   ft_service_list_lookup( FT_ServiceDesc  service_descriptors,
@@ -374,14 +374,14 @@ FT_BEGIN_HEADER
 
   /*
    * This structure is used to store a cache for several frequently used
-   * services.  It is the type of `face->internal->services'.  You
-   * should only use FT_FACE_LOOKUP_SERVICE to access it.
+   * services.  It is the type of `face->internal->services'.  You should
+   * only use FT_FACE_LOOKUP_SERVICE to access it.
    *
    * All fields should have the type FT_Pointer to relax compilation
    * dependencies.  We assume the developer isn't completely stupid.
    *
-   * Each field must be named `service_XXXX' where `XXX' corresponds to
-   * the correct FT_SERVICE_ID_XXXX macro.  See the definition of
+   * Each field must be named `service_XXXX' where `XXX' corresponds to the
+   * correct FT_SERVICE_ID_XXXX macro.  See the definition of
    * FT_FACE_LOOKUP_SERVICE below how this is implemented.
    *
    */

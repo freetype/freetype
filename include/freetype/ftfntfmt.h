@@ -44,10 +44,10 @@ FT_BEGIN_HEADER
    *  Getting the font format.
    *
    * @description:
-   *  The single function in this section can be used to get the font
-   *  format.  Note that this information is not needed normally;
-   *  however, there are special cases (like in PDF devices) where it is
-   *  important to differentiate, in spite of FreeType's uniform API.
+   *  The single function in this section can be used to get the font format.
+   *  Note that this information is not needed normally; however, there are
+   *  special cases (like in PDF devices) where it is important to
+   *  differentiate, in spite of FreeType's uniform API.
    *
    */
 
@@ -58,9 +58,9 @@ FT_BEGIN_HEADER
    *  FT_Get_Font_Format
    *
    * @description:
-   *  Return a string describing the format of a given face.  Possible
-   *  values are `TrueType', `Type~1', `BDF', `PCF', `Type~42',
-   *  `CID~Type~1', `CFF', `PFR', and `Windows~FNT'.
+   *  Return a string describing the format of a given face.  Possible values
+   *  are 'TrueType', 'Type~1', 'BDF', 'PCF', 'Type~42', 'CID~Type~1', 'CFF',
+   *  'PFR', and 'Windows~FNT'.
    *
    *  The return value is suitable to be used as an X11 FONT_PROPERTY.
    *
@@ -72,8 +72,7 @@ FT_BEGIN_HEADER
    *  Font format string.  NULL in case of error.
    *
    * @note:
-   *  A deprecated name for the same function is
-   *  `FT_Get_X11_Font_Format'.
+   *  A deprecated name for the same function is `FT_Get_X11_Font_Format`.
    */
   FT_EXPORT( const char* )
   FT_Get_Font_Format( FT_Face  face );

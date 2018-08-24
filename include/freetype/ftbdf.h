@@ -44,8 +44,8 @@ FT_BEGIN_HEADER
    *   BDF and PCF specific API.
    *
    * @description:
-   *   This section contains the declaration of functions specific to BDF
-   *   and PCF fonts.
+   *   This section contains the declaration of functions specific to BDF and
+   *   PCF fonts.
    *
    */
 
@@ -87,8 +87,8 @@ FT_BEGIN_HEADER
    *    BDF_Property
    *
    * @description:
-   *    A handle to a @BDF_PropertyRec structure to model a given
-   *    BDF/PCF property.
+   *    A handle to a @BDF_PropertyRec structure to model a given BDF/PCF
+   *    property.
    */
   typedef struct BDF_PropertyRec_*  BDF_Property;
 
@@ -106,8 +106,8 @@ FT_BEGIN_HEADER
    *      The property type.
    *
    *    u.atom ::
-   *      The atom string, if type is @BDF_PROPERTY_TYPE_ATOM.  May be
-   *      NULL, indicating an empty string.
+   *      The atom string, if type is @BDF_PROPERTY_TYPE_ATOM.  May be NULL,
+   *      indicating an empty string.
    *
    *    u.integer ::
    *      A signed integer, if type is @BDF_PROPERTY_TYPE_INTEGER.
@@ -134,8 +134,8 @@ FT_BEGIN_HEADER
    *    FT_Get_BDF_Charset_ID
    *
    * @description:
-   *    Retrieve a BDF font character set identity, according to
-   *    the BDF specification.
+   *    Retrieve a BDF font character set identity, according to the BDF
+   *    specification.
    *
    * @input:
    *    face ::
@@ -187,15 +187,15 @@ FT_BEGIN_HEADER
    *   otherwise.  It also returns an error if the property is not in the
    *   font.
    *
-   *   A `property' is a either key-value pair within the STARTPROPERTIES
+   *   A 'property' is a either key-value pair within the STARTPROPERTIES
    *   ... ENDPROPERTIES block of a BDF font or a key-value pair from the
-   *   `info->props' array within a `FontRec' structure of a PCF font.
+   *   `info->props` array within a 'FontRec' structure of a PCF font.
    *
-   *   Integer properties are always stored as `signed' within PCF fonts;
+   *   Integer properties are always stored as 'signed' within PCF fonts;
    *   consequently, @BDF_PROPERTY_TYPE_CARDINAL is a possible return value
    *   for BDF fonts only.
    *
-   *   In case of error, `aproperty->type' is always set to
+   *   In case of error, `aproperty->type` is always set to
    *   @BDF_PROPERTY_TYPE_NONE.
    */
   FT_EXPORT( FT_Error )

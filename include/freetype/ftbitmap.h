@@ -49,11 +49,11 @@ FT_BEGIN_HEADER
    *   This section contains functions for handling @FT_Bitmap objects,
    *   automatically adjusting the target's bitmap buffer size as needed.
    *
-   *   Note that none of the functions changes the bitmap's `flow' (as
-   *   indicated by the sign of the `pitch' field in @FT_Bitmap).
+   *   Note that none of the functions changes the bitmap's 'flow' (as
+   *   indicated by the sign of the 'pitch' field in @FT_Bitmap).
    *
    *   To set the flow, assign an appropriate positive or negative value to
-   *   the `pitch' field of the target @FT_Bitmap object after calling
+   *   the 'pitch' field of the target @FT_Bitmap object after calling
    *   @FT_Bitmap_Init but before calling any of the other functions
    *   described here.
    */
@@ -72,7 +72,7 @@ FT_BEGIN_HEADER
    *     A pointer to the bitmap structure.
    *
    * @note:
-   *   A deprecated name for the same function is `FT_Bitmap_New'.
+   *   A deprecated name for the same function is `FT_Bitmap_New`.
    */
   FT_EXPORT( void )
   FT_Bitmap_Init( FT_Bitmap  *abitmap );
@@ -106,7 +106,7 @@ FT_BEGIN_HEADER
    *   FreeType error code.  0~means success.
    *
    * @note:
-   *   `source->buffer' and `target->buffer' must neither be equal nor
+   *   `source->buffer` and `target->buffer` must neither be equal nor
    *   overlap.
    */
   FT_EXPORT( FT_Error )
@@ -121,21 +121,21 @@ FT_BEGIN_HEADER
    *   FT_Bitmap_Embolden
    *
    * @description:
-   *   Embolden a bitmap.  The new bitmap will be about `xStrength'
-   *   pixels wider and `yStrength' pixels higher.  The left and bottom
-   *   borders are kept unchanged.
+   *   Embolden a bitmap.  The new bitmap will be about `xStrength` pixels
+   *   wider and `yStrength` pixels higher.  The left and bottom borders are
+   *   kept unchanged.
    *
    * @input:
    *   library ::
    *     A handle to a library object.
    *
    *   xStrength ::
-   *     How strong the glyph is emboldened horizontally.
-   *     Expressed in 26.6 pixel format.
+   *     How strong the glyph is emboldened horizontally.  Expressed in 26.6
+   *     pixel format.
    *
    *   yStrength ::
-   *     How strong the glyph is emboldened vertically.
-   *     Expressed in 26.6 pixel format.
+   *     How strong the glyph is emboldened vertically.  Expressed in 26.6
+   *     pixel format.
    *
    * @inout:
    *   bitmap ::
@@ -145,14 +145,14 @@ FT_BEGIN_HEADER
    *   FreeType error code.  0~means success.
    *
    * @note:
-   *   The current implementation restricts `xStrength' to be less than
-   *   or equal to~8 if bitmap is of pixel_mode @FT_PIXEL_MODE_MONO.
+   *   The current implementation restricts `xStrength` to be less than or
+   *   equal to~8 if bitmap is of pixel_mode @FT_PIXEL_MODE_MONO.
    *
-   *   If you want to embolden the bitmap owned by a @FT_GlyphSlotRec,
-   *   you should call @FT_GlyphSlot_Own_Bitmap on the slot first.
+   *   If you want to embolden the bitmap owned by a @FT_GlyphSlotRec, you
+   *   should call @FT_GlyphSlot_Own_Bitmap on the slot first.
    *
-   *   Bitmaps in @FT_PIXEL_MODE_GRAY2 and @FT_PIXEL_MODE_GRAY@ format
-   *   are converted to @FT_PIXEL_MODE_GRAY format (i.e., 8bpp).
+   *   Bitmaps in @FT_PIXEL_MODE_GRAY2 and @FT_PIXEL_MODE_GRAY@ format are
+   *   converted to @FT_PIXEL_MODE_GRAY format (i.e., 8bpp).
    */
   FT_EXPORT( FT_Error )
   FT_Bitmap_Embolden( FT_Library  library,
@@ -167,9 +167,9 @@ FT_BEGIN_HEADER
    *   FT_Bitmap_Convert
    *
    * @description:
-   *   Convert a bitmap object with depth 1bpp, 2bpp, 4bpp, 8bpp or 32bpp
-   *   to a bitmap object with depth 8bpp, making the number of used
-   *   bytes per line (a.k.a. the `pitch') a multiple of `alignment'.
+   *   Convert a bitmap object with depth 1bpp, 2bpp, 4bpp, 8bpp or 32bpp to
+   *   a bitmap object with depth 8bpp, making the number of used bytes per
+   *   line (a.k.a. the 'pitch') a multiple of 'alignment'.
    *
    * @input:
    *   library ::
@@ -179,8 +179,8 @@ FT_BEGIN_HEADER
    *     The source bitmap.
    *
    *   alignment ::
-   *     The pitch of the bitmap is a multiple of this
-   *     argument.  Common values are 1, 2, or 4.
+   *     The pitch of the bitmap is a multiple of this argument.  Common
+   *     values are 1, 2, or 4.
    *
    * @output:
    *   target ::
@@ -195,10 +195,10 @@ FT_BEGIN_HEADER
    *
    *   Use @FT_Bitmap_Done to finally remove the bitmap object.
    *
-   *   The `library' argument is taken to have access to FreeType's
-   *   memory handling functions.
+   *   The 'library' argument is taken to have access to FreeType's memory
+   *   handling functions.
    *
-   *   `source->buffer' and `target->buffer' must neither be equal nor
+   *   `source->buffer` and `target->buffer` must neither be equal nor
    *   overlap.
    */
   FT_EXPORT( FT_Error )
@@ -228,11 +228,11 @@ FT_BEGIN_HEADER
    *     26.6 pixel format.  This can be a fractional pixel value.
    *
    *   color ::
-   *     The color used to draw `source' onto `target'.
+   *     The color used to draw 'source' onto 'target'.
    *
    * @inout:
    *   target ::
-   *     A handle to an `FT_Bitmap' object.  It should be either initialized
+   *     A handle to an `FT_Bitmap` object.  It should be either initialized
    *     as empty with a call to @FT_Bitmap_Init, or it should be of type
    *     @FT_PIXEL_MODE_BGRA.
    *
@@ -247,14 +247,14 @@ FT_BEGIN_HEADER
    * @note:
    *   This function doesn't perform clipping.
    *
-   *   The bitmap in `target' gets allocated or reallocated as needed; the
-   *   vector `atarget_offset' is updated accordingly.
+   *   The bitmap in 'target' gets allocated or reallocated as needed; the
+   *   vector `atarget_offset` is updated accordingly.
    *
    *   In case of allocation or reallocation, the bitmap's pitch is set to
-   *   `4~*~width'.  Both `source' and `target' must have the same bitmap
-   *   flow (as indicated by the sign of the `pitch' field).
+   *   '4~*~width'.  Both 'source' and 'target' must have the same bitmap
+   *   flow (as indicated by the sign of the 'pitch' field).
    *
-   *   `source->buffer' and `target->buffer' must neither be equal nor
+   *   `source->buffer` and `target->buffer` must neither be equal nor
    *   overlap.
    *
    * @since:
@@ -275,7 +275,7 @@ FT_BEGIN_HEADER
    *   FT_GlyphSlot_Own_Bitmap
    *
    * @description:
-   *   Make sure that a glyph slot owns `slot->bitmap'.
+   *   Make sure that a glyph slot owns `slot->bitmap`.
    *
    * @input:
    *   slot ::
@@ -285,8 +285,7 @@ FT_BEGIN_HEADER
    *   FreeType error code.  0~means success.
    *
    * @note:
-   *   This function is to be used in combination with
-   *   @FT_Bitmap_Embolden.
+   *   This function is to be used in combination with @FT_Bitmap_Embolden.
    */
   FT_EXPORT( FT_Error )
   FT_GlyphSlot_Own_Bitmap( FT_GlyphSlot  slot );
@@ -311,8 +310,8 @@ FT_BEGIN_HEADER
    *   FreeType error code.  0~means success.
    *
    * @note:
-   *   The `library' argument is taken to have access to FreeType's
-   *   memory handling functions.
+   *   The 'library' argument is taken to have access to FreeType's memory
+   *   handling functions.
    */
   FT_EXPORT( FT_Error )
   FT_Bitmap_Done( FT_Library  library,

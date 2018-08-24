@@ -2,7 +2,7 @@
  *
  * sfnt.h
  *
- *   High-level `sfnt' driver interface (specification).
+ *   High-level 'sfnt' driver interface (specification).
  *
  * Copyright 1996-2018 by
  * David Turner, Robert Wilhelm, and Werner Lemberg.
@@ -34,8 +34,8 @@ FT_BEGIN_HEADER
    *   TT_Init_Face_Func
    *
    * @description:
-   *   First part of the SFNT face object initialization.  This finds
-   *   the face in a SFNT file or collection, and load its format tag in
+   *   First part of the SFNT face object initialization.  This finds the
+   *   face in a SFNT file or collection, and load its format tag in
    *   face->format_tag.
    *
    * @input:
@@ -46,10 +46,9 @@ FT_BEGIN_HEADER
    *     A handle to the target face object.
    *
    *   face_index ::
-   *     The index of the TrueType font, if we are opening a
-   *     collection, in bits 0-15.  The numbered instance
-   *     index~+~1 of a GX (sub)font, if applicable, in bits
-   *     16-30.
+   *     The index of the TrueType font, if we are opening a collection, in
+   *     bits 0-15.  The numbered instance index~+~1 of a GX (sub)font, if
+   *     applicable, in bits 16-30.
    *
    *   num_params ::
    *     The number of additional parameters.
@@ -63,12 +62,11 @@ FT_BEGIN_HEADER
    * @note:
    *   The stream cursor must be at the font file's origin.
    *
-   *   This function recognizes fonts embedded in a `TrueType
-   *   collection'.
+   *   This function recognizes fonts embedded in a 'TrueType collection'.
    *
-   *   Once the format tag has been validated by the font driver, it
-   *   should then call the TT_Load_Face_Func() callback to read the rest
-   *   of the SFNT tables in the object.
+   *   Once the format tag has been validated by the font driver, it should
+   *   then call the TT_Load_Face_Func() callback to read the rest of the
+   *   SFNT tables in the object.
    */
   typedef FT_Error
   (*TT_Init_Face_Func)( FT_Stream      stream,
@@ -84,9 +82,9 @@ FT_BEGIN_HEADER
    *   TT_Load_Face_Func
    *
    * @description:
-   *   Second part of the SFNT face object initialization.  This loads
-   *   the common SFNT tables (head, OS/2, maxp, metrics, etc.) in the
-   *   face object.
+   *   Second part of the SFNT face object initialization.  This loads the
+   *   common SFNT tables (head, OS/2, maxp, metrics, etc.) in the face
+   *   object.
    *
    * @input:
    *   stream ::
@@ -96,10 +94,9 @@ FT_BEGIN_HEADER
    *     A handle to the target face object.
    *
    *   face_index ::
-   *     The index of the TrueType font, if we are opening a
-   *     collection, in bits 0-15.  The numbered instance
-   *     index~+~1 of a GX (sub)font, if applicable, in bits
-   *     16-30.
+   *     The index of the TrueType font, if we are opening a collection, in
+   *     bits 0-15.  The numbered instance index~+~1 of a GX (sub)font, if
+   *     applicable, in bits 16-30.
    *
    *   num_params ::
    *     The number of additional parameters.
@@ -153,30 +150,24 @@ FT_BEGIN_HEADER
    *     The face object to look for.
    *
    *   tag ::
-   *     The tag of table to load.  Use the value 0 if you want
-   *     to access the whole font file, else set this parameter
-   *     to a valid TrueType table tag that you can forge with
-   *     the MAKE_TT_TAG macro.
+   *     The tag of table to load.  Use the value 0 if you want to access the
+   *     whole font file, else set this parameter to a valid TrueType table
+   *     tag that you can forge with the MAKE_TT_TAG macro.
    *
    *   offset ::
-   *     The starting offset in the table (or the file if
-   *     tag == 0).
+   *     The starting offset in the table (or the file if tag == 0).
    *
    *   length ::
    *     The address of the decision variable:
    *
-   *     If length == NULL:
-   *     Loads the whole table.  Returns an error if
-   *     `offset' == 0!
+   *     If length == NULL: Loads the whole table.  Returns an error if
+   *     'offset' == 0!
    *
-   *     If *length == 0:
-   *     Exits immediately; returning the length of the given
-   *     table or of the font file, depending on the value of
-   *     `tag'.
+   *     If *length == 0: Exits immediately; returning the length of the
+   *     given table or of the font file, depending on the value of 'tag'.
    *
-   *     If *length != 0:
-   *     Loads the next `length' bytes of table or font,
-   *     starting at offset `offset' (in table or font too).
+   *     If *length != 0: Loads the next 'length' bytes of table or font,
+   *     starting at offset 'offset' (in table or font too).
    *
    * @output:
    *   buffer ::
@@ -199,8 +190,8 @@ FT_BEGIN_HEADER
    *   TT_Find_SBit_Image_Func
    *
    * @description:
-   *   Check whether an embedded bitmap (an `sbit') exists for a given
-   *   glyph, at a given strike.
+   *   Check whether an embedded bitmap (an 'sbit') exists for a given glyph,
+   *   at a given strike.
    *
    * @input:
    *   face ::
@@ -220,12 +211,11 @@ FT_BEGIN_HEADER
    *     The SBit strike containing the glyph index.
    *
    *   aglyph_offset ::
-   *     The offset of the glyph data in `EBDT' table.
+   *     The offset of the glyph data in 'EBDT' table.
    *
    * @return:
    *   FreeType error code.  0 means success.  Returns
-   *   SFNT_Err_Invalid_Argument if no sbit exists for the requested
-   *   glyph.
+   *   SFNT_Err_Invalid_Argument if no sbit exists for the requested glyph.
    */
   typedef FT_Error
   (*TT_Find_SBit_Image_Func)( TT_Face          face,
@@ -259,11 +249,11 @@ FT_BEGIN_HEADER
    *   FreeType error code.  0 means success.
    *
    * @note:
-   *   The stream cursor must be positioned at the glyph's offset within
-   *   the `EBDT' table before the call.
+   *   The stream cursor must be positioned at the glyph's offset within the
+   *   'EBDT' table before the call.
    *
    *   If the image format uses variable metrics, the stream cursor is
-   *   positioned just after the metrics header in the `EBDT' table on
+   *   positioned just after the metrics header in the 'EBDT' table on
    *   function exit.
    */
   typedef FT_Error
@@ -305,11 +295,11 @@ FT_BEGIN_HEADER
    *     A big sbit metrics structure for the glyph image.
    *
    * @return:
-   *   FreeType error code.  0 means success.  Returns an error if no
-   *   glyph sbit exists for the index.
+   *   FreeType error code.  0 means success.  Returns an error if no glyph
+   *   sbit exists for the index.
    *
    * @note:
-   *   The `map.buffer' field is always freed before the glyph is loaded.
+   *   The `map.buffer` field is always freed before the glyph is loaded.
    */
   typedef FT_Error
   (*TT_Load_SBit_Image_Func)( TT_Face              face,
@@ -341,8 +331,8 @@ FT_BEGIN_HEADER
    *     The index of the sbit strike.
    *
    * @return:
-   *   FreeType error code.  0 means success.  Returns an error if no
-   *   sbit strike exists for the selected ppem values.
+   *   FreeType error code.  0 means success.  Returns an error if no sbit
+   *   strike exists for the selected ppem values.
    */
   typedef FT_Error
   (*TT_Set_SBit_Strike_Func)( TT_Face          face,
@@ -370,8 +360,8 @@ FT_BEGIN_HEADER
    *     the metrics of the strike.
    *
    * @return:
-   *   FreeType error code.  0 means success.  Returns an error if no
-   *   such sbit strike exists.
+   *   FreeType error code.  0 means success.  Returns an error if no such
+   *   sbit strike exists.
    */
   typedef FT_Error
   (*TT_Load_Strike_Metrics_Func)( TT_Face           face,
@@ -392,8 +382,8 @@ FT_BEGIN_HEADER
    *     The glyph index.
    *
    *   PSname ::
-   *     The address of a string pointer.  Will be NULL in case
-   *     of error, otherwise it is a pointer to the glyph name.
+   *     The address of a string pointer.  Will be NULL in case of error,
+   *     otherwise it is a pointer to the glyph name.
    *
    *     You must not modify the returned string!
    *
@@ -454,12 +444,10 @@ FT_BEGIN_HEADER
    *
    * @output:
    *   abearing ::
-   *     The horizontal (or vertical) bearing.  Set to zero in
-   *     case of error.
+   *     The horizontal (or vertical) bearing.  Set to zero in case of error.
    *
    *   aadvance ::
-   *     The horizontal (or vertical) advance.  Set to zero in
-   *     case of error.
+   *     The horizontal (or vertical) advance.  Set to zero in case of error.
    */
   typedef void
   (*TT_Get_Metrics_Func)( TT_Face     face,
@@ -475,7 +463,7 @@ FT_BEGIN_HEADER
    *   TT_Set_Palette_Func
    *
    * @description:
-   *   Load the colors into `face->palette' for a given palette index.
+   *   Load the colors into `face->palette` for a given palette index.
    *
    * @input:
    *   face ::
@@ -510,8 +498,8 @@ FT_BEGIN_HEADER
    * @inout:
    *   iterator ::
    *     An @FT_LayerIterator object.  For the first call you should set
-   *     `iterator->p' to NULL.  For all following calls, simply use the
-   *     same object again.
+   *     `iterator->p` to NULL.  For all following calls, simply use the same
+   *     object again.
    *
    * @output:
    *   aglyph_index ::
@@ -524,9 +512,9 @@ FT_BEGIN_HEADER
    *     instead (to be set up by the application outside of FreeType).
    *
    * @return:
-   *   Value~1 if everything is OK.  If there are no more layers (or if
-   *   there are no layers at all), value~0 gets returned.  In case of an
-   *   error, value~0 is returned also.
+   *   Value~1 if everything is OK.  If there are no more layers (or if there
+   *   are no layers at all), value~0 gets returned.  In case of an error,
+   *   value~0 is returned also.
    */
   typedef FT_Bool
   (*TT_Get_Colr_Layer_Func)( TT_Face            face,
@@ -542,10 +530,10 @@ FT_BEGIN_HEADER
    *   TT_Blend_Colr_Func
    *
    * @description:
-   *   Blend the bitmap in `new_glyph' into `base_glyph' using the color
-   *   specified by `color_index'.  If `color_index' is 0xFFFF, use
-   *   `face->foreground_color' if `face->have_foreground_color' is set.
-   *   Otherwise check `face->palette_data.palette_flags': If present and
+   *   Blend the bitmap in `new_glyph` into `base_glyph` using the color
+   *   specified by `color_index`.  If `color_index` is 0xFFFF, use
+   *   `face->foreground_color` if `face->have_foreground_color` is set.
+   *   Otherwise check `face->palette_data.palette_flags`: If present and
    *   @FT_PALETTE_FOR_DARK_BACKGROUND is set, use BGRA value 0xFFFFFFFF
    *   (white opaque).  Otherwise use BGRA value 0x000000FF (black opaque).
    *
@@ -557,11 +545,11 @@ FT_BEGIN_HEADER
    *     Color index from the COLR table.
    *
    *   base_glyph ::
-   *     Slot for bitmap to be merged into.  The underlying
-   *     bitmap may get reallocated.
+   *     Slot for bitmap to be merged into.  The underlying bitmap may get
+   *     reallocated.
    *
    *   new_glyph ::
-   *     Slot to be incooperated into `base_glyph'.
+   *     Slot to be incooperated into `base_glyph`.
    *
    * @return:
    *   FreeType error code.  0 means success.  Returns an error if
@@ -580,8 +568,7 @@ FT_BEGIN_HEADER
    *   TT_Get_Name_Func
    *
    * @description:
-   *   From the `name' table, return a given ENGLISH name record in
-   *   ASCII.
+   *   From the 'name' table, return a given ENGLISH name record in ASCII.
    *
    * @input:
    *   face ::
@@ -592,8 +579,8 @@ FT_BEGIN_HEADER
    *
    * @inout:
    *   name ::
-   *     The address of an allocated string pointer.  NULL if
-   *     no name is present.
+   *     The address of an allocated string pointer.  NULL if no name is
+   *     present.
    *
    * @return:
    *   FreeType error code.  0 means success.
@@ -610,8 +597,8 @@ FT_BEGIN_HEADER
    *   TT_Get_Name_ID_Func
    *
    * @description:
-   *   Search whether an ENGLISH version for a given name ID is in the
-   *   `name' table.
+   *   Search whether an ENGLISH version for a given name ID is in the 'name'
+   *   table.
    *
    * @input:
    *   face ::
@@ -622,12 +609,12 @@ FT_BEGIN_HEADER
    *
    * @output:
    *   win ::
-   *     If non-negative, an index into the `name' table with
-   *     the corresponding (3,1) or (3,0) Windows entry.
+   *     If non-negative, an index into the 'name' table with the
+   *     corresponding (3,1) or (3,0) Windows entry.
    *
    *   apple ::
-   *     If non-negative, an index into the `name' table with
-   *     the corresponding (1,0) Apple entry.
+   *     If non-negative, an index into the 'name' table with the
+   *     corresponding (1,0) Apple entry.
    *
    * @return:
    *   1 if there is either a win or apple entry (or both), 0 otheriwse.
@@ -658,8 +645,8 @@ FT_BEGIN_HEADER
    *   FreeType error code.  0 means success.
    *
    * @note:
-   *   The function uses `face->goto_table' to seek the stream to the
-   *   start of the table, except while loading the font directory.
+   *   The function uses `face->goto_table` to seek the stream to the start
+   *   of the table, except while loading the font directory.
    */
   typedef FT_Error
   (*TT_Load_Table_Func)( TT_Face    face,
@@ -690,8 +677,8 @@ FT_BEGIN_HEADER
    *    Return the horizontal kerning value between two glyphs.
    *
    * @input:
-   *    face        :: A handle to the source face object.
-   *    left_glyph  :: The left glyph index.
+   *    face :: A handle to the source face object.  left_glyph :: The left
+   *    glyph index.
    *    right_glyph :: The right glyph index.
    *
    * @return:
@@ -709,8 +696,8 @@ FT_BEGIN_HEADER
    *   SFNT_Interface
    *
    * @description:
-   *   This structure holds pointers to the functions used to load and
-   *   free the basic tables that are required in a `sfnt' font file.
+   *   This structure holds pointers to the functions used to load and free
+   *   the basic tables that are required in a 'sfnt' font file.
    *
    * @fields:
    *   Check the various xxx_Func() descriptions for details.

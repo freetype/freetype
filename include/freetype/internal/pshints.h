@@ -4,7 +4,7 @@
  *
  *   Interface to Postscript-specific (Type 1 and Type 2) hints
  *   recorders (specification only).  These are used to support native
- *   T1/T2 hints in the `type1', `cid', and `cff' font drivers.
+ *   T1/T2 hints in the 'type1', 'cid', and 'cff' font drivers.
  *
  * Copyright 2001-2018 by
  * David Turner, Robert Wilhelm, and Werner Lemberg.
@@ -86,16 +86,16 @@ FT_BEGIN_HEADER
    *   @T1_Hints_FuncsRec structure.  Recording glyph hints is normally
    *   achieved through the following scheme:
    *
-   *   - Open a new hint recording session by calling the `open' method.
+   *   - Open a new hint recording session by calling the 'open' method.
    *     This rewinds the recorder and prepare it for new input.
    *
    *   - For each hint found in the glyph charstring, call the corresponding
-   *     method (`stem', `stem3', or `reset').  Note that these functions do
+   *     method ('stem', 'stem3', or 'reset').  Note that these functions do
    *     not return an error code.
    *
-   *   - Close the recording session by calling the `close' method.  It
-   *     returns an error code if the hints were invalid or something
-   *     strange happened (e.g., memory shortage).
+   *   - Close the recording session by calling the 'close' method.  It
+   *     returns an error code if the hints were invalid or something strange
+   *     happened (e.g., memory shortage).
    *
    *   The hints accumulated in the object can later be used by the
    *   PostScript hinter.
@@ -146,7 +146,7 @@ FT_BEGIN_HEADER
    *
    * @description:
    *   A method of the @T1_Hints class used to record a new horizontal or
-   *   vertical stem.  This corresponds to the Type 1 `hstem' and `vstem'
+   *   vertical stem.  This corresponds to the Type 1 'hstem' and 'vstem'
    *   operators.
    *
    * @input:
@@ -164,15 +164,15 @@ FT_BEGIN_HEADER
    *   Use vertical coordinates (y) for horizontal stems (dim=0).  Use
    *   horizontal coordinates (x) for vertical stems (dim=1).
    *
-   *   `coords[0]' is the absolute stem position (lowest coordinate);
-   *   `coords[1]' is the length.
+   *   'coords[0]' is the absolute stem position (lowest coordinate);
+   *   'coords[1]' is the length.
    *
    *   The length can be negative, in which case it must be either -20 or
-   *   -21.  It is interpreted as a `ghost' stem, according to the Type 1
+   *   -21.  It is interpreted as a 'ghost' stem, according to the Type 1
    *   specification.
    *
-   *   If the length is -21 (corresponding to a bottom ghost stem), then
-   *   the real stem position is `coords[0]+coords[1]'.
+   *   If the length is -21 (corresponding to a bottom ghost stem), then the
+   *   real stem position is 'coords[0]+coords[1]'.
    *
    */
   typedef void
@@ -297,7 +297,7 @@ FT_BEGIN_HEADER
    *   On input, all points within the outline are in font coordinates. On
    *   output, they are in 1/64th of pixels.
    *
-   *   The scaling transformation is taken from the `globals' object which
+   *   The scaling transformation is taken from the 'globals' object which
    *   must correspond to the same font as the glyph.
    *
    */
@@ -373,16 +373,16 @@ FT_BEGIN_HEADER
    *   @T2_Hints_FuncsRec structure.  Recording glyph hints is normally
    *   achieved through the following scheme:
    *
-   *   - Open a new hint recording session by calling the `open' method.
+   *   - Open a new hint recording session by calling the 'open' method.
    *     This rewinds the recorder and prepare it for new input.
    *
    *   - For each hint found in the glyph charstring, call the corresponding
-   *     method (`stems', `hintmask', `counters').  Note that these
-   *     functions do not return an error code.
+   *     method ('stems', 'hintmask', 'counters').  Note that these functions
+   *     do not return an error code.
    *
-   *   - Close the recording session by calling the `close' method.  It
-   *     returns an error code if the hints were invalid or something
-   *     strange happened (e.g., memory shortage).
+   *   - Close the recording session by calling the 'close' method.  It
+   *     returns an error code if the hints were invalid or something strange
+   *     happened (e.g., memory shortage).
    *
    *   The hints accumulated in the object can later be used by the
    *   Postscript hinter.
@@ -434,7 +434,7 @@ FT_BEGIN_HEADER
    * @description:
    *   A method of the @T2_Hints class used to set the table of stems in
    *   either the vertical or horizontal dimension.  Equivalent to the
-   *   `hstem', `vstem', `hstemhm', and `vstemhm' Type 2 operators.
+   *   'hstem', 'vstem', 'hstemhm', and 'vstemhm' Type 2 operators.
    *
    * @input:
    *   hints ::
@@ -447,18 +447,18 @@ FT_BEGIN_HEADER
    *     The number of stems.
    *
    *   coords ::
-   *     An array of `count' (position,length) pairs in 16.16 format.
+   *     An array of 'count' (position,length) pairs in 16.16 format.
    *
    * @note:
    *   Use vertical coordinates (y) for horizontal stems (dim=0).  Use
    *   horizontal coordinates (x) for vertical stems (dim=1).
    *
-   *   There are `2*count' elements in the `coords' array.  Each even
-   *   element is an absolute position in font units, each odd element is a
-   *   length in font units.
+   *   There are '2*count' elements in the 'coords' array.  Each even element
+   *   is an absolute position in font units, each odd element is a length in
+   *   font units.
    *
-   *   A length can be negative, in which case it must be either -20 or
-   *   -21.  It is interpreted as a `ghost' stem, according to the Type 1
+   *   A length can be negative, in which case it must be either -20 or -21.
+   *   It is interpreted as a 'ghost' stem, according to the Type 1
    *   specification.
    *
    */
@@ -476,15 +476,15 @@ FT_BEGIN_HEADER
    *
    * @description:
    *   A method of the @T2_Hints class used to set a given hintmask (this
-   *   corresponds to the `hintmask' Type 2 operator).
+   *   corresponds to the 'hintmask' Type 2 operator).
    *
    * @input:
    *   hints ::
    *     A handle to the Type 2 hints recorder.
    *
    *   end_point ::
-   *     The glyph index of the last point to which the previously defined
-   *     or activated hints apply.
+   *     The glyph index of the last point to which the previously defined or
+   *     activated hints apply.
    *
    *   bit_count ::
    *     The number of bits in the hint mask.
@@ -494,13 +494,13 @@ FT_BEGIN_HEADER
    *
    * @note:
    *   If the hintmask starts the charstring (before any glyph point
-   *   definition), the value of `end_point' should be 0.
+   *   definition), the value of `end_point` should be 0.
    *
-   *   `bit_count' is the number of meaningful bits in the `bytes' array; it
+   *   `bit_count` is the number of meaningful bits in the 'bytes' array; it
    *   must be equal to the total number of hints defined so far (i.e.,
    *   horizontal+verticals).
    *
-   *   The `bytes' array can come directly from the Type 2 charstring and
+   *   The 'bytes' array can come directly from the Type 2 charstring and
    *   respects the same format.
    *
    */
@@ -517,8 +517,8 @@ FT_BEGIN_HEADER
    *   T2_Hints_CounterFunc
    *
    * @description:
-   *   A method of the @T2_Hints class used to set a given counter mask
-   *   (this corresponds to the `hintmask' Type 2 operator).
+   *   A method of the @T2_Hints class used to set a given counter mask (this
+   *   corresponds to the 'hintmask' Type 2 operator).
    *
    * @input:
    *   hints ::
@@ -536,13 +536,13 @@ FT_BEGIN_HEADER
    *
    * @note:
    *   If the hintmask starts the charstring (before any glyph point
-   *   definition), the value of `end_point' should be 0.
+   *   definition), the value of `end_point` should be 0.
    *
-   *   `bit_count' is the number of meaningful bits in the `bytes' array; it
+   *   `bit_count` is the number of meaningful bits in the 'bytes' array; it
    *   must be equal to the total number of hints defined so far (i.e.,
    *   horizontal+verticals).
    *
-   *    The `bytes' array can come directly from the Type 2 charstring and
+   *    The 'bytes' array can come directly from the Type 2 charstring and
    *    respects the same format.
    *
    */
@@ -588,8 +588,7 @@ FT_BEGIN_HEADER
    *
    * @description:
    *   A method of the @T2_Hints class used to apply hints to the
-   *   corresponding glyph outline.  Must be called after the `close'
-   *   method.
+   *   corresponding glyph outline.  Must be called after the 'close' method.
    *
    * @input:
    *   hints ::
@@ -611,7 +610,7 @@ FT_BEGIN_HEADER
    *   On input, all points within the outline are in font coordinates. On
    *   output, they are in 1/64th of pixels.
    *
-   *   The scaling transformation is taken from the `globals' object which
+   *   The scaling transformation is taken from the 'globals' object which
    *   must correspond to the same font than the glyph.
    *
    */

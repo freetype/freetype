@@ -41,17 +41,17 @@
    *
    *                          integer limits
    *
-   * UINT_MAX and ULONG_MAX are used to automatically compute the size
-   * of `int' and `long' in bytes at compile-time.  So far, this works
-   * for all platforms the library has been tested on.
+   * UINT_MAX and ULONG_MAX are used to automatically compute the size of
+   * 'int' and 'long' in bytes at compile-time.  So far, this works for all
+   * platforms the library has been tested on.
    *
-   * Note that on the extremely rare platforms that do not provide
-   * integer types that are _exactly_ 16 and 32 bits wide (e.g. some
-   * old Crays where `int' is 36 bits), we do not make any guarantee
-   * about the correct behaviour of FT2 with all fonts.
+   * Note that on the extremely rare platforms that do not provide integer
+   * types that are _exactly_ 16 and 32 bits wide (e.g. some old Crays where
+   * 'int' is 36 bits), we do not make any guarantee about the correct
+   * behaviour of FT2 with all fonts.
    *
-   * In these case, `ftconfig.h' will refuse to compile anyway with a
-   * message like `couldn't find 32-bit type' or something similar.
+   * In these case, `ftconfig.h` will refuse to compile anyway with a message
+   * like 'couldn't find 32-bit type' or something similar.
    *
    */
 

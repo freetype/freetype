@@ -18,8 +18,8 @@
 
   /**************************************************************************
    *
-   * This file is automatically included by `ft2build.h'.
-   * Do not include it manually!
+   * This file is automatically included by `ft2build.h`.  Do not include it
+   * manually!
    *
    */
 

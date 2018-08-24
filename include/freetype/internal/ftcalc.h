@@ -252,7 +252,7 @@ FT_BEGIN_HEADER
    *   FT_MulDiv_No_Round
    *
    * @description:
-   *   A very simple function used to perform the computation `(a*b)/c'
+   *   A very simple function used to perform the computation '(a*b)/c'
    *   (without rounding) with maximum accuracy (it uses a 64-bit
    *   intermediate integer whenever necessary).
    *
@@ -268,9 +268,9 @@ FT_BEGIN_HEADER
    *     The divisor.
    *
    * @return:
-   *   The result of `(a*b)/c'.  This function never traps when trying to
-   *   divide by zero; it simply returns `MaxInt' or `MinInt' depending
-   *   on the signs of `a' and `b'.
+   *   The result of '(a*b)/c'.  This function never traps when trying to
+   *   divide by zero; it simply returns 'MaxInt' or 'MinInt' depending on
+   *   the signs of 'a' and 'b'.
    */
   FT_BASE( FT_Long )
   FT_MulDiv_No_Round( FT_Long  a,
@@ -279,12 +279,11 @@ FT_BEGIN_HEADER
 
 
   /*
-   * A variant of FT_Matrix_Multiply which scales its result afterwards.
-   * The idea is that both `a' and `b' are scaled by factors of 10 so that
-   * the values are as precise as possible to get a correct result during
-   * the 64bit multiplication.  Let `sa' and `sb' be the scaling factors of
-   * `a' and `b', respectively, then the scaling factor of the result is
-   * `sa*sb'.
+   * A variant of FT_Matrix_Multiply which scales its result afterwards.  The
+   * idea is that both `a' and `b' are scaled by factors of 10 so that the
+   * values are as precise as possible to get a correct result during the
+   * 64bit multiplication.  Let `sa' and `sb' be the scaling factors of `a'
+   * and `b', respectively, then the scaling factor of the result is `sa*sb'.
    */
   FT_BASE( void )
   FT_Matrix_Multiply_Scaled( const FT_Matrix*  a,
@@ -318,22 +317,22 @@ FT_BEGIN_HEADER
 
 
   /*
-   * This function normalizes a vector and returns its original length.
-   * The normalized vector is a 16.16 fixed-point unit vector with length
-   * close to 0x10000.  The accuracy of the returned length is limited to
-   * 16 bits also.  The function utilizes quick inverse square root
-   * approximation without divisions and square roots relying on Newton's
-   * iterations instead.
+   * This function normalizes a vector and returns its original length.  The
+   * normalized vector is a 16.16 fixed-point unit vector with length close
+   * to 0x10000.  The accuracy of the returned length is limited to 16 bits
+   * also.  The function utilizes quick inverse square root approximation
+   * without divisions and square roots relying on Newton's iterations
+   * instead.
    */
   FT_BASE( FT_UInt32 )
   FT_Vector_NormLen( FT_Vector*  vector );
 
 
   /*
-   * Return -1, 0, or +1, depending on the orientation of a given corner.
-   * We use the Cartesian coordinate system, with positive vertical values
-   * going upwards.  The function returns +1 if the corner turns to the
-   * left, -1 to the right, and 0 for undecidable cases.
+   * Return -1, 0, or +1, depending on the orientation of a given corner.  We
+   * use the Cartesian coordinate system, with positive vertical values going
+   * upwards.  The function returns +1 if the corner turns to the left, -1 to
+   * the right, and 0 for undecidable cases.
    */
   FT_BASE( FT_Int )
   ft_corner_orientation( FT_Pos  in_x,
@@ -433,7 +432,7 @@ FT_BEGIN_HEADER
    *     The value to compute the root for.
    *
    * @return:
-   *   The result of `sqrt(x)'.
+   *   The result of 'sqrt(x)'.
    *
    * @note:
    *   This function is not very fast.

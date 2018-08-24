@@ -55,8 +55,8 @@ FT_BEGIN_HEADER
    *   An API to validate OpenType tables.
    *
    * @description:
-   *   This section contains the declaration of functions to validate
-   *   some OpenType tables (BASE, GDEF, GPOS, GSUB, JSTF, MATH).
+   *   This section contains the declaration of functions to validate some
+   *   OpenType tables (BASE, GDEF, GPOS, GSUB, JSTF, MATH).
    *
    * @order:
    *   FT_OpenType_Validate
@@ -122,8 +122,8 @@ FT_BEGIN_HEADER
    * @description:
    *    Validate various OpenType tables to assure that all offsets and
    *    indices are valid.  The idea is that a higher-level library that
-   *    actually does the text layout can access those tables without
-   *    error checking (which can be quite time consuming).
+   *    actually does the text layout can access those tables without error
+   *    checking (which can be quite time consuming).
    *
    * @input:
    *    face ::

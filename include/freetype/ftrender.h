@@ -132,12 +132,11 @@ FT_BEGIN_HEADER
    *     The glyph image format this renderer handles.
    *
    *   render_glyph ::
-   *     A method used to render the image that is in a
-   *     given glyph slot into a bitmap.
+   *     A method used to render the image that is in a given glyph slot into
+   *     a bitmap.
    *
    *   transform_glyph ::
-   *     A method used to transform the image that is in
-   *     a given glyph slot.
+   *     A method used to transform the image that is in a given glyph slot.
    *
    *   get_glyph_cbox ::
    *     A method used to access the glyph's cbox.
@@ -146,8 +145,8 @@ FT_BEGIN_HEADER
    *     A method used to pass additional parameters.
    *
    *   raster_class ::
-   *     For @FT_GLYPH_FORMAT_OUTLINE renderers only.
-   *     This is a pointer to its raster's class.
+   *     For @FT_GLYPH_FORMAT_OUTLINE renderers only.  This is a pointer to
+   *     its raster's class.
    */
   typedef struct  FT_Renderer_Class_
   {
@@ -184,8 +183,8 @@ FT_BEGIN_HEADER
    *   A renderer handle.  0~if none found.
    *
    * @note:
-   *   An error will be returned if a module already exists by that name,
-   *   or if the module requires a version of FreeType that is too great.
+   *   An error will be returned if a module already exists by that name, or
+   *   if the module requires a version of FreeType that is too great.
    *
    *   To add a new renderer, simply use @FT_Add_Module.  To retrieve a
    *   renderer by its name, use @FT_Get_Module.
@@ -221,13 +220,13 @@ FT_BEGIN_HEADER
    *   FreeType error code.  0~means success.
    *
    * @note:
-   *   In case of success, the renderer will be used to convert glyph
-   *   images in the renderer's known format into bitmaps.
+   *   In case of success, the renderer will be used to convert glyph images
+   *   in the renderer's known format into bitmaps.
    *
    *   This doesn't change the current renderer for other formats.
    *
-   *   Currently, no FreeType renderer module uses `parameters'; you
-   *   should thus always pass NULL as the value.
+   *   Currently, no FreeType renderer module uses 'parameters'; you should
+   *   thus always pass NULL as the value.
    */
   FT_EXPORT( FT_Error )
   FT_Set_Renderer( FT_Library     library,

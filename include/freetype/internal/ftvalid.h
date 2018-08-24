@@ -54,17 +54,17 @@ FT_BEGIN_HEADER
    * FT_VALIDATE_TIGHT ::
    *   A table that passes this validation level can be used reliably and
    *   doesn't contain invalid data.  For example, a charmap table that
-   *   returns invalid glyph indices will not pass, even though it can
-   *   be used with FreeType in default mode (the library will simply
-   *   return an error later when trying to load the glyph).
+   *   returns invalid glyph indices will not pass, even though it can be
+   *   used with FreeType in default mode (the library will simply return an
+   *   error later when trying to load the glyph).
    *
    *   It also checks that fields which must be a multiple of 2, 4, or 8,
    *   don't have incorrect values, etc.
    *
    * FT_VALIDATE_PARANOID ::
    *   Only for font debugging.  Checks that a table follows the
-   *   specification by 100%.  Very few fonts will be able to pass this
-   *   level anyway but it can be useful for certain tools like font
+   *   specification by 100%.  Very few fonts will be able to pass this level
+   *   anyway but it can be useful for certain tools like font
    *   editors/converters.
    */
   typedef enum  FT_ValidationLevel_

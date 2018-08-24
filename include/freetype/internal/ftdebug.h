@@ -15,7 +15,7 @@
  *
  *
  * IMPORTANT: A description of FreeType's debugging support can be
- *             found in `docs/DEBUG.TXT'.  Read it if you need to use or
+ *             found in 'docs/DEBUG.TXT'.  Read it if you need to use or
  *             understand this code.
  *
  */
@@ -44,8 +44,8 @@ FT_BEGIN_HEADER
 
   /**************************************************************************
    *
-   * Define the trace enums as well as the trace levels array when they
-   * are needed.
+   * Define the trace enums as well as the trace levels array when they are
+   * needed.
    *
    */
 
@@ -115,8 +115,8 @@ FT_BEGIN_HEADER
    *   FT_DEBUG_LEVEL_TRACE definition.
    *
    * @note:
-   *   This function may be useful if you want to access elements of
-   *   the internal trace levels array by an index.
+   *   This function may be useful if you want to access elements of the
+   *   internal trace levels array by an index.
    */
   FT_BASE( FT_Int )
   FT_Trace_Get_Count( void );
@@ -213,8 +213,8 @@ FT_BEGIN_HEADER
 
   /**************************************************************************
    *
-   * Define the FT_ASSERT and FT_THROW macros.  The call to `FT_Throw'
-   * makes it possible to easily set a breakpoint at this function.
+   * Define the FT_ASSERT and FT_THROW macros.  The call to `FT_Throw` makes
+   * it possible to easily set a breakpoint at this function.
    *
    */
 
@@ -245,7 +245,7 @@ FT_BEGIN_HEADER
 
   /**************************************************************************
    *
-   * Define `FT_Message' and `FT_Panic' when needed.
+   * Define `FT_Message` and `FT_Panic` when needed.
    *
    */
 

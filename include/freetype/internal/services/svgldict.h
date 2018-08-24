@@ -26,8 +26,8 @@ FT_BEGIN_HEADER
 
 
   /*
-   * A service used to retrieve glyph names, as well as to find the
-   * index of a given glyph name in a font.
+   * A service used to retrieve glyph names, as well as to find the index of
+   * a given glyph name in a font.
    *
    */
 

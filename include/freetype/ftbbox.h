@@ -22,7 +22,7 @@
    * boxes.
    *
    * It is separated from the rest of the engine for various technical
-   * reasons.  It may well be integrated in `ftoutln' later.
+   * reasons.  It may well be integrated in 'ftoutln' later.
    *
    */
 
@@ -58,11 +58,10 @@ FT_BEGIN_HEADER
    *   FT_Outline_Get_BBox
    *
    * @description:
-   *   Compute the exact bounding box of an outline.  This is slower
-   *   than computing the control box.  However, it uses an advanced
-   *   algorithm that returns _very_ quickly when the two boxes
-   *   coincide.  Otherwise, the outline Bezier arcs are traversed to
-   *   extract their extrema.
+   *   Compute the exact bounding box of an outline.  This is slower than
+   *   computing the control box.  However, it uses an advanced algorithm
+   *   that returns _very_ quickly when the two boxes coincide.  Otherwise,
+   *   the outline Bezier arcs are traversed to extract their extrema.
    *
    * @input:
    *   outline ::
@@ -78,10 +77,10 @@ FT_BEGIN_HEADER
    * @note:
    *   If the font is tricky and the glyph has been loaded with
    *   @FT_LOAD_NO_SCALE, the resulting BBox is meaningless.  To get
-   *   reasonable values for the BBox it is necessary to load the glyph
-   *   at a large ppem value (so that the hinting instructions can
-   *   properly shift and scale the subglyphs), then extracting the BBox,
-   *   which can be eventually converted back to font units.
+   *   reasonable values for the BBox it is necessary to load the glyph at a
+   *   large ppem value (so that the hinting instructions can properly shift
+   *   and scale the subglyphs), then extracting the BBox, which can be
+   *   eventually converted back to font units.
    */
   FT_EXPORT( FT_Error )
   FT_Outline_Get_BBox( FT_Outline*  outline,

@@ -25,8 +25,8 @@
 FT_BEGIN_HEADER
 
   /*
-   * A trivial service used to retrieve the PostScript name of a given
-   * font when available.  The `get_name' field should never be NULL.
+   * A trivial service used to retrieve the PostScript name of a given font
+   * when available.  The `get_name' field should never be NULL.
    *
    * The corresponding function can return NULL to indicate that the
    * PostScript name is not available.

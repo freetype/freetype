@@ -18,8 +18,8 @@
 
   /**************************************************************************
    *
-   * This file implements functions relative to list processing.  Its
-   * data structures are defined in `freetype.h'.
+   * This file implements functions relative to list processing.  Its data
+   * structures are defined in `freetype.h`.
    *
    */
 
@@ -53,8 +53,8 @@ FT_BEGIN_HEADER
    *   Simple management of lists.
    *
    * @description:
-   *   This section contains various definitions related to list
-   *   processing using doubly-linked nodes.
+   *   This section contains various definitions related to list processing
+   *   using doubly-linked nodes.
    *
    * @order:
    *   FT_List
@@ -141,8 +141,8 @@ FT_BEGIN_HEADER
    *   FT_List_Remove
    *
    * @description:
-   *   Remove a node from a list.  This function doesn't check whether
-   *   the node is in the list!
+   *   Remove a node from a list.  This function doesn't check whether the
+   *   node is in the list!
    *
    * @input:
    *   node ::
@@ -163,8 +163,7 @@ FT_BEGIN_HEADER
    *   FT_List_Up
    *
    * @description:
-   *   Move a node to the head/top of a list.  Used to maintain LRU
-   *   lists.
+   *   Move a node to the head/top of a list.  Used to maintain LRU lists.
    *
    * @inout:
    *   list ::
@@ -183,16 +182,16 @@ FT_BEGIN_HEADER
    *   FT_List_Iterator
    *
    * @description:
-   *   An FT_List iterator function that is called during a list parse
-   *   by @FT_List_Iterate.
+   *   An FT_List iterator function that is called during a list parse by
+   *   @FT_List_Iterate.
    *
    * @input:
    *   node ::
    *     The current iteration list node.
    *
    *   user ::
-   *     A typeless pointer passed to @FT_List_Iterate.
-   *     Can be used to point to the iteration's state.
+   *     A typeless pointer passed to @FT_List_Iterate.  Can be used to point
+   *     to the iteration's state.
    */
   typedef FT_Error
   (*FT_List_Iterator)( FT_ListNode  node,
@@ -215,8 +214,8 @@ FT_BEGIN_HEADER
    *   iterator ::
    *     An iterator function, called on each node of the list.
    *   user ::
-   *     A user-supplied field that is passed as the second
-   *     argument to the iterator.
+   *     A user-supplied field that is passed as the second argument to the
+   *     iterator.
    *
    * @return:
    *   The result (a FreeType error code) of the last iterator call.
@@ -234,8 +233,8 @@ FT_BEGIN_HEADER
    *
    * @description:
    *   An @FT_List iterator function that is called during a list
-   *   finalization by @FT_List_Finalize to destroy all elements in a
-   *   given list.
+   *   finalization by @FT_List_Finalize to destroy all elements in a given
+   *   list.
    *
    * @input:
    *   system ::
@@ -245,8 +244,8 @@ FT_BEGIN_HEADER
    *     The current object to destroy.
    *
    *   user ::
-   *     A typeless pointer passed to @FT_List_Iterate.  It can
-   *     be used to point to the iteration's state.
+   *     A typeless pointer passed to @FT_List_Iterate.  It can be used to
+   *     point to the iteration's state.
    */
   typedef void
   (*FT_List_Destructor)( FT_Memory  memory,
@@ -267,15 +266,15 @@ FT_BEGIN_HEADER
    *     A handle to the list.
    *
    *   destroy ::
-   *     A list destructor that will be applied to each element
-   *     of the list.  Set this to NULL if not needed.
+   *     A list destructor that will be applied to each element of the list.
+   *     Set this to NULL if not needed.
    *
    *   memory ::
    *     The current memory object that handles deallocation.
    *
    *   user ::
-   *     A user-supplied field that is passed as the last
-   *     argument to the destructor.
+   *     A user-supplied field that is passed as the last argument to the
+   *     destructor.
    *
    * @note:
    *   This function expects that all nodes added by @FT_List_Add or

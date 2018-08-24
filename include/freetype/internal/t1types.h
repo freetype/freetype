@@ -55,16 +55,14 @@ FT_BEGIN_HEADER
    *
    * @fields:
    *   num_chars ::
-   *     The number of character codes in the encoding.
-   *     Usually 256.
+   *     The number of character codes in the encoding.  Usually 256.
    *
    *   code_first ::
    *     The lowest valid character code in the encoding.
    *
    *   code_last ::
-   *     The highest valid character code in the encoding
-   *     + 1. When equal to code_first there are no valid
-   *     character codes.
+   *     The highest valid character code in the encoding + 1. When equal to
+   *     code_first there are no valid character codes.
    *
    *   char_index ::
    *     An array of corresponding glyph indices.

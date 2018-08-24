@@ -48,8 +48,7 @@ FT_BEGIN_HEADER
 
 
   /*
-   * Simple unicode -> glyph index charmap built from font glyph names
-   * table.
+   * Simple unicode -> glyph index charmap built from font glyph names table.
    */
   typedef struct  PS_UniMap_
   {
@@ -71,8 +70,8 @@ FT_BEGIN_HEADER
 
 
   /*
-   * A function which returns a glyph name for a given index.  Returns
-   * NULL if invalid index.
+   * A function which returns a glyph name for a given index.  Returns NULL
+   * if invalid index.
    */
   typedef const char*
   (*PS_GetGlyphNameFunc)( FT_Pointer  data,

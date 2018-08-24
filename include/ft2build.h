@@ -18,17 +18,17 @@
 
   /**************************************************************************
    *
-   * This is the `entry point' for FreeType header file inclusions.  It is
+   * This is the 'entry point' for FreeType header file inclusions.  It is
    * the only header file which should be included directly; all other
    * FreeType header files should be accessed with macro names (after
-   * including `ft2build.h').
+   * including `ft2build.h`).
    *
    * A typical example is
    *
-   * {
+   * ```
    *   #include <ft2build.h>
    *   #include FT_FREETYPE_H
-   * }
+   * ```
    *
    */
 

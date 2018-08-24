@@ -149,8 +149,8 @@ FT_BEGIN_HEADER
 
   /**************************************************************************
    *
-   * Integer extraction macros -- the `buffer' parameter must ALWAYS be of
-   * type `char*' or equivalent (1-byte elements).
+   * Integer extraction macros -- the 'buffer' parameter must ALWAYS be of
+   * type 'char*' or equivalent (1-byte elements).
    */
 
 #define FT_BYTE_( p, i )  ( ((const FT_Byte*)(p))[(i)] )
@@ -166,8 +166,8 @@ FT_BEGIN_HEADER
 
 
   /*
-   * `FT_PEEK_XXX' are generic macros to get data from a buffer position.
-   * No safety checks are performed.
+   * `FT_PEEK_XXX' are generic macros to get data from a buffer position.  No
+   * safety checks are performed.
    */
 #define FT_PEEK_SHORT( p )  FT_INT16( FT_BYTE_U16( p, 0, 8 ) | \
                                       FT_BYTE_U16( p, 1, 0 ) )
@@ -267,11 +267,11 @@ FT_BEGIN_HEADER
 
   /**************************************************************************
    *
-   * The `FT_GET_XXX' macros use an implicit `stream' variable.
+   * The `FT_GET_XXX` macros use an implicit 'stream' variable.
    *
-   * Note that a call to `FT_STREAM_SEEK' or `FT_STREAM_POS' has *no* effect
-   * on `FT_GET_XXX'!  They operate on `stream->pos', while `FT_GET_XXX' use
-   * `stream->cursor'.
+   * Note that a call to `FT_STREAM_SEEK` or `FT_STREAM_POS` has **no**
+   * effect on `FT_GET_XXX`!  They operate on `stream->pos`, while
+   * `FT_GET_XXX` use `stream->cursor`.
    */
 #if 0
 #define FT_GET_MACRO( type )    FT_NEXT_ ## type ( stream->cursor )
@@ -319,8 +319,8 @@ FT_BEGIN_HEADER
    * The `FT_READ_XXX' macros use implicit `stream' and `error' variables.
    *
    * `FT_READ_XXX' can be controlled with `FT_STREAM_SEEK' and
-   * `FT_STREAM_POS'.  They use the full machinery to check whether a read
-   * is valid.
+   * `FT_STREAM_POS'.  They use the full machinery to check whether a read is
+   * valid.
    */
 #define FT_READ_BYTE( var )       FT_READ_MACRO( FT_Stream_ReadChar, FT_Byte, var )
 #define FT_READ_CHAR( var )       FT_READ_MACRO( FT_Stream_ReadChar, FT_Char, var )

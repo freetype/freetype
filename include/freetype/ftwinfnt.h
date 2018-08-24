@@ -56,20 +56,19 @@ FT_BEGIN_HEADER
    *   FT_WinFNT_ID_XXX
    *
    * @description:
-   *   A list of valid values for the `charset' byte in
-   *   @FT_WinFNT_HeaderRec.  Exact mapping tables for the various cpXXXX
-   *   encodings (except for cp1361) can be found at
-   *   ftp://ftp.unicode.org/Public in the MAPPINGS/VENDORS/MICSFT/WINDOWS
-   *   subdirectory.  cp1361 is roughly a superset of
-   *   MAPPINGS/OBSOLETE/EASTASIA/KSC/JOHAB.TXT.
+   *   A list of valid values for the 'charset' byte in @FT_WinFNT_HeaderRec.
+   *   Exact mapping tables for the various cpXXXX encodings (except for
+   *   cp1361) can be found at ftp://ftp.unicode.org/Public in the
+   *   MAPPINGS/VENDORS/MICSFT/WINDOWS subdirectory.  cp1361 is roughly a
+   *   superset of MAPPINGS/OBSOLETE/EASTASIA/KSC/JOHAB.TXT.
    *
    * @values:
    *   FT_WinFNT_ID_DEFAULT ::
-   *     This is used for font enumeration and font creation as a
-   *     `don't care' value.  Valid font files don't contain this value.
-   *     When querying for information about the character set of the font
-   *     that is currently selected into a specified device context, this
-   *     return value (of the related Windows API) simply denotes failure.
+   *     This is used for font enumeration and font creation as a 'don't
+   *     care' value.  Valid font files don't contain this value.  When
+   *     querying for information about the character set of the font that is
+   *     currently selected into a specified device context, this return
+   *     value (of the related Windows API) simply denotes failure.
    *
    *   FT_WinFNT_ID_SYMBOL ::
    *     There is no known mapping table available.
@@ -80,26 +79,27 @@ FT_BEGIN_HEADER
    *   FT_WinFNT_ID_OEM ::
    *     From Michael Poettgen <michael@poettgen.de>:
    *
-   *     The `Windows Font Mapping' article says that FT_WinFNT_ID_OEM
-   *     is used for the charset of vector fonts, like `modern.fon',
-   *     `roman.fon', and `script.fon' on Windows.
+   *     The 'Windows Font Mapping' article says that FT_WinFNT_ID_OEM is
+   *     used for the charset of vector fonts, like `modern.fon`,
+   *     `roman.fon`, and `script.fon` on Windows.
    *
-   *     The `CreateFont' documentation says: The FT_WinFNT_ID_OEM value
+   *     The 'CreateFont' documentation says: The FT_WinFNT_ID_OEM value
    *     specifies a character set that is operating-system dependent.
    *
-   *     The `IFIMETRICS' documentation from the `Windows Driver
-   *     Development Kit' says: This font supports an OEM-specific
-   *     character set.  The OEM character set is system dependent.
+   *     The 'IFIMETRICS' documentation from the 'Windows Driver Development
+   *     Kit' says: This font supports an OEM-specific character set.  The
+   *     OEM character set is system dependent.
    *
    *     In general OEM, as opposed to ANSI (i.e., cp1252), denotes the
-   *     second default codepage that most international versions of
-   *     Windows have.  It is one of the OEM codepages from
+   *     second default codepage that most international versions of Windows
+   *     have.  It is one of the OEM codepages from
    *
-   *     https://docs.microsoft.com/en-us/windows/desktop/intl/code-page-identifiers ,
+   *     https://docs.microsoft.com/en-us/windows/desktop/intl/code-page-identifiers
+   *     ,
    *
-   *     and is used for the `DOS boxes', to support legacy applications.
-   *     A German Windows version for example usually uses ANSI codepage
-   *     1252 and OEM codepage 850.
+   *     and is used for the 'DOS boxes', to support legacy applications.  A
+   *     German Windows version for example usually uses ANSI codepage 1252
+   *     and OEM codepage 850.
    *
    *   FT_WinFNT_ID_CP874 ::
    *     A superset of Thai TIS 620 and ISO 8859-11.
@@ -112,8 +112,8 @@ FT_BEGIN_HEADER
    *     ordering and minor deviations).
    *
    *   FT_WinFNT_ID_CP949 ::
-   *     A superset of Korean Hangul KS~C 5601-1987 (with different
-   *     ordering and minor deviations).
+   *     A superset of Korean Hangul KS~C 5601-1987 (with different ordering
+   *     and minor deviations).
    *
    *   FT_WinFNT_ID_CP950 ::
    *     A superset of traditional Chinese Big~5 ETen (with different

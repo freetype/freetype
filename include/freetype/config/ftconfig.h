@@ -18,20 +18,19 @@
 
   /**************************************************************************
    *
-   * This header file contains a number of macro definitions that are used
-   * by the rest of the engine.  Most of the macros here are automatically
-   * determined at compile time, and you should not need to change it to
-   * port FreeType, except to compile the library with a non-ANSI
-   * compiler.
+   * This header file contains a number of macro definitions that are used by
+   * the rest of the engine.  Most of the macros here are automatically
+   * determined at compile time, and you should not need to change it to port
+   * FreeType, except to compile the library with a non-ANSI compiler.
    *
-   * Note however that if some specific modifications are needed, we
-   * advise you to place a modified copy in your build directory.
+   * Note however that if some specific modifications are needed, we advise
+   * you to place a modified copy in your build directory.
    *
-   * The build directory is usually `builds/<system>', and contains
-   * system-specific files that are always included first when building
-   * the library.
+   * The build directory is usually 'builds/<system>', and contains
+   * system-specific files that are always included first when building the
+   * library.
    *
-   * This ANSI version should stay in `include/config/'.
+   * This ANSI version should stay in 'include/config/'.
    *
    */
 
@@ -50,10 +49,10 @@ FT_BEGIN_HEADER
    *
    *              PLATFORM-SPECIFIC CONFIGURATION MACROS
    *
-   * These macros can be toggled to suit a specific system.  The current
-   * ones are defaults used to compile FreeType in an ANSI C environment
-   * (16bit compilers are also supported).  Copy this file to your own
-   * `builds/<system>' directory, and edit it to port the engine.
+   * These macros can be toggled to suit a specific system.  The current ones
+   * are defaults used to compile FreeType in an ANSI C environment (16bit
+   * compilers are also supported).  Copy this file to your own
+   * 'builds/<system>' directory, and edit it to port the engine.
    *
    */
 
@@ -192,8 +191,8 @@ FT_BEGIN_HEADER
    *   FT_Int32
    *
    * @description:
-   *   A typedef for a 32bit signed integer type.  The size depends on
-   *   the configuration.
+   *   A typedef for a 32bit signed integer type.  The size depends on the
+   *   configuration.
    */
   typedef signed XXX  FT_Int32;
 
@@ -203,8 +202,8 @@ FT_BEGIN_HEADER
    * @type:
    *   FT_UInt32
    *
-   *   A typedef for a 32bit unsigned integer type.  The size depends on
-   *   the configuration.
+   *   A typedef for a 32bit unsigned integer type.  The size depends on the
+   *   configuration.
    */
   typedef unsigned XXX  FT_UInt32;
 
@@ -214,8 +213,8 @@ FT_BEGIN_HEADER
    * @type:
    *   FT_Int64
    *
-   *   A typedef for a 64bit signed integer type.  The size depends on
-   *   the configuration.  Only defined if there is real 64bit support;
+   *   A typedef for a 64bit signed integer type.  The size depends on the
+   *   configuration.  Only defined if there is real 64bit support;
    *   otherwise, it gets emulated with a structure (if necessary).
    */
   typedef signed XXX  FT_Int64;
@@ -226,8 +225,8 @@ FT_BEGIN_HEADER
    * @type:
    *   FT_UInt64
    *
-   *   A typedef for a 64bit unsigned integer type.  The size depends on
-   *   the configuration.  Only defined if there is real 64bit support;
+   *   A typedef for a 64bit unsigned integer type.  The size depends on the
+   *   configuration.  Only defined if there is real 64bit support;
    *   otherwise, it gets emulated with a structure (if necessary).
    */
   typedef unsigned XXX  FT_UInt64;
@@ -276,10 +275,10 @@ FT_BEGIN_HEADER
 
   /**************************************************************************
    *
-   * A 64-bit data type may create compilation problems if you compile
-   * in strict ANSI mode.  To avoid them, we disable other 64-bit data
-   * types if __STDC__ is defined.  You can however ignore this rule
-   * by defining the FT_CONFIG_OPTION_FORCE_INT64 configuration macro.
+   * A 64-bit data type may create compilation problems if you compile in
+   * strict ANSI mode.  To avoid them, we disable other 64-bit data types if
+   * __STDC__ is defined.  You can however ignore this rule by defining the
+   * FT_CONFIG_OPTION_FORCE_INT64 configuration macro.
    */
 #elif !defined( __STDC__ ) || defined( FT_CONFIG_OPTION_FORCE_INT64 )
 

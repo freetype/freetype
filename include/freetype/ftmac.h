@@ -59,8 +59,8 @@ FT_BEGIN_HEADER
    *   Only available on the Macintosh.
    *
    * @description:
-   *   The following definitions are only available if FreeType is
-   *   compiled on a Macintosh.
+   *   The following definitions are only available if FreeType is compiled
+   *   on a Macintosh.
    *
    */
 
@@ -82,8 +82,7 @@ FT_BEGIN_HEADER
    *     A FOND resource.
    *
    *   face_index ::
-   *     Only supported for the -1 `sanity check' special
-   *     case.
+   *     Only supported for the -1 'sanity check' special case.
    *
    * @output:
    *   aface ::
@@ -93,13 +92,13 @@ FT_BEGIN_HEADER
    *   FreeType error code.  0~means success.
    *
    * @example:
-   *   This function can be used to create @FT_Face objects from fonts
-   *   that are installed in the system as follows.
+   *   This function can be used to create @FT_Face objects from fonts that
+   *   are installed in the system as follows.
    *
-   *   {
+   *   ```
    *     fond  = GetResource( 'FOND', fontName );
    *     error = FT_New_Face_From_FOND( library, fond, 0, &face );
-   *   }
+   *   ```
    */
   FT_EXPORT( FT_Error )
   FT_New_Face_From_FOND( FT_Library  library,
@@ -119,17 +118,14 @@ FT_BEGIN_HEADER
    *
    * @input:
    *   fontName ::
-   *     Mac OS name of the font (e.g., Times New Roman
-   *     Bold).
+   *     Mac OS name of the font (e.g., Times New Roman Bold).
    *
    * @output:
    *   pathSpec ::
-   *     FSSpec to the file.  For passing to
-   *     @FT_New_Face_From_FSSpec.
+   *     FSSpec to the file.  For passing to @FT_New_Face_From_FSSpec.
    *
    *   face_index ::
-   *     Index of the face.  For passing to
-   *     @FT_New_Face_From_FSSpec.
+   *     Index of the face.  For passing to @FT_New_Face_From_FSSpec.
    *
    * @return:
    *   FreeType error code.  0~means success.
@@ -155,12 +151,10 @@ FT_BEGIN_HEADER
    *
    * @output:
    *   pathSpec ::
-   *     FSSpec to the file. For passing to
-   *     @FT_New_Face_From_FSSpec.
+   *     FSSpec to the file. For passing to @FT_New_Face_From_FSSpec.
    *
    *   face_index ::
-   *     Index of the face. For passing to
-   *     @FT_New_Face_From_FSSpec.
+   *     Index of the face. For passing to @FT_New_Face_From_FSSpec.
    *
    * @return:
    *   FreeType error code.  0~means success.
@@ -178,8 +172,8 @@ FT_BEGIN_HEADER
    *   FT_GetFilePath_From_Mac_ATS_Name
    *
    * @description:
-   *   Return a pathname of the disk file and face index for given font
-   *   name that is handled by ATS framework.
+   *   Return a pathname of the disk file and face index for given font name
+   *   that is handled by ATS framework.
    *
    * @input:
    *   fontName ::
@@ -187,12 +181,11 @@ FT_BEGIN_HEADER
    *
    * @output:
    *   path ::
-   *     Buffer to store pathname of the file.  For passing
-   *     to @FT_New_Face.  The client must allocate this
-   *     buffer before calling this function.
+   *     Buffer to store pathname of the file.  For passing to @FT_New_Face.
+   *     The client must allocate this buffer before calling this function.
    *
    *   maxPathSize ::
-   *     Lengths of the buffer `path' that client allocated.
+   *     Lengths of the buffer 'path' that client allocated.
    *
    *   face_index ::
    *     Index of the face.  For passing to @FT_New_Face.
@@ -226,8 +219,8 @@ FT_BEGIN_HEADER
    *     FSSpec to the font file.
    *
    *   face_index ::
-   *     The index of the face within the resource.  The
-   *     first face has index~0.
+   *     The index of the face within the resource.  The first face has
+   *     index~0.
    * @output:
    *   aface ::
    *     A handle to a new face object.
@@ -236,8 +229,8 @@ FT_BEGIN_HEADER
    *   FreeType error code.  0~means success.
    *
    * @note:
-   *   @FT_New_Face_From_FSSpec is identical to @FT_New_Face except
-   *   it accepts an FSSpec instead of a path.
+   *   @FT_New_Face_From_FSSpec is identical to @FT_New_Face except it
+   *   accepts an FSSpec instead of a path.
    */
   FT_EXPORT( FT_Error )
   FT_New_Face_From_FSSpec( FT_Library     library,
@@ -265,8 +258,8 @@ FT_BEGIN_HEADER
    *     FSRef to the font file.
    *
    *   face_index ::
-   *     The index of the face within the resource.  The
-   *     first face has index~0.
+   *     The index of the face within the resource.  The first face has
+   *     index~0.
    * @output:
    *   aface ::
    *     A handle to a new face object.
@@ -275,8 +268,8 @@ FT_BEGIN_HEADER
    *   FreeType error code.  0~means success.
    *
    * @note:
-   *   @FT_New_Face_From_FSRef is identical to @FT_New_Face except
-   *   it accepts an FSRef instead of a path.
+   *   @FT_New_Face_From_FSRef is identical to @FT_New_Face except it accepts
+   *   an FSRef instead of a path.
    */
   FT_EXPORT( FT_Error )
   FT_New_Face_From_FSRef( FT_Library    library,

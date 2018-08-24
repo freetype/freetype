@@ -129,46 +129,37 @@ FT_BEGIN_HEADER
    *
    *
    *   load_glyph ::
-   *     A function handle to load a glyph to a slot.
-   *     This field is mandatory!
+   *     A function handle to load a glyph to a slot.  This field is
+   *     mandatory!
    *
    *   get_kerning ::
-   *     A function handle to return the unscaled
-   *     kerning for a given pair of glyphs.  Can be
-   *     set to 0 if the format doesn't support
-   *     kerning.
+   *     A function handle to return the unscaled kerning for a given pair of
+   *     glyphs.  Can be set to 0 if the format doesn't support kerning.
    *
    *   attach_file ::
-   *     This function handle is used to read
-   *     additional data for a face from another
-   *     file/stream.  For example, this can be used to
-   *     add data from AFM or PFM files on a Type 1
-   *     face, or a CIDMap on a CID-keyed face.
+   *     This function handle is used to read additional data for a face from
+   *     another file/stream.  For example, this can be used to add data from
+   *     AFM or PFM files on a Type 1 face, or a CIDMap on a CID-keyed face.
    *
    *   get_advances ::
-   *     A function handle used to return advance
-   *     widths of `count' glyphs (in font units),
-   *     starting at `first'.  The `vertical' flag must
-   *     be set to get vertical advance heights.  The
-   *     `advances' buffer is caller-allocated.
-   *     The idea of this function is to be able to
-   *     perform device-independent text layout without
-   *     loading a single glyph image.
+   *     A function handle used to return advance widths of 'count' glyphs
+   *     (in font units), starting at 'first'.  The 'vertical' flag must be
+   *     set to get vertical advance heights.  The 'advances' buffer is
+   *     caller-allocated.  The idea of this function is to be able to
+   *     perform device-independent text layout without loading a single
+   *     glyph image.
    *
    *   request_size ::
-   *     A handle to a function used to request the new
-   *     character size.  Can be set to 0 if the
-   *     scaling done in the base layer suffices.
+   *     A handle to a function used to request the new character size.  Can
+   *     be set to 0 if the scaling done in the base layer suffices.
    *
    *   select_size ::
-   *     A handle to a function used to select a new
-   *     fixed size.  It is used only if
-   *     @FT_FACE_FLAG_FIXED_SIZES is set.  Can be set
-   *     to 0 if the scaling done in the base layer
-   *     suffices.
+   *     A handle to a function used to select a new fixed size.  It is used
+   *     only if @FT_FACE_FLAG_FIXED_SIZES is set.  Can be set to 0 if the
+   *     scaling done in the base layer suffices.
    * @note:
-   *   Most function pointers, with the exception of `load_glyph', can be
-   *   set to 0 to indicate a default behaviour.
+   *   Most function pointers, with the exception of `load_glyph`, can be set
+   *   to 0 to indicate a default behaviour.
    */
   typedef struct  FT_Driver_ClassRec_
   {
@@ -206,8 +197,8 @@ FT_BEGIN_HEADER
    *   FT_DECLARE_DRIVER
    *
    * @description:
-   *   Used to create a forward declaration of an FT_Driver_ClassRec
-   *   struct instance.
+   *   Used to create a forward declaration of an FT_Driver_ClassRec struct
+   *   instance.
    *
    * @macro:
    *   FT_DEFINE_DRIVER
@@ -215,12 +206,12 @@ FT_BEGIN_HEADER
    * @description:
    *   Used to initialize an instance of FT_Driver_ClassRec struct.
    *
-   *   `ftinit.c' (ft_create_default_module_classes) already contains a
-   *   mechanism to call these functions for the default modules
-   *   described in `ftmodule.h'.
+   *   `ftinit.c` (ft_create_default_module_classes) already contains a
+   *   mechanism to call these functions for the default modules described in
+   *   `ftmodule.h`.
    *
-   *   The struct will be allocated in the global scope (or the scope
-   *   where the macro is used).
+   *   The struct will be allocated in the global scope (or the scope where
+   *   the macro is used).
    */
 #define FT_DECLARE_DRIVER( class_ )  \
   FT_CALLBACK_TABLE                  \

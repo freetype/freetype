@@ -35,8 +35,8 @@ FT_BEGIN_HEADER
 
   /**************************************************************************
    *
-   * Possible values for the `platform' identifier code in the name
-   * records of an SFNT `name' table.
+   * Possible values for the 'platform' identifier code in the name records
+   * of an SFNT 'name' table.
    *
    */
 
@@ -47,30 +47,31 @@ FT_BEGIN_HEADER
    *   TT_PLATFORM_XXX
    *
    * @description:
-   *   A list of valid values for the `platform_id' identifier code in
+   *   A list of valid values for the `platform_id` identifier code in
    *   @FT_CharMapRec and @FT_SfntName structures.
    *
    * @values:
    *   TT_PLATFORM_APPLE_UNICODE ::
    *     Used by Apple to indicate a Unicode character map and/or name entry.
-   *     See @TT_APPLE_ID_XXX for corresponding `encoding_id' values.  Note
+   *     See @TT_APPLE_ID_XXX for corresponding `encoding_id` values.  Note
    *     that name entries in this format are coded as big-endian UCS-2
    *     character codes _only_.
    *
    *   TT_PLATFORM_MACINTOSH ::
-   *     Used by Apple to indicate a MacOS-specific charmap and/or name entry.
-   *     See @TT_MAC_ID_XXX for corresponding `encoding_id' values.  Note that
-   *     most TrueType fonts contain an Apple roman charmap to be usable on
-   *     MacOS systems (even if they contain a Microsoft charmap as well).
+   *     Used by Apple to indicate a MacOS-specific charmap and/or name
+   *     entry.  See @TT_MAC_ID_XXX for corresponding `encoding_id` values.
+   *     Note that most TrueType fonts contain an Apple roman charmap to be
+   *     usable on MacOS systems (even if they contain a Microsoft charmap as
+   *     well).
    *
    *   TT_PLATFORM_ISO ::
-   *     This value was used to specify ISO/IEC 10646 charmaps.  It is however
-   *     now deprecated.  See @TT_ISO_ID_XXX for a list of corresponding
-   *     `encoding_id' values.
+   *     This value was used to specify ISO/IEC 10646 charmaps.  It is
+   *     however now deprecated.  See @TT_ISO_ID_XXX for a list of
+   *     corresponding `encoding_id` values.
    *
    *   TT_PLATFORM_MICROSOFT ::
    *     Used by Microsoft to indicate Windows-specific charmaps.  See
-   *     @TT_MS_ID_XXX for a list of corresponding `encoding_id' values.
+   *     @TT_MS_ID_XXX for a list of corresponding `encoding_id` values.
    *     Note that most fonts contain a Unicode charmap using
    *     (TT_PLATFORM_MICROSOFT, @TT_MS_ID_UNICODE_CS).
    *
@@ -97,7 +98,7 @@ FT_BEGIN_HEADER
    *   TT_APPLE_ID_XXX
    *
    * @description:
-   *   A list of valid values for the `encoding_id' for
+   *   A list of valid values for the `encoding_id` for
    *   @TT_PLATFORM_APPLE_UNICODE charmaps and name entries.
    *
    * @values:
@@ -117,8 +118,8 @@ FT_BEGIN_HEADER
    *     Unicode 3.1 and beyond, using UTF-32.
    *
    *   TT_APPLE_ID_VARIANT_SELECTOR ::
-   *     From Adobe, not Apple.  Not a normal cmap.  Specifies variations
-   *     on a real cmap.
+   *     From Adobe, not Apple.  Not a normal cmap.  Specifies variations on
+   *     a real cmap.
    *
    *   TT_APPLE_ID_FULL_UNICODE ::
    *     Used for fallback fonts that provide complete Unicode coverage with
@@ -140,7 +141,7 @@ FT_BEGIN_HEADER
    *   TT_MAC_ID_XXX
    *
    * @description:
-   *   A list of valid values for the `encoding_id' for
+   *   A list of valid values for the `encoding_id` for
    *   @TT_PLATFORM_MACINTOSH charmaps and name entries.
    */
 
@@ -186,8 +187,8 @@ FT_BEGIN_HEADER
    *   TT_ISO_ID_XXX
    *
    * @description:
-   *   A list of valid values for the `encoding_id' for
-   *   @TT_PLATFORM_ISO charmaps and name entries.
+   *   A list of valid values for the `encoding_id` for @TT_PLATFORM_ISO
+   *   charmaps and name entries.
    *
    *   Their use is now deprecated.
    *
@@ -211,7 +212,7 @@ FT_BEGIN_HEADER
    *   TT_MS_ID_XXX
    *
    * @description:
-   *   A list of valid values for the `encoding_id' for
+   *   A list of valid values for the `encoding_id` for
    *   @TT_PLATFORM_MICROSOFT charmaps and name entries.
    *
    * @values:
@@ -219,16 +220,15 @@ FT_BEGIN_HEADER
    *     Microsoft symbol encoding.  See @FT_ENCODING_MS_SYMBOL.
    *
    *   TT_MS_ID_UNICODE_CS ::
-   *     Microsoft WGL4 charmap, matching Unicode.  See
-   *     @FT_ENCODING_UNICODE.
+   *     Microsoft WGL4 charmap, matching Unicode.  See @FT_ENCODING_UNICODE.
    *
    *   TT_MS_ID_SJIS ::
    *     Shift JIS Japanese encoding.  See @FT_ENCODING_SJIS.
    *
    *   TT_MS_ID_PRC ::
    *     Chinese encodings as used in the People's Republic of China (PRC).
-   *     This means the encodings GB~2312 and its supersets GBK and
-   *     GB~18030.  See @FT_ENCODING_PRC.
+   *     This means the encodings GB~2312 and its supersets GBK and GB~18030.
+   *     See @FT_ENCODING_PRC.
    *
    *   TT_MS_ID_BIG_5 ::
    *     Traditional Chinese as used in Taiwan and Hong Kong.  See
@@ -264,8 +264,8 @@ FT_BEGIN_HEADER
    *   TT_ADOBE_ID_XXX
    *
    * @description:
-   *   A list of valid values for the `encoding_id' for
-   *   @TT_PLATFORM_ADOBE charmaps.  This is a FreeType-specific extension!
+   *   A list of valid values for the `encoding_id` for @TT_PLATFORM_ADOBE
+   *   charmaps.  This is a FreeType-specific extension!
    *
    * @values:
    *   TT_ADOBE_ID_STANDARD ::
@@ -291,7 +291,7 @@ FT_BEGIN_HEADER
    *
    * @description:
    *   Possible values of the language identifier field in the name records
-   *   of the SFNT `name' table if the `platform' identifier code is
+   *   of the SFNT 'name' table if the 'platform' identifier code is
    *   @TT_PLATFORM_MACINTOSH.  These values are also used as return values
    *   for function @FT_Get_CMap_Language_ID.
    *
@@ -431,7 +431,7 @@ FT_BEGIN_HEADER
    *
    * @description:
    *   Possible values of the language identifier field in the name records
-   *   of the SFNT `name' table if the `platform' identifier code is
+   *   of the SFNT 'name' table if the 'platform' identifier code is
    *   @TT_PLATFORM_MICROSOFT.  These values are also used as return values
    *   for function @FT_Get_CMap_Language_ID.
    *
@@ -441,7 +441,7 @@ FT_BEGIN_HEADER
    *
    *   however, we only provide macros for language identifiers present in
    *   the OpenType specification: Microsoft has abandoned the concept of
-   *   LCIDs (language code identifiers), and format~1 of the `name' table
+   *   LCIDs (language code identifiers), and format~1 of the 'name' table
    *   provides a better mechanism for languages not covered here.
    *
    *   More legacy values not listed in the reference can be found in the
@@ -786,8 +786,8 @@ FT_BEGIN_HEADER
    *   TT_NAME_ID_XXX
    *
    * @description:
-   *   Possible values of the `name' identifier field in the name records of
-   *   an SFNT `name' table.  These values are platform independent.
+   *   Possible values of the 'name' identifier field in the name records of
+   *   an SFNT 'name' table.  These values are platform independent.
    */
 
 #define TT_NAME_ID_COPYRIGHT              0
@@ -840,8 +840,8 @@ FT_BEGIN_HEADER
    *   TT_UCR_XXX
    *
    * @description:
-   *   Possible bit mask values for the `ulUnicodeRangeX' fields in an SFNT
-   *   `OS/2' table.
+   *   Possible bit mask values for the `ulUnicodeRangeX` fields in an SFNT
+   *   'OS/2' table.
    */
 
   /* ulUnicodeRange1 */
