@@ -1,3 +1,41 @@
+2018-05-25  Nikhil Ramakrishnan  <ramakrishnan.nikhil@gmail.com>
+
+	Convert documentation markup to Markdown.
+
+	It is the result of a GSoC 2018 project; this separate ChangeLog
+	commit covers the last four commits
+
+	  ae5d1a4cec37557f31aec270332cfe886a62f9a0
+	  53c69ce04faed3dcc68ca0f54cb8d703d8babf69
+	  195728d5ba38f34fb2c2c20807c01656f2f59b66
+	  c962db28ea59225f0105c03d907d4a9b71765687
+
+	* docs/reference/markdown/images/favico.ico,
+	docs/reference/markdown/javascripts/extra.js,
+	docs/reference/markdown/stylesheets/extra.css: New files.
+
+	* docs/reference/.gitignore, docs/reference/README: Updated.
+
+	* src/tools/docmaker/*: Removed.  It has been replaced with
+	`docwriter', a python package available at
+
+	  https://pypi.org/project/docwriter/
+
+	* Jamfile: Updated.
+	* builds/ansi/ansi-def.mk, builds/beos/beos-def.mk,
+	builds/dos/dos-def.mk, builds/os2/os2-def.mk (BIN),
+	builds/unix/unixddef.mk, builds/windows/win32-def.mk: New variable.
+
+	* builds/unix/configure.raw: Check for `python' and `pip'.
+	If not present, warn that `make refdoc' will fail.
+	* builds/unix/unix-def.in (PYTHON, PIP, BIN): New variables.
+
+	* builds/freetype.mk (PYTHON, PIP, VENV_NAME, VENV_DIR, ENV_PYTHON,
+	ENV_PIP): New variables.
+	(refdoc): Updated.
+	(refdoc-venv): New target.
+	(.PHONY): Updated.
+
 2018-08-23  Werner Lemberg  <wl@gnu.org>
 
 	Add macros for handling	over-/underflowing `FT_Int64' values.
