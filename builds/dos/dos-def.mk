@@ -19,6 +19,9 @@ SEP       := $(strip \ )
 BUILD_DIR := $(TOP_DIR)/builds/dos
 PLATFORM  := dos
 
+# This is used for `make refdoc' and `make refdoc-venv'
+#
+BIN := Scripts
 
 # The executable file extension (for tools), *with* leading dot.
 #

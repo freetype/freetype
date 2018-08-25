@@ -968,6 +968,25 @@ case "$CFLAGS" in
     ;;
 esac
 
+# Check for python and docwriter
+
+AC_CHECK_PROGS([PYTHON], [python3 python2 python], [missing])
+have_docwriter=no
+if test "x$PYTHON" != "xmissing"; then
+  AC_CHECK_PROGS([PIP], [pip3 pip2 pip], [missing])
+
+  if test "x$PIP" != "xmissing"; then
+    AC_MSG_CHECKING([for \`docwriter' Python module])
+    $PIP show -q docwriter
+    if test "x$?" = "x0"; then
+      have_docwriter=yes
+      AC_MSG_RESULT([yes])
+    else
+      AC_MSG_RESULT([no])
+    fi
+  fi
+fi
+
 
 # entries in Requires.private are separated by commas;
 REQUIRES_PRIVATE="$zlib_reqpriv,     \
@@ -1111,5 +1130,16 @@ Library configuration:
   libpng:        $have_libpng
   harfbuzz:      $have_harfbuzz
 ])
+
+# Warn if docwriter is not installed
+
+if test $have_docwriter = no; then
+  AC_MSG_NOTICE([
+  Warning: \`make refdoc' will fail since pip package \`docwriter' is not
+  installed.  To install, run \`$PIP install docwriter', or to use a python
+  virtual environment, run \`make refdoc-venv' (requires pip package
+  \`virtualenv').
+  ])
+fi
 
 # end of configure.raw

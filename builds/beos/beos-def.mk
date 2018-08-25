@@ -21,6 +21,9 @@ SEP       := /
 BUILD_DIR := $(TOP_DIR)/builds/beos
 PLATFORM  := beos
 
+# This is used for `make refdoc' and `make refdoc-venv'
+#
+BIN := bin
 
 # The directory where all library files are placed.
 #
