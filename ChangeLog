@@ -1,3 +1,16 @@
+2018-08-26  Nikhil Ramakrishnan  <ramakrishnan.nikhil@gmail.com>
+
+	* configure: Copy assets required by docwriter.
+
+	Copy directory `docs/reference/markdown' when FreeType is compiled in a
+	different directory.
+
+	Fixes `make refdoc' if builddir != srcdir.
+
+	Reported as
+
+	  http://lists.nongnu.org/archive/html/freetype-devel/2018-08/msg00083.html
+
 2018-08-26  Werner Lemberg  <wl@gnu.org>
 
 	* src/pshint/pshalgo.c (psh_hint_overlap): Fix numeric overflow.
