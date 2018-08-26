@@ -1,5 +1,13 @@
 2018-08-26  Werner Lemberg  <wl@gnu.org>
 
+	* src/pshint/pshalgo.c (psh_hint_overlap): Fix numeric overflow.
+
+	Reported as
+
+	  https://bugs.chromium.org/p/oss-fuzz/issues/detail?id=10057
+
+2018-08-26  Werner Lemberg  <wl@gnu.org>
+
 	Minor tracing adjustments.
 
 	* src/base/ftstream.c (FT_Stream_EnterFrame, FT_Stream_ExitFrame):
