@@ -239,6 +239,8 @@
     FT_ULong  read_bytes;
 
 
+    FT_TRACE7(( "FT_Stream_EnterFrame: %ld bytes\n", count ));
+
     /* check for nested frame access */
     FT_ASSERT( stream && stream->cursor == 0 );
 
@@ -323,7 +325,9 @@
     /*  In this case, the loader code handles the 0-length table          */
     /*  gracefully; however, stream.cursor is really set to 0 by the      */
     /*  FT_Stream_EnterFrame() call, and this is not an error.            */
-    /*                                                                    */
+
+    FT_TRACE7(( "FT_Stream_ExitFrame\n" ));
+
     FT_ASSERT( stream );
 
     if ( stream->read )

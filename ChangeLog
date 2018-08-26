@@ -1,5 +1,14 @@
 2018-08-26  Werner Lemberg  <wl@gnu.org>
 
+	Minor tracing adjustments.
+
+	* src/base/ftstream.c (FT_Stream_EnterFrame, FT_Stream_ExitFrame):
+	Trace.
+
+	* src/truetype/ttgload.c (TT_Access_Glyph_Frame): Remove tracing.
+
+2018-08-26  Werner Lemberg  <wl@gnu.org>
+
 	[truetype] Avoid nested frames.
 
 	Triggered by
