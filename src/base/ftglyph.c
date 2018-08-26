@@ -76,7 +76,7 @@
     /* do lazy copying whenever possible */
     if ( slot->internal->flags & FT_GLYPH_OWN_BITMAP )
     {
-      glyph->bitmap = slot->bitmap;
+      glyph->bitmap          = slot->bitmap;
       slot->internal->flags &= ~FT_GLYPH_OWN_BITMAP;
     }
     else
@@ -400,8 +400,8 @@
   FT_Get_Glyph( FT_GlyphSlot  slot,
                 FT_Glyph     *aglyph )
   {
-    FT_Error    error;
-    FT_Glyph    glyph;
+    FT_Error  error;
+    FT_Glyph  glyph;
 
 
     if ( !slot )

@@ -1,4 +1,14 @@
-2018-05-25  Nikhil Ramakrishnan  <ramakrishnan.nikhil@gmail.com>
+2018-08-26  Werner Lemberg  <wl@gnu.org>
+
+	Various minor clean-ups.
+
+	* src/base/ftapi.c: Remove.  Unused.
+	* src/base/Jamfile (_sources): Updated.
+
+	* src/base/ftstream.c (FT_Stream_ReleaseFrame): Remove redundant
+	code.
+
+2018-08-25  Nikhil Ramakrishnan  <ramakrishnan.nikhil@gmail.com>
 
 	Convert documentation markup to Markdown.
 

@@ -96,13 +96,13 @@ FT_BEGIN_HEADER
   /* The structure type must be set in the FT_STRUCTURE macro before       */
   /* calling the FT_FRAME_START() macro.                                   */
   /*                                                                       */
-#define FT_FIELD_SIZE( f ) \
+#define FT_FIELD_SIZE( f )                          \
           (FT_Byte)sizeof ( ((FT_STRUCTURE*)0)->f )
 
-#define FT_FIELD_SIZE_DELTA( f ) \
+#define FT_FIELD_SIZE_DELTA( f )                       \
           (FT_Byte)sizeof ( ((FT_STRUCTURE*)0)->f[0] )
 
-#define FT_FIELD_OFFSET( f ) \
+#define FT_FIELD_OFFSET( f )                         \
           (FT_UShort)( offsetof( FT_STRUCTURE, f ) )
 
 #define FT_FRAME_FIELD( frame_op, field ) \
@@ -406,11 +406,13 @@ FT_BEGIN_HEADER
 
   /* Enter a frame of `count' consecutive bytes in a stream.  Returns an */
   /* error if the frame could not be read/accessed.  The caller can use  */
-  /* the `FT_Stream_Get_XXX' functions to retrieve frame data without    */
+  /* the `FT_Stream_GetXXX' functions to retrieve frame data without     */
   /* error checks.                                                       */
   /*                                                                     */
   /* You must _always_ call `FT_Stream_ExitFrame' once you have entered  */
   /* a stream frame!                                                     */
+  /*                                                                     */
+  /* Nested frames are not permitted.                                    */
   /*                                                                     */
   FT_BASE( FT_Error )
   FT_Stream_EnterFrame( FT_Stream  stream,
@@ -420,14 +422,17 @@ FT_BEGIN_HEADER
   FT_BASE( void )
   FT_Stream_ExitFrame( FT_Stream  stream );
 
+
   /* Extract a stream frame.  If the stream is disk-based, a heap block */
   /* is allocated and the frame bytes are read into it.  If the stream  */
-  /* is memory-based, this function simply set a pointer to the data.   */
+  /* is memory-based, this function simply sets a pointer to the data.  */
   /*                                                                    */
   /* Useful to optimize access to memory-based streams transparently.   */
   /*                                                                    */
-  /* All extracted frames must be `freed' with a call to the function   */
-  /* FT_Stream_ReleaseFrame().                                          */
+  /* `FT_Stream_GetXXX' functions can't be used.                        */
+  /*                                                                    */
+  /* An extracted frame must be `freed' with a call to the function     */
+  /* `FT_Stream_ReleaseFrame'.                                          */
   /*                                                                    */
   FT_BASE( FT_Error )
   FT_Stream_ExtractFrame( FT_Stream  stream,
@@ -438,6 +443,7 @@ FT_BEGIN_HEADER
   FT_BASE( void )
   FT_Stream_ReleaseFrame( FT_Stream  stream,
                           FT_Byte**  pbytes );
+
 
   /* read a byte from an entered frame */
   FT_BASE( FT_Char )

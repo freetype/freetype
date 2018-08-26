@@ -222,11 +222,11 @@
 
 #ifdef FT_DEBUG_MEMORY
       ft_mem_free( memory, *pbytes );
-      *pbytes = NULL;
 #else
       FT_FREE( *pbytes );
 #endif
     }
+
     *pbytes = NULL;
   }
 
@@ -282,6 +282,7 @@
         FT_FREE( stream->base );
         error = FT_THROW( Invalid_Stream_Operation );
       }
+
       stream->cursor = stream->base;
       stream->limit  = stream->cursor + count;
       stream->pos   += read_bytes;
@@ -329,6 +330,7 @@
     {
       FT_Memory  memory = stream->memory;
 
+
 #ifdef FT_DEBUG_MEMORY
       ft_mem_free( memory, stream->base );
       stream->base = NULL;
@@ -336,6 +338,7 @@
       FT_FREE( stream->base );
 #endif
     }
+
     stream->cursor = NULL;
     stream->limit  = NULL;
   }
