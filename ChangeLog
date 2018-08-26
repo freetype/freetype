@@ -1,3 +1,7 @@
+2018-08-26  Werner Lemberg  <wl@gnu.org>
+
+	* src/truetype/ttobjs.c (tt_size_read_bytecode): Trace CVT values.
+
 2018-08-26  Nikhil Ramakrishnan  <ramakrishnan.nikhil@gmail.com>
 
 	* configure: Copy assets required by docwriter.
