@@ -1271,7 +1271,7 @@
 	* src/autofit/afcjk.c (af_cjk_metrics_init_widths): Use it.
 	(af_cjk_metrics_init, af_cjk_script_class): Updated.
 
-	* src/autofit/afindic.c	(af_indic_metrics_init,
+	* src/autofit/afindic.c (af_indic_metrics_init,
 	af_indic_script_class): Updated.
 
 	* src/autofit/afcjk.h, src/autofit/aflatin.h: Updated.

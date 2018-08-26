@@ -95,7 +95,7 @@
 
 2018-08-23  Werner Lemberg  <wl@gnu.org>
 
-	Add macros for handling	over-/underflowing `FT_Int64' values.
+	Add macros for handling over-/underflowing `FT_Int64' values.
 
 	* include/freetype/internal/ftcalc.h (ADD_INT64, SUB_INT64,
 	MUL_INT64, DIV_INT64) [FT_LONG64]: New macros.

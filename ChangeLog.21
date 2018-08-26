@@ -553,7 +553,7 @@
 	(T1_New_Parser): Use it to check font header before allocating
 	anything on the heap.
 
-	* src/type42/t42parse.c	(t42_parser_init): Modify functions to check
+	* src/type42/t42parse.c (t42_parser_init): Modify functions to check
 	the font header before allocating anything on the heap.
 
 	* include/freetype/internal/ftmemory.h (FT_ARRAY_MAX,
