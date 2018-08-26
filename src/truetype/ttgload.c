@@ -1534,12 +1534,11 @@
                        FT_UInt    recurse_count,
                        FT_Bool    header_only )
   {
-    FT_Error        error        = FT_Err_Ok;
+    FT_Error        error   = FT_Err_Ok;
     FT_Fixed        x_scale, y_scale;
     FT_ULong        offset;
-    TT_Face         face         = loader->face;
-    FT_GlyphLoader  gloader      = loader->gloader;
-    FT_Bool         opened_frame = 0;
+    TT_Face         face    = loader->face;
+    FT_GlyphLoader  gloader = loader->gloader;
 
 #ifdef FT_CONFIG_OPTION_INCREMENTAL
     FT_StreamRec    inc_stream;
@@ -1572,15 +1571,15 @@
 
     loader->glyph_index = glyph_index;
 
-    if ( ( loader->load_flags & FT_LOAD_NO_SCALE ) == 0 )
-    {
-      x_scale = loader->size->metrics->x_scale;
-      y_scale = loader->size->metrics->y_scale;
-    }
-    else
+    if ( loader->load_flags & FT_LOAD_NO_SCALE )
     {
       x_scale = 0x10000L;
       y_scale = 0x10000L;
+    }
+    else
+    {
+      x_scale = loader->size->metrics->x_scale;
+      y_scale = loader->size->metrics->y_scale;
     }
 
     /* Set `offset' to the start of the glyph relative to the start of */
@@ -1639,38 +1638,36 @@
       if ( error )
         goto Exit;
 
-      opened_frame = 1;
-
       /* read glyph header first */
       error = face->read_glyph_header( loader );
-      if ( error )
-        goto Exit;
 
-      /* the metrics must be computed after loading the glyph header */
-      /* since we need the glyph's `yMax' value in case the vertical */
-      /* metrics must be emulated                                    */
-      error = tt_get_metrics( loader, glyph_index );
-      if ( error )
-        goto Exit;
+      face->forget_glyph_frame( loader );
 
-      if ( header_only )
+      if ( error )
         goto Exit;
     }
 
+    /* a space glyph */
     if ( loader->byte_len == 0 || loader->n_contours == 0 )
     {
       loader->bbox.xMin = 0;
       loader->bbox.xMax = 0;
       loader->bbox.yMin = 0;
       loader->bbox.yMax = 0;
+    }
 
-      error = tt_get_metrics( loader, glyph_index );
-      if ( error )
-        goto Exit;
+    /* the metrics must be computed after loading the glyph header */
+    /* since we need the glyph's `yMax' value in case the vertical */
+    /* metrics must be emulated                                    */
+    error = tt_get_metrics( loader, glyph_index );
+    if ( error )
+      goto Exit;
 
-      if ( header_only )
-        goto Exit;
+    if ( header_only )
+      goto Exit;
 
+    if ( loader->byte_len == 0 || loader->n_contours == 0 )
+    {
       /* must initialize points before (possibly) overriding */
       /* glyph metrics from the incremental interface        */
       tt_loader_set_pp( loader );
@@ -1726,7 +1723,6 @@
         loader->pp4.x = points[3].x;
         loader->pp4.y = points[3].y;
 
-
         /* recalculate linear horizontal and vertical advances */
         /* if we don't have HVAR and VVAR, respectively        */
         if ( !( loader->face->variation_support & TT_FACE_FLAG_VAR_HADVANCE ) )
@@ -1767,6 +1763,14 @@
     /***********************************************************************/
     /***********************************************************************/
 
+    /* we now open a frame again, right after the glyph header */
+    /* (which consists of 10 bytes)                            */
+    error = face->access_glyph_frame( loader, glyph_index,
+                                      face->glyf_offset + offset + 10,
+                                      (FT_UInt)loader->byte_len - 10 );
+    if ( error )
+      goto Exit;
+
     /* if it is a simple glyph, load it */
 
     if ( loader->n_contours > 0 )
@@ -1777,7 +1781,6 @@
 
       /* all data have been read */
       face->forget_glyph_frame( loader );
-      opened_frame = 0;
 
       error = TT_Process_Simple_Glyph( loader );
       if ( error )
@@ -1811,7 +1814,6 @@
        * double cast to make this portable.  Note, however, that this needs
        * pointers with a width of at least 32 bits.
        */
-
 
       /* clear the nodes filled by sibling chains */
       node = ft_list_get_node_at( &loader->composites, recurse_count );
@@ -1852,7 +1854,6 @@
 
       /* all data we need are read */
       face->forget_glyph_frame( loader );
-      opened_frame = 0;
 
 #ifdef TT_CONFIG_OPTION_GX_VAR_SUPPORT
 
@@ -2106,9 +2107,6 @@
     /***********************************************************************/
 
   Exit:
-
-    if ( opened_frame )
-      face->forget_glyph_frame( loader );
 
 #ifdef FT_CONFIG_OPTION_INCREMENTAL
 

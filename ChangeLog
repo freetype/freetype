@@ -1,5 +1,22 @@
 2018-08-26  Werner Lemberg  <wl@gnu.org>
 
+	[truetype] Avoid nested frames.
+
+	Triggered by
+
+	  https://bugs.chromium.org/p/oss-fuzz/issues/detail?id=10054
+
+	* src/truetype/ttgload.c (load_truetype_glyph): Don't use variable
+	`opened_frame' to trace whether a frame must be closed at the end of
+	function: This fails because `TT_Vary_Apply_Glyph_Deltas' (which
+	gets called for space glyphs) uses a frame by itself.  Instead,
+	close the frame after loading the header, then use another frame for
+	the remaining part of the glyph later on.
+
+	Also avoid calling `tt_get_metrics' twice under some circumstances.
+
+2018-08-26  Werner Lemberg  <wl@gnu.org>
+
 	Various minor clean-ups.
 
 	* src/base/ftapi.c: Remove.  Unused.
