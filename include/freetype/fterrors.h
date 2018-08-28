@@ -92,8 +92,8 @@
    *    #include FT_ERRORS_H
    *  ```
    *
-   *  Note that `FT_Err_Ok` is _not_ defined with `FT_ERRORDEF` but with
-   *  `FT_NOERRORDEF`; it is always zero.
+   *  Note that `FT_Err_Ok` is _not_ defined with `FT_ERRORDEF`; it is
+   *  always zero.
    *
    */
 
