@@ -220,7 +220,7 @@ FT_BEGIN_HEADER
    *   for certain configurations only.
    *
    *   If you use a build system like cmake or the 'configure' script,
-   *   options set by those programs have precendence, overwriting the value
+   *   options set by those programs have precedence, overwriting the value
    *   here with the configured one.
    */
 /* #define FT_CONFIG_OPTION_SYSTEM_ZLIB */
@@ -240,7 +240,7 @@ FT_BEGIN_HEADER
    *   Define this macro if you want to enable this 'feature'.
    *
    *   If you use a build system like cmake or the 'configure' script,
-   *   options set by those programs have precendence, overwriting the value
+   *   options set by those programs have precedence, overwriting the value
    *   here with the configured one.
    */
 /* #define FT_CONFIG_OPTION_USE_BZIP2 */
@@ -269,7 +269,7 @@ FT_BEGIN_HEADER
    *   Define this macro if you want to enable this 'feature'.
    *
    *   If you use a build system like cmake or the 'configure' script,
-   *   options set by those programs have precendence, overwriting the value
+   *   options set by those programs have precedence, overwriting the value
    *   here with the configured one.
    */
 /* #define FT_CONFIG_OPTION_USE_PNG */
@@ -286,7 +286,7 @@ FT_BEGIN_HEADER
    *   Define this macro if you want to enable this 'feature'.
    *
    *   If you use a build system like cmake or the 'configure' script,
-   *   options set by those programs have precendence, overwriting the value
+   *   options set by those programs have precedence, overwriting the value
    *   here with the configured one.
    */
 /* #define FT_CONFIG_OPTION_USE_HARFBUZZ */
