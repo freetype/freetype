@@ -1,3 +1,14 @@
+2018-08-29  Armin Hasitzka  <prince.cherusker@gmail.com>
+
+	Fix numeric overflows.
+
+	* src/pshint/pshalgo.c (psh_hint_align, psh_hint_align_light,
+	psh_hint_table_find_strong_points): Fix numeric overflows.
+
+	Reported as
+
+	  https://bugs.chromium.org/p/oss-fuzz/issues/detail?id=10083
+
 2018-08-29  Werner Lemberg  <wl@gnu.org>
 
 	[cff] Fix handling of `roll' op in old engine.

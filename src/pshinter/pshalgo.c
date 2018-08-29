@@ -479,7 +479,7 @@
 
       if ( dimension == 1 )
         psh_blues_snap_stem( &globals->blues,
-                             hint->org_pos + hint->org_len,
+                             ADD_INT( hint->org_pos, hint->org_len ),
                              hint->org_pos,
                              &align );
 
@@ -703,7 +703,7 @@
 
       if ( dimension == 1 )
         psh_blues_snap_stem( &globals->blues,
-                             hint->org_pos + hint->org_len,
+                             ADD_INT( hint->org_pos, hint->org_len ),
                              hint->org_pos,
                              &align );
 
@@ -1538,8 +1538,8 @@
             PSH_Hint  hint = sort[nn];
 
 
-            if ( org_u >= hint->org_pos                 &&
-                org_u <= hint->org_pos + hint->org_len )
+            if ( org_u >=          hint->org_pos                  &&
+                 org_u <= ADD_INT( hint->org_pos, hint->org_len ) )
             {
               point->hint = hint;
               break;
