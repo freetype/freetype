@@ -1,3 +1,15 @@
+2018-08-29  Werner Lemberg  <wl@gnu.org>
+
+	[cff] Fix handling of `roll' op in old engine.
+
+	Reported as
+
+	  https://bugs.chromium.org/p/oss-fuzz/issues/detail?id=10080
+
+	* src/psaux/cffdecode.c (cff_decoder_parse_charstrings) <cff_op_roll>
+	[CFF_CONFIG_OPTION_OLD_ENGINE]: Use modulo for loop count, as
+	documented in the specification.
+
 2018-08-26  Werner Lemberg  <wl@gnu.org>
 
 	* src/truetype/ttobjs.c (tt_size_read_bytecode): Trace CVT values.

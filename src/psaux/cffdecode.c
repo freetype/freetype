@@ -1821,6 +1821,7 @@
 
             if ( idx >= 0 )
             {
+              idx = idx % count;
               while ( idx > 0 )
               {
                 FT_Fixed  tmp = args[count - 1];
@@ -1835,6 +1836,10 @@
             }
             else
             {
+              /* before C99 it is implementation-defined whether    */
+              /* the result of `%' is negative if the first operand */
+              /* is negative                                        */
+              idx = -( ( -idx ) % count );
               while ( idx < 0 )
               {
                 FT_Fixed  tmp = args[0];

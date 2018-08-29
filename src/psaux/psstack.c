@@ -258,6 +258,9 @@
       return;
     }
 
+    /* before C99 it is implementation-defined whether    */
+    /* the result of `%' is negative if the first operand */
+    /* is negative                                        */
     if ( shift < 0 )
       shift = -( ( -shift ) % count );
     else
