@@ -37,6 +37,7 @@
    * provides some macros in `fttypes.h`.
    *
    *   FT_ERR( err )
+   *
    *     Add current error module prefix (as defined with the `FT_ERR_PREFIX`
    *     macro) to 'err'.  For example, in the BDF module the line
    *
@@ -49,7 +50,9 @@
    *     For simplicity, you can always use `FT_Err_Ok` directly instead of
    *     'FT_ERR( Ok )'.
    *
-   *   FT_ERR_EQ( errcode, err ) FT_ERR_NEQ( errcode, err )
+   *   FT_ERR_EQ( errcode, err )
+   *   FT_ERR_NEQ( errcode, err )
+   *
    *     Compare error code 'errcode' with the error 'err' for equality and
    *     inequality, respectively.  Example:
    *
@@ -63,9 +66,10 @@
    *       if ( error == FT_Err_Invalid_Outline )
    *         ...
    *
-   *   FT_ERROR_BASE( errcode ) FT_ERROR_MODULE( errcode )
-   *     Get base error and module error code, respectively.
+   *   FT_ERROR_BASE( errcode )
+   *   FT_ERROR_MODULE( errcode )
    *
+   *     Get base error and module error code, respectively.
    *
    * It can also be used to create a module error message table easily with
    * something like
