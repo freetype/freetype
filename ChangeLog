@@ -1,5 +1,13 @@
 2018-08-30  Armin Hasitzka  <prince.cherusker@gmail.com>
 
+	[errors] Introduce a macro to control `FT_Error_String'.
+
+	* devel/ftoption.h (FT_CONFIG_OPTION_ERROR_STRINGS),
+	include/freetype/config/ftoption.h (FT_CONFIG_OPTION_ERROR_STRINGS):
+	New macro.
+
+2018-08-30  Armin Hasitzka  <prince.cherusker@gmail.com>
+
 	[errors] Introduce `FT_Error_String'.
 
 	* include/freetype/fterrors.h (FT_Error_String),

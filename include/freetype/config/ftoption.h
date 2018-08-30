@@ -493,6 +493,19 @@ FT_BEGIN_HEADER
 #undef FT_CONFIG_OPTION_USE_MODULE_ERRORS
 
 
+  /**************************************************************************
+   *
+   * Error Strings
+   *
+   *   If this macro is set, `FT_Error_String' will return meaningful
+   *   descriptions.  This is not enabled by default to reduce the overall
+   *   size of FreeType.
+   *
+   *   More details can be found in the file fterrors.h.
+   */
+/* #define FT_CONFIG_OPTION_ERROR_STRINGS */
+
+
   /*************************************************************************/
   /*************************************************************************/
   /****                                                                 ****/
