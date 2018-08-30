@@ -342,6 +342,7 @@
   }
 
 
+  /* overflow-resistant presetting of bitmap position and dimensions */
   FT_BASE_DEF( void )
   ft_glyphslot_preset_bitmap( FT_GlyphSlot      slot,
                               FT_Render_Mode    mode,
@@ -352,7 +353,7 @@
 
     FT_Pixel_Mode  pixel_mode;
 
-    FT_BBox  cbox;
+    FT_BBox  cbox, pbox;
     FT_Pos   x_shift = 0;
     FT_Pos   y_shift = 0;
     FT_Pos   x_left, y_top;
@@ -372,10 +373,17 @@
     /* taking into account the origin shift      */
     FT_Outline_Get_CBox( outline, &cbox );
 
-    cbox.xMin += x_shift;
-    cbox.yMin += y_shift;
-    cbox.xMax += x_shift;
-    cbox.yMax += y_shift;
+    /* rough estimte of pixel box */
+    pbox.xMin = ( cbox.xMin >> 6 ) + ( x_shift >> 6 );
+    pbox.yMin = ( cbox.yMin >> 6 ) + ( y_shift >> 6 );
+    pbox.xMax = ( cbox.xMax >> 6 ) + ( x_shift >> 6 );
+    pbox.yMax = ( cbox.yMax >> 6 ) + ( y_shift >> 6 );
+
+    /* tiny remainder box */
+    cbox.xMin = ( cbox.xMin & 63 ) + ( x_shift & 63 );
+    cbox.yMin = ( cbox.yMin & 63 ) + ( y_shift & 63 );
+    cbox.xMax = ( cbox.xMax & 63 ) + ( x_shift & 63 );
+    cbox.yMax = ( cbox.yMax & 63 ) + ( y_shift & 63 );
 
     switch ( mode )
     {
@@ -384,58 +392,63 @@
 #if 1
       /* undocumented but confirmed: bbox values get rounded    */
       /* unless the rounded box can collapse for a narrow glyph */
-      if ( cbox.xMax - cbox.xMin < 64 )
+      if ( pbox.xMax - pbox.xMin == 0 )
       {
         cbox.xMin = ( cbox.xMin + cbox.xMax ) / 2 - 32;
         cbox.xMax = cbox.xMin + 64;
       }
+      else if ( pbox.xMax - pbox.xMin == 1 )
+      {
+        cbox.xMin = cbox.xMax = ( cbox.xMin + cbox.xMax ) / 2;
+      }
 
-      cbox.xMin = FT_PIX_ROUND_LONG( cbox.xMin );
-      cbox.xMax = FT_PIX_ROUND_LONG( cbox.xMax );
+      pbox.xMin += ( cbox.xMin + 32 ) >> 6;
+      pbox.xMax += ( cbox.xMax + 32 ) >> 6;
 
-      if ( cbox.yMax - cbox.yMin < 64 )
+      if ( pbox.yMax - pbox.yMin == 0 )
       {
         cbox.yMin = ( cbox.yMin + cbox.yMax ) / 2 - 32;
         cbox.yMax = cbox.yMin + 64;
       }
+      else if ( pbox.yMax - pbox.yMin == 1 )
+      {
+        cbox.yMin = cbox.yMax = ( cbox.yMin + cbox.yMax ) / 2;
+      }
 
-      cbox.yMin = FT_PIX_ROUND_LONG( cbox.yMin );
-      cbox.yMax = FT_PIX_ROUND_LONG( cbox.yMax );
+      pbox.yMin += ( cbox.yMin + 32 ) >> 6;
+      pbox.yMax += ( cbox.yMax + 32 ) >> 6;
 
       break;
 #else
-      goto Round;
+      goto Adjust;
 #endif
 
     case FT_RENDER_MODE_LCD:
       pixel_mode = FT_PIXEL_MODE_LCD;
       ft_lcd_padding( &cbox, slot, mode );
-      goto Round;
+      goto Adjust;
 
     case FT_RENDER_MODE_LCD_V:
       pixel_mode = FT_PIXEL_MODE_LCD_V;
       ft_lcd_padding( &cbox, slot, mode );
-      goto Round;
+      goto Adjust;
 
     case FT_RENDER_MODE_NORMAL:
     case FT_RENDER_MODE_LIGHT:
     default:
       pixel_mode = FT_PIXEL_MODE_GRAY;
-    Round:
-      cbox.xMin = FT_PIX_FLOOR( cbox.xMin );
-      cbox.yMin = FT_PIX_FLOOR( cbox.yMin );
-      cbox.xMax = FT_PIX_CEIL_LONG( cbox.xMax );
-      cbox.yMax = FT_PIX_CEIL_LONG( cbox.yMax );
+    Adjust:
+      pbox.xMin += cbox.xMin >> 6;
+      pbox.yMin += cbox.yMin >> 6;
+      pbox.xMax += ( cbox.xMax + 63 ) >> 6;
+      pbox.yMax += ( cbox.yMax + 63 ) >> 6;
     }
 
-    x_shift = SUB_LONG( x_shift, cbox.xMin );
-    y_shift = SUB_LONG( y_shift, cbox.yMin );
+    x_left = pbox.xMin;
+    y_top  = pbox.yMax;
 
-    x_left = cbox.xMin >> 6;
-    y_top  = cbox.yMax >> 6;
-
-    width  = ( (FT_ULong)cbox.xMax - (FT_ULong)cbox.xMin ) >> 6;
-    height = ( (FT_ULong)cbox.yMax - (FT_ULong)cbox.yMin ) >> 6;
+    width  = pbox.xMax - pbox.xMin;
+    height = pbox.yMax - pbox.yMin;
 
     switch ( pixel_mode )
     {

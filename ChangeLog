@@ -1,3 +1,9 @@
+2018-08-30  Alexei Podtelezhnikov  <apodtele@gmail.com>
+
+	[base] Overflow-resistant bitmap presetting.
+
+	* src/base/ftobjs.c (ft_glyphslot_preset_bitmap): Implement it.
+
 2018-08-29  Armin Hasitzka  <prince.cherusker@gmail.com>
 
 	Fix numeric overflows.
