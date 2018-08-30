@@ -373,7 +373,7 @@
     /* taking into account the origin shift      */
     FT_Outline_Get_CBox( outline, &cbox );
 
-    /* rough estimte of pixel box */
+    /* rough estimate of pixel box */
     pbox.xMin = ( cbox.xMin >> 6 ) + ( x_shift >> 6 );
     pbox.yMin = ( cbox.yMin >> 6 ) + ( y_shift >> 6 );
     pbox.xMax = ( cbox.xMax >> 6 ) + ( x_shift >> 6 );
@@ -398,9 +398,7 @@
         cbox.xMax = cbox.xMin + 64;
       }
       else if ( pbox.xMax - pbox.xMin == 1 )
-      {
         cbox.xMin = cbox.xMax = ( cbox.xMin + cbox.xMax ) / 2;
-      }
 
       pbox.xMin += ( cbox.xMin + 32 ) >> 6;
       pbox.xMax += ( cbox.xMax + 32 ) >> 6;
@@ -411,9 +409,7 @@
         cbox.yMax = cbox.yMin + 64;
       }
       else if ( pbox.yMax - pbox.yMin == 1 )
-      {
         cbox.yMin = cbox.yMax = ( cbox.yMin + cbox.yMax ) / 2;
-      }
 
       pbox.yMin += ( cbox.yMin + 32 ) >> 6;
       pbox.yMax += ( cbox.yMax + 32 ) >> 6;
