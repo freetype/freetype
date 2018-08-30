@@ -252,6 +252,12 @@ FT_BEGIN_HEADER
     AF_Point   next;     /* next point in contour     */
     AF_Point   prev;     /* previous point in contour */
 
+#ifdef FT_DEBUG_AUTOFIT
+    /* track `before' and `after' edges for strong points */
+    AF_Edge    before[2];
+    AF_Edge    after[2];
+#endif
+
   } AF_PointRec;
 
 

@@ -1,3 +1,16 @@
+2018-08-30  Werner Lemberg  <wl@gnu.org>
+
+	[autofit] Trace `before' and `after' edges of strong points.
+
+	* src/autofit/afhints.h (AF_PointRec) [FT_DEBUG_AUTOFIT]: New arrays
+	`before' and `after'.
+
+	* src/autofit/afhints.c (af_get_strong_edge_index): New auxiliary
+	function.
+	(af_glyph_hints_dump_points): Trace `before' and `after' edges.
+	(af_glyph_hints_align_strong_points) [FT_DEBUG_AUTOFIT]: Set
+	`before' and `after' information.
+
 2018-08-30  Alexei Podtelezhnikov  <apodtele@gmail.com>
 
 	[base] Overflow-resistant bitmap presetting.

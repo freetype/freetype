@@ -297,6 +297,19 @@
   }
 
 
+  static int
+  af_get_strong_edge_index( AF_GlyphHints  hints,
+                            AF_Edge*       strong_edges,
+                            int            dimension )
+  {
+    AF_AxisHints  axis  = &hints->axis[dimension];
+    AF_Edge       edges = axis->edges;
+
+
+    return AF_INDEX_NUM( strong_edges[dimension], edges );
+  }
+
+
 #ifdef __cplusplus
   extern "C" {
 #endif
@@ -317,8 +330,10 @@
     {
       AF_DUMP(( "  index  hedge  hseg  vedge  vseg  flags "
              /* "  XXXXX  XXXXX XXXXX  XXXXX XXXXX  XXXXXX" */
-                "  xorg  yorg  xscale  yscale   xfit    yfit" ));
+                "  xorg  yorg  xscale  yscale   xfit    yfit "
              /* " XXXXX XXXXX XXXX.XX XXXX.XX XXXX.XX XXXX.XX" */
+                "  hbef  haft  vbef  vaft" ));
+             /* " XXXXX XXXXX XXXXX XXXXX" */
     }
     else
       AF_DUMP(( "  (none)\n" ));
@@ -330,6 +345,7 @@
       int  segment_idx_1 = af_get_segment_index( hints, point_idx, 1 );
 
       char  buf1[16], buf2[16], buf3[16], buf4[16];
+      char  buf5[16], buf6[16], buf7[16], buf8[16];
 
 
       /* insert extra newline at the beginning of a contour */
@@ -340,7 +356,8 @@
       }
 
       AF_DUMP(( "  %5d  %5s %5s  %5s %5s  %s"
-                " %5d %5d %7.2f %7.2f %7.2f %7.2f\n",
+                " %5d %5d %7.2f %7.2f %7.2f %7.2f"
+                " %5s %5s %5s %5s\n",
                 point_idx,
                 af_print_idx( buf1,
                               af_get_edge_index( hints, segment_idx_1, 1 ) ),
@@ -359,7 +376,20 @@
                 point->ox / 64.0,
                 point->oy / 64.0,
                 point->x / 64.0,
-                point->y / 64.0 ));
+                point->y / 64.0,
+
+                af_print_idx( buf5, af_get_strong_edge_index( hints,
+                                                              point->before,
+                                                              1 ) ),
+                af_print_idx( buf6, af_get_strong_edge_index( hints,
+                                                              point->after,
+                                                              1 ) ),
+                af_print_idx( buf7, af_get_strong_edge_index( hints,
+                                                              point->before,
+                                                              0 ) ),
+                af_print_idx( buf8, af_get_strong_edge_index( hints,
+                                                              point->after,
+                                                              0 ) ) ));
     }
     AF_DUMP(( "\n" ));
   }
@@ -1309,6 +1339,12 @@
         if ( delta >= 0 )
         {
           u = edge->pos - ( edge->opos - ou );
+
+#ifdef FT_DEBUG_AUTOFIT
+          point->before[dim] = edge;
+          point->after[dim]  = NULL;
+#endif
+
           goto Store_Point;
         }
 
@@ -1318,6 +1354,12 @@
         if ( delta >= 0 )
         {
           u = edge->pos + ( ou - edge->opos );
+
+#ifdef FT_DEBUG_AUTOFIT
+          point->before[dim] = NULL;
+          point->after[dim]  = edge;
+#endif
+
           goto Store_Point;
         }
 
@@ -1364,6 +1406,12 @@
             {
               /* we are on the edge */
               u = edge->pos;
+
+#ifdef FT_DEBUG_AUTOFIT
+              point->before[dim] = NULL;
+              point->after[dim]  = NULL;
+#endif
+
               goto Store_Point;
             }
           }
@@ -1373,6 +1421,11 @@
             AF_Edge  before = edges + min - 1;
             AF_Edge  after  = edges + min + 0;
 
+
+#ifdef FT_DEBUG_AUTOFIT
+            point->before[dim] = before;
+            point->after[dim]  = after;
+#endif
 
             /* assert( before && after && before != after ) */
             if ( before->scale == 0 )
