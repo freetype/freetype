@@ -23,6 +23,7 @@
 #include "ftcalc.c"
 #include "ftcolor.c"
 #include "ftdbgmem.c"
+#include "fterrors.c"
 #include "ftfntfmt.c"
 #include "ftgloadr.c"
 #include "fthash.c"

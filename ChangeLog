@@ -1,3 +1,15 @@
+2018-08-30  Armin Hasitzka  <prince.cherusker@gmail.com>
+
+	[errors] Introduce `FT_Error_String'.
+
+	* include/freetype/fterrors.h (FT_Error_String),
+	src/base/fterrors.c (FT_Error_String): Implement `FT_Error_String'.
+
+	* src/base/ftbase.c, src/base/Jamfile (_source),
+	src/base/rules.mk (BASE_SRC): Add `fterrors.c' to the build logic.
+
+	* src/base/ftdebug.c (FT_Throw): Use `FT_Error_String'.
+
 2018-08-30  Werner Lemberg  <wl@gnu.org>
 
 	[autofit] Trace `before' and `after' edges of strong points.

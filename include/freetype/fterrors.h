@@ -166,6 +166,8 @@
   /*                                                           */
 #ifndef FT_ERRORDEF
 
+#define FT_INCLUDE_ERR_PROTOS
+
 #define FT_ERRORDEF( e, v, s )  e = v,
 #define FT_ERROR_START_LIST     enum {
 #define FT_ERROR_END_LIST       FT_ERR_CAT( FT_ERR_PREFIX, Max ) };
@@ -227,6 +229,42 @@
 #ifndef FT2_BUILD_LIBRARY
 #undef FT_ERR_PREFIX
 #endif
+
+#ifdef FT_INCLUDE_ERR_PROTOS
+
+
+  /**************************************************************************
+   *
+   * @function:
+   *   FT_Error_String
+   *
+   * @description:
+   *   Retrieve the description of a valid FreeType error code.
+   *
+   * @input:
+   *   error_code ::
+   *     A valid FreeType error code.
+   *
+   * @return:
+   *   A C~string or `NULL`, if any error occurred.
+   *
+   * @note:
+   *   FreeType has to be compiled with `FT_CONFIG_OPTION_ERROR_STRINGS` or
+   *   `FT_DEBUG_LEVEL_ERROR` to get meaningful descriptions.
+   *   'error_string' will be `NULL` otherwise.
+   *
+   *   Module identification will be ignored:
+   *
+   *   ```c
+   *     strcmp( FT_Error_String(  FT_Err_Unknown_File_Format ),
+   *             FT_Error_String( BDF_Err_Unknown_File_Format ) ) == 0;
+   *   ```
+   */
+  FT_EXPORT( const char* )
+  FT_Error_String( FT_Error  error_code );
+
+
+#endif /* FT_INCLUDE_ERR_PROTOS */
 
 #endif /* !(FTERRORS_H_ && __FTERRORS_H__) */
 
