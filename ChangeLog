@@ -1,3 +1,12 @@
+2018-08-31  Armin Hasitzka  <prince.cherusker@gmail.com>
+
+	[errors] Refine the macro logic surrounding `FT_Error_String'.
+
+	* include/freetype/fterrors.h (FT_INCLUDE_ERR_PROTOS,
+	FT_ERR_PROTOS_DEFINED): Undefine `FT_INCLUDE_ERR_PROTOS' after
+	checking it and introduce a new macro that takes proper care of
+	multiple-inclusion protection.
+
 2018-08-31  Werner Lemberg  <wl@gnu.org>
 
 	* src/base/ftdebug.c (FT_Throw): Restore missing `FT_UNUSED' calls.

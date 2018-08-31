@@ -230,7 +230,16 @@
 #undef FT_ERR_PREFIX
 #endif
 
+  /* FT_INCLUDE_ERR_PROTOS:  Control if function prototypes should be       */
+  /*                         included with `#include FT_ERRORS_H'.  This is */
+  /*                         only true where `FT_ERRORDEF' is undefined.    */
+  /* FT_ERR_PROTOS_DEFINED:  Actual multiple-inclusion protection of        */
+  /*                         `fterrors.h'.                                  */
 #ifdef FT_INCLUDE_ERR_PROTOS
+#undef FT_INCLUDE_ERR_PROTOS
+
+#ifndef FT_ERR_PROTOS_DEFINED
+#define FT_ERR_PROTOS_DEFINED
 
 
   /**************************************************************************
@@ -263,6 +272,8 @@
   FT_EXPORT( const char* )
   FT_Error_String( FT_Error  error_code );
 
+
+#endif /* FT_ERR_PROTOS_DEFINED */
 
 #endif /* FT_INCLUDE_ERR_PROTOS */
 
