@@ -774,7 +774,7 @@
 
 	(Font_Class): Rename to...
 	(SPH_Font_Class): This.  Decorate with `const' where appropriate.
-	
+
 	* src/truetype/ttsubpix.h (scale_test_tweak, sph_test_tweak):
 	Decorate arguments with `const' where appropriate.
 
