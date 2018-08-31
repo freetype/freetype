@@ -1,5 +1,9 @@
 2018-08-31  Werner Lemberg  <wl@gnu.org>
 
+	* src/base/ftdebug.c (FT_Throw): Reduce chattiness.
+
+2018-08-31  Werner Lemberg  <wl@gnu.org>
+
 	* src/autofit/afhints.c (af_glyph_hints_reload): Add initialization.
 
 2018-08-30  Alexei Podtelezhnikov  <apodtele@gmail.com>
