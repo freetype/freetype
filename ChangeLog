@@ -1,5 +1,9 @@
 2018-08-31  Werner Lemberg  <wl@gnu.org>
 
+	* src/base/ftdebug.c (FT_Throw): Restore missing `FT_UNUSED' calls.
+
+2018-08-31  Werner Lemberg  <wl@gnu.org>
+
 	* src/base/ftdebug.c (FT_Throw): Reduce chattiness.
 
 2018-08-31  Werner Lemberg  <wl@gnu.org>

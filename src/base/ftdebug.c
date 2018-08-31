@@ -95,6 +95,10 @@
              line,
              error,
              FT_Error_String( error ) );
+#else
+   FT_UNUSED( error );
+   FT_UNUSED( line );
+   FT_UNUSED( file );
 #endif
 
     return 0;
