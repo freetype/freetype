@@ -928,6 +928,14 @@
               prev     = end;
             }
           }
+
+#ifdef FT_DEBUG_AUTOFIT
+          point->before[0] = NULL;
+          point->before[1] = NULL;
+          point->after[0]  = NULL;
+          point->after[1]  = NULL;
+#endif
+
         }
       }
 
