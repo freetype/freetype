@@ -1,5 +1,18 @@
 2018-08-30  Alexei Podtelezhnikov  <apodtele@gmail.com>
 
+	Consolidate bitmap presetting and size assessment.
+
+	* include/freetype/internal/ftobjs.h (ft_glyphslot_preset_bitmap):
+	Change return type.
+	* src/base/ftobjs.c (ft_glyphslot_preset_bitmap): Return the bitmap
+	size assessment.
+
+	* src/raster/ftrend1.c (ft_raster1_render): Use it to refuse the
+	rendering of enourmous or far-fetched outlines.
+	* src/smooth/ftsmooth.c (ft_smooth_render_generic): Ditto.
+
+2018-08-30  Alexei Podtelezhnikov  <apodtele@gmail.com>
+
 	* src/base/ftobjs.c (ft_glyphslot_preset_bitmap): Correct mono.
 
 2018-08-30  Armin Hasitzka  <prince.cherusker@gmail.com>

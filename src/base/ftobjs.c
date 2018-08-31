@@ -343,7 +343,8 @@
 
 
   /* overflow-resistant presetting of bitmap position and dimensions */
-  FT_BASE_DEF( void )
+  /* also checks if the size is too large for rendering              */
+  FT_BASE_DEF( FT_Bool )
   ft_glyphslot_preset_bitmap( FT_GlyphSlot      slot,
                               FT_Render_Mode    mode,
                               const FT_Vector*  origin )
@@ -480,6 +481,16 @@
     bitmap->width      = (unsigned int)width;
     bitmap->rows       = (unsigned int)height;
     bitmap->pitch      = pitch;
+
+    if ( pbox.xMin < -0x8000 || pbox.xMax > 0x7FFF ||
+         pbox.yMin < -0x8000 || pbox.yMax > 0x7FFF )
+    {
+      FT_TRACE3(( "ft_glyphslot_peset_bitmap: [%ld %ld %ld %ld]\n",
+                  pbox.xMin, pbox.yMin, pbox.xMax, pbox.yMax ));
+      return 1;
+    }
+
+    return 0;
   }
 
 

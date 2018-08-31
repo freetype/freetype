@@ -701,8 +701,9 @@ FT_BEGIN_HEADER
   ft_glyphslot_free_bitmap( FT_GlyphSlot  slot );
 
 
-  /* Preset bitmap metrics of an outline glyphslot prior to rendering. */
-  FT_BASE( void )
+  /* Preset bitmap metrics of an outline glyphslot prior to rendering */
+  /* and check if the truncated bbox is too large for rendering.      */       
+  FT_BASE( FT_Bool )
   ft_glyphslot_preset_bitmap( FT_GlyphSlot      slot,
                               FT_Render_Mode    mode,
                               const FT_Vector*  origin );
