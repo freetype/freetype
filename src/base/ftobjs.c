@@ -342,8 +342,8 @@
   }
 
 
-  /* overflow-resistant presetting of bitmap position and dimensions */
-  /* also checks if the size is too large for rendering              */
+  /* overflow-resistant presetting of bitmap position and dimensions; */
+  /* also check whether the size is too large for rendering           */
   FT_BASE_DEF( FT_Bool )
   ft_glyphslot_preset_bitmap( FT_GlyphSlot      slot,
                               FT_Render_Mode    mode,
