@@ -3997,6 +3997,8 @@ FT_BEGIN_HEADER
    *   interpreted depending on the flags returned in `*p_flags`.  See the
    *   OpenType specification for details.
    *
+   *     https://docs.microsoft.com/en-us/typography/opentype/spec/glyf#composite-glyph-description
+   *
    */
   FT_EXPORT( FT_Error )
   FT_Get_SubGlyph_Info( FT_GlyphSlot  glyph,
