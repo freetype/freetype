@@ -391,25 +391,31 @@
       pixel_mode = FT_PIXEL_MODE_MONO;
 #if 1
       /* undocumented but confirmed: bbox values get rounded    */
-      /* unless the rounded box can collapse for a narrow glyph */
-      if ( pbox.xMax - pbox.xMin == 0 )
+      /* for narrow glyphs bbox is extended to one pixel first  */
+      if ( pbox.xMax - pbox.xMin <= 1 )
       {
-        cbox.xMin = ( cbox.xMin + cbox.xMax ) / 2 - 32;
-        cbox.xMax = cbox.xMin + 64;
+        if ( pbox.xMax - pbox.xMin == 0 )
+        {
+          cbox.xMin = ( cbox.xMin + cbox.xMax ) / 2 - 32;
+          cbox.xMax = cbox.xMin + 64;
+        }
+        else if ( cbox.xMax - cbox.xMin < 0 )
+          cbox.xMin = cbox.xMax = ( cbox.xMin + cbox.xMax ) / 2;
       }
-      else if ( pbox.xMax - pbox.xMin == 1 )
-        cbox.xMin = cbox.xMax = ( cbox.xMin + cbox.xMax ) / 2;
 
       pbox.xMin += ( cbox.xMin + 32 ) >> 6;
       pbox.xMax += ( cbox.xMax + 32 ) >> 6;
 
-      if ( pbox.yMax - pbox.yMin == 0 )
+      if ( pbox.yMax - pbox.yMin <= 1 )
       {
-        cbox.yMin = ( cbox.yMin + cbox.yMax ) / 2 - 32;
-        cbox.yMax = cbox.yMin + 64;
+        if ( pbox.yMax - pbox.yMin == 0 )
+        {
+          cbox.yMin = ( cbox.yMin + cbox.yMax ) / 2 - 32;
+          cbox.yMax = cbox.yMin + 64;
+        }
+        else if ( cbox.yMax - cbox.yMin < 0 )
+          cbox.yMin = cbox.yMax = ( cbox.yMin + cbox.yMax ) / 2;
       }
-      else if ( pbox.yMax - pbox.yMin == 1 )
-        cbox.yMin = cbox.yMax = ( cbox.yMin + cbox.yMax ) / 2;
 
       pbox.yMin += ( cbox.yMin + 32 ) >> 6;
       pbox.yMax += ( cbox.yMax + 32 ) >> 6;
