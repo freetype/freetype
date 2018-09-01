@@ -361,8 +361,8 @@
     FT_Pos   width, height, pitch;
 
 
-    if ( slot->internal && ( slot->internal->flags & FT_GLYPH_OWN_BITMAP ) )
-      return;
+    if ( slot->format != FT_GLYPH_FORMAT_OUTLINE )
+      return 1;
 
     if ( origin )
     {

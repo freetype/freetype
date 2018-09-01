@@ -1,3 +1,7 @@
+2018-08-30  Alexei Podtelezhnikov  <apodtele@gmail.com>
+
+	* src/base/ftobjs.c (ft_glyphslot_preset_bitmap): Check glyph format.
+
 2018-08-31  Armin Hasitzka  <prince.cherusker@gmail.com>
 
 	[errors] Refine the macro logic surrounding `FT_Error_String'.
