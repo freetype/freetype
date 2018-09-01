@@ -1,3 +1,19 @@
+2018-09-01  Werner Lemberg  <wl@gnu.org>
+
+	Remove `FT_Outline_{New,Done}_Internal'.
+
+	These public API functions(!) were always undocumented and have
+	escaped all clean-up efforts until now.
+
+	* include/freetype/ftoutln.h (FT_Outline_New_Internal,
+	FT_Outline_Done_Internal): Removed.
+
+	* src/base/ftoutln.h (FT_Outline_New_Internal,
+	FT_Outline_Done_Internal): Merge into...
+	(FT_Outline_New, FT_Outline_Done): ... these functions.
+
+	* docs/README: Updated.
+
 2018-08-30  Alexei Podtelezhnikov  <apodtele@gmail.com>
 
 	* src/base/ftobjs.c (ft_glyphslot_preset_bitmap): Check glyph format.

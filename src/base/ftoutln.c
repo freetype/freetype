@@ -16,13 +16,6 @@
  */
 
 
-  /**************************************************************************
-   *
-   * All functions are declared in freetype.h.
-   *
-   */
-
-
 #include <ft2build.h>
 #include FT_OUTLINE_H
 #include FT_INTERNAL_OBJECTS_H
@@ -296,14 +289,22 @@
   }
 
 
-  FT_EXPORT_DEF( FT_Error )
-  FT_Outline_New_Internal( FT_Memory    memory,
-                           FT_UInt      numPoints,
-                           FT_Int       numContours,
-                           FT_Outline  *anoutline )
-  {
-    FT_Error  error;
+  /* documentation is in ftoutln.h */
 
+  FT_EXPORT_DEF( FT_Error )
+  FT_Outline_New( FT_Library   library,
+                  FT_UInt      numPoints,
+                  FT_Int       numContours,
+                  FT_Outline  *anoutline )
+  {
+    FT_Error   error;
+    FT_Memory  memory;
+
+
+    if ( !library )
+      return FT_THROW( Invalid_Library_Handle );
+
+    memory = library->memory;
 
     if ( !anoutline || !memory )
       return FT_THROW( Invalid_Argument );
@@ -330,25 +331,9 @@
 
   Fail:
     anoutline->flags |= FT_OUTLINE_OWNER;
-    FT_Outline_Done_Internal( memory, anoutline );
+    FT_Outline_Done( library, anoutline );
 
     return error;
-  }
-
-
-  /* documentation is in ftoutln.h */
-
-  FT_EXPORT_DEF( FT_Error )
-  FT_Outline_New( FT_Library   library,
-                  FT_UInt      numPoints,
-                  FT_Int       numContours,
-                  FT_Outline  *anoutline )
-  {
-    if ( !library )
-      return FT_THROW( Invalid_Library_Handle );
-
-    return FT_Outline_New_Internal( library->memory, numPoints,
-                                    numContours, anoutline );
   }
 
 
@@ -436,12 +421,22 @@
   }
 
 
+  /* documentation is in ftoutln.h */
+
   FT_EXPORT_DEF( FT_Error )
-  FT_Outline_Done_Internal( FT_Memory    memory,
-                            FT_Outline*  outline )
+  FT_Outline_Done( FT_Library   library,
+                   FT_Outline*  outline )
   {
+    FT_Memory  memory;
+
+
+    if ( !library )
+      return FT_THROW( Invalid_Library_Handle );
+
     if ( !outline )
       return FT_THROW( Invalid_Outline );
+
+    memory = library->memory;
 
     if ( !memory )
       return FT_THROW( Invalid_Argument );
@@ -455,21 +450,6 @@
     *outline = null_outline;
 
     return FT_Err_Ok;
-  }
-
-
-  /* documentation is in ftoutln.h */
-
-  FT_EXPORT_DEF( FT_Error )
-  FT_Outline_Done( FT_Library   library,
-                   FT_Outline*  outline )
-  {
-    /* check for valid `outline' in FT_Outline_Done_Internal() */
-
-    if ( !library )
-      return FT_THROW( Invalid_Library_Handle );
-
-    return FT_Outline_Done_Internal( library->memory, outline );
   }
 
 

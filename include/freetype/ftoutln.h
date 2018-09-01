@@ -166,13 +166,6 @@ FT_BEGIN_HEADER
                   FT_Outline  *anoutline );
 
 
-  FT_EXPORT( FT_Error )
-  FT_Outline_New_Internal( FT_Memory    memory,
-                           FT_UInt      numPoints,
-                           FT_Int       numContours,
-                           FT_Outline  *anoutline );
-
-
   /**************************************************************************
    *
    * @function:
@@ -198,11 +191,6 @@ FT_BEGIN_HEADER
   FT_EXPORT( FT_Error )
   FT_Outline_Done( FT_Library   library,
                    FT_Outline*  outline );
-
-
-  FT_EXPORT( FT_Error )
-  FT_Outline_Done_Internal( FT_Memory    memory,
-                            FT_Outline*  outline );
 
 
   /**************************************************************************
