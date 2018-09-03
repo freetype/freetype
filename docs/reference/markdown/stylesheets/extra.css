@@ -33,6 +33,9 @@ span.keyword {
     white-space: pre;
     color: #d73a49;
 }
+.md-typeset code {
+    white-space: pre;
+}
 /* H4 Heading */
 h4 {
     background-color: #EEEEFF;

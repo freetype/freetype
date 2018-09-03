@@ -1,3 +1,14 @@
+2018-09-03  Nikhil Ramakrishnan  <ramakrishnan.nikhil@gmail.com>
+
+	[docwriter] Don't break code snippets accross lines.
+
+	Reported as
+
+	  http://lists.nongnu.org/archive/html/freetype-devel/2018-08/msg00124.html
+
+	* docs/reference/markdown/stylesheets/extra.css (.md-typeset code):
+	Add rule `white-space'.
+
 2018-09-03  Werner Lemberg  <wl@gnu.org>
 
 	*/*: s/PSNames/psnames/.
