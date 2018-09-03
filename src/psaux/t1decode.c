@@ -1957,7 +1957,7 @@
   {
     FT_ZERO( decoder );
 
-    /* retrieve PSNames interface from list of current modules */
+    /* retrieve `psnames' interface from list of current modules */
     {
       FT_Service_PsCMaps  psnames;
 

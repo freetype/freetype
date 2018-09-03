@@ -2,7 +2,7 @@
  *
  * psmodule.h
  *
- *   High-level PSNames module interface (specification).
+ *   High-level psnames module interface (specification).
  *
  * Copyright 1996-2018 by
  * David Turner, Robert Wilhelm, and Werner Lemberg.

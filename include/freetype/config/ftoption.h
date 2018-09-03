@@ -321,14 +321,14 @@ FT_BEGIN_HEADER
    *
    * Postscript Names to Unicode Values support
    *
-   *   By default, FreeType 2 is built with the 'PSNames' module compiled in.
+   *   By default, FreeType 2 is built with the 'psnames' module compiled in.
    *   Among other things, the module is used to convert a glyph name into a
    *   Unicode value.  This is especially useful in order to synthesize on
    *   the fly a Unicode charmap from the CFF/Type 1 driver through a big
    *   table named the 'Adobe Glyph List' (AGL).
    *
    *   Undefine this macro if you do not want the Adobe Glyph List compiled
-   *   in your 'PSNames' module.  The Type 1 driver will not be able to
+   *   in your 'psnames' module.  The Type 1 driver will not be able to
    *   synthesize a Unicode charmap out of the glyphs found in the fonts.
    */
 #define FT_CONFIG_OPTION_ADOBE_GLYPH_LIST
@@ -538,11 +538,11 @@ FT_BEGIN_HEADER
    * Define TT_CONFIG_OPTION_POSTSCRIPT_NAMES if you want to be able to load
    * and enumerate the glyph Postscript names in a TrueType or OpenType file.
    *
-   * Note that when you do not compile the 'PSNames' module by undefining the
+   * Note that when you do not compile the 'psnames' module by undefining the
    * above FT_CONFIG_OPTION_POSTSCRIPT_NAMES, the 'sfnt' module will contain
    * additional code used to read the PS Names table from a font.
    *
-   * (By default, the module uses 'PSNames' to extract glyph names.)
+   * (By default, the module uses 'psnames' to extract glyph names.)
    */
 #define TT_CONFIG_OPTION_POSTSCRIPT_NAMES
 

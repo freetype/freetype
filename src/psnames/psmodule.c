@@ -2,7 +2,7 @@
  *
  * psmodule.c
  *
- *   PSNames module implementation (body).
+ *   psnames module implementation (body).
  *
  * Copyright 1996-2018 by
  * David Turner, Robert Wilhelm, and Werner Lemberg.

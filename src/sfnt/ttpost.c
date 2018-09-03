@@ -48,7 +48,7 @@
 #define FT_COMPONENT  ttpost
 
 
-  /* If this configuration macro is defined, we rely on the `PSNames' */
+  /* If this configuration macro is defined, we rely on the `psnames' */
   /* module to grab the glyph names.                                  */
 
 #ifdef FT_CONFIG_OPTION_POSTSCRIPT_NAMES
@@ -62,9 +62,9 @@
 #else /* FT_CONFIG_OPTION_POSTSCRIPT_NAMES */
 
 
-   /* Otherwise, we ignore the `PSNames' module, and provide our own  */
+   /* Otherwise, we ignore the `psnames' module, and provide our own  */
    /* table of Mac names.  Thus, it is possible to build a version of */
-   /* FreeType without the Type 1 driver & PSNames module.            */
+   /* FreeType without the Type 1 driver & psnames module.            */
 
 #define MAC_NAME( x )  (FT_String*)tt_post_default_names[x]
 

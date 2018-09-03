@@ -756,7 +756,7 @@ $ open/append out [.src.psnames]descrip.mms
 $ copy sys$input: out
 $ deck
 #
-# FreeType 2 PSNames driver compilation rules for VMS
+# FreeType 2 psnames driver compilation rules for VMS
 #
 
 

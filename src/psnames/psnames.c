@@ -2,7 +2,7 @@
  *
  * psnames.c
  *
- *   FreeType PSNames module component (body only).
+ *   FreeType psnames module component (body only).
  *
  * Copyright 1996-2018 by
  * David Turner, Robert Wilhelm, and Werner Lemberg.

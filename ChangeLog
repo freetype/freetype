@@ -1,5 +1,11 @@
 2018-09-03  Werner Lemberg  <wl@gnu.org>
 
+	*/*: s/PSNames/psnames/.
+
+	Only tracing messages are affected.
+
+2018-09-03  Werner Lemberg  <wl@gnu.org>
+
 	[sfnt] Fix heap buffer overflow in CPAL handling.
 
 	* src/sfnt/ttcpal.c (tt_face_palette_set): Fix boundary test.
