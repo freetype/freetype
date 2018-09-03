@@ -19,11 +19,11 @@
 
   /**************************************************************************
    *
-   * This file is used to group all #includes to the ANSI C library that
+   * This file is used to group all `#includes` to the ANSI~C library that
    * FreeType normally requires.  It also defines macros to rename the
    * standard functions within the FreeType source code.
    *
-   * Load a file which defines FTSTDLIB_H_ before this one to override it.
+   * Load a file which defines `FTSTDLIB_H_` before this one to override it.
    *
    */
 
@@ -37,21 +37,21 @@
 #define ft_ptrdiff_t  ptrdiff_t
 
 
-  /***********************************************************************
+  /**************************************************************************
    *
    *                          integer limits
    *
-   * UINT_MAX and ULONG_MAX are used to automatically compute the size of
-   * 'int' and 'long' in bytes at compile-time.  So far, this works for all
+   * `UINT_MAX` and `ULONG_MAX` are used to automatically compute the size of
+   * `int` and `long` in bytes at compile-time.  So far, this works for all
    * platforms the library has been tested on.
    *
    * Note that on the extremely rare platforms that do not provide integer
-   * types that are _exactly_ 16 and 32 bits wide (e.g. some old Crays where
-   * 'int' is 36 bits), we do not make any guarantee about the correct
-   * behaviour of FT2 with all fonts.
+   * types that are _exactly_ 16 and 32~bits wide (e.g., some old Crays where
+   * `int` is 36~bits), we do not make any guarantee about the correct
+   * behaviour of FreeType~2 with all fonts.
    *
-   * In these case, `ftconfig.h` will refuse to compile anyway with a message
-   * like 'couldn't find 32-bit type' or something similar.
+   * In these cases, `ftconfig.h` will refuse to compile anyway with a
+   * message like 'couldn't find 32-bit type' or something similar.
    *
    */
 
@@ -155,16 +155,16 @@
 
 #include <setjmp.h>
 
-#define ft_jmp_buf     jmp_buf  /* note: this cannot be a typedef since */
-                                /*       jmp_buf is defined as a macro  */
-                                /*       on certain platforms           */
+#define ft_jmp_buf     jmp_buf  /* note: this cannot be a typedef since  */
+                                /*       `jmp_buf` is defined as a macro */
+                                /*       on certain platforms            */
 
 #define ft_longjmp     longjmp
 #define ft_setjmp( b ) setjmp( *(ft_jmp_buf*) &(b) ) /* same thing here */
 
 
-  /* the following is only used for debugging purposes, i.e., if */
-  /* FT_DEBUG_LEVEL_ERROR or FT_DEBUG_LEVEL_TRACE are defined    */
+  /* The following is only used for debugging purposes, i.e., if   */
+  /* `FT_DEBUG_LEVEL_ERROR` or `FT_DEBUG_LEVEL_TRACE` are defined. */
 
 #include <stdarg.h>
 
