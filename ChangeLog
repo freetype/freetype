@@ -1,3 +1,10 @@
+2018-09-03  Werner Lemberg  <wl@gnu.org>
+
+	[sfnt] Fix heap buffer overflow in CPAL handling.
+
+	* src/sfnt/ttcpal.c (tt_face_palette_set): Fix boundary test.
+	(tt_face_load_cpal): Updated.
+
 2018-09-01  Werner Lemberg  <wl@gnu.org>
 
 	Remove `FT_Outline_{New,Done}_Internal'.

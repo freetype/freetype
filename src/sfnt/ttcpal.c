@@ -220,7 +220,8 @@
                        face->palette_data.num_palette_entries ) )
       goto NoCpal;
 
-    tt_face_palette_set( face, 0 );
+    if ( tt_face_palette_set( face, 0 ) )
+      goto InvalidTable;
 
     return FT_Err_Ok;
 
@@ -230,6 +231,8 @@
   NoCpal:
     FT_FRAME_RELEASE( table );
     FT_FREE( cpal );
+
+    face->cpal = NULL;
 
     /* arrays in `face->palette_data' and `face->palette' */
     /* are freed in `sfnt_done_face'                      */
@@ -267,20 +270,20 @@
     FT_Color*  q;
     FT_Color*  limit;
 
-    FT_ULong  record_offset;
+    FT_UShort  color_index;
 
 
     if ( !cpal || palette_index >= face->palette_data.num_palettes )
       return FT_THROW( Invalid_Argument );
 
-    offset        = cpal->color_indices + 2 * palette_index;
-    record_offset = COLOR_SIZE * FT_PEEK_USHORT( offset );
+    offset      = cpal->color_indices + 2 * palette_index;
+    color_index = FT_PEEK_USHORT( offset );
 
-    if ( record_offset + COLOR_SIZE * face->palette_data.num_palette_entries >
-           cpal->table_size )
+    if ( color_index + face->palette_data.num_palette_entries >
+           cpal->num_colors )
       return FT_THROW( Invalid_Table );
 
-    p     = cpal->colors + record_offset;
+    p     = cpal->colors + COLOR_SIZE * color_index;
     q     = face->palette;
     limit = q + face->palette_data.num_palette_entries;
 
