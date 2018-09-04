@@ -35,7 +35,7 @@
 
 
   /* Main reason for not lifting the functions in this module to a  */
-  /* `standard' API is that the used parameters for emboldening and */
+  /* 'standard' API is that the used parameters for emboldening and */
   /* slanting are not configurable.  Consider the functions as a    */
   /* code resource that should be copied into the application and   */
   /* adapted to the particular needs.                               */
@@ -57,7 +57,7 @@
 
 FT_BEGIN_HEADER
 
-  /* Embolden a glyph by a `reasonable' value (which is highly a matter of */
+  /* Embolden a glyph by a 'reasonable' value (which is highly a matter of */
   /* taste).  This function is actually a convenience function, providing  */
   /* a wrapper for @FT_Outline_Embolden and @FT_Bitmap_Embolden.           */
   /*                                                                       */

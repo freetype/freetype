@@ -250,7 +250,7 @@ FT_BEGIN_HEADER
 
 
   /* these constants are deprecated; use the corresponding */
-  /* `T1_Blend_Flags' values instead                       */
+  /* `T1_Blend_Flags` values instead                       */
 #define t1_blend_underline_position   T1_BLEND_UNDERLINE_POSITION
 #define t1_blend_underline_thickness  T1_BLEND_UNDERLINE_THICKNESS
 #define t1_blend_italic_angle         T1_BLEND_ITALIC_ANGLE
@@ -730,20 +730,20 @@ FT_BEGIN_HEADER
    *    'read-only' nature of these values, i.e., this function cannot be
    *    used to manipulate the face.
    *
-   *    'value' is a void pointer because the values returned can be of
+   *    `value` is a void pointer because the values returned can be of
    *    various types.
    *
-   *    If either 'value' is NULL or `value_len` is too small, just the
+   *    If either `value` is NULL or `value_len` is too small, just the
    *    required memory size for the requested entry is returned.
    *
-   *    The 'idx' parameter is used, not only to retrieve elements of, for
+   *    The `idx` parameter is used, not only to retrieve elements of, for
    *    example, the FontMatrix or FontBBox, but also to retrieve name keys
    *    from the CharStrings dictionary, and the charstrings themselves.  It
    *    is ignored for atomic values.
    *
-   *    PS_DICT_BLUE_SCALE returns a value that is scaled up by 1000.  To get
-   *    the value as in the font stream, you need to divide by 65536000.0 (to
-   *    remove the FT_Fixed scale, and the x1000 scale).
+   *    `PS_DICT_BLUE_SCALE` returns a value that is scaled up by 1000.  To
+   *    get the value as in the font stream, you need to divide by 65536000.0
+   *    (to remove the FT_Fixed scale, and the x1000 scale).
    *
    *    IMPORTANT: Only key/value pairs read by the FreeType interpreter can
    *    be retrieved.  So, for example, PostScript procedures such as NP, ND,

@@ -143,7 +143,7 @@ FT_BEGIN_HEADER
    *   FreeType error code.  0~means success.
    *
    * @note:
-   *   If 'face' is the size's parent face object, this function changes the
+   *   If `face` is the size's parent face object, this function changes the
    *   value of `face->size` to the input size handle.
    */
   FT_EXPORT( FT_Error )

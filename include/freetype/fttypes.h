@@ -430,7 +430,7 @@ FT_BEGIN_HEADER
    *
    * @input:
    *   The address of the FreeType object that is under finalization.  Its
-   *   client data is accessed through its 'generic' field.
+   *   client data is accessed through its `generic` field.
    */
   typedef void  (*FT_Generic_Finalizer)( void*  object );
 
@@ -445,14 +445,14 @@ FT_BEGIN_HEADER
    *   variety of FreeType core objects.  For example, a text layout API
    *   might want to associate a glyph cache to a given size object.
    *
-   *   Some FreeType object contains a 'generic' field, of type FT_Generic,
+   *   Some FreeType object contains a `generic` field, of type `FT_Generic`,
    *   which usage is left to client applications and font servers.
    *
    *   It can be used to store a pointer to client-specific data, as well as
    *   the address of a 'finalizer' function, which will be called by
    *   FreeType when the object is destroyed (for example, the previous
    *   client example would put the address of the glyph cache destructor in
-   *   the 'finalizer' field).
+   *   the `finalizer` field).
    *
    * @fields:
    *   data ::
@@ -594,7 +594,7 @@ FT_BEGIN_HEADER
 #define FT_ERR_XCAT( x, y )  x ## y
 #define FT_ERR_CAT( x, y )   FT_ERR_XCAT( x, y )
 
-  /* see `ftmoderr.h' for descriptions of the following macros */
+  /* see `ftmoderr.h` for descriptions of the following macros */
 
 #define FT_ERR( e )  FT_ERR_CAT( FT_ERR_PREFIX, e )
 

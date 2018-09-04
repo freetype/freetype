@@ -144,12 +144,12 @@ FT_BEGIN_HEADER
    *     Adobe MM fonts if possible.
    *
    *   strid ::
-   *     The axis name entry in the font's 'name' table.  This is another
+   *     The axis name entry in the font's `name` table.  This is another
    *     (and often better) version of the 'name' field for TrueType GX or
    *     OpenType variation fonts.  Not meaningful for Adobe MM fonts.
    *
    * @note:
-   *   The fields 'minimum', 'def', and 'maximum' are 16.16 fractional values
+   *   The fields `minimum`, `def`, and `maximum` are 16.16 fractional values
    *   for TrueType GX and OpenType variation fonts.  For Adobe MM fonts, the
    *   values are integers.
    */
@@ -184,10 +184,10 @@ FT_BEGIN_HEADER
    *     entry for each axis.
    *
    *   strid ::
-   *     The entry in 'name' table identifying this instance.
+   *     The entry in `name` table identifying this instance.
    *
    *   psid ::
-   *     The entry in 'name' table identifying a PostScript name for this
+   *     The entry in `name` table identifying a PostScript name for this
    *     instance.  Value 0xFFFF indicates a missing entry.
    */
   typedef struct  FT_Var_Named_Style_
@@ -222,7 +222,7 @@ FT_BEGIN_HEADER
    *
    *   num_namedstyles ::
    *     The number of named styles; a 'named style' is a tuple of design
-   *     coordinates that has a string ID (in the 'name' table) associated
+   *     coordinates that has a string ID (in the `name` table) associated
    *     with it.  The font can tell the user that, for example,
    *     [Weight=1.5,Width=1.1] is 'Bold'.  Another name for 'named style' is
    *     'named instance'.
@@ -316,7 +316,7 @@ FT_BEGIN_HEADER
    * @input:
    *   library ::
    *     A handle of the face's parent library object that was used in the
-   *     call to @FT_Get_MM_Var to create 'amaster'.
+   *     call to @FT_Get_MM_Var to create `amaster`.
    *
    * @return:
    *   FreeType error code.  0~means success.
@@ -356,7 +356,7 @@ FT_BEGIN_HEADER
    *
    * @note:
    *   [Since 2.8.1] To reset all axes to the default values, call the
-   *   function with `num_coords` set to zero and 'coords' set to NULL.
+   *   function with `num_coords` set to zero and `coords` set to NULL.
    *
    *   [Since 2.9] If `num_coords` is larger than zero, this function sets
    *   the @FT_FACE_FLAG_VARIATION bit in @FT_Face's `face_flags` field
@@ -397,7 +397,7 @@ FT_BEGIN_HEADER
    *
    * @note:
    *   [Since 2.8.1] To reset all axes to the default values, call the
-   *   function with `num_coords` set to zero and 'coords' set to NULL.
+   *   function with `num_coords` set to zero and `coords` set to NULL.
    *   [Since 2.9] 'Default values' means the currently selected named
    *   instance (or the base font if no named instance is selected).
    *
@@ -478,7 +478,7 @@ FT_BEGIN_HEADER
    *
    * @note:
    *   [Since 2.8.1] To reset all axes to the default values, call the
-   *   function with `num_coords` set to zero and 'coords' set to NULL.
+   *   function with `num_coords` set to zero and `coords` set to NULL.
    *   [Since 2.9] 'Default values' means the currently selected named
    *   instance (or the base font if no named instance is selected).
    *
@@ -588,7 +588,7 @@ FT_BEGIN_HEADER
    * @description:
    *   Get the 'flags' field of an OpenType Variation Axis Record.
    *
-   *   Not meaningful for Adobe MM fonts ('*flags' is always zero).
+   *   Not meaningful for Adobe MM fonts (`*flags` is always zero).
    *
    * @input:
    *   master ::

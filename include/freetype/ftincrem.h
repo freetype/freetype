@@ -110,7 +110,7 @@ FT_BEGIN_HEADER
    *
    * @note:
    *   These correspond to horizontal or vertical metrics depending on the
-   *   value of the 'vertical' argument to the function
+   *   value of the `vertical` argument to the function
    *   @FT_Incremental_GetGlyphMetricsFunc.
    *
    */
@@ -148,7 +148,7 @@ FT_BEGIN_HEADER
    *
    *   Note that the format of the glyph's data bytes depends on the font
    *   file format.  For TrueType, it must correspond to the raw bytes within
-   *   the 'glyf' table.  For PostScript formats, it must correspond to the
+   *   the `glyf` table.  For PostScript formats, it must correspond to the
    *   **unencrypted** charstring bytes, without any `lenIV` header.  It is
    *   undefined for any other format.
    *

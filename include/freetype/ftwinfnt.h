@@ -56,11 +56,11 @@ FT_BEGIN_HEADER
    *   FT_WinFNT_ID_XXX
    *
    * @description:
-   *   A list of valid values for the 'charset' byte in @FT_WinFNT_HeaderRec.
-   *   Exact mapping tables for the various cpXXXX encodings (except for
-   *   cp1361) can be found at ftp://ftp.unicode.org/Public in the
-   *   MAPPINGS/VENDORS/MICSFT/WINDOWS subdirectory.  cp1361 is roughly a
-   *   superset of MAPPINGS/OBSOLETE/EASTASIA/KSC/JOHAB.TXT.
+   *   A list of valid values for the `charset` byte in @FT_WinFNT_HeaderRec. 
+   *   Exact mapping tables for the various 'cpXXXX' encodings (except for
+   *   'cp1361') can be found at 'ftp://ftp.unicode.org/Public' in the
+   *   `MAPPINGS/VENDORS/MICSFT/WINDOWS` subdirectory.  'cp1361' is roughly a
+   *   superset of `MAPPINGS/OBSOLETE/EASTASIA/KSC/JOHAB.TXT`.
    *
    * @values:
    *   FT_WinFNT_ID_DEFAULT ::
@@ -79,18 +79,18 @@ FT_BEGIN_HEADER
    *   FT_WinFNT_ID_OEM ::
    *     From Michael Poettgen <michael@poettgen.de>:
    *
-   *     The 'Windows Font Mapping' article says that FT_WinFNT_ID_OEM is
+   *     The 'Windows Font Mapping' article says that `FT_WinFNT_ID_OEM` is
    *     used for the charset of vector fonts, like `modern.fon`,
    *     `roman.fon`, and `script.fon` on Windows.
    *
-   *     The 'CreateFont' documentation says: The FT_WinFNT_ID_OEM value
+   *     The 'CreateFont' documentation says: The `FT_WinFNT_ID_OEM` value
    *     specifies a character set that is operating-system dependent.
    *
    *     The 'IFIMETRICS' documentation from the 'Windows Driver Development
    *     Kit' says: This font supports an OEM-specific character set.  The
    *     OEM character set is system dependent.
    *
-   *     In general OEM, as opposed to ANSI (i.e., cp1252), denotes the
+   *     In general OEM, as opposed to ANSI (i.e., 'cp1252'), denotes the
    *     second default codepage that most international versions of Windows
    *     have.  It is one of the OEM codepages from
    *

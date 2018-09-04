@@ -156,7 +156,7 @@ FT_BEGIN_HEADER
    *   FreeType error code.  0~means success.
    *
    * @note:
-   *   The reason why this function takes a 'library' parameter is simply to
+   *   The reason why this function takes a `library` parameter is simply to
    *   use the library's memory allocator.
    */
   FT_EXPORT( FT_Error )
@@ -333,10 +333,10 @@ FT_BEGIN_HEADER
    *
    * @description:
    *   Embolden an outline.  The new outline will be at most 4~times
-   *   'strength' pixels wider and higher.  You may think of the left and
+   *   `strength` pixels wider and higher.  You may think of the left and
    *   bottom borders as unchanged.
    *
-   *   Negative 'strength' values to reduce the outline thickness are
+   *   Negative `strength` values to reduce the outline thickness are
    *   possible also.
    *
    * @inout:
@@ -382,8 +382,8 @@ FT_BEGIN_HEADER
    *   FT_Outline_EmboldenXY
    *
    * @description:
-   *   Embolden an outline.  The new outline will be 'xstrength' pixels wider
-   *   and 'ystrength' pixels higher.  Otherwise, it is similar to
+   *   Embolden an outline.  The new outline will be `xstrength` pixels wider
+   *   and `ystrength` pixels higher.  Otherwise, it is similar to
    *   @FT_Outline_Embolden, which uses the same strength in both directions.
    *
    * @since:
@@ -410,7 +410,7 @@ FT_BEGIN_HEADER
    *
    * @note:
    *   This function toggles the bit flag @FT_OUTLINE_REVERSE_FILL in the
-   *   outline's 'flags' field.
+   *   outline's `flags` field.
    *
    *   It shouldn't be used by a normal client application, unless it knows
    *   what it is doing.
@@ -443,13 +443,13 @@ FT_BEGIN_HEADER
    *   FreeType error code.  0~means success.
    *
    * @note:
-   *   This function does NOT CREATE the bitmap, it only renders an outline
-   *   image within the one you pass to it!  Consequently, the various fields
-   *   in 'abitmap' should be set accordingly.
+   *   This function does **not create** the bitmap, it only renders an
+   *   outline image within the one you pass to it!  Consequently, the
+   *   various fields in `abitmap` should be set accordingly.
    *
    *   It will use the raster corresponding to the default glyph format.
    *
-   *   The value of the `num_grays` field in 'abitmap' is ignored.  If you
+   *   The value of the `num_grays` field in `abitmap` is ignored.  If you
    *   select the gray-level rasterizer, and you want less than 256 gray
    *   levels, you have to use @FT_Outline_Render directly.
    */
@@ -488,13 +488,13 @@ FT_BEGIN_HEADER
    *   You should know what you are doing and how @FT_Raster_Params works to
    *   use this function.
    *
-   *   The field `params.source` will be set to 'outline' before the scan
+   *   The field `params.source` will be set to `outline` before the scan
    *   converter is called, which means that the value you give to it is
    *   actually ignored.
    *
    *   The gray-level rasterizer always uses 256 gray levels.  If you want
    *   less gray levels, you have to provide your own span callback.  See the
-   *   @FT_RASTER_FLAG_DIRECT value of the 'flags' field in the
+   *   @FT_RASTER_FLAG_DIRECT value of the `flags` field in the
    *   @FT_Raster_Params structure for more details.
    */
   FT_EXPORT( FT_Error )

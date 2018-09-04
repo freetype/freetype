@@ -71,7 +71,7 @@ FT_BEGIN_HEADER
    *   FT_Alloc_Func
    *
    * @description:
-   *   A function used to allocate 'size' bytes from 'memory'.
+   *   A function used to allocate `size` bytes from `memory`.
    *
    * @input:
    *   memory ::
@@ -206,7 +206,7 @@ FT_BEGIN_HEADER
    *
    * @description:
    *   A union type used to store either a long or a pointer.  This is used
-   *   to store a file descriptor or a 'FILE*' in an input stream.
+   *   to store a file descriptor or a `FILE*` in an input stream.
    *
    */
   typedef union  FT_StreamDesc_
@@ -243,7 +243,7 @@ FT_BEGIN_HEADER
    *
    * @note:
    *   This function might be called to perform a seek or skip operation with
-   *   a 'count' of~0.  A non-zero return value then indicates an error.
+   *   a `count` of~0.  A non-zero return value then indicates an error.
    *
    */
   typedef unsigned long
@@ -297,7 +297,7 @@ FT_BEGIN_HEADER
    *
    *   descriptor ::
    *     This field is a union that can hold an integer or a pointer.  It is
-   *     used by stream implementations to store file descriptors or 'FILE*'
+   *     used by stream implementations to store file descriptors or `FILE*`
    *     pointers.
    *
    *   pathname ::
@@ -318,7 +318,7 @@ FT_BEGIN_HEADER
    *   cursor ::
    *     This field is set and used internally by FreeType when parsing
    *     frames.  In particular, the `FT_GET_XXX` macros use this instead of
-   *     the 'pos' field.
+   *     the `pos` field.
    *
    *   limit ::
    *     This field is set and used internally by FreeType when parsing

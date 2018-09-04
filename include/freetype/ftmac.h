@@ -18,9 +18,9 @@
 
 /****************************************************************************
  *
- * NOTE: Include this file after FT_FREETYPE_H and after any
+ * NOTE: Include this file after `FT_FREETYPE_H` and after any
  *       Mac-specific headers (because this header uses Mac types such as
- *       Handle, FSSpec, FSRef, etc.)
+ *       'Handle', 'FSSpec', 'FSRef', etc.)
  *
  */
 
@@ -185,7 +185,7 @@ FT_BEGIN_HEADER
    *     The client must allocate this buffer before calling this function.
    *
    *   maxPathSize ::
-   *     Lengths of the buffer 'path' that client allocated.
+   *     Lengths of the buffer `path` that client allocated.
    *
    *   face_index ::
    *     Index of the face.  For passing to @FT_New_Face.

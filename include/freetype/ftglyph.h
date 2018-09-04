@@ -378,7 +378,7 @@ FT_BEGIN_HEADER
 
 
   /* these constants are deprecated; use the corresponding */
-  /* `FT_Glyph_BBox_Mode' values instead                   */
+  /* `FT_Glyph_BBox_Mode` values instead                   */
 #define ft_glyph_bbox_unscaled   FT_GLYPH_BBOX_UNSCALED
 #define ft_glyph_bbox_subpixels  FT_GLYPH_BBOX_SUBPIXELS
 #define ft_glyph_bbox_gridfit    FT_GLYPH_BBOX_GRIDFIT
@@ -495,7 +495,7 @@ FT_BEGIN_HEADER
    * @note:
    *   This function does nothing if the glyph format isn't scalable.
    *
-   *   The glyph image is translated with the 'origin' vector before
+   *   The glyph image is translated with the `origin` vector before
    *   rendering.
    *
    *   The first parameter is a pointer to an @FT_Glyph handle, that will be
@@ -609,18 +609,18 @@ FT_BEGIN_HEADER
    *   FT_Matrix_Multiply
    *
    * @description:
-   *   Perform the matrix operation 'b = a*b'.
+   *   Perform the matrix operation `b = a*b`.
    *
    * @input:
    *   a ::
-   *     A pointer to matrix 'a'.
+   *     A pointer to matrix `a`.
    *
    * @inout:
    *   b ::
-   *     A pointer to matrix 'b'.
+   *     A pointer to matrix `b`.
    *
    * @note:
-   *   The result is undefined if either 'a' or 'b' is zero.
+   *   The result is undefined if either `a` or `b` is zero.
    *
    *   Since the function uses wrap-around arithmetic, results become
    *   meaningless if the arguments are very large.

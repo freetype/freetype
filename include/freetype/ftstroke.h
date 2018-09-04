@@ -119,7 +119,7 @@ FT_BEGIN_HEADER
    *     the intersection of the segments a distance greater than the product
    *     of the miter limit value and the border radius), then a bevel join
    *     (see above) is used instead.  This prevents long spikes being
-   *     created.  FT_STROKER_LINEJOIN_MITER_FIXED generates a miter line
+   *     created.  `FT_STROKER_LINEJOIN_MITER_FIXED` generates a miter line
    *     join as used in PostScript and PDF.
    *
    *   FT_STROKER_LINEJOIN_MITER_VARIABLE ::
@@ -129,10 +129,10 @@ FT_BEGIN_HEADER
    *     line perpendicular to the bisector of the angle between the strokes,
    *     at the distance from the intersection of the segments equal to the
    *     product of the miter limit value and the border radius.  This
-   *     prevents long spikes being created.
-   *     FT_STROKER_LINEJOIN_MITER_VARIABLE generates a mitered line join as
-   *     used in XPS.  FT_STROKER_LINEJOIN_MITER is an alias for
-   *     FT_STROKER_LINEJOIN_MITER_VARIABLE, retained for backward
+   *     prevents long spikes being created. 
+   *     `FT_STROKER_LINEJOIN_MITER_VARIABLE` generates a mitered line join
+   *     as used in XPS.  `FT_STROKER_LINEJOIN_MITER` is an alias for
+   *     `FT_STROKER_LINEJOIN_MITER_VARIABLE`, retained for backward
    *     compatibility.
    */
   typedef enum  FT_Stroker_LineJoin_
@@ -296,8 +296,8 @@ FT_BEGIN_HEADER
    *     The line join style.
    *
    *   miter_limit ::
-   *     The miter limit for the FT_STROKER_LINEJOIN_MITER_FIXED and
-   *     FT_STROKER_LINEJOIN_MITER_VARIABLE line join styles, expressed as
+   *     The miter limit for the `FT_STROKER_LINEJOIN_MITER_FIXED` and
+   *     `FT_STROKER_LINEJOIN_MITER_VARIABLE` line join styles, expressed as
    *     16.16 fixed-point value.
    *
    * @note:
@@ -356,10 +356,10 @@ FT_BEGIN_HEADER
    *   FreeType error code.  0~means success.
    *
    * @note:
-   *   If 'opened' is~0 (the default), the outline is treated as a closed
+   *   If `opened` is~0 (the default), the outline is treated as a closed
    *   path, and the stroker generates two distinct 'border' outlines.
    *
-   *   If 'opened' is~1, the outline is processed as an open path, and the
+   *   If `opened` is~1, the outline is processed as an open path, and the
    *   stroker generates a single 'stroke' outline.
    *
    *   This function calls @FT_Stroker_Rewind automatically.

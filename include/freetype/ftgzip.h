@@ -99,7 +99,7 @@ FT_BEGIN_HEADER
    *
    * @description:
    *   Decompress a zipped input buffer into an output buffer.  This function
-   *   is modeled after zlib's 'uncompress' function.
+   *   is modeled after zlib's `uncompress` function.
    *
    * @input:
    *   memory ::
@@ -121,7 +121,7 @@ FT_BEGIN_HEADER
    *     buffer, which must be large enough to hold the entire uncompressed
    *     data (so the size of the uncompressed data must be known in
    *     advance).  After calling the function, `output_len` is the size of
-   *     the used data in 'output'.
+   *     the used data in `output`.
    *
    * @return:
    *   FreeType error code.  0~means success.

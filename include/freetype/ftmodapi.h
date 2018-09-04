@@ -352,7 +352,7 @@ FT_BEGIN_HEADER
    *
    *    value ::
    *      A generic pointer to a variable or structure that gives the new
-   *      value of the property.  The exact definition of 'value' is
+   *      value of the property.  The exact definition of `value` is
    *      dependent on the property; see section @properties.
    *
    * @return:
@@ -360,7 +360,7 @@ FT_BEGIN_HEADER
    *
    * @note:
    *    If `module_name` isn't a valid module name, or `property_name`
-   *    doesn't specify a valid property, or if 'value' doesn't represent a
+   *    doesn't specify a valid property, or if `value` doesn't represent a
    *    valid value for the given property, an error is returned.
    *
    *    The following example sets property 'bar' (a simple integer) in
@@ -415,7 +415,7 @@ FT_BEGIN_HEADER
    * @inout:
    *    value ::
    *      A generic pointer to a variable or structure that gives the value
-   *      of the property.  The exact definition of 'value' is dependent on
+   *      of the property.  The exact definition of `value` is dependent on
    *      the property; see section @properties.
    *
    * @return:
@@ -423,7 +423,7 @@ FT_BEGIN_HEADER
    *
    * @note:
    *    If `module_name` isn't a valid module name, or `property_name`
-   *    doesn't specify a valid property, or if 'value' doesn't represent a
+   *    doesn't specify a valid property, or if `value` doesn't represent a
    *    valid value for the given property, an error is returned.
    *
    *    The following example gets property 'baz' (a range) in module 'foo'.
@@ -462,9 +462,10 @@ FT_BEGIN_HEADER
    *   FT_Set_Default_Properties
    *
    * @description:
-   *   If compilation option FT_CONFIG_OPTION_ENVIRONMENT_PROPERTIES is set,
-   *   this function reads the `FREETYPE_PROPERTIES` environment variable to
-   *   control driver properties.  See section @properties for more.
+   *   If compilation option `FT_CONFIG_OPTION_ENVIRONMENT_PROPERTIES` is
+   *   set, this function reads the `FREETYPE_PROPERTIES` environment
+   *   variable to control driver properties.  See section @properties for
+   *   more.
    *
    *   If the compilation option is not set, this function does nothing.
    *

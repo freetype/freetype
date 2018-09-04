@@ -189,7 +189,7 @@ FT_BEGIN_HEADER
    *
    *   A 'property' is a either key-value pair within the STARTPROPERTIES
    *   ... ENDPROPERTIES block of a BDF font or a key-value pair from the
-   *   `info->props` array within a 'FontRec' structure of a PCF font.
+   *   `info->props` array within a `FontRec` structure of a PCF font.
    *
    *   Integer properties are always stored as 'signed' within PCF fonts;
    *   consequently, @BDF_PROPERTY_TYPE_CARDINAL is a possible return value

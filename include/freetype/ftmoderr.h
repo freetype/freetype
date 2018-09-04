@@ -20,17 +20,17 @@
    *
    * This file is used to define the FreeType module error codes.
    *
-   * If the macro FT_CONFIG_OPTION_USE_MODULE_ERRORS in `ftoption.h` is set,
-   * the lower byte of an error value identifies the error code as usual.  In
-   * addition, the higher byte identifies the module.  For example, the error
-   * `FT_Err_Invalid_File_Format` has value 0x0003, the error
-   * `TT_Err_Invalid_File_Format` has value 0x1303, the error
+   * If the macro `FT_CONFIG_OPTION_USE_MODULE_ERRORS` in `ftoption.h` is
+   * set, the lower byte of an error value identifies the error code as
+   * usual.  In addition, the higher byte identifies the module.  For
+   * example, the error `FT_Err_Invalid_File_Format` has value 0x0003, the
+   * error `TT_Err_Invalid_File_Format` has value 0x1303, the error
    * `T1_Err_Invalid_File_Format` has value 0x1403, etc.
    *
    * Note that `FT_Err_Ok`, `TT_Err_Ok`, etc. are always equal to zero,
    * including the high byte.
    *
-   * If FT_CONFIG_OPTION_USE_MODULE_ERRORS isn't set, the higher byte of an
+   * If `FT_CONFIG_OPTION_USE_MODULE_ERRORS` isn't set, the higher byte of an
    * error value is set to zero.
    *
    * To hide the various `XXX_Err_` prefixes in the source code, FreeType
@@ -39,32 +39,40 @@
    *   FT_ERR( err )
    *
    *     Add current error module prefix (as defined with the `FT_ERR_PREFIX`
-   *     macro) to 'err'.  For example, in the BDF module the line
+   *     macro) to `err`.  For example, in the BDF module the line
    *
+   *     ```
    *       error = FT_ERR( Invalid_Outline );
+   *     ```
    *
    *     expands to
    *
+   *     ```
    *       error = BDF_Err_Invalid_Outline;
+   *     ```
    *
    *     For simplicity, you can always use `FT_Err_Ok` directly instead of
-   *     'FT_ERR( Ok )'.
+   *     `FT_ERR( Ok )`.
    *
    *   FT_ERR_EQ( errcode, err )
    *   FT_ERR_NEQ( errcode, err )
    *
-   *     Compare error code 'errcode' with the error 'err' for equality and
+   *     Compare error code `errcode` with the error `err` for equality and
    *     inequality, respectively.  Example:
    *
+   *     ```
    *       if ( FT_ERR_EQ( error, Invalid_Outline ) )
    *         ...
+   *     ```
    *
    *     Using this macro you don't have to think about error prefixes.  Of
    *     course, if module errors are not active, the above example is the
    *     same as
    *
+   *     ```
    *       if ( error == FT_Err_Invalid_Outline )
    *         ...
+   *     ```
    *
    *   FT_ERROR_BASE( errcode )
    *   FT_ERROR_MODULE( errcode )

@@ -35,7 +35,7 @@
    *
    *   **Error Formats**
    *
-   *   The configuration macro FT_CONFIG_OPTION_USE_MODULE_ERRORS can be
+   *   The configuration macro `FT_CONFIG_OPTION_USE_MODULE_ERRORS` can be
    *   defined in `ftoption.h` in order to make the higher byte indicate the
    *   module where the error has happened (this is not compatible with
    *   standard builds of FreeType~2, however).  See the file `ftmoderr.h`
@@ -56,7 +56,7 @@
    *   ```
    *
    *   This macro is called before anything else to define the start of the
-   *   error list.  It is followed by several FT_ERROR_DEF calls.
+   *   error list.  It is followed by several `FT_ERROR_DEF` calls.
    *
    *   ```
    *     FT_ERROR_DEF( e, v, s )
@@ -101,18 +101,20 @@
    *     #define FT_ERROR_END_LIST       }
    *   ```
    *
-   *   If you use FT_CONFIG_OPTION_USE_MODULE_ERRORS, 'error_code' should be
-   *   replaced with 'FT_ERROR_BASE(error_code)' in the last example.
+   *   If you use `FT_CONFIG_OPTION_USE_MODULE_ERRORS`, `error_code` should
+   *   be replaced with `FT_ERROR_BASE(error_code)` in the last example.
    */
 
   /* */
 
-  /* In previous FreeType versions we used `__FTERRORS_H__'.  However, */
+  /* In previous FreeType versions we used `__FTERRORS_H__`.  However, */
   /* using two successive underscores in a non-system symbol name      */
   /* violates the C (and C++) standard, so it was changed to the       */
   /* current form.  In spite of this, we have to make                  */
   /*                                                                   */
+  /* ```                                                               */
   /*   #undefine __FTERRORS_H__                                        */
+  /* ```                                                               */
   /*                                                                   */
   /* work for backward compatibility.                                  */
   /*                                                                   */
@@ -138,7 +140,7 @@
 
 
   /* FT_ERR_PREFIX is used as a prefix for error identifiers. */
-  /* By default, we use `FT_Err_'.                            */
+  /* By default, we use `FT_Err_`.                            */
   /*                                                          */
 #ifndef FT_ERR_PREFIX
 #define FT_ERR_PREFIX  FT_Err_
@@ -232,9 +234,9 @@
 
   /* FT_INCLUDE_ERR_PROTOS:  Control if function prototypes should be       */
   /*                         included with `#include FT_ERRORS_H'.  This is */
-  /*                         only true where `FT_ERRORDEF' is undefined.    */
+  /*                         only true where `FT_ERRORDEF` is undefined.    */
   /* FT_ERR_PROTOS_DEFINED:  Actual multiple-inclusion protection of        */
-  /*                         `fterrors.h'.                                  */
+  /*                         `fterrors.h`.                                  */
 #ifdef FT_INCLUDE_ERR_PROTOS
 #undef FT_INCLUDE_ERR_PROTOS
 
