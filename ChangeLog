@@ -1,3 +1,7 @@
+2018-09-04  Werner Lemberg  <wl@gnu.org>
+
+	* devel/ftoption.h: Synchronize with master `ftoption.h'.
+
 2018-09-03  Nikhil Ramakrishnan  <ramakrishnan.nikhil@gmail.com>
 
 	[docwriter] Don't break code snippets accross lines.
