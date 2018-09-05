@@ -1,3 +1,10 @@
+2018-09-05  Werner Lemberg  <wl@gnu.org>
+
+	Synchronize `ftdebug.c' files.
+
+	* builds/amiga/src/base/ftdebug.c, builds/wince/ftdebug.c,
+	builds/windows/ftdebug.c: Synchronize with `src/base/ftdebug.c'.
+
 2018-09-05  Nikhil Ramakrishnan  <ramakrishnan.nikhil@gmail.com>
 
 	Add documentation guidelines file.
