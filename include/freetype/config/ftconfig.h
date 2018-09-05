@@ -264,8 +264,8 @@ FT_BEGIN_HEADER
 #endif
 
 
-  /* determine whether we have a 64-bit int type for platforms without */
-  /* Autoconf                                                          */
+  /* determine whether we have a 64-bit `int` type for platforms without */
+  /* Autoconf                                                            */
 #if FT_SIZEOF_LONG == ( 64 / FT_CHAR_BIT )
 
   /* `FT_LONG64` must be defined if a 64-bit type is available */
