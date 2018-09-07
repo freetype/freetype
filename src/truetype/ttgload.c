@@ -1537,6 +1537,8 @@
     TT_Face         face    = loader->face;
     FT_GlyphLoader  gloader = loader->gloader;
 
+    FT_Bool  opened_frame = 0;
+
 #ifdef FT_CONFIG_OPTION_INCREMENTAL
     FT_StreamRec    inc_stream;
     FT_Data         glyph_data;
@@ -1768,6 +1770,8 @@
     if ( error )
       goto Exit;
 
+    opened_frame = 1;
+
     /* if it is a simple glyph, load it */
 
     if ( loader->n_contours > 0 )
@@ -1778,6 +1782,7 @@
 
       /* all data have been read */
       face->forget_glyph_frame( loader );
+      opened_frame = 0;
 
       error = TT_Process_Simple_Glyph( loader );
       if ( error )
@@ -1851,6 +1856,7 @@
 
       /* all data we need are read */
       face->forget_glyph_frame( loader );
+      opened_frame = 0;
 
 #ifdef TT_CONFIG_OPTION_GX_VAR_SUPPORT
 
@@ -2104,6 +2110,9 @@
     /***********************************************************************/
 
   Exit:
+
+    if ( opened_frame )
+      face->forget_glyph_frame( loader );
 
 #ifdef FT_CONFIG_OPTION_INCREMENTAL
 

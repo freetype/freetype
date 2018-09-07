@@ -1,3 +1,15 @@
+2018-09-07  Werner Lemberg  <wl@gnu.org>
+
+	[truetype] Fix assertion failure.
+
+	Triggered by
+
+	  https://bugs.chromium.org/p/oss-fuzz/issues/detail?id=10212
+
+	* src/truetype/ttgload.c (load_truetype_glyph): Reintroduce
+	`opened_frame' (removed in a change from 2018-08-26) to handle
+	dealloation of the second frame.
+
 2018-09-05  Werner Lemberg  <wl@gnu.org>
 
 	Synchronize `ftdebug.c' files.
