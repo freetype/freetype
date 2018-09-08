@@ -53,8 +53,8 @@
   gf_cmap_init(  FT_CMap     gfcmap,
                  FT_Pointer  init_data )
   {
-    GF_CMap  cmap = (GF_CMap)gfcmap;
-    GF_Face  face = (GF_Face)FT_CMAP_FACE( cmap );
+    GF_CMap  cmap = (GF_CMap) gfcmap;
+    GF_Face  face = (GF_Face) FT_CMAP_FACE( cmap );
     FT_UNUSED( init_data );
 
     cmap->num_encodings = face->gf_glyph->nencodings;
@@ -67,7 +67,7 @@
   FT_CALLBACK_DEF( void )
   gf_cmap_done( FT_CMap  gfcmap )
   {
-    GF_CMap  cmap = (GF_CMap)gfcmap;
+    GF_CMap  cmap = (GF_CMap) gfcmap;
 
     cmap->encodings     = NULL;
     cmap->num_encodings = 0;
@@ -79,30 +79,31 @@
   gf_cmap_char_index(  FT_CMap    gfcmap,
                        FT_UInt32  charcode )
   {
-    GF_CMap       cmap      = (GF_CMap)gfcmap;
+    GF_CMap       cmap      = (GF_CMap) gfcmap;
     GF_Encoding   encodings = cmap->encodings;
-    FT_UInt       max, code, result    = 0, i;
+    FT_UInt       max, code, result = 0, i;
 
     max = cmap->num_encodings;
 
     for( i = 0; i < max; i++ )
     {
-      code = (FT_ULong)encodings[i].enc;
+      code = (FT_ULong) encodings[i].enc;
       if ( charcode == code )
       {
         result = encodings[i].glyph;
         goto Exit;
       }
     }
-    Exit:
-      return result;
+  Exit:
+    return result;
   }
+
 
   FT_CALLBACK_DEF( FT_UInt )
   gf_cmap_char_next(  FT_CMap     gfcmap,
                       FT_UInt32  *acharcode )
   {
-    GF_CMap       cmap      = (GF_CMap)gfcmap;
+    GF_CMap       cmap      = (GF_CMap) gfcmap;
     GF_Encoding   encodings = cmap->encodings;
     FT_UInt       result    = 0, i, code, max;
     FT_ULong      charcode  = *acharcode + 1;
@@ -111,7 +112,7 @@
 
     for( i = 0; i < max; i++ )
     {
-      code = (FT_ULong)encodings[i].enc;
+      code = (FT_ULong) encodings[i].enc;
       if ( charcode == code )
       {
         result = encodings[i].glyph + 1;
@@ -127,7 +128,7 @@
       /* XXX: result should be changed to indicate an overflow error */
     }
     else
-      *acharcode = (FT_UInt32)charcode;
+      *acharcode = (FT_UInt32) charcode;
     return result;
   }
 
@@ -146,11 +147,10 @@
 
 
   FT_CALLBACK_DEF( void )
-  GF_Face_Done( FT_Face        gfface )         /* GF_Face */
+  GF_Face_Done( FT_Face  gfface )         /* GF_Face */
   {
-    GF_Face    face   = (GF_Face)gfface;
+    GF_Face    face = (GF_Face) gfface;
     FT_Memory  memory;
-
 
     if ( !face )
       return;
@@ -168,16 +168,16 @@
 
 
   FT_CALLBACK_DEF( FT_Error )
-  GF_Face_Init(  FT_Stream      stream,
-                 FT_Face        gfface,         /* GF_Face */
-                 FT_Int         face_index,
-                 FT_Int         num_params,
-                 FT_Parameter*  params )
+  GF_Face_Init(  FT_Stream     stream,
+                 FT_Face       gfface,     /* GF_Face */
+                 FT_Int        face_index,
+                 FT_Int        num_params,
+                 FT_Parameter* params )
   {
-    GF_Face     face   = (GF_Face)gfface;
+    GF_Face     face   = (GF_Face) gfface;
     FT_Error    error  = FT_Err_Ok;
     FT_Memory   memory = FT_FACE_MEMORY( face );
-    GF_Glyph    go=NULL;
+    GF_Glyph    go     = NULL;
 
     TFM_Service tfm;
 
@@ -185,9 +185,9 @@
     FT_UNUSED( params );
 
 
-    face->tfm = FT_Get_Module_Interface( FT_FACE_LIBRARY( face ),
-                                           "tfm" );
-    tfm = (TFM_Service)face->tfm;
+    face->tfm = FT_Get_Module_Interface( FT_FACE_LIBRARY( face ), "tfm" );
+
+    tfm = (TFM_Service) face->tfm;
     if ( !tfm )
     {
       FT_ERROR(( "GF_Face_Init: cannot access `tfm' module\n" ));
@@ -244,9 +244,9 @@
      */
 
     gfface->family_name     = NULL;
-    gfface->num_glyphs      = (FT_Long)go->nglyphs;
+    gfface->num_glyphs      = (FT_Long) go->nglyphs;
 
-    FT_TRACE4(( "  number of glyphs: allocated %d\n",gfface->num_glyphs ));
+    FT_TRACE4(( "  number of glyphs: allocated %d\n", gfface->num_glyphs ));
 
     if ( gfface->num_glyphs <= 0 )
     {
@@ -266,16 +266,15 @@
       bsize->height = (FT_Short) face->gf_glyph->font_bbx_h ;
       bsize->width  = (FT_Short) face->gf_glyph->font_bbx_w ;
       bsize->size   = (FT_Pos)   FT_MulDiv( FT_ABS( face->gf_glyph->ds ),
-                                     64 * 7200,
-                                     72270L );
-
+                                                    64 * 7200,
+                                                    72270L );
       x_res = toint( go->hppp * 72.27 );
       y_res = toint( go->vppp * 72.27 );
 
       bsize->y_ppem = (FT_Pos) toint((face->gf_glyph->ds * y_res)/ 72.27) << 6 ;
-      bsize->x_ppem = (FT_Pos)FT_MulDiv( bsize->y_ppem,
-                                         x_res,
-                                         y_res ); ;
+      bsize->x_ppem = (FT_Pos) FT_MulDiv( bsize->y_ppem,
+                                          x_res,
+                                          y_res );
     }
 
     /* set up charmap */
@@ -298,7 +297,6 @@
 
       charmap.face        = FT_FACE( face );
       charmap.encoding    = FT_ENCODING_NONE;
-      /* initial platform/encoding should indicate unset status? */
       charmap.platform_id = TT_PLATFORM_APPLE_UNICODE;
       charmap.encoding_id = TT_APPLE_ID_DEFAULT;
 
@@ -331,6 +329,7 @@
     return FT_THROW( Unknown_File_Format );
   }
 
+
   FT_CALLBACK_DEF( FT_Error )
   GF_Size_Select(  FT_Size   size,
                    FT_ULong  strike_index )
@@ -341,7 +340,7 @@
 
     FT_Select_Metrics( size->face, 0 );
 
-    size->metrics.ascender    = (go->font_bbx_h - go->font_bbx_yoff) * 64;
+    size->metrics.ascender    = ( go->font_bbx_h - go->font_bbx_yoff ) * 64;
     size->metrics.descender   = -go->font_bbx_yoff * 64;
     size->metrics.max_advance = go->font_bbx_w * 64;
 
@@ -349,11 +348,12 @@
 
   }
 
+
   FT_CALLBACK_DEF( FT_Error )
   GF_Size_Request(  FT_Size          size,
                     FT_Size_Request  req )
   {
-    GF_Face           face    = (GF_Face)size->face;
+    GF_Face           face    = (GF_Face) size->face;
     FT_Bitmap_Size*   bsize   = size->face->available_sizes;
     FT_Error          error   = FT_ERR( Invalid_Pixel_Size );
     FT_Long           height;
@@ -386,15 +386,14 @@
   }
 
 
-
   FT_CALLBACK_DEF( FT_Error )
   GF_Glyph_Load(  FT_GlyphSlot  slot,
                   FT_Size       size,
                   FT_UInt       glyph_index,
                   FT_Int32      load_flags )
   {
-    GF_Face      gf     = (GF_Face)FT_SIZE_FACE( size );
-    FT_Face      face   = FT_FACE( gf );
+    GF_Face      gf     = (GF_Face) FT_SIZE_FACE( size );
+    FT_Face      face   = FT_FACE ( gf );
     FT_Error     error  = FT_Err_Ok;
     FT_Bitmap*   bitmap = &slot->bitmap;
     GF_Bitmap    bm;
@@ -417,10 +416,8 @@
       goto Exit;
     }
 
-    FT_TRACE1(( "GF_Glyph_Load: glyph index %d charcode is %d\n", glyph_index, go->bm_table[glyph_index].code ));
-
-    if ( (FT_Int)glyph_index < 0 )
-      glyph_index = 0;
+    FT_TRACE1(( "GF_Glyph_Load: glyph index %d charcode is %d\n",
+		 glyph_index, go->bm_table[glyph_index].code ));
 
     if ( !go->bm_table )
     {
@@ -443,7 +440,7 @@
       goto Exit;
     }
 
-    bitmap->pitch = (int)bm->raster ;
+    bitmap->pitch = (FT_Int) bm->raster ;
 
     /* note: we don't allocate a new array to hold the bitmap; */
     /*       we can simply point to it                         */
@@ -464,9 +461,9 @@
                 "                         bm->off_x      is %ld\n"
                 "                         bm->off_y      is %ld\n"
                 "                         bm->mv_x       is %ld\n"
-                "                         bm->mv_y       is %ld\n", bm->bbx_height, bm->bbx_width,
-                                                                    bm->off_x, bm->off_y, bm->mv_x,
-                                                                    bm->mv_y ));
+                "                         bm->mv_y       is %ld\n",
+		bm->bbx_height, bm->bbx_width, bm->off_x, bm->off_y,
+		bm->mv_x, bm->mv_y ));
 
     ft_synthesize_vertical_metrics( &slot->metrics, bm->bbx_height * 64 );
 
@@ -474,15 +471,17 @@
     return error;
   }
 
+
   FT_LOCAL_DEF( void )
   TFM_Done_Metrics( FT_Memory     memory,
                     TFM_FontInfo  fi )
   {
-    FT_FREE(fi->width);
-    FT_FREE(fi->height);
-    FT_FREE(fi->depth);
+    FT_FREE( fi->width );
+    FT_FREE( fi->height );
+    FT_FREE( fi->depth );
     FT_FREE( fi );
   }
+
 
   /* parse a TFM metrics file */
   FT_LOCAL_DEF( FT_Error )
@@ -494,14 +493,14 @@
     TFM_ParserRec  parser;
     TFM_FontInfo   fi      = NULL;
     FT_Error       error   = FT_ERR( Unknown_File_Format );
-    GF_Face        face    = (GF_Face)gf_face;
+    GF_Face        face    = (GF_Face) gf_face;
     GF_Glyph       gf_glyph= face->gf_glyph;
 
 
     if ( face->tfm_data )
     {
       FT_TRACE1(( "TFM_Read_Metrics:"
-                  " Freeing previously attached metrics data.\n" ));
+                  "Freeing previously attached metrics data.\n" ));
       TFM_Done_Metrics( memory, (TFM_FontInfo)face->tfm_data );
 
       face->tfm_data = NULL;
@@ -519,15 +518,16 @@
       error = tfm->tfm_parser_funcs->init( &parser,
                                            memory,
                                            stream );
-
       if ( !error )
       {
         FT_TRACE4(( "TFM_Read_Metrics: Initialised tfm metric data.\n" ));
+
         parser.FontInfo  = fi;
         parser.user_data = gf_glyph;
 
         error = tfm->tfm_parser_funcs->parse_metrics( &parser );
-        if( !error )
+
+	if( !error )
           FT_TRACE4(( "TFM_Read_Metrics: parsing TFM metric information done.\n" ));
 
         FT_TRACE6(( "TFM_Read_Metrics: TFM Metric Information:\n"
@@ -537,10 +537,13 @@
                     "                  End Char   : %d\n"
                     "                  font_bbx_w : %d\n"
                     "                  font_bbx_h : %d\n"
-                    "                  slant      : %d\n", parser.FontInfo->cs, parser.FontInfo->design_size, parser.FontInfo->begin_char,
-                                                           parser.FontInfo->end_char, parser.FontInfo->font_bbx_w,
-                                                           parser.FontInfo->font_bbx_h, parser.FontInfo->slant ));
-        tfm->tfm_parser_funcs->done( &parser );
+                    "                  slant      : %d\n",
+		    parser.FontInfo->cs, parser.FontInfo->design_size,
+		    parser.FontInfo->begin_char, parser.FontInfo->end_char,
+		    parser.FontInfo->font_bbx_w, parser.FontInfo->font_bbx_h,
+		    parser.FontInfo->slant ));
+
+	tfm->tfm_parser_funcs->done( &parser );
       }
     }
 
@@ -563,6 +566,7 @@
     return error;
   }
 
+
  /*
   *
   * SERVICES LIST
@@ -576,9 +580,10 @@
     { NULL, NULL }
   };
 
+
   FT_CALLBACK_DEF( FT_Module_Interface )
   gf_driver_requester( FT_Module    module,
-                        const char*  name )
+                       const char*  name )
   {
     FT_UNUSED( module );
 
@@ -598,7 +603,7 @@
       0x10000L,
       0x20000L,
 
-      NULL,    									/* module-specific interface */
+      NULL,    			/* module-specific interface */
 
       NULL,                     /* FT_Module_Constructor  module_init   */
       NULL,                     /* FT_Module_Destructor   module_done   */
@@ -622,8 +627,8 @@
     TFM_Read_Metrics,           /* FT_Face_AttachFunc       attach_file  */
     NULL,                       /* FT_Face_GetAdvancesFunc  get_advances */
 
-    GF_Size_Request,           /* FT_Size_RequestFunc  request_size */
-    GF_Size_Select             /* FT_Size_SelectFunc   select_size  */
+    GF_Size_Request,            /* FT_Size_RequestFunc  request_size */
+    GF_Size_Select              /* FT_Size_SelectFunc   select_size  */
   };
 
 

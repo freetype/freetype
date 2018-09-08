@@ -30,47 +30,48 @@ FT_BEGIN_HEADER
 
   typedef struct  GF_EncodingRec_
   {
-    FT_Long   enc;
-    FT_UShort glyph;
+    FT_Long     enc;
+    FT_UShort   glyph;
 
   } GF_EncodingRec, *GF_Encoding;
+
 
   /* BitmapRec for GF format specific glyphs  */
   typedef struct GF_BitmapRec_
   {
-    FT_Long         bbx_width, bbx_height;
-    FT_Long         off_x, off_y;
-    FT_Long         mv_x,  mv_y;
-    FT_Byte         *bitmap;
-    FT_UInt         raster;
-    FT_UShort       code;
+    FT_Long     bbx_width, bbx_height;
+    FT_Long     off_x, off_y;
+    FT_Long     mv_x,  mv_y;
+    FT_Byte     *bitmap;
+    FT_UInt     raster;
+    FT_UShort   code;
 
   } GF_BitmapRec, *GF_Bitmap;
 
 
   typedef struct GF_GlyphRec_
   {
-    FT_UInt         code_min, code_max;
-    GF_Bitmap       bm_table;
-    FT_Int          ds, hppp, vppp;
-    FT_Int          font_bbx_w, font_bbx_h;
-    FT_Int          font_bbx_xoff, font_bbx_yoff;
+    FT_UInt     code_min, code_max;
+    GF_Bitmap   bm_table;
+    FT_Int      ds, hppp, vppp;
+    FT_Int      font_bbx_w, font_bbx_h;
+    FT_Int      font_bbx_xoff, font_bbx_yoff;
 
-    FT_ULong        nencodings;
-    GF_Encoding     encodings;
+    FT_ULong    nencodings;
+    GF_Encoding encodings;
 
-    FT_ULong        nglyphs;
+    FT_ULong    nglyphs;
 
   } GF_GlyphRec, *GF_Glyph;
 
 
   typedef struct  GF_FaceRec_
   {
-    FT_FaceRec      root;
-    GF_Glyph        gf_glyph;
+    FT_FaceRec  root;
+    GF_Glyph    gf_glyph;
 
-    const void*     tfm;
-    const void*     tfm_data;
+    const void* tfm;
+    const void* tfm_data;
 
   } GF_FaceRec, *GF_Face;
 

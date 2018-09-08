@@ -28,7 +28,6 @@
 
 FT_BEGIN_HEADER
 
-#define  FONT_DRIVER_GF   1
 
 #define  GF_PRE          247
 #define  GF_ID           131
@@ -60,6 +59,7 @@ FT_BEGIN_HEADER
 #define  GF_NO_OP        244
 
 #define toint(x)  (int)(((x)>0)?(x+0.5):(x-0.5))
+
 
 FT_END_HEADER
 
