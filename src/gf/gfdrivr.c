@@ -461,9 +461,9 @@
                 "                         bm->off_x      is %ld\n"
                 "                         bm->off_y      is %ld\n"
                 "                         bm->mv_x       is %ld\n"
-                "                         bm->mv_y       is %ld\n",
-		bm->bbx_height, bm->bbx_width, bm->off_x, bm->off_y,
-		bm->mv_x, bm->mv_y ));
+                "                         bm->mv_y       is %ld\n", bm->bbx_height, bm->bbx_width,
+		                                                    bm->off_x, bm->off_y,
+		                                                    bm->mv_x, bm->mv_y ));
 
     ft_synthesize_vertical_metrics( &slot->metrics, bm->bbx_height * 64 );
 
@@ -537,11 +537,10 @@
                     "                  End Char   : %d\n"
                     "                  font_bbx_w : %d\n"
                     "                  font_bbx_h : %d\n"
-                    "                  slant      : %d\n",
-		    parser.FontInfo->cs, parser.FontInfo->design_size,
-		    parser.FontInfo->begin_char, parser.FontInfo->end_char,
-		    parser.FontInfo->font_bbx_w, parser.FontInfo->font_bbx_h,
-		    parser.FontInfo->slant ));
+                    "                  slant      : %d\n", parser.FontInfo->cs, parser.FontInfo->design_size,
+		                                           parser.FontInfo->begin_char, parser.FontInfo->end_char,
+		                                           parser.FontInfo->font_bbx_w, parser.FontInfo->font_bbx_h,
+		                                           parser.FontInfo->slant ));
 
 	tfm->tfm_parser_funcs->done( &parser );
       }
