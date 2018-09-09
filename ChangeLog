@@ -1,3 +1,7 @@
+2018-09-09  Ben Wagner  <bungeman@google.com>
+
+	* builds/freetype.mk (refdoc-venv): Ensure python version (#54631).
+
 2018-09-07  Werner Lemberg  <wl@gnu.org>
 
 	[truetype] Fix assertion failure.
