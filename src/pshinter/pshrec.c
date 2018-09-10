@@ -1187,7 +1187,7 @@
       /* compute integer stem positions in font units */
       for ( n = 0; n < count * 2; n++ )
       {
-        y       += coords[n];
+        y        = ADD_LONG( y, coords[n] );
         stems[n] = FIXED_TO_INT( y );
       }
 

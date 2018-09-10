@@ -1,3 +1,11 @@
+2018-09-10  Armin Hasitzka  <prince.cherusker@gmail.com>
+
+	* src/pshinter/pshrec.c (t2_hints_stems): Mask numeric overflow.
+
+	Reported as
+
+	  https://bugs.chromium.org/p/oss-fuzz/issues/detail?id=10215
+
 2018-09-09  Ben Wagner  <bungeman@google.com>
 
 	* builds/freetype.mk (refdoc-venv): Ensure python version (#54631).
