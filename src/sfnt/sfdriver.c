@@ -471,12 +471,10 @@
    * (https://docs.microsoft.com/en-us/typography/opentype/spec/recom#name).
    */
 #define IS_WIN( n )  ( (n)->platformID == 3                             && \
-                       ( (n)->encodingID == 1 || (n)->encodingID == 0 ) && \
-                       (n)->languageID == 0x409                         )
+                       ( (n)->encodingID == 1 || (n)->encodingID == 0 ) )
 
 #define IS_APPLE( n )  ( (n)->platformID == 1 && \
-                         (n)->encodingID == 0 && \
-                         (n)->languageID == 0 )
+                         (n)->encodingID == 0 )
 
   static char*
   get_win_string( FT_Memory       memory,
@@ -500,42 +498,40 @@
 
     if ( FT_STREAM_SEEK( entry->stringOffset ) ||
          FT_FRAME_ENTER( entry->stringLength ) )
-    {
-      FT_FREE( result );
-      entry->stringLength = 0;
-      entry->stringOffset = 0;
-      FT_FREE( entry->string );
-
-      return NULL;
-    }
+      goto get_win_string_error;
 
     r = (FT_String*)result;
     p = (FT_Char*)stream->cursor;
 
     for ( len = entry->stringLength / 2; len > 0; len--, p += 2 )
     {
-      if ( p[0] == 0 )
+      if ( p[0] == 0 && char_type( p[1] ) )
+        *r++ = p[1];
+      else
       {
-        if ( char_type( p[1] ) )
-          *r++ = p[1];
-        else
-        {
-          if ( report_invalid_characters )
-          {
-            FT_TRACE0(( "get_win_string:"
-                        " Character `%c' (0x%X) invalid in PS name string\n",
-                        p[1], p[1] ));
-            /* it's not the job of FreeType to correct PS names... */
-            *r++ = p[1];
-          }
-        }
+        if ( report_invalid_characters )
+          FT_TRACE0(( "get_win_string:"
+                      " Character 0x%X invalid in PS name string\n",
+                      ((unsigned)p[0])*256 + (unsigned)p[1] ));
+        break;
       }
     }
-    *r = '\0';
+    if ( !len )
+      *r = '\0';
 
     FT_FRAME_EXIT();
 
-    return result;
+    if ( !len )
+      return result;
+
+  get_win_string_error:
+    FT_FREE( result );
+
+    entry->stringLength = 0;
+    entry->stringOffset = 0;
+    FT_FREE( entry->string );
+
+    return NULL;
   }
 
 
@@ -561,14 +557,7 @@
 
     if ( FT_STREAM_SEEK( entry->stringOffset ) ||
          FT_FRAME_ENTER( entry->stringLength ) )
-    {
-      FT_FREE( result );
-      entry->stringOffset = 0;
-      entry->stringLength = 0;
-      FT_FREE( entry->string );
-
-      return NULL;
-    }
+      goto get_apple_string_error;
 
     r = (FT_String*)result;
     p = (FT_Char*)stream->cursor;
@@ -580,20 +569,28 @@
       else
       {
         if ( report_invalid_characters )
-        {
           FT_TRACE0(( "get_apple_string:"
                       " Character `%c' (0x%X) invalid in PS name string\n",
                       *p, *p ));
-          /* it's not the job of FreeType to correct PS names... */
-          *r++ = *p;
-        }
+        break;
       }
     }
-    *r = '\0';
+    if ( !len )
+      *r = '\0';
 
     FT_FRAME_EXIT();
 
-    return result;
+    if ( !len )
+      return result;
+
+  get_apple_string_error:
+    FT_FREE( result );
+
+    entry->stringOffset = 0;
+    entry->stringLength = 0;
+    FT_FREE( entry->string );
+
+    return NULL;
   }
 
 
@@ -837,7 +834,7 @@
                                  face->name_table.names + win,
                                  sfnt_is_alphanumeric,
                                  0 );
-      else
+      if ( !result && apple != -1 )
         result = get_apple_string( face->root.memory,
                                    face->name_table.stream,
                                    face->name_table.names + apple,
@@ -1061,7 +1058,7 @@
                                face->name_table.names + win,
                                sfnt_is_postscript,
                                1 );
-    else
+    if ( !result && apple != -1 )
       result = get_apple_string( face->root.memory,
                                  face->name_table.stream,
                                  face->name_table.names + apple,

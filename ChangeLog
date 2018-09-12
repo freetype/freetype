@@ -1,3 +1,16 @@
+2018-09-12  John Tytgat  <John.Tytgat@esko.com>
+
+	[sfnt] Better PS name handling (#54629).
+
+	* src/sfnt/sfdriver (IS_WIN, IS_APPLE): Omit language ID checks.
+	(get_win_string, get_apple_string): Return NULL when the PostScript
+	font name characters is not according to specification.
+	(get_win_string): Make trace output work if the high byte if
+	non-zero.
+	(sfnt_get_var_ps_name, sfnt_get_ps_name): Previously we preferred
+	Win PS name (when there is also an Apple PS name); change this into
+	a fallback to Apple PS name in case the Win PS name is invalid.
+
 2018-09-12  Werner Lemberg  <wl@gnu.org>
 
 	[truetype] Improve VF check.
