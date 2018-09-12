@@ -1,5 +1,16 @@
 2018-09-12  Werner Lemberg  <wl@gnu.org>
 
+	[truetype] Improve VF check.
+
+	Triggered by
+
+	  https://bugs.chromium.org/p/oss-fuzz/issues/detail?id=10255
+
+	* src/truetype/ttgxvar.c (ft_var_load_gvar): Use better limit check
+	for `tupleCount'.
+
+2018-09-12  Werner Lemberg  <wl@gnu.org>
+
 	* src/truetype/ttgxvar.c (ft_var_load_gvar): Check `glyphoffsets'.
 
 2018-09-10  Armin Hasitzka  <prince.cherusker@gmail.com>
