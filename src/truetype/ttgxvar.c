@@ -1531,24 +1531,51 @@
 
     if ( gvar_head.flags & 1 )
     {
+      FT_ULong  limit = gvar_start + table_len;
+
+
       /* long offsets (one more offset than glyphs, to mark size of last) */
       if ( FT_FRAME_ENTER( ( blend->gv_glyphcnt + 1 ) * 4L ) )
         goto Exit;
 
       for ( i = 0; i <= blend->gv_glyphcnt; i++ )
+      {
         blend->glyphoffsets[i] = offsetToData + FT_GET_ULONG();
+        /* use `>', not `>=' */
+        if ( blend->glyphoffsets[i] > limit )
+        {
+          FT_TRACE2(( "ft_var_load_gvar:"
+                      " invalid glyph variation data offset for index %d\n",
+                      i ));
+          error = FT_THROW( Invalid_Table );
+          goto Exit;
+        }
+      }
 
       FT_FRAME_EXIT();
     }
     else
     {
+      FT_ULong  limit = gvar_start + table_len;
+
+
       /* short offsets (one more offset than glyphs, to mark size of last) */
       if ( FT_FRAME_ENTER( ( blend->gv_glyphcnt + 1 ) * 2L ) )
         goto Exit;
 
       for ( i = 0; i <= blend->gv_glyphcnt; i++ )
+      {
         blend->glyphoffsets[i] = offsetToData + FT_GET_USHORT() * 2;
-                                               /* XXX: Undocumented: `*2'! */
+        /* use `>', not `>=' */
+        if ( blend->glyphoffsets[i] > limit )
+        {
+          FT_TRACE2(( "ft_var_load_gvar:"
+                      " invalid glyph variation data offset for index %d\n",
+                      i ));
+          error = FT_THROW( Invalid_Table );
+          goto Exit;
+        }
+      }
 
       FT_FRAME_EXIT();
     }

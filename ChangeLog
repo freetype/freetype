@@ -1,3 +1,7 @@
+2018-09-12  Werner Lemberg  <wl@gnu.org>
+
+	* src/truetype/ttgxvar.c (ft_var_load_gvar): Check `glyphoffsets'.
+
 2018-09-10  Armin Hasitzka  <prince.cherusker@gmail.com>
 
 	* src/pshinter/pshrec.c (t2_hints_stems): Mask numeric overflow.
