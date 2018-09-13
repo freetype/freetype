@@ -1,3 +1,11 @@
+2018-09-13  Werner Lemberg  <wl@gnu.org>
+
+	* src/sfnt/sfdriver.c (sfnt_get_var_ps_name): Check `result'.
+
+	Reported as
+
+	  https://bugs.chromium.org/p/oss-fuzz/issues/detail?id=10316
+
 2018-09-12  John Tytgat  <John.Tytgat@esko.com>
 
 	[sfnt] Better PS name handling (#54629).

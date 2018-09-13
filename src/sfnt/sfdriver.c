@@ -841,7 +841,7 @@
                                    sfnt_is_alphanumeric,
                                    0 );
 
-      len = ft_strlen( result );
+      len = result ? ft_strlen( result ) : 0;
 
       /* sanitize if necessary; we reserve space for 36 bytes (a 128bit  */
       /* checksum as a hex number, preceded by `-' and followed by three */
