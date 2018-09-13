@@ -841,7 +841,14 @@
                                    sfnt_is_alphanumeric,
                                    0 );
 
-      len = result ? ft_strlen( result ) : 0;
+      if ( !result )
+      {
+        FT_TRACE0(( "sfnt_get_var_ps_name:"
+                    " No valid PS name prefix for font instances found\n" ));
+        return NULL;
+      }
+
+      len = ft_strlen( result );
 
       /* sanitize if necessary; we reserve space for 36 bytes (a 128bit  */
       /* checksum as a hex number, preceded by `-' and followed by three */

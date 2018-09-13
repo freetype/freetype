@@ -1,5 +1,9 @@
 2018-09-13  Werner Lemberg  <wl@gnu.org>
 
+	* src/sfnt/sfdriver.c (sfnt_get_var_ps_name): Fix last commit.
+
+2018-09-13  Werner Lemberg  <wl@gnu.org>
+
 	* src/sfnt/sfdriver.c (sfnt_get_var_ps_name): Check `result'.
 
 	Reported as
