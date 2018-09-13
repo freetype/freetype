@@ -1,5 +1,18 @@
 2018-09-13  Werner Lemberg  <wl@gnu.org>
 
+	[truetype] Some fixes for VF checks.
+
+	Reported as
+
+	  https://bugs.chromium.org/p/oss-fuzz/issues/detail?id=10317
+
+	* src/truetype/ttgxvar.c (ft_var_load_gvar): Properly exit memory
+	frame if we have invalid glyph variation data offsets.
+	(tt_face_vary_cvt): Protect against missing `tuplecoords' array.
+	Fix typo.
+
+2018-09-13  Werner Lemberg  <wl@gnu.org>
+
 	* src/sfnt/sfdriver.c (sfnt_get_var_ps_name): Fix last commit.
 
 2018-09-13  Werner Lemberg  <wl@gnu.org>

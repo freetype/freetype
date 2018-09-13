@@ -1548,11 +1548,9 @@
                       " invalid glyph variation data offset for index %d\n",
                       i ));
           error = FT_THROW( Invalid_Table );
-          goto Exit;
+          break;
         }
       }
-
-      FT_FRAME_EXIT();
     }
     else
     {
@@ -1573,12 +1571,14 @@
                       " invalid glyph variation data offset for index %d\n",
                       i ));
           error = FT_THROW( Invalid_Table );
-          goto Exit;
+          break;
         }
       }
-
-      FT_FRAME_EXIT();
     }
+
+    FT_FRAME_EXIT();
+    if ( error )
+      goto Exit;
 
     if ( blend->tuplecount != 0 )
     {
@@ -3263,13 +3263,24 @@
                     " invalid tuple index\n" ));
 
         error = FT_THROW( Invalid_Table );
-        goto Exit;
+        goto FExit;
       }
       else
+      {
+        if ( !blend->tuplecoords )
+        {
+          FT_TRACE2(( "tt_face_vary_cvt:"
+                      " no valid tuple coordinates available\n" ));
+
+          error = FT_THROW( Invalid_Table );
+          goto FExit;
+        }
+
         FT_MEM_COPY(
           tuple_coords,
           &blend->tuplecoords[( tupleIndex & 0xFFF ) * blend->num_axis],
           blend->num_axis * sizeof ( FT_Fixed ) );
+      }
 
       if ( tupleIndex & GX_TI_INTERMEDIATE_TUPLE )
       {
