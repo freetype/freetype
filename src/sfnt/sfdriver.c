@@ -464,12 +464,7 @@
   typedef int (*char_type_func)( int  c );
 
 
-  /*
-   * Handling of PID/EID 3/0 and 3/1 is the same.  The language ID
-   * restriction to use value 0x409 (US English) comes from OpenType's
-   * recommendation section
-   * (https://docs.microsoft.com/en-us/typography/opentype/spec/recom#name).
-   */
+  /* Handling of PID/EID 3/0 and 3/1 is the same. */
 #define IS_WIN( n )  ( (n)->platformID == 3                             && \
                        ( (n)->encodingID == 1 || (n)->encodingID == 0 ) )
 
