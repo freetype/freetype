@@ -3091,6 +3091,12 @@ FT_BEGIN_HEADER
    *     output.  The result is probably unpleasant if the glyph is rendered
    *     in non-monochrome modes.
    *
+   *     Note that for outline fonts only the TrueType font driver has proper
+   *     monochrome hinting support, provided the TTFs contain hints for B/W
+   *     rendering (which most fonts no longer provide).  If these conditions
+   *     are not met it is very likely that you get ugly results at smaller
+   *     sizes.
+   *
    *   FT_LOAD_TARGET_LCD ::
    *     A variant of @FT_LOAD_TARGET_LIGHT optimized for horizontally
    *     decimated LCD displays.
