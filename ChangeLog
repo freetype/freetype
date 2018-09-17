@@ -1,3 +1,14 @@
+2018-09-17  Werner Lemberg  <wl@gnu.org>
+
+	[pshinter] Handle numeric overflow.
+
+	Reported as
+
+	  https://bugs.chromium.org/p/oss-fuzz/issues/detail?id=10396
+
+	* src/pshinter/pshglob.c: Include FT_INTERNAL_CALC_H.
+	(psh_blues_snap_stems): Mask numeric overflow.
+
 2018-09-13  Werner Lemberg  <wl@gnu.org>
 
 	[truetype] Some fixes for VF checks.
@@ -669,7 +680,7 @@
 
 	[cid] Trace PostScript dictionaries.
 
-	* src/cid/cidload.c: Include FT_INTERNAL_POSTSCRIPT_AUX_H
+	* src/cid/cidload.c: Include FT_INTERNAL_POSTSCRIPT_AUX_H.
 	(cid_load_keyword, cid_parse_font_matrix, parse_fd_array,
 	parse_expansion_factor, cid_parse_dict): Add tracing calls.
 	(parse_font_name): New function to trace `/FontName' keywords in
