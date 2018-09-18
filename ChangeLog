@@ -1,3 +1,11 @@
+2018-09-18  Alexei Podtelezhnikov  <apodtele@gmail.com>
+
+	Remove unused fields.
+
+	* src/pcf.h (PCF_FaceRec): Remove `charmap' and `charmap_handle'.
+	* src/bdfdrvr.h (BDF_FaceRec): Ditto.
+	* src/winfonts/winfnt.h (FNT_FaceRec): Ditto.
+
 2018-09-17  Werner Lemberg  <wl@gnu.org>
 
 	[pshinter] Handle numeric overflow.

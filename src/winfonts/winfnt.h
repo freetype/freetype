@@ -150,9 +150,6 @@ FT_BEGIN_HEADER
     FT_FaceRec     root;
     FNT_Font       font;
 
-    FT_CharMap     charmap_handle;
-    FT_CharMapRec  charmap;  /* a single charmap per face */
-
   } FNT_FaceRec, *FNT_Face;
 
 

@@ -161,9 +161,6 @@ FT_BEGIN_HEADER
 
     FT_ULong       bitmapsFormat;
 
-    FT_CharMap     charmap_handle;
-    FT_CharMapRec  charmap;  /* a single charmap per face */
-
   } PCF_FaceRec, *PCF_Face;
 
 

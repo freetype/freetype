@@ -56,9 +56,6 @@ FT_BEGIN_HEADER
 
     BDF_encoding_el*  en_table;
 
-    FT_CharMap        charmap_handle;
-    FT_CharMapRec     charmap;  /* a single charmap per face */
-
     FT_UInt           default_glyph;
 
   } BDF_FaceRec, *BDF_Face;
