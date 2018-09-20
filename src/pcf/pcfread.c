@@ -936,6 +936,40 @@ THE SOFTWARE.
    * This file uses X11 terminology for PCF data; an `encoding' in X11 speak
    * is the same as a character code in FreeType speak.
    */
+#define PCF_ENC_SIZE  10
+
+  static
+  const FT_Frame_Field  pcf_enc_header[] =
+  {
+#undef  FT_STRUCTURE
+#define FT_STRUCTURE  PCF_EncRec
+
+    FT_FRAME_START( PCF_ENC_SIZE ),
+      FT_FRAME_USHORT_LE( firstCol ),
+      FT_FRAME_USHORT_LE( lastCol ),
+      FT_FRAME_USHORT_LE( firstRow ),
+      FT_FRAME_USHORT_LE( lastRow ),
+      FT_FRAME_USHORT_LE( defaultChar ),
+    FT_FRAME_END
+  };
+
+
+  static
+  const FT_Frame_Field  pcf_enc_msb_header[] =
+  {
+#undef  FT_STRUCTURE
+#define FT_STRUCTURE  PCF_EncRec
+
+    FT_FRAME_START( PCF_ENC_SIZE ),
+      FT_FRAME_USHORT( firstCol ),
+      FT_FRAME_USHORT( lastCol ),
+      FT_FRAME_USHORT( firstRow ),
+      FT_FRAME_USHORT( lastRow ),
+      FT_FRAME_USHORT( defaultChar ),
+    FT_FRAME_END
+  };
+
+
   static FT_Error
   pcf_get_encodings( FT_Stream  stream,
                      PCF_Face   face )
@@ -943,8 +977,7 @@ THE SOFTWARE.
     FT_Error      error;
     FT_Memory     memory = FT_FACE( face )->memory;
     FT_ULong      format, size;
-    FT_UShort     firstCol, lastCol;
-    FT_UShort     firstRow, lastRow;
+    PCF_Enc       enc = &face->enc;
     FT_ULong      nencoding;
     FT_UShort     defaultCharRow, defaultCharCol;
     FT_UShort     encodingOffset, defaultCharEncodingOffset;
@@ -961,86 +994,73 @@ THE SOFTWARE.
                                     &format,
                                     &size );
     if ( error )
-      return error;
+      goto Bail;
 
-    error = FT_Stream_EnterFrame( stream, 14 );
-    if ( error )
-      return error;
-
-    format = FT_GET_ULONG_LE();
-
-    /* X11's reference implementation uses the equivalent to  */
-    /* `FT_GET_SHORT' for `defaultChar', however this doesn't */
-    /* make sense for most encodings.                         */
-    if ( PCF_BYTE_ORDER( format ) == MSBFirst )
-    {
-      firstCol          = FT_GET_USHORT();
-      lastCol           = FT_GET_USHORT();
-      firstRow          = FT_GET_USHORT();
-      lastRow           = FT_GET_USHORT();
-      face->defaultChar = FT_GET_USHORT();
-    }
-    else
-    {
-      firstCol          = FT_GET_USHORT_LE();
-      lastCol           = FT_GET_USHORT_LE();
-      firstRow          = FT_GET_USHORT_LE();
-      lastRow           = FT_GET_USHORT_LE();
-      face->defaultChar = FT_GET_USHORT_LE();
-    }
-
-    FT_Stream_ExitFrame( stream );
+    if ( FT_READ_ULONG_LE( format ) )
+      goto Bail;
 
     FT_TRACE4(( "pcf_get_encodings:\n"
                 "  format: 0x%lX (%s)\n",
                 format,
                 PCF_BYTE_ORDER( format ) == MSBFirst ? "MSB" : "LSB" ));
 
-    if ( !PCF_FORMAT_MATCH( format, PCF_DEFAULT_FORMAT ) )
+    if ( !PCF_FORMAT_MATCH( format, PCF_DEFAULT_FORMAT ) &&
+         !PCF_FORMAT_MATCH( format, PCF_BDF_ENCODINGS )  )
       return FT_THROW( Invalid_File_Format );
+
+    if ( PCF_BYTE_ORDER( format ) == MSBFirst )
+    {
+      if ( FT_STREAM_READ_FIELDS( pcf_enc_msb_header, enc ) )
+        goto Bail;
+    }
+    else
+    {
+      if ( FT_STREAM_READ_FIELDS( pcf_enc_header, enc ) )
+        goto Bail;
+    }
 
     FT_TRACE4(( "  firstCol 0x%X, lastCol 0x%X\n"
                 "  firstRow 0x%X, lastRow 0x%X\n"
                 "  defaultChar 0x%X\n",
-                firstCol, lastCol,
-                firstRow, lastRow,
-                face->defaultChar ));
+                enc->firstCol, enc->lastCol,
+                enc->firstRow, enc->lastRow,
+                enc->defaultChar ));
 
     /* sanity checks; we limit numbers of rows and columns to 256 */
-    if ( firstCol > lastCol ||
-         lastCol  > 0xFF    ||
-         firstRow > lastRow ||
-         lastRow  > 0xFF    )
+    if ( enc->firstCol > enc->lastCol ||
+         enc->lastCol  > 0xFF         ||
+         enc->firstRow > enc->lastRow ||
+         enc->lastRow  > 0xFF         )
       return FT_THROW( Invalid_Table );
 
-    nencoding = (FT_ULong)( lastCol - firstCol + 1 ) *
-                (FT_ULong)( lastRow - firstRow + 1 );
+    nencoding = (FT_ULong)( enc->lastCol - enc->firstCol + 1 ) *
+                (FT_ULong)( enc->lastRow - enc->firstRow + 1 );
 
     if ( FT_NEW_ARRAY( encoding, nencoding ) )
-      return error;
+      goto Bail;
 
     error = FT_Stream_EnterFrame( stream, 2 * nencoding );
     if ( error )
-      goto Bail;
+      goto Exit;
 
     FT_TRACE5(( "\n" ));
 
-    defaultCharRow = face->defaultChar >> 8;
-    defaultCharCol = face->defaultChar & 0xFF;
+    defaultCharRow = enc->defaultChar >> 8;
+    defaultCharCol = enc->defaultChar & 0xFF;
 
     /* validate default character */
-    if ( defaultCharRow < firstRow ||
-         defaultCharRow > lastRow  ||
-         defaultCharCol < firstCol ||
-         defaultCharCol > lastCol  )
+    if ( defaultCharRow < enc->firstRow ||
+         defaultCharRow > enc->lastRow  ||
+         defaultCharCol < enc->firstCol ||
+         defaultCharCol > enc->lastCol  )
     {
-      face->defaultChar = firstRow * 256U + firstCol;
+      enc->defaultChar = enc->firstRow * 256U + enc->firstCol;
       FT_TRACE0(( "pcf_get_encodings:"
                   " Invalid default character set to %u\n",
-                  face->defaultChar ));
+                  enc->defaultChar ));
 
-      defaultCharRow = face->defaultChar >> 8;
-      defaultCharCol = face->defaultChar & 0xFF;
+      defaultCharRow = enc->firstRow;
+      defaultCharCol = enc->firstCol;
     }
 
     /* FreeType mandates that glyph index 0 is the `undefined glyph',  */
@@ -1051,8 +1071,9 @@ THE SOFTWARE.
     /* `stream->cursor' still points at the beginning of the frame; */
     /* we can thus easily get the offset to the default character   */
     pos = stream->cursor +
-            2 * ( ( defaultCharRow - firstRow ) * ( lastCol - firstCol + 1 ) +
-                  defaultCharCol - firstCol );
+            2 * ( ( defaultCharRow - enc->firstRow ) *
+                  ( enc->lastCol - enc->firstCol + 1 ) +
+                    defaultCharCol - enc->firstCol       );
 
     if ( PCF_BYTE_ORDER( format ) == MSBFirst )
       defaultCharEncodingOffset = FT_PEEK_USHORT( pos );
@@ -1078,9 +1099,9 @@ THE SOFTWARE.
     }
 
     k = 0;
-    for ( i = firstRow; i <= lastRow; i++ )
+    for ( i = enc->firstRow; i <= enc->lastRow; i++ )
     {
-      for ( j = firstCol; j <= lastCol; j++ )
+      for ( j = enc->firstCol; j <= enc->lastCol; j++ )
       {
         /* X11's reference implementation uses the equivalent to  */
         /* `FT_GET_SHORT', however PCF fonts with more than 32768 */
@@ -1111,15 +1132,17 @@ THE SOFTWARE.
     FT_Stream_ExitFrame( stream );
 
     if ( FT_RENEW_ARRAY( encoding, nencoding, k ) )
-      goto Bail;
+      goto Exit;
 
     face->nencodings = k;
     face->encodings  = encoding;
 
     return error;
 
-  Bail:
+  Exit:
     FT_FREE( encoding );
+
+  Bail:
     return error;
   }
 

@@ -104,6 +104,19 @@ FT_BEGIN_HEADER
   } PCF_MetricRec, *PCF_Metric;
 
 
+  typedef struct  PCF_EncRec_
+  {
+    FT_UShort   firstCol;
+    FT_UShort   lastCol;
+    FT_UShort   firstRow;
+    FT_UShort   lastRow;
+    FT_UShort   defaultChar;
+
+    FT_UShort*  offset;  /* unused yet */
+
+  } PCF_EncRec, *PCF_Enc;
+
+
   typedef struct  PCF_AccelRec_
   {
     FT_Byte        noOverlap;
@@ -157,7 +170,7 @@ FT_BEGIN_HEADER
     FT_ULong       nencodings;
     PCF_Encoding   encodings;
 
-    FT_UShort      defaultChar;
+    PCF_EncRec     enc;
 
     FT_ULong       bitmapsFormat;
 

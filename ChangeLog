@@ -1,3 +1,12 @@
+2018-09-19  Alexei Podtelezhnikov  <apodtele@gmail.com>
+
+	[pcf] Prepare to replace charmap implementation.
+
+	* src/pcf/pcf.h (PCF_Face): Updated to include...
+	(PCF_EncRec): ... this new structure to store charmap geometry.
+
+	* src/pcf/pcfread.c (pcf_get_encodings): Store charmap geometry.
+
 2018-09-18  Alexei Podtelezhnikov  <apodtele@gmail.com>
 
 	Remove unused fields.
