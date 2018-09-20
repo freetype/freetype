@@ -1,3 +1,10 @@
+2018-09-20  Werner Lemberg  <wl@gnu.org>
+
+	[base] Remove unused function `FT_GlyphLoader_CopyPoints'.
+
+	* include/freetype/internal/ftgloadr.h, src/base/ftgloadr.c
+	(FT_GlyphLoader_CopyPoints): Do it.
+
 2018-09-19  Alexei Podtelezhnikov  <apodtele@gmail.com>
 
 	[pcf] Prepare to replace charmap implementation.

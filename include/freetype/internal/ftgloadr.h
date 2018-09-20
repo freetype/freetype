@@ -138,11 +138,6 @@ FT_BEGIN_HEADER
   FT_BASE( void )
   FT_GlyphLoader_Add( FT_GlyphLoader  loader );
 
-  /* copy points from one glyph loader to another */
-  FT_BASE( FT_Error )
-  FT_GlyphLoader_CopyPoints( FT_GlyphLoader  target,
-                             FT_GlyphLoader  source );
-
  /* */
 
 

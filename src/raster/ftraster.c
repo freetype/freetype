@@ -99,7 +99,7 @@
    *   built from the bottom of the render pool, used as a stack.  The
    *   following graphics shows the profile list under construction:
    *
-   *     __________________________________________________________ _ _
+   *    __________________________________________________________ _ _
    *   |         |                 |         |                 |
    *   | profile | coordinates for | profile | coordinates for |-->
    *   |    1    |  profile 1      |    2    |  profile 2      |-->
@@ -125,8 +125,8 @@
    *
    *     _ _ _______________________________________
    *                           |                    |
-   *                         <--| sorted list of     |
-   *                         <--|  extrema scanlines |
+   *                        <--| sorted list of     |
+   *                        <--|  extrema scanlines |
    *     _ _ __________________|____________________|
    *
    *                           ^                    ^
