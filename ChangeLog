@@ -1,3 +1,16 @@
+2018-09-20  Alexei Podtelezhnikov  <apodtele@gmail.com>
+
+	[pcf] Replace charmap implementation.
+
+	PCF comes with charmap lookup table, aka PCF encodings.  Using it
+	directly makes FT_Get_Char_Index and FT_Get_Next_Char 4-5 times
+	faster than the original BDF-like binary searches.
+
+	* src/pcf/pcf.h (PCF_EncodingRec): Removed.
+	(PCF_FaceRec): Remove `nencodings' and `encodings'.
+	* src/pcf/pcfdrivr.c (pcf_cmap_char_{index,next}): Replaced.
+	* src/pcf/pcfread.c (pcf_get_encodings): Store data differently.
+
 2018-09-20  Werner Lemberg  <wl@gnu.org>
 
 	[base] Remove unused function `FT_GlyphLoader_CopyPoints'.
@@ -9,7 +22,7 @@
 
 	[pcf] Prepare to replace charmap implementation.
 
-	* src/pcf/pcf.h (PCF_Face): Updated to include...
+	* src/pcf/pcf.h (PCF_FaceRec): Updated to include...
 	(PCF_EncRec): ... this new structure to store charmap geometry.
 
 	* src/pcf/pcfread.c (pcf_get_encodings): Store charmap geometry.

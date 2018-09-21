@@ -112,7 +112,7 @@ FT_BEGIN_HEADER
     FT_UShort   lastRow;
     FT_UShort   defaultChar;
 
-    FT_UShort*  offset;  /* unused yet */
+    FT_UShort*  offset;
 
   } PCF_EncRec, *PCF_Enc;
 
@@ -141,38 +141,28 @@ FT_BEGIN_HEADER
    * This file uses X11 terminology for PCF data; an `encoding' in X11 speak
    * is the same as a `character code' in FreeType speak.
    */
-  typedef struct  PCF_EncodingRec_
-  {
-    FT_ULong   enc;
-    FT_UShort  glyph;  /* an index into PCF_Face's `metrics' array */
-
-  } PCF_EncodingRec, *PCF_Encoding;
-
-
   typedef struct  PCF_FaceRec_
   {
-    FT_FaceRec     root;
+    FT_FaceRec    root;
 
-    FT_StreamRec   comp_stream;
-    FT_Stream      comp_source;
+    FT_StreamRec  comp_stream;
+    FT_Stream     comp_source;
 
-    char*          charset_encoding;
-    char*          charset_registry;
+    char*         charset_encoding;
+    char*         charset_registry;
 
-    PCF_TocRec     toc;
-    PCF_AccelRec   accel;
+    PCF_TocRec    toc;
+    PCF_AccelRec  accel;
 
-    int            nprops;
-    PCF_Property   properties;
+    int           nprops;
+    PCF_Property  properties;
 
-    FT_ULong       nmetrics;
-    PCF_Metric     metrics;
-    FT_ULong       nencodings;
-    PCF_Encoding   encodings;
+    FT_ULong      nmetrics;
+    PCF_Metric    metrics;
 
-    PCF_EncRec     enc;
+    PCF_EncRec    enc;
 
-    FT_ULong       bitmapsFormat;
+    FT_ULong      bitmapsFormat;
 
   } PCF_FaceRec, *PCF_Face;
 

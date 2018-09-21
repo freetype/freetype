@@ -974,17 +974,16 @@ THE SOFTWARE.
   pcf_get_encodings( FT_Stream  stream,
                      PCF_Face   face )
   {
-    FT_Error      error;
-    FT_Memory     memory = FT_FACE( face )->memory;
-    FT_ULong      format, size;
-    PCF_Enc       enc = &face->enc;
-    FT_ULong      nencoding;
-    FT_UShort     defaultCharRow, defaultCharCol;
-    FT_UShort     encodingOffset, defaultCharEncodingOffset;
-    FT_UShort     i, j;
-    FT_Byte*      pos;
-    FT_ULong      k;
-    PCF_Encoding  encoding = NULL;
+    FT_Error    error;
+    FT_Memory   memory = FT_FACE( face )->memory;
+    FT_ULong    format, size;
+    PCF_Enc     enc = &face->enc;
+    FT_ULong    nencoding;
+    FT_UShort*  offset;
+    FT_UShort   defaultCharRow, defaultCharCol;
+    FT_UShort   encodingOffset, defaultCharEncodingOffset;
+    FT_UShort   i, j;
+    FT_Byte*    pos;
 
 
     error = pcf_seek_to_table_type( stream,
@@ -1036,7 +1035,7 @@ THE SOFTWARE.
     nencoding = (FT_ULong)( enc->lastCol - enc->firstCol + 1 ) *
                 (FT_ULong)( enc->lastRow - enc->firstRow + 1 );
 
-    if ( FT_NEW_ARRAY( encoding, nencoding ) )
+    if ( FT_NEW_ARRAY( enc->offset, nencoding ) )
       goto Bail;
 
     error = FT_Stream_EnterFrame( stream, 2 * nencoding );
@@ -1098,7 +1097,7 @@ THE SOFTWARE.
       face->metrics[0]                         = tmp;
     }
 
-    k = 0;
+    offset = enc->offset;
     for ( i = enc->firstRow; i <= enc->lastRow; i++ )
     {
       for ( j = enc->firstCol; j <= enc->lastCol; j++ )
@@ -1118,29 +1117,17 @@ THE SOFTWARE.
             encodingOffset = 0;
           else if ( encodingOffset == 0 )
             encodingOffset = defaultCharEncodingOffset;
-
-          encoding[k].enc   = i * 256U + j;
-          encoding[k].glyph = encodingOffset;
-
-          FT_TRACE5(( "  code %u (0x%04X): idx %u\n",
-                      encoding[k].enc, encoding[k].enc, encoding[k].glyph ));
-
-          k++;
         }
+
+        *offset++ = encodingOffset;
       }
     }
     FT_Stream_ExitFrame( stream );
 
-    if ( FT_RENEW_ARRAY( encoding, nencoding, k ) )
-      goto Exit;
-
-    face->nencodings = k;
-    face->encodings  = encoding;
-
     return error;
 
   Exit:
-    FT_FREE( encoding );
+    FT_FREE( enc->offset );
 
   Bail:
     return error;
