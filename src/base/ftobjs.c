@@ -391,8 +391,10 @@
     case FT_RENDER_MODE_MONO:
       pixel_mode = FT_PIXEL_MODE_MONO;
 #if 1
-      /* undocumented but confirmed: bbox values get rounded    */
-      /* for narrow glyphs bbox is extended to one pixel first  */
+      /* x */
+
+      /* undocumented but confirmed: bbox values get rounded;  */
+      /* for narrow glyphs bbox is extended to one pixel first */
       if ( pbox.xMax - pbox.xMin <= 1 )
       {
         if ( pbox.xMax - pbox.xMin == 0 )
@@ -404,8 +406,13 @@
           cbox.xMin = cbox.xMax = ( cbox.xMin + cbox.xMax ) / 2;
       }
 
+      /* we do asymmetric rounding so that the center */
+      /* of a pixel gets always included              */
+
       pbox.xMin += ( cbox.xMin + 31 ) >> 6;
       pbox.xMax += ( cbox.xMax + 32 ) >> 6;
+
+      /* y */
 
       if ( pbox.yMax - pbox.yMin <= 1 )
       {
