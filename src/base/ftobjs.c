@@ -404,7 +404,7 @@
           cbox.xMin = cbox.xMax = ( cbox.xMin + cbox.xMax ) / 2;
       }
 
-      pbox.xMin += ( cbox.xMin + 32 ) >> 6;
+      pbox.xMin += ( cbox.xMin + 31 ) >> 6;
       pbox.xMax += ( cbox.xMax + 32 ) >> 6;
 
       if ( pbox.yMax - pbox.yMin <= 1 )
@@ -418,7 +418,7 @@
           cbox.yMin = cbox.yMax = ( cbox.yMin + cbox.yMax ) / 2;
       }
 
-      pbox.yMin += ( cbox.yMin + 32 ) >> 6;
+      pbox.yMin += ( cbox.yMin + 31 ) >> 6;
       pbox.yMax += ( cbox.yMax + 32 ) >> 6;
 
       break;

@@ -1,5 +1,12 @@
 2018-09-20  Alexei Podtelezhnikov  <apodtele@gmail.com>
 
+	* src/base/ftobjs.c (ft_glyphslot_reset_bimap): Tiny rounding tweak.
+
+	This adds pixels in case a contour goes through the center
+	and they need to be turned on in the b/w rasterizer.
+
+2018-09-20  Alexei Podtelezhnikov  <apodtele@gmail.com>
+
 	[pcf] Replace charmap implementation.
 
 	PCF comes with charmap lookup table, aka PCF encodings.  Using it
