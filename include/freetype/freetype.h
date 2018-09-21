@@ -2929,10 +2929,13 @@ FT_BEGIN_HEADER
    *
    *   FT_LOAD_NO_RECURSE ::
    *     Don't load composite glyphs recursively.  Instead, the font driver
-   *     should set the `num_subglyph` and `subglyphs` values of the glyph
-   *     slot accordingly, and set `glyph->format` to
-   *     @FT_GLYPH_FORMAT_COMPOSITE.  The description of subglyphs can then
-   *     be accessed with @FT_Get_SubGlyph_Info.
+   *     fills the `num_subglyph` and `subglyphs` values of the glyph slot;
+   *     it also sets `glyph->format` to @FT_GLYPH_FORMAT_COMPOSITE.  The
+   *     description of subglyphs can then be accessed with
+   *     @FT_Get_SubGlyph_Info.
+   *
+   *     Don't use this flag for retrieving metrics information since some
+   *     font drivers only return rudimentary data.
    *
    *     This flag implies @FT_LOAD_NO_SCALE and @FT_LOAD_IGNORE_TRANSFORM.
    *
