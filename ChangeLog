@@ -1,3 +1,10 @@
+2018-09-21  Werner Lemberg  <wl@gnu.org>
+
+	[raster] Fix disappearing vertical lines (#54589).
+
+	* src/raster/ftraster.c (Vertical_Sweep_Span): Handle special case
+	where both left and right outline exactly pass pixel centers.
+
 2018-09-20  Alexei Podtelezhnikov  <apodtele@gmail.com>
 
 	* src/base/ftobjs.c (ft_glyphslot_reset_bimap): Tiny rounding tweak.
