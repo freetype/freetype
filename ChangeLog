@@ -1,3 +1,21 @@
+2018-09-21  Ben Wagner  <bungeman@google.com>
+
+	Improve auto-hinter handling of bitmap fonts (#54681).
+
+	For bitmap fonts, `FT_Load_Glyph' should either return an error or
+	not set the format to `FT_GLYPH_FORMAT_OUTLINE'.  However, in this
+	case `FT_Load_Glyph' calls into the auto-hinter which calls back
+	into `FT_Load_Glyph' with `FT_LOAD_NO_SCALE' in the flags, which
+	marks the glyph as `FT_GLYPH_FORMAT_OUTLINE' with an empty path
+	(even though it doesn't have any path).  It appears that the
+	auto-hinter should not be called when the face doesn't have
+	outlines.  The current test for using the auto-hinter in
+	`FT_Load_Glyph' checks whether the driver supports scalable
+	outlines, but not if the face supports scalable outlines.
+
+	* src/base/ftobjs.c (FT_Load_Glyph): Directly check whether we have
+	scalable outlines.
+
 2018-09-21  Werner Lemberg  <wl@gnu.org>
 
 	[raster] Fix disappearing vertical lines (#54589).

@@ -846,7 +846,7 @@
      * - Do only auto-hinting if we have
      *
      *   - a hinter module,
-     *   - a scalable font format dealing with outlines,
+     *   - a scalable font,
      *   - not a tricky font, and
      *   - no transforms except simple slants and/or rotations by
      *     integer multiples of 90 degrees.
@@ -864,8 +864,7 @@
     if ( hinter                                           &&
          !( load_flags & FT_LOAD_NO_HINTING )             &&
          !( load_flags & FT_LOAD_NO_AUTOHINT )            &&
-         FT_DRIVER_IS_SCALABLE( driver )                  &&
-         FT_DRIVER_USES_OUTLINES( driver )                &&
+         FT_IS_SCALABLE( face )                           &&
          !FT_IS_TRICKY( face )                            &&
          ( ( load_flags & FT_LOAD_IGNORE_TRANSFORM )    ||
            ( face->internal->transform_matrix.yx == 0 &&
