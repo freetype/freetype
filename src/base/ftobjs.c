@@ -393,46 +393,38 @@
 #if 1
       /* x */
 
-      /* undocumented but confirmed: bbox values get rounded;  */
-      /* for narrow glyphs bbox is extended to one pixel first */
-      switch ( pbox.xMax - pbox.xMin )
-      {
-      case 1:
-        pbox.xMax -= 1;
-        cbox.xMax += 64;
-        /* fall through */
-      case 0:
-        if ( cbox.xMax - cbox.xMin < 63 )
-        {
-          cbox.xMin = ( cbox.xMin + cbox.xMax ) / 2 - 31;
-          cbox.xMax = cbox.xMin + 63;
-        }
-      }
-
-      /* we do asymmetric rounding so that the center */
-      /* of a pixel gets always included              */
+      /* undocumented but confirmed: bbox values get rounded;    */
+      /* we do asymmetric rounding so that the center of a pixel */
+      /* gets always included                                    */
 
       pbox.xMin += ( cbox.xMin + 31 ) >> 6;
       pbox.xMax += ( cbox.xMax + 32 ) >> 6;
 
-      /* y */
+      /* if the bbox collapsed, we add a pixel based on the total */
+      /* rounding remainder to cover most of the original cbox    */
 
-      switch ( pbox.yMax - pbox.yMin )
+      if ( pbox.xMin == pbox.xMax )
       {
-      case 1:
-        pbox.yMax -= 1;
-        cbox.yMax += 64;
-        /* fall through */
-      case 0:
-        if ( cbox.yMax - cbox.yMin < 63 )
-        {
-          cbox.yMin = ( cbox.yMin + cbox.yMax ) / 2 - 31;
-          cbox.yMax = cbox.yMin + 63;
-        }
+        if ( ( ( cbox.xMin + 31 ) & 63 ) - 31 +
+             ( ( cbox.xMax + 32 ) & 63 ) - 32 < 0 )
+          pbox.xMin -= 1;
+        else
+          pbox.xMax += 1;
       }
+
+      /* y */
 
       pbox.yMin += ( cbox.yMin + 31 ) >> 6;
       pbox.yMax += ( cbox.yMax + 32 ) >> 6;
+
+      if ( pbox.yMin == pbox.yMax )
+      {
+        if ( ( ( cbox.yMin + 31 ) & 63 ) - 31 +
+             ( ( cbox.yMax + 32 ) & 63 ) - 32 < 0 )
+          pbox.yMin -= 1;
+        else
+          pbox.yMax += 1;
+      }
 
       break;
 #else
