@@ -1,3 +1,7 @@
+2018-09-20  Alexei Podtelezhnikov  <apodtele@gmail.com>
+
+	* src/base/ftobjs.c (ft_glyphslot_reset_bimap): Further tweak.
+
 2018-09-21  Ben Wagner  <bungeman@google.com>
 
 	Improve auto-hinter handling of bitmap fonts (#54681).

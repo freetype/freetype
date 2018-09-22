@@ -395,15 +395,18 @@
 
       /* undocumented but confirmed: bbox values get rounded;  */
       /* for narrow glyphs bbox is extended to one pixel first */
-      if ( pbox.xMax - pbox.xMin <= 1 )
+      switch ( pbox.xMax - pbox.xMin )
       {
-        if ( pbox.xMax - pbox.xMin == 0 )
+      case 1:
+        pbox.xMax -= 1;
+        cbox.xMax += 64;
+        /* fall through */
+      case 0:
+        if ( cbox.xMax - cbox.xMin < 63 )
         {
-          cbox.xMin = ( cbox.xMin + cbox.xMax ) / 2 - 32;
-          cbox.xMax = cbox.xMin + 64;
+          cbox.xMin = ( cbox.xMin + cbox.xMax ) / 2 - 31;
+          cbox.xMax = cbox.xMin + 63;
         }
-        else if ( cbox.xMax - cbox.xMin < 0 )
-          cbox.xMin = cbox.xMax = ( cbox.xMin + cbox.xMax ) / 2;
       }
 
       /* we do asymmetric rounding so that the center */
@@ -414,15 +417,18 @@
 
       /* y */
 
-      if ( pbox.yMax - pbox.yMin <= 1 )
+      switch ( pbox.yMax - pbox.yMin )
       {
-        if ( pbox.yMax - pbox.yMin == 0 )
+      case 1:
+        pbox.yMax -= 1;
+        cbox.yMax += 64;
+        /* fall through */
+      case 0:
+        if ( cbox.yMax - cbox.yMin < 63 )
         {
-          cbox.yMin = ( cbox.yMin + cbox.yMax ) / 2 - 32;
-          cbox.yMax = cbox.yMin + 64;
+          cbox.yMin = ( cbox.yMin + cbox.yMax ) / 2 - 31;
+          cbox.yMax = cbox.yMin + 63;
         }
-        else if ( cbox.yMax - cbox.yMin < 0 )
-          cbox.yMin = cbox.yMax = ( cbox.yMin + cbox.yMax ) / 2;
       }
 
       pbox.yMin += ( cbox.yMin + 31 ) >> 6;
