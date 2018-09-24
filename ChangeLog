@@ -1,13 +1,22 @@
-2018-09-20  Alexei Podtelezhnikov  <apodtele@gmail.com>
+2018-09-23  Alexei Podtelezhnikov  <apodtele@gmail.com>
 
-	* src/base/ftobjs.c (ft_glyphslot_reset_bimap): Another tweak.
+	[bdf] Speed up charmap access.
+
+	This makes FT_Get_Char_Index and FT_Get_Next_Char 4-5 times faster.
+
+	* src/bdf/bdfdrivr.c (bdf_cmap_char_{index,next}): Help binary search
+	with continuous prediction.
+
+2018-09-22  Alexei Podtelezhnikov  <apodtele@gmail.com>
+
+	* src/base/ftobjs.c (ft_glyphslot_preset_bimap): Another tweak.
 
 	This one should be clearer. When the rounded monochrome bbox collapses
 	we add a pixel that covers most if not all original cbox. 
 
-2018-09-20  Alexei Podtelezhnikov  <apodtele@gmail.com>
+2018-09-21  Alexei Podtelezhnikov  <apodtele@gmail.com>
 
-	* src/base/ftobjs.c (ft_glyphslot_reset_bimap): Further tweak.
+	* src/base/ftobjs.c (ft_glyphslot_preset_bimap): Further tweak.
 
 2018-09-21  Ben Wagner  <bungeman@google.com>
 
@@ -36,7 +45,7 @@
 
 2018-09-20  Alexei Podtelezhnikov  <apodtele@gmail.com>
 
-	* src/base/ftobjs.c (ft_glyphslot_reset_bimap): Tiny rounding tweak.
+	* src/base/ftobjs.c (ft_glyphslot_preset_bimap): Tiny rounding tweak.
 
 	This adds pixels in case a contour goes through the center
 	and they need to be turned on in the b/w rasterizer.

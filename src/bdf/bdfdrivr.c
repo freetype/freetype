@@ -99,13 +99,16 @@ THE SOFTWARE.
 
     min = 0;
     max = cmap->num_encodings;
+    mid = ( min + max ) >> 1;
 
     while ( min < max )
     {
       FT_ULong  code;
 
 
-      mid  = ( min + max ) >> 1;
+      if ( mid > max || mid < min )
+        mid = ( min + max ) >> 1;
+
       code = encodings[mid].enc;
 
       if ( charcode == code )
@@ -120,6 +123,9 @@ THE SOFTWARE.
         max = mid;
       else
         min = mid + 1;
+
+      /* prediction in a continuous block */
+      mid += charcode - code;
     }
 
     return result;
@@ -139,13 +145,16 @@ THE SOFTWARE.
 
     min = 0;
     max = cmap->num_encodings;
+    mid = ( min + max ) >> 1;
 
     while ( min < max )
     {
       FT_ULong  code; /* same as BDF_encoding_el.enc */
 
 
-      mid  = ( min + max ) >> 1;
+      if ( mid > max || mid < min )
+        mid = ( min + max ) >> 1;
+
       code = encodings[mid].enc;
 
       if ( charcode == code )
@@ -160,6 +169,9 @@ THE SOFTWARE.
         max = mid;
       else
         min = mid + 1;
+
+      /* prediction in a continuous block */
+      mid += charcode - code;
     }
 
     charcode = 0;
