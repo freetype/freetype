@@ -414,7 +414,7 @@
         decoder.width_only = TRUE;
 
       decoder.builder.no_recurse =
-        (FT_Bool)( load_flags & FT_LOAD_NO_RECURSE );
+        FT_BOOL( load_flags & FT_LOAD_NO_RECURSE );
 
       /* now load the unscaled outline */
       error = cff_get_glyph_data( face, glyph_index,

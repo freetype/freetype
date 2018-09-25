@@ -489,9 +489,9 @@
                             FT_UInt         gindex )
   {
     if ( gindex < (FT_ULong)globals->glyph_count )
-      return (FT_Bool)( globals->glyph_styles[gindex] & AF_DIGIT );
+      return FT_BOOL( globals->glyph_styles[gindex] & AF_DIGIT );
 
-    return (FT_Bool)0;
+    return FT_BOOL( 0 );
   }
 
 

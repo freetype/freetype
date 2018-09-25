@@ -1198,7 +1198,7 @@
 
           /* check for links -- if seg->serif is set, then seg->link must */
           /* be ignored                                                   */
-          is_serif = (FT_Bool)( seg->serif && seg->serif->edge != edge );
+          is_serif = FT_BOOL( seg->serif && seg->serif->edge != edge );
 
           if ( seg->link || is_serif )
           {

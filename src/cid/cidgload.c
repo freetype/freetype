@@ -393,8 +393,7 @@
     must_finish_decoder = TRUE;
 
     /* set up the decoder */
-    decoder.builder.no_recurse = FT_BOOL(
-      ( ( load_flags & FT_LOAD_NO_RECURSE ) != 0 ) );
+    decoder.builder.no_recurse = FT_BOOL( load_flags & FT_LOAD_NO_RECURSE );
 
     error = cid_load_glyph( &decoder, glyph_index );
     if ( error )

@@ -1568,7 +1568,7 @@
               x = ADD_LONG( x, args[0] );
               y = ADD_LONG( y, args[1] );
               cff_builder_add_point( builder, x, y,
-                                     (FT_Bool)( count == 3 ) );
+                                     FT_BOOL( count == 3 ) );
               args += 2;
             }
 
@@ -1606,7 +1606,7 @@
               x = ADD_LONG( x, args[0] );
               y = ADD_LONG( y, args[1] );
               cff_builder_add_point( builder, x, y,
-                                     (FT_Bool)( count == 4 || count == 1 ) );
+                                     FT_BOOL( count == 4 || count == 1 ) );
               args += 2;
             }
 

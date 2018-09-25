@@ -122,7 +122,7 @@
               stream,
               (FT_UInt)( face_index & 0xFFFF ),
               face->header.log_dir_offset,
-              FT_BOOL( face->header.phy_font_max_size_high != 0 ) );
+              FT_BOOL( face->header.phy_font_max_size_high ) );
     if ( error )
       goto Exit;
 
@@ -370,7 +370,7 @@
       FT_Bool            scaling;
 
 
-      scaling = FT_BOOL( ( load_flags & FT_LOAD_NO_SCALE ) == 0 );
+      scaling = FT_BOOL( !( load_flags & FT_LOAD_NO_SCALE ) );
 
       /* copy outline data */
       *outline = slot->glyph.loader->base.outline;

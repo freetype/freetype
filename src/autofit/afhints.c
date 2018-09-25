@@ -549,7 +549,7 @@
     *offset  = ( dim == AF_DIMENSION_HORZ ) ? seg->first->fx
                                             : seg->first->fy;
     if ( seg->edge )
-      *is_blue = (FT_Bool)( seg->edge->blue_edge != 0 );
+      *is_blue = FT_BOOL( seg->edge->blue_edge );
     else
       *is_blue = FALSE;
 

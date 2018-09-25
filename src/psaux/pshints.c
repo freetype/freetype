@@ -217,52 +217,49 @@
   FT_LOCAL_DEF( FT_Bool )
   cf2_hint_isValid( const CF2_Hint  hint )
   {
-    return (FT_Bool)( hint->flags != 0 );
+    return FT_BOOL( hint->flags );
   }
 
 
   static FT_Bool
   cf2_hint_isPair( const CF2_Hint  hint )
   {
-    return (FT_Bool)( ( hint->flags                      &
-                        ( CF2_PairBottom | CF2_PairTop ) ) != 0 );
+    return FT_BOOL( hint->flags & ( CF2_PairBottom | CF2_PairTop ) );
   }
 
 
   static FT_Bool
   cf2_hint_isPairTop( const CF2_Hint  hint )
   {
-    return (FT_Bool)( ( hint->flags & CF2_PairTop ) != 0 );
+    return FT_BOOL( hint->flags & CF2_PairTop );
   }
 
 
   FT_LOCAL_DEF( FT_Bool )
   cf2_hint_isTop( const CF2_Hint  hint )
   {
-    return (FT_Bool)( ( hint->flags                    &
-                        ( CF2_PairTop | CF2_GhostTop ) ) != 0 );
+    return FT_BOOL( hint->flags & ( CF2_PairTop | CF2_GhostTop ) );
   }
 
 
   FT_LOCAL_DEF( FT_Bool )
   cf2_hint_isBottom( const CF2_Hint  hint )
   {
-    return (FT_Bool)( ( hint->flags                          &
-                        ( CF2_PairBottom | CF2_GhostBottom ) ) != 0 );
+    return FT_BOOL( hint->flags & ( CF2_PairBottom | CF2_GhostBottom ) );
   }
 
 
   static FT_Bool
   cf2_hint_isLocked( const CF2_Hint  hint )
   {
-    return (FT_Bool)( ( hint->flags & CF2_Locked ) != 0 );
+    return FT_BOOL( hint->flags & CF2_Locked );
   }
 
 
   static FT_Bool
   cf2_hint_isSynthetic( const CF2_Hint  hint )
   {
-    return (FT_Bool)( ( hint->flags & CF2_Synthetic ) != 0 );
+    return FT_BOOL( hint->flags & CF2_Synthetic );
   }
 
 
@@ -497,7 +494,7 @@
           {
             move     = moveDown;
             /* true if non-optimum move */
-            saveEdge = (FT_Bool)( moveUp < -moveDown );
+            saveEdge = FT_BOOL( moveUp < -moveDown );
           }
           else
           {

@@ -962,8 +962,9 @@
 
 #ifdef GRID_FIT_METRICS
         if ( !( load_flags & FT_LOAD_NO_HINTING ) )
-          ft_glyphslot_grid_fit_metrics( slot,
-              FT_BOOL( load_flags & FT_LOAD_VERTICAL_LAYOUT ) );
+          ft_glyphslot_grid_fit_metrics(
+            slot,
+            FT_BOOL( load_flags & FT_LOAD_VERTICAL_LAYOUT ) );
 #endif
       }
     }
@@ -2736,8 +2737,8 @@
 
     /* close the attached stream */
     FT_Stream_Free( stream,
-                    (FT_Bool)( parameters->stream &&
-                               ( parameters->flags & FT_OPEN_STREAM ) ) );
+                    FT_BOOL( parameters->stream                     &&
+                             ( parameters->flags & FT_OPEN_STREAM ) ) );
 
   Exit:
     return error;
@@ -5154,9 +5155,9 @@
     service = (FT_Service_Properties)interface;
 
     if ( set )
-      missing_func = (FT_Bool)( !service->set_property );
+      missing_func = FT_BOOL( !service->set_property );
     else
-      missing_func = (FT_Bool)( !service->get_property );
+      missing_func = FT_BOOL( !service->get_property );
 
     if ( missing_func )
     {

@@ -1479,7 +1479,7 @@
     }
 #endif
 
-    use_aw_2 = (FT_Bool)( subpixel_hinting && grayscale );
+    use_aw_2 = FT_BOOL( subpixel_hinting && grayscale );
 
     loader->pp1.x = loader->bbox.xMin - loader->left_bearing;
     loader->pp1.y = 0;

@@ -331,7 +331,7 @@
     }
 
     /* copy hinted flag on each call */
-    font->hinted = (FT_Bool)( font->renderingFlags & CF2_FlagsHinted );
+    font->hinted = FT_BOOL( font->renderingFlags & CF2_FlagsHinted );
 
     /* determine if transform has changed;       */
     /* include Fontmatrix but ignore translation */
@@ -366,7 +366,7 @@
     if ( font->stemDarkened != ( font->renderingFlags & CF2_FlagsDarkened ) )
     {
       font->stemDarkened =
-        (FT_Bool)( font->renderingFlags & CF2_FlagsDarkened );
+        FT_BOOL( font->renderingFlags & CF2_FlagsDarkened );
 
       /* blue zones depend on darkened flag */
       needExtraSetup = TRUE;

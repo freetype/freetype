@@ -588,7 +588,7 @@ FT_BEGIN_HEADER
 
 
 #define FT_IS_EMPTY( list )  ( (list).head == 0 )
-#define FT_BOOL( x )  ( (FT_Bool)( x ) )
+#define FT_BOOL( x )  ( (FT_Bool)( (x) != 0 ) )
 
   /* concatenate C tokens */
 #define FT_ERR_XCAT( x, y )  x ## y
