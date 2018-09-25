@@ -1,6 +1,6 @@
 2018-09-25  Werner Lemberg  <wl@gnu.org>
 
-	Fix handing of `FT_Bool'.
+	Fix handling of `FT_Bool'.
 
 	Before this commit we had code like
 
