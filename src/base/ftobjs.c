@@ -490,7 +490,7 @@
     if ( pbox.xMin < -0x8000 || pbox.xMax > 0x7FFF ||
          pbox.yMin < -0x8000 || pbox.yMax > 0x7FFF )
     {
-      FT_TRACE3(( "ft_glyphslot_peset_bitmap: [%ld %ld %ld %ld]\n",
+      FT_TRACE3(( "ft_glyphslot_preset_bitmap: [%ld %ld %ld %ld]\n",
                   pbox.xMin, pbox.yMin, pbox.xMax, pbox.yMax ));
       return 1;
     }
