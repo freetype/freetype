@@ -59,14 +59,14 @@
   typedef struct FT_MemoryRec_*  FT_Memory;
 
   typedef void* (*FT_Alloc_Func)( FT_Memory  memory,
-                                  long       size );
+                                  size_t     size );
 
   typedef void (*FT_Free_Func)( FT_Memory  memory,
                                 void*      block );
 
   typedef void* (*FT_Realloc_Func)( FT_Memory  memory,
-                                    long       cur_size,
-                                    long       new_size,
+                                    size_t     cur_size,
+                                    size_t     new_size,
                                     void*      block );
 
   typedef struct FT_MemoryRec_

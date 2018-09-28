@@ -94,7 +94,7 @@
   /*                                                                       */
   FT_CALLBACK_DEF( void* )
   ft_alloc( FT_Memory  memory,
-            long       size )
+            size_t     size )
   {
     FT_UNUSED( memory );
 
@@ -124,8 +124,8 @@
   /*                                                                       */
   FT_CALLBACK_DEF( void* )
   ft_realloc( FT_Memory  memory,
-              long       cur_size,
-              long       new_size,
+              size_t     cur_size,
+              size_t     new_size,
               void*      block )
   {
     FT_UNUSED( memory );

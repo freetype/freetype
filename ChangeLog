@@ -1,3 +1,18 @@
+2018-09-27  Alexei Podtelezhnikov  <apodtele@gmail.com>
+
+	Align FreeType with standard C memory management.
+
+	* include/freetype/ftsystem.h: Include FT_TYPES_H.
+	(*FT_Alloc_Func, *FT_Realloc_Func): Use size_t for the size arguments.
+	* src/raster/ftmisc.h: Ditto.
+
+	* builds/amiga/src/base/ftsystem.c, builds/unix/ftsystem.c,
+	* builds/vms/ftsystem.c, src/base/ftsystem.c (ft_alloc, ft_realloc):
+	Use size_t for the size arguments.
+
+	* src/base/ftdbgmem.c (ft_mem_debug_alloc, ft_mem_debug_realloc): Use
+	FT_Offset, aka size_t, for the size arguments.
+
 2018-09-25  Werner Lemberg  <wl@gnu.org>
 
 	Fix handling of `FT_Bool'.
@@ -39,7 +54,7 @@
 	* src/base/ftobjs.c (ft_glyphslot_preset_bimap): Another tweak.
 
 	This one should be clearer. When the rounded monochrome bbox collapses
-	we add a pixel that covers most if not all original cbox. 
+	we add a pixel that covers most if not all original cbox.
 
 2018-09-21  Alexei Podtelezhnikov  <apodtele@gmail.com>
 

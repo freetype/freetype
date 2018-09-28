@@ -676,10 +676,11 @@
 
   static FT_Pointer
   ft_mem_debug_alloc( FT_Memory  memory,
-                      FT_Long    size )
+                      FT_Offset  size_ )
   {
     FT_MemTable  table = (FT_MemTable)memory->user;
     FT_Byte*     block;
+    FT_Long      size = (FT_Long)size_;
 
 
     if ( size <= 0 )
@@ -736,14 +737,16 @@
 
   static FT_Pointer
   ft_mem_debug_realloc( FT_Memory   memory,
-                        FT_Long     cur_size,
-                        FT_Long     new_size,
+                        FT_Offset   cur_size_,
+                        FT_Offset   new_size_,
                         FT_Pointer  block )
   {
     FT_MemTable  table = (FT_MemTable)memory->user;
     FT_MemNode   node, *pnode;
     FT_Pointer   new_block;
     FT_Long      delta;
+    FT_Long      cur_size = (FT_Long)cur_size_;
+    FT_Long      new_size = (FT_Long)new_size_;
 
     const char*  file_name = FT_FILENAME( _ft_debug_file );
     FT_Long      line_no   = _ft_debug_lineno;
