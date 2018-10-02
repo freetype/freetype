@@ -2027,20 +2027,31 @@
           break;
 
         case cff_op_callothersubr:
-          /* this is an invalid Type 2 operator; however, there        */
-          /* exist fonts which are incorrectly converted from probably */
-          /* Type 1 to CFF, and some parsers seem to accept it         */
+          {
+            FT_Fixed  arg;
 
-          FT_TRACE4(( " callothersubr (invalid op)\n" ));
 
-          /* subsequent `pop' operands should add the arguments,       */
-          /* this is the implementation described for `unknown' other  */
-          /* subroutines in the Type1 spec.                            */
-          /*                                                           */
-          /* XXX Fix return arguments (see discussion below).          */
-          args -= 2 + ( args[-2] >> 16 );
-          if ( args < stack )
-            goto Stack_Underflow;
+            /* this is an invalid Type 2 operator; however, there      */
+            /* exist fonts which are incorrectly converted from        */
+            /* probably Type 1 to CFF, and some parsers seem to accept */
+            /* it                                                      */
+
+            FT_TRACE4(( " callothersubr (invalid op)\n" ));
+
+            /* subsequent `pop' operands should add the arguments,     */
+            /* this is the implementation described for `unknown'      */
+            /* other subroutines in the Type1 spec.                    */
+            /*                                                         */
+            /* XXX Fix return arguments (see discussion below).        */
+
+            arg = 2 + ( args[-2] >> 16 );
+            if ( arg >= CFF_MAX_OPERANDS )
+              goto Stack_Underflow;
+
+            args -= arg;
+            if ( args < stack )
+              goto Stack_Underflow;
+          }
           break;
 
         case cff_op_pop:
