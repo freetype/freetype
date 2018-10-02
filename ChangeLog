@@ -1,5 +1,16 @@
 2018-10-02  Werner Lemberg  <wl@gnu.org>
 
+	[psaux] Fix numeric overflow.
+
+	Reported as
+
+	  https://bugs.chromium.org/p/oss-fuzz/issues/detail?id=10768
+
+	* src/psaux/cffdecode.c (cff_decoder_parse_charstrings) <cff_op_roll>
+	[CFF_CONFIG_OPTION_OLD_ENGINE]: Use NEG_INT.
+
+2018-10-02  Werner Lemberg  <wl@gnu.org>
+
 	[pshinter] Handle numeric overflow.
 
 	Reported as
