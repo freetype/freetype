@@ -591,7 +591,7 @@
 
     for ( ; count > 0; count--, zone-- )
     {
-      delta = zone->org_top - stem_bot;
+      delta = SUB_LONG( zone->org_top, stem_bot );
       if ( delta < -blues->blue_fuzz )
         break;
 

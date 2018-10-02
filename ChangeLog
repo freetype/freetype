@@ -1,3 +1,14 @@
+2018-10-02  Werner Lemberg  <wl@gnu.org>
+
+	[pshinter] Handle numeric overflow.
+
+	Reported as
+
+	  https://bugs.chromium.org/p/oss-fuzz/issues/detail?id=10550
+
+	* src/pshinter/pshglob.c (psh_blues_snap_stem): Mask numeric
+	overflow.
+
 2018-09-27  Alexei Podtelezhnikov  <apodtele@gmail.com>
 
 	Align FreeType with standard C memory management.
@@ -138,7 +149,7 @@
 	  https://bugs.chromium.org/p/oss-fuzz/issues/detail?id=10396
 
 	* src/pshinter/pshglob.c: Include FT_INTERNAL_CALC_H.
-	(psh_blues_snap_stems): Mask numeric overflow.
+	(psh_blues_snap_stem): Mask numeric overflow.
 
 2018-09-13  Werner Lemberg  <wl@gnu.org>
 
