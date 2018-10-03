@@ -222,10 +222,10 @@ typedef ptrdiff_t  FT_PtrDist;
 #endif
 
 #define FT_THROW( e )                               \
-          ( FT_Throw( FT_ERR_CAT( ErrRaster, e ),   \
+          ( FT_Throw( FT_ERR_CAT( ErrRaster_, e ),  \
                       __LINE__,                     \
                       __FILE__ )                  | \
-            FT_ERR_CAT( ErrRaster, e )            )
+            FT_ERR_CAT( ErrRaster_, e )           )
 
 #else /* !FT_DEBUG_LEVEL_TRACE */
 
