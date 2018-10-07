@@ -161,6 +161,9 @@
     if ( !charset->sids )
       return FT_THROW( No_Unicode_Glyph_Name );
 
+    if ( !psnames->unicodes_init )
+      return FT_THROW( Unimplemented_Feature );
+
     return psnames->unicodes_init( memory,
                                    unicodes,
                                    cff->num_glyphs,

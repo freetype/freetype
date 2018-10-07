@@ -3681,6 +3681,9 @@
     FT_UNUSED( pointer );
 
 
+    if ( !psnames->unicodes_init )
+      return FT_THROW( Unimplemented_Feature );
+
     return psnames->unicodes_init( memory,
                                    unicodes,
                                    face->root.num_glyphs,

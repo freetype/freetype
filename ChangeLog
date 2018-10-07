@@ -1,3 +1,11 @@
+2018-10-07  Werner Lemberg  <wl@gnu.org>
+
+	Fix handling of FT_CONFIG_OPTION_ADOBE_GLYPH_LIST (#54794).
+
+	* src/cff/cffcmap.c (cff_cmap_unicode_init), src/psaux/t1cmap.c
+	(t1_cmap_unicode_init), src/sfnt/ttcmap.c (tt_cmap_unicode_init):
+	Check `unicodes_init' field.
+
 2018-10-03  Werner Lemberg  <wl@gnu.org>
 
 	[ftgrays] Fix typo in stand-alone mode (#54771).
