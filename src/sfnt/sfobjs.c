@@ -1531,7 +1531,8 @@
           error = FT_CMap_New( (FT_CMap_Class)&tt_cmap_unicode_class_rec,
                                NULL, &cmaprec, NULL );
           if ( error                                      &&
-               FT_ERR_NEQ( error, No_Unicode_Glyph_Name ) )
+               FT_ERR_NEQ( error, No_Unicode_Glyph_Name ) &&
+               FT_ERR_NEQ( error, Unimplemented_Feature ) )
             goto Exit;
           error = FT_Err_Ok;
 

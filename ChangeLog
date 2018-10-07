@@ -1,5 +1,15 @@
 2018-10-07  Werner Lemberg  <wl@gnu.org>
 
+	A missing Unicode cmap is not a fatal error.
+
+	This is a follow-up to the previous commit.
+
+	* src/cff/cffobjs.c (cff_face_init), src/sfnt/sfobjs.c
+	(sfnt_load_face), src/type1/t1objs.c (T1_Face_Init),
+	src/type42/t42objs.c (T42_Face_Init): Implement it.
+
+2018-10-07  Werner Lemberg  <wl@gnu.org>
+
 	Fix handling of FT_CONFIG_OPTION_ADOBE_GLYPH_LIST (#54794).
 
 	* src/cff/cffcmap.c (cff_cmap_unicode_init), src/psaux/t1cmap.c
