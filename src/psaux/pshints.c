@@ -331,7 +331,7 @@
   cf2_hintmap_map( CF2_HintMap  hintmap,
                    CF2_Fixed    csCoord )
   {
-    if ( hintmap->count == 0 || ! hintmap->hinted )
+    if ( hintmap->count == 0 || !hintmap->hinted )
     {
       /* there are no hints; use uniform scale and zero offset */
       return FT_MulFix( csCoord, hintmap->scale );

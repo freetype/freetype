@@ -731,7 +731,7 @@
 
     /* check for `input' delayed to `inflate' */
 
-    if ( !memory || ! output_len || !output )
+    if ( !memory || !output_len || !output )
       return FT_THROW( Invalid_Argument );
 
     /* this function is modeled after zlib's `uncompress' function */
