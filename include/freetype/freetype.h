@@ -2919,8 +2919,8 @@ FT_BEGIN_HEADER
    *
    *   FT_LOAD_PEDANTIC ::
    *     Make the font driver perform pedantic verifications during glyph
-   *     loading.  This is mostly used to detect broken glyphs in fonts.  By
-   *     default, FreeType tries to handle broken fonts also.
+   *     loading and hinting.  This is mostly used to detect broken glyphs in
+   *     fonts.  By default, FreeType tries to handle broken fonts also.
    *
    *     In particular, errors from the TrueType bytecode engine are not
    *     passed to the application if this flag is not set; this might result
