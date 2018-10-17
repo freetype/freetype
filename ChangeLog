@@ -1,3 +1,9 @@
+2018-10-17  David Demelier  <markand@malikania.fr>
+
+	* CMakeLists.txt: Specify `RUNTIME DESTINATION'.
+
+	This is needed for DLL builds.
+
 2018-10-07  Werner Lemberg  <wl@gnu.org>
 
 	A missing Unicode cmap is not a fatal error.
