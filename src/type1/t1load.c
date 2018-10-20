@@ -1062,16 +1062,22 @@
   parse_buildchar( T1_Face    face,
                    T1_Loader  loader )
   {
-    FT_UInt  i;
-
-
     face->len_buildchar = (FT_UInt)T1_ToFixedArray( &loader->parser,
                                                     0, NULL, 0 );
-    FT_TRACE4(( " [" ));
-    for ( i = 0; i < face->len_buildchar; i++ )
-      FT_TRACE4(( " 0" ));
 
-    FT_TRACE4(( "]\n" ));
+#ifdef FT_DEBUG_LEVEL_TRACE
+    {
+      FT_UInt  i;
+
+
+      FT_TRACE4(( " [" ));
+      for ( i = 0; i < face->len_buildchar; i++ )
+        FT_TRACE4(( " 0" ));
+
+      FT_TRACE4(( "]\n" ));
+    }
+#endif
+
     return;
   }
 

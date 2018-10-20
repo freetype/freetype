@@ -1,3 +1,10 @@
+2018-10-20  Werner Lemberg  <wl@gnu.org>
+
+	Avoid endless loop while tracing (#54858).
+
+	* src/type1/t1load.c (parse_buildchar): Guard tracing stuff with
+	FT_DEBUG_LEVEL_TRACE.
+
 2018-10-17  David Demelier  <markand@malikania.fr>
 
 	* CMakeLists.txt: Specify `RUNTIME DESTINATION'.
