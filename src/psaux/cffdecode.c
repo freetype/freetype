@@ -1950,7 +1950,8 @@
             if ( num_results < 0 )
               goto Syntax_Error;
 
-            if ( num_results * (FT_Int)num_designs > num_args )
+            if ( num_results > num_args                       ||
+                 num_results * (FT_Int)num_designs > num_args )
               goto Stack_Underflow;
 
             /* since we currently don't handle interpolation of multiple */

@@ -1,3 +1,14 @@
+2018-10-27  Werner Lemberg  <wl@gnu.org>
+
+	[psaux] Fix numeric overflow.
+
+	Triggered by
+
+	  https://bugs.chromium.org/p/oss-fuzz/issues/detail?id=11157
+
+	* src/psaux/cffdecode.c (cff_decoder_parse_charstrings) <cff_op_blend>
+	[CFF_CONFIG_OPTION_OLD_ENGINE]: Fix integer overflow.
+
 2018-10-20  Werner Lemberg  <wl@gnu.org>
 
 	Avoid endless loop while tracing (#54858).
