@@ -91,8 +91,8 @@ FT_BEGIN_HEADER
     FT_UShort  Flags;
     FT_UShort  Units_Per_EM;
 
-    FT_Long    Created [2];
-    FT_Long    Modified[2];
+    FT_ULong   Created [2];
+    FT_ULong   Modified[2];
 
     FT_Short   xMin;
     FT_Short   yMin;

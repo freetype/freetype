@@ -1,5 +1,14 @@
 2018-10-27  Alexei Podtelezhnikov  <apodtele@gmail.com>
 
+	[sfnt] Make `head' timestamps unsigned.
+
+	It's been more than 2^31 seconds since 1904.
+
+	* include/freetype/tttables.h (TT_Header): Change field types.
+	* src/sfnt/ttload.c (tt_face_load_generic_header): Updated.
+
+2018-10-27  Alexei Podtelezhnikov  <apodtele@gmail.com>
+
 	Revert: Align FreeType with standard C memory management.
 
 2018-10-27  Werner Lemberg  <wl@gnu.org>
