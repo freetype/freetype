@@ -139,7 +139,7 @@ Free_VecPooled( APTR  poolHeader,
   /*                                                                       */
   FT_CALLBACK_DEF( void* )
   ft_alloc( FT_Memory  memory,
-            size_t     size )
+            long       size )
   {
 #ifdef __amigaos4__
     return AllocVecPooled( memory->user, size );
@@ -171,8 +171,8 @@ Free_VecPooled( APTR  poolHeader,
   /*                                                                       */
   FT_CALLBACK_DEF( void* )
   ft_realloc( FT_Memory  memory,
-              size_t     cur_size,
-              size_t     new_size,
+              long       cur_size,
+              long       new_size,
               void*      block )
   {
     void* new_block;

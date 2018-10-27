@@ -21,7 +21,6 @@
 
 
 #include <ft2build.h>
-#include FT_TYPES_H
 
 
 FT_BEGIN_HEADER
@@ -87,7 +86,7 @@ FT_BEGIN_HEADER
    */
   typedef void*
   (*FT_Alloc_Func)( FT_Memory  memory,
-                    size_t     size );
+                    long       size );
 
 
   /**************************************************************************
@@ -141,8 +140,8 @@ FT_BEGIN_HEADER
    */
   typedef void*
   (*FT_Realloc_Func)( FT_Memory  memory,
-                      size_t     cur_size,
-                      size_t     new_size,
+                      long       cur_size,
+                      long       new_size,
                       void*      block );
 
 
