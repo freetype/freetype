@@ -78,7 +78,9 @@ FT_BEGIN_HEADER
    *
    * @description:
    *   A structure to model a TrueType font header table.  All fields follow
-   *   the OpenType specification.
+   *   the OpenType specification.  The 64-bit timestamps are stored in
+   *   two-member arrays `Created` and `Modified`, first upper then lower
+   *   32 bits.
    */
   typedef struct  TT_Header_
   {
