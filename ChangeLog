@@ -1,3 +1,14 @@
+2018-10-29  Werner Lemberg  <wl@gnu.org>
+
+	[cff] Fix numeric overflow.
+
+	Reported as
+
+	  https://bugs.chromium.org/p/oss-fuzz/issues/detail?id=10988
+
+	* src/cff/cffparse.c (cff_parser_run)
+	[CFF_CONFIG_OPTION_OLD_ENGINE]: Use `NEG_LONG'.
+
 2018-10-27  Alexei Podtelezhnikov  <apodtele@gmail.com>
 
 	[sfnt] Make `head' timestamps unsigned.

@@ -1259,7 +1259,7 @@
 
           if ( *stack < 0 )
           {
-            num = (FT_ULong)-*stack;
+            num = (FT_ULong)NEG_LONG( *stack );
             neg = 1;
           }
           else
