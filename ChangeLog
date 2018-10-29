@@ -1,5 +1,15 @@
 2018-10-29  Werner Lemberg  <wl@gnu.org>
 
+	[base] Fix numeric overflow.
+
+	Reported as
+
+	  https://bugs.chromium.org/p/oss-fuzz/issues/detail?id=11080
+
+	* src/base/ftoutln.c (FT_Outline_Get_Orientation): Use `MUL_LONG'.
+
+2018-10-29  Werner Lemberg  <wl@gnu.org>
+
 	[cff] Fix numeric overflow.
 
 	Reported as

@@ -1076,7 +1076,8 @@
         v_cur.y = points[n].y >> yshift;
 
         area = ADD_LONG( area,
-                         ( v_cur.y - v_prev.y ) * ( v_cur.x + v_prev.x ) );
+                         MUL_LONG( v_cur.y - v_prev.y,
+                                   v_cur.x + v_prev.x ) );
 
         v_prev = v_cur;
       }
