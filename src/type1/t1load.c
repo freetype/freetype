@@ -384,23 +384,30 @@
     for ( n = 0; n < blend->num_designs; n++ )
     {
       FT_Fixed  result = 0x10000L;  /* 1.0 fixed */
+      FT_Fixed  factor;
 
 
       for ( m = 0; m < blend->num_axis; m++ )
       {
-        FT_Fixed  factor;
-
-
-        /* get current blend axis position;                  */
         /* use a default value if we don't have a coordinate */
-        factor = m < num_coords ? coords[m] : 0x8000;
-        if ( factor < 0 )
-          factor = 0;
-        if ( factor > 0x10000L )
-          factor = 0x10000L;
+        if ( m >= num_coords )
+        {
+          result >>= 1;
+          continue;
+        }
 
+        /* get current blend axis position */
+        factor = coords[m];
         if ( ( n & ( 1 << m ) ) == 0 )
           factor = 0x10000L - factor;
+
+        if ( factor <= 0 )
+        {
+          result = 0;
+          break;
+        }
+        else if ( factor >= 0x10000L )
+          continue;
 
         result = FT_MulFix( result, factor );
       }
