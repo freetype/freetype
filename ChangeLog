@@ -1,3 +1,7 @@
+2018-10-31  Alexei Podtelezhnikov  <apodtele@gmail.com>
+
+	* src/truetype/ttgxvar.c (ft_var_get_item_delta): Optimized.
+
 2018-10-29  Werner Lemberg  <wl@gnu.org>
 
 	[base] Fix numeric overflow.

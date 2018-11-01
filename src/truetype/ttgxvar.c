@@ -893,47 +893,43 @@
       /* inner loop steps through axes in this region */
       for ( j = 0; j < itemStore->axisCount; j++, axis++ )
       {
-        FT_Fixed  axisScalar;
-
-
         /* compute the scalar contribution of this axis; */
         /* ignore invalid ranges                         */
         if ( axis->startCoord > axis->peakCoord ||
              axis->peakCoord > axis->endCoord   )
-          axisScalar = FT_FIXED_ONE;
+          continue;
 
         else if ( axis->startCoord < 0 &&
                   axis->endCoord > 0   &&
                   axis->peakCoord != 0 )
-          axisScalar = FT_FIXED_ONE;
+          continue;
 
         /* peak of 0 means ignore this axis */
         else if ( axis->peakCoord == 0 )
-          axisScalar = FT_FIXED_ONE;
+          continue;
 
         /* ignore this region if coords are out of range */
-        else if ( face->blend->normalizedcoords[j] < axis->startCoord ||
-                  face->blend->normalizedcoords[j] > axis->endCoord   )
-          axisScalar = 0;
-
-        /* calculate a proportional factor */
-        else
+        else if ( face->blend->normalizedcoords[j] <= axis->startCoord ||
+                  face->blend->normalizedcoords[j] >= axis->endCoord   )
         {
-          if ( face->blend->normalizedcoords[j] == axis->peakCoord )
-            axisScalar = FT_FIXED_ONE;
-          else if ( face->blend->normalizedcoords[j] < axis->peakCoord )
-            axisScalar =
-              FT_DivFix( face->blend->normalizedcoords[j] - axis->startCoord,
-                         axis->peakCoord - axis->startCoord );
-          else
-            axisScalar =
-              FT_DivFix( axis->endCoord - face->blend->normalizedcoords[j],
-                         axis->endCoord - axis->peakCoord );
+          scalar = 0;
+          break;
         }
 
-        /* take product of all the axis scalars */
-        scalar = FT_MulFix( scalar, axisScalar );
+        else if ( face->blend->normalizedcoords[j] == axis->peakCoord )
+          continue;
 
+        /* cumulative product of all the axis scalars */
+        else if ( face->blend->normalizedcoords[j] < axis->peakCoord )
+          scalar =
+            FT_MulDiv( scalar,
+                       face->blend->normalizedcoords[j] - axis->startCoord,
+                       axis->peakCoord - axis->startCoord );
+        else
+          scalar =
+            FT_MulDiv( scalar,
+                       axis->endCoord - face->blend->normalizedcoords[j],
+                       axis->endCoord - axis->peakCoord );
       } /* per-axis loop */
 
       /* get the scaled delta for this region */
