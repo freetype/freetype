@@ -1,3 +1,10 @@
+2018-10-31  Alexei Podtelezhnikov <apodtele@gmail.com>
+
+	[truetype] Speed up variation IUP.
+
+	* src/truetype/ttgxvar.c (tt_delta_interpolate): Separate trivial
+	snapping to the same position from true interpolation.
+
 2018-10-31  Alexei Podtelezhnikov  <apodtele@gmail.com>
 
 	* src/type1/t1load.c (t1_set_mm_blend): Optimized.
