@@ -1,3 +1,9 @@
+2018-11-02  Alexei Podtelezhnikov  <apodtele@gmail.com>
+
+	* src/truetype/ttgxvar.c (ft_var_get_item_delta): Fixed logic.
+
+	Reported and tested by Behdad.
+
 2018-11-02  Shailesh Mistry  <shailesh.mistry@hotmail.co.uk>
 
 	[autofit] Prevent SEGV.

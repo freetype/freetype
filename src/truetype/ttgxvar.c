@@ -68,8 +68,6 @@
 
 
   /* some macros we need */
-#define FT_FIXED_ONE  ( (FT_Fixed)0x10000 )
-
 #define FT_fdot14ToFixed( x )                \
         ( (FT_Fixed)( (FT_ULong)(x) << 2 ) )
 #define FT_intToFixed( i )                    \
@@ -884,7 +882,7 @@
     /* outer loop steps through master designs to be blended */
     for ( master = 0; master < varData->regionIdxCount; master++ )
     {
-      FT_Fixed  scalar      = FT_FIXED_ONE;
+      FT_Fixed  scalar      = 0x10000L;
       FT_UInt   regionIndex = varData->regionIndices[master];
 
       GX_AxisCoords  axis = itemStore->varRegionList[regionIndex].axisList;
@@ -908,6 +906,9 @@
         else if ( axis->peakCoord == 0 )
           continue;
 
+        else if ( face->blend->normalizedcoords[j] == axis->peakCoord )
+          continue;
+
         /* ignore this region if coords are out of range */
         else if ( face->blend->normalizedcoords[j] <= axis->startCoord ||
                   face->blend->normalizedcoords[j] >= axis->endCoord   )
@@ -915,9 +916,6 @@
           scalar = 0;
           break;
         }
-
-        else if ( face->blend->normalizedcoords[j] == axis->peakCoord )
-          continue;
 
         /* cumulative product of all the axis scalars */
         else if ( face->blend->normalizedcoords[j] < axis->peakCoord )
