@@ -3213,14 +3213,14 @@
     }
 
     FT_TRACE5(( "cvar: there %s %d tuple%s:\n",
-                ( tupleCount & 0xFFF ) == 1 ? "is" : "are",
-                tupleCount & 0xFFF,
-                ( tupleCount & 0xFFF ) == 1 ? "" : "s" ));
+                ( tupleCount & GX_TC_TUPLE_COUNT_MASK ) == 1 ? "is" : "are",
+                tupleCount & GX_TC_TUPLE_COUNT_MASK,
+                ( tupleCount & GX_TC_TUPLE_COUNT_MASK ) == 1 ? "" : "s" ));
 
     if ( FT_NEW_ARRAY( cvt_deltas, face->cvt_size ) )
       goto FExit;
 
-    for ( i = 0; i < ( tupleCount & 0xFFF ); i++ )
+    for ( i = 0; i < ( tupleCount & GX_TC_TUPLE_COUNT_MASK ); i++ )
     {
       FT_UInt   tupleDataSize;
       FT_UInt   tupleIndex;
@@ -3259,7 +3259,8 @@
 
         FT_MEM_COPY(
           tuple_coords,
-          &blend->tuplecoords[( tupleIndex & 0xFFF ) * blend->num_axis],
+          blend->tuplecoords +
+            ( tupleIndex & GX_TI_TUPLE_INDEX_MASK ) * blend->num_axis,
           blend->num_axis * sizeof ( FT_Fixed ) );
       }
 
@@ -3460,7 +3461,7 @@
   /* point indices.                                                  */
 
   /* modeled after `af_iup_interp', `_iup_worker_interpolate', and   */
-  /* `Ins_IUP' with spec differences in handling ill-defined cases.  */ 
+  /* `Ins_IUP' with spec differences in handling ill-defined cases.  */
   static void
   tt_delta_interpolate( int         p1,
                         int         p2,
@@ -3794,7 +3795,8 @@
       else
         FT_MEM_COPY(
           tuple_coords,
-          &blend->tuplecoords[( tupleIndex & 0xFFF ) * blend->num_axis],
+          blend->tuplecoords +
+            ( tupleIndex & GX_TI_TUPLE_INDEX_MASK ) * blend->num_axis,
           blend->num_axis * sizeof ( FT_Fixed ) );
 
       if ( tupleIndex & GX_TI_INTERMEDIATE_TUPLE )
