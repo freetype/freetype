@@ -3472,9 +3472,8 @@
   /* between `p1' and `p2', using `ref1' and `ref2' as the reference */
   /* point indices.                                                  */
 
-  /* modeled after `af_iup_interp', `_iup_worker_interpolate', and */
-  /* `Ins_IUP'                                                     */
-
+  /* modeled after `af_iup_interp', `_iup_worker_interpolate', and   */
+  /* `Ins_IUP' with spec differences in handling ill-defined cases.  */ 
   static void
   tt_delta_interpolate( int         p1,
                         int         p2,
