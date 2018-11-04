@@ -3514,25 +3514,10 @@
 
       /* If the reference points have the same coordinate but different */
       /* delta, inferred delta is zero.  Otherwise interpolate.         */
-      if ( in1 == in2 || out1 == out2 )
+      if ( in1 != in2 || out1 == out2 )
       {
-        for ( p = p1; p <= p2; p++ )
-        {
-          out = in_points[p].x;
-
-          if ( out <= in1 )
-            out += d1;
-          else if ( out >= in2 )
-            out += d2;
-          else
-            out = out1;
-
-          out_points[p].x = out;
-        }
-      }
-      else
-      {
-        FT_Fixed  scale = FT_DivFix( out2 - out1, in2 - in1 );
+        FT_Fixed  scale = in1 != in2 ? FT_DivFix( out2 - out1, in2 - in1 )
+                                     : 0;
 
 
         for ( p = p1; p <= p2; p++ )
