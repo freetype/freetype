@@ -1704,8 +1704,8 @@
       {
         /* intermediate tuple */
 
-        if ( blend->normalizedcoords[i] < im_start_coords[i] ||
-             blend->normalizedcoords[i] > im_end_coords[i]   )
+        if ( blend->normalizedcoords[i] <= im_start_coords[i] ||
+             blend->normalizedcoords[i] >= im_end_coords[i]   )
         {
           FT_TRACE6(( "      intermediate tuple range (%.5f;%.5f) is exceeded,"
                       " stop\n",
