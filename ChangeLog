@@ -1,5 +1,9 @@
 2018-11-03  Alexei Podtelezhnikov  <apodtele@gmail.com>
 
+	* src/truetype/ttgxvar.c (ft_var_apply_tuple): Tracing tweaks.
+
+2018-11-03  Alexei Podtelezhnikov  <apodtele@gmail.com>
+
 	Revert due to specs: [truetype] Speed up variation IUP.
 
 2018-11-02  Alexei Podtelezhnikov  <apodtele@gmail.com>
