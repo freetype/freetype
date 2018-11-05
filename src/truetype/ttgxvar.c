@@ -1707,7 +1707,7 @@
         if ( blend->normalizedcoords[i] <= im_start_coords[i] ||
              blend->normalizedcoords[i] >= im_end_coords[i]   )
         {
-          FT_TRACE6(( "      intermediate tuple range (%.5f;%.5f) is exceeded,"
+          FT_TRACE6(( "      intermediate tuple range ]%.5f;%.5f[ is exceeded,"
                       " stop\n",
                       im_start_coords[i] / 65536.0,
                       im_end_coords[i] / 65536.0 ));
@@ -1715,7 +1715,7 @@
           break;
         }
 
-        FT_TRACE6(( "      intermediate tuple range (%.5f;%.5f) fits\n",
+        FT_TRACE6(( "      intermediate tuple range ]%.5f;%.5f[ fits\n",
                     im_start_coords[i] / 65536.0,
                     im_end_coords[i] / 65536.0 ));
         if ( blend->normalizedcoords[i] < tuple_coords[i] )
