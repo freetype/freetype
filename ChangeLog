@@ -1,5 +1,15 @@
 2018-11-06  Werner Lemberg  <wl@gnu.org>
 
+	[pshinter] Fix numeric overflow.
+
+	Reported as
+
+	  https://bugs.chromium.org/p/oss-fuzz/issues/detail?id=11242
+
+	* src/pshinter/pshrec.c (ps_dimension_add_t1stem): Implement it.
+
+2018-11-06  Werner Lemberg  <wl@gnu.org>
+
 	[psaux] Fix timeout in old CFF engine.
 
 	Reported as

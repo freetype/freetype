@@ -666,7 +666,7 @@
       if ( len == -21 )
       {
         flags |= PS_HINT_FLAG_BOTTOM;
-        pos   += len;
+        pos    = ADD_INT( pos, len );
       }
       len = 0;
     }
