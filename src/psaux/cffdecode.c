@@ -1748,7 +1748,10 @@
         case cff_op_sqrt:
           FT_TRACE4(( " sqrt\n" ));
 
-          if ( args[0] > 0 )
+          /* without upper limit the loop below might not finish */
+          if ( args[0] > 0x7FFFFFFFL )
+            args[0] = 46341;
+          else if ( args[0] > 0 )
           {
             FT_Fixed  root = args[0];
             FT_Fixed  new_root;
