@@ -1,3 +1,10 @@
+2018-11-07  Ben Wagner  <bungeman@google.com>
+
+	[truetype] Fix VF check from 2018-09-12 (#54973).
+
+	* src/truetype/ttgxvar.c (TT_Vary_Apply_Glyph_Deltas): Use correct
+	offsets for estimates.
+
 2018-11-06  Werner Lemberg  <wl@gnu.org>
 
 	[pshinter] Fix numeric overflow.

@@ -3725,8 +3725,8 @@
     offsetToData = FT_GET_USHORT();
 
     /* rough sanity test */
-    if ( offsetToData + ( tupleCount & GX_TC_TUPLE_COUNT_MASK ) * 4 >
-           dataSize )
+    if ( offsetToData > dataSize                                ||
+         ( tupleCount & GX_TC_TUPLE_COUNT_MASK ) * 4 > dataSize )
     {
       FT_TRACE2(( "TT_Vary_Apply_Glyph_Deltas:"
                   " invalid glyph variation array header\n" ));
