@@ -367,6 +367,7 @@
       /* it contains the `adjusted' starting coordinates          */
       border->num_points    = --count;
       border->points[start] = border->points[count];
+      border->tags[start]   = border->tags[count];
 
       if ( reverse )
       {

@@ -1,3 +1,9 @@
+2018-11-08  Alexei Podtelezhnikov  <apodtele@gmail.com>
+
+	[ftstroke] Fix unpredictable failures (#54976).
+
+	* src/base/ftstroke.c (ft_sroke_border_close): Set the start tags.
+
 2018-11-07  Ben Wagner  <bungeman@google.com>
 
 	[truetype] Fix VF check from 2018-09-12 (#54973).
