@@ -37,7 +37,7 @@ AC_SUBST(EXEEXT)
 PKG_PROG_PKG_CONFIG([0.24])
 
 LT_INIT(win32-dll)
-LT_PROG_RC
+AC_CHECK_HEADER([windows.h],[LT_PROG_RC])
 
 
 # checks for native programs to generate building tool
