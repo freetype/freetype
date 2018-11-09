@@ -1,5 +1,11 @@
 2018-11-08  Alexei Podtelezhnikov  <apodtele@gmail.com>
 
+	[ftstroke] Fix unpredictable failures (#54986).
+
+	* src/base/ftstroke.c (ft_sroke_border_lineto): Fix lineto check.
+
+2018-11-08  Alexei Podtelezhnikov  <apodtele@gmail.com>
+
 	[ftstroke] Fix unpredictable failures (#54976).
 
 	* src/base/ftstroke.c (ft_sroke_border_close): Set the start tags.
