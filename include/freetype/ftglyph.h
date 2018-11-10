@@ -59,8 +59,9 @@ FT_BEGIN_HEADER
    *
    * @description:
    *   This section contains definitions used to manage glyph data through
-   *   generic FT_Glyph objects.  Each of them can contain a bitmap, a vector
-   *   outline, or even images in other formats.
+   *   generic @FT_Glyph objects.  Each of them can contain a bitmap,
+   *   a vector outline, or even images in other formats.  These objects are
+   *   detached from @FT_Face, contrary to @FT_GlyphSlot.
    *
    */
 
