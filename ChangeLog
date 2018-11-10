@@ -1,3 +1,10 @@
+2018-11-10  Alexei Podtelezhnikov  <apodtele@gmail.com>
+
+	[smooth] Placeholder only for library-enabled LCD filtering.
+
+	* src/smooth/ftsmooth.c (ft_smooth_init): Add disabled
+	`FT_Library_SetLcdFilter' call.
+
 2018-11-09  Young Xiao  <yangx92@hotmail.com>
 
 	[psaux] Add safety guard (#54985).

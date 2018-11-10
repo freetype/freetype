@@ -44,6 +44,10 @@
     sub[2].x = 21;
     sub[2].y = 0;
 
+#elif 0   /* or else, once ClearType patents expire */
+
+    FT_Library_SetLcdFilter( render->root.library, FT_LCD_FILTER_DEFAULT );
+
 #endif
 
     render->clazz->raster_class->raster_reset( render->raster, NULL, 0 );
