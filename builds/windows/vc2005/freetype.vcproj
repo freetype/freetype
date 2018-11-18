@@ -126,7 +126,22 @@
       <File RelativePath="..\..\..\src\cache\ftcache.c">
       </File>
       <File RelativePath="..\ftdebug.c">
-        <FileConfiguration>
+        <FileConfiguration Name="Release|Win32">
+          <Tool Name="VCCLCompilerTool" DisableLanguageExtensions="false" />
+        </FileConfiguration>
+        <FileConfiguration Name="Release Multithreaded|Win32">
+          <Tool Name="VCCLCompilerTool" DisableLanguageExtensions="false" />
+        </FileConfiguration>
+        <FileConfiguration Name="Release Singlethreaded|Win32">
+          <Tool Name="VCCLCompilerTool" DisableLanguageExtensions="false" />
+        </FileConfiguration>
+        <FileConfiguration Name="Debug|Win32">
+          <Tool Name="VCCLCompilerTool" DisableLanguageExtensions="false" />
+        </FileConfiguration>
+        <FileConfiguration Name="Debug Singlethreaded|Win32">
+          <Tool Name="VCCLCompilerTool" DisableLanguageExtensions="false" />
+        </FileConfiguration>
+        <FileConfiguration Name="Debug Multithreaded|Win32">
           <Tool Name="VCCLCompilerTool" DisableLanguageExtensions="false" />
         </FileConfiguration>
       </File>

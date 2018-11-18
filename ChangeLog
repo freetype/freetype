@@ -1,3 +1,7 @@
+2018-11-18  Alexei Podtelezhnikov  <apodtele@gmail.com>
+
+	* builds/windows/{visualc,vc2005,vc2008}/freetype.vcproj: Fix it.
+
 2018-11-10  Alexei Podtelezhnikov  <apodtele@gmail.com>
 
 	[smooth] Placeholder only for library-enabled LCD filtering.
