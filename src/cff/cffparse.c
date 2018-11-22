@@ -1121,21 +1121,35 @@
 #endif /* FT_DEBUG_LEVEL_TRACE */
 
 
+  static void
+  destruct_t2s_item( FT_Memory  memory,
+                     void*      data,
+                     void*      user )
+  {
+    FT_UNUSED( user );
+    memory->free( memory, data );
+  }
+
+
   FT_LOCAL_DEF( FT_Error )
   cff_parser_run( CFF_Parser  parser,
                   FT_Byte*    start,
                   FT_Byte*    limit )
   {
+    FT_Byte*  p     = start;
+    FT_Error  error = FT_Err_Ok;
+
 #ifdef CFF_CONFIG_OPTION_OLD_ENGINE
     PSAux_Service  psaux;
-#endif
 
-    FT_Byte*    p       = start;
-    FT_Error    error   = FT_Err_Ok;
     FT_Library  library = parser->library;
+    FT_Memory   memory  = library->memory;
 
-    FT_UNUSED( library );
+    FT_ListRec  t2s;
 
+
+    FT_ZERO( &t2s );
+#endif
 
     parser->top    = parser->stack;
     parser->start  = start;
@@ -1195,8 +1209,9 @@
         FT_Byte*     charstring_base;
         FT_ULong     charstring_len;
 
-        FT_Fixed*  stack;
-        FT_Byte*   q;
+        FT_Fixed*    stack;
+        FT_ListNode  node;
+        FT_Byte*     q;
 
 
         charstring_base = ++p;
@@ -1237,13 +1252,23 @@
         /* Now copy the stack data in the temporary decoder object,    */
         /* converting it back to charstring number representations     */
         /* (this is ugly, I know).                                     */
-        /*                                                             */
-        /* We overwrite the original top DICT charstring under the     */
-        /* assumption that the charstring representation of the result */
-        /* of `cff_decoder_parse_charstrings' is shorter, which should */
-        /* be always true.                                             */
 
-        q     = charstring_base - 1;
+        node = (FT_ListNode)memory->alloc( memory,
+                                           sizeof ( FT_ListNodeRec ) );
+        if ( !node )
+          goto Out_Of_Memory_Error;
+
+        /* `5' is the conservative upper bound of required bytes per stack */
+        /* element.                                                        */
+        q = (FT_Byte*)memory->alloc( memory,
+                                     5 * ( decoder.top - decoder.stack ) );
+        if ( !q )
+          goto Out_Of_Memory_Error;
+
+        node->data = q;
+
+        FT_List_Add( &t2s, node );
+
         stack = decoder.stack;
 
         while ( stack < decoder.top )
@@ -1500,10 +1525,17 @@
           parser->top = parser->stack;
       }
       p++;
-    }
+    } /* while ( p < limit ) */
 
   Exit:
+#ifdef CFF_CONFIG_OPTION_OLD_ENGINE
+    FT_List_Finalize( &t2s, destruct_t2s_item, memory, NULL );
+#endif
     return error;
+
+  Out_Of_Memory_Error:
+    error = FT_THROW( Out_Of_Memory );
+    goto Exit;
 
   Stack_Overflow:
     error = FT_THROW( Invalid_Argument );

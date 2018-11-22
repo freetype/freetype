@@ -1,3 +1,15 @@
+2018-11-22  Armin Hasitzka  <prince.cherusker@gmail.com>
+
+	[cff] Fix memory overflow.
+
+	Reported as
+
+	  https://bugs.chromium.org/p/oss-fuzz/issues/detail?id=9869
+	  https://bugs.chromium.org/p/oss-fuzz/issues/detail?id=10869
+
+	* src/cff/cffparse.c (destruct_t2s_item, cff_parser_run): Store
+	evaluated T2 charstrings in separately allocated memory.
+
 2018-11-18  Alexei Podtelezhnikov  <apodtele@gmail.com>
 
 	* builds/windows/{visualc,vc2005,vc2008}/freetype.vcproj: Fix it.
