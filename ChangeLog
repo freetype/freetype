@@ -1,5 +1,9 @@
 2018-11-22  Armin Hasitzka  <prince.cherusker@gmail.com>
 
+	* src/cff/cffparse.c: Please the compiler.
+
+2018-11-22  Armin Hasitzka  <prince.cherusker@gmail.com>
+
 	[cff] Fix memory overflow.
 
 	Reported as
