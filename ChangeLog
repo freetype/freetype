@@ -1,3 +1,14 @@
+2018-11-18  Alexei Podtelezhnikov  <apodtele@gmail.com>
+
+	[builds] Belated DLL support with vc2002-vc2008.
+
+	The solution and project files should be automatically upgraded for
+	the approriate Visual C++ version.
+
+	* builds/windows/visualc/freetype.{sln,vcproj}: Major upgrades.
+	* builds/windows/visualc/index.html: Document the change.
+	* builds/windows/vc2005, builds/windows/vc2008: Removed as redundant.
+
 2018-11-22  Armin Hasitzka  <prince.cherusker@gmail.com>
 
 	* src/cff/cffparse.c: Please the compiler.
