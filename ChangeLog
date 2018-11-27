@@ -1,6 +1,13 @@
 2018-11-27  Ben Wagner  <bungeman@google.com>
 
-	[truetype Fix numeric overflow (#55103).
+	[cff] Fix compiler warning (#55105).
+
+	* src/cff/cffparse.c (cff_parser_run): Guard label only used if
+	CFF_CONFIG_OPTION_OLD_ENGINE is active.
+
+2018-11-27  Ben Wagner  <bungeman@google.com>
+
+	[truetype] Fix numeric overflow (#55103).
 
 	* src/truetype/ttgload.c (compute_glyph_metrics): Use `SUB_LONG'.
 

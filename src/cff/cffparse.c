@@ -1534,9 +1534,11 @@
 #endif
     return error;
 
+#ifdef CFF_CONFIG_OPTION_OLD_ENGINE
   Out_Of_Memory_Error:
     error = FT_THROW( Out_Of_Memory );
     goto Exit;
+#endif
 
   Stack_Overflow:
     error = FT_THROW( Invalid_Argument );
