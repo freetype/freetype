@@ -2160,7 +2160,7 @@
 
     glyph->metrics.horiBearingX = bbox.xMin;
     glyph->metrics.horiBearingY = bbox.yMax;
-    glyph->metrics.horiAdvance  = loader->pp2.x - loader->pp1.x;
+    glyph->metrics.horiAdvance  = SUB_LONG(loader->pp2.x, loader->pp1.x);
 
     /* Adjust advance width to the value contained in the hdmx table   */
     /* unless FT_LOAD_COMPUTE_METRICS is set or backward compatibility */
