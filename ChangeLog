@@ -1,3 +1,33 @@
+2018-11-27  Chris Liddell  <chris.liddell@artifex.com>
+
+	[type1,cff] Add FT_{Set,Get}_MM_WeightVector API calls.
+
+	For multiple master fonts, common usage (in Postscript) is to modify
+	the WeightVector of an existing font instance, this addition
+	supports that use.
+
+	* include/freetype/ftmm.h, src/base/ftmm.c (FT_Set_MM_WeightVector,
+	FT_Get_MM_WeightVector): New API functions.
+
+	* include/freetype/internalservices/svmm.h
+	(FT_Set_MM_WeightVector_Func, FT_Get_MM_WeightVector_Func): New
+	function types.
+	(MultiMasters): Add `set_mm_weightvector' and `get_mm_weightvector'
+	members.
+	(FT_DEFINE_SERVICE_MULTIMASTERSREC): Updated.
+
+	* src/cffcffdrivr.c (cff_set_mm_weightvector,
+	cff_get_mm_weightvector): New functions.
+	(cff_service_multi_masters): Register them.
+
+	* src/truetype/ttdriver.c (tt_service_gx_multi_masters): Updated.
+	This driver doesn't use the new interface.
+
+	* src/type1/t1load.c (T1_Set_MM_WeightVector,
+	T1_Get_MM_WeightVector): New functions.
+	* src/type1/t1driver.c (t1_service_multi_masters): Register them.
+	* src/type1/t1load.h: Updated.
+
 2018-11-27  Ben Wagner  <bungeman@google.com>
 
 	[cff] Fix compiler warning (#55105).

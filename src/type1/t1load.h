@@ -106,6 +106,16 @@ FT_BEGIN_HEADER
   FT_LOCAL( void )
   T1_Done_Blend( T1_Face  face );
 
+  FT_LOCAL( FT_Error )
+  T1_Set_MM_WeightVector( T1_Face    face,
+                          FT_UInt    len,
+                          FT_Fixed*  weightvector );
+
+  FT_LOCAL( FT_Error )
+  T1_Get_MM_WeightVector( T1_Face    face,
+                          FT_UInt*   len,
+                          FT_Fixed*  weightvector );
+
 #endif /* !T1_CONFIG_OPTION_NO_MM_SUPPORT */
 
 
