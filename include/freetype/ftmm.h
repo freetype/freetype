@@ -633,7 +633,7 @@ FT_BEGIN_HEADER
    *     completion, `len` is set to the number of designs (i.e., the number
    *     of values written to the array).
    *
-   * @utput:
+   * @output:
    *   weightvector ::
    *     An array to be filled.
    *
