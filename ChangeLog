@@ -1,3 +1,15 @@
+2018-12-04  Werner Lemberg  <wl@gnu.org>
+
+	[bdf] Ignore data after `ENDFONT'.
+
+	Reported as
+
+	  https://bugs.chromium.org/p/oss-fuzz/issues/detail?id=10798
+
+	* src/bdf/bdflib.c (_bdf_parse_end): New function.
+	(_bdf_parse_glyphs): Switch to `_bdf_parse_end' after `ENDFONT' has
+	been encountered.
+
 2018-12-02  Alexei Podtelezhnikov  <apodtele@gmail.com>
 
 	* builds/windows/visualc/freetype.dsp: Dust off.

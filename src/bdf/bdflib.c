@@ -1262,6 +1262,25 @@
   };
 
 
+  static FT_Error
+  _bdf_parse_end( char*          line,
+                  unsigned long  linelen,
+                  unsigned long  lineno,
+                  void*          call_data,
+                  void*          client_data )
+  {
+    /* a no-op; we ignore everything after `ENDFONT' */
+
+    FT_UNUSED( line );
+    FT_UNUSED( linelen );
+    FT_UNUSED( lineno );
+    FT_UNUSED( call_data );
+    FT_UNUSED( client_data );
+
+    return FT_Err_Ok;
+  }
+
+
   /* Actually parse the glyph info and bitmaps. */
   static FT_Error
   _bdf_parse_glyphs( char*          line,
@@ -1275,6 +1294,7 @@
     unsigned char*     bp;
     unsigned long      i, slen, nibbles;
 
+    _bdf_line_func_t*  next;
     _bdf_parse_t*      p;
     bdf_glyph_t*       glyph;
     bdf_font_t*        font;
@@ -1282,11 +1302,11 @@
     FT_Memory          memory;
     FT_Error           error = FT_Err_Ok;
 
-    FT_UNUSED( call_data );
     FT_UNUSED( lineno );        /* only used in debug mode */
 
 
-    p = (_bdf_parse_t *)client_data;
+    next = (_bdf_line_func_t *)call_data;
+    p    = (_bdf_parse_t *)    client_data;
 
     font   = p->font;
     memory = font->memory;
@@ -1367,6 +1387,7 @@
                 by_encoding );
 
       p->flags &= ~BDF_START_;
+      *next     = _bdf_parse_end;
 
       goto Exit;
     }
