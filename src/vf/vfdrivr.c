@@ -55,8 +55,8 @@
     VF_Face  face = (VF_Face)FT_CMAP_FACE( cmap );
     FT_UNUSED( init_data );
 
-    cmap->bc     = ;
-    cmap->ec     = ;
+    cmap->bc     = 0;
+    cmap->ec     = 255;/* TO-DO */
 
     return FT_Err_Ok;
   }
@@ -185,11 +185,11 @@
       0x10000L,
       0x20000L,
 
-      NULL,    									/* module-specific interface */
+      NULL,                     /* module-specific interface */
 
       NULL,                     /* FT_Module_Constructor  module_init   */
       NULL,                     /* FT_Module_Destructor   module_done   */
-      NULL      								/* FT_Module_Requester    get_interface */
+      NULL                      /* FT_Module_Requester    get_interface */
     },
 
     sizeof ( VF_FaceRec ),
