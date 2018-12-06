@@ -20,7 +20,7 @@
 
 #include <ft2build.h>
 
-#include "vflib.c"
+/* #include "vflib.c" */
 #include "vfdrivr.c"
 
 
