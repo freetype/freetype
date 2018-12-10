@@ -53,7 +53,15 @@ CHANGES BETWEEN 2.9.1 and 2.10
 
     - `FT_Outline_New_Internal'  and  `FT_Outline_Done_Internal'  have
       been removed.  These two functions were public by oversight only
-      and were never documented either.
+      and were never documented.
+
+    - A new  function `FT_Error_String' returns descriptions  of error
+      codes if  configuration macro  FT_CONFIG_OPTION_ERROR_STRINGS is
+      defined.
+
+    - `FT_Set_MM_WeightVector'  and  `FT_Get_MM_WeightVector' are  new
+      functions limited to Adobe MultiMaster fonts to directly set and
+      get the weight vector.
 
 
 ======================================================================

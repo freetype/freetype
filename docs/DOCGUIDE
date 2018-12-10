@@ -1,5 +1,6 @@
 Introduction
 ------------
+
 Documentation is an extremely important part of any project, and it
 helps a lot if it uses consistent syntax and layout.
 
@@ -12,8 +13,10 @@ comments are extracted and organized by 'docwriter' (previously
 Documentation comments follow a specific structure and format as
 described below.
 
+
 Documentation Structure
 -----------------------
+
 The documentation is divided into multiple chapters, which contain
 sections relevant to it.  The chapter details and sections contained
 in them are listed in `include/freetype/ftchapters.h`.  Any unlisted
@@ -22,8 +25,10 @@ section is added to the 'Miscellaneous' chapter.
 Sections may contain sub-sections which consist of properties,
 enumerations, and other data types.
 
+
 Comment Blocks
 --------------
+
 Documentation blocks follow a specific format:
 
     /***************************** (should end on column 77)
@@ -38,8 +43,10 @@ the second asterisk to something else if you want to prevent a comment
 block being handled by 'docwriter' (for example, change `/****/` to
 `/*#**/`).
 
+
 Markup Tags
 -----------
+
 Markup tags are used to indicate what comes next.  The syntax for a
 tag is:
 
@@ -47,8 +54,10 @@ tag is:
 
 An `@`, followed by the tag, and then `:`.
 
+
 Reserved Tags
 -------------
+
 There are some keywords that have a special meaning to docwriter.
 As a convention, all keywords are written in lowercase.
 
@@ -63,13 +72,17 @@ As a convention, all keywords are written in lowercase.
 * `values`: A list of 'values' for the tag.  These values are used for
             cross-referencing.
 
+
 Other Tags
 ----------
+
 Except the ones given above, any other tags will be added as a part of
 a subsection.  All tags are lowercase by convention.
 
+
 Public Header Definitions
 -------------------------
+
 The public headers for FreeType have their names defined in
 `include/freetype/config/ftheader.h`.  Any new public header file must
 be defined in this file, in the following format:
@@ -81,14 +94,18 @@ Where `newname` is the name of the header file.
 This macro is combined with the file location of a sub-section and
 printed with the object.
 
+
 Note on code blocks captured after comments
 -------------------------------------------
+
 All non-documentation lines after a documentation comment block are
 captured to be displayed as the code for the sub-section.  To stop
 collection, a line with `/* */` should be added.
 
+
 General Formatting Conventions
 ------------------------------
+
 * Use two spaces after a full stop ending a sentence.
 * Use appropriate uppercasing in titles.  Refer
 
@@ -97,8 +114,10 @@ General Formatting Conventions
   for more information.
 * Do not add trailing parentheses when citing a C function.
 
+
 Markdown Usage
 --------------
+
 All tags, except the ones that define the name and title for a block
 support markdown in them.  Docwriter uses a markdown parser that
 follows rules given in John Gruber's markdown guide:
@@ -108,8 +127,10 @@ follows rules given in John Gruber's markdown guide:
 with a few exceptions and extensions, detailed below.  This may also
 be referred to as the **FreeType Flavored Markdown**.
 
+
 Headers
 -------
+
 Markdown headers should not be used directly, because these are added
 based on section titles, sub-section names, and tags.  However, if a
 header needs to be added, note the following correspondence to HTML tags:
@@ -120,8 +141,10 @@ header needs to be added, note the following correspondence to HTML tags:
 * Any header added will be visible in the Table of Contents (TOC) of
   the page.
 
+
 Emphasis
 --------
+
 * Use `_underscores_` for italics.
 * Use `**double asterisks**` for bold.
 
@@ -138,8 +161,10 @@ renders symbols correctly without modifications.  If a symbol is
 absolutely required outside of an inline code block or code sequence,
 escape it with a backslash (like `\*` or `\_`).
 
+
 Lists
 -----
+
 Unordered lists can be created with asterisks:
 
     * Unordered list items can use asterisks.
@@ -168,8 +193,10 @@ More information on lists in markdown is available at
 
   https://daringfireball.net/projects/markdown/syntax#list
 
+
 Cross-references
 ----------------
+
 Other sub-sections can be linked with the `@` symbol:
 
     @description:
@@ -180,14 +207,18 @@ Other sub-sections can be linked with the `@` symbol:
 If a field in the `values` table of another sub-section is linked, the
 link leads to its parent sub-section.
 
+
 Links and Images
 ----------------
+
 All URLs are converted to links in the HTML documentation.
 
 Markdown syntax for links and images are fully supported.
 
+
 Inline Code
 -----------
+
 To indicate a span of code, wrap it with backtick quotes (`` ` ``):
 
     Use the `printf()` function.
@@ -195,8 +226,10 @@ To indicate a span of code, wrap it with backtick quotes (`` ` ``):
 Cross-references, markdown, and html styling do not work in inline code
 sequences.
 
+
 Code and Syntax Highlighting
 ----------------------------
+
 Blocks of code are fenced by lines with three back-ticks `` ``` ``
 followed by the language name, if any (used for syntax highlighting),
 as demonstrated in the following example.
@@ -216,8 +249,10 @@ larger indentation than the surrounding back-ticks.
 Like inline code, markdown and html styling is *not* supported inside
 code blocks.
 
+
 Tables
 ------
+
 Tables are used to list values, input, and other fields.  The FreeType
 Flavored Markdown adopts a simple approach to tables with two columns,
 or field definition tables.
@@ -235,8 +270,10 @@ start of another field definition, or a markup tag.
         See @FT_Open_Face for a detailed description of this
         parameter.
 
+
 Non-breaking Space
 ------------------
+
 A tilde can be used to create a non-breaking space.  The example
 
     The encoding value~0 is reserved.
@@ -244,6 +281,7 @@ A tilde can be used to create a non-breaking space.  The example
 is converted to
 
     The encoding value&nbsp;0 is reserved.
+
 
 ----------------------------------------------------------------------
 
