@@ -1,3 +1,11 @@
+2018-12-11  Werner Lemberg  <wl@gnu.org>
+
+	* src/truetype/ttgload.c (TT_Hint_Glyph): Remove useless test.
+
+	`control_len' only gets its value from `n_ins' (and vice versa),
+	which is always read as `unsigned short' and thus can't be larger
+	than 0xFFFF.
+
 2018-12-04  Werner Lemberg  <wl@gnu.org>
 
 	[bdf] Ignore data after `ENDFONT'.
