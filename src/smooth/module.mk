@@ -22,6 +22,8 @@ $(OPEN_DRIVER) FT_Renderer_Class, ft_smooth_lcd_renderer_class $(CLOSE_DRIVER)
 $(ECHO_DRIVER)smooth    $(ECHO_DRIVER_DESC)anti-aliased bitmap renderer for LCDs$(ECHO_DRIVER_DONE)
 $(OPEN_DRIVER) FT_Renderer_Class, ft_smooth_lcdv_renderer_class $(CLOSE_DRIVER)
 $(ECHO_DRIVER)smooth    $(ECHO_DRIVER_DESC)anti-aliased bitmap renderer for vertical LCDs$(ECHO_DRIVER_DONE)
+$(OPEN_DRIVER) FT_Renderer_Class, ft_smooth_bgra_renderer_class $(CLOSE_DRIVER)
+$(ECHO_DRIVER)smooth    $(ECHO_DRIVER_DESC)color bitmap renderer for layered glyphs$(ECHO_DRIVER_DONE)
 endef
 
 # EOF

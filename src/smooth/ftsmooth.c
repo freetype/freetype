@@ -20,6 +20,7 @@
 #include FT_INTERNAL_DEBUG_H
 #include FT_INTERNAL_OBJECTS_H
 #include FT_OUTLINE_H
+#include FT_BITMAP_H
 #include "ftsmooth.h"
 #include "ftgrays.h"
 
@@ -419,6 +420,115 @@
   }
 
 
+  /* convert a slot image into a BGRA bitmap using supplemental color array */
+  static FT_Error
+  ft_smooth_render_bgra( FT_Renderer       render,
+                         FT_GlyphSlot      slot,
+                         FT_Render_Mode    mode,
+                         const FT_Vector*  origin )
+  {
+    FT_Error    error = FT_Err_Ok;
+    FT_Memory   memory  = render->root.memory;
+    FT_Outline  outline = slot->outline;  /* hard copy */
+    FT_Bitmap   target;
+    FT_Vector   target_offset, offset;
+    short       i, c_done, p_done;
+
+
+    /* check glyph image format */
+    if ( slot->format != render->glyph_format )
+      return FT_THROW( Invalid_Argument );
+
+    /* check mode */
+    if ( mode != FT_RENDER_MODE_BGRA ||
+         slot->color == NULL         )
+      return FT_THROW( Cannot_Render_Glyph );
+
+    /* release old bitmap buffer */
+    if ( slot->internal->flags & FT_GLYPH_OWN_BITMAP )
+    {
+      FT_FREE( slot->bitmap.buffer );
+      slot->internal->flags &= ~FT_GLYPH_OWN_BITMAP;
+    }
+
+    if ( ft_glyphslot_preset_bitmap( slot, mode, origin ) )
+      return FT_THROW( Raster_Overflow );
+
+    target          = slot->bitmap;
+    target_offset.x = slot->bitmap_left * 64;
+    target_offset.y = slot->bitmap_top  * 64;
+
+    /* allocate new one */
+    if ( FT_ALLOC_MULT( target.buffer, target.rows, target.pitch ) )
+      goto Exit;
+
+    c_done = 0;
+    p_done = 0;
+    for ( i = 0; i < outline.n_contours; i++ )
+    {
+      /* grow layer */
+      slot->outline.n_contours           = i - c_done + 1;
+      slot->outline.n_points             = outline.contours[i] - p_done + 1;
+      slot->outline.contours[i - c_done] = outline.contours[i] - p_done;
+
+      if ( i == outline.n_contours - 1                             ||
+           slot->color[i + 1].red   != slot->color[c_done].red   ||
+           slot->color[i + 1].green != slot->color[c_done].green ||
+           slot->color[i + 1].blue  != slot->color[c_done].blue  ||
+           slot->color[i + 1].alpha != slot->color[c_done].alpha )
+      {
+        /* render layer */
+        error = ft_smooth_render( render,
+                                  slot,
+                                  FT_RENDER_MODE_NORMAL,
+                                  origin );
+        if ( error )
+          break;
+
+        /* blend layer  */
+        offset.x = slot->bitmap_left * 64;
+        offset.y = slot->bitmap_top  * 64;
+        error = FT_Bitmap_Blend( slot->library,
+                                 &slot->bitmap,
+                                 offset,
+                                 &target,
+                                 &target_offset,
+                                 slot->color[c_done] );
+
+        if ( error )
+          break;
+
+        c_done += slot->outline.n_contours;
+        p_done += slot->outline.n_points;
+
+        /* start next layer */
+        slot->outline.contours   = outline.contours + c_done;
+        slot->outline.points     = outline.points + p_done;
+        slot->outline.tags       = outline.tags + p_done;
+
+        slot->format = FT_GLYPH_FORMAT_OUTLINE;
+      }
+    }
+
+    /* restore pointers so that they can be freed */
+    slot->outline.contours   = outline.contours;
+    slot->outline.points     = outline.points;
+    slot->outline.tags       = outline.tags;
+
+    if ( !error )
+    {
+      FT_FREE( slot->bitmap.buffer );
+      slot->bitmap = target;
+      slot->bitmap_left = target_offset.x >> 6;
+      slot->bitmap_top  = target_offset.y >> 6;
+      slot->format      = FT_GLYPH_FORMAT_BITMAP;
+    }
+
+  Exit:
+    return error;
+  }
+
+
   FT_DEFINE_RENDERER(
     ft_smooth_renderer_class,
 
@@ -492,6 +602,33 @@
     FT_GLYPH_FORMAT_OUTLINE,
 
     (FT_Renderer_RenderFunc)   ft_smooth_render_lcd_v,  /* render_glyph    */
+    (FT_Renderer_TransformFunc)ft_smooth_transform,     /* transform_glyph */
+    (FT_Renderer_GetCBoxFunc)  ft_smooth_get_cbox,      /* get_glyph_cbox  */
+    (FT_Renderer_SetModeFunc)  ft_smooth_set_mode,      /* set_mode        */
+
+    (FT_Raster_Funcs*)&ft_grays_raster                  /* raster_class    */
+  )
+
+
+  FT_DEFINE_RENDERER(
+    ft_smooth_bgra_renderer_class,
+
+      FT_MODULE_RENDERER,
+      sizeof ( FT_RendererRec ),
+
+      "smooth-bgra",
+      0x10000L,
+      0x20000L,
+
+      NULL,    /* module specific interface */
+
+      (FT_Module_Constructor)ft_smooth_init,  /* module_init   */
+      (FT_Module_Destructor) NULL,            /* module_done   */
+      (FT_Module_Requester)  NULL,            /* get_interface */
+
+    FT_GLYPH_FORMAT_OUTLINE,
+
+    (FT_Renderer_RenderFunc)   ft_smooth_render_bgra,   /* render_glyph    */
     (FT_Renderer_TransformFunc)ft_smooth_transform,     /* transform_glyph */
     (FT_Renderer_GetCBoxFunc)  ft_smooth_get_cbox,      /* get_glyph_cbox  */
     (FT_Renderer_SetModeFunc)  ft_smooth_set_mode,      /* set_mode        */

@@ -441,6 +441,10 @@
       ft_lcd_padding( &cbox, slot, mode );
       goto Adjust;
 
+    case FT_RENDER_MODE_BGRA:
+      pixel_mode = FT_PIXEL_MODE_BGRA;
+      goto Adjust;
+
     case FT_RENDER_MODE_NORMAL:
     case FT_RENDER_MODE_LIGHT:
     default:
@@ -467,6 +471,10 @@
     case FT_PIXEL_MODE_LCD:
       width *= 3;
       pitch  = FT_PAD_CEIL( width, 4 );
+      break;
+
+    case FT_PIXEL_MODE_BGRA:
+      pitch  = 4 * width;
       break;
 
     case FT_PIXEL_MODE_LCD_V:

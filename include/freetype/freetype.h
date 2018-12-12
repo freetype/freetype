@@ -3239,6 +3239,11 @@ FT_BEGIN_HEADER
    *     bitmaps that are 3~times the height of the original glyph outline in
    *     pixels and use the @FT_PIXEL_MODE_LCD_V mode.
    *
+   *   FT_RENDER_MODE_BGRA ::
+   *     This mode is intended for rendering color layered glyphs. It
+   *     produces 32-bit premultiplied color images using @FT_PIXEL_MODE_BGRA
+   *     mode.
+   *
    * @note:
    *   Should you define `FT_CONFIG_OPTION_SUBPIXEL_RENDERING` in your
    *   `ftoption.h`, which enables patented ClearType-style rendering, the
@@ -3260,6 +3265,7 @@ FT_BEGIN_HEADER
     FT_RENDER_MODE_MONO,
     FT_RENDER_MODE_LCD,
     FT_RENDER_MODE_LCD_V,
+    FT_RENDER_MODE_BGRA,
 
     FT_RENDER_MODE_MAX
 
