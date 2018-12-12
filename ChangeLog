@@ -1,3 +1,10 @@
+2018-12-11  Alexei Podtelezhnikov  <apodtele@gmail.com>
+
+	Color glyph framework and rendering (1/3).
+
+	* include/freetype/fttypes.h (FT_Color): Move here...
+	* include/freetype/ftcolor.h (FT_Color): ...from here.
+
 2018-12-11  Werner Lemberg  <wl@gnu.org>
 
 	* src/truetype/ttgload.c (TT_Hint_Glyph): Remove useless test.

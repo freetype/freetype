@@ -51,43 +51,6 @@ FT_BEGIN_HEADER
 
   /**************************************************************************
    *
-   * @struct:
-   *   FT_Color
-   *
-   * @description:
-   *   This structure models a BGRA color value of a `CPAL` palette entry.
-   *
-   *   The used color space is sRGB; the colors are not pre-multiplied, and
-   *   alpha values must be explicitly set.
-   *
-   * @fields:
-   *   blue ::
-   *     Blue value.
-   *
-   *   green ::
-   *     Green value.
-   *
-   *   red ::
-   *     Red value.
-   *
-   *   alpha ::
-   *     Alpha value, giving the red, green, and blue color's opacity.
-   *
-   * @since:
-   *   2.10
-   */
-  typedef struct  FT_Color_
-  {
-    FT_Byte  blue;
-    FT_Byte  green;
-    FT_Byte  red;
-    FT_Byte  alpha;
-
-  } FT_Color;
-
-
-  /**************************************************************************
-   *
    * @enum:
    *   FT_PALETTE_XXX
    *
