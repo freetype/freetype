@@ -203,6 +203,10 @@ FT_BEGIN_HEADER
    *   outline ::
    *     A descriptor for the outline.
    *
+   *   color ::
+   *     Supplemental pointer to the color array with elements corresponding
+   *     to each outline contour.
+   *
    * @note:
    *   You can typecast an @FT_Glyph to @FT_OutlineGlyph if you have
    *   `glyph->format == FT_GLYPH_FORMAT_OUTLINE`.  This lets you access the
@@ -219,6 +223,7 @@ FT_BEGIN_HEADER
   {
     FT_GlyphRec  root;
     FT_Outline   outline;
+    FT_Color*    color;
 
   } FT_OutlineGlyphRec;
 

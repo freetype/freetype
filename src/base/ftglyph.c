@@ -182,6 +182,7 @@
       goto Exit;
 
     FT_Outline_Copy( source, target );
+    glyph->color = slot->color;
 
   Exit:
     return error;
@@ -192,9 +193,13 @@
   ft_outline_glyph_done( FT_Glyph  outline_glyph )
   {
     FT_OutlineGlyph  glyph = (FT_OutlineGlyph)outline_glyph;
+    FT_Memory        memory =  FT_GLYPH( glyph )->library->memory;
 
 
     FT_Outline_Done( FT_GLYPH( glyph )->library, &glyph->outline );
+
+    if ( glyph->outline.flags & FT_OUTLINE_OWNER )
+      FT_FREE( glyph->color );
   }
 
 
@@ -213,7 +218,10 @@
                             source->outline.n_contours,
                             &target->outline );
     if ( !error )
+    {
       FT_Outline_Copy( &source->outline, &target->outline );
+      target->color = source->color;
+    }
 
     return error;
   }
@@ -255,6 +263,7 @@
 
     slot->format         = FT_GLYPH_FORMAT_OUTLINE;
     slot->outline        = glyph->outline;
+    slot->color          = glyph->color;
     slot->outline.flags &= ~FT_OUTLINE_OWNER;
 
     return FT_Err_Ok;

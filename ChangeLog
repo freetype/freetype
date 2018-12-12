@@ -1,5 +1,20 @@
 2018-12-11  Alexei Podtelezhnikov  <apodtele@gmail.com>
 
+	Color glyph framework and rendering (2/3).
+
+	* include/freetype/freetype.h (FT_GlyphSlotRec): Rename reserved
+	pointer `other' into `color'.
+	* include/freetype/ftglyph.h (FT_OutlineGlyphRec): Add new field
+	`color'. Technically this breaks binary compatibility but this is
+	highly unlikely.
+	* src/base/ftglyph.c (ft_outline_glyph_{init,done,copy,prepare}):
+	Handle color and copy it between FT_Glyph and FT_GlyphSlot.
+
+	* src/base/ftobjs.c (ft_glyphslot_clear): s/other/color/.
+	* src/type42/t42objs.c (t42_glyphslot_clear): s/other/color/.
+
+2018-12-11  Alexei Podtelezhnikov  <apodtele@gmail.com>
+
 	Color glyph framework and rendering (1/3).
 
 	* include/freetype/fttypes.h (FT_Color): Move here...

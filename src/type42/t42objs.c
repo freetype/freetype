@@ -628,7 +628,7 @@
     slot->subglyphs     = NULL;
     slot->control_data  = NULL;
     slot->control_len   = 0;
-    slot->other         = NULL;
+    slot->color         = NULL;
     slot->format        = FT_GLYPH_FORMAT_NONE;
 
     slot->linearHoriAdvance = 0;

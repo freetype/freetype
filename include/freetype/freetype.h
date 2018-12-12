@@ -1785,9 +1785,6 @@ FT_BEGIN_HEADER
    *     This is the length in bytes of the control data.  Currently internal
    *     to FreeType.
    *
-   *   other ::
-   *     Reserved.
-   *
    *   lsb_delta ::
    *     The difference between hinted and unhinted left side bearing while
    *     auto-hinting is active.  Zero otherwise.
@@ -1795,6 +1792,11 @@ FT_BEGIN_HEADER
    *   rsb_delta ::
    *     The difference between hinted and unhinted right side bearing while
    *     auto-hinting is active.  Zero otherwise.
+   *
+   *   color ::
+   *     Supplemental pointer to the color array with elements corresponding
+   *     to each outline contour.  It is used with @FT_RENDER_MODE_RGBA,
+   *     when consecutive contours of the same color are rendered as layers.
    *
    * @note:
    *   If @FT_Load_Glyph is called with default flags (see @FT_LOAD_DEFAULT)
@@ -1904,7 +1906,7 @@ FT_BEGIN_HEADER
     FT_Pos            lsb_delta;
     FT_Pos            rsb_delta;
 
-    void*             other;
+    FT_Color*         color;
 
     FT_Slot_Internal  internal;
 
