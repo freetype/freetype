@@ -537,14 +537,6 @@
    *   Executes one or more instructions in the execution context.
    *
    * @Input:
-   *   debug ::
-   *     A Boolean flag.  If set, the function sets some internal
-   *     variables and returns immediately, otherwise TT_RunIns()
-   *     is called.
-   *
-   *     This is commented out currently.
-   *
-   * @Input:
    *   exec ::
    *     A handle to the target execution context.
    *
