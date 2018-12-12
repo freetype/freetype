@@ -821,11 +821,6 @@ FT_BEGIN_HEADER
   /*************************************************************************/
 
 
-  /* This hook is used by the TrueType debugger.  It must be set to an */
-  /* alternate truetype bytecode interpreter function.                 */
-#define FT_DEBUG_HOOK_TRUETYPE  0
-
-
   /**************************************************************************
    *
    * @struct:

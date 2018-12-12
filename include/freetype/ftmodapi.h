@@ -592,10 +592,52 @@ FT_BEGIN_HEADER
   FT_EXPORT( FT_Error )
   FT_Done_Library( FT_Library  library );
 
-  /* */
 
+  /**************************************************************************
+   *
+   * @functype:
+   *   FT_DebugHook_Func
+   *
+   * @description:
+   *   A drop-in replacement (or rather a wrapper) for the bytecode or
+   *   charstring interpreter's main loop function.
+   *
+   *   Its job is essentially
+   *
+   *   - to activate debug mode to enforce single-stepping,
+   *   - to call the main loop function to interpret the next opcode, and
+   *   - to show the changed context to the user.
+   *
+   *   An example for such a main loop function is `TT_RunIns` (declared in
+   *   FreeType's internal header file `src/truetype/ttinterp.h`).
+   *
+   *   Have a look at the source code of the `ttdebug` FreeType demo program
+   *   for an example of a drop-in replacement.
+   *
+   * @inout:
+   *   arg ::
+   *     A typeless pointer, to be cast to the main loop function's data
+   *     structure (which depends on the font module).  For TrueType fonts
+   *     it is bytecode interpreter's execution context, `TT_ExecContext`,
+   *     which is declared in FreeType's internal header file `tttypes.h`.
+   */
   typedef void
   (*FT_DebugHook_Func)( void*  arg );
+
+
+  /**************************************************************************
+   *
+   * @enum:
+   *   FT_DEBUG_HOOK_XXX
+   *
+   * @description:
+   *   A list of named debug hook indices.
+   *
+   * @values:
+   *   FT_DEBUG_HOOK_TRUETYPE::
+   *     This hook index identifies the TrueType bytecode debugger.
+   */
+#define FT_DEBUG_HOOK_TRUETYPE  0
 
 
   /**************************************************************************
@@ -607,25 +649,27 @@ FT_BEGIN_HEADER
    *   Set a debug hook function for debugging the interpreter of a font
    *   format.
    *
+   *   While this is a public API function, an application needs access to
+   *   FreeType's internal header files to do something useful.
+   *
+   *   Have a look at the source code of the `ttdebug` FreeType demo program
+   *   for an example of its usage.
+   *
    * @inout:
    *   library ::
    *     A handle to the library object.
    *
    * @input:
    *   hook_index ::
-   *     The index of the debug hook.  You should use the values defined in
-   *     `ftobjs.h`, e.g., `FT_DEBUG_HOOK_TRUETYPE`.
+   *     The index of the debug hook.  You should use defined enumeration
+   *     macros like @FT_DEBUG_HOOK_TRUETYPE.
    *
    *   debug_hook ::
    *     The function used to debug the interpreter.
    *
    * @note:
-   *   Currently, four debug hook slots are available, but only two (for the
-   *   TrueType and the Type~1 interpreter) are defined.
-   *
-   *   Since the internal headers of FreeType are no longer installed, the
-   *   symbol `FT_DEBUG_HOOK_TRUETYPE` isn't available publicly.  This is a
-   *   bug and will be fixed in a forthcoming release.
+   *   Currently, four debug hook slots are available, but only one (for the
+   *   TrueType interpreter) is defined.
    */
   FT_EXPORT( void )
   FT_Set_Debug_Hook( FT_Library         library,
