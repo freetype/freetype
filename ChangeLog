@@ -1,3 +1,10 @@
+2018-12-12  Werner Lemberg  <wl@gnu.org>
+
+	[gxvalid] Fix compiler warnings.
+
+	* src/gxvalid/gxvjust.c (gxv_just_check_max_gid),
+	src/gxvalid/gxvmort.c (gxv_mort_coverage_validate): Use `FT_UNUSED'.
+
 2018-12-11  Werner Lemberg  <wl@gnu.org>
 
 	* src/truetype/ttgload.c (TT_Hint_Glyph): Remove useless test.

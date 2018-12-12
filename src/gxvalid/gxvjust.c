@@ -72,6 +72,8 @@
                           const FT_String*  msg_tag,
                           GXV_Validator     gxvalid )
   {
+    FT_UNUSED( msg_tag );
+
     if ( gid < gxvalid->face->num_glyphs )
       return;
 

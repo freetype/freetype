@@ -123,6 +123,7 @@
                               GXV_Validator  gxvalid )
   {
     FT_UNUSED( gxvalid );
+    FT_UNUSED( coverage );
 
 #ifdef FT_DEBUG_LEVEL_TRACE
     if ( coverage & 0x8000U )
