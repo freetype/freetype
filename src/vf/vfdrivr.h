@@ -38,6 +38,14 @@ FT_BEGIN_HEADER
   } VF_BitmapRec, *VF_Bitmap;
 
 
+  /* Bitmap list */
+  struct vf_s_bitmaplist {
+    FT_Long              off_x, off_y;
+    VF_Bitmap            bitmap;
+    struct vf_s_bitmaplist *next;
+  };
+  typedef struct vf_s_bitmaplist *VF_BITMAPLIST;
+
   typedef struct TFM_Rec_
   {
     /* Font Info */
