@@ -432,7 +432,7 @@
     FT_Outline  outline = slot->outline;  /* hard copy */
     FT_Bitmap   target;
     FT_Vector   target_offset, offset;
-    short       i, c_done, p_done;
+    short       i, j, c_done, p_done;
 
 
     /* check glyph image format */
@@ -471,7 +471,8 @@
       slot->outline.n_points             = outline.contours[i] - p_done + 1;
       slot->outline.contours[i - c_done] = outline.contours[i] - p_done;
 
-      if ( i == outline.n_contours - 1                             ||
+      /* layer ends when color changes */
+      if ( i == outline.n_contours - 1                           ||
            slot->color[i + 1].red   != slot->color[c_done].red   ||
            slot->color[i + 1].green != slot->color[c_done].green ||
            slot->color[i + 1].blue  != slot->color[c_done].blue  ||
@@ -497,6 +498,10 @@
 
         if ( error )
           break;
+
+        /* restore contours */
+        for ( j = 0; j < slot->outline.n_contours; j++ )
+          slot->outline.contours[j] += p_done;
 
         c_done += slot->outline.n_contours;
         p_done += slot->outline.n_points;

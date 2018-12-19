@@ -1,3 +1,7 @@
+2018-12-18  Alexei Podtelezhnikov  <apodtele@gmail.com>
+
+	* src/smooth/ftsmooth.c (ft_smooth_render_bgra): Restore contours.
+
 2018-12-11  Alexei Podtelezhnikov  <apodtele@gmail.com>
 
 	Color glyph framework and rendering (3/3).
