@@ -1,3 +1,11 @@
+2018-12-25  Werner Lemberg  <wl@gnu.org>
+
+	* src/psaux/cffdecode.c (cff_operaor_seac): Fix numeric overflow.
+
+	Reported as
+
+	  https://bugs.chromium.org/p/oss-fuzz/issues/detail?id=11915
+
 2018-12-12  Werner Lemberg  <wl@gnu.org>
 
 	[gxvalid] Fix compiler warnings.

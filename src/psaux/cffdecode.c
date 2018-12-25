@@ -235,8 +235,8 @@
       return FT_THROW( Syntax_Error );
     }
 
-    adx += decoder->builder.left_bearing.x;
-    ady += decoder->builder.left_bearing.y;
+    adx = ADD_LONG( adx, decoder->builder.left_bearing.x );
+    ady = ADD_LONG( ady, decoder->builder.left_bearing.y );
 
 #ifdef FT_CONFIG_OPTION_INCREMENTAL
     /* Incremental fonts don't necessarily have valid charsets.        */
