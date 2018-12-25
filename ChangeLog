@@ -582,7 +582,7 @@
 
 	Reported as
 
-	  http://lists.nongnu.org/archive/html/freetype-devel/2018-08/msg00124.html
+	  https://lists.nongnu.org/archive/html/freetype-devel/2018-08/msg00124.html
 
 	* docs/reference/markdown/stylesheets/extra.css (.md-typeset code):
 	Add rule `white-space'.
@@ -735,7 +735,7 @@
 
 	Reported as
 
-	  http://lists.nongnu.org/archive/html/freetype-devel/2018-08/msg00083.html
+	  https://lists.nongnu.org/archive/html/freetype-devel/2018-08/msg00083.html
 
 2018-08-26  Werner Lemberg  <wl@gnu.org>
 

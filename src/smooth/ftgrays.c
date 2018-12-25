@@ -48,7 +48,7 @@
    * coverage of the outline on each pixel cell.
    *
    * It is based on ideas that I initially found in Raph Levien's
-   * excellent LibArt graphics library (see http://www.levien.com/libart
+   * excellent LibArt graphics library (see https://www.levien.com/libart
    * for more information, though the web pages do not tell anything
    * about the renderer; you'll have to dive into the source code to
    * understand how it works).

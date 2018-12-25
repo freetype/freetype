@@ -352,7 +352,7 @@ FT_BEGIN_HEADER
      *     https://www.microsoft.com/typography/cleartype/truetypecleartype.aspx
      *
      * [3] Beat Stamm describes it in more detail:
-     *     http://www.beatstamm.com/typography/RTRCh4.htm#Sec12
+     *     http://rastertragedy.com/RTRCh4.htm#Sec12.
      *
      * [4] The list of `native ClearType' fonts is small at the time of this
      *     writing; I found the following on a Windows 10 Update 1511
