@@ -605,7 +605,9 @@ FT_BEGIN_HEADER
    *   Its job is essentially
    *
    *   - to activate debug mode to enforce single-stepping,
+   *
    *   - to call the main loop function to interpret the next opcode, and
+   *
    *   - to show the changed context to the user.
    *
    *   An example for such a main loop function is `TT_RunIns` (declared in
