@@ -963,7 +963,7 @@
           FT_TRACE4(( " closepath" ));
 
           /* if there is no path, `closepath' is a no-op */
-          ps_builder_close_contour( &decoder->builder );
+          cf2_glyphpath_closeOpenPath( &glyphPath );
 
           haveWidth = TRUE;
         }

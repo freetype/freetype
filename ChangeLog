@@ -1,3 +1,16 @@
+2019-01-08  Chris Liddell <chris.liddell@artifex.com>
+
+	[psaux] Fix closepath (#55414).
+
+	All of the Type 1 path building is done with code common to the
+	revised CFF engine, with the exception of closepath, which was still
+	calling ps_builder_close_contour(), thus previously cached segments
+	were not always written to the path, and glyph corruption, or even
+	invalid outlines were possible.
+
+	* src/psauc/psinterp.c (cf2_interpT2CharString) <cf2_cmdCLOSEPATH>:
+	Switch to calling `cf2_glyphpath_closeOpenPath'.
+
 2018-12-29  Werner Lemberg  <wl@gnu.org>
 
 	* src/autofit/aflatin2.c: Some fixes from `aflatin.c' (#55310).
