@@ -1,3 +1,10 @@
+2019-01-18  John Tytgat  <John.Tytgat@esko.com>
+
+	[sfnt] Handle TT fonts having two PostScript font names (#55471).
+
+	* src/sfnt/sfdriver.c (sfnt_get_name_id): Prefer English over any
+	other language found for PostScript font names.
+
 2019-01-08  Chris Liddell <chris.liddell@artifex.com>
 
 	[psaux] Fix closepath (#55414).

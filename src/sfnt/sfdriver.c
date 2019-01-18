@@ -608,10 +608,10 @@
 
       if ( name->nameID == id && name->stringLength > 0 )
       {
-        if ( IS_WIN( name ) )
+        if ( IS_WIN( name ) && ( name->languageID == 0x409 || *win == -1 ) )
           *win = n;
 
-        if ( IS_APPLE( name ) )
+        if ( IS_APPLE( name ) && ( name->languageID == 0 || *apple == -1 ) )
           *apple = n;
       }
     }
