@@ -4,7 +4,7 @@
 /*                                                                         */
 /*    FreeType VERSIONINFO resource for Windows DLLs.                      */
 /*                                                                         */
-/*  Copyright 2018 by                                                      */
+/*  Copyright 2018-2019 by                                                 */
 /*  David Turner, Robert Wilhelm, and Werner Lemberg.                      */
 /*                                                                         */
 /*  This file is part of the FreeType project, and may only be used,       */
@@ -45,7 +45,7 @@ BEGIN
       VALUE "FileVersion",      FT_VERSION_STR
       VALUE "ProductName",      "FreeType"
       VALUE "ProductVersion",   FT_VERSION_STR
-      VALUE "LegalCopyright",   "\251 2018 The FreeType Project www.freetype.org. All rights reserved."
+      VALUE "LegalCopyright",   "\251 2018-2019 The FreeType Project www.freetype.org. All rights reserved."
       VALUE "InternalName",     "freetype"
       VALUE "OriginalFilename", FT_FILENAME
     END

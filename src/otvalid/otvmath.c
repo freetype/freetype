@@ -4,7 +4,7 @@
  *
  *   OpenType MATH table validation (body).
  *
- * Copyright 2007-2018 by
+ * Copyright 2007-2019 by
  * David Turner, Robert Wilhelm, and Werner Lemberg.
  *
  * Written by George Williams.

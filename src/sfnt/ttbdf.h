@@ -4,7 +4,7 @@
  *
  *   TrueType and OpenType embedded BDF properties (specification).
  *
- * Copyright 2005-2018 by
+ * Copyright 2005-2019 by
  * David Turner, Robert Wilhelm, and Werner Lemberg.
  *
  * This file is part of the FreeType project, and may only be used,

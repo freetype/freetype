@@ -4,7 +4,7 @@
  *
  *   FreeType API for validating TrueTypeGX/AAT tables (specification).
  *
- * Copyright 2004-2018 by
+ * Copyright 2004-2019 by
  * Masatake YAMATO, Redhat K.K,
  * David Turner, Robert Wilhelm, and Werner Lemberg.
  *

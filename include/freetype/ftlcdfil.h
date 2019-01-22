@@ -5,7 +5,7 @@
  *   FreeType API for color filtering of subpixel bitmap glyphs
  *   (specification).
  *
- * Copyright 2006-2018 by
+ * Copyright 2006-2019 by
  * David Turner, Robert Wilhelm, and Werner Lemberg.
  *
  * This file is part of the FreeType project, and may only be used,
