@@ -1641,59 +1641,73 @@
         root->units_per_EM = face->header.Units_Per_EM;
 
 
-        /* XXX: Computing the ascender/descender/height is very different */
-        /*      from what the specification tells you.  Apparently, we    */
-        /*      must be careful because                                   */
-        /*                                                                */
-        /*      - not all fonts have an OS/2 table; in this case, we take */
-        /*        the values in the horizontal header.  However, these    */
-        /*        values very often are not reliable.                     */
-        /*                                                                */
-        /*      - otherwise, the correct typographic values are in the    */
-        /*        sTypoAscender, sTypoDescender & sTypoLineGap fields.    */
-        /*                                                                */
-        /*        However, certain fonts have these fields set to 0.      */
-        /*        Rather, they have usWinAscent & usWinDescent correctly  */
-        /*        set (but with different values).                        */
-        /*                                                                */
-        /*      As an example, Arial Narrow is implemented through four   */
-        /*      files ARIALN.TTF, ARIALNI.TTF, ARIALNB.TTF & ARIALNBI.TTF */
-        /*                                                                */
-        /*      Strangely, all fonts have the same values in their        */
-        /*      sTypoXXX fields, except ARIALNB which sets them to 0.     */
-        /*                                                                */
-        /*      On the other hand, they all have different                */
-        /*      usWinAscent/Descent values -- as a conclusion, the OS/2   */
-        /*      table cannot be used to compute the text height reliably! */
-        /*                                                                */
+        /*
+         * Computing the ascender/descender/height is tricky.
+         *
+         * The OpenType specification v1.8.3 says:
+         *
+         *   [OS/2's] sTypoAscender, sTypoDescender and sTypoLineGap fields
+         *   are intended to allow applications to lay out documents in a
+         *   typographically-correct and portable fashion.
+         *
+         * This is somewhat at odds with the decades of backwards
+         * compatibility, operating systems and applications doing whatever
+         * they want, not to mention broken fonts.
+         *
+         * Not all fonts have an OS/2 table; in this case, we take the values
+         * in the horizontal header, although there is nothing stopping the
+         * values from being unreliable. Even with a OS/2 table, certain fonts
+         * set the sTypoAscender, sTypoDescender and sTypoLineGap fields to 0
+         * and instead correctly set usWinAscent and usWinDescent.
+         *
+         * As an example, Arial Narrow is shipped as four files ARIALN.TTF,
+         * ARIALNI.TTF, ARIALNB.TTF and ARIALNBI.TTF. Strangely, all fonts have
+         * the same values in their sTypo* fields, except ARIALNB.ttf which
+         * sets them to 0. All of them have different usWinAscent/Descent
+         * values. The OS/2 table therefore cannot be trusted for computing the
+         * text height reliably.
+         *
+         * As a compromise, do the following:
+         *
+         * 1. If the OS/2 table exists and the fsSelection bit 7 is set
+         *    (USE_TYPO_METRICS), trust the font and use the sTypo* metrics.
+         * 2. Otherwise, use the `hhea' table's metrics.
+         * 3. If they are zero and the OS/2 table exists,
+         *    1. use the OS/2 table's sTypo* metrics if they are non-zero.
+         *    2. Otherwise, use the OS/2 table's usWin* metrics.
+         */
 
-        /* The ascender and descender are taken from the `hhea' table. */
-        /* If zero, they are taken from the `OS/2' table.              */
-
-        root->ascender  = face->horizontal.Ascender;
-        root->descender = face->horizontal.Descender;
-
-        root->height = root->ascender - root->descender +
-                       face->horizontal.Line_Gap;
-
-        if ( !( root->ascender || root->descender ) )
+        if ( face->os2.version != 0xFFFFU && face->os2.fsSelection & 128 )
         {
-          if ( face->os2.version != 0xFFFFU )
+          root->ascender  = face->os2.sTypoAscender;
+          root->descender = face->os2.sTypoDescender;
+          root->height    = root->ascender - root->descender +
+                            face->os2.sTypoLineGap;
+        }
+        else
+        {
+          root->ascender  = face->horizontal.Ascender;
+          root->descender = face->horizontal.Descender;
+          root->height    = root->ascender - root->descender +
+                            face->horizontal.Line_Gap;
+
+          if ( !( root->ascender || root->descender ) )
           {
-            if ( face->os2.sTypoAscender || face->os2.sTypoDescender )
+            if ( face->os2.version != 0xFFFFU )
             {
-              root->ascender  = face->os2.sTypoAscender;
-              root->descender = face->os2.sTypoDescender;
-
-              root->height = root->ascender - root->descender +
-                             face->os2.sTypoLineGap;
-            }
-            else
-            {
-              root->ascender  =  (FT_Short)face->os2.usWinAscent;
-              root->descender = -(FT_Short)face->os2.usWinDescent;
-
-              root->height = root->ascender - root->descender;
+              if ( face->os2.sTypoAscender || face->os2.sTypoDescender )
+              {
+                root->ascender  = face->os2.sTypoAscender;
+                root->descender = face->os2.sTypoDescender;
+                root->height    = root->ascender - root->descender +
+                                  face->os2.sTypoLineGap;
+              }
+              else
+              {
+                root->ascender  =  (FT_Short)face->os2.usWinAscent;
+                root->descender = -(FT_Short)face->os2.usWinDescent;
+                root->height    =  root->ascender - root->descender;
+              }
             }
           }
         }

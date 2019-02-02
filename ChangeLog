@@ -1,3 +1,13 @@
+2019-02-02  Nikolaus Waxweiler  <madigens@gmail.com>
+
+	[sfnt] Use typo metrics if OS/2 fsSelection USE_TYPO_METRICS bit is set.
+
+	If the OS/2 table exists and fsSelection bit 7 (USE_TYPO_METRICS) is set,
+	use the sTypo* set of values to compute the FT_Face's ascender, descender
+	and height. Otherwise, fall back to old behavior.
+
+	* src/sfnt/sfobjs.c (sfnt_load_face): Implement.
+
 2019-01-18  John Tytgat  <John.Tytgat@esko.com>
 
 	[sfnt] Handle TT fonts having two PostScript font names (#55471).
@@ -420,7 +430,7 @@
 	* src/base/ftobjs.c (ft_glyphslot_preset_bimap): Another tweak.
 
 	This one should be clearer. When the rounded monochrome bbox collapses
-	we add a pixel that covers most if not all original cbox. 
+	we add a pixel that covers most if not all original cbox.
 
 2018-09-21  Alexei Podtelezhnikov  <apodtele@gmail.com>
 
