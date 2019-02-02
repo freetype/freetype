@@ -1,5 +1,16 @@
 2019-02-02  Nikolaus Waxweiler  <madigens@gmail.com>
 
+	[truetype] Apply MVAR hasc, hdsc and hlgp metrics to current FT_Face metrics.
+
+	Instead of setting typo or win metrics as the new FT_Face metrics
+	indiscriminately, apply only typo deltas to the currently active FT_Face
+	metrics. This prevents line height differences when e.g. the default
+	outlines were used as the regular face and instances for everything else.
+
+	* src/truetype/ttgxvar.c (tt_apply_mvar): Implement.
+
+2019-02-02  Nikolaus Waxweiler  <madigens@gmail.com>
+
 	[sfnt] Use typo metrics if OS/2 fsSelection USE_TYPO_METRICS bit is set.
 
 	If the OS/2 table exists and fsSelection bit 7 (USE_TYPO_METRICS) is set,
