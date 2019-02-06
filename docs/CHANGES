@@ -18,6 +18,22 @@ CHANGES BETWEEN 2.9.1 and 2.10
 
   III. MISCELLANEOUS
 
+    - The  logic for  computing  the global  ascender, descender,  and
+      height  of  OpenType  fonts   has  been  slightly  adjusted  for
+      consistency.
+
+      . If the `useTypoMetrics' flag (i.e., bit 7 in the `fsSelection'
+        field) in the  `OS/2' table is set, use the  `sTypo' fields in
+        `OS/2' unconditionally.
+      . Otherwise use  the metrics data from the `hhea'  table (if not
+        zero).
+      . Otherwise use the `sTypo' fields (if not zero).
+      . Otherwise use the `usWin' data from the `OS/2' table as a last
+        resort.
+
+      Variable fonts will apply the `MVAR' deltas to whichever metrics
+      were picked.
+
     - `TT_Set_MM_Blend' could  fail if  call repeatedly with  the same
       arguments.
 

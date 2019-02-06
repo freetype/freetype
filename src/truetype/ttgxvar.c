@@ -1405,6 +1405,8 @@
        */
       FT_Short  current_line_gap = root->height - root->ascender +
                                    root->descender;
+
+
       root->ascender  = root->ascender + mvar_hasc_delta;
       root->descender = root->descender + mvar_hdsc_delta;
       root->height    = root->ascender - root->descender +
