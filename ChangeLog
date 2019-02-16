@@ -1,3 +1,7 @@
+2019-02-16  Wink Saville  <wink@saville.com>
+
+	* src/autofit/afwarp.h (af_warper_compute): Fix declaration.
+
 2019-02-02  Nikolaus Waxweiler  <madigens@gmail.com>
 
 	[truetype] Apply MVAR hasc, hdsc and hlgp metrics to current FT_Face metrics.

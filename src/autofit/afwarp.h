@@ -53,7 +53,7 @@ FT_BEGIN_HEADER
                      AF_GlyphHints  hints,
                      AF_Dimension   dim,
                      FT_Fixed      *a_scale,
-                     FT_Fixed      *a_delta );
+                     FT_Pos        *a_delta );
 #endif
 
 
