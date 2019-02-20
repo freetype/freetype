@@ -132,7 +132,7 @@ FT_BEGIN_HEADER
    *     An empty name ID in the `CPAL` table gets represented as value
    *     0xFFFF.
    *
-   *     NULL if the font's `CPAL` table doesn't contain appropriate data.
+   *     `NULL` if the font's `CPAL` table doesn't contain appropriate data.
    *
    *   palette_flags ::
    *     A read-only array of palette flags with `num_palettes` elements.
@@ -140,7 +140,7 @@ FT_BEGIN_HEADER
    *     @FT_PALETTE_FOR_LIGHT_BACKGROUND and
    *     @FT_PALETTE_FOR_DARK_BACKGROUND.
    *
-   *     NULL if the font's `CPAL` table doesn't contain appropriate data.
+   *     `NULL` if the font's `CPAL` table doesn't contain appropriate data.
    *
    *   num_palette_entries ::
    *     The number of entries in a single palette.  All palettes have the
@@ -157,7 +157,7 @@ FT_BEGIN_HEADER
    *     An empty entry name ID in the `CPAL` table gets represented as value
    *     0xFFFF.
    *
-   *     NULL if the font's `CPAL` table doesn't contain appropriate data.
+   *     `NULL` if the font's `CPAL` table doesn't contain appropriate data.
    *
    * @note:
    *   Use function @FT_Get_Sfnt_Name to map name IDs and entry name IDs to
@@ -240,10 +240,10 @@ FT_BEGIN_HEADER
    *   apalette ::
    *     An array of color entries for a palette with index `palette_index`,
    *     having `num_palette_entries` elements (as found in the
-   *     `FT_Palette_Data` structure).  If `apalette` is set to NULL, no
+   *     `FT_Palette_Data` structure).  If `apalette` is set to `NULL`, no
    *     array gets returned (and no color entries can be modified).
    *
-   *     In case the font doesn't support color palettes, NULL is returned.
+   *     In case the font doesn't support color palettes, `NULL` is returned.
    *
    * @return:
    *   FreeType error code.  0~means success.

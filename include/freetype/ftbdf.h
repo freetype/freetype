@@ -106,8 +106,8 @@ FT_BEGIN_HEADER
    *      The property type.
    *
    *    u.atom ::
-   *      The atom string, if type is @BDF_PROPERTY_TYPE_ATOM.  May be NULL,
-   *      indicating an empty string.
+   *      The atom string, if type is @BDF_PROPERTY_TYPE_ATOM.  May be
+   *      `NULL`, indicating an empty string.
    *
    *    u.integer ::
    *      A signed integer, if type is @BDF_PROPERTY_TYPE_INTEGER.

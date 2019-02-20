@@ -90,7 +90,7 @@ FT_BEGIN_HEADER
    *     The address of the listed object.
    *
    * @return:
-   *   List node.  NULL if it wasn't found.
+   *   List node.  `NULL` if it wasn't found.
    */
   FT_EXPORT( FT_ListNode )
   FT_List_Find( FT_List  list,
@@ -267,7 +267,7 @@ FT_BEGIN_HEADER
    *
    *   destroy ::
    *     A list destructor that will be applied to each element of the list.
-   *     Set this to NULL if not needed.
+   *     Set this to `NULL` if not needed.
    *
    *   memory ::
    *     The current memory object that handles deallocation.

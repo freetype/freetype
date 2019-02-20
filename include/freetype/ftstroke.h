@@ -264,7 +264,7 @@ FT_BEGIN_HEADER
    *
    * @output:
    *   astroker ::
-   *     A new stroker object handle.  NULL in case of error.
+   *     A new stroker object handle.  `NULL` in case of error.
    *
    * @return:
    *    FreeType error code.  0~means success.
@@ -674,7 +674,7 @@ FT_BEGIN_HEADER
    *
    * @input:
    *   stroker ::
-   *     A stroker handle.  Can be NULL.
+   *     A stroker handle.  Can be `NULL`.
    */
   FT_EXPORT( void )
   FT_Stroker_Done( FT_Stroker  stroker );

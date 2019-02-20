@@ -64,21 +64,21 @@ FT_BEGIN_HEADER
    * @output:
    *    aoutline_resolution ::
    *      Outline resolution.  This is equivalent to `face->units_per_EM` for
-   *      non-PFR fonts.  Optional (parameter can be NULL).
+   *      non-PFR fonts.  Optional (parameter can be `NULL`).
    *
    *    ametrics_resolution ::
    *      Metrics resolution.  This is equivalent to `outline_resolution` for
-   *      non-PFR fonts.  Optional (parameter can be NULL).
+   *      non-PFR fonts.  Optional (parameter can be `NULL`).
    *
    *    ametrics_x_scale ::
    *      A 16.16 fixed-point number used to scale distance expressed in
    *      metrics units to device subpixels.  This is equivalent to
    *      `face->size->x_scale`, but for metrics only.  Optional (parameter
-   *      can be NULL).
+   *      can be `NULL`).
    *
    *    ametrics_y_scale ::
    *      Same as `ametrics_x_scale` but for the vertical direction.
-   *      optional (parameter can be NULL).
+   *      optional (parameter can be `NULL`).
    *
    * @return:
    *    FreeType error code.  0~means success.

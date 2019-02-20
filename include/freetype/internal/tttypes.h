@@ -1485,12 +1485,12 @@ FT_BEGIN_HEADER
    *     indices used in the font's sbit table.
    *
    *   cpal ::
-   *     A pointer to data related to the 'CPAL' table.  NULL if the table is
-   *     not available.
+   *     A pointer to data related to the 'CPAL' table.  `NULL` if the table
+   *     is not available.
    *
    *   colr ::
-   *     A pointer to data related to the 'COLR' table.  NULL if the table is
-   *     not available.
+   *     A pointer to data related to the 'COLR' table.  `NULL` if the table
+   *     is not available.
    *
    *   kern_table ::
    *     A pointer to the 'kern' table.

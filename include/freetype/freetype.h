@@ -927,7 +927,7 @@ FT_BEGIN_HEADER
    *     denominator used to list fonts.  Some formats (TrueType & OpenType)
    *     provide localized and Unicode versions of this string.  Applications
    *     should use the format-specific interface to access them.  Can be
-   *     NULL (e.g., in fonts embedded in a PDF file).
+   *     `NULL` (e.g., in fonts embedded in a PDF file).
    *
    *     In case the font doesn't provide a specific family name entry,
    *     FreeType tries to synthesize one, deriving it from other name
@@ -937,7 +937,7 @@ FT_BEGIN_HEADER
    *     The face's style name.  This is an ASCII string, usually in English,
    *     that describes the typeface's style (like 'Italic', 'Bold',
    *     'Condensed', etc).  Not all font formats provide a style name, so
-   *     this field is optional, and can be set to NULL.  As for
+   *     this field is optional, and can be set to `NULL`.  As for
    *     `family_name`, some formats provide localized and Unicode versions
    *     of this string.  Applications should use the format-specific
    *     interface to access them.
@@ -949,7 +949,7 @@ FT_BEGIN_HEADER
    *
    *   available_sizes ::
    *     An array of @FT_Bitmap_Size for all bitmap strikes in the face.  It
-   *     is set to NULL if there is no bitmap strike.
+   *     is set to `NULL` if there is no bitmap strike.
    *
    *     Note that FreeType tries to sanitize the strike data since they are
    *     sometimes sloppy or incorrect, but this can easily fail.
@@ -2078,7 +2078,7 @@ FT_BEGIN_HEADER
    *
    *   driver ::
    *     This field is exclusively used by @FT_Open_Face; it simply specifies
-   *     the font driver to use for opening the face.  If set to NULL,
+   *     the font driver to use for opening the face.  If set to `NULL`,
    *     FreeType tries to load the face with each one of the drivers in its
    *     list.
    *
@@ -2149,7 +2149,7 @@ FT_BEGIN_HEADER
    * @output:
    *   aface ::
    *     A handle to a new face object.  If `face_index` is greater than or
-   *     equal to zero, it must be non-NULL.
+   *     equal to zero, it must be non-`NULL`.
    *
    * @return:
    *   FreeType error code.  0~means success.
@@ -2190,7 +2190,7 @@ FT_BEGIN_HEADER
    * @output:
    *   aface ::
    *     A handle to a new face object.  If `face_index` is greater than or
-   *     equal to zero, it must be non-NULL.
+   *     equal to zero, it must be non-`NULL`.
    *
    * @return:
    *   FreeType error code.  0~means success.
@@ -2242,7 +2242,7 @@ FT_BEGIN_HEADER
    *     In general, if the `face_index` argument is negative, the function's
    *     return value is~0 if the font format is recognized, or non-zero
    *     otherwise.  The function allocates a more or less empty face handle
-   *     in `*aface` (if `aface` isn't NULL); the only two useful fields in
+   *     in `*aface` (if `aface` isn't `NULL`); the only two useful fields in
    *     this special case are `face->num_faces` and `face->style_flags`.
    *     For any negative value of `face_index`, `face->num_faces` gives the
    *     number of faces within the font file.  For the negative value
@@ -2255,7 +2255,7 @@ FT_BEGIN_HEADER
    * @output:
    *   aface ::
    *     A handle to a new face object.  If `face_index` is greater than or
-   *     equal to zero, it must be non-NULL.
+   *     equal to zero, it must be non-`NULL`.
    *
    * @return:
    *   FreeType error code.  0~means success.
@@ -3174,10 +3174,10 @@ FT_BEGIN_HEADER
    *
    * @input:
    *   matrix ::
-   *     A pointer to the transformation's 2x2 matrix.  Use NULL for the
+   *     A pointer to the transformation's 2x2 matrix.  Use `NULL` for the
    *     identity matrix.
    *   delta ::
-   *     A pointer to the translation vector.  Use NULL for the null vector.
+   *     A pointer to the translation vector.  Use `NULL` for the null vector.
    *
    * @note:
    *   The transformation is only applied to scalable image formats after the
@@ -3576,7 +3576,7 @@ FT_BEGIN_HEADER
    *     A handle to the source face object.
    *
    * @return:
-   *   A pointer to the face's PostScript name.  NULL if unavailable.
+   *   A pointer to the face's PostScript name.  `NULL` if unavailable.
    *
    * @note:
    *   The returned pointer is owned by the face and is destroyed with it.
@@ -3841,7 +3841,7 @@ FT_BEGIN_HEADER
    *     provided by the 'cff', 'type1', and 't1cid' modules; see
    *     @random-seed).
    *
-   *   Pass NULL as `data` in @FT_Parameter for a given tag to reset the
+   *   Pass `NULL` as `data` in @FT_Parameter for a given tag to reset the
    *   option and use the library or module default again.
    *
    * @input:
@@ -4056,7 +4056,7 @@ FT_BEGIN_HEADER
    *
    *   p ::
    *     An opaque pointer into `COLR` table data.  The caller must set this
-   *     to NULL before the first call of @FT_Get_Color_Glyph_Layer.
+   *     to `NULL` before the first call of @FT_Get_Color_Glyph_Layer.
    */
   typedef struct  FT_LayerIterator_
   {
@@ -4100,8 +4100,8 @@ FT_BEGIN_HEADER
    * @inout:
    *   iterator ::
    *     An @FT_LayerIterator object.  For the first call you should set
-   *     `iterator->p` to NULL.  For all following calls, simply use the same
-   *     object again.
+   *     `iterator->p` to `NULL`.  For all following calls, simply use the
+   *     same object again.
    *
    * @output:
    *   aglyph_index ::
@@ -4422,8 +4422,8 @@ FT_BEGIN_HEADER
    *     A handle to the source face object.
    *
    * @return:
-   *   A pointer to an array of selector code points, or NULL if there is no
-   *   valid variation selector cmap subtable.
+   *   A pointer to an array of selector code points, or `NULL` if there is
+   *   no valid variation selector cmap subtable.
    *
    * @note:
    *   The last item in the array is~0; the array is owned by the @FT_Face
@@ -4455,7 +4455,7 @@ FT_BEGIN_HEADER
    *
    * @return:
    *   A pointer to an array of variation selector code points that are
-   *   active for the given character, or NULL if the corresponding list is
+   *   active for the given character, or `NULL` if the corresponding list is
    *   empty.
    *
    * @note:
@@ -4489,8 +4489,8 @@ FT_BEGIN_HEADER
    *
    * @return:
    *   A list of all the code points that are specified by this selector
-   *   (both default and non-default codes are returned) or NULL if there is
-   *   no valid cmap or the variation selector is invalid.
+   *   (both default and non-default codes are returned) or `NULL` if there
+   *   is no valid cmap or the variation selector is invalid.
    *
    * @note:
    *   The last item in the array is~0; the array is owned by the @FT_Face

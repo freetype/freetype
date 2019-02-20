@@ -157,7 +157,7 @@ FT_BEGIN_HEADER
    *   otherwise.
    *
    *   After use, the application should deallocate the five tables with
-   *   @FT_OpenType_Free.  A NULL value indicates that the table either
+   *   @FT_OpenType_Free.  A `NULL` value indicates that the table either
    *   doesn't exist in the font, or the application hasn't asked for
    *   validation.
    */

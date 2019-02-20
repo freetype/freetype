@@ -499,7 +499,7 @@ FT_BEGIN_HEADER
    * @note:
    *    String pointers within the @PS_FontInfoRec structure are owned by the
    *    face and don't need to be freed by the caller.  Missing entries in
-   *    the font's FontInfo dictionary are represented by NULL pointers.
+   *    the font's FontInfo dictionary are represented by `NULL` pointers.
    *
    *    If the font's format is not PostScript-based, this function will
    *    return the `FT_Err_Invalid_Argument` error code.
@@ -733,7 +733,7 @@ FT_BEGIN_HEADER
    *    `value` is a void pointer because the values returned can be of
    *    various types.
    *
-   *    If either `value` is NULL or `value_len` is too small, just the
+   *    If either `value` is `NULL` or `value_len` is too small, just the
    *    required memory size for the requested entry is returned.
    *
    *    The `idx` parameter is used, not only to retrieve elements of, for

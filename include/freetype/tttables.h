@@ -659,9 +659,9 @@ FT_BEGIN_HEADER
    *     The index of the SFNT table.
    *
    * @return:
-   *   A type-less pointer to the table.  This will be NULL in case of error,
-   *   or if the corresponding table was not found **OR** loaded from the
-   *   file.
+   *   A type-less pointer to the table.  This will be `NULL` in case of
+   *   error, or if the corresponding table was not found **OR** loaded from
+   *   the file.
    *
    *   Use a typecast according to `tag` to access the structure elements.
    *
@@ -716,7 +716,7 @@ FT_BEGIN_HEADER
    *
    * @inout:
    *   length ::
-   *     If the `length` parameter is NULL, try to load the whole table.
+   *     If the `length` parameter is `NULL`, try to load the whole table.
    *     Return an error code if it fails.
    *
    *     Else, if `*length` is~0, exit immediately while returning the
@@ -778,9 +778,9 @@ FT_BEGIN_HEADER
    *
    * @inout:
    *   tag ::
-   *     The name tag of the SFNT table.  If the value is NULL, `table_index`
-   *     is ignored, and `length` returns the number of SFNT tables in the
-   *     font.
+   *     The name tag of the SFNT table.  If the value is `NULL`,
+   *     `table_index` is ignored, and `length` returns the number of SFNT
+   *     tables in the font.
    *
    * @output:
    *   length ::

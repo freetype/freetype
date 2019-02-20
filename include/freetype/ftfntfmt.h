@@ -69,7 +69,7 @@ FT_BEGIN_HEADER
    *    Input face handle.
    *
    * @return:
-   *  Font format string.  NULL in case of error.
+   *  Font format string.  `NULL` in case of error.
    *
    * @note:
    *  A deprecated name for the same function is `FT_Get_X11_Font_Format`.

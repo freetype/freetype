@@ -1105,7 +1105,7 @@ FT_BEGIN_HEADER
    *
    *   pool_base ::
    *     Previously, the address in memory of the render pool.  Set this to
-   *     NULL.
+   *     `NULL`.
    *
    *   pool_size ::
    *     Previously, the size in bytes of the render pool.  Set this to 0.

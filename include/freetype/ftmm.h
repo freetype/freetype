@@ -356,7 +356,7 @@ FT_BEGIN_HEADER
    *
    * @note:
    *   [Since 2.8.1] To reset all axes to the default values, call the
-   *   function with `num_coords` set to zero and `coords` set to NULL.
+   *   function with `num_coords` set to zero and `coords` set to `NULL`.
    *
    *   [Since 2.9] If `num_coords` is larger than zero, this function sets
    *   the @FT_FACE_FLAG_VARIATION bit in @FT_Face's `face_flags` field
@@ -397,7 +397,7 @@ FT_BEGIN_HEADER
    *
    * @note:
    *   [Since 2.8.1] To reset all axes to the default values, call the
-   *   function with `num_coords` set to zero and `coords` set to NULL.
+   *   function with `num_coords` set to zero and `coords` set to `NULL`.
    *   [Since 2.9] 'Default values' means the currently selected named
    *   instance (or the base font if no named instance is selected).
    *
@@ -478,7 +478,7 @@ FT_BEGIN_HEADER
    *
    * @note:
    *   [Since 2.8.1] To reset all axes to the default values, call the
-   *   function with `num_coords` set to zero and `coords` set to NULL.
+   *   function with `num_coords` set to zero and `coords` set to `NULL`.
    *   [Since 2.9] 'Default values' means the currently selected named
    *   instance (or the base font if no named instance is selected).
    *
@@ -593,7 +593,7 @@ FT_BEGIN_HEADER
    *   Adobe Multiple Master fonts limit the number of designs, and thus the
    *   length of the weight vector to~16.
    *
-   *   If `len` is zero and `weightvector` is NULL, the weight vector array
+   *   If `len` is zero and `weightvector` is `NULL`, the weight vector array
    *   is reset to the default values.
    *
    *   The Adobe documentation also states that the values in the

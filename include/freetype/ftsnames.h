@@ -96,7 +96,7 @@ FT_BEGIN_HEADER
    *   string ::
    *     The 'name' string.  Note that its format differs depending on the
    *     (platform,encoding) pair, being either a string of bytes (without a
-   *     terminating NULL byte) or containing UTF-16BE entities.
+   *     terminating `NULL` byte) or containing UTF-16BE entities.
    *
    *   string_len ::
    *     The length of `string` in bytes.
@@ -194,8 +194,8 @@ FT_BEGIN_HEADER
    *
    * @fields:
    *   string ::
-   *     The language tag string, encoded in UTF-16BE (without trailing NULL
-   *     bytes).
+   *     The language tag string, encoded in UTF-16BE (without trailing
+   *     `NULL` bytes).
    *
    *   string_len ::
    *     The length of `string` in **bytes**.

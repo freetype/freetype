@@ -54,7 +54,7 @@ FT_BEGIN_HEADER
    *
    * @output:
    *   ptr ::
-   *     A variable that receives the service pointer.  Will be NULL if not
+   *     A variable that receives the service pointer.  Will be `NULL` if not
    *     found.
    */
 #ifdef __cplusplus
@@ -106,7 +106,7 @@ FT_BEGIN_HEADER
    *
    * @output:
    *   ptr ::
-   *     A variable that receives the service pointer.  Will be NULL if not
+   *     A variable that receives the service pointer.  Will be `NULL` if not
    *     found.
    */
 #ifdef __cplusplus
@@ -426,7 +426,7 @@ FT_BEGIN_HEADER
    *
    * @output:
    *   ptr ::
-   *     A variable receiving the service data.  NULL if not available.
+   *     A variable receiving the service data.  `NULL` if not available.
    */
 #ifdef __cplusplus
 

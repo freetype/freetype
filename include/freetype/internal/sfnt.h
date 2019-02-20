@@ -160,13 +160,13 @@ FT_BEGIN_HEADER
    *   length ::
    *     The address of the decision variable:
    *
-   *     If length == NULL: Loads the whole table.  Returns an error if
+   *     If `length == NULL`: Loads the whole table.  Returns an error if
    *     'offset' == 0!
    *
-   *     If *length == 0: Exits immediately; returning the length of the
+   *     If `*length == 0`: Exits immediately; returning the length of the
    *     given table or of the font file, depending on the value of 'tag'.
    *
-   *     If *length != 0: Loads the next 'length' bytes of table or font,
+   *     If `*length != 0`: Loads the next 'length' bytes of table or font,
    *     starting at offset 'offset' (in table or font too).
    *
    * @output:
@@ -382,7 +382,7 @@ FT_BEGIN_HEADER
    *     The glyph index.
    *
    *   PSname ::
-   *     The address of a string pointer.  Will be NULL in case of error,
+   *     The address of a string pointer.  Will be `NULL` in case of error,
    *     otherwise it is a pointer to the glyph name.
    *
    *     You must not modify the returned string!
@@ -498,8 +498,8 @@ FT_BEGIN_HEADER
    * @inout:
    *   iterator ::
    *     An @FT_LayerIterator object.  For the first call you should set
-   *     `iterator->p` to NULL.  For all following calls, simply use the same
-   *     object again.
+   *     `iterator->p` to `NULL`.  For all following calls, simply use the
+   *     same object again.
    *
    * @output:
    *   aglyph_index ::
@@ -579,7 +579,7 @@ FT_BEGIN_HEADER
    *
    * @inout:
    *   name ::
-   *     The address of an allocated string pointer.  NULL if no name is
+   *     The address of an allocated string pointer.  `NULL` if no name is
    *     present.
    *
    * @return:

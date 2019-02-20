@@ -118,8 +118,8 @@ FT_BEGIN_HEADER
    * @output:
    *   new_names ::
    *     An array of guessed file names in which the resource forks may
-   *     exist.  If 'new_names[N]' is NULL, the guessed file name is equal to
-   *     `base_name`.
+   *     exist.  If 'new_names[N]' is `NULL`, the guessed file name is equal
+   *     to `base_name`.
    *
    *   offsets ::
    *     An array of guessed file offsets.  'offsets[N]' holds the file
