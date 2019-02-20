@@ -238,9 +238,10 @@ FT_BEGIN_HEADER
    *
    * @output:
    *   apalette ::
-   *     An array of color entries for a palette with index `palette_index`.
-   *     If `apalette` is set to NULL, no array gets returned (and no color
-   *     entries can be modified).
+   *     An array of color entries for a palette with index `palette_index`,
+   *     having `num_palette_entries` elements (as found in the
+   *     `FT_Palette_Data` structure).  If `apalette` is set to NULL, no
+   *     array gets returned (and no color entries can be modified).
    *
    *     In case the font doesn't support color palettes, NULL is returned.
    *

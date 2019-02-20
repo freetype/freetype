@@ -677,9 +677,14 @@ FT_BEGIN_HEADER
    *    Return the horizontal kerning value between two glyphs.
    *
    * @input:
-   *    face :: A handle to the source face object.  left_glyph :: The left
-   *    glyph index.
-   *    right_glyph :: The right glyph index.
+   *    face ::
+   *      A handle to the source face object.
+   *
+   *    left_glyph ::
+   *      The left glyph index.
+   *
+   *    right_glyph ::
+   *      The right glyph index.
    *
    * @return:
    *    The kerning value in font units.
