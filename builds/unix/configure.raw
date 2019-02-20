@@ -37,7 +37,7 @@ AC_SUBST(EXEEXT)
 PKG_PROG_PKG_CONFIG([0.24])
 
 LT_INIT(win32-dll)
-AC_CHECK_HEADER([windows.h],[LT_PROG_RC])
+AC_CHECK_HEADER([windows.h], [LT_PROG_RC])
 
 
 # checks for native programs to generate building tool
@@ -196,7 +196,7 @@ AC_SYS_LARGEFILE
 AC_ARG_ENABLE([mmap],
   AS_HELP_STRING([--disable-mmap],
                  [do not check mmap() and do not use]),
-  [enable_mmap="no"],[enable_mmap="yes"])
+  [enable_mmap="no"], [enable_mmap="yes"])
 if test "x${enable_mmap}" != "xno"; then
   AC_FUNC_MMAP
 fi
@@ -315,7 +315,7 @@ found_visibility_flag=no
 AC_MSG_CHECKING([for -fvisibility=hidden compiler flag])
 orig_CFLAGS="${CFLAGS}"
 CFLAGS="${CFLAGS} -fvisibility=hidden"
-AC_LINK_IFELSE([AC_LANG_PROGRAM([],[])],
+AC_LINK_IFELSE([AC_LANG_PROGRAM([], [])],
                [found_visibility_flag=yes
                 AC_MSG_RESULT(yes)],
                [CFLAGS="${orig_CFLAGS}"
@@ -325,7 +325,7 @@ if test "${found_visibility_flag}" = "no"; then
   AC_MSG_CHECKING([for -xldscope=hidden compiler flag])
   orig_CFLAGS="${CFLAGS}"
   CFLAGS="${CFLAGS} -xldscope=hidden"
-  AC_LINK_IFELSE([AC_LANG_PROGRAM([],[])],
+  AC_LINK_IFELSE([AC_LANG_PROGRAM([], [])],
                  [found_visibility_flag=yes
                   AC_MSG_RESULT(yes)],
                  [CFLAGS="${orig_CFLAGS}"

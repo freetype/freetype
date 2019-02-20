@@ -79,6 +79,11 @@ CHANGES BETWEEN 2.9.1 and 2.10
       functions limited to Adobe MultiMaster fonts to directly set and
       get the weight vector.
 
+    - Support for Position Independent Code as needed by  systems that
+      prohibit  automatic  address  fixups,  such  as BREW,  has  been
+      removed.  [Compilation with modern compilers that use flags like
+      `-fPIC' or `-fPIE' is not affected.]
+
 
 ======================================================================
 

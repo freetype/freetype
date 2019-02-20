@@ -860,7 +860,7 @@
           case cff_op_flex1:
           case cff_op_callsubr:
           case cff_op_callgsubr:
-            /* depracated opcodes */
+            /* deprecated opcodes */
           case cff_op_dotsection:
             /* invalid Type 1 opcodes */
           case cff_op_hsbw:
