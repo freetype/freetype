@@ -144,7 +144,7 @@ FT_BEGIN_HEADER
    *     Adobe MM fonts if possible.
    *
    *   strid ::
-   *     The axis name entry in the font's `name` table.  This is another
+   *     The axis name entry in the font's 'name' table.  This is another
    *     (and often better) version of the 'name' field for TrueType GX or
    *     OpenType variation fonts.  Not meaningful for Adobe MM fonts.
    *
@@ -184,10 +184,10 @@ FT_BEGIN_HEADER
    *     entry for each axis.
    *
    *   strid ::
-   *     The entry in `name` table identifying this instance.
+   *     The entry in 'name' table identifying this instance.
    *
    *   psid ::
-   *     The entry in `name` table identifying a PostScript name for this
+   *     The entry in 'name' table identifying a PostScript name for this
    *     instance.  Value 0xFFFF indicates a missing entry.
    */
   typedef struct  FT_Var_Named_Style_
@@ -222,7 +222,7 @@ FT_BEGIN_HEADER
    *
    *   num_namedstyles ::
    *     The number of named styles; a 'named style' is a tuple of design
-   *     coordinates that has a string ID (in the `name` table) associated
+   *     coordinates that has a string ID (in the 'name' table) associated
    *     with it.  The font can tell the user that, for example,
    *     [Weight=1.5,Width=1.1] is 'Bold'.  Another name for 'named style' is
    *     'named instance'.

@@ -308,7 +308,7 @@ FT_BEGIN_HEADER
    *   `horiAdvance` or `vertAdvance`; you have to manually adjust these
    *   values to account for the added width and height.
    *
-   *   FreeType doesn't use the `VORG` table data for CFF fonts because it
+   *   FreeType doesn't use the 'VORG' table data for CFF fonts because it
    *   doesn't have an interface to quickly retrieve the glyph height.  The
    *   y~coordinate of the vertical origin can be simply computed as
    *   `vertBearingY + height` after loading a glyph.
@@ -1032,7 +1032,7 @@ FT_BEGIN_HEADER
    *
    *   For an OpenType variation font, the values of the following fields can
    *   change after a call to @FT_Set_Var_Design_Coordinates (and friends) if
-   *   the font contains an `MVAR` table: `ascender`, `descender`, `height`,
+   *   the font contains an 'MVAR' table: `ascender`, `descender`, `height`,
    *   `underline_position`, and `underline_thickness`.
    *
    *   Especially for TrueType fonts see also the documentation for
@@ -1137,7 +1137,7 @@ FT_BEGIN_HEADER
    *     The face contains kerning information.  If set, the kerning distance
    *     can be retrieved using the function @FT_Get_Kerning.  Otherwise the
    *     function always return the vector (0,0).  Note that FreeType doesn't
-   *     handle kerning data from the SFNT `GPOS` table (as present in many
+   *     handle kerning data from the SFNT 'GPOS' table (as present in many
    *     OpenType fonts).
    *
    *   FT_FACE_FLAG_FAST_GLYPHS ::
@@ -1163,7 +1163,7 @@ FT_BEGIN_HEADER
    *
    *   FT_FACE_FLAG_HINTER ::
    *     The font driver has a hinting machine of its own.  For example, with
-   *     TrueType fonts, it makes sense to use data from the SFNT `gasp`
+   *     TrueType fonts, it makes sense to use data from the SFNT 'gasp'
    *     table only if the native TrueType hinting engine (with the bytecode
    *     interpreter) is available and active.
    *
@@ -1482,7 +1482,7 @@ FT_BEGIN_HEADER
    * @note:
    *   The style information as provided by FreeType is very basic.  More
    *   details are beyond the scope and should be done on a higher level (for
-   *   example, by analyzing various fields of the `OS/2` table in SFNT based
+   *   example, by analyzing various fields of the 'OS/2' table in SFNT based
    *   fonts).
    */
 #define FT_STYLE_FLAG_ITALIC  ( 1 << 0 )
@@ -2969,7 +2969,7 @@ FT_BEGIN_HEADER
    *     bitmaps, using the @FT_PIXEL_MODE_GRAY format.
    *
    *     [Since 2.10] If the glyph index contains an entry in the face's
-   *     `COLR` table with a `CPAL` palette table (as defined in the OpenType
+   *     'COLR' table with a 'CPAL' palette table (as defined in the OpenType
    *     specification), make @FT_Render_Glyph provide a default blending of
    *     the color glyph layers associated with the glyph index, using the
    *     same bitmap format as embedded color bitmap images.  This is mainly
@@ -2980,7 +2980,7 @@ FT_BEGIN_HEADER
    *
    *   FT_LOAD_COMPUTE_METRICS ::
    *     [Since 2.6.1] Compute glyph metrics from the glyph data, without the
-   *     use of bundled metrics tables (for example, the `hdmx` table in
+   *     use of bundled metrics tables (for example, the 'hdmx' table in
    *     TrueType fonts).  This flag is mainly used by font validating or
    *     font editing applications, which need to ignore, verify, or edit
    *     those tables.
@@ -3460,7 +3460,7 @@ FT_BEGIN_HEADER
    *   out of the scope of this API function -- they can be implemented
    *   through format-specific interfaces.
    *
-   *   Kerning for OpenType fonts implemented in a `GPOS` table is not
+   *   Kerning for OpenType fonts implemented in a 'GPOS' table is not
    *   supported; use @FT_HAS_KERNING to find out whether a font has data
    *   that can be extracted with `FT_Get_Kerning`.
    */
@@ -3590,7 +3590,7 @@ FT_BEGIN_HEADER
    *
    *   [Since 2.9] Special PostScript names for named instances are only
    *   returned if the named instance is set with @FT_Set_Named_Instance (and
-   *   the font has corresponding entries in its `fvar` table).  If
+   *   the font has corresponding entries in its 'fvar' table).  If
    *   @FT_IS_VARIATION returns true, the algorithmically derived PostScript
    *   name is provided, not looking up special entries for named instances.
    */
@@ -3941,7 +3941,7 @@ FT_BEGIN_HEADER
    *   FT_SUBGLYPH_FLAG_XXX
    *
    * @description:
-   *   A list of constants describing subglyphs.  Please refer to the `glyf`
+   *   A list of constants describing subglyphs.  Please refer to the 'glyf'
    *   table description in the OpenType specification for the meaning of the
    *   various flags (which get synthesized for non-OpenType subglyphs).
    *
@@ -4030,11 +4030,11 @@ FT_BEGIN_HEADER
    *   Glyph Layer Management
    *
    * @abstract:
-   *   Retrieving and manipulating OpenType's `COLR` table data.
+   *   Retrieving and manipulating OpenType's 'COLR' table data.
    *
    * @description:
    *   The functions described here allow access of colored glyph layer data
-   *   in OpenType's `COLR` tables.
+   *   in OpenType's 'COLR' tables.
    */
 
 
@@ -4055,7 +4055,7 @@ FT_BEGIN_HEADER
    *     The current layer.  Will be set by @FT_Get_Color_Glyph_Layer.
    *
    *   p ::
-   *     An opaque pointer into `COLR` table data.  The caller must set this
+   *     An opaque pointer into 'COLR' table data.  The caller must set this
    *     to `NULL` before the first call of @FT_Get_Color_Glyph_Layer.
    */
   typedef struct  FT_LayerIterator_
@@ -4073,7 +4073,7 @@ FT_BEGIN_HEADER
    *   FT_Get_Color_Glyph_Layer
    *
    * @description:
-   *   This is an interface to the `COLR` table in OpenType fonts to
+   *   This is an interface to the 'COLR' table in OpenType fonts to
    *   iteratively retrieve the colored glyph layers associated with the
    *   current glyph slot.
    *

@@ -58,7 +58,7 @@ FT_BEGIN_HEADER
    *
    * @fields:
    *   tag ::
-   *     Must be 'ttc ' to indicate a TrueType collection.
+   *     Must be 'ttc~' to indicate a TrueType collection.
    *
    *   version ::
    *     The version number.
@@ -1395,7 +1395,7 @@ FT_BEGIN_HEADER
    *
    *   cvt ::
    *     The face's original control value table.  Coordinates are expressed
-   *     in unscaled font units.  Comes from the 'cvt ' table.  Ignored for
+   *     in unscaled font units.  Comes from the 'cvt~' table.  Ignored for
    *     Type 2 fonts.
    *
    *   interpreter ::

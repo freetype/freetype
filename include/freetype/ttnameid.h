@@ -36,7 +36,7 @@ FT_BEGIN_HEADER
   /**************************************************************************
    *
    * Possible values for the 'platform' identifier code in the name records
-   * of an SFNT `name` table.
+   * of an SFNT 'name' table.
    *
    */
 
@@ -291,7 +291,7 @@ FT_BEGIN_HEADER
    *
    * @description:
    *   Possible values of the language identifier field in the name records
-   *   of the SFNT `name` table if the 'platform' identifier code is
+   *   of the SFNT 'name' table if the 'platform' identifier code is
    *   @TT_PLATFORM_MACINTOSH.  These values are also used as return values
    *   for function @FT_Get_CMap_Language_ID.
    *
@@ -431,7 +431,7 @@ FT_BEGIN_HEADER
    *
    * @description:
    *   Possible values of the language identifier field in the name records
-   *   of the SFNT `name` table if the 'platform' identifier code is
+   *   of the SFNT 'name' table if the 'platform' identifier code is
    *   @TT_PLATFORM_MICROSOFT.  These values are also used as return values
    *   for function @FT_Get_CMap_Language_ID.
    *
@@ -441,7 +441,7 @@ FT_BEGIN_HEADER
    *
    *   however, we only provide macros for language identifiers present in
    *   the OpenType specification: Microsoft has abandoned the concept of
-   *   LCIDs (language code identifiers), and format~1 of the `name` table
+   *   LCIDs (language code identifiers), and format~1 of the 'name' table
    *   provides a better mechanism for languages not covered here.
    *
    *   More legacy values not listed in the reference can be found in the
@@ -787,7 +787,7 @@ FT_BEGIN_HEADER
    *
    * @description:
    *   Possible values of the 'name' identifier field in the name records of
-   *   an SFNT `name` table.  These values are platform independent.
+   *   an SFNT 'name' table.  These values are platform independent.
    */
 
 #define TT_NAME_ID_COPYRIGHT              0
@@ -841,7 +841,7 @@ FT_BEGIN_HEADER
    *
    * @description:
    *   Possible bit mask values for the `ulUnicodeRangeX` fields in an SFNT
-   *   `OS/2` table.
+   *   'OS/2' table.
    */
 
   /* ulUnicodeRange1 */

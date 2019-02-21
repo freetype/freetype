@@ -2,7 +2,7 @@
  *
  * ftsnames.h
  *
- *   Simple interface to access SFNT `name` tables (which are used
+ *   Simple interface to access SFNT 'name' tables (which are used
  *   to hold font names, copyright info, notices, etc.) (specification).
  *
  *   This is _not_ used to retrieve glyph names!
@@ -50,7 +50,7 @@ FT_BEGIN_HEADER
    *
    * @description:
    *   The TrueType and OpenType specifications allow the inclusion of a
-   *   special names table (`name`) in font files.  This table contains
+   *   special names table ('name') in font files.  This table contains
    *   textual (and internationalized) information regarding the font, like
    *   family name, copyright, version, etc.
    *
@@ -67,7 +67,7 @@ FT_BEGIN_HEADER
    *   FT_SfntName
    *
    * @description:
-   *   A structure used to model an SFNT `name` table entry.
+   *   A structure used to model an SFNT 'name' table entry.
    *
    * @fields:
    *   platform_id ::
@@ -124,14 +124,14 @@ FT_BEGIN_HEADER
    *   FT_Get_Sfnt_Name_Count
    *
    * @description:
-   *   Retrieve the number of name strings in the SFNT `name` table.
+   *   Retrieve the number of name strings in the SFNT 'name' table.
    *
    * @input:
    *   face ::
    *     A handle to the source face.
    *
    * @return:
-   *   The number of strings in the `name` table.
+   *   The number of strings in the 'name' table.
    *
    * @note:
    *   This function always returns an error if the config macro
@@ -147,7 +147,7 @@ FT_BEGIN_HEADER
    *   FT_Get_Sfnt_Name
    *
    * @description:
-   *   Retrieve a string of the SFNT `name` table for a given index.
+   *   Retrieve a string of the SFNT 'name' table for a given index.
    *
    * @input:
    *   face ::
@@ -169,10 +169,10 @@ FT_BEGIN_HEADER
    *   yourself; FreeType takes care of it if you call @FT_Done_Face.
    *
    *   Use @FT_Get_Sfnt_Name_Count to get the total number of available
-   *   `name` table entries, then do a loop until you get the right platform,
+   *   'name' table entries, then do a loop until you get the right platform,
    *   encoding, and name ID.
    *
-   *   `name` table format~1 entries can use language tags also, see
+   *   'name' table format~1 entries can use language tags also, see
    *   @FT_Get_Sfnt_LangTag.
    *
    *   This function always returns an error if the config macro
@@ -190,7 +190,7 @@ FT_BEGIN_HEADER
    *   FT_SfntLangTag
    *
    * @description:
-   *   A structure to model a language tag entry from an SFNT `name` table.
+   *   A structure to model a language tag entry from an SFNT 'name' table.
    *
    * @fields:
    *   string ::
@@ -222,7 +222,7 @@ FT_BEGIN_HEADER
    *
    * @description:
    *   Retrieve the language tag associated with a language ID of an SFNT
-   *   `name` table entry.
+   *   'name' table entry.
    *
    * @input:
    *   face ::
@@ -234,7 +234,7 @@ FT_BEGIN_HEADER
    *
    * @output:
    *   alangTag ::
-   *     The language tag associated with the `name` table entry's language
+   *     The language tag associated with the 'name' table entry's language
    *     ID.
    *
    * @return:
@@ -245,7 +245,7 @@ FT_BEGIN_HEADER
    *   null-terminated.  Note that you don't have to deallocate `string` by
    *   yourself; FreeType takes care of it if you call @FT_Done_Face.
    *
-   *   Only `name` table format~1 supports language tags.  For format~0
+   *   Only 'name' table format~1 supports language tags.  For format~0
    *   tables, this function always returns FT_Err_Invalid_Table.  For
    *   invalid format~1 language ID values, FT_Err_Invalid_Argument is
    *   returned.

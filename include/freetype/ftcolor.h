@@ -41,11 +41,11 @@ FT_BEGIN_HEADER
    *   Glyph Color Management
    *
    * @abstract:
-   *   Retrieving and manipulating OpenType's `CPAL` table data.
+   *   Retrieving and manipulating OpenType's 'CPAL' table data.
    *
    * @description:
    *   The functions described here allow access and manipulation of color
-   *   palette entries in OpenType's `CPAL` tables.
+   *   palette entries in OpenType's 'CPAL' tables.
    */
 
 
@@ -55,7 +55,7 @@ FT_BEGIN_HEADER
    *   FT_Color
    *
    * @description:
-   *   This structure models a BGRA color value of a `CPAL` palette entry.
+   *   This structure models a BGRA color value of a 'CPAL' palette entry.
    *
    *   The used color space is sRGB; the colors are not pre-multiplied, and
    *   alpha values must be explicitly set.
@@ -118,7 +118,7 @@ FT_BEGIN_HEADER
    *   FT_Palette_Data
    *
    * @description:
-   *   This structure holds the data of the `CPAL` table.
+   *   This structure holds the data of the 'CPAL' table.
    *
    * @fields:
    *   num_palettes ::
@@ -126,13 +126,13 @@ FT_BEGIN_HEADER
    *
    *   palette_name_ids ::
    *     A read-only array of palette name IDs with `num_palettes` elements,
-   *     corresponding to entries like 'dark' or 'light' in the font's `name`
+   *     corresponding to entries like 'dark' or 'light' in the font's 'name'
    *     table.
    *
-   *     An empty name ID in the `CPAL` table gets represented as value
+   *     An empty name ID in the 'CPAL' table gets represented as value
    *     0xFFFF.
    *
-   *     `NULL` if the font's `CPAL` table doesn't contain appropriate data.
+   *     `NULL` if the font's 'CPAL' table doesn't contain appropriate data.
    *
    *   palette_flags ::
    *     A read-only array of palette flags with `num_palettes` elements.
@@ -140,7 +140,7 @@ FT_BEGIN_HEADER
    *     @FT_PALETTE_FOR_LIGHT_BACKGROUND and
    *     @FT_PALETTE_FOR_DARK_BACKGROUND.
    *
-   *     `NULL` if the font's `CPAL` table doesn't contain appropriate data.
+   *     `NULL` if the font's 'CPAL' table doesn't contain appropriate data.
    *
    *   num_palette_entries ::
    *     The number of entries in a single palette.  All palettes have the
@@ -150,14 +150,14 @@ FT_BEGIN_HEADER
    *     A read-only array of palette entry name IDs with
    *     `num_palette_entries`.  In each palette, entries with the same index
    *     have the same function.  For example, index~0 might correspond to
-   *     string 'outline' in the font's `name` table to indicate that this
+   *     string 'outline' in the font's 'name' table to indicate that this
    *     palette entry is used for outlines, index~1 might correspond to
    *     'fill' to indicate the filling color palette entry, etc.
    *
-   *     An empty entry name ID in the `CPAL` table gets represented as value
+   *     An empty entry name ID in the 'CPAL' table gets represented as value
    *     0xFFFF.
    *
-   *     `NULL` if the font's `CPAL` table doesn't contain appropriate data.
+   *     `NULL` if the font's 'CPAL' table doesn't contain appropriate data.
    *
    * @note:
    *   Use function @FT_Get_Sfnt_Name to map name IDs and entry name IDs to
@@ -226,7 +226,7 @@ FT_BEGIN_HEADER
    *
    * A corollary of (2) is that calling the function, then modifying some
    * values, then calling the function again with the same arguments resets
-   * all color entries to the original `CPAL` values; all user modifications
+   * all color entries to the original 'CPAL' values; all user modifications
    * are lost.
    *
    * @input:
@@ -273,7 +273,7 @@ FT_BEGIN_HEADER
    *   FT_Palette_Set_Foreground_Color
    *
    * @description:
-   *   `COLR` uses palette index 0xFFFF to indicate a 'text foreground
+   *   'COLR' uses palette index 0xFFFF to indicate a 'text foreground
    *   color'.  This function sets this value.
    *
    * @input:
@@ -291,7 +291,7 @@ FT_BEGIN_HEADER
    *   white opaque (BGRA value 0xFFFFFFFF) if
    *   @FT_PALETTE_FOR_DARK_BACKGROUND is present for the current palette,
    *   and black opaque (BGRA value 0x000000FF) otherwise, including the case
-   *   that no palette types are available in the `CPAL` table.
+   *   that no palette types are available in the 'CPAL' table.
    *
    *   This function always returns an error if the config macro
    *   `TT_CONFIG_OPTION_COLOR_LAYERS` is not defined in `ftoption.h`.

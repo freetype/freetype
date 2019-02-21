@@ -299,13 +299,13 @@ FT_BEGIN_HEADER
    *   By default, FreeType 2 is compiled with the 'psnames' module.  This
    *   module is in charge of converting a glyph name string into a Unicode
    *   value, or return a Macintosh standard glyph name for the use with the
-   *   TrueType `post` table.
+   *   TrueType 'post' table.
    *
    *   Undefine this macro if you do not want 'psnames' compiled in your
    *   build of FreeType.  This has the following effects:
    *
    *   - The TrueType driver will provide its own set of glyph names, if you
-   *     build it to support postscript names in the TrueType `post` table,
+   *     build it to support postscript names in the TrueType 'post' table,
    *     but will not synthesize a missing Unicode charmap.
    *
    *   - The Type~1 driver will not be able to synthesize a Unicode charmap
@@ -342,7 +342,7 @@ FT_BEGIN_HEADER
    *   (mac dfont, mac resource, macbinary containing a mac resource) on
    *   non-Mac platforms.
    *
-   *   Note that the `FOND` resource isn't checked.
+   *   Note that the 'FOND' resource isn't checked.
    */
 #define FT_CONFIG_OPTION_MAC_FONTS
 
@@ -527,7 +527,7 @@ FT_BEGIN_HEADER
   /**************************************************************************
    *
    * Define `TT_CONFIG_OPTION_COLOR_LAYERS` if you want to support coloured
-   * outlines (from the `COLR`/`CPAL` tables) in all formats using the 'sfnt'
+   * outlines (from the 'COLR'/'CPAL' tables) in all formats using the 'sfnt'
    * module (namely TrueType~& OpenType).
    */
 #define TT_CONFIG_OPTION_COLOR_LAYERS
@@ -684,8 +684,8 @@ FT_BEGIN_HEADER
   /**************************************************************************
    *
    * Define `TT_CONFIG_OPTION_GX_VAR_SUPPORT` if you want to include support
-   * for Apple's distortable font technology (`fvar`, `gvar`, `cvar`, and
-   * `avar` tables).  Tagged 'Font Variations', this is now part of OpenType
+   * for Apple's distortable font technology ('fvar', 'gvar', 'cvar', and
+   * 'avar' tables).  Tagged 'Font Variations', this is now part of OpenType
    * also.  This has many similarities to Type~1 Multiple Masters support.
    */
 #define TT_CONFIG_OPTION_GX_VAR_SUPPORT
@@ -694,7 +694,7 @@ FT_BEGIN_HEADER
   /**************************************************************************
    *
    * Define `TT_CONFIG_OPTION_BDF` if you want to include support for an
-   * embedded `BDF ` table within SFNT-based bitmap formats.
+   * embedded 'BDF~' table within SFNT-based bitmap formats.
    */
 #define TT_CONFIG_OPTION_BDF
 

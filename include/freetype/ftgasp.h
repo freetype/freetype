@@ -2,7 +2,7 @@
  *
  * ftgasp.h
  *
- *   Access of TrueType's `gasp` table (specification).
+ *   Access of TrueType's 'gasp' table (specification).
  *
  * Copyright 2007-2019 by
  * David Turner, Robert Wilhelm, and Werner Lemberg.
@@ -41,11 +41,11 @@ FT_BEGIN_HEADER
    *   Gasp Table
    *
    * @abstract:
-   *   Retrieving TrueType `gasp` table entries.
+   *   Retrieving TrueType 'gasp' table entries.
    *
    * @description:
    *   The function @FT_Get_Gasp can be used to query a TrueType or OpenType
-   *   font for specific entries in its `gasp` table, if any.  This is mainly
+   *   font for specific entries in its 'gasp' table, if any.  This is mainly
    *   useful when implementing native TrueType hinting with the bytecode
    *   interpreter to duplicate the Windows text rendering results.
    */
@@ -106,7 +106,7 @@ FT_BEGIN_HEADER
    *
    * @description:
    *   For a TrueType or OpenType font file, return the rasterizer behaviour
-   *   flags from the font's `gasp` table corresponding to a given character
+   *   flags from the font's 'gasp' table corresponding to a given character
    *   pixel size.
    *
    * @input:
@@ -118,7 +118,7 @@ FT_BEGIN_HEADER
    *
    * @return:
    *   Bit flags (see @FT_GASP_XXX), or @FT_GASP_NO_TABLE if there is no
-   *   `gasp` table in the face.
+   *   'gasp' table in the face.
    *
    * @note:
    *   If you want to use the MM functionality of OpenType variation fonts

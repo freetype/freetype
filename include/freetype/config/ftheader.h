@@ -624,8 +624,8 @@
    *
    * @description:
    *   A macro used in `#include` statements to name the file containing the
-   *   optional FreeType~2 API which validates OpenType tables (`BASE`,
-   *   `GDEF`, `GPOS`, `GSUB`, `JSTF`).
+   *   optional FreeType~2 API which validates OpenType tables ('BASE',
+   *   'GDEF', 'GPOS', 'GSUB', 'JSTF').
    *
    */
 #define FT_OPENTYPE_VALIDATE_H  <freetype/ftotval.h>
@@ -638,8 +638,8 @@
    *
    * @description:
    *   A macro used in `#include` statements to name the file containing the
-   *   optional FreeType~2 API which validates TrueTypeGX/AAT tables (`feat`,
-   *   `mort`, `morx`, `bsln`, `just`, `kern`, `opbd`, `trak`, `prop`).
+   *   optional FreeType~2 API which validates TrueTypeGX/AAT tables ('feat',
+   *   'mort', 'morx', 'bsln', 'just', 'kern', 'opbd', 'trak', 'prop').
    *
    */
 #define FT_GX_VALIDATE_H  <freetype/ftgxval.h>
@@ -765,7 +765,7 @@
    *
    * @description:
    *   A macro used in `#include` statements to name the file containing the
-   *   FreeType~2 API which handles the OpenType `CPAL` table.
+   *   FreeType~2 API which handles the OpenType 'CPAL' table.
    */
 #define FT_COLOR_H  <freetype/ftcolor.h>
 

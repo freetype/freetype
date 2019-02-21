@@ -117,8 +117,8 @@ FT_BEGIN_HEADER
    *   TT_HoriHeader
    *
    * @description:
-   *   A structure to model a TrueType horizontal header, the `hhea` table,
-   *   as well as the corresponding horizontal metrics table, `hmtx`.
+   *   A structure to model a TrueType horizontal header, the 'hhea' table,
+   *   as well as the corresponding horizontal metrics table, 'hmtx'.
    *
    * @fields:
    *   Version ::
@@ -132,7 +132,7 @@ FT_BEGIN_HEADER
    *     font designer, and often reflects only a portion of the glyphs found
    *     in the font (maybe ASCII).
    *
-   *     You should use the `sTypoAscender` field of the `OS/2` table instead
+   *     You should use the `sTypoAscender` field of the 'OS/2' table instead
    *     if you want the correct one.
    *
    *   Descender ::
@@ -143,7 +143,7 @@ FT_BEGIN_HEADER
    *     font designer, and often reflects only a portion of the glyphs found
    *     in the font (maybe ASCII).
    *
-   *     You should use the `sTypoDescender` field of the `OS/2` table
+   *     You should use the `sTypoDescender` field of the 'OS/2' table
    *     instead if you want the correct one.
    *
    *   Line_Gap ::
@@ -183,19 +183,19 @@ FT_BEGIN_HEADER
    *     Always~0.
    *
    *   number_Of_HMetrics ::
-   *     Number of HMetrics entries in the `hmtx` table -- this value can be
+   *     Number of HMetrics entries in the 'hmtx' table -- this value can be
    *     smaller than the total number of glyphs in the font.
    *
    *   long_metrics ::
-   *     A pointer into the `hmtx` table.
+   *     A pointer into the 'hmtx' table.
    *
    *   short_metrics ::
-   *     A pointer into the `hmtx` table.
+   *     A pointer into the 'hmtx' table.
    *
    * @note:
    *   For an OpenType variation font, the values of the following fields can
    *   change after a call to @FT_Set_Var_Design_Coordinates (and friends) if
-   *   the font contains an `MVAR` table: `caret_Slope_Rise`,
+   *   the font contains an 'MVAR' table: `caret_Slope_Rise`,
    *   `caret_Slope_Run`, and `caret_Offset`.
    */
   typedef struct  TT_HoriHeader_
@@ -221,7 +221,7 @@ FT_BEGIN_HEADER
 
     /* The following fields are not defined by the OpenType specification */
     /* but they are used to connect the metrics header to the relevant    */
-    /* `hmtx` table.                                                      */
+    /* 'hmtx' table.                                                      */
 
     void*      long_metrics;
     void*      short_metrics;
@@ -235,8 +235,8 @@ FT_BEGIN_HEADER
    *   TT_VertHeader
    *
    * @description:
-   *   A structure used to model a TrueType vertical header, the `vhea`
-   *   table, as well as the corresponding vertical metrics table, `vmtx`.
+   *   A structure used to model a TrueType vertical header, the 'vhea'
+   *   table, as well as the corresponding vertical metrics table, 'vmtx'.
    *
    * @fields:
    *   Version ::
@@ -250,7 +250,7 @@ FT_BEGIN_HEADER
    *     font designer, and often reflects only a portion of the glyphs found
    *     in the font (maybe ASCII).
    *
-   *     You should use the `sTypoAscender` field of the `OS/2` table instead
+   *     You should use the `sTypoAscender` field of the 'OS/2' table instead
    *     if you want the correct one.
    *
    *   Descender ::
@@ -261,7 +261,7 @@ FT_BEGIN_HEADER
    *     font designer, and often reflects only a portion of the glyphs found
    *     in the font (maybe ASCII).
    *
-   *     You should use the `sTypoDescender` field of the `OS/2` table
+   *     You should use the `sTypoDescender` field of the 'OS/2' table
    *     instead if you want the correct one.
    *
    *   Line_Gap ::
@@ -301,19 +301,19 @@ FT_BEGIN_HEADER
    *     Always~0.
    *
    *   number_Of_VMetrics ::
-   *     Number of VMetrics entries in the `vmtx` table -- this value can be
+   *     Number of VMetrics entries in the 'vmtx' table -- this value can be
    *     smaller than the total number of glyphs in the font.
    *
    *   long_metrics ::
-   *     A pointer into the `vmtx` table.
+   *     A pointer into the 'vmtx' table.
    *
    *   short_metrics ::
-   *     A pointer into the `vmtx` table.
+   *     A pointer into the 'vmtx' table.
    *
    * @note:
    *   For an OpenType variation font, the values of the following fields can
    *   change after a call to @FT_Set_Var_Design_Coordinates (and friends) if
-   *   the font contains an `MVAR` table: `Ascender`, `Descender`,
+   *   the font contains an 'MVAR' table: `Ascender`, `Descender`,
    *   `Line_Gap`, `caret_Slope_Rise`, `caret_Slope_Run`, and `caret_Offset`.
    */
   typedef struct  TT_VertHeader_
@@ -339,7 +339,7 @@ FT_BEGIN_HEADER
 
     /* The following fields are not defined by the OpenType specification */
     /* but they are used to connect the metrics header to the relevant    */
-    /* `vmtx` table.                                                      */
+    /* 'vmtx' table.                                                      */
 
     void*      long_metrics;
     void*      short_metrics;
@@ -353,16 +353,16 @@ FT_BEGIN_HEADER
    *   TT_OS2
    *
    * @description:
-   *   A structure to model a TrueType `OS/2` table.  All fields comply to
+   *   A structure to model a TrueType 'OS/2' table.  All fields comply to
    *   the OpenType specification.
    *
-   *   Note that we now support old Mac fonts that do not include an `OS/2`
+   *   Note that we now support old Mac fonts that do not include an 'OS/2'
    *   table.  In this case, the `version` field is always set to 0xFFFF.
    *
    * @note:
    *   For an OpenType variation font, the values of the following fields can
    *   change after a call to @FT_Set_Var_Design_Coordinates (and friends) if
-   *   the font contains an `MVAR` table: `sCapHeight`, `sTypoAscender`,
+   *   the font contains an 'MVAR' table: `sCapHeight`, `sTypoAscender`,
    *   `sTypoDescender`, `sTypoLineGap`, `sxHeight`, `usWinAscent`,
    *   `usWinDescent`, `yStrikeoutPosition`, `yStrikeoutSize`,
    *   `ySubscriptXOffset`, `ySubScriptXSize`, `ySubscriptYOffset`,
@@ -437,7 +437,7 @@ FT_BEGIN_HEADER
    *   TT_Postscript
    *
    * @description:
-   *   A structure to model a TrueType `post` table.  All fields comply to
+   *   A structure to model a TrueType 'post' table.  All fields comply to
    *   the OpenType specification.  This structure does not reference a
    *   font's PostScript glyph names; use @FT_Get_Glyph_Name to retrieve
    *   them.
@@ -445,7 +445,7 @@ FT_BEGIN_HEADER
    * @note:
    *   For an OpenType variation font, the values of the following fields can
    *   change after a call to @FT_Set_Var_Design_Coordinates (and friends) if
-   *   the font contains an `MVAR` table: `underlinePosition` and
+   *   the font contains an 'MVAR' table: `underlinePosition` and
    *   `underlineThickness`.
    */
   typedef struct  TT_Postscript_
@@ -460,7 +460,7 @@ FT_BEGIN_HEADER
     FT_ULong  minMemType1;
     FT_ULong  maxMemType1;
 
-    /* Glyph names follow in the `post` table, but we don't */
+    /* Glyph names follow in the 'post' table, but we don't */
     /* load them by default.                                */
 
   } TT_Postscript;
@@ -472,7 +472,7 @@ FT_BEGIN_HEADER
    *   TT_PCLT
    *
    * @description:
-   *   A structure to model a TrueType `PCLT` table.  All fields comply to
+   *   A structure to model a TrueType 'PCLT' table.  All fields comply to
    *   the OpenType specification.
    */
   typedef struct  TT_PCLT_
@@ -502,7 +502,7 @@ FT_BEGIN_HEADER
    *   TT_MaxProfile
    *
    * @description:
-   *   The maximum profile (`maxp`) table contains many max values, which can
+   *   The maximum profile ('maxp') table contains many max values, which can
    *   be used to pre-allocate arrays for speeding up glyph loading and
    *   hinting.
    *
@@ -673,7 +673,7 @@ FT_BEGIN_HEADER
    *   list.
    *
    * @example:
-   *   Here an example how to access the `vhea` table.
+   *   Here an example how to access the 'vhea' table.
    *
    *   ```
    *     TT_VertHeader*  vert_header;
@@ -832,7 +832,7 @@ FT_BEGIN_HEADER
    *   FT_Get_CMap_Format
    *
    * @description:
-   *   Return the format of an SFNT `cmap` table.
+   *   Return the format of an SFNT 'cmap' table.
    *
    * @input:
    *   charmap ::
