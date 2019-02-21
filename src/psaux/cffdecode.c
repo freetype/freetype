@@ -1556,9 +1556,9 @@
             }
 
             if ( dx < 0 )
-              dx = -dx;
+              dx = NEG_LONG( dx );
             if ( dy < 0 )
-              dy = -dy;
+              dy = NEG_LONG( dy );
 
             /* strange test, but here it is... */
             horizontal = ( dx > dy );

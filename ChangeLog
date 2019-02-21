@@ -1,3 +1,14 @@
+2019-02-21  Armin Hasitzka  <prince.cherusker@gmail.com>
+
+	[psaux] Mask numeric overflow.
+
+	* src/psaux/cffdecode.c (cff_decoder_parse_charstrings): Mask numeric
+	overflow.
+
+	Reported as
+
+	  https://bugs.chromium.org/p/oss-fuzz/issues/detail?id=13041
+
 2019-02-16  Wink Saville  <wink@saville.com>
 
 	* src/autofit/afwarp.h (af_warper_compute): Fix declaration.
