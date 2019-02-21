@@ -1,5 +1,17 @@
 2019-02-21  Armin Hasitzka  <prince.cherusker@gmail.com>
 
+	[truetype] Mask numeric overflows.
+
+	* src/truetype/ttinterp.c (Move_CVT, Move_CVT_Stretched, Ins_MIRP):
+	Mask numeric overflows.
+
+	Reported as
+
+	  https://bugs.chromium.org/p/oss-fuzz/issues/detail?id=11681
+	  https://bugs.chromium.org/p/oss-fuzz/issues/detail?id=11734
+
+2019-02-21  Armin Hasitzka  <prince.cherusker@gmail.com>
+
 	[psaux] Mask numeric overflow.
 
 	* src/psaux/cffdecode.c (cff_decoder_parse_charstrings): Mask numeric

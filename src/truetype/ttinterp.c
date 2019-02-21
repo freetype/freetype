@@ -1564,7 +1564,7 @@
             FT_ULong        idx,
             FT_F26Dot6      value )
   {
-    exc->cvt[idx] += value;
+    exc->cvt[idx] = ADD_LONG( exc->cvt[idx], value );
   }
 
 
@@ -1573,7 +1573,8 @@
                       FT_ULong        idx,
                       FT_F26Dot6      value )
   {
-    exc->cvt[idx] += FT_DivFix( value, Current_Ratio( exc ) );
+    exc->cvt[idx] = ADD_LONG( exc->cvt[idx],
+                              FT_DivFix( value, Current_Ratio( exc ) );
   }
 
 
@@ -6311,7 +6312,7 @@
     if ( exc->GS.auto_flip )
     {
       if ( ( org_dist ^ cvt_dist ) < 0 )
-        cvt_dist = -cvt_dist;
+        cvt_dist = NEG_LONG( cvt_dist );
     }
 
 #ifdef TT_SUPPORT_SUBPIXEL_HINTING_INFINALITY
