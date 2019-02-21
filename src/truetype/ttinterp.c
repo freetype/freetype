@@ -1574,7 +1574,7 @@
                       FT_F26Dot6      value )
   {
     exc->cvt[idx] = ADD_LONG( exc->cvt[idx],
-                              FT_DivFix( value, Current_Ratio( exc ) );
+                              FT_DivFix( value, Current_Ratio( exc ) ) );
   }
 
 
