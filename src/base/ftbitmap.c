@@ -811,7 +811,6 @@
 
     FT_Vector  source_offset;
     FT_Vector  target_offset;
-    FT_Vector  frac_offset;
 
     FT_Bool  free_source_bitmap          = 0;
     FT_Bool  free_target_bitmap_on_error = 0;
@@ -845,16 +844,9 @@
     if ( !( source_->width && source_->rows ) )
       return FT_Err_Ok;               /* nothing to do */
 
-    /* we isolate a fractional shift of `source',        */
-    /* to be less than one pixel and always positive;    */
-    /* `source_offset' now holds full-pixel shift values */
+    /* assure integer pixel offset s */
     source_offset.x = FT_PIX_FLOOR( source_offset_.x );
-    frac_offset.x   = source_offset_.x - source_offset.x;
-
     source_offset.y = FT_PIX_FLOOR( source_offset_.y );
-    frac_offset.y   = source_offset_.y - source_offset.y;
-
-    /* assure integer pixel offset for target bitmap */
     target_offset.x = FT_PIX_FLOOR( atarget_offset->x );
     target_offset.y = FT_PIX_FLOOR( atarget_offset->y );
 
@@ -906,13 +898,6 @@
       target_ury = FT_LONG_MIN;
     }
 
-    /* move upper right corner up and to the right */
-    /* if we have a fractional offset              */
-    if ( source_urx >= target_urx && frac_offset.x )
-      source_urx += 64;
-    if ( source_ury >= target_ury && frac_offset.y )
-      source_ury += 64;
-
     /* compute final bitmap dimensions */
     final_llx = FT_MIN( source_llx, target_llx );
     final_lly = FT_MIN( source_lly, target_lly );
@@ -928,10 +913,6 @@
       source_llx / 64, source_lly / 64,
       source_urx / 64, source_ury / 64,
       source_->width, source_->rows ));
-
-    if ( frac_offset.x || frac_offset.y )
-      FT_TRACE5(( "    fractional offset: (%d/64, %d/64)\n",
-                  frac_offset.x, frac_offset.y ));
 
     if ( target->width && target->rows )
       FT_TRACE5(( "  target bitmap: (%d, %d) -- (%d, %d); %d x %d\n",
@@ -1069,8 +1050,6 @@
     /* similar to what FreeType gets from `CBDT' tables             */
     x = source_llx >> 6;
     y = source_lly >> 6;
-
-    /* XXX handle `frac_offset' */
 
     /* the bitmap flow is from top to bottom, */
     /* but y is measured from bottom to top   */
