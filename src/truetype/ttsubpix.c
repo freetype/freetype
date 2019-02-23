@@ -4,7 +4,7 @@
  *
  *   TrueType Subpixel Hinting.
  *
- * Copyright 2010-2019 by
+ * Copyright (C) 2010-2019 by
  * David Turner, Robert Wilhelm, and Werner Lemberg.
  *
  * This file is part of the FreeType project, and may only be used,

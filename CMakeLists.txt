@@ -1,6 +1,6 @@
 # CMakeLists.txt
 #
-# Copyright 2013-2019 by
+# Copyright (C) 2013-2019 by
 # David Turner, Robert Wilhelm, and Werner Lemberg.
 #
 # Written originally by John Cary <cary@txcorp.com>

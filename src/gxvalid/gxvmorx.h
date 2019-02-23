@@ -4,7 +4,7 @@
  *
  *   TrueTypeGX/AAT common definition for morx table (specification).
  *
- * Copyright 2005-2019 by
+ * Copyright (C) 2005-2019 by
  * suzuki toshiya, Masatake YAMATO, Red Hat K.K.,
  * David Turner, Robert Wilhelm, and Werner Lemberg.
  *
