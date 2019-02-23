@@ -249,9 +249,6 @@ FT_BEGIN_HEADER
    *   FreeType error code.  0~means success.
    *
    * @note:
-   *   The number of color entries is given by the `num_palette_entries`
-   *   field in the @FT_Palette_Data structure.
-   *
    *   The array pointed to by `apalette_entries` is owned and managed by
    *   FreeType.
    *

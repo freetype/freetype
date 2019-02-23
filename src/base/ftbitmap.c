@@ -844,7 +844,7 @@
     if ( !( source_->width && source_->rows ) )
       return FT_Err_Ok;               /* nothing to do */
 
-    /* assure integer pixel offset s */
+    /* assure integer pixel offsets */
     source_offset.x = FT_PIX_FLOOR( source_offset_.x );
     source_offset.y = FT_PIX_FLOOR( source_offset_.y );
     target_offset.x = FT_PIX_FLOOR( atarget_offset->x );

@@ -7,13 +7,29 @@ CHANGES BETWEEN 2.9.1 and 2.10
   II. IMPORTANT CHANGES
 
     - A bunch  of new functions has  been added to access  and process
-      COLR/CPAL data of OpenType fonts with coloured glyph layers.
+      COLR/CPAL data of OpenType fonts with color-layered glyphs.
 
         FT_Palette_Data_Get
+          Retrieve color palette data.
         FT_Palette_Select
+          Select and activate a color palette for color-layered
+          glyphs.
         FT_Palette_Set_Foreground_Color
+          Set text foreground color for palette index 0xFFFF.
+
         FT_Get_Color_Glyph_Layer
+          Get color layers for a given glyph (using an interator
+          object).
+
         FT_Bitmap_Blend
+          Blend one bitmap onto another with a given color.
+
+    - An   experimental  feature   is   the  new   behaviour  of   the
+      `FT_LOAD_COLOR' load  flag for color-layered  glyphs: Internally
+      it  sets a  flag so  that  if `FT_Render_Glyph'  is called  with
+      `FT_RENDER_MODE_NORMAL'      (or       `FT_Load_Glyph'      with
+      `FT_LOAD_RENDER'), a default blending  of the color glyph layers
+      will happen automatically for convenience.
 
 
   III. MISCELLANEOUS
@@ -83,6 +99,27 @@ CHANGES BETWEEN 2.9.1 and 2.10
       prohibit  automatic  address  fixups,  such  as BREW,  has  been
       removed.  [Compilation with modern compilers that use flags like
       `-fPIC' or `-fPIE' is not affected.]
+
+    - The  `ftdump' demo  program has  new  options `-c'  and `-C'  to
+      display charmaps  in compact and detailed  format, respectively.
+      Option `-V' has been removed.
+
+    - The `ftview', `ftstring',  and `ftgrid' demo programs  use a new
+      command line option `-d' to  specify the program window's width,
+      height, and color depth.
+
+    - The `ftview' demo program now  displays red boxes for zero-width
+      glyphs.
+
+    - `ftglyph'   has   limited   support  to   display   fonts   with
+      color-layered glyphs.  This will be improved later on.
+
+    - `ftgrid' can now display bitmap fonts also.
+
+    - The `ttdebug'  demo program has  a new  option `-f' to  select a
+      member of a TrueType collection (TTC).
+
+    - Other various improvements to the demo programs.
 
 
 ======================================================================
@@ -321,7 +358,7 @@ CHANGES BETWEEN 2.7.1 and 2.8
       following properties can be  handled: stem darkening, LCD filter
       weights, and the random seed for the `random' CFF operator.
 
-    - The PCF change to show more `colourful' family names (introduced
+    - The PCF change to show more `colorful'  family names (introduced
       in version 2.7.1) was too radical; it can now be configured with
       PCF_CONFIG_OPTION_LONG_FAMILY_NAMES   at   compile   time.    If
       activated, it can  be switched off at run time  with the new pcf
@@ -472,7 +509,7 @@ CHANGES BETWEEN 2.7 and 2.7.1
       and the number of CVT entries.  Please report if you encounter a
       font where the selected values are not adequate.
 
-    - PCF family names are made more `colourful'; they now include the
+    - PCF family names are made more `colorful';  they now include the
       foundry  and information  whether they contain  wide characters.
       For example,  you no longer get `Fixed' but  rather `Sony Fixed'
       or `Misc Fixed Wide'.
@@ -756,8 +793,8 @@ CHANGES BETWEEN 2.6.1 and 2.6.2
     - The `ftstring' demo program now supports subpixel rendering; use
       key `l' to cycle through the LCD modes.
 
-    - The `ftstring'  demo program now supports  colour rendering; use
-      the `space' key to cycle through various colour combinations.
+    - The `ftstring'  demo program now supports  color rendering;  use
+      the `space' key to cycle through various color combinations.
 
     - The graphical demo programs now use a default gamma value of 1.8
       (instead of 1.2).

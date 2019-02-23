@@ -2968,15 +2968,15 @@ FT_BEGIN_HEADER
    *     color bitmaps are found, they are converted to 256-level gray
    *     bitmaps, using the @FT_PIXEL_MODE_GRAY format.
    *
-   *     [Since 2.10] If the glyph index contains an entry in the face's
-   *     'COLR' table with a 'CPAL' palette table (as defined in the OpenType
-   *     specification), make @FT_Render_Glyph provide a default blending of
-   *     the color glyph layers associated with the glyph index, using the
-   *     same bitmap format as embedded color bitmap images.  This is mainly
-   *     for convenience; for full control of color layers use
+   *     [Since 2.10, experimental] If the glyph index contains an entry in
+   *     the face's 'COLR' table with a 'CPAL' palette table (as defined in
+   *     the OpenType specification), make @FT_Render_Glyph provide a default
+   *     blending of the color glyph layers associated with the glyph index,
+   *     using the same bitmap format as embedded color bitmap images.  This
+   *     is mainly for convenience; for full control of color layers use
    *     @FT_Get_Color_Glyph_Layer and FreeType's color functions like
-   *     @FT_Palette_Select instead of setting FT_LOAD_COLOR for rendering so
-   *     that the client application can handle blending by itself.
+   *     @FT_Palette_Select instead of setting @FT_LOAD_COLOR for rendering
+   *     so that the client application can handle blending by itself.
    *
    *   FT_LOAD_COMPUTE_METRICS ::
    *     [Since 2.6.1] Compute glyph metrics from the glyph data, without the
@@ -3288,11 +3288,12 @@ FT_BEGIN_HEADER
    *     The render mode used to render the glyph image into a bitmap.  See
    *     @FT_Render_Mode for a list of possible values.
    *
-   *     If @FT_RENDER_MODE_NORMAL is used, the flag @FT_LOAD_COLOR can be
-   *     additionally set to make the function provide a default blending of
-   *     colored glyph layers associated with the current glyph slot
-   *     (provided the font contains such layers) instead of rendering the
-   *     glyph slot's outline.  See @FT_LOAD_COLOR for more information.
+   *     If @FT_RENDER_MODE_NORMAL is used, a previous call of @FT_Load_Glyph
+   *     with flag @FT_LOAD_COLOR makes the FT_Render_Glyph provide a default
+   *     blending of colored glyph layers associated with the current glyph
+   *     slot (provided the font contains such layers) instead of rendering
+   *     the glyph slot's outline.  This is an experimental feature; see
+   *     @FT_LOAD_COLOR for more information.
    *
    * @return:
    *   FreeType error code.  0~means success.
@@ -4126,8 +4127,9 @@ FT_BEGIN_HEADER
    *   objects (like @FT_Get_Glyph or @FT_Glyph_To_Bitmap) don't have access
    *   to this information.
    *
-   *   @FT_Render_Glyph, however, handles colored glyph layers automatically
-   *   if the @FT_LOAD_COLOR flag is passed to it.
+   *   Note that @FT_Render_Glyph is able to handle colored glyph layers
+   *   automatically if the @FT_LOAD_COLOR flag is passed to a previous call
+   *   to @FT_Load_Glyph.  [This is an experimental feature.]
    *
    * @example:
    *   ```
