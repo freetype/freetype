@@ -1,3 +1,7 @@
+2019-02-23  Werner Lemberg  <wl@gnu.org>
+
+	* src/tools/update-copyright-year: Insert `(C)'.
+
 2019-02-21  Armin Hasitzka  <prince.cherusker@gmail.com>
 
 	[truetype] Mask numeric overflows.
