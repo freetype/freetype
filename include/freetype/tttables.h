@@ -673,7 +673,7 @@ FT_BEGIN_HEADER
    *   list.
    *
    * @example:
-   *   Here an example how to access the 'vhea' table.
+   *   Here is an example demonstrating access to the 'vhea' table.
    *
    *   ```
    *     TT_VertHeader*  vert_header;

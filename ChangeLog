@@ -3,7 +3,7 @@
 	* src/base/ftbitmap.c (FT_Bitmap_Blend): No fractional offsets.
 
 	The function only provided a framework without an actual
-	implementation, which this commits removes.
+	implementation, which this commit removes.
 
 2019-02-23  Werner Lemberg  <wl@gnu.org>
 

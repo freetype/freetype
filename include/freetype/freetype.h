@@ -3289,7 +3289,7 @@ FT_BEGIN_HEADER
    *     @FT_Render_Mode for a list of possible values.
    *
    *     If @FT_RENDER_MODE_NORMAL is used, a previous call of @FT_Load_Glyph
-   *     with flag @FT_LOAD_COLOR makes the FT_Render_Glyph provide a default
+   *     with flag @FT_LOAD_COLOR makes FT_Render_Glyph provide a default
    *     blending of colored glyph layers associated with the current glyph
    *     slot (provided the font contains such layers) instead of rendering
    *     the glyph slot's outline.  This is an experimental feature; see
@@ -3859,7 +3859,7 @@ FT_BEGIN_HEADER
    *   FreeType error code.  0~means success.
    *
    * @example:
-   *   Here an example that sets three properties.  You must define
+   *   Here is an example that sets three properties.  You must define
    *   `FT_CONFIG_OPTION_SUBPIXEL_RENDERING` to make the LCD filter examples
    *   work.
    *

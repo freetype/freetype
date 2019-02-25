@@ -533,7 +533,7 @@ FT_BEGIN_HEADER
    *     FT_Done_Glyph( glyph );
    *   ```
    *
-   *   Here another example, again without error handling:
+   *   Here is another example, again without error handling:
    *
    *   ```
    *     FT_Glyph  glyphs[MAX_GLYPHS]
