@@ -64,14 +64,14 @@ FT_BEGIN_HEADER
    *   A good 5-tap FIR filter should be applied to subpixel coverages
    *   regardless of pixel boundaries and should have these properties:
    *
-   *   1) It should be symmetrical, like {~a, b, c, b, a~}, to avoid
+   *   1. It should be symmetrical, like {~a, b, c, b, a~}, to avoid
    *      any shifts in appearance.
    *
-   *   2) It should be color-balanced, meaning a~+ b~=~c, to reduce color
+   *   2. It should be color-balanced, meaning a~+ b~=~c, to reduce color
    *      fringes by distributing the computed coverage for one subpixel to
    *      all subpixels equally.
    *
-   *   3) It should be normalized, meaning 2a~+ 2b~+ c~=~1.0 to maintain
+   *   3. It should be normalized, meaning 2a~+ 2b~+ c~=~1.0 to maintain
    *      overall brightness.
    *
    *   Boxy 3-tap filter {0, 1/3, 1/3, 1/3, 0} is sharper but is less
