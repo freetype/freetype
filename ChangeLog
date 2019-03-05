@@ -1,3 +1,15 @@
+2019-03-05  Sebastian Rasmussen  <sebras@gmail.com>
+
+	[psaux] Fix use of uninitialized memory.
+
+	* src/psaux/psintrp.c (cf2_interpT2CharString): The call to
+	`cf2_arrstack_setCount' may fail because the allocator ran out of
+	memory.  When this happens the stack is still written to before the
+	error condition is checked.  This means that FreeType writes outside
+	of allocated memory.  This commit moves the error check prior to the
+	stack assignment, hence the function now properly returns with an
+	error condition.
+
 2019-02-23  Werner Lemberg  <wl@gnu.org>
 
 	* src/base/ftbitmap.c (FT_Bitmap_Blend): No fractional offsets.

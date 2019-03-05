@@ -612,13 +612,13 @@
     cf2_arrstack_setCount( &subrStack, CF2_MAX_SUBR + 1 );
 
     charstring  = (CF2_Buffer)cf2_arrstack_getBuffer( &subrStack );
-    *charstring = *buf;    /* structure copy */
-
-    charstringIndex = 0;       /* entry is valid now */
 
     /* catch errors so far */
     if ( *error )
       goto exit;
+
+    *charstring     = *buf;    /* structure copy     */
+    charstringIndex = 0;       /* entry is valid now */
 
     /* main interpreter loop */
     while ( 1 )
