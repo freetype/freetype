@@ -1,6 +1,12 @@
+2019-03-05  Werner Lemberg  <wl@gnu.org>
+
+	[base] Handle numeric overflow (#55827).
+
+	* src/base/ftglyph.c (FT_Glyph_Get_CBox): Use `FT_PIX_CEIL_LONG'.
+
 2019-03-05  Sebastian Rasmussen  <sebras@gmail.com>
 
-	[psaux] Fix use of uninitialized memory.
+	[psaux] Fix use of uninitialized memory (#55832).
 
 	* src/psaux/psintrp.c (cf2_interpT2CharString): The call to
 	`cf2_arrstack_setCount' may fail because the allocator ran out of

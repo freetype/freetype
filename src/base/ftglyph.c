@@ -513,8 +513,8 @@
     {
       acbox->xMin = FT_PIX_FLOOR( acbox->xMin );
       acbox->yMin = FT_PIX_FLOOR( acbox->yMin );
-      acbox->xMax = FT_PIX_CEIL( acbox->xMax );
-      acbox->yMax = FT_PIX_CEIL( acbox->yMax );
+      acbox->xMax = FT_PIX_CEIL_LONG( acbox->xMax );
+      acbox->yMax = FT_PIX_CEIL_LONG( acbox->yMax );
     }
 
     /* convert to integer pixels if needed */
