@@ -1,10 +1,7 @@
 
 CHANGES BETWEEN 2.9.1 and 2.10
 
-  I. IMPORTANT BUG FIXES
-
-
-  II. IMPORTANT CHANGES
+  I. IMPORTANT CHANGES
 
     - A bunch  of new functions has  been added to access  and process
       COLR/CPAL data of OpenType fonts with color-layered glyphs.
@@ -31,8 +28,11 @@ CHANGES BETWEEN 2.9.1 and 2.10
       `FT_LOAD_RENDER'), a default blending  of the color glyph layers
       will happen automatically for convenience.
 
+    - As  a   GSoC  2018   project,  Nikhil   Ramakrishnan  completely
+      overhauled and modernized the API reference.
 
-  III. MISCELLANEOUS
+
+  II. MISCELLANEOUS
 
     - The  logic for  computing  the global  ascender, descender,  and
       height  of  OpenType  fonts   has  been  slightly  adjusted  for
@@ -43,7 +43,8 @@ CHANGES BETWEEN 2.9.1 and 2.10
         `OS/2' unconditionally.
       . Otherwise use  the metrics data from the `hhea'  table (if not
         zero).
-      . Otherwise use the `sTypo' fields (if not zero).
+      . Otherwise use the `sTypo' fields from the `OS/2' table (if not
+        zero).
       . Otherwise use the `usWin' data from the `OS/2' table as a last
         resort.
 
