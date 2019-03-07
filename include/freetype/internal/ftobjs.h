@@ -185,7 +185,7 @@ FT_BEGIN_HEADER
                                FT_UInt32  char_code,
                                FT_UInt32  variant_selector );
 
-  typedef FT_Bool
+  typedef FT_Int
   (*FT_CMap_CharVarIsDefaultFunc)( FT_CMap    cmap,
                                    FT_UInt32  char_code,
                                    FT_UInt32  variant_selector );

@@ -38,13 +38,15 @@
 
 
   static FT_Error
-  af_dummy_hints_apply( FT_UInt        glyph_index,
-                        AF_GlyphHints  hints,
-                        FT_Outline*    outline )
+  af_dummy_hints_apply( FT_UInt          glyph_index,
+                        AF_GlyphHints    hints,
+                        FT_Outline*      outline,
+                        AF_StyleMetrics  metrics )
   {
     FT_Error  error;
 
     FT_UNUSED( glyph_index );
+    FT_UNUSED( metrics );
 
 
     error = af_glyph_hints_reload( hints, outline );

@@ -1,3 +1,20 @@
+2019-03-07  Andrei Alexeyev  <0x416b617269@gmail.com>
+            Werner Lemberg  <wl@gnu.org>
+
+	Fix invalid function pointer casts.
+
+	This change should allow Freetype to work on WASM/Emscripten without
+	needing `-s EMULATE_FUNCTION_POINTER_CASTS=1'.
+
+	* src/autofit/afdummy.c (af_dummy_hints_apply): Fix signature.
+
+	* src/cid/cidload.c (cid_parse_font_matrix, parse_fd_array,
+	parse_expansion_factor, parse_font_name): Return `void', not
+	`FT_Error'.
+
+	* include/freetype/internal/ftobjs.h (FT_CMap_CharVarIsDefaultFunc):
+	Fix signature.
+
 2019-03-05  Werner Lemberg  <wl@gnu.org>
 
 	[base] Handle numeric overflow (#55827).
