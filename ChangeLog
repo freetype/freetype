@@ -1,3 +1,44 @@
+2019-03-15  Werner Lemberg  <wl@gnu.org>
+
+	* Version 2.10.0 released.
+	==========================
+
+
+	Tag sources with `VER-2-10-0'.
+
+	* docs/VERSION.TXT: Add entry for version 2.10.0.
+	* docs/CHANGES: Updated.
+
+	* README, Jamfile (RefDoc), src/base/ftver.rc,
+	builds/windows/vc2010/freetype.vcxproj,
+	builds/windows/vc2010/index.html,
+	builds/windows/visualc/freetype.dsp,
+	builds/windows/visualc/freetype.vcproj,
+	builds/windows/visualc/index.html,
+	builds/windows/visualce/freetype.dsp,
+	builds/windows/visualce/freetype.vcproj,
+	builds/windows/visualce/index.html,
+	builds/wince/vc2005-ce/freetype.vcproj,
+	builds/wince/vc2005-ce/index.html,
+	builds/wince/vc2008-ce/freetype.vcproj,
+	builds/wince/vc2008-ce/index.html: s/2.9.1/2.10.0/, s/291/2100/.
+
+	* include/freetype/freetype.h (FREETYPE_MINOR): Set to 10.
+	(FREETYPE_PATCH): Set to 0.
+
+	* builds/unix/configure.raw (version_info): Set to 23:0:17.
+	* CMakeLists.txt (VERSION_MINOR): Set to 10.
+	(VERSION_PATCH): Set to 0.
+
+	* builds/toplevel.mk (version, winversion): Since the minor version
+	number has two digits now, never omit the patch number.  We would
+	get ambiguous zip file names otherwise.
+	(dist): Remove remnants of `docmaker' tool.
+	(do-dist): Remove unused intermediate files.
+
+	* src/cff/cffparse.c (destrict_c2s_item): Guard function with
+	CFF_CONFIG_OPTION_OLD_ENGINE macro.
+
 2019-03-07  Andrei Alexeyev  <0x416b617269@gmail.com>
             Werner Lemberg  <wl@gnu.org>
 

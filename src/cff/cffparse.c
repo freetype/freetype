@@ -1122,6 +1122,7 @@
 #endif /* FT_DEBUG_LEVEL_TRACE */
 
 
+#ifdef CFF_CONFIG_OPTION_OLD_ENGINE
   static void
   destruct_t2s_item( FT_Memory  memory,
                      void*      data,
@@ -1130,6 +1131,7 @@
     FT_UNUSED( user );
     memory->free( memory, data );
   }
+#endif /* CFF_CONFIG_OPTION_OLD_ENGINE */
 
 
   FT_LOCAL_DEF( FT_Error )
