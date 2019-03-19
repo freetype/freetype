@@ -1,3 +1,19 @@
+2019-03-19  Werner Lemberg  <wl@gnu.org>
+
+	[autofit] Add support for Mongolian script.
+
+	As a de-facto standard, layouts using this script are constructed
+	horizontally line by line, then the lines are rotated clockwise for
+	vertical display.
+
+	* src/autofit/afblue.dat: Add blue zone data for Mongolian.
+	* src/autofit/afblue.c, src/autofit/afblue.h: Regenerated.
+
+	* src/autofit/afscript.h: Add Mongolian standard characters.
+
+	* src/autofit/afranges.c, src/autofit/afstyles.h: Add Mongolian
+	data.
+
 2019-03-15  Werner Lemberg  <wl@gnu.org>
 
 	* Version 2.10.0 released.
