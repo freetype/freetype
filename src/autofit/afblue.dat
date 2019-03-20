@@ -393,7 +393,7 @@ AF_BLUE_STRING_ENUM AF_BLUE_STRINGS_ARRAY AF_BLUE_STRING_MAX_LEN:
     "ട ഠ ധ ശ ഘ ച ഥ ല"
 
   AF_BLUE_STRING_MONGOLIAN_TOP_BASE
-    "ᠳ ᠴ ᠶ ᠽ ᡂ ᡊ ᡡ ᡳ"
+    "ᠳ ᠴ ᠶ ᠽ ᡂ ᡊ ‍ᡡ‍ ‍ᡳ‍"
   AF_BLUE_STRING_MONGOLIAN_BOTTOM_BASE
     "ᡃ"
 

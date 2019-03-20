@@ -1,3 +1,11 @@
+2019-03-20  Werner Lemberg  <wl@gnu.org>
+
+	[autofit] Fix Mongolian blue zone characters.
+
+	* src/autofit/afblue.dat: Use U+200D (ZERO-WIDTH JOINER) characters
+	to get medial forms for some Mongolian characters.
+	* src/autofit/afblue.c, src/autofit/afblue.h: Regenerated.
+
 2019-03-19  Werner Lemberg  <wl@gnu.org>
 
 	[autofit] Add support for Mongolian script.
