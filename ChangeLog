@@ -1,3 +1,26 @@
+2019-03-31  Armin Hasitzka  <prince.cherusker@gmail.com>
+
+	[cff] Fix boundary checks.
+
+	642bc7590c701c8cd35a9f60fa899cfa518b17ff introduced dynamically
+	allocated memory when parsing CFF files with the "old" engine.  Bounds
+	checks have never been updated, however, leading to pointless
+	comparisons of pointers in some cases.  This commit presents a
+	solution for bounds checks in the CFF module with an extended logic
+	for the "old" engine while staying as concise as possible for the
+	"new" one.
+
+	* src/cff/cffparse.h: Introduce the struct `CFF_T2_StringRec' and
+	the additional field `t2_strings' within `CFF_ParserRec'.
+
+	* src/cff/cffparse.c (cff_parser_within_limits): Move all boundary
+	checks into this new function and update the rest of `cffparse.c' to
+	use it.
+
+	Reported as
+
+	  https://bugs.chromium.org/p/oss-fuzz/issues/detail?id=12137
+
 2019-03-20  Werner Lemberg  <wl@gnu.org>
 
 	[autofit] Fix Mongolian blue zone characters.
