@@ -3932,8 +3932,8 @@ FT_BEGIN_HEADER
    *   The glyph index.  0~means 'undefined character code'.
    */
   FT_EXPORT( FT_UInt )
-  FT_Get_Name_Index( FT_Face     face,
-                     FT_String*  glyph_name );
+  FT_Get_Name_Index( FT_Face           face,
+                     const FT_String*  glyph_name );
 
 
   /**************************************************************************

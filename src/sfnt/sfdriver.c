@@ -182,8 +182,8 @@
 
 
   static FT_UInt
-  sfnt_get_name_index( FT_Face     face,
-                       FT_String*  glyph_name )
+  sfnt_get_name_index( FT_Face           face,
+                       const FT_String*  glyph_name )
   {
     TT_Face  ttface = (TT_Face)face;
 

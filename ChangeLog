@@ -1,3 +1,16 @@
+2019-04-06  Antony Lee  <anntzer.lee@gmail.com>
+
+	Make `glyph_name' parameter to `FT_Get_Name_Index' a `const'.
+
+	* include/freetype/freetype.h (FT_Get_Name_Index),
+	include/freetype/internal/ftobjs.h (FT_Face_GetGlyphNameIndexFunc),
+	include/freetype/internal/services/svgldict.h
+	(FT_GlyphDict_NameIndexFunc), src/base/ftobjs.c (FT_Get_Name_Index),
+	src/cff/cffdrivr.c (cff_get_name_index), src/sfnt/sfdriver.c
+	(sfnt_get_name_index), src/type1/t1driver.c (t1_get_name_index),
+	src/type42/t42drivr.c (t42_get_name_index): Add `const' to second
+	argument.
+
 2019-03-31  Armin Hasitzka  <prince.cherusker@gmail.com>
 
 	[cff] Fix boundary checks.
