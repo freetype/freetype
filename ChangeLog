@@ -1,5 +1,11 @@
 2019-04-06  Werner Lemberg  <wl@gnu.org>
 
+	* src/sfnt/ttcmap.c (tt_get_glyph_name): Pacify compiler (#56061).
+
+	This is for Visual Studio 2019 on ARM.
+
+2019-04-06  Werner Lemberg  <wl@gnu.org>
+
 	For distribution, replace `.tar.bz2' with `.tar.xz' bundles.
 
 	* builds/toplevel.mk (build): Do it.

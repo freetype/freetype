@@ -3661,7 +3661,7 @@
   tt_get_glyph_name( TT_Face  face,
                      FT_UInt  idx )
   {
-    FT_String*  PSname;
+    FT_String*  PSname = NULL;
 
 
     tt_face_get_ps_name( face, idx, &PSname );
