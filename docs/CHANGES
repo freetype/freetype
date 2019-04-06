@@ -1,5 +1,20 @@
 
-CHANGES BETWEEN 2.9.1 and 2.10
+CHANGES BETWEEN 2.10.0 and 2.10.1
+
+  I. IMPORTANT BUG FIXES
+
+
+  II. MISCELLANEOUS
+
+  - Auto-hinter support for Mongolian.
+
+  - For distribution,  `.tar.bz2' packages are replaced with `.tar.xz'
+    bundles.
+
+
+======================================================================
+
+CHANGES BETWEEN 2.9.1 and 2.10.0
 
   I. IMPORTANT CHANGES
 

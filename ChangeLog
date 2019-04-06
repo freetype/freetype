@@ -1,3 +1,11 @@
+2019-04-06  Werner Lemberg  <wl@gnu.org>
+
+	For distribution, replace `.tar.bz2' with `.tar.xz' bundles.
+
+	* builds/toplevel.mk (build): Do it.
+
+	* README, docs/CHANGES, docs/release: Updated.
+
 2019-04-06  Antony Lee  <anntzer.lee@gmail.com>
 
 	Make `glyph_name' parameter to `FT_Get_Name_Index' a `const'.
