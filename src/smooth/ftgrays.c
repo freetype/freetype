@@ -1755,7 +1755,6 @@ typedef ptrdiff_t  FT_PtrDist;
   {
     const FT_Outline*  outline    = (const FT_Outline*)params->source;
     const FT_Bitmap*   target_map = params->target;
-    FT_BBox            clip;
 
 #ifndef FT_STATIC_RASTER
     gray_TWorker  worker[1];
@@ -1792,6 +1791,11 @@ typedef ptrdiff_t  FT_PtrDist;
 
       ras.render_span      = (FT_Raster_Span_Func)params->gray_spans;
       ras.render_span_data = params->user;
+
+      ras.min_ex = params->clip_box.xMin;
+      ras.min_ey = params->clip_box.yMin;
+      ras.max_ex = params->clip_box.xMax;
+      ras.max_ey = params->clip_box.yMax;
     }
     else
     {
@@ -1816,27 +1820,14 @@ typedef ptrdiff_t  FT_PtrDist;
 
       ras.render_span      = (FT_Raster_Span_Func)NULL;
       ras.render_span_data = NULL;
+
+      ras.min_ex = 0;
+      ras.min_ey = 0;
+      ras.max_ex = (FT_Pos)target_map->width;
+      ras.max_ey = (FT_Pos)target_map->rows;
     }
 
-    /* compute clipping box */
-    if ( params->flags & FT_RASTER_FLAG_DIRECT &&
-         params->flags & FT_RASTER_FLAG_CLIP   )
-      clip = params->clip_box;
-    else
-    {
-      /* compute clip box from target pixmap */
-      clip.xMin = 0;
-      clip.yMin = 0;
-      clip.xMax = (FT_Pos)target_map->width;
-      clip.yMax = (FT_Pos)target_map->rows;
-    }
-
-    /* clip to target bitmap, exit if nothing to do */
-    ras.min_ex = clip.xMin;
-    ras.min_ey = clip.yMin;
-    ras.max_ex = clip.xMax;
-    ras.max_ey = clip.yMax;
-
+    /* exit if nothing to do */
     if ( ras.max_ex <= ras.min_ex || ras.max_ey <= ras.min_ey )
       return 0;
 

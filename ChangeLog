@@ -1,3 +1,11 @@
+2019-04-11  Alexei Podtelezhnikov  <apodtele@gmail.com>
+
+	[smooth] Fix segfault in direct mode (#56092).
+
+	* src/base/ftoutln.c (FT_Outline_Render): Set missing clip_box for
+	direct mode.
+	* src/smooth/ftgrays.c (gray_raster_render): Use it.
+
 2019-04-06  Werner Lemberg  <wl@gnu.org>
 
 	* src/sfnt/ttcmap.c (tt_get_glyph_name): Pacify compiler (#56061).

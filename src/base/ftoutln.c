@@ -621,6 +621,16 @@
 
     params->source = (void*)outline;
 
+    /* preset clip_box for direct mode */
+    if ( params->flags & FT_RASTER_FLAG_DIRECT    &&
+         !( params->flags & FT_RASTER_FLAG_CLIP ) )
+    {
+      params->clip_box.xMin = cbox.xMin >> 6;
+      params->clip_box.yMin = cbox.yMin >> 6;
+      params->clip_box.xMax = ( cbox.xMax + 63 ) >> 6;
+      params->clip_box.yMax = ( cbox.yMax + 63 ) >> 6;
+    }
+
     error = FT_ERR( Cannot_Render_Glyph );
     while ( renderer )
     {
