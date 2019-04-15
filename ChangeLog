@@ -1,3 +1,11 @@
+2019-04-15  JDG  <JonathanG@iQmetrix.com>
+
+	* src/tools/apinames.c (main): Fix error message.
+
+	Reported as
+
+	  https://savannah.nongnu.org/patch/?9796
+
 2019-04-11  Alexei Podtelezhnikov  <apodtele@gmail.com>
 
 	[smooth] Fix segfault in direct mode (#56092).

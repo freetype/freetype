@@ -384,7 +384,7 @@ int  main( int argc, const char* const*  argv )
         out = fopen( arg, "wt" );
         if ( !out )
         {
-          fprintf( stderr, "could not open '%s' for writing\n", argv[2] );
+          fprintf( stderr, "could not open '%s' for writing\n", arg );
           exit(3);
         }
         break;
