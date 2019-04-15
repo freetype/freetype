@@ -1,3 +1,11 @@
+2019-04-15  Minmin Gong  <gongminmin@msn.com>
+
+	* CMakeLists.txt: Avoid rewriting of unchanged configuration files.
+
+	Reported as
+
+	  https://savannah.nongnu.org/patch/index.php?9755
+
 2019-04-15  JDG  <JonathanG@iQmetrix.com>
 
 	* src/tools/apinames.c (main): Fix error message.
