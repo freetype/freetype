@@ -1,3 +1,23 @@
+2019-04-18  Werner Lemberg  <wl@gnu.org>
+
+	[pcf] Fix handling of undefined glyph (#56067).
+
+	This commit fixes the changes from 2018-07-21, which broke charmap
+	iteration.  We now add the default character as a new glyph with
+	index 0, thus increasing the number of glyphs by one (as before).
+
+	* src/pcf/pcfread.c (pcf_get_metrics): Adjust to new artificial
+	glyph with index 0.
+	Limit number of elements to 65534.
+	(pcf_get_bitmaps): Ditto.
+	Unify two loops into one; this avoids allocation of an intermediate
+	array.
+	(pcf_get_encodings): Don't flip indices but copy glyph metrics of
+	default character to index 0.
+	Also handle invalid default character.
+
+	* docs/CHANGES: Updated.
+
 2019-04-15  Minmin Gong  <gongminmin@msn.com>
 
 	* CMakeLists.txt: Avoid rewriting of unchanged configuration files.

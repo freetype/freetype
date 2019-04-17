@@ -743,33 +743,39 @@ THE SOFTWARE.
     if ( !orig_nmetrics )
       return FT_THROW( Invalid_Table );
 
-    /* PCF is a format from ancient times; Unicode was in its       */
-    /* infancy, and widely used two-byte character sets for CJK     */
-    /* scripts (Big 5, GB 2312, JIS X 0208, etc.) did have at most  */
-    /* 15000 characters.  Even the more exotic CNS 11643 and CCCII  */
-    /* standards, which were essentially three-byte character sets, */
-    /* provided less then 65536 assigned characters.                */
-    /*                                                              */
-    /* While technically possible to have a larger number of glyphs */
-    /* in PCF files, we thus limit the number to 65536.             */
-    if ( orig_nmetrics > 65536 )
+    /*
+     * PCF is a format from ancient times; Unicode was in its infancy, and
+     * widely used two-byte character sets for CJK scripts (Big 5, GB 2312,
+     * JIS X 0208, etc.) did have at most 15000 characters.  Even the more
+     * exotic CNS 11643 and CCCII standards, which were essentially
+     * three-byte character sets, provided less then 65536 assigned
+     * characters.
+     *
+     * While technically possible to have a larger number of glyphs in PCF
+     * files, we thus limit the number to 65535, taking into account that we
+     * synthesize the metrics of glyph 0 to be a copy of the `default
+     * character', and that 0xFFFF in the encodings array indicates a
+     * missing glyph.
+     */
+    if ( orig_nmetrics > 65534 )
     {
       FT_TRACE0(( "pcf_get_metrics:"
-                  " only loading first 65536 metrics\n" ));
-      nmetrics = 65536;
+                  " only loading first 65534 metrics\n" ));
+      nmetrics = 65534;
     }
     else
       nmetrics = orig_nmetrics;
 
-    face->nmetrics = nmetrics;
+    face->nmetrics = nmetrics + 1;
 
-    if ( FT_NEW_ARRAY( face->metrics, nmetrics ) )
+    if ( FT_NEW_ARRAY( face->metrics, face->nmetrics ) )
       return error;
 
-    metrics = face->metrics;
+    /* we handle glyph index 0 later on */
+    metrics = face->metrics + 1;
 
     FT_TRACE4(( "\n" ));
-    for ( i = 0; i < nmetrics; i++, metrics++ )
+    for ( i = 1; i < face->nmetrics; i++, metrics++ )
     {
       FT_TRACE5(( "  idx %ld:", i ));
       error = pcf_get_metric( stream, format, metrics );
@@ -808,12 +814,10 @@ THE SOFTWARE.
   pcf_get_bitmaps( FT_Stream  stream,
                    PCF_Face   face )
   {
-    FT_Error   error;
-    FT_Memory  memory  = FT_FACE( face )->memory;
-    FT_ULong*  offsets = NULL;
-    FT_ULong   bitmapSizes[GLYPHPADOPTIONS];
-    FT_ULong   format, size;
-    FT_ULong   nbitmaps, orig_nbitmaps, i, sizebitmaps = 0;
+    FT_Error  error;
+    FT_ULong  bitmapSizes[GLYPHPADOPTIONS];
+    FT_ULong  format, size, pos;
+    FT_ULong  nbitmaps, orig_nbitmaps, i, sizebitmaps = 0;
 
 
     error = pcf_seek_to_table_type( stream,
@@ -859,31 +863,46 @@ THE SOFTWARE.
     FT_TRACE4(( "  number of bitmaps: %ld\n", orig_nbitmaps ));
 
     /* see comment in `pcf_get_metrics' */
-    if ( orig_nbitmaps > 65536 )
+    if ( orig_nbitmaps > 65534 )
     {
       FT_TRACE0(( "pcf_get_bitmaps:"
-                  " only loading first 65536 bitmaps\n" ));
-      nbitmaps = 65536;
+                  " only loading first 65534 bitmaps\n" ));
+      nbitmaps = 65534;
     }
     else
       nbitmaps = orig_nbitmaps;
 
-    if ( nbitmaps != face->nmetrics )
+    /* no extra bitmap for glyph 0 */
+    if ( nbitmaps != face->nmetrics - 1 )
       return FT_THROW( Invalid_File_Format );
 
-    if ( FT_NEW_ARRAY( offsets, nbitmaps ) )
-      return error;
+    /* start position of bitmap data */
+    pos = stream->pos + nbitmaps * 4 + 4 * 4;
 
     FT_TRACE5(( "\n" ));
-    for ( i = 0; i < nbitmaps; i++ )
+    for ( i = 1; i <= nbitmaps; i++ )
     {
+      FT_ULong  offset;
+
+
       if ( PCF_BYTE_ORDER( format ) == MSBFirst )
-        (void)FT_READ_ULONG( offsets[i] );
+        (void)FT_READ_ULONG( offset );
       else
-        (void)FT_READ_ULONG_LE( offsets[i] );
+        (void)FT_READ_ULONG_LE( offset );
 
       FT_TRACE5(( "  bitmap %lu: offset %lu (0x%lX)\n",
-                  i, offsets[i], offsets[i] ));
+                  i, offset, offset ));
+
+      /* right now, we only check the offset with a rough estimate; */
+      /* actual bitmaps are only loaded on demand                   */
+      if ( offset > size )
+      {
+        FT_TRACE0(( "pcf_get_bitmaps:"
+                    " invalid offset to bitmap data of glyph %lu\n", i ));
+        face->metrics[i].bits = pos;
+      }
+      else
+        face->metrics[i].bits = pos + offset;
     }
     if ( error )
       goto Bail;
@@ -910,24 +929,9 @@ THE SOFTWARE.
 
     FT_UNUSED( sizebitmaps );       /* only used for debugging */
 
-    /* right now, we only check the bitmap offsets; */
-    /* actual bitmaps are only loaded on demand     */
-    for ( i = 0; i < nbitmaps; i++ )
-    {
-      /* rough estimate */
-      if ( offsets[i] > size )
-      {
-        FT_TRACE0(( "pcf_get_bitmaps:"
-                    " invalid offset to bitmap data of glyph %lu\n", i ));
-      }
-      else
-        face->metrics[i].bits = stream->pos + offsets[i];
-    }
-
     face->bitmapsFormat = format;
 
   Bail:
-    FT_FREE( offsets );
     return error;
   }
 
@@ -1062,41 +1066,52 @@ THE SOFTWARE.
       defaultCharCol = enc->firstCol;
     }
 
-    /* FreeType mandates that glyph index 0 is the `undefined glyph',  */
-    /* which PCF calls the `default character'.  For this reason, we   */
-    /* swap the positions of glyph index 0 and the index corresponding */
-    /* to `defaultChar' in case they are different.                    */
-
-    /* `stream->cursor' still points at the beginning of the frame; */
-    /* we can thus easily get the offset to the default character   */
+    /*
+     * FreeType mandates that glyph index 0 is the `undefined glyph', which
+     * PCF calls the `default character'.  However, FreeType needs glyph
+     * index 0 to be used for the undefined glyph only, which is is not the
+     * case for PCF.  For this reason, we add one slot for glyph index 0 and
+     * simply copy the default character to it.
+     *
+     * `stream->cursor' still points to the beginning of the frame; we can
+     * thus easily get the offset to the default character.
+     */
     pos = stream->cursor +
             2 * ( ( defaultCharRow - enc->firstRow ) *
-                  ( enc->lastCol - enc->firstCol + 1 ) +
-                    defaultCharCol - enc->firstCol       );
+                    ( enc->lastCol - enc->firstCol + 1 ) +
+                  defaultCharCol - enc->firstCol );
 
     if ( PCF_BYTE_ORDER( format ) == MSBFirst )
       defaultCharEncodingOffset = FT_PEEK_USHORT( pos );
     else
       defaultCharEncodingOffset = FT_PEEK_USHORT_LE( pos );
 
-    if ( defaultCharEncodingOffset >= face->nmetrics )
+    if ( defaultCharEncodingOffset == 0xFFFF )
     {
       FT_TRACE0(( "pcf_get_encodings:"
-                  " Invalid glyph index for default character,"
-                  " setting to zero\n" ));
-      defaultCharEncodingOffset = 0;
+                  " No glyph for default character,\n"
+                  "                  "
+                  " setting it to the first glyph of the font\n" ));
+      defaultCharEncodingOffset = 1;
     }
-
-    if ( defaultCharEncodingOffset )
+    else
     {
-      /* do the swapping */
-      PCF_MetricRec  tmp = face->metrics[defaultCharEncodingOffset];
+      defaultCharEncodingOffset++;
 
-
-      face->metrics[defaultCharEncodingOffset] = face->metrics[0];
-      face->metrics[0]                         = tmp;
+      if ( defaultCharEncodingOffset >= face->nmetrics )
+      {
+        FT_TRACE0(( "pcf_get_encodings:"
+                    " Invalid glyph index for default character,\n"
+                    "                  "
+                    " setting it to the first glyph of the font\n" ));
+        defaultCharEncodingOffset = 1;
+      }
     }
 
+    /* copy metrics of default character to index 0 */
+    face->metrics[0] = face->metrics[defaultCharEncodingOffset];
+
+    /* now loop over all values */
     offset = enc->offset;
     for ( i = enc->firstRow; i <= enc->lastRow; i++ )
     {
@@ -1111,15 +1126,9 @@ THE SOFTWARE.
         else
           encodingOffset = FT_GET_USHORT_LE();
 
-        if ( encodingOffset != 0xFFFFU )
-        {
-          if ( encodingOffset == defaultCharEncodingOffset )
-            encodingOffset = 0;
-          else if ( encodingOffset == 0 )
-            encodingOffset = defaultCharEncodingOffset;
-        }
-
-        *offset++ = encodingOffset;
+        /* everything is off by 1 due to the artificial glyph 0 */
+        *offset++ = encodingOffset == 0xFFFF ? 0xFFFF
+                                             : encodingOffset + 1;
       }
     }
     FT_Stream_ExitFrame( stream );
