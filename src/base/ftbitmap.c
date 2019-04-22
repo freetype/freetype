@@ -971,6 +971,13 @@
 
 
       pitch = target->pitch;
+      if ( !pitch )
+      {
+        FT_TRACE5(( "FT_Blend_Bitmap:"
+                    " zero target bitmap pitch is invalid\n" ));
+        return FT_THROW( Invalid_Argument );
+      }
+
       if ( pitch < 0 )
         pitch = -pitch;
 
