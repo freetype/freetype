@@ -3080,7 +3080,12 @@
                                  mmvar->num_axis,
                                  named_style->coords );
       if ( error )
+      {
+        /* internal error code -1 means `no change' */
+        if ( error == -1 )
+          error = FT_Err_Ok;
         goto Exit;
+      }
     }
     else
       error = TT_Set_Var_Design( face, 0, NULL );

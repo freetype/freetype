@@ -15,6 +15,10 @@ CHANGES BETWEEN 2.10.0 and 2.10.1
     in version 2.10.0 was partially broken, causing premature abortion
     of charmap iteration for many fonts.
 
+  - If  `FT_Set_Named_Instance' was  called  with  the same  arguments
+    twice in a row, the function  returned an incorrect error code the
+    second time.
+
 
 ======================================================================
 

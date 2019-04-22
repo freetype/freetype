@@ -1,3 +1,10 @@
+2019-04-22  Werner Lemberg  <wl@gnu.org>
+
+	Fix return value of `FT_Set_Named_Instance' (#56186).
+
+	* src/truetype/ttgxvar.c (TT_Set_Named_Instance): Correctly handle
+	internal return value -1 of `TT_Set_Var_Design'.
+
 2019-04-18  Werner Lemberg  <wl@gnu.org>
 
 	[pcf] Fix handling of undefined glyph (#56067).
