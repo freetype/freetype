@@ -922,11 +922,17 @@
     else
       FT_TRACE5(( "  target bitmap: empty\n" ));
 
-    FT_TRACE5(( "  final bitmap: (%d, %d) -- (%d, %d); %d x %d\n",
-      final_llx / 64, final_lly / 64,
-      final_urx / 64, final_ury / 64,
-      final_width, final_rows ));
+    if ( final_width && final_rows )
+      FT_TRACE5(( "  final bitmap: (%d, %d) -- (%d, %d); %d x %d\n",
+        final_llx / 64, final_lly / 64,
+        final_urx / 64, final_ury / 64,
+        final_width, final_rows ));
+    else
+      FT_TRACE5(( "  final bitmap: empty\n" ));
 #endif /* FT_DEBUG_LEVEL_TRACE */
+
+    if ( !( final_width && final_rows ) )
+      return FT_Err_Ok;               /* nothing to do */
 
     /* for blending, set offset vector of final bitmap */
     /* temporarily to (0,0)                            */
@@ -971,12 +977,6 @@
 
 
       pitch = target->pitch;
-      if ( !pitch )
-      {
-        FT_TRACE5(( "FT_Blend_Bitmap:"
-                    " zero target bitmap pitch is invalid\n" ));
-        return FT_THROW( Invalid_Argument );
-      }
 
       if ( pitch < 0 )
         pitch = -pitch;
