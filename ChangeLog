@@ -1,5 +1,12 @@
 2019-04-23  Werner Lemberg  <wl@gnu.org>
 
+	* src/sfnt/ttcmap.c (tt_cmap12_next): Remove dead code.
+
+	Found by clang 8.0's static analyzer and reported by Sender Ghost
+	<lightside@gmx.com>.
+
+2019-04-23  Werner Lemberg  <wl@gnu.org>
+
 	[base] Fix thinko in previous commit.
 
 	* src/base/ftbitmap.c (FT_Bitmap_Blend): Check final width, not

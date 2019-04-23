@@ -2368,10 +2368,7 @@
         /* if `gindex' is invalid, the remaining values */
         /* in this group are invalid, too               */
         if ( gindex >= (FT_UInt)face->num_glyphs )
-        {
-          gindex = 0;
           continue;
-        }
 
         cmap->cur_charcode = char_code;
         cmap->cur_gindex   = gindex;
