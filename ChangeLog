@@ -1,3 +1,13 @@
+2019-04-25  Alexei Podtelezhnikov  <apodtele@gmail.com>
+
+	Optimize Bézier bisections.
+
+	* src/raster/ftraster.c (Split_Conic, Split_Cubic): Use shifts and
+	refactor.
+	* src/smooth/ftgrays.c (gray_split_conic, gray_split_cubic): Ditto.
+	* src/base/ftstroke.c (ft_conic_split, ft_cubic_split): Ditto.
+	* src/base/ftbbox.c (cubic_peak): Use shifts.
+
 2019-04-23  Werner Lemberg  <wl@gnu.org>
 
 	* src/sfnt/ttcmap.c (tt_cmap12_next): Remove dead code.
