@@ -516,7 +516,7 @@ typedef ptrdiff_t  FT_PtrDist;
 
   /**************************************************************************
    *
-   * Record the current cell in the table.
+   * Record the current cell in the linked list.
    */
   static void
   gray_record_cell( RAS_ARG )
@@ -526,10 +526,9 @@ typedef ptrdiff_t  FT_PtrDist;
 
 
     pcell = &ras.ycells[ras.ey - ras.min_ey];
-    for (;;)
+    while ( ( cell = *pcell ) )
     {
-      cell = *pcell;
-      if ( !cell || cell->x > x )
+      if ( cell->x > x )
         break;
 
       if ( cell->x == x )
@@ -577,16 +576,13 @@ typedef ptrdiff_t  FT_PtrDist;
     /* Note that if a cell is to the left of the clipping region, it is    */
     /* actually set to the (min_ex-1) horizontal position.                 */
 
-    if ( ex < ras.min_ex )
-      ex = ras.min_ex - 1;
-
     /* record the current one if it is valid and substantial */
     if ( !ras.invalid && ( ras.area || ras.cover ) )
       gray_record_cell( RAS_VAR );
 
     ras.area  = 0;
     ras.cover = 0;
-    ras.ex    = ex;
+    ras.ex    = FT_MAX( ex, ras.min_ex - 1 );
     ras.ey    = ey;
 
     ras.invalid = ( ey >= ras.max_ey || ey < ras.min_ey ||
@@ -1044,12 +1040,11 @@ typedef ptrdiff_t  FT_PtrDist;
     /* many times as there are trailing zeros in the counter.         */
     do
     {
-      split = 1;
-      while ( ( draw & split ) == 0 )
+      split = draw & ( -draw );  /* isolate the rightmost 1-bit */
+      while ( ( split >>= 1 ) )
       {
         gray_split_conic( arc );
         arc += 2;
-        split <<= 1;
       }
 
       gray_render_line( RAS_VAR_ arc[0].x, arc[0].y );
@@ -1242,8 +1237,6 @@ typedef ptrdiff_t  FT_PtrDist;
   {
     /* scale the coverage from 0..(ONE_PIXEL*ONE_PIXEL*2) to 0..256  */
     coverage >>= PIXEL_BITS * 2 + 1 - 8;
-    if ( coverage < 0 )
-      coverage = -coverage - 1;
 
     /* compute the line's coverage depending on the outline fill rule */
     if ( ras.outline.flags & FT_OUTLINE_EVEN_ODD_FILL )
@@ -1253,9 +1246,11 @@ typedef ptrdiff_t  FT_PtrDist;
       if ( coverage >= 256 )
         coverage = 511 - coverage;
     }
-    else
+    else  /* default non-zero winding rule */
     {
-      /* normal non-zero winding rule */
+      if ( coverage < 0 )
+        coverage = ~coverage;  /* the same as -coverage - 1 */
+
       if ( coverage >= 256 )
         coverage = 255;
     }
@@ -1637,7 +1632,7 @@ typedef ptrdiff_t  FT_PtrDist;
   gray_convert_glyph_inner( RAS_ARG,
                             int  continued )
   {
-    volatile int  error = 0;
+    int  error;
 
 
     if ( ft_setjmp( ras.jump_buffer ) == 0 )

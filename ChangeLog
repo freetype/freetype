@@ -1,3 +1,10 @@
+2019-04-26  Alexei Podtelezhnikov  <apodtele@gmail.com>
+
+	[smooth] Bithacks and cosmetics.
+
+	* src/smooth/ftgrays.c (gray_record_cell, gray_set_cell, gray_hline,
+	gray_render_conic, gray_convert_glyph_inner): Updated.
+
 2019-04-25  Alexei Podtelezhnikov  <apodtele@gmail.com>
 
 	Optimize Bézier bisections.
