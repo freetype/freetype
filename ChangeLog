@@ -1,3 +1,21 @@
+2019-04-29  Alexei Podtelezhnikov  <apodtele@gmail.com>
+
+	[smooth] Simplify cubic Bézier flattening.
+
+	The previous implementation is correct but it is too complex.
+	The revised algorithm is based on the fact that each split moves
+	the control points closer to the trisection points on the chord.
+	The corresponding distances are good surrogates for the curve
+	deviation from the straight line.
+
+	This cubic flattening algorithm is somewhat similar to the conic
+	algorithm based the distance from the control point to the middle of
+	the chord.  The cubic distances, however, decrease less predictably
+	but are easy enough to calculate on each step.
+
+	* src/smooth/ftgrays.c (gray_render_cubic): Replace the split
+	condition.
+
 2019-04-26  Alexei Podtelezhnikov  <apodtele@gmail.com>
 
 	[smooth] Bithacks and cosmetics.
