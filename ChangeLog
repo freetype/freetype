@@ -1,3 +1,13 @@
+2019-05-02  Werner Lemberg  <wl@gnu.org>
+
+	* vms_make.com: Updated (#56253).
+
+	Remove no longer existing directories (`autohint', `otlayout').
+	Update used base extensions.
+	Activate `autofit' module.
+	Add `gxvalid' module.
+	Update copyright notices.
+
 2019-04-29  Alexei Podtelezhnikov  <apodtele@gmail.com>
 
 	[smooth] Simplify cubic Bézier flattening.
