@@ -1,3 +1,13 @@
+2019-05-02  Alexei Podtelezhnikov  <apodtele@gmail.com>
+
+	Tweak LCD filtering.
+
+	* src/base/ftlcdfil.c (ft_lcd_filter_fir, _ft_lcd_filter_legacy):
+	Choose direction from bitmap's pixel_mode.
+	* include/freetype/internal/ftobjs.c (FT_Bitmap_LcdFilterFunc):
+	Updated.
+	* src/smooth/ftsmooth.c (ft_smooth_render_generic): Updated.
+
 2019-05-02  Werner Lemberg  <wl@gnu.org>
 
 	* vms_make.com: Updated (#56253).
