@@ -856,8 +856,8 @@ typedef ptrdiff_t  FT_PtrDist;
       ;
     else if ( dy == 0 ) /* ex1 != ex2 */  /* any horizontal line */
     {
-      ex1 = ex2;
-      gray_set_cell( RAS_VAR_ ex1, ey1 );
+      gray_set_cell( RAS_VAR_ ex2, ey2 );
+      goto End;
     }
     else if ( dx == 0 )
     {
