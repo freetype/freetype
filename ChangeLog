@@ -1,3 +1,30 @@
+2019-05-04  Werner Lemberg  <wl@gnu.org>
+
+	Various clang 8.0 static analyzer fixes.
+
+	Reported by Sender Ghost <lightside@gmx.com>.
+
+	* src/autofit/afcjk.c (af_cjk_hints_compute_edges): Catch a corner
+	case where `edge->first' could be NULL.
+
+	* src/pfr/pfrobjs.c (pfr_slot_load): Remove unnecessary test of
+	`size'.
+
+	* src/raster/ftraster.c (Draw_Sweep): Catch a corner case where
+	`draw_right' might be NULL.
+
+	* src/sfnt/ttmtx.c (tt_face_get_metrics): Fix limit test for
+	`aadvance'.
+	Ensure `abearing' always hold a meaningful result.
+
+	* src/truetype/ttgload.c (load_truetype_glyph): Ensure `subglyph' is
+	not NULL before accessing it.
+	* src/truetype/ttgxvar.c (TT_Set_Named_Instance): Remove unnecessary
+	test of `namedstyle'.
+
+	* src/type42/t42parse.c (t42_parser_done): Ensure
+	`parser->root.funcs.done' is not NULL before accessing it.
+
 2019-05-03  Alexei Podtelezhnikov  <apodtele@gmail.com>
 
 	Miscellaneous macro updates.

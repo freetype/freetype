@@ -2778,6 +2778,12 @@
       Sort( &draw_left );
       Sort( &draw_right );
 
+      if ( !draw_right )
+      {
+        ras.error = FT_THROW( Invalid );
+        return FAILURE;
+      }
+
       y_change = (Short)ras.sizeBuff[-ras.numTurns--];
       y_height = (Short)( y_change - y );
 

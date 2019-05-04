@@ -2088,6 +2088,7 @@
         loader->ins_pos = ins_pos;
         if ( IS_HINTED( loader->load_flags ) &&
 #ifdef TT_USE_BYTECODE_INTERPRETER
+             subglyph                        &&
              subglyph->flags & WE_HAVE_INSTR &&
 #endif
              num_points > start_point )

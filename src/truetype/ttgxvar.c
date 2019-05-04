@@ -3054,7 +3054,7 @@
     if ( instance_index > num_instances )
       goto Exit;
 
-    if ( instance_index > 0 && mmvar->namedstyle )
+    if ( instance_index > 0 )
     {
       FT_Memory     memory = face->root.memory;
       SFNT_Service  sfnt   = (SFNT_Service)face->sfnt;
