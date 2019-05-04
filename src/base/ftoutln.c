@@ -46,8 +46,7 @@
                         void*                    user )
   {
 #undef  SCALED
-#define SCALED( x )  ( ( (x) < 0 ? -( -(x) << shift )             \
-                                 :  (  (x) << shift ) ) - delta )
+#define SCALED( x )  ( (x) * ( 1L << shift ) - delta )
 
     FT_Vector   v_last;
     FT_Vector   v_control;

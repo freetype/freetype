@@ -1,3 +1,12 @@
+2019-05-03  Alexei Podtelezhnikov  <apodtele@gmail.com>
+
+	Miscellaneous macro updates.
+
+	* src/base/ftoutln.c (SCALED): Updated.
+	* src/smooth/ftgrays.c (SCALED): Ditto.
+	(FLOOR, ROUND, CEILING): Removed.
+	* src/psaux/psfixed.h (cf2_fracToFixed): Updated.
+
 2019-05-02  Alexei Podtelezhnikov  <apodtele@gmail.com>
 
 	Tweak LCD filtering.
