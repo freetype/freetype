@@ -1,3 +1,7 @@
+2019-05-05  Alexei Podtelezhnikov  <apodtele@gmail.com>
+
+	* src/raster/ftraster.c: Clean-ups.
+
 2019-05-05  Werner Lemberg  <wl@gnu.org>
 
 	* src/truetype/ttgxvar.c: More use of `FT_fdot14ToFixed'.

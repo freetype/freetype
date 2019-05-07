@@ -399,7 +399,7 @@
 
 
 #define RAS_ARGS       /* void */
-#define RAS_ARG        /* void */
+#define RAS_ARG        void
 
 #define RAS_VARS       /* void */
 #define RAS_VAR        /* void */
@@ -546,8 +546,7 @@
 
 #ifdef FT_STATIC_RASTER
 
-  static black_TWorker  cur_ras;
-#define ras  cur_ras
+  static black_TWorker  ras;
 
 #else /* !FT_STATIC_RASTER */
 
@@ -661,7 +660,6 @@
       return FAILURE;
     }
 
-    ras.cProfile->flags  = 0;
     ras.cProfile->start  = 0;
     ras.cProfile->height = 0;
     ras.cProfile->offset = ras.top;
@@ -3269,7 +3267,9 @@
     const FT_Outline*  outline    = (const FT_Outline*)params->source;
     const FT_Bitmap*   target_map = params->target;
 
+#ifndef FT_STATIC_RASTER
     black_TWorker  worker[1];
+#endif
 
     Long  buffer[FT_MAX_BLACK_POOL];
 
@@ -3311,8 +3311,8 @@
     ras.outline = *outline;
     ras.target  = *target_map;
 
-    worker->buff     = buffer;
-    worker->sizeBuff = (&buffer)[1]; /* Points to right after buffer. */
+    ras.buff     = buffer;
+    ras.sizeBuff = (&buffer)[1]; /* Points to right after buffer. */
 
     return Render_Glyph( RAS_VAR );
   }
