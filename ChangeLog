@@ -1,3 +1,7 @@
+2019-05-05  Werner Lemberg  <wl@gnu.org>
+
+	* src/truetype/ttgxvar.c: More use of `FT_fdot14ToFixed'.
+
 2019-05-04  Alexei Podtelezhnikov  <apodtele@gmail.com>
 
 	* src/smooth/ftgrays.c (gray_render_line): Small shortcut.
