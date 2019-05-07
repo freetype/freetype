@@ -2776,12 +2776,6 @@
       Sort( &draw_left );
       Sort( &draw_right );
 
-      if ( !draw_right )
-      {
-        ras.error = FT_THROW( Invalid );
-        return FAILURE;
-      }
-
       y_change = (Short)ras.sizeBuff[-ras.numTurns--];
       y_height = (Short)( y_change - y );
 
@@ -2794,7 +2788,7 @@
         P_Left  = draw_left;
         P_Right = draw_right;
 
-        while ( P_Left )
+        while ( P_Left && P_Right )
         {
           x1 = P_Left ->X;
           x2 = P_Right->X;
@@ -2895,7 +2889,7 @@
     P_Left  = draw_left;
     P_Right = draw_right;
 
-    while ( P_Left )
+    while ( P_Left && P_Right )
     {
       if ( P_Left->countL )
       {

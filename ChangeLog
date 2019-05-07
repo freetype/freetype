@@ -1,3 +1,7 @@
+2019-05-07  Alexei Podtelezhnikov  <apodtele@gmail.com>
+
+	* src/raster/ftraster.c (Draw_Sweep): Unbreak.
+
 2019-05-05  Alexei Podtelezhnikov  <apodtele@gmail.com>
 
 	* src/raster/ftraster.c: Clean-ups.
