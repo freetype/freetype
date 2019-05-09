@@ -971,14 +971,6 @@
 
 #endif /* TT_CONFIG_OPTION_GX_VAR_SUPPORT */
 
-    if ( IS_HINTED( loader->load_flags ) )
-    {
-      tt_prepare_zone( &loader->zone, &gloader->current, 0, 0 );
-
-      FT_ARRAY_COPY( loader->zone.orus, loader->zone.cur,
-                     loader->zone.n_points + 4 );
-    }
-
     {
 #ifdef TT_SUPPORT_SUBPIXEL_HINTING_INFINALITY
       TT_Face    face   = loader->face;
@@ -1075,6 +1067,11 @@
 
     if ( IS_HINTED( loader->load_flags ) )
     {
+      tt_prepare_zone( &loader->zone, &gloader->current, 0, 0 );
+
+      FT_ARRAY_COPY( loader->zone.orus, loader->zone.cur,
+                     loader->zone.n_points + 4 );
+
       loader->zone.n_points += 4;
 
       error = TT_Hint_Glyph( loader, 0 );

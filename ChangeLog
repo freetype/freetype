@@ -1,3 +1,7 @@
+2019-05-09  Werner Lemberg  <wl@gnu.org>
+
+	* src/truetype/ttgload.c (TT_Process_Simple_Glyph): Minor.
+
 2019-05-08  Alexei Podtelezhnikov  <apodtele@gmail.com>
 
 	[smooth] Faster fractions.
