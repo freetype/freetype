@@ -1,3 +1,11 @@
+2019-05-08  Alexei Podtelezhnikov  <apodtele@gmail.com>
+
+	[smooth] Faster fractions.
+
+	* src/smooth/ftgrays.c (SUBPIXELS): Replace with...
+	(FRACT): A fractional coordinate macro to use in...
+	(gray_render_line, gray_render_scanline): ... here.
+
 2019-05-07  Alexei Podtelezhnikov  <apodtele@gmail.com>
 
 	* src/raster/ftraster.c (Draw_Sweep): Unbreak.
