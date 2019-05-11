@@ -1,5 +1,23 @@
 2019-05-09  Werner Lemberg  <wl@gnu.org>
 
+	[truetype] Increase precision of font variation (#54371).
+
+	This patch make FreeType use font units in 26.6 format internally
+	instead of integers.
+
+	* src/truetype/ttgxvar.c (FT_fixedToFdot6): New macro.
+	(TT_Vary_Apply_Glyph_Deltas): Add argument to output unrounded font
+	coordinates.
+	* src/truetype/ttgxvar.h: Updated.
+
+	* src/truetype/ttgload.c (TT_Process_Simple_Glyph): Use
+	`extra_points2' array to temporarily hold unrounded point
+	coordinates; use them to compute scaled coordinates and linear
+	advance width and height.
+	(load_truetype_code): Adjust similarly.
+
+2019-05-09  Werner Lemberg  <wl@gnu.org>
+
 	* src/truetype/ttgload.c (TT_Process_Simple_Glyph): Minor.
 
 2019-05-08  Alexei Podtelezhnikov  <apodtele@gmail.com>

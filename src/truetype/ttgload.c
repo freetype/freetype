@@ -925,6 +925,7 @@
     FT_GlyphLoader  gloader = loader->gloader;
     FT_Error        error   = FT_Err_Ok;
     FT_Outline*     outline;
+    FT_Vector*      unrounded;
     FT_Int          n_points;
 
 
@@ -950,20 +951,26 @@
     if ( FT_IS_NAMED_INSTANCE( FT_FACE( loader->face ) ) ||
          FT_IS_VARIATION( FT_FACE( loader->face ) )      )
     {
-      /* Deltas apply to the unscaled data. */
+      /* Deltas apply to the unscaled data.                           */
+      /* We temporarily use `extra_points2' to hold unrounded values. */
+      unrounded = gloader->current.extra_points2;
       error = TT_Vary_Apply_Glyph_Deltas( loader->face,
                                           loader->glyph_index,
                                           outline,
+                                          unrounded,
                                           (FT_UInt)n_points );
 
       /* recalculate linear horizontal and vertical advances */
       /* if we don't have HVAR and VVAR, respectively        */
+
+      /* XXX: change all FreeType modules to store `linear' and `vadvance' */
+      /*      in 26.6 format before the `base' module scales them to 16.16 */
       if ( !( loader->face->variation_support & TT_FACE_FLAG_VAR_HADVANCE ) )
-        loader->linear = outline->points[n_points - 3].x -
-                         outline->points[n_points - 4].x;
+        loader->linear = FT_PIX_ROUND( unrounded[n_points - 3].x -
+                                       unrounded[n_points - 4].x ) / 64;
       if ( !( loader->face->variation_support & TT_FACE_FLAG_VAR_VADVANCE ) )
-        loader->vadvance = outline->points[n_points - 1].x -
-                           outline->points[n_points - 2].x;
+        loader->vadvance = FT_PIX_ROUND( unrounded[n_points - 1].x -
+                                         unrounded[n_points - 2].x ) / 64;
 
       if ( error )
         return error;
@@ -1013,10 +1020,17 @@
           /* compensate for any scaling by de/emboldening; */
           /* the amount was determined via experimentation */
           if ( x_scale_factor != 1000 && ppem > 11 )
+          {
+            FT_Vector*  orig_points = outline->points;
+
+
+            outline->points = unrounded;
             FT_Outline_EmboldenXY( outline,
                                    FT_MulFix( 1280 * ppem,
                                               1000 - x_scale_factor ),
                                    0 );
+            outline->points = orig_points;
+          }
           do_scale = TRUE;
         }
       }
@@ -1037,10 +1051,10 @@
 
       if ( do_scale )
       {
-        for ( ; vec < limit; vec++ )
+        for ( ; vec < limit; vec++, unrounded++ )
         {
-          vec->x = FT_MulFix( vec->x, x_scale );
-          vec->y = FT_MulFix( vec->y, y_scale );
+          vec->x = FT_MulDiv( unrounded->x, x_scale, 0x10000L * 64 );
+          vec->y = FT_MulDiv( unrounded->y, y_scale, 0x10000L * 64 );
         }
       }
 
@@ -1678,6 +1692,9 @@
         short       contours[4] = { 0, 1, 2, 3 };
         FT_Outline  outline;
 
+        /* unrounded values */
+        FT_Vector  unrounded[4];
+
 
         points[0].x = loader->pp1.x;
         points[0].y = loader->pp1.y;
@@ -1699,6 +1716,7 @@
         error = TT_Vary_Apply_Glyph_Deltas( loader->face,
                                             glyph_index,
                                             &outline,
+                                            unrounded,
                                             (FT_UInt)outline.n_points );
         if ( error )
           goto Exit;
@@ -1716,9 +1734,11 @@
         /* recalculate linear horizontal and vertical advances */
         /* if we don't have HVAR and VVAR, respectively        */
         if ( !( loader->face->variation_support & TT_FACE_FLAG_VAR_HADVANCE ) )
-          loader->linear = loader->pp2.x - loader->pp1.x;
+          loader->linear = FT_PIX_ROUND( unrounded[1].x -
+                                         unrounded[0].x ) / 64;
         if ( !( loader->face->variation_support & TT_FACE_FLAG_VAR_VADVANCE ) )
-          loader->vadvance = loader->pp4.x - loader->pp3.x;
+          loader->vadvance = FT_PIX_ROUND( unrounded[3].x -
+                                           unrounded[2].x ) / 64;
       }
 
 #endif /* TT_CONFIG_OPTION_GX_VAR_SUPPORT */
@@ -1858,9 +1878,10 @@
         FT_SubGlyph  subglyph;
 
         FT_Outline  outline;
-        FT_Vector*  points   = NULL;
-        char*       tags     = NULL;
-        short*      contours = NULL;
+        FT_Vector*  points    = NULL;
+        char*       tags      = NULL;
+        short*      contours  = NULL;
+        FT_Vector*  unrounded = NULL;
 
 
         limit = (short)gloader->current.num_subglyphs;
@@ -1874,9 +1895,10 @@
         outline.tags     = NULL;
         outline.contours = NULL;
 
-        if ( FT_NEW_ARRAY( points, outline.n_points )   ||
-             FT_NEW_ARRAY( tags, outline.n_points )     ||
-             FT_NEW_ARRAY( contours, outline.n_points ) )
+        if ( FT_NEW_ARRAY( points, outline.n_points )    ||
+             FT_NEW_ARRAY( tags, outline.n_points )      ||
+             FT_NEW_ARRAY( contours, outline.n_points )  ||
+             FT_NEW_ARRAY( unrounded, outline.n_points ) )
           goto Exit1;
 
         subglyph = gloader->current.subglyphs;
@@ -1925,6 +1947,7 @@
                              face,
                              glyph_index,
                              &outline,
+                             unrounded,
                              (FT_UInt)outline.n_points ) ) )
           goto Exit1;
 
@@ -1952,14 +1975,17 @@
         /* recalculate linear horizontal and vertical advances */
         /* if we don't have HVAR and VVAR, respectively        */
         if ( !( face->variation_support & TT_FACE_FLAG_VAR_HADVANCE ) )
-          loader->linear = loader->pp2.x - loader->pp1.x;
+          loader->linear = FT_PIX_ROUND( unrounded[1].x -
+                                         unrounded[0].x ) / 64;
         if ( !( face->variation_support & TT_FACE_FLAG_VAR_VADVANCE ) )
-          loader->vadvance = loader->pp4.x - loader->pp3.x;
+          loader->vadvance = FT_PIX_ROUND( unrounded[3].x -
+                                           unrounded[2].x ) / 64;
 
       Exit1:
         FT_FREE( outline.points );
         FT_FREE( outline.tags );
         FT_FREE( outline.contours );
+        FT_FREE( unrounded );
 
         if ( error )
           goto Exit;

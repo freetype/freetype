@@ -68,12 +68,14 @@
 
 
   /* some macros we need */
-#define FT_fdot14ToFixed( x )                \
-        ( (FT_Fixed)( (FT_ULong)(x) << 2 ) )
-#define FT_intToFixed( i )                    \
-        ( (FT_Fixed)( (FT_ULong)(i) << 16 ) )
-#define FT_fixedToInt( x )                                   \
-        ( (FT_Short)( ( (FT_UInt32)(x) + 0x8000U ) >> 16 ) )
+#define FT_fdot14ToFixed( x )                  \
+          ( (FT_Fixed)( (FT_ULong)(x) << 2 ) )
+#define FT_intToFixed( i )                      \
+          ( (FT_Fixed)( (FT_ULong)(i) << 16 ) )
+#define FT_fixedToInt( x )                                     \
+          ( (FT_Short)( ( (FT_UInt32)(x) + 0x8000U ) >> 16 ) )
+#define FT_fixedToFdot6( x )                              \
+          ( (FT_Pos)( ( (FT_UInt32)(x) + 0x20 ) >> 10 ) )
 
 
   /**************************************************************************
@@ -3674,6 +3676,11 @@
    *   outline ::
    *     The outline to change.
    *
+   * @Output:
+   *   unrounded ::
+   *     An array with `n_points' elements that is filled with unrounded
+   *     point coordinates (in 26.6 format).
+   *
    * @Return:
    *   FreeType error code.  0 means success.
    */
@@ -3681,6 +3688,7 @@
   TT_Vary_Apply_Glyph_Deltas( TT_Face      face,
                               FT_UInt      glyph_index,
                               FT_Outline*  outline,
+                              FT_Vector*   unrounded,
                               FT_UInt      n_points )
   {
     FT_Error   error;
@@ -4068,6 +4076,11 @@
 
     for ( i = 0; i < n_points; i++ )
     {
+      unrounded[i].x = INT_TO_F26DOT6( outline->points[i].x ) +
+                         FT_fixedToFdot6( point_deltas_x[i] );
+      unrounded[i].y = INT_TO_F26DOT6( outline->points[i].y ) +
+                         FT_fixedToFdot6( point_deltas_y[i] );
+
       outline->points[i].x += FT_fixedToInt( point_deltas_x[i] );
       outline->points[i].y += FT_fixedToInt( point_deltas_y[i] );
     }
