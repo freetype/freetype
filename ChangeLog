@@ -1,8 +1,34 @@
+2019-05-12  Werner Lemberg  <wl@gnu.org>
+
+	[truetype] Doh.  Fix last commit to make it work.
+
+	Very embarassing :-)
+
+	Reported as
+
+	  https://bugs.chromium.org/p/oss-fuzz/issues/detail?id=14701
+	  https://bugs.chromium.org/p/oss-fuzz/issues/detail?id=14705
+	  https://bugs.chromium.org/p/oss-fuzz/issues/detail?id=14710
+
+	* src/truetype/ttgload.c (IS_DEFAULT_INSTANCE): Move up and add
+	argument; update all callers.
+	(TT_Process_Simple_Glyph): Use it.  The `unrounded' array is active
+	for variation fonts only, thus also enclose related code with
+	`#ifdef TT_CONFIG_OPTION_GX_VAR_SUPPORT ...  #endif' where
+	necessary.
+	Revert commit a113e5d from 2019-05-09, and don't use `extra_points2'
+	but allocate a temporary array.
+	Speed up the scaling of the `unrounded' array.
+
+	* src/truetype/ttgxvar.c (FT_fixedToInt, FT_FixedToFdot6): Fix type
+	conversions and rounding.  The unsigned type must have more or equal
+	bits to the signed type.
+
 2019-05-09  Werner Lemberg  <wl@gnu.org>
 
 	[truetype] Increase precision of font variation (#54371).
 
-	This patch make FreeType use font units in 26.6 format internally
+	This patch makes FreeType use font units in 26.6 format internally
 	instead of integers.
 
 	* src/truetype/ttgxvar.c (FT_fixedToFdot6): New macro.

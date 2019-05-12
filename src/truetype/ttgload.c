@@ -82,6 +82,15 @@
 #define UNSCALED_COMPONENT_OFFSET  0x1000
 
 
+#ifdef TT_CONFIG_OPTION_GX_VAR_SUPPORT
+#define IS_DEFAULT_INSTANCE( _face )             \
+          ( !( FT_IS_NAMED_INSTANCE( _face ) ||  \
+               FT_IS_VARIATION( _face )      ) )
+#else
+#define IS_DEFAULT_INSTANCE( _face )  1
+#endif
+
+
   /**************************************************************************
    *
    * Return the horizontal metrics in font units for a given glyph.
@@ -925,8 +934,12 @@
     FT_GlyphLoader  gloader = loader->gloader;
     FT_Error        error   = FT_Err_Ok;
     FT_Outline*     outline;
-    FT_Vector*      unrounded;
     FT_Int          n_points;
+
+#ifdef TT_CONFIG_OPTION_GX_VAR_SUPPORT
+    FT_Memory   memory    = loader->face->root.memory;
+    FT_Vector*  unrounded = NULL;
+#endif
 
 
     outline  = &gloader->current.outline;
@@ -948,12 +961,12 @@
 
 #ifdef TT_CONFIG_OPTION_GX_VAR_SUPPORT
 
-    if ( FT_IS_NAMED_INSTANCE( FT_FACE( loader->face ) ) ||
-         FT_IS_VARIATION( FT_FACE( loader->face ) )      )
+    if ( !IS_DEFAULT_INSTANCE( FT_FACE( loader->face ) ) )
     {
-      /* Deltas apply to the unscaled data.                           */
-      /* We temporarily use `extra_points2' to hold unrounded values. */
-      unrounded = gloader->current.extra_points2;
+      if ( FT_NEW_ARRAY( unrounded, n_points ) )
+        goto Exit;
+
+      /* Deltas apply to the unscaled data. */
       error = TT_Vary_Apply_Glyph_Deltas( loader->face,
                                           loader->glyph_index,
                                           outline,
@@ -973,10 +986,18 @@
                                          unrounded[n_points - 2].x ) / 64;
 
       if ( error )
-        return error;
+        goto Exit;
     }
 
 #endif /* TT_CONFIG_OPTION_GX_VAR_SUPPORT */
+
+    if ( IS_HINTED( loader->load_flags ) )
+    {
+      tt_prepare_zone( &loader->zone, &gloader->current, 0, 0 );
+
+      FT_ARRAY_COPY( loader->zone.orus, loader->zone.cur,
+                     loader->zone.n_points + 4 );
+    }
 
     {
 #ifdef TT_SUPPORT_SUBPIXEL_HINTING_INFINALITY
@@ -1021,15 +1042,21 @@
           /* the amount was determined via experimentation */
           if ( x_scale_factor != 1000 && ppem > 11 )
           {
+#ifdef TT_CONFIG_OPTION_GX_VAR_SUPPORT
             FT_Vector*  orig_points = outline->points;
 
 
-            outline->points = unrounded;
+            if ( !IS_DEFAULT_INSTANCE( FT_FACE( loader->face ) ) )
+              outline->points = unrounded;
+#endif
             FT_Outline_EmboldenXY( outline,
                                    FT_MulFix( 1280 * ppem,
                                               1000 - x_scale_factor ),
                                    0 );
-            outline->points = orig_points;
+#ifdef TT_CONFIG_OPTION_GX_VAR_SUPPORT
+            if ( !IS_DEFAULT_INSTANCE( FT_FACE( loader->face ) ) )
+              outline->points = orig_points;
+#endif
           }
           do_scale = TRUE;
         }
@@ -1051,10 +1078,29 @@
 
       if ( do_scale )
       {
-        for ( ; vec < limit; vec++, unrounded++ )
+#ifdef TT_CONFIG_OPTION_GX_VAR_SUPPORT
+        if ( !IS_DEFAULT_INSTANCE( FT_FACE( loader->face ) ) )
         {
-          vec->x = FT_MulDiv( unrounded->x, x_scale, 0x10000L * 64 );
-          vec->y = FT_MulDiv( unrounded->y, y_scale, 0x10000L * 64 );
+          FT_Vector*  u = unrounded;
+
+          FT_Fixed  xs = x_scale >> 6;
+          FT_Fixed  ys = y_scale >> 6;
+
+
+          for ( ; vec < limit; vec++, u++ )
+          {
+            vec->x = FT_MulFix( u->x, xs );
+            vec->y = FT_MulFix( u->y, ys );
+          }
+        }
+        else
+#endif /* TT_CONFIG_OPTION_GX_VAR_SUPPORT */
+        {
+          for ( ; vec < limit; vec++ )
+          {
+            vec->x = FT_MulFix( vec->x, x_scale );
+            vec->y = FT_MulFix( vec->y, y_scale );
+          }
         }
       }
 
@@ -1081,15 +1127,15 @@
 
     if ( IS_HINTED( loader->load_flags ) )
     {
-      tt_prepare_zone( &loader->zone, &gloader->current, 0, 0 );
-
-      FT_ARRAY_COPY( loader->zone.orus, loader->zone.cur,
-                     loader->zone.n_points + 4 );
-
       loader->zone.n_points += 4;
 
       error = TT_Hint_Glyph( loader, 0 );
     }
+
+#ifdef TT_CONFIG_OPTION_GX_VAR_SUPPORT
+  Exit:
+    FT_FREE( unrounded );
+#endif
 
     return error;
   }
@@ -2742,13 +2788,6 @@
     FT_Error      error;
     TT_LoaderRec  loader;
 
-#ifdef TT_CONFIG_OPTION_GX_VAR_SUPPORT
-#define IS_DEFAULT_INSTANCE  ( !( FT_IS_NAMED_INSTANCE( glyph->face ) ||  \
-                                  FT_IS_VARIATION( glyph->face )      ) )
-#else
-#define IS_DEFAULT_INSTANCE  1
-#endif
-
 
     FT_TRACE1(( "TT_Load_Glyph: glyph index %d\n", glyph_index ));
 
@@ -2757,7 +2796,7 @@
     /* try to load embedded bitmap (if any) */
     if ( size->strike_index != 0xFFFFFFFFUL      &&
          ( load_flags & FT_LOAD_NO_BITMAP ) == 0 &&
-         IS_DEFAULT_INSTANCE                     )
+         IS_DEFAULT_INSTANCE( glyph->face )      )
     {
       FT_Fixed  x_scale = size->root.metrics.x_scale;
       FT_Fixed  y_scale = size->root.metrics.y_scale;
