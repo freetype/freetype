@@ -47,7 +47,7 @@ $!
 $! Setup variables holding "config" information
 $!
 $ Make    = ""
-$ ccopt   = "/name=as_is/float=ieee"
+$ ccopt   = "/name=(as_is,short)/float=ieee"
 $ lopts   = ""
 $ dnsrl   = ""
 $ aconf_in_file = "config.hin"
@@ -113,7 +113,14 @@ $!
 $ If f$getsyi("HW_MODEL") .gt. 1024
 $ Then
 $   write sys$output "Creating freetype2shr.exe"
-$   call anal_obj_axp 'optfile' _link.opt
+$   If f$getsyi("HW_MODEL") .le. 2048
+$   Then
+$     call anal_obj_axp 'optfile' _link.opt
+$   Else
+$     copy _link.opt_ia64 _link.opt
+$     close libsf
+$     copy libs.opt_ia64 libs.opt
+$   endif
 $   open/append  optf 'optfile'
 $   if s_case then WRITE optf "case_sensitive=YES"
 $   close optf
@@ -172,12 +179,14 @@ $ deck
 
 
 all :
+        define config [--.include.freetype.config]
+        define internal [--.include.freetype.internal]
         define autofit [-.autofit]
         define base [-.base]
         define cache [-.cache]
         define cff [-.cff]
         define cid [-.cid]
-        define freetype [--.include]
+        define freetype [--.include.freetype]
         define pcf [-.pcf]
         define psaux [-.psaux]
         define psnames [-.psnames]
@@ -190,7 +199,7 @@ all :
         if f$search("lib.dir") .eqs. "" then create/directory [.lib]
         set default [.builds.vms]
         $(MMS)$(MMSQUALIFIERS)
-        set default [-.autofit]
+        set default [--.src.autofit]
         $(MMS)$(MMSQUALIFIERS)
         set default [-.base]
         $(MMS)$(MMSQUALIFIERS)
@@ -205,6 +214,8 @@ all :
         set default [-.gxvalid]
         $(MMS)$(MMSQUALIFIERS)
         set default [-.gzip]
+        $(MMS)$(MMSQUALIFIERS)
+        set default [-.bzip2]
         $(MMS)$(MMSQUALIFIERS)
         set default [-.lzw]
         $(MMS)$(MMSQUALIFIERS)
@@ -259,7 +270,7 @@ $ deck
 # fully.
 
 
-CFLAGS=$(COMP_FLAGS)$(DEBUG)/include=([],[--.include],[--.src.base])
+CFLAGS=$(COMP_FLAGS)$(DEBUG)/list/show=all/include=([],[--.include],[--.src.base])
 
 OBJS=ftsystem.obj
 
@@ -395,7 +406,7 @@ $ deck
 # fully.
 
 
-CFLAGS=$(COMP_FLAGS)$(DEBUG)/include=([--.include],[--.src.cache])
+CFLAGS=$(COMP_FLAGS)$(DEBUG)/include=([--.include],[--.src.cache])/nowarn
 
 OBJS=ftcache.obj
 
@@ -522,6 +533,42 @@ $ deck
 CFLAGS=$(COMP_FLAGS)$(DEBUG)/include=($(LIBINCS)[--.include],[--.src.gzip])
 
 OBJS=ftgzip.obj
+
+all : $(OBJS)
+        library [--.lib]freetype.olb $(OBJS)
+
+# EOF
+$ eod
+$ close out
+$ write sys$output "... [.src.bzip2] directory"
+$ create [.src.bzip2]descrip.mms
+$ open/append out [.src.bzip2]descrip.mms
+$ copy sys$input: out
+$ deck
+#
+# FreeType 2 BZIP2 support compilation rules for VMS
+#
+
+
+# Copyright 2010-2019 by
+# Joel Klinghed.
+#
+# based on `src/lzw/rules.mk'
+#
+# This file is part of the FreeType project, and may only be used, modified,
+# and distributed under the terms of the FreeType project license,
+# LICENSE.TXT.  By continuing to use, modify, or distribute this file you
+# indicate that you have read the license and understand and accept it
+# fully.
+$EOD
+$ if libincs .nes. "" then write out "LIBINCS = ", libincs - ",", ","
+$ write out "COMP_FLAGS = ", ccopt
+$ copy sys$input: out
+$ deck
+
+CFLAGS=$(COMP_FLAGS)$(DEBUG)/include=([--.include],[--.src.bzip2])
+
+OBJS=ftbzip2.obj
 
 all : $(OBJS)
         library [--.lib]freetype.olb $(OBJS)
@@ -1076,7 +1123,7 @@ $ endif
 $!
 $! Init symbols used to hold CPP definitions and include path
 $!
-$ libdefs = ""
+$ libdefs = "FT2_BUILD_LIBRARY,FT_CONFIG_OPTION_OLD_INTERNALS,"
 $ libincs = ""
 $!
 $! Open data file with location of libraries

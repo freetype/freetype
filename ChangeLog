@@ -1,3 +1,7 @@
+2019-05-13  Jouk Jansen  <joukj@hrem.nano.tudelft.nl>
+
+	* vms_make.com: Updated.  Handle `bzip2' directory, too.
+
 2019-05-13  Werner Lemberg  <wl@gnu.org>
 
 	* src/psaux/psfont.c (cf2_font_setup): Fix compiler warning.
