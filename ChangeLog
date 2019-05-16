@@ -1,3 +1,12 @@
+2019-05-16  Werner Lemberg  <wl@gnu.org>
+
+	[truetype] Avoid code duplication.
+
+	* src/truetype/ttobjs.c (tt_size_run_prep): Scale CVT values in this
+	function.
+	(tt_size_ready_bytecode): Updated.
+	* src/truetype/ttgload.c (tt_loader_init): Updated.
+
 2019-05-13  Jouk Jansen  <joukj@hrem.nano.tudelft.nl>
 
 	* vms_make.com: Updated.  Handle `bzip2' directory, too.

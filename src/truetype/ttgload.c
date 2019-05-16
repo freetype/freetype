@@ -2681,11 +2681,6 @@
 
       if ( reexecute )
       {
-        FT_UInt  i;
-
-
-        for ( i = 0; i < size->cvt_size; i++ )
-          size->cvt[i] = FT_MulFix( face->cvt[i], size->ttmetrics.scale );
         error = tt_size_run_prep( size, pedantic );
         if ( error )
           return error;

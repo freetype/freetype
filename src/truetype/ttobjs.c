@@ -937,7 +937,19 @@
     TT_Face         face = (TT_Face)size->root.face;
     TT_ExecContext  exec;
     FT_Error        error;
+    FT_UInt         i;
 
+
+    /* Scale the cvt values to the new ppem.            */
+    /* By default, we use the y ppem value for scaling. */
+    FT_TRACE6(( "CVT values:\n" ));
+    for ( i = 0; i < size->cvt_size; i++ )
+    {
+      size->cvt[i] = FT_MulFix( face->cvt[i], size->ttmetrics.scale );
+      FT_TRACE6(( "  %3d: %d (%f)\n",
+                  i, face->cvt[i], size->cvt[i] / 64.0 ));
+    }
+    FT_TRACE6(( "\n" ));
 
     exec = size->context;
 
@@ -1171,19 +1183,7 @@
     if ( size->cvt_ready < 0 )
     {
       FT_UInt  i;
-      TT_Face  face = (TT_Face)size->root.face;
 
-
-      /* Scale the cvt values to the new ppem.            */
-      /* By default, we use the y ppem value for scaling. */
-      FT_TRACE6(( "CVT values:\n" ));
-      for ( i = 0; i < size->cvt_size; i++ )
-      {
-        size->cvt[i] = FT_MulFix( face->cvt[i], size->ttmetrics.scale );
-        FT_TRACE6(( "  %3d: %d (%f)\n",
-                    i, face->cvt[i], size->cvt[i] / 64.0 ));
-      }
-      FT_TRACE6(( "\n" ));
 
       /* all twilight points are originally zero */
       for ( i = 0; i < (FT_UInt)size->twilight.n_points; i++ )
