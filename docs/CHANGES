@@ -3,6 +3,9 @@ CHANGES BETWEEN 2.10.0 and 2.10.1
 
   I. IMPORTANT BUG FIXES
 
+  - The bytecode hinting of OpenType variation fonts was flawed, since
+    the data in the `CVAR' table wasn't correctly applied.
+
 
   II. MISCELLANEOUS
 
@@ -18,6 +21,9 @@ CHANGES BETWEEN 2.10.0 and 2.10.1
   - If  `FT_Set_Named_Instance' was  called  with  the same  arguments
     twice in a row, the function  returned an incorrect error code the
     second time.
+
+  - Increased  precision  while  computing  OpenType  font   variation
+    instances.
 
 
 ======================================================================

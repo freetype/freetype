@@ -3113,6 +3113,21 @@
   /*************************************************************************/
 
 
+  static FT_Error
+  tt_cvt_ready_iterator( FT_ListNode  node,
+                         void*        user )
+  {
+    TT_Size  size = (TT_Size)node->data;
+
+    FT_UNUSED( user );
+
+
+    size->cvt_ready = -1;
+
+    return FT_Err_Ok;
+  }
+
+
   /**************************************************************************
    *
    * @Function:
@@ -3142,6 +3157,8 @@
   {
     FT_Error   error;
     FT_Memory  memory = stream->memory;
+
+    FT_Face  root = &face->root;
 
     FT_ULong  table_start;
     FT_ULong  table_len;
@@ -3450,6 +3467,12 @@
     FT_FREE( im_start_coords );
     FT_FREE( im_end_coords );
     FT_FREE( cvt_deltas );
+
+    /* iterate over all FT_Size objects and set `cvt_ready' to -1 */
+    /* to trigger rescaling of all CVT values                     */
+    FT_List_Iterate( &root->sizes_list,
+                     tt_cvt_ready_iterator,
+                     NULL );
 
     return error;
   }

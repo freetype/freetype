@@ -1,5 +1,16 @@
 2019-05-16  Werner Lemberg  <wl@gnu.org>
 
+	[truetype] Actually scale varied CVT values.
+
+	Up to now, only the unscaled CVT values were varied; in other words,
+	the `CVAR' data was never used for bytecode hinting.
+
+	* src/truetype/ttgxvar.c (tt_cvt_ready_iterator): New auxiliary
+	function.
+	(tt_face_vary_cvt): Use it to trigger rescaling of CVT values.
+
+2019-05-16  Werner Lemberg  <wl@gnu.org>
+
 	[truetype] Use 26.6 format for storing unscaled CVT values.
 
 	If `CVAR' data is applied to variation fonts, fractional values are
