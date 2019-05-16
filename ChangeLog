@@ -1,5 +1,12 @@
 2019-05-16  Werner Lemberg  <wl@gnu.org>
 
+	* src/truetype/ttgload.c (load_truetype_glyph): Init `unrounded'.
+
+	This fixes linear advance width values for spacing glyphs.  Bug
+	introduced 2019-05-09.
+
+2019-05-16  Werner Lemberg  <wl@gnu.org>
+
 	[truetype] Avoid code duplication.
 
 	* src/truetype/ttobjs.c (tt_size_run_prep): Scale CVT values in this

@@ -1739,7 +1739,7 @@
         FT_Outline  outline;
 
         /* unrounded values */
-        FT_Vector  unrounded[4];
+        FT_Vector  unrounded[4] = { {0, 0}, {0, 0}, {0, 0}, {0, 0} };
 
 
         points[0].x = loader->pp1.x;
