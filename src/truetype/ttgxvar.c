@@ -72,6 +72,8 @@
           ( (FT_Fixed)( (FT_ULong)(x) << 2 ) )
 #define FT_intToFixed( i )                      \
           ( (FT_Fixed)( (FT_ULong)(i) << 16 ) )
+#define FT_fdot6ToFixed( i )                      \
+          ( (FT_Fixed)( (FT_ULong)(i) << 10 ) )
 #define FT_fixedToInt( x )                                    \
           ( (FT_Short)( ( (FT_ULong)(x) + 0x8000U ) >> 16 ) )
 #define FT_fixedToFdot6( x )                              \
@@ -3367,9 +3369,9 @@
           {
             FT_TRACE7(( "      %d: %f -> %f\n",
                         j,
-                        ( FT_intToFixed( face->cvt[j] ) +
+                        ( FT_fdot6ToFixed( face->cvt[j] ) +
                           old_cvt_delta ) / 65536.0,
-                        ( FT_intToFixed( face->cvt[j] ) +
+                        ( FT_fdot6ToFixed( face->cvt[j] ) +
                           cvt_deltas[j] ) / 65536.0 ));
             count++;
           }
@@ -3409,9 +3411,9 @@
           {
             FT_TRACE7(( "      %d: %f -> %f\n",
                         pindex,
-                        ( FT_intToFixed( face->cvt[pindex] ) +
+                        ( FT_fdot6ToFixed( face->cvt[pindex] ) +
                           old_cvt_delta ) / 65536.0,
-                        ( FT_intToFixed( face->cvt[pindex] ) +
+                        ( FT_fdot6ToFixed( face->cvt[pindex] ) +
                           cvt_deltas[pindex] ) / 65536.0 ));
             count++;
           }
@@ -3436,7 +3438,7 @@
     FT_TRACE5(( "\n" ));
 
     for ( i = 0; i < face->cvt_size; i++ )
-      face->cvt[i] += FT_fixedToInt( cvt_deltas[i] );
+      face->cvt[i] += FT_fixedToFdot6( cvt_deltas[i] );
 
   FExit:
     FT_FRAME_EXIT();

@@ -1395,8 +1395,10 @@ FT_BEGIN_HEADER
    *
    *   cvt ::
    *     The face's original control value table.  Coordinates are expressed
-   *     in unscaled font units.  Comes from the 'cvt~' table.  Ignored for
-   *     Type 2 fonts.
+   *     in unscaled font units (in 26.6 format).  Comes from the 'cvt~'
+   *     table.  Ignored for Type 2 fonts.
+   *
+   *     If varied by the `CVAR' table, non-integer values are possible.
    *
    *   interpreter ::
    *     A pointer to the TrueType bytecode interpreters field is also used
@@ -1633,7 +1635,7 @@ FT_BEGIN_HEADER
 
     /* the original, unscaled, control value table */
     FT_ULong              cvt_size;
-    FT_Short*             cvt;
+    FT_Int32*             cvt;
 
     /* A pointer to the bytecode interpreter to use.  This is also */
     /* used to hook the debugger for the `ttdebug' utility.        */

@@ -1,5 +1,24 @@
 2019-05-16  Werner Lemberg  <wl@gnu.org>
 
+	[truetype] Use 26.6 format for storing unscaled CVT values.
+
+	If `CVAR' data is applied to variation fonts, fractional values are
+	possible.
+
+	* include/freetype/internal/tttypes.h (TT_FaceRec): Change type of
+	`cvt' from `FT_Short' to `FT_Int32'.
+
+	* src/truetype/ttgxvar.c (FT_fdot6ToFixed): New macro.
+	(tt_face_vary_cvt): Use it to update code to 26.6 format.
+
+	* src/truetype/ttobjs.c (tt_size_run_prep): Update code to 26.6
+	format.
+
+	* src/truetype/ttpload.c (tt_face_load_cvt): Stora data in 26.6
+	format.
+
+2019-05-16  Werner Lemberg  <wl@gnu.org>
+
 	* src/truetype/ttgload.c (load_truetype_glyph): Init `unrounded'.
 
 	This fixes linear advance width values for spacing glyphs.  Bug

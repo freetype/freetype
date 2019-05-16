@@ -939,15 +939,18 @@
     FT_Error        error;
     FT_UInt         i;
 
+    /* unscaled CVT values are already stored in 26.6 format */
+    FT_Fixed  scale = size->ttmetrics.scale >> 6;
+
 
     /* Scale the cvt values to the new ppem.            */
     /* By default, we use the y ppem value for scaling. */
     FT_TRACE6(( "CVT values:\n" ));
     for ( i = 0; i < size->cvt_size; i++ )
     {
-      size->cvt[i] = FT_MulFix( face->cvt[i], size->ttmetrics.scale );
-      FT_TRACE6(( "  %3d: %d (%f)\n",
-                  i, face->cvt[i], size->cvt[i] / 64.0 ));
+      size->cvt[i] = FT_MulFix( face->cvt[i], scale );
+      FT_TRACE6(( "  %3d: %f (%f)\n",
+                  i, face->cvt[i] / 64.0, size->cvt[i] / 64.0 ));
     }
     FT_TRACE6(( "\n" ));
 
