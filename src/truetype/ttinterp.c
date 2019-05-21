@@ -1694,6 +1694,32 @@
   }
 
 
+  /*
+   *
+   * Apple's TrueType specification at
+   *
+   *   https://developer.apple.com/fonts/TrueType-Reference-Manual/RM02/Chap2.html#order
+   *
+   * gives the following order of operations in instructions that move
+   * points.
+   *
+   *   - check single width cut-in (MIRP, MDRP)
+   *
+   *   - check control value cut-in (MIRP, MIAP)
+   *
+   *   - apply engine compensation (MIRP, MDRP)
+   *
+   *   - round distance (MIRP, MDRP) or value (MIAP, MDAP)
+   *
+   *   - check minimum distance (MIRP,MDRP)
+   *
+   *   - move point (MIRP, MDRP, MIAP, MSIRP, MDAP)
+   *
+   * For rounding instructions, engine compensation happens before rounding.
+   *
+   */
+
+
   /**************************************************************************
    *
    * @Function:
@@ -1918,7 +1944,6 @@
     zone->org[point].y = ADD_LONG( zone->org[point].y, distance );
   }
 
-
   /**************************************************************************
    *
    * @Function:
@@ -1936,12 +1961,6 @@
    *
    * @Return:
    *   The compensated distance.
-   *
-   * @Note:
-   *   The TrueType specification says very few about the relationship
-   *   between rounding and engine compensation.  However, it seems from
-   *   the description of super round that we should add the compensation
-   *   before rounding.
    */
   static FT_F26Dot6
   Round_None( TT_ExecContext  exc,
