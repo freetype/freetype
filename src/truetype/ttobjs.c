@@ -1109,11 +1109,17 @@
       tt_metrics->rotated   = FALSE;
       tt_metrics->stretched = FALSE;
 
-      /* set default engine compensation */
-      tt_metrics->compensations[0] = 0;   /* gray     */
-      tt_metrics->compensations[1] = 0;   /* black    */
-      tt_metrics->compensations[2] = 0;   /* white    */
-      tt_metrics->compensations[3] = 0;   /* reserved */
+      /* Set default engine compensation.  Value 3 is not described */
+      /* in the OpenType specification (as of Mai 2019), but Greg   */
+      /* says that MS handles it the same as `gray'.                */
+      /*                                                            */
+      /* The Apple specification says that the compensation for     */
+      /* `gray' is always zero.  FreeType doesn't do any            */
+      /* compensation at all.                                       */
+      tt_metrics->compensations[0] = 0;   /* gray             */
+      tt_metrics->compensations[1] = 0;   /* black            */
+      tt_metrics->compensations[2] = 0;   /* white            */
+      tt_metrics->compensations[3] = 0;   /* the same as gray */
     }
 
     /* allocate function defs, instruction defs, cvt, and storage area */
