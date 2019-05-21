@@ -195,6 +195,11 @@
 	the chord.  The cubic distances, however, decrease less predictably
 	but are easy enough to calculate on each step.
 
+	The new algorithm produces slightly larger number of splits, which is
+	compensated by its simplicity.  The overall rendering performance is
+	improved by 1-2%.  The larger number of splits does not necessarily
+	result in higher quality, which stays comparable.
+
 	* src/smooth/ftgrays.c (gray_render_cubic): Replace the split
 	condition.
 
@@ -208,6 +213,10 @@
 2019-04-25  Alexei Podtelezhnikov  <apodtele@gmail.com>
 
 	Optimize Bézier bisections.
+
+	This change makes bisections faster by 20-30%. When inlined into
+	`gray_render_cubic', this makes the function faster by 10% and is
+	noticeable in the overall rendering performance.
 
 	* src/raster/ftraster.c (Split_Conic, Split_Cubic): Use shifts and
 	refactor.

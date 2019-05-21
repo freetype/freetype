@@ -45,7 +45,7 @@
    * This is a new anti-aliasing scan-converter for FreeType 2.  The
    * algorithm used here is _very_ different from the one in the standard
    * `ftraster' module.  Actually, `ftgrays' computes the _exact_
-   * coverage of the outline on each pixel cell.
+   * coverage of the outline on each pixel cell by straight segments.
    *
    * It is based on ideas that I initially found in Raph Levien's
    * excellent LibArt graphics library (see https://www.levien.com/libart
@@ -58,6 +58,14 @@
    * different way, and I don't use sorted vector paths.  Also, it doesn't
    * use floating point values.
    *
+   * Bézier segments are flattened by splitting them until their deviation
+   * from straight line becomes much smaller than a pixel.  Therefore, the
+   * pixel coverage by a Bézier curve is calculated approximately.  To
+   * estimate the deviation, we use the distance from the control point
+   * to the conic chord centre or the cubic chord trisection.  These
+   * distances vanish fast after each split.  In the conic case, they vanish
+   * predictably and the number of necessary splits can be calculated.
+   *
    * This renderer has the following advantages:
    *
    * - It doesn't need an intermediate bitmap.  Instead, one can supply a
@@ -67,7 +75,7 @@
    *   callback.
    *
    * - A perfect anti-aliaser, i.e., it computes the _exact_ coverage on
-   *   each pixel cell.
+   *   each pixel cell by straight segments.
    *
    * - It performs a single pass on the outline (the `standard' FT2
    *   renderer makes two passes).
@@ -75,7 +83,7 @@
    * - It can easily be modified to render to _any_ number of gray levels
    *   cheaply.
    *
-   * - For small (< 20) pixel sizes, it is faster than the standard
+   * - For small (< 80) pixel sizes, it is faster than the standard
    *   renderer.
    *
    */
