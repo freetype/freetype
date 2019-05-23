@@ -3755,6 +3755,12 @@
     if ( !face->doblend || !blend )
       return FT_THROW( Invalid_Argument );
 
+    for ( i = 0; i < n_points; i++ )
+    {
+      unrounded[i].x = INT_TO_F26DOT6( outline->points[i].x );
+      unrounded[i].y = INT_TO_F26DOT6( outline->points[i].y );
+    }
+
     if ( glyph_index >= blend->gv_glyphcnt      ||
          blend->glyphoffsets[glyph_index] ==
            blend->glyphoffsets[glyph_index + 1] )
@@ -4101,10 +4107,8 @@
 
     for ( i = 0; i < n_points; i++ )
     {
-      unrounded[i].x = INT_TO_F26DOT6( outline->points[i].x ) +
-                         FT_fixedToFdot6( point_deltas_x[i] );
-      unrounded[i].y = INT_TO_F26DOT6( outline->points[i].y ) +
-                         FT_fixedToFdot6( point_deltas_y[i] );
+      unrounded[i].x += FT_fixedToFdot6( point_deltas_x[i] );
+      unrounded[i].y += FT_fixedToFdot6( point_deltas_y[i] );
 
       outline->points[i].x += FT_fixedToInt( point_deltas_x[i] );
       outline->points[i].y += FT_fixedToInt( point_deltas_y[i] );
