@@ -1,3 +1,7 @@
+2019-05-26  Ben Wagner  <bungeman@google.com>
+
+	* src/truetype/ttgload.c (TT_Process_Simple_Glyph): Improve accuracy.
+
 2019-05-23  Werner Lemberg  <wl@gnu.org>
 
 	[truetype] Draw glyphs without deltas in variation font (#56374).

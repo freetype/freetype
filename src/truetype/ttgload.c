@@ -1083,14 +1083,11 @@
         {
           FT_Vector*  u = unrounded;
 
-          FT_Fixed  xs = x_scale >> 6;
-          FT_Fixed  ys = y_scale >> 6;
-
 
           for ( ; vec < limit; vec++, u++ )
           {
-            vec->x = FT_MulFix( u->x, xs );
-            vec->y = FT_MulFix( u->y, ys );
+            vec->x = ( FT_MulFix( u->x, x_scale ) + 32 ) >> 6;
+            vec->y = ( FT_MulFix( u->y, y_scale ) + 32 ) >> 6;
           }
         }
         else
