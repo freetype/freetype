@@ -1,3 +1,10 @@
+2019-05-26  Ben Wagner  <bungeman@google.com>
+
+	[truetype] Fix copy-and-paste error (#56409).
+
+	* src/truetype/ttgload.c (load_truetype_glyph): Use correct indices
+	into `unrounded' array for phantom points.
+
 2019-05-29  Werner Lemberg  <wl@gnu.org>
 
 	[truetype] Fix 32bit builds (#56404).
