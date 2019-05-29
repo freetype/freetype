@@ -335,6 +335,7 @@ int r )
       }
       ZFREE(z, s->sub.trees.blens);
       s->mode = CODES;
+      /* fall through */
     case CODES:
       UPDATE
       if ((r = inflate_codes(s, z, r)) != Z_STREAM_END)
@@ -351,11 +352,13 @@ int r )
         break;
       }
       s->mode = DRY;
+      /* fall through */
     case DRY:
       FLUSH
       if (s->read != s->write)
         LEAVE
       s->mode = DONE;
+      /* fall through */
     case DONE:
       r = Z_STREAM_END;
       LEAVE

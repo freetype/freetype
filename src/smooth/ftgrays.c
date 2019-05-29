@@ -1244,14 +1244,29 @@ typedef ptrdiff_t  FT_PtrDist;
        */
       switch ( acount )
       {
-      case 7: *q++ = c;
-      case 6: *q++ = c;
-      case 5: *q++ = c;
-      case 4: *q++ = c;
-      case 3: *q++ = c;
-      case 2: *q++ = c;
-      case 1: *q   = c;
-      case 0: break;
+      case 7:
+        *q++ = c;
+        /* fall through */
+      case 6:
+        *q++ = c;
+        /* fall through */
+      case 5:
+        *q++ = c;
+        /* fall through */
+      case 4:
+        *q++ = c;
+        /* fall through */
+      case 3:
+        *q++ = c;
+        /* fall through */
+      case 2:
+        *q++ = c;
+        /* fall through */
+      case 1:
+        *q = c;
+        /* fall through */
+      case 0:
+        break;
       default:
         FT_MEM_SET( q, c, acount );
       }
