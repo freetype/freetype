@@ -72,12 +72,12 @@
           ( (FT_Fixed)( (FT_ULong)(x) << 2 ) )
 #define FT_intToFixed( i )                      \
           ( (FT_Fixed)( (FT_ULong)(i) << 16 ) )
-#define FT_fdot6ToFixed( i )                      \
+#define FT_fdot6ToFixed( i )                    \
           ( (FT_Fixed)( (FT_ULong)(i) << 10 ) )
-#define FT_fixedToInt( x )                                    \
-          ( (FT_Short)( ( (FT_ULong)(x) + 0x8000U ) >> 16 ) )
-#define FT_fixedToFdot6( x )                              \
-          ( (FT_Pos)( ( (FT_ULong)(x) + 0x200 ) >> 10 ) )
+#define FT_fixedToInt( x )                          \
+          ( (FT_Short)( ( (x) + 0x8000U ) >> 16 ) )
+#define FT_fixedToFdot6( x )                    \
+          ( (FT_Pos)( ( (x) + 0x200 ) >> 10 ) )
 
 
   /**************************************************************************
