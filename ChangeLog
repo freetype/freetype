@@ -1,3 +1,27 @@
+2019-05-30  Nikhil Ramakrishnan  <ramakrishnan.nikhil@gmail.com>
+
+	[sfnt] Separate WOFF sources and headers.
+
+	Move WOFF sources and headers to separate files.
+
+	* include/freetype/internal/wofftypes.h, src/sfnt/sfwoff.c,
+	src/sfnt/sfwoff.h: New files.
+
+	* include/freetype/internal/fttrace.h: Register `sfwoff.c'.
+
+	* include/freetype/internal/internal.h: Define
+	FT_INTERNAL_WOFF_TYPES_H.
+
+	* include/freetype/internal/sfnt.h: Include FT_INTERNAL_WOFF_TYPES_H.
+
+	* include/freetype/internal/tttypes.h: Move out WOFF structures.
+
+	* src/sfnt/rules.mk: Add `sfwoff.c'.
+
+	* src/sfnt/sfnt.c: Include `sfwoff.c'.
+
+	* src/sfnt/sfobjs.c: Include `sfwoff.h', move out WOFF sources.
+
 2019-05-30  Werner Lemberg  <wl@gnu.org>
 
 	[base] Fix `make multi'.
