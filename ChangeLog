@@ -1,4 +1,12 @@
-2019-05-26  Ben Wagner  <bungeman@google.com>
+2019-05-30  Werner Lemberg  <wl@gnu.org>
+
+	[base] Fix `make multi'.
+
+	Reported by Nikhil.
+
+	* src/base/fterrors.c: Include FT_INTERNAL_DEBUG_H.
+
+2019-05-29  Ben Wagner  <bungeman@google.com>
 
 	[truetype] Fix copy-and-paste error (#56409).
 
