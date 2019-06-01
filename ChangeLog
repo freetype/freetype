@@ -1,3 +1,11 @@
+2019-05-31  Alexei Podtelezhnikov  <apodtele@gmail.com>
+
+	Solidify VC2005 builds.
+
+	* include/freetype/internal/ftcalc.h (FT_MSB) [_MSC_VER]: Explicitly
+	declare `_BitScanReverse' intrinsic.
+	* builds/windows/visualc/freetype.vcproj [Debug]: Disable intrinsics.
+
 2019-05-30  Nikhil Ramakrishnan  <ramakrishnan.nikhil@gmail.com>
 
 	[sfnt] Separate WOFF sources and headers.
