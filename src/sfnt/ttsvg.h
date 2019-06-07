@@ -1,10 +1,10 @@
 /****************************************************************************
  *
- * sfnt.c
+ * ttsvg.h
  *
- *   Single object library component.
+ *   OpenType SVG Color (specification).
  *
- * Copyright (C) 1996-2019 by
+ * Copyright (C) 2018-2019 by
  * David Turner, Robert Wilhelm, and Werner Lemberg.
  *
  * This file is part of the FreeType project, and may only be used,
@@ -15,25 +15,21 @@
  *
  */
 
+#ifndef __TTSVG_H__
+#define __TTSVG_H__
 
-#define FT_MAKE_OPTION_SINGLE_OBJECT
 #include <ft2build.h>
 
-#include "pngshim.c"
-#include "sfdriver.c"
-#include "sfobjs.c"
-#include "sfwoff.c"
-#include "ttbdf.c"
-#include "ttcmap.c"
-#include "ttcolr.c"
-#include "ttcpal.c"
-#include "ttsvg.c"
+FT_BEGIN_HEADER
 
-#include "ttkern.c"
-#include "ttload.c"
-#include "ttmtx.c"
-#include "ttpost.c"
-#include "ttsbit.c"
+  FT_LOCAL( FT_Error )
+  tt_face_load_svg( TT_Face    face,
+                    FT_Stream  stream );
 
+  FT_LOCAL( void )
+  tt_face_free_svg( TT_Face    face );
 
+FT_END_HEADER
+
+#endif /* __TTSVG_H__ */
 /* END */
