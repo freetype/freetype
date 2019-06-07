@@ -37,6 +37,8 @@
 #include "ttcpal.h"
 #endif
 
+#include "ttsvg.h" /* OpenType SVG support */
+
 #ifdef TT_CONFIG_OPTION_POSTSCRIPT_NAMES
 #include "ttpost.h"
 #endif
@@ -1294,7 +1296,9 @@
     tt_face_get_metrics,    /* TT_Get_Metrics_Func     get_metrics     */
 
     tt_face_get_name,       /* TT_Get_Name_Func        get_name        */
-    sfnt_get_name_id        /* TT_Get_Name_ID_Func     get_name_id     */
+    sfnt_get_name_id,       /* TT_Get_Name_ID_Func     get_name_id     */
+    tt_face_load_svg,       /* TT_Load_Table_Func      load_svg       */
+    tt_face_free_svg        /* TT_Free_Table_Func      free_svg       */
   )
 
 

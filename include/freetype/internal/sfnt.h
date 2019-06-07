@@ -778,6 +778,9 @@ FT_BEGIN_HEADER
     TT_Get_Name_Func             get_name;
     TT_Get_Name_ID_Func          get_name_id;
 
+    /* Open Type SVG Support */
+    TT_Load_Table_Func           load_svg;
+    TT_Free_Table_Func           free_svg;
   } SFNT_Interface;
 
 
@@ -824,7 +827,9 @@ FT_BEGIN_HEADER
           colr_blend_,                   \
           get_metrics_,                  \
           get_name_,                     \
-          get_name_id_ )                 \
+          get_name_id_,                  \
+          load_svg_,                     \
+          free_svg_    )                 \
   static const SFNT_Interface  class_ =  \
   {                                      \
     goto_table_,                         \
@@ -864,7 +869,9 @@ FT_BEGIN_HEADER
     colr_blend_,                         \
     get_metrics_,                        \
     get_name_,                           \
-    get_name_id_                         \
+    get_name_id_,                        \
+    load_svg_,                           \
+    free_svg_                            \
   };
 
 
