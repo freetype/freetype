@@ -347,6 +347,21 @@
     if ( load_flags & FT_LOAD_SBITS_ONLY )
       return FT_THROW( Invalid_Argument );
 
+    /* OpenType SVG Support Over here */
+    if ( ( load_flags & FT_LOAD_COLOR ) && 
+         ( ((TT_Face)glyph->root.face)->svg ) )
+    {
+      SFNT_Service  sfnt = (SFNT_Service)(((TT_Face)glyph->root.face)->sfnt);
+      error = sfnt->load_svg_doc( &(glyph->root), glyph_index );
+      if( error == FT_Err_Ok )
+      {
+        glyph->root.format = FT_GLYPH_FORMAT_SVG;
+        return error;
+      }
+    }
+
+    /* OpenType SVG Support End */
+
     /* if we have a CID subfont, use its matrix (which has already */
     /* been multiplied with the root matrix)                       */
 

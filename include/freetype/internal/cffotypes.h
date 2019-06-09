@@ -61,6 +61,9 @@ FT_BEGIN_HEADER
   {
     FT_GlyphSlotRec  root;
 
+    FT_Byte*          svg_document;
+    FT_ULong          svg_document_length;
+
     FT_Bool  hint;
     FT_Bool  scaled;
 
