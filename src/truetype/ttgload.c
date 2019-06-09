@@ -2204,7 +2204,8 @@
 
     FT_BBox       bbox;
     FT_Fixed      y_scale;
-    TT_GlyphSlot  glyph = loader->glyph;
+    TT_GlyphSlot  glyph_ = (TT_GlyphSlot)loader->glyph;
+    FT_GlyphSlot  glyph = (FT_GlyphSlot)glyph_;
     TT_Size       size  = loader->size;
 
 
@@ -2392,7 +2393,7 @@
     TT_SBit_MetricsRec  sbit_metrics;
 
 
-    face   = (TT_Face)glyph->face;
+    face   = (TT_Face)(glyph->root.face);
     sfnt   = (SFNT_Service)face->sfnt;
     stream = face->root.stream;
 
@@ -2401,35 +2402,35 @@
                                    glyph_index,
                                    (FT_UInt)load_flags,
                                    stream,
-                                   &glyph->bitmap,
+                                   &(glyph->root.bitmap),
                                    &sbit_metrics );
     if ( !error )
     {
-      glyph->outline.n_points   = 0;
-      glyph->outline.n_contours = 0;
+      (glyph->root).outline.n_points   = 0;
+      (glyph->root).outline.n_contours = 0;
 
-      glyph->metrics.width  = (FT_Pos)sbit_metrics.width  * 64;
-      glyph->metrics.height = (FT_Pos)sbit_metrics.height * 64;
+      (glyph->root).metrics.width  = (FT_Pos)sbit_metrics.width  * 64;
+      (glyph->root).metrics.height = (FT_Pos)sbit_metrics.height * 64;
 
-      glyph->metrics.horiBearingX = (FT_Pos)sbit_metrics.horiBearingX * 64;
-      glyph->metrics.horiBearingY = (FT_Pos)sbit_metrics.horiBearingY * 64;
-      glyph->metrics.horiAdvance  = (FT_Pos)sbit_metrics.horiAdvance  * 64;
+      (glyph->root).metrics.horiBearingX = (FT_Pos)sbit_metrics.horiBearingX * 64;
+      (glyph->root).metrics.horiBearingY = (FT_Pos)sbit_metrics.horiBearingY * 64;
+      (glyph->root).metrics.horiAdvance  = (FT_Pos)sbit_metrics.horiAdvance  * 64;
 
-      glyph->metrics.vertBearingX = (FT_Pos)sbit_metrics.vertBearingX * 64;
-      glyph->metrics.vertBearingY = (FT_Pos)sbit_metrics.vertBearingY * 64;
-      glyph->metrics.vertAdvance  = (FT_Pos)sbit_metrics.vertAdvance  * 64;
+      (glyph->root).metrics.vertBearingX = (FT_Pos)sbit_metrics.vertBearingX * 64;
+      (glyph->root).metrics.vertBearingY = (FT_Pos)sbit_metrics.vertBearingY * 64;
+      (glyph->root).metrics.vertAdvance  = (FT_Pos)sbit_metrics.vertAdvance  * 64;
 
-      glyph->format = FT_GLYPH_FORMAT_BITMAP;
+      (glyph->root).format = FT_GLYPH_FORMAT_BITMAP;
 
       if ( load_flags & FT_LOAD_VERTICAL_LAYOUT )
       {
-        glyph->bitmap_left = sbit_metrics.vertBearingX;
-        glyph->bitmap_top  = sbit_metrics.vertBearingY;
+        (glyph->root).bitmap_left = sbit_metrics.vertBearingX;
+        (glyph->root).bitmap_top  = sbit_metrics.vertBearingY;
       }
       else
       {
-        glyph->bitmap_left = sbit_metrics.horiBearingX;
-        glyph->bitmap_top  = sbit_metrics.horiBearingY;
+        (glyph->root).bitmap_left = sbit_metrics.horiBearingX;
+        (glyph->root).bitmap_top  = sbit_metrics.horiBearingY;
       }
     }
 
@@ -2437,6 +2438,22 @@
   }
 
 #endif /* TT_CONFIG_OPTION_EMBEDDED_BITMAPS */
+
+  static FT_Error
+  load_svg_glyph( TT_GlyphSlot glyph,
+                  FT_ULong     glyph_index ) 
+  {
+    FT_Error      error;
+    TT_Face       face;
+    SFNT_Service  sfnt;
+    FT_Byte*      doc_list;
+
+    face = (TT_Face)(glyph->root).face;
+    sfnt = (SFNT_Service)face->sfnt;
+    
+    error = sfnt->load_svg_doc( (FT_GlyphSlot)glyph, glyph_index );
+    return error;
+  }
 
 
   static FT_Error
@@ -2454,12 +2471,12 @@
     FT_Bool    pedantic = FT_BOOL( load_flags & FT_LOAD_PEDANTIC );
 #if defined TT_SUPPORT_SUBPIXEL_HINTING_INFINALITY || \
     defined TT_SUPPORT_SUBPIXEL_HINTING_MINIMAL
-    TT_Driver  driver = (TT_Driver)FT_FACE_DRIVER( (TT_Face)glyph->face );
+    TT_Driver  driver = (TT_Driver)FT_FACE_DRIVER( (TT_Face)(glyph->root).face );
 #endif
 #endif
 
 
-    face   = (TT_Face)glyph->face;
+    face   = (TT_Face)(glyph->root.face);
     stream = face->root.stream;
 
     FT_ZERO( loader );
@@ -2711,7 +2728,7 @@
     /* get face's glyph loader */
     if ( !glyf_table_only )
     {
-      FT_GlyphLoader  gloader = glyph->internal->loader;
+      FT_GlyphLoader  gloader = (glyph->root).internal->loader;
 
 
       FT_GlyphLoader_Rewind( gloader );
@@ -2775,13 +2792,13 @@
    */
   FT_LOCAL_DEF( FT_Error )
   TT_Load_Glyph( TT_Size       size,
-                 TT_GlyphSlot  glyph,
+                 TT_GlyphSlot  glyph_,
                  FT_UInt       glyph_index,
                  FT_Int32      load_flags )
   {
     FT_Error      error;
     TT_LoaderRec  loader;
-
+    FT_GlyphSlot  glyph = (FT_GlyphSlot)glyph_;
 
     FT_TRACE1(( "TT_Load_Glyph: glyph index %d\n", glyph_index ));
 
@@ -2796,7 +2813,7 @@
       FT_Fixed  y_scale = size->root.metrics.y_scale;
 
 
-      error = load_sbit_image( size, glyph, glyph_index, load_flags );
+      error = load_sbit_image( size, glyph_, glyph_index, load_flags );
       if ( FT_ERR_EQ( error, Missing_Bitmap ) )
       {
         /* the bitmap strike is incomplete and misses the requested glyph; */
@@ -2863,7 +2880,7 @@
         if ( FT_IS_SCALABLE( glyph->face ) )
         {
           /* for the bbox we need the header only */
-          (void)tt_loader_init( &loader, size, glyph, load_flags, TRUE );
+          (void)tt_loader_init( &loader, size, glyph_, load_flags, TRUE );
           (void)load_truetype_glyph( &loader, glyph_index, 0, TRUE );
           tt_loader_done( &loader );
           glyph->linearHoriAdvance = loader.linear;
@@ -2885,11 +2902,10 @@
 
 #endif /* TT_CONFIG_OPTION_EMBEDDED_BITMAPS */
 
-    /* if FT_LOAD_NO_SCALE is not set, `ttmetrics' must be valid */
-    if ( !( load_flags & FT_LOAD_NO_SCALE ) && !size->ttmetrics.valid )
+    /* OT-SVG part here */
+    if ( ( load_flags & FT_LOAD_COLOR ) && ( ((TT_Face)glyph->face)->svg ) )
     {
-      error = FT_THROW( Invalid_Size_Handle );
-      goto Exit;
+      error = load_svg_glyph( glyph_, glyph_index );
     }
 
     if ( load_flags & FT_LOAD_SBITS_ONLY )
@@ -2898,7 +2914,7 @@
       goto Exit;
     }
 
-    error = tt_loader_init( &loader, size, glyph, load_flags, FALSE );
+    error = tt_loader_init( &loader, size, glyph_, load_flags, FALSE );
     if ( error )
       goto Exit;
 

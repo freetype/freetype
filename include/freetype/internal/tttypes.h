@@ -967,8 +967,8 @@ FT_BEGIN_HEADER
    * This structure/class is defined here because it is common to the
    * following formats: TTF, OpenType-TT, and OpenType-CFF.
    *
-   * Note, however, that the classes TT_Size and TT_GlyphSlot are not shared
-   * between font drivers, and are thus defined in `ttobjs.h`.
+   * Note, however, that the classes TT_Size and `TT_GlyphSlot'(not anymore),
+   * are not shared between font drivers, and are thus defined in `ttobjs.h`.
    *
    */
 
@@ -987,6 +987,32 @@ FT_BEGIN_HEADER
    *   OpenType-CFF class (T2_Face).
    */
   typedef struct TT_FaceRec_*  TT_Face;
+
+  /**************************************************************************
+   *
+   * @Type:
+   *   TT_GlyphSlotRec_
+   *
+   * @Description:
+   *   A glyph slot that inherits from FT_GlyphSlotRec_ but adds more fields
+   *
+   */
+  typedef struct TT_GlyphSlotRec_ 
+  {
+    FT_GlyphSlotRec   root;
+    FT_Byte*          svg_document;
+    FT_ULong          svg_document_length;
+  } TT_GlyphSlotRec;
+
+  /**************************************************************************
+   *
+   * @Type:
+   *   TT_GlyphSlot
+   *
+   * @Description:
+   *   A handle to a TrueType glyph slot object.
+   */
+  typedef struct TT_GlyphSlotRec_*  TT_GlyphSlot;
 
 
   /* a function type used for the truetype bytecode interpreter hooks */
