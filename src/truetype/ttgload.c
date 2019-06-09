@@ -2455,23 +2455,6 @@
 #endif /* TT_CONFIG_OPTION_EMBEDDED_BITMAPS */
 
   static FT_Error
-  load_svg_glyph( TT_GlyphSlot glyph,
-                  FT_ULong     glyph_index ) 
-  {
-    FT_Error      error;
-    TT_Face       face;
-    SFNT_Service  sfnt;
-    FT_Byte*      doc_list;
-
-    face = (TT_Face)(glyph->root).face;
-    sfnt = (SFNT_Service)face->sfnt;
-    
-    error = sfnt->load_svg_doc( (FT_GlyphSlot)glyph, glyph_index );
-    return error;
-  }
-
-
-  static FT_Error
   tt_loader_init( TT_Loader     loader,
                   TT_Size       size,
                   TT_GlyphSlot  glyph,
@@ -2813,6 +2796,7 @@
   {
     FT_Error      error;
     TT_LoaderRec  loader;
+    SFNT_Service  sfnt;
     FT_GlyphSlot  glyph = (FT_GlyphSlot)glyph_;
 
     FT_TRACE1(( "TT_Load_Glyph: glyph index %d\n", glyph_index ));
@@ -2920,7 +2904,13 @@
     /* OT-SVG part here */
     if ( ( load_flags & FT_LOAD_COLOR ) && ( ((TT_Face)glyph->face)->svg ) )
     {
-      error = load_svg_glyph( glyph_, glyph_index );
+      sfnt = (SFNT_Service)((TT_Face)glyph->face)->sfnt;
+      error = sfnt->load_svg_doc( glyph, glyph_index );
+      if( error == FT_Err_Ok )
+      {
+        glyph->format = FT_GLYPH_FORMAT_SVG;
+        return error;
+      }
     }
 
     if ( load_flags & FT_LOAD_SBITS_ONLY )
