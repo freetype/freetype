@@ -1,6 +1,6 @@
 /****************************************************************************
  *
- * ttsvg.h
+ * ttsvg.c
  *
  *   OpenType SVG Color (specification).
  *
@@ -27,6 +27,7 @@
 #include <ft2build.h>
 #include FT_INTERNAL_STREAM_H
 #include FT_TRUETYPE_TAGS_H
+#include FT_GZIP_H
 
 
 #include "ttsvg.h"
@@ -113,3 +114,111 @@
       FT_FREE( svg );
     }   
   }
+
+  FT_Error
+  find_doc( FT_Byte*   stream,
+            FT_UShort  num_entries,
+            FT_UInt    glyph_index,
+            FT_ULong   *doc_offset,
+            FT_ULong   *doc_length  )
+  {
+    FT_Error   error;
+    FT_UShort  start_glyph_id;
+    FT_UShort  end_glyph_id;
+    FT_ULong   cur_doc_offset;
+    FT_ULong   cur_doc_length;
+
+    FT_Bool    found = FALSE;
+    FT_UInt    i     = 0;
+
+    /* For now it's linear search, later convert to binary search */
+    for ( i = 0; i < num_entries; i++)
+    {
+      start_glyph_id = FT_NEXT_USHORT( stream );
+      end_glyph_id   = FT_NEXT_USHORT( stream );
+      cur_doc_offset = FT_NEXT_ULONG( stream );
+      cur_doc_length = FT_NEXT_ULONG( stream );
+      
+      if ( ( glyph_index >= start_glyph_id) && 
+           ( glyph_index <= end_glyph_id  ) )
+      {
+        found = TRUE;
+        *doc_offset = cur_doc_offset;
+        *doc_length = cur_doc_length;
+        break;
+      }
+    }
+    if ( found != TRUE )
+      error = FT_THROW( Invalid_Glyph_Index );
+    else
+      error = FT_Err_Ok;
+    return error;
+  }
+
+  FT_LOCAL_DEF(FT_Error)
+  tt_face_load_svg_doc( FT_GlyphSlot  glyph_,
+                        FT_UInt       glyph_index )
+  {
+
+    TT_GlyphSlot glyph = (TT_GlyphSlot) glyph_;
+
+    /* TODO: properly clean stuff here on errors */
+
+    FT_Byte*   doc_list;             /* Pointer to the Svg Document List */ 
+    FT_UShort  num_entries;          /* Total no of entires in doc list  */
+
+    FT_ULong   doc_offset;
+    FT_ULong   doc_length;
+
+    FT_ULong   uncomp_size;
+    FT_Byte*   uncomp_buffer;
+
+    FT_Bool    is_gzip_encoded = FALSE;
+
+    FT_Error   error  = FT_Err_Ok;
+    TT_Face    face   = (TT_Face)glyph->root.face;   
+    FT_Memory  memory = face->root.memory;
+    Svg*       svg    = face->svg;
+
+    /* handle svg being 0x0 situation here */
+    doc_list     = svg->svg_doc_list;
+    num_entries  = FT_NEXT_USHORT( doc_list );
+    
+    error = find_doc( doc_list, num_entries, glyph_index, 
+                                &doc_offset, &doc_length );
+    if ( error != FT_Err_Ok )
+      return error;
+
+    doc_list = svg->svg_doc_list;   /* Reset to so we can use it again */
+    doc_list = (FT_Byte*)( doc_list + doc_offset );
+    
+    if( ( doc_list[0] == 0x1F ) && ( doc_list[1] == 0x8B )
+                                && ( doc_list[2] == 0x08 ) )
+    {
+      is_gzip_encoded = TRUE;
+      uncomp_size = (FT_ULong)doc_list[doc_length - 1] << 24 |
+                    (FT_ULong)doc_list[doc_length - 2] << 16 |
+                    (FT_ULong)doc_list[doc_length - 3] << 8  |
+                    (FT_ULong)doc_list[doc_length - 4];
+      
+      /* TODO: memory allocated here needs to be freed somewhere */
+      uncomp_buffer = (FT_Byte*) memory->alloc(memory, uncomp_size);
+      error = FT_Gzip_Uncompress( memory, uncomp_buffer, &uncomp_size,
+                                          doc_list,      doc_length  );
+      if ( error != FT_Err_Ok )
+      {
+        error = FT_THROW( Invalid_Table );
+        return error;
+      }
+
+      glyph->svg_document        = uncomp_buffer;
+      glyph->svg_document_length = uncomp_size;
+      return FT_Err_Ok;
+    } 
+
+    glyph->svg_document        = doc_list;
+    glyph->svg_document_length = doc_length;
+    return FT_Err_Ok;
+  }
+
+  
