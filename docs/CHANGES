@@ -22,8 +22,28 @@ CHANGES BETWEEN 2.10.0 and 2.10.1
     twice in a row, the function  returned an incorrect error code the
     second time.
 
+  - Direct   rendering   using  FT_RASTER_FLAG_DIRECT   crashed   (bug
+    introduced in version 2.10.0).
+
   - Increased  precision  while  computing  OpenType  font   variation
     instances.
+
+  - The  flattening  algorithm of  cubic  Bezier  curves was  slightly
+    changed to make  it faster.  This can cause  very subtle rendering
+    changes, which aren't noticeable by the eye, however.
+
+  - The `ftmulti' demo program now  supports multiple hidden axes with
+    the same name tag.
+
+  - `ftview', `ftstring', and `ftgrid' got  a `-k' command line option
+    to emulate a sequence of keystrokes at start-up.
+
+  - `ftview', `ftstring', and `ftgrid' now support screen dumping to a
+    PNG file.
+
+  - The bytecode debugger, `ttdebug',  now supports variation TrueType
+    fonts; a variation font instance can be selected with the new `-d'
+    command line option.
 
 
 ======================================================================
