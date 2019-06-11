@@ -1,3 +1,10 @@
+2019-06-11  Moazin Khatti  <moazinkhatri@gmail.com>
+
+	[gzip] Add support for `gzip' encoded header.
+
+	* src/gzip/ftgzip.c (FT_Gzip_Uncompress): Modify the the call to
+	`inflateInit2' to enable support for `gzip' encoded headers. 
+
 2019-06-10  Alexei Podtelezhnikov  <apodtele@gmail.com>
 
 	[type1,type42] Use `const' for string literals.
