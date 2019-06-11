@@ -104,6 +104,73 @@ FT_BEGIN_HEADER
   } WOFF_TableRec, *WOFF_Table;
 
 
+  /**************************************************************************
+   *
+   * @struct:
+   *   WOFF2_HeaderRec
+   *
+   * @description:
+   *   WOFF2 file format header.
+   *
+   * @fields:
+   *   See
+   *
+   *     https://www.w3.org/TR/WOFF2/#woff20Header
+   *
+   * @note:
+   *   We don't care about the fields `reserved`, `majorVersion` and
+   *   `minorVersion`, so they are not included.  The `totalSfntSize` field
+   *   does not necessarily represent the actual size of the uncompressed
+   *   SFNT font stream, so that is not included either.
+   */
+  typedef struct  WOFF2_HeaderRec
+  {
+    FT_ULong   signature;
+    FT_ULong   flavor;
+    FT_ULong   length;
+    FT_UShort  num_tables;
+    FT_ULong   totalCompressedSize;
+    FT_ULong   metaOffset;
+    FT_ULong   metaLength;
+    FT_ULong   metaOrigLength;
+    FT_ULong   privOffset;
+    FT_ULong   privLength;
+
+    FT_ULong   uncompressed_size;
+    FT_ULong   header_version;
+
+  } WOFF2_HeaderRec, *WOFF2_Header;
+
+
+  /**************************************************************************
+   *
+   * @struct:
+   *   WOFF2_TableRec
+   *
+   * @description:
+   *   This structure describes a given table of a WOFF2 font.
+   *
+   * @fields:
+   *   See
+   *
+   *     https://www.w3.org/TR/WOFF2/#table_dir_format
+   */
+  typedef struct  WOFF2_TableRec_
+  {
+    FT_Byte   FlagByte;           /* table type and flags      */
+    FT_ULong  Tag;                /* table file offset         */
+    FT_ULong  OrigLength;         /* uncompressed table length */
+    FT_ULong  TransformLength;    /* transformed length        */
+
+    FT_ULong  flags;              /* calculated flags          */
+    FT_ULong  src_offset;         /* compressed table offset   */
+    FT_ULong  src_length;         /* compressed table length   */
+
+    FT_ULong  dst_offset;         /* uncompressed table offset */
+
+  } WOFF2_TableRec, *WOFF2_Table;
+
+
 FT_END_HEADER
 
 #endif /* WOFFTYPES_H_ */
