@@ -1,3 +1,13 @@
+2019-06-10  Alexei Podtelezhnikov  <apodtele@gmail.com>
+
+	[bdf,pcf] Use `const' for string literals.
+
+	* src/bdf/bdf.h (bdf_property_t): Updated `name'.
+	* src/bdf/bdflib.c (_bdf_list_split,bdf_create_property,
+	_bdf_add_property,_bdf_ato*): Updated.
+	* src/bdf/bdfdrivr.c (bdf_interpret_style): Updated.
+	* src/pcf/pcfread.c (pcf_intrpret_style): Ditto.
+
 2019-06-07  Philip Race  <philip.race@oracle.com>
 
 	* src/base/ftinit.c (FT_Set_Default_Properties): Fix crash.
