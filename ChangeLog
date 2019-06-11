@@ -1,3 +1,14 @@
+2019-08-27  Nikhil Ramakrishnan  <ramakrishnan.nikhil@gmail.com>
+
+	Add structures for WOFF2.
+
+	Add structures and macro for WOFF 2 header and table directory.
+
+	* include/freetype/internal/wofftypes.h (WOFF2_HeaderRec,
+	WOFF2_TableRec_): New structures.
+
+	* include/freetype/tttags.h (TTAG_wOF2): New macro.
+
 2019-08-26  Werner Lemberg  <wl@gnu.org>
 
 	* src/psaux/cffdecode.c (cff_operator_seac): Fix numeric overflow.
