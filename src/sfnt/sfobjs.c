@@ -22,6 +22,7 @@
 #include "ttcmap.h"
 #include "ttkern.h"
 #include "sfwoff.h"
+#include "sfwoff2.h"
 #include FT_INTERNAL_SFNT_H
 #include FT_INTERNAL_DEBUG_H
 #include FT_TRUETYPE_IDS_H
@@ -377,6 +378,22 @@
         return error;
 
       error = woff_open_font( stream, face );
+      if ( error )
+        return error;
+
+      /* Swap out stream and retry! */
+      stream = face->root.stream;
+      goto retry;
+    }
+
+    if ( tag == TTAG_wOF2 )
+    {
+      FT_TRACE2(( "sfnt_open_font: file is a WOFF2; synthesizing SFNT\n" ));
+
+      if ( FT_STREAM_SEEK( offset ) )
+        return error;
+
+      error = woff2_open_font( stream, face );
       if ( error )
         return error;
 

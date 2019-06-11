@@ -1,5 +1,23 @@
 2019-08-27  Nikhil Ramakrishnan  <ramakrishnan.nikhil@gmail.com>
 
+	[sfnt] Read WOFF 2 header.
+
+	Check for WOFF2 tag, call `woff2_open_font', and implement it to read
+	header according to specification.
+
+	* include/freetype/internal/fttrace.h: Add `sfwoff2.c'.
+
+	* src/sfnt/rules.mk (SFNT_DRV_SRC): Add `sfwoff2.c'.
+
+	* src/sfnt/sfnt.c: Include `sfwoff2.c'.
+
+	* src/sfnt/sfobjs.c (sfnt_open_font): Check for `wOF2' tag and call
+	`woff2_open_font'.
+
+	* src/sfnt/sfwoff2.c, src/sfnt/sfwoff2.h: New files.
+
+2019-08-27  Nikhil Ramakrishnan  <ramakrishnan.nikhil@gmail.com>
+
 	Add structures for WOFF2.
 
 	Add structures and macro for WOFF 2 header and table directory.
