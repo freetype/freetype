@@ -1,5 +1,18 @@
 2019-06-10  Alexei Podtelezhnikov  <apodtele@gmail.com>
 
+	[type1,type42] Use `const' for string literals.
+
+	* include/freetype/internal/psaux.h (PS_Table_FuncsRec): Updated.
+	* include/freetype/internal/t1types.h (T1_EncodingRec): Updated.
+	* src/psaux/psobjs.[ch] (ps_table_add): Updated.
+	* src/type1/t1load.c (T1_Open_Face, parse_encoding): Updated.
+	* src/type42/t42objs.c (T42_Open_Face): Updated.
+	* src/type42/t42parse.c (t42_parse_encoding): Updated.
+
+	* src/cff/cffobjs.c (cff_face_init): Minor.
+
+2019-06-10  Alexei Podtelezhnikov  <apodtele@gmail.com>
+
 	[bdf,pcf] Use `const' for string literals.
 
 	* src/bdf/bdf.h (bdf_property_t): Updated `name'.
