@@ -148,7 +148,7 @@
   /* This list shall be expanded as we find more of them.       */
 
   static FT_Bool
-  tt_check_trickyness_family( FT_String*  name )
+  tt_check_trickyness_family( const FT_String*  name )
   {
 
 #define TRICK_NAMES_MAX_CHARACTERS  19
