@@ -646,6 +646,9 @@ typedef ptrdiff_t  FT_PtrDist;
       dx    = -dx;
     }
 
+    /* the fractional part of y-delta is mod/dx. It is essential to */
+    /* keep track of its accumulation for accurate rendering.       */
+    /* XXX: y-delta and x-delta below should be related.            */
     FT_DIV_MOD( TCoord, p, dx, delta, mod );
 
     ras.area  += (TArea)( ( fx1 + first ) * delta );
@@ -783,6 +786,8 @@ typedef ptrdiff_t  FT_PtrDist;
       dy    = -dy;
     }
 
+    /* the fractional part of x-delta is mod/dy. It is essential to */
+    /* keep track of its accumulation for accurate rendering.       */
     FT_DIV_MOD( TCoord, p, dy, delta, mod );
 
     x = ras.x + delta;
