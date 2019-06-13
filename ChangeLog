@@ -1,3 +1,17 @@
+2019-06-13  Alexei Podtelezhnikov  <apodtele@gmail.com>
+
+	[smooth] Restore the span buffering for direct mode only.
+
+	The buffer size FT_MAX_GRAY_SPANS is set to 10 spans, which should be
+	enough to cover the entire scanline for simple glyphs in most cases:
+	each slightly slanted edge needs up to two spans, plus a filling span
+	in-between.  This is not new, we used to do it before cb4388783cecc.
+
+	* src/smooth/ftgrays.c (gray_TWorker): Add `spans' and `num_spans'.
+	(gray_hline, gray_sweep): Implement the span buffering.
+	(gray_raster_render): Use negative `num_spans' to avoid the direct
+	mode.
+
 2019-06-12  Alexei Podtelezhnikov  <apodtele@gmail.com>
 
 	* include/freetype/ftmodapi.h (FT_DebugHook_Func): Return error.
