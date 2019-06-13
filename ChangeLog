@@ -1,3 +1,10 @@
+2019-06-12  Alexei Podtelezhnikov  <apodtele@gmail.com>
+
+	* include/freetype/ftmodapi.h (FT_DebugHook_Func): Return error.
+
+	Fix a warning by adding a return value as in `TT_RunIns',
+	which should not be a compatibility issue. 
+
 2019-06-11  Alexei Podtelezhnikov  <apodtele@gmail.com>
 
 	* src/truetype/ttobjs.c (tt_check_trickyness_family): Add `const'.
