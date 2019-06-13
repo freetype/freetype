@@ -1,3 +1,7 @@
+2019-06-13  Werner Lemberg  <wl@gnu.org>
+
+	* src/autofit/aflatin.c (af_latin_metrics_init_widths): Minor.
+
 2019-06-13  Alexei Podtelezhnikov  <apodtele@gmail.com>
 
 	[smooth] Restore the span buffering for direct mode only.

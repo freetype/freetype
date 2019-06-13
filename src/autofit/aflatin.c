@@ -149,7 +149,11 @@
       af_shaper_buf_destroy( face, shaper_buf );
 
       if ( !glyph_index )
+      {
+        FT_TRACE5(( "standard character missing;"
+                    " using fallback stem widths\n" ));
         goto Exit;
+      }
 
       FT_TRACE5(( "standard character: U+%04lX (glyph index %d)\n",
                   ch, glyph_index ));
