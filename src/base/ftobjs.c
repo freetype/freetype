@@ -4538,7 +4538,10 @@
     {
     case FT_GLYPH_FORMAT_BITMAP:   /* already a bitmap, don't do anything */
       break;
+    case FT_GLYPH_FORMAT_SVG:      /* handle svg rendering */
+      renderer = FT_Lookup_Renderer( library, slot->format, NULL );
 
+      break;
     default:
       if ( slot->internal->load_flags & FT_LOAD_COLOR )
       {

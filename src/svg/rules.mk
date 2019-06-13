@@ -1,0 +1,72 @@
+#
+# FreeType 2 svg renderer module build rules
+#
+
+
+# Copyright (C) 1996-2019 by
+# David Turner, Robert Wilhelm, and Werner Lemberg.
+#
+# This file is part of the FreeType project, and may only be used, modified,
+# and distributed under the terms of the FreeType project license,
+# LICENSE.TXT.  By continuing to use, modify, or distribute this file you
+# indicate that you have read the license and understand and accept it
+# fully.
+
+
+# svg renderer driver directory
+#
+SVG_DIR := $(SRC_DIR)/svg
+
+# compilation flags for the driver
+#
+SVG_COMPILE := $(CC) $(ANSIFLAGS)                               \
+                        $I$(subst /,$(COMPILER_SEP),$(SVG_DIR)) \
+                        $(INCLUDE_FLAGS)                           \
+                        $(FT_CFLAGS)
+
+
+# raster driver sources (i.e., C files)
+#
+SVG_DRV_SRC := $(SVG_DIR)/ftsvg.c \
+	       $(SVG_DIR)/svgtypes.c
+
+
+# raster driver headers
+#
+SVG_DRV_H := $(SVG_DIR)/ftsvg.h
+
+
+# raster driver object(s)
+#
+#   RASTER_DRV_OBJ_M is used during `multi' builds.
+#   RASTER_DRV_OBJ_S is used during `single' builds.
+#
+#RASTER_DRV_OBJ_M := $(RASTER_DRV_SRC:$(RASTER_DIR)/%.c=$(OBJ_DIR)/%.$O)
+SVG_DRV_OBJ_M := $(SVG_DRV_SRC:$(SVG_DIR)/%.c=$(OBJ_DIR)/%.$O)
+SVG_DRV_OBJ_S := $(OBJ_DIR)/svg.$O
+
+# raster driver source file for single build
+#
+SVG_DRV_SRC_S := $(SVG_DIR)/svg.c
+
+
+# raster driver - single object
+#
+$(SVG_DRV_OBJ_S): $(SVG_DRV_SRC_S) $(SVG_DRV_SRC) \
+                     $(FREETYPE_H) $(SVG_DRV_H)
+	$(SVG_COMPILE) $T$(subst /,$(COMPILER_SEP),$@ $(SVG_DRV_SRC_S))
+
+
+# raster driver - multiple objects
+#
+$(OBJ_DIR)/%.$O: $(SVG_DIR)/%.c $(FREETYPE_H) $(SVG_DRV_H)
+	$(SVG_COMPILE) $T$(subst /,$(COMPILER_SEP),$@ $<)
+
+
+# update main driver object lists
+#
+DRV_OBJS_S += $(SVG_DRV_OBJ_S)
+DRV_OBJS_M += $(SVG_DRV_OBJ_M)
+
+
+# EOF
