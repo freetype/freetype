@@ -967,8 +967,8 @@ FT_BEGIN_HEADER
    * This structure/class is defined here because it is common to the
    * following formats: TTF, OpenType-TT, and OpenType-CFF.
    *
-   * Note, however, that the classes TT_Size and `TT_GlyphSlot'(not anymore),
-   * are not shared between font drivers, and are thus defined in `ttobjs.h`.
+   * Note, however, that the class TT_Size is not shared between font driver,
+   * and is thus defined in `ttobjs.h`.
    *
    */
 
@@ -990,12 +990,28 @@ FT_BEGIN_HEADER
 
   /**************************************************************************
    *
-   * @Type:
+   * @type:
    *   TT_GlyphSlotRec_
    *
-   * @Description:
+   * @description:
    *   A glyph slot that inherits from FT_GlyphSlotRec_ but adds more fields
    *
+   * @fields:
+   *   root ::
+   *     Inherits this structure from FT_GlyphSlotRec. See note below.
+   *
+   *   svg_document ::
+   *     A pointer to the SVG Document stream under interest. The stream
+   *     will be in plain text.
+   *
+   *   svg_document_length ::
+   *     The length of the `svg_document' stream.
+   *
+   * @note:
+   *   This structure has been created to accomodate the needs of OT-SVG
+   *   rendering. It inherits from FT_GlyphSlotRect. So that `TT_GlyphSlot'
+   *   can be casted to `FT_GlyphSlot' and behave that way too. It's defined
+   *   here because it is common to OpenType-TTF and OpenType-CFF.
    */
   typedef struct TT_GlyphSlotRec_ 
   {
@@ -1004,14 +1020,8 @@ FT_BEGIN_HEADER
     FT_ULong          svg_document_length;
   } TT_GlyphSlotRec;
 
-  /**************************************************************************
-   *
-   * @Type:
-   *   TT_GlyphSlot
-   *
-   * @Description:
-   *   A handle to a TrueType glyph slot object.
-   */
+
+  /* A handle to a TrueType glyph slot object. */
   typedef struct TT_GlyphSlotRec_*  TT_GlyphSlot;
 
 

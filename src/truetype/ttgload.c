@@ -2204,6 +2204,10 @@
 
     FT_BBox       bbox;
     FT_Fixed      y_scale;
+
+    /* TODO: (OT-SVG) Temporary hack to accomodate the change
+     * in the `TT_GlyphSlot' made. Rewrite properly
+     */
     TT_GlyphSlot  glyph_ = (TT_GlyphSlot)loader->glyph;
     FT_GlyphSlot  glyph = (FT_GlyphSlot)glyph_;
     TT_Size       size  = loader->size;
@@ -2392,7 +2396,9 @@
     FT_Error            error;
     TT_SBit_MetricsRec  sbit_metrics;
 
-
+    /* (OT-SVG) face assignment changed to accomodate the change in
+     * the structure of TT_GlyphSlot
+     */
     face   = (TT_Face)(glyph->root.face);
     sfnt   = (SFNT_Service)face->sfnt;
     stream = face->root.stream;
@@ -2404,6 +2410,10 @@
                                    stream,
                                    &(glyph->root.bitmap),
                                    &sbit_metrics );
+    /* TODO: (OT-SVG) So many `glyph->root' look ugly. Maybe create a new variable
+     * to make this look good.
+     */
+
     if ( !error )
     {
       (glyph->root).outline.n_points   = 0;
@@ -2782,6 +2792,8 @@
     FT_Error      error;
     TT_LoaderRec  loader;
     SFNT_Service  sfnt;
+
+    /* TODO: (OT-SVG) maybe find a proper way to do this */
     FT_GlyphSlot  glyph = (FT_GlyphSlot)glyph_;
 
     FT_TRACE1(( "TT_Load_Glyph: glyph index %d\n", glyph_index ));
@@ -2886,7 +2898,7 @@
 
 #endif /* TT_CONFIG_OPTION_EMBEDDED_BITMAPS */
 
-    /* OT-SVG part here */
+    /* check for OT-SVG */
     if ( ( load_flags & FT_LOAD_COLOR ) && ( ((TT_Face)glyph->face)->svg ) )
     {
       sfnt = (SFNT_Service)((TT_Face)glyph->face)->sfnt;
