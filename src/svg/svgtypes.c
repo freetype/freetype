@@ -19,17 +19,14 @@
 #include <ft2build.h>
 #include FT_INTERNAL_OBJECTS_H
 #include FT_RENDER_H
-
-
-  /* Function Pointer definitions for SVG_RendererHooks */
-  typedef FT_Error (*SVG_Lib_Init)(); /* initialize the external lib */
-  typedef FT_Error (*SVG_Lib_Free)(); /* destroy the external lib */
+#include FT_SVG_RENDERER_H
 
   typedef struct SVG_RendererHooks_
   {
     /* Api Hooks for OT-SVG Rendering */ 
-    SVG_Lib_Init  svg_lib_init;
-    SVG_Lib_Free  svg_lib_free;
+    SVG_Lib_Init    svg_lib_init;
+    SVG_Lib_Free    svg_lib_free;
+    SVG_Lib_Render  svg_lib_render;
   } SVG_RendererHooks;
 
   typedef struct SVG_RendererRec_
