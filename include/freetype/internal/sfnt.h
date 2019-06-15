@@ -312,7 +312,26 @@ FT_BEGIN_HEADER
                               TT_SBit_MetricsRec  *ametrics );
 
 
-  /* OT-SVG to be documented later */
+  /**************************************************************************
+   *
+   * @functype:
+   *   TT_Load_Svg_Doc_Func
+   *
+   * @description:
+   *   Scans the SVG documents list to find the document containing the glyph
+   *   that has the id `glyph<glyph_index>'
+   *
+   * @input:
+   *   glyph ::
+   *     The glyph slot from which pointers to SVG documents list will be
+   *     grabbed. The results will be stored back in the slot too.
+   *
+   *   glyph_index ::
+   *     The index of the glyph that is to be looked up.
+   *
+   * @return:
+   *   FreeType error code.  0 means success.
+   */
   typedef FT_Error
   (*TT_Load_Svg_Doc_Func)( FT_GlyphSlot  glyph,
                            FT_UInt       glyph_index );
