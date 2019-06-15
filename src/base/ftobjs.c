@@ -40,6 +40,7 @@
 #include FT_SERVICE_TT_CMAP_H
 #include FT_SERVICE_KERNING_H
 #include FT_SERVICE_TRUETYPE_ENGINE_H
+#include FT_SVG_RENDERER_H
 
 #include FT_DRIVER_H
 
@@ -5549,5 +5550,19 @@
       return 0;
   }
 
+  FT_EXPORT_DEF( FT_Error )
+  FT_Set_Svg_Hooks( FT_Library      library, 
+                    SVG_Lib_Init    init_hook, 
+                    SVG_Lib_Free    free_hook,
+                    SVG_Lib_Render  render_hook )
+  {
+    FT_Module               renderer;
+    SVG_Renderer_Interface  *svg;
+    
+    renderer = FT_Get_Module( library, "ot-svg" );
+    svg = (SVG_Renderer_Interface*)renderer->clazz->module_interface;
+    svg->set_hooks(library, init_hook, free_hook, render_hook);
+    return FT_Err_Ok;
+  }
 
 /* END */

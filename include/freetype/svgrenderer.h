@@ -1,0 +1,153 @@
+/****************************************************************************
+ *
+ * svgrenderer.h
+ *
+ *   Interface for SVG Renderer Module (specification).
+ *
+ * Copyright (C) 2004-2019 by
+ * David Turner, Robert Wilhelm, and Werner Lemberg.
+ *
+ * This file is part of the FreeType project, and may only be used,
+ * modified, and distributed under the terms of the FreeType project
+ * license, LICENSE.TXT.  By continuing to use, modify, or distribute
+ * this file you indicate that you have read the license and
+ * understand and accept it fully.
+ *
+ */
+
+
+#ifndef FTSVG_RENDERER_H_
+#define FTSVG_RENDERER_H_
+
+#include <ft2build.h>
+#include FT_FREETYPE_H
+
+#ifdef FREETYPE_H
+#error "freetype.h of FreeType 1 has been loaded!"
+#error "Please fix the directory search order for header files"
+#error "so that freetype.h of FreeType 2 is found first."
+#endif
+
+FT_BEGIN_HEADER
+
+  /**************************************************************************
+   *
+   * @functype:
+   *   SVG_Lib_Init
+   *
+   * @description:
+   *   A callback used to initiate the SVG Rendering port
+   *
+   * @return:
+   *   FreeType error code.  0 means success.
+   */
+
+  typedef FT_Error
+  (*SVG_Lib_Init)(  ); 
+
+
+  /**************************************************************************
+   *
+   * @functype:
+   *   SVG_Lib_Free
+   *
+   * @description:
+   *   A callback used to free the SVG Rendering port. Calling this callback
+   *   shall do all cleanups that the SVG Rendering port wants to do.
+   *
+   * @return:
+   *   FreeType error code.  0 means success.
+   */
+
+  typedef FT_Error
+  (*SVG_Lib_Free)(  );
+
+
+  /**************************************************************************
+   *
+   * @functype:
+   *   SVG_Lib_Render
+   *
+   * @description:
+   *   A callback used to render the glyph loaded in the slot.
+   *
+   * @input:
+   *   svg_doc::
+   *     A pointer to the svg document 
+   *
+   * @return:
+   *   FreeType error code.  0 means success.
+   */
+
+  typedef FT_Error
+  (*SVG_Lib_Render)( FT_GlyphSlot  slot );
+
+
+  /**************************************************************************
+   *
+   * @functype:
+   *   SVG_Set_Hooks
+   *
+   * @description:
+   *   A function that is used set SVG Hooks. Part of the SVG Renderer
+   *   Interface.
+   *
+   * @input:
+   *   library::
+   *     FT_Library instance. 
+   *
+   *   init_hook::
+   *     A function pointer of the type `SVG_Lib_Init'. Read the documentation
+   *     of `SVG_Lib_Init'
+   *
+   *   free_hook::
+   *     A function pointer of the type `SVG_Lib_Free'. Read the documentation
+   *     of `SVG_Lib_Free'.
+   *
+   *   render_hook::
+   *     A function pointer of the type `SVG_Lib_Render'. Read the 
+   *     documentation of `SVG_Lib_Render'.
+   *
+   * @return:
+   *   FreeType error code.  0 means success.
+   */
+
+  typedef FT_Error
+  (*SVG_Set_Hooks)( FT_Library      library, 
+                    SVG_Lib_Init    init_hook, 
+                    SVG_Lib_Free    free_hook,
+                    SVG_Lib_Render  render_hook );
+
+  /**************************************************************************
+   *
+   * @struct:
+   *   SVG_Renderer_Interface
+   *
+   * @description:
+   *   An interface structure that function needed to inject external SVG 
+   *   rendering library hooks.
+   *
+   * @fields:
+   *   set_hooks::
+   *     A function that can be called to set the hooks.
+   *
+   * @return:
+   *   FreeType error code.  0 means success.
+   */
+
+  typedef struct SVG_Renderer_Interface_ 
+  {
+    SVG_Set_Hooks  set_hooks; 
+  } SVG_Renderer_Interface;
+
+
+  /* TODO: to document */
+  FT_Error
+  FT_Set_Svg_Hooks( FT_Library      library, 
+                    SVG_Lib_Init    init_hook, 
+                    SVG_Lib_Free    free_hook,
+                    SVG_Lib_Render  render_hook );
+
+FT_END_HEADER
+
+#endif

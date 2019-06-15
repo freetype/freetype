@@ -16,6 +16,8 @@
  */
 
 #include <ft2build.h>
+#include FT_SVG_RENDERER_H
+
 #include <stdio.h>
 
 #include "ftsvg.h"
@@ -24,7 +26,9 @@
   FT_Error 
   tmp_svg_lib_init()
   {
-    FT_Error error = FT_Err_Ok;
+    FT_Error  error;
+
+    error = FT_Err_Ok;
     printf("Init svg\n");
     return error;
   }
@@ -49,12 +53,36 @@
                  FT_Render_Mode    mode,
                  const FT_Vector*  origin )
   {
-    SVG_Renderer renderer_ = (SVG_Renderer)renderer;
+    SVG_Renderer  renderer_ = (SVG_Renderer)renderer;
+
     if( renderer_->loaded == FALSE )
       renderer_->loaded = TRUE;
+
     renderer_->hooks.svg_lib_init();
+    return FT_Err_Ok;
   }
 
+  static FT_Error
+  ft_svg_set_hooks( FT_Module       renderer_,
+                    SVG_Lib_Init    init_hook, 
+                    SVG_Lib_Free    free_hook,
+                    SVG_Lib_Render  render_hook )
+  {
+    SVG_Renderer  renderer;
+
+    renderer = (SVG_Renderer)renderer_;
+    renderer->hooks.svg_lib_init   = init_hook;
+    renderer->hooks.svg_lib_free   = free_hook;
+    renderer->hooks.svg_lib_render = render_hook;
+
+    return FT_Err_Ok;
+  }
+
+
+  static const SVG_Renderer_Interface svg_renderer_interface = 
+  {
+    (SVG_Set_Hooks)ft_svg_set_hooks
+  };
 
 
   FT_DEFINE_RENDERER(
@@ -66,12 +94,12 @@
       "ot-svg",
       0x10000L,
       0x20000L,
-      NULL,     /* module specific interface */
+      (const void*)&svg_renderer_interface,   /* module specific interface */
       (FT_Module_Constructor)ft_svg_init,     /* module_init */
       NULL,
       NULL,
       FT_GLYPH_FORMAT_SVG,
-      NULL,
+      (FT_Renderer_RenderFunc)ft_svg_render,
       NULL,
       NULL,
       NULL,
