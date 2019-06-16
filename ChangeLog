@@ -1,3 +1,15 @@
+2019-06-16  Werner Lemberg  <wl@gnu.org>
+
+	Towards better VMS support.
+
+	More to come.
+
+	* builds/vms/LIBS.OPT_IA64, builds/vms/_LINK.OPT_IA64,
+	builds/vms/vmslib.dat: New files provided by Jouk Jansen
+	<joukj@hrem.nano.tudelft.nl>.
+
+	* builds/vms/ftconfig.h: Update, also from Jouk.
+
 2019-06-13  Werner Lemberg  <wl@gnu.org>
 
 	* src/autofit/aflatin.c (af_latin_metrics_init_widths): Minor.
