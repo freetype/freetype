@@ -1,5 +1,21 @@
 2019-08-27  Nikhil Ramakrishnan  <ramakrishnan.nikhil@gmail.com>
 
+	[woff2] Read table and collection directory.
+
+	* include/freetype/internal/wofftypes.h (WOFF2_TtcFontRec): New
+	structure.
+	(WOFF2_HeaderRec): Add more fields.
+
+	* src/sfnt/sfwoff2.c (READ_255USHORT, READ_BASE128, ROUND4): New
+	macros.
+	(Read255UShort, CollectionHeaderSize, compute_first_table_offset):
+	New functions.
+	(ReadBase128): Use `FT_READ_BYTE'.
+	(woff2_open_font): Add functionality to read table directory and
+	collection directory (if present).
+
+2019-08-27  Nikhil Ramakrishnan  <ramakrishnan.nikhil@gmail.com>
+
 	[sfnt] Include `woff2tags.c' for building.
 
 	* src/sfnt/rules.mk (SFNT_DRV_SRC): Add `woff2tags.c'.
