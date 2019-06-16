@@ -107,6 +107,42 @@ FT_BEGIN_HEADER
   /**************************************************************************
    *
    * @struct:
+   *   WOFF2_TtcFontRec
+   *
+   * @description:
+   *   Metadata for a TTC font entry in WOFF2.
+   *
+   * @fields:
+   *   flavor ::
+   *     TTC font flavor.
+   *
+   *   num_tables ::
+   *     Number of tables in TTC, indicating number of elements in
+   *     `table_indices`.
+   *
+   *   dst_offset ::
+   *     Uncompressed table offset.
+   *
+   *   header_checksum ::
+   *     Checksum for font header.
+   *
+   *   table_indices ::
+   *     Array of table indices for each TTC font.
+   */
+  typedef struct  WOFF2_TtcFontRec_
+  {
+    FT_ULong    flavor;
+    FT_UShort   num_tables;
+    FT_ULong    dst_offset;
+    FT_ULong    header_checksum;
+    FT_UShort*  table_indices;
+
+  } WOFF2_TtcFontRec, *WOFF2_TtcFont;
+
+
+  /**************************************************************************
+   *
+   * @struct:
    *   WOFF2_HeaderRec
    *
    * @description:
@@ -123,7 +159,7 @@ FT_BEGIN_HEADER
    *   does not necessarily represent the actual size of the uncompressed
    *   SFNT font stream, so that is not included either.
    */
-  typedef struct  WOFF2_HeaderRec
+  typedef struct  WOFF2_HeaderRec_
   {
     FT_ULong   signature;
     FT_ULong   flavor;
@@ -137,7 +173,11 @@ FT_BEGIN_HEADER
     FT_ULong   privLength;
 
     FT_ULong   uncompressed_size;
+    FT_UInt64  compressed_offset;
     FT_ULong   header_version;
+    FT_UShort  num_fonts;
+
+    WOFF2_TtcFont  ttc_fonts;
 
   } WOFF2_HeaderRec, *WOFF2_Header;
 
