@@ -1,5 +1,18 @@
 2019-08-27  Nikhil Ramakrishnan  <ramakrishnan.nikhil@gmail.com>
 
+	[sfnt] Add WOFF2 constants.
+
+	Add constants required for WOFF2, and known table tags as defined in
+	the specification.  See
+
+	  https://www.w3.org/TR/WOFF2/#table_dir_format
+
+	for details.
+
+	* src/sfnt/woff2tags.c, src/sfnt/woff2tags.h: New files.
+
+2019-08-27  Nikhil Ramakrishnan  <ramakrishnan.nikhil@gmail.com>
+
 	[sfnt] Read WOFF 2 header.
 
 	Check for WOFF2 tag, call `woff2_open_font', and implement it to read
