@@ -1,5 +1,9 @@
 2019-06-16  Werner Lemberg  <wl@gnu.org>
 
+	* src/tools/apinames.c: Formatting, minor edits.
+
+2019-06-16  Werner Lemberg  <wl@gnu.org>
+
 	[autofit] Disable hinting if no blue zones are available (#56450).
 
 	* src/autofit/afglobal.c (af_face_global_get_metrics): Start again
