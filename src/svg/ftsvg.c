@@ -38,12 +38,7 @@
   ft_svg_init( SVG_Renderer svg_module )
   {
     FT_Error           error = FT_Err_Ok;
-    SVG_RendererHooks  hooks;
-
-    hooks.svg_lib_init = tmp_svg_lib_init;
-    svg_module->hooks  = hooks;
     svg_module->loaded = FALSE;
-
     return error; 
   }
 
@@ -56,10 +51,12 @@
     SVG_Renderer  renderer_ = (SVG_Renderer)renderer;
 
     if( renderer_->loaded == FALSE )
+    {
       renderer_->loaded = TRUE;
+      renderer_->hooks.svg_lib_init();
+    }
 
-    renderer_->hooks.svg_lib_init();
-    return FT_Err_Ok;
+    return renderer_->hooks.svg_lib_render( slot );
   }
 
   static FT_Error

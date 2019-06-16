@@ -4541,7 +4541,7 @@
       break;
     case FT_GLYPH_FORMAT_SVG:      /* handle svg rendering */
       renderer = FT_Lookup_Renderer( library, slot->format, NULL );
-
+      error    = renderer->clazz->render_glyph( renderer, slot, FT_RENDER_MODE_NORMAL, NULL);
       break;
     default:
       if ( slot->internal->load_flags & FT_LOAD_COLOR )
@@ -5561,7 +5561,7 @@
     
     renderer = FT_Get_Module( library, "ot-svg" );
     svg = (SVG_Renderer_Interface*)renderer->clazz->module_interface;
-    svg->set_hooks(library, init_hook, free_hook, render_hook);
+    svg->set_hooks(renderer, init_hook, free_hook, render_hook);
     return FT_Err_Ok;
   }
 

@@ -93,8 +93,8 @@ FT_BEGIN_HEADER
    *   Interface.
    *
    * @input:
-   *   library::
-   *     FT_Library instance. 
+   *   module::
+   *     FT_Module instance. 
    *
    *   init_hook::
    *     A function pointer of the type `SVG_Lib_Init'. Read the documentation
@@ -113,7 +113,7 @@ FT_BEGIN_HEADER
    */
 
   typedef FT_Error
-  (*SVG_Set_Hooks)( FT_Library      library, 
+  (*SVG_Set_Hooks)( FT_Module       module,
                     SVG_Lib_Init    init_hook, 
                     SVG_Lib_Free    free_hook,
                     SVG_Lib_Render  render_hook );
