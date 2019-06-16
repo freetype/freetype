@@ -41,7 +41,8 @@ SFNT_DRV_SRC := $(SFNT_DIR)/pngshim.c  \
                 $(SFNT_DIR)/ttload.c   \
                 $(SFNT_DIR)/ttmtx.c    \
                 $(SFNT_DIR)/ttpost.c   \
-                $(SFNT_DIR)/ttsbit.c
+                $(SFNT_DIR)/ttsbit.c   \
+                $(SFNT_DIR)/woff2tags.c
 
 # SFNT driver headers
 #
