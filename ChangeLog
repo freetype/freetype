@@ -1,5 +1,13 @@
 2019-08-27  Nikhil Ramakrishnan  <ramakrishnan.nikhil@gmail.com>
 
+	[sfnt] Include `woff2tags.c' for building.
+
+	* src/sfnt/rules.mk (SFNT_DRV_SRC): Add `woff2tags.c'.
+
+	* src/sfnt/sfnt.c: Include `woff2tags.c'.
+
+2019-08-27  Nikhil Ramakrishnan  <ramakrishnan.nikhil@gmail.com>
+
 	[sfnt] Add WOFF2 constants.
 
 	Add constants required for WOFF2, and known table tags as defined in
