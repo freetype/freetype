@@ -1,5 +1,19 @@
 2019-06-16  Werner Lemberg  <wl@gnu.org>
 
+	[autofit] Disable hinting if no blue zones are available (#56450).
+
+	* src/autofit/afglobal.c (af_face_global_get_metrics): Start again
+	(with dummy hinter module) if no blue zones are present.
+
+	* src/autofit/aflatin.c (af_latin_metrics_init_blues): Change
+	signature to return error code.
+	If no blue zones are found, update `glyph_styles' array to hold
+	AF_STYLE_NONE_DFLT instead of the current style.
+	(af_latin_metrics_init): Return internal error code if no blue zones
+	are found.
+
+2019-06-16  Werner Lemberg  <wl@gnu.org>
+
 	Towards better VMS support.
 
 	More to come.
