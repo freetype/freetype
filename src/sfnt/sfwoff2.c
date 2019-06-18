@@ -242,7 +242,7 @@
          ( woff2.privOffset >= woff2.length )                       ||
          ( woff2.length - woff2.privOffset < woff2.privLength )     )
     {
-      FT_ERROR(( "woff_font_open: invalid WOFF2 header\n" ));
+      FT_ERROR(( "woff2_font_open: invalid WOFF2 header\n" ));
       return FT_THROW( Invalid_Table );
     }
     /* DEBUG - Remove later. */
@@ -451,6 +451,11 @@
   Exit:
     return error;
   }
+
+
+#undef READ_255USHORT
+#undef READ_BASE128
+#undef ROUND4
 
 
 /* END */
