@@ -32,6 +32,11 @@ CHANGES BETWEEN 2.10.0 and 2.10.1
     changed to make  it faster.  This can cause  very subtle rendering
     changes, which aren't noticeable by the eye, however.
 
+  - The  auto-hinter  now  disables hinting  if there  are blue  zones
+    defined for a `style' (i.e., a certain combination of a script and
+    its related typographic features) but the font doesn't contain any
+    characters needed to set up at least one blue zone.
+
   - The `ftmulti' demo program now  supports multiple hidden axes with
     the same name tag.
 
