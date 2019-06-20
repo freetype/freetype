@@ -61,11 +61,6 @@ FT_BEGIN_HEADER
   {
     FT_GlyphSlotRec  root;
 
-    /* (OT-SVG) Added these here so that CFFGlyphSlot can be cast to
-       TT_GlyphSlot */
-    FT_Byte*          svg_document;
-    FT_ULong          svg_document_length;
-
     FT_Bool  hint;
     FT_Bool  scaled;
 
