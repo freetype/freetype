@@ -28,6 +28,7 @@
 #include FT_INTERNAL_STREAM_H
 #include FT_TRUETYPE_TAGS_H
 #include FT_GZIP_H
+#include FT_SVG_RENDERER_H
 
 
 #include "ttsvg.h"
@@ -39,7 +40,7 @@
     FT_UShort  version;           /* Table version (starting at 0)         */
     FT_UShort  num_entries;        /* Number of SVG document records       */
     /* Pointer to the starting of SVG Document List */
-    FT_Byte*   svg_doc_list;      
+    FT_Byte*   svg_doc_list;
     /* Memory that backs up SVG */
     void*     table;
     FT_ULong  table_size;
@@ -68,7 +69,7 @@
 
     if( FT_FRAME_EXTRACT( table_size, table ))
       goto NoSVG;
-     
+
     /* Allocate the memory for the Svg object */
     if( FT_NEW( svg ) )
       goto NoSVG;
@@ -114,7 +115,7 @@
     {
       FT_FRAME_RELEASE( svg->table );
       FT_FREE( svg );
-    }   
+    }
   }
 
   FT_Error
@@ -159,11 +160,9 @@
   }
 
   FT_LOCAL_DEF(FT_Error)
-  tt_face_load_svg_doc( FT_GlyphSlot  glyph_,
+  tt_face_load_svg_doc( FT_GlyphSlot  glyph,
                         FT_UInt       glyph_index )
   {
-
-    TT_GlyphSlot glyph = (TT_GlyphSlot) glyph_;
 
     /* TODO: (OT-SVG) properly clean stuff here on errors */
 
@@ -179,9 +178,11 @@
     FT_Bool    is_gzip_encoded = FALSE;
 
     FT_Error   error  = FT_Err_Ok;
-    TT_Face    face   = (TT_Face)glyph->root.face;
+    TT_Face    face   = (TT_Face)glyph->face;
     FT_Memory  memory = face->root.memory;
     Svg*       svg    = face->svg;
+
+    FT_SVG_Document  svg_document;
 
     /* handle svg being 0x0 situation here */
     doc_list     = svg->svg_doc_list;
@@ -221,12 +222,17 @@
         return error;
       }
 
-      glyph->svg_document        = uncomp_buffer;
-      glyph->svg_document_length = uncomp_size;
+      doc_list   = uncomp_buffer;
+      doc_length = uncomp_size;
       return FT_Err_Ok;
     }
 
-    glyph->svg_document        = doc_list;
-    glyph->svg_document_length = doc_length;
+    if ( FT_NEW( svg_document ) )
+      return FT_THROW( Out_Of_Memory );
+
+    svg_document->svg_document        = doc_list;
+    svg_document->svg_document_length = doc_length;
+
+    glyph->other = svg_document;
     return FT_Err_Ok;
   }
