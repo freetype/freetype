@@ -869,7 +869,7 @@ FT_BEGIN_HEADER
    *
    * @input:
    *   y ::
-   *     The scanline's y~coordinate.
+   *     The scanline's upward y~coordinate.
    *
    *   count ::
    *     The number of spans to draw on this scanline.
