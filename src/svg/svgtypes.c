@@ -23,7 +23,7 @@
 
   typedef struct SVG_RendererHooks_
   {
-    /* Api Hooks for OT-SVG Rendering */ 
+    /* Api Hooks for OT-SVG Rendering */
     SVG_Lib_Init    svg_lib_init;
     SVG_Lib_Free    svg_lib_free;
     SVG_Lib_Render  svg_lib_render;

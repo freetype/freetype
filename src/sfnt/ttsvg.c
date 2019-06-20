@@ -210,7 +210,7 @@
                     (FT_ULong)doc_list[doc_length - 2] << 16 |
                     (FT_ULong)doc_list[doc_length - 3] << 8  |
                     (FT_ULong)doc_list[doc_length - 4];
-      
+
       /* TODO: (OT-SVG) memory allocated here needs to be freed somewhere */
       uncomp_buffer = (FT_Byte*) memory->alloc(memory, uncomp_size);
       error = FT_Gzip_Uncompress( memory, uncomp_buffer, &uncomp_size,
