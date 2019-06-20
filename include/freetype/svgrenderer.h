@@ -43,7 +43,7 @@ FT_BEGIN_HEADER
    */
 
   typedef FT_Error
-  (*SVG_Lib_Init)(  ); 
+  (*SVG_Lib_Init)(  );
 
 
   /**************************************************************************
@@ -73,7 +73,7 @@ FT_BEGIN_HEADER
    *
    * @input:
    *   svg_doc::
-   *     A pointer to the svg document 
+   *     A pointer to the svg document
    *
    * @return:
    *   FreeType error code.  0 means success.
@@ -94,7 +94,7 @@ FT_BEGIN_HEADER
    *
    * @input:
    *   module::
-   *     FT_Module instance. 
+   *     FT_Module instance.
    *
    *   init_hook::
    *     A function pointer of the type `SVG_Lib_Init'. Read the documentation
@@ -105,7 +105,7 @@ FT_BEGIN_HEADER
    *     of `SVG_Lib_Free'.
    *
    *   render_hook::
-   *     A function pointer of the type `SVG_Lib_Render'. Read the 
+   *     A function pointer of the type `SVG_Lib_Render'. Read the
    *     documentation of `SVG_Lib_Render'.
    *
    * @return:
@@ -114,7 +114,7 @@ FT_BEGIN_HEADER
 
   typedef FT_Error
   (*SVG_Set_Hooks)( FT_Module       module,
-                    SVG_Lib_Init    init_hook, 
+                    SVG_Lib_Init    init_hook,
                     SVG_Lib_Free    free_hook,
                     SVG_Lib_Render  render_hook );
 
@@ -124,7 +124,7 @@ FT_BEGIN_HEADER
    *   SVG_Renderer_Interface
    *
    * @description:
-   *   An interface structure that function needed to inject external SVG 
+   *   An interface structure that function needed to inject external SVG
    *   rendering library hooks.
    *
    * @fields:
@@ -135,16 +135,16 @@ FT_BEGIN_HEADER
    *   FreeType error code.  0 means success.
    */
 
-  typedef struct SVG_Renderer_Interface_ 
+  typedef struct SVG_Renderer_Interface_
   {
-    SVG_Set_Hooks  set_hooks; 
+    SVG_Set_Hooks  set_hooks;
   } SVG_Renderer_Interface;
 
 
   /* TODO: to document */
   FT_Error
-  FT_Set_Svg_Hooks( FT_Library      library, 
-                    SVG_Lib_Init    init_hook, 
+  FT_Set_Svg_Hooks( FT_Library      library,
+                    SVG_Lib_Init    init_hook,
                     SVG_Lib_Free    free_hook,
                     SVG_Lib_Render  render_hook );
 

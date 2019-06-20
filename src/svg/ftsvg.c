@@ -23,7 +23,7 @@
 #include "ftsvg.h"
 
   /* tmp hook injection */
-  FT_Error 
+  FT_Error
   tmp_svg_lib_init()
   {
     FT_Error  error;
@@ -39,7 +39,7 @@
   {
     FT_Error           error = FT_Err_Ok;
     svg_module->loaded = FALSE;
-    return error; 
+    return error;
   }
 
   static FT_Error
@@ -61,7 +61,7 @@
 
   static FT_Error
   ft_svg_set_hooks( FT_Module       renderer_,
-                    SVG_Lib_Init    init_hook, 
+                    SVG_Lib_Init    init_hook,
                     SVG_Lib_Free    free_hook,
                     SVG_Lib_Render  render_hook )
   {
@@ -76,7 +76,7 @@
   }
 
 
-  static const SVG_Renderer_Interface svg_renderer_interface = 
+  static const SVG_Renderer_Interface svg_renderer_interface =
   {
     (SVG_Set_Hooks)ft_svg_set_hooks
   };
