@@ -148,6 +148,38 @@ FT_BEGIN_HEADER
                     SVG_Lib_Free    free_hook,
                     SVG_Lib_Render  render_hook );
 
+  /**************************************************************************
+   *
+   * @struct:
+   *   FT_SVG_DocumentRec_
+   *
+   * @description:
+   *   A structure that models one SVG document.
+   *
+   * @fields:
+   *   svg_document ::
+   *     A pointer to the SVG document string.
+   *
+   *   svg_document_length ::
+   *     The length of the SVG document string.
+   */
+
+  typedef struct FT_SVG_DocumentRec_
+  {
+    FT_Byte*  svg_document;
+    FT_ULong  svg_document_length;
+  } FT_SVG_DocumentRec;
+
+  /**************************************************************************
+   *
+   * @type:
+   *   FT_SVG_Document
+   *
+   * @description:
+   *   A handle to a FT_SVG_DocumentRec object.
+   */
+  typedef struct FT_SVG_DocumentRec_*  FT_SVG_Document;
+
 FT_END_HEADER
 
 #endif

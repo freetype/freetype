@@ -838,6 +838,12 @@
     if ( load_flags & FT_LOAD_BITMAP_METRICS_ONLY )
       load_flags &= ~FT_LOAD_RENDER;
 
+    if ( ( load_flags & FT_LOAD_COLOR ) &&
+         ( ((TT_Face)face)->svg ) )
+    {
+      FT_Load_Glyph( face, glyph_index, FT_LOAD_DEFAULT );
+    }
+
     /*
      * Determine whether we need to auto-hint or not.
      * The general rules are:
