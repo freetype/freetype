@@ -41,6 +41,21 @@ FT_BEGIN_HEADER
 
   /**************************************************************************
    *
+   * @Type:
+   *   TT_GlyphSlot
+   *
+   * @Description:
+   *   A handle to a TrueType glyph slot object.
+   *
+   * @Note:
+   *   This is a direct typedef of FT_GlyphSlot, as there is nothing
+   *   specific about the TrueType glyph slot.
+   */
+  typedef FT_GlyphSlot  TT_GlyphSlot;
+
+
+  /**************************************************************************
+   *
    * @Struct:
    *   TT_GraphicsState
    *
