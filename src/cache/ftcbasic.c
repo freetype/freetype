@@ -177,7 +177,8 @@
       if ( !error )
       {
         if ( face->glyph->format == FT_GLYPH_FORMAT_BITMAP  ||
-             face->glyph->format == FT_GLYPH_FORMAT_OUTLINE )
+             face->glyph->format == FT_GLYPH_FORMAT_OUTLINE ||
+             face->glyph->format == FT_GLYPH_FORMAT_SVG )
         {
           /* ok, copy it */
           FT_Glyph  glyph;
