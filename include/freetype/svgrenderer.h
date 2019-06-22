@@ -142,7 +142,7 @@ FT_BEGIN_HEADER
 
 
   /* TODO: to document */
-  FT_Error
+  FT_EXPORT( FT_Error )
   FT_Set_Svg_Hooks( FT_Library      library,
                     SVG_Lib_Init    init_hook,
                     SVG_Lib_Free    free_hook,
