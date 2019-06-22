@@ -166,8 +166,9 @@ FT_BEGIN_HEADER
 
   typedef struct FT_SVG_DocumentRec_
   {
-    FT_Byte*  svg_document;
-    FT_ULong  svg_document_length;
+    FT_Byte*         svg_document;
+    FT_ULong         svg_document_length;
+    FT_Size_Metrics  metrics;
   } FT_SVG_DocumentRec;
 
   /**************************************************************************
