@@ -232,7 +232,11 @@
 
     svg_document->svg_document        = doc_list;
     svg_document->svg_document_length = doc_length;
+    svg_document->metrics             = glyph->face->size->metrics;
 
     glyph->other = svg_document;
+    glyph->metrics.horiAdvance *= ((float)glyph->face->size->metrics.x_ppem)/((float)glyph->face->units_per_EM) * 64.0;
+    glyph->metrics.vertAdvance *= ((float)glyph->face->size->metrics.y_ppem)/((float)glyph->face->units_per_EM) * 64.0;
+
     return FT_Err_Ok;
   }

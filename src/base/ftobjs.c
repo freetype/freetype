@@ -839,9 +839,9 @@
       load_flags &= ~FT_LOAD_RENDER;
 
     if ( ( load_flags & FT_LOAD_COLOR ) &&
-         ( ((TT_Face)face)->svg ) )
+         ( ttface->svg ) )
     {
-      FT_Load_Glyph( face, glyph_index, FT_LOAD_DEFAULT );
+      FT_Load_Glyph( face, glyph_index, FT_LOAD_NO_SCALE);
     }
 
     /*
@@ -4548,6 +4548,11 @@
     case FT_GLYPH_FORMAT_SVG:      /* handle svg rendering */
       renderer = FT_Lookup_Renderer( library, slot->format, NULL );
       error    = renderer->clazz->render_glyph( renderer, slot, FT_RENDER_MODE_NORMAL, NULL);
+      if( error == FT_Err_Ok )
+      {
+        slot->format = FT_GLYPH_FORMAT_BITMAP;
+      }
+      return error;
       break;
     default:
       if ( slot->internal->load_flags & FT_LOAD_COLOR )
