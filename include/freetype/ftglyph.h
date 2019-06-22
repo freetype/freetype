@@ -225,6 +225,52 @@ FT_BEGIN_HEADER
 
   /**************************************************************************
    *
+   * @type:
+   *   FT_SvgGlyph
+   *
+   * @description:
+   *   A handle to an object used to model an SVG glyph image.  This is a
+   *   sub-class of @FT_Glyph, and a pointer to @FT_SvgGlyphRec.
+   */
+  typedef struct FT_SvgGlyphRec_*  FT_SvgGlyph;
+
+  /**************************************************************************
+   *
+   * @struct:
+   *   FT_SvgGlyphRec
+   *
+   * @description:
+   *   A structure used for SVG glyph images.  This really is a 'sub-class'
+   *   of @FT_OutlineGlyphRec.
+   *
+   * @fields:
+   *   root ::
+   *     The root @FT_OutlineGlyphRec fields.
+   *
+   *   svg_document ::
+   *     A pointer to the SVG document.
+   *
+   *   svg_document_length ::
+   *     The length of the svg_document.
+   *
+   *   glyph_index ::
+   *     The index of the glyph to be rendered. I think it's necessary
+   *     because one document can contain multiple glyphs.
+   *
+   */
+  typedef struct  FT_SvgGlyphRec_
+  {
+    FT_OutlineGlyphRec  root;
+    FT_Byte*            svg_document;
+    FT_ULong            svg_document_length;
+    FT_UInt             glyph_index;
+    FT_Size_Metrics     metrics;
+    /* TODO: (OT-SVG) Maybe put a transformation matrix here */
+  } FT_SvgGlyphRec;
+
+
+  /**************************************************************************
+   *
    * @function:
    *   FT_New_Glyph
    *
