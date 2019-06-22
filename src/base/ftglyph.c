@@ -35,6 +35,7 @@
 #include FT_OUTLINE_H
 #include FT_BITMAP_H
 #include FT_INTERNAL_OBJECTS_H
+#include FT_SVG_RENDERER_H
 
 
   /**************************************************************************
@@ -275,6 +276,157 @@
     ft_outline_glyph_prepare    /* FT_Glyph_PrepareFunc    glyph_prepare   */
   )
 
+  /*************************************************************************/
+  /*************************************************************************/
+  /****                                                                 ****/
+  /****   FT_SvgGlyph support                                           ****/
+  /****                                                                 ****/
+  /*************************************************************************/
+  /*************************************************************************/
+
+
+  FT_CALLBACK_DEF( FT_Error )
+  ft_svg_glyph_init( FT_Glyph      svg_glyph,
+                     FT_GlyphSlot  slot )
+  {
+    FT_SvgGlyph   glyph   = (FT_SvgGlyph)svg_glyph;
+    FT_Error      error   = FT_Err_Ok;
+    FT_Memory     memory  =  FT_GLYPH( glyph )->library->memory;
+    FT_ULong      doc_length;
+
+    FT_SVG_Document  document;
+
+    if ( slot->format != FT_GLYPH_FORMAT_SVG )
+    {
+      error = FT_THROW( Invalid_Glyph_Format );
+      goto Exit;
+    }
+
+    if ( slot->other == NULL )
+    {
+      error = FT_THROW( Invalid_Slot_Handle );
+      goto Exit;
+    }
+
+    document = (FT_SVG_Document)slot->other;
+
+    if ( document->svg_document_length == 0 )
+    {
+      error = FT_THROW( Invalid_Slot_Handle );
+      goto Exit;
+    }
+
+    slot->format = FT_GLYPH_FORMAT_OUTLINE;
+    /* let's init the parent first */
+    ft_outline_glyph_class.glyph_init( svg_glyph, slot );
+    slot->format = FT_GLYPH_FORMAT_SVG;
+
+    /* allocate a new document */
+    doc_length = document->svg_document_length;
+    glyph->svg_document        = memory->alloc( memory, doc_length );
+    glyph->svg_document_length = doc_length;
+    glyph->glyph_index         = slot->glyph_index;
+    glyph->metrics             = document->metrics;
+
+    /* copy the document into glyph */
+    FT_MEM_COPY( glyph->svg_document, document->svg_document, doc_length );
+
+  Exit:
+    return error;
+  }
+
+
+  FT_CALLBACK_DEF( void )
+  ft_svg_glyph_done( FT_Glyph  svg_glyph )
+  {
+    FT_SvgGlyph  glyph  = (FT_SvgGlyph)svg_glyph;
+    FT_Memory    memory = svg_glyph->library->memory;
+
+    /* free the parent first */
+    ft_outline_glyph_class.glyph_done( svg_glyph );
+
+    /* just free the memory */
+    memory->free( memory, glyph->svg_document );
+  }
+
+  FT_CALLBACK_DEF( FT_Error )
+  ft_svg_glyph_copy( FT_Glyph  svg_source,
+                     FT_Glyph  svg_target )
+  {
+    FT_SvgGlyph  source  = (FT_SvgGlyph)svg_source;
+    FT_SvgGlyph  target  = (FT_SvgGlyph)svg_target;
+    FT_Error     error   = FT_Err_Ok;
+    FT_Memory    memory  = FT_GLYPH( source )->library->memory;
+
+    if ( svg_source->format != FT_GLYPH_FORMAT_SVG )
+    {
+      error = FT_THROW( Invalid_Glyph_Format );
+      return error;
+    }
+
+    if ( source->svg_document_length == 0 )
+    {
+      error = FT_THROW( Invalid_Slot_Handle );
+      return error;
+    }
+
+    /* copy the parent first */
+    ft_outline_glyph_class.glyph_copy( svg_source, svg_target );
+
+    target->glyph_index         = source->glyph_index;
+    target->svg_document_length = source->svg_document_length;
+    target->metrics             = source->metrics;
+
+    /* allocate space for the svg document */
+    target->svg_document = memory->alloc( memory, target->svg_document_length );
+
+    /* copy the stuff */
+    FT_MEM_COPY( target->svg_document, source->svg_document, target->svg_document_length );
+
+    return error;
+  }
+
+  FT_CALLBACK_DEF( FT_Error )
+  ft_svg_glyph_prepare( FT_Glyph     svg_glyph,
+                        FT_GlyphSlot slot )
+  {
+    FT_SvgGlyph   glyph  = (FT_SvgGlyph)svg_glyph;
+    FT_Error      error  = FT_Err_Ok;
+    FT_Memory     memory = svg_glyph->library->memory;
+
+    FT_SVG_Document  document;
+
+    if ( FT_NEW( document ) )
+      return error;
+
+    /* call the parent and prepare it */
+    ft_outline_glyph_class.glyph_prepare( svg_glyph, slot );
+    slot->format = FT_GLYPH_FORMAT_SVG;
+
+    document->svg_document        = glyph->svg_document;
+    document->svg_document_length = glyph->svg_document_length;
+    document->metrics             = glyph->metrics;
+    slot->format = FT_GLYPH_FORMAT_SVG;
+
+    slot->other = document;
+    return error;
+  }
+
+  FT_DEFINE_GLYPH(
+    ft_svg_glyph_class,
+
+    sizeof ( FT_SvgGlyphRec ),
+    FT_GLYPH_FORMAT_SVG,
+
+    ft_svg_glyph_init,      /* FT_Glyph_InitFunc       glyph_init      */
+    ft_svg_glyph_done,      /* FT_Glyph_DoneFunc       glyph_done      */
+    ft_svg_glyph_copy,      /* FT_Glyph_CopyFunc       glyph_copy      */
+    NULL,                   /* FT_Glyph_TransformFunc  glyph_transform */
+    NULL,                   /* FT_Glyph_GetBBoxFunc    glyph_bbox      */
+    ft_svg_glyph_prepare    /* FT_Glyph_PrepareFunc    glyph_prepare   */
+  )
+
+
 
   /*************************************************************************/
   /*************************************************************************/
@@ -375,6 +527,10 @@
     /* if it is an outline */
     else if ( format == FT_GLYPH_FORMAT_OUTLINE )
       clazz = &ft_outline_glyph_class;
+
+    /* if it is a SVG glyph */
+    else if ( format == FT_GLYPH_FORMAT_SVG )
+      clazz = &ft_svg_glyph_class;
 
     else
     {
