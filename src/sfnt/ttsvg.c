@@ -91,6 +91,8 @@
 
     face->svg = svg;
 
+    face->root.face_flags |= FT_FACE_FLAG_SVG;
+
     return FT_Err_Ok;
 
   InvalidTable:
@@ -182,7 +184,7 @@
     FT_Memory  memory = face->root.memory;
     Svg*       svg    = face->svg;
 
-    FT_SVG_Document  svg_document;
+    FT_SVG_Document  svg_document = glyph->other;
 
     /* handle svg being 0x0 situation here */
     doc_list     = svg->svg_doc_list;
@@ -226,9 +228,6 @@
       doc_length = uncomp_size;
       return FT_Err_Ok;
     }
-
-    if ( FT_NEW( svg_document ) )
-      return FT_THROW( Out_Of_Memory );
 
     svg_document->svg_document        = doc_list;
     svg_document->svg_document_length = doc_length;
