@@ -561,8 +561,19 @@
     slot->subglyphs     = NULL;
     slot->control_data  = NULL;
     slot->control_len   = 0;
+
     if ( !( slot->face->face_flags & FT_FACE_FLAG_SVG ) )
       slot->other         = NULL;
+    {
+      if ( slot->internal->flags & FT_GLYPH_OWN_GZIP_SVG )
+      {
+        FT_Memory        memory = slot->face->memory;
+        FT_SVG_Document  doc    = (FT_SVG_Document)slot->other;
+        FT_FREE( doc->svg_document );
+        slot->internal->load_flags &= ~FT_GLYPH_OWN_GZIP_SVG;
+      }
+    }
+
     slot->format        = FT_GLYPH_FORMAT_NONE;
 
     slot->linearHoriAdvance = 0;
@@ -582,6 +593,13 @@
 
     if ( slot->face->face_flags & FT_FACE_FLAG_SVG )
     {
+      /* free memory in case svg was there */
+      if ( slot->internal->flags & FT_GLYPH_OWN_GZIP_SVG )
+      {
+        FT_SVG_Document  doc    = (FT_SVG_Document)slot->other;
+        FT_FREE( doc->svg_document );
+        slot->internal->flags &= ~FT_GLYPH_OWN_GZIP_SVG;
+      }
       FT_FREE( slot->other );
     }
 

@@ -378,10 +378,13 @@
     target->metrics             = source->metrics;
 
     /* allocate space for the svg document */
-    target->svg_document = memory->alloc( memory, target->svg_document_length );
+    target->svg_document = memory->alloc( memory,
+                                          target->svg_document_length );
 
     /* copy the stuff */
-    FT_MEM_COPY( target->svg_document, source->svg_document, target->svg_document_length );
+    FT_MEM_COPY( target->svg_document,
+                 source->svg_document,
+                 target->svg_document_length );
 
     return error;
   }
@@ -396,6 +399,7 @@
 
     FT_SVG_Document  document;
 
+    /* TODO: (OT-SVG) this probably creates a memory leak. Fix it */
     if ( FT_NEW( document ) )
       return error;
 

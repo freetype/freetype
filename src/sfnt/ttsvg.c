@@ -26,6 +26,7 @@
 
 #include <ft2build.h>
 #include FT_INTERNAL_STREAM_H
+#include FT_INTERNAL_OBJECTS_H
 #include FT_TRUETYPE_TAGS_H
 #include FT_GZIP_H
 #include FT_SVG_RENDERER_H
@@ -214,8 +215,8 @@
                     (FT_ULong)doc_list[doc_length - 3] << 8  |
                     (FT_ULong)doc_list[doc_length - 4];
 
-      /* TODO: (OT-SVG) memory allocated here needs to be freed somewhere */
       uncomp_buffer = (FT_Byte*) memory->alloc(memory, uncomp_size);
+      glyph->internal->flags |= FT_GLYPH_OWN_GZIP_SVG;
       error = FT_Gzip_Uncompress( memory, uncomp_buffer, &uncomp_size,
                                           doc_list,      doc_length  );
       if ( error != FT_Err_Ok )
