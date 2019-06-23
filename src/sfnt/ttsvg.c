@@ -226,7 +226,6 @@
 
       doc_list   = uncomp_buffer;
       doc_length = uncomp_size;
-      return FT_Err_Ok;
     }
 
     svg_document->svg_document        = doc_list;
