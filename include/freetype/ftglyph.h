@@ -257,6 +257,8 @@ FT_BEGIN_HEADER
    *     The index of the glyph to be rendered. I think it's necessary
    *     because one document can contain multiple glyphs.
    *
+   *   metrics ::
+   *     A metrics object storing the size information.
    */
   typedef struct  FT_SvgGlyphRec_
   {

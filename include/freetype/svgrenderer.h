@@ -162,6 +162,9 @@ FT_BEGIN_HEADER
    *
    *   svg_document_length ::
    *     The length of the SVG document string.
+   *
+   *   metrics ::
+   *     A metrics object storing the size information.
    */
 
   typedef struct FT_SVG_DocumentRec_
