@@ -259,6 +259,20 @@ FT_BEGIN_HEADER
    *
    *   metrics ::
    *     A metrics object storing the size information.
+   *
+   *   units_per_EM ::
+   *     The size of the EM square.
+   *
+   * @note:
+   *   `metrics' and `units_per_EM' might look like repetitions since both
+   *   fields are stored in face objects. However, the Glyph Management API
+   *   requires an `FT_Glyph' to store all the information that completely
+   *   describes a glyph. Outline glyphs are themselves scaled thus they
+   *   don't need this information. However, SVG documents do. The field of
+   *   `units_per_EM' is needed because the SVG is to be scaled in case its
+   *   viewbox size differs from `units_per_EM'. For more info, refer to
+   *   the section `Coordinate Systems and Glyph Metrics' of the OpenType
+   *   SVG specs.
    */
   typedef struct  FT_SvgGlyphRec_
   {
@@ -267,6 +281,7 @@ FT_BEGIN_HEADER
     FT_ULong            svg_document_length;
     FT_UInt             glyph_index;
     FT_Size_Metrics     metrics;
+    FT_UShort           units_per_EM;
     /* TODO: (OT-SVG) Maybe put a transformation matrix here */
   } FT_SvgGlyphRec;
 
