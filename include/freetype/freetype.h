@@ -1206,6 +1206,9 @@ FT_BEGIN_HEADER
    *     altered with @FT_Set_MM_Design_Coordinates,
    *     @FT_Set_Var_Design_Coordinates, or @FT_Set_Var_Blend_Coordinates.
    *     This flag is unset by a call to @FT_Set_Named_Instance.
+   *
+   *   FT_FACE_FLAG_SVG ::
+   *     Set if the current face has an SVG table.
    */
 #define FT_FACE_FLAG_SCALABLE          ( 1L <<  0 )
 #define FT_FACE_FLAG_FIXED_SIZES       ( 1L <<  1 )
@@ -1223,6 +1226,7 @@ FT_BEGIN_HEADER
 #define FT_FACE_FLAG_TRICKY            ( 1L << 13 )
 #define FT_FACE_FLAG_COLOR             ( 1L << 14 )
 #define FT_FACE_FLAG_VARIATION         ( 1L << 15 )
+#define FT_FACE_FLAG_SVG               ( 1L << 16 )
 
 
   /**************************************************************************

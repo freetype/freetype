@@ -318,6 +318,15 @@
     if ( !error && clazz->init_slot )
       error = clazz->init_slot( slot );
 
+    /* check if SVG table exists allocate the space in slot->other */
+    if ( slot->face->face_flags & FT_FACE_FLAG_SVG )
+    {
+      FT_SVG_Document  document;
+      if ( FT_NEW( document ) )
+        goto Exit;
+      slot->other = document;
+    }
+
   Exit:
     return error;
   }
@@ -552,7 +561,8 @@
     slot->subglyphs     = NULL;
     slot->control_data  = NULL;
     slot->control_len   = 0;
-    slot->other         = NULL;
+    if ( !( slot->face->face_flags & FT_FACE_FLAG_SVG ) )
+      slot->other         = NULL;
     slot->format        = FT_GLYPH_FORMAT_NONE;
 
     slot->linearHoriAdvance = 0;
@@ -569,6 +579,11 @@
     FT_Driver_Class  clazz  = driver->clazz;
     FT_Memory        memory = driver->root.memory;
 
+
+    if ( slot->face->face_flags & FT_FACE_FLAG_SVG )
+    {
+      FT_FREE( slot->other );
+    }
 
     if ( clazz->done_slot )
       clazz->done_slot( slot );
@@ -588,6 +603,7 @@
 
       FT_FREE( slot->internal );
     }
+
   }
 
 
