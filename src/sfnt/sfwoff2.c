@@ -34,8 +34,48 @@
 
 
 #define READ_255USHORT( var )  Read255UShort( stream, &var )
+
 #define READ_BASE128( var )    ReadBase128( stream, &var )
+
 #define ROUND4( var )          ( var + 3 ) & ~3
+
+#define WRITE_USHORT( p, v )                \
+          do                                \
+          {                                 \
+            *(p)++ = (FT_Byte)( (v) >> 8 ); \
+            *(p)++ = (FT_Byte)( (v) >> 0 ); \
+                                            \
+          } while ( 0 )
+
+#define WRITE_ULONG( p, v )                  \
+          do                                 \
+          {                                  \
+            *(p)++ = (FT_Byte)( (v) >> 24 ); \
+            *(p)++ = (FT_Byte)( (v) >> 16 ); \
+            *(p)++ = (FT_Byte)( (v) >>  8 ); \
+            *(p)++ = (FT_Byte)( (v) >>  0 ); \
+                                             \
+          } while ( 0 )
+
+
+  FT_CALLBACK_DEF( int )
+  compare_tags( const void*  a,
+                const void*  b )
+  {
+    WOFF2_Table  table1 = *(WOFF2_Table*)a;
+    WOFF2_Table  table2 = *(WOFF2_Table*)b;
+
+    FT_ULong  tag1 = table1->Tag;
+    FT_ULong  tag2 = table2->Tag;
+
+
+    if ( tag1 > tag2 )
+      return 1;
+    else if ( tag1 < tag2 )
+      return -1;
+    else
+      return 0;
+  }
 
 
   static FT_Error
@@ -183,6 +223,10 @@
     FT_UInt64        first_table_offset;
     FT_UInt64        file_offset;
 
+    FT_Byte*         sfnt        = NULL;
+    FT_Stream        sfnt_stream = NULL;
+    FT_Byte*         sfnt_header;
+
     static const FT_Frame_Field  woff2_header_fields[] =
     {
 #undef  FT_STRUCTURE
@@ -210,6 +254,9 @@
 
     FT_ASSERT( stream == face->root.stream );
     FT_ASSERT( FT_STREAM_POS() == 0 );
+
+    /* DEBUG - Remove later. */
+    FT_TRACE2(( "Face index = %ld\n", face->root.face_index ));
 
     /* Read WOFF2 Header. */
     if ( FT_STREAM_READ_FIELDS( woff2_header_fields, &woff2 ) )
@@ -408,7 +455,7 @@
             return FT_THROW( Invalid_Table );
           /* DEBUG - Remove later */
           else
-            FT_TRACE2(( "Glyf and loca are valid.\n" ));
+            FT_TRACE2(( "glyf and loca are valid.\n" ));
         }
       }
       /* Collection directory reading complete. */
@@ -444,11 +491,82 @@
     if( file_offset != ( ROUND4( woff2.length ) ) )
       return FT_THROW( Invalid_Table );
 
+    /* Redirect a TTC to exit for now. */
+    if( woff2.header_version )
+    {
+      FT_TRACE2(( "Reading TTC fonts not supported yet.\n" ));
+      error = FT_THROW( Unimplemented_Feature );
+      goto Exit;
+    }
+
+    /* Write sfnt header. */
+    if ( FT_ALLOC( sfnt, 12 + woff2.num_tables * 16UL ) ||
+         FT_NEW( sfnt_stream )                         )
+      goto Exit;
+
+    sfnt_header = sfnt;
+
+    {
+      FT_UInt  searchRange, entrySelector, rangeShift, x;
+      /* DEBUG - Remove later */
+      FT_TRACE2(( "Writing SFNT offset table.\n" ));
+
+      x             = woff2.num_tables;
+      entrySelector = 0;
+      while ( x )
+      {
+        x            >>= 1;
+        entrySelector += 1;
+      }
+      entrySelector--;
+
+      searchRange = ( 1 << entrySelector ) * 16;
+      rangeShift  = ( woff2.num_tables * 16  ) - searchRange;
+
+      WRITE_ULONG ( sfnt_header, woff2.flavor );
+      WRITE_USHORT( sfnt_header, woff2.num_tables );
+      WRITE_USHORT( sfnt_header, searchRange );
+      WRITE_USHORT( sfnt_header, entrySelector );
+      WRITE_USHORT( sfnt_header, rangeShift );
+
+    }
+
+    /* Sort tables by tag. */
+    ft_qsort( indices,
+              woff2.num_tables,
+              sizeof ( WOFF2_Table ),
+              compare_tags );
+
+    /* DEBUG - Remove later */
+    FT_TRACE2(( "Sorted table indices: \n" ));
+    for( nn = 0; nn < woff2.num_tables; ++nn )
+    {
+      WOFF2_Table  table = indices[nn];
+      /* DEBUG - Remove later */
+      FT_TRACE2(( "  Index %d", nn ));
+      FT_TRACE2(( " %c%c%c%c\n",
+                  (FT_Char)( table->Tag >> 24 ),
+                  (FT_Char)( table->Tag >> 16 ),
+                  (FT_Char)( table->Tag >> 8  ),
+                  (FT_Char)( table->Tag       )));
+    }
+
     error = FT_THROW( Unimplemented_Feature );
+    /* DEBUG - Remove later */
     FT_TRACE2(( "Reached end without errors.\n" ));
     goto Exit;
 
   Exit:
+    FT_FREE( tables );
+    FT_FREE( indices );
+
+    if( error )
+    {
+      FT_FREE( sfnt );
+      FT_Stream_Close( sfnt_stream );
+      FT_FREE( sfnt_stream );
+    }
+
     return error;
   }
 
@@ -456,6 +574,8 @@
 #undef READ_255USHORT
 #undef READ_BASE128
 #undef ROUND4
+#undef WRITE_USHORT
+#undef WRITE_ULONG
 
 
 /* END */

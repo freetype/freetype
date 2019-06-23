@@ -1,5 +1,13 @@
 2019-08-27  Nikhil Ramakrishnan  <ramakrishnan.nikhil@gmail.com>
 
+	[woff2] Write SFNT Offset table.
+
+	* src/sfnt/sfwoff2.c (WRITE_USHORT, WRITE_ULONG): New macros.
+	(compare_tags): New function.
+	(woff2_open_font): Implement it.
+
+2019-08-27  Nikhil Ramakrishnan  <ramakrishnan.nikhil@gmail.com>
+
 	* src/sfnt/sfwoff2.c: #undef macros.
 
 2019-08-27  Nikhil Ramakrishnan  <ramakrishnan.nikhil@gmail.com>
