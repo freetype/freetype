@@ -126,7 +126,9 @@
             FT_UShort  num_entries,
             FT_UInt    glyph_index,
             FT_ULong   *doc_offset,
-            FT_ULong   *doc_length  )
+            FT_ULong   *doc_length,
+            FT_UShort  *start_glyph,
+            FT_UShort  *end_glyph )
   {
     FT_Error   error;
     FT_UShort  start_glyph_id;
@@ -158,7 +160,11 @@
     if ( found != TRUE )
       error = FT_THROW( Invalid_Glyph_Index );
     else
+    {
+      *start_glyph = start_glyph_id;
+      *end_glyph   = end_glyph_id;
       error = FT_Err_Ok;
+    }
     return error;
   }
 
@@ -174,6 +180,8 @@
 
     FT_ULong   doc_offset;
     FT_ULong   doc_length;
+    FT_UShort  start_glyph_id;
+    FT_UShort  end_glyph_id;
 
     FT_ULong   uncomp_size;
     FT_Byte*   uncomp_buffer;
@@ -192,7 +200,8 @@
     num_entries  = FT_NEXT_USHORT( doc_list );
 
     error = find_doc( doc_list, num_entries, glyph_index,
-                                &doc_offset, &doc_length );
+                                &doc_offset, &doc_length,
+                                &start_glyph_id, &end_glyph_id );
     if ( error != FT_Err_Ok )
       return error;
 
@@ -233,6 +242,8 @@
     svg_document->svg_document_length = doc_length;
     svg_document->metrics             = glyph->face->size->metrics;
     svg_document->units_per_EM        = glyph->face->units_per_EM;
+    svg_document->start_glyph_id      = start_glyph_id;
+    svg_document->end_glyph_id        = end_glyph_id;
 
     glyph->other = svg_document;
     glyph->metrics.horiAdvance *= ((float)glyph->face->size->metrics.x_ppem)/((float)glyph->face->units_per_EM) * 64.0;

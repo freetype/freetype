@@ -328,6 +328,8 @@
     glyph->glyph_index         = slot->glyph_index;
     glyph->metrics             = document->metrics;
     glyph->units_per_EM        = document->units_per_EM;
+    glyph->start_glyph_id      = document->start_glyph_id;
+    glyph->end_glyph_id        = document->end_glyph_id;
 
     /* copy the document into glyph */
     FT_MEM_COPY( glyph->svg_document, document->svg_document, doc_length );
@@ -378,6 +380,8 @@
     target->svg_document_length = source->svg_document_length;
     target->metrics             = source->metrics;
     target->units_per_EM        = source->units_per_EM;
+    target->start_glyph_id      = source->start_glyph_id;
+    target->end_glyph_id        = source->end_glyph_id;
 
     /* allocate space for the svg document */
     target->svg_document = memory->alloc( memory,
@@ -413,6 +417,9 @@
     document->svg_document_length = glyph->svg_document_length;
     document->metrics             = glyph->metrics;
     document->units_per_EM        = glyph->units_per_EM;
+    document->start_glyph_id      = glyph->start_glyph_id;
+    document->end_glyph_id        = glyph->end_glyph_id;
+
     slot->format = FT_GLYPH_FORMAT_SVG;
 
     slot->other = document;
