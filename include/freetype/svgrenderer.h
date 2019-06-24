@@ -169,6 +169,12 @@ FT_BEGIN_HEADER
    *   units_per_EM ::
    *     The size of the EM square.
    *
+   *   start_glyph_id ::
+   *     The starting glyph ID for the glyph range that this document has.
+   *
+   *   end_glyph_id ::
+   *     The ending glyph ID for the glyph range that this document has.
+   *
    * @note:
    *   `metrics' and `units_per_EM' might look like repetitions since both
    *   fields are stored in face objects. However, the Glyph Management API
@@ -187,6 +193,10 @@ FT_BEGIN_HEADER
     FT_ULong         svg_document_length;
     FT_Size_Metrics  metrics;
     FT_UShort        units_per_EM;
+    FT_UShort        start_glyph_id;
+    FT_UShort        end_glyph_id;
+    /* TODO: (OT-SVG) Not storing glyph_index here for now. Might need to
+     * at some point. Review this! */
   } FT_SVG_DocumentRec;
 
   /**************************************************************************
