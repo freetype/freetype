@@ -1,3 +1,9 @@
+2019-06-26  Alexei Podtelezhnikov  <apodtele@gmail.com>
+
+	* src/bdf/bdfdrivr.c (bdf_cmap_char_{index,next}): Fix inequality.
+
+	Reported by Armin Hasitzka.
+
 2019-06-16  Werner Lemberg  <wl@gnu.org>
 
 	* src/tools/apinames.c: Formatting, minor edits.

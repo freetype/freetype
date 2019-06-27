@@ -106,7 +106,7 @@ THE SOFTWARE.
       FT_ULong  code;
 
 
-      if ( mid > max || mid < min )
+      if ( mid >= max || mid < min )
         mid = ( min + max ) >> 1;
 
       code = encodings[mid].enc;
@@ -152,7 +152,7 @@ THE SOFTWARE.
       FT_ULong  code; /* same as BDF_encoding_el.enc */
 
 
-      if ( mid > max || mid < min )
+      if ( mid >= max || mid < min )
         mid = ( min + max ) >> 1;
 
       code = encodings[mid].enc;
