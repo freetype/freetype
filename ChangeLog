@@ -1,5 +1,19 @@
 2019-08-27  Nikhil Ramakrishnan  <ramakrishnan.nikhil@gmail.com>
 
+	Add Brotli dependency and required checks.
+
+	Brotli is required for decompressing WOFF2 font directory streams.
+	The library is thus being added as an optional dependency for
+	FreeType.
+
+	* builds/unix/configure.raw: Add checks for `libbrotlidec'.
+	(REQUIRES_PRIVATE, LIBS_PRIVATE, LIBSSTATIC_CONFIG): Updated.
+
+	* devel/ftoption.h, include/freetype/config/ftoption.h
+	(FT_CONFIG_OPTION_USE_BROTLI): New macro.
+
+2019-08-27  Nikhil Ramakrishnan  <ramakrishnan.nikhil@gmail.com>
+
 	[woff2] Write SFNT Offset table.
 
 	* src/sfnt/sfwoff2.c (WRITE_USHORT, WRITE_ULONG): New macros.
@@ -234,7 +248,7 @@
 	* include/freetype/ftmodapi.h (FT_DebugHook_Func): Return error.
 
 	Fix a warning by adding a return value as in `TT_RunIns',
-	which should not be a compatibility issue. 
+	which should not be a compatibility issue.
 
 2019-06-11  Alexei Podtelezhnikov  <apodtele@gmail.com>
 
@@ -245,7 +259,7 @@
 	[gzip] Add support for `gzip' encoded header.
 
 	* src/gzip/ftgzip.c (FT_Gzip_Uncompress): Modify the the call to
-	`inflateInit2' to enable support for `gzip' encoded headers. 
+	`inflateInit2' to enable support for `gzip' encoded headers.
 
 2019-06-10  Alexei Podtelezhnikov  <apodtele@gmail.com>
 
