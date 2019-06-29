@@ -1,5 +1,27 @@
 2019-08-27  Nikhil Ramakrishnan  <ramakrishnan.nikhil@gmail.com>
 
+	[woff2] Uncompress Brotli streams and `face_index' support.
+
+	WOFF2 compressed stream is now uncompressed if Brotli is available.
+	This data is stored in a separate buffer (uncompressed_buf) because
+	it does not contain direct table data.  Certain tables have
+	transformations applied to them, and they must be reconstructed
+	before we can write those tables to the SFNT stream.
+
+	`face_index' is now being passed as a parameter to
+	`woff2_open_font'.
+
+	* src/sfnt/sfobjs.c (sfnt_open_font): Add parameter
+	`face_instance_index'.
+
+	* src/sfnt/sfwoff2.c (woff2_uncompress): New function.
+	(woff2_open_font): Call `woff2_uncompress'.
+	(compute_first_table_offset): Fix return type.
+
+	* src/sfnt/sfwoff2.h (woff2_open_font): Modify declaration.
+
+2019-08-27  Nikhil Ramakrishnan  <ramakrishnan.nikhil@gmail.com>
+
 	* builds/unix/configure.raw: Change argument name to `brotli'.
 
 2019-08-27  Nikhil Ramakrishnan  <ramakrishnan.nikhil@gmail.com>
