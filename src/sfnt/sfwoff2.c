@@ -23,6 +23,13 @@
 #include FT_INTERNAL_STREAM_H
 
 
+#ifdef FT_CONFIG_OPTION_USE_BROTLI
+
+#include <brotli/decode.h>
+
+#endif
+
+
   /**************************************************************************
    *
    * The macro FT_COMPONENT is used in trace mode.  It is an implicit
@@ -96,7 +103,7 @@
       return FT_THROW( Invalid_Table );
     if( code == wordCode )
     {
-      /* Read next two bytes and store UInt16 value */
+      /* Read next two bytes and store FT_UShort value */
       if( FT_READ_USHORT( result_short ) )
         return FT_THROW( Invalid_Table );
       *value = result_short;
@@ -176,7 +183,7 @@
   }
 
 
-  static FT_Error
+  static FT_UInt64
   compute_first_table_offset( const WOFF2_Header  woff2 )
   {
     FT_Int  nn;
@@ -196,12 +203,42 @@
   }
 
 
+  static FT_Error
+  woff2_uncompress( FT_Byte*        dst,
+                    FT_ULong        dst_size,
+                    const FT_Byte*  src,
+                    FT_ULong        src_size )
+  {
+#ifdef FT_CONFIG_OPTION_USE_BROTLI
+
+    FT_ULong             uncompressed_size = dst_size;
+    BrotliDecoderResult  result;
+
+    result = BrotliDecoderDecompress(
+      src_size, src, &uncompressed_size, dst);
+
+    if( result != BROTLI_DECODER_RESULT_SUCCESS ||
+        uncompressed_size != dst_size )
+        return FT_THROW( Invalid_Table );
+
+    return FT_Err_Ok;
+
+#else /* !FT_CONFIG_OPTION_USE_BROTLI */
+
+    FT_ERROR(( "woff2_uncompress: Brotli support not available.\n" ));
+    return FT_THROW( Unimplemented_Feature );
+
+#endif /* !FT_CONFIG_OPTION_USE_BROTLI */
+  }
+
+
   /* Replace `face->root.stream' with a stream containing the extracted */
   /* SFNT of a WOFF2 font.                                              */
 
   FT_LOCAL_DEF( FT_Error )
   woff2_open_font( FT_Stream  stream,
-                   TT_Face    face )
+                   TT_Face    face,
+                   FT_Int     face_index )
   {
     FT_Memory        memory = stream->memory;
     FT_Error         error  = FT_Err_Ok;
@@ -226,6 +263,8 @@
     FT_Byte*         sfnt        = NULL;
     FT_Stream        sfnt_stream = NULL;
     FT_Byte*         sfnt_header;
+
+    FT_Byte*         uncompressed_buf = NULL;
 
     static const FT_Frame_Field  woff2_header_fields[] =
     {
@@ -256,7 +295,7 @@
     FT_ASSERT( FT_STREAM_POS() == 0 );
 
     /* DEBUG - Remove later. */
-    FT_TRACE2(( "Face index = %ld\n", face->root.face_index ));
+    FT_TRACE2(( "Face index = %ld\n", face_index ));
 
     /* Read WOFF2 Header. */
     if ( FT_STREAM_READ_FIELDS( woff2_header_fields, &woff2 ) )
@@ -306,7 +345,6 @@
                 "  tag    flags    transform   origLen   transformLen\n"
                 "  --------------------------------------------------\n" ));
 
-    /* TODO check whether there is sufficient input before FT_READ_*. */
     for ( nn = 0; nn < woff2.num_tables; nn++ )
     {
       WOFF2_Table  table = tables + nn;
@@ -455,7 +493,7 @@
             return FT_THROW( Invalid_Table );
           /* DEBUG - Remove later */
           else
-            FT_TRACE2(( "glyf and loca are valid.\n" ));
+            FT_TRACE2(( "glyf and loca indices are valid.\n" ));
         }
       }
       /* Collection directory reading complete. */
@@ -470,7 +508,7 @@
     file_offset = ROUND4( woff2.compressed_offset +
                             woff2.totalCompressedSize );
 
-    /* Few more checks before we start reading the tables */
+    /* Few more checks before we start reading the tables. */
     if( file_offset > woff2.length )
       return FT_THROW( Invalid_Table );
 
@@ -491,6 +529,7 @@
     if( file_offset != ( ROUND4( woff2.length ) ) )
       return FT_THROW( Invalid_Table );
 
+    /* TODO Add support for uncompression of TTC fonts. */
     /* Redirect a TTC to exit for now. */
     if( woff2.header_version )
     {
@@ -550,6 +589,27 @@
                   (FT_Char)( table->Tag >> 8  ),
                   (FT_Char)( table->Tag       )));
     }
+
+    if( woff2.uncompressed_size < 1 )
+    {
+      error = FT_THROW( Invalid_Table );
+      goto Exit;
+    }
+
+    /* Allocate memory for uncompressed table data. */
+    if ( FT_ALLOC( uncompressed_buf, woff2.uncompressed_size ) ||
+         FT_FRAME_ENTER( woff2.totalCompressedSize )           )
+      goto Exit;
+
+    /* Uncompress the stream. */
+    error = woff2_uncompress( uncompressed_buf, woff2.uncompressed_size,
+                              stream->cursor, woff2.totalCompressedSize );
+    if( error )
+        goto Exit;
+
+    FT_FRAME_EXIT();
+
+    /* TODO Write table entries. */
 
     error = FT_THROW( Unimplemented_Feature );
     /* DEBUG - Remove later */

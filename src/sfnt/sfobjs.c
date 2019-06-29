@@ -342,7 +342,8 @@
   /* synthesized into a TTC with one offset table.              */
   static FT_Error
   sfnt_open_font( FT_Stream  stream,
-                  TT_Face    face )
+                  TT_Face    face,
+                  FT_Int     face_instance_index )
   {
     FT_Memory  memory = stream->memory;
     FT_Error   error;
@@ -393,7 +394,7 @@
       if ( FT_STREAM_SEEK( offset ) )
         return error;
 
-      error = woff2_open_font( stream, face );
+      error = woff2_open_font( stream, face, face_instance_index );
       if ( error )
         return error;
 
@@ -531,7 +532,7 @@
 
     FT_TRACE2(( "SFNT driver\n" ));
 
-    error = sfnt_open_font( stream, face );
+    error = sfnt_open_font( stream, face, face_instance_index );
     if ( error )
       return error;
 
