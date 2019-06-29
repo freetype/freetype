@@ -545,7 +545,7 @@ fi
 
 # check for system libbrotlidec
 
-AC_ARG_WITH([libbrotlidec],
+AC_ARG_WITH([brotli],
   [AS_HELP_STRING([--with-brotli=@<:@yes|no|auto@:>@],
                   [Support decompression of WOFF2 streams @<:@default=auto@:>@])],
   [], [with_brotli=auto])
