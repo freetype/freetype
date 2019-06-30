@@ -235,6 +235,27 @@
   }
 
 
+  static FT_Error
+  reconstruct_font( FT_Byte*       transformed_buf,
+                    FT_ULong       transformed_buf_size,
+                    WOFF2_Table*   indices,
+                    WOFF2_Header   woff2,
+                    FT_Int         face_index,
+                    FT_Byte*       sfnt )
+  {
+    /* We're writing only one face per call, so offset is fixed. */
+    FT_ULong  dst_offset  = 12;
+    FT_Byte*  table_entry = NULL;
+
+    FT_UNUSED( dst_offset );
+    FT_UNUSED( table_entry );
+
+    /* TODO reconstruct the font tables! */
+
+    return FT_Err_Ok;
+  }
+
+
   /* Replace `face->root.stream' with a stream containing the extracted */
   /* SFNT of a WOFF2 font.                                              */
 
@@ -247,8 +268,9 @@
     FT_Error         error  = FT_Err_Ok;
 
     WOFF2_HeaderRec  woff2;
-    WOFF2_Table      tables  = NULL;
-    WOFF2_Table*     indices = NULL;
+    WOFF2_Table      tables       = NULL;
+    WOFF2_Table*     indices      = NULL;
+    WOFF2_Table*     temp_indices = NULL;
     WOFF2_Table      last_table;
 
     FT_Int           nn;
@@ -257,7 +279,6 @@
     FT_UShort        xform_version;
     FT_ULong         src_offset = 0;
 
-    FT_UShort        ttc_num_tables;
     FT_UInt          glyf_index;
     FT_UInt          loca_index;
     FT_UInt64        first_table_offset;
@@ -453,23 +474,23 @@
       {
         WOFF2_TtcFont  ttc_font = woff2.ttc_fonts + nn;
 
-        if( READ_255USHORT( ttc_num_tables ) )
+        if( READ_255USHORT( ttc_font->num_tables ) )
           goto Exit;
         if( FT_READ_ULONG( ttc_font->flavor ) )
           goto Exit;
 
-        if( FT_NEW_ARRAY( ttc_font->table_indices, ttc_num_tables ) )
+        if( FT_NEW_ARRAY( ttc_font->table_indices, ttc_font->num_tables ) )
           goto Exit;
         /* DEBUG - Change to TRACE4 */
         FT_TRACE2(( "Number of tables in font %d: %ld\n",
-                    nn, ttc_num_tables ));
+                    nn, ttc_font->num_tables ));
         /* DEBUG - Change to TRACE5 */
         FT_TRACE2(( "  Indices: " ));
 
         glyf_index = 0;
         loca_index = 0;
 
-        for ( j = 0; j < ttc_num_tables; j++ )
+        for ( j = 0; j < ttc_font->num_tables; j++ )
         {
           FT_UShort    table_index;
           WOFF2_Table  table;
@@ -492,7 +513,8 @@
         /* glyf and loca must be consecutive */
         if( glyf_index > 0 || loca_index > 0 )
         {
-          if(glyf_index > loca_index || loca_index - glyf_index != 1)
+          if( glyf_index > loca_index      ||
+              loca_index - glyf_index != 1 )
             return FT_THROW( Invalid_Table );
           /* DEBUG - Remove later */
           else
@@ -531,13 +553,38 @@
     if( file_offset != ( ROUND4( woff2.length ) ) )
       return FT_THROW( Invalid_Table );
 
-    /* TODO Add support for uncompression of TTC fonts. */
-    /* Redirect a TTC to exit for now. */
+    /* Only retain tables of the requested face in a TTC. */
+    /* TODO Check whether it is OK for rest of the code to be unaware of the
+       fact that we're working with a TTC. */
     if( woff2.header_version )
     {
-      FT_TRACE2(( "Reading TTC fonts not supported yet.\n" ));
-      error = FT_THROW( Unimplemented_Feature );
-      goto Exit;
+      WOFF2_TtcFont  ttc_font = woff2.ttc_fonts + face_index;
+      /* Create a temporary array. */
+      if( FT_NEW_ARRAY( temp_indices,
+                        ttc_font->num_tables ) )
+        goto Exit;
+
+      for ( nn = 0; nn < ttc_font->num_tables; nn++ )
+      {
+        /* DEBUG - Remove later */
+        FT_TRACE2(( "i=%d, table_index=%d\n",
+                    nn, ttc_font->table_indices[nn] ));
+        temp_indices[nn] = indices[ttc_font->table_indices[nn]];
+      }
+
+      /* Resize array to required size. */
+      if( FT_RENEW_ARRAY( indices, woff2.num_tables,
+                      ttc_font->num_tables ) )
+        goto Exit;
+
+      for ( nn = 0; nn < ttc_font->num_tables; nn++ )
+        indices[nn] = temp_indices[nn];
+      FT_FREE( temp_indices );
+
+      /* Change header values. */
+      woff2.flavor     = ttc_font->flavor;
+      woff2.num_tables = ttc_font->num_tables;
+
     }
 
     /* Write sfnt header. */
@@ -580,7 +627,7 @@
 
     /* DEBUG - Remove later */
     FT_TRACE2(( "Sorted table indices: \n" ));
-    for( nn = 0; nn < woff2.num_tables; ++nn )
+    for ( nn = 0; nn < woff2.num_tables; ++nn )
     {
       WOFF2_Table  table = indices[nn];
       /* DEBUG - Remove later */
@@ -612,6 +659,8 @@
     FT_FRAME_EXIT();
 
     /* TODO Write table entries. */
+    reconstruct_font( uncompressed_buf, woff2.uncompressed_size,
+                      indices, &woff2, face_index, sfnt );
 
     error = FT_THROW( Unimplemented_Feature );
     /* DEBUG - Remove later */
