@@ -1,5 +1,17 @@
 2019-08-27  Nikhil Ramakrishnan  <ramakrishnan.nikhil@gmail.com>
 
+	[woff2] Handle TTCs and start reconstructing font.
+
+	We `handle' TTCs by modifying the `indices' array to point to only
+	those tables that are part of the requested `face_index'.
+
+	Set and use `num_tables' in `WOFF2_TtcFont'.
+
+	* src/sfnt/sfwoff2.c (reconstruct_font): New function.
+	(woff2_open_font): Start reconstruction of font.
+
+2019-08-27  Nikhil Ramakrishnan  <ramakrishnan.nikhil@gmail.com>
+
 	[woff2] Get known tags from function.
 
 	Change `KnownTags' to a function (`woff2_known_tags').  This avoids
