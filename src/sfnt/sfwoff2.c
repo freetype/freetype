@@ -219,7 +219,10 @@
 
     if( result != BROTLI_DECODER_RESULT_SUCCESS ||
         uncompressed_size != dst_size )
+      {
+        FT_ERROR(( "woff2_uncompress: Stream length mismatch.\n" ));
         return FT_THROW( Invalid_Table );
+      }
 
     return FT_Err_Ok;
 
@@ -498,7 +501,6 @@
       }
       /* Collection directory reading complete. */
       FT_TRACE2(( "WOFF2 collection dirtectory is valid.\n" ));
-
     }
 
     first_table_offset = compute_first_table_offset( &woff2 );
@@ -506,7 +508,7 @@
 
     woff2.compressed_offset = FT_STREAM_POS();
     file_offset = ROUND4( woff2.compressed_offset +
-                            woff2.totalCompressedSize );
+                          woff2.totalCompressedSize );
 
     /* Few more checks before we start reading the tables. */
     if( file_offset > woff2.length )
@@ -619,6 +621,7 @@
   Exit:
     FT_FREE( tables );
     FT_FREE( indices );
+    FT_FREE( uncompressed_buf );
 
     if( error )
     {
