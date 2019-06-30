@@ -360,7 +360,7 @@
           goto Exit;
       }
       else
-        table->Tag = KnownTags[table->FlagByte & 0x3f];
+        table->Tag = woff2_known_tags( table->FlagByte & 0x3f );
 
       flags = 0;
       xform_version = ( table->FlagByte >> 6 ) & 0x03;

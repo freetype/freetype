@@ -1,5 +1,21 @@
 2019-08-27  Nikhil Ramakrishnan  <ramakrishnan.nikhil@gmail.com>
 
+	[woff2] Get known tags from function.
+
+	Change `KnownTags' to a function (`woff2_known_tags').  This avoids
+	introducing a global constant array.  This function returns the
+	specified index without *any* checks.  The caller must ensure that
+	`index' is within array limits.
+
+	* src/sfnt/sfwoff2.c (woff2_open_font): Change `KnownTags[...]'
+	notation to `woff2_known_tags( ...  )'.
+
+	* src/sfnt/woff2tags.c: Perform changes.
+
+	* src/sfnt/woff2tags.h: Update definitions.
+
+2019-08-27  Nikhil Ramakrishnan  <ramakrishnan.nikhil@gmail.com>
+
 	[woff2] Minor.
 
 	* src/sfnt/sfwoff2.c (woff2_uncompress): Add error message
