@@ -289,12 +289,12 @@
   ft_svg_glyph_init( FT_Glyph      svg_glyph,
                      FT_GlyphSlot  slot )
   {
-    FT_SvgGlyph   glyph   = (FT_SvgGlyph)svg_glyph;
-    FT_Error      error   = FT_Err_Ok;
-    FT_Memory     memory  =  FT_GLYPH( glyph )->library->memory;
-    FT_ULong      doc_length;
-
+    FT_ULong         doc_length;
     FT_SVG_Document  document;
+    FT_SvgGlyph      glyph   = (FT_SvgGlyph)svg_glyph;
+    FT_Error         error   = FT_Err_Ok;
+    FT_Memory        memory  = FT_GLYPH( glyph )->library->memory;
+
 
     if ( slot->format != FT_GLYPH_FORMAT_SVG )
     {
@@ -316,13 +316,13 @@
       goto Exit;
     }
 
+    /* init the parent first */
     slot->format = FT_GLYPH_FORMAT_OUTLINE;
-    /* let's init the parent first */
     ft_outline_glyph_class.glyph_init( svg_glyph, slot );
     slot->format = FT_GLYPH_FORMAT_SVG;
 
     /* allocate a new document */
-    doc_length = document->svg_document_length;
+    doc_length                 = document->svg_document_length;
     glyph->svg_document        = memory->alloc( memory, doc_length );
     glyph->svg_document_length = doc_length;
     glyph->glyph_index         = slot->glyph_index;
@@ -420,9 +420,10 @@
     document->start_glyph_id      = glyph->start_glyph_id;
     document->end_glyph_id        = glyph->end_glyph_id;
 
-    slot->format = FT_GLYPH_FORMAT_SVG;
+    slot->format      = FT_GLYPH_FORMAT_SVG;
+    slot->glyph_index = glyph->glyph_index;
+    slot->other       = document;
 
-    slot->other = document;
     return error;
   }
 

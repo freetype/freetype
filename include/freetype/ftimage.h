@@ -734,7 +734,7 @@ FT_BEGIN_HEADER
    *     but FreeType isn't currently capable of rendering them correctly.
    *
    *   FT_GLYPH_FORMAT_SVG ::
-   *     The glyph is inside an SVG documents in the SVG table.
+   *     The glyph is represented by an SVG documents in the SVG table.
    *
    */
   typedef enum  FT_Glyph_Format_
@@ -757,7 +757,7 @@ FT_BEGIN_HEADER
 #define ft_glyph_format_bitmap     FT_GLYPH_FORMAT_BITMAP
 #define ft_glyph_format_outline    FT_GLYPH_FORMAT_OUTLINE
 #define ft_glyph_format_plotter    FT_GLYPH_FORMAT_PLOTTER
-#define ft_glyph_format_svg        FT_GLYPH_FROMAT_SVG
+#define ft_glyph_format_svg        FT_GLYPH_FORMAT_SVG
 
 
   /*************************************************************************/

@@ -5,7 +5,7 @@
  *   Interface for SVG Renderer Module (specification).
  *
  * Copyright (C) 2004-2019 by
- * David Turner, Robert Wilhelm, and Werner Lemberg.
+ * David Turner, Robert Wilhelm, Werner Lemberg and Moazin Khatti.
  *
  * This file is part of the FreeType project, and may only be used,
  * modified, and distributed under the terms of the FreeType project
