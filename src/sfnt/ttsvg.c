@@ -5,7 +5,7 @@
  *   OpenType SVG Color (specification).
  *
  * Copyright (C) 2018-2019 by
- * David Turner, Robert Wilhelm, and Werner Lemberg.
+ * David Turner, Robert Wilhelm, Werner Lemberg and Moazin Khatti.
  *
  * This file is part of the FreeType project, and may only be used,
  * modified, and distributed under the terms of the FreeType project
@@ -112,8 +112,9 @@
   {
     FT_Memory  memory = face->root.memory;
     FT_Stream  stream = face->root.stream;
+    Svg*       svg    = (Svg*) face->svg;
 
-    Svg* svg = (Svg*) face->svg;
+
     if( svg )
     {
       FT_FRAME_RELEASE( svg->table );
@@ -246,8 +247,10 @@
     svg_document->end_glyph_id        = end_glyph_id;
 
     glyph->other = svg_document;
-    glyph->metrics.horiAdvance *= ((float)glyph->face->size->metrics.x_ppem)/((float)glyph->face->units_per_EM) * 64.0;
-    glyph->metrics.vertAdvance *= ((float)glyph->face->size->metrics.y_ppem)/((float)glyph->face->units_per_EM) * 64.0;
+    glyph->metrics.horiAdvance *= ((float)glyph->face->size->metrics.x_ppem)/
+                                  ((float)glyph->face->units_per_EM) * 64.0;
+    glyph->metrics.vertAdvance *= ((float)glyph->face->size->metrics.y_ppem)/
+                                  ((float)glyph->face->units_per_EM) * 64.0;
 
     return FT_Err_Ok;
   }

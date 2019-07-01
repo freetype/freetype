@@ -5,7 +5,7 @@
  *   The FreeType svg renderer interface (body).
  *
  * Copyright (C) 1996-2019 by
- * David Turner, Robert Wilhelm, and Werner Lemberg.
+ * David Turner, Robert Wilhelm, Werner Lemberg and Moazin Khatti.
  *
  * This file is part of the FreeType project, and may only be used,
  * modified, and distributed under the terms of the FreeType project
@@ -37,7 +37,9 @@
   static FT_Error
   ft_svg_init( SVG_Renderer svg_module )
   {
-    FT_Error           error = FT_Err_Ok;
+    FT_Error  error = FT_Err_Ok;
+
+
     svg_module->loaded = FALSE;
     return error;
   }
@@ -48,26 +50,27 @@
                  FT_Render_Mode    mode,
                  const FT_Vector*  origin )
   {
-    SVG_Renderer  renderer_ = (SVG_Renderer)renderer;
+    SVG_Renderer  svg_renderer = (SVG_Renderer)renderer;
 
-    if( renderer_->loaded == FALSE )
+
+    if( svg_renderer->loaded == FALSE )
     {
-      renderer_->loaded = TRUE;
-      renderer_->hooks.svg_lib_init();
+      svg_renderer->loaded = TRUE;
+      svg_renderer->hooks.svg_lib_init();
     }
 
-    return renderer_->hooks.svg_lib_render( slot );
+    return svg_renderer->hooks.svg_lib_render( slot );
   }
 
   static FT_Error
-  ft_svg_set_hooks( FT_Module       renderer_,
+  ft_svg_set_hooks( FT_Module       module,
                     SVG_Lib_Init    init_hook,
                     SVG_Lib_Free    free_hook,
                     SVG_Lib_Render  render_hook )
   {
     SVG_Renderer  renderer;
 
-    renderer = (SVG_Renderer)renderer_;
+    renderer = (SVG_Renderer)module;
     renderer->hooks.svg_lib_init   = init_hook;
     renderer->hooks.svg_lib_free   = free_hook;
     renderer->hooks.svg_lib_render = render_hook;

@@ -751,7 +751,7 @@
     FT_Bool       is_apple_sbix;
     FT_Bool       has_CBLC;
     FT_Bool       has_CBDT;
-    FT_Bool       has_SVG = FALSE; /* For OpenType SVG fonts */
+    FT_Bool       has_SVG                      = FALSE; /* for OT-SVG */
     FT_Bool       ignore_typographic_family    = FALSE;
     FT_Bool       ignore_typographic_subfamily = FALSE;
 
@@ -955,8 +955,8 @@
     }
 
     /* opentype svg colored glyph support */
-    /* no If statement because the function always exists for now */ 
-    LOAD_( svg ); 
+    /* no If statement because the function always exists for now */
+    LOAD_( svg );
 
     if( face->svg )
       has_SVG = TRUE;

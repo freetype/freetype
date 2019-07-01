@@ -5604,7 +5604,13 @@
     FT_Module               renderer;
     SVG_Renderer_Interface  *svg;
 
+    /* TODO: (OT-SVG) Handle the case if the module is not found */
     renderer = FT_Get_Module( library, "ot-svg" );
+
+    /* If ot-svg module is not available return with error */
+    if ( renderer == 0 )
+      return FT_THROW( Missing_Module );
+
     svg = (SVG_Renderer_Interface*)renderer->clazz->module_interface;
     svg->set_hooks(renderer, init_hook, free_hook, render_hook);
     return FT_Err_Ok;
