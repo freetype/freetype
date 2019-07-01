@@ -1,3 +1,34 @@
+2019-07-01  Werner Lemberg  <wl@gnu.org>
+
+	* Version 2.10.1 released.
+	==========================
+
+
+	Tag sources with `VER-2-10-1'.
+
+	* docs/VERSION.TXT: Add entry for version 2.10.1.
+
+	* README, Jamfile (RefDoc), src/base/ftver.rc,
+	builds/windows/vc2010/freetype.vcxproj,
+	builds/windows/vc2010/index.html,
+	builds/windows/visualc/freetype.dsp,
+	builds/windows/visualc/freetype.vcproj,
+	builds/windows/visualc/index.html,
+	builds/windows/visualce/freetype.dsp,
+	builds/windows/visualce/freetype.vcproj,
+	builds/windows/visualce/index.html,
+	builds/wince/vc2005-ce/freetype.vcproj,
+	builds/wince/vc2005-ce/index.html,
+	builds/wince/vc2008-ce/freetype.vcproj,
+	builds/wince/vc2008-ce/index.html: s/2.10.0/2.10.1/, s/2100/2101/.
+
+	* include/freetype/freetype.h (FREETYPE_PATCH): Set to 1.
+
+	* builds/unix/configure.raw (version_info): Set to 23:1:17.
+	* CMakeLists.txt (VERSION_PATCH): Set to 1.
+
+	* include/freetype/fterrors.h (FT_Error_String): Fix C++ compilation.
+
 2019-06-26  Alexei Podtelezhnikov  <apodtele@gmail.com>
 
 	* src/bdf/bdfdrivr.c (bdf_cmap_char_{index,next}): Fix inequality.
