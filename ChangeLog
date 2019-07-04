@@ -1,3 +1,24 @@
+2019-07-04  Chris Liddell <chris.liddell@artifex.com>
+
+	[psaux] (1/2) Handle fonts that use SEAC for ligatures (#56580).
+
+	As originally intended, a Type 1 SEAC charstring would be used for
+	an accented glyph (like `acaron' or `uumlaut'), where the advance
+	width of the SEAC glyph is the same as that of the `base' glyph
+	(like `a' or `u').  In this case it is not uncommon for the SEAC
+	glyph to not use an (H)SBW opcode of its own but to rely on the
+	value from the base glyph.
+
+	However, out-of-spec fonts also use SEAC glyphs for ligatures (like
+	`oe' or `fi'), and in those cases the overall advance width is
+	greater than that of the `base' glyph.  For this reason we have to
+	allow that the SEAC glyph can have an (H)SBW value of its own, and
+	if it has, retain this value, rather than the one from the base
+	glyph.
+
+	* src/psaux/psintrp.c (cf2_interpT2CharString) <cf2_escSEAC>:
+	Implement it.
+
 2019-07-01  Werner Lemberg  <wl@gnu.org>
 
 	* Version 2.10.1 released.
