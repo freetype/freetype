@@ -65,6 +65,20 @@
           } while ( 0 )
 
 
+  static void
+  stream_close( FT_Stream  stream )
+  {
+    FT_Memory  memory = stream->memory;
+
+
+    FT_FREE( stream->base );
+
+    stream->size  = 0;
+    stream->base  = NULL;
+    stream->close = NULL;
+  }
+
+
   FT_CALLBACK_DEF( int )
   compare_tags( const void*  a,
                 const void*  b )
@@ -235,23 +249,140 @@
   }
 
 
+  static WOFF2_Table
+  find_table( WOFF2_Table* tables,
+              FT_UShort    num_tables,
+              FT_ULong     tag )
+  {
+    FT_Int i;
+
+    for ( i = 0; i < num_tables; i++ )
+    {
+      if( tables[i]->Tag == tag )
+        return tables[i];
+    }
+    return NULL;
+  }
+
+
+  /* Read `numberOfHMetrics' from `hhea' table. */
+  static FT_Error
+  read_num_hmetrics( FT_Stream   stream,
+                     FT_ULong    table_len,
+                     FT_UShort*  num_hmetrics )
+  {
+    FT_Error   error = FT_Err_Ok;
+    FT_UShort  num_metrics;
+
+    if( FT_STREAM_SKIP( 34 )  )
+      return FT_THROW( Invalid_Table );
+
+    if( FT_READ_USHORT( num_metrics ) )
+      return FT_THROW( Invalid_Table );
+
+    *num_hmetrics = num_metrics;
+
+    FT_TRACE2(( "num_hmetrics = %d\n", *num_hmetrics ));
+
+    return error;
+  }
+
+
   static FT_Error
   reconstruct_font( FT_Byte*       transformed_buf,
                     FT_ULong       transformed_buf_size,
                     WOFF2_Table*   indices,
                     WOFF2_Header   woff2,
-                    FT_Int         face_index,
-                    FT_Byte*       sfnt )
+                    FT_Byte*       sfnt,
+                    FT_Memory      memory )
   {
-    /* We're writing only one face per call, so offset is fixed. */
-    FT_ULong  dst_offset  = 12;
-    FT_Byte*  table_entry = NULL;
+    FT_Error   error  = FT_Err_Ok;
+    FT_Stream  stream = NULL;
+
+    /* We're writing only one face per call, so initial offset is fixed. */
+    FT_ULong   dst_offset  = 12;
+    FT_UShort  num_tables  = woff2->num_tables;
+
+    FT_ULong  checksum      = 0;
+    FT_ULong  loca_checksum = 0;
+    FT_Int    nn            = 0;
+    FT_UShort  num_hmetrics;
+
+    /* Few table checks before reconstruction. */
+    /* `glyf' must be present with `loca'. */
+    const WOFF2_Table glyf_table = find_table( indices, num_tables,
+                                               TTAG_glyf );
+    const WOFF2_Table loca_table = find_table( indices, num_tables,
+                                               TTAG_loca );
+
+    if( ( !glyf_table && loca_table ) ||
+        ( !loca_table && glyf_table ) )
+    {
+      FT_ERROR(( "Cannot have only one of glyf/loca.\n" ));
+      return FT_THROW( Invalid_Table );
+    }
+
+    /* Both `glyf' and `loca' must have same transformation. */
+    if( glyf_table != NULL )
+    {
+      if( ( glyf_table->flags & WOFF2_FLAGS_TRANSFORM ) !=
+          ( loca_table->flags & WOFF2_FLAGS_TRANSFORM ) )
+        {
+          FT_ERROR(( "Transformation mismatch in glyf and loca." ));
+          return FT_THROW( Invalid_Table );
+        }
+    }
 
     FT_UNUSED( dst_offset );
-    FT_UNUSED( table_entry );
+    FT_UNUSED( loca_checksum );
+    FT_UNUSED( checksum );
+
+    /* Create a stream for the uncompressed buffer. */
+    if ( FT_NEW( stream ) )
+      return FT_THROW( Invalid_Table );
+    FT_Stream_OpenMemory( stream, transformed_buf, transformed_buf_size );
+    stream->close = stream_close;
+
+    FT_ASSERT( FT_STREAM_POS() == 0 );
+
+    /* Reconstruct/copy tables to output stream. */
+    for ( nn = 0; nn < num_tables; nn++ )
+    {
+      WOFF2_TableRec  table = *( indices[nn] );
+
+      /* DEBUG - Remove later */
+      FT_TRACE2(( "Seeking to %d with table size %d.\n", table.src_offset, table.src_length ));
+      FT_TRACE2(( "Table tag: %c%c%c%c.\n",
+            (FT_Char)( table.Tag >> 24 ),
+            (FT_Char)( table.Tag >> 16 ),
+            (FT_Char)( table.Tag >> 8  ),
+            (FT_Char)( table.Tag       ) ));
+      if ( FT_STREAM_SEEK( table.src_offset ) )
+        return FT_THROW( Invalid_Table );
+
+      if( table.src_offset + table.src_length > transformed_buf_size )
+        return FT_THROW( Invalid_Table );
+
+      /* Get stream size for fields of `hmtx' table. */
+      if( table.Tag == TTAG_hhea )
+      {
+        if( read_num_hmetrics( stream, table.src_length, &num_hmetrics ) )
+          return FT_THROW( Invalid_Table );
+      }
+
+      if( ( table.flags & WOFF2_FLAGS_TRANSFORM ) != WOFF2_FLAGS_TRANSFORM )
+      {
+        /* Check if `head' is atleast 12 bytes. */
+        if( table.Tag == TTAG_head )
+        {
+          if( table.src_length < 12 )
+            return FT_THROW( Invalid_Table );
+        }
+      }
+
+    }
 
     /* TODO reconstruct the font tables! */
-
     return FT_Err_Ok;
   }
 
@@ -564,6 +695,8 @@
                         ttc_font->num_tables ) )
         goto Exit;
 
+      /* DEBUG - Remove later */
+      FT_TRACE2(( "Storing tables for TTC face index %d.\n", face_index ));
       for ( nn = 0; nn < ttc_font->num_tables; nn++ )
       {
         /* DEBUG - Remove later */
@@ -660,7 +793,7 @@
 
     /* TODO Write table entries. */
     reconstruct_font( uncompressed_buf, woff2.uncompressed_size,
-                      indices, &woff2, face_index, sfnt );
+                      indices, &woff2, sfnt, memory );
 
     error = FT_THROW( Unimplemented_Feature );
     /* DEBUG - Remove later */
