@@ -367,6 +367,12 @@
 
     FT_GlyphLoader_Prepare( decoder->builder.loader );  /* prepare loader */
 
+    /* save the left bearing and width of the SEAC   */
+    /* glyph as they will be erased by the next load */
+
+    left_bearing = decoder->builder.left_bearing;
+    advance      = decoder->builder.advance;
+
     /* the seac operator must not be nested */
     decoder->seac = TRUE;
     error = t1_decoder_parse_glyph( decoder, (FT_UInt)bchar_index );
@@ -374,11 +380,14 @@
     if ( error )
       goto Exit;
 
-    /* save the left bearing and width of the base character */
-    /* as they will be erased by the next load.              */
+    /* If the SEAC glyph doesn't have a (H)SBW of its */
+    /* own use the values from the base glyph.        */
 
-    left_bearing = decoder->builder.left_bearing;
-    advance      = decoder->builder.advance;
+    if ( decoder->builder.parse_state != T1_Parse_Have_Width )
+    {
+      left_bearing = decoder->builder.left_bearing;
+      advance      = decoder->builder.advance;
+    }
 
     decoder->builder.left_bearing.x = 0;
     decoder->builder.left_bearing.y = 0;
@@ -396,8 +405,8 @@
     if ( error )
       goto Exit;
 
-    /* restore the left side bearing and   */
-    /* advance width of the base character */
+    /* restore the left side bearing and advance width   */
+    /* of the SEAC glyph or base character (saved above) */
 
     decoder->builder.left_bearing = left_bearing;
     decoder->builder.advance      = advance;

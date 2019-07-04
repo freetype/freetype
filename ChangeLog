@@ -1,3 +1,11 @@
+2019-07-04  Werner Lemberg  <wl@gnu.org>
+
+	[psaux] (2/2) Handle fonts that use SEAC for ligatures (#56580).
+
+	The same as previous commit but for the old engine.
+
+	* src/psaux/t1decode.c (t1operator_seac): Implement it.
+
 2019-07-04  Chris Liddell <chris.liddell@artifex.com>
 
 	[psaux] (1/2) Handle fonts that use SEAC for ligatures (#56580).
