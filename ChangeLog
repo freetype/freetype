@@ -1,5 +1,18 @@
 2019-08-27  Nikhil Ramakrishnan  <ramakrishnan.nikhil@gmail.com>
 
+	[woff2] Create stream for uncompressed buffer.
+
+	Uncompressed buffer is now an `FT_Stream'.
+
+	Perform basic checks and start iterating over tables.
+
+	* src/sfnt/sfwoff2.c (stream_close, find_table, read_num_hmetrics):
+	New functions.
+	(reconstruct_font): Modify parameters and iterate over tables.
+	(woff2_open_font): Updated.
+
+2019-08-27  Nikhil Ramakrishnan  <ramakrishnan.nikhil@gmail.com>
+
 	[woff2] Handle TTCs and start reconstructing font.
 
 	We `handle' TTCs by modifying the `indices' array to point to only
