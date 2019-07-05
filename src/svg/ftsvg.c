@@ -37,11 +37,18 @@
   static FT_Error
   ft_svg_init( SVG_Renderer svg_module )
   {
-    FT_Error  error = FT_Err_Ok;
-
-
+    FT_Error    error = FT_Err_Ok;
     svg_module->loaded = FALSE;
     return error;
+  }
+
+  static void
+  ft_svg_done( SVG_Renderer svg_module )
+  {
+    FT_Library  library = svg_module->root.root.library;
+    if ( svg_module->loaded = TRUE )
+      svg_module->hooks.svg_lib_free( library );
+    svg_module->loaded = FALSE;
   }
 
   static FT_Error
@@ -51,14 +58,13 @@
                  const FT_Vector*  origin )
   {
     SVG_Renderer  svg_renderer = (SVG_Renderer)renderer;
-
-
-    if( svg_renderer->loaded == FALSE )
+    FT_Library    library      = renderer->root.library;
+    FT_Error      error;
+    if ( svg_renderer->loaded == FALSE )
     {
+      error = svg_renderer->hooks.svg_lib_init( library );
       svg_renderer->loaded = TRUE;
-      svg_renderer->hooks.svg_lib_init();
     }
-
     return svg_renderer->hooks.svg_lib_render( slot );
   }
 
@@ -96,7 +102,7 @@
       0x20000L,
       (const void*)&svg_renderer_interface,   /* module specific interface */
       (FT_Module_Constructor)ft_svg_init,     /* module_init */
-      NULL,
+      (FT_Module_Destructor)ft_svg_done,      /* module_done */
       NULL,
       FT_GLYPH_FORMAT_SVG,
       (FT_Renderer_RenderFunc)ft_svg_render,

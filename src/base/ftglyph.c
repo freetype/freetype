@@ -716,6 +716,7 @@
     const FT_Glyph_Class*     clazz;
 
     FT_Library                library;
+    FT_Memory                 memory = library->memory;
 
 
     /* check argument */
@@ -763,7 +764,13 @@
     /* prepare dummy slot for rendering */
     error = clazz->glyph_prepare( glyph, &dummy );
     if ( !error )
+    {
       error = FT_Render_Glyph_Internal( glyph->library, &dummy, render_mode );
+      if ( clazz == &ft_svg_glyph_class )
+      {
+        FT_FREE( dummy.other );
+      }
+    }
 
 #if 1
     if ( !destroy && origin )

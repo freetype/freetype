@@ -890,6 +890,10 @@ FT_BEGIN_HEADER
    *     created.  @FT_Reference_Library increments this counter, and
    *     @FT_Done_Library only destroys a library if the counter is~1,
    *     otherwise it simply decrements it.
+   *
+   *   svg_renderer_state ::
+   *     A pointer to a state object that will have the state of the SVG
+   *     Renderer. This will be totally managed by the renderer.
    */
   typedef struct  FT_LibraryRec_
   {
@@ -916,6 +920,8 @@ FT_BEGIN_HEADER
 #endif
 
     FT_Int             refcount;
+
+    void*              svg_renderer_state;
 
   } FT_LibraryRec;
 

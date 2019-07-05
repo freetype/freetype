@@ -38,12 +38,18 @@ FT_BEGIN_HEADER
    * @description:
    *   A callback used to initiate the SVG Rendering port
    *
+   * @input:
+   *   library::
+   *     A instance of library. This is required to initialize the renderer's
+   *     state which will be held in the library.
+   *
+   *
    * @return:
    *   FreeType error code.  0 means success.
    */
 
   typedef FT_Error
-  (*SVG_Lib_Init)(  );
+  (*SVG_Lib_Init)( FT_Library  library );
 
 
   /**************************************************************************
@@ -55,12 +61,14 @@ FT_BEGIN_HEADER
    *   A callback used to free the SVG Rendering port. Calling this callback
    *   shall do all cleanups that the SVG Rendering port wants to do.
    *
-   * @return:
-   *   FreeType error code.  0 means success.
+   * @input:
+   *   library::
+   *     A instance of library. This is required to free the renderer's state
+   *     which will be held in the library.
    */
 
-  typedef FT_Error
-  (*SVG_Lib_Free)(  );
+  typedef void
+  (*SVG_Lib_Free)( FT_Library  library );
 
 
   /**************************************************************************
