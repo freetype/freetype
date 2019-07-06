@@ -33,6 +33,9 @@ FT_BEGIN_HEADER
 #define WOFF2_SFNT_HEADER_SIZE  12
 #define WOFF2_SFNT_ENTRY_SIZE   16
 
+  /* Suggested max size for output. */
+#define WOFF2_DEFAULT_MAX_SIZE  30 * 1024 * 1024
+
   FT_LOCAL( FT_ULong )
   woff2_known_tags( FT_Byte  index );
 
