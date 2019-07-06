@@ -5596,10 +5596,12 @@
   }
 
   FT_EXPORT_DEF( FT_Error )
-  FT_Set_Svg_Hooks( FT_Library      library,
-                    SVG_Lib_Init    init_hook,
-                    SVG_Lib_Free    free_hook,
-                    SVG_Lib_Render  render_hook )
+  FT_Set_Svg_Hooks( FT_Library               library,
+                    SVG_Lib_Init             init_hook,
+                    SVG_Lib_Free             free_hook,
+                    SVG_Lib_Render           render_hook,
+                    SVG_Lib_Get_State_Size   get_state_size,
+                    SVG_Lib_Get_Buffer_Size  get_buffer_size )
   {
     FT_Module               renderer;
     SVG_Renderer_Interface  *svg;
@@ -5612,7 +5614,12 @@
       return FT_THROW( Missing_Module );
 
     svg = (SVG_Renderer_Interface*)renderer->clazz->module_interface;
-    svg->set_hooks(renderer, init_hook, free_hook, render_hook);
+    svg->set_hooks(renderer,
+                   init_hook,
+                   free_hook,
+                   render_hook,
+                   get_state_size,
+                   get_buffer_size );
     return FT_Err_Ok;
   }
 

@@ -80,15 +80,63 @@ FT_BEGIN_HEADER
    *   A callback used to render the glyph loaded in the slot.
    *
    * @input:
-   *   svg_doc::
-   *     A pointer to the svg document
+   *   slot ::
+   *     The whole glyph slot object.
+   *
+   *   outline_bbox ::
+   *     The bounding box of the glyph in font units. So that the renderer
+   *     may not need to calculate it again.
    *
    * @return:
    *   FreeType error code.  0 means success.
    */
 
   typedef FT_Error
-  (*SVG_Lib_Render)( FT_GlyphSlot  slot );
+  (*SVG_Lib_Render)( FT_GlyphSlot  slot,
+                     FT_BBox  outline_bbox);
+
+  /**************************************************************************
+   *
+   * @functype:
+   *   SVG_Lib_Get_State_Size
+   *
+   * @description:
+   *   A callback which is called to query the size of the state stucture.
+   *   This is used for allocating the state structure in library.
+   *
+   * @return:
+   *   Size of the state structure in bytes.
+   */
+
+  typedef FT_UInt
+  (*SVG_Lib_Get_State_Size)( );
+
+  /**************************************************************************
+   *
+   * @functype:
+   *   SVG_Lib_Get_Buffer_Size
+   *
+   * @description:
+   *   A callback which is called to get the size of the image buffer needed.
+   *   This buffer will ultimately be populated by `SVG_Lib_Render' hook.
+   *
+   * @input:
+   *   slot ::
+   *     The glyph slot which has the SVG document loaded as well as other
+   *     info.
+   *
+   *   bbox ::
+   *     The bbox in font units. This is required for the rendering port to
+   *     predict the final size of the image buffer.
+   *
+   * @return:
+   *   Size of the state structure in bytes.
+   *
+   */
+
+  typedef FT_ULong
+  (*SVG_Lib_Get_Buffer_Size)( FT_GlyphSlot  slot,
+                              FT_BBox       bbox );
 
 
   /**************************************************************************
@@ -116,15 +164,25 @@ FT_BEGIN_HEADER
    *     A function pointer of the type `SVG_Lib_Render'. Read the
    *     documentation of `SVG_Lib_Render'.
    *
+   *   get_state_size::
+   *     A function pointer of the type `SVG_Lib_Get_State_Size'. Read the
+   *     documentation of `SVG_Lib_Get_State_Size'.
+   *
+   *   get_buffer_size::
+   *     A function pointer of the type `SVG_Lib_Get_Buffer_Size'. Read the
+   *     documentation of `SVG_Lib_Get_Buffer_Size'.
+   *
    * @return:
    *   FreeType error code.  0 means success.
    */
 
   typedef FT_Error
-  (*SVG_Set_Hooks)( FT_Module       module,
-                    SVG_Lib_Init    init_hook,
-                    SVG_Lib_Free    free_hook,
-                    SVG_Lib_Render  render_hook );
+  (*SVG_Set_Hooks)( FT_Module                module,
+                    SVG_Lib_Init             init_hook,
+                    SVG_Lib_Free             free_hook,
+                    SVG_Lib_Render           render_hook,
+                    SVG_Lib_Get_State_Size   get_state_size,
+                    SVG_Lib_Get_Buffer_Size  get_buffer_size );
 
   /**************************************************************************
    *
@@ -151,10 +209,12 @@ FT_BEGIN_HEADER
 
   /* TODO: to document */
   FT_EXPORT( FT_Error )
-  FT_Set_Svg_Hooks( FT_Library      library,
-                    SVG_Lib_Init    init_hook,
-                    SVG_Lib_Free    free_hook,
-                    SVG_Lib_Render  render_hook );
+  FT_Set_Svg_Hooks( FT_Library               library,
+                    SVG_Lib_Init             init_hook,
+                    SVG_Lib_Free             free_hook,
+                    SVG_Lib_Render           render_hook,
+                    SVG_Lib_Get_State_Size   get_state_size,
+                    SVG_Lib_Get_Buffer_Size  get_buffer_size );
 
   /**************************************************************************
    *

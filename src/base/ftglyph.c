@@ -716,7 +716,7 @@
     const FT_Glyph_Class*     clazz;
 
     FT_Library                library;
-    FT_Memory                 memory = library->memory;
+    FT_Memory                 memory;
 
 
     /* check argument */
@@ -728,6 +728,7 @@
 
     clazz   = glyph->clazz;
     library = glyph->library;
+    memory = library->memory;
     if ( !library || !clazz )
       goto Bad;
 
