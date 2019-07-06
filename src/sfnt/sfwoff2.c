@@ -64,6 +64,8 @@
                                              \
           } while ( 0 )
 
+#define WRITE_SFNT_BUF( buf, s ) \
+          write_buf( &sfnt, &dest_offset, buf, s, memory )
 
   static void
   stream_close( FT_Stream  stream )
@@ -182,6 +184,41 @@
   }
 
 
+  static FT_Error
+  write_buf( FT_Byte**  dst_bytes,
+             FT_ULong*  offset,
+             FT_Byte*   src,
+             FT_ULong   size,
+             FT_Memory  memory )
+  {
+    FT_Error  error = FT_Err_Ok;
+    /* We are reallocating memory for `dst', so its pointer may change. */
+    FT_Byte*  dst   = *dst_bytes;
+
+    /* Check if we are within limits. */
+    if( ( *offset + size ) > WOFF2_DEFAULT_MAX_SIZE  )
+      return FT_THROW( Array_Too_Large );
+
+    /* DEBUG - Remove later */
+    FT_TRACE2(( "Reallocating %lu to %lu.\n", *offset, (*offset + size) ));
+    /* Reallocate `dst'. */
+    if ( FT_REALLOC( dst,
+                     (FT_ULong)(*offset),
+                     (FT_ULong)(*offset + size ) ) )
+      goto Exit;
+
+    /* Copy data. */
+    ft_memcpy( dst + *offset, src, size );
+
+    *offset += size;
+    /* Set pointer of `dst' to its correct value. */
+    *dst_bytes = dst;
+
+  Exit:
+    return error;
+  }
+
+
   static FT_Offset
   CollectionHeaderSize( FT_ULong header_version,
                         FT_UShort num_fonts )
@@ -214,6 +251,32 @@
       }
     }
     return offset;
+  }
+
+  static FT_Long
+  compute_ULong_sum( FT_Byte*  buf,
+                     FT_ULong  size )
+  {
+    FT_ULong  checksum     = 0;
+    FT_ULong  aligned_size = size & ~3;
+    FT_ULong  i;
+    FT_ULong  v;
+
+    for( i = 0; i < aligned_size; i += 4 )
+    {
+      checksum += ( buf[i] << 24 ) | ( buf[i+1] << 16 ) |
+                  ( buf[i+2] << 8 ) | ( buf[i+3] << 0 );
+    }
+
+    /* If size is not aligned to 4, treat as if it is padded with 0s */
+    if( size != aligned_size )
+    {
+      v = 0;
+      for( i = aligned_size ; i < size; ++i )
+        v |= buf[i] << ( 24 - 8 * ( i & 3 ) );
+      checksum += v;
+    }
+    return checksum;
   }
 
 
@@ -293,15 +356,17 @@
                     FT_ULong       transformed_buf_size,
                     WOFF2_Table*   indices,
                     WOFF2_Header   woff2,
-                    FT_Byte*       sfnt,
+                    FT_Byte**      sfnt_bytes,
                     FT_Memory      memory )
   {
     FT_Error   error  = FT_Err_Ok;
     FT_Stream  stream = NULL;
+    FT_Byte*   buf_cursor = NULL;
+    /* We are reallocating memory for `sfnt', so its pointer may change. */
+    FT_Byte*   sfnt       = *sfnt_bytes;
 
-    /* We're writing only one face per call, so initial offset is fixed. */
-    FT_ULong   dst_offset  = 12;
     FT_UShort  num_tables  = woff2->num_tables;
+    FT_ULong   dest_offset = 12 + num_tables * 16UL;
 
     FT_ULong  checksum      = 0;
     FT_ULong  loca_checksum = 0;
@@ -333,7 +398,6 @@
         }
     }
 
-    FT_UNUSED( dst_offset );
     FT_UNUSED( loca_checksum );
     FT_UNUSED( checksum );
 
@@ -351,12 +415,14 @@
       WOFF2_TableRec  table = *( indices[nn] );
 
       /* DEBUG - Remove later */
-      FT_TRACE2(( "Seeking to %d with table size %d.\n", table.src_offset, table.src_length ));
+      FT_TRACE2(( "Seeking to %d with table size %d.\n",
+                  table.src_offset, table.src_length ));
       FT_TRACE2(( "Table tag: %c%c%c%c.\n",
             (FT_Char)( table.Tag >> 24 ),
             (FT_Char)( table.Tag >> 16 ),
             (FT_Char)( table.Tag >> 8  ),
             (FT_Char)( table.Tag       ) ));
+
       if ( FT_STREAM_SEEK( table.src_offset ) )
         return FT_THROW( Invalid_Table );
 
@@ -370,6 +436,7 @@
           return FT_THROW( Invalid_Table );
       }
 
+      checksum = 0;
       if( ( table.flags & WOFF2_FLAGS_TRANSFORM ) != WOFF2_FLAGS_TRANSFORM )
       {
         /* Check if `head' is atleast 12 bytes. */
@@ -377,12 +444,30 @@
         {
           if( table.src_length < 12 )
             return FT_THROW( Invalid_Table );
+          buf_cursor = transformed_buf + table.src_offset + 8;
+          WRITE_ULONG( buf_cursor, 0 );
         }
+        table.dst_offset = dest_offset;
+        checksum = compute_ULong_sum( transformed_buf + table.src_offset,
+                                     table.src_length );
+        /* DEBUG - Remove later */
+        FT_TRACE2(( "Checksum = %u\n", checksum ));
+
+        if( WRITE_SFNT_BUF( transformed_buf + table.src_offset,
+                            table.src_length ) )
+          return FT_THROW( Invalid_Table );
+      }
+      else{
+        /* DEBUG - Remove later */
+        FT_TRACE2(( "This table has xform.\n" ));
+
+        /* TODO reconstruct transformed font tables! */
       }
 
     }
 
-    /* TODO reconstruct the font tables! */
+    /* Set pointer of sfnt stream to its correct value. */
+    *sfnt_bytes = sfnt;
     return FT_Err_Ok;
   }
 
@@ -793,7 +878,7 @@
 
     /* TODO Write table entries. */
     reconstruct_font( uncompressed_buf, woff2.uncompressed_size,
-                      indices, &woff2, sfnt, memory );
+                      indices, &woff2, &sfnt, memory );
 
     error = FT_THROW( Unimplemented_Feature );
     /* DEBUG - Remove later */
@@ -821,6 +906,7 @@
 #undef ROUND4
 #undef WRITE_USHORT
 #undef WRITE_ULONG
+#undef WRITE_SFNT_BUF
 
 
 /* END */

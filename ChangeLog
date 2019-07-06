@@ -1,5 +1,24 @@
 2019-08-27  Nikhil Ramakrishnan  <ramakrishnan.nikhil@gmail.com>
 
+	[woff2] Copy un-transformed tables to sfnt stream.
+
+	Copy un-transformed tables to the sfnt stream.
+
+	* src/sfnt/sfwoff2.c: (WRITE_SFNT_BUF): New macro.
+	(write_buf): New function.  Extend memory of `dst' buffer and copy
+	bytes from `src'.
+	(compute_ULong_sum): New function.  Calculate checksum of table.
+	(reconstruct_font): Change `FT_Byte* sfnt' to `FT_Byte**
+	sfnt_bytes'.  This has been done because we reallocate memory to
+	`sfnt' multiple times, which may change the pointer value of `sfnt'.
+	This new pointer must be propogated back to the caller.  Same reason
+	for using a double pointer in `write_buf'.
+
+	* src/sfnt/woff2tags.h (WOFF2_DEFAULT_MAX_SIZE): New macro used for
+	overflow checking.
+
+2019-08-27  Nikhil Ramakrishnan  <ramakrishnan.nikhil@gmail.com>
+
 	[woff2] Create stream for uncompressed buffer.
 
 	Uncompressed buffer is now an `FT_Stream'.
