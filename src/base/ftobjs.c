@@ -4444,6 +4444,11 @@
         render->render        = clazz->render_glyph;
       }
 
+      if ( clazz->glyph_format == FT_GLYPH_FORMAT_SVG )
+      {
+        render->render = clazz->render_glyph;
+      }
+
       /* add to list */
       node->data = module;
       FT_List_Add( &library->renderers, node );
@@ -4578,15 +4583,6 @@
     switch ( slot->format )
     {
     case FT_GLYPH_FORMAT_BITMAP:   /* already a bitmap, don't do anything */
-      break;
-    case FT_GLYPH_FORMAT_SVG:      /* handle svg rendering */
-      renderer = FT_Lookup_Renderer( library, slot->format, NULL );
-      error    = renderer->clazz->render_glyph( renderer, slot, FT_RENDER_MODE_NORMAL, NULL);
-      if( error == FT_Err_Ok )
-      {
-        slot->format = FT_GLYPH_FORMAT_BITMAP;
-      }
-      return error;
       break;
     default:
       if ( slot->internal->load_flags & FT_LOAD_COLOR )
