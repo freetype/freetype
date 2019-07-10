@@ -16,36 +16,35 @@
 # call cmake to configure the build with default parameters as a static
 # library.
 #
-#   cmake -E make_directory build
-#   cmake -E chdir build cmake ..
+#   cmake -B build
 #
 # For a dynamic library, use
 #
-#   cmake -E chdir build cmake -D BUILD_SHARED_LIBS:BOOL=true ..
+#   cmake -B build -D BUILD_SHARED_LIBS=true
 #
 # For a framework on OS X, use
 #
-#   cmake -E chdir build cmake -G Xcode -D BUILD_FRAMEWORK:BOOL=true ..
+#   cmake -B build -G Xcode -D BUILD_FRAMEWORK=true
 #
 # For an iOS static library, use
 #
-#   cmake -E chdir build cmake -G Xcode -D IOS_PLATFORM=OS ..
+#   cmake -B build -G Xcode -D IOS_PLATFORM=OS
 #
 # or
 #
-#   cmake -E chdir build cmake -G Xcode -D IOS_PLATFORM=SIMULATOR ..
+#   cmake -B build -G Xcode -D IOS_PLATFORM=SIMULATOR
 #
 # or
 #
-#   cmake -E chdir build cmake -G Xcode -D IOS_PLATFORM=SIMULATOR64 ..
+#   cmake -B build -G Xcode -D IOS_PLATFORM=SIMULATOR64
 #
-# Finally, build the project with:
+# Finally, build the project (with optimizations) with:
 #
-#   cmake --build build
+#   cmake --build build --config Release
 #
 # Install it with
 #
-#   (sudo) cmake --build build --target install
+#   (sudo) cmake --build build --config Release --target install
 #
 # A binary distribution can be made with
 #
@@ -68,14 +67,22 @@
 # . `CMakeLists.txt' is provided as-is since it is normally not used by the
 #   developer team.
 #
-# . Set the `FT_WITH_ZLIB', `FT_WITH_BZIP2', `FT_WITH_PNG', and
-#   `FT_WITH_HARFBUZZ' CMake variables to `ON' to force using a dependency.
-#   Leave a variable undefined (which is the default) to use the dependency
-#   only if it is available.  Set `CMAKE_DISABLE_FIND_PACKAGE_HarfBuzz=TRUE' to
-#   disable a dependency completely (CMake package name, so `BZip2' instead of
-#   `BZIP2'). Example:
+# . The detection of external library dependencies is automatic, like
+#   with the default build system. Set the `FT_WITH_ZLIB', `FT_WITH_BZIP2',
+#   `FT_WITH_PNG', and `FT_WITH_HARFBUZZ' CMake variables to `ON' to force using
+#   a dependency, e.g.:
 #
-#     cmake -DFT_WITH_ZLIB=ON -DCMAKE_DISABLE_FIND_PACKAGE_HarfBuzz=TRUE [...]
+#     cmake -B build -D FT_WITH_ZLIB=ON -D FT_WITH_BZIP2=ON \
+#                    -D FT_WITH_PNG=ON -D FT_WITH_HARFBUZZ=ON
+#
+#   Use the `CMAKE_DISABLE_FIND_PACKAGE_X=TRUE' variables to
+#   disable a dependency completely (CMake package name, so `BZip2' instead of
+#   `BZIP2'), e.g.:
+#
+#     cmake -B build -D CMAKE_DISABLE_FIND_PACKAGE_ZLIB=TRUE \
+#                    -D CMAKE_DISABLE_FIND_PACKAGE_BZip2=TRUE \
+#                    -D CMAKE_DISABLE_FIND_PACKAGE_PNG=TRUE \
+#                    -D CMAKE_DISABLE_FIND_PACKAGE_HarfBuzz=TRUE
 #
 # . Installation of FreeType can be controlled with the CMake variables
 #   `SKIP_INSTALL_HEADERS', `SKIP_INSTALL_LIBRARIES', and `SKIP_INSTALL_ALL'
@@ -147,10 +154,8 @@ set(VERSION_PATCH "1")
 set(LIBRARY_VERSION "6.16.0")
 set(LIBRARY_SOVERSION "6")
 
-# These options mean "require x and complain if not found". They'll get
-# optionally found anyway. Use `-DCMAKE_DISABLE_FIND_PACKAGE_x=TRUE` to disable
-# searching for a packge entirely (x is the CMake package name, so "BZip2"
-# instead of "BZIP2").
+# External dependency library detection is automatic. See the top of this file,
+# notes section, for how to force or disable dependencies completely.
 option(FT_WITH_ZLIB "Use system zlib instead of internal library." OFF)
 option(FT_WITH_BZIP2 "Support bzip2 compressed fonts." OFF)
 option(FT_WITH_PNG "Support PNG compressed OpenType embedded bitmaps." OFF)
