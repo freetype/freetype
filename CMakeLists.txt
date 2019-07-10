@@ -313,7 +313,6 @@ set(BASE_SRCS
   src/base/ftpfr.c
   src/base/ftstroke.c
   src/base/ftsynth.c
-  src/base/ftsystem.c
   src/base/fttype1.c
   src/base/ftwinfnt.c
   src/bdf/bdf.c
@@ -336,6 +335,12 @@ set(BASE_SRCS
   src/type42/type42.c
   src/winfonts/winfnt.c
 )
+
+if (UNIX)
+  list(APPEND BASE_SRCS "builds/unix/ftsystem.c")
+else ()
+  list(APPEND BASE_SRCS "src/base/ftsystem.c")
+endif ()
 
 if (WIN32)
   enable_language(RC)
@@ -395,8 +400,11 @@ target_include_directories(
       $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
     PRIVATE
       ${CMAKE_CURRENT_BINARY_DIR}/include
-      ${CMAKE_CURRENT_SOURCE_DIR}/include)
-
+      ${CMAKE_CURRENT_SOURCE_DIR}/include
+      
+      # Make <ftconfig.h> available for builds/unix/ftsystem.c.
+      ${CMAKE_CURRENT_BINARY_DIR}/include/freetype/config
+)
 
 if (BUILD_FRAMEWORK)
   set_property(SOURCE ${PUBLIC_CONFIG_HEADERS}
