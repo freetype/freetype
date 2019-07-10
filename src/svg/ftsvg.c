@@ -36,10 +36,8 @@
   ft_svg_done( SVG_Renderer svg_module )
   {
     FT_Library  library = svg_module->root.root.library;
-    FT_Memory   memory  = library->memory;
     if ( svg_module->loaded == TRUE )
       svg_module->hooks.svg_lib_free( library );
-      FT_FREE( library->svg_renderer_state );
     svg_module->loaded = FALSE;
   }
 
@@ -54,17 +52,13 @@
     FT_Memory     memory       = library->memory;
     FT_BBox       outline_bbox;
     FT_Error      error;
+    FT_ULong       size_image_buffer;
 
     SVG_RendererHooks hooks = svg_renderer->hooks;
 
-    unsigned long  size_image_buffer;
 
     if ( svg_renderer->loaded == FALSE )
     {
-      FT_MEM_ALLOC( library->svg_renderer_state,
-                    hooks.svg_lib_get_state_size() );
-      if ( error )
-        return error;
       error = hooks.svg_lib_init( library );
       svg_renderer->loaded = TRUE;
     }
@@ -88,7 +82,6 @@
                     SVG_Lib_Init             init_hook,
                     SVG_Lib_Free             free_hook,
                     SVG_Lib_Render           render_hook,
-                    SVG_Lib_Get_State_Size   get_state_size,
                     SVG_Lib_Get_Buffer_Size  get_buffer_size )
   {
     SVG_Renderer  renderer;
@@ -98,7 +91,6 @@
     renderer->hooks.svg_lib_free   = free_hook;
     renderer->hooks.svg_lib_render = render_hook;
 
-    renderer->hooks.svg_lib_get_state_size  = get_state_size;
     renderer->hooks.svg_lib_get_buffer_size = get_buffer_size;
 
     return FT_Err_Ok;
