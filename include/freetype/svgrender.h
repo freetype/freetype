@@ -33,7 +33,7 @@ FT_BEGIN_HEADER
   /**************************************************************************
    *
    * @functype:
-   *   SVG_Lib_Init
+   *   SVG_Lib_Init_Func
    *
    * @description:
    *   A callback used to initiate the SVG Rendering port
@@ -49,13 +49,13 @@ FT_BEGIN_HEADER
    */
 
   typedef FT_Error
-  (*SVG_Lib_Init)( FT_Library  library );
+  (*SVG_Lib_Init_Func)( FT_Library  library );
 
 
   /**************************************************************************
    *
    * @functype:
-   *   SVG_Lib_Free
+   *   SVG_Lib_Free_Func
    *
    * @description:
    *   A callback used to free the SVG Rendering port. Calling this callback
@@ -68,13 +68,13 @@ FT_BEGIN_HEADER
    */
 
   typedef void
-  (*SVG_Lib_Free)( FT_Library  library );
+  (*SVG_Lib_Free_Func)( FT_Library  library );
 
 
   /**************************************************************************
    *
    * @functype:
-   *   SVG_Lib_Render
+   *   SVG_Lib_Render_Func
    *
    * @description:
    *   A callback used to render the glyph loaded in the slot.
@@ -92,17 +92,18 @@ FT_BEGIN_HEADER
    */
 
   typedef FT_Error
-  (*SVG_Lib_Render)( FT_GlyphSlot  slot,
-                     FT_BBox  outline_bbox);
+  (*SVG_Lib_Render_Func)( FT_GlyphSlot  slot,
+                          FT_BBox  outline_bbox);
 
   /**************************************************************************
    *
    * @functype:
-   *   SVG_Lib_Get_Buffer_Size
+   *   SVG_Lib_Get_Buffer_Size_Func
    *
    * @description:
    *   A callback which is called to get the size of the image buffer needed.
-   *   This buffer will ultimately be populated by `SVG_Lib_Render' hook.
+   *   This buffer will ultimately be populated by `SVG_Lib_Render_Func'
+   *   hook.
    *
    * @input:
    *   slot ::
@@ -119,14 +120,14 @@ FT_BEGIN_HEADER
    */
 
   typedef FT_ULong
-  (*SVG_Lib_Get_Buffer_Size)( FT_GlyphSlot  slot,
-                              FT_BBox       bbox );
+  (*SVG_Lib_Get_Buffer_Size_Func)( FT_GlyphSlot  slot,
+                                   FT_BBox       bbox );
 
 
   /**************************************************************************
    *
    * @functype:
-   *   SVG_Set_Hooks
+   *   SVG_Set_Hooks_Func
    *
    * @description:
    *   A function that is used set SVG Hooks. Part of the SVG Renderer
@@ -136,32 +137,32 @@ FT_BEGIN_HEADER
    *   module ::
    *     FT_Module instance.
    *
-   *   init_hook ::
-   *     A function pointer of the type `SVG_Lib_Init'. Read the documentation
-   *     of `SVG_Lib_Init'
+   *   init_svg ::
+   *     A function pointer of the type `SVG_Lib_Init_Func'. Read the
+   *     documentation of `SVG_Lib_Init_Func'
    *
-   *   free_hook ::
-   *     A function pointer of the type `SVG_Lib_Free'. Read the documentation
-   *     of `SVG_Lib_Free'.
+   *   free_svg ::
+   *     A function pointer of the type `SVG_Lib_Free_Func'. Read the
+   *     documentation of `SVG_Lib_Free_Func'.
    *
-   *   render_hook ::
-   *     A function pointer of the type `SVG_Lib_Render'. Read the
-   *     documentation of `SVG_Lib_Render'.
+   *   render_svg ::
+   *     A function pointer of the type `SVG_Lib_Render_Func'. Read the
+   *     documentation of `SVG_Lib_Render_Func'.
    *
    *   get_buffer_size ::
-   *     A function pointer of the type `SVG_Lib_Get_Buffer_Size'. Read the
-   *     documentation of `SVG_Lib_Get_Buffer_Size'.
+   *     A function pointer of the type `SVG_Lib_Get_Buffer_Size_Func'. Read
+   *     the documentation of `SVG_Lib_Get_Buffer_Size_Func'.
    *
    * @return:
    *   FreeType error code.  0 means success.
    */
 
   typedef FT_Error
-  (*SVG_Set_Hooks)( FT_Module                module,
-                    SVG_Lib_Init             init_hook,
-                    SVG_Lib_Free             free_hook,
-                    SVG_Lib_Render           render_hook,
-                    SVG_Lib_Get_Buffer_Size  get_buffer_size );
+  (*SVG_Set_Hooks_Func)( FT_Module                     module,
+                         SVG_Lib_Init_Func             init_svg,
+                         SVG_Lib_Free_Func             free_svg,
+                         SVG_Lib_Render_Func           render_svg,
+                         SVG_Lib_Get_Buffer_Size_Func  get_buffer_size );
 
   /**************************************************************************
    *
@@ -182,17 +183,17 @@ FT_BEGIN_HEADER
 
   typedef struct SVG_Renderer_Interface_
   {
-    SVG_Set_Hooks  set_hooks;
+    SVG_Set_Hooks_Func  set_hooks;
   } SVG_Renderer_Interface;
 
 
   /* TODO: to document */
   FT_EXPORT( FT_Error )
-  FT_Set_Svg_Hooks( FT_Library               library,
-                    SVG_Lib_Init             init_hook,
-                    SVG_Lib_Free             free_hook,
-                    SVG_Lib_Render           render_hook,
-                    SVG_Lib_Get_Buffer_Size  get_buffer_size );
+  FT_Set_Svg_Hooks( FT_Library                    library,
+                    SVG_Lib_Init_Func             init_svg,
+                    SVG_Lib_Free_Func             free_svg,
+                    SVG_Lib_Render_Func           render_svg,
+                    SVG_Lib_Get_Buffer_Size_Func  get_buffer_size );
 
   /**************************************************************************
    *

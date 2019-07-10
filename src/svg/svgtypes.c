@@ -19,16 +19,16 @@
 #include <ft2build.h>
 #include FT_INTERNAL_OBJECTS_H
 #include FT_RENDER_H
-#include FT_SVG_RENDERER_H
+#include FT_SVG_RENDER_H
 
   typedef struct SVG_RendererHooks_
   {
     /* Api Hooks for OT-SVG Rendering */
-    SVG_Lib_Init    svg_lib_init;
-    SVG_Lib_Free    svg_lib_free;
-    SVG_Lib_Render  svg_lib_render;
+    SVG_Lib_Init_Func    init_svg;
+    SVG_Lib_Free_Func    free_svg;
+    SVG_Lib_Render_Func  render_svg;
 
-    SVG_Lib_Get_Buffer_Size  svg_lib_get_buffer_size;
+    SVG_Lib_Get_Buffer_Size_Func  get_buffer_size;
   } SVG_RendererHooks;
 
   typedef struct SVG_RendererRec_

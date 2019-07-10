@@ -550,14 +550,14 @@
   /**************************************************************************
    *
    * @macro:
-   *   FT_SVG_RENDERER_H
+   *   FT_SVG_RENDER_H
    *
    * @description:
    *   A macro used in `#include` statements to name the file containing the
    *   API of the SVG Renderer Module.
    *
    */
-#define FT_SVG_RENDERER_H  <freetype/svgrenderer.h>
+#define FT_SVG_RENDER_H  <freetype/svgrender.h>
 
 
   /**************************************************************************

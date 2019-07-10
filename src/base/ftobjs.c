@@ -40,7 +40,7 @@
 #include FT_SERVICE_TT_CMAP_H
 #include FT_SERVICE_KERNING_H
 #include FT_SERVICE_TRUETYPE_ENGINE_H
-#include FT_SVG_RENDERER_H
+#include FT_SVG_RENDER_H
 
 #include FT_DRIVER_H
 
@@ -5593,11 +5593,11 @@
   }
 
   FT_EXPORT_DEF( FT_Error )
-  FT_Set_Svg_Hooks( FT_Library               library,
-                    SVG_Lib_Init             init_hook,
-                    SVG_Lib_Free             free_hook,
-                    SVG_Lib_Render           render_hook,
-                    SVG_Lib_Get_Buffer_Size  get_buffer_size )
+  FT_Set_Svg_Hooks( FT_Library                    library,
+                    SVG_Lib_Init_Func             init_svg,
+                    SVG_Lib_Free_Func             free_svg,
+                    SVG_Lib_Render_Func           render_svg,
+                    SVG_Lib_Get_Buffer_Size_Func  get_buffer_size )
   {
     FT_Module               renderer;
     SVG_Renderer_Interface  *svg;
@@ -5611,9 +5611,9 @@
 
     svg = (SVG_Renderer_Interface*)renderer->clazz->module_interface;
     svg->set_hooks(renderer,
-                   init_hook,
-                   free_hook,
-                   render_hook,
+                   init_svg,
+                   free_svg,
+                   render_svg,
                    get_buffer_size );
     return FT_Err_Ok;
   }
