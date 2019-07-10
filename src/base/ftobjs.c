@@ -5596,7 +5596,6 @@
                     SVG_Lib_Init             init_hook,
                     SVG_Lib_Free             free_hook,
                     SVG_Lib_Render           render_hook,
-                    SVG_Lib_Get_State_Size   get_state_size,
                     SVG_Lib_Get_Buffer_Size  get_buffer_size )
   {
     FT_Module               renderer;
@@ -5614,7 +5613,6 @@
                    init_hook,
                    free_hook,
                    render_hook,
-                   get_state_size,
                    get_buffer_size );
     return FT_Err_Ok;
   }

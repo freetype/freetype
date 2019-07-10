@@ -39,7 +39,7 @@ FT_BEGIN_HEADER
    *   A callback used to initiate the SVG Rendering port
    *
    * @input:
-   *   library::
+   *   library ::
    *     A instance of library. This is required to initialize the renderer's
    *     state which will be held in the library.
    *
@@ -62,7 +62,7 @@ FT_BEGIN_HEADER
    *   shall do all cleanups that the SVG Rendering port wants to do.
    *
    * @input:
-   *   library::
+   *   library ::
    *     A instance of library. This is required to free the renderer's state
    *     which will be held in the library.
    */
@@ -94,22 +94,6 @@ FT_BEGIN_HEADER
   typedef FT_Error
   (*SVG_Lib_Render)( FT_GlyphSlot  slot,
                      FT_BBox  outline_bbox);
-
-  /**************************************************************************
-   *
-   * @functype:
-   *   SVG_Lib_Get_State_Size
-   *
-   * @description:
-   *   A callback which is called to query the size of the state stucture.
-   *   This is used for allocating the state structure in library.
-   *
-   * @return:
-   *   Size of the state structure in bytes.
-   */
-
-  typedef FT_UInt
-  (*SVG_Lib_Get_State_Size)( );
 
   /**************************************************************************
    *
@@ -149,26 +133,22 @@ FT_BEGIN_HEADER
    *   Interface.
    *
    * @input:
-   *   module::
+   *   module ::
    *     FT_Module instance.
    *
-   *   init_hook::
+   *   init_hook ::
    *     A function pointer of the type `SVG_Lib_Init'. Read the documentation
    *     of `SVG_Lib_Init'
    *
-   *   free_hook::
+   *   free_hook ::
    *     A function pointer of the type `SVG_Lib_Free'. Read the documentation
    *     of `SVG_Lib_Free'.
    *
-   *   render_hook::
+   *   render_hook ::
    *     A function pointer of the type `SVG_Lib_Render'. Read the
    *     documentation of `SVG_Lib_Render'.
    *
-   *   get_state_size::
-   *     A function pointer of the type `SVG_Lib_Get_State_Size'. Read the
-   *     documentation of `SVG_Lib_Get_State_Size'.
-   *
-   *   get_buffer_size::
+   *   get_buffer_size ::
    *     A function pointer of the type `SVG_Lib_Get_Buffer_Size'. Read the
    *     documentation of `SVG_Lib_Get_Buffer_Size'.
    *
@@ -181,7 +161,6 @@ FT_BEGIN_HEADER
                     SVG_Lib_Init             init_hook,
                     SVG_Lib_Free             free_hook,
                     SVG_Lib_Render           render_hook,
-                    SVG_Lib_Get_State_Size   get_state_size,
                     SVG_Lib_Get_Buffer_Size  get_buffer_size );
 
   /**************************************************************************
@@ -194,7 +173,7 @@ FT_BEGIN_HEADER
    *   rendering library hooks.
    *
    * @fields:
-   *   set_hooks::
+   *   set_hooks ::
    *     A function that can be called to set the hooks.
    *
    * @return:
@@ -213,7 +192,6 @@ FT_BEGIN_HEADER
                     SVG_Lib_Init             init_hook,
                     SVG_Lib_Free             free_hook,
                     SVG_Lib_Render           render_hook,
-                    SVG_Lib_Get_State_Size   get_state_size,
                     SVG_Lib_Get_Buffer_Size  get_buffer_size );
 
   /**************************************************************************

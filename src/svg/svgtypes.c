@@ -28,7 +28,6 @@
     SVG_Lib_Free    svg_lib_free;
     SVG_Lib_Render  svg_lib_render;
 
-    SVG_Lib_Get_State_Size   svg_lib_get_state_size;
     SVG_Lib_Get_Buffer_Size  svg_lib_get_buffer_size;
   } SVG_RendererHooks;
 
