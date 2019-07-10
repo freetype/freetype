@@ -564,6 +564,7 @@
 
     if ( !( slot->face->face_flags & FT_FACE_FLAG_SVG ) )
       slot->other         = NULL;
+    else
     {
       if ( slot->internal->flags & FT_GLYPH_OWN_GZIP_SVG )
       {
