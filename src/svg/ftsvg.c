@@ -16,7 +16,7 @@
  */
 
 #include <ft2build.h>
-#include FT_SVG_RENDERER_H
+#include FT_SVG_RENDER_H
 #include FT_BBOX_H
 
 #include <stdio.h>
@@ -37,7 +37,7 @@
   {
     FT_Library  library = svg_module->root.root.library;
     if ( svg_module->loaded == TRUE )
-      svg_module->hooks.svg_lib_free( library );
+      svg_module->hooks.free_svg( library );
     svg_module->loaded = FALSE;
   }
 
@@ -59,7 +59,7 @@
 
     if ( svg_renderer->loaded == FALSE )
     {
-      error = hooks.svg_lib_init( library );
+      error = hooks.init_svg( library );
       svg_renderer->loaded = TRUE;
     }
 
@@ -68,30 +68,30 @@
     if( error != FT_Err_Ok )
       return error;
 
-    size_image_buffer = hooks.svg_lib_get_buffer_size( slot, outline_bbox );
+    size_image_buffer = hooks.get_buffer_size( slot, outline_bbox );
 
     FT_MEM_ALLOC( slot->bitmap.buffer, size_image_buffer );
     if ( error )
       return error;
 
-    return hooks.svg_lib_render( slot, outline_bbox );
+    return hooks.render_svg( slot, outline_bbox );
   }
 
   static FT_Error
-  ft_svg_set_hooks( FT_Module                module,
-                    SVG_Lib_Init             init_hook,
-                    SVG_Lib_Free             free_hook,
-                    SVG_Lib_Render           render_hook,
-                    SVG_Lib_Get_Buffer_Size  get_buffer_size )
+  ft_svg_set_hooks( FT_Module                     module,
+                    SVG_Lib_Init_Func             init_svg,
+                    SVG_Lib_Free_Func             free_svg,
+                    SVG_Lib_Render_Func           render_svg,
+                    SVG_Lib_Get_Buffer_Size_Func  get_buffer_size )
   {
     SVG_Renderer  renderer;
 
     renderer = (SVG_Renderer)module;
-    renderer->hooks.svg_lib_init   = init_hook;
-    renderer->hooks.svg_lib_free   = free_hook;
-    renderer->hooks.svg_lib_render = render_hook;
+    renderer->hooks.init_svg   = init_svg;
+    renderer->hooks.free_svg   = free_svg;
+    renderer->hooks.render_svg = render_svg;
 
-    renderer->hooks.svg_lib_get_buffer_size = get_buffer_size;
+    renderer->hooks.get_buffer_size = get_buffer_size;
 
     return FT_Err_Ok;
   }
@@ -99,7 +99,7 @@
 
   static const SVG_Renderer_Interface svg_renderer_interface =
   {
-    (SVG_Set_Hooks)ft_svg_set_hooks
+    (SVG_Set_Hooks_Func)ft_svg_set_hooks
   };
 
 
