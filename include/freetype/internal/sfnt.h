@@ -319,12 +319,12 @@ FT_BEGIN_HEADER
    *
    * @description:
    *   Scans the SVG documents list to find the document containing the glyph
-   *   that has the id `glyph<glyph_index>'
+   *   that has the id "glyph<glyph_index>".
    *
    * @input:
    *   glyph ::
    *     The glyph slot from which pointers to SVG documents list will be
-   *     grabbed. The results will be stored back in the slot too.
+   *     grabbed.  The results will be stored back in the slot too.
    *
    *   glyph_index ::
    *     The index of the glyph that is to be looked up.
