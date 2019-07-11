@@ -600,6 +600,13 @@ if (NOT SKIP_INSTALL_LIBRARIES AND NOT SKIP_INSTALL_ALL)
       COMPONENT pkgconfig)
   endif ()
 
+  if (UNIX)
+    install(
+      FILES ${PROJECT_SOURCE_DIR}/builds/unix/freetype2.m4
+      DESTINATION ${CMAKE_INSTALL_DATADIR}/aclocal
+      COMPONENT m4)
+  endif ()
+
   install(
     TARGETS freetype
       EXPORT freetype-targets
