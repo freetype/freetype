@@ -40,9 +40,8 @@ FT_BEGIN_HEADER
    *
    * @input:
    *   library ::
-   *     A instance of library. This is required to initialize the renderer's
-   *     state which will be held in the library.
-   *
+   *     A instance of library.  This is required to initialize the
+   *     renderer's state which will be held in the library.
    *
    * @return:
    *   FreeType error code.  0 means success.
@@ -58,13 +57,13 @@ FT_BEGIN_HEADER
    *   SVG_Lib_Free_Func
    *
    * @description:
-   *   A callback used to free the SVG Rendering port. Calling this callback
+   *   A callback used to free the SVG Rendering port.  Calling this callback
    *   shall do all cleanups that the SVG Rendering port wants to do.
    *
    * @input:
    *   library ::
-   *     A instance of library. This is required to free the renderer's state
-   *     which will be held in the library.
+   *     A instance of library.  This is required to free the renderer's
+   *     state which will be held in the library.
    */
 
   typedef void
@@ -84,7 +83,7 @@ FT_BEGIN_HEADER
    *     The whole glyph slot object.
    *
    *   outline_bbox ::
-   *     The bounding box of the glyph in font units. So that the renderer
+   *     The bounding box of the glyph in font units.  So that the renderer
    *     may not need to calculate it again.
    *
    * @return:
@@ -93,7 +92,7 @@ FT_BEGIN_HEADER
 
   typedef FT_Error
   (*SVG_Lib_Render_Func)( FT_GlyphSlot  slot,
-                          FT_BBox  outline_bbox);
+                          FT_BBox       outline_bbox);
 
   /**************************************************************************
    *
@@ -102,7 +101,7 @@ FT_BEGIN_HEADER
    *
    * @description:
    *   A callback which is called to get the size of the image buffer needed.
-   *   This buffer will ultimately be populated by `SVG_Lib_Render_Func'
+   *   This buffer will ultimately be populated by `SVG_Lib_Render_Func`
    *   hook.
    *
    * @input:
@@ -116,7 +115,6 @@ FT_BEGIN_HEADER
    *
    * @return:
    *   Size of the state structure in bytes.
-   *
    */
 
   typedef FT_ULong
@@ -130,28 +128,28 @@ FT_BEGIN_HEADER
    *   SVG_Set_Hooks_Func
    *
    * @description:
-   *   A function that is used set SVG Hooks. Part of the SVG Renderer
+   *   A function that is used set SVG Hooks.   Part of the SVG Renderer
    *   Interface.
    *
    * @input:
    *   module ::
-   *     FT_Module instance.
+   *     `FT_Module` instance.
    *
    *   init_svg ::
-   *     A function pointer of the type `SVG_Lib_Init_Func'. Read the
-   *     documentation of `SVG_Lib_Init_Func'
+   *     A function pointer of the type `SVG_Lib_Init_Func`.  Read the
+   *     documentation of `SVG_Lib_Init_Func`.
    *
    *   free_svg ::
-   *     A function pointer of the type `SVG_Lib_Free_Func'. Read the
-   *     documentation of `SVG_Lib_Free_Func'.
+   *     A function pointer of the type `SVG_Lib_Free_Func`.  Read the
+   *     documentation of `SVG_Lib_Free_Func`.
    *
    *   render_svg ::
-   *     A function pointer of the type `SVG_Lib_Render_Func'. Read the
-   *     documentation of `SVG_Lib_Render_Func'.
+   *     A function pointer of the type `SVG_Lib_Render_Func`.  Read the
+   *     documentation of `SVG_Lib_Render_Func`.
    *
    *   get_buffer_size ::
-   *     A function pointer of the type `SVG_Lib_Get_Buffer_Size_Func'. Read
-   *     the documentation of `SVG_Lib_Get_Buffer_Size_Func'.
+   *     A function pointer of the type `SVG_Lib_Get_Buffer_Size_Func`.
+   *     Read the documentation of `SVG_Lib_Get_Buffer_Size_Func`.
    *
    * @return:
    *   FreeType error code.  0 means success.
@@ -223,14 +221,14 @@ FT_BEGIN_HEADER
    *     The ending glyph ID for the glyph range that this document has.
    *
    * @note:
-   *   `metrics' and `units_per_EM' might look like repetitions since both
-   *   fields are stored in face objects. However, the Glyph Management API
-   *   requires an `FT_Glyph' to store all the information that completely
-   *   describes a glyph. Outline glyphs are themselves scaled thus they
-   *   don't need this information. However, SVG documents do. The field of
-   *   `units_per_EM' is needed because the SVG is to be scaled in case its
-   *   viewbox size differs from `units_per_EM'. For more info, refer to
-   *   the section `Coordinate Systems and Glyph Metrics' of the OpenType
+   *   `metrics` and `units_per_EM` might look like repetitions since both
+   *   fields are stored in face objects.  However, the Glyph Management API
+   *   requires an `FT_Glyph` to store all the information that completely
+   *   describes a glyph.  Outline glyphs are themselves scaled thus they
+   *   don`t need this information.  However, SVG documents do.  The field
+   *   of `units_per_EM` is needed because the SVG is to be scaled in case
+   *   its viewbox size differs from `units_per_EM`.  For more info, refer
+   *   to the section `Coordinate Systems and Glyph Metrics` of the OpenType
    *   SVG specs.
    */
 

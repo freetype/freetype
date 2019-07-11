@@ -254,8 +254,7 @@ FT_BEGIN_HEADER
    *     The length of the svg_document.
    *
    *   glyph_index ::
-   *     The index of the glyph to be rendered. I think it's necessary
-   *     because one document can contain multiple glyphs.
+   *     The index of the glyph to be rendered.
    *
    *   metrics ::
    *     A metrics object storing the size information.
@@ -270,14 +269,14 @@ FT_BEGIN_HEADER
    *     The ending glyph ID for the glyph range that this document has.
    *
    * @note:
-   *   `metrics' and `units_per_EM' might look like repetitions since both
-   *   fields are stored in face objects. However, the Glyph Management API
-   *   requires an `FT_Glyph' to store all the information that completely
+   *   `metrics` and `units_per_EM` might look like repetitions since both
+   *   fields are stored in face objects.  However, the Glyph Management API
+   *   requires an `FT_Glyph` to store all the information that completely
    *   describes a glyph. Outline glyphs are themselves scaled thus they
    *   don't need this information. However, SVG documents do. The field of
-   *   `units_per_EM' is needed because the SVG is to be scaled in case its
-   *   viewbox size differs from `units_per_EM'. For more info, refer to
-   *   the section `Coordinate Systems and Glyph Metrics' of the OpenType
+   *   `units_per_EM` is needed because the SVG is to be scaled in case its
+   *   viewbox size differs from `units_per_EM`. For more info, refer to
+   *   the section _Coordinate Systems and Glyph Metrics_ of the OpenType
    *   SVG specs.
    */
   typedef struct  FT_SvgGlyphRec_

@@ -893,7 +893,7 @@ FT_BEGIN_HEADER
    *
    *   svg_renderer_state ::
    *     A pointer to a state object that will have the state of the SVG
-   *     Renderer. This will be totally managed by the renderer.
+   *     Renderer.  This will be totally managed by the renderer.
    */
   typedef struct  FT_LibraryRec_
   {
