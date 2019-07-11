@@ -14,13 +14,14 @@
 #
 # The following will 1. create a build directory and 2. change into it and
 # call cmake to configure the build with default parameters as a static
-# library.
+# library. See https://cmake.org/cmake/help/latest/variable/CMAKE_BUILD_TYPE.html
+# for information about Debug, Release, etc. builds.
 #
-#   cmake -B build
+#   cmake -B build -D CMAKE_BUILD_TYPE=Release
 #
 # For a dynamic library, use
 #
-#   cmake -B build -D BUILD_SHARED_LIBS=true
+#   cmake -B build -D BUILD_SHARED_LIBS=true -D CMAKE_BUILD_TYPE=Release
 #
 # For a framework on OS X, use
 #
@@ -38,17 +39,17 @@
 #
 #   cmake -B build -G Xcode -D IOS_PLATFORM=SIMULATOR64
 #
-# Finally, build the project (with optimizations) with:
+# Finally, build the project with:
 #
-#   cmake --build build --config Release
+#   cmake --build build
 #
 # Install it with
 #
-#   (sudo) cmake --build build --config Release --target install
+#   (sudo) cmake --build build --target install
 #
 # A binary distribution can be made with
 #
-#   cmake --build build --config Release --target package
+#   cmake --build build --target package
 #
 # Please refer to the cmake manual for further options, in particular, how
 # to modify compilation and linking parameters.
@@ -73,7 +74,7 @@
 #   a dependency, e.g.:
 #
 #     cmake -B build -D FT_WITH_ZLIB=ON -D FT_WITH_BZIP2=ON \
-#                    -D FT_WITH_PNG=ON -D FT_WITH_HARFBUZZ=ON
+#                    -D FT_WITH_PNG=ON -D FT_WITH_HARFBUZZ=ON [...]
 #
 #   Use the `CMAKE_DISABLE_FIND_PACKAGE_X=TRUE' variables to
 #   disable a dependency completely (CMake package name, so `BZip2' instead of
@@ -82,7 +83,7 @@
 #     cmake -B build -D CMAKE_DISABLE_FIND_PACKAGE_ZLIB=TRUE \
 #                    -D CMAKE_DISABLE_FIND_PACKAGE_BZip2=TRUE \
 #                    -D CMAKE_DISABLE_FIND_PACKAGE_PNG=TRUE \
-#                    -D CMAKE_DISABLE_FIND_PACKAGE_HarfBuzz=TRUE
+#                    -D CMAKE_DISABLE_FIND_PACKAGE_HarfBuzz=TRUE [...]
 #
 # . Installation of FreeType can be controlled with the CMake variables
 #   `SKIP_INSTALL_HEADERS', `SKIP_INSTALL_LIBRARIES', and `SKIP_INSTALL_ALL'
