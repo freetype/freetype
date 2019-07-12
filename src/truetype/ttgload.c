@@ -1102,9 +1102,16 @@
       }
 
 #ifdef TT_CONFIG_OPTION_GX_VAR_SUPPORT
-      /* if we have a HVAR table, `pp1' and/or `pp2' are already adjusted */
-      if ( !( loader->face->variation_support & TT_FACE_FLAG_VAR_HADVANCE ) ||
-           !IS_HINTED( loader->load_flags )                                 )
+      /* if we have a HVAR table, `pp1' and/or `pp2' */
+      /* are already adjusted but unscaled           */
+      if ( ( loader->face->variation_support & TT_FACE_FLAG_VAR_HADVANCE ) &&
+           IS_HINTED( loader->load_flags )                                 )
+      {
+        loader->pp1.x = FT_MulFix( loader->pp1.x, x_scale );
+        loader->pp2.x = FT_MulFix( loader->pp2.x, x_scale );
+        /* pp1.y and pp2.y are always zero */
+      }
+      else
 #endif
       {
         loader->pp1 = outline->points[n_points - 4];
@@ -1112,9 +1119,17 @@
       }
 
 #ifdef TT_CONFIG_OPTION_GX_VAR_SUPPORT
-      /* if we have a VVAR table, `pp3' and/or `pp4' are already adjusted */
-      if ( !( loader->face->variation_support & TT_FACE_FLAG_VAR_VADVANCE ) ||
-           !IS_HINTED( loader->load_flags )                                 )
+      /* if we have a VVAR table, `pp3' and/or `pp4' */
+      /* are already adjusted but unscaled           */
+      if ( ( loader->face->variation_support & TT_FACE_FLAG_VAR_VADVANCE ) &&
+           IS_HINTED( loader->load_flags )                                 )
+      {
+        loader->pp3.x = FT_MulFix( loader->pp3.x, x_scale );
+        loader->pp3.y = FT_MulFix( loader->pp3.y, y_scale );
+        loader->pp4.x = FT_MulFix( loader->pp4.x, x_scale );
+        loader->pp4.y = FT_MulFix( loader->pp4.y, y_scale );
+      }
+      else
 #endif
       {
         loader->pp3 = outline->points[n_points - 2];

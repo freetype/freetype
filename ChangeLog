@@ -1,3 +1,10 @@
+2019-07-12  Ben Wagner  <bungeman@google.com>
+
+	Properly handle phantom points for variation fonts (#56601).
+
+	* src/truetype/ttgload.c (TT_Process_Simple_Glyph): Scale phantom
+	points if HVAR and/or VVAR is present.
+
 2019-07-04  Werner Lemberg  <wl@gnu.org>
 
 	[psaux] (2/2) Handle fonts that use SEAC for ligatures (#56580).
