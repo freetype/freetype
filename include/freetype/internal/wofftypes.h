@@ -185,6 +185,34 @@ FT_BEGIN_HEADER
   /**************************************************************************
    *
    * @struct:
+   *   WOFF2_InfoRec
+   *
+   * @description:
+   *   Metadata for WOFF2 font that may be required for reconstruction of
+   *   sfnt tables.
+   *
+   * @fields:
+   *   num_glyphs ::
+   *     Number of glyphs in the font.
+   *
+   *   num_hmetrics ::
+   *     `numberOfHMetrics' field in the `hhea' table.
+   *
+   *   x_mins ::
+   *     `xMin' values of glyph bounding box.
+   */
+  typedef struct  WOFF2_InfoRec_
+  {
+    FT_UShort  num_glyphs;
+    FT_UShort  num_hmetrics;
+    FT_Short*  x_mins;
+
+  } WOFF2_InfoRec, *WOFF2_Info;
+
+
+  /**************************************************************************
+   *
+   * @struct:
    *   WOFF2_TableRec
    *
    * @description:
@@ -199,7 +227,7 @@ FT_BEGIN_HEADER
   {
     FT_Byte   FlagByte;           /* table type and flags      */
     FT_ULong  Tag;                /* table file offset         */
-    FT_ULong  OrigLength;         /* uncompressed table length */
+    FT_ULong  dst_length;         /* uncompressed table length */
     FT_ULong  TransformLength;    /* transformed length        */
 
     FT_ULong  flags;              /* calculated flags          */
@@ -209,6 +237,60 @@ FT_BEGIN_HEADER
     FT_ULong  dst_offset;         /* uncompressed table offset */
 
   } WOFF2_TableRec, *WOFF2_Table;
+
+
+  /**************************************************************************
+   *
+   * @struct:
+   *   WOFF2_SubstreamRec
+   *
+   * @description:
+   *   This structure stores information about a substream in the transformed
+   *   `glyf' table in a WOFF2 stream.
+   *
+   * @fields:
+   *   start ::
+   *     Beginning of the substream relative to uncompressed table stream.
+   *
+   *   offset ::
+   *     Offset of the substream relative to uncompressed table stream.
+   *
+   *   size ::
+   *     Size of the substream.
+   */
+  typedef struct  WOFF2_SubstreamRec_
+  {
+    FT_ULong  start;
+    FT_ULong  offset;
+    FT_ULong  size;
+  } WOFF2_SubstreamRec, *WOFF2_Substream;
+
+
+  /**************************************************************************
+   *
+   * @struct:
+   *   WOFF2_PointRec
+   *
+   * @description:
+   *   This structure stores information about a point in the transformed
+   *   `glyf' table in a WOFF2 stream.
+   *
+   * @fields:
+   *   x ::
+   *     x-coordinate.
+   *
+   *   y ::
+   *     y-coordinate.
+   *
+   *   on_curve ::
+   *     on-curve.
+   */
+  typedef struct  WOFF2_PointRec_
+  {
+    FT_Int   x;
+    FT_Int   y;
+    FT_Bool  on_curve;
+  } WOFF2_PointRec, *WOFF2_Point;
 
 
 FT_END_HEADER

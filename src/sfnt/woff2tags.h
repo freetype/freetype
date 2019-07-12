@@ -27,15 +27,6 @@
 FT_BEGIN_HEADER
 
 
-  /* Leave the first byte open to store flag_byte. */
-#define WOFF2_FLAGS_TRANSFORM   1 << 8
-
-#define WOFF2_SFNT_HEADER_SIZE  12
-#define WOFF2_SFNT_ENTRY_SIZE   16
-
-  /* Suggested max size for output. */
-#define WOFF2_DEFAULT_MAX_SIZE  30 * 1024 * 1024
-
   FT_LOCAL( FT_ULong )
   woff2_known_tags( FT_Byte  index );
 
