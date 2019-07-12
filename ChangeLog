@@ -1,5 +1,45 @@
 2019-08-27  Nikhil Ramakrishnan  <ramakrishnan.nikhil@gmail.com>
 
+	[woff2] Reconstruct transformed `glyf' table.
+
+	Reconstruct `glyf' table if it is transformed in the uncompressed
+	table stream.  Also add necessary structures, macros and functions.
+
+	* include/freetype/internal/wofftypes.h (WOFF2_InfoRec,
+	WOFF2_SubstreamRec, WOFF2_PointRec): New structures.
+	(WOFF2_TableRec): s/OrigLength/dst_length/.
+
+	* src/sfnt/sfwoff2.c (READ_255USHORT, READ_BASE128): Use
+	`FT_SET_ERROR' to set implicit `error' variable.
+
+	(WRITE_SHORT): New macro.
+
+	(N_CONTOUR_STREAM, N_POINTS_STREAM, FLAG_STREAM, GLYPH_STREAM,
+	COMPOSITE_STREAM, BBOX_STREAM, INSTRUCTION_STREAM): New macros to
+	refer to substreams of the transformed `glyf' tables.
+
+	(Read255UShort, ReadBase128): Return errors set by `FT_READ_XXX'
+	macros.
+
+	(with_sign, safe_int_addition): New functions to add sign to values
+	based on a flag and perform safe addition respectively.
+
+	(triplet_decode): Decode variable-length (flag, xCoordinate,
+	yCoordinate) triplet for a simple glyph.   See
+
+	  https://www.w3.org/TR/WOFF2/#triplet_decoding
+
+	(store_points, compute_bbox, composteGlyph_size, reconstruct_glyf):
+	New functions.
+
+	(reconstruct_font): Call `reconstruct_glyf'.
+
+	* src/sfnt/sfwoff2.h: Add required constants.
+
+	* src/sfnt/woff2tags.h: Move out constants to `sfwoff2.h'.
+
+2019-08-27  Nikhil Ramakrishnan  <ramakrishnan.nikhil@gmail.com>
+
 	[woff2] Copy un-transformed tables to sfnt stream.
 
 	Copy un-transformed tables to the sfnt stream.

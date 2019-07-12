@@ -28,6 +28,39 @@
 FT_BEGIN_HEADER
 
 
+  /* Leave the first byte open to store flag_byte. */
+#define WOFF2_FLAGS_TRANSFORM   1 << 8
+
+#define WOFF2_SFNT_HEADER_SIZE  12
+#define WOFF2_SFNT_ENTRY_SIZE   16
+
+  /* Suggested max size for output. */
+#define WOFF2_DEFAULT_MAX_SIZE  30 * 1024 * 1024
+
+  /* 98% of Google Fonts have no glyph above 5k bytes. */
+#define WOFF2_DEFAULT_GLYPH_BUF  5120
+
+  /* Composite glyph flags                                     */
+  /* See CompositeGlyph.java in `sfntly' for full definitions  */
+#define FLAG_ARG_1_AND_2_ARE_WORDS     1 << 0
+#define FLAG_WE_HAVE_A_SCALE           1 << 3
+#define FLAG_MORE_COMPONENTS           1 << 5
+#define FLAG_WE_HAVE_AN_X_AND_Y_SCALE  1 << 6
+#define FLAG_WE_HAVE_A_TWO_BY_TWO      1 << 7
+#define FLAG_WE_HAVE_INSTRUCTIONS      1 << 8
+
+  /* Simple glyph flags */
+#define GLYF_ON_CURVE        1 << 0
+#define GLYF_X_SHORT         1 << 1
+#define GLYF_Y_SHORT         1 << 2
+#define GLYF_REPEAT          1 << 3
+#define GLYF_THIS_X_IS_SAME  1 << 4
+#define GLYF_THIS_Y_IS_SAME  1 << 5
+
+  /* Other constants */
+#define CONTOUR_OFFSET_END_POINT  10
+
+
   FT_LOCAL( FT_Error )
   woff2_open_font( FT_Stream  stream,
                    TT_Face    face,
