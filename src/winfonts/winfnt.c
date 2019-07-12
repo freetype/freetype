@@ -331,7 +331,7 @@
         {
           FT_TRACE2(( "invalid alignment shift count for resource data\n" ));
           error = FT_THROW( Invalid_File_Format );
-          goto Exit;
+          goto Exit1;
         }
 
 
@@ -597,6 +597,10 @@
 
   Exit:
     return error;
+
+  Exit1:
+    FT_FRAME_EXIT();
+    goto Exit;
   }
 
 

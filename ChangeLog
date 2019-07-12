@@ -1,3 +1,12 @@
+2019-07-12  Werner Lemberg  <wl@gnu.org>
+
+	[sfnt, winfonts] Avoid memory leaks in case of error (#56587).
+
+	* src/sfnt/sfwoff.c (woff_open_font): Call `FT_FRAME_EXIT' in case
+	of error.
+
+	* src/winfonts/winfnt.c (fnt_face_get_dll_font): Ditto.
+
 2019-07-12  Ben Wagner  <bungeman@google.com>
 
 	Properly handle phantom points for variation fonts (#56601).
