@@ -1,5 +1,45 @@
 2019-08-27  Nikhil Ramakrishnan  <ramakrishnan.nikhil@gmail.com>
 
+	[woff2] Reconstruct `loca', `hmtx', and swap out stream.
+
+	Add necessary functions to reconstruct loca and hmtx tables (the two
+	remaining tables that can have a transform).  `woff2_open_font' is
+	now capable of loading a woff2 font face.  This code may still need
+	more refining and better memory management.
+
+	* include/freetype/internal/wofftypes.h (WOFF2_HeaderRec): Add total
+	(final) size of sfnt stream.
+
+	(WOFF2_InfoRec): Add header checksum value.
+
+	* src/sfnt/sfobjs.c (sfnt_open_font): Change `face_instance_index'
+	parameter to its pointer so its value can be modified by
+	`woff2_open_font'.
+
+	* src/sfnt/sfwoff2.c: (WRITE_SFNT_BUF_AT): New macro to write into
+	sfnt buffer at given position.
+
+	(write_buf): Add parameter `extend_buf' which allows caller to
+	specify whether buffer should be reallocated before copying data.
+
+	(WRITE_SFNT_BUF): Updated.
+
+	(pad4, store_loca, reconstruct_htmx): New functions.
+
+	(reconstruct_glyf): Calculate loca values and store them.
+
+	(reconstruct_font): Call `reconstruct_hmtx', write table record
+	entries, and calculate table checksums.  Also calculate font
+	checksum and update `checksumAdjustment' entry in head table.
+
+	(woff2_open_font): Open stream for sfnt buffer, swap out input
+	stream and return.
+
+	* src/sfnt/sfwoff2.h (woff2_open_font): Modify parameter to accept
+	pointer to `face_index'.
+
+2019-08-27  Nikhil Ramakrishnan  <ramakrishnan.nikhil@gmail.com>
+
 	[woff2] Reconstruct transformed `glyf' table.
 
 	Reconstruct `glyf' table if it is transformed in the uncompressed
