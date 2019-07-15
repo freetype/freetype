@@ -173,9 +173,10 @@ FT_BEGIN_HEADER
     FT_ULong   privLength;
 
     FT_ULong   uncompressed_size;
-    FT_UInt64  compressed_offset;
+    FT_ULong   compressed_offset;
     FT_ULong   header_version;
     FT_UShort  num_fonts;
+    FT_ULong   total_sfnt_size;
 
     WOFF2_TtcFont  ttc_fonts;
 
@@ -203,6 +204,7 @@ FT_BEGIN_HEADER
    */
   typedef struct  WOFF2_InfoRec_
   {
+    FT_ULong   header_checksum;
     FT_UShort  num_glyphs;
     FT_UShort  num_hmetrics;
     FT_Short*  x_mins;
