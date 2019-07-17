@@ -223,6 +223,7 @@ FT_BEGIN_HEADER
   } FT_OutlineGlyphRec;
 
 
+#ifdef FT_CONFIG_OPTION_SVG
   /**************************************************************************
    *
    * @type:
@@ -292,6 +293,7 @@ FT_BEGIN_HEADER
     /* TODO: (OT-SVG) Maybe put a transformation matrix here */
   } FT_SvgGlyphRec;
 
+#endif
 
   /**************************************************************************
    *

@@ -276,6 +276,7 @@
     ft_outline_glyph_prepare    /* FT_Glyph_PrepareFunc    glyph_prepare   */
   )
 
+#ifdef FT_CONFIG_OPTION_SVG
   /*************************************************************************/
   /*************************************************************************/
   /****                                                                 ****/
@@ -441,7 +442,7 @@
     ft_svg_glyph_prepare    /* FT_Glyph_PrepareFunc    glyph_prepare   */
   )
 
-
+#endif
 
   /*************************************************************************/
   /*************************************************************************/
@@ -543,9 +544,11 @@
     else if ( format == FT_GLYPH_FORMAT_OUTLINE )
       clazz = &ft_outline_glyph_class;
 
+#ifdef FT_CONFIG_OPTION_SVG
     /* if it is a SVG glyph */
     else if ( format == FT_GLYPH_FORMAT_SVG )
       clazz = &ft_svg_glyph_class;
+#endif
 
     else
     {
@@ -716,7 +719,6 @@
     const FT_Glyph_Class*     clazz;
 
     FT_Library                library;
-    FT_Memory                 memory;
 
 
     /* check argument */
@@ -728,7 +730,6 @@
 
     clazz   = glyph->clazz;
     library = glyph->library;
-    memory = library->memory;
     if ( !library || !clazz )
       goto Bad;
 
@@ -767,10 +768,13 @@
     if ( !error )
     {
       error = FT_Render_Glyph_Internal( glyph->library, &dummy, render_mode );
+#ifdef FT_CONFIG_OPTION_SVG
       if ( clazz == &ft_svg_glyph_class )
       {
+        FT_Memory  memory = library->memory;
         FT_FREE( dummy.other );
       }
+#endif
     }
 
 #if 1
