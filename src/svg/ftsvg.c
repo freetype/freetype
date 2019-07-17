@@ -88,14 +88,11 @@
     FT_Error      error    = FT_Err_Ok;
     SVG_Renderer  renderer = (SVG_Renderer)module;
 
-    if ( !ft_strcmp( property_name, "init_svg_hook" ) )
-      renderer->hooks.init_svg = (SVG_Lib_Init_Func)value;
-    else if ( !ft_strcmp( property_name, "free_svg_hook" ) )
-      renderer->hooks.free_svg = (SVG_Lib_Free_Func)value;
-    else if ( !ft_strcmp( property_name, "render_svg_hook" ) )
-      renderer->hooks.render_svg = (SVG_Lib_Render_Func)value;
-    else if ( !ft_strcmp( property_name, "get_buffer_size_hook" ) )
-      renderer->hooks.get_buffer_size = (SVG_Lib_Get_Buffer_Size_Func)value;
+    if ( !ft_strcmp( property_name, "svg_hooks" ) )
+    {
+      SVG_RendererHooks*  hooks = (SVG_RendererHooks*)value;
+      renderer->hooks = *hooks;
+    }
     else
     {
       error = FT_THROW( Missing_Property );
@@ -111,26 +108,10 @@
     FT_Error      error    = FT_Err_Ok;
     SVG_Renderer  renderer = (SVG_Renderer)module;
 
-    if ( !ft_strcmp( property_name, "init_svg_hook" ) )
+    if ( !ft_strcmp( property_name, "svg_hooks" ) )
     {
-      SVG_Lib_Init_Func*  val = (SVG_Lib_Init_Func*)value;
-      *val = (SVG_Lib_Init_Func)renderer->hooks.init_svg;
-    }
-    else if ( !ft_strcmp( property_name, "free_svg_hook" ) )
-    {
-      SVG_Lib_Free_Func*  val = (SVG_Lib_Free_Func*)value;
-      *val = (SVG_Lib_Free_Func)renderer->hooks.free_svg;
-    }
-    else if ( !ft_strcmp( property_name, "render_svg_hook" ) )
-    {
-      SVG_Lib_Render_Func*  val = (SVG_Lib_Render_Func*)value;
-      *val = (SVG_Lib_Render_Func)renderer->hooks.render_svg;
-    }
-    else if ( !ft_strcmp( property_name, "get_buffer_size_hook" ) )
-    {
-      SVG_Lib_Get_Buffer_Size_Func*  val;
-      val  = (SVG_Lib_Get_Buffer_Size_Func*)value;
-      *val = (SVG_Lib_Get_Buffer_Size_Func)renderer->hooks.render_svg;
+      SVG_RendererHooks*  hooks = (SVG_RendererHooks*)value;
+      *hooks = renderer->hooks;
     }
     else
     {
