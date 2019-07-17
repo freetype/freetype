@@ -751,7 +751,6 @@
     FT_Bool       is_apple_sbix;
     FT_Bool       has_CBLC;
     FT_Bool       has_CBDT;
-    FT_Bool       has_SVG                      = FALSE; /* for OT-SVG */
     FT_Bool       ignore_typographic_family    = FALSE;
     FT_Bool       ignore_typographic_subfamily = FALSE;
 
@@ -954,12 +953,11 @@
       LOAD_( colr );
     }
 
-    /* opentype svg colored glyph support */
-    /* no If statement because the function always exists for now */
-    LOAD_( svg );
-
-    if( face->svg )
-      has_SVG = TRUE;
+#ifdef FT_CONFIG_OPTION_SVG
+    /* opentype svg glyph support */
+    if ( sfnt->load_svg )
+      LOAD_( svg );
+#endif
 
     /* consider the pclt, kerning, and gasp tables as optional */
     LOAD_( pclt );
@@ -1380,9 +1378,11 @@
         sfnt->free_cpal( face );
         sfnt->free_colr( face );
       }
-
+#ifdef FT_CONFIG_OPTION_SVG
       /* free svg data */
-      sfnt->free_svg( face );
+      if ( sfnt->free_svg )
+        sfnt->free_svg( face );
+#endif
     }
 
 #ifdef TT_CONFIG_OPTION_BDF

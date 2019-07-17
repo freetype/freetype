@@ -318,6 +318,7 @@
     if ( !error && clazz->init_slot )
       error = clazz->init_slot( slot );
 
+#ifdef FT_CONFIG_OPTION_SVG
     /* check if SVG table exists allocate the space in slot->other */
     if ( slot->face->face_flags & FT_FACE_FLAG_SVG )
     {
@@ -326,6 +327,7 @@
         goto Exit;
       slot->other = document;
     }
+#endif
 
   Exit:
     return error;
@@ -561,7 +563,9 @@
     slot->subglyphs     = NULL;
     slot->control_data  = NULL;
     slot->control_len   = 0;
-
+#ifndef FT_CONFIG_OPTION_SVG
+    slot->other         = NULL;
+#else
     if ( !( slot->face->face_flags & FT_FACE_FLAG_SVG ) )
       slot->other         = NULL;
     else
@@ -574,6 +578,7 @@
         slot->internal->load_flags &= ~FT_GLYPH_OWN_GZIP_SVG;
       }
     }
+#endif
 
     slot->format        = FT_GLYPH_FORMAT_NONE;
 
@@ -592,6 +597,7 @@
     FT_Memory        memory = driver->root.memory;
 
 
+#ifdef FT_CONFIG_OPTION_SVG
     if ( slot->face->face_flags & FT_FACE_FLAG_SVG )
     {
       /* free memory in case svg was there */
@@ -603,6 +609,7 @@
       }
       FT_FREE( slot->other );
     }
+#endif
 
     if ( clazz->done_slot )
       clazz->done_slot( slot );
@@ -873,11 +880,13 @@
     if ( load_flags & FT_LOAD_BITMAP_METRICS_ONLY )
       load_flags &= ~FT_LOAD_RENDER;
 
+#ifdef FT_CONFIG_OPTION_SVG
     if ( ( load_flags & FT_LOAD_COLOR ) &&
          ( ttface->svg ) )
     {
       FT_Load_Glyph( face, glyph_index, FT_LOAD_NO_SCALE);
     }
+#endif
 
     /*
      * Determine whether we need to auto-hint or not.
@@ -4445,10 +4454,12 @@
         render->render        = clazz->render_glyph;
       }
 
+#ifdef FT_CONFIG_OPTION_SVG
       if ( clazz->glyph_format == FT_GLYPH_FORMAT_SVG )
       {
         render->render = clazz->render_glyph;
       }
+#endif
 
       /* add to list */
       node->data = module;
@@ -5592,6 +5603,7 @@
       return 0;
   }
 
+#ifdef FT_CONFIG_OPTION_SVG
   FT_EXPORT_DEF( FT_Error )
   FT_Set_Svg_Hooks( FT_Library                    library,
                     SVG_Lib_Init_Func             init_svg,
@@ -5617,5 +5629,6 @@
                    get_buffer_size );
     return FT_Err_Ok;
   }
+#endif
 
 /* END */

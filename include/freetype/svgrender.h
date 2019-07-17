@@ -28,6 +28,7 @@
 #error "so that freetype.h of FreeType 2 is found first."
 #endif
 
+#ifdef FT_CONFIG_OPTION_SVG
 FT_BEGIN_HEADER
 
   /**************************************************************************
@@ -255,5 +256,5 @@ FT_BEGIN_HEADER
   typedef struct FT_SVG_DocumentRec_*  FT_SVG_Document;
 
 FT_END_HEADER
-
+#endif /* FT_CONFIG_OPTION_SVG */
 #endif

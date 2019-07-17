@@ -31,6 +31,7 @@
 #include FT_GZIP_H
 #include FT_SVG_RENDER_H
 
+#ifdef FT_CONFIG_OPTION_SVG
 
 #include "ttsvg.h"
 
@@ -187,8 +188,6 @@
     FT_ULong   uncomp_size;
     FT_Byte*   uncomp_buffer;
 
-    FT_Bool    is_gzip_encoded = FALSE;
-
     FT_Error   error  = FT_Err_Ok;
     TT_Face    face   = (TT_Face)glyph->face;
     FT_Memory  memory = face->root.memory;
@@ -212,8 +211,6 @@
     if( ( doc_list[0] == 0x1F ) && ( doc_list[1] == 0x8B )
                                 && ( doc_list[2] == 0x08 ) )
     {
-      is_gzip_encoded = TRUE;
-
       /* get the size of the orignal document. This helps in alotting the
        * buffer to accomodate the uncompressed version. The last 4 bytes
        * of the compressed document are equal to orignal_size modulo 2^32.
@@ -254,3 +251,10 @@
 
     return FT_Err_Ok;
   }
+
+#else /* !FT_CONFIG_OPTION_SVG */
+
+  /* ANSI C doesn't like empty source files */
+  typedef int  _tt_cpal_dummy;
+
+#endif /* !FT_CONFIG_OPTION_SVG */

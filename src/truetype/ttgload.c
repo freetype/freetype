@@ -2796,7 +2796,7 @@
   {
     FT_Error      error;
     TT_LoaderRec  loader;
-    SFNT_Service  sfnt;
+
 
     FT_TRACE1(( "TT_Load_Glyph: glyph index %d\n", glyph_index ));
 
@@ -2907,9 +2907,11 @@
       goto Exit;
     }
 
+#ifdef FT_CONFIG_OPTION_SVG
     /* check for OT-SVG */
     if ( ( load_flags & FT_LOAD_COLOR ) && ( ((TT_Face)glyph->face)->svg ) )
     {
+      SFNT_Service  sfnt;
       sfnt = (SFNT_Service)((TT_Face)glyph->face)->sfnt;
       error = sfnt->load_svg_doc( glyph, glyph_index );
       if( error == FT_Err_Ok )
@@ -2918,6 +2920,7 @@
         return error;
       }
     }
+#endif
 
     if ( load_flags & FT_LOAD_SBITS_ONLY )
     {

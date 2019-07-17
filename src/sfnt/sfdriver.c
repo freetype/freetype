@@ -37,7 +37,9 @@
 #include "ttcpal.h"
 #endif
 
+#ifdef FT_CONFIG_OPTION_SVG
 #include "ttsvg.h" /* OpenType SVG support */
+#endif
 
 #ifdef TT_CONFIG_OPTION_POSTSCRIPT_NAMES
 #include "ttpost.h"
@@ -1210,6 +1212,12 @@
 #define PUT_EMBEDDED_BITMAPS( a )  NULL
 #endif
 
+#ifdef FT_CONFIG_OPTION_SVG
+#define PUT_SVG_SUPPORT( a )  a
+#else
+#define PUT_SVG_SUPPORT( a )  NULL
+#endif
+
 #ifdef TT_CONFIG_OPTION_COLOR_LAYERS
 #define PUT_COLOR_LAYERS( a )  a
 #else
@@ -1297,9 +1305,12 @@
 
     tt_face_get_name,       /* TT_Get_Name_Func        get_name        */
     sfnt_get_name_id,       /* TT_Get_Name_ID_Func     get_name_id     */
-    tt_face_load_svg,       /* TT_Load_Table_Func      load_svg        */
-    tt_face_free_svg,       /* TT_Free_Table_Func      free_svg        */
-    tt_face_load_svg_doc    /* TT_Load_Svg_Doc_Func    load_svg_doc    */
+    PUT_SVG_SUPPORT( tt_face_load_svg ),
+                            /* TT_Load_Table_Func      load_svg        */
+    PUT_SVG_SUPPORT( tt_face_free_svg ),
+                            /* TT_Free_Table_Func      free_svg        */
+    PUT_SVG_SUPPORT( tt_face_load_svg_doc )
+                            /* TT_Load_Svg_Doc_Func    load_svg_doc    */
   )
 
 
