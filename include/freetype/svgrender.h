@@ -121,6 +121,16 @@ FT_BEGIN_HEADER
   (*SVG_Lib_Get_Buffer_Size_Func)( FT_GlyphSlot  slot,
                                    FT_BBox       bbox );
 
+  typedef struct SVG_RendererHooks_
+  {
+    /* Api Hooks for OT-SVG Rendering */
+    SVG_Lib_Init_Func    init_svg;
+    SVG_Lib_Free_Func    free_svg;
+    SVG_Lib_Render_Func  render_svg;
+
+    SVG_Lib_Get_Buffer_Size_Func  get_buffer_size;
+  } SVG_RendererHooks;
+
   /**************************************************************************
    *
    * @struct:
