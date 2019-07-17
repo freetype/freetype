@@ -16,6 +16,8 @@
  */
 
 #include <ft2build.h>
+#include FT_INTERNAL_DEBUG_H
+#include FT_SERVICE_PROPERTIES_H
 #include FT_SVG_RENDER_H
 #include FT_BBOX_H
 
@@ -78,30 +80,89 @@
   }
 
   static FT_Error
-  ft_svg_set_hooks( FT_Module                     module,
-                    SVG_Lib_Init_Func             init_svg,
-                    SVG_Lib_Free_Func             free_svg,
-                    SVG_Lib_Render_Func           render_svg,
-                    SVG_Lib_Get_Buffer_Size_Func  get_buffer_size )
+  ft_svg_property_set( FT_Module    module,
+                       const char*  property_name,
+                       const void*  value,
+                       FT_Bool      value_is_string )
   {
-    SVG_Renderer  renderer;
+    FT_Error      error    = FT_Err_Ok;
+    SVG_Renderer  renderer = (SVG_Renderer)module;
 
-    renderer = (SVG_Renderer)module;
-    renderer->hooks.init_svg   = init_svg;
-    renderer->hooks.free_svg   = free_svg;
-    renderer->hooks.render_svg = render_svg;
-
-    renderer->hooks.get_buffer_size = get_buffer_size;
-
-    return FT_Err_Ok;
+    if ( !ft_strcmp( property_name, "init_svg_hook" ) )
+      renderer->hooks.init_svg = (SVG_Lib_Init_Func)value;
+    else if ( !ft_strcmp( property_name, "free_svg_hook" ) )
+      renderer->hooks.free_svg = (SVG_Lib_Free_Func)value;
+    else if ( !ft_strcmp( property_name, "render_svg_hook" ) )
+      renderer->hooks.render_svg = (SVG_Lib_Render_Func)value;
+    else if ( !ft_strcmp( property_name, "get_buffer_size_hook" ) )
+      renderer->hooks.get_buffer_size = (SVG_Lib_Get_Buffer_Size_Func)value;
+    else
+    {
+      error = FT_THROW( Missing_Property );
+    }
+    return error;
   }
 
-
-  static const SVG_Renderer_Interface svg_renderer_interface =
+  static FT_Error
+  ft_svg_property_get( FT_Module    module,
+                       const char*  property_name,
+                       const void*  value )
   {
-    (SVG_Set_Hooks_Func)ft_svg_set_hooks
-  };
+    FT_Error      error    = FT_Err_Ok;
+    SVG_Renderer  renderer = (SVG_Renderer)module;
 
+    if ( !ft_strcmp( property_name, "init_svg_hook" ) )
+    {
+      SVG_Lib_Init_Func*  val = (SVG_Lib_Init_Func*)value;
+      *val = (SVG_Lib_Init_Func)renderer->hooks.init_svg;
+    }
+    else if ( !ft_strcmp( property_name, "free_svg_hook" ) )
+    {
+      SVG_Lib_Free_Func*  val = (SVG_Lib_Free_Func*)value;
+      *val = (SVG_Lib_Free_Func)renderer->hooks.free_svg;
+    }
+    else if ( !ft_strcmp( property_name, "render_svg_hook" ) )
+    {
+      SVG_Lib_Render_Func*  val = (SVG_Lib_Render_Func*)value;
+      *val = (SVG_Lib_Render_Func)renderer->hooks.render_svg;
+    }
+    else if ( !ft_strcmp( property_name, "get_buffer_size_hook" ) )
+    {
+      SVG_Lib_Get_Buffer_Size_Func*  val;
+      val  = (SVG_Lib_Get_Buffer_Size_Func*)value;
+      *val = (SVG_Lib_Get_Buffer_Size_Func)renderer->hooks.render_svg;
+    }
+    else
+    {
+      error = FT_THROW( Missing_Property );
+    }
+    return error;
+  }
+
+  FT_DEFINE_SERVICE_PROPERTIESREC(
+    ft_svg_service_properties,
+
+    (FT_Properties_SetFunc)ft_svg_property_set, /* set_property */
+    (FT_Properties_GetFunc)ft_svg_property_get  /* get_property */
+  )
+
+  FT_DEFINE_SERVICEDESCREC1(
+    ft_svg_services,
+    FT_SERVICE_ID_PROPERTIES,  &ft_svg_service_properties )
+
+
+  FT_CALLBACK_DEF( FT_Module_Interface )
+  ft_svg_get_interface( FT_Module    module,
+                        const char*  ft_svg_interface )
+  {
+    FT_Module_Interface  result;
+
+
+    result = ft_service_list_lookup( ft_svg_services, ft_svg_interface );
+    if ( result )
+      return result;
+    return 0;
+  }
 
   FT_DEFINE_RENDERER(
     ft_svg_renderer_class,
@@ -112,10 +173,10 @@
       "ot-svg",
       0x10000L,
       0x20000L,
-      (const void*)&svg_renderer_interface,   /* module specific interface */
-      (FT_Module_Constructor)ft_svg_init,     /* module_init */
-      (FT_Module_Destructor)ft_svg_done,      /* module_done */
-      NULL,
+      NULL,                                /* module specific interface */
+      (FT_Module_Constructor)ft_svg_init,  /* module_init */
+      (FT_Module_Destructor)ft_svg_done,   /* module_done */
+      ft_svg_get_interface,                /* get_interface */
       FT_GLYPH_FORMAT_SVG,
       (FT_Renderer_RenderFunc)ft_svg_render,
       NULL,

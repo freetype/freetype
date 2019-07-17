@@ -5603,47 +5603,4 @@
       return 0;
   }
 
-#ifdef FT_CONFIG_OPTION_SVG
-  FT_EXPORT_DEF( FT_Error )
-  FT_Set_Svg_Hooks( FT_Library                    library,
-                    SVG_Lib_Init_Func             init_svg,
-                    SVG_Lib_Free_Func             free_svg,
-                    SVG_Lib_Render_Func           render_svg,
-                    SVG_Lib_Get_Buffer_Size_Func  get_buffer_size )
-  {
-    FT_Module               renderer;
-    SVG_Renderer_Interface  *svg;
-
-    /* TODO: (OT-SVG) Handle the case if the module is not found */
-    renderer = FT_Get_Module( library, "ot-svg" );
-
-    /* If ot-svg module is not available return with error */
-    if ( renderer == 0 )
-      return FT_THROW( Missing_Module );
-
-    svg = (SVG_Renderer_Interface*)renderer->clazz->module_interface;
-    svg->set_hooks(renderer,
-                   init_svg,
-                   free_svg,
-                   render_svg,
-                   get_buffer_size );
-    return FT_Err_Ok;
-  }
-#else
-  FT_EXPORT_DEF( FT_Error )
-  FT_Set_Svg_Hooks( FT_Library                    library,
-                    SVG_Lib_Init_Func             init_svg,
-                    SVG_Lib_Free_Func             free_svg,
-                    SVG_Lib_Render_Func           render_svg,
-                    SVG_Lib_Get_Buffer_Size_Func  get_buffer_size )
-  {
-    FT_UNUSED( library );
-    FT_UNUSED( init_svg );
-    FT_UNUSED( free_svg );
-    FT_UNUSED( render_svg );
-    FT_UNUSED( get_buffer_size );
-    return FT_THROW( Unimplemented_Feature );
-  }
-#endif
-
 /* END */
