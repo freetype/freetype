@@ -1227,9 +1227,7 @@ FT_BEGIN_HEADER
 #define FT_FACE_FLAG_TRICKY            ( 1L << 13 )
 #define FT_FACE_FLAG_COLOR             ( 1L << 14 )
 #define FT_FACE_FLAG_VARIATION         ( 1L << 15 )
-#ifdef FT_CONFIG_OPTION_SVG
 #define FT_FACE_FLAG_SVG               ( 1L << 16 )
-#endif
 
 
   /**************************************************************************

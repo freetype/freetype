@@ -419,9 +419,7 @@ FT_BEGIN_HEADER
    */
 
 #define FT_GLYPH_OWN_BITMAP    0x1U
-#ifdef FT_CONFIG_OPTION_SVG
 #define FT_GLYPH_OWN_GZIP_SVG  0x2U
-#endif
 
   typedef struct  FT_Slot_InternalRec_
   {
