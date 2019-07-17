@@ -73,10 +73,10 @@
           } while ( 0 )
 
 #define WRITE_SFNT_BUF( buf, s ) \
-          write_buf( &sfnt, &dest_offset, buf, s, memory, TRUE )
+          write_buf( &sfnt, sfnt_size, &dest_offset, buf, s, memory )
 
 #define WRITE_SFNT_BUF_AT( offset, buf, s ) \
-          write_buf( &sfnt, &offset, buf, s, memory, FALSE )
+          write_buf( &sfnt, sfnt_size, &offset, buf, s, memory )
 
 #define N_CONTOUR_STREAM    0
 #define N_POINTS_STREAM     1
@@ -205,11 +205,11 @@
 
   static FT_Error
   write_buf( FT_Byte**  dst_bytes,
+             FT_ULong*  dst_size,
              FT_ULong*  offset,
              FT_Byte*   src,
              FT_ULong   size,
-             FT_Memory  memory,
-             FT_Bool    extend_buf )
+             FT_Memory  memory )
   {
     FT_Error  error = FT_Err_Ok;
     /* We are reallocating memory for `dst', so its pointer may change. */
@@ -219,15 +219,18 @@
     if( ( *offset + size ) > WOFF2_DEFAULT_MAX_SIZE  )
       return FT_THROW( Array_Too_Large );
 
-    /* DEBUG - Remove later */
-    /* FT_TRACE2(( "Reallocating %lu to %lu.\n", *offset, (*offset + size) )); */
     /* Reallocate `dst'. */
-    if( extend_buf )
+    if( ( *offset + size ) > *dst_size )
     {
+      /* DEBUG - Remove later */
+      FT_TRACE2(( "Reallocating %lu to %lu.\n",
+                  *dst_size, (*offset + size) ));
       if ( FT_REALLOC( dst,
-                      (FT_ULong)( *offset ),
+                      (FT_ULong)( *dst_size ),
                       (FT_ULong)( *offset + size ) ) )
         goto Exit;
+
+      *dst_size = *offset + size;
     }
 
     /* Copy data. */
@@ -244,6 +247,7 @@
 
   static FT_Error
   pad4( FT_Byte**  sfnt_bytes,
+        FT_ULong*  sfnt_size,
         FT_ULong*  out_offset,
         FT_Memory  memory )
   {
@@ -722,6 +726,7 @@
               FT_UShort  index_format,
               FT_ULong*  checksum,
               FT_Byte**  sfnt_bytes,
+              FT_ULong*  sfnt_size,
               FT_ULong*  out_offset,
               FT_Memory  memory )
   {
@@ -783,6 +788,7 @@
                     WOFF2_Table  loca_table,
                     FT_ULong*    loca_checksum,
                     FT_Byte**    sfnt_bytes,
+                    FT_ULong*    sfnt_size,
                     FT_ULong*    out_offset,
                     WOFF2_Info   info,
                     FT_Memory    memory )
@@ -1108,7 +1114,7 @@
       if( WRITE_SFNT_BUF( glyph_buf, glyph_size ) )
         goto Fail;
 
-      if( pad4( &sfnt, &dest_offset, memory ) )
+      if( pad4( &sfnt, sfnt_size, &dest_offset, memory ) )
         goto Fail;
 
       *glyf_checksum += compute_ULong_sum( glyph_buf, glyph_size );
@@ -1124,7 +1130,8 @@
     loca_values[num_glyphs] = glyf_table->dst_length;
 
     if( store_loca( loca_values, num_glyphs + 1, index_format,
-                    loca_checksum, &sfnt, &dest_offset, memory ) )
+                    loca_checksum, &sfnt, sfnt_size,
+                    &dest_offset, memory ) )
       goto Fail;
 
     loca_table->dst_length = dest_offset - loca_table->dst_offset;
@@ -1172,6 +1179,7 @@
                     FT_Short*  x_mins,
                     FT_ULong*  checksum,
                     FT_Byte**  sfnt_bytes,
+                    FT_ULong*  sfnt_size,
                     FT_ULong*  out_offset,
                     FT_Memory  memory )
   {
@@ -1306,6 +1314,7 @@
                     WOFF2_Header  woff2,
                     WOFF2_Info    info,
                     FT_Byte**     sfnt_bytes,
+                    FT_ULong*     sfnt_size,
                     FT_Memory     memory )
   {
     FT_Error   error               = FT_Err_Ok;
@@ -1427,8 +1436,8 @@
 
           if( reconstruct_glyf( stream, &table, &checksum,
                                 loca_table, &loca_checksum,
-                                &sfnt, &dest_offset, info,
-                                memory ) )
+                                &sfnt, sfnt_size, &dest_offset,
+                                info, memory ) )
             return FT_THROW( Invalid_Table );
         FT_TRACE2(("glyf checksum is %08x\n", checksum));
         }
@@ -1441,7 +1450,7 @@
           table.dst_offset = dest_offset;
           if( reconstruct_hmtx( stream, table.src_length, info->num_glyphs,
                                 info->num_hmetrics, info->x_mins, &checksum,
-                                &sfnt, &dest_offset, memory ) )
+                                &sfnt, sfnt_size, &dest_offset, memory ) )
             return FT_THROW( Invalid_Table );
         }
         else
@@ -1464,7 +1473,7 @@
       /* Update checksum. */
       font_checksum += compute_ULong_sum( table_entry, 16 );
 
-      if( pad4( &sfnt, &dest_offset, memory ) )
+      if( pad4( &sfnt, sfnt_size, &dest_offset, memory ) )
         goto Fail;
 
       /* Sanity check. */
@@ -1488,7 +1497,7 @@
 
     FT_TRACE2(( "Final checksum = %u\n", font_checksum ));
 
-    woff2->total_sfnt_size = dest_offset;
+    woff2->actual_sfnt_size = dest_offset;
 
     /* Set pointer of sfnt stream to its correct value. */
     *sfnt_bytes = sfnt;
@@ -1539,6 +1548,7 @@
     FT_Byte*         sfnt        = NULL;
     FT_Stream        sfnt_stream = NULL;
     FT_Byte*         sfnt_header;
+    FT_ULong         sfnt_size;
 
     FT_Byte*         uncompressed_buf = NULL;
 
@@ -1548,18 +1558,19 @@
 #define FT_STRUCTURE  WOFF2_HeaderRec
 
       FT_FRAME_START( 48 ),
-        FT_FRAME_ULONG ( signature ),
-        FT_FRAME_ULONG ( flavor ),
-        FT_FRAME_ULONG ( length ),
-        FT_FRAME_USHORT( num_tables ),
-        FT_FRAME_SKIP_BYTES( 2 + 4 ),
-        FT_FRAME_ULONG ( totalCompressedSize ),
+        FT_FRAME_ULONG     ( signature ),
+        FT_FRAME_ULONG     ( flavor ),
+        FT_FRAME_ULONG     ( length ),
+        FT_FRAME_USHORT    ( num_tables ),
+        FT_FRAME_SKIP_BYTES( 2 ),
+        FT_FRAME_ULONG     ( totalSfntSize ),
+        FT_FRAME_ULONG     ( totalCompressedSize ),
         FT_FRAME_SKIP_BYTES( 2 * 2 ),
-        FT_FRAME_ULONG ( metaOffset ),
-        FT_FRAME_ULONG ( metaLength ),
-        FT_FRAME_ULONG ( metaOrigLength ),
-        FT_FRAME_ULONG ( privOffset ),
-        FT_FRAME_ULONG ( privLength ),
+        FT_FRAME_ULONG     ( metaOffset ),
+        FT_FRAME_ULONG     ( metaLength ),
+        FT_FRAME_ULONG     ( metaOrigLength ),
+        FT_FRAME_ULONG     ( privOffset ),
+        FT_FRAME_ULONG     ( privLength ),
       FT_FRAME_END
     };
 
@@ -1582,6 +1593,7 @@
     FT_TRACE2(( "flavor     -> 0x%X\n", woff2.flavor ));
     FT_TRACE2(( "length     -> %lu\n", woff2.length ));
     FT_TRACE2(( "num_tables -> %hu\n", woff2.num_tables ));
+    FT_TRACE2(( "totalSfntSize -> %lu\n", woff2.totalSfntSize ));
     FT_TRACE2(( "metaOffset -> %hu\n", woff2.metaOffset ));
     FT_TRACE2(( "metaLength -> %hu\n", woff2.metaLength ));
     FT_TRACE2(( "privOffset -> %hu\n", woff2.privOffset ));
@@ -1816,12 +1828,7 @@
       /* DEBUG - Remove later */
       FT_TRACE2(( "Storing tables for TTC face index %d.\n", face_index ));
       for ( nn = 0; nn < ttc_font->num_tables; nn++ )
-      {
-        /* DEBUG - Remove later */
-        FT_TRACE2(( "i=%d, table_index=%d\n",
-                    nn, ttc_font->table_indices[nn] ));
         temp_indices[nn] = indices[ttc_font->table_indices[nn]];
-      }
 
       /* Resize array to required size. */
       if( FT_RENEW_ARRAY( indices, woff2.num_tables,
@@ -1837,9 +1844,16 @@
       woff2.num_tables = ttc_font->num_tables;
     }
 
+    /* We need to allocate this much at the minimum. */
+    sfnt_size = 12 + woff2.num_tables * 16UL;
+    /* This is what we normally expect.                              */
+    /* Initially trust `totalSfntSize' and change later as required. */
+    if ( woff2.totalSfntSize > sfnt_size )
+      sfnt_size = woff2.totalSfntSize;
+
     /* Write sfnt header. */
-    if ( FT_ALLOC( sfnt, 12 + woff2.num_tables * 16UL ) ||
-         FT_NEW( sfnt_stream )                          )
+    if ( FT_ALLOC( sfnt, sfnt_size ) ||
+         FT_NEW( sfnt_stream )       )
       goto Exit;
 
     sfnt_header = sfnt;
@@ -1910,11 +1924,24 @@
     FT_FRAME_EXIT();
 
     reconstruct_font( uncompressed_buf, woff2.uncompressed_size,
-                      indices, &woff2, &info, &sfnt, memory );
+                      indices, &woff2, &info, &sfnt, &sfnt_size,
+                      memory );
+
+    /* Resize `sfnt' to actual size of sfnt stream. */
+    if ( woff2.actual_sfnt_size < sfnt_size )
+    {
+      /* DEBUG - Remove later */
+      FT_TRACE2(( "Trimming sfnt stream from %lu to %lu.\n",
+                  sfnt_size, woff2.actual_sfnt_size ));
+      if ( FT_REALLOC( sfnt,
+                      (FT_ULong)( sfnt_size ),
+                      (FT_ULong)( woff2.actual_sfnt_size ) ) )
+        goto Exit;
+    }
 
     /* reconstruct_font has done all the work. */
     /* Swap out stream and return.             */
-    FT_Stream_OpenMemory( sfnt_stream, sfnt, woff2.total_sfnt_size );
+    FT_Stream_OpenMemory( sfnt_stream, sfnt, woff2.actual_sfnt_size );
     sfnt_stream->memory = stream->memory;
     sfnt_stream->close  = stream_close;
 

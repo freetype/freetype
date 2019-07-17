@@ -1,5 +1,30 @@
 2019-08-27  Nikhil Ramakrishnan  <ramakrishnan.nikhil@gmail.com>
 
+	[woff2] Avoid too many calls to `FT_REALLOC'.
+
+	We do this by using `totalSfntSize' as an initial reference, and
+	extending the buffer when required.  This reduces rendering time
+	considerably.
+
+	* include/freetype/internal/wofftypes.h (WOFF2_HeaderRec): Add
+	`totalSfntSize', rename `total_sfnt_size' to `actual_sfnt_size'.
+
+	* src/sfnt/sfwoff2.c (write_buf): Add parameter `dst_size' to keep
+	track of and update total size of stream.
+
+	(WRITE_SFNT_BUF, WRITE_SFNT_BUF_AT): Modify macros accordingly.
+
+	(pad4, store_loca, reconstruct_glyf, reconstruct_hmtx,
+	reconstruct_font): Update parameters to accept `sfnt_size'.
+
+	(woff2_open_font): Add variable `sfnt_size'.  Use WOFF2 header field
+	`totalSfntSize' as initial reference (if value makes sense) and
+	allocate `totalSfntSize' bytes for the sfnt stream.  `write_buf'
+	handles reallocation if and when required.  Also resize the stream
+	to `actual_sfnt_size' after reconstruction.
+
+2019-08-27  Nikhil Ramakrishnan  <ramakrishnan.nikhil@gmail.com>
+
 	[woff2] Reconstruct `loca', `hmtx', and swap out stream.
 
 	Add necessary functions to reconstruct loca and hmtx tables (the two
