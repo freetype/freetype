@@ -165,6 +165,7 @@ FT_BEGIN_HEADER
     FT_ULong   flavor;
     FT_ULong   length;
     FT_UShort  num_tables;
+    FT_ULong   totalSfntSize;
     FT_ULong   totalCompressedSize;
     FT_ULong   metaOffset;
     FT_ULong   metaLength;
@@ -176,7 +177,7 @@ FT_BEGIN_HEADER
     FT_ULong   compressed_offset;
     FT_ULong   header_version;
     FT_UShort  num_fonts;
-    FT_ULong   total_sfnt_size;
+    FT_ULong   actual_sfnt_size;
 
     WOFF2_TtcFont  ttc_fonts;
 
