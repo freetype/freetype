@@ -501,6 +501,8 @@ FT_BEGIN_HEADER
    */
 #define FT_CONFIG_OPTION_SVG
 
+/* #define FT_CONFIG_OPTION_SVG_DEFAULT */
+
 
   /**************************************************************************
    *

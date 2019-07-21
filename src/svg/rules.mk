@@ -21,9 +21,13 @@ SVG_DIR := $(SRC_DIR)/svg
 #
 SVG_COMPILE := $(CC) $(ANSIFLAGS)                               \
                         $I$(subst /,$(COMPILER_SEP),$(SVG_DIR)) \
-                        $(INCLUDE_FLAGS)                           \
+                        $(INCLUDE_FLAGS)                        \
                         $(FT_CFLAGS)
 
+SVG_PORT_COMPILE := $(CC) \
+                        $I$(subst /,$(COMPILER_SEP),$(SVG_DIR)) \
+			$(INCLUDE_FLAGS)                        \
+			$(FT_CFLAGS)
 
 # raster driver sources (i.e., C files)
 #
@@ -52,6 +56,13 @@ SVG_DRV_SRC_S := $(SVG_DIR)/svg.c
 
 # raster driver - single object
 #
+
+SVG_PORT_SRC_S := $(SVG_DIR)/rsvg_port.c
+SVG_PORT_OBJ_S := $(OBJ_DIR)/rsvg_port.$O
+
+$(SVG_PORT_OBJ_S): $(SVG_PORT_SRC_S) $(FREETYPE_H)
+	$(SVG_PORT_COMPILE) $T$(subst /,$(COMPILER_SEP), $@ $(SVG_PORT_SRC_S))
+
 $(SVG_DRV_OBJ_S): $(SVG_DRV_SRC_S) $(SVG_DRV_SRC) \
                      $(FREETYPE_H) $(SVG_DRV_H)
 	$(SVG_COMPILE) $T$(subst /,$(COMPILER_SEP),$@ $(SVG_DRV_SRC_S))
@@ -68,5 +79,6 @@ $(OBJ_DIR)/%.$O: $(SVG_DIR)/%.c $(FREETYPE_H) $(SVG_DRV_H)
 DRV_OBJS_S += $(SVG_DRV_OBJ_S)
 DRV_OBJS_M += $(SVG_DRV_OBJ_M)
 
+DRV_OBJS_S += $(SVG_PORT_OBJ_S)
 
 # EOF

@@ -21,6 +21,9 @@
 #include FT_SVG_RENDER_H
 #include FT_BBOX_H
 
+#ifdef FT_CONFIG_OPTION_SVG_DEFAULT
+#include <rsvg_port.h>
+#endif
 #include <stdio.h>
 
 #include "ftsvg.h"
@@ -31,6 +34,12 @@
   {
     FT_Error    error = FT_Err_Ok;
     svg_module->loaded = FALSE;
+#ifdef FT_CONFIG_OPTION_SVG_DEFAULT
+    svg_module->hooks.init_svg = (SVG_Lib_Init_Func)rsvg_port_init;
+    svg_module->hooks.free_svg = (SVG_Lib_Free_Func)rsvg_port_free;
+    svg_module->hooks.render_svg = (SVG_Lib_Render_Func)rsvg_port_render;
+    svg_module->hooks.get_buffer_size = (SVG_Lib_Get_Buffer_Size_Func)rsvg_port_get_buffer_size;
+#endif
     return error;
   }
 

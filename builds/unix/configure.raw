@@ -542,6 +542,40 @@ if test x"$with_harfbuzz" = xyes -a "$have_harfbuzz" = no; then
   AC_MSG_ERROR([harfbuzz support requested but library not found])
 fi
 
+# OT-SVG checks
+# Librsvg is the default for now!
+AC_ARG_WITH([svg],
+  [AS_HELP_STRING([--with-svg=@<:@yes|no|auto@:>@],
+                  [support OpenType SVG fonts @<:@default=auto@:>@])],
+  [], [with_svg=auto])
+
+have_librsvg=no
+if test x"$with_svg" = xyes -o x"$with_svg"=xauto; then
+  librsvg_pkg="librsvg-2.0 >= 2.40.0"
+  have_librsvg_pkg=no
+
+  if test x"$LIBRSVG_CFLAGS" = x -a x"$LIBRSVG_LIBS" = x; then
+    PKG_CHECK_EXISTS([$librsvg_pkg], [have_librsvg_pkg=yes])
+  fi
+  PKG_CHECK_MODULES([LIBRSVG], [$librsvg_pkg],
+                    [have_librsvg="yes (pkg-config)"], [:])
+
+  if test $have_librsvg_pkg = yes; then
+    # we have librsvg pkg-config file
+    librsvg_reqpriv="$librsvg_pkg"
+    librsvg_libspriv=
+    librsvg_libsstaticconf=`$PKG_CONFIG --static --libs "$librsvg_pkg"`
+  else
+    librsvg_reqpriv=
+
+    if test "$have_librsvg" != no; then
+      # LIBRSVG_CFLAGS and LIBRSVG_LIBS are set by the user
+      librsvg_libspriv="$LIBRSVG_LIBS"
+      librsvg_libsstaticconf="$LIBRSVG_LIBS"
+      have_librsvg="yes (LIBRSVG_CFLAGS and LIBRSVG_LIBS)"
+    fi
+  fi
+fi
 
 # check for librt
 #
@@ -992,7 +1026,8 @@ fi
 REQUIRES_PRIVATE="$zlib_reqpriv,     \
                   $bzip2_reqpriv,    \
                   $libpng_reqpriv,   \
-                  $harfbuzz_reqpriv"
+                  $harfbuzz_reqpriv, \
+                  $librsvg_reqpriv"
 # beautify
 REQUIRES_PRIVATE=`echo "$REQUIRES_PRIVATE" \
                   | sed -e 's/^  *//'      \
@@ -1007,7 +1042,8 @@ LIBS_PRIVATE="$zlib_libspriv     \
               $bzip2_libspriv    \
               $libpng_libspriv   \
               $harfbuzz_libspriv \
-              $ft2_extra_libs"
+              $ft2_extra_libs    \
+              $librsvg_libspriv"
 # beautify
 LIBS_PRIVATE=`echo "$LIBS_PRIVATE"  \
               | sed -e 's/^  *//'   \
@@ -1019,7 +1055,9 @@ LIBSSTATIC_CONFIG="-lfreetype               \
                    $bzip2_libsstaticconf    \
                    $libpng_libsstaticconf   \
                    $harfbuzz_libsstaticconf \
-                   $ft2_extra_libs"
+                   $ft2_extra_libs          \
+                   $librsvg_libsstaticconf"
+
 # remove -L/usr/lib and -L/usr/lib64 since `freetype-config' adds them later
 # on if necessary; also beautify
 LIBSSTATIC_CONFIG=`echo "$LIBSSTATIC_CONFIG"          \
@@ -1082,6 +1120,15 @@ if test "$have_harfbuzz" != no; then
   ftoption_set FT_CONFIG_OPTION_USE_HARFBUZZ
 else
   ftoption_unset FT_CONFIG_OPTION_USE_HARFBUZZ
+fi
+
+if test "$have_librsvg" != no; then
+  LIBRSVG_CFLAGS=$(echo $LIBRSVG_CFLAGS | sed -e 's/-I\(.*\?\)freetype2//g')
+  CFLAGS="$CFLAGS $LIBRSVG_CFLAGS"
+  LDFLAGS="$LDFLAGS $LIBRSVG_LIBS"
+  ftoption_set FT_CONFIG_OPTION_SVG_DEFAULT
+else
+  ftoption_unset FT_CONFIG_OPTION_SVG_DEFAULT
 fi
 
 AC_SUBST([CFLAGS])
