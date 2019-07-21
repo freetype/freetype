@@ -493,6 +493,8 @@ FT_BEGIN_HEADER
 #undef FT_CONFIG_OPTION_USE_MODULE_ERRORS
 
 
+
+
   /**************************************************************************
    *
    * OpenType SVG Glyph Support
@@ -501,8 +503,7 @@ FT_BEGIN_HEADER
    */
 #define FT_CONFIG_OPTION_SVG
 
-/* #define FT_CONFIG_OPTION_SVG_DEFAULT */
-
+/* #define FT_CONFIG_OPTION_DEFAULT_SVG */
 
   /**************************************************************************
    *

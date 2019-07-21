@@ -81,6 +81,8 @@ T := -o$(space)
 CPPFLAGS := @CPPFLAGS@
 CFLAGS   := -c @XX_CFLAGS@ @CFLAGS@ -DFT_CONFIG_CONFIG_H="<ftconfig.h>"
 
+COMPILE_SVG_PORT := @COMPILE_SVG_PORT@
+
 # ANSIFLAGS: Put there the flags used to make your compiler ANSI-compliant.
 #
 ANSIFLAGS := @XX_ANSIFLAGS@

@@ -545,12 +545,15 @@ fi
 # OT-SVG checks
 # Librsvg is the default for now!
 AC_ARG_WITH([svg],
-  [AS_HELP_STRING([--with-svg=@<:@yes|no|auto@:>@],
+  [AS_HELP_STRING([--with-svg=@<:@yes|no|auto|no-default@:>@],
                   [support OpenType SVG fonts @<:@default=auto@:>@])],
   [], [with_svg=auto])
 
 have_librsvg=no
-if test x"$with_svg" = xyes -o x"$with_svg"=xauto; then
+have_librsvg_simple=no
+with_svg_simple=no
+if test x"$with_svg" = xyes -o x"$with_svg" = xauto; then
+  with_svg_simple=yes
   librsvg_pkg="librsvg-2.0 >= 2.40.0"
   have_librsvg_pkg=no
 
@@ -558,7 +561,7 @@ if test x"$with_svg" = xyes -o x"$with_svg"=xauto; then
     PKG_CHECK_EXISTS([$librsvg_pkg], [have_librsvg_pkg=yes])
   fi
   PKG_CHECK_MODULES([LIBRSVG], [$librsvg_pkg],
-                    [have_librsvg="yes (pkg-config)"], [:])
+                    [have_librsvg="yes (pkg-config)";have_librsvg_simple="yes"], [:])
 
   if test $have_librsvg_pkg = yes; then
     # we have librsvg pkg-config file
@@ -573,10 +576,16 @@ if test x"$with_svg" = xyes -o x"$with_svg"=xauto; then
       librsvg_libspriv="$LIBRSVG_LIBS"
       librsvg_libsstaticconf="$LIBRSVG_LIBS"
       have_librsvg="yes (LIBRSVG_CFLAGS and LIBRSVG_LIBS)"
+      have_librsvg_simple="yes"
     fi
   fi
+elif test x"$with_svg" = x"no-default"; then
+  have_librsvg="no-default"
+  have_librsvg_simple="no"
+  with_svg_simple="no-default"
+else
+  with_svg_simple="no"
 fi
-
 # check for librt
 #
 # We need `clock_gettime' for the `ftbench' demo program.
@@ -1122,15 +1131,24 @@ else
   ftoption_unset FT_CONFIG_OPTION_USE_HARFBUZZ
 fi
 
-if test "$have_librsvg" != no; then
+COMPILE_SVG_PORT=no
+if test "$have_librsvg_simple" = yes -a "$with_svg_simple" = yes; then
   LIBRSVG_CFLAGS=$(echo $LIBRSVG_CFLAGS | sed -e 's/-I\(.*\?\)freetype2//g')
   CFLAGS="$CFLAGS $LIBRSVG_CFLAGS"
   LDFLAGS="$LDFLAGS $LIBRSVG_LIBS"
-  ftoption_set FT_CONFIG_OPTION_SVG_DEFAULT
+  COMPILE_SVG_PORT=yes
+  ftoption_set FT_CONFIG_OPTION_SVG
+  ftoption_set FT_CONFIG_OPTION_DEFAULT_SVG
+elif test "$with_svg_simple" = "no"; then
+  ftoption_unset FT_CONFIG_OPTION_SVG
+  ftoption_unset FT_CONFIG_OPTION_DEFAULT_SVG
 else
-  ftoption_unset FT_CONFIG_OPTION_SVG_DEFAULT
+  COMPILE_SVG_PORT=no
+  ftoption_set FT_CONFIG_OPTION_SVG
+  ftoption_unset FT_CONFIG_OPTION_DEFAULT_SVG
 fi
 
+AC_SUBST([COMPILE_SVG_PORT])
 AC_SUBST([CFLAGS])
 AC_SUBST([LDFLAGS])
 
@@ -1176,6 +1194,7 @@ Library configuration:
   bzip2:         $have_bzip2
   libpng:        $have_libpng
   harfbuzz:      $have_harfbuzz
+  svg support:   $have_librsvg
 ])
 
 # Warn if docwriter is not installed

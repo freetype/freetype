@@ -60,8 +60,10 @@ SVG_DRV_SRC_S := $(SVG_DIR)/svg.c
 SVG_PORT_SRC_S := $(SVG_DIR)/rsvg_port.c
 SVG_PORT_OBJ_S := $(OBJ_DIR)/rsvg_port.$O
 
+ifeq ($(COMPILE_SVG_PORT), yes)
 $(SVG_PORT_OBJ_S): $(SVG_PORT_SRC_S) $(FREETYPE_H)
 	$(SVG_PORT_COMPILE) $T$(subst /,$(COMPILER_SEP), $@ $(SVG_PORT_SRC_S))
+endif
 
 $(SVG_DRV_OBJ_S): $(SVG_DRV_SRC_S) $(SVG_DRV_SRC) \
                      $(FREETYPE_H) $(SVG_DRV_H)
@@ -79,6 +81,8 @@ $(OBJ_DIR)/%.$O: $(SVG_DIR)/%.c $(FREETYPE_H) $(SVG_DRV_H)
 DRV_OBJS_S += $(SVG_DRV_OBJ_S)
 DRV_OBJS_M += $(SVG_DRV_OBJ_M)
 
+ifeq ($(COMPILE_SVG_PORT), yes)
 DRV_OBJS_S += $(SVG_PORT_OBJ_S)
+endif
 
 # EOF
