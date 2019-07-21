@@ -39,6 +39,9 @@
     svg_module->hooks.free_svg = (SVG_Lib_Free_Func)rsvg_port_free;
     svg_module->hooks.render_svg = (SVG_Lib_Render_Func)rsvg_port_render;
     svg_module->hooks.get_buffer_size = (SVG_Lib_Get_Buffer_Size_Func)rsvg_port_get_buffer_size;
+    svg_module->hooks_set = TRUE;
+#else
+    svg_module->hooks_set = FALSE;
 #endif
     return error;
   }
@@ -47,7 +50,8 @@
   ft_svg_done( SVG_Renderer svg_module )
   {
     FT_Library  library = svg_module->root.root.library;
-    if ( svg_module->loaded == TRUE )
+    if ( svg_module->loaded    == TRUE &&
+         svg_module->hooks_set == TRUE )
       svg_module->hooks.free_svg( library );
     svg_module->loaded = FALSE;
   }
@@ -63,10 +67,14 @@
     FT_Memory     memory       = library->memory;
     FT_BBox       outline_bbox;
     FT_Error      error;
-    FT_ULong       size_image_buffer;
+    FT_ULong      size_image_buffer;
 
     SVG_RendererHooks hooks = svg_renderer->hooks;
 
+    if ( svg_renderer->hooks_set == FALSE )
+    {
+      return FT_THROW( Missing_SVG_Hooks );
+    }
 
     if ( svg_renderer->loaded == FALSE )
     {
@@ -100,7 +108,8 @@
     if ( !ft_strcmp( property_name, "svg_hooks" ) )
     {
       SVG_RendererHooks*  hooks = (SVG_RendererHooks*)value;
-      renderer->hooks = *hooks;
+      renderer->hooks     = *hooks;
+      renderer->hooks_set = TRUE;
     }
     else
     {

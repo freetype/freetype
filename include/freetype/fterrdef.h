@@ -234,6 +234,8 @@
                 "found FDEF or IDEF opcode in glyf bytecode" )
   FT_ERRORDEF_( Missing_Bitmap,                              0x9D,
                 "missing bitmap in strike" )
+  FT_ERRORDEF_( Missing_SVG_Hooks,                           0x9E,
+                "hooks have not been set" )
 
   /* CFF, CID, and Type 1 errors */
 
