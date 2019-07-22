@@ -550,10 +550,7 @@ AC_ARG_WITH([svg],
   [], [with_svg=auto])
 
 have_librsvg=no
-have_librsvg_simple=no
-with_svg_simple=no
 if test x"$with_svg" = xyes -o x"$with_svg" = xauto; then
-  with_svg_simple=yes
   librsvg_pkg="librsvg-2.0 >= 2.40.0"
   have_librsvg_pkg=no
 
@@ -561,7 +558,7 @@ if test x"$with_svg" = xyes -o x"$with_svg" = xauto; then
     PKG_CHECK_EXISTS([$librsvg_pkg], [have_librsvg_pkg=yes])
   fi
   PKG_CHECK_MODULES([LIBRSVG], [$librsvg_pkg],
-                    [have_librsvg="yes (pkg-config)";have_librsvg_simple="yes"], [:])
+                    [have_librsvg="yes (pkg-config)"], [:])
 
   if test $have_librsvg_pkg = yes; then
     # we have librsvg pkg-config file
@@ -576,15 +573,12 @@ if test x"$with_svg" = xyes -o x"$with_svg" = xauto; then
       librsvg_libspriv="$LIBRSVG_LIBS"
       librsvg_libsstaticconf="$LIBRSVG_LIBS"
       have_librsvg="yes (LIBRSVG_CFLAGS and LIBRSVG_LIBS)"
-      have_librsvg_simple="yes"
     fi
   fi
-elif test x"$with_svg" = x"no-default"; then
-  have_librsvg="no-default"
-  have_librsvg_simple="no"
-  with_svg_simple="no-default"
-else
-  with_svg_simple="no"
+fi
+
+if test x"$with_svg" = xyes -a x"$have_librsvg" = xno; then
+  AC_MSG_ERROR([SVG support requested but library not found])
 fi
 # check for librt
 #
@@ -1132,20 +1126,23 @@ else
 fi
 
 COMPILE_SVG_PORT=no
-if test "$have_librsvg_simple" = yes -a "$with_svg_simple" = yes; then
+if test "$with_svg" = no-default; then
+  ftoption_set FT_CONFIG_OPTION_SVG
+  ftoption_unset FT_CONFIG_OPTION_DEFAULT_SVG
+  have_librsvg="no-default"
+elif test "$with_svg" = no; then
+  ftoption_unset FT_CONFIG_OPTION_SVG
+  ftoption_unset FT_CONFIG_OPTION_DEFAULT_SVG
+elif test "$with_svg" = auto -a "$have_librsvg" = no; then
+  ftoption_unset FT_CONFIG_OPTION_SVG
+  ftoption_unset FT_CONFIG_OPTION_DEFAULT_SVG
+else
   LIBRSVG_CFLAGS=$(echo $LIBRSVG_CFLAGS | sed -e 's/-I\(.*\?\)freetype2//g')
   CFLAGS="$CFLAGS $LIBRSVG_CFLAGS"
   LDFLAGS="$LDFLAGS $LIBRSVG_LIBS"
   COMPILE_SVG_PORT=yes
   ftoption_set FT_CONFIG_OPTION_SVG
   ftoption_set FT_CONFIG_OPTION_DEFAULT_SVG
-elif test "$with_svg_simple" = "no"; then
-  ftoption_unset FT_CONFIG_OPTION_SVG
-  ftoption_unset FT_CONFIG_OPTION_DEFAULT_SVG
-else
-  COMPILE_SVG_PORT=no
-  ftoption_set FT_CONFIG_OPTION_SVG
-  ftoption_unset FT_CONFIG_OPTION_DEFAULT_SVG
 fi
 
 AC_SUBST([COMPILE_SVG_PORT])
