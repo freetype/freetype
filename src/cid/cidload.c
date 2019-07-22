@@ -715,7 +715,7 @@
       if ( ft_isdigit( *p ) )
         val = (FT_Byte)( *p - '0' );
       else if ( *p >= 'a' && *p <= 'f' )
-        val = (FT_Byte)( *p - 'a' );
+        val = (FT_Byte)( *p - 'a' + 10 );
       else if ( *p >= 'A' && *p <= 'F' )
         val = (FT_Byte)( *p - 'A' + 10 );
       else if ( *p == ' '  ||

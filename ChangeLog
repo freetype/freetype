@@ -1,3 +1,7 @@
+2019-07-22  Weiyi Wu  <w1w2y3@gmail.com>
+
+	* src/cid/cidload.c (cid_hex_to_binary): Fix typo (#56653).
+
 2019-07-12  Werner Lemberg  <wl@gnu.org>
 
 	[sfnt, winfonts] Avoid memory leaks in case of error (#56587).
