@@ -28,6 +28,7 @@
 
 #include "ftsvg.h"
 
+#ifdef FT_CONFIG_OPTION_SVG
   /* ft_svg_init */
   static FT_Error
   ft_svg_init( SVG_Renderer svg_module )
@@ -163,6 +164,14 @@
     return 0;
   }
 
+#endif
+
+#ifdef FT_CONFIG_OPTION_SVG
+#define PUT_SVG_MODULE( a )  a
+#else
+#define PUT_SVG_MODULE( a )  NULL
+#endif
+
   FT_DEFINE_RENDERER(
     ft_svg_renderer_class,
 
@@ -173,11 +182,15 @@
       0x10000L,
       0x20000L,
       NULL,                                /* module specific interface */
-      (FT_Module_Constructor)ft_svg_init,  /* module_init */
-      (FT_Module_Destructor)ft_svg_done,   /* module_done */
-      ft_svg_get_interface,                /* get_interface */
+      (FT_Module_Constructor)PUT_SVG_MODULE( ft_svg_init ),  /* module_init */
+      (FT_Module_Destructor)PUT_SVG_MODULE( ft_svg_done ),   /* module_done */
+      PUT_SVG_MODULE( ft_svg_get_interface ),                /* get_interface */
+#ifdef FT_CONFIG_OPTION_SVG
       FT_GLYPH_FORMAT_SVG,
-      (FT_Renderer_RenderFunc)ft_svg_render,
+#else
+      FT_GLYPH_FORMAT_NONE,
+#endif
+      (FT_Renderer_RenderFunc)PUT_SVG_MODULE( ft_svg_render ),
       NULL,
       NULL,
       NULL,
