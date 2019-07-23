@@ -884,6 +884,11 @@
     if ( ( load_flags & FT_LOAD_COLOR ) &&
          ( ttface->svg ) )
     {
+      /* load the TTF/CFF glyph without any scaling,
+       * this is so that ultimately, these outlines
+       * can be used to calculate the bounding box and
+       * the advance metrics
+       */
       FT_Load_Glyph( face, glyph_index, FT_LOAD_NO_SCALE);
     }
 #endif
