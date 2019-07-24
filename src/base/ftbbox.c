@@ -294,10 +294,10 @@
       if ( shift > 2 )
         shift = 2;
 
-      q1 <<=  shift;
-      q2 <<=  shift;
-      q3 <<=  shift;
-      q4 <<=  shift;
+      q1 *= 1 << shift;
+      q2 *= 1 << shift;
+      q3 *= 1 << shift;
+      q4 *= 1 << shift;
     }
     else
     {

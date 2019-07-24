@@ -1,3 +1,7 @@
+2019-06-26  Alexei Podtelezhnikov  <apodtele@gmail.com>
+
+	* src/base/ftbbox.c (cubic_peak): Sanitize left shift (#56586).
+
 2019-07-22  Weiyi Wu  <w1w2y3@gmail.com>
 
 	* src/cid/cidload.c (cid_hex_to_binary): Fix typo (#56653).
