@@ -123,6 +123,37 @@
     }
   }
 
+  typedef struct Svg_doc_
+  {
+    FT_UShort  start_glyph_id;
+    FT_UShort  end_glyph_id;
+    FT_ULong   cur_doc_offset;
+    FT_ULong   cur_doc_length;
+  } Svg_doc;
+
+  Svg_doc
+  extract_svg_doc( FT_Byte*  stream )
+  {
+    Svg_doc  doc;
+    doc.start_glyph_id = FT_NEXT_USHORT( stream );
+    doc.end_glyph_id   = FT_NEXT_USHORT( stream );
+    doc.cur_doc_offset = FT_NEXT_ULONG( stream );
+    doc.cur_doc_length = FT_NEXT_ULONG( stream );
+    return doc;
+  }
+
+  FT_Int
+  compare_svg_doc( Svg_doc  doc,
+                   FT_UInt  glyph_index )
+  {
+    if ( glyph_index < doc.start_glyph_id )
+      return -1;
+    else if ( glyph_index > doc.end_glyph_id )
+      return 1;
+    else
+      return 0;
+  }
+
   FT_Error
   find_doc( FT_Byte*   stream,
             FT_UShort  num_entries,
@@ -133,38 +164,31 @@
             FT_UShort  *end_glyph )
   {
     FT_Error   error;
-    FT_UShort  start_glyph_id;
-    FT_UShort  end_glyph_id;
-    FT_ULong   cur_doc_offset;
-    FT_ULong   cur_doc_length;
+    Svg_doc    cur_doc;
 
     FT_Bool    found = FALSE;
     FT_UInt    i     = 0;
 
     /* TODO: (OT-SVG) Convert to efficient search algorithm        */
-    /* TODO: (OT-SVG) Use Frame Fields here instead of `FT_NEXT_*' */
     for ( i = 0; i < num_entries; i++)
     {
-      start_glyph_id = FT_NEXT_USHORT( stream );
-      end_glyph_id   = FT_NEXT_USHORT( stream );
-      cur_doc_offset = FT_NEXT_ULONG( stream );
-      cur_doc_length = FT_NEXT_ULONG( stream );
-
-      if ( ( glyph_index >= start_glyph_id) &&
-           ( glyph_index <= end_glyph_id  ) )
+      cur_doc = extract_svg_doc( stream );
+      stream += 12;
+      if ( compare_svg_doc( cur_doc, glyph_index ) == 0 )
       {
         found = TRUE;
-        *doc_offset = cur_doc_offset;
-        *doc_length = cur_doc_length;
+        *doc_offset = cur_doc.cur_doc_offset;
+        *doc_length = cur_doc.cur_doc_length;
         break;
       }
     }
+
     if ( found != TRUE )
       error = FT_THROW( Invalid_Glyph_Index );
     else
     {
-      *start_glyph = start_glyph_id;
-      *end_glyph   = end_glyph_id;
+      *start_glyph = cur_doc.start_glyph_id;
+      *end_glyph   = cur_doc.end_glyph_id;
       error = FT_Err_Ok;
     }
     return error;
