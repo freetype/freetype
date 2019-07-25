@@ -127,8 +127,8 @@
   {
     FT_UShort  start_glyph_id;
     FT_UShort  end_glyph_id;
-    FT_ULong   cur_doc_offset;
-    FT_ULong   cur_doc_length;
+    FT_ULong   offset;
+    FT_ULong   length;
   } Svg_doc;
 
   Svg_doc
@@ -137,8 +137,8 @@
     Svg_doc  doc;
     doc.start_glyph_id = FT_NEXT_USHORT( stream );
     doc.end_glyph_id   = FT_NEXT_USHORT( stream );
-    doc.cur_doc_offset = FT_NEXT_ULONG( stream );
-    doc.cur_doc_length = FT_NEXT_ULONG( stream );
+    doc.offset = FT_NEXT_ULONG( stream );
+    doc.length = FT_NEXT_ULONG( stream );
     return doc;
   }
 
@@ -165,30 +165,68 @@
   {
     FT_Error   error;
     Svg_doc    cur_doc;
+    Svg_doc    start_doc;
+    Svg_doc    mid_doc;
+    Svg_doc    end_doc;
 
-    FT_Bool    found = FALSE;
-    FT_UInt    i     = 0;
+    FT_Bool  found       = FALSE;
+    FT_UInt  i           = 0;
+    FT_UInt  start_index = 0;
+    FT_UInt  end_index   = num_entries - 1;
+    FT_Int   comp_res;
+
 
     /* TODO: (OT-SVG) Convert to efficient search algorithm        */
-    for ( i = 0; i < num_entries; i++)
+    /* search algo */
+
+    if ( num_entries == 0 )
     {
-      cur_doc = extract_svg_doc( stream );
-      stream += 12;
-      if ( compare_svg_doc( cur_doc, glyph_index ) == 0 )
+      error = FT_THROW( Invalid_Table );
+      return error;
+    }
+
+    start_doc = extract_svg_doc( stream + start_index * 12 );
+    end_doc   = extract_svg_doc( stream + end_index * 12 );
+    if ( ( compare_svg_doc( start_doc, glyph_index ) == -1 ) ||
+         ( compare_svg_doc( end_doc, glyph_index ) == 1 ) )
+    {
+      error = FT_THROW( Invalid_Glyph_Index );
+      return error;
+    }
+
+    while ( start_index <= end_index )
+    {
+      i = ( start_index + end_index ) / 2;
+      mid_doc = extract_svg_doc( stream + i * 12 );
+      comp_res = compare_svg_doc( mid_doc, glyph_index );
+      if ( comp_res == 1 )
+      {
+        start_index = i + 1;
+        start_doc = extract_svg_doc( stream + start_index * 4 );
+      }
+      else if ( comp_res == -1 )
+      {
+        end_index = i - 1;
+        end_doc = extract_svg_doc( stream + end_index * 4 );
+      }
+      else
       {
         found = TRUE;
-        *doc_offset = cur_doc.cur_doc_offset;
-        *doc_length = cur_doc.cur_doc_length;
         break;
       }
     }
 
+    /* search algo end */
+    /* must set `found', `doc_offset' and `doc_length'. */
+    /* also keep `cur_doc' alive */
     if ( found != TRUE )
       error = FT_THROW( Invalid_Glyph_Index );
     else
     {
-      *start_glyph = cur_doc.start_glyph_id;
-      *end_glyph   = cur_doc.end_glyph_id;
+      *doc_offset = mid_doc.offset;
+      *doc_length = mid_doc.length;
+      *start_glyph = mid_doc.start_glyph_id;
+      *end_glyph   = mid_doc.end_glyph_id;
       error = FT_Err_Ok;
     }
     return error;
