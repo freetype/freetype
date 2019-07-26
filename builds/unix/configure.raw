@@ -1137,7 +1137,7 @@ elif test "$with_svg" = auto -a "$have_librsvg" = no; then
   ftoption_unset FT_CONFIG_OPTION_SVG
   ftoption_unset FT_CONFIG_OPTION_DEFAULT_SVG
 else
-  LIBRSVG_CFLAGS=$(echo $LIBRSVG_CFLAGS | sed -e 's/-I\(.*\?\)freetype2//g')
+  LIBRSVG_CFLAGS=$(echo $LIBRSVG_CFLAGS | sed -e 's/freetype2//g')
   CFLAGS="$CFLAGS $LIBRSVG_CFLAGS"
   LDFLAGS="$LDFLAGS $LIBRSVG_LIBS"
   COMPILE_SVG_PORT=yes
