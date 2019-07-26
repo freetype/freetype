@@ -175,9 +175,7 @@
     FT_Int   comp_res;
 
 
-    /* TODO: (OT-SVG) Convert to efficient search algorithm        */
     /* search algo */
-
     if ( num_entries == 0 )
     {
       error = FT_THROW( Invalid_Table );
@@ -216,8 +214,6 @@
     }
 
     /* search algo end */
-    /* must set `found', `doc_offset' and `doc_length'. */
-    /* also keep `cur_doc' alive */
     if ( found != TRUE )
       error = FT_THROW( Invalid_Glyph_Index );
     else
