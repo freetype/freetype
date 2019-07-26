@@ -164,7 +164,6 @@
             FT_UShort  *end_glyph )
   {
     FT_Error   error;
-    Svg_doc    cur_doc;
     Svg_doc    start_doc;
     Svg_doc    mid_doc;
     Svg_doc    end_doc;
