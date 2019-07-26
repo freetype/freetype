@@ -101,6 +101,8 @@
                 "too many hints" )
   FT_ERRORDEF_( Invalid_Pixel_Size,                          0x17,
                 "invalid pixel size" )
+  FT_ERRORDEF_( Invalid_SVG_Document,                        0x18,
+                "invalid SVG document" )
 
   /* handle errors */
 
