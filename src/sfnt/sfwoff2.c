@@ -1333,6 +1333,7 @@
     FT_Int     nn            = 0;
     FT_UShort  num_hmetrics;
     FT_ULong   font_checksum = info->header_checksum;
+    FT_Bool    is_glyf_xform = FALSE;
 
     FT_ULong     table_entry_offset = 12;
     WOFF2_Table  head_table;
@@ -1370,7 +1371,8 @@
     if ( FT_NEW( stream ) )
       return FT_THROW( Invalid_Table );
     FT_Stream_OpenMemory( stream, transformed_buf, transformed_buf_size );
-    stream->close = stream_close;
+    stream->memory = memory;
+    stream->close  = stream_close;
 
     FT_ASSERT( FT_STREAM_POS() == 0 );
 
@@ -1432,6 +1434,7 @@
 
         if( table.Tag == TTAG_glyf )
         {
+          is_glyf_xform    = TRUE;
           table.dst_offset = dest_offset;
 
           if( reconstruct_glyf( stream, &table, &checksum,
@@ -1447,6 +1450,12 @@
         }
         else if( table.Tag == TTAG_hmtx )
         {
+          if( !is_glyf_xform )
+          {
+            FT_ERROR(( "hmtx is transformed but glyf is not.\n" ));
+            error = FT_THROW( Unimplemented_Feature );
+            goto Fail;
+          }
           table.dst_offset = dest_offset;
           if( reconstruct_hmtx( stream, table.src_length, info->num_glyphs,
                                 info->num_hmetrics, info->x_mins, &checksum,
@@ -1501,7 +1510,11 @@
 
     /* Set pointer of sfnt stream to its correct value. */
     *sfnt_bytes = sfnt;
+
     FT_FREE( table_entry );
+    FT_Stream_Close( stream );
+    FT_FREE( stream );
+
     return error;
 
     Fail:
@@ -1509,10 +1522,10 @@
         error = FT_THROW( Invalid_Table );
 
       FT_FREE( table_entry );
+      FT_Stream_Close( stream );
+      FT_FREE( stream );
 
       return error;
-
-    /* TODO free the uncompressed stream after everything is done. */
   }
 
 
@@ -1673,14 +1686,16 @@
         if( table->Tag == TTAG_loca && table->TransformLength )
         {
           FT_ERROR(( "woff_font_open: Invalid loca `transformLength'.\n" ));
-          return FT_THROW( Invalid_Table );
+          error = FT_THROW( Invalid_Table );
+          goto Exit;
         }
       }
 
       if ( src_offset + table->TransformLength < src_offset )
       {
         FT_ERROR(( "woff_font_open: invalid WOFF2 table directory.\n" ));
-        return FT_THROW( Invalid_Table );
+        error = FT_THROW( Invalid_Table );
+        goto Exit;
       }
 
       table->src_offset = src_offset;
@@ -1708,7 +1723,11 @@
     woff2.uncompressed_size = last_table->src_offset
                               + last_table->src_length;
     if( woff2.uncompressed_size < last_table->src_offset )
-        return FT_THROW( Invalid_Table );
+    {
+      error = FT_THROW( Invalid_Table );
+      goto Exit;
+    }
+
     /* DEBUG - Remove later. */
     FT_TRACE2(( "Uncompressed size: %ld\n", woff2.uncompressed_size ));
 
@@ -1724,7 +1743,10 @@
       FT_TRACE2(( "Header version: %lx\n", woff2.header_version ));
       if( woff2.header_version != 0x00010000 &&
           woff2.header_version != 0x00020000 )
-        return FT_THROW( Invalid_Table );
+      {
+        error = FT_THROW( Invalid_Table );
+        goto Exit;
+      }
 
       if( READ_255USHORT( woff2.num_fonts ) )
         goto Exit;
@@ -1779,10 +1801,10 @@
         {
           if( glyf_index > loca_index      ||
               loca_index - glyf_index != 1 )
-            return FT_THROW( Invalid_Table );
-          /* DEBUG - Remove later */
-          else
-            FT_TRACE2(( "glyf and loca indices are valid.\n" ));
+          {
+            error = FT_THROW( Invalid_Table );
+            goto Exit;
+          }
         }
       }
       /* Collection directory reading complete. */
@@ -1795,24 +1817,36 @@
 
     /* Few more checks before we start reading the tables. */
     if( file_offset > woff2.length )
-      return FT_THROW( Invalid_Table );
+    {
+      error = FT_THROW( Invalid_Table );
+      goto Exit;
+    }
 
     if ( woff2.metaOffset )
     {
       if ( file_offset != woff2.metaOffset )
-        return FT_THROW( Invalid_Table );
+      {
+        error = FT_THROW( Invalid_Table );
+        goto Exit;
+      }
       file_offset = ROUND4(woff2.metaOffset + woff2.metaLength);
     }
 
     if( woff2.privOffset )
     {
       if( file_offset != woff2.privOffset )
-        return FT_THROW( Invalid_Table );
+      {
+        error = FT_THROW( Invalid_Table );
+        goto Exit;
+      }
       file_offset = ROUND4(woff2.privOffset + woff2.privLength);
     }
 
     if( file_offset != ( ROUND4( woff2.length ) ) )
-      return FT_THROW( Invalid_Table );
+    {
+      error = FT_THROW( Invalid_Table );
+      goto Exit;
+    }
 
     /* Only retain tables of the requested face in a TTC. */
     /* TODO Check whether it is OK for rest of the code to be unaware of the
@@ -1919,13 +1953,15 @@
     error = woff2_uncompress( uncompressed_buf, woff2.uncompressed_size,
                               stream->cursor, woff2.totalCompressedSize );
     if( error )
-        goto Exit;
+      goto Exit;
 
     FT_FRAME_EXIT();
 
-    reconstruct_font( uncompressed_buf, woff2.uncompressed_size,
-                      indices, &woff2, &info, &sfnt, &sfnt_size,
-                      memory );
+    error = reconstruct_font( uncompressed_buf, woff2.uncompressed_size,
+                              indices, &woff2, &info, &sfnt, &sfnt_size,
+                              memory );
+    if( error )
+      goto Exit;
 
     /* Resize `sfnt' to actual size of sfnt stream. */
     if ( woff2.actual_sfnt_size < sfnt_size )
@@ -1953,7 +1989,7 @@
 
     face->root.face_flags &= ~FT_FACE_FLAG_EXTERNAL_STREAM;
 
-    /* Set face_index to 0.  */
+    /* Set face_index to 0. */
     *face_instance_index = 0;
 
     /* error = FT_THROW( Unimplemented_Feature ); */
@@ -1964,13 +2000,15 @@
   Exit:
     FT_FREE( tables );
     FT_FREE( indices );
-    FT_FREE( uncompressed_buf );
 
     if( error )
     {
       FT_FREE( sfnt );
-      FT_Stream_Close( sfnt_stream );
-      FT_FREE( sfnt_stream );
+      if ( sfnt_stream )
+      {
+        FT_Stream_Close( sfnt_stream );
+        FT_FREE( sfnt_stream );
+      }
     }
 
     return error;

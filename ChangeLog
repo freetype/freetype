@@ -1,5 +1,14 @@
 2019-08-27  Nikhil Ramakrishnan  <ramakrishnan.nikhil@gmail.com>
 
+	[woff2] Improve memory and error handling.
+
+	Free up memory after use, and improve error handling.
+
+	* src/sfnt/sfwoff2.c (reconstruct_font, woff2_open_font): Implement
+	changes.
+
+2019-08-27  Nikhil Ramakrishnan  <ramakrishnan.nikhil@gmail.com>
+
 	[woff2] Avoid too many calls to `FT_REALLOC'.
 
 	We do this by using `totalSfntSize' as an initial reference, and
