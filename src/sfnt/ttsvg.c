@@ -88,6 +88,9 @@
     p = svg->svg_doc_list;
     svg->num_entries = FT_NEXT_USHORT( p );
 
+    FT_TRACE3(( "version: %d\n", svg->version ));
+    FT_TRACE3(( "num entiries: %d\n", svg->num_entries ));
+
     svg->table =      table;
     svg->table_size = table_size;
 
@@ -182,8 +185,17 @@
       return error;
     }
 
+    FT_TRACE6(( "--- binary search glyph id: %d ---\n", glyph_index ));
+
     start_doc = extract_svg_doc( stream + start_index * 12 );
     end_doc   = extract_svg_doc( stream + end_index * 12 );
+
+    FT_TRACE6(( "--- start glyph ---\n" ));
+    FT_TRACE6(( "start_id: %d\n", start_doc.start_glyph_id ));
+    FT_TRACE6(( "end_id: %d\n", start_doc.end_glyph_id ));
+    FT_TRACE6(( "--- end glyph ---\n" ));
+    FT_TRACE6(( "start_id: %d\n", end_doc.start_glyph_id ));
+    FT_TRACE6(( "end_id: %d\n", end_doc.end_glyph_id ));
     if ( ( compare_svg_doc( start_doc, glyph_index ) == -1 ) ||
          ( compare_svg_doc( end_doc, glyph_index ) == 1 ) )
     {
@@ -195,27 +207,37 @@
     {
       i = ( start_index + end_index ) / 2;
       mid_doc = extract_svg_doc( stream + i * 12 );
+      FT_TRACE6(( "--- current glyph ---\n" ));
+      FT_TRACE6(( "start_id: %d\n", mid_doc.start_glyph_id ));
+      FT_TRACE6(( "end_id: %d\n", mid_doc.end_glyph_id ));
       comp_res = compare_svg_doc( mid_doc, glyph_index );
       if ( comp_res == 1 )
       {
         start_index = i + 1;
         start_doc = extract_svg_doc( stream + start_index * 4 );
+        FT_TRACE6(( "RIGHT\n" ));
       }
       else if ( comp_res == -1 )
       {
         end_index = i - 1;
         end_doc = extract_svg_doc( stream + end_index * 4 );
+        FT_TRACE6(( "LEFT\n" ));
       }
       else
       {
         found = TRUE;
+        FT_TRACE5(( "FOUND\n" ));
         break;
       }
     }
 
+    FT_TRACE5(( "--- binary search end ---\n" ));
     /* search algo end */
     if ( found != TRUE )
+    {
+      FT_TRACE5(( "NOT FOUND\n" ));
       error = FT_THROW( Invalid_Glyph_Index );
+    }
     else
     {
       *doc_offset = mid_doc.offset;
@@ -274,6 +296,7 @@
        * Since SVG docs will be lesser in size then 2^32, we can use this
        * accurately. The four bytes are stored in little-endian format.
        */
+      FT_TRACE4(( "SVG document found is GZIP compressed\n" ));
       uncomp_size = (FT_ULong)doc_list[doc_length - 1] << 24 |
                     (FT_ULong)doc_list[doc_length - 2] << 16 |
                     (FT_ULong)doc_list[doc_length - 3] << 8  |
@@ -299,6 +322,10 @@
     svg_document->units_per_EM        = glyph->face->units_per_EM;
     svg_document->start_glyph_id      = start_glyph_id;
     svg_document->end_glyph_id        = end_glyph_id;
+
+    FT_TRACE5(( "start_glyph_id: %d\n", start_glyph_id ));
+    FT_TRACE5(( "end_glyph_id:   %d\n", end_glyph_id ));
+    FT_TRACE5(( "svg_document:\n%.*s\n", doc_length, doc_list ));
 
     glyph->other = svg_document;
     glyph->metrics.horiAdvance *= ((float)glyph->face->size->metrics.x_ppem)/

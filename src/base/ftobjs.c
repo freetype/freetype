@@ -884,6 +884,7 @@
     if ( ( load_flags & FT_LOAD_COLOR ) &&
          ( ttface->svg ) )
     {
+      FT_TRACE3(( "SVG table exists, calling `FT_Load_Glyph' with `FT_LOAD_NO_SCALE'\n" ));
       /* load the TTF/CFF glyph without any scaling,
        * this is so that ultimately, these outlines
        * can be used to calculate the bounding box and

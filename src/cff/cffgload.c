@@ -352,13 +352,16 @@
     if ( ( load_flags & FT_LOAD_COLOR ) &&
          ( ((TT_Face)glyph->root.face)->svg ) )
     {
+      FT_TRACE3(( "Attemping to load SVG glyph\n" ));
       SFNT_Service  sfnt = (SFNT_Service)((TT_Face)glyph->root.face)->sfnt;
       error = sfnt->load_svg_doc( (FT_GlyphSlot)glyph, glyph_index );
       if( error == FT_Err_Ok )
       {
+        FT_TRACE3(( "Successfully loaded SVG glyph\n" ));
         glyph->root.format = FT_GLYPH_FORMAT_SVG;
         return error;
       }
+      FT_TRACE3(( "Failed to load SVG glyph\n" ));
     }
 #endif
 

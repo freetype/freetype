@@ -28,6 +28,9 @@
 
 #include "ftsvg.h"
 
+#undef  FT_COMPONENT
+#define FT_COMPONENT otsvg
+
 #ifdef FT_CONFIG_OPTION_SVG
   /* ft_svg_init */
   static FT_Error
@@ -36,12 +39,14 @@
     FT_Error    error = FT_Err_Ok;
     svg_module->loaded = FALSE;
 #ifdef FT_CONFIG_OPTION_DEFAULT_SVG
+    FT_TRACE3(( "ft_svg_init: Default hooks being set\n" ));
     svg_module->hooks.init_svg = (SVG_Lib_Init_Func)rsvg_port_init;
     svg_module->hooks.free_svg = (SVG_Lib_Free_Func)rsvg_port_free;
     svg_module->hooks.render_svg = (SVG_Lib_Render_Func)rsvg_port_render;
     svg_module->hooks.get_buffer_size = (SVG_Lib_Get_Buffer_Size_Func)rsvg_port_get_buffer_size;
     svg_module->hooks_set = TRUE;
 #else
+    FT_TRACE3(( "ft_svg_init: No default hooks set\n" ));
     svg_module->hooks_set = FALSE;
 #endif
     return error;
@@ -74,11 +79,13 @@
 
     if ( svg_renderer->hooks_set == FALSE )
     {
+      FT_TRACE1(( "Hooks are NOT set. Can't render OT-SVG glyphs\n" ));
       return FT_THROW( Missing_SVG_Hooks );
     }
 
     if ( svg_renderer->loaded == FALSE )
     {
+      FT_TRACE3(( "ft_svg_render: first rendering, calling init hook\n" ));
       error = hooks.init_svg( library );
       svg_renderer->loaded = TRUE;
     }
