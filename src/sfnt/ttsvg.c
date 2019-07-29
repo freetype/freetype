@@ -35,6 +35,24 @@
 
 #include "ttsvg.h"
 
+/* SVG table looks like:
+ * --------------------------------------
+ * Bytes:         Field                 |
+ * --------------------------------------
+ * 2              version
+ * 4              offsetToSVGDocumentList
+ * 4              reserved
+ * 2              numEntries (non-zero)
+ * 12*numEntries  documentList
+ *
+ * Since numEntries must be at least one, minimum
+ * size of SVG table is 24. Everything apart from
+ * the documentList makes 12 bytes.
+ */
+
+#define  SVG_HEADER_BASE_SIZE 12
+#define  SVG_HEADER_MIN_SIZE  24
+
   /* TODO: (OT-SVG) Decide whether to add documentation here or not */
 
   typedef struct Svg_
@@ -69,6 +87,9 @@
     if( error )
       goto NoSVG;
 
+    if ( table_size < SVG_HEADER_MIN_SIZE )
+      goto InvalidTable;
+
     if( FT_FRAME_EXTRACT( table_size, table ))
       goto NoSVG;
 
@@ -77,7 +98,14 @@
       goto NoSVG;
 
     p = table;
-    svg->version =            FT_NEXT_USHORT( p );
+    svg->version = FT_NEXT_USHORT( p );
+
+    /* At the time of writing this, only version 0 exists,
+     * and only that is supported by FreeType
+     */
+    if ( svg->version != 0 )
+      goto InvalidTable;
+
     offsetToSVGDocumentList = FT_NEXT_ULONG( p );
 
     if( offsetToSVGDocumentList == 0 )
@@ -87,6 +115,9 @@
 
     p = svg->svg_doc_list;
     svg->num_entries = FT_NEXT_USHORT( p );
+
+    if ( ( svg->num_entries*12 + SVG_HEADER_BASE_SIZE ) > table_size )
+      goto InvalidTable;
 
     FT_TRACE3(( "version: %d\n", svg->version ));
     FT_TRACE3(( "num entiries: %d\n", svg->num_entries ));
@@ -244,7 +275,10 @@
       *doc_length = mid_doc.length;
       *start_glyph = mid_doc.start_glyph_id;
       *end_glyph   = mid_doc.end_glyph_id;
-      error = FT_Err_Ok;
+      if ( *doc_length == 0 )
+        error = FT_THROW( Invalid_SVG_Document );
+      else
+        error = FT_Err_Ok;
     }
     return error;
   }
