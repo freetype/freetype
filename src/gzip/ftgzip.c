@@ -55,7 +55,7 @@
   /* original ZLib.                                                 */
 
 #ifndef USE_ZLIB_ZCALLOC
-#define MY_ZCALLOC /* prevent all zcalloc() & zfree() in zutil.c */
+/* #define MY_ZCALLOC */ /* prevent all zcalloc() & zfree() in zutil.c */
 #endif
 
   /* Note that our `zlib.h' includes `ftzconf.h' instead of `zconf.h'; */
@@ -86,6 +86,7 @@
 
   /* Urgh.  `inflate_mask' must not be declared twice -- C++ doesn't like
      this.  We temporarily disable it and load all necessary header files. */
+/*
 #define NO_INFLATE_MASK
 #include "zutil.h"
 #include "inftrees.h"
@@ -93,15 +94,33 @@
 #include "infcodes.h"
 #include "infutil.h"
 #undef  NO_INFLATE_MASK
+*/
 
+#include "deflate.h"
+#include "inffast.h"
+#include "inftrees.h"
+#include "inffixed.h"
+#include "zconf.h"
+#include "zutil.h"
+#include "inflate.h"
+#include "gzguts.h"
   /* infutil.c must be included before infcodes.c */
-#include "zutil.c"
-#include "inftrees.c"
-#include "infutil.c"
-#include "infcodes.c"
-#include "infblock.c"
+
 #include "inflate.c"
 #include "adler32.c"
+#include "compress.c"
+#include "crc32.c"
+#include "deflate.c"
+#include "gzclose.c"
+/* #include "infback.c"  not needed */
+#include "inftrees.c"
+#include "trees.c"
+#include "uncompr.c"
+#include "zutil.c"
+#include "inffast.c"
+#include "gzlib.c"
+#include "gzread.c"
+#include "gzwrite.c"
 
 #if defined( _MSC_VER )
 #pragma warning( pop )
@@ -146,6 +165,7 @@
 
 #if !defined( FT_CONFIG_OPTION_SYSTEM_ZLIB ) && !defined( USE_ZLIB_ZCALLOC )
 
+/*
   local voidpf
   zcalloc ( voidpf    opaque,
             unsigned  items,
@@ -161,6 +181,7 @@
     ft_gzip_free( (FT_Memory)opaque, ptr );
   }
 
+*/
 #endif /* !SYSTEM_ZLIB && !USE_ZLIB_ZCALLOC */
 
 
