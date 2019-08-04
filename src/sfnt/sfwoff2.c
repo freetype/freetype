@@ -1535,11 +1535,12 @@
   FT_LOCAL_DEF( FT_Error )
   woff2_open_font( FT_Stream  stream,
                    TT_Face    face,
-                   FT_Int*    face_instance_index )
+                   FT_Int*    face_instance_index,
+                   FT_Long*   num_faces )
   {
     FT_Memory        memory     = stream->memory;
     FT_Error         error      = FT_Err_Ok;
-    FT_Int           face_index = *face_instance_index;
+    FT_Int           face_index;
 
     WOFF2_HeaderRec  woff2;
     WOFF2_InfoRec    info;
@@ -1594,6 +1595,7 @@
     FT_ASSERT( stream == face->root.stream );
     FT_ASSERT( FT_STREAM_POS() == 0 );
 
+    face_index = FT_ABS( *face_instance_index ) & 0xFFFF;
     /* DEBUG - Remove later. */
     FT_TRACE2(( "Face index = %ld\n", face_index ));
 
@@ -1734,6 +1736,7 @@
     FT_TRACE2(( "Table directory successfully parsed.\n" ));
 
     /* Check for and read collection directory. */
+    woff2.num_fonts      = 1;
     woff2.header_version = 0;
     if( woff2.flavor == TTAG_ttcf ){
       FT_TRACE2(( "Font is a TTC, reading collection directory.\n" ));
@@ -1848,12 +1851,28 @@
       goto Exit;
     }
 
+    /* Validate requested face index. */
+    *num_faces = woff2.num_fonts;
+    /* value -(N+1) requests information on index N */
+    if ( *face_instance_index < 0 )
+      face_index--;
+
+    if( face_index >= woff2.num_fonts )
+    {
+      if ( *face_instance_index >= 0 )
+      {
+        error = FT_THROW( Invalid_Argument );
+        goto Exit;
+      }
+      else
+        face_index = 0;
+    }
+
     /* Only retain tables of the requested face in a TTC. */
-    /* TODO Check whether it is OK for rest of the code to be unaware of the
-       fact that we're working with a TTC. */
     if( woff2.header_version )
     {
       WOFF2_TtcFont  ttc_font = woff2.ttc_fonts + face_index;
+
       /* Create a temporary array. */
       if( FT_NEW_ARRAY( temp_indices,
                         ttc_font->num_tables ) )
@@ -1989,8 +2008,11 @@
 
     face->root.face_flags &= ~FT_FACE_FLAG_EXTERNAL_STREAM;
 
-    /* Set face_index to 0. */
-    *face_instance_index = 0;
+    /* Set face_index. */
+    if( *face_instance_index < 0 )
+      *face_instance_index = -1;
+    else
+      *face_instance_index = 0;
 
     /* error = FT_THROW( Unimplemented_Feature ); */
     /* DEBUG - Remove later */

@@ -1,5 +1,29 @@
 2019-08-27  Nikhil Ramakrishnan  <ramakrishnan.nikhil@gmail.com>
 
+	[sfnt] Support `face->num_faces' for WOFF2 fonts.
+
+	Set correct value of `face->num_faces' for WOFF2 fonts.  This is
+	being handled separately because we only load the tables for the
+	requested font face in `woff2_open_font' and create a single-face
+	sfnt stream.
+
+	The full discussion is at:
+
+	  https://lists.gnu.org/archive/html/freetype-devel/2019-08/msg00000.html
+
+	* src/sfnt/sfobjs.c (sfnt_open_font): Add parameter
+	`woff2_num_faces'.
+	(sfnt_init_face): Introduce variable `woff2_num_faces', and change
+	`face->root.num_faces' if `woff2_num_faces' is set.
+
+	* src/sfnt/sfwoff2.c (woff2_open_font): Validate requested face
+	index and handle negative face indices.
+
+	* src/sfnt/sfwoff2.h (woff2_open_font): Add parameter `num_faces' to
+	declaration.
+
+2019-08-27  Nikhil Ramakrishnan  <ramakrishnan.nikhil@gmail.com>
+
 	[woff2] Improve memory and error handling.
 
 	Free up memory after use, and improve error handling.
