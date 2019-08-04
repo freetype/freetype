@@ -343,7 +343,8 @@
   static FT_Error
   sfnt_open_font( FT_Stream  stream,
                   TT_Face    face,
-                  FT_Int*    face_instance_index )
+                  FT_Int*    face_instance_index,
+                  FT_Long*   woff2_num_faces )
   {
     FT_Memory  memory = stream->memory;
     FT_Error   error;
@@ -394,7 +395,10 @@
       if ( FT_STREAM_SEEK( offset ) )
         return error;
 
-      error = woff2_open_font( stream, face, face_instance_index );
+      error = woff2_open_font( stream,
+                               face,
+                               face_instance_index,
+                               woff2_num_faces );
       if ( error )
         return error;
 
@@ -479,9 +483,10 @@
                   FT_Parameter*  params )
   {
     FT_Error      error;
-    FT_Library    library = face->root.driver->root.library;
+    FT_Library    library         = face->root.driver->root.library;
     SFNT_Service  sfnt;
     FT_Int        face_index;
+    FT_Long       woff2_num_faces = 0;
 
 
     /* for now, parameters are unused */
@@ -532,7 +537,10 @@
 
     FT_TRACE2(( "SFNT driver\n" ));
 
-    error = sfnt_open_font( stream, face, &face_instance_index );
+    error = sfnt_open_font( stream,
+                            face,
+                            &face_instance_index,
+                            &woff2_num_faces );
     if ( error )
       return error;
 
@@ -706,6 +714,10 @@
 
     face->root.num_faces  = face->ttc_header.count;
     face->root.face_index = face_instance_index;
+
+    /* `num_faces' for a WOFF2 needs to be handled separately. */
+    if( woff2_num_faces )
+      face->root.num_faces = woff2_num_faces;
 
     return error;
   }
