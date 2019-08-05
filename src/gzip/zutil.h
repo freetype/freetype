@@ -106,7 +106,7 @@ extern z_const char * const z_errmsg[10]; /* indexed by 2-zlib_error */
 #if defined(VAXC) || defined(VMS)
 #  define OS_CODE  2
 #  define F_OPEN(name, mode) \
-     fopen((name), (mode), "mbc=60", "ctx=stm", "rfm=fix", "mrs=512")
+     ft_fopen((name), (mode), "mbc=60", "ctx=stm", "rfm=fix", "mrs=512")
 #endif
 
 #ifdef __370__
@@ -223,9 +223,9 @@ extern z_const char * const z_errmsg[10]; /* indexed by 2-zlib_error */
 #    define zmemcmp _fmemcmp
 #    define zmemzero(dest, len) _fmemset(dest, 0, len)
 #  else
-#    define zmemcpy memcpy
-#    define zmemcmp memcmp
-#    define zmemzero(dest, len) memset(dest, 0, len)
+#    define zmemcpy ft_memcpy
+#    define zmemcmp ft_memcmp
+#    define zmemzero(dest, len) ft_memset(dest, 0, len)
 #  endif
 #else
    void ZLIB_INTERNAL zmemcpy OF((Bytef* dest, const Bytef* source, uInt len));
@@ -254,9 +254,9 @@ extern z_const char * const z_errmsg[10]; /* indexed by 2-zlib_error */
 #endif
 
 #ifndef Z_SOLO
-   voidpf ZLIB_INTERNAL zcalloc OF((voidpf opaque, unsigned items,
+   static voidpf zcalloc OF((voidpf opaque, unsigned items,
                                     unsigned size));
-   void ZLIB_INTERNAL zcfree  OF((voidpf opaque, voidpf ptr));
+   static void zcfree  OF((voidpf opaque, voidpf ptr));
 #endif
 
 #define ZALLOC(strm, items, size) \

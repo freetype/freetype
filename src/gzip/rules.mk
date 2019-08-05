@@ -43,7 +43,7 @@ GZIP_DRV_SRCS := $(GZIP_DIR)/inftrees.c  \
                  $(GZIP_DIR)/gzread.c    \
                  $(GZIP_DIR)/inftrees.h  \
                  $(GZIP_DIR)/deflate.c   \
-                 $(GZIP_DIR)/zconf.h     \
+                 $(GZIP_DIR)/ftzconf.h   \
                  $(GZIP_DIR)/trees.c     \
                  $(GZIP_DIR)/inffast.c   \
                  $(GZIP_DIR)/inflate.c   \
