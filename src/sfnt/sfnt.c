@@ -27,6 +27,7 @@
 #include "ttcmap.c"
 #include "ttcolr.c"
 #include "ttcpal.c"
+#include "ttsvg.c"
 
 #include "ttkern.c"
 #include "ttload.c"

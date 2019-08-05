@@ -141,6 +141,7 @@ FT_BEGIN_HEADER
    *   FT_FACE_FLAG_GLYPH_NAMES
    *   FT_FACE_FLAG_EXTERNAL_STREAM
    *   FT_FACE_FLAG_HINTER
+   *   FT_FACE_FLAG_SVG
    *
    *   FT_HAS_HORIZONTAL
    *   FT_HAS_VERTICAL
@@ -1167,6 +1168,10 @@ FT_BEGIN_HEADER
    *     table only if the native TrueType hinting engine (with the bytecode
    *     interpreter) is available and active.
    *
+   *   FT_FACE_FLAG_SVG ::
+   *     The font file has an SVG table. The presence of an SVG table
+   *     indicate the presence of OT-SVG glyphs.
+   *
    *   FT_FACE_FLAG_CID_KEYED ::
    *     The face is CID-keyed.  In that case, the face is not accessed by
    *     glyph indices but by CID values.  For subsetted CID-keyed fonts this
@@ -1223,6 +1228,7 @@ FT_BEGIN_HEADER
 #define FT_FACE_FLAG_TRICKY            ( 1L << 13 )
 #define FT_FACE_FLAG_COLOR             ( 1L << 14 )
 #define FT_FACE_FLAG_VARIATION         ( 1L << 15 )
+#define FT_FACE_FLAG_SVG               ( 1L << 16 )
 
 
   /**************************************************************************
