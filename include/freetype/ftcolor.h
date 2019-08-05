@@ -163,6 +163,9 @@ FT_BEGIN_HEADER
    *   Use function @FT_Get_Sfnt_Name to map name IDs and entry name IDs to
    *   name strings.
    *
+   *   Use function @FT_Palette_Select to get the colors associated with a
+   *   palette entry.
+   *
    * @since:
    *   2.10
    */
