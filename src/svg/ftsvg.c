@@ -19,6 +19,7 @@
 #include FT_INTERNAL_DEBUG_H
 #include FT_SERVICE_PROPERTIES_H
 #include FT_SVG_RENDER_H
+#include FT_INTERNAL_SVG_INTERFACE_H
 #include FT_BBOX_H
 
 #ifdef FT_CONFIG_OPTION_DEFAULT_SVG
@@ -43,7 +44,7 @@
     svg_module->hooks.init_svg = (SVG_Lib_Init_Func)rsvg_port_init;
     svg_module->hooks.free_svg = (SVG_Lib_Free_Func)rsvg_port_free;
     svg_module->hooks.render_svg = (SVG_Lib_Render_Func)rsvg_port_render;
-    svg_module->hooks.get_buffer_size = (SVG_Lib_Get_Buffer_Size_Func)rsvg_port_get_buffer_size;
+    svg_module->hooks.preset_slot = (SVG_Lib_Preset_Slot_Func)rsvg_port_preset_slot;
     svg_module->hooks_set = TRUE;
 #else
     FT_TRACE3(( "ft_svg_init: No default hooks set\n" ));
@@ -63,6 +64,23 @@
   }
 
   static FT_Error
+  ft_svg_preset_slot( FT_Module     module,
+                      FT_GlyphSlot  slot,
+                      FT_Bool       cache )
+  {
+    SVG_Renderer      svg_renderer = (SVG_Renderer)module;
+    SVG_RendererHooks hooks        = svg_renderer->hooks;
+
+    if ( svg_renderer->hooks_set == FALSE )
+    {
+      FT_TRACE1(( "Hooks are NOT set. Can't render OT-SVG glyphs\n" ));
+      return FT_THROW( Missing_SVG_Hooks );
+    }
+
+    return hooks.preset_slot( slot, cache );
+  }
+
+  static FT_Error
   ft_svg_render( FT_Renderer       renderer,
                  FT_GlyphSlot      slot,
                  FT_Render_Mode    mode,
@@ -71,7 +89,6 @@
     SVG_Renderer  svg_renderer = (SVG_Renderer)renderer;
     FT_Library    library      = renderer->root.library;
     FT_Memory     memory       = library->memory;
-    FT_BBox       outline_bbox;
     FT_Error      error;
     FT_ULong      size_image_buffer;
 
@@ -90,19 +107,18 @@
       svg_renderer->loaded = TRUE;
     }
 
-    /* Let's calculate the bounding box in font units here */
-    error = FT_Outline_Get_BBox( &slot->outline, &outline_bbox );
-    if( error != FT_Err_Ok )
-      return error;
-
-    size_image_buffer = hooks.get_buffer_size( slot, outline_bbox );
-
-    FT_MEM_ALLOC( slot->bitmap.buffer, size_image_buffer );
+    ft_svg_preset_slot( renderer, slot, TRUE);
+    size_image_buffer = slot->bitmap.pitch * slot->bitmap.rows;
+    FT_MEM_ALLOC( slot->bitmap.buffer, size_image_buffer);
     if ( error )
       return error;
 
-    return hooks.render_svg( slot, outline_bbox );
+    return hooks.render_svg( slot );
   }
+
+  static const SVG_Interface svg_interface = {
+    (Preset_Bitmap_Func)ft_svg_preset_slot
+  };
 
   static FT_Error
   ft_svg_property_set( FT_Module    module,
@@ -188,7 +204,7 @@
       "ot-svg",
       0x10000L,
       0x20000L,
-      NULL,                                /* module specific interface */
+      (const void*)&svg_interface,                           /* module specific interface */
       (FT_Module_Constructor)PUT_SVG_MODULE( ft_svg_init ),  /* module_init */
       (FT_Module_Destructor)PUT_SVG_MODULE( ft_svg_done ),   /* module_done */
       PUT_SVG_MODULE( ft_svg_get_interface ),                /* get_interface */

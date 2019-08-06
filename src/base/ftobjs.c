@@ -28,6 +28,7 @@
 #include FT_INTERNAL_STREAM_H
 #include FT_INTERNAL_SFNT_H            /* for SFNT_Load_Table_Func */
 #include FT_INTERNAL_POSTSCRIPT_AUX_H  /* for PS_Driver            */
+#include FT_INTERNAL_SVG_INTERFACE_H
 
 #include FT_TRUETYPE_TABLES_H
 #include FT_TRUETYPE_TAGS_H
@@ -363,6 +364,7 @@
   {
     FT_Outline*  outline = &slot->outline;
     FT_Bitmap*   bitmap  = &slot->bitmap;
+    FT_Module    module;
 
     FT_Pixel_Mode  pixel_mode;
 
@@ -374,7 +376,17 @@
 
 
     if ( slot->format != FT_GLYPH_FORMAT_OUTLINE )
-      return 1;
+    {
+      if ( slot->format == FT_GLYPH_FORMAT_SVG )
+      {
+        module = FT_Get_Module(slot->library, "ot-svg" );
+        SVG_Service svg_service = module->clazz->module_interface;
+
+        svg_service->preset_slot( module, slot, FALSE );
+      }
+      else
+        return 1;
+    }
 
     if ( origin )
     {

@@ -82,44 +82,32 @@ FT_BEGIN_HEADER
    *   slot ::
    *     The whole glyph slot object.
    *
-   *   outline_bbox ::
-   *     The bounding box of the glyph in font units.  So that the renderer
-   *     may not need to calculate it again.
+   * @return:
+   *   FreeType error code.  0 means success.
+   */
+
+  typedef FT_Error
+  (*SVG_Lib_Render_Func)( FT_GlyphSlot  slot );
+
+  /**************************************************************************
+   *
+   * @functype:
+   *   SVG_Lib_Preset_Slot_Func
+   *
+   * @description:
+   *   A callback which is to preset the glyphslot.
+   *
+   * @input:
+   *   slot ::
+   *     The glyph slot which has the SVG document loaded.
    *
    * @return:
    *   FreeType error code.  0 means success.
    */
 
   typedef FT_Error
-  (*SVG_Lib_Render_Func)( FT_GlyphSlot  slot,
-                          FT_BBox       outline_bbox);
+  (*SVG_Lib_Preset_Slot_Func)( FT_GlyphSlot  slot, FT_Bool  cache);
 
-  /**************************************************************************
-   *
-   * @functype:
-   *   SVG_Lib_Get_Buffer_Size_Func
-   *
-   * @description:
-   *   A callback which is called to get the size of the image buffer needed.
-   *   This buffer will ultimately be populated by `SVG_Lib_Render_Func`
-   *   hook.
-   *
-   * @input:
-   *   slot ::
-   *     The glyph slot which has the SVG document loaded as well as other
-   *     info.
-   *
-   *   bbox ::
-   *     The bbox in font units. This is required for the rendering port to
-   *     predict the final size of the image buffer.
-   *
-   * @return:
-   *   Size of the state structure in bytes.
-   */
-
-  typedef FT_ULong
-  (*SVG_Lib_Get_Buffer_Size_Func)( FT_GlyphSlot  slot,
-                                   FT_BBox       bbox );
 
   typedef struct SVG_RendererHooks_
   {
@@ -128,8 +116,9 @@ FT_BEGIN_HEADER
     SVG_Lib_Free_Func    free_svg;
     SVG_Lib_Render_Func  render_svg;
 
-    SVG_Lib_Get_Buffer_Size_Func  get_buffer_size;
+    SVG_Lib_Preset_Slot_Func  preset_slot;
   } SVG_RendererHooks;
+
 
   /**************************************************************************
    *
