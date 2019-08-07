@@ -382,10 +382,11 @@
         module = FT_Get_Module(slot->library, "ot-svg" );
         SVG_Service svg_service = module->clazz->module_interface;
 
-        svg_service->preset_slot( module, slot, FALSE );
+        return svg_service->preset_slot( module, slot, FALSE );
       }
       else
         return 1;
+      return 1;
     }
 
     if ( origin )

@@ -317,11 +317,6 @@
       goto Exit;
     }
 
-    /* init the parent first */
-    slot->format = FT_GLYPH_FORMAT_OUTLINE;
-    ft_outline_glyph_class.glyph_init( svg_glyph, slot );
-    slot->format = FT_GLYPH_FORMAT_SVG;
-
     /* allocate a new document */
     doc_length                 = document->svg_document_length;
     glyph->svg_document        = memory->alloc( memory, doc_length );
@@ -331,7 +326,6 @@
     glyph->units_per_EM        = document->units_per_EM;
     glyph->start_glyph_id      = document->start_glyph_id;
     glyph->end_glyph_id        = document->end_glyph_id;
-
     /* copy the document into glyph */
     FT_MEM_COPY( glyph->svg_document, document->svg_document, doc_length );
 
@@ -345,9 +339,6 @@
   {
     FT_SvgGlyph  glyph  = (FT_SvgGlyph)svg_glyph;
     FT_Memory    memory = svg_glyph->library->memory;
-
-    /* free the parent first */
-    ft_outline_glyph_class.glyph_done( svg_glyph );
 
     /* just free the memory */
     memory->free( memory, glyph->svg_document );
@@ -374,8 +365,6 @@
       return error;
     }
 
-    /* copy the parent first */
-    ft_outline_glyph_class.glyph_copy( svg_source, svg_target );
 
     target->glyph_index         = source->glyph_index;
     target->svg_document_length = source->svg_document_length;
@@ -409,10 +398,6 @@
     /* TODO: (OT-SVG) this probably creates a memory leak. Fix it */
     if ( FT_NEW( document ) )
       return error;
-
-    /* call the parent and prepare it */
-    ft_outline_glyph_class.glyph_prepare( svg_glyph, slot );
-    slot->format = FT_GLYPH_FORMAT_SVG;
 
     document->svg_document        = glyph->svg_document;
     document->svg_document_length = glyph->svg_document_length;
@@ -508,7 +493,6 @@
     if ( error )
       goto Exit;
 
-    copy->advance = source->advance;
     copy->format  = source->format;
 
     if ( clazz->glyph_copy )

@@ -241,11 +241,11 @@ FT_BEGIN_HEADER
    *
    * @description:
    *   A structure used for SVG glyph images.  This really is a 'sub-class'
-   *   of @FT_OutlineGlyphRec.
+   *   of @FT_GlyphRec.
    *
    * @fields:
    *   root ::
-   *     The root @FT_OutlineGlyphRec fields.
+   *     The root @FT_GlyphRec fields.
    *
    *   svg_document ::
    *     A pointer to the SVG document.
@@ -281,7 +281,7 @@ FT_BEGIN_HEADER
    */
   typedef struct  FT_SvgGlyphRec_
   {
-    FT_OutlineGlyphRec  root;
+    FT_GlyphRec         root;
     FT_Byte*            svg_document;
     FT_ULong            svg_document_length;
     FT_UInt             glyph_index;
