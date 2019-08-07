@@ -893,20 +893,6 @@
     if ( load_flags & FT_LOAD_BITMAP_METRICS_ONLY )
       load_flags &= ~FT_LOAD_RENDER;
 
-#ifdef FT_CONFIG_OPTION_SVG
-    if ( ( load_flags & FT_LOAD_COLOR ) &&
-         ( ttface->svg ) )
-    {
-      FT_TRACE3(( "SVG table exists, calling `FT_Load_Glyph' with `FT_LOAD_NO_SCALE'\n" ));
-      /* load the TTF/CFF glyph without any scaling,
-       * this is so that ultimately, these outlines
-       * can be used to calculate the bounding box and
-       * the advance metrics
-       */
-      FT_Load_Glyph( face, glyph_index, FT_LOAD_NO_SCALE);
-    }
-#endif
-
     /*
      * Determine whether we need to auto-hint or not.
      * The general rules are:

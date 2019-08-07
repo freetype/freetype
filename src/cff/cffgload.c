@@ -359,6 +359,24 @@
       {
         FT_TRACE3(( "Successfully loaded SVG glyph\n" ));
         glyph->root.format = FT_GLYPH_FORMAT_SVG;
+        FT_Short   leftBearing, topBearing;
+        FT_UShort  advanceX, advanceY;
+        sfnt->get_metrics( face,
+                           FALSE,
+                           glyph_index,
+                           &leftBearing,
+                           &advanceX );
+        sfnt->get_metrics( face,
+                           TRUE,
+                           glyph_index,
+                           &topBearing,
+                           &advanceY );
+        advanceX *= ((float)glyph->root.face->size->metrics.x_ppem)/
+                    ((float)glyph->root.face->units_per_EM) * 64.0;
+        advanceY *= ((float)glyph->root.face->size->metrics.y_ppem)/
+                    ((float)glyph->root.face->units_per_EM) * 64.0;
+        glyph->root.metrics.horiAdvance = advanceX;
+        glyph->root.metrics.vertAdvance = advanceY;
         return error;
       }
       FT_TRACE3(( "Failed to load SVG glyph\n" ));
