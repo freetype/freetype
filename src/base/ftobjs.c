@@ -379,9 +379,10 @@
     {
       if ( slot->format == FT_GLYPH_FORMAT_SVG )
       {
-        module = FT_Get_Module(slot->library, "ot-svg" );
-        SVG_Service svg_service = module->clazz->module_interface;
+        SVG_Service  svg_service;
 
+        module = FT_Get_Module(slot->library, "ot-svg" );
+        svg_service = (SVG_Service)module->clazz->module_interface;
         return svg_service->preset_slot( module, slot, FALSE );
       }
       else

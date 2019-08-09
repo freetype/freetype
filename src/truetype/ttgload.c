@@ -2911,22 +2911,25 @@
     /* check for OT-SVG */
     if ( ( load_flags & FT_LOAD_COLOR ) && ( ((TT_Face)glyph->face)->svg ) )
     {
-      FT_TRACE3(( "Attemping to load SVG glyph\n" ));
       SFNT_Service  sfnt;
+      FT_Short      leftBearing;
+      FT_Short      topBearing;
+      FT_UShort     advanceX;
+      FT_UShort     advanceY;
+
+      FT_TRACE3(( "Attemping to load SVG glyph\n" ));
       sfnt = (SFNT_Service)((TT_Face)glyph->face)->sfnt;
       error = sfnt->load_svg_doc( glyph, glyph_index );
       if( error == FT_Err_Ok )
       {
         FT_TRACE3(( "Successfully loaded SVG glyph\n" ));
         glyph->format = FT_GLYPH_FORMAT_SVG;
-        FT_Short   leftBearing, topBearing;
-        FT_UShort  advanceX, advanceY;
-        sfnt->get_metrics( glyph->face,
+        sfnt->get_metrics( (TT_Face)glyph->face,
                            FALSE,
                            glyph_index,
                            &leftBearing,
                            &advanceX );
-        sfnt->get_metrics( glyph->face,
+        sfnt->get_metrics( (TT_Face)glyph->face,
                            TRUE,
                            glyph_index,
                            &topBearing,
