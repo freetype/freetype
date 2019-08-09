@@ -395,7 +395,6 @@
 
     FT_SVG_Document  document;
 
-    /* TODO: (OT-SVG) this probably creates a memory leak. Fix it */
     if ( FT_NEW( document ) )
       return error;
 

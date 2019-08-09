@@ -167,8 +167,6 @@ FT_BEGIN_HEADER
     FT_UShort        units_per_EM;
     FT_UShort        start_glyph_id;
     FT_UShort        end_glyph_id;
-    /* TODO: (OT-SVG) Not storing glyph_index here for now. Might need to
-     * at some point. Review this! */
   } FT_SVG_DocumentRec;
 
   /**************************************************************************

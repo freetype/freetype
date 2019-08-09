@@ -35,7 +35,6 @@
 
 #include "ttsvg.h"
 
-  /* TODO: (OT-SVG) Decide whether to add documentation here or not */
 
   typedef struct Svg_
   {
@@ -253,9 +252,6 @@
   tt_face_load_svg_doc( FT_GlyphSlot  glyph,
                         FT_UInt       glyph_index )
   {
-
-    /* TODO: (OT-SVG) properly clean stuff here on errors */
-
     FT_Byte*   doc_list;             /* Pointer to the Svg Document List */
     FT_UShort  num_entries;          /* Total no of entires in doc list  */
 
@@ -274,7 +270,8 @@
 
     FT_SVG_Document  svg_document = glyph->other;
 
-    /* handle svg being 0x0 situation here */
+    FT_ASSERT( !( svg == NULL ) );
+
     doc_list     = svg->svg_doc_list;
     num_entries  = FT_NEXT_USHORT( doc_list );
 
@@ -282,7 +279,7 @@
                                 &doc_offset, &doc_length,
                                 &start_glyph_id, &end_glyph_id );
     if ( error != FT_Err_Ok )
-      return error;
+      goto Exit;
 
     doc_list = svg->svg_doc_list;   /* Reset to so we can use it again */
     doc_list = (FT_Byte*)( doc_list + doc_offset );
@@ -302,16 +299,16 @@
                     (FT_ULong)doc_list[doc_length - 3] << 8  |
                     (FT_ULong)doc_list[doc_length - 4];
 
-      uncomp_buffer = (FT_Byte*) memory->alloc(memory, uncomp_size);
-      glyph->internal->flags |= FT_GLYPH_OWN_GZIP_SVG;
+      uncomp_buffer = (FT_Byte*) memory->alloc( memory, uncomp_size );
       error = FT_Gzip_Uncompress( memory, uncomp_buffer, &uncomp_size,
                                           doc_list,      doc_length  );
       if ( error != FT_Err_Ok )
       {
+        memory->free( memory, uncomp_buffer );
         error = FT_THROW( Invalid_Table );
-        return error;
+        goto Exit;
       }
-
+      glyph->internal->flags |= FT_GLYPH_OWN_GZIP_SVG;
       doc_list   = uncomp_buffer;
       doc_length = uncomp_size;
     }
@@ -329,6 +326,7 @@
 
     glyph->other = svg_document;
 
+Exit:
     return FT_Err_Ok;
   }
 

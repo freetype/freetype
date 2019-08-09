@@ -2,7 +2,6 @@
  *
  * svgtypes.h
  *
- *   TODO:
  *   The FreeType svg renderer internal types (specification).
  *
  * Copyright (C) 1996-2019 by
