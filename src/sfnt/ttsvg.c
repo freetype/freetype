@@ -134,7 +134,7 @@
     FT_ULong   length;
   } Svg_doc;
 
-  Svg_doc
+  static Svg_doc
   extract_svg_doc( FT_Byte*  stream )
   {
     Svg_doc  doc;
@@ -145,7 +145,7 @@
     return doc;
   }
 
-  FT_Int
+  static FT_Int
   compare_svg_doc( Svg_doc  doc,
                    FT_UInt  glyph_index )
   {
@@ -157,7 +157,7 @@
       return 0;
   }
 
-  FT_Error
+  static FT_Error
   find_doc( FT_Byte*   stream,
             FT_UShort  num_entries,
             FT_UInt    glyph_index,
@@ -249,7 +249,7 @@
     return error;
   }
 
-  FT_LOCAL_DEF(FT_Error)
+  FT_LOCAL_DEF( FT_Error )
   tt_face_load_svg_doc( FT_GlyphSlot  glyph,
                         FT_UInt       glyph_index )
   {
