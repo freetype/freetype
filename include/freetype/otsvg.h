@@ -32,6 +32,96 @@ FT_BEGIN_HEADER
 
   /**************************************************************************
    *
+   * @functype:
+   *   SVG_Lib_Init_Func
+   *
+   * @description:
+   *   A callback used to initiate the SVG Rendering port
+   *
+   * @input:
+   *   library ::
+   *     A instance of library.  This is required to initialize the
+   *     renderer's state which will be held in the library.
+   *
+   * @return:
+   *   FreeType error code.  0 means success.
+   */
+
+  typedef FT_Error
+  (*SVG_Lib_Init_Func)( FT_Library  library );
+
+
+  /**************************************************************************
+   *
+   * @functype:
+   *   SVG_Lib_Free_Func
+   *
+   * @description:
+   *   A callback used to free the SVG Rendering port.  Calling this callback
+   *   shall do all cleanups that the SVG Rendering port wants to do.
+   *
+   * @input:
+   *   library ::
+   *     A instance of library.  This is required to free the renderer's
+   *     state which will be held in the library.
+   */
+
+  typedef void
+  (*SVG_Lib_Free_Func)( FT_Library  library );
+
+
+  /**************************************************************************
+   *
+   * @functype:
+   *   SVG_Lib_Render_Func
+   *
+   * @description:
+   *   A callback used to render the glyph loaded in the slot.
+   *
+   * @input:
+   *   slot ::
+   *     The whole glyph slot object.
+   *
+   * @return:
+   *   FreeType error code.  0 means success.
+   */
+
+  typedef FT_Error
+  (*SVG_Lib_Render_Func)( FT_GlyphSlot  slot );
+
+  /**************************************************************************
+   *
+   * @functype:
+   *   SVG_Lib_Preset_Slot_Func
+   *
+   * @description:
+   *   A callback used to preset the glyphslot.
+   *
+   * @input:
+   *   slot ::
+   *     The glyph slot which has the SVG document loaded.
+   *
+   * @return:
+   *   FreeType error code.  0 means success.
+   */
+
+  typedef FT_Error
+  (*SVG_Lib_Preset_Slot_Func)( FT_GlyphSlot  slot, FT_Bool  cache);
+
+
+  typedef struct SVG_RendererHooks_
+  {
+    /* Api Hooks for OT-SVG Rendering */
+    SVG_Lib_Init_Func    init_svg;
+    SVG_Lib_Free_Func    free_svg;
+    SVG_Lib_Render_Func  render_svg;
+
+    SVG_Lib_Preset_Slot_Func  preset_slot;
+  } SVG_RendererHooks;
+
+
+  /**************************************************************************
+   *
    * @struct:
    *   FT_SVG_DocumentRec_
    *

@@ -39,6 +39,7 @@ FT_TRACE_DEF( mm )        /* MM interface            (ftmm.c)     */
 FT_TRACE_DEF( psprops )   /* PS driver properties    (ftpsprop.c) */
 FT_TRACE_DEF( raccess )   /* resource fork accessor  (ftrfork.c)  */
 FT_TRACE_DEF( raster )    /* monochrome rasterizer   (ftraster.c) */
+FT_TRACE_DEF( otsvg )     /* ot-svg renderer         (ftsvg.c)    */
 FT_TRACE_DEF( smooth )    /* anti-aliasing raster    (ftgrays.c)  */
 FT_TRACE_DEF( synth )     /* bold/slant synthesizer  (ftsynth.c)  */
 

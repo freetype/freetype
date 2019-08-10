@@ -28,6 +28,7 @@
 #include FT_INTERNAL_STREAM_H
 #include FT_INTERNAL_SFNT_H            /* for SFNT_Load_Table_Func */
 #include FT_INTERNAL_POSTSCRIPT_AUX_H  /* for PS_Driver            */
+#include FT_INTERNAL_SVG_INTERFACE_H
 
 #include FT_TRUETYPE_TABLES_H
 #include FT_TRUETYPE_TAGS_H
@@ -363,6 +364,7 @@
   {
     FT_Outline*  outline = &slot->outline;
     FT_Bitmap*   bitmap  = &slot->bitmap;
+    FT_Module    module;
 
     FT_Pixel_Mode  pixel_mode;
 
@@ -374,7 +376,19 @@
 
 
     if ( slot->format != FT_GLYPH_FORMAT_OUTLINE )
+    {
+      if ( slot->format == FT_GLYPH_FORMAT_SVG )
+      {
+        SVG_Service  svg_service;
+
+        module = FT_Get_Module(slot->library, "ot-svg" );
+        svg_service = (SVG_Service)module->clazz->module_interface;
+        return svg_service->preset_slot( module, slot, FALSE );
+      }
+      else
+        return 1;
       return 1;
+    }
 
     if ( origin )
     {
@@ -629,6 +643,7 @@
 
       FT_FREE( slot->internal );
     }
+
   }
 
 
@@ -4445,6 +4460,13 @@
         render->render        = clazz->render_glyph;
       }
 
+#ifdef FT_CONFIG_OPTION_SVG
+      if ( clazz->glyph_format == FT_GLYPH_FORMAT_SVG )
+      {
+        render->render = clazz->render_glyph;
+      }
+#endif
+
       /* add to list */
       node->data = module;
       FT_List_Add( &library->renderers, node );
@@ -4580,7 +4602,6 @@
     {
     case FT_GLYPH_FORMAT_BITMAP:   /* already a bitmap, don't do anything */
       break;
-
     default:
       if ( slot->internal->load_flags & FT_LOAD_COLOR )
       {
@@ -5587,6 +5608,5 @@
     else
       return 0;
   }
-
 
 /* END */
