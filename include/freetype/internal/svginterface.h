@@ -20,7 +20,7 @@
 #define SVGINTERFACE_H
 
 #include <ft2build.h>
-#include FT_SVG_RENDER_H
+#include FT_OTSVG_H
 
 
 FT_BEGIN_HEADER

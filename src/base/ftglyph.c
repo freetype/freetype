@@ -35,7 +35,7 @@
 #include FT_OUTLINE_H
 #include FT_BITMAP_H
 #include FT_INTERNAL_OBJECTS_H
-#include FT_SVG_RENDER_H
+#include FT_OTSVG_H
 
 
   /**************************************************************************

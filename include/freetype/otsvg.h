@@ -1,8 +1,8 @@
 /****************************************************************************
  *
- * svgrenderer.h
+ * otsvg.h
  *
- *   Interface for SVG Renderer Module (specification).
+ *   Interface for OT-SVG support related things (specification).
  *
  * Copyright (C) 2004-2019 by
  * David Turner, Robert Wilhelm, Werner Lemberg and Moazin Khatti.

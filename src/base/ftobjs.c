@@ -41,7 +41,7 @@
 #include FT_SERVICE_TT_CMAP_H
 #include FT_SERVICE_KERNING_H
 #include FT_SERVICE_TRUETYPE_ENGINE_H
-#include FT_SVG_RENDER_H
+#include FT_OTSVG_H
 
 #include FT_DRIVER_H
 

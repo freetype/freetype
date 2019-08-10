@@ -29,7 +29,7 @@
 #include FT_INTERNAL_OBJECTS_H
 #include FT_TRUETYPE_TAGS_H
 #include FT_GZIP_H
-#include FT_SVG_RENDER_H
+#include FT_OTSVG_H
 
 #ifdef FT_CONFIG_OPTION_SVG
 

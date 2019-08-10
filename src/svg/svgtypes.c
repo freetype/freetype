@@ -18,7 +18,7 @@
 #include <ft2build.h>
 #include FT_INTERNAL_OBJECTS_H
 #include FT_RENDER_H
-#include FT_SVG_RENDER_H
+#include FT_OTSVG_H
 
   typedef struct SVG_RendererRec_
   {

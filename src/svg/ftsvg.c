@@ -18,7 +18,7 @@
 #include <ft2build.h>
 #include FT_INTERNAL_DEBUG_H
 #include FT_SERVICE_PROPERTIES_H
-#include FT_SVG_RENDER_H
+#include FT_OTSVG_H
 #include FT_INTERNAL_SVG_INTERFACE_H
 #include FT_BBOX_H
 
