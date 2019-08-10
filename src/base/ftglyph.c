@@ -35,6 +35,7 @@
 #include FT_OUTLINE_H
 #include FT_BITMAP_H
 #include FT_INTERNAL_OBJECTS_H
+#include FT_OTSVG_H
 
 
   /**************************************************************************
@@ -275,6 +276,157 @@
     ft_outline_glyph_prepare    /* FT_Glyph_PrepareFunc    glyph_prepare   */
   )
 
+#ifdef FT_CONFIG_OPTION_SVG
+  /*************************************************************************/
+  /*************************************************************************/
+  /****                                                                 ****/
+  /****   FT_SvgGlyph support                                           ****/
+  /****                                                                 ****/
+  /*************************************************************************/
+  /*************************************************************************/
+
+
+  FT_CALLBACK_DEF( FT_Error )
+  ft_svg_glyph_init( FT_Glyph      svg_glyph,
+                     FT_GlyphSlot  slot )
+  {
+    FT_ULong         doc_length;
+    FT_SVG_Document  document;
+    FT_SvgGlyph      glyph   = (FT_SvgGlyph)svg_glyph;
+    FT_Error         error   = FT_Err_Ok;
+    FT_Memory        memory  = FT_GLYPH( glyph )->library->memory;
+
+
+    if ( slot->format != FT_GLYPH_FORMAT_SVG )
+    {
+      error = FT_THROW( Invalid_Glyph_Format );
+      goto Exit;
+    }
+
+    if ( slot->other == NULL )
+    {
+      error = FT_THROW( Invalid_Slot_Handle );
+      goto Exit;
+    }
+
+    document = (FT_SVG_Document)slot->other;
+
+    if ( document->svg_document_length == 0 )
+    {
+      error = FT_THROW( Invalid_Slot_Handle );
+      goto Exit;
+    }
+
+    /* allocate a new document */
+    doc_length                 = document->svg_document_length;
+    glyph->svg_document        = memory->alloc( memory, doc_length );
+    glyph->svg_document_length = doc_length;
+    glyph->glyph_index         = slot->glyph_index;
+    glyph->metrics             = document->metrics;
+    glyph->units_per_EM        = document->units_per_EM;
+    glyph->start_glyph_id      = document->start_glyph_id;
+    glyph->end_glyph_id        = document->end_glyph_id;
+    /* copy the document into glyph */
+    FT_MEM_COPY( glyph->svg_document, document->svg_document, doc_length );
+
+  Exit:
+    return error;
+  }
+
+
+  FT_CALLBACK_DEF( void )
+  ft_svg_glyph_done( FT_Glyph  svg_glyph )
+  {
+    FT_SvgGlyph  glyph  = (FT_SvgGlyph)svg_glyph;
+    FT_Memory    memory = svg_glyph->library->memory;
+
+    /* just free the memory */
+    memory->free( memory, glyph->svg_document );
+  }
+
+  FT_CALLBACK_DEF( FT_Error )
+  ft_svg_glyph_copy( FT_Glyph  svg_source,
+                     FT_Glyph  svg_target )
+  {
+    FT_SvgGlyph  source  = (FT_SvgGlyph)svg_source;
+    FT_SvgGlyph  target  = (FT_SvgGlyph)svg_target;
+    FT_Error     error   = FT_Err_Ok;
+    FT_Memory    memory  = FT_GLYPH( source )->library->memory;
+
+    if ( svg_source->format != FT_GLYPH_FORMAT_SVG )
+    {
+      error = FT_THROW( Invalid_Glyph_Format );
+      return error;
+    }
+
+    if ( source->svg_document_length == 0 )
+    {
+      error = FT_THROW( Invalid_Slot_Handle );
+      return error;
+    }
+
+
+    target->glyph_index         = source->glyph_index;
+    target->svg_document_length = source->svg_document_length;
+    target->metrics             = source->metrics;
+    target->units_per_EM        = source->units_per_EM;
+    target->start_glyph_id      = source->start_glyph_id;
+    target->end_glyph_id        = source->end_glyph_id;
+
+    /* allocate space for the svg document */
+    target->svg_document = memory->alloc( memory,
+                                          target->svg_document_length );
+
+    /* copy the stuff */
+    FT_MEM_COPY( target->svg_document,
+                 source->svg_document,
+                 target->svg_document_length );
+
+    return error;
+  }
+
+  FT_CALLBACK_DEF( FT_Error )
+  ft_svg_glyph_prepare( FT_Glyph     svg_glyph,
+                        FT_GlyphSlot slot )
+  {
+    FT_SvgGlyph   glyph  = (FT_SvgGlyph)svg_glyph;
+    FT_Error      error  = FT_Err_Ok;
+    FT_Memory     memory = svg_glyph->library->memory;
+
+    FT_SVG_Document  document;
+
+    if ( FT_NEW( document ) )
+      return error;
+
+    document->svg_document        = glyph->svg_document;
+    document->svg_document_length = glyph->svg_document_length;
+    document->metrics             = glyph->metrics;
+    document->units_per_EM        = glyph->units_per_EM;
+    document->start_glyph_id      = glyph->start_glyph_id;
+    document->end_glyph_id        = glyph->end_glyph_id;
+
+    slot->format      = FT_GLYPH_FORMAT_SVG;
+    slot->glyph_index = glyph->glyph_index;
+    slot->other       = document;
+
+    return error;
+  }
+
+  FT_DEFINE_GLYPH(
+    ft_svg_glyph_class,
+
+    sizeof ( FT_SvgGlyphRec ),
+    FT_GLYPH_FORMAT_SVG,
+
+    ft_svg_glyph_init,      /* FT_Glyph_InitFunc       glyph_init      */
+    ft_svg_glyph_done,      /* FT_Glyph_DoneFunc       glyph_done      */
+    ft_svg_glyph_copy,      /* FT_Glyph_CopyFunc       glyph_copy      */
+    NULL,                   /* FT_Glyph_TransformFunc  glyph_transform */
+    NULL,                   /* FT_Glyph_GetBBoxFunc    glyph_bbox      */
+    ft_svg_glyph_prepare    /* FT_Glyph_PrepareFunc    glyph_prepare   */
+  )
+
+#endif
 
   /*************************************************************************/
   /*************************************************************************/
@@ -375,6 +527,12 @@
     /* if it is an outline */
     else if ( format == FT_GLYPH_FORMAT_OUTLINE )
       clazz = &ft_outline_glyph_class;
+
+#ifdef FT_CONFIG_OPTION_SVG
+    /* if it is a SVG glyph */
+    else if ( format == FT_GLYPH_FORMAT_SVG )
+      clazz = &ft_svg_glyph_class;
+#endif
 
     else
     {
@@ -592,7 +750,16 @@
     /* prepare dummy slot for rendering */
     error = clazz->glyph_prepare( glyph, &dummy );
     if ( !error )
+    {
       error = FT_Render_Glyph_Internal( glyph->library, &dummy, render_mode );
+#ifdef FT_CONFIG_OPTION_SVG
+      if ( clazz == &ft_svg_glyph_class )
+      {
+        FT_Memory  memory = library->memory;
+        FT_FREE( dummy.other );
+      }
+#endif
+    }
 
 #if 1
     if ( !destroy && origin )
