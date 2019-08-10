@@ -29,6 +29,10 @@ FT_BEGIN_HEADER
   FT_LOCAL( void )
   tt_face_free_svg( TT_Face    face );
 
+  FT_LOCAL( FT_Error )
+  tt_face_load_svg_doc( FT_GlyphSlot  glyph,
+                        FT_UInt       glyph_index );
+
 FT_END_HEADER
 
 #endif /* __TTSVG_H__ */

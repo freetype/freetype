@@ -347,6 +347,53 @@
     if ( load_flags & FT_LOAD_SBITS_ONLY )
       return FT_THROW( Invalid_Argument );
 
+#ifdef FT_CONFIG_OPTION_SVG
+    /* check for OT-SVG */
+    if ( ( load_flags & FT_LOAD_COLOR ) &&
+         ( ((TT_Face)glyph->root.face)->svg ) )
+    {
+      SFNT_Service  sfnt;
+      FT_Short      leftBearing;
+      FT_Short      topBearing;
+      FT_UShort     advanceX;
+      FT_UShort     advanceY;
+
+      if ( ( size->root.metrics.x_ppem < 1 ||
+             size->root.metrics.y_ppem < 1 ) )
+      {
+        error = FT_THROW( Invalid_Size_Handle );
+        return error;
+      }
+
+      FT_TRACE3(( "Attemping to load SVG glyph\n" ));
+      sfnt = (SFNT_Service)((TT_Face)glyph->root.face)->sfnt;
+      error = sfnt->load_svg_doc( (FT_GlyphSlot)glyph, glyph_index );
+      if( error == FT_Err_Ok )
+      {
+        FT_TRACE3(( "Successfully loaded SVG glyph\n" ));
+        glyph->root.format = FT_GLYPH_FORMAT_SVG;
+        sfnt->get_metrics( face,
+                           FALSE,
+                           glyph_index,
+                           &leftBearing,
+                           &advanceX );
+        sfnt->get_metrics( face,
+                           TRUE,
+                           glyph_index,
+                           &topBearing,
+                           &advanceY );
+        advanceX *= ((float)glyph->root.face->size->metrics.x_ppem)/
+                    ((float)glyph->root.face->units_per_EM) * 64.0;
+        advanceY *= ((float)glyph->root.face->size->metrics.y_ppem)/
+                    ((float)glyph->root.face->units_per_EM) * 64.0;
+        glyph->root.metrics.horiAdvance = advanceX;
+        glyph->root.metrics.vertAdvance = advanceY;
+        return error;
+      }
+      FT_TRACE3(( "Failed to load SVG glyph\n" ));
+    }
+#endif
+
     /* if we have a CID subfont, use its matrix (which has already */
     /* been multiplied with the root matrix)                       */
 

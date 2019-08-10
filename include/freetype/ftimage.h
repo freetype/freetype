@@ -732,6 +732,9 @@ FT_BEGIN_HEADER
    *     contours.  Some Type~1 fonts, like those in the Hershey family,
    *     contain glyphs in this format.  These are described as @FT_Outline,
    *     but FreeType isn't currently capable of rendering them correctly.
+   *
+   *   FT_GLYPH_FORMAT_SVG ::
+   *     The glyph is represented by an SVG document in the SVG table.
    */
   typedef enum  FT_Glyph_Format_
   {
@@ -740,7 +743,8 @@ FT_BEGIN_HEADER
     FT_IMAGE_TAG( FT_GLYPH_FORMAT_COMPOSITE, 'c', 'o', 'm', 'p' ),
     FT_IMAGE_TAG( FT_GLYPH_FORMAT_BITMAP,    'b', 'i', 't', 's' ),
     FT_IMAGE_TAG( FT_GLYPH_FORMAT_OUTLINE,   'o', 'u', 't', 'l' ),
-    FT_IMAGE_TAG( FT_GLYPH_FORMAT_PLOTTER,   'p', 'l', 'o', 't' )
+    FT_IMAGE_TAG( FT_GLYPH_FORMAT_PLOTTER,   'p', 'l', 'o', 't' ),
+    FT_IMAGE_TAG( FT_GLYPH_FORMAT_SVG,       's', 'v', 'g', ' ' )
 
   } FT_Glyph_Format;
 
@@ -752,6 +756,7 @@ FT_BEGIN_HEADER
 #define ft_glyph_format_bitmap     FT_GLYPH_FORMAT_BITMAP
 #define ft_glyph_format_outline    FT_GLYPH_FORMAT_OUTLINE
 #define ft_glyph_format_plotter    FT_GLYPH_FORMAT_PLOTTER
+#define ft_glyph_format_svg        FT_GLYPH_FORMAT_SVG
 
 
   /*************************************************************************/

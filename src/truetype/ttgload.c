@@ -2907,6 +2907,45 @@
       goto Exit;
     }
 
+#ifdef FT_CONFIG_OPTION_SVG
+    /* check for OT-SVG */
+    if ( ( load_flags & FT_LOAD_COLOR ) && ( ((TT_Face)glyph->face)->svg ) )
+    {
+      SFNT_Service  sfnt;
+      FT_Short      leftBearing;
+      FT_Short      topBearing;
+      FT_UShort     advanceX;
+      FT_UShort     advanceY;
+
+      FT_TRACE3(( "Attemping to load SVG glyph\n" ));
+      sfnt = (SFNT_Service)((TT_Face)glyph->face)->sfnt;
+      error = sfnt->load_svg_doc( glyph, glyph_index );
+      if( error == FT_Err_Ok )
+      {
+        FT_TRACE3(( "Successfully loaded SVG glyph\n" ));
+        glyph->format = FT_GLYPH_FORMAT_SVG;
+        sfnt->get_metrics( (TT_Face)glyph->face,
+                           FALSE,
+                           glyph_index,
+                           &leftBearing,
+                           &advanceX );
+        sfnt->get_metrics( (TT_Face)glyph->face,
+                           TRUE,
+                           glyph_index,
+                           &topBearing,
+                           &advanceY );
+        advanceX *= ((float)glyph->face->size->metrics.x_ppem)/
+                    ((float)glyph->face->units_per_EM) * 64.0;
+        advanceY *= ((float)glyph->face->size->metrics.y_ppem)/
+                    ((float)glyph->face->units_per_EM) * 64.0;
+        glyph->metrics.horiAdvance = advanceX;
+        glyph->metrics.vertAdvance = advanceY;
+        return error;
+      }
+      FT_TRACE3(( "Failed to load SVG glyph\n" ));
+    }
+#endif
+
     if ( load_flags & FT_LOAD_SBITS_ONLY )
     {
       error = FT_THROW( Invalid_Argument );

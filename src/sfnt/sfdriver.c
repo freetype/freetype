@@ -1212,16 +1212,16 @@
 #define PUT_EMBEDDED_BITMAPS( a )  NULL
 #endif
 
-#ifdef TT_CONFIG_OPTION_COLOR_LAYERS
-#define PUT_COLOR_LAYERS( a )  a
-#else
-#define PUT_COLOR_LAYERS( a )  NULL
-#endif
-
 #ifdef FT_CONFIG_OPTION_SVG
 #define PUT_SVG_SUPPORT( a )  a
 #else
 #define PUT_SVG_SUPPORT( a )  NULL
+#endif
+
+#ifdef TT_CONFIG_OPTION_COLOR_LAYERS
+#define PUT_COLOR_LAYERS( a )  a
+#else
+#define PUT_COLOR_LAYERS( a )  NULL
 #endif
 
 #ifdef TT_CONFIG_OPTION_POSTSCRIPT_NAMES
@@ -1308,8 +1308,10 @@
 
     PUT_SVG_SUPPORT( tt_face_load_svg ),
                             /* TT_Load_Table_Func      load_svg        */
-    PUT_SVG_SUPPORT( tt_face_free_svg )
+    PUT_SVG_SUPPORT( tt_face_free_svg ),
                             /* TT_Free_Table_Func      free_svg        */
+    PUT_SVG_SUPPORT( tt_face_load_svg_doc )
+                            /* TT_Load_Svg_Doc_Func    load_svg_doc    */
   )
 
 

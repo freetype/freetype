@@ -550,6 +550,19 @@
   /**************************************************************************
    *
    * @macro:
+   *   FT_OTSVG_H
+   *
+   * @description:
+   *   A macro used in `#include` statements to name the file containing the
+   *   API of OT-SVG support related things.
+   *
+   */
+#define FT_OTSVG_H  <freetype/otsvg.h>
+
+
+  /**************************************************************************
+   *
+   * @macro:
    *   FT_BBOX_H
    *
    * @description:

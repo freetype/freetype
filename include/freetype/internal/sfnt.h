@@ -315,6 +315,31 @@ FT_BEGIN_HEADER
   /**************************************************************************
    *
    * @functype:
+   *   TT_Load_Svg_Doc_Func
+   *
+   * @description:
+   *   Scans the SVG documents list to find the document containing the glyph
+   *   that has the id "glyph<glyph_index>".
+   *
+   * @input:
+   *   glyph ::
+   *     The glyph slot from which pointers to SVG documents list will be
+   *     grabbed.  The results will be stored back in the slot too.
+   *
+   *   glyph_index ::
+   *     The index of the glyph that is to be looked up.
+   *
+   * @return:
+   *   FreeType error code.  0 means success.
+   */
+  typedef FT_Error
+  (*TT_Load_Svg_Doc_Func)( FT_GlyphSlot  glyph,
+                           FT_UInt       glyph_index );
+
+
+  /**************************************************************************
+   *
+   * @functype:
    *   TT_Set_SBit_Strike_Func
    *
    * @description:
@@ -781,6 +806,7 @@ FT_BEGIN_HEADER
     /* OpenType SVG support */
     TT_Load_Table_Func           load_svg;
     TT_Free_Table_Func           free_svg;
+    TT_Load_Svg_Doc_Func         load_svg_doc;
 
   } SFNT_Interface;
 
@@ -830,7 +856,8 @@ FT_BEGIN_HEADER
           get_name_,                     \
           get_name_id_,                  \
           load_svg_,                     \
-          free_svg_ )                    \
+          free_svg_,                     \
+          load_svg_doc_ )                \
   static const SFNT_Interface  class_ =  \
   {                                      \
     goto_table_,                         \
@@ -872,7 +899,8 @@ FT_BEGIN_HEADER
     get_name_,                           \
     get_name_id_,                        \
     load_svg_,                           \
-    free_svg_                            \
+    free_svg_,                           \
+    load_svg_doc_                        \
   };
 
 
