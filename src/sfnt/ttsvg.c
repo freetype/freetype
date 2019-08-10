@@ -327,7 +327,7 @@
     glyph->other = svg_document;
 
 Exit:
-    return FT_Err_Ok;
+    return error;
   }
 
 #else /* !FT_CONFIG_OPTION_SVG */
