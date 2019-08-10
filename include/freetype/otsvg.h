@@ -149,14 +149,12 @@ FT_BEGIN_HEADER
    *
    * @note:
    *   `metrics` and `units_per_EM` might look like repetitions since both
-   *   fields are stored in face objects.  However, the Glyph Management API
-   *   requires an `FT_Glyph` to store all the information that completely
-   *   describes a glyph.  Outline glyphs are themselves scaled thus they
-   *   don`t need this information.  However, SVG documents do.  The field
-   *   of `units_per_EM` is needed because the SVG is to be scaled in case
-   *   its viewbox size differs from `units_per_EM`.  For more info, refer
-   *   to the section `Coordinate Systems and Glyph Metrics` of the OpenType
-   *   SVG specs.
+   *   fields are stored in face object, but they are not; When the slot is
+   *   passed down to a renderer, the renderer can only access the `metrics`
+   *   and `units_per_EM` by `slot->face`. However, when `FT_Glyph_To_Bitmap`
+   *   sets up a dummy object, it has no way to set a `face` object. Thus,
+   *   metrics information and units_per_EM (which is necessary for OT-SVG)
+   *   has to be stored separately.
    */
 
   typedef struct FT_SVG_DocumentRec_
