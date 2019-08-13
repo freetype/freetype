@@ -1170,7 +1170,92 @@
   }
 
 
-  /* XXX What if hmtx is transformed but glyf is not? */
+  /* Get `x_mins' for untransformed glyf table. */
+  static FT_Error
+  get_x_mins( FT_Stream     stream,
+              WOFF2_Table*  tables,
+              FT_UShort     num_tables,
+              WOFF2_Info    info,
+              FT_Memory     memory )
+  {
+    FT_UShort  num_glyphs;
+    FT_UShort  index_format;
+    FT_ULong   glyf_offset;
+    FT_UShort  glyf_offset_short;
+    FT_ULong   loca_offset;
+    FT_Int     i;
+    FT_Error   error = FT_Err_Ok;
+    FT_ULong   offset_size;
+
+    const WOFF2_Table glyf_table = find_table( tables, num_tables,
+                                               TTAG_glyf );
+    const WOFF2_Table loca_table = find_table( tables, num_tables,
+                                               TTAG_loca );
+    const WOFF2_Table maxp_table = find_table( tables, num_tables,
+                                               TTAG_maxp );
+    const WOFF2_Table head_table = find_table( tables, num_tables,
+                                               TTAG_head );
+
+    /* Read `numGlyphs' from maxp table. */
+    if ( FT_STREAM_SEEK( maxp_table->src_offset ) && FT_STREAM_SKIP( 8 ) )
+      return error;
+
+    if( FT_READ_USHORT( num_glyphs ) )
+      return error;
+
+    info->num_glyphs = num_glyphs;
+
+    FT_TRACE2(( "num_glyphs = %d", num_glyphs ));
+
+    /* Read `indexToLocFormat' from head table. */
+    if( FT_STREAM_SEEK( head_table->src_offset ) && FT_STREAM_SKIP( 50 ) )
+      return error;
+
+    if( FT_READ_USHORT( index_format ) )
+      return error;
+
+    offset_size = index_format ? 4 : 2;
+
+    /* Create x_mins array. */
+    if( FT_NEW_ARRAY( info->x_mins, num_glyphs ) )
+      return error;
+
+    loca_offset = loca_table->src_offset;
+
+    for( i = 0; i < num_glyphs; ++i )
+    {
+      if( FT_STREAM_SEEK( loca_offset ) )
+        return error;
+
+      loca_offset += offset_size;
+
+      if( index_format )
+      {
+        if( FT_READ_ULONG( glyf_offset ) )
+          return error;
+      }
+      else
+      {
+        if( FT_READ_USHORT( glyf_offset_short ) )
+          return error;
+
+        glyf_offset = (FT_ULong)( glyf_offset_short );
+        glyf_offset = glyf_offset << 1;
+      }
+
+      glyf_offset += glyf_table->src_offset;
+
+      if( FT_STREAM_SEEK( glyf_offset ) && FT_STREAM_SKIP( 2 ) )
+        return error;
+
+      if( FT_READ_USHORT( info->x_mins[i] ) )
+        return error;
+    }
+
+    return error;
+  }
+
+
   static FT_Error
   reconstruct_hmtx( FT_Stream  stream,
                     FT_ULong   transformed_size,
@@ -1450,11 +1535,11 @@
         }
         else if( table.Tag == TTAG_hmtx )
         {
+          /* If glyf is not transformed and hmtx is, handle separately. */
           if( !is_glyf_xform )
           {
-            FT_ERROR(( "hmtx is transformed but glyf is not.\n" ));
-            error = FT_THROW( Unimplemented_Feature );
-            goto Fail;
+            if( get_x_mins(stream, indices, num_tables, info, memory) )
+              return FT_THROW( Invalid_Table );
           }
           table.dst_offset = dest_offset;
           if( reconstruct_hmtx( stream, table.src_length, info->num_glyphs,

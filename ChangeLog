@@ -1,5 +1,16 @@
 2019-08-27  Nikhil Ramakrishnan  <ramakrishnan.nikhil@gmail.com>
 
+	[woff2] Support `hmtx' reconstruction when `glyf' is untransformed.
+
+	`reconstruct_hmtx' requires `info->x_mins' and `info->num_glyphs' to
+	reconstruct the hmtx table.  In case glyf is not transformed, we
+	call `get_x_mins' which does the necessary work.
+
+	* src/sfnt/sfwoff2.c (get_x_mins): New function.
+	(reconstruct_font): Call get_x_mins.
+
+2019-08-27  Nikhil Ramakrishnan  <ramakrishnan.nikhil@gmail.com>
+
 	[sfnt] Support `face->num_faces' for WOFF2 fonts.
 
 	Set correct value of `face->num_faces' for WOFF2 fonts.  This is
