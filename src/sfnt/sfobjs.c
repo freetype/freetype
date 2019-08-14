@@ -716,7 +716,7 @@
     face->root.face_index = face_instance_index;
 
     /* `num_faces' for a WOFF2 needs to be handled separately. */
-    if( woff2_num_faces )
+    if ( woff2_num_faces )
       face->root.num_faces = woff2_num_faces;
 
     return error;
