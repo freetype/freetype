@@ -1,5 +1,11 @@
 2019-08-27  Nikhil Ramakrishnan  <ramakrishnan.nikhil@gmail.com>
 
+	* src/sfnt/sfwoff2.c: Improve trace comments.
+
+	Adjust tracing levels for comments, and more formatting.
+
+2019-08-27  Nikhil Ramakrishnan  <ramakrishnan.nikhil@gmail.com>
+
 	[woff2] Support `hmtx' reconstruction when `glyf' is untransformed.
 
 	`reconstruct_hmtx' requires `info->x_mins' and `info->num_glyphs' to
