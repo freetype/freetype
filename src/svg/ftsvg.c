@@ -190,25 +190,50 @@
   static FT_Error
   ft_svg_transform( FT_Renderer       renderer,
                     FT_GlyphSlot      slot,
-                    const FT_Matrix*  matrix,
-                    const FT_Vector*  delta )
+                    const FT_Matrix*  _matrix,
+                    const FT_Vector*  _delta )
   {
     FT_SVG_Document  doc = (FT_SVG_Document)slot->other;
 
-    if ( matrix )
+    FT_Matrix*  matrix = _matrix;
+    FT_Vector*  delta  = _delta;
+    FT_Matrix   tmp_matrix;
+    FT_Vector   tmp_delta;
+    FT_Matrix   a, b;
+    FT_Pos      x, y;
+
+    if ( !matrix )
     {
-      FT_Matrix  a, b;
-      a = doc->transform;
-      b = *matrix;
-      FT_Matrix_Multiply( &b, &a );
-      doc->transform = a;
+      tmp_matrix.xx = 0x10000;
+      tmp_matrix.xy = 0;
+      tmp_matrix.yx = 0;
+      tmp_matrix.yy = 0x10000;
+      matrix = &tmp_matrix;
     }
 
-    if ( delta )
+    if ( !delta )
     {
-      doc->delta.x = ADD_LONG( doc->delta.x, delta->x );
-      doc->delta.y = ADD_LONG( doc->delta.y, delta->y );
+      tmp_delta.x = 0;
+      tmp_delta.y = 0;
     }
+
+    a = doc->transform;
+    b = *matrix;
+    FT_Matrix_Multiply( &b, &a );
+
+
+    x = ADD_LONG(ADD_LONG(
+        FT_MulFix(matrix->xx, doc->delta.x),
+        FT_MulFix(matrix->xy, doc->delta.y)),
+        delta->x);
+    y = ADD_LONG(ADD_LONG(
+        FT_MulFix(matrix->yx, doc->delta.x),
+        FT_MulFix(matrix->yy, doc->delta.y)),
+        delta->y);
+    doc->delta.x = x;
+    doc->delta.y = y;
+
+    doc->transform = a;
 
     return FT_Err_Ok;
   }

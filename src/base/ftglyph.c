@@ -392,25 +392,51 @@
 
   FT_CALLBACK_DEF( void )
   ft_svg_glyph_transform( FT_Glyph          svg_glyph,
-                          const FT_Matrix*  matrix,
-                          const FT_Vector*  delta )
+                          const FT_Matrix*  _matrix,
+                          const FT_Vector*  _delta )
   {
     FT_SvgGlyph  glyph = (FT_SvgGlyph)svg_glyph;
 
-    if ( matrix )
+    FT_Matrix*  matrix = _matrix;
+    FT_Vector*  delta  = _delta;
+
+    FT_Matrix  tmp_matrix;
+    FT_Vector  tmp_delta;
+    FT_Matrix  a, b;
+    FT_Pos     x, y;
+
+    if ( !matrix )
     {
-      FT_Matrix  a, b;
-      a = glyph->transform;
-      b = *matrix;
-      FT_Matrix_Multiply( &b, &a );
-      glyph->transform = a;
+      tmp_matrix.xx = 0x10000;
+      tmp_matrix.xy = 0;
+      tmp_matrix.yx = 0;
+      tmp_matrix.yy = 0x10000;
+      matrix = &tmp_matrix;
     }
 
-    if ( delta )
+    if ( !delta )
     {
-      glyph->delta.x = ADD_LONG( glyph->delta.x, delta->x );
-      glyph->delta.y = ADD_LONG( glyph->delta.y, delta->y );
+      tmp_delta.x = 0;
+      tmp_delta.y = 0;
+      delta = &tmp_delta;
     }
+
+    a = glyph->transform;
+    b = *matrix;
+    FT_Matrix_Multiply( &b, &a );
+
+    x = ADD_LONG(ADD_LONG(
+        FT_MulFix(matrix->xx, glyph->delta.x),
+        FT_MulFix(matrix->xy, glyph->delta.y)),
+        delta->x);
+    y = ADD_LONG(ADD_LONG(
+        FT_MulFix(matrix->yx, glyph->delta.x),
+        FT_MulFix(matrix->yy, glyph->delta.y)),
+        delta->y);
+    glyph->delta.x = x;
+    glyph->delta.y = y;
+
+    glyph->transform = a;
   }
 
   FT_CALLBACK_DEF( FT_Error )
