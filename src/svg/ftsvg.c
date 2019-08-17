@@ -187,6 +187,32 @@
     return 0;
   }
 
+  static FT_Error
+  ft_svg_transform( FT_Renderer       renderer,
+                    FT_GlyphSlot      slot,
+                    const FT_Matrix*  matrix,
+                    const FT_Vector*  delta )
+  {
+    FT_SVG_Document  doc = (FT_SVG_Document)slot->other;
+
+    if ( matrix )
+    {
+      FT_Matrix  a, b;
+      a = doc->transform;
+      b = *matrix;
+      FT_Matrix_Multiply( &b, &a );
+      doc->transform = a;
+    }
+
+    if ( delta )
+    {
+      doc->delta.x = ADD_LONG( doc->delta.x, delta->x );
+      doc->delta.y = ADD_LONG( doc->delta.y, delta->y );
+    }
+
+    return FT_Err_Ok;
+  }
+
 #endif
 
 #ifdef FT_CONFIG_OPTION_SVG
@@ -213,7 +239,7 @@
       PUT_SVG_MODULE( ft_svg_get_interface ),                /* get_interface */
       SVG_GLYPH_FORMAT,
       (FT_Renderer_RenderFunc)PUT_SVG_MODULE( ft_svg_render ),
-      NULL,
+      (FT_Renderer_TransformFunc)PUT_SVG_MODULE( ft_svg_transform ),
       NULL,
       NULL,
       NULL

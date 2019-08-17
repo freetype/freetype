@@ -147,6 +147,12 @@ FT_BEGIN_HEADER
    *   end_glyph_id ::
    *     The ending glyph ID for the glyph range that this document has.
    *
+   *   transform ::
+   *     Transformation matrix to apply on the glyph while rendering.
+   *
+   *   delta ::
+   *     Translation to apply on the glyph while rendering.
+   *
    * @note:
    *   `metrics` and `units_per_EM` might look like repetitions since both
    *   fields are stored in face object, but they are not; When the slot is
@@ -165,6 +171,8 @@ FT_BEGIN_HEADER
     FT_UShort        units_per_EM;
     FT_UShort        start_glyph_id;
     FT_UShort        end_glyph_id;
+    FT_Matrix        transform;
+    FT_Vector        delta;
   } FT_SVG_DocumentRec;
 
   /**************************************************************************

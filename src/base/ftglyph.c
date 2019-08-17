@@ -326,6 +326,9 @@
     glyph->units_per_EM        = document->units_per_EM;
     glyph->start_glyph_id      = document->start_glyph_id;
     glyph->end_glyph_id        = document->end_glyph_id;
+    glyph->transform           = document->transform;
+    glyph->delta               = document->delta;
+
     /* copy the document into glyph */
     FT_MEM_COPY( glyph->svg_document, document->svg_document, doc_length );
 
@@ -372,6 +375,8 @@
     target->units_per_EM        = source->units_per_EM;
     target->start_glyph_id      = source->start_glyph_id;
     target->end_glyph_id        = source->end_glyph_id;
+    target->transform           = source->transform;
+    target->delta               = source->delta;
 
     /* allocate space for the svg document */
     target->svg_document = memory->alloc( memory,
@@ -383,6 +388,29 @@
                  target->svg_document_length );
 
     return error;
+  }
+
+  FT_CALLBACK_DEF( void )
+  ft_svg_glyph_transform( FT_Glyph          svg_glyph,
+                          const FT_Matrix*  matrix,
+                          const FT_Vector*  delta )
+  {
+    FT_SvgGlyph  glyph = (FT_SvgGlyph)svg_glyph;
+
+    if ( matrix )
+    {
+      FT_Matrix  a, b;
+      a = glyph->transform;
+      b = *matrix;
+      FT_Matrix_Multiply( &b, &a );
+      glyph->transform = a;
+    }
+
+    if ( delta )
+    {
+      glyph->delta.x = ADD_LONG( glyph->delta.x, delta->x );
+      glyph->delta.y = ADD_LONG( glyph->delta.y, delta->y );
+    }
   }
 
   FT_CALLBACK_DEF( FT_Error )
@@ -404,6 +432,8 @@
     document->units_per_EM        = glyph->units_per_EM;
     document->start_glyph_id      = glyph->start_glyph_id;
     document->end_glyph_id        = glyph->end_glyph_id;
+    document->transform           = glyph->transform;
+    document->delta               = glyph->delta;
 
     slot->format      = FT_GLYPH_FORMAT_SVG;
     slot->glyph_index = glyph->glyph_index;
@@ -421,7 +451,7 @@
     ft_svg_glyph_init,      /* FT_Glyph_InitFunc       glyph_init      */
     ft_svg_glyph_done,      /* FT_Glyph_DoneFunc       glyph_done      */
     ft_svg_glyph_copy,      /* FT_Glyph_CopyFunc       glyph_copy      */
-    NULL,                   /* FT_Glyph_TransformFunc  glyph_transform */
+    ft_svg_glyph_transform, /* FT_Glyph_TransformFunc  glyph_transform */
     NULL,                   /* FT_Glyph_GetBBoxFunc    glyph_bbox      */
     ft_svg_glyph_prepare    /* FT_Glyph_PrepareFunc    glyph_prepare   */
   )

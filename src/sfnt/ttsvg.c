@@ -320,6 +320,13 @@
     svg_document->start_glyph_id      = start_glyph_id;
     svg_document->end_glyph_id        = end_glyph_id;
 
+    svg_document->transform.xx = 0x10000;
+    svg_document->transform.xy = 0;
+    svg_document->transform.yx = 0;
+    svg_document->transform.yy = 0x10000;
+    svg_document->delta.x      = 0;
+    svg_document->delta.y      = 0;
+
     FT_TRACE5(( "start_glyph_id: %d\n", start_glyph_id ));
     FT_TRACE5(( "end_glyph_id:   %d\n", end_glyph_id ));
     FT_TRACE5(( "svg_document:\n%.*s\n", doc_length, doc_list ));
