@@ -120,12 +120,6 @@ FT_BEGIN_HEADER
    *     Number of tables in TTC, indicating number of elements in
    *     `table_indices`.
    *
-   *   dst_offset ::
-   *     Uncompressed table offset.
-   *
-   *   header_checksum ::
-   *     Checksum for font header.
-   *
    *   table_indices ::
    *     Array of table indices for each TTC font.
    */
@@ -133,8 +127,6 @@ FT_BEGIN_HEADER
   {
     FT_ULong    flavor;
     FT_UShort   num_tables;
-    FT_ULong    dst_offset;
-    FT_ULong    header_checksum;
     FT_UShort*  table_indices;
 
   } WOFF2_TtcFontRec, *WOFF2_TtcFont;
@@ -157,7 +149,7 @@ FT_BEGIN_HEADER
    *   We don't care about the fields `reserved`, `majorVersion` and
    *   `minorVersion`, so they are not included.  The `totalSfntSize` field
    *   does not necessarily represent the actual size of the uncompressed
-   *   SFNT font stream, so that is not included either.
+   *   SFNT font stream, so that is used as a reference value instead.
    */
   typedef struct  WOFF2_HeaderRec_
   {
@@ -173,13 +165,13 @@ FT_BEGIN_HEADER
     FT_ULong   privOffset;
     FT_ULong   privLength;
 
-    FT_ULong   uncompressed_size;
-    FT_ULong   compressed_offset;
-    FT_ULong   header_version;
-    FT_UShort  num_fonts;
-    FT_ULong   actual_sfnt_size;
+    FT_ULong   uncompressed_size;    /* uncompressed brotli stream size */
+    FT_ULong   compressed_offset;    /* compressed stream offset        */
+    FT_ULong   header_version;       /* version of original TTC Header  */
+    FT_UShort  num_fonts;            /* number of fonts in TTC          */
+    FT_ULong   actual_sfnt_size;     /* actual size of sfnt stream      */
 
-    WOFF2_TtcFont  ttc_fonts;
+    WOFF2_TtcFont  ttc_fonts;        /* metadata for fonts in a TTC     */
 
   } WOFF2_HeaderRec, *WOFF2_Header;
 
@@ -194,14 +186,17 @@ FT_BEGIN_HEADER
    *   sfnt tables.
    *
    * @fields:
+   *   header_checksum ::
+   *     Checksum of SFNT offset table.
+   *
    *   num_glyphs ::
    *     Number of glyphs in the font.
    *
    *   num_hmetrics ::
-   *     `numberOfHMetrics' field in the `hhea' table.
+   *     `numberOfHMetrics` field in the 'hhea' table.
    *
    *   x_mins ::
-   *     `xMin' values of glyph bounding box.
+   *     `xMin` values of glyph bounding box.
    */
   typedef struct  WOFF2_InfoRec_
   {
@@ -236,7 +231,6 @@ FT_BEGIN_HEADER
     FT_ULong  flags;              /* calculated flags          */
     FT_ULong  src_offset;         /* compressed table offset   */
     FT_ULong  src_length;         /* compressed table length   */
-
     FT_ULong  dst_offset;         /* uncompressed table offset */
 
   } WOFF2_TableRec, *WOFF2_Table;
@@ -249,7 +243,7 @@ FT_BEGIN_HEADER
    *
    * @description:
    *   This structure stores information about a substream in the transformed
-   *   `glyf' table in a WOFF2 stream.
+   *   'glyf' table in a WOFF2 stream.
    *
    * @fields:
    *   start ::
@@ -266,6 +260,7 @@ FT_BEGIN_HEADER
     FT_ULong  start;
     FT_ULong  offset;
     FT_ULong  size;
+
   } WOFF2_SubstreamRec, *WOFF2_Substream;
 
 
@@ -276,7 +271,7 @@ FT_BEGIN_HEADER
    *
    * @description:
    *   This structure stores information about a point in the transformed
-   *   `glyf' table in a WOFF2 stream.
+   *   'glyf' table in a WOFF2 stream.
    *
    * @fields:
    *   x ::
@@ -286,13 +281,14 @@ FT_BEGIN_HEADER
    *     y-coordinate.
    *
    *   on_curve ::
-   *     on-curve.
+   *     Whether point is on-curve.
    */
   typedef struct  WOFF2_PointRec_
   {
     FT_Int   x;
     FT_Int   y;
     FT_Bool  on_curve;
+
   } WOFF2_PointRec, *WOFF2_Point;
 
 
