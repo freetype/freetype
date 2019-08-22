@@ -270,7 +270,7 @@
       "ot-svg",
       0x10000L,
       0x20000L,
-      (const void*)&svg_interface,                           /* module specific interface */
+      (const void*)PUT_SVG_MODULE( &svg_interface ),         /* module specific interface */
       (FT_Module_Constructor)PUT_SVG_MODULE( ft_svg_init ),  /* module_init */
       (FT_Module_Destructor)PUT_SVG_MODULE( ft_svg_done ),   /* module_done */
       PUT_SVG_MODULE( ft_svg_get_interface ),                /* get_interface */
