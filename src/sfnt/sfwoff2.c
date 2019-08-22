@@ -1760,7 +1760,15 @@
           goto Exit;
       }
       else
+      {
         table->Tag = woff2_known_tags( table->FlagByte & 0x3f );
+        if ( !table->Tag )
+        {
+          FT_ERROR(( "woff2_open_font: Unknown table tag." ));
+          error = FT_THROW( Invalid_Table );
+          goto Exit;
+        }
+      }
 
       flags = 0;
       xform_version = ( table->FlagByte >> 6 ) & 0x03;
@@ -1787,7 +1795,7 @@
           goto Exit;
         if ( table->Tag == TTAG_loca && table->TransformLength )
         {
-          FT_ERROR(( "woff_font_open: Invalid loca `transformLength'.\n" ));
+          FT_ERROR(( "woff2_open_font: Invalid loca `transformLength'.\n" ));
           error = FT_THROW( Invalid_Table );
           goto Exit;
         }
@@ -1795,7 +1803,7 @@
 
       if ( src_offset + table->TransformLength < src_offset )
       {
-        FT_ERROR(( "woff_font_open: invalid WOFF2 table directory.\n" ));
+        FT_ERROR(( "woff2_open_font: invalid WOFF2 table directory.\n" ));
         error = FT_THROW( Invalid_Table );
         goto Exit;
       }

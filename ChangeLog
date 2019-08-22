@@ -1,5 +1,16 @@
 2019-08-27  Nikhil Ramakrishnan  <ramakrishnan.nikhil@gmail.com>
 
+	[woff2] Check whether known tag is in array bounds.
+
+	If table tag is not 0x3f, we expect a value between 0 and 62.  If
+	this is not the case, exit with errors.
+
+	* src/sfnt/sfwoff2/c: Check whether table tag makes sense.
+
+	* src/sfnt/woff2tags.c: Return 0 if tag is out of bounds.
+
+2019-08-27  Nikhil Ramakrishnan  <ramakrishnan.nikhil@gmail.com>
+
 	* src/sfnt/sfwoff2.c: Improve trace comments.
 
 	Adjust tracing levels for comments, and more formatting.
