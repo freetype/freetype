@@ -131,7 +131,13 @@
 
     if ( !ft_strcmp( property_name, "svg_hooks" ) )
     {
-      SVG_RendererHooks*  hooks = (SVG_RendererHooks*)value;
+      SVG_RendererHooks*  hooks;
+
+
+      if ( value_is_string == TRUE )
+        return FT_THROW( Invalid_Argument );
+
+      hooks = (SVG_RendererHooks*)value;
       renderer->hooks     = *hooks;
       renderer->hooks_set = TRUE;
     }
