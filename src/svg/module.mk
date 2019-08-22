@@ -17,7 +17,7 @@ FTMODULE_H_COMMANDS += SVG_MODULE
 
 define SVG_MODULE
 $(OPEN_DRIVER) FT_Renderer_Class, ft_svg_renderer_class $(CLOSE_DRIVER)
-$(ECHO_DRIVER)svg    $(ECHO_DRIVER_DESC)svg renderer module$(ECHO_DRIVER_DONE)
+$(ECHO_DRIVER)ot-svg    $(ECHO_DRIVER_DESC)ot-svg glyph renderer module$(ECHO_DRIVER_DONE)
 endef
 
 # EOF
