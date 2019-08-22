@@ -113,7 +113,13 @@
     if ( error )
       return error;
 
-    return hooks.render_svg( slot );
+    error = hooks.render_svg( slot );
+    if ( error )
+      FT_FREE( slot->bitmap.buffer );
+    else
+      slot->internal->flags |= FT_GLYPH_OWN_BITMAP;
+
+    return error;
   }
 
   static const SVG_Interface svg_interface = {
