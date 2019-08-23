@@ -495,6 +495,15 @@ FT_BEGIN_HEADER
 
   /**************************************************************************
    *
+   * OpenType SVG Glyph Support
+   *
+   *   If this macro is set, OpenType SVG glyphs will be supported.
+   */
+#define FT_CONFIG_OPTION_SVG
+
+#define FT_CONFIG_OPTION_DEFAULT_SVG
+  /**************************************************************************
+   *
    * Error Strings
    *
    *   If this macro is set, `FT_Error_String` will return meaningful

@@ -130,8 +130,9 @@ ifdef DEVEL_DIR
   # We assume that all library dependencies for FreeType are fulfilled for a
   # development build, so we directly access the necessary include directory
   # information using `pkg-config'.
-  INCLUDE_FLAGS += $(shell pkg-config --cflags libpng \
-                                               harfbuzz )
+  INCLUDE_FLAGS += $(shell pkg-config --cflags libpng      \
+                                               harfbuzz    \
+                                               librsvg-2.0 \)
 endif
 
 
