@@ -27,6 +27,7 @@
 #include <ft2build.h>
 #include FT_INTERNAL_STREAM_H
 #include FT_INTERNAL_OBJECTS_H
+#include FT_INTERNAL_DEBUG_H
 #include FT_TRUETYPE_TAGS_H
 #include FT_GZIP_H
 #include FT_OTSVG_H
@@ -47,6 +48,8 @@
     FT_ULong  table_size;
   } Svg;
 
+#undef  FT_COMPONENT
+#define FT_COMPONENT  ttsvg
 
   FT_LOCAL_DEF( FT_Error )
   tt_face_load_svg( TT_Face    face,

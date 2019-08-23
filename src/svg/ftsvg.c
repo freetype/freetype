@@ -17,10 +17,13 @@
 
 #include <ft2build.h>
 #include FT_INTERNAL_DEBUG_H
+#include FT_INTERNAL_SERVICE_H
 #include FT_SERVICE_PROPERTIES_H
 #include FT_OTSVG_H
 #include FT_INTERNAL_SVG_INTERFACE_H
 #include FT_BBOX_H
+
+#include "svgtypes.h"
 
 #ifdef FT_CONFIG_OPTION_DEFAULT_SVG
 #include <rsvg_port.h>

@@ -82,6 +82,7 @@ DRV_OBJS_M += $(SVG_DRV_OBJ_M)
 
 ifeq ($(COMPILE_SVG_PORT), yes)
 DRV_OBJS_S += $(SVG_PORT_OBJ_S)
+DRV_OBJS_M += $(SVG_PORT_OBJ_S)
 endif
 
 # EOF
