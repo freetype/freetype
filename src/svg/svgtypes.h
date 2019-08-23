@@ -15,6 +15,9 @@
  *
  */
 
+#ifndef FTSVGTYPES_H
+#define FTSVGTYPES_H
+
 #include <ft2build.h>
 #include FT_INTERNAL_OBJECTS_H
 #include FT_RENDER_H
@@ -30,3 +33,4 @@
 
   typedef struct SVG_RendererRec_*  SVG_Renderer;
 
+#endif

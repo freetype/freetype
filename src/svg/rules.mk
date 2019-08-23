@@ -31,13 +31,13 @@ SVG_PORT_COMPILE := $(CC) $I$(subst /,$(COMPILER_SEP),$(SVG_DIR)) \
 
 # svg renderer sources (i.e., C files)
 #
-SVG_DRV_SRC := $(SVG_DIR)/ftsvg.c \
-	             $(SVG_DIR)/svgtypes.c
+SVG_DRV_SRC := $(SVG_DIR)/ftsvg.c
 
 
 # svg renderer headers
 #
-SVG_DRV_H := $(SVG_DIR)/ftsvg.h
+SVG_DRV_H := $(SVG_DIR)/ftsvg.h \
+	           $(SVG_DIR)/svgtypes.h
 
 
 # svg renderer object(s)
