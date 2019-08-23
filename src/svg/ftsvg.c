@@ -24,10 +24,10 @@
 #include FT_BBOX_H
 
 #include "svgtypes.h"
-
 #ifdef FT_CONFIG_OPTION_DEFAULT_SVG
-#include <rsvg_port.h>
+#include "rsvg_port.h"
 #endif
+
 #include <stdio.h>
 
 #include "ftsvg.h"

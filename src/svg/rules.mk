@@ -24,20 +24,17 @@ SVG_COMPILE := $(CC) $(ANSIFLAGS)                            \
                      $(INCLUDE_FLAGS)                        \
                      $(FT_CFLAGS)
 
-# seperate compilation command for default rendering port files
-SVG_PORT_COMPILE := $(CC) $I$(subst /,$(COMPILER_SEP),$(SVG_DIR)) \
-			                    $(INCLUDE_FLAGS)                        \
-			                    $(FT_CFLAGS)
-
 # svg renderer sources (i.e., C files)
 #
-SVG_DRV_SRC := $(SVG_DIR)/ftsvg.c
+SVG_DRV_SRC := $(SVG_DIR)/ftsvg.c \
+	             $(SVG_DIR)/rsvg_port.c
 
 
 # svg renderer headers
 #
 SVG_DRV_H := $(SVG_DIR)/ftsvg.h \
-	           $(SVG_DIR)/svgtypes.h
+	           $(SVG_DIR)/svgtypes.h \
+						 $(SVG_DIR)/rsvg_port.h
 
 
 # svg renderer object(s)
@@ -55,15 +52,6 @@ SVG_DRV_SRC_S := $(SVG_DIR)/svg.c
 
 # svg renderer - single object
 #
-
-SVG_PORT_SRC_S := $(SVG_DIR)/rsvg_port.c
-SVG_PORT_OBJ_S := $(OBJ_DIR)/rsvg_port.$O
-
-ifeq ($(COMPILE_SVG_PORT), yes)
-$(SVG_PORT_OBJ_S): $(SVG_PORT_SRC_S) $(FREETYPE_H)
-	$(SVG_PORT_COMPILE) $T$(subst /,$(COMPILER_SEP), $@ $(SVG_PORT_SRC_S))
-endif
-
 $(SVG_DRV_OBJ_S): $(SVG_DRV_SRC_S) $(SVG_DRV_SRC) \
                      $(FREETYPE_H) $(SVG_DRV_H)
 	$(SVG_COMPILE) $T$(subst /,$(COMPILER_SEP),$@ $(SVG_DRV_SRC_S))
@@ -79,10 +67,5 @@ $(OBJ_DIR)/%.$O: $(SVG_DIR)/%.c $(FREETYPE_H) $(SVG_DRV_H)
 #
 DRV_OBJS_S += $(SVG_DRV_OBJ_S)
 DRV_OBJS_M += $(SVG_DRV_OBJ_M)
-
-ifeq ($(COMPILE_SVG_PORT), yes)
-DRV_OBJS_S += $(SVG_PORT_OBJ_S)
-DRV_OBJS_M += $(SVG_PORT_OBJ_S)
-endif
 
 # EOF

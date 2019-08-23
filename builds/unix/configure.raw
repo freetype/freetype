@@ -1125,7 +1125,6 @@ else
   ftoption_unset FT_CONFIG_OPTION_USE_HARFBUZZ
 fi
 
-COMPILE_SVG_PORT=no
 if test "$with_svg" = no-default; then
   ftoption_set FT_CONFIG_OPTION_SVG
   ftoption_unset FT_CONFIG_OPTION_DEFAULT_SVG
@@ -1140,12 +1139,10 @@ else
   LIBRSVG_CFLAGS=$(echo $LIBRSVG_CFLAGS | sed -e 's/freetype2//g')
   CFLAGS="$CFLAGS $LIBRSVG_CFLAGS"
   LDFLAGS="$LDFLAGS $LIBRSVG_LIBS"
-  COMPILE_SVG_PORT=yes
   ftoption_set FT_CONFIG_OPTION_SVG
   ftoption_set FT_CONFIG_OPTION_DEFAULT_SVG
 fi
 
-AC_SUBST([COMPILE_SVG_PORT])
 AC_SUBST([CFLAGS])
 AC_SUBST([LDFLAGS])
 

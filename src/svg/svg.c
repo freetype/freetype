@@ -17,9 +17,15 @@
 
 #define FT_MAKE_OPTION_SINGLE_OBJECT
 #include <ft2build.h>
+#include FT_FREETYPE_H
+
+#ifdef FT_CONFIG_OPTION_DEFAULT_SVG
+#include "rsvg_port.c"
+#endif
 
 #include "svgtypes.h"
 #include "ftsvg.c"
+
 
 
 /* END */
