@@ -210,8 +210,8 @@
   {
     FT_SVG_Document  doc = (FT_SVG_Document)slot->other;
 
-    FT_Matrix*  matrix = _matrix;
-    FT_Vector*  delta  = _delta;
+    FT_Matrix*  matrix = (FT_Matrix*)_matrix;
+    FT_Vector*  delta  = (FT_Vector*)_delta;
     FT_Matrix   tmp_matrix;
     FT_Vector   tmp_delta;
     FT_Matrix   a, b;
@@ -230,6 +230,7 @@
     {
       tmp_delta.x = 0;
       tmp_delta.y = 0;
+      delta = &tmp_delta;
     }
 
     a = doc->transform;

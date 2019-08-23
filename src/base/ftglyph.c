@@ -397,8 +397,8 @@
   {
     FT_SvgGlyph  glyph = (FT_SvgGlyph)svg_glyph;
 
-    FT_Matrix*  matrix = _matrix;
-    FT_Vector*  delta  = _delta;
+    FT_Matrix*  matrix = (FT_Matrix*)_matrix;
+    FT_Vector*  delta  = (FT_Vector*)_delta;
 
     FT_Matrix  tmp_matrix;
     FT_Vector  tmp_delta;
