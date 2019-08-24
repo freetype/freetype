@@ -318,12 +318,12 @@ FT_BEGIN_HEADER
    *   TT_Load_Svg_Doc_Func
    *
    * @description:
-   *   Scans the SVG documents list to find the document containing the glyph
+   *   Scan the SVG document list to find the document containing the glyph
    *   that has the id "glyph<glyph_index>".
    *
    * @input:
    *   glyph ::
-   *     The glyph slot from which pointers to SVG documents list will be
+   *     The glyph slot from which pointers to SVG document list will be
    *     grabbed.  The results will be stored back in the slot too.
    *
    *   glyph_index ::
@@ -807,6 +807,7 @@ FT_BEGIN_HEADER
     TT_Load_Table_Func           load_svg;
     TT_Free_Table_Func           free_svg;
     TT_Load_Svg_Doc_Func         load_svg_doc;
+
   } SFNT_Interface;
 
 

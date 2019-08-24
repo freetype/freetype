@@ -343,6 +343,7 @@
     FT_SvgGlyph  glyph  = (FT_SvgGlyph)svg_glyph;
     FT_Memory    memory = svg_glyph->library->memory;
 
+
     /* just free the memory */
     memory->free( memory, glyph->svg_document );
   }
@@ -355,6 +356,7 @@
     FT_SvgGlyph  target  = (FT_SvgGlyph)svg_target;
     FT_Error     error   = FT_Err_Ok;
     FT_Memory    memory  = FT_GLYPH( source )->library->memory;
+
 
     if ( svg_source->format != FT_GLYPH_FORMAT_SVG )
     {
@@ -395,15 +397,14 @@
                           const FT_Matrix*  _matrix,
                           const FT_Vector*  _delta )
   {
-    FT_SvgGlyph  glyph = (FT_SvgGlyph)svg_glyph;
+    FT_SvgGlyph  glyph  = (FT_SvgGlyph)svg_glyph;
+    FT_Matrix*   matrix = (FT_Matrix*)_matrix;
+    FT_Vector*   delta  = (FT_Vector*)_delta;
+    FT_Matrix    tmp_matrix;
+    FT_Vector    tmp_delta;
+    FT_Matrix    a, b;
+    FT_Pos       x, y;
 
-    FT_Matrix*  matrix = (FT_Matrix*)_matrix;
-    FT_Vector*  delta  = (FT_Vector*)_delta;
-
-    FT_Matrix  tmp_matrix;
-    FT_Vector  tmp_delta;
-    FT_Matrix  a, b;
-    FT_Pos     x, y;
 
     if ( !matrix )
     {
@@ -443,11 +444,11 @@
   ft_svg_glyph_prepare( FT_Glyph     svg_glyph,
                         FT_GlyphSlot slot )
   {
-    FT_SvgGlyph   glyph  = (FT_SvgGlyph)svg_glyph;
-    FT_Error      error  = FT_Err_Ok;
-    FT_Memory     memory = svg_glyph->library->memory;
-
+    FT_SvgGlyph      glyph  = (FT_SvgGlyph)svg_glyph;
+    FT_Error         error  = FT_Err_Ok;
+    FT_Memory        memory = svg_glyph->library->memory;
     FT_SVG_Document  document;
+
 
     if ( FT_NEW( document ) )
       return error;

@@ -33,6 +33,7 @@ FT_BEGIN_HEADER
   typedef struct SVG_Interface_
   {
     Preset_Bitmap_Func  preset_slot;
+
   } SVG_Interface;
 
   typedef SVG_Interface*  SVG_Service;

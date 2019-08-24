@@ -23,24 +23,25 @@
 #include FT_INTERNAL_SVG_INTERFACE_H
 #include FT_BBOX_H
 
+#include "ftsvg.h"
 #include "svgtypes.h"
+
 #ifdef FT_CONFIG_OPTION_DEFAULT_SVG
 #include "rsvg_port.h"
 #endif
-
-#include <stdio.h>
-
-#include "ftsvg.h"
 
 #undef  FT_COMPONENT
 #define FT_COMPONENT otsvg
 
 #ifdef FT_CONFIG_OPTION_SVG
+
   /* ft_svg_init */
   static FT_Error
   ft_svg_init( SVG_Renderer svg_module )
   {
     FT_Error    error = FT_Err_Ok;
+
+
     svg_module->loaded = FALSE;
 #ifdef FT_CONFIG_OPTION_DEFAULT_SVG
     FT_TRACE3(( "ft_svg_init: Default hooks being set\n" ));
@@ -53,6 +54,7 @@
     FT_TRACE3(( "ft_svg_init: No default hooks set\n" ));
     svg_module->hooks_set = FALSE;
 #endif
+
     return error;
   }
 
@@ -60,6 +62,8 @@
   ft_svg_done( SVG_Renderer svg_module )
   {
     FT_Library  library = svg_module->root.root.library;
+
+
     if ( svg_module->loaded    == TRUE &&
          svg_module->hooks_set == TRUE )
       svg_module->hooks.free_svg( library );
@@ -71,8 +75,9 @@
                       FT_GlyphSlot  slot,
                       FT_Bool       cache )
   {
-    SVG_Renderer      svg_renderer = (SVG_Renderer)module;
-    SVG_RendererHooks hooks        = svg_renderer->hooks;
+    SVG_Renderer       svg_renderer = (SVG_Renderer)module;
+    SVG_RendererHooks  hooks        = svg_renderer->hooks;
+
 
     if ( svg_renderer->hooks_set == FALSE )
     {
@@ -97,6 +102,7 @@
 
     SVG_RendererHooks hooks = svg_renderer->hooks;
 
+
     if ( svg_renderer->hooks_set == FALSE )
     {
       FT_TRACE1(( "Hooks are NOT set. Can't render OT-SVG glyphs\n" ));
@@ -111,6 +117,7 @@
     }
 
     ft_svg_preset_slot( (FT_Module)renderer, slot, TRUE);
+
     size_image_buffer = slot->bitmap.pitch * slot->bitmap.rows;
     FT_MEM_ALLOC( slot->bitmap.buffer, size_image_buffer);
     if ( error )
@@ -138,6 +145,7 @@
     FT_Error      error    = FT_Err_Ok;
     SVG_Renderer  renderer = (SVG_Renderer)module;
 
+
     if ( !ft_strcmp( property_name, "svg_hooks" ) )
     {
       SVG_RendererHooks*  hooks;
@@ -151,9 +159,8 @@
       renderer->hooks_set = TRUE;
     }
     else
-    {
       error = FT_THROW( Missing_Property );
-    }
+
     return error;
   }
 
@@ -165,15 +172,15 @@
     FT_Error      error    = FT_Err_Ok;
     SVG_Renderer  renderer = (SVG_Renderer)module;
 
+
     if ( !ft_strcmp( property_name, "svg_hooks" ) )
     {
       SVG_RendererHooks*  hooks = (SVG_RendererHooks*)value;
       *hooks = renderer->hooks;
     }
     else
-    {
       error = FT_THROW( Missing_Property );
-    }
+
     return error;
   }
 
@@ -199,6 +206,7 @@
     result = ft_service_list_lookup( ft_svg_services, ft_svg_interface );
     if ( result )
       return result;
+
     return 0;
   }
 
@@ -208,14 +216,14 @@
                     const FT_Matrix*  _matrix,
                     const FT_Vector*  _delta )
   {
-    FT_SVG_Document  doc = (FT_SVG_Document)slot->other;
+    FT_SVG_Document  doc    = (FT_SVG_Document)slot->other;
+    FT_Matrix*       matrix = (FT_Matrix*)_matrix;
+    FT_Vector*       delta  = (FT_Vector*)_delta;
+    FT_Matrix        tmp_matrix;
+    FT_Vector        tmp_delta;
+    FT_Matrix        a, b;
+    FT_Pos           x, y;
 
-    FT_Matrix*  matrix = (FT_Matrix*)_matrix;
-    FT_Vector*  delta  = (FT_Vector*)_delta;
-    FT_Matrix   tmp_matrix;
-    FT_Vector   tmp_delta;
-    FT_Matrix   a, b;
-    FT_Pos      x, y;
 
     if ( !matrix )
     {
@@ -246,9 +254,9 @@
         FT_MulFix(matrix->yx, doc->delta.x),
         FT_MulFix(matrix->yy, doc->delta.y)),
         delta->y);
-    doc->delta.x = x;
-    doc->delta.y = y;
 
+    doc->delta.x   = x;
+    doc->delta.y   = y;
     doc->transform = a;
 
     return FT_Err_Ok;

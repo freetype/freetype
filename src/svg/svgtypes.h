@@ -29,6 +29,7 @@
     FT_Bool            loaded;
     FT_Bool            hooks_set;
     SVG_RendererHooks  hooks;  /* Holds out hooks to the outside library */
+
   } SVG_RendererRec;
 
   typedef struct SVG_RendererRec_*  SVG_Renderer;

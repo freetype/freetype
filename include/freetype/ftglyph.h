@@ -240,7 +240,7 @@ FT_BEGIN_HEADER
    *   FT_SvgGlyphRec
    *
    * @description:
-   *   A structure used for SVG glyph images.  This really is a 'sub-class'
+   *   A structure used for OT-SVG glyph images.  This really is a 'sub-class'
    *   of @FT_GlyphRec.
    *
    * @fields:
@@ -251,7 +251,7 @@ FT_BEGIN_HEADER
    *     A pointer to the SVG document.
    *
    *   svg_document_length ::
-   *     The length of the svg_document.
+   *     The length of `svg_document`.
    *
    *   glyph_index ::
    *     The index of the glyph to be rendered.
@@ -263,13 +263,13 @@ FT_BEGIN_HEADER
    *     The size of the EM square.
    *
    *   start_glyph_id ::
-   *     The starting glyph ID for the glyph range that this document has.
+   *     The first glyph ID in the glyph range is covered by this document.
    *
    *   end_glyph_id ::
-   *     The ending glyph ID for the glyph range that this document has.
+   *     The last glyph ID in the glyph range is covered by this document.
    *
    *   transform ::
-   *     Transformation matrix to apply on the glyph while rendering.
+   *     A 2x2 transformation matrix to apply on the glyph while rendering it.
    *
    *   delta ::
    *     Translation to apply on the glyph while rendering.
@@ -283,7 +283,10 @@ FT_BEGIN_HEADER
    *   `units_per_EM` is needed because the SVG is to be scaled in case its
    *   viewbox size differs from `units_per_EM`. For more info, refer to
    *   the section _Coordinate Systems and Glyph Metrics_ of the OpenType
-   *   SVG specs.
+   *   SVG specs. The `transform` and `delta` are stored here because for an
+   *   SVG document, there's no way to apply a transformation without parsing
+   *   it. Thus, we just store the transform and later the renderer can apply
+   *   it while rendering.
    */
   typedef struct  FT_SvgGlyphRec_
   {
@@ -297,6 +300,7 @@ FT_BEGIN_HEADER
     FT_UShort           end_glyph_id;
     FT_Matrix           transform;
     FT_Vector           delta;
+
   } FT_SvgGlyphRec;
 
 

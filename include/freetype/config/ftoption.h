@@ -493,17 +493,18 @@ FT_BEGIN_HEADER
 #undef FT_CONFIG_OPTION_USE_MODULE_ERRORS
 
 
-
-
   /**************************************************************************
    *
    * OpenType SVG Glyph Support
    *
-   *   If this macro is set, OpenType SVG glyphs will be supported.
+   *   If `FT_CONFIG_OPTION_SVG` is set, OpenType SVG glyphs will be
+   *   supported.
+   *   If `FT_CONFIG_OPTION_DEFAULT_SVG` is also set, a default library will
+   *   also be integrated so no external hooks will be necessary.
    */
 #define FT_CONFIG_OPTION_SVG
-
 /* #define FT_CONFIG_OPTION_DEFAULT_SVG */
+
 
   /**************************************************************************
    *

@@ -1647,6 +1647,7 @@ FT_BEGIN_HEADER
 
     /* OpenType SVG Glyph Support */
     void*                 svg;
+
   } TT_FaceRec;
 
 

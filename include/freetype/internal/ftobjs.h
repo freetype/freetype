@@ -924,6 +924,7 @@ FT_BEGIN_HEADER
 #ifdef FT_CONFIG_OPTION_SVG
     void*              svg_renderer_state;
 #endif
+
   } FT_LibraryRec;
 
 

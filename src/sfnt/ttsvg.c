@@ -46,6 +46,7 @@
     /* Memory that backs up SVG */
     void*     table;
     FT_ULong  table_size;
+
   } Svg;
 
 #undef  FT_COMPONENT
@@ -57,14 +58,11 @@
   {
     FT_Error   error;
     FT_Memory  memory = face->root.memory;
-
     FT_ULong   table_size;
     FT_Byte*   table = NULL;
     FT_Byte*   p     = NULL;
-
     Svg*       svg   = NULL;
-
-    FT_ULong  offsetToSVGDocumentList;
+    FT_ULong   offsetToSVGDocumentList;
 
 
     error = face->goto_table( face, TTAG_SVG, stream, &table_size );
@@ -134,16 +132,19 @@
     FT_UShort  end_glyph_id;
     FT_ULong   offset;
     FT_ULong   length;
+
   } Svg_doc;
 
   static Svg_doc
   extract_svg_doc( FT_Byte*  stream )
   {
     Svg_doc  doc;
+
+
     doc.start_glyph_id = FT_NEXT_USHORT( stream );
     doc.end_glyph_id   = FT_NEXT_USHORT( stream );
-    doc.offset = FT_NEXT_ULONG( stream );
-    doc.length = FT_NEXT_ULONG( stream );
+    doc.offset         = FT_NEXT_ULONG( stream );
+    doc.length         = FT_NEXT_ULONG( stream );
     return doc;
   }
 
@@ -242,10 +243,11 @@
     }
     else
     {
-      *doc_offset = mid_doc.offset;
-      *doc_length = mid_doc.length;
+      *doc_offset  = mid_doc.offset;
+      *doc_length  = mid_doc.length;
       *start_glyph = mid_doc.start_glyph_id;
       *end_glyph   = mid_doc.end_glyph_id;
+
       error = FT_Err_Ok;
     }
     return error;
@@ -257,12 +259,10 @@
   {
     FT_Byte*   doc_list;             /* Pointer to the Svg Document List */
     FT_UShort  num_entries;          /* Total no of entires in doc list  */
-
     FT_ULong   doc_offset;
     FT_ULong   doc_length;
     FT_UShort  start_glyph_id;
     FT_UShort  end_glyph_id;
-
     FT_ULong   uncomp_size;
     FT_Byte*   uncomp_buffer;
 
@@ -272,6 +272,7 @@
     Svg*       svg    = face->svg;
 
     FT_SVG_Document  svg_document = glyph->other;
+
 
     FT_ASSERT( !( svg == NULL ) );
 
@@ -336,13 +337,13 @@
 
     glyph->other = svg_document;
 
-Exit:
+  Exit:
     return error;
   }
 
 #else /* !FT_CONFIG_OPTION_SVG */
 
   /* ANSI C doesn't like empty source files */
-  typedef int  _tt_cpal_dummy;
+  typedef int  _tt_svg_dummy;
 
 #endif /* !FT_CONFIG_OPTION_SVG */

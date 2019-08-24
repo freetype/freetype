@@ -1305,6 +1305,7 @@
 
     tt_face_get_name,       /* TT_Get_Name_Func        get_name        */
     sfnt_get_name_id,       /* TT_Get_Name_ID_Func     get_name_id     */
+
     PUT_SVG_SUPPORT( tt_face_load_svg ),
                             /* TT_Load_Table_Func      load_svg        */
     PUT_SVG_SUPPORT( tt_face_free_svg ),

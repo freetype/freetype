@@ -36,7 +36,7 @@ FT_BEGIN_HEADER
    *   SVG_Lib_Init_Func
    *
    * @description:
-   *   A callback used to initiate the SVG Rendering port
+   *   A callback used to initiate the SVG Rendering port.
    *
    * @input:
    *   library ::
@@ -46,7 +46,6 @@ FT_BEGIN_HEADER
    * @return:
    *   FreeType error code.  0 means success.
    */
-
   typedef FT_Error
   (*SVG_Lib_Init_Func)( FT_Library  library );
 
@@ -65,7 +64,6 @@ FT_BEGIN_HEADER
    *     A instance of library.  This is required to free the renderer's
    *     state which will be held in the library.
    */
-
   typedef void
   (*SVG_Lib_Free_Func)( FT_Library  library );
 
@@ -85,7 +83,6 @@ FT_BEGIN_HEADER
    * @return:
    *   FreeType error code.  0 means success.
    */
-
   typedef FT_Error
   (*SVG_Lib_Render_Func)( FT_GlyphSlot  slot );
 
@@ -104,11 +101,33 @@ FT_BEGIN_HEADER
    * @return:
    *   FreeType error code.  0 means success.
    */
-
   typedef FT_Error
   (*SVG_Lib_Preset_Slot_Func)( FT_GlyphSlot  slot, FT_Bool  cache);
 
 
+  /**************************************************************************
+   *
+   * @struct:
+   *   SVG_RendererHooks
+   *
+   * @description:
+   *   A structure that stores the four hooks needed to render OT-SVG glyphs
+   *   properly. The structure is publicly used to set the hooks via driver
+   *   properties.
+   *
+   * @fields:
+   *   init_svg ::
+   *     The initialization hook.
+   *
+   *   free_svg ::
+   *     The cleanup hook.
+   *
+   *   render_hook ::
+   *     The render hook.
+   *
+   *   preset_slot ::
+   *     The preset hook.
+   */
   typedef struct SVG_RendererHooks_
   {
     /* Api Hooks for OT-SVG Rendering */
@@ -117,6 +136,7 @@ FT_BEGIN_HEADER
     SVG_Lib_Render_Func  render_svg;
 
     SVG_Lib_Preset_Slot_Func  preset_slot;
+
   } SVG_RendererHooks;
 
 
@@ -130,10 +150,10 @@ FT_BEGIN_HEADER
    *
    * @fields:
    *   svg_document ::
-   *     A pointer to the SVG document string.
+   *     A pointer to the SVG document.
    *
    *   svg_document_length ::
-   *     The length of the SVG document string.
+   *     The length of `svg_document`.
    *
    *   metrics ::
    *     A metrics object storing the size information.
@@ -142,13 +162,13 @@ FT_BEGIN_HEADER
    *     The size of the EM square.
    *
    *   start_glyph_id ::
-   *     The starting glyph ID for the glyph range that this document has.
+   *     The first glyph ID in the glyph range is covered by this document.
    *
    *   end_glyph_id ::
-   *     The ending glyph ID for the glyph range that this document has.
+   *     The last glyph ID in the glyph range is covered by this document.
    *
    *   transform ::
-   *     Transformation matrix to apply on the glyph while rendering.
+   *     A 2x2 transformation matrix to apply on the glyph while rendering it.
    *
    *   delta ::
    *     Translation to apply on the glyph while rendering.
@@ -173,6 +193,7 @@ FT_BEGIN_HEADER
     FT_UShort        end_glyph_id;
     FT_Matrix        transform;
     FT_Vector        delta;
+
   } FT_SVG_DocumentRec;
 
   /**************************************************************************

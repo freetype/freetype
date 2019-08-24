@@ -358,6 +358,7 @@
       FT_UShort     advanceX;
       FT_UShort     advanceY;
 
+
       if ( ( size->root.metrics.x_ppem < 1 ||
              size->root.metrics.y_ppem < 1 ) )
       {
@@ -367,6 +368,7 @@
 
       FT_TRACE3(( "Attemping to load SVG glyph\n" ));
       sfnt = (SFNT_Service)((TT_Face)glyph->root.face)->sfnt;
+
       error = sfnt->load_svg_doc( (FT_GlyphSlot)glyph, glyph_index );
       if( error == FT_Err_Ok )
       {
@@ -388,6 +390,7 @@
                     ((float)glyph->root.face->units_per_EM) * 64.0;
         glyph->root.metrics.horiAdvance = advanceX;
         glyph->root.metrics.vertAdvance = advanceY;
+
         return error;
       }
       FT_TRACE3(( "Failed to load SVG glyph\n" ));
