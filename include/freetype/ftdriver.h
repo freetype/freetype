@@ -621,6 +621,46 @@ FT_BEGIN_HEADER
 
   /**************************************************************************
    *
+   * @property:
+   *   svg_hooks
+   *
+   * @description:
+   *   OT-SVG glyphs are rendererd with the use of some callback hooks to an
+   *   external SVG rendering library.  OT-SVG glyphs support can be enabled
+   *   by compiling FreeType with `FT_CONFIG_OPTION_SVG`.  The hooks can be
+   *   stored in an @SVG_RendererHooks structure, which is then passed as the
+   *   value of `svg_hooks` property.  See the example.  We also provide
+   *   default hooks which can be enabled by compiling with
+   *   `FT_CONFIG_OPTION_DEFAULT_SVG`.  Then, nothing needs to be set from
+   *   the user side, unless the user wants to use some other library.
+   *
+   * @note:
+   *   This property can only be set via @FT_Property_Set.
+   *
+   * @example:
+   *   ```
+   *     FT_Library         library;
+   *     SVG_RendererHooks  hooks;
+   *
+   *
+   *     FT_Init_FreeType( &library );
+   *
+   *     hooks.init_svg    = (SVG_Lib_Init_Func)foo_port_init;
+   *     hooks.free_svg    = (SVG_Lib_Free_Func)foo_port_free;
+   *     hooks.render_svg  = (SVG_Lib_Render_Func)foo_port_render;
+   *     hooks.preset_slot = (SVG_Lib_Preset_Slot_Func)foo_port_preset_slot;
+   *
+   *     FT_Property_Set( library, "ot-svg", "svg_hooks", &hooks );
+   *
+   *   ```
+   *
+   * @since:
+   *   2.11
+   */
+
+
+  /**************************************************************************
+   *
    * @enum:
    *   TT_INTERPRETER_VERSION_XXX
    *
