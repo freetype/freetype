@@ -103,6 +103,9 @@
     SVG_RendererHooks hooks = svg_renderer->hooks;
 
 
+    FT_UNUSED( mode );
+    FT_UNUSED( origin );
+
     if ( svg_renderer->hooks_set == FALSE )
     {
       FT_TRACE1(( "Hooks are NOT set. Can't render OT-SVG glyphs\n" ));
@@ -203,6 +206,8 @@
     FT_Module_Interface  result;
 
 
+    FT_UNUSED( module );
+
     result = ft_service_list_lookup( ft_svg_services, ft_svg_interface );
     if ( result )
       return result;
@@ -224,6 +229,8 @@
     FT_Matrix        a, b;
     FT_Pos           x, y;
 
+
+    FT_UNUSED( renderer );
 
     if ( !matrix )
     {
