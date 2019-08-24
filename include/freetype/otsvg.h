@@ -36,12 +36,15 @@ FT_BEGIN_HEADER
    *   SVG_Lib_Init_Func
    *
    * @description:
-   *   A callback used to initiate the SVG Rendering port.
+   *   A callback which is called when the first OT-SVG glyph is rendered in
+   *   the lifetime of an @FT_Library object. The callback should perform all
+   *   sorts of initializations that the SVG rendering library needs such as
+   *   allocating memory for `svg_renderer_state` of @FT_LibraryRec.
    *
    * @input:
    *   library ::
-   *     A instance of library.  This is required to initialize the
-   *     renderer's state which will be held in the library.
+   *     An instance of @FT_Library. It's passed to give the callbacks access
+   *     to `svg_renderer_state` of @FT_LibraryRec.
    *
    * @return:
    *   FreeType error code.  0 means success.
@@ -56,13 +59,15 @@ FT_BEGIN_HEADER
    *   SVG_Lib_Free_Func
    *
    * @description:
-   *   A callback used to free the SVG Rendering port.  Calling this callback
-   *   shall do all cleanups that the SVG Rendering port wants to do.
+   *   A callback which is called when the `ot-svg` module is being freed.
+   *   It is only called only if the init hook was called earlier. So, if no
+   *   OT-SVG glyph is rendered, neither the init hook is called nor the free
+   *   hook.
    *
    * @input:
    *   library ::
-   *     A instance of library.  This is required to free the renderer's
-   *     state which will be held in the library.
+   *     An instance of @FT_Library. It's passed to give the callbacks access
+   *     to `svg_renderer_state` of @FT_LibraryRec.
    */
   typedef void
   (*SVG_Lib_Free_Func)( FT_Library  library );
@@ -74,11 +79,15 @@ FT_BEGIN_HEADER
    *   SVG_Lib_Render_Func
    *
    * @description:
-   *   A callback used to render the glyph loaded in the slot.
+   *   A callback which is called to render an OT-SVG glyph. This callback
+   *   hook is called right after the preset hook has been called with
+   *   `cache` set to `TRUE`. The data necessary to render is available
+   *   through the handle @FT_SVG_Document which is set in `other` field of
+   *   @FT_GlyphSlotRec.
    *
    * @input:
    *   slot ::
-   *     The whole glyph slot object.
+   *     The slot to render.
    *
    * @return:
    *   FreeType error code.  0 means success.
@@ -92,11 +101,25 @@ FT_BEGIN_HEADER
    *   SVG_Lib_Preset_Slot_Func
    *
    * @description:
-   *   A callback which is to preset the glyphslot.
+   *   A callback which is called to preset the glyphslot. It is called from
+   *   two places.
+   *
+   *   1. When `FT_Load_Glyph` needs to preset the glyphslot.
+   *   2. Right before the `ot-svg` module calls the render callback hook.
+   *
+   *   When it is the former, the argument `cache` is set to `FALSE`. When it
+   *   is the latter, the argument `cache` is set to `TRUE`. This distinction
+   *   has been made because while presetting a glyphslot many calculations
+   *   are needed and later the render callback hook needs the same
+   *   calculations, thus, if `cache` is `TRUE`, the hook might _cache_ these
+   *   calculations in `svg_renderer_state` of @FT_LibraryRec.
    *
    * @input:
    *   slot ::
    *     The glyph slot which has the SVG document loaded.
+   *
+   *   cache ::
+   *     See description.
    *
    * @return:
    *   FreeType error code.  0 means success.
@@ -130,7 +153,6 @@ FT_BEGIN_HEADER
    */
   typedef struct SVG_RendererHooks_
   {
-    /* Api Hooks for OT-SVG Rendering */
     SVG_Lib_Init_Func    init_svg;
     SVG_Lib_Free_Func    free_svg;
     SVG_Lib_Render_Func  render_svg;
