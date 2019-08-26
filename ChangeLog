@@ -1,4 +1,11 @@
-2019-06-26  Alexei Podtelezhnikov  <apodtele@gmail.com>
+2019-08-26  Werner Lemberg  <wl@gnu.org>
+
+	[type1] Fix `FT_Get_Var_Axis_Flags' (#56804).
+
+	* src/type1/t1load.c (T1_Get_MM_Var): Allocate space for axis flags.
+	Also remove redundant assignment.
+
+2019-07-24  Alexei Podtelezhnikov  <apodtele@gmail.com>
 
 	* src/base/ftbbox.c (cubic_peak): Sanitize left shift (#56586).
 

@@ -1,6 +1,19 @@
 
 CHANGES BETWEEN 2.10.0 and 2.10.1
 
+  I. IMPORTANT CHANGES
+
+
+  II. MISCELLANEOUS
+
+  - Function  `FT_Get_Var_Axis_Flags' returned random data for  Type 1
+    MM fonts.
+
+
+======================================================================
+
+CHANGES BETWEEN 2.10.0 and 2.10.1
+
   I. IMPORTANT BUG FIXES
 
   - The bytecode hinting of OpenType variation fonts was flawed, since

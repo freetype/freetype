@@ -2127,7 +2127,7 @@
     /* `fvar' table validity check in `sfnt_init_face'          */
 
     /* the various `*_size' variables, which we also use as     */
-    /* offsets into the `mmlen' array, must be multiples of the */
+    /* offsets into the `mmvar' array, must be multiples of the */
     /* pointer size (except the last one); without such an      */
     /* alignment there might be runtime errors due to           */
     /* misaligned addresses                                     */
