@@ -330,7 +330,7 @@
     builder->left_bearing.x = 0;
     builder->left_bearing.y = 0;
 
-    builder->pos_x = adx - asb;
+    builder->pos_x = SUB_LONG( adx, asb );
     builder->pos_y = ady;
 
     /* Now load `achar' on top of the base outline. */

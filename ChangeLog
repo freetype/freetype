@@ -1,5 +1,13 @@
 2019-08-26  Werner Lemberg  <wl@gnu.org>
 
+	* src/psaux/cffdecode.c (cff_operator_seac): Fix numeric overflow.
+
+	Reported as
+
+	  https://bugs.chromium.org/p/oss-fuzz/issues/detail?id=16470
+
+2019-08-26  Werner Lemberg  <wl@gnu.org>
+
 	[type1] Fix `FT_Get_Var_Axis_Flags' (#56804).
 
 	* src/type1/t1load.c (T1_Get_MM_Var): Allocate space for axis flags.
