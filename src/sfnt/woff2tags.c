@@ -15,11 +15,21 @@
  *
  */
 
+
 #include <ft2build.h>
 #include "sfwoff.h"
 #include FT_TRUETYPE_TAGS_H
 
-  /* Return tag from index in the order given in WOFF2 specification. */
+
+  /*
+   * Return tag from index in the order given in WOFF2 specification.
+   *
+   * See
+   *
+   *       https://www.w3.org/TR/WOFF2/#table_dir_format
+   *
+   * for details.
+   */
   FT_LOCAL_DEF( FT_ULong )
   woff2_known_tags( FT_Byte  index )
   {

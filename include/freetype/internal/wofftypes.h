@@ -275,13 +275,13 @@ FT_BEGIN_HEADER
    *
    * @fields:
    *   x ::
-   *     x-coordinate.
+   *     x-coordinate of point.
    *
    *   y ::
-   *     y-coordinate.
+   *     y-coordinate of point.
    *
    *   on_curve ::
-   *     Whether point is on-curve.
+   *     Set if point is on-curve.
    */
   typedef struct  WOFF2_PointRec_
   {

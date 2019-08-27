@@ -28,20 +28,20 @@ SFNT_COMPILE := $(CC) $(ANSIFLAGS)                             \
 
 # SFNT driver sources (i.e., C files)
 #
-SFNT_DRV_SRC := $(SFNT_DIR)/pngshim.c  \
-                $(SFNT_DIR)/sfdriver.c \
-                $(SFNT_DIR)/sfobjs.c   \
-                $(SFNT_DIR)/sfwoff.c   \
-                $(SFNT_DIR)/sfwoff2.c  \
-                $(SFNT_DIR)/ttbdf.c    \
-                $(SFNT_DIR)/ttcmap.c   \
-                $(SFNT_DIR)/ttcolr.c   \
-                $(SFNT_DIR)/ttcpal.c   \
-                $(SFNT_DIR)/ttkern.c   \
-                $(SFNT_DIR)/ttload.c   \
-                $(SFNT_DIR)/ttmtx.c    \
-                $(SFNT_DIR)/ttpost.c   \
-                $(SFNT_DIR)/ttsbit.c   \
+SFNT_DRV_SRC := $(SFNT_DIR)/pngshim.c   \
+                $(SFNT_DIR)/sfdriver.c  \
+                $(SFNT_DIR)/sfobjs.c    \
+                $(SFNT_DIR)/sfwoff.c    \
+                $(SFNT_DIR)/sfwoff2.c   \
+                $(SFNT_DIR)/ttbdf.c     \
+                $(SFNT_DIR)/ttcmap.c    \
+                $(SFNT_DIR)/ttcolr.c    \
+                $(SFNT_DIR)/ttcpal.c    \
+                $(SFNT_DIR)/ttkern.c    \
+                $(SFNT_DIR)/ttload.c    \
+                $(SFNT_DIR)/ttmtx.c     \
+                $(SFNT_DIR)/ttpost.c    \
+                $(SFNT_DIR)/ttsbit.c    \
                 $(SFNT_DIR)/woff2tags.c
 
 # SFNT driver headers

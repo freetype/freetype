@@ -478,7 +478,7 @@ if test x"$with_png" = xyes -o x"$with_png" = xauto; then
       libpng_libsstaticconf="$LIBPNG_LIBS"
       have_libpng="yes (LIBPNG_CFLAGS and LIBPNG_LIBS)"
     else
-      # fall back to config script.
+      # fall back to config script
       AC_MSG_CHECKING([for libpng-config])
       if which libpng-config > /dev/null 2>&1; then
         LIBPNG_CFLAGS=`libpng-config --cflags`
@@ -547,7 +547,7 @@ fi
 
 AC_ARG_WITH([brotli],
   [AS_HELP_STRING([--with-brotli=@<:@yes|no|auto@:>@],
-                  [Support decompression of WOFF2 streams @<:@default=auto@:>@])],
+                  [support decompression of WOFF2 streams @<:@default=auto@:>@])],
   [], [with_brotli=auto])
 
 have_brotli=no
@@ -576,7 +576,7 @@ if test x"$with_brotli" = xyes -o x"$with_brotli" = xauto; then
       have_brotli="yes (BROTLI_CFLAGS and BROTLI_LIBS)"
     else
       # since Brotli is quite a new library we don't fall back to a
-      # different test;
+      # different test
       :
     fi
   fi
@@ -1032,7 +1032,7 @@ if test "x$PYTHON" != "xmissing"; then
 fi
 
 
-# entries in Requires.private are separated by commas;
+# entries in Requires.private are separated by commas
 REQUIRES_PRIVATE="$zlib_reqpriv,     \
                   $bzip2_reqpriv,    \
                   $libpng_reqpriv,   \
