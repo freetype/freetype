@@ -3,6 +3,9 @@ CHANGES BETWEEN 2.10.0 and 2.10.1
 
   I. IMPORTANT CHANGES
 
+  - Support  of  WOFF2  fonts.   This  code  contribution  was  Nikhil
+    Ramakrishnan's GSoC 2019 project.
+
 
   II. MISCELLANEOUS
 
