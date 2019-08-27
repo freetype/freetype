@@ -1,3 +1,11 @@
+2019-08-27  Dominik Röttsches  <drott@chromium.org>
+
+	[woff2] Don't use `FT_UInt64' (#56815).
+
+	* src/sfnt/sfwoff2.c (woff2_open_font): Use `FT_UInt32' for
+	`file_offset'.  This fixes builds on platforms where `FT_LONG64' is
+	not defined while still being sufficient to store a file offset.
+
 2019-08-27  Werner Lemberg  <wl@gnu.org>
 
 	[truetype] Prevent crash in `TT_Set_Named_Instance' (#56813).

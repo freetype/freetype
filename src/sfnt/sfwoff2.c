@@ -1739,7 +1739,7 @@
 
     FT_UInt    glyf_index;
     FT_UInt    loca_index;
-    FT_UInt64  file_offset;
+    FT_UInt32  file_offset;
 
     FT_Byte*   sfnt        = NULL;
     FT_Stream  sfnt_stream = NULL;
