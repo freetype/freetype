@@ -1,3 +1,19 @@
+2019-08-27  Werner Lemberg  <wl@gnu.org>
+
+	[woff2] Fix compiler warnings.
+
+	* src/sfnt/sfwoff2.c (read_num_hmetrics): Remove unused argument
+	`table_len'.
+	Update caller.
+	(triplet_decode, compute_bbox, store_loca, reconstruct_glyf): Make
+	`i' variable unsigned.
+	(reconstruct_glyph): Remove condition which is always false.
+	(reconstruct_html): Removed unused argument `transformed_size'.
+	Update caller.
+
+	* src/sfnt/woff2tags.c (woff2_known_tags): Remove condition which is
+	always false.
+
 2019-08-27  Nikhil Ramakrishnan  <ramakrishnan.nikhil@gmail.com>
 
 	[woff2] Check whether known tag is in array bounds.

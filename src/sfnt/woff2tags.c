@@ -101,7 +101,7 @@
     };
 
 
-    if ( index < 0 || index > 62 )
+    if ( index > 62 )
       return 0;
 
     return known_tags[index];

@@ -366,7 +366,6 @@
   /* Read `numberOfHMetrics' field from `hhea' table. */
   static FT_Error
   read_num_hmetrics( FT_Stream   stream,
-                     FT_ULong    table_len,
                      FT_UShort*  num_hmetrics )
   {
     FT_Error   error = FT_Err_Ok;
@@ -433,7 +432,7 @@
     FT_ULong  triplet_index = 0;
     FT_ULong  data_bytes;
 
-    FT_Int  i;
+    FT_UInt  i;
 
 
     if ( n_points > in_size )
@@ -673,7 +672,8 @@
     FT_Int  y_min = 0;
     FT_Int  x_max = 0;
     FT_Int  y_max = 0;
-    FT_Int  i;
+
+    FT_UInt  i;
 
     FT_ULong  offset;
     FT_Byte*  pointer;
@@ -778,7 +778,7 @@
     FT_Byte*  loca_buf = NULL;
     FT_Byte*  dst      = NULL;
 
-    FT_Int    i = 0;
+    FT_UInt   i = 0;
     FT_ULong  loca_buf_size;
 
     const FT_ULong  offset_size = index_format ? 4 : 2;
@@ -849,7 +849,7 @@
     FT_UShort  index_format;
     FT_ULong   expected_loca_length;
     FT_UInt    offset;
-    FT_Int     i;
+    FT_UInt    i;
     FT_ULong   points_size;
     FT_ULong   bitmap_length;
     FT_ULong   glyph_buf_size;
@@ -1099,8 +1099,7 @@
 
         substreams[GLYPH_STREAM].offset = FT_STREAM_POS();
 
-        if ( total_n_points >= ( 1 << 27 )   ||
-             instruction_size >= ( 1 << 30 ) )
+        if ( total_n_points >= ( 1 << 27 ) )
           goto Fail;
 
         size_needed = 12 +
@@ -1333,7 +1332,6 @@
 
   static FT_Error
   reconstruct_hmtx( FT_Stream  stream,
-                    FT_ULong   transformed_size,
                     FT_UShort  num_glyphs,
                     FT_UShort  num_hmetrics,
                     FT_Short*  x_mins,
@@ -1564,7 +1562,7 @@
       /* Get stream size for fields of `hmtx' table. */
       if ( table.Tag == TTAG_hhea )
       {
-        if ( read_num_hmetrics( stream, table.src_length, &num_hmetrics ) )
+        if ( read_num_hmetrics( stream, &num_hmetrics ) )
           return FT_THROW( Invalid_Table );
       }
 
@@ -1633,7 +1631,6 @@
           table.dst_offset = dest_offset;
 
           if ( reconstruct_hmtx( stream,
-                                 table.src_length,
                                  info->num_glyphs,
                                  info->num_hmetrics,
                                  info->x_mins,
