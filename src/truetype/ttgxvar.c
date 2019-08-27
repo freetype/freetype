@@ -3037,7 +3037,7 @@
   TT_Set_Named_Instance( TT_Face  face,
                          FT_UInt  instance_index )
   {
-    FT_Error    error = FT_ERR( Invalid_Argument );
+    FT_Error    error;
     GX_Blend    blend;
     FT_MM_Var*  mmvar;
 
@@ -3057,7 +3057,10 @@
 
     /* `instance_index' starts with value 1, thus `>' */
     if ( instance_index > num_instances )
+    {
+      error = FT_ERR( Invalid_Argument );
       goto Exit;
+    }
 
     if ( instance_index > 0 )
     {
