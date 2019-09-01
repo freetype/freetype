@@ -1,3 +1,13 @@
+2019-09-01  Werner Lemberg  <wl@gnu.org>
+
+	* src/sfnt/sfwoff2.c (woff2_open_font): Add sanity check.
+
+	Don't trust `totalSfntSize' unconditionally.
+
+	Reported as
+
+	  https://bugs.chromium.org/p/oss-fuzz/issues/detail?id=16893
+
 2019-08-27  Dominik Röttsches  <drott@chromium.org>
 
 	[woff2] Don't use `FT_UInt64' (#56815).

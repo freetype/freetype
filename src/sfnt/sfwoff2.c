@@ -2092,7 +2092,22 @@
     /* This is what we normally expect.                              */
     /* Initially trust `totalSfntSize' and change later as required. */
     if ( woff2.totalSfntSize > sfnt_size )
-      sfnt_size = woff2.totalSfntSize;
+    {
+      /* However, adjust the value to something reasonable. */
+
+      /* Factor 64 is heuristic. */
+      if ( ( woff2.totalSfntSize >> 6 ) > sfnt_size )
+        sfnt_size <<= 6;
+      else
+        sfnt_size = woff2.totalSfntSize;
+
+      /* Value 1<<26 = 67108864 is heuristic. */
+      if (sfnt_size >= (1 << 26))
+        sfnt_size = 1 << 26;
+
+      FT_TRACE4(( "adjusting estimate of uncompressed font size to %lu\n",
+                  sfnt_size ));
+    }
 
     /* Write sfnt header. */
     if ( FT_ALLOC( sfnt, sfnt_size ) ||
