@@ -292,10 +292,10 @@
 
 
     for ( i = 0; i < aligned_size; i += 4 )
-      checksum += ( buf[i    ] << 24 ) |
-                  ( buf[i + 1] << 16 ) |
-                  ( buf[i + 2] <<  8 ) |
-                  ( buf[i + 3] <<  0 );
+      checksum += ( (FT_ULong)buf[i    ] << 24 ) |
+                  ( (FT_ULong)buf[i + 1] << 16 ) |
+                  ( (FT_ULong)buf[i + 2] <<  8 ) |
+                  ( (FT_ULong)buf[i + 3] <<  0 );
 
     /* If size is not aligned to 4, treat as if it is padded with 0s. */
     if ( size != aligned_size )

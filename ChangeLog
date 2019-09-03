@@ -1,3 +1,11 @@
+2019-09-03  Werner Lemberg  <wl@gnu.org>
+
+	* src/sfnt/sfwoff2.c (compute_ULong_sum): Fix undefined shift.
+
+	Reported as
+
+	  https://bugs.chromium.org/p/oss-fuzz/issues/detail?id=16933
+
 2019-09-01  Werner Lemberg  <wl@gnu.org>
 
 	* src/sfnt/sfwoff2.c (woff2_open_font): Add sanity check.
