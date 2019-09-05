@@ -1,5 +1,13 @@
 2019-09-05  Werner Lemberg  <wl@gnu.org>
 
+	[cmake] Add brotli support.
+
+	* CMakeLists.txt (FT_WITH_BROTLI): New option.
+
+	* builds/cmake/FindBrotliDec.cmake: New file.
+
+2019-09-05  Werner Lemberg  <wl@gnu.org>
+
 	Fix handling of `AF_CONFIG_OPTION_INDIC'.
 
 	* devel/ftoption.h, include/freetype/config/ftoption.h:

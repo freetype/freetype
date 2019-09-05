@@ -68,12 +68,14 @@
 # . `CMakeLists.txt' is provided as-is since it is normally not used by the
 #   developer team.
 #
-# . Set the `FT_WITH_ZLIB', `FT_WITH_BZIP2', `FT_WITH_PNG', and
-#   `FT_WITH_HARFBUZZ' CMake variables to `ON' to force using a dependency.
-#   Leave a variable undefined (which is the default) to use the dependency
-#   only if it is available.  Set `CMAKE_DISABLE_FIND_PACKAGE_HarfBuzz=TRUE' to
-#   disable a dependency completely (CMake package name, so `BZip2' instead of
-#   `BZIP2'). Example:
+# . Set the `FT_WITH_ZLIB', `FT_WITH_BZIP2', `FT_WITH_PNG',
+#   `FT_WITH_HARFBUZZ', and `FT_WITH_BROTLI' CMake variables to `ON' to
+#   force using a dependency.  Leave a variable undefined (which is the
+#   default) to use the dependency only if it is available.  Set
+#   `CMAKE_DISABLE_FIND_PACKAGE_XXX=TRUE' to disable a dependency completely
+#   (where `XXX' is a CMake package name like `BZip2').
+#
+#   Example:
 #
 #     cmake -DFT_WITH_ZLIB=ON -DCMAKE_DISABLE_FIND_PACKAGE_HarfBuzz=TRUE [...]
 #
@@ -156,14 +158,15 @@ string(REGEX REPLACE
 math(EXPR LIBRARY_SOVERSION "${LIBTOOL_CURRENT} - ${LIBTOOL_AGE}")
 set(LIBRARY_VERSION "${LIBRARY_SOVERSION}.${LIBTOOL_AGE}.${LIBTOOL_REVISION}")
 
-# These options mean "require x and complain if not found". They'll get
-# optionally found anyway. Use `-DCMAKE_DISABLE_FIND_PACKAGE_x=TRUE` to disable
-# searching for a packge entirely (x is the CMake package name, so "BZip2"
-# instead of "BZIP2").
+# These options mean `require x and complain if not found'.  They'll get
+# optionally found anyway.  Use `-DCMAKE_DISABLE_FIND_PACKAGE_x=TRUE` to
+# disable searching for a package entirely (`x' is the CMake package name,
+# so `BZip2' instead of `BZIP2').
 option(FT_WITH_ZLIB "Use system zlib instead of internal library." OFF)
 option(FT_WITH_BZIP2 "Support bzip2 compressed fonts." OFF)
 option(FT_WITH_PNG "Support PNG compressed OpenType embedded bitmaps." OFF)
 option(FT_WITH_HARFBUZZ "Improve auto-hinting of OpenType fonts." OFF)
+option(FT_WITH_BROTLI "Support compressed WOFF2 fonts." OFF)
 
 
 # Disallow in-source builds
@@ -217,6 +220,12 @@ if (FT_WITH_BZIP2)
   find_package(BZip2 REQUIRED)
 else ()
   find_package(BZip2)
+endif ()
+
+if (FT_WITH_BROTLI)
+  find_package(BrotliDec REQUIRED)
+else ()
+  find_package(BrotliDec)
 endif ()
 
 # Create the configuration file
@@ -281,6 +290,11 @@ endif ()
 if (HARFBUZZ_FOUND)
   string(REGEX REPLACE
     "/\\* +(#define +FT_CONFIG_OPTION_USE_HARFBUZZ) +\\*/" "\\1"
+    FTOPTION_H "${FTOPTION_H}")
+endif ()
+if (BROTLIDEC_FOUND)
+  string(REGEX REPLACE
+    "/\\* +(#define +FT_CONFIG_OPTION_USE_BROTLI) +\\*/" "\\1"
     FTOPTION_H "${FTOPTION_H}")
 endif ()
 
@@ -438,6 +452,12 @@ if (HARFBUZZ_FOUND)
   target_link_libraries(freetype PRIVATE ${HARFBUZZ_LIBRARIES})
   target_include_directories(freetype PRIVATE ${HARFBUZZ_INCLUDE_DIRS})
   list(APPEND PKG_CONFIG_REQUIRED_PRIVATE "harfbuzz >= ${HARFBUZZ_MIN_VERSION}")
+endif ()
+if (BROTLIDEC_FOUND)
+  target_link_libraries(freetype PRIVATE ${BROTLIDEC_LIBRARIES})
+  target_compile_definitions(freetype PRIVATE ${BROTLIDEC_DEFINITIONS})
+  target_include_directories(freetype PRIVATE ${BROTLIDEC_INCLUDE_DIRS})
+  list(APPEND PKG_CONFIG_REQUIRED_PRIVATE "libbrotlidec")
 endif ()
 
 
