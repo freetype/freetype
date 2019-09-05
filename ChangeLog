@@ -1,5 +1,12 @@
 2019-09-05  Werner Lemberg  <wl@gnu.org>
 
+	Fix handling of `AF_CONFIG_OPTION_INDIC'.
+
+	* devel/ftoption.h, include/freetype/config/ftoption.h:
+	`AF_CONFIG_OPTION_INDIC' needs `AF_CONFIG_OPTION_CJK'.
+
+2019-09-05  Werner Lemberg  <wl@gnu.org>
+
 	CMakeLists.txt: Fix generation of DLL related stuff (#56852).
 
 	Extract `version_info' variable from `builds/unix/configure.raw' and

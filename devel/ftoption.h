@@ -887,9 +887,11 @@ FT_BEGIN_HEADER
    *
    * Compile 'autofit' module with fallback Indic script support, covering
    * some scripts that the 'latin' submodule of the 'autofit' module doesn't
-   * (yet) handle.
+   * (yet) handle.  Currently, this needs option `AF_CONFIG_OPTION_CJK`.
    */
+#ifdef AF_CONFIG_OPTION_CJK
 #define AF_CONFIG_OPTION_INDIC
+#endif
 
 
   /**************************************************************************
