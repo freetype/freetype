@@ -89,7 +89,7 @@ cmake_minimum_required(VERSION 2.8.12)
 
 if (NOT CMAKE_VERSION VERSION_LESS 3.3)
   # Allow symbol visibility settings also on static libraries. CMake < 3.3
-  # only sets the propery on a shared library build.
+  # only sets the property on a shared library build.
   cmake_policy(SET CMP0063 NEW)
 endif ()
 
@@ -137,15 +137,24 @@ set(VERSION_MAJOR "2")
 set(VERSION_MINOR "10")
 set(VERSION_PATCH "1")
 
-# SOVERSION scheme: CURRENT.AGE.REVISION
-#   If there was an incompatible interface change:
-#     Increment CURRENT. Set AGE and REVISION to 0
-#   If there was a compatible interface change:
-#     Increment AGE. Set REVISION to 0
-#   If the source code was changed, but there were no interface changes:
-#     Increment REVISION.
-set(LIBRARY_VERSION "6.16.0")
-set(LIBRARY_SOVERSION "6")
+# Generate LIBRARY_VERSION and LIBRARY_SOVERSION.
+set(LIBTOOL_REGEX "version_info='([0-9]+):([0-9]+):([0-9]+)'")
+file(STRINGS "${PROJECT_SOURCE_DIR}/builds/unix/configure.raw"
+  VERSION_INFO
+  REGEX ${LIBTOOL_REGEX})
+string(REGEX REPLACE
+  ${LIBTOOL_REGEX} "\\1"
+  LIBTOOL_CURRENT "${VERSION_INFO}")
+string(REGEX REPLACE
+  ${LIBTOOL_REGEX} "\\2"
+  LIBTOOL_REVISION "${VERSION_INFO}")
+string(REGEX REPLACE
+  ${LIBTOOL_REGEX} "\\3"
+  LIBTOOL_AGE "${VERSION_INFO}")
+
+# This is what libtool does internally on Unix platforms.
+math(EXPR LIBRARY_SOVERSION "${LIBTOOL_CURRENT} - ${LIBTOOL_AGE}")
+set(LIBRARY_VERSION "${LIBRARY_SOVERSION}.${LIBTOOL_AGE}.${LIBTOOL_REVISION}")
 
 # These options mean "require x and complain if not found". They'll get
 # optionally found anyway. Use `-DCMAKE_DISABLE_FIND_PACKAGE_x=TRUE` to disable
@@ -185,10 +194,11 @@ endif ()
 
 
 # Find dependencies
+set(HARFBUZZ_MIN_VERSION "1.3.0")
 if (FT_WITH_HARFBUZZ)
-  find_package(HarfBuzz 1.3.0 REQUIRED)
+  find_package(HarfBuzz ${HARFBUZZ_MIN_VERSION} REQUIRED)
 else ()
-  find_package(HarfBuzz 1.3.0)
+  find_package(HarfBuzz ${HARFBUZZ_MIN_VERSION})
 endif ()
 
 if (FT_WITH_PNG)
@@ -411,23 +421,23 @@ set(PKG_CONFIG_REQUIRED_PRIVATE "")
 if (ZLIB_FOUND)
   target_link_libraries(freetype PRIVATE ${ZLIB_LIBRARIES})
   target_include_directories(freetype PRIVATE ${ZLIB_INCLUDE_DIRS})
-  list(APPEND PKG_CONFIG_REQUIRED_PRIVATE zlib)
+  list(APPEND PKG_CONFIG_REQUIRED_PRIVATE "zlib")
 endif ()
 if (BZIP2_FOUND)
   target_link_libraries(freetype PRIVATE ${BZIP2_LIBRARIES})
   target_include_directories(freetype PRIVATE ${BZIP2_INCLUDE_DIR}) # not BZIP2_INCLUDE_DIRS
-  list(APPEND PKG_CONFIG_REQUIRED_PRIVATE bzip2)
+  list(APPEND PKG_CONFIG_REQUIRED_PRIVATE "bzip2")
 endif ()
 if (PNG_FOUND)
   target_link_libraries(freetype PRIVATE ${PNG_LIBRARIES})
   target_compile_definitions(freetype PRIVATE ${PNG_DEFINITIONS})
   target_include_directories(freetype PRIVATE ${PNG_INCLUDE_DIRS})
-  list(APPEND PKG_CONFIG_REQUIRED_PRIVATE libpng)
+  list(APPEND PKG_CONFIG_REQUIRED_PRIVATE "libpng")
 endif ()
 if (HARFBUZZ_FOUND)
   target_link_libraries(freetype PRIVATE ${HARFBUZZ_LIBRARIES})
   target_include_directories(freetype PRIVATE ${HARFBUZZ_INCLUDE_DIRS})
-  list(APPEND PKG_CONFIG_REQUIRED_PRIVATE harfbuzz)
+  list(APPEND PKG_CONFIG_REQUIRED_PRIVATE "harfbuzz >= ${HARFBUZZ_MIN_VERSION}")
 endif ()
 
 
@@ -453,7 +463,7 @@ endif ()
 if (NOT SKIP_INSTALL_LIBRARIES AND NOT SKIP_INSTALL_ALL)
   # Generate the pkg-config file
   if (UNIX)
-    file(READ ${PROJECT_SOURCE_DIR}/builds/unix/freetype2.in FREETYPE2_PC_IN)
+    file(READ "${PROJECT_SOURCE_DIR}/builds/unix/freetype2.in" FREETYPE2_PC_IN)
 
     string(REPLACE ";" ", " PKG_CONFIG_REQUIRED_PRIVATE "${PKG_CONFIG_REQUIRED_PRIVATE}")
 
@@ -465,7 +475,7 @@ if (NOT SKIP_INSTALL_LIBRARIES AND NOT SKIP_INSTALL_ALL)
            FREETYPE2_PC_IN ${FREETYPE2_PC_IN})
     string(REPLACE "%includedir%" "\${prefix}/${CMAKE_INSTALL_INCLUDEDIR}"
            FREETYPE2_PC_IN ${FREETYPE2_PC_IN})
-    string(REPLACE "%ft_version%" "${VERSION_MAJOR}.${VERSION_MINOR}.${VERSION_PATCH}"
+    string(REPLACE "%ft_version%" "${LIBTOOL_CURRENT}.${LIBTOOL_REVISION}.${LIBTOOL_AGE}"
            FREETYPE2_PC_IN ${FREETYPE2_PC_IN})
     string(REPLACE "%REQUIRES_PRIVATE%" "${PKG_CONFIG_REQUIRED_PRIVATE}"
            FREETYPE2_PC_IN ${FREETYPE2_PC_IN})

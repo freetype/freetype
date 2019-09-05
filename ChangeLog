@@ -1,3 +1,14 @@
+2019-09-05  Werner Lemberg  <wl@gnu.org>
+
+	CMakeLists.txt: Fix generation of DLL related stuff (#56852).
+
+	Extract `version_info' variable from `builds/unix/configure.raw' and
+	use the data to correctly set `LIBRARY_VERSION' and
+	`LIBRARY_SOVERSION'.
+
+	Also use the data to set `ft_version' field in `freetype2.pc'.
+	Also fix the needed minimum version of HarfBuzz in `freetype2.pc'.
+
 2019-09-03  Werner Lemberg  <wl@gnu.org>
 
 	* src/sfnt/sfwoff2.c (compute_ULong_sum): Fix undefined shift.
