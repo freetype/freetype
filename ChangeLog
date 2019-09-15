@@ -1,3 +1,20 @@
+2019-09-15  Avi Halachmi (:avih)  <avihpit@yahoo.com>
+
+	[cmake] Don't fail if brotli is missing (#56894).
+
+	The libs which cmake controls are commented out at
+
+	  include/freetype/config/ftoption.h
+
+	and cmake un-comment each enabled library, but the brotli option was
+	not commented out, therefore `FT_CONFIG_OPTION_USE_BROTLI' remained
+	defined even if brotli was missing/disabled/etc.
+
+	Comment it such that cmake can control it, which means leaving it
+	undefined if brotli is missing.
+
+	* include/freetype/config/ftoption.h: Fix typo.
+
 2019-09-05  Werner Lemberg  <wl@gnu.org>
 
 	[cmake] Add brotli support.
