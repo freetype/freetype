@@ -1,3 +1,11 @@
+2019-09-17  Werner Lemberg  <wl@gnu.org>
+
+	* src/sfnt/sfwoff2.c (woff2_open_font): Check table index.
+
+	Reported as
+
+	  https://bugs.chromium.org/p/oss-fuzz/issues/detail?id=17100
+
 2019-09-15  Avi Halachmi (:avih)  <avihpit@yahoo.com>
 
 	[cmake] Don't fail if brotli is missing (#56894).

@@ -1975,6 +1975,13 @@
             goto Exit;
 
           FT_TRACE6(( "%hu ", table_index ));
+          if ( table_index >= woff2.num_tables )
+          {
+            FT_ERROR(( "woff2_open_font: invalid table index\n" ));
+            error = FT_THROW( Invalid_Table );
+            goto Exit;
+          }
+
           ttc_font->table_indices[j] = table_index;
 
           table = indices[table_index];
