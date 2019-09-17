@@ -1,5 +1,11 @@
 2019-09-17  Werner Lemberg  <wl@gnu.org>
 
+	* src/otvalid/otvcommon.c (otv_Coverage_get_last): Guard `count'.
+
+	Problem reported by Marc Schönefeld <marc.schoenefeld@gmx.org>.
+
+2019-09-17  Werner Lemberg  <wl@gnu.org>
+
 	* src/sfnt/sfwoff2.c (woff2_open_font): Check table index.
 
 	Reported as

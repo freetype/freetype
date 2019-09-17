@@ -151,6 +151,9 @@
     FT_UInt   result = 0;
 
 
+    if ( !count )
+      return result;
+
     switch ( CoverageFormat )
     {
     case 1:
