@@ -1706,6 +1706,7 @@
     FT_FREE( table_entry );
     FT_Stream_Close( stream );
     FT_FREE( stream );
+    FT_FREE( transformed_buf );
 
     return error;
   }
@@ -2170,10 +2171,11 @@
                               woff2.uncompressed_size,
                               stream->cursor,
                               woff2.totalCompressedSize );
-    if ( error )
-      goto Exit;
 
     FT_FRAME_EXIT();
+
+    if ( error )
+      goto Exit;
 
     error = reconstruct_font( uncompressed_buf,
                               woff2.uncompressed_size,
@@ -2183,6 +2185,9 @@
                               &sfnt,
                               &sfnt_size,
                               memory );
+
+    uncompressed_buf = NULL;
+
     if ( error )
       goto Exit;
 
@@ -2221,6 +2226,7 @@
   Exit:
     FT_FREE( tables );
     FT_FREE( indices );
+    FT_FREE( uncompressed_buf );
 
     if ( error )
     {

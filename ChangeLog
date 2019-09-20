@@ -1,3 +1,15 @@
+2019-09-20  Nikhil Ramakrishnan  <ramakrishnan.nikhil@gmail.com>
+
+	[woff2] Fix memory leaks.
+
+	Reported as
+
+	  https://bugs.chromium.org/p/oss-fuzz/issues/detail?id=16896
+
+	* src/sfnt/sfwoff2.c (woff2_open_font): Fix error handling.
+	Free `uncompressed_buf'.
+	(reconstruct_font): Free `transformed_buf'.
+
 2019-09-17  Werner Lemberg  <wl@gnu.org>
 
 	* src/otvalid/otvcommon.c (otv_Coverage_get_last): Guard `count'.
