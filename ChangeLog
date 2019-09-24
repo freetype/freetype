@@ -1,3 +1,7 @@
+2019-09-23  Alexei Podtelezhnikov  <apodtele@gmail.com>
+
+	* src/base/ftstroke.c (ft_stroke_border_arcto): Speed up calculations.
+
 2019-09-20  Nikhil Ramakrishnan  <ramakrishnan.nikhil@gmail.com>
 
 	[woff2] Fix memory leaks.

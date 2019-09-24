@@ -540,63 +540,52 @@
                           FT_Angle         angle_start,
                           FT_Angle         angle_diff )
   {
-    FT_Angle   total, angle, step, rotate, next, theta;
-    FT_Vector  a, b, a2, b2;
-    FT_Fixed   length;
+    FT_Fixed   coef;
+    FT_Vector  a0, a1, a2, a3;
+    FT_Int     i, arcs = 1;
     FT_Error   error = FT_Err_Ok;
 
 
-    /* compute start point */
-    FT_Vector_From_Polar( &a, radius, angle_start );
-    a.x += center->x;
-    a.y += center->y;
+    /* number of cubic arcs to draw */
+    while (  angle_diff > FT_ARC_CUBIC_ANGLE * arcs ||
+            -angle_diff > FT_ARC_CUBIC_ANGLE * arcs )
+      arcs++;
 
-    total  = angle_diff;
-    angle  = angle_start;
-    rotate = ( angle_diff >= 0 ) ? FT_ANGLE_PI2 : -FT_ANGLE_PI2;
+    /* control tangents */
+    coef  = FT_Tan( angle_diff / ( 4 * arcs ) );
+    coef += coef / 3;
 
-    while ( total != 0 )
+    /* compute start and first control point */
+    FT_Vector_From_Polar( &a0, radius, angle_start );
+    a1.x = FT_MulFix( -a0.y, coef );
+    a1.y = FT_MulFix(  a0.x, coef );
+
+    a0.x += center->x;
+    a0.y += center->y;
+    a1.x += a0.x;
+    a1.y += a0.y;
+
+    for ( i = 1; i <= arcs; i++ )
     {
-      step = total;
-      if ( step > FT_ARC_CUBIC_ANGLE )
-        step = FT_ARC_CUBIC_ANGLE;
+      /* compute end and second control point */
+      FT_Vector_From_Polar( &a3, radius,
+                            angle_start + i * angle_diff / arcs );
+      a2.x = FT_MulFix(  a3.y, coef );
+      a2.y = FT_MulFix( -a3.x, coef );
 
-      else if ( step < -FT_ARC_CUBIC_ANGLE )
-        step = -FT_ARC_CUBIC_ANGLE;
-
-      next  = angle + step;
-      theta = step;
-      if ( theta < 0 )
-        theta = -theta;
-
-      theta >>= 1;
-
-      /* compute end point */
-      FT_Vector_From_Polar( &b, radius, next );
-      b.x += center->x;
-      b.y += center->y;
-
-      /* compute first and second control points */
-      length = FT_MulDiv( radius, FT_Sin( theta ) * 4,
-                          ( 0x10000L + FT_Cos( theta ) ) * 3 );
-
-      FT_Vector_From_Polar( &a2, length, angle + rotate );
-      a2.x += a.x;
-      a2.y += a.y;
-
-      FT_Vector_From_Polar( &b2, length, next - rotate );
-      b2.x += b.x;
-      b2.y += b.y;
+      a3.x += center->x;
+      a3.y += center->y;
+      a2.x += a3.x;
+      a2.y += a3.y;
 
       /* add cubic arc */
-      error = ft_stroke_border_cubicto( border, &a2, &b2, &b );
+      error = ft_stroke_border_cubicto( border, &a1, &a2, &a3 );
       if ( error )
         break;
 
-      /* process the rest of the arc ?? */
-      a      = b;
-      total -= step;
-      angle  = next;
+      /* a0 = a3; */
+      a1.x = a3.x - a2.x + a3.x;
+      a1.y = a3.y - a2.y + a3.y;
     }
 
     return error;
