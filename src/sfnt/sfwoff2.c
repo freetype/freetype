@@ -2161,6 +2161,13 @@
       goto Exit;
     }
 
+    if ( woff2.uncompressed_size > sfnt_size )
+    {
+      FT_ERROR(( "woff2_open_font: SFNT table lengths are too large.\n" ));
+      error = FT_THROW( Invalid_Table );
+      goto Exit;
+    }
+
     /* Allocate memory for uncompressed table data. */
     if ( FT_ALLOC( uncompressed_buf, woff2.uncompressed_size ) ||
          FT_FRAME_ENTER( woff2.totalCompressedSize )           )

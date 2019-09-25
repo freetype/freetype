@@ -1,3 +1,11 @@
+2019-09-25  Werner Lemberg  <wl@gnu.org>
+
+	* src/sfnt/sfwoff2.c (woff2_open_font): Check (sum of) table sizes.
+
+	Reported as
+
+	  https://bugs.chromium.org/p/oss-fuzz/issues/detail?id=17684
+
 2019-09-23  Alexei Podtelezhnikov  <apodtele@gmail.com>
 
 	* src/base/ftstroke.c (ft_stroke_border_arcto): Speed up calculations.
