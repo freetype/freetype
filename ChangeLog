@@ -1,3 +1,8 @@
+2019-09-25  Alexei Podtelezhnikov  <apodtele@gmail.com>
+
+	* src/base/ftstroke.c (ft_stroker_outside): Speed up clipped miter.
+	* include/freetype/ftstroke.h: Wordsmith miter docs.
+
 2019-09-25  Werner Lemberg  <wl@gnu.org>
 
 	* src/sfnt/sfwoff2.c (woff2_open_font): Check (sum of) table sizes.

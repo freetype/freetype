@@ -1062,10 +1062,10 @@
     else
     {
       /* this is a mitered (pointed) or beveled (truncated) corner */
-      FT_Fixed  sigma = 0, radius = stroker->radius;
-      FT_Angle  theta = 0, phi = 0;
-      FT_Fixed  thcos = 0;
-      FT_Bool   bevel, fixed_bevel;
+      FT_Fixed   radius = stroker->radius;
+      FT_Vector  sigma;
+      FT_Angle   theta = 0, phi = 0;
+      FT_Bool    bevel, fixed_bevel;
 
 
       rotate = FT_SIDE_TO_ROTATE( side );
@@ -1076,26 +1076,20 @@
       fixed_bevel =
         FT_BOOL( stroker->line_join != FT_STROKER_LINEJOIN_MITER_VARIABLE );
 
+      /* check miter limit first */
       if ( !bevel )
       {
-        theta = FT_Angle_Diff( stroker->angle_in, stroker->angle_out );
+        theta = FT_Angle_Diff( stroker->angle_in, stroker->angle_out ) / 2;
 
-        if ( theta == FT_ANGLE_PI )
-        {
-          theta = rotate;
-          phi   = stroker->angle_in;
-        }
-        else
-        {
-          theta /= 2;
-          phi    = stroker->angle_in + theta + rotate;
-        }
+        if ( theta == FT_ANGLE_PI2 )
+          theta = -rotate;
 
-        thcos = FT_Cos( theta );
-        sigma = FT_MulFix( stroker->miter_limit, thcos );
+        phi    = stroker->angle_in + theta + rotate;
+
+        FT_Vector_From_Polar( &sigma, stroker->miter_limit, theta );
 
         /* is miter limit exceeded? */
-        if ( sigma < 0x10000L )
+        if ( sigma.x < 0x10000L )
         {
           /* don't create variable bevels for very small deviations; */
           /* FT_Sin(x) = 0 for x <= 57                               */
@@ -1122,36 +1116,34 @@
           border->movable = FALSE;
           error = ft_stroke_border_lineto( border, &delta, FALSE );
         }
-        else /* variable bevel */
+        else /* variable bevel or clipped miter */
         {
           /* the miter is truncated */
           FT_Vector  middle, delta;
-          FT_Fixed   length;
+          FT_Fixed   coef;
 
 
-          /* compute middle point */
+          /* compute middle point and first angle point */
           FT_Vector_From_Polar( &middle,
                                 FT_MulFix( radius, stroker->miter_limit ),
                                 phi );
+
+          coef    = FT_DivFix(  0x10000L - sigma.x, sigma.y );
+          delta.x = FT_MulFix(  middle.y, coef );
+          delta.y = FT_MulFix( -middle.x, coef );
+
           middle.x += stroker->center.x;
           middle.y += stroker->center.y;
-
-          /* compute first angle point */
-          length = FT_MulDiv( radius, 0x10000L - sigma,
-                              ft_pos_abs( FT_Sin( theta ) ) );
-
-          FT_Vector_From_Polar( &delta, length, phi + rotate );
-          delta.x += middle.x;
-          delta.y += middle.y;
+          delta.x  += middle.x;
+          delta.y  += middle.y;
 
           error = ft_stroke_border_lineto( border, &delta, FALSE );
           if ( error )
             goto Exit;
 
           /* compute second angle point */
-          FT_Vector_From_Polar( &delta, length, phi - rotate );
-          delta.x += middle.x;
-          delta.y += middle.y;
+          delta.x = middle.x - delta.x + middle.x;
+          delta.y = middle.y - delta.y + middle.y;
 
           error = ft_stroke_border_lineto( border, &delta, FALSE );
           if ( error )
@@ -1178,7 +1170,7 @@
         FT_Vector  delta;
 
 
-        length = FT_DivFix( stroker->radius, thcos );
+        length = FT_MulDiv( stroker->radius, stroker->miter_limit, sigma.x );
 
         FT_Vector_From_Polar( &delta, length, phi );
         delta.x += stroker->center.x;
