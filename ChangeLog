@@ -1,3 +1,7 @@
+2019-09-27  Alexei Podtelezhnikov  <apodtele@gmail.com>
+
+	* src/base/ftstroke.c (ft_stroker_cap): Speed up caps.
+
 2019-09-25  Alexei Podtelezhnikov  <apodtele@gmail.com>
 
 	* src/base/ftstroke.c (ft_stroker_outside): Speed up clipped miter.

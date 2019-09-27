@@ -297,12 +297,13 @@ FT_BEGIN_HEADER
    *     expressed as 16.16 fixed point value.
    *
    * @note:
-   *   The radius is expressed in the same units as the outline coordinates.
+   *   The `radius` is expressed in the same units as the outline
+   *   coordinates.
    *
-   *   The miter limit multiplied by the radius gives the maximum size
+   *   The `miter_limit` multiplied by the `radius` gives the maximum size
    *   of a miter spike, at which it is clipped for
-   *   `FT_STROKER_LINEJOIN_MITER_VARIABLE` or replaced with a bevel join for
-   *   `FT_STROKER_LINEJOIN_MITER_FIXED`.
+   *   @FT_STROKER_LINEJOIN_MITER_VARIABLE or replaced with a bevel join for
+   *   @FT_STROKER_LINEJOIN_MITER_FIXED.
    *
    *   This function calls @FT_Stroker_Rewind automatically.
    */

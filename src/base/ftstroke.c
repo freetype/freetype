@@ -923,55 +923,40 @@
 
       error = ft_stroker_arcto( stroker, side );
     }
-    else if ( stroker->line_cap == FT_STROKER_LINECAP_SQUARE )
+    else
     {
-      /* add a square cap */
-      FT_Vector        delta, delta2;
-      FT_Angle         rotate = FT_SIDE_TO_ROTATE( side );
+      /* add a square or butt cap */
+      FT_Vector        middle, delta;
       FT_Fixed         radius = stroker->radius;
       FT_StrokeBorder  border = stroker->borders + side;
 
 
-      FT_Vector_From_Polar( &delta2, radius, angle + rotate );
-      FT_Vector_From_Polar( &delta,  radius, angle );
+      /* compute middle point and first angle point */
+      FT_Vector_From_Polar( &middle, radius, angle );
+      delta.x = side ?  middle.y : -middle.y;
+      delta.y = side ? -middle.x :  middle.x;
 
-      delta.x += stroker->center.x + delta2.x;
-      delta.y += stroker->center.y + delta2.y;
+      if ( stroker->line_cap == FT_STROKER_LINECAP_SQUARE )
+      {
+        middle.x += stroker->center.x;
+        middle.y += stroker->center.y;
+      }
+      else  /* FT_STROKER_LINECAP_BUTT */
+      {
+        middle.x  = stroker->center.x;
+        middle.y  = stroker->center.y;
+      }
+
+      delta.x  += middle.x;
+      delta.y  += middle.y;
 
       error = ft_stroke_border_lineto( border, &delta, FALSE );
       if ( error )
         goto Exit;
 
-      FT_Vector_From_Polar( &delta2, radius, angle - rotate );
-      FT_Vector_From_Polar( &delta,  radius, angle );
-
-      delta.x += delta2.x + stroker->center.x;
-      delta.y += delta2.y + stroker->center.y;
-
-      error = ft_stroke_border_lineto( border, &delta, FALSE );
-    }
-    else if ( stroker->line_cap == FT_STROKER_LINECAP_BUTT )
-    {
-      /* add a butt ending */
-      FT_Vector        delta;
-      FT_Angle         rotate = FT_SIDE_TO_ROTATE( side );
-      FT_Fixed         radius = stroker->radius;
-      FT_StrokeBorder  border = stroker->borders + side;
-
-
-      FT_Vector_From_Polar( &delta, radius, angle + rotate );
-
-      delta.x += stroker->center.x;
-      delta.y += stroker->center.y;
-
-      error = ft_stroke_border_lineto( border, &delta, FALSE );
-      if ( error )
-        goto Exit;
-
-      FT_Vector_From_Polar( &delta, radius, angle - rotate );
-
-      delta.x += stroker->center.x;
-      delta.y += stroker->center.y;
+      /* compute second angle point */
+      delta.x = middle.x - delta.x + middle.x;
+      delta.y = middle.y - delta.y + middle.y;
 
       error = ft_stroke_border_lineto( border, &delta, FALSE );
     }
