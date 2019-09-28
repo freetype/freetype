@@ -927,6 +927,7 @@
     if ( FT_NEW_ARRAY( glyph_buf, glyph_buf_size ) )
       goto Fail;
 
+    info->x_mins = NULL;
     if ( FT_NEW_ARRAY( info->x_mins, num_glyphs ) )
       goto Fail;
 
@@ -2007,8 +2008,10 @@
       }
 
       /* Collection directory reading complete. */
-      FT_TRACE2(( "WOFF2 collection dirtectory is valid.\n" ));
+      FT_TRACE2(( "WOFF2 collection directory is valid.\n" ));
     }
+    else
+      woff2.ttc_fonts = NULL;
 
     woff2.compressed_offset = FT_STREAM_POS();
     file_offset             = ROUND4( woff2.compressed_offset +
@@ -2234,6 +2237,21 @@
     FT_FREE( tables );
     FT_FREE( indices );
     FT_FREE( uncompressed_buf );
+    FT_FREE( info.x_mins );
+
+    if ( woff2.ttc_fonts )
+    {
+      WOFF2_TtcFont  ttc_font = woff2.ttc_fonts;
+
+
+      for ( nn = 0; nn < woff2.num_fonts; nn++ )
+      {
+        FT_FREE( ttc_font->table_indices );
+        ttc_font++;
+      }
+
+      FT_FREE( woff2.ttc_fonts );
+    }
 
     if ( error )
     {

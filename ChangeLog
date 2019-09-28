@@ -1,3 +1,16 @@
+2019-09-28  Werner Lemberg  <wl@gnu.org>
+
+	[woff2] Fix memory leaks.
+
+	One of them reported as
+
+	  https://bugs.chromium.org/p/oss-fuzz/issues/detail?id=17766
+
+	* src/sfnt/sfwoff2.c (woff2_open_font): Free `info->x_mins' and
+	`woff2->ttc_fonts'.
+
+	(reconstruct_glyf): Initialize `info->x_mins'.
+
 2019-09-27  Alexei Podtelezhnikov  <apodtele@gmail.com>
 
 	* src/base/ftstroke.c (ft_stroker_cap): Speed up caps.
