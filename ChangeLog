@@ -1,5 +1,11 @@
 2019-09-28  Werner Lemberg  <wl@gnu.org>
 
+	* src/sfnt/sfwoff2.c (woff2_open_font): Fix sanity check.
+
+	Correct thinkos in patch from 2019-09-01.
+
+2019-09-28  Werner Lemberg  <wl@gnu.org>
+
 	[woff2] Fix memory leaks.
 
 	One of them reported as

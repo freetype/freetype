@@ -2107,8 +2107,8 @@
       /* However, adjust the value to something reasonable. */
 
       /* Factor 64 is heuristic. */
-      if ( ( woff2.totalSfntSize >> 6 ) > sfnt_size )
-        sfnt_size <<= 6;
+      if ( ( woff2.totalSfntSize >> 6 ) > woff2.length )
+        sfnt_size = woff2.length << 6;
       else
         sfnt_size = woff2.totalSfntSize;
 
@@ -2116,8 +2116,11 @@
       if (sfnt_size >= (1 << 26))
         sfnt_size = 1 << 26;
 
-      FT_TRACE4(( "adjusting estimate of uncompressed font size to %lu\n",
-                  sfnt_size ));
+#ifdef FT_DEBUG_LEVEL_TRACE
+      if ( sfnt_size != woff2.totalSfntSize )
+        FT_TRACE4(( "adjusting estimate of uncompressed font size to %lu\n",
+                    sfnt_size ));
+#endif
     }
 
     /* Write sfnt header. */
