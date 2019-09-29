@@ -927,7 +927,6 @@
     if ( FT_NEW_ARRAY( glyph_buf, glyph_buf_size ) )
       goto Fail;
 
-    info->x_mins = NULL;
     if ( FT_NEW_ARRAY( info->x_mins, num_glyphs ) )
       goto Fail;
 
@@ -938,7 +937,7 @@
       FT_Bool    have_bbox  = FALSE;
       FT_Byte    bbox_bitmap;
       FT_ULong   bbox_offset;
-      FT_UShort  x_min;
+      FT_UShort  x_min      = 0;
 
 
       /* Set `have_bbox'. */
@@ -1493,7 +1492,7 @@
     FT_ULong   checksum      = 0;
     FT_ULong   loca_checksum = 0;
     FT_Int     nn            = 0;
-    FT_UShort  num_hmetrics;
+    FT_UShort  num_hmetrics  = 0;
     FT_ULong   font_checksum = info->header_checksum;
     FT_Bool    is_glyf_xform = FALSE;
 
@@ -1727,7 +1726,7 @@
     FT_Int     face_index;
 
     WOFF2_HeaderRec  woff2;
-    WOFF2_InfoRec    info;
+    WOFF2_InfoRec    info         = { 0, 0, 0, NULL };
     WOFF2_Table      tables       = NULL;
     WOFF2_Table*     indices      = NULL;
     WOFF2_Table*     temp_indices = NULL;
