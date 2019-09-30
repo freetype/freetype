@@ -1,5 +1,13 @@
 2019-09-30  Werner Lemberg  <wl@gnu.org>
 
+	* src/sfnt/sfwoff2.c (reconstruct_font): Fix memory leak.
+
+	Reported as
+
+	  https://bugs.chromium.org/p/oss-fuzz/issues/detail?id=17812
+
+2019-09-30  Werner Lemberg  <wl@gnu.org>
+
 	[woff2] Reject fonts without `head' table.
 
 	Also fix memory deallocation in case of error.

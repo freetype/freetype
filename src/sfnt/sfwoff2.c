@@ -1534,7 +1534,7 @@
 
     /* Create a stream for the uncompressed buffer. */
     if ( FT_NEW( stream ) )
-      return FT_THROW( Invalid_Table );
+      goto Fail;
     FT_Stream_OpenMemory( stream, transformed_buf, transformed_buf_size );
 
     FT_ASSERT( FT_STREAM_POS() == 0 );
@@ -1554,16 +1554,16 @@
                   (FT_Char)( table.Tag       ) ));
 
       if ( FT_STREAM_SEEK( table.src_offset ) )
-        return FT_THROW( Invalid_Table );
+        goto Fail;
 
       if ( table.src_offset + table.src_length > transformed_buf_size )
-        return FT_THROW( Invalid_Table );
+        goto Fail;
 
       /* Get stream size for fields of `hmtx' table. */
       if ( table.Tag == TTAG_hhea )
       {
         if ( read_num_hmetrics( stream, &num_hmetrics ) )
-          return FT_THROW( Invalid_Table );
+          goto Fail;
       }
 
       info->num_hmetrics = num_hmetrics;
@@ -1575,7 +1575,7 @@
         if ( table.Tag == TTAG_head )
         {
           if ( table.src_length < 12 )
-            return FT_THROW( Invalid_Table );
+            goto Fail;
 
           buf_cursor = transformed_buf + table.src_offset + 8;
           /* Set checkSumAdjustment = 0 */
@@ -1590,7 +1590,7 @@
 
         if ( WRITE_SFNT_BUF( transformed_buf + table.src_offset,
                              table.src_length ) )
-          return FT_THROW( Invalid_Table );
+          goto Fail;
       }
       else
       {
@@ -1611,7 +1611,7 @@
                                  &dest_offset,
                                  info,
                                  memory ) )
-            return FT_THROW( Invalid_Table );
+            goto Fail;
 
           FT_TRACE4(( "Checksum = %09x.\n", checksum ));
         }
@@ -1625,7 +1625,7 @@
           if ( !is_glyf_xform )
           {
             if ( get_x_mins( stream, indices, num_tables, info, memory ) )
-              return FT_THROW( Invalid_Table );
+              goto Fail;
           }
 
           table.dst_offset = dest_offset;
@@ -1639,13 +1639,13 @@
                                  sfnt_size,
                                  &dest_offset,
                                  memory ) )
-            return FT_THROW( Invalid_Table );
+            goto Fail;
         }
         else
         {
           /* Unknown transform. */
           FT_ERROR(( "Unknown table transform.\n" ));
-          return FT_THROW( Invalid_Table );
+          goto Fail;
         }
       }
 
