@@ -1478,6 +1478,8 @@
                     FT_ULong*     sfnt_size,
                     FT_Memory     memory )
   {
+    /* Memory management of `transformed_buf' is handled by the caller. */
+
     FT_Error   error       = FT_Err_Ok;
     FT_Stream  stream      = NULL;
     FT_Byte*   buf_cursor  = NULL;
@@ -1534,8 +1536,6 @@
     if ( FT_NEW( stream ) )
       return FT_THROW( Invalid_Table );
     FT_Stream_OpenMemory( stream, transformed_buf, transformed_buf_size );
-    stream->memory = memory;
-    stream->close  = stream_close;
 
     FT_ASSERT( FT_STREAM_POS() == 0 );
 
@@ -1675,11 +1675,14 @@
 
     /* Update `head' checkSumAdjustment. */
     head_table = find_table( indices, num_tables, TTAG_head );
-    if ( head_table )
+    if ( !head_table )
     {
-      if ( head_table->dst_length < 12 )
-        goto Fail;
+      FT_ERROR(( "`head' table is missing.\n" ));
+      goto Fail;
     }
+
+    if ( head_table->dst_length < 12 )
+      goto Fail;
 
     buf_cursor    = sfnt + head_table->dst_offset + 8;
     font_checksum = 0xB1B0AFBA - font_checksum;
@@ -1706,7 +1709,6 @@
     FT_FREE( table_entry );
     FT_Stream_Close( stream );
     FT_FREE( stream );
-    FT_FREE( transformed_buf );
 
     return error;
   }
@@ -2197,8 +2199,6 @@
                               &sfnt,
                               &sfnt_size,
                               memory );
-
-    uncompressed_buf = NULL;
 
     if ( error )
       goto Exit;

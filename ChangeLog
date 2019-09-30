@@ -1,3 +1,18 @@
+2019-09-30  Werner Lemberg  <wl@gnu.org>
+
+	[woff2] Reject fonts without `head' table.
+
+	Also fix memory deallocation in case of error.
+
+	`head' problem reported as
+
+	  https://bugs.chromium.org/p/oss-fuzz/issues/detail?id=17820
+
+	* src/sfnt/sfwoff2.c (reconstruct_glyf): Don't use `stream_close'.
+	Abort if `head_table' is NULL.
+	Don't free `transformed_buf' in case of error.
+	(woff2_open_font): Don't set `uncompressed_buf' to NULL.
+
 2019-09-29  Werner Lemberg  <wl@gnu.org>
 
 	[woff2] Fix compiler warnings.
