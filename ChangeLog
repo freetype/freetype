@@ -1,3 +1,11 @@
+2019-10-01  Werner Lemberg  <wl@gnu.org>
+
+	* src/sfnt/sfwoff2 (woff2_open_font): Initialize `woff2.ttc_fonts'.
+
+	Reported as
+
+	  https://bugs.chromium.org/p/oss-fuzz/issues/detail?id=17804
+
 2019-09-30  Werner Lemberg  <wl@gnu.org>
 
 	* src/sfnt/sfwoff2.c (reconstruct_font): Fix memory leak.

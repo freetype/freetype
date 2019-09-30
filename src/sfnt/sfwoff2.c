@@ -1816,6 +1816,8 @@
 
     FT_TRACE2(( "woff2_open_font: WOFF2 Header is valid.\n" ));
 
+    woff2.ttc_fonts = NULL;
+
     /* Read table directory. */
     if ( FT_NEW_ARRAY( tables, woff2.num_tables )  ||
          FT_NEW_ARRAY( indices, woff2.num_tables ) )
