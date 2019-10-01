@@ -1,3 +1,7 @@
+2019-10-01  Alexei Podtelezhnikov  <apodtele@gmail.com>
+
+	* src/base/ftstroke.c (ft_stroker_inside): Speed up.
+
 2019-10-01  Werner Lemberg  <wl@gnu.org>
 
 	* src/sfnt/sfwoff2 (woff2_open_font): Initialize `woff2.ttc_fonts'.

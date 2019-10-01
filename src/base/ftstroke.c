@@ -974,8 +974,8 @@
   {
     FT_StrokeBorder  border = stroker->borders + side;
     FT_Angle         phi, theta, rotate;
-    FT_Fixed         length, thcos;
-    FT_Vector        delta;
+    FT_Fixed         length;
+    FT_Vector        sigma, delta;
     FT_Error         error = FT_Err_Ok;
     FT_Bool          intersect;          /* use intersection of lines? */
 
@@ -993,9 +993,12 @@
     else
     {
       /* compute minimum required length of lines */
-      FT_Fixed  min_length = ft_pos_abs( FT_MulFix( stroker->radius,
-                                                    FT_Tan( theta ) ) );
+      FT_Fixed  min_length;
 
+
+      FT_Vector_Unit( &sigma, theta );
+      min_length =
+        ft_pos_abs( FT_MulDiv( stroker->radius, sigma.y, sigma.x ) );
 
       intersect = FT_BOOL( min_length                         &&
                            stroker->line_length >= min_length &&
@@ -1014,13 +1017,11 @@
     else
     {
       /* compute median angle */
-      phi = stroker->angle_in + theta;
+      phi = stroker->angle_in + theta + rotate;
 
-      thcos = FT_Cos( theta );
+      length = FT_DivFix( stroker->radius, sigma.x );
 
-      length = FT_DivFix( stroker->radius, thcos );
-
-      FT_Vector_From_Polar( &delta, length, phi + rotate );
+      FT_Vector_From_Polar( &delta, length, phi );
       delta.x += stroker->center.x;
       delta.y += stroker->center.y;
     }
