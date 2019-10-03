@@ -1706,6 +1706,9 @@
     if ( !error )
       error = FT_THROW( Invalid_Table );
 
+    /* Set pointer of sfnt stream to its correct value. */
+    *sfnt_bytes = sfnt;
+
     FT_FREE( table_entry );
     FT_Stream_Close( stream );
     FT_FREE( stream );
