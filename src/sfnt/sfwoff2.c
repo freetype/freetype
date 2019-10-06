@@ -1235,6 +1235,9 @@
     if ( !error )
       error = FT_THROW( Invalid_Table );
 
+    /* Set pointer `sfnt_bytes' to its correct value. */
+    *sfnt_bytes = sfnt;
+
     FT_FREE( substreams );
     FT_FREE( loca_values );
     FT_FREE( n_points_arr );

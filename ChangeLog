@@ -1,5 +1,13 @@
 2019-10-06  Werner Lemberg  <wl@gnu.org>
 
+	* src/sfnt/sfwoff2 (reconstruct_glyf): Fix reallocation.
+
+	Reported as
+
+	  https://bugs.chromium.org/p/oss-fuzz/issues/detail?id=18046
+
+2019-10-06  Werner Lemberg  <wl@gnu.org>
+
 	Improve memory debugging.
 
 	* include/freetype/internal/ftmemory.h (FT_MEM_FREE): Use
