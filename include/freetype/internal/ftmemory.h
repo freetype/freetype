@@ -153,10 +153,10 @@ extern "C++"
                                                (FT_Long)(size), \
                                                &error ) )
 
-#define FT_MEM_FREE( ptr )                \
-          FT_BEGIN_STMNT                  \
-            ft_mem_free( memory, (ptr) ); \
-            (ptr) = NULL;                 \
+#define FT_MEM_FREE( ptr )                                  \
+          FT_BEGIN_STMNT                                    \
+            FT_DEBUG_INNER( ft_mem_free( memory, (ptr) ) ); \
+            (ptr) = NULL;                                   \
           FT_END_STMNT
 
 #define FT_MEM_NEW( ptr )                        \

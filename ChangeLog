@@ -1,3 +1,13 @@
+2019-10-06  Werner Lemberg  <wl@gnu.org>
+
+	Improve memory debugging.
+
+	* include/freetype/internal/ftmemory.h (FT_MEM_FREE): Use
+	`FT_DEBUG_INNER' to set source code file name and line.
+
+	* src/base/ftdbgmem.c (ft_mem_table_remove): Better formatting of
+	tracing message.
+
 2019-10-03  Werner Lemberg  <wl@gnu.org>
 
 	* src/sfnt/sfwoff2 (reconstruct_font): Fix reallocation.
