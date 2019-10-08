@@ -1,6 +1,28 @@
+2019-10-08  Werner Lemberg  <wl@gnu.org>
+
+	[woff2] Fix SFNT table checks.
+
+	Also reduce number of SFNT table lookups.
+
+	Reported as
+
+	  https://bugs.chromium.org/p/oss-fuzz/issues/detail?id=18065
+
+	* include/freetype/internal/wofftypes.h (WOFF2_InfoRec): Add fields
+	`glyf_table', `loca_table', and `head_table'.
+
+	* src/sfnt/sfwoff2.c (reconstruct_glyf): Update signature.
+	Use table pointers in `info' parameter.
+	(get_x_mins): Check `maxp_table'
+	Use table pointers in `info' parameter.
+	(reconstruct_font):  Use and set table pointers in `info' parameter.
+	Fix check for `glyf' and `loca' tables.
+	Update call to `reconstruct_glyf'.
+	(woff2_open_font): Updated.
+
 2019-10-06  Werner Lemberg  <wl@gnu.org>
 
-	* src/sfnt/sfwoff2 (reconstruct_glyf): Fix reallocation.
+	* src/sfnt/sfwoff2.c (reconstruct_glyf): Fix reallocation.
 
 	Reported as
 
