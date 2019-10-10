@@ -1,9 +1,17 @@
+2019-10-10  Werner Lemberg  <wl@gnu.org>
+
+	* src/sfnt/sfwoff2.c (reconstruct_glyf): Check `triplet_size'.
+
+	Reported as
+
+	  https://bugs.chromium.org/p/oss-fuzz/issues/detail?id=18108
+
 2019-10-09  John Tytgat  <John.Tytgat@esko.com>
 
 	[cff] Fix FT_FACE_FLAG_GLYPH_NAMES for CFF2 based fonts (#57023).
 
-	* src/cff/cffobjs.c (cff_face_init): Don't set FT_FACE_FLAG_GLYPH_NAMES
-	for CFF2 based fonts.
+	* src/cff/cffobjs.c (cff_face_init): Don't set
+	FT_FACE_FLAG_GLYPH_NAMES for CFF2 based fonts.
 
 2019-10-08  Werner Lemberg  <wl@gnu.org>
 

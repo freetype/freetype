@@ -1070,6 +1070,11 @@
         flags_buf   = stream->base + substreams[FLAG_STREAM].offset;
         triplet_buf = stream->base + substreams[GLYPH_STREAM].offset;
 
+        if ( substreams[GLYPH_STREAM].size <
+               ( substreams[GLYPH_STREAM].offset -
+                 substreams[GLYPH_STREAM].start ) )
+          goto Fail;
+
         triplet_size       = substreams[GLYPH_STREAM].size -
                                ( substreams[GLYPH_STREAM].offset -
                                  substreams[GLYPH_STREAM].start );
