@@ -1,3 +1,7 @@
+2019-10-10  Alexei Podtelezhnikov  <apodtele@gmail.com>
+
+	* src/sfnt/pngshim.c (premultiply_data): Optimize for __SSE__ only.
+
 2019-10-10  Werner Lemberg  <wl@gnu.org>
 
 	* src/sfnt/sfwoff2.c (reconstruct_glyf): Check `triplet_size'.
