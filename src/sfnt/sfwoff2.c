@@ -1969,7 +1969,10 @@
         FT_TRACE5(( "Number of tables in font %d: %ld\n",
                     nn, ttc_font->num_tables ));
 
-        FT_TRACE6(( "  Indices: " ));
+#ifdef FT_DEBUG_LEVEL_TRACE
+        if ( ttc_font->num_tables )
+          FT_TRACE6(( "  Indices: " ));
+#endif
 
         glyf_index = 0;
         loca_index = 0;
@@ -2000,7 +2003,10 @@
             glyf_index = table_index;
         }
 
-        FT_TRACE6(( "\n" ));
+#ifdef FT_DEBUG_LEVEL_TRACE
+        if ( ttc_font->num_tables )
+          FT_TRACE6(( "\n" ));
+#endif
 
         /* glyf and loca must be consecutive */
         if ( glyf_index > 0 || loca_index > 0 )
@@ -2137,6 +2143,9 @@
 
     sfnt_header = sfnt;
 
+    WRITE_ULONG( sfnt_header, woff2.flavor );
+
+    if ( woff2.num_tables )
     {
       FT_UInt  searchRange, entrySelector, rangeShift, x;
 
@@ -2151,16 +2160,15 @@
       entrySelector--;
 
       searchRange = ( 1 << entrySelector ) * 16;
-      rangeShift  = ( woff2.num_tables * 16  ) - searchRange;
+      rangeShift  = ( woff2.num_tables * 16 ) - searchRange;
 
-      WRITE_ULONG ( sfnt_header, woff2.flavor );
       WRITE_USHORT( sfnt_header, woff2.num_tables );
       WRITE_USHORT( sfnt_header, searchRange );
       WRITE_USHORT( sfnt_header, entrySelector );
       WRITE_USHORT( sfnt_header, rangeShift );
-
-      info.header_checksum = compute_ULong_sum( sfnt, 12 );
     }
+
+    info.header_checksum = compute_ULong_sum( sfnt, 12 );
 
     /* Sort tables by tag. */
     ft_qsort( indices,
