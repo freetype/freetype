@@ -1,3 +1,11 @@
+2019-10-25  Werner Lemberg  <wl@gnu.org>
+
+	* src/sfnt/sfwoff2.c (woff2_open_font): Check `num_fonts' for TTCs.
+
+	Reported as
+
+	  https://bugs.chromium.org/p/oss-fuzz/issues/detail?id=18494
+
 2019-10-22  Werner Lemberg  <wl@gnu.org>
 
 	* src/sfnt/sfwoff2.c (woff2_open_font): Avoid undefined shift.

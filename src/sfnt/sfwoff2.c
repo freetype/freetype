@@ -1948,6 +1948,12 @@
       if ( READ_255USHORT( woff2.num_fonts ) )
         goto Exit;
 
+      if ( !woff2.num_fonts )
+      {
+        error = FT_THROW( Invalid_Table );
+        goto Exit;
+      }
+
       FT_TRACE4(( "Number of fonts in TTC: %ld\n", woff2.num_fonts ));
 
       if ( FT_NEW_ARRAY( woff2.ttc_fonts, woff2.num_fonts ) )
