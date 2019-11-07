@@ -1,3 +1,10 @@
+2019-11-07  Nikolaus Waxweiler  <madigens@gmail.com>
+
+	* CMakeLists.txt: Minor additions to the notes, compile
+	  builds/unix/ftsystem.c instead of src/base/ftsystem.c on UNIX.
+
+	The latter change is based on the code proposed by rim in #55235.
+
 2019-10-25  Werner Lemberg  <wl@gnu.org>
 
 	* src/sfnt/sfwoff2.c (woff2_open_font): Check `num_fonts' for TTCs.

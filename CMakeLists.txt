@@ -14,14 +14,14 @@
 #
 # The following will 1. create a build directory and 2. change into it and
 # call cmake to configure the build with default parameters as a static
-# library.
+# library. See https://cmake.org/cmake/help/latest/variable/CMAKE_BUILD_TYPE.html
+# for information about Debug, Release, etc. builds.
 #
-#   cmake -E make_directory build
-#   cmake -E chdir build cmake ..
+#   cmake -B build -D CMAKE_BUILD_TYPE=Release
 #
 # For a dynamic library, use
 #
-#   cmake -E chdir build cmake -D BUILD_SHARED_LIBS:BOOL=true ..
+#   cmake -B build -D BUILD_SHARED_LIBS=true -D CMAKE_BUILD_TYPE=Release
 #
 # For a framework on OS X, use
 #
@@ -71,13 +71,23 @@
 # . Set the `FT_WITH_ZLIB', `FT_WITH_BZIP2', `FT_WITH_PNG',
 #   `FT_WITH_HARFBUZZ', and `FT_WITH_BROTLI' CMake variables to `ON' to
 #   force using a dependency.  Leave a variable undefined (which is the
-#   default) to use the dependency only if it is available.  Set
-#   `CMAKE_DISABLE_FIND_PACKAGE_XXX=TRUE' to disable a dependency completely
-#   (where `XXX' is a CMake package name like `BZip2').
+#   default) to use the dependency only if it is available. Example:
 #
-#   Example:
+#     cmake -B build -D FT_WITH_ZLIB=ON \
+#                    -D FT_WITH_BZIP2=ON \
+#                    -D FT_WITH_PNG=ON \
+#                    -D FT_WITH_HARFBUZZ=ON \
+#                    -D FT_WITH_BROTLI=ON [...]
 #
-#     cmake -DFT_WITH_ZLIB=ON -DCMAKE_DISABLE_FIND_PACKAGE_HarfBuzz=TRUE [...]
+#   Set `CMAKE_DISABLE_FIND_PACKAGE_XXX=TRUE' to disable a dependency completely
+#   (where `XXX' is a CMake package name like `BZip2').  Example for disabling all
+#   dependencies:
+#
+#     cmake -B build -D CMAKE_DISABLE_FIND_PACKAGE_ZLIB=TRUE \
+#                    -D CMAKE_DISABLE_FIND_PACKAGE_BZip2=TRUE \
+#                    -D CMAKE_DISABLE_FIND_PACKAGE_PNG=TRUE \
+#                    -D CMAKE_DISABLE_FIND_PACKAGE_HarfBuzz=TRUE \
+#                    -D CMAKE_DISABLE_FIND_PACKAGE_BrotliDec=TRUE [...]
 #
 # . Installation of FreeType can be controlled with the CMake variables
 #   `SKIP_INSTALL_HEADERS', `SKIP_INSTALL_LIBRARIES', and `SKIP_INSTALL_ALL'
@@ -158,10 +168,8 @@ string(REGEX REPLACE
 math(EXPR LIBRARY_SOVERSION "${LIBTOOL_CURRENT} - ${LIBTOOL_AGE}")
 set(LIBRARY_VERSION "${LIBRARY_SOVERSION}.${LIBTOOL_AGE}.${LIBTOOL_REVISION}")
 
-# These options mean `require x and complain if not found'.  They'll get
-# optionally found anyway.  Use `-DCMAKE_DISABLE_FIND_PACKAGE_x=TRUE` to
-# disable searching for a package entirely (`x' is the CMake package name,
-# so `BZip2' instead of `BZIP2').
+# External dependency library detection is automatic. See the notes at the top
+# of this file, for how to force or disable dependencies completely.
 option(FT_WITH_ZLIB "Use system zlib instead of internal library." OFF)
 option(FT_WITH_BZIP2 "Support bzip2 compressed fonts." OFF)
 option(FT_WITH_PNG "Support PNG compressed OpenType embedded bitmaps." OFF)
@@ -332,7 +340,6 @@ set(BASE_SRCS
   src/base/ftpfr.c
   src/base/ftstroke.c
   src/base/ftsynth.c
-  src/base/ftsystem.c
   src/base/fttype1.c
   src/base/ftwinfnt.c
   src/bdf/bdf.c
@@ -355,6 +362,12 @@ set(BASE_SRCS
   src/type42/type42.c
   src/winfonts/winfnt.c
 )
+
+if (UNIX)
+  list(APPEND BASE_SRCS "builds/unix/ftsystem.c")
+else ()
+  list(APPEND BASE_SRCS "src/base/ftsystem.c")
+endif ()
 
 if (WIN32)
   enable_language(RC)
@@ -414,7 +427,11 @@ target_include_directories(
       $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
     PRIVATE
       ${CMAKE_CURRENT_BINARY_DIR}/include
-      ${CMAKE_CURRENT_SOURCE_DIR}/include)
+      ${CMAKE_CURRENT_SOURCE_DIR}/include
+      
+      # Make <ftconfig.h> available for builds/unix/ftsystem.c.
+      ${CMAKE_CURRENT_BINARY_DIR}/include/freetype/config
+)
 
 
 if (BUILD_FRAMEWORK)
