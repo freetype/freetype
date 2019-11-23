@@ -215,6 +215,10 @@
     FT_UInt      new_max, old_max;
 
 
+    error = FT_GlyphLoader_CreateExtra( loader );
+    if ( error )
+      return error;
+
     /* check points & tags */
     new_max = (FT_UInt)base->n_points + (FT_UInt)current->n_points +
               n_points;
@@ -247,6 +251,10 @@
       adjust = 1;
       loader->max_points = new_max;
     }
+
+    error = FT_GlyphLoader_CreateExtra( loader );
+    if ( error )
+      return error;
 
     /* check contours */
     old_max = loader->max_contours;
