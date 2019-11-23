@@ -1,3 +1,14 @@
+2019-11-23  Werner Lemberg  <wl@gnu.org>
+
+	* include/freetype/internal/ftmemory.h (FT_OFFSET): New macro.
+
+	Use this for `base + offset' pointer calculations where `base' can
+	be NULL (triggering a sanitizer warning even if the resulting
+	pointer gets never dereferenced since it is undefined behaviour
+	in C).
+
+	Suggested by Ben Wagner.
+
 2019-11-23  Ben Wagner  <bungeman@google.com>
 
 	[sfnt] Ensure OTTO fonts have tables (#57285).
