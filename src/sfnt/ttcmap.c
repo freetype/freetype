@@ -3764,16 +3764,16 @@
   FT_LOCAL_DEF( FT_Error )
   tt_face_build_cmaps( TT_Face  face )
   {
-    FT_Byte*           table = face->cmap_table;
-    FT_Byte*           limit = table + face->cmap_size;
+    FT_Byte* const     table   = face->cmap_table;
+    FT_Byte*           limit;
     FT_UInt volatile   num_cmaps;
-    FT_Byte* volatile  p     = table;
+    FT_Byte* volatile  p       = table;
     FT_Library         library = FT_FACE_LIBRARY( face );
 
     FT_UNUSED( library );
 
 
-    if ( !p || p + 4 > limit )
+    if ( !p || face->cmap_size < 4 )
       return FT_THROW( Invalid_Table );
 
     /* only recognize format 0 */
@@ -3786,6 +3786,7 @@
     }
 
     num_cmaps = TT_NEXT_USHORT( p );
+    limit     = table + face->cmap_size;
 
     for ( ; num_cmaps > 0 && p + 8 <= limit; num_cmaps-- )
     {

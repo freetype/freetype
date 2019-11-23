@@ -1,3 +1,11 @@
+2019-11-23  Ben Wagner  <bungeman@google.com>
+
+	[sfnt] Avoid sanitizer warning (#57286).
+
+	* src/sfnt/ttcmap.c (tt_face_build_cmaps): Avoid possible `NULL +
+	offset' computation.
+	Tag `table' as `const'.
+
 2019-11-23  John Stracke  <jstracke@Google.com>
             Werner Lemberg  <wl@gnu.org>
 
