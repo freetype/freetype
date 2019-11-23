@@ -1,3 +1,10 @@
+2019-11-23  Werner Lemberg  <wl@gnu.org>
+
+	[truetype] Avoid sanitizer warning (#57289).
+
+	* src/truetype/ttpload.c (tt_face_get_device_metrics): Use
+	`FT_OFFSET'.
+
 2019-11-23  Armin Hasitzka  <prince.cherusker@gmail.com>
 
 	[truetype] Fix integer overflow (#57287).
