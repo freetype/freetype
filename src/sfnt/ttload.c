@@ -397,7 +397,15 @@
       }
     }
     else
+    {
       valid_entries = sfnt.num_tables;
+      if ( !valid_entries )
+      {
+        FT_TRACE2(( "tt_face_load_font_dir: no valid tables found\n" ));
+        error = FT_THROW( Unknown_File_Format );
+        goto Exit;
+      }
+    }
 
     face->num_tables = valid_entries;
     face->format_tag = sfnt.format_tag;

@@ -1,3 +1,9 @@
+2019-11-23  Ben Wagner  <bungeman@google.com>
+
+	[sfnt] Ensure OTTO fonts have tables (#57285).
+
+	* src/sfnt/ttload.c (tt_face_load_font_dir): Add test.
+
 2019-11-23  Behdad Esfahbod  <behdad@behdad.org>
 
 	Minor fixes for recent compilers.
