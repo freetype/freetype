@@ -1,3 +1,11 @@
+2019-11-23  Behdad Esfahbod  <behdad@behdad.org>
+
+	Minor fixes for recent compilers.
+
+	* src/gzip/infutil.h (inflate_mask): Add `const'.
+
+	* src/autofit/aflatin2.c: Include `ft2build.h'.
+
 2019-11-07  Nikolaus Waxweiler  <madigens@gmail.com>
 
 	* CMakeLists.txt: Minor additions to the notes, compile
