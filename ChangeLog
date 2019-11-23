@@ -1,3 +1,12 @@
+2019-11-23  John Stracke  <jstracke@Google.com>
+            Werner Lemberg  <wl@gnu.org>
+
+	[base] Fix `NULL + offset' sanitizer warnings (#57194).
+
+	* src/base/ftgloadr.c (FT_GlyphLoader_Adjust_Points,
+	FT_GlyphLoader_Adjust_Subglyphs): Use `FT_OFFSET'.
+	(FT_GlyphLoader_CreateExtra): Add short cut if some values are zero.
+
 2019-11-23  Werner Lemberg  <wl@gnu.org>
 
 	* include/freetype/internal/ftmemory.h (FT_OFFSET): New macro.

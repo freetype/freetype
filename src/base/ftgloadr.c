@@ -146,9 +146,9 @@
     FT_Outline*  current = &loader->current.outline;
 
 
-    current->points   = base->points   + base->n_points;
-    current->tags     = base->tags     + base->n_points;
-    current->contours = base->contours + base->n_contours;
+    current->points   = FT_OFFSET( base->points,   base->n_points );
+    current->tags     = FT_OFFSET( base->tags,     base->n_points );
+    current->contours = FT_OFFSET( base->contours, base->n_contours );
 
     /* handle extra points table - if any */
     if ( loader->use_extra )
@@ -168,6 +168,10 @@
     FT_Error   error;
     FT_Memory  memory = loader->memory;
 
+
+    if ( loader->max_points == 0           ||
+         loader->base.extra_points != NULL )
+      return FT_Err_Ok;
 
     if ( !FT_NEW_ARRAY( loader->base.extra_points, 2 * loader->max_points ) )
     {
@@ -189,7 +193,7 @@
     FT_GlyphLoad  current = &loader->current;
 
 
-    current->subglyphs = base->subglyphs + base->num_subglyphs;
+    current->subglyphs = FT_OFFSET( base->subglyphs, base->num_subglyphs );
   }
 
 
