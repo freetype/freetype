@@ -2057,7 +2057,7 @@
     if ( !error )
     {
       FT_TRACE4(( " top dictionary:\n" ));
-      error = cff_parser_run( &parser, dict, dict + dict_len );
+      error = cff_parser_run( &parser, dict, FT_OFFSET( dict, dict_len ) );
     }
 
     /* clean up regardless of error */

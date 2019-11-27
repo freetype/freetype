@@ -711,7 +711,7 @@
     FT_Vector*  limit;
 
 
-    if ( !outline || !matrix )
+    if ( !outline || !matrix || !outline->points )
       return;
 
     vec   = outline->points;

@@ -1,3 +1,13 @@
+2019-11-29  Dominik Röttsches  <drott@chromium.org>
+
+	Avoid more nullptr offset UBSan warnings (#57316).
+
+	* src/base/ftoutln.c (FT_Outline_Transform): Bail on empty points.
+	* src/cff/cffload.c (cff_subfont_load): Use `FT_OFFSET'.
+	* src/psaux/psft.c (cf2_decoder_parse_substrings): Early out if
+	`charstring_base' or `charstring_len' are null.
+	* src/sfnt/ttload.c (tt_face_load_name): Use `FT_OFFSET'.
+
 2019-11-23  John Stracke  <jstracke@Google.com>
 
 	[base] Really fix #57194.

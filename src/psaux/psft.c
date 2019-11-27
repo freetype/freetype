@@ -313,8 +313,11 @@
     FT_Error   error = FT_Err_Ok;
     CF2_Font   font;
 
-    FT_Bool    is_t1 = decoder->builder.is_t1;
+    FT_Bool  is_t1 = decoder->builder.is_t1;
 
+
+    if ( !charstring_base || !charstring_len )
+      return FT_ERR( Invalid_File_Format );
 
     FT_ASSERT( decoder &&
                ( is_t1 || decoder->cff ) );

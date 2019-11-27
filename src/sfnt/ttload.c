@@ -924,7 +924,7 @@
       /* load language tags */
       {
         TT_LangTag  entry = table->langTags;
-        TT_LangTag  limit = entry + table->numLangTagRecords;
+        TT_LangTag  limit = FT_OFFSET( entry, table->numLangTagRecords );
 
 
         for ( ; entry < limit; entry++ )
