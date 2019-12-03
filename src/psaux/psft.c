@@ -700,7 +700,7 @@
     FT_ASSERT( charstring + len >= charstring );
 
     buf->start = charstring;
-    buf->end   = charstring + len;
+    buf->end   = FT_OFFSET( charstring, len );
     buf->ptr   = buf->start;
 
     return FT_Err_Ok;

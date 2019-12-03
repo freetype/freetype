@@ -7715,7 +7715,7 @@
   Ins_UNKNOWN( TT_ExecContext  exc )
   {
     TT_DefRecord*  def   = exc->IDefs;
-    TT_DefRecord*  limit = def + exc->numIDefs;
+    TT_DefRecord*  limit = FT_OFFSET( def, exc->numIDefs );
 
 
     for ( ; def < limit; def++ )
