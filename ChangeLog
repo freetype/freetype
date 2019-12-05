@@ -1,3 +1,11 @@
+2019-12-05  Werner Lemberg  <wl@gnu.org>
+
+	* src/truetype/ttinterp.c (TT_RunIns): Use `FT_OFFSET'.
+
+	Reported as
+
+	  https://bugs.chromium.org/p/chromium/issues/detail?id=1030614
+
 2019-12-03  Werner Lemberg  <wl@gnu.org>
 
 	More nullptr offset UBSan warnings (#57331, #57347).
