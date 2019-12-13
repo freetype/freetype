@@ -155,6 +155,9 @@
       goto Exit;
     }
 
+    if ( !bitmap->rows || !bitmap->pitch )
+      goto Exit;
+
     /* allocate new one */
     if ( FT_ALLOC_MULT( bitmap->buffer, bitmap->rows, bitmap->pitch ) )
       goto Exit;

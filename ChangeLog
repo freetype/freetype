@@ -1,3 +1,29 @@
+2019-12-13  Werner Lemberg  <wl@gnu.org>
+
+	Another bunch of UBSan warnings on adding offsets to nullptr.
+
+	Reported as
+
+	  https://bugs.chromium.org/p/oss-fuzz/issues/detail?id=19427
+	  https://bugs.chromium.org/p/oss-fuzz/issues/detail?id=19433
+	  https://bugs.chromium.org/p/oss-fuzz/issues/detail?id=19441
+	  https://bugs.chromium.org/p/oss-fuzz/issues/detail?id=19451
+	  https://bugs.chromium.org/p/oss-fuzz/issues/detail?id=19452
+	  https://bugs.chromium.org/p/oss-fuzz/issues/detail?id=19457
+
+	* src/autofit/aflatin.c (af_latin_hints_compute_segments,
+	af_latin_hints_compute_edges): Use `FT_OFFSET'.
+
+	* src/base/ftstream.c (FT_Stream_EnterFrame): Use `FT_OFFSET'.
+
+	* src/psaux/cffdecode.c (cff_decoder_parse_charstrings): Exit early
+	if there is no charstring.
+
+	* src/psaux/psobjs.c (t1_decrypt): Use `FT_OFFSET'.
+
+	* src/smooth/ftsmooth.c (ft_smooth_render_generic): Exit early for
+	zero bitmap dimensions.
+
 2019-12-09  Dominik Röttsches  <drott@chromium.org>
 
 	Fix more UBSan warnings on adding offset to nullptr (#57384).

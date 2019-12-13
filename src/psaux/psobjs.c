@@ -2577,7 +2577,7 @@
               FT_UShort  seed )
   {
     PS_Conv_EexecDecode( &buffer,
-                         buffer + length,
+                         FT_OFFSET( buffer, length ),
                          buffer,
                          length,
                          &seed );

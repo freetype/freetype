@@ -1910,7 +1910,7 @@
     /* sense -- this is used to better detect and ignore serifs   */
     {
       AF_Segment  segments     = axis->segments;
-      AF_Segment  segments_end = segments + axis->num_segments;
+      AF_Segment  segments_end = FT_OFFSET( segments, axis->num_segments );
 
 
       for ( segment = segments; segment < segments_end; segment++ )
@@ -2314,7 +2314,7 @@
      */
     {
       AF_Edge  edges      = axis->edges;
-      AF_Edge  edge_limit = edges + axis->num_edges;
+      AF_Edge  edge_limit = FT_OFFSET( edges, axis->num_edges );
       AF_Edge  edge;
 
 

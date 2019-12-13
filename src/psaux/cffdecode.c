@@ -530,6 +530,9 @@
 
     builder->path_begun = 0;
 
+    if ( !charstring_base )
+      return FT_Err_Ok;
+
     zone->base           = charstring_base;
     limit = zone->limit  = charstring_base + charstring_len;
     ip    = zone->cursor = zone->base;

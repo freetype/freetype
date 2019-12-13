@@ -286,7 +286,7 @@
       }
 
       stream->cursor = stream->base;
-      stream->limit  = stream->cursor + count;
+      stream->limit  = FT_OFFSET( stream->cursor, count );
       stream->pos   += read_bytes;
     }
     else
