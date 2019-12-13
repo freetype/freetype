@@ -6346,12 +6346,14 @@
     /* twilight points (confirmed by Greg Hitchcock)   */
     if ( exc->GS.gep1 == 0 )
     {
-      exc->zp1.org[point].x = exc->zp0.org[exc->GS.rp0].x +
-                              TT_MulFix14( cvt_dist,
-                                           exc->GS.freeVector.x );
-      exc->zp1.org[point].y = exc->zp0.org[exc->GS.rp0].y +
-                              TT_MulFix14( cvt_dist,
-                                           exc->GS.freeVector.y );
+      exc->zp1.org[point].x = ADD_LONG(
+                                exc->zp0.org[exc->GS.rp0].x,
+                                TT_MulFix14( cvt_dist,
+                                             exc->GS.freeVector.x ) );
+      exc->zp1.org[point].y = ADD_LONG(
+                                exc->zp0.org[exc->GS.rp0].y,
+                                TT_MulFix14( cvt_dist,
+                                             exc->GS.freeVector.y ) );
       exc->zp1.cur[point]   = exc->zp1.org[point];
     }
 

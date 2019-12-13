@@ -1,3 +1,13 @@
+2019-12-14  Werner Lemberg  <wl@gnu.org>
+
+	[truetype] Fix integer overflow.
+
+	Reported as
+
+	  https://bugs.chromium.org/p/oss-fuzz/issues/detail?id=19305
+
+	* src/truetype/ttinterp.c (Ins_MIRP): Use `ADD_LONG'.
+
 2019-12-13  Werner Lemberg  <wl@gnu.org>
 
 	Another bunch of UBSan warnings on adding offsets to nullptr.
