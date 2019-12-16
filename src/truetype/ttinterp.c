@@ -3718,7 +3718,7 @@
     /* We will then parse the current table.                       */
 
     rec   = exc->FDefs;
-    limit = rec + exc->numFDefs;
+    limit = FT_OFFSET( rec, exc->numFDefs );
     n     = (FT_ULong)args[0];
 
     for ( ; rec < limit; rec++ )
@@ -4150,7 +4150,7 @@
     /*  First of all, look for the same function in our table */
 
     def   = exc->IDefs;
-    limit = def + exc->numIDefs;
+    limit = FT_OFFSET( def, exc->numIDefs );
 
     for ( ; def < limit; def++ )
       if ( def->opc == (FT_ULong)args[0] )

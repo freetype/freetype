@@ -1,3 +1,13 @@
+2019-12-16  Werner Lemberg  <wl@gnu.org>
+
+	[truetype] Fix UBSan warnings on adding offsets to nullptr.
+
+	Reported as
+
+	  https://bugs.chromium.org/p/chromium/issues/detail?id=1032152
+
+	* src/truetype/ttinterp.c (Ins_FDEF, Ins_IDEF): Use `FT_OFFSET'.
+
 2019-12-14  Werner Lemberg  <wl@gnu.org>
 
 	[truetype] Fix integer overflow.
