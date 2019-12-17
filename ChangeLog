@@ -1,3 +1,10 @@
+2019-12-21  Dominik Röttsches  <drott@chromium.org>
+
+	Fix more UBSan warnings on adding offset to nullptr (#57432).
+
+	* src/truetype/ttinterp.c (Ins_LOOPCALL), src/psaux/psft.c
+	(cf2_initLocalRegionBuffer): Use `FT_OFFSET'.
+
 2019-12-16  Werner Lemberg  <wl@gnu.org>
 
 	[truetype] Fix UBSan warnings on adding offsets to nullptr.

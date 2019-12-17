@@ -4062,7 +4062,7 @@
     /*                                                              */
     /* If this isn't true, we need to look up the function table.   */
 
-    def = exc->FDefs + F;
+    def = FT_OFFSET( exc->FDefs, F );
     if ( exc->maxFunc + 1 != exc->numFDefs || def->opc != F )
     {
       /* look up the FDefs table */
@@ -4070,7 +4070,7 @@
 
 
       def   = exc->FDefs;
-      limit = def + exc->numFDefs;
+      limit = FT_OFFSET( def, exc->numFDefs );
 
       while ( def < limit && def->opc != F )
         def++;

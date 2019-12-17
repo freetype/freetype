@@ -823,7 +823,7 @@
       /* The CID driver stores subroutines with seed bytes.  This     */
       /* case is taken care of when decoder->subrs_len == 0.          */
       if ( decoder->locals_len )
-        buf->end = buf->start + decoder->locals_len[idx];
+        buf->end = FT_OFFSET( buf->start, decoder->locals_len[idx] );
       else
       {
         /* We are using subroutines from a CID font.  We must adjust */
