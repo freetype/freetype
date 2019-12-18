@@ -1,3 +1,10 @@
+2019-12-21  Hugh McMaster  <hugh.mcmaster@outlook.com>
+
+	[docs] (1/2) Move static web assets (#56745).
+
+	* docs/reference/*: Move ...
+	* docs: ... one directory up.
+
 2019-12-21  Dominik Röttsches  <drott@chromium.org>
 
 	Fix more UBSan warnings on adding offset to nullptr (#57432).
