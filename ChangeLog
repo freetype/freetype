@@ -1,5 +1,22 @@
 2019-12-21  Hugh McMaster  <hugh.mcmaster@outlook.com>
 
+	[docs] (2/2) Fix generation of API documentation (#56745).
+
+	Creating the API Reference in the (new) `reference' sub-directory is
+	consistent with other documentation sub-topics, such as `design',
+	`glyphs' and `tutorial'.
+
+	This patch fixes broken hyperlinks in the documentation pointing to
+	and from the API Reference.  It also allows web assets to load from
+	their relative paths.
+
+	* builds/freetype.mk (DOC_DIR): Adjust.
+	(refdoc, refdoc-venv): Add `--site' argument.
+
+	* builds/toplevel.mk (do-dist): Updated.
+
+2019-12-21  Hugh McMaster  <hugh.mcmaster@outlook.com>
+
 	[docs] (1/2) Move static web assets (#56745).
 
 	* docs/reference/*: Move ...
@@ -61,7 +78,7 @@
 2019-12-09  Dominik Röttsches  <drott@chromium.org>
 
 	Fix more UBSan warnings on adding offset to nullptr (#57384).
-    
+
 	* src/smooth/ftsmooth.c (ft_smooth_render_generic),
 	src/psaux/psobjs.c (ps_table_add): Use `FT_OFFSET'.
 

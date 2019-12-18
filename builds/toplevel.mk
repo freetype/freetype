@@ -268,7 +268,7 @@ do-dist: distclean refdoc
 	cp $(CONFIG_SUB) builds/unix
 
 	@# Remove intermediate files created by the `refdoc' target.
-	rm -rf docs/reference/markdown
-	rm -f docs/reference/mkdocs.yml
+	rm -rf docs/markdown
+	rm -f docs/mkdocs.yml
 
 # EOF
