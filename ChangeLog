@@ -1,3 +1,9 @@
+2020-01-02  Dominik Röttsches  <drott@chromium.org>
+
+	[truetype] Fix UBSan warning on offset to nullptr (#57501).
+
+	* src/truetype/ttinterp.c (Ins_CALL): Fail if `exc->FDefs' is null.
+
 2019-12-31  Nikhil Ramakrishnan  <ramakrishnan.nikhil@gmail.com>
 
 	[woff2] Allow bitmap-only fonts (#57394).

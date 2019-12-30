@@ -3965,6 +3965,9 @@
     if ( BOUNDSL( F, exc->maxFunc + 1 ) )
       goto Fail;
 
+    if ( !exc->FDefs )
+      goto Fail;
+
     /* Except for some old Apple fonts, all functions in a TrueType */
     /* font are defined in increasing order, starting from 0.  This */
     /* means that we normally have                                  */
