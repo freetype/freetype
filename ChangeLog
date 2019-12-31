@@ -1,3 +1,10 @@
+2019-12-31  Nikhil Ramakrishnan  <ramakrishnan.nikhil@gmail.com>
+
+	[woff2] Allow bitmap-only fonts (#57394).
+
+	* src/sfnt/sfwoff2.c (reconstruct_font): Fix test for `glyf' and
+	`loca' tables.
+
 2019-12-21  Hugh McMaster  <hugh.mcmaster@outlook.com>
 
 	[docs] (2/2) Fix generation of API documentation (#56745).
