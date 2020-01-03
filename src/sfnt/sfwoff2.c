@@ -302,7 +302,7 @@
     {
       v = 0;
       for ( i = aligned_size ; i < size; ++i )
-        v |= buf[i] << ( 24 - 8 * ( i & 3 ) );
+        v |= (FT_ULong)buf[i] << ( 24 - 8 * ( i & 3 ) );
       checksum += v;
     }
 
@@ -1465,9 +1465,17 @@
     *sfnt_bytes = sfnt;
     *out_offset = dest_offset;
 
+    FT_FREE( advance_widths );
+    FT_FREE( lsbs );
+    FT_FREE( hmtx_table );
+
     return error;
 
   Fail:
+    FT_FREE( advance_widths );
+    FT_FREE( lsbs );
+    FT_FREE( hmtx_table );
+
     if ( !error )
       error = FT_THROW( Invalid_Table );
 

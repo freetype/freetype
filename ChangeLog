@@ -1,3 +1,14 @@
+2020-01-03  Werner Lemberg  <wl@gnu.org>
+
+	[woff2] Fix memory leaks and a runtime warning.
+
+	Reported as
+
+	  https://bugs.chromium.org/p/oss-fuzz/issues/detail?id=19773
+
+	* src/sfnt/sfwoff2.c (compute_ULong_sum): Add missing cast.
+	(reconstruct_hmtx): Add missing deallocation calls.
+
 2020-01-02  Dominik Röttsches  <drott@chromium.org>
 
 	[truetype] Fix UBSan warning on offset to nullptr (#57501).
