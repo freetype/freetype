@@ -5,6 +5,7 @@
 	Reported as
 
 	  https://bugs.chromium.org/p/oss-fuzz/issues/detail?id=19773
+	  https://bugs.chromium.org/p/oss-fuzz/issues/detail?id=18101
 
 	* src/sfnt/sfwoff2.c (compute_ULong_sum): Add missing cast.
 	(reconstruct_hmtx): Add missing deallocation calls.
