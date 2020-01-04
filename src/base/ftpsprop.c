@@ -165,9 +165,9 @@
           driver->hinting_engine = *hinting_engine;
         else
           error = FT_ERR( Unimplemented_Feature );
-
-        return error;
       }
+
+      return error;
     }
 
     else if ( !ft_strcmp( property_name, "no-stem-darkening" ) )

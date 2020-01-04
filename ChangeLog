@@ -1,3 +1,11 @@
+2020-01-04  Werner Lemberg  <wl@gnu.org>
+
+	[base] Fix `FREETYPE_PROPERTIES=type1:hinting-engine=adobe`.
+
+	* src/base/ftpsprop.c (ps_property_set) [hinting-engine]: Avoid an
+	incorrect return value that caused a warning.  The function did the
+	right thing, though.
+
 2020-01-03  Werner Lemberg  <wl@gnu.org>
 
 	[woff2] Fix memory leaks and a runtime warning.
