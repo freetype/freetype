@@ -1,3 +1,9 @@
+2020-02-04  Werner Lemberg  <wl@gnu.org>
+
+	* src/truetype/ttinterp.c (TT_RunIns): Adjust loop counter (#57732).
+
+	The font that exceeds the old limit is Constantine, version 1.001.
+
 2020-01-04  Werner Lemberg  <wl@gnu.org>
 
 	[base] Fix `FREETYPE_PROPERTIES=type1:hinting-engine=adobe`.
