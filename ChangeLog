@@ -1,3 +1,7 @@
+2020-02-12  Werner Lemberg  <wl@gnu.org>
+
+	* src/sfnt/ttcmap.c (tt_face_build_cmaps): Ignore version (#57708).
+
 2020-02-04  Werner Lemberg  <wl@gnu.org>
 
 	* src/truetype/ttinterp.c (TT_RunIns): Adjust loop counter (#57732).

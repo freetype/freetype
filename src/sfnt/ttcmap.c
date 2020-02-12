@@ -3776,14 +3776,16 @@
     if ( !p || face->cmap_size < 4 )
       return FT_THROW( Invalid_Table );
 
-    /* only recognize format 0 */
-    if ( TT_NEXT_USHORT( p ) != 0 )
-    {
-      FT_ERROR(( "tt_face_build_cmaps:"
-                 " unsupported `cmap' table format = %d\n",
-                 TT_PEEK_USHORT( p - 2 ) ));
-      return FT_THROW( Invalid_Table );
-    }
+    /* Version 1.8.3 of the OpenType specification contains the following */
+    /* (https://docs.microsoft.com/en-us/typography/opentype/spec/cmap):  */
+    /*                                                                    */
+    /*   The 'cmap' table version number remains at 0x0000 for fonts that */
+    /*   make use of the newer subtable formats.                          */
+    /*                                                                    */
+    /* This essentially means that a version format test is useless.      */
+
+    /* ignore format */
+    p += 2;
 
     num_cmaps = TT_NEXT_USHORT( p );
     limit     = table + face->cmap_size;
