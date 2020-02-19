@@ -778,6 +778,18 @@
   };
 
 
+  const AF_Script_UniRangeRec  af_rohg_uniranges[] =
+  {
+    AF_UNIRANGE_REC( 0x10D00, 0x10D3F ),   /* Hanifi Rohingya */
+    AF_UNIRANGE_REC(       0,       0 )
+  };
+
+  const AF_Script_UniRangeRec  af_rohg_nonbase_uniranges[] =
+  {
+    AF_UNIRANGE_REC( 0, 0 )
+  };
+
+
   const AF_Script_UniRangeRec  af_saur_uniranges[] =
   {
     AF_UNIRANGE_REC(  0xA880,  0xA8DF ),   /* Saurashtra */

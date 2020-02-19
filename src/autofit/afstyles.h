@@ -378,6 +378,13 @@
          AF_BLUE_STRINGSET_OSMA,
          AF_COVERAGE_DEFAULT )
 
+  STYLE( rohg_dflt, ROHG_DFLT,
+         "Hanifi Rohingya default style",
+         AF_WRITING_SYSTEM_LATIN,
+         AF_SCRIPT_ROHG,
+         AF_BLUE_STRINGSET_ROHG,
+         AF_COVERAGE_DEFAULT )
+
   STYLE( saur_dflt, SAUR_DFLT,
          "Saurashtra default style",
          AF_WRITING_SYSTEM_LATIN,
