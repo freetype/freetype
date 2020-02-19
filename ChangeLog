@@ -1,3 +1,13 @@
+2020-02-19  Werner Lemberg  <wl@gnu.org>
+
+	Require HarfBuzz 1.8.
+
+	* builds/unix/configure.raw, CMakeLists.txt: Request HarfBuzz 1.8.0
+	or newer.
+
+	We are going to add auto-hinter support for Hanifi Rohingya, which
+	was introduced in Unicode 11.0.
+
 2020-02-12  Werner Lemberg  <wl@gnu.org>
 
 	* src/sfnt/ttcmap.c (tt_face_build_cmaps): Ignore version (#57708).
