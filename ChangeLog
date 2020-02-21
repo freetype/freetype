@@ -1,3 +1,11 @@
+2020-02-21  Werner Lemberg  <wl@gnu.org>
+
+	[psaux] Make `t1_decoder_parse_metrics' handle `op_div' (#57519).
+
+	* src/psaux/t1decode.c (t1_decoder_parse_metrics): Copy
+	corresponding code from old engine's `t1_decoder_parse_charstrings'
+	function.
+
 2020-02-19  Nikolaus Waxweiler  <nikolaus.waxweiler@daltonmaag.com>
 
 	[autofit] Add support for Hanifi Rohingya script.
