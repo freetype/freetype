@@ -1,3 +1,14 @@
+2020-02-22  Werner Lemberg  <wl@gnu.org>
+
+	[woff2] Fix font table access.
+
+	Reported as
+
+	  https://bugs.chromium.org/p/oss-fuzz/issues/detail?id=20778
+
+	* src/sfnt/sfwoff2.c (get_x_mins): Explicitly check for presence of
+	`head' table, which might not have been processed yet.
+
 2020-02-21  Werner Lemberg  <wl@gnu.org>
 
 	[psaux] Make `t1_decoder_parse_metrics' handle `op_div' (#57519).
