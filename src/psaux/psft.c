@@ -316,9 +316,6 @@
     FT_Bool  is_t1 = decoder->builder.is_t1;
 
 
-    if ( !charstring_base || !charstring_len )
-      return FT_ERR( Invalid_File_Format );
-
     FT_ASSERT( decoder &&
                ( is_t1 || decoder->cff ) );
 
@@ -388,7 +385,7 @@
       FT_ZERO( &buf );
       buf.start =
       buf.ptr   = charstring_base;
-      buf.end   = charstring_base + charstring_len;
+      buf.end   = FT_OFFSET( charstring_base, charstring_len );
 
       FT_ZERO( &transform );
 
