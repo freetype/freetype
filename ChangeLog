@@ -1,3 +1,14 @@
+2020-02-28  Ben Wagner  <bungeman@google.com>
+
+	[truetype] Add better checks for loading `gvar' table (#57905).
+
+	* src/truetype/ttgxvar.c (ft_var_load_gvar): Delay settings of any
+	`blend->xxxcount' values until the corresponding data has been
+	checked.
+	Also do some sanitizing to avoid a too early exit.
+
+	(TT_Vary_Apply_Glyph_Deltas): Improve tracing message.
+
 2020-02-27  Werner Lemberg  <wl@gnu.org>
 
 	Make `FT_HAS_*' and `FT_IS_*' really return true (#57906).

@@ -1541,62 +1541,82 @@
 
     FT_TRACE2(( "loaded\n" ));
 
-    blend->gvar_size   = table_len;
-    blend->tuplecount  = gvar_head.globalCoordCount;
-    blend->gv_glyphcnt = gvar_head.glyphCount;
-    offsetToData       = gvar_start + gvar_head.offsetToData;
+    blend->gvar_size = table_len;
+    offsetToData     = gvar_start + gvar_head.offsetToData;
 
     FT_TRACE5(( "gvar: there %s %d shared coordinate%s:\n",
-                blend->tuplecount == 1 ? "is" : "are",
-                blend->tuplecount,
-                blend->tuplecount == 1 ? "" : "s" ));
+                gvar_head.globalCoordCount == 1 ? "is" : "are",
+                gvar_head.globalCoordCount,
+                gvar_head.globalCoordCount == 1 ? "" : "s" ));
 
-    if ( FT_NEW_ARRAY( blend->glyphoffsets, blend->gv_glyphcnt + 1 ) )
+    if ( FT_NEW_ARRAY( blend->glyphoffsets, gvar_head.glyphCount + 1 ) )
       goto Exit;
 
     if ( gvar_head.flags & 1 )
     {
-      FT_ULong  limit = gvar_start + table_len;
+      FT_ULong  limit      = gvar_start + table_len;
+      FT_ULong  max_offset = 0;
 
 
       /* long offsets (one more offset than glyphs, to mark size of last) */
-      if ( FT_FRAME_ENTER( ( blend->gv_glyphcnt + 1 ) * 4L ) )
+      if ( FT_FRAME_ENTER( ( gvar_head.glyphCount + 1 ) * 4L ) )
         goto Exit;
 
-      for ( i = 0; i <= blend->gv_glyphcnt; i++ )
+      for ( i = 0; i <= gvar_head.glyphCount; i++ )
       {
         blend->glyphoffsets[i] = offsetToData + FT_GET_ULONG();
-        /* use `>', not `>=' */
-        if ( blend->glyphoffsets[i] > limit )
+
+        if ( max_offset <= blend->glyphoffsets[i] )
+          max_offset = blend->glyphoffsets[i];
+        else
         {
           FT_TRACE2(( "ft_var_load_gvar:"
-                      " invalid glyph variation data offset for index %d\n",
+                      " glyph variation data offset %d not monotonic\n",
                       i ));
-          error = FT_THROW( Invalid_Table );
-          break;
+          blend->glyphoffsets[i] = max_offset;
+        }
+
+        /* use `<', not `<=' */
+        if ( limit < blend->glyphoffsets[i] )
+        {
+          FT_TRACE2(( "ft_var_load_gvar:"
+                      " glyph variation data offset %d out of range\n",
+                      i ));
+          blend->glyphoffsets[i] = limit;
         }
       }
     }
     else
     {
-      FT_ULong  limit = gvar_start + table_len;
+      FT_ULong  limit      = gvar_start + table_len;
+      FT_ULong  max_offset = 0;
 
 
       /* short offsets (one more offset than glyphs, to mark size of last) */
-      if ( FT_FRAME_ENTER( ( blend->gv_glyphcnt + 1 ) * 2L ) )
+      if ( FT_FRAME_ENTER( ( gvar_head.glyphCount + 1 ) * 2L ) )
         goto Exit;
 
-      for ( i = 0; i <= blend->gv_glyphcnt; i++ )
+      for ( i = 0; i <= gvar_head.glyphCount; i++ )
       {
         blend->glyphoffsets[i] = offsetToData + FT_GET_USHORT() * 2;
-        /* use `>', not `>=' */
-        if ( blend->glyphoffsets[i] > limit )
+
+        if ( max_offset <= blend->glyphoffsets[i] )
+          max_offset = blend->glyphoffsets[i];
+        else
         {
           FT_TRACE2(( "ft_var_load_gvar:"
-                      " invalid glyph variation data offset for index %d\n",
+                      " glyph variation data offset %d not monotonic\n",
                       i ));
-          error = FT_THROW( Invalid_Table );
-          break;
+          blend->glyphoffsets[i] = max_offset;
+        }
+
+        /* use `<', not `<=' */
+        if ( limit < blend->glyphoffsets[i] )
+        {
+          FT_TRACE2(( "ft_var_load_gvar:"
+                      " glyph variation data offset %d out of range\n",
+                      i ));
+          blend->glyphoffsets[i] = limit;
         }
       }
     }
@@ -1605,15 +1625,24 @@
     if ( error )
       goto Exit;
 
-    if ( blend->tuplecount != 0 )
+    blend->gv_glyphcnt = gvar_head.glyphCount;
+
+    if ( gvar_head.globalCoordCount != 0 )
     {
+      if ( FT_STREAM_SEEK( gvar_start + gvar_head.offsetToCoord ) ||
+           FT_FRAME_ENTER( gvar_head.globalCoordCount *
+                           gvar_head.axisCount * 2L )             )
+      {
+        FT_TRACE2(( "ft_var_load_gvar:"
+                    " glyph variation shared tuples missing\n" ));
+        goto Exit;
+      }
+
       if ( FT_NEW_ARRAY( blend->tuplecoords,
-                         gvar_head.axisCount * blend->tuplecount ) )
+                         gvar_head.axisCount * gvar_head.globalCoordCount ) )
         goto Exit;
 
-      if ( FT_STREAM_SEEK( gvar_start + gvar_head.offsetToCoord )         ||
-           FT_FRAME_ENTER( blend->tuplecount * gvar_head.axisCount * 2L ) )
-        goto Exit;
+      blend->tuplecount = gvar_head.globalCoordCount;
 
       for ( i = 0; i < blend->tuplecount; i++ )
       {
@@ -3769,7 +3798,7 @@
            blend->glyphoffsets[glyph_index + 1] )
     {
       FT_TRACE2(( "TT_Vary_Apply_Glyph_Deltas:"
-                  " no variation data for this glyph\n" ));
+                  " no variation data for glyph %d\n", glyph_index ));
       return FT_Err_Ok;
     }
 
