@@ -1,3 +1,21 @@
+2020-02-29  Ben Wagner  <bungeman@google.com>
+
+	[truetype] Fix state of `FT_Face' for buggy `gvar' tables (#57923).
+
+	By resetting the blend as implemented with this commit fonts with
+	invalid `gvar' tables may keep calling into `ft_var_load_gvar' from
+	`tt_set_mm_blend' and failing, but the font was invalid anyway and
+	we want to keep seeing the failure in `tt_set_mm_blend'.
+
+	* src/truetype/ttgxvar.c (ft_var_load_gvar): Calculate length of
+	offset array once.
+	Allocate arrays after `FT_FRAME_ENTER' (extra check before
+	allocating and avoid needing to free array later if error entering
+	frame).
+	Always call `FT_FRAME_EXIT'.
+	Consistently set counts immediately after array initialized.
+	Reset the blend (particularly `blend->glyphoffsets') on failure.
+
 2020-03-01  Nikhil Ramakrishnan  <ramakrishnan.nikhil@gmail.com>
 
 	[docs] Update docwriter stylesheet.
