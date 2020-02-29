@@ -1,3 +1,21 @@
+2020-03-01  Nikhil Ramakrishnan  <ramakrishnan.nikhil@gmail.com>
+
+	[docs] Update docwriter stylesheet.
+
+	This change is required to support docwriter 1.2.1.
+
+	See
+
+	  https://github.com/freetype/docwriter/issues/36
+
+	for more information.
+
+	* docs/markdown/stylesheets/extra.css:
+	(.md-typeset code) -> (.md-typeset pre>code)
+	(pre) -> (pre>code)
+	(p, .md-typeset p, h4): Remove commented styles.
+	(table.index): Remove unused styles.
+
 2020-02-28  Ben Wagner  <bungeman@google.com>
 
 	[truetype] Add better checks for loading `gvar' table (#57905).
