@@ -1,3 +1,22 @@
+2020-03-02  Moazin Khatti  <moazinkhatri@gmail.com>
+
+	[gzip] Support `gzip' encoded header conditionally.
+
+	In order to support `gzip' encoded header the call to
+	`inflateInit2' was modified in commit 6a92b1fadde26477a9179.
+	However, this code breaks with the outdated internal version
+	of zlib.  This is a temporary fix to conditionally support
+	`gzip' encoded header whenever a system installation of zlib
+	is being used.
+
+	Problem report in
+
+	  https://lists.nongnu.org/archive/html/freetype-devel/2020-02/msg00023.html
+
+	* src/gzip/ftgzip.c (FT_Gzip_Uncompress): Change the the call to
+	`inflateInit2' depending on whether the system installation is
+	being used or the internal copy.
+
 2020-02-29  Ben Wagner  <bungeman@google.com>
 
 	[truetype] Fix state of `FT_Face' for buggy `gvar' tables (#57923).
