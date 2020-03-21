@@ -120,7 +120,7 @@ std_setup:
 	$(info `$(CONFIG_MK)' from this directory then read the INSTALL file for help.)
 	$(info )
 	$(info Otherwise, simply type `$(MAKE)' again to build the library,)
-	$(info or `$(MAKE) refdoc' to build the API reference (this needs python >= 2.6).)
+	$(info or `$(MAKE) refdoc' to build the API reference (this needs Python >= 3.5).)
 	$(info )
 	@$(COPY) $(subst /,$(SEP),$(CONFIG_RULES) $(CONFIG_MK))
 

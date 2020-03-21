@@ -12,6 +12,10 @@ CHANGES BETWEEN 2.10.1 and 2.10.2
   - Function  `FT_Get_Var_Axis_Flags' returned random data for  Type 1
     MM fonts.
 
+  - Drop  support  for Python 2 in Freetype's API reference  generator
+    `docwriter'  (Python >= 3.5 is required for targets  `make refdoc'
+    and `make refdoc-venv').
+
 
 ======================================================================
 

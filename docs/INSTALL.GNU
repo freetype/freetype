@@ -63,7 +63,7 @@ instructions in the file `INSTALL.UNIX' instead.
 
       Otherwise, simply type 'make' again to build the library
       or 'make refdoc' to build the API reference (the latter needs
-      python).
+      Python >= 3.5).
       =============================================================
 
 

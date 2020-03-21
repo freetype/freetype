@@ -1,3 +1,29 @@
+2020-03-21  Nikhil Ramakrishnan  <ramakrishnan.nikhil@gmail.com>
+
+	[docwriter] Drop support for Python < 3.5.
+
+	Python versions < 3.5 have reached end-of-life and as such, no
+	security or bug fixes will be provided for those versions.  See
+
+	  https://devguide.python.org/#status-of-python-branches
+	
+	for more information.
+
+	* Jamfile (RefDoc): Add `site' parameter.
+
+	* builds/detect.mk (std_setup): Update Python version requirement.
+
+	* builds/freetype.mk (refdoc-venv): Use pip as `python -m pip'.
+
+	* builds/unix/ax_compare_version.m4,
+	builds/unix/ax_prog_python_version.m4: Macros to detect Python
+	version.  New files.
+
+	* builds/unix/configure.raw: Check for Python >= 3.5 and remove
+	check for `pip'.
+
+	* docs/CHANGES, docs/INSTALL.GNU, docs/README: Updated.
+
 2020-03-02  Moazin Khatti  <moazinkhatri@gmail.com>
 
 	[gzip] Support `gzip' encoded header conditionally.

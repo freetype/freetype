@@ -1012,16 +1012,20 @@ case "$CFLAGS" in
     ;;
 esac
 
-# Check for python and docwriter
+# Check for Python and docwriter
 
-AC_CHECK_PROGS([PYTHON], [python3 python2 python], [missing])
+have_py3=no
 have_docwriter=no
-if test "x$PYTHON" != "xmissing"; then
-  AC_CHECK_PROGS([PIP], [pip3 pip2 pip], [missing])
+PIP=pip
 
-  if test "x$PIP" != "xmissing"; then
+AC_CHECK_PROGS([PYTHON], [python3 python], [missing])
+if test "x$PYTHON" != "xmissing"; then
+  AX_PROG_PYTHON_VERSION([3.5], [have_py3=yes], [])
+
+  if test "x$have_py3" = "xyes"; then
+    PIP="$PYTHON -m $PIP"
     AC_MSG_CHECKING([for \`docwriter' Python module])
-    $PIP show -q docwriter
+    $PYTHON -m docwriter -h > /dev/null 2>&1
     if test "x$?" = "x0"; then
       have_docwriter=yes
       AC_MSG_RESULT([yes])
@@ -1191,9 +1195,9 @@ Library configuration:
 if test $have_docwriter = no; then
   AC_MSG_NOTICE([
   Warning: \`make refdoc' will fail since pip package \`docwriter' is not
-  installed.  To install, run \`$PIP install docwriter', or to use a python
+  installed.  To install, run \`$PIP install docwriter', or to use a Python
   virtual environment, run \`make refdoc-venv' (requires pip package
-  \`virtualenv').
+  \`virtualenv'). These operations require Python >= 3.5.
   ])
 fi
 
