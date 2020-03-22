@@ -1,4 +1,4 @@
-After saying `make refdoc' or `make refdoc-venv' the `site/' directory
+After saying `make refdoc' or `make refdoc-venv' the `reference/' directory
 contains the FreeType API reference.  You need Python >= 3.5 and pip to make
 this target.
 

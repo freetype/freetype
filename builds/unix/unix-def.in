@@ -24,7 +24,6 @@ SEP    := /
 # This is used for `make refdoc' and `make refdoc-venv'
 #
 PYTHON := @PYTHON@
-PIP    := @PIP@
 BIN    := bin
 
 # this is used for `make distclean' and `make install'

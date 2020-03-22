@@ -1,3 +1,16 @@
+2020-03-22  Nikhil Ramakrishnan  <ramakrishnan.nikhil@gmail.com>
+
+	[docs] Fix building docs if `srcdir' != `builddir'.
+
+	`docs/reference/*' was moved one directory up in commit 237fed6.
+
+	* builds/unix/unix-def.in (PIP): Remove variable.
+
+	* configure: Create `docs' directory and copy assets from
+	`docs/markdown'.
+
+	* docs/README: Output directory is `reference'.
+
 2020-03-21  Nikhil Ramakrishnan  <ramakrishnan.nikhil@gmail.com>
 
 	[docwriter] Drop support for Python < 3.5.
