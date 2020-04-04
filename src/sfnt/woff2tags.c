@@ -17,7 +17,6 @@
 
 
 #include <ft2build.h>
-#include "sfwoff.h"
 #include FT_TRUETYPE_TAGS_H
 
 

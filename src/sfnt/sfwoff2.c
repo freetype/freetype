@@ -1288,7 +1288,7 @@
     }
 
     /* Read `numGlyphs' field from `maxp' table. */
-    if ( FT_STREAM_SEEK( maxp_table->src_offset ) && FT_STREAM_SKIP( 8 ) )
+    if ( FT_STREAM_SEEK( maxp_table->src_offset ) || FT_STREAM_SKIP( 8 ) )
       return error;
 
     if ( FT_READ_USHORT( num_glyphs ) )
@@ -1297,7 +1297,7 @@
     info->num_glyphs = num_glyphs;
 
     /* Read `indexToLocFormat' field from `head' table. */
-    if ( FT_STREAM_SEEK( head_table->src_offset ) &&
+    if ( FT_STREAM_SEEK( head_table->src_offset ) ||
          FT_STREAM_SKIP( 50 )                     )
       return error;
 
@@ -1335,7 +1335,7 @@
 
       glyf_offset += info->glyf_table->src_offset;
 
-      if ( FT_STREAM_SEEK( glyf_offset ) && FT_STREAM_SKIP( 2 ) )
+      if ( FT_STREAM_SEEK( glyf_offset ) || FT_STREAM_SKIP( 2 ) )
         return error;
 
       if ( FT_READ_USHORT( info->x_mins[i] ) )

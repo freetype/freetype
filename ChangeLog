@@ -1,3 +1,11 @@
+2020-04-04  Nikhil Ramakrishnan  <ramakrishnan.nikhil@gmail.com>
+
+	[woff2] Return if single stream operation fails.
+
+	* src/sfnt/sfwoff2.c (get_x_mins): Do it.
+
+	* src/sfnt/woff2tags.c: Remove unused include.
+
 2020-03-22  Nikhil Ramakrishnan  <ramakrishnan.nikhil@gmail.com>
 
 	[docs] Fix building docs if `srcdir' != `builddir'.
