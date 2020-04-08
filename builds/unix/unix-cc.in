@@ -87,8 +87,12 @@ ANSIFLAGS := @XX_ANSIFLAGS@
 
 # C compiler to use -- we use libtool!
 #
-CCraw := $(CC)
-CC    := $(LIBTOOL) --mode=compile $(CCraw)
+# CC might be set on the command line; we store this value in `CCraw'.
+# Consequently, we use the `override' directive to ensure that the
+# libtool call is always prepended.
+#
+CCraw       := $(CC)
+override CC := $(LIBTOOL) --mode=compile $(CCraw)
 
 # Resource compiler to use on Cygwin/MinGW, usually windres.
 #
