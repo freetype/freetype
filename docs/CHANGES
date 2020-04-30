@@ -16,8 +16,7 @@ CHANGES BETWEEN 2.10.1 and 2.10.2
     `docwriter'  (Python >= 3.5 is required for targets  `make refdoc'
     and `make refdoc-venv').
 
-  - The  next release  will  remove build  support  by Perforce's  Jam
-    system.
+  - The next release will remove Jam build support.
 
 
 ======================================================================
