@@ -1,3 +1,18 @@
+2020-05-02  Alexei Podtelezhnikov  <apodtele@gmail.com>
+
+	[builds] Clean up Windows CE project files.
+
+	Remove version from filenames that caused a lot of polution in the
+	release process. Use VERSIONINFO resource instead.
+
+	* builds/wince/vc2005-ce/freetype.vcproj,
+	builds/wince/vc2008-ce/freetype.vcproj,
+	builds/windows/visualce/freetype.vcproj,
+	builds/windows/visualce/freetype.dsp: s/2101//g, but add `ftver.rc'.
+	* builds/wince/vc2008-ce/index.html,
+	builds/wince/vc2005-ce/index.html,
+	builds/windows/visualce/index.html: s/2101//g.
+
 2020-05-01  Alexei Podtelezhnikov  <apodtele@gmail.com>
 
 	* devel/ft2build.h: Override FT_CONFIG_MODULES_H here as well.
