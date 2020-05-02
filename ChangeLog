@@ -1,3 +1,11 @@
+2020-05-01  Alexei Podtelezhnikov  <apodtele@gmail.com>
+
+	[builds/unix] Consolidate marco overrides (for the demos to see them).
+
+	* builds/unix/unix-cc.in (FT_CONFIG_MODULES_H, FT_CONFIG_OPTIONS_H):
+	Override them here...
+	* builds/freetype.mk: ... instead of here.
+
 2020-04-08  Werner Lemberg  <wl@gnu.org>
 
 	Allow setting `CC' in Unix build (#58051).
