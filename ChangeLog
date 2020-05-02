@@ -1,5 +1,9 @@
 2020-05-01  Alexei Podtelezhnikov  <apodtele@gmail.com>
 
+	* devel/ft2build.h: Override FT_CONFIG_MODULES_H here as well.
+
+2020-05-01  Alexei Podtelezhnikov  <apodtele@gmail.com>
+
 	[builds/unix] Consolidate marco overrides (for the demos to see them).
 
 	* builds/unix/unix-cc.in (FT_CONFIG_MODULES_H, FT_CONFIG_OPTIONS_H):
