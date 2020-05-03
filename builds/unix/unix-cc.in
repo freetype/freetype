@@ -76,7 +76,7 @@ T := -o$(space)
 #   Use the ANSIFLAGS variable to define the compiler flags used to enfore
 #   ANSI compliance.
 #
-#   We use our own FreeType configuration file.
+#   We use our own FreeType configuration files overriding defaults.
 #
 CPPFLAGS := @CPPFLAGS@
 CFLAGS   := -c @XX_CFLAGS@ @CFLAGS@ \

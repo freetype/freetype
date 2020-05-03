@@ -127,11 +127,12 @@ INCLUDES := $(subst /,$(COMPILER_SEP),$(OBJ_DIR) \
 INCLUDE_FLAGS := $(INCLUDES:%=$I%)
 
 ifdef DEVEL_DIR
-  # We assume that all library dependencies for FreeType are fulfilled for a
-  # development build, so we directly access the necessary include directory
-  # information using `pkg-config'.
-  INCLUDE_FLAGS += $(shell pkg-config --cflags libpng \
-                                               harfbuzz )
+  # We assume that library dependencies defined in `ftoption.c' are fulfilled
+  # for a development build, so we directly access the necessary include
+  # directory information using `pkg-config'.
+  INCLUDE_FLAGS += $(shell pkg-config --cflags libpng)
+  INCLUDE_FLAGS += $(shell pkg-config --cflags harfbuzz)
+  INCLUDE_FLAGS += $(shell pkg-config --cflags libbrotlidec)
 endif
 
 
@@ -146,21 +147,13 @@ endif
 # FreeType.  This is required to let our sources include the internal
 # headers (something forbidden by clients).
 #
-# Finally, we define FT_CONFIG_MODULES_H so that the compiler uses the
-# generated version of `ftmodule.h' in $(OBJ_DIR).  If there is an
-# `ftoption.h' files in $(OBJ_DIR), define FT_CONFIG_OPTIONS_H too.
-#
-ifneq ($(wildcard $(OBJ_DIR)/ftoption.h),)
-  FTOPTION_H    := $(OBJ_DIR)/ftoption.h
-else ifneq ($(wildcard $(BUILD_DIR)/ftoption.h),)
-  FTOPTION_H    := $(BUILD_DIR)/ftoption.h
-endif
-
 # `CPPFLAGS' might be specified by the user in the environment.
 #
 FT_CFLAGS  = $(CPPFLAGS) \
              $(CFLAGS) \
              $DFT2_BUILD_LIBRARY
+
+FT_COMPILE := $(CC) $(ANSIFLAGS) $(INCLUDE_FLAGS) $(FT_CFLAGS)
 
 
 # Include the `exports' rules file.
@@ -175,11 +168,17 @@ OBJECTS_LIST :=
 
 # Define $(PUBLIC_H) as the list of all public header files located in
 # `$(TOP_DIR)/include/freetype'.  $(INTERNAL_H), and $(CONFIG_H) are defined
-# similarly.
+# similarly.  $(FTOPTION_H) is the option file used in the compilation.
 #
 # This is used to simplify the dependency rules -- if one of these files
 # changes, the whole library is recompiled.
 #
+ifneq ($(wildcard $(OBJ_DIR)/ftoption.h),)
+  FTOPTION_H    := $(OBJ_DIR)/ftoption.h
+else ifneq ($(wildcard $(BUILD_DIR)/ftoption.h),)
+  FTOPTION_H    := $(BUILD_DIR)/ftoption.h
+endif
+
 PUBLIC_H   := $(wildcard $(PUBLIC_DIR)/*.h)
 INTERNAL_H := $(wildcard $(INTERNAL_DIR)/*.h) \
               $(wildcard $(SERVICES_DIR)/*.h)
@@ -191,8 +190,6 @@ DEVEL_H    := $(wildcard $(TOP_DIR)/devel/*.h)
 
 FREETYPE_H := $(PUBLIC_H) $(INTERNAL_H) $(CONFIG_H) $(DEVEL_H)
 
-
-FT_COMPILE := $(CC) $(ANSIFLAGS) $(INCLUDE_FLAGS) $(FT_CFLAGS)
 
 # ftsystem component
 #

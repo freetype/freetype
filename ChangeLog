@@ -1,3 +1,7 @@
+2020-05-03  Alexei Podtelezhnikov  <apodtele@gmail.com>
+
+	* builds/freetype.mk: Refactor for readability.
+
 2020-05-02  Alexei Podtelezhnikov  <apodtele@gmail.com>
 
 	[builds] Clean up Windows CE project files.
