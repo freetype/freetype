@@ -126,10 +126,11 @@ INCLUDES := $(subst /,$(COMPILER_SEP),$(OBJ_DIR) \
 
 INCLUDE_FLAGS := $(INCLUDES:%=$I%)
 
+# For a development build, we assume that the external library dependencies
+# defined in `ftoption.h' are fulfilled, so we directly access the necessary
+# include directory information using `pkg-config'.
+#
 ifdef DEVEL_DIR
-  # We assume that library dependencies defined in `ftoption.c' are fulfilled
-  # for a development build, so we directly access the necessary include
-  # directory information using `pkg-config'.
   INCLUDE_FLAGS += $(shell pkg-config --cflags libpng)
   INCLUDE_FLAGS += $(shell pkg-config --cflags harfbuzz)
   INCLUDE_FLAGS += $(shell pkg-config --cflags libbrotlidec)
