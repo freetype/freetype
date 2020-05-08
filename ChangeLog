@@ -1,3 +1,10 @@
+2020-05-08  Jakub Alba  <jalba@vewd.com>
+
+	* src/truetype/ttinterp.c (TT_RunIns): Adjust loop counter (#58319).
+
+	The font that exceeds the old limit is Icono Regular, version
+	1.00000.
+
 2020-05-03  Alexei Podtelezhnikov  <apodtele@gmail.com>
 
 	* builds/freetype.mk: Refactor for readability.
