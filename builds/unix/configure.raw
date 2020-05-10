@@ -1193,9 +1193,9 @@ Library configuration:
 # Warn if docwriter is not installed
 
 if test $have_docwriter = no; then
-  AC_MSG_NOTICE([
-  Warning: \`make refdoc' will fail since pip package \`docwriter' is not
-  installed.  To install, run \`$PIP install docwriter', or to use a Python
+  AC_MSG_WARN([
+  \`make refdoc' will fail since pip package \`docwriter' is not installed.
+  To install, run \`$PIP install docwriter', or to use a Python
   virtual environment, run \`make refdoc-venv' (requires pip package
   \`virtualenv'). These operations require Python >= 3.5.
   ])
