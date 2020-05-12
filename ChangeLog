@@ -1,3 +1,14 @@
+2020-05-12  Alexei Podtelezhnikov  <apodtele@gmail.com>
+
+	[smooth] Turn on LCD filtering during FreeType initialization.
+
+	* src/smooth/ftsmooth.c (ft_smooth_init): Enable LCD filtering.
+
+	* include/freetype/ftlcdfil.h: Document it, remove patent warnings.
+	* include/freetype/freetype.h (FT_Render_Mode): Updated.
+	* include/freetype/config/ftoption.h, devel/ftoption.h
+	[FT_CONFIG_OPTION_SUBPIXEL_RENDERING]: Do not mention patents.
+
 2020-05-11  Alexei Podtelezhnikov  <apodtele@gmail.com>
 
 	[smooth] Stop using dedicated LCD modules and classes.
