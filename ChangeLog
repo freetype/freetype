@@ -1,3 +1,20 @@
+2020-05-11  Alexei Podtelezhnikov  <apodtele@gmail.com>
+
+	[smooth] Stop using dedicated LCD modules and classes.
+
+	The LCD modules were never truly independent. They mostly served as
+	a way to disable patented LCD rendering, which is no longer necessary.
+	The `smooth' module now handles LCD modes as well.
+
+	* src/smooth/ftsmooth.c (ft_smooth_lcd_renderer_class.
+	ft_smooth_lcdv_renderer_class): Deleted.
+	(ft_render_smooth): Reworked from `ft_render_smooth_generic'.
+	* src/smooth/ftsmooth.h: Remove dedicated LCD classes.
+	* src/smooth/module.mk: Remove dedicated LCD modules.
+	* include/freetype/config/ftmodule.h: Ditto.
+	* builds/amiga/include/config/ftmodule.h: Ditto.
+	* include/freetype/ftmodapi.h: Do not mention LCD modules.
+
 2020-05-09  Werner Lemberg  <wl@gnu.org>
 
 	* Version 2.10.2 released.

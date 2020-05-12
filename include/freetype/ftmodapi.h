@@ -65,7 +65,7 @@ FT_BEGIN_HEADER
    *     psnames
    *     raster1
    *     sfnt
-   *     smooth, smooth-lcd, smooth-lcdv
+   *     smooth
    *     truetype
    *     type1
    *     type42
