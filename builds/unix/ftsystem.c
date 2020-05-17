@@ -18,7 +18,7 @@
 
 #include <ft2build.h>
   /* we use our special ftconfig.h file, not the standard one */
-#include <ftconfig.h>
+#include FT_CONFIG_CONFIG_H
 #include <freetype/internal/ftdebug.h>
 #include <freetype/ftsystem.h>
 #include <freetype/fterrors.h>
