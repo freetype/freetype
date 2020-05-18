@@ -56,7 +56,6 @@ FT_BEGIN_HEADER
 
 #undef HAVE_UNISTD_H
 #undef HAVE_FCNTL_H
-#undef HAVE_STDINT_H
 
   /* There are systems (like the Texas Instruments 'C54x) where a `char`  */
   /* has 16~bits.  ANSI~C says that `sizeof(char)` is always~1.  Since an */

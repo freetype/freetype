@@ -1,5 +1,16 @@
 2020-05-18  David Turner  <david@freetype.org>
 
+	Remove obsolete HAVE_STDINT_H probing macro.
+
+	This macro was updated by the unix configure script and the
+	`CMakeLists.txt' one, but is never used in the source tree (nor is
+	<stdint.h> included anywhere).
+
+	* CMakeLists.txt, builds/unix/ftconfig.in: Don't handle
+	`HAVE_STDINT_H'.
+
+2020-05-18  David Turner  <david@freetype.org>
+
 	Remove Jamfile files from the tree.
 
 	These have not been used in a very, very long time, so better remove
