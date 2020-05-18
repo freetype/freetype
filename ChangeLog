@@ -1,3 +1,13 @@
+2020-05-18  David Turner  <david@freetype.org>
+
+	Remove Jamfile files from the tree.
+
+	These have not been used in a very, very long time, so better remove
+	them.  A corresponding patch will be submitted to the
+	`freetype2-demos' repository.
+
+	* src/Jamfile, src/*/Jamfile, Jamrules: Delete.
+
 2020-05-12  Alexei Podtelezhnikov  <apodtele@gmail.com>
 
 	[smooth] Turn on LCD filtering during FreeType initialization.

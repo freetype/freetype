@@ -1174,10 +1174,6 @@ AC_CONFIG_HEADERS([ftconfig.h:ftconfig.in],
 AC_CONFIG_FILES([unix-cc.mk:unix-cc.in
                  unix-def.mk:unix-def.in])
 
-# re-generate the Jamfile to use libtool now
-#
-# AC_CONFIG_FILES([../../Jamfile:../../Jamfile.in])
-
 AC_OUTPUT
 
 AC_MSG_NOTICE([

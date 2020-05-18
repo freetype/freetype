@@ -42,7 +42,7 @@ FT_BEGIN_HEADER
    *   the name of a directory that is included _before_ the FreeType include
    *   path during compilation.
    *
-   *   The default FreeType Makefiles and Jamfiles use the build directory
+   *   The default FreeType Makefiles use the build directory
    *   `builds/<system>` by default, but you can easily change that for your
    *   own projects.
    *
