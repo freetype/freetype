@@ -1,3 +1,7 @@
+2020-06-02  Werner Lemberg  <wl@gnu.org>
+
+	* src/sfnt/ttcmap.c (tt_face_build_cmaps): Trace number of cmaps.
+
 2020-05-18  David Turner  <david@freetype.org>
 
 	Remove obsolete HAVE_STDINT_H probing macro.

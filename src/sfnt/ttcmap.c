@@ -3788,8 +3788,9 @@
     p += 2;
 
     num_cmaps = TT_NEXT_USHORT( p );
-    limit     = table + face->cmap_size;
+    FT_TRACE4(( "tt_face_build_cmaps: %d cmaps\n", num_cmaps ));
 
+    limit = table + face->cmap_size;
     for ( ; num_cmaps > 0 && p + 8 <= limit; num_cmaps-- )
     {
       FT_CharMapRec  charmap;
