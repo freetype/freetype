@@ -20,10 +20,10 @@
 
 
 #include <ft2build.h>
-#include FT_INTERNAL_DEBUG_H
-#include FT_INTERNAL_STREAM_H
-#include FT_TRUETYPE_TAGS_H
-#include FT_BITMAP_H
+#include <freetype/internal/ftdebug.h>
+#include <freetype/internal/ftstream.h>
+#include <freetype/tttags.h>
+#include <freetype/ftbitmap.h>
 
 
 #ifdef TT_CONFIG_OPTION_EMBEDDED_BITMAPS

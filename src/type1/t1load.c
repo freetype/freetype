@@ -61,12 +61,12 @@
 
 
 #include <ft2build.h>
-#include FT_INTERNAL_DEBUG_H
+#include <freetype/internal/ftdebug.h>
 #include FT_CONFIG_CONFIG_H
-#include FT_MULTIPLE_MASTERS_H
-#include FT_INTERNAL_TYPE1_TYPES_H
-#include FT_INTERNAL_CALC_H
-#include FT_INTERNAL_HASH_H
+#include <freetype/ftmm.h>
+#include <freetype/internal/t1types.h>
+#include <freetype/internal/ftcalc.h>
+#include <freetype/internal/fthash.h>
 
 #include "t1load.h"
 #include "t1errors.h"

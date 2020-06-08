@@ -17,31 +17,31 @@
 
 
 #include <ft2build.h>
-#include FT_LIST_H
-#include FT_OUTLINE_H
-#include FT_FONT_FORMATS_H
+#include <freetype/ftlist.h>
+#include <freetype/ftoutln.h>
+#include <freetype/ftfntfmt.h>
 
-#include FT_INTERNAL_VALIDATE_H
-#include FT_INTERNAL_OBJECTS_H
-#include FT_INTERNAL_DEBUG_H
-#include FT_INTERNAL_RFORK_H
-#include FT_INTERNAL_STREAM_H
-#include FT_INTERNAL_SFNT_H            /* for SFNT_Load_Table_Func */
-#include FT_INTERNAL_POSTSCRIPT_AUX_H  /* for PS_Driver            */
+#include <freetype/internal/ftvalid.h>
+#include <freetype/internal/ftobjs.h>
+#include <freetype/internal/ftdebug.h>
+#include <freetype/internal/ftrfork.h>
+#include <freetype/internal/ftstream.h>
+#include <freetype/internal/sfnt.h>          /* for SFNT_Load_Table_Func */
+#include <freetype/internal/psaux.h>         /* for PS_Driver            */
 
-#include FT_TRUETYPE_TABLES_H
-#include FT_TRUETYPE_TAGS_H
-#include FT_TRUETYPE_IDS_H
+#include <freetype/tttables.h>
+#include <freetype/tttags.h>
+#include <freetype/ttnameid.h>
 
-#include FT_SERVICE_PROPERTIES_H
-#include FT_SERVICE_SFNT_H
-#include FT_SERVICE_POSTSCRIPT_NAME_H
-#include FT_SERVICE_GLYPH_DICT_H
-#include FT_SERVICE_TT_CMAP_H
-#include FT_SERVICE_KERNING_H
-#include FT_SERVICE_TRUETYPE_ENGINE_H
+#include <freetype/internal/services/svprop.h>
+#include <freetype/internal/services/svsfnt.h>
+#include <freetype/internal/services/svpostnm.h>
+#include <freetype/internal/services/svgldict.h>
+#include <freetype/internal/services/svttcmap.h>
+#include <freetype/internal/services/svkern.h>
+#include <freetype/internal/services/svtteng.h>
 
-#include FT_DRIVER_H
+#include <freetype/ftdriver.h>
 
 #ifdef FT_CONFIG_OPTION_MAC_FONTS
 #include "ftbase.h"
@@ -50,7 +50,7 @@
 
 #ifdef FT_DEBUG_LEVEL_TRACE
 
-#include FT_BITMAP_H
+#include <freetype/ftbitmap.h>
 
 #if defined( _MSC_VER )      /* Visual C++ (and Intel C++)   */
   /* We disable the warning `conversion from XXX to YYY,     */

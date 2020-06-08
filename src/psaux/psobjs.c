@@ -17,10 +17,10 @@
 
 
 #include <ft2build.h>
-#include FT_INTERNAL_POSTSCRIPT_AUX_H
-#include FT_INTERNAL_DEBUG_H
-#include FT_INTERNAL_CALC_H
-#include FT_DRIVER_H
+#include <freetype/internal/psaux.h>
+#include <freetype/internal/ftdebug.h>
+#include <freetype/internal/ftcalc.h>
+#include <freetype/ftdriver.h>
 
 #include "psobjs.h"
 #include "psconv.h"

@@ -18,30 +18,30 @@
 
 #include <ft2build.h>
 
-#include FT_INTERNAL_DEBUG_H
-#include FT_INTERNAL_CALC_H
-#include FT_INTERNAL_STREAM_H
-#include FT_ERRORS_H
-#include FT_TRUETYPE_IDS_H
-#include FT_TRUETYPE_TAGS_H
-#include FT_INTERNAL_SFNT_H
-#include FT_DRIVER_H
+#include <freetype/internal/ftdebug.h>
+#include <freetype/internal/ftcalc.h>
+#include <freetype/internal/ftstream.h>
+#include <freetype/fterrors.h>
+#include <freetype/ttnameid.h>
+#include <freetype/tttags.h>
+#include <freetype/internal/sfnt.h>
+#include <freetype/ftdriver.h>
 
 #ifdef TT_CONFIG_OPTION_GX_VAR_SUPPORT
-#include FT_MULTIPLE_MASTERS_H
-#include FT_SERVICE_MULTIPLE_MASTERS_H
-#include FT_SERVICE_METRICS_VARIATIONS_H
+#include <freetype/ftmm.h>
+#include <freetype/internal/services/svmm.h>
+#include <freetype/internal/services/svmetric.h>
 #endif
 
-#include FT_INTERNAL_CFF_OBJECTS_TYPES_H
+#include <freetype/internal/cffotypes.h>
 #include "cffobjs.h"
 #include "cffload.h"
 #include "cffcmap.h"
 
 #include "cfferrs.h"
 
-#include FT_INTERNAL_POSTSCRIPT_AUX_H
-#include FT_SERVICE_CFF_TABLE_LOAD_H
+#include <freetype/internal/psaux.h>
+#include <freetype/internal/services/svcfftl.h>
 
 
   /**************************************************************************

@@ -17,10 +17,10 @@
 
 
 #include <ft2build.h>
-#include FT_INTERNAL_DEBUG_H
-#include FT_INTERNAL_SFNT_H
-#include FT_INTERNAL_OBJECTS_H
-#include FT_TRUETYPE_IDS_H
+#include <freetype/internal/ftdebug.h>
+#include <freetype/internal/sfnt.h>
+#include <freetype/internal/ftobjs.h>
+#include <freetype/ttnameid.h>
 
 #include "sfdriver.h"
 #include "ttload.h"
@@ -43,21 +43,21 @@
 
 #ifdef TT_CONFIG_OPTION_BDF
 #include "ttbdf.h"
-#include FT_SERVICE_BDF_H
+#include <freetype/internal/services/svbdf.h>
 #endif
 
 #include "ttcmap.h"
 #include "ttkern.h"
 #include "ttmtx.h"
 
-#include FT_SERVICE_GLYPH_DICT_H
-#include FT_SERVICE_POSTSCRIPT_NAME_H
-#include FT_SERVICE_SFNT_H
-#include FT_SERVICE_TT_CMAP_H
+#include <freetype/internal/services/svgldict.h>
+#include <freetype/internal/services/svpostnm.h>
+#include <freetype/internal/services/svsfnt.h>
+#include <freetype/internal/services/svttcmap.h>
 
 #ifdef TT_CONFIG_OPTION_GX_VAR_SUPPORT
-#include FT_MULTIPLE_MASTERS_H
-#include FT_SERVICE_MULTIPLE_MASTERS_H
+#include <freetype/ftmm.h>
+#include <freetype/internal/services/svmm.h>
 #endif
 
 

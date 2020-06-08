@@ -33,7 +33,7 @@
 #include "gxvcommn.h"
 #include "gxvmort.h"
 
-#include FT_SFNT_NAMES_H
+#include <freetype/ftsnames.h>
 
 
   FT_LOCAL( void )

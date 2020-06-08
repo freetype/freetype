@@ -17,11 +17,11 @@
 
 
 #include <ft2build.h>
-#include FT_INTERNAL_CALC_H
-#include FT_INTERNAL_DEBUG_H
-#include FT_INTERNAL_STREAM_H
-#include FT_TRUETYPE_IDS_H
-#include FT_DRIVER_H
+#include <freetype/internal/ftcalc.h>
+#include <freetype/internal/ftdebug.h>
+#include <freetype/internal/ftstream.h>
+#include <freetype/ttnameid.h>
+#include <freetype/ftdriver.h>
 
 #include "t1gload.h"
 #include "t1load.h"
@@ -32,8 +32,8 @@
 #include "t1afm.h"
 #endif
 
-#include FT_SERVICE_POSTSCRIPT_CMAPS_H
-#include FT_INTERNAL_POSTSCRIPT_AUX_H
+#include <freetype/internal/services/svpscmap.h>
+#include <freetype/internal/psaux.h>
 
 
   /**************************************************************************

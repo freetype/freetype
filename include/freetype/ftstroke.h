@@ -20,8 +20,8 @@
 #define FTSTROKE_H_
 
 #include <ft2build.h>
-#include FT_OUTLINE_H
-#include FT_GLYPH_H
+#include <freetype/ftoutln.h>
+#include <freetype/ftglyph.h>
 
 
 FT_BEGIN_HEADER

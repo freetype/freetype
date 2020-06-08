@@ -18,11 +18,11 @@
 
 #include <ft2build.h>
 #include "cffparse.h"
-#include FT_INTERNAL_STREAM_H
-#include FT_INTERNAL_DEBUG_H
-#include FT_INTERNAL_CALC_H
-#include FT_INTERNAL_POSTSCRIPT_AUX_H
-#include FT_LIST_H
+#include <freetype/internal/ftstream.h>
+#include <freetype/internal/ftdebug.h>
+#include <freetype/internal/ftcalc.h>
+#include <freetype/internal/psaux.h>
+#include <freetype/ftlist.h>
 
 #include "cfferrs.h"
 #include "cffload.h"

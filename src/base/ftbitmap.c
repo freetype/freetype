@@ -17,11 +17,11 @@
 
 
 #include <ft2build.h>
-#include FT_INTERNAL_DEBUG_H
+#include <freetype/internal/ftdebug.h>
 
-#include FT_BITMAP_H
-#include FT_IMAGE_H
-#include FT_INTERNAL_OBJECTS_H
+#include <freetype/ftbitmap.h>
+#include <freetype/ftimage.h>
+#include <freetype/internal/ftobjs.h>
 
 
   /**************************************************************************

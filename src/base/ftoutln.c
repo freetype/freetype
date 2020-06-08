@@ -17,11 +17,11 @@
 
 
 #include <ft2build.h>
-#include FT_OUTLINE_H
-#include FT_INTERNAL_OBJECTS_H
-#include FT_INTERNAL_CALC_H
-#include FT_INTERNAL_DEBUG_H
-#include FT_TRIGONOMETRY_H
+#include <freetype/ftoutln.h>
+#include <freetype/internal/ftobjs.h>
+#include <freetype/internal/ftcalc.h>
+#include <freetype/internal/ftdebug.h>
+#include <freetype/fttrigon.h>
 
 
   /**************************************************************************

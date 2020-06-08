@@ -26,14 +26,14 @@ THE SOFTWARE.
 
 #include <ft2build.h>
 
-#include FT_INTERNAL_DEBUG_H
-#include FT_INTERNAL_STREAM_H
-#include FT_INTERNAL_OBJECTS_H
-#include FT_BDF_H
-#include FT_TRUETYPE_IDS_H
+#include <freetype/internal/ftdebug.h>
+#include <freetype/internal/ftstream.h>
+#include <freetype/internal/ftobjs.h>
+#include <freetype/ftbdf.h>
+#include <freetype/ttnameid.h>
 
-#include FT_SERVICE_BDF_H
-#include FT_SERVICE_FONT_FORMAT_H
+#include <freetype/internal/services/svbdf.h>
+#include <freetype/internal/services/svfntfmt.h>
 
 #include "bdf.h"
 #include "bdfdrivr.h"

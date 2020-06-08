@@ -21,7 +21,7 @@
 
 
 #include <ft2build.h>
-#include FT_FREETYPE_H
+#include <freetype/freetype.h>
 
 
 #ifdef FT_CONFIG_OPTION_USE_HARFBUZZ

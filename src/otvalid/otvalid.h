@@ -21,12 +21,12 @@
 
 
 #include <ft2build.h>
-#include FT_FREETYPE_H
+#include <freetype/freetype.h>
 
-#include "otverror.h"           /* must come before FT_INTERNAL_VALIDATE_H */
+#include "otverror.h"                      /* must come before `ftvalid.h' */
 
-#include FT_INTERNAL_VALIDATE_H
-#include FT_INTERNAL_STREAM_H
+#include <freetype/internal/ftvalid.h>
+#include <freetype/internal/ftstream.h>
 
 
 FT_BEGIN_HEADER

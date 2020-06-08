@@ -22,8 +22,8 @@
 
 
 #include <ft2build.h>
-#include FT_WINFONTS_H
-#include FT_INTERNAL_DRIVER_H
+#include <freetype/ftwinfnt.h>
+#include <freetype/internal/ftdrv.h>
 
 
 FT_BEGIN_HEADER

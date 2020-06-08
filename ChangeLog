@@ -1,3 +1,22 @@
+2020-06-08  David Turner  <david@freetype.org>
+
+	Make macros for header file names optional.
+
+	We no longer have to take care of the 8.3 file name limit; this
+	allows us (a) to introduce longer, meaningful file names, and (b) to
+	avoid macro names in `#include' lines altogether since some
+	compilers (most notably Visual C++) doesn't support this properly.
+
+	*/*: Replace
+
+	   #include FOO_H
+
+	with
+
+	   #include <freetype/foo.h>
+
+	or something similar.  Also update the documentation.
+
 2020-06-02  Werner Lemberg  <wl@gnu.org>
 
 	* src/sfnt/ttcmap.c (tt_face_build_cmaps): Trace number of cmaps.

@@ -21,8 +21,8 @@
 
 
 #include <ft2build.h>
-#include FT_INTERNAL_POSTSCRIPT_AUX_H
-#include FT_INTERNAL_CFF_OBJECTS_TYPES_H
+#include <freetype/internal/psaux.h>
+#include <freetype/internal/cffotypes.h>
 
 
 FT_BEGIN_HEADER

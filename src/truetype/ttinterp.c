@@ -21,12 +21,12 @@
 
 
 #include <ft2build.h>
-#include FT_INTERNAL_DEBUG_H
-#include FT_INTERNAL_CALC_H
-#include FT_TRIGONOMETRY_H
-#include FT_SYSTEM_H
-#include FT_DRIVER_H
-#include FT_MULTIPLE_MASTERS_H
+#include <freetype/internal/ftdebug.h>
+#include <freetype/internal/ftcalc.h>
+#include <freetype/fttrigon.h>
+#include <freetype/ftsystem.h>
+#include <freetype/ftdriver.h>
+#include <freetype/ftmm.h>
 
 #include "ttinterp.h"
 #include "tterrors.h"

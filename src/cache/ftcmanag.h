@@ -64,7 +64,7 @@
 
 
 #include <ft2build.h>
-#include FT_CACHE_H
+#include <freetype/ftcache.h>
 #include "ftcmru.h"
 #include "ftccache.h"
 

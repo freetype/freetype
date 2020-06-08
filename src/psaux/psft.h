@@ -47,10 +47,10 @@
 #define CF2_NDEBUG
 
 
-#include FT_SYSTEM_H
+#include <freetype/ftsystem.h>
 
 #include "psglue.h"
-#include FT_INTERNAL_POSTSCRIPT_AUX_H    /* for PS_Decoder */
+#include <freetype/internal/psaux.h>    /* for PS_Decoder */
 
 
 FT_BEGIN_HEADER

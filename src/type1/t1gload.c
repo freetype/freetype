@@ -18,13 +18,13 @@
 
 #include <ft2build.h>
 #include "t1gload.h"
-#include FT_INTERNAL_CALC_H
-#include FT_INTERNAL_DEBUG_H
-#include FT_INTERNAL_STREAM_H
-#include FT_OUTLINE_H
-#include FT_INTERNAL_POSTSCRIPT_AUX_H
-#include FT_INTERNAL_CFF_TYPES_H
-#include FT_DRIVER_H
+#include <freetype/internal/ftcalc.h>
+#include <freetype/internal/ftdebug.h>
+#include <freetype/internal/ftstream.h>
+#include <freetype/ftoutln.h>
+#include <freetype/internal/psaux.h>
+#include <freetype/internal/cfftypes.h>
+#include <freetype/ftdriver.h>
 
 #include "t1errors.h"
 

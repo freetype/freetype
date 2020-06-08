@@ -64,8 +64,8 @@
 
 #include <ft2build.h>
 #include "ftraster.h"
-#include FT_INTERNAL_CALC_H   /* for FT_MulDiv and FT_MulDiv_No_Round */
-#include FT_OUTLINE_H         /* for FT_Outline_Get_CBox              */
+#include <freetype/internal/ftcalc.h> /* for FT_MulDiv and FT_MulDiv_No_Round */
+#include <freetype/ftoutln.h>         /* for FT_Outline_Get_CBox              */
 
 #endif /* !STANDALONE_ */
 
@@ -226,8 +226,8 @@
 #else /* !STANDALONE_ */
 
 
-#include FT_INTERNAL_OBJECTS_H
-#include FT_INTERNAL_DEBUG_H       /* for FT_TRACE, FT_ERROR, and FT_THROW */
+#include <freetype/internal/ftobjs.h>
+#include <freetype/internal/ftdebug.h> /* for FT_TRACE, FT_ERROR, and FT_THROW */
 
 #include "rasterrs.h"
 
