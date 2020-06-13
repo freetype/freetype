@@ -20,11 +20,6 @@
 #define FREETYPE_H_
 
 
-#ifndef FT_FREETYPE_H
-#error "`ft2build.h' hasn't been included yet!"
-#endif
-
-
 #include <ft2build.h>
 #include FT_CONFIG_CONFIG_H
 #include <freetype/fttypes.h>

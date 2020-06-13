@@ -20,7 +20,6 @@
 #define SFNT_H_
 
 
-#include <ft2build.h>
 #include <freetype/internal/ftdrv.h>
 #include <freetype/internal/tttypes.h>
 #include <freetype/internal/wofftypes.h>

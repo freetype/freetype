@@ -16,7 +16,6 @@
  */
 
 
-#include <ft2build.h>
 #include <freetype/ftgasp.h>
 #include <freetype/internal/tttypes.h>
 

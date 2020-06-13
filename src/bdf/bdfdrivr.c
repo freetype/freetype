@@ -24,7 +24,6 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
 */
 
-#include <ft2build.h>
 
 #include <freetype/internal/ftdebug.h>
 #include <freetype/internal/ftstream.h>

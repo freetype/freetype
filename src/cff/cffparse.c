@@ -16,7 +16,6 @@
  */
 
 
-#include <ft2build.h>
 #include "cffparse.h"
 #include <freetype/internal/ftstream.h>
 #include <freetype/internal/ftdebug.h>

@@ -21,7 +21,6 @@
 #define WINFNT_H_
 
 
-#include <ft2build.h>
 #include <freetype/ftwinfnt.h>
 #include <freetype/internal/ftdrv.h>
 

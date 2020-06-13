@@ -19,7 +19,6 @@
 #ifndef T1AFM_H_
 #define T1AFM_H_
 
-#include <ft2build.h>
 #include "t1objs.h"
 #include <freetype/internal/t1types.h>
 

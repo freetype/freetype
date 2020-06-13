@@ -20,7 +20,6 @@
 #ifndef FTLCDFIL_H_
 #define FTLCDFIL_H_
 
-#include <ft2build.h>
 #include <freetype/freetype.h>
 #include <freetype/ftparams.h>
 

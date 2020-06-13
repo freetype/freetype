@@ -21,7 +21,6 @@
  */
 
 
-#include <ft2build.h>
 #include <freetype/ftadvanc.h>
 
 

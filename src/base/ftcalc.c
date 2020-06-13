@@ -32,7 +32,6 @@
    */
 
 
-#include <ft2build.h>
 #include <freetype/ftglyph.h>
 #include <freetype/fttrigon.h>
 #include <freetype/internal/ftcalc.h>

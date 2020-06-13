@@ -20,7 +20,6 @@
 #define TTBDF_H_
 
 
-#include <ft2build.h>
 #include "ttload.h"
 #include <freetype/ftbdf.h>
 

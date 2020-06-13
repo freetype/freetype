@@ -19,7 +19,6 @@
 #ifndef FTLZW_H_
 #define FTLZW_H_
 
-#include <ft2build.h>
 #include <freetype/freetype.h>
 
 #ifdef FREETYPE_H

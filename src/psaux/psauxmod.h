@@ -20,7 +20,6 @@
 #define PSAUXMOD_H_
 
 
-#include <ft2build.h>
 #include <freetype/ftmodapi.h>
 
 #include <freetype/internal/psaux.h>

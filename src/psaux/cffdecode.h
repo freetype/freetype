@@ -20,7 +20,6 @@
 #define CFFDECODE_H_
 
 
-#include <ft2build.h>
 #include <freetype/internal/psaux.h>
 
 

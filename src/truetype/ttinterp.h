@@ -19,7 +19,6 @@
 #ifndef TTINTERP_H_
 #define TTINTERP_H_
 
-#include <ft2build.h>
 #include "ttobjs.h"
 
 

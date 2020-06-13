@@ -278,7 +278,6 @@ typedef ptrdiff_t  FT_PtrDist;
 #else /* !STANDALONE_ */
 
 
-#include <ft2build.h>
 #include "ftgrays.h"
 #include <freetype/internal/ftobjs.h>
 #include <freetype/internal/ftdebug.h>

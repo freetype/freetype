@@ -21,7 +21,6 @@
 #define PSAUX_H_
 
 
-#include <ft2build.h>
 #include <freetype/internal/ftobjs.h>
 #include <freetype/internal/t1types.h>
 #include <freetype/internal/fthash.h>

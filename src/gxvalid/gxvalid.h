@@ -28,7 +28,6 @@
 #ifndef GXVALID_H_
 #define GXVALID_H_
 
-#include <ft2build.h>
 #include <freetype/freetype.h>
 
 #include "gxverror.h"                     /* must come before `ftvalid.h' */

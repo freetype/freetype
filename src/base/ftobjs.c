@@ -16,7 +16,6 @@
  */
 
 
-#include <ft2build.h>
 #include <freetype/ftlist.h>
 #include <freetype/ftoutln.h>
 #include <freetype/ftfntfmt.h>

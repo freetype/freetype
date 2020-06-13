@@ -16,7 +16,6 @@
  */
 
 
-#include <ft2build.h>
 #include <freetype/ftstroke.h>
 #include <freetype/fttrigon.h>
 #include <freetype/ftoutln.h>

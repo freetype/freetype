@@ -16,7 +16,6 @@
  */
 
 
-#include <ft2build.h>
 #include "cidriver.h"
 #include "cidgload.h"
 #include <freetype/internal/ftdebug.h>

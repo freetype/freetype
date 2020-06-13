@@ -16,7 +16,6 @@
  */
 
 
-#include <ft2build.h>
 #include <freetype/internal/ftdebug.h>
 
 #include "sferrors.h"                      /* must come before `ftvalid.h' */

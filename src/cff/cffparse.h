@@ -20,7 +20,6 @@
 #define CFFPARSE_H_
 
 
-#include <ft2build.h>
 #include <freetype/internal/cfftypes.h>
 #include <freetype/internal/ftobjs.h>
 

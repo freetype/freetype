@@ -32,7 +32,6 @@
 #define PSHREC_H_
 
 
-#include <ft2build.h>
 #include <freetype/internal/pshints.h>
 #include "pshglob.h"
 

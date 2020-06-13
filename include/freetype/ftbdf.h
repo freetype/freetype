@@ -19,7 +19,6 @@
 #ifndef FTBDF_H_
 #define FTBDF_H_
 
-#include <ft2build.h>
 #include <freetype/freetype.h>
 
 #ifdef FREETYPE_H

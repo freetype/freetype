@@ -20,7 +20,6 @@
 #define OTVALID_H_
 
 
-#include <ft2build.h>
 #include <freetype/freetype.h>
 
 #include "otverror.h"                      /* must come before `ftvalid.h' */

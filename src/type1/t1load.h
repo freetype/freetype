@@ -20,7 +20,6 @@
 #define T1LOAD_H_
 
 
-#include <ft2build.h>
 #include <freetype/internal/ftstream.h>
 #include <freetype/internal/psaux.h>
 #include <freetype/ftmm.h>

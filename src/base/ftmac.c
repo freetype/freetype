@@ -65,7 +65,6 @@
   */
 
 
-#include <ft2build.h>
 #include <freetype/freetype.h>
 #include <freetype/tttags.h>
 #include <freetype/internal/ftstream.h>

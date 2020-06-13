@@ -30,7 +30,6 @@
  * Based on bdf.h,v 1.16 2000/03/16 20:08:51 mleisher
  */
 
-#include <ft2build.h>
 #include <freetype/internal/ftobjs.h>
 #include <freetype/internal/ftstream.h>
 #include <freetype/internal/fthash.h>

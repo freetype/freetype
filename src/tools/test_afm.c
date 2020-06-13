@@ -2,7 +2,6 @@
  * gcc -DFT2_BUILD_LIBRARY -I../../include -o test_afm test_afm.c \
  *     -L../../objs/.libs -lfreetype -lz -static
  */
-#include <ft2build.h>
 #include <freetype/freetype.h>
 #include <freetype/internal/ftstream.h>
 #include <freetype/internal/psaux.h>

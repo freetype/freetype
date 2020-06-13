@@ -20,7 +20,6 @@
 #define OTVCOMMN_H_
 
 
-#include <ft2build.h>
 #include "otvalid.h"
 #include <freetype/internal/ftdebug.h>
 

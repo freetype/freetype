@@ -22,7 +22,6 @@
 #ifndef FTZOPEN_H_
 #define FTZOPEN_H_
 
-#include <ft2build.h>
 #include <freetype/freetype.h>
 
 

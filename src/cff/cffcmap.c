@@ -16,7 +16,6 @@
  */
 
 
-#include <ft2build.h>
 #include <freetype/internal/ftdebug.h>
 #include "cffcmap.h"
 #include "cffload.h"

@@ -19,7 +19,6 @@
 #ifndef FTPFR_H_
 #define FTPFR_H_
 
-#include <ft2build.h>
 #include <freetype/freetype.h>
 
 #ifdef FREETYPE_H

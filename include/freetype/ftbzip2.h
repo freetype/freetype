@@ -19,7 +19,6 @@
 #ifndef FTBZIP2_H_
 #define FTBZIP2_H_
 
-#include <ft2build.h>
 #include <freetype/freetype.h>
 
 #ifdef FREETYPE_H

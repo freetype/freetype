@@ -20,7 +20,6 @@
 #define FTSMOOTH_H_
 
 
-#include <ft2build.h>
 #include <freetype/ftrender.h>
 
 

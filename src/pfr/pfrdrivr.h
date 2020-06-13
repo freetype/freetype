@@ -20,7 +20,6 @@
 #define PFRDRIVR_H_
 
 
-#include <ft2build.h>
 #include <freetype/internal/ftdrv.h>
 
 

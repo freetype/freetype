@@ -20,7 +20,6 @@
 #define TTMTX_H_
 
 
-#include <ft2build.h>
 #include <freetype/internal/ftstream.h>
 #include <freetype/internal/tttypes.h>
 

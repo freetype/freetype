@@ -22,7 +22,6 @@
 #define PSHINTS_H_
 
 
-#include <ft2build.h>
 #include <freetype/freetype.h>
 #include <freetype/t1tables.h>
 

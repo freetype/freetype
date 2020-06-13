@@ -28,7 +28,6 @@ THE SOFTWARE.
 #ifndef BDFDRIVR_H_
 #define BDFDRIVR_H_
 
-#include <ft2build.h>
 #include <freetype/internal/ftdrv.h>
 
 #include "bdf.h"

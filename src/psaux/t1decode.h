@@ -20,7 +20,6 @@
 #define T1DECODE_H_
 
 
-#include <ft2build.h>
 #include <freetype/internal/psaux.h>
 #include <freetype/internal/t1types.h>
 

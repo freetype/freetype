@@ -19,7 +19,6 @@
 #ifndef CFFOTYPES_H_
 #define CFFOTYPES_H_
 
-#include <ft2build.h>
 #include <freetype/internal/ftobjs.h>
 #include <freetype/internal/cfftypes.h>
 #include <freetype/internal/tttypes.h>

@@ -16,7 +16,6 @@
  */
 
 
-#include <ft2build.h>
 #include <freetype/ftcache.h>
 #include "ftcimage.h"
 #include <freetype/internal/ftmemory.h>

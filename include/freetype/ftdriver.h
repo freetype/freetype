@@ -19,7 +19,6 @@
 #ifndef FTDRIVER_H_
 #define FTDRIVER_H_
 
-#include <ft2build.h>
 #include <freetype/freetype.h>
 #include <freetype/ftparams.h>
 

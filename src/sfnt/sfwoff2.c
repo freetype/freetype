@@ -15,7 +15,6 @@
  *
  */
 
-#include <ft2build.h>
 #include "sfwoff2.h"
 #include "woff2tags.h"
 #include <freetype/tttags.h>

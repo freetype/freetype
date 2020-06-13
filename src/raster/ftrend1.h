@@ -20,7 +20,6 @@
 #define FTREND1_H_
 
 
-#include <ft2build.h>
 #include <freetype/ftrender.h>
 
 

@@ -1,3 +1,12 @@
+2020-06-13  Werner Lemberg  <wl@gnu.org>
+
+	Remove redundant inclusion of `ft2build.h'.
+
+	* */*: Remove `#include <ft2build.h>' where possible.
+
+	* include/freetype/freetype.h: Remove cpp error about missing
+	inclusion of `ft2build.h'.
+
 2020-06-08  David Turner  <david@freetype.org>
 
 	Make macros for header file names optional.

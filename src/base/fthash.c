@@ -39,7 +39,6 @@
    */
 
 
-#include <ft2build.h>
 #include <freetype/internal/fthash.h>
 #include <freetype/internal/ftmemory.h>
 

@@ -19,7 +19,6 @@
 #ifndef FTINCREM_H_
 #define FTINCREM_H_
 
-#include <ft2build.h>
 #include <freetype/freetype.h>
 #include <freetype/ftparams.h>
 

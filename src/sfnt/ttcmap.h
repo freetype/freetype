@@ -20,7 +20,6 @@
 #define TTCMAP_H_
 
 
-#include <ft2build.h>
 #include <freetype/internal/tttypes.h>
 #include <freetype/internal/ftvalid.h>
 #include <freetype/internal/services/svttcmap.h>

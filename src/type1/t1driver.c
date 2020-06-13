@@ -16,7 +16,6 @@
  */
 
 
-#include <ft2build.h>
 #include "t1driver.h"
 #include "t1gload.h"
 #include "t1load.h"

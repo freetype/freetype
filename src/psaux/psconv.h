@@ -20,7 +20,6 @@
 #define PSCONV_H_
 
 
-#include <ft2build.h>
 #include <freetype/internal/psaux.h>
 
 FT_BEGIN_HEADER

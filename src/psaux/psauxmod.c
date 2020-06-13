@@ -16,7 +16,6 @@
  */
 
 
-#include <ft2build.h>
 #include "psauxmod.h"
 #include "psobjs.h"
 #include "t1decode.h"

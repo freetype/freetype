@@ -20,7 +20,6 @@
 #define SFDRIVER_H_
 
 
-#include <ft2build.h>
 #include <freetype/ftmodapi.h>
 
 

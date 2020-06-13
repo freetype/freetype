@@ -39,7 +39,6 @@
 #ifndef PSTYPES_H_
 #define PSTYPES_H_
 
-#include <ft2build.h>
 #include <freetype/freetype.h>
 
 

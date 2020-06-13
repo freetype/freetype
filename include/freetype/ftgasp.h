@@ -19,7 +19,6 @@
 #ifndef FTGASP_H_
 #define FTGASP_H_
 
-#include <ft2build.h>
 #include <freetype/freetype.h>
 
 #ifdef FREETYPE_H

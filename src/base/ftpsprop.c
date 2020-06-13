@@ -17,7 +17,6 @@
  */
 
 
-#include <ft2build.h>
 #include <freetype/ftdriver.h>
 #include <freetype/internal/ftdebug.h>
 #include <freetype/internal/psaux.h>

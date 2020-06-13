@@ -20,7 +20,6 @@
 #define T42TYPES_H_
 
 
-#include <ft2build.h>
 #include <freetype/freetype.h>
 #include <freetype/t1tables.h>
 #include <freetype/internal/t1types.h>

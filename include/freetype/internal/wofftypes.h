@@ -21,7 +21,6 @@
 #define WOFFTYPES_H_
 
 
-#include <ft2build.h>
 #include <freetype/tttables.h>
 #include <freetype/internal/ftobjs.h>
 

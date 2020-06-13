@@ -15,7 +15,6 @@
  *
  */
 
-#include <ft2build.h>
 #include <freetype/t1tables.h>
 #include <freetype/tttables.h>
 #include <freetype/internal/ftserv.h>

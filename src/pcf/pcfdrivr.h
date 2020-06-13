@@ -28,7 +28,6 @@ THE SOFTWARE.
 #ifndef PCFDRIVR_H_
 #define PCFDRIVR_H_
 
-#include <ft2build.h>
 #include <freetype/internal/ftdrv.h>
 
 

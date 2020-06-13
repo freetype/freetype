@@ -19,7 +19,6 @@
 #ifndef FTSTROKE_H_
 #define FTSTROKE_H_
 
-#include <ft2build.h>
 #include <freetype/ftoutln.h>
 #include <freetype/ftglyph.h>
 

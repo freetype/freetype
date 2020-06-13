@@ -20,7 +20,6 @@
 #define CFFLOAD_H_
 
 
-#include <ft2build.h>
 #include <freetype/internal/cfftypes.h>
 #include "cffparse.h"
 #include <freetype/internal/cffotypes.h>  /* for CFF_Face */

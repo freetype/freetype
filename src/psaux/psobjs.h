@@ -20,7 +20,6 @@
 #define PSOBJS_H_
 
 
-#include <ft2build.h>
 #include <freetype/internal/psaux.h>
 #include <freetype/internal/cffotypes.h>
 

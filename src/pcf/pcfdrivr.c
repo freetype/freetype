@@ -25,7 +25,6 @@ THE SOFTWARE.
 */
 
 
-#include <ft2build.h>
 
 #include <freetype/internal/ftdebug.h>
 #include <freetype/internal/ftstream.h>

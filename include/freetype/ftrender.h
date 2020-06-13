@@ -20,7 +20,6 @@
 #define FTRENDER_H_
 
 
-#include <ft2build.h>
 #include <freetype/ftmodapi.h>
 #include <freetype/ftglyph.h>
 

@@ -20,7 +20,6 @@
 #define FTBITMAP_H_
 
 
-#include <ft2build.h>
 #include <freetype/freetype.h>
 #include <freetype/ftcolor.h>
 

@@ -32,7 +32,6 @@
 #ifndef AFTYPES_H_
 #define AFTYPES_H_
 
-#include <ft2build.h>
 
 #include <freetype/freetype.h>
 #include <freetype/ftoutln.h>

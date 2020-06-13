@@ -20,7 +20,6 @@
 #define AFSHAPER_H_
 
 
-#include <ft2build.h>
 #include <freetype/freetype.h>
 
 

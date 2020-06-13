@@ -21,7 +21,6 @@
 #define T1TYPES_H_
 
 
-#include <ft2build.h>
 #include <freetype/t1tables.h>
 #include <freetype/internal/pshints.h>
 #include <freetype/internal/ftserv.h>

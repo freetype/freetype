@@ -20,7 +20,6 @@
 #define CIDPARSE_H_
 
 
-#include <ft2build.h>
 #include <freetype/internal/t1types.h>
 #include <freetype/internal/ftstream.h>
 #include <freetype/internal/psaux.h>

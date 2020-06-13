@@ -20,7 +20,6 @@
 #define WOFF2TAGS_H
 
 
-#include <ft2build.h>
 #include <freetype/internal/ftobjs.h>
 
 

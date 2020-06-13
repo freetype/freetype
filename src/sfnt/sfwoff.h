@@ -20,7 +20,6 @@
 #define SFWOFF_H_
 
 
-#include <ft2build.h>
 #include <freetype/internal/sfnt.h>
 #include <freetype/internal/ftobjs.h>
 

@@ -19,7 +19,6 @@
 #ifndef AFMODULE_H_
 #define AFMODULE_H_
 
-#include <ft2build.h>
 #include <freetype/internal/ftobjs.h>
 #include <freetype/ftmodapi.h>
 

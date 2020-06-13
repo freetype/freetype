@@ -26,7 +26,6 @@
 #ifndef FTOBJS_H_
 #define FTOBJS_H_
 
-#include <ft2build.h>
 #include <freetype/ftrender.h>
 #include <freetype/ftsizes.h>
 #include <freetype/ftlcdfil.h>

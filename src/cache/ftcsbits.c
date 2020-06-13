@@ -16,7 +16,6 @@
  */
 
 
-#include <ft2build.h>
 #include <freetype/ftcache.h>
 #include "ftcsbits.h"
 #include <freetype/internal/ftobjs.h>

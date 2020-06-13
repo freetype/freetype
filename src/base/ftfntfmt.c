@@ -16,7 +16,6 @@
  */
 
 
-#include <ft2build.h>
 #include <freetype/ftfntfmt.h>
 #include <freetype/internal/ftobjs.h>
 #include <freetype/internal/services/svfntfmt.h>

@@ -19,7 +19,6 @@
 #ifndef FTFNTFMT_H_
 #define FTFNTFMT_H_
 
-#include <ft2build.h>
 #include <freetype/freetype.h>
 
 #ifdef FREETYPE_H

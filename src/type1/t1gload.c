@@ -16,7 +16,6 @@
  */
 
 
-#include <ft2build.h>
 #include "t1gload.h"
 #include <freetype/internal/ftcalc.h>
 #include <freetype/internal/ftdebug.h>
