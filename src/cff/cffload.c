@@ -489,6 +489,10 @@
     }
 
   Exit:
+    if ( error && new_bytes )
+      FT_FREE( new_bytes );
+    if ( error && t )
+      FT_FREE( t );
     return error;
   }
 

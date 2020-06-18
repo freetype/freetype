@@ -1,3 +1,11 @@
+2020-06-19  Sebastian Rasmussen  <sebras@gmail.com>
+
+	[cff] Free table upon error allocating other data (#58609).
+
+	* src/cff/cffload.c (cff_index_get_pointers): When new_bytes fails
+	to allocate, make sure to free the table.  Do the same for both
+	allocations if there is a later error.
+
 2020-06-13  Werner Lemberg  <wl@gnu.org>
 
 	Remove redundant inclusion of `ft2build.h'.
