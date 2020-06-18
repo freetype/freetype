@@ -1,5 +1,12 @@
 2020-06-19  Sebastian Rasmussen  <sebras@gmail.com>
 
+	[base] Fix memory leak (#58611).
+
+	* src/base/ftobjs.c (FT_New_Size): When the call to `clazz->init_size'
+	fails, make sure to free `size->internal'.
+
+2020-06-19  Sebastian Rasmussen  <sebras@gmail.com>
+
 	[cff] Fix memory leak (#58610).
 
 	* src/cff/cffobjs.c (cff_size_init): When the call to
