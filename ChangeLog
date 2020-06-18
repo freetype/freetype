@@ -1,3 +1,10 @@
+2020-06-19  Sebastian Rasmussen  <sebras@gmail.com>
+
+	[cff] Fix memory leak (#58610).
+
+	* src/cff/cffobjs.c (cff_size_init): When the call to
+	`funcs->create' fails, make sure to free `internal'.
+
 2020-06-19  Werner Lemberg  <wl@gnu.org>
 
 	* src/cff/cffload.c (cff_index_get_pointers): Rename `t' to `tbl'.

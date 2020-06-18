@@ -166,15 +166,16 @@
     FT_Error           error = FT_Err_Ok;
     PSH_Globals_Funcs  funcs = cff_size_get_globals_funcs( size );
 
+    FT_Memory     memory   = cffsize->face->memory;
+    CFF_Internal  internal = NULL;
+
 
     if ( funcs )
     {
-      CFF_Face      face     = (CFF_Face)cffsize->face;
-      CFF_Font      font     = (CFF_Font)face->extra.data;
-      CFF_Internal  internal = NULL;
+      CFF_Face  face = (CFF_Face)cffsize->face;
+      CFF_Font  font = (CFF_Font)face->extra.data;
 
       PS_PrivateRec  priv;
-      FT_Memory      memory = cffsize->face->memory;
 
       FT_UInt  i;
 
@@ -206,6 +207,9 @@
     size->strike_index = 0xFFFFFFFFUL;
 
   Exit:
+    if ( error )
+      FT_FREE( internal );
+
     return error;
   }
 
