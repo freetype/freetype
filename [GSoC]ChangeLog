@@ -1,0 +1,23 @@
+2020-06-18  Anuj Verma  <anujv@iitbhilai.ac.in>
+
+	[sdf] Added the structure of a new module to render
+	 signed distance fields.
+
+	* src/sdf/sdf.c, src/sdf/ftsdfrend.c, src/sdf/ftsdf.c,
+	  src/sdf/ftsdfrend.h, src/sdf/ftsdf.h, src/sdf/ftsdferrs.h:
+	  Added files required by the `sdf' renderer module and added
+	  the basic structure and functions required.
+
+	* src/sdf/rules.mk, src/sdf/module.mk: Added files required to
+	  build the `sdf' module using the default build system.
+
+	* CMakeLists.txt (`BASE_SRCS'): Add `src/sdf/sdf.c' to the variable.
+
+	* include/freetype/config/ftmodule.h: Added `sdf' module 
+	  declaration so that the module can be added when not compiling
+	  with GNU make.
+
+	* modules.cfg (RASTER_MODULES): Include `sdf' module to the default
+	  rasterizer module list.
+
+	* include/freetype/ftmoderr.h: sdf module error define
