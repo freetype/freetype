@@ -1,7 +1,7 @@
 2020-06-18  Anuj Verma  <anujv@iitbhilai.ac.in>
 
 	[sdf] Added the structure of a new module to render
-	 signed distance fields.
+	signed distance fields.
 
 	* src/sdf/sdf.c, src/sdf/ftsdfrend.c, src/sdf/ftsdf.c,
 	  src/sdf/ftsdfrend.h, src/sdf/ftsdf.h, src/sdf/ftsdferrs.h:
@@ -14,7 +14,7 @@
 	* CMakeLists.txt (`BASE_SRCS'): Add `src/sdf/sdf.c' to the variable.
 
 	* include/freetype/config/ftmodule.h: Added `sdf' module 
-	  declaration so that the module can be added when not compiling
+	  declaration so that the module can be compiled when not compiling
 	  with GNU make.
 
 	* modules.cfg (RASTER_MODULES): Include `sdf' module to the default
