@@ -1,3 +1,13 @@
+2020-06-19  Anuj Verma  <anujv@iitbhilai.ac.in>
+
+	* include/freetype/freetype.h (FT_Render_Mode_): Added new
+	  rendermode `FT_RENDER_MODE_SDF' which will be used by the
+	  `sdf' module to generate signed distance fields from glyph's
+	  outline.
+
+	* src/sdf/ftsdfrend.h, src/sdf/module.mk, src/sdf/rules.mk:
+	  Add a new line at the end of files.
+
 2020-06-18  Anuj Verma  <anujv@iitbhilai.ac.in>
 
 	[sdf] Added the structure of a new module to render

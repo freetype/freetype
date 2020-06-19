@@ -3208,10 +3208,14 @@ FT_BEGIN_HEADER
    *   in the @FT_GlyphSlotRec structure gives the format of the returned
    *   bitmap.
    *
-   *   All modes except @FT_RENDER_MODE_MONO use 256 levels of opacity,
-   *   indicating pixel coverage.  Use linear alpha blending and gamma
-   *   correction to correctly render non-monochrome glyph bitmaps onto a
-   *   surface; see @FT_Render_Glyph.
+   *   All modes except @FT_RENDER_MODE_MONO and @FT_RENDER_MODE_SDF use 
+   *   256 levels of opacity, indicating pixel coverage.  Use linear alpha 
+   *   blending and gamma correction to correctly render non-monochrome glyph
+   *   bitmaps onto a surface; see @FT_Render_Glyph.
+   *
+   *   The @FT_RENDER_MODE_SDF is s special render mode which uses as much 
+   *   65536 distance values, indicating the signed distance from the grid
+   *   position to the nearest outline.
    *
    * @values:
    *   FT_RENDER_MODE_NORMAL ::
@@ -3238,6 +3242,13 @@ FT_BEGIN_HEADER
    *     bitmaps that are 3~times the height of the original glyph outline in
    *     pixels and use the @FT_PIXEL_MODE_LCD_V mode.
    *
+   *   FT_RENDER_MODE_SDF ::
+   *     This mode corresponds to 16-bit signed distance fields bitmap.  Each
+   *     pixel in a SDF bitmap contains information about the nearest edge of
+   *     the glyph outline.  The distances are calculated from the center of
+   *     the pixel and are positive if they are filled by the outline (i.e.
+   *     inside the outline) and negative otherwise.
+   *
    * @note:
    *   The selected render mode only affects vector glyphs of a font.
    *   Embedded bitmaps often have a different pixel mode like
@@ -3251,6 +3262,7 @@ FT_BEGIN_HEADER
     FT_RENDER_MODE_MONO,
     FT_RENDER_MODE_LCD,
     FT_RENDER_MODE_LCD_V,
+    FT_RENDER_MODE_SDF,
 
     FT_RENDER_MODE_MAX
 
