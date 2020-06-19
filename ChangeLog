@@ -1,5 +1,12 @@
 2020-06-19  Sebastian Rasmussen  <sebras@gmail.com>
 
+	[psaux] Fix memory leak (#58626).
+
+	* src/psaux/psstack.c (cf2_stack_init): If `cf2_stack_init' fails to
+	allocate the stack, return error early.
+
+2020-06-19  Sebastian Rasmussen  <sebras@gmail.com>
+
 	[base] Fix memory leak (#58624).
 
 	* src/base/ftobjs.c (FT_New_Size): Avoid trying to free
