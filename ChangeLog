@@ -1,5 +1,16 @@
 2020-06-19  Werner Lemberg  <wl@gnu.org>
 
+	[base] Fix UBSAN error.
+
+	Reported as
+
+	  https://bugs.chromium.org/p/oss-fuzz/issues/detail?id=23166
+
+	* src/base/ftoutln.c (FT_Outline_Get_Orientation): Avoid values
+	larger than 32 bits.
+
+2020-06-19  Werner Lemberg  <wl@gnu.org>
+
 	[woff2] Fix segfault.
 
 	Reported as
