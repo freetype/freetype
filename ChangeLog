@@ -1,3 +1,7 @@
+2020-06-19  Werner Lemberg  <wl@gnu.org>
+
+	* src/cff/cffload.c (cff_index_get_pointers): Rename `t' to `tbl'.
+
 2020-06-19  Sebastian Rasmussen  <sebras@gmail.com>
 
 	[cff] Free table upon error allocating other data (#58609).

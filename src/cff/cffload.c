@@ -410,7 +410,7 @@
     FT_Error   error     = FT_Err_Ok;
     FT_Memory  memory    = idx->stream->memory;
 
-    FT_Byte**  t         = NULL;
+    FT_Byte**  tbl       = NULL;
     FT_Byte*   new_bytes = NULL;
     FT_ULong   new_size;
 
@@ -427,11 +427,11 @@
     new_size = idx->data_size + idx->count;
 
     if ( idx->count > 0                                &&
-         !FT_NEW_ARRAY( t, idx->count + 1 )            &&
+         !FT_NEW_ARRAY( tbl, idx->count + 1 )          &&
          ( !pool || !FT_ALLOC( new_bytes, new_size ) ) )
     {
       FT_ULong  n, cur_offset;
-      FT_ULong  extra = 0;
+      FT_ULong  extra     = 0;
       FT_Byte*  org_bytes = idx->bytes;
 
 
@@ -448,9 +448,9 @@
       }
 
       if ( !pool )
-        t[0] = org_bytes + cur_offset;
+        tbl[0] = org_bytes + cur_offset;
       else
-        t[0] = new_bytes + cur_offset;
+        tbl[0] = new_bytes + cur_offset;
 
       for ( n = 1; n <= idx->count; n++ )
       {
@@ -464,23 +464,25 @@
           next_offset = idx->data_size;
 
         if ( !pool )
-          t[n] = org_bytes + next_offset;
+          tbl[n] = org_bytes + next_offset;
         else
         {
-          t[n] = new_bytes + next_offset + extra;
+          tbl[n] = new_bytes + next_offset + extra;
 
           if ( next_offset != cur_offset )
           {
-            FT_MEM_COPY( t[n - 1], org_bytes + cur_offset, t[n] - t[n - 1] );
-            t[n][0] = '\0';
-            t[n]   += 1;
+            FT_MEM_COPY( tbl[n - 1],
+                         org_bytes + cur_offset,
+                         tbl[n] - tbl[n - 1] );
+            tbl[n][0] = '\0';
+            tbl[n]   += 1;
             extra++;
           }
         }
 
         cur_offset = next_offset;
       }
-      *table = t;
+      *table = tbl;
 
       if ( pool )
         *pool = new_bytes;
@@ -491,8 +493,9 @@
   Exit:
     if ( error && new_bytes )
       FT_FREE( new_bytes );
-    if ( error && t )
-      FT_FREE( t );
+    if ( error && tbl )
+      FT_FREE( tbl );
+
     return error;
   }
 
