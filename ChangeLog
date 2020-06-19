@@ -1,5 +1,14 @@
 2020-06-19  Sebastian Rasmussen  <sebras@gmail.com>
 
+	[cff] Fix another two memory leaks (#58629).
+
+	* src/cff/cffobjs.c (cff_size_init): If a call to `funcs->create'
+	fails to allocate one of the `internal->subfont' variables, make
+	sure to free `internal->topfont' and any successfully allocated
+	subfonts.
+
+2020-06-19  Sebastian Rasmussen  <sebras@gmail.com>
+
 	[psaux] Fix memory leak (#58626).
 
 	* src/psaux/psstack.c (cf2_stack_init): If `cf2_stack_init' fails to
