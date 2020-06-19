@@ -1,3 +1,10 @@
+2020-06-19  Alexei Podtelezhnikov  <apodtele@gmail.com>
+
+	[base] Rework d1180b5f9598 until further notice.
+
+	* src/base/ftoutln.c (FT_Outline_Get_Orientation): Reject large
+	outlines.
+
 2020-06-19  Sebastian Rasmussen  <sebras@gmail.com>
 
 	[cff, cid] Fix segfaults in case of error (#58621).

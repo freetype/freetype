@@ -1060,11 +1060,9 @@
     if ( cbox.xMin == cbox.xMax || cbox.yMin == cbox.yMax )
       return FT_ORIENTATION_NONE;
 
-    /* Reject values larger than 32bit. */
-    if ( (unsigned long)cbox.xMin > 0xFFFFFFFFUL ||
-         (unsigned long)cbox.xMax > 0xFFFFFFFFUL ||
-         (unsigned long)cbox.yMin > 0xFFFFFFFFUL ||
-         (unsigned long)cbox.yMax > 0xFFFFFFFFUL )
+    /* Reject values large outlines. */
+    if ( cbox.xMin < -0x1000000L || cbox.yMin < -0x1000000L ||
+         cbox.xMax >  0x1000000L || cbox.yMax >  0x1000000L )
       return FT_ORIENTATION_NONE;
 
     xshift = FT_MSB( (FT_UInt32)( FT_ABS( cbox.xMax ) |
