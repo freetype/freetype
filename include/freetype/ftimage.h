@@ -157,6 +157,12 @@ FT_BEGIN_HEADER
    *     in font files according to the OpenType specification.  We haven't
    *     found a single font using this format, however.
    *
+   *   FT_PIXEL_MODE_GRAY16 ::
+   *     A 16-bit per pixel bitmap used to represent signed distances in a 
+   *     signed distance field bitmap.  This is currently only used while
+   *     rendering using @FT_RENDER_MODE_SDF.  Note that this is a 2.14
+   *     fixed-point fractional value.
+   *
    *   FT_PIXEL_MODE_LCD ::
    *     An 8-bit bitmap, representing RGB or BGR decimated glyph images used
    *     for display on LCD displays; the bitmap is three times wider than
@@ -184,6 +190,7 @@ FT_BEGIN_HEADER
     FT_PIXEL_MODE_GRAY,
     FT_PIXEL_MODE_GRAY2,
     FT_PIXEL_MODE_GRAY4,
+    FT_PIXEL_MODE_GRAY16,
     FT_PIXEL_MODE_LCD,
     FT_PIXEL_MODE_LCD_V,
     FT_PIXEL_MODE_BGRA,

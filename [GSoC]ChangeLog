@@ -1,5 +1,11 @@
 2020-06-19  Anuj Verma  <anujv@iitbhilai.ac.in>
 
+	* include/freetype/ftimage.h (FT_Render_Mode_): Added new
+	  pixel mode `FT_PIXEL_MODE_GRAY16' which will be used
+	  to represent signed values while rendering to SDF bitmap.
+
+2020-06-19  Anuj Verma  <anujv@iitbhilai.ac.in>
+
 	* include/freetype/freetype.h (FT_Render_Mode_): Added new
 	  rendermode `FT_RENDER_MODE_SDF' which will be used by the
 	  `sdf' module to generate signed distance fields from glyph's
