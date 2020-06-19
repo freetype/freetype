@@ -1,3 +1,10 @@
+2020-06-19  Stephen McDowell  <svenevs.dev@gmail.com>
+
+	[sfnt] Support Intel compilers.
+
+	* src/sfnt/pngshim.c (premultiply_data): Intel compilers do not
+	currently support `__builtin_shuffle'.
+
 2020-06-19  Sebastian Rasmussen  <sebras@gmail.com>
 
 	[base] Fix memory leak (#58611).
