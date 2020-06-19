@@ -1,3 +1,11 @@
+2020-06-19  Sebastian Rasmussen  <sebras@gmail.com>
+
+	[base] Fix memory leak (#58624).
+
+	* src/base/ftobjs.c (FT_New_Size): Avoid trying to free
+	`size->internal' unless `size' has been allocated.  This mistake
+	appeared in the fix for issue #58611.
+
 2020-06-19  Alexei Podtelezhnikov  <apodtele@gmail.com>
 
 	[base] Rework d1180b5f9598 until further notice.

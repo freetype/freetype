@@ -2857,7 +2857,8 @@
     if ( error )
     {
       FT_FREE( node );
-      FT_FREE( size->internal );
+      if ( size )
+        FT_FREE( size->internal );
       FT_FREE( size );
     }
 
