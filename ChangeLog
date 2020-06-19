@@ -1,3 +1,14 @@
+2020-06-19  Werner Lemberg  <wl@gnu.org>
+
+	[woff2] Fix segfault.
+
+	Reported as
+
+	  https://bugs.chromium.org/p/oss-fuzz/issues/detail?id=23402
+
+	* src/sfnt/sfwoff2.c (get_x_mins): Check whether `loca' table
+	exists.
+
 2020-06-19  Stephen McDowell  <svenevs.dev@gmail.com>
 
 	[sfnt] Support Intel compilers.

@@ -1286,6 +1286,12 @@
       return FT_THROW( Invalid_Table );
     }
 
+    if ( !info->loca_table )
+    {
+      FT_ERROR(( "`loca' table is missing.\n" ));
+      return FT_THROW( Invalid_Table );
+    }
+
     /* Read `numGlyphs' field from `maxp' table. */
     if ( FT_STREAM_SEEK( maxp_table->src_offset ) || FT_STREAM_SKIP( 8 ) )
       return error;
