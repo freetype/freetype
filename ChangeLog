@@ -1,3 +1,12 @@
+2020-06-19  Sebastian Rasmussen  <sebras@gmail.com>
+
+	[cff, cid] Fix segfaults in case of error (#58621).
+
+	* src/cff/cffobjs.c (cff_slot_done), src/cid/cidobjs.c
+	(cid_slot_done): If `ft_glyphslot_init' fails to allocate
+	`internal', then the class' `done_slot' callback (called by
+	`ft_glyphslot_done') must not dereference the pointer to `internal'.
+
 2020-06-19  Werner Lemberg  <wl@gnu.org>
 
 	[base] Fix UBSAN error.
