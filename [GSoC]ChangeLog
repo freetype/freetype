@@ -1,3 +1,20 @@
+2020-06-20  Anuj Verma  <anujv@iitbhilai.ac.in>
+
+	[sdf] Implemented a few functions required by a renderer
+	module.
+
+	* src/sdf/ftsdf.c (sdf_TRaster_): Added new structure to hold
+	  the memory allocator `FT_Memory'.
+
+	* src/sdf/ftsdf.c (ft_sdf_raster): Implemented a few essential
+	  functions required by `FT_Raster'.
+
+	* src/sdf/ftsdfrend.c (ft_sdf_renderer_class): Implemented a few
+	  essential functions required by `FT_Renderer'.
+
+	* src/sdf/ftsdfrend.c (ft_sdf_render): Added functionality to
+	  compute shift and padding before rendering the outline.
+
 2020-06-19  Anuj Verma  <anujv@iitbhilai.ac.in>
 
 	* include/freetype/ftimage.h (FT_Render_Mode_): Added new
@@ -27,7 +44,7 @@
 	* src/sdf/rules.mk, src/sdf/module.mk: Added files required to
 	  build the `sdf' module using the default build system.
 
-	* CMakeLists.txt (`BASE_SRCS'): Add `src/sdf/sdf.c' to the variable.
+	* CMakeLists.txt (BASE_SRCS): Add `src/sdf/sdf.c' to the variable.
 
 	* include/freetype/config/ftmodule.h: Added `sdf' module 
 	  declaration so that the module can be compiled when not compiling

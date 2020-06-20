@@ -5,15 +5,37 @@
 
 #include "ftsdferrs.h"
 
+  /**************************************************************************
+   *
+   * structures and enums
+   *
+   */
+
+  typedef struct  sdf_TRaster_
+  {
+    FT_Memory  memory; /* used internally to allocate memory */
+  } sdf_TRaster;
+
+  /**************************************************************************
+   *
+   * interface functions
+   *
+   */
+
   static int
   sdf_raster_new( FT_Memory   memory,
                   FT_Raster*  araster)
   {
-    FT_Error  error = FT_THROW( Unimplemented_Feature );
+    FT_Error      error  = FT_Err_Ok;
+    sdf_TRaster*  raster = NULL;
 
 
-    FT_UNUSED( memory );
-    FT_UNUSED( araster );
+    *araster = 0;
+    if ( !FT_ALLOC( raster, sizeof( sdf_TRaster ) ) )
+    {
+      raster->memory = memory;
+      *araster = (FT_Raster)raster;
+    }
 
     return error;
   }
@@ -23,6 +45,7 @@
                     unsigned char*  pool_base,
                     unsigned long   pool_size )
   {
+    /* no use of this function */
     FT_UNUSED( raster );
     FT_UNUSED( pool_base );
     FT_UNUSED( pool_size );
@@ -33,6 +56,8 @@
                        unsigned long  mode,
                        void*          args )
   {
+    /* Currently there is no use for this function but later */
+    /* it will be used to modify the `spread' parameter.     */
     FT_UNUSED( raster );
     FT_UNUSED( mode );
     FT_UNUSED( args );
@@ -55,7 +80,10 @@
   static void
   sdf_raster_done( FT_Raster  raster )
   {
-    FT_UNUSED( raster );
+    FT_Memory  memory = (FT_Memory)((sdf_TRaster*)raster)->memory;
+
+
+    FT_FREE( raster );
   }
 
   FT_DEFINE_RASTER_FUNCS(
