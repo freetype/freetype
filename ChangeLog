@@ -1,3 +1,12 @@
+2020-06-20  Sebastian Rasmussen  <sebras@gmail.com>
+
+	[cff] Fix handling of `style_name == NULL' (#58630).
+
+	* src/cff/cffobjs.c (cff_face_init): If a call to `cff_strcpy' fails
+	by returning NULL in `cff_face_init', `remove_style' is still
+	called.  This means that the NULL pointer is dereferenced, causing a
+	crash.
+
 2020-06-19  Sebastian Rasmussen  <sebras@gmail.com>
 
 	[cff] Fix another two memory leaks (#58629).
