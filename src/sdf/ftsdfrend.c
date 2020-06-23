@@ -1,16 +1,157 @@
 
 #include <freetype/internal/ftdebug.h>
 #include <freetype/internal/ftobjs.h>
+#include <freetype/internal/services/svprop.h>
 #include <freetype/ftoutln.h>
 #include "ftsdfrend.h"
 #include "ftsdf.h"
 
 #include "ftsdferrs.h"
 
+  /**************************************************************************
+   *
+   * The macro FT_COMPONENT is used in trace mode.  It is an implicit
+   * parameter of the FT_TRACE() and FT_ERROR() macros, used to print/log
+   * messages during execution.
+   */
+  #undef  FT_COMPONENT
+  #define FT_COMPONENT  sdf
+
+  /**************************************************************************
+   *
+   * macros and default property values
+   *
+   */
+
+  #define DEFAULT_SPREAD  8
+  #define MAX_SPREAD      32
+
+  #define SDF_RENDERER( rend ) ( (SDF_Renderer)rend )
+
+  /**************************************************************************
+   *
+   * for setting properties
+   *
+   */
+
+  static FT_Error
+  sdf_property_set( FT_Module    module,
+                    const char*  property_name,
+                    const void*  value,
+                    FT_Bool      value_is_string )
+  {
+    FT_UNUSED( value_is_string );
+
+    FT_Error      error = FT_Err_Ok;
+    SDF_Renderer  render = SDF_RENDERER( FT_RENDERER( module ) );
+
+
+    if ( ft_strcmp( property_name, "spread" ) == 0 )
+    {
+      FT_UInt  val = *(const FT_UInt*)value;
+
+
+      if ( val > MAX_SPREAD )
+      {
+        FT_TRACE0(( "[sdf module] sdf_property_set: "
+                    "the `spread' property can have a "
+                    "maximum value of %d\n", MAX_SPREAD ));
+        error = FT_THROW( Invalid_Argument );
+        goto Exit;
+      }
+      render->spread = val;
+      FT_TRACE7(( "[sdf module] sdf_property_set: "
+                  "updated property `spread' to %d\n", val ));
+    }
+    else
+    {
+      FT_TRACE0(( "[sdf module] sdf_property_set: "
+                  "missing property `%s'\n", property_name ));
+      error = FT_THROW( Missing_Property );
+      goto Exit;
+    }
+
+  Exit:
+    return error;
+  }
+
+  static FT_Error
+  sdf_property_get( FT_Module    module,
+                    const char*  property_name,
+                    void*        value )
+  {
+    FT_Error      error = FT_Err_Ok;
+    SDF_Renderer  render = SDF_RENDERER( FT_RENDERER( module ) );
+
+
+    if ( ft_strcmp( property_name, "spread" ) == 0 )
+    {
+      FT_UInt*  val = (FT_UInt*)value;
+
+
+      *val = render->spread;
+    }
+    else
+    {
+      FT_TRACE0(( "[sdf module] sdf_property_get: "
+                  "missing property `%s'\n", property_name ));
+      error = FT_THROW( Missing_Property );
+      goto Exit;
+    }
+
+  Exit:
+    return error;
+  }
+
+  FT_DEFINE_SERVICE_PROPERTIESREC(
+    sdf_service_properties,
+
+    (FT_Properties_SetFunc)sdf_property_set,        /* set_property */
+    (FT_Properties_GetFunc)sdf_property_get )       /* get_property */
+
+
+  FT_DEFINE_SERVICEDESCREC1(
+    sdf_services,
+
+    FT_SERVICE_ID_PROPERTIES, &sdf_service_properties )
+
+  static FT_Module_Interface
+  ft_sdf_requester ( FT_Renderer  render,
+                     const char*  module_interface )
+  {
+    FT_UNUSED( render );
+
+    return ft_service_list_lookup( sdf_services, module_interface );
+  }
+
+  /**************************************************************************
+   *
+   * interface functions
+   *
+   */
+
+  static FT_Error
+  ft_sdf_init ( FT_Renderer  render )
+  {
+    SDF_Renderer  sdf_render = SDF_RENDERER( render );
+
+
+    sdf_render->spread = DEFAULT_SPREAD;
+
+    return FT_Err_Ok;
+  }
+
+  static FT_Error
+  ft_sdf_done ( FT_Renderer  render )
+  {
+    FT_UNUSED( render );
+
+    return FT_Err_Ok;
+  }
 
   /* generate signed distance field from a glyph's slot image */
   static FT_Error
-  ft_sdf_render( FT_Renderer       render,
+  ft_sdf_render( FT_Renderer       module,
                  FT_GlyphSlot      slot,
                  FT_Render_Mode    mode,
                  const FT_Vector*  origin )
@@ -18,15 +159,21 @@
     FT_Error     error   = FT_Err_Ok;
     FT_Outline*  outline = &slot->outline;
     FT_Bitmap*   bitmap  = &slot->bitmap;
-    FT_Memory    memory  = render->root.memory;
+    FT_Memory    memory  = NULL;
+    FT_Renderer  render  = NULL;
     FT_Pos       x_shift = 0;
     FT_Pos       y_shift = 0;
-    
+
     /* use hardcoded padding for now */
     FT_UInt      x_pad   = 10;
     FT_UInt      y_pad   = 10;
 
     FT_Raster_Params  params;
+    SDF_Renderer      sdf_module = SDF_RENDERER( module );
+
+
+    render = &sdf_module->root;
+    memory = render->root.memory;
 
     /* check if slot format is correct before rendering */
     if ( slot->format != render->glyph_format )
@@ -52,7 +199,7 @@
     }
 
     /* preset the bitmap using the glyph's outline;        */
-    /* the sdf bitmap is similar to a antialiased bitmap   */
+    /* the sdf bitmap is similar to an antialiased bitmap  */
     /* with a slighty bigger size and different pixel mode */
     if ( ft_glyphslot_preset_bitmap( slot, FT_RENDER_MODE_NORMAL, origin ) )
     {
@@ -172,7 +319,7 @@
     ft_sdf_renderer_class,
 
     FT_MODULE_RENDERER,
-    sizeof( FT_RendererRec ),
+    sizeof( SDF_Renderer_Module ),
 
     "sdf",
     0x10000L,
@@ -180,9 +327,9 @@
 
     NULL,
 
-    (FT_Module_Constructor) NULL,
-    (FT_Module_Destructor)  NULL,
-    (FT_Module_Requester)   NULL,
+    (FT_Module_Constructor) ft_sdf_init,
+    (FT_Module_Destructor)  ft_sdf_done,
+    (FT_Module_Requester)   ft_sdf_requester,
 
     FT_GLYPH_FORMAT_OUTLINE,
 

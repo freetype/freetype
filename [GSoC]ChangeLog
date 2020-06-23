@@ -1,3 +1,23 @@
+2020-06-23  Anuj Verma  <anujv@iitbhilai.ac.in>
+
+	[sdf] Added functionality to set and get module properties.
+	Also added a `spread' property.
+
+	* src/freetype/internal/fttrace.h: Added sdf module trace
+	  define.
+
+	* src/sdf/ftsdf.c (sdf_TRaster => SDF_TRaster): Use capital
+	  character for structs.
+
+	* src/sdf/ftsdfrend.h (SDF_Renderer_Module): Added a struct
+	  which extends the `FT_RendererRec' and added the `spread'
+	  property.
+
+	* src/sdf/ftsdfrend.c: Synchronized the code to use the new
+	  `SDF_Renderer_Module' and added functions to get/set the
+	  properties.
+
+
 2020-06-20  Anuj Verma  <anujv@iitbhilai.ac.in>
 
 	[sdf] Implemented a few functions required by a renderer

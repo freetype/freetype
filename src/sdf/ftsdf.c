@@ -11,10 +11,10 @@
    *
    */
 
-  typedef struct  sdf_TRaster_
+  typedef struct  SDF_TRaster_
   {
     FT_Memory  memory; /* used internally to allocate memory */
-  } sdf_TRaster;
+  } SDF_TRaster;
 
   /**************************************************************************
    *
@@ -22,16 +22,16 @@
    *
    */
 
-  static int
+  static FT_Error
   sdf_raster_new( FT_Memory   memory,
                   FT_Raster*  araster)
   {
     FT_Error      error  = FT_Err_Ok;
-    sdf_TRaster*  raster = NULL;
+    SDF_TRaster*  raster = NULL;
 
 
     *araster = 0;
-    if ( !FT_ALLOC( raster, sizeof( sdf_TRaster ) ) )
+    if ( !FT_ALLOC( raster, sizeof( SDF_TRaster ) ) )
     {
       raster->memory = memory;
       *araster = (FT_Raster)raster;
@@ -51,7 +51,7 @@
     FT_UNUSED( pool_size );
   }
 
-  static int
+  static FT_Error
   sdf_raster_set_mode( FT_Raster      raster,
                        unsigned long  mode,
                        void*          args )
@@ -63,10 +63,10 @@
     FT_UNUSED( args );
 
 
-    return 0;
+    return FT_THROW( Unimplemented_Feature );
   }
 
-  static int
+  static FT_Error
   sdf_raster_render( FT_Raster                raster,
                      const FT_Raster_Params*  params )
   {
@@ -74,13 +74,13 @@
     FT_UNUSED( params );
 
 
-    return 0;
+    return FT_THROW( Unimplemented_Feature );
   }
 
   static void
   sdf_raster_done( FT_Raster  raster )
   {
-    FT_Memory  memory = (FT_Memory)((sdf_TRaster*)raster)->memory;
+    FT_Memory  memory = (FT_Memory)((SDF_TRaster*)raster)->memory;
 
 
     FT_FREE( raster );
