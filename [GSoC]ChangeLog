@@ -1,5 +1,15 @@
 2020-06-25  Anuj Verma  <anujv@iitbhilai.ac.in>
 
+	[sdf] Decompose outline and store it in a temporary
+	`SDF_Shape' object for easy iteration and pre-computing
+	some variables.
+
+	* src/sdf/ftsdf.c (sdf_outline_decompose): Added function
+	  to decompost outline and store it in a `SDF_Shape' object.
+	  This allows us to pre-compute some variable.
+
+2020-06-25  Anuj Verma  <anujv@iitbhilai.ac.in>
+
 	[sdf] Added essential enums and structs required.
 
 	* src/freetype/internal/fttrace.h: Remove tabs.

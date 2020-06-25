@@ -1,6 +1,7 @@
 
 #include <freetype/internal/ftobjs.h>
 #include <freetype/internal/ftdebug.h>
+#include <freetype/ftlist.h>
 #include "ftsdf.h"
 
 #include "ftsdferrs.h"
@@ -53,7 +54,7 @@
   typedef struct  SDF_Contour_
   {
     FT_26D6_Vec  last_pos;  /* end position of the last edge    */
-    FT_List      edges      /* list of all edges in the contour */
+    FT_List      edges;     /* list of all edges in the contour */
 
   } SDF_Contour;
 
@@ -86,6 +87,12 @@
   static
   const SDF_Shape    null_shape   = { NULL, NULL };
 
+  static
+  const FT_ListRec   empty_list   = { NULL, NULL };
+
+
+  /* Creates a new `SDF_Edge' on the heap and assigns the `edge' */
+  /* pointer to the newly allocated memory.                      */
   static FT_Error
   sdf_edge_new( FT_Memory   memory,
                 SDF_Edge**  edge )
@@ -101,9 +108,7 @@
     }
 
     FT_QNEW( ptr );
-    if ( error != FT_Err_Ok )
-      *edge = NULL;
-    else
+    if ( error == FT_Err_Ok )
     {
       *ptr = null_edge;
       *edge = ptr;
@@ -113,6 +118,9 @@
     return error;
   }
 
+  /* Creates a new `SDF_Contour' on the heap and assigns the `contour'  */
+  /* pointer to the newly allocated memory. Note that the function also */
+  /* allocate the `contour.edges' list variable and sets to empty list. */
   static FT_Error
   sdf_contour_new( FT_Memory      memory,
                    SDF_Contour**  contour )
@@ -128,19 +136,24 @@
     }
 
     FT_QNEW( ptr );
-    if ( error != FT_Err_Ok )
-      *contour = NULL;
-    else
+    if ( error == FT_Err_Ok )
     {
       *ptr = null_contour;
       FT_QNEW( ptr->edges );
-      *contour = ptr;
+      if ( error == FT_Err_Ok )
+      {
+        *ptr->edges = empty_list;
+        *contour = ptr;
+      }
     }
 
   Exit:
     return error;
   }
 
+  /* Creates a new `SDF_Shape' on the heap and assigns the `shape'       */
+  /* pointer to the newly allocated memory. Note that the function also  */
+  /* allocate the `shape.contours' list variable and sets to empty list. */
   static void
   sdf_shape_new( FT_Memory    memory,
                  SDF_Shape**  shape )
@@ -156,14 +169,230 @@
     }
 
     FT_QNEW( ptr );
-    if ( error != FT_Err_Ok )
-      *shape = NULL;
-    else
+    if ( error == FT_Err_Ok )
     {
       *ptr = null_shape;
       FT_QNEW( ptr->contours );
-      *shape = ptr;
+      if ( error == FT_Err_Ok )
+      {
+        *ptr->contours = empty_list;
+        ptr->memory = memory;
+        *shape = ptr;
+      }
     }
+
+  Exit:
+    return error;
+  }
+
+  
+
+  /**************************************************************************
+   *
+   * shape decomposition functions
+   *
+   */
+
+  static FT_Error
+  sdf_move_to( const FT_26D6_Vec* to,
+               void*              user )
+  {
+    /* This function is called when walking along a new contour */
+    /* so add a new contour to the shape's list.                */
+    SDF_Shape*    shape    = ( SDF_Shape* )user;
+    SDF_Contour*  contour  = NULL;
+    FT_ListNode   node     = NULL;
+
+    FT_Error      error    = FT_Err_Ok;
+    FT_Memory     memory   = shape->memory;
+
+
+    if ( !to || !user )
+    {
+      error = FT_THROW( Invalid_Argument );
+      goto Exit;
+    }
+
+    error = sdf_contour_new( memory, &contour );
+    if ( error != FT_Err_Ok )
+      goto Exit;
+
+    FT_QNEW( node );
+    if ( error != FT_Err_Ok )
+      goto Exit;
+
+    contour->last_pos = *to;
+
+    node->data = contour;
+    FT_List_Add( shape->contours, node );
+
+  Exit:
+    return error;
+  }
+
+  static FT_Error
+  sdf_line_to( const FT_26D6_Vec*  to,
+               void*               user )
+  {
+    SDF_Shape*    shape    = ( SDF_Shape* )user;
+    SDF_Edge*     edge     = NULL;
+    SDF_Contour*  contour  = NULL;
+    FT_ListNode   node     = NULL;
+
+    FT_Error      error    = FT_Err_Ok;
+    FT_Memory     memory   = shape->memory;
+
+
+    if ( !to || !user )
+    {
+      error = FT_THROW( Invalid_Argument );
+      goto Exit;
+    }
+
+    contour = ( SDF_Contour* )shape->contours->tail->data;
+
+    if ( contour->last_pos.x == to->x && 
+         contour->last_pos.y == to->y )
+      goto Exit;
+
+    error = sdf_edge_new( memory, &edge );
+    if ( error != FT_Err_Ok )
+      goto Exit;
+
+    FT_QNEW( node );
+    if ( error != FT_Err_Ok )
+      goto Exit;
+
+    edge->edge_type = SDF_EDGE_LINE;
+    edge->start_pos = contour->last_pos;
+    edge->end_pos   = *to;
+
+    contour->last_pos = *to;
+
+    node->data = edge;
+    FT_List_Add( contour->edges, node );
+
+  Exit:
+    return error;
+  }
+
+  static FT_Error
+  sdf_conic_to( const FT_26D6_Vec*  control_1,
+                const FT_26D6_Vec*  to,
+                void*               user )
+  {
+    SDF_Shape*    shape    = ( SDF_Shape* )user;
+    SDF_Edge*     edge     = NULL;
+    SDF_Contour*  contour  = NULL;
+    FT_ListNode   node     = NULL;
+
+    FT_Error      error    = FT_Err_Ok;
+    FT_Memory     memory   = shape->memory;
+
+
+    if ( !control_1 || !to || !user )
+    {
+      error = FT_THROW( Invalid_Argument );
+      goto Exit;
+    }
+
+    contour = ( SDF_Contour* )shape->contours->tail->data;
+
+    error = sdf_edge_new( memory, &edge );
+    if ( error != FT_Err_Ok )
+      goto Exit;
+
+    FT_QNEW( node );
+    if ( error != FT_Err_Ok )
+      goto Exit;
+
+    edge->edge_type = SDF_EDGE_CONIC;
+    edge->start_pos = contour->last_pos;
+    edge->control_a = *control_1;
+    edge->end_pos   = *to;
+
+    contour->last_pos = *to;
+
+    node->data = edge;
+    FT_List_Add( contour->edges, node );
+
+  Exit:
+    return error;
+  }
+
+  static FT_Error
+  sdf_cubic_to( const FT_26D6_Vec*  control_1,
+                const FT_26D6_Vec*  control_2,
+                const FT_26D6_Vec*  to,
+                void*               user )
+  {
+    SDF_Shape*    shape    = ( SDF_Shape* )user;
+    SDF_Edge*     edge     = NULL;
+    SDF_Contour*  contour  = NULL;
+    FT_ListNode   node     = NULL;
+
+    FT_Error      error    = FT_Err_Ok;
+    FT_Memory     memory   = shape->memory;
+
+
+    if ( !control_2 || !control_1 || !to || !user )
+    {
+      error = FT_THROW( Invalid_Argument );
+      goto Exit;
+    }
+
+    contour = ( SDF_Contour* )shape->contours->tail->data;
+
+    error = sdf_edge_new( memory, &edge );
+    if ( error != FT_Err_Ok )
+      goto Exit;
+
+    FT_QNEW( node );
+    if ( error != FT_Err_Ok )
+      goto Exit;
+
+    edge->edge_type = SDF_EDGE_CUBIC;
+    edge->start_pos = contour->last_pos;
+    edge->control_a = *control_1;
+    edge->control_b = *control_2;
+    edge->end_pos   = *to;
+
+    contour->last_pos = *to;
+
+    node->data = edge;
+    FT_List_Add( contour->edges, node );
+
+  Exit:
+    return error;
+  }
+
+  FT_DEFINE_OUTLINE_FUNCS(
+      sdf_decompose_funcs,
+
+      (FT_Outline_MoveTo_Func)  sdf_move_to,   /* move_to  */
+      (FT_Outline_LineTo_Func)  sdf_line_to,   /* line_to  */
+      (FT_Outline_ConicTo_Func) sdf_conic_to,  /* conic_to */
+      (FT_Outline_CubicTo_Func) sdf_cubic_to,  /* cubic_to */
+
+      0,                                       /* shift    */
+      0                                        /* delta    */
+  )
+
+  /* function decomposes the outline and puts it into the `shape' object */
+  static FT_Error
+  sdf_outline_decompose( FT_Outline*  outline,
+                         SDF_Shape*   shape )
+  {
+    FT_Error  error = FT_Err_Ok;
+
+
+    if ( !outline || !shape )
+    {
+      error = FT_THROW( Invalid_Argument );
+      goto Exit;
+    }
+
+    error = FT_Outline_Decompose( outline, &sdf_decompose_funcs, (void*)shape );
 
   Exit:
     return error;
@@ -223,7 +452,6 @@
   {
     FT_UNUSED( raster );
     FT_UNUSED( params );
-
 
     return FT_THROW( Unimplemented_Feature );
   }
