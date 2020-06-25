@@ -48,18 +48,19 @@
 
     if ( ft_strcmp( property_name, "spread" ) == 0 )
     {
-      FT_UInt  val = *(const FT_UInt*)value;
+      FT_Int  val = *(const FT_Int*)value;
 
 
-      if ( val > MAX_SPREAD )
+      if ( val > MAX_SPREAD || val <= 0 )
       {
         FT_TRACE0(( "[sdf module] sdf_property_set: "
                     "the `spread' property can have a "
-                    "maximum value of %d\n", MAX_SPREAD ));
+                    "value within range [1, %d] "
+                    "(value provided %d)\n", MAX_SPREAD, val ));
         error = FT_THROW( Invalid_Argument );
         goto Exit;
       }
-      render->spread = val;
+      render->spread = (FT_UInt)val;
       FT_TRACE7(( "[sdf module] sdf_property_set: "
                   "updated property `spread' to %d\n", val ));
     }
@@ -68,7 +69,6 @@
       FT_TRACE0(( "[sdf module] sdf_property_set: "
                   "missing property `%s'\n", property_name ));
       error = FT_THROW( Missing_Property );
-      goto Exit;
     }
 
   Exit:
@@ -86,7 +86,7 @@
 
     if ( ft_strcmp( property_name, "spread" ) == 0 )
     {
-      FT_UInt*  val = (FT_UInt*)value;
+      FT_Int*  val = (FT_Int*)value;
 
 
       *val = render->spread;
@@ -96,7 +96,6 @@
       FT_TRACE0(( "[sdf module] sdf_property_get: "
                   "missing property `%s'\n", property_name ));
       error = FT_THROW( Missing_Property );
-      goto Exit;
     }
 
   Exit:
@@ -164,9 +163,8 @@
     FT_Pos       x_shift = 0;
     FT_Pos       y_shift = 0;
 
-    /* use hardcoded padding for now */
-    FT_UInt      x_pad   = 10;
-    FT_UInt      y_pad   = 10;
+    FT_UInt      x_pad   = 0;
+    FT_UInt      y_pad   = 0;
 
     FT_Raster_Params  params;
     SDF_Renderer      sdf_module = SDF_RENDERER( module );
@@ -210,9 +208,13 @@
     if ( !bitmap->rows || !bitmap->pitch )
       goto Exit;
 
-    /* apply the padding */
-    bitmap->rows  += y_pad;
-    bitmap->width += x_pad;
+    /* the padding will simply be equal to the `spread' */
+    x_pad = sdf_module->spread;
+    y_pad = sdf_module->spread;
+
+    /* apply the padding, will be in all the directions */
+    bitmap->rows  += y_pad * 2;
+    bitmap->width += x_pad * 2;
 
     /* ignore the pitch, pixel mode and set custom */
     bitmap->pixel_mode = FT_PIXEL_MODE_GRAY16;
@@ -333,10 +335,10 @@
 
     FT_GLYPH_FORMAT_OUTLINE,
 
-    (FT_Renderer_RenderFunc)   ft_sdf_render,     /* render_glyph    */
-    (FT_Renderer_TransformFunc)ft_sdf_transform,  /* transform_glyph */
-    (FT_Renderer_GetCBoxFunc)  ft_sdf_get_cbox,   /* get_glyph_cbox  */
-    (FT_Renderer_SetModeFunc)  ft_sdf_set_mode,   /* set_mode        */
+    (FT_Renderer_RenderFunc)    ft_sdf_render,     /* render_glyph    */
+    (FT_Renderer_TransformFunc) ft_sdf_transform,  /* transform_glyph */
+    (FT_Renderer_GetCBoxFunc)   ft_sdf_get_cbox,   /* get_glyph_cbox  */
+    (FT_Renderer_SetModeFunc)   ft_sdf_set_mode,   /* set_mode        */
 
     (FT_Raster_Funcs*)&ft_sdf_raster              /* raster_class    */
   )

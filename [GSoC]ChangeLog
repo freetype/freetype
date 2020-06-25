@@ -1,3 +1,16 @@
+2020-06-25  Anuj Verma  <anujv@iitbhilai.ac.in>
+
+	[sdf] Added essential enums and structs required.
+
+	* src/freetype/internal/fttrace.h: Remove tabs.
+
+	* src/sdf/ftsdfrend.c (ft_sdf_render): Calculate padding
+	  using the `spread'.
+
+	* src/sdf/ftsdf.c (SDF_Edge_Type, SDF_Edge, SDF_Contour,
+	  SDF_Shape): Added structures and their initializer
+	  functions.
+
 2020-06-23  Anuj Verma  <anujv@iitbhilai.ac.in>
 
 	[sdf] Added functionality to set and get module properties.
