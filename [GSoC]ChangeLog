@@ -1,5 +1,10 @@
 2020-06-26  Anuj Verma  <anujv@iitbhilai.ac.in>
 
+	* src/sdf/ftsdf.c (sdf_shape_dump): Use `FT_TRACEX'
+	  instead of `printf'.
+
+2020-06-26  Anuj Verma  <anujv@iitbhilai.ac.in>
+
 	* src/sdf/ftsdf.c (sdf_shape_dump): Added function to
 	  dump the `SDF_Shape' on the console for debugging.
 
