@@ -1,12 +1,17 @@
 2020-06-26  Anuj Verma  <anujv@iitbhilai.ac.in>
 
+	* src/sdf/ftsdf.c (sdf_shape_dump): Added function to
+	  dump the `SDF_Shape' on the console for debugging.
+
+2020-06-26  Anuj Verma  <anujv@iitbhilai.ac.in>
+
 	[sdf] Added functions to de-allocate `SDF_' structs.
 
 	* src/sdf/ftsdf.c (SDF_Contour, SDF_Shape): Use `FT_ListRec'
 	  instead of `FT_List' to avoid a few extra allocations.
 
 	* src/sdf/ftsdf.c (SDF_Edge, SDF_Contour, SDF_Shape): Added
-	  functions to de-allocate these structs and there members.
+	  functions to de-allocate these structs and their members.
 
 	* src/sdf/ftsdfrenc.c: Typo.
 

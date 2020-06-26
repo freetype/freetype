@@ -420,15 +420,15 @@
   }
 
   FT_DEFINE_OUTLINE_FUNCS(
-      sdf_decompose_funcs,
+    sdf_decompose_funcs,
 
-      (FT_Outline_MoveTo_Func)  sdf_move_to,   /* move_to  */
-      (FT_Outline_LineTo_Func)  sdf_line_to,   /* line_to  */
-      (FT_Outline_ConicTo_Func) sdf_conic_to,  /* conic_to */
-      (FT_Outline_CubicTo_Func) sdf_cubic_to,  /* cubic_to */
+    (FT_Outline_MoveTo_Func)  sdf_move_to,   /* move_to  */
+    (FT_Outline_LineTo_Func)  sdf_line_to,   /* line_to  */
+    (FT_Outline_ConicTo_Func) sdf_conic_to,  /* conic_to */
+    (FT_Outline_CubicTo_Func) sdf_cubic_to,  /* cubic_to */
 
-      0,                                       /* shift    */
-      0                                        /* delta    */
+    0,                                       /* shift    */
+    0                                        /* delta    */
   )
 
   /* function decomposes the outline and puts it into the `shape' struct */
@@ -450,6 +450,104 @@
   Exit:
     return error;
   }
+
+  /**************************************************************************
+   *
+   * for debugging
+   *
+   */
+
+#ifdef FT_DEBUG_LEVEL_TRACE
+
+  static void
+  sdf_shape_dump( SDF_Shape*  shape )
+  {
+    FT_UInt     num_contours = 0;
+    FT_UInt     total_edges  = 0;
+    FT_ListRec  contour_list;
+
+
+    if ( !shape )
+    {
+      printf( "[sdf] sdf_shape_dump: null shape\n" );
+      return;
+    }
+
+    contour_list = shape->contours;
+
+    printf( "-------------------------------------------------\n" );
+    printf( "[sdf] sdf_shape_dump:\n" );
+
+    while ( contour_list.head != NULL )
+    {
+      FT_UInt       num_edges = 0;
+      FT_ListRec    edge_list;
+      SDF_Contour*  contour = (SDF_Contour*)contour_list.head->data;
+
+
+      edge_list = contour->edges;
+      printf( "Contour %d\n", num_contours );
+
+      while ( edge_list.head != NULL )
+      {
+        SDF_Edge*  edge = (SDF_Edge*)edge_list.head->data;
+
+
+        printf( "    Edge %d\n", num_edges );
+
+        switch (edge->edge_type) {
+        case SDF_EDGE_LINE:
+          printf( "        Edge Type: Line\n" );
+          printf( "        ---------------\n" );
+          printf( "        Start Pos: %d, %d\n", edge->start_pos.x,
+                                                 edge->start_pos.y );
+          printf( "        End Pos  : %d, %d\n", edge->end_pos.x,
+                                                 edge->end_pos.y );
+          break;
+        case SDF_EDGE_CONIC:
+          printf( "        Edge Type: Conic Bezier\n" );
+          printf( "        -----------------------\n" );
+          printf( "        Start Pos: %d, %d\n", edge->start_pos.x,
+                                                 edge->start_pos.y );
+          printf( "        Ctrl1 Pos: %d, %d\n", edge->control_a.x,
+                                                 edge->control_a.y );
+          printf( "        End Pos  : %d, %d\n", edge->end_pos.x,
+                                                 edge->end_pos.y );
+          break;
+        case SDF_EDGE_CUBIC:
+          printf( "        Edge Type: Cubic Bezier\n" );
+          printf( "        -----------------------\n" );
+          printf( "        Start Pos: %d, %d\n", edge->start_pos.x,
+                                                 edge->start_pos.y );
+          printf( "        Ctrl1 Pos: %d, %d\n", edge->control_a.x,
+                                                 edge->control_a.y );
+          printf( "        Ctrl2 Pos: %d, %d\n", edge->control_b.x,
+                                                 edge->control_b.y );
+          printf( "        End Pos  : %d, %d\n", edge->end_pos.x,
+                                                 edge->end_pos.y );
+          break;
+        default:
+            break;
+        }
+
+        num_edges++;
+        total_edges++;
+        edge_list.head = edge_list.head->next;
+      }
+
+      num_contours++;
+      contour_list.head = contour_list.head->next;
+    }
+
+    printf( "\n" );
+    printf( "*note the above values are in 26.6 fixed point format*\n" );
+    printf( "[sdf] total number of contours = %d\n", num_contours );
+    printf( "[sdf] total number of edges    = %d\n", total_edges );
+    printf( "[sdf] sdf_shape_dump complete\n" );
+    printf( "-------------------------------------------------\n" );
+  }
+
+#endif
 
   /**************************************************************************
    *
@@ -512,6 +610,8 @@
     sdf_shape_new( memory, &shape );
 
     sdf_outline_decompose( params->source, shape );
+
+    sdf_shape_dump( shape );
 
     sdf_shape_done( memory, &shape );
 
