@@ -54,7 +54,7 @@
   typedef struct  SDF_Contour_
   {
     FT_26D6_Vec  last_pos;  /* end position of the last edge    */
-    FT_List      edges;     /* list of all edges in the contour */
+    FT_ListRec   edges;     /* list of all edges in the contour */
 
   } SDF_Contour;
 
@@ -62,8 +62,8 @@
   /* glyph outline.                                       */
   typedef struct  SDF_Shape_
   {
-    FT_Memory  memory;    /* used internally to allocate memory  */
-    FT_List    contours;  /* list of all contours in the outline */
+    FT_Memory   memory;    /* used internally to allocate memory  */
+    FT_ListRec  contours;  /* list of all contours in the outline */
 
   } SDF_Shape;
 
@@ -82,14 +82,10 @@
                                       SDF_EDGE_UNDEFINED };
 
   static
-  const SDF_Contour  null_contour = { { 0, 0 }, NULL };
+  const SDF_Contour  null_contour = { { 0, 0 }, { NULL, NULL } };
 
   static
-  const SDF_Shape    null_shape   = { NULL, NULL };
-
-  static
-  const FT_ListRec   empty_list   = { NULL, NULL };
-
+  const SDF_Shape    null_shape   = { NULL, { NULL, NULL } };
 
   /* Creates a new `SDF_Edge' on the heap and assigns the `edge' */
   /* pointer to the newly allocated memory.                      */
@@ -118,6 +114,29 @@
     return error;
   }
 
+  /* Frees the allocated `edge' variable. */
+  static void
+  sdf_edge_done( FT_Memory   memory,
+                 SDF_Edge**  edge )
+  {
+    if ( !memory || !edge || !*edge )
+      return;
+
+    FT_FREE( *edge );
+  }
+
+  /* Used in `FT_List_Finalize' */
+  static void
+  sdf_edge_destructor( FT_Memory  memory,
+                       void*      data,
+                       void*      user )
+  {
+    SDF_Edge*  edge = (SDF_Edge*)data;
+
+
+    sdf_edge_done( memory, &edge );
+  }
+
   /* Creates a new `SDF_Contour' on the heap and assigns the `contour'  */
   /* pointer to the newly allocated memory. Note that the function also */
   /* allocate the `contour.edges' list variable and sets to empty list. */
@@ -139,22 +158,45 @@
     if ( error == FT_Err_Ok )
     {
       *ptr = null_contour;
-      FT_QNEW( ptr->edges );
-      if ( error == FT_Err_Ok )
-      {
-        *ptr->edges = empty_list;
-        *contour = ptr;
-      }
+      *contour = ptr;
     }
 
   Exit:
     return error;
   }
 
+  /* Frees the allocated `contour' variable and also frees */
+  /* the list of edges.                                    */
+  static void
+  sdf_contour_done( FT_Memory      memory,
+                    SDF_Contour**  contour )
+  {
+    if ( !memory || !contour || !*contour )
+      return;
+
+    /*  */
+    FT_List_Finalize( &(*contour)->edges, sdf_edge_destructor,
+                      memory, NULL );
+
+    FT_FREE( *contour );
+  }
+
+  /* Used in `FT_List_Finalize' */
+  static void
+  sdf_contour_destructor( FT_Memory  memory,
+                          void*      data,
+                          void*      user )
+  {
+    SDF_Contour*  contour = (SDF_Contour*)data;
+
+
+    sdf_contour_done( memory, &contour );
+  }
+
   /* Creates a new `SDF_Shape' on the heap and assigns the `shape'       */
   /* pointer to the newly allocated memory. Note that the function also  */
   /* allocate the `shape.contours' list variable and sets to empty list. */
-  static void
+  static FT_Error
   sdf_shape_new( FT_Memory    memory,
                  SDF_Shape**  shape )
   {
@@ -172,20 +214,31 @@
     if ( error == FT_Err_Ok )
     {
       *ptr = null_shape;
-      FT_QNEW( ptr->contours );
-      if ( error == FT_Err_Ok )
-      {
-        *ptr->contours = empty_list;
-        ptr->memory = memory;
-        *shape = ptr;
-      }
+      ptr->memory = memory;
+      *shape = ptr;
     }
 
   Exit:
     return error;
   }
 
-  
+  /* Frees the allocated `shape' variable and also frees */
+  /* the list of contours.                               */
+  static void
+  sdf_shape_done( FT_Memory    memory,
+                  SDF_Shape**  shape )
+  {
+    if ( !memory || !shape || !*shape )
+      return;
+
+    /* release the list of contours */
+    FT_List_Finalize( &(*shape)->contours, sdf_contour_destructor, 
+                       memory, NULL );
+
+    /* release the allocated shape struct  */
+    FT_FREE( *shape );
+  }
+    
 
   /**************************************************************************
    *
@@ -224,7 +277,7 @@
     contour->last_pos = *to;
 
     node->data = contour;
-    FT_List_Add( shape->contours, node );
+    FT_List_Add( &shape->contours, node );
 
   Exit:
     return error;
@@ -249,7 +302,7 @@
       goto Exit;
     }
 
-    contour = ( SDF_Contour* )shape->contours->tail->data;
+    contour = ( SDF_Contour* )shape->contours.tail->data;
 
     if ( contour->last_pos.x == to->x && 
          contour->last_pos.y == to->y )
@@ -270,7 +323,7 @@
     contour->last_pos = *to;
 
     node->data = edge;
-    FT_List_Add( contour->edges, node );
+    FT_List_Add( &contour->edges, node );
 
   Exit:
     return error;
@@ -296,7 +349,7 @@
       goto Exit;
     }
 
-    contour = ( SDF_Contour* )shape->contours->tail->data;
+    contour = ( SDF_Contour* )shape->contours.tail->data;
 
     error = sdf_edge_new( memory, &edge );
     if ( error != FT_Err_Ok )
@@ -314,7 +367,7 @@
     contour->last_pos = *to;
 
     node->data = edge;
-    FT_List_Add( contour->edges, node );
+    FT_List_Add( &contour->edges, node );
 
   Exit:
     return error;
@@ -341,7 +394,7 @@
       goto Exit;
     }
 
-    contour = ( SDF_Contour* )shape->contours->tail->data;
+    contour = ( SDF_Contour* )shape->contours.tail->data;
 
     error = sdf_edge_new( memory, &edge );
     if ( error != FT_Err_Ok )
@@ -360,7 +413,7 @@
     contour->last_pos = *to;
 
     node->data = edge;
-    FT_List_Add( contour->edges, node );
+    FT_List_Add( &contour->edges, node );
 
   Exit:
     return error;
@@ -378,7 +431,7 @@
       0                                        /* delta    */
   )
 
-  /* function decomposes the outline and puts it into the `shape' object */
+  /* function decomposes the outline and puts it into the `shape' struct */
   static FT_Error
   sdf_outline_decompose( FT_Outline*  outline,
                          SDF_Shape*   shape )
@@ -452,6 +505,15 @@
   {
     FT_UNUSED( raster );
     FT_UNUSED( params );
+
+    FT_Memory  memory = (FT_Memory)((SDF_TRaster*)raster)->memory;
+
+    SDF_Shape * shape = NULL;
+    sdf_shape_new( memory, &shape );
+
+    sdf_outline_decompose( params->source, shape );
+
+    sdf_shape_done( memory, &shape );
 
     return FT_THROW( Unimplemented_Feature );
   }

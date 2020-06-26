@@ -196,9 +196,9 @@
       slot->internal->flags &= ~FT_GLYPH_OWN_BITMAP;
     }
 
-    /* preset the bitmap using the glyph's outline;        */
-    /* the sdf bitmap is similar to an antialiased bitmap  */
-    /* with a slighty bigger size and different pixel mode */
+    /* preset the bitmap using the glyph's outline;         */
+    /* the sdf bitmap is similar to an antialiased bitmap   */
+    /* with a slightly bigger size and different pixel mode */
     if ( ft_glyphslot_preset_bitmap( slot, FT_RENDER_MODE_NORMAL, origin ) )
     {
       error = FT_THROW( Raster_Overflow );
