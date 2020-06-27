@@ -969,11 +969,17 @@ FT_BEGIN_HEADER
    *     will be clipped to a box specified in the `clip_box` field of the
    *     @FT_Raster_Params structure.  Otherwise, the `clip_box` is
    *     effectively set to the bounding box and all spans are generated.
+   *
+   *   FT_RASTER_FLAG_SDF ::
+   *     This flag is set to indicate that a signed distance field glyph
+   *     image should be generated.  This is only used while rendering with
+   *     `FT_RENDER_MODE_SDF' render mode.
    */
 #define FT_RASTER_FLAG_DEFAULT  0x0
 #define FT_RASTER_FLAG_AA       0x1
 #define FT_RASTER_FLAG_DIRECT   0x2
 #define FT_RASTER_FLAG_CLIP     0x4
+#define FT_RASTER_FLAG_SDF      0x8
 
   /* these constants are deprecated; use the corresponding */
   /* `FT_RASTER_FLAG_XXX` values instead                   */

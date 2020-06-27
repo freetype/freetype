@@ -244,7 +244,7 @@
     /* set up parameters */
     params.target = bitmap;
     params.source = outline;
-    params.flags  = 0;
+    params.flags  = FT_RASTER_FLAG_SDF;
 
     /* render the outline */
     error = render->raster_render( render->raster, &params );

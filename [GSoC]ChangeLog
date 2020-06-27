@@ -1,5 +1,14 @@
 2020-06-26  Anuj Verma  <anujv@iitbhilai.ac.in>
 
+	* include/freetype/ftimage.h (FT_RASTER_FLAG_): Added
+	  a new raster flag `FT_RASTER_FLAG_SDF'. The `ftsdf'
+	  rasterizer will only render if this flag is set.
+
+	* src/sdf/ftsdfrend.c (ft_sdf_render): Set the `flags' field
+	  of `FT_Raster_Params' to `FT_RASTER_FLAG_SDF'.
+	  
+2020-06-26  Anuj Verma  <anujv@iitbhilai.ac.in>
+
 	* src/sdf/ftsdf.c (sdf_shape_dump): Use `FT_TRACEX'
 	  instead of `printf'.
 
