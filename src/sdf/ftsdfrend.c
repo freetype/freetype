@@ -23,9 +23,6 @@
    *
    */
 
-  #define DEFAULT_SPREAD  8
-  #define MAX_SPREAD      32
-
   #define SDF_RENDERER( rend ) ( (SDF_Renderer)rend )
 
   /**************************************************************************
@@ -51,22 +48,22 @@
       FT_Int  val = *(const FT_Int*)value;
 
 
-      if ( val > MAX_SPREAD || val <= 0 )
+      if ( val > MAX_SPREAD || val < MIN_SPREAD )
       {
-        FT_TRACE0(( "[sdf module] sdf_property_set: "
+        FT_TRACE0(( "[sdf] sdf_property_set: "
                     "the `spread' property can have a "
-                    "value within range [1, %d] "
-                    "(value provided %d)\n", MAX_SPREAD, val ));
+                    "value within range [%d, %d] (value provided %d)\n",
+                    MIN_SPREAD, MAX_SPREAD, val ));
         error = FT_THROW( Invalid_Argument );
         goto Exit;
       }
       render->spread = (FT_UInt)val;
-      FT_TRACE7(( "[sdf module] sdf_property_set: "
+      FT_TRACE7(( "[sdf] sdf_property_set: "
                   "updated property `spread' to %d\n", val ));
     }
     else
     {
-      FT_TRACE0(( "[sdf module] sdf_property_set: "
+      FT_TRACE0(( "[sdf] sdf_property_set: "
                   "missing property `%s'\n", property_name ));
       error = FT_THROW( Missing_Property );
     }
@@ -93,7 +90,7 @@
     }
     else
     {
-      FT_TRACE0(( "[sdf module] sdf_property_get: "
+      FT_TRACE0(( "[sdf] sdf_property_get: "
                   "missing property `%s'\n", property_name ));
       error = FT_THROW( Missing_Property );
     }
@@ -166,8 +163,8 @@
     FT_UInt      x_pad   = 0;
     FT_UInt      y_pad   = 0;
 
-    FT_Raster_Params  params;
-    SDF_Renderer      sdf_module = SDF_RENDERER( module );
+    SDF_Raster_Params  params;
+    SDF_Renderer       sdf_module = SDF_RENDERER( module );
 
 
     render = &sdf_module->root;
@@ -176,15 +173,16 @@
     /* check if slot format is correct before rendering */
     if ( slot->format != render->glyph_format )
     {
-      error = FT_THROW( Invalid_Argument );
+      error = FT_THROW( Invalid_Glyph_Format );
       goto Exit;
     }
 
     /* check if render mode is correct */
     if ( mode != FT_RENDER_MODE_SDF )
     {
-      FT_ERROR(( "ft_sdf_render: sdf module only"
-                 "render when using `FT_RENDER_MODE_SDF'" ));
+      FT_ERROR(( "[sdf] ft_sdf_render: "
+                 "sdf module only render when "
+                 "using `FT_RENDER_MODE_SDF'\n" ));
       error = FT_THROW( Cannot_Render_Glyph );
       goto Exit;
     }
@@ -242,12 +240,13 @@
       FT_Outline_Translate( outline, x_shift, y_shift );
 
     /* set up parameters */
-    params.target = bitmap;
-    params.source = outline;
-    params.flags  = FT_RASTER_FLAG_SDF;
+    params.root.target = bitmap;
+    params.root.source = outline;
+    params.root.flags  = FT_RASTER_FLAG_SDF;
+    params.spread      = sdf_module->spread;
 
     /* render the outline */
-    error = render->raster_render( render->raster, &params );
+    error = render->raster_render( render->raster, (const FT_Raster_Params*)&params );
 
   Exit:
     if ( !error )
@@ -340,7 +339,7 @@
     (FT_Renderer_GetCBoxFunc)   ft_sdf_get_cbox,   /* get_glyph_cbox  */
     (FT_Renderer_SetModeFunc)   ft_sdf_set_mode,   /* set_mode        */
 
-    (FT_Raster_Funcs*)&ft_sdf_raster              /* raster_class    */
+    (FT_Raster_Funcs*)&ft_sdf_raster               /* raster_class    */
   )
 
 /* END */

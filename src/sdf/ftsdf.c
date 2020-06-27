@@ -125,7 +125,7 @@
     FT_FREE( *edge );
   }
 
-  /* Used in `FT_List_Finalize' */
+  /* Used in `FT_List_Finalize'. */
   static void
   sdf_edge_destructor( FT_Memory  memory,
                        void*      data,
@@ -137,9 +137,8 @@
     sdf_edge_done( memory, &edge );
   }
 
-  /* Creates a new `SDF_Contour' on the heap and assigns the `contour'  */
-  /* pointer to the newly allocated memory. Note that the function also */
-  /* allocate the `contour.edges' list variable and sets to empty list. */
+  /* Creates a new `SDF_Contour' on the heap and assigns  */
+  /* the `contour' pointer to the newly allocated memory. */
   static FT_Error
   sdf_contour_new( FT_Memory      memory,
                    SDF_Contour**  contour )
@@ -181,7 +180,7 @@
     FT_FREE( *contour );
   }
 
-  /* Used in `FT_List_Finalize' */
+  /* Used in `FT_List_Finalize'. */
   static void
   sdf_contour_destructor( FT_Memory  memory,
                           void*      data,
@@ -193,9 +192,8 @@
     sdf_contour_done( memory, &contour );
   }
 
-  /* Creates a new `SDF_Shape' on the heap and assigns the `shape'       */
-  /* pointer to the newly allocated memory. Note that the function also  */
-  /* allocate the `shape.contours' list variable and sets to empty list. */
+  /* Creates a new `SDF_Shape' on the heap and assigns  */
+  /* the `shape' pointer to the newly allocated memory. */
   static FT_Error
   sdf_shape_new( FT_Memory    memory,
                  SDF_Shape**  shape )
@@ -246,12 +244,12 @@
    *
    */
 
+  /* This function is called when walking along a new contour */
+  /* so add a new contour to the shape's list.                */
   static FT_Error
   sdf_move_to( const FT_26D6_Vec* to,
                void*              user )
   {
-    /* This function is called when walking along a new contour */
-    /* so add a new contour to the shape's list.                */
     SDF_Shape*    shape    = ( SDF_Shape* )user;
     SDF_Contour*  contour  = NULL;
     FT_ListNode   node     = NULL;
@@ -541,8 +539,8 @@
 
     FT_TRACE5(( "\n" ));
     FT_TRACE5(( "*note: the above values are in 26.6 fixed point format*\n" ));
-    FT_TRACE5(( "[sdf] total number of contours = %d\n", num_contours ));
-    FT_TRACE5(( "[sdf] total number of edges    = %d\n", total_edges ));
+    FT_TRACE5(( "total number of contours = %d\n", num_contours ));
+    FT_TRACE5(( "total number of edges    = %d\n", total_edges ));
     FT_TRACE5(( "[sdf] sdf_shape_dump complete\n" ));
     FT_TRACE5(( "-------------------------------------------------\n" ));
   }
@@ -601,17 +599,63 @@
   sdf_raster_render( FT_Raster                raster,
                      const FT_Raster_Params*  params )
   {
-    FT_UNUSED( raster );
-    FT_UNUSED( params );
+    FT_Error                  error      = FT_Err_Ok;
+    SDF_TRaster*              sdf_raster = (SDF_TRaster*)raster;
+    FT_Outline*               outline    = NULL;
+    const SDF_Raster_Params*  sdf_params = (const SDF_Raster_Params*)params;
+
+
+    /* check for valid arguments */
+    if ( !sdf_raster || !sdf_params )
+    {
+      error = FT_THROW( Invalid_Argument );
+      goto Exit;
+    }
+
+    outline = (FT_Outline*)sdf_params->root.source;
+
+    /* check if the outline is valid or not */
+    if ( !outline )
+    {
+      error = FT_THROW( Invalid_Outline );
+      goto Exit;
+    }
+
+    /* if the outline is empty, return */
+    if ( outline->n_points <= 0 || outline->n_contours <= 0 )
+      goto Exit;
+
+    /* check if the outline has valid fields */
+    if ( !outline->contours || !outline->points )
+    {
+      error = FT_THROW( Invalid_Outline );
+      goto Exit;
+    }
+
+    /* check if spread is set properly */
+    if ( sdf_params->spread > MAX_SPREAD ||
+         sdf_params->spread < MIN_SPREAD )
+    {
+      FT_TRACE0(( 
+        "[sdf] sdf_raster_render:\n"
+        "      The `spread' field of `SDF_Raster_Params' is invalid,\n"
+        "      the value of this field must be within [%d, %d].\n"
+        "      Also, you must pass `SDF_Raster_Params' instead of the\n"
+        "      default `FT_Raster_Params' while calling this function\n"
+        "      and set the fields properly.\n"
+        , MIN_SPREAD, MAX_SPREAD) );
+      error = FT_THROW( Invalid_Argument );
+      goto Exit;
+    }
 
     /* temporary */
 
-    FT_Memory  memory = (FT_Memory)((SDF_TRaster*)raster)->memory;
+    FT_Memory  memory = sdf_raster->memory;
 
     SDF_Shape * shape = NULL;
     sdf_shape_new( memory, &shape );
 
-    sdf_outline_decompose( params->source, shape );
+    sdf_outline_decompose( outline, shape );
 
     sdf_shape_dump( shape );
 
@@ -619,7 +663,9 @@
 
     /* --------- */
 
-    return FT_THROW( Unimplemented_Feature );
+  Exit:
+    error = FT_THROW( Unimplemented_Feature );
+    return error;
   }
 
   static void

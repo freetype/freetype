@@ -1,5 +1,24 @@
 2020-06-26  Anuj Verma  <anujv@iitbhilai.ac.in>
 
+	[sdf] Added `SDF_Raster_Params' struct which extends
+	`FT_Raster_Params' and has a few extra fields. This is done
+	to pass extra data to the sdf rasterzier which is required
+	while rastersizing.
+
+	* src/sdf/ftsdf.h (SDF_Raster_Params): Added a struct which
+	  extends `FT_Raster_Params' and has the `spread' parameter.
+	  Also moved the max, min and default spread values to this
+	  header file.
+
+	* src/sdf/ftsdf.c (sdf_raster_render): Added parameter and
+	  attribute checking in order to pick errors and return
+	  early.
+
+	* src//sdf/ftsdfrend.c (ft_sdf_render): Setup the `SDF_Raster_Params'
+	  and pass it to the rasterizer instead of `FT_Raster_Params'.
+
+2020-06-26  Anuj Verma  <anujv@iitbhilai.ac.in>
+
 	* include/freetype/ftimage.h (FT_RASTER_FLAG_): Added
 	  a new raster flag `FT_RASTER_FLAG_SDF'. The `ftsdf'
 	  rasterizer will only render if this flag is set.
