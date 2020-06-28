@@ -1,5 +1,14 @@
 2020-06-27  Anuj Verma  <anujv@iitbhilai.ac.in>
 
+	* src/sdf/ftsdf.c (SDF_Iterator_IO): Removed.
+
+	* src/sdf/ftsdf.c (sdf_edge_iterator_func => sdf_edge_get_min_distance
+	  sdf_contour_iterator_func => sdf_contour_get_min_distance): Renamed.
+	  Manually iterate through the lists instead of `FT_List_Iterate' to
+	  avoid io structs and looks a bit cleaner.
+
+2020-06-27  Anuj Verma  <anujv@iitbhilai.ac.in>
+
 	[sdf] Added basic outline of the functions required to
 	generate sdf.
 

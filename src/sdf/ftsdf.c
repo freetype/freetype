@@ -14,6 +14,16 @@
 
   #define FT_INT_26D6( x ) ( x * 64 )   /* convert int to 26.6 fixed point */
 
+
+  /* Convenient macro which calls the function */
+  /* and returns if any error occurs.          */
+  #define FT_CALL( x ) do                          \
+                       {                           \
+                         error = ( x );            \
+                         if ( error != FT_Err_Ok ) \
+                           goto Exit;              \
+                       } while ( 0 )
+
   /**************************************************************************
    *
    * typedefs
@@ -102,15 +112,6 @@
 
   } SDF_Signed_Distance;
 
-  /* This struct servers as both input and output while */
-  /* iterating through the contours and edges.          */
-  typedef struct  SDF_Iterator_IO_
-  {
-    FT_26D6_Vec          current_point;  /* input  */
-    SDF_Signed_Distance  shortest_point; /* output */
-
-  } SDF_Iterator_IO;
-
   /**************************************************************************
    *
    * constants, initializer and destructor
@@ -132,8 +133,8 @@
   const SDF_Shape    null_shape   = { NULL, { NULL, NULL } };
 
   static
-  const SDF_Signed_Distance  max_sdf_dist = { { 0, 0 }, { 0, 0 },
-                                                FT_INT_MAX, 0 };
+  const SDF_Signed_Distance  max_sdf = { { 0, 0 }, { 0, 0 },
+                                         INT_MAX, 0 };
 
   /* Creates a new `SDF_Edge' on the heap and assigns the `edge' */
   /* pointer to the newly allocated memory.                      */
@@ -606,14 +607,11 @@
   /**************************************************************************
    *
    * @Function:
-   *   sdf_edge_iterator_func
+   *   sdf_edge_get_min_distance
    *
    * @Description:
-   *   This function find the shortest distance from a point to
-   *   a given point. The function assign the output if current edge
-   *   distance is smaller than the output. Make sure to assign max
-   *   distance to io.shortest_point before calling the iterator first
-   *   time.
+   *   This function find the shortest distance from the `edge' to
+   *   a given `point' and assigns it to `out'.
    *
    * @Input:
    *   [TODO]
@@ -622,17 +620,26 @@
    *   [TODO]
    */
   static FT_Error
-  sdf_edge_iterator_func( FT_ListNode  node,
-                          void*        user )
+  sdf_edge_get_min_distance( SDF_Edge*             edge,
+                             FT_26D6_Vec           point,
+                             SDF_Signed_Distance*  out)
   {
     FT_Error  error = FT_Err_Ok;
-    SDF_Iterator_IO*  io = (SDF_Iterator_IO*)user;
 
 
-    if ( !node || !user )
+    if ( !edge || !out )
     {
       error = FT_THROW( Invalid_Argument );
       goto Exit;
+    }
+
+    /* edge specific distance calculation */
+    switch ( edge->edge_type ) {
+    case SDF_EDGE_LINE:
+    case SDF_EDGE_CONIC:
+    case SDF_EDGE_CUBIC:
+    default:
+        error = FT_THROW( Invalid_Argument );
     }
 
   Exit:
@@ -642,14 +649,12 @@
   /**************************************************************************
    *
    * @Function:
-   *   sdf_contour_iterator_func
+   *   sdf_contour_get_min_distance
    *
    * @Description:
    *   This function iterate through all the edges that make up
    *   the contour and find the shortest distance from a point to
-   *   this contour. The function assign the output if any edge distance
-   *   is smaller than the output. Make sure to assign max distance to
-   *   io.shortest_point before calling the iterator for the first time.
+   *   this contour and assigns it to `out'.
    *
    * @Input:
    *   [TODO]
@@ -658,16 +663,37 @@
    *   [TODO]
    */
   static FT_Error
-  sdf_contour_iterator_func( FT_ListNode  node,
-                             void*        user )
+  sdf_contour_get_min_distance( SDF_Contour*          contuor,
+                                FT_26D6_Vec           point,
+                                SDF_Signed_Distance*  out)
   {
-    FT_Error          error  = FT_Err_Ok;
-    SDF_Iterator_IO*  io = (SDF_Iterator_IO*)user;
+    FT_Error             error  = FT_Err_Ok;
+    SDF_Signed_Distance  min_dist = max_sdf;
+    FT_ListRec           edge_list;
 
-    if ( !node || !user )
+
+    if ( !contuor || !out )
     {
       error = FT_THROW( Invalid_Argument );
       goto Exit;
+    }
+
+    edge_list = contuor->edges;
+
+    /* iterate through all the edges manually */
+    while ( edge_list.head ) {
+      SDF_Signed_Distance  current_dist = max_sdf;
+    
+    
+      FT_CALL( sdf_edge_get_min_distance( 
+               (SDF_Edge*)edge_list.head->data,
+               point, &current_dist ) );
+    
+      /* [TODO]: *IMPORTANT* Add corner checking function. */
+      if ( current_dist.distance < min_dist.distance )
+        min_dist = current_dist;
+    
+      edge_list.head = edge_list.head->next;
     }
 
   Exit:
@@ -740,7 +766,8 @@
         /* from this point to the entire shape.       */
         FT_26D6_Vec  grid_point = { FT_INT_26D6( x ),
                                     FT_INT_26D6( y ) };
-        SDF_Iterator_IO  arg;
+        SDF_Signed_Distance  min_dist = max_sdf;
+        FT_ListRec           contour_list;
 
 
         /* This `grid_point' is at the corner, but we */
@@ -748,18 +775,27 @@
         grid_point.x += FT_INT_26D6( 1 ) / 2;
         grid_point.y += FT_INT_26D6( 1 ) / 2;
 
-        arg.current_point = grid_point;
-        arg.shortest_point = max_sdf_dist;
+        contour_list = shape->contours;
 
-        /* [TODO]: iterate through all the contours */
+        /* iterate through all the contours manually */
+        while ( contour_list.head ) {
+          SDF_Signed_Distance  current_dist = max_sdf;
 
-        /* [TODO]: Now check the returned distance and assign */
-        /*         the values to the bitmap.                  */
+
+          FT_CALL( sdf_contour_get_min_distance( 
+                   (SDF_Contour*)contour_list.head->data,
+                   grid_point, &current_dist ) );
+
+          if ( current_dist.distance < min_dist.distance )
+            min_dist = current_dist;
+
+          contour_list.head = contour_list.head->next;
+        }
       }
     }
 
   Exit:
-    return FT_THROW( Unimplemented_Feature );
+    return error;
   }
 
   /**************************************************************************
@@ -819,6 +855,9 @@
     FT_Outline*               outline    = NULL;
     const SDF_Raster_Params*  sdf_params = (const SDF_Raster_Params*)params;
 
+    FT_Memory                 memory     = NULL;
+    SDF_Shape*                shape      = NULL;
+
 
     /* check for valid arguments */
     if ( !sdf_raster || !sdf_params )
@@ -863,23 +902,29 @@
       goto Exit;
     }
 
-    /* temporary */
+    memory = sdf_raster->memory;
+    if ( !memory )
+    {
+      FT_TRACE0(( "[sdf] sdf_raster_render:\n"
+                  "      Raster not setup properly, "
+                  "unable to find memory handle.\n" ));
+      error = FT_THROW( Invalid_Handle );
+      goto Exit;
+    }
 
-    FT_Memory  memory = sdf_raster->memory;
+    FT_CALL( sdf_shape_new( memory, &shape ) );
 
-    SDF_Shape * shape = NULL;
-    sdf_shape_new( memory, &shape );
+    FT_CALL( sdf_outline_decompose( outline, shape ) );
 
-    sdf_outline_decompose( outline, shape );
+    FT_CALL( sdf_generate( shape, sdf_params->spread, 
+                           sdf_params->root.target ) );
 
     sdf_shape_dump( shape );
 
-    sdf_shape_done( memory, &shape );
-
-    /* --------- */
-
   Exit:
-    error = FT_THROW( Unimplemented_Feature );
+    if ( shape )
+      sdf_shape_done( memory, &shape );
+
     return error;
   }
 
