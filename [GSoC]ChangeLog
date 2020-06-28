@@ -1,3 +1,24 @@
+2020-06-27  Anuj Verma  <anujv@iitbhilai.ac.in>
+
+	[sdf] Added basic outline of the functions required to
+	generate sdf.
+
+	* src/sdf/ftsdf.c (SDF_Signed_Distance): Added struct which
+	  represent a complete signed distance and can be used to
+	  get cross, dot, sign etc.
+
+	* src/sdf/ftsdf.c (SDF_Iterator_IO): This struct will be used
+	  while `FT_List_Iterate'.
+
+	* src/sdf/ftsdf.c (sdf_generate): Added function which genearte
+	  SDF from `SDF_Shape'.
+
+	* src/sdf/ftsdf.c (sdf_edge_iterator_func,
+	                   sdf_contour_iterator_func): Added funcions
+	  which iterate through contours and edges and return the shortest
+	  distance.
+	  
+
 2020-06-26  Anuj Verma  <anujv@iitbhilai.ac.in>
 
 	[sdf] Added `SDF_Raster_Params' struct which extends

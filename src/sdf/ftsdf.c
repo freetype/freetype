@@ -8,12 +8,22 @@
 
   /**************************************************************************
    *
+   * macros
+   *
+   */
+
+  #define FT_INT_26D6( x ) ( x * 64 )   /* convert int to 26.6 fixed point */
+
+  /**************************************************************************
+   *
    * typedefs
    *
    */
 
   typedef  FT_Vector FT_26D6_Vec;   /* with 26.6 fixed point components  */
   typedef  FT_Vector FT_16D16_Vec;  /* with 16.16 fixed point components */
+
+  typedef  FT_Fixed  FT_16D16;      /* 16.16 fixed point representation  */
 
   /**************************************************************************
    *
@@ -67,6 +77,40 @@
 
   } SDF_Shape;
 
+  typedef struct SDF_Signed_Distance_
+  {
+    /* Nearest point the outline to a given point.    */
+    /* [note]: This is not a *direction* vector, this */
+    /*         simply a *point* vector on the grid.   */
+    FT_16D16_Vec  neartest_point;
+
+    /* The normalized direction of the curve at the   */
+    /* above point.                                   */
+    /* [note]: This is a *direction* vector.          */
+    FT_16D16_Vec  direction;
+
+    /* Unsigned shortest distance from the point to   */
+    /* the above `nearest_point'.                     */
+    FT_16D16      distance;
+
+    /* Represent weather the `nearest_point' is outside */
+    /* or inside the contour corresponding to the edge. */
+    /* [note]: This sign may or may not be correct,     */
+    /*         therefore it must be checked properly in */
+    /*         case there is an ambiguity.              */
+    FT_Char       sign;       
+
+  } SDF_Signed_Distance;
+
+  /* This struct servers as both input and output while */
+  /* iterating through the contours and edges.          */
+  typedef struct  SDF_Iterator_IO_
+  {
+    FT_26D6_Vec          current_point;  /* input  */
+    SDF_Signed_Distance  shortest_point; /* output */
+
+  } SDF_Iterator_IO;
+
   /**************************************************************************
    *
    * constants, initializer and destructor
@@ -86,6 +130,10 @@
 
   static
   const SDF_Shape    null_shape   = { NULL, { NULL, NULL } };
+
+  static
+  const SDF_Signed_Distance  max_sdf_dist = { { 0, 0 }, { 0, 0 },
+                                                FT_INT_MAX, 0 };
 
   /* Creates a new `SDF_Edge' on the heap and assigns the `edge' */
   /* pointer to the newly allocated memory.                      */
@@ -546,6 +594,173 @@
   }
 
 #endif
+
+  /*************************************************************************/
+  /*************************************************************************/
+  /**                                                                     **/
+  /**  RASTERIZER                                                         **/
+  /**                                                                     **/
+  /*************************************************************************/
+  /*************************************************************************/
+
+  /**************************************************************************
+   *
+   * @Function:
+   *   sdf_edge_iterator_func
+   *
+   * @Description:
+   *   This function find the shortest distance from a point to
+   *   a given point. The function assign the output if current edge
+   *   distance is smaller than the output. Make sure to assign max
+   *   distance to io.shortest_point before calling the iterator first
+   *   time.
+   *
+   * @Input:
+   *   [TODO]
+   *
+   * @Return:
+   *   [TODO]
+   */
+  static FT_Error
+  sdf_edge_iterator_func( FT_ListNode  node,
+                          void*        user )
+  {
+    FT_Error  error = FT_Err_Ok;
+    SDF_Iterator_IO*  io = (SDF_Iterator_IO*)user;
+
+
+    if ( !node || !user )
+    {
+      error = FT_THROW( Invalid_Argument );
+      goto Exit;
+    }
+
+  Exit:
+    return error;
+  }
+
+  /**************************************************************************
+   *
+   * @Function:
+   *   sdf_contour_iterator_func
+   *
+   * @Description:
+   *   This function iterate through all the edges that make up
+   *   the contour and find the shortest distance from a point to
+   *   this contour. The function assign the output if any edge distance
+   *   is smaller than the output. Make sure to assign max distance to
+   *   io.shortest_point before calling the iterator for the first time.
+   *
+   * @Input:
+   *   [TODO]
+   *
+   * @Return:
+   *   [TODO]
+   */
+  static FT_Error
+  sdf_contour_iterator_func( FT_ListNode  node,
+                             void*        user )
+  {
+    FT_Error          error  = FT_Err_Ok;
+    SDF_Iterator_IO*  io = (SDF_Iterator_IO*)user;
+
+    if ( !node || !user )
+    {
+      error = FT_THROW( Invalid_Argument );
+      goto Exit;
+    }
+
+  Exit:
+    return error;
+  }
+
+  /**************************************************************************
+   *
+   * @Function:
+   *   sdf_generate
+   *
+   * @Description:
+   *   This is the main function that is responsible for generating
+   *   signed distance fields. The function will not align or compute
+   *   the size of the `bitmap', therefore setup the `bitmap' properly
+   *   and transform the `shape' appropriately before calling this
+   *   function.
+   *   Currently we check all the pixels against all the contours and
+   *   all the edges.
+   *
+   * @Input:
+   *   [TODO]
+   *
+   * @Return:
+   *   [TODO]
+   */
+  static FT_Error
+  sdf_generate( const SDF_Shape*  shape,
+                FT_UInt           spread,
+                FT_Bitmap*        bitmap )
+  {
+    FT_Error  error = FT_Err_Ok;
+    FT_UInt   width = 0;
+    FT_UInt   rows  = 0;
+    FT_UInt   x     = 0; /* used to loop in x direction i.e. width */
+    FT_UInt   y     = 0; /* used to loop in y direction i.e. rows  */
+
+    if ( !shape || !bitmap )
+    {
+      error = FT_THROW( Invalid_Argument );
+      goto Exit;
+    }
+
+    if ( spread < MIN_SPREAD || spread > MAX_SPREAD )
+    {
+      error = FT_THROW( Invalid_Argument );
+      goto Exit;
+    }
+
+    width = bitmap->width;
+    rows = bitmap->rows;
+
+    if ( width == 0 || rows == 0 )
+    {
+      FT_TRACE0(( "[sdf] sdf_generate:\n"
+                  "      Cannot render glyph with width/height == 0\n"
+                  "      (width, height provided [%d, %d])", width, rows ));
+      error = FT_THROW( Cannot_Render_Glyph );
+      goto Exit;
+    }
+
+    /* loop through all the rows */
+    for ( y = 0; y < rows; y++ )
+    {
+      /* loop through all the pixels of a row */
+      for ( x = 0; x < width; x++ )
+      {
+        /* `grid_point' is the current pixel position */
+        /* our task is to find the shortest distance  */
+        /* from this point to the entire shape.       */
+        FT_26D6_Vec  grid_point = { FT_INT_26D6( x ),
+                                    FT_INT_26D6( y ) };
+        SDF_Iterator_IO  arg;
+
+
+        /* This `grid_point' is at the corner, but we */
+        /* use the center of the pixel.               */
+        grid_point.x += FT_INT_26D6( 1 ) / 2;
+        grid_point.y += FT_INT_26D6( 1 ) / 2;
+
+        arg.current_point = grid_point;
+        arg.shortest_point = max_sdf_dist;
+
+        /* [TODO]: iterate through all the contours */
+
+        /* [TODO]: Now check the returned distance and assign */
+        /*         the values to the bitmap.                  */
+      }
+    }
+
+  Exit:
+    return FT_THROW( Unimplemented_Feature );
+  }
 
   /**************************************************************************
    *
