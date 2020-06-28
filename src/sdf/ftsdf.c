@@ -12,7 +12,9 @@
    *
    */
 
-  #define FT_INT_26D6( x ) ( x * 64 )   /* convert int to 26.6 fixed point */
+  #define FT_INT_26D6( x )   ( x * 64 )     /* convert int to 26.6 fixed point   */
+  #define FT_INT_16D16( x )  ( x * 65536 )  /* convert int to 16.16 fixed point  */
+  #define FT_26D6_16D16( x ) ( x * 1024 )   /* convert 26.6 to 16.16 fixed point */
 
 
   /* Convenient macro which calls the function */
@@ -34,6 +36,7 @@
   typedef  FT_Vector FT_16D16_Vec;  /* with 16.16 fixed point components */
 
   typedef  FT_Fixed  FT_16D16;      /* 16.16 fixed point representation  */
+  typedef  FT_Fixed  FT_26D6;       /* 26.6 fixed point representation   */
 
   /**************************************************************************
    *
@@ -99,9 +102,9 @@
     /* [note]: This is a *direction* vector.          */
     FT_16D16_Vec  direction;
 
-    /* Unsigned shortest distance from the point to   */
-    /* the above `nearest_point'.                     */
-    FT_16D16      distance;
+    /* Unsigned shortest squared distance from the    */
+    /* point to the above `nearest_point'.            */
+    FT_16D16      squared_distance;
 
     /* Represent weather the `nearest_point' is outside */
     /* or inside the contour corresponding to the edge. */
@@ -607,6 +610,144 @@
   /**************************************************************************
    *
    * @Function:
+   *   get_min_distance_line
+   *
+   * @Description:
+   *   This function find the shortest distance from the `line' to
+   *   a given `point' and assigns it to `out'. Only use it for line
+   *   segments.
+   *
+   * @Input:
+   *   [TODO]
+   *
+   * @Return:
+   *   [TODO]
+   */
+  static FT_Error
+  get_min_distance_line( SDF_Edge*             line,
+                         FT_26D6_Vec           point, 
+                         SDF_Signed_Distance*  out )
+  {
+    /* in order to calculate the shortest distance from a point to */
+    /* a line segment.                                             */
+    /*                                                             */
+    /* a = start point of the line segment                         */
+    /* b = end point of the line segment                           */
+    /* p = point from which shortest distance is to be calculated  */
+    /* ----------------------------------------------------------- */
+    /* => we first write the parametric equation of the line       */
+    /*    point_on_line = a + ( b - a ) * t ( t is the factor )    */
+    /*                                                             */
+    /* => next we find the projection of point p on the line. the  */
+    /*    projection will be perpendicular to the line, that is    */
+    /*    why we can find it by making the dot product zero.       */
+    /*    ( point_on_line - a ) . ( p - point_on_line ) = 0        */
+    /*                                                             */
+    /*                 ( point_on_line )                           */
+    /*    ( a ) x-------o----------------x ( b )                   */
+    /*                |_|                                          */
+    /*                  |                                          */
+    /*                  |                                          */
+    /*                ( p )                                        */
+    /*                                                             */
+    /* => by simplifying the above equation we get the factor of   */
+    /*    point_on_line such that                                  */
+    /*    t = ( ( p - a ) . ( b - a ) ) / ( |b - a| ^ 2 )          */
+    /*                                                             */
+    /* => we clamp the factor t between [0.0f, 1.0f], because the  */
+    /*    point_on_line can be outside the line segment.           */
+    /*                                                             */
+    /*                                        ( point_on_line )    */
+    /*    ( a ) x------------------------x ( b ) -----o---         */
+    /*                                              |_|            */
+    /*                                                |            */
+    /*                                                |            */
+    /*                                              ( p )          */
+    /*                                                             */
+    /* => finally the distance becomes | point_on_line - p |       */
+
+    FT_Error     error = FT_Err_Ok;
+
+    const FT_Vector   a = line->start_pos;
+    const FT_Vector   b = line->end_pos;
+    const FT_Vector   p = point;
+
+    FT_26D6_Vec  line_segment;      /* `b' - `a'*/
+    FT_26D6_Vec  p_sub_a;           /* `p' - `a' */
+
+    FT_26D6      sq_line_length;    /* squared length of `line_segment' */
+    FT_16D16     factor;            /* factor of the nearest point      */
+    FT_26D6      cross;             /* used to determine sign           */
+
+    FT_16D16_Vec nearest_point;  /* point on the line nearest to `point' */
+    FT_16D16_Vec nearest_vector; /* `p' - `nearest_point' */
+
+    if ( !line || !out )
+    {
+      error = FT_THROW( Invalid_Argument );
+      goto Exit;
+    }
+
+    if ( line->edge_type != SDF_EDGE_LINE )
+    {
+      error = FT_THROW( Invalid_Argument );
+      goto Exit;
+    }
+
+    line_segment.x = b.x - a.x;
+    line_segment.y = b.y - a.y;
+
+    p_sub_a.x = p.x - a.x;
+    p_sub_a.y = p.y - a.y;
+
+    sq_line_length = ( line_segment.x * line_segment.x ) / 64 +
+                     ( line_segment.y * line_segment.y ) / 64;
+
+    /* currently factor is 26.6 */
+    factor = ( p_sub_a.x * line_segment.x ) / 64 +
+             ( p_sub_a.y * line_segment.y ) / 64;
+
+    /* now factor is 16.16 */
+    factor = FT_DivFix( factor, sq_line_length );
+
+    /* clamp the factor between 0.0 and 1.0 in fixed point */
+    if ( factor > FT_INT_16D16( 1 ) )
+      factor = FT_INT_16D16( 1 );
+    if ( factor < 0 )
+      factor = 0;
+
+    nearest_point.x = FT_MulFix( FT_26D6_16D16(line_segment.x),
+                                 factor );
+    nearest_point.y = FT_MulFix( FT_26D6_16D16(line_segment.y),
+                                 factor );
+
+    nearest_point.x = FT_26D6_16D16( a.x ) + nearest_point.x -
+                      FT_26D6_16D16( p.x );
+    nearest_point.y = FT_26D6_16D16( a.y ) + nearest_point.y -
+                      FT_26D6_16D16( p.y );
+
+    nearest_vector.x = nearest_point.x - FT_26D6_16D16( p.x );
+    nearest_vector.y = nearest_point.y - FT_26D6_16D16( p.y );
+
+    cross = FT_MulFix( nearest_vector.x, line_segment.y ) -
+            FT_MulFix( nearest_vector.y, line_segment.x );
+
+    FT_Vector_NormLen( &line_segment );
+
+    /* assign the output */
+    out->neartest_point = nearest_point;
+    out->sign = cross < 0 ? 1 : -1;
+    out->squared_distance = FT_MulFix( nearest_vector.x, nearest_vector.x ) +
+                            FT_MulFix( nearest_vector.y, nearest_vector.y );
+    out->direction = line_segment;
+
+  Exit:
+    return error;
+  }
+
+  /**************************************************************************
+   *
+   * @Function:
    *   sdf_edge_get_min_distance
    *
    * @Description:
@@ -636,6 +777,8 @@
     /* edge specific distance calculation */
     switch ( edge->edge_type ) {
     case SDF_EDGE_LINE:
+      get_min_distance_line( edge, point, out );
+      break;
     case SDF_EDGE_CONIC:
     case SDF_EDGE_CUBIC:
     default:
@@ -663,7 +806,7 @@
    *   [TODO]
    */
   static FT_Error
-  sdf_contour_get_min_distance( SDF_Contour*          contuor,
+  sdf_contour_get_min_distance( SDF_Contour*          contour,
                                 FT_26D6_Vec           point,
                                 SDF_Signed_Distance*  out)
   {
@@ -672,13 +815,13 @@
     FT_ListRec           edge_list;
 
 
-    if ( !contuor || !out )
+    if ( !contour || !out )
     {
       error = FT_THROW( Invalid_Argument );
       goto Exit;
     }
 
-    edge_list = contuor->edges;
+    edge_list = contour->edges;
 
     /* iterate through all the edges manually */
     while ( edge_list.head ) {
@@ -690,7 +833,7 @@
                point, &current_dist ) );
     
       /* [TODO]: *IMPORTANT* Add corner checking function. */
-      if ( current_dist.distance < min_dist.distance )
+      if ( current_dist.squared_distance < min_dist.squared_distance )
         min_dist = current_dist;
     
       edge_list.head = edge_list.head->next;
@@ -786,7 +929,8 @@
                    (SDF_Contour*)contour_list.head->data,
                    grid_point, &current_dist ) );
 
-          if ( current_dist.distance < min_dist.distance )
+          if ( current_dist.squared_distance <
+               min_dist.squared_distance )
             min_dist = current_dist;
 
           contour_list.head = contour_list.head->next;

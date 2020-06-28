@@ -1,5 +1,19 @@
 2020-06-27  Anuj Verma  <anujv@iitbhilai.ac.in>
 
+	[sdf] Added function to find shortest distance from
+	a point to a line.
+
+	* src/sdf/ftsdf.c (get_min_distance_line): The function
+	  calculate the shortest signed distance from a point
+	  to a line segment.
+
+	* src/sdf/ftsdf.c (sdf_contour_get_min_distance): Typo.
+
+	* src/sdf/ftsdf.c (SDF_Signed_Distance): Use squared
+	  distance instead of actual distance for performance.
+
+2020-06-27  Anuj Verma  <anujv@iitbhilai.ac.in>
+
 	* src/sdf/ftsdf.c (SDF_Iterator_IO): Removed.
 
 	* src/sdf/ftsdf.c (sdf_edge_iterator_func => sdf_edge_get_min_distance
