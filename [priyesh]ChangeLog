@@ -12,4 +12,15 @@
 
     * include/freetype/internal/ftdebug.h: Created an environment for dlg 
       support in FreeType.
-      
+
+    * include/freetype/internal/ftdebug.h: Added functions `ft_logging_init()` and `ft_logging_deinit()` for 
+         initializing and un-initalizing FILE*.
+
+    * src/base/ftdebug.c: 
+       1. Added a FILE* to write logs to file
+       2. Added function definitions for functions 
+      `ft_logging_init()` and `ft_logging_deinit()`.
+
+    * src/base/ftinit.c: 
+      1. Added a function call to `ft_logging_init()` in `FT_Init_FreeType()` if FT_LOGGING macro is enabled.
+      2. Added a function call to `ft_logging_deinit()` in `FT_Done_FreeType()` if FT_LOGGING macro is enabled.  

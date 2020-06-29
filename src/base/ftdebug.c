@@ -314,5 +314,37 @@
 
 #endif /* !FT_DEBUG_LEVEL_TRACE */
 
+#ifdef FT_LOGGING
+
+
+  /******************************************************************
+   * If FT_LOGGING is enabled FreeType needs a FILE* to write logs 
+   * to file.
+   */
+  static FILE* fileptr = NULL; 
+
+
+
+  /*******************************************************************
+   * 
+   * If FT_LOGGING is enabled, FreeType needs a FILE* to write logs 
+   * therefore it uses `ft_logging_init()` function to initialize a 
+   * FILE* and `ft_logging_deinit()` to un-initialize the FILE*
+   * 
+   */
+  
+  FT_BASE_DEF( void )
+  ft_logging_init( void )
+  {
+    fileptr = fopen( "freetype2.logs", "w" );
+  }
+
+  FT_BASE_DEF( void )
+  ft_logging_deinit( void )
+  {
+    fclose( fileptr );
+  }
+
+#endif /* FT_LOGGING */
 
 /* END */

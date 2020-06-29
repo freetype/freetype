@@ -307,6 +307,25 @@ FT_BEGIN_HEADER
   FT_BASE( void )
   ft_debug_init( void );
 
+#ifdef FT_LOGGING
+
+  /************************************************************************
+   * 
+   * If FT_LOGGING macro is enabled, Freetype needs to initialize and 
+   * un-initialize FILE* using following functions
+   * These functions are defined in ftdebug.c
+   * 
+   */ 
+
+  FT_BASE( void )
+  ft_logging_init( void );
+
+  FT_BASE( void )
+  ft_logging_deinit( void );
+
+
+#endif /* FT_LOGGING */  
+
 FT_END_HEADER
 
 #endif /* FTDEBUG_H_ */
