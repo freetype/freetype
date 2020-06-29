@@ -29,8 +29,23 @@
 #include FT_CONFIG_CONFIG_H
 #include <freetype/freetype.h>
 
+  /* Additional include files for supporting logging in FreeType using      */
+  /* external logging library ~ src/dlg                                     */
+  /*                                                                        */
+#include <../src/dlg/include/dlg/dlg.h>
+#include <../src/dlg/include/dlg/output.h>
+
 
 FT_BEGIN_HEADER
+
+
+  /* force the definition of FT_DEBUG_LEVEL_TRACE if FT_LOGGING is already*/
+  /* defined; therefore the following macros                              */
+  /*                                                                      */
+#ifdef FT_LOGGING
+#undef FT_DEBUG_LEVEL_TRACE
+#define FT_DEBUG_LEVEL_TRACE
+#endif /* FT_LOGGING */   
 
 
   /* force the definition of FT_DEBUG_LEVEL_ERROR if FT_DEBUG_LEVEL_TRACE */
@@ -74,13 +89,30 @@ FT_BEGIN_HEADER
   /**************************************************************************
    *
    * Define the FT_TRACE macro
-   *
+   * 
    * IMPORTANT!
    *
    * Each component must define the macro FT_COMPONENT to a valid FT_Trace
    * value before using any TRACE macro.
-   *
+   * 
+   * If FT_LOGGING is enabled, trace messages will be sent to 
+   * dlg's APIs and is FT_LOGGING is disabled trace messages will be sent to
+   * FT_Message(defined in ftdebug.c)
+   * Therefore the following macros:
+   *  
    */
+
+#ifdef FT_LOGGING
+
+#undef FT_Log
+#define FT_Log dlg_trace
+
+#else
+
+#undef FT_Log
+#define FT_Log FT_Message
+
+#endif /* FT_LOGGING */
 
 #ifdef FT_DEBUG_LEVEL_TRACE
 
@@ -92,7 +124,7 @@ FT_BEGIN_HEADER
           do                                                               \
           {                                                                \
             if ( ft_trace_levels[FT_TRACE_COMP( FT_COMPONENT )] >= level ) \
-              FT_Message varformat;                                        \
+              FT_Log varformat;                                            \
           } while ( 0 )
 
 #else /* !FT_DEBUG_LEVEL_TRACE */

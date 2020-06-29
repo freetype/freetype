@@ -1,0 +1,15 @@
+2020-06-29  Priyesh Kumar   <priyeshkkumar@gmail.com>
+
+    * Added submodule - dlg library (https://github.com/nyorain/dlg)
+      in src/dlg.
+      This library is used as a logger for FreeType.
+
+    * include/freetype/config/ftoption.h: Added macro `FT_LOGGING` 
+      to enable/disable logging in FreeType using dlg.
+  
+    * [builds] unix-cc-in: Added -std=c99, since dlg does not support 
+      C standards below c99. 
+
+    * include/freetype/internal/ftdebug.h: Created an environment for dlg 
+      support in FreeType.
+      

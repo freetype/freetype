@@ -1,0 +1,3 @@
+[submodule "src/dlg"]
+	path = src/dlg
+	url = https://github.com/nyorain/dlg.git
