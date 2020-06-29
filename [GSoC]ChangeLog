@@ -1,5 +1,17 @@
 2020-06-27  Anuj Verma  <anujv@iitbhilai.ac.in>
 
+	[sdf] Added function to resolve corners in case of
+	ambiguity.
+
+	* src/sdf/ftsdf.c (resolve_corner): Added function
+	  to determine the correct sign in case there are
+	  two sign for the same shortest distance (happens
+	  around corners).
+
+	* src/sdf/ftsdf.c: Typo neartest_point -> nearest_point.
+
+2020-06-27  Anuj Verma  <anujv@iitbhilai.ac.in>
+
 	[sdf] The module can now generate signed distance
 	fields for outline with only lines.
 

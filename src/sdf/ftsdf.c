@@ -95,7 +95,7 @@
     /* Nearest point the outline to a given point.    */
     /* [note]: This is not a *direction* vector, this */
     /*         simply a *point* vector on the grid.   */
-    FT_16D16_Vec  neartest_point;
+    FT_16D16_Vec  nearest_point;
 
     /* The normalized direction of the curve at the   */
     /* above point.                                   */
@@ -642,6 +642,112 @@
   /**************************************************************************
    *
    * @Function:
+   *   resolve_corner
+   *
+   * @Description:
+   *   At some places on the grid two edges can give opposite direction
+   *   this happens when the closes point is on of the endpoint, in that
+   *   case we need to check the proper sign.
+   *
+   *   This can be visualized by an example:
+   *
+   *                x
+   *                 
+   *                   o
+   *                  ^ \
+   *                 /   \
+   *                /     \
+   *           (a) /       \  (b)
+   *              /         \
+   *             /           \
+   *            /             v
+   *
+   *   Suppose `x' is the point whose shortest distance from an arbitrary
+   *   contour we want to find out. It is clear that `o' is the nearest
+   *   point on the contour. Now to determine the sign we do a cross
+   *   product of shortest distance vector and the edge direction. i.e.
+   *
+   *   => sign = cross( ( x - o ), direction( a ) )
+   *
+   *   From right hand thumb rule we can see that the sign will be positive
+   *   and if check for `b'.
+   *
+   *   => sign = cross( ( x - o ), direction( b ) )
+   *
+   *   In this case the sign will be negative. So, to determine the correct
+   *   sign we divide the plane in half and check in which plane the point
+   *   lies.
+   *
+   *   Divide:
+   *
+   *                   |
+   *                x  |
+   *                   |
+   *                   o
+   *                  ^|\
+   *                 / | \
+   *                /  |  \
+   *           (a) /   |   \  (b)
+   *              /    |    \
+   *             /           \
+   *            /             v
+   *
+   *   We can see that `x' lies in the plane of `a', so we take the sign
+   *   determined by `a'. This can be easily done by calculating the 
+   *   orthogonality and taking the greater one.
+   *
+   * @Input:
+   *   [TODO]
+   *
+   * @Return:
+   *   [TODO]
+   */
+  static SDF_Signed_Distance
+  resolve_corner( SDF_Signed_Distance  sdf1,
+                  SDF_Signed_Distance  sdf2,
+                  FT_26D6_Vec          point )
+  {
+    FT_16D16_Vec  dist;
+
+    FT_16D16      ortho1;
+    FT_16D16      ortho2;
+
+    /* if they are not equal return the shorter */
+    if ( sdf1.squared_distance != sdf2.squared_distance )
+      return sdf1.squared_distance < sdf2.squared_distance ?
+             sdf1 : sdf2;
+
+    /* if there is not ambiguity in the sign return any */
+    if ( sdf1.sign == sdf2.sign )
+      return sdf1;
+
+    /* final check: Make sure nearest point is same. If not */
+    /* then return any, it is not the shortest distance.    */
+    if ( sdf1.nearest_point.x != sdf2.nearest_point.x ||
+         sdf1.nearest_point.y != sdf2.nearest_point.y )
+      return sdf1;
+
+    /* calculate the distance vectors, will be same for both */
+    dist.x = sdf1.nearest_point.x - FT_26D6_16D16( point.x );
+    dist.y = sdf1.nearest_point.y - FT_26D6_16D16( point.y );
+
+    FT_Vector_NormLen( &dist );
+
+    /* use cross product to find orthogonality */
+    ortho1 = FT_MulFix( sdf1.direction.x, dist.y ) -
+             FT_MulFix( sdf1.direction.y, dist.x );
+    ortho1 = FT_ABS( ortho1 );
+
+    ortho2 = FT_MulFix( sdf2.direction.x, dist.y ) -
+             FT_MulFix( sdf2.direction.y, dist.x );
+    ortho2 = FT_ABS( ortho2 );
+
+    return ortho1 > ortho2 ? sdf1 : sdf2;
+  }
+
+  /**************************************************************************
+   *
+   * @Function:
    *   get_min_distance_line
    *
    * @Description:
@@ -762,10 +868,11 @@
     cross = FT_MulFix( nearest_vector.x, line_segment.y ) -
             FT_MulFix( nearest_vector.y, line_segment.x );
 
+    /* [OPTIMIZATION]: Pre-compute this direction. */
     FT_Vector_NormLen( &line_segment );
 
     /* assign the output */
-    out->neartest_point = nearest_point;
+    out->nearest_point = nearest_point;
     out->sign = cross < 0 ? 1 : -1;
     out->squared_distance = FT_MulFix( nearest_vector.x, nearest_vector.x ) +
                             FT_MulFix( nearest_vector.y, nearest_vector.y );
@@ -862,10 +969,12 @@
                (SDF_Edge*)edge_list.head->data,
                point, &current_dist ) );
 
-      /* [TODO]: *IMPORTANT* Add corner checking function. */
       if ( current_dist.squared_distance >= 0 && 
            current_dist.squared_distance < min_dist.squared_distance )
         min_dist = current_dist;
+      else if ( current_dist.squared_distance ==
+                min_dist.squared_distance )
+        min_dist = resolve_corner( min_dist, current_dist, point );
     
       edge_list.head = edge_list.head->next;
     }
