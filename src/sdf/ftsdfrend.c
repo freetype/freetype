@@ -112,8 +112,8 @@
     FT_SERVICE_ID_PROPERTIES, &sdf_service_properties )
 
   static FT_Module_Interface
-  ft_sdf_requester ( FT_Renderer  render,
-                     const char*  module_interface )
+  ft_sdf_requester( FT_Renderer  render,
+                    const char*  module_interface )
   {
     FT_UNUSED( render );
 
@@ -127,7 +127,7 @@
    */
 
   static FT_Error
-  ft_sdf_init ( FT_Renderer  render )
+  ft_sdf_init( FT_Renderer  render )
   {
     SDF_Renderer  sdf_render = SDF_RENDERER( render );
 
@@ -138,7 +138,7 @@
   }
 
   static FT_Error
-  ft_sdf_done ( FT_Renderer  render )
+  ft_sdf_done( FT_Renderer  render )
   {
     FT_UNUSED( render );
 
@@ -225,7 +225,7 @@
 
     slot->internal->flags |= FT_GLYPH_OWN_BITMAP;
 
-    x_shift  = 64 * -( slot->bitmap_left + x_pad );
+    x_shift  = 64 * -( slot->bitmap_left - x_pad );
     y_shift  = 64 * -( slot->bitmap_top + y_pad );
     y_shift += 64 * (FT_Int)bitmap->rows;
 

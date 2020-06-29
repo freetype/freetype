@@ -599,6 +599,38 @@
 
 #endif
 
+  /**************************************************************************
+   *
+   * math functions
+   *
+   */
+
+  /* Original Algorithm: https://github.com/chmike/fpsqrt */
+  static FT_Fixed
+  square_root( FT_Fixed  val )
+  {
+    FT_ULong t, q, b, r;
+
+
+    r = val;
+    b = 0x40000000;
+    q = 0;
+    while( b > 0x40 )
+    {
+      t = q + b;
+      if( r >= t )
+      {
+        r -= t;
+        q = t + b;
+      }
+      r <<= 1;
+      b >>= 1;
+    }
+    q >>= 8;
+
+    return q;
+  }
+
   /*************************************************************************/
   /*************************************************************************/
   /**                                                                     **/
@@ -721,10 +753,8 @@
     nearest_point.y = FT_MulFix( FT_26D6_16D16(line_segment.y),
                                  factor );
 
-    nearest_point.x = FT_26D6_16D16( a.x ) + nearest_point.x -
-                      FT_26D6_16D16( p.x );
-    nearest_point.y = FT_26D6_16D16( a.y ) + nearest_point.y -
-                      FT_26D6_16D16( p.y );
+    nearest_point.x = FT_26D6_16D16( a.x ) + nearest_point.x; 
+    nearest_point.y = FT_26D6_16D16( a.y ) + nearest_point.y;
 
     nearest_vector.x = nearest_point.x - FT_26D6_16D16( p.x );
     nearest_vector.y = nearest_point.y - FT_26D6_16D16( p.y );
@@ -831,14 +861,16 @@
       FT_CALL( sdf_edge_get_min_distance( 
                (SDF_Edge*)edge_list.head->data,
                point, &current_dist ) );
-    
+
       /* [TODO]: *IMPORTANT* Add corner checking function. */
-      if ( current_dist.squared_distance < min_dist.squared_distance )
+      if ( current_dist.squared_distance >= 0 && 
+           current_dist.squared_distance < min_dist.squared_distance )
         min_dist = current_dist;
     
       edge_list.head = edge_list.head->next;
     }
 
+    *out = min_dist;
   Exit:
     return error;
   }
@@ -868,11 +900,14 @@
                 FT_UInt           spread,
                 FT_Bitmap*        bitmap )
   {
-    FT_Error  error = FT_Err_Ok;
-    FT_UInt   width = 0;
-    FT_UInt   rows  = 0;
-    FT_UInt   x     = 0; /* used to loop in x direction i.e. width */
-    FT_UInt   y     = 0; /* used to loop in y direction i.e. rows  */
+    FT_Error   error = FT_Err_Ok;
+    FT_UInt    width = 0;
+    FT_UInt    rows  = 0;
+    FT_UInt    x     = 0; /* used to loop in x direction i.e. width */
+    FT_UInt    y     = 0; /* used to loop in y direction i.e. rows  */
+    FT_UInt    sp_sq = 0; /* `spread' * `spread' int 16.16 fixed    */
+
+    FT_Short*  buffer;
 
     if ( !shape || !bitmap )
     {
@@ -888,6 +923,9 @@
 
     width = bitmap->width;
     rows = bitmap->rows;
+    buffer = (FT_Short*)bitmap->buffer;
+
+    sp_sq = FT_INT_16D16( spread * spread );
 
     if ( width == 0 || rows == 0 )
     {
@@ -911,7 +949,8 @@
                                     FT_INT_26D6( y ) };
         SDF_Signed_Distance  min_dist = max_sdf;
         FT_ListRec           contour_list;
-
+        FT_UInt              index;
+        FT_Short             value;
 
         /* This `grid_point' is at the corner, but we */
         /* use the center of the pixel.               */
@@ -919,6 +958,8 @@
         grid_point.y += FT_INT_26D6( 1 ) / 2;
 
         contour_list = shape->contours;
+
+        index = ( rows - y - 1 ) * width + x;
 
         /* iterate through all the contours manually */
         while ( contour_list.head ) {
@@ -929,12 +970,27 @@
                    (SDF_Contour*)contour_list.head->data,
                    grid_point, &current_dist ) );
 
-          if ( current_dist.squared_distance <
-               min_dist.squared_distance )
+          if ( current_dist.squared_distance < min_dist.squared_distance )
             min_dist = current_dist;
 
           contour_list.head = contour_list.head->next;
         }
+
+        /* [OPTIMIZATION]: if (min_dist > sp_sq) then simply clamp  */
+        /*                 the value to spread to avoid square_root */
+
+        /* clamp the values to spread */
+        if ( min_dist.squared_distance > sp_sq )
+          min_dist.squared_distance = sp_sq;
+
+        /* square_root the values and fit in a 6.10 fixed point */
+        min_dist.squared_distance = square_root( min_dist.squared_distance );
+
+        min_dist.squared_distance /= 64; /* convert from 16.16 to 22.10 */
+        value = min_dist.squared_distance & 0x0000FFFF; /* truncate to 6.10 */
+        value *= min_dist.sign;
+
+        buffer[index] = value;
       }
     }
 
@@ -1062,8 +1118,6 @@
 
     FT_CALL( sdf_generate( shape, sdf_params->spread, 
                            sdf_params->root.target ) );
-
-    sdf_shape_dump( shape );
 
   Exit:
     if ( shape )

@@ -1,5 +1,23 @@
 2020-06-27  Anuj Verma  <anujv@iitbhilai.ac.in>
 
+	[sdf] The module can now generate signed distance
+	fields for outline with only lines.
+
+	* src/sdf/ftsdf.c (get_min_distance_line): Calculation
+	  mistake.
+
+	* src/sdf/ftsdf.c (square_root): Added function to calculate
+	  square root of a 16.16 fixed point integer.
+
+	* src/sdf/ftsdf.c (sdf_generate): Assign values to the output
+	  bitmap, currently the output is 6.10 fixed point which can
+	  contain values from [-32, 32]. Also fixed a bug which was
+	  causing upside down images.
+
+	* src/sdf/ftsdfrend.c (ft_sdf_render): Fixed alignment issues.
+
+2020-06-27  Anuj Verma  <anujv@iitbhilai.ac.in>
+
 	[sdf] Added function to find shortest distance from
 	a point to a line.
 
