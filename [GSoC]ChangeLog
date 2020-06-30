@@ -1,5 +1,10 @@
 2020-06-30  Anuj Verma  <anujv@iitbhilai.ac.in>
 
+	* src/sdf/ftsdf.c: Avoid parentheses if there is only
+	  one statement inside a control-flow statement.
+
+2020-06-30  Anuj Verma  <anujv@iitbhilai.ac.in>
+
 	[sdf] Added functions to solve polynomial equations.
 
 	* src/sdf/ftsdf.c (solve_quadratic_equation, 

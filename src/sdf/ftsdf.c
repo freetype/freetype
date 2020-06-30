@@ -635,7 +635,8 @@
   cube_root( FT_16D16  val )
   {
     /* [IMPORTANT]: This function is not good as it may */
-    /* not break, so use a lookup table instead.        */
+    /* not break, so use a lookup table instead. Or we  */
+    /* can use algorithm similar to `square_root'.      */
 
     FT_Int  v, g, c;
 
@@ -703,9 +704,7 @@
     if ( a == 0 )
     {
       if ( b == 0 )
-      {
         return 0;
-      }
       else 
       {
         out[0] = FT_DivFix( -c, b );
@@ -716,9 +715,7 @@
     discriminant = FT_MulFix( b, b ) - 4 * FT_MulFix( a, c );
 
     if ( discriminant < 0 )
-    {
       return 0;
-    }
     else if ( discriminant == 0 )
     {
       out[0] = FT_DivFix( -b, 2 * a );
@@ -736,10 +733,10 @@
   }
 
   /* The function compute the roots of a cubic polynomial */
-  /* assigns it to `out' and returns the umber of real    */
+  /* assigns it to `out' and returns the number of real   */
   /* roots of the equation.                               */
   /* The procedure can be found at:                       */
-  /* https://mathworld.wolfram.com/QuadraticFormula.html  */
+  /* https://mathworld.wolfram.com/CubicFormula.html      */
   static FT_UShort
   solve_cubic_equation( FT_26D6   a,
                         FT_26D6   b,
@@ -761,12 +758,9 @@
     FT_16D16  a1x2           = 0;
 
 
-    /* cutoff value for `a' to be a cubic */
+    /* cutoff value for `a' to be a cubic otherwise solve quadratic*/
     if ( a == 0 || FT_ABS( a ) < 16 )
-    {
-      /* quadratic equation */
       return solve_quadratic_equation( b, c, d, out );
-    }
     if ( d == 0 )
     {
       out[0] = 0;
@@ -832,13 +826,9 @@
 
 
       if ( q3 == 0 )
-      {
         dis = FT_ABS( r );
-      }
       else
-      {
         dis = square_root( q3 + r2 );
-      }
 
       s = cube_root( r + dis );
       t = cube_root( r - dis );
