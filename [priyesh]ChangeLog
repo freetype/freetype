@@ -1,5 +1,7 @@
 2020-06-30  Priyesh Kumar   <priyeshkkumar@gmail.com>
 
+    * Adding new line at end of file
+
     * include/freetype/internal/ftdebug.h: Added a FreeType specific dlg 
       output handler to print trace logs to file ~ 
       `ft_freetype_output_handler()`
