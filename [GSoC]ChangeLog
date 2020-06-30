@@ -1,5 +1,14 @@
 2020-06-30  Anuj Verma  <anujv@iitbhilai.ac.in>
 
+	[sdf] Added functions to solve polynomial equations.
+
+	* src/sdf/ftsdf.c (solve_quadratic_equation, 
+	  solve_cubic_equation): Added functions to solve
+	  quadratic and cubic equations. These will be used for
+	  conic bezier curves only.
+
+2020-06-30  Anuj Verma  <anujv@iitbhilai.ac.in>
+
 	* src/sdf/ftsdf.c (square_root, cube_root, arc_cos):
 	  Use FT_16D16 instead of FT_Fixed to avoid confusion.
 
