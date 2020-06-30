@@ -1,5 +1,10 @@
 2020-06-30  Anuj Verma  <anujv@iitbhilai.ac.in>
 
+	* src/sdf/ftsdf.c (square_root, cube_root, arc_cos):
+	  Use FT_16D16 instead of FT_Fixed to avoid confusion.
+
+2020-06-30  Anuj Verma  <anujv@iitbhilai.ac.in>
+
 	* src/sdf/ftsdf.c (cube_root, arc_cos): Added a few
 	  essential math functions.
 

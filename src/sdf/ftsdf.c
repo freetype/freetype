@@ -600,8 +600,8 @@
    */
 
   /* Original Algorithm: https://github.com/chmike/fpsqrt */
-  static FT_Fixed
-  square_root( FT_Fixed  val )
+  static FT_16D16
+  square_root( FT_16D16  val )
   {
     FT_ULong t, q, b, r;
 
@@ -627,8 +627,8 @@
 
   /* This function uses newton's iteration to find */
   /* cube root of a fixed point integer.           */
-  static FT_Fixed
-  cube_root( FT_Fixed  val )
+  static FT_16D16
+  cube_root( FT_16D16  val )
   {
     /* [IMPORTANT]: This function is not good as it may */
     /* not break, so use a lookup table instead.        */
@@ -659,12 +659,14 @@
     return val < 0 ? -g : g;
   }
 
-  /* returns cos inverse of a value */
-  static FT_Fixed
-  arc_cos( FT_Fixed  val )
+  /* The function calculate the perpendicular */
+  /* using 1 - ( base ^ 2 ) and then use arc  */
+  /* tan to compute the angle.                */
+  static FT_16D16
+  arc_cos( FT_16D16  val )
   {
-    FT_Fixed  p, b = val;
-    FT_Fixed  one  = FT_INT_16D16( 1 );
+    FT_16D16  p, b = val;
+    FT_16D16  one  = FT_INT_16D16( 1 );
 
 
     if ( b >  one ) b =  one;
