@@ -29,9 +29,9 @@
 #include FT_CONFIG_CONFIG_H
 #include <freetype/freetype.h>
 
-  /* Additional include files for supporting logging in FreeType using      */
-  /* external logging library ~ src/dlg                                     */
-  /*                                                                        */
+  /* Additional include files for supporting logging in FreeType using    */
+  /* external logging library ~ src/dlg                                   */
+  /*                                                                      */
 #include <../src/dlg/include/dlg/dlg.h>
 #include <../src/dlg/include/dlg/output.h>
 
@@ -95,8 +95,8 @@ FT_BEGIN_HEADER
    * Each component must define the macro FT_COMPONENT to a valid FT_Trace
    * value before using any TRACE macro.
    * 
-   * If FT_LOGGING is enabled, trace messages will be sent to 
-   * dlg's APIs and is FT_LOGGING is disabled trace messages will be sent to
+   * If FT_LOGGING is enabled, trace messages will be sent to dlg's API and 
+   * if is FT_LOGGING is disabled trace messages will be sent to
    * FT_Message(defined in ftdebug.c)
    * Therefore the following macros:
    *  
@@ -106,6 +106,19 @@ FT_BEGIN_HEADER
 
 #undef FT_Log
 #define FT_Log dlg_trace
+
+/****************************************************************************
+ * 
+ * dlg uses output handlers to control how and where the log messages are 
+ * printed.
+ * Therefore we need to define an output handler specific to FreeType, it 
+ * will act as a default output handler of Freetype. 
+ * 
+ */
+
+ FT_BASE( void ) 
+ ft_freetype_output_handler( const struct dlg_origin* origin, 
+ const char* string, void* data );
 
 #else
 
@@ -309,7 +322,7 @@ FT_BEGIN_HEADER
 
 #ifdef FT_LOGGING
 
-  /************************************************************************
+  /**************************************************************************
    * 
    * If FT_LOGGING macro is enabled, Freetype needs to initialize and 
    * un-initialize FILE* using following functions

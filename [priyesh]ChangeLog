@@ -1,3 +1,19 @@
+2020-06-30  Priyesh Kumar   <priyeshkkumar@gmail.com>
+
+    * include/freetype/internal/ftdebug.h: Added a FreeType specific dlg 
+      output handler to print trace logs to file ~ 
+      `ft_freetype_output_handler()`
+
+    * src/base/ftdebug.c: 
+      1. If FT_LOGGING is enabled `ft_debug_init()` will be called from
+         `ft_logging_init()`
+      2. Added function definition of `ft_freetype_output_handler)()`
+
+    * src/base/ftobjs.c: If FT_LOGGING macro is disabled, only then FreeType
+      will call `ft_debug_init()` else it is controlled by logging APIs.
+      
+    * Fixed Scaling  
+    
 2020-06-29  Priyesh Kumar   <priyeshkkumar@gmail.com>
 
     * Added submodule - dlg library (https://github.com/nyorain/dlg)
@@ -13,8 +29,9 @@
     * include/freetype/internal/ftdebug.h: Created an environment for dlg 
       support in FreeType.
 
-    * include/freetype/internal/ftdebug.h: Added functions `ft_logging_init()` and `ft_logging_deinit()` for 
-         initializing and un-initalizing FILE*.
+    * include/freetype/internal/ftdebug.h: Added functions 
+        `ft_logging_init()` and `ft_logging_deinit()` for initializing and
+         un-initalizing FILE*.
 
     * src/base/ftdebug.c: 
        1. Added a FILE* to write logs to file
@@ -22,5 +39,7 @@
       `ft_logging_init()` and `ft_logging_deinit()`.
 
     * src/base/ftinit.c: 
-      1. Added a function call to `ft_logging_init()` in `FT_Init_FreeType()` if FT_LOGGING macro is enabled.
-      2. Added a function call to `ft_logging_deinit()` in `FT_Done_FreeType()` if FT_LOGGING macro is enabled.  
+      1. Added a function call to `ft_logging_init()` in `FT_Init_FreeType()` 
+         if FT_LOGGING macro is enabled.
+      2. Added function call to `ft_logging_deinit()` in `FT_Done_FreeType()` 
+         if FT_LOGGING macro is enabled.

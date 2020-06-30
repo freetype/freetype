@@ -317,7 +317,7 @@
 #ifdef FT_LOGGING
 
 
-  /******************************************************************
+  /**************************************************************************
    * If FT_LOGGING is enabled FreeType needs a FILE* to write logs 
    * to file.
    */
@@ -325,7 +325,7 @@
 
 
 
-  /*******************************************************************
+  /**************************************************************************
    * 
    * If FT_LOGGING is enabled, FreeType needs a FILE* to write logs 
    * therefore it uses `ft_logging_init()` function to initialize a 
@@ -336,7 +336,11 @@
   FT_BASE_DEF( void )
   ft_logging_init( void )
   {
-    fileptr = fopen( "freetype2.logs", "w" );
+    fileptr = fopen( "freetype2.log", "w" );
+    ft_debug_init();
+    
+    /* We need to set the default FreeType specific dlg's output handler */
+    dlg_set_handler( &ft_freetype_output_handler, NULL );
   }
 
   FT_BASE_DEF( void )
@@ -344,6 +348,22 @@
   {
     fclose( fileptr );
   }
+
+  FT_BASE_DEF( void )
+
+  /*************************************************************************
+   * 
+   * TODO:
+   * 1. Add support for priniting FT_COMPONENT
+   *    
+   */ 
+  ft_freetype_output_handler( const struct dlg_origin* origin, 
+                              const char* string, void* data )
+ {
+     unsigned int features = dlg_output_threadsafe /*| dlg_output_tags*/ ;
+	   dlg_generic_output_stream( fileptr, features, origin, string, 
+                                dlg_default_output_styles );
+ }
 
 #endif /* FT_LOGGING */
 
