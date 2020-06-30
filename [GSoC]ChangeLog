@@ -1,5 +1,10 @@
 2020-06-30  Anuj Verma  <anujv@iitbhilai.ac.in>
 
+	* src/sdf/ftsdf.c (cube_root, arc_cos): Added a few
+	  essential math functions.
+
+2020-06-30  Anuj Verma  <anujv@iitbhilai.ac.in>
+
 	[sdf] Fixed compilation under gnumake.
 
 	* src/sdf/rules.mk (DRV_OBJ_ => DRV_OBJS_): Fixed varialbe

@@ -2,6 +2,7 @@
 #include <freetype/internal/ftobjs.h>
 #include <freetype/internal/ftdebug.h>
 #include <freetype/ftlist.h>
+#include <freetype/fttrigon.h>
 #include "ftsdf.h"
 
 #include "ftsdferrs.h"
@@ -622,6 +623,57 @@
     q >>= 8;
 
     return q;
+  }
+
+  /* This function uses newton's iteration to find */
+  /* cube root of a fixed point integer.           */
+  static FT_Fixed
+  cube_root( FT_Fixed  val )
+  {
+    /* [IMPORTANT]: This function is not good as it may */
+    /* not break, so use a lookup table instead.        */
+
+    FT_Int  v, g, c;
+
+
+    if ( val == 0 ||
+         val == -FT_INT_16D16( 1 ) ||
+         val ==  FT_INT_16D16( 1 ) )
+      return val;
+
+    v = val < 0 ? -val : val;
+    g = square_root( v );
+    c = 0;
+
+    while ( 1 )
+    {
+      c = FT_MulFix( FT_MulFix( g, g ), g ) - v;
+      c = FT_DivFix( c, 3 * FT_MulFix( g, g ) );
+
+      g -= c;
+
+      if ( ( c < 0 ? -c : c ) < 30 )
+        break;
+    }
+
+    return val < 0 ? -g : g;
+  }
+
+  /* returns cos inverse of a value */
+  static FT_Fixed
+  arc_cos( FT_Fixed  val )
+  {
+    FT_Fixed  p, b = val;
+    FT_Fixed  one  = FT_INT_16D16( 1 );
+
+
+    if ( b >  one ) b =  one;
+    if ( b < -one ) b = -one;
+
+    p = one - FT_MulFix( b, b );
+    p = square_root( p );
+
+    return FT_Atan2( b, p );
   }
 
   /*************************************************************************/
