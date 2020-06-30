@@ -155,8 +155,7 @@
       goto Exit;
     }
 
-    FT_QNEW( ptr );
-    if ( error == FT_Err_Ok )
+    if ( !FT_QNEW( ptr ) )
     {
       *ptr = null_edge;
       *edge = ptr;
@@ -205,8 +204,7 @@
       goto Exit;
     }
 
-    FT_QNEW( ptr );
-    if ( error == FT_Err_Ok )
+    if ( !FT_QNEW( ptr ) )
     {
       *ptr = null_contour;
       *contour = ptr;
@@ -260,8 +258,7 @@
       goto Exit;
     }
 
-    FT_QNEW( ptr );
-    if ( error == FT_Err_Ok )
+    if ( !FT_QNEW( ptr ) )
     {
       *ptr = null_shape;
       ptr->memory = memory;
@@ -320,8 +317,7 @@
     if ( error != FT_Err_Ok )
       goto Exit;
 
-    FT_QNEW( node );
-    if ( error != FT_Err_Ok )
+    if ( FT_QNEW( node ) )
       goto Exit;
 
     contour->last_pos = *to;
@@ -362,8 +358,7 @@
     if ( error != FT_Err_Ok )
       goto Exit;
 
-    FT_QNEW( node );
-    if ( error != FT_Err_Ok )
+    if ( FT_QNEW( node ) )
       goto Exit;
 
     edge->edge_type = SDF_EDGE_LINE;
@@ -405,8 +400,7 @@
     if ( error != FT_Err_Ok )
       goto Exit;
 
-    FT_QNEW( node );
-    if ( error != FT_Err_Ok )
+    if ( FT_QNEW( node ) )
       goto Exit;
 
     edge->edge_type = SDF_EDGE_CONIC;
@@ -450,8 +444,7 @@
     if ( error != FT_Err_Ok )
       goto Exit;
 
-    FT_QNEW( node );
-    if ( error != FT_Err_Ok )
+    if ( FT_QNEW( node ) )
       goto Exit;
 
     edge->edge_type = SDF_EDGE_CUBIC;
@@ -1007,7 +1000,7 @@
   static FT_Error
   sdf_generate( const SDF_Shape*  shape,
                 FT_UInt           spread,
-                FT_Bitmap*        bitmap )
+                const FT_Bitmap*  bitmap )
   {
     FT_Error   error = FT_Err_Ok;
     FT_UInt    width = 0;
@@ -1030,8 +1023,8 @@
       goto Exit;
     }
 
-    width = bitmap->width;
-    rows = bitmap->rows;
+    width  = bitmap->width;
+    rows   = bitmap->rows;
     buffer = (FT_Short*)bitmap->buffer;
 
     sp_sq = FT_INT_16D16( spread * spread );
@@ -1054,12 +1047,15 @@
         /* `grid_point' is the current pixel position */
         /* our task is to find the shortest distance  */
         /* from this point to the entire shape.       */
-        FT_26D6_Vec  grid_point = { FT_INT_26D6( x ),
-                                    FT_INT_26D6( y ) };
-        SDF_Signed_Distance  min_dist = max_sdf;
+        FT_26D6_Vec          grid_point = zero_vector;
+        SDF_Signed_Distance  min_dist   = max_sdf;
         FT_ListRec           contour_list;
         FT_UInt              index;
         FT_Short             value;
+
+
+        grid_point.x = FT_INT_26D6( x );
+        grid_point.y = FT_INT_26D6( y );
 
         /* This `grid_point' is at the corner, but we */
         /* use the center of the pixel.               */

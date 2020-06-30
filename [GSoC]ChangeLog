@@ -1,4 +1,17 @@
-2020-06-27  Anuj Verma  <anujv@iitbhilai.ac.in>
+2020-06-30  Anuj Verma  <anujv@iitbhilai.ac.in>
+
+	[sdf] Fixed compilation under gnumake.
+
+	* src/sdf/rules.mk (DRV_OBJ_ => DRV_OBJS_): Fixed varialbe
+	  name so that the sdf can compile.
+
+	* src/sdf/module.mk: Fixed spacing.
+
+	* src/sdf/*.c: Fixed all compiler warnings.
+
+	* [GSoC]ChangLog: Fixed dates.
+
+2020-06-29  Anuj Verma  <anujv@iitbhilai.ac.in>
 
 	[sdf] Added function to resolve corners in case of
 	ambiguity.
@@ -10,7 +23,7 @@
 
 	* src/sdf/ftsdf.c: Typo neartest_point -> nearest_point.
 
-2020-06-27  Anuj Verma  <anujv@iitbhilai.ac.in>
+2020-06-29  Anuj Verma  <anujv@iitbhilai.ac.in>
 
 	[sdf] The module can now generate signed distance
 	fields for outline with only lines.
@@ -28,7 +41,7 @@
 
 	* src/sdf/ftsdfrend.c (ft_sdf_render): Fixed alignment issues.
 
-2020-06-27  Anuj Verma  <anujv@iitbhilai.ac.in>
+2020-06-28  Anuj Verma  <anujv@iitbhilai.ac.in>
 
 	[sdf] Added function to find shortest distance from
 	a point to a line.
@@ -42,7 +55,7 @@
 	* src/sdf/ftsdf.c (SDF_Signed_Distance): Use squared
 	  distance instead of actual distance for performance.
 
-2020-06-27  Anuj Verma  <anujv@iitbhilai.ac.in>
+2020-06-28  Anuj Verma  <anujv@iitbhilai.ac.in>
 
 	* src/sdf/ftsdf.c (SDF_Iterator_IO): Removed.
 
@@ -51,7 +64,7 @@
 	  Manually iterate through the lists instead of `FT_List_Iterate' to
 	  avoid io structs and looks a bit cleaner.
 
-2020-06-27  Anuj Verma  <anujv@iitbhilai.ac.in>
+2020-06-28  Anuj Verma  <anujv@iitbhilai.ac.in>
 
 	[sdf] Added basic outline of the functions required to
 	generate sdf.
@@ -72,7 +85,7 @@
 	  distance.
 	  
 
-2020-06-26  Anuj Verma  <anujv@iitbhilai.ac.in>
+2020-06-27  Anuj Verma  <anujv@iitbhilai.ac.in>
 
 	[sdf] Added `SDF_Raster_Params' struct which extends
 	`FT_Raster_Params' and has a few extra fields. This is done
@@ -91,7 +104,7 @@
 	* src//sdf/ftsdfrend.c (ft_sdf_render): Setup the `SDF_Raster_Params'
 	  and pass it to the rasterizer instead of `FT_Raster_Params'.
 
-2020-06-26  Anuj Verma  <anujv@iitbhilai.ac.in>
+2020-06-27  Anuj Verma  <anujv@iitbhilai.ac.in>
 
 	* include/freetype/ftimage.h (FT_RASTER_FLAG_): Added
 	  a new raster flag `FT_RASTER_FLAG_SDF'. The `ftsdf'

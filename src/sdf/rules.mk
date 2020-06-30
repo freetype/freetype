@@ -54,5 +54,5 @@ $(OBJ_DIR)/%.$O: $(SDF_DIR)/%.c $(FREETYPE_H) $(SDF_DRV_H)
 
 # update main driver list
 #
-DRV_OBJ_S += $(SDF_DRV_OBJ_S)
-DRV_OBJ_M += $(SDF_DRV_OBJ_M)
+DRV_OBJS_S += $(SDF_DRV_OBJ_S)
+DRV_OBJS_M += $(SDF_DRV_OBJ_M)

@@ -37,11 +37,11 @@
                     const void*  value,
                     FT_Bool      value_is_string )
   {
-    FT_UNUSED( value_is_string );
-
-    FT_Error      error = FT_Err_Ok;
+    FT_Error      error  = FT_Err_Ok;
     SDF_Renderer  render = SDF_RENDERER( FT_RENDERER( module ) );
 
+
+    FT_UNUSED( value_is_string );
 
     if ( ft_strcmp( property_name, "spread" ) == 0 )
     {
@@ -95,7 +95,6 @@
       error = FT_THROW( Missing_Property );
     }
 
-  Exit:
     return error;
   }
 
@@ -217,7 +216,7 @@
     /* ignore the pitch, pixel mode and set custom */
     bitmap->pixel_mode = FT_PIXEL_MODE_GRAY16;
     bitmap->pitch = bitmap->width * 2;
-    bitmap->num_grays = 65536;
+    bitmap->num_grays = 65535;
 
     /* allocate new buffer */
     if ( FT_ALLOC_MULT( bitmap->buffer, bitmap->rows, bitmap->pitch ) )
