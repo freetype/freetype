@@ -1,5 +1,13 @@
 2020-07-01	Anuj Verma  <anujv@iitbhilai.ac.in>
 
+	* src/sdf/ftsdf.c (get_min_distance_conic): Add more
+	  details to why we clamp the roots.
+
+	* src/sdf/ftsdf.c: Make sure preprocessor # is always
+	  on the first line.
+
+2020-07-01	Anuj Verma  <anujv@iitbhilai.ac.in>
+
 	[sdf] Make squared distances toggleable.
 
 	* src/sdf/ftsdf.c (SDF_Signed_Distance): Renamed 

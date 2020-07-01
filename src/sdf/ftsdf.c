@@ -15,10 +15,10 @@
 
   /* If it is defined to 1 then the rasterizer will use squared distances */
   /* for computation. It can greatly improve the performance but there is */
-  /* a chance of overflow and artifacts. You can safely use is upto a     */
+  /* a chance of overflow and artifacts. You can safely use it upto a     */
   /* pixel size of 128.                                                   */
   #ifndef USE_SQUARED_DISTANCES
-    #define USE_SQUARED_DISTANCES 0
+  #  define USE_SQUARED_DISTANCES 0
   #endif
 
   /**************************************************************************
@@ -57,10 +57,10 @@
   /* By using squared distances the performance can be greatly improved  */
   /* but there is a risk of overflow. Use it wisely.                     */
   #if USE_SQUARED_DISTANCES
-    #define VECTOR_LENGTH_16D16( v ) ( FT_MulFix( v.x, v.x ) + \
+  #  define VECTOR_LENGTH_16D16( v ) ( FT_MulFix( v.x, v.x ) + \
                                        FT_MulFix( v.y, v.y ) )
   #else
-    #define VECTOR_LENGTH_16D16( v ) FT_Vector_Length( &v )
+  #  define VECTOR_LENGTH_16D16( v ) FT_Vector_Length( &v )
   #endif
 
   /**************************************************************************
@@ -1213,7 +1213,7 @@
 
     FT_16D16     roots[3] = { 0, 0, 0 }; /* real roots of the cubic eq    */
     FT_16D16     min_factor;             /* factor at `nearest_point'     */
-    FT_16D16     cross;                  /* to determin the sign          */
+    FT_16D16     cross;                  /* to determine the sign         */
     FT_16D16     min = FT_INT_MAX;       /* shortest squared distance     */
 
     FT_UShort    num_roots;              /* number of real roots of cubic */
@@ -1267,6 +1267,9 @@
       num_roots = 2;
     }
 
+    /* [OPTIMIZATION]: Check the roots, clamp them and discard */
+    /*                 duplicate roots.                        */
+
     /* convert these values to 16.16 for further computation */
     aA.x = FT_26D6_16D16( aA.x );
     aA.y = FT_26D6_16D16( aA.y );
@@ -1289,9 +1292,24 @@
       FT_16D16_Vec  curve_point;
       FT_16D16_Vec  dist_vector;
 
-
-      /* check this: https://lists.nongnu.org/archive/html/freetype-devel/2020-06/msg00147.html */
-      /* to see why we clamp the values and not check the endpoints */
+      /* Ideally we should discard the roots which are outside the     */
+      /* range [0.0, 1.0] and check the endpoints of the bezier, but   */
+      /* Behdad gave me a lemma:                                       */
+      /* Lemma:                                                        */
+      /* * If the closest point on the curve [0, 1] is to the endpoint */
+      /*   at t = 1 and the cubic has no real roots at t = 1 then, the */
+      /*   cubic must have a real root at some t > 1.                  */
+      /* * Similarly,                                                  */
+      /*   If the closest point on the curve [0, 1] is to the endpoint */
+      /*   at t = 0 and the cubic has no real roots at t = 0 then, the */
+      /*   cubic must have a real root at some t < 0.                  */
+      /*                                                               */
+      /* Now because of this lemma we only need to clamp the roots and */
+      /* that will take care of the endpoints.                         */
+      /*                                                               */
+      /* For proof contact: behdad@behdad.org                          */
+      /* For more details check message:                               */
+      /* https://lists.nongnu.org/archive/html/freetype-devel/2020-06/msg00147.html */
       if ( t < 0 )
         t = 0;
       if ( t > FT_INT_16D16( 1 ) )
