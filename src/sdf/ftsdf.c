@@ -1014,9 +1014,9 @@
 
     FT_Error     error = FT_Err_Ok;
 
-    const FT_Vector   a = line->start_pos;
-    const FT_Vector   b = line->end_pos;
-    const FT_Vector   p = point;
+    FT_Vector    a;                 /* start position */
+    FT_Vector    b;                 /* end position   */
+    FT_Vector    p;                 /* current point  */
 
     FT_26D6_Vec  line_segment;      /* `b' - `a'*/
     FT_26D6_Vec  p_sub_a;           /* `p' - `a' */
@@ -1025,8 +1025,8 @@
     FT_16D16     factor;            /* factor of the nearest point      */
     FT_26D6      cross;             /* used to determine sign           */
 
-    FT_16D16_Vec nearest_point;  /* point on the line nearest to `point' */
-    FT_16D16_Vec nearest_vector; /* `p' - `nearest_point' */
+    FT_16D16_Vec nearest_point;     /* `point_on_line'       */
+    FT_16D16_Vec nearest_vector;    /* `p' - `nearest_point' */
 
     if ( !line || !out )
     {
@@ -1039,6 +1039,10 @@
       error = FT_THROW( Invalid_Argument );
       goto Exit;
     }
+
+    a = line->start_pos;
+    b = line->end_pos;
+    p = point;
 
     line_segment.x = b.x - a.x;
     line_segment.y = b.y - a.y;
