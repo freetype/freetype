@@ -27,6 +27,10 @@
                            goto Exit;              \
                        } while ( 0 )
 
+  #define MUL_26D6( a, b ) ( ( a * b ) / 64 )
+  #define VEC_26D6_DOT( p, q ) ( MUL_26D6( p.x, q.x ) +   \
+                                 MUL_26D6( p.y, q.y ) )
+
   /**************************************************************************
    *
    * typedefs
@@ -1028,6 +1032,7 @@
     FT_16D16_Vec nearest_point;     /* `point_on_line'       */
     FT_16D16_Vec nearest_vector;    /* `p' - `nearest_point' */
 
+
     if ( !line || !out )
     {
       error = FT_THROW( Invalid_Argument );
@@ -1097,6 +1102,204 @@
   /**************************************************************************
    *
    * @Function:
+   *   get_min_distance_conic
+   *
+   * @Description:
+   *   This function find the shortest distance from the `conic' bezier
+   *   curve to a given `point' and assigns it to `out'. Only use it for
+   *   conic/quadratic curves.
+   *
+   * @Input:
+   *   [TODO]
+   *
+   * @Return:
+   *   [TODO]
+   */
+  static FT_Error
+  get_min_distance_conic( SDF_Edge*             conic,
+                          FT_26D6_Vec           point,
+                          SDF_Signed_Distance*  out )
+  {
+      /* The procedure to find the shortest distance from a point to */
+      /* a quadratic bezier curve is similar to a line segment. the  */
+      /* shortest distance will be perpendicular to the bezier curve */
+      /* The only difference from line is that there can be more     */
+      /* than one perpendicular and we also have to check the endpo- */
+      /* -ints, because the perpendicular may not be the shortest.   */
+      /*                                                             */
+      /* p0 = first endpoint                                         */
+      /* p1 = control point                                          */
+      /* p2 = second endpoint                                        */
+      /* p = point from which shortest distance is to be calculated  */
+      /* ----------------------------------------------------------- */
+      /* => the equation of a quadratic bezier curve can be written  */
+      /*    B( t ) = ( ( 1 - t )^2 )p0 + 2( 1 - t )tp1 + t^2p2       */
+      /*    here t is the factor with range [0.0f, 1.0f]             */
+      /*    the above equation can be rewritten as                   */
+      /*    B( t ) = t^2( p0 - 2p1 + p2 ) + 2t( p1 - p0 ) + p0       */
+      /*                                                             */
+      /*    now let A = ( p0 - 2p1 + p2), B = ( p1 - p0 )            */
+      /*    B( t ) = t^2( A ) + 2t( B ) + p0                         */
+      /*                                                             */
+      /* => the derivative of the above equation is written as       */
+      /*    B`( t ) = 2( tA + B )                                    */
+      /*                                                             */
+      /* => now to find the shortest distance from p to B( t ), we   */
+      /*    find the point on the curve at which the shortest        */
+      /*    distance vector ( i.e. B( t ) - p ) and the direction    */
+      /*    ( i.e. B`( t )) makes 90 degrees. in other words we make */
+      /*    the dot product zero.                                    */
+      /*    ( B( t ) - p ).( B`( t ) ) = 0                           */
+      /*    ( t^2( A ) + 2t( B ) + p0 - p ).( 2( tA + B ) ) = 0      */
+      /*                                                             */
+      /*    after simplifying we get a cubic equation as             */
+      /*    at^3 + bt^2 + ct + d = 0                                 */
+      /*    a = ( A.A ), b = ( 3A.B ), c = ( 2B.B + A.p0 - A.p )     */
+      /*    d = ( p0.B - p.B )                                       */
+      /*                                                             */
+      /* => now the roots of the equation can be computed using the  */
+      /*    `Cardano's Cubic formula' we clamp the roots in range    */
+      /*    [0.0f, 1.0f].                                            */
+      /*                                                             */
+      /* [note]: B and B( t ) are different in the above equations   */
+
+    FT_Error     error = FT_Err_Ok;
+
+    FT_26D6_Vec  aA, bB;         /* A, B in the above comment             */
+    FT_26D6_Vec  nearest_point;  /* point on curve nearest to `point'     */
+    FT_26D6_Vec  direction;      /* direction of curve at `nearest_point' */
+
+    FT_26D6_Vec  p0, p1, p2;     /* control points of a conic curve       */
+    FT_26D6_Vec  p;              /* `point' to which shortest distance    */
+
+    FT_26D6      a, b, c, d;     /* cubic coefficients                    */
+
+    FT_16D16     roots[3] = { 0, 0, 0 }; /* real roots of the cubic eq    */
+    FT_16D16     min_factor;             /* factor at `nearest_point'     */
+    FT_16D16     cross;                  /* to determin the sign          */
+    FT_16D16     min = FT_INT_MAX;       /* shortest squared distance     */
+
+    FT_UShort    num_roots;              /* number of real roots of cubic */
+    FT_UShort    i;
+
+
+    if ( !conic || !out )
+    {
+      error = FT_THROW( Invalid_Argument );
+      goto Exit;
+    }
+
+    if ( conic->edge_type != SDF_EDGE_CONIC )
+    {
+      error = FT_THROW( Invalid_Argument );
+      goto Exit;
+    }
+
+    /* assign the values after checking pointer */
+    p0 = conic->start_pos;
+    p1 = conic->control_a;
+    p2 = conic->end_pos;
+    p  = point;
+
+    /* compute substitution coefficients */
+    aA.x = p0.x - 2 * p1.x + p2.x;
+    aA.y = p0.y - 2 * p1.y + p2.y;
+
+    bB.x = p1.x - p0.x;
+    bB.y = p1.y - p0.y;
+
+    /* compute cubic coefficients */
+    a = VEC_26D6_DOT( aA, aA );
+
+    b = 3 * VEC_26D6_DOT( aA, bB );
+
+    c = 2 * VEC_26D6_DOT( bB, bB ) +
+            VEC_26D6_DOT( aA, p0 ) -
+            VEC_26D6_DOT( aA, p );
+
+    d = VEC_26D6_DOT( p0, bB ) -
+        VEC_26D6_DOT( p, bB );
+
+    /* find the roots */
+    num_roots = solve_cubic_equation( a, b, c, d, roots );
+
+    /* convert these values to 16.16 for further computation */
+    aA.x = FT_26D6_16D16( aA.x );
+    aA.y = FT_26D6_16D16( aA.y );
+
+    bB.x = FT_26D6_16D16( bB.x );
+    bB.y = FT_26D6_16D16( bB.y );
+
+    p0.x = FT_26D6_16D16( p0.x );
+    p0.y = FT_26D6_16D16( p0.y );
+
+    p.x = FT_26D6_16D16( p.x );
+    p.y = FT_26D6_16D16( p.y );
+
+    for ( i = 0; i < num_roots; i++ )
+    {
+      FT_16D16      t    = roots[i];
+      FT_16D16      t2   = 0;
+      FT_16D16      dist = 0;
+
+      FT_16D16_Vec  curve_point;
+      FT_16D16_Vec  dist_vector;
+
+
+      /* check this: https://lists.nongnu.org/archive/html/freetype-devel/2020-06/msg00147.html */
+      /* to see why we clamp the values and not check the endpoints */
+      if ( t < 0 )
+        t = 0;
+      if ( t > FT_INT_16D16( 1 ) )
+        t = FT_INT_16D16( 1 );
+
+      t2 = FT_MulFix( t, t );
+
+      /* B( t ) = t^2( A ) + 2t( B ) + p0 - p */
+      curve_point.x = FT_MulFix( aA.x, t2 ) +
+                      2 * FT_MulFix( bB.x, t ) + p0.x;
+      curve_point.y = FT_MulFix( aA.y, t2 ) +
+                      2 * FT_MulFix( bB.y, t ) + p0.y;
+
+      /* `curve_point' - `p' */
+      dist_vector.x = curve_point.x - p.x;
+      dist_vector.y = curve_point.y - p.y;
+
+      dist = FT_MulFix( dist_vector.x, dist_vector.x ) +
+             FT_MulFix( dist_vector.y, dist_vector.y );
+
+      if ( dist < min )
+      {
+        min = dist;
+        nearest_point = curve_point;
+        min_factor = t;
+      }
+    }
+
+    /* B`( t ) = 2( tA + B ) */
+    direction.x = 2 * FT_MulFix( aA.x, min_factor ) + 2 * bB.x;
+    direction.y = 2 * FT_MulFix( aA.y, min_factor ) + 2 * bB.y;
+
+    /* determine the sign */
+    cross = FT_MulFix( nearest_point.x - p.x, direction.y ) -
+            FT_MulFix( nearest_point.y - p.y, direction.x );
+
+    /* assign the values */
+    out->squared_distance = min;
+    out->nearest_point = nearest_point;
+    out->sign = cross < 0 ? 1 : -1;
+
+    FT_Vector_NormLen( &direction );
+
+    out->direction = direction;
+
+  Exit:
+    return error;
+  }
+
+  /**************************************************************************
+   *
+   * @Function:
    *   sdf_edge_get_min_distance
    *
    * @Description:
@@ -1129,6 +1332,8 @@
       get_min_distance_line( edge, point, out );
       break;
     case SDF_EDGE_CONIC:
+      get_min_distance_conic( edge, point, out );
+      break;
     case SDF_EDGE_CUBIC:
     default:
         error = FT_THROW( Invalid_Argument );

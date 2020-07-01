@@ -1,5 +1,18 @@
 2020-07-01	Anuj Verma  <anujv@iitbhilai.ac.in>
 
+	[sdf] Added function to find shortest distance from a
+	point to a conic bezier. Now the sdf module can render
+	ttf fonts or fonts with line and conic segments.
+
+	* src/sdf/ftsdf.c (get_min_distance_conic): The function
+	  calculates shortest distance from a point to a conic
+	  bezier curve.
+
+	* src/sdf/ftsdf.c (sdf_edge_get_min_distance): Add the
+	  `get_min_distance_conic' function call.
+
+2020-07-01	Anuj Verma  <anujv@iitbhilai.ac.in>
+
 	* src/sdf/ftsdf.c (get_min_distance_line): First check
 	  pointer before using or dereferencing them.
 
