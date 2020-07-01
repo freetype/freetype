@@ -9,13 +9,32 @@
 
   /**************************************************************************
    *
+   * definitions
+   *
+   */
+
+  /* If it is defined to 1 then the rasterizer will use squared distances */
+  /* for computation. It can greatly improve the performance but there is */
+  /* a chance of overflow and artifacts. You can safely use is upto a     */
+  /* pixel size of 128.                                                   */
+  #ifndef USE_SQUARED_DISTANCES
+    #define USE_SQUARED_DISTANCES 0
+  #endif
+
+  /**************************************************************************
+   *
    * macros
    *
    */
 
-  #define FT_INT_26D6( x )   ( x * 64 )     /* convert int to 26.6 fixed point   */
-  #define FT_INT_16D16( x )  ( x * 65536 )  /* convert int to 16.16 fixed point  */
-  #define FT_26D6_16D16( x ) ( x * 1024 )   /* convert 26.6 to 16.16 fixed point */
+  /* convert int to 26.6 fixed point   */
+  #define FT_INT_26D6( x )   ( x * 64 )
+
+  /* convert int to 16.16 fixed point  */
+  #define FT_INT_16D16( x )  ( x * 65536 )
+
+  /* convert 26.6 to 16.16 fixed point */
+  #define FT_26D6_16D16( x ) ( x * 1024 )
 
 
   /* Convenient macro which calls the function */
@@ -30,6 +49,19 @@
   #define MUL_26D6( a, b ) ( ( a * b ) / 64 )
   #define VEC_26D6_DOT( p, q ) ( MUL_26D6( p.x, q.x ) +   \
                                  MUL_26D6( p.y, q.y ) )
+
+  /* [IMPORTANT]: The macro `VECTOR_LENGTH_16D16' is not always the same */
+  /* and must not be used anywhere except a few places. This macro is    */
+  /* controlled by the `USE_SQUARED_DISTANCES' macro. It compute squared */
+  /* distance or actual distance based on `USE_SQUARED_DISTANCES' value. */
+  /* By using squared distances the performance can be greatly improved  */
+  /* but there is a risk of overflow. Use it wisely.                     */
+  #if USE_SQUARED_DISTANCES
+    #define VECTOR_LENGTH_16D16( v ) ( FT_MulFix( v.x, v.x ) + \
+                                       FT_MulFix( v.y, v.y ) )
+  #else
+    #define VECTOR_LENGTH_16D16( v ) FT_Vector_Length( &v )
+  #endif
 
   /**************************************************************************
    *
@@ -107,9 +139,12 @@
     /* [note]: This is a *direction* vector.          */
     FT_16D16_Vec  direction;
 
-    /* Unsigned shortest squared distance from the    */
-    /* point to the above `nearest_point'.            */
-    FT_16D16      squared_distance;
+    /* Unsigned shortest distance from the point to   */
+    /* the above `nearest_point'.                     */
+    /* [NOTE]: This can represent both squared as or  */
+    /* actual distance. This is controlled by the     */
+    /* `USE_SQUARED_DISTANCES' macro.                 */
+    FT_16D16      distance;
 
     /* Represent weather the `nearest_point' is outside */
     /* or inside the contour corresponding to the edge. */
@@ -493,7 +528,9 @@
       goto Exit;
     }
 
-    error = FT_Outline_Decompose( outline, &sdf_decompose_funcs, (void*)shape );
+    error = FT_Outline_Decompose( outline, 
+                                  &sdf_decompose_funcs,
+                                  (void*)shape );
 
   Exit:
     return error;
@@ -588,7 +625,8 @@
     }
 
     FT_TRACE5(( "\n" ));
-    FT_TRACE5(( "*note: the above values are in 26.6 fixed point format*\n" ));
+    FT_TRACE5(( "*note: the above values are "
+                "in 26.6 fixed point format*\n" ));
     FT_TRACE5(( "total number of contours = %d\n", num_contours ));
     FT_TRACE5(( "total number of edges    = %d\n", total_edges ));
     FT_TRACE5(( "[sdf] sdf_shape_dump complete\n" ));
@@ -925,8 +963,8 @@
     FT_16D16      ortho2;
 
     /* if they are not equal return the shorter */
-    if ( sdf1.squared_distance != sdf2.squared_distance )
-      return sdf1.squared_distance < sdf2.squared_distance ?
+    if ( sdf1.distance != sdf2.distance )
+      return sdf1.distance < sdf2.distance ?
              sdf1 : sdf2;
 
     /* if there is not ambiguity in the sign return any */
@@ -1091,8 +1129,7 @@
     /* assign the output */
     out->nearest_point = nearest_point;
     out->sign = cross < 0 ? 1 : -1;
-    out->squared_distance = FT_MulFix( nearest_vector.x, nearest_vector.x ) +
-                            FT_MulFix( nearest_vector.y, nearest_vector.y );
+    out->distance = VECTOR_LENGTH_16D16( nearest_vector );
     out->direction = line_segment;
 
   Exit:
@@ -1272,8 +1309,7 @@
       dist_vector.x = curve_point.x - p.x;
       dist_vector.y = curve_point.y - p.y;
 
-      dist = FT_MulFix( dist_vector.x, dist_vector.x ) +
-             FT_MulFix( dist_vector.y, dist_vector.y );
+      dist = VECTOR_LENGTH_16D16( dist_vector );
 
       if ( dist < min )
       {
@@ -1292,7 +1328,7 @@
             FT_MulFix( nearest_point.y - p.y, direction.x );
 
     /* assign the values */
-    out->squared_distance = min;
+    out->distance = min;
     out->nearest_point = nearest_point;
     out->sign = cross < 0 ? 1 : -1;
 
@@ -1393,11 +1429,11 @@
                (SDF_Edge*)edge_list.head->data,
                point, &current_dist ) );
 
-      if ( current_dist.squared_distance >= 0 && 
-           current_dist.squared_distance < min_dist.squared_distance )
+      if ( current_dist.distance >= 0 && 
+           current_dist.distance < min_dist.distance )
         min_dist = current_dist;
-      else if ( current_dist.squared_distance ==
-                min_dist.squared_distance )
+      else if ( current_dist.distance ==
+                min_dist.distance )
         min_dist = resolve_corner( min_dist, current_dist, point );
     
       edge_list.head = edge_list.head->next;
@@ -1458,7 +1494,10 @@
     rows   = bitmap->rows;
     buffer = (FT_Short*)bitmap->buffer;
 
-    sp_sq = FT_INT_16D16( spread * spread );
+    if ( USE_SQUARED_DISTANCES )
+      sp_sq = FT_INT_16D16( spread * spread );
+    else
+      sp_sq = FT_INT_16D16( spread );
 
     if ( width == 0 || rows == 0 )
     {
@@ -1506,7 +1545,7 @@
                    (SDF_Contour*)contour_list.head->data,
                    grid_point, &current_dist ) );
 
-          if ( current_dist.squared_distance < min_dist.squared_distance )
+          if ( current_dist.distance < min_dist.distance )
             min_dist = current_dist;
 
           contour_list.head = contour_list.head->next;
@@ -1516,14 +1555,15 @@
         /*                 the value to spread to avoid square_root */
 
         /* clamp the values to spread */
-        if ( min_dist.squared_distance > sp_sq )
-          min_dist.squared_distance = sp_sq;
+        if ( min_dist.distance > sp_sq )
+          min_dist.distance = sp_sq;
 
         /* square_root the values and fit in a 6.10 fixed point */
-        min_dist.squared_distance = square_root( min_dist.squared_distance );
+        if ( USE_SQUARED_DISTANCES )
+          min_dist.distance = square_root( min_dist.distance );
 
-        min_dist.squared_distance /= 64; /* convert from 16.16 to 22.10 */
-        value = min_dist.squared_distance & 0x0000FFFF; /* truncate to 6.10 */
+        min_dist.distance /= 64; /* convert from 16.16 to 22.10 */
+        value = min_dist.distance & 0x0000FFFF; /* truncate to 6.10 */
         value *= min_dist.sign;
 
         buffer[index] = value;

@@ -1,5 +1,21 @@
 2020-07-01	Anuj Verma  <anujv@iitbhilai.ac.in>
 
+	[sdf] Make squared distances toggleable.
+
+	* src/sdf/ftsdf.c (SDF_Signed_Distance): Renamed 
+	  squared_distance to distance. It can now represent
+	  both squared as well as actual distances.
+
+	* src/sdf/ftsdf.c (USE_SQUARED_DISTANCES): Added macro
+	  which control weather to do computation is squared
+	  distances or actual distances. This can be used to
+	  avoid overflow when generating large SDF bitmaps.
+
+	* src/sdf/ftsdf.c: Make sure not to exceed line length
+	  of 78.
+
+2020-07-01	Anuj Verma  <anujv@iitbhilai.ac.in>
+
 	* src/sdf/ftsdf.c (get_min_distance_conic): In case
 	  the cubic equation returns zero root, use endpoints
 	  for calculating the shortest distance.
