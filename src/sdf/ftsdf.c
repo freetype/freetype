@@ -1223,6 +1223,13 @@
     /* find the roots */
     num_roots = solve_cubic_equation( a, b, c, d, roots );
 
+    if ( num_roots == 0 )
+    {
+      roots[0] = 0;
+      roots[1] = FT_INT_16D16( 1 );
+      num_roots = 2;
+    }
+
     /* convert these values to 16.16 for further computation */
     aA.x = FT_26D6_16D16( aA.x );
     aA.y = FT_26D6_16D16( aA.y );

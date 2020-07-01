@@ -1,5 +1,11 @@
 2020-07-01	Anuj Verma  <anujv@iitbhilai.ac.in>
 
+	* src/sdf/ftsdf.c (get_min_distance_conic): In case
+	  the cubic equation returns zero root, use endpoints
+	  for calculating the shortest distance.
+
+2020-07-01	Anuj Verma  <anujv@iitbhilai.ac.in>
+
 	[sdf] Added function to find shortest distance from a
 	point to a conic bezier. Now the sdf module can render
 	ttf fonts or fonts with line and conic segments.
