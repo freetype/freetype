@@ -241,7 +241,7 @@ if (UNIX)
   check_include_file("unistd.h" HAVE_UNISTD_H)
   check_include_file("fcntl.h" HAVE_FCNTL_H)
 
-  file(READ "${PROJECT_SOURCE_DIR}/builds/unix/ftconfig.in"
+  file(READ "${PROJECT_SOURCE_DIR}/builds/unix/ftconfig.h.in"
     FTCONFIG_H)
   if (HAVE_UNISTD_H)
     string(REGEX REPLACE

@@ -1,3 +1,15 @@
+2020-07-05  David Turner  <david@freetype.org>
+
+	[build] Rename `build/unix/ftconfig.in' to `ftconfig.h.in'.
+
+	Since we are no longer limited to 8.3 file names, it is simpler to
+	follow the usual conventions for template files.
+
+	* builds/unix/ftconfig.in: Renamed to...
+	* builds/unix/ftconfig.h.in: ...this.
+
+	* CMakeLists.txt, builds/unix/configure.raw: Updated.
+
 2020-07-03  Alexei Podtelezhnikov  <apodtele@gmail.com>
 
 	[smooth] Introduce direct oversampling for overlaps.
