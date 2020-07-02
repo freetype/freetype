@@ -49,38 +49,41 @@
 
 FT_BEGIN_HEADER
 
-/* Define a public FreeType API function. This ensures it is properly exported
- * or imported at build time.
+/* Mark a function declaration as public. This ensures it will be properly
+ * exported to client code. Place this before a function declaration.
+ *
+ * NOTE: This macro should be considered an internal implementation detail, and
+ * not part of the FreeType API. It is only defined here because it is needed
+ * by FT_EXPORT()
  */
-#ifndef FT_EXPORT
-
-#ifdef FT2_BUILD_LIBRARY
-
-#if defined( _WIN32 ) && defined( DLL_EXPORT )
-#define FT_EXPORT( x )  __declspec( dllexport )  x
-#elif defined( __GNUC__ ) && __GNUC__ >= 4
-#define FT_EXPORT( x )  __attribute__(( visibility( "default" ) ))  x
-#elif defined( __SUNPRO_C ) && __SUNPRO_C >= 0x550
-#define FT_EXPORT( x )  __global  x
-#elif defined( __cplusplus )
-#define FT_EXPORT( x )  extern "C"  x
-#else
-#define FT_EXPORT( x )  extern  x
+#if defined(_WIN32)
+#  if defined(FT2_BUILD_LIBRARY) && defined( DLL_EXPORT )
+#    define FT_PUBLIC_FUNCTION_ATTRIBUTE  __declspec( dllexport )
+#  elif defined( DLL_IMPORT )
+#    define FT_PUBLIC_FUNCTION_ATTRIBUTE  __declspec( dllimport )
+#  endif
+#elif (defined(__GNUC__) && __GNUC__ >= 4) || defined(__clang__)
+#  define FT_PUBLIC_FUNCTION_ATTRIBUTE  __attribute__((visibility("default")))
+#elif defined(__SUNPRO_C) && __SUNPRO_C >= 0x550
+#  define FT_PUBLIC_FUNCTION_ATTRIBUTE __global
 #endif
 
-#else  /* !FT2_BUILD_LIBRARY */
-
-#if defined( _WIN32 ) && defined( DLL_IMPORT )
-#define FT_EXPORT( x )  __declspec( dllimport )  x
-#elif defined( __cplusplus )
-#define FT_EXPORT( x )  extern "C"  x
-#else
-#define FT_EXPORT( x )  extern  x
+#ifndef FT_PUBLIC_FUNCTION_ATTRIBUTE
+#  define FT_PUBLIC_FUNCTION_ATTRIBUTE  /* nothing */
 #endif
 
-#endif  /* !FT2_BUILD_LIBRARY */
-
-#endif /* !FT_EXPORT */
+/* Define a public FreeType API function. This ensures it is properly exported
+ * or imported at build time. The macro parameter is the function's return type
+ * as in:
+ *
+ *     FT_EXPORT( FT_Bool )  FT_Object_Method( FT_Object obj, ... );
+ *
+ */
+#ifdef __cplusplus
+#define FT_EXPORT( x )  FT_PUBLIC_FUNCTION_ATTRIBUTE extern "C" x
+#else
+#define FT_EXPORT( x )  FT_PUBLIC_FUNCTION_ATTRIBUTE extern x
+#endif
 
 FT_END_HEADER
 

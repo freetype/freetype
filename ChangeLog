@@ -1,5 +1,28 @@
 2020-07-05  David Turner  <david@freetype.org>
 
+	[build] Improve visibility support of library function names.
+
+	* include/freetype/config/public-macros.h
+	(FT_PUBLIC_FUNCTION_ATTRIBUTE): New macro to tag functions as
+	public (and thus exportable).
+	(FT_EXPORT): Use it.
+
+	* include/freetype/config/compiler-macros.h
+	(FT_INTERNAL_FUNCTION_ATTRIBUTE): New macro to tag functions as
+	internal to the library (and thus hidden).  Note that on ELF
+	systems, all internal functions have hidden visibility, which avoids
+	the need to enforce this when invoking the compiler (e.g., with an
+	option like `-fvisibility=hidden').
+
+	(FT_FUNCTION_DECLARATION, FT_FUNCTION_DEFINITION): New base macros
+	to deal with C and C++ linkage issues at the same time.
+
+	(FT_LOCAL, FT_LOCAL_DEF, FT_LOCAL_ARRAY, FT_LOCAL_ARRAY_DEF,
+	FT_BASE, FT_BASE_DEF, FT_EXPORT_VAR, FT_BASE_CALLBACK,
+	FT_BASE_CALLBACK_DEF): Redefined using new macros.
+
+2020-07-05  David Turner  <david@freetype.org>
+
 	[build] Split off more stuff from `ftconfig.h'.
 
 	* builds/unix/ftconfig.h.in, builds/vms/ftconfig.h,
