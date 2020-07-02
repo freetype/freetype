@@ -359,7 +359,16 @@
   ft_default_output_handler( const struct dlg_origin* origin, 
                               const char* string, void* data )
  {
-     unsigned int features = dlg_output_threadsafe /*| dlg_output_tags*/ ;
+     unsigned int features; 
+     if( origin->tags[0] == "error_log" )
+     {
+      features = dlg_output_threadsafe | dlg_output_tags ;
+     }
+     else
+     {
+      features = dlg_output_threadsafe /*| dlg_output_tags*/ ;
+     }
+     
 	   dlg_generic_output_stream( fileptr, features, origin, string, 
                                 dlg_default_output_styles );
  }
