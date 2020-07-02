@@ -1,5 +1,22 @@
 2020-07-05  David Turner  <david@freetype.org>
 
+	[build] Split off more stuff from `ftconfig.h'.
+
+	* builds/unix/ftconfig.h.in, builds/vms/ftconfig.h,
+	include/freetype/config/ftconfig.h: Split off macro definitions
+	required by the FreeType API headers to...
+	* include/freetype/config/public-macros.h: ...this new file.
+
+	* builds/unix/ftconfig.h.in, builds/vms/ftconfig.h,
+	include/freetype/config/ftconfig.h: Split off macro definitions used
+	by the library but not to be exposed to clients to...
+	* include/freetype/config/compiler-macros.h: ...this new file.
+
+	* include/freetype/internal/*.h, src/raster/ftraster.h: Include
+	`compiler-macros.h' where needed.
+
+2020-07-05  David Turner  <david@freetype.org>
+
 	[build] Move mac support code to `mac-support.h'.
 
 	* builds/unix/ftconfig.h.in, builds/vms/ftconfig.h,

@@ -40,6 +40,7 @@
 #include <freetype/ftincrem.h>
 #endif
 
+#include "compiler-macros.h"
 
 FT_BEGIN_HEADER
 
