@@ -39,9 +39,15 @@
 #include FT_CONFIG_OPTIONS_H
 #include FT_CONFIG_STANDARD_LIBRARY_H
 
+#define SIZEOF_INT   4
+#define SIZEOF_LONG  4
+
+#define FT_SIZEOF_INT   4
+#define FT_SIZEOF_LONG  4
+
+#include <freetype/config/integer-types.h>
 
 FT_BEGIN_HEADER
-
 
   /**************************************************************************
    *
@@ -56,13 +62,6 @@ FT_BEGIN_HEADER
 
 #define HAVE_UNISTD_H  1
 #define HAVE_FCNTL_H   1
-
-#define SIZEOF_INT   4
-#define SIZEOF_LONG  4
-
-#define FT_SIZEOF_INT   4
-#define FT_SIZEOF_LONG  4
-
 
   /* `FT_UNUSED` indicates that a given parameter is not used --   */
   /* this is only used to get rid of unpleasant compiler warnings. */
@@ -118,199 +117,6 @@ FT_BEGIN_HEADER
 #pragma set woff 3505
 #endif
 #endif
-
-
-  /**************************************************************************
-   *
-   * @section:
-   *   basic_types
-   *
-   */
-
-
-  /**************************************************************************
-   *
-   * @type:
-   *   FT_Int16
-   *
-   * @description:
-   *   A typedef for a 16bit signed integer type.
-   */
-  typedef signed short  FT_Int16;
-
-
-  /**************************************************************************
-   *
-   * @type:
-   *   FT_UInt16
-   *
-   * @description:
-   *   A typedef for a 16bit unsigned integer type.
-   */
-  typedef unsigned short  FT_UInt16;
-
-  /* */
-
-
-  /* this #if 0 ... #endif clause is for documentation purposes */
-#if 0
-
-  /**************************************************************************
-   *
-   * @type:
-   *   FT_Int32
-   *
-   * @description:
-   *   A typedef for a 32bit signed integer type.  The size depends on the
-   *   configuration.
-   */
-  typedef signed XXX  FT_Int32;
-
-
-  /**************************************************************************
-   *
-   * @type:
-   *   FT_UInt32
-   *
-   *   A typedef for a 32bit unsigned integer type.  The size depends on the
-   *   configuration.
-   */
-  typedef unsigned XXX  FT_UInt32;
-
-
-  /**************************************************************************
-   *
-   * @type:
-   *   FT_Int64
-   *
-   *   A typedef for a 64bit signed integer type.  The size depends on the
-   *   configuration.  Only defined if there is real 64bit support;
-   *   otherwise, it gets emulated with a structure (if necessary).
-   */
-  typedef signed XXX  FT_Int64;
-
-
-  /**************************************************************************
-   *
-   * @type:
-   *   FT_UInt64
-   *
-   *   A typedef for a 64bit unsigned integer type.  The size depends on the
-   *   configuration.  Only defined if there is real 64bit support;
-   *   otherwise, it gets emulated with a structure (if necessary).
-   */
-  typedef unsigned XXX  FT_UInt64;
-
-  /* */
-
-#endif
-
-#if FT_SIZEOF_INT == 4
-
-  typedef signed int      FT_Int32;
-  typedef unsigned int    FT_UInt32;
-
-#elif FT_SIZEOF_LONG == 4
-
-  typedef signed long     FT_Int32;
-  typedef unsigned long   FT_UInt32;
-
-#else
-#error "no 32bit type found -- please check your configuration files"
-#endif
-
-
-  /* look up an integer type that is at least 32~bits */
-#if FT_SIZEOF_INT >= 4
-
-  typedef int            FT_Fast;
-  typedef unsigned int   FT_UFast;
-
-#elif FT_SIZEOF_LONG >= 4
-
-  typedef long           FT_Fast;
-  typedef unsigned long  FT_UFast;
-
-#endif
-
-
-  /* determine whether we have a 64-bit `int` type for platforms without */
-  /* Autoconf                                                            */
-#if FT_SIZEOF_LONG == 8
-
-  /* `FT_LONG64` must be defined if a 64-bit type is available */
-#define FT_LONG64
-#define FT_INT64   long
-#define FT_UINT64  unsigned long
-
-  /* we handle the LLP64 scheme separately for GCC and clang, */
-  /* suppressing the `long long` warning                      */
-#elif ( FT_SIZEOF_LONG == 4 )       && \
-      defined( HAVE_LONG_LONG_INT ) && \
-      defined( __GNUC__ )
-#pragma GCC diagnostic ignored "-Wlong-long"
-#define FT_LONG64
-#define FT_INT64   long long int
-#define FT_UINT64  unsigned long long int
-
-  /**************************************************************************
-   *
-   * A 64-bit data type may create compilation problems if you compile in
-   * strict ANSI mode.  To avoid them, we disable other 64-bit data types if
-   * `__STDC__` is defined.  You can however ignore this rule by defining the
-   * `FT_CONFIG_OPTION_FORCE_INT64` configuration macro.
-   */
-#elif !defined( __STDC__ ) || defined( FT_CONFIG_OPTION_FORCE_INT64 )
-
-#if defined( __STDC_VERSION__ ) && __STDC_VERSION__ >= 199901L
-
-#define FT_LONG64
-#define FT_INT64   long long int
-#define FT_UINT64  unsigned long long int
-
-#elif defined( _MSC_VER ) && _MSC_VER >= 900 /* Visual C++ (and Intel C++) */
-
-  /* this compiler provides the `__int64` type */
-#define FT_LONG64
-#define FT_INT64   __int64
-#define FT_UINT64  unsigned __int64
-
-#elif defined( __BORLANDC__ )  /* Borland C++ */
-
-  /* XXXX: We should probably check the value of `__BORLANDC__` in order */
-  /*       to test the compiler version.                                 */
-
-  /* this compiler provides the `__int64` type */
-#define FT_LONG64
-#define FT_INT64   __int64
-#define FT_UINT64  unsigned __int64
-
-#elif defined( __WATCOMC__ )   /* Watcom C++ */
-
-  /* Watcom doesn't provide 64-bit data types */
-
-#elif defined( __MWERKS__ )    /* Metrowerks CodeWarrior */
-
-#define FT_LONG64
-#define FT_INT64   long long int
-#define FT_UINT64  unsigned long long int
-
-#elif defined( __GNUC__ )
-
-  /* GCC provides the `long long` type */
-#define FT_LONG64
-#define FT_INT64   long long int
-#define FT_UINT64  unsigned long long int
-
-#endif /* __STDC_VERSION__ >= 199901L */
-
-#endif /* FT_SIZEOF_LONG == 8 */
-
-#ifdef FT_LONG64
-  typedef FT_INT64   FT_Int64;
-  typedef FT_UINT64  FT_UInt64;
-#endif
-
 
 #ifdef _WIN64
   /* only 64bit Windows uses the LLP64 data model, i.e., */

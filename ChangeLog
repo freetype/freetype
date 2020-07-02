@@ -1,5 +1,28 @@
 2020-07-05  David Turner  <david@freetype.org>
 
+	[build] Put integer type definitions into `integer-types.h'.
+
+	Refactor some of the `ftconfig.h' headers and template to move the
+	definition of the FreeType integer types (e.g., `FT_Int16') to a
+	common header file `freetype/config/integer-types.h'.
+
+	* builds/unix/ftconfig.h.in, builds/vms/ftconfig.h,
+	include/freetype/config/ftconfig.h: Split off integer type
+	definition stuff to...
+	* include/freetype/config/integer-types.h: ...this new file.
+
+	* builds/unix/ftconfig.h.in: Control the definition of
+	`FT_SIZEOF_INT' and `FT_SIZEOF_LONG' with macro
+	`FT_USE_AUTOCONF_SIZEOF_TYPES'.  If these are not defined, auto
+	detection happens in `integer-types.h' as usual based on `INTXX_MAX'
+	values.  Otherwise the autoconf-detected values are used.
+
+	* builds/unix/configure.raw (CPPFLAGS): Don't include path to
+	`config' directory.  Instead, ...
+	(FT_CONFIG_STANDARD_LIBRARY_H): Use complete path.
+
+2020-07-05  David Turner  <david@freetype.org>
+
 	[build] Rename `build/unix/ftconfig.in' to `ftconfig.h.in'.
 
 	Since we are no longer limited to 8.3 file names, it is simpler to

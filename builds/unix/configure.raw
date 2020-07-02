@@ -113,7 +113,7 @@ AC_TYPE_LONG_LONG_INT
 
 AC_MSG_CHECKING([whether cpp computation of bit length in ftconfig.h.in works])
 orig_CPPFLAGS="${CPPFLAGS}"
-CPPFLAGS="-I${srcdir} -I. -I${srcdir}/../../include/freetype/config ${CPPFLAGS}"
+CPPFLAGS="-I${srcdir} -I. -I${srcdir}/../../include ${CPPFLAGS}"
 
 ac_clean_files=
 if test ! -f ft2build.h; then
@@ -124,7 +124,7 @@ fi
 cat > conftest.c <<\_ACEOF
 #include <limits.h>
 #define FT_CONFIG_OPTIONS_H "ftoption.h"
-#define FT_CONFIG_STANDARD_LIBRARY_H "ftstdlib.h"
+#define FT_CONFIG_STANDARD_LIBRARY_H <freetype/config/ftstdlib.h>
 #define FT_UINT_MAX  UINT_MAX
 #define FT_ULONG_MAX ULONG_MAX
 #include "ftconfig.h.in"
