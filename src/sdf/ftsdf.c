@@ -18,8 +18,21 @@
   /* a chance of overflow and artifacts. You can safely use it upto a     */
   /* pixel size of 128.                                                   */
   #ifndef USE_SQUARED_DISTANCES
-  #  define USE_SQUARED_DISTANCES 0
+  #  define USE_SQUARED_DISTANCES 1
   #endif
+
+  /* If it is defined to 1 then the rasterizer will use Newton-Raphson's  */
+  /* method for finding shortest distance from a point to a conic curve.  */
+  /* The other method is an analytical method which find the roots of a   */
+  /* cubic polynomial to find the shortest distance. But the analytical   */
+  /* method has underflow as of now. So, use the Newton's method if there */
+  /* is any visible artifacts.                                            */
+  #ifndef USE_NEWTON_FOR_CONIC
+  #  define USE_NEWTON_FOR_CONIC 1
+  #endif
+
+  #define MAX_NEWTON_ITERATION 4
+  #define MAX_NEWTON_STEPS     4
 
   /**************************************************************************
    *
@@ -1136,6 +1149,8 @@
     return error;
   }
 
+#if !USE_NEWTON_FOR_CONIC
+
   /**************************************************************************
    *
    * @Function:
@@ -1145,6 +1160,10 @@
    *   This function find the shortest distance from the `conic' bezier
    *   curve to a given `point' and assigns it to `out'. Only use it for
    *   conic/quadratic curves.
+   *   [Note]: The function uses analytical method to find shortest distance
+   *           which is faster than the Newton-Raphson's method, but has
+   *           underflows at the moment. Use Newton's method if you can
+   *           see artifacts in the SDF.
    *
    * @Input:
    *   [TODO]
@@ -1357,6 +1376,230 @@
   Exit:
     return error;
   }
+
+#else
+
+  /**************************************************************************
+   *
+   * @Function:
+   *   get_min_distance_conic
+   *
+   * @Description:
+   *   This function find the shortest distance from the `conic' bezier
+   *   curve to a given `point' and assigns it to `out'. Only use it for
+   *   conic/quadratic curves.
+   *   [Note]: The function uses Newton's approximation to find the shortest
+   *           distance, which is a bit slower than the analytical method
+   *           doesn't cause underflow. Use is upto your needs.
+   *
+   * @Input:
+   *   [TODO]
+   *
+   * @Return:
+   *   [TODO]
+   */
+  static FT_Error
+  get_min_distance_conic( SDF_Edge*             conic,
+                          FT_26D6_Vec           point,
+                          SDF_Signed_Distance*  out )
+  {
+    /* This method uses Newton-Raphson's approximation to find the */
+    /* shortest distance from a point to conic curve which does    */
+    /* not involve solving any cubic equation, that is why there   */
+    /* is no risk of underflow. The method is as follows:          */
+    /*                                                             */
+    /* p0 = first endpoint                                         */
+    /* p1 = control point                                          */
+    /* p3 = second endpoint                                        */
+    /* p  = point from which shortest distance is to be calculated */
+    /* ----------------------------------------------------------- */
+    /* => the equation of a quadratic bezier curve can be written  */
+    /*    B( t ) = ( ( 1 - t )^2 )p0 + 2( 1 - t )tp1 + t^2p2       */
+    /*    here t is the factor with range [0.0f, 1.0f]             */
+    /*    the above equation can be rewritten as                   */
+    /*    B( t ) = t^2( p0 - 2p1 + p2 ) + 2t( p1 - p0 ) + p0       */
+    /*                                                             */
+    /*    now let A = ( p0 - 2p1 + p2), B = 2( p1 - p0 )           */
+    /*    B( t ) = t^2( A ) + t( B ) + p0                          */
+    /*                                                             */
+    /* => the derivative of the above equation is written as       */
+    /*    B`( t ) = 2t( A ) + B                                    */
+    /*                                                             */
+    /* => further derivative of the above equation is written as   */
+    /*    B``( t ) = 2A                                            */
+    /*                                                             */
+    /* => the equation of distance from point `p' to the curve     */
+    /*    P( t ) can be written as                                 */
+    /*    P( t ) = t^2( A ) + t^2( B ) + p0 - p                    */
+    /*    Now let C = ( p0 - p )                                   */
+    /*    P( t ) = t^2( A ) + t( B ) + C                           */
+    /*                                                             */
+    /* => finally the equation of angle between curve B( t ) and   */
+    /*    point to curve distance P( t ) can be written as         */
+    /*    Q( t ) = P( t ).B`( t )                                  */
+    /*                                                             */
+    /* => now our task is to find a value of t such that the above */
+    /*    equation Q( t ) becomes zero. in other words the point   */
+    /*    to curve vector makes 90 degree with curve. this is done */
+    /*    by Newton-Raphson's method.                              */
+    /*                                                             */
+    /* => we first assume a arbitary value of the factor `t' and   */
+    /*    then we improve it using Newton's equation such as       */
+    /*                                                             */
+    /*    t -= Q( t ) / Q`( t )                                    */
+    /*    putting value of Q( t ) from the above equation gives    */
+    /*                                                             */
+    /*    t -= P( t ).B`( t ) / derivative( P( t ).B`( t ) )       */
+    /*    t -= P( t ).B`( t ) /                                    */
+    /*         ( P`( t )B`( t ) + P( t ).B``( t ) )                */
+    /*                                                             */
+    /*    P`( t ) is noting but B`( t ) because the constant are   */
+    /*    gone due to derivative                                   */
+    /*                                                             */
+    /* => finally we get the equation to improve the factor as     */
+    /*    t -= P( t ).B`( t ) /                                    */
+    /*         ( B`( t ).B`( t ) + P( t ).B``( t ) )               */
+    /*                                                             */
+    /* [note]: B and B( t ) are different in the above equations   */
+
+    FT_Error     error = FT_Err_Ok;
+
+    FT_26D6_Vec  aA, bB, cC;     /* A, B, C in the above comment          */
+    FT_26D6_Vec  nearest_point;  /* point on curve nearest to `point'     */
+    FT_26D6_Vec  direction;      /* direction of curve at `nearest_point' */
+
+    FT_26D6_Vec  p0, p1, p2;     /* control points of a conic curve       */
+    FT_26D6_Vec  p;              /* `point' to which shortest distance    */
+
+    FT_16D16     min_factor;             /* factor at `nearest_point'     */
+    FT_16D16     cross;                  /* to determine the sign         */
+    FT_16D16     min = FT_INT_MAX;       /* shortest squared distance     */
+
+    FT_UShort    iterations;
+    FT_UShort    steps;
+
+    if ( !conic || !out )
+    {
+      error = FT_THROW( Invalid_Argument );
+      goto Exit;
+    }
+
+    if ( conic->edge_type != SDF_EDGE_CONIC )
+    {
+      error = FT_THROW( Invalid_Argument );
+      goto Exit;
+    }
+
+    /* assign the values after checking pointer */
+    p0 = conic->start_pos;
+    p1 = conic->control_a;
+    p2 = conic->end_pos;
+    p  = point;
+
+    /* compute substitution coefficients */
+    aA.x = p0.x - 2 * p1.x + p2.x;
+    aA.y = p0.y - 2 * p1.y + p2.y;
+
+    bB.x = 2 * ( p1.x - p0.x );
+    bB.y = 2 * ( p1.y - p0.y );
+
+    cC.x = p0.x;
+    cC.y = p0.y;
+
+    /* do newton's iterations */
+    for ( iterations = 0; iterations <= MAX_NEWTON_ITERATION; iterations++ )
+    {
+      FT_16D16  factor = FT_INT_16D16( iterations ) / MAX_NEWTON_ITERATION;
+      FT_16D16  factor2;
+      FT_16D16  length;
+
+      FT_16D16_Vec  curve_point; /* point on the curve  */
+      FT_16D16_Vec  dist_vector; /* `curve_point' - `p' */
+
+      FT_26D6_Vec   d1;          /* first  derivative   */
+      FT_26D6_Vec   d2;          /* second derivative   */
+
+      FT_16D16      temp1;
+      FT_16D16      temp2;
+
+      for ( steps = 0; steps < MAX_NEWTON_STEPS; steps++ )
+      {
+        factor2 = FT_MulFix( factor, factor );
+
+        /* B( t ) = t^2( A ) + t( B ) + p0 */
+        curve_point.x = FT_MulFix( aA.x, factor2 ) +
+                        FT_MulFix( bB.x, factor ) + cC.x;
+        curve_point.y = FT_MulFix( aA.y, factor2 ) +
+                        FT_MulFix( bB.y, factor ) + cC.y;
+
+        /* convert to 16.16 */
+        curve_point.x = FT_26D6_16D16( curve_point.x );
+        curve_point.y = FT_26D6_16D16( curve_point.y );
+
+        /* B( t ) = t^2( A ) + t( B ) + p0 - p. P( t ) in the comment */
+        dist_vector.x = curve_point.x - FT_26D6_16D16( p.x );
+        dist_vector.y = curve_point.y - FT_26D6_16D16( p.y );
+
+        length = VECTOR_LENGTH_16D16( dist_vector );
+
+        if ( length < min )
+        {
+          min = length;
+          min_factor = factor;
+          nearest_point = curve_point;
+        }
+
+        /* This the actual Newton's approximation.       */
+        /*    t -= P( t ).B`( t ) /                      */
+        /*         ( B`( t ).B`( t ) + P( t ).B``( t ) ) */
+
+        /* B`( t ) = 2tA + B */
+        d1.x = FT_MulFix( aA.x, 2 * factor ) + bB.x;
+        d1.y = FT_MulFix( aA.y, 2 * factor ) + bB.y;
+
+        /* B``( t ) = 2A */
+        d2.x = 2 * aA.x;
+        d2.y = 2 * aA.y;
+
+        dist_vector.x /= 1024;
+        dist_vector.y /= 1024;
+
+        /* temp1 = P( t ).B`( t ) */
+        temp1 = VEC_26D6_DOT( dist_vector, d1 );
+
+        /* temp2 = ( B`( t ).B`( t ) + P( t ).B``( t ) ) */
+        temp2 = VEC_26D6_DOT( d1, d1 ) +
+                VEC_26D6_DOT( dist_vector, d2 );
+
+        factor -= FT_DivFix( temp1, temp2 );
+
+        if ( factor < 0 || factor > FT_INT_16D16( 1 ) )
+          break;
+      }
+    }
+
+    /* B`( t ) = 2tA + B */
+    direction.x = 2 * FT_MulFix( aA.x, min_factor ) + bB.x;
+    direction.y = 2 * FT_MulFix( aA.y, min_factor ) + bB.y;
+
+    /* determine the sign */
+    cross = FT_MulFix( nearest_point.x - FT_26D6_16D16( p.x ), direction.y ) -
+            FT_MulFix( nearest_point.y - FT_26D6_16D16( p.y ), direction.x );
+
+    /* assign the values */
+    out->distance = min;
+    out->nearest_point = nearest_point;
+    out->sign = cross < 0 ? 1 : -1;
+
+    FT_Vector_NormLen( &direction );
+
+    out->direction = direction;
+
+  Exit:
+    return error;
+  }
+
+#endif
 
   /**************************************************************************
    *

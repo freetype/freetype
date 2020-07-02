@@ -1,3 +1,17 @@
+2020-07-02  Anuj Verma  <anujv@iitbhilai.ac.in>
+
+	[sdf] Added Newton's method for shortest distance
+	from a point to a conic.
+
+	* src/sdf/ftsdf.c (get_min_distance_conic): Created
+	  a new function with same name which uses Newon't
+	  iteration for finding shortest distance fom a point
+	  to a conic curve. This dosen't causes underfow.
+
+	* src/sdf/ftsdf.c (USE_NEWTON_FOR_CONIC): This macro
+	  can be used to toggle between Newton or analytical
+	  cubic solving method.
+
 2020-07-01	Anuj Verma  <anujv@iitbhilai.ac.in>
 
 	* src/sdf/ftsdf.c (get_min_distance_conic): Add more
