@@ -193,9 +193,9 @@
    * runtime errors), and 7 means _very_ verbose.
    */
   FT_BASE_DEF( void )
-  ft_debug_init( void )
+  ft_debug_init( const char* level )
   {
-    const char*  ft2_debug = ft_getenv( "FT2_DEBUG" );
+    const char*  ft2_debug = level;
 
 
     if ( ft2_debug )
@@ -274,7 +274,7 @@
 
 
   FT_BASE_DEF( void )
-  ft_debug_init( void )
+  ft_debug_init( const char* level )
   {
     /* nothing */
   }
@@ -337,10 +337,10 @@
   ft_logging_init( void )
   {
     fileptr = fopen( "freetype2.log", "w" );
-    ft_debug_init();
+    FT_Trace_Set_Default_Level();
     
     /* We need to set the default FreeType specific dlg's output handler */
-    dlg_set_handler( &ft_freetype_output_handler, NULL );
+    dlg_set_handler( &ft_default_output_handler, NULL );
   }
 
   FT_BASE_DEF( void )
@@ -349,21 +349,55 @@
     fclose( fileptr );
   }
 
-  FT_BASE_DEF( void )
-
   /*************************************************************************
    * 
    * TODO:
    * 1. Add support for priniting FT_COMPONENT
    *    
-   */ 
-  ft_freetype_output_handler( const struct dlg_origin* origin, 
+   */
+  FT_BASE_DEF( void ) 
+  ft_default_output_handler( const struct dlg_origin* origin, 
                               const char* string, void* data )
  {
      unsigned int features = dlg_output_threadsafe /*| dlg_output_tags*/ ;
 	   dlg_generic_output_stream( fileptr, features, origin, string, 
                                 dlg_default_output_styles );
  }
+
+ /**************************************************************************
+  * 
+  * 
+  * 
+  */
+  FT_EXPORT_DEF( void )
+  FT_Trace_Set_Level( const char* level )
+  {  
+    ft_debug_init( level );
+  }
+
+  FT_EXPORT_DEF( void )
+  FT_Trace_Set_Default_Level( void )
+  {
+    ft_debug_init( ft_getenv( "FT2_DEBUG" ) );
+  }
+
+/****************************************************************************
+ * 
+ * 
+ * 
+ */
+
+  FT_EXPORT_DEF( void )
+  FT_Trace_Set_Output( ft_ouput_handler handler )
+  {
+    freetype_output_handler = handler;
+  }
+
+  FT_EXPORT_DEF( void )
+  FT_Trace_Set_Default_Output()
+  {
+    freetype_output_handler = NULL;
+  }
 
 #endif /* FT_LOGGING */
 

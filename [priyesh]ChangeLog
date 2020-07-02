@@ -1,3 +1,28 @@
+2020-07-02  Priyesh Kumar   <priyeshkkumar@gmail.com>
+
+    * Fixed some code layout
+
+    * Added a new header- `include/freetype/ftlogging.h` for public APIs to 
+      use when using logging:
+      1. FT_Trace_Set_Level(): Used to change trace level of components at 
+          runtime.
+      2. FT_Trace_Set_Default_Level(): Used to set the default value of trace
+         level(which is supplied by env FT2_DEBUG)
+    
+    * include/freetype/internal/ftdebug.h:
+      1. Added dlg support for FT_ERROR, now error messages are also written 
+         on file if FT_LOGGING is enabled. 
+      2. Changed `ft_debug_init()`: now it takes an argument of type const
+         char* which is used to specify trace level.
+    
+    * src/base/ftobjs.c: Changed `ft_debug_init()`, now it passes an argument
+      to define trace level.
+
+    * src/base/ftdebug.c: Added definitions of public APIs 
+      `FT_Trace_Set_Default_Level()` and `FT_Trace_Set_Level()`
+
+    * Strated working on Callback. 
+
 2020-06-30  Priyesh Kumar   <priyeshkkumar@gmail.com>
 
     * Adding new line at end of file

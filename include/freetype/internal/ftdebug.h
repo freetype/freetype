@@ -29,11 +29,18 @@
 #include FT_CONFIG_CONFIG_H
 #include <freetype/freetype.h>
 
-  /* Additional include files for supporting logging in FreeType using    */
-  /* external logging library ~ src/dlg                                   */
-  /*                                                                      */
+  /**************************************************************************
+   *
+   * Additional include files for supporting logging in FreeType using   
+   * external logging library ~ src/dlg and freetype/ftlogging.h  
+   *                                  
+   */ 
+                                                                      
+#ifdef FT_LOGGING
 #include <../src/dlg/include/dlg/dlg.h>
 #include <../src/dlg/include/dlg/output.h>
+#include <freetype/ftlogging.h>
+#endif /* FT_LOGGING */
 
 
 FT_BEGIN_HEADER
@@ -104,6 +111,8 @@ FT_BEGIN_HEADER
 
 #ifdef FT_LOGGING
 
+  static ft_ouput_handler freetype_output_handler = NULL;
+  
 #undef FT_Log
 #define FT_Log dlg_trace
 
@@ -117,7 +126,7 @@ FT_BEGIN_HEADER
  */
 
  FT_BASE( void ) 
- ft_freetype_output_handler( const struct dlg_origin* origin, 
+ ft_default_output_handler( const struct dlg_origin* origin, 
  const char* string, void* data );
 
 #else
@@ -247,7 +256,21 @@ FT_BEGIN_HEADER
 
 #ifdef FT_DEBUG_LEVEL_ERROR
 
+#ifdef FT_LOGGING
+
+#define FT_ERROR( varformat )                                               \
+          do                                                                \
+          {                                                                 \
+          dlg_add_tag( "error_log", NULL );                                 \
+          dlg_trace varformat;                                              \
+          dlg_remove_tag( "error_log", NULL );                              \  
+          } while ( 0 )                            
+
+#else
+
 #define FT_ERROR( varformat )  FT_Message  varformat
+
+#endif /* FT_LOGGING */
 
 #else  /* !FT_DEBUG_LEVEL_ERROR */
 
@@ -318,7 +341,7 @@ FT_BEGIN_HEADER
 
 
   FT_BASE( void )
-  ft_debug_init( void );
+  ft_debug_init( const char* level );
 
 #ifdef FT_LOGGING
 

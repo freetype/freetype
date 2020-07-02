@@ -5276,7 +5276,7 @@
 #ifndef FT_LOGGING 
 #ifdef FT_DEBUG_LEVEL_ERROR
     /* init debugging support */
-    ft_debug_init();
+    ft_debug_init( ft_getenv( "FT2_DEBUG" ) );
 #endif /* FT_DEBUG_LEVEL_ERROR */
 #endif /* FT_LOGGING */ 
 
