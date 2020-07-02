@@ -253,8 +253,6 @@ if (UNIX)
       "#undef +(HAVE_FCNTL_H)" "#define \\1 1"
       FTCONFIG_H "${FTCONFIG_H}")
   endif ()
-  string(REPLACE "/undef " "#undef "
-    FTCONFIG_H "${FTCONFIG_H}")
 else ()
   file(READ "${PROJECT_SOURCE_DIR}/include/freetype/config/ftconfig.h"
     FTCONFIG_H)

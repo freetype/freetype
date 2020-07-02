@@ -1,5 +1,18 @@
 2020-07-05  David Turner  <david@freetype.org>
 
+	[build] Move mac support code to `mac-support.h'.
+
+	* builds/unix/ftconfig.h.in, builds/vms/ftconfig.h,
+	include/freetype/config/ftconfig.h: Split off mac-specific stuff
+	to...
+	* include/freetype/config/mac-support.h: ...this new file.
+
+	* CMakeLists.txt, builds/unix/configure.raw: Remove `/undef ->
+	#undef' string replacement; the affected code is no longer part of
+	the `ftconfig.h' template.
+
+2020-07-05  David Turner  <david@freetype.org>
+
 	[build] Put integer type definitions into `integer-types.h'.
 
 	Refactor some of the `ftconfig.h' headers and template to move the
