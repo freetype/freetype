@@ -41,6 +41,11 @@
   /* the shortest distance.                                               */
   #define MAX_NEWTON_STEPS     4
 
+  /* This is the distance in 16.16 which is used for corner resolving. If */
+  /* the difference of two distance is less than `CORNER_CHECK_EPSILON'   */
+  /* then they will be checked for corner if they have ambiguity.         */
+  #define CORNER_CHECK_EPSILON  32
+
   /**************************************************************************
    *
    * macros
@@ -986,39 +991,34 @@
                   SDF_Signed_Distance  sdf2,
                   FT_26D6_Vec          point )
   {
-    FT_16D16_Vec  dist;
+    FT_16D16_Vec  dist1;
+    FT_16D16_Vec  dist2;
 
     FT_16D16      ortho1;
     FT_16D16      ortho2;
 
-    /* if they are not equal return the shorter */
-    if ( sdf1.distance != sdf2.distance )
-      return sdf1.distance < sdf2.distance ?
-             sdf1 : sdf2;
 
     /* if there is not ambiguity in the sign return any */
     if ( sdf1.sign == sdf2.sign )
       return sdf1;
 
-    /* final check: Make sure nearest point is same. If not */
-    /* then return any, it is not the shortest distance.    */
-    if ( sdf1.nearest_point.x != sdf2.nearest_point.x ||
-         sdf1.nearest_point.y != sdf2.nearest_point.y )
-      return sdf1;
+    /* calculate the distance vectors */
+    dist1.x = FT_26D6_16D16( point.x ) - sdf1.nearest_point.x;
+    dist1.y = FT_26D6_16D16( point.y ) - sdf1.nearest_point.y;
 
-    /* calculate the distance vectors, will be same for both */
-    dist.x = sdf1.nearest_point.x - FT_26D6_16D16( point.x );
-    dist.y = sdf1.nearest_point.y - FT_26D6_16D16( point.y );
+    dist2.x = FT_26D6_16D16( point.x ) - sdf2.nearest_point.x;
+    dist2.y = FT_26D6_16D16( point.y ) - sdf2.nearest_point.y;
 
-    FT_Vector_NormLen( &dist );
+    FT_Vector_NormLen( &dist1 );
+    FT_Vector_NormLen( &dist2 );
 
     /* use cross product to find orthogonality */
-    ortho1 = FT_MulFix( sdf1.direction.x, dist.y ) -
-             FT_MulFix( sdf1.direction.y, dist.x );
+    ortho1 = FT_MulFix( sdf1.direction.x, dist1.y ) -
+             FT_MulFix( sdf1.direction.y, dist1.x );
     ortho1 = FT_ABS( ortho1 );
 
-    ortho2 = FT_MulFix( sdf2.direction.x, dist.y ) -
-             FT_MulFix( sdf2.direction.y, dist.x );
+    ortho2 = FT_MulFix( sdf2.direction.x, dist2.y ) -
+             FT_MulFix( sdf2.direction.y, dist2.x );
     ortho2 = FT_ABS( ortho2 );
 
     return ortho1 > ortho2 ? sdf1 : sdf2;
@@ -1700,18 +1700,27 @@
     /* iterate through all the edges manually */
     while ( edge_list.head ) {
       SDF_Signed_Distance  current_dist = max_sdf;
+      FT_16D16             diff;
     
     
       FT_CALL( sdf_edge_get_min_distance( 
                (SDF_Edge*)edge_list.head->data,
                point, &current_dist ) );
 
-      if ( current_dist.distance >= 0 && 
-           current_dist.distance < min_dist.distance )
-        min_dist = current_dist;
-      else if ( current_dist.distance ==
-                min_dist.distance )
-        min_dist = resolve_corner( min_dist, current_dist, point );
+      if ( current_dist.distance >= 0 )
+      {
+        diff = current_dist.distance - min_dist.distance;
+
+
+        if ( FT_ABS(diff ) < CORNER_CHECK_EPSILON )
+          min_dist = resolve_corner( min_dist, current_dist, point );
+        else if ( diff < 0 )
+          min_dist = current_dist;
+      }
+      else
+      {
+        FT_TRACE0(( "sdf_contour_get_min_distance: Overflowed.\n" ));
+      }
     
       edge_list.head = edge_list.head->next;
     }

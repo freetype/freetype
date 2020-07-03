@@ -1,5 +1,17 @@
 2020-07-03  Anuj Verma  <anujv@iitbhilai.ac.in>
 
+	* src/sdf/ftsdf.c (resolve_corner): [Bug] Remove the
+	  nearest_point check. Two distances can be same and
+	  can give opposite sign, but they may not have a
+	  common nearest_point. Also remove distance check
+	  because due to precision errors the two distances can
+	  be really really close. Therefore use epsilon instead.
+
+	* src/sdf/ftsdf.c (sdf_contour_get_min_distance): Use
+	  epsilon for comparing distances.
+
+2020-07-03  Anuj Verma  <anujv@iitbhilai.ac.in>
+
 	* src/sdf/ftsdf.c (sdf_shape_dump): Add more info
 	  to the debug output.
 
