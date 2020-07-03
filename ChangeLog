@@ -1,5 +1,16 @@
 2020-07-03  Alexei Podtelezhnikov  <apodtele@gmail.com>
 
+	[smooth] Use direct rendering mode in Harmony.
+
+	Instead of rendering 3 bitmaps side by side and reshuffling, we use
+	direct rendering to deliver the bitmaps on each third byte.
+
+	* src/smooth/ftsmooth.c (ft_smooth_raster_lcd)
+	[!FT_CONFIG_OPTION_SUBPIXEL_RENDERING]: Set up direct mode with...
+	(ft_smooth_lcd_spans): ... new span function.
+
+2020-07-03  Alexei Podtelezhnikov  <apodtele@gmail.com>
+
 	[smooth] Separate LCD paths from gray rendering.
 
 	This makes `ft_smooth_render' a lot smaller and easier to follow. It

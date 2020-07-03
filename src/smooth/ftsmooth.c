@@ -76,6 +76,13 @@
       FT_Outline_Get_CBox( &slot->outline, cbox );
   }
 
+  typedef struct TOrigin_
+  {
+    unsigned char*  origin;  /* pixmap origin at the bottom-left */
+    int             pitch;   /* pitch to go down one row */
+
+  } TOrigin;
+
 #ifndef FT_CONFIG_OPTION_SUBPIXEL_RENDERING
 
   /* initialize renderer -- init its raster */
@@ -99,24 +106,58 @@
   }
 
 
+  /* This function writes every third byte in direct rendering mode */
+  static void
+  ft_smooth_lcd_spans( int             y,
+                       int             count,
+                       const FT_Span*  spans,
+                       TOrigin*        target )
+  {
+    unsigned char*  dst_line = target->origin - y * target->pitch;
+    unsigned char*  dst;
+    unsigned short  w;
+
+
+    for ( ; count--; spans++ )
+      for ( dst = dst_line + spans->x * 3, w = spans->len; w--; dst += 3 )
+        *dst = spans->coverage;
+  }
+
+
   static FT_Error
   ft_smooth_raster_lcd( FT_Renderer  render,
                         FT_Outline*  outline,
                         FT_Bitmap*   bitmap )
   {
     FT_Error      error = FT_Err_Ok;
-    unsigned int  width = bitmap->width / 3;
     FT_Vector*    sub   = render->root.library->lcd_geometry;
     FT_Pos        x, y;
 
     FT_Raster_Params   params;
+    TOrigin            target;
 
-
-    params.target = bitmap;
-    params.source = outline;
-    params.flags  = FT_RASTER_FLAG_AA;
 
     /* Render 3 separate coverage bitmaps, shifting the outline.  */
+    /* Set up direct rendering to record them on each third byte. */
+    params.target     = bitmap;
+    params.source     = outline;
+    params.flags      = FT_RASTER_FLAG_AA | FT_RASTER_FLAG_DIRECT;
+    params.gray_spans = (FT_SpanFunc)ft_smooth_lcd_spans;
+    params.user       = &target;
+
+    params.clip_box.xMin = 0;
+    params.clip_box.yMin = 0;
+    params.clip_box.xMax = bitmap->width;
+    params.clip_box.yMax = bitmap->rows;
+
+    if ( bitmap->pitch < 0 )
+      target.origin = bitmap->buffer;
+    else
+      target.origin = bitmap->buffer
+                      + ( bitmap->rows - 1 ) * (unsigned int)bitmap->pitch;
+
+    target.pitch = bitmap->pitch;
+
     FT_Outline_Translate( outline,
                           -sub[0].x,
                           -sub[0].y );
@@ -126,57 +167,23 @@
     if ( error )
       goto Exit;
 
-    bitmap->buffer += width;
+    target.origin++;
     FT_Outline_Translate( outline,
                           sub[0].x - sub[1].x,
                           sub[0].y - sub[1].y );
     error = render->raster_render( render->raster, &params );
     x = sub[1].x;
     y = sub[1].y;
-    bitmap->buffer -= width;
     if ( error )
       goto Exit;
 
-    bitmap->buffer += 2 * width;
+    target.origin++;
     FT_Outline_Translate( outline,
                           sub[1].x - sub[2].x,
                           sub[1].y - sub[2].y );
     error = render->raster_render( render->raster, &params );
     x = sub[2].x;
     y = sub[2].y;
-    bitmap->buffer -= 2 * width;
-    if ( error )
-      goto Exit;
-
-    /* XXX: Rearrange the bytes according to FT_PIXEL_MODE_LCD.    */
-    /* XXX: It is more efficient to render every third byte above. */
-    {
-      FT_Memory  memory  = render->root.memory;
-      FT_Byte*   line;
-      FT_Byte*   temp = NULL;
-      FT_UInt    i, j;
-
-      unsigned int  height = bitmap->rows;
-      int           pitch  = bitmap->pitch;
-
-
-      if ( FT_ALLOC( temp, (FT_ULong)pitch ) )
-        goto Exit;
-
-      for ( i = 0; i < height; i++ )
-      {
-        line = bitmap->buffer + i * (FT_ULong)pitch;
-        for ( j = 0; j < width; j++ )
-        {
-          temp[3 * j    ] = line[j];
-          temp[3 * j + 1] = line[j + width];
-          temp[3 * j + 2] = line[j + width + width];
-        }
-        FT_MEM_COPY( line, temp, pitch );
-      }
-
-      FT_FREE( temp );
-    }
 
   Exit:
     FT_Outline_Translate( outline, x, y );
