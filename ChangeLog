@@ -1,3 +1,16 @@
+2020-07-03  Alexei Podtelezhnikov  <apodtele@gmail.com>
+
+	[smooth] Separate LCD paths from gray rendering.
+
+	This makes `ft_smooth_render' a lot smaller and easier to follow. It
+	also cleanly separates Harmony and ClearType-style LCD rendering
+	algorithms. Now I only wish to move LCD filtering and geometry from
+	FT_Library to FT_Renderer.
+
+	* src/smooth/ftsmooth.c (ft_smooth_render): Move LCD code from here...
+	(ft_smooth_raster_lcd, ft_smooth_raster_lcdv): ... to here.
+	[FT_CONFIG_OPTION_SUBPIXEL_RENDERING]: Reorganize #ifdef's.
+
 2020-06-20  Sebastian Rasmussen  <sebras@gmail.com>
 
 	[cff] Fix handling of `style_name == NULL' (#58630).
