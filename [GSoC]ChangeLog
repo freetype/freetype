@@ -1,5 +1,10 @@
 2020-07-03  Anuj Verma  <anujv@iitbhilai.ac.in>
 
+	* src/sdf/ftsdf.c: Use ASCII single quote (') instead
+	  of back tick (`) for derivatives. Looks cleaner.
+
+2020-07-03  Anuj Verma  <anujv@iitbhilai.ac.in>
+
 	[sdf] Added function to find shortest distance from a
 	point to a cubic bezier. Now the sdf module can render
 	all types of fonts, but still has some issues.

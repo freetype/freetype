@@ -1214,14 +1214,14 @@
       /*    B( t ) = t^2( A ) + 2t( B ) + p0                         */
       /*                                                             */
       /* => the derivative of the above equation is written as       */
-      /*    B`( t ) = 2( tA + B )                                    */
+      /*    B'( t ) = 2( tA + B )                                    */
       /*                                                             */
       /* => now to find the shortest distance from p to B( t ), we   */
       /*    find the point on the curve at which the shortest        */
       /*    distance vector ( i.e. B( t ) - p ) and the direction    */
-      /*    ( i.e. B`( t )) makes 90 degrees. in other words we make */
+      /*    ( i.e. B'( t )) makes 90 degrees. in other words we make */
       /*    the dot product zero.                                    */
-      /*    ( B( t ) - p ).( B`( t ) ) = 0                           */
+      /*    ( B( t ) - p ).( B'( t ) ) = 0                           */
       /*    ( t^2( A ) + 2t( B ) + p0 - p ).( 2( tA + B ) ) = 0      */
       /*                                                             */
       /*    after simplifying we get a cubic equation as             */
@@ -1372,7 +1372,7 @@
       }
     }
 
-    /* B`( t ) = 2( tA + B ) */
+    /* B'( t ) = 2( tA + B ) */
     direction.x = 2 * FT_MulFix( aA.x, min_factor ) + 2 * bB.x;
     direction.y = 2 * FT_MulFix( aA.y, min_factor ) + 2 * bB.y;
 
@@ -1439,10 +1439,10 @@
     /*    B( t ) = t^2( A ) + t( B ) + p0                          */
     /*                                                             */
     /* => the derivative of the above equation is written as       */
-    /*    B`( t ) = 2t( A ) + B                                    */
+    /*    B'( t ) = 2t( A ) + B                                    */
     /*                                                             */
     /* => further derivative of the above equation is written as   */
-    /*    B``( t ) = 2A                                            */
+    /*    B''( t ) = 2A                                            */
     /*                                                             */
     /* => the equation of distance from point `p' to the curve     */
     /*    P( t ) can be written as                                 */
@@ -1452,7 +1452,7 @@
     /*                                                             */
     /* => finally the equation of angle between curve B( t ) and   */
     /*    point to curve distance P( t ) can be written as         */
-    /*    Q( t ) = P( t ).B`( t )                                  */
+    /*    Q( t ) = P( t ).B'( t )                                  */
     /*                                                             */
     /* => now our task is to find a value of t such that the above */
     /*    equation Q( t ) becomes zero. in other words the point   */
@@ -1462,19 +1462,19 @@
     /* => we first assume a arbitary value of the factor `t' and   */
     /*    then we improve it using Newton's equation such as       */
     /*                                                             */
-    /*    t -= Q( t ) / Q`( t )                                    */
+    /*    t -= Q( t ) / Q'( t )                                    */
     /*    putting value of Q( t ) from the above equation gives    */
     /*                                                             */
-    /*    t -= P( t ).B`( t ) / derivative( P( t ).B`( t ) )       */
-    /*    t -= P( t ).B`( t ) /                                    */
-    /*         ( P`( t )B`( t ) + P( t ).B``( t ) )                */
+    /*    t -= P( t ).B'( t ) / derivative( P( t ).B'( t ) )       */
+    /*    t -= P( t ).B'( t ) /                                    */
+    /*         ( P'( t )B'( t ) + P( t ).B''( t ) )                */
     /*                                                             */
-    /*    P`( t ) is noting but B`( t ) because the constant are   */
+    /*    P'( t ) is noting but B'( t ) because the constant are   */
     /*    gone due to derivative                                   */
     /*                                                             */
     /* => finally we get the equation to improve the factor as     */
-    /*    t -= P( t ).B`( t ) /                                    */
-    /*         ( B`( t ).B`( t ) + P( t ).B``( t ) )               */
+    /*    t -= P( t ).B'( t ) /                                    */
+    /*         ( B'( t ).B'( t ) + P( t ).B''( t ) )               */
     /*                                                             */
     /* [note]: B and B( t ) are different in the above equations   */
 
@@ -1567,24 +1567,24 @@
         }
 
         /* This the actual Newton's approximation.       */
-        /*    t -= P( t ).B`( t ) /                      */
-        /*         ( B`( t ).B`( t ) + P( t ).B``( t ) ) */
+        /*    t -= P( t ).B'( t ) /                      */
+        /*         ( B'( t ).B'( t ) + P( t ).B''( t ) ) */
 
-        /* B`( t ) = 2tA + B */
+        /* B'( t ) = 2tA + B */
         d1.x = FT_MulFix( aA.x, 2 * factor ) + bB.x;
         d1.y = FT_MulFix( aA.y, 2 * factor ) + bB.y;
 
-        /* B``( t ) = 2A */
+        /* B''( t ) = 2A */
         d2.x = 2 * aA.x;
         d2.y = 2 * aA.y;
 
         dist_vector.x /= 1024;
         dist_vector.y /= 1024;
 
-        /* temp1 = P( t ).B`( t ) */
+        /* temp1 = P( t ).B'( t ) */
         temp1 = VEC_26D6_DOT( dist_vector, d1 );
 
-        /* temp2 = ( B`( t ).B`( t ) + P( t ).B``( t ) ) */
+        /* temp2 = ( B'( t ).B'( t ) + P( t ).B''( t ) ) */
         temp2 = VEC_26D6_DOT( d1, d1 ) +
                 VEC_26D6_DOT( dist_vector, d2 );
 
@@ -1595,7 +1595,7 @@
       }
     }
 
-    /* B`( t ) = 2tA + B */
+    /* B'( t ) = 2tA + B */
     direction.x = 2 * FT_MulFix( aA.x, min_factor ) + bB.x;
     direction.y = 2 * FT_MulFix( aA.y, min_factor ) + bB.y;
 
@@ -1670,10 +1670,10 @@
     /*    B( t ) = t^3( A ) + t^2( B ) + tC + p0                   */
     /*                                                             */
     /* => the derivative of the above equation is written as       */
-    /*    B`( t ) = 3t^2( A ) + 2t( B ) + C                        */
+    /*    B'( t ) = 3t^2( A ) + 2t( B ) + C                        */
     /*                                                             */
     /* => further derivative of the above equation is written as   */
-    /*    B``( t ) = 6t( A ) + 2B                                  */
+    /*    B''( t ) = 6t( A ) + 2B                                  */
     /*                                                             */
     /* => the equation of distance from point `p' to the curve     */
     /*    P( t ) can be written as                                 */
@@ -1683,7 +1683,7 @@
     /*                                                             */
     /* => finally the equation of angle between curve B( t ) and   */
     /*    point to curve distance P( t ) can be written as         */
-    /*    Q( t ) = P( t ).B`( t )                                  */
+    /*    Q( t ) = P( t ).B'( t )                                  */
     /*                                                             */
     /* => now our task is to find a value of t such that the above */
     /*    equation Q( t ) becomes zero. in other words the point   */
@@ -1693,19 +1693,19 @@
     /* => we first assume a arbitary value of the factor `t' and   */
     /*    then we improve it using Newton's equation such as       */
     /*                                                             */
-    /*    t -= Q( t ) / Q`( t )                                    */
+    /*    t -= Q( t ) / Q'( t )                                    */
     /*    putting value of Q( t ) from the above equation gives    */
     /*                                                             */
-    /*    t -= P( t ).B`( t ) / derivative( P( t ).B`( t ) )       */
-    /*    t -= P( t ).B`( t ) /                                    */
-    /*         ( P`( t )B`( t ) + P( t ).B``( t ) )                */
+    /*    t -= P( t ).B'( t ) / derivative( P( t ).B'( t ) )       */
+    /*    t -= P( t ).B'( t ) /                                    */
+    /*         ( P'( t )B'( t ) + P( t ).B''( t ) )                */
     /*                                                             */
-    /*    P`( t ) is noting but B`( t ) because the constant are   */
+    /*    P'( t ) is noting but B'( t ) because the constant are   */
     /*    gone due to derivative                                   */
     /*                                                             */
     /* => finally we get the equation to improve the factor as     */
-    /*    t -= P( t ).B`( t ) /                                    */
-    /*         ( B`( t ).B`( t ) + P( t ).B``( t ) )               */
+    /*    t -= P( t ).B'( t ) /                                    */
+    /*         ( B'( t ).B'( t ) + P( t ).B''( t ) )               */
     /*                                                             */
     /* [note]: B and B( t ) are different in the above equations   */
 
@@ -1809,26 +1809,26 @@
         }
 
         /* This the actual Newton's approximation.       */
-        /*    t -= P( t ).B`( t ) /                      */
-        /*         ( B`( t ).B`( t ) + P( t ).B``( t ) ) */
+        /*    t -= P( t ).B'( t ) /                      */
+        /*         ( B'( t ).B'( t ) + P( t ).B''( t ) ) */
 
-        /* B`( t ) = 3t^2( A ) + 2t( B ) + C */
+        /* B'( t ) = 3t^2( A ) + 2t( B ) + C */
         d1.x = FT_MulFix( aA.x, 3 * factor2 ) + 
                FT_MulFix( bB.x, 2 * factor ) + cC.x;
         d1.y = FT_MulFix( aA.y, 3 * factor2 ) + 
                FT_MulFix( bB.y, 2 * factor ) + cC.y;
 
-        /* B``( t ) = 6t( A ) + 2B */
+        /* B''( t ) = 6t( A ) + 2B */
         d2.x = FT_MulFix( aA.x, 6 * factor ) + 2 * bB.x;
         d2.y = FT_MulFix( aA.y, 6 * factor ) + 2 * bB.y;
 
         dist_vector.x /= 1024;
         dist_vector.y /= 1024;
 
-        /* temp1 = P( t ).B`( t ) */
+        /* temp1 = P( t ).B'( t ) */
         temp1 = VEC_26D6_DOT( dist_vector, d1 );
 
-        /* temp2 = ( B`( t ).B`( t ) + P( t ).B``( t ) ) */
+        /* temp2 = ( B'( t ).B'( t ) + P( t ).B''( t ) ) */
         temp2 = VEC_26D6_DOT( d1, d1 ) +
                 VEC_26D6_DOT( dist_vector, d2 );
 
@@ -1839,7 +1839,7 @@
       }
     }
 
-    /* B`( t ) = 3t^2( A ) + 2t( B ) + C */
+    /* B'( t ) = 3t^2( A ) + 2t( B ) + C */
     direction.x = FT_MulFix( aA.x, 3 * min_factor_sq ) + 
                   FT_MulFix( bB.x, 2 * min_factor ) + cC.x;
     direction.y = FT_MulFix( aA.y, 3 * min_factor_sq ) + 
