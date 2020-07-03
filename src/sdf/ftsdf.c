@@ -31,7 +31,14 @@
   #  define USE_NEWTON_FOR_CONIC 1
   #endif
 
-  #define MAX_NEWTON_ITERATION 4
+  /* `MAX_NEWTON_DIVISIONS' is the number of intervals the bezier curve   */
+  /* is sampled and checked for shortest distance.                        */
+  #define MAX_NEWTON_DIVISIONS 4
+
+  /* `MAX_NEWTON_STEPS' is the number of steps of Newton's iterations in  */
+  /* each interval of the bezier curve. Basically for each division we    */
+  /* run the Newton's approximation (i.e. x -= Q( t ) / Q'( t )) to get   */
+  /* the shortest distance.                                               */
   #define MAX_NEWTON_STEPS     4
 
   /**************************************************************************
@@ -1507,9 +1514,9 @@
     cC.y = p0.y;
 
     /* do newton's iterations */
-    for ( iterations = 0; iterations <= MAX_NEWTON_ITERATION; iterations++ )
+    for ( iterations = 0; iterations <= MAX_NEWTON_DIVISIONS; iterations++ )
     {
-      FT_16D16  factor = FT_INT_16D16( iterations ) / MAX_NEWTON_ITERATION;
+      FT_16D16  factor = FT_INT_16D16( iterations ) / MAX_NEWTON_DIVISIONS;
       FT_16D16  factor2;
       FT_16D16  length;
 

@@ -1,3 +1,8 @@
+2020-07-03  Anuj Verma  <anujv@iitbhilai.ac.in>
+
+	* src/sdf/ftsdf.c (MAX_NEWTON_ITERATION => MAX_NEWTON_DIVISIONS):
+	  Renamed to avoid confusion.
+
 2020-07-02  Anuj Verma  <anujv@iitbhilai.ac.in>
 
 	[sdf] Added Newton's method for shortest distance
