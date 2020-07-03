@@ -193,9 +193,20 @@
    * runtime errors), and 7 means _very_ verbose.
    */
   FT_BASE_DEF( void )
-  ft_debug_init( const char* level )
+  ft_debug_init( void )
   {
-    const char*  ft2_debug = level;
+    const char*  ft2_debug = NULL;
+
+#ifdef FT_LOGGING
+
+if( ft_custom_trace_level != NULL )
+    ft2_debug = ft_custom_trace_level;
+else  
+    ft2_debug = ft_default_trace_level;
+
+#else
+    ft2_debug = ft_getenv( "FT2_DEBUG" );
+#endif /* FT_LOGGIGN */
 
 
     if ( ft2_debug )
@@ -274,7 +285,7 @@
 
 
   FT_BASE_DEF( void )
-  ft_debug_init( const char* level )
+  ft_debug_init( void )
   {
     /* nothing */
   }
@@ -316,31 +327,27 @@
 
 #ifdef FT_LOGGING
 
-
-  /**************************************************************************
-   * If FT_LOGGING is enabled FreeType needs a FILE* to write logs 
-   * to file.
-   */
-  static FILE* fileptr = NULL; 
-
-
-
   /**************************************************************************
    * 
-   * If FT_LOGGING is enabled, FreeType needs a FILE* to write logs 
-   * therefore it uses `ft_logging_init()` function to initialize a 
-   * FILE* and `ft_logging_deinit()` to un-initialize the FILE*
+   * If FT_LOGGING is enabled, FreeType needs to initialize all logging 
+   * variables to write logs. 
+   * Therefore it uses `ft_logging_init()` function to initialize a 
+   * loggging variables and `ft_logging_deinit()` to un-initialize the 
+   * logging variables.
    * 
    */
   
   FT_BASE_DEF( void )
   ft_logging_init( void )
   {
+    ft_default_output_handler = &ft_output_handler;
+    ft_default_trace_level = ft_getenv( "FT2_DEBUG" );
     fileptr = fopen( "freetype2.log", "w" );
-    FT_Trace_Set_Default_Level();
     
+    ft_debug_init();
     /* We need to set the default FreeType specific dlg's output handler */
-    dlg_set_handler( &ft_default_output_handler, NULL );
+    dlg_set_handler( ft_default_output_handler, NULL );
+
   }
 
   FT_BASE_DEF( void )
@@ -356,7 +363,7 @@
    *    
    */
   FT_BASE_DEF( void ) 
-  ft_default_output_handler( const struct dlg_origin* origin, 
+  ft_output_handler( const struct dlg_origin* origin, 
                               const char* string, void* data )
  {
      unsigned int features; 
@@ -375,39 +382,48 @@
 
  /**************************************************************************
   * 
+  * Functions to set trace levels at run-time
+  * 1. FT_Trace_Set_Level() - Use this function to change the trace level 
+  *    at run-time. e.g. FT_Trace_Set_Level( "any:6 io:2" );
   * 
+  * 2. FT_Trace_Set_Default_Level() - Use this function to set the default 
+  *    value of trace levels which is provided by environment variable 
+  *    FT2_DEBUG
   * 
   */
+ 
   FT_EXPORT_DEF( void )
   FT_Trace_Set_Level( const char* level )
   {  
-    ft_debug_init( level );
+    ft_custom_trace_level = level;
+    ft_debug_init();
   }
 
   FT_EXPORT_DEF( void )
   FT_Trace_Set_Default_Level( void )
   {
-    ft_debug_init( ft_getenv( "FT2_DEBUG" ) );
+    ft_custom_trace_level = NULL ;
+    ft_debug_init();
   }
 
 /****************************************************************************
  * 
- * 
+ * comments on callback
  * 
  */
-
+  /*
   FT_EXPORT_DEF( void )
   FT_Trace_Set_Output( ft_ouput_handler handler )
   {
-    freetype_output_handler = handler;
+    ft_custom_output_handler = handler;
   }
 
   FT_EXPORT_DEF( void )
   FT_Trace_Set_Default_Output()
   {
-    freetype_output_handler = NULL;
+    ft_custom_output_handler = NULL;
   }
-
+  */
 #endif /* FT_LOGGING */
 
 /* END */

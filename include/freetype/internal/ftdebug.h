@@ -110,24 +110,9 @@ FT_BEGIN_HEADER
    */
 
 #ifdef FT_LOGGING
-
-  static ft_ouput_handler freetype_output_handler = NULL;
   
 #undef FT_Log
 #define FT_Log dlg_trace
-
-/****************************************************************************
- * 
- * dlg uses output handlers to control how and where the log messages are 
- * printed.
- * Therefore we need to define an output handler specific to FreeType, it 
- * will act as a default output handler of Freetype. 
- * 
- */
-
- FT_BASE( void ) 
- ft_default_output_handler( const struct dlg_origin* origin, 
- const char* string, void* data );
 
 #else
 
@@ -263,7 +248,7 @@ FT_BEGIN_HEADER
           {                                                                 \
           dlg_add_tag( "error_log", NULL );                                 \
           dlg_trace varformat;                                              \
-          dlg_remove_tag( "error_log", NULL );                              \  
+          dlg_remove_tag( "error_log", NULL );                              \
           } while ( 0 )                            
 
 #else
@@ -341,9 +326,48 @@ FT_BEGIN_HEADER
 
 
   FT_BASE( void )
-  ft_debug_init( const char* level );
+  ft_debug_init( void );
 
 #ifdef FT_LOGGING
+
+
+/****************************************************************************
+ * 
+ * dlg uses output handlers to control how and where the log messages are 
+ * printed.
+ * Therefore we need to define an output handler specific to FreeType, it 
+ * will act as a default output handler of Freetype. 
+ * 
+ */
+
+ FT_BASE( void ) 
+ ft_output_handler( const struct dlg_origin* origin, const char* string, 
+                    void* data );
+
+
+  /**************************************************************************
+   * 
+   * Variable used when FT_LOGGING is enabled to control logging:
+   * 1. ft_default_trace_level: stores the value of trace levels which are 
+   *    provided to FreeType using FT2_DEBUG environment variable.
+   * 
+   * 2. ft_custom_trace_level: stores the value of custom trace level which 
+   *    is provided by user at run-time.
+   * 
+   * 3. custom_output_handler: stores the function pointer to the callback 
+   *    function provided by user.
+   * 
+   * 4. ft_default_output_handler: stores the function pointer which is used 
+   *    internally by FreeType to print logs to file.
+   * 
+   * 5. fileptr: store the FILE*
+   *     
+   */ 
+  static const char* ft_default_trace_level = NULL;
+  static const char* ft_custom_trace_level = NULL;
+  static ft_custom_output_handler custom_output_handler = NULL;
+  static dlg_handler ft_default_output_handler = NULL;
+  static FILE* fileptr = NULL;
 
   /**************************************************************************
    * 
