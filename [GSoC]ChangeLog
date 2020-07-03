@@ -1,5 +1,10 @@
 2020-07-03  Anuj Verma  <anujv@iitbhilai.ac.in>
 
+	* src/sdf/ftsdf.c (sdf_shape_dump): Add more info
+	  to the debug output.
+
+2020-07-03  Anuj Verma  <anujv@iitbhilai.ac.in>
+
 	* src/sdf/ftsdf.c (MAX_NEWTON_ITERATION => MAX_NEWTON_DIVISIONS):
 	  Renamed to avoid confusion.
 
