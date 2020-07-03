@@ -1,5 +1,18 @@
 2020-07-03  Anuj Verma  <anujv@iitbhilai.ac.in>
 
+	[sdf] Added function to find shortest distance from a
+	point to a cubic bezier. Now the sdf module can render
+	all types of fonts, but still has some issues.
+
+	* src/sdf/ftsdf.c (get_min_distance_cubic): The function
+	  calculates shortest distance from a point to a cubic
+	  bezier curve.
+
+	* src/sdf/ftsdf.c (sdf_edge_get_min_distance): Add the
+	  `get_min_distance_cubic' function call.
+
+2020-07-03  Anuj Verma  <anujv@iitbhilai.ac.in>
+
 	* src/sdf/ftsdf.c (resolve_corner): [Bug] Remove the
 	  nearest_point check. Two distances can be same and
 	  can give opposite sign, but they may not have a

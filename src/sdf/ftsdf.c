@@ -1494,6 +1494,7 @@
     FT_UShort    iterations;
     FT_UShort    steps;
 
+
     if ( !conic || !out )
     {
       error = FT_THROW( Invalid_Argument );
@@ -1620,6 +1621,250 @@
   /**************************************************************************
    *
    * @Function:
+   *   get_min_distance_cubic
+   *
+   * @Description:
+   *   This function find the shortest distance from the `cubic' bezier
+   *   curve to a given `point' and assigns it to `out'. Only use it for
+   *   cubic curves.
+   *   [Note]: The function uses Newton's approximation to find the shortest
+   *           distance. Another way would be to divide the cubic into conic
+   *           or subdivide the curve into lines.
+   *
+   * @Input:
+   *   [TODO]
+   *
+   * @Return:
+   *   [TODO]
+   */
+  static FT_Error
+  get_min_distance_cubic( SDF_Edge*             cubic,
+                          FT_26D6_Vec           point,
+                          SDF_Signed_Distance*  out )
+  {
+    /* the procedure to find the shortest distance from a point to */
+    /* a cubic bezier curve is similar to a quadratic curve.       */
+    /* The only difference is that while calculating the factor    */
+    /* `t', instead of a cubic polynomial equation we have to find */
+    /* the roots of a 5th degree polynomial equation.              */
+    /* But since solving a 5th degree polynomial equation require  */
+    /* significant amount of time and still the results may not be */
+    /* accurate, we are going to directly approximate the value of */
+    /* `t' using Newton-Raphson method                             */
+    /*                                                             */
+    /* p0 = first endpoint                                         */
+    /* p1 = first control point                                    */
+    /* p2 = second control point                                   */
+    /* p3 = second endpoint                                        */
+    /* p = point from which shortest distance is to be calculated  */
+    /* ----------------------------------------------------------- */
+    /* => the equation of a cubic bezier curve can be written as:  */
+    /*    B( t ) = ( ( 1 - t )^3 )p0 + 3( ( 1 - t )^2 )tp1 +       */
+    /*             3( 1 - t )( t^2 )p2 + ( t^3 )p3                 */
+    /*    The equation can be expanded and written as:             */
+    /*    B( t ) = ( t^3 )( -p0 + 3p1 - 3p2 + p3 ) +               */
+    /*             3( t^2 )( p0 - 2p1 + p2 ) + 3t( -p0 + p1 ) + p0 */
+    /*                                                             */
+    /*    Now let A = ( -p0 + 3p1 - 3p2 + p3 ),                    */
+    /*            B = 3( p0 - 2p1 + p2 ), C = 3( -p0 + p1 )        */
+    /*    B( t ) = t^3( A ) + t^2( B ) + tC + p0                   */
+    /*                                                             */
+    /* => the derivative of the above equation is written as       */
+    /*    B`( t ) = 3t^2( A ) + 2t( B ) + C                        */
+    /*                                                             */
+    /* => further derivative of the above equation is written as   */
+    /*    B``( t ) = 6t( A ) + 2B                                  */
+    /*                                                             */
+    /* => the equation of distance from point `p' to the curve     */
+    /*    P( t ) can be written as                                 */
+    /*    P( t ) = t^3( A ) + t^2( B ) + tC + p0 - p               */
+    /*    Now let D = ( p0 - p )                                   */
+    /*    P( t ) = t^3( A ) + t^2( B ) + tC + D                    */
+    /*                                                             */
+    /* => finally the equation of angle between curve B( t ) and   */
+    /*    point to curve distance P( t ) can be written as         */
+    /*    Q( t ) = P( t ).B`( t )                                  */
+    /*                                                             */
+    /* => now our task is to find a value of t such that the above */
+    /*    equation Q( t ) becomes zero. in other words the point   */
+    /*    to curve vector makes 90 degree with curve. this is done */
+    /*    by Newton-Raphson's method.                              */
+    /*                                                             */
+    /* => we first assume a arbitary value of the factor `t' and   */
+    /*    then we improve it using Newton's equation such as       */
+    /*                                                             */
+    /*    t -= Q( t ) / Q`( t )                                    */
+    /*    putting value of Q( t ) from the above equation gives    */
+    /*                                                             */
+    /*    t -= P( t ).B`( t ) / derivative( P( t ).B`( t ) )       */
+    /*    t -= P( t ).B`( t ) /                                    */
+    /*         ( P`( t )B`( t ) + P( t ).B``( t ) )                */
+    /*                                                             */
+    /*    P`( t ) is noting but B`( t ) because the constant are   */
+    /*    gone due to derivative                                   */
+    /*                                                             */
+    /* => finally we get the equation to improve the factor as     */
+    /*    t -= P( t ).B`( t ) /                                    */
+    /*         ( B`( t ).B`( t ) + P( t ).B``( t ) )               */
+    /*                                                             */
+    /* [note]: B and B( t ) are different in the above equations   */
+
+    FT_Error      error = FT_Err_Ok;
+
+    FT_26D6_Vec   aA, bB, cC, dD; /* A, B, C in the above comment          */
+    FT_16D16_Vec  nearest_point;  /* point on curve nearest to `point'     */
+    FT_16D16_Vec  direction;      /* direction of curve at `nearest_point' */
+
+    FT_26D6_Vec   p0, p1, p2, p3; /* control points of a cubic curve       */
+    FT_26D6_Vec   p;              /* `point' to which shortest distance    */
+
+    FT_16D16      min = FT_INT_MAX; /* shortest distance           */
+    FT_16D16      min_factor;       /* factor at shortest distance */
+    FT_16D16      min_factor_sq;    /* factor at shortest distance */
+    FT_16D16      cross;            /* to determine the sign       */
+
+    FT_UShort     iterations;
+    FT_UShort     steps;
+
+
+    if ( !cubic || !out )
+    {
+      error = FT_THROW( Invalid_Argument );
+      goto Exit;
+    }
+
+    if ( cubic->edge_type != SDF_EDGE_CUBIC )
+    {
+      error = FT_THROW( Invalid_Argument );
+      goto Exit;
+    }
+
+    /* assign the values after checking pointer */
+    p0 = cubic->start_pos;
+    p1 = cubic->control_a;
+    p2 = cubic->control_b;
+    p3 = cubic->end_pos;
+    p  = point;
+
+    /* compute substitution coefficients */
+    aA.x = -p0.x + 3 * ( p1.x - p2.x ) + p3.x;
+    aA.y = -p0.y + 3 * ( p1.y - p2.y ) + p3.y;
+
+    bB.x = 3 * ( p0.x - 2 * p1.x + p2.x );
+    bB.y = 3 * ( p0.y - 2 * p1.y + p2.y );
+
+    cC.x = 3 * ( p1.x - p0.x );
+    cC.y = 3 * ( p1.y - p0.y );
+
+    dD.x = p0.x;
+    dD.y = p0.y;
+
+    for ( iterations = 0; iterations <= MAX_NEWTON_DIVISIONS; iterations++ )
+    {
+      FT_16D16  factor  = FT_INT_16D16( iterations ) / MAX_NEWTON_DIVISIONS;
+
+      FT_16D16  factor2;         /* factor^2            */
+      FT_16D16  factor3;         /* factor^3            */
+      FT_16D16  length;
+
+      FT_16D16_Vec  curve_point; /* point on the curve  */
+      FT_16D16_Vec  dist_vector; /* `curve_point' - `p' */
+
+      FT_26D6_Vec   d1;          /* first  derivative   */
+      FT_26D6_Vec   d2;          /* second derivative   */
+
+      FT_16D16      temp1;
+      FT_16D16      temp2;
+
+
+      for ( steps = 0; steps < MAX_NEWTON_STEPS; steps++ )
+      {
+        factor2 = FT_MulFix( factor, factor );
+        factor3 = FT_MulFix( factor2, factor );
+
+        /* B( t ) = t^3( A ) + t^2( B ) + tC + D */
+        curve_point.x = FT_MulFix( aA.x, factor3 ) +
+                        FT_MulFix( bB.x, factor2 ) +
+                        FT_MulFix( cC.x, factor ) + dD.x;
+        curve_point.y = FT_MulFix( aA.y, factor3 ) +
+                        FT_MulFix( bB.y, factor2 ) +
+                        FT_MulFix( cC.y, factor ) + dD.y;
+
+        /* convert to 16.16 */
+        curve_point.x = FT_26D6_16D16( curve_point.x );
+        curve_point.y = FT_26D6_16D16( curve_point.y );
+
+        /* P( t ) in the comment */
+        dist_vector.x = curve_point.x - FT_26D6_16D16( p.x );
+        dist_vector.y = curve_point.y - FT_26D6_16D16( p.y );
+
+        length = VECTOR_LENGTH_16D16( dist_vector );
+
+        if ( length < min )
+        {
+          min = length;
+          min_factor = factor;
+          min_factor_sq = factor2;
+          nearest_point = curve_point;
+        }
+
+        /* This the actual Newton's approximation.       */
+        /*    t -= P( t ).B`( t ) /                      */
+        /*         ( B`( t ).B`( t ) + P( t ).B``( t ) ) */
+
+        /* B`( t ) = 3t^2( A ) + 2t( B ) + C */
+        d1.x = FT_MulFix( aA.x, 3 * factor2 ) + 
+               FT_MulFix( bB.x, 2 * factor ) + cC.x;
+        d1.y = FT_MulFix( aA.y, 3 * factor2 ) + 
+               FT_MulFix( bB.y, 2 * factor ) + cC.y;
+
+        /* B``( t ) = 6t( A ) + 2B */
+        d2.x = FT_MulFix( aA.x, 6 * factor ) + 2 * bB.x;
+        d2.y = FT_MulFix( aA.y, 6 * factor ) + 2 * bB.y;
+
+        dist_vector.x /= 1024;
+        dist_vector.y /= 1024;
+
+        /* temp1 = P( t ).B`( t ) */
+        temp1 = VEC_26D6_DOT( dist_vector, d1 );
+
+        /* temp2 = ( B`( t ).B`( t ) + P( t ).B``( t ) ) */
+        temp2 = VEC_26D6_DOT( d1, d1 ) +
+                VEC_26D6_DOT( dist_vector, d2 );
+
+        factor -= FT_DivFix( temp1, temp2 );
+
+        if ( factor < 0 || factor > FT_INT_16D16( 1 ) )
+          break;
+      }
+    }
+
+    /* B`( t ) = 3t^2( A ) + 2t( B ) + C */
+    direction.x = FT_MulFix( aA.x, 3 * min_factor_sq ) + 
+                  FT_MulFix( bB.x, 2 * min_factor ) + cC.x;
+    direction.y = FT_MulFix( aA.y, 3 * min_factor_sq ) + 
+                  FT_MulFix( bB.y, 2 * min_factor ) + cC.y;
+
+    /* determine the sign */
+    cross = FT_MulFix( nearest_point.x - FT_26D6_16D16( p.x ), direction.y ) -
+            FT_MulFix( nearest_point.y - FT_26D6_16D16( p.y ), direction.x );
+
+    /* assign the values */
+    out->distance = min;
+    out->nearest_point = nearest_point;
+    out->sign = cross < 0 ? 1 : -1;
+
+    FT_Vector_NormLen( &direction );
+
+    out->direction = direction;
+
+  Exit:
+    return error;
+  }
+
+  /**************************************************************************
+   *
+   * @Function:
    *   sdf_edge_get_min_distance
    *
    * @Description:
@@ -1655,6 +1900,8 @@
       get_min_distance_conic( edge, point, out );
       break;
     case SDF_EDGE_CUBIC:
+      get_min_distance_cubic( edge, point, out );
+      break;
     default:
         error = FT_THROW( Invalid_Argument );
     }
