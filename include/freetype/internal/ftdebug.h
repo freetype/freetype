@@ -109,18 +109,6 @@ FT_BEGIN_HEADER
    *  
    */
 
-#ifdef FT_LOGGING
-  
-#undef FT_Log
-#define FT_Log dlg_trace
-
-#else
-
-#undef FT_Log
-#define FT_Log FT_Message
-
-#endif /* FT_LOGGING */
-
 #ifdef FT_DEBUG_LEVEL_TRACE
 
   /* we need two macros here to make cpp expand `FT_COMPONENT' */
@@ -131,7 +119,7 @@ FT_BEGIN_HEADER
           do                                                               \
           {                                                                \
             if ( ft_trace_levels[FT_TRACE_COMP( FT_COMPONENT )] >= level ) \
-              FT_Log varformat;                                            \
+              FT_Message varformat;                                        \
           } while ( 0 )
 
 #else /* !FT_DEBUG_LEVEL_TRACE */
@@ -341,7 +329,7 @@ FT_BEGIN_HEADER
  */
 
  FT_BASE( void ) 
- ft_output_handler( const struct dlg_origin* origin, const char* string, 
+ ft_log_handler( const struct dlg_origin* origin, const char* string, 
                     void* data );
 
 
@@ -360,14 +348,14 @@ FT_BEGIN_HEADER
    * 4. ft_default_output_handler: stores the function pointer which is used 
    *    internally by FreeType to print logs to file.
    * 
-   * 5. fileptr: store the FILE*
+   * 5. ft_fileptr: store the FILE*
    *     
    */ 
   static const char* ft_default_trace_level = NULL;
   static const char* ft_custom_trace_level = NULL;
-  static ft_custom_output_handler custom_output_handler = NULL;
-  static dlg_handler ft_default_output_handler = NULL;
-  static FILE* fileptr = NULL;
+  static ft_custom_log_handler custom_output_handler = NULL;
+  static dlg_handler ft_default_log_handler = NULL;
+  static FILE* ft_fileptr = NULL;
 
   /**************************************************************************
    * 

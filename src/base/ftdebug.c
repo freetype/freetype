@@ -53,12 +53,25 @@
   FT_Message( const char*  fmt,
               ... )
   {
+#ifdef FT_LOGGING
+
+    if( custom_output_handler != NULL )
+    {
+      va_list  ap;
+      va_start( ap, fmt );
+      custom_output_handler( fmt, ap );
+      va_end( ap );
+    }
+    else
+      dlg_trace( fmt );
+#else
     va_list  ap;
 
 
     va_start( ap, fmt );
     vfprintf( stderr, fmt, ap );
     va_end( ap );
+#endif /* FT_LOGGING */
   }
 
 
@@ -340,20 +353,20 @@ else
   FT_BASE_DEF( void )
   ft_logging_init( void )
   {
-    ft_default_output_handler = &ft_output_handler;
+    ft_default_log_handler = ft_log_handler;
     ft_default_trace_level = ft_getenv( "FT2_DEBUG" );
-    fileptr = fopen( "freetype2.log", "w" );
+    ft_fileptr = fopen( "freetype2.log", "w" );
     
     ft_debug_init();
     /* We need to set the default FreeType specific dlg's output handler */
-    dlg_set_handler( ft_default_output_handler, NULL );
+    dlg_set_handler( ft_default_log_handler, NULL );
 
   }
 
   FT_BASE_DEF( void )
   ft_logging_deinit( void )
   {
-    fclose( fileptr );
+    fclose( ft_fileptr );
   }
 
   /*************************************************************************
@@ -363,9 +376,9 @@ else
    *    
    */
   FT_BASE_DEF( void ) 
-  ft_output_handler( const struct dlg_origin* origin, 
+  ft_log_handler( const struct dlg_origin* origin, 
                               const char* string, void* data )
- {
+  {
      unsigned int features; 
      if( origin->tags[0] == "error_log" )
      {
@@ -376,9 +389,9 @@ else
       features = dlg_output_threadsafe /*| dlg_output_tags*/ ;
      }
      
-	   dlg_generic_output_stream( fileptr, features, origin, string, 
+	   dlg_generic_output_stream( ft_fileptr, features, origin, string, 
                                 dlg_default_output_styles );
- }
+  }
 
  /**************************************************************************
   * 
@@ -408,22 +421,22 @@ else
 
 /****************************************************************************
  * 
- * comments on callback
+ * Functions to handle custom log handler:
  * 
  */
-  /*
+  
   FT_EXPORT_DEF( void )
-  FT_Trace_Set_Output( ft_ouput_handler handler )
+  FT_Set_Log_Handler( ft_custom_log_handler handler )
   {
-    ft_custom_output_handler = handler;
+    custom_output_handler = handler;
   }
-
+  
   FT_EXPORT_DEF( void )
-  FT_Trace_Set_Default_Output()
+  FT_Set_Default_Log_Handler()
   {
-    ft_custom_output_handler = NULL;
+    custom_output_handler = NULL;
   }
-  */
+  
 #endif /* FT_LOGGING */
 
 /* END */

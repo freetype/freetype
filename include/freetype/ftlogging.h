@@ -22,20 +22,24 @@ FT_BEGIN_HEADER
 
   /* An external callback function to be used to define an output handler */
   typedef void 
-  (*ft_custom_output_handler)( const char* string ); 
+  (*ft_custom_log_handler)( const char* fmt, va_list args ); 
 
 
   /**************************************************************************
    * 
-   * comments on callback
+   * If FT_LOGGING is enabled user can provide their own function to handle 
+   * the log messages using the function `FT_Set_Log_Handler()` by passing 
+   * the function name which they want to use.
+   * User could also revert back to use FreeType's inbuilt function to 
+   * handle logs using function `FT_Set_Default_Log_Handler()` 
+   * Defined in src/base/ftdebug.c
    *
    */ 
-  /*  
   FT_EXPORT( void )
-  FT_Trace_Set_Output( ft_ouput_handler handler ); 
+  FT_Set_Log_Handler( ft_custom_log_handler handler ); 
 
   FT_EXPORT( void )
-  FT_Trace_Set_Default_Output();
-  */
+  FT_Set_Default_Log_Handler();
+  
 
 FT_END_HEADER
