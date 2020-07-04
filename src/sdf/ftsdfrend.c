@@ -159,8 +159,8 @@
     FT_Pos       x_shift = 0;
     FT_Pos       y_shift = 0;
 
-    FT_UInt      x_pad   = 0;
-    FT_UInt      y_pad   = 0;
+    FT_Pos       x_pad   = 0;
+    FT_Pos       y_pad   = 0;
 
     SDF_Raster_Params  params;
     SDF_Renderer       sdf_module = SDF_RENDERER( module );

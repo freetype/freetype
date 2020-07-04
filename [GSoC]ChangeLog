@@ -1,3 +1,8 @@
+2020-07-04  Anuj Verma  <anujv@iitbhilai.ac.in>
+
+	* src/sdf/ftsdfrend.c (ft_sdf_render): Don't negate
+	  unsigned integers.
+
 2020-07-03  Anuj Verma  <anujv@iitbhilai.ac.in>
 
 	* src/sdf/ftsdf.c: Use ASCII single quote (') instead
