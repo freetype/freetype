@@ -1,4 +1,8 @@
 2020-07-04  Priyesh Kumar   <priyeshkkumar@gmail.com>
+    
+    * Added code to print FT_COMPONENT along with TimeStamp with each log
+
+2020-07-04  Priyesh Kumar   <priyeshkkumar@gmail.com>
 
     * include/freetype/ftlogging.h: Added two functions `FT_Set_Log_Handler()`
       and `FT_Set_Default_Log_Handler()` to enable the callback functionality.

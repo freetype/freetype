@@ -386,7 +386,7 @@ else
      }
      else
      {
-      features = dlg_output_threadsafe /*| dlg_output_tags*/ ;
+      features = dlg_output_threadsafe | dlg_output_tags | dlg_output_time ;
      }
      
 	   dlg_generic_output_stream( ft_fileptr, features, origin, string, 
@@ -436,7 +436,33 @@ else
   {
     custom_output_handler = NULL;
   }
+
+  FT_BASE_DEF( void )
+  ft_add_tag( const char* tag )
+  {
+    dlg_add_tag( tag, NULL );
+  }
+
+  FT_BASE_DEF( void )
+  ft_remove_tag( const char* tag )
+  {
+    dlg_remove_tag( tag, NULL );
+  }
   
+#else /* ! FT_LOGGING */
+
+  FT_BASE_DEF( void )
+  ft_add_tag( const char* tag )
+  {
+    /* nothing */
+  }
+
+  FT_BASE_DEF( void )
+  ft_remove_tag( const char* tag )
+  {
+    /* nothing */
+  }
+ 
 #endif /* FT_LOGGING */
 
 /* END */

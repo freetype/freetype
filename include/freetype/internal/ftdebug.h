@@ -111,6 +111,17 @@ FT_BEGIN_HEADER
 
 #ifdef FT_DEBUG_LEVEL_TRACE
 
+#define FT_LOGGING_TAG( x ) FT_LOGGING_TAG_( x )
+#define FT_LOGGING_TAG_( x ) #x
+
+/*function to add dlg tag*/
+FT_BASE( void )
+ft_add_tag( const char* tag );
+
+FT_BASE( void )
+ft_remove_tag( const char* tag );
+
+
   /* we need two macros here to make cpp expand `FT_COMPONENT' */
 #define FT_TRACE_COMP( x )   FT_TRACE_COMP_( x )
 #define FT_TRACE_COMP_( x )  trace_ ## x
@@ -119,7 +130,11 @@ FT_BEGIN_HEADER
           do                                                               \
           {                                                                \
             if ( ft_trace_levels[FT_TRACE_COMP( FT_COMPONENT )] >= level ) \
+            {                                                              \
+              ft_add_tag( FT_LOGGING_TAG( FT_COMPONENT ) );                \
               FT_Message varformat;                                        \
+              ft_remove_tag( FT_LOGGING_TAG( FT_COMPONENT ) );             \
+            }                                                              \
           } while ( 0 )
 
 #else /* !FT_DEBUG_LEVEL_TRACE */
