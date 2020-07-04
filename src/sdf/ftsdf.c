@@ -612,34 +612,34 @@
         case SDF_EDGE_LINE:
           FT_TRACE5(( "    Edge Type: Line\n" ));
           FT_TRACE5(( "    ---------------\n" ));
-          FT_TRACE5(( "    Start Pos: %d, %d\n", edge->start_pos.x,
-                                                 edge->start_pos.y ));
-          FT_TRACE5(( "    End Pos  : %d, %d\n", edge->end_pos.x,
-                                                 edge->end_pos.y ));
+          FT_TRACE5(( "    Start Pos: %ld, %ld\n", edge->start_pos.x,
+                                                   edge->start_pos.y ));
+          FT_TRACE5(( "    End Pos  : %ld, %ld\n", edge->end_pos.x,
+                                                   edge->end_pos.y ));
           total_lines++;
           break;
         case SDF_EDGE_CONIC:
           FT_TRACE5(( "    Edge Type: Conic Bezier\n" ));
           FT_TRACE5(( "    -----------------------\n" ));
-          FT_TRACE5(( "    Start Pos: %d, %d\n", edge->start_pos.x,
-                                                 edge->start_pos.y ));
-          FT_TRACE5(( "    Ctrl1 Pos: %d, %d\n", edge->control_a.x,
-                                                 edge->control_a.y ));
-          FT_TRACE5(( "    End Pos  : %d, %d\n", edge->end_pos.x,
-                                                 edge->end_pos.y ));
+          FT_TRACE5(( "    Start Pos: %ld, %ld\n", edge->start_pos.x,
+                                                   edge->start_pos.y ));
+          FT_TRACE5(( "    Ctrl1 Pos: %ld, %ld\n", edge->control_a.x,
+                                                   edge->control_a.y ));
+          FT_TRACE5(( "    End Pos  : %ld, %ld\n", edge->end_pos.x,
+                                                   edge->end_pos.y ));
           total_conic++;
           break;
         case SDF_EDGE_CUBIC:
           FT_TRACE5(( "    Edge Type: Cubic Bezier\n" ));
           FT_TRACE5(( "    -----------------------\n" ));
-          FT_TRACE5(( "    Start Pos: %d, %d\n", edge->start_pos.x,
-                                                 edge->start_pos.y ));
-          FT_TRACE5(( "    Ctrl1 Pos: %d, %d\n", edge->control_a.x,
-                                                 edge->control_a.y ));
-          FT_TRACE5(( "    Ctrl2 Pos: %d, %d\n", edge->control_b.x,
-                                                 edge->control_b.y ));
-          FT_TRACE5(( "    End Pos  : %d, %d\n", edge->end_pos.x,
-                                                 edge->end_pos.y ));
+          FT_TRACE5(( "    Start Pos: %ld, %ld\n", edge->start_pos.x,
+                                                   edge->start_pos.y ));
+          FT_TRACE5(( "    Ctrl1 Pos: %ld, %ld\n", edge->control_a.x,
+                                                   edge->control_a.y ));
+          FT_TRACE5(( "    Ctrl2 Pos: %ld, %ld\n", edge->control_b.x,
+                                                   edge->control_b.y ));
+          FT_TRACE5(( "    End Pos  : %ld, %ld\n", edge->end_pos.x,
+                                                   edge->end_pos.y ));
           total_cubic++;
           break;
         default:

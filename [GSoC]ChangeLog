@@ -1,5 +1,10 @@
 2020-07-04  Anuj Verma  <anujv@iitbhilai.ac.in>
 
+	* src/sdf/ftsdfrend.c (sdf_shape_dump): Use `%ld' to
+	  printf `signed long' otherwise it gives wrong output.
+
+2020-07-04  Anuj Verma  <anujv@iitbhilai.ac.in>
+
 	* src/sdf/ftsdfrend.c (ft_sdf_render): Don't negate
 	  unsigned integers.
 
