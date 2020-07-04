@@ -1,5 +1,20 @@
 2020-07-03  Alexei Podtelezhnikov  <apodtele@gmail.com>
 
+	[smooth] Introduce direct oversampling for overlaps.
+
+	This implements oversampling to metigate artifacts in pixels partially
+	covered by overlapping contours.  It turns out that the 4x4
+	oversampling is sufficient but, at least, quadruples the rendering
+	time.  The outline has to set FT_OUTLINE_OVERLAP to use this method.
+
+	* include/freetype/ftimage.h (FT_OUTLINE_OVERLAP): New flag.
+	* src/smooth/ftsmooth.c (ft_smooth_render): Check it to...
+	(ft_smooth_raster_overlap): ... inflate outline and set up direct
+	rendering for oversampling with...
+	(ft_smooth_overlap_spans): ... new span function that integrates them.
+
+2020-07-03  Alexei Podtelezhnikov  <apodtele@gmail.com>
+
 	[smooth] Use direct rendering mode in Harmony.
 
 	Instead of rendering 3 bitmaps side by side and reshuffling, we use

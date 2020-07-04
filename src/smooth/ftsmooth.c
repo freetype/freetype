@@ -333,7 +333,94 @@
 
 #endif  /* FT_CONFIG_OPTION_SUBPIXEL_RENDERING */
 
-  /* convert a slot's glyph image into a bitmap */
+/* Oversampling scale to be used in rendering overlaps */
+#define SCALE  ( 1 << 2 )
+
+  /* This function averages inflated spans in direct rendering mode */
+  static void
+  ft_smooth_overlap_spans( int             y,
+                           int             count,
+                           const FT_Span*  spans,
+                           TOrigin*        target )
+  {
+    unsigned char*  dst = target->origin - ( y / SCALE ) * target->pitch;
+    unsigned short  x;
+    unsigned int    cover, sum;
+
+
+    /* When accumulating the oversampled spans we need to assure that  */
+    /* fully covered pixels are equal to 255 and do not overflow.      */
+    /* It is important that the SCALE is a power of 2, each subpixel   */
+    /* cover can also reach a power of 2 after rounding, and the total */
+    /* is clamped to 255 when it adds up to 256.                       */
+    for ( ; count--; spans++ )
+    {
+      cover = ( spans->coverage + SCALE * SCALE / 2 ) / ( SCALE * SCALE );
+      for ( x = 0; x < spans->len; x++ )
+      {
+        sum = dst[ ( spans->x + x ) / SCALE ] + cover;
+        dst[ ( spans->x + x ) / SCALE ] = sum - ( sum >> 8 );
+      }
+    }
+  }
+
+
+  static FT_Error
+  ft_smooth_raster_overlap( FT_Renderer  render,
+                            FT_Outline*  outline,
+                            FT_Bitmap*   bitmap )
+  {
+    FT_Error    error      = FT_Err_Ok;
+    FT_Vector*  points     = outline->points;
+    FT_Vector*  points_end = FT_OFFSET( points, outline->n_points );
+    FT_Vector*  vec;
+
+    FT_Raster_Params   params;
+    TOrigin            target;
+
+
+    /* Set up direct rendering to average oversampled spans. */
+    params.target     = bitmap;
+    params.source     = outline;
+    params.flags      = FT_RASTER_FLAG_AA | FT_RASTER_FLAG_DIRECT;
+    params.gray_spans = (FT_SpanFunc)ft_smooth_overlap_spans;
+    params.user       = &target;
+
+    params.clip_box.xMin = 0;
+    params.clip_box.yMin = 0;
+    params.clip_box.xMax = bitmap->width * SCALE;
+    params.clip_box.yMax = bitmap->rows  * SCALE;
+
+    if ( bitmap->pitch < 0 )
+      target.origin = bitmap->buffer;
+    else
+      target.origin = bitmap->buffer
+                      + ( bitmap->rows - 1 ) * (unsigned int)bitmap->pitch;
+
+    target.pitch = bitmap->pitch;
+
+    /* inflate outline */
+    for ( vec = points; vec < points_end; vec++ )
+    {
+      vec->x *= SCALE;
+      vec->y *= SCALE;
+    }
+
+    /* render outline into the bitmap */
+    error = render->raster_render( render->raster, &params );
+
+    /* deflate outline */
+    for ( vec = points; vec < points_end; vec++ )
+    {
+      vec->x /= SCALE;
+      vec->y /= SCALE;
+    }
+
+    return error;
+  }
+
+#undef SCALE
+
   static FT_Error
   ft_smooth_render( FT_Renderer       render,
                     FT_GlyphSlot      slot,
@@ -407,14 +494,19 @@
     if ( mode == FT_RENDER_MODE_NORMAL ||
          mode == FT_RENDER_MODE_LIGHT  )
     {
-      FT_Raster_Params  params;
+      if ( outline->flags & FT_OUTLINE_OVERLAP )
+        error = ft_smooth_raster_overlap( render, outline, bitmap );
+      else
+      {
+        FT_Raster_Params  params;
 
 
-      params.target = bitmap;
-      params.source = outline;
-      params.flags  = FT_RASTER_FLAG_AA;
+        params.target = bitmap;
+        params.source = outline;
+        params.flags  = FT_RASTER_FLAG_AA;
 
-      error = render->raster_render( render->raster, &params );
+        error = render->raster_render( render->raster, &params );
+      }
     }
     else
     {
