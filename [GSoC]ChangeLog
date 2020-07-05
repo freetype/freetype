@@ -1,3 +1,15 @@
+2020-07-05  Anuj Verma  <anujv@iitbhilai.ac.in>
+
+	[sdf] Added bounding box optimization.
+
+	* src/sdf/ftsdfrend.c (sdf_generate_bounding_box): The
+	  function generate SDF just like the `sdf_generate'
+	  function, but uses boundinb box to check pixels
+	  efficiently.
+
+	* src/sdf/ftsdfrend.c (get_control_box): Added function
+	  to get control box of a `SDF_Edge'.
+
 2020-07-04  Anuj Verma  <anujv@iitbhilai.ac.in>
 
 	* src/sdf/ftsdfrend.c (sdf_shape_dump): Use `%ld' to

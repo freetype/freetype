@@ -100,6 +100,8 @@
   typedef  FT_Fixed  FT_16D16;      /* 16.16 fixed point representation  */
   typedef  FT_Fixed  FT_26D6;       /* 26.6 fixed point representation   */
 
+  typedef  FT_BBox   FT_CBox;       /* control box of a curve            */
+
   /**************************************************************************
    *
    * structures and enums
@@ -559,6 +561,97 @@
 
   Exit:
     return error;
+  }
+
+  /**************************************************************************
+   *
+   * utility functions
+   *
+   */
+
+  /* The function returns the control box of a edge. */
+  /* The control box is a rectangle in which all the */
+  /* control points can fit tightly.                 */
+  static FT_CBox
+  get_control_box( SDF_Edge  edge )
+  {
+    FT_CBox  cbox;
+    FT_Bool  is_set = 0;
+
+
+    switch (edge.edge_type) {
+    case SDF_EDGE_CUBIC:
+    {
+      cbox.xMin = edge.control_b.x;
+      cbox.xMax = edge.control_b.x;
+      cbox.yMin = edge.control_b.y;
+      cbox.yMax = edge.control_b.y;
+
+      is_set = 1;
+    }
+    case SDF_EDGE_CONIC:
+    {
+      if ( is_set )
+      {
+        cbox.xMin = edge.control_a.x < cbox.xMin ?
+                    edge.control_a.x : cbox.xMin;
+        cbox.xMax = edge.control_a.x > cbox.xMax ?
+                    edge.control_a.x : cbox.xMax;
+
+        cbox.yMin = edge.control_a.y < cbox.yMin ?
+                    edge.control_a.y : cbox.yMin;
+        cbox.yMax = edge.control_a.y > cbox.yMax ?
+                    edge.control_a.y : cbox.yMax;
+      }
+      else
+      {
+        cbox.xMin = edge.control_a.x;
+        cbox.xMax = edge.control_a.x;
+        cbox.yMin = edge.control_a.y;
+        cbox.yMax = edge.control_a.y;
+
+        is_set = 1;
+      }
+    }
+    case SDF_EDGE_LINE:
+    {
+      if ( is_set )
+      {
+        cbox.xMin = edge.start_pos.x < cbox.xMin ?
+                    edge.start_pos.x : cbox.xMin;
+        cbox.xMax = edge.start_pos.x > cbox.xMax ?
+                    edge.start_pos.x : cbox.xMax;
+
+        cbox.yMin = edge.start_pos.y < cbox.yMin ?
+                    edge.start_pos.y : cbox.yMin;
+        cbox.yMax = edge.start_pos.y > cbox.yMax ?
+                    edge.start_pos.y : cbox.yMax;
+      }
+      else
+      {
+        cbox.xMin = edge.start_pos.x;
+        cbox.xMax = edge.start_pos.x;
+        cbox.yMin = edge.start_pos.y;
+        cbox.yMax = edge.start_pos.y;
+      }
+
+      cbox.xMin = edge.end_pos.x < cbox.xMin ?
+                  edge.end_pos.x : cbox.xMin;
+      cbox.xMax = edge.end_pos.x > cbox.xMax ?
+                  edge.end_pos.x : cbox.xMax;
+
+      cbox.yMin = edge.end_pos.y < cbox.yMin ?
+                  edge.end_pos.y : cbox.yMin;
+      cbox.yMax = edge.end_pos.y > cbox.yMax ?
+                  edge.end_pos.y : cbox.yMax;
+
+      break;
+    }
+    default:
+        break;
+    }
+
+    return cbox;
   }
 
   /**************************************************************************
@@ -2109,6 +2202,199 @@
 
   /**************************************************************************
    *
+   * @Function:
+   *   sdf_generate_bounding_box
+   *
+   * @Description:
+   *   This function does basically the same thing as the above 
+   *   `sdf_generate' but more efficiently.
+   *   Instead of checking all the pixels against all the edges, we loop
+   *   through all the edges and only check the pixels around the control
+   *   box of the edge, the control box is increased by the spread in all
+   *   all the directions. Anything outside the control box will naturally
+   *   be more than the `spread' and shouldn't be computed.
+   *   Lastly to determine the sign of unchecked pixels we do a single pass
+   *   of all the rows starting with a + sign and flipping when we come
+   *   across a - sign and continue.
+   *   This also eliminate the chance of overflow because we only check the
+   *   proximity of the curve. Therefore we can use squared distanced
+   *   safely.
+   *
+   * @Input:
+   *   [TODO]
+   *
+   * @Return:
+   *   [TODO]
+   */
+  static FT_Error
+  sdf_generate_bounding_box( const SDF_Shape*  shape,
+                             FT_UInt           spread,
+                             const FT_Bitmap*  bitmap )
+  {
+    FT_Error    error = FT_Err_Ok;
+    FT_Memory   memory;
+
+    FT_UInt     width, rows, i, j;
+    FT_ListRec  contours;   /* list of all contours */
+    FT_UInt     sp_sq;      /* max value to check   */
+
+    FT_Short*   buffer;     /* the bitmap buffer    */
+
+    /* This buffer has the same size in indices as the   */
+    /* bitmap buffer. When we check a pixel position for */
+    /* shortest distance we keep the sign in this buffer */
+    /* This way we check find out which pixel is set.    */
+    FT_Char*    signs;
+
+    if ( !shape || !bitmap )
+    {
+      error = FT_THROW( Invalid_Argument );
+      goto Exit;
+    }
+
+    if ( spread < MIN_SPREAD || spread > MAX_SPREAD )
+    {
+      error = FT_THROW( Invalid_Argument );
+      goto Exit;
+    }
+
+    memory = shape->memory;
+
+    contours = shape->contours;
+    width    = bitmap->width;
+    rows     = bitmap->rows;
+    buffer   = (FT_Short*)bitmap->buffer;
+
+    if ( FT_ALLOC_MULT( signs, width, rows ) )
+      goto Exit;
+
+    FT_MEM_ZERO( signs, width * rows );
+
+    if ( USE_SQUARED_DISTANCES )
+      sp_sq = FT_INT_16D16( spread * spread );
+    else
+      sp_sq = FT_INT_16D16( spread );
+
+    if ( width == 0 || rows == 0 )
+    {
+      FT_TRACE0(( "[sdf] sdf_generate:\n"
+                  "      Cannot render glyph with width/height == 0\n"
+                  "      (width, height provided [%d, %d])", width, rows ));
+      error = FT_THROW( Cannot_Render_Glyph );
+      goto Exit;
+    }
+
+    /* loop through all the contours */
+    while ( contours.head ) {
+      SDF_Contour*  current_contour = (SDF_Contour*)contours.head->data;
+      FT_ListRec    edges = current_contour->edges;
+
+
+      /* loop through all the edges */
+      while ( edges.head )
+      {
+        SDF_Edge*  current_edge = (SDF_Edge*)edges.head->data;
+        FT_CBox    cbox;
+        FT_Int     x, y;
+
+        /* get the control box and increase by `spread' */
+        cbox = get_control_box( *current_edge );
+        cbox.xMin = ROUND_F26DOT6( cbox.xMin ) / 64 - ( FT_Pos )spread;
+        cbox.xMax = ROUND_F26DOT6( cbox.xMax ) / 64 + ( FT_Pos )spread;
+        cbox.yMin = ROUND_F26DOT6( cbox.yMin ) / 64 - ( FT_Pos )spread;
+        cbox.yMax = ROUND_F26DOT6( cbox.yMax ) / 64 + ( FT_Pos )spread;
+
+        /* now loop the pixels in the control box. */
+        for ( y = cbox.yMin; y < cbox.yMax; y++  )
+        {
+          for ( x = cbox.xMin; x < cbox.xMax; x++  )
+          {
+            FT_26D6_Vec          grid_point = zero_vector;
+            SDF_Signed_Distance  dist       = max_sdf;
+            FT_UInt              index      = 0;
+            FT_Short             value;
+
+
+            if ( x < 0 || x >= width ) continue;
+            if ( y < 0 || y >= rows )  continue;
+
+            grid_point.x = FT_INT_26D6( x );
+            grid_point.y = FT_INT_26D6( y );
+            
+            /* This `grid_point' is at the corner, but we */
+            /* use the center of the pixel.               */
+            grid_point.x += FT_INT_26D6( 1 ) / 2;
+            grid_point.y += FT_INT_26D6( 1 ) / 2;
+            
+            index = ( rows - y - 1 ) * width + x;
+
+            FT_CALL( sdf_edge_get_min_distance( current_edge,
+                                                grid_point,
+                                                &dist ) );
+
+            /* clamp the values to spread */
+            if ( dist.distance > sp_sq )
+              dist.distance = sp_sq;
+            
+            /* square_root the values and fit in a 6.10 fixed point */
+            if ( USE_SQUARED_DISTANCES )
+              dist.distance = square_root( dist.distance );
+
+            dist.distance /= 64;
+
+            /* [IMPORTANT]: Do corner checking. Unfortunately  */
+            /* this will require more memory usage to keep the */
+            /* direction of each pixel.                        */
+
+            /* check weather the pixel is set or not */
+            if ( signs[index] == 0 )
+            {
+              buffer[index] = dist.distance;
+              signs[index] = dist.sign;
+            }
+            else if ( dist.distance < buffer[index] )
+            {
+              buffer[index] = dist.distance;
+              signs[index] = dist.sign;
+            }
+          }
+        }
+
+        edges.head = edges.head->next;
+      }
+
+      contours.head = contours.head->next;
+    }
+
+    /* final pass */
+    for ( j = 0; j < rows; j++ )
+    {
+      /* We assume the starting pixel of each row */
+      /* will be outside.                         */
+      FT_Char  current_sign = -1;
+      FT_UInt  index;
+
+      for ( i = 0; i < width; i++ )
+      {
+        index = j * width + i;
+
+
+        if ( signs[index] == 0 )
+          buffer[index] = (spread * 1024);
+        else
+          current_sign = signs[index];
+
+        buffer[index] *= current_sign;
+      }
+    }
+
+  Exit:
+    FT_FREE( signs );
+    return error;
+  }
+
+  /**************************************************************************
+   *
    * interface functions
    *
    */
@@ -2225,7 +2511,7 @@
 
     FT_CALL( sdf_outline_decompose( outline, shape ) );
 
-    FT_CALL( sdf_generate( shape, sdf_params->spread, 
+    FT_CALL( sdf_generate_bounding_box( shape, sdf_params->spread, 
                            sdf_params->root.target ) );
 
   Exit:
