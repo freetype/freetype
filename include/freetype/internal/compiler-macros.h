@@ -29,12 +29,6 @@ FT_BEGIN_HEADER
 #  endif
 #endif
 
-  /* `FT_UNUSED` indicates that a given parameter is not used --   */
-  /* this is only used to get rid of unpleasant compiler warnings. */
-#ifndef FT_UNUSED
-#define FT_UNUSED( arg )  ( (arg) = (arg) )
-#endif
-
   /* Fix compiler warning with sgi compiler. */
 #if defined( __sgi ) && !defined( __GNUC__ )
 #  if defined( _COMPILER_VERSION ) && ( _COMPILER_VERSION >= 730 )
@@ -126,18 +120,13 @@ FT_BEGIN_HEADER
  *
  *    FT_FUNCTION_DECLARATION(int) foo(int x);
  *
- * NOTE: Technically, all FreeType headers put their function declarations
- * inside an extern "C" block, giving them C linkage. This means that using
- * this macro is only necessary within internal source files, but using it in
- * a header will be harmless.
+ * NOTE: This requires that all uses are inside FT_BEGIN_HEADER..FT_END_HEADER
+ * blocks. Which guarantees that the declarations have C linkage when the
+ * headers are included by C++ sources.
  *
  * NOTE: Do not use directly, use FT_LOCAL()/FT_BASE()/FT_EXPORT() instead.
  */
-#ifdef __cplusplus
-#define FT_FUNCTION_DECLARATION( x )  extern "C" x
-#else
 #define FT_FUNCTION_DECLARATION( x )  extern x
-#endif
 
 /* Same as FT_FUNCTION_DECLARATION(), but for function definitions instead.
  * NOTE: Do not use directly, use FT_LOCAL_DEF()/FT_BASE_DEF()/FT_EXPORT_DEF()
@@ -171,7 +160,7 @@ FT_BEGIN_HEADER
  * sub-directory, but are otherwise internal to the library.
  */
 #define FT_LOCAL_ARRAY( x )      FT_INTERNAL_FUNCTION_ATTRIBUTE extern const x
-#define FT_LOCAL_ARRAY_DEF( x )  const x
+#define FT_LOCAL_ARRAY_DEF( x )  FT_FUNCTION_DEFINITION( const x )
 
 /* Use FT_BASE()/FT_BASE_DEF() to declare or define an internal library
  * function that are used by more than one single module.

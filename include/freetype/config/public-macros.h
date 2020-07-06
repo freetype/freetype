@@ -78,12 +78,22 @@ FT_BEGIN_HEADER
  *
  *     FT_EXPORT( FT_Bool )  FT_Object_Method( FT_Object obj, ... );
  *
+ * NOTE: This requires that all FT_EXPORT() uses are inside FT_BEGIN_HEADER ..
+ * FT_END_HEADER blocks. This guarantees that the functions are exported with
+ * C linkage, even when the header is included by a C++ source file.
  */
-#ifdef __cplusplus
-#define FT_EXPORT( x )  FT_PUBLIC_FUNCTION_ATTRIBUTE extern "C" x
-#else
 #define FT_EXPORT( x )  FT_PUBLIC_FUNCTION_ATTRIBUTE extern x
+
+  /* `FT_UNUSED` indicates that a given parameter is not used --   */
+  /* this is only used to get rid of unpleasant compiler warnings. */
+  /*                                                               */
+  /* Technically, this was not meant to be part of the public API, */
+  /* but some third-party code depends on it.                      */
+  /*                                                               */
+#ifndef FT_UNUSED
+#define FT_UNUSED( arg )  ( (arg) = (arg) )
 #endif
+
 
 FT_END_HEADER
 

@@ -1,3 +1,29 @@
+2020-07-07  David Turner  <david@freetype.org>
+
+	[build] Really fix multi and C++ builds.
+
+	The following builds were still failing due to previous changes:
+
+	  make multi
+	  make multi CC="c++"
+	  make CC="c++"
+
+	This patch fixes the issues, which were missing includes to get the
+	right macro definitions in multi-build mode.
+
+	Also, `FT_UNUSED' is actually used by third-party code, so move it
+	back to `public-macros.h' to avoid breaking it.
+
+	* include/freetype/config/public-macros.h (FT_EXPORT): Remove
+	special definition for C++.
+	(FT_UNUSED): Define here instead of...
+	* include/freetype/config/compiler-macros.h: ... here.
+	(FT_FUNCTION_DECLARATION): Remove special definition for C++.
+	(FT_LOCAL_ARRAY_DEF): Fix definition.
+
+	* src/cache/ftccback.h, src/lzw/ftzopen.h, src/gxvalid/gxvmort.h,
+	src/gxvalid/gxvmorx.h: Add `FT_BEGIN_HEADER' and `FT_END_HEADER'.
+
 2020-07-06  David Turner  <david@freetype.org>
 
 	[build] Fix multi and C++ builds.
