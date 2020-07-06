@@ -156,16 +156,6 @@
 
   typedef struct SDF_Signed_Distance_
   {
-    /* Nearest point the outline to a given point.    */
-    /* [note]: This is not a *direction* vector, this */
-    /*         simply a *point* vector on the grid.   */
-    FT_16D16_Vec  nearest_point;
-
-    /* The normalized direction of the curve at the   */
-    /* above point.                                   */
-    /* [note]: This is a *direction* vector.          */
-    FT_16D16_Vec  direction;
-
     /* Unsigned shortest distance from the point to   */
     /* the above `nearest_point'.                     */
     /* [NOTE]: This can represent both squared as or  */
@@ -173,7 +163,11 @@
     /* `USE_SQUARED_DISTANCES' macro.                 */
     FT_16D16      distance;
 
-    /* Represent weather the `nearest_point' is outside */
+    /* The cross product of distance vector and the   */
+    /* direction. ( aka orthogonality )               */
+    FT_16D16      cross;
+
+    /* Represent weather the distance vector is outside */
     /* or inside the contour corresponding to the edge. */
     /* [note]: This sign may or may not be correct,     */
     /*         therefore it must be checked properly in */
@@ -203,8 +197,7 @@
   const SDF_Shape    null_shape   = { NULL, { NULL, NULL } };
 
   static
-  const SDF_Signed_Distance  max_sdf = { { 0, 0 }, { 0, 0 },
-                                         INT_MAX, 0 };
+  const SDF_Signed_Distance  max_sdf = { INT_MAX, 0, 0 };
 
   /* Creates a new `SDF_Edge' on the heap and assigns the `edge' */
   /* pointer to the newly allocated memory.                      */
@@ -1072,6 +1065,9 @@
    *   We can see that `x' lies in the plane of `a', so we take the sign
    *   determined by `a'. This can be easily done by calculating the 
    *   orthogonality and taking the greater one.
+   *   The orthogonality is nothing but the sinus of the two vectors (i.e.
+   *   ( x - o ) and the corresponding direction. The orthogonality is pre
+   *   computed by the corresponding `get_min_distance_' functions efficiently.
    *
    * @Input:
    *   [TODO]
@@ -1081,40 +1077,9 @@
    */
   static SDF_Signed_Distance
   resolve_corner( SDF_Signed_Distance  sdf1,
-                  SDF_Signed_Distance  sdf2,
-                  FT_26D6_Vec          point )
+                  SDF_Signed_Distance  sdf2 )
   {
-    FT_16D16_Vec  dist1;
-    FT_16D16_Vec  dist2;
-
-    FT_16D16      ortho1;
-    FT_16D16      ortho2;
-
-
-    /* if there is not ambiguity in the sign return any */
-    if ( sdf1.sign == sdf2.sign )
-      return sdf1;
-
-    /* calculate the distance vectors */
-    dist1.x = FT_26D6_16D16( point.x ) - sdf1.nearest_point.x;
-    dist1.y = FT_26D6_16D16( point.y ) - sdf1.nearest_point.y;
-
-    dist2.x = FT_26D6_16D16( point.x ) - sdf2.nearest_point.x;
-    dist2.y = FT_26D6_16D16( point.y ) - sdf2.nearest_point.y;
-
-    FT_Vector_NormLen( &dist1 );
-    FT_Vector_NormLen( &dist2 );
-
-    /* use cross product to find orthogonality */
-    ortho1 = FT_MulFix( sdf1.direction.x, dist1.y ) -
-             FT_MulFix( sdf1.direction.y, dist1.x );
-    ortho1 = FT_ABS( ortho1 );
-
-    ortho2 = FT_MulFix( sdf2.direction.x, dist2.y ) -
-             FT_MulFix( sdf2.direction.y, dist2.x );
-    ortho2 = FT_ABS( ortho2 );
-
-    return ortho1 > ortho2 ? sdf1 : sdf2;
+    return FT_ABS( sdf1.cross ) > FT_ABS( sdf2.cross ) ? sdf1 : sdf2;
   }
 
   /**************************************************************************
@@ -1245,14 +1210,26 @@
     cross = FT_MulFix( nearest_vector.x, line_segment.y ) -
             FT_MulFix( nearest_vector.y, line_segment.x );
 
-    /* [OPTIMIZATION]: Pre-compute this direction. */
-    FT_Vector_NormLen( &line_segment );
-
     /* assign the output */
-    out->nearest_point = nearest_point;
     out->sign = cross < 0 ? 1 : -1;
     out->distance = VECTOR_LENGTH_16D16( nearest_vector );
-    out->direction = line_segment;
+
+    /* Instead of finding cross for checking corner we */
+    /* directly set it here. This is more efficient    */
+    /* because if the distance is perpendicular we can */
+    /* directly set it to 1.                           */
+    if ( factor != 0 && factor != FT_INT_16D16( 1 ) )
+      out->cross = FT_INT_16D16( 1 );
+    else
+    {
+      /* [OPTIMIZATION]: Pre-compute this direction. */
+      /* if not perpendicular then compute the cross */
+      FT_Vector_NormLen( &line_segment );
+      FT_Vector_NormLen( &nearest_vector );
+
+      out->cross = FT_MulFix( line_segment.x, nearest_vector.y ) -
+                   FT_MulFix( line_segment.y, nearest_vector.x );
+    }
 
   Exit:
     return error;
@@ -1475,13 +1452,23 @@
 
     /* assign the values */
     out->distance = min;
-    out->nearest_point = nearest_point;
     out->sign = cross < 0 ? 1 : -1;
 
-    FT_Vector_NormLen( &direction );
+    if ( min_factor != 0 && min_factor != FT_INT_16D16( 1 ) )
+      out->cross = FT_INT_16D16( 1 );   /* the two are perpendicular */
+    else
+    {
+      /* convert to nearest vector */
+      nearest_point.x -= FT_26D6_16D16( p.x );
+      nearest_point.y -= FT_26D6_16D16( p.y );
 
-    out->direction = direction;
+      /* if not perpendicular then compute the cross */
+      FT_Vector_NormLen( &direction );
+      FT_Vector_NormLen( &nearest_point );
 
+      out->cross = FT_MulFix( direction.x, nearest_point.y ) -
+                   FT_MulFix( direction.y, nearest_point.x );
+    }
   Exit:
     return error;
   }
@@ -1698,12 +1685,23 @@
 
     /* assign the values */
     out->distance = min;
-    out->nearest_point = nearest_point;
     out->sign = cross < 0 ? 1 : -1;
 
-    FT_Vector_NormLen( &direction );
+    if ( min_factor != 0 && min_factor != FT_INT_16D16( 1 ) )
+      out->cross = FT_INT_16D16( 1 );   /* the two are perpendicular */
+    else
+    {
+      /* convert to nearest vector */
+      nearest_point.x -= FT_26D6_16D16( p.x );
+      nearest_point.y -= FT_26D6_16D16( p.y );
 
-    out->direction = direction;
+      /* if not perpendicular then compute the cross */
+      FT_Vector_NormLen( &direction );
+      FT_Vector_NormLen( &nearest_point );
+
+      out->cross = FT_MulFix( direction.x, nearest_point.y ) -
+                   FT_MulFix( direction.y, nearest_point.x );
+    }
 
   Exit:
     return error;
@@ -1944,13 +1942,23 @@
 
     /* assign the values */
     out->distance = min;
-    out->nearest_point = nearest_point;
     out->sign = cross < 0 ? 1 : -1;
 
-    FT_Vector_NormLen( &direction );
+    if ( min_factor != 0 && min_factor != FT_INT_16D16( 1 ) )
+      out->cross = FT_INT_16D16( 1 );   /* the two are perpendicular */
+    else
+    {
+      /* convert to nearest vector */
+      nearest_point.x -= FT_26D6_16D16( p.x );
+      nearest_point.y -= FT_26D6_16D16( p.y );
 
-    out->direction = direction;
+      /* if not perpendicular then compute the cross */
+      FT_Vector_NormLen( &direction );
+      FT_Vector_NormLen( &nearest_point );
 
+      out->cross = FT_MulFix( direction.x, nearest_point.y ) -
+                   FT_MulFix( direction.y, nearest_point.x );
+    }
   Exit:
     return error;
   }
@@ -2053,7 +2061,7 @@
 
 
         if ( FT_ABS(diff ) < CORNER_CHECK_EPSILON )
-          min_dist = resolve_corner( min_dist, current_dist, point );
+          min_dist = resolve_corner( min_dist, current_dist );
         else if ( diff < 0 )
           min_dist = current_dist;
       }
@@ -2511,7 +2519,7 @@
 
     FT_CALL( sdf_outline_decompose( outline, shape ) );
 
-    FT_CALL( sdf_generate_bounding_box( shape, sdf_params->spread, 
+    FT_CALL( sdf_generate( shape, sdf_params->spread, 
                            sdf_params->root.target ) );
 
   Exit:

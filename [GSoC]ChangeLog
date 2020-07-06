@@ -1,3 +1,22 @@
+2020-07-06  Anuj Verma  <anujv@iitbhilai.ac.in>
+
+	[sdf] Precompute the orthogonality.
+
+	* src/sdf/ftsdf.c (SDF_Signed_Distance): Remove unused
+	  fields.
+
+	* src/sdf/ftsdf.c (resolve_corner): The function can be
+	  simplified to a single line. Instead of computing
+	  orthogonality here, we precompute it in the corresponding
+	  `get_min_distance_' functions more efficiently.
+
+	* src/sdf/ftsdf.c (get_min_distance_): Precompute orthogonality/
+	  cross product of direction and the distance vector. Since
+	  in these function we know that weather the distance vector
+	  and the direction are perpendicular, we can simply set
+	  the cross to 1 (sin(90) = 1) in case they are perpendicular.
+	  This can reduce the number of `FT_Vector_NormLen' calls.
+
 2020-07-05  Anuj Verma  <anujv@iitbhilai.ac.in>
 
 	[sdf] Added bounding box optimization.
