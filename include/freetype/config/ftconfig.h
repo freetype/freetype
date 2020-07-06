@@ -45,9 +45,6 @@
 #include <freetype/config/public-macros.h>
 #include <freetype/config/mac-support.h>
 
-FT_END_HEADER
-
-
 #endif /* FTCONFIG_H_ */
 
 

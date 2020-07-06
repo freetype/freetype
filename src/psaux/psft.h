@@ -40,8 +40,8 @@
 #define PSFT_H_
 
 
+#include <freetype/internal/compiler-macros.h>
 #include "pstypes.h"
-
 
   /* TODO: disable asserts for now */
 #define CF2_NDEBUG

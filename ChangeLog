@@ -1,3 +1,23 @@
+2020-07-06  David Turner  <david@freetype.org>
+
+	[build] Fix multi and C++ builds.
+
+	The following builds were failing due to previous changes:
+
+	  make multi
+	  make multi CC="c++"
+
+	* include/freetype/config/ftconfig.h: Remove `FT_END_HEADER'.
+
+	* include/freetype/config/ftheader.h (FT_BEGIN_HEADER,
+	FT_END_HEADER): Protect against redefinition.
+
+	* src/cache/ftccache.h, src/cache/ftcmru.h, src/pcf/pcfutil.h,
+	src/psaux/pserror.h, src/psaux/psft.h, src/psaux/psstack.h,
+	src/sfnt/woff2tags.h: Include `compiler-macros.h'.
+
+	* src/sfnt/woff2tags.c: Include `woff2tags.h'.
+
 2020-07-06  Werner Lemberg  <wl@gnu.org>
 
 	[psaux] Improve `t1_decoder_parse_metrics' (#58646).

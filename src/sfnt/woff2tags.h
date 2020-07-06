@@ -21,6 +21,7 @@
 
 
 #include <freetype/internal/ftobjs.h>
+#include <freetype/internal/compiler-macros.h>
 
 
 FT_BEGIN_HEADER
