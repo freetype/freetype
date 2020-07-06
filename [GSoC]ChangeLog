@@ -1,10 +1,14 @@
 2020-07-06  Anuj Verma  <anujv@iitbhilai.ac.in>
 
+	* [GSoC]ChangLog: Fixed typos.
+
+2020-07-06  Anuj Verma  <anujv@iitbhilai.ac.in>
+
 	* src/sdf/ftsdfrend.c (sdf_generate_bounding_box): Due to
 	  the way we use the bounding box, we need to keep a track
 	  of signed distances of each pixel so later the sign can
 	  be determined properly. The method is certainly faster
-	  then checking all the pixels agains all the edges,
+	  then checking all the pixels against all the edges,
 	  but also require a decent amount of memory to work.
 
 2020-07-06  Anuj Verma  <anujv@iitbhilai.ac.in>
@@ -32,7 +36,7 @@
 
 	* src/sdf/ftsdfrend.c (sdf_generate_bounding_box): The
 	  function generate SDF just like the `sdf_generate'
-	  function, but uses boundinb box to check pixels
+	  function, but uses bounding box to check pixels
 	  efficiently.
 
 	* src/sdf/ftsdfrend.c (get_control_box): Added function
@@ -94,9 +98,9 @@
 	from a point to a conic.
 
 	* src/sdf/ftsdf.c (get_min_distance_conic): Created
-	  a new function with same name which uses Newon't
-	  iteration for finding shortest distance fom a point
-	  to a conic curve. This dosen't causes underfow.
+	  a new function with same name which uses Newton's
+	  iteration for finding shortest distance from a point
+	  to a conic curve. This doesn't causes underflow.
 
 	* src/sdf/ftsdf.c (USE_NEWTON_FOR_CONIC): This macro
 	  can be used to toggle between Newton or analytical
@@ -178,7 +182,7 @@
 
 	[sdf] Fixed compilation under gnumake.
 
-	* src/sdf/rules.mk (DRV_OBJ_ => DRV_OBJS_): Fixed varialbe
+	* src/sdf/rules.mk (DRV_OBJ_ => DRV_OBJS_): Fixed variable
 	  name so that the sdf can compile.
 
 	* src/sdf/module.mk: Fixed spacing.
@@ -252,11 +256,11 @@
 	* src/sdf/ftsdf.c (SDF_Iterator_IO): This struct will be used
 	  while `FT_List_Iterate'.
 
-	* src/sdf/ftsdf.c (sdf_generate): Added function which genearte
+	* src/sdf/ftsdf.c (sdf_generate): Added function which generate
 	  SDF from `SDF_Shape'.
 
 	* src/sdf/ftsdf.c (sdf_edge_iterator_func,
-	                   sdf_contour_iterator_func): Added funcions
+	                   sdf_contour_iterator_func): Added functions
 	  which iterate through contours and edges and return the shortest
 	  distance.
 	  
@@ -265,8 +269,8 @@
 
 	[sdf] Added `SDF_Raster_Params' struct which extends
 	`FT_Raster_Params' and has a few extra fields. This is done
-	to pass extra data to the sdf rasterzier which is required
-	while rastersizing.
+	to pass extra data to the sdf rasterizer which is required
+	while rasterizing.
 
 	* src/sdf/ftsdf.h (SDF_Raster_Params): Added a struct which
 	  extends `FT_Raster_Params' and has the `spread' parameter.
