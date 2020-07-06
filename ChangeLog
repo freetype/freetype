@@ -1,3 +1,11 @@
+2020-07-06  Werner Lemberg  <wl@gnu.org>
+
+	[psaux] Improve `t1_decoder_parse_metrics' (#58646).
+
+	* src/psaux/t1decode.c (t1_decoder_parse_metrics): Copy
+	corresponding code from old engine's `t1_decoder_parse_charstrings'
+	function to handle `op_callsubr' and `op_return'.
+
 2020-07-05  David Turner  <david@freetype.org>
 
 	[build] Improve visibility support of library function names.
