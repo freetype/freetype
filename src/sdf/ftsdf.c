@@ -2250,9 +2250,10 @@
 
     /* This buffer has the same size in indices as the   */
     /* bitmap buffer. When we check a pixel position for */
-    /* shortest distance we keep the sign in this buffer */
-    /* This way we check find out which pixel is set.    */
-    FT_Char*    signs;
+    /* shortest distance we keep it in this buffer.      */
+    /* This way we check find out which pixel is set,    */
+    /* and also determine the signs properly.            */
+    SDF_Signed_Distance*    dists;
 
     if ( !shape || !bitmap )
     {
@@ -2273,10 +2274,10 @@
     rows     = bitmap->rows;
     buffer   = (FT_Short*)bitmap->buffer;
 
-    if ( FT_ALLOC_MULT( signs, width, rows ) )
+    if ( FT_ALLOC_MULT( dists, width, rows * sizeof(*dists) ) )
       goto Exit;
 
-    FT_MEM_ZERO( signs, width * rows );
+    FT_MEM_ZERO( dists, width * rows * sizeof(*dists) );
 
     if ( USE_SQUARED_DISTANCES )
       sp_sq = FT_INT_16D16( spread * spread );
@@ -2307,10 +2308,10 @@
 
         /* get the control box and increase by `spread' */
         cbox = get_control_box( *current_edge );
-        cbox.xMin = ROUND_F26DOT6( cbox.xMin ) / 64 - ( FT_Pos )spread;
-        cbox.xMax = ROUND_F26DOT6( cbox.xMax ) / 64 + ( FT_Pos )spread;
-        cbox.yMin = ROUND_F26DOT6( cbox.yMin ) / 64 - ( FT_Pos )spread;
-        cbox.yMax = ROUND_F26DOT6( cbox.yMax ) / 64 + ( FT_Pos )spread;
+        cbox.xMin = ( cbox.xMin - 63 ) / 64 - ( FT_Pos )spread;
+        cbox.xMax = ( cbox.xMax + 63 ) / 64 + ( FT_Pos )spread;
+        cbox.yMin = ( cbox.yMin - 63 ) / 64 - ( FT_Pos )spread;
+        cbox.yMax = ( cbox.yMax + 63 ) / 64 + ( FT_Pos )spread;
 
         /* now loop the pixels in the control box. */
         for ( y = cbox.yMin; y < cbox.yMax; y++  )
@@ -2340,30 +2341,23 @@
                                                 grid_point,
                                                 &dist ) );
 
-            /* clamp the values to spread */
-            if ( dist.distance > sp_sq )
-              dist.distance = sp_sq;
-            
+            /* ignore if the distance is greater than spread    */
+            /* otherwise it creates artifacts due to wrong sign */
+            if ( dist.distance > sp_sq ) continue;
+
             /* square_root the values and fit in a 6.10 fixed point */
             if ( USE_SQUARED_DISTANCES )
               dist.distance = square_root( dist.distance );
 
-            dist.distance /= 64;
-
-            /* [IMPORTANT]: Do corner checking. Unfortunately  */
-            /* this will require more memory usage to keep the */
-            /* direction of each pixel.                        */
-
             /* check weather the pixel is set or not */
-            if ( signs[index] == 0 )
+            if ( dists[index].sign == 0 )
+              dists[index] = dist;
+            else if ( dists[index].distance > dist.distance )
+              dists[index] = dist;
+            else if ( FT_ABS(dists[index].distance - dist.distance  ) < CORNER_CHECK_EPSILON )
             {
-              buffer[index] = dist.distance;
-              signs[index] = dist.sign;
-            }
-            else if ( dist.distance < buffer[index] )
-            {
-              buffer[index] = dist.distance;
-              signs[index] = dist.sign;
+              if ( FT_ABS( dists[index].cross ) < FT_ABS( dist.cross ) )
+                dists[index] = dist;
             }
           }
         }
@@ -2386,18 +2380,26 @@
       {
         index = j * width + i;
 
-
-        if ( signs[index] == 0 )
-          buffer[index] = (spread * 1024);
+        /* if the pixel is not set that means it's */
+        /* shortest distance is more than spread   */
+        if ( dists[index].sign == 0 )
+          dists[index].distance = FT_INT_16D16( spread );
         else
-          current_sign = signs[index];
+          current_sign = dists[index].sign;
 
-        buffer[index] *= current_sign;
+        /* clamp the values */
+        if ( dists[index].distance > FT_INT_16D16( spread ) )
+          dists[index].distance = FT_INT_16D16( spread );
+
+        /* convert from 16.16 to 6.10 */
+        dists[index].distance /= 64;
+
+        buffer[index] = dists[index].distance * current_sign;
       }
     }
 
   Exit:
-    FT_FREE( signs );
+    FT_FREE( dists );
     return error;
   }
 
@@ -2519,7 +2521,7 @@
 
     FT_CALL( sdf_outline_decompose( outline, shape ) );
 
-    FT_CALL( sdf_generate( shape, sdf_params->spread, 
+    FT_CALL( sdf_generate_bounding_box( shape, sdf_params->spread, 
                            sdf_params->root.target ) );
 
   Exit:

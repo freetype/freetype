@@ -1,5 +1,14 @@
 2020-07-06  Anuj Verma  <anujv@iitbhilai.ac.in>
 
+	* src/sdf/ftsdfrend.c (sdf_generate_bounding_box): Due to
+	  the way we use the bounding box, we need to keep a track
+	  of signed distances of each pixel so later the sign can
+	  be determined properly. The method is certainly faster
+	  then checking all the pixels agains all the edges,
+	  but also require a decent amount of memory to work.
+
+2020-07-06  Anuj Verma  <anujv@iitbhilai.ac.in>
+
 	[sdf] Precompute the orthogonality.
 
 	* src/sdf/ftsdf.c (SDF_Signed_Distance): Remove unused
