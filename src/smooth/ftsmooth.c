@@ -358,8 +358,8 @@
       cover = ( spans->coverage + SCALE * SCALE / 2 ) / ( SCALE * SCALE );
       for ( x = 0; x < spans->len; x++ )
       {
-        sum = dst[ ( spans->x + x ) / SCALE ] + cover;
-        dst[ ( spans->x + x ) / SCALE ] = sum - ( sum >> 8 );
+        sum                           = dst[( spans->x + x ) / SCALE] + cover;
+        dst[( spans->x + x ) / SCALE] = (unsigned char)( sum - ( sum >> 8 ) );
       }
     }
   }

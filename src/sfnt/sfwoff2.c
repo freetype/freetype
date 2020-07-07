@@ -43,7 +43,8 @@
 
 #define READ_BASE128( var )    FT_SET_ERROR( ReadBase128( stream, &var ) )
 
-#define ROUND4( var )          ( ( var + 3 ) & ~3 )
+  /* `var' should be FT_ULong */
+#define ROUND4( var )          ( ( var + 3 ) & ~3UL )
 
 #define WRITE_USHORT( p, v )                \
           do                                \
@@ -63,12 +64,12 @@
                                              \
           } while ( 0 )
 
-#define WRITE_SHORT( p, v )        \
-          do                       \
-          {                        \
-            *(p)++ = ( (v) >> 8 ); \
-            *(p)++ = ( (v) >> 0 ); \
-                                   \
+#define WRITE_SHORT( p, v )                 \
+          do                                \
+          {                                 \
+            *(p)++ = (FT_Byte)( (v) >> 8 ); \
+            *(p)++ = (FT_Byte)( (v) >> 0 ); \
+                                            \
           } while ( 0 )
 
 #define WRITE_SFNT_BUF( buf, s ) \
@@ -280,12 +281,12 @@
 
 
   /* Calculate table checksum of `buf'. */
-  static FT_Long
+  static FT_ULong
   compute_ULong_sum( FT_Byte*  buf,
                      FT_ULong  size )
   {
     FT_ULong  checksum     = 0;
-    FT_ULong  aligned_size = size & ~3;
+    FT_ULong  aligned_size = size & ~3UL;
     FT_ULong  i;
     FT_ULong  v;
 
@@ -536,12 +537,12 @@
                 FT_ULong*          glyph_size )
   {
     FT_UInt   flag_offset  = 10 + ( 2 * n_contours ) + 2 + instruction_len;
-    FT_Int    last_flag    = -1;
-    FT_Int    repeat_count =  0;
-    FT_Int    last_x       =  0;
-    FT_Int    last_y       =  0;
-    FT_UInt   x_bytes      =  0;
-    FT_UInt   y_bytes      =  0;
+    FT_Byte   last_flag    = 0xFFU;
+    FT_Byte   repeat_count = 0;
+    FT_Int    last_x       = 0;
+    FT_Int    last_y       = 0;
+    FT_UInt   x_bytes      = 0;
+    FT_UInt   y_bytes      = 0;
     FT_UInt   xy_bytes;
     FT_UInt   i;
     FT_UInt   x_offset;
@@ -553,9 +554,9 @@
     {
       const WOFF2_PointRec  point = points[i];
 
-      FT_Int  flag = point.on_curve ? GLYF_ON_CURVE : 0;
-      FT_Int  dx   = point.x - last_x;
-      FT_Int  dy   = point.y - last_y;
+      FT_Byte  flag = point.on_curve ? GLYF_ON_CURVE : 0;
+      FT_Int   dx   = point.x - last_x;
+      FT_Int   dy   = point.y - last_y;
 
 
       if ( dx == 0 )
@@ -632,7 +633,7 @@
       if ( dx == 0 )
         ;
       else if ( dx > -256 && dx < 256 )
-        dst[x_offset++] = FT_ABS( dx );
+        dst[x_offset++] = (FT_Byte)FT_ABS( dx );
       else
       {
         pointer = dst + x_offset;
@@ -645,7 +646,7 @@
       if ( dy == 0 )
         ;
       else if ( dy > -256 && dy < 256 )
-        dst[y_offset++] = FT_ABS( dy );
+        dst[y_offset++] = (FT_Byte)FT_ABS( dy );
       else
       {
         pointer = dst + y_offset;
@@ -917,7 +918,7 @@
     bbox_bitmap_offset = substreams[BBOX_STREAM].offset;
 
     /* Size of bboxBitmap = 4 * floor((numGlyphs + 31) / 32) */
-    bitmap_length                   = ( ( num_glyphs + 31 ) >> 5 ) << 2;
+    bitmap_length                   = ( ( num_glyphs + 31U ) >> 5 ) << 2;
     substreams[BBOX_STREAM].offset += bitmap_length;
 
     glyph_buf_size = WOFF2_DEFAULT_GLYPH_BUF;
@@ -1195,7 +1196,7 @@
 
       /* Store x_mins, may be required to reconstruct `hmtx'. */
       if ( n_contours > 0 )
-        info->x_mins[i] = x_min;
+        info->x_mins[i] = (FT_Short)x_min;
     }
 
     info->glyf_table->dst_length = dest_offset - info->glyf_table->dst_offset;
@@ -1343,7 +1344,7 @@
       if ( FT_STREAM_SEEK( glyf_offset ) || FT_STREAM_SKIP( 2 ) )
         return error;
 
-      if ( FT_READ_USHORT( info->x_mins[i] ) )
+      if ( FT_READ_SHORT( info->x_mins[i] ) )
         return error;
     }
 

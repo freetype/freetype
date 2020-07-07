@@ -1,3 +1,45 @@
+2020-07-07  Werner Lemberg  <wl@gnu.org>
+
+	Fix clang warnings.
+
+	* include/freetype/internal/autohint.h
+	(FT_DECLARE_AUTOHINTER_INTERFACE): New macro.
+	* src/autofit/afmodule.h: Use it to declare
+	`af_autofitter_interface'.
+
+	* include/freetype/internal/ftobjs.h (FT_DECLARE_GLYPH): New macro.
+	* src/base/ftbase.h: Use it to declare `ft_bitmap_glyph_class' and
+	`ft_outline_glyph_class'.
+
+	* src/base/ftglyph.c: Include `ftbase.h'.
+
+	* src/cff/cffparse.c (cff_parser_run): Fix type of `t2_size'.
+
+	* src/pcf/pcfdrivr.c (pcf_cmap_char_next): Fix type of `result'.
+
+	* src/psaux/psauxmod.c (psaux_module_class): Use `FT_DEFINE_MODULE'.
+	* src/psaux/psauxmod.h: Declare `afm_parser_funcs',
+	`t1_cmap_classes', `cff_decoder_funcs', and `psaux_module_class'.
+
+	* src/pshinter/pshmod.c: Include `pshmod.h'.
+
+	* src/sfnt/sfwoff2.c (ROUND4, WRITE_SHORT): Fix implicit sign
+	conversion.
+	(compute_ULong_sum): Fix return type.
+	Fix implicit sign conversion.
+	(store_points): Fix type of `last_flag', `repeat_count', and `flag'.
+	Use casts to avoid warnings.
+	(reconstruct_glyf): Fix implicit sign conversion.
+	Use cast to avoid warning.
+	(get_x_mins): Fix implicit sign conversion.
+	* src/sfnt/ttcmap.c: Undef `TTCMAPCITEM'.
+	* src/sfnt/ttcmap.h: Define `TTCMAPCITEM' and include `ttcmapc.h' to
+	declare cmap classes.
+
+	* src/smooth/ftsmooth.c (ft_smooth_overlap_spans): Use cast.
+
+	* src/truetype/ttinterp.c (Ins_MIAP): Fix typo.
+
 2020-07-07  David Turner  <david@freetype.org>
 
 	[build] Really fix multi and C++ builds.

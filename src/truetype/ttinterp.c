@@ -6081,7 +6081,7 @@
         exc->zp0.org[point].x = TT_MulFix14( distance,
                                              exc->GS.freeVector.x );
       exc->zp0.org[point].y = TT_MulFix14( distance,
-                                           exc->GS.freeVector.y ),
+                                           exc->GS.freeVector.y );
       exc->zp0.cur[point]   = exc->zp0.org[point];
     }
 #ifdef TT_SUPPORT_SUBPIXEL_HINTING_INFINALITY

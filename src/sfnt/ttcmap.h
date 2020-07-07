@@ -90,6 +90,11 @@ FT_BEGIN_HEADER
   };
 
 
+#undef  TTCMAPCITEM
+#define TTCMAPCITEM( a )  FT_CALLBACK_TABLE  const TT_CMap_ClassRec  a;
+#include "ttcmapc.h"
+
+
   typedef struct  TT_ValidatorRec_
   {
     FT_ValidatorRec  validator;

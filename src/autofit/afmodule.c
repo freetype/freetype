@@ -550,8 +550,8 @@
     NULL,                                                    /* reset_face */
     NULL,                                              /* get_global_hints */
     NULL,                                             /* done_global_hints */
-    (FT_AutoHinter_GlyphLoadFunc)af_autofitter_load_glyph )  /* load_glyph */
-
+    (FT_AutoHinter_GlyphLoadFunc)af_autofitter_load_glyph    /* load_glyph */
+  )
 
   FT_DEFINE_MODULE(
     autofit_module_class,

@@ -1263,11 +1263,11 @@
         FT_Byte*     charstring_base;
         FT_ULong     charstring_len;
 
-        FT_Fixed*     stack;
-        FT_ListNode   node;
-        CFF_T2_String t2;
-        size_t        t2_size;
-        FT_Byte*      q;
+        FT_Fixed*      stack;
+        FT_ListNode    node;
+        CFF_T2_String  t2;
+        FT_Fixed       t2_size;
+        FT_Byte*       q;
 
 
         charstring_base = ++p;

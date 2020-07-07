@@ -136,7 +136,7 @@ THE SOFTWARE.
     FT_UInt32  charcode  = *acharcode;
     FT_UShort  charcodeRow;
     FT_UShort  charcodeCol;
-    FT_Int     result = 0;
+    FT_UInt    result = 0;
 
 
     while ( charcode < (FT_UInt32)( enc->lastRow * 256 + enc->lastCol ) )
