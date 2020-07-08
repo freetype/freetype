@@ -824,6 +824,8 @@
         edges.head = edges.head->next;
       }
 
+      edges = ((SDF_Contour*)contours.head->data)->edges;
+
       /* Deallocate the previous list of edges and     */
       /* assign the newly created list to the contour. */
       FT_List_Finalize( &edges, sdf_edge_destructor, memory, NULL );
@@ -2711,6 +2713,8 @@
     FT_CALL( sdf_shape_new( memory, &shape ) );
 
     FT_CALL( sdf_outline_decompose( outline, shape ) );
+
+    split_sdf_shape( shape );
 
     FT_CALL( sdf_generate_bounding_box( shape, sdf_params->spread, 
                            sdf_params->root.target ) );

@@ -1,5 +1,11 @@
 2020-07-08  Anuj Verma  <anujv@iitbhilai.ac.in>
 
+	* src/sdf/ftsdf.c (split_sdf_shape): Memory leak.
+	  After recursion the edges variable becomes `NULL'
+	  so reassign it to deallocate the list completely.
+
+2020-07-08  Anuj Verma  <anujv@iitbhilai.ac.in>
+
 	[sdf] Added functions to subdivide a conic curve.
 
 	* src/sdf/ftsdf.c (split_conic, split_sdf_conic):
