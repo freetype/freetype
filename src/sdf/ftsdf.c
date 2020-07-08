@@ -647,6 +647,197 @@
     return cbox;
   }
 
+  /* The function is exactly same as the one    */
+  /* in the smooth renderer. It splits a conic  */
+  /* into two conic exactly half way at t = 0.5 */
+  static void
+  split_conic( FT_26D6_Vec*  base )
+  {
+    FT_26D6  a, b;
+
+
+    base[4].x = base[2].x;
+    a = base[0].x + base[1].x;
+    b = base[1].x + base[2].x;
+    base[3].x = b / 2;
+    base[2].x = ( a + b ) / 4;
+    base[1].x = a / 2;
+
+    base[4].y = base[2].y;
+    a = base[0].y + base[1].y;
+    b = base[1].y + base[2].y;
+    base[3].y = b / 2;
+    base[2].y = ( a + b ) / 4;
+    base[1].y = a / 2;
+  }
+
+  /* the function splits a conic bezier curve     */
+  /* into a number of lines and adds them to      */
+  /* a list `out'. The function uses recursion    */
+  /* that is why a `max_splits' param is required */
+  /* for stopping.                                */
+  static FT_Error
+  split_sdf_conic( FT_Memory     memory,
+                   FT_26D6_Vec*  control_points,
+                   FT_Int        max_splits,
+                   FT_List       out )
+  {
+    FT_Error     error = FT_Err_Ok;
+    FT_26D6_Vec  cpos[5];
+    SDF_Edge*    left,*  right;
+    FT_ListNode  n1, n2;
+
+
+    if ( !memory || !out  )
+    {
+      error = FT_THROW( Invalid_Argument );
+      goto Exit;
+    }
+
+    /* split the conic */
+    cpos[0] = control_points[0];
+    cpos[1] = control_points[1];
+    cpos[2] = control_points[2];
+
+    split_conic( cpos );
+
+    /* If max number of splits is done */
+    /* then stop and add the lines to  */
+    /* the list.                       */
+    if ( max_splits <= 2 )
+      goto Append;
+
+    /* If not max splits then keep splitting */
+    FT_CALL( split_sdf_conic( memory, &cpos[0], max_splits / 2, out ) );
+    FT_CALL( split_sdf_conic( memory, &cpos[2], max_splits / 2, out ) );
+
+    /* [NOTE]: This is not an efficient way of   */
+    /* splitting the curve. Check the deviation  */
+    /* instead and stop if the deviation is less */
+    /* than a pixel.                             */
+
+    goto Exit;
+
+  Append:
+
+    /* Allocation and add the lines to the list. */
+
+    FT_CALL( sdf_edge_new( memory, &left) );
+    FT_CALL( sdf_edge_new( memory, &right) );
+
+    if ( FT_QNEW( n1 ) || FT_QNEW( n2 ) )
+      goto Exit;
+
+    left->start_pos  = cpos[0];
+    left->end_pos    = cpos[2];
+    left->edge_type  = SDF_EDGE_LINE;
+
+    right->start_pos = cpos[2];
+    right->end_pos   = cpos[4];
+    right->edge_type = SDF_EDGE_LINE;
+
+    n1->data = left;
+    n2->data = right;
+
+    FT_List_Add( out, n1 );
+    FT_List_Add( out, n2 );
+
+  Exit:
+    return error;
+  }
+
+  /* This function subdivide and entire shape  */
+  /* into line segment such that the it does   */
+  /* look visually different than the original */
+  /* curve.                                    */
+  static FT_Error
+  split_sdf_shape( SDF_Shape*  shape )
+  {
+    FT_Error    error = FT_Err_Ok;
+    FT_ListRec  contours;
+    FT_ListRec  edges;
+    FT_ListRec  new_edges = { NULL, NULL };
+    FT_Memory   memory = shape->memory;
+
+
+    if ( !shape )
+    {
+      error = FT_THROW( Invalid_Argument );
+      goto Exit;
+    }
+
+    contours = shape->contours;
+
+    /* for each contour */
+    while ( contours.head )
+    {
+      edges = ((SDF_Contour*)contours.head->data)->edges;
+
+      /* for each edge */
+      while ( edges.head )
+      {
+        SDF_Edge*    edge = (SDF_Edge*)edges.head->data;
+        FT_ListNode  node;
+        SDF_Edge*    temp;
+
+        switch ( edge->edge_type )
+        {
+        case SDF_EDGE_LINE:
+        {
+          /* Just create a duplicate edge in case   */
+          /* it is a line. We can use the same edge */
+          /* but then `FT_List_Finalize' will have  */
+          /* to be changed.                         */
+          FT_CALL( sdf_edge_new( memory, &temp ) );
+          if ( FT_QNEW( node ) )
+            goto Exit;
+
+          ft_memcpy( temp, edge, sizeof( *edge ) );
+
+          node->data = temp;
+
+          FT_List_Add( &new_edges, node );
+          node = NULL;
+          break;
+        }
+        case SDF_EDGE_CONIC:
+        {
+          /* Subdivide the curve and add to the list. */
+          FT_26D6_Vec  ctrls[3];
+
+
+          ctrls[0] = edge->start_pos;
+          ctrls[1] = edge->control_a;
+          ctrls[2] = edge->end_pos;
+          error = split_sdf_conic( memory, ctrls, 16, &new_edges );
+          break;
+        }
+        case SDF_EDGE_CUBIC:
+        {
+          /* [TODO] */
+        }
+        default:
+          error = FT_THROW( Invalid_Argument );
+          goto Exit;
+        }
+
+        edges.head = edges.head->next;
+      }
+
+      /* Deallocate the previous list of edges and     */
+      /* assign the newly created list to the contour. */
+      FT_List_Finalize( &edges, sdf_edge_destructor, memory, NULL );
+      ((SDF_Contour*)contours.head->data)->edges = new_edges;
+      new_edges.head = NULL;
+      new_edges.tail = NULL;
+
+      contours.head = contours.head->next;
+    }
+
+  Exit:
+    return error;
+  }
+
   /**************************************************************************
    *
    * for debugging

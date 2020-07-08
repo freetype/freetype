@@ -1,3 +1,15 @@
+2020-07-08  Anuj Verma  <anujv@iitbhilai.ac.in>
+
+	[sdf] Added functions to subdivide a conic curve.
+
+	* src/sdf/ftsdf.c (split_conic, split_sdf_conic):
+	  These functions can be used to subdivide a
+	  conic bezier curve into line segments which can
+	  then be used to generate the SDF.
+
+	* src/sdf/ftsdf.c (split_sdf_shape): Added function
+	  to split a outline into a line segments.
+
 2020-07-06  Anuj Verma  <anujv@iitbhilai.ac.in>
 
 	* [GSoC]ChangLog: Fixed typos.
