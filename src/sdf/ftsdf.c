@@ -332,10 +332,17 @@
   /* Frees the allocated `shape' variable and also frees */
   /* the list of contours.                               */
   static void
-  sdf_shape_done( FT_Memory    memory,
-                  SDF_Shape**  shape )
+  sdf_shape_done( SDF_Shape**  shape )
   {
-    if ( !memory || !shape || !*shape )
+    FT_Memory  memory;
+
+
+    if ( !shape || !*shape )
+      return;
+
+    memory = (*shape)->memory;
+
+    if ( !memory )
       return;
 
     /* release the list of contours */
@@ -671,6 +678,40 @@
     base[1].y = a / 2;
   }
 
+  /* The function is exactly same as the one    */
+  /* in the smooth renderer. It splits a cubic  */
+  /* into two cubic exactly half way at t = 0.5 */
+  static void
+  split_cubic( FT_26D6_Vec*  base )
+  {
+    FT_26D6  a, b, c;
+
+
+    base[6].x = base[3].x;
+    a = base[0].x + base[1].x;
+    b = base[1].x + base[2].x;
+    c = base[2].x + base[3].x;
+    base[5].x = c / 2;
+    c += b;
+    base[4].x = c / 4;
+    base[1].x = a / 2;
+    a += b;
+    base[2].x = a / 4;
+    base[3].x = ( a + c ) / 8;
+
+    base[6].y = base[3].y;
+    a = base[0].y + base[1].y;
+    b = base[1].y + base[2].y;
+    c = base[2].y + base[3].y;
+    base[5].y = c / 2;
+    c += b;
+    base[4].y = c / 4;
+    base[1].y = a / 2;
+    a += b;
+    base[2].y = a / 4;
+    base[3].y = ( a + c ) / 8;
+  }
+
   /* the function splits a conic bezier curve     */
   /* into a number of lines and adds them to      */
   /* a list `out'. The function uses recursion    */
@@ -734,6 +775,82 @@
 
     right->start_pos = cpos[2];
     right->end_pos   = cpos[4];
+    right->edge_type = SDF_EDGE_LINE;
+
+    n1->data = left;
+    n2->data = right;
+
+    FT_List_Add( out, n1 );
+    FT_List_Add( out, n2 );
+
+  Exit:
+    return error;
+  }
+
+  /* the function splits a cubic bezier curve     */
+  /* into a number of lines and adds them to      */
+  /* a list `out'. The function uses recursion    */
+  /* that is why a `max_splits' param is required */
+  /* for stopping.                                */
+  static FT_Error
+  split_sdf_cubic( FT_Memory     memory,
+                   FT_26D6_Vec*  control_points,
+                   FT_Int        max_splits,
+                   FT_List       out )
+  {
+    FT_Error     error = FT_Err_Ok;
+    FT_26D6_Vec  cpos[7];
+    SDF_Edge*    left,*  right;
+    FT_ListNode  n1, n2;
+
+
+    if ( !memory || !out  )
+    {
+      error = FT_THROW( Invalid_Argument );
+      goto Exit;
+    }
+
+    /* split the conic */
+    cpos[0] = control_points[0];
+    cpos[1] = control_points[1];
+    cpos[2] = control_points[2];
+    cpos[3] = control_points[3];
+
+    split_cubic( cpos );
+
+    /* If max number of splits is done */
+    /* then stop and add the lines to  */
+    /* the list.                       */
+    if ( max_splits <= 2 )
+      goto Append;
+
+    /* If not max splits then keep splitting */
+    FT_CALL( split_sdf_cubic( memory, &cpos[0], max_splits / 2, out ) );
+    FT_CALL( split_sdf_cubic( memory, &cpos[3], max_splits / 2, out ) );
+
+    /* [NOTE]: This is not an efficient way of   */
+    /* splitting the curve. Check the deviation  */
+    /* instead and stop if the deviation is less */
+    /* than a pixel.                             */
+
+    goto Exit;
+
+  Append:
+
+    /* Allocation and add the lines to the list. */
+
+    FT_CALL( sdf_edge_new( memory, &left) );
+    FT_CALL( sdf_edge_new( memory, &right) );
+
+    if ( FT_QNEW( n1 ) || FT_QNEW( n2 ) )
+      goto Exit;
+
+    left->start_pos  = cpos[0];
+    left->end_pos    = cpos[3];
+    left->edge_type  = SDF_EDGE_LINE;
+
+    right->start_pos = cpos[3];
+    right->end_pos   = cpos[6];
     right->edge_type = SDF_EDGE_LINE;
 
     n1->data = left;
@@ -814,7 +931,16 @@
         }
         case SDF_EDGE_CUBIC:
         {
-          /* [TODO] */
+          /* Subdivide the curve and add to the list. */
+          FT_26D6_Vec  ctrls[4];
+
+
+          ctrls[0] = edge->start_pos;
+          ctrls[1] = edge->control_a;
+          ctrls[2] = edge->control_b;
+          ctrls[3] = edge->end_pos;
+          error = split_sdf_cubic( memory, ctrls, 16, &new_edges );
+          break;
         }
         default:
           error = FT_THROW( Invalid_Argument );
@@ -2721,7 +2847,7 @@
 
   Exit:
     if ( shape )
-      sdf_shape_done( memory, &shape );
+      sdf_shape_done( &shape );
 
     return error;
   }

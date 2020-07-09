@@ -1,5 +1,21 @@
 2020-07-09  Anuj Verma  <anujv@iitbhilai.ac.in>
 
+	[sdf] Added functions to subdivide a cubic curve.
+
+	* src/sdf/ftsdf.c (split_cubic, split_sdf_cubic):
+	  These functions can be used to subdivide a
+	  cubic bezier curve into line segments which can
+	  then be used to generate the SDF.
+
+	* src/sdf/ftsdf.c (split_sdf_shape): Added function
+	  to split a cubic into a line segments.
+
+	* src/sdf/ftsdf.c (sdf_shape_done): No need to pass
+	  `FT_Memory' as a parameter, it can be accessed
+	  from the `shape' struct.
+
+2020-07-09  Anuj Verma  <anujv@iitbhilai.ac.in>
+
 	* src/sdf/ftsdf.c (split_sdf_shape): Typo.
 
 2020-07-08  Anuj Verma  <anujv@iitbhilai.ac.in>
