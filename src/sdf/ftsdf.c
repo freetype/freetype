@@ -746,10 +746,10 @@
     return error;
   }
 
-  /* This function subdivide and entire shape  */
-  /* into line segment such that the it does   */
-  /* look visually different than the original */
-  /* curve.                                    */
+  /* This function subdivide and entire shape   */
+  /* into line segment such that the it doesn't */
+  /* look visually different than the original  */
+  /* curve.                                     */
   static FT_Error
   split_sdf_shape( SDF_Shape*  shape )
   {
