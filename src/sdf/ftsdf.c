@@ -2724,6 +2724,38 @@
 
   /**************************************************************************
    *
+   * @Function:
+   *   sdf_generate_bounding_box
+   *
+   * @Description:
+   *   This function subdivide the shape into a number of straight lines
+   *   and then simply use the above `sdf_generate_bounding_box' to generate
+   *   the SDF.
+   *   Note: After calling this function the `shape' will no longer have the
+   *         original edges, it will only contain lines.
+   *
+   * @Input:
+   *   [TODO]
+   *
+   * @Return:
+   *   [TODO]
+   */
+  static FT_Error
+  sdf_generate_subdivision( const SDF_Shape*  shape,
+                            FT_UInt           spread,
+                            const FT_Bitmap*  bitmap )
+  {
+    FT_Error   error = FT_Err_Ok;
+
+    FT_CALL( split_sdf_shape( shape ) );
+    FT_CALL( sdf_generate_bounding_box( shape, spread, bitmap ) );
+
+  Exit:
+    return error;
+  }
+
+  /**************************************************************************
+   *
    * interface functions
    *
    */
@@ -2840,9 +2872,7 @@
 
     FT_CALL( sdf_outline_decompose( outline, shape ) );
 
-    split_sdf_shape( shape );
-
-    FT_CALL( sdf_generate_bounding_box( shape, sdf_params->spread, 
+    FT_CALL( sdf_generate_subdivision( shape, sdf_params->spread, 
                            sdf_params->root.target ) );
 
   Exit:

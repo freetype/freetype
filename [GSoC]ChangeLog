@@ -1,5 +1,15 @@
 2020-07-09  Anuj Verma  <anujv@iitbhilai.ac.in>
 
+	[sdf] Added subdivision optimization.
+
+	* src/sdf/ftsdfrend.c (sdf_generate_subdivision): The
+	  function generate SDF just like the `sdf_generate'
+	  function, but subdivide the curve into a number of
+	  lines and then use the `sdf_generate_bounding_box'
+	  function to generate SDF.
+
+2020-07-09  Anuj Verma  <anujv@iitbhilai.ac.in>
+
 	[sdf] Added functions to subdivide a cubic curve.
 
 	* src/sdf/ftsdf.c (split_cubic, split_sdf_cubic):
