@@ -1,5 +1,13 @@
 2020-07-10  Anuj Verma  <anujv@iitbhilai.ac.in>
 
+	[sdf] Added the coarse grid optimization function.
+
+	* src/sdf/ftsdf.c (sdf_generate_coarse_grid): The
+	  function uses coarse grid to optimize nearest edge
+	  search performance.
+
+2020-07-10  Anuj Verma  <anujv@iitbhilai.ac.in>
+
 	[sdf] Remove use of `FT_List'.
 
 	Simply use a `next' pointer inside `SDF_Edge' and

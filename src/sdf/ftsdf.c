@@ -32,18 +32,20 @@
 
   /* `MAX_NEWTON_DIVISIONS' is the number of intervals the bezier curve   */
   /* is sampled and checked for shortest distance.                        */
-  #define MAX_NEWTON_DIVISIONS 4
+  #define MAX_NEWTON_DIVISIONS   4
 
   /* `MAX_NEWTON_STEPS' is the number of steps of Newton's iterations in  */
   /* each interval of the bezier curve. Basically for each division we    */
   /* run the Newton's approximation (i.e. x -= Q( t ) / Q'( t )) to get   */
   /* the shortest distance.                                               */
-  #define MAX_NEWTON_STEPS     4
+  #define MAX_NEWTON_STEPS       4
 
   /* This is the distance in 16.16 which is used for corner resolving. If */
   /* the difference of two distance is less than `CORNER_CHECK_EPSILON'   */
   /* then they will be checked for corner if they have ambiguity.         */
-  #define CORNER_CHECK_EPSILON  32
+  #define CORNER_CHECK_EPSILON   32
+
+  #define COARSE_GRID_DIV        8
 
   /**************************************************************************
    *
@@ -2681,7 +2683,7 @@
   /**************************************************************************
    *
    * @Function:
-   *   sdf_generate_bounding_box
+   *   sdf_generate_subdivision
    *
    * @Description:
    *   This function subdivide the shape into a number of straight lines
@@ -2705,6 +2707,94 @@
 
     FT_CALL( split_sdf_shape( shape ) );
     FT_CALL( sdf_generate_bounding_box( shape, spread, bitmap ) );
+
+  Exit:
+    return error;
+  }
+
+
+  /**************************************************************************
+   *
+   * @Function:
+   *   sdf_generate_coarse_grid
+   *
+   * @Description:
+   *   The function divide the entire bitmap into a coarse grid (the
+   *   dimension is determined by the COARSE_GRID_DIV). Then for each
+   *   coarse grid, it checks which edges a relevant. An edge is relevant
+   *   if it's shortest distance from the coarse grid is less than `spread'
+   *   + `COARSE_GRID_DIV'.
+   *   After we have all the relevant edges we only check those edges for
+   *   the pixels inside the coarse grid.
+   *
+   * @Input:
+   *   [TODO]
+   *
+   * @Return:
+   *   [TODO]
+   */
+  static FT_Error
+  sdf_generate_coarse_grid( const SDF_Shape*  shape,
+                            FT_UInt           spread,
+                            const FT_Bitmap*  bitmap )
+  {
+    FT_Error      error = FT_Err_Ok;
+    FT_Memory     memory;
+
+    FT_UInt       width, rows, i, j;
+    FT_UInt       c_width, c_rows;
+    FT_UInt       sp_sq;      /* max value to check   */
+
+    SDF_Contour*  contours;   /* list of all contours */
+    FT_Short*     buffer;     /* the bitmap buffer    */
+
+    /* coarse grid to hold the list of edges */
+    SDF_Edge**    coarse_grid[ COARSE_GRID_DIV * COARSE_GRID_DIV ];
+
+    if ( !shape || !bitmap )
+    {
+      error = FT_THROW( Invalid_Argument );
+      goto Exit;
+    }
+
+    if ( spread < MIN_SPREAD || spread > MAX_SPREAD )
+    {
+      error = FT_THROW( Invalid_Argument );
+      goto Exit;
+    }
+
+    memory = shape->memory;
+
+    contours = shape->contours;
+    width    = bitmap->width;
+    rows     = bitmap->rows;
+    buffer   = (FT_Short*)bitmap->buffer;
+
+    if ( USE_SQUARED_DISTANCES )
+      sp_sq = FT_INT_16D16( spread * spread );
+    else
+      sp_sq = FT_INT_16D16( spread );
+
+    if ( width == 0 || rows == 0 )
+    {
+      FT_TRACE0(( "[sdf] sdf_generate:\n"
+                  "      Cannot render glyph with width/height == 0\n"
+                  "      (width, height provided [%d, %d])", width, rows ));
+      error = FT_THROW( Cannot_Render_Glyph );
+      goto Exit;
+    }
+
+    /* determine the dimension of the coarse grid */
+    c_width = width / COARSE_GRID_DIV + ( width % COARSE_GRID_DIV == 0 ? 0 : 1 );
+    c_rows = rows / COARSE_GRID_DIV + ( rows % COARSE_GRID_DIV == 0 ? 0 : 1 );
+
+    /* if the coarse grid is too small then simply */
+    /* check all pixels against all the edges      */
+    if ( c_width <= 1 || c_rows <= 1 )
+    {
+      error = sdf_generate( shape, spread, bitmap );
+      goto Exit;
+    }
 
   Exit:
     return error;
