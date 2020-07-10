@@ -1,5 +1,15 @@
 2020-07-10  Anuj Verma  <anujv@iitbhilai.ac.in>
 
+	[sdf] Partially completed the coarse grid optimization.
+
+	* src/sdf/ftsdf.c (sdf_generate_coarse_grid): Added
+	  functionality to check distances of all edges from
+	  the coarse grid and add the relevant edges to the 
+	  list.
+	  [Note]: The function is not complete yet.
+
+2020-07-10  Anuj Verma  <anujv@iitbhilai.ac.in>
+
 	[sdf] Added the coarse grid optimization function.
 
 	* src/sdf/ftsdf.c (sdf_generate_coarse_grid): The

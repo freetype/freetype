@@ -45,7 +45,7 @@
   /* then they will be checked for corner if they have ambiguity.         */
   #define CORNER_CHECK_EPSILON   32
 
-  #define COARSE_GRID_DIV        8
+  #define CG_DIMEN        8
 
   /**************************************************************************
    *
@@ -2743,13 +2743,15 @@
 
     FT_UInt       width, rows, i, j;
     FT_UInt       c_width, c_rows;
-    FT_UInt       sp_sq;      /* max value to check   */
+    FT_16D16      sp_sq;      /* max value to check   */
+    FT_16D16      cg_sq;      /* max value to check for coarse grid  */
+    FT_16D16      cg_max;
 
     SDF_Contour*  contours;   /* list of all contours */
     FT_Short*     buffer;     /* the bitmap buffer    */
 
     /* coarse grid to hold the list of edges */
-    SDF_Edge**    coarse_grid[ COARSE_GRID_DIV * COARSE_GRID_DIV ];
+    SDF_Edge*     coarse_grid[ CG_DIMEN * CG_DIMEN ];
 
     if ( !shape || !bitmap )
     {
@@ -2770,11 +2772,6 @@
     rows     = bitmap->rows;
     buffer   = (FT_Short*)bitmap->buffer;
 
-    if ( USE_SQUARED_DISTANCES )
-      sp_sq = FT_INT_16D16( spread * spread );
-    else
-      sp_sq = FT_INT_16D16( spread );
-
     if ( width == 0 || rows == 0 )
     {
       FT_TRACE0(( "[sdf] sdf_generate:\n"
@@ -2785,8 +2782,21 @@
     }
 
     /* determine the dimension of the coarse grid */
-    c_width = width / COARSE_GRID_DIV + ( width % COARSE_GRID_DIV == 0 ? 0 : 1 );
-    c_rows = rows / COARSE_GRID_DIV + ( rows % COARSE_GRID_DIV == 0 ? 0 : 1 );
+    c_width = width / CG_DIMEN + ( width % CG_DIMEN == 0 ? 0 : 1 );
+    c_rows = rows / CG_DIMEN + ( rows % CG_DIMEN == 0 ? 0 : 1 );
+
+    cg_max = c_width > c_rows ? c_width : c_rows;
+
+    if ( USE_SQUARED_DISTANCES )
+    {
+      sp_sq = FT_INT_16D16( spread * spread );
+      cg_sq = sp_sq * 2;
+    }
+    else
+    {
+      sp_sq = FT_INT_16D16( spread );
+      cg_sq = sp_sq + FT_INT_16D16( cg_max / 2 );
+    }
 
     /* if the coarse grid is too small then simply */
     /* check all pixels against all the edges      */
@@ -2794,6 +2804,111 @@
     {
       error = sdf_generate( shape, spread, bitmap );
       goto Exit;
+    }
+
+    for ( j = 0; j < CG_DIMEN; j++ )
+    {
+      for ( i = 0; i < CG_DIMEN; i++ )
+      {
+        FT_Int        cindex  = j * CG_DIMEN + i;
+        SDF_Contour*  cont    = contours;
+        SDF_Edge*     edge;
+        FT_26D6_Vec   cpoint;
+
+        coarse_grid[cindex] = NULL;
+        cpoint.x = FT_INT_26D6( i ) + FT_INT_26D6( c_width / 2 );
+        cpoint.y = FT_INT_26D6( j ) + FT_INT_26D6( c_rows / 2 );
+
+        while ( cont )
+        {
+          edge = cont->edges;
+
+          while ( edge )
+          {
+            SDF_Signed_Distance  dist;
+            SDF_Edge*            temp;
+
+
+            FT_CALL( sdf_edge_get_min_distance( edge, cpoint, &dist ) );
+
+            if ( dist.distance > cg_sq )
+            {
+              edge = edge->next;
+              continue;
+            }
+
+            FT_CALL( sdf_edge_new( memory, &temp ) );
+            ft_memcpy( temp, edge, sizeof( *edge ) );
+
+            temp->next = coarse_grid[cindex];
+            coarse_grid[cindex] = temp;
+
+            edge = edge->next;
+          }
+
+          cont = cont->next;
+        }
+      }
+    }
+
+    for ( j = 0; j < CG_DIMEN; j++ )
+    {
+      for ( i = 0; i < CG_DIMEN; i++ )
+      {
+        FT_BBox    sample_region;
+        FT_Int     x, y;
+
+
+        if ( !coarse_grid[j * CG_DIMEN + i] ) continue;
+
+        sample_region.xMin = i * c_width;
+        sample_region.xMax = sample_region.xMin + c_width;
+        sample_region.yMin = j * c_rows;
+        sample_region.yMax = sample_region.yMin + c_rows;
+
+
+        for ( y = sample_region.yMin; y < sample_region.yMax; y++ )
+        {
+          for ( x = sample_region.xMin; x < sample_region.xMax; x++ )
+          {
+            FT_26D6_Vec          current_pos;
+            SDF_Signed_Distance  min_dist = max_sdf;
+            SDF_Edge*            edges = coarse_grid[j * CG_DIMEN + i];
+
+
+            if ( x < 0 || x >= width ) continue;
+            if ( y < 0 || y >= rows )  continue;
+
+            current_pos.x = FT_INT_26D6( x ) + FT_INT_26D6( 1 ) / 2;
+            current_pos.y = FT_INT_26D6( y ) + FT_INT_26D6( 1 ) / 2;
+
+            while ( edges )
+            {
+              SDF_Signed_Distance  dist;
+
+
+              FT_CALL( sdf_edge_get_min_distance( edges,
+                       current_pos, &dist ) );
+
+              if ( dist.distance < min_dist.distance )
+                min_dist = dist;
+
+              edges = edges->next;
+            }
+
+            if ( min_dist.distance > sp_sq )
+              min_dist.distance = sp_sq;
+
+            if ( USE_SQUARED_DISTANCES )
+              min_dist.distance = square_root( min_dist.distance );
+
+            min_dist.distance /= 64;
+
+            buffer[ y * width + x ] = min_dist.distance;
+
+          }
+        }
+      }
     }
 
   Exit:
@@ -2918,7 +3033,7 @@
 
     FT_CALL( sdf_outline_decompose( outline, shape ) );
 
-    FT_CALL( sdf_generate_subdivision( shape, sdf_params->spread,
+    FT_CALL( sdf_generate_coarse_grid( shape, sdf_params->spread,
                            sdf_params->root.target ) );
 
   Exit:
