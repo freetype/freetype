@@ -1,7 +1,6 @@
 
 #include <freetype/internal/ftobjs.h>
 #include <freetype/internal/ftdebug.h>
-#include <freetype/ftlist.h>
 #include <freetype/fttrigon.h>
 #include "ftsdf.h"
 
@@ -18,7 +17,7 @@
   /* a chance of overflow and artifacts. You can safely use it upto a     */
   /* pixel size of 128.                                                   */
   #ifndef USE_SQUARED_DISTANCES
-  #  define USE_SQUARED_DISTANCES 1
+  #  define USE_SQUARED_DISTANCES 0
   #endif
 
   /* If it is defined to 1 then the rasterizer will use Newton-Raphson's  */
@@ -134,14 +133,18 @@
 
     SDF_Edge_Type  edge_type;   /* edge identifier                        */
 
+    struct SDF_Edge_*   next;   /* to create linked list                  */
+
   } SDF_Edge;
 
   /* A contour represent a set of edges which make a closed */
   /* loop.                                                  */
   typedef struct  SDF_Contour_
   {
-    FT_26D6_Vec  last_pos;  /* end position of the last edge    */
-    FT_ListRec   edges;     /* list of all edges in the contour */
+    FT_26D6_Vec           last_pos;  /* end position of the last edge    */
+    SDF_Edge*             edges;     /* list of all edges in the contour */
+
+    struct SDF_Contour_*  next;      /* to create linked list            */
 
   } SDF_Contour;
 
@@ -149,8 +152,8 @@
   /* glyph outline.                                       */
   typedef struct  SDF_Shape_
   {
-    FT_Memory   memory;    /* used internally to allocate memory  */
-    FT_ListRec  contours;  /* list of all contours in the outline */
+    FT_Memory     memory;    /* used internally to allocate memory  */
+    SDF_Contour*  contours;  /* list of all contours in the outline */
 
   } SDF_Shape;
 
@@ -188,13 +191,13 @@
   static
   const SDF_Edge     null_edge    = { { 0, 0 }, { 0, 0 },
                                       { 0, 0 }, { 0, 0 },
-                                      SDF_EDGE_UNDEFINED };
+                                      SDF_EDGE_UNDEFINED, NULL };
 
   static
-  const SDF_Contour  null_contour = { { 0, 0 }, { NULL, NULL } };
+  const SDF_Contour  null_contour = { { 0, 0 }, NULL, NULL };
 
   static
-  const SDF_Shape    null_shape   = { NULL, { NULL, NULL } };
+  const SDF_Shape    null_shape   = { NULL, NULL };
 
   static
   const SDF_Signed_Distance  max_sdf = { INT_MAX, 0, 0 };
@@ -236,18 +239,6 @@
     FT_FREE( *edge );
   }
 
-  /* Used in `FT_List_Finalize'. */
-  static void
-  sdf_edge_destructor( FT_Memory  memory,
-                       void*      data,
-                       void*      user )
-  {
-    SDF_Edge*  edge = (SDF_Edge*)data;
-
-
-    sdf_edge_done( memory, &edge );
-  }
-
   /* Creates a new `SDF_Contour' on the heap and assigns  */
   /* the `contour' pointer to the newly allocated memory. */
   static FT_Error
@@ -280,26 +271,24 @@
   sdf_contour_done( FT_Memory      memory,
                     SDF_Contour**  contour )
   {
+    SDF_Edge*  edges;
+    SDF_Edge*  temp;
+
     if ( !memory || !contour || !*contour )
       return;
 
-    /*  */
-    FT_List_Finalize( &(*contour)->edges, sdf_edge_destructor,
-                      memory, NULL );
+    edges = (*contour)->edges;
+
+    /* release all the edges */
+    while ( edges )
+    {
+      temp = edges;
+      edges = edges->next;
+
+      sdf_edge_done( memory, &temp );
+    }
 
     FT_FREE( *contour );
-  }
-
-  /* Used in `FT_List_Finalize'. */
-  static void
-  sdf_contour_destructor( FT_Memory  memory,
-                          void*      data,
-                          void*      user )
-  {
-    SDF_Contour*  contour = (SDF_Contour*)data;
-
-
-    sdf_contour_done( memory, &contour );
   }
 
   /* Creates a new `SDF_Shape' on the heap and assigns  */
@@ -334,20 +323,28 @@
   static void
   sdf_shape_done( SDF_Shape**  shape )
   {
-    FT_Memory  memory;
+    FT_Memory     memory;
+    SDF_Contour*  contours;
+    SDF_Contour*  temp;
 
 
     if ( !shape || !*shape )
       return;
 
     memory = (*shape)->memory;
+    contours = (*shape)->contours;
 
     if ( !memory )
       return;
 
-    /* release the list of contours */
-    FT_List_Finalize( &(*shape)->contours, sdf_contour_destructor, 
-                       memory, NULL );
+    /* release all the contours */
+    while ( contours )
+    {
+      temp = contours;
+      contours = contours->next;
+
+      sdf_contour_done( memory, &temp );
+    }
 
     /* release the allocated shape struct  */
     FT_FREE( *shape );
@@ -368,7 +365,6 @@
   {
     SDF_Shape*    shape    = ( SDF_Shape* )user;
     SDF_Contour*  contour  = NULL;
-    FT_ListNode   node     = NULL;
 
     FT_Error      error    = FT_Err_Ok;
     FT_Memory     memory   = shape->memory;
@@ -380,17 +376,11 @@
       goto Exit;
     }
 
-    error = sdf_contour_new( memory, &contour );
-    if ( error != FT_Err_Ok )
-      goto Exit;
-
-    if ( FT_QNEW( node ) )
-      goto Exit;
+    FT_CALL( sdf_contour_new( memory, &contour ) );
 
     contour->last_pos = *to;
-
-    node->data = contour;
-    FT_List_Add( &shape->contours, node );
+    contour->next = shape->contours;
+    shape->contours = contour;
 
   Exit:
     return error;
@@ -403,7 +393,6 @@
     SDF_Shape*    shape    = ( SDF_Shape* )user;
     SDF_Edge*     edge     = NULL;
     SDF_Contour*  contour  = NULL;
-    FT_ListNode   node     = NULL;
 
     FT_Error      error    = FT_Err_Ok;
     FT_Memory     memory   = shape->memory;
@@ -415,27 +404,21 @@
       goto Exit;
     }
 
-    contour = ( SDF_Contour* )shape->contours.tail->data;
+    contour = shape->contours;
 
     if ( contour->last_pos.x == to->x && 
          contour->last_pos.y == to->y )
       goto Exit;
 
-    error = sdf_edge_new( memory, &edge );
-    if ( error != FT_Err_Ok )
-      goto Exit;
-
-    if ( FT_QNEW( node ) )
-      goto Exit;
+    FT_CALL( sdf_edge_new( memory, &edge ) );
 
     edge->edge_type = SDF_EDGE_LINE;
     edge->start_pos = contour->last_pos;
     edge->end_pos   = *to;
 
+    edge->next = contour->edges;
+    contour->edges = edge;
     contour->last_pos = *to;
-
-    node->data = edge;
-    FT_List_Add( &contour->edges, node );
 
   Exit:
     return error;
@@ -449,7 +432,6 @@
     SDF_Shape*    shape    = ( SDF_Shape* )user;
     SDF_Edge*     edge     = NULL;
     SDF_Contour*  contour  = NULL;
-    FT_ListNode   node     = NULL;
 
     FT_Error      error    = FT_Err_Ok;
     FT_Memory     memory   = shape->memory;
@@ -461,24 +443,18 @@
       goto Exit;
     }
 
-    contour = ( SDF_Contour* )shape->contours.tail->data;
+    contour = shape->contours;
 
-    error = sdf_edge_new( memory, &edge );
-    if ( error != FT_Err_Ok )
-      goto Exit;
-
-    if ( FT_QNEW( node ) )
-      goto Exit;
+    FT_CALL( sdf_edge_new( memory, &edge ) );
 
     edge->edge_type = SDF_EDGE_CONIC;
     edge->start_pos = contour->last_pos;
     edge->control_a = *control_1;
     edge->end_pos   = *to;
 
+    edge->next = contour->edges;
+    contour->edges = edge;
     contour->last_pos = *to;
-
-    node->data = edge;
-    FT_List_Add( &contour->edges, node );
 
   Exit:
     return error;
@@ -493,7 +469,6 @@
     SDF_Shape*    shape    = ( SDF_Shape* )user;
     SDF_Edge*     edge     = NULL;
     SDF_Contour*  contour  = NULL;
-    FT_ListNode   node     = NULL;
 
     FT_Error      error    = FT_Err_Ok;
     FT_Memory     memory   = shape->memory;
@@ -505,14 +480,9 @@
       goto Exit;
     }
 
-    contour = ( SDF_Contour* )shape->contours.tail->data;
+    contour = shape->contours;
 
-    error = sdf_edge_new( memory, &edge );
-    if ( error != FT_Err_Ok )
-      goto Exit;
-
-    if ( FT_QNEW( node ) )
-      goto Exit;
+    FT_CALL( sdf_edge_new( memory, &edge ) );
 
     edge->edge_type = SDF_EDGE_CUBIC;
     edge->start_pos = contour->last_pos;
@@ -520,10 +490,9 @@
     edge->control_b = *control_2;
     edge->end_pos   = *to;
 
+    edge->next = contour->edges;
+    contour->edges = edge;
     contour->last_pos = *to;
-
-    node->data = edge;
-    FT_List_Add( &contour->edges, node );
 
   Exit:
     return error;
@@ -721,12 +690,11 @@
   split_sdf_conic( FT_Memory     memory,
                    FT_26D6_Vec*  control_points,
                    FT_Int        max_splits,
-                   FT_List       out )
+                   SDF_Edge**    out )
   {
     FT_Error     error = FT_Err_Ok;
     FT_26D6_Vec  cpos[5];
     SDF_Edge*    left,*  right;
-    FT_ListNode  n1, n2;
 
 
     if ( !memory || !out  )
@@ -766,9 +734,6 @@
     FT_CALL( sdf_edge_new( memory, &left) );
     FT_CALL( sdf_edge_new( memory, &right) );
 
-    if ( FT_QNEW( n1 ) || FT_QNEW( n2 ) )
-      goto Exit;
-
     left->start_pos  = cpos[0];
     left->end_pos    = cpos[2];
     left->edge_type  = SDF_EDGE_LINE;
@@ -777,11 +742,9 @@
     right->end_pos   = cpos[4];
     right->edge_type = SDF_EDGE_LINE;
 
-    n1->data = left;
-    n2->data = right;
-
-    FT_List_Add( out, n1 );
-    FT_List_Add( out, n2 );
+    left->next = right;
+    right->next = (*out);
+    *out = left;
 
   Exit:
     return error;
@@ -796,12 +759,11 @@
   split_sdf_cubic( FT_Memory     memory,
                    FT_26D6_Vec*  control_points,
                    FT_Int        max_splits,
-                   FT_List       out )
+                   SDF_Edge**    out )
   {
     FT_Error     error = FT_Err_Ok;
     FT_26D6_Vec  cpos[7];
     SDF_Edge*    left,*  right;
-    FT_ListNode  n1, n2;
 
 
     if ( !memory || !out  )
@@ -842,9 +804,6 @@
     FT_CALL( sdf_edge_new( memory, &left) );
     FT_CALL( sdf_edge_new( memory, &right) );
 
-    if ( FT_QNEW( n1 ) || FT_QNEW( n2 ) )
-      goto Exit;
-
     left->start_pos  = cpos[0];
     left->end_pos    = cpos[3];
     left->edge_type  = SDF_EDGE_LINE;
@@ -853,11 +812,9 @@
     right->end_pos   = cpos[6];
     right->edge_type = SDF_EDGE_LINE;
 
-    n1->data = left;
-    n2->data = right;
-
-    FT_List_Add( out, n1 );
-    FT_List_Add( out, n2 );
+    left->next = right;
+    right->next = (*out);
+    *out = left;
 
   Exit:
     return error;
@@ -870,11 +827,12 @@
   static FT_Error
   split_sdf_shape( SDF_Shape*  shape )
   {
-    FT_Error    error = FT_Err_Ok;
-    FT_ListRec  contours;
-    FT_ListRec  edges;
-    FT_ListRec  new_edges = { NULL, NULL };
-    FT_Memory   memory = shape->memory;
+    FT_Error      error = FT_Err_Ok;
+    FT_Memory     memory = shape->memory;
+
+    SDF_Contour*  contours;
+    SDF_Contour*  new_contours = NULL;
+
 
 
     if ( !shape )
@@ -886,15 +844,17 @@
     contours = shape->contours;
 
     /* for each contour */
-    while ( contours.head )
+    while ( contours )
     {
-      edges = ((SDF_Contour*)contours.head->data)->edges;
+      SDF_Edge*     edges = contours->edges;
+      SDF_Edge*     new_edges = NULL;
+
+      SDF_Contour*  tempc;
 
       /* for each edge */
-      while ( edges.head )
+      while ( edges )
       {
-        SDF_Edge*    edge = (SDF_Edge*)edges.head->data;
-        FT_ListNode  node;
+        SDF_Edge*    edge = edges;
         SDF_Edge*    temp;
 
         switch ( edge->edge_type )
@@ -903,18 +863,12 @@
         {
           /* Just create a duplicate edge in case   */
           /* it is a line. We can use the same edge */
-          /* but then `FT_List_Finalize' will have  */
-          /* to be changed.                         */
           FT_CALL( sdf_edge_new( memory, &temp ) );
-          if ( FT_QNEW( node ) )
-            goto Exit;
 
           ft_memcpy( temp, edge, sizeof( *edge ) );
 
-          node->data = temp;
-
-          FT_List_Add( &new_edges, node );
-          node = NULL;
+          temp->next = new_edges;
+          new_edges = temp;
           break;
         }
         case SDF_EDGE_CONIC:
@@ -947,20 +901,24 @@
           goto Exit;
         }
 
-        edges.head = edges.head->next;
+        edges = edges->next;
       }
 
-      edges = ((SDF_Contour*)contours.head->data)->edges;
+      /* add to the contours list */
+      FT_CALL( sdf_contour_new( memory, &tempc ) );
+      tempc->next   = new_contours;
+      tempc->edges  = new_edges;
+      new_contours  = tempc;
+      new_edges     = NULL;
 
-      /* Deallocate the previous list of edges and     */
-      /* assign the newly created list to the contour. */
-      FT_List_Finalize( &edges, sdf_edge_destructor, memory, NULL );
-      ((SDF_Contour*)contours.head->data)->edges = new_edges;
-      new_edges.head = NULL;
-      new_edges.tail = NULL;
+      /* deallocate the contour */
+      tempc = contours;
+      contours = contours->next;
 
-      contours.head = contours.head->next;
+      sdf_contour_done( memory, &tempc );
     }
+
+    shape->contours = new_contours;
 
   Exit:
     return error;
@@ -982,8 +940,8 @@
     FT_UInt     total_lines  = 0;
     FT_UInt     total_conic  = 0;
     FT_UInt     total_cubic  = 0;
-    FT_ListRec  contour_list;
 
+    SDF_Contour*  contour_list;
 
     if ( !shape )
     {
@@ -996,19 +954,19 @@
     FT_TRACE5(( "-------------------------------------------------\n" ));
     FT_TRACE5(( "[sdf] sdf_shape_dump:\n" ));
 
-    while ( contour_list.head != NULL )
+    while ( contour_list )
     {
       FT_UInt       num_edges = 0;
-      FT_ListRec    edge_list;
-      SDF_Contour*  contour = (SDF_Contour*)contour_list.head->data;
+      SDF_Edge*     edge_list;
+      SDF_Contour*  contour = contour_list;
 
 
       edge_list = contour->edges;
       FT_TRACE5(( "Contour %d\n", num_contours ));
 
-      while ( edge_list.head != NULL )
+      while ( edge_list )
       {
-        SDF_Edge*  edge = (SDF_Edge*)edge_list.head->data;
+        SDF_Edge*  edge = edge_list;
 
 
         FT_TRACE5(( "  Edge %d\n", num_edges ));
@@ -1053,11 +1011,11 @@
 
         num_edges++;
         total_edges++;
-        edge_list.head = edge_list.head->next;
+        edge_list = edge_list->next;
       }
 
       num_contours++;
-      contour_list.head = contour_list.head->next;
+      contour_list = contour_list->next;
     }
 
     FT_TRACE5(( "\n" ));
@@ -2353,7 +2311,7 @@
   {
     FT_Error             error  = FT_Err_Ok;
     SDF_Signed_Distance  min_dist = max_sdf;
-    FT_ListRec           edge_list;
+    SDF_Edge*            edge_list;
 
 
     if ( !contour || !out )
@@ -2365,13 +2323,13 @@
     edge_list = contour->edges;
 
     /* iterate through all the edges manually */
-    while ( edge_list.head ) {
+    while ( edge_list ) {
       SDF_Signed_Distance  current_dist = max_sdf;
       FT_16D16             diff;
     
     
       FT_CALL( sdf_edge_get_min_distance( 
-               (SDF_Edge*)edge_list.head->data,
+               edge_list,
                point, &current_dist ) );
 
       if ( current_dist.distance >= 0 )
@@ -2389,7 +2347,7 @@
         FT_TRACE0(( "sdf_contour_get_min_distance: Overflowed.\n" ));
       }
     
-      edge_list.head = edge_list.head->next;
+      edge_list = edge_list->next;
     }
 
     *out = min_dist;
@@ -2472,7 +2430,7 @@
         /* from this point to the entire shape.       */
         FT_26D6_Vec          grid_point = zero_vector;
         SDF_Signed_Distance  min_dist   = max_sdf;
-        FT_ListRec           contour_list;
+        SDF_Contour*         contour_list;
         FT_UInt              index;
         FT_Short             value;
 
@@ -2490,18 +2448,18 @@
         index = ( rows - y - 1 ) * width + x;
 
         /* iterate through all the contours manually */
-        while ( contour_list.head ) {
+        while ( contour_list ) {
           SDF_Signed_Distance  current_dist = max_sdf;
 
 
           FT_CALL( sdf_contour_get_min_distance( 
-                   (SDF_Contour*)contour_list.head->data,
+                   contour_list,
                    grid_point, &current_dist ) );
 
           if ( current_dist.distance < min_dist.distance )
             min_dist = current_dist;
 
-          contour_list.head = contour_list.head->next;
+          contour_list = contour_list->next;
         }
 
         /* [OPTIMIZATION]: if (min_dist > sp_sq) then simply clamp  */
@@ -2558,14 +2516,14 @@
                              FT_UInt           spread,
                              const FT_Bitmap*  bitmap )
   {
-    FT_Error    error = FT_Err_Ok;
-    FT_Memory   memory;
+    FT_Error      error = FT_Err_Ok;
+    FT_Memory     memory;
 
-    FT_UInt     width, rows, i, j;
-    FT_ListRec  contours;   /* list of all contours */
-    FT_UInt     sp_sq;      /* max value to check   */
+    FT_UInt       width, rows, i, j;
+    FT_UInt       sp_sq;      /* max value to check   */
 
-    FT_Short*   buffer;     /* the bitmap buffer    */
+    SDF_Contour*  contours;   /* list of all contours */
+    FT_Short*     buffer;     /* the bitmap buffer    */
 
     /* This buffer has the same size in indices as the   */
     /* bitmap buffer. When we check a pixel position for */
@@ -2613,20 +2571,18 @@
     }
 
     /* loop through all the contours */
-    while ( contours.head ) {
-      SDF_Contour*  current_contour = (SDF_Contour*)contours.head->data;
-      FT_ListRec    edges = current_contour->edges;
+    while ( contours ) {
+      SDF_Edge*  edges = contours->edges;
 
 
       /* loop through all the edges */
-      while ( edges.head )
+      while ( edges )
       {
-        SDF_Edge*  current_edge = (SDF_Edge*)edges.head->data;
         FT_CBox    cbox;
         FT_Int     x, y;
 
         /* get the control box and increase by `spread' */
-        cbox = get_control_box( *current_edge );
+        cbox = get_control_box( *edges );
         cbox.xMin = ( cbox.xMin - 63 ) / 64 - ( FT_Pos )spread;
         cbox.xMax = ( cbox.xMax + 63 ) / 64 + ( FT_Pos )spread;
         cbox.yMin = ( cbox.yMin - 63 ) / 64 - ( FT_Pos )spread;
@@ -2656,7 +2612,7 @@
             
             index = ( rows - y - 1 ) * width + x;
 
-            FT_CALL( sdf_edge_get_min_distance( current_edge,
+            FT_CALL( sdf_edge_get_min_distance( edges,
                                                 grid_point,
                                                 &dist ) );
 
@@ -2681,10 +2637,10 @@
           }
         }
 
-        edges.head = edges.head->next;
+        edges = edges->next;
       }
 
-      contours.head = contours.head->next;
+      contours = contours->next;
     }
 
     /* final pass */
@@ -2872,7 +2828,7 @@
 
     FT_CALL( sdf_outline_decompose( outline, shape ) );
 
-    FT_CALL( sdf_generate_subdivision( shape, sdf_params->spread, 
+    FT_CALL( sdf_generate_subdivision( shape, sdf_params->spread,
                            sdf_params->root.target ) );
 
   Exit:

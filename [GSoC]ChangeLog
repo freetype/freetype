@@ -1,8 +1,28 @@
+2020-07-10  Anuj Verma  <anujv@iitbhilai.ac.in>
+
+	[sdf] Remove use of `FT_List'.
+
+	Simply use a `next' pointer inside `SDF_Edge' and
+	`SDF_Contour' to create a linked list. This reduces
+	the number of allocations due to `FT_ListNode', also
+	we don't need a doubly linked list.
+
+	* src/sdf/ftsdf.c (SDF_Edge, SDF_Contour): Remove the
+	  `FT_List' and use a `next' pointer to create the
+	  linked list.
+
+	* src/sdf/ftsdf.c(sdf_edge_destructor, sdf_contour_destructor):
+	  Removed, not needed any more.
+
+	* src/sdf/ftsdf.c (*): Remove the use of `FT_List_'
+	  functions wherever necessary and sync with the new
+	  list.
+
 2020-07-09  Anuj Verma  <anujv@iitbhilai.ac.in>
 
 	[sdf] Added subdivision optimization.
 
-	* src/sdf/ftsdfrend.c (sdf_generate_subdivision): The
+	* src/sdf/ftsdf.c (sdf_generate_subdivision): The
 	  function generate SDF just like the `sdf_generate'
 	  function, but subdivide the curve into a number of
 	  lines and then use the `sdf_generate_bounding_box'
