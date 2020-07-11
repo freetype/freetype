@@ -45,7 +45,7 @@
   /* then they will be checked for corner if they have ambiguity.         */
   #define CORNER_CHECK_EPSILON   32
 
-  #define CG_DIMEN               10
+  #define CG_DIMEN               8
 
   /**************************************************************************
    *
@@ -2907,6 +2907,24 @@
           }
         }
       }
+    }
+
+    /* release the allocated lists */
+    for ( i = 0; i < CG_DIMEN * CG_DIMEN; i++ )
+    {
+      SDF_Edge*  edge = coarse_grid[i];
+      SDF_Edge*  temp;
+
+
+      while ( edge )
+      {
+        temp = edge;
+        edge = edge->next;
+
+        sdf_edge_done( memory, &temp );
+      }
+
+      coarse_grid[i] = NULL;
     }
 
   Exit:
