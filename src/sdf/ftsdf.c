@@ -45,7 +45,7 @@
   /* then they will be checked for corner if they have ambiguity.         */
   #define CORNER_CHECK_EPSILON   32
 
-  #define CG_DIMEN        8
+  #define CG_DIMEN               10
 
   /**************************************************************************
    *
@@ -2816,8 +2816,8 @@
         FT_26D6_Vec   cpoint;
 
         coarse_grid[cindex] = NULL;
-        cpoint.x = FT_INT_26D6( i ) + FT_INT_26D6( c_width / 2 );
-        cpoint.y = FT_INT_26D6( j ) + FT_INT_26D6( c_rows / 2 );
+        cpoint.x = FT_INT_26D6( i * c_width ) + FT_INT_26D6( c_width / 2 );
+        cpoint.y = FT_INT_26D6( j * c_rows ) + FT_INT_26D6( c_rows / 2 );
 
         while ( cont )
         {
@@ -2831,17 +2831,15 @@
 
             FT_CALL( sdf_edge_get_min_distance( edge, cpoint, &dist ) );
 
-            if ( dist.distance > cg_sq )
+
+            if ( dist.distance < cg_sq )
             {
-              edge = edge->next;
-              continue;
+              FT_CALL( sdf_edge_new( memory, &temp ) );
+              ft_memcpy( temp, edge, sizeof( *edge ) );
+              
+              temp->next = coarse_grid[cindex];
+              coarse_grid[cindex] = temp;
             }
-
-            FT_CALL( sdf_edge_new( memory, &temp ) );
-            ft_memcpy( temp, edge, sizeof( *edge ) );
-
-            temp->next = coarse_grid[cindex];
-            coarse_grid[cindex] = temp;
 
             edge = edge->next;
           }
@@ -2904,7 +2902,7 @@
 
             min_dist.distance /= 64;
 
-            buffer[ y * width + x ] = min_dist.distance;
+            buffer[ ( rows - y - 1 ) * width + x ] = min_dist.distance;
 
           }
         }

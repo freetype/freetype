@@ -1,3 +1,11 @@
+2020-07-11  Anuj Verma  <anujv@iitbhilai.ac.in>
+
+	[sdf] Completed the coarse grid optimization.
+
+	* src/sdf/ftsdf.c (sdf_generate_coarse_grid): Fixed
+	  an issue with position calculation and upside down
+	  images.
+
 2020-07-10  Anuj Verma  <anujv@iitbhilai.ac.in>
 
 	[sdf] Partially completed the coarse grid optimization.
