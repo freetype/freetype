@@ -1,5 +1,13 @@
 2020-07-11  Anuj Verma  <anujv@iitbhilai.ac.in>
 
+	* src/sdf/ftsdf.c (sdf_generate_coarse_grid): Comments.
+
+	Add more comments explaining the step by step
+	process of using coarse grid to increase the
+	performance of nearest distance search.
+
+2020-07-11  Anuj Verma  <anujv@iitbhilai.ac.in>
+
 	* src/sdf/ftsdf.c (sdf_generate_coarse_grid): Memory leak.
 
 	Release the allocated lists for the coarse grid after

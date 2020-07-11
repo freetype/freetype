@@ -2723,7 +2723,7 @@
    *   dimension is determined by the COARSE_GRID_DIV). Then for each
    *   coarse grid, it checks which edges a relevant. An edge is relevant
    *   if it's shortest distance from the coarse grid is less than `spread'
-   *   + `COARSE_GRID_DIV'.
+   *   + coarse grid max dimension in the x/y axis.
    *   After we have all the relevant edges we only check those edges for
    *   the pixels inside the coarse grid.
    *
@@ -2741,14 +2741,15 @@
     FT_Error      error = FT_Err_Ok;
     FT_Memory     memory;
 
-    FT_UInt       width, rows, i, j;
-    FT_UInt       c_width, c_rows;
-    FT_16D16      sp_sq;      /* max value to check   */
-    FT_16D16      cg_sq;      /* max value to check for coarse grid  */
+    FT_UInt       width, rows;     /* width and rows of the bitmap        */
+    FT_UInt       i, j;            /* iterators                           */
+    FT_UInt       c_width, c_rows; /* coarse grid dimensions              */
+    FT_16D16      sp_sq;           /* max value to check                  */
+    FT_16D16      cg_sq;           /* max value to check for coarse grid  */
     FT_16D16      cg_max;
 
-    SDF_Contour*  contours;   /* list of all contours */
-    FT_Short*     buffer;     /* the bitmap buffer    */
+    SDF_Contour*  contours;        /* list of all contours */
+    FT_Short*     buffer;          /* the bitmap buffer    */
 
     /* coarse grid to hold the list of edges */
     SDF_Edge*     coarse_grid[ CG_DIMEN * CG_DIMEN ];
@@ -2787,10 +2788,12 @@
 
     cg_max = c_width > c_rows ? c_width : c_rows;
 
+    /* `cg_sq' is the max value for which we add an edge */
+    /* to the coarse grid list.                          */
     if ( USE_SQUARED_DISTANCES )
     {
       sp_sq = FT_INT_16D16( spread * spread );
-      cg_sq = sp_sq * 2;
+      cg_sq = sp_sq + FT_INT_16D16( cg_max * cg_max ) / 4;
     }
     else
     {
@@ -2806,6 +2809,8 @@
       goto Exit;
     }
 
+    /* Loop through the coarse grid and buildup the list */
+    /* of edges for further checking.                    */
     for ( j = 0; j < CG_DIMEN; j++ )
     {
       for ( i = 0; i < CG_DIMEN; i++ )
@@ -2815,14 +2820,19 @@
         SDF_Edge*     edge;
         FT_26D6_Vec   cpoint;
 
+
         coarse_grid[cindex] = NULL;
+
+        /* we check from the center of the coarse grid */
         cpoint.x = FT_INT_26D6( i * c_width ) + FT_INT_26D6( c_width / 2 );
         cpoint.y = FT_INT_26D6( j * c_rows ) + FT_INT_26D6( c_rows / 2 );
 
+        /* for all contours */
         while ( cont )
         {
           edge = cont->edges;
 
+          /* for all edges */
           while ( edge )
           {
             SDF_Signed_Distance  dist;
@@ -2831,7 +2841,7 @@
 
             FT_CALL( sdf_edge_get_min_distance( edge, cpoint, &dist ) );
 
-
+            /* if the distance is more than `cg_sq' than discard it */
             if ( dist.distance < cg_sq )
             {
               FT_CALL( sdf_edge_new( memory, &temp ) );
@@ -2849,6 +2859,11 @@
       }
     }
 
+    /* Now that we have the list of edges relevant for the pixels */
+    /* inside a coarse grid, we only need to check those pixels   */
+    /* against the list of edges.                                 */
+
+    /* again loop through the coarse grid */
     for ( j = 0; j < CG_DIMEN; j++ )
     {
       for ( i = 0; i < CG_DIMEN; i++ )
@@ -2859,12 +2874,14 @@
 
         if ( !coarse_grid[j * CG_DIMEN + i] ) continue;
 
+        /* this gives the pixels inside the coarse grid */
         sample_region.xMin = i * c_width;
         sample_region.xMax = sample_region.xMin + c_width;
         sample_region.yMin = j * c_rows;
         sample_region.yMax = sample_region.yMin + c_rows;
 
 
+        /* for all the pixes inside the coarse grid */
         for ( y = sample_region.yMin; y < sample_region.yMax; y++ )
         {
           for ( x = sample_region.xMin; x < sample_region.xMax; x++ )
@@ -2877,9 +2894,11 @@
             if ( x < 0 || x >= width ) continue;
             if ( y < 0 || y >= rows )  continue;
 
+            /* we check from the center of a pixel */
             current_pos.x = FT_INT_26D6( x ) + FT_INT_26D6( 1 ) / 2;
             current_pos.y = FT_INT_26D6( y ) + FT_INT_26D6( 1 ) / 2;
 
+            /* check the pixels only against the relevant edges */
             while ( edges )
             {
               SDF_Signed_Distance  dist;
@@ -2894,6 +2913,7 @@
               edges = edges->next;
             }
 
+            /* finally truncate and assign the values */
             if ( min_dist.distance > sp_sq )
               min_dist.distance = sp_sq;
 
