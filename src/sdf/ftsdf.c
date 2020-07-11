@@ -830,20 +830,21 @@
   split_sdf_shape( SDF_Shape*  shape )
   {
     FT_Error      error = FT_Err_Ok;
-    FT_Memory     memory = shape->memory;
+    FT_Memory     memory;
 
     SDF_Contour*  contours;
     SDF_Contour*  new_contours = NULL;
 
 
 
-    if ( !shape )
+    if ( !shape || !shape->memory )
     {
       error = FT_THROW( Invalid_Argument );
       goto Exit;
     }
 
     contours = shape->contours;
+    memory = shape->memory;
 
     /* for each contour */
     while ( contours )
@@ -1066,6 +1067,8 @@
     return q;
   }
 
+#if !USE_NEWTON_FOR_CONIC
+
   /* [NOTE]: All the functions below down until rasterizer */
   /*         can be avoided if we decide to subdivide the  */
   /*         curve into lines.                             */
@@ -1279,6 +1282,8 @@
       return 1;
     }
   }
+
+#endif
 
   /*************************************************************************/
   /*************************************************************************/
@@ -1846,7 +1851,7 @@
     FT_26D6_Vec  p0, p1, p2;     /* control points of a conic curve       */
     FT_26D6_Vec  p;              /* `point' to which shortest distance    */
 
-    FT_16D16     min_factor;             /* factor at `nearest_point'     */
+    FT_16D16     min_factor = 0;         /* factor at `nearest_point'     */
     FT_16D16     cross;                  /* to determine the sign         */
     FT_16D16     min = FT_INT_MAX;       /* shortest squared distance     */
 
@@ -2088,10 +2093,10 @@
     FT_26D6_Vec   p0, p1, p2, p3; /* control points of a cubic curve       */
     FT_26D6_Vec   p;              /* `point' to which shortest distance    */
 
-    FT_16D16      min = FT_INT_MAX; /* shortest distance           */
-    FT_16D16      min_factor;       /* factor at shortest distance */
-    FT_16D16      min_factor_sq;    /* factor at shortest distance */
-    FT_16D16      cross;            /* to determine the sign       */
+    FT_16D16      min = FT_INT_MAX;  /* shortest distance           */
+    FT_16D16      min_factor = 0;    /* factor at shortest distance */
+    FT_16D16      min_factor_sq = 0; /* factor at shortest distance */
+    FT_16D16      cross;             /* to determine the sign       */
 
     FT_UShort     iterations;
     FT_UShort     steps;
@@ -2518,8 +2523,8 @@
                              FT_UInt           spread,
                              const FT_Bitmap*  bitmap )
   {
-    FT_Error      error = FT_Err_Ok;
-    FT_Memory     memory;
+    FT_Error      error  = FT_Err_Ok;
+    FT_Memory     memory = NULL;
 
     FT_UInt       width, rows, i, j;
     FT_UInt       sp_sq;      /* max value to check   */
@@ -2532,7 +2537,7 @@
     /* shortest distance we keep it in this buffer.      */
     /* This way we check find out which pixel is set,    */
     /* and also determine the signs properly.            */
-    SDF_Signed_Distance*    dists;
+    SDF_Signed_Distance*    dists = NULL;
 
     if ( !shape || !bitmap )
     {
@@ -2547,6 +2552,10 @@
     }
 
     memory = shape->memory;
+    if ( !memory ){
+      error = FT_THROW( Invalid_Argument );
+      goto Exit;
+    }
 
     contours = shape->contours;
     width    = bitmap->width;
@@ -2598,7 +2607,6 @@
             FT_26D6_Vec          grid_point = zero_vector;
             SDF_Signed_Distance  dist       = max_sdf;
             FT_UInt              index      = 0;
-            FT_Short             value;
 
 
             if ( x < 0 || x >= width ) continue;
@@ -2671,7 +2679,7 @@
         /* convert from 16.16 to 6.10 */
         dists[index].distance /= 64;
 
-        buffer[index] = dists[index].distance * current_sign;
+        buffer[index] = (FT_Short)dists[index].distance * current_sign;
       }
     }
 
@@ -2699,7 +2707,7 @@
    *   [TODO]
    */
   static FT_Error
-  sdf_generate_subdivision( const SDF_Shape*  shape,
+  sdf_generate_subdivision( SDF_Shape*        shape,
                             FT_UInt           spread,
                             const FT_Bitmap*  bitmap )
   {
@@ -2922,7 +2930,7 @@
 
             min_dist.distance /= 64;
 
-            buffer[ ( rows - y - 1 ) * width + x ] = min_dist.distance;
+            buffer[( rows - y - 1 ) * width + x] = (FT_Short)min_dist.distance;
 
           }
         }
@@ -3069,13 +3077,13 @@
 
     FT_CALL( sdf_outline_decompose( outline, shape ) );
 
-    FT_CALL( sdf_generate_coarse_grid( shape, sdf_params->spread,
+    FT_CALL( sdf_generate_subdivision( shape, sdf_params->spread,
                            sdf_params->root.target ) );
 
-  Exit:
     if ( shape )
       sdf_shape_done( &shape );
 
+  Exit:
     return error;
   }
 

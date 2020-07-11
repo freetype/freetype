@@ -1,5 +1,11 @@
 2020-07-11  Anuj Verma  <anujv@iitbhilai.ac.in>
 
+	* src/sdf/ftsdf.c (*): Fixed warnings.
+
+	Fixed various warnings and other few errors.
+
+2020-07-11  Anuj Verma  <anujv@iitbhilai.ac.in>
+
 	* src/sdf/ftsdf.c (sdf_generate_coarse_grid): Comments.
 
 	Add more comments explaining the step by step
