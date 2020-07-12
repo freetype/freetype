@@ -123,7 +123,7 @@ fi
 
 cat > conftest.c <<\_ACEOF
 #include <limits.h>
-#define FT_CONFIG_OPTIONS_H "ftoption.h"
+#define FT_CONFIG_OPTIONS_H <freetype/config/ftoption.h>
 #define FT_CONFIG_STANDARD_LIBRARY_H <freetype/config/ftstdlib.h>
 #define FT_UINT_MAX  UINT_MAX
 #define FT_ULONG_MAX ULONG_MAX
