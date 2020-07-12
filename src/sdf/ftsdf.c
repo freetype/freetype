@@ -2754,13 +2754,10 @@
     FT_UInt       c_width, c_rows; /* coarse grid dimensions              */
     FT_16D16      sp_sq;           /* max value to check                  */
     FT_16D16      cg_sq;           /* max value to check for coarse grid  */
-    FT_16D16      cg_max;
+    FT_16D16      cg_diagon;
 
     SDF_Contour*  contours;        /* list of all contours */
     FT_Short*     buffer;          /* the bitmap buffer    */
-
-    /* coarse grid to hold the list of edges */
-    SDF_Edge*     coarse_grid[ CG_DIMEN * CG_DIMEN ];
 
     if ( !shape || !bitmap )
     {
@@ -2794,19 +2791,20 @@
     c_width = width / CG_DIMEN + ( width % CG_DIMEN == 0 ? 0 : 1 );
     c_rows = rows / CG_DIMEN + ( rows % CG_DIMEN == 0 ? 0 : 1 );
 
-    cg_max = c_width > c_rows ? c_width : c_rows;
+    cg_diagon = FT_INT_16D16( c_width * c_width ) +
+                FT_INT_16D16( c_rows * c_rows );
 
     /* `cg_sq' is the max value for which we add an edge */
     /* to the coarse grid list.                          */
     if ( USE_SQUARED_DISTANCES )
     {
       sp_sq = FT_INT_16D16( spread * spread );
-      cg_sq = sp_sq + FT_INT_16D16( cg_max * cg_max ) / 4;
+      cg_sq = sp_sq + cg_diagon;
     }
     else
     {
       sp_sq = FT_INT_16D16( spread );
-      cg_sq = sp_sq + FT_INT_16D16( cg_max / 2 );
+      cg_sq = sp_sq + square_root( cg_diagon );
     }
 
     /* if the coarse grid is too small then simply */
@@ -2826,10 +2824,15 @@
         FT_Int        cindex  = j * CG_DIMEN + i;
         SDF_Contour*  cont    = contours;
         SDF_Edge*     edge;
+        SDF_Edge*     relevant_list;
         FT_26D6_Vec   cpoint;
+        FT_BBox       sample_region;
+        FT_Int        x, y;
+
+        SDF_Signed_Distance  min_cg_dist = max_sdf;
 
 
-        coarse_grid[cindex] = NULL;
+        relevant_list = NULL;
 
         /* we check from the center of the coarse grid */
         cpoint.x = FT_INT_26D6( i * c_width ) + FT_INT_26D6( c_width / 2 );
@@ -2855,39 +2858,31 @@
               FT_CALL( sdf_edge_new( memory, &temp ) );
               ft_memcpy( temp, edge, sizeof( *edge ) );
               
-              temp->next = coarse_grid[cindex];
-              coarse_grid[cindex] = temp;
+              temp->next = relevant_list;
+              relevant_list = temp;
             }
+
+            if ( dist.distance < min_cg_dist.distance )
+              min_cg_dist = dist;
+            else if ( FT_ABS( dist.distance - min_cg_dist.distance ) <
+                      CORNER_CHECK_EPSILON )
+              min_cg_dist = resolve_corner( min_cg_dist, dist );
 
             edge = edge->next;
           }
 
           cont = cont->next;
         }
-      }
-    }
 
-    /* Now that we have the list of edges relevant for the pixels */
-    /* inside a coarse grid, we only need to check those pixels   */
-    /* against the list of edges.                                 */
-
-    /* again loop through the coarse grid */
-    for ( j = 0; j < CG_DIMEN; j++ )
-    {
-      for ( i = 0; i < CG_DIMEN; i++ )
-      {
-        FT_BBox    sample_region;
-        FT_Int     x, y;
-
-
-        if ( !coarse_grid[j * CG_DIMEN + i] ) continue;
+        /* Now that we have the list of edges relevant for the pixels */
+        /* inside a coarse grid, we only need to check those pixels   */
+        /* against the list of edges.                                 */
 
         /* this gives the pixels inside the coarse grid */
         sample_region.xMin = i * c_width;
         sample_region.xMax = sample_region.xMin + c_width;
         sample_region.yMin = j * c_rows;
         sample_region.yMax = sample_region.yMin + c_rows;
-
 
         /* for all the pixes inside the coarse grid */
         for ( y = sample_region.yMin; y < sample_region.yMax; y++ )
@@ -2896,11 +2891,19 @@
           {
             FT_26D6_Vec          current_pos;
             SDF_Signed_Distance  min_dist = max_sdf;
-            SDF_Edge*            edges = coarse_grid[j * CG_DIMEN + i];
+            SDF_Edge*            edges = relevant_list;
+            FT_Int               index = ( rows - y - 1 ) * width + x;
 
 
             if ( x < 0 || x >= width ) continue;
             if ( y < 0 || y >= rows )  continue;
+
+            /* If there is no relevant edge for the */
+            /* coarse grid then it's fare than the  */
+            /* `spread'. In that case simply assign */
+            /* `min_dist' = `min_cg_dist'.          */
+            if ( !relevant_list )
+              min_dist = min_cg_dist;
 
             /* we check from the center of a pixel */
             current_pos.x = FT_INT_26D6( x ) + FT_INT_26D6( 1 ) / 2;
@@ -2917,6 +2920,9 @@
 
               if ( dist.distance < min_dist.distance )
                 min_dist = dist;
+              else if ( FT_ABS( dist.distance - min_dist.distance ) <
+                        CORNER_CHECK_EPSILON )
+                min_dist = resolve_corner( min_dist, dist );
 
               edges = edges->next;
             }
@@ -2930,29 +2936,20 @@
 
             min_dist.distance /= 64;
 
-            buffer[( rows - y - 1 ) * width + x] = (FT_Short)min_dist.distance;
+            buffer[index] = (FT_Short)min_dist.distance * min_dist.sign;
 
           }
         }
+
+        /* release the allocated lists */
+        while ( relevant_list )
+        {
+          edge = relevant_list;
+          relevant_list = relevant_list->next;
+
+          sdf_edge_done( memory, &edge );
+        }
       }
-    }
-
-    /* release the allocated lists */
-    for ( i = 0; i < CG_DIMEN * CG_DIMEN; i++ )
-    {
-      SDF_Edge*  edge = coarse_grid[i];
-      SDF_Edge*  temp;
-
-
-      while ( edge )
-      {
-        temp = edge;
-        edge = edge->next;
-
-        sdf_edge_done( memory, &temp );
-      }
-
-      coarse_grid[i] = NULL;
     }
 
   Exit:

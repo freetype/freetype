@@ -1,3 +1,17 @@
+2020-07-12  Anuj Verma  <anujv@iitbhilai.ac.in>
+
+	[sdf] Optimize the coarse grid optimization.
+
+	* src/sdf/ftsdf.c (sdf_generate_coarse_grid): Merge
+	  the relevant edge finding loop and shortest dist-
+	  ance search loop. We can find the relevant edges
+	  of a coarse grid and immediately use them to find
+	  the shortest distance of the points in the coarse
+	  grid. This drastically reduce memory usage and 
+	  performance.
+	  Also, do the sign assignment of the edges which was
+	  missing.
+
 2020-07-11  Anuj Verma  <anujv@iitbhilai.ac.in>
 
 	* src/sdf/ftsdf.c (*): Fixed warnings.
