@@ -111,7 +111,7 @@ FT_BEGIN_HEADER
 
 #ifdef FT_LOGGING
 
-#define FT_Log( level, varformat )                                         \
+#define FT_LOG( level, varformat )                                         \
           do                                                               \
           {                                                                \
             ft_add_tag( FT_LOGGING_TAG( FT_COMPONENT ) );                  \
@@ -129,7 +129,7 @@ FT_BEGIN_HEADER
 
 #else 
 
-#define FT_Log( level, varformat )                                         \
+#define FT_LOG( level, varformat )                                         \
           do                                                               \
           {                                                                \
             if ( ft_trace_levels[FT_TRACE_COMP( FT_COMPONENT )] >= level ) \
@@ -160,7 +160,7 @@ ft_remove_tag( const char* tag );
 #define FT_TRACE_COMP( x )   FT_TRACE_COMP_( x )
 #define FT_TRACE_COMP_( x )  trace_ ## x
 
-#define FT_TRACE( level, varformat )   FT_Log( level, varformat )                               
+#define FT_TRACE( level, varformat )   FT_LOG( level, varformat )                               
 
 #else /* !FT_DEBUG_LEVEL_TRACE */
 
