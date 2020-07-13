@@ -8,7 +8,7 @@
         1. Added a function `FT_Callback()` which is used when user sets an
            external log handeling callback function.
         2. Code Cleanup and resolved [ -Wunused-variable ] warnings
-        3. Added a macro `FT_Log` to handle the `FT_TRACE` 
+        3. Added a macro `FT_LOG` to handle the `FT_TRACE` 
     * src/base/ftdebug.c:
         1. Updated code to print FT_COMPONENT and TimeStamp. 
         2. Code Cleanup.
