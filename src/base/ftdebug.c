@@ -44,6 +44,62 @@
 #include <freetype/freetype.h>
 #include <freetype/internal/ftdebug.h>
 
+#ifdef FT_LOGGING
+
+  /**************************************************************************
+   * 
+   * Variable used when FT_LOGGING is enabled to control logging:
+   * 
+   * 1. ft_default_trace_level: stores the value of trace levels which are 
+   *    provided to FreeType using FT2_DEBUG environment variable.
+   * 
+   * 2. ft_custom_trace_level: stores the value of custom trace level which 
+   *    is provided by user at run-time.
+   * 
+   * 3. ft_component: a string that holds the name of FT_COMPONENT
+   * 
+   * 4. ft_fileptr: store the FILE*
+   * 
+   * 5. ft_component_flag: a flag when is true, prints FT_COMPONENT along 
+   *    with log message if `-v` is defined in FT2_DEBUG
+   * 6. ft_timestamp_flag: a flag when is true, prints time in millisec along
+   *    with log message if `-t` is define in FT2_DEBUG
+   * 7. ft_have_newline_char: It is used to differentiate between a log 
+   *    message with '\n' char and log message without '\n' char  
+   * 
+   * Static Variables are defined here to remove [ -Wunused-variable ] 
+   * warning
+   *     
+   */ 
+  static const char* ft_default_trace_level = NULL;
+  static const char* ft_custom_trace_level = NULL;
+  static const char* ft_component = NULL;
+  static FILE* ft_fileptr = NULL;
+  static bool ft_component_flag = false;
+  static bool ft_timestamp_flag = false;
+  static bool ft_have_newline_char = true;
+
+  ft_custom_log_handler custom_output_handler = NULL;
+  dlg_handler ft_default_log_handler = NULL;
+
+  /* different types of dlg features to be used according to the flags     */
+  /* passed in FT2_DEBUG environment variable                              */
+
+  static unsigned int features_component = dlg_output_threadsafe 
+                                          | dlg_output_tags;
+  static unsigned int features_timestamp = dlg_output_threadsafe 
+                                          | dlg_output_time
+                                          | dlg_output_time_msecs; 
+  static unsigned int features_both = dlg_output_threadsafe 
+                                      | dlg_output_time_msecs 
+                                      |dlg_output_time
+                                      | dlg_output_tags ;
+  static unsigned int features_none = dlg_output_threadsafe;
+
+
+
+#endif
+
 
 #ifdef FT_DEBUG_LEVEL_ERROR
 
@@ -53,25 +109,12 @@
   FT_Message( const char*  fmt,
               ... )
   {
-#ifdef FT_LOGGING
-
-    if( custom_output_handler != NULL )
-    {
-      va_list  ap;
-      va_start( ap, fmt );
-      custom_output_handler( fmt, ap );
-      va_end( ap );
-    }
-    else
-      dlg_trace( fmt );
-#else
     va_list  ap;
 
 
     va_start( ap, fmt );
     vfprintf( stderr, fmt, ap );
     va_end( ap );
-#endif /* FT_LOGGING */
   }
 
 
@@ -230,10 +273,40 @@ else
 
       for ( ; *p; p++ )
       {
+       
         /* skip leading whitespace and separators */
         if ( *p == ' ' || *p == '\t' || *p == ',' || *p == ';' || *p == '=' )
           continue;
 
+#ifdef FT_LOGGING
+        /* check extra arguments for logging */
+        if( *p == '-' )
+        {
+          const char* r = ++p;
+          if( *r == 'v' )
+          {
+            ft_component_flag = true;
+            const char* s = ++r;
+            if( *s == 't' )
+            {
+              ft_timestamp_flag = true;
+              p++;
+            }
+            p++;
+          }
+          else if( *r == 't' )
+          {
+            ft_timestamp_flag = true;
+            const char* s = ++r;
+            if( *s == 'v' )
+            {
+              ft_component_flag = true;
+              p++;
+            }
+            p++;
+          }
+        }
+#endif 
         /* read toggle name, followed by ':' */
         q = p;
         while ( *p && *p != ':' )
@@ -379,18 +452,24 @@ else
   ft_log_handler( const struct dlg_origin* origin, 
                               const char* string, void* data )
   {
-     unsigned int features; 
-     if( origin->tags[0] == "error_log" )
-     {
-      features = dlg_output_threadsafe | dlg_output_tags ;
-     }
+     static unsigned int features ;
+     if( ft_timestamp_flag && ft_component_flag && ft_have_newline_char )
+      features = features_both;
+     else if( ft_component_flag && ft_have_newline_char)
+      features = features_component;
+     else if( ft_timestamp_flag && ft_have_newline_char )
+      features = features_timestamp;
      else
-     {
-      features = dlg_output_threadsafe | dlg_output_tags | dlg_output_time ;
-     }
-     
+      features = features_none;
+
+      
 	   dlg_generic_output_stream( ft_fileptr, features, origin, string, 
                                 dlg_default_output_styles );
+
+     if( strchr( string, '\n' ) )
+       ft_have_newline_char = true;   
+     else
+       ft_have_newline_char = false;  
   }
 
  /**************************************************************************
@@ -438,8 +517,18 @@ else
   }
 
   FT_BASE_DEF( void )
+  FT_Callback( const char* fmt, ... )
+  {
+    va_list ap;
+    va_start( ap, fmt );
+    custom_output_handler( ft_component , fmt, ap ); 
+    va_end( ap );
+  }
+
+  FT_BASE_DEF( void )
   ft_add_tag( const char* tag )
   {
+    ft_component = tag;
     dlg_add_tag( tag, NULL );
   }
 

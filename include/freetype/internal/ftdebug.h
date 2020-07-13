@@ -109,6 +109,40 @@ FT_BEGIN_HEADER
    *  
    */
 
+#ifdef FT_LOGGING
+
+#define FT_Log( level, varformat )                                         \
+          do                                                               \
+          {                                                                \
+            ft_add_tag( FT_LOGGING_TAG( FT_COMPONENT ) );                  \
+                                                                           \
+            if( ft_trace_levels[FT_TRACE_COMP( FT_COMPONENT )] >= level )  \
+            {                                                              \
+              if( custom_output_handler != NULL )                          \
+                FT_Callback varformat;                                     \
+              else                                                         \
+                dlg_trace varformat;                                       \
+            }                                                              \
+                                                                           \
+            ft_remove_tag( FT_LOGGING_TAG( FT_COMPONENT ) );               \
+          }while( 0 )
+
+#else 
+
+#define FT_Log( level, varformat )                                         \
+          do                                                               \
+          {                                                                \
+            if ( ft_trace_levels[FT_TRACE_COMP( FT_COMPONENT )] >= level ) \
+            {                                                              \
+              FT_Message varformat;                                        \
+            }                                                              \
+          } while ( 0 )
+
+#endif /* FT_LOGGING */
+
+
+
+
 #ifdef FT_DEBUG_LEVEL_TRACE
 
 #define FT_LOGGING_TAG( x ) FT_LOGGING_TAG_( x )
@@ -126,16 +160,7 @@ ft_remove_tag( const char* tag );
 #define FT_TRACE_COMP( x )   FT_TRACE_COMP_( x )
 #define FT_TRACE_COMP_( x )  trace_ ## x
 
-#define FT_TRACE( level, varformat )                                       \
-          do                                                               \
-          {                                                                \
-            if ( ft_trace_levels[FT_TRACE_COMP( FT_COMPONENT )] >= level ) \
-            {                                                              \
-              ft_add_tag( FT_LOGGING_TAG( FT_COMPONENT ) );                \
-              FT_Message varformat;                                        \
-              ft_remove_tag( FT_LOGGING_TAG( FT_COMPONENT ) );             \
-            }                                                              \
-          } while ( 0 )
+#define FT_TRACE( level, varformat )   FT_Log( level, varformat )                               
 
 #else /* !FT_DEBUG_LEVEL_TRACE */
 
@@ -351,26 +376,17 @@ ft_remove_tag( const char* tag );
   /**************************************************************************
    * 
    * Variable used when FT_LOGGING is enabled to control logging:
-   * 1. ft_default_trace_level: stores the value of trace levels which are 
-   *    provided to FreeType using FT2_DEBUG environment variable.
    * 
-   * 2. ft_custom_trace_level: stores the value of custom trace level which 
-   *    is provided by user at run-time.
-   * 
-   * 3. custom_output_handler: stores the function pointer to the callback 
+   * 1. ft_custom_output_handler: stores the function pointer to the callback 
    *    function provided by user.
    * 
-   * 4. ft_default_output_handler: stores the function pointer which is used 
+   * 2. ft_default_log_handler: stores the function pointer which is used 
    *    internally by FreeType to print logs to file.
    * 
-   * 5. ft_fileptr: store the FILE*
-   *     
+   * These are defined in ftdebug.c
    */ 
-  static const char* ft_default_trace_level = NULL;
-  static const char* ft_custom_trace_level = NULL;
-  static ft_custom_log_handler custom_output_handler = NULL;
-  static dlg_handler ft_default_log_handler = NULL;
-  static FILE* ft_fileptr = NULL;
+  extern ft_custom_log_handler custom_output_handler;
+  extern dlg_handler ft_default_log_handler;
 
   /**************************************************************************
    * 
@@ -385,6 +401,9 @@ ft_remove_tag( const char* tag );
 
   FT_BASE( void )
   ft_logging_deinit( void );
+
+  FT_BASE( void )
+  FT_Callback( const char* fmt, ... );
 
 
 #endif /* FT_LOGGING */  

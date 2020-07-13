@@ -1,3 +1,25 @@
+2020-07-13  Priyesh Kumar   <priyeshkkumar@gmail.com>
+
+    * include/freetype/ftlogging.h: Changed the definition of callback 
+      function `ft_custom_log_handler` now it also provides FT_COMPONENT
+      value to the external log handeling function.
+    
+    * include/freetype/internal/ftdebug.h:
+        1. Added a function `FT_Callback()` which is used when user sets an
+           external log handeling callback function.
+        2. Code Cleanup and resolved [ -Wunused-variable ] warnings
+        3. Added a macro `FT_Log` to handle the `FT_TRACE` 
+    * src/base/ftdebug.c:
+        1. Updated code to print FT_COMPONENT and TimeStamp. 
+        2. Code Cleanup.
+        3.Added support of flag within `FT2_DEBUG` env variable to control 
+          the printing of extra info( time-stamp and FT_COMPONENT ):
+            3.1 '-v' for printing FT_COMPONENT along with actual log message
+            3.2 '-t' for printing TimeStamp along with actual log message
+            3.3 '-tv' or '-vt' for printing both FT_COMPONENT and TimeStamp
+                 along with actual log message.
+        4. Added definition of function `FT_Callback()`
+
 2020-07-04  Priyesh Kumar   <priyeshkkumar@gmail.com>
     
     * Added code to print FT_COMPONENT along with TimeStamp with each log

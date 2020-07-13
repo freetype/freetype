@@ -22,7 +22,8 @@ FT_BEGIN_HEADER
 
   /* An external callback function to be used to define an output handler */
   typedef void 
-  (*ft_custom_log_handler)( const char* fmt, va_list args ); 
+  (*ft_custom_log_handler)( const char* ft_component, const char* fmt, 
+                            va_list args ); 
 
 
   /**************************************************************************
