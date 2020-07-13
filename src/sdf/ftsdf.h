@@ -35,6 +35,8 @@ FT_BEGIN_HEADER
   {
     FT_Raster_Params  root;
     FT_UInt           spread;
+    FT_Bool           flip_sign;
+    FT_Bool           flip_y;
 
   } SDF_Raster_Params;
 

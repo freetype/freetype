@@ -61,6 +61,24 @@
       FT_TRACE7(( "[sdf] sdf_property_set: "
                   "updated property `spread' to %d\n", val ));
     }
+    else if ( ft_strcmp( property_name, "flip_sign" ) == 0 )
+    {
+      FT_Int  val = *(const FT_Int*)value;
+
+
+      render->flip_sign = val ? 1 : 0;
+      FT_TRACE7(( "[sdf] sdf_property_set: "
+                  "updated property `flip_sign' to %d\n", val ));
+    }
+    else if ( ft_strcmp( property_name, "flip_y" ) == 0 )
+    {
+      FT_Int  val = *(const FT_Int*)value;
+
+
+      render->flip_y = val ? 1 : 0;
+      FT_TRACE7(( "[sdf] sdf_property_set: "
+                  "updated property `flip_y' to %d\n", val ));
+    }
     else
     {
       FT_TRACE0(( "[sdf] sdf_property_set: "
@@ -87,6 +105,20 @@
 
 
       *val = render->spread;
+    }
+    else if ( ft_strcmp( property_name, "flip_sign" ) == 0 )
+    {
+      FT_Int*  val = (FT_Int*)value;
+
+
+      *val = render->flip_sign;
+    }
+    else if ( ft_strcmp( property_name, "flip_y" ) == 0 )
+    {
+      FT_Int*  val = (FT_Int*)value;
+
+
+      *val = render->flip_y;
     }
     else
     {
@@ -131,7 +163,9 @@
     SDF_Renderer  sdf_render = SDF_RENDERER( render );
 
 
-    sdf_render->spread = DEFAULT_SPREAD;
+    sdf_render->spread    = DEFAULT_SPREAD;
+    sdf_render->flip_sign = 0;
+    sdf_render->flip_y    = 0;
 
     return FT_Err_Ok;
   }
@@ -243,6 +277,8 @@
     params.root.source = outline;
     params.root.flags  = FT_RASTER_FLAG_SDF;
     params.spread      = sdf_module->spread;
+    params.flip_sign   = sdf_module->flip_sign;
+    params.flip_y      = sdf_module->flip_y;
 
     /* render the outline */
     error = render->raster_render( render->raster, (const FT_Raster_Params*)&params );

@@ -2470,8 +2470,6 @@
 
         contour_list = shape->contours;
 
-        index = ( rows - y - 1 ) * width + x;
-
         /* iterate through all the contours manually */
         while ( contour_list ) {
           SDF_Signed_Distance  current_dist = max_sdf;
@@ -2500,10 +2498,17 @@
 
         if ( internal_params.orientation == FT_ORIENTATION_FILL_LEFT )
           min_dist.sign = -min_dist.sign;
+        if ( internal_params.flip_sign )
+          min_dist.sign = -min_dist.sign;
 
         min_dist.distance /= 64; /* convert from 16.16 to 22.10 */
         value = min_dist.distance & 0x0000FFFF; /* truncate to 6.10 */
         value *= min_dist.sign;
+
+        if ( internal_params.flip_y )
+          index = y * width + x;
+        else
+          index = ( rows - y - 1 ) * width + x;
 
         buffer[index] = value;
       }
@@ -2642,8 +2647,6 @@
             grid_point.x += FT_INT_26D6( 1 ) / 2;
             grid_point.y += FT_INT_26D6( 1 ) / 2;
             
-            index = ( rows - y - 1 ) * width + x;
-
             FT_CALL( sdf_edge_get_min_distance( edges,
                                                 grid_point,
                                                 &dist ) );
@@ -2658,6 +2661,11 @@
             /* square_root the values and fit in a 6.10 fixed point */
             if ( USE_SQUARED_DISTANCES )
               dist.distance = square_root( dist.distance );
+
+            if ( internal_params.flip_y )
+              index = y * width + x;
+            else
+              index = ( rows - y - 1 ) * width + x;
 
             /* check weather the pixel is set or not */
             if ( dists[index].sign == 0 )
@@ -2704,7 +2712,10 @@
         /* convert from 16.16 to 6.10 */
         dists[index].distance /= 64;
 
-        buffer[index] = (FT_Short)dists[index].distance * current_sign;
+        if ( internal_params.flip_sign )
+          buffer[index] = (FT_Short)dists[index].distance * -current_sign;
+        else
+          buffer[index] = (FT_Short)dists[index].distance * current_sign;
       }
     }
 
@@ -2920,7 +2931,7 @@
             FT_26D6_Vec          current_pos;
             SDF_Signed_Distance  min_dist = max_sdf;
             SDF_Edge*            edges = relevant_list;
-            FT_Int               index = ( rows - y - 1 ) * width + x;
+            FT_Int               index;
 
 
             if ( x < 0 || x >= width ) continue;
@@ -2962,10 +2973,17 @@
             if ( USE_SQUARED_DISTANCES )
               min_dist.distance = square_root( min_dist.distance );
 
-            if ( internal_params.orientation == FT_ORIENTATION_FILL_RIGHT )
+            if ( internal_params.orientation == FT_ORIENTATION_FILL_LEFT )
+              min_dist.sign = -min_dist.sign;
+            if ( internal_params.flip_sign )
               min_dist.sign = -min_dist.sign;
 
             min_dist.distance /= 64;
+
+            if ( internal_params.flip_y )
+              index = y * width + x;
+            else
+              index = ( rows - y - 1 ) * width + x;
 
             buffer[index] = (FT_Short)min_dist.distance * min_dist.sign;
 
@@ -3104,8 +3122,8 @@
 
     /* setup the params */
     internal_params.orientation = FT_Outline_Get_Orientation( outline );
-    internal_params.flip_sign = 0;
-    internal_params.flip_y = 0;
+    internal_params.flip_sign = sdf_params->flip_sign;
+    internal_params.flip_y = sdf_params->flip_y;
 
     FT_CALL( sdf_shape_new( memory, &shape ) );
 

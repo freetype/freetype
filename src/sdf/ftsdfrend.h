@@ -26,6 +26,8 @@ FT_BEGIN_HEADER
   {
     FT_RendererRec  root;
     FT_UInt         spread;
+    FT_Bool         flip_sign;
+    FT_Bool         flip_y;
 
   } SDF_Renderer_Module, *SDF_Renderer;
 
