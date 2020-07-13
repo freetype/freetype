@@ -1,3 +1,17 @@
+2020-07-13  Anuj Verma  <anujv@iitbhilai.ac.in>
+
+	[sdf] Check for left or right fill.
+
+	* src/sdf/ftsdf.c (SDF_Params): Added struct which
+	  contains some internal data required by the rater-
+	  izer (such as left/right fill).
+
+	* src/sdf/ftsdf.c (sdf_raster_render): Determine the
+	  fill side and pass it to the `sdf_generate_' funcs.
+
+	* src/sdf/ftsdf.c (sdf_generate_): Use the new `SDF_Params'
+	  to generate SDF accordingly.
+
 2020-07-12  Anuj Verma  <anujv@iitbhilai.ac.in>
 
 	[sdf] Optimize the coarse grid optimization.

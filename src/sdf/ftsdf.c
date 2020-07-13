@@ -181,6 +181,23 @@
 
   } SDF_Signed_Distance;
 
+  typedef struct SDF_Params_
+  {
+    /* Used to properly assign sign to the pixels. In  */
+    /* truetype the right should be inside but in post */
+    /* script left should be inside.                   */
+    FT_Orientation  orientation;
+
+    /* Simply flip the sign if this is true.           */
+    FT_Bool         flip_sign;
+
+    /* If set to true the output will be upside down.  */
+    /* Can be useful because OpenGL and DirectX have   */
+    /* different coordinate system for textures.       */
+    FT_Bool         flip_y;
+
+  } SDF_Params;
+
   /**************************************************************************
    *
    * constants, initializer and destructor
@@ -2383,7 +2400,8 @@
    *   [TODO]
    */
   static FT_Error
-  sdf_generate( const SDF_Shape*  shape,
+  sdf_generate( const SDF_Params  internal_params,
+                const SDF_Shape*  shape,
                 FT_UInt           spread,
                 const FT_Bitmap*  bitmap )
   {
@@ -2480,6 +2498,9 @@
         if ( USE_SQUARED_DISTANCES )
           min_dist.distance = square_root( min_dist.distance );
 
+        if ( internal_params.orientation == FT_ORIENTATION_FILL_LEFT )
+          min_dist.sign = -min_dist.sign;
+
         min_dist.distance /= 64; /* convert from 16.16 to 22.10 */
         value = min_dist.distance & 0x0000FFFF; /* truncate to 6.10 */
         value *= min_dist.sign;
@@ -2519,7 +2540,8 @@
    *   [TODO]
    */
   static FT_Error
-  sdf_generate_bounding_box( const SDF_Shape*  shape,
+  sdf_generate_bounding_box( const SDF_Params  internal_params,
+                             const SDF_Shape*  shape,
                              FT_UInt           spread,
                              const FT_Bitmap*  bitmap )
   {
@@ -2626,6 +2648,9 @@
                                                 grid_point,
                                                 &dist ) );
 
+            if ( internal_params.orientation == FT_ORIENTATION_FILL_LEFT )
+              dist.sign = -dist.sign;
+
             /* ignore if the distance is greater than spread    */
             /* otherwise it creates artifacts due to wrong sign */
             if ( dist.distance > sp_sq ) continue;
@@ -2707,14 +2732,16 @@
    *   [TODO]
    */
   static FT_Error
-  sdf_generate_subdivision( SDF_Shape*        shape,
+  sdf_generate_subdivision( const SDF_Params  internal_params,
+                            SDF_Shape*        shape,
                             FT_UInt           spread,
                             const FT_Bitmap*  bitmap )
   {
     FT_Error   error = FT_Err_Ok;
 
     FT_CALL( split_sdf_shape( shape ) );
-    FT_CALL( sdf_generate_bounding_box( shape, spread, bitmap ) );
+    FT_CALL( sdf_generate_bounding_box( internal_params,
+                                        shape, spread, bitmap ) );
 
   Exit:
     return error;
@@ -2742,7 +2769,8 @@
    *   [TODO]
    */
   static FT_Error
-  sdf_generate_coarse_grid( const SDF_Shape*  shape,
+  sdf_generate_coarse_grid( const SDF_Params  internal_params,
+                            const SDF_Shape*  shape,
                             FT_UInt           spread,
                             const FT_Bitmap*  bitmap )
   {
@@ -2811,7 +2839,7 @@
     /* check all pixels against all the edges      */
     if ( c_width <= 1 || c_rows <= 1 )
     {
-      error = sdf_generate( shape, spread, bitmap );
+      error = sdf_generate( internal_params, shape, spread, bitmap );
       goto Exit;
     }
 
@@ -2934,6 +2962,9 @@
             if ( USE_SQUARED_DISTANCES )
               min_dist.distance = square_root( min_dist.distance );
 
+            if ( internal_params.orientation == FT_ORIENTATION_FILL_RIGHT )
+              min_dist.sign = -min_dist.sign;
+
             min_dist.distance /= 64;
 
             buffer[index] = (FT_Short)min_dist.distance * min_dist.sign;
@@ -3015,6 +3046,7 @@
 
     FT_Memory                 memory     = NULL;
     SDF_Shape*                shape      = NULL;
+    SDF_Params                internal_params;
 
 
     /* check for valid arguments */
@@ -3070,11 +3102,16 @@
       goto Exit;
     }
 
+    /* setup the params */
+    internal_params.orientation = FT_Outline_Get_Orientation( outline );
+    internal_params.flip_sign = 0;
+    internal_params.flip_y = 0;
+
     FT_CALL( sdf_shape_new( memory, &shape ) );
 
     FT_CALL( sdf_outline_decompose( outline, shape ) );
 
-    FT_CALL( sdf_generate_subdivision( shape, sdf_params->spread,
+    FT_CALL( sdf_generate_subdivision( internal_params, shape, sdf_params->spread,
                            sdf_params->root.target ) );
 
     if ( shape )
