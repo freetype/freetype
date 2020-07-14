@@ -1,3 +1,15 @@
+2020-07-14  Anuj Verma  <anujv@iitbhilai.ac.in>
+
+	[sdf] Temporary change.
+
+	Added new property to dynamically change the
+	optimization to be used to generate the SDF.
+	This can be used to compare the performance of
+	different optimization techniques without going
+	and recompiling the program.
+	And will also be used in the demo to check the
+	performance.
+
 2020-07-13  Anuj Verma  <anujv@iitbhilai.ac.in>
 
 	[sdf] Added more properties.

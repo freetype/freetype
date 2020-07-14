@@ -17,6 +17,16 @@ FT_BEGIN_HEADER
   /* maximum spread supported by the rasterizer. */
   #define MAX_SPREAD      32
 
+  /* TEMPORARY */
+  typedef enum Optimizations_ {
+    OPTIMIZATION_NONE = 0,  /* default: check all points against all edges  */
+    OPTIMIZATION_BB   = 1,  /* use bounding box to check nearby grid points */
+    OPTIMIZATION_SUB  = 2,  /* subdivide then use bounding box              */
+    OPTIMIZATION_CG   = 3,  /* use coarse grid to only check relevant edges */
+
+  } Optimizations;
+  /* --------- */
+
   /**************************************************************************
    *
    * @struct:
@@ -37,6 +47,9 @@ FT_BEGIN_HEADER
     FT_UInt           spread;
     FT_Bool           flip_sign;
     FT_Bool           flip_y;
+
+    /* TEMPORARY */
+    FT_Int            optimization;
 
   } SDF_Raster_Params;
 

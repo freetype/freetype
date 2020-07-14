@@ -3129,8 +3129,23 @@
 
     FT_CALL( sdf_outline_decompose( outline, shape ) );
 
-    FT_CALL( sdf_generate_subdivision( internal_params, shape, sdf_params->spread,
-                           sdf_params->root.target ) );
+    /* TEMPORARY */
+    if ( sdf_params->optimization == OPTIMIZATION_BB )
+      FT_CALL( sdf_generate_bounding_box( internal_params,
+                                          shape, sdf_params->spread,
+                                          sdf_params->root.target ) );
+    else if ( sdf_params->optimization == OPTIMIZATION_SUB )
+      FT_CALL( sdf_generate_subdivision( internal_params,
+                                         shape, sdf_params->spread,
+                                         sdf_params->root.target ) );
+    else if ( sdf_params->optimization == OPTIMIZATION_CG )
+      FT_CALL( sdf_generate_coarse_grid( internal_params,
+                                         shape, sdf_params->spread,
+                                         sdf_params->root.target ) );
+    else
+      FT_CALL( sdf_generate( internal_params,
+                             shape, sdf_params->spread,
+                             sdf_params->root.target ) );
 
     if ( shape )
       sdf_shape_done( &shape );

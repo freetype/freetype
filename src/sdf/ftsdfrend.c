@@ -79,6 +79,16 @@
       FT_TRACE7(( "[sdf] sdf_property_set: "
                   "updated property `flip_y' to %d\n", val ));
     }
+    /* TEMPORARY */
+    else if ( ft_strcmp( property_name, "optimization" ) == 0 )
+    {
+      FT_Int  val = *(const FT_Int*)value;
+
+
+      render->optimization = val ? 1 : 0;
+      FT_TRACE7(( "[sdf] sdf_property_set: "
+                  "updated property `optimization' to %d\n", val ));
+    }
     else
     {
       FT_TRACE0(( "[sdf] sdf_property_set: "
@@ -166,6 +176,9 @@
     sdf_render->spread    = DEFAULT_SPREAD;
     sdf_render->flip_sign = 0;
     sdf_render->flip_y    = 0;
+
+    /* TEMPORARY */
+    sdf_render->optimization = OPTIMIZATION_NONE;
 
     return FT_Err_Ok;
   }
@@ -279,6 +292,9 @@
     params.spread      = sdf_module->spread;
     params.flip_sign   = sdf_module->flip_sign;
     params.flip_y      = sdf_module->flip_y;
+
+    /* TEMPORARY */
+    params.optimization = sdf_module->optimization;
 
     /* render the outline */
     error = render->raster_render( render->raster, (const FT_Raster_Params*)&params );

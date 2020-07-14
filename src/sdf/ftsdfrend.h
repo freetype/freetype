@@ -29,6 +29,9 @@ FT_BEGIN_HEADER
     FT_Bool         flip_sign;
     FT_Bool         flip_y;
 
+    /* TEMPORARY */
+    FT_Int          optimization;
+
   } SDF_Renderer_Module, *SDF_Renderer;
 
 
