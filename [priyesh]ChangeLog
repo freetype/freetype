@@ -1,8 +1,8 @@
 2020-07-15  Priyesh Kumar   <priyeshkkumar@gmail.com>
 
-    * builds\compiler\gcc.mk: Added a flag -std=c99 for using dlg on windows
+    * builds/compiler/gcc.mk: Added a flag -std=c99 for using dlg on windows
 
-    * builds\windows\ftdebug.c: Added support for using `FT_LOGGING` on 
+    * builds/windows/ftdebug.c: Added support for using `FT_LOGGING` on 
       windows.
 
 2020-07-13  Priyesh Kumar   <priyeshkkumar@gmail.com>
