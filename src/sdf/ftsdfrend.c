@@ -85,7 +85,7 @@
       FT_Int  val = *(const FT_Int*)value;
 
 
-      render->optimization = val ? 1 : 0;
+      render->optimization = val;
       FT_TRACE7(( "[sdf] sdf_property_set: "
                   "updated property `optimization' to %d\n", val ));
     }

@@ -1,3 +1,7 @@
+2020-07-15  Anuj Verma  <anujv@iitbhilai.ac.in>
+
+	* src/sdf/ftsdfrend.c (sdf_property_set): Minor fix.
+
 2020-07-14  Anuj Verma  <anujv@iitbhilai.ac.in>
 
 	[sdf] Temporary change.
