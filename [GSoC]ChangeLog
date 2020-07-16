@@ -1,3 +1,13 @@
+2020-07-16  Anuj Verma  <anujv@iitbhilai.ac.in>
+
+	[sdf] Added total memory allocation log.
+
+	* src/sdf/ftsdf.c (*): Replaced `FT_QNEW' and `FT_ALLOC_MULT'
+	  to custom macros in order to track memory allocations
+	  throughout the process of generating SDF. It basically
+	  add the memory being allocated to a static global variable
+	  and at the end outputs it at the end.
+
 2020-07-15  Anuj Verma  <anujv@iitbhilai.ac.in>
 
 	* src/sdf/ftsdfrend.c (sdf_property_set): Minor fix.

@@ -8,6 +8,48 @@
 
   /**************************************************************************
    *
+   * macros to track intermediate memory allocations
+   *
+   */
+
+#ifdef FT_DEBUG_LEVEL_TRACE
+
+  /* These macros are used to track and output the total */
+  /* memory allocation once the SDF is generated.        */
+
+  static FT_Long  s_total_memory_allocated;
+  
+  #define SDF_MEM_TRACK_START()  s_total_memory_allocated = 0
+
+  #define SDF_MEM_TRACK_END()                                          \
+            FT_TRACE0(( "[sdf] Total intermediate memory allocated = " \
+                        "%ld bytes\n", s_total_memory_allocated ));    \
+                        s_total_memory_allocated = 0
+
+  /* We only use these two macros to allocate memory in  */
+  /* the module.                                         */
+
+  #define SDF_ALLOC_MULT( ptr, count, item_size )                      \
+            s_total_memory_allocated += count * item_size,             \
+            FT_ALLOC_MULT( ptr, count, item_size )
+
+  #define SDF_QNEW( ptr )                                              \
+            s_total_memory_allocated += sizeof( *ptr ),                \
+            !FT_QNEW( ptr )
+#else
+
+  #define SDF_MEM_TRACK_START()
+  #define SDF_MEM_TRACK_END()
+
+  #define SDF_ALLOC_MULT( ptr, count, item_size )                      \
+            FT_ALLOC_MULT( ptr, count, item_size )
+
+  #define SDF_QNEW( ptr ) !FT_QNEW( ptr )
+
+#endif
+
+  /**************************************************************************
+   *
    * definitions
    *
    */
@@ -237,7 +279,7 @@
       goto Exit;
     }
 
-    if ( !FT_QNEW( ptr ) )
+    if ( SDF_QNEW( ptr ) )
     {
       *ptr = null_edge;
       *edge = ptr;
@@ -274,7 +316,7 @@
       goto Exit;
     }
 
-    if ( !FT_QNEW( ptr ) )
+    if ( SDF_QNEW( ptr ) )
     {
       *ptr = null_contour;
       *contour = ptr;
@@ -326,7 +368,7 @@
       goto Exit;
     }
 
-    if ( !FT_QNEW( ptr ) )
+    if ( SDF_QNEW( ptr ) )
     {
       *ptr = null_shape;
       ptr->memory = memory;
@@ -2589,7 +2631,7 @@
     rows     = bitmap->rows;
     buffer   = (FT_Short*)bitmap->buffer;
 
-    if ( FT_ALLOC_MULT( dists, width, rows * sizeof(*dists) ) )
+    if ( SDF_ALLOC_MULT( dists, width, rows * sizeof(*dists) ) )
       goto Exit;
 
     FT_MEM_ZERO( dists, width * rows * sizeof(*dists) );
@@ -3067,6 +3109,8 @@
     SDF_Params                internal_params;
 
 
+    SDF_MEM_TRACK_START();
+
     /* check for valid arguments */
     if ( !sdf_raster || !sdf_params )
     {
@@ -3149,6 +3193,8 @@
 
     if ( shape )
       sdf_shape_done( &shape );
+
+    SDF_MEM_TRACK_END();
 
   Exit:
     return error;
