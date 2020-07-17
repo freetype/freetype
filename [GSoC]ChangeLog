@@ -1,3 +1,20 @@
+2020-07-17  Anuj Verma  <anujv@iitbhilai.ac.in>
+
+	[sdf] Added memory tracker.
+
+	* src/sdf/ftsdf.c (SDF_MemoryUser): Added struct
+	  which is used in place of `FT_Memory::user'.
+
+	* src/sdf/ftsdf.c (SDF_ALLOC, SDF_FREE): Added macros
+	  for allocating and deallocating memory. These macros
+	  restore the old `FT_Memory::user' before calling the
+	  relevant allocation/deallocation functions so as to
+	  not cause errors while debugging memory. And later
+	  they add the allocated memory size in a variable.
+
+	* src/sdf/ftsdf.c (*): Use `SDF_ALLOC', `SDF_FREE'
+	  instead of the `FT_' variant.
+
 2020-07-15  Anuj Verma  <anujv@iitbhilai.ac.in>
 
 	* src/sdf/ftsdfrend.c (sdf_property_set): Minor fix.

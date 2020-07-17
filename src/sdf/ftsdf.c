@@ -8,6 +8,55 @@
 
   /**************************************************************************
    *
+   * for tracking memory used
+   *
+   */
+
+  /* To be used with `FT_Memory::user' in order to track */
+  /* memory allocations.                                 */
+  typedef struct  SDF_MemoryUser_
+  {
+    void*    prev_user;
+    FT_Long  total_usage;
+
+  } SDF_MemoryUser;
+
+  /* Use these macros while allocating and deallocating     */
+  /* memory. These macros restore the previous user pointer */
+  /* before calling the allocation functions, which is ess- */
+  /* ential if the program is compiled with macro           */
+  /* `FT_DEBUG_MEMORY'.                                     */
+  #define SDF_ALLOC( ptr, size )                            \
+            do                                              \
+            {                                               \
+              SDF_MemoryUser*  current_user;                \
+                                                            \
+                                                            \
+              current_user = (SDF_MemoryUser*)memory->user; \
+              memory->user = current_user->prev_user;       \
+                                                            \
+              if ( !FT_QALLOC( ptr, size ) )                \
+                current_user->total_usage += size;          \
+                                                            \
+              memory->user = (void*)current_user;           \
+            } while ( 0 )
+
+  #define SDF_FREE( ptr )                                   \
+            do                                              \
+            {                                               \
+              SDF_MemoryUser*  current_user;                \
+                                                            \
+                                                            \
+              current_user = (SDF_MemoryUser*)memory->user; \
+              memory->user = current_user->prev_user;       \
+                                                            \
+              FT_FREE( ptr );                               \
+                                                            \
+              memory->user = (void*)current_user;           \
+            } while ( 0 );
+
+  /**************************************************************************
+   *
    * definitions
    *
    */
@@ -237,7 +286,8 @@
       goto Exit;
     }
 
-    if ( !FT_QNEW( ptr ) )
+    SDF_ALLOC( ptr, sizeof( *ptr ) );
+    if ( error == 0 )
     {
       *ptr = null_edge;
       *edge = ptr;
@@ -255,7 +305,7 @@
     if ( !memory || !edge || !*edge )
       return;
 
-    FT_FREE( *edge );
+    SDF_FREE( *edge );
   }
 
   /* Creates a new `SDF_Contour' on the heap and assigns  */
@@ -274,7 +324,8 @@
       goto Exit;
     }
 
-    if ( !FT_QNEW( ptr ) )
+    SDF_ALLOC( ptr, sizeof( *ptr ) );
+    if ( error == 0 )
     {
       *ptr = null_contour;
       *contour = ptr;
@@ -307,7 +358,7 @@
       sdf_edge_done( memory, &temp );
     }
 
-    FT_FREE( *contour );
+    SDF_FREE( *contour );
   }
 
   /* Creates a new `SDF_Shape' on the heap and assigns  */
@@ -326,7 +377,8 @@
       goto Exit;
     }
 
-    if ( !FT_QNEW( ptr ) )
+    SDF_ALLOC( ptr, sizeof( *ptr ) );
+    if ( error == 0 )
     {
       *ptr = null_shape;
       ptr->memory = memory;
@@ -366,7 +418,7 @@
     }
 
     /* release the allocated shape struct  */
-    FT_FREE( *shape );
+    SDF_FREE( *shape );
   }
     
 
@@ -2589,7 +2641,8 @@
     rows     = bitmap->rows;
     buffer   = (FT_Short*)bitmap->buffer;
 
-    if ( FT_ALLOC_MULT( dists, width, rows * sizeof(*dists) ) )
+    SDF_ALLOC( dists, width * rows * sizeof( *dists ) );
+    if ( error != 0 )
       goto Exit;
 
     FT_MEM_ZERO( dists, width * rows * sizeof(*dists) );
@@ -2720,7 +2773,7 @@
     }
 
   Exit:
-    FT_FREE( dists );
+    SDF_FREE( dists );
     return error;
   }
 
@@ -3065,6 +3118,7 @@
     FT_Memory                 memory     = NULL;
     SDF_Shape*                shape      = NULL;
     SDF_Params                internal_params;
+    SDF_MemoryUser            mem_user;
 
 
     /* check for valid arguments */
@@ -3125,6 +3179,15 @@
     internal_params.flip_sign = sdf_params->flip_sign;
     internal_params.flip_y = sdf_params->flip_y;
 
+    /* assign a custom user pointer to `FT_Memory'   */
+    /* also keep a reference of the old user pointer */
+    /* in order to debug the memory while compiling  */
+    /* with `FT_DEBUG_MEMORY'.                       */
+    mem_user.prev_user = memory->user;
+    mem_user.total_usage = 0;
+
+    memory->user = &mem_user;
+
     FT_CALL( sdf_shape_new( memory, &shape ) );
 
     FT_CALL( sdf_outline_decompose( outline, shape ) );
@@ -3149,6 +3212,12 @@
 
     if ( shape )
       sdf_shape_done( &shape );
+
+    /* restore the memory->user */
+    memory->user = mem_user.prev_user;
+
+    FT_TRACE0(( "[sdf] sdf_raster_render: Total memory used = %ld\n",
+                mem_user.total_usage ));
 
   Exit:
     return error;
