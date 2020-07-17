@@ -172,7 +172,6 @@
   FT_MODERRDEF( Winfonts, 0x1500, "Windows FON/FNT module" )
   FT_MODERRDEF( GXvalid,  0x1600, "GX validation module" )
   FT_MODERRDEF( Sdf,      0x1700, "signed distance field raster module" )
-  FT_MODERRDEF( Sdfb,     0x1700, "signed distance field converter module" )
 
 
 #ifdef FT_MODERR_END_LIST
