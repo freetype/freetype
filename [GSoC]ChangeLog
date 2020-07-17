@@ -1,5 +1,32 @@
 2020-07-17  Anuj Verma  <anujv@iitbhilai.ac.in>
 
+	[sdfb] Added new module to generate SDF from bitmap.
+
+	* src/sdfb/sdfb.c, src/sdfb/ftsdfbrend.c,
+	  src/sdfb/ftsdfb.c, src/sdfb/ftsdfbrend.h,
+	  src/sdfb/ftsdfb.h, src/sdfb/ftsdfberrs.h:
+	  Added files required by the `sdfb' renderer module.
+
+	* src/sdfb/rules.mk, src/sdfb/module.mk: Added
+	  files required to build the `sdfb' module using
+	  the default build system.
+
+	* CMakeLists.txt (BASE_SRCS): Add `src/sdfb/sdfb.c'
+	  to the variable.
+
+	* include/freetype/config/ftmodule.h: Added `sdfb'
+	  module declaration so that the module can be compiled 
+	  when not compiling with GNU make.
+
+	* modules.cfg (RASTER_MODULES): Include `sdfb' module
+	  to the default rasterizer module list.
+
+	* include/freetype/ftmoderr.h: sdfb module error define
+
+	* src/sdf/rules.mk: Add EOF.
+
+2020-07-17  Anuj Verma  <anujv@iitbhilai.ac.in>
+
 	[sdf] Added memory tracker.
 
 	* src/sdf/ftsdf.c (SDF_MemoryUser): Added struct

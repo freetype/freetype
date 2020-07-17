@@ -348,6 +348,7 @@ set(BASE_SRCS
   src/psnames/psnames.c
   src/raster/raster.c
   src/sdf/sdf.c
+  src/sdfb/sdfb.c
   src/sfnt/sfnt.c
   src/smooth/smooth.c
   src/truetype/truetype.c

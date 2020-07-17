@@ -27,5 +27,6 @@ FT_USE_MODULE( FT_Module_Class, sfnt_module_class )
 FT_USE_MODULE( FT_Renderer_Class, ft_smooth_renderer_class )
 FT_USE_MODULE( FT_Driver_ClassRec, bdf_driver_class )
 FT_USE_MODULE( FT_Renderer_Class, ft_sdf_renderer_class )
+FT_USE_MODULE( FT_Renderer_Class, ft_sdfb_renderer_class )
 
 /* EOF */
