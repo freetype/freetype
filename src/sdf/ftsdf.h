@@ -22,7 +22,7 @@ FT_BEGIN_HEADER
     OPTIMIZATION_NONE = 0,  /* default: check all points against all edges  */
     OPTIMIZATION_BB   = 1,  /* use bounding box to check nearby grid points */
     OPTIMIZATION_SUB  = 2,  /* subdivide then use bounding box              */
-    OPTIMIZATION_CG   = 3   /* use coarse grid to only check relevant edges */
+    OPTIMIZATION_CG   = 3,  /* use coarse grid to only check relevant edges */
 
   } Optimizations;
   /* --------- */
