@@ -16,13 +16,13 @@ SDFB_COMPILE := $(CC) $(ANSIFLAGS)                             \
 # sdf bitmap driver sources (i.e., C files)
 #
 SDFB_DRV_SRC := $(SDFB_DIR)/ftsdfbrend.c  \
-               $(SDFB_DIR)/ftsdfb.c
+                $(SDFB_DIR)/ftsdfb.c
 
 
 # sdf bitmap driver headers
 #
 SDFB_DRV_H := $(SDFB_DRV_SRC:%.c=%.h)  \
-             $(SDFB_DIR)/ftsdferrs.h
+              $(SDFB_DIR)/ftsdfberrs.h
 
 
 # sdf bitmap driver object(s)

@@ -1,3 +1,17 @@
+2020-07-18  Anuj Verma  <anujv@iitbhilai.ac.in>
+
+	[sdfb] Fix GNU Make build.
+
+	* src/sdfb/rules.mk (SDFB_DRV_H): Fix name of
+	  the module specific error file `ftsdfberrs.h'.
+
+	* src/sdf/ftsdf.h (Optimizations): Fix warning.
+	  `warning: comma at end of enumerator list [-Wpedantic]'
+
+	* src/sdf/ftsdf.c (sdf_generate_coarse_grid): Remove
+	  unused variable `cindex', causes warning.
+	  `warning: unused variable 'cindex' [-Wunused-variable]'
+
 2020-07-17  Anuj Verma  <anujv@iitbhilai.ac.in>
 
 	[sdfb] Added new module to generate SDF from bitmap.
