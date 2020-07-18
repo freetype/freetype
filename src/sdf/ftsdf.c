@@ -2913,7 +2913,6 @@
     {
       for ( i = 0; i < CG_DIMEN; i++ )
       {
-        FT_Int        cindex  = j * CG_DIMEN + i;
         SDF_Contour*  cont    = contours;
         SDF_Edge*     edge;
         SDF_Edge*     relevant_list;
