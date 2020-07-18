@@ -1,5 +1,13 @@
 2020-07-18  Anuj Verma  <anujv@iitbhilai.ac.in>
 
+	[sdf] Only track memory in debug mode.
+
+	* src/sdf/ftsdf.c (*): Disable total memory
+	  usage tracking if the program is not in
+	  debug mode.
+
+2020-07-18  Anuj Verma  <anujv@iitbhilai.ac.in>
+
 	[sdfb] Removed Module.
 
 	Remove sdfb module. Instead of a new module

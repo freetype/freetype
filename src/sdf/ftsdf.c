@@ -12,6 +12,8 @@
    *
    */
 
+#ifdef FT_DEBUG_LEVEL_TRACE
+
   /* To be used with `FT_Memory::user' in order to track */
   /* memory allocations.                                 */
   typedef struct  SDF_MemoryUser_
@@ -53,7 +55,33 @@
               FT_FREE( ptr );                               \
                                                             \
               memory->user = (void*)current_user;           \
-            } while ( 0 );
+            } while ( 0 )
+
+  #define SDF_MEMORY_TRACKER_DECLARE() SDF_MemoryUser  sdf_memory_user
+
+  #define SDF_MEMORY_TRACKER_SETUP()                    \
+            sdf_memory_user.prev_user   = memory->user; \
+            sdf_memory_user.total_usage = 0;            \
+            memory->user = &sdf_memory_user
+
+  #define SDF_MEMORY_TRACKER_DONE()                     \
+            memory->user = sdf_memory_user.prev_user;   \
+            FT_TRACE0(( "[sdf] sdf_raster_render: "     \
+                        "Total memory used = %ld\n",    \
+                         sdf_memory_user.total_usage ))
+
+#else
+
+  /* Use the native allocation functions. */
+  #define SDF_ALLOC FT_QALLOC
+  #define SDF_FREE  FT_FREE
+
+  /* Do nothing */
+  #define SDF_MEMORY_TRACKER_DECLARE()
+  #define SDF_MEMORY_TRACKER_SETUP()
+  #define SDF_MEMORY_TRACKER_DONE()
+
+#endif
 
   /**************************************************************************
    *
@@ -3117,7 +3145,8 @@
     FT_Memory                 memory     = NULL;
     SDF_Shape*                shape      = NULL;
     SDF_Params                internal_params;
-    SDF_MemoryUser            mem_user;
+
+    SDF_MEMORY_TRACKER_DECLARE();
 
 
     /* check for valid arguments */
@@ -3182,10 +3211,7 @@
     /* also keep a reference of the old user pointer */
     /* in order to debug the memory while compiling  */
     /* with `FT_DEBUG_MEMORY'.                       */
-    mem_user.prev_user = memory->user;
-    mem_user.total_usage = 0;
-
-    memory->user = &mem_user;
+    SDF_MEMORY_TRACKER_SETUP();
 
     FT_CALL( sdf_shape_new( memory, &shape ) );
 
@@ -3213,10 +3239,7 @@
       sdf_shape_done( &shape );
 
     /* restore the memory->user */
-    memory->user = mem_user.prev_user;
-
-    FT_TRACE0(( "[sdf] sdf_raster_render: Total memory used = %ld\n",
-                mem_user.total_usage ));
+    SDF_MEMORY_TRACKER_DONE();
 
   Exit:
     return error;
