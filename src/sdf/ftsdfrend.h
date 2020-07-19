@@ -57,7 +57,7 @@ FT_BEGIN_HEADER
    *   convert bitmaps to signed distance fields.
    *
    * @note:
-   *   This is not a seperate module, it is a part of the `sdf' module.
+   *   This is not a separate module, it is a part of the `sdf' module.
    *
    */
   FT_DECLARE_RENDERER( ft_bitmap_sdf_renderer_class )

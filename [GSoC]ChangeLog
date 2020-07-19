@@ -1,5 +1,41 @@
 2020-07-19  Anuj Verma  <anujv@iitbhilai.ac.in>
 
+	[sdf] Added interface functions for `bsdf' converter.
+
+	* src/base/ftobjs.c (FT_Render_Glyph_Internal): Remove
+	  the bitmap check which prevent calling renderers
+	  if the glyph is already a bitmap. The `bsdf' renderer
+	  requires a bitmap for conversion.
+
+	* src/base/ftobjs.c (ft_add_renderer): Remove the glyph
+	  format check which ensures that the glyph format for
+	  a renderer is `FT_GLYPH_FORMAT_OUTLINE', again the `bsdf'
+	  renderer has `FT_GLYPH_FORMAT_BITMAP' as a glyph format,
+	  so we need to remove the condition to initialize the
+	  renderer properly.
+
+	* src/sdf/ftbsdf.c (*): Added a rasterizer for the
+	  `bsdf' renderer and created necessary functions.
+
+	* src/sdf/ftbsdf.h: Add forward declaration of the
+	  rasterizer.
+
+	* src/sdf/ftsdfrend.c (ft_bitmap_sdf_renderer_class):
+	  Define the new `bsdf' rendere and add the
+	  `FT_Renderer_RenderFunc' function, the rest is
+	  same as the `sdf' renderer.
+
+	* src/sdf/ftsdfrend.h: Add forward declaration of the
+	  renderer.
+
+	* src/sdf/rules.mk (SDF_DRV_SRC): Add the new `ftbsdf.c'
+	  file to the compile list.
+
+	* src/sdf/sdf.c: Inclue the `ftbsdf.c' file if making
+	  single object.
+
+2020-07-19  Anuj Verma  <anujv@iitbhilai.ac.in>
+
 	[sdf] Add alloc/free functions.
 
 	* src/sdf/ftsdf.c (*): Add `sdf_alloc' and `sdf_free'
