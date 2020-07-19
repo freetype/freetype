@@ -14,6 +14,17 @@
 
 #ifdef FT_DEBUG_LEVEL_TRACE
 
+  #undef FT_DEBUG_INNER
+  #undef FT_ASSIGNP_INNER
+
+  #define FT_DEBUG_INNER( exp )  ( _ft_debug_file   = __FILE__, \
+                                   _ft_debug_lineno = line,     \
+                                   (exp) )
+
+  #define FT_ASSIGNP_INNER( p, exp )  ( _ft_debug_file   = __FILE__, \
+                                        _ft_debug_lineno = line,     \
+                                        FT_ASSIGNP( p, exp ) )
+
   /* To be used with `FT_Memory::user' in order to track */
   /* memory allocations.                                 */
   typedef struct  SDF_MemoryUser_
@@ -23,39 +34,57 @@
 
   } SDF_MemoryUser;
 
-  /* Use these macros while allocating and deallocating     */
+  /* Use these functions while allocating and deallocating  */
   /* memory. These macros restore the previous user pointer */
   /* before calling the allocation functions, which is ess- */
   /* ential if the program is compiled with macro           */
   /* `FT_DEBUG_MEMORY'.                                     */
-  #define SDF_ALLOC( ptr, size )                            \
-            do                                              \
-            {                                               \
-              SDF_MemoryUser*  current_user;                \
-                                                            \
-                                                            \
-              current_user = (SDF_MemoryUser*)memory->user; \
-              memory->user = current_user->prev_user;       \
-                                                            \
-              if ( !FT_QALLOC( ptr, size ) )                \
-                current_user->total_usage += size;          \
-                                                            \
-              memory->user = (void*)current_user;           \
-            } while ( 0 )
 
-  #define SDF_FREE( ptr )                                   \
-            do                                              \
-            {                                               \
-              SDF_MemoryUser*  current_user;                \
-                                                            \
-                                                            \
-              current_user = (SDF_MemoryUser*)memory->user; \
-              memory->user = current_user->prev_user;       \
-                                                            \
-              FT_FREE( ptr );                               \
-                                                            \
-              memory->user = (void*)current_user;           \
-            } while ( 0 )
+  static FT_Pointer
+  sdf_alloc( FT_Memory  memory,
+             FT_Long    size,
+             FT_Error*  err, 
+             FT_Int     line )
+  {
+    SDF_MemoryUser*  current_user;
+    FT_Pointer       ptr;
+    FT_Error         error;
+
+
+    current_user = (SDF_MemoryUser*)memory->user;
+    memory->user = current_user->prev_user;
+
+    if ( !FT_QALLOC( ptr, size ) )      
+      current_user->total_usage += size;
+
+    memory->user = (void*)current_user;
+    *err = error;
+
+    return ptr;
+  }
+
+  static void
+  sdf_free( FT_Memory    memory,
+             FT_Pointer  ptr,
+             FT_Int      line )
+  {
+    SDF_MemoryUser*  current_user;
+
+    current_user = (SDF_MemoryUser*)memory->user;
+    memory->user = current_user->prev_user;
+
+    FT_FREE( ptr );
+
+    memory->user = (void*)current_user;
+  }
+
+  #define SDF_ALLOC( ptr, size )                     \
+            ( ptr = sdf_alloc( memory, size,         \
+                               &error, __LINE__ ),   \
+              error != 0 )
+
+  #define SDF_FREE( ptr )                            \
+            sdf_free( memory, ptr, __LINE__ )        \
 
   #define SDF_MEMORY_TRACKER_DECLARE() SDF_MemoryUser  sdf_memory_user
 
@@ -77,9 +106,9 @@
   #define SDF_FREE  FT_FREE
 
   /* Do nothing */
-  #define SDF_MEMORY_TRACKER_DECLARE()
-  #define SDF_MEMORY_TRACKER_SETUP()
-  #define SDF_MEMORY_TRACKER_DONE()
+  #define SDF_MEMORY_TRACKER_DECLARE() do {} while ( 0 )
+  #define SDF_MEMORY_TRACKER_SETUP()   do {} while ( 0 )
+  #define SDF_MEMORY_TRACKER_DONE()    do {} while ( 0 )
 
 #endif
 
@@ -314,8 +343,7 @@
       goto Exit;
     }
 
-    SDF_ALLOC( ptr, sizeof( *ptr ) );
-    if ( error == 0 )
+    if ( !SDF_ALLOC( ptr, sizeof( *ptr ) ) )
     {
       *ptr = null_edge;
       *edge = ptr;
@@ -352,8 +380,7 @@
       goto Exit;
     }
 
-    SDF_ALLOC( ptr, sizeof( *ptr ) );
-    if ( error == 0 )
+    if ( !SDF_ALLOC( ptr, sizeof( *ptr ) ) )
     {
       *ptr = null_contour;
       *contour = ptr;
@@ -405,8 +432,7 @@
       goto Exit;
     }
 
-    SDF_ALLOC( ptr, sizeof( *ptr ) );
-    if ( error == 0 )
+    if ( !SDF_ALLOC( ptr, sizeof( *ptr ) ) )
     {
       *ptr = null_shape;
       ptr->memory = memory;
@@ -2669,8 +2695,7 @@
     rows     = bitmap->rows;
     buffer   = (FT_Short*)bitmap->buffer;
 
-    SDF_ALLOC( dists, width * rows * sizeof( *dists ) );
-    if ( error != 0 )
+    if ( SDF_ALLOC( dists, width * rows * sizeof( *dists ) ) )
       goto Exit;
 
     FT_MEM_ZERO( dists, width * rows * sizeof(*dists) );
@@ -3097,6 +3122,7 @@
   {
     FT_Error      error  = FT_Err_Ok;
     SDF_TRaster*  raster = NULL;
+    FT_Int        line   = __LINE__;
 
 
     *araster = 0;
@@ -3249,6 +3275,7 @@
   sdf_raster_done( FT_Raster  raster )
   {
     FT_Memory  memory = (FT_Memory)((SDF_TRaster*)raster)->memory;
+    FT_Int     line   = __LINE__;
 
 
     FT_FREE( raster );

@@ -1,5 +1,20 @@
 2020-07-19  Anuj Verma  <anujv@iitbhilai.ac.in>
 
+	[sdf] Add alloc/free functions.
+
+	* src/sdf/ftsdf.c (*): Add `sdf_alloc' and `sdf_free'
+	  to allocate and deallocate memory respectively.
+	  By using function we can directly use them in the
+	  conditional statements, which is not possible when
+	  using `do {} while ( 0 )'.
+
+	* src/sdf/ftsdf.c (SDF_MEMORY_TRACKER_): When not
+	  debugging don't leave the macros empty otherwise
+	  some compiler may emit warning because of empty
+	  `;' semi-colon.
+
+2020-07-19  Anuj Verma  <anujv@iitbhilai.ac.in>
+
 	[sdf] Added new renderer `bsdf'.
 
 	* src/sdf/ftsdfrend.* (*): Added new renderer
