@@ -393,4 +393,47 @@
     (FT_Raster_Funcs*)&ft_sdf_raster               /* raster_class    */
   )
 
+  /*************************************************************************/
+  /*************************************************************************/
+  /**                                                                     **/
+  /**  BITMAP TO SDF CONVERTER                                            **/
+  /**                                                                     **/
+  /*************************************************************************/
+  /*************************************************************************/
+
+  static FT_Error
+  ft_bsdf_render( FT_Renderer      module,
+                 FT_GlyphSlot      slot,
+                 FT_Render_Mode    mode,
+                 const FT_Vector*  origin )
+  {
+    
+  }
+
+  FT_DEFINE_RENDERER(
+    ft_bitmap_sdf_renderer_class,
+
+    FT_MODULE_RENDERER,
+    sizeof( SDF_Renderer_Module ),
+
+    "bsdf",
+    0x10000L,
+    0x20000L,
+
+    NULL,
+
+    (FT_Module_Constructor) ft_sdf_init,
+    (FT_Module_Destructor)  ft_sdf_done,
+    (FT_Module_Requester)   ft_sdf_requester,
+
+    FT_GLYPH_FORMAT_BITMAP,
+
+    (FT_Renderer_RenderFunc)    ft_bsdf_render,    /* render_glyph    */
+    (FT_Renderer_TransformFunc) ft_sdf_transform,  /* transform_glyph */
+    (FT_Renderer_GetCBoxFunc)   ft_sdf_get_cbox,   /* get_glyph_cbox  */
+    (FT_Renderer_SetModeFunc)   ft_sdf_set_mode,   /* set_mode        */
+
+    (FT_Raster_Funcs*)NULL                         /* raster_class    */
+  )
+
 /* END */

@@ -35,7 +35,32 @@ FT_BEGIN_HEADER
   } SDF_Renderer_Module, *SDF_Renderer;
 
 
+  /**************************************************************************
+   *
+   * @renderer:
+   *   ft_sdf_renderer_class
+   *
+   * @description:
+   *   Renderer to convert `FT_Outline' to signed distance fields.
+   *
+   */
   FT_DECLARE_RENDERER( ft_sdf_renderer_class )
+
+
+  /**************************************************************************
+   *
+   * @renderer:
+   *   ft_bitmap_sdf_renderer_class
+   *
+   * @description:
+   *   This is not exactly a renderer, it's just a converter which
+   *   convert bitmaps to signed distance fields.
+   *
+   * @note:
+   *   This is not a seperate module, it is a part of the `sdf' module.
+   *
+   */
+  FT_DECLARE_RENDERER( ft_bitmap_sdf_renderer_class )
 
 
 FT_END_HEADER

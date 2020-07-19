@@ -1,3 +1,20 @@
+2020-07-19  Anuj Verma  <anujv@iitbhilai.ac.in>
+
+	[sdf] Added new renderer `bsdf'.
+
+	* src/sdf/ftsdfrend.* (*): Added new renderer
+	  named `bsdf' which basically convert bitmap
+	  to signed distance fields. This is a part of
+	  the `sdf' module and not a separate module on
+	  it's own.
+
+	* src/sdf/module.mk (FTMODULE_H_COMMANDS): Add
+	  the new renderer to the list of modules.
+
+	* include/freetype/config/ftmodule.h: Add the
+	  new renderer to default list of modules when
+	  not compiling with GNU Make.
+
 2020-07-18  Anuj Verma  <anujv@iitbhilai.ac.in>
 
 	[sdf] Only track memory in debug mode.
