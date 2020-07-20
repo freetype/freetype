@@ -162,4 +162,25 @@ cd ../..
 
 chmod +x ./configure
 
+copy_submodule_files()
+{
+  echo "Copying files from \`submodules/dlg' to \`src/dlg'"
+  cp $DLG_INC_DIR/dlg.h src/dlg
+  cp $DLG_INC_DIR/output.h src/dlg
+  cp $DLG_SRC_DIR/* src/dlg
+}
+
+DLG_INC_DIR=submodules/dlg/include/dlg
+DLG_SRC_DIR=submodules/dlg/src/dlg
+
+if ! test -d "$DLG_INC_DIR"; then 
+  echo "Submodule check out:"
+  git submodule init
+  git submodule update
+  
+  copy_submodule_files
+else 
+  copy_submodule_files
+fi
+
 # EOF

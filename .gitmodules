@@ -1,3 +1,4 @@
-[submodule "src/dlg"]
-	path = src/dlg
+
+[submodule "submodules/dlg"]
+	path = submodules/dlg
 	url = https://github.com/nyorain/dlg.git

@@ -543,12 +543,14 @@ else
   FT_BASE_DEF( void )
   ft_add_tag( const char* tag )
   {
+    (void) tag;
     /* nothing */
   }
 
   FT_BASE_DEF( void )
   ft_remove_tag( const char* tag )
   {
+    (void) tag;
     /* nothing */
   }
  

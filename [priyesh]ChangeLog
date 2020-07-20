@@ -1,3 +1,17 @@
+2020-07-20  Priyesh Kumar   <priyeshkkumar@gmail.com>
+
+    * Changed git submodule(dlg) from `src/dlg` to `submodules/dlg`
+
+    * Updated autogen.sh file:
+        For copying the necessary files from `submodules/dlg` to `src\dlg`.
+        If the git submodule(dlg) is not checked-out, first it runs necessary 
+        git commands for checking out the submodule(dlg) ad then it copies
+        the files.
+    * include/freetype/internal/ftdebug.h:
+        Updated the include path for dlg.
+    
+    * Added a new file `src/dlg/rules.mk`
+
 2020-07-15  Priyesh Kumar   <priyeshkkumar@gmail.com>
 
     * builds/compiler/gcc.mk: Added a flag -std=c99 for using dlg on windows
