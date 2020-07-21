@@ -220,6 +220,7 @@ $(FTDEBUG_OBJ): $(FTDEBUG_SRC) $(FREETYPE_H)
 #
 include $(SRC_DIR)/base/rules.mk
 include $(patsubst %,$(SRC_DIR)/%/rules.mk,$(MODULES))
+include $(SRC_DIR)/dlg/rules.mk
 
 
 # ftinit component
@@ -260,8 +261,8 @@ endif
 
 # All FreeType library objects.
 #
-OBJ_M := $(BASE_OBJ_M) $(BASE_EXT_OBJ) $(DRV_OBJS_M)
-OBJ_S := $(BASE_OBJ_S) $(BASE_EXT_OBJ) $(DRV_OBJS_S)
+OBJ_M := $(BASE_OBJ_M) $(BASE_EXT_OBJ) $(DRV_OBJS_M) $(DLG_OBJS_M)
+OBJ_S := $(BASE_OBJ_S) $(BASE_EXT_OBJ) $(DRV_OBJS_S) $(DLG_OBJS_S)
 
 
 # The target `multi' on the Make command line indicates that we want to

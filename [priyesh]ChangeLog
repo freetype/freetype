@@ -1,3 +1,10 @@
+2020-07-21  Priyesh Kumar   <priyeshkkumar@gmail.com>
+
+    * builds/freetype.mk: Updates to build dlg along with rest of base and
+        module objects.
+    
+    * autogen.sh: Minor changes.
+
 2020-07-20  Priyesh Kumar   <priyeshkkumar@gmail.com>
 
     * Changed git submodule(dlg) from `src/dlg` to `submodules/dlg`

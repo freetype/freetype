@@ -174,7 +174,7 @@ DLG_INC_DIR=submodules/dlg/include/dlg
 DLG_SRC_DIR=submodules/dlg/src/dlg
 
 if ! test -d "$DLG_INC_DIR"; then 
-  echo "Submodule check out:"
+  echo "Submodule check out in \`submodules/dlg':"
   git submodule init
   git submodule update
   
