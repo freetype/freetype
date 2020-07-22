@@ -1,6 +1,7 @@
 2020-07-22  Priyesh Kumar   <priyeshkkumar@gmail.com>
 
-    * Reverted back to `-std=c99' flag in `unix-cc.in'
+    * Reverted back to `-std=c99' flag in `unix-cc.in' and 
+      `builds/freetype.mk'
 
     * Updated dlg's include path in `include/freetype/internal/ftdebug.h'.
 

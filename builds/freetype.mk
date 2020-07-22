@@ -152,7 +152,7 @@ endif
 #
 FT_CFLAGS  = $(CPPFLAGS) \
              $(CFLAGS) \
-             $DFT2_BUILD_LIBRARY
+             $DFT2_BUILD_LIBRARY -std=c99
 
 FT_COMPILE := $(CC) $(ANSIFLAGS) $(INCLUDE_FLAGS) $(FT_CFLAGS)
 
