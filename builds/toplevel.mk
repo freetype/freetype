@@ -103,6 +103,22 @@ ifneq ($(findstring setup,$(MAKECMDGOALS)),)
   check_platform := 1
 endif
 
+# For builds that don't use `./configure' script we need to copy files
+# from `submodule/dlg' to `src/dlg'
+#
+ifeq ($(wildcard src/dlg/dlg.*),)
+  ifeq ($(wildcard submodules/dlg/.*),)
+  	$(info Submodule check out in `submodules/slg' )
+  	$(shell git submodule init)
+  	$(shell git submodule update)
+  endif
+
+  $(info Copying files from `submodules/dlg' to `src/dlg')
+  $(shell cp submodules/dlg/include/dlg/dlg.h src/dlg/)
+  $(shell cp submodules/dlg/include/dlg/output.h src/dlg/)
+  $(shell cp submodules/dlg/src/dlg/dlg.c src/dlg/)
+endif
+
 # Include the automatic host platform detection rules when we need to
 # check the platform.
 #

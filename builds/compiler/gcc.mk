@@ -61,7 +61,7 @@ T := -o$(space)
 #   Use the ANSIFLAGS variable to define the compiler flags used to enfore
 #   ANSI compliance.
 #
-CFLAGS ?= -c -g -O3 -Wall -std=c99
+CFLAGS ?= -c -g -O3 -Wall 
 
 # ANSIFLAGS: Put there the flags used to make your compiler ANSI-compliant.
 #

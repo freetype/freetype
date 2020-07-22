@@ -306,7 +306,7 @@ else
             p++;
           }
         }
-#endif 
+#endif /* FT_LOGGING */
         /* read toggle name, followed by ':' */
         q = p;
         while ( *p && *p != ':' )
@@ -543,14 +543,14 @@ else
   FT_BASE_DEF( void )
   ft_add_tag( const char* tag )
   {
-    (void) tag;
+    FT_UNUSED(tag);
     /* nothing */
   }
 
   FT_BASE_DEF( void )
   ft_remove_tag( const char* tag )
   {
-    (void) tag;
+    FT_UNUSED (tag);
     /* nothing */
   }
  

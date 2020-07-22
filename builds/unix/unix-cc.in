@@ -79,7 +79,7 @@ T := -o$(space)
 #   We use our own FreeType configuration files overriding defaults.
 #
 CPPFLAGS := @CPPFLAGS@
-CFLAGS   := -c -std=c99 @XX_CFLAGS@ @CFLAGS@ \
+CFLAGS   := -c @XX_CFLAGS@ @CFLAGS@ \
             $DFT_CONFIG_CONFIG_H="<ftconfig.h>" \
             $DFT_CONFIG_MODULES_H="<ftmodule.h>" \
             $DFT_CONFIG_OPTIONS_H="<ftoption.h>"

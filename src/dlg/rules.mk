@@ -17,6 +17,7 @@
 #
 DLG_DIR := $(SRC_DIR)/dlg
 
+FT_CFLAGS += -std=c99
 
 DLG_COMPILE := $(CC) $(ANSIFLAGS)                            \
                      $I$(subst /,$(COMPILER_SEP),$(DLG_DIR)) \
