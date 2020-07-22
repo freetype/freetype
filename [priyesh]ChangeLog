@@ -1,24 +1,27 @@
 2020-07-22  Priyesh Kumar   <priyeshkkumar@gmail.com>
 
-    * Reverted back to `-std=c99' flag in `unix-cc.in' and 
-      `builds/freetype.mk'
-
-    * Updated dlg's include path in `include/freetype/internal/ftdebug.h'.
-
-    * Changed `builds/toplevel.mk' and `autogen.sh' to copy dlg's include
-      files from `submodules/dlg' to `src/dlg/dlg' due to include path errors
-      on windows.
-      Updated `rules.mk' w.r.t to above changes.
-
-    * Updated `builds/toplevel.mk' so that for builds that do not use 
-      `./configure' script dlg files are copied from `submodules/dlg' to
-      `src/dlg'.
+    * builds/freetype.mk (FT_CFLAGS): Added `-std=c99' flag 
     
-    * Removed `-std=c99' flag from `gcc.mk' and `unix-cc.in'.
+    * builds/unix/unix-cc.in (CFLAGS): Added `-std=c99' flag
 
-    * src/base/ftdebug.c: Minor changes
+    * include/freetype/internal/ftdebug.h: Updated include path of dlg to 
+      `#include<..src/dlg/dlg/dlg.h>' and `#include<..src/dlg/dlg/output.h>` 
 
-    * src/dlg/rules.mk: Added `-std=c99' flag in `FT_CFLAGS' varialble 
+    * src/dlg/rules.mk (DLG_H): Updated.
+
+    * builds/toplevel.mk, autogen.sh: Copy dlg's include files from 
+      `submodules/dlg' to `src/dlg/dlg' due to include path errors
+      on windows.
+
+    * builds/toplevel.mk: For builds that do not use `./configure' script dlg
+      files are copied from `submodules/dlg' to `src/dlg'.
+    
+    * builds/compiler/gcc.mk (CFLAGS), builds/unix/unix-cc.in (CFLAGS): 
+      Removed `-std=c99' flag.
+
+    * src/base/ftdebug.c (ft_add_tag, ft_remove_tag): Minor changes
+
+    * src/dlg/rules.mk (FT_CFLAGS): Added `-std=c99' flag  
 
 2020-07-21  Priyesh Kumar   <priyeshkkumar@gmail.com>
 
