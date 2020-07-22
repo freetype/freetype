@@ -31,8 +31,8 @@ DLG_SRC := $(DLG_DIR)/dlg.c
 
 # dlg logging library headers
 #
-DLG_H := $(DLG_SRC:%.c=%.h) \
-             $(DLG_DIR)/output.h
+DLG_H := $(DLG_DIR)/dlg/dlg.h \
+             $(DLG_DIR)/dlg/output.h
 
 
 # dlg logging library object(s)

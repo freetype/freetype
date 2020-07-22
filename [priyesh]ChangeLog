@@ -1,5 +1,10 @@
 2020-07-22  Priyesh Kumar   <priyeshkkumar@gmail.com>
 
+    * Changed `builds/toplevel.mk' and `autogen.sh' to copy dlg's include
+      files from `submodules/dlg' to `src/dlg/dlg' due to include path errors
+      on windows.
+      Updated `rules.mk' w.r.t to above changes.
+
     * Updated `builds/toplevel.mk' so that for builds that do not use 
       `./configure' script dlg files are copied from `submodules/dlg' to
       `src/dlg'.

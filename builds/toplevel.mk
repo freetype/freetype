@@ -107,15 +107,16 @@ endif
 # from `submodule/dlg' to `src/dlg'
 #
 ifeq ($(wildcard src/dlg/dlg.*),)
-  ifeq ($(wildcard submodules/dlg/.*),)
-  	$(info Submodule check out in `submodules/slg' )
+  ifeq ($(wildcard submodules/dlg/dlg.*),)
+  	$(info Submodule check out in `submodules/dlg' )
   	$(shell git submodule init)
   	$(shell git submodule update)
   endif
 
   $(info Copying files from `submodules/dlg' to `src/dlg')
-  $(shell cp submodules/dlg/include/dlg/dlg.h src/dlg/)
-  $(shell cp submodules/dlg/include/dlg/output.h src/dlg/)
+  $(shell mkdir src/dlg/dlg)
+  $(shell cp submodules/dlg/include/dlg/dlg.h src/dlg/dlg)
+  $(shell cp submodules/dlg/include/dlg/output.h src/dlg/dlg)
   $(shell cp submodules/dlg/src/dlg/dlg.c src/dlg/)
 endif
 
