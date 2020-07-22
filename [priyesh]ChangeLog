@@ -1,5 +1,9 @@
 2020-07-22  Priyesh Kumar   <priyeshkkumar@gmail.com>
 
+    * Reverted back to `-std=c99' flag in `unix-cc.in'
+
+    * Updated dlg's include path in `include/freetype/internal/ftdebug.h'.
+
     * Changed `builds/toplevel.mk' and `autogen.sh' to copy dlg's include
       files from `submodules/dlg' to `src/dlg/dlg' due to include path errors
       on windows.
