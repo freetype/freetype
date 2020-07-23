@@ -318,7 +318,9 @@
   {
 #ifdef FT_CONFIG_OPTION_USE_BROTLI
 
-    FT_ULong             uncompressed_size = dst_size;
+    /* this cast is only of importance on 32bit systems; */
+    /* we don't validate it                              */
+    FT_Offset            uncompressed_size = (FT_Offset)dst_size;
     BrotliDecoderResult  result;
 
 
