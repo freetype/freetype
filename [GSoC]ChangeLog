@@ -1,3 +1,14 @@
+2020-07-24  Anuj Verma  <anujv@iitbhilai.ac.in>
+
+	[sdf] Started the `bsdf' rasterier.
+
+	* src/sdf/ftbsdf.c (*): Fix line endings.
+
+	* src/sdf/ftbsdf.c (bsdf_copy_source_to_target): Added
+	  function to copy the source bitmap to the center of
+	  the target bitmap and also convert it to normalized
+	  16 bits per pixel bitmap.
+
 2020-07-19  Anuj Verma  <anujv@iitbhilai.ac.in>
 
 	[sdf] Added interface functions for `bsdf' converter.
