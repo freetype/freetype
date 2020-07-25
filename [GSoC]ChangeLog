@@ -1,5 +1,31 @@
 2020-07-25  Anuj Verma  <anujv@iitbhilai.ac.in>
 
+	[sdf -> bsdf renderer] Hold a refrence to `FT_Memory'.
+
+	Due to the way the 8SED algorithm works we need to keep
+	a track of distances and nearest point of all the pixels/
+	grid points.
+
+	* src/sdf/ftbsdf.c (BSDF_TRaster): Added struct to
+	  hold the `FT_Memory' reference, to be used to allocate
+	  memory.
+
+	* src/sdf/ftbsdf.c (ED, BSDF_Worker): Added few more
+	  essential struct. `ED' contains infomation about the
+	  nearest point. `BSDF_Worker' is used to combine all
+	  the essentail parameters to functions.
+
+	* src/sdf/ftbsdf.c (bsdf_copy_source_to_target => 
+	  bsdf_init_distance_map): Renamed.
+
+	* src/sdf/ftbsdf.c (*): Various minor changes.
+
+	* src/sdf/sdf.c: Change the order of source include
+	  because `ftsdf.c' change some internal freetype
+	  defines which are required in `ftbsdf.c'.
+
+2020-07-25  Anuj Verma  <anujv@iitbhilai.ac.in>
+
 	[sdf -> bsdf renderer] Convert 8bit bitmap to 16bit.
 
 	* src/sdf/ftbsdf.c (bsdf_copy_source_to_target): Added

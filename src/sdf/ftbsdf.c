@@ -1,6 +1,7 @@
 
 #include <freetype/internal/ftobjs.h>
 #include <freetype/internal/ftdebug.h>
+#include <freetype/internal/ftmemory.h>
 
 #include "ftsdf.h"
 #include "ftsdferrs.h"
@@ -26,7 +27,41 @@
    *
    */
 
-  typedef  FT_Short FT_6D10; /* 6.10 fixed point representation */
+  typedef  FT_Vector FT_16D16_Vec;  /* with 16.16 fixed point components */
+
+  typedef  FT_Short FT_6D10;        /* 6.10 fixed point representation   */
+  typedef  FT_Fixed FT_16D16;       /* 6.10 fixed point representation   */
+
+  /**************************************************************************
+   *
+   * structs
+   *
+   */
+
+  typedef struct  BSDF_TRaster_
+  {
+    FT_Memory  memory; /* used internally to allocate memory */
+
+  } BSDF_TRaster;
+
+  /* euclidean distance used for euclidean distance transform */
+  typedef struct  ED_
+  {
+    FT_16D16      dist; /* distance at `near' */
+    FT_16D16_Vec  near; /* nearest point */
+
+  } ED;
+
+  typedef struct  BSDF_Worker_
+  {
+    ED*                distance_map;
+
+    FT_Int             width;
+    FT_Int             rows;
+
+    SDF_Raster_Params  params;
+
+  } BSDF_Worker;
 
   /**************************************************************************
    *
@@ -34,13 +69,24 @@
    *
    */
 
-  /* This function copy the `source' bitmap on top of */
-  /* `target' bitmap's center. It also converts the   */
-  /* values to 16bpp in a fixed point format.         */
+  /**************************************************************************
+   *
+   * @Function:
+   *   bsdf_init_distance_map
+   *
+   * @Description:
+   *   This function initialize the distance map according to
+   *   algorithm '8-point sequential Euclidean distance mapping' (8SED).
+   *
+   * @Input:
+   *   [TODO]
+   *
+   * @Return:
+   *   [TODO]
+   */
   static FT_Error
-  bsdf_copy_source_to_target( const FT_Bitmap*  source,
-                              FT_Bitmap*        target,
-                              FT_Bool           flip_y )
+  bsdf_init_distance_map( const FT_Bitmap*  source,
+                          BSDF_Worker*      worker )
   {
     FT_Error  error         = FT_Err_Ok;
     FT_Bool   is_monochrome = 0;
@@ -49,10 +95,10 @@
     FT_Int    num_channels;
     FT_Int    t_i, t_j, s_i, s_j;
     FT_Byte*  s;
-    FT_6D10*  t;
+    ED*       t;
 
     /* again check the parameters (probably unnecessary) */
-    if ( !source || !target )
+    if ( !source || !worker )
     {
       error = FT_THROW( Invalid_Argument );
       goto Exit;
@@ -62,8 +108,8 @@
     /* i.e. aligning the source to the center of the   */
     /* target, the target's width/rows must be checked */
     /* before copying.                                 */
-    if ( target->width < source->width ||
-         target->rows  < source->rows )
+    if ( worker->width < source->width ||
+         worker->rows  < source->rows )
     {
       error = FT_THROW( Invalid_Argument );
       goto Exit;
@@ -74,15 +120,6 @@
     {
       FT_ERROR(( "[bsdf] bsdf_copy_source_to_target: "
                  "Invalid pixel mode of source bitmap" ));
-      error = FT_THROW( Invalid_Argument );
-      goto Exit;
-    }
-
-    /* make sure target bitmap is 16bpp */
-    if ( target->pixel_mode != FT_PIXEL_MODE_GRAY16 )
-    {
-      FT_ERROR(( "[bsdf] bsdf_copy_source_to_target: "
-                 "Invalid pixel mode of target bitmap" ));
       error = FT_THROW( Invalid_Argument );
       goto Exit;
     }
@@ -100,13 +137,13 @@
 
     /* Calculate the difference in width and rows */
     /* of the target and source.                  */
-    x_diff = target->width - source->width;
-    y_diff = target->rows - source->rows;
+    x_diff = worker->width - source->width;
+    y_diff = worker->rows - source->rows;
 
     x_diff /= 2;
     y_diff /= 2;
 
-    t = (FT_6D10*)target->buffer;
+    t = (ED*)worker->distance_map;
     s = source->buffer;
 
     /* For now we only support pixel mode `FT_PIXEL_MODE_MONO'  */
@@ -129,8 +166,8 @@
       break;
     case FT_PIXEL_MODE_GRAY:
     {
-      FT_Int  t_width = target->width;
-      FT_Int  t_rows  = target->rows;
+      FT_Int  t_width = worker->width;
+      FT_Int  t_rows  = worker->rows;
       FT_Int  s_width = source->width;
       FT_Int  s_rows  = source->rows;
 
@@ -149,15 +186,15 @@
           s_i = t_i - x_diff;
           s_j = t_j - y_diff;
 
-          /* assign 0 to the padding */
+          /* assign INT_MAX to the padding */
           if ( s_i < 0 || s_i >= s_width ||
                s_j < 0 || s_j >= s_rows )
           {
-            t[t_index] = 0;
+            t[t_index].dist = FT_INT_MAX;
             continue;
           }
 
-          if ( flip_y )
+          if ( worker->params.flip_y )
             s_index = ( s_rows - s_j - 1 ) * s_width + s_i;
           else
             s_index = s_j * s_width + s_i;
@@ -169,12 +206,12 @@
           if ( pixel_value == 255 )
             pixel_value = 256;
 
-          /* Assume that 256 is fractional value with */
-          /* 0.8 representation, to make it 6.10 left */
-          /* shift the value by 2.                    */
-          pixel_value <<= 2;
+          /* Assume that 256 is fractional value with  */
+          /* 0.8 representation, to make it 16.16 left */
+          /* shift the value by 8.                     */
+          pixel_value <<= 8;
 
-          t[t_index] = pixel_value;
+          t[t_index].dist = pixel_value;
         }
       }
 
@@ -202,10 +239,18 @@
   bsdf_raster_new( FT_Memory   memory,
                    FT_Raster*  araster)
   {
-    FT_UNUSED( memory );
-    FT_UNUSED( araster );
+    FT_Error       error  = FT_Err_Ok;
+    BSDF_TRaster*  raster = NULL;
 
-    return FT_Err_Ok;
+
+    *araster = 0;
+    if ( !FT_ALLOC( raster, sizeof( SDF_TRaster ) ) )
+    {
+      raster->memory = memory;
+      *araster = (FT_Raster)raster;
+    }
+
+    return error;
   }
 
   static void
@@ -236,9 +281,12 @@
   bsdf_raster_render( FT_Raster                raster,
                       const FT_Raster_Params*  params )
   {
-    FT_Error    error  = FT_Err_Ok;
-    FT_Bitmap*  source = NULL;
-    FT_Bitmap*  target = NULL;
+    FT_Error       error       = FT_Err_Ok;
+    FT_Bitmap*     source      = NULL;
+    FT_Bitmap*     target      = NULL;
+    FT_Memory      memory      = NULL;
+    BSDF_TRaster*  bsdf_raster = (SDF_TRaster*)raster;
+    BSDF_Worker    worker;
 
     const SDF_Raster_Params*  sdf_params = (const SDF_Raster_Params*)params;
 
@@ -246,7 +294,7 @@
     FT_UNUSED( raster );
 
     /* check for valid parameters */
-    if ( !params )
+    if ( !raster || !params )
     {
       error = FT_THROW( Invalid_Argument );
       goto Exit;
@@ -269,6 +317,16 @@
       goto Exit; 
     }
 
+    memory = bsdf_raster->memory;
+    if ( !memory )
+    {
+      FT_TRACE0(( "[bsdf] bsdf_raster_render:\n"
+                  "      Raster not setup properly, "
+                  "unable to find memory handle.\n" ));
+      error = FT_THROW( Invalid_Handle );
+      goto Exit;
+    }
+
     /* check if spread is set properly */
     if ( sdf_params->spread > MAX_SPREAD ||
          sdf_params->spread < MIN_SPREAD )
@@ -285,8 +343,18 @@
       goto Exit;
     }
 
-    FT_CALL( bsdf_copy_source_to_target( source, target,
-                                         sdf_params->flip_y ) );
+    /* setup the worker */
+
+    /* allocate the distance map */
+    if ( !FT_QALLOC_MULT( worker.distance_map, target->rows,
+                          target->width * sizeof( *worker.distance_map ) ) )
+      goto Exit;
+
+    worker.width  = target->width;
+    worker.rows   = target->rows;
+    worker.params = *sdf_params;
+
+    FT_CALL( bsdf_init_distance_map( source, &worker ) );
 
   Exit:
     return error;
@@ -295,7 +363,10 @@
   static void
   bsdf_raster_done( FT_Raster  raster )
   {
-    FT_UNUSED( raster );
+    FT_Memory  memory = (FT_Memory)((SDF_TRaster*)raster)->memory;
+
+
+    FT_FREE( raster );
   }
 
   FT_DEFINE_RASTER_FUNCS(
