@@ -244,7 +244,7 @@
 
 
     *araster = 0;
-    if ( !FT_ALLOC( raster, sizeof( SDF_TRaster ) ) )
+    if ( !FT_ALLOC( raster, sizeof( BSDF_TRaster ) ) )
     {
       raster->memory = memory;
       *araster = (FT_Raster)raster;
@@ -285,7 +285,7 @@
     FT_Bitmap*     source      = NULL;
     FT_Bitmap*     target      = NULL;
     FT_Memory      memory      = NULL;
-    BSDF_TRaster*  bsdf_raster = (SDF_TRaster*)raster;
+    BSDF_TRaster*  bsdf_raster = (BSDF_TRaster*)raster;
     BSDF_Worker    worker;
 
     const SDF_Raster_Params*  sdf_params = (const SDF_Raster_Params*)params;
@@ -363,7 +363,7 @@
   static void
   bsdf_raster_done( FT_Raster  raster )
   {
-    FT_Memory  memory = (FT_Memory)((SDF_TRaster*)raster)->memory;
+    FT_Memory  memory = (FT_Memory)((BSDF_TRaster*)raster)->memory;
 
 
     FT_FREE( raster );

@@ -1,5 +1,11 @@
 2020-07-25  Anuj Verma  <anujv@iitbhilai.ac.in>
 
+	* src/sdf/ftbsdf.c (*): Rename `SDF_TRaster' => `BSDF_TRaster'.
+
+	`SDF_TRaster' is for the `sdf' renderer.
+
+2020-07-25  Anuj Verma  <anujv@iitbhilai.ac.in>
+
 	* src/sdf/ftbsdf.c: Typo. `FT_16D16' is 16.16 representation.
 
 2020-07-25  Anuj Verma  <anujv@iitbhilai.ac.in>
