@@ -1729,7 +1729,7 @@
 
       if ( tuple_coords[i] == 0 )
       {
-        FT_TRACE6(( "      tuple coordinate is zero, ignore\n", i ));
+        FT_TRACE6(( "      tuple coordinate is zero, ignore\n" ));
         continue;
       }
 

@@ -1,3 +1,25 @@
+2020-07-25  Werner Lemberg  <wl@gnu.org>
+
+	Fix `-Wformat' compiler warnings.
+
+	Problem reported by Priyesh kumar <priyeshkkumar@gmail.com>
+
+	* src/base/ftoutln.c (FT_Outline_Decompose): Fix number of arguments
+	to tracing macro.
+
+	* src/bdf/bdfdrivr.c (bdf_cmap_char_next, bdf_get_bdf_property):
+	Ditto.
+
+	* src/cache/ftcbasic.c (ftc_basic_family_get_count): Ditto.
+	Reformulate message.
+
+	* src/pcf/pcfdrivr.c (pcf_get_bdf_property): Ditto.
+
+	* src/sfnt/sfwoff2.c (woff2_open_font): Ditto.
+	Trace table offset, too.
+
+	* src/truetype/ttgxvar.c (ft_var_apply_tuple): Ditto.
+
 2020-07-23  Werner Lemberg  <wl@gnu.org>
 
 	* src/sfnt/sfwoff2.c (woff2_decompress): Fix compiler warning.

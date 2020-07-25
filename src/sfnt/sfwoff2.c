@@ -1852,9 +1852,11 @@
          FT_NEW_ARRAY( indices, woff2.num_tables ) )
       goto Exit;
 
-    FT_TRACE2(( "\n"
-                "  tag    flags    transform   origLen   transformLen\n"
-                "  --------------------------------------------------\n" ));
+    FT_TRACE2((
+      "\n"
+      "  tag    flags    transform  origLen   transformLen   offset\n"
+      "  -----------------------------------------------------------\n" ));
+   /* "  XXXX  XXXXXXXX  XXXXXXXX   XXXXXXXX    XXXXXXXX    XXXXXXXX" */
 
     for ( nn = 0; nn < woff2.num_tables; nn++ )
     {
@@ -1924,7 +1926,7 @@
       src_offset       += table->TransformLength;
       table->flags      = flags;
 
-      FT_TRACE2(( "  %c%c%c%c  %08d  %08d    %08ld  %08ld\n",
+      FT_TRACE2(( "  %c%c%c%c  %08d  %08d   %08ld    %08ld    %08ld\n",
                   (FT_Char)( table->Tag >> 24 ),
                   (FT_Char)( table->Tag >> 16 ),
                   (FT_Char)( table->Tag >> 8  ),
@@ -1933,7 +1935,6 @@
                   ( table->FlagByte >> 6 ) & 0x03,
                   table->dst_length,
                   table->TransformLength,
-                  table->src_length,
                   table->src_offset ));
 
       indices[nn] = table;

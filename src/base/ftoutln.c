@@ -274,7 +274,7 @@
       first = (FT_UInt)last + 1;
     }
 
-    FT_TRACE5(( "FT_Outline_Decompose: Done\n", n ));
+    FT_TRACE5(( "FT_Outline_Decompose: Done\n" ));
     return FT_Err_Ok;
 
   Invalid_Outline:

@@ -606,8 +606,9 @@ THE SOFTWARE.
         if ( prop->value.l > 0x7FFFFFFFL          ||
              prop->value.l < ( -1 - 0x7FFFFFFFL ) )
         {
-          FT_TRACE1(( "pcf_get_bdf_property:" ));
-          FT_TRACE1(( " too large integer 0x%x is truncated\n" ));
+          FT_TRACE1(( "pcf_get_bdf_property:"
+                      " too large integer 0x%lx is truncated\n",
+                      prop->value.l ));
         }
 
         /*

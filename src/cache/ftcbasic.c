@@ -110,7 +110,9 @@
 
     if ( (FT_ULong)face->num_glyphs > FT_UINT_MAX || 0 > face->num_glyphs )
       FT_TRACE1(( "ftc_basic_family_get_count:"
-                  " too large number of glyphs in this face, truncated\n",
+                  " the number of glyphs in this face is %ld,\n"
+                  "                           "
+                  " which is too much and thus truncated\n",
                   face->num_glyphs ));
 
     if ( !error )
