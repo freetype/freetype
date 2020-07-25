@@ -22,20 +22,34 @@
 
   /**************************************************************************
    *
+   * typedefs
+   *
+   */
+
+  typedef  FT_Short FT_6D10; /* 6.10 fixed point representation */
+
+  /**************************************************************************
+   *
    * rasterizer functions
    *
    */
 
+  /* This function copy the `source' bitmap on top of */
+  /* `target' bitmap's center. It also converts the   */
+  /* values to 16bpp in a fixed point format.         */
   static FT_Error
   bsdf_copy_source_to_target( const FT_Bitmap*  source,
-                              FT_Bitmap*        target )
+                              FT_Bitmap*        target,
+                              FT_Bool           flip_y )
   {
     FT_Error  error         = FT_Err_Ok;
     FT_Bool   is_monochrome = 0;
 
     FT_Int    x_diff, y_diff;
     FT_Int    num_channels;
-    FT_Byte*  t, s;
+    FT_Int    t_i, t_j, s_i, s_j;
+    FT_Byte*  s;
+    FT_6D10*  t;
 
     /* again check the parameters (probably unnecessary) */
     if ( !source || !target )
@@ -92,7 +106,7 @@
     x_diff /= 2;
     y_diff /= 2;
 
-    t = target->buffer;
+    t = (FT_6D10*)target->buffer;
     s = source->buffer;
 
     /* For now we only support pixel mode `FT_PIXEL_MODE_MONO'  */
@@ -102,14 +116,70 @@
     /*         since the target bitmap can be 16bpp we manually */
     /*         convert the source bitmap to desired bpp.        */
     switch ( source->pixel_mode ) {
+    case FT_PIXEL_MODE_GRAY2:
+    case FT_PIXEL_MODE_GRAY4:
+    case FT_PIXEL_MODE_GRAY16:
+    case FT_PIXEL_MODE_LCD:
+    case FT_PIXEL_MODE_LCD_V:
     case FT_PIXEL_MODE_MONO:
       /* [TODO] */
+      FT_ERROR(( "[bsdf] bsdf_copy_source_to_target: "
+                 "support for pixel mode not yet added\n" ));
       error = FT_THROW( Unimplemented_Feature );
       break;
     case FT_PIXEL_MODE_GRAY:
-      /* [TODO] */
-      error = FT_THROW( Unimplemented_Feature );
+    {
+      FT_Int  t_width = target->width;
+      FT_Int  t_rows  = target->rows;
+      FT_Int  s_width = source->width;
+      FT_Int  s_rows  = source->rows;
+
+
+      /* loop through all the pixels and */
+      /* assign pixel values from source */
+      for ( t_j = 0; t_j < t_rows; t_j++ )
+      {
+        for ( t_i = 0; t_i < t_width; t_i++ )
+        {
+          FT_Int    t_index = t_j * t_width + t_i;
+          FT_Int    s_index;
+          FT_Short  pixel_value;
+
+
+          s_i = t_i - x_diff;
+          s_j = t_j - y_diff;
+
+          /* assign 0 to the padding */
+          if ( s_i < 0 || s_i >= s_width ||
+               s_j < 0 || s_j >= s_rows )
+          {
+            t[t_index] = 0;
+            continue;
+          }
+
+          if ( flip_y )
+            s_index = ( s_rows - s_j - 1 ) * s_width + s_i;
+          else
+            s_index = s_j * s_width + s_i;
+
+          pixel_value = (FT_Short)s[s_index];
+
+          /* to make the fractional value 1 */
+          /* for completely filled pixels   */
+          if ( pixel_value == 255 )
+            pixel_value = 256;
+
+          /* Assume that 256 is fractional value with */
+          /* 0.8 representation, to make it 6.10 left */
+          /* shift the value by 2.                    */
+          pixel_value <<= 2;
+
+          t[t_index] = pixel_value;
+        }
+      }
+
       break;
+    }
     default:
       FT_ERROR(( "[bsdf] bsdf_copy_source_to_target: "
                  "unsopported pixel mode of source bitmap\n" ));
@@ -215,7 +285,8 @@
       goto Exit;
     }
 
-    FT_CALL( bsdf_copy_source_to_target( source, target ) );
+    FT_CALL( bsdf_copy_source_to_target( source, target,
+                                         sdf_params->flip_y ) );
 
   Exit:
     return error;
