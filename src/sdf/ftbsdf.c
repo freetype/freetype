@@ -30,7 +30,7 @@
   typedef  FT_Vector FT_16D16_Vec;  /* with 16.16 fixed point components */
 
   typedef  FT_Short FT_6D10;        /* 6.10 fixed point representation   */
-  typedef  FT_Fixed FT_16D16;       /* 6.10 fixed point representation   */
+  typedef  FT_Fixed FT_16D16;       /* 16.16 fixed point representation  */
 
   /**************************************************************************
    *

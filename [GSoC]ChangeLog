@@ -1,5 +1,9 @@
 2020-07-25  Anuj Verma  <anujv@iitbhilai.ac.in>
 
+	* src/sdf/ftbsdf.c: Typo. `FT_16D16' is 16.16 representation.
+
+2020-07-25  Anuj Verma  <anujv@iitbhilai.ac.in>
+
 	[sdf -> bsdf renderer] Hold a refrence to `FT_Memory'.
 
 	Due to the way the 8SED algorithm works we need to keep
