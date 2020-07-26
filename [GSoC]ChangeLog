@@ -1,3 +1,27 @@
+2020-07-26  Anuj Verma  <anujv@iitbhilai.ac.in>
+
+	[sdf -> bsdf] Added first pass of the '8SED' algorithm.
+
+	Added the first pass of the 8SED algorithm. The first pass
+	transverse the bitmap from top to bottom and for each row
+	it sweeps forward and backward assigning distances to the
+	grid points.
+
+	* src/sdf/ftbsdf.c (ED): Added additional parameter `sign'.
+
+	* src/sdf/ftbsdf.c (edt8): Added function to convert bitmap
+	  to SDF using the 8SED algorithm.
+
+	* src/sdf/ftbsdf.c (first_pass): Added function to do the
+	  first pass of the 8SED algorithm on the bitmap.
+
+	* src/sdf/ftbsdf.c (finalize_sdf): Added function to assign
+	  the final SDF data to the target bitmap.
+
+	* src/sdf/ftbsdf.c (*): Various minor or experimental changes.
+
+	* src/sdf/ftsdfrend.c (ft_bsdf_render): Fix spacing.
+
 2020-07-25  Anuj Verma  <anujv@iitbhilai.ac.in>
 
 	* src/sdf/ftbsdf.c (*): Rename `SDF_TRaster' => `BSDF_TRaster'.

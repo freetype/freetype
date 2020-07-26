@@ -404,10 +404,10 @@
 
   /* generate signed distance field from glyph's bitmap */
   static FT_Error
-  ft_bsdf_render( FT_Renderer      module,
-                 FT_GlyphSlot      slot,
-                 FT_Render_Mode    mode,
-                 const FT_Vector*  origin )
+  ft_bsdf_render( FT_Renderer       module,
+                  FT_GlyphSlot      slot,
+                  FT_Render_Mode    mode,
+                  const FT_Vector*  origin )
   {
     FT_Error     error   = FT_Err_Ok;
     FT_Bitmap*   bitmap  = &slot->bitmap;

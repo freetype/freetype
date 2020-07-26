@@ -21,6 +21,8 @@
                            goto Exit;              \
                        } while ( 0 )
 
+  #define ONE 65536 /* 1 in 16.16 */
+
   /**************************************************************************
    *
    * typedefs
@@ -48,7 +50,8 @@
   typedef struct  ED_
   {
     FT_16D16      dist; /* distance at `near' */
-    FT_16D16_Vec  near; /* nearest point */
+    FT_16D16_Vec  near; /* nearest point      */
+    FT_Char       sign; /* outside or inside  */
 
   } ED;
 
@@ -62,6 +65,15 @@
     SDF_Raster_Params  params;
 
   } BSDF_Worker;
+
+  /**************************************************************************
+   *
+   * initializer
+   *
+   */
+
+  static
+  const ED  zero_ed = { 0, { 0, 0 }, 0 };
 
   /**************************************************************************
    *
@@ -180,17 +192,22 @@
         {
           FT_Int    t_index = t_j * t_width + t_i;
           FT_Int    s_index;
-          FT_Short  pixel_value;
+          FT_Byte   pixel_value;
 
+
+          t[t_index] = zero_ed;
 
           s_i = t_i - x_diff;
           s_j = t_j - y_diff;
 
-          /* assign INT_MAX to the padding */
+          /* Assign 0 to padding similar to */
+          /* the source bitmap.             */
           if ( s_i < 0 || s_i >= s_width ||
                s_j < 0 || s_j >= s_rows )
           {
-            t[t_index].dist = FT_INT_MAX;
+            t[t_index].near.x = 100000;
+            t[t_index].near.y = 100000;
+            t[t_index].dist   = 100000;
             continue;
           }
 
@@ -199,7 +216,9 @@
           else
             s_index = s_j * s_width + s_i;
 
-          pixel_value = (FT_Short)s[s_index];
+          pixel_value = s[s_index];
+
+  #if 0
 
           /* to make the fractional value 1 */
           /* for completely filled pixels   */
@@ -211,7 +230,17 @@
           /* shift the value by 8.                     */
           pixel_value <<= 8;
 
-          t[t_index].dist = pixel_value;
+  #else
+          if ( pixel_value )
+            t[t_index].dist = 0;
+          else
+          {
+            t[t_index].near.x = 100000;
+            t[t_index].near.y = 100000;
+            t[t_index].dist   = 100000;
+          }
+
+  #endif
         }
       }
 
@@ -227,7 +256,222 @@
   Exit:
     return error;
   }
-  
+
+  /**************************************************************************
+   *
+   * @Function:
+   *   first_pass
+   *
+   * @Description:
+   *   [TODO]
+   *
+   * @Input:
+   *   [TODO]
+   *
+   * @Return:
+   *   [TODO]
+   */
+  static void
+  first_pass( BSDF_Worker*  worker )
+  {
+    FT_Int    i, j; /* iterators    */
+    FT_Int    w, r; /* width, rows  */
+    ED*       dm;   /* distance map */
+
+
+    dm = worker->distance_map;
+    w  = worker->width;
+    r  = worker->rows;
+
+    /* Start scanning from top to bottom and sweep each   */
+    /* row back and forth comparing the distances of the  */
+    /* neighborhood. Leave the first row as it has no top */
+    /* neighbor, it will be covered in the 2nd scan of    */
+    /* the image, that is from bottom to top.             */
+    for ( j = 1; j < r; j++ )
+    {
+      FT_Int        index;
+      FT_16D16      dist;
+      FT_16D16_Vec  dist_vec;
+      ED*           to_check;
+      ED*           current;
+
+
+      /* Forward pass of rows (left -> right), leave, the */
+      /* first column, will be covered in backward pass.  */
+      for ( i = 1; i < w; i++ )
+      {
+        index = j * w + i;
+        current = dm + index;
+
+        /* left-up */
+        to_check = current - w - 1;
+        dist_vec = to_check->near;
+        dist_vec.x -= ONE;
+        dist_vec.y -= ONE;
+        dist = FT_Vector_Length( &dist_vec );
+        if ( dist < current->dist )
+        {
+          current->dist = dist;
+          current->near = dist_vec;
+        }
+
+        /* up */
+        to_check = current - w;
+        dist_vec = to_check->near;
+        dist_vec.y -= ONE;
+        dist = FT_Vector_Length( &dist_vec );
+        if ( dist < current->dist )
+        {
+          current->dist = dist;
+          current->near = dist_vec;
+        }
+
+        /* up-right */
+        to_check = current - w + 1;
+        dist_vec = to_check->near;
+        dist_vec.x += ONE;
+        dist_vec.y -= ONE;
+        dist = FT_Vector_Length( &dist_vec );
+        if ( dist < current->dist )
+        {
+          current->dist = dist;
+          current->near = dist_vec;
+        }
+
+        /* left */
+        to_check = current - 1;
+        dist_vec = to_check->near;
+        dist_vec.x -= ONE;
+        dist = FT_Vector_Length( &dist_vec );
+        if ( dist < current->dist )
+        {
+          current->dist = dist;
+          current->near = dist_vec;
+        }
+      }
+
+      /* Backward pass of rows (right -> left), leave, the */
+      /* last column, already covered in the forward pass. */
+      for ( i = w - 2; i >= 0; i-- )
+      {
+        index = j * w + i;
+        current = dm + index;
+
+        /* right */
+        to_check = current + 1;
+        dist_vec = to_check->near;
+        dist_vec.x += ONE;
+        dist = FT_Vector_Length( &dist_vec );
+        if ( dist < current->dist )
+        {
+          current->dist = dist;
+          current->near = dist_vec;
+        }
+      }
+    }
+  }
+
+  /**************************************************************************
+   *
+   * @Function:
+   *   edt8
+   *
+   * @Description:
+   *   [TODO]
+   *
+   * @Input:
+   *   [TODO]
+   *
+   * @Return:
+   *   [TODO]
+   */
+  static FT_Error
+  edt8( BSDF_Worker*  worker )
+  {
+    FT_Error  error = FT_Err_Ok;
+
+
+    if ( !worker || !worker->distance_map )
+    {
+      error = FT_THROW( Invalid_Argument );
+      goto Exit;
+    }
+
+    /* first scan of the image */
+    first_pass( worker );
+
+    /* second scan of the image */
+    /* [TODO] */
+
+  Exit:
+    return error;
+  }
+
+  /**************************************************************************
+   *
+   * @Function:
+   *   finalize_sdf
+   *
+   * @Description:
+   *   [TODO]
+   *
+   * @Input:
+   *   [TODO]
+   *
+   * @Return:
+   *   [TODO]
+   */
+  static FT_Error
+  finalize_sdf( BSDF_Worker*  worker,
+                FT_Bitmap*    target )
+  {
+    FT_Error   error = FT_Err_Ok;
+    FT_Int     w, r;
+    FT_Int     i, j;
+    FT_6D10*   t_buffer;
+
+    if ( !worker || !target )
+    {
+      error = FT_THROW( Invalid_Argument );
+      goto Exit;
+    }
+
+    w = target->width;
+    r = target->rows;
+    t_buffer = (FT_6D10*)target->buffer;
+
+    if ( w != worker->width ||
+         r != worker->rows )
+    {
+      error = FT_THROW( Invalid_Argument );
+      goto Exit;      
+    }
+
+    for ( j = 0; j < r; j++ )
+    {
+      for ( i = 0; i < w; i++ )
+      {
+        FT_Int    index;
+        FT_16D16  dist;
+        FT_6D10   final_dist;
+
+
+        index = j * w + i;
+        dist = worker->distance_map[index].dist;
+        /* convert from 16.16 to 6.10 */
+        dist /= 64;
+        final_dist = (FT_6D10)(dist & 0x0000FFFF);
+
+        /* [TODO]: Assing the sign properly. */
+
+        t_buffer[index] = final_dist;
+      }
+    }
+
+  Exit:
+    return error;
+  }
 
   /**************************************************************************
    *
@@ -338,7 +582,7 @@
         "       Also, you must pass `SDF_Raster_Params' instead of the\n"
         "       default `FT_Raster_Params' while calling this function\n"
         "       and set the fields properly.\n"
-        , MIN_SPREAD, MAX_SPREAD) );
+        , MIN_SPREAD, MAX_SPREAD ));
       error = FT_THROW( Invalid_Argument );
       goto Exit;
     }
@@ -346,8 +590,8 @@
     /* setup the worker */
 
     /* allocate the distance map */
-    if ( !FT_QALLOC_MULT( worker.distance_map, target->rows,
-                          target->width * sizeof( *worker.distance_map ) ) )
+    if ( FT_QALLOC_MULT( worker.distance_map, target->rows,
+                         target->width * sizeof( *worker.distance_map ) ) )
       goto Exit;
 
     worker.width  = target->width;
@@ -355,6 +599,8 @@
     worker.params = *sdf_params;
 
     FT_CALL( bsdf_init_distance_map( source, &worker ) );
+    FT_CALL( edt8( &worker ) );
+    FT_CALL( finalize_sdf( &worker, target ) );
 
   Exit:
     return error;
