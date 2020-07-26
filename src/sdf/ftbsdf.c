@@ -206,9 +206,9 @@
           if ( s_i < 0 || s_i >= s_width ||
                s_j < 0 || s_j >= s_rows )
           {
-            t[t_index].near.x = 100000;
-            t[t_index].near.y = 100000;
-            t[t_index].dist   = 100000;
+            t[t_index].near.x = FT_INT_MAX;
+            t[t_index].near.y = FT_INT_MAX;
+            t[t_index].dist   = 128 * ONE;
             continue;
           }
 
@@ -236,9 +236,9 @@
             t[t_index].dist = 0;
           else
           {
-            t[t_index].near.x = 100000;
-            t[t_index].near.y = 100000;
-            t[t_index].dist   = 100000;
+            t[t_index].near.x = FT_INT_MAX;
+            t[t_index].near.y = FT_INT_MAX;
+            t[t_index].dist   = 128 * ONE;
           }
 
   #endif
@@ -305,50 +305,75 @@
         index = j * w + i;
         current = dm + index;
 
+        /* While checking for nearest point we first     */
+        /* approximate the dist of the `current' point   */
+        /* by adding the deviation ( which will be root  */
+        /* 2 max ). And if the new value is lesser than  */
+        /* the current value then only we calculate the  */
+        /* actual distances using `FT_Vector_Length'.    */
+        /* Of course this will be eliminated while using */
+        /* squared distances.                            */
+
         /* left-up */
         to_check = current - w - 1;
-        dist_vec = to_check->near;
-        dist_vec.x -= ONE;
-        dist_vec.y -= ONE;
-        dist = FT_Vector_Length( &dist_vec );
+        dist = to_check->dist + 2 * ONE; /* will be root(2) but 2 is fine */
         if ( dist < current->dist )
         {
-          current->dist = dist;
-          current->near = dist_vec;
+          dist_vec = to_check->near;
+          dist_vec.x -= ONE;
+          dist_vec.y -= ONE;
+          dist = FT_Vector_Length( &dist_vec );
+          if ( dist < current->dist )
+          {
+            current->dist = dist;
+            current->near = dist_vec;
+          }
         }
 
         /* up */
         to_check = current - w;
-        dist_vec = to_check->near;
-        dist_vec.y -= ONE;
-        dist = FT_Vector_Length( &dist_vec );
+        dist = to_check->dist + 1 * ONE; /* can only be 1 */
         if ( dist < current->dist )
         {
-          current->dist = dist;
-          current->near = dist_vec;
+          dist_vec = to_check->near;
+          dist_vec.y -= ONE;
+          dist = FT_Vector_Length( &dist_vec );
+          if ( dist < current->dist )
+          {
+            current->dist = dist;
+            current->near = dist_vec;
+          }
         }
 
         /* up-right */
         to_check = current - w + 1;
-        dist_vec = to_check->near;
-        dist_vec.x += ONE;
-        dist_vec.y -= ONE;
-        dist = FT_Vector_Length( &dist_vec );
+        dist = to_check->dist + 2 * ONE;
         if ( dist < current->dist )
         {
-          current->dist = dist;
-          current->near = dist_vec;
+          dist_vec = to_check->near;
+          dist_vec.x += ONE;
+          dist_vec.y -= ONE;
+          dist = FT_Vector_Length( &dist_vec );
+          if ( dist < current->dist )
+          {
+            current->dist = dist;
+            current->near = dist_vec;
+          }
         }
 
         /* left */
         to_check = current - 1;
-        dist_vec = to_check->near;
-        dist_vec.x -= ONE;
-        dist = FT_Vector_Length( &dist_vec );
+        dist = to_check->dist + 1 * ONE;
         if ( dist < current->dist )
         {
-          current->dist = dist;
-          current->near = dist_vec;
+          dist_vec = to_check->near;
+          dist_vec.x -= ONE;
+          dist = FT_Vector_Length( &dist_vec );
+          if ( dist < current->dist )
+          {
+            current->dist = dist;
+            current->near = dist_vec;
+          }
         }
       }
 
@@ -361,13 +386,17 @@
 
         /* right */
         to_check = current + 1;
-        dist_vec = to_check->near;
-        dist_vec.x += ONE;
-        dist = FT_Vector_Length( &dist_vec );
+        dist = to_check->dist + 1 * ONE;
         if ( dist < current->dist )
         {
-          current->dist = dist;
-          current->near = dist_vec;
+          dist_vec = to_check->near;
+          dist_vec.x += ONE;
+          dist = FT_Vector_Length( &dist_vec );
+          if ( dist < current->dist )
+          {
+            current->dist = dist;
+            current->near = dist_vec;
+          }
         }
       }
     }
@@ -465,6 +494,9 @@
         final_dist = (FT_6D10)(dist & 0x0000FFFF);
 
         /* [TODO]: Assing the sign properly. */
+
+        if ( final_dist > worker->params.spread * 1024 )
+          final_dist = worker->params.spread * 1024;
 
         t_buffer[index] = final_dist;
       }

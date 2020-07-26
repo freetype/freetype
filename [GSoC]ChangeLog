@@ -1,5 +1,17 @@
 2020-07-26  Anuj Verma  <anujv@iitbhilai.ac.in>
 
+	[sdf -> bsdf] Optimize the first pass of the 8SED.
+
+	* src/sdf/ftbsdf.c (first_pass): Optimize the first
+	  pass by first approximating the neighbor's distance
+	  by adding an offset. The offset will be max root(2)
+	  because the maximum be add to a vector is (1, 1).
+	  By approximating we can reduce the number of
+	  `FT_Vector_Length' calls and thus make the process
+	  faster.
+
+2020-07-26  Anuj Verma  <anujv@iitbhilai.ac.in>
+
 	[sdf] Fix GNU Make build.
 
 	* src/sdf/rules.mk (SDF_DRV_H): Manually add source files
