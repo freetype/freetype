@@ -1,5 +1,14 @@
 2020-07-26  Anuj Verma  <anujv@iitbhilai.ac.in>
 
+	[sdf] Fix GNU Make build.
+
+	* src/sdf/rules.mk (SDF_DRV_H): Manually add source files
+	  as there is a `ftbsdf.c' file without any `ftbsdf.h'.
+
+	* src/sdf/ftbsdf.c: Include `fttrigon.h' for `multi' builds.
+
+2020-07-26  Anuj Verma  <anujv@iitbhilai.ac.in>
+
 	[sdf -> bsdf] Added first pass of the '8SED' algorithm.
 
 	Added the first pass of the 8SED algorithm. The first pass

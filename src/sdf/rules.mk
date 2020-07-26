@@ -22,7 +22,8 @@ SDF_DRV_SRC := $(SDF_DIR)/ftsdfrend.c  \
 
 # sdf driver headers
 #
-SDF_DRV_H := $(SDF_DRV_SRC:%.c=%.h)  \
+SDF_DRV_H := $(SDF_DIR)/ftsdfrend.h  \
+             $(SDF_DIR)/ftsdf.h      \
              $(SDF_DIR)/ftsdferrs.h
 
 

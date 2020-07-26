@@ -2,6 +2,7 @@
 #include <freetype/internal/ftobjs.h>
 #include <freetype/internal/ftdebug.h>
 #include <freetype/internal/ftmemory.h>
+#include <freetype/fttrigon.h>
 
 #include "ftsdf.h"
 #include "ftsdferrs.h"
