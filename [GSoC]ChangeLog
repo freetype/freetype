@@ -1,5 +1,13 @@
 2020-07-27  Anuj Verma  <anujv@iitbhilai.ac.in>
 
+	[sdf -> bsdf] Fix edge detection bug.
+
+	* src/sdf/ftbsdf.c (bsdf_is_edge): [BUG] Check all
+	  neighbors including the diagonal neighbors to
+	  properly determine the edge.
+
+2020-07-27  Anuj Verma  <anujv@iitbhilai.ac.in>
+
 	[sdf -> bsdf] Added edge detection algorithm.
 
 	Added edge detection algorithm. It works by checking

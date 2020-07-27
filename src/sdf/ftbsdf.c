@@ -107,6 +107,7 @@
     FT_Byte*  to_check      = NULL;
     FT_Int    num_neighbour = 0;
 
+
     if ( y == 7 && x == 20 )
       to_check = NULL;
 
@@ -117,7 +118,7 @@
     if ( y > 0 )
     {
       num_neighbour++;
-      to_check = s -  w;
+      to_check = s - w;
       if ( *to_check == 0 )
       {
         is_edge = 1;
@@ -161,9 +162,55 @@
       }
     }
 
-    
+    /* up left */
+    if ( y > 0 && x > 0 )
+    {
+      num_neighbour++;
+      to_check = s - w - 1;
+      if ( *to_check == 0 )
+      {
+        is_edge = 1;
+        goto Done;
+      }
+    }
 
-    if ( num_neighbour != 4 )
+    /* up right */
+    if ( y > 0 && x < w - 2 )
+    {
+      num_neighbour++;
+      to_check = s - w + 1;
+      if ( *to_check == 0 )
+      {
+        is_edge = 1;
+        goto Done;
+      }
+    }
+
+    /* down left */
+    if ( y < r - 2 && x > 0 )
+    {
+      num_neighbour++;
+      to_check = s + w - 1;
+      if ( *to_check == 0 )
+      {
+        is_edge = 1;
+        goto Done;
+      }
+    }
+
+    /* down right */
+    if ( y < r - 2 && x < w - 2 )
+    {
+      num_neighbour++;
+      to_check = s + w + 1;
+      if ( *to_check == 0 )
+      {
+        is_edge = 1;
+        goto Done;
+      }
+    }
+
+    if ( num_neighbour != 8 )
       is_edge = 1;
 
   Done:
