@@ -85,6 +85,94 @@
   /**************************************************************************
    *
    * @Function:
+   *   bsdf_is_edge
+   *
+   * @Description:
+   *   [TODO]
+   *
+   * @Input:
+   *   [TODO]
+   *
+   * @Return:
+   *   [TODO]
+   */
+  static FT_Bool
+  bsdf_is_edge( FT_Byte*  s,    /* source bitmap             */
+                FT_Int    x,    /* x index of point to check */
+                FT_Int    y,    /* y index of point to check */
+                FT_Int    w,    /* width                     */
+                FT_Int    r )   /* rows                      */
+  {
+    FT_Bool   is_edge       = 0;
+    FT_Byte*  to_check      = NULL;
+    FT_Int    num_neighbour = 0;
+
+    if ( y == 7 && x == 20 )
+      to_check = NULL;
+
+    if ( *s == 0 )
+      goto Done;
+
+    /* up */
+    if ( y > 0 )
+    {
+      num_neighbour++;
+      to_check = s -  w;
+      if ( *to_check == 0 )
+      {
+        is_edge = 1;
+        goto Done;
+      }
+    }
+
+    /* down */
+    if ( y < r - 2 )
+    {
+      num_neighbour++;
+      to_check = s + w;
+      if ( *to_check == 0 )
+      {
+        is_edge = 1;
+        goto Done;
+      }
+    }
+
+    /* left */
+    if ( x > 0 )
+    {
+      num_neighbour++;
+      to_check = s - 1;
+      if ( *to_check == 0 )
+      {
+        is_edge = 1;
+        goto Done;
+      }
+    }
+
+    /* right */
+    if ( x < w - 2 )
+    {
+      num_neighbour++;
+      to_check = s + 1;
+      if ( *to_check == 0 )
+      {
+        is_edge = 1;
+        goto Done;
+      }
+    }
+
+    
+
+    if ( num_neighbour != 4 )
+      is_edge = 1;
+
+  Done:
+    return is_edge;
+  }
+
+  /**************************************************************************
+   *
+   * @Function:
    *   bsdf_init_distance_map
    *
    * @Description:
@@ -233,18 +321,21 @@
           pixel_value <<= 8;
 
   #else
-          if ( pixel_value )
+          if ( bsdf_is_edge( s + s_index , s_i, s_j, s_width, s_rows ) )
           {
             t[t_index].dist = 0;
-            t[t_index].sign = 1;
           }
           else
           {
             t[t_index].near.x = FT_INT_MAX;
             t[t_index].near.y = FT_INT_MAX;
             t[t_index].dist   = 128 * ONE;
-            t[t_index].sign   = -1;
           }
+
+          if ( pixel_value )
+            t[t_index].sign = 1;
+          else
+            t[t_index].sign = -1;
 
   #endif
         }

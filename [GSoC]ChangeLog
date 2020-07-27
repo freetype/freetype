@@ -1,5 +1,17 @@
 2020-07-27  Anuj Verma  <anujv@iitbhilai.ac.in>
 
+	[sdf -> bsdf] Added edge detection algorithm.
+
+	Added edge detection algorithm. It works by checking
+	the neighboring pixels and if any neighbor is not
+	filled (i.e. belongs to background) we mark the
+	pixel as edge by setting it's distance to 0.
+
+	* src/sdf/ftbsdf.c (bsdf_is_edge): Added function to
+	  detect if the pixel is an edge.
+
+2020-07-27  Anuj Verma  <anujv@iitbhilai.ac.in>
+
 	[sdf -> bsdf] Added the second pass of the '8SED'.
 
 	Added the second pass of the 8SED algorithm. The second pass
