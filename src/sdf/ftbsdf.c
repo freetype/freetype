@@ -209,6 +209,7 @@
             t[t_index].near.x = FT_INT_MAX;
             t[t_index].near.y = FT_INT_MAX;
             t[t_index].dist   = 128 * ONE;
+            t[t_index].sign   = -1;
             continue;
           }
 
@@ -233,12 +234,16 @@
 
   #else
           if ( pixel_value )
+          {
             t[t_index].dist = 0;
+            t[t_index].sign = 1;
+          }
           else
           {
             t[t_index].near.x = FT_INT_MAX;
             t[t_index].near.y = FT_INT_MAX;
             t[t_index].dist   = 128 * ONE;
+            t[t_index].sign   = -1;
           }
 
   #endif
@@ -405,6 +410,151 @@
   /**************************************************************************
    *
    * @Function:
+   *   second_pass
+   *
+   * @Description:
+   *   [TODO]
+   *
+   * @Input:
+   *   [TODO]
+   *
+   * @Return:
+   *   [TODO]
+   */
+  static void
+  second_pass( BSDF_Worker*  worker )
+  {
+    FT_Int    i, j; /* iterators    */
+    FT_Int    w, r; /* width, rows  */ 
+    ED*       dm;   /* distance map */
+
+
+    dm = worker->distance_map;
+    w  = worker->width;
+    r  = worker->rows;
+
+    /* Start scanning from bottom to top and sweep each   */
+    /* row back and forth comparing the distances of the  */
+    /* neighborhood. Leave the last row as it has no down */
+    /* neighbor, it is already covered in the 1stscan of  */
+    /* the image, that is from top to bottom.             */
+    for ( j = r - 2; j >= 0; j-- )
+    {
+      FT_Int        index;
+      FT_16D16      dist;
+      FT_16D16_Vec  dist_vec;
+      ED*           to_check;
+      ED*           current;
+
+
+      /* Forward pass of rows (left -> right), leave, the */
+      /* first column, will be covered in backward pass.  */
+      for ( i = 1; i < w; i++ )
+      {
+        index = j * w + i;
+        current = dm + index;
+
+        /* While checking for nearest point we first     */
+        /* approximate the dist of the `current' point   */
+        /* by adding the deviation ( which will be root  */
+        /* 2 max ). And if the new value is lesser than  */
+        /* the current value then only we calculate the  */
+        /* actual distances using `FT_Vector_Length'.    */
+        /* Of course this will be eliminated while using */
+        /* squared distances.                            */
+
+        /* left-up */
+        to_check = current + w - 1;
+        dist = to_check->dist + 2 * ONE; /* will be root(2) but 2 is fine */
+        if ( dist < current->dist )
+        {
+          dist_vec = to_check->near;
+          dist_vec.x -= ONE;
+          dist_vec.y += ONE;
+          dist = FT_Vector_Length( &dist_vec );
+          if ( dist < current->dist )
+          {
+            current->dist = dist;
+            current->near = dist_vec;
+          }
+        }
+
+        /* up */
+        to_check = current + w;
+        dist = to_check->dist + 1 * ONE; /* can only be 1 */
+        if ( dist < current->dist )
+        {
+          dist_vec = to_check->near;
+          dist_vec.y += ONE;
+          dist = FT_Vector_Length( &dist_vec );
+          if ( dist < current->dist )
+          {
+            current->dist = dist;
+            current->near = dist_vec;
+          }
+        }
+
+        /* up-right */
+        to_check = current + w + 1;
+        dist = to_check->dist + 2 * ONE;
+        if ( dist < current->dist )
+        {
+          dist_vec = to_check->near;
+          dist_vec.x += ONE;
+          dist_vec.y += ONE;
+          dist = FT_Vector_Length( &dist_vec );
+          if ( dist < current->dist )
+          {
+            current->dist = dist;
+            current->near = dist_vec;
+          }
+        }
+
+        /* left */
+        to_check = current - 1;
+        dist = to_check->dist + 1 * ONE;
+        if ( dist < current->dist )
+        {
+          dist_vec = to_check->near;
+          dist_vec.x -= ONE;
+          dist = FT_Vector_Length( &dist_vec );
+          if ( dist < current->dist )
+          {
+            current->dist = dist;
+            current->near = dist_vec;
+          }
+        }
+      }
+
+      /* Backward pass of rows (right -> left), leave, the */
+      /* last column, already covered in the forward pass. */
+      for ( i = w - 2; i >= 0; i-- )
+      {
+        index = j * w + i;
+        current = dm + index;
+
+        /* right */
+        to_check = current + 1;
+        dist = to_check->dist + 1 * ONE;
+        if ( dist < current->dist )
+        {
+          dist_vec = to_check->near;
+          dist_vec.x += ONE;
+          dist = FT_Vector_Length( &dist_vec );
+          if ( dist < current->dist )
+          {
+            current->dist = dist;
+            current->near = dist_vec;
+          }
+        }
+      }
+    }
+  }
+
+
+  /**************************************************************************
+   *
+   * @Function:
    *   edt8
    *
    * @Description:
@@ -432,7 +582,7 @@
     first_pass( worker );
 
     /* second scan of the image */
-    /* [TODO] */
+    second_pass( worker );
 
   Exit:
     return error;
@@ -498,7 +648,7 @@
         if ( final_dist > worker->params.spread * 1024 )
           final_dist = worker->params.spread * 1024;
 
-        t_buffer[index] = final_dist;
+        t_buffer[index] = final_dist * worker->distance_map[index].sign;
       }
     }
 

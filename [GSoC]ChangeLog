@@ -1,3 +1,15 @@
+2020-07-27  Anuj Verma  <anujv@iitbhilai.ac.in>
+
+	[sdf -> bsdf] Added the second pass of the '8SED'.
+
+	Added the second pass of the 8SED algorithm. The second pass
+	transverse the bitmap from bottom to top and for each row
+	it sweeps forward and backward assigning distances to the
+	grid points.
+
+	* src/sdf/ftbsdf.c (second_pas): Added function to do the
+	  second pass of the 8SED algorithm on the bitmap.
+
 2020-07-26  Anuj Verma  <anujv@iitbhilai.ac.in>
 
 	[sdf -> bsdf] Optimize the first pass of the 8SED.
