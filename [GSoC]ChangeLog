@@ -1,5 +1,14 @@
 2020-07-27  Anuj Verma  <anujv@iitbhilai.ac.in>
 
+	* src/sdf/ftbsdf.c (bsdf_is_edge): Use macros to
+	  make it look cleaner.
+
+	  Use `CHECK_NEIGHBOR' macro to check neighbors while
+	  finding edges. Make the code more readable and look
+	  cleaner.
+
+2020-07-27  Anuj Verma  <anujv@iitbhilai.ac.in>
+
 	[sdf -> bsdf] Fix edge detection bug.
 
 	* src/sdf/ftbsdf.c (bsdf_is_edge): [BUG] Check all

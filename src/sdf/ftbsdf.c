@@ -82,6 +82,24 @@
    *
    */
 
+  #ifdef CHECK_NEIGHBOR
+  #undef CHECK_NEIGHBOR
+  #endif
+
+  /* Use the macro only in `bsdf_is_edge' function. */
+  #define CHECK_NEIGHBOR( x_offset, y_offset )     \
+    if ( x + x_offset >= 0 && x + x_offset < w &&  \
+         y + y_offset >= 0 && y + y_offset < r )   \
+    {                                              \
+      num_neighbour++;                             \
+      to_check = s + y_offset * w + x_offset;      \
+      if ( *to_check == 0 )                        \
+      {                                            \
+        is_edge = 1;                               \
+        goto Done;                                 \
+      }                                            \
+    }
+
   /**************************************************************************
    *
    * @Function:
@@ -115,107 +133,38 @@
       goto Done;
 
     /* up */
-    if ( y > 0 )
-    {
-      num_neighbour++;
-      to_check = s - w;
-      if ( *to_check == 0 )
-      {
-        is_edge = 1;
-        goto Done;
-      }
-    }
+    CHECK_NEIGHBOR(  0, -1 );
 
     /* down */
-    if ( y < r - 2 )
-    {
-      num_neighbour++;
-      to_check = s + w;
-      if ( *to_check == 0 )
-      {
-        is_edge = 1;
-        goto Done;
-      }
-    }
+    CHECK_NEIGHBOR(  0,  1 );
 
     /* left */
-    if ( x > 0 )
-    {
-      num_neighbour++;
-      to_check = s - 1;
-      if ( *to_check == 0 )
-      {
-        is_edge = 1;
-        goto Done;
-      }
-    }
+    CHECK_NEIGHBOR( -1,  0 );
 
     /* right */
-    if ( x < w - 2 )
-    {
-      num_neighbour++;
-      to_check = s + 1;
-      if ( *to_check == 0 )
-      {
-        is_edge = 1;
-        goto Done;
-      }
-    }
+    CHECK_NEIGHBOR(  1,  0 );
 
     /* up left */
-    if ( y > 0 && x > 0 )
-    {
-      num_neighbour++;
-      to_check = s - w - 1;
-      if ( *to_check == 0 )
-      {
-        is_edge = 1;
-        goto Done;
-      }
-    }
+    CHECK_NEIGHBOR( -1, -1 );
 
     /* up right */
-    if ( y > 0 && x < w - 2 )
-    {
-      num_neighbour++;
-      to_check = s - w + 1;
-      if ( *to_check == 0 )
-      {
-        is_edge = 1;
-        goto Done;
-      }
-    }
+    CHECK_NEIGHBOR(  1, -1 );
 
     /* down left */
-    if ( y < r - 2 && x > 0 )
-    {
-      num_neighbour++;
-      to_check = s + w - 1;
-      if ( *to_check == 0 )
-      {
-        is_edge = 1;
-        goto Done;
-      }
-    }
+    CHECK_NEIGHBOR( -1,  1 );
 
     /* down right */
-    if ( y < r - 2 && x < w - 2 )
-    {
-      num_neighbour++;
-      to_check = s + w + 1;
-      if ( *to_check == 0 )
-      {
-        is_edge = 1;
-        goto Done;
-      }
-    }
+    CHECK_NEIGHBOR(  1,  1 );
 
     if ( num_neighbour != 8 )
       is_edge = 1;
 
   Done:
     return is_edge;
+
   }
+
+  #undef CHECK_NEIGHBOR
 
   /**************************************************************************
    *
