@@ -149,7 +149,7 @@
       if ( !af_style_classes[ss] )
       {
         FT_TRACE0(( "af_property_set: Invalid value %d for property `%s'\n",
-                    fallback_script, property_name ));
+                    *fallback_script, property_name ));
         return FT_THROW( Invalid_Argument );
       }
 
@@ -550,8 +550,8 @@
     NULL,                                                    /* reset_face */
     NULL,                                              /* get_global_hints */
     NULL,                                             /* done_global_hints */
-    (FT_AutoHinter_GlyphLoadFunc)af_autofitter_load_glyph )  /* load_glyph */
-
+    (FT_AutoHinter_GlyphLoadFunc)af_autofitter_load_glyph    /* load_glyph */
+  )
 
   FT_DEFINE_MODULE(
     autofit_module_class,

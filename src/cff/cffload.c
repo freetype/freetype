@@ -442,7 +442,7 @@
       if ( cur_offset != 0 )
       {
         FT_TRACE0(( "cff_index_get_pointers:"
-                    " invalid first offset value %d set to zero\n",
+                    " invalid first offset value %ld set to zero\n",
                     cur_offset ));
         cur_offset = 0;
       }
@@ -559,8 +559,8 @@
            idx->data_offset > stream->size - off2 + 1 )
       {
         FT_ERROR(( "cff_index_access_element:"
-                   " offset to next entry (%d)"
-                   " exceeds the end of stream (%d)\n",
+                   " offset to next entry (%ld)"
+                   " exceeds the end of stream (%ld)\n",
                    off2, stream->size - idx->data_offset + 1 ));
         off2 = stream->size - idx->data_offset + 1;
       }
@@ -984,7 +984,7 @@
             if ( glyph_sid > 0xFFFFL - nleft )
             {
               FT_ERROR(( "cff_charset_load: invalid SID range trimmed"
-                         " nleft=%d -> %d\n", nleft, 0xFFFFL - glyph_sid ));
+                         " nleft=%d -> %ld\n", nleft, 0xFFFFL - glyph_sid ));
               nleft = ( FT_UInt )( 0xFFFFL - glyph_sid );
             }
 
@@ -1951,7 +1951,7 @@
     if ( priv->blue_shift > 1000 || priv->blue_shift < 0 )
     {
       FT_TRACE2(( "cff_load_private_dict:"
-                  " setting unlikely BlueShift value %d to default (7)\n",
+                  " setting unlikely BlueShift value %ld to default (7)\n",
                   priv->blue_shift ));
       priv->blue_shift = 7;
     }
@@ -1959,7 +1959,7 @@
     if ( priv->blue_fuzz > 1000 || priv->blue_fuzz < 0 )
     {
       FT_TRACE2(( "cff_load_private_dict:"
-                  " setting unlikely BlueFuzz value %d to default (1)\n",
+                  " setting unlikely BlueFuzz value %ld to default (1)\n",
                   priv->blue_fuzz ));
       priv->blue_fuzz = 1;
     }

@@ -45,6 +45,7 @@
 
 
 #include <freetype/freetype.h>
+#include <freetype/internal/compiler-macros.h>
 
 #ifdef FREETYPE_H
 #error "freetype.h of FreeType 1 has been loaded!"

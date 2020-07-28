@@ -26,6 +26,10 @@
 FT_BEGIN_HEADER
 
 
+  FT_DECLARE_GLYPH( ft_bitmap_glyph_class )
+  FT_DECLARE_GLYPH( ft_outline_glyph_class )
+
+
 #ifdef FT_CONFIG_OPTION_MAC_FONTS
 
   /* MacOS resource fork cannot exceed 16MB at least for Carbon code; */

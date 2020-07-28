@@ -31,6 +31,7 @@
 #ifndef FTSERV_H_
 #define FTSERV_H_
 
+#include "compiler-macros.h"
 
 FT_BEGIN_HEADER
 

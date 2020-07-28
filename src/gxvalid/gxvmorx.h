@@ -36,6 +36,9 @@
 #include <freetype/ftsnames.h>
 
 
+FT_BEGIN_HEADER
+
+
   FT_LOCAL( void )
   gxv_morx_subtable_type0_validate( FT_Bytes       table,
                                     FT_Bytes       limit,
@@ -61,6 +64,8 @@
                                     FT_Bytes       limit,
                                     GXV_Validator  gxvalid );
 
+
+FT_END_HEADER
 
 #endif /* GXVMORX_H_ */
 

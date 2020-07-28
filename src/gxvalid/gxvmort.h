@@ -34,6 +34,9 @@
 #include <freetype/ftsnames.h>
 
 
+FT_BEGIN_HEADER
+
+
   typedef struct  GXV_mort_featureRec_
   {
     FT_UShort  featureType;
@@ -87,6 +90,8 @@
                                     FT_Bytes       limit,
                                     GXV_Validator  gxvalid );
 
+
+FT_END_HEADER
 
 #endif /* GXVMORT_H_ */
 

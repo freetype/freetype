@@ -3751,6 +3751,7 @@
 
   static const TT_CMap_Class  tt_cmap_classes[] =
   {
+#undef  TTCMAPCITEM
 #define TTCMAPCITEM( a )  &a,
 #include "ttcmapc.h"
     NULL,

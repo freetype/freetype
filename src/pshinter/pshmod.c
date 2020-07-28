@@ -19,6 +19,7 @@
 #include <freetype/internal/ftobjs.h>
 #include "pshrec.h"
 #include "pshalgo.h"
+#include "pshmod.h"
 
 
   /* the Postscript Hinter module structure */

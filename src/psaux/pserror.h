@@ -50,6 +50,7 @@
 
 
 #include <freetype/fterrors.h>
+#include <freetype/internal/compiler-macros.h>
 #include "psft.h"
 
 

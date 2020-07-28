@@ -400,6 +400,13 @@ FT_BEGIN_HEADER
    *     if @FT_OUTLINE_IGNORE_DROPOUTS is set.  See below for more
    *     information.
    *
+   *   FT_OUTLINE_OVERLAP ::
+   *     This flag indicates that this outline contains overlapping contrours
+   *     and the anti-aliased renderer should perform oversampling to
+   *     metigate possible artifacts.  This flag should _not_ be set for
+   *     well designed glyphs without overlaps because it quadruples the
+   *     rendering time.
+   *
    *   FT_OUTLINE_HIGH_PRECISION ::
    *     This flag indicates that the scan-line converter should try to
    *     convert this outline to bitmaps with the highest possible quality.
@@ -432,6 +439,7 @@ FT_BEGIN_HEADER
 #define FT_OUTLINE_SMART_DROPOUTS   0x10
 #define FT_OUTLINE_INCLUDE_STUBS    0x20
 
+#define FT_OUTLINE_OVERLAP          0x80
 #define FT_OUTLINE_HIGH_PRECISION   0x100
 #define FT_OUTLINE_SINGLE_PASS      0x200
 

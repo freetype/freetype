@@ -35,6 +35,8 @@
 #include <freetype/ftbitmap.h>
 #include <freetype/internal/ftobjs.h>
 
+#include "ftbase.h"
+
 
   /**************************************************************************
    *

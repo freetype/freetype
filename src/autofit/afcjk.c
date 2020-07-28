@@ -157,7 +157,7 @@
       if ( !glyph_index )
         goto Exit;
 
-      FT_TRACE5(( "standard character: U+%04lX (glyph index %d)\n",
+      FT_TRACE5(( "standard character: U+%04lX (glyph index %ld)\n",
                   ch, glyph_index ));
 
       error = FT_Load_Glyph( face, glyph_index, FT_LOAD_NO_SCALE );
@@ -260,9 +260,9 @@
                       dim == AF_DIMENSION_VERT ? "horizontal"
                                                : "vertical" ));
 
-          FT_TRACE5(( "  %d (standard)", axis->standard_width ));
+          FT_TRACE5(( "  %ld (standard)", axis->standard_width ));
           for ( i = 1; i < axis->width_count; i++ )
-            FT_TRACE5(( " %d", axis->widths[i].org ));
+            FT_TRACE5(( " %ld", axis->widths[i].org ));
 
           FT_TRACE5(( "\n" ));
         }
@@ -727,7 +727,7 @@
 
         delta2 = FT_MulFix( delta2, scale );
 
-        FT_TRACE5(( "delta: %d", delta1 ));
+        FT_TRACE5(( "delta: %ld", delta1 ));
         if ( delta2 < 32 )
           delta2 = 0;
 #if 0
@@ -736,7 +736,7 @@
 #endif
         else
           delta2 = FT_PIX_ROUND( delta2 );
-        FT_TRACE5(( "/%d\n", delta2 ));
+        FT_TRACE5(( "/%ld\n", delta2 ));
 
         if ( delta1 < 0 )
           delta2 = -delta2;
@@ -1643,7 +1643,7 @@
 
     stem_edge->pos = base_edge->pos + fitted_width;
 
-    FT_TRACE5(( "  CJKLINK: edge %d @%d (opos=%.2f) linked to %.2f,"
+    FT_TRACE5(( "  CJKLINK: edge %ld @%d (opos=%.2f) linked to %.2f,"
                 " dist was %.2f, now %.2f\n",
                 stem_edge - hints->axis[dim].edges, stem_edge->fpos,
                 stem_edge->opos / 64.0, stem_edge->pos / 64.0,
@@ -1865,7 +1865,7 @@
           continue;
 
 #ifdef FT_DEBUG_LEVEL_TRACE
-        FT_TRACE5(( "  CJKBLUE: edge %d @%d (opos=%.2f) snapped to %.2f,"
+        FT_TRACE5(( "  CJKBLUE: edge %ld @%d (opos=%.2f) snapped to %.2f,"
                     " was %.2f\n",
                     edge1 - edges, edge1->fpos, edge1->opos / 64.0,
                     blue->fit / 64.0, edge1->pos / 64.0 ));
@@ -1929,7 +1929,7 @@
       /* this should not happen, but it's better to be safe */
       if ( edge2->blue_edge )
       {
-        FT_TRACE5(( "ASSERTION FAILED for edge %d\n", edge2-edges ));
+        FT_TRACE5(( "ASSERTION FAILED for edge %ld\n", edge2-edges ));
 
         af_cjk_align_linked_edge( hints, dim, edge2, edge );
         edge->flags |= AF_EDGE_DONE;

@@ -874,7 +874,7 @@
       if ( error )
       {
         FT_ERROR(( "ps_hints_stem: could not add stem"
-                   " (%d,%d) to hints table\n", stems[0], stems[1] ));
+                   " (%ld,%ld) to hints table\n", stems[0], stems[1] ));
 
         hints->error = error;
         return;

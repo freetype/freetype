@@ -1,3 +1,266 @@
+2020-07-28  Priyesh Kumar  <priyeshkkumar@gmail.com>
+
+	Fix `-Wformat' compiler warnings.
+
+	* src/*: Fix format specifiers.
+
+	* builds/unix/ftsystem.c (FT_Stream_Open): Ditto.
+
+2020-07-25  Werner Lemberg  <wl@gnu.org>
+
+	Fix `-Wformat' compiler warnings.
+
+	Problem reported by Priyesh kumar <priyeshkkumar@gmail.com>
+
+	* src/base/ftoutln.c (FT_Outline_Decompose): Fix number of arguments
+	to tracing macro.
+
+	* src/bdf/bdfdrivr.c (bdf_cmap_char_next, bdf_get_bdf_property):
+	Ditto.
+
+	* src/cache/ftcbasic.c (ftc_basic_family_get_count): Ditto.
+	Reformulate message.
+
+	* src/pcf/pcfdrivr.c (pcf_get_bdf_property): Ditto.
+
+	* src/sfnt/sfwoff2.c (woff2_open_font): Ditto.
+	Trace table offset, too.
+
+	* src/truetype/ttgxvar.c (ft_var_apply_tuple): Ditto.
+
+2020-07-23  Werner Lemberg  <wl@gnu.org>
+
+	* src/sfnt/sfwoff2.c (woff2_decompress): Fix compiler warning.
+
+	Reported by Hin-Tak.
+
+2020-07-12  Werner Lemberg  <wl@gnu.org>
+
+	* builds/unix/configure.raw: Fix inclusion of `ftoption.h'.
+
+2020-07-07  Werner Lemberg  <wl@gnu.org>
+
+	Fix clang warnings.
+
+	* include/freetype/internal/autohint.h
+	(FT_DECLARE_AUTOHINTER_INTERFACE): New macro.
+	* src/autofit/afmodule.h: Use it to declare
+	`af_autofitter_interface'.
+
+	* include/freetype/internal/ftobjs.h (FT_DECLARE_GLYPH): New macro.
+	* src/base/ftbase.h: Use it to declare `ft_bitmap_glyph_class' and
+	`ft_outline_glyph_class'.
+
+	* src/base/ftglyph.c: Include `ftbase.h'.
+
+	* src/cff/cffparse.c (cff_parser_run): Fix type of `t2_size'.
+
+	* src/pcf/pcfdrivr.c (pcf_cmap_char_next): Fix type of `result'.
+
+	* src/psaux/psauxmod.c (psaux_module_class): Use `FT_DEFINE_MODULE'.
+	* src/psaux/psauxmod.h: Declare `afm_parser_funcs',
+	`t1_cmap_classes', `cff_decoder_funcs', and `psaux_module_class'.
+
+	* src/pshinter/pshmod.c: Include `pshmod.h'.
+
+	* src/sfnt/sfwoff2.c (ROUND4, WRITE_SHORT): Fix implicit sign
+	conversion.
+	(compute_ULong_sum): Fix return type.
+	Fix implicit sign conversion.
+	(store_points): Fix type of `last_flag', `repeat_count', and `flag'.
+	Use casts to avoid warnings.
+	(reconstruct_glyf): Fix implicit sign conversion.
+	Use cast to avoid warning.
+	(get_x_mins): Fix implicit sign conversion.
+	* src/sfnt/ttcmap.c: Undef `TTCMAPCITEM'.
+	* src/sfnt/ttcmap.h: Define `TTCMAPCITEM' and include `ttcmapc.h' to
+	declare cmap classes.
+
+	* src/smooth/ftsmooth.c (ft_smooth_overlap_spans): Use cast.
+
+	* src/truetype/ttinterp.c (Ins_MIAP): Fix typo.
+
+2020-07-07  David Turner  <david@freetype.org>
+
+	[build] Really fix multi and C++ builds.
+
+	The following builds were still failing due to previous changes:
+
+	  make multi
+	  make multi CC="c++"
+	  make CC="c++"
+
+	This patch fixes the issues, which were missing includes to get the
+	right macro definitions in multi-build mode.
+
+	Also, `FT_UNUSED' is actually used by third-party code, so move it
+	back to `public-macros.h' to avoid breaking it.
+
+	* include/freetype/config/public-macros.h (FT_EXPORT): Remove
+	special definition for C++.
+	(FT_UNUSED): Define here instead of...
+	* include/freetype/config/compiler-macros.h: ... here.
+	(FT_FUNCTION_DECLARATION): Remove special definition for C++.
+	(FT_LOCAL_ARRAY_DEF): Fix definition.
+
+	* src/cache/ftccback.h, src/lzw/ftzopen.h, src/gxvalid/gxvmort.h,
+	src/gxvalid/gxvmorx.h: Add `FT_BEGIN_HEADER' and `FT_END_HEADER'.
+
+2020-07-06  David Turner  <david@freetype.org>
+
+	[build] Fix multi and C++ builds.
+
+	The following builds were failing due to previous changes:
+
+	  make multi
+	  make multi CC="c++"
+
+	* include/freetype/config/ftconfig.h: Remove `FT_END_HEADER'.
+
+	* include/freetype/config/ftheader.h (FT_BEGIN_HEADER,
+	FT_END_HEADER): Protect against redefinition.
+
+	* src/cache/ftccache.h, src/cache/ftcmru.h, src/pcf/pcfutil.h,
+	src/psaux/pserror.h, src/psaux/psft.h, src/psaux/psstack.h,
+	src/sfnt/woff2tags.h: Include `compiler-macros.h'.
+
+	* src/sfnt/woff2tags.c: Include `woff2tags.h'.
+
+2020-07-06  Werner Lemberg  <wl@gnu.org>
+
+	[psaux] Improve `t1_decoder_parse_metrics' (#58646).
+
+	* src/psaux/t1decode.c (t1_decoder_parse_metrics): Copy
+	corresponding code from old engine's `t1_decoder_parse_charstrings'
+	function to handle `op_callsubr' and `op_return'.
+
+2020-07-05  David Turner  <david@freetype.org>
+
+	[build] Improve visibility support of library function names.
+
+	* include/freetype/config/public-macros.h
+	(FT_PUBLIC_FUNCTION_ATTRIBUTE): New macro to tag functions as
+	public (and thus exportable).
+	(FT_EXPORT): Use it.
+
+	* include/freetype/config/compiler-macros.h
+	(FT_INTERNAL_FUNCTION_ATTRIBUTE): New macro to tag functions as
+	internal to the library (and thus hidden).  Note that on ELF
+	systems, all internal functions have hidden visibility, which avoids
+	the need to enforce this when invoking the compiler (e.g., with an
+	option like `-fvisibility=hidden').
+
+	(FT_FUNCTION_DECLARATION, FT_FUNCTION_DEFINITION): New base macros
+	to deal with C and C++ linkage issues at the same time.
+
+	(FT_LOCAL, FT_LOCAL_DEF, FT_LOCAL_ARRAY, FT_LOCAL_ARRAY_DEF,
+	FT_BASE, FT_BASE_DEF, FT_EXPORT_VAR, FT_BASE_CALLBACK,
+	FT_BASE_CALLBACK_DEF): Redefined using new macros.
+
+2020-07-05  David Turner  <david@freetype.org>
+
+	[build] Split off more stuff from `ftconfig.h'.
+
+	* builds/unix/ftconfig.h.in, builds/vms/ftconfig.h,
+	include/freetype/config/ftconfig.h: Split off macro definitions
+	required by the FreeType API headers to...
+	* include/freetype/config/public-macros.h: ...this new file.
+
+	* builds/unix/ftconfig.h.in, builds/vms/ftconfig.h,
+	include/freetype/config/ftconfig.h: Split off macro definitions used
+	by the library but not to be exposed to clients to...
+	* include/freetype/config/compiler-macros.h: ...this new file.
+
+	* include/freetype/internal/*.h, src/raster/ftraster.h: Include
+	`compiler-macros.h' where needed.
+
+2020-07-05  David Turner  <david@freetype.org>
+
+	[build] Move mac support code to `mac-support.h'.
+
+	* builds/unix/ftconfig.h.in, builds/vms/ftconfig.h,
+	include/freetype/config/ftconfig.h: Split off mac-specific stuff
+	to...
+	* include/freetype/config/mac-support.h: ...this new file.
+
+	* CMakeLists.txt, builds/unix/configure.raw: Remove `/undef ->
+	#undef' string replacement; the affected code is no longer part of
+	the `ftconfig.h' template.
+
+2020-07-05  David Turner  <david@freetype.org>
+
+	[build] Put integer type definitions into `integer-types.h'.
+
+	Refactor some of the `ftconfig.h' headers and template to move the
+	definition of the FreeType integer types (e.g., `FT_Int16') to a
+	common header file `freetype/config/integer-types.h'.
+
+	* builds/unix/ftconfig.h.in, builds/vms/ftconfig.h,
+	include/freetype/config/ftconfig.h: Split off integer type
+	definition stuff to...
+	* include/freetype/config/integer-types.h: ...this new file.
+
+	* builds/unix/ftconfig.h.in: Control the definition of
+	`FT_SIZEOF_INT' and `FT_SIZEOF_LONG' with macro
+	`FT_USE_AUTOCONF_SIZEOF_TYPES'.  If these are not defined, auto
+	detection happens in `integer-types.h' as usual based on `INTXX_MAX'
+	values.  Otherwise the autoconf-detected values are used.
+
+	* builds/unix/configure.raw (CPPFLAGS): Don't include path to
+	`config' directory.  Instead, ...
+	(FT_CONFIG_STANDARD_LIBRARY_H): Use complete path.
+
+2020-07-05  David Turner  <david@freetype.org>
+
+	[build] Rename `build/unix/ftconfig.in' to `ftconfig.h.in'.
+
+	Since we are no longer limited to 8.3 file names, it is simpler to
+	follow the usual conventions for template files.
+
+	* builds/unix/ftconfig.in: Renamed to...
+	* builds/unix/ftconfig.h.in: ...this.
+
+	* CMakeLists.txt, builds/unix/configure.raw: Updated.
+
+2020-07-03  Alexei Podtelezhnikov  <apodtele@gmail.com>
+
+	[smooth] Introduce direct oversampling for overlaps.
+
+	This implements oversampling to metigate artifacts in pixels partially
+	covered by overlapping contours.  It turns out that the 4x4
+	oversampling is sufficient but, at least, quadruples the rendering
+	time.  The outline has to set FT_OUTLINE_OVERLAP to use this method.
+
+	* include/freetype/ftimage.h (FT_OUTLINE_OVERLAP): New flag.
+	* src/smooth/ftsmooth.c (ft_smooth_render): Check it to...
+	(ft_smooth_raster_overlap): ... inflate outline and set up direct
+	rendering for oversampling with...
+	(ft_smooth_overlap_spans): ... new span function that integrates them.
+
+2020-07-03  Alexei Podtelezhnikov  <apodtele@gmail.com>
+
+	[smooth] Use direct rendering mode in Harmony.
+
+	Instead of rendering 3 bitmaps side by side and reshuffling, we use
+	direct rendering to deliver the bitmaps on each third byte.
+
+	* src/smooth/ftsmooth.c (ft_smooth_raster_lcd)
+	[!FT_CONFIG_OPTION_SUBPIXEL_RENDERING]: Set up direct mode with...
+	(ft_smooth_lcd_spans): ... new span function.
+
+2020-07-03  Alexei Podtelezhnikov  <apodtele@gmail.com>
+
+	[smooth] Separate LCD paths from gray rendering.
+
+	This makes `ft_smooth_render' a lot smaller and easier to follow. It
+	also cleanly separates Harmony and ClearType-style LCD rendering
+	algorithms. Now I only wish to move LCD filtering and geometry from
+	FT_Library to FT_Renderer.
+
+	* src/smooth/ftsmooth.c (ft_smooth_render): Move LCD code from here...
+	(ft_smooth_raster_lcd, ft_smooth_raster_lcdv): ... to here.
+	[FT_CONFIG_OPTION_SUBPIXEL_RENDERING]: Reorganize #ifdef's.
+
 2020-06-20  Sebastian Rasmussen  <sebras@gmail.com>
 
 	[cff] Fix handling of `style_name == NULL' (#58630).

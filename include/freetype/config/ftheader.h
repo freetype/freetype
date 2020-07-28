@@ -30,10 +30,12 @@
   /*    encapsulated in an `extern "C" { .. }` block when included from a  */
   /*    C++ compiler.                                                      */
   /*                                                                       */
-#ifdef __cplusplus
-#define FT_BEGIN_HEADER  extern "C" {
-#else
-#define FT_BEGIN_HEADER  /* nothing */
+#ifndef FT_BEGIN_HEADER
+#  ifdef __cplusplus
+#    define FT_BEGIN_HEADER  extern "C" {
+#  else
+#  define FT_BEGIN_HEADER  /* nothing */
+#  endif
 #endif
 
 
@@ -48,10 +50,12 @@
   /*    encapsulated in an `extern "C" { .. }` block when included from a  */
   /*    C++ compiler.                                                      */
   /*                                                                       */
-#ifdef __cplusplus
-#define FT_END_HEADER  }
-#else
-#define FT_END_HEADER  /* nothing */
+#ifndef FT_END_HEADER
+#  ifdef __cplusplus
+#    define FT_END_HEADER  }
+#  else
+#   define FT_END_HEADER  /* nothing */
+#  endif
 #endif
 
 

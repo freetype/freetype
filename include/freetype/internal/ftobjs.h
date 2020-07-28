@@ -40,6 +40,7 @@
 #include <freetype/ftincrem.h>
 #endif
 
+#include "compiler-macros.h"
 
 FT_BEGIN_HEADER
 
@@ -225,8 +226,8 @@ FT_BEGIN_HEADER
   } FT_CMap_ClassRec;
 
 
-#define FT_DECLARE_CMAP_CLASS( class_ )              \
-  FT_CALLBACK_TABLE const  FT_CMap_ClassRec class_;
+#define FT_DECLARE_CMAP_CLASS( class_ )            \
+  FT_CALLBACK_TABLE const FT_CMap_ClassRec  class_;
 
 #define FT_DEFINE_CMAP_CLASS(       \
           class_,                   \
@@ -1056,6 +1057,9 @@ FT_BEGIN_HEADER
    *   The struct will be allocated in the global scope (or the scope where
    *   the macro is used).
    */
+#define FT_DECLARE_GLYPH( class_ )                \
+  FT_CALLBACK_TABLE const FT_Glyph_Class  class_;
+
 #define FT_DEFINE_GLYPH(          \
           class_,                 \
           size_,                  \

@@ -24,6 +24,7 @@
 #include FT_CONFIG_CONFIG_H
 #include <freetype/fttypes.h>
 
+#include "compiler-macros.h"
 
 FT_BEGIN_HEADER
 
