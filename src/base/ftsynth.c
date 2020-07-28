@@ -129,7 +129,7 @@
       if ( ( ystr >> 6 ) > FT_INT_MAX || ( ystr >> 6 ) < FT_INT_MIN )
       {
         FT_TRACE1(( "FT_GlyphSlot_Embolden:" ));
-        FT_TRACE1(( "too strong emboldening parameter ystr=%d\n", ystr ));
+        FT_TRACE1(( "too strong emboldening parameter ystr=%ld\n", ystr ));
         return;
       }
       error = FT_GlyphSlot_Own_Bitmap( slot );

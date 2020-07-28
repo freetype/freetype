@@ -1,3 +1,11 @@
+2020-07-28  Priyesh Kumar  <priyeshkkumar@gmail.com>
+
+	Fix `-Wformat' compiler warnings.
+
+	* src/*: Fix format specifiers.
+
+	* builds/unix/ftsystem.c (FT_Stream_Open): Ditto.
+
 2020-07-25  Werner Lemberg  <wl@gnu.org>
 
 	Fix `-Wformat' compiler warnings.

@@ -194,7 +194,7 @@
     else if ( (FT_ULong)face->num_glyphs < FT_UINT_MAX )
       max_gid = (FT_UInt)face->num_glyphs;
     else
-      FT_TRACE0(( "Ignore glyph names for invalid GID 0x%08x - 0x%08x\n",
+      FT_TRACE0(( "Ignore glyph names for invalid GID 0x%08x - 0x%08lx\n",
                   FT_UINT_MAX, face->num_glyphs ));
 
     for ( i = 0; i < max_gid; i++ )

@@ -737,7 +737,7 @@
       {
         if ( dict->cid_supplement < FT_INT_MIN ||
              dict->cid_supplement > FT_INT_MAX )
-          FT_TRACE1(( "cff_get_ros: too large supplement %d is truncated\n",
+          FT_TRACE1(( "cff_get_ros: too large supplement %ld is truncated\n",
                       dict->cid_supplement ));
         *supplement = (FT_Int)dict->cid_supplement;
       }

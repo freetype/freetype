@@ -239,7 +239,7 @@
           break;
         else
         {
-          FT_TRACE6(( "load_format_20: %d byte left in post table\n",
+          FT_TRACE6(( "load_format_20: %ld byte left in post table\n",
                       post_limit - FT_STREAM_POS() ));
 
           if ( FT_READ_BYTE( len ) )

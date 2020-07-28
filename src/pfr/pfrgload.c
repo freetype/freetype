@@ -451,7 +451,7 @@
           case 1:                           /* 16-bit absolute value */
             PFR_CHECK( 2 );
             cur->x = PFR_NEXT_SHORT( p );
-            FT_TRACE7(( " x.%d", cur->x ));
+            FT_TRACE7(( " x.%ld", cur->x ));
             break;
 
           case 2:                           /* 8-bit delta */
@@ -481,7 +481,7 @@
           case 1:                           /* 16-bit absolute value */
             PFR_CHECK( 2 );
             cur->y = PFR_NEXT_SHORT( p );
-            FT_TRACE7(( " y.%d", cur->y ));
+            FT_TRACE7(( " y.%ld", cur->y ));
             break;
 
           case 2:                           /* 8-bit delta */

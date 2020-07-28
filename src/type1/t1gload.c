@@ -333,7 +333,7 @@
       else
         advances[nn] = 0;
 
-      FT_TRACE5(( "  idx %d: advance width %d font unit%s\n",
+      FT_TRACE5(( "  idx %d: advance width %ld font unit%s\n",
                   first + nn,
                   advances[nn],
                   advances[nn] == 1 ? "" : "s" ));

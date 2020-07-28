@@ -149,7 +149,7 @@
       if ( !af_style_classes[ss] )
       {
         FT_TRACE0(( "af_property_set: Invalid value %d for property `%s'\n",
-                    fallback_script, property_name ));
+                    *fallback_script, property_name ));
         return FT_THROW( Invalid_Argument );
       }
 

@@ -293,7 +293,7 @@
     FT_Error  error;
 
 
-    FT_TRACE1(( "Init_Context: new object at 0x%08p\n", exec ));
+    FT_TRACE1(( "Init_Context: new object at %p\n", (void *)exec ));
 
     exec->memory   = memory;
     exec->callSize = 32;
@@ -318,7 +318,7 @@
     return FT_Err_Ok;
 
   Fail_Memory:
-    FT_ERROR(( "Init_Context: not enough memory for %p\n", exec ));
+    FT_ERROR(( "Init_Context: not enough memory for %p\n", (void *)exec ));
     TT_Done_Context( exec );
 
     return error;
@@ -7845,7 +7845,7 @@
         num_twilight_points = 0xFFFFU;
 
       FT_TRACE5(( "TT_RunIns: Resetting number of twilight points\n"
-                  "           from %d to the more reasonable value %d\n",
+                  "           from %d to the more reasonable value %ld\n",
                   exc->twilight.n_points,
                   num_twilight_points ));
       exc->twilight.n_points = (FT_UShort)num_twilight_points;
@@ -7880,11 +7880,11 @@
       exc->loopcall_counter_max = 100 * (FT_ULong)exc->face->root.num_glyphs;
 
     FT_TRACE5(( "TT_RunIns: Limiting total number of loops in LOOPCALL"
-                " to %d\n", exc->loopcall_counter_max ));
+                " to %ld\n", exc->loopcall_counter_max ));
 
     exc->neg_jump_counter_max = exc->loopcall_counter_max;
     FT_TRACE5(( "TT_RunIns: Limiting total number of backward jumps"
-                " to %d\n", exc->neg_jump_counter_max ));
+                " to %ld\n", exc->neg_jump_counter_max ));
 
     /* set PPEM and CVT functions */
     exc->tt_metrics.ratio = 0;
@@ -7921,14 +7921,14 @@
         /* if tracing level is 7, show current code position */
         /* and the first few stack elements also             */
         FT_TRACE6(( "  " ));
-        FT_TRACE7(( "%06d ", exc->IP ));
+        FT_TRACE7(( "%06ld ", exc->IP ));
         FT_TRACE6(( "%s", opcode_name[exc->opcode] + 2 ));
         FT_TRACE7(( "%*s", *opcode_name[exc->opcode] == 'A'
                               ? 2
                               : 12 - ( *opcode_name[exc->opcode] - '0' ),
                               "#" ));
         for ( n = 1; n <= cnt; n++ )
-          FT_TRACE7(( " %d", exc->stack[exc->top - n] ));
+          FT_TRACE7(( " %ld", exc->stack[exc->top - n] ));
         FT_TRACE6(( "\n" ));
       }
 #endif /* FT_DEBUG_LEVEL_TRACE */
@@ -8646,7 +8646,7 @@
     } while ( !exc->instruction_trap );
 
   LNo_Error_:
-    FT_TRACE4(( "  %d instruction%s executed\n",
+    FT_TRACE4(( "  %ld instruction%s executed\n",
                 ins_counter,
                 ins_counter == 1 ? "" : "s" ));
     return FT_Err_Ok;

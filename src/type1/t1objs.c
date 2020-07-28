@@ -346,8 +346,8 @@
     if ( error )
       goto Exit;
 
-    FT_TRACE2(( "T1_Face_Init: %08p (index %d)\n",
-                face,
+    FT_TRACE2(( "T1_Face_Init: %p (index %d)\n",
+                (void *)face,
                 face_index ));
 
     /* if we just wanted to check the format, leave successfully now */

@@ -1222,7 +1222,7 @@
     FT_TRACE4(( "  loca table info:\n" ));
     FT_TRACE4(( "    dst_offset = %lu\n", info->loca_table->dst_offset ));
     FT_TRACE4(( "    dst_length = %lu\n", info->loca_table->dst_length ));
-    FT_TRACE4(( "    checksum = %09x\n", *loca_checksum ));
+    FT_TRACE4(( "    checksum = %09lx\n", *loca_checksum ));
 
     /* Set pointer `sfnt_bytes' to its correct value. */
     *sfnt_bytes = sfnt;
@@ -1573,7 +1573,7 @@
       WOFF2_TableRec  table = *( indices[nn] );
 
 
-      FT_TRACE3(( "Seeking to %d with table size %d.\n",
+      FT_TRACE3(( "Seeking to %ld with table size %ld.\n",
                   table.src_offset, table.src_length ));
       FT_TRACE3(( "Table tag: %c%c%c%c.\n",
                   (FT_Char)( table.Tag >> 24 ),
@@ -1614,7 +1614,7 @@
 
         checksum = compute_ULong_sum( transformed_buf + table.src_offset,
                                       table.src_length );
-        FT_TRACE4(( "Checksum = %09x.\n", checksum ));
+        FT_TRACE4(( "Checksum = %09lx.\n", checksum ));
 
         if ( WRITE_SFNT_BUF( transformed_buf + table.src_offset,
                              table.src_length ) )
@@ -1639,7 +1639,7 @@
                                  memory ) )
             goto Fail;
 
-          FT_TRACE4(( "Checksum = %09x.\n", checksum ));
+          FT_TRACE4(( "Checksum = %09lx.\n", checksum ));
         }
 
         else if ( table.Tag == TTAG_loca )
@@ -1715,7 +1715,7 @@
 
     WRITE_ULONG( buf_cursor, font_checksum );
 
-    FT_TRACE2(( "Final checksum = %09x.\n", font_checksum ));
+    FT_TRACE2(( "Final checksum = %09lx.\n", font_checksum ));
 
     woff2->actual_sfnt_size = dest_offset;
 
@@ -1812,15 +1812,15 @@
     if ( FT_STREAM_READ_FIELDS( woff2_header_fields, &woff2 ) )
       return error;
 
-    FT_TRACE4(( "signature     -> 0x%X\n", woff2.signature ));
+    FT_TRACE4(( "signature     -> 0x%lX\n", woff2.signature ));
     FT_TRACE2(( "flavor        -> 0x%08lx\n", woff2.flavor ));
     FT_TRACE4(( "length        -> %lu\n", woff2.length ));
     FT_TRACE2(( "num_tables    -> %hu\n", woff2.num_tables ));
     FT_TRACE4(( "totalSfntSize -> %lu\n", woff2.totalSfntSize ));
-    FT_TRACE4(( "metaOffset    -> %hu\n", woff2.metaOffset ));
-    FT_TRACE4(( "metaLength    -> %hu\n", woff2.metaLength ));
-    FT_TRACE4(( "privOffset    -> %hu\n", woff2.privOffset ));
-    FT_TRACE4(( "privLength    -> %hu\n", woff2.privLength ));
+    FT_TRACE4(( "metaOffset    -> %lu\n", woff2.metaOffset ));
+    FT_TRACE4(( "metaLength    -> %lu\n", woff2.metaLength ));
+    FT_TRACE4(( "privOffset    -> %lu\n", woff2.privOffset ));
+    FT_TRACE4(( "privLength    -> %lu\n", woff2.privLength ));
 
     /* Make sure we don't recurse back here. */
     if ( woff2.flavor == TTAG_wOF2 )
@@ -1980,7 +1980,7 @@
         goto Exit;
       }
 
-      FT_TRACE4(( "Number of fonts in TTC: %ld\n", woff2.num_fonts ));
+      FT_TRACE4(( "Number of fonts in TTC: %d\n", woff2.num_fonts ));
 
       if ( FT_NEW_ARRAY( woff2.ttc_fonts, woff2.num_fonts ) )
         goto Exit;
@@ -1998,7 +1998,7 @@
         if ( FT_NEW_ARRAY( ttc_font->table_indices, ttc_font->num_tables ) )
           goto Exit;
 
-        FT_TRACE5(( "Number of tables in font %d: %ld\n",
+        FT_TRACE5(( "Number of tables in font %d: %d\n",
                     nn, ttc_font->num_tables ));
 
 #ifdef FT_DEBUG_LEVEL_TRACE

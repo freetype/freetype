@@ -1063,7 +1063,7 @@
         map->design_points[p] = T1_ToInt( parser );
         map->blend_points [p] = T1_ToFixed( parser, 0 );
 
-        FT_TRACE4(( " [%d %f]",
+        FT_TRACE4(( " [%ld %f]",
                     map->design_points[p],
                     (double)map->blend_points[p] / 65536 ));
       }
@@ -1755,7 +1755,7 @@
        */
 
       FT_TRACE0(( "parse_subrs: adjusting number of subroutines"
-                  " (from %d to %d)\n",
+                  " (from %d to %ld)\n",
                   num_subrs,
                   ( parser->root.limit - parser->root.cursor ) >> 3 ));
       num_subrs = ( parser->root.limit - parser->root.cursor ) >> 3;
@@ -1926,7 +1926,7 @@
     if ( num_glyphs > ( limit - cur ) >> 3 )
     {
       FT_TRACE0(( "parse_charstrings: adjusting number of glyphs"
-                  " (from %d to %d)\n",
+                  " (from %d to %ld)\n",
                   num_glyphs, ( limit - cur ) >> 3 ));
       num_glyphs = ( limit - cur ) >> 3;
     }

@@ -713,7 +713,7 @@
            ( max_scaling - min_scaling ) > 9 )
       {
         FT_TRACE1(( "cff_parse_font_matrix:"
-                    " strange scaling values (minimum %d, maximum %d),\n"
+                    " strange scaling values (minimum %ld, maximum %ld),\n"
                     "                      "
                     " using default matrix\n", min_scaling, max_scaling ));
         goto Unlikely;
@@ -810,7 +810,7 @@
       bbox->yMax = FT_RoundFix( cff_parse_fixed( parser, data   ) );
       error = FT_Err_Ok;
 
-      FT_TRACE4(( " [%d %d %d %d]\n",
+      FT_TRACE4(( " [%ld %ld %ld %ld]\n",
                   bbox->xMin / 65536,
                   bbox->yMin / 65536,
                   bbox->xMax / 65536,
@@ -933,11 +933,11 @@
         FT_TRACE1(( "cff_parse_cid_ros: real supplement is rounded\n" ));
       dict->cid_supplement = cff_parse_num( parser, data );
       if ( dict->cid_supplement < 0 )
-        FT_TRACE1(( "cff_parse_cid_ros: negative supplement %d is found\n",
+        FT_TRACE1(( "cff_parse_cid_ros: negative supplement %ld is found\n",
                    dict->cid_supplement ));
       error = FT_Err_Ok;
 
-      FT_TRACE4(( " %d %d %d\n",
+      FT_TRACE4(( " %d %d %ld\n",
                   dict->cid_registry,
                   dict->cid_ordering,
                   dict->cid_supplement ));

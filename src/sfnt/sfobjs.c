@@ -546,8 +546,8 @@
     /* Stream may have changed in sfnt_open_font. */
     stream = face->root.stream;
 
-    FT_TRACE2(( "sfnt_init_face: %08p (index %d)\n",
-                face,
+    FT_TRACE2(( "sfnt_init_face: %p (index %d)\n",
+                (void *)face,
                 face_instance_index ));
 
     face_index = FT_ABS( face_instance_index ) & 0xFFFF;
@@ -820,7 +820,7 @@
     /* it doesn't contain outlines.                                */
     /*                                                             */
 
-    FT_TRACE2(( "sfnt_load_face: %08p\n\n", face ));
+    FT_TRACE2(( "sfnt_load_face: %p\n\n", (void *)face ));
 
     /* do we have outlines in there? */
 #ifdef FT_CONFIG_OPTION_INCREMENTAL

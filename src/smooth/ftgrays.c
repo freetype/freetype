@@ -1648,7 +1648,7 @@ typedef ptrdiff_t  FT_PtrDist;
       if ( !ras.invalid )
         gray_record_cell( RAS_VAR );
 
-      FT_TRACE7(( "band [%d..%d]: %d cell%s\n",
+      FT_TRACE7(( "band [%d..%d]: %ld cell%s\n",
                   ras.min_ey,
                   ras.max_ey,
                   ras.num_cells,

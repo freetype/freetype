@@ -347,7 +347,7 @@
             FT_TRACE2(( "tt_face_load_strike_metrics:"
                         " sanitizing invalid ascender and descender\n"
                         "                            "
-                        " values for strike %d (%dppem, %dppem)\n",
+                        " values for strike %ld (%dppem, %dppem)\n",
                         strike_index,
                         metrics->x_ppem, metrics->y_ppem ));
 

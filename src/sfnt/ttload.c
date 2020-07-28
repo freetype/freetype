@@ -64,8 +64,8 @@
 #endif
 
 
-    FT_TRACE4(( "tt_face_lookup_table: %08p, `%c%c%c%c' -- ",
-                face,
+    FT_TRACE4(( "tt_face_lookup_table: %p, `%c%c%c%c' -- ",
+                (void *)face,
                 (FT_Char)( tag >> 24 ),
                 (FT_Char)( tag >> 16 ),
                 (FT_Char)( tag >> 8  ),
@@ -362,7 +362,7 @@
     };
 
 
-    FT_TRACE2(( "tt_face_load_font_dir: %08p\n", face ));
+    FT_TRACE2(( "tt_face_load_font_dir: %p\n", (void *)face ));
 
     /* read the offset table */
 
@@ -1314,7 +1314,7 @@
     /* we don't load the glyph names, we do that in another */
     /* module (ttpost).                                     */
 
-    FT_TRACE3(( "FormatType:   0x%x\n", post->FormatType ));
+    FT_TRACE3(( "FormatType:   0x%lx\n", post->FormatType ));
     FT_TRACE3(( "isFixedPitch:   %s\n", post->isFixedPitch
                                         ? "  yes" : "   no" ));
 

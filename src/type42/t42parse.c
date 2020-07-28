@@ -826,7 +826,7 @@
       if ( loader->num_glyphs > ( limit - parser->root.cursor ) >> 2 )
       {
         FT_TRACE0(( "t42_parse_charstrings: adjusting number of glyphs"
-                    " (from %d to %d)\n",
+                    " (from %d to %ld)\n",
                     loader->num_glyphs,
                     ( limit - parser->root.cursor ) >> 2 ));
         loader->num_glyphs = ( limit - parser->root.cursor ) >> 2;
