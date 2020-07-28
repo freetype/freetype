@@ -1,3 +1,15 @@
+2020-07-28  Anuj Verma  <anujv@iitbhilai.ac.in>
+
+	* src/sdf/ftbsdf.c (_pass): Use function for repetitive task.
+
+	Use function `compare_neighbor' for comparing the
+	neighbors. Makes it easier to tweak the algorithm
+	and looks better.
+
+	* src/sdf/ftbsdf.c (compare_neighbor): Added function
+	  to compare the neighbors and assign values if the
+	  new distance is the shortest.
+
 2020-07-27  Anuj Verma  <anujv@iitbhilai.ac.in>
 
 	* src/sdf/ftbsdf.c (bsdf_is_edge): Use macros to
