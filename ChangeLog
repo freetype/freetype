@@ -1,3 +1,10 @@
+2020-07-28  Anuj Verma  <anujv@iitbhilai.ac.in>
+
+	Fix static compilation with Visual C.
+
+	* include/freetype/internal/compiler-macros.h
+	(FT_INTERNAL_FUNCTION_ATTRIBUTE) <_WIN32>: Define as empty.
+
 2020-07-28  Priyesh Kumar  <priyeshkkumar@gmail.com>
 
 	Fix `-Wformat' compiler warnings.

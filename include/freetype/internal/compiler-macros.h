@@ -105,9 +105,16 @@ FT_BEGIN_HEADER
    * generate smaller and faster code on ELF-based platforms.  Place this
    * before a function declaration.
    */
-#if ( defined( __GNUC__ ) && __GNUC__ >= 4 ) || defined( __clang__ )
+
+  /* Visual C, mingw */
+#if defined( _WIN32 )
+#define FT_INTERNAL_FUNCTION_ATTRIBUTE  /* empty */
+
+  /* gcc, clang */
+#elif ( defined( __GNUC__ ) && __GNUC__ >= 4 ) || defined( __clang__ )
 #define FT_INTERNAL_FUNCTION_ATTRIBUTE  \
           __attribute__(( visibility( "hidden" ) ))
+
 #else
 #define FT_INTERNAL_FUNCTION_ATTRIBUTE  /* empty */
 #endif
