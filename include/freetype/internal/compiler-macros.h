@@ -36,50 +36,60 @@ FT_BEGIN_HEADER
 #  endif
 #endif
 
-/* When defining a macro that expands to a non-trivial C statement, use
- * FT_BEGIN_STMNT and FT_END_STMNT to enclose the macro's body. This ensures
- * there are no surprises when the macro is invoked in conditional branches.
- *
- * E.g.:
- *   #define  LOG(...) \
- *      FT_BEGIN_STMNT \
- *        if (logging_enabled) \
- *           log(__VA_ARGS__); \
- *      FT_END_STMNT
- */
+  /*
+   * When defining a macro that expands to a non-trivial C statement, use
+   * FT_BEGIN_STMNT and FT_END_STMNT to enclose the macro's body.  This
+   * ensures there are no surprises when the macro is invoked in conditional
+   * branches.
+   *
+   * Example:
+   *
+   *   #define  LOG( ... )        \
+   *     FT_BEGIN_STMNT           \
+   *       if ( logging_enabled ) \
+   *         log( __VA_ARGS__ );  \
+   *     FT_END_STMNT
+   */
 #define FT_BEGIN_STMNT  do {
 #define FT_END_STMNT    } while ( 0 )
 
-/* FT_DUMMY_STMNT expands to an empty C statement. Useful for conditionally
- * define statement macros, as in:
- *
- * #ifdef BUILD_CONFIG_LOGGING
- * #  define LOG(...) \
- *     FT_BEGIN_STMNT \
- *       if (logging_enabled) \
- *         log(__VA_ARGS__); \
- *     FT_END_STMNT
- * #else
- * #  define LOG(...)  FT_DUMMY_STMNT
- * #endif
- */
+  /*
+   * FT_DUMMY_STMNT expands to an empty C statement.  Useful for
+   * conditionally defined statement macros.
+   *
+   * Example:
+   *
+   *   #ifdef BUILD_CONFIG_LOGGING
+   *   #define  LOG( ... )         \
+   *      FT_BEGIN_STMNT           \
+   *        if ( logging_enabled ) \
+   *          log( __VA_ARGS__ );  \
+   *      FT_END_STMNT
+   *   #else
+   *   #  define LOG( ... )  FT_DUMMY_STMNT
+   *   #endif
+   */
 #define FT_DUMMY_STMNT  FT_BEGIN_STMNT FT_END_STMNT
 
 #ifdef _WIN64
- /* only 64bit Windows uses the LLP64 data model, i.e., */
- /* 32-bit integers, 64-bit pointers.                   */
-#define FT_UINT_TO_POINTER( x ) (void*)(unsigned __int64)(x)
+  /* only 64bit Windows uses the LLP64 data model, i.e., */
+  /* 32-bit integers, 64-bit pointers.                   */
+#define FT_UINT_TO_POINTER( x )  (void *)(unsigned __int64)(x)
 #else
-#define FT_UINT_TO_POINTER( x ) (void*)(unsigned long)(x)
+#define FT_UINT_TO_POINTER( x )  (void *)(unsigned long)(x)
 #endif
 
-/* Use FT_TYPEOF(type) to cast a value to |type|. This is useful to suppress
- * signedness compilation warnings in macros as in:
- *
- * #define PAD_(x, n)  ( (x) & ~FT_TYPEOF( x )( (n) - 1 ) )
- *
- * `typeof` condition taken from gnulib's `intprops.h` header file
- */
+  /*
+   * Use `FT_TYPEOF( type )` to cast a value to `type`.  This is useful to
+   * suppress signedness compilation warnings in macros.
+   *
+   * Example:
+   *
+   *   #define PAD_( x, n )  ( (x) & ~FT_TYPEOF( x )( (n) - 1 ) )
+   *
+   * (The `typeof` condition is taken from gnulib's `intprops.h` header
+   * file.)
+   */
 #if ( ( defined( __GNUC__ ) && __GNUC__ >= 2 )                       || \
       ( defined( __IBMC__ ) && __IBMC__ >= 1210 &&                      \
         defined( __IBM__TYPEOF__ ) )                                 || \
@@ -89,94 +99,113 @@ FT_BEGIN_HEADER
 #define FT_TYPEOF( type )  /* empty */
 #endif
 
-/* Mark a function declaration as internal to the library. This ensures that
- * it will not be exposed by default to client code, and helps generate smaller
- * and faster code on ELF-based platforms. Place this before a function
- * declaration.
- */
-#if (defined(__GNUC__) && __GNUC__ >= 4) || defined(__clang__)
-#define FT_INTERNAL_FUNCTION_ATTRIBUTE  __attribute__((visibility("hidden")))
+  /*
+   * Mark a function declaration as internal to the library.  This ensures
+   * that it will not be exposed by default to client code, and helps
+   * generate smaller and faster code on ELF-based platforms.  Place this
+   * before a function declaration.
+   */
+#if ( defined( __GNUC__ ) && __GNUC__ >= 4 ) || defined( __clang__ )
+#define FT_INTERNAL_FUNCTION_ATTRIBUTE  \
+          __attribute__(( visibility( "hidden" ) ))
 #else
-#define FT_INTERNAL_FUNCTION_ATTRIBUTE  /* nothing */
+#define FT_INTERNAL_FUNCTION_ATTRIBUTE  /* empty */
 #endif
 
-/* FreeType supports compiling its C sources to be compiled as C++ instead,
- * this introduces a number of subtle issues.
- *
- * The main one is that a C++ function declaration and its definition must have
- * the same 'linkage'. Because all FreeType headers declare their function with
- * C linkage (i.e. within an extern "C" { .. } block, due to the magic of
- * FT_BEGIN_HEADER and FT_END_HEADER), then their definition in FreeType
- * sources should also be prefixed with 'extern "C"' when compiled in C++ mode.
- *
- * The FT_FUNCTION_DECLARATION() and FT_FUNCTION_DEFINITION() macros are
- * provided to deal with this case, as well as FT_CALLBACK_DEF et al below.
- */
+  /*
+   * FreeType supports compilation of its C sources with a C++ compiler (in
+   * C++ mode); this introduces a number of subtle issues.
+   *
+   * The main one is that a C++ function declaration and its definition must
+   * have the same 'linkage'.  Because all FreeType headers declare their
+   * functions with C linkage (i.e., within an `extern "C" { ... }` block
+   * due to the magic of FT_BEGIN_HEADER and FT_END_HEADER), their
+   * definition in FreeType sources should also be prefixed with `extern
+   * "C"` when compiled in C++ mode.
+   *
+   * The `FT_FUNCTION_DECLARATION` and `FT_FUNCTION_DEFINITION` macros are
+   * provided to deal with this case, as well as `FT_CALLBACK_DEF` and its
+   * siblings below.
+   */
 
-/* FT_FUNCTION_DECLARATION(type) can be used to write a C function declaration,
- * and ensure it will have C linkage when the library is built with a C++
- * compiler. The parameter is the function's return type, so a declaration
- * would look like:
- *
- *    FT_FUNCTION_DECLARATION(int) foo(int x);
- *
- * NOTE: This requires that all uses are inside FT_BEGIN_HEADER..FT_END_HEADER
- * blocks. Which guarantees that the declarations have C linkage when the
- * headers are included by C++ sources.
- *
- * NOTE: Do not use directly, use FT_LOCAL()/FT_BASE()/FT_EXPORT() instead.
- */
+  /*
+   * `FT_FUNCTION_DECLARATION( type )` can be used to write a C function
+   * declaration to ensure it will have C linkage when the library is built
+   * with a C++ compiler.  The parameter is the function's return type, so a
+   * declaration would look like
+   *
+   *    FT_FUNCTION_DECLARATION( int )
+   *    foo( int x );
+   *
+   * NOTE: This requires that all uses are inside of `FT_BEGIN_HEADER ...
+   * FT_END_HEADER` blocks, which guarantees that the declarations have C
+   * linkage when the headers are included by C++ sources.
+   *
+   * NOTE: Do not use directly.  Use `FT_LOCAL`, `FT_BASE`, and `FT_EXPORT`
+   * instead.
+   */
 #define FT_FUNCTION_DECLARATION( x )  extern x
 
-/* Same as FT_FUNCTION_DECLARATION(), but for function definitions instead.
- * NOTE: Do not use directly, use FT_LOCAL_DEF()/FT_BASE_DEF()/FT_EXPORT_DEF()
- * instead.
- */
+  /*
+   * Same as `FT_FUNCTION_DECLARATION`, but for function definitions instead.
+   *
+   * NOTE: Do not use directly.  Use `FT_LOCAL_DEF`, `FT_BASE_DEF`, and
+   * `FT_EXPORT_DEF` instead.
+   */
 #ifdef __cplusplus
 #define FT_FUNCTION_DEFINITION( x )  extern "C" x
 #else
 #define FT_FUNCTION_DEFINITION( x )  x
 #endif
 
-/* Use FT_LOCAL()/FT_LOCAL_DEF() to declare and define an internal FreeType
- * function that is only used by the sources of a single src/module/ directory.
- * This ensures the functions are turned into static ones at build time,
- * resulting in smaller and faster code.
- */
+  /*
+   * Use `FT_LOCAL` and `FT_LOCAL_DEF` to declare and define, respectively,
+   * an internal FreeType function that is only used by the sources of a
+   * single `src/module/` directory.  This ensures that the functions are
+   * turned into static ones at build time, resulting in smaller and faster
+   * code.
+   */
 #ifdef FT_MAKE_OPTION_SINGLE_OBJECT
 
-#  define FT_LOCAL( x )  static x
-#  define FT_LOCAL_DEF( x )  static x
+#define FT_LOCAL( x )      static x
+#define FT_LOCAL_DEF( x )  static x
 
 #else
 
-#define FT_LOCAL( x )      FT_INTERNAL_FUNCTION_ATTRIBUTE FT_FUNCTION_DECLARATION( x )
+#define FT_LOCAL( x )      FT_INTERNAL_FUNCTION_ATTRIBUTE \
+                           FT_FUNCTION_DECLARATION( x )
 #define FT_LOCAL_DEF( x )  FT_FUNCTION_DEFINITION( x )
 
 #endif  /* FT_MAKE_OPTION_SINGLE_OBJECT */
 
-/* Use FT_LOCAL_ARRAY()/FT_LOCAL_ARRAY_DEF() to declare and define a constant
- * array that must be accessed from several sources in the same src/module/
- * sub-directory, but are otherwise internal to the library.
- */
-#define FT_LOCAL_ARRAY( x )      FT_INTERNAL_FUNCTION_ATTRIBUTE extern const x
+  /*
+   * Use `FT_LOCAL_ARRAY` and `FT_LOCAL_ARRAY_DEF` to declare and define,
+   * respectively, a constant array that must be accessed from several
+   * sources in the same `src/module/` sub-directory, and which are internal
+   * to the library.
+   */
+#define FT_LOCAL_ARRAY( x )      FT_INTERNAL_FUNCTION_ATTRIBUTE \
+                                 extern const x
 #define FT_LOCAL_ARRAY_DEF( x )  FT_FUNCTION_DEFINITION( const x )
 
-/* Use FT_BASE()/FT_BASE_DEF() to declare or define an internal library
- * function that are used by more than one single module.
- */
-#define FT_BASE( x )      FT_INTERNAL_FUNCTION_ATTRIBUTE FT_FUNCTION_DECLARATION( x )
+  /*
+   * `Use FT_BASE` and `FT_BASE_DEF` to declare and define, respectively, an
+   * internal library function that is used by more than a single module.
+   */
+#define FT_BASE( x )      FT_INTERNAL_FUNCTION_ATTRIBUTE \
+                          FT_FUNCTION_DECLARATION( x )
 #define FT_BASE_DEF( x )  FT_FUNCTION_DEFINITION( x )
 
 
-/* NOTE: Conditionally define FT_EXPORT_VAR() due to its definition in
- * src/smooth/ftgrays.h to make the header more portable.
- */
+  /*
+   * NOTE: Conditionally define `FT_EXPORT_VAR` due to its definition in
+   * `src/smooth/ftgrays.h` to make the header more portable.
+   */
 #ifndef FT_EXPORT_VAR
-#define FT_EXPORT_VAR( x )   FT_FUNCTION_DECLARATION( x )
+#define FT_EXPORT_VAR( x )  FT_FUNCTION_DECLARATION( x )
 #endif
 
-  /* When compiling FreeType as a DLL or DSO with hidden visibility    */
+  /* When compiling FreeType as a DLL or DSO with hidden visibility,   */
   /* some systems/compilers need a special attribute in front OR after */
   /* the return type of function declarations.                         */
   /*                                                                   */
@@ -211,8 +240,8 @@ FT_BEGIN_HEADER
   /* To export a variable, use `FT_EXPORT_VAR`.                        */
   /*                                                                   */
 
-/* See <freetype/config/compiler_macros.h> for the FT_EXPORT() definition */
-#define FT_EXPORT_DEF( x ) FT_FUNCTION_DEFINITION( x )
+  /* See `freetype/config/compiler_macros.h` for the `FT_EXPORT` definition */
+#define FT_EXPORT_DEF( x )  FT_FUNCTION_DEFINITION( x )
 
   /* The following macros are needed to compile the library with a   */
   /* C++ compiler and with 16bit compilers.                          */
