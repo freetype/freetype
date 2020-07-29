@@ -115,6 +115,11 @@ FT_BEGIN_HEADER
 #define FT_INTERNAL_FUNCTION_ATTRIBUTE  \
           __attribute__(( visibility( "hidden" ) ))
 
+  /* Sun */
+#elif defined( __SUNPRO_C ) && __SUNPRO_C >= 0x550
+#define FT_INTERNAL_FUNCTION_ATTRIBUTE  __hidden
+#endif
+
 #else
 #define FT_INTERNAL_FUNCTION_ATTRIBUTE  /* empty */
 #endif

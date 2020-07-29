@@ -1,3 +1,10 @@
+2020-07-28  Alexei Podtelezhnikov  <apodtele@gmail.com>
+
+	Hide internal functions with SunPro.
+
+	* include/freetype/internal/compiler-macros.h
+	(FT_INTERNAL_FUNCTION_ATTRIBUTE) <__SUNPRO_C>: Define as __hidden.
+
 2020-07-28  Anuj Verma  <anujv@iitbhilai.ac.in>
 
 	Fix static compilation with Visual C.
