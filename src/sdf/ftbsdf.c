@@ -47,7 +47,8 @@
 
   } BSDF_TRaster;
 
-  /* euclidean distance used for euclidean distance transform */
+  /* Euclidean distance used for euclidean distance transform */
+  /* can also be interpreted as edge distance.                */
   typedef struct  ED_
   {
     FT_16D16      dist; /* distance at `near' */
@@ -121,16 +122,19 @@
                 FT_Int    w,    /* width                     */
                 FT_Int    r )   /* rows                      */
   {
-    FT_Bool   is_edge       = 0;
+    FT_Bool   is_edge       = 0; 
     FT_Byte*  to_check      = NULL;
     FT_Int    num_neighbour = 0;
 
 
-    if ( y == 7 && x == 20 )
-      to_check = NULL;
-
     if ( *s == 0 )
       goto Done;
+
+    if ( *s > 0 && *s < 255 )
+    {
+      is_edge = 1;
+      goto Done;
+    }
 
     /* up */
     CHECK_NEIGHBOR(  0, -1 );
@@ -165,6 +169,122 @@
   }
 
   #undef CHECK_NEIGHBOR
+
+  /**************************************************************************
+   *
+   * @Function:
+   *   compute_gradient
+   *
+   * @Description:
+   *   [TODO]
+   *
+   * @Input:
+   *   [TODO]
+   *
+   * @Return:
+   *   [TODO]
+   */
+  static FT_16D16_Vec
+  compute_gradient( ED*     current,
+                    FT_Int  x,
+                    FT_Int  y,
+                    FT_Int  w,
+                    FT_Int  r )
+  {
+    /* [TODO]: Write proper explanation. */
+    FT_16D16_Vec  g = { 0, 0 };
+
+
+    if ( x <= 0 || x >= w - 1 ||
+         y <= 0 || y >= r - 1 )
+      return g;
+
+
+    g.x = -    current[-w - 1].dist -
+           2 * current[  -1  ].dist -
+               current[ w - 1].dist +
+               current[-w + 1].dist +
+           2 * current[   1  ].dist +
+               current[ w + 1].dist;
+
+    g.y = -    current[-w - 1].dist -
+           2 * current[  -w  ].dist -
+               current[-w + 1].dist +
+               current[ w - 1].dist +
+           2 * current[   w  ].dist +
+               current[ w + 1].dist;
+
+    FT_Vector_NormLen( &g );
+    g.x = FT_MulFix( g.x, ONE / 2 - current->dist );
+    g.y = FT_MulFix( g.y, ONE / 2 - current->dist );
+
+    return g;
+  }
+  
+  /**************************************************************************
+   *
+   * @Function:
+   *   bsdf_approximate_edge
+   *
+   * @Description:
+   *   [TODO]
+   *
+   * @Input:
+   *   [TODO]
+   *
+   * @Return:
+   *   [TODO]
+   */
+  static FT_Error
+  bsdf_approximate_edge( BSDF_Worker*  worker )
+  {
+    /* [TODO]: Write proper explanation. */
+    FT_Error  error = FT_Err_Ok;
+    FT_Int    i, j;
+    FT_Int    index;
+    ED*       ed;
+
+
+    if ( !worker || !worker->distance_map )
+    {
+      error = FT_THROW( Invalid_Argument );
+      goto Exit;
+    }
+
+    ed = worker->distance_map;
+
+    for ( j = 0; j < worker->rows; j++ )
+    {
+      for ( i = 0; i < worker->width; i++ )
+      {
+        index = j * worker->width + i;
+
+        if ( ed[index].dist != 0 )
+          ed[index].near = compute_gradient( ed + index, i, j,
+                             worker->width, worker->rows );
+      }
+    }
+
+    for ( j = 0; j < worker->rows; j++ )
+    {
+      for ( i = 0; i < worker->width; i++ )
+      {
+        index = j * worker->width + i;
+
+        if ( ed[index].dist == 0 )
+        {
+          ed[index].dist   = 200 * ONE;
+          ed[index].near.x = 100 * ONE;
+          ed[index].near.y = 100 * ONE;
+        }
+        else
+          ed[index].dist = FT_Vector_Length( &ed[index].near );
+      }
+    }
+
+  Exit:
+    return error;
+  }
 
   /**************************************************************************
    *
@@ -277,7 +397,7 @@
         {
           FT_Int    t_index = t_j * t_width + t_i;
           FT_Int    s_index;
-          FT_Byte   pixel_value;
+          FT_Int   pixel_value;
 
 
           t[t_index] = zero_ed;
@@ -290,10 +410,7 @@
           if ( s_i < 0 || s_i >= s_width ||
                s_j < 0 || s_j >= s_rows )
           {
-            t[t_index].near.x = FT_INT_MAX;
-            t[t_index].near.y = FT_INT_MAX;
-            t[t_index].dist   = 128 * ONE;
-            t[t_index].sign   = -1;
+            t[t_index].sign = -1;
             continue;
           }
 
@@ -302,20 +419,19 @@
           else
             s_index = s_j * s_width + s_i;
 
-          pixel_value = s[s_index];
+          pixel_value = (FT_Int)s[s_index];
 
+          /* clamp the pixel value to [0, 256] */
+          if ( pixel_value == 255 )
+            pixel_value = 256;
+
+          /* only assign values to the edge pixels */
           if ( bsdf_is_edge( s + s_index , s_i, s_j, s_width, s_rows ) )
-          {
-            t[t_index].dist = 0;
-          }
-          else
-          {
-            t[t_index].near.x = FT_INT_MAX;
-            t[t_index].near.y = FT_INT_MAX;
-            t[t_index].dist   = 128 * ONE;
-          }
+            t[t_index].dist = 256 * pixel_value;
 
-          if ( pixel_value )
+          /* We assume that if the pixel is inside a contour */
+          /* then it's coverage value must be > 127.         */
+          if ( pixel_value > 127 )
             t[t_index].sign = 1;
           else
             t[t_index].sign = -1;
@@ -765,6 +881,7 @@
     worker.params = *sdf_params;
 
     FT_CALL( bsdf_init_distance_map( source, &worker ) );
+    FT_CALL( bsdf_approximate_edge( &worker ) );
     FT_CALL( edt8( &worker ) );
     FT_CALL( finalize_sdf( &worker, target ) );
 

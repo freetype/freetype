@@ -1,3 +1,15 @@
+2020-07-29  Anuj Verma  <anujv@iitbhilai.ac.in>
+
+	[sdf -> bsdf] Added function to approximate edge distance.
+
+	* src/sdf/ftbsdf.c (bsdf_approximate_edge): The function
+	  uses the Gustavson's algorithm to approximate the edge
+	  from pixel values.
+
+	* src/sdf/ftbsdf.c (compute_gradient): The function uses
+	  Sobel's operator to compute the gradient at a pixel.
+	  The is used to detect edge direction.
+
 2020-07-28  Anuj Verma  <anujv@iitbhilai.ac.in>
 
 	* src/sdf/ftbsdf.c (_pass): Use function for repetitive task.
