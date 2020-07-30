@@ -170,6 +170,9 @@
 
   #undef CHECK_NEIGHBOR
 
+  static FT_16D16
+  square_root( FT_16D16  val );
+
   /**************************************************************************
    *
    * @Function:
@@ -193,6 +196,9 @@
   {
     /* [TODO]: Write proper explanation. */
     FT_16D16_Vec  g = { 0, 0 };
+    FT_16D16      dist;
+    FT_16D16      a1, temp;
+    FT_16D16      gx, gy;
 
 
     if ( x <= 0 || x >= w - 1 ||
@@ -200,23 +206,61 @@
       return g;
 
 
-    g.x = -    current[-w - 1].dist -
-           2 * current[  -1  ].dist -
-               current[ w - 1].dist +
-               current[-w + 1].dist +
-           2 * current[   1  ].dist +
-               current[ w + 1].dist;
-
-    g.y = -    current[-w - 1].dist -
-           2 * current[  -w  ].dist -
-               current[-w + 1].dist +
-               current[ w - 1].dist +
-           2 * current[   w  ].dist +
-               current[ w + 1].dist;
+    /* compute the gradient */
+    g.x = - current[-w - 1].dist -
+            FT_MulFix( current[-1].dist, 92681 ) -
+            current[ w - 1].dist +
+            current[-w + 1].dist +
+            FT_MulFix( current[1].dist, 92681 ) +
+            current[ w + 1].dist;
+            
+    g.y = - current[-w - 1].dist -
+            FT_MulFix( current[-w].dist, 92681 ) -
+            current[-w + 1].dist +
+            current[ w - 1].dist +
+            FT_MulFix( current[w].dist, 92681 ) +
+            current[ w + 1].dist;
 
     FT_Vector_NormLen( &g );
-    g.x = FT_MulFix( g.x, ONE / 2 - current->dist );
-    g.y = FT_MulFix( g.y, ONE / 2 - current->dist );
+
+    /* The gradient gives us the direction of the   */
+    /* edge for the current pixel. Once we have the */
+    /* approximate direction of the edge, we can    */
+    /* approximate the edge distance much better.   */
+
+    /* [TODO]: Add squared distance support. */
+    if ( g.x == 0 || g.y == 0 )
+      dist = ONE / 2 - current->dist;
+    else
+    {
+      gx = g.x;
+      gy = g.y;
+
+      gx = FT_ABS( gx );
+      gy = FT_ABS( gy );
+
+      if ( gx < gy )
+      {
+        temp = gx;
+        gx = gy;
+        gy = temp;
+      }
+
+      a1 = FT_DivFix( gy, gx ) / 2;
+      if ( current->dist < a1 )
+        dist = (( gx + gy ) / 2) -
+               square_root( 2 * FT_MulFix( gx, 
+               FT_MulFix( gy, current->dist ) ) );
+      else if ( current->dist < ( ONE - a1 ) )
+        dist = FT_MulFix( ONE / 2 - current->dist, gx );
+      else
+        dist = -(( gx + gy ) / 2) +
+               square_root( 2 * FT_MulFix( gx,
+               FT_MulFix( gy, ONE - current->dist ) ) );
+    }
+
+    g.x = FT_MulFix( g.x, dist );
+    g.y = FT_MulFix( g.y, dist );
 
     return g;
   }
@@ -265,6 +309,7 @@
       }
     }
 
+    /* [TODO]: Try to combine the above and below loops. */
     for ( j = 0; j < worker->rows; j++ )
     {
       for ( i = 0; i < worker->width; i++ )

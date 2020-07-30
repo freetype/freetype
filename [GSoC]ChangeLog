@@ -1,3 +1,10 @@
+2020-07-30  Anuj Verma  <anujv@iitbhilai.ac.in>
+
+	* src/sdf/ftbsdf.c (compute_gradient): Use root(2)
+	  for the filter. Also, use the computed gradient
+	  to approximate the edge distance from a pixel's
+	  position according to the Gustavson's algorithm.
+
 2020-07-29  Anuj Verma  <anujv@iitbhilai.ac.in>
 
 	[sdf -> bsdf] Added function to approximate edge distance.
