@@ -1,4 +1,27 @@
-2020-07-22  Priyesh Kumar  <priyeshkkumar@gmail.com>
+2020-07-30  Priyesh Kumar  <priyeshkkumar@gmail.com>
+
+  Added a Visual Studios project to build dlg along with FreeType on Windows.
+
+    * builds/windows/dlg/dlg.{vcxproj, vcxproj.filters}: New files.
+
+    * builds/windows/dlg/script.bat: New Batch File. It is called as a pre-
+    built event while building dlg to copy files from `submodules/dlg' to
+    `src/dlg'.
+
+    * builds/windows/vc2010/freetype.sln: Added a subproject to build `dlg'
+    for `Debug' and `Debug Static' Configurations in `Win32' and `x64' 
+    platforms.
+
+    * builds/windows/vc2010/freetype.vcxproj (AdditionalIncludeDirectories):
+    Added dlg's include files for all configurations and platforms.
+    (AdditionalDependencies): Added `dlg.lib' as a dependency for `Debug`
+    configuration of FreeType on both platforms.
+    (PreprocessorDefinitions): Added `DLG_STATIC' for `Debug Static' 
+    configuration on bot platforms.
+
+    * [priyesh]ChangeLog: Fix date.
+
+2020-07-28  Priyesh Kumar  <priyeshkkumar@gmail.com>
 
     Merging master branch with current branch(priyeshLogLibrary)
 
