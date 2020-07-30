@@ -1,5 +1,11 @@
 2020-07-30  Anuj Verma  <anujv@iitbhilai.ac.in>
 
+	* src/sdf/ftsdfcommon.h (*): Fix line endings.
+
+	Always use LF line endings.
+
+2020-07-30  Anuj Verma  <anujv@iitbhilai.ac.in>
+
 	[sdf,bsdf] Put common propertied and functions in one file.
 
 	* src/sdf/ftsdfcommon.h: Added new file which contains
