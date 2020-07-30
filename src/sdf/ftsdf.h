@@ -6,16 +6,10 @@
 #include FT_CONFIG_CONFIG_H
 #include <freetype/ftimage.h>
 
+/* common properties and function */
+#include "ftsdfcommon.h"
+
 FT_BEGIN_HEADER
-
-  /* default spread value */
-  #define DEFAULT_SPREAD  8
-
-  /* minimum spread supported by the rasterizer. */
-  #define MIN_SPREAD      2
-
-  /* maximum spread supported by the rasterizer. */
-  #define MAX_SPREAD      32
 
   /* TEMPORARY */
   typedef enum Optimizations_ {

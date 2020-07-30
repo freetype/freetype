@@ -118,14 +118,6 @@
    *
    */
 
-  /* If it is defined to 1 then the rasterizer will use squared distances */
-  /* for computation. It can greatly improve the performance but there is */
-  /* a chance of overflow and artifacts. You can safely use it upto a     */
-  /* pixel size of 128.                                                   */
-  #ifndef USE_SQUARED_DISTANCES
-  #  define USE_SQUARED_DISTANCES 0
-  #endif
-
   /* If it is defined to 1 then the rasterizer will use Newton-Raphson's  */
   /* method for finding shortest distance from a point to a conic curve.  */
   /* The other method is an analytical method which find the roots of a   */
@@ -159,25 +151,6 @@
    *
    */
 
-  /* convert int to 26.6 fixed point   */
-  #define FT_INT_26D6( x )   ( x * 64 )
-
-  /* convert int to 16.16 fixed point  */
-  #define FT_INT_16D16( x )  ( x * 65536 )
-
-  /* convert 26.6 to 16.16 fixed point */
-  #define FT_26D6_16D16( x ) ( x * 1024 )
-
-
-  /* Convenient macro which calls the function */
-  /* and returns if any error occurs.          */
-  #define FT_CALL( x ) do                          \
-                       {                           \
-                         error = ( x );            \
-                         if ( error != FT_Err_Ok ) \
-                           goto Exit;              \
-                       } while ( 0 )
-
   #define MUL_26D6( a, b ) ( ( a * b ) / 64 )
   #define VEC_26D6_DOT( p, q ) ( MUL_26D6( p.x, q.x ) +   \
                                  MUL_26D6( p.y, q.y ) )
@@ -194,20 +167,6 @@
   #else
   #  define VECTOR_LENGTH_16D16( v ) FT_Vector_Length( &v )
   #endif
-
-  /**************************************************************************
-   *
-   * typedefs
-   *
-   */
-
-  typedef  FT_Vector FT_26D6_Vec;   /* with 26.6 fixed point components  */
-  typedef  FT_Vector FT_16D16_Vec;  /* with 16.16 fixed point components */
-
-  typedef  FT_Fixed  FT_16D16;      /* 16.16 fixed point representation  */
-  typedef  FT_Fixed  FT_26D6;       /* 26.6 fixed point representation   */
-
-  typedef  FT_BBox   FT_CBox;       /* control box of a curve            */
 
   /**************************************************************************
    *
@@ -1163,32 +1122,6 @@
    * math functions
    *
    */
-
-  /* Original Algorithm: https://github.com/chmike/fpsqrt */
-  static FT_16D16
-  square_root( FT_16D16  val )
-  {
-    FT_ULong t, q, b, r;
-
-
-    r = val;
-    b = 0x40000000;
-    q = 0;
-    while( b > 0x40 )
-    {
-      t = q + b;
-      if( r >= t )
-      {
-        r -= t;
-        q = t + b;
-      }
-      r <<= 1;
-      b >>= 1;
-    }
-    q >>= 8;
-
-    return q;
-  }
 
 #if !USE_NEWTON_FOR_CONIC
 

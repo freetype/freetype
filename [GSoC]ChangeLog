@@ -1,5 +1,19 @@
 2020-07-30  Anuj Verma  <anujv@iitbhilai.ac.in>
 
+	[sdf,bsdf] Put common propertied and functions in one file.
+
+	* src/sdf/ftsdfcommon.h: Added new file which contains
+	  common function, macros, properties for both `sdf' and
+	  `bsdf' renderer.
+
+	* src/sdf/ftsdf.c, src/sdf/ftsdf.h, src/sdf/ftbsdf.c:
+	  Remove common properties and include `ftsdfcommon.h'.
+
+	* src/sdf/rules.mk (SDF_DRV_H): Add the new `ftsdfcommon.h'
+	  file to include list.
+
+2020-07-30  Anuj Verma  <anujv@iitbhilai.ac.in>
+
 	* src/sdf/ftbsdf.c (compute_gradient): Use root(2)
 	  for the filter. Also, use the computed gradient
 	  to approximate the edge distance from a pixel's

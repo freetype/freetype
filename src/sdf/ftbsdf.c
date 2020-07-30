@@ -6,6 +6,7 @@
 
 #include "ftsdf.h"
 #include "ftsdferrs.h"
+#include "ftsdfcommon.h"
 
   /**************************************************************************
    *
@@ -13,27 +14,7 @@
    *
    */
 
-  /* Convenient macro which calls the function */
-  /* and returns if any error occurs.          */
-  #define FT_CALL( x ) do                          \
-                       {                           \
-                         error = ( x );            \
-                         if ( error != FT_Err_Ok ) \
-                           goto Exit;              \
-                       } while ( 0 )
-
   #define ONE 65536 /* 1 in 16.16 */
-
-  /**************************************************************************
-   *
-   * typedefs
-   *
-   */
-
-  typedef  FT_Vector FT_16D16_Vec;  /* with 16.16 fixed point components */
-
-  typedef  FT_Short FT_6D10;        /* 6.10 fixed point representation   */
-  typedef  FT_Fixed FT_16D16;       /* 16.16 fixed point representation  */
 
   /**************************************************************************
    *
@@ -169,9 +150,6 @@
   }
 
   #undef CHECK_NEIGHBOR
-
-  static FT_16D16
-  square_root( FT_16D16  val );
 
   /**************************************************************************
    *
