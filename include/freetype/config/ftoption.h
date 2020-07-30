@@ -442,13 +442,9 @@ FT_BEGIN_HEADER
    *   error and trace log messages to a file instead of `stderr`
    *   For writing logs to file FreeType uses an external library `dlg`
    *   Source Code - `src/dlg`
-   *   
-   *   When on Windows platform, and using a static build of dlg to link
-   *   it with FreeType, Define the macro `DLG_STATIC` so that it gets 
-   *   linked properly(see src/dlg/include/dlg.h:76)  
+   *
    */ 
 /* #define FT_LOGGING */ 
-/* #define DLG_STATIC */
 
   /**************************************************************************
    *

@@ -1,5 +1,13 @@
 2020-07-30  Priyesh Kumar  <priyeshkkumar@gmail.com>
 
+    * builds/windows/vc2010/freetype.sln: Skip building dlg for `Release' and
+    `Release Static' Configurations on both platforms.
+
+    * include/freetype/config/ftoption.h (DLG_STATIC): Removed Macro.
+    Removed comments related to `DLG_STATIC' macro.
+
+    * [priyesh]ChangeLog: Fix typo.
+
   Added a Visual Studios project to build dlg along with FreeType on Windows.
 
     * builds/windows/dlg/dlg.{vcxproj, vcxproj.filters}: New files.
@@ -17,7 +25,7 @@
     (AdditionalDependencies): Added `dlg.lib' as a dependency for `Debug`
     configuration of FreeType on both platforms.
     (PreprocessorDefinitions): Added `DLG_STATIC' for `Debug Static' 
-    configuration on bot platforms.
+    configuration on both platforms.
 
     * [priyesh]ChangeLog: Fix date.
 
