@@ -154,7 +154,7 @@
   /**************************************************************************
    *
    * @Function:
-   *   compute_gradient
+   *   compute_edge_distance
    *
    * @Description:
    *   [TODO]
@@ -166,13 +166,46 @@
    *   [TODO]
    */
   static FT_16D16_Vec
-  compute_gradient( ED*     current,
-                    FT_Int  x,
-                    FT_Int  y,
-                    FT_Int  w,
-                    FT_Int  r )
+  compute_edge_distance( ED*     current,
+                         FT_Int  x,
+                         FT_Int  y,
+                         FT_Int  w,
+                         FT_Int  r )
   {
-    /* [TODO]: Write proper explanation. */
+    /* This is the function which is based on the paper presented */
+    /* by Stefan Gustavson and Robin Strand which is used to app- */
+    /* roximate edge distance from anti-aliased bitmaps.          */
+    /*                                                            */
+    /* The algorithm is as follows:                               */
+    /*                                                            */
+    /* * In anti-aliased images, the pixel's alpha value is the   */
+    /*   coverage of the pixel by the outline. For example if the */
+    /*   alpha value is 0.5f then we can assume the the outline   */
+    /*   passes through the center of the pixel.                  */
+    /*                                                            */
+    /* * So, we can use that alpha value to approximate the real  */
+    /*   distance of the pixel to edge pretty accurately. A real  */
+    /*   simple approximation is ( 0.5f - alpha ), assuming that  */
+    /*   the outline is parallel to the x or y axis. But in this  */
+    /*   algorithm that is pretty accurate the edge distance.     */
+    /*                                                            */
+    /* * The only remaining piece of information that we cannot   */
+    /*   approximate directly from the alpha is the direction of  */
+    /*   the edge. That is where we use the Sobel's operator to   */
+    /*   compute the gradient of the pixel. The gradient give us  */
+    /*   a pretty good approximation of the edge direction.       */
+    /*   We use a 3x3 kernel filter to compute the gradient.      */
+    /*                                                            */
+    /* * After the above two steps we have both the direction and */
+    /*   the distance to the edge which is used to generate the   */
+    /*   Signed Distance Field.                                   */
+    /*                                                            */
+    /* References:                                                */
+    /* * Anti-Aliased Euclidean Distance Transform:               */
+    /*   http://weber.itn.liu.se/~stegu/aadist/edtaa_preprint.pdf */
+    /* * Sobel Operator:                                          */
+    /*   https://en.wikipedia.org/wiki/Sobel_operator             */
+    /*                                                            */
     FT_16D16_Vec  g = { 0, 0 };
     FT_16D16      dist;
     FT_16D16      a1, temp;
@@ -184,7 +217,18 @@
       return g;
 
 
-    /* compute the gradient */
+    /* Compute the gradient using the Sobel operator. */
+    /* In this case we use the following 3x3 filters: */
+    /*                                                */
+    /* For x: |   -1     0   -1    |                  */
+    /*        | -root(2) 0 root(2) |                  */
+    /*        |    -1    0    1    |                  */
+    /*                                                */
+    /* For y: |   -1 -root(2) -1   |                  */
+    /*        |    0    0      0   |                  */
+    /*        |    1  root(2)  1   |                  */
+    /*                                                */
+    /* [Note]: 92681 is nothing but root(2) in 16.16  */
     g.x = - current[-w - 1].dist -
             FT_MulFix( current[-1].dist, 92681 ) -
             current[ w - 1].dist +
@@ -260,7 +304,6 @@
   static FT_Error
   bsdf_approximate_edge( BSDF_Worker*  worker )
   {
-    /* [TODO]: Write proper explanation. */
     FT_Error  error = FT_Err_Ok;
     FT_Int    i, j;
     FT_Int    index;
@@ -282,7 +325,8 @@
         index = j * worker->width + i;
 
         if ( ed[index].dist != 0 )
-          ed[index].near = compute_gradient( ed + index, i, j,
+          /* approximate the edge distance */
+          ed[index].near = compute_edge_distance( ed + index, i, j,
                              worker->width, worker->rows );
       }
     }
@@ -294,6 +338,8 @@
       {
         index = j * worker->width + i;
 
+        /* Assign the values, for bacground pixel assign */
+        /* values vert far away.                         */
         if ( ed[index].dist == 0 )
         {
           ed[index].dist   = 200 * ONE;
@@ -449,7 +495,7 @@
             pixel_value = 256;
 
           /* only assign values to the edge pixels */
-          if ( bsdf_is_edge( s + s_index , s_i, s_j, s_width, s_rows ) )
+          if ( pixel_value )
             t[t_index].dist = 256 * pixel_value;
 
           /* We assume that if the pixel is inside a contour */
@@ -510,8 +556,9 @@
     /* Of course this will be eliminated while using */
     /* squared distances.                            */
 
-    /* approximate the distance */
-    dist = to_check->dist + ( FT_ABS( x_offset ) + FT_ABS( y_offset ) ) * ONE;
+    /* Approximate the distance, use 1 to avoid */
+    /* precision errors.                        */
+    dist = to_check->dist + ONE;
 
     if ( dist < current->dist )
     {

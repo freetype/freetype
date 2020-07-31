@@ -1,3 +1,15 @@
+2020-07-31  Anuj Verma  <anujv@iitbhilai.ac.in>
+
+	[sdf -> bsdf] Add explanation of the approximation.
+
+	* src/sdf/ftbsdf.c (compute_gradient => compute_edge_distance):
+	  Renamed to make sense of what the function does.
+	  Also, added the explanation of the algorithm used
+	  and a high level view of how it works.
+
+	* src/sdf/ftbsdf.c (compare_neighbor): Fix a bug related
+	  to value approximation before calling `FT_Vector_Length'.
+
 2020-07-30  Anuj Verma  <anujv@iitbhilai.ac.in>
 
 	* src/sdf/ftsdfcommon.h (*): Fix line endings.
