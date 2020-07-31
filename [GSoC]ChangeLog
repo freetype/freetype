@@ -1,5 +1,9 @@
 2020-07-31  Anuj Verma  <anujv@iitbhilai.ac.in>
 
+	* src/sdf/ftbsdf.c (compute_edge_distance): Grammer fix.
+
+2020-07-31  Anuj Verma  <anujv@iitbhilai.ac.in>
+
 	[sdf -> bsdf] Add explanation of the approximation.
 
 	* src/sdf/ftbsdf.c (compute_gradient => compute_edge_distance):

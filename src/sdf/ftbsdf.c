@@ -187,11 +187,12 @@
     /*   distance of the pixel to edge pretty accurately. A real  */
     /*   simple approximation is ( 0.5f - alpha ), assuming that  */
     /*   the outline is parallel to the x or y axis. But in this  */
-    /*   algorithm that is pretty accurate the edge distance.     */
+    /*   algorithm we use a different approximation which is qui- */
+    /*   te accurate even for non axis aligned edges.             */
     /*                                                            */
     /* * The only remaining piece of information that we cannot   */
     /*   approximate directly from the alpha is the direction of  */
-    /*   the edge. That is where we use the Sobel's operator to   */
+    /*   the edge. This is where we use the Sobel's operator to   */
     /*   compute the gradient of the pixel. The gradient give us  */
     /*   a pretty good approximation of the edge direction.       */
     /*   We use a 3x3 kernel filter to compute the gradient.      */
