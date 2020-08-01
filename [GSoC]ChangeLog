@@ -3,7 +3,7 @@
 	[sdf -> bsdf] Optimized a bit.
 
 	* src/sdf/ftbsdf.c (ED: sign => alpha): Renamed sign
-	  to alphs. This is used to store the alpha of the current
+	  to alphas. This is used to store the alpha of the current
 	  pixel mapped to the source image. This let's us store
 	  additional information without increasing memory usage.
 
