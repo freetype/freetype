@@ -74,8 +74,8 @@
          y + y_offset >= 0 && y + y_offset < r )   \
     {                                              \
       num_neighbour++;                             \
-      to_check = s + y_offset * w + x_offset;      \
-      if ( *to_check == 0 )                        \
+      to_check = dm + y_offset * w + x_offset;     \
+      if ( to_check->alpha == 0 )                  \
       {                                            \
         is_edge = 1;                               \
         goto Done;                                 \
@@ -97,21 +97,21 @@
    *   [TODO]
    */
   static FT_Bool
-  bsdf_is_edge( FT_Byte*  s,    /* source bitmap             */
+  bsdf_is_edge( ED*      dm,    /* distance map              */
                 FT_Int    x,    /* x index of point to check */
                 FT_Int    y,    /* y index of point to check */
                 FT_Int    w,    /* width                     */
                 FT_Int    r )   /* rows                      */
   {
     FT_Bool   is_edge       = 0; 
-    FT_Byte*  to_check      = NULL;
+    ED*       to_check      = NULL;
     FT_Int    num_neighbour = 0;
 
 
-    if ( *s == 0 )
+    if ( dm->alpha == 0 )
       goto Done;
 
-    if ( *s > 0 && *s < 255 )
+    if ( dm->alpha > 0 && dm->alpha < 255 )
     {
       is_edge = 1;
       goto Done;
@@ -340,19 +340,20 @@
       {
         index = j * worker->width + i;
 
-        /* [TODO]: Check if the current pixel is edge. */
-        if ( ed[index].alpha != 0 )
+        if ( bsdf_is_edge( worker->distance_map + index,
+             i, j, worker->width, worker->rows  ) )
         {
-          /* approximate the edge distance */
+          /* for edge pixels approximate the edge distance */
           ed[index].near = compute_edge_distance( ed + index, i, j,
                              worker->width, worker->rows );
-          ed[index].dist = FT_Vector_Length( &ed[index].near );
+          ed[index].dist = VECTOR_LENGTH_16D16( ed[index].near );
         }
         else
         {
-          ed[index].dist   = 200 * ONE;
-          ed[index].near.x = 100 * ONE;
-          ed[index].near.y = 100 * ONE;
+          /* for non edge pixels assign far away distances */
+          ed[index].dist   = 400 * ONE;
+          ed[index].near.x = 200 * ONE;
+          ed[index].near.y = 200 * ONE;
         }
       }
     }
@@ -554,7 +555,7 @@
       dist_vec = to_check->near;
       dist_vec.x += x_offset * ONE;
       dist_vec.y += y_offset * ONE;
-      dist = FT_Vector_Length( &dist_vec );
+      dist = VECTOR_LENGTH_16D16( dist_vec );
       if ( dist < current->dist )
       {
         current->dist = dist;
@@ -798,11 +799,17 @@
 
         index = j * w + i;
         dist = worker->distance_map[index].dist;
+
+  #if USE_SQUARED_DISTANCES
+        if ( dist < 0 )
+          dist = FT_INT_16D16( worker->params.spread );
+        else
+          dist = square_root( dist );
+  #endif
+
         /* convert from 16.16 to 6.10 */
         dist /= 64;
         final_dist = (FT_6D10)(dist & 0x0000FFFF);
-
-        /* [TODO]: Assing the sign properly. */
 
         if ( final_dist > worker->params.spread * 1024 )
           final_dist = worker->params.spread * 1024;

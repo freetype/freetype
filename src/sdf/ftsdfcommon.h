@@ -68,6 +68,19 @@ FT_BEGIN_HEADER
                            goto Exit;              \
                        } while ( 0 )
 
+  /* [IMPORTANT]: The macro `VECTOR_LENGTH_16D16' is not always the same */
+  /* and must not be used anywhere except a few places. This macro is    */
+  /* controlled by the `USE_SQUARED_DISTANCES' macro. It compute squared */
+  /* distance or actual distance based on `USE_SQUARED_DISTANCES' value. */
+  /* By using squared distances the performance can be greatly improved  */
+  /* but there is a risk of overflow. Use it wisely.                     */
+  #if USE_SQUARED_DISTANCES
+  #  define VECTOR_LENGTH_16D16( v ) ( FT_MulFix( v.x, v.x ) + \
+                                       FT_MulFix( v.y, v.y ) )
+  #else
+  #  define VECTOR_LENGTH_16D16( v ) FT_Vector_Length( &v )
+  #endif
+
   /**************************************************************************
    *
    * common typedefs

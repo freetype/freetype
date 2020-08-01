@@ -1,5 +1,28 @@
 2020-08-1  Anuj Verma  <anujv@iitbhilai.ac.in>
 
+	[sdf -> bsdf] Added option to use squared distances.
+
+	* src/sdf/ftbsdf.c (bsdf_is_edge): Modified the function
+	  to use distance map rather than the alpha values from
+	  the source image.
+
+	* src/sdf/ftbsdf.c (bsdf_approximate_edge): Only calculate
+	  approximate edges for edge pixels. Use `bsdf_is_edge' is
+	  to check for edge pixels. For non edge pixel assgn far
+	  away distances.
+
+	* src/sdf/ftbsdf.c (finalize_sdf): Handle distances in case
+	  of squared distances.
+	  And also use the macro `VECTOR_LENGTH_16D16' in the entire
+	  code to compute vector length. This takes care of squared
+	  distances.
+
+	* src/sdf/ftsdfcommon.c (VECTOR_LENGTH_16D16): Move the macro
+	  `VECTOR_LENGTH_16D16' from `ftsdf.c' to this file because
+	  it is also used by the `bsdf' renderer.
+
+2020-08-1  Anuj Verma  <anujv@iitbhilai.ac.in>
+
 	* src/sdf/ftbsdf.c (compare_neighbor): Fix bug.
 
 2020-08-1  Anuj Verma  <anujv@iitbhilai.ac.in>
