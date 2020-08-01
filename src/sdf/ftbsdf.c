@@ -32,9 +32,9 @@
   /* can also be interpreted as edge distance.                */
   typedef struct  ED_
   {
-    FT_16D16      dist; /* distance at `near' */
-    FT_16D16_Vec  near; /* nearest point      */
-    FT_Char       sign; /* outside or inside  */
+    FT_16D16      dist;  /* distance at `near'  */
+    FT_16D16_Vec  near;  /* nearest point       */
+    FT_Byte       alpha; /* alpha of the source */
 
   } ED;
 
@@ -208,15 +208,33 @@
     /*   https://en.wikipedia.org/wiki/Sobel_operator             */
     /*                                                            */
     FT_16D16_Vec  g = { 0, 0 };
-    FT_16D16      dist;
+    FT_16D16      dist, current_alpha;
     FT_16D16      a1, temp;
     FT_16D16      gx, gy;
+    FT_16D16      alphas[9];
 
 
+    if ( x == 41 && y == 72 )
+      gx = 0;
+
+    /* Since our spread cannot be 0, this condition */
+    /* can never be true.                           */
     if ( x <= 0 || x >= w - 1 ||
          y <= 0 || y >= r - 1 )
       return g;
 
+    /* initialize the alphas */
+    alphas[0] = 256 * (FT_16D16)current[-w - 1].alpha;
+    alphas[1] = 256 * (FT_16D16)current[  -w  ].alpha;
+    alphas[2] = 256 * (FT_16D16)current[-w + 1].alpha;
+    alphas[3] = 256 * (FT_16D16)current[  -1  ].alpha;
+    alphas[4] = 256 * (FT_16D16)current[   0  ].alpha;
+    alphas[5] = 256 * (FT_16D16)current[   1  ].alpha;
+    alphas[6] = 256 * (FT_16D16)current[ w - 1].alpha;
+    alphas[7] = 256 * (FT_16D16)current[   w  ].alpha;
+    alphas[8] = 256 * (FT_16D16)current[ w + 1].alpha;
+
+    current_alpha = alphas[4];
 
     /* Compute the gradient using the Sobel operator. */
     /* In this case we use the following 3x3 filters: */
@@ -230,19 +248,19 @@
     /*        |    1  root(2)  1   |                  */
     /*                                                */
     /* [Note]: 92681 is nothing but root(2) in 16.16  */
-    g.x = - current[-w - 1].dist -
-            FT_MulFix( current[-1].dist, 92681 ) -
-            current[ w - 1].dist +
-            current[-w + 1].dist +
-            FT_MulFix( current[1].dist, 92681 ) +
-            current[ w + 1].dist;
+    g.x = -alphas[0] -
+           FT_MulFix( alphas[3], 92681 ) -
+           alphas[6] +
+           alphas[2] +
+           FT_MulFix( alphas[5], 92681 ) +
+           alphas[8];
             
-    g.y = - current[-w - 1].dist -
-            FT_MulFix( current[-w].dist, 92681 ) -
-            current[-w + 1].dist +
-            current[ w - 1].dist +
-            FT_MulFix( current[w].dist, 92681 ) +
-            current[ w + 1].dist;
+    g.y = -alphas[0] -
+           FT_MulFix( alphas[1], 92681 ) -
+           alphas[2] +
+           alphas[6] +
+           FT_MulFix( alphas[7], 92681 ) +
+           alphas[8];
 
     FT_Vector_NormLen( &g );
 
@@ -253,7 +271,7 @@
 
     /* [TODO]: Add squared distance support. */
     if ( g.x == 0 || g.y == 0 )
-      dist = ONE / 2 - current->dist;
+      dist = ONE / 2 - alphas[4];
     else
     {
       gx = g.x;
@@ -270,16 +288,16 @@
       }
 
       a1 = FT_DivFix( gy, gx ) / 2;
-      if ( current->dist < a1 )
+      if ( current_alpha < a1 )
         dist = (( gx + gy ) / 2) -
                square_root( 2 * FT_MulFix( gx, 
-               FT_MulFix( gy, current->dist ) ) );
-      else if ( current->dist < ( ONE - a1 ) )
-        dist = FT_MulFix( ONE / 2 - current->dist, gx );
+               FT_MulFix( gy, current_alpha ) ) );
+      else if ( current_alpha < ( ONE - a1 ) )
+        dist = FT_MulFix( ONE / 2 - current_alpha, gx );
       else
         dist = -(( gx + gy ) / 2) +
                square_root( 2 * FT_MulFix( gx,
-               FT_MulFix( gy, ONE - current->dist ) ) );
+               FT_MulFix( gy, ONE - current_alpha ) ) );
     }
 
     g.x = FT_MulFix( g.x, dist );
@@ -325,30 +343,20 @@
       {
         index = j * worker->width + i;
 
-        if ( ed[index].dist != 0 )
+        /* [TODO]: Check if the current pixel is edge. */
+        if ( ed[index].alpha != 0 )
+        {
           /* approximate the edge distance */
           ed[index].near = compute_edge_distance( ed + index, i, j,
                              worker->width, worker->rows );
-      }
-    }
-
-    /* [TODO]: Try to combine the above and below loops. */
-    for ( j = 0; j < worker->rows; j++ )
-    {
-      for ( i = 0; i < worker->width; i++ )
-      {
-        index = j * worker->width + i;
-
-        /* Assign the values, for bacground pixel assign */
-        /* values vert far away.                         */
-        if ( ed[index].dist == 0 )
+          ed[index].dist = FT_Vector_Length( &ed[index].near );
+        }
+        else
         {
           ed[index].dist   = 200 * ONE;
           ed[index].near.x = 100 * ONE;
           ed[index].near.y = 100 * ONE;
         }
-        else
-          ed[index].dist = FT_Vector_Length( &ed[index].near );
       }
     }
 
@@ -467,7 +475,6 @@
         {
           FT_Int    t_index = t_j * t_width + t_i;
           FT_Int    s_index;
-          FT_Int   pixel_value;
 
 
           t[t_index] = zero_ed;
@@ -479,32 +486,15 @@
           /* the source bitmap.             */
           if ( s_i < 0 || s_i >= s_width ||
                s_j < 0 || s_j >= s_rows )
-          {
-            t[t_index].sign = -1;
             continue;
-          }
 
           if ( worker->params.flip_y )
             s_index = ( s_rows - s_j - 1 ) * s_width + s_i;
           else
             s_index = s_j * s_width + s_i;
 
-          pixel_value = (FT_Int)s[s_index];
-
-          /* clamp the pixel value to [0, 256] */
-          if ( pixel_value == 255 )
-            pixel_value = 256;
-
-          /* only assign values to the edge pixels */
-          if ( pixel_value )
-            t[t_index].dist = 256 * pixel_value;
-
-          /* We assume that if the pixel is inside a contour */
-          /* then it's coverage value must be > 127.         */
-          if ( pixel_value > 127 )
-            t[t_index].sign = 1;
-          else
-            t[t_index].sign = -1;
+          /* simply copy the alpha values */
+          t[t_index].alpha = s[s_index];
         }
       }
 
@@ -805,6 +795,7 @@
         FT_Int    index;
         FT_16D16  dist;
         FT_6D10   final_dist;
+        FT_Char   sign;
 
 
         index = j * w + i;
@@ -818,7 +809,11 @@
         if ( final_dist > worker->params.spread * 1024 )
           final_dist = worker->params.spread * 1024;
 
-        t_buffer[index] = final_dist * worker->distance_map[index].sign;
+        /* We assume that if the pixel is inside a contour */
+        /* then it's coverage value must be > 127.         */
+        sign = worker->distance_map[index].alpha < 127 ? -1 : 1;
+
+        t_buffer[index] = final_dist * sign;
       }
     }
 

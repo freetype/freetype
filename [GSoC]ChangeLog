@@ -1,3 +1,30 @@
+2020-08-1  Anuj Verma  <anujv@iitbhilai.ac.in>
+
+	[sdf -> bsdf] Optimized a bit.
+
+	* src/sdf/ftbsdf.c (ED: sign => alpha): Renamed sign
+	  to alphs. This is used to store the alpha of the current
+	  pixel mapped to the source image. This let's us store
+	  additional information without increasing memory usage.
+
+	* src/sdf/ftbsdf.c (bsdf_init_distance_map): Removed any/all
+	  kind of edge approximation and edge check from the function.
+	  The function simply copy the source bitmap to the distance
+	  map now, preserving alpha values.
+
+	* src/sdf/ftbsdf.c (compute_edge_distance): Use the new `alpha'
+	  parameter to compute gradient and approximate distance.
+	  Previously we were using the `dist' variable to store alpha
+	  values, which restricts modifying the `dist' variable because
+	  we need alpha values of neighbor to compute the gradient.
+
+	* src/sdf/ftbsdf.c (bsdf_approximate_edge): Now that we can
+	  modify the `dist' variable of the distance map, we can
+	  combine the two nested loops.
+
+	* src/sdf/ftbsdf.c (finalize_sdf): Move the `sign' determination
+	  and assignment to this function.
+
 2020-07-31  Anuj Verma  <anujv@iitbhilai.ac.in>
 
 	* src/sdf/ftbsdf.c (compute_edge_distance): Grammer fix.
