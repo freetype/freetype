@@ -214,9 +214,6 @@
     FT_16D16      alphas[9];
 
 
-    if ( x == 41 && y == 72 )
-      gx = 0;
-
     /* Since our spread cannot be 0, this condition */
     /* can never be true.                           */
     if ( x <= 0 || x >= w - 1 ||
@@ -547,9 +544,10 @@
     /* Of course this will be eliminated while using */
     /* squared distances.                            */
 
-    /* Approximate the distance, use 1 to avoid */
-    /* precision errors.                        */
-    dist = to_check->dist + ONE;
+    /* Approximate the distance, use 1 to avoid  */
+    /* precision errors. We subtract because the */
+    /* two directions can be opposite.           */
+    dist = to_check->dist - ONE;
 
     if ( dist < current->dist )
     {

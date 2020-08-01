@@ -1,5 +1,9 @@
 2020-08-1  Anuj Verma  <anujv@iitbhilai.ac.in>
 
+	* src/sdf/ftbsdf.c (compare_neighbor): Fix bug.
+
+2020-08-1  Anuj Verma  <anujv@iitbhilai.ac.in>
+
 	[sdf -> bsdf] Optimized a bit.
 
 	* src/sdf/ftbsdf.c (ED: sign => alpha): Renamed sign
