@@ -769,6 +769,7 @@
     FT_Int     w, r;
     FT_Int     i, j;
     FT_6D10*   t_buffer;
+    FT_16D16   spread;
 
     if ( !worker || !target )
     {
@@ -787,6 +788,13 @@
       goto Exit;      
     }
 
+  #if USE_SQUARED_DISTANCES
+    spread = FT_INT_16D16( worker->params.spread *
+                           worker->params.spread );
+  #else
+    spread = FT_INT_16D16( worker->params.spread );
+  #endif
+
     for ( j = 0; j < r; j++ )
     {
       for ( i = 0; i < w; i++ )
@@ -800,10 +808,10 @@
         index = j * w + i;
         dist = worker->distance_map[index].dist;
 
+        if ( dist < 0 || dist > spread )
+          dist = spread;
+
   #if USE_SQUARED_DISTANCES
-        if ( dist < 0 )
-          dist = FT_INT_16D16( worker->params.spread );
-        else
           dist = square_root( dist );
   #endif
 
@@ -811,12 +819,13 @@
         dist /= 64;
         final_dist = (FT_6D10)(dist & 0x0000FFFF);
 
-        if ( final_dist > worker->params.spread * 1024 )
-          final_dist = worker->params.spread * 1024;
-
         /* We assume that if the pixel is inside a contour */
         /* then it's coverage value must be > 127.         */
         sign = worker->distance_map[index].alpha < 127 ? -1 : 1;
+
+        /* flip the sign according to the property */
+        if ( worker->params.flip_sign )
+          sign = -sign;
 
         t_buffer[index] = final_dist * sign;
       }
