@@ -421,7 +421,10 @@
     SDF_Raster_Params  params;
     SDF_Renderer       sdf_module = SDF_RENDERER( module );
 
-    
+
+    /* initialize the bitmap in case any error occurs */
+    FT_Bitmap_Init( &target );
+
     render = &sdf_module->root;
     memory = render->root.memory;
 

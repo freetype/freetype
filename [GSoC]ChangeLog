@@ -1,5 +1,11 @@
 2020-08-3  Anuj Verma  <anujv@iitbhilai.ac.in>
 
+	* src/sdf/ftsdfrend.c (ft_bsdf_render): Initialize
+	  the target bitmap so as to avoid crashes due to
+	  uninitialized memory.
+
+2020-08-3  Anuj Verma  <anujv@iitbhilai.ac.in>
+
 	[sdf -> bsdf] Fixed memory leak.
 
 	* src/sdf/ftbsdf.c (bsdf_raster_render): Release the
