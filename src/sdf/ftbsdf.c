@@ -965,7 +965,14 @@
     FT_CALL( edt8( &worker ) );
     FT_CALL( finalize_sdf( &worker, target ) );
 
+    FT_TRACE0(( "[bsdf] bsdf_raster_render: "
+            "Total memory used = %ld\n",
+             worker.width * worker.rows * sizeof( *worker.distance_map ) ));
+
   Exit:
+    if ( worker.distance_map )
+      FT_FREE( worker.distance_map );
+
     return error;
   }
 

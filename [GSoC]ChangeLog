@@ -1,3 +1,12 @@
+2020-08-3  Anuj Verma  <anujv@iitbhilai.ac.in>
+
+	[sdf -> bsdf] Fixed memory leak.
+
+	* src/sdf/ftbsdf.c (bsdf_raster_render): Release the
+	  allocated distance map.
+	  Also, added a log of total memory allocated for
+	  generating SDF from bitmap.
+
 2020-08-2  Anuj Verma  <anujv@iitbhilai.ac.in>
 
 	[sdf -> bsdf] Fixed a bug with `finalize_sdf'.
