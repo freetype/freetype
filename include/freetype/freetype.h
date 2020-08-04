@@ -4074,7 +4074,7 @@ FT_BEGIN_HEADER
    *     https://docs.microsoft.com/en-us/typography/opentype/spec/colr
    *
    *   The glyph layer data for a given glyph index, if present, provides an
-   *   alternative, multi-colour glyph representation: Instead of rendering
+   *   alternative, multi-color glyph representation: Instead of rendering
    *   the outline or bitmap with the given glyph index, glyphs with the
    *   indices and colors returned by this function are rendered layer by
    *   layer.

@@ -4541,7 +4541,7 @@
 2018-05-13  Shao Yu Zhang  <shaozhang@fb.com>
 	    Werner Lemberg  <wl@gnu.org>
 
-	[sfnt] Preliminary support of coloured layer outlines (#44689).
+	[sfnt] Preliminary support of colored layer outlines (#44689).
 
 	This commit enables OpenType's COLR/CPAL table handling; a typical
 	application are color emojis that can be scaled to any size.

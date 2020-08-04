@@ -43,7 +43,7 @@ FT_BEGIN_HEADER
    *    borders of the stroke.
    *
    *    This can be useful to generate 'bordered' glyph, i.e., glyphs
-   *    displayed with a coloured (and anti-aliased) border around their
+   *    displayed with a colored (and anti-aliased) border around their
    *    shape.
    *
    * @order:
