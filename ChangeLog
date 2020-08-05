@@ -1,3 +1,7 @@
+2020-08-04  Alexei Podtelezhnikov  <apodtele@gmail.com>
+
+	* src/truetype/ttgload.c (TT_Load_Glyph): More tracing.
+
 2020-07-28  Alexei Podtelezhnikov  <apodtele@gmail.com>
 
 	Hide internal functions with SunPro.

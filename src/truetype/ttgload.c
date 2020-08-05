@@ -2981,8 +2981,6 @@
       error = compute_glyph_metrics( &loader, glyph_index );
     }
 
-    tt_loader_done( &loader );
-
     /* Set the `high precision' bit flag.                           */
     /* This is _critical_ to get correct output for monochrome      */
     /* TrueType glyphs at all sizes using the bytecode interpreter. */
@@ -2990,6 +2988,15 @@
     if ( !( load_flags & FT_LOAD_NO_SCALE ) &&
          size->metrics->y_ppem < 24         )
       glyph->outline.flags |= FT_OUTLINE_HIGH_PRECISION;
+
+    FT_TRACE1(( "  subglyphs = %u, contours = %hd, points = %hd,"
+                " flags = 0x%.3x\n",
+                loader.gloader->base.num_subglyphs,
+                glyph->outline.n_contours,
+                glyph->outline.n_points,
+                glyph->outline.flags ));
+
+    tt_loader_done( &loader );
 
   Exit:
 #ifdef FT_DEBUG_LEVEL_TRACE
