@@ -1,3 +1,18 @@
+2020-08-05  Alexei Podtelezhnikov  <apodtele@gmail.com>
+
+	[truetype] Retain OVERLAP_SIMPLE and OVERLAP_COMPOUND.
+
+	For glyphs with OVERLAP_SIMPLE or OVERLAP_COMPOUND, set
+	FT_OUTLINE_OVERLAP to render them with direct oversampling, which
+	mitigates artifacts (see 3bb512bc9f62).
+
+	* include/freetype/ftimage.h (FT_OUTLINE_OVERLAP): Redefine to rhyme
+	with OVERLAP_SIMPLE.
+	* src/base/ftgloadr.c (FT_GlyphLoader_Rewind): Reset outline flags.
+	* src/truetype/ttgload.c
+	(TT_Load_Simple_Glyph): Retain OVERLAP_SIMPLE.
+	(load_truetype_glyph): Retain OVERLAP_COMPOUND.
+
 2020-08-04  Alexei Podtelezhnikov  <apodtele@gmail.com>
 
 	* src/truetype/ttgload.c (TT_Load_Glyph): More tracing.
@@ -244,7 +259,7 @@
 
 	[smooth] Introduce direct oversampling for overlaps.
 
-	This implements oversampling to metigate artifacts in pixels partially
+	This implements oversampling to mitigate artifacts in pixels partially
 	covered by overlapping contours.  It turns out that the 4x4
 	oversampling is sufficient but, at least, quadruples the rendering
 	time.  The outline has to set FT_OUTLINE_OVERLAP to use this method.

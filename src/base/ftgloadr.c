@@ -92,6 +92,7 @@
 
     base->outline.n_points   = 0;
     base->outline.n_contours = 0;
+    base->outline.flags      = 0;
     base->num_subglyphs      = 0;
 
     *current = *base;

@@ -60,7 +60,7 @@
 #define SAME_X          0x10
 #define Y_POSITIVE      0x20  /* two meanings depending on Y_SHORT_VECTOR */
 #define SAME_Y          0x20
-#define OVERLAP_SIMPLE  0x40  /* we ignore this value                     */
+#define OVERLAP_SIMPLE  0x40  /* retained as FT_OUTLINE_OVERLAP           */
 
 
   /**************************************************************************
@@ -77,7 +77,7 @@
 #define WE_HAVE_A_2X2              0x0080
 #define WE_HAVE_INSTR              0x0100
 #define USE_MY_METRICS             0x0200
-#define OVERLAP_COMPOUND           0x0400  /* we ignore this value */
+#define OVERLAP_COMPOUND           0x0400  /* retained as FT_OUTLINE_OVERLAP */
 #define SCALED_COMPONENT_OFFSET    0x0800
 #define UNSCALED_COMPONENT_OFFSET  0x1000
 
@@ -488,6 +488,10 @@
           *flag++ = c;
       }
     }
+
+    /* retain the overlap flag */
+    if ( n_points && outline->tags[0] & OVERLAP_SIMPLE )
+      gloader->base.outline.flags |= FT_OUTLINE_OVERLAP;
 
     /* reading the X coordinates */
 
@@ -2183,6 +2187,11 @@
             goto Exit;
         }
       }
+
+      /* retain the overlap flag */
+      if ( gloader->base.num_subglyphs                         &&
+           gloader->base.subglyphs[0].flags & OVERLAP_COMPOUND )
+        gloader->base.outline.flags |= FT_OUTLINE_OVERLAP;
     }
 
     /***********************************************************************/
