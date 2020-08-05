@@ -1,5 +1,15 @@
 2020-08-5  Anuj Verma  <anujv@iitbhilai.ac.in>
 
+	[sdf] Added documentation for some structs.
+
+	* src/sdf/ftsdfrend.h
+	      .../ftsdfrend.c
+	      .../ftsdfcommon.h
+	      .../ftsdf.h
+	  : Added documentation for a few structs.
+
+2020-08-5  Anuj Verma  <anujv@iitbhilai.ac.in>
+
 	[sdf -> bsdf] Extended to work with monochrome bitmaps.
 
 	* src/sdf/ftbsdf.c (bsdf_init_distance_map): Handle

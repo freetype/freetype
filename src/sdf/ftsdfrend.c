@@ -32,6 +32,7 @@
    *
    */
 
+  /* property setter function */
   static FT_Error
   sdf_property_set( FT_Module    module,
                     const char*  property_name,
@@ -101,6 +102,7 @@
     return error;
   }
 
+  /* property getter function */
   static FT_Error
   sdf_property_get( FT_Module    module,
                     const char*  property_name,

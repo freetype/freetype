@@ -11,7 +11,7 @@
 
 FT_BEGIN_HEADER
 
-  /* TEMPORARY */
+  /* @experimental struct: */
   typedef enum Optimizations_ {
     OPTIMIZATION_NONE = 0,  /* default: check all points against all edges  */
     OPTIMIZATION_BB   = 1,  /* use bounding box to check nearby grid points */
@@ -30,9 +30,31 @@ FT_BEGIN_HEADER
    *   This struct must be used for the raster render function
    *   `FT_Raster_Render_Func' instead of `FT_Raster_Params' because
    *   the rasterizer require some addition information to render properly.
+   *   So, this struct is used to pass additional parameter to the
+   *   rasterizer.
    *
    * @fields:
-   *   [TODO]
+   *   root ::
+   *     The native raster params struct.
+   *
+   *   spread ::
+   *     This is and essential parameter/property required by the
+   *     rendere. `spread' defines the maximum unsigned value that
+   *     will be present in the final SDF output. For default value
+   *     check `ftsdfcommon.h'.
+   *
+   *   flip_sign ::
+   *     By default the position values are inside the contours i.e.
+   *     filled by a contour. If this property is true then that output
+   *     will be opposite from the default i.e. negative will be filled
+   *     by a contour.
+   *
+   *   flip_y ::
+   *     Setting this parameter to true maked the output image flipped
+   *     along the y-axis.
+   *
+   * @note:
+   *   It is valid for both `sdf' and `bsdf' renderer.
    *
    */
   typedef struct  SDF_Raster_Params_
@@ -42,7 +64,7 @@ FT_BEGIN_HEADER
     FT_Bool           flip_sign;
     FT_Bool           flip_y;
 
-    /* TEMPORARY */
+    /* @experimental fields: */
     FT_Int            optimization;
 
   } SDF_Raster_Params;

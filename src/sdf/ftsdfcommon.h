@@ -103,6 +103,8 @@ FT_BEGIN_HEADER
    */
 
   /* Original Algorithm: https://github.com/chmike/fpsqrt */
+  /* Use this to compute the square root of a 16.16 fixed */
+  /* point number.                                        */
   static FT_16D16
   square_root( FT_16D16  val )
   {
