@@ -1,3 +1,12 @@
+2020-08-5  Anuj Verma  <anujv@iitbhilai.ac.in>
+
+	[sdf -> bsdf] Extended to work with monochrome bitmaps.
+
+	* src/sdf/ftbsdf.c (bsdf_init_distance_map): Handle
+	  monochrome bitmaps and convert them to the internal
+	  intermediate format, which can then be used to
+	  generate SDF.
+
 2020-08-3  Anuj Verma  <anujv@iitbhilai.ac.in>
 
 	* src/sdf/ftsdfrend.c (ft_bsdf_render): Initialize

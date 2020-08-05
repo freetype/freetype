@@ -446,17 +446,54 @@
     /*         since the target bitmap can be 16bpp we manually */
     /*         convert the source bitmap to desired bpp.        */
     switch ( source->pixel_mode ) {
-    case FT_PIXEL_MODE_GRAY2:
-    case FT_PIXEL_MODE_GRAY4:
-    case FT_PIXEL_MODE_GRAY16:
-    case FT_PIXEL_MODE_LCD:
-    case FT_PIXEL_MODE_LCD_V:
     case FT_PIXEL_MODE_MONO:
       /* [TODO] */
-      FT_ERROR(( "[bsdf] bsdf_copy_source_to_target: "
-                 "support for pixel mode not yet added\n" ));
-      error = FT_THROW( Unimplemented_Feature );
+    {
+      FT_Int  t_width = worker->width;
+      FT_Int  t_rows  = worker->rows;
+      FT_Int  s_width = source->width;
+      FT_Int  s_rows  = source->rows;
+
+
+      for ( t_j = 0; t_j < t_rows; t_j++ )
+      {
+        for ( t_i = 0; t_i < t_width; t_i++ )
+        {
+          FT_Int   t_index = t_j * t_width + t_i;
+          FT_Int   s_index;
+          FT_Int   div, mod;
+          FT_Byte  pixel, byte;
+
+
+          t[t_index] = zero_ed;
+
+          s_i = t_i - x_diff;
+          s_j = t_j - y_diff;
+
+          /* Assign 0 to padding similar to */
+          /* the source bitmap.             */
+          if ( s_i < 0 || s_i >= s_width ||
+               s_j < 0 || s_j >= s_rows )
+            continue;
+
+          if ( worker->params.flip_y )
+            s_index = ( s_rows - s_j - 1 ) * source->pitch;
+          else
+            s_index = s_j * source->pitch;
+
+          div = s_index + s_i / 8;
+          mod = 7 - s_i % 8;
+
+          pixel = s[div];
+          byte = 1 << mod;
+
+          t[t_index].alpha = pixel & byte ? 255 : 0;
+
+          pixel = 0;
+        }
+      }
       break;
+    }
     case FT_PIXEL_MODE_GRAY:
     {
       FT_Int  t_width = worker->width;
