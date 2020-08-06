@@ -892,8 +892,8 @@
   }
 
   /* This function subdivide and entire shape   */
-  /* into line segment such that the it doesn't */
-  /* look visually different than the original  */
+  /* into line segment such that it doesn't     */
+  /* look visually different from the original  */
   /* curve.                                     */
   static FT_Error
   split_sdf_shape( SDF_Shape*  shape )
@@ -933,8 +933,8 @@
         {
         case SDF_EDGE_LINE:
         {
-          /* Just create a duplicate edge in case   */
-          /* it is a line. We can use the same edge */
+          /* Just create a duplicate edge in case    */
+          /* it is a line. We can use the same edge. */
           FT_CALL( sdf_edge_new( memory, &temp ) );
 
           ft_memcpy( temp, edge, sizeof( *edge ) );
@@ -1397,10 +1397,23 @@
    *   computed by the corresponding `get_min_distance_' functions efficiently.
    *
    * @Input:
-   *   [TODO]
+   *   sdf1 ::
+   *        First signed distance. (can be any of `a' or `b')
+   *
+   *   sdf1 ::
+   *        Second signed distance. (can be any of `a' or `b')
    *
    * @Return:
-   *   [TODO]
+   *   The correct signed distance, which is checked using
+   *   the above algorithm.
+   *
+   * @Note:
+   *   The function does not care about the actual distance, it simply
+   *   returns the signed distance which has a larger cross product.
+   *   So, do not call this function if the two distances are fairly
+   *   apart. In that case simply use the signed distance with shorter
+   *   absolute distance.
+   *
    */
   static SDF_Signed_Distance
   resolve_corner( SDF_Signed_Distance  sdf1,
@@ -1420,10 +1433,23 @@
    *   segments.
    *
    * @Input:
-   *   [TODO]
+   *   line ::
+   *     The line segment to which the shortest distance is to be
+   *     computed.
+   *
+   *   point ::
+   *     Point from which the shortest distance is to be computed.
    *
    * @Return:
-   *   [TODO]
+   *   out ::
+   *     Signed distance from the `point' to the `line'.
+   *
+   *   FT_Error ::
+   *     FreeType error, 0 means success.
+   *
+   * @Note:
+   *   The `line' parameter must have a `edge_type' of `SDF_EDGE_LINE'.
+   *
    */
   static FT_Error
   get_min_distance_line( SDF_Edge*             line,
@@ -1573,16 +1599,30 @@
    *   This function find the shortest distance from the `conic' bezier
    *   curve to a given `point' and assigns it to `out'. Only use it for
    *   conic/quadratic curves.
-   *   [Note]: The function uses analytical method to find shortest distance
-   *           which is faster than the Newton-Raphson's method, but has
-   *           underflows at the moment. Use Newton's method if you can
-   *           see artifacts in the SDF.
    *
    * @Input:
-   *   [TODO]
+   *   conic ::
+   *     The conic bezier to which the shortest distance is to be
+   *     computed.
+   *
+   *   point ::
+   *     Point from which the shortest distance is to be computed.
    *
    * @Return:
-   *   [TODO]
+   *   out ::
+   *     Signed distance from the `point' to the `conic'.
+   *
+   *   FT_Error ::
+   *     FreeType error, 0 means success.
+   *
+   * @Note:
+   *   The function uses analytical method to find shortest distance
+   *   which is faster than the Newton-Raphson's method, but has
+   *   underflows at the moment. Use Newton's method if you can
+   *   see artifacts in the SDF.
+   *
+   *   The `conic' parameter must have a `edge_type' of `SDF_EDGE_CONIC'.
+   *
    */
   static FT_Error
   get_min_distance_conic( SDF_Edge*             conic,
@@ -1811,15 +1851,29 @@
    *   This function find the shortest distance from the `conic' bezier
    *   curve to a given `point' and assigns it to `out'. Only use it for
    *   conic/quadratic curves.
-   *   [Note]: The function uses Newton's approximation to find the shortest
-   *           distance, which is a bit slower than the analytical method
-   *           doesn't cause underflow. Use is upto your needs.
    *
    * @Input:
-   *   [TODO]
+   *   conic ::
+   *     The conic bezier to which the shortest distance is to be
+   *     computed.
+   *
+   *   point ::
+   *     Point from which the shortest distance is to be computed.
    *
    * @Return:
-   *   [TODO]
+   *   out ::
+   *     Signed distance from the `point' to the `conic'.
+   *
+   *   FT_Error ::
+   *     FreeType error, 0 means success.
+   *
+   * @Note:
+   *   The function uses Newton's approximation to find the shortest
+   *   distance, which is a bit slower than the analytical method but
+   *   doesn't cause underflow. Use is upto your needs.
+   *
+   *   The `conic' parameter must have a `edge_type' of `SDF_EDGE_CONIC'.
+   *
    */
   static FT_Error
   get_min_distance_conic( SDF_Edge*             conic,
@@ -2045,15 +2099,29 @@
    *   This function find the shortest distance from the `cubic' bezier
    *   curve to a given `point' and assigns it to `out'. Only use it for
    *   cubic curves.
-   *   [Note]: The function uses Newton's approximation to find the shortest
-   *           distance. Another way would be to divide the cubic into conic
-   *           or subdivide the curve into lines.
    *
    * @Input:
-   *   [TODO]
+   *   cubic ::
+   *     The cubic bezier to which the shortest distance is to be
+   *     computed.
+   *
+   *   point ::
+   *     Point from which the shortest distance is to be computed.
    *
    * @Return:
-   *   [TODO]
+   *   out ::
+   *     Signed distance from the `point' to the `cubic'.
+   *
+   *   FT_Error ::
+   *     FreeType error, 0 means success.
+   *
+   * @Note:
+   *   The function uses Newton's approximation to find the shortest
+   *   distance. Another way would be to divide the cubic into conic
+   *   or subdivide the curve into lines, but that is not implemented.
+   *
+   *   The `cubic' parameter must have a `edge_type' of `SDF_EDGE_CUBIC'.
+   *
    */
   static FT_Error
   get_min_distance_cubic( SDF_Edge*             cubic,
@@ -2296,14 +2364,24 @@
    *   sdf_edge_get_min_distance
    *
    * @Description:
-   *   This function find the shortest distance from the `edge' to
-   *   a given `point' and assigns it to `out'.
+   *   This is a handy function which can be used to find shortest distance
+   *   from a `point' to any type of `edge'. It checks the edge type and
+   *   then calls the relevant `get_min_distance_' function.
    *
    * @Input:
-   *   [TODO]
+   *   edge ::
+   *     An edge to which the shortest distance is to be computed.
+   *
+   *   point ::
+   *     Point from which the shortest distance is to be computed.
    *
    * @Return:
-   *   [TODO]
+   *   out ::
+   *     Signed distance from the `point' to the `edge'.
+   *
+   *   FT_Error ::
+   *     FreeType error, 0 means success.
+   *
    */
   static FT_Error
   sdf_edge_get_min_distance( SDF_Edge*             edge,
@@ -2349,10 +2427,24 @@
    *   this contour and assigns it to `out'.
    *
    * @Input:
-   *   [TODO]
+   *   contour ::
+   *     A contour to which the shortest distance is to be computed.
+   *
+   *   point ::
+   *     Point from which the shortest distance is to be computed.
    *
    * @Return:
-   *   [TODO]
+   *   out ::
+   *     Signed distance from the `point' to the `contour'.
+   *
+   *   FT_Error ::
+   *     FreeType error, 0 means success.
+   *
+   * @Note:
+   *   The function does not return signed distance for each edge
+   *   which make up the contour, it simply returns the shortest
+   *   of all the edges.
+   *
    */
   static FT_Error
   sdf_contour_get_min_distance( SDF_Contour*          contour,
@@ -2420,10 +2512,23 @@
    *   all the edges.
    *
    * @Input:
-   *   [TODO]
+   *   internal_params ::
+   *     Internal parameters and properties required by the rasterizer.
+   *     See `SDF_Params' for the actual parameters.
    *
-   * @Return:
-   *   [TODO]
+   *   shape ::
+   *     A complete shape which is used to generate SDF.
+   *
+   *   spread ::
+   *     Maximum distances to be allowed inthe output bitmap.
+   *
+   * @Return
+   *   bitmap ::
+   *     The output bitmap which will contain the SDF information.
+   *
+   *   FT_Error ::
+   *     FreeType error, 0 means success.
+   *
    */
   static FT_Error
   sdf_generate( const SDF_Params  internal_params,
@@ -2565,10 +2670,23 @@
    *   safely.
    *
    * @Input:
-   *   [TODO]
+   *   internal_params ::
+   *     Internal parameters and properties required by the rasterizer.
+   *     See `SDF_Params' for the actual parameters.
    *
-   * @Return:
-   *   [TODO]
+   *   shape ::
+   *     A complete shape which is used to generate SDF.
+   *
+   *   spread ::
+   *     Maximum distances to be allowed inthe output bitmap.
+   *
+   * @Return
+   *   bitmap ::
+   *     The output bitmap which will contain the SDF information.
+   *
+   *   FT_Error ::
+   *     FreeType error, 0 means success.
+   *
    */
   static FT_Error
   sdf_generate_bounding_box( const SDF_Params  internal_params,
@@ -2763,10 +2881,23 @@
    *         original edges, it will only contain lines.
    *
    * @Input:
-   *   [TODO]
+   *   internal_params ::
+   *     Internal parameters and properties required by the rasterizer.
+   *     See `SDF_Params' for the actual parameters.
    *
-   * @Return:
-   *   [TODO]
+   *   shape ::
+   *     A complete shape which is used to generate SDF.
+   *
+   *   spread ::
+   *     Maximum distances to be allowed inthe output bitmap.
+   *
+   * @Return
+   *   bitmap ::
+   *     The output bitmap which will contain the SDF information.
+   *
+   *   FT_Error ::
+   *     FreeType error, 0 means success.
+   *
    */
   static FT_Error
   sdf_generate_subdivision( const SDF_Params  internal_params,
@@ -2800,10 +2931,23 @@
    *   the pixels inside the coarse grid.
    *
    * @Input:
-   *   [TODO]
+   *   internal_params ::
+   *     Internal parameters and properties required by the rasterizer.
+   *     See `SDF_Params' for the actual parameters.
    *
-   * @Return:
-   *   [TODO]
+   *   shape ::
+   *     A complete shape which is used to generate SDF.
+   *
+   *   spread ::
+   *     Maximum distances to be allowed inthe output bitmap.
+   *
+   * @Return
+   *   bitmap ::
+   *     The output bitmap which will contain the SDF information.
+   *
+   *   FT_Error ::
+   *     FreeType error, 0 means success.
+   *
    */
   static FT_Error
   sdf_generate_coarse_grid( const SDF_Params  internal_params,

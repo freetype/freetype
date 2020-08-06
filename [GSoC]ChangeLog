@@ -1,3 +1,11 @@
+2020-08-6  Anuj Verma  <anujv@iitbhilai.ac.in>
+
+	[sdf] Added documentation for function of the `sdf' renderer.
+
+	* src/sdf/ftsdf.c (*): Added function documentation for
+	  function of the `sdf' renderer, and fixed grammar at a
+	  few places.
+
 2020-08-5  Anuj Verma  <anujv@iitbhilai.ac.in>
 
 	[sdf] Added documentation for some structs.
