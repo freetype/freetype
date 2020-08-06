@@ -88,16 +88,34 @@
    *   bsdf_is_edge
    *
    * @Description:
-   *   [TODO]
+   *   This function checks weather a pixel is an edge pixel. A pixel
+   *   is edge bixel if it surrounded by a completely black pixel ( 0
+   *   alpha ) and the current pixel is not a completely black pixel.
    *
    * @Input:
-   *   [TODO]
+   *   dm ::
+   *     Array of distances. The parameter must point to the current
+   *     pixel i.e. the pixel that is to be checked for edge.
+   *
+   *   x ::
+   *     The x position of the current pixel.
+   *
+   *   y ::
+   *     The y position of the current pixel.
+   *
+   *   w ::
+   *     Width of the bitmap.
+   *
+   *   r ::
+   *     Number of rows in the bitmap.
    *
    * @Return:
-   *   [TODO]
+   *   FT_Bool ::
+   *     1 if the current pixel is an edge pixel, 0 otherwise.
+   *
    */
   static FT_Bool
-  bsdf_is_edge( ED*      dm,    /* distance map              */
+  bsdf_is_edge( ED*       dm,   /* distance map              */
                 FT_Int    x,    /* x index of point to check */
                 FT_Int    y,    /* y index of point to check */
                 FT_Int    w,    /* width                     */
@@ -157,13 +175,37 @@
    *   compute_edge_distance
    *
    * @Description:
-   *   [TODO]
+   *   Approximate the outline and compute the distance from `current'
+   *   to the approximated outline.
    *
    * @Input:
-   *   [TODO]
+   *   current ::
+   *     Array of distances. This parameter is an array of Euclidean
+   *     distances. The `current' must point to the position for which
+   *     the distance is to be caculated. We treat this array as a 2D
+   *     array mapped to a 1D array.
+   *
+   *   x ::
+   *     The x coordinate of the `current' parameter in the array.
+   *
+   *   y ::
+   *     The y coordinate of the `current' parameter in the array.
+   *
+   *   w ::
+   *     The width of the distances array.
+   *
+   *   r ::
+   *     Number of rows in the distances array.
    *
    * @Return:
-   *   [TODO]
+   *   FT_16D16_Vec ::
+   *     A vector pointing to the approximate edge distance.
+   *
+   * @Note:
+   *   This is a computationally expensive function. Try to reduce the
+   *   number of calls to this function. Moreover this must only be used
+   *   for edge pixel positions.
+   *
    */
   static FT_16D16_Vec
   compute_edge_distance( ED*     current,
@@ -309,13 +351,25 @@
    *   bsdf_approximate_edge
    *
    * @Description:
-   *   [TODO]
+   *   This is a handy function which loops through all the pixels, and
+   *   calls `compute_edge_distance' function only for edge pixels. This
+   *   maked the process a lot faster since `compute_edge_distance' uses
+   *   some functions such as `FT_Vector_NormLen' which are quite slow.
    *
    * @Input:
-   *   [TODO]
+   *   worker ::
+   *     Contains the distance map as well as all the relevant parameters
+   *     required by the function.
    *
    * @Return:
-   *   [TODO]
+   *   FT_Error ::
+   *     FreeType error, 0 means success.
+   *
+   * @Note:
+   *   The function dosen't have any actual output, it do computation on
+   *   the `distance_map' parameter of the `worker' and put the data in
+   *   that distance map itself.
+   *   
    */
   static FT_Error
   bsdf_approximate_edge( BSDF_Worker*  worker )
@@ -369,13 +423,21 @@
    *
    * @Description:
    *   This function initialize the distance map according to
-   *   algorithm '8-point sequential Euclidean distance mapping' (8SED).
+   *   algorithm `8-point sequential Euclidean distance mapping' (8SED).
+   *   Basically it copy the `source' bitmap alpha values to the
+   *   `distance_map->alpha' parameter of the `worker'.
    *
    * @Input:
-   *   [TODO]
+   *   source ::
+   *     Source bitmap to copy the data from.
    *
    * @Return:
-   *   [TODO]
+   *   worker ::
+   *     Target distance map to copy the data to.
+   *
+   *   FT_Error ::
+   *     FreeType error, 0 means success.
+   *
    */
   static FT_Error
   bsdf_init_distance_map( const FT_Bitmap*  source,
@@ -552,13 +614,31 @@
    *   compare_neighbor
    *
    * @Description:
-   *   [TODO]
+   *   Handy function which compare the neighbor ( which is defined
+   *   by the offset ) and updae the `current' distance if the new
+   *   distance is shorter than the original.
    *
    * @Input:
-   *   [TODO]
+   *   current ::
+   *     Array of distances. This parameter must point to the position
+   *     whose neighbor is to be checked. Also the array is treated as
+   *     a 2D array.
+   *
+   *   x_offset ::
+   *     X offset of the neighbor to be checked. The offset is releative
+   *     to the `current' point.
+   *
+   *   y_offset ::
+   *     Y offset of the neighbor to be checked. The offset is releative
+   *     to the `current' point.
+   *
+   *   width ::
+   *     Width of the `current' array, we need this since we treat the
+   *     distance array as a 2D array.
    *
    * @Return:
-   *   [TODO]
+   *   None. It just update the current distance.
+   *
    */
   static void
   compare_neighbor( ED*     current,
@@ -607,13 +687,17 @@
    *   first_pass
    *
    * @Description:
-   *   [TODO]
+   *   First pass the 8SED algorithm. It loop the bitmap from top
+   *   to bottom and scan each row left to right updating the distances
+   *   in the distance map ( in the `worker' parameter ).
    *
    * @Input:
-   *   [TODO]
+   *   worker::
+   *     Contains all the relevant parameters.
    *
    * @Return:
-   *   [TODO]
+   *   None. It update the distance map.
+   *
    */
   static void
   first_pass( BSDF_Worker*  worker )
@@ -680,13 +764,17 @@
    *   second_pass
    *
    * @Description:
-   *   [TODO]
+   *   Second pass the 8SED algorithm. It loop the bitmap from bottom
+   *   to top and scan each row left to right updating the distances
+   *   in the distance map ( in the `worker' parameter ).
    *
    * @Input:
-   *   [TODO]
+   *   worker::
+   *     Contains all the relevant parameters.
    *
    * @Return:
-   *   [TODO]
+   *   None. It update the distance map.
+   *
    */
   static void
   second_pass( BSDF_Worker*  worker )
@@ -754,13 +842,17 @@
    *   edt8
    *
    * @Description:
-   *   [TODO]
+   *   Function which compute the distance map of the a bitmap. It does
+   *   both first and second pass of the 8SED algorithm.
    *
    * @Input:
-   *   [TODO]
+   *   worker::
+   *     Contains all the relevant parameters.
    *
    * @Return:
-   *   [TODO]
+   *   FT_Error ::
+   *     FreeType error, 0 means success.
+   *
    */
   static FT_Error
   edt8( BSDF_Worker*  worker )
@@ -790,13 +882,22 @@
    *   finalize_sdf
    *
    * @Description:
-   *   [TODO]
+   *   This function copy the SDF data from `worker->distance_map' to the
+   *   `target' bitmap. It aslo transforms the data to our output format,
+   *    i.e. 6.10 fixed point format at the moment.
    *
    * @Input:
-   *   [TODO]
+   *   worker ::
+   *     Conaints source distance map and parameters/properties which contains
+   *     SDF data.
    *
    * @Return:
-   *   [TODO]
+   *   target ::
+   *     Target bitmap to which the SDF data is copied to.
+   *
+   *   FT_Error ::
+   *     FreeType error, 0 means success.
+   *
    */
   static FT_Error
   finalize_sdf( BSDF_Worker*  worker,

@@ -1,5 +1,12 @@
 2020-08-6  Anuj Verma  <anujv@iitbhilai.ac.in>
 
+	[sdf -> bsdf] Added documentation for functions of the `bsdf' renderer.
+
+	* src/sdf/ftbsdf.c (*) Added function documentation for
+	  function of the `bsdf' renderer.
+
+2020-08-6  Anuj Verma  <anujv@iitbhilai.ac.in>
+
 	[sdf] Added documentation for function of the `sdf' renderer.
 
 	* src/sdf/ftsdf.c (*): Added function documentation for
