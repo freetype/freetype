@@ -1,3 +1,16 @@
+2020-08-06  Priyesh Kumar  <priyeshkkumar@gmail.com>
+
+    [build] Fix MinGW errors while building dlg with FreeType on Windows. 
+
+    * builds/freetype.mk (DLG_DIR): New variable to include dlg's header
+    files.
+    (INCLUDES): Added `DLG_DIR'
+    When using MinGW to build dlg along with FreeType on Windows there are 
+    missing dlg's include files errors. Therefore we need to add path to dlg's
+    include files to remove the errors.
+
+    * src/base/ftsystem.c: Fix `-Wformat' warnings. 
+
 2020-07-30  Priyesh Kumar  <priyeshkkumar@gmail.com>
 
     * builds/windows/vc2010/freetype.sln: Skip building dlg for `Release' and

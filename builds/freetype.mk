@@ -101,6 +101,7 @@ PUBLIC_DIR   := $(TOP_DIR)/include/freetype
 INTERNAL_DIR := $(PUBLIC_DIR)/internal
 SERVICES_DIR := $(INTERNAL_DIR)/services
 CONFIG_DIR   := $(PUBLIC_DIR)/config
+DLG_DIR      := $(TOP_DIR)/src/dlg
 
 # The documentation directory.
 #
@@ -122,7 +123,8 @@ PROJECT_LIBRARY := $(LIB_DIR)/$(LIBRARY).$A
 INCLUDES := $(subst /,$(COMPILER_SEP),$(OBJ_DIR) \
                                       $(DEVEL_DIR) \
                                       $(BUILD_DIR) \
-                                      $(TOP_DIR)/include)
+                                      $(DLG_DIR) \
+                                      $(TOP_DIR)/include) 
 
 INCLUDE_FLAGS := $(INCLUDES:%=$I%)
 
