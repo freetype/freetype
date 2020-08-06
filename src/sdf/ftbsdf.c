@@ -308,7 +308,6 @@
     /* approximate direction of the edge, we can    */
     /* approximate the edge distance much better.   */
 
-    /* [TODO]: Add squared distance support. */
     if ( g.x == 0 || g.y == 0 )
       dist = ONE / 2 - alphas[4];
     else
@@ -509,7 +508,6 @@
     /*         convert the source bitmap to desired bpp.        */
     switch ( source->pixel_mode ) {
     case FT_PIXEL_MODE_MONO:
-      /* [TODO] */
     {
       FT_Int  t_width = worker->width;
       FT_Int  t_rows  = worker->rows;

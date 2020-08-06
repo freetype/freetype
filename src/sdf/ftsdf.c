@@ -151,7 +151,7 @@
    *
    */
 
-  #define MUL_26D6( a, b ) ( ( a * b ) / 64 )
+  #define MUL_26D6( a, b ) ( ( ( a ) * ( b ) ) / 64 )
   #define VEC_26D6_DOT( p, q ) ( MUL_26D6( p.x, q.x ) +   \
                                  MUL_26D6( p.y, q.y ) )
 
@@ -176,6 +176,16 @@
     SDF_EDGE_CUBIC      = 3   /* third order bezier curve      */
 
   } SDF_Edge_Type;
+
+  /* Enumeration for the orientation of a contour, remember */
+  /* the orientation is independent of the fill rule.       */
+  typedef enum  SDF_Contour_Orientation_
+  {
+    SDF_ORIENTATION_NONE  = 0,  /* undefined, used to initialize */
+    SDF_ORIENTATION_CW    = 0,  /* clockwise orientation         */
+    SDF_ORIENTATION_ACW   = 0,  /* anti-clockwise orientation    */
+
+  } SDF_Contour_Orientation;
 
   /* represent a single edge in a contour */
   typedef struct  SDF_Edge_
@@ -692,6 +702,67 @@
     }
 
     return cbox;
+  }
+
+  /* The function returns the orientation for a single contour.  */
+  /* Note that the orientation is independent of the fill rule.  */
+  /* So, for ttf the clockwise has to be filled and the opposite */
+  /* for otf fonts.                                              */
+  static SDF_Contour_Orientation
+  get_contour_orientation ( SDF_Contour*  contour )
+  {
+    SDF_Edge*  head = NULL;
+    FT_26D6    area = 0;
+
+
+    /* return none if invalid parameters */
+    if ( !contour || !contour->edges )
+      return SDF_ORIENTATION_NONE;
+
+    head = contour->edges;
+
+    /* Simply calculate the area of the control box for */
+    /* all the edges.                                   */
+    while ( head )
+    {
+      switch ( head->edge_type ) {
+      case SDF_EDGE_LINE:
+      {
+        area += MUL_26D6( ( head->end_pos.x - head->start_pos.x ),
+                          ( head->end_pos.y + head->start_pos.y ) );
+        break;
+      }
+      case SDF_EDGE_CONIC:
+      {
+        area += MUL_26D6( head->control_a.x - head->start_pos.x,
+                          head->control_a.y + head->start_pos.y );
+        area += MUL_26D6( head->end_pos.x - head->control_a.x,
+                          head->end_pos.y + head->control_a.y );
+        break;
+      }
+      case SDF_EDGE_CUBIC:
+      {
+        area += MUL_26D6( head->control_a.x - head->start_pos.x,
+                          head->control_a.y + head->start_pos.y );
+        area += MUL_26D6( head->control_b.x - head->control_a.x,
+                          head->control_b.y + head->control_a.y );
+        area += MUL_26D6( head->end_pos.x - head->control_b.x,
+                          head->end_pos.y + head->control_b.y );
+        break;
+      }
+      default:
+          return SDF_ORIENTATION_NONE;
+      }
+
+      head = head->next;
+    }
+
+    /* Clockwise contour cover a positive area, and Anti-Clockwise */
+    /* contour cover a negitive area.                              */
+    if ( area > 0 )
+      return SDF_ORIENTATION_CW;
+    else
+      return SDF_ORIENTATION_ACW;
   }
 
   /* The function is exactly same as the one    */

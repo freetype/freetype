@@ -1,5 +1,18 @@
 2020-08-6  Anuj Verma  <anujv@iitbhilai.ac.in>
 
+	[sdf] Added function to get contour orientation.
+
+	* src/sdf/ftsdf.c (SDF_Contour_Orientation): Added
+	  enum to hold the different orientations of a contour.
+
+	* src/sdf/ftsdf.c (get_contour_orientation): Added
+	  function which can be used to compute the orientation
+	  of a contour.
+
+	* src/sdf/ftbsdf.c (*): Remove completed `[TODO]'s.
+
+2020-08-6  Anuj Verma  <anujv@iitbhilai.ac.in>
+
 	[sdf -> bsdf] Added documentation for functions of the `bsdf' renderer.
 
 	* src/sdf/ftbsdf.c (*) Added function documentation for
