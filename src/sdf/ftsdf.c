@@ -143,6 +143,8 @@
   /* then they will be checked for corner if they have ambiguity.         */
   #define CORNER_CHECK_EPSILON   32
 
+  /* Coarse grid dimension. Probably will be removed in the future cause  */
+  /* coarse grid optimization is the slowest.                             */
   #define CG_DIMEN               8
 
   /**************************************************************************
@@ -161,101 +163,258 @@
    *
    */
 
+  /**************************************************************************
+   *
+   * @Struct:
+   *   SDF_TRaster
+   *
+   * @Description:
+   *   This struct is used in place of `FT_Raster' and is stored within
+   *   the internal freetype renderer struct. While rasterizing this is
+   *   passed to the `FT_Raster_Render_Func' function, which then can be
+   *   used however we want.
+   *
+   * @Fields:
+   *   memory ::
+   *     Used internally to allocate intermediate memory while raterizing.
+   *
+   */
   typedef struct  SDF_TRaster_
   {
-    FT_Memory  memory; /* used internally to allocate memory */
+    FT_Memory  memory;
 
   } SDF_TRaster;
 
-  /* enumeration of all the types of curve present in vector fonts */
+  /**************************************************************************
+   *
+   * @Enum:
+   *   SDF_Edge_Type
+   *
+   * @Description:
+   *   Enumeration of all the types of curve present in fonts.
+   *
+   * @Fields:
+   *   SDF_EDGE_UNDEFINED ::
+   *     Undefined edge, simply used to initialize and detect errors.
+   *
+   *   SDF_EDGE_LINE ::
+   *     Line segment with start and end point.
+   *
+   *   SDF_EDGE_CONIC ::
+   *     A conic/quadratic bezier curve with start, end and on control
+   *     point.
+   *
+   *   SDF_EDGE_CUBIC ::
+   *     A cubic bezier curve with start, end and two control points.
+   *
+   */
   typedef enum  SDF_Edge_Type_
   {
-    SDF_EDGE_UNDEFINED  = 0,  /* undefined, used to initialize */
-    SDF_EDGE_LINE       = 1,  /* straight line segment         */
-    SDF_EDGE_CONIC      = 2,  /* second order bezier curve     */
-    SDF_EDGE_CUBIC      = 3   /* third order bezier curve      */
+    SDF_EDGE_UNDEFINED  = 0,
+    SDF_EDGE_LINE       = 1,
+    SDF_EDGE_CONIC      = 2,
+    SDF_EDGE_CUBIC      = 3
 
   } SDF_Edge_Type;
 
-  /* Enumeration for the orientation of a contour, remember */
-  /* the orientation is independent of the fill rule.       */
+  /**************************************************************************
+   *
+   * @Enum:
+   *   SDF_Contour_Orientation
+   *
+   * @Description:
+   *   Enumeration of all the orientation of a contour. We determine the
+   *   orientation by calculating the area covered by a contour.
+   *
+   * @Fields:
+   *   SDF_ORIENTATION_NONE ::
+   *     Undefined orientation, simply used to initialize and detect errors.
+   *
+   *   SDF_ORIENTATION_CW ::
+   *     Clockwise orientation. (positive area covered)
+   *
+   *   SDF_ORIENTATION_ACW ::
+   *     Anti-clockwise orientation. (negative area covered)
+   *
+   * @Note:
+   *   The orientation is independent of the fill rule of a `FT_Outline',
+   *   that means the fill will be different for different font formats.
+   *   For example, for TrueType fonts clockwise contours are filled, while
+   *   for OpenType fonts anti-clockwise contours are filled. To determine
+   *   the propert fill rule use `FT_Outline_Get_Orientation'.
+   *
+   */
   typedef enum  SDF_Contour_Orientation_
   {
-    SDF_ORIENTATION_NONE  = 0,  /* undefined, used to initialize */
-    SDF_ORIENTATION_CW    = 0,  /* clockwise orientation         */
-    SDF_ORIENTATION_ACW   = 0,  /* anti-clockwise orientation    */
+    SDF_ORIENTATION_NONE  = 0,
+    SDF_ORIENTATION_CW    = 0,
+    SDF_ORIENTATION_ACW   = 0
 
   } SDF_Contour_Orientation;
 
-  /* represent a single edge in a contour */
+  /**************************************************************************
+   *
+   * @Enum:
+   *   SDF_Edge
+   *
+   * @Description:
+   *   Represent an edge of a contour.
+   *
+   * @Fields:
+   *   start_pos ::
+   *     Start position of an edge. Valid for all types of edges.
+   *
+   *   end_pos ::
+   *     Etart position of an edge. Valid for all types of edges.
+   *
+   *   control_a ::
+   *     A control point of the edge. Valid only for `SDF_EDGE_CONIC'
+   *     and `SDF_EDGE_CUBIC'.
+   *
+   *   control_b ::
+   *     Another control point of the edge. Valid only for `SDF_EDGE_CONIC'.
+   *
+   *   edge_type ::
+   *     Type of the edge, see `SDF_Edge_Type' for all possible edge types.
+   *
+   *   next ::
+   *     Used to create a singly linked list, which can be interpreted
+   *     as a contour.
+   *
+   */
   typedef struct  SDF_Edge_
   {
-    FT_26D6_Vec    start_pos;   /* start position of the edge             */
-    FT_26D6_Vec    end_pos;     /* end position of the edge               */
-    FT_26D6_Vec    control_a;   /* first control point of a bezier curve  */
-    FT_26D6_Vec    control_b;   /* second control point of a bezier curve */
+    FT_26D6_Vec    start_pos;
+    FT_26D6_Vec    end_pos;
+    FT_26D6_Vec    control_a;
+    FT_26D6_Vec    control_b;
 
-    SDF_Edge_Type  edge_type;   /* edge identifier                        */
+    SDF_Edge_Type  edge_type;
 
-    struct SDF_Edge_*   next;   /* to create linked list                  */
+    struct SDF_Edge_*   next;
 
   } SDF_Edge;
 
-  /* A contour represent a set of edges which make a closed */
-  /* loop.                                                  */
+  /**************************************************************************
+   *
+   * @Enum:
+   *   SDF_Contour
+   *
+   * @Description:
+   *   Represent a complete contour, which contains a list of edges.
+   *
+   * @Fields:
+   *   last_pos ::
+   *     Contains the position of the `end_pos' of the last edge
+   *     in the list of edges. Useful while decomposing the outline
+   *     using `FT_Outline_Decompose'.
+   *
+   *   edges ::
+   *     Linked list of all the edges that make the contour.
+   *
+   *   next ::
+   *     Used to create a singly linked list, which can be interpreted
+   *     as a complete shape or `FT_Outline'.
+   *
+   */
   typedef struct  SDF_Contour_
   {
-    FT_26D6_Vec           last_pos;  /* end position of the last edge    */
-    SDF_Edge*             edges;     /* list of all edges in the contour */
+    FT_26D6_Vec           last_pos;
+    SDF_Edge*             edges;
 
-    struct SDF_Contour_*  next;      /* to create linked list            */
+    struct SDF_Contour_*  next;
 
   } SDF_Contour;
 
-  /* Represent a set a contours which makes up a complete */
-  /* glyph outline.                                       */
+  /**************************************************************************
+   *
+   * @Enum:
+   *   SDF_Shape
+   *
+   * @Description:
+   *   Represent a complete shape which is the decomposition of `FT_Outline'.
+   *
+   * @Fields:
+   *   memory ::
+   *     Used internally to allocate memory.
+   *
+   *   contours ::
+   *     Linked list of all the contours that make the shape.
+   *
+   */
   typedef struct  SDF_Shape_
   {
-    FT_Memory     memory;    /* used internally to allocate memory  */
-    SDF_Contour*  contours;  /* list of all contours in the outline */
+    FT_Memory     memory;
+    SDF_Contour*  contours;
 
   } SDF_Shape;
 
+  /**************************************************************************
+   *
+   * @Enum:
+   *   SDF_Signed_Distance
+   *
+   * @Description:
+   *   Represent signed distance of a point, i.e. the distance of the
+   *   edge nearest to the point.
+   *
+   * @Fields:
+   *   distance ::
+   *     Distance of the point from the nearest edge. Can be squared or
+   *     absolute depending on the `USE_SQUARED_DISTANCES' parameter
+   *     defined in `ftsdfcommon.h'.
+   *
+   *   cross ::
+   *     Cross product of the shortest distance vector (i.e. the vector
+   *     the point to the nearest edge) and the direction of the edge
+   *     at the nearest point. This is used to resolve any ambiguity
+   *     in the sign.
+   *
+   *   sign ::
+   *     Represent weather the distance vector is outside or inside the
+   *     contour corresponding to the edge.
+   *
+   * @Note:
+   *   The `sign' may or may not be correct, therefore it must be checked
+   *   properly in case there is an ambiguity.
+   *
+   */
   typedef struct SDF_Signed_Distance_
   {
-    /* Unsigned shortest distance from the point to   */
-    /* the above `nearest_point'.                     */
-    /* [NOTE]: This can represent both squared as or  */
-    /* actual distance. This is controlled by the     */
-    /* `USE_SQUARED_DISTANCES' macro.                 */
     FT_16D16      distance;
-
-    /* The cross product of distance vector and the   */
-    /* direction. ( aka orthogonality )               */
     FT_16D16      cross;
-
-    /* Represent weather the distance vector is outside */
-    /* or inside the contour corresponding to the edge. */
-    /* [note]: This sign may or may not be correct,     */
-    /*         therefore it must be checked properly in */
-    /*         case there is an ambiguity.              */
     FT_Char       sign;       
 
   } SDF_Signed_Distance;
 
+  /**************************************************************************
+   *
+   * @Enum:
+   *   SDF_Params
+   *
+   * @Description:
+   *   Yet another internal parameters required by the rasterizer.
+   *
+   * @Fields:
+   *   orientation ::
+   *     This is not the `SDF_Contour_Orientation', this is the
+   *     `FT_Orientation', which determine weather clockwise is to 
+   *     be filled or anti-clockwise.
+   *
+   *   flip_sign ::
+   *     Simply flip the sign if this is true. By default the points
+   *     filled by the outline are positive.
+   *
+   *   flip_y ::
+   *     If set to true the output bitmap will be upside down. Can be
+   *     useful because OpenGL and DirectX have different coordinate
+   *     system for textures.
+   *
+   */
   typedef struct SDF_Params_
   {
-    /* Used to properly assign sign to the pixels. In  */
-    /* truetype the right should be inside but in post */
-    /* script left should be inside.                   */
     FT_Orientation  orientation;
-
-    /* Simply flip the sign if this is true.           */
     FT_Bool         flip_sign;
-
-    /* If set to true the output will be upside down.  */
-    /* Can be useful because OpenGL and DirectX have   */
-    /* different coordinate system for textures.       */
     FT_Bool         flip_y;
 
   } SDF_Params;

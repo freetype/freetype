@@ -1,3 +1,10 @@
+2020-08-7  Anuj Verma  <anujv@iitbhilai.ac.in>
+
+	[sdf, bsdf] Added better documentation.
+
+	* src/sdf/ftsdf.c, src/sdf/ftbsdf.c (*): Added documentation
+	  of the structs and enums for both the renderers.
+
 2020-08-6  Anuj Verma  <anujv@iitbhilai.ac.in>
 
 	[sdf] Added function to get contour orientation.
