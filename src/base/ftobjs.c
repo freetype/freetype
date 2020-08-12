@@ -4440,8 +4440,7 @@
 
 
       /* release raster object, if any */
-      if ( render->clazz->glyph_format == FT_GLYPH_FORMAT_OUTLINE &&
-           render->raster                                         )
+      if ( render->raster )
         render->clazz->raster_class->raster_done( render->raster );
 
       /* remove from list */

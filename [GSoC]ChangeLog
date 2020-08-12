@@ -1,5 +1,15 @@
 2020-08-12  Anuj Verma  <anujv@iitbhilai.ac.in>
 
+	[base] Fix memory leaks due to FreeType internals.
+
+	* src/base/ftobjs.c (ft_remove_renderer): Similar to
+	  `ft_add_renderer', remover raster's `glyph_format'
+	  check. Due to this the rasterizers which do not have
+	  `glyph_format' of `FT_GLYPH_FORMAT_OUTLINE' won't get
+	  deallocated (the `raster_done' function is no called).
+
+2020-08-12  Anuj Verma  <anujv@iitbhilai.ac.in>
+
 	[sdf] Fix memory leaks.
 
 	* src/sdf/ftsdf.c (sdf_generate_with_overlaps): Deallocate
