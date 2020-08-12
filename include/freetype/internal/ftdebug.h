@@ -113,11 +113,15 @@ FT_BEGIN_HEADER
 
 #ifdef FT_LOGGING
 
+
+#define FT_LOGGING_TAG( x )  FT_LOGGING_TAG_( x )
+#define FT_LOGGING_TAG_( x ) #x
+
 #define FT_LOG( level, varformat )                                         \
           do                                                               \
           {                                                                \
-            ft_add_tag( FT_LOGGING_TAG( FT_COMPONENT ) );                  \
-                                                                           \
+            const char* ft_component =  FT_LOGGING_TAG( FT_COMPONENT );    \
+            ft_add_tag(ft_component );                              \
             if( ft_trace_levels[FT_TRACE_COMP( FT_COMPONENT )] >= level )  \
             {                                                              \
               if( custom_output_handler != NULL )                          \
@@ -125,8 +129,7 @@ FT_BEGIN_HEADER
               else                                                         \
                 dlg_trace varformat;                                       \
             }                                                              \
-                                                                           \
-            ft_remove_tag( FT_LOGGING_TAG( FT_COMPONENT ) );               \
+            ft_remove_tag( ft_component );                          \
           }while( 0 )
 
 #else 
@@ -146,9 +149,6 @@ FT_BEGIN_HEADER
 
 
 #ifdef FT_DEBUG_LEVEL_TRACE
-
-#define FT_LOGGING_TAG( x ) FT_LOGGING_TAG_( x )
-#define FT_LOGGING_TAG_( x ) #x
 
 /*function to add dlg tag*/
 FT_BASE( void )

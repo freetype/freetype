@@ -1,3 +1,11 @@
+2020-08-12  Priyesh Kumar  <priyeshkkumar@gmail.com>
+
+    Bug fix on Windows.
+
+    * include/freetype/internal/ftdebug.h: Store the name of current 
+    `FT_COMPONENT' and then pass it to the functions `ft_add_tag()' and 
+    `ft_remove_tag()'
+
 2020-08-06  Priyesh Kumar  <priyeshkkumar@gmail.com>
 
     [build] Fix MinGW errors while building dlg with FreeType on Windows. 
