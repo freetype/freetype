@@ -1,5 +1,9 @@
 #include FT_CONFIG_CONFIG_H
 
+#ifndef FTLOGGING_H_
+#define FTLOGGING_H_
+
+
 FT_BEGIN_HEADER
 
  /***************************************************************************
@@ -40,7 +44,9 @@ FT_BEGIN_HEADER
   FT_Set_Log_Handler( ft_custom_log_handler handler ); 
 
   FT_EXPORT( void )
-  FT_Set_Default_Log_Handler();
+  FT_Set_Default_Log_Handler( void );
   
 
 FT_END_HEADER
+
+#endif /* FTLOGGING_H_ */

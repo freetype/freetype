@@ -452,6 +452,7 @@ else
   ft_log_handler( const struct dlg_origin* origin, 
                               const char* string, void* data )
   {
+    ( void ) data;
      static unsigned int features ;
      if( ft_timestamp_flag && ft_component_flag && ft_have_newline_char )
       features = features_both;

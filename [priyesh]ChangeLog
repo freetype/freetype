@@ -1,8 +1,16 @@
 2020-08-12  Priyesh Kumar  <priyeshkkumar@gmail.com>
 
+    * src/base/ftdebug.c (ft_log_handler): Fix "-Wunused-parameter" warning.
+
+    * include/freetype/ftlogging.h ( FTLOGGING_H_ ): Added Include guard.
+
+    * src/*: Fixed format specifiers.
+
+    * [priyesh]ChangeLog: Fix typo.  
+
     Bug fix on Windows.
 
-    * include/freetype/internal/ftdebug.h: Store the name of current 
+    * include/freetype/internal/ftdebug.h (FT_LOG): Store the name of current 
     `FT_COMPONENT' and then pass it to the functions `ft_add_tag()' and 
     `ft_remove_tag()'
 
