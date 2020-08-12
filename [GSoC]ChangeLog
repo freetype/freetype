@@ -1,3 +1,31 @@
+2020-08-12  Anuj Verma  <anujv@iitbhilai.ac.in>
+
+	[sdf] Added overlap support (currently only for TrueType).
+
+	* src/sdf/ftsdfrend.h (SDF_Renderer_Module): Removed the
+	  expermental `optimization' property.
+	  Added another property `overlaps', which can be used to
+	  turn on the overlap support.
+
+	* src/sdf/ftsdf.h (SDF_Raster_Params): Ditto as above.
+
+	* src/sdf/ftsdfrend.c (*): Added functionality to set
+	  and get the new `overlaps' property.
+
+	* src/sdf/ftsdf.c (sdf_raster_render):
+	  Removed support for all the optimization modes and
+	  only keep the subdivision optimization and the new
+	  overlap support function.
+
+	* src/sdf/ftsdf.c (sdf_generate_coarse_grid): Turned
+	  off until we can find a way to make it faster.
+
+	* src/sdf/ftsdf.c (sdf_generate_with_overlaps): Added
+	  a function to generate SDF for shapes with overlapping
+	  contours. It basically generate SDF for separate contours
+	  in seperate bitmaps and then combine them to remove
+	  overlaps.
+
 2020-08-7  Anuj Verma  <anujv@iitbhilai.ac.in>
 
 	[sdf, bsdf] Added better documentation.

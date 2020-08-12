@@ -40,9 +40,17 @@ FT_BEGIN_HEADER
    *   flip_y ::
    *     Setting this parameter to true maked the output image flipped
    *     along the y-axis.
-
+   *   
+   *   overlaps ::
+   *     Set this to true to generate SDF for glyphs having overlapping
+   *     contours. The overlapping support is limited to glyph which do
+   *     not have self intersecting contours. Also, removing overlaps
+   *     require a considerable amount of extra memory and this is not
+   *     valid while generating SDF from bitmap.
+   *
    * @note:
-   *   It is valid for both `sdf' and `bsdf' renderer.
+   *   All properties except `overlaps' is valid for both `sdf' and
+   *   `bsdf' renderer.
    *
    */
   typedef struct  SDF_Renderer_Module_
@@ -51,9 +59,7 @@ FT_BEGIN_HEADER
     FT_UInt         spread;
     FT_Bool         flip_sign;
     FT_Bool         flip_y;
-
-    /* @experimental fields: */
-    FT_Int          optimization;
+    FT_Bool         overlaps;
 
   } SDF_Renderer_Module, *SDF_Renderer;
 

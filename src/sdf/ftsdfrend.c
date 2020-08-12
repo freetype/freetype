@@ -81,15 +81,14 @@
       FT_TRACE7(( "[sdf] sdf_property_set: "
                   "updated property `flip_y' to %d\n", val ));
     }
-    /* TEMPORARY */
-    else if ( ft_strcmp( property_name, "optimization" ) == 0 )
+    else if ( ft_strcmp( property_name, "overlaps" ) == 0 )
     {
       FT_Int  val = *(const FT_Int*)value;
 
 
-      render->optimization = val;
+      render->overlaps = val;
       FT_TRACE7(( "[sdf] sdf_property_set: "
-                  "updated property `optimization' to %d\n", val ));
+                  "updated property `overlaps' to %d\n", val ));
     }
     else
     {
@@ -132,6 +131,13 @@
 
 
       *val = render->flip_y;
+    }
+    else if ( ft_strcmp( property_name, "overlaps" ) == 0 )
+    {
+      FT_Int*  val = (FT_Int*)value;
+
+
+      *val = render->overlaps;
     }
     else
     {
@@ -179,9 +185,7 @@
     sdf_render->spread    = DEFAULT_SPREAD;
     sdf_render->flip_sign = 0;
     sdf_render->flip_y    = 0;
-
-    /* TEMPORARY */
-    sdf_render->optimization = OPTIMIZATION_NONE;
+    sdf_render->overlaps  = 0;
 
     return FT_Err_Ok;
   }
@@ -295,9 +299,7 @@
     params.spread      = sdf_module->spread;
     params.flip_sign   = sdf_module->flip_sign;
     params.flip_y      = sdf_module->flip_y;
-
-    /* TEMPORARY */
-    params.optimization = sdf_module->optimization;
+    params.overlaps    = sdf_module->overlaps;
 
     /* render the outline */
     error = render->raster_render( render->raster, (const FT_Raster_Params*)&params );

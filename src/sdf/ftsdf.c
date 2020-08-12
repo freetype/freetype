@@ -143,9 +143,13 @@
   /* then they will be checked for corner if they have ambiguity.         */
   #define CORNER_CHECK_EPSILON   32
 
+  #if 0
+
   /* Coarse grid dimension. Probably will be removed in the future cause  */
   /* coarse grid optimization is the slowest.                             */
   #define CG_DIMEN               8
+
+  #endif
 
   /**************************************************************************
    *
@@ -247,8 +251,8 @@
   typedef enum  SDF_Contour_Orientation_
   {
     SDF_ORIENTATION_NONE  = 0,
-    SDF_ORIENTATION_CW    = 0,
-    SDF_ORIENTATION_ACW   = 0
+    SDF_ORIENTATION_CW    = 1,
+    SDF_ORIENTATION_ACW   = 2
 
   } SDF_Contour_Orientation;
 
@@ -410,12 +414,20 @@
    *     useful because OpenGL and DirectX have different coordinate
    *     system for textures.
    *
+   *   overload_sign ::
+   *     In the subdivision and bounding box optimization, the default
+   *     outside sign is taken as -1. This parameter can be used to
+   *     modify that behaviour. For example, while generating SDF for
+   *     single counter-clockwise contour the outside sign should be 1.
+   *
    */
   typedef struct SDF_Params_
   {
     FT_Orientation  orientation;
     FT_Bool         flip_sign;
     FT_Bool         flip_y;
+
+    FT_Int          overload_sign;
 
   } SDF_Params;
 
@@ -3068,6 +3080,9 @@
       FT_Char  current_sign = -1;
       FT_UInt  index;
 
+      if ( internal_params.overload_sign != 0 )
+        current_sign = internal_params.overload_sign < 0 ? -1 : 1;
+
       for ( i = 0; i < width; i++ )
       {
         index = j * width + i;
@@ -3145,6 +3160,186 @@
     return error;
   }
 
+  /**************************************************************************
+   *
+   * @Function:
+   *   sdf_generate_with_overlaps
+   *
+   * @Description:
+   *   This function can be used to generate SDF for glyphs with
+   *   overlapping contours. The function generate SDF for contours
+   *   seperately on seperate bitmaps (to generate SDF it uses
+   *   `sdf_generate_subdivision'). And at the end it simply combine 
+   *   all the SDF into the output bitmap, this fixes all the signs
+   *   and removes overlaps.
+   *
+   * @Input:
+   *   internal_params ::
+   *     Internal parameters and properties required by the rasterizer.
+   *     See `SDF_Params' for the actual parameters.
+   *
+   *   shape ::
+   *     A complete shape which is used to generate SDF.
+   *
+   *   spread ::
+   *     Maximum distances to be allowed inthe output bitmap.
+   *
+   * @Return
+   *   bitmap ::
+   *     The output bitmap which will contain the SDF information.
+   *
+   *   FT_Error ::
+   *     FreeType error, 0 means success.
+   *
+   */
+  static FT_Error
+  sdf_generate_with_overlaps( SDF_Params        internal_params,
+                              SDF_Shape*        shape,
+                              FT_UInt           spread,
+                              const FT_Bitmap*  bitmap )
+  {
+    FT_Error      error = FT_Err_Ok;
+    FT_Int        num_contours;      /* total number of contours      */
+    FT_Int        i, j;              /* iterators                     */
+    FT_Bitmap*    bitmaps;           /* seperate bitmaps for contours */
+    SDF_Contour*  contour;           /* temporary variable to iterate */
+    SDF_Shape     temp_shape;        /* temporary shape               */
+    SDF_Contour*  temp_contour;      /* temporary contour             */
+    FT_Memory     memory;            /* to allocate memory            */
+    FT_6D10*      t;                 /* target bitmap buffer          */
+
+    /* orientation of all the seperate contours */
+    SDF_Contour_Orientation*  orientations;
+
+
+    if ( !shape || !bitmap || !shape->memory )
+    {
+      error = FT_THROW( Invalid_Argument );
+      goto Exit;
+    }
+
+    /* assign the necessary variables */
+    contour = shape->contours;
+    memory = shape->memory;
+    temp_shape.memory = memory;
+    num_contours = 0;
+
+    /* find the number of contours in the shape */
+    while ( contour )
+    {
+      num_contours++;
+      contour = contour->next;
+    }
+
+    /* allocate the bitmaps to generate SDF for seperate contours */
+    if ( SDF_ALLOC( bitmaps, num_contours * sizeof( *bitmaps ) ) )
+      goto Exit;
+
+    /* allocate array to hold orientation for all contours */
+    if ( SDF_ALLOC( orientations, num_contours * sizeof( *orientations ) ) )
+      goto Exit;
+
+    contour = shape->contours;
+
+    /* Iterate through all the contours */
+    /* and generate SDF seperately.     */
+    for ( i = 0; i < num_contours; i++ )
+    {
+      /* initialize the corresponding bitmap */
+      FT_Bitmap_Init( &bitmaps[i] );
+
+      bitmaps[i].width      = bitmap->width;
+      bitmaps[i].rows       = bitmap->rows;
+      bitmaps[i].pitch      = bitmap->pitch;
+      bitmaps[i].num_grays  = bitmap->num_grays;
+      bitmaps[i].pixel_mode = bitmap->pixel_mode;
+
+      /* allocate memory for the buffer */
+      if ( SDF_ALLOC( bitmaps[i].buffer, bitmap->rows * bitmap->pitch ) )
+        goto Exit;
+
+      /* Allocate a temporary contour to pass to the */
+      /* generation function. This is done because   */
+      /* `split_sdf_shape' deallocate the contour,   */
+      /* so we cannot pass a static memory.          */
+      if ( SDF_ALLOC( temp_contour, sizeof( *temp_contour ) ) )
+        goto Exit;
+
+      /* initialize the new contour */
+      temp_contour->edges  = contour->edges;
+      temp_contour->next   = NULL;
+
+      /* Use the `temp_shape' to hold the new contour. */
+      /* Now, the `temp_shape' has only one contour.   */
+      temp_shape.contours  = temp_contour;
+
+      /* determine the orientation */
+      orientations[i] = get_contour_orientation( temp_contour );
+
+      /* The `overload_sign; property is specific to  */
+      /* sdf_generate_bounding_box. This basically    */
+      /* overload the default sign of the outside     */
+      /* pixels. Which is necessary for counter clock */
+      /* wise contours.                               */
+      if ( orientations[i] == SDF_ORIENTATION_ACW )
+        internal_params.overload_sign = -1;
+      else
+        internal_params.overload_sign = 0;
+
+      /* finally generate the SDF */
+      FT_CALL( sdf_generate_subdivision( internal_params,
+                                         &temp_shape,
+                                         spread,
+                                         &bitmaps[i] ) );
+
+      contour = contour->next;
+    }
+
+    /* cast the output bitmap buffer */
+    t  = (FT_6D10*)bitmap->buffer;
+
+    /* Iterate through all the pixels and combine all the */
+    /* seperate contours. This is the rule for combining: */
+    /*                                                    */
+    /* => For all clockwise contours compute the largest  */
+    /*    value. Name this as `val_c'.                    */
+    /* => For all counter clockwise contours compute the  */
+    /*    smallest value. Name this as `val_ac'.          */
+    /* => Now, finally use the smaller of `val_c' and     */
+    /*    `val_ac'.                                       */
+    for ( j = 0; j < bitmap->rows; j++ )
+    {
+      for ( i = 0; i < bitmap->width; i++ )
+      {
+        FT_Int   id = j * bitmap->width + i; /* index of current pixel   */
+        FT_Int   c;                          /* contour iterator         */
+        FT_6D10  val_c  = SHRT_MIN;          /* max clockwise value      */
+        FT_6D10  val_ac = SHRT_MAX;          /* min anti-clockwise value */
+
+
+        /* iterate through all the contours */
+        for ( c = 0; c < num_contours; c++ )
+        {
+          /* current contour value */
+          FT_6D10  temp = ((FT_6D10*)bitmaps[c].buffer)[id];
+
+
+          if ( orientations[c] == SDF_ORIENTATION_CW )
+            val_c = FT_MAX( val_c, temp );  /* for clockwise */
+          else
+            val_ac = FT_MIN( val_ac, temp ); /* for anti-clockwise */
+        }
+
+        /* finally find the smaller of two and assign to output */
+        t[id] = FT_MIN( val_c, val_ac );
+      }
+    }
+
+  Exit:
+    return error;
+  }
+
+  #if 0 /* coarse grid optimization is the slowest at the moment. */
 
   /**************************************************************************
    *
@@ -3404,6 +3599,8 @@
     return error;
   }
 
+  #endif
+
   /**************************************************************************
    *
    * interface functions
@@ -3526,6 +3723,7 @@
     internal_params.orientation = FT_Outline_Get_Orientation( outline );
     internal_params.flip_sign = sdf_params->flip_sign;
     internal_params.flip_y = sdf_params->flip_y;
+    internal_params.overload_sign = 0;
 
     /* assign a custom user pointer to `FT_Memory'   */
     /* also keep a reference of the old user pointer */
@@ -3537,26 +3735,17 @@
 
     FT_CALL( sdf_outline_decompose( outline, shape ) );
 
-    /* TEMPORARY */
-    if ( sdf_params->optimization == OPTIMIZATION_BB )
-      FT_CALL( sdf_generate_bounding_box( internal_params,
-                                          shape, sdf_params->spread,
-                                          sdf_params->root.target ) );
-    else if ( sdf_params->optimization == OPTIMIZATION_SUB )
+    if ( sdf_params->overlaps )
+      FT_CALL( sdf_generate_with_overlaps( internal_params,
+                                           shape, sdf_params->spread,
+                                           sdf_params->root.target ) );
+    else
       FT_CALL( sdf_generate_subdivision( internal_params,
                                          shape, sdf_params->spread,
                                          sdf_params->root.target ) );
-    else if ( sdf_params->optimization == OPTIMIZATION_CG )
-      FT_CALL( sdf_generate_coarse_grid( internal_params,
-                                         shape, sdf_params->spread,
-                                         sdf_params->root.target ) );
-    else
-      FT_CALL( sdf_generate( internal_params,
-                             shape, sdf_params->spread,
-                             sdf_params->root.target ) );
 
-    if ( shape )
-      sdf_shape_done( &shape );
+    //if ( shape )
+    //  sdf_shape_done( &shape );
 
     /* restore the memory->user */
     SDF_MEMORY_TRACKER_DONE();

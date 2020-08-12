@@ -11,16 +11,6 @@
 
 FT_BEGIN_HEADER
 
-  /* @experimental struct: */
-  typedef enum Optimizations_ {
-    OPTIMIZATION_NONE = 0,  /* default: check all points against all edges  */
-    OPTIMIZATION_BB   = 1,  /* use bounding box to check nearby grid points */
-    OPTIMIZATION_SUB  = 2,  /* subdivide then use bounding box              */
-    OPTIMIZATION_CG   = 3   /* use coarse grid to only check relevant edges */
-
-  } Optimizations;
-  /* --------- */
-
   /**************************************************************************
    *
    * @struct:
@@ -53,6 +43,13 @@ FT_BEGIN_HEADER
    *     Setting this parameter to true maked the output image flipped
    *     along the y-axis.
    *
+   *   overlaps ::
+   *     Set this to true to generate SDF for glyphs having overlapping
+   *     contours. The overlapping support is limited to glyph which do
+   *     not have self intersecting contours. Also, removing overlaps
+   *     require a considerable amount of extra memory and this is not
+   *     valid while generating SDF from bitmap.
+   *
    * @note:
    *   It is valid for both `sdf' and `bsdf' renderer.
    *
@@ -63,9 +60,7 @@ FT_BEGIN_HEADER
     FT_UInt           spread;
     FT_Bool           flip_sign;
     FT_Bool           flip_y;
-
-    /* @experimental fields: */
-    FT_Int            optimization;
+    FT_Bool           overlaps;
 
   } SDF_Raster_Params;
 
