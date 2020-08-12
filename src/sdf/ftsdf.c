@@ -3207,6 +3207,7 @@
     SDF_Contour*  temp_contour;      /* temporary contour             */
     FT_Memory     memory;            /* to allocate memory            */
     FT_6D10*      t;                 /* target bitmap buffer          */
+    FT_Bool       flip_sign;         /* filp sign?                    */
 
     /* orientation of all the seperate contours */
     SDF_Contour_Orientation*  orientations;
@@ -3238,6 +3239,11 @@
     /* allocate array to hold orientation for all contours */
     if ( SDF_ALLOC( orientations, num_contours * sizeof( *orientations ) ) )
       goto Exit;
+
+    /* Disable the flip_sign to avoid extra complication */
+    /* during the combination phase.                     */
+    flip_sign = internal_params.flip_sign;
+    internal_params.flip_sign = 0;
 
     contour = shape->contours;
 
@@ -3281,8 +3287,12 @@
       /* overload the default sign of the outside     */
       /* pixels. Which is necessary for counter clock */
       /* wise contours.                               */
-      if ( orientations[i] == SDF_ORIENTATION_ACW )
+      if ( orientations[i] == SDF_ORIENTATION_ACW &&
+           internal_params.orientation == FT_ORIENTATION_FILL_RIGHT )
         internal_params.overload_sign = -1;
+      if ( orientations[i] == SDF_ORIENTATION_CW &&
+           internal_params.orientation == FT_ORIENTATION_FILL_LEFT )
+        internal_params.overload_sign = 1;
       else
         internal_params.overload_sign = 0;
 
@@ -3291,6 +3301,16 @@
                                          &temp_shape,
                                          spread,
                                          &bitmaps[i] ) );
+
+      /* Simply flip the orientation in case of post-scritp fonts, */
+      /* so as to avoid modificatons in the combining phase.       */
+      if ( internal_params.orientation == FT_ORIENTATION_FILL_LEFT )
+      {
+        if ( orientations[i] == SDF_ORIENTATION_CW )
+          orientations[i] = SDF_ORIENTATION_ACW;
+        else if ( orientations[i] == SDF_ORIENTATION_ACW )
+          orientations[i] = SDF_ORIENTATION_CW;
+      }
 
       contour = contour->next;
     }
@@ -3330,8 +3350,9 @@
             val_ac = FT_MIN( val_ac, temp ); /* for anti-clockwise */
         }
 
-        /* finally find the smaller of two and assign to output */
-        t[id] = FT_MIN( val_c, val_ac );
+        /* Finally find the smaller of two and assign to output. */
+        /* Also apply the flip_sign if set.                      */
+        t[id] = FT_MIN( val_c, val_ac ) * ( flip_sign ? -1 : 1 );
       }
     }
 

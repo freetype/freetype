@@ -1,5 +1,16 @@
 2020-08-12  Anuj Verma  <anujv@iitbhilai.ac.in>
 
+	[sdf] Handle Post-Script fonts for overlap.
+
+	* src/sdf/ftsdf.c (sdf_generate_with_overlaps): Handle
+	  Handle Post-Script fonts for overlap support. Simply
+	  flip the orientation while combining all the separate
+	  SDF.
+	  Also, handle the `flip_sign' property separately so as
+	  to avoid handling extra cases.
+
+2020-08-12  Anuj Verma  <anujv@iitbhilai.ac.in>
+
 	[sdf] Added overlap support (currently only for TrueType).
 
 	* src/sdf/ftsdfrend.h (SDF_Renderer_Module): Removed the
