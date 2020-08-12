@@ -3203,8 +3203,9 @@
     FT_Int        i, j;              /* iterators                     */
     FT_Bitmap*    bitmaps;           /* seperate bitmaps for contours */
     SDF_Contour*  contour;           /* temporary variable to iterate */
-    SDF_Shape     temp_shape;        /* temporary shape               */
     SDF_Contour*  temp_contour;      /* temporary contour             */
+    SDF_Contour*  head;              /* head of the contour list      */
+    SDF_Shape     temp_shape;        /* temporary shape               */
     FT_Memory     memory;            /* to allocate memory            */
     FT_6D10*      t;                 /* target bitmap buffer          */
     FT_Bool       flip_sign;         /* filp sign?                    */
@@ -3212,6 +3213,10 @@
     /* orientation of all the seperate contours */
     SDF_Contour_Orientation*  orientations;
 
+
+    bitmaps      = NULL;
+    orientations = NULL;
+    head         = NULL;
 
     if ( !shape || !bitmap || !shape->memory )
     {
@@ -3236,9 +3241,15 @@
     if ( SDF_ALLOC( bitmaps, num_contours * sizeof( *bitmaps ) ) )
       goto Exit;
 
+    /* zero the memory */
+    ft_memset( bitmaps, 0, num_contours * sizeof( *bitmaps ) );
+
     /* allocate array to hold orientation for all contours */
     if ( SDF_ALLOC( orientations, num_contours * sizeof( *orientations ) ) )
       goto Exit;
+
+    /* zero the memory */
+    ft_memset( orientations, 0, num_contours * sizeof( *orientations ) );
 
     /* Disable the flip_sign to avoid extra complication */
     /* during the combination phase.                     */
@@ -3264,23 +3275,8 @@
       if ( SDF_ALLOC( bitmaps[i].buffer, bitmap->rows * bitmap->pitch ) )
         goto Exit;
 
-      /* Allocate a temporary contour to pass to the */
-      /* generation function. This is done because   */
-      /* `split_sdf_shape' deallocate the contour,   */
-      /* so we cannot pass a static memory.          */
-      if ( SDF_ALLOC( temp_contour, sizeof( *temp_contour ) ) )
-        goto Exit;
-
-      /* initialize the new contour */
-      temp_contour->edges  = contour->edges;
-      temp_contour->next   = NULL;
-
-      /* Use the `temp_shape' to hold the new contour. */
-      /* Now, the `temp_shape' has only one contour.   */
-      temp_shape.contours  = temp_contour;
-
       /* determine the orientation */
-      orientations[i] = get_contour_orientation( temp_contour );
+      orientations[i] = get_contour_orientation( contour );
 
       /* The `overload_sign; property is specific to  */
       /* sdf_generate_bounding_box. This basically    */
@@ -3296,11 +3292,31 @@
       else
         internal_params.overload_sign = 0;
 
+      /* Make `contour->next' NULL so that there is  */
+      /* one contour in the list. Also hold the next */
+      /* contour in a temporary variable so as to    */
+      /* restore the original value.                 */
+      temp_contour = contour->next;
+      contour->next = NULL;
+
+      /* Use the `temp_shape' to hold the new contour. */
+      /* Now, the `temp_shape' has only one contour.   */
+      temp_shape.contours = contour;
+
       /* finally generate the SDF */
       FT_CALL( sdf_generate_subdivision( internal_params,
                                          &temp_shape,
                                          spread,
                                          &bitmaps[i] ) );
+
+      /* Restore the original next variable. */
+      contour->next = temp_contour;
+
+      /* Since `slpit_sdf_shape' deallocated the original  */
+      /* contours list, we need to assign the new value to */
+      /* the shape's contour.                              */
+      temp_shape.contours->next = head;
+      head = temp_shape.contours;
 
       /* Simply flip the orientation in case of post-scritp fonts, */
       /* so as to avoid modificatons in the combining phase.       */
@@ -3314,6 +3330,9 @@
 
       contour = contour->next;
     }
+
+    /* assign the new contour list to `shape->contours' */
+    shape->contours = head;
 
     /* cast the output bitmap buffer */
     t  = (FT_6D10*)bitmap->buffer;
@@ -3357,6 +3376,25 @@
     }
 
   Exit:
+
+    /* deallocate the orientations array */
+    if ( orientations )
+      SDF_FREE( orientations );
+
+    /* deallocate the temporary bitmaps */
+    if ( bitmaps )
+    {
+      if ( num_contours == 0 )
+        error = FT_THROW( Raster_Corrupted );
+      else
+      {
+        for ( i = 0; i < num_contours; i++ )
+          SDF_FREE( bitmaps[i].buffer );
+
+        SDF_FREE( bitmaps );
+      }
+    }
+
     return error;
   }
 
@@ -3765,8 +3803,8 @@
                                          shape, sdf_params->spread,
                                          sdf_params->root.target ) );
 
-    //if ( shape )
-    //  sdf_shape_done( &shape );
+    if ( shape )
+      sdf_shape_done( &shape );
 
     /* restore the memory->user */
     SDF_MEMORY_TRACKER_DONE();

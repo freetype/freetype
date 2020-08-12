@@ -1,5 +1,14 @@
 2020-08-12  Anuj Verma  <anujv@iitbhilai.ac.in>
 
+	[sdf] Fix memory leaks.
+
+	* src/sdf/ftsdf.c (sdf_generate_with_overlaps): Deallocate
+	  the temporary bitmaps, and all the rest of the arrays.
+	  And also handle the `shape' appropriately so as to not
+	  cause memory leaks.
+
+2020-08-12  Anuj Verma  <anujv@iitbhilai.ac.in>
+
 	[sdf] Handle Post-Script fonts for overlap.
 
 	* src/sdf/ftsdf.c (sdf_generate_with_overlaps): Handle
