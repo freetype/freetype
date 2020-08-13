@@ -1,4 +1,6 @@
-2020-08-12  Priyesh Kumar  <priyeshkkumar@gmail.com>
+2020-08-13  Priyesh Kumar  <priyeshkkumar@gmail.com>
+
+    [priyesh]ChangeLog: Fix Date.
 
     * builds/windows/dlg/dlg.vcxproj (PreprocessorDefinitions): Added 
     `DLG_STATIC' macro for Static builds of dlg on both `x64' and `Win32'
