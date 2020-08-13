@@ -1,5 +1,15 @@
 2020-08-12  Priyesh Kumar  <priyeshkkumar@gmail.com>
 
+    * builds/windows/dlg/dlg.vcxproj (PreprocessorDefinitions): Added 
+    `DLG_STATIC' macro for Static builds of dlg on both `x64' and `Win32'
+    platforms.
+
+    * builds/windows/vc2010/freetype.vcxproj (PreprocessorDefinitions):
+    Added `FT_LOGGING' macro for Debug builds of FreeType on both `x64' and
+    `Win32' platforms.
+
+2020-08-12  Priyesh Kumar  <priyeshkkumar@gmail.com>
+
     * src/base/ftdebug.c (ft_log_handler): Fix "-Wunused-parameter" warning.
 
     * include/freetype/ftlogging.h ( FTLOGGING_H_ ): Added Include guard.
