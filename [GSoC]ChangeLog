@@ -1,3 +1,11 @@
+2020-08-13  Anuj Verma  <anujv@iitbhilai.ac.in>
+
+	[sdf] Bug fix.
+
+	* src/sdf/ftsdf.c (sdf_generate_with_overlaps): The
+	  outside sign will always be 1. And added a missing
+	  `else'.
+
 2020-08-12  Anuj Verma  <anujv@iitbhilai.ac.in>
 
 	[base] Fix memory leaks due to FreeType internals.

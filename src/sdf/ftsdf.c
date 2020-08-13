@@ -3285,8 +3285,8 @@
       /* wise contours.                               */
       if ( orientations[i] == SDF_ORIENTATION_ACW &&
            internal_params.orientation == FT_ORIENTATION_FILL_RIGHT )
-        internal_params.overload_sign = -1;
-      if ( orientations[i] == SDF_ORIENTATION_CW &&
+        internal_params.overload_sign = 1;
+      else if ( orientations[i] == SDF_ORIENTATION_CW &&
            internal_params.orientation == FT_ORIENTATION_FILL_LEFT )
         internal_params.overload_sign = 1;
       else
