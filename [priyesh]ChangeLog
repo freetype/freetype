@@ -1,5 +1,10 @@
 2020-08-13  Priyesh Kumar  <priyeshkkumar@gmail.com>
+    
+    * src/base/ftobjs.c (Mac_Read_POST_Resource): Fixed `-Wformat' 
+    warnings.
 
+    *  src/bdf/bdflib.c (ACMSG3, ACMSG7): Fixed `-Wformat' warnings. 
+      	
     [priyesh]ChangeLog: Fix Date.
 
     * builds/windows/dlg/dlg.vcxproj (PreprocessorDefinitions): Added 
