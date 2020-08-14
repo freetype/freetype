@@ -1,5 +1,13 @@
 2020-08-13  Anuj Verma  <anujv@iitbhilai.ac.in>
 
+	[sdf] Fix gcc compiler warnings.
+
+	* src/sdf/ftsdf.c, src/sdf/ftbsdf.c (*): Fix
+	  various compiler warnings, which were caused
+	  mainly due to unused variables and unused functions.
+
+2020-08-13  Anuj Verma  <anujv@iitbhilai.ac.in>
+
 	[sdf] Bug fix.
 
 	* src/sdf/ftsdf.c (sdf_generate_with_overlaps): The

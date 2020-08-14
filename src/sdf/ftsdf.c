@@ -2658,6 +2658,9 @@
     return error;
   }
 
+  /* `sdf_generate' is not used at the moment */
+  #if 0
+
   /**************************************************************************
    *
    * @Function:
@@ -2891,6 +2894,8 @@
     return error;
   }
 
+  #endif
+
   /**************************************************************************
    *
    * @Function:
@@ -3059,10 +3064,7 @@
             else if ( dists[index].distance > dist.distance )
               dists[index] = dist;
             else if ( FT_ABS(dists[index].distance - dist.distance  ) < CORNER_CHECK_EPSILON )
-            {
-              if ( FT_ABS( dists[index].cross ) < FT_ABS( dist.cross ) )
-                dists[index] = dist;
-            }
+              dists[index] = resolve_corner( dists[index], dist );
           }
         }
 
@@ -3675,6 +3677,9 @@
     FT_Int        line   = __LINE__;
 
 
+    /* in non debugging mode this is not used */
+    FT_UNUSED( line );
+
     *araster = 0;
     if ( !FT_ALLOC( raster, sizeof( SDF_TRaster ) ) )
     {
@@ -3819,6 +3824,8 @@
     FT_Memory  memory = (FT_Memory)((SDF_TRaster*)raster)->memory;
     FT_Int     line   = __LINE__;
 
+    /* in non debugging mode this is not used */
+    FT_UNUSED( line );
 
     FT_FREE( raster );
   }

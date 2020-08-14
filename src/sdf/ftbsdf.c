@@ -508,10 +508,8 @@
                           BSDF_Worker*      worker )
   {
     FT_Error  error         = FT_Err_Ok;
-    FT_Bool   is_monochrome = 0;
 
     FT_Int    x_diff, y_diff;
-    FT_Int    num_channels;
     FT_Int    t_i, t_j, s_i, s_j;
     FT_Byte*  s;
     ED*       t;
@@ -782,9 +780,6 @@
     for ( j = 1; j < r; j++ )
     {
       FT_Int        index;
-      FT_16D16      dist;
-      FT_16D16_Vec  dist_vec;
-      ED*           to_check;
       ED*           current;
 
 
@@ -859,9 +854,6 @@
     for ( j = r - 2; j >= 0; j-- )
     {
       FT_Int        index;
-      FT_16D16      dist;
-      FT_16D16_Vec  dist_vec;
-      ED*           to_check;
       ED*           current;
 
 
@@ -963,8 +955,8 @@
    *
    */
   static FT_Error
-  finalize_sdf( BSDF_Worker*  worker,
-                FT_Bitmap*    target )
+  finalize_sdf( BSDF_Worker*      worker,
+                const FT_Bitmap*  target )
   {
     FT_Error   error = FT_Err_Ok;
     FT_Int     w, r;
@@ -1092,17 +1084,17 @@
   bsdf_raster_render( FT_Raster                raster,
                       const FT_Raster_Params*  params )
   {
-    FT_Error       error       = FT_Err_Ok;
-    FT_Bitmap*     source      = NULL;
-    FT_Bitmap*     target      = NULL;
-    FT_Memory      memory      = NULL;
-    BSDF_TRaster*  bsdf_raster = (BSDF_TRaster*)raster;
-    BSDF_Worker    worker;
+    FT_Error          error       = FT_Err_Ok;
+    const FT_Bitmap*  source      = NULL;
+    const FT_Bitmap*  target      = NULL;
+    FT_Memory         memory      = NULL;
+    BSDF_TRaster*     bsdf_raster = (BSDF_TRaster*)raster;
+    BSDF_Worker       worker;
 
     const SDF_Raster_Params*  sdf_params = (const SDF_Raster_Params*)params;
 
 
-    FT_UNUSED( raster );
+    worker.distance_map = NULL;
 
     /* check for valid parameters */
     if ( !raster || !params )
