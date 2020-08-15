@@ -21,7 +21,7 @@
    *   * The basic idea of generating the SDF is taken from Viktor Chlumsky's
    *     research paper. Citation:
    *     Chlumsky, Viktor. Shape Decomposition for Multi-channel Distance
-   *     Fields. Master’s thesis.  Czech Technical University in Prague,
+   *     Fields. Master's thesis. Czech Technical University in Prague,
    *     Faculty of InformationTechnology, 2015.
    *     For more information: https://github.com/Chlumsky/msdfgen
    * 
