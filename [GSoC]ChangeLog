@@ -1,5 +1,13 @@
 2020-08-15  Anuj Verma  <anujv@iitbhilai.ac.in>
 
+	[sdf -> bsdf] Added a basic overview of the `bsdf' rasterizer.
+
+	* src/sdf/ftbsdf.c: Added the citation of the original paper
+	  and added a overview of the process for generating SDF
+	  from bitmaps.
+
+2020-08-15  Anuj Verma  <anujv@iitbhilai.ac.in>
+
 	[sdf] Added a basic overview of the `sdf' rasterizer.
 
 	* src/sdf/ftsdf.c: Added the citation of the original paper
