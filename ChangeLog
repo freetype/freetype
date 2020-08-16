@@ -1,3 +1,15 @@
+2020-08-16  Anuj Verma  <anujv@iitbhilai.ac.in>
+
+	[base] Allow renderers of different formats.
+
+	* src/base/ftobjs.c (FT_Render_Glyph_Internal): Do not return if the
+	glyph's slot format is `FT_GLYPH_FORMAT_BITMAP`.  The forthcoming
+	'bsdf' renderer will require bitmaps for processing.
+
+	* src/base/ftobjs.c (ft_add_renderer, ft_remove_renderer): Remove
+	renderer's glyph format check before adding and removing them.  The
+	'bsdf' renderer will have a format `FT_GLYPH_FORMAT_BITMAP`.
+
 2020-12-23  Werner Lemberg  <wl@gnu.org>
 
 	* builds/windows/detect.mk (COPY): Make it work with `shell`.
