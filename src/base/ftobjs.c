@@ -4393,8 +4393,7 @@
       render->glyph_format = clazz->glyph_format;
 
       /* allocate raster object if needed */
-      if ( clazz->glyph_format == FT_GLYPH_FORMAT_OUTLINE &&
-           clazz->raster_class->raster_new                )
+      if ( clazz->raster_class->raster_new )
       {
         error = clazz->raster_class->raster_new( memory, &render->raster );
         if ( error )
@@ -4441,8 +4440,7 @@
 
 
       /* release raster object, if any */
-      if ( render->clazz->glyph_format == FT_GLYPH_FORMAT_OUTLINE &&
-           render->raster                                         )
+      if ( render->raster )
         render->clazz->raster_class->raster_done( render->raster );
 
       /* remove from list */
@@ -4537,9 +4535,6 @@
 
     switch ( slot->format )
     {
-    case FT_GLYPH_FORMAT_BITMAP:   /* already a bitmap, don't do anything */
-      break;
-
     default:
       if ( slot->internal->load_flags & FT_LOAD_COLOR )
       {
