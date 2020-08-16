@@ -1,5 +1,20 @@
 2020-08-16  Anuj Verma  <anujv@iitbhilai.ac.in>
 
+	Add data types required for the forthcoming 'sdf' module.
+
+	* include/freetype/freetype.h (FT_Render_Mode): Add new render mode
+	`FT_RENDER_MODE_SDF`, which will be used to generate SDF.
+
+	* include/freetype/ftimage.h (FT_Pixel_Mode): Add new pixel mode
+	`FT_PIXEL_MODE_GRAY16`, which will be the output of the 'sdf'
+	module.
+	(FT_RASTER_FLAG_SDF): New raster flag to be used internally by the
+	'sdf' module.
+
+	* include/freetype/fttypes.h (FT_F6Dot10): New data type.
+
+2020-08-16  Anuj Verma  <anujv@iitbhilai.ac.in>
+
 	[base] Allow renderers of different formats.
 
 	* src/base/ftobjs.c (FT_Render_Glyph_Internal): Do not return if the

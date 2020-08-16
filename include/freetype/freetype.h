@@ -3204,7 +3204,7 @@ FT_BEGIN_HEADER
    *
    * @note:
    *   This function is provided as a convenience, but keep in mind that
-   *   @FT_Matrix coefficients are only 16.16 fixed point values, which can
+   *   @FT_Matrix coefficients are only 16.16 fixed-point values, which can
    *   limit the accuracy of the results.  Using floating-point computations
    *   to perform the transform directly in client code instead will always
    *   yield better numbers.
@@ -3236,10 +3236,14 @@ FT_BEGIN_HEADER
    *   in the @FT_GlyphSlotRec structure gives the format of the returned
    *   bitmap.
    *
-   *   All modes except @FT_RENDER_MODE_MONO use 256 levels of opacity,
-   *   indicating pixel coverage.  Use linear alpha blending and gamma
-   *   correction to correctly render non-monochrome glyph bitmaps onto a
-   *   surface; see @FT_Render_Glyph.
+   *   All modes except @FT_RENDER_MODE_MONO and @FT_RENDER_MODE_SDF use 256
+   *   levels of opacity, indicating pixel coverage.  Use linear alpha
+   *   blending and gamma correction to correctly render non-monochrome
+   *   glyph bitmaps onto a surface; see @FT_Render_Glyph.
+   *
+   *   The @FT_RENDER_MODE_SDF is a special render mode that uses up to
+   *   65536 distance values, indicating the signed distance from the grid
+   *   position to the nearest outline.
    *
    * @values:
    *   FT_RENDER_MODE_NORMAL ::
@@ -3266,6 +3270,15 @@ FT_BEGIN_HEADER
    *     bitmaps that are 3~times the height of the original glyph outline in
    *     pixels and use the @FT_PIXEL_MODE_LCD_V mode.
    *
+   *   FT_RENDER_MODE_SDF ::
+   *     This mode corresponds to 16-bit signed distance fields (SDF)
+   *     bitmaps.  Each pixel in a SDF bitmap contains information about the
+   *     nearest edge of the glyph outline.  The distances are calculated
+   *     from the center of the pixel and are positive if they are filled by
+   *     the outline (i.e., inside the outline) and negative otherwise.  The
+   *     output bitmap buffer is represented as 6.10 fixed-point values; use
+   *     @FT_6Dot10 and convert accordingly.
+   *
    * @note:
    *   The selected render mode only affects vector glyphs of a font.
    *   Embedded bitmaps often have a different pixel mode like
@@ -3279,6 +3292,7 @@ FT_BEGIN_HEADER
     FT_RENDER_MODE_MONO,
     FT_RENDER_MODE_LCD,
     FT_RENDER_MODE_LCD_V,
+    FT_RENDER_MODE_SDF,
 
     FT_RENDER_MODE_MAX
 
