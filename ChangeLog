@@ -1,5 +1,25 @@
 2020-08-16  Anuj Verma  <anujv@iitbhilai.ac.in>
 
+	[sdf] Add files for new 'sdf' module.
+
+	Here is a breakdown of what the files will contain.
+
+	* src/sdf/ftsdfrend.c, src/sdf/ftsdfrend.h: The 'sdf' and 'bsdf'
+	renderers.
+
+	* src/sdf/ftsdf.c, src/sdf/ftsdf.h: The rasterizer for the 'sdf'
+	renderer.
+	* src/sdf/ftbsdf.c, src/sdf/ftbsdf.h: The rasterizer for the 'bsdf'
+	renderer.
+
+	* src/sdf/ftsdfcommon.h: Commmon properties and functions for both
+	rasterizers.
+	* src/sdf/ftsdferrs.h: Common error defines.
+
+	* src/sdf/sdf.c: For building a single object of the entire module.
+
+2020-08-16  Anuj Verma  <anujv@iitbhilai.ac.in>
+
 	[base] Allow renderers of different formats.
 
 	* src/base/ftobjs.c (FT_Render_Glyph_Internal): Do not return if the
