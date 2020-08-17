@@ -1,5 +1,13 @@
 2020-08-17  Anuj Verma  <anujv@iitbhilai.ac.in>
 
+	[sdf] Add 'sdf' renderer.
+
+	* src/sdf/ftsdf.c: Add 'sdf' renderer along with its interface
+	functions.
+	Also add functions to set and get properties.
+
+2020-08-17  Anuj Verma  <anujv@iitbhilai.ac.in>
+
 	[sdf] Add common elements for 'sdf' and 'bsdf' renderers.
 
 	* src/sdf/ftsdfrend.h (SDF_Rendere_Module, ft_sdf_renderer_class,
