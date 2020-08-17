@@ -1,5 +1,36 @@
 2020-08-17  Anuj Verma  <anujv@iitbhilai.ac.in>
 
+	[sdf] Structs, enums, macros, and functions for 'sdf' rasterizer.
+
+	* src/sdf/ftsdf.c (FT_DEBUG_INNER, FT_ASSIGNP_INNER)
+	[FT_DEBUG_LEVEL_TRACE && FT_DEBUG_MEMORY]: New macros.
+	(SDF_MemoryUser) [FT_DEBUG_LEVEL_TRACE && FT_DEBUG_MEMORY]: New
+	struct for memory usage tracing.
+	(sdf_alloc, sdf_free) [FT_DEBUG_LEVEL_TRACE && FT_DEBUG_MEMORY]: New
+	functions for memory usage tracing.
+
+	(SDF_ALLOC, SDF_FREE): New macros for memory management.
+	(SDF_MEMORY_TRACKER_DECLARE, SDF_MEMORY_TRACKER_SETUP,
+	SDF_MEMORY_TRACKER_DONE): New macros to set up memory usage tracing.
+
+	(USE_NEWTON_FOR_CONIC, MAX_NEWTON_DIVISIONS, MAX_NEWTON_STEPS,
+	CORNER_CHECK_EPSILON, CG_DIMEN): New configuration macros for
+	controlling the process of finding the shortest distance.
+
+	(MUL_26D6, VEC_26D6_DOT): New auxiliary macros.
+
+	(SDF_TRaster, SDF_Edge, SDF_Contour, SDF_Shape, SDF_Signed_Distance,
+	SDF_Params): New structs for setting up SDF data.
+	(SDF_Edge_Type, SDF_Contour_Orientation): New enums for SDF data.
+
+	(zero_vector, null_edge, null_contour, null_shape, max_sdf): Useful
+	constants.
+
+	(sdf_edge_new, sdf_edge_done, sdf_contour_new, sdf_contour_done,
+	sdf_shape_new, sdf_shape_done): New constructors and destructors.
+
+2020-08-17  Anuj Verma  <anujv@iitbhilai.ac.in>
+
 	[sdf] Add raster parameters structure.
 
 	* src/sdf/ftsdf.h (SDF_Raster_Params): New structure.
