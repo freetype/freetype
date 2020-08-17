@@ -643,4 +643,203 @@
     SDF_FREE( *shape );
   }
 
+
+  /**************************************************************************
+   *
+   * shape decomposition functions
+   *
+   */
+
+  /* This function is called when starting a new contour at `to`, */
+  /* which gets added to the shape's list.                        */
+  static FT_Error
+  sdf_move_to( const FT_26D6_Vec* to,
+               void*              user )
+  {
+    SDF_Shape*    shape   = ( SDF_Shape* )user;
+    SDF_Contour*  contour = NULL;
+
+    FT_Error   error  = FT_Err_Ok;
+    FT_Memory  memory = shape->memory;
+
+
+    if ( !to || !user )
+    {
+      error = FT_THROW( Invalid_Argument );
+      goto Exit;
+    }
+
+    FT_CALL( sdf_contour_new( memory, &contour ) );
+
+    contour->last_pos = *to;
+    contour->next     = shape->contours;
+    shape->contours   = contour;
+
+  Exit:
+    return error;
+  }
+
+
+  /* This function is called when there is a line in the      */
+  /* contour.  The line starts at the previous edge point and */
+  /* stops at `to`.                                           */
+  static FT_Error
+  sdf_line_to( const FT_26D6_Vec*  to,
+               void*               user )
+  {
+    SDF_Shape*    shape    = ( SDF_Shape* )user;
+    SDF_Edge*     edge     = NULL;
+    SDF_Contour*  contour  = NULL;
+
+    FT_Error      error    = FT_Err_Ok;
+    FT_Memory     memory   = shape->memory;
+
+
+    if ( !to || !user )
+    {
+      error = FT_THROW( Invalid_Argument );
+      goto Exit;
+    }
+
+    contour = shape->contours;
+
+    if ( contour->last_pos.x == to->x &&
+         contour->last_pos.y == to->y )
+      goto Exit;
+
+    FT_CALL( sdf_edge_new( memory, &edge ) );
+
+    edge->edge_type = SDF_EDGE_LINE;
+    edge->start_pos = contour->last_pos;
+    edge->end_pos   = *to;
+
+    edge->next        = contour->edges;
+    contour->edges    = edge;
+    contour->last_pos = *to;
+
+  Exit:
+    return error;
+  }
+
+
+  /* This function is called when there is a conic Bezier curve   */
+  /* in the contour.  The curve starts at the previous edge point */
+  /* and stops at `to`, with control point `control_1`.           */
+  static FT_Error
+  sdf_conic_to( const FT_26D6_Vec*  control_1,
+                const FT_26D6_Vec*  to,
+                void*               user )
+  {
+    SDF_Shape*    shape    = ( SDF_Shape* )user;
+    SDF_Edge*     edge     = NULL;
+    SDF_Contour*  contour  = NULL;
+
+    FT_Error   error  = FT_Err_Ok;
+    FT_Memory  memory = shape->memory;
+
+
+    if ( !control_1 || !to || !user )
+    {
+      error = FT_THROW( Invalid_Argument );
+      goto Exit;
+    }
+
+    contour = shape->contours;
+
+    FT_CALL( sdf_edge_new( memory, &edge ) );
+
+    edge->edge_type = SDF_EDGE_CONIC;
+    edge->start_pos = contour->last_pos;
+    edge->control_a = *control_1;
+    edge->end_pos   = *to;
+
+    edge->next        = contour->edges;
+    contour->edges    = edge;
+    contour->last_pos = *to;
+
+  Exit:
+    return error;
+  }
+
+
+  /* This function is called when there is a cubic Bezier curve   */
+  /* in the contour.  The curve starts at the previous edge point */
+  /* and stops at `to`, with two control points `control_1` and   */
+  /* `control_2`.                                                 */
+  static FT_Error
+  sdf_cubic_to( const FT_26D6_Vec*  control_1,
+                const FT_26D6_Vec*  control_2,
+                const FT_26D6_Vec*  to,
+                void*               user )
+  {
+    SDF_Shape*    shape    = ( SDF_Shape* )user;
+    SDF_Edge*     edge     = NULL;
+    SDF_Contour*  contour  = NULL;
+
+    FT_Error   error  = FT_Err_Ok;
+    FT_Memory  memory = shape->memory;
+
+
+    if ( !control_2 || !control_1 || !to || !user )
+    {
+      error = FT_THROW( Invalid_Argument );
+      goto Exit;
+    }
+
+    contour = shape->contours;
+
+    FT_CALL( sdf_edge_new( memory, &edge ) );
+
+    edge->edge_type = SDF_EDGE_CUBIC;
+    edge->start_pos = contour->last_pos;
+    edge->control_a = *control_1;
+    edge->control_b = *control_2;
+    edge->end_pos   = *to;
+
+    edge->next        = contour->edges;
+    contour->edges    = edge;
+    contour->last_pos = *to;
+
+  Exit:
+    return error;
+  }
+
+
+  /* Construct the structure to hold all four outline */
+  /* decomposition functions.                         */
+  FT_DEFINE_OUTLINE_FUNCS(
+    sdf_decompose_funcs,
+
+    (FT_Outline_MoveTo_Func) sdf_move_to,   /* move_to  */
+    (FT_Outline_LineTo_Func) sdf_line_to,   /* line_to  */
+    (FT_Outline_ConicTo_Func)sdf_conic_to,  /* conic_to */
+    (FT_Outline_CubicTo_Func)sdf_cubic_to,  /* cubic_to */
+
+    0,                                      /* shift    */
+    0                                       /* delta    */
+  )
+
+
+  /* Decompose `outline` and put it into the `shape` structure.  */
+  static FT_Error
+  sdf_outline_decompose( FT_Outline*  outline,
+                         SDF_Shape*   shape )
+  {
+    FT_Error  error = FT_Err_Ok;
+
+
+    if ( !outline || !shape )
+    {
+      error = FT_THROW( Invalid_Argument );
+      goto Exit;
+    }
+
+    error = FT_Outline_Decompose( outline,
+                                  &sdf_decompose_funcs,
+                                  (void*)shape );
+
+  Exit:
+    return error;
+  }
+
 /* END */

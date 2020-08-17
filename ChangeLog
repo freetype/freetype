@@ -1,5 +1,14 @@
 2020-08-17  Anuj Verma  <anujv@iitbhilai.ac.in>
 
+	[sdf] Add functions to decompose `FT_Outline`.
+
+	* src/sdf/ftsdf.c (sdf_move_to, sdf_line_to, sdf_conic_to,
+	sdf_cubic_to): New auxiliary decomposition functions.
+	(sdf_compose_funcs): New structure.
+	(sdf_outline_decompose): New function.
+
+2020-08-17  Anuj Verma  <anujv@iitbhilai.ac.in>
+
 	[sdf] Structs, enums, macros, and functions for 'sdf' rasterizer.
 
 	* src/sdf/ftsdf.c (FT_DEBUG_INNER, FT_ASSIGNP_INNER)
