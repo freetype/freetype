@@ -1,3 +1,20 @@
+2020-08-17  Anuj Verma  <anujv@iitbhilai.ac.in>
+
+	[sdf] Add common elements for 'sdf' and 'bsdf' renderers.
+
+	* src/sdf/ftsdfrend.h (SDF_Rendere_Module, ft_sdf_renderer_class,
+	ft_bitmap_sdf_renderer_class): New structures.
+
+	* src/sdf/ftsdfcommon.h (DEFAULT_SPREAD, MIN_SPREAD_MAX_SPREAD,
+	USE_SQUARED_DISTANCES): New macros.
+	(FT_INT_26D6, FT_INT_16D16, FT_26D6_16D16): New macros.
+	(FT_CALL, VECTOR_LENGTH_16D16): New macros.
+	(FT_26D6_Vec, FT_16D16_Vec, FT_16D16, FT_26D6, FT_6D10, FT_CBox):
+	New typedefs.
+	(square_root): New macro.
+
+	* src/sdf/ftsdferrs.h: Add module error setup.
+
 2020-08-16  Anuj Verma  <anujv@iitbhilai.ac.in>
 
 	[sdf] Add files for new 'sdf' module.
