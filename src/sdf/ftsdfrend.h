@@ -50,6 +50,7 @@ FT_BEGIN_HEADER
    * @note:
    *   All properties except `overlaps' is valid for both `sdf' and
    *   `bsdf' renderer.
+   *
    */
   typedef struct  SDF_Renderer_Module_
   {
