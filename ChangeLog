@@ -1,5 +1,14 @@
 2020-08-17  Anuj Verma  <anujv@iitbhilai.ac.in>
 
+	[sdf] Add raster parameters structure.
+
+	* src/sdf/ftsdf.h (SDF_Raster_Params): New structure.
+
+	* src/sdf/sdf.c: Include source files in order to make a single
+	object of the module.
+
+2020-08-17  Anuj Verma  <anujv@iitbhilai.ac.in>
+
 	[sdf] Add 'sdf' renderer.
 
 	* src/sdf/ftsdf.c: Add 'sdf' renderer along with its interface
