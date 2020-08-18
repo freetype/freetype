@@ -1,5 +1,15 @@
 2020-08-18  Anuj Verma  <anujv@iitbhilai.ac.in>
 
+	[sdf] Add shortest distance finding functions.
+
+	* src/sdf/ftsdf.c (get_min_distance_line, get_min_distance_conic,
+	get_min_distance_cubic): New functions.  Note that
+	`get_min_distance_conic` comes with two implementations (using an
+	analytical and an iterative method, to be controlled with the
+	`USE_NEWTON_FOR_CONIC` macro).
+
+2020-08-18  Anuj Verma  <anujv@iitbhilai.ac.in>
+
 	[sdf] Add function to resolve corner distances.
 
 	* src/sdf/ftsdf.c (resolve_corner): New function.
