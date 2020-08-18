@@ -1,5 +1,15 @@
 2020-08-18  Anuj Verma  <anujv@iitbhilai.ac.in>
 
+	[sdf] Add essential math functions.
+
+	* src/sdf/ftsdf.c (cube_root, arc_cos) [!USE_NEWTON_FOR_CONIC]: New
+	auxiliary functions.
+
+	* src/sdf/ftsdf.c (solve_quadratic_equation, solve_cubic_equation)
+	[!USE_NEWTON_FOR_CONIC]: New functions.
+
+2020-08-18  Anuj Verma  <anujv@iitbhilai.ac.in>
+
 	[sdf] Add utility functions for contours.
 
 	* src/sdf/ftsdf.c (get_control_box, get_contour_orientation): New

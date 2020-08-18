@@ -1312,4 +1312,248 @@
     return error;
   }
 
+
+  /**************************************************************************
+   *
+   * math functions
+   *
+   */
+
+#if !USE_NEWTON_FOR_CONIC
+
+  /* [NOTE]: All the functions below down until rasterizer */
+  /*         can be avoided if we decide to subdivide the  */
+  /*         curve into lines.                             */
+
+  /* This function uses Newton's iteration to find */
+  /* the cube root of a fixed-point integer.       */
+  static FT_16D16
+  cube_root( FT_16D16  val )
+  {
+    /* [IMPORTANT]: This function is not good as it may */
+    /* not break, so use a lookup table instead.  Or we */
+    /* can use an algorithm similar to `square_root`.   */
+
+    FT_Int  v, g, c;
+
+
+    if ( val == 0                  ||
+         val == -FT_INT_16D16( 1 ) ||
+         val ==  FT_INT_16D16( 1 ) )
+      return val;
+
+    v = val < 0 ? -val : val;
+    g = square_root( v );
+    c = 0;
+
+    while ( 1 )
+    {
+      c = FT_MulFix( FT_MulFix( g, g ), g ) - v;
+      c = FT_DivFix( c, 3 * FT_MulFix( g, g ) );
+
+      g -= c;
+
+      if ( ( c < 0 ? -c : c ) < 30 )
+        break;
+    }
+
+    return val < 0 ? -g : g;
+  }
+
+
+  /* Calculate the perpendicular by using '1 - base^2'. */
+  /* Then use arctan to compute the angle.              */
+  static FT_16D16
+  arc_cos( FT_16D16  val )
+  {
+    FT_16D16  p;
+    FT_16D16  b   = val;
+    FT_16D16  one = FT_INT_16D16( 1 );
+
+
+    if ( b > one )
+      b = one;
+    if ( b < -one )
+      b = -one;
+
+    p = one - FT_MulFix( b, b );
+    p = square_root( p );
+
+    return FT_Atan2( b, p );
+  }
+
+
+  /* Compute roots of a quadratic polynomial, assign them to `out`, */
+  /* and return number of real roots.                               */
+  /*                                                                */
+  /* The procedure can be found at                                  */
+  /*                                                                */
+  /*   https://mathworld.wolfram.com/QuadraticFormula.html          */
+  static FT_UShort
+  solve_quadratic_equation( FT_26D6   a,
+                            FT_26D6   b,
+                            FT_26D6   c,
+                            FT_16D16  out[2] )
+  {
+    FT_16D16  discriminant = 0;
+
+
+    a = FT_26D6_16D16( a );
+    b = FT_26D6_16D16( b );
+    c = FT_26D6_16D16( c );
+
+    if ( a == 0 )
+    {
+      if ( b == 0 )
+        return 0;
+      else
+      {
+        out[0] = FT_DivFix( -c, b );
+
+        return 1;
+      }
+    }
+
+    discriminant = FT_MulFix( b, b ) - 4 * FT_MulFix( a, c );
+
+    if ( discriminant < 0 )
+      return 0;
+    else if ( discriminant == 0 )
+    {
+      out[0] = FT_DivFix( -b, 2 * a );
+
+      return 1;
+    }
+    else
+    {
+      discriminant = square_root( discriminant );
+
+      out[0] = FT_DivFix( -b + discriminant, 2 * a );
+      out[1] = FT_DivFix( -b - discriminant, 2 * a );
+
+      return 2;
+    }
+  }
+
+
+  /* Compute roots of a cubic polynomial, assign them to `out`, */
+  /* and return number of real roots.                           */
+  /*                                                            */
+  /* The procedure can be found at                              */
+  /*                                                            */
+  /*   https://mathworld.wolfram.com/CubicFormula.html          */
+  static FT_UShort
+  solve_cubic_equation( FT_26D6   a,
+                        FT_26D6   b,
+                        FT_26D6   c,
+                        FT_26D6   d,
+                        FT_16D16  out[3] )
+  {
+    FT_16D16  q = 0;      /* intermediate */
+    FT_16D16  r = 0;      /* intermediate */
+
+    FT_16D16  a2 = b;     /* x^2 coefficients */
+    FT_16D16  a1 = c;     /* x coefficients   */
+    FT_16D16  a0 = d;     /* constant         */
+
+    FT_16D16  q3   = 0;
+    FT_16D16  r2   = 0;
+    FT_16D16  a23  = 0;
+    FT_16D16  a22  = 0;
+    FT_16D16  a1x2 = 0;
+
+
+    /* cutoff value for `a` to be a cubic, otherwise solve quadratic */
+    if ( a == 0 || FT_ABS( a ) < 16 )
+      return solve_quadratic_equation( b, c, d, out );
+
+    if ( d == 0 )
+    {
+      out[0] = 0;
+
+      return solve_quadratic_equation( a, b, c, out + 1 ) + 1;
+    }
+
+    /* normalize the coefficients; this also makes them 16.16 */
+    a2 = FT_DivFix( a2, a );
+    a1 = FT_DivFix( a1, a );
+    a0 = FT_DivFix( a0, a );
+
+    /* compute intermediates */
+    a1x2 = FT_MulFix( a1, a2 );
+    a22  = FT_MulFix( a2, a2 );
+    a23  = FT_MulFix( a22, a2 );
+
+    q = ( 3 * a1 - a22 ) / 9;
+    r = ( 9 * a1x2 - 27 * a0 - 2 * a23 ) / 54;
+
+    /* [BUG]: `q3` and `r2` still cause underflow. */
+
+    q3 = FT_MulFix( q, q );
+    q3 = FT_MulFix( q3, q );
+
+    r2 = FT_MulFix( r, r );
+
+    if ( q3 < 0 && r2 < -q3 )
+    {
+      FT_16D16  t = 0;
+
+
+      q3 = square_root( -q3 );
+      t  = FT_DivFix( r, q3 );
+
+      if ( t > ( 1 << 16 ) )
+        t =  ( 1 << 16 );
+      if ( t < -( 1 << 16 ) )
+        t = -( 1 << 16 );
+
+      t   = arc_cos( t );
+      a2 /= 3;
+      q   = 2 * square_root( -q );
+
+      out[0] = FT_MulFix( q, FT_Cos( t / 3 ) ) - a2;
+      out[1] = FT_MulFix( q, FT_Cos( ( t + FT_ANGLE_PI * 2 ) / 3 ) ) - a2;
+      out[2] = FT_MulFix( q, FT_Cos( ( t + FT_ANGLE_PI * 4 ) / 3 ) ) - a2;
+
+      return 3;
+    }
+
+    else if ( r2 == -q3 )
+    {
+      FT_16D16  s = 0;
+
+
+      s   = cube_root( r );
+      a2 /= -3;
+
+      out[0] = a2 + ( 2 * s );
+      out[1] = a2 - s;
+
+      return 2;
+    }
+
+    else
+    {
+      FT_16D16  s    = 0;
+      FT_16D16  t    = 0;
+      FT_16D16  dis  = 0;
+
+
+      if ( q3 == 0 )
+        dis = FT_ABS( r );
+      else
+        dis = square_root( q3 + r2 );
+
+      s = cube_root( r + dis );
+      t = cube_root( r - dis );
+      a2 /= -3;
+      out[0] = ( a2 + ( s + t ) );
+
+      return 1;
+    }
+  }
+
+#endif /* !USE_NEWTON_FOR_CONIC */
+
+
 /* END */
