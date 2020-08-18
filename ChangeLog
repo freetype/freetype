@@ -1,5 +1,11 @@
 2020-08-18  Anuj Verma  <anujv@iitbhilai.ac.in>
 
+	[sdf] Add function to resolve corner distances.
+
+	* src/sdf/ftsdf.c (resolve_corner): New function.
+
+2020-08-18  Anuj Verma  <anujv@iitbhilai.ac.in>
+
 	[sdf] Add essential math functions.
 
 	* src/sdf/ftsdf.c (cube_root, arc_cos) [!USE_NEWTON_FOR_CONIC]: New
