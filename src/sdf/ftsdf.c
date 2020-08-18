@@ -842,4 +842,474 @@
     return error;
   }
 
+
+  /**************************************************************************
+   *
+   * utility functions
+   *
+   */
+
+  /* Return the control box of a edge.  The control box is a rectangle */
+  /* in which all the control points can fit tightly.                  */
+  static FT_CBox
+  get_control_box( SDF_Edge  edge )
+  {
+    FT_CBox  cbox;
+    FT_Bool  is_set = 0;
+
+
+    switch ( edge.edge_type )
+    {
+    case SDF_EDGE_CUBIC:
+      cbox.xMin = edge.control_b.x;
+      cbox.xMax = edge.control_b.x;
+      cbox.yMin = edge.control_b.y;
+      cbox.yMax = edge.control_b.y;
+
+      is_set = 1;
+      /* fall through */
+
+    case SDF_EDGE_CONIC:
+      if ( is_set )
+      {
+        cbox.xMin = edge.control_a.x < cbox.xMin
+                    ? edge.control_a.x
+                    : cbox.xMin;
+        cbox.xMax = edge.control_a.x > cbox.xMax
+                    ? edge.control_a.x
+                    : cbox.xMax;
+
+        cbox.yMin = edge.control_a.y < cbox.yMin
+                    ? edge.control_a.y
+                    : cbox.yMin;
+        cbox.yMax = edge.control_a.y > cbox.yMax
+                    ? edge.control_a.y
+                    : cbox.yMax;
+      }
+      else
+      {
+        cbox.xMin = edge.control_a.x;
+        cbox.xMax = edge.control_a.x;
+        cbox.yMin = edge.control_a.y;
+        cbox.yMax = edge.control_a.y;
+
+        is_set = 1;
+      }
+      /* fall through */
+
+    case SDF_EDGE_LINE:
+      if ( is_set )
+      {
+        cbox.xMin = edge.start_pos.x < cbox.xMin
+                    ? edge.start_pos.x
+                    : cbox.xMin;
+        cbox.xMax = edge.start_pos.x > cbox.xMax
+                    ? edge.start_pos.x
+                    : cbox.xMax;
+
+        cbox.yMin = edge.start_pos.y < cbox.yMin
+                    ? edge.start_pos.y
+                    : cbox.yMin;
+        cbox.yMax = edge.start_pos.y > cbox.yMax
+                    ? edge.start_pos.y
+                    : cbox.yMax;
+      }
+      else
+      {
+        cbox.xMin = edge.start_pos.x;
+        cbox.xMax = edge.start_pos.x;
+        cbox.yMin = edge.start_pos.y;
+        cbox.yMax = edge.start_pos.y;
+      }
+
+      cbox.xMin = edge.end_pos.x < cbox.xMin
+                  ? edge.end_pos.x
+                  : cbox.xMin;
+      cbox.xMax = edge.end_pos.x > cbox.xMax
+                  ? edge.end_pos.x
+                  : cbox.xMax;
+
+      cbox.yMin = edge.end_pos.y < cbox.yMin
+                  ? edge.end_pos.y
+                  : cbox.yMin;
+      cbox.yMax = edge.end_pos.y > cbox.yMax
+                  ? edge.end_pos.y
+                  : cbox.yMax;
+
+      break;
+
+    default:
+      break;
+    }
+
+    return cbox;
+  }
+
+
+  /* Return orientation of a single contour.                    */
+  /* Note that the orientation is independent of the fill rule! */
+  /* So, for TTF a clockwise-oriented contour has to be filled  */
+  /* and the opposite for OTF fonts.                            */
+  static SDF_Contour_Orientation
+  get_contour_orientation ( SDF_Contour*  contour )
+  {
+    SDF_Edge*  head = NULL;
+    FT_26D6    area = 0;
+
+
+    /* return none if invalid parameters */
+    if ( !contour || !contour->edges )
+      return SDF_ORIENTATION_NONE;
+
+    head = contour->edges;
+
+    /* Calculate the area of the control box for all edges. */
+    while ( head )
+    {
+      switch ( head->edge_type )
+      {
+      case SDF_EDGE_LINE:
+        area += MUL_26D6( ( head->end_pos.x - head->start_pos.x ),
+                          ( head->end_pos.y + head->start_pos.y ) );
+        break;
+
+      case SDF_EDGE_CONIC:
+        area += MUL_26D6( head->control_a.x - head->start_pos.x,
+                          head->control_a.y + head->start_pos.y );
+        area += MUL_26D6( head->end_pos.x - head->control_a.x,
+                          head->end_pos.y + head->control_a.y );
+        break;
+
+      case SDF_EDGE_CUBIC:
+        area += MUL_26D6( head->control_a.x - head->start_pos.x,
+                          head->control_a.y + head->start_pos.y );
+        area += MUL_26D6( head->control_b.x - head->control_a.x,
+                          head->control_b.y + head->control_a.y );
+        area += MUL_26D6( head->end_pos.x - head->control_b.x,
+                          head->end_pos.y + head->control_b.y );
+        break;
+
+      default:
+        return SDF_ORIENTATION_NONE;
+      }
+
+      head = head->next;
+    }
+
+    /* Clockwise contours cover a positive area, and anti-clockwise */
+    /* contours cover a negative area.                              */
+    if ( area > 0 )
+      return SDF_ORIENTATION_CW;
+    else
+      return SDF_ORIENTATION_ACW;
+  }
+
+
+  /* This function is exactly the same as the one */
+  /* in the smooth renderer.  It splits a conic   */
+  /* into two conics exactly half way at t = 0.5. */
+  static void
+  split_conic( FT_26D6_Vec*  base )
+  {
+    FT_26D6  a, b;
+
+
+    base[4].x = base[2].x;
+    a         = base[0].x + base[1].x;
+    b         = base[1].x + base[2].x;
+    base[3].x = b / 2;
+    base[2].x = ( a + b ) / 4;
+    base[1].x = a / 2;
+
+    base[4].y = base[2].y;
+    a         = base[0].y + base[1].y;
+    b         = base[1].y + base[2].y;
+    base[3].y = b / 2;
+    base[2].y = ( a + b ) / 4;
+    base[1].y = a / 2;
+  }
+
+
+  /* This function is exactly the same as the one */
+  /* in the smooth renderer.  It splits a cubic   */
+  /* into two cubics exactly half way at t = 0.5. */
+  static void
+  split_cubic( FT_26D6_Vec*  base )
+  {
+    FT_26D6  a, b, c;
+
+
+    base[6].x = base[3].x;
+    a         = base[0].x + base[1].x;
+    b         = base[1].x + base[2].x;
+    c         = base[2].x + base[3].x;
+    base[5].x = c / 2;
+    c        += b;
+    base[4].x = c / 4;
+    base[1].x = a / 2;
+    a        += b;
+    base[2].x = a / 4;
+    base[3].x = ( a + c ) / 8;
+
+    base[6].y = base[3].y;
+    a         = base[0].y + base[1].y;
+    b         = base[1].y + base[2].y;
+    c         = base[2].y + base[3].y;
+    base[5].y = c / 2;
+    c        += b;
+    base[4].y = c / 4;
+    base[1].y = a / 2;
+    a        += b;
+    base[2].y = a / 4;
+    base[3].y = ( a + c ) / 8;
+  }
+
+
+  /* Split a conic Bezier curve into a number of lines */
+  /* and add them to `out'.                            */
+  /*                                                   */
+  /* This function uses recursion; we thus need        */
+  /* parameter `max_splits' for stopping.              */
+  static FT_Error
+  split_sdf_conic( FT_Memory     memory,
+                   FT_26D6_Vec*  control_points,
+                   FT_Int        max_splits,
+                   SDF_Edge**    out )
+  {
+    FT_Error     error = FT_Err_Ok;
+    FT_26D6_Vec  cpos[5];
+    SDF_Edge*    left,*  right;
+
+
+    if ( !memory || !out  )
+    {
+      error = FT_THROW( Invalid_Argument );
+      goto Exit;
+    }
+
+    /* split conic outline */
+    cpos[0] = control_points[0];
+    cpos[1] = control_points[1];
+    cpos[2] = control_points[2];
+
+    split_conic( cpos );
+
+    /* If max number of splits is done */
+    /* then stop and add the lines to  */
+    /* the list.                       */
+    if ( max_splits <= 2 )
+      goto Append;
+
+    /* Otherwise keep splitting. */
+    FT_CALL( split_sdf_conic( memory, &cpos[0], max_splits / 2, out ) );
+    FT_CALL( split_sdf_conic( memory, &cpos[2], max_splits / 2, out ) );
+
+    /* [NOTE]: This is not an efficient way of   */
+    /* splitting the curve.  Check the deviation */
+    /* instead and stop if the deviation is less */
+    /* than a pixel.                             */
+
+    goto Exit;
+
+  Append:
+    /* Do allocation and add the lines to the list. */
+
+    FT_CALL( sdf_edge_new( memory, &left ) );
+    FT_CALL( sdf_edge_new( memory, &right ) );
+
+    left->start_pos  = cpos[0];
+    left->end_pos    = cpos[2];
+    left->edge_type  = SDF_EDGE_LINE;
+
+    right->start_pos = cpos[2];
+    right->end_pos   = cpos[4];
+    right->edge_type = SDF_EDGE_LINE;
+
+    left->next  = right;
+    right->next = (*out);
+    *out        = left;
+
+  Exit:
+    return error;
+  }
+
+
+  /* Split a cubic Bezier curve into a number of lines */
+  /* and add them to `out`.                            */
+  /*                                                   */
+  /* This function uses recursion; we thus need        */
+  /* parameter `max_splits' for stopping.              */
+  static FT_Error
+  split_sdf_cubic( FT_Memory     memory,
+                   FT_26D6_Vec*  control_points,
+                   FT_Int        max_splits,
+                   SDF_Edge**    out )
+  {
+    FT_Error     error = FT_Err_Ok;
+    FT_26D6_Vec  cpos[7];
+    SDF_Edge*    left,*  right;
+
+
+    if ( !memory || !out  )
+    {
+      error = FT_THROW( Invalid_Argument );
+      goto Exit;
+    }
+
+    /* split the conic */
+    cpos[0] = control_points[0];
+    cpos[1] = control_points[1];
+    cpos[2] = control_points[2];
+    cpos[3] = control_points[3];
+
+    split_cubic( cpos );
+
+    /* If max number of splits is done */
+    /* then stop and add the lines to  */
+    /* the list.                       */
+    if ( max_splits <= 2 )
+      goto Append;
+
+    /* Otherwise keep splitting. */
+    FT_CALL( split_sdf_cubic( memory, &cpos[0], max_splits / 2, out ) );
+    FT_CALL( split_sdf_cubic( memory, &cpos[3], max_splits / 2, out ) );
+
+    /* [NOTE]: This is not an efficient way of   */
+    /* splitting the curve.  Check the deviation */
+    /* instead and stop if the deviation is less */
+    /* than a pixel.                             */
+
+    goto Exit;
+
+  Append:
+    /* Do allocation and add the lines to the list. */
+
+    FT_CALL( sdf_edge_new( memory, &left) );
+    FT_CALL( sdf_edge_new( memory, &right) );
+
+    left->start_pos  = cpos[0];
+    left->end_pos    = cpos[3];
+    left->edge_type  = SDF_EDGE_LINE;
+
+    right->start_pos = cpos[3];
+    right->end_pos   = cpos[6];
+    right->edge_type = SDF_EDGE_LINE;
+
+    left->next  = right;
+    right->next = (*out);
+    *out        = left;
+
+  Exit:
+    return error;
+  }
+
+
+  /* Subdivide an entire shape into line segments */
+  /* such that it doesn't look visually different */
+  /* from the original curve.                     */
+  static FT_Error
+  split_sdf_shape( SDF_Shape*  shape )
+  {
+    FT_Error   error = FT_Err_Ok;
+    FT_Memory  memory;
+
+    SDF_Contour*  contours;
+    SDF_Contour*  new_contours = NULL;
+
+
+    if ( !shape || !shape->memory )
+    {
+      error = FT_THROW( Invalid_Argument );
+      goto Exit;
+    }
+
+    contours = shape->contours;
+    memory   = shape->memory;
+
+    /* for each contour */
+    while ( contours )
+    {
+      SDF_Edge*  edges     = contours->edges;
+      SDF_Edge*  new_edges = NULL;
+
+      SDF_Contour*  tempc;
+
+
+      /* for each edge */
+      while ( edges )
+      {
+        SDF_Edge*  edge = edges;
+        SDF_Edge*  temp;
+
+        switch ( edge->edge_type )
+        {
+        case SDF_EDGE_LINE:
+          /* Just create a duplicate edge in case     */
+          /* it is a line.  We can use the same edge. */
+          FT_CALL( sdf_edge_new( memory, &temp ) );
+
+          ft_memcpy( temp, edge, sizeof ( *edge ) );
+
+          temp->next = new_edges;
+          new_edges  = temp;
+          break;
+
+        case SDF_EDGE_CONIC:
+          /* Subdivide the curve and add it to the list. */
+          {
+            FT_26D6_Vec  ctrls[3];
+
+
+            ctrls[0] = edge->start_pos;
+            ctrls[1] = edge->control_a;
+            ctrls[2] = edge->end_pos;
+
+            error = split_sdf_conic( memory, ctrls, 32, &new_edges );
+          }
+          break;
+
+        case SDF_EDGE_CUBIC:
+          /* Subdivide the curve and add it to the list. */
+          {
+            FT_26D6_Vec  ctrls[4];
+
+
+            ctrls[0] = edge->start_pos;
+            ctrls[1] = edge->control_a;
+            ctrls[2] = edge->control_b;
+            ctrls[3] = edge->end_pos;
+
+            error = split_sdf_cubic( memory, ctrls, 32, &new_edges );
+          }
+          break;
+
+        default:
+          error = FT_THROW( Invalid_Argument );
+          goto Exit;
+        }
+
+        edges = edges->next;
+      }
+
+      /* add to the contours list */
+      FT_CALL( sdf_contour_new( memory, &tempc ) );
+
+      tempc->next  = new_contours;
+      tempc->edges = new_edges;
+      new_contours = tempc;
+      new_edges    = NULL;
+
+      /* deallocate the contour */
+      tempc    = contours;
+      contours = contours->next;
+
+      sdf_contour_done( memory, &tempc );
+    }
+
+    shape->contours = new_contours;
+
+  Exit:
+    return error;
+  }
+
 /* END */

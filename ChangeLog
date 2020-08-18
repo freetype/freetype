@@ -1,3 +1,12 @@
+2020-08-18  Anuj Verma  <anujv@iitbhilai.ac.in>
+
+	[sdf] Add utility functions for contours.
+
+	* src/sdf/ftsdf.c (get_control_box, get_contour_orientation): New
+	functions.
+	(split_conic, split_cubic, split_sdf_conic, split_sdf_cubic,
+	split_sdf_shape): New functions.
+
 2020-08-17  Anuj Verma  <anujv@iitbhilai.ac.in>
 
 	[sdf] Add functions to decompose `FT_Outline`.
