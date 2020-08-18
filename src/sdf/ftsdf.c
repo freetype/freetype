@@ -1475,4 +1475,98 @@
 
 #endif
 
+  /*************************************************************************/
+  /*************************************************************************/
+  /**                                                                     **/
+  /**  RASTERIZER                                                         **/
+  /**                                                                     **/
+  /*************************************************************************/
+  /*************************************************************************/
+
+  /**************************************************************************
+   *
+   * @Function:
+   *   resolve_corner
+   *
+   * @Description:
+   *   At some places on the grid two edges can give opposite direction,
+   *   this happens when the closest point is on one of the endpoint, in that
+   *   case we need to check the proper sign.
+   *
+   *   This can be visualized by an example:
+   *
+   *                x
+   *                 
+   *                   o
+   *                  ^ \
+   *                 /   \
+   *                /     \
+   *           (a) /       \  (b)
+   *              /         \
+   *             /           \
+   *            /             v
+   *
+   *   Suppose `x' is the point whose shortest distance from an arbitrary
+   *   contour we want to find out. It is clear that `o' is the nearest
+   *   point on the contour. Now to determine the sign we do a cross
+   *   product of shortest distance vector and the edge direction. i.e.
+   *
+   *   => sign = cross( ( x - o ), direction( a ) )
+   *
+   *   From right hand thumb rule we can see that the sign will be positive
+   *   and if check for `b'.
+   *
+   *   => sign = cross( ( x - o ), direction( b ) )
+   *
+   *   In this case the sign will be negative. So, to determine the correct
+   *   sign we divide the plane in half and check in which plane the point
+   *   lies.
+   *
+   *   Divide:
+   *
+   *                   |
+   *                x  |
+   *                   |
+   *                   o
+   *                  ^|\
+   *                 / | \
+   *                /  |  \
+   *           (a) /   |   \  (b)
+   *              /    |    \
+   *             /           \
+   *            /             v
+   *
+   *   We can see that `x' lies in the plane of `a', so we take the sign
+   *   determined by `a'. This can be easily done by calculating the 
+   *   orthogonality and taking the greater one.
+   *   The orthogonality is nothing but the sinus of the two vectors (i.e.
+   *   ( x - o ) and the corresponding direction. The orthogonality is pre
+   *   computed by the corresponding `get_min_distance_' functions efficiently.
+   *
+   * @Input:
+   *   sdf1 ::
+   *        First signed distance. (can be any of `a' or `b')
+   *
+   *   sdf1 ::
+   *        Second signed distance. (can be any of `a' or `b')
+   *
+   * @Return:
+   *   The correct signed distance, which is checked using
+   *   the above algorithm.
+   *
+   * @Note:
+   *   The function does not care about the actual distance, it simply
+   *   returns the signed distance which has a larger cross product.
+   *   So, do not call this function if the two distances are fairly
+   *   apart. In that case simply use the signed distance with shorter
+   *   absolute distance.
+   *
+   */
+  static SDF_Signed_Distance
+  resolve_corner( SDF_Signed_Distance  sdf1,
+                  SDF_Signed_Distance  sdf2 )
+  {
+    return FT_ABS( sdf1.cross ) > FT_ABS( sdf2.cross ) ? sdf1 : sdf2;
+  }
+
 /* END */
