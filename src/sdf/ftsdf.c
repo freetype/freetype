@@ -2887,6 +2887,166 @@
     return error;
   }
 
-#endif
+
+  /**************************************************************************
+   *
+   * @Function:
+   *   sdf_generate
+   *
+   * @Description:
+   *   This is the main function that is responsible for generating signed
+   *   distance fields.  The function does not align or compute the size of
+   *   `bitmap`; therefore the calling application must set up `bitmap`
+   *   properly and transform the `shape' appropriately in advance.
+   *
+   *   Currently we check all pixels against all contours and all edges.
+   *
+   * @Input:
+   *   internal_params ::
+   *     Internal parameters and properties required by the rasterizer.  See
+   *     @SDF_Params for more.
+   *
+   *   shape ::
+   *     A complete shape which is used to generate SDF.
+   *
+   *   spread ::
+   *     Maximum distances to be allowed in the output bitmap.
+   *
+   * @Output:
+   *   bitmap ::
+   *     The output bitmap which will contain the SDF information.
+   *
+   * @Return:
+   *   FreeType error, 0 means success.
+   *
+   */
+  static FT_Error
+  sdf_generate( const SDF_Params  internal_params,
+                const SDF_Shape*  shape,
+                FT_UInt           spread,
+                const FT_Bitmap*  bitmap )
+  {
+    FT_Error  error = FT_Err_Ok;
+
+    FT_UInt  width = 0;
+    FT_UInt  rows  = 0;
+    FT_UInt  x     = 0;   /* used to loop in x direction, i.e., width     */
+    FT_UInt  y     = 0;   /* used to loop in y direction, i.e., rows      */
+    FT_UInt  sp_sq = 0;   /* `spread` [* `spread`] as a 16.16 fixed value */
+
+    FT_Short*  buffer;
+
+
+    if ( !shape || !bitmap )
+    {
+      error = FT_THROW( Invalid_Argument );
+      goto Exit;
+    }
+
+    if ( spread < MIN_SPREAD || spread > MAX_SPREAD )
+    {
+      error = FT_THROW( Invalid_Argument );
+      goto Exit;
+    }
+
+    width  = bitmap->width;
+    rows   = bitmap->rows;
+    buffer = (FT_Short*)bitmap->buffer;
+
+    if ( USE_SQUARED_DISTANCES )
+      sp_sq = FT_INT_16D16( spread * spread );
+    else
+      sp_sq = FT_INT_16D16( spread );
+
+    if ( width == 0 || rows == 0 )
+    {
+      FT_TRACE0(( "sdf_generate:"
+                  " Cannot render glyph with width/height == 0\n" ));
+      FT_TRACE0(( "             "
+                  " (width, height provided [%d, %d])\n",
+                  width, rows ));
+
+      error = FT_THROW( Cannot_Render_Glyph );
+      goto Exit;
+    }
+
+    /* loop over all rows */
+    for ( y = 0; y < rows; y++ )
+    {
+      /* loop over all pixels of a row */
+      for ( x = 0; x < width; x++ )
+      {
+        /* `grid_point` is the current pixel position; */
+        /* our task is to find the shortest distance   */
+        /* from this point to the entire shape.        */
+        FT_26D6_Vec          grid_point = zero_vector;
+        SDF_Signed_Distance  min_dist   = max_sdf;
+        SDF_Contour*         contour_list;
+
+        FT_UInt   index;
+        FT_Short  value;
+
+
+        grid_point.x = FT_INT_26D6( x );
+        grid_point.y = FT_INT_26D6( y );
+
+        /* This `grid_point' is at the corner, but we */
+        /* use the center of the pixel.               */
+        grid_point.x += FT_INT_26D6( 1 ) / 2;
+        grid_point.y += FT_INT_26D6( 1 ) / 2;
+
+        contour_list = shape->contours;
+
+        /* iterate over all contours manually */
+        while ( contour_list )
+        {
+          SDF_Signed_Distance  current_dist = max_sdf;
+
+
+          FT_CALL( sdf_contour_get_min_distance( contour_list,
+                                                 grid_point,
+                                                 &current_dist ) );
+
+          if ( current_dist.distance < min_dist.distance )
+            min_dist = current_dist;
+
+          contour_list = contour_list->next;
+        }
+
+        /* [OPTIMIZATION]: if (min_dist > sp_sq) then simply clamp  */
+        /*                 the value to spread to avoid square_root */
+
+        /* clamp the values to spread */
+        if ( min_dist.distance > sp_sq )
+          min_dist.distance = sp_sq;
+
+        /* square_root the values and fit in a 6.10 fixed point */
+        if ( USE_SQUARED_DISTANCES )
+          min_dist.distance = square_root( min_dist.distance );
+
+        if ( internal_params.orientation == FT_ORIENTATION_FILL_LEFT )
+          min_dist.sign = -min_dist.sign;
+        if ( internal_params.flip_sign )
+          min_dist.sign = -min_dist.sign;
+
+        min_dist.distance /= 64; /* convert from 16.16 to 22.10 */
+
+        value  = min_dist.distance & 0x0000FFFF; /* truncate to 6.10 */
+        value *= min_dist.sign;
+
+        if ( internal_params.flip_y )
+          index = y * width + x;
+        else
+          index = ( rows - y - 1 ) * width + x;
+
+        buffer[index] = value;
+      }
+    }
+
+  Exit:
+    return error;
+  }
+
+#endif /* 0 */
 
 /* END */

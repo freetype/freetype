@@ -1,5 +1,13 @@
 2020-08-19  Anuj Verma  <anujv@iitbhilai.ac.in>
 
+	[sdf] Add function to generate SDF.
+
+	* src/sdf/ftsdf.c (sdf_generate): New function, currently disabled. 
+	This is a proof-of-concept implementation: It doesn't use any
+	optimization, it simply checks all grid points against all contours.
+
+2020-08-19  Anuj Verma  <anujv@iitbhilai.ac.in>
+
 	[sdf] Add functions to get shortest distance from any edge/contour.
 
 	* src/sdf/ftsdf.c (sdf_edge_get_min_distance): New function.
