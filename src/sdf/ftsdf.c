@@ -3352,4 +3352,198 @@
     return error;
   }
 
+
+  /**************************************************************************
+   *
+   * interface functions
+   *
+   */
+
+  static FT_Error
+  sdf_raster_new( FT_Memory   memory,
+                  FT_Raster*  araster)
+  {
+    FT_Error      error  = FT_Err_Ok;
+    SDF_TRaster*  raster = NULL;
+    FT_Int        line   = __LINE__;
+
+    /* in non-debugging mode this is not used */
+    FT_UNUSED( line );
+
+
+    *araster = 0;
+    if ( !FT_ALLOC( raster, sizeof ( SDF_TRaster ) ) )
+    {
+      raster->memory = memory;
+      *araster       = (FT_Raster)raster;
+    }
+
+    return error;
+  }
+
+
+  static void
+  sdf_raster_reset( FT_Raster       raster,
+                    unsigned char*  pool_base,
+                    unsigned long   pool_size )
+  {
+    FT_UNUSED( raster );
+    FT_UNUSED( pool_base );
+    FT_UNUSED( pool_size );
+  }
+
+
+  static FT_Error
+  sdf_raster_set_mode( FT_Raster      raster,
+                       unsigned long  mode,
+                       void*          args )
+  {
+    FT_UNUSED( raster );
+    FT_UNUSED( mode );
+    FT_UNUSED( args );
+
+    return FT_Err_Ok;
+  }
+
+
+  static FT_Error
+  sdf_raster_render( FT_Raster                raster,
+                     const FT_Raster_Params*  params )
+  {
+    FT_Error                  error      = FT_Err_Ok;
+    SDF_TRaster*              sdf_raster = (SDF_TRaster*)raster;
+    FT_Outline*               outline    = NULL;
+    const SDF_Raster_Params*  sdf_params = (const SDF_Raster_Params*)params;
+
+    FT_Memory   memory = NULL;
+    SDF_Shape*  shape  = NULL;
+    SDF_Params  internal_params;
+
+    SDF_MEMORY_TRACKER_DECLARE();
+
+
+    /* check for valid arguments */
+    if ( !sdf_raster || !sdf_params )
+    {
+      error = FT_THROW( Invalid_Argument );
+      goto Exit;
+    }
+
+    outline = (FT_Outline*)sdf_params->root.source;
+
+    /* check whether outline is valid */
+    if ( !outline )
+    {
+      error = FT_THROW( Invalid_Outline );
+      goto Exit;
+    }
+
+    /* if the outline is empty, return */
+    if ( outline->n_points <= 0 || outline->n_contours <= 0 )
+      goto Exit;
+
+    /* check whether the outline has valid fields */
+    if ( !outline->contours || !outline->points )
+    {
+      error = FT_THROW( Invalid_Outline );
+      goto Exit;
+    }
+
+    /* check whether spread is set properly */
+    if ( sdf_params->spread > MAX_SPREAD ||
+         sdf_params->spread < MIN_SPREAD )
+    {
+      FT_TRACE0(( "sdf_raster_render:"
+                  " The `spread' field of `SDF_Raster_Params' is invalid,\n" ));
+      FT_TRACE0(( "                  "
+                  " the value of this field must be within [%d, %d].\n",
+                  MIN_SPREAD, MAX_SPREAD ));
+      FT_TRACE0(( "                  "
+                  " Also, you must pass `SDF_Raster_Params' instead of\n" ));
+      FT_TRACE0(( "                  "
+                  " the default `FT_Raster_Params' while calling\n" ));
+      FT_TRACE0(( "                  "
+                  " this function and set the fields properly.\n" ));
+
+      error = FT_THROW( Invalid_Argument );
+      goto Exit;
+    }
+
+    memory = sdf_raster->memory;
+    if ( !memory )
+    {
+      FT_TRACE0(( "sdf_raster_render:"
+                  " Raster not setup properly,\n" ));
+      FT_TRACE0(( "                  "
+                  " unable to find memory handle.\n" ));
+
+      error = FT_THROW( Invalid_Handle );
+      goto Exit;
+    }
+
+    /* set up the parameters */
+    internal_params.orientation   = FT_Outline_Get_Orientation( outline );
+    internal_params.flip_sign     = sdf_params->flip_sign;
+    internal_params.flip_y        = sdf_params->flip_y;
+    internal_params.overload_sign = 0;
+
+    /* assign a custom user pointer to `FT_Memory`;  */
+    /* also keep a reference of the old user pointer */
+    /* in order to debug the memory while compiling  */
+    /* with `FT_DEBUG_MEMORY`.                       */
+    SDF_MEMORY_TRACKER_SETUP();
+
+    FT_CALL( sdf_shape_new( memory, &shape ) );
+
+    FT_CALL( sdf_outline_decompose( outline, shape ) );
+
+#if 0
+    /* XXX to be added */
+    if ( sdf_params->overlaps )
+      FT_CALL( sdf_generate_with_overlaps( internal_params,
+                                           shape, sdf_params->spread,
+                                           sdf_params->root.target ) );
+    else
+#endif
+      FT_CALL( sdf_generate_subdivision( internal_params,
+                                         shape, sdf_params->spread,
+                                         sdf_params->root.target ) );
+
+    if ( shape )
+      sdf_shape_done( &shape );
+
+    /* restore the memory->user */
+    SDF_MEMORY_TRACKER_DONE();
+
+  Exit:
+    return error;
+  }
+
+
+  static void
+  sdf_raster_done( FT_Raster  raster )
+  {
+    FT_Memory  memory = (FT_Memory)((SDF_TRaster*)raster)->memory;
+    FT_Int     line   = __LINE__;
+
+    /* in non-debugging mode this is not used */
+    FT_UNUSED( line );
+
+
+    FT_FREE( raster );
+  }
+
+
+  FT_DEFINE_RASTER_FUNCS(
+    ft_sdf_raster,
+
+    FT_GLYPH_FORMAT_OUTLINE,
+
+    (FT_Raster_New_Func)     sdf_raster_new,       /* raster_new      */
+    (FT_Raster_Reset_Func)   sdf_raster_reset,     /* raster_reset    */
+    (FT_Raster_Set_Mode_Func)sdf_raster_set_mode,  /* raster_set_mode */
+    (FT_Raster_Render_Func)  sdf_raster_render,    /* raster_render   */
+    (FT_Raster_Done_Func)    sdf_raster_done       /* raster_done     */
+  )
+
 /* END */

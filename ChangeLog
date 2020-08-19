@@ -1,5 +1,14 @@
 2020-08-19  Anuj Verma  <anujv@iitbhilai.ac.in>
 
+	[sdf] Add interface functions for the 'sdf' rasterizer.
+
+	* src/sdf/ftsdf.c (sdf_raster_new, sdf_raster_reset,
+	sdf_raster_set_mode, sdf_raster_render, sdf_raster_done): New
+	functions.
+	(ft_sdf_raster): New structure.
+
+2020-08-19  Anuj Verma  <anujv@iitbhilai.ac.in>
+
 	[sdf] Add subdivision and bounding box optimization.
 
 	* src/sdf/ftsdf.c (sdf_generate_bounding_box): New function, which
