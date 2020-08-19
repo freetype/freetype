@@ -1,3 +1,10 @@
+2020-08-19  Anuj Verma  <anujv@iitbhilai.ac.in>
+
+	[sdf] Add functions to get shortest distance from any edge/contour.
+
+	* src/sdf/ftsdf.c (sdf_edge_get_min_distance): New function.
+	(sdf_contour_get_min_distance): New function, currently disabled.
+
 2020-08-18  Anuj Verma  <anujv@iitbhilai.ac.in>
 
 	[sdf] Add shortest distance finding functions.

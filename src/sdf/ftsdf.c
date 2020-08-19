@@ -2735,9 +2735,158 @@
       out->cross = FT_MulFix( direction.x, nearest_point.y ) -
                    FT_MulFix( direction.y, nearest_point.x );
     }
+
   Exit:
     return error;
   }
 
+
+  /**************************************************************************
+   *
+   * @Function:
+   *   sdf_edge_get_min_distance
+   *
+   * @Description:
+   *   Find shortest distance from `point` to any type of `edge`.  It checks
+   *   the edge type and then calls the relevant `get_min_distance_*`
+   *   function.
+   *
+   * @Input:
+   *   edge ::
+   *     An edge to which the shortest distance is to be computed.
+   *
+   *   point ::
+   *     Point from which the shortest distance is to be computed.
+   *
+   * @Output:
+   *   out ::
+   *     Signed distance from `point` to `edge`.
+   *
+   * @Return:
+   *   FreeType error, 0 means success.
+   *
+   */
+  static FT_Error
+  sdf_edge_get_min_distance( SDF_Edge*             edge,
+                             FT_26D6_Vec           point,
+                             SDF_Signed_Distance*  out )
+  {
+    FT_Error  error = FT_Err_Ok;
+
+
+    if ( !edge || !out )
+    {
+      error = FT_THROW( Invalid_Argument );
+      goto Exit;
+    }
+
+    /* edge-specific distance calculation */
+    switch ( edge->edge_type )
+    {
+    case SDF_EDGE_LINE:
+      get_min_distance_line( edge, point, out );
+      break;
+
+    case SDF_EDGE_CONIC:
+      get_min_distance_conic( edge, point, out );
+      break;
+
+    case SDF_EDGE_CUBIC:
+      get_min_distance_cubic( edge, point, out );
+      break;
+
+    default:
+      error = FT_THROW( Invalid_Argument );
+    }
+
+  Exit:
+    return error;
+  }
+
+
+  /* `sdf_generate' is not used at the moment */
+#if 0
+
+  /**************************************************************************
+   *
+   * @Function:
+   *   sdf_contour_get_min_distance
+   *
+   * @Description:
+   *   Iterate over all edges that make up the contour, find the shortest
+   *   distance from a point to this contour, and assigns result to `out`.
+   *
+   * @Input:
+   *   contour ::
+   *     A contour to which the shortest distance is to be computed.
+   *
+   *   point ::
+   *     Point from which the shortest distance is to be computed.
+   *
+   * @Output:
+   *   out ::
+   *     Signed distance from the `point' to the `contour'.
+   *
+   * @Return:
+   *   FreeType error, 0 means success.
+   *
+   * @Note:
+   *   The function does not return a signed distance for each edge which
+   *   makes up the contour, it simply returns the shortest of all the
+   *   edges.
+   *
+   */
+  static FT_Error
+  sdf_contour_get_min_distance( SDF_Contour*          contour,
+                                FT_26D6_Vec           point,
+                                SDF_Signed_Distance*  out )
+  {
+    FT_Error             error    = FT_Err_Ok;
+    SDF_Signed_Distance  min_dist = max_sdf;
+    SDF_Edge*            edge_list;
+
+
+    if ( !contour || !out )
+    {
+      error = FT_THROW( Invalid_Argument );
+      goto Exit;
+    }
+
+    edge_list = contour->edges;
+
+    /* iterate over all the edges manually */
+    while ( edge_list )
+    {
+      SDF_Signed_Distance  current_dist = max_sdf;
+      FT_16D16             diff;
+
+
+      FT_CALL( sdf_edge_get_min_distance( edge_list,
+                                          point,
+                                          &current_dist ) );
+
+      if ( current_dist.distance >= 0 )
+      {
+        diff = current_dist.distance - min_dist.distance;
+
+
+        if ( FT_ABS(diff ) < CORNER_CHECK_EPSILON )
+          min_dist = resolve_corner( min_dist, current_dist );
+        else if ( diff < 0 )
+          min_dist = current_dist;
+      }
+      else
+        FT_TRACE0(( "sdf_contour_get_min_distance: Overflow.\n" ));
+
+      edge_list = edge_list->next;
+    }
+
+    *out = min_dist;
+
+  Exit:
+    return error;
+  }
+
+#endif
 
 /* END */
