@@ -1,5 +1,13 @@
 2020-08-19  Anuj Verma  <anujv@iitbhilai.ac.in>
 
+	[sdf] Add subdivision and bounding box optimization.
+
+	* src/sdf/ftsdf.c (sdf_generate_bounding_box): New function, which
+	is an optimized version of `sdf_generate`.
+	(sdf_generate_subdivision): New function.
+
+2020-08-19  Anuj Verma  <anujv@iitbhilai.ac.in>
+
 	[sdf] Add function to generate SDF.
 
 	* src/sdf/ftsdf.c (sdf_generate): New function, currently disabled. 

@@ -3049,4 +3049,307 @@
 
 #endif /* 0 */
 
+
+  /**************************************************************************
+   *
+   * @Function:
+   *   sdf_generate_bounding_box
+   *
+   * @Description:
+   *   This function does basically the same thing as `sdf_generate` above
+   *   but more efficiently.
+   *
+   *   Instead of checking all pixels against all edges, we loop over all
+   *   edges and only check pixels around the control box of the edge; the
+   *   control box is increased by the spread in all directions.  Anything
+   *   outside of the control box that exceeds `spread` doesn't need to be
+   *   computed.
+   *
+   *   Lastly, to determine the sign of unchecked pixels, we do a single
+   *   pass of all rows starting with a '+' sign and flipping when we come
+   *   across a '-' sign and continue.  This also eliminates the possibility
+   *   of overflow because we only check the proximity of the curve.
+   *   Therefore we can use squared distanced safely.
+   *
+   * @Input:
+   *   internal_params ::
+   *     Internal parameters and properties required by the rasterizer.
+   *     See @SDF_Params for more.
+   *
+   *   shape ::
+   *     A complete shape which is used to generate SDF.
+   *
+   *   spread ::
+   *     Maximum distances to be allowed in the output bitmap.
+   *
+   * @Output:
+   *   bitmap ::
+   *     The output bitmap which will contain the SDF information.
+   *
+   * @Return:
+   *   FreeType error, 0 means success.
+   *
+   */
+  static FT_Error
+  sdf_generate_bounding_box( const SDF_Params  internal_params,
+                             const SDF_Shape*  shape,
+                             FT_UInt           spread,
+                             const FT_Bitmap*  bitmap )
+  {
+    FT_Error   error  = FT_Err_Ok;
+    FT_Memory  memory = NULL;
+
+    FT_Int  width, rows, i, j;
+    FT_Int  sp_sq;            /* max value to check   */
+
+    SDF_Contour*  contours;   /* list of all contours */
+    FT_Short*     buffer;     /* the bitmap buffer    */
+
+    /* This buffer has the same size in indices as the    */
+    /* bitmap buffer.  When we check a pixel position for */
+    /* a shortest distance we keep it in this buffer.     */
+    /* This way we can find out which pixel is set,       */
+    /* and also determine the signs properly.             */
+    SDF_Signed_Distance*  dists = NULL;
+
+
+    if ( !shape || !bitmap )
+    {
+      error = FT_THROW( Invalid_Argument );
+      goto Exit;
+    }
+
+    if ( spread < MIN_SPREAD || spread > MAX_SPREAD )
+    {
+      error = FT_THROW( Invalid_Argument );
+      goto Exit;
+    }
+
+    memory = shape->memory;
+    if ( !memory )
+    {
+      error = FT_THROW( Invalid_Argument );
+      goto Exit;
+    }
+
+    contours = shape->contours;
+    width    = (FT_Int)bitmap->width;
+    rows     = (FT_Int)bitmap->rows;
+    buffer   = (FT_Short*)bitmap->buffer;
+
+    if ( SDF_ALLOC( dists, width * rows * sizeof ( *dists ) ) )
+      goto Exit;
+
+    FT_MEM_ZERO( dists, width * rows * sizeof ( *dists ) );
+
+    if ( USE_SQUARED_DISTANCES )
+      sp_sq = FT_INT_16D16( spread * spread );
+    else
+      sp_sq = FT_INT_16D16( spread );
+
+    if ( width == 0 || rows == 0 )
+    {
+      FT_TRACE0(( "sdf_generate:"
+                  " Cannot render glyph with width/height == 0\n" ));
+      FT_TRACE0(( "             "
+                  " (width, height provided [%d, %d])", width, rows ));
+
+      error = FT_THROW( Cannot_Render_Glyph );
+      goto Exit;
+    }
+
+    /* loop over all contours */
+    while ( contours )
+    {
+      SDF_Edge*  edges = contours->edges;
+
+
+      /* loop over all edges */
+      while ( edges )
+      {
+        FT_CBox  cbox;
+        FT_Int   x, y;
+
+
+        /* get the control box and increase it by `spread' */
+        cbox = get_control_box( *edges );
+
+        cbox.xMin = ( cbox.xMin - 63 ) / 64 - ( FT_Pos )spread;
+        cbox.xMax = ( cbox.xMax + 63 ) / 64 + ( FT_Pos )spread;
+        cbox.yMin = ( cbox.yMin - 63 ) / 64 - ( FT_Pos )spread;
+        cbox.yMax = ( cbox.yMax + 63 ) / 64 + ( FT_Pos )spread;
+
+        /* now loop over the pixels in the control box. */
+        for ( y = cbox.yMin; y < cbox.yMax; y++ )
+        {
+          for ( x = cbox.xMin; x < cbox.xMax; x++ )
+          {
+            FT_26D6_Vec          grid_point = zero_vector;
+            SDF_Signed_Distance  dist       = max_sdf;
+            FT_UInt              index      = 0;
+
+
+            if ( x < 0 || x >= width )
+              continue;
+            if ( y < 0 || y >= rows )
+              continue;
+
+            grid_point.x = FT_INT_26D6( x );
+            grid_point.y = FT_INT_26D6( y );
+
+            /* This `grid_point` is at the corner, but we */
+            /* use the center of the pixel.               */
+            grid_point.x += FT_INT_26D6( 1 ) / 2;
+            grid_point.y += FT_INT_26D6( 1 ) / 2;
+
+            FT_CALL( sdf_edge_get_min_distance( edges,
+                                                grid_point,
+                                                &dist ) );
+
+            if ( internal_params.orientation == FT_ORIENTATION_FILL_LEFT )
+              dist.sign = -dist.sign;
+
+            /* ignore if the distance is greater than spread;       */
+            /* otherwise it creates artifacts due to the wrong sign */
+            if ( dist.distance > sp_sq )
+              continue;
+
+            /* square_root the values and fit in a 6.10 fixed-point */
+            if ( USE_SQUARED_DISTANCES )
+              dist.distance = square_root( dist.distance );
+
+            if ( internal_params.flip_y )
+              index = y * width + x;
+            else
+              index = ( rows - y - 1 ) * width + x;
+
+            /* check whether the pixel is set or not */
+            if ( dists[index].sign == 0 )
+              dists[index] = dist;
+            else if ( dists[index].distance > dist.distance )
+              dists[index] = dist;
+            else if ( FT_ABS( dists[index].distance - dist.distance )
+                        < CORNER_CHECK_EPSILON )
+              dists[index] = resolve_corner( dists[index], dist );
+          }
+        }
+
+        edges = edges->next;
+      }
+
+      contours = contours->next;
+    }
+
+    /* final pass */
+    for ( j = 0; j < rows; j++ )
+    {
+      /* We assume the starting pixel of each row is outside. */
+      FT_Char  current_sign = -1;
+      FT_UInt  index;
+
+
+      if ( internal_params.overload_sign != 0 )
+        current_sign = internal_params.overload_sign < 0 ? -1 : 1;
+
+      for ( i = 0; i < width; i++ )
+      {
+        index = j * width + i;
+
+        /* if the pixel is not set                     */
+        /* its shortest distance is more than `spread` */
+        if ( dists[index].sign == 0 )
+          dists[index].distance = FT_INT_16D16( spread );
+        else
+          current_sign = dists[index].sign;
+
+        /* clamp the values */
+        if ( dists[index].distance > (FT_Int)FT_INT_16D16( spread ) )
+          dists[index].distance = FT_INT_16D16( spread );
+
+        /* convert from 16.16 to 6.10 */
+        dists[index].distance /= 64;
+
+        if ( internal_params.flip_sign )
+          buffer[index] = (FT_Short)dists[index].distance * -current_sign;
+        else
+          buffer[index] = (FT_Short)dists[index].distance * current_sign;
+      }
+    }
+
+  Exit:
+    SDF_FREE( dists );
+    return error;
+  }
+
+
+  /**************************************************************************
+   *
+   * @Function:
+   *   sdf_generate_subdivision
+   *
+   * @Description:
+   *   Subdivide the shape into a number of straight lines, then use the
+   *   above `sdf_generate_bounding_box` function to generate the SDF.
+   *
+   *   Note: After calling this function `shape` no longer has the original
+   *         edges, it only contains lines.
+   *
+   * @Input:
+   *   internal_params ::
+   *     Internal parameters and properties required by the rasterizer.
+   *     See @SDF_Params for more.
+   *
+   *   shape ::
+   *     A complete shape which is used to generate SDF.
+   *
+   *   spread ::
+   *     Maximum distances to be allowed inthe output bitmap.
+   *
+   * @Output:
+   *   bitmap ::
+   *     The output bitmap which will contain the SDF information.
+   *
+   * @Return:
+   *   FreeType error, 0 means success.
+   *
+   */
+  static FT_Error
+  sdf_generate_subdivision( const SDF_Params  internal_params,
+                            SDF_Shape*        shape,
+                            FT_UInt           spread,
+                            const FT_Bitmap*  bitmap )
+  {
+    /*
+     * Thanks to Alexei for providing the idea of this optimization.
+     *
+     * We take advantage of two facts.
+     *
+     * (1) Computing the shortest distance from a point to a line segment is
+     *     very fast.
+     * (2) We don't have to compute the shortest distance for the entire
+     *     two-dimensional grid.
+     *
+     * Both ideas lead to the following optimization.
+     *
+     * (1) Split the outlines into a number of line segments.
+     *
+     * (2) For each line segment, only process its neighborhood.
+     *
+     * (3) Compute the closest distance to the line only for neighborhood
+     *     grid points.
+     *
+     * This greatly reduces the number of grid points to check.
+     */
+
+    FT_Error  error = FT_Err_Ok;
+
+
+    FT_CALL( split_sdf_shape( shape ) );
+    FT_CALL( sdf_generate_bounding_box( internal_params,
+                                        shape, spread, bitmap ) );
+
+  Exit:
+    return error;
+  }
+
 /* END */
