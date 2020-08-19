@@ -1,5 +1,22 @@
 2020-08-19  Anuj Verma  <anujv@iitbhilai.ac.in>
 
+	[sdf] Add build infrastructure.
+
+	* src/sdf/module.mk, src/sfd/rules.mk: New files.
+
+	* src/sdf/ftsdf.h (ft_sdf_raster): New forward declaration.
+
+	* include/freetype/ftmoderr.h (FT_MODERRDEF): Add error definition
+	for the 'sdf' module.
+
+	* include/freetype/internal/fttrace.h (FT_TRACE_DEF): Add trace
+	definition for the `sdf' module.
+
+	* modules.cfg (RASTER_MODULES): Add the `sdf' module to the list of
+	rasterizers.
+
+2020-08-19  Anuj Verma  <anujv@iitbhilai.ac.in>
+
 	[sdf] Add interface functions for the 'sdf' rasterizer.
 
 	* src/sdf/ftsdf.c (sdf_raster_new, sdf_raster_reset,

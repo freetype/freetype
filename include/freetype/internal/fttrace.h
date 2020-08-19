@@ -44,6 +44,7 @@ FT_TRACE_DEF( psprops )   /* PS driver properties    (ftpsprop.c) */
 FT_TRACE_DEF( raccess )   /* resource fork accessor  (ftrfork.c)  */
 FT_TRACE_DEF( raster )    /* monochrome rasterizer   (ftraster.c) */
 FT_TRACE_DEF( smooth )    /* anti-aliasing raster    (ftgrays.c)  */
+FT_TRACE_DEF( sdf )       /* signed distance raster  (ftsdf.c)    */
 FT_TRACE_DEF( synth )     /* bold/slant synthesizer  (ftsynth.c)  */
 
   /* Cache sub-system */
