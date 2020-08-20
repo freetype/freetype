@@ -347,6 +347,7 @@ set(BASE_SRCS
   src/pshinter/pshinter.c
   src/psnames/psnames.c
   src/raster/raster.c
+  src/sdf/sdf.c
   src/sfnt/sfnt.c
   src/smooth/smooth.c
   src/truetype/truetype.c

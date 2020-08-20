@@ -1,5 +1,14 @@
 2020-08-20  Anuj Verma  <anujv@iitbhilai.ac.in>
 
+	[sdf] Add 'sdf' module to non-gnumake build systems.
+
+	* include/freetype/config/ftmodule.h: Add both the 'sfd' and 'bsfd'
+	renderers to the list of modules.
+
+	* CMakeLists.txt (BASE_SRCS): Add 'sdf' single-object module.
+
+2020-08-20  Anuj Verma  <anujv@iitbhilai.ac.in>
+
 	[sdf] Added basic overlapping contour support.
 
 	* src/sdf/ftsdf.c (sdf_generate_with_overlaps): New function.
