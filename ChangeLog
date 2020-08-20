@@ -1,5 +1,13 @@
 2020-08-20  Anuj Verma  <anujv@iitbhilai.ac.in>
 
+	[sdf] Add essential structures for the 'bsdf' rasterizer.
+
+	* src/sdf/ftbsdf.c (ONE): New macro.
+	(BSDF_TRaster, ED, BSDF_Worker): New structures.
+	(zero_ed): New constant.
+
+2020-08-20  Anuj Verma  <anujv@iitbhilai.ac.in>
+
 	[sdf] Add 'sdf' module to non-gnumake build systems.
 
 	* include/freetype/config/ftmodule.h: Add both the 'sfd' and 'bsfd'
