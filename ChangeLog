@@ -1,3 +1,10 @@
+2020-08-20  Anuj Verma  <anujv@iitbhilai.ac.in>
+
+	[sdf] Added basic overlapping contour support.
+
+	* src/sdf/ftsdf.c (sdf_generate_with_overlaps): New function.
+	(sdf_raster_render): Enable it.
+
 2020-08-19  Anuj Verma  <anujv@iitbhilai.ac.in>
 
 	[sdf] Add build infrastructure.
