@@ -1,3 +1,8 @@
+2020-08-21  Priyesh Kumar  <priyeshkkumar@gmail.com>
+
+    * builds/windows/vc2010/freetype.vcxproj (PreprocessorDefinitions): 
+    Added `DLG_STATIC' for `Debug Static' configuration on both platforms. 
+
 2020-08-13  Priyesh Kumar  <priyeshkkumar@gmail.com>
     
     * src/base/ftobjs.c (Mac_Read_POST_Resource): Fixed `-Wformat' 
