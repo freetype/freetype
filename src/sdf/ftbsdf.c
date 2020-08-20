@@ -129,4 +129,115 @@
   static const ED  zero_ed = { 0, { 0, 0 }, 0 };
 
 
+  /**************************************************************************
+   *
+   * rasterizer functions
+   *
+   */
+
+  /**************************************************************************
+   *
+   * @Function:
+   *   bsdf_is_edge
+   *
+   * @Description:
+   *   Check whether a pixel is an edge pixel, i.e., whether it is
+   *   surrounded by a completely black pixel (zero alpha), and the current
+   *   pixel is not a completely black pixel.
+   *
+   * @Input:
+   *   dm ::
+   *     Array of distances.  The parameter must point to the current
+   *     pixel, i.e., the pixel that is to be checked for being an edge.
+   *
+   *   x ::
+   *     The x position of the current pixel.
+   *
+   *   y ::
+   *     The y position of the current pixel.
+   *
+   *   w ::
+   *     Width of the bitmap.
+   *
+   *   r ::
+   *     Number of rows in the bitmap.
+   *
+   * @Return:
+   *   1~if the current pixel is an edge pixel, 0~otherwise.
+   *
+   */
+
+#ifdef CHECK_NEIGHBOR
+#undef CHECK_NEIGHBOR
+#endif
+
+#define CHECK_NEIGHBOR( x_offset, y_offset )            \
+          if ( x + x_offset >= 0 && x + x_offset < w && \
+               y + y_offset >= 0 && y + y_offset < r )  \
+          {                                             \
+            num_neighbors++;                            \
+                                                        \
+            to_check = dm + y_offset * w + x_offset;    \
+            if ( to_check->alpha == 0 )                 \
+            {                                           \
+              is_edge = 1;                              \
+              goto Done;                                \
+            }                                           \
+          }
+
+  static FT_Bool
+  bsdf_is_edge( ED*     dm,   /* distance map              */
+                FT_Int  x,    /* x index of point to check */
+                FT_Int  y,    /* y index of point to check */
+                FT_Int  w,    /* width                     */
+                FT_Int  r )   /* rows                      */
+  {
+    FT_Bool  is_edge       = 0; 
+    ED*      to_check      = NULL;
+    FT_Int   num_neighbors = 0;
+
+
+    if ( dm->alpha == 0 )
+      goto Done;
+
+    if ( dm->alpha > 0 && dm->alpha < 255 )
+    {
+      is_edge = 1;
+      goto Done;
+    }
+
+    /* up */
+    CHECK_NEIGHBOR(  0, -1 );
+
+    /* down */
+    CHECK_NEIGHBOR(  0,  1 );
+
+    /* left */
+    CHECK_NEIGHBOR( -1,  0 );
+
+    /* right */
+    CHECK_NEIGHBOR(  1,  0 );
+
+    /* up left */
+    CHECK_NEIGHBOR( -1, -1 );
+
+    /* up right */
+    CHECK_NEIGHBOR(  1, -1 );
+
+    /* down left */
+    CHECK_NEIGHBOR( -1,  1 );
+
+    /* down right */
+    CHECK_NEIGHBOR(  1,  1 );
+
+    if ( num_neighbors != 8 )
+      is_edge = 1;
+
+  Done:
+    return is_edge;
+  }
+
+#undef CHECK_NEIGHBOR
+
+
 /* END */
