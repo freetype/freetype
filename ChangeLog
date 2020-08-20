@@ -1,5 +1,12 @@
 2020-08-20  Anuj Verma  <anujv@iitbhilai.ac.in>
 
+	[sdf] Add functions to compute pixel edge distances.
+
+	* src/sdf/ftbsdf.c (compute_edge_distance, bsdf_approximate_edge):
+	New functions.
+
+2020-08-20  Anuj Verma  <anujv@iitbhilai.ac.in>
+
 	[sdf] Add function to find edge pixels in a grid of alpha values.
 
 	* src/sdf/ftbsdf.c (bsdf_is_edge): New function.
