@@ -83,7 +83,10 @@
    *
    */
 
-#ifdef FT_DEBUG_LEVEL_TRACE
+/* The memory tracker only works when `FT_DEBUG_MEMORY' is defined  */
+/* because some variables such as `_ft_debug_file' are defined when */
+/* `FT_DEBUG_MEMORY' is defined.                                    */
+#if defined(FT_DEBUG_LEVEL_TRACE) && defined(FT_DEBUG_MEMORY)
 
   #undef FT_DEBUG_INNER
   #undef FT_ASSIGNP_INNER
