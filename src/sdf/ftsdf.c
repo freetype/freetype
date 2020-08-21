@@ -1327,6 +1327,114 @@
 
   /**************************************************************************
    *
+   * for debugging
+   *
+   */
+
+#ifdef FT_DEBUG_LEVEL_TRACE
+
+  static void
+  sdf_shape_dump( SDF_Shape*  shape )
+  {
+    FT_UInt     num_contours = 0;
+    FT_UInt     total_edges  = 0;
+    FT_UInt     total_lines  = 0;
+    FT_UInt     total_conic  = 0;
+    FT_UInt     total_cubic  = 0;
+
+    SDF_Contour*  contour_list;
+
+    if ( !shape )
+    {
+      FT_TRACE5(( "[sdf] sdf_shape_dump: null shape\n" ));
+      return;
+    }
+
+    contour_list = shape->contours;
+
+    FT_TRACE5(( "-------------------------------------------------\n" ));
+    FT_TRACE5(( "[sdf] sdf_shape_dump:\n" ));
+
+    while ( contour_list )
+    {
+      FT_UInt       num_edges = 0;
+      SDF_Edge*     edge_list;
+      SDF_Contour*  contour = contour_list;
+
+
+      edge_list = contour->edges;
+      FT_TRACE5(( "Contour %d\n", num_contours ));
+
+      while ( edge_list )
+      {
+        SDF_Edge*  edge = edge_list;
+
+
+        FT_TRACE5(( "  Edge %d\n", num_edges ));
+
+        switch (edge->edge_type) {
+        case SDF_EDGE_LINE:
+          FT_TRACE5(( "    Edge Type: Line\n" ));
+          FT_TRACE5(( "    ---------------\n" ));
+          FT_TRACE5(( "    Start Pos: %ld, %ld\n", edge->start_pos.x,
+                                                   edge->start_pos.y ));
+          FT_TRACE5(( "    End Pos  : %ld, %ld\n", edge->end_pos.x,
+                                                   edge->end_pos.y ));
+          total_lines++;
+          break;
+        case SDF_EDGE_CONIC:
+          FT_TRACE5(( "    Edge Type: Conic Bezier\n" ));
+          FT_TRACE5(( "    -----------------------\n" ));
+          FT_TRACE5(( "    Start Pos: %ld, %ld\n", edge->start_pos.x,
+                                                   edge->start_pos.y ));
+          FT_TRACE5(( "    Ctrl1 Pos: %ld, %ld\n", edge->control_a.x,
+                                                   edge->control_a.y ));
+          FT_TRACE5(( "    End Pos  : %ld, %ld\n", edge->end_pos.x,
+                                                   edge->end_pos.y ));
+          total_conic++;
+          break;
+        case SDF_EDGE_CUBIC:
+          FT_TRACE5(( "    Edge Type: Cubic Bezier\n" ));
+          FT_TRACE5(( "    -----------------------\n" ));
+          FT_TRACE5(( "    Start Pos: %ld, %ld\n", edge->start_pos.x,
+                                                   edge->start_pos.y ));
+          FT_TRACE5(( "    Ctrl1 Pos: %ld, %ld\n", edge->control_a.x,
+                                                   edge->control_a.y ));
+          FT_TRACE5(( "    Ctrl2 Pos: %ld, %ld\n", edge->control_b.x,
+                                                   edge->control_b.y ));
+          FT_TRACE5(( "    End Pos  : %ld, %ld\n", edge->end_pos.x,
+                                                   edge->end_pos.y ));
+          total_cubic++;
+          break;
+        default:
+            break;
+        }
+
+        num_edges++;
+        total_edges++;
+        edge_list = edge_list->next;
+      }
+
+      num_contours++;
+      contour_list = contour_list->next;
+    }
+
+    FT_TRACE5(( "\n" ));
+    FT_TRACE5(( "*note: the above values are "
+                "in 26.6 fixed point format*\n" ));
+    FT_TRACE5(( "total number of contours = %d\n", num_contours ));
+    FT_TRACE5(( "total number of edges    = %d\n", total_edges ));
+    FT_TRACE5(( "  |__lines = %d\n", total_lines ));
+    FT_TRACE5(( "  |__conic = %d\n", total_conic ));
+    FT_TRACE5(( "  |__cubic = %d\n", total_cubic ));
+    FT_TRACE5(( "[sdf] sdf_shape_dump complete\n" ));
+    FT_TRACE5(( "-------------------------------------------------\n" ));
+  }
+
+#endif
+
+  /**************************************************************************
+   *
    * math functions
    *
    */
