@@ -944,4 +944,103 @@
     return error;
   }
 
+
+  /**************************************************************************
+   *
+   * @Function:
+   *   finalize_sdf
+   *
+   * @Description:
+   *   Copy the SDF data from `worker->distance_map` to the `target` bitmap.
+   *   Also transform the data to output format, (which is 6.10 fixed-point
+   *   format at the moment).
+   *
+   * @Input:
+   *   worker ::
+   *     Contains source distance map and other SDF data.
+   *
+   * @Output:
+   *   target ::
+   *     Target bitmap to which the SDF data is copied to.
+   *
+   * @Return:
+   *   FreeType error, 0 means success.
+   *
+   */
+  static FT_Error
+  finalize_sdf( BSDF_Worker*      worker,
+                const FT_Bitmap*  target )
+  {
+    FT_Error  error = FT_Err_Ok;
+
+    FT_Int    w, r;
+    FT_Int    i, j;
+    FT_6D10*  t_buffer;
+    FT_16D16  spread;
+
+
+    if ( !worker || !target )
+    {
+      error = FT_THROW( Invalid_Argument );
+      goto Exit;
+    }
+
+    w        = target->width;
+    r        = target->rows;
+    t_buffer = (FT_6D10*)target->buffer;
+
+    if ( w != worker->width ||
+         r != worker->rows  )
+    {
+      error = FT_THROW( Invalid_Argument );
+      goto Exit;
+    }
+
+#if USE_SQUARED_DISTANCES
+    spread = FT_INT_16D16( worker->params.spread *
+                           worker->params.spread );
+#else
+    spread = FT_INT_16D16( worker->params.spread );
+#endif
+
+    for ( j = 0; j < r; j++ )
+    {
+      for ( i = 0; i < w; i++ )
+      {
+        FT_Int    index;
+        FT_16D16  dist;
+        FT_6D10   final_dist;
+        FT_Char   sign;
+
+
+        index = j * w + i;
+        dist  = worker->distance_map[index].dist;
+
+        if ( dist < 0 || dist > spread )
+          dist = spread;
+
+#if USE_SQUARED_DISTANCES
+        dist = square_root( dist );
+#endif
+
+        /* convert from 16.16 to 6.10 */
+        dist      /= 64;
+        final_dist = (FT_6D10)(dist & 0x0000FFFF);
+
+        /* We assume that if the pixel is inside a contour */
+        /* its coverage value must be > 127.               */
+        sign = worker->distance_map[index].alpha < 127 ? -1 : 1;
+
+        /* flip the sign according to the property */
+        if ( worker->params.flip_sign )
+          sign = -sign;
+
+        t_buffer[index] = final_dist * sign;
+      }
+    }
+
+  Exit:
+    return error;
+  }
+
 /* END */
