@@ -670,4 +670,265 @@
   }
 
 
+  /**************************************************************************
+   *
+   * @Function:
+   *   compare_neighbor
+   *
+   * @Description:
+   *   Handy function which compare the neighbor ( which is defined
+   *   by the offset ) and updae the `current' distance if the new
+   *   distance is shorter than the original.
+   *
+   * @Input:
+   *   current ::
+   *     Array of distances. This parameter must point to the position
+   *     whose neighbor is to be checked. Also the array is treated as
+   *     a 2D array.
+   *
+   *   x_offset ::
+   *     X offset of the neighbor to be checked. The offset is releative
+   *     to the `current' point.
+   *
+   *   y_offset ::
+   *     Y offset of the neighbor to be checked. The offset is releative
+   *     to the `current' point.
+   *
+   *   width ::
+   *     Width of the `current' array, we need this since we treat the
+   *     distance array as a 2D array.
+   *
+   * @Return:
+   *   None. It just update the current distance.
+   *
+   */
+  static void
+  compare_neighbor( ED*     current,
+                    FT_Int  x_offset,
+                    FT_Int  y_offset,
+                    FT_Int  width )
+  {
+    ED*           to_check;
+    FT_16D16      dist;
+    FT_16D16_Vec  dist_vec;
+
+
+    to_check = current + ( y_offset * width ) + x_offset;
+
+    /* While checking for nearest point we first     */
+    /* approximate the dist of the `current' point   */
+    /* by adding the deviation ( which will be root  */
+    /* 2 max ). And if the new value is lesser than  */
+    /* the current value then only we calculate the  */
+    /* actual distances using `FT_Vector_Length'.    */
+    /* Of course this will be eliminated while using */
+    /* squared distances.                            */
+
+    /* Approximate the distance, use 1 to avoid  */
+    /* precision errors. We subtract because the */
+    /* two directions can be opposite.           */
+    dist = to_check->dist - ONE;
+
+    if ( dist < current->dist )
+    {
+      dist_vec = to_check->near;
+      dist_vec.x += x_offset * ONE;
+      dist_vec.y += y_offset * ONE;
+      dist = VECTOR_LENGTH_16D16( dist_vec );
+      if ( dist < current->dist )
+      {
+        current->dist = dist;
+        current->near = dist_vec;
+      }
+    }
+  }
+
+  /**************************************************************************
+   *
+   * @Function:
+   *   first_pass
+   *
+   * @Description:
+   *   First pass the 8SED algorithm. It loop the bitmap from top
+   *   to bottom and scan each row left to right updating the distances
+   *   in the distance map ( in the `worker' parameter ).
+   *
+   * @Input:
+   *   worker::
+   *     Contains all the relevant parameters.
+   *
+   * @Return:
+   *   None. It update the distance map.
+   *
+   */
+  static void
+  first_pass( BSDF_Worker*  worker )
+  {
+    FT_Int    i, j; /* iterators    */
+    FT_Int    w, r; /* width, rows  */
+    ED*       dm;   /* distance map */
+
+
+    dm = worker->distance_map;
+    w  = worker->width;
+    r  = worker->rows;
+
+    /* Start scanning from top to bottom and sweep each   */
+    /* row back and forth comparing the distances of the  */
+    /* neighborhood. Leave the first row as it has no top */
+    /* neighbor, it will be covered in the 2nd scan of    */
+    /* the image, that is from bottom to top.             */
+    for ( j = 1; j < r; j++ )
+    {
+      FT_Int        index;
+      ED*           current;
+
+
+      /* Forward pass of rows (left -> right), leave, the */
+      /* first column, will be covered in backward pass.  */
+      for ( i = 1; i < w; i++ )
+      {
+        index = j * w + i;
+        current = dm + index;
+
+        /* left-up */
+        compare_neighbor( current, -1, -1, w );
+
+        /* up */
+        compare_neighbor( current,  0, -1, w );
+
+        /* up-right */
+        compare_neighbor( current,  1, -1, w );
+
+        /* left */
+        compare_neighbor( current, -1,  0, w );
+      }
+
+      /* Backward pass of rows (right -> left), leave, the */
+      /* last column, already covered in the forward pass. */
+      for ( i = w - 2; i >= 0; i-- )
+      {
+        index = j * w + i;
+        current = dm + index;
+
+        /* right */
+        compare_neighbor( current,  1,  0, w );
+      }
+    }
+  }
+
+  /**************************************************************************
+   *
+   * @Function:
+   *   second_pass
+   *
+   * @Description:
+   *   Second pass the 8SED algorithm. It loop the bitmap from bottom
+   *   to top and scan each row left to right updating the distances
+   *   in the distance map ( in the `worker' parameter ).
+   *
+   * @Input:
+   *   worker::
+   *     Contains all the relevant parameters.
+   *
+   * @Return:
+   *   None. It update the distance map.
+   *
+   */
+  static void
+  second_pass( BSDF_Worker*  worker )
+  {
+    FT_Int    i, j; /* iterators    */
+    FT_Int    w, r; /* width, rows  */ 
+    ED*       dm;   /* distance map */
+
+
+    dm = worker->distance_map;
+    w  = worker->width;
+    r  = worker->rows;
+
+    /* Start scanning from bottom to top and sweep each   */
+    /* row back and forth comparing the distances of the  */
+    /* neighborhood. Leave the last row as it has no down */
+    /* neighbor, it is already covered in the 1stscan of  */
+    /* the image, that is from top to bottom.             */
+    for ( j = r - 2; j >= 0; j-- )
+    {
+      FT_Int        index;
+      ED*           current;
+
+
+      /* Forward pass of rows (left -> right), leave, the */
+      /* first column, will be covered in backward pass.  */
+      for ( i = 1; i < w; i++ )
+      {
+        index = j * w + i;
+        current = dm + index;
+
+        /* left-up */
+        compare_neighbor( current, -1,  1, w );
+
+        /* up */
+        compare_neighbor( current,  0,  1, w );
+
+        /* up-right */
+        compare_neighbor( current,  1,  1, w );
+
+        /* left */
+        compare_neighbor( current, -1,  0, w );
+      }
+
+      /* Backward pass of rows (right -> left), leave, the */
+      /* last column, already covered in the forward pass. */
+      for ( i = w - 2; i >= 0; i-- )
+      {
+        index = j * w + i;
+        current = dm + index;
+
+        /* right */
+        compare_neighbor( current,  1,  0, w );
+      }
+    }
+  }
+
+  /**************************************************************************
+   *
+   * @Function:
+   *   edt8
+   *
+   * @Description:
+   *   Function which compute the distance map of the a bitmap. It does
+   *   both first and second pass of the 8SED algorithm.
+   *
+   * @Input:
+   *   worker::
+   *     Contains all the relevant parameters.
+   *
+   * @Return:
+   *   FT_Error ::
+   *     FreeType error, 0 means success.
+   *
+   */
+  static FT_Error
+  edt8( BSDF_Worker*  worker )
+  {
+    FT_Error  error = FT_Err_Ok;
+
+
+    if ( !worker || !worker->distance_map )
+    {
+      error = FT_THROW( Invalid_Argument );
+      goto Exit;
+    }
+
+    /* first scan of the image */
+    first_pass( worker );
+
+    /* second scan of the image */
+    second_pass( worker );
+
+  Exit:
+    return error;
+  }
+
 /* END */
