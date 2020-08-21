@@ -1392,6 +1392,106 @@
 
   /**************************************************************************
    *
+   * for debugging
+   *
+   */
+
+#ifdef FT_DEBUG_LEVEL_TRACE
+
+  static void
+  sdf_shape_dump( SDF_Shape*  shape )
+  {
+    FT_UInt  num_contours = 0;
+
+    FT_UInt  total_edges = 0;
+    FT_UInt  total_lines = 0;
+    FT_UInt  total_conic = 0;
+    FT_UInt  total_cubic = 0;
+
+    SDF_Contour*  contour_list;
+
+
+    if ( !shape )
+    {
+      FT_TRACE5(( "sdf_shape_dump: null shape\n" ));
+      return;
+    }
+
+    contour_list = shape->contours;
+
+    FT_TRACE5(( "sdf_shape_dump (values are in 26.6 format):\n" ));
+
+    while ( contour_list )
+    {
+      FT_UInt       num_edges = 0;
+      SDF_Edge*     edge_list;
+      SDF_Contour*  contour = contour_list;
+
+
+      FT_TRACE5(( "  Contour %d\n", num_contours ));
+
+      edge_list = contour->edges;
+
+      while ( edge_list )
+      {
+        SDF_Edge*  edge = edge_list;
+
+
+        FT_TRACE5(( "  %3d: ", num_edges ));
+
+        switch ( edge->edge_type )
+        {
+        case SDF_EDGE_LINE:
+          FT_TRACE5(( "Line:  (%ld, %ld) -- (%ld, %ld)\n",
+                      edge->start_pos.x, edge->start_pos.y,
+                      edge->end_pos.x, edge->end_pos.y ));
+          total_lines++;
+          break;
+
+        case SDF_EDGE_CONIC:
+          FT_TRACE5(( "Conic: (%ld, %ld) .. (%ld, %ld) .. (%ld, %ld)\n",
+                      edge->start_pos.x, edge->start_pos.y,
+                      edge->control_a.x, edge->control_a.y,
+                      edge->end_pos.x, edge->end_pos.y ));
+          total_conic++;
+          break;
+
+        case SDF_EDGE_CUBIC:
+          FT_TRACE5(( "Cubic: (%ld, %ld) .. (%ld, %ld)"
+                      " .. (%ld, %ld) .. (%ld %ld)\n",
+                      edge->start_pos.x, edge->start_pos.y,
+                      edge->control_a.x, edge->control_a.y,
+                      edge->control_b.x, edge->control_b.y,
+                      edge->end_pos.x, edge->end_pos.y ));
+          total_cubic++;
+          break;
+
+        default:
+          break;
+        }
+
+        num_edges++;
+        total_edges++;
+        edge_list = edge_list->next;
+      }
+
+      num_contours++;
+      contour_list = contour_list->next;
+    }
+
+    FT_TRACE5(( "\n" ));
+    FT_TRACE5(( "  total number of contours = %d\n", num_contours ));
+    FT_TRACE5(( "  total number of edges    = %d\n", total_edges ));
+    FT_TRACE5(( "    |__lines = %d\n", total_lines ));
+    FT_TRACE5(( "    |__conic = %d\n", total_conic ));
+    FT_TRACE5(( "    |__cubic = %d\n", total_cubic ));
+  }
+
+#endif /* FT_DEBUG_LEVEL_TRACE */
+
+
+  /**************************************************************************
+   *
    * math functions
    *
    */
