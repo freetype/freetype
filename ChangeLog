@@ -1,5 +1,12 @@
 2020-08-20  Anuj Verma  <anujv@iitbhilai.ac.in>
 
+	[sdf] Add '8-point sequential Euclidean distance mapping' algorithm.
+
+	* src/sdf/ftbsdf.c (compare_neighbor, first_pass, second_pass,
+	edt8): New functions.
+
+2020-08-20  Anuj Verma  <anujv@iitbhilai.ac.in>
+
 	[sdf] Add function to copy source bitmap to distance map.
 
 	* src/sdf/ftbsdf.c (bsdf_init_distance_map): New function.
