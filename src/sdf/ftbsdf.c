@@ -11,6 +11,95 @@
 
   /**************************************************************************
    *
+   * A brief technical overview of how the BSDF rasterizer works
+   * -----------------------------------------------------------
+   *
+   * [Notes]:
+   *   * SDF stands for Signed Distance Field everywhere.
+   *
+   *   * BSDF stands for Bitmap to Signed Distance Field rasterizer.
+   *
+   *   * This renderer converts rasterized bitmaps to SDF.  There is another
+   *     renderer called 'sdf', which generates SDF directly from outlines;
+   *     see file `ftsdf.c` for more.
+   *
+   *   * The idea of generating SDF from bitmaps is taken from two research
+   *     papers, where one is dependent on the other:
+   *
+   *     - Per-Erik Danielsson: Euclidean Distance Mapping
+   *       http://webstaff.itn.liu.se/~stegu/JFA/Danielsson.pdf
+   *
+   *       From this paper we use the eight-point sequential Euclidean
+   *       distance mapping (8SED).  This is the heart of the process used
+   *       in this rasterizer.
+   *
+   *     - Stefan Gustavson, Robin Strand: Anti-aliased Euclidean distance transform.
+   *       http://weber.itn.liu.se/~stegu/aadist/edtaa_preprint.pdf
+   *
+   *       The original 8SED algorithm discards the pixels' alpha values,
+   *       which can contain information about the actual outline of the
+   *       glyph.  This paper takes advantage of those alpha values and
+   *       approximates outline pretty accurately.
+   *
+   *   * This rasterizer also works for monochrome bitmaps.  However, the
+   *     result is not as accurate since we don't have any way to
+   *     approximate outlines from binary bitmaps.
+   *
+   * ========================================================================
+   *
+   * Generating SDF from bitmap is done in several steps.
+   *
+   * (1) The only information we have is the bitmap itself.  It can
+   *     be monochrome or anti-aliased.  If it is anti-aliased, pixel values
+   *     are nothing but coverage values.  These coverage values can be used
+   *     to extract information about the outline of the image.  For
+   *     example, if the pixel's alpha value is 0.5, then we can safely
+   *     assume that the outline passes through the center of the pixel.
+   *
+   * (2) Find edge pixels in the bitmap (see `bsdf_is_edge` for more).  For
+   *     all edge pixels we use the Anti-aliased Euclidean distance
+   *     transform algorithm and compute approximate edge distances (see
+   *     `compute_edge_distance` and/or the second paper for more).
+   *
+   * (3) Now that we have computed approximate distances for edge pixels we
+   *     use the 8SED algorithm to basically sweep the entire bitmap and
+   *     compute distances for the rest of the pixels.  (Since the algorithm
+   *     is pretty convoluted it is only explained briefly in a comment to
+   *     function `edt8`.  To see the actual algorithm refer to the first
+   *     paper.)
+   *
+   * (4) Finally, compute the sign for each pixel.  This is done in function
+   *     `finalize_sdf`.  The basic idea is that if a pixel's original
+   *     alpha/coverage value is greater than 0.5 then it is 'inside' (and
+   *     'outside' otherwise).
+   *
+   * Pseudo Code:
+   *
+   * ```
+   * b  = source bitmap;
+   * t  = target bitmap;
+   * dm = list of distances; // dimension equal to b
+   *
+   * foreach grid_point (x, y) in b:
+   * {
+   *   if (is_edge(x, y)):
+   *     dm = approximate_edge_distance(b, x, y);
+   *
+   *   // do the 8SED on the distances
+   *   edt8(dm);
+   *
+   *   // determine the signs
+   *   determine_signs(dm):
+   *
+   *   // copy SDF data to the target bitmap
+   *   copy(dm to t);
+   * }
+   *
+   */
+
+
+  /**************************************************************************
+   *
    * useful macros
    *
    */

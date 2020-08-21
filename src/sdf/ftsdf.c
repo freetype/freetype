@@ -9,6 +9,83 @@
 
   /**************************************************************************
    *
+   * A brief technical overview of how the SDF rasterizer works
+   * ----------------------------------------------------------
+   *
+   * [Notes]:
+   *   * SDF stands for Signed Distance Field everywhere.
+   *
+   *   * This renderer generates SDF directly from outlines.  There is
+   *     another renderer called 'bsdf', which converts bitmaps to SDF; see
+   *     file `ftbsdf.c` for more.
+   *
+   *   * The basic idea of generating the SDF is taken from Viktor Chlumsky's
+   *     research paper.
+   *
+   *       Chlumsky, Viktor: Shape Decomposition for Multi-channel Distance
+   *       Fields.  Master's thesis.  Czech Technical University in Prague,
+   *       Faculty of InformationTechnology, 2015.
+   *
+   *     For more information: https://github.com/Chlumsky/msdfgen
+   *
+   * ========================================================================
+   *
+   * Generating SDF from outlines is pretty straightforward.
+   *
+   * (1) We have a set of contours that make the outline of a shape/glyph.
+   *     Each contour comprises of several edges, with three types of edges.
+   *
+   *     * line segments
+   *     * conic Bezier curves
+   *     * cubic Bezier curves
+   *
+   * (2) Apart from the outlines we also have a two-dimensional grid, namely
+   *     the bitmap that is used to represent the final SDF data.
+   *
+   * (3) In order to generate SDF, our task is to find shortest signed
+   *     distance from each grid point to the outline.  The 'signed
+   *     distance' means that if the grid point is filled by any contour
+   *     then its sign is positive, otherwise it is negative.  The pseudo
+   *     code is as follows.
+   *
+   *     ```
+   *     foreach grid_point (x, y):
+   *     {
+   *       int min_dist = INT_MAX;
+   *
+   *       foreach contour in outline:
+   *       {
+   *         foreach edge in contour:
+   *         {
+   *           // get shortest distance from point (x, y) to the edge
+   *           d = get_min_dist(x, y, edge);
+   *
+   *           if (d < min_dist)
+   *             min_dist = d;
+   *         }
+   *
+   *         bitmap[x, y] = min_dist;
+   *       }
+   *     }
+   *     ```
+   *
+   * (4) After running this algorithm the bitmap contain sinformation about the closest
+   *     point from each point to the outline of the shape.  Of course,
+   *     while this is the most straightforward way of generating SDF, we
+   *     use various optimizations in this rasterizer.  See the
+   *     `sdf_generate_*' functions in this file for all details.
+   *
+   *     The optimization currently used by default is subdivision; see
+   *     function `sdf_generate_subdivision` for more.
+   *
+   *     Also, to see how we compute the shortest distance from a point to
+   *     each type of edge, check out the `get_min_distance_*' functions.
+   *
+   */
+
+
+  /**************************************************************************
+   *
    * for tracking used memory
    *
    */
