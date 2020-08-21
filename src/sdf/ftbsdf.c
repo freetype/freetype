@@ -10,6 +10,101 @@
 
   /**************************************************************************
    *
+   * A brief technical overview of how the BSDF rasterizer works.
+   * ------------------------------------------------------------
+   * 
+   * [Notes]:
+   *   * SDF stands for Signed Distance Field everywhere.
+   * 
+   *   * BSDF stands for Bitmap to Signed Distance Field rasterizer.
+   * 
+   *   * This renderer convert rasterized bitmaps to SDF. There is another
+   *     renderer `sdf' which generate SDF directly from outlines, see
+   *     `ftsdf.c' for more details on the `sdf' rasterizer.
+   * 
+   *   * The idea of generating SDF from bitmaps is taken from two research 
+   *     papers, where one is dependent on the other:
+   *     
+   *     - First paper:
+   *         Euclidean Distance Mapping, PER-ERIK DANIELSSON.
+   *         Link: http://webstaff.itn.liu.se/~stegu/JFA/Danielsson.pdf
+   *         From this paper we use the he eight-point sequential Euclidean
+   *         distance mapping (8SED). This is the heart of the process used
+   *         in this rasterizer.
+   *         The 8SED algorithm is the basic algorithm which generate SDF
+   *         (distance map) from binary bitmaps.
+   *         
+   *     - Second paper:
+   *         Anti-aliased Euclidean distance transform. Stefan Gustavson,
+   *         Robin Strand.
+   *         Link: http://weber.itn.liu.se/~stegu/aadist/edtaa_preprint.pdf
+   *         The 8SED discards the pixel's alpha values which can contain
+   *         information about the actual outline of the glyph. So, this
+   *         paper takes advantage of those alpha values and approximate
+   *         outline pretty accurately.
+   * 
+   *   * The two algorithms together generate pretty accurate SDF from only
+   *     bitmaps.
+   * 
+   *   * This rasterizer will work for monochrome bitmaps but the result will
+   *     not be as accurate since we don't have any way to approximate outli-
+   *     nes from binary bitmaps.
+   * 
+   * ========================================================================
+   * 
+   *   Generating SDF from bitmap is done in several steps:
+   * 
+   *   1 - First, the only information we have is the bitmap itself. It can
+   *       be monochrome or anti-aliased. If it is anti-aliased the pixel
+   *       values are nothing but the coverage values. There coverage values
+   *       can be used to extract information about the outline of the image.
+   *       For example: If the pixel's alpha value is 0.5, then we can safely
+   *       assume that the outline pass through the center of the pixel.
+   *
+   *   2 - Now we find the edge pixels in the bitmap (see `bsdf_is_edge' for
+   *       more details about how we find edge pixels). For all edge pixels
+   *       we use the Anti-aliased Euclidean distance transform algorithm and
+   *       compute approximate edge distances (see `compute_edge_distance'
+   *       and/or the second paper about how we compute approximate edge
+   *       distances).
+   *       
+   *   3 - Now that we have computed approximate distance for edge pixels we
+   *       use the 8SED algorithm to basically sweep the entire bitmap and
+   *       compute distances for the rest of the pixels. (Since the algorithm
+   *       is pretty large it is only explained briefly in the file, the
+   *       function for which is `edt8'. To see the actual algorithm refer
+   *       to the first paper).
+   *
+   *   4 - And finally we compute the sign for each pixel. This is done in
+   *       the `finalize_sdf' function. The basic idea is that if the pixel's
+   *       original alpha/coverage value is greater than 0.5 then it is
+   *       'inside' otherwise it is 'outside'.
+   *
+   *   5 - This concludes the algorithm.
+   *
+   *   Pseudo Code:
+   *
+   *     b  = source bitmap;
+   *     t  = target bitmap;
+   *     dm = list of distances; // dimension equal to b
+   *
+   *     foreach grid_point (x, y) in b:
+   *       if ( is_edge(x, y) ):
+   *         dm = approximate_edge_distance(b, x, y);
+   *     
+   *     // do the 8SED on the distances
+   *     edt8(dm);
+   *
+   *     // determine the signs
+   *     determine_signs(dm):
+   *
+   *     // copy SDF data to the target bitmap
+   *     copy(dm to t);
+   *
+   */
+
+  /**************************************************************************
+   *
    * useful macros
    *
    */
