@@ -444,8 +444,7 @@ else
 
   /*************************************************************************
    * 
-   * TODO:
-   * 1. Add support for priniting FT_COMPONENT
+   * An Output log handler specific to FreeType used by dlg library. 
    *    
    */
   FT_BASE_DEF( void ) 
@@ -488,6 +487,8 @@ else
   FT_EXPORT_DEF( void )
   FT_Trace_Set_Level( const char* level )
   {  
+    ft_component_flag = NULL;
+    ft_timestamp_flag = NULL;
     ft_custom_trace_level = level;
     ft_debug_init();
   }
@@ -495,6 +496,8 @@ else
   FT_EXPORT_DEF( void )
   FT_Trace_Set_Default_Level( void )
   {
+    ft_component_flag = NULL;
+    ft_timestamp_flag = NULL;
     ft_custom_trace_level = NULL ;
     ft_debug_init();
   }

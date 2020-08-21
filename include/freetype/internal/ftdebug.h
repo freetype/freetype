@@ -120,8 +120,8 @@ FT_BEGIN_HEADER
 #define FT_LOG( level, varformat )                                         \
           do                                                               \
           {                                                                \
-            const char* ft_component =  FT_LOGGING_TAG( FT_COMPONENT );    \
-            ft_add_tag(ft_component );                              \
+            const char* dlg_tag =  FT_LOGGING_TAG( FT_COMPONENT );         \
+            ft_add_tag( dlg_tag );                                         \
             if( ft_trace_levels[FT_TRACE_COMP( FT_COMPONENT )] >= level )  \
             {                                                              \
               if( custom_output_handler != NULL )                          \
@@ -129,7 +129,7 @@ FT_BEGIN_HEADER
               else                                                         \
                 dlg_trace varformat;                                       \
             }                                                              \
-            ft_remove_tag( ft_component );                          \
+            ft_remove_tag( dlg_tag );                                      \
           }while( 0 )
 
 #else 
@@ -276,9 +276,10 @@ ft_remove_tag( const char* tag );
 #define FT_ERROR( varformat )                                               \
           do                                                                \
           {                                                                 \
-          dlg_add_tag( "error_log", NULL );                                 \
+          const char* dlg_tag =  FT_LOGGING_TAG( FT_COMPONENT );            \
+          ft_add_tag( dlg_tag );                                            \
           dlg_trace varformat;                                              \
-          dlg_remove_tag( "error_log", NULL );                              \
+          ft_remove_tag( dlg_tag );                                         \
           } while ( 0 )                            
 
 #else

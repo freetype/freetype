@@ -1,5 +1,15 @@
 2020-08-21  Priyesh Kumar  <priyeshkkumar@gmail.com>
 
+    * include/freetype/internal/ftdebug.h (FT_LOG ): Use more relevant
+    temporary variable name, to hold the name of FT_COMPONENT.
+    (FT_ERROR): Store the name of `FT_COMPONENT' in a temporary variable
+    and then pass it as a parameter to `ft_add_tag' and `ft_remove_tag'.
+
+    * src/base/ftdebug.c : Updated Comments.
+    (FT_Trace_Set_Level, FT_Trace_Set_Default_Level): Reinitialize the
+    values of `ft_timestamp_flag' and `ft_component_flag' every time 
+    `FT_Trace_Set_Level' and `FT_Trace_Set_Default_Level' is used.
+
     * builds/windows/vc2010/freetype.vcxproj (PreprocessorDefinitions): 
     Added `DLG_STATIC' for `Debug Static' configuration on both platforms. 
 
