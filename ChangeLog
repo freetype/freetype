@@ -1,5 +1,13 @@
 2020-08-20  Anuj Verma  <anujv@iitbhilai.ac.in>
 
+	[sdf] Add 'bsdf' renderer to 'sdf' module.
+
+	* src/sdf/ftsdfrend.c (ft_bsdf_render): New function.
+
+	(ft_bitmap_sdf_renderer_class): New structure.
+
+2020-08-20  Anuj Verma  <anujv@iitbhilai.ac.in>
+
 	[sdf] Add interface functions for the 'bsdf' rasterizer.
 
 	* src/sdf/ftsdf.c (bsdf_raster_new, bsdf_raster_reset,

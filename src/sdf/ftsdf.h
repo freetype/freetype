@@ -19,14 +19,14 @@ FT_BEGIN_HEADER
    * @description:
    *   This struct must be passed to the raster render function
    *   @FT_Raster_RenderFunc instead of @FT_Raster_Params because the
-   *   rasterizer requires some additional information to render properly. 
+   *   rasterizer requires some additional information to render properly.
    *
    * @fields:
    *   root ::
    *     The native raster parameters structure.
    *
    *   spread ::
-   *     This is an essential parameter/property required by the renderer. 
+   *     This is an essential parameter/property required by the renderer.
    *     `spread` defines the maximum unsigned value that is present in the
    *     final SDF output.  For the default value check file
    *     `ftsdfcommon.h`.
