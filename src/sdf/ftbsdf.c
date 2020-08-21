@@ -1043,4 +1043,185 @@
     return error;
   }
 
+
+  /**************************************************************************
+   *
+   * interface functions
+   *
+   */
+
+  /* called when adding a new module through @FT_Add_Module */
+  static FT_Error
+  bsdf_raster_new( FT_Memory   memory,
+                   FT_Raster*  araster )
+  {
+    FT_Error       error  = FT_Err_Ok;
+    BSDF_TRaster*  raster = NULL;
+
+
+    *araster = 0;
+    if ( !FT_ALLOC( raster, sizeof ( BSDF_TRaster ) ) )
+    {
+      raster->memory = memory;
+      *araster       = (FT_Raster)raster;
+    }
+
+    return error;
+  }
+
+
+  /* unused */
+  static void
+  bsdf_raster_reset( FT_Raster       raster,
+                     unsigned char*  pool_base,
+                     unsigned long   pool_size )
+  {
+    FT_UNUSED( raster );
+    FT_UNUSED( pool_base );
+    FT_UNUSED( pool_size );
+  }
+
+
+  /* unused */
+  static FT_Error
+  bsdf_raster_set_mode( FT_Raster      raster,
+                        unsigned long  mode,
+                        void*          args )
+  {
+    FT_UNUSED( raster );
+    FT_UNUSED( mode );
+    FT_UNUSED( args );
+
+    return FT_Err_Ok;
+  }
+
+
+  /* called while rendering through @FT_Render_Glyph */
+  static FT_Error
+  bsdf_raster_render( FT_Raster                raster,
+                      const FT_Raster_Params*  params )
+  {
+    FT_Error   error  = FT_Err_Ok;
+    FT_Memory  memory = NULL;
+
+    const FT_Bitmap*  source      = NULL;
+    const FT_Bitmap*  target      = NULL;
+
+    BSDF_TRaster*  bsdf_raster = (BSDF_TRaster*)raster;
+    BSDF_Worker    worker;
+
+    const SDF_Raster_Params*  sdf_params = (const SDF_Raster_Params*)params;
+
+
+    worker.distance_map = NULL;
+
+    /* check for valid parameters */
+    if ( !raster || !params )
+    {
+      error = FT_THROW( Invalid_Argument );
+      goto Exit;
+    }
+
+    /* check whether the flag is set */
+    if ( sdf_params->root.flags != FT_RASTER_FLAG_SDF )
+    {
+      error = FT_THROW( Raster_Corrupted );
+      goto Exit;
+    }
+
+    source = sdf_params->root.source;
+    target = sdf_params->root.target;
+
+    /* check source and target bitmap */
+    if ( !source || !target )
+    {
+      error = FT_THROW( Invalid_Argument );
+      goto Exit;
+    }
+
+    memory = bsdf_raster->memory;
+    if ( !memory )
+    {
+      FT_TRACE0(( "bsdf_raster_render: Raster not set up properly,\n" ));
+      FT_TRACE0(( "                    unable to find memory handle.\n" ));
+
+      error = FT_THROW( Invalid_Handle );
+      goto Exit;
+    }
+
+    /* check whether spread is set properly */
+    if ( sdf_params->spread > MAX_SPREAD ||
+         sdf_params->spread < MIN_SPREAD )
+    {
+      FT_TRACE0(( "bsdf_raster_render:"
+                  " The `spread' field of `SDF_Raster_Params'\n" ));
+      FT_TRACE0(( "                   "
+                  " is invalid; the value of this field must be\n" ));
+      FT_TRACE0(( "                   "
+                  " within [%d, %d].\n",
+                  MIN_SPREAD, MAX_SPREAD ));
+      FT_TRACE0(( "                   "
+                  " Also, you must pass `SDF_Raster_Params'\n" ));
+      FT_TRACE0(( "                   "
+                  " instead of the default `FT_Raster_Params'\n" ));
+      FT_TRACE0(( "                   "
+                  " while calling this function and set the fields\n" ));
+      FT_TRACE0(( "                   "
+                  " accordingly.\n" ));
+
+      error = FT_THROW( Invalid_Argument );
+      goto Exit;
+    }
+
+    /* set up the worker */
+
+    /* allocate the distance map */
+    if ( FT_QALLOC_MULT( worker.distance_map, target->rows,
+                         target->width * sizeof ( *worker.distance_map ) ) )
+      goto Exit;
+
+    worker.width  = target->width;
+    worker.rows   = target->rows;
+    worker.params = *sdf_params;
+
+    FT_CALL( bsdf_init_distance_map( source, &worker ) );
+    FT_CALL( bsdf_approximate_edge( &worker ) );
+    FT_CALL( edt8( &worker ) );
+    FT_CALL( finalize_sdf( &worker, target ) );
+
+    FT_TRACE0(( "bsdf_raster_render: Total memory used = %ld\n",
+                worker.width * worker.rows *
+                  sizeof ( *worker.distance_map ) ));
+
+  Exit:
+    if ( worker.distance_map )
+      FT_FREE( worker.distance_map );
+
+    return error;
+  }
+
+
+  /* called while deleting `FT_Library` only if the module is added */
+  static void
+  bsdf_raster_done( FT_Raster  raster )
+  {
+    FT_Memory  memory = (FT_Memory)((BSDF_TRaster*)raster)->memory;
+
+
+    FT_FREE( raster );
+  }
+
+
+  FT_DEFINE_RASTER_FUNCS(
+    ft_bitmap_sdf_raster,
+
+    FT_GLYPH_FORMAT_BITMAP,
+
+    (FT_Raster_New_Func)     bsdf_raster_new,       /* raster_new      */
+    (FT_Raster_Reset_Func)   bsdf_raster_reset,     /* raster_reset    */
+    (FT_Raster_Set_Mode_Func)bsdf_raster_set_mode,  /* raster_set_mode */
+    (FT_Raster_Render_Func)  bsdf_raster_render,    /* raster_render   */
+    (FT_Raster_Done_Func)    bsdf_raster_done       /* raster_done     */
+  )
+
 /* END */

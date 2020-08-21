@@ -1,5 +1,17 @@
 2020-08-20  Anuj Verma  <anujv@iitbhilai.ac.in>
 
+	[sdf] Add interface functions for the 'bsdf' rasterizer.
+
+	* src/sdf/ftsdf.c (bsdf_raster_new, bsdf_raster_reset,
+	bsdf_raster_set_mode, bsdf_raster_render, bsdf_raster_done): New
+	functions.
+
+	(ft_bitmap_sdf_raster): New variable.
+
+	* src/sdf/ftsdf.h: Updated.
+
+2020-08-20  Anuj Verma  <anujv@iitbhilai.ac.in>
+
 	[sdf] Add function to copy SDF data into output bitmap.
 
 	* src/sdf/ftbsdf.c (finalize_sdf): New function.
@@ -42,7 +54,7 @@
 
 	[sdf] Add 'sdf' module to non-gnumake build systems.
 
-	* include/freetype/config/ftmodule.h: Add both the 'sfd' and 'bsfd'
+	* include/freetype/config/ftmodule.h: Add both the 'sdf' and 'bsdf'
 	renderers to the list of modules.
 
 	* CMakeLists.txt (BASE_SRCS): Add 'sdf' single-object module.
@@ -58,7 +70,7 @@
 
 	[sdf] Add build infrastructure.
 
-	* src/sdf/module.mk, src/sfd/rules.mk: New files.
+	* src/sdf/module.mk, src/sdf/rules.mk: New files.
 
 	* src/sdf/ftsdf.h (ft_sdf_raster): New forward declaration.
 
