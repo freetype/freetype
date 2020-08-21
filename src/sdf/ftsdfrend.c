@@ -398,4 +398,145 @@
     (FT_Raster_Funcs*)&ft_sdf_raster               /* raster_class    */
   )
 
+  /*************************************************************************/
+  /*************************************************************************/
+  /**                                                                     **/
+  /**  BITMAP TO SDF CONVERTER                                            **/
+  /**                                                                     **/
+  /*************************************************************************/
+  /*************************************************************************/
+
+  /* generate signed distance field from glyph's bitmap */
+  static FT_Error
+  ft_bsdf_render( FT_Renderer       module,
+                  FT_GlyphSlot      slot,
+                  FT_Render_Mode    mode,
+                  const FT_Vector*  origin )
+  {
+    FT_Error     error   = FT_Err_Ok;
+    FT_Bitmap*   bitmap  = &slot->bitmap;
+    FT_Memory    memory  = NULL;
+    FT_Renderer  render  = NULL;
+    FT_Bitmap    target;
+
+    FT_Pos      x_pad    = 0;
+    FT_Pos      y_pad    = 0;
+
+    SDF_Raster_Params  params;
+    SDF_Renderer       sdf_module = SDF_RENDERER( module );
+
+
+    /* initialize the bitmap in case any error occurs */
+    FT_Bitmap_Init( &target );
+
+    render = &sdf_module->root;
+    memory = render->root.memory;
+
+    /* check if slot format is correct before rendering */
+    if ( slot->format != render->glyph_format )
+    {
+      FT_ERROR(( "[bsdf] ft_bsdf_render: "
+                 "bsdf renderer require the slot "
+                 "format to be a bitmap\n" ));
+      error = FT_THROW( Invalid_Glyph_Format );
+      goto Exit;
+    }
+
+    /* check if render mode is correct */
+    if ( mode != FT_RENDER_MODE_SDF )
+    {
+      FT_ERROR(( "[bsdf] ft_bsdf_render: "
+                 "sdf module only render when "
+                 "using `FT_RENDER_MODE_SDF'\n" ));
+      error = FT_THROW( Cannot_Render_Glyph );
+      goto Exit;
+    }
+
+    if ( origin )
+    {
+      FT_ERROR(( "[bsdf] ft_bsdf_render: "
+                 "bsdf renderer can't translate "
+                 "the bitmap\n" ));
+      error = FT_THROW( Unimplemented_Feature );
+      goto Exit;
+    }
+
+    if ( !bitmap->rows || !bitmap->pitch )
+      goto Exit;
+
+    FT_Bitmap_New( &target );
+
+    /* the padding will simply be equal to the `spread' */
+    x_pad = sdf_module->spread;
+    y_pad = sdf_module->spread;
+
+    /* apply the padding, will be in all the directions */
+    target.rows = bitmap->rows + y_pad * 2;
+    target.width = bitmap->width + x_pad * 2;
+
+    /* setup the target bitmap */
+    target.pixel_mode = FT_PIXEL_MODE_GRAY16;
+    target.pitch = target.width * 2;
+    target.num_grays = 65535;
+
+    if ( FT_ALLOC_MULT( target.buffer, target.rows, target.pitch ) )
+      goto Exit;
+
+    /* set up parameters */
+    params.root.target = &target;
+    params.root.source = bitmap;
+    params.root.flags  = FT_RASTER_FLAG_SDF;
+    params.spread      = sdf_module->spread;
+    params.flip_sign   = sdf_module->flip_sign;
+    params.flip_y      = sdf_module->flip_y;
+
+    error = render->raster_render( render->raster,
+                                   (const FT_Raster_Params*)&params );
+  Exit:
+    if ( !error )
+    {
+      /* the glyph is successfully converted to a SDF */
+      if ( slot->internal->flags & FT_GLYPH_OWN_BITMAP )
+      {
+        FT_FREE( bitmap->buffer );
+        slot->internal->flags &= ~FT_GLYPH_OWN_BITMAP;
+      }
+
+      slot->bitmap = target;
+      slot->internal->flags |= FT_GLYPH_OWN_BITMAP;
+    }
+    else if ( target.buffer )
+    {
+      FT_FREE( target.buffer );
+    }
+
+    return error;
+  }
+
+  FT_DEFINE_RENDERER(
+    ft_bitmap_sdf_renderer_class,
+
+    FT_MODULE_RENDERER,
+    sizeof( SDF_Renderer_Module ),
+
+    "bsdf",
+    0x10000L,
+    0x20000L,
+
+    NULL,
+
+    (FT_Module_Constructor) ft_sdf_init,
+    (FT_Module_Destructor)  ft_sdf_done,
+    (FT_Module_Requester)   ft_sdf_requester,
+
+    FT_GLYPH_FORMAT_BITMAP,
+
+    (FT_Renderer_RenderFunc)    ft_bsdf_render,    /* render_glyph    */
+    (FT_Renderer_TransformFunc) ft_sdf_transform,  /* transform_glyph */
+    (FT_Renderer_GetCBoxFunc)   ft_sdf_get_cbox,   /* get_glyph_cbox  */
+    (FT_Renderer_SetModeFunc)   ft_sdf_set_mode,   /* set_mode        */
+
+    (FT_Raster_Funcs*)&ft_bitmap_sdf_raster        /* raster_class    */
+  )
+
 /* END */
