@@ -480,4 +480,194 @@
     return error;
   }
 
+  /**************************************************************************
+   *
+   * @Function:
+   *   bsdf_init_distance_map
+   *
+   * @Description:
+   *   This function initialize the distance map according to
+   *   algorithm `8-point sequential Euclidean distance mapping' (8SED).
+   *   Basically it copy the `source' bitmap alpha values to the
+   *   `distance_map->alpha' parameter of the `worker'.
+   *
+   * @Input:
+   *   source ::
+   *     Source bitmap to copy the data from.
+   *
+   * @Return:
+   *   worker ::
+   *     Target distance map to copy the data to.
+   *
+   *   FT_Error ::
+   *     FreeType error, 0 means success.
+   *
+   */
+  static FT_Error
+  bsdf_init_distance_map( const FT_Bitmap*  source,
+                          BSDF_Worker*      worker )
+  {
+    FT_Error  error         = FT_Err_Ok;
+
+    FT_Int    x_diff, y_diff;
+    FT_Int    t_i, t_j, s_i, s_j;
+    FT_Byte*  s;
+    ED*       t;
+
+    /* again check the parameters (probably unnecessary) */
+    if ( !source || !worker )
+    {
+      error = FT_THROW( Invalid_Argument );
+      goto Exit;
+    }
+
+    /* Because of the way we convert bitmap to SDF     */
+    /* i.e. aligning the source to the center of the   */
+    /* target, the target's width/rows must be checked */
+    /* before copying.                                 */
+    if ( worker->width < source->width ||
+         worker->rows  < source->rows )
+    {
+      error = FT_THROW( Invalid_Argument );
+      goto Exit;
+    }
+
+    /* check pixel mode */
+    if ( source->pixel_mode == FT_PIXEL_MODE_NONE )
+    {
+      FT_ERROR(( "[bsdf] bsdf_copy_source_to_target: "
+                 "Invalid pixel mode of source bitmap" ));
+      error = FT_THROW( Invalid_Argument );
+      goto Exit;
+    }
+
+  #ifdef FT_DEBUG_LEVEL_TRACE
+    if ( source->pixel_mode == FT_PIXEL_MODE_MONO )
+    {
+      FT_TRACE0(( "[bsdf] bsdf_copy_source_to_target:\n"
+                  "The `bsdf' renderer can convert monochrome bitmap\n"
+                  "to SDF, but the results are not perfect because there\n"
+                  "is no way to approximate actual outline from monochrome\n"
+                  "bitmap. Consider using anti-aliased bitmap instead.\n" ));
+    }
+  #endif
+
+    /* Calculate the difference in width and rows */
+    /* of the target and source.                  */
+    x_diff = worker->width - source->width;
+    y_diff = worker->rows - source->rows;
+
+    x_diff /= 2;
+    y_diff /= 2;
+
+    t = (ED*)worker->distance_map;
+    s = source->buffer;
+
+    /* For now we only support pixel mode `FT_PIXEL_MODE_MONO'  */
+    /* and `FT_PIXEL_MODE_GRAY'. More will be added later.      */
+    /* [NOTE]: We can also use `FT_Bitmap_Convert' to convert   */
+    /*         bitmap to 8bpp. To avoid extra allocation and    */
+    /*         since the target bitmap can be 16bpp we manually */
+    /*         convert the source bitmap to desired bpp.        */
+    switch ( source->pixel_mode ) {
+    case FT_PIXEL_MODE_MONO:
+    {
+      FT_Int  t_width = worker->width;
+      FT_Int  t_rows  = worker->rows;
+      FT_Int  s_width = source->width;
+      FT_Int  s_rows  = source->rows;
+
+
+      for ( t_j = 0; t_j < t_rows; t_j++ )
+      {
+        for ( t_i = 0; t_i < t_width; t_i++ )
+        {
+          FT_Int   t_index = t_j * t_width + t_i;
+          FT_Int   s_index;
+          FT_Int   div, mod;
+          FT_Byte  pixel, byte;
+
+
+          t[t_index] = zero_ed;
+
+          s_i = t_i - x_diff;
+          s_j = t_j - y_diff;
+
+          /* Assign 0 to padding similar to */
+          /* the source bitmap.             */
+          if ( s_i < 0 || s_i >= s_width ||
+               s_j < 0 || s_j >= s_rows )
+            continue;
+
+          if ( worker->params.flip_y )
+            s_index = ( s_rows - s_j - 1 ) * source->pitch;
+          else
+            s_index = s_j * source->pitch;
+
+          div = s_index + s_i / 8;
+          mod = 7 - s_i % 8;
+
+          pixel = s[div];
+          byte = 1 << mod;
+
+          t[t_index].alpha = pixel & byte ? 255 : 0;
+
+          pixel = 0;
+        }
+      }
+      break;
+    }
+    case FT_PIXEL_MODE_GRAY:
+    {
+      FT_Int  t_width = worker->width;
+      FT_Int  t_rows  = worker->rows;
+      FT_Int  s_width = source->width;
+      FT_Int  s_rows  = source->rows;
+
+
+      /* loop through all the pixels and */
+      /* assign pixel values from source */
+      for ( t_j = 0; t_j < t_rows; t_j++ )
+      {
+        for ( t_i = 0; t_i < t_width; t_i++ )
+        {
+          FT_Int    t_index = t_j * t_width + t_i;
+          FT_Int    s_index;
+
+
+          t[t_index] = zero_ed;
+
+          s_i = t_i - x_diff;
+          s_j = t_j - y_diff;
+
+          /* Assign 0 to padding similar to */
+          /* the source bitmap.             */
+          if ( s_i < 0 || s_i >= s_width ||
+               s_j < 0 || s_j >= s_rows )
+            continue;
+
+          if ( worker->params.flip_y )
+            s_index = ( s_rows - s_j - 1 ) * s_width + s_i;
+          else
+            s_index = s_j * s_width + s_i;
+
+          /* simply copy the alpha values */
+          t[t_index].alpha = s[s_index];
+        }
+      }
+
+      break;
+    }
+    default:
+      FT_ERROR(( "[bsdf] bsdf_copy_source_to_target: "
+                 "unsopported pixel mode of source bitmap\n" ));
+      error = FT_THROW( Unimplemented_Feature );
+      break;
+    }
+
+  Exit:
+    return error;
+  }
+
+
 /* END */
