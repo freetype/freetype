@@ -137,6 +137,11 @@
                                 face->horizontal.Descender );
     }
 
+#ifdef FT_DEBUG_LEVEL_TRACE
+    if ( !face->vertical_info )
+      FT_TRACE5(( "  [vertical metrics missing, computing values]\n" ));
+#endif
+
     FT_TRACE5(( "  advance height (font units): %d\n", *ah ));
     FT_TRACE5(( "  top side bearing (font units): %d\n", *tsb ));
   }

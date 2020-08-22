@@ -1,3 +1,7 @@
+2020-08-22  Werner Lemberg  <wl@gnu.org>
+
+	* src/truetype/ttgload.c (TT_Get_VMetrics): Add tracing message.
+
 2020-08-05  Alexei Podtelezhnikov  <apodtele@gmail.com>
 
 	[truetype] Retain OVERLAP_SIMPLE and OVERLAP_COMPOUND.
