@@ -160,8 +160,10 @@ FT_BEGIN_HEADER
    *   FT_PIXEL_MODE_GRAY16 ::
    *     A 16-bit per pixel bitmap used to represent signed distances in a
    *     signed distance field bitmap.  This is currently only used while
-   *     rendering using @FT_RENDER_MODE_SDF.  Note that this is a 2.14
-   *     fixed-point fractional value.
+   *     rendering using @FT_RENDER_MODE_SDF.  One Impotant Note:
+   *     This pixel format is represented as 6.10 fixed point format.  That
+   *     means you have to divide the values by 1024.0F in order to get
+   *     actual data that is outputted by the SDF rasterizers.
    *
    *   FT_PIXEL_MODE_LCD ::
    *     An 8-bit bitmap, representing RGB or BGR decimated glyph images used

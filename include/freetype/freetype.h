@@ -3247,7 +3247,9 @@ FT_BEGIN_HEADER
    *     pixel in a SDF bitmap contains information about the nearest edge of
    *     the glyph outline.  The distances are calculated from the center of
    *     the pixel and are positive if they are filled by the outline (i.e.
-   *     inside the outline) and negative otherwise.
+   *     inside the outline) and negative otherwise.  The output bitmap buffer
+   *     is represented as 6.10 fixed point values, use @FT_6Dot10 and convert
+   *     accordingly.
    *
    * @note:
    *   The selected render mode only affects vector glyphs of a font.
