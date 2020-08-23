@@ -3031,8 +3031,8 @@
     FT_Error      error  = FT_Err_Ok;
     FT_Memory     memory = NULL;
 
-    FT_UInt       width, rows, i, j;
-    FT_UInt       sp_sq;      /* max value to check   */
+    FT_Int        width, rows, i, j;
+    FT_Int        sp_sq;      /* max value to check   */
 
     SDF_Contour*  contours;   /* list of all contours */
     FT_Short*     buffer;     /* the bitmap buffer    */
@@ -3063,8 +3063,8 @@
     }
 
     contours = shape->contours;
-    width    = bitmap->width;
-    rows     = bitmap->rows;
+    width    = (FT_Int)bitmap->width;
+    rows     = (FT_Int)bitmap->rows;
     buffer   = (FT_Short*)bitmap->buffer;
 
     if ( SDF_ALLOC( dists, width * rows * sizeof( *dists ) ) )
@@ -3322,6 +3322,7 @@
     FT_Error      error = FT_Err_Ok;
     FT_Int        num_contours;      /* total number of contours      */
     FT_Int        i, j;              /* iterators                     */
+    FT_Int        width, rows;       /* width and rows of the bitmap  */
     FT_Bitmap*    bitmaps;           /* seperate bitmaps for contours */
     SDF_Contour*  contour;           /* temporary variable to iterate */
     SDF_Contour*  temp_contour;      /* temporary contour             */
@@ -3349,6 +3350,8 @@
     contour = shape->contours;
     memory = shape->memory;
     temp_shape.memory = memory;
+    width = (FT_Int)bitmap->width;
+    rows = (FT_Int)bitmap->rows;
     num_contours = 0;
 
     /* find the number of contours in the shape */
@@ -3467,11 +3470,11 @@
     /*    smallest value. Name this as `val_ac'.          */
     /* => Now, finally use the smaller of `val_c' and     */
     /*    `val_ac'.                                       */
-    for ( j = 0; j < bitmap->rows; j++ )
+    for ( j = 0; j < rows; j++ )
     {
-      for ( i = 0; i < bitmap->width; i++ )
+      for ( i = 0; i < width; i++ )
       {
-        FT_Int   id = j * bitmap->width + i; /* index of current pixel   */
+        FT_Int   id = j * width + i; /* index of current pixel   */
         FT_Int   c;                          /* contour iterator         */
         FT_6D10  val_c  = SHRT_MIN;          /* max clockwise value      */
         FT_6D10  val_ac = SHRT_MAX;          /* min anti-clockwise value */

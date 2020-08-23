@@ -620,8 +620,8 @@
     /* i.e. aligning the source to the center of the   */
     /* target, the target's width/rows must be checked */
     /* before copying.                                 */
-    if ( worker->width < source->width ||
-         worker->rows  < source->rows )
+    if ( worker->width < (FT_Int)source->width ||
+         worker->rows  < (FT_Int)source->rows )
     {
       error = FT_THROW( Invalid_Argument );
       goto Exit;
