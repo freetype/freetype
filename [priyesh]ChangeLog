@@ -1,5 +1,10 @@
 2020-08-24  Priyesh Kumar  <priyeshkkumar@gmail.com>
 
+    * src/sfnt/ttload.c (tt_face_load_font_dir): Changed layout of tracing
+    messages.
+
+    * src/base/ftdebug.c (ft_logging_init): Fix Seg fault. 
+
     * include/freetype/ftlogging.h (FT_Trace_Set_Level): Use more relevant
     parameters name in function declaration. 
     (FT_Custom_Log_Handler): Changed function name `ft_custom_log_handler'->
