@@ -896,9 +896,15 @@
       cbox.yMax = edge.control_b.y;
 
       is_set = 1;
+
+      /* To avoid warning [-Wimplicit-fallthrough=] add  */
+      /* a break statement but jump to next edge before. */
+      goto conic;
+      break;
     }
     case SDF_EDGE_CONIC:
     {
+    conic:
       if ( is_set )
       {
         cbox.xMin = edge.control_a.x < cbox.xMin ?
@@ -920,9 +926,13 @@
 
         is_set = 1;
       }
+
+      goto line;
+      break;
     }
     case SDF_EDGE_LINE:
     {
+    line:
       if ( is_set )
       {
         cbox.xMin = edge.start_pos.x < cbox.xMin ?
@@ -3184,7 +3194,7 @@
           current_sign = dists[index].sign;
 
         /* clamp the values */
-        if ( dists[index].distance > FT_INT_16D16( spread ) )
+        if ( dists[index].distance > (FT_Int)FT_INT_16D16( spread ) )
           dists[index].distance = FT_INT_16D16( spread );
 
         /* convert from 16.16 to 6.10 */

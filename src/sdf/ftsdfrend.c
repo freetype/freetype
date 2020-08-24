@@ -190,12 +190,10 @@
     return FT_Err_Ok;
   }
 
-  static FT_Error
+  static void
   ft_sdf_done( FT_Renderer  render )
   {
     FT_UNUSED( render );
-
-    return FT_Err_Ok;
   }
 
   /* generate signed distance field from a glyph's slot image */
