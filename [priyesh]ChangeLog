@@ -1,5 +1,7 @@
 2020-08-24  Priyesh Kumar  <priyeshkkumar@gmail.com>
 
+    * docs/DEBUG: Update documentation.
+
     * builds/windows/ftdebug.c (ft_logging_init, ft_logging_init):
     Fixed coding style. 
 

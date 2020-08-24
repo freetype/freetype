@@ -42,8 +42,9 @@ located in the file `ftoption.h'.  The macros are:
     Now,  `FT_TRACE'  and  `FT_ERROR'  macros  will start  sending the
     tracing  and  debugging   messages  to  the file system instead of
     `stderr'.
-    On the file system the log file  with name `freetype2.log' will be
-    generated in the same directory where the executable is placed.  
+    On  the  file system  the  log  file will be generated on the path 
+    specified  using  `FT_LOGGING_FILE'  environment  variable(more on
+    this later).
 
     There is an additional support  of  logging  Time and the  name of
     the `FT_COMPONENT' from which the current  log is  generated along
@@ -202,6 +203,17 @@ behaviour of FreeType at runtime.
 
             [{ttload}] table directory loaded
 
+  FT_LOGGING_FILE
+
+    This  variable   is  only  used   when  FreeType  is   built  with
+    `FT_LOGGING' macro defined. It contains the path to the file where
+    the user wants to put his log file.
+
+      On Linux with bash:
+      export FT_LOGGING_FILE="/tmp/freetype2.log"      
+
+      On Windows:
+      set FT_LOGGING_FILE=C:\Users\AppData\Local\Temp\freetype2.log
 
   FT2_DEBUG_MEMORY
 
