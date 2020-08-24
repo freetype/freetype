@@ -193,15 +193,15 @@ behaviour of FreeType at runtime.
         
           Case 1: FT2_DEBUG="any:7 memory:5 -vt"
 
-            [20:32:02:44969 ttload] table directory loaded
+            [20:32:02:44969 ttload]    table directory loaded
 
           Case 2: FT2_DEBUG="any:7 memory:5 -t"
 
-            [20:32:02:44969 ttload] table directory loaded
+            [20:32:02:44969 ttload]    table directory loaded
 
           Case 3: FT2_DEBUG="any:7 memory:5 -v"
 
-            [ttload] table directory loaded
+            [ttload]    table directory loaded
 
   FT_LOGGING_FILE
 
