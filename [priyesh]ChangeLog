@@ -1,5 +1,10 @@
 2020-08-24  Priyesh Kumar  <priyeshkkumar@gmail.com>
 
+    * builds/windows/ftdebug.c (ft_logging_init, ft_logging_init):
+    Fixed coding style. 
+
+    * src/base/ftdebug.c (ft_logging_init): Fixed coding style.
+
     * builds/windows/ftdebug.c (ft_log_handler): Updated code according to the 
     recent updates in dlg library.
     (ft_logging_init): Added environment variable `FT_LOGGING_FILE', the 

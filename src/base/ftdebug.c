@@ -413,13 +413,10 @@ else
     ft_default_log_handler = ft_log_handler;
     ft_default_trace_level = ft_getenv( "FT2_DEBUG" );
     if( ft_getenv( "FT_LOGGING_FILE" ) )
-    {
-      ft_fileptr = fopen( ft_getenv( "FT_LOGGING_FILE" ) , "w" );
-    }    
+      ft_fileptr = fopen( ft_getenv( "FT_LOGGING_FILE" ) , "w" );   
     else 
-    {
       ft_fileptr = stderr;
-    }
+
     ft_debug_init();
     /* We need to set the default FreeType specific dlg's output handler */
     dlg_set_handler( ft_default_log_handler, NULL );
