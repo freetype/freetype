@@ -1,5 +1,13 @@
 2020-08-24  Priyesh Kumar  <priyeshkkumar@gmail.com>
 
+    * builds/windows/ftdebug.c (ft_log_handler): Updated code according to the 
+    recent updates in dlg library.
+    (ft_logging_init): Added environment variable `FT_LOGGING_FILE', the 
+    variable `ft_fileptr' stores it's value.
+    Changed function name `ft_custom_log_handler'->
+    `FT_Custom_Log_Handler'. 
+    (ft_debug_init): Code Cleanup.
+
     * src/sfnt/ttload.c (tt_face_load_font_dir): Changed layout of tracing
     messages.
 

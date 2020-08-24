@@ -79,24 +79,8 @@
   static bool ft_timestamp_flag = false;
   static bool ft_have_newline_char = true;
 
-  ft_custom_log_handler custom_output_handler = NULL;
+  FT_Custom_Log_Handler custom_output_handler = NULL;
   dlg_handler ft_default_log_handler = NULL;
-
-  /* different types of dlg features to be used according to the flags     */
-  /* passed in FT2_DEBUG environment variable                              */
-
-  static unsigned int features_component = dlg_output_threadsafe 
-                                          | dlg_output_tags;
-  static unsigned int features_timestamp = dlg_output_threadsafe 
-                                          | dlg_output_time
-                                          | dlg_output_time_msecs; 
-  static unsigned int features_both = dlg_output_threadsafe 
-                                      | dlg_output_time_msecs 
-                                      |dlg_output_time
-                                      | dlg_output_tags ;
-  static unsigned int features_none = dlg_output_threadsafe;
-
-
 
 #endif
 
@@ -268,9 +252,13 @@
 #ifdef FT_LOGGING
 
 if( ft_custom_trace_level != NULL )
+{
     ft2_debug = ft_custom_trace_level;
-else  
+}
+else
+{
     ft2_debug = ft_default_trace_level;
+}  
 
 #else
     ft2_debug = ft_getenv( "FT2_DEBUG" );
@@ -440,8 +428,14 @@ else
   {
     ft_default_log_handler = ft_log_handler;
     ft_default_trace_level = ft_getenv( "FT2_DEBUG" );
-    ft_fileptr = fopen( "freetype2.log", "w" );
-    
+    if( ft_getenv( "FT_LOGGING_FILE" ) )
+    {
+      ft_fileptr = fopen( ft_getenv( "FT_LOGGING_FILE" ) , "w" );
+    }    
+    else 
+    {
+      ft_fileptr = stderr;
+    }
     ft_debug_init();
     /* We need to set the default FreeType specific dlg's output handler */
     dlg_set_handler( ft_default_log_handler, NULL );
@@ -464,19 +458,19 @@ else
   ft_log_handler( const struct dlg_origin* origin, 
                               const char* string, void* data )
   {
-     static unsigned int features ;
+     ( void ) data;
+     const char* features ;
      if( ft_timestamp_flag && ft_component_flag && ft_have_newline_char )
-      features = features_both;
+      features = "[%h:%m  %t]    %c";
      else if( ft_component_flag && ft_have_newline_char)
-      features = features_component;
+      features = "[%t]    %c";
      else if( ft_timestamp_flag && ft_have_newline_char )
-      features = features_timestamp;
+      features = "[%t]    %c";
      else
-      features = features_none;
+      features = "%c";
 
-      
-     dlg_generic_output_stream( ft_fileptr, features, origin, string, 
-                                dlg_default_output_styles );
+     dlg_generic_outputf_stream( ft_fileptr, features, origin, string, 
+                                dlg_default_output_styles, true );
 
      if( strchr( string, '\n' ) )
        ft_have_newline_char = true;   
@@ -517,7 +511,7 @@ else
  */
   
   FT_EXPORT_DEF( void )
-  FT_Set_Log_Handler( ft_custom_log_handler handler )
+  FT_Set_Log_Handler( FT_Custom_Log_Handler handler )
   {
     custom_output_handler = handler;
   }
