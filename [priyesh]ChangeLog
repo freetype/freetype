@@ -1,3 +1,30 @@
+2020-08-24  Priyesh Kumar  <priyeshkkumar@gmail.com>
+
+    * include/freetype/ftlogging.h (FT_Trace_Set_Level): Use more relevant
+    parameters name in function declaration. 
+    (FT_Custom_Log_Handler): Changed function name `ft_custom_log_handler'->
+    `FT_Custom_Log_Handler'. 
+    Updated documentation.
+
+    * include/freetype/ftchapters.h: Added `debugging_apis' section under 
+    `support_api' chapter.
+
+    * .gitmodules: Updated submodule to track recent changes in dlg library.
+
+    * src/base/ftdebug.c (ft_log_handler): Updated code according to the 
+    recent updates in dlg library.
+    (ft_logging_init): Added environment variable `FT_LOGGING_FILE', the 
+    variable `ft_fileptr' stores it's value.
+    Changed function name `ft_custom_log_handler'->
+    `FT_Custom_Log_Handler'. 
+
+    * include/freetype/internal/ftdebug.h: Changed function name 
+    `ft_custom_log_handler'-> `FT_Custom_Log_Handler'. 
+
+    * README.git: Updated documentation.
+
+    * docs/DEBUG: Updated documentation. 
+
 2020-08-21  Priyesh Kumar  <priyeshkkumar@gmail.com>
 
     * include/freetype/internal/ftdebug.h (FT_LOG ): Use more relevant

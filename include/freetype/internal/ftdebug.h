@@ -388,7 +388,7 @@ ft_remove_tag( const char* tag );
    * 
    * These are defined in ftdebug.c
    */ 
-  extern ft_custom_log_handler custom_output_handler;
+  extern FT_Custom_Log_Handler custom_output_handler;
   extern dlg_handler ft_default_log_handler;
 
   /**************************************************************************
