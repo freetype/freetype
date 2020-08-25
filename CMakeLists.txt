@@ -527,6 +527,12 @@ if (NOT SKIP_INSTALL_LIBRARIES AND NOT SKIP_INSTALL_ALL)
       COMPONENT pkgconfig)
   endif ()
 
+  include(CMakePackageConfigHelpers)
+  write_basic_package_version_file(
+    ${PROJECT_BINARY_DIR}/freetype-config-version.cmake
+    VERSION ${VERSION_MAJOR}.${VERSION_MINOR}.${VERSION_PATCH}
+    COMPATIBILITY SameMajorVersion)
+
   install(
     TARGETS freetype
       EXPORT freetype-targets
@@ -540,6 +546,10 @@ if (NOT SKIP_INSTALL_LIBRARIES AND NOT SKIP_INSTALL_ALL)
       DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/freetype
       FILE freetype-config.cmake
       COMPONENT headers)
+  install(
+    FILES ${PROJECT_BINARY_DIR}/freetype-config-version.cmake
+    DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/freetype
+    COMPONENT headers)
 endif ()
 
 
