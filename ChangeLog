@@ -1,3 +1,35 @@
+2020-09-21  David Turner  <david@freetype.org>
+
+	Add python script for building tarballs.
+
+	* scripts/make_distribution_archives.py: New file.
+
+	This standalone Python script should be equivalent to running `make
+	dist` with the Make-based build system, with the following minor
+	differences:
+
+	- Since `make distclean` doesn't always clean up `objs/` properly,
+	  `make dist` archives may contain some stale binaries like
+	  `objs/.libs/libfreetype.so.6` or others.
+
+	- `config.guess` and `config.sub` are not updated unless option
+	  `--gnu-config-dir=DIR` is used to specify the location of these
+	  files.
+
+	- Some bits of the auto-generated reference documentation may
+	  appear in slightly different order, probably due to issues related
+	  to mkdocs and docwriter.
+
+	As an example, the call
+
+	  scripts/make_distribution_archives.py /tmp/freetype2-dist
+
+	creates the following files under `/tmp/freetype2-dist`:
+
+	  freetype-<version>.tar.gz
+	  freetype-<version>.tar.xz
+	  ft<winversion>.zip
+
 2020-09-21  Werner Lemberg  <wl@gnu.org>
 
 	* scripts/extract_freetype_version.py: Fix regex typos.
