@@ -1,3 +1,21 @@
+2020-11-28  Priyesh Kumar  <priyeshkkumar@gmail.com>
+
+	[base] Updates to print timestamp and name of `FT_COMPONENT` in logs.
+
+	* include/freetype/internal/ftdebug.h (FT_LOGGING_TAG,
+	FT_LOGGING_TAG_): New macros to resolve the value of `FT_COMPONENT'
+	into a string.
+	(ft_add_tag, ft_remove_tag): New functions to add and remove dlg tags.
+
+	* src/base/ftdebug.c: Add new variables to control the logging of
+	timestamp and name of `FT_COMPONENT` along with actual logs.
+	(ft_add_tag, ft_remove_tag): Add function definitions.
+	(ft_log_handler): Updates to print timestamp and name of
+	`FT_COMPONENT`.
+	(ft_debug_init) [FT_LOGGING]: Users can now control the logging of
+	timestamp and name of `FT_COMPONENT` by adding tags in the
+	`FT2_DEBUG` environment variable.
+
 2020-11-27  Priyesh Kumar  <priyeshkkumar@gmail.com>
 
 	[base] Add functions and variables to print logs to a file.
