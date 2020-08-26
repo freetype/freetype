@@ -44,6 +44,27 @@
 #include <freetype/freetype.h>
 #include <freetype/internal/ftdebug.h>
 
+#ifdef FT_LOGGING
+
+  /**************************************************************************
+   *
+   * Variable used when FT_LOGGING is enabled to control logging:
+   *
+   * 1. ft_default_trace_level: stores the value of trace levels which are
+   *    provided to FreeType using FT2_DEBUG environment variable.
+   *
+   * 2. ft_fileptr: store the FILE*
+   *
+   * Static Variables are defined here to remove [ -Wunused-variable ]
+   * warning
+   *
+   */
+  static const char* ft_default_trace_level = NULL;
+  static FILE* ft_fileptr = NULL;
+
+  dlg_handler ft_default_log_handler = NULL;
+
+#endif
 
 #ifdef FT_DEBUG_LEVEL_ERROR
 
@@ -314,5 +335,57 @@
 
 #endif /* !FT_DEBUG_LEVEL_TRACE */
 
+#ifdef FT_LOGGING
+
+  /**************************************************************************
+   *
+   * If FT_LOGGING is enabled, FreeType needs to initialize all logging
+   * variables to write logs.
+   * Therefore it uses `ft_logging_init()` function to initialize a
+   * loggging variables and `ft_logging_deinit()` to un-initialize the
+   * logging variables.
+   *
+   */
+
+  FT_BASE_DEF( void )
+  ft_logging_init( void )
+  {
+    ft_default_log_handler = ft_log_handler;
+    ft_default_trace_level = ft_getenv( "FT2_DEBUG" );
+    if( ft_getenv( "FT_LOGGING_FILE" ) )
+      ft_fileptr = fopen( ft_getenv( "FT_LOGGING_FILE" ) , "w" );
+    else
+      ft_fileptr = stderr;
+
+    ft_debug_init();
+    /* We need to set the default FreeType specific dlg's output handler */
+    dlg_set_handler( ft_default_log_handler, NULL );
+
+  }
+
+  FT_BASE_DEF( void )
+  ft_logging_deinit( void )
+  {
+    fclose( ft_fileptr );
+  }
+
+  /*************************************************************************
+   *
+   * An Output log handler specific to FreeType used by dlg library.
+   *
+   */
+  FT_BASE_DEF( void )
+  ft_log_handler( const struct dlg_origin* origin,
+                              const char* string, void* data )
+  {
+    ( void ) data;
+     const char*  features = "%c";
+
+	   dlg_generic_outputf_stream( ft_fileptr, features, origin, string,
+                                dlg_default_output_styles, true );
+
+  }
+
+#endif /* FT_LOGGING */
 
 /* END */

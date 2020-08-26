@@ -31,9 +31,28 @@
 
 #include "compiler-macros.h"
 
+  /**************************************************************************
+   *
+   * Additional include files for supporting logging in FreeType using
+   * external logging library ~ src/dlg and freetype/ftlogging.h
+   *
+   */
+
+#ifdef FT_LOGGING
+#include <../src/dlg/dlg/dlg.h>
+#include <../src/dlg/dlg/output.h>
+#endif /* FT_LOGGING */
+
 
 FT_BEGIN_HEADER
 
+  /* force the definition of FT_DEBUG_LEVEL_TRACE if FT_LOGGING is already*/
+  /* defined; therefore the following #ifdefs                             */
+  /*                                                                      */
+#ifdef FT_LOGGING
+#undef FT_DEBUG_LEVEL_TRACE
+#define FT_DEBUG_LEVEL_TRACE
+#endif /* FT_LOGGING */
 
   /* force the definition of FT_DEBUG_LEVEL_ERROR if FT_DEBUG_LEVEL_TRACE */
   /* is already defined; this simplifies the following #ifdefs            */
@@ -84,18 +103,47 @@ FT_BEGIN_HEADER
    *
    */
 
+#ifdef FT_LOGGING
+
+  /*************************************************************************
+   *
+   * If FT_LOGGING is enabled, trace messages will be sent to dlg's API and
+   * if is FT_LOGGING is disabled trace messages will be sent to
+   * FT_Message(defined in ftdebug.c)
+   * Therefore the following macros:
+   *
+   */
+
+#define FT_LOG( level, varformat )                                         \
+          do                                                               \
+          {                                                                \
+            if( ft_trace_levels[FT_TRACE_COMP( FT_COMPONENT )] >= level )  \
+                dlg_trace varformat;                                       \
+          }while( 0 )
+
+#else
+
+#define FT_LOG( level, varformat )                                         \
+          do                                                               \
+          {                                                                \
+            if ( ft_trace_levels[FT_TRACE_COMP( FT_COMPONENT )] >= level ) \
+            {                                                              \
+              FT_Message varformat;                                        \
+            }                                                              \
+          } while ( 0 )
+
+#endif /* FT_LOGGING */
+
+
+
+
 #ifdef FT_DEBUG_LEVEL_TRACE
 
   /* we need two macros here to make cpp expand `FT_COMPONENT' */
 #define FT_TRACE_COMP( x )   FT_TRACE_COMP_( x )
 #define FT_TRACE_COMP_( x )  trace_ ## x
 
-#define FT_TRACE( level, varformat )                                       \
-          do                                                               \
-          {                                                                \
-            if ( ft_trace_levels[FT_TRACE_COMP( FT_COMPONENT )] >= level ) \
-              FT_Message varformat;                                        \
-          } while ( 0 )
+#define FT_TRACE( level, varformat )   FT_LOG( level, varformat )
 
 #else /* !FT_DEBUG_LEVEL_TRACE */
 
@@ -204,7 +252,28 @@ FT_BEGIN_HEADER
 
 #ifdef FT_DEBUG_LEVEL_ERROR
 
+#ifdef FT_LOGGING
+
+  /*************************************************************************
+   *
+   * If FT_LOGGING is enabled, error messages will be sent to dlg's API and
+   * if is FT_LOGGING is disabled error messages will be sent to
+   * FT_Message(defined in ftdebug.c)
+   * Therefore the following macros:
+   *
+   */
+
+#define FT_ERROR( varformat )                                               \
+          do                                                                \
+          {                                                                 \
+          dlg_trace varformat;                                              \
+          } while ( 0 )
+
+#else
+
 #define FT_ERROR( varformat )  FT_Message  varformat
+
+#endif /* FT_LOGGING */
 
 #else  /* !FT_DEBUG_LEVEL_ERROR */
 
@@ -276,6 +345,50 @@ FT_BEGIN_HEADER
 
   FT_BASE( void )
   ft_debug_init( void );
+
+#ifdef FT_LOGGING
+
+/****************************************************************************
+ *
+ * dlg uses output handlers to control how and where the log messages are
+ * printed.
+ * Therefore we need to define an output handler specific to FreeType, it
+ * will act as a default output handler of Freetype.
+ *
+ */
+
+ FT_BASE( void )
+ ft_log_handler( const struct dlg_origin* origin,
+                 const char* string,
+                 void* data );
+
+
+  /**************************************************************************
+   *
+   * Variables used when FT_LOGGING is enabled to control logging:
+   *
+   * 1. ft_default_log_handler: stores the function pointer which is used
+   *    internally by FreeType to print logs to file.
+   *
+   * These are defined in ftdebug.c
+   */
+  extern dlg_handler ft_default_log_handler;
+
+  /**************************************************************************
+   *
+   * If FT_LOGGING macro is enabled, Freetype needs to initialize and
+   * un-initialize FILE* using following functions
+   * These functions are defined in ftdebug.c
+   *
+   */
+
+  FT_BASE( void )
+  ft_logging_init( void );
+
+  FT_BASE( void )
+  ft_logging_deinit( void );
+
+#endif /* FT_LOGGING */
 
 FT_END_HEADER
 

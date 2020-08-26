@@ -201,6 +201,10 @@
     FT_Error   error;
     FT_Memory  memory;
 
+    /* If logging is enabled initialize the FILE* */
+#ifdef FT_LOGGING
+    ft_logging_init();
+#endif /* FT_LOGGING */
 
     /* check of `alibrary' delayed to `FT_New_Library' */
 
@@ -247,6 +251,11 @@
 
     /* discard memory manager */
     FT_Done_Memory( memory );
+
+    /* If logging is enabled we need to close the FILE* */
+#ifdef FT_LOGGING
+    ft_logging_deinit();
+#endif /* FT_LOGGING */
 
     return FT_Err_Ok;
   }

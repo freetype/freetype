@@ -5273,10 +5273,12 @@
     if ( !memory || !alibrary )
       return FT_THROW( Invalid_Argument );
 
+#ifndef FT_LOGGING
 #ifdef FT_DEBUG_LEVEL_ERROR
     /* init debugging support */
     ft_debug_init();
-#endif
+#endif /* FT_DEBUG_LEVEL_ERROR */
+#endif /* FT_LOGGING */
 
     /* first of all, allocate the library object */
     if ( FT_NEW( library ) )
