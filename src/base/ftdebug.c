@@ -55,12 +55,27 @@
    *
    * 2. ft_fileptr: store the FILE*
    *
+   * 3. ft_component: a string that holds the name of FT_COMPONENT
+   *
+   * 4. ft_component_flag: a flag when true, prints the name of
+   * FT_COMPONENT along with actual log message.
+   *
+   * 5. ft_timestamp_flag: a flag when true, prints time along with log
+   * actual log message.
+   *
+   * 6. ft_have_newline_char: It is used to differentiate between a log
+   *    message with '\n' char and log message without '\n' char
+   *
    * Static Variables are defined here to remove [ -Wunused-variable ]
    * warning
    *
    */
   static const char* ft_default_trace_level = NULL;
   static FILE* ft_fileptr = NULL;
+  static const char* ft_component = NULL;
+  static bool ft_component_flag = false;
+  static bool ft_timestamp_flag = false;
+  static bool ft_have_newline_char = true;
 
   dlg_handler ft_default_log_handler = NULL;
 
@@ -231,6 +246,36 @@
         if ( *p == ' ' || *p == '\t' || *p == ',' || *p == ';' || *p == '=' )
           continue;
 
+#ifdef FT_LOGGING
+        /* check extra arguments for logging */
+        if( *p == '-' )
+        {
+          const char* r = ++p;
+          if( *r == 'v' )
+          {
+            ft_component_flag = true;
+            const char* s = ++r;
+            if( *s == 't' )
+            {
+              ft_timestamp_flag = true;
+              p++;
+            }
+            p++;
+          }
+          else if( *r == 't' )
+          {
+            ft_timestamp_flag = true;
+            const char* s = ++r;
+            if( *s == 'v' )
+            {
+              ft_component_flag = true;
+              p++;
+            }
+            p++;
+          }
+        }
+#endif /* FT_LOGGING */
+
         /* read toggle name, followed by ':' */
         q = p;
         while ( *p && *p != ':' )
@@ -379,11 +424,40 @@
                               const char* string, void* data )
   {
     ( void ) data;
-     const char*  features = "%c";
+     const char* features ;
+     if( ft_timestamp_flag && ft_component_flag && ft_have_newline_char )
+      features = "[%h:%m  %t]    %c";
+     else if( ft_component_flag && ft_have_newline_char)
+      features = "[%t]    %c";
+     else if( ft_timestamp_flag && ft_have_newline_char )
+      features = "[%h:%m]    %c";
+     else
+      features = "%c";
 
 	   dlg_generic_outputf_stream( ft_fileptr, features, origin, string,
                                 dlg_default_output_styles, true );
 
+
+     if( strchr( string, '\n' ) )
+       ft_have_newline_char = true;
+     else
+       ft_have_newline_char = false;
+
+  }
+
+/* documentation is in ftdebug.h */
+  FT_BASE_DEF( void )
+  ft_add_tag( const char* tag )
+  {
+    ft_component = tag;
+    dlg_add_tag( tag, NULL );
+  }
+
+/* documentation is in ftdebug.h */
+  FT_BASE_DEF( void )
+  ft_remove_tag( const char* tag )
+  {
+    dlg_remove_tag( tag, NULL );
   }
 
 #endif /* FT_LOGGING */

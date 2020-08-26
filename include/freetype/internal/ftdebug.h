@@ -105,6 +105,11 @@ FT_BEGIN_HEADER
 
 #ifdef FT_LOGGING
 
+  /* we need two macros to convert the names of `FT_COMPONENT' to a string */
+#define FT_LOGGING_TAG( x )  FT_LOGGING_TAG_( x )
+#define FT_LOGGING_TAG_( x ) #x
+
+
   /*************************************************************************
    *
    * If FT_LOGGING is enabled, trace messages will be sent to dlg's API and
@@ -117,12 +122,14 @@ FT_BEGIN_HEADER
 #define FT_LOG( level, varformat )                                         \
           do                                                               \
           {                                                                \
+            const char* dlg_tag =  FT_LOGGING_TAG( FT_COMPONENT );         \
+            ft_add_tag( dlg_tag );                                         \
             if( ft_trace_levels[FT_TRACE_COMP( FT_COMPONENT )] >= level )  \
                 dlg_trace varformat;                                       \
+            ft_remove_tag( dlg_tag );                                      \
           }while( 0 )
 
 #else
-
 #define FT_LOG( level, varformat )                                         \
           do                                                               \
           {                                                                \
@@ -266,7 +273,10 @@ FT_BEGIN_HEADER
 #define FT_ERROR( varformat )                                               \
           do                                                                \
           {                                                                 \
+          const char* dlg_tag =  FT_LOGGING_TAG( FT_COMPONENT );            \
+          ft_add_tag( dlg_tag );                                            \
           dlg_trace varformat;                                              \
+          ft_remove_tag( dlg_tag );                                         \
           } while ( 0 )
 
 #else
@@ -387,6 +397,18 @@ FT_BEGIN_HEADER
 
   FT_BASE( void )
   ft_logging_deinit( void );
+
+  /**************************************************************************
+   *
+   * For printing the name of `FT_COMPONENT' along with the actual log, a dlg
+   * tag with the name of `FT_COMPONENT' needs to be added.
+   *
+   */
+  FT_BASE( void )
+  ft_add_tag( const char* tag );
+
+  FT_BASE( void )
+  ft_remove_tag( const char* tag );
 
 #endif /* FT_LOGGING */
 
