@@ -66,6 +66,9 @@
    * 6. ft_have_newline_char: It is used to differentiate between a log
    *    message with '\n' char and log message without '\n' char
    *
+   * 7. ft_custom_trace_level: stores the value of custom trace level which
+   *    is provided by user at run-time.
+   *
    * Static Variables are defined here to remove [ -Wunused-variable ]
    * warning
    *
@@ -76,6 +79,7 @@
   static bool ft_component_flag = false;
   static bool ft_timestamp_flag = false;
   static bool ft_have_newline_char = true;
+  static const char* ft_custom_trace_level = NULL;
 
   dlg_handler ft_default_log_handler = NULL;
 
@@ -231,8 +235,18 @@
   FT_BASE_DEF( void )
   ft_debug_init( void )
   {
-    const char*  ft2_debug = ft_getenv( "FT2_DEBUG" );
+    const char*  ft2_debug = NULL;
 
+#ifdef FT_LOGGING
+
+if( ft_custom_trace_level != NULL )
+    ft2_debug = ft_custom_trace_level;
+else
+    ft2_debug = ft_default_trace_level;
+
+#else
+    ft2_debug = ft_getenv( "FT2_DEBUG" );
+#endif /* FT_LOGGIGN */
 
     if ( ft2_debug )
     {
@@ -458,6 +472,28 @@
   ft_remove_tag( const char* tag )
   {
     dlg_remove_tag( tag, NULL );
+  }
+
+/* documentation is in ftlogging.h */
+
+  FT_EXPORT_DEF( void )
+  FT_Trace_Set_Level( const char* level )
+  {
+    ft_component_flag = NULL;
+    ft_timestamp_flag = NULL;
+    ft_custom_trace_level = level;
+    ft_debug_init();
+  }
+
+/* documentation is in ftlogging.h */
+
+  FT_EXPORT_DEF( void )
+  FT_Trace_Set_Default_Level( void )
+  {
+    ft_component_flag = NULL;
+    ft_timestamp_flag = NULL;
+    ft_custom_trace_level = NULL ;
+    ft_debug_init();
   }
 
 #endif /* FT_LOGGING */

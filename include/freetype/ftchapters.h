@@ -123,6 +123,7 @@
    *   gzip
    *   lzw
    *   bzip2
+   *   debugging_apis
    *
    */
 
