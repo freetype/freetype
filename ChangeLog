@@ -1,3 +1,7 @@
+2020-11-27  Priyesh Kumar  <priyeshkkumar@gmail.com>
+
+	* .gitmodules: Add 'dlg' library's git repository as submodule.
+
 2020-12-01  Werner Lemberg  <wl@gnu.org>
 
 	* src/tools/chktrcmp.py (trace_use_pat): Update to current use.
