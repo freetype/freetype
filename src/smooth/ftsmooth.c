@@ -379,6 +379,11 @@
     TOrigin            target;
 
 
+    /* Reject outlines that are too wide for 16-bit FT_Span.       */
+    /* Other limits are applied upstream with the same error code. */
+    if ( bitmap->width * SCALE > 0x7FFF )
+      return FT_THROW( Raster_Overflow );
+
     /* Set up direct rendering to average oversampled spans. */
     params.target     = bitmap;
     params.source     = outline;

@@ -1,3 +1,11 @@
+2020-08-25  Alexei Podtelezhnikov  <apodtele@gmail.com>
+
+	* src/smooth/ftsmooth.c (ft_smooth_raster_overlap): Limit width.
+
+	Segmentation fault reported as
+
+	  https://bugs.chromium.org/p/oss-fuzz/issues/detail?id=24729
+
 2020-08-22  Werner Lemberg  <wl@gnu.org>
 
 	* src/truetype/ttgload.c (TT_Get_VMetrics): Add tracing message.
