@@ -1,5 +1,31 @@
 2020-11-27  Priyesh Kumar  <priyeshkkumar@gmail.com>
 
+	[builds] Necessary changes to make 'dlg' compile.
+
+	* autogen.sh (copy_submodule_files): New script to copy all the
+	necessary source and include files from `submodules/dlg` to
+	`src/dlg`.
+
+	* src/dlg/dlgwrap.c: New wrapper file for `src/dlg.c`.  It enables
+	the build of 'dlg' if the `FT_LOGGING` macro is defined.
+
+	* src/dlg/rules.mk: New sub-Makefile.
+
+	* builds/freetype.mk (DLG_DIR): New variable to include the
+	header files of the 'dlg' library.
+	(INCLUDES): Add `DLG_DIR`.
+	(FT_CFLAGS): Add `-std=c99' flag.
+	Include `src/dlg/rules.mk` file to build 'dlg' library.
+	(OBJ_S, OBJ_M): Add `DLG_OBJS_M` and `DLG_OBJS_S`.
+
+	* builds/toplevel.mk: For builds directly from the git repository
+	we need to copy files from `submodule/dlg` to `src/dlg`.
+
+	* include/freetype/config/ftoption.h, devel/ftoption.h (FT_LOGGING):
+	New macro to enable or disable the logging facility in FreeType.
+
+2020-11-27  Priyesh Kumar  <priyeshkkumar@gmail.com>
+
 	* .gitmodules: Add 'dlg' library's git repository as submodule.
 
 2020-12-01  Werner Lemberg  <wl@gnu.org>
