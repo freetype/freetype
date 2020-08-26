@@ -34,7 +34,9 @@
 #ifdef FT_LOGGING
 #include <../src/dlg/dlg/dlg.h>
 #include <../src/dlg/dlg/output.h>
-#endif
+
+#include <freetype/ftlogging.h>
+#endif /* FT_LOGGING */
 
 
 FT_BEGIN_HEADER

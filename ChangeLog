@@ -1,5 +1,22 @@
 2020-11-28  Priyesh Kumar  <priyeshkkumar@gmail.com>
 
+	[base] Add public API to change the levels of tracing components.
+
+	* include/freetype/ftlogging.h: New header file.
+
+	* include/freetype/internal/ftdebug.h [FT_LOGGING]: Include
+	`ftlogging.h`.
+
+	* src/base/ftdebug.c (ft_custom_trace_level): New variable.
+	(ft_debug_init): Update to support change of levels of tracing
+	components of FreeType at run-time.
+	(FT_Trace_Set_Level): New function to change the levels of tracing
+	components at run-time.
+	(FT_Trace_Set_Default_Level): New function to reset the levels of
+	tracing components back to default.
+
+2020-11-28  Priyesh Kumar  <priyeshkkumar@gmail.com>
+
 	[base] Updates to print timestamp and name of `FT_COMPONENT` in logs.
 
 	* include/freetype/internal/ftdebug.h (FT_LOGGING_TAG,
