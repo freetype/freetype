@@ -101,6 +101,7 @@ PUBLIC_DIR   := $(TOP_DIR)/include/freetype
 INTERNAL_DIR := $(PUBLIC_DIR)/internal
 SERVICES_DIR := $(INTERNAL_DIR)/services
 CONFIG_DIR   := $(PUBLIC_DIR)/config
+DLG_DIR      := $(TOP_DIR)/src/dlg
 
 # The documentation directory.
 #
@@ -122,6 +123,7 @@ PROJECT_LIBRARY := $(LIB_DIR)/$(LIBRARY).$A
 INCLUDES := $(subst /,$(COMPILER_SEP),$(OBJ_DIR) \
                                       $(DEVEL_DIR) \
                                       $(BUILD_DIR) \
+                                      $(DLG_DIR) \
                                       $(TOP_DIR)/include)
 
 INCLUDE_FLAGS := $(INCLUDES:%=$I%)
@@ -152,7 +154,7 @@ endif
 #
 FT_CFLAGS  = $(CPPFLAGS) \
              $(CFLAGS) \
-             $DFT2_BUILD_LIBRARY
+             $DFT2_BUILD_LIBRARY -std=c99
 
 FT_COMPILE := $(CC) $(ANSIFLAGS) $(INCLUDE_FLAGS) $(FT_CFLAGS)
 
@@ -220,6 +222,7 @@ $(FTDEBUG_OBJ): $(FTDEBUG_SRC) $(FREETYPE_H)
 #
 include $(SRC_DIR)/base/rules.mk
 include $(patsubst %,$(SRC_DIR)/%/rules.mk,$(MODULES))
+include $(SRC_DIR)/dlg/rules.mk
 
 
 # ftinit component
@@ -260,8 +263,8 @@ endif
 
 # All FreeType library objects.
 #
-OBJ_M := $(BASE_OBJ_M) $(BASE_EXT_OBJ) $(DRV_OBJS_M)
-OBJ_S := $(BASE_OBJ_S) $(BASE_EXT_OBJ) $(DRV_OBJS_S)
+OBJ_M := $(BASE_OBJ_M) $(BASE_EXT_OBJ) $(DRV_OBJS_M) $(DLG_OBJS_M)
+OBJ_S := $(BASE_OBJ_S) $(BASE_EXT_OBJ) $(DRV_OBJS_S) $(DLG_OBJS_S)
 
 
 # The target `multi' on the Make command line indicates that we want to

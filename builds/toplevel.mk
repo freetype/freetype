@@ -103,6 +103,23 @@ ifneq ($(findstring setup,$(MAKECMDGOALS)),)
   check_platform := 1
 endif
 
+# For builds directly from the git repository we need to copy files
+# from `submodule/dlg' to `src/dlg'
+#
+ifeq ($(wildcard src/dlg/dlg.*),)
+  ifeq ($(wildcard submodules/dlg/dlg.*),)
+  	$(info Submodule check out in `submodules/dlg' )
+  	$(shell git submodule init)
+  	$(shell git submodule update)
+  endif
+
+  $(info Copying files from `submodules/dlg' to `src/dlg')
+  $(shell mkdir src/dlg/dlg)
+  $(shell cp submodules/dlg/include/dlg/dlg.h src/dlg/dlg)
+  $(shell cp submodules/dlg/include/dlg/output.h src/dlg/dlg)
+  $(shell cp submodules/dlg/src/dlg/dlg.c src/dlg/)
+endif
+
 # Include the automatic host platform detection rules when we need to
 # check the platform.
 #
