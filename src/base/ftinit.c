@@ -202,6 +202,10 @@
     FT_Memory  memory;
 
 
+#ifdef FT_LOGGING
+    ft_logging_init();
+#endif
+
     /* check of `alibrary' delayed to `FT_New_Library' */
 
     /* First of all, allocate a new system object -- this function is part */
@@ -247,6 +251,10 @@
 
     /* discard memory manager */
     FT_Done_Memory( memory );
+
+#ifdef FT_LOGGING
+    ft_logging_deinit();
+#endif
 
     return FT_Err_Ok;
   }

@@ -45,6 +45,28 @@
 #include <freetype/internal/ftdebug.h>
 
 
+#ifdef FT_LOGGING
+
+  /**************************************************************************
+   *
+   * Variables used to control logging.
+   *
+   * 1. `ft_default_trace_level` stores the value of trace levels, which are
+   *    provided to FreeType using the `FT2_DEBUG` environment variable.
+   *
+   * 2. `ft_fileptr` stores the `FILE*` handle.
+   *
+   * Use `static` to avoid 'unused variable' warnings.
+   *
+   */
+  static const char*  ft_default_trace_level = NULL;
+  static FILE*        ft_fileptr             = NULL;
+
+  dlg_handler  ft_default_log_handler = NULL;
+
+#endif /* FT_LOGGING*/
+
+
 #ifdef FT_DEBUG_LEVEL_ERROR
 
   /* documentation is in ftdebug.h */
@@ -104,7 +126,6 @@
   }
 
 #endif /* FT_DEBUG_LEVEL_ERROR */
-
 
 
 #ifdef FT_DEBUG_LEVEL_TRACE
@@ -313,6 +334,61 @@
 
 
 #endif /* !FT_DEBUG_LEVEL_TRACE */
+
+
+#ifdef FT_LOGGING
+
+  /**************************************************************************
+   *
+   * Initialize and de-initialize 'dlg' library.
+   *
+   */
+
+  FT_BASE_DEF( void )
+  ft_logging_init( void )
+  {
+    ft_default_log_handler = ft_log_handler;
+    ft_default_trace_level = ft_getenv( "FT2_DEBUG" );
+
+    if ( ft_getenv( "FT_LOGGING_FILE" ) )
+      ft_fileptr = ft_fopen( ft_getenv( "FT_LOGGING_FILE" ), "w" );
+    else
+      ft_fileptr = stderr;
+
+    ft_debug_init();
+
+    /* Set the default output handler for 'dlg'. */
+    dlg_set_handler( ft_default_log_handler, NULL );
+  }
+
+
+  FT_BASE_DEF( void )
+  ft_logging_deinit( void )
+  {
+    ft_fclose( ft_fileptr );
+  }
+
+
+  /*************************************************************************
+   *
+   * An output log handler for FreeType.
+   *
+   */
+  FT_BASE_DEF( void )
+  ft_log_handler( const struct dlg_origin*  origin,
+                  const char*               string,
+                  void*                     data )
+  {
+    const char*  features = "%c";
+
+    FT_UNUSED( data );
+
+
+    dlg_generic_outputf_stream( ft_fileptr, features, origin, string,
+                                dlg_default_output_styles, true );
+  }
+
+#endif /* FT_LOGGING */
 
 
 /* END */

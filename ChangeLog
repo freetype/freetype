@@ -1,5 +1,27 @@
 2020-11-27  Priyesh Kumar  <priyeshkkumar@gmail.com>
 
+	[base] Add functions and variables to print logs to a file.
+
+	* include/freetype/internal/ftdebug.h: Added dlg's header files.
+	(FT_LOG): New macro to redirect trace logs to dlg's API's whenever
+	`FT_LOGGING' is defined.
+	(ft_logging_init, ft_logging_deinit): New functions to handle
+	initialization and uninitialization of logging related variables.
+	(ft_log_handler): New function to handle logs of FreeType.
+
+	* src/base/ftdebug.c: Add necessary logging related variables. 
+	(ft_logging_init, ft_logging_deinit, ft_log_handler): Add function
+	definitions.
+
+	* src/base/ftinit.c (FT_Init_FreeType) [FT_LOGGING]: Call
+	`ft_logging_init`.
+	(FT_Done_FreeType) [FT_LOGGING]: Call `ft_logging_deinit`.
+
+	* src/base/ftobjs.c (FT_New_Library): Call `ft_debug_init` only if
+	`FT_LOGGING` is not defined.
+
+2020-11-27  Priyesh Kumar  <priyeshkkumar@gmail.com>
+
 	[builds] Necessary changes to make 'dlg' compile.
 
 	* autogen.sh (copy_submodule_files): New script to copy all the
@@ -38,7 +60,7 @@
 
 	* src/cff/cffobjs.c (cff_iriver_init): Always default to Adobe engine.
 	* src/cid/cidobjs.c (cid_driver_init): Ditto.
-        * src/type1/t1objs.c (T1_Driver_Init): Ditto.
+	* src/type1/t1objs.c (T1_Driver_Init): Ditto.
 
 2020-11-09  Werner Lemberg  <wl@gnu.org>
 
