@@ -407,7 +407,6 @@
     /* nothing */
   }
 
-
 #endif /* !FT_DEBUG_LEVEL_TRACE */
 
 

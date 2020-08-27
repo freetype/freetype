@@ -1,5 +1,33 @@
 2020-11-30  Priyesh Kumar  <priyeshkkumar@gmail.com>
 
+	[builds/windows] Changes to build 'dlg' with FreeType on Windows.
+
+	We only support Visual C++ 2010 and newer.
+
+	* builds/windows/vc2010/script.bat: New windows batch file to copy
+	necessary 'dlg' files from `submodules/dlg` to `src/dlg`.  This file
+	is used as a pre-built event in Visual C++.
+
+	* builds/windows/ftdebug.c: Synchronize with `src/base/ftdebug.c`.
+
+	* builds/windows/vc2010/freetype.vcxproj.filters: Add
+	`src/dlgwrap.c`.
+
+	* builds/windows/vc2010/freetype.vcxproj
+	(AdditionalIncludeDirectories): Add include files of dlg for 'Debug'
+	and 'Debug Static' configurations on both 'x64' and 'win32'
+	platforms.
+	(PreprocessorDefinitions): Add `FT_LOGGING` for 'Debug' and 'Debug
+	Static' configurations on both 'x64' and 'win32' platforms.
+	Add `DLG_STATIC' for 'Debug' configuration on 'x64' and 'win32'
+	platforms.
+	(DisableLanguageExtensions): We need to disable the `/Za` option
+	when building 'dlg' with FreeType as 'dlg' strictly follows the C99
+	standard.  Visual C++ produces behaves unexpectedly when
+	compiling a C99 file with `/Za` option enabled.
+
+2020-11-30  Priyesh Kumar  <priyeshkkumar@gmail.com>
+
 	[base] Add public API to change log handling function.
 
 	* include/freetype/ftlogging.h (FT_Custom_Log_Handler): New function
@@ -64,7 +92,7 @@
 	initialization and uninitialization of logging related variables.
 	(ft_log_handler): New function to handle logs of FreeType.
 
-	* src/base/ftdebug.c: Add necessary logging related variables. 
+	* src/base/ftdebug.c: Add necessary logging related variables.
 	(ft_logging_init, ft_logging_deinit, ft_log_handler): Add function
 	definitions.
 

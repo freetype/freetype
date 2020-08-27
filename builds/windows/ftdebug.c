@@ -43,6 +43,51 @@
 
 #include <freetype/freetype.h>
 #include <freetype/internal/ftdebug.h>
+#include <freetype/internal/ftobjs.h>
+
+
+#ifdef FT_LOGGING
+
+  /**************************************************************************
+   *
+   * Variables used to control logging.
+   *
+   * 1. `ft_default_trace_level` stores the value of trace levels, which are
+   *    provided to FreeType using the `FT2_DEBUG` environment variable.
+   *
+   * 2. `ft_fileptr` stores the `FILE*` handle.
+   *
+   * 3. `ft_component` is a string that holds the name of `FT_COMPONENT`.
+   *
+   * 4. The flag `ft_component_flag` prints the name of `FT_COMPONENT` along
+   *    with the actual log message if set to true.
+   *
+   * 5. The flag `ft_timestamp_flag` prints time along with the actual log
+   *    message if set to ture.
+   *
+   * 6. `ft_have_newline_char` is used to differentiate between a log
+   *    message with and without a trailing newline character.
+   *
+   * 7. `ft_custom_trace_level` stores the custom trace level value, which
+   *    is provided by the user at run-time.
+   *
+   * We use `static` to avoid 'unused variable' warnings.
+   *
+   */
+  static const char*  ft_default_trace_level = NULL;
+  static FILE*        ft_fileptr             = NULL;
+  static const char*  ft_component           = NULL;
+  static FT_Bool      ft_component_flag      = FALSE;
+  static FT_Bool      ft_timestamp_flag      = FALSE;
+  static FT_Bool      ft_have_newline_char   = TRUE;
+  static const char*  ft_custom_trace_level  = NULL;
+
+  /* declared in ftdebug.h */
+
+  dlg_handler            ft_default_log_handler = NULL;
+  FT_Custom_Log_Handler  custom_output_handler  = NULL;
+
+#endif /* FT_LOGGING*/
 
 
 #ifdef FT_DEBUG_LEVEL_ERROR
@@ -207,8 +252,17 @@
   FT_BASE_DEF( void )
   ft_debug_init( void )
   {
-    const char*  ft2_debug = getenv( "FT2_DEBUG" );
+    const char*  ft2_debug = NULL;
 
+
+#ifdef FT_LOGGING
+    if ( ft_custom_trace_level != NULL )
+      ft2_debug = ft_custom_trace_level;
+    else
+      ft2_debug = ft_default_trace_level;
+#else
+    ft2_debug = ft_getenv( "FT2_DEBUG" );
+#endif
 
     if ( ft2_debug )
     {
@@ -221,6 +275,49 @@
         /* skip leading whitespace and separators */
         if ( *p == ' ' || *p == '\t' || *p == ',' || *p == ';' || *p == '=' )
           continue;
+
+#ifdef FT_LOGGING
+
+        /* check extra arguments for logging */
+        if ( *p == '-' )
+        {
+          const char*  r = ++p;
+
+
+          if ( *r == 'v' )
+          {
+            const char*  s = ++r;
+
+
+            ft_component_flag = TRUE;
+
+            if ( *s == 't' )
+            {
+              ft_timestamp_flag = TRUE;
+              p++;
+            }
+
+            p++;
+          }
+
+          else if ( *r == 't' )
+          {
+            const char*  s = ++r;
+
+
+            ft_timestamp_flag = TRUE;
+
+            if ( *s == 'v' )
+            {
+              ft_component_flag = TRUE;
+              p++;
+            }
+
+            p++;
+          }
+        }
+
+#endif /* FT_LOGGING */
 
         /* read toggle name, followed by ':' */
         q = p;
@@ -323,8 +420,158 @@
     /* nothing */
   }
 
-
 #endif /* !FT_DEBUG_LEVEL_TRACE */
+
+
+#ifdef FT_LOGGING
+
+  /**************************************************************************
+   *
+   * Initialize and de-initialize 'dlg' library.
+   *
+   */
+
+  FT_BASE_DEF( void )
+  ft_logging_init( void )
+  {
+    ft_default_log_handler = ft_log_handler;
+    ft_default_trace_level = ft_getenv( "FT2_DEBUG" );
+
+    if ( ft_getenv( "FT_LOGGING_FILE" ) )
+      ft_fileptr = ft_fopen( ft_getenv( "FT_LOGGING_FILE" ), "w" );
+    else
+      ft_fileptr = stderr;
+
+    ft_debug_init();
+
+    /* Set the default output handler for 'dlg'. */
+    dlg_set_handler( ft_default_log_handler, NULL );
+  }
+
+
+  FT_BASE_DEF( void )
+  ft_logging_deinit( void )
+  {
+    ft_fclose( ft_fileptr );
+  }
+
+
+  /**************************************************************************
+   *
+   * An output log handler for FreeType.
+   *
+   */
+  FT_BASE_DEF( void )
+  ft_log_handler( const struct dlg_origin*  origin,
+                  const char*               string,
+                  void*                     data )
+  {
+    const char*  features;
+
+    FT_UNUSED( data );
+
+
+    if ( ft_timestamp_flag && ft_component_flag && ft_have_newline_char )
+      features = "[%h:%m  %t]    %c";
+    else if ( ft_component_flag && ft_have_newline_char )
+      features = "[%t]    %c";
+    else if ( ft_timestamp_flag && ft_have_newline_char )
+      features = "[%h:%m]    %c";
+    else
+      features = "%c";
+
+    dlg_generic_outputf_stream( ft_fileptr, features, origin, string,
+                                dlg_default_output_styles, true );
+
+    if ( strchr( string, '\n' ) )
+      ft_have_newline_char = TRUE;
+    else
+      ft_have_newline_char = FALSE;
+  }
+
+
+  /* documentation is in ftdebug.h */
+  FT_BASE_DEF( void )
+  ft_add_tag( const char*  tag )
+  {
+    ft_component = tag;
+
+    dlg_add_tag( tag, NULL );
+  }
+
+
+  /* documentation is in ftdebug.h */
+  FT_BASE_DEF( void )
+  ft_remove_tag( const char*  tag )
+  {
+    dlg_remove_tag( tag, NULL );
+  }
+
+
+  /* documentation is in ftlogging.h */
+
+  FT_EXPORT_DEF( void )
+  FT_Trace_Set_Level( const char*  level )
+  {
+    ft_component_flag     = FALSE;
+    ft_timestamp_flag     = FALSE;
+    ft_custom_trace_level = level;
+
+    ft_debug_init();
+  }
+
+
+  /* documentation is in ftlogging.h */
+
+  FT_EXPORT_DEF( void )
+  FT_Trace_Set_Default_Level( void )
+  {
+    ft_component_flag     = FALSE;
+    ft_timestamp_flag     = FALSE;
+    ft_custom_trace_level = NULL;
+
+    ft_debug_init();
+  }
+
+
+  /**************************************************************************
+   *
+   * Functions to handle a custom log handler.
+   *
+   */
+
+  /* documentation is in ftlogging.h */
+
+  FT_EXPORT_DEF( void )
+  FT_Set_Log_Handler( FT_Custom_Log_Handler  handler )
+  {
+    custom_output_handler = handler;
+  }
+
+
+  /* documentation is in ftlogging.h */
+
+  FT_EXPORT_DEF( void )
+  FT_Set_Default_Log_Handler()
+  {
+    custom_output_handler = NULL;
+  }
+
+
+  /* documentation is in ftdebug.h */
+  FT_BASE_DEF( void )
+  FT_Logging_Callback( const char*  fmt,
+                       ... )
+  {
+    va_list  ap;
+
+
+    va_start( ap, fmt );
+    custom_output_handler( ft_component, fmt, ap );
+    va_end( ap );
+  }
+
+#endif /* FT_LOGGING */
 
 
 /* END */
