@@ -82,6 +82,66 @@ FT_BEGIN_HEADER
   FT_EXPORT( void )
   FT_Trace_Set_Default_Level( void );
 
+  /**************************************************************************
+   *
+   * @functype:
+   *   FT_Custom_Log_Handler
+   *
+   * @description:
+   *   Function which is used to handle the logging of tracing and debug messages
+   *   on a file system.
+   *
+   * @input:
+   *   ft_component ::
+   *     The name of `FT_COMPONENT' from  which  the  current debug or error
+   *     message is produced.
+   *
+   *   fmt ::
+   *     Actual debug or tracing message.
+   *
+   *   args::
+   *     Arguments of debug or tracing messages.
+   *
+   */
+  typedef void
+  (*FT_Custom_Log_Handler)( const char* ft_component,
+                            const char* fmt,
+                            va_list args );
+
+
+  /**************************************************************************
+   *
+   * @function:
+   *   FT_Set_Log_Handler
+   *
+   * @description:
+   *   A function to set a custom log handler
+   *
+   * @input:
+   *
+   *   handler ::
+   *     New logging function
+   *
+   */
+  FT_EXPORT( void )
+  FT_Set_Log_Handler( FT_Custom_Log_Handler handler );
+
+
+  /**************************************************************************
+   *
+   * @function:
+   *   FT_Set_Default_Log_Handler
+   *
+   * @description:
+   *   If previously, `FT_Set_Log_Handler'  functions is used  to set new
+   *   custom logging function, this API could be  used to reset the back
+   *   the log handler to FreeType's inbuilt log handler.
+   *
+   */
+
+  FT_EXPORT( void )
+  FT_Set_Default_Log_Handler( void );
+
   /* */
 
 FT_END_HEADER

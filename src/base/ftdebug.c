@@ -81,7 +81,10 @@
   static bool ft_have_newline_char = true;
   static const char* ft_custom_trace_level = NULL;
 
+/* declared in ftdebug.h */
+
   dlg_handler ft_default_log_handler = NULL;
+  FT_Custom_Log_Handler custom_output_handler = NULL;
 
 #endif
 
@@ -494,6 +497,33 @@ else
     ft_timestamp_flag = NULL;
     ft_custom_trace_level = NULL ;
     ft_debug_init();
+  }
+
+/****************************************************************************
+ *
+ * Functions to handle custom log handler:
+ *
+ */
+
+  FT_EXPORT_DEF( void )
+  FT_Set_Log_Handler( FT_Custom_Log_Handler handler )
+  {
+    custom_output_handler = handler;
+  }
+
+  FT_EXPORT_DEF( void )
+  FT_Set_Default_Log_Handler()
+  {
+    custom_output_handler = NULL;
+  }
+
+  FT_BASE_DEF( void )
+  FT_Callback( const char* fmt, ... )
+  {
+    va_list ap;
+    va_start( ap, fmt );
+    custom_output_handler( ft_component , fmt, ap );
+    va_end( ap );
   }
 
 #endif /* FT_LOGGING */

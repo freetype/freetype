@@ -126,7 +126,12 @@ FT_BEGIN_HEADER
             const char* dlg_tag =  FT_LOGGING_TAG( FT_COMPONENT );         \
             ft_add_tag( dlg_tag );                                         \
             if( ft_trace_levels[FT_TRACE_COMP( FT_COMPONENT )] >= level )  \
+            {                                                              \
+              if( custom_output_handler != NULL )                          \
+                FT_Callback varformat;                                     \
+              else                                                         \
                 dlg_trace varformat;                                       \
+            }                                                              \
             ft_remove_tag( dlg_tag );                                      \
           }while( 0 )
 
@@ -381,9 +386,13 @@ FT_BEGIN_HEADER
    * 1. ft_default_log_handler: stores the function pointer which is used
    *    internally by FreeType to print logs to file.
    *
+   * 2. custom_output_handler: stores the function pointer to the callback
+   *    function provided by user.
+   *
    * These are defined in ftdebug.c
    */
   extern dlg_handler ft_default_log_handler;
+  extern FT_Custom_Log_Handler custom_output_handler;
 
   /**************************************************************************
    *
@@ -410,6 +419,15 @@ FT_BEGIN_HEADER
 
   FT_BASE( void )
   ft_remove_tag( const char* tag );
+
+  /**************************************************************************
+   *
+   *
+   *
+   */
+  FT_BASE( void )
+  FT_Callback( const char* fmt,
+               ... );
 
 #endif /* FT_LOGGING */
 
