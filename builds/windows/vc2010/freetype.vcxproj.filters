@@ -131,6 +131,9 @@
     <ClCompile Include="..\..\..\src\base\ftwinfnt.c">
       <Filter>Source Files\FT_MODULES</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\..\src\dlg\dlgwrap.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="..\..\..\src\base\ftver.rc">
