@@ -1,3 +1,23 @@
+2020-11-30  Priyesh Kumar  <priyeshkkumar@gmail.com>
+
+	[base] Add public API to change log handling function.
+
+	* include/freetype/ftlogging.h (FT_Custom_Log_Handler): New function
+	typedef to store the custom callback logging function.
+	(FT_Set_Log_Handler, FT_Set_Default_Log_Handler): New functions to
+	set and reset custom log handler.
+
+	* include/freetype/internal/ftdebug.h (custom_output_handler): New
+	variable to support a custom callback logging function.
+	(FT_Logging_Callback): A new function typedef to print log using
+	custom callback logging function, which is set using
+	`FT_Set_Log_Handler`.
+	(FT_Log): Use it.
+
+	* src/base/ftdebug.c (FT_Set_Log_Handler,
+	FT_Set_Default_Log_Handler, FT_Logging_Callback): Add function
+	definitions.
+
 2020-11-28  Priyesh Kumar  <priyeshkkumar@gmail.com>
 
 	[base] Add public API to change the levels of tracing components.

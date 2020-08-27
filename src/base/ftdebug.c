@@ -82,7 +82,10 @@
   static FT_Bool      ft_have_newline_char   = TRUE;
   static const char*  ft_custom_trace_level  = NULL;
 
-  dlg_handler  ft_default_log_handler = NULL;
+  /* declared in ftdebug.h */
+
+  dlg_handler            ft_default_log_handler = NULL;
+  FT_Custom_Log_Handler  custom_output_handler  = NULL;
 
 #endif /* FT_LOGGING*/
 
@@ -441,7 +444,7 @@
   }
 
 
-  /*************************************************************************
+  /**************************************************************************
    *
    * An output log handler for FreeType.
    *
@@ -516,6 +519,44 @@
     ft_custom_trace_level = NULL;
 
     ft_debug_init();
+  }
+
+
+  /**************************************************************************
+   *
+   * Functions to handle a custom log handler.
+   *
+   */
+
+  /* documentation is in ftlogging.h */
+
+  FT_EXPORT_DEF( void )
+  FT_Set_Log_Handler( FT_Custom_Log_Handler  handler )
+  {
+    custom_output_handler = handler;
+  }
+
+
+  /* documentation is in ftlogging.h */
+
+  FT_EXPORT_DEF( void )
+  FT_Set_Default_Log_Handler()
+  {
+    custom_output_handler = NULL;
+  }
+
+
+  /* documentation is in ftdebug.h */
+  FT_BASE_DEF( void )
+  FT_Logging_Callback( const char*  fmt,
+                       ... )
+  {
+    va_list  ap;
+
+
+    va_start( ap, fmt );
+    custom_output_handler( ft_component, fmt, ap );
+    va_end( ap );
   }
 
 #endif /* FT_LOGGING */

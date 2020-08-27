@@ -121,7 +121,12 @@ FT_BEGIN_HEADER
                                                                            \
             ft_add_tag( dlg_tag );                                         \
             if ( ft_trace_levels[FT_TRACE_COMP( FT_COMPONENT )] >= level ) \
-              dlg_trace varformat;                                         \
+            {                                                              \
+              if ( custom_output_handler != NULL )                         \
+                FT_Logging_Callback varformat;                             \
+              else                                                         \
+                dlg_trace varformat;                                       \
+            }                                                              \
             ft_remove_tag( dlg_tag );                                      \
           } while( 0 )
 
@@ -367,12 +372,16 @@ FT_BEGIN_HEADER
 
   /**************************************************************************
    *
-   * `ft_default_log_handler` stores the function pointer that is used
-   * internally by FreeType to print logs to a file.
+   * 1. `ft_default_log_handler` stores the function pointer that is used
+   *    internally by FreeType to print logs to a file.
+   *
+   * 2. `custom_output_handler` stores the function pointer to the callback
+   *    function provided by the user.
    *
    * It is defined in `ftdebug.c`.
    */
-  extern dlg_handler  ft_default_log_handler;
+  extern dlg_handler            ft_default_log_handler;
+  extern FT_Custom_Log_Handler  custom_output_handler;
 
 
   /**************************************************************************
@@ -381,7 +390,6 @@ FT_BEGIN_HEADER
    * un-initialize `FILE*`.
    *
    * These functions are defined in `ftdebug.c`.
-   *
    */
   FT_BASE( void )
   ft_logging_init( void );
@@ -395,12 +403,25 @@ FT_BEGIN_HEADER
    * For printing the name of `FT_COMPONENT` along with the actual log we
    * need to add a tag with the name of `FT_COMPONENT`.
    *
+   * These functions are defined in `ftdebug.c`.
    */
   FT_BASE( void )
   ft_add_tag( const char*  tag );
 
   FT_BASE( void )
   ft_remove_tag( const char*  tag );
+
+
+  /**************************************************************************
+   *
+   * A function to print log data using a custom callback logging function
+   * (which is set using `FT_Set_Log_Handler`).
+   *
+   * This function is defined in `ftdebug.c`.
+   */
+  FT_BASE( void )
+  FT_Logging_Callback( const char*  fmt,
+                       ... );
 
 #endif /* FT_LOGGING */
 
