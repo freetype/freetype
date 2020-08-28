@@ -35,6 +35,14 @@ Similarly, a  build with  `cmake' can  be done  directly from  the git
 repository.
 
 
+For using the `FT_LOGGING' macro while debugging (see `docs/DEBUG' for
+more information)  use the  following git  commands to  checkout `dlg'
+library as a git submodule.
+
+  git submodule init
+  git submodule update
+
+
 ----------------------------------------------------------------------
 
 Copyright (C) 2005-2020 by

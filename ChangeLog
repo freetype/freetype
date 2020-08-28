@@ -1,5 +1,13 @@
 2020-11-30  Priyesh Kumar  <priyeshkkumar@gmail.com>
 
+	Update logging related documentation.
+
+	* docs/DEBUG: Updates related to `FT_LOGGING`.
+
+	* README.git: Updates related to logging.
+
+2020-11-30  Priyesh Kumar  <priyeshkkumar@gmail.com>
+
 	* src/*: Fix `-Wformat` warnings.
 
 2020-11-30  Priyesh Kumar  <priyeshkkumar@gmail.com>
