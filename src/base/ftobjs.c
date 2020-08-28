@@ -1937,7 +1937,7 @@
       {
         FT_TRACE3(( "    Write POST fragment #%d header (4-byte) to buffer"
                     " %p + 0x%08lx\n",
-                    i, pfb_data, pfb_lenpos ));
+                    i, ( void* )pfb_data, pfb_lenpos ));
 
         if ( pfb_lenpos + 3 > pfb_len + 2 )
           goto Exit2;
@@ -1952,7 +1952,7 @@
 
         FT_TRACE3(( "    Write POST fragment #%d header (6-byte) to buffer"
                     " %p + 0x%08lx\n",
-                    i, pfb_data, pfb_pos ));
+                    i, ( void* )pfb_data, pfb_pos ));
 
         if ( pfb_pos + 6 > pfb_len + 2 )
           goto Exit2;
@@ -1975,7 +1975,7 @@
 
       FT_TRACE3(( "    Load POST fragment #%d (%ld byte) to buffer"
                   " %p + 0x%08lx\n",
-                  i, rlen, pfb_data, pfb_pos ));
+                  i, rlen, ( void* )pfb_data, pfb_pos ));
 
       error = FT_Stream_Read( stream, (FT_Byte *)pfb_data + pfb_pos, rlen );
       if ( error )
