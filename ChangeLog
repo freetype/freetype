@@ -1,5 +1,9 @@
 2020-11-30  Priyesh Kumar  <priyeshkkumar@gmail.com>
 
+	* src/*: Fix `-Wformat` warnings.
+
+2020-11-30  Priyesh Kumar  <priyeshkkumar@gmail.com>
+
 	[builds/windows] Changes to build 'dlg' with FreeType on Windows.
 
 	We only support Visual C++ 2010 and newer.

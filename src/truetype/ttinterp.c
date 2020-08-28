@@ -3771,7 +3771,7 @@
 
             if ( opcode_pointer[i] == opcode_size[i] )
             {
-              FT_TRACE6(( "sph: Function %d, opcode ptrn: %d, %s %s\n",
+              FT_TRACE6(( "sph: Function %d, opcode ptrn: %ld, %s %s\n",
                           i, n,
                           exc->face->root.family_name,
                           exc->face->root.style_name ));
