@@ -1,5 +1,12 @@
 2020-08-25  Alexei Podtelezhnikov  <apodtele@gmail.com>
 
+	[smooth] Don't set target in direct mode.
+
+	* src/smooth/ftsmooth.c (ft_smooth_raster_overlap): Remove assignment.
+	(ft_smooth_raster_lcd) [!FT_CONFIG_OPTION_SUBPIXEL_RENDERING]: Ditto.
+
+2020-08-25  Alexei Podtelezhnikov  <apodtele@gmail.com>
+
 	* src/smooth/ftsmooth.c (ft_smooth_raster_overlap): Limit width.
 
 	Segmentation fault reported as
