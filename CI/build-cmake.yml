@@ -1,0 +1,59 @@
+# This is a template for building and publishing freetype2 build artifacts using CMake
+
+parameters:
+- name: buildArgs # CMake configure flags
+  default: ''
+- name: mingw     # Mingw requires special enviormental setup
+  type: boolean
+  default: false
+- name: preCMD    # Command(s) executed before calling CMake 
+  default: ''
+- name: srcDIR    # Location of freetype2 sources
+  default: '.'
+- name: postCMD   # Command(s) executed after calling CMake 
+  default: ''
+
+steps:
+- ${{ if eq(parameters.mingw, true) }}:
+  - script: |
+      set PATH=C:\Windows\system32;C:\Windows;C:\Windows\System32\Wbem
+      cd $(Build.SourcesDirectory)
+      %CD:~0,2%\msys64\usr\bin\bash -lc "cmake . ${{ parameters.buildArgs }} -B $(echo \"$(Build.BinariesDirectory)\" | tr '\\' '/') -D CMAKE_BUILD_TYPE=Release -D CMAKE_INSTALL_PREFIX=install"
+    displayName: 'CMake Configure'
+    env:
+      MSYSTEM: $(MINGW_UPPER)
+      CHERE_INVOKING: yes
+      MINGW_INSTALLS: $(MINGW_LOWER)
+
+  - script: |
+      set PATH=C:\Windows\system32;C:\Windows;C:\Windows\System32\Wbem
+      %CD:~0,2%\msys64\usr\bin\bash -lc "cmake --build $(echo \"$(Build.BinariesDirectory)\" | tr '\\' '/') --config Release --target package"
+    displayName: 'CMake Build and Package'
+    env:
+      MSYSTEM: $(MINGW_UPPER)
+      CHERE_INVOKING: yes
+      MINGW_INSTALLS: $(MINGW_LOWER)
+
+- ${{ if eq(parameters.mingw, false) }}:
+  - script: |
+      ${{ parameters.preCMD }}
+      cd ${{ parameters.srcDIR }}
+      cmake . ${{ parameters.buildArgs }} -B $(Build.BinariesDirectory) -D CMAKE_BUILD_TYPE=Release -D CMAKE_INSTALL_PREFIX=install
+      ${{ parameters.postCMD }}
+    displayName: 'CMake Configure'
+    
+  - script: |
+      ${{ parameters.preCMD }}
+      cd ${{ parameters.srcDIR }}
+      cmake --build $(Build.BinariesDirectory) --config Release --target package
+      ${{ parameters.postCMD }}
+    displayName: 'CMake Build and Package'
+
+- script: mv $(Build.BinariesDirectory)/freetype-* $(Build.ArtifactStagingDirectory)
+  displayName: 'Stage Artifacts'
+
+- task: PublishBuildArtifacts@1
+  displayName: 'Push Build Artifacts'
+  inputs:
+    pathtoPublish: $(Build.ArtifactStagingDirectory)
+    artifactName: $(Agent.JobName)

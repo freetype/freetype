@@ -1,0 +1,23 @@
+# passthrough templateto call other build templates
+
+parameters:
+- name: buildArgs # CMake configure flags
+  default: ''
+- name: buildArgs # CMake configure flags
+  default: ''
+- name: mingw     # Mingw requires special enviormental setup
+  type: boolean
+  default: false
+- name: preCMD    # Command(s) executed before calling CMake 
+  default: ''
+- name: srcDIR    # Location of freetype2 sources
+  default: '.'
+- name: postCMD   # Command(s) executed after calling CMake 
+  default: ''
+
+- template: build-autotools.yml
+  parameters:
+    preCMD: ${{ parameters.preCMD }}
+    srcDIR: ${{ parameters.srcDIR }}
+    postCMD: ${{ parameters.postCMD }}
+    buildArgs: ${{ parameters.buildArgs }}

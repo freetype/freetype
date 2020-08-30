@@ -1,0 +1,232 @@
+# This file is responsible for seting up several compiler enviorments.
+# Once setup is done, the template "CI/build-cmake.yml" is invoked to test freetype
+# compiles successfully on various operating systems and compilers liststed
+# below. Artifacts of all builds are also published to azure.
+
+# TODO: Add functionality tests
+
+trigger:
+- master
+
+variables:
+  vcpkgGitRef: a41c53c14794bb32cb03269069cdd3b66fedda5f # Update this git ref to update vcpkg
+  vckpgPackages: zlib bzip2 libpng harfbuzz
+  
+jobs:
+
+## Linux ##
+- job: ArchLinux_Regression
+  displayName: "Archlinux Regression tests"
+  pool:
+    vmImage: ubuntu-latest
+  strategy:
+    matrix:
+      Test1:
+        TEST: 0
+      Test2:
+        TEST: 1
+      Test3:
+        TEST: 2
+        
+  timeoutInMinutes: 360
+  steps:
+    - checkout: self
+      path: freetype2
+      
+    - template: CI/arch-setup.yml
+      
+    - template: CI/regression-test.yml
+      parameters:
+        preCMD: 'cd $(Build.BinariesDirectory) && cat << EOF | sudo ./root.x86_64/bin/arch-chroot ./root.x86_64/'
+        srcDIR: freetype2
+        postCMD: 'EOF'
+        testNum: $(TEST)
+        
+- job: ArchLinux_Autotools
+  displayName: "Archlinux Autotools"
+  pool:
+    vmImage: ubuntu-latest
+  steps:
+    - checkout: self
+      path: freetype2
+      
+    - template: CI/arch-setup.yml
+      
+    - template: CI/build-autotools.yml
+
+- job: ArchLinux_Cmake
+  displayName: "Archlinux CMake"
+  pool:
+    vmImage: ubuntu-latest
+  strategy:
+    matrix:
+      shared:
+        BUILD_SHARED_LIBS: true
+        BUILD_ARGS: '-G "Unix Makefiles" -D BUILD_SHARED_LIBS=$(BUILD_SHARED_LIBS)'
+      static:
+        BUILD_SHARED_LIBS: false
+  
+  steps:
+    - checkout: self
+      path: freetype2
+      
+    - template: CI/arch-setup.yml
+      
+    - template: CI/build-cmake.yml
+      parameters:
+        preCMD: 'cd $(Build.BinariesDirectory) && cat << EOF | sudo ./root.x86_64/bin/arch-chroot ./root.x86_64/'
+        srcDIR: freetype2
+        postCMD: 'EOF'
+        buildArgs: $(BUILD_ARGS)
+
+## Windows ##
+
+- job: MSVC_2019_CMake
+  displayName: "MVSC 2019 CMake"
+  pool:
+    vmImage: windows-latest
+  strategy:
+    matrix:
+      i686_shared:
+        TRIPLET: x86-windows
+        BUILD_SHARED_LIBS: true
+        ARCH: Win32
+      x86_64_shared:
+        TRIPLET: x64-windows
+        BUILD_SHARED_LIBS: true
+        ARCH: x64
+      i686_static:
+        TRIPLET: x86-windows-static
+        BUILD_SHARED_LIBS: false
+        ARCH: Win32
+      x86_64_static:
+        TRIPLET: x64-windows-static
+        BUILD_SHARED_LIBS: false
+        ARCH: x64
+
+  steps:
+    - task: Cache@2
+      displayName: 'Cache VCPKG Artifacts'
+      inputs:
+        key: '"$(TRIPLET)" | "$(vckpgPackages)" | "$(vcpkgGitRef)" | "$(Agent.OS)"'
+        path: '$(Build.BinariesDirectory)/vcpkg'
+        
+    - task: run-vcpkg@0
+      displayName: 'Run VCPKG'
+      inputs:
+        vcpkgArguments: --triplet $(TRIPLET) $(vckpgPackages)
+        vcpkgGitCommitId: $(vcpkgGitRef)
+        vcpkgGitURL: https://github.com/microsoft/vcpkg.git
+
+    - template: CI/build-cmake.yml
+      parameters:
+        buildArgs: '-G "Visual Studio 16 2019" -A $(ARCH) -D CMAKE_TOOLCHAIN_FILE=$(Build.BinariesDirectory)\vcpkg\scripts\buildsystems\vcpkg.cmake -D VCPKG_ROOT=$(Build.BinariesDirectory)\vcpkg -D VCPKG_TARGET_TRIPLET=$(TRIPLET) -D BUILD_SHARED_LIBS=$(BUILD_SHARED_LIBS)'
+
+- job: MINGW_Autotools
+  displayName: "Mingw Autotools"
+  pool:
+    vmImage: windows-latest
+  strategy:
+    matrix:
+      i686:
+        MINGW_UPPER: MINGW32
+        MINGW_LOWER: mingw32
+        MINGW_ARCH: i686
+      x86_64:
+        MINGW_UPPER: MINGW64
+        MINGW_LOWER: mingw64
+        MINGW_ARCH: x86_64
+  
+  steps:
+    - template: CI/mingw-setup.yml
+      
+    - template: CI/build-autotools.yml
+      parameters:
+        mingw: true
+
+- job: MINGW_CMake
+  displayName: "MingGW CMake"
+  pool:
+    vmImage: windows-latest
+  strategy:
+    matrix:
+      i686_shared:
+        MINGW_UPPER: MINGW32
+        MINGW_LOWER: mingw32
+        MINGW_ARCH: i686
+        BUILD_SHARED_LIBS: true
+      x86_64_shared:
+        MINGW_UPPER: MINGW64
+        MINGW_LOWER: mingw64
+        MINGW_ARCH: x86_64
+        BUILD_SHARED_LIBS: true
+      i686_static:
+        MINGW_UPPER: MINGW32
+        MINGW_LOWER: mingw32
+        MINGW_ARCH: i686
+        BUILD_SHARED_LIBS: false
+      x86_64_static:
+        MINGW_UPPER: MINGW64
+        MINGW_LOWER: mingw64
+        MINGW_ARCH: x86_64
+        BUILD_SHARED_LIBS: false
+  
+  steps:
+    - template: CI/mingw-setup.yml
+      
+    - template: CI/build-cmake.yml
+      parameters:
+        mingw: true
+        buildArgs: '-G \"MSYS Makefiles\" -D BUILD_SHARED_LIBS=$(BUILD_SHARED_LIBS)'
+
+## MacOS X ##
+
+- job: MacOS_X_Autotools
+  displayName: "MacOS X Autotools"
+  pool:
+    vmImage: macos-latest
+    
+  steps:
+    - script: |
+        curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install.sh
+        bash ./install.sh
+        brew install autoconf automake
+      displayName: 'Install Brew'
+      
+    - template: CI/build-autotools.yml
+
+- job: MacOS_X_CMake
+  displayName: "MacOS X CMake"
+  pool:
+    vmImage: macos-latest
+
+  steps:
+    - template: CI/build-cmake.yml
+      parameters:
+        buildArgs: '-G Xcode -D BUILD_FRAMEWORK:BOOL=true'
+
+### iOS ##
+
+- job: iOS_CMake
+  displayName: "iOS CMake"
+  pool:
+    vmImage: macos-latest
+  strategy:
+    matrix:
+      OS:
+        IOS_PLATFORM: OS
+      Simulator:
+        IOS_PLATFORM: SIMULATOR64
+      TV_OS:
+        IOS_PLATFORM: TVOS
+      TV_OS_Simulator:
+        IOS_PLATFORM: SIMULATOR_TVOS
+      Watch_OS:
+        IOS_PLATFORM: WATCHOS
+      Watch_OS_Simulator:
+        IOS_PLATFORM: SIMULATOR_WATCHOS
+      
+  steps:
+    - template: CI/build-cmake.yml
+      parameters:
+        buildArgs: '-G Xcode -D PLATFORM=$(IOS_PLATFORM)'

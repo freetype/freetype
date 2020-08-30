@@ -1,0 +1,24 @@
+steps:
+  - script: |
+      git clone https://github.com/msys2/msys2-ci-base.git %CD:~0,2%\msys64
+      %CD:~0,2%\msys64\usr\bin\rm -rf %CD:~0,2%\msys64\.git
+    displayName: Install MSYS2
+  
+  - script: |
+      set PATH=%CD:~0,2%\msys64\usr\bin;C:\Windows\system32;C:\Windows;C:\Windows\System32\Wbem
+      %CD:~0,2%\msys64\usr\bin\curl -O http://repo.msys2.org/msys/x86_64/msys2-keyring-r21.b39fb11-1-any.pkg.tar.xz
+      %CD:~0,2%\msys64\usr\bin\curl -O http://repo.msys2.org/msys/x86_64/msys2-keyring-r21.b39fb11-1-any.pkg.tar.xz.sig
+      %CD:~0,2%\msys64\usr\bin\pacman-key --verify msys2-keyring-r21.b39fb11-1-any.pkg.tar.xz.sig
+      %CD:~0,2%\msys64\usr\bin\pacman --overwrite='*' --noconfirm -U msys2-keyring-r21.b39fb11-1-any.pkg.tar.xz
+      %CD:~0,2%\msys64\usr\bin\pacman --noconfirm -Syyuu
+    displayName: Update MSYS2
+    
+  - script: taskkill /f /fi "MODULES eq msys-2.0.dll" || exit /b 0s
+    displayName: Reset MSYS2
+  
+  - script: |
+      set PATH=%CD:~0,2%\msys64\usr\bin;C:\Windows\system32;C:\Windows;C:\Windows\System32\Wbem
+      %CD:~0,2%\msys64\usr\bin\pacman --noconfirm -Syyuu
+      %CD:~0,2%\msys64\usr\bin\pacman --noconfirm --needed -S zip git base-devel mingw-w64-$(MINGW_ARCH)-toolchain mingw-w64-$(MINGW_ARCH)-cmake mingw-w64-$(MINGW_ARCH)-harfbuzz
+      %CD:~0,2%\msys64\usr\bin\pacman --noconfirm -Scc
+    displayName: Install Toolchain

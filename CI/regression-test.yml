@@ -1,0 +1,39 @@
+# This is a template for building, running and publishing freetype2 build 
+# regression test artifacts 
+parameters:
+- name: preCMD    # Command(s) executed before calling configure
+  default: ''
+- name: srcDIR    # Location of freetype2 sources
+  default: '.'
+- name: postCMD   # Command(s) executed after calling make
+  default: ''
+- name: testNum   # Test number to run
+  default: '0'
+
+steps:
+  - script: |
+      ${{ parameters.preCMD }}
+      curl https://releases.pagure.org/liberation-fonts/liberation-fonts-ttf-2.00.1.tar.gz -o /tmp/fonts.tar.gz
+      tar -xf /tmp/fonts.tar.gz
+      mkdir -p ~/test-fonts/
+      mv liberation-fonts-*/*.ttf  ~/test-fonts/
+      cd ${{ parameters.srcDIR }}
+      git clone git://git.sv.nongnu.org/freetype/freetype2-demos.git
+      cd freetype2-demos
+      ln -s ${{ parameters.srcDIR }} ../freetype2
+      cd /freetype2
+      ./CI/ft-regression.sh master ${{ parameters.testNum }}
+      chmod -R 755 /tmp/ft-tests/
+      mv /tmp/ft-tests/ /
+      ${{ parameters.postCMD }}
+    displayName: 'Run Regression Tests'
+
+  - script: |
+      cp -R $(Build.BinariesDirectory)/root.x86_64/ft-tests $(Build.ArtifactStagingDirectory)
+    displayName: 'Stage Artifacts'
+
+  - task: PublishBuildArtifacts@1
+    displayName: 'Push Build Artifacts'
+    inputs:
+      pathtoPublish: $(Build.ArtifactStagingDirectory)
+      artifactName: $(Agent.JobName)

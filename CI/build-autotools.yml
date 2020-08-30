@@ -1,0 +1,86 @@
+# This is a template for building and publishing freetype2 build artifacts using autotools
+parameters:
+- name: buildArgs # Configure flags
+  default: ''
+- name: mingw     # Mingw requires special enviormental setup
+  type: boolean
+  default: false
+- name: preCMD    # Command(s) executed before calling configure
+  default: ''
+- name: srcDIR    # Location of freetype2 sources
+  default: '.'
+- name: postCMD   # Command(s) executed after calling make
+  default: ''
+
+steps:
+- ${{ if eq(parameters.mingw, true) }}:
+  - script: |
+      set PATH=C:\Windows\system32;C:\Windows;C:\Windows\System32\Wbem
+      cd $(Build.SourcesDirectory)
+      %CD:~0,2%\msys64\usr\bin\bash -lc "./autogen.sh && ./configure"
+    displayName: 'Configure'
+    env:
+      MSYSTEM: $(MINGW_UPPER)
+      CHERE_INVOKING: yes
+      MINGW_INSTALLS: $(MINGW_LOWER)
+      
+  - script: |
+      set PATH=C:\Windows\system32;C:\Windows;C:\Windows\System32\Wbem
+      %CD:~0,2%\msys64\usr\bin\bash -lc "make && make install DESTDIR=$(echo \"$(Build.BinariesDirectory)/install\" | tr '\\' '/')"
+      %CD:~0,2%\msys64\usr\bin\bash -lc "cp -R ${{ parameters.srcDIR }} $(echo \"$(Build.BinariesDirectory)/freetype2\" | tr '\\' '/')"
+    displayName: 'Build and Package'
+    env:
+      MSYSTEM: $(MINGW_UPPER)
+      CHERE_INVOKING: yes
+      MINGW_INSTALLS: $(MINGW_LOWER)
+
+  # Building Demos in mingw seems broken do to configuration error of it including termios.h in ttdebug.c which doesn't exist in mingw
+  #- script: |
+  #    set PATH=C:\Windows\system32;C:\Windows;C:\Windows\System32\Wbem
+  #    %CD:~0,2%\msys64\usr\bin\bash -lc "cd $(echo \"$(Build.BinariesDirectory)\" | tr '\\' '/') && git clone git://git.sv.nongnu.org/freetype/freetype2-demos.git && cd freetype2-demos && make && mv bin/ $(echo \"$(Build.BinariesDirectory)/install/demos\" | tr '\\' '/')"
+  #  displayName: 'Build Demos'
+  #  env:
+  #    MSYSTEM: $(MINGW_UPPER)
+  #    CHERE_INVOKING: yes
+  #    MINGW_INSTALLS: $(MINGW_LOWER)
+  
+  - script: |
+      set PATH=C:\Windows\system32;C:\Windows;C:\Windows\System32\Wbem"
+      %CD:~0,2%\msys64\usr\bin\bash -lc "zip -r $(echo \"$(Build.ArtifactStagingDirectory)/freetype-build.zip\" | tr '\\' '/') $(echo \"$(Build.BinariesDirectory)/install\" | tr '\\' '/')"
+    displayName: 'Stage Artifacts'
+
+- ${{ if eq(parameters.mingw, false) }}:
+  - script: |
+      ${{ parameters.preCMD }}
+      cd ${{ parameters.srcDIR }}
+      ./autogen.sh
+      ./configure ${{ parameters.buildArgs }}
+      ${{ parameters.postCMD }}
+    displayName: 'Configure'
+    
+  - script: |
+      ${{ parameters.preCMD }}
+      cd ${{ parameters.srcDIR }}
+      make 
+      make install DESTDIR=$(Build.BinariesDirectory)/install
+      ${{ parameters.postCMD }}
+    displayName: 'Build and Install'
+    
+  - script: |
+      cd ${{ parameters.srcDIR }}
+      git clone git://git.sv.nongnu.org/freetype/freetype2-demos.git
+      cd freetype2-demos
+      ln -s ${{ parameters.srcDIR }} ../freetype2
+      make
+      mv bin/ $(Build.BinariesDirectory)/install/demos
+    displayName: 'Build Demos'
+
+  - script: |
+      zip -r $(Build.ArtifactStagingDirectory)/freetype-build.zip $(Build.BinariesDirectory)/install
+    displayName: 'Stage Artifacts'
+
+- task: PublishBuildArtifacts@1
+  displayName: 'Push Build Artifacts'
+  inputs:
+    pathtoPublish: $(Build.ArtifactStagingDirectory)
+    artifactName: $(Agent.JobName)
