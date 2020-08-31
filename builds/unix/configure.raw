@@ -1012,6 +1012,10 @@ case "$CFLAGS" in
     ;;
 esac
 
+# Check for pthreads
+
+AX_PTHREAD([have_pthread=yes], [have_pthread=no])
+
 # Check for Python and docwriter
 
 have_py3=no
@@ -1141,6 +1145,13 @@ if test "$have_brotli" != no; then
 else
   ftoption_unset FT_CONFIG_OPTION_USE_BROTLI
 fi
+if test "$have_pthread" != no; then
+  CFLAGS="$CFLAGS $PTHREAD_CFLAGS"
+  LDFLAGS="$LDFLAGS $PTHREAD_CFLAGS $PTHREAD_LIBS"
+  ftoption_set FT_LOGGING
+else
+  ftoption_unset FT_LOGGING
+fi
 
 AC_SUBST([CFLAGS])
 AC_SUBST([LDFLAGS])
@@ -1176,6 +1187,7 @@ Library configuration:
   libpng:        $have_libpng
   harfbuzz:      $have_harfbuzz
   brotli:        $have_brotli
+  pthread:       $have_pthread
 ])
 
 # Warn if docwriter is not installed
@@ -1186,6 +1198,14 @@ if test $have_docwriter = no; then
   To install, run \`$PIP install docwriter', or to use a Python
   virtual environment, run \`make refdoc-venv' (requires pip package
   \`virtualenv'). These operations require Python >= 3.5.
+  ])
+fi
+
+# Warn if pthread is not available
+
+if test $have_pthread = no; then
+  AC_MSG_WARN([
+    `FT_LOGGING' will not work since pthread library is not available.
   ])
 fi
 
