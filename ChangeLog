@@ -1,3 +1,13 @@
+2020-12-01  Priyesh Kumar  <priyeshkkumar@gmail.com>
+
+	[builds/unix] Check for 'pthread' library.
+
+	* builds/unix/ax_pthread.m4: New file, taken from 'autoconf-archive'
+	git repository.
+
+	* builds/unix/configure.raw: Check for 'pthread'; also check whether
+	it works.
+
 2020-12-01  Werner Lemberg  <wl@gnu.org>
 
 	[base] Implement vertical alignment of log printing.
