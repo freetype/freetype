@@ -438,20 +438,38 @@ else
    */
   FT_BASE_DEF( void )
   ft_log_handler( const struct dlg_origin* origin,
-                              const char* string, void* data )
+                              const char* string,
+                              void* data )
   {
     ( void ) data;
-     const char* features ;
+     char* features ;
      if( ft_timestamp_flag && ft_component_flag && ft_have_newline_char )
-      features = "[%h:%m  %t]    %c";
+        features = "[%h:%m  %t]";
      else if( ft_component_flag && ft_have_newline_char)
-      features = "[%t]    %c";
+      features = "[%t]";
      else if( ft_timestamp_flag && ft_have_newline_char )
-      features = "[%h:%m]    %c";
-     else
-      features = "%c";
+      features = "[%h:%m]";
+    else
+      features = "";
 
-	   dlg_generic_outputf_stream( ft_fileptr, features, origin, string,
+    long int tag_length = strlen( *origin->tags );
+    long int features_length = strlen( features );
+
+    char features_[ features_length + 18 ];
+
+    strcpy( features_, features );
+
+    if( ft_have_newline_char && ( ft_component_flag || ft_timestamp_flag ) )
+    {
+          long int num_of_spaces = 15 - tag_length;
+          int i;
+          for( i = 0; i < num_of_spaces; i++ )
+            strcat( features_, " " );
+    }
+
+    strcat( features_, "%c" );
+
+	   dlg_generic_outputf_stream( ft_fileptr, (const char*)features_, origin, string,
                                 dlg_default_output_styles, true );
 
 
