@@ -1,5 +1,12 @@
 2020-09-02  Alexei Podtelezhnikov  <apodtele@gmail.com>
 
+	[truetype] Reduce Infinality footprint (cont'd).
+
+	* src/truetype/ttinterp.c (Ins_DELTAP): Shrink variable scope.
+	(Ins_SHPIX, Ins_MIRP): Revise if-logic.
+
+2020-09-02  Alexei Podtelezhnikov  <apodtele@gmail.com>
+
 	[truetype] Reduce Infinality footprint.
 
 	* src/truetype/ttinterp.c (Ins_SHPIX, Ins_MSIRP, Ins_MIAP, Ins_MDRP,
