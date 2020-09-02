@@ -1115,10 +1115,10 @@
       /* The Apple specification says that the compensation for     */
       /* `gray' is always zero.  FreeType doesn't do any            */
       /* compensation at all.                                       */
-      tt_metrics->compensations[0] = 0;   /* gray             */
-      tt_metrics->compensations[1] = 0;   /* black            */
-      tt_metrics->compensations[2] = 0;   /* white            */
-      tt_metrics->compensations[3] = 0;   /* the same as gray */
+      tt_metrics->compensations[0] = 0;   /* gray  */
+      tt_metrics->compensations[1] = 0;   /* black */
+      tt_metrics->compensations[2] = 0;   /* white */
+      tt_metrics->compensations[3] = 0;   /* zero  */
     }
 
     /* allocate function defs, instruction defs, cvt, and storage area */

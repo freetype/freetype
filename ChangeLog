@@ -1,4 +1,15 @@
-2020-08-25  Alexei Podtelezhnikov  <apodtele@gmail.com>
+2020-09-01  Alexei Podtelezhnikov  <apodtele@gmail.com>
+
+	[truetype] Refactor compensation color.
+
+	* src/truetype/ttinterp.h (TT_Round_Func): Change the last argument.
+	* src/truetype/ttinterp.c (Ins_ROUND, Ins_NROUND, Ins_MDAP, Ins_MIAP,
+	Ins_MDRP, Ins_MIRP): Move compensation retrieval from here...
+	(Round_*): ... to here.
+	* src/truetype/ttobjs.c (tt_size_init_bytecode): Reserve zero
+	compensation at color index 3.
+
+2020-08-28  Alexei Podtelezhnikov  <apodtele@gmail.com>
 
 	[smooth] Don't set target in direct mode.
 
