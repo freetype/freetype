@@ -1,3 +1,10 @@
+2020-09-02  Alexei Podtelezhnikov  <apodtele@gmail.com>
+
+	[truetype] Reduce Infinality footprint.
+
+	* src/truetype/ttinterp.c (Ins_SHPIX, Ins_MSIRP, Ins_MIAP, Ins_MDRP,
+	Ins_MIRP): Shrink variable scopes and consolidate ifdefs.
+
 2020-09-01  Alexei Podtelezhnikov  <apodtele@gmail.com>
 
 	[truetype] Refactor compensation color.

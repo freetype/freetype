@@ -5722,9 +5722,6 @@
   {
     FT_F26Dot6  dx, dy;
     FT_UShort   point;
-#ifdef TT_SUPPORT_SUBPIXEL_HINTING_INFINALITY
-    FT_Int      B1, B2;
-#endif
 #ifdef TT_SUPPORT_SUBPIXEL_HINTING_MINIMAL
     FT_Bool     in_twilight = FT_BOOL( exc->GS.gep0 == 0 ||
                                        exc->GS.gep1 == 0 ||
@@ -5771,6 +5768,9 @@
 
         if ( exc->ignore_x_mode )
         {
+          FT_Int  B1, B2;
+
+
           /* save point for later comparison */
           if ( exc->GS.freeVector.y != 0 )
             B1 = exc->zp2.cur[point].y;
@@ -5882,21 +5882,7 @@
   {
     FT_UShort   point = 0;
     FT_F26Dot6  distance;
-#ifdef TT_SUPPORT_SUBPIXEL_HINTING_INFINALITY
-    FT_F26Dot6  control_value_cutin = 0;
-    FT_F26Dot6  delta;
 
-
-    if ( SUBPIXEL_HINTING_INFINALITY )
-    {
-      control_value_cutin = exc->GS.control_value_cutin;
-
-      if ( exc->ignore_x_mode                                 &&
-           exc->GS.freeVector.x != 0                          &&
-           !( exc->sph_tweak_flags & SPH_TWEAK_NORMAL_ROUND ) )
-        control_value_cutin = 0;
-    }
-#endif /* TT_SUPPORT_SUBPIXEL_HINTING_INFINALITY */
 
     point = (FT_UShort)args[0];
 
@@ -5920,16 +5906,25 @@
     distance = PROJECT( exc->zp1.cur + point, exc->zp0.cur + exc->GS.rp0 );
 
 #ifdef TT_SUPPORT_SUBPIXEL_HINTING_INFINALITY
-    delta = SUB_LONG( distance, args[1] );
-    if ( delta < 0 )
-      delta = NEG_LONG( delta );
-
     /* subpixel hinting - make MSIRP respect CVT cut-in; */
-    if ( SUBPIXEL_HINTING_INFINALITY  &&
-         exc->ignore_x_mode           &&
-         exc->GS.freeVector.x != 0    &&
-         delta >= control_value_cutin )
-      distance = args[1];
+    if ( SUBPIXEL_HINTING_INFINALITY &&
+         exc->ignore_x_mode          &&
+         exc->GS.freeVector.x != 0   )
+    {
+      FT_F26Dot6  control_value_cutin = exc->GS.control_value_cutin;
+      FT_F26Dot6  delta;
+
+
+      if ( !( exc->sph_tweak_flags & SPH_TWEAK_NORMAL_ROUND ) )
+        control_value_cutin = 0;
+
+      delta = SUB_LONG( distance, args[1] );
+      if ( delta < 0 )
+        delta = NEG_LONG( delta );
+
+      if ( delta >= control_value_cutin )
+        distance = args[1];
+    }
 #endif /* TT_SUPPORT_SUBPIXEL_HINTING_INFINALITY */
 
     exc->func_move( exc,
@@ -6005,21 +6000,10 @@
     FT_UShort   point;
     FT_F26Dot6  distance;
     FT_F26Dot6  org_dist;
-    FT_F26Dot6  control_value_cutin;
 
 
-    control_value_cutin = exc->GS.control_value_cutin;
-    cvtEntry            = (FT_ULong)args[1];
-    point               = (FT_UShort)args[0];
-
-#ifdef TT_SUPPORT_SUBPIXEL_HINTING_INFINALITY
-    if ( SUBPIXEL_HINTING_INFINALITY                        &&
-         exc->ignore_x_mode                                 &&
-         exc->GS.freeVector.x != 0                          &&
-         exc->GS.freeVector.y == 0                          &&
-         !( exc->sph_tweak_flags & SPH_TWEAK_NORMAL_ROUND ) )
-      control_value_cutin = 0;
-#endif /* TT_SUPPORT_SUBPIXEL_HINTING_INFINALITY */
+    cvtEntry = (FT_ULong)args[1];
+    point    = (FT_UShort)args[0];
 
     if ( BOUNDS( point,     exc->zp0.n_points ) ||
          BOUNDSL( cvtEntry, exc->cvtSize )      )
@@ -6079,8 +6063,18 @@
 
     if ( ( exc->opcode & 1 ) != 0 )   /* rounding and control cut-in flag */
     {
+      FT_F26Dot6  control_value_cutin = exc->GS.control_value_cutin;
       FT_F26Dot6  delta;
 
+
+#ifdef TT_SUPPORT_SUBPIXEL_HINTING_INFINALITY
+      if ( SUBPIXEL_HINTING_INFINALITY                        &&
+           exc->ignore_x_mode                                 &&
+           exc->GS.freeVector.x != 0                          &&
+           exc->GS.freeVector.y == 0                          &&
+           !( exc->sph_tweak_flags & SPH_TWEAK_NORMAL_ROUND ) )
+        control_value_cutin = 0;
+#endif /* TT_SUPPORT_SUBPIXEL_HINTING_INFINALITY */
 
       delta = SUB_LONG( distance, org_dist );
       if ( delta < 0 )
@@ -6118,18 +6112,8 @@
             FT_Long*        args )
   {
     FT_UShort   point = 0;
-    FT_F26Dot6  org_dist, distance, minimum_distance;
+    FT_F26Dot6  org_dist, distance;
 
-
-    minimum_distance = exc->GS.minimum_distance;
-
-#ifdef TT_SUPPORT_SUBPIXEL_HINTING_INFINALITY
-    if ( SUBPIXEL_HINTING_INFINALITY                        &&
-         exc->ignore_x_mode                                 &&
-         exc->GS.freeVector.x != 0                          &&
-         !( exc->sph_tweak_flags & SPH_TWEAK_NORMAL_ROUND ) )
-      minimum_distance = 0;
-#endif /* TT_SUPPORT_SUBPIXEL_HINTING_INFINALITY */
 
     point = (FT_UShort)args[0];
 
@@ -6215,6 +6199,17 @@
 
     if ( ( exc->opcode & 8 ) != 0 )
     {
+      FT_F26Dot6  minimum_distance = exc->GS.minimum_distance;
+
+
+#ifdef TT_SUPPORT_SUBPIXEL_HINTING_INFINALITY
+      if ( SUBPIXEL_HINTING_INFINALITY                        &&
+           exc->ignore_x_mode                                 &&
+           exc->GS.freeVector.x != 0                          &&
+           !( exc->sph_tweak_flags & SPH_TWEAK_NORMAL_ROUND ) )
+        minimum_distance = 0;
+#endif /* TT_SUPPORT_SUBPIXEL_HINTING_INFINALITY */
+
       if ( org_dist >= 0 )
       {
         if ( distance < minimum_distance )
@@ -6258,30 +6253,13 @@
     FT_F26Dot6  cvt_dist,
                 distance,
                 cur_dist,
-                org_dist,
-                control_value_cutin,
-                minimum_distance;
-#ifdef TT_SUPPORT_SUBPIXEL_HINTING_INFINALITY
-    FT_Int      B1           = 0; /* pacify compiler */
-    FT_Int      B2           = 0;
-    FT_Bool     reverse_move = FALSE;
-#endif /* TT_SUPPORT_SUBPIXEL_HINTING_INFINALITY */
+                org_dist;
 
     FT_F26Dot6  delta;
 
 
-    minimum_distance    = exc->GS.minimum_distance;
-    control_value_cutin = exc->GS.control_value_cutin;
-    point               = (FT_UShort)args[0];
-    cvtEntry            = (FT_ULong)( ADD_LONG( args[1], 1 ) );
-
-#ifdef TT_SUPPORT_SUBPIXEL_HINTING_INFINALITY
-    if ( SUBPIXEL_HINTING_INFINALITY                        &&
-         exc->ignore_x_mode                                 &&
-         exc->GS.freeVector.x != 0                          &&
-         !( exc->sph_tweak_flags & SPH_TWEAK_NORMAL_ROUND ) )
-      control_value_cutin = minimum_distance = 0;
-#endif /* TT_SUPPORT_SUBPIXEL_HINTING_INFINALITY */
+    point    = (FT_UShort)args[0];
+    cvtEntry = (FT_ULong)( ADD_LONG( args[1], 1 ) );
 
     /* XXX: UNDOCUMENTED! cvt[-1] = 0 always */
 
@@ -6361,6 +6339,9 @@
 
       if ( exc->GS.gep0 == exc->GS.gep1 )
       {
+        FT_F26Dot6  control_value_cutin = exc->GS.control_value_cutin;
+
+
         /* XXX: According to Greg Hitchcock, the following wording is */
         /*      the right one:                                        */
         /*                                                            */
@@ -6392,6 +6373,13 @@
            exc->ignore_x_mode           &&
            exc->GS.gep0 == exc->GS.gep1 )
       {
+        FT_F26Dot6  control_value_cutin = exc->GS.control_value_cutin;
+
+
+        if ( exc->GS.freeVector.x != 0                          &&
+             !( exc->sph_tweak_flags & SPH_TWEAK_NORMAL_ROUND ) )
+          control_value_cutin = 0;
+
         delta = SUB_LONG( cvt_dist, org_dist );
         if ( delta < 0 )
           delta = NEG_LONG( delta );
@@ -6408,6 +6396,17 @@
 
     if ( ( exc->opcode & 8 ) != 0 )
     {
+      FT_F26Dot6  minimum_distance    = exc->GS.minimum_distance;
+
+
+#ifdef TT_SUPPORT_SUBPIXEL_HINTING_INFINALITY
+      if ( SUBPIXEL_HINTING_INFINALITY                        &&
+           exc->ignore_x_mode                                 &&
+           exc->GS.freeVector.x != 0                          &&
+           !( exc->sph_tweak_flags & SPH_TWEAK_NORMAL_ROUND ) )
+        minimum_distance = 0;
+#endif /* TT_SUPPORT_SUBPIXEL_HINTING_INFINALITY */
+
       if ( org_dist >= 0 )
       {
         if ( distance < minimum_distance )
@@ -6423,6 +6422,10 @@
 #ifdef TT_SUPPORT_SUBPIXEL_HINTING_INFINALITY
     if ( SUBPIXEL_HINTING_INFINALITY )
     {
+      FT_Int   B1, B2;
+      FT_Bool  reverse_move = FALSE;
+
+
       B1 = exc->zp1.cur[point].y;
 
       /* Round moves if necessary */
@@ -6437,17 +6440,12 @@
            ( exc->opcode & 8 ) == 0                                &&
            ( exc->sph_tweak_flags & SPH_TWEAK_COURIER_NEW_2_HACK ) )
         distance += 64;
-    }
-#endif /* TT_SUPPORT_SUBPIXEL_HINTING_INFINALITY */
 
-    exc->func_move( exc,
-                    &exc->zp1,
-                    point,
-                    SUB_LONG( distance, cur_dist ) );
+      exc->func_move( exc,
+                      &exc->zp1,
+                      point,
+                      SUB_LONG( distance, cur_dist ) );
 
-#ifdef TT_SUPPORT_SUBPIXEL_HINTING_INFINALITY
-    if ( SUBPIXEL_HINTING_INFINALITY )
-    {
       B2 = exc->zp1.cur[point].y;
 
       /* Reverse move if necessary */
@@ -6472,8 +6470,13 @@
                         point,
                         SUB_LONG( cur_dist, distance ) );
     }
-
+    else
 #endif /* TT_SUPPORT_SUBPIXEL_HINTING_INFINALITY */
+
+      exc->func_move( exc,
+                      &exc->zp1,
+                      point,
+                      SUB_LONG( distance, cur_dist ) );
 
   Fail:
     exc->GS.rp1 = exc->GS.rp0;
