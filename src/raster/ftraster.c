@@ -459,6 +459,9 @@
 #define IS_TOP_OVERSHOOT( x )    \
           (Bool)( x - FLOOR( x ) >= ras.precision_half )
 
+  /* smart dropout rounding */
+#define SMART( x1, x2 )  FLOOR( ( (x1) + (x2) - 1 ) / 2 + ras.precision_half )
+
 #if FT_RENDER_POOL_SIZE > 2048
 #define FT_MAX_BLACK_POOL  ( FT_RENDER_POOL_SIZE / sizeof ( Long ) )
 #else
@@ -2360,7 +2363,7 @@
           break;
 
         case 4: /* smart drop-outs including stubs */
-          pxl = FLOOR( ( x1 + x2 - 1 ) / 2 + ras.precision_half );
+          pxl = SMART( x1, x2 );
           break;
 
         case 1: /* simple drop-outs excluding stubs */
@@ -2409,7 +2412,7 @@
           if ( dropOutControl == 1 )
             pxl = e2;
           else
-            pxl = FLOOR( ( x1 + x2 - 1 ) / 2 + ras.precision_half );
+            pxl = SMART( x1, x2 );
           break;
 
         default: /* modes 2, 3, 6, 7 */
@@ -2580,7 +2583,7 @@
           break;
 
         case 4: /* smart drop-outs including stubs */
-          pxl = FLOOR( ( x1 + x2 - 1 ) / 2 + ras.precision_half );
+          pxl = SMART( x1, x2 );
           break;
 
         case 1: /* simple drop-outs excluding stubs */
@@ -2604,7 +2607,7 @@
           if ( dropOutControl == 1 )
             pxl = e2;
           else
-            pxl = FLOOR( ( x1 + x2 - 1 ) / 2 + ras.precision_half );
+            pxl = SMART( x1, x2 );
           break;
 
         default: /* modes 2, 3, 6, 7 */

@@ -1,3 +1,10 @@
+2020-09-08  Alexei Podtelezhnikov  <apodtele@gmail.com>
+
+	[raster] Introduce SMART macro.
+
+	* src/raster/ftraster.c (SMART): New macro for smart dropout rounding.
+	(Verstical_Sweep_Drop, Horizontal_Sweep_Drop): Use it.
+
 2020-09-03  Boris Dalstein  <dalboris@gmail.com>
 
 	[build] Make CMake install basic version information.
