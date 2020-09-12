@@ -459,8 +459,9 @@
 #define IS_TOP_OVERSHOOT( x )    \
           (Bool)( x - FLOOR( x ) >= ras.precision_half )
 
-  /* smart dropout rounding */
-#define SMART( x1, x2 )  FLOOR( ( (x1) + (x2) - 1 ) / 2 + ras.precision_half )
+  /* smart dropout rounding to find which pixel is closer to span ends;    */
+  /* to mimick Windows, symmetric cases break down indepenent of precision */
+#define SMART( p, q )  FLOOR( ( (p) + (q) + ras.precision * 63 / 64 ) >> 1 )
 
 #if FT_RENDER_POOL_SIZE > 2048
 #define FT_MAX_BLACK_POOL  ( FT_RENDER_POOL_SIZE / sizeof ( Long ) )
