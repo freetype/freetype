@@ -1,3 +1,15 @@
+2020-09-11  Alexei Podtelezhnikov  <apodtele@gmail.com>
+
+	[raster] Improve the second pass (#58373).
+
+	Besides dropout control the second horizontal sweep is supposed to
+	clean up straight horizontal edges that are mishandled by the first
+	vertical sweep when a line passes through pixel centers.  This line
+	would present as perfectly aligned span edges in the second sweep.
+
+	* src/raster/ftraster.c (Horizontal_Sweep_Span): Replace the old
+	implementation with a better one focusing on aligned span edges only.
+
 2020-09-08  Alexei Podtelezhnikov  <apodtele@gmail.com>
 
 	[raster] Tune SMART macro (#58352).

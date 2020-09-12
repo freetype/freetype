@@ -2495,45 +2495,68 @@
                                   PProfile    left,
                                   PProfile    right )
   {
+    Long  e1, e2;
+
     FT_UNUSED( left );
     FT_UNUSED( right );
 
 
-    if ( x2 - x1 < ras.precision )
+    FT_TRACE7(( "  x=%d y=[% .12f;% .12f]",
+                y,
+                x1 / (double)ras.precision,
+                x2 / (double)ras.precision ));
+
+    /* We should not need this procedure but the vertical sweep   */
+    /* mishandles horizontal lines through pixel centers. So we   */
+    /* have to check perfectly aligned span edges here.           */
+    /*                                                            */
+    /* XXX: Can we handle horizontal lines better and drop this?  */
+
+    e1 = CEILING( x1 );
+
+    if ( x1 == e1 )
     {
-      Long  e1, e2;
+      e1 = TRUNC( e1 );
 
-
-      FT_TRACE7(( "  x=%d y=[% .12f;% .12f]",
-                  y,
-                  x1 / (double)ras.precision,
-                  x2 / (double)ras.precision ));
-
-      e1 = CEILING( x1 );
-      e2 = FLOOR  ( x2 );
-
-      if ( e1 == e2 )
+      if ( e1 >= 0 && (ULong)e1 < ras.target.rows )
       {
-        e1 = TRUNC( e1 );
-
-        if ( e1 >= 0 && (ULong)e1 < ras.target.rows )
-        {
-          Byte   f1;
-          PByte  bits;
+        Byte   f1;
+        PByte  bits;
 
 
-          bits = ras.bOrigin + ( y >> 3 ) - e1 * ras.target.pitch;
-          f1   = (Byte)( 0x80 >> ( y & 7 ) );
+        bits = ras.bOrigin + ( y >> 3 ) - e1 * ras.target.pitch;
+        f1   = (Byte)( 0x80 >> ( y & 7 ) );
 
-          FT_TRACE7(( bits[0] & f1 ? " redundant"
-                                   : " -> y=%ld", e1 ));
+        FT_TRACE7(( bits[0] & f1 ? " redundant"
+                                 : " -> y=%ld edge", e1 ));
 
-          bits[0] |= f1;
-        }
+        bits[0] |= f1;
       }
-
-      FT_TRACE7(( "\n" ));
     }
+
+    e2 = FLOOR  ( x2 );
+
+    if ( x2 == e2 )
+    {
+      e2 = TRUNC( e2 );
+
+      if ( e2 >= 0 && (ULong)e2 < ras.target.rows )
+      {
+        Byte   f1;
+        PByte  bits;
+
+
+        bits = ras.bOrigin + ( y >> 3 ) - e2 * ras.target.pitch;
+        f1   = (Byte)( 0x80 >> ( y & 7 ) );
+
+        FT_TRACE7(( bits[0] & f1 ? " redundant"
+                                 : " -> y=%ld edge", e2 ));
+
+        bits[0] |= f1;
+      }
+    }
+
+    FT_TRACE7(( "\n" ));
   }
 
 
