@@ -1,3 +1,7 @@
+2020-09-21  Werner Lemberg  <wl@gnu.org>
+
+	* scripts/extract_freetype_version.py: Fix regex typos.
+
 2020-09-21  David Turner  <david@freetype.org>
 
 	Add Meson build project file.

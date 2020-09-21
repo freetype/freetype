@@ -22,9 +22,9 @@ import sys
 #  #define FREETYPE_PATCH  2
 #  ...
 
-RE_MAJOR = re.compile(r"^ #define \s+ FREETYPE_MAJOR \s+ (.*) $", re.X)
-RE_MINOR = re.compile(r"^ #define \s+ FREETYPE_MINOR \s+ (.*) $", re.X)
-RE_PATCH = re.compile(r"^ #define \s+ FREETYPE_PATCH \s+ (.*) $", re.X)
+RE_MAJOR = re.compile(r"^ \#define \s+ FREETYPE_MAJOR \s+ (.*) $", re.X)
+RE_MINOR = re.compile(r"^ \#define \s+ FREETYPE_MINOR \s+ (.*) $", re.X)
+RE_PATCH = re.compile(r"^ \#define \s+ FREETYPE_PATCH \s+ (.*) $", re.X)
 
 
 def parse_freetype_header(header):
