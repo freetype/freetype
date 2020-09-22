@@ -29,11 +29,11 @@ python = import('python')
 python_exe = python.find_installation(required: true)
 
 ft2_version = run_command(python_exe,
-  files('scripts/extract_freetype_version.py'),
+  files('builds/meson/extract_freetype_version.py'),
   files('include/freetype/freetype.h')).stdout().strip()
 
 ft2_libtool_version = run_command(python_exe,
-  files('scripts/extract_libtool_version.py'),
+  files('builds/meson/extract_libtool_version.py'),
   '--soversion',
   files('builds/unix/configure.raw')).stdout().strip()
 
@@ -46,7 +46,7 @@ ft2_includes = include_directories('include')
 ftmodule_h = custom_target('ftmodule.h',
   output: 'ftmodule.h',
   input: 'modules.cfg',
-  command: [python_exe, files('scripts/parse_modules_cfg.py'),
+  command: [python_exe, files('builds/meson/parse_modules_cfg.py'),
             '--format=ftmodule.h', '@INPUT@', '--output', '@OUTPUT@'],
   install: true,
   install_dir: 'include/freetype2/freetype/config',
@@ -57,7 +57,7 @@ ft2_sources = [ftmodule_h]
 # FreeType 2 modules.
 
 ft_main_modules = run_command(python_exe,
-  files('scripts/parse_modules_cfg.py'),
+  files('builds/meson/parse_modules_cfg.py'),
   '--format=main-modules',
   files('modules.cfg')).stdout().strip().split()
 
@@ -78,7 +78,7 @@ endforeach
 
 # NOTE: The `gzip` and `bzip2` aux modules are handled through options.
 ft_aux_modules = run_command(python_exe,
-  files('scripts/parse_modules_cfg.py'),
+  files('builds/meson/parse_modules_cfg.py'),
   '--format=aux-modules',
   files('modules.cfg')).stdout().strip().split()
 
@@ -102,7 +102,7 @@ endforeach
 # Normally configured through `modules.cfg`.
 
 base_extensions = run_command(python_exe,
-  files('scripts/parse_modules_cfg.py'),
+  files('builds/meson/parse_modules_cfg.py'),
   '--format=base-extensions-list',
   files('modules.cfg')).stdout().split()
 
@@ -223,7 +223,7 @@ ft2_deps = []
 # Generate `ftoption.h` based on available dependencies.
 
 ftoption_command = [python_exe,
-  files('scripts/process_ftoption_h.py'),
+  files('builds/meson/process_ftoption_h.py'),
   '@INPUT@', '--output=@OUTPUT@']
 
 # GZip support
@@ -358,7 +358,7 @@ gen_docs = custom_target('freetype2 reference documentation',
   output: 'docs',
   input: ft2_public_headers + ft2_config_headers,
   command: [python_exe,
-    files('scripts/generate_reference_docs.py'),
+    files('builds/meson/generate_reference_docs.py'),
     '--version=' + ft2_version,
     '--input-dir=' + meson.source_root(),
     '--output-dir=@OUTPUT@'
