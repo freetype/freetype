@@ -1062,11 +1062,30 @@
                 slot->linearHoriAdvance / 65536.0 ));
     FT_TRACE5(( "  linear y advance: %f\n",
                 slot->linearVertAdvance / 65536.0 ));
+    FT_TRACE5(( "\n" ));
     FT_TRACE5(( "  bitmap %dx%d, %s (mode %d)\n",
                 slot->bitmap.width,
                 slot->bitmap.rows,
                 pixel_modes[slot->bitmap.pixel_mode],
                 slot->bitmap.pixel_mode ));
+    FT_TRACE5(( "\n" ));
+
+    {
+      FT_Glyph_Metrics*  metrics = &slot->metrics;
+
+
+      FT_TRACE5(( "  metrics:\n" ));
+      FT_TRACE5(( "    width:  %f\n", metrics->width  / 64.0 ));
+      FT_TRACE5(( "    height: %f\n", metrics->height / 64.0 ));
+      FT_TRACE5(( "\n" ));
+      FT_TRACE5(( "    horiBearingX: %f\n", metrics->horiBearingX / 64.0 ));
+      FT_TRACE5(( "    horiBearingY: %f\n", metrics->horiBearingY / 64.0 ));
+      FT_TRACE5(( "    horiAdvance:  %f\n", metrics->horiAdvance  / 64.0 ));
+      FT_TRACE5(( "\n" ));
+      FT_TRACE5(( "    vertBearingX: %f\n", metrics->vertBearingX / 64.0 ));
+      FT_TRACE5(( "    vertBearingY: %f\n", metrics->vertBearingY / 64.0 ));
+      FT_TRACE5(( "    vertAdvance:  %f\n", metrics->vertAdvance  / 64.0 ));
+    }
 #endif
 
   Exit:
