@@ -1,5 +1,16 @@
 2020-09-24  Werner Lemberg  <wl@gnu.org>
 
+	* src/cff/cffgload.c (cff_slot_load): Scale `vertBearingY`.
+
+	Towards the end of the the function there is a call to
+	`FT_Outline_Get_CBox` that retrieves the glyph bbox in scaled units.
+	That sets `horiBearing{X,Y}` and `vertBearingX` but `vertBearingY`
+	is left alone, and is not scaled.
+
+	Patch from Eric Muller <emuller@amazon.com>.
+
+2020-09-24  Werner Lemberg  <wl@gnu.org>
+
 	* src/base/ftobjs.c (FT_Load_Glyph): Trace glyph metrics.
 
 2020-09-22  Werner Lemberg  <wl@gnu.org>
