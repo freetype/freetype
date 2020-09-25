@@ -1,5 +1,23 @@
 2020-09-25  Werner Lemberg  <wl@gnu.org>
 
+	[autofit] Synchronize with ttfautohint.
+
+	This corresponds to the following commits in the ttfautohint git
+	repository:
+
+	  bb6842bd3bd437b7b4a7921b0376c860f5e73d18  Typo, formatting.
+	  d5c91ddb1cb310257a3dfe9a8e20e1fc51335faa  Add Medefaidrin script.
+
+	* src/autofit/afblue.dat: Add blue zone data for Medefaidrin.
+	* src/autofit/afblue.c, src/autofit/afblue.h: Regenerated.
+
+	* src/autofit/afscript.h: Add Medefaidrin standard characters.
+
+	* src/autofit/afranges.c, src/autofit/afstyles.h: Add Medefaidrin
+	data.
+
+2020-09-25  Werner Lemberg  <wl@gnu.org>
+
 	Move `scripts/make_distribution_archives.py` to `src/tools`.
 
 	* scr/tools/scripts/make_distribution_archives.py: (_TOP_DIR,

@@ -19,7 +19,7 @@ CHANGES BETWEEN 2.10.1 and 2.10.2
     `docwriter'  (Python >= 3.5 is required for targets  `make refdoc'
     and `make refdoc-venv').
 
-  - Auto-hinter support for Hanifi Rohingya.
+  - Auto-hinter support for Hanifi Rohingya and Medefaidrin.
 
   - Document the `FT2_KEEP_ALIVE' debugging environment variable.
 
