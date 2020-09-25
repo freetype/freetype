@@ -1,3 +1,15 @@
+2020-09-25  Werner Lemberg  <wl@gnu.org>
+
+	Move `scripts/make_distribution_archives.py` to `src/tools`.
+
+	* scr/tools/scripts/make_distribution_archives.py: (_TOP_DIR,
+	_SCRIPT_DIR): Updated to new location.
+	(main): s/shutils.copyfile/shutils.copy/ to preserve file
+	permissions.
+	(main): Prefix source file paths with `git_dir` while copying files
+	to allow calls of the script from other places than the top-level
+	directory.
+
 2020-09-24  Werner Lemberg  <wl@gnu.org>
 
 	* src/cff/cffgload.c (cff_slot_load): Scale `vertBearingY`.

@@ -11,8 +11,8 @@ import subprocess
 import sys
 import tempfile
 
-_SCRIPT_DIR = os.path.dirname(__file__)
-_TOP_DIR = os.path.abspath(os.path.join(_SCRIPT_DIR, ".."))
+_TOP_DIR = os.path.abspath(os.path.join(__file__, "..", "..", ".."))
+_SCRIPT_DIR = os.path.dirname(os.path.join(_TOP_DIR, "builds", "meson", ""))
 
 
 def get_cmd_output(cmd, cwd=None):
@@ -135,7 +135,7 @@ def main():
         dst_dir = os.path.dirname(dst)
         if not os.path.exists(dst_dir):
             os.makedirs(dst_dir)
-        shutil.copyfile(src, dst)
+        shutil.copy(os.path.join(git_dir, src), dst)
 
     # Run autogen.sh in directory.
     subprocess.check_call(["/bin/sh", "autogen.sh"], cwd=tmp_src_dir)
@@ -146,7 +146,7 @@ def main():
     # Copy config.guess and config.sub if possible!
     if args.gnu_config_dir:
         for f in ("config.guess", "config.sub"):
-            shutil.copyfile(
+            shutil.copy(
                 os.path.join(args.gnu_config_dir, f),
                 os.path.join(tmp_src_dir, "builds", "unix", f),
             )
@@ -196,7 +196,7 @@ def main():
         freetype_tar + ".xz",
         ftwinversion + ".zip",
     ):
-        shutil.copyfile(
+        shutil.copy(
             os.path.join(build_dir, f), os.path.join(args.output_dir, f)
         )
 
