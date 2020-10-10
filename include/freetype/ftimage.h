@@ -403,7 +403,7 @@ FT_BEGIN_HEADER
    *   FT_OUTLINE_OVERLAP ::
    *     This flag indicates that this outline contains overlapping contrours
    *     and the anti-aliased renderer should perform oversampling to
-   *     metigate possible artifacts.  This flag should _not_ be set for
+   *     mitigate possible artifacts.  This flag should _not_ be set for
    *     well designed glyphs without overlaps because it quadruples the
    *     rendering time.
    *
@@ -1017,11 +1017,11 @@ FT_BEGIN_HEADER
    * @note:
    *   The @FT_RASTER_FLAG_AA bit flag must be set in the `flags` to
    *   generate an anti-aliased glyph bitmap, otherwise a monochrome bitmap
-   *   is generated. The `target` should have appropriate pixel mode and its
+   *   is generated.  The `target` should have appropriate pixel mode and its
    *   dimensions define the clipping region.
    *
    *   If both `( @FT_RASTER_FLAG_AA | @FT_RASTER_FLAG_DIRECT )` bit flags
-   *   are set in `flags`, the raster will call an @FT_SpanFunc callback
+   *   are set in `flags`, the raster calls an @FT_SpanFunc callback
    *   `gray_spans` with `user` data as an argument ignoring `target`.  This
    *   allows direct composition over a pre-existing user surface to perform
    *   the span drawing and composition.  To optionally clip the spans, set

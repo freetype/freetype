@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 """Extract the FreeType version numbers from `<freetype/freetype.h>`.
 
-This script parses the header to extract the version number defined there. 
+This script parses the header to extract the version number defined there.
 By default, the full dotted version number is printed, but `--major`,
 `--minor` or `--patch` can be used to only print one of these values
 instead.

@@ -195,7 +195,7 @@ FT_BEGIN_HEADER
    *   FreeType error code.  0~means success.
    *
    * @note:
-   *   Since 2.11 the LCD filtering is enabled with @FT_LCD_FILTER_DEFAULT.
+   *   Since 2.10.3 the LCD filtering is enabled with @FT_LCD_FILTER_DEFAULT.
    *   It is no longer necessary to call this function explicitly except
    *   to choose a different filter or disable filtering altogether with
    *   @FT_LCD_FILTER_NONE.

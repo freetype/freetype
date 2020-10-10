@@ -459,8 +459,9 @@
 #define IS_TOP_OVERSHOOT( x )    \
           (Bool)( x - FLOOR( x ) >= ras.precision_half )
 
-  /* smart dropout rounding to find which pixel is closer to span ends;    */
-  /* to mimick Windows, symmetric cases break down indepenent of precision */
+  /* Smart dropout rounding to find which pixel is closer to span ends. */
+  /* To mimick Windows, symmetric cases break down indepenently of the  */
+  /* precision.                                                         */
 #define SMART( p, q )  FLOOR( ( (p) + (q) + ras.precision * 63 / 64 ) >> 1 )
 
 #if FT_RENDER_POOL_SIZE > 2048
@@ -2507,7 +2508,7 @@
                 x2 / (double)ras.precision ));
 
     /* We should not need this procedure but the vertical sweep   */
-    /* mishandles horizontal lines through pixel centers. So we   */
+    /* mishandles horizontal lines through pixel centers.  So we  */
     /* have to check perfectly aligned span edges here.           */
     /*                                                            */
     /* XXX: Can we handle horizontal lines better and drop this?  */
