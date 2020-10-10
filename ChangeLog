@@ -1,3 +1,25 @@
+2020-10-10  Werner Lemberg  <wl@gnu.org>
+
+	* Version 2.10.3 released.
+	==========================
+
+
+	Tag sources with `VER-2-10-3'.
+
+	* docs/VERSION.TXT: Add entry for version 2.10.3.
+
+	* README, src/base/ftver.rc, builds/windows/vc2010/index.html,
+	builds/windows/visualc/index.html,
+	builds/windows/visualce/index.html,
+	builds/wince/vc2005-ce/index.html,
+	builds/wince/vc2008-ce/index.html, docs/freetype-config.1:
+	s/2.10.2/2.10.3/, s/2102/2103/.
+
+	* include/freetype/freetype.h (FREETYPE_PATCH): Set to 3.
+
+	* builds/unix/configure.raw (version_info): Set to 23:3:17.
+	* CMakeLists.txt (VERSION_PATCH): Set to 3.
+
 2020-09-25  Werner Lemberg  <wl@gnu.org>
 
 	[autofit] Synchronize with ttfautohint.
