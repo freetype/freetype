@@ -1020,7 +1020,7 @@ FT_BEGIN_HEADER
    *   is generated.  The `target` should have appropriate pixel mode and its
    *   dimensions define the clipping region.
    *
-   *   If both `( @FT_RASTER_FLAG_AA | @FT_RASTER_FLAG_DIRECT )` bit flags
+   *   If both @FT_RASTER_FLAG_AA and @FT_RASTER_FLAG_DIRECT bit flags
    *   are set in `flags`, the raster calls an @FT_SpanFunc callback
    *   `gray_spans` with `user` data as an argument ignoring `target`.  This
    *   allows direct composition over a pre-existing user surface to perform
