@@ -125,10 +125,10 @@
   Read255UShort( FT_Stream   stream,
                  FT_UShort*  value )
   {
-    static const FT_Int  oneMoreByteCode1 = 255;
-    static const FT_Int  oneMoreByteCode2 = 254;
-    static const FT_Int  wordCode         = 253;
-    static const FT_Int  lowestUCode      = 253;
+    const FT_Byte    oneMoreByteCode1 = 255;
+    const FT_Byte    oneMoreByteCode2 = 254;
+    const FT_Byte    wordCode         = 253;
+    const FT_UShort  lowestUCode      = 253;
 
     FT_Error   error        = FT_Err_Ok;
     FT_Byte    code;
