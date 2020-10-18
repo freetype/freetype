@@ -1,5 +1,9 @@
 2020-10-17  Alexei Podtelezhnikov  <apodtele@gmail.com>
 
+	* src/sfnt/tt{colr,cpal}.c: Fix signedness warnings from VC++.
+
+2020-10-17  Alexei Podtelezhnikov  <apodtele@gmail.com>
+
 	* src/sfnt/sfwoff2.c (Read255UShort): Tweak types to please VC++.
 
 2020-10-10  Werner Lemberg  <wl@gnu.org>
