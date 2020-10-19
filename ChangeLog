@@ -1,3 +1,11 @@
+2020-10-19  Werner Lemberg  <wl@gnu.org>
+
+	[sfnt] Fix heap buffer overflow (#59308).
+
+	This is CVE-2020-15999.
+
+	* src/sfnt/pngshim.c (Load_SBit_Png): Test bitmap size earlier.
+
 2020-10-17  Alexei Podtelezhnikov  <apodtele@gmail.com>
 
 	* src/sfnt/tt{colr,cpal}.c: Fix signedness warnings from VC++.
