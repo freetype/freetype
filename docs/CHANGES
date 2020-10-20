@@ -1,3 +1,18 @@
+CHANGES BETWEEN 2.10.3 and 2.10.4
+
+  I. IMPORTANT BUG FIXES
+
+  - A heap buffer overflow has been found  in the handling of embedded
+    PNG bitmaps, introduced in FreeType version 2.6.
+
+      https://cve.mitre.org/cgi-bin/cvename.cgi?name=CVE-2020-15999
+
+    If you  use option  FT_CONFIG_OPTION_USE_PNG  you  should  upgrade
+    immediately.
+
+
+======================================================================
+
 CHANGES BETWEEN 2.10.2 and 2.10.3
 
   I. IMPORTANT CHANGES

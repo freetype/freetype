@@ -1,3 +1,26 @@
+2020-10-20  Werner Lemberg  <wl@gnu.org>
+
+	* Version 2.10.4 released.
+	==========================
+
+
+	Tag sources with `VER-2-10-4'.
+
+	* docs/VERSION.TXT: Add entry for version 2.10.4.
+	* docs/CHANGES: Updated.
+
+	* README, src/base/ftver.rc, builds/windows/vc2010/index.html,
+	builds/windows/visualc/index.html,
+	builds/windows/visualce/index.html,
+	builds/wince/vc2005-ce/index.html,
+	builds/wince/vc2008-ce/index.html, docs/freetype-config.1:
+	s/2.10.3/2.10.4/, s/2103/2104/.
+
+	* include/freetype/freetype.h (FREETYPE_PATCH): Set to 4.
+
+	* builds/unix/configure.raw (version_info): Set to 23:4:17.
+	* CMakeLists.txt (VERSION_PATCH): Set to 4.
+
 2020-10-19  Werner Lemberg  <wl@gnu.org>
 
 	[sfnt] Fix heap buffer overflow (#59308).
