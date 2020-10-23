@@ -1,3 +1,10 @@
+2020-10-23  Ben Wagner  <bungeman@google.com>
+
+	* src/sfnt/pngshim.c (Load_SBit_Png): Fix memory leak (#59322).
+
+	The issue is that `rows` is allocated but will not be freed in the
+	event that the call to `png_read_image` fails and calls `longjmp`.
+
 2020-10-20  Werner Lemberg  <wl@gnu.org>
 
 	* Version 2.10.4 released.
