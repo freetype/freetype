@@ -35,7 +35,7 @@ ft2_so_version = run_command(python_exe,
   '--soversion',
   files('builds/unix/configure.raw')).stdout().strip()
 
-ft2_libtool_version = run_command(python_exe,
+ft2_pkgconfig_version = run_command(python_exe,
   files('builds/meson/extract_libtool_version.py'),
   files('builds/unix/configure.raw')).stdout().strip()
 
@@ -333,7 +333,7 @@ ft2_lib = library('freetype',
 freetype2_dep = declare_dependency(
   include_directories: ft2_includes,
   link_with: ft2_lib,
-  version: ft2_so_version)
+  version: ft2_pkgconfig_version)
 meson.override_dependency('freetype2', freetype2_dep)
 
 
@@ -355,7 +355,7 @@ pkgconfig.generate(ft2_lib,
   description: 'A free, high-quality, and portable font engine.',
   url: 'https://freetype.org',
   subdirs: 'freetype2',
-  version: ft2_libtool_version,
+  version: ft2_pkgconfig_version,
 )
 
 

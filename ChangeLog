@@ -1,5 +1,14 @@
 2021-02-09  Xavier Claessens  <xavier.claessens@collabora.com>
 
+	* meson.build: s/ft2_libtool_version/ft2_pkgconfig_version/.
+
+	(freetype2_dep): Use it.
+
+	`ft2_libtool_version` would be the shared library version, not the
+	one we should use in file `freetype2.pc`.
+
+2021-02-09  Xavier Claessens  <xavier.claessens@collabora.com>
+
 	* meson.build: Use `meson.override_dependency`.
 
 	This is a new meson mechanism to avoid other projects to hard-code
