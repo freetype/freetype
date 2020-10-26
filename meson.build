@@ -13,9 +13,10 @@
 
 
 project('freetype2', 'c',
-  version: '2.10.4',
   meson_version: '>= 0.55.0',
   default_options: ['default_library=both'],
+  version: run_command('builds/meson/extract_freetype_version.py',
+                       'include/freetype/freetype.h').stdout().strip(),
 )
 
 #
@@ -28,10 +29,6 @@ project('freetype2', 'c',
 
 python = import('python')
 python_exe = python.find_installation(required: true)
-
-ft2_version = run_command(python_exe,
-  files('builds/meson/extract_freetype_version.py'),
-  files('include/freetype/freetype.h')).stdout().strip()
 
 ft2_so_version = run_command(python_exe,
   files('builds/meson/extract_libtool_version.py'),
@@ -378,7 +375,7 @@ gen_docs = custom_target('freetype2 reference documentation',
   input: ft2_public_headers + ft2_config_headers,
   command: [python_exe,
     files('builds/meson/generate_reference_docs.py'),
-    '--version=' + ft2_version,
+    '--version=' + meson.project_version(),
     '--input-dir=' + meson.source_root(),
     '--output-dir=@OUTPUT@'
   ],

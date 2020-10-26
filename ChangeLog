@@ -1,3 +1,7 @@
+2021-02-09  Xavier Claessens  <xavier.claessens@collabora.com>
+
+	* meson.build: Set project version.
+
 2021-02-04  Werner Lemberg  <wl@gnu.org>
 
 	[base] Fix Netpbm tracing message.
