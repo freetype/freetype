@@ -250,14 +250,7 @@ else
 endif
 
 # BZip2 support
-#
-# IMPORTANT NOTE: Without `static: false` here, Meson will find both the
-# static library version and the shared library version when they are
-# installed on the system, and will try to link them *both* to the final
-# library!
-bzip2_dep = meson.get_compiler('c').find_library('bz2',
-              static: false,
-              required: get_option('bzip2'))
+bzip2_dep = cc.find_library('bz2', required: get_option('bzip2'))
 if bzip2_dep.found()
   ftoption_command += ['--enable=FT_CONFIG_OPTION_USE_BZIP2']
   ft2_sources += files(['src/bzip2/ftbzip2.c',])

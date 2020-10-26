@@ -1,5 +1,19 @@
 2021-02-09  Xavier Claessens  <xavier.claessens@collabora.com>
 
+	* meson.build (bzip2_dep): Simplify.
+
+	We remove `static:false` from `find_library('bz2')`.
+
+	I don't know whether the previous code was a workaround for an old
+	meson bug, but at least with version >=0.55.0 (which FreeType uses)
+	it picks the shared library when both are available.
+
+	File `freetype2.pc` still contains the full path to file `libbz2.so`
+	instead of `-lbz2` – that we need to do this is a meson bug even
+	present in the current version (0.57.0).
+
+2021-02-09  Xavier Claessens  <xavier.claessens@collabora.com>
+
 	* meson.build: Set project version.
 
 2021-02-04  Werner Lemberg  <wl@gnu.org>
