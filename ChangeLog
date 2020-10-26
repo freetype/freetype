@@ -1,5 +1,15 @@
 2021-02-09  Xavier Claessens  <xavier.claessens@collabora.com>
 
+	* meson.build: Fix resource compilation on Windows.
+
+	This is copied from GStreamer's meson port of FreeType.
+
+	(ft2_sources): Add both debug and resource file (the latter for
+	Windows only).
+	(ft2_debug_src): Removed.
+
+2021-02-09  Xavier Claessens  <xavier.claessens@collabora.com>
+
 	* meson.build: s/ft2_libtool_version/ft2_pkgconfig_version/.
 
 	(freetype2_dep): Use it.

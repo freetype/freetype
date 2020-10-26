@@ -215,11 +215,14 @@ endif
 # into `ftsystem.c` as well.
 #
 if host_machine.system() == 'windows'
-  ft2_debug_src = 'builds/windows/ftdebug.c'
+  winmod = import('windows')
+  ft2_sources += [
+    'builds/windows/ftdebug.c',
+    winmod.compile_resources('src/base/ftver.rc'),
+  ]
 else
-  ft2_debug_src = 'src/base/ftdebug.c'
+  ft2_sources += 'src/base/ftdebug.c'
 endif
-ft2_sources += files([ft2_debug_src])
 
 ft2_deps = []
 
