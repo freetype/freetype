@@ -267,13 +267,17 @@ ft2_deps += [libpng_dep]
 harfbuzz_dep = dependency('harfbuzz',
                  version: '>= 1.8.0',
                  required: get_option('harfbuzz'))
-ftoption_command += ['--enable=FT_CONFIG_OPTION_USE_HARFBUZZ']
-ft2_deps += [harfbuzz_dep]
+if harfbuzz_dep.found()
+  ftoption_command += ['--enable=FT_CONFIG_OPTION_USE_HARFBUZZ']
+  ft2_deps += [harfbuzz_dep]
+endif
 
 # Brotli decompression support
 brotli_dep = dependency('libbrotlidec', required: get_option('brotli'))
-ftoption_command += ['--enable=FT_CONFIG_OPTION_USE_BROTLI']
-ft2_deps += [brotli_dep]
+if brotli_dep.found()
+  ftoption_command += ['--enable=FT_CONFIG_OPTION_USE_BROTLI']
+  ft2_deps += [brotli_dep]
+endif
 
 # We can now generate `ftoption.h`.
 ftoption_h = custom_target('ftoption.h',

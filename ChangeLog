@@ -1,3 +1,11 @@
+2020-10-26  Werner Lemberg  <wl@gnu.org>
+
+	* meson.build: Fix 'harfbuzz' and 'brotli' build options (#59347).
+
+	Without this patch, 'harfbuzz' and 'brotli' are always required.
+
+	Patch submitted anonymously in Savannah bug report.
+
 2020-10-23  Ben Wagner  <bungeman@google.com>
 
 	* src/sfnt/pngshim.c (Load_SBit_Png): Fix memory leak (#59322).
