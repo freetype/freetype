@@ -13,8 +13,7 @@
 
 
 option('zlib',
-  type: 'combo',
-  choices: ['disabled', 'auto', 'builtin', 'system'],
+  type: 'feature',
   value: 'auto',
   description: 'Support reading gzip-compressed font files.')
 

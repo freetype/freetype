@@ -1,5 +1,34 @@
 2021-02-09  Xavier Claessens  <xavier.claessens@collabora.com>
 
+	[meson] Fix dependency lookup and generate `ftconfig.h`.
+
+	- zlib: If not found on the system, meson can build it as a
+	  subproject.  We thus never use the (outdated) zlib support that
+	  comes with FreeType.  Doing so has the additional advantage that
+	  the zlib code can be shared with other projects like GLib if both
+	  are subprojects of an application.
+	- harfbuzz: Build as a subproject if not found on the system.
+	- 'QUESTION: What if the compiler doesn't support `-D` but uses `/D`
+	  instead as on Windows?'  Answer: Meson translate arguments for us.
+	- visibility: Replace self-made code with meson-specific solution.
+
+	* meson.build (ft2_defines): Rewrite logic to set and handle it.
+	(process_header_command): New variable, previously called
+	`ftoption_command`.
+	(ftoption_command, ftconfig_command): New variables.
+	(zlib_option): Removed.
+	(zlib_dep): New variable.
+	(ft2_deps): Updated.
+	(harfbuzz_dep): Updated.
+	(ftconfig_h_in, ftconfig_h): New variables.
+	(ft2_sources): Updated.
+	(ft2_lib): Updated, handle visibility.
+	(summary): Updted.
+
+	* meson_options.txt (zlib): Updated.
+
+2021-02-09  Xavier Claessens  <xavier.claessens@collabora.com>
+
 	* meson.build: Fix resource compilation on Windows.
 
 	This is copied from GStreamer's meson port of FreeType.

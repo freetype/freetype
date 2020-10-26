@@ -170,7 +170,7 @@ ft2_config_headers = files([
   'include/freetype/config/public-macros.h',
 ])
 
-ft2_defines = []
+ft2_defines = ['-DFT2_BUILD_LIBRARY=1']
 
 
 # System support file.
@@ -181,13 +181,6 @@ cc = meson.get_compiler('c')
 has_unistd_h = cc.has_header('unistd.h')
 has_fcntl_h = cc.has_header('fcntl.h')
 has_sys_mman_h = cc.has_header('sys/mman.h')
-
-if has_unistd_h
-  ft2_defines += ['-DHAVE_UNISTD_H=1']
-endif
-if has_fcntl_h
-  ft2_defines += ['-DHAVE_FCNTL_H']
-endif
 
 mmap_option = get_option('mmap')
 if mmap_option.auto()
@@ -229,27 +222,24 @@ ft2_deps = []
 
 # Generate `ftoption.h` based on available dependencies.
 
-ftoption_command = [python_exe,
+process_header_command = [python_exe,
   files('builds/meson/process_ftoption_h.py'),
   '@INPUT@', '--output=@OUTPUT@']
+ftoption_command = process_header_command
+
 
 # GZip support
-have_zlib='no'
-zlib_option = get_option('zlib')
-if zlib_option == 'disabled'
-  ftoption_command += ['--disable=FT_CONFIG_OPTION_USE_ZLIB']
-else
-  have_zlib='yes'
-  ftoption_command += ['--enable=FT_CONFIG_OPTION_USE_ZLIB']
-  if zlib_option == 'builtin'
-    ftoption_command += ['--disable=FT_CONFIG_OPTION_SYSTEM_ZLIB']
-  else
-    # Probe for the system version.
-    zlib_system = dependency('zlib', required: zlib_option == 'system')
-    ft2_deps += [zlib_system]
-    ftoption_command += ['--enable=FT_CONFIG_OPTION_SYSTEM_ZLIB']
-  endif
+zlib_dep = dependency('zlib', required: get_option('zlib'),
+  fallback: ['zlib', 'zlib_dep'])
+if zlib_dep.found()
+  ftoption_command += [
+    '--enable=FT_CONFIG_OPTION_USE_ZLIB',
+    '--enable=FT_CONFIG_OPTION_SYSTEM_ZLIB',
+  ]
   ft2_sources += files(['src/gzip/ftgzip.c',])
+  ft2_deps += [zlib_dep]
+else
+  ftoption_command += ['--disable=FT_CONFIG_OPTION_USE_ZLIB']
 endif
 
 # BZip2 support
@@ -270,7 +260,10 @@ endif
 # Harfbuzz support
 harfbuzz_dep = dependency('harfbuzz',
                  version: '>= 2.0.0',
-                 required: get_option('harfbuzz'))
+                 required: get_option('harfbuzz'),
+                 fallback: ['harfbuzz', 'libharfbuzz_dep'],
+                 default_options : ['freetype=disabled',
+                                    'fontconfig=disabled'])
 if harfbuzz_dep.found()
   ftoption_command += ['--enable=FT_CONFIG_OPTION_USE_HARFBUZZ']
   ft2_deps += [harfbuzz_dep]
@@ -292,39 +285,43 @@ ftoption_h = custom_target('ftoption.h',
   install_dir: 'include/freetype2/freetype/config',
 )
 ft2_sources += ftoption_h
-
-
-# QUESTION: What if the compiler doesn't support `-D` but uses `/D` instead
-# as on Windows?
-#
-# Other build systems have something like c_defines to list defines in a
-# more portable way.  For now assume the compiler supports `-D` (hint: Visual
-# Studio does).
-ft2_defines += ['-DFT2_BUILD_LIBRARY=1']
+ft2_defines += ['-DFT_CONFIG_OPTIONS_H=<ftoption.h>']
 
 if host_machine.system() == 'windows'
   ft2_defines += ['-DDLL_EXPORT=1']
 endif
 
+# Generate `ftconfig.h`
 
-# Ensure that the `ftoption.h` file generated above will be used to build
-# FreeType.  Unfortunately, and very surprisingly, configure_file() does not
-# support putting the output file in a sub-directory, so we have to override
-# the default which is `<freetype/config/ftoption.h>`.
-#
-# It would be cleaner to generate the file directly into
-# `${MESON_BUILD_DIR}/freetype/config/ftoption.h`.  See
-# 'https://github.com/mesonbuild/meson/issues/2320' for details.
-ft2_defines += ['-DFT_CONFIG_OPTIONS_H=<ftoption.h>']
-
-ft2_c_args = ft2_defines
-if cc.has_function_attribute('visibility:hidden')
-  ft2_c_args += ['-fvisibility=hidden']
+ftconfig_command = process_header_command
+if has_unistd_h
+  ftconfig_command += '--enable=HAVE_UNISTD_H'
 endif
+if has_fcntl_h
+  ftconfig_command += '--enable=HAVE_FCNTL_H'
+endif
+
+if host_machine.system() in ['linux', 'darwin', 'cygwin']
+  ftconfig_h_in = files('builds/unix/ftconfig.h.in')
+else
+  ftconfig_h_in = files('include/freetype/config/ftconfig.h')
+endif
+
+ftconfig_h = custom_target('ftconfig.h',
+  input: ftconfig_h_in,
+  output: 'ftconfig.h',
+  command: ftconfig_command,
+  install: true,
+  install_dir: 'include/freetype2/freetype/config',
+)
+ft2_sources += ftconfig_h
+ft2_defines += ['-DFT_CONFIG_CONFIG_H=<ftconfig.h>']
+
 
 ft2_lib = library('freetype',
   sources: ft2_sources + [ftmodule_h],
-  c_args: ft2_c_args,
+  c_args: ft2_defines,
+  gnu_symbol_visibility: 'hidden',
   include_directories: ft2_includes,
   dependencies: ft2_deps,
   install: true,
@@ -378,7 +375,7 @@ gen_docs = custom_target('freetype2 reference documentation',
 
 
 summary({'OS': host_machine.system(),
-         'Zlib': have_zlib,
+         'Zlib': zlib_dep.found() ? 'yes' : 'no',
          'Bzip2': bzip2_dep.found() ? 'yes' : 'no',
          'Png': libpng_dep.found() ? 'yes' : 'no',
          'Harfbuzz': harfbuzz_dep.found() ? 'yes' : 'no',
