@@ -334,6 +334,7 @@ freetype2_dep = declare_dependency(
   include_directories: ft2_includes,
   link_with: ft2_lib,
   version: ft2_so_version)
+meson.override_dependency('freetype2', freetype2_dep)
 
 
 # NOTE: Using both `install_dir` and `subdir` doesn't seem to work below,
@@ -347,8 +348,6 @@ install_headers(ft2_config_headers,
   install_dir: 'include/freetype2/freetype/config')
 
 
-# TODO(david): Declare_dependency() for using this in a Meson subproject
-#
 pkgconfig = import('pkgconfig')
 pkgconfig.generate(ft2_lib,
   filebase: 'freetype2',

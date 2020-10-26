@@ -1,5 +1,17 @@
 2021-02-09  Xavier Claessens  <xavier.claessens@collabora.com>
 
+	* meson.build: Use `meson.override_dependency`.
+
+	This is a new meson mechanism to avoid other projects to hard-code
+	the `freetype2_dep` variable name in their build definition.  It
+	also ensures that meson does not mix system and subproject versions
+	of FreeType inside of the same project.
+
+	Also remove outdated TODO because `declare_dependency` was already
+	there.
+
+2021-02-09  Xavier Claessens  <xavier.claessens@collabora.com>
+
 	* meson.build (bzip2_dep): Simplify.
 
 	We remove `static:false` from `find_library('bz2')`.
