@@ -1,3 +1,10 @@
+2020-10-28  Werner Lemberg  <wl@gnu.org>
+
+	[truetype] Minor update to forthcoming OpenType 1.8.4 standard.
+
+	* src/truetype/ttgxvar.c (ft_var_load_item_variation_store): Limit
+	size of `regionCount`.
+
 2020-10-26  Werner Lemberg  <wl@gnu.org>
 
 	* meson.build: Fix 'harfbuzz' and 'brotli' build options (#59347).

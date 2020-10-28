@@ -493,6 +493,15 @@
       goto Exit;
     }
 
+    /* new constraint in OpenType 1.8.4 */
+    if ( itemStore->regionCount >= 32768U )
+    {
+      FT_TRACE2(( "ft_var_load_item_variation_store:"
+                  " too many variation region tables\n" ));
+      error = FT_THROW( Invalid_Table );
+      goto Exit;
+    }
+
     if ( FT_NEW_ARRAY( itemStore->varRegionList, itemStore->regionCount ) )
       goto Exit;
 
