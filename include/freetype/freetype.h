@@ -33,6 +33,27 @@ FT_BEGIN_HEADER
   /**************************************************************************
    *
    * @section:
+   *   preamble
+   *
+   * @title:
+   *   Preamble
+   *
+   * @abstract
+   *   What FreeType is and isn't
+   *
+   * @descriptiom
+   *   FreeType is a library that provides access to glyphs in font files.
+   *   It scales the glyph images and their metrics to a requested size but
+   *   it is not a text layout engine.  FreeType rasterizes the glyph images
+   *   and produces pixel or subpixel alpha coverage bitmaps but it does not
+   *   perform alpha blending or compositing itself.
+   *
+   */
+
+
+  /**************************************************************************
+   *
+   * @section:
    *   header_inclusion
    *
    * @title:

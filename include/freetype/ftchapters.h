@@ -15,6 +15,7 @@
    *   General Remarks
    *
    * @sections:
+   *   preamble
    *   header_inclusion
    *   user_allocation
    *
