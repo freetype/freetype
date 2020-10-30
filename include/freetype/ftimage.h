@@ -855,7 +855,7 @@ FT_BEGIN_HEADER
    *   The coverage value is always between 0 and 255.  If you want less gray
    *   values, the callback function has to reduce them by scaling the
    *   outline four times and using bilevel monochrome renderer to then
-   *   average 16 pixels in each 4×4 box.
+   *   average 16~pixels in each 4-by-4 box.
    *
    *   The only correct way to blend colors is to convert the colors from
    *   sRGB to linear colorspace, then perform the weighted average, then
