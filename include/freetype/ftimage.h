@@ -853,7 +853,19 @@ FT_BEGIN_HEADER
    *   @FT_SpanFunc that takes the y~coordinate of the span as a parameter.
    *
    *   The coverage value is always between 0 and 255.  If you want less gray
-   *   values, the callback function has to reduce them.
+   *   values, the callback function has to reduce them by scaling the
+   *   outline four times and using bilevel monochrome renderer to then
+   *   average 16 pixels in each 4×4 box.
+   *
+   *   The only correct way to blend colors is to convert the colors from
+   *   sRGB to linear colorspace, then perform the weighted average, then
+   *   convert to sRGB, but this is out of scope of FreeType.  Using an
+   *   approximation such as gamma 2.2 or 2.3 or interpolation from a lookup
+   *   table of more than three entries or sampling from a lookup table of
+   *   more than fifteen entries is acceptable, but any implementation
+   *   significantly deviating from that (for example a gamma of 1.8 or less,
+   *   or a gamma of 2.7 or greater, or not implementing gamma properly at
+   *   all) will most likely yield bad results.
    */
   typedef struct  FT_Span_
   {
