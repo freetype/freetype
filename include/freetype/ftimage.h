@@ -785,26 +785,27 @@ FT_BEGIN_HEADER
    *   How vectorial outlines are converted into bitmaps and pixmaps.
    *
    * @description:
-   *   A raster or a raterizer is a scan converter in charge of producing
-   *   a pixel coverage bitmap that can be used as an alpha channel when
+
+   *   A raster or a rasterizer is a scan converter in charge of producing a
+   *   pixel coverage bitmap that can be used as an alpha channel when
    *   compositing a glyph with a background.  FreeType comes with two
    *   rasterizers: bilevel `raster1` and anti-aliased `smooth` are two
-   *   separate modules.  They are usually called from high-level
-   *   @FT_Load_Glyph or @FT_Render_Glyph and produce the entire coverage
-   *   bitmap at once, while staying largely invisible to users.
+   *   separate modules.  They are usually called from the high-level
+   *   @FT_Load_Glyph or @FT_Render_Glyph functions and produce the entire
+   *   coverage bitmap at once, while staying largely invisible to users.
    *
-   *   Instead of working with complete coverage bitmaps, it is also
-   *   possible to intercept consecutive pixel runs on the same scanline
-   *   with the same coverage, called spans, and process them individually.
-   *   Only `smooth` rasterizer permits this when calling @FT_Outline_Render
-   *   with @FT_Raster_Params described below.
+   *   Instead of working with complete coverage bitmaps, it is also possible
+   *   to intercept consecutive pixel runs on the same scanline with the same
+   *   coverage, called _spans_, and process them individually.  Only the
+   *   `smooth` rasterizer permits this when calling @FT_Outline_Render with
+   *   @FT_Raster_Params as described below.
    *
-   *   Whether working with complete bitmaps or spans, it is important to
-   *   think of them as colorless coverage objects suitable as alpha channels
-   *   in blending arbitrary colors with background.  For best results, it is
-   *   recommended to use gamma correction too.
+   *   Working with either complete bitmaps or spans it is important to think
+   *   of them as colorless coverage objects suitable as alpha channels to
+   *   blend arbitrary colors with a background.  For best results, it is
+   *   recommended to use gamma correction, too.
    *
-   *   This section also describes public API needed to set up alternative
+   *   This section also describes the public API needed to set up alternative
    *   @FT_Renderer modules.
    *
    * @order:
@@ -830,8 +831,8 @@ FT_BEGIN_HEADER
    *   FT_Span
    *
    * @description:
-   *   A structure used to model a single span of consecutive pixels
-   *   when rendering an anti-aliased bitmap.
+   *   A structure to model a single span of consecutive pixels when
+   *   rendering an anti-aliased bitmap.
    *
    * @fields:
    *   x ::
@@ -849,7 +850,7 @@ FT_BEGIN_HEADER
    *   @FT_SpanFunc that takes the y~coordinate of the span as a parameter.
    *
    *   The anti-aliased rasterizer produces coverage values from 0 to 255,
-   *   from completely transparent to completely opaque.
+   *   this is, from completely transparent to completely opaque.
    */
   typedef struct  FT_Span_
   {
