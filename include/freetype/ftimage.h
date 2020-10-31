@@ -772,17 +772,6 @@ FT_BEGIN_HEADER
   /*************************************************************************/
 
 
-  /**************************************************************************
-   *
-   * A raster is a scan converter, in charge of rendering an outline into a
-   * bitmap.  This section contains the public API for rasters.
-   *
-   * Note that in FreeType 2, all rasters are now encapsulated within
-   * specific modules called 'renderers'.  See `ftrender.h` for more details
-   * on renderers.
-   *
-   */
-
 
   /**************************************************************************
    *
@@ -796,16 +785,35 @@ FT_BEGIN_HEADER
    *   How vectorial outlines are converted into bitmaps and pixmaps.
    *
    * @description:
-   *   This section contains technical definitions.
+   *   A raster or a raterizer is a scan converter in charge of producing
+   *   a pixel coverage bitmap that can be used as an alpha channel when
+   *   compositing a glyph with a background.  FreeType comes with two
+   *   rasterizers: bilevel `raster1` and anti-aliased `smooth` are two
+   *   separate modules.  They are usually called from high-level
+   *   @FT_Load_Glyph or @FT_Render_Glyph and produce the entire coverage
+   *   bitmap at once, while staying largely invisible to users.
+   *
+   *   Instead of working with complete coverage bitmaps, it is also
+   *   possible to intercept consecutive pixel runs on the same scanline
+   *   with the same coverage, called spans, and process them individually.
+   *   Only `smooth` rasterizer permits this when calling @FT_Outline_Render
+   *   with @FT_Raster_Params described below.
+   *
+   *   Whether working with complete bitmaps or spans, it is important to
+   *   think of them as colorless coverage objects suitable as alpha channels
+   *   in blending arbitrary colors with background.  For best results, it is
+   *   recommended to use gamma correction too.
+   *
+   *   This section also describes public API needed to set up alternative
+   *   @FT_Renderer modules.
    *
    * @order:
-   *   FT_Raster
    *   FT_Span
    *   FT_SpanFunc
-   *
    *   FT_Raster_Params
    *   FT_RASTER_FLAG_XXX
    *
+   *   FT_Raster
    *   FT_Raster_NewFunc
    *   FT_Raster_DoneFunc
    *   FT_Raster_ResetFunc
@@ -818,24 +826,12 @@ FT_BEGIN_HEADER
 
   /**************************************************************************
    *
-   * @type:
-   *   FT_Raster
-   *
-   * @description:
-   *   An opaque handle (pointer) to a raster object.  Each object can be
-   *   used independently to convert an outline into a bitmap or pixmap.
-   */
-  typedef struct FT_RasterRec_*  FT_Raster;
-
-
-  /**************************************************************************
-   *
    * @struct:
    *   FT_Span
    *
    * @description:
-   *   A structure used to model a single span of gray pixels when rendering
-   *   an anti-aliased bitmap.
+   *   A structure used to model a single span of consecutive pixels
+   *   when rendering an anti-aliased bitmap.
    *
    * @fields:
    *   x ::
@@ -852,20 +848,8 @@ FT_BEGIN_HEADER
    *   This structure is used by the span drawing callback type named
    *   @FT_SpanFunc that takes the y~coordinate of the span as a parameter.
    *
-   *   The coverage value is always between 0 and 255.  If you want less gray
-   *   values, the callback function has to reduce them by scaling the
-   *   outline four times and using bilevel monochrome renderer to then
-   *   average 16~pixels in each 4-by-4 box.
-   *
-   *   The only correct way to blend colors is to convert the colors from
-   *   sRGB to linear colorspace, then perform the weighted average, then
-   *   convert to sRGB, but this is out of scope of FreeType.  Using an
-   *   approximation such as gamma 2.2 or 2.3 or interpolation from a lookup
-   *   table of more than three entries or sampling from a lookup table of
-   *   more than fifteen entries is acceptable, but any implementation
-   *   significantly deviating from that (for example a gamma of 1.8 or less,
-   *   or a gamma of 2.7 or greater, or not implementing gamma properly at
-   *   all) will most likely yield bad results.
+   *   The anti-aliased rasterizer produces coverage values from 0 to 255,
+   *   from completely transparent to completely opaque.
    */
   typedef struct  FT_Span_
   {
@@ -883,8 +867,8 @@ FT_BEGIN_HEADER
    *
    * @description:
    *   A function used as a call-back by the anti-aliased renderer in order
-   *   to let client applications draw themselves the gray pixel spans on
-   *   each scan line.
+   *   to let client applications draw themselves the pixel spans on each
+   *   scan line.
    *
    * @input:
    *   y ::
@@ -900,11 +884,12 @@ FT_BEGIN_HEADER
    *     User-supplied data that is passed to the callback.
    *
    * @note:
-   *   This callback allows client applications to directly render the gray
-   *   spans of the anti-aliased bitmap to any kind of surfaces.
+   *   This callback allows client applications to directly render the spans
+   *   of the anti-aliased bitmap to any kind of surfaces.
    *
    *   This can be used to write anti-aliased outlines directly to a given
-   *   background bitmap, and even perform translucency.
+   *   background bitmap using alpha compositing.  It can also be used for
+   *   oversampling and averaging.
    */
   typedef void
   (*FT_SpanFunc)( int             y,
@@ -1057,6 +1042,23 @@ FT_BEGIN_HEADER
     FT_BBox                 clip_box;
 
   } FT_Raster_Params;
+
+
+  /**************************************************************************
+   *
+   * @type:
+   *   FT_Raster
+   *
+   * @description:
+   *   An opaque handle (pointer) to a raster object.  Each object can be
+   *   used independently to convert an outline into a bitmap or pixmap.
+   *
+   * @note
+   *   In FreeType 2, all rasters are now encapsulated within specific
+   *   @FT_Renderer modules and only used in their context.
+   *
+   */
+  typedef struct FT_RasterRec_*  FT_Raster;
 
 
   /**************************************************************************
