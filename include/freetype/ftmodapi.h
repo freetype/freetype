@@ -45,10 +45,12 @@ FT_BEGIN_HEADER
    *
    * @description:
    *   The definitions below are used to manage modules within FreeType.
-   *   Modules can be added, upgraded, and removed at runtime.  Additionally,
-   *   some module properties can be controlled also.
+   *   Internal and external modules can be added, upgraded, and removed at
+   *   runtime.  For example, an alternative renderer or proprietary font
+   *   driver can be registered and prioritized.  Additionally, some module
+   *   properties can also be controlled.
    *
-   *   Here is a list of possible values of the `module_name` field in the
+   *   Here is a list of existing values of the `module_name` field in the
    *   @FT_Module_Class structure.
    *
    *   ```
