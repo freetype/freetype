@@ -785,7 +785,6 @@ FT_BEGIN_HEADER
    *   How vectorial outlines are converted into bitmaps and pixmaps.
    *
    * @description:
-
    *   A raster or a rasterizer is a scan converter in charge of producing a
    *   pixel coverage bitmap that can be used as an alpha channel when
    *   compositing a glyph with a background.  FreeType comes with two
@@ -1054,7 +1053,7 @@ FT_BEGIN_HEADER
    *   An opaque handle (pointer) to a raster object.  Each object can be
    *   used independently to convert an outline into a bitmap or pixmap.
    *
-   * @note
+   * @note:
    *   In FreeType 2, all rasters are now encapsulated within specific
    *   @FT_Renderer modules and only used in their context.
    *
