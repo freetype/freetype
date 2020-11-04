@@ -32,9 +32,13 @@ ft2_version = run_command(python_exe,
   files('builds/meson/extract_freetype_version.py'),
   files('include/freetype/freetype.h')).stdout().strip()
 
-ft2_libtool_version = run_command(python_exe,
+ft2_so_version = run_command(python_exe,
   files('builds/meson/extract_libtool_version.py'),
   '--soversion',
+  files('builds/unix/configure.raw')).stdout().strip()
+
+ft2_libtool_version = run_command(python_exe,
+  files('builds/meson/extract_libtool_version.py'),
   files('builds/unix/configure.raw')).stdout().strip()
 
 ft2_includes = include_directories('include')
@@ -320,7 +324,7 @@ ft2_lib = library('freetype',
   include_directories: ft2_includes,
   dependencies: ft2_deps,
   install: true,
-  version: ft2_libtool_version,
+  version: ft2_so_version,
 )
 
 
@@ -328,7 +332,7 @@ ft2_lib = library('freetype',
 freetype2_dep = declare_dependency(
   include_directories: ft2_includes,
   link_with: ft2_lib,
-  version: ft2_libtool_version)
+  version: ft2_so_version)
 
 
 # NOTE: Using both `install_dir` and `subdir` doesn't seem to work below,
