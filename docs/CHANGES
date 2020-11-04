@@ -1,4 +1,17 @@
-CHANGES BETWEEN 2.10.3 and 2.10.4
+CHANGES BETWEEN 2.10.4 and 2.11.0
+
+  I. IMPORTANT CHANGES
+
+
+  II. MISCELLANEOUS
+
+  - `ttdebug' didn't show changed point coordinates (bug introduced in
+    version 2.10.2).
+
+
+======================================================================
+
+CHANGES BETWEEN 2.10.3 and 2.10.4 (2020-Oct-20)
 
   I. IMPORTANT BUG FIXES
 
@@ -13,7 +26,7 @@ CHANGES BETWEEN 2.10.3 and 2.10.4
 
 ======================================================================
 
-CHANGES BETWEEN 2.10.2 and 2.10.3
+CHANGES BETWEEN 2.10.2 and 2.10.3 (2020-Oct-10)
 
   I. IMPORTANT CHANGES
 
@@ -63,7 +76,7 @@ CHANGES BETWEEN 2.10.2 and 2.10.3
 
 ======================================================================
 
-CHANGES BETWEEN 2.10.1 and 2.10.2
+CHANGES BETWEEN 2.10.1 and 2.10.2 (2020-May-09)
 
   I. IMPORTANT CHANGES
 
@@ -100,7 +113,7 @@ CHANGES BETWEEN 2.10.1 and 2.10.2
 
 ======================================================================
 
-CHANGES BETWEEN 2.10.0 and 2.10.1
+CHANGES BETWEEN 2.10.0 and 2.10.1 (2019-Jul-01)
 
   I. IMPORTANT BUG FIXES
 
@@ -154,7 +167,7 @@ CHANGES BETWEEN 2.10.0 and 2.10.1
 
 ======================================================================
 
-CHANGES BETWEEN 2.9.1 and 2.10.0
+CHANGES BETWEEN 2.9.1 and 2.10.0 (2019-Mar-15)
 
   I. IMPORTANT CHANGES
 
@@ -280,7 +293,7 @@ CHANGES BETWEEN 2.9.1 and 2.10.0
 
 ======================================================================
 
-CHANGES BETWEEN 2.9 and 2.9.1
+CHANGES BETWEEN 2.9 and 2.9.1 (2019-May-01)
 
   I. IMPORTANT BUG FIXES
 
@@ -328,7 +341,7 @@ CHANGES BETWEEN 2.9 and 2.9.1
 
 ======================================================================
 
-CHANGES BETWEEN 2.8.1 and 2.9
+CHANGES BETWEEN 2.8.1 and 2.9 (2018-Jan-08)
 
   I. IMPORTANT BUG FIXES
 
@@ -418,7 +431,7 @@ CHANGES BETWEEN 2.8.1 and 2.9
 
 ======================================================================
 
-CHANGES BETWEEN 2.8 and 2.8.1
+CHANGES BETWEEN 2.8 and 2.8.1 (2017-Sep-16)
 
   I. IMPORTANT BUG FIXES
 
@@ -501,7 +514,7 @@ CHANGES BETWEEN 2.8 and 2.8.1
 
 ======================================================================
 
-CHANGES BETWEEN 2.7.1 and 2.8
+CHANGES BETWEEN 2.7.1 and 2.8 (2017-May-13)
 
   I. IMPORTANT CHANGES
 
@@ -622,7 +635,7 @@ CHANGES BETWEEN 2.7.1 and 2.8
 
 ======================================================================
 
-CHANGES BETWEEN 2.7 and 2.7.1
+CHANGES BETWEEN 2.7 and 2.7.1 (2016-Dec-30)
 
   I. IMPORTANT CHANGES
 
@@ -699,7 +712,7 @@ CHANGES BETWEEN 2.7 and 2.7.1
 
 ======================================================================
 
-CHANGES BETWEEN 2.6.5 and 2.7
+CHANGES BETWEEN 2.6.5 and 2.7 (2016-Sep-08)
 
   I. IMPORTANT CHANGES
 
@@ -763,7 +776,7 @@ CHANGES BETWEEN 2.6.5 and 2.7
 
 ======================================================================
 
-CHANGES BETWEEN 2.6.4 and 2.6.5
+CHANGES BETWEEN 2.6.4 and 2.6.5 (2016-Jul-12)
 
   I. IMPORTANT BUG FIXES
 
@@ -783,7 +796,7 @@ CHANGES BETWEEN 2.6.4 and 2.6.5
 
 ======================================================================
 
-CHANGES BETWEEN 2.6.3 and 2.6.4
+CHANGES BETWEEN 2.6.3 and 2.6.4 (2016-Jul-05)
 
   I. IMPORTANT CHANGES
 
@@ -849,7 +862,7 @@ CHANGES BETWEEN 2.6.3 and 2.6.4
 
 ======================================================================
 
-CHANGES BETWEEN 2.6.2 and 2.6.3
+CHANGES BETWEEN 2.6.2 and 2.6.3 (2016-Feb-08)
 
   I. IMPORTANT CHANGES
 
@@ -898,7 +911,7 @@ CHANGES BETWEEN 2.6.2 and 2.6.3
 
 ======================================================================
 
-CHANGES BETWEEN 2.6.1 and 2.6.2
+CHANGES BETWEEN 2.6.1 and 2.6.2 (2015-Nov-28)
 
   I. IMPORTANT CHANGES
 
@@ -958,7 +971,7 @@ CHANGES BETWEEN 2.6.1 and 2.6.2
 
 ======================================================================
 
-CHANGES BETWEEN 2.6 and 2.6.1
+CHANGES BETWEEN 2.6 and 2.6.1 (2015-Oct-04)
 
   I. IMPORTANT BUG FIXES
 
@@ -1039,7 +1052,7 @@ CHANGES BETWEEN 2.6 and 2.6.1
 
 ======================================================================
 
-CHANGES BETWEEN 2.5.5 and 2.6
+CHANGES BETWEEN 2.5.5 and 2.6 (2015-Jun-07)
 
   I. IMPORTANT CHANGES
 
@@ -1145,7 +1158,7 @@ CHANGES BETWEEN 2.5.5 and 2.6
 
 ======================================================================
 
-CHANGES BETWEEN 2.5.4 and 2.5.5
+CHANGES BETWEEN 2.5.4 and 2.5.5 (2014-Dec-30)
 
   I. IMPORTANT BUG FIXES
 
@@ -1155,7 +1168,7 @@ CHANGES BETWEEN 2.5.4 and 2.5.5
 
 ======================================================================
 
-CHANGES BETWEEN 2.5.3 and 2.5.4
+CHANGES BETWEEN 2.5.3 and 2.5.4 (2014-Dec-06)
 
   I. IMPORTANT BUG FIXES
 
@@ -1226,7 +1239,7 @@ CHANGES BETWEEN 2.5.3 and 2.5.4
 
 ======================================================================
 
-CHANGES BETWEEN 2.5.2 and 2.5.3
+CHANGES BETWEEN 2.5.2 and 2.5.3 (2014-Mar-06)
 
   I. IMPORTANT BUG FIXES
 
@@ -1294,7 +1307,7 @@ CHANGES BETWEEN 2.5.2 and 2.5.3
 
 ======================================================================
 
-CHANGES BETWEEN 2.5.1 and 2.5.2
+CHANGES BETWEEN 2.5.1 and 2.5.2 (2013-Dec-08)
 
   I. IMPORTANT BUG FIXES
 
@@ -1318,7 +1331,7 @@ CHANGES BETWEEN 2.5.1 and 2.5.2
 
 ======================================================================
 
-CHANGES BETWEEN 2.5 and 2.5.1
+CHANGES BETWEEN 2.5 and 2.5.1 (2013-Nov-25)
 
   I. IMPORTANT BUG FIXES
 
@@ -1422,7 +1435,7 @@ CHANGES BETWEEN 2.5 and 2.5.1
 
 ======================================================================
 
-CHANGES BETWEEN 2.4.12 and 2.5
+CHANGES BETWEEN 2.4.12 and 2.5 (2013-Jun-19)
 
   I. IMPORTANT BUG FIXES
 
@@ -1502,7 +1515,7 @@ CHANGES BETWEEN 2.4.12 and 2.5
 
 ======================================================================
 
-CHANGES BETWEEN 2.4.11 and 2.4.12
+CHANGES BETWEEN 2.4.11 and 2.4.12 (2013-May-08)
 
     - We have another CFF parsing and hinting engine!  Written by Dave
       Arnold <darnold@adobe.com>,  this work  has been  contributed by
@@ -1590,7 +1603,7 @@ index ebcf189..3f2ce6b 100644
 
 ======================================================================
 
-CHANGES BETWEEN 2.4.10 and 2.4.11
+CHANGES BETWEEN 2.4.10 and 2.4.11 (2012-Dec-20)
 
   I. IMPORTANT BUG FIXES
 
@@ -1650,7 +1663,7 @@ CHANGES BETWEEN 2.4.10 and 2.4.11
 
 ======================================================================
 
-CHANGES BETWEEN 2.4.9 and 2.4.10
+CHANGES BETWEEN 2.4.9 and 2.4.10 (2012-Jun-15)
 
   I. IMPORTANT BUG FIXES
 
@@ -1675,7 +1688,7 @@ CHANGES BETWEEN 2.4.9 and 2.4.10
 
 ======================================================================
 
-CHANGES BETWEEN 2.4.8 and 2.4.9
+CHANGES BETWEEN 2.4.8 and 2.4.9 (2012-Mar-08)
 
   I. IMPORTANT BUG FIXES
 
@@ -1703,7 +1716,7 @@ CHANGES BETWEEN 2.4.8 and 2.4.9
 
 ======================================================================
 
-CHANGES BETWEEN 2.4.7 and 2.4.8
+CHANGES BETWEEN 2.4.7 and 2.4.8 (2011-Nov-14)
 
   I. IMPORTANT BUG FIXES
 
@@ -1719,7 +1732,7 @@ CHANGES BETWEEN 2.4.7 and 2.4.8
 
 ======================================================================
 
-CHANGES BETWEEN 2.4.6 and 2.4.7
+CHANGES BETWEEN 2.4.6 and 2.4.7 (2011-Oct-18)
 
   I. IMPORTANT BUG FIXES
 
@@ -1736,7 +1749,7 @@ CHANGES BETWEEN 2.4.6 and 2.4.7
 
 ======================================================================
 
-CHANGES BETWEEN 2.4.5 and 2.4.6
+CHANGES BETWEEN 2.4.5 and 2.4.6 (2011-Jul-29)
 
   I. IMPORTANT BUG FIXES
 
@@ -1775,7 +1788,7 @@ CHANGES BETWEEN 2.4.5 and 2.4.6
 
 ======================================================================
 
-CHANGES BETWEEN 2.4.4 and 2.4.5
+CHANGES BETWEEN 2.4.4 and 2.4.5 (2011-Jun-25)
 
   I. IMPORTANT BUG FIXES
 
@@ -1822,7 +1835,7 @@ CHANGES BETWEEN 2.4.4 and 2.4.5
 
 ======================================================================
 
-CHANGES BETWEEN 2.4.3 and 2.4.4
+CHANGES BETWEEN 2.4.3 and 2.4.4 (2010-Nov-28)
 
   I. IMPORTANT BUG FIXES
 
@@ -1847,7 +1860,7 @@ CHANGES BETWEEN 2.4.3 and 2.4.4
 
 ======================================================================
 
-CHANGES BETWEEN 2.4.2 and 2.4.3
+CHANGES BETWEEN 2.4.2 and 2.4.3 (2010-Oct-03)
 
   I. IMPORTANT BUG FIXES
 
@@ -1866,7 +1879,7 @@ CHANGES BETWEEN 2.4.2 and 2.4.3
 
 ======================================================================
 
-CHANGES BETWEEN 2.4.1 and 2.4.2
+CHANGES BETWEEN 2.4.1 and 2.4.2 (2010-Aug-06)
 
   I. IMPORTANT BUG FIXES
 
@@ -1890,7 +1903,7 @@ CHANGES BETWEEN 2.4.1 and 2.4.2
 
 ======================================================================
 
-CHANGES BETWEEN 2.4.0 and 2.4.1
+CHANGES BETWEEN 2.4.0 and 2.4.1 (2010-Jul-18)
 
   I. IMPORTANT CHANGES
 
@@ -1900,7 +1913,7 @@ CHANGES BETWEEN 2.4.0 and 2.4.1
 
 ======================================================================
 
-CHANGES BETWEEN 2.3.12 and 2.4.0
+CHANGES BETWEEN 2.3.12 and 2.4.0 (2010-Jul-12)
 
   I. IMPORTANT CHANGES
 
