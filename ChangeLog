@@ -1,3 +1,7 @@
+2020-11-09  Werner Lemberg  <wl@gnu.org>
+
+	* src/type42/t42parse.c (t42_parse_sfnts): More tracing messages.
+
 2020-11-04  Werner Lemberg  <wl@gnu.org>
 
 	* meson.build: Fix .pc file generation.
