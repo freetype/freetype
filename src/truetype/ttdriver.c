@@ -108,7 +108,7 @@
       return error;
     }
 
-    FT_TRACE0(( "tt_property_set: missing property `%s'\n",
+    FT_TRACE2(( "tt_property_set: missing property `%s'\n",
                 property_name ));
     return FT_THROW( Missing_Property );
   }
@@ -135,7 +135,7 @@
       return error;
     }
 
-    FT_TRACE0(( "tt_property_get: missing property `%s'\n",
+    FT_TRACE2(( "tt_property_get: missing property `%s'\n",
                 property_name ));
     return FT_THROW( Missing_Property );
   }

@@ -5149,16 +5149,16 @@
 
     if ( cur == limit )
     {
-      FT_ERROR(( "%s: can't find module `%s'\n",
-                 func_name, module_name ));
+      FT_TRACE2(( "%s: can't find module `%s'\n",
+                  func_name, module_name ));
       return FT_THROW( Missing_Module );
     }
 
     /* check whether we have a service interface */
     if ( !cur[0]->clazz->get_interface )
     {
-      FT_ERROR(( "%s: module `%s' doesn't support properties\n",
-                 func_name, module_name ));
+      FT_TRACE2(( "%s: module `%s' doesn't support properties\n",
+                  func_name, module_name ));
       return FT_THROW( Unimplemented_Feature );
     }
 
@@ -5167,8 +5167,8 @@
                                               FT_SERVICE_ID_PROPERTIES );
     if ( !interface )
     {
-      FT_ERROR(( "%s: module `%s' doesn't support properties\n",
-                 func_name, module_name ));
+      FT_TRACE2(( "%s: module `%s' doesn't support properties\n",
+                  func_name, module_name ));
       return FT_THROW( Unimplemented_Feature );
     }
 
@@ -5181,8 +5181,8 @@
 
     if ( missing_func )
     {
-      FT_ERROR(( "%s: property service of module `%s' is broken\n",
-                 func_name, module_name ));
+      FT_TRACE2(( "%s: property service of module `%s' is broken\n",
+                  func_name, module_name ));
       return FT_THROW( Unimplemented_Feature );
     }
 
