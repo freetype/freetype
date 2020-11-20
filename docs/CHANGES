@@ -2,6 +2,10 @@ CHANGES BETWEEN 2.10.4 and 2.11.0
 
   I. IMPORTANT CHANGES
 
+  - The legacy Type 1/CFF engine  is  further demoted  due to  lack of
+    CFF2 charstring support.  You now need  to use FT_Property_Set  to
+    enable it besides T1/CFF_CONFIG_OPTION_OLD_ENGINE options.
+
 
   II. MISCELLANEOUS
 

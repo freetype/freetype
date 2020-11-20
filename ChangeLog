@@ -1,3 +1,11 @@
+2020-11-20  Alexei Podtelezhnikov  <apodtele@gmail.com>
+
+	[cff,cid,type1] Demote old engine for lack of CFF2.
+
+	* src/cff/cffobjs.c (cff_iriver_init): Always default to Adobe engine.
+	* src/cid/cidobjs.c (cid_driver_init): Ditto.
+        * src/type1/t1objs.c (T1_Driver_Init): Ditto.
+
 2020-11-09  Werner Lemberg  <wl@gnu.org>
 
 	* src/type42/t42parse.c (t42_parse_sfnts): More tracing messages.
