@@ -16,6 +16,11 @@
  */
 
 
+  /* We have to duplicate these feature test macros from `dlg.c` */
+  /* since `freetype.h` loads some affected standard headers.    */
+#define _XOPEN_SOURCE
+#define _POSIX_C_SOURCE 200809L
+
 #include <freetype/freetype.h>
 
 

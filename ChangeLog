@@ -1,5 +1,13 @@
 2020-12-01  Werner Lemberg  <wl@gnu.org>
 
+	[dlg] Fix compiler warnings.
+
+	* src/dlg/dlgwrap.c: Duplicate some feature test macros from
+	`dlg.c`, which must come first before loading standard headers.  For
+	example, `freetype.h` loads `stdio.h` if compiled in debug mode.
+
+2020-12-01  Werner Lemberg  <wl@gnu.org>
+
 	* src/type42/t42parse.c: Fix `-Wformat` warnings.
 
 2020-12-01  Priyesh Kumar  <priyeshkkumar@gmail.com>
