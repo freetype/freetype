@@ -1,3 +1,5 @@
+build
 config.mk
 objs/vc2010/
-build
+src/dlg/dlg/
+src/dlg/dlg.c
