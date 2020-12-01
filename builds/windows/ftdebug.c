@@ -466,24 +466,73 @@
                   const char*               string,
                   void*                     data )
   {
-    const char*  features;
+    char         features_buf[128];
+    char*        bufp = features_buf;
 
     FT_UNUSED( data );
 
 
-    if ( ft_timestamp_flag && ft_component_flag && ft_have_newline_char )
-      features = "[%h:%m  %t]    %c";
-    else if ( ft_component_flag && ft_have_newline_char )
-      features = "[%t]    %c";
-    else if ( ft_timestamp_flag && ft_have_newline_char )
-      features = "[%h:%m]    %c";
-    else
-      features = "%c";
+    if ( ft_have_newline_char )
+    {
+      const char*  features        = NULL;
+      size_t       features_length = 0;
 
-    dlg_generic_outputf_stream( ft_fileptr, features, origin, string,
-                                dlg_default_output_styles, true );
 
-    if ( strchr( string, '\n' ) )
+#define FEATURES_TIMESTAMP            "[%h:%m] "
+#define FEATURES_COMPONENT            "[%t] "
+#define FEATURES_TIMESTAMP_COMPONENT  "[%h:%m %t] "
+
+      if ( ft_timestamp_flag && ft_component_flag )
+      {
+        features        = FEATURES_TIMESTAMP_COMPONENT;
+        features_length = sizeof ( FEATURES_TIMESTAMP_COMPONENT );
+      }
+      else if ( ft_timestamp_flag )
+      {
+        features        = FEATURES_TIMESTAMP;
+        features_length = sizeof ( FEATURES_TIMESTAMP );
+      }
+      else if ( ft_component_flag )
+      {
+        features        = FEATURES_COMPONENT;
+        features_length = sizeof ( FEATURES_COMPONENT );
+      }
+
+      if ( ft_component_flag || ft_timestamp_flag )
+      {
+        ft_strncpy( features_buf, features, features_length );
+        bufp += features_length - 1;
+      }
+
+      if ( ft_component_flag )
+      {
+        size_t  tag_length = ft_strlen( *origin->tags );
+        size_t  i;
+
+
+        /* To vertically align tracing messages we compensate the */
+        /* different FT_COMPONENT string lengths by inserting an  */
+        /* appropriate amount of space characters.                */
+        for ( i = 0;
+              i < FT_MAX_TRACE_LEVEL_LENGTH - tag_length;
+              i++ )
+          *bufp++ = ' ';
+      }
+    }
+
+    /* Finally add the format string for the tracing message. */
+    *bufp++ = '%';
+    *bufp++ = 'c';
+    *bufp   = '\0';
+
+    dlg_generic_outputf_stream( ft_fileptr,
+                                (const char*)features_buf,
+                                origin,
+                                string,
+                                dlg_default_output_styles,
+                                true );
+
+    if ( ft_strrchr( string, '\n' ) )
       ft_have_newline_char = TRUE;
     else
       ft_have_newline_char = FALSE;

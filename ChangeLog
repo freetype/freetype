@@ -1,3 +1,17 @@
+2020-12-01  Werner Lemberg  <wl@gnu.org>
+
+	[base] Implement vertical alignment of log printing.
+
+	Based on a patch by Priyesh.
+
+	* include/freetype/internal/fttrace.h (FT_MAX_TRACE_LEVEL_LENGTH):
+	New macro.
+
+	* src/base/ftdebug.c, builds/windows/ftdebug.c (ft_log_handler):
+	Print logs after a fixed width to handle different lengths of
+	`FT_COMPONENT` entries.
+	Use `ft_strrchr` to check for final newline character.
+
 2020-11-30  Priyesh Kumar  <priyeshkkumar@gmail.com>
 
 	Update logging related documentation.

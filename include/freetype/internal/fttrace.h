@@ -18,6 +18,10 @@
 
   /* definitions of trace levels for FreeType 2 */
 
+  /* the maximum string length (if the argument to `FT_TRACE_DEF` */
+  /* gets used as a string)                                       */
+#define FT_MAX_TRACE_LEVEL_LENGTH  9
+
   /* the first level must always be `trace_any' */
 FT_TRACE_DEF( any )
 
