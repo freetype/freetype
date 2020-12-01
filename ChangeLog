@@ -1,3 +1,7 @@
+2020-12-01  Werner Lemberg  <wl@gnu.org>
+
+	* src/type42/t42parse.c: Fix `-Wformat` warnings.
+
 2020-12-01  Priyesh Kumar  <priyeshkkumar@gmail.com>
 
 	[builds/unix] Check for 'pthread' library.

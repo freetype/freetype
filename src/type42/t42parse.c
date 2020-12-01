@@ -683,7 +683,7 @@
         goto Fail;
       }
 
-      FT_TRACE2(( "  PS string size %5lu bytes, offset 0x%08x (%lu)\n",
+      FT_TRACE2(( "  PS string size %5lu bytes, offset 0x%08lx (%lu)\n",
                   string_size, count, count ));
 
       /* The whole TTF is now loaded into `string_buf'.  We are */
@@ -746,7 +746,7 @@
 
 
               len = FT_PEEK_ULONG( p );
-              FT_TRACE2(( "   %4i  0x%08x (%lu)\n", i, len, len ));
+              FT_TRACE2(( "   %4i  0x%08lx (%lu)\n", i, len, len ));
 
               if ( len > size                               ||
                    face->ttf_size > (FT_Long)( size - len ) )
