@@ -442,6 +442,8 @@ FT_BEGIN_HEADER
    *   trace log messages to a file instead of `stderr`.  For writing logs
    *   to a file, FreeType uses an the external `dlg` library (the source
    *   code is in `src/dlg`).
+   *
+   *   This option needs a C99 compiler.
    */
 /* #define FT_LOGGING */
 

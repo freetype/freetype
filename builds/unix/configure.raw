@@ -227,18 +227,10 @@ AC_CHECK_FUNCS([memcpy memmove])
 
 # get compiler flags right
 #
-#   We try to make the compiler work for C89-strict source.  Even if the
-#   C compiler is gcc and C89 flags are available, some system headers
-#   (e.g., Android Bionic libc) are broken in C89 mode.  We have to check
-#   whether the compilation finishes successfully.
-#
-#   Due to bugs in mingwrt 4.0.3 we don't use `-ansi' for MinGW.
-#
-#   To avoid zillions of
-#
-#     ISO C90 does not support 'long long'
-#
-#   warnings, we disable `-pedantic' for gcc version < 4.6.
+#   We try to make the compiler work for C99-strict source.  Even if the
+#   C compiler is gcc and C99 flags are available, some system headers
+#   might be broken in C99 mode.  We have to check whether compilation
+#   finishes successfully.
 #
 if test "x$GCC" = xyes; then
   XX_CFLAGS="-Wall"
@@ -250,23 +242,11 @@ if test "x$GCC" = xyes; then
     XX_ANSIFLAGS="-pedantic"
     ;;
   *)
-    GCC_VERSION=`$CC -dumpversion`
-    GCC_MAJOR=`echo "$GCC_VERSION" | sed 's/\([[^.]][[^.]]*\).*/\1/'`
-    GCC_MINOR=`echo "$GCC_VERSION" | sed 's/[[^.]][[^.]]*.\([[^.]][[^.]]*\).*/\1/'`
-
-    XX_PEDANTIC=-pedantic
-    if test $GCC_MAJOR -lt 4; then
-      XX_PEDANTIC=
-    else
-      if test $GCC_MAJOR -eq 4 -a $GCC_MINOR -lt 6; then
-        XX_PEDANTIC=
-      fi
-    fi
-
     XX_ANSIFLAGS=""
-    for a in $XX_PEDANTIC -ansi
+
+    for a in "-pedantic" "-std=c99"
     do
-      AC_MSG_CHECKING([gcc compiler flag ${a} to assure ANSI C works correctly])
+      AC_MSG_CHECKING([$CC compiler flag ${a} to assure ANSI C99 works correctly])
       orig_CFLAGS="${CFLAGS}"
       CFLAGS="${CFLAGS} ${XX_ANSIFLAGS} ${a}"
       AC_COMPILE_IFELSE([

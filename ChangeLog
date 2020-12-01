@@ -1,5 +1,19 @@
 2020-12-01  Werner Lemberg  <wl@gnu.org>
 
+	[build] Use gcc (and clang) in C99 mode.
+
+	Other compilers are unchanged.
+
+	* builds/compiler/gcc-dev.mk, builds/compiler/gcc.mk (ANSIFLAGS):
+	s/-ansi/-std=c99/.
+
+	* builds/freetype.mk (FT_CFLAGS): Remove `-std=c99`.
+
+	* builds/unix/configure.raw: Handle C99.
+	Remove no longer needed test for gcc 4.6 and earlier.
+
+2020-12-01  Werner Lemberg  <wl@gnu.org>
+
 	[dlg] Fix compiler warnings.
 
 	* src/dlg/dlgwrap.c: Duplicate some feature test macros from
