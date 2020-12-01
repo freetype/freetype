@@ -60,7 +60,7 @@ T := -FO=
 #
 #   These should concern: debug output, optimization & warnings.
 #
-#   Use the ANSIFLAGS variable to define the compiler flags used to enfore
+#   Use the ANSIFLAGS variable to define the compiler flags used to enforce
 #   ANSI compliance.
 #
 CFLAGS ?= -zq

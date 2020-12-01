@@ -60,7 +60,7 @@ TE := -e
 #
 #   These should concern: debug output, optimization & warnings.
 #
-#   Use the ANSIFLAGS variable to define the compiler flags used to enfore
+#   Use the ANSIFLAGS variable to define the compiler flags used to enforce
 #   ANSI compliance.
 #
 CFLAGS ?= -c -q -y -d -v -Od -w-par -w-ccc -w-rch -w-pro -w-aus

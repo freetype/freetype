@@ -61,7 +61,7 @@ TE := /Fe
 #
 #   These should concern: debug output, optimization & warnings.
 #
-#   Use the ANSIFLAGS variable to define the compiler flags used to enfore
+#   Use the ANSIFLAGS variable to define the compiler flags used to enforce
 #   ANSI compliance.
 #
 #   Note that the Intel C/C++ compiler version 4.5 complains about
