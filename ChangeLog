@@ -1,5 +1,9 @@
 2020-12-02  Werner Lemberg  <wl@gnu.org>
 
+	* src/bdf/bdflib.c: Fix `-Wformat` warning.
+
+2020-12-02  Werner Lemberg  <wl@gnu.org>
+
 	Improve setup for 'dlg' library.
 
 	* autogen.sh (copy_submodule_file), builds/toplevel.mk: Redirect

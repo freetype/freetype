@@ -190,7 +190,7 @@
                  "Old: %hd New: %hd.\n"
 #define ACMSG5   "Font ascent != actual ascent.  Old: %hd New: %hd.\n"
 #define ACMSG6   "Font descent != actual descent.  Old: %d New: %d.\n"
-#define ACMSG7   "Font height != actual height. Old: %hd New: %hd.\n"
+#define ACMSG7   "Font height != actual height. Old: %d New: %d.\n"
 #define ACMSG8   "Glyph scalable width (SWIDTH) adjustments made.\n"
 #define ACMSG9   "SWIDTH field missing at line %ld.  Set automatically.\n"
 #define ACMSG10  "DWIDTH field missing at line %ld.  Set to glyph width.\n"
