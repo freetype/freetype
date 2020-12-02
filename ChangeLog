@@ -1,5 +1,9 @@
 2020-12-02  Werner Lemberg  <wl@gnu.org>
 
+	* submodules/dlg: Updated to commit 9f0c8b22.
+
+2020-12-02  Werner Lemberg  <wl@gnu.org>
+
 	* src/bdf/bdflib.c: Fix `-Wformat` warning.
 
 2020-12-02  Werner Lemberg  <wl@gnu.org>
