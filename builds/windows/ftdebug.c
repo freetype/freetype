@@ -452,7 +452,8 @@
   FT_BASE_DEF( void )
   ft_logging_deinit( void )
   {
-    ft_fclose( ft_fileptr );
+    if ( ft_fileptr != stderr )
+      ft_fclose( ft_fileptr );
   }
 
 

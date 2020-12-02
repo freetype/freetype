@@ -1,5 +1,12 @@
 2020-12-02  Werner Lemberg  <wl@gnu.org>
 
+	[base] Don't close 'stderr' after logging.
+
+	* src/base/ftdebug.c, builds/windows/ftdebug.c (ft_logging_deinit):
+	Fix it.
+
+2020-12-02  Werner Lemberg  <wl@gnu.org>
+
 	* submodules/dlg: Updated to commit 9f0c8b22.
 
 2020-12-02  Werner Lemberg  <wl@gnu.org>
