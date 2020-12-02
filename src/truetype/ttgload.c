@@ -736,12 +736,14 @@
                       subglyph->transform.xx / 65536.0,
                       subglyph->transform.yy / 65536.0 ));
         else if ( subglyph->flags & WE_HAVE_A_2X2 )
-          FT_TRACE7(( "      scaling: xx=%f, yx=%f\n"
-                      "               xy=%f, yy=%f\n",
+        {
+          FT_TRACE7(( "      scaling: xx=%f, yx=%f\n",
                       subglyph->transform.xx / 65536.0,
-                      subglyph->transform.yx / 65536.0,
+                      subglyph->transform.yx / 65536.0 ));
+          FT_TRACE7(( "               xy=%f, yy=%f\n",
                       subglyph->transform.xy / 65536.0,
                       subglyph->transform.yy / 65536.0 ));
+        }
 
         subglyph++;
       }

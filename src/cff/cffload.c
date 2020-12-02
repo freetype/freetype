@@ -1018,8 +1018,8 @@
       case 0:
         if ( num_glyphs > 229 )
         {
-          FT_ERROR(( "cff_charset_load: implicit charset larger than\n"
-                     "predefined charset (Adobe ISO-Latin)\n" ));
+          FT_ERROR(( "cff_charset_load: implicit charset larger than\n" ));
+          FT_ERROR(( "predefined charset (Adobe ISO-Latin)\n" ));
           error = FT_THROW( Invalid_File_Format );
           goto Exit;
         }
@@ -1036,8 +1036,8 @@
       case 1:
         if ( num_glyphs > 166 )
         {
-          FT_ERROR(( "cff_charset_load: implicit charset larger than\n"
-                     "predefined charset (Adobe Expert)\n" ));
+          FT_ERROR(( "cff_charset_load: implicit charset larger than\n" ));
+          FT_ERROR(( "predefined charset (Adobe Expert)\n" ));
           error = FT_THROW( Invalid_File_Format );
           goto Exit;
         }
@@ -1054,8 +1054,8 @@
       case 2:
         if ( num_glyphs > 87 )
         {
-          FT_ERROR(( "cff_charset_load: implicit charset larger than\n"
-                     "predefined charset (Adobe Expert Subset)\n" ));
+          FT_ERROR(( "cff_charset_load: implicit charset larger than\n" ));
+          FT_ERROR(( "predefined charset (Adobe Expert Subset)\n" ));
           error = FT_THROW( Invalid_File_Format );
           goto Exit;
         }
@@ -1456,10 +1456,8 @@
       if ( master == 0 )
       {
         blend->BV[master] = FT_FIXED_ONE;
-        FT_TRACE4(( "   build blend vector len %d\n"
-                    "   [ %f ",
-                    len,
-                    blend->BV[master] / 65536.0 ));
+        FT_TRACE4(( "   build blend vector len %d\n", len ));
+        FT_TRACE4(( "   [ %f ", blend->BV[master] / 65536.0 ));
         continue;
       }
 

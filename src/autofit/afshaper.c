@@ -173,9 +173,9 @@
     if ( hb_set_is_empty( gsub_lookups ) )
       goto Exit; /* nothing to do */
 
-    FT_TRACE4(( "GSUB lookups (style `%s'):\n"
-                " ",
+    FT_TRACE4(( "GSUB lookups (style `%s'):\n",
                 af_style_names[style_class->style] ));
+    FT_TRACE4(( " " ));
 
 #ifdef FT_DEBUG_LEVEL_TRACE
     count = 0;
@@ -202,12 +202,13 @@
 #ifdef FT_DEBUG_LEVEL_TRACE
     if ( !count )
       FT_TRACE4(( " (none)" ));
-    FT_TRACE4(( "\n\n" ));
+    FT_TRACE4(( "\n" ));
+    FT_TRACE4(( "\n" ));
 #endif
 
-    FT_TRACE4(( "GPOS lookups (style `%s'):\n"
-                " ",
+    FT_TRACE4(( "GPOS lookups (style `%s'):\n",
                 af_style_names[style_class->style] ));
+    FT_TRACE4(( " " ));
 
     gpos_lookups = hb_set_create();
     hb_ot_layout_collect_lookups( face,
@@ -242,7 +243,8 @@
 #ifdef FT_DEBUG_LEVEL_TRACE
     if ( !count )
       FT_TRACE4(( " (none)" ));
-    FT_TRACE4(( "\n\n" ));
+    FT_TRACE4(( "\n" ));
+    FT_TRACE4(( "\n" ));
 #endif
 
     /*
@@ -353,8 +355,10 @@
     {
 #ifdef FT_DEBUG_LEVEL_TRACE
       if ( !( count % 10 ) )
-        FT_TRACE4(( "\n"
-                    "   " ));
+      {
+        FT_TRACE4(( "\n" ));
+        FT_TRACE4(( "   " ));
+      }
 
       FT_TRACE4(( " %d", idx ));
       count++;
@@ -376,9 +380,12 @@
 
 #ifdef FT_DEBUG_LEVEL_TRACE
     if ( !count )
-      FT_TRACE4(( "\n"
-                  "    (none)" ));
-    FT_TRACE4(( "\n\n" ));
+    {
+      FT_TRACE4(( "\n" ));
+      FT_TRACE4(( "    (none)" ));
+    }
+    FT_TRACE4(( "\n" ));
+    FT_TRACE4(( "\n" ));
 #endif
 
   Exit:

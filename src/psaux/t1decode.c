@@ -1650,7 +1650,8 @@
 
     } /* while ip < limit */
 
-    FT_TRACE4(( "..end..\n\n" ));
+    FT_TRACE4(( "..end..\n" ));
+    FT_TRACE4(( "\n" ));
 
   Fail:
     return error;
@@ -2070,7 +2071,8 @@
 
     } /* while ip < limit */
 
-    FT_TRACE4(( "..end..\n\n" ));
+    FT_TRACE4(( "..end..\n" ));
+    FT_TRACE4(( "\n" ));
 
   No_Width:
     FT_ERROR(( "t1_decoder_parse_metrics:"

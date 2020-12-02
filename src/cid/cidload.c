@@ -803,8 +803,8 @@
       if ( parser->binary_length >
              face->root.stream->size - parser->data_offset )
       {
-        FT_TRACE0(( "cid_face_open: adjusting length of binary data\n"
-                    "               (from %ld to %ld bytes)\n",
+        FT_TRACE0(( "cid_face_open: adjusting length of binary data\n" ));
+        FT_TRACE0(( "               (from %ld to %ld bytes)\n",
                     parser->binary_length,
                     face->root.stream->size - parser->data_offset ));
         parser->binary_length = face->root.stream->size -

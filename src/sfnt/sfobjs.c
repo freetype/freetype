@@ -820,7 +820,8 @@
     /* it doesn't contain outlines.                                */
     /*                                                             */
 
-    FT_TRACE2(( "sfnt_load_face: %p\n\n", (void *)face ));
+    FT_TRACE2(( "sfnt_load_face: %p\n", (void *)face ));
+    FT_TRACE2(( "\n" ));
 
     /* do we have outlines in there? */
 #ifdef FT_CONFIG_OPTION_INCREMENTAL

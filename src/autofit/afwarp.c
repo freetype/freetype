@@ -106,10 +106,10 @@
 
       if ( idx_min < 0 || idx_min > idx_max || idx_max > 64 )
       {
-        FT_TRACE5(( "invalid indices:\n"
-                    "  min=%d max=%d, xx1=%ld xx2=%ld,\n"
-                    "  x1min=%ld x1max=%ld, x2min=%ld x2max=%ld\n",
-                    idx_min, idx_max, xx1, xx2,
+        FT_TRACE5(( "invalid indices:\n" ));
+        FT_TRACE5(( "  min=%d max=%d, xx1=%ld xx2=%ld,\n",
+                    idx_min, idx_max, xx1, xx2 ));
+        FT_TRACE5(( "  x1min=%ld x1max=%ld, x2min=%ld x2max=%ld\n",
                     warper->x1min, warper->x1max,
                     warper->x2min, warper->x2max ));
         return;

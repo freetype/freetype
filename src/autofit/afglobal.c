@@ -285,10 +285,10 @@
 
 #ifdef FT_DEBUG_LEVEL_TRACE
 
-    FT_TRACE4(( "\n"
-                "style coverage\n"
-                "==============\n"
-                "\n" ));
+    FT_TRACE4(( "\n" ));
+    FT_TRACE4(( "style coverage\n" ));
+    FT_TRACE4(( "==============\n" ));
+    FT_TRACE4(( "\n" ));
 
     for ( ss = 0; af_style_classes[ss]; ss++ )
     {

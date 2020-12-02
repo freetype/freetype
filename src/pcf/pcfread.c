@@ -501,8 +501,8 @@ THE SOFTWARE.
     if ( FT_READ_ULONG_LE( format ) )
       goto Bail;
 
-    FT_TRACE4(( "pcf_get_properties:\n"
-                "  format: 0x%lX (%s)\n",
+    FT_TRACE4(( "pcf_get_properties:\n" ));
+    FT_TRACE4(( "  format: 0x%lX (%s)\n",
                 format,
                 PCF_BYTE_ORDER( format ) == MSBFirst ? "MSB" : "LSB" ));
 
@@ -697,8 +697,8 @@ THE SOFTWARE.
     if ( FT_READ_ULONG_LE( format ) )
       goto Bail;
 
-    FT_TRACE4(( "pcf_get_metrics:\n"
-                "  format: 0x%lX (%s, %s)\n",
+    FT_TRACE4(( "pcf_get_metrics:\n" ));
+    FT_TRACE4(( "  format: 0x%lX (%s, %s)\n",
                 format,
                 PCF_BYTE_ORDER( format ) == MSBFirst ? "MSB" : "LSB",
                 PCF_FORMAT_MATCH( format, PCF_COMPRESSED_METRICS ) ?
@@ -840,17 +840,16 @@ THE SOFTWARE.
 
     FT_Stream_ExitFrame( stream );
 
-    FT_TRACE4(( "pcf_get_bitmaps:\n"
-                "  format: 0x%lX\n"
-                "          (%s, %s,\n"
-                "           padding=%d bit%s, scanning=%d bit%s)\n",
-                format,
+    FT_TRACE4(( "pcf_get_bitmaps:\n" ));
+    FT_TRACE4(( "  format: 0x%lX\n", format ));
+    FT_TRACE4(( "          (%s, %s,\n",
                 PCF_BYTE_ORDER( format ) == MSBFirst
                   ? "most significant byte first"
                   : "least significant byte first",
                 PCF_BIT_ORDER( format ) == MSBFirst
                   ? "most significant bit first"
-                  : "least significant bit first",
+                  : "least significant bit first" ));
+    FT_TRACE4(( "           padding=%d bit%s, scanning=%d bit%s)\n",
                 8 << PCF_GLYPH_PAD_INDEX( format ),
                 ( 8 << PCF_GLYPH_PAD_INDEX( format ) ) == 1 ? "" : "s",
                 8 << PCF_SCAN_UNIT_INDEX( format ),
@@ -1001,8 +1000,8 @@ THE SOFTWARE.
     if ( FT_READ_ULONG_LE( format ) )
       goto Bail;
 
-    FT_TRACE4(( "pcf_get_encodings:\n"
-                "  format: 0x%lX (%s)\n",
+    FT_TRACE4(( "pcf_get_encodings:\n" ));
+    FT_TRACE4(( "  format: 0x%lX (%s)\n",
                 format,
                 PCF_BYTE_ORDER( format ) == MSBFirst ? "MSB" : "LSB" ));
 
@@ -1021,11 +1020,11 @@ THE SOFTWARE.
         goto Bail;
     }
 
-    FT_TRACE4(( "  firstCol 0x%X, lastCol 0x%X\n"
-                "  firstRow 0x%X, lastRow 0x%X\n"
-                "  defaultChar 0x%X\n",
-                enc->firstCol, enc->lastCol,
-                enc->firstRow, enc->lastRow,
+    FT_TRACE4(( "  firstCol 0x%X, lastCol 0x%X\n",
+                enc->firstCol, enc->lastCol ));
+    FT_TRACE4(( "  firstRow 0x%X, lastRow 0x%X\n",
+                enc->firstRow, enc->lastRow ));
+    FT_TRACE4(( "  defaultChar 0x%X\n",
                 enc->defaultChar ));
 
     /* sanity checks; we limit numbers of rows and columns to 256 */
@@ -1208,10 +1207,10 @@ THE SOFTWARE.
     if ( FT_READ_ULONG_LE( format ) )
       goto Bail;
 
-    FT_TRACE4(( "pcf_get_accel%s:\n"
-                "  format: 0x%lX (%s, %s)\n",
+    FT_TRACE4(( "pcf_get_accel%s:\n",
                 type == PCF_BDF_ACCELERATORS ? " (getting BDF accelerators)"
-                                             : "",
+                                             : "" ));
+    FT_TRACE4(( "  format: 0x%lX (%s, %s)\n",
                 format,
                 PCF_BYTE_ORDER( format ) == MSBFirst ? "MSB" : "LSB",
                 PCF_FORMAT_MATCH( format, PCF_ACCEL_W_INKBOUNDS ) ?

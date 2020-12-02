@@ -72,11 +72,11 @@
     AF_GlyphHintsRec  hints[1];
 
 
-    FT_TRACE5(( "\n"
-                "cjk standard widths computation (style `%s')\n"
-                "===================================================\n"
-                "\n",
+    FT_TRACE5(( "\n" ));
+    FT_TRACE5(( "cjk standard widths computation (style `%s')\n",
                 af_style_names[metrics->root.style_class->style] ));
+    FT_TRACE5(( "===================================================\n" ));
+    FT_TRACE5(( "\n" ));
 
     af_glyph_hints_init( hints, face->memory );
 
@@ -314,9 +314,9 @@
     /* style's entry in the `af_blue_stringset' array, computing its */
     /* extremum points (depending on the string properties)          */
 
-    FT_TRACE5(( "cjk blue zones computation\n"
-                "==========================\n"
-                "\n" ));
+    FT_TRACE5(( "cjk blue zones computation\n" ));
+    FT_TRACE5(( "==========================\n" ));
+    FT_TRACE5(( "\n" ));
 
 #ifdef FT_CONFIG_OPTION_USE_HARFBUZZ
     shaper_buf = af_shaper_buf_create( face );
@@ -555,9 +555,8 @@
       if ( AF_CJK_IS_TOP_BLUE( bs ) )
         blue->flags |= AF_CJK_BLUE_TOP;
 
-      FT_TRACE5(( "    -> reference = %ld\n"
-                  "       overshoot = %ld\n",
-                  *blue_ref, *blue_shoot ));
+      FT_TRACE5(( "    -> reference = %ld\n", *blue_ref ));
+      FT_TRACE5(( "       overshoot = %ld\n", *blue_shoot ));
 
     } /* end for loop */
 
@@ -743,12 +742,12 @@
 
         blue->shoot.fit = blue->ref.fit - delta2;
 
-        FT_TRACE5(( ">> active cjk blue zone %c%d[%ld/%ld]:\n"
-                    "     ref:   cur=%.2f fit=%.2f\n"
-                    "     shoot: cur=%.2f fit=%.2f\n",
+        FT_TRACE5(( ">> active cjk blue zone %c%d[%ld/%ld]:\n",
                     ( dim == AF_DIMENSION_HORZ ) ? 'H' : 'V',
-                    nn, blue->ref.org, blue->shoot.org,
-                    blue->ref.cur / 64.0, blue->ref.fit / 64.0,
+                    nn, blue->ref.org, blue->shoot.org ));
+        FT_TRACE5(( "     ref:   cur=%.2f fit=%.2f\n",
+                    blue->ref.cur / 64.0, blue->ref.fit / 64.0 ));
+        FT_TRACE5(( "     shoot: cur=%.2f fit=%.2f\n",
                     blue->shoot.cur / 64.0, blue->shoot.fit / 64.0 ));
 
         blue->flags |= AF_CJK_BLUE_ACTIVE;

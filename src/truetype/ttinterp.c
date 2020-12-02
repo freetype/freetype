@@ -7781,8 +7781,8 @@
       if ( num_twilight_points > 0xFFFFU )
         num_twilight_points = 0xFFFFU;
 
-      FT_TRACE5(( "TT_RunIns: Resetting number of twilight points\n"
-                  "           from %d to the more reasonable value %ld\n",
+      FT_TRACE5(( "TT_RunIns: Resetting number of twilight points\n" ));
+      FT_TRACE5(( "           from %d to the more reasonable value %ld\n",
                   exc->twilight.n_points,
                   num_twilight_points ));
       exc->twilight.n_points = (FT_UShort)num_twilight_points;

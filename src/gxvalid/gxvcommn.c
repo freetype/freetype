@@ -1493,9 +1493,11 @@
       state = (FT_UShort)( newState_idx / ( 1 + maxClassID ) );
       if ( 0 != ( newState_idx % ( 1 + maxClassID ) ) )
       {
-        FT_TRACE4(( "-> new state = %d (supposed)\n"
-                    "but newState index 0x%04x is not aligned to %d-classes\n",
-                    state, newState_idx,  1 + maxClassID ));
+        FT_TRACE4(( "-> new state = %d (supposed)\n",
+                    state ));
+        FT_TRACE4(( "but newState index 0x%04x"
+                    " is not aligned to %d-classes\n",
+                    newState_idx, 1 + maxClassID ));
         GXV_SET_ERR_IF_PARANOID( FT_INVALID_OFFSET );
       }
 

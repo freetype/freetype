@@ -1,5 +1,12 @@
 2020-12-02  Werner Lemberg  <wl@gnu.org>
 
+	* src/*: Don't use more than one '\n' in `FT_TRACE` and `FT_ERROR`.
+
+	This ensures good logging output, with all lines having a proper
+	prefix (if requested).
+
+2020-12-02  Werner Lemberg  <wl@gnu.org>
+
 	[base] Don't close 'stderr' after logging.
 
 	* src/base/ftdebug.c, builds/windows/ftdebug.c (ft_logging_deinit):

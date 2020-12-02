@@ -371,8 +371,9 @@
 
     if ( axisCount != (FT_Long)blend->mmvar->num_axis )
     {
-      FT_TRACE2(( "ft_var_load_avar: number of axes in `avar' and `fvar'\n"
-                  "                  table are different\n" ));
+      FT_TRACE2(( "ft_var_load_avar:"
+                  " number of axes in `avar' and `fvar'\n" ));
+      FT_TRACE2(( "                  table are different\n" ));
       goto Exit;
     }
 
@@ -1524,8 +1525,9 @@
 
     if ( gvar_head.axisCount != (FT_UShort)blend->mmvar->num_axis )
     {
-      FT_TRACE1(( "ft_var_load_gvar: number of axes in `gvar' and `cvar'\n"
-                  "                  table are different\n" ));
+      FT_TRACE1(( "ft_var_load_gvar:"
+                  " number of axes in `gvar' and `cvar'\n" ));
+      FT_TRACE1(( "                  table are different\n" ));
       error = FT_THROW( Invalid_Table );
       goto Exit;
     }
@@ -2124,8 +2126,8 @@
         if ( FT_SET_ERROR( face->goto_table( face, TTAG_CFF2,
                                              stream, &table_len ) ) )
         {
-          FT_TRACE1(( "\n"
-                      "TT_Get_MM_Var: `gvar' or `CFF2' table is missing\n" ));
+          FT_TRACE1(( "\n" ));
+          FT_TRACE1(( "TT_Get_MM_Var: `gvar' or `CFF2' table is missing\n" ));
           goto Exit;
         }
       }
@@ -2553,17 +2555,17 @@
       num_coords = mmvar->num_axis;
     }
 
-    FT_TRACE5(( "TT_Set_MM_Blend:\n"
-                "  normalized design coordinates:\n" ));
+    FT_TRACE5(( "TT_Set_MM_Blend:\n" ));
+    FT_TRACE5(( "  normalized design coordinates:\n" ));
 
     for ( i = 0; i < num_coords; i++ )
     {
       FT_TRACE5(( "    %.5f\n", coords[i] / 65536.0 ));
       if ( coords[i] < -0x00010000L || coords[i] > 0x00010000L )
       {
-        FT_TRACE1(( "TT_Set_MM_Blend: normalized design coordinate %.5f\n"
-                    "                 is out of range [-1;1]\n",
+        FT_TRACE1(( "TT_Set_MM_Blend: normalized design coordinate %.5f\n",
                     coords[i] / 65536.0 ));
+        FT_TRACE1(( "                 is out of range [-1;1]\n" ));
         error = FT_THROW( Invalid_Argument );
         goto Exit;
       }
@@ -2961,8 +2963,8 @@
     if ( !face->blend->avar_loaded )
       ft_var_load_avar( face );
 
-    FT_TRACE5(( "TT_Set_Var_Design:\n"
-                "  normalized design coordinates:\n" ));
+    FT_TRACE5(( "TT_Set_Var_Design:\n" ));
+    FT_TRACE5(( "  normalized design coordinates:\n" ));
     ft_var_to_normalized( face, num_coords, blend->coords, normalized );
 
     error = tt_set_mm_blend( face, mmvar->num_axis, normalized, 0 );
@@ -3238,16 +3240,16 @@
 
     if ( !blend )
     {
-      FT_TRACE2(( "\n"
-                  "tt_face_vary_cvt: no blend specified\n" ));
+      FT_TRACE2(( "\n" ));
+      FT_TRACE2(( "tt_face_vary_cvt: no blend specified\n" ));
       error = FT_Err_Ok;
       goto Exit;
     }
 
     if ( !face->cvt )
     {
-      FT_TRACE2(( "\n"
-                  "tt_face_vary_cvt: no `cvt ' table\n" ));
+      FT_TRACE2(( "\n" ));
+      FT_TRACE2(( "tt_face_vary_cvt: no `cvt ' table\n" ));
       error = FT_Err_Ok;
       goto Exit;
     }

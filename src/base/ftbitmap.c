@@ -907,8 +907,8 @@
     final_rows  = ( final_ury - final_lly ) >> 6;
 
 #ifdef FT_DEBUG_LEVEL_TRACE
-    FT_TRACE5(( "FT_Bitmap_Blend:\n"
-                "  source bitmap: (%ld, %ld) -- (%ld, %ld); %d x %d\n",
+    FT_TRACE5(( "FT_Bitmap_Blend:\n" ));
+    FT_TRACE5(( "  source bitmap: (%ld, %ld) -- (%ld, %ld); %d x %d\n",
       source_llx / 64, source_lly / 64,
       source_urx / 64, source_ury / 64,
       source_->width, source_->rows ));

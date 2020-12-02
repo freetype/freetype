@@ -2271,7 +2271,8 @@
 
     } /* while ip < limit */
 
-    FT_TRACE4(( "..end..\n\n" ));
+    FT_TRACE4(( "..end..\n" ));
+    FT_TRACE4(( "\n" ));
 
   Fail:
     return error;

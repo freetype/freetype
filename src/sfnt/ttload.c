@@ -416,9 +416,9 @@
          FT_FRAME_ENTER( sfnt.num_tables * 16L ) )
       goto Exit;
 
-    FT_TRACE2(( "\n"
-                "  tag    offset    length   checksum\n"
-                "  ----------------------------------\n" ));
+    FT_TRACE2(( "\n" ));
+    FT_TRACE2(( "  tag    offset    length   checksum\n" ));
+    FT_TRACE2(( "  ----------------------------------\n" ));
 
     valid_entries = 0;
     for ( nn = 0; nn < sfnt.num_tables; nn++ )
@@ -505,7 +505,8 @@
 
     FT_FRAME_EXIT();
 
-    FT_TRACE2(( "table directory loaded\n\n" ));
+    FT_TRACE2(( "table directory loaded\n" ));
+    FT_TRACE2(( "\n" ));
 
   Exit:
     return error;

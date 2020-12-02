@@ -198,9 +198,9 @@
          FT_NEW_ARRAY( indices, woff.num_tables ) )
       goto Exit;
 
-    FT_TRACE2(( "\n"
-                "  tag    offset    compLen  origLen  checksum\n"
-                "  -------------------------------------------\n" ));
+    FT_TRACE2(( "\n" ));
+    FT_TRACE2(( "  tag    offset    compLen  origLen  checksum\n" ));
+    FT_TRACE2(( "  -------------------------------------------\n" ));
 
     if ( FT_FRAME_ENTER( 20L * woff.num_tables ) )
       goto Exit;

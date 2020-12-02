@@ -208,8 +208,9 @@
     /* 'af_latin2_blue_chars[blues]' string, then compute its top-most or */
     /* bottom-most points (depending on `AF_IS_TOP_BLUE')                 */
 
-    FT_TRACE5(( "blue zones computation\n"
-                "======================\n\n" ));
+    FT_TRACE5(( "blue zones computation\n" ));
+    FT_TRACE5(( "======================\n" ));
+    FT_TRACE5(( "\n" ));
 
     for ( bb = 0; bb < AF_LATIN_BLUE_MAX; bb++ )
     {
@@ -426,9 +427,8 @@
       if ( AF_LATIN_IS_X_HEIGHT_BLUE( bb ) )
         blue->flags |= AF_LATIN_BLUE_ADJUSTMENT;
 
-      FT_TRACE5(( "    -> reference = %ld\n"
-                  "       overshoot = %ld\n",
-                  *blue_ref, *blue_shoot ));
+      FT_TRACE5(( "    -> reference = %ld\n", *blue_ref ));
+      FT_TRACE5(( "       overshoot = %ld\n", *blue_shoot ));
     }
 
     return;

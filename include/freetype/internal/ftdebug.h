@@ -96,6 +96,9 @@ FT_BEGIN_HEADER
    * Each component must define the macro FT_COMPONENT to a valid FT_Trace
    * value before using any TRACE macro.
    *
+   * To get consistent logging output, there should be no newline character
+   * (i.e., '\n') or a single trailing one in the message string of
+   * `FT_TRACEx` and `FT_ERROR`.
    */
 
 
@@ -104,7 +107,6 @@ FT_BEGIN_HEADER
    * If FT_LOGGING is enabled, tracing messages are sent to dlg's API.
    * If FT_LOGGING is disabled, tracing messages are sent to `FT_Message`
    * (defined in ftdebug.c).
-   *
    */
 #ifdef FT_LOGGING
 
