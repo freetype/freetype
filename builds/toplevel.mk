@@ -291,4 +291,7 @@ do-dist: distclean refdoc
 	rm -rf docs/markdown
 	rm -f docs/mkdocs.yml
 
+	@# Remove more stuff related to git.
+	rm -rf submodules
+
 # EOF

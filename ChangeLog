@@ -1,3 +1,7 @@
+2020-12-05  Werner Lemberg  <wl@gnu.org>
+
+	* builds/toplevel.mk (do-dist): Remove `submodules` directory.
+
 2020-12-02  Werner Lemberg  <wl@gnu.org>
 
 	* src/*: Don't use more than one '\n' in `FT_TRACE` and `FT_ERROR`.
