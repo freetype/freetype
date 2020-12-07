@@ -202,7 +202,7 @@
     FT_Memory  memory;
 
 
-#ifdef FT_LOGGING
+#ifdef FT_DEBUG_LOGGING
     ft_logging_init();
 #endif
 
@@ -252,7 +252,7 @@
     /* discard memory manager */
     FT_Done_Memory( memory );
 
-#ifdef FT_LOGGING
+#ifdef FT_DEBUG_LOGGING
     ft_logging_deinit();
 #endif
 

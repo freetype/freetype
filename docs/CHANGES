@@ -12,10 +12,10 @@ CHANGES BETWEEN 2.10.4 and 2.11.0
   - `ttdebug' didn't show changed point coordinates (bug introduced in
     version 2.10.3).
 
-  - A new configuration macro  `FT_LOGGING` is available.  It provides
-    extended debugging capabilities for  FreeType, for example showing
-    a time stamp  or displaying the component a  tracing message comes
-    from.  See file `docs/DEBUG` for more information.
+  - A  new configuration  macro `FT_DEBUG_LOGGING`  is available.   It
+    provides extended debugging capabilities for FreeType, for example
+    showing a time stamp or displaying the component a tracing message
+    comes from.  See file `docs/DEBUG` for more information.
 
     This work was Priyesh Kumar's GSoC 2020 project.
 

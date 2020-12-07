@@ -36,11 +36,11 @@ FT_BEGIN_HEADER
    *   External Debugging APIs
    *
    * @abstract:
-   *   Public APIs to control the `FT_LOGGING` macro.
+   *   Public APIs to control the `FT_DEBUG_LOGGING` macro.
    *
    * @description:
    *   This section contains the declarations of public functions that
-   *   enables fine control of what the `FT_LOGGING` macro outputs.
+   *   enables fine control of what the `FT_DEBUG_LOGGING` macro outputs.
    *
    */
 
@@ -66,8 +66,8 @@ FT_BEGIN_HEADER
    *   ```
    *
    * @note:
-   *   This function is only available if compilation option `@FT_LOGGING`
-   *   is set.
+   *   This function is only available if compilation option
+   *   `FT_DEBUG_LOGGING` is set.
    */
   FT_EXPORT( void )
   FT_Trace_Set_Level( const char*  tracing_level );
@@ -85,8 +85,8 @@ FT_BEGIN_HEADER
    *
    *
    * @note:
-   *   This function is only available if compilation option `@FT_LOGGING`
-   *   is set.
+   *   This function is only available if compilation option
+   *   `FT_DEBUG_LOGGING` is set.
    */
   FT_EXPORT( void )
   FT_Trace_Set_Default_Level( void );
@@ -131,8 +131,8 @@ FT_BEGIN_HEADER
    *     New logging function.
    *
    * @note:
-   *   This function is only available if compilation option `@FT_LOGGING`
-   *   is set.
+   *   This function is only available if compilation option
+   *   `FT_DEBUG_LOGGING` is set.
    */
   FT_EXPORT( void )
   FT_Set_Log_Handler( FT_Custom_Log_Handler  handler );
@@ -148,8 +148,8 @@ FT_BEGIN_HEADER
    *   log handler to FreeType's built-in version.
    *
    * @note:
-   *   This function is only available if compilation option `@FT_LOGGING`
-   *   is set.
+   *   This function is only available if compilation option
+   *   `FT_DEBUG_LOGGING` is set.
    */
   FT_EXPORT( void )
   FT_Set_Default_Log_Handler( void );

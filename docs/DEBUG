@@ -44,7 +44,7 @@ located in the file `ftoption.h'.  The macros are:
     When `FT2_DEBUG_MEMORY'  isn't defined  at runtime,  the debugging
     memory manager is ignored, and performance is unaffected.
 
-  FT_LOGGING
+  FT_DEBUG_LOGGING
 
     #define this macro for enhanced logging support; it automatically
     sets `FT_DEBUG_LEVEL_TRACE' and `FT_DEBUG_LEVEL_ERROR'.
@@ -165,7 +165,7 @@ behaviour of FreeType at runtime.
     the memory and io components, which  are set to the trace levels 5
     and 4, respectively.
 
-    If `FT_LOGGING' is defined, two more options are available.
+    If `FT_DEBUG_LOGGING' is defined, two more options are available.
 
     * -v: Print also  the name of FreeType's component  from which the
           current log is produced.
@@ -190,8 +190,8 @@ behaviour of FreeType at runtime.
   FT_LOGGING_FILE
 
     This  variable  is  only  used  if  FreeType  is  built  with  the
-    `FT_LOGGING'  macro defined.   It contains  the path  to the  file
-    where the  user wants  to put  his log  file.  If  it is  not set,
+    `FT_DEBUG_LOGGING'  macro defined.   It contains  the path  to the
+    file where the user wants to put  his log file.  If it is not set,
     FreeType uses stderr.
 
     Examples:
@@ -254,10 +254,10 @@ behaviour of FreeType at runtime.
     freed blocks are released at runtime.
 
 
-IV. Additional Capabilities with `FT_LOGGING'
----------------------------------------------
+IV. Additional Capabilities with `FT_DEBUG_LOGGING'
+---------------------------------------------------
 
-If  `FT_LOGGING'  is  defined,  four APIs  are  available  to  provide
+If `FT_DEBUG_LOGGING' is  defined, four APIs are  available to provide
 additional debugging support.  Use
 
   #include<freetype/ftlogging.h>

@@ -24,7 +24,7 @@
 #include <freetype/freetype.h>
 
 
-#ifdef FT_LOGGING
+#ifdef FT_DEBUG_LOGGING
 #include "dlg.c"
 #else
   /* ANSI C doesn't like empty source files */

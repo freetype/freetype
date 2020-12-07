@@ -46,7 +46,7 @@
 #include <freetype/internal/ftobjs.h>
 
 
-#ifdef FT_LOGGING
+#ifdef FT_DEBUG_LOGGING
 
   /**************************************************************************
    *
@@ -87,7 +87,7 @@
   dlg_handler            ft_default_log_handler = NULL;
   FT_Custom_Log_Handler  custom_output_handler  = NULL;
 
-#endif /* FT_LOGGING*/
+#endif /* FT_DEBUG_LOGGING*/
 
 
 #ifdef FT_DEBUG_LEVEL_ERROR
@@ -242,7 +242,7 @@
     const char*  ft2_debug = NULL;
 
 
-#ifdef FT_LOGGING
+#ifdef FT_DEBUG_LOGGING
     if ( ft_custom_trace_level != NULL )
       ft2_debug = ft_custom_trace_level;
     else
@@ -263,7 +263,7 @@
         if ( *p == ' ' || *p == '\t' || *p == ',' || *p == ';' || *p == '=' )
           continue;
 
-#ifdef FT_LOGGING
+#ifdef FT_DEBUG_LOGGING
 
         /* check extra arguments for logging */
         if ( *p == '-' )
@@ -304,7 +304,7 @@
           }
         }
 
-#endif /* FT_LOGGING */
+#endif /* FT_DEBUG_LOGGING */
 
         /* read toggle name, followed by ':' */
         q = p;
@@ -410,7 +410,7 @@
 #endif /* !FT_DEBUG_LEVEL_TRACE */
 
 
-#ifdef FT_LOGGING
+#ifdef FT_DEBUG_LOGGING
 
   /**************************************************************************
    *
@@ -608,7 +608,7 @@
     va_end( ap );
   }
 
-#endif /* FT_LOGGING */
+#endif /* FT_DEBUG_LOGGING */
 
 
 /* END */

@@ -443,7 +443,7 @@ FT_BEGIN_HEADER
    *   to a file, FreeType uses an the external `dlg` library (the source
    *   code is in `src/dlg`).
    */
-#define FT_LOGGING
+#define FT_DEBUG_LOGGING
 
 
   /**************************************************************************
