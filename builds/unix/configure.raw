@@ -1125,12 +1125,10 @@ if test "$have_brotli" != no; then
 else
   ftoption_unset FT_CONFIG_OPTION_USE_BROTLI
 fi
+
 if test "$have_pthread" != no; then
   CFLAGS="$CFLAGS $PTHREAD_CFLAGS"
   LDFLAGS="$LDFLAGS $PTHREAD_CFLAGS $PTHREAD_LIBS"
-  ftoption_set FT_DEBUG_LOGGING
-else
-  ftoption_unset FT_DEBUG_LOGGING
 fi
 
 AC_SUBST([CFLAGS])
@@ -1185,7 +1183,9 @@ fi
 
 if test $have_pthread = no; then
   AC_MSG_WARN([
-  \`FT_DEBUG_LOGGING' will not work since the \`pthread' library is not available.
+  \`FT_DEBUG_LOGGING' will not work since the \`pthread' library is not
+  available.  This warning can be safely ignored if you don't plan to use
+  this configuration macro.
   ])
 fi
 

@@ -1,5 +1,11 @@
 2020-12-07  Werner Lemberg  <wl@gnu.org>
 
+	* builds/unix/configure.raw: Don't set `FT_DEBUG_LOGGING`.
+
+	All debug options are handled exclusively in `ftoption.h`.
+
+2020-12-07  Werner Lemberg  <wl@gnu.org>
+
 	* src/*: More fixes for using a '\n' in `FT_TRACE` and `FT_ERROR`.
 
 2020-12-07  Werner Lemberg  <wl@gnu.org>
