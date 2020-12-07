@@ -1852,12 +1852,12 @@
       FT_TRACE5(( "    %d: %.5f\n", i, coord / 65536.0 ));
       if ( coord > a->maximum || coord < a->minimum )
       {
-        FT_TRACE1((
-          "ft_var_to_normalized: design coordinate %.5f\n"
-          "                      is out of range [%.5f;%.5f]; clamping\n",
-          coord / 65536.0,
-          a->minimum / 65536.0,
-          a->maximum / 65536.0 ));
+        FT_TRACE1(( "ft_var_to_normalized: design coordinate %.5f\n",
+                    coord / 65536.0 ));
+        FT_TRACE1(( "                      is out of range [%.5f;%.5f];"
+                    " clamping\n",
+                    a->minimum / 65536.0,
+                    a->maximum / 65536.0 ));
 
         if ( coord > a->maximum )
           coord = a->maximum;

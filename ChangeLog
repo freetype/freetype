@@ -1,5 +1,9 @@
 2020-12-07  Werner Lemberg  <wl@gnu.org>
 
+	* src/*: More fixes for using a '\n' in `FT_TRACE` and `FT_ERROR`.
+
+2020-12-07  Werner Lemberg  <wl@gnu.org>
+
 	*/*: s/FT_LOGGING/FT_DEBUG_LOGGING/.
 
 2020-12-05  Werner Lemberg  <wl@gnu.org>

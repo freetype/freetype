@@ -105,10 +105,11 @@ FT_BEGIN_HEADER
                 FT_Byte*  pp = (FT_Byte*)_size ## _p;               \
                                                                     \
                                                                     \
-                FT_TRACE3(( "\n"                                    \
-                            "Invalid offset to optional table `%s'" \
-                            " set to zero.\n"                       \
-                            "\n", #_size ));                        \
+                FT_TRACE3(( "\n" ));                                \
+                FT_TRACE3(( "Invalid offset to optional table `%s'" \
+                            " set to zero.\n",                      \
+                            #_size ));                              \
+                FT_TRACE3(( "\n" ));                                \
                                                                     \
                 _size = pp[0] = pp[1] = 0;                          \
               }                                                     \
@@ -127,10 +128,11 @@ FT_BEGIN_HEADER
                 FT_Byte*  pp = (FT_Byte*)_size ## _p;               \
                                                                     \
                                                                     \
-                FT_TRACE3(( "\n"                                    \
-                            "Invalid offset to optional table `%s'" \
-                            " set to zero.\n"                       \
-                            "\n", #_size ));                        \
+                FT_TRACE3(( "\n" ));                                \
+                FT_TRACE3(( "Invalid offset to optional table `%s'" \
+                            " set to zero.\n",                      \
+                            #_size ));                              \
+                FT_TRACE3(( "\n" ));                                \
                                                                     \
                 _size = pp[0] = pp[1] = pp[2] = pp[3] = 0;          \
               }                                                     \

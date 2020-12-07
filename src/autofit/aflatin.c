@@ -1274,29 +1274,28 @@
 
             if ( dist == 0 )
             {
-              FT_TRACE5((
-                "af_latin_metrics_scale_dim:"
-                " x height alignment (style `%s'):\n"
-                "                           "
-                " vertical scaling changed from %.5f to %.5f (by %ld%%)\n"
-                "\n",
-                af_style_names[metrics->root.style_class->style],
-                scale / 65536.0,
-                new_scale / 65536.0,
-                ( fitted - scaled ) * 100 / scaled ));
+              FT_TRACE5(( "af_latin_metrics_scale_dim:"
+                          " x height alignment (style `%s'):\n",
+                          af_style_names[metrics->root.style_class->style] ));
+              FT_TRACE5(( "                           "
+                          " vertical scaling changed"
+                          " from %.5f to %.5f (by %ld%%)\n",
+                          scale / 65536.0,
+                          new_scale / 65536.0,
+                          ( fitted - scaled ) * 100 / scaled ));
+              FT_TRACE5(( "\n" ));
 
               scale = new_scale;
             }
 #ifdef FT_DEBUG_LEVEL_TRACE
             else
             {
-              FT_TRACE5((
-                "af_latin_metrics_scale_dim:"
-                " x height alignment (style `%s'):\n"
-                "                           "
-                " excessive vertical scaling abandoned\n"
-                "\n",
-                af_style_names[metrics->root.style_class->style] ));
+              FT_TRACE5(( "af_latin_metrics_scale_dim:"
+                          " x height alignment (style `%s'):\n",
+                          af_style_names[metrics->root.style_class->style] ));
+              FT_TRACE5(( "                           "
+                          " excessive vertical scaling abandoned\n" ));
+              FT_TRACE5(( "\n" ));
             }
 #endif
           }

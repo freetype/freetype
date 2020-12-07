@@ -1852,11 +1852,10 @@
          FT_NEW_ARRAY( indices, woff2.num_tables ) )
       goto Exit;
 
-    FT_TRACE2((
-      "\n"
-      "  tag    flags    transform  origLen   transformLen   offset\n"
-      "  -----------------------------------------------------------\n" ));
-   /* "  XXXX  XXXXXXXX  XXXXXXXX   XXXXXXXX    XXXXXXXX    XXXXXXXX" */
+    FT_TRACE2(( "\n" ));
+    FT_TRACE2(( "  tag    flags    transform  origLen   transformLen   offset\n" ));
+    FT_TRACE2(( "  -----------------------------------------------------------\n" ));
+             /* "  XXXX  XXXXXXXX  XXXXXXXX   XXXXXXXX    XXXXXXXX    XXXXXXXX" */
 
     for ( nn = 0; nn < woff2.num_tables; nn++ )
     {
