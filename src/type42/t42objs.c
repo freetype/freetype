@@ -510,7 +510,8 @@
 
 
     error = FT_New_Size( t42face->ttf_face, &ttsize );
-    t42size->ttsize = ttsize;
+    if ( !error )
+      t42size->ttsize = ttsize;
 
     FT_Activate_Size( ttsize );
 
@@ -593,7 +594,8 @@
     else
     {
       error = FT_New_GlyphSlot( t42face->ttf_face, &ttslot );
-      slot->ttslot = ttslot;
+      if ( !error )
+        slot->ttslot = ttslot;
     }
 
     return error;

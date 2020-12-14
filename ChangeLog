@@ -1,3 +1,10 @@
+2020-12-14  Werner Lemberg  <wl@gnu.org>
+
+	[type42] Pacify static analysis tools (#59682).
+
+	* src/type42/t42objs.c (T42_Size_Init, T42_GlyphSlot_Init): Avoid
+	warnings about uninitialized variables.
+
 2020-12-07  Werner Lemberg  <wl@gnu.org>
 
 	* builds/unix/configure.raw: Don't set `FT_DEBUG_LOGGING`.
