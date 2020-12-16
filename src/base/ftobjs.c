@@ -5568,4 +5568,40 @@
   }
 
 
+  FT_EXPORT_DEF ( FT_Bool )
+  FT_Get_Color_Glyph_Paint( FT_Face          face,
+                            FT_UInt          base_glyph,
+                            FT_OpaquePaint*  paint )
+  {
+    return 0;
+  }
+
+
+  FT_EXPORT_DEF ( FT_Bool )
+  FT_Get_Paint_Layers( FT_Face            face,
+                       FT_LayerIterator*  layer_iterator,
+                       FT_OpaquePaint*    paint )
+  {
+    return 0;
+  }
+
+
+  FT_EXPORT_DEF( FT_Bool )
+  FT_Get_Paint( FT_Face face,
+                FT_OpaquePaint  opaque_paint,
+                FT_COLR_Paint*  paint )
+  {
+    return 0;
+  }
+
+
+  FT_EXPORT_DEF ( FT_Bool )
+  FT_Get_Colorline_Stops ( FT_Face                face,
+                           FT_ColorStop *         color_stop,
+                           FT_ColorStopIterator  *iterator )
+  {
+    return 0;
+  }
+
+
 /* END */

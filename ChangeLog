@@ -1,5 +1,19 @@
 2020-12-16  Dominik Röttsches  <drott@chromium.org>
 
+	Add new methods required for 'COLR' v1 to public API (#59703).
+
+	* include/freetype/freetype.h (FT_Get_Color_Glyph_Paint): New method
+	for retrieving the root paint object for a color glyph by specifying
+	a glyph ID.
+	(FT_Get_Paint_Layers): New method for retrieving the layers of a
+	`PaintColorGlyph`.
+	(FT_Get_ColorLine_Stops): New method for retrieving the stops of a
+	color.
+	(FT_Get_Paint): New method for resolving an `FT_OpaquePaint` into an
+	`FT_COLR_Paint` object.
+
+2020-12-16  Dominik Röttsches  <drott@chromium.org>
+
 	Add types required for 'COLR' v1 to public API (#59703).
 
 	* include/freetype/freetype.h (FT_PaintFormat, FT_ColorStopIterator,

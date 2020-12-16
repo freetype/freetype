@@ -4881,6 +4881,165 @@ FT_BEGIN_HEADER
 
   /**************************************************************************
    *
+   * @function:
+   *   FT_Get_Color_Glyph_Paint
+   *
+   * @description:
+   *   This is the starting point and interface to color gradient
+   *   information in a 'COLR' v1 table in OpenType fonts to recursively
+   *   retrieve the paint tables for the directed acyclic graph of a colored
+   *   glyph, given a glyph ID.
+   *
+   *     https://github.com/googlefonts/colr-gradients-spec
+   *
+   *   In a 'COLR' v1 font, each color glyph defines a directed acyclic
+   *   graph of nested paint tables, such as `PaintGlyph`, `PaintSolid`,
+   *   `PaintLinearGradient`, `PaintRadialGradient`, and so on.  Using this
+   *   function and specifying a glyph ID, one retrieves the root paint
+   *   table for this glyph ID.
+   *
+   * @input:
+   *   face ::
+   *     A handle to the parent face object.
+   *
+   *   base_glyph ::
+   *     The glyph index for which to retrieve the root paint table.
+   *
+   * @output:
+   *   paint ::
+   *     The @FT_OpaquePaint object that references the actual paint table.
+   *
+   *     The respective actual @FT_COLR_Paint object is retrieved via
+   *     @FT_Get_Paint.
+   *
+   * @return:
+   *   Value~1 if everything is OK.  If no color glyph is found, or the root
+   *   paint could not be retrieved, value~0 gets returned.  In case of an
+   *   error, value~0 is returned also.
+   */
+  FT_EXPORT( FT_Bool )
+  FT_Get_Color_Glyph_Paint( FT_Face          face,
+                            FT_UInt          base_glyph,
+                            FT_OpaquePaint*  paint );
+
+
+  /**************************************************************************
+   *
+   * @function:
+   *   FT_Get_Paint_Layers
+   *
+   * @description:
+   *   Access the layers of a `PaintColrLayers` table.
+   *
+   *   If the root paint of a color glyph, or a nested paint of a 'COLR'
+   *   glyph is a `PaintColrLayers` table, this function retrieves the
+   *   layers of the `PaintColrLayers` table.
+   *
+   *   The @FT_PaintColrLayers object contains an @FT_LayerIterator, which
+   *   is used here to iterate over the layers.  Each layer is returned as
+   *   an @FT_OpaquePaint object, which then can be used with @FT_Get_Paint
+   *   to retrieve the actual paint object.
+   *
+   * @input:
+   *   face ::
+   *     A handle to the parent face object.
+   *
+   * @inout:
+   *   iterator ::
+   *     The @FT_LayerIterator from an @FT_PaintColrLayers object, for which
+   *     the layers are to be retrieved.  The internal state of the iterator
+   *     is incremented after one call to this function for retrieving one
+   *     layer.
+   *
+   * @output:
+   *   paint ::
+   *     The @FT_OpaquePaint object that references the actual paint table.
+   *     The respective actual @FT_COLR_Paint object is retrieved via
+   *     @FT_Get_Paint.
+   *
+   * @return:
+   *   Value~1 if everything is OK.  Value~0 gets returned when the paint
+   *   object can not be retrieved or any other error occurs.
+   */
+  FT_EXPORT( FT_Bool )
+  FT_Get_Paint_Layers( FT_Face            face,
+                       FT_LayerIterator*  iterator,
+                       FT_OpaquePaint*    paint );
+
+
+  /**************************************************************************
+   *
+   * @function:
+   *   FT_Get_Colorline_Stops
+   *
+   * @description:
+   *   This is an interface to color gradient information in a 'COLR' v1
+   *   table in OpenType fonts to iteratively retrieve the gradient and
+   *   solid fill information for colored glyph layers for a specified glyph
+   *   ID.
+   *
+   *     https://github.com/googlefonts/colr-gradients-spec
+   *
+   * @input:
+   *   face ::
+   *     A handle to the parent face object.
+   *
+   * @inout:
+   *   iterator ::
+   *     The retrieved @FT_ColorStopIterator, configured on an @FT_ColorLine,
+   *     which in turn got retrieved via paint information in
+   *     @FT_PaintLinearGradient or @FT_PaintRadialGradient.
+   *
+   * @output:
+   *   color_stop ::
+   *     Color index and alpha value for the retrieved color stop.
+   *
+   * @return:
+   *   Value~1 if everything is OK.  If there are no more color stops,
+   *   value~0 gets returned.  In case of an error, value~0 is returned
+   *   also.
+   */
+  FT_EXPORT( FT_Bool )
+  FT_Get_Colorline_Stops( FT_Face                face,
+                          FT_ColorStop*          color_stop,
+                          FT_ColorStopIterator*  iterator );
+
+
+  /**************************************************************************
+   *
+   * @function:
+   *  FT_Get_Paint
+   *
+   * @description:
+   *   Access the details of a paint using an @FT_OpaquePaint opaque paint
+   *   object, which internally stores the offset to the respective `Paint`
+   *   object in the 'COLR' table.
+   *
+   * @input:
+   *   face ::
+   *     A handle to the parent face object.
+   *
+   *   opaque_paint ::
+   *     The opaque paint object for which the underlying @FT_COLR_Paint
+   *     data is to be retrieved.
+   *
+   * @output:
+   *   paint ::
+   *     The specific @FT_COLR_Paint object containing information coming
+   *     from one of the font's `Paint*` tables.
+   *
+   * @return:
+   *   Value~1 if everything is OK.  Value~0 if no details can be found for
+   *   this paint or any other error occured.
+   */
+  FT_EXPORT( FT_Bool )
+  FT_Get_Paint( FT_Face         face,
+                FT_OpaquePaint  opaque_paint,
+                FT_COLR_Paint*  paint );
+
+
+  /**************************************************************************
+   *
    * @section:
    *   base_interface
    *
