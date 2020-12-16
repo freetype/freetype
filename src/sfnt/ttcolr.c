@@ -5,7 +5,7 @@
  *   TrueType and OpenType colored glyph layer support (body).
  *
  * Copyright (C) 2018-2020 by
- * David Turner, Robert Wilhelm, and Werner Lemberg.
+ * David Turner, Robert Wilhelm, Dominik Röttsches, and Werner Lemberg.
  *
  * Originally written by Shao Yu Zhang <shaozhang@fb.com>.
  *
@@ -31,6 +31,7 @@
 #include <freetype/internal/ftstream.h>
 #include <freetype/tttags.h>
 #include <freetype/ftcolor.h>
+#include <freetype/config/integer-types.h>
 
 
 #ifdef TT_CONFIG_OPTION_COLOR_LAYERS
@@ -39,12 +40,16 @@
 
 
   /* NOTE: These are the table sizes calculated through the specs. */
-#define BASE_GLYPH_SIZE            6U
-#define LAYER_SIZE                 4U
-#define COLR_HEADER_SIZE          14U
+#define BASE_GLYPH_SIZE                   6U
+#define BASE_GLYPH_V1_RECORD_SIZE         6U
+#define LAYER_V1_LIST_PAINT_OFFSET_SIZE   4U
+#define LAYER_V1_LIST_NUM_LAYERS_SIZE     4U
+#define COLOR_STOP_SIZE                   6U
+#define LAYER_SIZE                        4U
+#define COLR_HEADER_SIZE                 14U
 
 
-  typedef struct BaseGlyphRecord_
+  typedef struct  BaseGlyphRecord_
   {
     FT_UShort  gid;
     FT_UShort  first_layer_index;
@@ -53,7 +58,16 @@
   } BaseGlyphRecord;
 
 
-  typedef struct Colr_
+  typedef struct  BaseGlyphV1Record_
+  {
+    FT_UShort  gid;
+    /* Offset from start of BaseGlyphV1List, i.e., from base_glyphs_v1. */
+    FT_ULong   paint_offset;
+
+  } BaseGlyphV1Record;
+
+
+  typedef struct  Colr_
   {
     FT_UShort  version;
     FT_UShort  num_base_glyphs;
@@ -62,7 +76,14 @@
     FT_Byte*  base_glyphs;
     FT_Byte*  layers;
 
-    /* The memory which backs up the `COLR' table. */
+    FT_ULong  num_base_glyphs_v1;
+    /* Points at beginning of BaseGlyphV1List. */
+    FT_Byte*  base_glyphs_v1;
+
+    FT_ULong  num_layers_v1;
+    FT_Byte*  layers_v1;
+
+    /* The memory that backs up the `COLR' table. */
     void*     table;
     FT_ULong  table_size;
 
@@ -88,10 +109,14 @@
 
     FT_Byte*  table = NULL;
     FT_Byte*  p     = NULL;
+    /* Needed for reading array lengths in referenced tables. */
+    FT_Byte*  p1    = NULL;
 
     Colr*  colr = NULL;
 
     FT_ULong  base_glyph_offset, layer_offset;
+    FT_ULong  base_glyphs_offset_v1, num_base_glyphs_v1;
+    FT_ULong  layer_offset_v1, num_layers_v1;
     FT_ULong  table_size;
 
 
@@ -115,7 +140,7 @@
       goto NoColr;
 
     colr->version = FT_NEXT_USHORT( p );
-    if ( colr->version != 0 )
+    if ( colr->version != 0 && colr->version != 1 )
       goto InvalidTable;
 
     colr->num_base_glyphs = FT_NEXT_USHORT( p );
@@ -134,6 +159,35 @@
       goto InvalidTable;
     if ( colr->num_layers * LAYER_SIZE > table_size - layer_offset )
       goto InvalidTable;
+
+    if ( colr->version == 1 )
+    {
+      base_glyphs_offset_v1 = FT_NEXT_ULONG( p );
+
+      if ( base_glyphs_offset_v1 >= table_size )
+        goto InvalidTable;
+
+      p1                 = (FT_Byte*)( table + base_glyphs_offset_v1 );
+      num_base_glyphs_v1 = FT_PEEK_ULONG( p1 );
+
+      if ( num_base_glyphs_v1 * BASE_GLYPH_V1_RECORD_SIZE >
+             table_size - base_glyphs_offset_v1 )
+        goto InvalidTable;
+
+      colr->num_base_glyphs_v1 = num_base_glyphs_v1;
+      colr->base_glyphs_v1     = p1;
+
+      layer_offset_v1 = FT_NEXT_ULONG( p );
+
+      if ( !layer_offset_v1 || layer_offset_v1 >= table_size )
+        goto InvalidTable;
+
+      p1            = (FT_Byte*)( table + layer_offset_v1 );
+      num_layers_v1 = FT_PEEK_ULONG( p1 );
+
+      colr->num_layers_v1 = num_layers_v1;
+      colr->layers_v1     = p1;
+    }
 
     colr->base_glyphs = (FT_Byte*)( table + base_glyph_offset );
     colr->layers      = (FT_Byte*)( table + layer_offset      );
@@ -260,6 +314,85 @@
       return 0;
 
     iterator->layer++;
+
+    return 1;
+  }
+
+
+  static FT_Bool
+  find_base_glyph_v1_record ( FT_Byte *           base_glyph_begin,
+                              FT_Int              num_base_glyph,
+                              FT_UInt             glyph_id,
+                              BaseGlyphV1Record  *record )
+  {
+    FT_Int  min = 0;
+    FT_Int  max = num_base_glyph - 1;
+
+
+    while ( min <= max )
+    {
+      FT_Int  mid = min + ( max - min ) / 2;
+
+      /*
+       * `base_glyph_begin` is the beginning of `BaseGlyphV1List`;
+       * skip `numBaseGlyphV1Records` by adding 4 to start binary search
+       * in the array of `BaseGlyphV1Record`.
+       */
+      FT_Byte  *p = base_glyph_begin + 4 + mid * BASE_GLYPH_V1_RECORD_SIZE;
+
+      FT_UShort  gid = FT_NEXT_USHORT( p );
+
+
+      if ( gid < glyph_id )
+        min = mid + 1;
+      else if (gid > glyph_id )
+        max = mid - 1;
+      else
+      {
+        record->gid          = gid;
+        record->paint_offset = FT_NEXT_ULONG ( p );
+        return 1;
+      }
+    }
+
+    return 0;
+  }
+
+
+  FT_LOCAL_DEF ( FT_Bool )
+  tt_face_get_colr_glyph_paint( TT_Face          face,
+                                FT_UInt          base_glyph,
+                                FT_OpaquePaint*  opaque_paint )
+  {
+    Colr*  colr = (Colr*)face->colr;
+
+    BaseGlyphV1Record  base_glyph_v1_record;
+    FT_Byte*           p;
+
+
+    if ( colr->version < 1 || !colr->num_base_glyphs_v1 ||
+         !colr->base_glyphs_v1 )
+      return 0;
+
+    if ( opaque_paint->p )
+      return 0;
+
+    if ( !find_base_glyph_v1_record( colr->base_glyphs_v1,
+                                     colr->num_base_glyphs_v1,
+                                     base_glyph,
+                                     &base_glyph_v1_record ) )
+      return 0;
+
+    if ( !base_glyph_v1_record.paint_offset                   ||
+         base_glyph_v1_record.paint_offset > colr->table_size )
+      return 0;
+
+    p = (FT_Byte*)( colr->base_glyphs_v1 +
+                    base_glyph_v1_record.paint_offset );
+    if ( p >= ( (FT_Byte*)colr->table + colr->table_size ) )
+      return 0;
+
+    opaque_paint->p = p;
 
     return 1;
   }

@@ -1,5 +1,17 @@
 2020-12-16  Dominik Röttsches  <drott@chromium.org>
 
+	[sfnt] Add API to retrieve 'COLR' v1 root paint (#59703).
+
+	* src/sfnt/ttcolr.c (BaseGlyphV1Record): New structure.
+	(tt_face_load_colr): Handle version 1 table header.
+	(find_base_glyph_v1_record): New auxiliary function.
+	(tt_face_get_colr_glyph_paint): New function to find the root
+	`FT_OpaquePaint` object for a given glyph ID.
+
+	* src/sfnt/ttcolr.h: Updated.
+
+2020-12-16  Dominik Röttsches  <drott@chromium.org>
+
 	Add new methods required for 'COLR' v1 to public API (#59703).
 
 	* include/freetype/freetype.h (FT_Get_Color_Glyph_Paint): New method
