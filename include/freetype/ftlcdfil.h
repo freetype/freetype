@@ -55,13 +55,12 @@ FT_BEGIN_HEADER
    *   ClearType-style LCD rendering exploits the color-striped structure of
    *   LCD pixels, increasing the available resolution in the direction of
    *   the stripe (usually horizontal RGB) by a factor of~3.  Using the
-   *   subpixels coverages unfiltered can create severe color fringes
+   *   subpixel coverages unfiltered can create severe color fringes
    *   especially when rendering thin features.  Indeed, to produce
    *   black-on-white text, the nearby color subpixels must be dimmed
-   *   equally.
-   *
-   *   A good 5-tap FIR filter should be applied to subpixel coverages
-   *   regardless of pixel boundaries and should have these properties:
+   *   evenly.  Therefore, an equalizing 5-tap FIR filter should be applied
+   *   to subpixel coverages regardless of pixel boundaries and should have
+   *   these properties:
    *
    *   1. It should be symmetrical, like {~a, b, c, b, a~}, to avoid
    *      any shifts in appearance.
