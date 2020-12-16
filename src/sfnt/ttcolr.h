@@ -48,6 +48,11 @@ FT_BEGIN_HEADER
                                 FT_OpaquePaint*  paint );
 
   FT_LOCAL( FT_Bool )
+  tt_face_get_colorline_stops( TT_Face                face,
+                               FT_ColorStop*          color_stop,
+                               FT_ColorStopIterator*  iterator );
+
+  FT_LOCAL( FT_Bool )
   tt_face_get_paint( TT_Face         face,
                      FT_OpaquePaint  opaque_paint,
                      FT_COLR_Paint*  paint );

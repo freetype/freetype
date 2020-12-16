@@ -693,6 +693,44 @@
   }
 
 
+  FT_LOCAL_DEF ( FT_Bool )
+  tt_face_get_colorline_stops( TT_Face                face,
+                               FT_ColorStop*          color_stop,
+                               FT_ColorStopIterator  *iterator )
+  {
+    Colr*  colr = (Colr*)face->colr;
+
+    FT_Byte*  p;
+
+
+    if ( iterator->current_color_stop >= iterator->num_color_stops )
+      return 0;
+
+    if ( iterator->p +
+           ( ( iterator->num_color_stops - iterator->current_color_stop ) *
+             COLOR_STOP_SIZE ) >
+         ( (FT_Byte *)colr->table + colr->table_size ) )
+      return 0;
+
+    /* Iterator points at first `ColorStop` of `ColorLine`. */
+    p = iterator->p;
+
+    /* skip VarIdx entries */
+    color_stop->stop_offset = FT_NEXT_USHORT ( p );
+    FT_NEXT_ULONG ( p );
+
+    color_stop->color.palette_index = FT_NEXT_USHORT ( p );
+
+    color_stop->color.alpha = FT_NEXT_USHORT ( p );
+    FT_NEXT_ULONG ( p );
+
+    iterator->p = p;
+    iterator->current_color_stop++;
+
+    return 1;
+  }
+
+
   FT_LOCAL_DEF( FT_Bool )
   tt_face_get_paint( TT_Face         face,
                      FT_OpaquePaint  opaque_paint,

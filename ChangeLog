@@ -1,5 +1,15 @@
 2020-12-16  Dominik Röttsches  <drott@chromium.org>
 
+	[sfnt] Add 'COLR' v1 API to iterate color stops (#59703).
+
+	* src/sfnt/ttcolr.c (tt_face_get_colorline_stops): New function to
+	return the current `FT_ColorStop` object from `FT_ColorStopIterator`.
+	Also increment the iterator.
+
+	* src/sfnt/ttcolr.h: Updated.
+
+2020-12-16  Dominik Röttsches  <drott@chromium.org>
+
 	[sfnt] Add API to get actual paint from `FT_OpaquePaint` (#59703).
 
 	* src/sfnt/ttcolr.c (tt_face_get_paint): New function to resolve an
