@@ -1,5 +1,16 @@
 2020-12-16  Dominik Röttsches  <drott@chromium.org>
 
+	[sfnt] Add 'COLR' v1 API to retrieve color layers (#59703).
+
+	* src/sfnt/ttcolr.c (tt_face_get_paint_layers): New function to get
+	the layers of a `PaintColrLayers` table in the font, using an
+	`FT_LayerIterator` from an `FT_PaintColrLayers` object retrieved via
+	`tt_face_get_paint`.
+
+	* src/sfnt/ttcolr.h: Updated.
+
+2020-12-16  Dominik Röttsches  <drott@chromium.org>
+
 	[sfnt] Add 'COLR' v1 API to iterate color stops (#59703).
 
 	* src/sfnt/ttcolr.c (tt_face_get_colorline_stops): New function to

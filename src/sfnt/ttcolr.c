@@ -693,6 +693,58 @@
   }
 
 
+  FT_LOCAL_DEF( FT_Bool )
+  tt_face_get_paint_layers( TT_Face            face,
+                            FT_LayerIterator*  iterator,
+                            FT_OpaquePaint*    opaque_paint )
+  {
+    FT_Byte*   p             = NULL;
+    FT_Byte*   p_first_layer = NULL;
+    FT_UInt32  paint_offset;
+
+    Colr*  colr;
+
+
+    if ( iterator->layer == iterator->num_layers )
+      return 0;
+
+    colr = (Colr*)face->colr;
+    if ( !colr )
+      return 0;
+
+    /*
+     * We have an iterator pointing at a paint offset as part of the
+     * `paintOffset` array in `LayerV1List`.
+     */
+    p = iterator->p;
+
+    /*
+     * Do a cursor sanity check of the iterator.  Counting backwards from
+     * where it stands, we need to end up at a position after the beginning
+     * of the `LayerV1List` table and not after the end of the
+     * `LayerV1List`.
+     */
+    p_first_layer = p -
+                      iterator->layer * LAYER_V1_LIST_PAINT_OFFSET_SIZE -
+                      LAYER_V1_LIST_NUM_LAYERS_SIZE;
+    if ( p_first_layer < (FT_Byte*)colr->layers_v1 )
+      return 0;
+    if ( p_first_layer >= (FT_Byte*)(
+           colr->layers_v1 + LAYER_V1_LIST_NUM_LAYERS_SIZE +
+           colr->num_layers_v1 * LAYER_V1_LIST_PAINT_OFFSET_SIZE ) )
+      return 0;
+
+    paint_offset    = FT_NEXT_ULONG( p );
+    opaque_paint->p = (FT_Byte*)( colr->layers_v1 + paint_offset );
+
+    iterator->p = p;
+
+    iterator->layer++;
+
+    return 1;
+  }
+
+
   FT_LOCAL_DEF ( FT_Bool )
   tt_face_get_colorline_stops( TT_Face                face,
                                FT_ColorStop*          color_stop,

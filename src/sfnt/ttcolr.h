@@ -47,6 +47,11 @@ FT_BEGIN_HEADER
                                 FT_UInt          base_glyph,
                                 FT_OpaquePaint*  paint );
 
+  FT_LOCAL ( FT_Bool )
+  tt_face_get_paint_layers( TT_Face            face,
+                            FT_LayerIterator*  iterator,
+                            FT_OpaquePaint*    paint );
+
   FT_LOCAL( FT_Bool )
   tt_face_get_colorline_stops( TT_Face                face,
                                FT_ColorStop*          color_stop,
