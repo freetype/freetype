@@ -320,6 +320,301 @@
 
 
   static FT_Bool
+  read_color_line( FT_Byte*      paint_base,
+                   FT_ULong      colorline_offset,
+                   FT_ColorLine  *colorline )
+  {
+    FT_Byte*        p = (FT_Byte *)( paint_base + colorline_offset );
+    FT_PaintExtend  paint_extend;
+    /* TODO: Check pointer limits. */
+
+
+    paint_extend = FT_NEXT_BYTE( p );
+    if ( paint_extend > FT_COLR_PAINT_EXTEND_REFLECT )
+      return 0;
+
+    colorline->extend = paint_extend;
+
+    colorline->color_stop_iterator.num_color_stops    = FT_NEXT_USHORT( p );
+    colorline->color_stop_iterator.p                  = p;
+    colorline->color_stop_iterator.current_color_stop = 0;
+
+    return 1;
+  }
+
+
+  static FT_Bool
+  read_paint( Colr*           colr,
+              FT_Byte*        p,
+              FT_COLR_Paint*  apaint )
+  {
+    FT_Byte*  paint_base = p;
+
+
+    apaint->format = FT_NEXT_BYTE( p );
+
+    if ( apaint->format >= FT_COLR_PAINT_FORMAT_MAX )
+      return 0;
+
+    if ( apaint->format == FT_COLR_PAINTFORMAT_COLR_LAYERS )
+    {
+      /* Initialize layer iterator/ */
+      FT_Byte    num_layers;
+      FT_UInt32  first_layer_index;
+
+
+      num_layers = FT_NEXT_BYTE( p );
+      if ( num_layers > colr->num_layers_v1 )
+        return 0;
+
+      first_layer_index = FT_NEXT_ULONG( p );
+      if ( first_layer_index + num_layers > colr->num_layers_v1 )
+        return 0;
+
+      apaint->u.colr_layers.layer_iterator.num_layers = num_layers;
+      apaint->u.colr_layers.layer_iterator.layer      = 0;
+      /* TODO: Check whether pointer is outside colr? */
+      apaint->u.colr_layers.layer_iterator.p =
+        colr->layers_v1 +
+        LAYER_V1_LIST_NUM_LAYERS_SIZE +
+        LAYER_V1_LIST_PAINT_OFFSET_SIZE * first_layer_index;
+
+      return 1;
+    }
+
+    if ( apaint->format == FT_COLR_PAINTFORMAT_GLYPH )
+    {
+      FT_UInt32  paint_offset;
+      FT_Byte*   paint_p;
+
+
+      paint_offset = FT_NEXT_UOFF3( p );
+      if ( !paint_offset )
+        return 0;
+
+      paint_p = (FT_Byte*)( paint_base + paint_offset );
+      if ( paint_p > ( (FT_Byte*)colr->table + colr->table_size ) )
+        return 0;
+
+      apaint->u.glyph.paint.p = paint_p;
+      apaint->u.glyph.glyphID = FT_NEXT_USHORT( p );
+    }
+
+    else if ( apaint->format == FT_COLR_PAINTFORMAT_SOLID )
+    {
+      apaint->u.solid.color.palette_index = FT_NEXT_USHORT ( p );
+      apaint->u.solid.color.alpha         = FT_NEXT_USHORT ( p );
+      /* skip VarIdx */
+      FT_NEXT_ULONG ( p );
+    }
+
+    else if ( apaint->format == FT_COLR_PAINTFORMAT_LINEAR_GRADIENT )
+    {
+      FT_ULong  color_line_offset = FT_NEXT_OFF3( p );
+
+
+      if ( !read_color_line( paint_base,
+                             color_line_offset,
+                             &apaint->u.linear_gradient.colorline ) )
+        return 0;
+
+      /* skip VarIdx entries */
+      apaint->u.linear_gradient.p0.x = FT_NEXT_SHORT ( p );
+      FT_NEXT_ULONG ( p );
+      apaint->u.linear_gradient.p0.y = FT_NEXT_SHORT ( p );
+      FT_NEXT_ULONG ( p );
+      apaint->u.linear_gradient.p1.x = FT_NEXT_SHORT ( p );
+      FT_NEXT_ULONG ( p );
+      apaint->u.linear_gradient.p1.y = FT_NEXT_SHORT ( p );
+      FT_NEXT_ULONG ( p );
+      apaint->u.linear_gradient.p2.x = FT_NEXT_SHORT ( p );
+      FT_NEXT_ULONG ( p );
+      apaint->u.linear_gradient.p2.y = FT_NEXT_SHORT ( p );
+      FT_NEXT_ULONG ( p );
+    }
+
+    else if ( apaint->format == FT_COLR_PAINTFORMAT_RADIAL_GRADIENT )
+    {
+      FT_ULong  color_line_offset = color_line_offset = FT_NEXT_OFF3( p );
+
+
+      if ( !read_color_line( paint_base,
+                             color_line_offset,
+                             &apaint->u.linear_gradient.colorline ) )
+        return 0;
+
+      /* skip VarIdx entries */
+      apaint->u.radial_gradient.c0.x = FT_NEXT_SHORT ( p );
+      FT_NEXT_ULONG ( p );
+      apaint->u.radial_gradient.c0.y = FT_NEXT_SHORT ( p );
+      FT_NEXT_ULONG ( p );
+
+      apaint->u.radial_gradient.r0 = FT_NEXT_USHORT ( p );
+      FT_NEXT_ULONG ( p );
+
+      apaint->u.radial_gradient.c1.x = FT_NEXT_SHORT ( p );
+      FT_NEXT_ULONG ( p );
+      apaint->u.radial_gradient.c1.y = FT_NEXT_SHORT ( p );
+      FT_NEXT_ULONG ( p );
+
+      apaint->u.radial_gradient.r1 = FT_NEXT_USHORT ( p );
+      FT_NEXT_ULONG ( p );
+    }
+
+    else if ( apaint->format == FT_COLR_PAINTFORMAT_TRANSFORMED )
+    {
+      FT_UInt32  paint_offset;
+      FT_Byte*   paint_p;
+
+
+      paint_offset = FT_NEXT_UOFF3( p );
+      if ( !paint_offset )
+        return 0;
+
+      paint_p = (FT_Byte*)( paint_base + paint_offset );
+      if ( paint_p > ( (FT_Byte*)colr->table + colr->table_size ) )
+        return 0;
+
+      apaint->u.transformed.paint.p = paint_p;
+
+      /* skip VarIdx entries */
+      apaint->u.transformed.affine.xx = FT_NEXT_LONG( p );
+      FT_NEXT_ULONG( p );
+      apaint->u.transformed.affine.yx = FT_NEXT_LONG( p );
+      FT_NEXT_ULONG( p );
+      apaint->u.transformed.affine.xy = FT_NEXT_LONG( p );
+      FT_NEXT_ULONG( p );
+      apaint->u.transformed.affine.yy = FT_NEXT_LONG( p );
+      FT_NEXT_ULONG( p );
+      apaint->u.transformed.affine.dx = FT_NEXT_LONG( p );
+      FT_NEXT_ULONG( p );
+      apaint->u.transformed.affine.dy = FT_NEXT_LONG( p );
+      FT_NEXT_ULONG( p );
+    }
+
+    else if ( apaint->format == FT_COLR_PAINTFORMAT_TRANSLATE )
+    {
+      FT_UInt32  paint_offset;
+      FT_Byte*   paint_p;
+
+
+      paint_offset = FT_NEXT_UOFF3( p );
+      if ( !paint_offset )
+        return 0;
+
+      paint_p = (FT_Byte*)( paint_base + paint_offset );
+      if ( paint_p > ( (FT_Byte*)colr->table + colr->table_size ) )
+        return 0;
+
+      apaint->u.translate.paint.p = paint_p;
+
+      /* skip VarIdx entries */
+      apaint->u.translate.dx = FT_NEXT_LONG( p );
+      FT_NEXT_ULONG( p );
+      apaint->u.translate.dy = FT_NEXT_LONG( p );
+      FT_NEXT_ULONG( p );
+    }
+
+    else if ( apaint->format == FT_COLR_PAINTFORMAT_ROTATE )
+    {
+      FT_UInt32  paint_offset;
+      FT_Byte*   paint_p;
+
+
+      paint_offset = FT_NEXT_UOFF3( p );
+      if ( !paint_offset )
+        return 0;
+
+      paint_p = (FT_Byte*)( paint_base + paint_offset );
+      if ( paint_p > ( (FT_Byte*)colr->table + colr->table_size ) )
+        return 0;
+
+      apaint->u.rotate.paint.p = paint_p;
+
+      /* skip VarIdx entries */
+      apaint->u.rotate.angle = FT_NEXT_LONG( p );
+      FT_NEXT_ULONG( p );
+
+      apaint->u.rotate.center_x = FT_NEXT_LONG( p );
+      FT_NEXT_ULONG( p );
+      apaint->u.rotate.center_y = FT_NEXT_LONG( p );
+      FT_NEXT_ULONG( p );
+    }
+
+    else if ( apaint->format == FT_COLR_PAINTFORMAT_SKEW )
+    {
+      FT_UInt32  paint_offset;
+      FT_Byte*   paint_p;
+
+
+      paint_offset = FT_NEXT_UOFF3( p );
+      if ( !paint_offset )
+        return 0;
+
+      paint_p = (FT_Byte*)( paint_base + paint_offset );
+      if ( paint_p > ( (FT_Byte*)colr->table + colr->table_size ) )
+        return 0;
+
+      apaint->u.skew.paint.p = paint_p;
+
+      /* skip VarIdx entries */
+      apaint->u.skew.x_skew_angle = FT_NEXT_LONG( p );
+      FT_NEXT_ULONG( p );
+      apaint->u.skew.y_skew_angle = FT_NEXT_LONG( p );
+      FT_NEXT_ULONG( p );
+
+      apaint->u.skew.center_x = FT_NEXT_LONG( p );
+      FT_NEXT_ULONG( p );
+      apaint->u.skew.center_y = FT_NEXT_LONG( p );
+      FT_NEXT_ULONG( p );
+    }
+
+    else if ( apaint->format == FT_COLR_PAINTFORMAT_COMPOSITE )
+    {
+      FT_UInt32  source_paint_offset;
+      FT_Byte*   source_paint_p;
+
+      FT_UInt32  backdrop_paint_offset;
+      FT_Byte*   backdrop_paint_p;
+
+      FT_UInt    composite_mode;
+
+
+      source_paint_offset = FT_NEXT_UOFF3( p );
+      if ( !source_paint_offset )
+        return 0;
+
+      source_paint_p = (FT_Byte*)( paint_base + source_paint_offset );
+      if ( source_paint_p > ( (FT_Byte*)colr->table + colr->table_size ) )
+        return 0;
+
+      apaint->u.composite.source_paint.p = source_paint_p;
+
+      composite_mode = FT_NEXT_BYTE( p );
+      if ( composite_mode >= FT_COLR_COMPOSITE_MAX )
+        return 0;
+
+      apaint->u.composite.composite_mode = composite_mode;
+
+      backdrop_paint_offset = FT_NEXT_UOFF3( p );
+      if ( !backdrop_paint_offset )
+        return 0;
+
+      backdrop_paint_p = (FT_Byte*)( paint_base + backdrop_paint_offset );
+      if ( backdrop_paint_p > ( (FT_Byte*)colr->table + colr->table_size ) )
+        return 0;
+
+      apaint->u.composite.backdrop_paint.p = backdrop_paint_p;
+    }
+
+    else if ( apaint->format == FT_COLR_PAINTFORMAT_COLR_GLYPH )
+      apaint->u.colr_glyph.glyphID = FT_NEXT_USHORT( p );
+
+    return 1;
+  }
+
+
+  static FT_Bool
   find_base_glyph_v1_record ( FT_Byte *           base_glyph_begin,
                               FT_Int              num_base_glyph,
                               FT_UInt             glyph_id,
@@ -395,6 +690,26 @@
     opaque_paint->p = p;
 
     return 1;
+  }
+
+
+  FT_LOCAL_DEF( FT_Bool )
+  tt_face_get_paint( TT_Face         face,
+                     FT_OpaquePaint  opaque_paint,
+                     FT_COLR_Paint*  paint )
+  {
+    Colr*  colr = (Colr*)face->colr;
+
+    FT_Byte*  p;
+
+
+    if ( opaque_paint.p < (FT_Byte*)colr->table                         ||
+         opaque_paint.p >= ( (FT_Byte*)colr->table + colr->table_size ) )
+      return 0;
+
+    p = opaque_paint.p;
+
+    return read_paint( colr, p, paint );
   }
 
 

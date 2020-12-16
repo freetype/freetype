@@ -47,6 +47,11 @@ FT_BEGIN_HEADER
                                 FT_UInt          base_glyph,
                                 FT_OpaquePaint*  paint );
 
+  FT_LOCAL( FT_Bool )
+  tt_face_get_paint( TT_Face         face,
+                     FT_OpaquePaint  opaque_paint,
+                     FT_COLR_Paint*  paint );
+
   FT_LOCAL( FT_Error )
   tt_face_colr_blend_layer( TT_Face       face,
                             FT_UInt       color_index,

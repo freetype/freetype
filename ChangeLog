@@ -1,5 +1,23 @@
 2020-12-16  Dominik Röttsches  <drott@chromium.org>
 
+	[sfnt] Add API to get actual paint from `FT_OpaquePaint` (#59703).
+
+	* src/sfnt/ttcolr.c (tt_face_get_paint): New function to resolve an
+	`FT_OpaquePaint` paint reference into an `FT_COLR_Paint` object of a
+	certain format, which contains the detailed information stored in a
+	paint of the respective format.
+	(read_paint): New function to provide the format specific parsing
+	and to populate the data members of each specific `FT_COLR_Paint`
+	subtype.
+	(read_color_line): New function to parse retrieved color line
+	information into an `FT_ColorLine` object, which has information
+	about the color line extend mode as well as an
+	`FT_ColorStopIterator` object.
+
+	* src/sfnt/ttcolr.h: Updated.
+
+2020-12-16  Dominik Röttsches  <drott@chromium.org>
+
 	[sfnt] Add API to retrieve 'COLR' v1 root paint (#59703).
 
 	* src/sfnt/ttcolr.c (BaseGlyphV1Record): New structure.
