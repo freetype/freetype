@@ -1,3 +1,22 @@
+2020-12-16  Chris Liddell  <chris.liddell@artifex.com>
+
+	[truetype] Fix incremental metrics (#59503).
+
+	* src/truetype/ttgload.c (tt_get_metrics, load_truetype_glyph):
+	Previously, the code would populate the phantom points before
+	calling the `get_glyph_metrics` callback.  For formats like PCL XL
+	format 1, class 2 downloaded fonts (where metrics are removed from
+	the TTF header), this causes problems when the hinting program uses
+	the phantom points (misplaced and distorted glyphs) due to the
+	metrics being unset (all zeros).
+	(tt_get_metrics_incr_overrides): Renamed to...
+	(tt_get_metrics_incremental): ... this.  Updated caller
+
+	* include/freetype/ftincrem.h: Update the documentation to make it
+	clearer that `get_glyph_metrics` is to retrieve metrics from a
+	non-standard source, but *not* for the purpose of imposing custom
+	metrics.
+
 2020-12-14  Werner Lemberg  <wl@gnu.org>
 
 	[type42] Pacify static analysis tools (#59682).

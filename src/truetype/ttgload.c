@@ -197,10 +197,17 @@
     }
 #endif /* TT_SUPPORT_SUBPIXEL_HINTING_INFINALITY */
 
-    if ( !loader->linear_def )
+#ifdef FT_CONFIG_OPTION_INCREMENTAL
+    /* With the incremental interface, these values are set by  */
+    /* a call to `tt_get_metrics_incremental'.                  */
+    if ( face->root.internal->incremental_interface == NULL )
+#endif
     {
-      loader->linear_def = 1;
-      loader->linear     = advance_width;
+      if ( !loader->linear_def )
+      {
+        loader->linear_def = 1;
+        loader->linear     = advance_width;
+      }
     }
 
     return FT_Err_Ok;
@@ -210,8 +217,8 @@
 #ifdef FT_CONFIG_OPTION_INCREMENTAL
 
   static void
-  tt_get_metrics_incr_overrides( TT_Loader  loader,
-                                 FT_UInt    glyph_index )
+  tt_get_metrics_incremental( TT_Loader  loader,
+                              FT_UInt    glyph_index )
   {
     TT_Face  face = loader->face;
 
@@ -1741,13 +1748,11 @@
 
     if ( loader->byte_len == 0 || loader->n_contours == 0 )
     {
-      /* must initialize points before (possibly) overriding */
-      /* glyph metrics from the incremental interface        */
+#ifdef FT_CONFIG_OPTION_INCREMENTAL
+      tt_get_metrics_incremental( loader, glyph_index );
+#endif
       tt_loader_set_pp( loader );
 
-#ifdef FT_CONFIG_OPTION_INCREMENTAL
-      tt_get_metrics_incr_overrides( loader, glyph_index );
-#endif
 
 #ifdef TT_CONFIG_OPTION_GX_VAR_SUPPORT
 
@@ -1830,13 +1835,11 @@
       goto Exit;
     }
 
-    /* must initialize phantom points before (possibly) overriding */
-    /* glyph metrics from the incremental interface                */
+#ifdef FT_CONFIG_OPTION_INCREMENTAL
+    tt_get_metrics_incremental( loader, glyph_index );
+#endif
     tt_loader_set_pp( loader );
 
-#ifdef FT_CONFIG_OPTION_INCREMENTAL
-    tt_get_metrics_incr_overrides( loader, glyph_index );
-#endif
 
     /***********************************************************************/
     /***********************************************************************/
