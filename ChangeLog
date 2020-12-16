@@ -1,5 +1,14 @@
 2020-12-16  Dominik Röttsches  <drott@chromium.org>
 
+	[base] Fill 'COLR' v1 API templates to make them work (#59703).
+
+	* src/base/ftobjs.c (FT_Get_Color_Glyph_Paint, FT_Get_Paint_Layers,
+	FT_Get_Paint, FT_Get_Colorline_Stops): Add basic sanity checks,
+	check for existence of `FT_Face`, check arguments and delegate calls
+	for the respective 'COLR' v1 API to the SFNT driver.
+
+2020-12-16  Dominik Röttsches  <drott@chromium.org>
+
 	[sfnt] Register 'COLR' v1 API in driver (#59703).
 
 	* include/freetype/internal/sfnt.h (TT_Get_Color_Glyph_Paint_Func,
