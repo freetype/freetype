@@ -1,5 +1,18 @@
 2020-12-16  Dominik Röttsches  <drott@chromium.org>
 
+	[sfnt] Register 'COLR' v1 API in driver (#59703).
+
+	* include/freetype/internal/sfnt.h (TT_Get_Color_Glyph_Paint_Func,
+	TT_Get_Paint_Layers_Func, TT_Get_Colorline_Stops_Func,
+	TT_Get_Paint_Func): New function pointer types.
+	(SFNT_Interface): Add them.
+	(FT_DEFINE_SFNT_INTERFACE): Updated.
+
+	* src/sfnt/sfdriver.c (PUT_COLOR_LAYERS_V1): New macro.
+	(sfnt_interface): Add new function pointers.
+
+2020-12-16  Dominik Röttsches  <drott@chromium.org>
+
 	[sfnt] Add 'COLR' v1 API to retrieve color layers (#59703).
 
 	* src/sfnt/ttcolr.c (tt_face_get_paint_layers): New function to get
