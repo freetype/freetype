@@ -1,3 +1,19 @@
+2020-12-16  Dominik Röttsches  <drott@chromium.org>
+
+	Add types required for 'COLR' v1 to public API (#59703).
+
+	* include/freetype/freetype.h (FT_PaintFormat, FT_ColorStopIterator,
+	FT_ColorIndex, FT_ColorStop, FT_PaintExtend, FT_ColorLine,
+	FT_Affine23, FT_CompositeMode, FT_OpaquePaint, FT_PaintColrLayers,
+	FT_PaintSolid, FT_PaintLinearGradient, FT_PaintRadialGradient,
+	FT_PaintGlyph, FT_PaintColrGlyph, FT_PaintTransformed,
+	FT_PaintTranslate, FT_PaintRotate, FT_PaintSkew, FT_PaintComposite,
+	FT_COLR_Paint): Adding structs and enum to represent paint format,
+	color stop information, gradient extend information, structs to
+	reference paint offsets, and to define transforms and compositions.
+	Adding a union type to represent the union of the structs,
+	distinguished by `FT_PaintFormat`.
+
 2021-01-10  Werner Lemberg  <wl@gnu.org>
 
 	* builds/*: s/BUILD_DIR/PLATFORM_DIR/.
