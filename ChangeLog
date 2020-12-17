@@ -1,3 +1,9 @@
+2020-12-17  Alexei Podtelezhnikov  <apodtele@gmail.com>
+
+	* include/freetype/ftmodapi.h (FT_FACE_DRIVER_NAME): New public macro.
+
+	The driver name is needed for `FT_Property_Set' and `FT_Property_Get'.
+
 2020-12-16  Chris Liddell  <chris.liddell@artifex.com>
 
 	[truetype] Fix incremental metrics (#59503).
