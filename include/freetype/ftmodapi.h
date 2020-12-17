@@ -332,20 +332,20 @@ FT_BEGIN_HEADER
 
 
   /**************************************************************************
-   *
-   * @macro:
-   *   FT_FACE_DRIVER_NAME
-   *
-   * @description:
-   *   A macro that retrieves the name of a font driver from a face object.
-   *
-   * @note:
-   *   The font driver name is a valid `module_name` for @FT_Property_Set
+   *
+   * @macro:
+   *   FT_FACE_DRIVER_NAME
+   *
+   * @description:
+   *   A macro that retrieves the name of a font driver from a face object.
+   *
+   * @note:
+   *   The font driver name is a valid `module_name` for @FT_Property_Set
    *   and @FT_Property_Get.  This is not the same as @FT_Get_Font_Format.
-   *
-   */
+   *
+   */
 #define FT_FACE_DRIVER_NAME( face ) \
-          ( ( *(FT_Module_Class**)( ( face )->driver ) )->module_name )
+          ( ( *(FT_Module_Class**)( ( face )->driver ) )->module_name )
 
 
   /**************************************************************************
