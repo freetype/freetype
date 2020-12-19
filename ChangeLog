@@ -1,3 +1,20 @@
+2020-12-18  Tatsuyuki Ishi  <ishitatsuyuki@gmail.com>
+
+	[autofit] Fix double division in stem darkening.
+
+	The old code used to divide the darkening amount by em_ratio twice,
+	leading to unnecessarily bold stems on certain fonts with higher
+	units per em (e.g. Inter). This patch fixes it.
+
+	The return value of af_loader_compute_darkening was also changed to
+	use 16.16 fixed point to get rid of a redundant truncation operation.
+	This should slightly improve the precision, although it's still
+	bottlenecked by the emboldening function, which uses 26.6 fixed point.
+
+	* src/autofit/afloader.[ch]
+	(af_loader_compute_darkening): Return FT_Fixed.
+	(af_loader_embolden_glyph_in_slot): Revise calculations.
+
 2020-12-17  Alexei Podtelezhnikov  <apodtele@gmail.com>
 
 	* include/freetype/ftmodapi.h (FT_FACE_DRIVER_NAME): New public macro.

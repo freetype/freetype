@@ -105,7 +105,6 @@
                               globals->stem_darkening_for_ppem;
 
     FT_Fixed  em_size  = af_intToFixed( face->units_per_EM );
-    FT_Fixed  em_ratio = FT_DivFix( af_intToFixed( 1000 ), em_size );
 
     FT_Matrix  scale_down_matrix = { 0x10000L, 0, 0, 0x10000L };
 
@@ -142,12 +141,11 @@
 
 
       darken_by_font_units_x =
-        af_intToFixed( af_loader_compute_darkening( loader,
-                                                    face,
-                                                    stdVW ) );
-      darken_x = FT_DivFix( FT_MulFix( darken_by_font_units_x,
-                                       size_metrics->x_scale ),
-                            em_ratio );
+         af_loader_compute_darkening( loader,
+                                      face,
+                                      stdVW ) ;
+      darken_x = FT_MulFix( darken_by_font_units_x,
+                            size_metrics->x_scale );
 
       globals->standard_vertical_width = stdVW;
       globals->stem_darkening_for_ppem = size_metrics->x_ppem;
@@ -161,12 +159,11 @@
 
 
       darken_by_font_units_y =
-        af_intToFixed( af_loader_compute_darkening( loader,
-                                                    face,
-                                                    stdHW ) );
-      darken_y = FT_DivFix( FT_MulFix( darken_by_font_units_y,
-                                       size_metrics->y_scale ),
-                            em_ratio );
+         af_loader_compute_darkening( loader,
+                                      face,
+                                      stdHW ) ;
+      darken_y = FT_MulFix( darken_by_font_units_y,
+                            size_metrics->y_scale );
 
       globals->standard_horizontal_width = stdHW;
       globals->stem_darkening_for_ppem   = size_metrics->x_ppem;
@@ -594,7 +591,7 @@
    *
    * XXX: Currently a crude adaption of the original algorithm.  Do better?
    */
-  FT_LOCAL_DEF( FT_Int32 )
+  FT_LOCAL_DEF( FT_Fixed )
   af_loader_compute_darkening( AF_Loader  loader,
                                FT_Face    face,
                                FT_Pos     standard_width )
@@ -713,7 +710,7 @@
     }
 
     /* Convert darken_amount from per 1000 em to true character space. */
-    return af_fixedToInt( FT_DivFix( darken_amount, em_ratio ) );
+    return FT_DivFix( darken_amount, em_ratio );
   }
 
 
