@@ -1,3 +1,7 @@
+2020-12-23  Ignacio Casal Quinteiro  <qignacio@amazon.com>
+
+	meson.build (ft2_defines): Fix builds on Windows.
+
 2020-12-18  Tatsuyuki Ishi  <ishitatsuyuki@gmail.com>
 
 	[autofit] Fix double division in stem darkening.

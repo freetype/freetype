@@ -302,6 +302,10 @@ ft2_sources += ftoption_h
 # Studio does).
 ft2_defines += ['-DFT2_BUILD_LIBRARY=1']
 
+if host_machine.system() == 'windows'
+  ft2_defines += ['-DDLL_EXPORT=1']
+endif
+
 
 # Ensure that the `ftoption.h` file generated above will be used to build
 # FreeType.  Unfortunately, and very surprisingly, configure_file() does not
