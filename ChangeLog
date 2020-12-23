@@ -1,6 +1,16 @@
+2020-12-23  Werner Lemberg  <wl@gnu.org>
+
+	* builds/windows/detect.mk (COPY): Make it work with `shell`.
+
+	Without this patch, we get the error
+
+	  builds/toplevel.mk:127: *** missing separator.  Stop.
+
+	Reported by Anuj, with a solution from Alexei.
+
 2020-12-23  Ignacio Casal Quinteiro  <qignacio@amazon.com>
 
-	meson.build (ft2_defines): Fix builds on Windows.
+	* meson.build (ft2_defines): Fix builds on Windows.
 
 2020-12-18  Tatsuyuki Ishi  <ishitatsuyuki@gmail.com>
 
