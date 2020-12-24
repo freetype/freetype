@@ -42,13 +42,14 @@ FT_TRACE_DEF( checksum )  /* bitmap checksum         (ftobjs.c)   */
 FT_TRACE_DEF( mm )        /* MM interface            (ftmm.c)     */
 FT_TRACE_DEF( psprops )   /* PS driver properties    (ftpsprop.c) */
 FT_TRACE_DEF( raccess )   /* resource fork accessor  (ftrfork.c)  */
-FT_TRACE_DEF( raster )    /* monochrome rasterizer   (ftraster.c) */
-FT_TRACE_DEF( smooth )    /* anti-aliasing raster    (ftgrays.c)  */
-FT_TRACE_DEF( sdf )       /* signed distance raster  (ftsdf.c)    */
 FT_TRACE_DEF( synth )     /* bold/slant synthesizer  (ftsynth.c)  */
 
-  /* Cache sub-system */
-FT_TRACE_DEF( cache )     /* cache sub-system        (ftcache.c, etc.) */
+  /* rasterizers */
+FT_TRACE_DEF( raster )    /* monochrome rasterizer   (ftraster.c) */
+FT_TRACE_DEF( smooth )    /* anti-aliasing raster    (ftgrays.c)  */
+
+  /* cache sub-system */
+FT_TRACE_DEF( cache )     /* cache sub-system   (ftcache.c, etc.) */
 
   /* SFNT driver components */
 FT_TRACE_DEF( sfdriver )  /* SFNT font driver        (sfdriver.c) */
@@ -159,5 +160,9 @@ FT_TRACE_DEF( aflatin )
 FT_TRACE_DEF( aflatin2 )
 FT_TRACE_DEF( afshaper )
 FT_TRACE_DEF( afwarp )
+
+  /* SDF components */
+FT_TRACE_DEF( sdf )       /* signed distance raster for outlines (ftsdf.c) */
+FT_TRACE_DEF( bsdf )      /* signed distance raster for bitmaps (ftbsdf.c) */
 
 /* END */
