@@ -2,14 +2,23 @@ CHANGES BETWEEN 2.10.4 and 2.11.0
 
   I. IMPORTANT CHANGES
 
-  - The legacy Type 1/CFF engine  is  further demoted  due to  lack of
-    CFF2 charstring support.  You now need  to use FT_Property_Set  to
-    enable it besides T1/CFF_CONFIG_OPTION_OLD_ENGINE options.
+  - The legacy Type 1 and CFF  engines are further demoted due to lack
+    of CFF2 charstring support.  You now need to use `FT_Property_Set`
+    to  enable   it  besides  the   `T1_CONFIG_OPTION_OLD_ENGINE`  and
+    `CFF_CONFIG_OPTION_OLD_ENGINE` options.
+
+  - A  new rendering  module has  been added  to create  16-bit Signed
+    Distance Field (SDF)  bitmaps for both outline  and bitmap glyphs.
+    The new  rendering mode is called  `FT_RENDER_MODE_SDF`, the pixel
+    mode is `FT_PIXEL_MODE_GRAY16`, and  the corresponding raster flag
+    is `FT_RASTER_FLAG_SDF`.
+
+    This work was Anuj Verma's GSoC 2020 project.
 
 
   II. MISCELLANEOUS
 
-  - `ttdebug' didn't show changed point coordinates (bug introduced in
+  - `ttdebug` didn't show changed point coordinates (bug introduced in
     version 2.10.3).
 
   - A  new configuration  macro `FT_DEBUG_LOGGING`  is available.   It
