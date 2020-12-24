@@ -1,5 +1,11 @@
 2020-12-24  Werner Lemberg  <wl@gnu.org>
 
+	[sdf] Fix `make multi`.
+
+	* src/sdf/ftsdf.c: Include `ftoutln.h`.
+
+2020-12-24  Werner Lemberg  <wl@gnu.org>
+
 	[sdf] Fix tracing.
 
 	* include/freetype/internal.fttrace.h: Add 'bsdf' component.
