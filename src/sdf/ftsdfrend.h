@@ -1,3 +1,22 @@
+/****************************************************************************
+ *
+ * ftsdfrend.h
+ *
+ *   Signed Distance Field renderer interface (specification).
+ *
+ * Copyright (C) 2020 by
+ * David Turner, Robert Wilhelm, and Werner Lemberg.
+ *
+ * Written by Anuj Verma.
+ *
+ * This file is part of the FreeType project, and may only be used,
+ * modified, and distributed under the terms of the FreeType project
+ * license, LICENSE.TXT.  By continuing to use, modify, or distribute
+ * this file you indicate that you have read the license and
+ * understand and accept it fully.
+ *
+ */
+
 
 #ifndef FTSDFREND_H_
 #define FTSDFREND_H_
@@ -94,5 +113,6 @@ FT_BEGIN_HEADER
 FT_END_HEADER
 
 #endif /* FTSDFREND_H_ */
+
 
 /* END */

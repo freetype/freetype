@@ -1,3 +1,22 @@
+/****************************************************************************
+ *
+ * ftbsdf.c
+ *
+ *   Signed Distance Field support for bitmap fonts (body only).
+ *
+ * Copyright (C) 2020 by
+ * David Turner, Robert Wilhelm, and Werner Lemberg.
+ *
+ * Written by Anuj Verma.
+ *
+ * This file is part of the FreeType project, and may only be used,
+ * modified, and distributed under the terms of the FreeType project
+ * license, LICENSE.TXT.  By continuing to use, modify, or distribute
+ * this file you indicate that you have read the license and
+ * understand and accept it fully.
+ *
+ */
+
 
 #include <freetype/internal/ftobjs.h>
 #include <freetype/internal/ftdebug.h>
@@ -1312,5 +1331,6 @@
     (FT_Raster_Render_Func)  bsdf_raster_render,    /* raster_render   */
     (FT_Raster_Done_Func)    bsdf_raster_done       /* raster_done     */
   )
+
 
 /* END */
