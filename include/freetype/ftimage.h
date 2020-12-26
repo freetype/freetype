@@ -209,6 +209,11 @@ FT_BEGIN_HEADER
 #define ft_pixel_mode_pal2   FT_PIXEL_MODE_GRAY2
 #define ft_pixel_mode_pal4   FT_PIXEL_MODE_GRAY4
 
+  /* */
+
+  /* For debugging, the @FT_Pixel_Mode enumeration must stay in sync */
+  /* with the `pixel_modes` array in file `ftobjs.c`.                */
+
 
   /**************************************************************************
    *
