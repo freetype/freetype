@@ -3277,7 +3277,7 @@ FT_BEGIN_HEADER
    *     from the center of the pixel and are positive if they are filled by
    *     the outline (i.e., inside the outline) and negative otherwise.  The
    *     output bitmap buffer is represented as 6.10 fixed-point values; use
-   *     @FT_6Dot10 and convert accordingly.
+   *     @FT_F6Dot10 and convert accordingly.
    *
    * @note:
    *   The selected render mode only affects vector glyphs of a font.
