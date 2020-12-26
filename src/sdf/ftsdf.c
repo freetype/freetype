@@ -89,10 +89,10 @@
    *     }
    *     ```
    *
-   * (4) After running this algorithm the bitmap contain sinformation about the closest
-   *     point from each point to the outline of the shape.  Of course,
-   *     while this is the most straightforward way of generating SDF, we
-   *     use various optimizations in this rasterizer.  See the
+   * (4) After running this algorithm the bitmap contains information about
+   *     the shortest distance from each point to the outline of the shape.
+   *     Of course, while this is the most straightforward way of generating
+   *     SDF, we use various optimizations in our implementation.  See the
    *     `sdf_generate_*' functions in this file for all details.
    *
    *     The optimization currently used by default is subdivision; see
@@ -112,123 +112,6 @@
    */
 #undef  FT_COMPONENT
 #define FT_COMPONENT  sdf
-
-
-  /**************************************************************************
-   *
-   * for tracking used memory
-   *
-   */
-
-  /* The memory tracker only works when `FT_DEBUG_MEMORY` is defined; */
-  /* we need some variables such as `_ft_debug_file`, which aren't    */
-  /* available otherwise.                                             */
-#if defined( FT_DEBUG_LEVEL_TRACE ) && defined( FT_DEBUG_MEMORY )
-
-
-#undef FT_DEBUG_INNER
-#undef FT_ASSIGNP_INNER
-
-#define FT_DEBUG_INNER( exp )  ( _ft_debug_file   = __FILE__, \
-                                 _ft_debug_lineno = line,     \
-                                 (exp) )
-#define FT_ASSIGNP_INNER( p, exp )  ( _ft_debug_file   = __FILE__, \
-                                      _ft_debug_lineno = line,     \
-                                      FT_ASSIGNP( p, exp ) )
-
-
-  /* To be used with `FT_Memory::user' in order to track */
-  /* memory allocations.                                 */
-  typedef struct  SDF_MemoryUser_
-  {
-    void*    prev_user;
-    FT_Long  total_usage;
-
-  } SDF_MemoryUser;
-
-
-  /*
-   * These functions are used while allocating and deallocating memory.
-   * They restore the previous user pointer before calling the allocation
-   * functions.
-   */
-
-  static FT_Pointer
-  sdf_alloc( FT_Memory  memory,
-             FT_Long    size,
-             FT_Error*  err,
-             FT_Int     line )
-  {
-    SDF_MemoryUser*  current_user;
-    FT_Pointer       ptr;
-    FT_Error         error;
-
-
-    current_user = (SDF_MemoryUser*)memory->user;
-    memory->user = current_user->prev_user;
-
-    if ( !FT_QALLOC( ptr, size ) )
-      current_user->total_usage += size;
-
-    memory->user = (void*)current_user;
-    *err = error;
-
-    return ptr;
-  }
-
-
-  static void
-  sdf_free( FT_Memory    memory,
-             FT_Pointer  ptr,
-             FT_Int      line )
-  {
-    SDF_MemoryUser*  current_user;
-
-
-    current_user = (SDF_MemoryUser*)memory->user;
-    memory->user = current_user->prev_user;
-
-    FT_FREE( ptr );
-
-    memory->user = (void*)current_user;
-  }
-
-
-#define SDF_ALLOC( ptr, size )                   \
-          ( ptr = sdf_alloc( memory, size,       \
-                             &error, __LINE__ ), \
-            error != 0 )
-
-#define SDF_FREE( ptr )                     \
-          sdf_free( memory, ptr, __LINE__ )
-
-#define SDF_MEMORY_TRACKER_DECLARE()  SDF_MemoryUser  sdf_memory_user
-
-#define SDF_MEMORY_TRACKER_SETUP()                       \
-          sdf_memory_user.prev_user   = memory->user;    \
-          sdf_memory_user.total_usage = 0;               \
-          memory->user                = &sdf_memory_user
-
-#define SDF_MEMORY_TRACKER_DONE()                    \
-          memory->user = sdf_memory_user.prev_user;  \
-                                                     \
-          FT_TRACE0(( "[sdf] sdf_raster_render:"     \
-                      " Total memory used = %ld\n",  \
-                      sdf_memory_user.total_usage ))
-
-
-#else /* !FT_DEBUG_LEVEL_TRACE */
-
-
-#define SDF_ALLOC  FT_QALLOC
-#define SDF_FREE   FT_FREE
-
-#define SDF_MEMORY_TRACKER_DECLARE()  FT_DUMMY_STMNT
-#define SDF_MEMORY_TRACKER_SETUP()    FT_DUMMY_STMNT
-#define SDF_MEMORY_TRACKER_DONE()     FT_DUMMY_STMNT
-
-
-#endif /* !FT_DEBUG_LEVEL_TRACE */
 
 
   /**************************************************************************
@@ -612,7 +495,7 @@
       goto Exit;
     }
 
-    if ( !SDF_ALLOC( ptr, sizeof ( *ptr ) ) )
+    if ( !FT_ALLOC( ptr, sizeof ( *ptr ) ) )
     {
       *ptr = null_edge;
       *edge = ptr;
@@ -631,7 +514,7 @@
     if ( !memory || !edge || !*edge )
       return;
 
-    SDF_FREE( *edge );
+    FT_FREE( *edge );
   }
 
 
@@ -651,7 +534,7 @@
       goto Exit;
     }
 
-    if ( !SDF_ALLOC( ptr, sizeof ( *ptr ) ) )
+    if ( !FT_ALLOC( ptr, sizeof ( *ptr ) ) )
     {
       *ptr     = null_contour;
       *contour = ptr;
@@ -686,7 +569,7 @@
       sdf_edge_done( memory, &temp );
     }
 
-    SDF_FREE( *contour );
+    FT_FREE( *contour );
   }
 
 
@@ -706,7 +589,7 @@
       goto Exit;
     }
 
-    if ( !SDF_ALLOC( ptr, sizeof ( *ptr ) ) )
+    if ( !FT_ALLOC( ptr, sizeof ( *ptr ) ) )
     {
       *ptr        = null_shape;
       ptr->memory = memory;
@@ -747,7 +630,7 @@
     }
 
     /* release the allocated shape struct  */
-    SDF_FREE( *shape );
+    FT_FREE( *shape );
   }
 
 
@@ -3344,10 +3227,8 @@
     rows     = (FT_Int)bitmap->rows;
     buffer   = (FT_Short*)bitmap->buffer;
 
-    if ( SDF_ALLOC( dists, width * rows * sizeof ( *dists ) ) )
+    if ( FT_ALLOC( dists, width * rows * sizeof ( *dists ) ) )
       goto Exit;
-
-    FT_MEM_ZERO( dists, width * rows * sizeof ( *dists ) );
 
     if ( USE_SQUARED_DISTANCES )
       sp_sq = FT_INT_16D16( spread * spread );
@@ -3484,7 +3365,7 @@
     }
 
   Exit:
-    SDF_FREE( dists );
+    FT_FREE( dists );
     return error;
   }
 
@@ -3649,18 +3530,12 @@
     }
 
     /* allocate the bitmaps to generate SDF for separate contours */
-    if ( SDF_ALLOC( bitmaps, num_contours * sizeof ( *bitmaps ) ) )
+    if ( FT_ALLOC( bitmaps, num_contours * sizeof ( *bitmaps ) ) )
       goto Exit;
-
-    /* zero the memory */
-    ft_memset( bitmaps, 0, num_contours * sizeof ( *bitmaps ) );
 
     /* allocate array to hold orientation for all contours */
-    if ( SDF_ALLOC( orientations, num_contours * sizeof ( *orientations ) ) )
+    if ( FT_ALLOC( orientations, num_contours * sizeof ( *orientations ) ) )
       goto Exit;
-
-    /* zero the memory */
-    ft_memset( orientations, 0, num_contours * sizeof ( *orientations ) );
 
     /* Disable `flip_sign` to avoid extra complication */
     /* during the combination phase.                   */
@@ -3682,7 +3557,7 @@
       bitmaps[i].pixel_mode = bitmap->pixel_mode;
 
       /* allocate memory for the buffer */
-      if ( SDF_ALLOC( bitmaps[i].buffer, bitmap->rows * bitmap->pitch ) )
+      if ( FT_ALLOC( bitmaps[i].buffer, bitmap->rows * bitmap->pitch ) )
         goto Exit;
 
       /* determine the orientation */
@@ -3789,7 +3664,7 @@
   Exit:
     /* deallocate orientations array */
     if ( orientations )
-      SDF_FREE( orientations );
+      FT_FREE( orientations );
 
     /* deallocate temporary bitmaps */
     if ( bitmaps )
@@ -3799,9 +3674,9 @@
       else
       {
         for ( i = 0; i < num_contours; i++ )
-          SDF_FREE( bitmaps[i].buffer );
+          FT_FREE( bitmaps[i].buffer );
 
-        SDF_FREE( bitmaps );
+        FT_FREE( bitmaps );
       }
     }
 
@@ -3875,8 +3750,6 @@
     SDF_Shape*  shape  = NULL;
     SDF_Params  internal_params;
 
-    SDF_MEMORY_TRACKER_DECLARE();
-
 
     /* check for valid arguments */
     if ( !sdf_raster || !sdf_params )
@@ -3943,12 +3816,6 @@
     internal_params.flip_y        = sdf_params->flip_y;
     internal_params.overload_sign = 0;
 
-    /* assign a custom user pointer to `FT_Memory`;  */
-    /* also keep a reference of the old user pointer */
-    /* in order to debug the memory while compiling  */
-    /* with `FT_DEBUG_MEMORY`.                       */
-    SDF_MEMORY_TRACKER_SETUP();
-
     FT_CALL( sdf_shape_new( memory, &shape ) );
 
     FT_CALL( sdf_outline_decompose( outline, shape ) );
@@ -3965,9 +3832,6 @@
     if ( shape )
       sdf_shape_done( &shape );
 
-    /* restore the memory->user */
-    SDF_MEMORY_TRACKER_DONE();
-
   Exit:
     return error;
   }
@@ -3977,10 +3841,6 @@
   sdf_raster_done( FT_Raster  raster )
   {
     FT_Memory  memory = (FT_Memory)((SDF_TRaster*)raster)->memory;
-    FT_Int     line   = __LINE__;
-
-    /* in non-debugging mode this is not used */
-    FT_UNUSED( line );
 
 
     FT_FREE( raster );

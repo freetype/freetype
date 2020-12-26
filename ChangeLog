@@ -1,3 +1,19 @@
+2020-12-26  Anuj Verma  <anujv@iitbhilai.ac.in>
+
+	[sdf] Remove custom memory tracker.
+
+	The internal FreeType memory tracker is sufficient.
+
+	* src/sdf/ftsdf.c (FT_DEBUG_INNER, FT_ASSIGNP_INNER, SDF_MemoryUser,
+	sdf_alloc, sdf_free, SDF_ALLOC, SDF_FREE,
+	SDF_MEMORY_TRACKER_DECLARE, SDF_MEMORY_TRACKER_SETUP,
+	SDF_MEMORY_TRACKER_DONE): Removed.
+
+	s/SDF_ALLOC/FT_ALLOC/.
+	s/SDF_FREE/FT_FREE/.
+
+	Other updates.
+
 2020-12-24  Werner Lemberg  <wl@gnu.org>
 
 	[sdf] Fix `make multi`.
@@ -132,7 +148,7 @@
 
 	[sdf] Add function to generate SDF.
 
-	* src/sdf/ftsdf.c (sdf_generate): New function, currently disabled. 
+	* src/sdf/ftsdf.c (sdf_generate): New function, currently disabled.
 	This is a proof-of-concept implementation: It doesn't use any
 	optimization, it simply checks all grid points against all contours.
 
@@ -1547,7 +1563,7 @@
 	security or bug fixes will be provided for those versions.  See
 
 	  https://devguide.python.org/#status-of-python-branches
-	
+
 	for more information.
 
 	* Jamfile (RefDoc): Add `site' parameter.
