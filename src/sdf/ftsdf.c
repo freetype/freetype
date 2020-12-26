@@ -257,8 +257,8 @@
    *   SDF_ORIENTATION_CW ::
    *     Clockwise orientation (positive area covered).
    *
-   *   SDF_ORIENTATION_ACW ::
-   *     Anti-clockwise orientation (negative area covered).
+   *   SDF_ORIENTATION_CCW ::
+   *     Counter-clockwise orientation (negative area covered).
    *
    * @Note:
    *   See @FT_Outline_Get_Orientation for more details.
@@ -268,7 +268,7 @@
   {
     SDF_ORIENTATION_NONE = 0,
     SDF_ORIENTATION_CW   = 1,
-    SDF_ORIENTATION_ACW  = 2
+    SDF_ORIENTATION_CCW  = 2
 
   } SDF_Contour_Orientation;
 
@@ -991,7 +991,7 @@
     if ( area > 0 )
       return SDF_ORIENTATION_CW;
     else
-      return SDF_ORIENTATION_ACW;
+      return SDF_ORIENTATION_CCW;
   }
 
 
@@ -3568,7 +3568,7 @@
       /* overloads the default sign of the outside    */
       /* pixels, which is necessary for               */
       /* counter-clockwise contours.                  */
-      if ( orientations[i] == SDF_ORIENTATION_ACW                   &&
+      if ( orientations[i] == SDF_ORIENTATION_CCW                   &&
            internal_params.orientation == FT_ORIENTATION_FILL_RIGHT )
         internal_params.overload_sign = 1;
       else if ( orientations[i] == SDF_ORIENTATION_CW                   &&
@@ -3608,8 +3608,8 @@
       if ( internal_params.orientation == FT_ORIENTATION_FILL_LEFT )
       {
         if ( orientations[i] == SDF_ORIENTATION_CW )
-          orientations[i] = SDF_ORIENTATION_ACW;
-        else if ( orientations[i] == SDF_ORIENTATION_ACW )
+          orientations[i] = SDF_ORIENTATION_CCW;
+        else if ( orientations[i] == SDF_ORIENTATION_CCW )
           orientations[i] = SDF_ORIENTATION_CW;
       }
 

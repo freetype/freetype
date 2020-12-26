@@ -1,5 +1,15 @@
 2020-12-26  Werner Lemberg  <wl@gnu.org>
 
+	[sdf] Use 'counter-clockwise', not 'anti-clockwise'.
+
+	We prefer US nomenclature.
+
+	* src/sdf/ftsdf.c (SDF_Contour_Orientation):
+	s/SDF_ORIENTATION-ACW/SDF_ORIENTATION_CCW/.
+	Update all users.
+
+2020-12-26  Werner Lemberg  <wl@gnu.org>
+
 	* src/base/ftobjs.c (pixel_modes): Updated.
 
 2020-12-26  Anuj Verma  <anujv@iitbhilai.ac.in>

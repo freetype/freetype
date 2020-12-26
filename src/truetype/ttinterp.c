@@ -4362,7 +4362,7 @@
 
     if ( ( opcode & 1 ) != 0 )
     {
-      C = B;   /* counter clockwise rotation */
+      C = B;   /* counter-clockwise rotation */
       B = A;
       A = NEG_LONG( C );
     }
@@ -5050,7 +5050,7 @@
 
     if ( ( opcode & 1 ) != 0 )
     {
-      C = B;   /* counter clockwise rotation */
+      C = B;   /* counter-clockwise rotation */
       B = A;
       A = NEG_LONG( C );
     }
@@ -5074,7 +5074,7 @@
 
     if ( ( opcode & 1 ) != 0 )
     {
-      C = B;   /* counter clockwise rotation */
+      C = B;   /* counter-clockwise rotation */
       B = A;
       A = NEG_LONG( C );
     }
