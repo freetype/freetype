@@ -13,6 +13,7 @@
 
 
 project('freetype2', 'c',
+  version: '2.10.4',
   meson_version: '>= 0.55.0',
   default_options: ['default_library=both'],
 )
@@ -231,10 +232,12 @@ ftoption_command = [python_exe,
   '@INPUT@', '--output=@OUTPUT@']
 
 # GZip support
+have_zlib='no'
 zlib_option = get_option('zlib')
 if zlib_option == 'disabled'
   ftoption_command += ['--disable=FT_CONFIG_OPTION_USE_ZLIB']
 else
+  have_zlib='yes'
   ftoption_command += ['--enable=FT_CONFIG_OPTION_USE_ZLIB']
   if zlib_option == 'builtin'
     ftoption_command += ['--disable=FT_CONFIG_OPTION_SYSTEM_ZLIB']
@@ -378,5 +381,14 @@ gen_docs = custom_target('freetype2 reference documentation',
     '--output-dir=@OUTPUT@'
   ],
 )
+
+
+summary({'OS': host_machine.system(),
+         'Zlib': have_zlib,
+         'Bzip2': bzip2_dep.found() ? 'yes' : 'no',
+         'Png': libpng_dep.found() ? 'yes' : 'no',
+         'Harfbuzz': harfbuzz_dep.found() ? 'yes' : 'no',
+         'Brotli': brotli_dep.found() ? 'yes' : 'no',
+        }, section: 'Configuration Options Summary:')
 
 # EOF
