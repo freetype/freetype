@@ -1,3 +1,9 @@
+2021-01-06  Torsten Hilbrich  <emacs.nolkaf@hilbrich.tk>
+
+	* meson.build: Fix 'png' build option (#59458).
+
+	Without this patch, 'png' is always required.
+
 2021-01-04  Alexei Podtelezhnikov  <apodtele@gmail.com>
 
 	[builds/windows] Add SDF to VC2010 project.

@@ -264,8 +264,10 @@ endif
 
 # PNG support
 libpng_dep = dependency('libpng', required: get_option('png'))
-ftoption_command += ['--enable=FT_CONFIG_OPTION_USE_PNG']
-ft2_deps += [libpng_dep]
+if libpng_dep.found()
+  ftoption_command += ['--enable=FT_CONFIG_OPTION_USE_PNG']
+  ft2_deps += [libpng_dep]
+endif
 
 # Harfbuzz support
 harfbuzz_dep = dependency('harfbuzz',
