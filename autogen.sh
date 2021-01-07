@@ -165,10 +165,10 @@ chmod +x ./configure
 # Copy all necessary 'dlg' files.
 copy_submodule_files ()
 {
-  echo "Copying files from \`submodules/dlg' to \`src/dlg'"
-  mkdir src/dlg/dlg 2> /dev/null
-  cp $DLG_INC_DIR/dlg.h src/dlg/dlg
-  cp $DLG_INC_DIR/output.h src/dlg/dlg
+  echo "Copying files from \`submodules/dlg' to \`src/dlg' and \`include/dlg'"
+  mkdir include/dlg 2> /dev/null
+  cp $DLG_INC_DIR/output.h include/dlg
+  cp $DLG_INC_DIR/dlg.h include/dlg
   cp $DLG_SRC_DIR/* src/dlg
 }
 

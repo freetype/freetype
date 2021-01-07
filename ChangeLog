@@ -1,3 +1,13 @@
+2021-01-07  Alexei Podtelezhnikov  <apodtele@gmail.com>
+
+	[dlg] Move the headers to include/dlg to simplify their use.
+
+	* autogen.sh, builds/toplevel.mk: Copy headers to incluide/dlg.
+	* builds/freetype.mk, builds/windows/vc2010/freetype.vcxproj:
+	Simplify included path.
+	* include/freetype/internal/ftdebug.h: Simplify #include.
+	* src/dlg/rules.mk, .gitignore: Updated.
+
 2021-01-06  Werner Lemberg  <wl@gnu.org>
 
 	* meson.build: Add summary.

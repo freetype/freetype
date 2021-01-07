@@ -32,8 +32,8 @@
 #include "compiler-macros.h"
 
 #ifdef FT_DEBUG_LOGGING
-#include <../src/dlg/dlg/dlg.h>
-#include <../src/dlg/dlg/output.h>
+#include <dlg/output.h>
+#include <dlg/dlg.h>
 
 #include <freetype/ftlogging.h>
 #endif /* FT_DEBUG_LOGGING */

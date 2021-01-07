@@ -89,8 +89,8 @@
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
       <Optimization>Disabled</Optimization>
-      <AdditionalIncludeDirectories>..\..\..\src\dlg\;$(UserOptionDirectory);..\..\..\include;$(UserIncludeDirectories);%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
-      <PreprocessorDefinitions>WIN32;_DEBUG;_LIB;_CRT_SECURE_NO_WARNINGS;FT_DEBUG_LEVEL_ERROR;FT_DEBUG_LEVEL_TRACE;FT2_BUILD_LIBRARY;DLL_EXPORT;FT_DEBUG_LOGGING;$(UserDefines);%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>$(UserOptionDirectory);..\..\..\include;$(UserIncludeDirectories);%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>WIN32;_DEBUG;_LIB;_CRT_SECURE_NO_WARNINGS;FT_DEBUG_LEVEL_ERROR;FT_DEBUG_LEVEL_TRACE;FT_DEBUG_LOGGING;FT2_BUILD_LIBRARY;DLL_EXPORT;$(UserDefines);%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
       <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
       <DisableLanguageExtensions>false</DisableLanguageExtensions>
@@ -118,8 +118,8 @@
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <ClCompile>
       <Optimization>Disabled</Optimization>
-      <AdditionalIncludeDirectories>..\..\..\src\dlg\;$(UserOptionDirectory);..\..\..\include;$(UserIncludeDirectories);%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
-      <PreprocessorDefinitions>WIN32;_DEBUG;_LIB;_CRT_SECURE_NO_WARNINGS;FT_DEBUG_LEVEL_ERROR;FT_DEBUG_LEVEL_TRACE;FT2_BUILD_LIBRARY;DLL_EXPORT;FT_DEBUG_LOGGING;$(UserDefines);%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>$(UserOptionDirectory);..\..\..\include;$(UserIncludeDirectories);%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>WIN32;_DEBUG;_LIB;_CRT_SECURE_NO_WARNINGS;FT_DEBUG_LEVEL_ERROR;FT_DEBUG_LEVEL_TRACE;FT_DEBUG_LOGGING;FT2_BUILD_LIBRARY;DLL_EXPORT;$(UserDefines);%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
       <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
       <DisableLanguageExtensions>false</DisableLanguageExtensions>
@@ -147,8 +147,8 @@
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug Static|Win32'">
     <ClCompile>
       <Optimization>Disabled</Optimization>
-      <AdditionalIncludeDirectories>..\..\..\src\dlg;$(UserOptionDirectory);..\..\..\include;$(UserIncludeDirectories);%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
-      <PreprocessorDefinitions>WIN32;_DEBUG;_LIB;_CRT_SECURE_NO_WARNINGS;FT_DEBUG_LEVEL_ERROR;FT_DEBUG_LEVEL_TRACE;FT2_BUILD_LIBRARY;FT_DEBUG_LOGGING;DLG_STATIC;$(UserDefines);%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>$(UserOptionDirectory);..\..\..\include;$(UserIncludeDirectories);%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>WIN32;_DEBUG;_LIB;_CRT_SECURE_NO_WARNINGS;FT_DEBUG_LEVEL_ERROR;FT_DEBUG_LEVEL_TRACE;FT_DEBUG_LOGGING;DLG_STATIC;FT2_BUILD_LIBRARY;$(UserDefines);%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
       <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
       <DisableLanguageExtensions>false</DisableLanguageExtensions>
@@ -176,8 +176,8 @@
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug Static|x64'">
     <ClCompile>
       <Optimization>Disabled</Optimization>
-      <AdditionalIncludeDirectories>..\..\..\src\dlg;$(UserOptionDirectory);..\..\..\include;$(UserIncludeDirectories);%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
-      <PreprocessorDefinitions>WIN32;_DEBUG;_LIB;_CRT_SECURE_NO_WARNINGS;FT_DEBUG_LEVEL_ERROR;FT_DEBUG_LEVEL_TRACE;FT2_BUILD_LIBRARY;FT_DEBUG_LOGGING;DLG_STATIC;$(UserDefines);%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>$(UserOptionDirectory);..\..\..\include;$(UserIncludeDirectories);%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>WIN32;_DEBUG;_LIB;_CRT_SECURE_NO_WARNINGS;FT_DEBUG_LEVEL_ERROR;FT_DEBUG_LEVEL_TRACE;FT_DEBUG_LOGGING;DLG_STATIC;FT2_BUILD_LIBRARY;$(UserDefines);%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
       <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
       <DisableLanguageExtensions>false</DisableLanguageExtensions>
