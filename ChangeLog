@@ -1,3 +1,10 @@
+2021-01-07  Alexei Podtelezhnikov  <apodtele@gmail.com>
+
+	[builds] Relocate `FTMODULE_H'.
+
+	* builds/toplevel.mk: Place `FTMODULE_H' in include/.
+	* builds/freetype.mk: Simplify included path.
+
 2021-01-07  Werner Lemberg  <wl@gnu.org>
 
 	Fix ABI incompatibility.

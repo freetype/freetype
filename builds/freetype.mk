@@ -119,8 +119,7 @@ PROJECT_LIBRARY := $(LIB_DIR)/$(LIBRARY).$A
 #                 in the `builds/<system>' directory, as these files will
 #                 override the default sources.
 #
-INCLUDES := $(subst /,$(COMPILER_SEP),$(OBJ_DIR) \
-                                      $(DEVEL_DIR) \
+INCLUDES := $(subst /,$(COMPILER_SEP),$(DEVEL_DIR) \
                                       $(BUILD_DIR) \
                                       $(TOP_DIR)/include)
 

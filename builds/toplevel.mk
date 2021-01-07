@@ -68,7 +68,7 @@ endif
 # FTMODULE_H, as its name suggests, indicates where the FreeType module
 # class file resides.
 #
-FTMODULE_H ?= $(OBJ_DIR)/ftmodule.h
+FTMODULE_H ?= $(TOP_DIR)/include/ftmodule.h
 
 
 include $(MODULES_CFG)
