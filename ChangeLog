@@ -2,7 +2,7 @@
 
 	[dlg] Move the headers to include/dlg to simplify their use.
 
-	* autogen.sh, builds/toplevel.mk: Copy headers to incluide/dlg.
+	* autogen.sh, builds/toplevel.mk: Copy headers to include/dlg.
 	* builds/freetype.mk, builds/windows/vc2010/freetype.vcxproj:
 	Simplify included path.
 	* include/freetype/internal/ftdebug.h: Simplify #include.
