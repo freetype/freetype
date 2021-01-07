@@ -1,5 +1,12 @@
 2021-01-07  Alexei Podtelezhnikov  <apodtele@gmail.com>
 
+	[builds/windows] Fix up DLG build with VC++.
+
+	* builds/windows/vc2010/script.bat: Copy headers to include/.
+	* builds/windows/vc2010/freetype.vcxproj: Remove DLG paths.
+
+2021-01-07  Alexei Podtelezhnikov  <apodtele@gmail.com>
+
 	[builds] Relocate `FTMODULE_H'.
 
 	* builds/toplevel.mk: Place `FTMODULE_H' in include/.
