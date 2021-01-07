@@ -1,3 +1,12 @@
+2021-01-07  Werner Lemberg  <wl@gnu.org>
+
+	Fix ABI incompatibility.
+
+	* include/freetype/ftimage.h (FT_Pixel_Mode): Don't insert
+	`FT_PIXEL_MODE_GRAY16' but append it.
+
+	* src/base/ftobjs.c (pixel_modes): Updated.
+
 2021-01-07  Alexei Podtelezhnikov  <apodtele@gmail.com>
 
 	[dlg] Move the headers to include/dlg to simplify their use.

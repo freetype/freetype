@@ -88,10 +88,10 @@
     "gray 8-bit bitmap",
     "gray 2-bit bitmap",
     "gray 4-bit bitmap",
-    "SDF 16-bit bitmap",
     "LCD 8-bit bitmap",
     "vertical LCD 8-bit bitmap",
     "BGRA 32-bit color image bitmap"
+    "SDF 16-bit bitmap",
   };
 
 #endif /* FT_DEBUG_LEVEL_TRACE */
