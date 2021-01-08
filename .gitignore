@@ -1,5 +1,5 @@
 build
 config.mk
-objs/vc2010/
+include/ftmodule.h
 include/dlg/
 src/dlg/dlg.c
