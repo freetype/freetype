@@ -1,5 +1,4 @@
 build
 config.mk
-include/ftmodule.h
 include/dlg/
 src/dlg/dlg.c

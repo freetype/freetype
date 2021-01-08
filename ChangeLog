@@ -1,3 +1,9 @@
+2021-01-08  Alexei Podtelezhnikov  <apodtele@gmail.com>
+
+	[builds] Revert `FTMODULE_H' changes.
+
+	* builds/toplevel.mk, builds/freetype.mk: Revert changes.
+
 2021-01-07  Alexei Podtelezhnikov  <apodtele@gmail.com>
 
 	[builds/windows] Fix up DLG build with VC++.
