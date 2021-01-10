@@ -13,11 +13,11 @@
 # fully.
 
 
-DELETE    := del
-CAT       := type
-SEP       := $(strip \ )
-BUILD_DIR := $(TOP_DIR)/builds/os2
-PLATFORM  := os2
+DELETE       := del
+CAT          := type
+SEP          := $(strip \ )
+PLATFORM_DIR := $(TOP_DIR)/builds/os2
+PLATFORM     := os2
 
 # This is used for `make refdoc' and `make refdoc-venv'
 #

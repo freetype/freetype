@@ -15,11 +15,11 @@
 # fully.
 
 
-DELETE    := rm -f
-CAT       := cat
-SEP       := /
-BUILD_DIR := $(TOP_DIR)/builds/beos
-PLATFORM  := beos
+DELETE       := rm -f
+CAT          := cat
+SEP          := /
+PLATFORM_DIR := $(TOP_DIR)/builds/beos
+PLATFORM     := beos
 
 # This is used for `make refdoc' and `make refdoc-venv'
 #

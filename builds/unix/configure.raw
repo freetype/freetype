@@ -204,7 +204,7 @@ if test "x${enable_mmap}" = "xno" \
    -o "$ac_cv_func_mmap_fixed_mapped" != "yes"; then
   FTSYS_SRC='$(BASE_DIR)/ftsystem.c'
 else
-  FTSYS_SRC='$(BUILD_DIR)/ftsystem.c'
+  FTSYS_SRC='$(PLATFORM_DIR)/ftsystem.c'
 
   AC_CHECK_DECLS([munmap],
     [],

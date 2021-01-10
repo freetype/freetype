@@ -27,7 +27,7 @@ PYTHON := @PYTHON@
 BIN    := bin
 
 # this is used for `make distclean' and `make install'
-OBJ_BUILD ?= $(BUILD_DIR)
+OBJ_BUILD ?= $(PLATFORM_DIR)
 
 # don't use `:=' here since the path stuff will be included after this file
 #

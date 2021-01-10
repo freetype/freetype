@@ -14,7 +14,7 @@
 
 CC           := @CC@
 COMPILER_SEP := $(SEP)
-FT_LIBTOOL_DIR ?= $(BUILD_DIR)
+FT_LIBTOOL_DIR ?= $(PLATFORM_DIR)
 
 LIBTOOL := $(FT_LIBTOOL_DIR)/libtool
 

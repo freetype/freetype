@@ -1,3 +1,9 @@
+2021-01-10  Werner Lemberg  <wl@gnu.org>
+
+	* builds/*: s/BUILD_DIR/PLATFORM_DIR/.
+
+	The old variable name caused confusion.
+
 2021-01-08  Alexei Podtelezhnikov  <apodtele@gmail.com>
 
 	[builds] Revert `FTMODULE_H' changes.

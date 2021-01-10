@@ -27,11 +27,11 @@ endif
 
 ifeq ($(PLATFORM),beos)
 
-  DELETE      := rm -f
-  CAT         := cat
-  SEP         := /
-  BUILD_DIR   := $(TOP_DIR)/builds/beos
-  CONFIG_FILE := beos.mk
+  DELETE         := rm -f
+  CAT            := cat
+  SEP            := /
+  PLATFORM_DIR   := $(TOP_DIR)/builds/beos
+  CONFIG_FILE    := beos.mk
 
   setup: std_setup
 

@@ -13,11 +13,11 @@
 # fully.
 
 
-DELETE    := rm -f
-CAT       := cat
-SEP       := /
-BUILD_DIR := $(TOP_DIR)/builds/ansi
-PLATFORM  := ansi
+DELETE       := rm -f
+CAT          := cat
+SEP          := /
+PLATFORM_DIR := $(TOP_DIR)/builds/ansi
+PLATFORM     := ansi
 
 # This is used for `make refdoc' and `make refdoc-venv'
 #
