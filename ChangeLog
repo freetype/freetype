@@ -1,3 +1,14 @@
+2021-01-13  Dominik Röttsches  <drott@chromium.org>
+
+	Add config option to test for 'COLR' v1 support in headers.
+
+	* include/freetype/config/ftoption.h (TT_SUPPORT_COLRV1): New macro
+	so that clients can test whether the FreeType checkout that they are
+	building against supports the 'COLR' v1 API.  This is intended to be
+	a temporary solution until 'COLR' v1 support is released in a
+	FreeType version and such a check can be made by using the version
+	number instead.
+
 2020-12-16  Dominik Röttsches  <drott@chromium.org>
 
 	[base] Fill 'COLR' v1 API templates to make them work (#59703).
