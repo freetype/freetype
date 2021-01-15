@@ -15,6 +15,38 @@ CHANGES BETWEEN 2.10.4 and 2.11.0
 
     This work was Anuj Verma's GSoC 2020 project.
 
+  - A new, experimental API is  now available for surfacing properties
+    of 'COLR' v1  color fonts (as the name says,  this is an extension
+    to  the  'COLR' table  for  outline  color  fonts using  the  SFNT
+    container  format).   'COLR'  v1  fonts are  a  recently  proposed
+    addition to OFF and OpenType; specification work currently happens
+    in
+
+      https://github.com/googlefonts/colr-gradients-spec/
+
+    'COLR'  v1  is  expected  to   be  merged  to  OpenType;  the  ISO
+    standardisation process  for adding 'COLR'  v1 as an  amendment to
+    OFF is underway.
+
+    Functions similar  to the  already existing  'COLR' API  have been
+    added to access the corresponding data.
+
+      FT_Get_Color_Glyph_Paint
+        Retrieve the root paint for a given glyph ID.
+
+      FT_Get_Paint_Layers
+        Access the layers of a `PaintColrLayers` table.
+
+      FT_Get_Colorline_Stops
+        Retrieve the  'color stops' on a  color line.  As an  input, a
+        color stop iterator gets used, which in turn is retrieved from
+        a paint.
+
+      FT_Get_Paint
+        Dereference  an  `FT_OpaquePaint`   object  and  retrieve  the
+        corresponding `FT_COLR_Paint`  object, which  contains details
+        on how to draw the respective 'COLR' v1 `Paint` table.
+
 
   II. MISCELLANEOUS
 
