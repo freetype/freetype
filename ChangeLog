@@ -1,3 +1,12 @@
+2021-01-14  Dominik Röttsches  <drott@chromium.org>
+
+	[sfnt] Additional checks for 'colr' table presence.
+
+	* sfnt/ttcolr.c (tt_face_get_colr_glyph_paint,
+	tt_face_get_colorline_stops, tt_face_get_paint): Additional checks
+	for whether colr table is present.  Prevents crashes when these
+	methods are called on non-COLR fonts.
+
 2021-01-13  Dominik Röttsches  <drott@chromium.org>
 
 	Add config option to test for 'COLR' v1 support in headers.
