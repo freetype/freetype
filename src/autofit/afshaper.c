@@ -132,13 +132,24 @@
     /* Convert a HarfBuzz script tag into the corresponding OpenType */
     /* tag or tags -- some Indic scripts like Devanagari have an old */
     /* and a new set of features.                                    */
-    hb_ot_tags_from_script( script,
-                            &script_tags[0],
-                            &script_tags[1] );
+    {
+      unsigned int  tags_count = 3;
+      hb_tag_t      tags[3];
 
-    /* `hb_ot_tags_from_script' usually returns HB_OT_TAG_DEFAULT_SCRIPT */
-    /* as the second tag.  We change that to HB_TAG_NONE except for the  */
-    /* default script.                                                   */
+
+      hb_ot_tags_from_script_and_language( script,
+                                           HB_LANGUAGE_INVALID,
+                                           &tags_count,
+                                           tags,
+                                           NULL,
+                                           NULL );
+      script_tags[0] = tags_count > 0 ? tags[0] : HB_TAG_NONE;
+      script_tags[1] = tags_count > 1 ? tags[1] : HB_TAG_NONE;
+      script_tags[2] = tags_count > 2 ? tags[2] : HB_TAG_NONE;
+    }
+
+    /* If the second tag is HB_OT_TAG_DEFAULT_SCRIPT, change that to     */
+    /* HB_TAG_NONE except for the default script.                        */
     if ( default_script )
     {
       if ( script_tags[0] == HB_TAG_NONE )
@@ -157,9 +168,6 @@
       /* HarfBuzz maps them to `DFLT', which we don't want to handle here */
       if ( script_tags[0] == HB_OT_TAG_DEFAULT_SCRIPT )
         goto Exit;
-
-      if ( script_tags[1] == HB_OT_TAG_DEFAULT_SCRIPT )
-        script_tags[1] = HB_TAG_NONE;
     }
 
     gsub_lookups = hb_set_create();

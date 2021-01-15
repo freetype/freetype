@@ -1,3 +1,12 @@
+2021-01-15  Nikolaus Waxweiler  <madigens@gmail.com>
+
+	[afshaper] Fix hb_ot_tags_from_script deprecation warning.
+
+	* autofit/afshaper.c (af_shaper_get_coverage): Copy the source code
+	of the function as suggested in
+	https://github.com/harfbuzz/harfbuzz/issues/2737 and adjust to handle
+	at most three tags.
+
 2021-01-17  Werner Lemberg  <wl@gnu.org>
 
 	* src/tools/update-copyright-year: Fix single-year entry handling.
