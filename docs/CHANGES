@@ -60,6 +60,18 @@ CHANGES BETWEEN 2.10.4 and 2.11.0
 
     This work was Priyesh Kumar's GSoC 2020 project.
 
+  - FreeType has moved its infrastructure to
+
+      https://gitlab.freedesktop.org/freetype
+
+    A  side  effect  is  that  the git  repositories  are  now  called
+    `freetype.git` and  `freetype-demos.git`, which by  default expand
+    to the directories  `freetype` and `freetype-demos`, respectively.
+    The documentation has been updated accordingly.
+
+    FreeType's Savannah  repositories will stay; they  are now mirrors
+    of the 'freedesktop.org' repositories.
+
 
 ======================================================================
 

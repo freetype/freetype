@@ -364,6 +364,6 @@
       <TargetFiles Include="$(TargetDir)$(TargetName).*" />
     </ItemGroup>
     <Copy SourceFiles="@(TargetFiles)" DestinationFolder="..\..\..\objs" />
-    <Copy SourceFiles="$(TargetDir)$(TargetFileName)" DestinationFolder="..\..\..\..\freetype2-demos\bin" Condition="'$(TargetExt)'=='.dll'" />
+    <Copy SourceFiles="$(TargetDir)$(TargetFileName)" DestinationFolder="..\..\..\..\freetype-demos\bin" Condition="'$(TargetExt)'=='.dll'" />
   </Target>
 </Project>
