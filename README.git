@@ -44,6 +44,23 @@ necessary to check out the 'dlg' library as a git submodule.
   git submodule update
 
 
+If you want to contribute to FreeType it is recommended to install the
+`git-merge-changelog` program – we use a `ChangeLog` file, which often
+prevents   simple   merging   due  to   conflicts.    Most   GNU/Linux
+distributions  have a  package  for this  program;  otherwise you  can
+install it via the 'gnulib' git repository.  Detailed instructions can
+be found at the beginning of
+
+  https://git.savannah.gnu.org/cgit/gnulib.git/tree/lib/git-merge-changelog.c
+
+To make  it actually work, add  to file `.git/config` in  the FreeType
+git repository (or to your `$HOME/.gitconfig` file) the lines
+
+  [merge "merge-changelog"]
+     name = GNU-style ChangeLog merge driver
+     driver = /usr/local/bin/git-merge-changelog %O %A %B
+
+
 ----------------------------------------------------------------------
 
 Copyright (C) 2005-2020 by
