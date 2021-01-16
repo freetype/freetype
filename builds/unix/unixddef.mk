@@ -27,9 +27,6 @@ SEP    := /
 #
 BIN := bin
 
-# we use a special devel ftoption.h
-DEVEL_DIR := $(TOP_DIR)/devel
-
 
 # library file name
 #

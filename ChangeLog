@@ -1,3 +1,7 @@
+2021-01-16  Alexei Podtelezhnikov  <apodtele@gmail.com>
+
+	* builds/unix/unixddef.mk: Remove the second DEVEL_DIR definition.
+
 2021-01-14  Dominik Röttsches  <drott@chromium.org>
 
 	[sfnt] Additional checks for 'colr' table presence.
