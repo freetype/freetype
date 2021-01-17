@@ -229,8 +229,7 @@ ftoption_command = process_header_command
 
 
 # GZip support
-zlib_dep = dependency('zlib', required: get_option('zlib'),
-  fallback: ['zlib', 'zlib_dep'])
+zlib_dep = dependency('zlib', required: get_option('zlib'), fallback: 'zlib')
 if zlib_dep.found()
   ftoption_command += [
     '--enable=FT_CONFIG_OPTION_USE_ZLIB',
@@ -251,7 +250,7 @@ if bzip2_dep.found()
 endif
 
 # PNG support
-libpng_dep = dependency('libpng', required: get_option('png'))
+libpng_dep = dependency('libpng', required: get_option('png'), fallback: 'libpng')
 if libpng_dep.found()
   ftoption_command += ['--enable=FT_CONFIG_OPTION_USE_PNG']
   ft2_deps += [libpng_dep]
