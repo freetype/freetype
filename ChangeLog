@@ -1,5 +1,13 @@
 2021-03-07  Tim-Philipp Müller  <tim@centricular.com>
 
+	[ci] Add basic support for Meson builds with MSVC on Windows.
+
+	This adds meson jobs for VS2017 (x86 and x86_64).
+
+	* .gitlab-ci.yml: New file.
+
+2021-03-07  Tim-Philipp Müller  <tim@centricular.com>
+
 	[meson] Add subproject fallbacks for 'libpng' and 'zlib'.
 
 	* subprojects/libpng.wrap, subprojects/zlib.wrap: New files.
