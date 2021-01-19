@@ -428,7 +428,7 @@
 
     ft_memcpy( library->lcd_geometry, sub, 3 * sizeof( FT_Vector ) );
 
-    return FT_THROW( Unimplemented_Feature );
+    return FT_Err_Ok;
   }
 
 #endif /* !FT_CONFIG_OPTION_SUBPIXEL_RENDERING */

@@ -1,3 +1,7 @@
+2021-01-19  Alexei Podtelezhnikov  <apodtele@gmail.com>
+
+	* srd/base/ftlcdfil.c (FT_Library_SetLcdGeometry): Fix return value.
+
 2021-01-15  Nikolaus Waxweiler  <madigens@gmail.com>
 
 	[afshaper] Fix hb_ot_tags_from_script deprecation warning.
