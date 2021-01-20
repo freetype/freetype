@@ -396,8 +396,9 @@
       if ( paint_p > ( (FT_Byte*)colr->table + colr->table_size ) )
         return 0;
 
-      apaint->u.glyph.paint.p = paint_p;
-      apaint->u.glyph.glyphID = FT_NEXT_USHORT( p );
+      apaint->u.glyph.paint.p                     = paint_p;
+      apaint->u.glyph.paint.insert_root_transform = 0;
+      apaint->u.glyph.glyphID                     = FT_NEXT_USHORT( p );
     }
 
     else if ( apaint->format == FT_COLR_PAINTFORMAT_SOLID )
@@ -475,7 +476,8 @@
       if ( paint_p > ( (FT_Byte*)colr->table + colr->table_size ) )
         return 0;
 
-      apaint->u.transformed.paint.p = paint_p;
+      apaint->u.transformed.paint.p                     = paint_p;
+      apaint->u.transformed.paint.insert_root_transform = 0;
 
       /* skip VarIdx entries */
       apaint->u.transformed.affine.xx = FT_NEXT_LONG( p );
@@ -506,7 +508,8 @@
       if ( paint_p > ( (FT_Byte*)colr->table + colr->table_size ) )
         return 0;
 
-      apaint->u.translate.paint.p = paint_p;
+      apaint->u.translate.paint.p                     = paint_p;
+      apaint->u.translate.paint.insert_root_transform = 0;
 
       /* skip VarIdx entries */
       apaint->u.translate.dx = FT_NEXT_LONG( p );
@@ -529,7 +532,8 @@
       if ( paint_p > ( (FT_Byte*)colr->table + colr->table_size ) )
         return 0;
 
-      apaint->u.rotate.paint.p = paint_p;
+      apaint->u.rotate.paint.p                     = paint_p;
+      apaint->u.rotate.paint.insert_root_transform = 0;
 
       /* skip VarIdx entries */
       apaint->u.rotate.angle = FT_NEXT_LONG( p );
@@ -555,7 +559,8 @@
       if ( paint_p > ( (FT_Byte*)colr->table + colr->table_size ) )
         return 0;
 
-      apaint->u.skew.paint.p = paint_p;
+      apaint->u.skew.paint.p                     = paint_p;
+      apaint->u.skew.paint.insert_root_transform = 0;
 
       /* skip VarIdx entries */
       apaint->u.skew.x_skew_angle = FT_NEXT_LONG( p );
@@ -588,7 +593,10 @@
       if ( source_paint_p > ( (FT_Byte*)colr->table + colr->table_size ) )
         return 0;
 
-      apaint->u.composite.source_paint.p = source_paint_p;
+      apaint->u.composite.source_paint.p =
+        source_paint_p;
+      apaint->u.composite.source_paint.insert_root_transform =
+        0;
 
       composite_mode = FT_NEXT_BYTE( p );
       if ( composite_mode >= FT_COLR_COMPOSITE_MAX )
@@ -604,7 +612,10 @@
       if ( backdrop_paint_p > ( (FT_Byte*)colr->table + colr->table_size ) )
         return 0;
 
-      apaint->u.composite.backdrop_paint.p = backdrop_paint_p;
+      apaint->u.composite.backdrop_paint.p =
+        backdrop_paint_p;
+      apaint->u.composite.backdrop_paint.insert_root_transform =
+        0;
     }
 
     else if ( apaint->format == FT_COLR_PAINTFORMAT_COLR_GLYPH )
@@ -655,17 +666,16 @@
 
 
   FT_LOCAL_DEF ( FT_Bool )
-  tt_face_get_colr_glyph_paint( TT_Face          face,
-                                FT_UInt          base_glyph,
-                                FT_OpaquePaint*  opaque_paint )
+  tt_face_get_colr_glyph_paint( TT_Face                  face,
+                                FT_UInt                  base_glyph,
+                                FT_Color_Root_Transform  root_transform,
+                                FT_OpaquePaint*          opaque_paint )
   {
-    Colr*  colr = (Colr*)face->colr;
-
+    Colr*              colr = (Colr*)face->colr;
     BaseGlyphV1Record  base_glyph_v1_record;
     FT_Byte*           p;
 
-
-    if ( !colr )
+    if ( !colr || !colr->table )
       return 0;
 
     if ( colr->version < 1 || !colr->num_base_glyphs_v1 ||
@@ -691,6 +701,11 @@
       return 0;
 
     opaque_paint->p = p;
+
+    if ( root_transform == FT_COLOR_INCLUDE_ROOT_TRANSFORM )
+      opaque_paint->insert_root_transform = 1;
+    else
+      opaque_paint->insert_root_transform = 0;
 
     return 1;
   }
@@ -737,8 +752,12 @@
            colr->num_layers_v1 * LAYER_V1_LIST_PAINT_OFFSET_SIZE ) )
       return 0;
 
-    paint_offset    = FT_NEXT_ULONG( p );
-    opaque_paint->p = (FT_Byte*)( colr->layers_v1 + paint_offset );
+    paint_offset =
+      FT_NEXT_ULONG( p );
+    opaque_paint->insert_root_transform =
+      0;
+    opaque_paint->p =
+      (FT_Byte*)( colr->layers_v1 + paint_offset );
 
     iterator->p = p;
 
@@ -794,21 +813,74 @@
                      FT_OpaquePaint  opaque_paint,
                      FT_COLR_Paint*  paint )
   {
-    Colr*  colr = (Colr*)face->colr;
+    Colr*           colr = (Colr*)face->colr;
+    FT_OpaquePaint  next_paint;
+    FT_Matrix       ft_root_scale;
 
-    FT_Byte*  p;
-
-
-    if ( !colr )
+    if ( !colr || !colr->base_glyphs_v1 || !colr->table )
       return 0;
 
-    if ( opaque_paint.p < (FT_Byte*)colr->table                         ||
-         opaque_paint.p >= ( (FT_Byte*)colr->table + colr->table_size ) )
-      return 0;
+    if ( opaque_paint.insert_root_transform )
+    {
+      /* 'COLR' v1 glyph information is returned in unscaled coordinates,
+       * i.e., `FT_Size` is not applied or multiplied into the values.  When
+       * client applications draw color glyphs, they can request to include
+       * a top-level transform, which includes the active `x_scale` and
+       * `y_scale` information for scaling the glyph, as well the additional
+       * transform and translate configured through `FT_Set_Transform`.
+       * This allows client applications to apply this top-level transform
+       * to the graphics context first and only once, then have gradient and
+       * contour scaling applied correctly when performing the additional
+       * drawing operations for subsequenct paints.  Prepare this initial
+       * transform here.
+       */
+      paint->format = FT_COLR_PAINTFORMAT_TRANSFORMED;
 
-    p = opaque_paint.p;
+      next_paint.p                     = opaque_paint.p;
+      next_paint.insert_root_transform = 0;
+      paint->u.transformed.paint       = next_paint;
 
-    return read_paint( colr, p, paint );
+      /* `x_scale` and `y_scale` are in 26.6 format, representing the scale
+       * factor to get from font units to requested size.  However, expected
+       * return values are in 16.16, so we shift accordingly with rounding. 
+       */
+      ft_root_scale.xx = ( face->root.size->metrics.x_scale + 32 ) >> 6;
+      ft_root_scale.xy = 0;
+      ft_root_scale.yx = 0;
+      ft_root_scale.yy = ( face->root.size->metrics.y_scale + 32 ) >> 6;
+
+      if ( face->root.internal->transform_flags & 1 )
+        FT_Matrix_Multiply( &face->root.internal->transform_matrix,
+                            &ft_root_scale );
+
+      paint->u.transformed.affine.xx = ft_root_scale.xx;
+      paint->u.transformed.affine.xy = ft_root_scale.xy;
+      paint->u.transformed.affine.yx = ft_root_scale.yx;
+      paint->u.transformed.affine.yy = ft_root_scale.yy;
+
+      /* The translation is specified in 26.6 format and, according to the
+       * documentation of `FT_Set_Translate`, is performed on the character
+       * size given in the last call to `FT_Set_Char_Size`.  The
+       * 'PaintTransformed' paint table's `FT_Affine23` format expects
+       * values in 16.16 format, thus we need to shift by 10 bits.
+       */
+      if ( face->root.internal->transform_flags & 2 )
+      {
+        paint->u.transformed.affine.dx =
+          face->root.internal->transform_delta.x << 10;
+        paint->u.transformed.affine.dy =
+          face->root.internal->transform_delta.y << 10;
+      }
+      else
+      {
+        paint->u.transformed.affine.dx = 0;
+        paint->u.transformed.affine.dy = 0;
+      }
+
+      return 1;
+    }
+
+    return read_paint( colr, opaque_paint.p, paint );
   }
 
 

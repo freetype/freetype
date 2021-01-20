@@ -1,3 +1,21 @@
+2021-02-09  Dominik Röttsches  <drott@chromium.org>
+
+	[sfnt] Provide optional root transform for 'COLR' v1 glyph graph.
+
+        * include/freetype/freetype.h (FT_Get_Color_Glyph_Paint):
+	Additional function argument `root_transform` to control whether
+	root transform should be returned.
+	(FT_OpaquePaint): Additional tracking field to denote whether
+	root transform is to be returned.
+	* include/freetype/internal/sfnt.h
+	(TT_Get_Color_Glyph_Paint_Func): Propagate additional argument.
+	* src/base/ftobjs.c (FT_Get_Color_Glyph_Paint): Ditto.
+	* src/sfnt/ttcolr.c (tt_face_get_colr_glyph_paint): Return root
+	transform reflecting the size and tranform configured on
+	`FT_Face`.
+	(read_paint): Initialize and track status of insert_root_transform
+	flag.
+
 2021-02-09  Xavier Claessens  <xavier.claessens@collabora.com>
 
 	* meson.build: s/freetype2_dep/freetype_dep/.

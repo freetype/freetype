@@ -549,9 +549,10 @@ FT_BEGIN_HEADER
    *   error, value~0 is returned also.
    */
   typedef FT_Bool
-  ( *TT_Get_Color_Glyph_Paint_Func )( TT_Face          face,
-                                      FT_UInt          base_glyph,
-                                      FT_OpaquePaint  *paint );
+  ( *TT_Get_Color_Glyph_Paint_Func )( TT_Face                   face,
+                                      FT_UInt                   base_glyph,
+                                      FT_Color_Root_Transform   root_transform,
+                                      FT_OpaquePaint           *paint );
 
 
   /**************************************************************************

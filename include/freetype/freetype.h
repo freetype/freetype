@@ -4479,11 +4479,15 @@ FT_BEGIN_HEADER
    *   p ::
    *     An internal offset to a Paint table, needs to be set to NULL before
    *     passing this struct as an argument to @FT_Get_Paint.
+   *
+   *   insert_root_transform ::
+   *     An internal boolean to track whether an initial root transform is
+   *     to be provided.  Do not set this value.
    */
   typedef struct  FT_Opaque_Paint_
   {
     FT_Byte*  p;
-
+    FT_Bool   insert_root_transform;
   } FT_OpaquePaint;
 
 
@@ -4881,6 +4885,33 @@ FT_BEGIN_HEADER
 
   /**************************************************************************
    *
+   * @enum:
+   *   FT_Color_Root_Transform
+   *
+   * @description:
+   *   An enumeration to specify whether @FT_Get_Color_Glyph_Paint is to
+   *   return a root transform to configure the client's graphics context
+   *   matrix.
+   *
+   * @values:
+   *   FT_COLOR_INCLUDE_ROOT_TRANSFORM ::
+   *     Do include the root transform as the initial @FT_COLR_Paint object.
+   *
+   *   FT_COLOR_NO_ROOT_TRANSFORM ::
+   *     Do not output an initial root transform.
+   */
+  typedef enum  FT_Color_Root_Transform_
+  {
+    FT_COLOR_INCLUDE_ROOT_TRANSFORM,
+    FT_COLOR_NO_ROOT_TRANSFORM,
+
+    FT_COLOR_ROOT_TRANSFORM_MAX
+
+  } FT_Color_Root_Transform;
+
+
+  /**************************************************************************
+   *
    * @function:
    *   FT_Get_Color_Glyph_Paint
    *
@@ -4898,12 +4929,54 @@ FT_BEGIN_HEADER
    *   function and specifying a glyph ID, one retrieves the root paint
    *   table for this glyph ID.
    *
+   *   This function allows control whether an initial root transform is
+   *   returned to configure scaling, transform, and translation correctly
+   *   on the client's graphics context.  The initial root transform is
+   *   computed and returned according to the values configured for @FT_Size
+   *   and @FT_Set_Transform on the @FT_Face object, see below for details
+   *   of the `root_transform` parameter.  This has implications for a
+   *   client 'COLR' v1 implementation: When this function returns an
+   *   initially computed root transform, at the time of executing the
+   *   @FT_Paint_Glyph operation, the contours should be retrieved using
+   *   @FT_Load_Glyph at unscaled, untransformed size.  This is because the
+   *   root transform applied to the graphics context will take care of
+   *   correct scaling.
+   *
+   *   Alternatively, to allow hinting of contours, at the time of executing
+   *   @FT_Load_Glyph, the current graphics context transformation matrix
+   *   can be decomposed into a scaling matrix and a remainder, and
+   *   @FT_Load_Glyph can be used to retrieve the contours at scaled size.
+   *   Care must then be taken to blit or clip to the graphics context with
+   *   taking this remainder transformation into account.
+   *
    * @input:
    *   face ::
    *     A handle to the parent face object.
    *
    *   base_glyph ::
    *     The glyph index for which to retrieve the root paint table.
+   *
+   *   root_transform ::
+   *     Specifies whether an initially computed root is returned by
+   *     @FT_Paint_Transformed to account for the activated size (see
+   *     @FT_Activate_Size) and the configured transform and translate (see
+   *     @FT_Set_Translate).
+   *
+   *     This root transform is returned before nodes of the glyph graph of
+   *     the font are returned.  Subsequent @FT_COLR_Paint structures
+   *     contain unscaled and untransformed values.  The inserted root
+   *     transform enables the client application to apply an initial
+   *     transform to its graphics context.  When executing subsequent
+   *     FT_COLR_Paint operations, values from @FT_COLR_Paint operations
+   *     will ultimately be correctly scaled because of the root transform
+   *     applied to the graphics context.  Use
+   *     @FT_COLOR_INCLUDE_ROOT_TRANSFORM to include the root transform, use
+   *     @FT_COLOR_NO_ROOT_TRANSFORM to not include it.  The latter may be
+   *     useful when traversing the 'COLR' v1 glyph graph and reaching a
+   *     @FT_PaintColrGlyph.  When recursing into @FT_PaintColrGlyph and
+   *     painting that inline, no additional root transform is needed as it
+   *     has already been applied to the graphics context at the beginning
+   *     of drawing this glyph.
    *
    * @output:
    *   paint ::
@@ -4918,9 +4991,10 @@ FT_BEGIN_HEADER
    *   error, value~0 is returned also.
    */
   FT_EXPORT( FT_Bool )
-  FT_Get_Color_Glyph_Paint( FT_Face          face,
-                            FT_UInt          base_glyph,
-                            FT_OpaquePaint*  paint );
+  FT_Get_Color_Glyph_Paint( FT_Face                  face,
+                            FT_UInt                  base_glyph,
+                            FT_Color_Root_Transform  root_transform,
+                            FT_OpaquePaint*          paint );
 
 
   /**************************************************************************

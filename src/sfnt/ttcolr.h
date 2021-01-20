@@ -43,9 +43,10 @@ FT_BEGIN_HEADER
                           FT_LayerIterator*  iterator );
 
   FT_LOCAL( FT_Bool )
-  tt_face_get_colr_glyph_paint( TT_Face          face,
-                                FT_UInt          base_glyph,
-                                FT_OpaquePaint*  paint );
+  tt_face_get_colr_glyph_paint( TT_Face                  face,
+                                FT_UInt                  base_glyph,
+                                FT_Color_Root_Transform  root_transform,
+                                FT_OpaquePaint*          paint );
 
   FT_LOCAL ( FT_Bool )
   tt_face_get_paint_layers( TT_Face            face,

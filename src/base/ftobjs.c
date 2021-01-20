@@ -5571,9 +5571,10 @@
   /* documentation is in freetype.h */
 
   FT_EXPORT_DEF ( FT_Bool )
-  FT_Get_Color_Glyph_Paint( FT_Face          face,
-                            FT_UInt          base_glyph,
-                            FT_OpaquePaint*  paint )
+  FT_Get_Color_Glyph_Paint( FT_Face                  face,
+                            FT_UInt                  base_glyph,
+                            FT_Color_Root_Transform  root_transform,
+                            FT_OpaquePaint*          paint )
   {
     TT_Face       ttface;
     SFNT_Service  sfnt;
@@ -5589,7 +5590,10 @@
     sfnt   = (SFNT_Service)ttface->sfnt;
 
     if ( sfnt->get_colr_layer )
-      return sfnt->get_colr_glyph_paint( ttface, base_glyph, paint );
+      return sfnt->get_colr_glyph_paint( ttface,
+                                         base_glyph,
+                                         root_transform,
+                                         paint );
     else
       return 0;
   }
