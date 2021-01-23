@@ -138,18 +138,25 @@ check_tool_version $ACLOCAL    aclocal    ACLOCAL    1.10.1
 check_tool_version $LIBTOOLIZE libtoolize LIBTOOLIZE 2.2.4
 check_tool_version $AUTOCONF   autoconf   AUTOCONF   2.62
 
-# This sets freetype_major, freetype_minor, and freetype_patch.
-eval `sed -nf version.sed include/freetype/freetype.h`
+# This sets FREETYPE version.
+eval `sed -n \
+-e 's/^#define  *\(FREETYPE_MAJOR\)  *\([0-9][0-9]*\).*/\1=\2/p' \
+-e 's/^#define  *\(FREETYPE_MINOR\)  *\([0-9][0-9]*\).*/\1=\2/p' \
+-e 's/^#define  *\(FREETYPE_PATCH\)  *\([0-9][0-9]*\).*/\1=\2/p' \
+include/freetype/freetype.h`
 
-# We set freetype-patch to an empty value if it is zero.
-if test "$freetype_patch" = ".0"; then
-  freetype_patch=
+if test "$FREETYPE_PATCH" = "0"; then
+  FREETYPE=$FREETYPE_MAJOR.$FREETYPE_MINOR
+else
+  FREETYPE=$FREETYPE_MAJOR.$FREETYPE_MINOR.$FREETYPE_PATCH
 fi
+
+echo "FreeType $FREETYPE:"
 
 cd builds/unix
 
 echo "generating \`configure.ac'"
-sed -e "s;@VERSION@;$freetype_major$freetype_minor$freetype_patch;" \
+sed -e "s;@VERSION@;$FREETYPE;" \
   < configure.raw > configure.ac
 
 run aclocal -I . --force
