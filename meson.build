@@ -274,7 +274,7 @@ endif
 
 # Harfbuzz support
 harfbuzz_dep = dependency('harfbuzz',
-                 version: '>= 1.8.0',
+                 version: '>= 2.0.0',
                  required: get_option('harfbuzz'))
 if harfbuzz_dep.found()
   ftoption_command += ['--enable=FT_CONFIG_OPTION_USE_HARFBUZZ']

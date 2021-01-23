@@ -1,3 +1,12 @@
+2021-01-23  Werner Lemberg  <wl@gnu.org>
+
+	Require HarfBuzz 2.0.0.
+
+	This is needed to make commit f1f9705f9 work.
+
+	* CMakeLists.txt (HARFBUZZ_MIN_VERSION), builds/unix/configure.raw
+	(harfbuzz_pkg), meson.build (harfbuzz_dep): Updated.
+
 2021-01-22  Alexei Podtelezhnikov  <apodtele@gmail.com>
 
 	* autogen.sh: Absorb `version.sed'.
