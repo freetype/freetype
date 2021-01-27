@@ -2,6 +2,11 @@
 
 	* builds/windows/ftsystem.c: Add shared memory support on Windows.
 
+	* CMakeLists.txt (BASE_SRCS), builds/unix/configure.raw (FTSYS_SRC),
+	builds/windows/vc2010/freetype.vcxproj,
+	builds/windows/visualc/freetype.vcproj, meson.build (ft2_sources):
+	Add it (conditionally).
+
 2021-01-23  Werner Lemberg  <wl@gnu.org>
 
 	Require HarfBuzz 2.0.0.
