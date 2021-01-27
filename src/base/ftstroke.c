@@ -1900,8 +1900,8 @@
     else
     {
       /* close the path if needed */
-      if ( stroker->center.x != stroker->subpath_start.x ||
-           stroker->center.y != stroker->subpath_start.y )
+      if ( !FT_IS_SMALL( stroker->center.x - stroker->subpath_start.x ) ||
+           !FT_IS_SMALL( stroker->center.y - stroker->subpath_start.y ) )
       {
          error = FT_Stroker_LineTo( stroker, &stroker->subpath_start );
          if ( error )

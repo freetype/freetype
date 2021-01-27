@@ -1,5 +1,11 @@
 2021-01-27  Alexei Podtelezhnikov  <apodtele@gmail.com>
 
+	* src/base/ftstroke.c (FT_Stroker_EndSubPath): Ignore tiny gaps.
+
+	Fixes bug #1020.
+
+2021-01-27  Alexei Podtelezhnikov  <apodtele@gmail.com>
+
 	[stroker] Minor clean-up.
 
 	* src/base/ftstroke.c (FT_Stroker_{ConicTo,CubicTo}): Reset the last
