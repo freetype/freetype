@@ -1,3 +1,7 @@
+2021-01-27  Vincent Torri  <vincent.torri@gmail.com>
+
+	* builds/windows/ftsystem.c: Add shared memory support on Windows.
+
 2021-01-23  Werner Lemberg  <wl@gnu.org>
 
 	Require HarfBuzz 2.0.0.

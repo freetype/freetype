@@ -358,6 +358,8 @@ set(BASE_SRCS
 
 if (UNIX)
   list(APPEND BASE_SRCS "builds/unix/ftsystem.c")
+elseif (WIN32)
+  list(APPEND BASE_SRCS "builds/windows/ftsystem.c")
 else ()
   list(APPEND BASE_SRCS "src/base/ftsystem.c")
 endif ()

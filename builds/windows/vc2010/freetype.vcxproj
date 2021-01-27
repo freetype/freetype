@@ -328,7 +328,6 @@
     <ClCompile Include="..\..\..\src\base\ftpfr.c" />
     <ClCompile Include="..\..\..\src\base\ftstroke.c" />
     <ClCompile Include="..\..\..\src\base\ftsynth.c" />
-    <ClCompile Include="..\..\..\src\base\ftsystem.c" />
     <ClCompile Include="..\..\..\src\base\fttype1.c" />
     <ClCompile Include="..\..\..\src\base\ftwinfnt.c" />
     <ClCompile Include="..\..\..\src\bdf\bdf.c" />
@@ -352,6 +351,9 @@
     <ClCompile Include="..\..\..\src\type42\type42.c" />
     <ClCompile Include="..\..\..\src\winfonts\winfnt.c" />
     <ClCompile Include="..\ftdebug.c">
+      <DisableLanguageExtensions>false</DisableLanguageExtensions>
+    </ClCompile>
+    <ClCompile Include="..\ftsystem.c">
       <DisableLanguageExtensions>false</DisableLanguageExtensions>
     </ClCompile>
     <ResourceCompile Include="..\..\..\src\base\ftver.rc" />

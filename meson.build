@@ -201,6 +201,8 @@ endif
 if use_mmap
   # This version of ftsystem.c uses mmap() to read input font files.
   ft2_sources += files(['builds/unix/ftsystem.c',])
+elif host_machine.system() == 'windows'
+  ft2_sources += files(['builds/windows/ftsystem.c',])
 else
   ft2_sources += files(['src/base/ftsystem.c',])
 endif
