@@ -1528,7 +1528,8 @@
       stroker->angle_in = angle_out;
     }
 
-    stroker->center = *to;
+    stroker->center      = *to;
+    stroker->line_length = 0;
 
   Exit:
     return error;
@@ -1744,7 +1745,8 @@
       stroker->angle_in = angle_out;
     }
 
-    stroker->center = *to;
+    stroker->center      = *to;
+    stroker->line_length = 0;
 
   Exit:
     return error;
@@ -1897,10 +1899,6 @@
     }
     else
     {
-      FT_Angle  turn;
-      FT_Int    inside_side;
-
-
       /* close the path if needed */
       if ( stroker->center.x != stroker->subpath_start.x ||
            stroker->center.y != stroker->subpath_start.y )
@@ -1912,29 +1910,11 @@
 
       /* process the corner */
       stroker->angle_out = stroker->subpath_angle;
-      turn               = FT_Angle_Diff( stroker->angle_in,
-                                          stroker->angle_out );
 
-      /* no specific corner processing is required if the turn is 0 */
-      if ( turn != 0 )
-      {
-        /* when we turn to the right, the inside side is 0 */
-        /* otherwise, the inside side is 1 */
-        inside_side = ( turn < 0 );
-
-        error = ft_stroker_inside( stroker,
-                                   inside_side,
-                                   stroker->subpath_line_length );
-        if ( error )
-          goto Exit;
-
-        /* process the outside side */
-        error = ft_stroker_outside( stroker,
-                                    !inside_side,
-                                    stroker->subpath_line_length );
-        if ( error )
-          goto Exit;
-      }
+      error = ft_stroker_process_corner( stroker,
+                                         stroker->subpath_line_length );
+      if ( error )
+        goto Exit;
 
       /* then end our two subpaths */
       ft_stroke_border_close( stroker->borders + 0, FALSE );

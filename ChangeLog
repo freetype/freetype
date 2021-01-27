@@ -1,3 +1,11 @@
+2021-01-27  Alexei Podtelezhnikov  <apodtele@gmail.com>
+
+	[stroker] Minor clean-up.
+
+	* src/base/ftstroke.c (FT_Stroker_{ConicTo,CubicTo}): Reset the last
+	line length.
+	(FT_Stroker_EndSubPath): Call `ft_stroker_process_corner'.
+
 2021-01-27  Vincent Torri  <vincent.torri@gmail.com>
 
 	* builds/windows/ftsystem.c: Add shared memory support on Windows.
