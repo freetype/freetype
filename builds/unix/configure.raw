@@ -202,7 +202,7 @@ if test "x${enable_mmap}" != "xno"; then
 fi
 if test "x${enable_mmap}" = "xno" \
    -o "$ac_cv_func_mmap_fixed_mapped" != "yes"; then
-  case
+  case "$host" in
   *-*-mingw*)
     FTSYS_SRC='$(PLATFORM_DIR)/ftsystem.c'
     ;;

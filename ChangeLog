@@ -1,3 +1,11 @@
+2021-01-31  Werner Lemberg  <wl@gnu.org>
+
+	* builds/unix/configure.raw: Fix typo.
+
+	Bug introduced in Vincent's last commit bb33f03.
+
+	Fixes issue #1021.
+
 2021-01-27  Alexei Podtelezhnikov  <apodtele@gmail.com>
 
 	* src/base/ftstroke.c (FT_Stroker_EndSubPath): Ignore tiny gaps.
