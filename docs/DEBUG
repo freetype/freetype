@@ -260,7 +260,7 @@ IV. Additional Capabilities with `FT_DEBUG_LOGGING'
 If `FT_DEBUG_LOGGING' is  defined, four APIs are  available to provide
 additional debugging support.  Use
 
-  #include<freetype/ftlogging.h>
+  #include <freetype/ftlogging.h>
 
 to access them.
 

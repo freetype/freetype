@@ -1,5 +1,19 @@
 2021-01-31  Werner Lemberg  <wl@gnu.org>
 
+	Always provide logging API.
+
+	It's easier to have stubs if FT_DEBUG_LOGGING is undefined than to
+	modify `ftexport.sym` conditionally.
+
+	Problem reported by Alexei.
+
+	* src/base/ftdebug.c: Include `ftlogging.h`.
+
+	(FT_Trace_Set_Level, FT_Trace_Set_Default_Level, FT_Set_Log_Handler,
+	FT_Set_Default_Log_Handler) [!FT_DEBUG_LOGGING]: Provide stubs.
+
+2021-01-31  Werner Lemberg  <wl@gnu.org>
+
 	* builds/unix/configure.raw: Fix typo.
 
 	Bug introduced in Vincent's last commit bb33f03.
