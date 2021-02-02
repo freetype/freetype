@@ -192,39 +192,51 @@ AC_SUBST(INSTALL_FT2_CONFIG, [$enable_freetype_config])
 AC_SYS_LARGEFILE
 
 # Here we check whether we can use our mmap file component.
+#
+# Note that `ftsystem.c` for Windows has its own mmap-like implementation
+# not covered by `AC_FUNC_MMAP` and/or `FT_UNMAP_PARAM`.
 
 AC_ARG_ENABLE([mmap],
   AS_HELP_STRING([--disable-mmap],
                  [do not check mmap() and do not use]),
   [enable_mmap="no"], [enable_mmap="yes"])
 if test "x${enable_mmap}" != "xno"; then
-  AC_FUNC_MMAP
+  case "$host" in
+  *-*-mingw*)
+    ac_cv_func_mmap_fixed_mapped="yes"
+    AC_MSG_CHECKING([for working mmap])
+    AC_MSG_RESULT([using Windows-specific equivalent])
+    ;;
+  *)
+    AC_FUNC_MMAP
+    ;;
+  esac
 fi
 if test "x${enable_mmap}" = "xno" \
    -o "$ac_cv_func_mmap_fixed_mapped" != "yes"; then
-  case "$host" in
-  *-*-mingw*)
-    FTSYS_SRC='$(PLATFORM_DIR)/ftsystem.c'
-    ;;
-  *)
-    FTSYS_SRC='$(BASE_DIR)/ftsystem.c'
-  esac
+  FTSYS_SRC='$(BASE_DIR)/ftsystem.c'
 else
   FTSYS_SRC='$(PLATFORM_DIR)/ftsystem.c'
 
-  AC_CHECK_DECLS([munmap],
-    [],
-    [],
-    [
+  case "$host" in
+  *-*-mingw*)
+    ;;
+  *)
+    AC_CHECK_DECLS([munmap],
+      [],
+      [],
+      [
 
 #ifdef HAVE_UNISTD_H
 #include <unistd.h>
 #endif
 #include <sys/mman.h>
 
-    ])
+      ])
 
-  FT_MUNMAP_PARAM
+    FT_MUNMAP_PARAM
+    ;;
+  esac
 fi
 AC_SUBST([FTSYS_SRC])
 

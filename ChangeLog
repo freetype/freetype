@@ -1,5 +1,11 @@
 2021-01-31  Werner Lemberg  <wl@gnu.org>
 
+	* builds/unix/configure.raw [mmap support]: Correctly handle Windows.
+
+	Fixes #1024.
+
+2021-01-31  Werner Lemberg  <wl@gnu.org>
+
 	* builds/windows/ftdebug.c: Synchronize with `src/base/ftdebug.c`.
 
 2021-01-31  Werner Lemberg  <wl@gnu.org>
