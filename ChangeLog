@@ -1,3 +1,13 @@
+2021-02-03  Werner Lemberg  <wl@gnu.org>
+
+	[psaux] Fix integer overflow.
+
+	Reported as
+
+	  https://bugs.chromium.org/p/oss-fuzz/issues/detail?id=30154
+
+	* src/psaux/psblues.c (cf2_blues_capture): Use `SUB_INT32`.
+
 2021-02-02  Alexei Podtelezhnikov  <apodtele@gmail.com>
 
 	* builds/unix/configure.raw [mmap support]: Explicitly handle Windows.
