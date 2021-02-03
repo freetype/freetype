@@ -204,9 +204,8 @@ if test "x${enable_mmap}" != "xno"; then
   case "$host" in
   *-*-mingw*)
     AC_MSG_CHECKING([for working mmap])
-    AC_MSG_RESULT([using Windows-specific equivalent])
+    AC_MSG_RESULT([using MapViewOfFile in Windows])
     FTSYS_SRC='$(TOP_DIR)/builds/windows/ftsystem.c'
-    AC_SUBST([FTSYS_SRC])
     ;;
   *)
     AC_FUNC_MMAP
@@ -226,11 +225,16 @@ if test "x${enable_mmap}" != "xno"; then
         ])
 
       FT_MUNMAP_PARAM
-      AC_SUBST([FTSYS_SRC])
     fi
     ;;
   esac
 fi
+
+if test -z "$FTSYS_SRC"; then
+  FTSYS_SRC='$(BASE_DIR)/ftsystem.c'
+fi
+AC_SUBST([FTSYS_SRC])
+
 
 AC_CHECK_FUNCS([memcpy memmove])
 

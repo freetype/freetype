@@ -1,3 +1,9 @@
+2021-02-03  Alexei Podtelezhnikov  <apodtele@gmail.com>
+
+	* builds/unix/configure.raw [mmap]: Restore default path.
+
+	Fixes #1023.
+
 2021-02-03  Werner Lemberg  <wl@gnu.org>
 
 	[psaux] Fix integer overflow.
