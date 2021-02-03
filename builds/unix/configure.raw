@@ -203,42 +203,34 @@ AC_ARG_ENABLE([mmap],
 if test "x${enable_mmap}" != "xno"; then
   case "$host" in
   *-*-mingw*)
-    ac_cv_func_mmap_fixed_mapped="yes"
     AC_MSG_CHECKING([for working mmap])
     AC_MSG_RESULT([using Windows-specific equivalent])
+    FTSYS_SRC='$(TOP_DIR)/builds/windows/ftsystem.c'
+    AC_SUBST([FTSYS_SRC])
     ;;
   *)
     AC_FUNC_MMAP
-    ;;
-  esac
-fi
-if test "x${enable_mmap}" = "xno" \
-   -o "$ac_cv_func_mmap_fixed_mapped" != "yes"; then
-  FTSYS_SRC='$(BASE_DIR)/ftsystem.c'
-else
-  FTSYS_SRC='$(PLATFORM_DIR)/ftsystem.c'
+    if test "$ac_cv_func_mmap_fixed_mapped" = "yes"; then
+      FTSYS_SRC='$(PLATFORM_DIR)/ftsystem.c'
 
-  case "$host" in
-  *-*-mingw*)
-    ;;
-  *)
-    AC_CHECK_DECLS([munmap],
-      [],
-      [],
-      [
+      AC_CHECK_DECLS([munmap],
+        [],
+        [],
+        [
 
 #ifdef HAVE_UNISTD_H
 #include <unistd.h>
 #endif
 #include <sys/mman.h>
 
-      ])
+        ])
 
-    FT_MUNMAP_PARAM
+      FT_MUNMAP_PARAM
+      AC_SUBST([FTSYS_SRC])
+    fi
     ;;
   esac
 fi
-AC_SUBST([FTSYS_SRC])
 
 AC_CHECK_FUNCS([memcpy memmove])
 
