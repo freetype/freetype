@@ -843,8 +843,8 @@
     if ( cid->fd_bytes > 4 || cid->gd_bytes > 4 )
     {
       FT_ERROR(( "cid_face_open:"
-                 " Values of `FDBytes' or `GDBytes' larger than 4\n"
-                 "               "
+                 " Values of `FDBytes' or `GDBytes' larger than 4\n" ));
+      FT_ERROR(( "               "
                  " are not supported\n" ));
       error = FT_THROW( Invalid_File_Format );
       goto Exit;

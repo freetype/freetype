@@ -659,8 +659,8 @@
       if ( dict->cid_registry == 0xFFFFU && !psnames )
       {
         FT_ERROR(( "cff_face_init:"
-                   " cannot open CFF & CEF fonts\n"
-                   "              "
+                   " cannot open CFF & CEF fonts\n" ));
+        FT_ERROR(( "              "
                    " without the `psnames' module\n" ));
         error = FT_THROW( Missing_Module );
         goto Exit;

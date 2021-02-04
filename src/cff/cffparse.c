@@ -713,9 +713,10 @@
            ( max_scaling - min_scaling ) > 9 )
       {
         FT_TRACE1(( "cff_parse_font_matrix:"
-                    " strange scaling values (minimum %ld, maximum %ld),\n"
-                    "                      "
-                    " using default matrix\n", min_scaling, max_scaling ));
+                    " strange scaling values (minimum %ld, maximum %ld),\n",
+                    min_scaling, max_scaling ));
+        FT_TRACE1(( "                      "
+                    " using default matrix\n" ));
         goto Unlikely;
       }
 

@@ -868,8 +868,8 @@
         result[len] = '\0';
 
         FT_TRACE0(( "sfnt_get_var_ps_name:"
-                    " Shortening variation PS name prefix\n"
-                    "                     "
+                    " Shortening variation PS name prefix\n" ));
+        FT_TRACE0(( "                     "
                     " to %d characters\n", len ));
       }
 
@@ -920,8 +920,8 @@
         if ( !subfamily_name )
         {
           FT_TRACE1(( "sfnt_get_var_ps_name:"
-                      " can't construct named instance PS name;\n"
-                      "                     "
+                      " can't construct named instance PS name;\n" ));
+          FT_TRACE1(( "                     "
                       " trying to construct normal instance PS name\n" ));
           goto construct_instance_name;
         }

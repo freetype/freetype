@@ -1122,8 +1122,8 @@
     else if ( blend->num_designs != (FT_UInt)num_designs )
     {
       FT_ERROR(( "parse_weight_vector:"
-                 " /BlendDesignPosition and /WeightVector have\n"
-                 "                    "
+                 " /BlendDesignPosition and /WeightVector have\n" ));
+      FT_ERROR(( "                    "
                  " different number of elements\n" ));
       error = FT_THROW( Invalid_File_Format );
       goto Exit;
@@ -1307,9 +1307,9 @@
     else
     {
       FT_TRACE1(( "t1_load_keyword: ignoring keyword `%s'"
-                  " which is not valid at this point\n"
-                  "                 (probably due to missing keywords)\n",
+                  " which is not valid at this point\n",
                  field->ident ));
+      FT_TRACE1(( "                 (probably due to missing keywords)\n" ));
       error = FT_Err_Ok;
     }
 

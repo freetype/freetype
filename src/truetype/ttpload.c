@@ -237,10 +237,11 @@
     if ( pos1 > face->glyf_len )
     {
       FT_TRACE1(( "tt_face_get_location:"
-                  " too large offset (0x%08lx) found for glyph index %d,\n"
-                  "                     "
+                  " too large offset (0x%08lx) found for glyph index %d,\n",
+                  pos1, gindex ));
+      FT_TRACE1(( "                     "
                   " exceeding the end of `glyf' table (0x%08lx)\n",
-                  pos1, gindex, face->glyf_len ));
+                  face->glyf_len ));
       *asize = 0;
       return 0;
     }
@@ -251,19 +252,21 @@
       if ( gindex == face->num_locations - 2 )
       {
         FT_TRACE1(( "tt_face_get_location:"
-                    " too large size (%ld bytes) found for glyph index %d,\n"
-                    "                     "
+                    " too large size (%ld bytes) found for glyph index %d,\n",
+                    pos2 - pos1, gindex ));
+        FT_TRACE1(( "                     "
                     " truncating at the end of `glyf' table to %ld bytes\n",
-                    pos2 - pos1, gindex, face->glyf_len - pos1 ));
+                    face->glyf_len - pos1 ));
         pos2 = face->glyf_len;
       }
       else
       {
         FT_TRACE1(( "tt_face_get_location:"
-                    " too large offset (0x%08lx) found for glyph index %d,\n"
-                    "                     "
+                    " too large offset (0x%08lx) found for glyph index %d,\n",
+                    pos2, gindex + 1 ));
+        FT_TRACE1(( "                     "
                     " exceeding the end of `glyf' table (0x%08lx)\n",
-                    pos2, gindex + 1, face->glyf_len ));
+                    face->glyf_len ));
         *asize = 0;
         return 0;
       }

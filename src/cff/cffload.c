@@ -2361,8 +2361,8 @@
       if ( font->name_index.count > 1 )
       {
         FT_ERROR(( "cff_font_load:"
-                   " invalid CFF font with multiple subfonts\n"
-                   "              "
+                   " invalid CFF font with multiple subfonts\n" ));
+        FT_ERROR(( "              "
                    " in SFNT wrapper\n" ));
         error = FT_THROW( Invalid_File_Format );
         goto Exit;

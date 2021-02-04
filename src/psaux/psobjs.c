@@ -595,10 +595,10 @@
     if ( cur < limit && cur == parser->cursor )
     {
       FT_ERROR(( "ps_parser_skip_PS_token:"
-                 " current token is `%c' which is self-delimiting\n"
-                 "                        "
-                 " but invalid at this point\n",
+                 " current token is `%c' which is self-delimiting\n",
                  *cur ));
+      FT_ERROR(( "                        "
+                 " but invalid at this point\n" ));
 
       error = FT_THROW( Invalid_File_Format );
     }
@@ -1175,8 +1175,8 @@
           else
           {
             FT_ERROR(( "ps_parser_load_field:"
-                       " expected a name or string\n"
-                       "                     "
+                       " expected a name or string\n" ));
+            FT_ERROR(( "                     "
                        " but found token of type %d instead\n",
                        token.type ));
             error = FT_THROW( Invalid_File_Format );
@@ -1258,14 +1258,14 @@
             if ( result < 0 || (FT_UInt)result < max_objects )
             {
               FT_ERROR(( "ps_parser_load_field:"
-                         " expected %d integer%s in the %s subarray\n"
-                         "                     "
-                         " of /FontBBox in the /Blend dictionary\n",
+                         " expected %d integer%s in the %s subarray\n",
                          max_objects, max_objects > 1 ? "s" : "",
                          i == 0 ? "first"
                                 : ( i == 1 ? "second"
                                            : ( i == 2 ? "third"
                                                       : "fourth" ) ) ));
+              FT_ERROR(( "                     "
+                         " of /FontBBox in the /Blend dictionary\n" ));
               error = FT_THROW( Invalid_File_Format );
 
               FT_FREE( temp );

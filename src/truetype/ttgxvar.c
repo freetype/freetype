@@ -487,8 +487,8 @@
     if ( itemStore->axisCount != (FT_Long)blend->mmvar->num_axis )
     {
       FT_TRACE2(( "ft_var_load_item_variation_store:"
-                  " number of axes in item variation store\n"
-                  "                                 "
+                  " number of axes in item variation store\n" ));
+      FT_TRACE2(( "                                 "
                   " and `fvar' table are different\n" ));
       error = FT_THROW( Invalid_Table );
       goto Exit;

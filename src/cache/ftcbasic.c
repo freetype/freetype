@@ -108,12 +108,16 @@
     if ( error || !face )
       return result;
 
+#ifdef FT_DEBUG_LEVEL_TRACE
     if ( (FT_ULong)face->num_glyphs > FT_UINT_MAX || 0 > face->num_glyphs )
+    {
       FT_TRACE1(( "ftc_basic_family_get_count:"
-                  " the number of glyphs in this face is %ld,\n"
-                  "                           "
-                  " which is too much and thus truncated\n",
+                  " the number of glyphs in this face is %ld,\n",
                   face->num_glyphs ));
+      FT_TRACE1(( "                           "
+                  " which is too much and thus truncated\n" ));
+    }
+#endif
 
     if ( !error )
       result = (FT_UInt)face->num_glyphs;

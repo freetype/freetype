@@ -795,8 +795,8 @@
       if ( maxProfile->maxTwilightPoints > ( 0xFFFFU - 4 ) )
       {
         FT_TRACE0(( "tt_face_load_maxp:"
-                    " too much twilight points in `maxp' table;\n"
-                    "                  "
+                    " too much twilight points in `maxp' table;\n" ));
+        FT_TRACE0(( "                  "
                     " some glyphs might be rendered incorrectly\n" ));
 
         maxProfile->maxTwilightPoints = 0xFFFFU - 4;

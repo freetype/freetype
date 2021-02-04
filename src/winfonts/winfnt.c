@@ -420,12 +420,12 @@
           goto Exit;
 
         FT_TRACE2(( "magic %04lx, machine %02x, number_of_sections %u, "
-                    "size_of_optional_header %02x\n"
-                    "magic32 %02x, rsrc_virtual_address %04lx, "
-                    "rsrc_size %04lx\n",
+                    "size_of_optional_header %02x\n",
                     pe32_header.magic, pe32_header.machine,
                     pe32_header.number_of_sections,
-                    pe32_header.size_of_optional_header,
+                    pe32_header.size_of_optional_header ));
+        FT_TRACE2(( "magic32 %02x, rsrc_virtual_address %04lx, "
+                    "rsrc_size %04lx\n",
                     pe32_header.magic32, pe32_header.rsrc_virtual_address,
                     pe32_header.rsrc_size ));
 

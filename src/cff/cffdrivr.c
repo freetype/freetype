@@ -345,8 +345,8 @@
       else
       {
         FT_ERROR(( "cff_get_glyph_name:"
-                   " cannot get glyph name from a CFF2 font\n"
-                   "                   "
+                   " cannot get glyph name from a CFF2 font\n" ));
+        FT_ERROR(( "                   "
                    " without the `psnames' module\n" ));
         error = FT_THROW( Missing_Module );
         goto Exit;
@@ -356,8 +356,8 @@
     if ( !font->psnames )
     {
       FT_ERROR(( "cff_get_glyph_name:"
-                 " cannot get glyph name from CFF & CEF fonts\n"
-                 "                   "
+                 " cannot get glyph name from CFF & CEF fonts\n" ));
+      FT_ERROR(( "                   "
                  " without the `psnames' module\n" ));
       error = FT_THROW( Missing_Module );
       goto Exit;
@@ -412,8 +412,8 @@
       else
       {
         FT_ERROR(( "cff_get_name_index:"
-                   " cannot get glyph index from a CFF2 font\n"
-                   "                   "
+                   " cannot get glyph index from a CFF2 font\n" ));
+        FT_ERROR(( "                   "
                    " without the `psnames' module\n" ));
         return 0;
       }
