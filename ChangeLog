@@ -1,5 +1,12 @@
 2021-02-04  Werner Lemberg  <wl@gnu.org>
 
+	[base] Fix Netpbm tracing message.
+
+	* src/base/ftobjs.c (FT_Render_Glyph_Internal): Don't emit Netpbm
+	warning if there is nothing to output.
+
+2021-02-04  Werner Lemberg  <wl@gnu.org>
+
 	* src/*: Don't use more than one '\n' in `FT_TRACE` and `FT_ERROR`.
 
 	This ensures good logging output, with all lines having a proper

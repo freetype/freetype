@@ -4733,11 +4733,11 @@
 
     /* we use FT_TRACE7 in this block */
     if ( !error                               &&
-         ft_trace_levels[trace_checksum] >= 7 )
+         ft_trace_levels[trace_checksum] >= 7 &&
+         slot->bitmap.buffer                  )
     {
       if ( slot->bitmap.rows  < 128U &&
-           slot->bitmap.width < 128U &&
-           slot->bitmap.buffer       )
+           slot->bitmap.width < 128U )
       {
         int  rows  = (int)slot->bitmap.rows;
         int  width = (int)slot->bitmap.width;
