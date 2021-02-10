@@ -1,5 +1,24 @@
 2021-02-09  Xavier Claessens  <xavier.claessens@collabora.com>
 
+	[meson] Fix handling of HarfBuzz library.
+
+	* meson.build (harfbuzz_dep): Do not fall back to HarfBuzz by
+	default.
+
+	Otherwise it causes a dependency cycle:
+
+	  cairo => fontconfig => freetype2 => harfbuzz => cairo
+
+	Meson will still fall back to HarfBuzz subprojects if the `harfbuzz`
+	option is set to `enabled` instead of `auto` and a
+	`subprojects/harfbuzz.wrap` file is present.  In that case it is the
+	responsibility of the main project to set the proper options on each
+	subproject to break the dependency cycle.
+
+	Fixes: #1028.
+
+2021-02-09  Xavier Claessens  <xavier.claessens@collabora.com>
+
 	[meson] Fix dependency lookup and generate `ftconfig.h`.
 
 	- zlib: If not found on the system, meson can build it as a
