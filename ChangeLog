@@ -1,3 +1,15 @@
+2021-02-10  Dominik Röttsches  <drott@chromium.org>
+
+	[sfnt] Implement 'COLR' v1 sweep gradients.
+
+	* freetype.h (FT_PaintSweepGradient): Add `FT_PaintSweepGradient` to
+	represent a 'COLR' v1 sweep gradient.
+	Update format.
+	(FT_PaintFormat): Update shifted paint formats.
+	Sync with spec.
+	* sfnt/ttcolr.c (read_paint): Logic to parse sweep gradients.
+	Fix struct access in radial gradient implementation.
+
 2021-02-09  Dominik Röttsches  <drott@chromium.org>
 
 	[sfnt] Provide optional root transform for 'COLR' v1 glyph graph.

@@ -4235,14 +4235,15 @@ FT_BEGIN_HEADER
     FT_COLR_PAINTFORMAT_SOLID           = 2,
     FT_COLR_PAINTFORMAT_LINEAR_GRADIENT = 3,
     FT_COLR_PAINTFORMAT_RADIAL_GRADIENT = 4,
-    FT_COLR_PAINTFORMAT_GLYPH           = 5,
-    FT_COLR_PAINTFORMAT_COLR_GLYPH      = 6,
-    FT_COLR_PAINTFORMAT_TRANSFORMED     = 7,
-    FT_COLR_PAINTFORMAT_TRANSLATE       = 8,
-    FT_COLR_PAINTFORMAT_ROTATE          = 9,
-    FT_COLR_PAINTFORMAT_SKEW            = 10,
-    FT_COLR_PAINTFORMAT_COMPOSITE       = 11,
-    FT_COLR_PAINT_FORMAT_MAX            = 12,
+    FT_COLR_PAINTFORMAT_SWEEP_GRADIENT  = 5,
+    FT_COLR_PAINTFORMAT_GLYPH           = 6,
+    FT_COLR_PAINTFORMAT_COLR_GLYPH      = 7,
+    FT_COLR_PAINTFORMAT_TRANSFORMED     = 8,
+    FT_COLR_PAINTFORMAT_TRANSLATE       = 9,
+    FT_COLR_PAINTFORMAT_ROTATE          = 10,
+    FT_COLR_PAINTFORMAT_SKEW            = 11,
+    FT_COLR_PAINTFORMAT_COMPOSITE       = 12,
+    FT_COLR_PAINT_FORMAT_MAX            = 13,
     FT_COLR_PAINTFORMAT_UNSUPPORTED     = 255
 
   } FT_PaintFormat;
@@ -4611,13 +4612,54 @@ FT_BEGIN_HEADER
   {
     FT_ColorLine  colorline;
 
-    /* TODO: Potentially expose those as x0, y0 etc. */
     FT_Vector  c0;
     FT_UShort  r0;
     FT_Vector  c1;
     FT_UShort  r1;
 
   } FT_PaintRadialGradient;
+
+
+  /**************************************************************************
+   *
+   * @struct:
+   *   FT_PaintSweepGradient
+   *
+   * @description:
+   *   A structure representing a `PaintSweepGradient` value of the 'COLR'
+   *   v1 extensions, see
+   *   'https://github.com/googlefonts/colr-gradients-spec'.  The glyph
+   *   layer filled with this paint is drawn filled with a sweep gradient
+   *   from `start_angle` to `end_angle`.
+   *
+   * @fields:
+   *   colorline ::
+   *     The @FT_ColorLine information for this paint, i.e., the list of
+   *     color stops along the gradient.
+   *
+   *   center ::
+   *     The center of the sweep gradient (in font units).
+   *
+   *   start_angle ::
+   *     The start angle of the sweep gradient, in 16.16 fixed point format
+   *     specifying degrees.  Values are given counter-clockwise, starting
+   *     from the (positive) y~axis.
+   *
+   *   end_angle ::
+   *     The end angle of the sweep gradient, in 16.16 fixed point format
+   *     specifying degrees.  Values are given counter-clockwise, starting
+   *     from the (positive) y~axis.
+   *
+   */
+  typedef struct  FT_PaintSweepGradient_
+  {
+    FT_ColorLine  colorline;
+
+    FT_Vector  center;
+    FT_Fixed   start_angle;
+    FT_Fixed   end_angle;
+
+  } FT_PaintSweepGradient;
 
 
   /**************************************************************************
@@ -4853,6 +4895,7 @@ FT_BEGIN_HEADER
    *       * @FT_PaintSolid
    *       * @FT_PaintLinearGradient
    *       * @FT_PaintRadialGradient
+   *       * @FT_PaintSweepGradient
    *       * @FT_PaintTransformed
    *       * @FT_PaintTranslate
    *       * @FT_PaintRotate
@@ -4871,6 +4914,7 @@ FT_BEGIN_HEADER
       FT_PaintSolid           solid;
       FT_PaintLinearGradient  linear_gradient;
       FT_PaintRadialGradient  radial_gradient;
+      FT_PaintSweepGradient   sweep_gradient;
       FT_PaintTransformed     transformed;
       FT_PaintTranslate       translate;
       FT_PaintRotate          rotate;

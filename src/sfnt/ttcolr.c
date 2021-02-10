@@ -441,7 +441,7 @@
 
       if ( !read_color_line( paint_base,
                              color_line_offset,
-                             &apaint->u.linear_gradient.colorline ) )
+                             &apaint->u.radial_gradient.colorline ) )
         return 0;
 
       /* skip VarIdx entries */
@@ -459,6 +459,28 @@
       FT_NEXT_ULONG ( p );
 
       apaint->u.radial_gradient.r1 = FT_NEXT_USHORT ( p );
+      FT_NEXT_ULONG ( p );
+    }
+
+    else if ( apaint->format == FT_COLR_PAINTFORMAT_SWEEP_GRADIENT )
+    {
+      FT_ULong  color_line_offset = color_line_offset = FT_NEXT_OFF3( p );
+
+
+      if ( !read_color_line( paint_base,
+                             color_line_offset,
+                             &apaint->u.sweep_gradient.colorline ) )
+        return 0;
+
+      /* skip VarIdx entries */
+      apaint->u.sweep_gradient.center.x = FT_NEXT_SHORT ( p );
+      FT_NEXT_ULONG ( p );
+      apaint->u.sweep_gradient.center.y = FT_NEXT_SHORT ( p );
+      FT_NEXT_ULONG ( p );
+
+      apaint->u.sweep_gradient.start_angle = FT_NEXT_LONG( p );
+      FT_NEXT_ULONG ( p );
+      apaint->u.sweep_gradient.end_angle = FT_NEXT_LONG( p );
       FT_NEXT_ULONG ( p );
     }
 
@@ -842,7 +864,7 @@
 
       /* `x_scale` and `y_scale` are in 26.6 format, representing the scale
        * factor to get from font units to requested size.  However, expected
-       * return values are in 16.16, so we shift accordingly with rounding. 
+       * return values are in 16.16, so we shift accordingly with rounding.
        */
       ft_root_scale.xx = ( face->root.size->metrics.x_scale + 32 ) >> 6;
       ft_root_scale.xy = 0;
