@@ -1,5 +1,15 @@
 2021-02-09  Xavier Claessens  <xavier.claessens@collabora.com>
 
+	* meson.build: s/freetype2_dep/freetype_dep/.
+
+	Many projects (e.g., fontconfig, cairo) hardcode the `freetype_dep`
+	variable name to use FreeType as subproject because that was the
+	variable name in Centricular's Meson port of FreeType.  While they
+	should stop hardcoding that variable name, it does not cost us
+	anything to keep using that name to ease transition.
+
+2021-02-09  Xavier Claessens  <xavier.claessens@collabora.com>
+
 	[meson] Fix handling of HarfBuzz library.
 
 	* meson.build (harfbuzz_dep): Do not fall back to HarfBuzz by

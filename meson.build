@@ -327,11 +327,11 @@ ft2_lib = library('freetype',
 
 
 # To be used by other projects including this one through subproject().
-freetype2_dep = declare_dependency(
+freetype_dep = declare_dependency(
   include_directories: ft2_includes,
   link_with: ft2_lib,
   version: ft2_pkgconfig_version)
-meson.override_dependency('freetype2', freetype2_dep)
+meson.override_dependency('freetype2', freetype_dep)
 
 
 # NOTE: Using both `install_dir` and `subdir` doesn't seem to work below,
