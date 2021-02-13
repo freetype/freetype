@@ -101,7 +101,7 @@
   }
 
 
-  FT_CALLBACK_DEF( int )
+  FT_COMPARE_DEF( int )
   compare_tags( const void*  a,
                 const void*  b )
   {

@@ -807,7 +807,7 @@
 
 
   /* Routine to compare two glyphs by encoding so they can be sorted. */
-  static int
+  FT_COMPARE_DEF( int )
   by_encoding( const void*  a,
                const void*  b )
   {

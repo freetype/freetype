@@ -46,16 +46,11 @@
   /*************************************************************************/
   /*************************************************************************/
 
-  static int
-  gxv_compare_ushort_offset( FT_UShort*  a,
-                             FT_UShort*  b )
+  FT_COMPARE_DEF( int )
+  gxv_compare_ushort_offset( const void*  a,
+                             const void*  b )
   {
-    if ( *a < *b )
-      return -1;
-    else if ( *a > *b )
-      return 1;
-    else
-      return 0;
+    return  *(FT_UShort*)a - *(FT_UShort*)b;
   }
 
 
@@ -78,7 +73,7 @@
     buff[nmemb] = limit;
 
     ft_qsort( buff, ( nmemb + 1 ), sizeof ( FT_UShort ),
-              ( int(*)(const void*, const void*) )gxv_compare_ushort_offset );
+              gxv_compare_ushort_offset );
 
     if ( buff[nmemb] > limit )
       FT_INVALID_OFFSET;
@@ -111,13 +106,17 @@
   /*************************************************************************/
   /*************************************************************************/
 
-  static int
-  gxv_compare_ulong_offset( FT_ULong*  a,
-                            FT_ULong*  b )
+  FT_COMPARE_DEF( int )
+  gxv_compare_ulong_offset( const void*  a,
+                            const void*  b )
   {
-    if ( *a < *b )
+    FT_ULong  a_ = *(FT_ULong*)a;
+    FT_ULong  b_ = *(FT_ULong*)b;
+
+
+    if ( a_ < b_ )
       return -1;
-    else if ( *a > *b )
+    else if ( a_ > b_ )
       return 1;
     else
       return 0;
@@ -143,7 +142,7 @@
     buff[nmemb] = limit;
 
     ft_qsort( buff, ( nmemb + 1 ), sizeof ( FT_ULong ),
-              ( int(*)(const void*, const void*) )gxv_compare_ulong_offset );
+              gxv_compare_ulong_offset );
 
     if ( buff[nmemb] > limit )
       FT_INVALID_OFFSET;

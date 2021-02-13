@@ -267,7 +267,8 @@ FT_BEGIN_HEADER
   /*                                                                 */
   /* FT_CALLBACK_DEF is used to _define_ a callback function,        */
   /* located in the same source code file as the structure that uses */
-  /* it.                                                             */
+  /* it.  FT_COMPARE_DEF, in addition, ensures the cdecl calling     */
+  /* convention on x86, required by the C library qsort.             */
   /*                                                                 */
   /* FT_BASE_CALLBACK and FT_BASE_CALLBACK_DEF are used to declare   */
   /* and define a callback function, respectively, in a similar way  */
@@ -287,6 +288,14 @@ FT_BEGIN_HEADER
 #define FT_CALLBACK_DEF( x )  extern "C"  x
 #else
 #define FT_CALLBACK_DEF( x )  static  x
+#endif
+
+#if defined( __i386__ )
+#define FT_COMPARE_DEF( x )  FT_CALLBACK_DEF( x ) __attribute__(( cdecl ))
+#elif defined( _M_IX86 )
+#define FT_COMPARE_DEF( x )  FT_CALLBACK_DEF( x ) __cdecl
+#else
+#define FT_COMPARE_DEF( x )  FT_CALLBACK_DEF( x )
 #endif
 
 #define FT_BASE_CALLBACK( x )      FT_FUNCTION_DECLARATION( x )

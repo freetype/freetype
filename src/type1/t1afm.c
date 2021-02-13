@@ -83,7 +83,7 @@
 
 
   /* compare two kerning pairs */
-  FT_CALLBACK_DEF( int )
+  FT_COMPARE_DEF( int )
   compare_kern_pairs( const void*  a,
                       const void*  b )
   {

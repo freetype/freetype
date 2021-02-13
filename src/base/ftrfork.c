@@ -167,16 +167,11 @@
   }
 
 
-  static int
-  ft_raccess_sort_ref_by_id( FT_RFork_Ref*  a,
-                             FT_RFork_Ref*  b )
+  FT_COMPARE_DEF( int )
+  ft_raccess_sort_ref_by_id( const void*  a,
+                             const void*  b )
   {
-    if ( a->res_id < b->res_id )
-      return -1;
-    else if ( a->res_id > b->res_id )
-      return 1;
-    else
-      return 0;
+    return  ( (FT_RFork_Ref*)a )->res_id - ( (FT_RFork_Ref*)b )->res_id;
   }
 
 
@@ -294,8 +289,7 @@
           ft_qsort( ref,
                     (size_t)*count,
                     sizeof ( FT_RFork_Ref ),
-                    ( int(*)(const void*,
-                             const void*) )ft_raccess_sort_ref_by_id );
+                    ft_raccess_sort_ref_by_id );
 
           FT_TRACE3(( "             -- sort resources by their ids --\n" ));
 
