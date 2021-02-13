@@ -50,16 +50,6 @@ CHANGES BETWEEN 2.10.4 and 2.11.0
 
   II. MISCELLANEOUS
 
-  - `ttdebug` didn't show changed point coordinates (bug introduced in
-    version 2.10.3).
-
-  - A  new configuration  macro `FT_DEBUG_LOGGING`  is available.   It
-    provides extended debugging capabilities for FreeType, for example
-    showing a time stamp or displaying the component a tracing message
-    comes from.  See file `docs/DEBUG` for more information.
-
-    This work was Priyesh Kumar's GSoC 2020 project.
-
   - FreeType has moved its infrastructure to
 
       https://gitlab.freedesktop.org/freetype
@@ -71,6 +61,19 @@ CHANGES BETWEEN 2.10.4 and 2.11.0
 
     FreeType's Savannah  repositories will stay; they  are now mirrors
     of the 'freedesktop.org' repositories.
+
+  - A  new  function  `FT_Get_Transform`  returns  the  values set  by
+    `FT_Set_Transform`.
+
+  - A  new configuration  macro `FT_DEBUG_LOGGING`  is available.   It
+    provides extended debugging capabilities for FreeType, for example
+    showing a time stamp or displaying the component a tracing message
+    comes from.  See file `docs/DEBUG` for more information.
+
+    This work was Priyesh Kumar's GSoC 2020 project.
+
+  - `ttdebug` didn't show changed point coordinates (bug introduced in
+    version 2.10.3).
 
 
 ======================================================================

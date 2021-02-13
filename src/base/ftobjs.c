@@ -738,6 +738,29 @@
   }
 
 
+  /* documentation is in freetype.h */
+
+  FT_EXPORT_DEF( void )
+  FT_Get_Transform( FT_Face     face,
+                    FT_Matrix*  matrix,
+                    FT_Vector*  delta )
+  {
+    FT_Face_Internal  internal;
+
+
+    if ( !face )
+      return;
+
+    internal = face->internal;
+
+    if ( matrix )
+      *matrix = internal->transform_matrix;
+
+    if ( delta )
+      *delta = internal->transform_delta;
+  }
+
+
   static FT_Renderer
   ft_lookup_glyph_renderer( FT_GlyphSlot  slot );
 

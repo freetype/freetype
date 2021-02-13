@@ -204,6 +204,7 @@ FT_BEGIN_HEADER
    *   FT_Size_RequestRec
    *   FT_Size_Request
    *   FT_Set_Transform
+   *   FT_Get_Transform
    *   FT_Load_Glyph
    *   FT_Get_Char_Index
    *   FT_Get_First_Char
@@ -3200,7 +3201,8 @@ FT_BEGIN_HEADER
    *     A pointer to the transformation's 2x2 matrix.  Use `NULL` for the
    *     identity matrix.
    *   delta ::
-   *     A pointer to the translation vector.  Use `NULL` for the null vector.
+   *     A pointer to the translation vector.  Use `NULL` for the null
+   *     vector.
    *
    * @note:
    *   This function is provided as a convenience, but keep in mind that
@@ -3219,6 +3221,35 @@ FT_BEGIN_HEADER
    */
   FT_EXPORT( void )
   FT_Set_Transform( FT_Face     face,
+                    FT_Matrix*  matrix,
+                    FT_Vector*  delta );
+
+
+  /**************************************************************************
+   *
+   * @function:
+   *   FT_Get_Transform
+   *
+   * @description:
+   *   Return the transformation that is applied to glyph images when they
+   *   are loaded into a glyph slot through @FT_Load_Glyph.  See
+   *   @FT_Set_Transform for more details.
+   *
+   * @input:
+   *   face ::
+   *     A handle to the source face object.
+   *
+   * @output:
+   *   matrix ::
+   *     A pointer to a transformation's 2x2 matrix.  Set this to NULL if you
+   *     are not interested in the value.
+   *
+   *   delta ::
+   *     A pointer a translation vector.  Set this to NULL if you are not
+   *     interested in the value.
+   */
+  FT_EXPORT( void )
+  FT_Get_Transform( FT_Face     face,
                     FT_Matrix*  matrix,
                     FT_Vector*  delta );
 

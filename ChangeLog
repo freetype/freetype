@@ -1,3 +1,16 @@
+2021-02-13  Werner Lemberg  <wl@gnu.org>
+
+	Add new function `FT_Get_Transform`.
+
+	See
+
+	  https://github.com/harfbuzz/harfbuzz/issues/2428
+
+	for some reasons to introduce this function.
+
+	* include/freetype/freetype.h, src/base/ftobjs.c (FT_Get_Transform):
+	Implement it.
+
 2021-02-12  Alexei Podtelezhnikov  <apodtele@gmail.com>
 
 	Decorate `qsort` callbacks with `cdecl`.
