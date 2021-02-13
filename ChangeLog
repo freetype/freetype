@@ -1,15 +1,17 @@
 2021-02-12  Alexei Podtelezhnikov  <apodtele@gmail.com>
 
-	Decorate qsort callbacks with cdecl.
+	Decorate `qsort` callbacks with `cdecl`.
 
 	* include/freetype/internal/compiler-macros.h (FT_COMPARE_DEF):
 	Add new macro.
-	* src/base/ftrfork.c, src/bdf/bdflib.c, src/gxvalid/gxvcommn.c,
-        src/psaux/afmparse.c, src/psnames/psmodule.c, src/type1/t1afm.c,
-        src/sfnt/sfwoff.c, src/sfnt/sfwoff2.c: Update qsort callbacks.
 
-	Fixes #1026 when compiling FreeType with an unusual calling convention
-	while the C library qsort still expects cdecl.
+	* src/base/ftrfork.c, src/bdf/bdflib.c, src/gxvalid/gxvcommn.c,
+	src/psaux/afmparse.c, src/psnames/psmodule.c, src/type1/t1afm.c,
+	src/sfnt/sfwoff.c, src/sfnt/sfwoff2.c: Update `qsort` callbacks.
+
+	Fixes #1026 when compiling FreeType with an unusual calling
+	convention while the C library function `qsort` still expects
+	`cdecl`.
 
 2021-02-10  Dominik Röttsches  <drott@chromium.org>
 

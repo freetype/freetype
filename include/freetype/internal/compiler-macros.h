@@ -216,74 +216,77 @@ FT_BEGIN_HEADER
 #define FT_EXPORT_VAR( x )  FT_FUNCTION_DECLARATION( x )
 #endif
 
-  /* When compiling FreeType as a DLL or DSO with hidden visibility,   */
-  /* some systems/compilers need a special attribute in front OR after */
-  /* the return type of function declarations.                         */
-  /*                                                                   */
-  /* Two macros are used within the FreeType source code to define     */
-  /* exported library functions: `FT_EXPORT` and `FT_EXPORT_DEF`.      */
-  /*                                                                   */
-  /* - `FT_EXPORT( return_type )`                                      */
-  /*                                                                   */
-  /*   is used in a function declaration, as in                        */
-  /*                                                                   */
-  /*   ```                                                             */
-  /*     FT_EXPORT( FT_Error )                                         */
-  /*     FT_Init_FreeType( FT_Library*  alibrary );                    */
-  /*   ```                                                             */
-  /*                                                                   */
-  /* - `FT_EXPORT_DEF( return_type )`                                  */
-  /*                                                                   */
-  /*   is used in a function definition, as in                         */
-  /*                                                                   */
-  /*   ```                                                             */
-  /*     FT_EXPORT_DEF( FT_Error )                                     */
-  /*     FT_Init_FreeType( FT_Library*  alibrary )                     */
-  /*     {                                                             */
-  /*       ... some code ...                                           */
-  /*       return FT_Err_Ok;                                           */
-  /*     }                                                             */
-  /*   ```                                                             */
-  /*                                                                   */
-  /* You can provide your own implementation of `FT_EXPORT` and        */
-  /* `FT_EXPORT_DEF` here if you want.                                 */
-  /*                                                                   */
-  /* To export a variable, use `FT_EXPORT_VAR`.                        */
-  /*                                                                   */
+  /*
+   * When compiling FreeType as a DLL or DSO with hidden visibility,
+   * some systems/compilers need a special attribute in front OR after
+   * the return type of function declarations.
+   *
+   * Two macros are used within the FreeType source code to define
+   * exported library functions: `FT_EXPORT` and `FT_EXPORT_DEF`.
+   *
+   * - `FT_EXPORT( return_type )`
+   *
+   *   is used in a function declaration, as in
+   *
+   *   ```
+   *     FT_EXPORT( FT_Error )
+   *     FT_Init_FreeType( FT_Library*  alibrary );
+   *   ```
+   *
+   * - `FT_EXPORT_DEF( return_type )`
+   *
+   *   is used in a function definition, as in
+   *
+   *   ```
+   *     FT_EXPORT_DEF( FT_Error )
+   *     FT_Init_FreeType( FT_Library*  alibrary )
+   *     {
+   *       ... some code ...
+   *       return FT_Err_Ok;
+   *     }
+   *   ```
+   *
+   * You can provide your own implementation of `FT_EXPORT` and
+   * `FT_EXPORT_DEF` here if you want.
+   *
+   * To export a variable, use `FT_EXPORT_VAR`.
+   */
 
   /* See `freetype/config/compiler_macros.h` for the `FT_EXPORT` definition */
 #define FT_EXPORT_DEF( x )  FT_FUNCTION_DEFINITION( x )
 
-  /* The following macros are needed to compile the library with a   */
-  /* C++ compiler and with 16bit compilers.                          */
-  /*                                                                 */
+  /*
+   * The following macros are needed to compile the library with a
+   * C++ compiler and with 16bit compilers.
+   */
 
-  /* This is special.  Within C++, you must specify `extern "C"` for */
-  /* functions which are used via function pointers, and you also    */
-  /* must do that for structures which contain function pointers to  */
-  /* assure C linkage -- it's not possible to have (local) anonymous */
-  /* functions which are accessed by (global) function pointers.     */
-  /*                                                                 */
-  /*                                                                 */
-  /* FT_CALLBACK_DEF is used to _define_ a callback function,        */
-  /* located in the same source code file as the structure that uses */
-  /* it.  FT_COMPARE_DEF, in addition, ensures the cdecl calling     */
-  /* convention on x86, required by the C library qsort.             */
-  /*                                                                 */
-  /* FT_BASE_CALLBACK and FT_BASE_CALLBACK_DEF are used to declare   */
-  /* and define a callback function, respectively, in a similar way  */
-  /* as FT_BASE and FT_BASE_DEF work.                                */
-  /*                                                                 */
-  /* FT_CALLBACK_TABLE is used to _declare_ a constant variable that */
-  /* contains pointers to callback functions.                        */
-  /*                                                                 */
-  /* FT_CALLBACK_TABLE_DEF is used to _define_ a constant variable   */
-  /* that contains pointers to callback functions.                   */
-  /*                                                                 */
-  /*                                                                 */
-  /* Some 16bit compilers have to redefine these macros to insert    */
-  /* the infamous `_cdecl` or `__fastcall` declarations.             */
-  /*                                                                 */
+  /*
+   * This is special.  Within C++, you must specify `extern "C"` for
+   * functions which are used via function pointers, and you also
+   * must do that for structures which contain function pointers to
+   * assure C linkage -- it's not possible to have (local) anonymous
+   * functions which are accessed by (global) function pointers.
+   *
+   *
+   * FT_CALLBACK_DEF is used to _define_ a callback function,
+   * located in the same source code file as the structure that uses
+   * it.  FT_COMPARE_DEF, in addition, ensures the `cdecl` calling
+   * convention on x86, required by the C library function `qsort`.
+   *
+   * FT_BASE_CALLBACK and FT_BASE_CALLBACK_DEF are used to declare
+   * and define a callback function, respectively, in a similar way
+   * as FT_BASE and FT_BASE_DEF work.
+   *
+   * FT_CALLBACK_TABLE is used to _declare_ a constant variable that
+   * contains pointers to callback functions.
+   *
+   * FT_CALLBACK_TABLE_DEF is used to _define_ a constant variable
+   * that contains pointers to callback functions.
+   *
+   *
+   * Some 16bit compilers have to redefine these macros to insert
+   * the infamous `_cdecl` or `__fastcall` declarations.
+   */
 #ifdef __cplusplus
 #define FT_CALLBACK_DEF( x )  extern "C"  x
 #else
