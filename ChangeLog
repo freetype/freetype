@@ -1,5 +1,12 @@
 2021-02-13  Werner Lemberg  <wl@gnu.org>
 
+	* src/tools/update-copyright-year: Fix single-year entry handling.
+
+	The fix from 2021-01-17 didn't cover the case where the year to be
+	updated is identical to the current year.
+
+2021-02-13  Werner Lemberg  <wl@gnu.org>
+
 	Add new function `FT_Get_Transform`.
 
 	See
