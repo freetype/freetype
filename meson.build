@@ -288,6 +288,7 @@ if host_machine.system() == 'windows'
   ft2_defines += ['-DDLL_EXPORT=1']
 endif
 
+
 # Generate `ftconfig.h`
 
 ftconfig_command = process_header_command
@@ -300,19 +301,16 @@ endif
 
 if host_machine.system() in ['linux', 'darwin', 'cygwin']
   ftconfig_h_in = files('builds/unix/ftconfig.h.in')
-else
-  ftconfig_h_in = files('include/freetype/config/ftconfig.h')
+  ftconfig_h = custom_target('ftconfig.h',
+    input: ftconfig_h_in,
+    output: 'ftconfig.h',
+    command: ftconfig_command,
+    install: true,
+    install_dir: 'include/freetype2/freetype/config',
+  )
+  ft2_sources += ftconfig_h
+  ft2_defines += ['-DFT_CONFIG_CONFIG_H=<ftconfig.h>']
 endif
-
-ftconfig_h = custom_target('ftconfig.h',
-  input: ftconfig_h_in,
-  output: 'ftconfig.h',
-  command: ftconfig_command,
-  install: true,
-  install_dir: 'include/freetype2/freetype/config',
-)
-ft2_sources += ftconfig_h
-ft2_defines += ['-DFT_CONFIG_CONFIG_H=<ftconfig.h>']
 
 
 ft2_lib = library('freetype',

@@ -1,3 +1,12 @@
+2021-03-07  Xavier Claessens  <xavier.claessens@collabora.com>
+
+	[meson] Make it work with Windows.
+
+	* meson.build: Do not process `ftconfig.h` when not using
+	`ftconfig.h.in`.
+
+	Fixes #1029.
+
 2021-02-25  Werner Lemberg  <wl@gnu.org>
 
 	[woff2] Fix memory leak.
