@@ -1,3 +1,10 @@
+2021-02-15  Daniel E  <daniel.engberg.lists@pyret.net>
+
+	* CMakeLists.txt: Improve 'bz2' support.
+
+	Not all distributions such as FreeBSD provide a `.pc` file for
+	'(lib)bz2' so follow autotools and add it to `Libs.private` instead.
+
 2021-02-13  Werner Lemberg  <wl@gnu.org>
 
 	* src/tools/update-copyright-year: Fix single-year entry handling.
