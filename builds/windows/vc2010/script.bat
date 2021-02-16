@@ -3,9 +3,9 @@
 :: Move to Top Dir
 cd ..\..\..\
 
-:: Copy dlg's files from `submodules\dlg' to `src\dlg'
+:: Copy dlg's files from `subprojects\dlg' to `src\dlg'
 IF NOT EXIST include\dlg (
 	mkdir include\dlg
-	COPY submodules\dlg\include\dlg\dlg.h include\dlg
-	COPY submodules\dlg\include\dlg\output.h include\dlg
-	COPY submodules\dlg\src\dlg\dlg.c src\dlg\ )
+	COPY subprojects\dlg\include\dlg\dlg.h include\dlg
+	COPY subprojects\dlg\include\dlg\output.h include\dlg
+	COPY subprojects\dlg\src\dlg\dlg.c src\dlg\ )

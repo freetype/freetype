@@ -172,18 +172,18 @@ chmod +x ./configure
 # Copy all necessary 'dlg' files.
 copy_submodule_files ()
 {
-  echo "Copying files from \`submodules/dlg' to \`src/dlg' and \`include/dlg'"
+  echo "Copying files from \`subprojects/dlg' to \`src/dlg' and \`include/dlg'"
   mkdir include/dlg 2> /dev/null
   cp $DLG_INC_DIR/output.h include/dlg
   cp $DLG_INC_DIR/dlg.h include/dlg
   cp $DLG_SRC_DIR/* src/dlg
 }
 
-DLG_INC_DIR=submodules/dlg/include/dlg
-DLG_SRC_DIR=submodules/dlg/src/dlg
+DLG_INC_DIR=subprojects/dlg/include/dlg
+DLG_SRC_DIR=subprojects/dlg/src/dlg
 
 if ! test -d "$DLG_INC_DIR"; then
-  echo "Checking out submodule in \`submodules/dlg':"
+  echo "Checking out submodule in \`subprojects/dlg':"
   git submodule init
   git submodule update
 fi

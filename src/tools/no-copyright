@@ -60,6 +60,6 @@ src/gzip/zutil.h
 src/tools/apinames.c
 src/tools/ftrandom/ftrandom.c
 #
-submodules/dlg
+subprojects/dlg
 #
 # EOF
