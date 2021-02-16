@@ -1,5 +1,13 @@
 2021-02-16  Werner Lemberg  <wl@gnu.org>
 
+	* builds/toplevel.mk: Avoid side effects of `shell`.
+
+	We use a dummy variable to catch its output.  Otherwise the `make`
+	program is going to interpret the return value of `shell`; this can
+	cause obscure warning or error messages or even be harmful.
+
+2021-02-16  Werner Lemberg  <wl@gnu.org>
+
 	Move 'dlg' submodule to `subprojects` directory.
 
 	This is for future changes with Meson, which doesn't allow a

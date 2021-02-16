@@ -118,17 +118,17 @@ ifdef check_platform
   ifeq ($(wildcard src/dlg/dlg.*),)
     ifeq ($(wildcard subprojects/dlg/*),)
       $(info Checking out submodule in `subprojects/dlg')
-      $(shell git submodule init)
-      $(shell git submodule update)
+      dummy := $(shell git submodule init)
+      dummy := $(shell git submodule update)
     endif
 
     $(info Copying files from `subprojects/dlg' to `src/dlg' and `include/dlg')
-    $(shell mkdir $(subst /,$(SEP),include/dlg) $(NO_OUTPUT))
-    $(shell $(COPY) \
+    dummy := $(shell mkdir $(subst /,$(SEP),include/dlg) $(NO_OUTPUT))
+    dummy := $(shell $(COPY) \
       $(subst /,$(SEP),subprojects/dlg/include/dlg/output.h include/dlg))
-    $(shell $(COPY) \
+    dummy := $(shell $(COPY) \
       $(subst /,$(SEP),subprojects/dlg/include/dlg/dlg.h include/dlg))
-    $(shell $(COPY) \
+    dummy := $(shell $(COPY) \
       $(subst /,$(SEP),subprojects/dlg/src/dlg/dlg.c src/dlg))
   endif
 
