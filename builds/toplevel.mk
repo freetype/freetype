@@ -103,6 +103,22 @@ ifneq ($(findstring setup,$(MAKECMDGOALS)),)
   check_platform := 1
 endif
 
+
+.PHONY: check_out_submodule copy_out_submodule
+
+check_out_submodule:
+	$(info Checking out submodule in `subprojects/dlg')
+	git submodule init
+	git submodule update
+
+copy_submodule:
+	$(info Copying files from `subprojects/dlg' to `src/dlg' and `include/dlg')
+	mkdir $(subst /,$(SEP),include/dlg) $(NO_OUTPUT)
+	$(COPY) $(subst /,$(SEP),subprojects/dlg/include/dlg/output.h include/dlg)
+	$(COPY) $(subst /,$(SEP),subprojects/dlg/include/dlg/dlg.h include/dlg)
+	$(COPY) $(subst /,$(SEP),subprojects/dlg/src/dlg/dlg.c src/dlg)
+
+
 # Include the automatic host platform detection rules when we need to
 # check the platform.
 #
@@ -117,19 +133,10 @@ ifdef check_platform
   #
   ifeq ($(wildcard src/dlg/dlg.*),)
     ifeq ($(wildcard subprojects/dlg/*),)
-      $(info Checking out submodule in `subprojects/dlg')
-      dummy := $(shell git submodule init)
-      dummy := $(shell git submodule update)
+      copy_submodule: check_out_submodule
     endif
 
-    $(info Copying files from `subprojects/dlg' to `src/dlg' and `include/dlg')
-    dummy := $(shell mkdir $(subst /,$(SEP),include/dlg) $(NO_OUTPUT))
-    dummy := $(shell $(COPY) \
-      $(subst /,$(SEP),subprojects/dlg/include/dlg/output.h include/dlg))
-    dummy := $(shell $(COPY) \
-      $(subst /,$(SEP),subprojects/dlg/include/dlg/dlg.h include/dlg))
-    dummy := $(shell $(COPY) \
-      $(subst /,$(SEP),subprojects/dlg/src/dlg/dlg.c src/dlg))
+    setup: copy_submodule
   endif
 
   # This rule makes sense for Unix only to remove files created by a run of

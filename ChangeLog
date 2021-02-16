@@ -1,5 +1,14 @@
 2021-02-16  Werner Lemberg  <wl@gnu.org>
 
+	* builds/toplevel.mk: Use rules for handling 'dlg'.
+
+	Suggested by Alexei.
+
+	(check_out_submodule, copy_submodule): New targets.
+	<top-level>: Replace calls to `shell` with rules.
+
+2021-02-16  Werner Lemberg  <wl@gnu.org>
+
 	* builds/toplevel.mk: Avoid side effects of `shell`.
 
 	We use a dummy variable to catch its output.  Otherwise the `make`
