@@ -4256,25 +4256,32 @@ FT_BEGIN_HEADER
    *   FT_PaintFormat
    *
    * @description:
-   *   Enumeration describing the different gradient types of the v1
+   *   Enumeration describing the different paint format types of the v1
    *   extensions to the 'COLR' table, see
    *   'https://github.com/googlefonts/colr-gradients-spec'.
+   *
+   *   Only non-variable format identifiers are listed in this enumeration;
+   *   as soon as support for variable 'COLR' v1 fonts is implemented,
+   *   interpolation is performed dependent on axis coordinates, which are
+   *   configured on the @FT_Face through @FT_Set_Var_Design_Coordinates.
+   *   This implies that always static (interpolated) values are returned
+   *   for both variable and non-variable formats.
    */
   typedef enum  FT_PaintFormat_
   {
     FT_COLR_PAINTFORMAT_COLR_LAYERS     = 1,
     FT_COLR_PAINTFORMAT_SOLID           = 2,
-    FT_COLR_PAINTFORMAT_LINEAR_GRADIENT = 3,
-    FT_COLR_PAINTFORMAT_RADIAL_GRADIENT = 4,
-    FT_COLR_PAINTFORMAT_SWEEP_GRADIENT  = 5,
-    FT_COLR_PAINTFORMAT_GLYPH           = 6,
-    FT_COLR_PAINTFORMAT_COLR_GLYPH      = 7,
-    FT_COLR_PAINTFORMAT_TRANSFORMED     = 8,
-    FT_COLR_PAINTFORMAT_TRANSLATE       = 9,
-    FT_COLR_PAINTFORMAT_ROTATE          = 10,
-    FT_COLR_PAINTFORMAT_SKEW            = 11,
-    FT_COLR_PAINTFORMAT_COMPOSITE       = 12,
-    FT_COLR_PAINT_FORMAT_MAX            = 13,
+    FT_COLR_PAINTFORMAT_LINEAR_GRADIENT = 4,
+    FT_COLR_PAINTFORMAT_RADIAL_GRADIENT = 6,
+    FT_COLR_PAINTFORMAT_SWEEP_GRADIENT  = 8,
+    FT_COLR_PAINTFORMAT_GLYPH           = 10,
+    FT_COLR_PAINTFORMAT_COLR_GLYPH      = 11,
+    FT_COLR_PAINTFORMAT_TRANSFORMED     = 12,
+    FT_COLR_PAINTFORMAT_TRANSLATE       = 14,
+    FT_COLR_PAINTFORMAT_ROTATE          = 16,
+    FT_COLR_PAINTFORMAT_SKEW            = 18,
+    FT_COLR_PAINTFORMAT_COMPOSITE       = 20,
+    FT_COLR_PAINT_FORMAT_MAX            = 21,
     FT_COLR_PAINTFORMAT_UNSUPPORTED     = 255
 
   } FT_PaintFormat;

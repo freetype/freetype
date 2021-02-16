@@ -1,3 +1,15 @@
+2021-02-16  Dominik Röttsches  <drott@chromium.org>
+
+	[sfnt] Update paint format values to support non-variable paints.
+
+	* freetype.h (FT_PaintFormat): Update paint format identifiers after
+	a specification change.  The specification was updated to have
+	sibling formats, variable and non-variable variants for each.
+	Reflect that here.
+
+	* sfnt/ttcolr.c (read_paint): Remove parsing of variable indices as
+	the non-variable formats no longer have them.
+
 2021-02-15  Daniel E  <daniel.engberg.lists@pyret.net>
 
 	* CMakeLists.txt: Improve 'bz2' support.

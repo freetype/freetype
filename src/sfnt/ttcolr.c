@@ -405,8 +405,6 @@
     {
       apaint->u.solid.color.palette_index = FT_NEXT_USHORT ( p );
       apaint->u.solid.color.alpha         = FT_NEXT_USHORT ( p );
-      /* skip VarIdx */
-      FT_NEXT_ULONG ( p );
     }
 
     else if ( apaint->format == FT_COLR_PAINTFORMAT_LINEAR_GRADIENT )
@@ -419,19 +417,12 @@
                              &apaint->u.linear_gradient.colorline ) )
         return 0;
 
-      /* skip VarIdx entries */
       apaint->u.linear_gradient.p0.x = FT_NEXT_SHORT ( p );
-      FT_NEXT_ULONG ( p );
       apaint->u.linear_gradient.p0.y = FT_NEXT_SHORT ( p );
-      FT_NEXT_ULONG ( p );
       apaint->u.linear_gradient.p1.x = FT_NEXT_SHORT ( p );
-      FT_NEXT_ULONG ( p );
       apaint->u.linear_gradient.p1.y = FT_NEXT_SHORT ( p );
-      FT_NEXT_ULONG ( p );
       apaint->u.linear_gradient.p2.x = FT_NEXT_SHORT ( p );
-      FT_NEXT_ULONG ( p );
       apaint->u.linear_gradient.p2.y = FT_NEXT_SHORT ( p );
-      FT_NEXT_ULONG ( p );
     }
 
     else if ( apaint->format == FT_COLR_PAINTFORMAT_RADIAL_GRADIENT )
@@ -444,22 +435,15 @@
                              &apaint->u.radial_gradient.colorline ) )
         return 0;
 
-      /* skip VarIdx entries */
       apaint->u.radial_gradient.c0.x = FT_NEXT_SHORT ( p );
-      FT_NEXT_ULONG ( p );
       apaint->u.radial_gradient.c0.y = FT_NEXT_SHORT ( p );
-      FT_NEXT_ULONG ( p );
 
       apaint->u.radial_gradient.r0 = FT_NEXT_USHORT ( p );
-      FT_NEXT_ULONG ( p );
 
       apaint->u.radial_gradient.c1.x = FT_NEXT_SHORT ( p );
-      FT_NEXT_ULONG ( p );
       apaint->u.radial_gradient.c1.y = FT_NEXT_SHORT ( p );
-      FT_NEXT_ULONG ( p );
 
       apaint->u.radial_gradient.r1 = FT_NEXT_USHORT ( p );
-      FT_NEXT_ULONG ( p );
     }
 
     else if ( apaint->format == FT_COLR_PAINTFORMAT_SWEEP_GRADIENT )
@@ -472,16 +456,11 @@
                              &apaint->u.sweep_gradient.colorline ) )
         return 0;
 
-      /* skip VarIdx entries */
       apaint->u.sweep_gradient.center.x = FT_NEXT_SHORT ( p );
-      FT_NEXT_ULONG ( p );
       apaint->u.sweep_gradient.center.y = FT_NEXT_SHORT ( p );
-      FT_NEXT_ULONG ( p );
 
       apaint->u.sweep_gradient.start_angle = FT_NEXT_LONG( p );
-      FT_NEXT_ULONG ( p );
       apaint->u.sweep_gradient.end_angle = FT_NEXT_LONG( p );
-      FT_NEXT_ULONG ( p );
     }
 
     else if ( apaint->format == FT_COLR_PAINTFORMAT_TRANSFORMED )
@@ -501,19 +480,12 @@
       apaint->u.transformed.paint.p                     = paint_p;
       apaint->u.transformed.paint.insert_root_transform = 0;
 
-      /* skip VarIdx entries */
       apaint->u.transformed.affine.xx = FT_NEXT_LONG( p );
-      FT_NEXT_ULONG( p );
       apaint->u.transformed.affine.yx = FT_NEXT_LONG( p );
-      FT_NEXT_ULONG( p );
       apaint->u.transformed.affine.xy = FT_NEXT_LONG( p );
-      FT_NEXT_ULONG( p );
       apaint->u.transformed.affine.yy = FT_NEXT_LONG( p );
-      FT_NEXT_ULONG( p );
       apaint->u.transformed.affine.dx = FT_NEXT_LONG( p );
-      FT_NEXT_ULONG( p );
       apaint->u.transformed.affine.dy = FT_NEXT_LONG( p );
-      FT_NEXT_ULONG( p );
     }
 
     else if ( apaint->format == FT_COLR_PAINTFORMAT_TRANSLATE )
@@ -533,11 +505,8 @@
       apaint->u.translate.paint.p                     = paint_p;
       apaint->u.translate.paint.insert_root_transform = 0;
 
-      /* skip VarIdx entries */
       apaint->u.translate.dx = FT_NEXT_LONG( p );
-      FT_NEXT_ULONG( p );
       apaint->u.translate.dy = FT_NEXT_LONG( p );
-      FT_NEXT_ULONG( p );
     }
 
     else if ( apaint->format == FT_COLR_PAINTFORMAT_ROTATE )
@@ -557,14 +526,10 @@
       apaint->u.rotate.paint.p                     = paint_p;
       apaint->u.rotate.paint.insert_root_transform = 0;
 
-      /* skip VarIdx entries */
       apaint->u.rotate.angle = FT_NEXT_LONG( p );
-      FT_NEXT_ULONG( p );
 
       apaint->u.rotate.center_x = FT_NEXT_LONG( p );
-      FT_NEXT_ULONG( p );
       apaint->u.rotate.center_y = FT_NEXT_LONG( p );
-      FT_NEXT_ULONG( p );
     }
 
     else if ( apaint->format == FT_COLR_PAINTFORMAT_SKEW )
@@ -584,16 +549,11 @@
       apaint->u.skew.paint.p                     = paint_p;
       apaint->u.skew.paint.insert_root_transform = 0;
 
-      /* skip VarIdx entries */
       apaint->u.skew.x_skew_angle = FT_NEXT_LONG( p );
-      FT_NEXT_ULONG( p );
       apaint->u.skew.y_skew_angle = FT_NEXT_LONG( p );
-      FT_NEXT_ULONG( p );
 
       apaint->u.skew.center_x = FT_NEXT_LONG( p );
-      FT_NEXT_ULONG( p );
       apaint->u.skew.center_y = FT_NEXT_LONG( p );
-      FT_NEXT_ULONG( p );
     }
 
     else if ( apaint->format == FT_COLR_PAINTFORMAT_COMPOSITE )
@@ -814,14 +774,11 @@
     /* Iterator points at first `ColorStop` of `ColorLine`. */
     p = iterator->p;
 
-    /* skip VarIdx entries */
     color_stop->stop_offset = FT_NEXT_USHORT ( p );
-    FT_NEXT_ULONG ( p );
 
     color_stop->color.palette_index = FT_NEXT_USHORT ( p );
 
     color_stop->color.alpha = FT_NEXT_USHORT ( p );
-    FT_NEXT_ULONG ( p );
 
     iterator->p = p;
     iterator->current_color_stop++;
