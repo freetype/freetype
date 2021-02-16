@@ -104,21 +104,6 @@ ifneq ($(findstring setup,$(MAKECMDGOALS)),)
 endif
 
 
-.PHONY: check_out_submodule copy_out_submodule
-
-check_out_submodule:
-	$(info Checking out submodule in `subprojects/dlg')
-	git submodule init
-	git submodule update
-
-copy_submodule:
-	$(info Copying files from `subprojects/dlg' to `src/dlg' and `include/dlg')
-	mkdir $(subst /,$(SEP),include/dlg) $(NO_OUTPUT)
-	$(COPY) $(subst /,$(SEP),subprojects/dlg/include/dlg/output.h include/dlg)
-	$(COPY) $(subst /,$(SEP),subprojects/dlg/include/dlg/dlg.h include/dlg)
-	$(COPY) $(subst /,$(SEP),subprojects/dlg/src/dlg/dlg.c src/dlg)
-
-
 # Include the automatic host platform detection rules when we need to
 # check the platform.
 #
@@ -131,8 +116,8 @@ ifdef check_platform
   # For builds directly from the git repository we need to copy files
   # from `subprojects/dlg' to `src/dlg' and `include/dlg'.
   #
-  ifeq ($(wildcard src/dlg/dlg.*),)
-    ifeq ($(wildcard subprojects/dlg/*),)
+  ifeq ($(wildcard $(TOP_DIR)/src/dlg/dlg.*),)
+    ifeq ($(wildcard $(TOP_DIR)/subprojects/dlg/*),)
       copy_submodule: check_out_submodule
     endif
 
@@ -179,6 +164,23 @@ else
   include $(CONFIG_MK)
 
 endif # test check_platform
+
+
+.PHONY: check_out_submodule copy_submodule
+
+check_out_submodule:
+	$(info Checking out submodule in `subprojects/dlg')
+	git submodule init
+	git submodule update
+
+copy_submodule:
+	$(info Copying files from `subprojects/dlg' to `src/dlg' and `include/dlg')
+  ifeq ($(wildcard include/dlg),)
+	mkdir $(subst /,$(SEP),include/dlg)
+  endif
+	$(COPY) $(subst /,$(SEP),subprojects/dlg/include/dlg/output.h include/dlg)
+	$(COPY) $(subst /,$(SEP),subprojects/dlg/include/dlg/dlg.h include/dlg)
+	$(COPY) $(subst /,$(SEP),subprojects/dlg/src/dlg/dlg.c src/dlg)
 
 
 # We always need the list of modules in ftmodule.h.

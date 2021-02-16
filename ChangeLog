@@ -1,5 +1,14 @@
 2021-02-16  Werner Lemberg  <wl@gnu.org>
 
+	* builds/toplevel.mk: Fix previous commit.
+
+	<top_level>: Use `TOP_DIR` in `wildcard` function.
+	(check_out_submodule, copy_submodule): Move down to come after
+	definition of `all` rule.
+	Call `mkdir` conditionally.
+
+2021-02-16  Werner Lemberg  <wl@gnu.org>
+
 	* builds/toplevel.mk: Use rules for handling 'dlg'.
 
 	Suggested by Alexei.
