@@ -1,3 +1,14 @@
+2021-02-17  Werner Lemberg  <wl@gnu.org>
+
+	[unix] Updates for autoconf 2.71.
+
+	This fixes warnings reported by autoupdate.
+
+	* builds/unix/ax_pthread.m4: Replace `as_echo` with `AS_ECHO`.
+
+	* builds/unix/configure.raw: Remove obsolete `AC_HEADER_STDC`.
+	Don't escape back quotes in messages for `AC_MSG_WARN`.
+
 2021-02-16  Werner Lemberg  <wl@gnu.org>
 
 	* builds/toplevel.mk: Fix previous commit.

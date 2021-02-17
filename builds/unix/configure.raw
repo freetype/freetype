@@ -97,7 +97,6 @@ esac
 
 # checks for header files
 
-AC_HEADER_STDC
 AC_CHECK_HEADERS([fcntl.h unistd.h])
 
 
@@ -1022,7 +1021,7 @@ if test "x$PYTHON" != "xmissing"; then
 
   if test "x$have_py3" = "xyes"; then
     PIP="$PYTHON -m $PIP"
-    AC_MSG_CHECKING([for \`docwriter' Python module])
+    AC_MSG_CHECKING([for `docwriter' Python module])
     $PYTHON -m docwriter -h > /dev/null 2>&1
     if test "x$?" = "x0"; then
       have_docwriter=yes
@@ -1186,10 +1185,10 @@ Library configuration:
 
 if test $have_docwriter = no; then
   AC_MSG_WARN([
-  \`make refdoc' will fail since pip package \`docwriter' is not installed.
-  To install, run \`$PIP install docwriter', or to use a Python
-  virtual environment, run \`make refdoc-venv' (requires pip package
-  \`virtualenv'). These operations require Python >= 3.5.
+  `make refdoc' will fail since pip package `docwriter' is not installed.
+  To install, run `$PIP install docwriter', or to use a Python
+  virtual environment, run `make refdoc-venv' (requires pip package
+  `virtualenv').  These operations require Python >= 3.5.
   ])
 fi
 
@@ -1197,7 +1196,7 @@ fi
 
 if test $have_pthread = no; then
   AC_MSG_WARN([
-  \`FT_DEBUG_LOGGING' will not work since the \`pthread' library is not
+  `FT_DEBUG_LOGGING' will not work since the `pthread' library is not
   available.  This warning can be safely ignored if you don't plan to use
   this configuration macro.
   ])
