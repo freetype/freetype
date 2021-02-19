@@ -1,3 +1,9 @@
+2021-02-19  Werner Lemberg  <wl@gnu.org>
+
+	* builds/unix/ax_pthread.m4: Update from 'autoconf-archive'.
+
+	A bunch of fixes were added recently to its git repository.
+
 2021-02-17  Werner Lemberg  <wl@gnu.org>
 
 	[unix] Updates for autoconf 2.71.
