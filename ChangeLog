@@ -1,3 +1,9 @@
+2021-02-22  Werner Lemberg  <wl@gnu.org>
+
+	* CMakeLists.txt: Update location of `LICENSE.TXT`.
+
+	Fixes #1035.
+
 2021-02-19  Werner Lemberg  <wl@gnu.org>
 
 	* builds/unix/ax_pthread.m4: Update from 'autoconf-archive'.
