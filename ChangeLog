@@ -1,3 +1,17 @@
+2021-02-25  Werner Lemberg  <wl@gnu.org>
+
+	[woff2] Fix memory leak.
+
+	Reported as
+
+	  https://bugs.chromium.org/p/oss-fuzz/issues/detail?id=28148
+
+	* src/sfnt/sfwoff2.c (woff2_open_font): Reject fonts that have
+	multiple tables with the same tag.  While not explicitly forbidden
+	in the OpenType specification, it is implicitly forbidden by
+	describing a binary search algorithm for tables that only works
+	reliably if table tags are unique.
+
 2021-02-22  Werner Lemberg  <wl@gnu.org>
 
 	* CMakeLists.txt: Update location of `LICENSE.TXT`.
