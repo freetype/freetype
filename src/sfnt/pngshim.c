@@ -33,6 +33,16 @@
 
 #include "sferrors.h"
 
+  /* Use _aligned_malloc / _aligned_free on 64-bit Windows to ensure that */
+  /* the jmp_buf needed for ft_setjmp is aligned to a 16-byte boundary.   */
+  /* If the jmp_buf is not aligned to a 16-byte boundary then a memory    */
+  /* access violation exception will occur upon ft_setjmp being called.   */
+#ifdef _WIN64
+#ifndef PNG_USER_MEM_SUPPORTED
+#error "libpng user-defined memory allocation is required for 64-bit Windows"
+#endif
+#include <malloc.h>
+#endif
 
   /* This code is freely based on cairo-png.c.  There's so many ways */
   /* to call libpng, and the way cairo does it is defacto standard.  */
@@ -221,6 +231,32 @@
   }
 
 
+#ifdef _WIN64
+
+  /* Memory allocation callback to ensure that the jmp_buf that is stored */
+  /* within the png_struct has 16-byte alignment for 64-bit Windows.      */
+  static png_voidp
+  malloc_callback( png_structp       png,
+                   png_alloc_size_t  size )
+  {
+    FT_UNUSED( png );
+    return _aligned_malloc( size, 16 );
+  }
+
+
+  /* Memory deallocation callback to release memory that was allocated */
+  /* with the matching memory allocation callback above.               */
+  static void
+  free_callback( png_structp  png,
+                 png_voidp    ptr )
+  {
+    FT_UNUSED( png );
+    _aligned_free( ptr );
+  }
+
+#endif /* _WIN64 */
+
+
   static void
   read_data_from_FT_Stream( png_structp  png,
                             png_bytep    data,
@@ -292,10 +328,20 @@
 
     FT_Stream_OpenMemory( &stream, data, png_len );
 
+#ifdef _WIN64
+    png = png_create_read_struct_2( PNG_LIBPNG_VER_STRING,
+                                    &error,
+                                    error_callback,
+                                    warning_callback,
+                                    NULL,
+                                    malloc_callback,
+                                    free_callback );
+#else
     png = png_create_read_struct( PNG_LIBPNG_VER_STRING,
                                   &error,
                                   error_callback,
                                   warning_callback );
+#endif
     if ( !png )
     {
       error = FT_THROW( Out_Of_Memory );
