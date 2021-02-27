@@ -15,6 +15,9 @@ INFORMATION.
 Read the files `docs/INSTALL*`  for installation instructions; see the
 file `docs/LICENSE.TXT` for the available licenses.
 
+For using FreeType's git repository  instead of a distribution bundle,
+please read file `README.git`.
+
 The FreeType 2 API reference is located in directory `docs/reference`;
 use the file  `index.html` as the top entry point.   [Please note that
 currently  the search  function  for  locally installed  documentation
