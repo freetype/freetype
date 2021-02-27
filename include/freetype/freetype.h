@@ -5019,7 +5019,7 @@ FT_BEGIN_HEADER
    *   of the `root_transform` parameter.  This has implications for a
    *   client 'COLR' v1 implementation: When this function returns an
    *   initially computed root transform, at the time of executing the
-   *   @FT_Paint_Glyph operation, the contours should be retrieved using
+   *   @FT_PaintGlyph operation, the contours should be retrieved using
    *   @FT_Load_Glyph at unscaled, untransformed size.  This is because the
    *   root transform applied to the graphics context will take care of
    *   correct scaling.
@@ -5039,10 +5039,10 @@ FT_BEGIN_HEADER
    *     The glyph index for which to retrieve the root paint table.
    *
    *   root_transform ::
-   *     Specifies whether an initially computed root is returned by
-   *     @FT_Paint_Transformed to account for the activated size (see
-   *     @FT_Activate_Size) and the configured transform and translate (see
-   *     @FT_Set_Translate).
+   *     Specifies whether an initially computed root is returned by the
+   *     @FT_PaintTransformed operation to account for the activated size
+   *     (see @FT_Activate_Size) and the configured transform and translate
+   *     (see @FT_Set_Transform).
    *
    *     This root transform is returned before nodes of the glyph graph of
    *     the font are returned.  Subsequent @FT_COLR_Paint structures
