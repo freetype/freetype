@@ -1,28 +1,3 @@
-2021-02-27  Jesse Towner  <townerj@gmail.com>
-
-	[sfnt] Fix crash in `Load_SBit_Png` on Windows x64.
-
-	This change fixes a crash that occurs in `Load_SBit_Png` when
-	running on a 64-bit Windows OS.  A memory access violation exception
-	would be raised by `setjmp` if the `jmp_buf` is not aligned to a
-	16-byte memory boundary.  This is due to setjmp executing `movdqa`
-	instructions to store 128-bit XMM registers to memory, which require
-	correct memory alignment.  This problem occurs because
-	`png_create_read_struct` uses `malloc` and `free` for memory
-	management, which only guarantees 8-byte alignment on Windows.
-
-	Instead, to fix the problem, `png_create_read_struct_2` is used on
-	64-bit Windows, which allows for user-defined memory allocation and
-	deallocation callbacks to be specified.  These callbacks forward the
-	allocation and deallocation requests to `_aligned_alloc` and
-	`_aligned_free`, ensuring that the allocated `png_struct` and
-	internal `jmp_buf` have the requisite 16-byte alignment.
-
-	* src/sfnt/pngshim.c <_WIN64>: Include `malloc.h`.
-	(malloc_callback, free_callback) <_WIN64>: New functions.
-	(Load_SBit_Png) <_WIN64>: Use `png_create_read_struct_2` instead of
-	`png_create_read_struct`
-
 2021-02-25  Werner Lemberg  <wl@gnu.org>
 
 	[woff2] Fix memory leak.
