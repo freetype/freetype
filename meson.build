@@ -183,18 +183,20 @@ has_fcntl_h = cc.has_header('fcntl.h')
 has_sys_mman_h = cc.has_header('sys/mman.h')
 
 mmap_option = get_option('mmap')
-if mmap_option.auto()
-  use_mmap = has_unistd_h and has_fcntl_h and has_sys_mman_h
-else
-  use_mmap = mmap_option.enabled()
-endif
-if use_mmap
-  # This version of ftsystem.c uses mmap() to read input font files.
-  ft2_sources += files(['builds/unix/ftsystem.c',])
+if mmap_option.disabled()
+  ft2_sources += files(['src/base/ftsystem.c',])
 elif host_machine.system() == 'windows'
   ft2_sources += files(['builds/windows/ftsystem.c',])
 else
-  ft2_sources += files(['src/base/ftsystem.c',])
+  if has_unistd_h and has_fcntl_h and has_sys_mman_h
+    # This version of ftsystem.c uses mmap() to read input font files.
+    ft2_sources += files(['builds/unix/ftsystem.c',])
+  elif mmap_option.enabled()
+    error('mmap was enabled via options but is not available,'
+          + ' required headers were not found!')
+  else
+    ft2_sources += files(['src/base/ftsystem.c',])
+  endif
 endif
 
 
