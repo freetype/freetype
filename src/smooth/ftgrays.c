@@ -912,8 +912,8 @@ typedef ptrdiff_t  FT_PtrDist;
       /* also easily updated when moving from one cell to the next.  */
       do
       {
-        if      ( prod                                   <= 0 &&
-                  prod - dx * ONE_PIXEL                  >  0 ) /* left */
+        if      ( prod - dx * ONE_PIXEL                  >  0 &&
+                  prod                                   <= 0 ) /* left */
         {
           fx2 = 0;
           fy2 = FT_UDIV( -prod, -dx );
@@ -924,8 +924,8 @@ typedef ptrdiff_t  FT_PtrDist;
           fy1 = fy2;
           ex1--;
         }
-        else if ( prod - dx * ONE_PIXEL                  <= 0 &&
-                  prod - dx * ONE_PIXEL + dy * ONE_PIXEL >  0 ) /* up */
+        else if ( prod - dx * ONE_PIXEL + dy * ONE_PIXEL >  0 &&
+                  prod - dx * ONE_PIXEL                  <= 0 ) /* up */
         {
           prod -= dx * ONE_PIXEL;
           fx2 = FT_UDIV( -prod, dy );
@@ -936,8 +936,8 @@ typedef ptrdiff_t  FT_PtrDist;
           fy1 = 0;
           ey1++;
         }
-        else if ( prod - dx * ONE_PIXEL + dy * ONE_PIXEL <= 0 &&
-                  prod                  + dy * ONE_PIXEL >= 0 ) /* right */
+        else if ( prod                  + dy * ONE_PIXEL >= 0 &&
+                  prod - dx * ONE_PIXEL + dy * ONE_PIXEL <= 0 ) /* right */
         {
           prod += dy * ONE_PIXEL;
           fx2 = ONE_PIXEL;
@@ -948,8 +948,8 @@ typedef ptrdiff_t  FT_PtrDist;
           fy1 = fy2;
           ex1++;
         }
-        else /* ( prod                  + dy * ONE_PIXEL <  0 &&
-                  prod                                   >  0 )    down */
+        else /* ( prod                                   >  0 &&
+                  prod                  + dy * ONE_PIXEL <  0 )    down */
         {
           fx2 = FT_UDIV( prod, -dy );
           fy2 = 0;

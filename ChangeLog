@@ -1,3 +1,9 @@
+2021-03-09  Alexei Podtelezhnikov  <apodtele@gmail.com>
+
+	* src/smooth/ftgrays.c (gray_render_line): Rearrange conditionals.
+
+	These produce faster or more optimizable code.
+
 2021-03-08  Tim-Philipp Müller  <tim@centricular.com>
 
 	[meson] Fix 'mmap' handling on Windows.
