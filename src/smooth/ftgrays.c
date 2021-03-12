@@ -447,14 +447,10 @@ typedef ptrdiff_t  FT_PtrDist;
   {
     ft_jmp_buf  jump_buffer;
 
-    TCoord  ex, ey;
     TCoord  min_ex, max_ex;
     TCoord  min_ey, max_ey;
 
-    TArea   area;
-    TCoord  cover;
-    int     invalid;
-
+    PCell       cell;
     PCell*      ycells;
     PCell       cells;
     FT_PtrDist  max_cells;
@@ -483,8 +479,9 @@ typedef ptrdiff_t  FT_PtrDist;
   static gray_TWorker  ras;
 #endif
 
-#define FT_INTEGRATE( ras, a, b )                         \
-           ras.cover += (a), ras.area += (a) * (TArea)(b)
+#define FT_INTEGRATE( ras, a, b )                                       \
+           if ( ras.cell )                                              \
+             ras.cell->cover += (a), ras.cell->area += (a) * (TArea)(b)
 
 
   typedef struct gray_TRaster_
@@ -523,59 +520,15 @@ typedef ptrdiff_t  FT_PtrDist;
 
   /**************************************************************************
    *
-   * Record the current cell in the linked list.
-   */
-  static void
-  gray_record_cell( RAS_ARG )
-  {
-    PCell  *pcell, cell;
-    TCoord  x = ras.ex;
-
-
-    pcell = &ras.ycells[ras.ey - ras.min_ey];
-    while ( ( cell = *pcell ) )
-    {
-      if ( cell->x > x )
-        break;
-
-      if ( cell->x == x )
-        goto Found;
-
-      pcell = &cell->next;
-    }
-
-    if ( ras.num_cells >= ras.max_cells )
-      ft_longjmp( ras.jump_buffer, 1 );
-
-    /* insert new cell */
-    cell        = ras.cells + ras.num_cells++;
-    cell->x     = x;
-    cell->area  = ras.area;
-    cell->cover = ras.cover;
-
-    cell->next  = *pcell;
-    *pcell      = cell;
-
-    return;
-
-  Found:
-    /* update old cell */
-    cell->area  += ras.area;
-    cell->cover += ras.cover;
-  }
-
-
-  /**************************************************************************
-   *
    * Set the current cell to a new position.
    */
   static void
   gray_set_cell( RAS_ARG_ TCoord  ex,
                           TCoord  ey )
   {
-    /* Move the cell pointer to a new position.  We set the `invalid'      */
-    /* flag to indicate that the cell isn't part of those we're interested */
-    /* in during the render phase.  This means that:                       */
+    /* Move the cell pointer to a new position in the linked list. We use  */
+    /* NULL to indicate that the cell is outside of the clipping region    */
+    /* during the render phase.  This means that:                          */
     /*                                                                     */
     /* . the new vertical position must be within min_ey..max_ey-1.        */
     /* . the new horizontal position must be strictly less than max_ex     */
@@ -583,17 +536,42 @@ typedef ptrdiff_t  FT_PtrDist;
     /* Note that if a cell is to the left of the clipping region, it is    */
     /* actually set to the (min_ex-1) horizontal position.                 */
 
-    /* record the current one if it is valid and substantial */
-    if ( !ras.invalid && ( ras.area || ras.cover ) )
-      gray_record_cell( RAS_VAR );
+    if ( ey >= ras.max_ey || ey < ras.min_ey || ex >= ras.max_ex )
+      ras.cell = NULL;
+    else
+    {
+      PCell  *pcell, cell;
 
-    ras.area  = 0;
-    ras.cover = 0;
-    ras.ex    = FT_MAX( ex, ras.min_ex - 1 );
-    ras.ey    = ey;
 
-    ras.invalid = ( ey >= ras.max_ey || ey < ras.min_ey ||
-                    ex >= ras.max_ex );
+      ex = FT_MAX( ex, ras.min_ex - 1 );
+
+      pcell = &ras.ycells[ey - ras.min_ey];
+      while ( ( cell = *pcell ) )
+      {
+        if ( cell->x > ex )
+          break;
+
+        if ( cell->x == ex )
+          goto Found;
+
+        pcell = &cell->next;
+      }
+
+      if ( ras.num_cells >= ras.max_cells )
+        ft_longjmp( ras.jump_buffer, 1 );
+
+      /* insert new cell */
+      cell        = ras.cells + ras.num_cells++;
+      cell->x     = ex;
+      cell->area  = 0;
+      cell->cover = 0;
+
+      cell->next  = *pcell;
+      *pcell      = cell;
+
+    Found:
+      ras.cell = cell;
+    }
   }
 
 
@@ -1631,9 +1609,6 @@ typedef ptrdiff_t  FT_PtrDist;
       if ( continued )
         FT_Trace_Enable();
 
-      if ( !ras.invalid )
-        gray_record_cell( RAS_VAR );
-
       FT_TRACE7(( "band [%d..%d]: %ld cell%s\n",
                   ras.min_ey,
                   ras.max_ey,
@@ -1702,7 +1677,7 @@ typedef ptrdiff_t  FT_PtrDist;
         FT_MEM_ZERO( ras.ycells, height * sizeof ( PCell ) );
 
         ras.num_cells = 0;
-        ras.invalid   = 1;
+        ras.cell      = NULL;
         ras.min_ey    = band[1];
         ras.max_ey    = band[0];
 

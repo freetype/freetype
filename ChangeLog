@@ -1,3 +1,15 @@
+2021-03-11  Alexei Podtelezhnikov  <apodtele@gmail.com>
+
+	[smooth] Reduce copying during integration phase.
+
+	We now record `cover' and `area' directly into the linked list. This
+	makes rendering faster by 10% or even more at larger sizes.
+
+	* src/smooth/ftgrays.c (FT_INTEGRATE): Write directly.
+	(gray_TWorker): Add direct cell reference and remove unused fields.
+	(gray_set_cell): Consolidate the linked list management and pointers.
+	(gray_convert_glyph, gray_convert_glyph_inner): Updated.
+
 2021-03-10  Alexei Podtelezhnikov  <apodtele@gmail.com>
 
 	* src/smooth/ftgrays.c (FT_INTEGRATE): New convenience macro.
