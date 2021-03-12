@@ -1,3 +1,8 @@
+2021-03-10  Alexei Podtelezhnikov  <apodtele@gmail.com>
+
+	* src/smooth/ftgrays.c (FT_INTEGRATE): New convenience macro.
+	(gray_render_line, gray_render_scanline): Use it.
+
 2021-03-09  Alexei Podtelezhnikov  <apodtele@gmail.com>
 
 	* src/smooth/ftgrays.c (gray_render_line): Rearrange conditionals.
