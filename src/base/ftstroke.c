@@ -974,7 +974,8 @@
     FT_StrokeBorder  border = stroker->borders + side;
     FT_Angle         phi, theta, rotate;
     FT_Fixed         length;
-    FT_Vector        sigma, delta;
+    FT_Vector        sigma = { 0, 0 };
+    FT_Vector        delta;
     FT_Error         error = FT_Err_Ok;
     FT_Bool          intersect;          /* use intersection of lines? */
 
@@ -1048,7 +1049,7 @@
     {
       /* this is a mitered (pointed) or beveled (truncated) corner */
       FT_Fixed   radius = stroker->radius;
-      FT_Vector  sigma;
+      FT_Vector  sigma = { 0, 0 };
       FT_Angle   theta = 0, phi = 0;
       FT_Bool    bevel, fixed_bevel;
 

@@ -110,7 +110,7 @@
 
     else if ( ft_strcmp( property_name, "overlaps" ) == 0 )
     {
-      FT_Int  val = *(const FT_Int*)value;
+      FT_Bool  val = *(const FT_Bool*)value;
 
 
       render->overlaps = val;

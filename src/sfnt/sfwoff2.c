@@ -341,6 +341,11 @@
 
 #else /* !FT_CONFIG_OPTION_USE_BROTLI */
 
+    FT_UNUSED( dst );
+    FT_UNUSED( dst_size );
+    FT_UNUSED( src );
+    FT_UNUSED( src_size );
+
     FT_ERROR(( "woff2_decompress: Brotli support not available.\n" ));
     return FT_THROW( Unimplemented_Feature );
 

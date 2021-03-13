@@ -1,3 +1,21 @@
+2021-03-13  Werner Lemberg  <wl@gnu.org>
+
+	Handle various VC++ compiler warnings.
+
+	Fixes #1039.
+
+	* src/base/ftstroke.c (ft_stroker_inside, ft_stroker_outside):
+	Initialize `sigma`.
+
+	* src/sdf/ftsdf.c (sdf_generate_with_overlaps): Exit immediately if
+	function arguments are invalid.
+	* src/sdf/ftsdfrend.c (sdf_property_set) <"overlaps">: Fix cast.
+
+	* src/sfnt/sfwoff2.c (woff2_decompress)
+	[!FT_CONFIG_OPTION_USE_BROTLI]: Use `FT_UNUSED`.
+
+	* src/truetype/ttgxvar.c (TT_Get_MM_Var): Initialize `fvar_head`.
+
 2021-03-11  Alexei Podtelezhnikov  <apodtele@gmail.com>
 
 	[smooth] Reduce copying during integration phase.

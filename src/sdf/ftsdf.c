@@ -3510,10 +3510,7 @@
     head         = NULL;
 
     if ( !shape || !bitmap || !shape->memory )
-    {
-      error = FT_THROW( Invalid_Argument );
-      goto Exit;
-    }
+      return FT_THROW( Invalid_Argument );
 
     contour           = shape->contours;
     memory            = shape->memory;
