@@ -270,7 +270,10 @@
 
     int         bitdepth, color_type, interlace;
     FT_Int      i;
-    png_byte*  *rows = NULL; /* pacify compiler */
+
+    /* `rows` gets modified within a 'setjmp' scope; */
+    /* we thus need the `volatile` keyword.          */
+    png_byte* *volatile  rows = NULL;
 
 
     if ( x_offset < 0 ||

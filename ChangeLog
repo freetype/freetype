@@ -1,3 +1,19 @@
+2021-03-16  Ben Wagner  <bungeman@google.com>
+
+	[sfnt] Fix memory leak in png loading.
+
+	Reported as
+
+	  https://bugs.chromium.org/p/chromium/issues/detail?id=1182552
+
+	Memory is allocated and the pointer assigned to `rows` inside a
+	'setjmp' scope.  This memory must be freed outside the 'setjmp'
+	scope after a 'longjmp'.  Since `rows` is a local and modified
+	inside the 'setjmp' scope it must be marked volatile or it will have
+	an indeterminate value after the 'longjmp'.
+
+	* src/sfnt/pngshim.c (Load_SBit_Png): Fix memory leak of `rows`.
+
 2021-03-16  Christopher Degawa  <ccom@randomderp.com>
 
 	* CMakeLists.txt: Don't limit generation of 'pkg-config' file to UNIX.
