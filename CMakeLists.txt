@@ -495,41 +495,39 @@ endif ()
 
 if (NOT SKIP_INSTALL_LIBRARIES AND NOT SKIP_INSTALL_ALL)
   # Generate the pkg-config file
-  if (UNIX)
-    file(READ "${PROJECT_SOURCE_DIR}/builds/unix/freetype2.in" FREETYPE2_PC_IN)
+  file(READ "${PROJECT_SOURCE_DIR}/builds/unix/freetype2.in" FREETYPE2_PC_IN)
 
-    string(REPLACE ";" ", " PKG_CONFIG_REQUIRED_PRIVATE "${PKG_CONFIG_REQUIRED_PRIVATE}")
+  string(REPLACE ";" ", " PKG_CONFIG_REQUIRED_PRIVATE "${PKG_CONFIG_REQUIRED_PRIVATE}")
 
-    string(REPLACE "%prefix%" ${CMAKE_INSTALL_PREFIX}
-           FREETYPE2_PC_IN ${FREETYPE2_PC_IN})
-    string(REPLACE "%exec_prefix%" "\${prefix}"
-           FREETYPE2_PC_IN ${FREETYPE2_PC_IN})
-    string(REPLACE "%libdir%" "\${prefix}/${CMAKE_INSTALL_LIBDIR}"
-           FREETYPE2_PC_IN ${FREETYPE2_PC_IN})
-    string(REPLACE "%includedir%" "\${prefix}/${CMAKE_INSTALL_INCLUDEDIR}"
-           FREETYPE2_PC_IN ${FREETYPE2_PC_IN})
-    string(REPLACE "%ft_version%" "${LIBTOOL_CURRENT}.${LIBTOOL_REVISION}.${LIBTOOL_AGE}"
-           FREETYPE2_PC_IN ${FREETYPE2_PC_IN})
-    string(REPLACE "%REQUIRES_PRIVATE%" "${PKG_CONFIG_REQUIRED_PRIVATE}"
-           FREETYPE2_PC_IN ${FREETYPE2_PC_IN})
-    string(REPLACE "%LIBS_PRIVATE%" "${PKG_CONFIG_LIBS_PRIVATE}"
-           FREETYPE2_PC_IN ${FREETYPE2_PC_IN})
+  string(REPLACE "%prefix%" ${CMAKE_INSTALL_PREFIX}
+          FREETYPE2_PC_IN ${FREETYPE2_PC_IN})
+  string(REPLACE "%exec_prefix%" "\${prefix}"
+          FREETYPE2_PC_IN ${FREETYPE2_PC_IN})
+  string(REPLACE "%libdir%" "\${prefix}/${CMAKE_INSTALL_LIBDIR}"
+          FREETYPE2_PC_IN ${FREETYPE2_PC_IN})
+  string(REPLACE "%includedir%" "\${prefix}/${CMAKE_INSTALL_INCLUDEDIR}"
+          FREETYPE2_PC_IN ${FREETYPE2_PC_IN})
+  string(REPLACE "%ft_version%" "${LIBTOOL_CURRENT}.${LIBTOOL_REVISION}.${LIBTOOL_AGE}"
+          FREETYPE2_PC_IN ${FREETYPE2_PC_IN})
+  string(REPLACE "%REQUIRES_PRIVATE%" "${PKG_CONFIG_REQUIRED_PRIVATE}"
+          FREETYPE2_PC_IN ${FREETYPE2_PC_IN})
+  string(REPLACE "%LIBS_PRIVATE%" "${PKG_CONFIG_LIBS_PRIVATE}"
+          FREETYPE2_PC_IN ${FREETYPE2_PC_IN})
 
-    set(FREETYPE2_PC_IN_NAME "${PROJECT_BINARY_DIR}/freetype2.pc")
-    if (EXISTS "${FREETYPE2_PC_IN_NAME}")
-      file(READ "${FREETYPE2_PC_IN_NAME}" ORIGINAL_FREETYPE2_PC_IN)
-    else ()
-      set(ORIGINAL_FREETYPE2_PC_IN "")
-    endif ()
-    if (NOT (ORIGINAL_FREETYPE2_PC_IN STREQUAL FREETYPE2_PC_IN))
-      file(WRITE "${FREETYPE2_PC_IN_NAME}" ${FREETYPE2_PC_IN})
-    endif ()
-
-    install(
-      FILES ${PROJECT_BINARY_DIR}/freetype2.pc
-      DESTINATION ${CMAKE_INSTALL_LIBDIR}/pkgconfig
-      COMPONENT pkgconfig)
+  set(FREETYPE2_PC_IN_NAME "${PROJECT_BINARY_DIR}/freetype2.pc")
+  if (EXISTS "${FREETYPE2_PC_IN_NAME}")
+    file(READ "${FREETYPE2_PC_IN_NAME}" ORIGINAL_FREETYPE2_PC_IN)
+  else ()
+    set(ORIGINAL_FREETYPE2_PC_IN "")
   endif ()
+  if (NOT (ORIGINAL_FREETYPE2_PC_IN STREQUAL FREETYPE2_PC_IN))
+    file(WRITE "${FREETYPE2_PC_IN_NAME}" ${FREETYPE2_PC_IN})
+  endif ()
+
+  install(
+    FILES ${PROJECT_BINARY_DIR}/freetype2.pc
+    DESTINATION ${CMAKE_INSTALL_LIBDIR}/pkgconfig
+    COMPONENT pkgconfig)
 
   include(CMakePackageConfigHelpers)
   write_basic_package_version_file(

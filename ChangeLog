@@ -1,3 +1,9 @@
+2021-03-16  Christopher Degawa  <ccom@randomderp.com>
+
+	* CMakeLists.txt: Don't limit generation of 'pkg-config' file to UNIX.
+
+	mingw-w64 uses the 'pkg-config' files but does not set UNIX.
+
 2021-03-11  Alexei Podtelezhnikov  <apodtele@gmail.com>
 
 	* src/smooth/ftgrays.c (gray_set_cell): Refactor to fix VC++ warning.
