@@ -1,6 +1,28 @@
 README.git
 ----------
 
+FreeType's official repository site is
+
+  https://gitlab.freedesktop.org/freetype  ,
+
+from  which the  'freetype.git' and  'freetype-demos.git' repositories
+can be cloned in the usual way.
+
+  git clone https://gitlab.freedesktop.org/freetype/freetype.git
+  git clone https://gitlab.freedesktop.org/freetype/freetype-demos.git
+
+If you  want to  use the  Savannah mirror  instead, you  have to  do a
+slightly different  incantation because  the repository  names contain
+digit '2' for historical reasons.
+
+  git clone \
+    https://git.savannah.nongnu.org/git/freetype/freetype2.git \
+    freetype
+  git clone \
+    https://git.savannah.nongnu.org/git/freetype/freetype2-demos.git \
+    freetype-demos
+
+
 The git  archive doesn't  contain pre-built configuration  scripts for
 UNIXish platforms.  To generate them say
 
