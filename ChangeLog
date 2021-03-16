@@ -1,3 +1,7 @@
+2021-03-11  Alexei Podtelezhnikov  <apodtele@gmail.com>
+
+	* src/smooth/ftgrays.c (gray_set_cell): Refactor to fix VC++ warning.
+
 2021-03-13  Werner Lemberg  <wl@gnu.org>
 
 	Handle various VC++ compiler warnings.

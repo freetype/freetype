@@ -540,15 +540,17 @@ typedef ptrdiff_t  FT_PtrDist;
       ras.cell = NULL;
     else
     {
-      PCell  *pcell, cell;
+      PCell*  pcell = ras.ycells + ey - ras.min_ey;
+      PCell   cell;
 
 
       ex = FT_MAX( ex, ras.min_ex - 1 );
 
-      pcell = &ras.ycells[ey - ras.min_ey];
-      while ( ( cell = *pcell ) )
+      while ( 1 )
       {
-        if ( cell->x > ex )
+        cell = *pcell;
+
+        if ( !cell || cell->x > ex )
           break;
 
         if ( cell->x == ex )
