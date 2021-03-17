@@ -441,11 +441,10 @@
 
     png_read_image( png, rows );
 
-    FT_FREE( rows );
-
     png_read_end( png, info );
 
   DestroyExit:
+    /* even if reading fails with longjmp, rows must be freed */
     FT_FREE( rows );
     png_destroy_read_struct( &png, &info, NULL );
     FT_Stream_Close( &stream );
