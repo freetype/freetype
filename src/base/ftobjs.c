@@ -539,6 +539,8 @@
     ft_glyphslot_free_bitmap( slot );
 
     /* clear all public fields in the glyph slot */
+    slot->glyph_index = 0;
+
     FT_ZERO( &slot->metrics );
     FT_ZERO( &slot->outline );
 
@@ -559,6 +561,8 @@
 
     slot->linearHoriAdvance = 0;
     slot->linearVertAdvance = 0;
+    slot->advance.x         = 0;
+    slot->advance.y         = 0;
     slot->lsb_delta         = 0;
     slot->rsb_delta         = 0;
   }

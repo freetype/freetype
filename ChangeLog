@@ -1,5 +1,14 @@
 2021-04-02  Ben Wagner  <bungeman@chromium.org>
 
+	[base] Complete `ft_glyphslot_clear`.
+
+	* src/base/ftobjs.c (ft_glyphslot_clear): This function is intended
+	to reset all the values of a glyph slot.  However, it was not
+	resetting the values of the advances and `glyph_index`.  Reset the
+	advances and `glyph_index` to zero.
+
+2021-04-02  Ben Wagner  <bungeman@chromium.org>
+
 	[truetype] Prevent glyph program state from persisting.
 
 	`FDEF` instructions are specified as allowed only in 'prep' or
