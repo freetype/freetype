@@ -476,16 +476,15 @@ FT_BEGIN_HEADER
    *   TT_New_Context
    *
    * @Description:
-   *   Queries the face context for a given font.  Note that there is
-   *   now a _single_ execution context in the TrueType driver which is
-   *   shared among faces.
+   *   Create a `TT_ExecContext`.  Note that there is now an execution
+   *   context per `TT_Size` that is not shared among faces.
    *
    * @Input:
-   *   face ::
-   *     A handle to the source face object.
+   *   driver ::
+   *     A handle to the driver, used for memory allocation.
    *
    * @Return:
-   *   A handle to the execution context.  Initialized for `face'.
+   *   A handle to a new empty execution context.
    *
    * @Note:
    *   Only the glyph loader and debugger should call this function.
