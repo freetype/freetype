@@ -175,6 +175,7 @@ FT_BEGIN_HEADER
 
     TT_GraphicsState   GS;         /* current graphics state */
 
+    FT_Int             iniRange;  /* initial code range number   */
     FT_Int             curRange;  /* current code range number   */
     FT_Byte*           code;      /* current code range          */
     FT_Long            IP;        /* current instruction pointer */
@@ -187,6 +188,9 @@ FT_BEGIN_HEADER
                                   /* increment IP after ins. exec */
     FT_ULong           cvtSize;
     FT_Long*           cvt;
+    FT_ULong           glyfCvtSize;
+    FT_Long*           glyfCvt;   /* cvt working copy for glyph */
+    FT_Long*           origCvt;
 
     FT_UInt            glyphSize; /* glyph instructions buffer size */
     FT_Byte*           glyphIns;  /* glyph instructions buffer */
@@ -213,8 +217,11 @@ FT_BEGIN_HEADER
     TT_CodeRangeTable  codeRangeTable;  /* table of valid code ranges */
                                         /* useful for the debugger   */
 
-    FT_UShort          storeSize;  /* size of current storage */
-    FT_Long*           storage;    /* storage area            */
+    FT_UShort          storeSize;    /* size of current storage */
+    FT_Long*           storage;      /* storage area            */
+    FT_UShort          glyfStoreSize;
+    FT_Long*           glyfStorage;  /* storage working copy for glyph */
+    FT_Long*           origStorage;
 
     FT_F26Dot6         period;     /* values used for the */
     FT_F26Dot6         phase;      /* `SuperRounding'     */

@@ -458,7 +458,7 @@
                           (void*)&load->exec->glyphIns,
                           n_ins );
 
-      load->exec->glyphSize = (FT_UShort)tmp;
+      load->exec->glyphSize = (FT_UInt)tmp;
       if ( error )
         return error;
 

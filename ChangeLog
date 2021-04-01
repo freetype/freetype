@@ -1,3 +1,67 @@
+2021-04-02  Ben Wagner  <bungeman@chromium.org>
+
+	[truetype] Prevent glyph program state from persisting.
+
+	`FDEF` instructions are specified as allowed only in 'prep' or
+	'fpgm'.  FreeType has attempted to prevent their use in the glyph
+	program, but they were still allowed in glyph programs if defined in
+	a function defined in 'prep' or 'fpgm' and called from the glyph
+	program.
+
+	Similarly, `IDEF` instructions are specified not to be able to
+	modify any existing instruction.  FreeType has attempted to prevent
+	their use in the glyph program, but they can still be used like
+	`FDEF`.
+
+	This change stores the initial bytecode range type and disallows the
+	use of `FDEF` and `IDEF` while running the glyph program.
+
+	Most other state is copied from the `TT_Size` into the execution
+	context.  However, it is possible for a glyph program to use `WS` to
+	write to the storage area or `WCVTP`, `WCVTF`, and `DELTAC[123]` to
+	write to the control value table.
+
+	Allowing any change to the global state from the glyph program is
+	problematic as the outlines of any given glyph may change based on
+	the order the glyphs are loaded or even how many times they are
+	loaded.  There exist fonts that write to the storage area or the
+	control value table in the glyph program, so their use should not be
+	an error.
+
+	Possible solutions to using these in the glyph program are
+
+	  * ignore the writes;
+	  * value-level copy on write, discard modified values when finished;
+	  * array-level copy on write, discard the copy when finished;
+	  * array-level copy up-front.
+
+	Ignoring the writes may break otherwise good uses.  A full copy
+	up-front was implemented, but was quite heavy as even well behaved
+	fonts required a full copy and the memory management that goes along
+	with it.  Value-level copy on write could use less memory but
+	requires a great deal more record keeping and complexity.  This
+	change implements array-level copy on write.  If any attempt is made
+	to write to the control value table or the storage area when the
+	initial bytecode range was in a glyph program, the relevant array
+	will be copied to a designated storage area and the copy used for
+	the rest of the glyph program's execution.
+
+	* src/truetype/ttinterp.h (TT_ExecContextRec): New fields
+	`iniRange`, `glyfCvtSize`, `glyfCvt`, `origCvt`, `glyfStoreSize`,
+	`glyfStorage`, and `origStorage`.
+
+	* src/truetype/ttinterp.c (Modify_CVT_Check): New function to handle
+	`exc->glyfCvt`.
+	(Write_CVT, Write_CVT_Stretched, Move_CVT, Move_CVT_Stretched): Use
+	it.
+	(Ins_WS): Handle `exc->glyfStorage`.
+	(Ins_FDEF, Ins_IDEF): Updated.
+	(TT_RunIns): Updated.
+	(TT_Done_Context): Free 'glyf' CVT working and storage area.
+	(TT_Load_Context): Fix/add casts.
+
+	* src/truetype/ttgload.c (TT_Load_Simple_Glyph): Fix cast.
+
 2021-03-30  Dominik Röttsches  <drott@chromium.org>
 
 	[sfnt] Check validity of pointer location of `read_color_line`.
@@ -277,7 +341,7 @@
 
 	[sfnt] Provide optional root transform for 'COLR' v1 glyph graph.
 
-        * include/freetype/freetype.h (FT_Get_Color_Glyph_Paint):
+	* include/freetype/freetype.h (FT_Get_Color_Glyph_Paint):
 	Additional function argument `root_transform` to control whether
 	root transform should be returned.
 	(FT_OpaquePaint): Additional tracking field to denote whether
