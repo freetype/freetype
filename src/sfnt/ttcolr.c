@@ -320,13 +320,11 @@
 
 
   static FT_Bool
-  read_color_line( FT_Byte*      paint_base,
-                   FT_ULong      colorline_offset,
+  read_color_line( FT_Byte*      color_line_p,
                    FT_ColorLine  *colorline )
   {
-    FT_Byte*        p = (FT_Byte *)( paint_base + colorline_offset );
+    FT_Byte*        p = color_line_p;
     FT_PaintExtend  paint_extend;
-    /* TODO: Check pointer limits. */
 
 
     paint_extend = FT_NEXT_BYTE( p );
@@ -343,13 +341,52 @@
   }
 
 
+  /*
+   * Read a paint offset for `FT_Paint*` objects that have them and check
+   * whether it is within reasonable limits within the font and the COLR
+   * table.
+   *
+   * Return 1 on success, 0 on failure.
+   */
+  static FT_Bool
+  get_child_table_pointer ( Colr*      colr,
+                            FT_Byte*   paint_base,
+                            FT_Byte**  p,
+                            FT_Byte**  child_table_pointer )
+  {
+    FT_UInt32  paint_offset;
+    FT_Byte*   child_table_p;
+
+
+    if ( !child_table_pointer )
+      return 0;
+
+    paint_offset = FT_NEXT_UOFF3( *p );
+    if ( !paint_offset )
+      return 0;
+
+    child_table_p = (FT_Byte*)( paint_base + paint_offset );
+
+    if ( child_table_p < colr->base_glyphs_v1                          ||
+         child_table_p >= ( (FT_Byte*)colr->table + colr->table_size ) )
+      return 0;
+
+    *child_table_pointer = child_table_p;
+    return 1;
+  }
+
+
   static FT_Bool
   read_paint( Colr*           colr,
               FT_Byte*        p,
               FT_COLR_Paint*  apaint )
   {
-    FT_Byte*  paint_base = p;
+    FT_Byte*  paint_base     = p;
+    FT_Byte*  child_table_p  = NULL;
 
+
+    if ( !p || !colr || !colr->table )
+      return 0;
 
     apaint->format = FT_NEXT_BYTE( p );
 
@@ -382,38 +419,34 @@
       return 1;
     }
 
-    if ( apaint->format == FT_COLR_PAINTFORMAT_GLYPH )
-    {
-      FT_UInt32  paint_offset;
-      FT_Byte*   paint_p;
-
-
-      paint_offset = FT_NEXT_UOFF3( p );
-      if ( !paint_offset )
-        return 0;
-
-      paint_p = (FT_Byte*)( paint_base + paint_offset );
-      if ( paint_p > ( (FT_Byte*)colr->table + colr->table_size ) )
-        return 0;
-
-      apaint->u.glyph.paint.p                     = paint_p;
-      apaint->u.glyph.paint.insert_root_transform = 0;
-      apaint->u.glyph.glyphID                     = FT_NEXT_USHORT( p );
-    }
-
     else if ( apaint->format == FT_COLR_PAINTFORMAT_SOLID )
     {
       apaint->u.solid.color.palette_index = FT_NEXT_USHORT ( p );
       apaint->u.solid.color.alpha         = FT_NEXT_USHORT ( p );
+
+      return 1;
     }
 
-    else if ( apaint->format == FT_COLR_PAINTFORMAT_LINEAR_GRADIENT )
+    else if ( apaint->format == FT_COLR_PAINTFORMAT_COLR_GLYPH )
     {
-      FT_ULong  color_line_offset = FT_NEXT_OFF3( p );
+      apaint->u.colr_glyph.glyphID = FT_NEXT_USHORT( p );
 
+      return 1;
+    }
 
-      if ( !read_color_line( paint_base,
-                             color_line_offset,
+    /*
+     * Grouped below here are all paint formats that have an offset to a
+     * child paint table as the first entry (for example, a color line or a
+     * child paint table).  Retrieve that and determine whether that paint
+     * offset is valid first.
+     */
+
+    if ( !get_child_table_pointer( colr, paint_base, &p, &child_table_p ) )
+      return 0;
+
+    if ( apaint->format == FT_COLR_PAINTFORMAT_LINEAR_GRADIENT )
+    {
+      if ( !read_color_line( child_table_p,
                              &apaint->u.linear_gradient.colorline ) )
         return 0;
 
@@ -423,15 +456,13 @@
       apaint->u.linear_gradient.p1.y = FT_NEXT_SHORT ( p );
       apaint->u.linear_gradient.p2.x = FT_NEXT_SHORT ( p );
       apaint->u.linear_gradient.p2.y = FT_NEXT_SHORT ( p );
+
+      return 1;
     }
 
     else if ( apaint->format == FT_COLR_PAINTFORMAT_RADIAL_GRADIENT )
     {
-      FT_ULong  color_line_offset = color_line_offset = FT_NEXT_OFF3( p );
-
-
-      if ( !read_color_line( paint_base,
-                             color_line_offset,
+      if ( !read_color_line( child_table_p,
                              &apaint->u.radial_gradient.colorline ) )
         return 0;
 
@@ -444,15 +475,13 @@
       apaint->u.radial_gradient.c1.y = FT_NEXT_SHORT ( p );
 
       apaint->u.radial_gradient.r1 = FT_NEXT_USHORT ( p );
+
+      return 1;
     }
 
     else if ( apaint->format == FT_COLR_PAINTFORMAT_SWEEP_GRADIENT )
     {
-      FT_ULong  color_line_offset = color_line_offset = FT_NEXT_OFF3( p );
-
-
-      if ( !read_color_line( paint_base,
-                             color_line_offset,
+      if ( !read_color_line( child_table_p,
                              &apaint->u.sweep_gradient.colorline ) )
         return 0;
 
@@ -461,23 +490,22 @@
 
       apaint->u.sweep_gradient.start_angle = FT_NEXT_LONG( p );
       apaint->u.sweep_gradient.end_angle = FT_NEXT_LONG( p );
+
+      return 1;
+    }
+
+    if ( apaint->format == FT_COLR_PAINTFORMAT_GLYPH )
+    {
+      apaint->u.glyph.paint.p                     = child_table_p;
+      apaint->u.glyph.paint.insert_root_transform = 0;
+      apaint->u.glyph.glyphID                     = FT_NEXT_USHORT( p );
+
+      return 1;
     }
 
     else if ( apaint->format == FT_COLR_PAINTFORMAT_TRANSFORMED )
     {
-      FT_UInt32  paint_offset;
-      FT_Byte*   paint_p;
-
-
-      paint_offset = FT_NEXT_UOFF3( p );
-      if ( !paint_offset )
-        return 0;
-
-      paint_p = (FT_Byte*)( paint_base + paint_offset );
-      if ( paint_p > ( (FT_Byte*)colr->table + colr->table_size ) )
-        return 0;
-
-      apaint->u.transformed.paint.p                     = paint_p;
+      apaint->u.transformed.paint.p                     = child_table_p;
       apaint->u.transformed.paint.insert_root_transform = 0;
 
       apaint->u.transformed.affine.xx = FT_NEXT_LONG( p );
@@ -486,67 +514,37 @@
       apaint->u.transformed.affine.yy = FT_NEXT_LONG( p );
       apaint->u.transformed.affine.dx = FT_NEXT_LONG( p );
       apaint->u.transformed.affine.dy = FT_NEXT_LONG( p );
+
+      return 1;
     }
 
     else if ( apaint->format == FT_COLR_PAINTFORMAT_TRANSLATE )
     {
-      FT_UInt32  paint_offset;
-      FT_Byte*   paint_p;
-
-
-      paint_offset = FT_NEXT_UOFF3( p );
-      if ( !paint_offset )
-        return 0;
-
-      paint_p = (FT_Byte*)( paint_base + paint_offset );
-      if ( paint_p > ( (FT_Byte*)colr->table + colr->table_size ) )
-        return 0;
-
-      apaint->u.translate.paint.p                     = paint_p;
+      apaint->u.translate.paint.p                     = child_table_p;
       apaint->u.translate.paint.insert_root_transform = 0;
 
       apaint->u.translate.dx = FT_NEXT_LONG( p );
       apaint->u.translate.dy = FT_NEXT_LONG( p );
+
+      return 1;
     }
 
     else if ( apaint->format == FT_COLR_PAINTFORMAT_ROTATE )
     {
-      FT_UInt32  paint_offset;
-      FT_Byte*   paint_p;
-
-
-      paint_offset = FT_NEXT_UOFF3( p );
-      if ( !paint_offset )
-        return 0;
-
-      paint_p = (FT_Byte*)( paint_base + paint_offset );
-      if ( paint_p > ( (FT_Byte*)colr->table + colr->table_size ) )
-        return 0;
-
-      apaint->u.rotate.paint.p                     = paint_p;
+      apaint->u.rotate.paint.p                     = child_table_p;
       apaint->u.rotate.paint.insert_root_transform = 0;
 
       apaint->u.rotate.angle = FT_NEXT_LONG( p );
 
       apaint->u.rotate.center_x = FT_NEXT_LONG( p );
       apaint->u.rotate.center_y = FT_NEXT_LONG( p );
+
+      return 1;
     }
 
     else if ( apaint->format == FT_COLR_PAINTFORMAT_SKEW )
     {
-      FT_UInt32  paint_offset;
-      FT_Byte*   paint_p;
-
-
-      paint_offset = FT_NEXT_UOFF3( p );
-      if ( !paint_offset )
-        return 0;
-
-      paint_p = (FT_Byte*)( paint_base + paint_offset );
-      if ( paint_p > ( (FT_Byte*)colr->table + colr->table_size ) )
-        return 0;
-
-      apaint->u.skew.paint.p                     = paint_p;
+      apaint->u.skew.paint.p                     = child_table_p;
       apaint->u.skew.paint.insert_root_transform = 0;
 
       apaint->u.skew.x_skew_angle = FT_NEXT_LONG( p );
@@ -554,31 +552,17 @@
 
       apaint->u.skew.center_x = FT_NEXT_LONG( p );
       apaint->u.skew.center_y = FT_NEXT_LONG( p );
+
+      return 1;
     }
 
     else if ( apaint->format == FT_COLR_PAINTFORMAT_COMPOSITE )
     {
-      FT_UInt32  source_paint_offset;
-      FT_Byte*   source_paint_p;
-
-      FT_UInt32  backdrop_paint_offset;
-      FT_Byte*   backdrop_paint_p;
-
-      FT_UInt    composite_mode;
+      FT_UInt  composite_mode;
 
 
-      source_paint_offset = FT_NEXT_UOFF3( p );
-      if ( !source_paint_offset )
-        return 0;
-
-      source_paint_p = (FT_Byte*)( paint_base + source_paint_offset );
-      if ( source_paint_p > ( (FT_Byte*)colr->table + colr->table_size ) )
-        return 0;
-
-      apaint->u.composite.source_paint.p =
-        source_paint_p;
-      apaint->u.composite.source_paint.insert_root_transform =
-        0;
+      apaint->u.composite.source_paint.p                     = child_table_p;
+      apaint->u.composite.source_paint.insert_root_transform = 0;
 
       composite_mode = FT_NEXT_BYTE( p );
       if ( composite_mode >= FT_COLR_COMPOSITE_MAX )
@@ -586,24 +570,18 @@
 
       apaint->u.composite.composite_mode = composite_mode;
 
-      backdrop_paint_offset = FT_NEXT_UOFF3( p );
-      if ( !backdrop_paint_offset )
-        return 0;
-
-      backdrop_paint_p = (FT_Byte*)( paint_base + backdrop_paint_offset );
-      if ( backdrop_paint_p > ( (FT_Byte*)colr->table + colr->table_size ) )
-        return 0;
+      if ( !get_child_table_pointer( colr, paint_base, &p, &child_table_p ) )
+         return 0;
 
       apaint->u.composite.backdrop_paint.p =
-        backdrop_paint_p;
+        child_table_p;
       apaint->u.composite.backdrop_paint.insert_root_transform =
         0;
+
+      return 1;
     }
 
-    else if ( apaint->format == FT_COLR_PAINTFORMAT_COLR_GLYPH )
-      apaint->u.colr_glyph.glyphID = FT_NEXT_USHORT( p );
-
-    return 1;
+    return 0;
   }
 
 
@@ -759,7 +737,7 @@
     FT_Byte*  p;
 
 
-    if ( !colr )
+    if ( !colr || !colr->table )
       return 0;
 
     if ( iterator->current_color_stop >= iterator->num_color_stops )
