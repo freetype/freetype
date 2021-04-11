@@ -4,17 +4,27 @@ your system and the level of  customization you need.  Here is a short
 overview of the documentation available:
 
 
-I. Normal installation and upgrades
-===================================
+I. Prerequisites and dependencies
+=================================
 
-  0. Modify  `include/freetype/config/ftoption.h',  if  necessary,  to
-     control how the FreeType library gets built.  Normally, you don't
-     need to change anything.
+  FreeType is a low level C library  that only depends on the standard
+  C library with very few platform-dependent optimizations utilized at
+  build time.  System libraries, such as  zlib,  Gzip,  bzip2, Brotli,
+  and libpng,  might  be  used  to handle  compressed fonts  or decode
+  embedded PNG glyphs.
 
-     Applications can't  control FreeType's  behaviour at  build time.
-     To make  applications control  (some of) FreeType's  behaviour at
-     run-time,    look    at    the    documentation    of    function
-     `FT_Property_Set'.
+  FreeType  auto-configuration scripts  should be  able to detect  the
+  prerequisites if the necessary headers are available  at the default
+  locations.  Otherwise,  modify  `include/freetype/config/ftoption.h'
+  to control how the FreeType library gets built.  Normally, you don't
+  need to change anything.
+
+  Applications have very limited control over FreeType's behaviour  at
+  run-time;  look at the documentation of function `FT_Property_Set'.
+
+
+II. Normal installation and upgrades
+====================================
 
   1. Unix and Unix-like systems
 
@@ -70,8 +80,8 @@ I. Normal installation and upgrades
     directory.
 
 
-II. Custom builds of the library
-================================
+III. Custom builds of the library
+=================================
 
   Customizing the compilation  of FreeType is easy, and  allows you to
   select only the components of  the font engine that you really need.

@@ -57,7 +57,9 @@ or MSys on Win32:
       ./configure --help
 
     to see  the list of  possible configuration options  and important
-    environment variables.
+    environment  variables.  The ./configure script  will detect  some
+    prerequisite  system  libraries  (libpng, brotli, etc.)  if  their
+    headers are available at the default locations.
 
     The following  should work  on all Unix  systems where  the `make'
     command invokes GNU Make:
