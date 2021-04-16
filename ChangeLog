@@ -1,3 +1,12 @@
+2021-04-16  Dominik Röttsches  <drott@chromium.org>
+
+	[sfnt] Safeguard 'COLR' v1 layer extraction
+
+	* src/sfnt/ttcolr.c (tt_face_get_paint_layers): Do not output
+	layer pointer to iterator if it is outside the 'COLR' table.
+	(read_paint): Do not attempt to read layers that are outside the
+	table.
+
 2021-04-02  Ben Wagner  <bungeman@chromium.org>
 
 	[base] Complete `ft_glyphslot_clear`.

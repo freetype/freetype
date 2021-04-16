@@ -388,6 +388,9 @@
     if ( !p || !colr || !colr->table )
       return 0;
 
+    if ( p < colr->base_glyphs_v1                          ||
+         p >= ( (FT_Byte*)colr->table + colr->table_size ) )
+
     apaint->format = FT_NEXT_BYTE( p );
 
     if ( apaint->format >= FT_COLR_PAINT_FORMAT_MAX )
@@ -678,6 +681,7 @@
   {
     FT_Byte*   p             = NULL;
     FT_Byte*   p_first_layer = NULL;
+    FT_Byte*   p_paint       = NULL;
     FT_UInt32  paint_offset;
 
     Colr*  colr;
@@ -716,8 +720,13 @@
       FT_NEXT_ULONG( p );
     opaque_paint->insert_root_transform =
       0;
-    opaque_paint->p =
-      (FT_Byte*)( colr->layers_v1 + paint_offset );
+
+    p_paint = (FT_Byte*)( colr->layers_v1 + paint_offset );
+
+    if ( p_paint < colr->base_glyphs_v1                          ||
+         p_paint >= ( (FT_Byte*)colr->table + colr->table_size ) )
+
+    opaque_paint->p = p_paint;
 
     iterator->p = p;
 
