@@ -1,3 +1,11 @@
+2021-04-16  Werner Lemberg  <wl@gnu.org>
+
+	* builds/unix/freetype2.m4: Fix help string formatting.
+
+	The indented `dnl` macros inserted unwanted horizontal space.
+
+	Problem reported by Ozkan Sezer <sezeroz@gmail.com>.
+
 2021-04-16  Dominik Röttsches  <drott@chromium.org>
 
 	[sfnt] Safeguard 'COLR' v1 layer extraction
