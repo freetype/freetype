@@ -1,3 +1,7 @@
+2021-04-16  Daniel Welty  <@danielwelty>
+
+	* src/cache/ftcsbits.c (ftc_snode_load): Properly handle short pitch.
+
 2021-04-16  Werner Lemberg  <wl@gnu.org>
 
 	* builds/unix/freetype2.m4: Fix help string formatting.

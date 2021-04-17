@@ -143,12 +143,13 @@
         goto BadGlyph;
       }
 
-      /* Check whether our values fit into 8-bit containers!    */
+      /* Check whether our values fit into 8/16-bit containers! */
       /* If this is not the case, our bitmap is too large       */
       /* and we will leave it as `missing' with sbit.buffer = 0 */
 
 #define CHECK_CHAR( d )  ( temp = (FT_Char)d, (FT_Int) temp == (FT_Int) d )
 #define CHECK_BYTE( d )  ( temp = (FT_Byte)d, (FT_UInt)temp == (FT_UInt)d )
+#define CHECK_SHRT( d )  ( temp = (FT_Short)d, (FT_Int)temp == (FT_Int) d )
 
       /* horizontal advance in pixels */
       xadvance = ( slot->advance.x + 32 ) >> 6;
@@ -156,7 +157,7 @@
 
       if ( !CHECK_BYTE( bitmap->rows  )     ||
            !CHECK_BYTE( bitmap->width )     ||
-           !CHECK_CHAR( bitmap->pitch )     ||
+           !CHECK_SHRT( bitmap->pitch )     ||
            !CHECK_CHAR( slot->bitmap_left ) ||
            !CHECK_CHAR( slot->bitmap_top  ) ||
            !CHECK_CHAR( xadvance )          ||
@@ -169,7 +170,7 @@
 
       sbit->width     = (FT_Byte)bitmap->width;
       sbit->height    = (FT_Byte)bitmap->rows;
-      sbit->pitch     = (FT_Char)bitmap->pitch;
+      sbit->pitch     = (FT_Short)bitmap->pitch;
       sbit->left      = (FT_Char)slot->bitmap_left;
       sbit->top       = (FT_Char)slot->bitmap_top;
       sbit->xadvance  = (FT_Char)xadvance;
