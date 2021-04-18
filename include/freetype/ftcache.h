@@ -86,8 +86,8 @@ FT_BEGIN_HEADER
    *   later use @FTC_CMapCache_Lookup to perform the equivalent of
    *   @FT_Get_Char_Index, only much faster.
    *
-   *   If you want to use the @FT_Glyph caching, call @FTC_ImageCache, then
-   *   later use @FTC_ImageCache_Lookup to retrieve the corresponding
+   *   If you want to use the @FT_Glyph caching, call @FTC_ImageCache_New,
+   *   then later use @FTC_ImageCache_Lookup to retrieve the corresponding
    *   @FT_Glyph objects from the cache.
    *
    *   If you need lots of small bitmaps, it is much more memory efficient to
