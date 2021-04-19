@@ -390,6 +390,7 @@
 
     if ( p < colr->base_glyphs_v1                          ||
          p >= ( (FT_Byte*)colr->table + colr->table_size ) )
+      return 0;
 
     apaint->format = FT_NEXT_BYTE( p );
 
@@ -725,6 +726,7 @@
 
     if ( p_paint < colr->base_glyphs_v1                          ||
          p_paint >= ( (FT_Byte*)colr->table + colr->table_size ) )
+      return 0;
 
     opaque_paint->p = p_paint;
 

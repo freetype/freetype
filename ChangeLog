@@ -1,3 +1,11 @@
+2021-04-19  Dominik Röttsches  <drott@chromium.org>
+
+	[sfnt] Return in 'COLR' v1 when layer pointer outside table
+
+	* src/sfnt/ttcolr.c (tt_face_get_paint_layers): Add missing return
+	when paint pointer outside table.
+	(read_paint): Add missing return when paint pointer outside table.
+
 2021-04-18  Alexei Podtelezhnikov  <apodtele@gmail.com>
 
 	[cache] Switch to lazy SBit setting.
