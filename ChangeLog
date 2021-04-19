@@ -1,3 +1,10 @@
+2021-04-18  Alexei Podtelezhnikov  <apodtele@gmail.com>
+
+	[cache] Switch to lazy SBit setting.
+
+	* src/cache/ftcsbits.c (ftc_sbit_copy_bitmap): Removed.
+	(ftc_snode_load): Take the bitmap ownership instead of copying.
+
 2021-04-16  Daniel Welty  <@danielwelty>
 
 	* src/cache/ftcsbits.c (ftc_snode_load): Properly handle short pitch.
