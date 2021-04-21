@@ -1,3 +1,10 @@
+2021-04-20  Alexei Podtelezhnikov  <apodtele@gmail.com>
+
+	[cache] Restore SBit copying for unowned (BDF) bitmaps.
+
+	* src/cache/ftcsbits.c (ftc_sbit_copy_bitmap): Restore.
+	(ftc_snode_load): Check ownership and copy unowned bitmaps.
+
 2021-04-19  Dominik Röttsches  <drott@chromium.org>
 
 	[sfnt] Return in 'COLR' v1 when layer pointer outside table

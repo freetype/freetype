@@ -38,6 +38,30 @@
   /*************************************************************************/
 
 
+  static FT_Error
+  ftc_sbit_copy_bitmap( FTC_SBit    sbit,
+                        FT_Bitmap*  bitmap,
+                        FT_Memory   memory )
+  {
+    FT_Error  error;
+    FT_Int    pitch = bitmap->pitch;
+    FT_ULong  size;
+
+
+    if ( pitch < 0 )
+      pitch = -pitch;
+
+    size = (FT_ULong)pitch * bitmap->rows;
+    if ( !size )
+      return FT_Err_Ok;
+
+    if ( !FT_ALLOC( sbit->buffer, size ) )
+      FT_MEM_COPY( sbit->buffer, bitmap->buffer, size );
+
+    return error;
+  }
+
+
   FT_LOCAL_DEF( void )
   ftc_snode_free( FTC_Node   ftcsnode,
                   FTC_Cache  cache )
@@ -153,9 +177,17 @@
       sbit->format    = (FT_Byte)bitmap->pixel_mode;
       sbit->max_grays = (FT_Byte)(bitmap->num_grays - 1);
 
-      /* take the bitmap ownership */
-      sbit->buffer = bitmap->buffer;
-      slot->internal->flags &= ~FT_GLYPH_OWN_BITMAP;
+      if ( slot->internal->flags & FT_GLYPH_OWN_BITMAP )
+      {
+        /* take the bitmap ownership */
+        sbit->buffer = bitmap->buffer;
+        slot->internal->flags &= ~FT_GLYPH_OWN_BITMAP;
+      }
+      else
+      {
+        /* copy the bitmap into a new buffer -- ignore error */
+        error = ftc_sbit_copy_bitmap( sbit, bitmap, manager->memory );
+      }
 
       /* now, compute size */
       if ( asize )
