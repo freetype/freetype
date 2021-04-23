@@ -62,7 +62,7 @@
     if ( error )
       goto Exit;
 
-    if ( FT_ALLOC( *table, *table_len ) )
+    if ( FT_QALLOC( *table, *table_len ) )
       goto Exit;
 
     error = FT_Load_Sfnt_Table( face, tag, 0, *table, table_len );

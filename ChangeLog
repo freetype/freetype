@@ -1,5 +1,12 @@
 2021-04-22  Alexei Podtelezhnikov  <apodtele@gmail.com>
 
+	[gxvalid,otvalid] s/FT_ALLOC/FT_QALLOC/ for initialized buffers.
+
+	* src/gxvalid/gxvmod.c (gxv_load_table): Do not zero out the buffer.
+	* src/otvalid/otvmod.c (otv_load_table): Ditto.
+
+2021-04-22  Alexei Podtelezhnikov  <apodtele@gmail.com>
+
 	[psaux] s/FT_ALLOC/FT_QALLOC/ for initialized buffers.
 
 	* src/psaux/psobjs.c (ps_table_done, ps_parser_load_field): Do not
