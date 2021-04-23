@@ -1,4 +1,11 @@
-2021-04-20  Alexei Podtelezhnikov  <apodtele@gmail.com>
+2021-04-22  Alexei Podtelezhnikov  <apodtele@gmail.com>
+
+	[psaux] s/FT_ALLOC/FT_QALLOC/ for initialized buffers.
+
+	* src/psaux/psobjs.c (ps_table_done, ps_parser_load_field): Do not
+	zero out the buffer.
+
+2021-04-22  Alexei Podtelezhnikov  <apodtele@gmail.com>
 
 	[base] s/FT_ALLOC/FT_QALLOC/ for initialized buffers.
 

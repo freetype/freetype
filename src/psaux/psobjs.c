@@ -251,7 +251,7 @@
     if ( !old_base )
       return;
 
-    if ( FT_ALLOC( table->block, table->cursor ) )
+    if ( FT_QALLOC( table->block, table->cursor ) )
       return;
     FT_MEM_COPY( table->block, old_base, table->cursor );
     shift_elements( table, old_base );
@@ -979,7 +979,7 @@
     }
 
     len = (FT_UInt)( cur - *cursor );
-    if ( cur >= limit || FT_ALLOC( result, len + 1 ) )
+    if ( cur >= limit || FT_QALLOC( result, len + 1 ) )
       return 0;
 
     /* now copy the string */
@@ -1193,7 +1193,7 @@
             *(FT_String**)q = NULL;
           }
 
-          if ( FT_ALLOC( string, len + 1 ) )
+          if ( FT_QALLOC( string, len + 1 ) )
             goto Exit;
 
           FT_MEM_COPY( string, cur, len );
