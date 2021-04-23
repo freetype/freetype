@@ -851,7 +851,7 @@
         FT_FREE( name );
       }
 
-      if ( FT_ALLOC( blend->axis_names[n], len + 1 ) )
+      if ( FT_QALLOC( blend->axis_names[n], len + 1 ) )
         goto Exit;
 
       name = (FT_Byte*)blend->axis_names[n];
@@ -1858,7 +1858,7 @@
         }
 
         /* t1_decrypt() shouldn't write to base -- make temporary copy */
-        if ( FT_ALLOC( temp, size ) )
+        if ( FT_QALLOC( temp, size ) )
           goto Fail;
         FT_MEM_COPY( temp, base, size );
         psaux->t1_decrypt( temp, size, 4330 );
@@ -2068,7 +2068,7 @@
           }
 
           /* t1_decrypt() shouldn't write to base -- make temporary copy */
-          if ( FT_ALLOC( temp, size ) )
+          if ( FT_QALLOC( temp, size ) )
             goto Fail;
           FT_MEM_COPY( temp, base, size );
           psaux->t1_decrypt( temp, size, 4330 );

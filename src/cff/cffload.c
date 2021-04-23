@@ -426,9 +426,9 @@
 
     new_size = idx->data_size + idx->count;
 
-    if ( idx->count > 0                                &&
-         !FT_NEW_ARRAY( tbl, idx->count + 1 )          &&
-         ( !pool || !FT_ALLOC( new_bytes, new_size ) ) )
+    if ( idx->count > 0                                 &&
+         !FT_NEW_ARRAY( tbl, idx->count + 1 )           &&
+         ( !pool || !FT_QALLOC( new_bytes, new_size ) ) )
     {
       FT_ULong  n, cur_offset;
       FT_ULong  extra     = 0;
@@ -634,10 +634,9 @@
     if ( error )
       goto Exit;
 
-    if ( !FT_ALLOC( name, byte_len + 1 ) )
+    if ( !FT_QALLOC( name, byte_len + 1 ) )
     {
-      if ( byte_len )
-        FT_MEM_COPY( name, bytes, byte_len );
+      FT_MEM_COPY( name, bytes, byte_len );
       name[byte_len] = 0;
     }
     cff_index_forget_element( idx, &bytes );

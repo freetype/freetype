@@ -197,7 +197,7 @@
     else
     {
       /* read segment in memory */
-      if ( FT_ALLOC( parser->base_dict, size )       ||
+      if ( FT_QALLOC( parser->base_dict, size )      ||
            FT_STREAM_READ( parser->base_dict, size ) )
         goto Exit;
 

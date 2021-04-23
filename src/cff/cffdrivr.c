@@ -478,7 +478,7 @@
       FT_Memory        memory    = face->root.memory;
 
 
-      if ( FT_ALLOC( font_info, sizeof ( *font_info ) ) )
+      if ( FT_QALLOC( font_info, sizeof ( *font_info ) ) )
         goto Fail;
 
       font_info->version     = cff_index_get_sid_string( cff,
