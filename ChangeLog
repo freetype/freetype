@@ -1,5 +1,12 @@
 2021-04-23  Alexei Podtelezhnikov  <apodtele@gmail.com>
 
+	[bzip2,gzip] s/FT_ALLOC/FT_QALLOC/ for initialized buffers.
+
+	* src/bzip2/ftbzip2.c (ft_bzip2_alloc): Do not zero out the buffer.
+	* src/gzip/ftgzip.c (ft_gzip_alloc, FT_Stream_OpenGzip): Ditto.
+
+2021-04-23  Alexei Podtelezhnikov  <apodtele@gmail.com>
+
 	[pcf,bdf,winfonts] s/FT_ALLOC/FT_QALLOC/ for initialized buffers.
 
 	* src/pcf/pcfread.c (pcf_interpret_style): Do not zero out the buffer.
