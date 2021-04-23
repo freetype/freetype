@@ -602,7 +602,7 @@
     if ( base_file_len + 6 > FT_INT_MAX )
       return FT_THROW( Array_Too_Large );
 
-    if ( FT_ALLOC( newpath, base_file_len + 6 ) )
+    if ( FT_QALLOC( newpath, base_file_len + 6 ) )
       return error;
 
     FT_MEM_COPY( newpath, base_file_name, base_file_len );
@@ -638,7 +638,7 @@
     if ( base_file_len + 18 > FT_INT_MAX )
       return FT_THROW( Array_Too_Large );
 
-    if ( FT_ALLOC( newpath, base_file_len + 18 ) )
+    if ( FT_QALLOC( newpath, base_file_len + 18 ) )
       return error;
 
     FT_MEM_COPY( newpath, base_file_name, base_file_len );
@@ -874,7 +874,7 @@
 
 
     new_length = ft_strlen( original_name ) + ft_strlen( insertion );
-    if ( FT_ALLOC( new_name, new_length + 1 ) )
+    if ( FT_QALLOC( new_name, new_length + 1 ) )
       return NULL;
 
     tmp = ft_strrchr( original_name, '/' );

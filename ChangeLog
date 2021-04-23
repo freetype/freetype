@@ -1,5 +1,15 @@
 2021-04-20  Alexei Podtelezhnikov  <apodtele@gmail.com>
 
+	[base] s/FT_ALLOC/FT_QALLOC/ for initialized buffers.
+
+	* src/base/ftobjs.c (open_face_PS_from_sfnt_stream,
+	Mac_Read_sfnt_Resource): Do not zero out the buffer.
+	* src/base/ftmac.c (FT_New_Face_From_SFNT, read_lwfn): Ditto.
+	* src/base/ftrfork.c (raccess_make_file_name,
+	raccess_guess_darwin_hfsplus, raccess_guess_darwin_newvfs): Ditto.
+
+2021-04-20  Alexei Podtelezhnikov  <apodtele@gmail.com>
+
 	[cache] Restore SBit copying for unowned (BDF) bitmaps.
 
 	* src/cache/ftcsbits.c (ftc_sbit_copy_bitmap): Restore.

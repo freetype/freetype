@@ -1818,7 +1818,7 @@
     if ( error )
       goto Exit;
 
-    if ( FT_ALLOC( sfnt_ps, (FT_Long)length ) )
+    if ( FT_QALLOC( sfnt_ps, (FT_Long)length ) )
       goto Exit;
 
     error = FT_Stream_Read( stream, (FT_Byte *)sfnt_ps, length );
@@ -2128,7 +2128,7 @@
     if ( error )
       goto Exit;
 
-    if ( FT_ALLOC( sfnt_data, rlen ) )
+    if ( FT_QALLOC( sfnt_data, rlen ) )
       return error;
     error = FT_Stream_Read( stream, (FT_Byte *)sfnt_data, (FT_ULong)rlen );
     if ( error ) {

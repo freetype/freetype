@@ -631,7 +631,7 @@
       old_total_size = total_size;
     }
 
-    if ( FT_ALLOC( buffer, (FT_Long)total_size ) )
+    if ( FT_QALLOC( buffer, (FT_Long)total_size ) )
       goto Error;
 
     /* Second pass: append all POST data to the buffer, add PFB fields. */
@@ -752,7 +752,7 @@
     if ( FT_MAC_RFORK_MAX_LEN < sfnt_size )
       return FT_THROW( Array_Too_Large );
 
-    if ( FT_ALLOC( sfnt_data, (FT_Long)sfnt_size ) )
+    if ( FT_QALLOC( sfnt_data, (FT_Long)sfnt_size ) )
     {
       ReleaseResource( sfnt );
       return error;
