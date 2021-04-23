@@ -590,7 +590,7 @@
       data_len = offsets[num_subrs] - offsets[0];
 
       if ( FT_NEW_ARRAY( subr->code, num_subrs + 1 ) ||
-           FT_ALLOC( subr->code[0], data_len )       )
+           FT_QALLOC( subr->code[0], data_len )      )
         goto Fail;
 
       if ( FT_STREAM_SEEK( cid->data_offset + offsets[0] ) ||
@@ -812,7 +812,7 @@
       }
 
       /* we must convert the data section from hexadecimal to binary */
-      if ( FT_ALLOC( face->binary_data, parser->binary_length )    ||
+      if ( FT_QALLOC( face->binary_data, parser->binary_length )   ||
            FT_SET_ERROR( cid_hex_to_binary( face->binary_data,
                                             parser->binary_length,
                                             parser->data_offset,
