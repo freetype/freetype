@@ -1,5 +1,12 @@
 2021-04-23  Alexei Podtelezhnikov  <apodtele@gmail.com>
 
+	[pfr] s/FT_ALLOC/FT_QALLOC/ for initialized buffers.
+
+	* src/pfr/pfrload.c (pfr_extra_item_load_font_id, pfr_aux_name_load):
+	Do not zero out the buffer.
+
+2021-04-23  Alexei Podtelezhnikov  <apodtele@gmail.com>
+
 	[bzip2,gzip] s/FT_ALLOC/FT_QALLOC/ for initialized buffers.
 
 	* src/bzip2/ftbzip2.c (ft_bzip2_alloc): Do not zero out the buffer.

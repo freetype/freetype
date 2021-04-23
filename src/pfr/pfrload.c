@@ -565,7 +565,7 @@
     if ( phy_font->font_id )
       goto Exit;
 
-    if ( FT_ALLOC( phy_font->font_id, len + 1 ) )
+    if ( FT_QALLOC( phy_font->font_id, len + 1 ) )
       goto Exit;
 
     /* copy font ID name, and terminate it for safety */
@@ -761,7 +761,7 @@
 
     if ( ok )
     {
-      if ( FT_ALLOC( result, len + 1 ) )
+      if ( FT_QALLOC( result, len + 1 ) )
         goto Exit;
 
       FT_MEM_COPY( result, p, len );
