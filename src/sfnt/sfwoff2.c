@@ -2174,8 +2174,8 @@
     }
 
     /* Write sfnt header. */
-    if ( FT_ALLOC( sfnt, sfnt_size ) ||
-         FT_NEW( sfnt_stream )       )
+    if ( FT_QALLOC( sfnt, sfnt_size ) ||
+         FT_NEW( sfnt_stream )        )
       goto Exit;
 
     sfnt_header = sfnt;
@@ -2246,8 +2246,8 @@
     }
 
     /* Allocate memory for uncompressed table data. */
-    if ( FT_ALLOC( uncompressed_buf, woff2.uncompressed_size ) ||
-         FT_FRAME_ENTER( woff2.totalCompressedSize )           )
+    if ( FT_QALLOC( uncompressed_buf, woff2.uncompressed_size ) ||
+         FT_FRAME_ENTER( woff2.totalCompressedSize )            )
       goto Exit;
 
     /* Uncompress the stream. */

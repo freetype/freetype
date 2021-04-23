@@ -501,7 +501,7 @@
     FT_UNUSED( error );
 
 
-    if ( FT_ALLOC( result, entry->stringLength / 2 + 1 ) )
+    if ( FT_QALLOC( result, entry->stringLength / 2 + 1 ) )
       return NULL;
 
     if ( FT_STREAM_SEEK( entry->stringOffset ) ||
@@ -560,7 +560,7 @@
     FT_UNUSED( error );
 
 
-    if ( FT_ALLOC( result, entry->stringLength + 1 ) )
+    if ( FT_QALLOC( result, entry->stringLength + 1 ) )
       return NULL;
 
     if ( FT_STREAM_SEEK( entry->stringOffset ) ||
@@ -928,8 +928,8 @@
 
         /* after the prefix we have character `-' followed by the   */
         /* subfamily name (using only characters a-z, A-Z, and 0-9) */
-        if ( FT_ALLOC( result, face->var_postscript_prefix_len +
-                               1 + ft_strlen( subfamily_name ) + 1 ) )
+        if ( FT_QALLOC( result, face->var_postscript_prefix_len +
+                                1 + ft_strlen( subfamily_name ) + 1 ) )
           return NULL;
 
         ft_strcpy( result, face->var_postscript_prefix );
@@ -957,9 +957,9 @@
     construct_instance_name:
       axis = mm_var->axis;
 
-      if ( FT_ALLOC( result,
-                     face->var_postscript_prefix_len +
-                       num_coords * MAX_VALUE_DESCRIPTOR_LEN + 1 ) )
+      if ( FT_QALLOC( result,
+                      face->var_postscript_prefix_len +
+                        num_coords * MAX_VALUE_DESCRIPTOR_LEN + 1 ) )
         return NULL;
 
       p = result;
@@ -993,6 +993,7 @@
         if ( t != ' ' && ft_isalnum( t ) )
           *p++ = t;
       }
+      *p++ = '\0';
     }
 
   check_length:

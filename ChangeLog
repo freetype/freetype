@@ -1,5 +1,15 @@
 2021-04-23  Alexei Podtelezhnikov  <apodtele@gmail.com>
 
+	[sfnt] s/FT_ALLOC/FT_QALLOC/ for initialized buffers.
+
+	* src/sfnt/sfdriver.c (get_win_string, get_apple_string,
+	sfnt_get_var_ps_name): Do not zero out the buffer.
+	* src/sfnt/sfobjs.c (sfnt_init_face): Ditto.
+	* src/sfnt/sfwoff.c (woff_open_font): Ditto.
+	* src/sfnt/sfwoff2.c (woff2_open_font): Ditto.
+
+2021-04-23  Alexei Podtelezhnikov  <apodtele@gmail.com>
+
 	[cff,type1,type42] s/FT_ALLOC/FT_QALLOC/ for initialized buffers.
 
 	* src/cff/cffload.c (cff_index_get_pointers, cff_index_get_name):
