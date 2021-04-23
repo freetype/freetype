@@ -888,7 +888,7 @@
       /* NULL byte -- the frame is erroneously one byte too small.  */
       /* We thus allocate one more byte, setting it explicitly to   */
       /* zero.                                                      */
-      if ( FT_ALLOC( font->family_name, family_size + 1 ) )
+      if ( FT_QALLOC( font->family_name, family_size + 1 ) )
         goto Fail;
 
       FT_MEM_COPY( font->family_name,
@@ -1094,7 +1094,7 @@
 
       /* note: since glyphs are stored in columns and not in rows we */
       /*       can't use ft_glyphslot_set_bitmap                     */
-      if ( FT_ALLOC_MULT( bitmap->buffer, bitmap->rows, pitch ) )
+      if ( FT_QALLOC_MULT( bitmap->buffer, bitmap->rows, pitch ) )
         goto Exit;
 
       column = (FT_Byte*)bitmap->buffer;

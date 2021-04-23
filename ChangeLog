@@ -1,3 +1,11 @@
+2021-04-23  Alexei Podtelezhnikov  <apodtele@gmail.com>
+
+	[pcf,bdf,winfonts] s/FT_ALLOC/FT_QALLOC/ for initialized buffers.
+
+	* src/pcf/pcfread.c (pcf_interpret_style): Do not zero out the buffer.
+	* src/bdf/bdfdrivr.c (bdf_interpret_style): Ditto.
+	* src/winfonts/winfnt.c (FNT_Face_Init, FNT_Load_Glyph): Ditto.
+
 2021-04-22  Alexei Podtelezhnikov  <apodtele@gmail.com>
 
 	[cache] Optimize SBit copying.

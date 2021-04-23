@@ -276,7 +276,7 @@ THE SOFTWARE.
       char*  s;
 
 
-      if ( FT_ALLOC( face->style_name, len ) )
+      if ( FT_QALLOC( face->style_name, len ) )
         return error;
 
       s = face->style_name;
