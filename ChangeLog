@@ -1,5 +1,12 @@
 2021-04-22  Alexei Podtelezhnikov  <apodtele@gmail.com>
 
+	[cache] Optimize SBit copying.
+
+	* src/cache/ftcsbits.c (ftc_snode_load): Do not initialize the buffer.
+	(ftc_sbit_copy_bitmap): Accept zero size, s/FT_ALLOC/FT_QALLOC/.
+
+2021-04-22  Alexei Podtelezhnikov  <apodtele@gmail.com>
+
 	[gxvalid,otvalid] s/FT_ALLOC/FT_QALLOC/ for initialized buffers.
 
 	* src/gxvalid/gxvmod.c (gxv_load_table): Do not zero out the buffer.

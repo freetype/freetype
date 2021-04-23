@@ -52,10 +52,8 @@
       pitch = -pitch;
 
     size = (FT_ULong)pitch * bitmap->rows;
-    if ( !size )
-      return FT_Err_Ok;
 
-    if ( !FT_ALLOC( sbit->buffer, size ) )
+    if ( !FT_QALLOC( sbit->buffer, size ) )
       FT_MEM_COPY( sbit->buffer, bitmap->buffer, size );
 
     return error;
@@ -121,8 +119,6 @@
 
     sbit  = snode->sbits + ( gindex - gnode->gindex );
     clazz = (FTC_SFamilyClass)family->clazz;
-
-    sbit->buffer = NULL;
 
     error = clazz->family_load_glyph( family, gindex, manager, &face );
     if ( error )
