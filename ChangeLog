@@ -1,5 +1,10 @@
 2021-04-23  Alexei Podtelezhnikov  <apodtele@gmail.com>
 
+	* src/base/ftobjs.c (Mac_Read_POST_Resource): s/FT_ALLOC/FT_QALLOC/.
+	* builds/mac/ftmac.c (FT_New_Face_From_SFNT, read_lwfn): Ditto.
+
+2021-04-23  Alexei Podtelezhnikov  <apodtele@gmail.com>
+
 	* src/sdf/ftsdf.c (sdf_{edge,contour,shape}_new): Use FT_QALLOC.
 
 2021-04-23  Alexei Podtelezhnikov  <apodtele@gmail.com>
