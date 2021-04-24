@@ -1,3 +1,14 @@
+2021-04-25  Issam E. Maghni  <issam.e.maghni@mailbox.org>
+
+	* builds/meson/process_ftoption_h.py: Add LF at EOF.
+
+	This fixes
+
+	  .../ftoption.h:1030:10: error:
+	    no newline at end of file [-Werror,-Wnewline-eof]
+
+	for the generated `ftoption.h` file.
+
 2021-04-24  Alexei Podtelezhnikov  <apodtele@gmail.com>
 
 	* src/cff/cffload.c (cff_index_get_pointers): s/FT_QALLOC/FT_ALLOC/.

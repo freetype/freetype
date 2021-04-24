@@ -92,7 +92,7 @@ def main():
             line = "#define " + option_name
         new_lines.append(line)
 
-    result = "\n".join(new_lines)
+    result = "\n".join(new_lines) + "\n"
 
     # Sanity check that all command-line options were actually processed.
     cmdline_options = set(args.enable) | set(args.disable)
