@@ -1,5 +1,9 @@
 2021-04-23  Alexei Podtelezhnikov  <apodtele@gmail.com>
 
+	* src/sdf/ftsdf.c (sdf_{edge,contour,shape}_new): Use FT_QALLOC.
+
+2021-04-23  Alexei Podtelezhnikov  <apodtele@gmail.com>
+
 	[sfnt] s/FT_ALLOC/FT_QALLOC/ for initialized buffers.
 
 	* src/sfnt/sfdriver.c (get_win_string, get_apple_string,

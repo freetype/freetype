@@ -495,7 +495,7 @@
       goto Exit;
     }
 
-    if ( !FT_ALLOC( ptr, sizeof ( *ptr ) ) )
+    if ( !FT_QALLOC( ptr, sizeof ( *ptr ) ) )
     {
       *ptr = null_edge;
       *edge = ptr;
@@ -534,7 +534,7 @@
       goto Exit;
     }
 
-    if ( !FT_ALLOC( ptr, sizeof ( *ptr ) ) )
+    if ( !FT_QALLOC( ptr, sizeof ( *ptr ) ) )
     {
       *ptr     = null_contour;
       *contour = ptr;
@@ -589,7 +589,7 @@
       goto Exit;
     }
 
-    if ( !FT_ALLOC( ptr, sizeof ( *ptr ) ) )
+    if ( !FT_QALLOC( ptr, sizeof ( *ptr ) ) )
     {
       *ptr        = null_shape;
       ptr->memory = memory;
