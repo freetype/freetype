@@ -1,3 +1,7 @@
+2021-04-24  Alexei Podtelezhnikov  <apodtele@gmail.com>
+
+	* src/cff/cffload.c (cff_index_get_pointers): s/FT_QALLOC/FT_ALLOC/.
+
 2021-04-23  Alexei Podtelezhnikov  <apodtele@gmail.com>
 
 	* src/base/ftobjs.c (Mac_Read_POST_Resource): s/FT_ALLOC/FT_QALLOC/.
@@ -34,7 +38,7 @@
 	[cid] s/FT_ALLOC/FT_QALLOC/ and clean up.
 
 	* src/cid/cidgload.c (cid_load_glyph): Do not zero out the buffer.
-        * src/cid/cidload.c (cid_face_open, cid_read_subrs): Ditto.
+	* src/cid/cidload.c (cid_face_open, cid_read_subrs): Ditto.
 
 2021-04-23  Alexei Podtelezhnikov  <apodtele@gmail.com>
 

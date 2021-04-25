@@ -426,9 +426,9 @@
 
     new_size = idx->data_size + idx->count;
 
-    if ( idx->count > 0                                 &&
-         !FT_NEW_ARRAY( tbl, idx->count + 1 )           &&
-         ( !pool || !FT_QALLOC( new_bytes, new_size ) ) )
+    if ( idx->count > 0                                &&
+         !FT_NEW_ARRAY( tbl, idx->count + 1 )          &&
+         ( !pool || !FT_ALLOC( new_bytes, new_size ) ) )
     {
       FT_ULong  n, cur_offset;
       FT_ULong  extra     = 0;
