@@ -1,5 +1,13 @@
 2021-04-26  Alexei Podtelezhnikov  <apodtele@gmail.com>
 
+	[pfr] Avoid some memory zeroing.
+
+	* src/pfr/pfrobjs.c (pfr_face_init) : Tweak memory macro.
+	* src/pfr/pfrload.c (pfr_extra_item_load_stem_snaps,
+	pfr_phy_font_load): Ditto.
+
+2021-04-26  Alexei Podtelezhnikov  <apodtele@gmail.com>
+
 	* src/winfonts/winfnt.c (FNT_Face_Init): Tweak memory macro.
 
 2021-04-26  Alexei Podtelezhnikov  <apodtele@gmail.com>

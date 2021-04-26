@@ -213,7 +213,7 @@
         FT_Memory        memory = pfrface->stream->memory;
 
 
-        if ( FT_NEW_ARRAY( pfrface->available_sizes, count ) )
+        if ( FT_QNEW_ARRAY( pfrface->available_sizes, count ) )
           goto Exit;
 
         size   = pfrface->available_sizes;

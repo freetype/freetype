@@ -601,7 +601,7 @@
 
     PFR_CHECK( count * 2 );
 
-    if ( FT_NEW_ARRAY( snaps, count ) )
+    if ( FT_QNEW_ARRAY( snaps, count ) )
       goto Exit;
 
     phy_font->vertical.stem_snaps = snaps;
@@ -953,7 +953,7 @@
 
       PFR_CHECK( count * 2 );
 
-      if ( FT_NEW_ARRAY( phy_font->blue_values, count ) )
+      if ( FT_QNEW_ARRAY( phy_font->blue_values, count ) )
         goto Fail;
 
       for ( n = 0; n < count; n++ )
