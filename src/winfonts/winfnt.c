@@ -793,7 +793,7 @@
         root->style_flags |= FT_STYLE_FLAG_BOLD;
 
       /* set up the `fixed_sizes' array */
-      if ( FT_NEW_ARRAY( root->available_sizes, 1 ) )
+      if ( FT_QNEW( root->available_sizes ) )
         goto Fail;
 
       root->num_fixed_sizes = 1;

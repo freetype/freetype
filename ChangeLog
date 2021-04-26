@@ -1,5 +1,9 @@
 2021-04-26  Alexei Podtelezhnikov  <apodtele@gmail.com>
 
+	* src/winfonts/winfnt.c (FNT_Face_Init): Tweak memory macro.
+
+2021-04-26  Alexei Podtelezhnikov  <apodtele@gmail.com>
+
 	[psaux,psnames] Avoid some memory zeroing.
 
 	* src/psaux/psstack.c (cf2_stack_init): Tweak memory macro.
