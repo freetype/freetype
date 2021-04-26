@@ -299,7 +299,7 @@
                         j, ref[j].res_id, ref[j].offset ));
         }
 
-        if ( FT_NEW_ARRAY( offsets_internal, *count ) )
+        if ( FT_QNEW_ARRAY( offsets_internal, *count ) )
           goto Exit;
 
         /* XXX: duplicated reference ID,

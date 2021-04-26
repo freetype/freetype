@@ -1,5 +1,12 @@
 2021-04-25  Alexei Podtelezhnikov  <apodtele@gmail.com>
 
+	[base] Avoid some memory zeroing.
+
+	* src/base/ftrfork.c (FT_Raccess_Get_DataOffsets): Use FT_QNEW_ARRAY.
+	* src/base/ftsnames.c (FT_Get_Sfnt_{Name,LangTag}): Ditto.
+
+2021-04-25  Alexei Podtelezhnikov  <apodtele@gmail.com>
+
 	[bdf,pcf] Avoid some memory zeroing.
 
 	* src/pcf/pcfread.c (pcf_read_TOC, pcf_get_properties, pcf_load_font):

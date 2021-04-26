@@ -65,7 +65,7 @@
           FT_Stream  stream = face->stream;
 
 
-          if ( FT_NEW_ARRAY  ( entry->string, entry->stringLength ) ||
+          if ( FT_QNEW_ARRAY ( entry->string, entry->stringLength ) ||
                FT_STREAM_SEEK( entry->stringOffset )                ||
                FT_STREAM_READ( entry->string, entry->stringLength ) )
           {
@@ -121,7 +121,7 @@
           FT_Stream  stream = face->stream;
 
 
-          if ( FT_NEW_ARRAY  ( entry->string, entry->stringLength ) ||
+          if ( FT_QNEW_ARRAY ( entry->string, entry->stringLength ) ||
                FT_STREAM_SEEK( entry->stringOffset )                ||
                FT_STREAM_READ( entry->string, entry->stringLength ) )
           {
