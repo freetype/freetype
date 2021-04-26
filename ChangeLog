@@ -1,3 +1,14 @@
+2021-04-25  Alexei Podtelezhnikov  <apodtele@gmail.com>
+
+	[bdf,pcf] Avoid some memory zeroing.
+
+	* src/pcf/pcfread.c (pcf_read_TOC, pcf_get_properties, pcf_load_font):
+	Tweak memory macros.
+	* src/bdf/bdfdrivr.c (BDF_Face_Init): Ditto.
+	* src/bdf/bdflib.c (_bdf_readstreami, bdf_create_property,
+	_bdf_parse_glyphs, _bdf_parse_start): Ditto.
+	(_bdf_add_property): Do not handle zero size.
+
 2021-04-25  Issam E. Maghni  <issam.e.maghni@mailbox.org>
 
 	* builds/meson/process_ftoption_h.py: Add LF at EOF.

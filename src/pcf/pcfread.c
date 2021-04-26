@@ -127,7 +127,7 @@ THE SOFTWARE.
       toc->count = FT_MIN( stream->size >> 4, 9 );
     }
 
-    if ( FT_NEW_ARRAY( face->toc.tables, toc->count ) )
+    if ( FT_QNEW_ARRAY( face->toc.tables, toc->count ) )
       return error;
 
     tables = face->toc.tables;
@@ -540,7 +540,7 @@ THE SOFTWARE.
 
     face->nprops = (int)nprops;
 
-    if ( FT_NEW_ARRAY( props, nprops ) )
+    if ( FT_QNEW_ARRAY( props, nprops ) )
       goto Bail;
 
     for ( i = 0; i < nprops; i++ )
@@ -607,12 +607,11 @@ THE SOFTWARE.
     }
 
     /* allocate one more byte so that we have a final null byte */
-    if ( FT_NEW_ARRAY( strings, string_size + 1 ) )
+    if ( FT_QALLOC( strings, string_size + 1 )  ||
+         FT_STREAM_READ( strings, string_size ) )
       goto Bail;
 
-    error = FT_Stream_Read( stream, (FT_Byte*)strings, string_size );
-    if ( error )
-      goto Bail;
+    strings[string_size] = '\0';
 
     if ( FT_NEW_ARRAY( properties, nprops ) )
       goto Bail;
@@ -1532,7 +1531,7 @@ THE SOFTWARE.
           {
             l += ft_strlen( foundry_prop->value.atom ) + 1;
 
-            if ( FT_NEW_ARRAY( root->family_name, l ) )
+            if ( FT_QALLOC( root->family_name, l ) )
               goto Exit;
 
             ft_strcpy( root->family_name, foundry_prop->value.atom );
@@ -1541,7 +1540,7 @@ THE SOFTWARE.
           }
           else
           {
-            if ( FT_NEW_ARRAY( root->family_name, l ) )
+            if ( FT_QALLOC( root->family_name, l ) )
               goto Exit;
 
             ft_strcpy( root->family_name, prop->value.atom );
@@ -1565,15 +1564,13 @@ THE SOFTWARE.
       root->num_glyphs = (FT_Long)face->nmetrics;
 
       root->num_fixed_sizes = 1;
-      if ( FT_NEW_ARRAY( root->available_sizes, 1 ) )
+      if ( FT_NEW( root->available_sizes ) )
         goto Exit;
 
       {
         FT_Bitmap_Size*  bsize = root->available_sizes;
         FT_Short         resolution_x = 0, resolution_y = 0;
 
-
-        FT_ZERO( bsize );
 
         /* for simplicity, we take absolute values of integer properties */
 
