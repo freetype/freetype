@@ -67,7 +67,7 @@
     stack->error  = e;
 
     /* allocate the stack buffer */
-    if ( FT_NEW_ARRAY( stack->buffer, stackSize ) )
+    if ( FT_QNEW_ARRAY( stack->buffer, stackSize ) )
     {
       FT_FREE( stack );
       return NULL;

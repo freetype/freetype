@@ -1,3 +1,10 @@
+2021-04-26  Alexei Podtelezhnikov  <apodtele@gmail.com>
+
+	[psaux,psnames] Avoid some memory zeroing.
+
+	* src/psaux/psstack.c (cf2_stack_init): Tweak memory macro.
+	* src/psnames/psmodule.c (ps_unicodes_init): Ditto.
+
 2021-04-25  Alexei Podtelezhnikov  <apodtele@gmail.com>
 
 	[base] Avoid some memory zeroing.

@@ -328,7 +328,7 @@
     table->num_maps = 0;
     table->maps     = NULL;
 
-    if ( !FT_NEW_ARRAY( table->maps, num_glyphs + EXTRA_GLYPH_LIST_SIZE ) )
+    if ( !FT_QNEW_ARRAY( table->maps, num_glyphs + EXTRA_GLYPH_LIST_SIZE ) )
     {
       FT_UInt     n;
       FT_UInt     count;
@@ -391,9 +391,9 @@
         /* Reallocate if the number of used entries is much smaller. */
         if ( count < num_glyphs / 2 )
         {
-          (void)FT_RENEW_ARRAY( table->maps,
-                                num_glyphs + EXTRA_GLYPH_LIST_SIZE,
-                                count );
+          (void)FT_QRENEW_ARRAY( table->maps,
+                                 num_glyphs + EXTRA_GLYPH_LIST_SIZE,
+                                 count );
           error = FT_Err_Ok;
         }
 
