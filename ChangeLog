@@ -1,5 +1,13 @@
 2021-04-26  Alexei Podtelezhnikov  <apodtele@gmail.com>
 
+	[cff] Avoid some memory zeroing.
+
+	* src/cff/cffparse.c (cff_parser_init): Tweak memory macro.
+	* src/cff/cffload.c (cff_index_load_offsets, cff_index_get_pointers,
+	cff_charset_load, cff_vstore_load): Ditto.
+
+2021-04-26  Alexei Podtelezhnikov  <apodtele@gmail.com>
+
 	[pfr] Avoid some memory zeroing.
 
 	* src/pfr/pfrobjs.c (pfr_face_init) : Tweak memory macro.

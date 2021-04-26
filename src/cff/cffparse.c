@@ -62,7 +62,7 @@
     parser->num_axes    = num_axes;
 
     /* allocate the stack buffer */
-    if ( FT_NEW_ARRAY( parser->stack, stackSize ) )
+    if ( FT_QNEW_ARRAY( parser->stack, stackSize ) )
     {
       FT_FREE( parser->stack );
       goto Exit;

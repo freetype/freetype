@@ -356,9 +356,9 @@
 
       data_size = (FT_ULong)( idx->count + 1 ) * offsize;
 
-      if ( FT_NEW_ARRAY( idx->offsets, idx->count + 1 ) ||
-           FT_STREAM_SEEK( idx->start + idx->hdr_size ) ||
-           FT_FRAME_ENTER( data_size )                  )
+      if ( FT_QNEW_ARRAY( idx->offsets, idx->count + 1 ) ||
+           FT_STREAM_SEEK( idx->start + idx->hdr_size )  ||
+           FT_FRAME_ENTER( data_size )                   )
         goto Exit;
 
       poff   = idx->offsets;
@@ -427,7 +427,7 @@
     new_size = idx->data_size + idx->count;
 
     if ( idx->count > 0                                &&
-         !FT_NEW_ARRAY( tbl, idx->count + 1 )          &&
+         !FT_QNEW_ARRAY( tbl, idx->count + 1 )         &&
          ( !pool || !FT_ALLOC( new_bytes, new_size ) ) )
     {
       FT_ULong  n, cur_offset;
@@ -931,7 +931,7 @@
         goto Exit;
 
       /* Allocate memory for sids. */
-      if ( FT_NEW_ARRAY( charset->sids, num_glyphs ) )
+      if ( FT_QNEW_ARRAY( charset->sids, num_glyphs ) )
         goto Exit;
 
       /* assign the .notdef glyph */
@@ -1024,7 +1024,7 @@
         }
 
         /* Allocate memory for sids. */
-        if ( FT_NEW_ARRAY( charset->sids, num_glyphs ) )
+        if ( FT_QNEW_ARRAY( charset->sids, num_glyphs ) )
           goto Exit;
 
         /* Copy the predefined charset into the allocated memory. */
@@ -1042,7 +1042,7 @@
         }
 
         /* Allocate memory for sids. */
-        if ( FT_NEW_ARRAY( charset->sids, num_glyphs ) )
+        if ( FT_QNEW_ARRAY( charset->sids, num_glyphs ) )
           goto Exit;
 
         /* Copy the predefined charset into the allocated memory.     */
@@ -1060,7 +1060,7 @@
         }
 
         /* Allocate memory for sids. */
-        if ( FT_NEW_ARRAY( charset->sids, num_glyphs ) )
+        if ( FT_QNEW_ARRAY( charset->sids, num_glyphs ) )
           goto Exit;
 
         /* Copy the predefined charset into the allocated memory.     */
@@ -1086,7 +1086,6 @@
       FT_FREE( charset->cids );
       charset->format = 0;
       charset->offset = 0;
-      charset->sids   = 0;
     }
 
     return error;
@@ -1168,7 +1167,7 @@
 
       /* make temporary copy of item variation data offsets; */
       /* we'll parse region list first, then come back       */
-      if ( FT_NEW_ARRAY( dataOffsetArray, vstore->dataCount ) )
+      if ( FT_QNEW_ARRAY( dataOffsetArray, vstore->dataCount ) )
         goto Exit;
 
       for ( i = 0; i < vstore->dataCount; i++ )
@@ -1183,7 +1182,7 @@
            FT_READ_USHORT( vstore->regionCount )         )
         goto Exit;
 
-      if ( FT_NEW_ARRAY( vstore->varRegionList, vstore->regionCount ) )
+      if ( FT_QNEW_ARRAY( vstore->varRegionList, vstore->regionCount ) )
         goto Exit;
 
       for ( i = 0; i < vstore->regionCount; i++ )
@@ -1191,7 +1190,7 @@
         CFF_VarRegion*  region = &vstore->varRegionList[i];
 
 
-        if ( FT_NEW_ARRAY( region->axisList, vstore->axisCount ) )
+        if ( FT_QNEW_ARRAY( region->axisList, vstore->axisCount ) )
           goto Exit;
 
         for ( j = 0; j < vstore->axisCount; j++ )
@@ -1213,7 +1212,7 @@
       }
 
       /* use dataOffsetArray now to parse varData items */
-      if ( FT_NEW_ARRAY( vstore->varData, vstore->dataCount ) )
+      if ( FT_QNEW_ARRAY( vstore->varData, vstore->dataCount ) )
         goto Exit;
 
       for ( i = 0; i < vstore->dataCount; i++ )
@@ -1235,7 +1234,7 @@
         if ( FT_READ_USHORT( data->regionIdxCount ) )
           goto Exit;
 
-        if ( FT_NEW_ARRAY( data->regionIndices, data->regionIdxCount ) )
+        if ( FT_QNEW_ARRAY( data->regionIndices, data->regionIdxCount ) )
           goto Exit;
 
         for ( j = 0; j < data->regionIdxCount; j++ )
