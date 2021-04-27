@@ -1,5 +1,12 @@
 2021-04-27  Alexei Podtelezhnikov  <apodtele@gmail.com>
 
+	[lzw] Preserve decompression stack when relocating to heap.
+
+	* src/lzw/ftzopen.c (ft_lzwstate_stack_grow): Copy stack when
+	relocating to heap.
+
+2021-04-27  Alexei Podtelezhnikov  <apodtele@gmail.com>
+
 	* src/cid/cidgload.c (cid_load_glyph): Restore the glyph_length check.
 
 2021-04-27  Werner Lemberg  <wl@gnu.org>
