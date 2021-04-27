@@ -1,5 +1,9 @@
 2021-04-26  Alexei Podtelezhnikov  <apodtele@gmail.com>
 
+	* src/sfnt/sfobjs.c (sfnt_init_face): Revert macro change.
+
+2021-04-26  Alexei Podtelezhnikov  <apodtele@gmail.com>
+
 	[cff] Avoid some memory zeroing.
 
 	* src/cff/cffparse.c (cff_parser_init): Tweak memory macro.
