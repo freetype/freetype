@@ -343,7 +343,7 @@
         const char*  gname = get_glyph_name( glyph_data, n );
 
 
-        if ( gname )
+        if ( gname && *gname )
         {
           ps_check_extra_glyph_name( gname, n,
                                      extra_glyphs, extra_glyph_list_states );

@@ -1,3 +1,11 @@
+2021-04-27  Werner Lemberg  <wl@gnu.org>
+
+	* src/psmodule.c (ps_unicodes_init): Ignore empty glyph names.
+
+	Reported as
+
+	  https://bugs.chromium.org/p/oss-fuzz/issues/detail?id=33637
+
 2021-04-26  Alexei Podtelezhnikov  <apodtele@gmail.com>
 
 	* src/sfnt/sfobjs.c (sfnt_init_face): Revert macro change.
