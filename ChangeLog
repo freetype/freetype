@@ -1,3 +1,7 @@
+2021-04-27  Alexei Podtelezhnikov  <apodtele@gmail.com>
+
+	* src/cid/cidgload.c (cid_load_glyph): Restore the glyph_length check.
+
 2021-04-27  Werner Lemberg  <wl@gnu.org>
 
 	* src/psmodule.c (ps_unicodes_init): Ignore empty glyph names.

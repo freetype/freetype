@@ -131,7 +131,8 @@
 
       glyph_length = off2 - off1;
 
-      if ( FT_QALLOC( charstring, glyph_length )         ||
+      if ( glyph_length == 0                             ||
+           FT_QALLOC( charstring, glyph_length )         ||
            FT_STREAM_READ_AT( cid->data_offset + off1,
                               charstring, glyph_length ) )
         goto Exit;
