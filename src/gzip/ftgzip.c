@@ -130,7 +130,8 @@
     FT_Pointer  p  = NULL;
 
 
-    (void)FT_QALLOC( p, sz );
+    /* allocate and zero out */
+    (void)FT_ALLOC( p, sz );
     return p;
   }
 

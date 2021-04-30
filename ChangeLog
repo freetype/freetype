@@ -1,3 +1,7 @@
+2021-04-30  Alexei Podtelezhnikov  <apodtele@gmail.com>
+
+	* src/gzip/ftgzip.c (ft_gzip_alloc): Zero out memory again.
+
 2021-04-27  Alexei Podtelezhnikov  <apodtele@gmail.com>
 
 	[lzw] Preserve decompression stack when relocating to heap.
