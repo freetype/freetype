@@ -1,3 +1,9 @@
+2021-05-01  Alexei Podtelezhnikov  <apodtele@gmail.com>
+
+	[woff2] Avoid some memory zeroing.
+
+	* src/sfnt/sfwoff2.c (store_loca, woff2_open_font): Tweak macros.
+
 2021-04-30  Alexei Podtelezhnikov  <apodtele@gmail.com>
 
 	* src/gzip/ftgzip.c (ft_gzip_alloc): Zero out memory again.

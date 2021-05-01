@@ -795,7 +795,7 @@
       goto Fail;
 
     loca_buf_size = loca_values_size * offset_size;
-    if ( FT_NEW_ARRAY( loca_buf, loca_buf_size ) )
+    if ( FT_QNEW_ARRAY( loca_buf, loca_buf_size ) )
       goto Fail;
 
     dst = loca_buf;
@@ -2123,8 +2123,8 @@
 
 
       /* Create a temporary array. */
-      if ( FT_NEW_ARRAY( temp_indices,
-                         ttc_font->num_tables ) )
+      if ( FT_QNEW_ARRAY( temp_indices,
+                          ttc_font->num_tables ) )
         goto Exit;
 
       FT_TRACE4(( "Storing tables for TTC face index %d.\n", face_index ));
@@ -2132,9 +2132,9 @@
         temp_indices[nn] = indices[ttc_font->table_indices[nn]];
 
       /* Resize array to required size. */
-      if ( FT_RENEW_ARRAY( indices,
-                           woff2.num_tables,
-                           ttc_font->num_tables ) )
+      if ( FT_QRENEW_ARRAY( indices,
+                            woff2.num_tables,
+                            ttc_font->num_tables ) )
         goto Exit;
 
       for ( nn = 0; nn < ttc_font->num_tables; nn++ )
