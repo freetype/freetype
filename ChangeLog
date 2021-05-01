@@ -1,5 +1,9 @@
 2021-05-01  Alexei Podtelezhnikov  <apodtele@gmail.com>
 
+	* src/sfnt/pngshim.c (Load_SBit_Png): Tweak allocaton macro.
+
+2021-05-01  Alexei Podtelezhnikov  <apodtele@gmail.com>
+
 	[truetype] Avoid some memory zeroing.
 
 	* src/truetype/ttinterp.c (Init_Context): Tweak allocation macro.

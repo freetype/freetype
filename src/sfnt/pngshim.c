@@ -430,7 +430,7 @@
         goto DestroyExit;
     }
 
-    if ( FT_NEW_ARRAY( rows, imgHeight ) )
+    if ( FT_QNEW_ARRAY( rows, imgHeight ) )
     {
       error = FT_THROW( Out_Of_Memory );
       goto DestroyExit;
