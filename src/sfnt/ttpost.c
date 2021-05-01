@@ -190,8 +190,8 @@
       FT_Int  n;
 
 
-      if ( FT_NEW_ARRAY ( glyph_indices, num_glyphs ) ||
-           FT_FRAME_ENTER( num_glyphs * 2L )          )
+      if ( FT_QNEW_ARRAY ( glyph_indices, num_glyphs ) ||
+           FT_FRAME_ENTER( num_glyphs * 2L )           )
         goto Fail;
 
       for ( n = 0; n < num_glyphs; n++ )
@@ -227,7 +227,7 @@
       FT_UShort  n;
 
 
-      if ( FT_NEW_ARRAY( name_strings, num_names ) )
+      if ( FT_QNEW_ARRAY( name_strings, num_names ) )
         goto Fail;
 
       for ( n = 0; n < num_names; n++ )
@@ -259,8 +259,8 @@
           len = (FT_UInt)FT_MAX( 0, d );
         }
 
-        if ( FT_NEW_ARRAY( name_strings[n], len + 1 ) ||
-             FT_STREAM_READ( name_strings[n], len   ) )
+        if ( FT_QNEW_ARRAY( name_strings[n], len + 1 ) ||
+             FT_STREAM_READ( name_strings[n], len    ) )
           goto Fail1;
 
         name_strings[n][len] = '\0';
@@ -273,7 +273,7 @@
                    " using NULL names for gid %d - %d\n",
                     n, num_names - 1 ));
         for ( ; n < num_names; n++ )
-          if ( FT_NEW_ARRAY( name_strings[n], 1 ) )
+          if ( FT_QNEW_ARRAY( name_strings[n], 1 ) )
             goto Fail1;
           else
             name_strings[n][0] = '\0';
@@ -336,7 +336,7 @@
       goto Exit;
     }
 
-    if ( FT_NEW_ARRAY( offset_table, num_glyphs )   ||
+    if ( FT_QNEW_ARRAY( offset_table, num_glyphs )  ||
          FT_STREAM_READ( offset_table, num_glyphs ) )
       goto Fail;
 
