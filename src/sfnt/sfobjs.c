@@ -65,7 +65,7 @@
 
     len = (FT_UInt)entry->stringLength / 2;
 
-    if ( FT_NEW_ARRAY( string, len + 1 ) )
+    if ( FT_QNEW_ARRAY( string, len + 1 ) )
       return NULL;
 
     for ( n = 0; n < len; n++ )
@@ -100,7 +100,7 @@
 
     len = (FT_UInt)entry->stringLength;
 
-    if ( FT_NEW_ARRAY( string, len + 1 ) )
+    if ( FT_QNEW_ARRAY( string, len + 1 ) )
       return NULL;
 
     for ( n = 0; n < len; n++ )
@@ -446,7 +446,7 @@
         return FT_THROW( Array_Too_Large );
 
       /* now read the offsets of each font in the file */
-      if ( FT_NEW_ARRAY( face->ttc_header.offsets, face->ttc_header.count ) )
+      if ( FT_QNEW_ARRAY( face->ttc_header.offsets, face->ttc_header.count ) )
         return error;
 
       if ( FT_FRAME_ENTER( face->ttc_header.count * 4L ) )
@@ -464,7 +464,7 @@
       face->ttc_header.version = 1 << 16;
       face->ttc_header.count   = 1;
 
-      if ( FT_NEW( face->ttc_header.offsets ) )
+      if ( FT_QNEW( face->ttc_header.offsets ) )
         return error;
 
       face->ttc_header.offsets[0] = offset;
@@ -643,8 +643,8 @@
        */
 
       if ( ( face->variation_support & TT_FACE_FLAG_VAR_FVAR ) &&
-           !( FT_ALLOC( default_values, num_axes * 4 )  ||
-              FT_ALLOC( instance_values, num_axes * 4 ) )     )
+           !( FT_QALLOC(  default_values, num_axes * 4 ) ||
+              FT_QALLOC( instance_values, num_axes * 4 ) )     )
       {
         /* the current stream position is 16 bytes after the table start */
         FT_ULong  array_start = FT_STREAM_POS() - 16 + offset;

@@ -917,8 +917,8 @@
       storage_start += 2 + 4 * table->numLangTagRecords;
 
       /* allocate language tag records array */
-      if ( FT_NEW_ARRAY( table->langTags, table->numLangTagRecords ) ||
-           FT_FRAME_ENTER( table->numLangTagRecords * 4 )            )
+      if ( FT_QNEW_ARRAY( table->langTags, table->numLangTagRecords ) ||
+           FT_FRAME_ENTER( table->numLangTagRecords * 4 )             )
         goto Exit;
 
       /* load language tags */
@@ -948,8 +948,8 @@
     }
 
     /* allocate name records array */
-    if ( FT_NEW_ARRAY( table->names, table->numNameRecords ) ||
-         FT_FRAME_ENTER( table->numNameRecords * 12 )        )
+    if ( FT_QNEW_ARRAY( table->names, table->numNameRecords ) ||
+         FT_FRAME_ENTER( table->numNameRecords * 12 )         )
       goto Exit;
 
     /* load name records */
@@ -993,9 +993,9 @@
 
       /* reduce array size to the actually used elements */
       count = (FT_UInt)( entry - table->names );
-      (void)FT_RENEW_ARRAY( table->names,
-                            table->numNameRecords,
-                            count );
+      (void)FT_QRENEW_ARRAY( table->names,
+                             table->numNameRecords,
+                             count );
       table->numNameRecords = count;
     }
 
