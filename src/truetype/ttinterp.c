@@ -306,7 +306,7 @@
     exec->memory   = memory;
     exec->callSize = 32;
 
-    if ( FT_NEW_ARRAY( exec->callStack, exec->callSize ) )
+    if ( FT_QNEW_ARRAY( exec->callStack, exec->callSize ) )
       goto Fail_Memory;
 
     /* all values in the context are set to 0 already, but this is */

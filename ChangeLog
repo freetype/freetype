@@ -1,5 +1,12 @@
 2021-05-01  Alexei Podtelezhnikov  <apodtele@gmail.com>
 
+	[truetype] Avoid some memory zeroing.
+
+	* src/truetype/ttinterp.c (Init_Context): Tweak allocation macro.
+	* src/truetype/ttpload.c (tt_face_load_cvt): Ditto. 
+
+2021-05-01  Alexei Podtelezhnikov  <apodtele@gmail.com>
+
 	[woff2] Avoid some memory zeroing.
 
 	* src/sfnt/sfwoff2.c (store_loca, woff2_open_font): Tweak macros.

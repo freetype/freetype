@@ -347,7 +347,7 @@
 
     face->cvt_size = table_len / 2;
 
-    if ( FT_NEW_ARRAY( face->cvt, face->cvt_size ) )
+    if ( FT_QNEW_ARRAY( face->cvt, face->cvt_size ) )
       goto Exit;
 
     if ( FT_FRAME_ENTER( face->cvt_size * 2L ) )
