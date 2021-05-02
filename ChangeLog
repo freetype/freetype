@@ -1,3 +1,11 @@
+2021-04-25  Alexei Podtelezhnikov  <apodtele@gmail.com>
+
+	[bdf,pcf] Avoid memory zeroing (contd.).
+
+	* src/bdf/bdflib.c (bdf_create_property, _bdf_add_comment,
+	_bdf_add_property, bdf_load_font): Tweak allocation macros.
+	* src/pcf/pcfread.c (pcf_get_properties, pcf_get_metrics): Ditto.
+
 2021-05-01  Alexei Podtelezhnikov  <apodtele@gmail.com>
 
 	* src/cid/cidload.c (cid_read_subrs): Tweak allocaton macro.

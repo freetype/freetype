@@ -844,9 +844,9 @@
     if ( ft_hash_str_lookup( name, &(font->proptbl) ) )
       goto Exit;
 
-    if ( FT_RENEW_ARRAY( font->user_props,
-                         font->nuser_props,
-                         font->nuser_props + 1 ) )
+    if ( FT_QRENEW_ARRAY( font->user_props,
+                          font->nuser_props,
+                          font->nuser_props + 1 ) )
       goto Exit;
 
     p = font->user_props + font->nuser_props;
@@ -941,9 +941,9 @@
     FT_Error   error  = FT_Err_Ok;
 
 
-    if ( FT_RENEW_ARRAY( font->comments,
-                         font->comments_len,
-                         font->comments_len + len + 1 ) )
+    if ( FT_QRENEW_ARRAY( font->comments,
+                          font->comments_len,
+                          font->comments_len + len + 1 ) )
       goto Exit;
 
     cp = font->comments + font->comments_len;
@@ -1158,9 +1158,9 @@
     /* Allocate another property if this is overflowing. */
     if ( font->props_used == font->props_size )
     {
-      if ( FT_RENEW_ARRAY( font->props,
-                           font->props_size,
-                           font->props_size + 1 ) )
+      if ( FT_QRENEW_ARRAY( font->props,
+                            font->props_size,
+                            font->props_size + 1 ) )
         goto Exit;
 
       fp = font->props + font->props_size;
@@ -2279,9 +2279,9 @@
 
       if ( p->font->comments_len > 0 )
       {
-        if ( FT_RENEW_ARRAY( p->font->comments,
-                             p->font->comments_len,
-                             p->font->comments_len + 1 ) )
+        if ( FT_QRENEW_ARRAY( p->font->comments,
+                              p->font->comments_len,
+                              p->font->comments_len + 1 ) )
           goto Fail;
 
         p->font->comments[p->font->comments_len] = 0;

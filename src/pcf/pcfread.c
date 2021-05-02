@@ -613,7 +613,7 @@ THE SOFTWARE.
 
     strings[string_size] = '\0';
 
-    if ( FT_NEW_ARRAY( properties, nprops ) )
+    if ( FT_QNEW_ARRAY( properties, nprops ) )
       goto Bail;
 
     face->properties = properties;
@@ -766,7 +766,7 @@ THE SOFTWARE.
 
     face->nmetrics = nmetrics + 1;
 
-    if ( FT_NEW_ARRAY( face->metrics, face->nmetrics ) )
+    if ( FT_QNEW_ARRAY( face->metrics, face->nmetrics ) )
       return error;
 
     /* we handle glyph index 0 later on */
