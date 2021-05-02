@@ -589,8 +589,8 @@
       /* allocate, and read them                     */
       data_len = offsets[num_subrs] - offsets[0];
 
-      if ( FT_NEW_ARRAY( subr->code, num_subrs + 1 ) ||
-           FT_QALLOC( subr->code[0], data_len )      )
+      if ( FT_QNEW_ARRAY( subr->code, num_subrs + 1 ) ||
+           FT_QALLOC( subr->code[0], data_len )       )
         goto Fail;
 
       if ( FT_STREAM_SEEK( cid->data_offset + offsets[0] ) ||

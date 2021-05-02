@@ -1,5 +1,9 @@
 2021-05-01  Alexei Podtelezhnikov  <apodtele@gmail.com>
 
+	* src/cid/cidload.c (cid_read_subrs): Tweak allocaton macro.
+
+2021-05-01  Alexei Podtelezhnikov  <apodtele@gmail.com>
+
 	[sfnt] Avoid some memory zeroing.
 
 	* src/sfnt/sfobjs.c (sfnt_open_font, sfnt_init_face,
