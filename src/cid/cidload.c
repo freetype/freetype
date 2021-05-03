@@ -668,14 +668,15 @@
   cid_hex_to_binary( FT_Byte*  data,
                      FT_ULong  data_len,
                      FT_ULong  offset,
-                     CID_Face  face )
+                     CID_Face  face,
+                     FT_ULong* data_written )
   {
     FT_Stream  stream = face->root.stream;
     FT_Error   error;
 
     FT_Byte    buffer[256];
     FT_Byte   *p, *plimit;
-    FT_Byte   *d, *dlimit;
+    FT_Byte   *d = data, *dlimit;
     FT_Byte    val;
 
     FT_Bool    upper_nibble, done;
@@ -684,7 +685,6 @@
     if ( FT_STREAM_SEEK( offset ) )
       goto Exit;
 
-    d      = data;
     dlimit = d + data_len;
     p      = buffer;
     plimit = p;
@@ -758,6 +758,7 @@
     error = FT_Err_Ok;
 
   Exit:
+    *data_written = d - data;
     return error;
   }
 
@@ -816,11 +817,12 @@
            FT_SET_ERROR( cid_hex_to_binary( face->binary_data,
                                             parser->binary_length,
                                             parser->data_offset,
-                                            face ) )               )
+                                            face,
+                                            &binary_length ) )     )
         goto Exit;
 
       FT_Stream_OpenMemory( face->cid_stream,
-                            face->binary_data, parser->binary_length );
+                            face->binary_data, binary_length );
       cid->data_offset = 0;
     }
     else
