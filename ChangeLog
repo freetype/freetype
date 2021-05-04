@@ -1,4 +1,16 @@
-2021-04-25  Alexei Podtelezhnikov  <apodtele@gmail.com>
+2021-05-03  Alexei Podtelezhnikov  <apodtele@gmail.com>
+
+	[sfnt] Streamline POST format 2.0 handing.
+
+	To reduce memory allocations, we read an entire Pascal-string buffer
+	and convert it to a C-string buffer.  We also reject tables with
+	Postscript glyph names exceeding 63 bytes.
+
+	* src/sfnt/ttpost.c (load_format20): Implement it.
+	(load_post_names): Check the minimal POST table size.
+	(load_format25, tt_face_free_ps_names): Updated accordingly.
+
+2021-05-02  Alexei Podtelezhnikov  <apodtele@gmail.com>
 
 	[bdf,pcf] Avoid memory zeroing (contd.).
 
