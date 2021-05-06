@@ -1320,9 +1320,9 @@
 
       /* increase or allocate `blend_stack' and reset `blend_top'; */
       /* prepare to append `numBlends' values to the buffer        */
-      if ( FT_REALLOC( subFont->blend_stack,
-                       subFont->blend_alloc,
-                       subFont->blend_alloc + size ) )
+      if ( FT_QREALLOC( subFont->blend_stack,
+                        subFont->blend_alloc,
+                        subFont->blend_alloc + size ) )
         goto Exit;
 
       subFont->blend_top    = subFont->blend_stack + subFont->blend_used;
@@ -1435,9 +1435,7 @@
 
     /* prepare buffer for the blend vector */
     len = varData->regionIdxCount + 1;    /* add 1 for default component */
-    if ( FT_REALLOC( blend->BV,
-                     blend->lenBV * sizeof( *blend->BV ),
-                     len * sizeof( *blend->BV ) ) )
+    if ( FT_QRENEW_ARRAY( blend->BV, blend->lenBV, len ) )
       goto Exit;
 
     blend->lenBV = len;
@@ -1539,9 +1537,7 @@
     if ( lenNDV != 0 )
     {
       /* user has set a normalized vector */
-      if ( FT_REALLOC( blend->lastNDV,
-                       blend->lenNDV * sizeof ( *NDV ),
-                       lenNDV * sizeof ( *NDV ) ) )
+      if ( FT_QRENEW_ARRAY( blend->lastNDV, blend->lenNDV, lenNDV ) )
         goto Exit;
 
       FT_MEM_COPY( blend->lastNDV,

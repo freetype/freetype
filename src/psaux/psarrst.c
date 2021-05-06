@@ -110,7 +110,7 @@
 
       FT_ASSERT( newSize > 0 );   /* avoid realloc with zero size */
 
-      if ( !FT_REALLOC( arrstack->ptr, arrstack->totalSize, newSize ) )
+      if ( !FT_QREALLOC( arrstack->ptr, arrstack->totalSize, newSize ) )
       {
         arrstack->allocated = numElements;
         arrstack->totalSize = newSize;

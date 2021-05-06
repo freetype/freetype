@@ -1,3 +1,12 @@
+2021-05-05  Alexei Podtelezhnikov  <apodtele@gmail.com>
+
+	[cff,psaux] Avoid memory zeroing (contd.).
+
+	* src/cff/cffload.c (cff_blend_doBlend, cff_blend_build_vector): Tweak
+	allocation macros.
+	* src/psaux/psarrst.c (cf2_arrstack_setNumElements): Ditto.
+	* src/psaux/psstack.c (cf2_stack_init): Ditto.
+
 2021-05-04  Ben Wagner  <bungeman@chromium.org>
 
 	* src/cid/cidload.c (cid_hex_to_binary): Improve return value.
