@@ -1,3 +1,7 @@
+2021-05-06  Alexei Podtelezhnikov  <apodtele@gmail.com>
+
+	* src/base/ftrfork.c (FT_Raccess_Get_DataOffsets): Tweak allocation.
+
 2021-05-05  Alexei Podtelezhnikov  <apodtele@gmail.com>
 
 	[cff,psaux] Avoid memory zeroing (contd.).

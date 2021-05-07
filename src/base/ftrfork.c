@@ -251,7 +251,7 @@
         if ( error )
           return error;
 
-        if ( FT_NEW_ARRAY( ref, *count ) )
+        if ( FT_QNEW_ARRAY( ref, *count ) )
           return error;
 
         for ( j = 0; j < *count; j++ )
