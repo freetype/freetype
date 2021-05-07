@@ -130,10 +130,10 @@
 
 
         /* allocate the blend `private' and `font_info' dictionaries */
-        if ( FT_NEW_ARRAY( blend->font_infos[1], num_designs     ) ||
-             FT_NEW_ARRAY( blend->privates  [1], num_designs     ) ||
-             FT_NEW_ARRAY( blend->bboxes    [1], num_designs     ) ||
-             FT_NEW_ARRAY( blend->weight_vector, num_designs * 2 ) )
+        if ( FT_QNEW_ARRAY( blend->font_infos[1], num_designs     ) ||
+             FT_QNEW_ARRAY( blend->privates  [1], num_designs     ) ||
+             FT_QNEW_ARRAY( blend->bboxes    [1], num_designs     ) ||
+             FT_QNEW_ARRAY( blend->weight_vector, num_designs * 2 ) )
           goto Exit;
 
         blend->default_weight_vector = blend->weight_vector + num_designs;
@@ -167,12 +167,12 @@
     /* allocate the blend design pos table if needed */
     num_designs = blend->num_designs;
     num_axis    = blend->num_axis;
-    if ( num_designs && num_axis && blend->design_pos[0] == 0 )
+    if ( num_designs && num_axis && blend->design_pos[0] == NULL )
     {
       FT_UInt  n;
 
 
-      if ( FT_NEW_ARRAY( blend->design_pos[0], num_designs * num_axis ) )
+      if ( FT_QNEW_ARRAY( blend->design_pos[0], num_designs * num_axis ) )
         goto Exit;
 
       for ( n = 1; n < num_designs; n++ )
@@ -1044,7 +1044,7 @@
       }
 
       /* allocate design map data */
-      if ( FT_NEW_ARRAY( map->design_points, num_points * 2 ) )
+      if ( FT_QNEW_ARRAY( map->design_points, num_points * 2 ) )
         goto Exit;
       map->blend_points = map->design_points + num_points;
       map->num_points   = (FT_Byte)num_points;

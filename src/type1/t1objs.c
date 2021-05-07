@@ -217,7 +217,6 @@
     {
       FT_FREE( face->buildchar );
 
-      face->buildchar     = NULL;
       face->len_buildchar = 0;
     }
 

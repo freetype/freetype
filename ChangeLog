@@ -1,5 +1,13 @@
 2021-05-07  Alexei Podtelezhnikov  <apodtele@gmail.com>
 
+	[type1] Avoid MM memory zeroing.
+
+	* src/type1/t1load.c (t1_allocate_blend, parse_blend_design_map):
+	Tweak allocation macros.
+	* src/type1/t1objs.c (T1_Face_Done): Minor.
+
+2021-05-07  Alexei Podtelezhnikov  <apodtele@gmail.com>
+
 	* src/bdf/bdflib.c (_bdf_list_ensure): Tweak allocation macro.
 
 2021-05-06  Alexei Podtelezhnikov  <apodtele@gmail.com>
