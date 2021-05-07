@@ -552,7 +552,7 @@
           goto Fail;
         }
 
-        if ( FT_RENEW_ARRAY( offsets, max_offsets, new_max ) )
+        if ( FT_QRENEW_ARRAY( offsets, max_offsets, new_max ) )
           goto Fail;
 
         max_offsets = new_max;
