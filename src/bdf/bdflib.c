@@ -328,7 +328,7 @@
       else if ( newsize < oldsize || newsize > bigsize )
         newsize = bigsize;
 
-      if ( FT_RENEW_ARRAY( list->field, oldsize, newsize ) )
+      if ( FT_QRENEW_ARRAY( list->field, oldsize, newsize ) )
         goto Exit;
 
       list->size = newsize;
