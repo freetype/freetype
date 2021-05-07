@@ -1,5 +1,9 @@
 2021-05-06  Alexei Podtelezhnikov  <apodtele@gmail.com>
 
+	* src/psaux/psobjs.c (ps_parser_load_field): Tweak allocation macro.
+
+2021-05-06  Alexei Podtelezhnikov  <apodtele@gmail.com>
+
 	* src/sfnt/sfobjs.c (sfnt_load_face): Tweak allocation macro.
 
 2021-05-06  Alexei Podtelezhnikov  <apodtele@gmail.com>

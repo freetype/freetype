@@ -1248,7 +1248,7 @@
           FT_UInt    i;
 
 
-          if ( FT_NEW_ARRAY( temp, max_objects * 4 ) )
+          if ( FT_QNEW_ARRAY( temp, max_objects * 4 ) )
             goto Exit;
 
           for ( i = 0; i < 4; i++ )
