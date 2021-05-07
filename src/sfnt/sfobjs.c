@@ -1237,7 +1237,7 @@
           }
 
           /* reduce array size to the actually used elements */
-          (void)FT_RENEW_ARRAY( sbit_strike_map, count, bsize_idx );
+          (void)FT_QRENEW_ARRAY( sbit_strike_map, count, bsize_idx );
 
           /* from now on, all strike indices are mapped */
           /* using `sbit_strike_map'                    */
