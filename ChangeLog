@@ -1,3 +1,9 @@
+2021-05-10  Alexei Podtelezhnikov  <apodtele@gmail.com>
+
+	* src/smooth/ftgrays.c (gray_hline): Simplify even-odd computations.
+
+	It is too bad the even-odd rule is not used much.
+
 2021-05-07  Alexei Podtelezhnikov  <apodtele@gmail.com>
 
 	[type1] Avoid MM memory zeroing.

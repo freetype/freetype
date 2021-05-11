@@ -1182,10 +1182,10 @@ typedef ptrdiff_t  FT_PtrDist;
     /* compute the line's coverage depending on the outline fill rule */
     if ( ras.outline.flags & FT_OUTLINE_EVEN_ODD_FILL )
     {
-      coverage &= 511;
+      if ( coverage & 256 )  /* odd bit */
+        coverage = ~coverage;
 
-      if ( coverage >= 256 )
-        coverage = 511 - coverage;
+      /* higher bits discarded below */
     }
     else  /* default non-zero winding rule */
     {
