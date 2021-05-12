@@ -467,7 +467,7 @@ typedef ptrdiff_t  FT_PtrDist;
 #endif
 
   /* FT_Span buffer size for direct rendering only */
-#define FT_MAX_GRAY_SPANS  10
+#define FT_MAX_GRAY_SPANS  16
 
 
 #if defined( _MSC_VER )      /* Visual C++ (and Intel C++) */

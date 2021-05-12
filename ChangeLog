@@ -1,3 +1,10 @@
+2021-05-12  Alexei Podtelezhnikov  <apodtele@gmail.com>
+
+	* src/smooth/ftgrays.c (FT_MAX_GRAY_SPANS): Increase from 10 to 16.
+
+	Ten was barely enough for two slanted stems. Sixteen can actually fit
+	a bit more complicated scanlines.
+
 2021-05-11  Alexei Podtelezhnikov  <apodtele@gmail.com>
 
 	* src/smooth/ftgrays.c (FT_GRAY_SET): Adjust for better code.
