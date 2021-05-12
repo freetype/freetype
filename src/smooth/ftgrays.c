@@ -409,22 +409,21 @@ typedef ptrdiff_t  FT_PtrDist;
 
   /* It is faster to write small spans byte-by-byte than calling     */
   /* `memset'.  This is mainly due to the cost of the function call. */
-#define FT_GRAY_SET( d, s, count )           \
-  FT_BEGIN_STMNT                             \
-    unsigned char* q = d;                    \
-    unsigned char  c = (unsigned char)s;     \
-    switch ( count )                         \
-    {                                        \
-      case 7: *q++ = c; /* fall through */   \
-      case 6: *q++ = c; /* fall through */   \
-      case 5: *q++ = c; /* fall through */   \
-      case 4: *q++ = c; /* fall through */   \
-      case 3: *q++ = c; /* fall through */   \
-      case 2: *q++ = c; /* fall through */   \
-      case 1: *q   = c; /* fall through */   \
-      case 0: break;                         \
-      default: FT_MEM_SET( d, s, count );    \
-    }                                        \
+#define FT_GRAY_SET( d, s, count )                          \
+  FT_BEGIN_STMNT                                            \
+    unsigned char* q = d;                                   \
+    switch ( count )                                        \
+    {                                                       \
+      case 7: *q++ = (unsigned char)s; /* fall through */   \
+      case 6: *q++ = (unsigned char)s; /* fall through */   \
+      case 5: *q++ = (unsigned char)s; /* fall through */   \
+      case 4: *q++ = (unsigned char)s; /* fall through */   \
+      case 3: *q++ = (unsigned char)s; /* fall through */   \
+      case 2: *q++ = (unsigned char)s; /* fall through */   \
+      case 1: *q   = (unsigned char)s; /* fall through */   \
+      case 0: break;                                        \
+      default: FT_MEM_SET( d, s, count );                   \
+    }                                                       \
   FT_END_STMNT
 
 

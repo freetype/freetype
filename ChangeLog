@@ -1,4 +1,8 @@
-2021-05-07  Alexei Podtelezhnikov  <apodtele@gmail.com>
+2021-05-11  Alexei Podtelezhnikov  <apodtele@gmail.com>
+
+	* src/smooth/ftgrays.c (FT_GRAY_SET): Adjust for better code.
+
+2021-05-11  Alexei Podtelezhnikov  <apodtele@gmail.com>
 
 	[smooth] Faster bitmap sweeping.
 
