@@ -1,3 +1,19 @@
+2021-05-07  Alexei Podtelezhnikov  <apodtele@gmail.com>
+
+	[smooth] Faster bitmap sweeping.
+
+	Selecting the fill rule or checking the direct mode each time we call
+	`gray_hline' is sub-optimal.  This effectively splits the direct mode
+	into a separate code path while inlining `gray_hline' and saving 5-7%
+	of rendering time.
+
+	* src/smooth/ftgrays.c (gray_hline): Eliminated in favor of...
+	(FT_FILL_RULE, FT_GRAY_SET): ... these new macros...
+	(gray_sweep): ... inlined here.
+	(gray_sweep_direct): New function that handles the direct span buffer.
+	(gray_TWorker): Remove the span buffer.
+	(gray_raster_render, gray_convert_glyph): Updated.
+
 2021-05-10  Alexei Podtelezhnikov  <apodtele@gmail.com>
 
 	* src/smooth/ftgrays.c (gray_hline): Simplify even-odd computations.
