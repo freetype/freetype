@@ -1,3 +1,14 @@
+2021-05-13  Daniel McArdle  <dmcardle@chromium.org>
+
+	[psaux] Use doubling allocation strategy for CF2_ArrStack.
+
+	Fixes timeout reported as
+
+	  https://crbug.com/1206181
+
+	* src/psaux/psarrst.c (cf2_arrstack_{push,init}): Implement it.
+	* src/psaux/psarrst.h (CF2_ArrStackiRec): Drop `chunk'.
+
 2021-05-12  Alexei Podtelezhnikov  <apodtele@gmail.com>
 
 	* src/smooth/ftgrays.c (FT_MAX_GRAY_SPANS): Increase from 10 to 16.
