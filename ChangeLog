@@ -1,3 +1,20 @@
+2021-05-19  Nikolaus Waxweiler  <madigens@gmail.com>
+
+	[CMake] Update dependency finders.
+
+	1. Fixes CMake using any found HarfBuzz version lower than the minimum
+	required. This is based on HALX99's merge request at
+	https://gitlab.freedesktop.org/freetype/freetype/-/merge_requests/31
+	2. Update FindHarfBuzz.cmake from
+	https://github.com/WebKit/WebKit/blob/1ce32454/Source/cmake/FindHarfBuzz.cmake
+	and guard post-CMake-3.1 features to keep the minimum version unchanged
+	3. Update FindBrotliDec.cmake to stop the warnings, based on what
+	https://github.com/google/woff2/blob/a0d0ed7d/cmake/FindBrotliDec.cmake
+	is doing
+
+	* CMakeLists.txt, builds/cmake/FindHarfBuzz.cmake: Implement 1 and 2.
+	* builds/cmake/FindBrotliDec.cmake: Implement 3.
+
 2021-05-19  Ben Wagner  <bungeman@chromium.org>
 
 	[gzip] Use exact type for `ft_gzip_alloc` and `ft_gzip_free`.

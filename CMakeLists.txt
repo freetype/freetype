@@ -103,6 +103,9 @@ if (NOT CMAKE_VERSION VERSION_LESS 3.3)
   # Allow symbol visibility settings also on static libraries. CMake < 3.3
   # only sets the property on a shared library build.
   cmake_policy(SET CMP0063 NEW)
+
+  # Support new IN_LIST if() operator.
+  cmake_policy(SET CMP0057 NEW)
 endif ()
 
 include(CheckIncludeFile)
@@ -461,9 +464,9 @@ if (PNG_FOUND)
   target_include_directories(freetype PRIVATE ${PNG_INCLUDE_DIRS})
   list(APPEND PKG_CONFIG_REQUIRED_PRIVATE "libpng")
 endif ()
-if (HARFBUZZ_FOUND)
-  target_link_libraries(freetype PRIVATE ${HARFBUZZ_LIBRARIES})
-  target_include_directories(freetype PRIVATE ${HARFBUZZ_INCLUDE_DIRS})
+if (HarfBuzz_FOUND)
+  target_link_libraries(freetype PRIVATE ${HarfBuzz_LIBRARY})
+  target_include_directories(freetype PRIVATE ${HarfBuzz_INCLUDE_DIRS})
   list(APPEND PKG_CONFIG_REQUIRED_PRIVATE "harfbuzz >= ${HARFBUZZ_MIN_VERSION}")
 endif ()
 if (BROTLIDEC_FOUND)
