@@ -155,25 +155,24 @@
     /* Look for a non-initial dot in the glyph name in order to */
     /* find variants like `A.swash', `e.final', etc.            */
     {
-      const char*  p   = glyph_name;
-      const char*  dot = NULL;
+      FT_UInt32    value = 0;
+      const char*  p     = glyph_name;
 
 
-      for ( ; *p; p++ )
+      for ( ; *p && *p != '.'; p++ )
+        ;
+
+      /* now look up the glyph in the Adobe Glyph List;      */
+      /* `.notdef', `.null' and the empty name are short cut */
+      if ( p > glyph_name )
       {
-        if ( *p == '.' && p > glyph_name )
-        {
-          dot = p;
-          break;
-        }
+        value =  (FT_UInt32)ft_get_adobe_glyph_index( glyph_name, p );
+
+        if ( *p == '.' )
+          value |= (FT_UInt32)VARIANT_BIT;
       }
 
-      /* now look up the glyph in the Adobe Glyph List */
-      if ( !dot )
-        return (FT_UInt32)ft_get_adobe_glyph_index( glyph_name, p );
-      else
-        return (FT_UInt32)( ft_get_adobe_glyph_index( glyph_name, dot ) |
-                            VARIANT_BIT );
+      return value;
     }
   }
 

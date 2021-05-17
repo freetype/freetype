@@ -1150,9 +1150,10 @@
         }
 
         /* synthesize Unicode charmap if one is missing */
-        if ( !has_unicode )
+        if ( !has_unicode                                &&
+             root->face_flags & FT_FACE_FLAG_GLYPH_NAMES )
         {
-          FT_CharMapRec cmaprec;
+          FT_CharMapRec  cmaprec;
 
 
           cmaprec.face        = root;

@@ -1312,6 +1312,12 @@
     if ( FT_STREAM_READ_FIELDS( post_fields, post ) )
       return error;
 
+    if ( post->FormatType != 0x00030000L &&
+         post->FormatType != 0x00025000L &&
+         post->FormatType != 0x00020000L &&
+         post->FormatType != 0x00010000L )
+      return FT_THROW( Invalid_Post_Table_Format );
+
     /* we don't load the glyph names, we do that in another */
     /* module (ttpost).                                     */
 

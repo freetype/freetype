@@ -1,3 +1,17 @@
+2021-05-16  Alexei Podtelezhnikov  <apodtele@gmail.com>
+
+	[sfnt] Additional guards on the POST table.
+
+	Fixes timeout (#1055) analyzed by Ben Wagner, reported as
+
+	  https://crbug.com/1194092
+
+	* src/sfnt/ttload.c (tt_face_load_post): Check POST format.
+	* src/sfnt/sfobjs.c (sfnt_load_face): Synthesize the missing unicode
+	charmap only if the glyph names exist.
+	* src/psnames/psmodule.c (ps_unicode_value): Short cut ".notdef" and
+	".null".
+
 2021-05-13  Daniel McArdle  <dmcardle@chromium.org>
 
 	[psaux] Use doubling allocation strategy for CF2_ArrStack.
