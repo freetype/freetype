@@ -121,13 +121,14 @@
      'malloc/free' */
 
   static voidpf
-  ft_gzip_alloc( FT_Memory  memory,
-                 uInt       items,
-                 uInt       size )
+  ft_gzip_alloc( voidpf  opaque,
+                 uInt    items,
+                 uInt    size )
   {
-    FT_ULong    sz = (FT_ULong)size * items;
+    FT_Memory   memory = (FT_Memory)opaque;
+    FT_ULong    sz     = (FT_ULong)size * items;
     FT_Error    error;
-    FT_Pointer  p  = NULL;
+    FT_Pointer  p      = NULL;
 
 
     /* allocate and zero out */
@@ -137,9 +138,12 @@
 
 
   static void
-  ft_gzip_free( FT_Memory  memory,
-                voidpf     address )
+  ft_gzip_free( voidpf  opaque,
+                voidpf  address )
   {
+    FT_Memory  memory = (FT_Memory)opaque;
+
+
     FT_MEM_FREE( address );
   }
 
@@ -151,14 +155,14 @@
             unsigned  items,
             unsigned  size )
   {
-    return ft_gzip_alloc( (FT_Memory)opaque, items, size );
+    return ft_gzip_alloc( opaque, items, size );
   }
 
   local void
   zcfree( voidpf  opaque,
           voidpf  ptr )
   {
-    ft_gzip_free( (FT_Memory)opaque, ptr );
+    ft_gzip_free( opaque, ptr );
   }
 
 #endif /* !SYSTEM_ZLIB && !USE_ZLIB_ZCALLOC */
@@ -305,8 +309,8 @@
     }
 
     /* initialize zlib -- there is no zlib header in the compressed stream */
-    zstream->zalloc = (alloc_func)ft_gzip_alloc;
-    zstream->zfree  = (free_func) ft_gzip_free;
+    zstream->zalloc = ft_gzip_alloc;
+    zstream->zfree  = ft_gzip_free;
     zstream->opaque = stream->memory;
 
     zstream->avail_in = 0;
@@ -742,8 +746,8 @@
     stream.next_out  = output;
     stream.avail_out = (uInt)*output_len;
 
-    stream.zalloc = (alloc_func)ft_gzip_alloc;
-    stream.zfree  = (free_func) ft_gzip_free;
+    stream.zalloc = ft_gzip_alloc;
+    stream.zfree  = ft_gzip_free;
     stream.opaque = memory;
 
     /* This is a temporary fix and will be removed once the internal

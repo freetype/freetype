@@ -1,3 +1,23 @@
+2021-05-19  Ben Wagner  <bungeman@chromium.org>
+
+	[gzip] Use exact type for `ft_gzip_alloc` and `ft_gzip_free`.
+
+	While a function pointer may be cast to another function pointer
+	type, it is required to cast the function pointer back to the
+	original function pointer type before calling it.  If a parameter is
+	a pointer the exact pointer type is required.  Using a pointer to a
+	different underlying type is technically undefined behavior.  The
+	wrapper functions `ft_gzip_alloc` and `ft_gzip_free` took
+	`FT_Memory` (a `FT_MemoryRec_*`) instead of `voidpf` (`void*`), so
+	when gzip calls these callbacks through `alloc_func` or `free_func`
+	it invokes undefined behavior.  On most platforms this works out as
+	expected, but newer undefined behavior detectors and targets like
+	wasm can detect this and will produce an error.
+
+	* src/gzip/ftgzip.c (ft_gzip_alloc, ft_gzip_free): Update signatures
+	to exactly match `alloc_func` and `free_func`, respectively.
+	Internally, cast the `void*` opaque pointer to `FT_Memory`.
+
 2021-05-18  Alexei Podtelezhnikov  <apodtele@gmail.com>
 
 	Prioritize the anti-aliasing renderer module.
