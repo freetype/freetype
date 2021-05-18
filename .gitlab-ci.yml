@@ -6,9 +6,9 @@ variables:
   MESON_ARGS: --fatal-meson-warnings
   MESON_ARGS_WINDOWS: ${MESON_ARGS} --force-fallback-for=zlib
 
-.build meson windows:
+.build windows common:
   # See
-  #   https://gitlab.freedesktop.org/gstreamer/gst-ci/container_registry/213
+  # https://gitlab.freedesktop.org/gstreamer/gst-ci/container_registry/213
   image: 'registry.freedesktop.org/gstreamer/gst-ci/amd64/windows:v14-master'
   stage: 'build'
   tags:
@@ -16,6 +16,15 @@ variables:
     - 'windows'
     - '1809'
     - 'gstreamer-windows'
+
+.build linux common:
+  # See
+  # https://gitlab.freedesktop.org/freetype/docker-images/container_registry/20896
+  image: 'registry.freedesktop.org/freetype/docker-images/debian:latest'
+  stage: 'build'
+
+.build windows meson:
+  extends: '.build windows common'
   variables:
     # Make sure any failure in PowerShell scripts is fatal.
     ErrorActionPreference: 'Stop'
@@ -43,12 +52,92 @@ variables:
         meson test -C build &&
         meson test -C build --benchmark"
 
-meson vs2017 amd64:
-  extends: '.build meson windows'
+
+# Format of job names:
+# <OS> <Build-Tool> <Build-Params> <Architecture> 
+
+
+# Windows jobs
+windows meson vs2017 amd64:
+  extends: '.build windows meson'
   variables:
     ARCH: 'amd64'
 
-meson vs2017 x86:
-  extends: '.build meson windows'
+windows meson vs2017 x86:
+  extends: '.build windows meson'
   variables:
     ARCH: 'x86'
+
+
+# Linux Jobs
+# Jobs with "libs" in the name force enable libraries.
+# They are disabled in rest of the jobs.
+linux autotools:
+  extends: '.build linux common'
+  script: |
+    ./autogen.sh
+    ./configure --with-brotli=no \
+                --with-bzip2=no \
+                --with-harfbuzz=no \
+                --with-png=no \
+                --with-zlib=no
+
+    make -j$(nproc) && make install
+
+linux autotools libs:
+  extends: '.build linux common'
+  script: |
+    ./autogen.sh
+    ./configure --with-brotli=yes \
+                --with-bzip2=yes \
+                --with-harfbuzz=yes \
+                --with-png=yes \
+                --with-zlib=yes
+
+    make -j$(nproc) && make install
+
+linux meson:
+  extends: '.build linux common'
+  script: |
+    meson setup build -Dbrotli=disabled \
+                      -Dbzip2=disabled \
+                      -Dharfbuzz=disabled \
+                      -Dpng=disabled \
+                      -Dzlib=disabled
+
+    meson compile --verbose -C build
+    meson install -C build
+
+linux meson libs:
+  extends: '.build linux common'
+  script: |
+    meson setup build -Dbrotli=enabled \
+                      -Dbzip2=enabled \
+                      -Dharfbuzz=disabled \
+                      -Dpng=disabled \
+                      -Dzlib=disabled
+
+    meson compile --verbose -C build
+    meson install -C build
+
+linux cmake:
+  extends: '.build linux common'
+  script: |
+    cmake -B build -D FT_WITH_BROTLI=OFF \
+                   -D FT_WITH_BZIP2=OFF \
+                   -D FT_WITH_HARFBUZZ=OFF \
+                   -D FT_WITH_PNG=OFF \
+                   -D FT_WITH_ZLIB=OFF
+
+    cmake --build build --target install
+
+linux cmake libs:
+  extends: '.build linux common'
+  script: |
+    cmake -B build -D FT_WITH_BROTLI=ON \
+                   -D FT_WITH_BZIP2=ON \
+                   -D FT_WITH_HARFBUZZ=ON \
+                   -D FT_WITH_PNG=ON \
+                   -D FT_WITH_ZLIB=ON
+
+    cmake --build build --target install
