@@ -1,3 +1,10 @@
+2021-05-18  Alexei Podtelezhnikov  <apodtele@gmail.com>
+
+	Prioritize the anti-aliasing renderer module.
+
+	* modules.cfg: Reorder the renderers.
+	* include/freetype/config/ftmodule.h: Ditto.
+
 2021-05-16  Alexei Podtelezhnikov  <apodtele@gmail.com>
 
 	[sfnt] Additional guards on the POST table.
