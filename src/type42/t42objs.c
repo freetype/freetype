@@ -44,7 +44,7 @@
 
     parser = &loader.parser;
 
-    if ( FT_ALLOC( face->ttf_data, 12 ) )
+    if ( FT_QALLOC( face->ttf_data, 12 ) )
       goto Exit;
 
     /* while parsing the font we always update `face->ttf_size' so that */

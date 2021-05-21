@@ -614,7 +614,7 @@
           error = FT_THROW( Invalid_File_Format );
           goto Fail;
         }
-        if ( FT_REALLOC( string_buf, old_string_size, string_size ) )
+        if ( FT_QREALLOC( string_buf, old_string_size, string_size ) )
           goto Fail;
 
         allocated = 1;
@@ -718,7 +718,7 @@
               goto Fail;
             }
 
-            if ( FT_REALLOC( face->ttf_data, 12, face->ttf_size ) )
+            if ( FT_QREALLOC( face->ttf_data, 12, face->ttf_size ) )
               goto Fail;
           }
           /* fall through */
@@ -767,8 +767,8 @@
             FT_TRACE2(( "  allocating %ld bytes\n", face->ttf_size + 1 ));
             FT_TRACE2(( "\n" ));
 
-            if ( FT_REALLOC( face->ttf_data, 12 + 16 * num_tables,
-                             face->ttf_size + 1 ) )
+            if ( FT_QREALLOC( face->ttf_data, 12 + 16 * num_tables,
+                              face->ttf_size + 1 ) )
               goto Fail;
           }
           /* fall through */

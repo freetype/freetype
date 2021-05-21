@@ -1,3 +1,10 @@
+2021-05-20  Alexei Podtelezhnikov  <apodtele@gmail.com>
+
+	[type42] Avoid some memory zeroing.
+
+	* src/type42/t42objs.c (T42_Open_Face): Tweak allocation macro.
+	* src/type42/t42parse.c (t42_parse_sfnts): Ditto.
+
 2021-05-19  Nikolaus Waxweiler  <madigens@gmail.com>
 
 	[CMake] Update dependency finders.
