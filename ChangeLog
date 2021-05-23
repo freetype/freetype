@@ -1,3 +1,9 @@
+2021-05-23  Alexei Podtelezhnikov  <apodtele@gmail.com>
+
+	* meson.build (ft2_public_headers): Add missing `ftcid.h'.
+
+	Fixes #1058.
+
 2021-05-20  Alexei Podtelezhnikov  <apodtele@gmail.com>
 
 	[type42] Avoid some memory zeroing.

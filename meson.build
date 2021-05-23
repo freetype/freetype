@@ -124,6 +124,7 @@ ft2_public_headers = files([
   'include/freetype/ftbzip2.h',
   'include/freetype/ftcache.h',
   'include/freetype/ftchapters.h',
+  'include/freetype/ftcid.h',
   'include/freetype/ftcolor.h',
   'include/freetype/ftdriver.h',
   'include/freetype/fterrdef.h',
