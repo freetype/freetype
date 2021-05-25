@@ -1,3 +1,20 @@
+2021-05-25  Werner Lemberg  <wl@gnu.org>
+
+	[psaux] Guard and trace AFM kern data allocation.
+
+	Reported as
+
+	  https://bugs.chromium.org/p/oss-fuzz/issues/detail?id=31543
+
+	* include/freetype/internal/fttrace.h: Add 'afmparse' trace
+	component.
+
+	* src/psaux/afmparse.c (FT_COMPONENT): Define.
+	(afm_parse_track_kern, afm_parse_kern_pairs): Protect against
+	allocations bombs.
+	Add tracing.
+	(afm_parse_kern_data): Don't allow multiple kern data sections.
+
 2021-05-23  Alexei Podtelezhnikov  <apodtele@gmail.com>
 
 	* meson.build (ft2_public_headers): Add missing `ftcid.h'.

@@ -83,6 +83,7 @@ FT_TRACE_DEF( t1objs )
 FT_TRACE_DEF( t1parse )
 
   /* PostScript helper module `psaux' */
+FT_TRACE_DEF( afmparse )
 FT_TRACE_DEF( cffdecode )
 FT_TRACE_DEF( psconv )
 FT_TRACE_DEF( psobjs )
