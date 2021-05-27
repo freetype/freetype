@@ -1,3 +1,15 @@
+2021-05-27  Alexei Podtelezhnikov  <apodtele@gmail.com>
+
+	[type42] Fix auto-hinting.
+
+	The autohinter could not access the base (unscaled) outline in the
+	child TrueType glyph slot. We now share the internal parts between
+	the parent and child glyph slots. Fixes #1057.
+
+	* src/type42/t42objs.c (T42_GlyphSlot_Init): Remove the internal parts
+	of `T42_GlyphSlot' and replace it with the child TrueType structure.
+	(T42_GlyphSlot_Done): Updated accordingly.
+
 2021-05-25  Werner Lemberg  <wl@gnu.org>
 
 	[psaux] Guard and trace AFM kern data allocation.

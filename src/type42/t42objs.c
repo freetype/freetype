@@ -583,6 +583,7 @@
     FT_Face        face    = t42slot->face;
     T42_Face       t42face = (T42_Face)face;
     FT_GlyphSlot   ttslot;
+    FT_Memory      memory  = face->memory;
     FT_Error       error   = FT_Err_Ok;
 
 
@@ -598,6 +599,11 @@
         slot->ttslot = ttslot;
     }
 
+    /* share the loader so that the autohinter can see it */
+    FT_GlyphLoader_Done( t42slot->internal->loader );
+    FT_FREE( t42slot->internal );
+    t42slot->internal = slot->ttslot->internal;
+
     return error;
   }
 
@@ -609,6 +615,7 @@
 
 
     FT_Done_GlyphSlot( slot->ttslot );
+    t42slot->internal = NULL;
   }
 
 
