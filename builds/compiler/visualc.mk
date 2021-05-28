@@ -70,7 +70,7 @@ CFLAGS ?= /nologo /c /Ox /W3 /WX
 
 # ANSIFLAGS: Put there the flags used to make your compiler ANSI-compliant.
 #
-ANSIFLAGS := /Za /D_CRT_SECURE_NO_DEPRECATE
+ANSIFLAGS ?= /Za /D_CRT_SECURE_NO_DEPRECATE
 
 
 # Library linking

@@ -65,7 +65,7 @@ CFLAGS ?= -c -g -O3 -Wall
 
 # ANSIFLAGS: Put there the flags used to make your compiler ANSI-compliant.
 #
-ANSIFLAGS := -std=c99 -pedantic
+ANSIFLAGS ?= -std=c99 -pedantic
 
 
 # Library linking

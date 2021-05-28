@@ -71,7 +71,7 @@ CFLAGS ?= -c -g
 #
 #  the "-A" flag simply increments verbosity about non ANSI code
 #
-ANSIFLAGS := -A
+ANSIFLAGS ?= -A
 
 
 # library linking

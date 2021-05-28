@@ -73,7 +73,7 @@ CFLAGS ?= -c
 
 # ANSIFLAGS: Put there the flags used to make your compiler ANSI-compliant.
 #
-ANSIFLAGS :=
+ANSIFLAGS ?=
 
 
 # EOF

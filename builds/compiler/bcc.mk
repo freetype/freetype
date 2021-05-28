@@ -67,7 +67,7 @@ CFLAGS ?= -c -q -y -d -v -Od -w-par -w-ccc -w-rch -w-pro -w-aus
 
 # ANSIFLAGS: Put there the flags used to make your compiler ANSI-compliant.
 #
-ANSIFLAGS := -A
+ANSIFLAGS ?= -A
 
 
 # Library linking

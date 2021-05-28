@@ -68,7 +68,7 @@ CFLAGS ?= -c
 #
 #  we assume the compiler is already strictly ANSI
 #
-ANSIFLAGS :=
+ANSIFLAGS ?=
 
 
 # Library linking

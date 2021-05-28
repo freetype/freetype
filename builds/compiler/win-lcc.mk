@@ -69,7 +69,7 @@ CFLAGS ?= -c -g2 -O
 #
 #  LCC is pure ANSI anyway!
 #
-ANSIFLAGS :=
+ANSIFLAGS ?=
 
 
 # library linking

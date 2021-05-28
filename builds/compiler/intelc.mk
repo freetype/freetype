@@ -74,7 +74,7 @@ CFLAGS ?= /nologo /c /Ox /G5 /W3 /Qwd32
 
 # ANSIFLAGS: Put there the flags used to make your compiler ANSI-compliant.
 #
-ANSIFLAGS := /Qansi_alias /Za
+ANSIFLAGS ?= /Qansi_alias /Za
 
 # Library linking
 #

@@ -82,8 +82,9 @@ ifndef CFLAGS
 endif
 
 # ANSIFLAGS: Put there the flags used to make your compiler ANSI-compliant.
+# You can override this on the command line.
 #
-ANSIFLAGS := -std=c99 -pedantic
+ANSIFLAGS ?= -std=c99 -pedantic
 
 
 # Library linking
