@@ -3222,18 +3222,19 @@
       goto Exit;
     }
 
+    if ( FT_ALLOC( dists,
+                   bitmap->width * bitmap->rows * sizeof ( *dists ) ) )
+      goto Exit;
+
     contours = shape->contours;
     width    = (FT_Int)bitmap->width;
     rows     = (FT_Int)bitmap->rows;
     buffer   = (FT_Short*)bitmap->buffer;
 
-    if ( FT_ALLOC( dists, width * rows * sizeof ( *dists ) ) )
-      goto Exit;
-
     if ( USE_SQUARED_DISTANCES )
-      sp_sq = FT_INT_16D16( spread * spread );
+      sp_sq = (FT_Int)FT_INT_16D16( spread * spread );
     else
-      sp_sq = FT_INT_16D16( spread );
+      sp_sq = (FT_Int)FT_INT_16D16( spread );
 
     if ( width == 0 || rows == 0 )
     {
@@ -3307,9 +3308,9 @@
               dist.distance = square_root( dist.distance );
 
             if ( internal_params.flip_y )
-              index = y * width + x;
+              index = FT_UInt( y * width + x );
             else
-              index = ( rows - y - 1 ) * width + x;
+              index = FT_UInt( ( rows - y - 1 ) * width + x );
 
             /* check whether the pixel is set or not */
             if ( dists[index].sign == 0 )
@@ -3341,7 +3342,7 @@
 
       for ( i = 0; i < width; i++ )
       {
-        index = j * width + i;
+        index = (FT_UInt)( j * width + i );
 
         /* if the pixel is not set                     */
         /* its shortest distance is more than `spread` */
@@ -3527,11 +3528,13 @@
     }
 
     /* allocate the bitmaps to generate SDF for separate contours */
-    if ( FT_ALLOC( bitmaps, num_contours * sizeof ( *bitmaps ) ) )
+    if ( FT_ALLOC( bitmaps,
+                   (FT_UInt)num_contours * sizeof ( *bitmaps ) ) )
       goto Exit;
 
     /* allocate array to hold orientation for all contours */
-    if ( FT_ALLOC( orientations, num_contours * sizeof ( *orientations ) ) )
+    if ( FT_ALLOC( orientations,
+                   (FT_UInt)num_contours * sizeof ( *orientations ) ) )
       goto Exit;
 
     /* Disable `flip_sign` to avoid extra complication */
@@ -3554,7 +3557,8 @@
       bitmaps[i].pixel_mode = bitmap->pixel_mode;
 
       /* allocate memory for the buffer */
-      if ( FT_ALLOC( bitmaps[i].buffer, bitmap->rows * bitmap->pitch ) )
+      if ( FT_ALLOC( bitmaps[i].buffer,
+                     bitmap->rows * (FT_UInt)bitmap->pitch ) )
         goto Exit;
 
       /* determine the orientation */

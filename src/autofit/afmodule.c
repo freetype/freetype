@@ -48,7 +48,7 @@
   int  _af_debug_disable_blue_hints;
 
   /* we use a global object instead of a local one for debugging */
-  AF_GlyphHintsRec  _af_debug_hints_rec[1];
+  static AF_GlyphHintsRec  _af_debug_hints_rec[1];
 
   void*  _af_debug_hints = _af_debug_hints_rec;
 #endif

@@ -1516,6 +1516,7 @@
 
               case cff_kind_fixed_thousand:
                 FT_TRACE4(( " %f\n", (double)val / 65536 / 1000 ));
+                break;
 
               default:
                 ; /* never reached */

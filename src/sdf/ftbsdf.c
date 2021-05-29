@@ -289,19 +289,22 @@
 #undef CHECK_NEIGHBOR
 #endif
 
-#define CHECK_NEIGHBOR( x_offset, y_offset )            \
-          if ( x + x_offset >= 0 && x + x_offset < w && \
-               y + y_offset >= 0 && y + y_offset < r )  \
-          {                                             \
-            num_neighbors++;                            \
-                                                        \
-            to_check = dm + y_offset * w + x_offset;    \
-            if ( to_check->alpha == 0 )                 \
-            {                                           \
-              is_edge = 1;                              \
-              goto Done;                                \
-            }                                           \
-          }
+#define CHECK_NEIGHBOR( x_offset, y_offset )              \
+          do                                              \
+          {                                               \
+            if ( x + x_offset >= 0 && x + x_offset < w && \
+                 y + y_offset >= 0 && y + y_offset < r )  \
+            {                                             \
+              num_neighbors++;                            \
+                                                          \
+              to_check = dm + y_offset * w + x_offset;    \
+              if ( to_check->alpha == 0 )                 \
+              {                                           \
+                is_edge = 1;                              \
+                goto Done;                                \
+              }                                           \
+            }                                             \
+          } while ( 0 )
 
   static FT_Bool
   bsdf_is_edge( ED*     dm,   /* distance map              */
@@ -693,8 +696,8 @@
 
     /* Calculate the width and row differences */
     /* between target and source.              */
-    x_diff = worker->width - source->width;
-    y_diff = worker->rows - source->rows;
+    x_diff = worker->width - (int)source->width;
+    y_diff = worker->rows - (int)source->rows;
 
     x_diff /= 2;
     y_diff /= 2;
@@ -716,8 +719,8 @@
       {
         FT_Int  t_width = worker->width;
         FT_Int  t_rows  = worker->rows;
-        FT_Int  s_width = source->width;
-        FT_Int  s_rows  = source->rows;
+        FT_Int  s_width = (int)source->width;
+        FT_Int  s_rows  = (int)source->rows;
 
 
         for ( t_j = 0; t_j < t_rows; t_j++ )
@@ -750,7 +753,7 @@
             mod = 7 - s_i % 8;
 
             pixel = s[div];
-            byte  = 1 << mod;
+            byte  = (FT_Byte)( 1 << mod );
 
             t[t_index].alpha = pixel & byte ? 255 : 0;
 
@@ -764,8 +767,8 @@
       {
         FT_Int  t_width = worker->width;
         FT_Int  t_rows  = worker->rows;
-        FT_Int  s_width = source->width;
-        FT_Int  s_rows  = source->rows;
+        FT_Int  s_width = (int)source->width;
+        FT_Int  s_rows  = (int)source->rows;
 
 
         /* loop over all pixels and assign pixel values from source */
@@ -1103,8 +1106,8 @@
       goto Exit;
     }
 
-    w        = target->width;
-    r        = target->rows;
+    w        = (int)target->width;
+    r        = (int)target->rows;
     t_buffer = (FT_6D10*)target->buffer;
 
     if ( w != worker->width ||
@@ -1222,8 +1225,8 @@
     FT_Error   error  = FT_Err_Ok;
     FT_Memory  memory = NULL;
 
-    const FT_Bitmap*  source      = NULL;
-    const FT_Bitmap*  target      = NULL;
+    const FT_Bitmap*  source = NULL;
+    const FT_Bitmap*  target = NULL;
 
     BSDF_TRaster*  bsdf_raster = (BSDF_TRaster*)raster;
     BSDF_Worker    worker;
@@ -1247,8 +1250,8 @@
       goto Exit;
     }
 
-    source = sdf_params->root.source;
-    target = sdf_params->root.target;
+    source = (const FT_Bitmap*)sdf_params->root.source;
+    target = (const FT_Bitmap*)sdf_params->root.target;
 
     /* check source and target bitmap */
     if ( !source || !target )
@@ -1298,8 +1301,8 @@
                          target->width * sizeof ( *worker.distance_map ) ) )
       goto Exit;
 
-    worker.width  = target->width;
-    worker.rows   = target->rows;
+    worker.width  = (int)target->width;
+    worker.rows   = (int)target->rows;
     worker.params = *sdf_params;
 
     FT_CALL( bsdf_init_distance_map( source, &worker ) );
@@ -1309,7 +1312,7 @@
 
     FT_TRACE0(( "bsdf_raster_render: Total memory used = %ld\n",
                 worker.width * worker.rows *
-                  sizeof ( *worker.distance_map ) ));
+                  (long)sizeof ( *worker.distance_map ) ));
 
   Exit:
     if ( worker.distance_map )

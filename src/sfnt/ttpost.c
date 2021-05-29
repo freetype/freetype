@@ -180,8 +180,8 @@
     /* There already exist fonts which have more than 32768 glyph names */
     /* in this table, so the test for this threshold has been dropped.  */
 
-    if ( num_glyphs > face->max_profile.numGlyphs ||
-         num_glyphs * 2UL > post_len - 2          )
+    if ( num_glyphs > face->max_profile.numGlyphs  ||
+         (FT_ULong)num_glyphs * 2UL > post_len - 2 )
     {
       error = FT_THROW( Invalid_File_Format );
       goto Exit;
@@ -231,7 +231,7 @@
       FT_ULong   p;
 
 
-      post_len -= num_glyphs * 2UL + 2;
+      post_len -= (FT_ULong)num_glyphs * 2UL + 2;
 
       if ( FT_QALLOC( strings, post_len + 1 )       ||
            FT_STREAM_READ( strings, post_len )      ||

@@ -1,5 +1,39 @@
 2021-05-29  Werner Lemberg  <wl@gnu.org>
 
+	Fix compilation errors and (some) warnings for clang++.
+
+	* src/autofit/afmodule.c (AF_GlyphHintsRec): Make it static.
+
+	* src/cache/ftcache.c (FTC_Cache_NewNode), src/cache/ftcsbits.c
+	(ftc_snode_compare): Remove semicolon.
+
+	* src/cff/cffparse.c (cff_parser_run): Add `break` statement.
+
+	* src/cid/cidload.c (cid_hex_to_binary): Add cast.
+
+	* src/sdf/ftbsdf.c (CHECK_NEIGHBOR): Use `do {} while(0)` loop.
+	(bsdf_init_distance_map, finalize_sdf, bsdf_raster_render): Add
+	casts.
+	* src/sdf/ftsdf.c (sdf_generate_bounding_box,
+	sdf_generate_with_overlaps): Ditto.
+	* src/sdf/ftsdfcommon.h (square_root): Ditto.
+	* src/sdf/ftsdfrend.c (sdf_property_get, ft_sdf_render,
+	ft_bsdf_render): Ditto.
+
+	* src/sfnt/ttcolr.c (find_base_glyph_record,
+	find_base_glyph_v1_record): Fix variable signedness.
+	(read_color_line): Add cast.
+	(read_paint): Add casts.
+	Fix signedness issue.
+	(tt_face_get_colorline_stops) Fix signedness issues.
+
+	* src/sfnt/ttpost.c (load_format_20): Add casts.
+
+	* src/truetype/ttsubpix.c (TWEAK_RULES, TWEAK_RULES_EXCEPTIONS):
+	Remove final semicolons.
+
+2021-05-29  Werner Lemberg  <wl@gnu.org>
+
 	[build] Allow overriding of `ANSIFLAGS` for GNU make build.
 
 	* builds/*: Implement it.

@@ -142,7 +142,7 @@
 
     if ( ft_strcmp( property_name, "spread" ) == 0 )
     {
-      FT_Int*  val = (FT_Int*)value;
+      FT_UInt*  val = (FT_UInt*)value;
 
 
       *val = render->spread;
@@ -314,7 +314,7 @@
 
     /* ignore the pitch, pixel mode and set custom */
     bitmap->pixel_mode = FT_PIXEL_MODE_GRAY16;
-    bitmap->pitch      = bitmap->width * 2;
+    bitmap->pitch      = (int)( bitmap->width * 2 );
     bitmap->num_grays  = 65535;
 
     /* allocate new buffer */
@@ -525,7 +525,7 @@
 
     /* set up the target bitmap */
     target.pixel_mode = FT_PIXEL_MODE_GRAY16;
-    target.pitch      = target.width * 2;
+    target.pitch      = (int)( target.width * 2 );
     target.num_grays  = 65535;
 
     if ( FT_ALLOC_MULT( target.buffer, target.rows, target.pitch ) )

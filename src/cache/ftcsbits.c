@@ -395,7 +395,7 @@
         {
           error = ftc_snode_load( snode, cache->manager, gindex, &size );
         }
-        FTC_CACHE_TRYLOOP_END( list_changed );
+        FTC_CACHE_TRYLOOP_END( list_changed )
 
         ftcsnode->ref_count--;  /* unlock the node */
 

@@ -139,7 +139,7 @@ FT_BEGIN_HEADER
     FT_ULong  t, q, b, r;
 
 
-    r = val;
+    r = (FT_ULong)val;
     b = 0x40000000L;
     q = 0;
 
@@ -159,7 +159,7 @@ FT_BEGIN_HEADER
 
     q >>= 8;
 
-    return q;
+    return (FT_16D16)q;
   }
 
 

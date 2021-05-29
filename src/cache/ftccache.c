@@ -459,7 +459,7 @@
     {
       error = cache->clazz.node_new( &node, query, cache );
     }
-    FTC_CACHE_TRYLOOP_END( NULL );
+    FTC_CACHE_TRYLOOP_END( NULL )
 
     if ( error )
       node = NULL;
