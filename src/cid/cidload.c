@@ -758,7 +758,7 @@
     error = FT_Err_Ok;
 
   Exit:
-    *data_written = FT_ULong( d - data );
+    *data_written = (FT_ULong)( d - data );
     return error;
   }
 

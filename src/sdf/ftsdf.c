@@ -3308,9 +3308,9 @@
               dist.distance = square_root( dist.distance );
 
             if ( internal_params.flip_y )
-              index = FT_UInt( y * width + x );
+              index = (FT_UInt)( y * width + x );
             else
-              index = FT_UInt( ( rows - y - 1 ) * width + x );
+              index = (FT_UInt)( ( rows - y - 1 ) * width + x );
 
             /* check whether the pixel is set or not */
             if ( dists[index].sign == 0 )
