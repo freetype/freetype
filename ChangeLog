@@ -1,3 +1,13 @@
+2021-06-02  Ben Wagner  <bungeman@chromium.org>
+	    Werner Lemberg  <wl@gnu.org>
+
+	[sfnt] Fix fallout from 2021-05-29 change.
+
+	* src/sfnt/ttcolr.c (find_base_glyph_record,
+	find_base_glyph_v1_record): Adjust binary search.
+
+	Needs to be updated with change to unsigned.
+
 2021-06-02  Werner Lemberg  <wl@gnu.org>
 
 	* src/autofit/aflatin.c (af_latin_metrics_scale_dim): Fix tracing.

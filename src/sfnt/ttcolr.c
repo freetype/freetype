@@ -233,10 +233,10 @@
                           BaseGlyphRecord*  record )
   {
     FT_UInt  min = 0;
-    FT_UInt  max = num_base_glyph - 1;
+    FT_UInt  max = num_base_glyph;
 
 
-    while ( min <= max )
+    while ( min < max )
     {
       FT_UInt   mid = min + ( max - min ) / 2;
       FT_Byte*  p   = base_glyph_begin + mid * BASE_GLYPH_SIZE;
@@ -247,7 +247,7 @@
       if ( gid < glyph_id )
         min = mid + 1;
       else if (gid > glyph_id )
-        max = mid - 1;
+        max = mid;
       else
       {
         record->gid               = gid;
@@ -590,16 +590,16 @@
 
 
   static FT_Bool
-  find_base_glyph_v1_record ( FT_Byte *           base_glyph_begin,
-                              FT_UInt             num_base_glyph,
-                              FT_UInt             glyph_id,
-                              BaseGlyphV1Record  *record )
+  find_base_glyph_v1_record( FT_Byte *           base_glyph_begin,
+                             FT_UInt             num_base_glyph,
+                             FT_UInt             glyph_id,
+                             BaseGlyphV1Record  *record )
   {
     FT_UInt  min = 0;
-    FT_UInt  max = num_base_glyph - 1;
+    FT_UInt  max = num_base_glyph;
 
 
-    while ( min <= max )
+    while ( min < max )
     {
       FT_UInt  mid = min + ( max - min ) / 2;
 
@@ -616,7 +616,7 @@
       if ( gid < glyph_id )
         min = mid + 1;
       else if (gid > glyph_id )
-        max = mid - 1;
+        max = mid;
       else
       {
         record->gid          = gid;
