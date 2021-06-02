@@ -159,7 +159,6 @@ FT_TRACE_DEF( afglobal )
 FT_TRACE_DEF( afhints )
 FT_TRACE_DEF( afmodule )
 FT_TRACE_DEF( aflatin )
-FT_TRACE_DEF( aflatin2 )
 FT_TRACE_DEF( afshaper )
 FT_TRACE_DEF( afwarp )
 

@@ -1,3 +1,18 @@
+2021-07-12  David Turner  <david@freetype.org>
+
+	Remove experimental "Latin2" writing system (FT_OPTION_AUTOFIT2)
+
+	This code has always been experimental and was never compiled anyway
+	(FT_OPTION_AUTOFIT2 does not appear in ftoption.h or even any of our
+	build files).
+
+	* include/freetype/internal/fttrace.h: Remove 'FT_TRACE_DEF( aflatin2 )'.
+	* src/autofit/aflatin2.[hc]: Removed.
+	* src/autofit/afloader.c: Remove undocumented hook to activate Latin2 system.
+	* src/autofit/afstyles.h: Remove ltn2_dflt style definition.
+	* src/autofit/afwrtsys.h: Remove LATIN2 writing system definition.
+	* src/autofit/autofit.c: Updated.
+
 2021-07-05  Werner Lemberg  <wl@gnu.org>
 
 	* src/base/ftlcdfil.c (FT_Library_SetLcdGeometry): Fix argument.

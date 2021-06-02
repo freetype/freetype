@@ -26,9 +26,6 @@
 #include "aflatin.h"
 #include "afcjk.h"
 #include "afindic.h"
-#ifdef FT_OPTION_AUTOFIT2
-#include "aflatin2.h"
-#endif
 
 #endif /* AFWRTSYS_H_ */
 
@@ -44,9 +41,5 @@
   WRITING_SYSTEM( latin,  LATIN  )
   WRITING_SYSTEM( cjk,    CJK    )
   WRITING_SYSTEM( indic,  INDIC  )
-#ifdef FT_OPTION_AUTOFIT2
-  WRITING_SYSTEM( latin2, LATIN2 )
-#endif
-
 
 /* END */

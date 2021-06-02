@@ -26,7 +26,6 @@
 #include "afhints.c"
 #include "afindic.c"
 #include "aflatin.c"
-#include "aflatin2.c"
 #include "afloader.c"
 #include "afmodule.c"
 #include "afranges.c"

@@ -299,15 +299,6 @@
          AF_BLUE_STRINGSET_LATP,
          AF_COVERAGE_DEFAULT )
 
-#ifdef FT_OPTION_AUTOFIT2
-  STYLE( ltn2_dflt, LTN2_DFLT,
-         "Latin 2 default style",
-         AF_WRITING_SYSTEM_LATIN2,
-         AF_SCRIPT_LATN,
-         AF_BLUE_STRINGSET_LATN,
-         AF_COVERAGE_DEFAULT )
-#endif
-
   STYLE( lisu_dflt, LISU_DFLT,
          "Lisu default style",
          AF_WRITING_SYSTEM_LATIN,

@@ -297,12 +297,6 @@
     if ( error )
       goto Exit;
 
-#ifdef FT_OPTION_AUTOFIT2
-    /* XXX: undocumented hook to activate the latin2 writing system. */
-    if ( load_flags & ( 1UL << 20 ) )
-      style_options = AF_STYLE_LTN2_DFLT;
-#endif
-
     /*
      * Glyphs (really code points) are assigned to scripts.  Script
      * analysis is done lazily: For each glyph that passes through here,
