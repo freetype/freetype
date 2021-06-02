@@ -30,7 +30,6 @@
 #include "afmodule.c"
 #include "afranges.c"
 #include "afshaper.c"
-#include "afwarp.c"
 
 
 /* END */

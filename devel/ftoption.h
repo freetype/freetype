@@ -909,24 +909,6 @@ FT_BEGIN_HEADER
 
   /**************************************************************************
    *
-   * Compile 'autofit' module with warp hinting.  The idea of the warping
-   * code is to slightly scale and shift a glyph within a single dimension so
-   * that as much of its segments are aligned (more or less) on the grid.  To
-   * find out the optimal scaling and shifting value, various parameter
-   * combinations are tried and scored.
-   *
-   * You can switch warping on and off with the `warping` property of the
-   * auto-hinter (see file `ftdriver.h` for more information; by default it
-   * is switched off).
-   *
-   * This experimental option is not active if the rendering mode is
-   * `FT_RENDER_MODE_LIGHT`.
-   */
-#define AF_CONFIG_OPTION_USE_WARPER
-
-
-  /**************************************************************************
-   *
    * Use TrueType-like size metrics for 'light' auto-hinting.
    *
    * It is strongly recommended to avoid this option, which exists only to

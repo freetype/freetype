@@ -408,10 +408,6 @@ FT_BEGIN_HEADER
 #define AF_HINTS_DO_ADVANCE( h )                                \
           !AF_HINTS_TEST_SCALER( h, AF_SCALER_FLAG_NO_ADVANCE )
 
-#define AF_HINTS_DO_WARP( h )                                  \
-          !AF_HINTS_TEST_SCALER( h, AF_SCALER_FLAG_NO_WARPER )
-
-
 
   FT_LOCAL( AF_Direction )
   af_direction_compute( FT_Pos  dx,
@@ -458,14 +454,6 @@ FT_BEGIN_HEADER
   FT_LOCAL( void )
   af_glyph_hints_align_weak_points( AF_GlyphHints  hints,
                                     AF_Dimension   dim );
-
-#ifdef AF_CONFIG_OPTION_USE_WARPER
-  FT_LOCAL( void )
-  af_glyph_hints_scale_dim( AF_GlyphHints  hints,
-                            AF_Dimension   dim,
-                            FT_Fixed       scale,
-                            FT_Pos         delta );
-#endif
 
   FT_LOCAL( void )
   af_glyph_hints_done( AF_GlyphHints  hints );

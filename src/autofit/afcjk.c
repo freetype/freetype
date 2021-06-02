@@ -37,11 +37,6 @@
 #include "aferrors.h"
 
 
-#ifdef AF_CONFIG_OPTION_USE_WARPER
-#include "afwarp.h"
-#endif
-
-
   /**************************************************************************
    *
    * The macro FT_COMPONENT is used in trace mode.  It is an implicit
@@ -1400,11 +1395,6 @@
     /* compute flags depending on render mode, etc. */
     mode = metrics->root.scaler.render_mode;
 
-#if 0 /* AF_CONFIG_OPTION_USE_WARPER */
-    if ( mode == FT_RENDER_MODE_LCD || mode == FT_RENDER_MODE_LCD_V )
-      metrics->root.scaler.render_mode = mode = FT_RENDER_MODE_NORMAL;
-#endif
-
     scaler_flags = hints->scaler_flags;
     other_flags  = 0;
 
@@ -1432,12 +1422,6 @@
       other_flags |= AF_LATIN_HINTS_MONO;
 
     scaler_flags |= AF_SCALER_FLAG_NO_ADVANCE;
-
-#ifdef AF_CONFIG_OPTION_USE_WARPER
-    /* get (global) warper flag */
-    if ( !metrics->root.globals->module->warping )
-      scaler_flags |= AF_SCALER_FLAG_NO_WARPER;
-#endif
 
     hints->scaler_flags = scaler_flags;
     hints->other_flags  = other_flags;
@@ -2321,25 +2305,6 @@
       if ( ( dim == AF_DIMENSION_HORZ && AF_HINTS_DO_HORIZONTAL( hints ) ) ||
            ( dim == AF_DIMENSION_VERT && AF_HINTS_DO_VERTICAL( hints ) )   )
       {
-
-#ifdef AF_CONFIG_OPTION_USE_WARPER
-        if ( dim == AF_DIMENSION_HORZ                                  &&
-             metrics->root.scaler.render_mode == FT_RENDER_MODE_NORMAL &&
-             AF_HINTS_DO_WARP( hints )                                 )
-        {
-          AF_WarperRec  warper;
-          FT_Fixed      scale;
-          FT_Pos        delta;
-
-
-          af_warper_compute( &warper, hints, (AF_Dimension)dim,
-                             &scale, &delta );
-          af_glyph_hints_scale_dim( hints, (AF_Dimension)dim,
-                                    scale, delta );
-          continue;
-        }
-#endif /* AF_CONFIG_OPTION_USE_WARPER */
-
         af_cjk_hint_edges( hints, (AF_Dimension)dim );
         af_cjk_align_edge_points( hints, (AF_Dimension)dim );
         af_glyph_hints_align_strong_points( hints, (AF_Dimension)dim );

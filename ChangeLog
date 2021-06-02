@@ -1,5 +1,19 @@
 2021-07-12  David Turner  <david@freetype.org>
 
+	Remove experimental auto-hinting 'warp' mode.
+
+	This feature was always experimental, and probably nevery worked
+	properly. This patch completely removes it from the source code,
+	except for a documentation block describing it for historical
+	purpose.
+
+	* devel/ftoption.h: Remove AF_CONFIG_OPTION_USE_WARPER.
+	* include/freetype/config/ftoption.h: Remove AF_CONFIG_OPTION_USE_WARPER.
+	* include/freetype/ftdriver.h: Document 'warping' property as obsolete.
+	* src/autofit/*: Remove any warp mode related code.
+
+2021-07-12  David Turner  <david@freetype.org>
+
 	Remove experimental "Latin2" writing system (FT_OPTION_AUTOFIT2)
 
 	This code has always been experimental and was never compiled anyway

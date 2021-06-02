@@ -27,11 +27,6 @@
 #include "aferrors.h"
 
 
-#ifdef AF_CONFIG_OPTION_USE_WARPER
-#include "afwarp.h"
-#endif
-
-
   static FT_Error
   af_indic_metrics_init( AF_CJKMetrics  metrics,
                          FT_Face        face )

@@ -172,7 +172,6 @@ extern void*  _af_debug_hints;
 #define AF_SCALER_FLAG_NO_HORIZONTAL  1U /* disable horizontal hinting */
 #define AF_SCALER_FLAG_NO_VERTICAL    2U /* disable vertical hinting   */
 #define AF_SCALER_FLAG_NO_ADVANCE     4U /* disable advance hinting    */
-#define AF_SCALER_FLAG_NO_WARPER      8U /* disable warper             */
 
 
   typedef struct  AF_ScalerRec_
