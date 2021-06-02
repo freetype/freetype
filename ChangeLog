@@ -1,5 +1,15 @@
 2021-07-12  David Turner  <david@freetype.org>
 
+	Remove obsolete AF_Angle type and related sources.
+
+	Move the af_sort_xxx() functions from afangles.c to afhints.c in
+	order to get rid of the obsolete angle-related types, macros and
+	function definitions.
+
+	* src/autofit/*: Remove code.
+
+2021-07-12  David Turner  <david@freetype.org>
+
 	Remove experimental auto-hinting 'warp' mode.
 
 	This feature was always experimental, and probably nevery worked

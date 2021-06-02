@@ -18,7 +18,6 @@
 
 #define FT_MAKE_OPTION_SINGLE_OBJECT
 
-#include "afangles.c"
 #include "afblue.c"
 #include "afcjk.c"
 #include "afdummy.c"
