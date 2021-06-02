@@ -1344,9 +1344,11 @@
 
 #ifdef FT_DEBUG_LEVEL_TRACE
     if ( axis->extra_light )
+    {
       FT_TRACE5(( "`%s' style is extra light (at current resolution)\n",
                   af_style_names[metrics->root.style_class->style] ));
       FT_TRACE5(( "\n" ));
+    }
 #endif
 
     if ( dim == AF_DIMENSION_VERT )

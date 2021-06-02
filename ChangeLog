@@ -1,5 +1,11 @@
 2021-06-02  Werner Lemberg  <wl@gnu.org>
 
+	* src/autofit/aflatin.c (af_latin_metrics_scale_dim): Fix tracing.
+
+	Problem reported by Alexei.
+
+2021-06-02  Werner Lemberg  <wl@gnu.org>
+
 	[psaux] Fix MSVC compiler warnings.
 
 	* src/psaux/afmparse.c (afm_parse_track_kern, afm_parse_kern_pairs):

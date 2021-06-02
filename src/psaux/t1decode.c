@@ -1164,7 +1164,7 @@
                         " too much operands on the stack"
                         " (seen %ld, expected %d)\n",
                         top - decoder->stack, num_args ));
-            break;
+          break;
         }
 
 #endif /* FT_DEBUG_LEVEL_TRACE */
