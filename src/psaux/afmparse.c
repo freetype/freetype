@@ -622,7 +622,8 @@
 
     /* Rough sanity check: The minimum line length of the `TrackKern` */
     /* command is 20 characters (including the EOL character).        */
-    if ( ( stream->limit - stream->cursor ) / 20 < fi->NumTrackKern )
+    if ( (FT_ULong)( stream->limit - stream->cursor ) / 20 <
+           fi->NumTrackKern )
     {
       FT_ERROR(( "afm_parse_track_kern:"
                  " number of track kern entries exceeds stream size\n" ));
@@ -763,7 +764,8 @@
     /* Rough sanity check: The minimum line length of the `KP`,    */
     /* `KPH`,`KPX`, and `KPY` commands is 10 characters (including */
     /* the EOL character).                                         */
-    if ( ( stream->limit - stream->cursor ) / 10 < fi->NumKernPair )
+    if ( (FT_ULong)( stream->limit - stream->cursor ) / 10 <
+           fi->NumKernPair )
     {
       FT_ERROR(( "afm_parse_kern_pairs:"
                  " number of kern pairs exceeds stream size\n" ));
