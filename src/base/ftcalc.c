@@ -109,7 +109,7 @@
 
 #ifndef FT_MSB
 
-  FT_BASE_DEF ( FT_Int )
+  FT_BASE_DEF( FT_Int )
   FT_MSB( FT_UInt32 z )
   {
     FT_Int  shift = 0;

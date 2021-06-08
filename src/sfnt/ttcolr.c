@@ -629,7 +629,7 @@
   }
 
 
-  FT_LOCAL_DEF ( FT_Bool )
+  FT_LOCAL_DEF( FT_Bool )
   tt_face_get_colr_glyph_paint( TT_Face                  face,
                                 FT_UInt                  base_glyph,
                                 FT_Color_Root_Transform  root_transform,
@@ -745,7 +745,7 @@
   }
 
 
-  FT_LOCAL_DEF ( FT_Bool )
+  FT_LOCAL_DEF( FT_Bool )
   tt_face_get_colorline_stops( TT_Face                face,
                                FT_ColorStop*          color_stop,
                                FT_ColorStopIterator  *iterator )

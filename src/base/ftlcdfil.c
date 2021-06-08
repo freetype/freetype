@@ -32,7 +32,7 @@
 
 
   /* add padding according to filter weights */
-  FT_BASE_DEF (void)
+  FT_BASE_DEF( void )
   ft_lcd_padding( FT_BBox*        cbox,
                   FT_GlyphSlot    slot,
                   FT_Render_Mode  mode )
@@ -368,7 +368,7 @@
 #else /* !FT_CONFIG_OPTION_SUBPIXEL_RENDERING */
 
   /* add padding to accommodate outline shifts */
-  FT_BASE_DEF (void)
+  FT_BASE_DEF( void )
   ft_lcd_padding( FT_BBox*        cbox,
                   FT_GlyphSlot    slot,
                   FT_Render_Mode  mode )

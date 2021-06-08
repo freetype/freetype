@@ -72,6 +72,9 @@ CHANGES BETWEEN 2.10.4 and 2.11.0
 
     This work was Priyesh Kumar's GSoC 2020 project.
 
+  - PCF bitmap fonts compressed with LZW (these are usually files with
+    the extension `.pcf.Z`) are now handled correctly.
+
   - Improved Meson build support for the library.
 
   - Meson support to build The FreeType demo programs.

@@ -665,11 +665,11 @@
 
 
   static FT_Error
-  cid_hex_to_binary( FT_Byte*  data,
-                     FT_ULong  data_len,
-                     FT_ULong  offset,
-                     CID_Face  face,
-                     FT_ULong* data_written )
+  cid_hex_to_binary( FT_Byte*   data,
+                     FT_ULong   data_len,
+                     FT_ULong   offset,
+                     CID_Face   face,
+                     FT_ULong*  data_written )
   {
     FT_Stream  stream = face->root.stream;
     FT_Error   error;

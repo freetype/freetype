@@ -68,6 +68,10 @@ FT_BEGIN_HEADER
    * @note:
    *   This function does nothing if compilation option `FT_DEBUG_LOGGING`
    *   isn't set.
+   *
+   * @since:
+   *   2.11
+   *
    */
   FT_EXPORT( void )
   FT_Trace_Set_Level( const char*  tracing_level );
@@ -83,10 +87,13 @@ FT_BEGIN_HEADER
    *   (i.e., to the value of the `FT2_DEBUG` environment value or to NULL
    *   if `FT2_DEBUG` is not set).
    *
-   *
    * @note:
    *   This function does nothing if compilation option `FT_DEBUG_LOGGING`
    *   isn't set.
+   *
+   * @since:
+   *   2.11
+   *
    */
   FT_EXPORT( void )
   FT_Trace_Set_Default_Level( void );
@@ -111,6 +118,10 @@ FT_BEGIN_HEADER
    *
    *   args::
    *     Arguments of debug or tracing messages.
+   *
+   * @since:
+   *   2.11
+   *
    */
   typedef void
   (*FT_Custom_Log_Handler)( const char*  ft_component,
@@ -133,6 +144,10 @@ FT_BEGIN_HEADER
    * @note:
    *   This function does nothing if compilation option `FT_DEBUG_LOGGING`
    *   isn't set.
+   *
+   * @since:
+   *   2.11
+   *
    */
   FT_EXPORT( void )
   FT_Set_Log_Handler( FT_Custom_Log_Handler  handler );
@@ -150,6 +165,10 @@ FT_BEGIN_HEADER
    * @note:
    *   This function does nothing if compilation option `FT_DEBUG_LOGGING`
    *   isn't set.
+   *
+   * @since:
+   *   2.11
+   *
    */
   FT_EXPORT( void )
   FT_Set_Default_Log_Handler( void );

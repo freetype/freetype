@@ -48,7 +48,7 @@ FT_BEGIN_HEADER
                                 FT_Color_Root_Transform  root_transform,
                                 FT_OpaquePaint*          paint );
 
-  FT_LOCAL ( FT_Bool )
+  FT_LOCAL( FT_Bool )
   tt_face_get_paint_layers( TT_Face            face,
                             FT_LayerIterator*  iterator,
                             FT_OpaquePaint*    paint );

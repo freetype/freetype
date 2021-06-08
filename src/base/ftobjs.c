@@ -91,7 +91,7 @@
     "LCD 8-bit bitmap",
     "vertical LCD 8-bit bitmap",
     "BGRA 32-bit color image bitmap",
-    "SDF 16-bit bitmap"
+    "SDF 8-bit bitmap"
   };
 
 #endif /* FT_DEBUG_LEVEL_TRACE */
@@ -5602,7 +5602,7 @@
 
   /* documentation is in freetype.h */
 
-  FT_EXPORT_DEF ( FT_Bool )
+  FT_EXPORT_DEF( FT_Bool )
   FT_Get_Color_Glyph_Paint( FT_Face                  face,
                             FT_UInt                  base_glyph,
                             FT_Color_Root_Transform  root_transform,
@@ -5633,7 +5633,7 @@
 
   /* documentation is in freetype.h */
 
-  FT_EXPORT_DEF ( FT_Bool )
+  FT_EXPORT_DEF( FT_Bool )
   FT_Get_Paint_Layers( FT_Face            face,
                        FT_LayerIterator*  layer_iterator,
                        FT_OpaquePaint*    paint )
@@ -5687,7 +5687,7 @@
 
   /* documentation is in freetype.h */
 
-  FT_EXPORT_DEF ( FT_Bool )
+  FT_EXPORT_DEF( FT_Bool )
   FT_Get_Colorline_Stops ( FT_Face                face,
                            FT_ColorStop *         color_stop,
                            FT_ColorStopIterator  *iterator )

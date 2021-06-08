@@ -343,6 +343,9 @@ FT_BEGIN_HEADER
    *   The font driver name is a valid `module_name` for @FT_Property_Set
    *   and @FT_Property_Get.  This is not the same as @FT_Get_Font_Format.
    *
+   * @since:
+   *   2.11
+   *
    */
 #define FT_FACE_DRIVER_NAME( face ) \
           ( ( *(FT_Module_Class**)( ( face )->driver ) )->module_name )
