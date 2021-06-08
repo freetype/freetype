@@ -28,9 +28,10 @@ SDF_COMPILE := $(CC) $(ANSIFLAGS)                            \
 
 # sdf driver sources (i.e., C files)
 #
-SDF_DRV_SRC := $(SDF_DIR)/ftsdfrend.c \
-               $(SDF_DIR)/ftsdf.c     \
-               $(SDF_DIR)/ftbsdf.c
+SDF_DRV_SRC := $(SDF_DIR)/ftsdfrend.c   \
+               $(SDF_DIR)/ftsdf.c       \
+               $(SDF_DIR)/ftbsdf.c      \
+               $(SDF_DIR)/ftsdfcommon.c
 
 
 # sdf driver headers

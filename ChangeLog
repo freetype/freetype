@@ -1,3 +1,16 @@
+2021-06-08  Werner Lemberg  <wl@gnu.org>
+
+	[sdf] Make `make multi` work.
+
+	* src/sdf/ftsdf.c: Include `ftbitmap.h`.
+
+	* src/sdf/ftsdfcommon.h: Move function bodies to `ftsdfcommon.c`.
+	Include `ftobjs.h` to get definitions of `FT_LOCAL` and friends.
+
+	* src/sdf/ftsdfcommon.c: New file.
+
+	* src/sdf/rules.mk, src/sdf/sdf.c: Updated.
+
 2021-06-08  Anuj Verma  <anujv@iitbhilai.ac.in>
 
 	[sdf] Use 8 bits for final SDF output instead of 16bits.

@@ -22,6 +22,7 @@
 #include <freetype/internal/ftdebug.h>
 #include <freetype/ftoutln.h>
 #include <freetype/fttrigon.h>
+#include <freetype/ftbitmap.h>
 #include "ftsdf.h"
 
 #include "ftsdferrs.h"
