@@ -2898,7 +2898,7 @@
 #if 0
 
   #error "DO NOT USE THIS!"
-  #error "The function still output 16-bit data which might cause memory"
+  #error "The function still outputs 16-bit data, which might cause memory"
   #error "corruption.  If required I will add this later."
 
   /**************************************************************************
@@ -3196,8 +3196,8 @@
     FT_Int  width, rows, i, j;
     FT_Int  sp_sq;            /* max value to check   */
 
-    SDF_Contour*  contours;   /* list of all contours */
-    FT_SDFFormat* buffer;     /* the bitmap buffer    */
+    SDF_Contour*   contours;  /* list of all contours */
+    FT_SDFFormat*  buffer;    /* the bitmap buffer    */
 
     /* This buffer has the same size in indices as the    */
     /* bitmap buffer.  When we check a pixel position for */
@@ -3206,7 +3206,7 @@
     /* and also determine the signs properly.             */
     SDF_Signed_Distance*  dists = NULL;
 
-    const FT_16D16 fixed_spread = FT_INT_16D16( spread );
+    const FT_16D16  fixed_spread = FT_INT_16D16( spread );
 
 
     if ( !shape || !bitmap )
@@ -3362,14 +3362,12 @@
           dists[index].distance = fixed_spread;
 
         /* flip sign if required */
-        dists[index].distance *= internal_params.flip_sign ?
-                                   -current_sign :
-                                    current_sign;
+        dists[index].distance *= internal_params.flip_sign ? -current_sign
+                                                           :  current_sign;
 
         /* concatenate to appropriate format */
-        buffer[index] = map_fixed_to_sdf(
-                          dists[index].distance,
-                          fixed_spread );
+        buffer[index] = map_fixed_to_sdf( dists[index].distance,
+                                          fixed_spread );
       }
     }
 
@@ -3506,9 +3504,9 @@
     SDF_Contour*  head;              /* head of the contour list      */
     SDF_Shape     temp_shape;        /* temporary shape               */
 
-    FT_Memory     memory;            /* to allocate memory            */
-    FT_SDFFormat* t;                 /* target bitmap buffer          */
-    FT_Bool       flip_sign;         /* filp sign?                    */
+    FT_Memory      memory;           /* to allocate memory            */
+    FT_SDFFormat*  t;                /* target bitmap buffer          */
+    FT_Bool        flip_sign;        /* flip sign?                    */
 
     /* orientation of all the separate contours */
     SDF_Contour_Orientation*  orientations;
@@ -3644,18 +3642,18 @@
     {
       for ( i = 0; i < width; i++ )
       {
-        FT_Int   id = j * width + i;     /* index of current pixel    */
-        FT_Int   c;                      /* contour iterator          */
+        FT_Int  id = j * width + i;       /* index of current pixel    */
+        FT_Int  c;                        /* contour iterator          */
 
-        FT_SDFFormat val_c  = 0;         /* max clockwise value       */
-        FT_SDFFormat val_ac = UCHAR_MAX; /* min counter-clockwise val */
+        FT_SDFFormat  val_c  = 0;         /* max clockwise value       */
+        FT_SDFFormat  val_ac = UCHAR_MAX; /* min counter-clockwise val */
 
 
         /* iterate through all the contours */
         for ( c = 0; c < num_contours; c++ )
         {
           /* current contour value */
-          FT_SDFFormat temp = ( (FT_SDFFormat*)bitmaps[c].buffer )[id];
+          FT_SDFFormat  temp = ( (FT_SDFFormat*)bitmaps[c].buffer )[id];
 
 
           if ( orientations[c] == SDF_ORIENTATION_CW )

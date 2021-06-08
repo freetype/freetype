@@ -1092,12 +1092,13 @@
   finalize_sdf( BSDF_Worker*      worker,
                 const FT_Bitmap*  target )
   {
-    FT_Error      error = FT_Err_Ok;
+    FT_Error  error = FT_Err_Ok;
 
-    FT_Int        w, r;
-    FT_Int        i, j;
-    FT_SDFFormat* t_buffer;
-    FT_16D16      spread;
+    FT_Int  w, r;
+    FT_Int  i, j;
+
+    FT_SDFFormat*  t_buffer;
+    FT_16D16       spread;
 
 
     if ( !worker || !target )
@@ -1128,10 +1129,10 @@
     {
       for ( i = 0; i < w; i++ )
       {
-        FT_Int       index;
-        FT_16D16     dist;
-        FT_SDFFormat final_dist;
-        FT_Char      sign;
+        FT_Int        index;
+        FT_16D16      dist;
+        FT_SDFFormat  final_dist;
+        FT_Char       sign;
 
 
         index = j * w + i;

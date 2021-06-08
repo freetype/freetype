@@ -3,10 +3,10 @@
 	[sdf] Use 8 bits for final SDF output instead of 16bits.
 
 	Since 8-bits is enough to represent SDF data we no longer require
-	16-bits for  this purpose. Also, we now normalize the output data
-	to use the entire 8-bit range efficiently. For example: if we use
+	16-bits for this purpose.  Also, we now normalize the output data
+	to use the entire 8-bit range efficiently.  For example: if we use
 	3.5 format with a spread of 1 we basically only use the starting
-	5-bits. By normalizing we can use the entire 8-bit range.
+	5-bits.  By normalizing we can use the entire 8-bit range.
 
 	* include/freetype/freetype.h (FT_Render_Mode): Updated description
 	for `FT_RENDER_MODE_SDF` regarding this change.
