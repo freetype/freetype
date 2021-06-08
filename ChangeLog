@@ -1,3 +1,35 @@
+2021-06-08  Anuj Verma  <anujv@iitbhilai.ac.in>
+
+	[sdf] Use 8 bits for final SDF output instead of 16bits.
+
+	Since 8-bits is enough to represent SDF data we no longer require
+	16-bits for  this purpose. Also, we now normalize the output data
+	to use the entire 8-bit range efficiently. For example: if we use
+	3.5 format with a spread of 1 we basically only use the starting
+	5-bits. By normalizing we can use the entire 8-bit range.
+
+	* include/freetype/freetype.h (FT_Render_Mode): Updated description
+	for `FT_RENDER_MODE_SDF` regarding this change.
+
+	* include/freetype/ftimage.h (FT_Pixel_Mode): Removed
+	`FT_PIXEL_MODE_GRAY16` since no longer required.
+
+	* include/freetype/fttypes.h (FT_F6Dot10): Removed since no longer
+	required.
+
+	* src/sdf/ftsdfrend.c (ft_sdf_render, ft_bsdf_render): Allocate 8-bit
+	bitmap instead of 16-bit buffer.
+
+	* src/sdf/ftsdfcommon.h (map_fixed_to_sdf): Added function to convert
+	16.16 distance value to our desired format.
+
+	* src/sdf/ftsdf.c (sdf_generate_with_overlaps,
+	sdf_generate_bounding_box): Use the new `map_fixed_to_sdf` function
+	and also use 8-bit output buffer.
+
+	* src/sdf/ftbsdf.c (finalize_sdf): Output to a 8-bit buffer instead
+	of 16-bit buffer.
+
 2021-06-02  Ben Wagner  <bungeman@chromium.org>
 	    Werner Lemberg  <wl@gnu.org>
 

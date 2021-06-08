@@ -1092,12 +1092,12 @@
   finalize_sdf( BSDF_Worker*      worker,
                 const FT_Bitmap*  target )
   {
-    FT_Error  error = FT_Err_Ok;
+    FT_Error      error = FT_Err_Ok;
 
-    FT_Int    w, r;
-    FT_Int    i, j;
-    FT_6D10*  t_buffer;
-    FT_16D16  spread;
+    FT_Int        w, r;
+    FT_Int        i, j;
+    FT_SDFFormat* t_buffer;
+    FT_16D16      spread;
 
 
     if ( !worker || !target )
@@ -1108,7 +1108,7 @@
 
     w        = (int)target->width;
     r        = (int)target->rows;
-    t_buffer = (FT_6D10*)target->buffer;
+    t_buffer = (FT_SDFFormat*)target->buffer;
 
     if ( w != worker->width ||
          r != worker->rows  )
@@ -1128,10 +1128,10 @@
     {
       for ( i = 0; i < w; i++ )
       {
-        FT_Int    index;
-        FT_16D16  dist;
-        FT_6D10   final_dist;
-        FT_Char   sign;
+        FT_Int       index;
+        FT_16D16     dist;
+        FT_SDFFormat final_dist;
+        FT_Char      sign;
 
 
         index = j * w + i;
@@ -1144,10 +1144,6 @@
         dist = square_root( dist );
 #endif
 
-        /* convert from 16.16 to 6.10 */
-        dist      /= 64;
-        final_dist = (FT_6D10)(dist & 0x0000FFFF);
-
         /* We assume that if the pixel is inside a contour */
         /* its coverage value must be > 127.               */
         sign = worker->distance_map[index].alpha < 127 ? -1 : 1;
@@ -1156,7 +1152,10 @@
         if ( worker->params.flip_sign )
           sign = -sign;
 
-        t_buffer[index] = final_dist * sign;
+        /* concatenate from 16.16 to appropriate format */
+        final_dist = map_fixed_to_sdf( dist * sign, spread );
+
+        t_buffer[index] = final_dist;
       }
     }
 

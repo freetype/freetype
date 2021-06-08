@@ -78,7 +78,6 @@ FT_BEGIN_HEADER
    *   FT_FWord
    *   FT_UFWord
    *   FT_F2Dot14
-   *   FT_F6Dot10
    *   FT_UnitVector
    *   FT_F26Dot6
    *   FT_Data
@@ -263,17 +262,6 @@ FT_BEGIN_HEADER
    *   A signed 2.14 fixed-point type used for unit vectors.
    */
   typedef signed short  FT_F2Dot14;
-
-
-  /**************************************************************************
-   *
-   * @type:
-   *   FT_F6Dot10
-   *
-   * @description:
-   *   A signed 6.10 fixed-point type used for signed distance values.
-   */
-  typedef signed short  FT_F6Dot10;
 
 
   /**************************************************************************

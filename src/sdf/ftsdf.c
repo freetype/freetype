@@ -2897,6 +2897,10 @@
   /* `sdf_generate' is not used at the moment */
 #if 0
 
+  #error "DO NOT USE THIS!"
+  #error "The function still output 16-bit data which might cause memory"
+  #error "corruption.  If required I will add this later."
+
   /**************************************************************************
    *
    * @Function:
@@ -3193,7 +3197,7 @@
     FT_Int  sp_sq;            /* max value to check   */
 
     SDF_Contour*  contours;   /* list of all contours */
-    FT_Short*     buffer;     /* the bitmap buffer    */
+    FT_SDFFormat* buffer;     /* the bitmap buffer    */
 
     /* This buffer has the same size in indices as the    */
     /* bitmap buffer.  When we check a pixel position for */
@@ -3201,6 +3205,8 @@
     /* This way we can find out which pixel is set,       */
     /* and also determine the signs properly.             */
     SDF_Signed_Distance*  dists = NULL;
+
+    const FT_16D16 fixed_spread = FT_INT_16D16( spread );
 
 
     if ( !shape || !bitmap )
@@ -3229,12 +3235,12 @@
     contours = shape->contours;
     width    = (FT_Int)bitmap->width;
     rows     = (FT_Int)bitmap->rows;
-    buffer   = (FT_Short*)bitmap->buffer;
+    buffer   = (FT_SDFFormat*)bitmap->buffer;
 
     if ( USE_SQUARED_DISTANCES )
-      sp_sq = (FT_Int)FT_INT_16D16( spread * spread );
+      sp_sq = fixed_spread * fixed_spread;
     else
-      sp_sq = (FT_Int)FT_INT_16D16( spread );
+      sp_sq = fixed_spread;
 
     if ( width == 0 || rows == 0 )
     {
@@ -3347,21 +3353,23 @@
         /* if the pixel is not set                     */
         /* its shortest distance is more than `spread` */
         if ( dists[index].sign == 0 )
-          dists[index].distance = FT_INT_16D16( spread );
+          dists[index].distance = fixed_spread;
         else
           current_sign = dists[index].sign;
 
         /* clamp the values */
-        if ( dists[index].distance > (FT_Int)FT_INT_16D16( spread ) )
-          dists[index].distance = FT_INT_16D16( spread );
+        if ( dists[index].distance > fixed_spread )
+          dists[index].distance = fixed_spread;
 
-        /* convert from 16.16 to 6.10 */
-        dists[index].distance /= 64;
+        /* flip sign if required */
+        dists[index].distance *= internal_params.flip_sign ?
+                                   -current_sign :
+                                    current_sign;
 
-        if ( internal_params.flip_sign )
-          buffer[index] = (FT_Short)dists[index].distance * -current_sign;
-        else
-          buffer[index] = (FT_Short)dists[index].distance * current_sign;
+        /* concatenate to appropriate format */
+        buffer[index] = map_fixed_to_sdf(
+                          dists[index].distance,
+                          fixed_spread );
       }
     }
 
@@ -3498,9 +3506,9 @@
     SDF_Contour*  head;              /* head of the contour list      */
     SDF_Shape     temp_shape;        /* temporary shape               */
 
-    FT_Memory  memory;               /* to allocate memory            */
-    FT_6D10*   t;                    /* target bitmap buffer          */
-    FT_Bool    flip_sign;            /* filp sign?                    */
+    FT_Memory     memory;            /* to allocate memory            */
+    FT_SDFFormat* t;                 /* target bitmap buffer          */
+    FT_Bool       flip_sign;         /* filp sign?                    */
 
     /* orientation of all the separate contours */
     SDF_Contour_Orientation*  orientations;
@@ -3621,7 +3629,7 @@
     shape->contours = head;
 
     /* cast the output bitmap buffer */
-    t = (FT_6D10*)bitmap->buffer;
+    t = (FT_SDFFormat*)bitmap->buffer;
 
     /* Iterate over all pixels and combine all separate    */
     /* contours.  These are the rules for combining:       */
@@ -3636,18 +3644,18 @@
     {
       for ( i = 0; i < width; i++ )
       {
-        FT_Int   id = j * width + i;         /* index of current pixel    */
-        FT_Int   c;                          /* contour iterator          */
+        FT_Int   id = j * width + i;     /* index of current pixel    */
+        FT_Int   c;                      /* contour iterator          */
 
-        FT_6D10  val_c  = SHRT_MIN;          /* max clockwise value       */
-        FT_6D10  val_ac = SHRT_MAX;          /* min counter-clockwise val */
+        FT_SDFFormat val_c  = 0;         /* max clockwise value       */
+        FT_SDFFormat val_ac = UCHAR_MAX; /* min counter-clockwise val */
 
 
         /* iterate through all the contours */
         for ( c = 0; c < num_contours; c++ )
         {
           /* current contour value */
-          FT_6D10  temp = ((FT_6D10*)bitmaps[c].buffer)[id];
+          FT_SDFFormat temp = ( (FT_SDFFormat*)bitmaps[c].buffer )[id];
 
 
           if ( orientations[c] == SDF_ORIENTATION_CW )
@@ -3658,7 +3666,10 @@
 
         /* Finally find the smaller of the two and assign to output. */
         /* Also apply `flip_sign` if set.                            */
-        t[id] = FT_MIN( val_c, val_ac ) * ( flip_sign ? -1 : 1 );
+        t[id] = FT_MIN( val_c, val_ac );
+
+        if ( flip_sign )
+          t[id] = invert_sign( t[id] );
       }
     }
 
@@ -3680,6 +3691,9 @@
         FT_FREE( bitmaps );
       }
     }
+
+    /* restore the `flip_sign` property */
+    internal_params.flip_sign = flip_sign;
 
     return error;
   }

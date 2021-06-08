@@ -3302,19 +3302,46 @@ FT_BEGIN_HEADER
    *     pixels and use the @FT_PIXEL_MODE_LCD_V mode.
    *
    *   FT_RENDER_MODE_SDF ::
-   *     This mode corresponds to 16-bit signed distance fields (SDF)
+   *     This mode corresponds to 8-bit signed distance fields (SDF)
    *     bitmaps.  Each pixel in a SDF bitmap contains information about the
    *     nearest edge of the glyph outline.  The distances are calculated
    *     from the center of the pixel and are positive if they are filled by
-   *     the outline (i.e., inside the outline) and negative otherwise.  The
-   *     output bitmap buffer is represented as 6.10 fixed-point values; use
-   *     @FT_F6Dot10 and convert accordingly.
+   *     the outline (i.e., inside the outline) and negative otherwise. Check
+   *     the note below on how to convert the output values to usable data.
    *
    * @note:
    *   The selected render mode only affects vector glyphs of a font.
    *   Embedded bitmaps often have a different pixel mode like
    *   @FT_PIXEL_MODE_MONO.  You can use @FT_Bitmap_Convert to transform them
    *   into 8-bit pixmaps.
+   *
+   *   For @FT_RENDER_MODE_SDF output bitmap buffer contains normalized
+   *   distance values that are packed into unsigned 8-bit buffer.  To get
+   *   pixel values in floating point representation use the following
+   *   conversion:
+   *
+   *   ```
+   *   <load glyph and render using @FT_RENDER_MODE_SDF, then use the
+   *    output buffer as follows>
+   *
+   *   ...
+   *   FT_Byte buffer = glyph->bitmap->buffer;
+   *
+   *   for pixel in buffer
+   *   {
+   *     <`sd` is the signed distance and spread is the current `spread`,
+   *      the default spread is 2 and can be changed>
+   *
+   *     float sd = (float)pixel - 128.0f;
+   *
+   *     <convert the to pixel values>
+   *
+   *     sd = ( sd / 128.0f ) * spread;
+   *
+   *     <store `sd` in a buffer or use as required>
+   *   }
+   *
+   *   ```
    */
   typedef enum  FT_Render_Mode_
   {

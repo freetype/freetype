@@ -313,9 +313,9 @@
     bitmap->width += x_pad * 2;
 
     /* ignore the pitch, pixel mode and set custom */
-    bitmap->pixel_mode = FT_PIXEL_MODE_GRAY16;
-    bitmap->pitch      = (int)( bitmap->width * 2 );
-    bitmap->num_grays  = 65535;
+    bitmap->pixel_mode = FT_PIXEL_MODE_GRAY;
+    bitmap->pitch      = (int)( bitmap->width );
+    bitmap->num_grays  = 255;
 
     /* allocate new buffer */
     if ( FT_ALLOC_MULT( bitmap->buffer, bitmap->rows, bitmap->pitch ) )
@@ -524,9 +524,9 @@
     target.width = bitmap->width + x_pad * 2;
 
     /* set up the target bitmap */
-    target.pixel_mode = FT_PIXEL_MODE_GRAY16;
-    target.pitch      = (int)( target.width * 2 );
-    target.num_grays  = 65535;
+    target.pixel_mode = FT_PIXEL_MODE_GRAY;
+    target.pitch      = (int)( target.width );
+    target.num_grays  = 255;
 
     if ( FT_ALLOC_MULT( target.buffer, target.rows, target.pitch ) )
       goto Exit;
