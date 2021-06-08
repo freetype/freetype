@@ -1,3 +1,11 @@
+2021-06-08  Dominik Röttsches  <drott@chromium.org>
+
+	[sfnt] Pointer validity check when reading COLR 'v1' layers
+
+	* src/sfnt/ttcolr.c (tt_face_get_paint_layers): In addition to the
+	existing sanity checks, ensure that the pointer to the layer to be
+	read is within the 'COLR' v1 table.
+
 2021-06-08  Werner Lemberg  <wl@gnu.org>
 
 	* src/sdf/ftsdfcommon.c: Fix inclusion of header files.
