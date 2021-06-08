@@ -1,5 +1,12 @@
 2021-06-08  Werner Lemberg  <wl@gnu.org>
 
+	Fix 'devel' build for COLR 'v1'.
+
+	* devel/ftoption.h: Synchronize with
+	  `include/freetype/config/ftoption.h`.
+
+2021-06-08  Werner Lemberg  <wl@gnu.org>
+
 	[sfnt] Sanitize cmap4 table better.
 
 	Fixes #1062.
