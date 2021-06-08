@@ -2457,6 +2457,7 @@ FT_BEGIN_HEADER
    *
    * @since:
    *   2.4.2
+   *
    */
   FT_EXPORT( FT_Error )
   FT_Reference_Face( FT_Face  face );
@@ -3247,6 +3248,10 @@ FT_BEGIN_HEADER
    *   delta ::
    *     A pointer a translation vector.  Set this to NULL if you are not
    *     interested in the value.
+   *
+   * @since:
+   *   2.11
+   *
    */
   FT_EXPORT( void )
   FT_Get_Transform( FT_Face     face,
@@ -3267,14 +3272,14 @@ FT_BEGIN_HEADER
    *   in the @FT_GlyphSlotRec structure gives the format of the returned
    *   bitmap.
    *
-   *   All modes except @FT_RENDER_MODE_MONO and @FT_RENDER_MODE_SDF use 256
-   *   levels of opacity, indicating pixel coverage.  Use linear alpha
-   *   blending and gamma correction to correctly render non-monochrome
-   *   glyph bitmaps onto a surface; see @FT_Render_Glyph.
+   *   All modes except @FT_RENDER_MODE_MONO use 256 levels of opacity,
+   *   indicating pixel coverage.  Use linear alpha blending and gamma
+   *   correction to correctly render non-monochrome glyph bitmaps onto a
+   *   surface; see @FT_Render_Glyph.
    *
-   *   The @FT_RENDER_MODE_SDF is a special render mode that uses up to
-   *   65536 distance values, indicating the signed distance from the grid
-   *   position to the nearest outline.
+   *   The @FT_RENDER_MODE_SDF is a special render mode that uses up to 256
+   *   distance values, indicating the signed distance from the grid position
+   *   to the nearest outline.
    *
    * @values:
    *   FT_RENDER_MODE_NORMAL ::
@@ -4295,6 +4300,10 @@ FT_BEGIN_HEADER
    *   configured on the @FT_Face through @FT_Set_Var_Design_Coordinates.
    *   This implies that always static (interpolated) values are returned
    *   for both variable and non-variable formats.
+   *
+   * @since:
+   *   2.11
+   *
    */
   typedef enum  FT_PaintFormat_
   {
@@ -4338,6 +4347,10 @@ FT_BEGIN_HEADER
    *   p ::
    *     An opaque pointer into 'COLR' table data.  The caller must set this
    *     to `NULL` before the first call of @FT_Get_Colorline_Stops.
+   *
+   * @since:
+   *   2.11
+   *
    */
   typedef struct  FT_ColorStopIterator_
   {
@@ -4364,6 +4377,10 @@ FT_BEGIN_HEADER
    *
    *   alpha ::
    *     Alpha transparency value multiplied with the value from 'CPAL'.
+   *
+   * @since:
+   *   2.11
+   *
    */
   typedef struct  FT_ColorIndex_
   {
@@ -4388,6 +4405,10 @@ FT_BEGIN_HEADER
    *
    *   color ::
    *     The color information for this stop, see @FT_ColorIndex.
+   *
+   * @since:
+   *   2.11
+   *
    */
   typedef struct  FT_ColorStop_
   {
@@ -4406,6 +4427,10 @@ FT_BEGIN_HEADER
    *   An enumeration representing the 'Extend' mode of the 'COLR' v1
    *   extensions, see 'https://github.com/googlefonts/colr-gradients-spec'.
    *   It describes how the gradient fill continues at the other boundaries.
+   *
+   * @since:
+   *   2.11
+   *
    */
   typedef enum  FT_PaintExtend_
   {
@@ -4433,6 +4458,10 @@ FT_BEGIN_HEADER
    *   color_stop_iterator ::
    *     The @FT_ColorStopIterator used to enumerate and retrieve the
    *     actual @FT_ColorStop's.
+   *
+   * @since:
+   *   2.11
+   *
    */
   typedef struct  FT_ColorLine_
   {
@@ -4475,6 +4504,9 @@ FT_BEGIN_HEADER
    *   dy ::
    *     y translation.
    *
+   * @since:
+   *   2.11
+   *
    */
   typedef struct  FT_Affine_23_
   {
@@ -4493,6 +4525,10 @@ FT_BEGIN_HEADER
    *   An enumeration listing the 'COLR' v1 composite modes used in
    *   @FT_PaintComposite.  For more details on each paint mode, see
    *   'https://www.w3.org/TR/compositing-1/#porterduffcompositingoperators'.
+   *
+   * @since:
+   *   2.11
+   *
    */
   typedef enum  FT_Composite_Mode_
   {
@@ -4551,6 +4587,10 @@ FT_BEGIN_HEADER
    *   insert_root_transform ::
    *     An internal boolean to track whether an initial root transform is
    *     to be provided.  Do not set this value.
+   *
+   * @since:
+   *   2.11
+   *
    */
   typedef struct  FT_Opaque_Paint_
   {
@@ -4575,6 +4615,10 @@ FT_BEGIN_HEADER
    * @fields:
    *   layer_iterator ::
    *     The layer iterator that describes the layers of this paint.
+   *
+   * @since:
+   *   2.11
+   *
    */
   typedef struct  FT_PaintColrLayers_
   {
@@ -4597,6 +4641,10 @@ FT_BEGIN_HEADER
    * @fields:
    *   color ::
    *     The color information for this solid paint, see @FT_ColorIndex.
+   *
+   * @since:
+   *   2.11
+   *
    */
   typedef struct  FT_PaintSolid_
   {
@@ -4630,6 +4678,10 @@ FT_BEGIN_HEADER
    *   p2 ::
    *     Optional point~p2 to rotate the gradient (in font units).
    *     Otherwise equal to~p0.
+   *
+   * @since:
+   *   2.11
+   *
    */
   typedef struct  FT_PaintLinearGradient_
   {
@@ -4674,6 +4726,10 @@ FT_BEGIN_HEADER
    *   r1 ::
    *     The radius of the end circle of the radial gradient (in font
    *     units).
+   *
+   * @since:
+   *   2.11
+   *
    */
   typedef struct  FT_PaintRadialGradient_
   {
@@ -4717,6 +4773,9 @@ FT_BEGIN_HEADER
    *     specifying degrees.  Values are given counter-clockwise, starting
    *     from the (positive) y~axis.
    *
+   * @since:
+   *   2.11
+   *
    */
   typedef struct  FT_PaintSweepGradient_
   {
@@ -4746,6 +4805,9 @@ FT_BEGIN_HEADER
    *     The glyph ID from the 'glyf' table, which serves as the contour
    *     information that is filled with paint.
    *
+   * @since:
+   *   2.11
+   *
    */
   typedef struct  FT_PaintGlyph_
   {
@@ -4767,6 +4829,10 @@ FT_BEGIN_HEADER
    *   glyphID ::
    *     The glyph ID from the `BaseGlyphV1List` table that is drawn for
    *     this paint.
+   *
+   * @since:
+   *   2.11
+   *
    */
   typedef struct  FT_PaintColrGlyph_
   {
@@ -4789,6 +4855,10 @@ FT_BEGIN_HEADER
    *
    *   affine ::
    *     A 2x3 transformation matrix in @FT_Affine23 format.
+   *
+   * @since:
+   *   2.11
+   *
    */
   typedef struct  FT_PaintTransformed_
   {
@@ -4817,6 +4887,10 @@ FT_BEGIN_HEADER
    *
    *   dy ::
    *     Translation in y~direction (in font units).
+   *
+   * @since:
+   *   2.11
+   *
    */
   typedef struct  FT_PaintTranslate_
   {
@@ -4852,6 +4926,10 @@ FT_BEGIN_HEADER
    *   center_y ::
    *     The y~coordinate of the pivot point of the rotation (in font
    *     units).
+   *
+   * @since:
+   *   2.11
+   *
    */
 
   typedef struct  FT_PaintRotate_
@@ -4892,6 +4970,10 @@ FT_BEGIN_HEADER
    *
    *   center_y ::
    *     The y~coordinate of the pivot point of the skew (in font units).
+   *
+   * @since:
+   *   2.11
+   *
    */
   typedef struct  FT_PaintSkew_
   {
@@ -4928,6 +5010,10 @@ FT_BEGIN_HEADER
    *   backdrop_paint ::
    *     An @FT_OpaquePaint object referencing the backdrop paint that
    *     `source_paint` is composited onto.
+   *
+   * @since:
+   *   2.11
+   *
    */
   typedef struct  FT_PaintComposite_
   {
@@ -4969,6 +5055,10 @@ FT_BEGIN_HEADER
    *       * @FT_PaintSkew
    *       * @FT_PaintComposite
    *       * @FT_PaintColrGlyph
+   *
+   * @since:
+   *   2.11
+   *
    */
   typedef struct  FT_COLR_Paint_
   {
@@ -5010,6 +5100,10 @@ FT_BEGIN_HEADER
    *
    *   FT_COLOR_NO_ROOT_TRANSFORM ::
    *     Do not output an initial root transform.
+   *
+   * @since:
+   *   2.11
+   *
    */
   typedef enum  FT_Color_Root_Transform_
   {
@@ -5100,6 +5194,10 @@ FT_BEGIN_HEADER
    *   Value~1 if everything is OK.  If no color glyph is found, or the root
    *   paint could not be retrieved, value~0 gets returned.  In case of an
    *   error, value~0 is returned also.
+   *
+   * @since:
+   *   2.11
+   *
    */
   FT_EXPORT( FT_Bool )
   FT_Get_Color_Glyph_Paint( FT_Face                  face,
@@ -5145,6 +5243,10 @@ FT_BEGIN_HEADER
    * @return:
    *   Value~1 if everything is OK.  Value~0 gets returned when the paint
    *   object can not be retrieved or any other error occurs.
+   *
+   * @since:
+   *   2.11
+   *
    */
   FT_EXPORT( FT_Bool )
   FT_Get_Paint_Layers( FT_Face            face,
@@ -5183,6 +5285,10 @@ FT_BEGIN_HEADER
    *   Value~1 if everything is OK.  If there are no more color stops,
    *   value~0 gets returned.  In case of an error, value~0 is returned
    *   also.
+   *
+   * @since:
+   *   2.11
+   *
    */
   FT_EXPORT( FT_Bool )
   FT_Get_Colorline_Stops( FT_Face                face,
@@ -5216,6 +5322,10 @@ FT_BEGIN_HEADER
    * @return:
    *   Value~1 if everything is OK.  Value~0 if no details can be found for
    *   this paint or any other error occured.
+   *
+   * @since:
+   *   2.11
+   *
    */
   FT_EXPORT( FT_Bool )
   FT_Get_Paint( FT_Face         face,
@@ -5313,6 +5423,7 @@ FT_BEGIN_HEADER
    *
    * @since:
    *   2.3.8
+   *
    */
   FT_EXPORT( FT_UShort )
   FT_Get_FSType_Flags( FT_Face  face );
@@ -5406,6 +5517,7 @@ FT_BEGIN_HEADER
    *
    * @since:
    *   2.3.6
+   *
    */
   FT_EXPORT( FT_UInt )
   FT_Face_GetCharVariantIndex( FT_Face   face,
@@ -5442,6 +5554,7 @@ FT_BEGIN_HEADER
    *
    * @since:
    *   2.3.6
+   *
    */
   FT_EXPORT( FT_Int )
   FT_Face_GetCharVariantIsDefault( FT_Face   face,
@@ -5473,6 +5586,7 @@ FT_BEGIN_HEADER
    *
    * @since:
    *   2.3.6
+   *
    */
   FT_EXPORT( FT_UInt32* )
   FT_Face_GetVariantSelectors( FT_Face  face );
@@ -5506,6 +5620,7 @@ FT_BEGIN_HEADER
    *
    * @since:
    *   2.3.6
+   *
    */
   FT_EXPORT( FT_UInt32* )
   FT_Face_GetVariantsOfChar( FT_Face   face,
@@ -5540,6 +5655,7 @@ FT_BEGIN_HEADER
    *
    * @since:
    *   2.3.6
+   *
    */
   FT_EXPORT( FT_UInt32* )
   FT_Face_GetCharsOfVariant( FT_Face   face,
@@ -5875,6 +5991,7 @@ FT_BEGIN_HEADER
    *
    * @since:
    *   2.3.5
+   *
    */
   FT_EXPORT( FT_Bool )
   FT_Face_CheckTrueTypePatents( FT_Face  face );
@@ -5903,6 +6020,7 @@ FT_BEGIN_HEADER
    *
    * @since:
    *   2.3.5
+   *
    */
   FT_EXPORT( FT_Bool )
   FT_Face_SetUnpatentedHinting( FT_Face  face,
