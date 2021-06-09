@@ -1,3 +1,12 @@
+2021-06-09  Alexei Podtelezhnikov  <apodtele@gmail.com>
+
+	[sdf] Fix SDF positioning.
+
+	* src/sdf/ftsdfrend.c (ft_sdf_render, ft_bsdf_render): Add padding to
+	`bitmap_top' and `bitmap_left'.
+
+	* sdf/sdf/ftsdf.c (sdf_generate_with_overlaps): Fix VC++ warning.
+
 2021-06-08  Werner Lemberg  <wl@gnu.org>
 
 	Fix 'devel' build for COLR 'v1'.

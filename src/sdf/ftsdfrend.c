@@ -323,8 +323,11 @@
 
     slot->internal->flags |= FT_GLYPH_OWN_BITMAP;
 
-    x_shift  = 64 * -( slot->bitmap_left - x_pad );
-    y_shift  = 64 * -( slot->bitmap_top + y_pad );
+    slot->bitmap_top  += y_pad;
+    slot->bitmap_left -= x_pad;
+
+    x_shift  = 64 * -slot->bitmap_left;
+    y_shift  = 64 * -slot->bitmap_top;
     y_shift += 64 * (FT_Int)bitmap->rows;
 
     if ( origin )
@@ -520,7 +523,7 @@
     y_pad = sdf_module->spread;
 
     /* apply padding, which extends to all directions */
-    target.rows  = bitmap->rows + y_pad * 2;
+    target.rows  = bitmap->rows  + y_pad * 2;
     target.width = bitmap->width + x_pad * 2;
 
     /* set up the target bitmap */
@@ -553,6 +556,8 @@
       }
 
       slot->bitmap           = target;
+      slot->bitmap_top      += y_pad;
+      slot->bitmap_left     -= x_pad;
       slot->internal->flags |= FT_GLYPH_OWN_BITMAP;
     }
     else if ( target.buffer )

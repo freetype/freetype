@@ -3520,6 +3520,11 @@
     if ( !shape || !bitmap || !shape->memory )
       return FT_THROW( Invalid_Argument );
 
+    /* Disable `flip_sign` to avoid extra complication */
+    /* during the combination phase.                   */
+    flip_sign                 = internal_params.flip_sign;
+    internal_params.flip_sign = 0;
+
     contour           = shape->contours;
     memory            = shape->memory;
     temp_shape.memory = memory;
@@ -3543,11 +3548,6 @@
     if ( FT_ALLOC( orientations,
                    (FT_UInt)num_contours * sizeof ( *orientations ) ) )
       goto Exit;
-
-    /* Disable `flip_sign` to avoid extra complication */
-    /* during the combination phase.                   */
-    flip_sign                 = internal_params.flip_sign;
-    internal_params.flip_sign = 0;
 
     contour = shape->contours;
 
