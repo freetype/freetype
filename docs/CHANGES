@@ -72,6 +72,8 @@ CHANGES BETWEEN 2.10.4 and 2.11.0
 
     This work was Priyesh Kumar's GSoC 2020 project.
 
+  - The smooth rasterizer performance has been improved by >10%.
+
   - PCF bitmap fonts compressed with LZW (these are usually files with
     the extension `.pcf.Z`) are now handled correctly.
 
@@ -81,6 +83,9 @@ CHANGES BETWEEN 2.10.4 and 2.11.0
 
   - `ttdebug` didn't show changed point coordinates (bug introduced in
     version 2.10.3).
+
+  - The graphical demos now work better in native color depth on win32
+    and x11.
 
 
 ======================================================================
