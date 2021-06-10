@@ -7922,6 +7922,7 @@
       exc->opcode = exc->code[exc->IP];
 
 #ifdef FT_DEBUG_LEVEL_TRACE
+      if ( ft_trace_levels[trace_ttinterp] >= 6 )
       {
         FT_Long  cnt = FT_MIN( 8, exc->top );
         FT_Long  n;

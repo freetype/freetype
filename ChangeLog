@@ -1,5 +1,9 @@
 2021-06-09  Alexei Podtelezhnikov  <apodtele@gmail.com>
 
+	* src/truetype/ttinterp.c (TT_RunIns): Optimize tracing. 
+
+2021-06-09  Alexei Podtelezhnikov  <apodtele@gmail.com>
+
 	[sdf] Fix SDF positioning.
 
 	* src/sdf/ftsdfrend.c (ft_sdf_render, ft_bsdf_render): Add padding to
