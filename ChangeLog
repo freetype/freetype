@@ -1,9 +1,29 @@
 2021-06-12  Werner Lemberg  <wl@gnu.org>
 
+	[psaux] Fix another assertion.
+
+	* src/psaux/psintrp.c (cf2_interpT2CharString)
+	<cf2_escCALLOTHERSUBR>: Convert assertion into error, since the
+	problem can happen with invalid user input.
+
+	Test case is file
+
+	  fuzzing/corpora/legacy/oss-fuzz/5754332360212480-unknown-read
+
+	in the `freetype2-testing` repository.
+
+2021-06-12  Werner Lemberg  <wl@gnu.org>
+
 	[psaux] Fix assertions.
 
 	* src/psaux/pshints.c (cf2_hintmap_adjustHints): Check for overflow
 	before emitting an assertion error.
+
+	Test case is file
+
+	 fuzzing/corpora/legacy/oss-fuzz/4594115297673216-integer-overflow
+
+	in the `freetype2-testing` repository.
 
 2021-06-09  Alexei Podtelezhnikov  <apodtele@gmail.com>
 
