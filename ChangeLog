@@ -1,3 +1,10 @@
+2021-06-12  Werner Lemberg  <wl@gnu.org>
+
+	[psaux] Fix assertions.
+
+	* src/psaux/pshints.c (cf2_hintmap_adjustHints): Check for overflow
+	before emitting an assertion error.
+
 2021-06-09  Alexei Podtelezhnikov  <apodtele@gmail.com>
 
 	* src/truetype/ttinterp.c (TT_RunIns): Optimize tracing. 
