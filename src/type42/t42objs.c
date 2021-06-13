@@ -600,9 +600,9 @@
     }
 
     /* share the loader so that the autohinter can see it */
-    FT_GlyphLoader_Done( t42slot->internal->loader );
-    FT_FREE( t42slot->internal );
-    t42slot->internal = slot->ttslot->internal;
+    FT_GlyphLoader_Done( slot->ttslot->internal->loader );
+    FT_FREE( slot->ttslot->internal );
+    slot->ttslot->internal = t42slot->internal;
 
     return error;
   }
@@ -614,8 +614,8 @@
     T42_GlyphSlot  slot = (T42_GlyphSlot)t42slot;
 
 
+    slot->ttslot->internal = NULL;
     FT_Done_GlyphSlot( slot->ttslot );
-    t42slot->internal = NULL;
   }
 
 

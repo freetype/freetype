@@ -1,3 +1,14 @@
+2021-06-12  Alexei Podtelezhnikov  <apodtele@gmail.com>
+
+	[type42] Fix new memory leak.
+
+	We need to inverse inheritance of FT_GlyphSlot_Internal so that we
+	have a chance to free the rendered bitmap from the parent slot.
+
+	* src/type42/t42objs.c (T42_GlyphSlot_Init): Remove the internal parts
+	of the child `ttslot' and replace it with the parent structure.
+	(T42_GlyphSlot_Done): Updated accordingly.
+
 2021-06-12  Werner Lemberg  <wl@gnu.org>
 
 	[psaux] Fix another assertion.
