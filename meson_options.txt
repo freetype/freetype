@@ -35,6 +35,11 @@ option('harfbuzz',
                + ' If available, many glyphs not directly addressable'
                + ' by a font\'s character map will be hinted also.')
 
+option('tests',
+  type: 'feature',
+  value: 'disabled',
+  description: 'Enable FreeType unit and regression tests.')
+
 option('brotli',
   type: 'feature',
   value: 'auto',

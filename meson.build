@@ -369,6 +369,9 @@ pkgconfig.generate(ft2_lib,
   version: ft2_pkgconfig_version,
 )
 
+if get_option('tests').enabled()
+  subdir('tests')
+endif
 
 # NOTE: Unlike the old `make refdoc` command, this generates the
 # documentation under `$BUILD/docs/` since Meson doesn't support modifying
