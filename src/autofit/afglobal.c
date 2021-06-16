@@ -478,6 +478,10 @@
           {
             style = (AF_Style)( globals->glyph_styles[gindex] &
                                 AF_STYLE_UNASSIGNED           );
+            /* IMPORTANT: Clear the error code, see
+             * https://gitlab.freedesktop.org/freetype/freetype/-/issues/1063
+             */
+            error = 0;
             goto Again;
           }
 
