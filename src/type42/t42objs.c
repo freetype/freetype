@@ -614,6 +614,7 @@
     T42_GlyphSlot  slot = (T42_GlyphSlot)t42slot;
 
 
+    /* do not destroy the inherited internal structure just yet */
     slot->ttslot->internal = NULL;
     FT_Done_GlyphSlot( slot->ttslot );
   }
