@@ -1,3 +1,36 @@
+2021-06-16  David Turner  <david@freetype.org>
+
+	[autofit] Fix return value of `FT_Load_Glyph`.
+
+	* src/autofit/afglobal.c (af_face_globals_get_metrics): The issue is
+	that `style_metrics_init` sometimes returns -1 without clearing
+	`error`.  While looping to `Again`, the next operation is
+	successful, but -1 is still returned by the function.  The fix is to
+	set `error` to 0 appropriately.
+
+	Fixes #1063.
+
+2021-06-15  David Turner  <david@freetype.org>
+
+	[meson] Add first regression test to FreeType.
+
+	* tests/README.md: New file that explains how to build and run the
+	tests with the Meson build.
+
+	* tests/scripts/download-test-fonts.sh: New bash script to download
+	test font files to the `tests/data` folder.
+
+	* meson.build, meson_options.txt: Add 'tests' option to enable
+	building and running the test programs (disabled by default).
+
+	* tests/meson.build: New file.
+
+	* tests/issue-1063/main.c: Simple regression test to exhibit issue
+	1063.
+
+	* .gitignore: Ignore the content of the `tests/data` folder for
+	now.
+
 2021-06-12  Alexei Podtelezhnikov  <apodtele@gmail.com>
 
 	[type42] Fix new memory leak.
