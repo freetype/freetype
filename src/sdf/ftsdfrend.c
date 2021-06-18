@@ -278,9 +278,6 @@
     /* check whether render mode is correct */
     if ( mode != FT_RENDER_MODE_SDF )
     {
-      FT_ERROR(( "[sdf] ft_sdf_render:"
-                 " sdf module only render when"
-                 " using `FT_RENDER_MODE_SDF'\n" ));
       error = FT_THROW( Cannot_Render_Glyph );
       goto Exit;
     }
@@ -490,8 +487,6 @@
     /* check whether slot format is correct before rendering */
     if ( slot->format != render->glyph_format )
     {
-      FT_ERROR(( "ft_bsdf_render: slot format must be a bitmap\n" ));
-
       error = FT_THROW( Invalid_Glyph_Format );
       goto Exit;
     }
@@ -499,8 +494,6 @@
     /* check whether render mode is correct */
     if ( mode != FT_RENDER_MODE_SDF )
     {
-      FT_ERROR(( "ft_bsdf_render: need `FT_RENDER_MODE_SDF' mode\n" ));
-
       error = FT_THROW( Cannot_Render_Glyph );
       goto Exit;
     }

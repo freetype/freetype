@@ -1,3 +1,7 @@
+2021-06-18  Alexei Podtelezhnikov  <apodtele@gmail.com>
+
+	* src/sdf/ftsdfrend.c (ft_(b)sdf_render): Do not FT_ERROR routinely.
+
 2021-06-16  David Turner  <david@freetype.org>
 
 	[autofit] Fix return value of `FT_Load_Glyph`.
