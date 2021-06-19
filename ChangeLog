@@ -1,5 +1,17 @@
 2021-07-15  David Turner  <david@freetype.org>
 
+	[smooth] Minor speedup to smooth rasterizer
+
+	This speeds up the smooth rasterizer by avoiding a conditional
+	branches in the hot path.
+
+	* src/smooth/ftgrays.c: Define a null cell used to both as a
+	sentinel for all linked-lists, and to accumulate coverage and
+	area values for "out-of-bounds" cell positions without a
+	conditional check.
+
+2021-07-15  David Turner  <david@freetype.org>
+
 	Replaces download-test-fonts.sh with download-test-fonts.py which
 	does the same work, and also avoids downloading anything if the
 	files are already installed with the right content.
