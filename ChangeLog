@@ -1,3 +1,16 @@
+2021-06-19  Werner Lemberg  <david@freetype.org>
+
+	[autofit] Prevent hinting if there are too many segments.
+
+	This speeds up handling of broken glyphs.
+
+	Reported as
+
+	  https://bugs.chromium.org/p/oss-fuzz/issues/detail?id=35309
+
+	* src/autofit/aflatin.c (af_latin_hints_compute_segments): Implement
+	it.
+
 2021-06-18  Alexei Podtelezhnikov  <apodtele@gmail.com>
 
 	* src/sdf/ftsdfrend.c (ft_(b)sdf_render): Do not FT_ERROR routinely.
