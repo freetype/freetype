@@ -1,5 +1,15 @@
 2021-06-19  Werner Lemberg  <david@freetype.org>
 
+	[truetype] Fix integer overflow.
+
+	Reported as
+
+	  https://bugs.chromium.org/p/oss-fuzz/issues/detail?id=35312
+
+	* src/truetype/ttinterp.c (Ins_JMPR): Use `ADD_LONG`.
+
+2021-06-19  Werner Lemberg  <david@freetype.org>
+
 	[autofit] Prevent hinting if there are too many segments.
 
 	This speeds up handling of broken glyphs.

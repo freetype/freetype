@@ -3593,7 +3593,7 @@
       return;
     }
 
-    exc->IP += args[0];
+    exc->IP = ADD_LONG( exc->IP, args[0] );
     if ( exc->IP < 0                                             ||
          ( exc->callTop > 0                                    &&
            exc->IP > exc->callStack[exc->callTop - 1].Def->end ) )
