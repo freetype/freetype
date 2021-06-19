@@ -1,5 +1,17 @@
 2021-07-15  David Turner  <david@freetype.org>
 
+	[smooth] Implement Bezier quadratic arc flattenning with DDA
+
+	Benchmarking shows that this provides a very slighty performance
+	boost when rendering fonts with lots of quadratic bezier arcs,
+	compared to the recursive arc splitting, but only when SSE2 is
+	available, or on 64-bit CPUs.
+
+	* src/smooth/ftgrays.c (gray_render_conic): New implementation
+	based on DDA and optionally SSE2.
+
+2021-07-15  David Turner  <david@freetype.org>
+
 	[smooth] Minor speedup to smooth rasterizer
 
 	This speeds up the smooth rasterizer by avoiding a conditional
