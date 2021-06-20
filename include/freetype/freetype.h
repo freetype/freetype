@@ -4302,7 +4302,8 @@ FT_BEGIN_HEADER
    *   for both variable and non-variable formats.
    *
    * @since:
-   *   2.11
+   *   2.11 -- **currently experimental only!**  There might be changes
+   *   without retaining backward-compatibility of both the API and ABI.
    *
    */
   typedef enum  FT_PaintFormat_
@@ -4349,7 +4350,8 @@ FT_BEGIN_HEADER
    *     to `NULL` before the first call of @FT_Get_Colorline_Stops.
    *
    * @since:
-   *   2.11
+   *   2.11 -- **currently experimental only!**  There might be changes
+   *   without retaining backward-compatibility of both the API and ABI.
    *
    */
   typedef struct  FT_ColorStopIterator_
@@ -4379,7 +4381,8 @@ FT_BEGIN_HEADER
    *     Alpha transparency value multiplied with the value from 'CPAL'.
    *
    * @since:
-   *   2.11
+   *   2.11 -- **currently experimental only!**  There might be changes
+   *   without retaining backward-compatibility of both the API and ABI.
    *
    */
   typedef struct  FT_ColorIndex_
@@ -4407,7 +4410,8 @@ FT_BEGIN_HEADER
    *     The color information for this stop, see @FT_ColorIndex.
    *
    * @since:
-   *   2.11
+   *   2.11 -- **currently experimental only!**  There might be changes
+   *   without retaining backward-compatibility of both the API and ABI.
    *
    */
   typedef struct  FT_ColorStop_
@@ -4429,7 +4433,8 @@ FT_BEGIN_HEADER
    *   It describes how the gradient fill continues at the other boundaries.
    *
    * @since:
-   *   2.11
+   *   2.11 -- **currently experimental only!**  There might be changes
+   *   without retaining backward-compatibility of both the API and ABI.
    *
    */
   typedef enum  FT_PaintExtend_
@@ -4460,7 +4465,8 @@ FT_BEGIN_HEADER
    *     actual @FT_ColorStop's.
    *
    * @since:
-   *   2.11
+   *   2.11 -- **currently experimental only!**  There might be changes
+   *   without retaining backward-compatibility of both the API and ABI.
    *
    */
   typedef struct  FT_ColorLine_
@@ -4505,7 +4511,8 @@ FT_BEGIN_HEADER
    *     y translation.
    *
    * @since:
-   *   2.11
+   *   2.11 -- **currently experimental only!**  There might be changes
+   *   without retaining backward-compatibility of both the API and ABI.
    *
    */
   typedef struct  FT_Affine_23_
@@ -4527,7 +4534,8 @@ FT_BEGIN_HEADER
    *   'https://www.w3.org/TR/compositing-1/#porterduffcompositingoperators'.
    *
    * @since:
-   *   2.11
+   *   2.11 -- **currently experimental only!**  There might be changes
+   *   without retaining backward-compatibility of both the API and ABI.
    *
    */
   typedef enum  FT_Composite_Mode_
@@ -4589,7 +4597,8 @@ FT_BEGIN_HEADER
    *     to be provided.  Do not set this value.
    *
    * @since:
-   *   2.11
+   *   2.11 -- **currently experimental only!**  There might be changes
+   *   without retaining backward-compatibility of both the API and ABI.
    *
    */
   typedef struct  FT_Opaque_Paint_
@@ -4617,7 +4626,8 @@ FT_BEGIN_HEADER
    *     The layer iterator that describes the layers of this paint.
    *
    * @since:
-   *   2.11
+   *   2.11 -- **currently experimental only!**  There might be changes
+   *   without retaining backward-compatibility of both the API and ABI.
    *
    */
   typedef struct  FT_PaintColrLayers_
@@ -4643,7 +4653,8 @@ FT_BEGIN_HEADER
    *     The color information for this solid paint, see @FT_ColorIndex.
    *
    * @since:
-   *   2.11
+   *   2.11 -- **currently experimental only!**  There might be changes
+   *   without retaining backward-compatibility of both the API and ABI.
    *
    */
   typedef struct  FT_PaintSolid_
@@ -4680,7 +4691,8 @@ FT_BEGIN_HEADER
    *     Otherwise equal to~p0.
    *
    * @since:
-   *   2.11
+   *   2.11 -- **currently experimental only!**  There might be changes
+   *   without retaining backward-compatibility of both the API and ABI.
    *
    */
   typedef struct  FT_PaintLinearGradient_
@@ -4728,7 +4740,8 @@ FT_BEGIN_HEADER
    *     units).
    *
    * @since:
-   *   2.11
+   *   2.11 -- **currently experimental only!**  There might be changes
+   *   without retaining backward-compatibility of both the API and ABI.
    *
    */
   typedef struct  FT_PaintRadialGradient_
@@ -4774,7 +4787,8 @@ FT_BEGIN_HEADER
    *     from the (positive) y~axis.
    *
    * @since:
-   *   2.11
+   *   2.11 -- **currently experimental only!**  There might be changes
+   *   without retaining backward-compatibility of both the API and ABI.
    *
    */
   typedef struct  FT_PaintSweepGradient_
@@ -4806,7 +4820,8 @@ FT_BEGIN_HEADER
    *     information that is filled with paint.
    *
    * @since:
-   *   2.11
+   *   2.11 -- **currently experimental only!**  There might be changes
+   *   without retaining backward-compatibility of both the API and ABI.
    *
    */
   typedef struct  FT_PaintGlyph_
@@ -4831,7 +4846,8 @@ FT_BEGIN_HEADER
    *     this paint.
    *
    * @since:
-   *   2.11
+   *   2.11 -- **currently experimental only!**  There might be changes
+   *   without retaining backward-compatibility of both the API and ABI.
    *
    */
   typedef struct  FT_PaintColrGlyph_
@@ -4857,7 +4873,8 @@ FT_BEGIN_HEADER
    *     A 2x3 transformation matrix in @FT_Affine23 format.
    *
    * @since:
-   *   2.11
+   *   2.11 -- **currently experimental only!**  There might be changes
+   *   without retaining backward-compatibility of both the API and ABI.
    *
    */
   typedef struct  FT_PaintTransformed_
@@ -4889,7 +4906,8 @@ FT_BEGIN_HEADER
    *     Translation in y~direction (in font units).
    *
    * @since:
-   *   2.11
+   *   2.11 -- **currently experimental only!**  There might be changes
+   *   without retaining backward-compatibility of both the API and ABI.
    *
    */
   typedef struct  FT_PaintTranslate_
@@ -4928,7 +4946,8 @@ FT_BEGIN_HEADER
    *     units).
    *
    * @since:
-   *   2.11
+   *   2.11 -- **currently experimental only!**  There might be changes
+   *   without retaining backward-compatibility of both the API and ABI.
    *
    */
 
@@ -4972,7 +4991,8 @@ FT_BEGIN_HEADER
    *     The y~coordinate of the pivot point of the skew (in font units).
    *
    * @since:
-   *   2.11
+   *   2.11 -- **currently experimental only!**  There might be changes
+   *   without retaining backward-compatibility of both the API and ABI.
    *
    */
   typedef struct  FT_PaintSkew_
@@ -5012,7 +5032,8 @@ FT_BEGIN_HEADER
    *     `source_paint` is composited onto.
    *
    * @since:
-   *   2.11
+   *   2.11 -- **currently experimental only!**  There might be changes
+   *   without retaining backward-compatibility of both the API and ABI.
    *
    */
   typedef struct  FT_PaintComposite_
@@ -5057,7 +5078,8 @@ FT_BEGIN_HEADER
    *       * @FT_PaintColrGlyph
    *
    * @since:
-   *   2.11
+   *   2.11 -- **currently experimental only!**  There might be changes
+   *   without retaining backward-compatibility of both the API and ABI.
    *
    */
   typedef struct  FT_COLR_Paint_
@@ -5102,7 +5124,8 @@ FT_BEGIN_HEADER
    *     Do not output an initial root transform.
    *
    * @since:
-   *   2.11
+   *   2.11 -- **currently experimental only!**  There might be changes
+   *   without retaining backward-compatibility of both the API and ABI.
    *
    */
   typedef enum  FT_Color_Root_Transform_
@@ -5196,7 +5219,8 @@ FT_BEGIN_HEADER
    *   error, value~0 is returned also.
    *
    * @since:
-   *   2.11
+   *   2.11 -- **currently experimental only!**  There might be changes
+   *   without retaining backward-compatibility of both the API and ABI.
    *
    */
   FT_EXPORT( FT_Bool )
@@ -5245,7 +5269,8 @@ FT_BEGIN_HEADER
    *   object can not be retrieved or any other error occurs.
    *
    * @since:
-   *   2.11
+   *   2.11 -- **currently experimental only!**  There might be changes
+   *   without retaining backward-compatibility of both the API and ABI.
    *
    */
   FT_EXPORT( FT_Bool )
@@ -5287,7 +5312,8 @@ FT_BEGIN_HEADER
    *   also.
    *
    * @since:
-   *   2.11
+   *   2.11 -- **currently experimental only!**  There might be changes
+   *   without retaining backward-compatibility of both the API and ABI.
    *
    */
   FT_EXPORT( FT_Bool )
@@ -5324,7 +5350,8 @@ FT_BEGIN_HEADER
    *   this paint or any other error occured.
    *
    * @since:
-   *   2.11
+   *   2.11 -- **currently experimental only!**  There might be changes
+   *   without retaining backward-compatibility of both the API and ABI.
    *
    */
   FT_EXPORT( FT_Bool )
