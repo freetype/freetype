@@ -475,12 +475,18 @@ FT_BEGIN_HEADER
    *   extensions to the 'COLR' table, see
    *   'https://github.com/googlefonts/colr-gradients-spec'.
    *
-   *   Only non-variable format identifiers are listed in this enumeration;
-   *   as soon as support for variable 'COLR' v1 fonts is implemented,
-   *   interpolation is performed dependent on axis coordinates, which are
-   *   configured on the @FT_Face through @FT_Set_Var_Design_Coordinates.
-   *   This implies that always static (interpolated) values are returned
-   *   for both variable and non-variable formats.
+   *   The enumeration values losely correspond with the format numbers of
+   *   the specification: FreeType always returns a fully specified 'Paint'
+   *   structure for the 'Transform', 'Translate', 'Scale', 'Rotate', and
+   *   'Skew' table types even though the specification has different formats
+   *   depending on whether or not a center is specified, whether the scale
+   *   is uniform in x and y~direction or not, etc.  Also, only non-variable
+   *   format identifiers are listed in this enumeration; as soon as support
+   *   for variable 'COLR' v1 fonts is implemented, interpolation is
+   *   performed dependent on axis coordinates, which are configured on the
+   *   @FT_Face through @FT_Set_Var_Design_Coordinates.  This implies that
+   *   always static, readily interpolated values are returned in the 'Paint'
+   *   structures.
    *
    * @since:
    *   2.11 -- **currently experimental only!**  There might be changes
@@ -498,10 +504,11 @@ FT_BEGIN_HEADER
     FT_COLR_PAINTFORMAT_COLR_GLYPH      = 11,
     FT_COLR_PAINTFORMAT_TRANSFORM       = 12,
     FT_COLR_PAINTFORMAT_TRANSLATE       = 14,
-    FT_COLR_PAINTFORMAT_ROTATE          = 16,
-    FT_COLR_PAINTFORMAT_SKEW            = 18,
-    FT_COLR_PAINTFORMAT_COMPOSITE       = 20,
-    FT_COLR_PAINT_FORMAT_MAX            = 21,
+    FT_COLR_PAINTFORMAT_SCALE           = 16,
+    FT_COLR_PAINTFORMAT_ROTATE          = 24,
+    FT_COLR_PAINTFORMAT_SKEW            = 28,
+    FT_COLR_PAINTFORMAT_COMPOSITE       = 32,
+    FT_COLR_PAINT_FORMAT_MAX            = 33,
     FT_COLR_PAINTFORMAT_UNSUPPORTED     = 255
 
   } FT_PaintFormat;
@@ -1104,6 +1111,56 @@ FT_BEGIN_HEADER
   /**************************************************************************
    *
    * @struct:
+   *   FT_PaintScale
+   *
+   * @description:
+   *   A structure representing all of the 'COLR' v1 'PaintScale*' paint
+   *   tables.  Used for scaling downstream paints by a given x and y~scale,
+   *   with a given center.  This structure is used for all 'PaintScale*'
+   *   types that are part of specification; fields of this structure are
+   *   filled accordingly.  If there is a center, the center values are set,
+   *   otherwise they are set to the zero coordinate.  If the source font
+   *   file has 'PaintScaleUniform*' set, the scale values are set
+   *   accordingly to the same value.
+   *
+   * @fields:
+   *   paint ::
+   *     An @FT_OpaquePaint object referencing the paint that is to be
+   *     scaled.
+   *
+   *   scale_x ::
+   *     Scale factor in x~direction.
+   *
+   *   scale_y ::
+   *     Scale factor in y~direction.
+   *
+   *   center_x ::
+   *     x~coordinate of center point to scale from.
+   *
+   *   center_y ::
+   *     y~coordinate of center point to scale from.
+   *
+   * @since:
+   *   2.11 -- **currently experimental only!**  There might be changes
+   *   without retaining backward-compatibility of both the API and ABI.
+   *
+   */
+  typedef struct  FT_PaintScale_
+  {
+    FT_OpaquePaint  paint;
+
+    FT_Fixed  scale_x;
+    FT_Fixed  scale_y;
+
+    FT_Fixed  center_x;
+    FT_Fixed  center_y;
+
+  } FT_PaintScale;
+
+
+  /**************************************************************************
+   *
+   * @struct:
    *   FT_PaintRotate
    *
    * @description:
@@ -1277,6 +1334,7 @@ FT_BEGIN_HEADER
       FT_PaintSweepGradient   sweep_gradient;
       FT_PaintTransform       transform;
       FT_PaintTranslate       translate;
+      FT_PaintScale           scale;
       FT_PaintRotate          rotate;
       FT_PaintSkew            skew;
       FT_PaintComposite       composite;

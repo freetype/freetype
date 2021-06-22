@@ -49,6 +49,17 @@
 #define COLR_HEADER_SIZE                 14U
 
 
+  typedef enum  FT_PaintFormat_Internal_
+  {
+    FT_COLR_PAINTFORMAT_INTERNAL_SCALE_CENTER         = 18,
+    FT_COLR_PAINTFORMAT_INTERNAL_SCALE_UNIFORM        = 20,
+    FT_COLR_PAINTFORMAT_INTERNAL_SCALE_UNIFORM_CENTER = 22,
+    FT_COLR_PAINTFORMAT_INTERNAL_ROTATE_CENTER        = 26,
+    FT_COLR_PAINTFORMAT_INTERNAL_SKEW_CENTER          = 30
+
+  } FT_PaintFormat_Internal;
+
+
   typedef struct  BaseGlyphRecord_
   {
     FT_UShort  gid;
@@ -557,6 +568,53 @@
 
       apaint->u.translate.dx = FT_NEXT_LONG( p );
       apaint->u.translate.dy = FT_NEXT_LONG( p );
+
+      return 1;
+    }
+
+    else if ( apaint->format ==
+                FT_COLR_PAINTFORMAT_SCALE                         ||
+              (FT_PaintFormat_Internal)apaint->format ==
+                FT_COLR_PAINTFORMAT_INTERNAL_SCALE_CENTER         ||
+              (FT_PaintFormat_Internal)apaint->format ==
+                FT_COLR_PAINTFORMAT_INTERNAL_SCALE_UNIFORM        ||
+              (FT_PaintFormat_Internal)apaint->format ==
+                FT_COLR_PAINTFORMAT_INTERNAL_SCALE_UNIFORM_CENTER )
+    {
+      apaint->u.scale.paint.p                     = child_table_p;
+      apaint->u.scale.paint.insert_root_transform = 0;
+
+      /* All scale paints get at least one scale value. */
+      apaint->u.scale.scale_x = FT_NEXT_LONG( p );
+
+      /* Non-uniform ones read an extra y value. */
+      if ( apaint->format ==
+             FT_COLR_PAINTFORMAT_SCALE                 ||
+           (FT_PaintFormat_Internal)apaint->format ==
+             FT_COLR_PAINTFORMAT_INTERNAL_SCALE_CENTER )
+        apaint->u.scale.scale_y = FT_NEXT_LONG( p );
+      else
+        apaint->u.scale.scale_y = apaint->u.scale.scale_x;
+
+      /* Scale paints that have a center read center coordinates, */
+      /* otherwise the center is (0,0).                           */
+      if ( (FT_PaintFormat_Internal)apaint->format ==
+             FT_COLR_PAINTFORMAT_INTERNAL_SCALE_CENTER         ||
+           (FT_PaintFormat_Internal)apaint->format ==
+             FT_COLR_PAINTFORMAT_INTERNAL_SCALE_UNIFORM_CENTER )
+      {
+        apaint->u.scale.center_x = FT_NEXT_LONG ( p );
+        apaint->u.scale.center_y = FT_NEXT_LONG ( p );
+      }
+      else
+      {
+        apaint->u.scale.center_x = 0;
+        apaint->u.scale.center_y = 0;
+      }
+
+      /* FT 'COLR' v1 API output format always returns fully defined */
+      /* structs; we thus set the format to the public API value.    */
+      apaint->format = FT_COLR_PAINTFORMAT_SCALE;
 
       return 1;
     }

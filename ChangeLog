@@ -1,5 +1,17 @@
 2021-06-30  Dominik Röttsches  <drott@chromium.org>
 
+	[sfnt] Support PaintScale in 'COLR' v1 parsing.
+
+	* include/freetype/ftcolor.h (FT_PaintFormat): Renumber values, add
+	`FT_COLR_PAINTFORMAT_SCALE`.
+	(FT_PaintScale): New structure to represent 'PaintScale*' tables.
+	(FT_COLR_Paint): Updated.
+
+	* src/sfnt/ttcolr.c (FT_PaintFormat_Internal): New enumeration.
+	(read_paint): Parse 'PaintScale' and friends.
+
+2021-06-30  Dominik Röttsches  <drott@chromium.org>
+
 	[sfnt] Handle fonts without layer list in 'COLR' v1.
 
 	'COLR' v1 fonts do not necessarily need to have a layer list; for
