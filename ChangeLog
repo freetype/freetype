@@ -1,5 +1,15 @@
 2021-07-22  Dominik Röttsches  <drott@chromium.org>
 
+	[sfnt] s/PaintTransformed/PaintTransform/, s/transformed/transform/.
+
+	* include/freetype/ftcolor.h (FT_PaintTransformed, FT_PaintFormat,
+	FT_COLR_Paint): Do it to make it harmonize with other names such as
+	'PaintTranslate'.
+
+	* src/sfnt/ttcolr.c (read_paint, tt_face_get_paint): Ditto.
+
+2021-07-22  Dominik Röttsches  <drott@chromium.org>
+
 	Move 'COLR' API to `ftcolor.h`.
 
 	* include/freetype/freetype.h: Cut section layer managament

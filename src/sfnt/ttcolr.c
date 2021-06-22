@@ -507,17 +507,17 @@
       return 1;
     }
 
-    else if ( apaint->format == FT_COLR_PAINTFORMAT_TRANSFORMED )
+    else if ( apaint->format == FT_COLR_PAINTFORMAT_TRANSFORM )
     {
-      apaint->u.transformed.paint.p                     = child_table_p;
-      apaint->u.transformed.paint.insert_root_transform = 0;
+      apaint->u.transform.paint.p                     = child_table_p;
+      apaint->u.transform.paint.insert_root_transform = 0;
 
-      apaint->u.transformed.affine.xx = FT_NEXT_LONG( p );
-      apaint->u.transformed.affine.yx = FT_NEXT_LONG( p );
-      apaint->u.transformed.affine.xy = FT_NEXT_LONG( p );
-      apaint->u.transformed.affine.yy = FT_NEXT_LONG( p );
-      apaint->u.transformed.affine.dx = FT_NEXT_LONG( p );
-      apaint->u.transformed.affine.dy = FT_NEXT_LONG( p );
+      apaint->u.transform.affine.xx = FT_NEXT_LONG( p );
+      apaint->u.transform.affine.yx = FT_NEXT_LONG( p );
+      apaint->u.transform.affine.xy = FT_NEXT_LONG( p );
+      apaint->u.transform.affine.yy = FT_NEXT_LONG( p );
+      apaint->u.transform.affine.dx = FT_NEXT_LONG( p );
+      apaint->u.transform.affine.dy = FT_NEXT_LONG( p );
 
       return 1;
     }
@@ -809,11 +809,11 @@
        * drawing operations for subsequenct paints.  Prepare this initial
        * transform here.
        */
-      paint->format = FT_COLR_PAINTFORMAT_TRANSFORMED;
+      paint->format = FT_COLR_PAINTFORMAT_TRANSFORM;
 
       next_paint.p                     = opaque_paint.p;
       next_paint.insert_root_transform = 0;
-      paint->u.transformed.paint       = next_paint;
+      paint->u.transform.paint         = next_paint;
 
       /* `x_scale` and `y_scale` are in 26.6 format, representing the scale
        * factor to get from font units to requested size.  However, expected
@@ -828,28 +828,28 @@
         FT_Matrix_Multiply( &face->root.internal->transform_matrix,
                             &ft_root_scale );
 
-      paint->u.transformed.affine.xx = ft_root_scale.xx;
-      paint->u.transformed.affine.xy = ft_root_scale.xy;
-      paint->u.transformed.affine.yx = ft_root_scale.yx;
-      paint->u.transformed.affine.yy = ft_root_scale.yy;
+      paint->u.transform.affine.xx = ft_root_scale.xx;
+      paint->u.transform.affine.xy = ft_root_scale.xy;
+      paint->u.transform.affine.yx = ft_root_scale.yx;
+      paint->u.transform.affine.yy = ft_root_scale.yy;
 
       /* The translation is specified in 26.6 format and, according to the
        * documentation of `FT_Set_Translate`, is performed on the character
        * size given in the last call to `FT_Set_Char_Size`.  The
-       * 'PaintTransformed' paint table's `FT_Affine23` format expects
+       * 'PaintTransform' paint table's `FT_Affine23` format expects
        * values in 16.16 format, thus we need to shift by 10 bits.
        */
       if ( face->root.internal->transform_flags & 2 )
       {
-        paint->u.transformed.affine.dx =
+        paint->u.transform.affine.dx =
           face->root.internal->transform_delta.x << 10;
-        paint->u.transformed.affine.dy =
+        paint->u.transform.affine.dy =
           face->root.internal->transform_delta.y << 10;
       }
       else
       {
-        paint->u.transformed.affine.dx = 0;
-        paint->u.transformed.affine.dy = 0;
+        paint->u.transform.affine.dx = 0;
+        paint->u.transform.affine.dy = 0;
       }
 
       return 1;

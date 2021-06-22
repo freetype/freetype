@@ -496,7 +496,7 @@ FT_BEGIN_HEADER
     FT_COLR_PAINTFORMAT_SWEEP_GRADIENT  = 8,
     FT_COLR_PAINTFORMAT_GLYPH           = 10,
     FT_COLR_PAINTFORMAT_COLR_GLYPH      = 11,
-    FT_COLR_PAINTFORMAT_TRANSFORMED     = 12,
+    FT_COLR_PAINTFORMAT_TRANSFORM       = 12,
     FT_COLR_PAINTFORMAT_TRANSLATE       = 14,
     FT_COLR_PAINTFORMAT_ROTATE          = 16,
     FT_COLR_PAINTFORMAT_SKEW            = 18,
@@ -762,7 +762,7 @@ FT_BEGIN_HEADER
    *   A structure representing an offset to a `Paint` value stored in any
    *   of the paint tables of a 'COLR' v1 font.  Compare Offset<24> there.
    *   When 'COLR' v1 paint tables represented by FreeType objects such as
-   *   @FT_PaintColrLayers, @FT_PaintComposite, or @FT_PaintTransformed
+   *   @FT_PaintColrLayers, @FT_PaintComposite, or @FT_PaintTransform
    *   reference downstream nested paint tables, we do not immediately
    *   retrieve them but encapsulate their location in this type.  Use
    *   @FT_Get_Paint to retrieve the actual @FT_COLR_Paint object that
@@ -1041,10 +1041,10 @@ FT_BEGIN_HEADER
   /**************************************************************************
    *
    * @struct:
-   *   FT_PaintTransformed
+   *   FT_PaintTransform
    *
    * @description:
-   *   A structure representing a 'COLR' v1 `PaintTransformed` paint table.
+   *   A structure representing a 'COLR' v1 `PaintTransform` paint table.
    *
    * @fields:
    *   paint ::
@@ -1058,12 +1058,12 @@ FT_BEGIN_HEADER
    *   without retaining backward-compatibility of both the API and ABI.
    *
    */
-  typedef struct  FT_PaintTransformed_
+  typedef struct  FT_PaintTransform_
   {
     FT_OpaquePaint  paint;
     FT_Affine23     affine;
 
-  } FT_PaintTransformed;
+  } FT_PaintTransform;
 
 
   /**************************************************************************
@@ -1251,7 +1251,7 @@ FT_BEGIN_HEADER
    *       * @FT_PaintLinearGradient
    *       * @FT_PaintRadialGradient
    *       * @FT_PaintSweepGradient
-   *       * @FT_PaintTransformed
+   *       * @FT_PaintTransform
    *       * @FT_PaintTranslate
    *       * @FT_PaintRotate
    *       * @FT_PaintSkew
@@ -1275,7 +1275,7 @@ FT_BEGIN_HEADER
       FT_PaintLinearGradient  linear_gradient;
       FT_PaintRadialGradient  radial_gradient;
       FT_PaintSweepGradient   sweep_gradient;
-      FT_PaintTransformed     transformed;
+      FT_PaintTransform       transform;
       FT_PaintTranslate       translate;
       FT_PaintRotate          rotate;
       FT_PaintSkew            skew;
@@ -1367,7 +1367,7 @@ FT_BEGIN_HEADER
    *
    *   root_transform ::
    *     Specifies whether an initially computed root is returned by the
-   *     @FT_PaintTransformed operation to account for the activated size
+   *     @FT_PaintTransform operation to account for the activated size
    *     (see @FT_Activate_Size) and the configured transform and translate
    *     (see @FT_Set_Transform).
    *
