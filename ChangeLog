@@ -1,3 +1,12 @@
+2021-07-22  Dominik Röttsches  <drott@chromium.org>
+
+	Move 'COLR' API to `ftcolor.h`.
+
+	* include/freetype/freetype.h: Cut section layer managament
+	containing 'COLR' v0 and v1 API and move it to `ftcolor.h` as
+	requested by Werner on freetype-devel.
+	* include/freetype/ftcolor.h: Paste that section.
+
 2021-06-19  Werner Lemberg  <david@freetype.org>
 
 	[truetype] Fix integer overflow.
