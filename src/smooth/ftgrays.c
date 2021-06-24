@@ -168,10 +168,11 @@
 typedef ptrdiff_t  FT_PtrDist;
 
 
+#define Smooth_Err_Ok                    0
 #define Smooth_Err_Invalid_Outline      -1
 #define Smooth_Err_Cannot_Render_Glyph  -2
 #define Smooth_Err_Invalid_Argument     -3
-#define Smooth_Err_Out_Of_Memory        -4
+#define Smooth_Err_Raster_Overflow      -4
 
 #define FT_BEGIN_HEADER
 #define FT_END_HEADER
@@ -1601,7 +1602,7 @@ typedef ptrdiff_t  FT_PtrDist;
     }
 
     FT_TRACE5(( "FT_Outline_Decompose: Done\n", n ));
-    return 0;
+    return Smooth_Err_Ok;
 
   Exit:
     FT_TRACE5(( "FT_Outline_Decompose: Error 0x%x\n", error ));
@@ -1650,7 +1651,7 @@ typedef ptrdiff_t  FT_PtrDist;
     }
     else
     {
-      error = FT_THROW( Out_Of_Memory );
+      error = FT_THROW( Raster_Overflow );
 
       FT_TRACE7(( "band [%d..%d]: to be bisected\n",
                   ras.min_ey, ras.max_ey ));
@@ -1726,8 +1727,8 @@ typedef ptrdiff_t  FT_PtrDist;
           band--;
           continue;
         }
-        else if ( error != Smooth_Err_Out_Of_Memory )
-          return 1;
+        else if ( error != Smooth_Err_Raster_Overflow )
+          return error;
 
         /* render pool overflow; we will reduce the render band by half */
         width >>= 1;
@@ -1736,7 +1737,7 @@ typedef ptrdiff_t  FT_PtrDist;
         if ( width == 0 )
         {
           FT_TRACE7(( "gray_convert_glyph: rotten glyph\n" ));
-          return 1;
+          return FT_THROW( Raster_Overflow );
         }
 
         band++;
@@ -1745,7 +1746,7 @@ typedef ptrdiff_t  FT_PtrDist;
       } while ( band >= bands );
     }
 
-    return 0;
+    return Smooth_Err_Ok;
   }
 
 
@@ -1773,7 +1774,7 @@ typedef ptrdiff_t  FT_PtrDist;
 
     /* return immediately if the outline is empty */
     if ( outline->n_points == 0 || outline->n_contours <= 0 )
-      return 0;
+      return Smooth_Err_Ok;
 
     if ( !outline->contours || !outline->points )
       return FT_THROW( Invalid_Outline );
@@ -1787,7 +1788,7 @@ typedef ptrdiff_t  FT_PtrDist;
     if ( params->flags & FT_RASTER_FLAG_DIRECT )
     {
       if ( !params->gray_spans )
-        return 0;
+        return Smooth_Err_Ok;
 
       ras.render_span      = (FT_Raster_Span_Func)params->gray_spans;
       ras.render_span_data = params->user;
@@ -1805,7 +1806,7 @@ typedef ptrdiff_t  FT_PtrDist;
 
       /* nothing to do */
       if ( !target_map->width || !target_map->rows )
-        return 0;
+        return Smooth_Err_Ok;
 
       if ( !target_map->buffer )
         return FT_THROW( Invalid_Argument );
@@ -1829,7 +1830,7 @@ typedef ptrdiff_t  FT_PtrDist;
 
     /* exit if nothing to do */
     if ( ras.max_ex <= ras.min_ex || ras.max_ey <= ras.min_ey )
-      return 0;
+      return Smooth_Err_Ok;
 
     return gray_convert_glyph( RAS_VAR );
   }

@@ -1,3 +1,20 @@
+2021-06-24  Alexei Podtelezhnikov  <apodtele@gmail.com>
+
+	[smooth, raster] Fix up and align error codes.
+
+	FT_Render_Glyph picked up FAILURE or 1 returned from the raster
+	function, which became a confusing error code. Instead, return
+	Raster_Overflow in the unlikely event that banding does not help or
+	another meaningful error.
+
+	* src/smooth/ftgrays.c (gray_convert_glyph_inner, gray_convert_glyph):
+	Use Raster_Overflow when the rendering pool is exhausted and return it
+	if banding does not help.
+	(gray_raster_render): Use Smooth_Err_Ok.
+
+	* src/raster/ftraster.c (Render_Single_Pass): Return Raster_Overflow
+	if banding does not help or another error code.
+
 2021-06-23  Alexei Podtelezhnikov  <apodtele@gmail.com>
 
 	[smooth, raster] Remove synonymous error macros.

@@ -3050,7 +3050,7 @@
       if ( Convert_Glyph( RAS_VARS flipped ) )
       {
         if ( ras.error != Raster_Err_Raster_Overflow )
-          return FAILURE;
+          return ras.error;
 
         ras.error = Raster_Err_Ok;
 
@@ -3068,7 +3068,7 @@
         if ( ras.band_top >= 7 || k < i )
         {
           ras.band_top = 0;
-          ras.error    = FT_THROW( Invalid_Outline );
+          ras.error    = FT_THROW( Raster_Overflow );
 
           return ras.error;
         }
@@ -3089,7 +3089,7 @@
       }
     }
 
-    return SUCCESS;
+    return Raster_Err_Ok;
   }
 
 
