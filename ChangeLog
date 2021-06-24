@@ -1,4 +1,16 @@
-2021-07-22  Dominik Röttsches  <drott@chromium.org>
+2021-06-23  Alexei Podtelezhnikov  <apodtele@gmail.com>
+
+	[smooth, raster] Remove synonymous error macros.
+
+	* src/smooth/ftgays.c [STANDALONE_]: s/ErrRaster_/Smooth_Err_/.
+	(gray_convert_glyph_inner): Updated accordingly.
+
+	* src/raster/ftraster.c [STANDALONE_]: Do not abbreviate error macros.
+	(New_Profile, End_Profile, Insert_Y_Turn, Line_Up, Bezier_Up,
+	Decompose_Curve, Draw_Sweep, Render_Single_Pass, ft_black_render):
+	Updated accordingly.
+
+2021-06-22  Dominik Röttsches  <drott@chromium.org>
 
 	[sfnt] s/PaintTransformed/PaintTransform/, s/transformed/transform/.
 
@@ -8,7 +20,7 @@
 
 	* src/sfnt/ttcolr.c (read_paint, tt_face_get_paint): Ditto.
 
-2021-07-22  Dominik Röttsches  <drott@chromium.org>
+2021-06-22  Dominik Röttsches  <drott@chromium.org>
 
 	Move 'COLR' API to `ftcolor.h`.
 

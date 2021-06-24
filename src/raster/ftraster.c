@@ -200,12 +200,13 @@
 #define FT_THROW( e )  FT_ERR_CAT( Raster_Err_, e )
 #endif
 
-#define Raster_Err_None          0
-#define Raster_Err_Not_Ini      -1
-#define Raster_Err_Overflow     -2
-#define Raster_Err_Neg_Height   -3
-#define Raster_Err_Invalid      -4
-#define Raster_Err_Unsupported  -5
+#define Raster_Err_Ok                       0
+#define Raster_Err_Invalid_Outline         -1
+#define Raster_Err_Cannot_Render_Glyph     -2
+#define Raster_Err_Invalid_Argument        -3
+#define Raster_Err_Raster_Overflow         -4
+#define Raster_Err_Raster_Uninitialized    -5
+#define Raster_Err_Raster_Negative_Height  -6
 
 #define ft_memset  memset
 
@@ -229,13 +230,6 @@
 #include <freetype/internal/ftdebug.h> /* for FT_TRACE, FT_ERROR, and FT_THROW */
 
 #include "rasterrs.h"
-
-#define Raster_Err_None         FT_Err_Ok
-#define Raster_Err_Not_Ini      Raster_Err_Raster_Uninitialized
-#define Raster_Err_Overflow     Raster_Err_Raster_Overflow
-#define Raster_Err_Neg_Height   Raster_Err_Raster_Negative_Height
-#define Raster_Err_Invalid      Raster_Err_Invalid_Outline
-#define Raster_Err_Unsupported  Raster_Err_Cannot_Render_Glyph
 
 
 #endif /* !STANDALONE_ */
@@ -660,7 +654,7 @@
 
     if ( ras.top >= ras.maxBuff )
     {
-      ras.error = FT_THROW( Overflow );
+      ras.error = FT_THROW( Raster_Overflow );
       return FAILURE;
     }
 
@@ -689,7 +683,7 @@
 
     default:
       FT_ERROR(( "New_Profile: invalid profile direction\n" ));
-      ras.error = FT_THROW( Invalid );
+      ras.error = FT_THROW( Invalid_Outline );
       return FAILURE;
     }
 
@@ -731,7 +725,7 @@
     if ( h < 0 )
     {
       FT_ERROR(( "End_Profile: negative height encountered\n" ));
-      ras.error = FT_THROW( Neg_Height );
+      ras.error = FT_THROW( Raster_Negative_Height );
       return FAILURE;
     }
 
@@ -767,7 +761,7 @@
     if ( ras.top >= ras.maxBuff )
     {
       FT_TRACE1(( "overflow in End_Profile\n" ));
-      ras.error = FT_THROW( Overflow );
+      ras.error = FT_THROW( Raster_Overflow );
       return FAILURE;
     }
 
@@ -822,7 +816,7 @@
       ras.maxBuff--;
       if ( ras.maxBuff <= ras.top )
       {
-        ras.error = FT_THROW( Overflow );
+        ras.error = FT_THROW( Raster_Overflow );
         return FAILURE;
       }
       ras.numTurns++;
@@ -1086,7 +1080,7 @@
     size = e2 - e1 + 1;
     if ( ras.top + size >= ras.maxBuff )
     {
-      ras.error = FT_THROW( Overflow );
+      ras.error = FT_THROW( Raster_Overflow );
       return FAILURE;
     }
 
@@ -1271,7 +1265,7 @@
     if ( ( top + TRUNC( e2 - e ) + 1 ) >= ras.maxBuff )
     {
       ras.top   = top;
-      ras.error = FT_THROW( Overflow );
+      ras.error = FT_THROW( Raster_Overflow );
       return FAILURE;
     }
 
@@ -1967,7 +1961,7 @@
     return SUCCESS;
 
   Invalid_Outline:
-    ras.error = FT_THROW( Invalid );
+    ras.error = FT_THROW( Invalid_Outline );
 
   Fail:
     return FAILURE;
@@ -2744,7 +2738,7 @@
     /* check the Y-turns */
     if ( ras.numTurns == 0 )
     {
-      ras.error = FT_THROW( Invalid );
+      ras.error = FT_THROW( Invalid_Outline );
       return FAILURE;
     }
 
@@ -3051,14 +3045,14 @@
 
       ras.top = ras.buff;
 
-      ras.error = Raster_Err_None;
+      ras.error = Raster_Err_Ok;
 
       if ( Convert_Glyph( RAS_VARS flipped ) )
       {
-        if ( ras.error != Raster_Err_Overflow )
+        if ( ras.error != Raster_Err_Raster_Overflow )
           return FAILURE;
 
-        ras.error = Raster_Err_None;
+        ras.error = Raster_Err_Ok;
 
         /* sub-banding */
 
@@ -3074,7 +3068,7 @@
         if ( ras.band_top >= 7 || k < i )
         {
           ras.band_top = 0;
-          ras.error    = FT_THROW( Invalid );
+          ras.error    = FT_THROW( Invalid_Outline );
 
           return ras.error;
         }
@@ -3174,7 +3168,7 @@
         return error;
     }
 
-    return Raster_Err_None;
+    return Raster_Err_Ok;
   }
 
 
@@ -3292,38 +3286,36 @@
 
 
     if ( !raster )
-      return FT_THROW( Not_Ini );
+      return FT_THROW( Raster_Uninitialized );
 
     if ( !outline )
-      return FT_THROW( Invalid );
+      return FT_THROW( Invalid_Outline );
 
     /* return immediately if the outline is empty */
     if ( outline->n_points == 0 || outline->n_contours <= 0 )
-      return Raster_Err_None;
+      return Raster_Err_Ok;
 
     if ( !outline->contours || !outline->points )
-      return FT_THROW( Invalid );
+      return FT_THROW( Invalid_Outline );
 
     if ( outline->n_points !=
            outline->contours[outline->n_contours - 1] + 1 )
-      return FT_THROW( Invalid );
+      return FT_THROW( Invalid_Outline );
 
     /* this version of the raster does not support direct rendering, sorry */
-    if ( params->flags & FT_RASTER_FLAG_DIRECT )
-      return FT_THROW( Unsupported );
-
-    if ( params->flags & FT_RASTER_FLAG_AA )
-      return FT_THROW( Unsupported );
+    if ( params->flags & FT_RASTER_FLAG_DIRECT ||
+         params->flags & FT_RASTER_FLAG_AA     )
+      return FT_THROW( Cannot_Render_Glyph );
 
     if ( !target_map )
-      return FT_THROW( Invalid );
+      return FT_THROW( Invalid_Argument );
 
     /* nothing to do */
     if ( !target_map->width || !target_map->rows )
-      return Raster_Err_None;
+      return Raster_Err_Ok;
 
     if ( !target_map->buffer )
-      return FT_THROW( Invalid );
+      return FT_THROW( Invalid_Argument );
 
     ras.outline = *outline;
     ras.target  = *target_map;
