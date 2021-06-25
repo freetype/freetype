@@ -1,3 +1,28 @@
+2021-06-25  Werner Lemberg  <wl@gnu.org>
+
+	[base] Add trace level to logging output.
+
+	Some practical debugging work has shown that displaying level X of
+	an `FT_TRACEX` macro in the output of `FT2_DEBUG="...  -v"` would be
+	very helpful to find out which trace level should be selected.  As
+	an example, we now get output like
+
+	```
+	[ttobjs:2]    TTF driver
+	[ttobjs:2]      SFNT driver
+	[sfobjs:2]      not a font using the SFNT container format
+	[t1objs:2]    Type 1 driver
+	[stream:7]    FT_Stream_EnterFrame: 14 bytes
+	```
+
+	* include/freetype/internal/ftdebug.h (FT_LOGGING_TAGX): New macro.
+	(FT_LOG): Use it to add the trace level to the logging tag.
+
+	* include/freetype/internal/fttrace.h (FT_MAX_TRACE_LEVEL_LENGTH):
+	Adjust.
+
+	* docs/DEBUG: Updated.
+
 2021-06-24  Alexei Podtelezhnikov  <apodtele@gmail.com>
 
 	[smooth, raster] Fix up and align error codes.

@@ -168,7 +168,7 @@ behaviour of FreeType at runtime.
     If `FT_DEBUG_LOGGING' is defined, two more options are available.
 
     * -v: Print also  the name of FreeType's component  from which the
-          current log is produced.
+          current log is produced, together with the tracing level.
 
     * -t: Print also the time.
 
@@ -176,7 +176,7 @@ behaviour of FreeType at runtime.
 
       FT2_DEBUG="any:7 memory:5 -vt"
 
-        => [20:32:02:44969 ttload]    table directory loaded
+        => [20:32:02:44969 ttload:2]    table directory loaded
 
       FT2_DEBUG="any:7 memory:5 -t"
 
@@ -184,7 +184,7 @@ behaviour of FreeType at runtime.
 
       FT2_DEBUG="any:7 memory:5 -v"
 
-        => [ttload]    table directory loaded
+        => [ttload:2]    table directory loaded
 
 
   FT_LOGGING_FILE

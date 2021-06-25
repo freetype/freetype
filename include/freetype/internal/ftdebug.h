@@ -114,11 +114,16 @@ FT_BEGIN_HEADER
 #define FT_LOGGING_TAG( x )   FT_LOGGING_TAG_( x )
 #define FT_LOGGING_TAG_( x )  #x
 
+  /* we need two macros to convert the component and the trace level */
+  /* to a string that combines them                                  */
+#define FT_LOGGING_TAGX( x, y )   FT_LOGGING_TAGX_( x, y )
+#define FT_LOGGING_TAGX_( x, y )  #x ":" #y
+
 
 #define FT_LOG( level, varformat )                                         \
           do                                                               \
           {                                                                \
-            const char*  dlg_tag = FT_LOGGING_TAG( FT_COMPONENT );         \
+            const char*  dlg_tag = FT_LOGGING_TAGX( FT_COMPONENT, level ); \
                                                                            \
                                                                            \
             ft_add_tag( dlg_tag );                                         \
