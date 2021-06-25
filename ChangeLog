@@ -1,3 +1,7 @@
+2021-06-25  Alexei Podtelezhnikov  <apodtele@gmail.com>
+
+	* src/raster/ftraster.c (Render_Single_Pass): Remove dead code.
+
 2021-06-25  Werner Lemberg  <wl@gnu.org>
 
 	[base] Add trace level to logging output.

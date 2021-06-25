@@ -149,9 +149,6 @@
   /*************************************************************************/
   /*************************************************************************/
 
-  /* define DEBUG_RASTER if you want to compile a debugging version */
-/* #define DEBUG_RASTER */
-
 
   /*************************************************************************/
   /*************************************************************************/
@@ -3052,13 +3049,7 @@
         if ( ras.error != Raster_Err_Raster_Overflow )
           return ras.error;
 
-        ras.error = Raster_Err_Ok;
-
         /* sub-banding */
-
-#ifdef DEBUG_RASTER
-        ClearBand( RAS_VARS TRUNC( ras.minY ), TRUNC( ras.maxY ) );
-#endif
 
         i = ras.band_stack[ras.band_top].y_min;
         j = ras.band_stack[ras.band_top].y_max;
@@ -3068,9 +3059,8 @@
         if ( ras.band_top >= 7 || k < i )
         {
           ras.band_top = 0;
-          ras.error    = FT_THROW( Raster_Overflow );
 
-          return ras.error;
+          return ras.error;  /* still Raster_Overflow */
         }
 
         ras.band_stack[ras.band_top + 1].y_min = k;
