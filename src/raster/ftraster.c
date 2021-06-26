@@ -529,7 +529,6 @@
 
     black_TBand  band_stack[16];    /* band stack used for sub-banding     */
                                     /* enough for signed short bands       */
-    Int          band_top;          /* band stack top                      */
 
   };
 
@@ -3034,12 +3033,13 @@
   Render_Single_Pass( RAS_ARGS Bool  flipped )
   {
     Short  i, j, k;
+    Int    band_top = 0;
 
 
-    while ( ras.band_top >= 0 )
+    do
     {
-      ras.maxY = (Long)ras.band_stack[ras.band_top].y_max * ras.precision;
-      ras.minY = (Long)ras.band_stack[ras.band_top].y_min * ras.precision;
+      ras.maxY = (Long)ras.band_stack[band_top].y_max * ras.precision;
+      ras.minY = (Long)ras.band_stack[band_top].y_min * ras.precision;
 
       ras.top = ras.buff;
 
@@ -3052,33 +3052,29 @@
 
         /* sub-banding */
 
-        i = ras.band_stack[ras.band_top].y_min;
-        j = ras.band_stack[ras.band_top].y_max;
+        i = ras.band_stack[band_top].y_min;
+        j = ras.band_stack[band_top].y_max;
 
         if ( i == j )
-        {
-          ras.band_top = 0;
-
           return ras.error;  /* still Raster_Overflow */
-        }
 
         k = (Short)( ( i + j ) / 2 );
 
-        ras.band_stack[ras.band_top + 1].y_min = (Short)( k + 1 );
-        ras.band_stack[ras.band_top + 1].y_max = j;
+        ras.band_stack[band_top].y_max = k;
 
-        ras.band_stack[ras.band_top].y_max = k;
+        ras.band_stack[band_top + 1].y_min = (Short)( k + 1 );
+        ras.band_stack[band_top + 1].y_max = j;
 
-        ras.band_top++;
+        band_top++;
       }
       else
       {
         if ( ras.fProfile )
           if ( Draw_Sweep( RAS_VAR ) )
              return ras.error;
-        ras.band_top--;
+        band_top--;
       }
-    }
+    } while ( band_top >= 0 );
 
     return Raster_Err_Ok;
   }
@@ -3128,7 +3124,6 @@
     ras.Proc_Sweep_Drop = Vertical_Sweep_Drop;
     ras.Proc_Sweep_Step = Vertical_Sweep_Step;
 
-    ras.band_top            = 0;
     ras.band_stack[0].y_min = 0;
     ras.band_stack[0].y_max = (Short)( ras.target.rows - 1 );
 
@@ -3151,7 +3146,6 @@
       ras.Proc_Sweep_Drop = Horizontal_Sweep_Drop;
       ras.Proc_Sweep_Step = Horizontal_Sweep_Step;
 
-      ras.band_top            = 0;
       ras.band_stack[0].y_min = 0;
       ras.band_stack[0].y_max = (Short)( ras.target.width - 1 );
 

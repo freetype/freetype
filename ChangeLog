@@ -1,5 +1,13 @@
 2021-06-25  Alexei Podtelezhnikov  <apodtele@gmail.com>
 
+	[raster] Make `band_top' local variable.
+
+	* src/raster/ftraster.c (black_TWorker): Move `band_top' from here...
+	(Render_Single_Pass): ... to here, and refactor.
+	(Render_Glyph): Updated.
+
+2021-06-25  Alexei Podtelezhnikov  <apodtele@gmail.com>
+
 	[raster] Adjust sub-band bisecting limits.
 
 	We can bisect a band until it is just a single scan line.  This might
