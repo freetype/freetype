@@ -528,6 +528,7 @@
     TPoint      arcs[3 * MaxBezier + 1]; /* The Bezier stack               */
 
     black_TBand  band_stack[16];    /* band stack used for sub-banding     */
+                                    /* enough for signed short bands       */
     Int          band_top;          /* band stack top                      */
 
   };
@@ -3054,19 +3055,19 @@
         i = ras.band_stack[ras.band_top].y_min;
         j = ras.band_stack[ras.band_top].y_max;
 
-        k = (Short)( ( i + j ) / 2 );
-
-        if ( ras.band_top >= 7 || k < i )
+        if ( i == j )
         {
           ras.band_top = 0;
 
           return ras.error;  /* still Raster_Overflow */
         }
 
-        ras.band_stack[ras.band_top + 1].y_min = k;
+        k = (Short)( ( i + j ) / 2 );
+
+        ras.band_stack[ras.band_top + 1].y_min = (Short)( k + 1 );
         ras.band_stack[ras.band_top + 1].y_max = j;
 
-        ras.band_stack[ras.band_top].y_max = (Short)( k - 1 );
+        ras.band_stack[ras.band_top].y_max = k;
 
         ras.band_top++;
       }

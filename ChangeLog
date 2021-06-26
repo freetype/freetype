@@ -1,5 +1,15 @@
 2021-06-25  Alexei Podtelezhnikov  <apodtele@gmail.com>
 
+	[raster] Adjust sub-band bisecting limits.
+
+	We can bisect a band until it is just a single scan line.  This might
+	be slow and cause time-outs but if we need to impose limits it should
+	be elsewhere.
+
+	* src/raster/ftraster.c (Render_Single_Pass): Tweak sub-banding.
+
+2021-06-25  Alexei Podtelezhnikov  <apodtele@gmail.com>
+
 	* src/raster/ftraster.c (Render_Single_Pass): Remove dead code.
 
 2021-06-25  Werner Lemberg  <wl@gnu.org>
