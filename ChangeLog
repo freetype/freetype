@@ -1,3 +1,21 @@
+2021-06-28  Dominik Röttsches  <drott@chromium.org>
+
+	[sfnt] Improve paint limit checks
+
+	Paint tables can appear before the `base_glyphs_v1` offset if the
+	font is produced with the layer list before the base glyph list.  In
+	this case paint tables can occur after the layer list but before the
+	base glyph list.  Checks in the 'COLR' v1 code were rejecting fonts
+	with this layout.  Improve these checks by calculating a minimum
+	offset after which paint tables can occur and use that in safety
+	checks.
+
+	* src/sfnt/ttcolr.c (Colr, tt_face_load_colr): Declare
+	`paint_start_v1` and calculate that as the minimum of the end of
+	layer list and base glyph list.
+	(get_child_table_pointer, read_paint, tt_face_get_paint_layers):
+	Use that in safety checks.
+
 2021-06-28  Alexei Podtelezhnikov  <apodtele@gmail.com>
 
 	[raster] Clean up vertical sweep.
@@ -202,7 +220,7 @@
 
 2021-06-09  Alexei Podtelezhnikov  <apodtele@gmail.com>
 
-	* src/truetype/ttinterp.c (TT_RunIns): Optimize tracing. 
+	* src/truetype/ttinterp.c (TT_RunIns): Optimize tracing.
 
 2021-06-09  Alexei Podtelezhnikov  <apodtele@gmail.com>
 

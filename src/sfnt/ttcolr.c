@@ -41,7 +41,7 @@
 
   /* NOTE: These are the table sizes calculated through the specs. */
 #define BASE_GLYPH_SIZE                   6U
-#define BASE_GLYPH_V1_RECORD_SIZE         6U
+#define BASE_GLYPH_PAINT_RECORD_SIZE      6U
 #define LAYER_V1_LIST_PAINT_OFFSET_SIZE   4U
 #define LAYER_V1_LIST_NUM_LAYERS_SIZE     4U
 #define COLOR_STOP_SIZE                   6U
@@ -82,6 +82,13 @@
 
     FT_ULong  num_layers_v1;
     FT_Byte*  layers_v1;
+
+    /*
+     * Paint tables start at the minimum of the end of the LayerList and the
+     * end of the BaseGlyphList.  Record this location in a field here for
+     * safety checks when accessing paint tables.
+     */
+    FT_Byte*  paints_start_v1;
 
     /* The memory that backs up the `COLR' table. */
     void*     table;
@@ -170,7 +177,7 @@
       p1                 = (FT_Byte*)( table + base_glyphs_offset_v1 );
       num_base_glyphs_v1 = FT_PEEK_ULONG( p1 );
 
-      if ( num_base_glyphs_v1 * BASE_GLYPH_V1_RECORD_SIZE >
+      if ( num_base_glyphs_v1 * BASE_GLYPH_PAINT_RECORD_SIZE >
              table_size - base_glyphs_offset_v1 )
         goto InvalidTable;
 
@@ -185,8 +192,18 @@
       p1            = (FT_Byte*)( table + layer_offset_v1 );
       num_layers_v1 = FT_PEEK_ULONG( p1 );
 
+      if ( num_layers_v1 * LAYER_V1_LIST_PAINT_OFFSET_SIZE >
+             table_size - layer_offset_v1 )
+        goto InvalidTable;
+
       colr->num_layers_v1 = num_layers_v1;
       colr->layers_v1     = p1;
+
+      colr->paints_start_v1 =
+        FT_MIN( colr->base_glyphs_v1 +
+                  colr->num_base_glyphs_v1 * BASE_GLYPH_PAINT_RECORD_SIZE,
+                colr->layers_v1 +
+                  colr->num_layers_v1 * LAYER_V1_LIST_PAINT_OFFSET_SIZE );
     }
 
     colr->base_glyphs = (FT_Byte*)( table + base_glyph_offset );
@@ -367,7 +384,7 @@
 
     child_table_p = (FT_Byte*)( paint_base + paint_offset );
 
-    if ( child_table_p < colr->base_glyphs_v1                          ||
+    if ( child_table_p < colr->paints_start_v1                         ||
          child_table_p >= ( (FT_Byte*)colr->table + colr->table_size ) )
       return 0;
 
@@ -388,7 +405,7 @@
     if ( !p || !colr || !colr->table )
       return 0;
 
-    if ( p < colr->base_glyphs_v1                          ||
+    if ( p < colr->paints_start_v1                         ||
          p >= ( (FT_Byte*)colr->table + colr->table_size ) )
       return 0;
 
@@ -608,7 +625,7 @@
        * skip `numBaseGlyphV1Records` by adding 4 to start binary search
        * in the array of `BaseGlyphV1Record`.
        */
-      FT_Byte  *p = base_glyph_begin + 4 + mid * BASE_GLYPH_V1_RECORD_SIZE;
+      FT_Byte  *p = base_glyph_begin + 4 + mid * BASE_GLYPH_PAINT_RECORD_SIZE;
 
       FT_UShort  gid = FT_NEXT_USHORT( p );
 
@@ -704,7 +721,7 @@
     /*
      * First ensure that p is within COLRv1.
      */
-    if ( p < colr->base_glyphs_v1                          ||
+    if ( p < colr->layers_v1                               ||
          p >= ( (FT_Byte*)colr->table + colr->table_size ) )
       return 0;
 
@@ -731,7 +748,7 @@
 
     p_paint = (FT_Byte*)( colr->layers_v1 + paint_offset );
 
-    if ( p_paint < colr->base_glyphs_v1                          ||
+    if ( p_paint < colr->paints_start_v1                         ||
          p_paint >= ( (FT_Byte*)colr->table + colr->table_size ) )
       return 0;
 
