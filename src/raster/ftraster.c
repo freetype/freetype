@@ -417,8 +417,8 @@
 
   /* prototypes used for sweep function dispatch */
   typedef void
-  Function_Sweep_Init( RAS_ARGS Short*  min,
-                                Short*  max );
+  Function_Sweep_Init( RAS_ARGS Short  min,
+                                Short  max );
 
   typedef void
   Function_Sweep_Span( RAS_ARGS Short       y,
@@ -487,6 +487,7 @@
 
     UShort      bWidth;             /* target bitmap width                 */
     PByte       bOrigin;            /* target bitmap bottom-left origin    */
+    PByte       bLine;              /* target bitmap current line          */
 
     Long        lastX, lastY;
     Long        minY, maxY;
@@ -507,9 +508,6 @@
 
     FT_Bitmap   target;             /* description of target bit/pixmap    */
     FT_Outline  outline;
-
-    Long        traceOfs;           /* current offset in target bitmap     */
-    Short       traceIncr;          /* sweep's increment in target bitmap  */
 
     /* dispatch variables */
 
@@ -2205,16 +2203,13 @@
    */
 
   static void
-  Vertical_Sweep_Init( RAS_ARGS Short*  min,
-                                Short*  max )
+  Vertical_Sweep_Init( RAS_ARGS Short  min,
+                                Short  max )
   {
-    Long  pitch = ras.target.pitch;
-
     FT_UNUSED( max );
 
 
-    ras.traceIncr = (Short)-pitch;
-    ras.traceOfs  = -*min * pitch;
+    ras.bLine = ras.bOrigin - min * ras.target.pitch;
   }
 
 
@@ -2276,7 +2271,7 @@
       f1 = (Byte)  ( 0xFF >> ( e1 & 7 ) );
       f2 = (Byte) ~( 0x7F >> ( e2 & 7 ) );
 
-      target = ras.bOrigin + ras.traceOfs + c1;
+      target = ras.bLine + c1;
       c2 -= c1;
 
       if ( c2 > 0 )
@@ -2428,8 +2423,8 @@
         c1 = (Short)( e1 >> 3 );
         f1 = (Short)( e1 &  7 );
 
-        if ( e1 >= 0 && e1 < ras.bWidth                      &&
-             ras.bOrigin[ras.traceOfs + c1] & ( 0x80 >> f1 ) )
+        if ( e1 >= 0 && e1 < ras.bWidth     &&
+             ras.bLine[c1] & ( 0x80 >> f1 ) )
           goto Exit;
       }
       else
@@ -2445,7 +2440,7 @@
       c1 = (Short)( e1 >> 3 );
       f1 = (Short)( e1 & 7 );
 
-      ras.bOrigin[ras.traceOfs + c1] |= (char)( 0x80 >> f1 );
+      ras.bLine[c1] |= (char)( 0x80 >> f1 );
     }
 
   Exit:
@@ -2456,7 +2451,7 @@
   static void
   Vertical_Sweep_Step( RAS_ARG )
   {
-    ras.traceOfs += ras.traceIncr;
+    ras.bLine -= ras.target.pitch;
   }
 
 
@@ -2470,8 +2465,8 @@
    */
 
   static void
-  Horizontal_Sweep_Init( RAS_ARGS Short*  min,
-                                  Short*  max )
+  Horizontal_Sweep_Init( RAS_ARGS Short  min,
+                                  Short  max )
   {
     /* nothing, really */
     FT_UNUSED_RASTER;
@@ -2741,7 +2736,7 @@
 
     /* now initialize the sweep */
 
-    ras.Proc_Sweep_Init( RAS_VARS &min_Y, &max_Y );
+    ras.Proc_Sweep_Init( RAS_VARS min_Y, max_Y );
 
     /* then compute the distance of each profile from min_Y */
 

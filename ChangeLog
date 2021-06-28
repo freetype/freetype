@@ -1,3 +1,12 @@
+2021-06-28  Alexei Podtelezhnikov  <apodtele@gmail.com>
+
+	[raster] Clean up vertical sweep.
+
+	* src/raster/ftraster.c (black_TWorker): Replace the current line
+	offset with the pointer and drop the increment.
+	(Function_Sweep_Init): Take values as arguments instead of pointers.
+	(Vertical_Sweep_*, Horizontal_Sweep_Init, Draw_Sweep): Updated.
+
 2021-06-25  Alexei Podtelezhnikov  <apodtele@gmail.com>
 
 	[raster] Make `band_top' local variable.
