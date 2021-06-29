@@ -484,7 +484,7 @@ FT_BEGIN_HEADER
    *
    * @since:
    *   2.11 -- **currently experimental only!**  There might be changes
-   *   without retaining backward-compatibility of both the API and ABI.
+   *   without retaining backward compatibility of both the API and ABI.
    *
    */
   typedef enum  FT_PaintFormat_
@@ -532,7 +532,7 @@ FT_BEGIN_HEADER
    *
    * @since:
    *   2.11 -- **currently experimental only!**  There might be changes
-   *   without retaining backward-compatibility of both the API and ABI.
+   *   without retaining backward compatibility of both the API and ABI.
    *
    */
   typedef struct  FT_ColorStopIterator_
@@ -563,7 +563,7 @@ FT_BEGIN_HEADER
    *
    * @since:
    *   2.11 -- **currently experimental only!**  There might be changes
-   *   without retaining backward-compatibility of both the API and ABI.
+   *   without retaining backward compatibility of both the API and ABI.
    *
    */
   typedef struct  FT_ColorIndex_
@@ -592,7 +592,7 @@ FT_BEGIN_HEADER
    *
    * @since:
    *   2.11 -- **currently experimental only!**  There might be changes
-   *   without retaining backward-compatibility of both the API and ABI.
+   *   without retaining backward compatibility of both the API and ABI.
    *
    */
   typedef struct  FT_ColorStop_
@@ -615,7 +615,7 @@ FT_BEGIN_HEADER
    *
    * @since:
    *   2.11 -- **currently experimental only!**  There might be changes
-   *   without retaining backward-compatibility of both the API and ABI.
+   *   without retaining backward compatibility of both the API and ABI.
    *
    */
   typedef enum  FT_PaintExtend_
@@ -647,7 +647,7 @@ FT_BEGIN_HEADER
    *
    * @since:
    *   2.11 -- **currently experimental only!**  There might be changes
-   *   without retaining backward-compatibility of both the API and ABI.
+   *   without retaining backward compatibility of both the API and ABI.
    *
    */
   typedef struct  FT_ColorLine_
@@ -693,7 +693,7 @@ FT_BEGIN_HEADER
    *
    * @since:
    *   2.11 -- **currently experimental only!**  There might be changes
-   *   without retaining backward-compatibility of both the API and ABI.
+   *   without retaining backward compatibility of both the API and ABI.
    *
    */
   typedef struct  FT_Affine_23_
@@ -716,7 +716,7 @@ FT_BEGIN_HEADER
    *
    * @since:
    *   2.11 -- **currently experimental only!**  There might be changes
-   *   without retaining backward-compatibility of both the API and ABI.
+   *   without retaining backward compatibility of both the API and ABI.
    *
    */
   typedef enum  FT_Composite_Mode_
@@ -779,7 +779,7 @@ FT_BEGIN_HEADER
    *
    * @since:
    *   2.11 -- **currently experimental only!**  There might be changes
-   *   without retaining backward-compatibility of both the API and ABI.
+   *   without retaining backward compatibility of both the API and ABI.
    *
    */
   typedef struct  FT_Opaque_Paint_
@@ -808,7 +808,7 @@ FT_BEGIN_HEADER
    *
    * @since:
    *   2.11 -- **currently experimental only!**  There might be changes
-   *   without retaining backward-compatibility of both the API and ABI.
+   *   without retaining backward compatibility of both the API and ABI.
    *
    */
   typedef struct  FT_PaintColrLayers_
@@ -835,7 +835,7 @@ FT_BEGIN_HEADER
    *
    * @since:
    *   2.11 -- **currently experimental only!**  There might be changes
-   *   without retaining backward-compatibility of both the API and ABI.
+   *   without retaining backward compatibility of both the API and ABI.
    *
    */
   typedef struct  FT_PaintSolid_
@@ -873,7 +873,7 @@ FT_BEGIN_HEADER
    *
    * @since:
    *   2.11 -- **currently experimental only!**  There might be changes
-   *   without retaining backward-compatibility of both the API and ABI.
+   *   without retaining backward compatibility of both the API and ABI.
    *
    */
   typedef struct  FT_PaintLinearGradient_
@@ -922,7 +922,7 @@ FT_BEGIN_HEADER
    *
    * @since:
    *   2.11 -- **currently experimental only!**  There might be changes
-   *   without retaining backward-compatibility of both the API and ABI.
+   *   without retaining backward compatibility of both the API and ABI.
    *
    */
   typedef struct  FT_PaintRadialGradient_
@@ -969,7 +969,7 @@ FT_BEGIN_HEADER
    *
    * @since:
    *   2.11 -- **currently experimental only!**  There might be changes
-   *   without retaining backward-compatibility of both the API and ABI.
+   *   without retaining backward compatibility of both the API and ABI.
    *
    */
   typedef struct  FT_PaintSweepGradient_
@@ -1002,7 +1002,7 @@ FT_BEGIN_HEADER
    *
    * @since:
    *   2.11 -- **currently experimental only!**  There might be changes
-   *   without retaining backward-compatibility of both the API and ABI.
+   *   without retaining backward compatibility of both the API and ABI.
    *
    */
   typedef struct  FT_PaintGlyph_
@@ -1028,7 +1028,7 @@ FT_BEGIN_HEADER
    *
    * @since:
    *   2.11 -- **currently experimental only!**  There might be changes
-   *   without retaining backward-compatibility of both the API and ABI.
+   *   without retaining backward compatibility of both the API and ABI.
    *
    */
   typedef struct  FT_PaintColrGlyph_
@@ -1055,7 +1055,7 @@ FT_BEGIN_HEADER
    *
    * @since:
    *   2.11 -- **currently experimental only!**  There might be changes
-   *   without retaining backward-compatibility of both the API and ABI.
+   *   without retaining backward compatibility of both the API and ABI.
    *
    */
   typedef struct  FT_PaintTransform_
@@ -1088,7 +1088,7 @@ FT_BEGIN_HEADER
    *
    * @since:
    *   2.11 -- **currently experimental only!**  There might be changes
-   *   without retaining backward-compatibility of both the API and ABI.
+   *   without retaining backward compatibility of both the API and ABI.
    *
    */
   typedef struct  FT_PaintTranslate_
@@ -1128,7 +1128,7 @@ FT_BEGIN_HEADER
    *
    * @since:
    *   2.11 -- **currently experimental only!**  There might be changes
-   *   without retaining backward-compatibility of both the API and ABI.
+   *   without retaining backward compatibility of both the API and ABI.
    *
    */
 
@@ -1173,7 +1173,7 @@ FT_BEGIN_HEADER
    *
    * @since:
    *   2.11 -- **currently experimental only!**  There might be changes
-   *   without retaining backward-compatibility of both the API and ABI.
+   *   without retaining backward compatibility of both the API and ABI.
    *
    */
   typedef struct  FT_PaintSkew_
@@ -1214,7 +1214,7 @@ FT_BEGIN_HEADER
    *
    * @since:
    *   2.11 -- **currently experimental only!**  There might be changes
-   *   without retaining backward-compatibility of both the API and ABI.
+   *   without retaining backward compatibility of both the API and ABI.
    *
    */
   typedef struct  FT_PaintComposite_
@@ -1260,7 +1260,7 @@ FT_BEGIN_HEADER
    *
    * @since:
    *   2.11 -- **currently experimental only!**  There might be changes
-   *   without retaining backward-compatibility of both the API and ABI.
+   *   without retaining backward compatibility of both the API and ABI.
    *
    */
   typedef struct  FT_COLR_Paint_
@@ -1306,7 +1306,7 @@ FT_BEGIN_HEADER
    *
    * @since:
    *   2.11 -- **currently experimental only!**  There might be changes
-   *   without retaining backward-compatibility of both the API and ABI.
+   *   without retaining backward compatibility of both the API and ABI.
    *
    */
   typedef enum  FT_Color_Root_Transform_
@@ -1401,7 +1401,7 @@ FT_BEGIN_HEADER
    *
    * @since:
    *   2.11 -- **currently experimental only!**  There might be changes
-   *   without retaining backward-compatibility of both the API and ABI.
+   *   without retaining backward compatibility of both the API and ABI.
    *
    */
   FT_EXPORT( FT_Bool )
@@ -1451,7 +1451,7 @@ FT_BEGIN_HEADER
    *
    * @since:
    *   2.11 -- **currently experimental only!**  There might be changes
-   *   without retaining backward-compatibility of both the API and ABI.
+   *   without retaining backward compatibility of both the API and ABI.
    *
    */
   FT_EXPORT( FT_Bool )
@@ -1494,7 +1494,7 @@ FT_BEGIN_HEADER
    *
    * @since:
    *   2.11 -- **currently experimental only!**  There might be changes
-   *   without retaining backward-compatibility of both the API and ABI.
+   *   without retaining backward compatibility of both the API and ABI.
    *
    */
   FT_EXPORT( FT_Bool )
@@ -1532,7 +1532,7 @@ FT_BEGIN_HEADER
    *
    * @since:
    *   2.11 -- **currently experimental only!**  There might be changes
-   *   without retaining backward-compatibility of both the API and ABI.
+   *   without retaining backward compatibility of both the API and ABI.
    *
    */
   FT_EXPORT( FT_Bool )
