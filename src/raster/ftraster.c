@@ -483,8 +483,6 @@
 
     Int         numTurns;           /* number of Y-turns in outline        */
 
-    TPoint*     arc;                /* current Bezier arc pointer          */
-
     UShort      bWidth;             /* target bitmap width                 */
     PByte       bOrigin;            /* target bitmap bottom-left origin    */
     PByte       bLine;              /* target bitmap current line          */
@@ -522,8 +520,6 @@
                                     /* should be performed to control      */
                                     /* drop-out accurately when calling    */
                                     /* Render_Glyph.                       */
-
-    TPoint      arcs[3 * MaxBezier + 1]; /* The Bezier stack               */
 
     black_TBand  band_stack[16];    /* band stack used for sub-banding     */
                                     /* enough for signed short bands       */
@@ -1198,6 +1194,7 @@
    */
   static Bool
   Bezier_Up( RAS_ARGS Int        degree,
+                      TPoint*    arc,
                       TSplitter  splitter,
                       Long       miny,
                       Long       maxy )
@@ -1205,13 +1202,11 @@
     Long   y1, y2, e, e2, e0;
     Short  f1;
 
-    TPoint*  arc;
     TPoint*  start_arc;
 
     PLong top;
 
 
-    arc = ras.arc;
     y1  = arc[degree].y;
     y2  = arc[0].y;
     top = ras.top;
@@ -1303,7 +1298,6 @@
 
   Fin:
     ras.top  = top;
-    ras.arc -= degree;
     return SUCCESS;
   }
 
@@ -1335,11 +1329,11 @@
    */
   static Bool
   Bezier_Down( RAS_ARGS Int        degree,
+                        TPoint*    arc,
                         TSplitter  splitter,
                         Long       miny,
                         Long       maxy )
   {
-    TPoint*  arc = ras.arc;
     Bool     result, fresh;
 
 
@@ -1351,7 +1345,7 @@
 
     fresh = ras.fresh;
 
-    result = Bezier_Up( RAS_VARS degree, splitter, -maxy, -miny );
+    result = Bezier_Up( RAS_VARS degree, arc, splitter, -maxy, -miny );
 
     if ( fresh && !ras.fresh )
       ras.cProfile->start = -ras.cProfile->start;
@@ -1492,22 +1486,24 @@
   {
     Long     y1, y2, y3, x3, ymin, ymax;
     TStates  state_bez;
+    TPoint   arcs[2 * MaxBezier + 1]; /* The Bezier stack           */
+    TPoint*  arc;                     /* current Bezier arc pointer */
 
 
-    ras.arc      = ras.arcs;
-    ras.arc[2].x = ras.lastX;
-    ras.arc[2].y = ras.lastY;
-    ras.arc[1].x = cx;
-    ras.arc[1].y = cy;
-    ras.arc[0].x = x;
-    ras.arc[0].y = y;
+    arc      = arcs;
+    arc[2].x = ras.lastX;
+    arc[2].y = ras.lastY;
+    arc[1].x = cx;
+    arc[1].y = cy;
+    arc[0].x = x;
+    arc[0].y = y;
 
     do
     {
-      y1 = ras.arc[2].y;
-      y2 = ras.arc[1].y;
-      y3 = ras.arc[0].y;
-      x3 = ras.arc[0].x;
+      y1 = arc[2].y;
+      y2 = arc[1].y;
+      y3 = arc[0].y;
+      x3 = arc[0].x;
 
       /* first, categorize the Bezier arc */
 
@@ -1525,13 +1521,13 @@
       if ( y2 < ymin || y2 > ymax )
       {
         /* this arc has no given direction, split it! */
-        Split_Conic( ras.arc );
-        ras.arc += 2;
+        Split_Conic( arc );
+        arc += 2;
       }
       else if ( y1 == y3 )
       {
         /* this arc is flat, ignore it and pop it from the Bezier stack */
-        ras.arc -= 2;
+        arc -= 2;
       }
       else
       {
@@ -1558,15 +1554,18 @@
         /* now call the appropriate routine */
         if ( state_bez == Ascending_State )
         {
-          if ( Bezier_Up( RAS_VARS 2, Split_Conic, ras.minY, ras.maxY ) )
+          if ( Bezier_Up( RAS_VARS 2, arc, Split_Conic,
+                                   ras.minY, ras.maxY ) )
             goto Fail;
         }
         else
-          if ( Bezier_Down( RAS_VARS 2, Split_Conic, ras.minY, ras.maxY ) )
+          if ( Bezier_Down( RAS_VARS 2, arc, Split_Conic,
+                                     ras.minY, ras.maxY ) )
             goto Fail;
+        arc -= 2;
       }
 
-    } while ( ras.arc >= ras.arcs );
+    } while ( arc >= arcs );
 
     ras.lastX = x3;
     ras.lastY = y3;
@@ -1621,25 +1620,27 @@
   {
     Long     y1, y2, y3, y4, x4, ymin1, ymax1, ymin2, ymax2;
     TStates  state_bez;
+    TPoint   arcs[3 * MaxBezier + 1]; /* The Bezier stack           */
+    TPoint*  arc;                     /* current Bezier arc pointer */
 
 
-    ras.arc      = ras.arcs;
-    ras.arc[3].x = ras.lastX;
-    ras.arc[3].y = ras.lastY;
-    ras.arc[2].x = cx1;
-    ras.arc[2].y = cy1;
-    ras.arc[1].x = cx2;
-    ras.arc[1].y = cy2;
-    ras.arc[0].x = x;
-    ras.arc[0].y = y;
+    arc      = arcs;
+    arc[3].x = ras.lastX;
+    arc[3].y = ras.lastY;
+    arc[2].x = cx1;
+    arc[2].y = cy1;
+    arc[1].x = cx2;
+    arc[1].y = cy2;
+    arc[0].x = x;
+    arc[0].y = y;
 
     do
     {
-      y1 = ras.arc[3].y;
-      y2 = ras.arc[2].y;
-      y3 = ras.arc[1].y;
-      y4 = ras.arc[0].y;
-      x4 = ras.arc[0].x;
+      y1 = arc[3].y;
+      y2 = arc[2].y;
+      y3 = arc[1].y;
+      y4 = arc[0].y;
+      x4 = arc[0].x;
 
       /* first, categorize the Bezier arc */
 
@@ -1668,13 +1669,13 @@
       if ( ymin2 < ymin1 || ymax2 > ymax1 )
       {
         /* this arc has no given direction, split it! */
-        Split_Cubic( ras.arc );
-        ras.arc += 3;
+        Split_Cubic( arc );
+        arc += 3;
       }
       else if ( y1 == y4 )
       {
         /* this arc is flat, ignore it and pop it from the Bezier stack */
-        ras.arc -= 3;
+        arc -= 3;
       }
       else
       {
@@ -1700,15 +1701,18 @@
         /* compute intersections */
         if ( state_bez == Ascending_State )
         {
-          if ( Bezier_Up( RAS_VARS 3, Split_Cubic, ras.minY, ras.maxY ) )
+          if ( Bezier_Up( RAS_VARS 3, arc, Split_Cubic,
+                                   ras.minY, ras.maxY ) )
             goto Fail;
         }
         else
-          if ( Bezier_Down( RAS_VARS 3, Split_Cubic, ras.minY, ras.maxY ) )
+          if ( Bezier_Down( RAS_VARS 3, arc, Split_Cubic,
+                                     ras.minY, ras.maxY ) )
             goto Fail;
+        arc -= 3;
       }
 
-    } while ( ras.arc >= ras.arcs );
+    } while ( arc >= arcs );
 
     ras.lastX = x4;
     ras.lastY = y4;
