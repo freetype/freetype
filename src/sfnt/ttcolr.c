@@ -186,24 +186,35 @@
 
       layer_offset_v1 = FT_NEXT_ULONG( p );
 
-      if ( !layer_offset_v1 || layer_offset_v1 >= table_size )
+      if ( layer_offset_v1 >= table_size )
         goto InvalidTable;
 
-      p1            = (FT_Byte*)( table + layer_offset_v1 );
-      num_layers_v1 = FT_PEEK_ULONG( p1 );
+      if ( layer_offset_v1 )
+      {
+        p1            = (FT_Byte*)( table + layer_offset_v1 );
+        num_layers_v1 = FT_PEEK_ULONG( p1 );
 
-      if ( num_layers_v1 * LAYER_V1_LIST_PAINT_OFFSET_SIZE >
-             table_size - layer_offset_v1 )
-        goto InvalidTable;
+        if ( num_layers_v1 * LAYER_V1_LIST_PAINT_OFFSET_SIZE >
+               table_size - layer_offset_v1 )
+          goto InvalidTable;
 
-      colr->num_layers_v1 = num_layers_v1;
-      colr->layers_v1     = p1;
+        colr->num_layers_v1 = num_layers_v1;
+        colr->layers_v1     = p1;
 
-      colr->paints_start_v1 =
-        FT_MIN( colr->base_glyphs_v1 +
-                  colr->num_base_glyphs_v1 * BASE_GLYPH_PAINT_RECORD_SIZE,
-                colr->layers_v1 +
-                  colr->num_layers_v1 * LAYER_V1_LIST_PAINT_OFFSET_SIZE );
+        colr->paints_start_v1 =
+            FT_MIN( colr->base_glyphs_v1 +
+                    colr->num_base_glyphs_v1 * BASE_GLYPH_PAINT_RECORD_SIZE,
+                    colr->layers_v1 +
+                    colr->num_layers_v1 * LAYER_V1_LIST_PAINT_OFFSET_SIZE );
+      }
+      else
+      {
+        colr->num_layers_v1   = 0;
+        colr->layers_v1       = 0;
+        colr->paints_start_v1 =
+          colr->base_glyphs_v1 +
+          colr->num_base_glyphs_v1 * BASE_GLYPH_PAINT_RECORD_SIZE;
+      }
     }
 
     colr->base_glyphs = (FT_Byte*)( table + base_glyph_offset );

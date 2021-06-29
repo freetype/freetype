@@ -1,3 +1,18 @@
+2021-06-30  Dominik Röttsches  <drott@chromium.org>
+
+	[sfnt] Handle fonts without layer list in 'COLR' v1.
+
+	'COLR' v1 fonts do not necessarily need to have a layer list; for
+	this reason, 'fontTools' recently started generating fonts in a way
+	that drops the layer list if there are no layers in it.  This
+	results in the layer list offset becoming zero, which FreeType
+	treated as an invalid table.  Fix that and handle the case for layer
+	list offset being 0.  This slightly changes how we need to calculate
+	the starting offset for paints.
+
+	* src/sfnt/ttcolr.c (tt_face_load_colr): Handle case of layer list
+	offset being zero without outright rejecting table.
+
 2021-06-30  Alexei Podtelezhnikov  <apodtele@gmail.com>
 
 	* src/raster/ftraster.c (Render_Single_Pass): Simplify `band_stack'.
