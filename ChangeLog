@@ -1,3 +1,7 @@
+2021-06-30  Alexei Podtelezhnikov  <apodtele@gmail.com>
+
+	* src/raster/ftraster.c (Render_Single_Pass): Simplify `band_stack'.
+
 2021-06-29  Alexei Podtelezhnikov  <apodtele@gmail.com>
 
 	[raster] Do not skip the second pass without dropout control.

@@ -366,16 +366,6 @@
   typedef PProfile*  PProfileList;
 
 
-  /* Simple record used to implement a stack of bands, required */
-  /* by the sub-banding mechanism                               */
-  typedef struct  black_TBand_
-  {
-    Int  y_min;   /* band's minimum */
-    Int  y_max;   /* band's maximum */
-
-  } black_TBand;
-
-
 #define AlignProfileSize \
   ( ( sizeof ( TProfile ) + sizeof ( Alignment ) - 1 ) / sizeof ( Long ) )
 
@@ -3027,9 +3017,7 @@
   {
     Int  y_mid;
     Int  band_top = 0;
-
-    black_TBand  band_stack[16];    /* band stack used for sub-banding     */
-                                    /* enough for signed short bands       */
+    Int  band_stack[32];  /* enough to bisect 32-bit int bands */
 
 
     while ( 1 )
@@ -3053,12 +3041,8 @@
 
         y_mid = ( y_min + y_max ) >> 1;
 
-        band_stack[band_top].y_min = y_min;
-        band_stack[band_top].y_max = y_mid;
-
-        band_top++;
-
-        y_min = y_mid + 1;
+        band_stack[band_top++] = y_min;
+        y_min                  = y_mid + 1;
       }
       else
       {
@@ -3069,8 +3053,8 @@
         if ( --band_top < 0 )
           break;
 
-        y_min = band_stack[band_top].y_min;
-        y_max = band_stack[band_top].y_max;
+        y_max = y_min - 1;
+        y_min = band_stack[band_top];
       }
     }
 
