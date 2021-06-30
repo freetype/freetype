@@ -84,15 +84,15 @@ FT_BEGIN_HEADER
    *   @properties section.
    *
    *
-   *   **Hinting and antialiasing principles of the new engine**
+   *   **Hinting and anti-aliasing principles of the new engine**
    *
    *   The rasterizer is positioning horizontal features (e.g., ascender
    *   height & x-height, or crossbars) on the pixel grid and minimizing the
-   *   amount of antialiasing applied to them, while placing vertical
+   *   amount of anti-aliasing applied to them, while placing vertical
    *   features (vertical stems) on the pixel grid without hinting, thus
    *   representing the stem position and weight accurately.  Sometimes the
    *   vertical stems may be only partially black.  In this context,
-   *   'antialiasing' means that stems are not positioned exactly on pixel
+   *   'anti-aliasing' means that stems are not positioned exactly on pixel
    *   borders, causing a fuzzy appearance.
    *
    *   There are two principles behind this approach.
@@ -108,7 +108,7 @@ FT_BEGIN_HEADER
    *   sizes are comparable to kerning values and thus would be noticeable
    *   (and distracting) while reading if hinting were applied.
    *
-   *   One of the reasons to not hint horizontally is antialiasing for LCD
+   *   One of the reasons to not hint horizontally is anti-aliasing for LCD
    *   screens: The pixel geometry of modern displays supplies three vertical
    *   subpixels as the eye moves horizontally across each visible pixel.  On
    *   devices where we can be certain this characteristic is present a
@@ -116,7 +116,7 @@ FT_BEGIN_HEADER
    *   weight.  In Western writing systems this turns out to be the more
    *   critical direction anyway; the weights and spacing of vertical stems
    *   (see above) are central to Armenian, Cyrillic, Greek, and Latin type
-   *   designs.  Even when the rasterizer uses greyscale antialiasing instead
+   *   designs.  Even when the rasterizer uses greyscale anti-aliasing instead
    *   of color (a necessary compromise when one doesn't know the screen
    *   characteristics), the unhinted vertical features preserve the design's
    *   weight and spacing much better than aliased type would.

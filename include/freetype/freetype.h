@@ -3445,7 +3445,8 @@ FT_BEGIN_HEADER
    *
    *   which is known as the OVER operator.
    *
-   *   To correctly composite an antialiased pixel of a glyph onto a surface,
+   *   To correctly composite an anti-aliased pixel of a glyph onto a
+   *   surface,
    *
    *   1. take the foreground and background colors (e.g., in sRGB space)
    *      and apply gamma to get them in a linear space,

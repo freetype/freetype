@@ -290,7 +290,7 @@
     }
 
     /* preset the bitmap using the glyph's outline;         */
-    /* the sdf bitmap is similar to an antialiased bitmap   */
+    /* the sdf bitmap is similar to an anti-aliased bitmap  */
     /* with a slightly bigger size and different pixel mode */
     if ( ft_glyphslot_preset_bitmap( slot, FT_RENDER_MODE_NORMAL, origin ) )
     {

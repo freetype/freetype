@@ -73,6 +73,7 @@ I. Standard procedure
        formats)
 
       src/raster/raster.c     -- monochrome rasterizer
+      src/sdf/sdf.c           -- Signed Distance Field driver
       src/smooth/smooth.c     -- anti-aliasing rasterizer
 
     -- auxiliary modules (optional)
