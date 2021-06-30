@@ -2663,9 +2663,10 @@
     }
 
     blend->num_axis = mmvar->num_axis;
-    FT_MEM_COPY( blend->normalizedcoords,
-                 coords,
-                 num_coords * sizeof ( FT_Fixed ) );
+    if ( coords )
+      FT_MEM_COPY( blend->normalizedcoords,
+                   coords,
+                   num_coords * sizeof ( FT_Fixed ) );
 
     if ( set_design_coords )
       ft_var_to_design( face,
