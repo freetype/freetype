@@ -370,8 +370,8 @@
   /* by the sub-banding mechanism                               */
   typedef struct  black_TBand_
   {
-    Short  y_min;   /* band's minimum */
-    Short  y_max;   /* band's maximum */
+    Int  y_min;   /* band's minimum */
+    Int  y_max;   /* band's maximum */
 
   } black_TBand;
 
@@ -520,9 +520,6 @@
                                     /* should be performed to control      */
                                     /* drop-out accurately when calling    */
                                     /* Render_Glyph.                       */
-
-    black_TBand  band_stack[16];    /* band stack used for sub-banding     */
-                                    /* enough for signed short bands       */
 
   };
 
@@ -3029,16 +3026,21 @@
    *   Renderer error code.
    */
   static int
-  Render_Single_Pass( RAS_ARGS Bool  flipped )
+  Render_Single_Pass( RAS_ARGS Bool  flipped,
+                               Int   y_min,
+                               Int   y_max )
   {
-    Short  i, j, k;
-    Int    band_top = 0;
+    Int  y_mid;
+    Int  band_top = 0;
+
+    black_TBand  band_stack[16];    /* band stack used for sub-banding     */
+                                    /* enough for signed short bands       */
 
 
-    do
+    while ( 1 )
     {
-      ras.maxY = (Long)ras.band_stack[band_top].y_max * ras.precision;
-      ras.minY = (Long)ras.band_stack[band_top].y_min * ras.precision;
+      ras.minY = (Long)y_min * ras.precision;
+      ras.maxY = (Long)y_max * ras.precision;
 
       ras.top = ras.buff;
 
@@ -3051,29 +3053,31 @@
 
         /* sub-banding */
 
-        i = ras.band_stack[band_top].y_min;
-        j = ras.band_stack[band_top].y_max;
-
-        if ( i == j )
+        if ( y_min == y_max )
           return ras.error;  /* still Raster_Overflow */
 
-        k = (Short)( ( i + j ) / 2 );
+        y_mid = ( y_min + y_max ) >> 1;
 
-        ras.band_stack[band_top].y_max = k;
-
-        ras.band_stack[band_top + 1].y_min = (Short)( k + 1 );
-        ras.band_stack[band_top + 1].y_max = j;
+        band_stack[band_top].y_min = y_min;
+        band_stack[band_top].y_max = y_mid;
 
         band_top++;
+
+        y_min = y_mid + 1;
       }
       else
       {
         if ( ras.fProfile )
           if ( Draw_Sweep( RAS_VAR ) )
              return ras.error;
-        band_top--;
+
+        if ( --band_top < 0 )
+          break;
+
+        y_min = band_stack[band_top].y_min;
+        y_max = band_stack[band_top].y_max;
       }
-    } while ( band_top >= 0 );
+    }
 
     return Raster_Err_Ok;
   }
@@ -3123,16 +3127,14 @@
     ras.Proc_Sweep_Drop = Vertical_Sweep_Drop;
     ras.Proc_Sweep_Step = Vertical_Sweep_Step;
 
-    ras.band_stack[0].y_min = 0;
-    ras.band_stack[0].y_max = (Short)( ras.target.rows - 1 );
-
     ras.bWidth  = (UShort)ras.target.width;
     ras.bOrigin = (Byte*)ras.target.buffer;
 
     if ( ras.target.pitch > 0 )
       ras.bOrigin += (Long)( ras.target.rows - 1 ) * ras.target.pitch;
 
-    if ( ( error = Render_Single_Pass( RAS_VARS 0 ) ) != 0 )
+    error = Render_Single_Pass( RAS_VARS 0, 0, (Int)ras.target.rows - 1 );
+    if ( error )
       return error;
 
     /* Horizontal Sweep */
@@ -3145,10 +3147,8 @@
       ras.Proc_Sweep_Drop = Horizontal_Sweep_Drop;
       ras.Proc_Sweep_Step = Horizontal_Sweep_Step;
 
-      ras.band_stack[0].y_min = 0;
-      ras.band_stack[0].y_max = (Short)( ras.target.width - 1 );
-
-      if ( ( error = Render_Single_Pass( RAS_VARS 1 ) ) != 0 )
+      error = Render_Single_Pass( RAS_VARS 1, 0, (Int)ras.target.width - 1 );
+      if ( error )
         return error;
     }
 

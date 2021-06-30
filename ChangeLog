@@ -1,3 +1,11 @@
+2021-06-29  Alexei Podtelezhnikov  <apodtele@gmail.com>
+
+	[raster] Handle sub-band stack locally.
+
+	* src/raster/ftraster.c (black_TWorker): Move `band_stack' from here..
+	(Render_Single_Pass): ... to here and accept limit arguments.
+	(Render_Glyph): Updated.
+
 2021-06-25  Anurag Thakur  <anuthadev@gmail.com>
 
 	[CI] Introduce linux CI and refactor job names.
