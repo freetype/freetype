@@ -483,6 +483,8 @@
 
     Int         numTurns;           /* number of Y-turns in outline        */
 
+    Byte        dropOutControl;     /* current drop_out control method     */
+
     UShort      bWidth;             /* target bitmap width                 */
     PByte       bOrigin;            /* target bitmap bottom-left origin    */
     PByte       bLine;              /* target bitmap current line          */
@@ -513,13 +515,6 @@
     Function_Sweep_Span*  Proc_Sweep_Span;
     Function_Sweep_Span*  Proc_Sweep_Drop;
     Function_Sweep_Step*  Proc_Sweep_Step;
-
-    Byte        dropOutControl;     /* current drop_out control method     */
-
-    Bool        second_pass;        /* indicates whether a horizontal pass */
-                                    /* should be performed to control      */
-                                    /* drop-out accurately when calling    */
-                                    /* Render_Glyph.                       */
 
   };
 
@@ -3116,9 +3111,6 @@
         ras.dropOutControl += 1;
     }
 
-    ras.second_pass = (Bool)( !( ras.outline.flags      &
-                                 FT_OUTLINE_SINGLE_PASS ) );
-
     /* Vertical Sweep */
     FT_TRACE7(( "Vertical pass (ftraster)\n" ));
 
@@ -3138,7 +3130,7 @@
       return error;
 
     /* Horizontal Sweep */
-    if ( ras.second_pass && ras.dropOutControl != 2 )
+    if ( !( ras.outline.flags & FT_OUTLINE_SINGLE_PASS ) )
     {
       FT_TRACE7(( "Horizontal pass (ftraster)\n" ));
 

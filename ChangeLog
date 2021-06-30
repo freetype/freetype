@@ -1,5 +1,14 @@
 2021-06-29  Alexei Podtelezhnikov  <apodtele@gmail.com>
 
+	[raster] Do not skip the second pass without dropout control.
+
+	The second pass also fixes horizontal lines through the pixel centers.
+
+	* src/raster/ftraster.c (black_TWorker): Do not use `second_pass'.
+	(Render_Glyph): Skip the second pass only with the appropriate flag.
+
+2021-06-29  Alexei Podtelezhnikov  <apodtele@gmail.com>
+
 	[raster] Handle sub-band stack locally.
 
 	* src/raster/ftraster.c (black_TWorker): Move `band_stack' from here..
