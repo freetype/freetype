@@ -1,3 +1,7 @@
+2021-07-03  Werner Lemberg  <wl@gnu.org>
+
+	* meson_options.txt: Sort alphabetically; no final full stops.
+
 2021-07-01  Ben Wagner  <bungeman@chromium.org>
 
 	* src/truetype/ttgxvar.c (tt_set_mm_blend): Test `coords`.
