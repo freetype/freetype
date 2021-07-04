@@ -1,3 +1,9 @@
+2021-07-04  Werner Lemberg  <wl@gnu.org>
+
+	* meson.build: Support `FT_DEBUG_LOGGING` option.
+
+	If this option is set, we need threads support.
+
 2021-07-03  Werner Lemberg  <wl@gnu.org>
 
 	* meson_options.txt: Sort alphabetically; no final full stops.

@@ -73,6 +73,7 @@ ft_main_modules = run_command(python_exe,
 ft2_sources += files([
   'src/base/ftbase.c',
   'src/base/ftinit.c',
+  'src/dlg/dlgwrap.c',
 ])
 
 foreach mod: ft_main_modules
@@ -229,6 +230,15 @@ else
 endif
 
 ft2_deps = []
+
+
+# Check whether threads support is needed and available.
+if cc.has_header_symbol('freetype/config/ftoption.h', 'FT_DEBUG_LOGGING',
+                        include_directories: ft2_includes)
+  thread_dep = dependency('threads',
+    required: true)
+  ft2_deps += [thread_dep]
+endif
 
 
 # Generate `ftoption.h` based on available dependencies.
