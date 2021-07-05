@@ -31,8 +31,9 @@ project('freetype2', 'c',
 )
 
 
-# Apparently meson doesn't provide a `read_file` function, so instead
-# running an external command is required.
+# Only meson >= 0.57 can read a file and assign its contents to a
+# variable; we thus use an external command to have this functionality
+# with older versions, too.
 
 python = import('python')
 python_exe = python.find_installation(required: true)
