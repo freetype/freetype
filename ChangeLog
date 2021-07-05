@@ -1,3 +1,9 @@
+2021-07-05  Werner Lemberg  <wl@gnu.org>
+
+	* src/base/ftlcdfil.c (FT_Library_SetLcdGeometry): Fix argument.
+
+	Reported by Hin-Tak.
+
 2021-07-03  Werner Lemberg  <wl@gnu.org>
 
 	* meson_options.txt: Sort alphabetically; no final full stops.
