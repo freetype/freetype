@@ -1,3 +1,15 @@
+2021-07-15  David Turner  <david@freetype.org>
+
+	Replaces download-test-fonts.sh with download-test-fonts.py which
+	does the same work, and also avoids downloading anything if the
+	files are already installed with the right content.
+
+	Now uses the first 8 byte of each file's sha256 hash for the digest.
+
+	* tests/scripts/download-test-fonts.sh: Removed
+	* tests/scripts/download-test-fonts.py: New script
+	* tests/README.md: Updated
+
 2021-07-15  Alex Richardson  <Alexander.Richardson@cl.cam.ac.uk>
 
 	Support architectures where `long` is smaller than pointers.
