@@ -1,40 +1,55 @@
+2021-07-12  Werner Lemberg  <wl@gnu.org>
+
+	Small clean-ups for the last few commits.
+
+	* include/freetype/fttrace.h (afwarp): Removed.
+
 2021-07-12  David Turner  <david@freetype.org>
 
-	Remove obsolete AF_Angle type and related sources.
+	Remove obsolete `AF_Angle` type and related sources.
 
-	Move the af_sort_xxx() functions from afangles.c to afhints.c in
-	order to get rid of the obsolete angle-related types, macros and
-	function definitions.
+	* src/autofit/afangles.c: File removed.  Functions related to
+	sorting moved to...
+	* src/autofit/afhints.c (af_sort_pos, af_sort_and_quantize_widths):
+	This file.
+	* src/autofit/afangles.h: File removed.
+	* src/autofit/aftypes.h: Updated.
+	* src/autofit/autofit.c: Updated.
 
-	* src/autofit/*: Remove code.
+	* src/autofit/rules.mk (AUTOF_DRV_SRC): Updated.
 
 2021-07-12  David Turner  <david@freetype.org>
 
 	Remove experimental auto-hinting 'warp' mode.
 
-	This feature was always experimental, and probably nevery worked
-	properly. This patch completely removes it from the source code,
+	This feature was always experimental, and probably never worked
+	properly.  This patch completely removes it from the source code,
 	except for a documentation block describing it for historical
-	purpose.
+	purposes.
 
-	* devel/ftoption.h: Remove AF_CONFIG_OPTION_USE_WARPER.
-	* include/freetype/config/ftoption.h: Remove AF_CONFIG_OPTION_USE_WARPER.
-	* include/freetype/ftdriver.h: Document 'warping' property as obsolete.
-	* src/autofit/*: Remove any warp mode related code.
+	* devel/ftoption.h, include/freetype/config/ftoption.h: Remove
+	`AF_CONFIG_OPTION_USE_WARPER`.
+
+	* include/freetype/ftdriver.h: Document 'warping' property as
+	obsolete.
+
+	* src/autofit/afwarp.c, src/autofit/afwarp.h: Files removed.
+	* src/autofit/*: Remove any code related to warp mode.
 
 2021-07-12  David Turner  <david@freetype.org>
 
-	Remove experimental "Latin2" writing system (FT_OPTION_AUTOFIT2)
+	Remove experimental 'Latin2' writing system (`FT_OPTION_AUTOFIT2`).
 
 	This code has always been experimental and was never compiled anyway
-	(FT_OPTION_AUTOFIT2 does not appear in ftoption.h or even any of our
-	build files).
+	(`FT_OPTION_AUTOFIT2` does not appear in `ftoption.h` or even any of
+	our build files).
 
-	* include/freetype/internal/fttrace.h: Remove 'FT_TRACE_DEF( aflatin2 )'.
-	* src/autofit/aflatin2.[hc]: Removed.
-	* src/autofit/afloader.c: Remove undocumented hook to activate Latin2 system.
-	* src/autofit/afstyles.h: Remove ltn2_dflt style definition.
-	* src/autofit/afwrtsys.h: Remove LATIN2 writing system definition.
+	* include/freetype/internal/fttrace.h (aflatin2): Removed.
+	* src/autofit/aflatin2.h, src/autofit/aflatin2.c: Files removed.
+	* src/autofit/afloader.c: Remove undocumented hook to activate
+	Latin2 system.
+	* src/autofit/afstyles.h: Remove `ltn2_dflt` style definition.
+	* src/autofit/afwrtsys.h: Remove `LATIN2` writing system definition.
 	* src/autofit/autofit.c: Updated.
 
 2021-07-05  Werner Lemberg  <wl@gnu.org>

@@ -53,10 +53,10 @@ FT_BEGIN_HEADER
    *   reasons.
    *
    *   Available properties are @increase-x-height, @no-stem-darkening
-   *   (experimental), @darkening-parameters (experimental), @warping
-   *   (experimental), @glyph-to-script-map (experimental), @fallback-script
-   *   (experimental), and @default-script (experimental), as documented in
-   *   the @properties section.
+   *   (experimental), @darkening-parameters (experimental),
+   *   @glyph-to-script-map (experimental), @fallback-script (experimental),
+   *   and @default-script (experimental), as documented in the @properties
+   *   section.
    *
    */
 
@@ -1165,15 +1165,15 @@ FT_BEGIN_HEADER
    *   **Obsolete**
    *
    *   This property was always experimental and probably never worked
-   *   correctly. It was entirely removed from the FreeType 2 sources.
-   *   This entry is only here for historical reference.
+   *   correctly.  It was entirely removed from the FreeType~2 sources.  This
+   *   entry is only here for historical reference.
    *
-   *   Warping only works in 'normal' auto-hinting mode replacing it.  The
-   *   idea of the code is to slightly scale and shift a glyph along the
+   *   Warping only worked in 'normal' auto-hinting mode replacing it.  The
+   *   idea of the code was to slightly scale and shift a glyph along the
    *   non-hinted dimension (which is usually the horizontal axis) so that as
-   *   much of its segments are aligned (more or less) to the grid.  To find
+   *   much of its segments were aligned (more or less) to the grid.  To find
    *   out a glyph's optimal scaling and shifting value, various parameter
-   *   combinations are tried and scored.
+   *   combinations were tried and scored.
    *
    * @since:
    *   2.6

@@ -508,8 +508,7 @@ FT_BEGIN_HEADER
    *
    *   ```
    *     FREETYPE_PROPERTIES=truetype:interpreter-version=35 \
-   *                         cff:no-stem-darkening=0 \
-   *                         autofitter:warping=1
+   *                         cff:no-stem-darkening=0
    *   ```
    *
    * @inout:
