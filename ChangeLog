@@ -1,5 +1,15 @@
 2021-07-12  Werner Lemberg  <wl@gnu.org>
 
+	[autofit] More clean-ups.
+
+	* src/autofit/afhints.h (AF_GlyphHintsRec): Remove the no longer
+	needed fields `xmin_delta` and `xmax_delta`.
+
+	* src/autofit/afhints.c (af_glyph_hints_reload),
+	src/autofit/afloader.c (af_loader_load_glyph): Updated.
+
+2021-07-12  Werner Lemberg  <wl@gnu.org>
+
 	Small clean-ups for the last few commits.
 
 	* include/freetype/fttrace.h (afwarp): Removed.

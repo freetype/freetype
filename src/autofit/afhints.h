@@ -362,9 +362,6 @@ FT_BEGIN_HEADER
                                     /* implementations         */
     AF_StyleMetrics  metrics;
 
-    FT_Pos           xmin_delta;    /* used for warping */
-    FT_Pos           xmax_delta;
-
     /* Two arrays to avoid allocation penalty.            */
     /* The `embedded' structure must be the last element! */
     struct
