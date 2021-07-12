@@ -1,3 +1,22 @@
+2021-07-12  Alex Richardson  <Alexander.Richardson@cl.cam.ac.uk>
+
+	* meson.build: Fix build for other UNIX systems (e.g., FreeBSD).
+
+	Without this change the build of `unix/ftsystem.c` fails because the
+	`ftconfig.h` header that defines macros such as `HAVE_UNISTD_H` and
+	`HAVE_FCNTL_H` is only being generated for Linux, macOS, and Cygwin
+	systems:
+
+	```
+	.../builds/unix/ftsystem.c:258:32: error:
+	    use of undeclared identifier 'O_RDONLY'
+	file = open( filepathname, O_RDONLY );
+	```
+
+	Instead of hardcoding a list of operating systems for this check,
+	update the logic that decides whether to build the file and set a
+	boolean flag that can be checked instead.
+
 2021-07-12  Werner Lemberg  <wl@gnu.org>
 
 	[autofit] More clean-ups.
