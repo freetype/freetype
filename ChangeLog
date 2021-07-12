@@ -1,3 +1,33 @@
+2021-07-15  Alex Richardson  <Alexander.Richardson@cl.cam.ac.uk>
+
+	Support architectures where `long` is smaller than pointers.
+
+	I am currently trying to compile FreeType for CHERI-extended ISAs
+	(CHERI-RISC-V and Arm's Morello), but I am getting compiler warnings
+	from the `FT_UINT_TO_POINTER` macro.  When compiling with the CHERI
+	Clang compiler, not using `uinptr_t` for casts between integers an
+	pointers results in the following `-Werror` build failures:
+
+	```
+	In file included from .../src/truetype/truetype.c:22:
+	  .../src/truetype/ttgload.c:1925:22: error:
+	    cast from provenance-free integer type to pointer type will
+	    give pointer that can not be dereferenced
+	    [-Werror,-Wcheri-capability-misuse]
+	  node->data = FT_UINT_TO_POINTER( glyph_index );
+	               ^
+	  .../include/freetype/internal/compiler-macros.h:79:34: note:
+	    expanded from macro 'FT_UINT_TO_POINTER'
+	```
+
+	* include/freetype/internal/compiler-macros.h (FT_UINT_TO_POINTER):
+	The ISO C standard compliant fix for this would be to use
+	`uintptr_t` from `stdint.h`, but I am not sure if this is supported
+	by the minimum compiler version.  Therefore, use the
+	compiler-defined `__UINTPTR_TYPE__` macro (supported in GCC 4.6+ and
+	Clang since about 3.0) before checking for `_WIN64` and falling back
+	to `unsigned long`.
+
 2021-07-13  Oleg Oshmyan  <chortos@inbox.lv>
 
 	[base] Fix `FT_Open_Face`'s handling of user-supplied streams.

@@ -71,12 +71,18 @@ FT_BEGIN_HEADER
    */
 #define FT_DUMMY_STMNT  FT_BEGIN_STMNT FT_END_STMNT
 
-#ifdef _WIN64
+#ifdef __UINTPTR_TYPE__
+  /*
+   * GCC and Clang both provide a `__UINTPTR_TYPE__` that can be used to
+   * avoid a dependency on `stdint.h`.
+   */
+#  define FT_UINT_TO_POINTER( x )  (void *)(__UINTPTR_TYPE__)(x)
+#elif defined( _WIN64 )
   /* only 64bit Windows uses the LLP64 data model, i.e., */
   /* 32-bit integers, 64-bit pointers.                   */
-#define FT_UINT_TO_POINTER( x )  (void *)(unsigned __int64)(x)
+#  define FT_UINT_TO_POINTER( x )  (void *)(unsigned __int64)(x)
 #else
-#define FT_UINT_TO_POINTER( x )  (void *)(unsigned long)(x)
+#  define FT_UINT_TO_POINTER( x )  (void *)(unsigned long)(x)
 #endif
 
   /*
