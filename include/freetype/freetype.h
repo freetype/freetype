@@ -3307,13 +3307,13 @@ FT_BEGIN_HEADER
    *     pixels and use the @FT_PIXEL_MODE_LCD_V mode.
    *
    *   FT_RENDER_MODE_SDF ::
-   *     This mode corresponds to 8-bit signed distance fields (SDF)
-   *     bitmaps.  Each pixel in a SDF bitmap contains information about the
-   *     nearest edge of the glyph outline.  The distances are calculated
-   *     from the center of the pixel and are positive if they are filled by
-   *     the outline (i.e., inside the outline) and negative otherwise.
-   *     Check the note below on how to convert the output values to usable
-   *     data.
+   *     This mode corresponds to 8-bit, single-channel signed distance field
+   *     (SDF) bitmaps.  Each pixel in the SDF grid is the value from the
+   *     pixel's position to the nearest glyph's outline.  The distances are
+   *     calculated from the center of the pixel and are positive if they are
+   *     filled by the outline (i.e., inside the outline) and negative
+   *     otherwise.  Check the note below on how to convert the output values
+   *     to usable data.
    *
    * @note:
    *   The selected render mode only affects vector glyphs of a font.

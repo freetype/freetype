@@ -41,7 +41,8 @@
    *     file `ftbsdf.c` for more.
    *
    *   * The basic idea of generating the SDF is taken from Viktor Chlumsky's
-   *     research paper.
+   *     research paper.  The paper explains both single and multi-channel
+   *     SDF, however, this implementation only generates single-channel SDF.
    *
    *       Chlumsky, Viktor: Shape Decomposition for Multi-channel Distance
    *       Fields.  Master's thesis.  Czech Technical University in Prague,
