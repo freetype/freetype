@@ -1,5 +1,51 @@
 2021-07-13  Oleg Oshmyan  <chortos@inbox.lv>
 
+	[base] Fix `FT_Open_Face`'s handling of user-supplied streams.
+
+	This was already true (though undocumented) most of the time, but
+	not if `FT_NEW` inside `FT_Stream_New` failed or if the
+	`FT_OPEN_XXX` flags were bad.
+
+	Normally, `FT_Open_Face` calls `FT_Stream_New`, which returns the
+	user-supplied stream unchanged, and in case of any subsequent error
+	in `FT_Open_Face`, the stream is closed via `FT_Stream_Free`.
+
+	Up to now, however, `FT_Stream_New` allocates a new stream even if
+	it is already given one by the user.  If this allocation fails, the
+	user-supplied stream is not returned to `FT_Open_Face` and never
+	closed.  Moreover, the user cannot detect this situation: all they
+	see is that `FT_Open_Face` returns `FT_Err_Out_Of_Memory`, but that
+	can also happen after a different allocation fails within the main
+	body of `FT_Open_Face`, when the user's stream has already been
+	closed by `FT_Open_Face`.  It is plausible that the user stream's
+	`close` method frees memory allocated for the stream object itself,
+	so the user cannot defensively free it upon `FT_Open_Face` failure
+	lest it ends up doubly freed.  All in all, this ends up leaking the
+	memory/resources used by user's stream.
+
+	Furthermore, `FT_Stream_New` simply returns an error if the
+	`FT_OPEN_XXX` flags are unsupported, which can mean either an
+	invalid combination of flags or a perfectly innocent
+	`FT_OPEN_STREAM` on a FreeType build that lacks stream support.
+	With this patch, the user-supplied stream is closed even in these
+	cases, so the user can be sure that if `FT_Open_Face` failed, the
+	stream is definitely closed.
+
+	* src/base/ftobjs.c (FT_Stream_New): Don't allocate a buffer
+	unnecessarily.
+	Move error-handling code to make the control flow more obvious.
+	Close user-supplied stream if the flags are unsupported.
+	`FT_Stream_Open` always sets `pathname.pointer`, so remove the
+	redundant (re)assignment.  None of the `FT_Stream_Open...` functions
+	uses `stream->memory`, so keep just one assignment at the end,
+	shared among all possible control flow paths.
+	('Unsupported flags' that may need a stream closure can be either an
+	invalid combination of multiple `FT_OPEN_XXX` mode flags or a clean
+	`FT_OPEN_STREAM` flag on a FreeType build that lacks stream
+	support.)
+
+2021-07-13  Oleg Oshmyan  <chortos@inbox.lv>
+
 	[base] Reject combinations of incompatible `FT_OPEN_XXX` flags.
 
 	The three modes are mutually exclusive, and the documentation of the

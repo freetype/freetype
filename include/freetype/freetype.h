@@ -2301,6 +2301,10 @@ FT_BEGIN_HEADER
    *   See the discussion of reference counters in the description of
    *   @FT_Reference_Face.
    *
+   *   If `FT_OPEN_STREAM` is set in `args->flags`, the stream in
+   *   `args->stream` is automatically closed before this function returns
+   *   any error (including `FT_Err_Invalid_Argument`).
+   *
    * @example:
    *   To loop over all faces, use code similar to the following snippet
    *   (omitting the error handling).
