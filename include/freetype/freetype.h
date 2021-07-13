@@ -2113,8 +2113,7 @@ FT_BEGIN_HEADER
    *     Extra parameters passed to the font driver when opening a new face.
    *
    * @note:
-   *   The stream type is determined by the contents of `flags` that are
-   *   tested in the following order by @FT_Open_Face:
+   *   The stream type is determined by the contents of `flags`:
    *
    *   If the @FT_OPEN_MEMORY bit is set, assume that this is a memory file
    *   of `memory_size` bytes, located at `memory_address`.  The data are not
@@ -2126,6 +2125,9 @@ FT_BEGIN_HEADER
    *
    *   Otherwise, if the @FT_OPEN_PATHNAME bit is set, assume that this is a
    *   normal file and use `pathname` to open it.
+   *
+   *   If none of the above bits are set or if multiple are set at the same
+   *   time, the flags are invalid and @FT_Open_Face fails.
    *
    *   If the @FT_OPEN_DRIVER bit is set, @FT_Open_Face only tries to open
    *   the file with the driver whose handler is in `driver`.

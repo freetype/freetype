@@ -1,3 +1,25 @@
+2021-07-13  Oleg Oshmyan  <chortos@inbox.lv>
+
+	[base] Reject combinations of incompatible `FT_OPEN_XXX` flags.
+
+	The three modes are mutually exclusive, and the documentation of the
+	`FT_OPEN_XXX` constants notes this.  However, there was no check to
+	validate this in the code, and the documentation on `FT_Open_Args`
+	claimed that the corresponding bits were checked in a well-defined
+	order, implying it was valid (if useless) to specify more than one.
+	Ironically, this documented order did not agree with the actual
+	code, so it could not be relied upon; hopefully, nobody did this and
+	nobody will be hurt by the new validation.
+
+	Even if multiple mode bits were allowed, they could cause memory
+	leaks: if both `FT_OPEN_STREAM` and `stream` are set along with
+	either `FT_OPEN_MEMORY` or `FT_OPEN_PATHNAME`, then `FT_Stream_New`
+	allocated a new stream but `FT_Open_Face` marked it as an 'external'
+	stream, so the stream object was never released.
+
+	* src/base/ftobjs.c (FT_Stream_New): Reject incompatible
+	`FT_OPEN_XXX` flags.
+
 2021-07-12  Alex Richardson  <Alexander.Richardson@cl.cam.ac.uk>
 
 	* meson.build: Fix build for other UNIX systems (e.g., FreeBSD).

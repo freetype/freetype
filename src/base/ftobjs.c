@@ -197,6 +197,7 @@
     FT_Error   error;
     FT_Memory  memory;
     FT_Stream  stream = NULL;
+    FT_UInt    mode;
 
 
     *astream = NULL;
@@ -208,13 +209,15 @@
       return FT_THROW( Invalid_Argument );
 
     memory = library->memory;
+    mode   = args->flags &
+               ( FT_OPEN_MEMORY | FT_OPEN_STREAM | FT_OPEN_PATHNAME );
 
     if ( FT_NEW( stream ) )
       goto Exit;
 
     stream->memory = memory;
 
-    if ( args->flags & FT_OPEN_MEMORY )
+    if ( mode == FT_OPEN_MEMORY )
     {
       /* create a memory-based stream */
       FT_Stream_OpenMemory( stream,
@@ -224,13 +227,13 @@
 
 #ifndef FT_CONFIG_OPTION_DISABLE_STREAM_SUPPORT
 
-    else if ( args->flags & FT_OPEN_PATHNAME )
+    else if ( mode == FT_OPEN_PATHNAME )
     {
       /* create a normal system stream */
       error = FT_Stream_Open( stream, args->pathname );
       stream->pathname.pointer = args->pathname;
     }
-    else if ( ( args->flags & FT_OPEN_STREAM ) && args->stream )
+    else if ( ( mode == FT_OPEN_STREAM ) && args->stream )
     {
       /* use an existing, user-provided stream */
 
