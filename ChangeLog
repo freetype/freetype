@@ -1,3 +1,15 @@
+2021-07-16  Alex Richardson  <Alexander.Richardson@cl.cam.ac.uk>
+
+	[tests] Allow arbitrary build directories.
+
+	* tests/issue-1063/main.c (main): I am building with a build
+	directory that is not directly inside the source tree, so the path
+	`../tests/data/As.I.Lay.Dying.ttf` does not resolve to the test
+	input file.  This change passes the test data directory as an
+	environment variable to allow arbitrary build directories.
+
+	* tests/meson.build: Updated.
+
 2021-07-15  Alex Richardson  <Alexander.Richardson@cl.cam.ac.uk>
 
 	* tests/issue-1063/main.c (main): Fix uninitialized variable.

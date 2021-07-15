@@ -1,16 +1,30 @@
+#include <limits.h>
 #include <stdio.h>
 
 #include <freetype/freetype.h>
 #include <ft2build.h>
 
+
 int
 main( void )
 {
-  FT_Library library;
-  FT_Face    face = NULL;
+  FT_Library  library;
+  FT_Face     face = NULL;
 
-  /* Assumes this is run from out/ build directory though 'meson test -C out' */
-  const char* filepath = "../tests/data/As.I.Lay.Dying.ttf";
+  /*
+   * We assume that `FREETYPE_TESTS_DATA_DIR` was set by `meson test`.
+   * Otherwise we default to `../tests/data`.
+   *
+   * TODO (David): Rewrite this to pass the test directory through the
+   * command-line.
+   */
+  const char*  testdata_dir = getenv( "FREETYPE_TESTS_DATA_DIR" );
+  char         filepath[PATH_MAX];
+
+
+  snprintf( filepath, sizeof( filepath ), "%s/%s",
+            testdata_dir ? testdata_dir : "../tests/data",
+            "As.I.Lay.Dying.ttf" );
 
   FT_Init_FreeType( &library );
   if ( FT_New_Face( library, filepath, 0, &face ) != 0 )
@@ -19,13 +33,17 @@ main( void )
     return 1;
   }
 
-  for ( FT_ULong i = 59; i < 171; i++ )
+  for ( FT_ULong  i = 59; i < 171; i++ )
   {
-    FT_UInt  gid  = FT_Get_Char_Index( face, i );
-    FT_Error code = FT_Load_Glyph( face, gid, FT_LOAD_DEFAULT );
+    FT_UInt   gid  = FT_Get_Char_Index( face, i );
+    FT_Error  code = FT_Load_Glyph( face, gid, FT_LOAD_DEFAULT );
+
+
     if ( code )
       printf( "unknown %d for char %lu, gid %u\n", code, i, gid );
   }
 
   return 0;
 }
+
+/* EOF */
