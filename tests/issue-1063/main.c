@@ -7,14 +7,13 @@ int
 main( void )
 {
   FT_Library library;
-  FT_Face    face;
+  FT_Face    face = NULL;
 
   /* Assumes this is run from out/ build directory though 'meson test -C out' */
   const char* filepath = "../tests/data/As.I.Lay.Dying.ttf";
 
   FT_Init_FreeType( &library );
-  FT_New_Face( library, filepath, 0, &face );
-  if ( !face )
+  if ( FT_New_Face( library, filepath, 0, &face ) != 0 )
   {
     fprintf( stderr, "Could not open file: %s\n", filepath );
     return 1;
