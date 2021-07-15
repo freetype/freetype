@@ -1009,7 +1009,9 @@ typedef ptrdiff_t  FT_PtrDist;
 
 #if BEZIER_USE_DDA
 
+#ifdef __SSE2__
 #include <emmintrin.h>
+#endif
 
   static void
   gray_render_conic( RAS_ARG_ const FT_Vector*  control,
