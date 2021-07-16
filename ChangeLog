@@ -1,3 +1,16 @@
+2021-07-17  David Turner  <david@freetype.org>
+
+	* src/smooth/ftgrays.c: Fix compilation if `FT_LONG64` is undefined.
+
+	The code assumed that if `__SSE2__` is defined, then 64-bit integer
+	types are available.  This is not the case apparently for certain
+	multilib compiler targets like 'x86_32.x86' used by Gentoo.
+
+	This patch fixes the issue by disabling the special code path when
+	64-bit integer types are not available.
+
+	Fixes #1071.
+
 2021-07-16  Alex Richardson  <Alexander.Richardson@cl.cam.ac.uk>
 
 	[tests] Allow arbitrary build directories.
@@ -10,7 +23,7 @@
 
 	* tests/meson.build: Updated.
 
-2021-07-15  Alex Richardson  <Alexander.Richardson@cl.cam.ac.uk>
+2021-07-16  Alex Richardson  <Alexander.Richardson@cl.cam.ac.uk>
 
 	* tests/issue-1063/main.c (main): Fix uninitialized variable.
 
