@@ -75,7 +75,10 @@ CHANGES BETWEEN 2.10.4 and 2.11.0
   - The experimental 'warp' mode (AF_CONFIG_OPTION_USE_WARPER) for the
     auto-hinter has been removed.
 
-  - The smooth rasterizer performance has been improved by >10%.
+  - The smooth rasterizer performance has been improved by >10%.  Note
+    that  due to  necessary code  changes there  might be  very subtle
+    differences  in  rendering.  They  are  not  visible by  the  eye,
+    however.
 
   - PCF bitmap fonts compressed with LZW (these are usually files with
     the extension `.pcf.Z`) are now handled correctly.
