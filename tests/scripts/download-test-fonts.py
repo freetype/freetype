@@ -1,8 +1,7 @@
 #!/usr/bin/env python3
 
-"""Download test fonts used by the FreeType regression test programs.
-These will be copied to $FREETYPE/tests/data/ by default.
-"""
+"""Download test fonts used by the FreeType regression test programs.  These
+will be copied to $FREETYPE/tests/data/ by default."""
 
 import argparse
 import collections
@@ -15,8 +14,8 @@ import zipfile
 
 from typing import Callable, List, Optional, Tuple
 
-# The list of download items describing the font files to install.
-# Each download item is a dictionary with one of the following schemas:
+# The list of download items describing the font files to install.  Each
+# download item is a dictionary with one of the following schemas:
 #
 # - File item:
 #
@@ -28,8 +27,8 @@ from typing import Callable, List, Optional, Tuple
 #      install_name
 #        Type: file name string
 #        Required: No
-#        Description: Installation name for the font file, only provided if it
-#          must be different from the original URL's basename.
+#        Description: Installation name for the font file, only provided if
+#          it must be different from the original URL's basename.
 #
 #      hex_digest
 #        Type: hexadecimal string
@@ -39,7 +38,7 @@ from typing import Callable, List, Optional, Tuple
 # - Zip items:
 #
 #   These items correspond to one or more font files that are embedded in a
-#   remote zip archive. Each entry has the following fields:
+#   remote zip archive.  Each entry has the following fields:
 #
 #      zip_url
 #        Type: URL string.
@@ -52,23 +51,25 @@ from typing import Callable, List, Optional, Tuple
 #        Description: A list of entries describing a single font file to be
 #          extracted from the archive
 #
-# Apart from that, some schemas are used for dictionaries used inside download
-# items:
+# Apart from that, some schemas are used for dictionaries used inside
+# download items:
 #
 # - File entries:
 #
-#   These are dictionaries describing a single font file to extract from an archive.
+#   These are dictionaries describing a single font file to extract from an
+#   archive.
 #
 #      filename
 #        Type: file path string
 #        Required: Yes
-#        Description: Path of source file, relative to the archive's top-level directory.
+#        Description: Path of source file, relative to the archive's
+#          top-level directory.
 #
 #      install_name
 #        Type: file name string
 #        Required: No
-#        Description: Installation name for the font file, only provided if it must be
-#          different from the original filename value.
+#        Description: Installation name for the font file; only provided if
+#          it must be different from the original filename value.
 #
 #      hex_digest
 #        Type: hexadecimal string
@@ -90,7 +91,8 @@ _DOWNLOAD_ITEMS = [
 
 
 def digest_data(data: bytes):
-    """Compute the digest of a given input byte string, which are the first 8 bytes of its sha256 hash."""
+    """Compute the digest of a given input byte string, which are the first
+    8 bytes of its sha256 hash."""
     m = hashlib.sha256()
     m.update(data)
     return m.digest()[:8]
@@ -155,14 +157,16 @@ def extract_file_from_zip_archive(
 
     Args:
       archive: Input ZipFile objec.
-      archive_name: Archive name or URL, only used to generate a human-readable error
-        message.
+      archive_name: Archive name or URL, only used to generate a
+        human-readable error message.
+
       filepath: Input filepath in archive.
       expected_digest: Optional digest for the file.
     Returns:
       A new File instance corresponding to the extract file.
     Raises:
-      ValueError if expected_digest is not None and does not match the extracted file.
+      ValueError if expected_digest is not None and does not match the
+      extracted file.
     """
     file = archive.open(filepath)
     if expected_digest is not None:
@@ -181,7 +185,8 @@ def _get_and_install_file(
     force_download: bool,
     get_content: Callable[[], bytes],
 ) -> bool:
-    if not force_download and hex_digest is not None and os.path.exists(install_path):
+    if not force_download and hex_digest is not None \
+      and os.path.exists(install_path):
         with open(install_path, "rb") as f:
             content: bytes = f.read()
         if bytes.fromhex(hex_digest) == digest_data(content):
@@ -200,14 +205,15 @@ def download_and_install_item(
     Args:
       item: Download item as a dictionary, see above for schema.
       install_dir: Installation directory.
-      force_download: Set to True to force download and installation, even if
-        the font file is already installed with the right content.
+      force_download: Set to True to force download and installation, even
+        if the font file is already installed with the right content.
 
     Returns:
-      A list of (install_name, status) tuples, where 'install_name' is the file's
-      installation name under 'install_dir', and 'status' is a boolean that is True
-      to indicate that the file was downloaded and installed, or False to indicate that
-      the file is already installed with the right content.
+      A list of (install_name, status) tuples, where 'install_name' is the
+      file's installation name under 'install_dir', and 'status' is a
+      boolean that is True to indicate that the file was downloaded and
+      installed, or False to indicate that the file is already installed
+      with the right content.
     """
     if "file_url" in item:
         file_url = item["file_url"]
@@ -284,10 +290,13 @@ def main():
         for install_name, status in download_and_install_item(
             item, args.install_dir, args.force
         ):
-            print("%s %s" % (install_name, "INSTALLED" if status else "UP-TO-DATE"))
+            print("%s %s" % (install_name,
+                             "INSTALLED" if status else "UP-TO-DATE"))
 
     return 0
 
 
 if __name__ == "__main__":
     sys.exit(main())
+
+# EOF

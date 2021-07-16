@@ -1,38 +1,88 @@
+2021-07-15  Ben Wagner  <bungeman@chromium.org>
+
+	* src/smooth/ftgrays.c: Guard inclusion of `emmintrin.h`.
+
+	Guard inclusion of `emmintrin.h` with `#ifdef __SSE2__`.  The gcc
+	version of this header, `xmmintrin.h`, and `mmintrin.h` check that
+	the appropriate defines are set before defining anything (are
+	internally guarded).  However, the clang versions of these includes
+	are not internally guarded.  As a result of this, externally guard
+	the inclusion of these headers.
+
 2021-07-15  David Turner  <david@freetype.org>
 
-	[smooth] Implement Bezier quadratic arc flattenning with DDA
+	[smooth] Implement Bézier quadratic arc flattening with DDA.
 
 	Benchmarking shows that this provides a very slighty performance
-	boost when rendering fonts with lots of quadratic bezier arcs,
+	boost when rendering fonts with lots of quadratic Bézier arcs,
 	compared to the recursive arc splitting, but only when SSE2 is
 	available, or on 64-bit CPUs.
+
+	On a 2017 Core i5-7300U CPU on Linux/x86_64:
+
+	  ftbench -p -s10 -t5 -cb DroidSansFallbackFull.ttf
+
+	  Before: 4.033 us/op  (best of 5 runs for all numbers)
+	  After:  3.876 us/op
+
+	  ftbench -p -s60 -t5 -cb DroidSansFallbackFull.ttf
+
+	  Before: 13.467 us/op
+	  After:  13.385 us/op
 
 	* src/smooth/ftgrays.c (gray_render_conic): New implementation
 	based on DDA and optionally SSE2.
 
 2021-07-15  David Turner  <david@freetype.org>
 
-	[smooth] Minor speedup to smooth rasterizer
+	[smooth] Minor speedup to smooth rasterizer.
 
-	This speeds up the smooth rasterizer by avoiding a conditional
+	This speeds up the smooth rasterizer by avoiding conditional
 	branches in the hot path.
 
-	* src/smooth/ftgrays.c: Define a null cell used to both as a
-	sentinel for all linked-lists, and to accumulate coverage and
-	area values for "out-of-bounds" cell positions without a
-	conditional check.
+	- Define a fixed 'null cell', which will be pointed to whenever the
+	  current cell is outside of the current target region.  This avoids
+	  a `ras.cell != NULL` check in the `FT_INTEGRATE` macro.
+
+	- Also use the null cell as a sentinel at the end of all `ycells`
+	  linked-lists, by setting its x coordinate to `INT_MAX`.  This
+	  avoids a `if (!cell)` check in `gray_set_cell` as well.
+
+	- Slightly change the worker struct fields to perform a little less
+	  operations during rendering.
+
+	Example results (on a 2013 Corei5-3337U CPU)
+
+	  out/ftbench -p -s10 -t5 -bc DroidSansFallbackFull.ttf
+
+	  Before: 5.472 us/op
+	  After:  5.275 us/op
+
+	  out/ftbench -p -s60 -t5 -bc DroidSansFallbackFull.ttf
+
+	  Before: 17.988 us/op
+	  After:  17.389 us/op
+
+	* src/smooth/ftgrays.c (grat_TWorker): Replace `num_cells` field with
+	`cell_free` and `cell_limit`.
+	(NULL_CELL_PTR, CELL_MAX_X_VALUE, CELL_IS_NULL): New macros.
+	(gray_dump_cells, gray_set_cell, gray_sweep, gray_sweep_direct,
+	gray_convert_glyph_inner, gray_convert_glyph): Updated.
 
 2021-07-15  David Turner  <david@freetype.org>
 
-	Replaces download-test-fonts.sh with download-test-fonts.py which
-	does the same work, and also avoids downloading anything if the
-	files are already installed with the right content.
+	[tests] Rewrite download script in Python3.
 
-	Now uses the first 8 byte of each file's sha256 hash for the digest.
+	This commit replaces the bash script with a Python script that does
+	the same work, plus avoiding to download anything if the files are
+	already installed with the right content.
 
-	* tests/scripts/download-test-fonts.sh: Removed
-	* tests/scripts/download-test-fonts.py: New script
-	* tests/README.md: Updated
+	We now use the first 8 bytes of each file's sha256 hash for the
+	digest.
+
+	* tests/scripts/download-test-fonts.sh: Removed.
+	* tests/scripts/download-test-fonts.py: New script.
+	* tests/README.md: Updated.
 
 2021-07-15  Alex Richardson  <Alexander.Richardson@cl.cam.ac.uk>
 

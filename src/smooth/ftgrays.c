@@ -487,8 +487,8 @@ typedef ptrdiff_t  FT_PtrDist;
     PCell       cell_free;   /* call allocation next free slot           */
     PCell       cell_limit;  /* cell allocation limit                    */
 
-    PCell*      ycells;      /* array of cell linked-lists, one per      */
-							 /* vertical coordinate in the current band. */
+    PCell*      ycells;      /* array of cell linked-lists; one per      */
+                             /* vertical coordinate in the current band  */
 
     PCell       cells;       /* cell storage area     */
     FT_PtrDist  max_cells;   /* cell storage capacity */
@@ -513,19 +513,21 @@ typedef ptrdiff_t  FT_PtrDist;
   static gray_TWorker  ras;
 #endif
 
-/* Return a pointer to the "null cell", used as a sentinel at the end   */
-/* of all ycells[] linked lists. Its x coordinate should be maximal     */
-/* to ensure no NULL checks are necessary when looking for an insertion */
-/* point in gray_set_cell(). Other loops should check the cell pointer  */
-/* with CELL_IS_NULL() to detect the end of the list.                   */
-#define NULL_CELL_PTR(ras)  (ras).cells
+  /*
+   * Return a pointer to the 'null cell', used as a sentinel at the end of
+   * all `ycells` linked lists.  Its x coordinate should be maximal to
+   * ensure no NULL checks are necessary when looking for an insertion point
+   * in `gray_set_cell`.  Other loops should check the cell pointer with
+   * CELL_IS_NULL() to detect the end of the list.
+   */
+#define NULL_CELL_PTR( ras )  (ras).cells
 
-/* The |x| value of the null cell. Must be the largest possible */
-/* integer value stored in a TCell.x field.                     */
+  /* The |x| value of the null cell.  Must be the largest possible */
+  /* integer value stored in a `TCell.x` field.                    */
 #define CELL_MAX_X_VALUE    INT_MAX
 
-/* Return true iff |cell| points to the null cell. */
-#define CELL_IS_NULL(cell)  ((cell)->x == CELL_MAX_X_VALUE)
+  /* Return true iff |cell| points to the null cell. */
+#define CELL_IS_NULL( cell )  ( (cell)->x == CELL_MAX_X_VALUE )
 
 
 #define FT_INTEGRATE( ras, a, b )                                     \
@@ -556,7 +558,7 @@ typedef ptrdiff_t  FT_PtrDist;
 
       printf( "%3d:", y );
 
-      for ( ; !CELL_IS_NULL(cell); cell = cell->next )
+      for ( ; !CELL_IS_NULL( cell ); cell = cell->next )
         printf( " (%3d, c:%4d, a:%6d)",
                 cell->x, cell->cover, cell->area );
       printf( "\n" );
@@ -584,9 +586,11 @@ typedef ptrdiff_t  FT_PtrDist;
     /* Note that if a cell is to the left of the clipping region, it is    */
     /* actually set to the (min_ex-1) horizontal position.                 */
 
-    TCoord ey_index = ey - ras.min_ey;
+    TCoord  ey_index = ey - ras.min_ey;
+
+
     if ( ey_index < 0 || ey_index >= ras.count_ey || ex >= ras.max_ex )
-      ras.cell = NULL_CELL_PTR(ras);
+      ras.cell = NULL_CELL_PTR( ras );
     else
     {
       PCell*  pcell = ras.ycells + ey_index;
@@ -610,7 +614,7 @@ typedef ptrdiff_t  FT_PtrDist;
 
       /* insert new cell */
       cell = ras.cell_free++;
-      if (cell >= ras.cell_limit)
+      if ( cell >= ras.cell_limit )
         ft_longjmp( ras.jump_buffer, 1 );
 
       cell->x     = ex;
@@ -978,6 +982,7 @@ typedef ptrdiff_t  FT_PtrDist;
         }
 
         gray_set_cell( RAS_VAR_ ex1, ey1 );
+
       } while ( ex1 != ex2 || ey1 != ey2 );
     }
 
@@ -987,30 +992,37 @@ typedef ptrdiff_t  FT_PtrDist;
     FT_INTEGRATE( ras, fy2 - fy1, fx1 + fx2 );
 
   End:
-    ras.x       = to_x;
-    ras.y       = to_y;
+    ras.x = to_x;
+    ras.y = to_y;
   }
 
 #endif
 
-/* Benchmarking shows that using DDA to flatten the quadratic bezier
- * arcs is slightly faster in the following cases:
- *
- *   - When the host CPU is 64-bit.
- *   - When SSE2 SIMD registers and instructions are available (even on x86).
- *
- * For other cases, using binary splits is actually slightly faster.
- */
-#if defined(__SSE2__) || defined(__x86_64__) || defined(__aarch64__) || defined(_M_AMD64) || defined(_M_ARM64)
-#define BEZIER_USE_DDA  1
+  /*
+   * Benchmarking shows that using DDA to flatten the quadratic Bézier arcs
+   * is slightly faster in the following cases:
+   *
+   *   - When the host CPU is 64-bit.
+   *   - When SSE2 SIMD registers and instructions are available (even on
+   *     x86).
+   *
+   * For other cases, using binary splits is actually slightly faster.
+   */
+#if defined( __SSE2__ )    || \
+    defined( __x86_64__ )  || \
+    defined( __aarch64__ ) || \
+    defined( _M_AMD64 )    || \
+    defined( _M_ARM64 )
+#  define BEZIER_USE_DDA  1
 #else
-#define BEZIER_USE_DDA  0
+#  define BEZIER_USE_DDA  0
 #endif
+
 
 #if BEZIER_USE_DDA
 
 #ifdef __SSE2__
-#include <emmintrin.h>
+#  include <emmintrin.h>
 #endif
 
   static void
@@ -1058,8 +1070,8 @@ typedef ptrdiff_t  FT_PtrDist;
     {
       dx   >>= 2;
       shift += 1;
-    }
-    while (dx > ONE_PIXEL / 4);
+
+    } while ( dx > ONE_PIXEL / 4 );
 
     /*
      * The (P0,P1,P2) arc equation, for t in [0,1] range:
@@ -1102,12 +1114,17 @@ typedef ptrdiff_t  FT_PtrDist;
      *     Q << 32   = (2 * B << (32 - N)) + (A << (32 - N - N))
      *               = (B << (33 - N)) + (A << (32 - N - N))
      */
+
 #ifdef __SSE2__
-    /* Experience shows that for small shift values, SSE2 is actually slower. */
-    if (shift > 2) {
-      union {
-        struct { FT_Int64 ax, ay, bx, by; } i;
-        struct { __m128i a, b; } vec;
+    /* Experience shows that for small shift values, */
+    /* SSE2 is actually slower.                      */
+    if ( shift > 2 )
+    {
+      union
+      {
+        struct { FT_Int64  ax, ay, bx, by; }  i;
+        struct { __m128i  a, b; }  vec;
+
       } u;
 
       u.i.ax = p0.x + p2.x - 2 * p1.x;
@@ -1138,10 +1155,11 @@ typedef ptrdiff_t  FT_PtrDist;
         p = _mm_add_epi64(p, q);
         q = _mm_add_epi64(q, r);
 
-        _mm_store_si128(&v.vec, p);
+        _mm_store_si128( &v.vec, p );
 
-        gray_render_line( RAS_VAR_ v.i.px_hi, v.i.py_hi);
+        gray_render_line( RAS_VAR_ v.i.px_hi, v.i.py_hi );
       }
+
       return;
     }
 #endif  /* !__SSE2__ */
@@ -1167,13 +1185,15 @@ typedef ptrdiff_t  FT_PtrDist;
       qx += rx;
       qy += ry;
 
-      gray_render_line( RAS_VAR_ (FT_Pos)(px >> 32), (FT_Pos)(py >> 32));
+      gray_render_line( RAS_VAR_ (FT_Pos)( px >> 32 ),
+                                 (FT_Pos)( py >> 32 ) );
     }
   }
 
 #else  /* !BEZIER_USE_DDA */
 
-  /* Note that multiple attempts to speed up the function below
+  /*
+   * Note that multiple attempts to speed up the function below
    * with SSE2 intrinsics, using various data layouts, have turned
    * out to be slower than the non-SIMD code below.
    */
@@ -1264,12 +1284,14 @@ typedef ptrdiff_t  FT_PtrDist;
 
 #endif  /* !BEZIER_USE_DDA */
 
-  /* For cubic bezier, binary splits are still faster than DDA
+
+  /*
+   * For cubic Bézier, binary splits are still faster than DDA
    * because the splits are adaptive to how quickly each sub-arc
    * approaches their chord trisection points.
    *
    * It might be useful to experiment with SSE2 to speed up
-   * gray_split_cubic() though.
+   * `gray_split_cubic`, though.
    */
   static void
   gray_split_cubic( FT_Vector*  base )
@@ -1361,6 +1383,7 @@ typedef ptrdiff_t  FT_PtrDist;
     }
   }
 
+
   static int
   gray_move_to( const FT_Vector*  to,
                 gray_PWorker      worker )
@@ -1428,7 +1451,7 @@ typedef ptrdiff_t  FT_PtrDist;
       unsigned char*  line = ras.target.origin - ras.target.pitch * y;
 
 
-      for ( ; !CELL_IS_NULL(cell); cell = cell->next )
+      for ( ; !CELL_IS_NULL( cell ); cell = cell->next )
       {
         if ( cover != 0 && cell->x > x )
         {
@@ -1476,7 +1499,7 @@ typedef ptrdiff_t  FT_PtrDist;
       TArea   area;
 
 
-      for ( ; !CELL_IS_NULL(cell); cell = cell->next )
+      for ( ; !CELL_IS_NULL( cell ); cell = cell->next )
       {
         if ( cover != 0 && cell->x > x )
         {
@@ -1898,19 +1921,19 @@ typedef ptrdiff_t  FT_PtrDist;
     /* memory management */
     n = ( height * sizeof ( PCell ) + sizeof ( TCell ) - 1 ) / sizeof ( TCell );
 
-    ras.cells     = buffer + n;
-    ras.max_cells = (FT_PtrDist)( FT_MAX_GRAY_POOL - n );
+    ras.cells      = buffer + n;
+    ras.max_cells  = (FT_PtrDist)( FT_MAX_GRAY_POOL - n );
     ras.cell_limit = ras.cells + ras.max_cells;
-    ras.ycells    = (PCell*)buffer;
+    ras.ycells     = (PCell*)buffer;
 
-	/* Initialize the null cell is at the start of the 'cells' array. */
-	/* Note that this requires ras.cell_free initialization to skip   */
-	/* over the first entry in the array.                             */
-	PCell null_cell  = NULL_CELL_PTR(ras);
-	null_cell->x     = CELL_MAX_X_VALUE;
-	null_cell->area  = 0;
-	null_cell->cover = 0;
-	null_cell->next  = NULL;;
+    /* Initialize the null cell at the start of the `cells` array.    */
+    /* Note that this requires `ras.cell_free` initialization to skip */
+    /* over the first entry in the array.                             */
+    PCell null_cell  = NULL_CELL_PTR( ras );
+    null_cell->x     = CELL_MAX_X_VALUE;
+    null_cell->area  = 0;
+    null_cell->cover = 0;
+    null_cell->next  = NULL;;
 
     for ( y = yMin; y < yMax; )
     {
@@ -1928,7 +1951,8 @@ typedef ptrdiff_t  FT_PtrDist;
         TCoord  w;
         int     error;
 
-        for (w = 0; w < width; ++w)
+
+        for ( w = 0; w < width; ++w )
           ras.ycells[w] = null_cell;
 
         ras.cell_free = ras.cells + 1;  /* NOTE: Skip over the null cell. */
