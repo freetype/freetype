@@ -1030,6 +1030,16 @@ typedef ptrdiff_t  FT_PtrDist;
                               const FT_Vector*  to )
   {
     FT_Vector  p0, p1, p2;
+    TPos       dx, dy;
+    int        shift;
+
+    FT_Int64  ax, ay, bx, by;
+    FT_Int64  rx, ry;
+    FT_Int64  qx, qy;
+    FT_Int64  px, py;
+
+    FT_UInt  count;
+
 
     p0.x = ras.x;
     p0.y = ras.y;
@@ -1051,8 +1061,8 @@ typedef ptrdiff_t  FT_PtrDist;
       return;
     }
 
-    TPos dx = FT_ABS( p0.x + p2.x - 2 * p1.x );
-    TPos dy = FT_ABS( p0.y + p2.y - 2 * p1.y );
+    dx = FT_ABS( p0.x + p2.x - 2 * p1.x );
+    dy = FT_ABS( p0.y + p2.y - 2 * p1.y );
     if ( dx < dy )
       dx = dy;
 
@@ -1065,7 +1075,7 @@ typedef ptrdiff_t  FT_PtrDist;
     /* We can calculate the number of necessary bisections because  */
     /* each bisection predictably reduces deviation exactly 4-fold. */
     /* Even 32-bit deviation would vanish after 16 bisections.      */
-    int shift = 0;
+    shift = 0;
     do
     {
       dx   >>= 2;
@@ -1127,33 +1137,43 @@ typedef ptrdiff_t  FT_PtrDist;
 
       } u;
 
+      union
+      {
+        struct { FT_Int32  px_lo, px_hi, py_lo, py_hi; }  i;
+        __m128i  vec;
+
+      } v;
+
+      __m128i  a, b;
+      __m128i  r, q, q2;
+      __m128i  p;
+
+
       u.i.ax = p0.x + p2.x - 2 * p1.x;
       u.i.ay = p0.y + p2.y - 2 * p1.y;
       u.i.bx = p1.x - p0.x;
       u.i.by = p1.y - p0.y;
 
-      __m128i a = _mm_load_si128(&u.vec.a);
-      __m128i b = _mm_load_si128(&u.vec.b);
+      a = _mm_load_si128( &u.vec.a );
+      b = _mm_load_si128( &u.vec.b );
 
-      __m128i r = _mm_slli_epi64(a, 33 - 2 * shift);
-      __m128i q = _mm_slli_epi64(b, 33 - shift);
-      __m128i q2 = _mm_slli_epi64(a, 32 - 2 * shift);
-      q = _mm_add_epi64(q2, q);
+      r  = _mm_slli_epi64( a, 33 - 2 * shift );
+      q  = _mm_slli_epi64( b, 33 - shift );
+      q2 = _mm_slli_epi64( a, 32 - 2 * shift );
 
-      union {
-        struct { FT_Int32  px_lo, px_hi, py_lo, py_hi; } i;
-        __m128i vec;
-      } v;
+      q = _mm_add_epi64( q2, q );
+
       v.i.px_lo = 0;
       v.i.px_hi = p0.x;
       v.i.py_lo = 0;
       v.i.py_hi = p0.y;
 
-      __m128i p = _mm_load_si128(&v.vec);
+      p = _mm_load_si128( &v.vec );
 
-      for (unsigned count = (1u << shift); count > 0; count--) {
-        p = _mm_add_epi64(p, q);
-        q = _mm_add_epi64(q, r);
+      for ( count = ( 1U << shift ); count > 0; count-- )
+      {
+        p = _mm_add_epi64( p, q );
+        q = _mm_add_epi64( q, r );
 
         _mm_store_si128( &v.vec, p );
 
@@ -1162,24 +1182,24 @@ typedef ptrdiff_t  FT_PtrDist;
 
       return;
     }
-#endif  /* !__SSE2__ */
-    FT_Int64 ax = p0.x + p2.x - 2 * p1.x;
-    FT_Int64 ay = p0.y + p2.y - 2 * p1.y;
-    FT_Int64 bx = p1.x - p0.x;
-    FT_Int64 by = p1.y - p0.y;
+#endif  /* __SSE2__ */
 
-    FT_Int64 rx = ax << (33 - 2 * shift);
-    FT_Int64 ry = ay << (33 - 2 * shift);
+    ax = p0.x + p2.x - 2 * p1.x;
+    ay = p0.y + p2.y - 2 * p1.y;
+    bx = p1.x - p0.x;
+    by = p1.y - p0.y;
 
-    FT_Int64 qx = (bx << (33 - shift)) + (ax << (32 - 2 * shift));
-    FT_Int64 qy = (by << (33 - shift)) + (ay << (32 - 2 * shift));
+    rx = ax << ( 33 - 2 * shift );
+    ry = ay << ( 33 - 2 * shift );
 
-    FT_Int64 px = (FT_Int64)p0.x << 32;
-    FT_Int64 py = (FT_Int64)p0.y << 32;
+    qx = ( bx << ( 33 - shift ) ) + ( ax << ( 32 - 2 * shift ) );
+    qy = ( by << ( 33 - shift ) ) + ( ay << ( 32 - 2 * shift ) );
 
-	FT_UInt count = 1u << shift;
+    px = (FT_Int64)p0.x << 32;
+    py = (FT_Int64)p0.y << 32;
 
-    for (; count > 0; count--) {
+    for ( count = 1U << shift; count > 0; count-- )
+    {
       px += qx;
       py += qy;
       qx += rx;
@@ -1879,7 +1899,7 @@ typedef ptrdiff_t  FT_PtrDist;
       FT_TRACE7(( "band [%d..%d]: %ld cell%s\n",
                   ras.min_ey,
                   ras.max_ey,
-                  ras.cell_free - ras.cells.,
+                  ras.cell_free - ras.cells,
                   ras.cell_free - ras.cells == 1 ? "" : "s" ));
     }
     else

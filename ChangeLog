@@ -1,3 +1,13 @@
+2021-07-16  Werner Lemberg  <wl@gnu.org>
+
+	[smooth] Minor fixes.
+
+	* src/smooth/ftgrays.c (gray_render_conic): Move variable and
+	structure declarations to beginning of function.  Inspite of C99
+	compliance we still do this for the sake of backward compatibility.
+	This also avoids a shadowing declaration of `count`.
+	(gray_convert_glyph_inner): Fix typo.
+
 2021-07-15  Ben Wagner  <bungeman@chromium.org>
 
 	* src/smooth/ftgrays.c: Guard inclusion of `emmintrin.h`.
