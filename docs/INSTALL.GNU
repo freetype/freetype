@@ -152,7 +152,7 @@ instructions in the file `INSTALL.UNIX' instead.
 
     To  launch  the build,  simply  invoke  GNU  Make again:  The  top
     Makefile will detect the configuration file and run the build with
-    it.  If you have used variables in  step 3, you must used the same
+    it.  If you have used variables in  step 3, you must use  the same
     variables here, too.
 
 

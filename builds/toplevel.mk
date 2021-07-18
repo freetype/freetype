@@ -248,7 +248,10 @@ dist:
 
 	currdir=`pwd` ; \
 	for f in `find . -wholename '*/.git' -prune \
+	                 -o -name .gitattributes \
 	                 -o -name .gitignore \
+	                 -o -name .gitlab-ci.yml \
+	                 -o -name .gitmodules \
 	                 -o -name .mailmap \
 	                 -o -type d \
 	                 -o -print` ; do \

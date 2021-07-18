@@ -166,7 +166,7 @@
       /* `.notdef', `.null' and the empty name are short cut */
       if ( p > glyph_name )
       {
-        value =  (FT_UInt32)ft_get_adobe_glyph_index( glyph_name, p );
+        value = (FT_UInt32)ft_get_adobe_glyph_index( glyph_name, p );
 
         if ( *p == '.' )
           value |= (FT_UInt32)VARIANT_BIT;

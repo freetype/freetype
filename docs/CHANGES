@@ -2,11 +2,6 @@ CHANGES BETWEEN 2.10.4 and 2.11.0
 
   I. IMPORTANT CHANGES
 
-  - The legacy Type 1 and CFF  engines are further demoted due to lack
-    of CFF2 charstring support.  You now need to use `FT_Property_Set`
-    to  enable   it  besides  the   `T1_CONFIG_OPTION_OLD_ENGINE`  and
-    `CFF_CONFIG_OPTION_OLD_ENGINE` options.
-
   - A  new rendering  module has  been  added to  create 8-bit  Signed
     Distance Field (SDF)  bitmaps for both outline  and bitmap glyphs.
     The new  rendering mode is called  `FT_RENDER_MODE_SDF`, the pixel
@@ -72,6 +67,11 @@ CHANGES BETWEEN 2.10.4 and 2.11.0
 
     This work was Priyesh Kumar's GSoC 2020 project.
 
+  - The legacy Type 1 and CFF  engines are further demoted due to lack
+    of CFF2 charstring support.  You now need to use `FT_Property_Set`
+    to  enable  them  besides  the  `T1_CONFIG_OPTION_OLD_ENGINE`  and
+    `CFF_CONFIG_OPTION_OLD_ENGINE` options, respectively.
+
   - The experimental 'warp' mode (AF_CONFIG_OPTION_USE_WARPER) for the
     auto-hinter has been removed.
 
@@ -83,9 +83,8 @@ CHANGES BETWEEN 2.10.4 and 2.11.0
   - PCF bitmap fonts compressed with LZW (these are usually files with
     the extension `.pcf.Z`) are now handled correctly.
 
-  - Improved Meson build support for the library.
-
-  - Meson support to build the FreeType demo programs.
+  - Improved  Meson  build  files,  including  support  to  build  the
+    FreeType demo programs.
 
   - A new demo program `ftsdf` is available to display Signed Distance
     Fields of glyphs.

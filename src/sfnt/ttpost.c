@@ -265,7 +265,7 @@
           if ( FT_QREALLOC( strings, 1, 2 ) )
             goto Fail;
 
-          post_len = 1;
+          post_len          = 1;
           strings[post_len] = 0;
         }
 

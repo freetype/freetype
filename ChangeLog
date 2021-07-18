@@ -1,3 +1,30 @@
+2021-07-18  Werner Lemberg  <wl@gnu.org>
+
+	* Version 2.11.0 released.
+	==========================
+
+
+	Tag sources with `VER-2-11-0'.
+
+	* docs/VERSION.TXT: Add entry for version 2.11.0.
+	* docs/CHANGES: Updated.
+
+	* README, src/base/ftver.rc, builds/windows/vc2010/index.html,
+	builds/windows/visualc/index.html,
+	builds/windows/visualce/index.html,
+	builds/wince/vc2005-ce/index.html,
+	builds/wince/vc2008-ce/index.html, docs/freetype-config.1:
+	s/2.10.4/2.11.0/, s/2104/2110/.
+
+	* include/freetype/freetype.h (FREETYPE_MINOR): Set to 11.
+	(FREETYPE_PATCH): Set to 0.
+
+	* builds/unix/configure.raw (version_info): Set to 24:0:18.
+	* CMakeLists.txt (VERSION_MINOR): Set to 11.
+	(VERSION_PATCH): Set to 0.
+
+	* builds/toplevel.mk (dist): Ignore more git-related files.
+
 2021-07-17  David Turner  <david@freetype.org>
 
 	* src/smooth/ftgrays.c: Fix compilation if `FT_LONG64` is undefined.
