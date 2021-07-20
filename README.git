@@ -72,6 +72,21 @@ to execute `autogen.sh`  in advance; this script clones  the 'dlg' git
 submodule and copies some files into FreeType's source tree.
 
 
+Code of Conduct
+---------------
+
+Please note that  this project is released with a  Contributor Code of
+Conduct (CoC).  By participating in this project you agree to abide by
+its terms, which you can find in the following link:
+
+  https://www.freedesktop.org/wiki/CodeOfConduct
+
+CoC issues may  be raised to the project maintainers  at the following
+address:
+
+  wl@gnu.org
+  apodtele@gmail.com
+
 ----------------------------------------------------------------------
 
 Copyright (C) 2005-2021 by
