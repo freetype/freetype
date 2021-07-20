@@ -123,21 +123,21 @@ linux meson libs:
 linux cmake:
   extends: '.build linux common'
   script: |
-    cmake -B build -D FT_WITH_BROTLI=OFF \
-                   -D FT_WITH_BZIP2=OFF \
-                   -D FT_WITH_HARFBUZZ=OFF \
-                   -D FT_WITH_PNG=OFF \
-                   -D FT_WITH_ZLIB=OFF
+    cmake -B build -D FT_DISABLE_BROTLI=TRUE \
+                   -D FT_DISABLE_BZIP2=TRUE \
+                   -D FT_DISABLE_HARFBUZZ=TRUE \
+                   -D FT_DISABLE_PNG=TRUE \
+                   -D FT_DISABLE_ZLIB=TRUE
 
     cmake --build build --target install
 
 linux cmake libs:
   extends: '.build linux common'
   script: |
-    cmake -B build -D FT_WITH_BROTLI=ON \
-                   -D FT_WITH_BZIP2=ON \
-                   -D FT_WITH_HARFBUZZ=ON \
-                   -D FT_WITH_PNG=ON \
-                   -D FT_WITH_ZLIB=ON
+    cmake -B build -D FT_REQUIRE_BROTLI=TRUE \
+                   -D FT_REQUIRE_BZIP2=TRUE \
+                   -D FT_REQUIRE_HARFBUZZ=TRUE \
+                   -D FT_REQUIRE_PNG=TRUE \
+                   -D FT_REQUIRE_ZLIB=TRUE
 
     cmake --build build --target install
