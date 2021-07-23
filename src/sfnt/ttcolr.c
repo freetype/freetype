@@ -619,15 +619,32 @@
       return 1;
     }
 
-    else if ( apaint->format == FT_COLR_PAINTFORMAT_ROTATE )
+    else if ( apaint->format == FT_COLR_PAINTFORMAT_ROTATE  ||
+              (FT_PaintFormat_Internal)apaint->format ==
+                FT_COLR_PAINTFORMAT_INTERNAL_ROTATE_CENTER  )
     {
       apaint->u.rotate.paint.p                     = child_table_p;
       apaint->u.rotate.paint.insert_root_transform = 0;
 
-      apaint->u.rotate.angle = FT_NEXT_LONG( p );
+      /* The angle is specified as F2DOT14 and our output type is an FT_Fixed,
+       * shift by 2 positions. */
+      apaint->u.rotate.angle = FT_NEXT_SHORT( p ) << 2;
 
-      apaint->u.rotate.center_x = FT_NEXT_LONG( p );
-      apaint->u.rotate.center_y = FT_NEXT_LONG( p );
+      if ( (FT_PaintFormat_Internal)apaint->format ==
+           FT_COLR_PAINTFORMAT_INTERNAL_ROTATE_CENTER )
+      {
+        /* The center is specified as Int16 in font units, shift by 16 bits to
+         * convert to our FT_Fixed output type. */
+        apaint->u.rotate.center_x = FT_NEXT_SHORT( p ) << 16;
+        apaint->u.rotate.center_y = FT_NEXT_SHORT( p ) << 16;
+      }
+      else
+      {
+        apaint->u.rotate.center_x = 0;
+        apaint->u.rotate.center_y = 0;
+      }
+
+      apaint->format = FT_COLR_PAINTFORMAT_ROTATE;
 
       return 1;
     }

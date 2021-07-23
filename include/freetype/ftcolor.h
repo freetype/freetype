@@ -1173,7 +1173,9 @@ FT_BEGIN_HEADER
    *     rotated.
    *
    *   angle ::
-   *     The rotation angle that is to be applied.
+   *     The rotation angle that is to be applied in degrees divided by
+   *     180.0 (as in the spec).  Multiply by 180.0f to receive degrees
+   *     value.
    *
    *   center_x ::
    *     The x~coordinate of the pivot point of the rotation (in font
