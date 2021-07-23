@@ -566,8 +566,8 @@
       apaint->u.translate.paint.p                     = child_table_p;
       apaint->u.translate.paint.insert_root_transform = 0;
 
-      apaint->u.translate.dx = FT_NEXT_LONG( p );
-      apaint->u.translate.dy = FT_NEXT_LONG( p );
+      apaint->u.translate.dx = FT_NEXT_SHORT( p ) << 16;
+      apaint->u.translate.dy = FT_NEXT_SHORT( p ) << 16;
 
       return 1;
     }
@@ -585,14 +585,14 @@
       apaint->u.scale.paint.insert_root_transform = 0;
 
       /* All scale paints get at least one scale value. */
-      apaint->u.scale.scale_x = FT_NEXT_LONG( p );
+      apaint->u.scale.scale_x = FT_NEXT_SHORT( p ) << 2;
 
       /* Non-uniform ones read an extra y value. */
       if ( apaint->format ==
              FT_COLR_PAINTFORMAT_SCALE                 ||
            (FT_PaintFormat_Internal)apaint->format ==
              FT_COLR_PAINTFORMAT_INTERNAL_SCALE_CENTER )
-        apaint->u.scale.scale_y = FT_NEXT_LONG( p );
+        apaint->u.scale.scale_y = FT_NEXT_SHORT( p ) << 2;
       else
         apaint->u.scale.scale_y = apaint->u.scale.scale_x;
 
@@ -603,8 +603,8 @@
            (FT_PaintFormat_Internal)apaint->format ==
              FT_COLR_PAINTFORMAT_INTERNAL_SCALE_UNIFORM_CENTER )
       {
-        apaint->u.scale.center_x = FT_NEXT_LONG ( p );
-        apaint->u.scale.center_y = FT_NEXT_LONG ( p );
+        apaint->u.scale.center_x = FT_NEXT_SHORT ( p ) << 16;
+        apaint->u.scale.center_y = FT_NEXT_SHORT ( p ) << 16;
       }
       else
       {
