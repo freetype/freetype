@@ -658,8 +658,8 @@ typedef ptrdiff_t  FT_PtrDist;
       return;
     }
 
-    fx1   = FRACT( x1 );
-    fx2   = FRACT( x2 );
+    fx1 = FRACT( x1 );
+    fx2 = FRACT( x2 );
 
     /* everything is located in a single cell.  That is easy! */
     /*                                                        */
@@ -1256,7 +1256,7 @@ typedef ptrdiff_t  FT_PtrDist;
     FT_Vector   bez_stack[16 * 2 + 1];  /* enough to accommodate bisections */
     FT_Vector*  arc = bez_stack;
     TPos        dx, dy;
-    int         draw, split;
+    int         draw;
 
 
     arc[0].x = UPSCALE( to->x );
@@ -1299,7 +1299,9 @@ typedef ptrdiff_t  FT_PtrDist;
     /* many times as there are trailing zeros in the counter.         */
     do
     {
-      split = draw & ( -draw );  /* isolate the rightmost 1-bit */
+      int  split = draw & ( -draw );  /* isolate the rightmost 1-bit */
+
+
       while ( ( split >>= 1 ) )
       {
         gray_split_conic( arc );
@@ -1466,7 +1468,8 @@ typedef ptrdiff_t  FT_PtrDist;
   static void
   gray_sweep( RAS_ARG )
   {
-    int  fill = ras.outline.flags & FT_OUTLINE_EVEN_ODD_FILL ? 0x100 : INT_MIN;
+    int  fill = ( ras.outline.flags & FT_OUTLINE_EVEN_ODD_FILL ) ? 0x100
+                                                                 : INT_MIN;
     int  coverage;
     int  y;
 
@@ -1476,13 +1479,15 @@ typedef ptrdiff_t  FT_PtrDist;
       PCell   cell  = ras.ycells[y - ras.min_ey];
       TCoord  x     = ras.min_ex;
       TArea   cover = 0;
-      TArea   area;
 
       unsigned char*  line = ras.target.origin - ras.target.pitch * y;
 
 
       for ( ; !CELL_IS_NULL( cell ); cell = cell->next )
       {
+        TArea  area;
+
+
         if ( cover != 0 && cell->x > x )
         {
           FT_FILL_RULE( coverage, cover, fill );
@@ -1513,7 +1518,8 @@ typedef ptrdiff_t  FT_PtrDist;
   static void
   gray_sweep_direct( RAS_ARG )
   {
-    int  fill = ras.outline.flags & FT_OUTLINE_EVEN_ODD_FILL ? 0x100 : INT_MIN;
+    int  fill = ( ras.outline.flags & FT_OUTLINE_EVEN_ODD_FILL ) ? 0x100
+                                                                 : INT_MIN;
     int  coverage;
     int  y;
 
@@ -1526,11 +1532,13 @@ typedef ptrdiff_t  FT_PtrDist;
       PCell   cell  = ras.ycells[y - ras.min_ey];
       TCoord  x     = ras.min_ex;
       TArea   cover = 0;
-      TArea   area;
 
 
       for ( ; !CELL_IS_NULL( cell ); cell = cell->next )
       {
+        TArea  area;
+
+
         if ( cover != 0 && cell->x > x )
         {
           FT_FILL_RULE( coverage, cover, fill );
