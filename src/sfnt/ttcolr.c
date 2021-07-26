@@ -551,6 +551,11 @@
       apaint->u.transform.paint.p                     = child_table_p;
       apaint->u.transform.paint.insert_root_transform = 0;
 
+      if ( !get_child_table_pointer( colr, paint_base, &p, &child_table_p ) )
+         return 0;
+
+      p = child_table_p;
+
       apaint->u.transform.affine.xx = FT_NEXT_LONG( p );
       apaint->u.transform.affine.yx = FT_NEXT_LONG( p );
       apaint->u.transform.affine.xy = FT_NEXT_LONG( p );
