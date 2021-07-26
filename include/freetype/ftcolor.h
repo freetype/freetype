@@ -965,14 +965,16 @@ FT_BEGIN_HEADER
    *     The center of the sweep gradient (in font units).
    *
    *   start_angle ::
-   *     The start angle of the sweep gradient, in 16.16 fixed point format
-   *     specifying degrees.  Values are given counter-clockwise, starting
-   *     from the (positive) y~axis.
+   *     The start angle of the sweep gradient, in 16.16 fixed point
+   *     format specifying degrees divided by 180.0 (as in the
+   *     spec).  Multiply by 180.0f to receive degrees value.  Values are
+   *     given counter-clockwise, starting from the (positive) y~axis.
    *
    *   end_angle ::
-   *     The end angle of the sweep gradient, in 16.16 fixed point format
-   *     specifying degrees.  Values are given counter-clockwise, starting
-   *     from the (positive) y~axis.
+   *     The end angle of the sweep gradient, in 16.16 fixed point
+   *     format specifying degrees divided by 180.0 (as in the
+   *     spec).  Multiply by 180.0f to receive degrees value.  Values are
+   *     given counter-clockwise, starting from the (positive) y~axis.
    *
    * @since:
    *   2.11 -- **currently experimental only!**  There might be changes

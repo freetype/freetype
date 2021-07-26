@@ -531,8 +531,8 @@
       apaint->u.sweep_gradient.center.x = FT_NEXT_SHORT( p );
       apaint->u.sweep_gradient.center.y = FT_NEXT_SHORT( p );
 
-      apaint->u.sweep_gradient.start_angle = FT_NEXT_LONG( p );
-      apaint->u.sweep_gradient.end_angle = FT_NEXT_LONG( p );
+      apaint->u.sweep_gradient.start_angle = FT_NEXT_SHORT( p ) << 2;
+      apaint->u.sweep_gradient.end_angle = FT_NEXT_SHORT( p ) << 2;
 
       return 1;
     }
