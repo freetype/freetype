@@ -649,16 +649,29 @@
       return 1;
     }
 
-    else if ( apaint->format == FT_COLR_PAINTFORMAT_SKEW )
+    else if ( apaint->format == FT_COLR_PAINTFORMAT_SKEW  ||
+              (FT_PaintFormat_Internal)apaint->format ==
+                FT_COLR_PAINTFORMAT_INTERNAL_SKEW_CENTER  )
     {
       apaint->u.skew.paint.p                     = child_table_p;
       apaint->u.skew.paint.insert_root_transform = 0;
 
-      apaint->u.skew.x_skew_angle = FT_NEXT_LONG( p );
-      apaint->u.skew.y_skew_angle = FT_NEXT_LONG( p );
+      apaint->u.skew.x_skew_angle = FT_NEXT_SHORT( p ) << 2;
+      apaint->u.skew.y_skew_angle = FT_NEXT_SHORT( p ) << 2;
 
-      apaint->u.skew.center_x = FT_NEXT_LONG( p );
-      apaint->u.skew.center_y = FT_NEXT_LONG( p );
+      if ( (FT_PaintFormat_Internal)apaint->format ==
+           FT_COLR_PAINTFORMAT_INTERNAL_SKEW_CENTER )
+      {
+        apaint->u.skew.center_x = FT_NEXT_SHORT( p ) << 16;
+        apaint->u.skew.center_y = FT_NEXT_SHORT( p ) << 16;
+      }
+      else
+      {
+        apaint->u.skew.center_x = 0;
+        apaint->u.skew.center_y = 0;
+      }
+
+      apaint->format = FT_COLR_PAINTFORMAT_SKEW;
 
       return 1;
     }
