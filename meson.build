@@ -49,6 +49,7 @@ ft2_pkgconfig_version = run_command(python_exe,
 
 ft2_includes = include_directories('include')
 
+freetype_includedir = join_paths(get_option('includedir'), 'freetype2')
 
 # Generate a custom `ftmodule.h` version based on the content of
 # `modules.cfg`.
@@ -59,7 +60,7 @@ ftmodule_h = custom_target('ftmodule.h',
   command: [python_exe, files('builds/meson/parse_modules_cfg.py'),
             '--format=ftmodule.h', '@INPUT@', '--output', '@OUTPUT@'],
   install: true,
-  install_dir: 'include/freetype2/freetype/config',
+  install_dir: join_paths(freetype_includedir, 'freetype/config'),
 )
 ft2_sources = [ftmodule_h]
 
@@ -303,7 +304,7 @@ ftoption_h = custom_target('ftoption.h',
   output: 'ftoption.h',
   command: ftoption_command,
   install: true,
-  install_dir: 'include/freetype2/freetype/config',
+  install_dir: join_paths(freetype_includedir, 'freetype/config'),
 )
 ft2_sources += ftoption_h
 ft2_defines += ['-DFT_CONFIG_OPTIONS_H=<ftoption.h>']
@@ -330,7 +331,7 @@ if use_unix_ftsystem_c
     output: 'ftconfig.h',
     command: ftconfig_command,
     install: true,
-    install_dir: 'include/freetype2/freetype/config',
+    install_dir: join_paths(freetype_includedir, 'freetype/config'),
   )
   ft2_sources += ftconfig_h
   ft2_defines += ['-DFT_CONFIG_CONFIG_H=<ftconfig.h>']
@@ -361,11 +362,11 @@ meson.override_dependency('freetype2', freetype_dep)
 # i.e., the subdir value seems to be ignored, contrary to examples in the
 # Meson documentation.
 install_headers('include/ft2build.h',
-  install_dir: 'include/freetype2')
+  install_dir: freetype_includedir)
 install_headers(ft2_public_headers,
-  install_dir: 'include/freetype2/freetype')
+  install_dir: join_paths(freetype_includedir, 'freetype'))
 install_headers(ft2_config_headers,
-  install_dir: 'include/freetype2/freetype/config')
+  install_dir: join_paths(freetype_includedir, 'freetype/config'))
 
 
 pkgconfig = import('pkgconfig')
