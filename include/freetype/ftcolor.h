@@ -1385,6 +1385,49 @@ FT_BEGIN_HEADER
 
   /**************************************************************************
    *
+   * @struct:
+   *   FT_ClipBox
+   *
+   * @description:
+   *   A structure representing a 'COLR' v1 'ClipBox' table.  'COLR' v1
+   *   glyphs may optionally define a clip box for aiding allocation or
+   *   defining a maximum drawable region.  Use @FT_Get_Color_Glyph_ClipBox
+   *   to retrieve it.
+   *
+   * @fields:
+   *   bottom_left ::
+   *     The bottom left corner of the clip box as an @FT_Vector with
+   *     fixed-point coordinates in 26.6 format.
+   *
+   *   top_left ::
+   *     The top left corner of the clip box as an @FT_Vector with
+   *     fixed-point coordinates in 26.6 format.
+   *
+   *   top_right ::
+   *     The top right corner of the clip box as an @FT_Vector with
+   *     fixed-point coordinates in 26.6 format.
+   *
+   *   bottom_right ::
+   *     The bottom right corner of the clip box as an @FT_Vector with
+   *     fixed-point coordinates in 26.6 format.
+   *
+   * @since:
+   *   2.12 -- **currently experimental only!**  There might be changes
+   *   without retaining backward compatibility of both the API and ABI.
+   *
+   */
+  typedef struct  FT_ClipBox_
+  {
+    FT_Vector  bottom_left;
+    FT_Vector  top_left;
+    FT_Vector  top_right;
+    FT_Vector  bottom_right;
+
+  } FT_ClipBox;
+
+
+  /**************************************************************************
+   *
    * @function:
    *   FT_Get_Color_Glyph_Paint
    *
@@ -1473,6 +1516,49 @@ FT_BEGIN_HEADER
                             FT_UInt                  base_glyph,
                             FT_Color_Root_Transform  root_transform,
                             FT_OpaquePaint*          paint );
+
+
+  /**************************************************************************
+   *
+   * @function:
+   *   FT_Get_Color_Glyph_ClipBox
+   *
+   * @description:
+   *   Search for a 'COLR' v1 clip box for the specified `base_glyph` and
+   *   fill the `clip_box` parameter with the 'COLR' v1 'ClipBox' information
+   *   if one is found.
+   *
+   * @input:
+   *   face ::
+   *     A handle to the parent face object.
+   *
+   *   base_glyph ::
+   *     The glyph index for which to retrieve the clip box.
+   *
+   * @output:
+   *   clip_box ::
+   *     The clip box for the requested `base_glyph` if one is found.  The
+   *     clip box is computed taking scale and transformations configured on
+   *     the @FT_Face into account.  @FT_ClipBox contains @FT_Vector values
+   *     in 26.6 format.
+   *
+   * @return:
+   *   Value~1 if a clip box is found.  If no clip box is found or an error
+   *   occured, value~0 is returned.
+   *
+   * @note:
+   *   To retrieve the clip box in font units, reset scale to units-per-em
+   *   and remove transforms configured using @FT_Set_Transform.
+   *
+   * @since:
+   *   2.12 -- **currently experimental only!**  There might be changes
+   *   without retaining backward compatibility of both the API and ABI.
+   *
+   */
+  FT_EXPORT( FT_Bool )
+  FT_Get_Color_Glyph_ClipBox( FT_Face      face,
+                              FT_UInt      base_glyph,
+                              FT_ClipBox*  clip_box );
 
 
   /**************************************************************************
