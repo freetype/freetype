@@ -532,7 +532,7 @@
       apaint->u.sweep_gradient.center.y = FT_NEXT_SHORT( p );
 
       apaint->u.sweep_gradient.start_angle = FT_NEXT_SHORT( p ) << 2;
-      apaint->u.sweep_gradient.end_angle = FT_NEXT_SHORT( p ) << 2;
+      apaint->u.sweep_gradient.end_angle   = FT_NEXT_SHORT( p ) << 2;
 
       return 1;
     }
@@ -624,9 +624,9 @@
       return 1;
     }
 
-    else if ( apaint->format == FT_COLR_PAINTFORMAT_ROTATE  ||
+    else if ( apaint->format == FT_COLR_PAINTFORMAT_ROTATE ||
               (FT_PaintFormat_Internal)apaint->format ==
-                FT_COLR_PAINTFORMAT_INTERNAL_ROTATE_CENTER  )
+                FT_COLR_PAINTFORMAT_INTERNAL_ROTATE_CENTER )
     {
       apaint->u.rotate.paint.p                     = child_table_p;
       apaint->u.rotate.paint.insert_root_transform = 0;
@@ -654,9 +654,9 @@
       return 1;
     }
 
-    else if ( apaint->format == FT_COLR_PAINTFORMAT_SKEW  ||
+    else if ( apaint->format == FT_COLR_PAINTFORMAT_SKEW ||
               (FT_PaintFormat_Internal)apaint->format ==
-                FT_COLR_PAINTFORMAT_INTERNAL_SKEW_CENTER  )
+                FT_COLR_PAINTFORMAT_INTERNAL_SKEW_CENTER )
     {
       apaint->u.skew.paint.p                     = child_table_p;
       apaint->u.skew.paint.insert_root_transform = 0;
