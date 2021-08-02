@@ -928,7 +928,7 @@
 
       /* Forward pass of rows (left -> right).  Leave the first  */
       /* column, which gets covered in the backward pass.        */
-      for ( i = 1; i < w; i++ )
+      for ( i = 1; i < w - 1; i++ )
       {
         index   = j * w + i;
         current = dm + index;
@@ -997,7 +997,7 @@
 
       /* Forward pass of rows (left -> right).  Leave the first */
       /* column, which gets covered in the backward pass.       */
-      for ( i = 1; i < w; i++ )
+      for ( i = 1; i < w - 1; i++ )
       {
         index   = j * w + i;
         current = dm + index;
