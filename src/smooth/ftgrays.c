@@ -1035,6 +1035,9 @@ typedef ptrdiff_t  FT_PtrDist;
 #  include <emmintrin.h>
 #endif
 
+#define LEFT_SHIFT( a, b )  (FT_Int64)( (FT_UInt64)(a) << (b) )
+
+
   static void
   gray_render_conic( RAS_ARG_ const FT_Vector*  control,
                               const FT_Vector*  to )
@@ -1126,13 +1129,15 @@ typedef ptrdiff_t  FT_PtrDist;
      *     EMIT(P)
      *
      * To ensure accurate results, perform computations on 64-bit
-     * values, after scaling them by 2^32:
+     * values, after scaling them by 2^32.
      *
-     *     R << 32   = 2 * A << (32 - N - N)
-     *               = A << (33 - 2 *N)
+     *           h = 1 / 2^N
      *
-     *     Q << 32   = (2 * B << (32 - N)) + (A << (32 - N - N))
-     *               = (B << (33 - N)) + (A << (32 - N - N))
+     *     R << 32 = 2 * A << (32 - N - N)
+     *             = A << (33 - 2*N)
+     *
+     *     Q << 32 = (2 * B << (32 - N)) + (A << (32 - N - N))
+     *             = (B << (33 - N)) + (A << (32 - 2*N))
      */
 
 #ifdef __SSE2__
@@ -1199,14 +1204,14 @@ typedef ptrdiff_t  FT_PtrDist;
     bx = p1.x - p0.x;
     by = p1.y - p0.y;
 
-    rx = ax << ( 33 - 2 * shift );
-    ry = ay << ( 33 - 2 * shift );
+    rx = LEFT_SHIFT( ax, 33 - 2 * shift );
+    ry = LEFT_SHIFT( ay, 33 - 2 * shift );
 
-    qx = ( bx << ( 33 - shift ) ) + ( ax << ( 32 - 2 * shift ) );
-    qy = ( by << ( 33 - shift ) ) + ( ay << ( 32 - 2 * shift ) );
+    qx = LEFT_SHIFT( bx, 33 - shift ) + LEFT_SHIFT( ax, 32 - 2 * shift );
+    qy = LEFT_SHIFT( by, 33 - shift ) + LEFT_SHIFT( ay, 32 - 2 * shift );
 
-    px = (FT_Int64)p0.x << 32;
-    py = (FT_Int64)p0.y << 32;
+    px = LEFT_SHIFT( p0.x, 32 );
+    py = LEFT_SHIFT( p0.y, 32 );
 
     for ( count = 1U << shift; count > 0; count-- )
     {
