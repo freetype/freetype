@@ -149,14 +149,8 @@
 #define FT_INT_MAX    INT_MAX
 #define FT_ULONG_MAX  ULONG_MAX
 
-#define ADD_LONG( a, b )                                    \
-          (long)( (unsigned long)(a) + (unsigned long)(b) )
-#define SUB_LONG( a, b )                                    \
-          (long)( (unsigned long)(a) - (unsigned long)(b) )
-#define MUL_LONG( a, b )                                    \
-          (long)( (unsigned long)(a) * (unsigned long)(b) )
-#define NEG_LONG( a )                                       \
-          (long)( -(unsigned long)(a) )
+#define ADD_INT( a, b )                                  \
+          (int)( (unsigned int)(a) + (unsigned int)(b) )
 
 
 #define ft_memset   memset
@@ -530,8 +524,9 @@ typedef ptrdiff_t  FT_PtrDist;
 #define CELL_IS_NULL( cell )  ( (cell)->x == CELL_MAX_X_VALUE )
 
 
-#define FT_INTEGRATE( ras, a, b )                                     \
-           ras.cell->cover += (a), ras.cell->area += (a) * (TArea)(b)
+#define FT_INTEGRATE( ras, a, b )                                       \
+          ras.cell->cover = ADD_INT( ras.cell->cover, a ),              \
+          ras.cell->area  = ADD_INT( ras.cell->area, (a) * (TArea)(b) )
 
 
   typedef struct gray_TRaster_
