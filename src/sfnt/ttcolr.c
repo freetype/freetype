@@ -863,7 +863,7 @@
 
         format = FT_NEXT_BYTE( p1 );
 
-        if ( format < 0 || format > 1 )
+        if ( format > 1 )
           return 0;
 
         /* `face->root.size->metrics.x_scale` and `y_scale` are factors   */
