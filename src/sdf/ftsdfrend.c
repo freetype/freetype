@@ -502,8 +502,11 @@
     /* check whether render mode is correct */
     if ( mode != FT_RENDER_MODE_SDF )
     {
-      error = FT_THROW( Cannot_Render_Glyph );
-      goto Exit;
+      FT_TRACE0(( "ft_bsdf_render: trying to render bitmap\n" ));
+
+      /* return OK since the slot is already a bitmap */
+      error = FT_Err_Ok;
+      return error;
     }
 
     if ( origin )
