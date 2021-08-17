@@ -46,8 +46,8 @@ option('tests',
   description: 'Enable FreeType unit and regression tests')
 
 option('zlib',
-  type: 'feature',
-  value: 'auto',
+  type: 'combo',
+  choices: ['auto', 'none', 'internal', 'external', 'system', 'disabled', 'enabled'],
   description: 'Support reading gzip-compressed font files')
 
 # EOF
