@@ -40,17 +40,17 @@ endif
 # unconditionally.
 #
 GZIP_DRV_SRCS := $(GZIP_DIR)/adler32.c  \
+	         $(GZIP_DIR)/crc32.c    \
+	         $(GZIP_DIR)/crc32.h    \
                  $(GZIP_DIR)/ftzconf.h  \
-                 $(GZIP_DIR)/infblock.c \
-                 $(GZIP_DIR)/infblock.h \
-                 $(GZIP_DIR)/infcodes.c \
-                 $(GZIP_DIR)/infcodes.h \
+                 $(GZIP_DIR)/infback.c  \
+                 $(GZIP_DIR)/inffast.c  \
+		 $(GZIP_DIR)/inffast.h  \
                  $(GZIP_DIR)/inffixed.h \
                  $(GZIP_DIR)/inflate.c  \
+                 $(GZIP_DIR)/inflate.h  \
                  $(GZIP_DIR)/inftrees.c \
                  $(GZIP_DIR)/inftrees.h \
-                 $(GZIP_DIR)/infutil.c  \
-                 $(GZIP_DIR)/infutil.h  \
                  $(GZIP_DIR)/zlib.h     \
                  $(GZIP_DIR)/zutil.c    \
                  $(GZIP_DIR)/zutil.h
