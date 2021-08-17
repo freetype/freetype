@@ -267,15 +267,49 @@ ftoption_command = process_header_command
 
 
 # external GZip support
-zlib_dep = dependency('zlib',
-  required: get_option('zlib'),
-  fallback: 'zlib')
+zlib_option = get_option('zlib')
 
-if zlib_dep.found()
-  ftoption_command += ['--enable=FT_CONFIG_OPTION_SYSTEM_ZLIB']
+# Backwards-compatible aliases.
+if zlib_option == 'disabled'
+  zlib_option = 'none'
+elif zlib_option == 'enabled'
+  zlib_option = 'auto'
+endif
+
+if zlib_option == 'auto'
+  # First try to find a system installation, otherwise fall back to
+  # the subproject.
+  zlib_dep = dependency('zlib',
+    required: false)
+  if zlib_dep.found()
+    zlib_option = 'system'
+  else
+    zlib_option = 'external'
+  endif
+endif
+
+if zlib_option == 'none'
+  ftoption_command += [ '--disable=FT_CONFIG_OPTION_USE_ZLIB' ]
+elif zlib_option == 'internal'
+  ftoption_command += [ '--enable=FT_CONFIG_OPTION_USE_ZLIB' ]
+elif zlib_option == 'external'
+  ftoption_command += [ '--enable=FT_CONFIG_OPTION_USE_ZLIB' ]
+  zlib_project = subproject('zlib',
+    required: true,
+    default_options: 'default_library=static')
+  zlib_dep = zlib_project.get_variable('zlib_dep')
+  ft2_deps += [zlib_dep]
+elif zlib_option == 'system'
+  zlib_dep = dependency('zlib',
+    required: true)
+  assert(zlib_dep.found(), 'Could not find system zlib installation!')
+  ftoption_command += [
+    '--enable=FT_CONFIG_OPTION_USE_ZLIB',
+    '--enable=FT_CONFIG_OPTION_SYSTEM_ZLIB',
+  ]
   ft2_deps += [zlib_dep]
 else
-  ftoption_command += ['--disable=FT_CONFIG_OPTION_SYSTEM_ZLIB']
+  assert(false, 'Invalid zlib option ' + zlib_option)
 endif
 
 # BZip2 support
@@ -422,7 +456,7 @@ gen_docs = custom_target('freetype2 reference documentation',
 summary({'OS': host_machine.system(),
         }, section: 'Operating System')
 
-summary({'Zlib': zlib_dep.found() ? 'external' : 'internal',
+summary({'Zlib': zlib_option,
          'Bzip2': bzip2_dep.found() ? 'yes' : 'no',
          'Png': libpng_dep.found() ? 'yes' : 'no',
          'Harfbuzz': harfbuzz_dep.found() ? 'yes' : 'no',
