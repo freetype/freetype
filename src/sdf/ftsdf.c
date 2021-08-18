@@ -841,12 +841,12 @@
    *
    */
 
-  /* Return the control box of a edge.  The control box is a rectangle */
-  /* in which all the control points can fit tightly.                  */
+  /* Return the control box of an edge.  The control box is a rectangle */
+  /* in which all the control points can fit tightly.                   */
   static FT_CBox
   get_control_box( SDF_Edge  edge )
   {
-    FT_CBox  cbox;
+    FT_CBox  cbox   = { 0, 0, 0, 0 };
     FT_Bool  is_set = 0;
 
 
