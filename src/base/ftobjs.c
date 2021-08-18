@@ -3132,10 +3132,12 @@
   }
 
 
-  FT_BASE_DEF( void )
+  FT_BASE_DEF( FT_Error )
   FT_Request_Metrics( FT_Face          face,
                       FT_Size_Request  req )
   {
+    FT_Error  error = FT_Err_Ok;
+
     FT_Size_Metrics*  metrics;
 
 
@@ -3226,8 +3228,18 @@
         scaled_h = FT_MulFix( face->units_per_EM, metrics->y_scale );
       }
 
-      metrics->x_ppem = (FT_UShort)( ( scaled_w + 32 ) >> 6 );
-      metrics->y_ppem = (FT_UShort)( ( scaled_h + 32 ) >> 6 );
+      scaled_w = ( scaled_w + 32 ) >> 6;
+      scaled_h = ( scaled_h + 32 ) >> 6;
+      if ( scaled_w > FT_USHORT_MAX ||
+           scaled_h > FT_USHORT_MAX )
+      {
+        FT_ERROR(( "FT_Request_Metrics: Resulting ppem size too large\n" ));
+        error = FT_ERR( Invalid_Pixel_Size );
+        goto Exit;
+      }
+
+      metrics->x_ppem = (FT_UShort)scaled_w;
+      metrics->y_ppem = (FT_UShort)scaled_h;
 
       ft_recompute_scaled_metrics( face, metrics );
     }
@@ -3237,6 +3249,9 @@
       metrics->x_scale = 1L << 16;
       metrics->y_scale = 1L << 16;
     }
+
+  Exit:
+    return error;
   }
 
 
@@ -3300,7 +3315,7 @@
   FT_Request_Size( FT_Face          face,
                    FT_Size_Request  req )
   {
-    FT_Error         error = FT_Err_Ok;
+    FT_Error         error;
     FT_Driver_Class  clazz;
     FT_ULong         strike_index;
 
@@ -3336,13 +3351,15 @@
        */
       error = FT_Match_Size( face, req, 0, &strike_index );
       if ( error )
-        return error;
+        goto Exit;
 
       return FT_Select_Size( face, (FT_Int)strike_index );
     }
     else
     {
-      FT_Request_Metrics( face, req );
+      error = FT_Request_Metrics( face, req );
+      if ( error )
+        goto Exit;
 
       FT_TRACE5(( "FT_Request_Size:\n" ));
     }
@@ -3365,6 +3382,7 @@
     }
 #endif
 
+  Exit:
     return error;
   }
 
