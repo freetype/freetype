@@ -217,8 +217,8 @@
       return FT_THROW( Invalid_Stream_Handle );
 
     /* open the file */
-    file = CreateFileA( filepathname, GENERIC_READ, FILE_SHARE_READ, NULL,
-                        OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, 0 );
+    file = CreateFile( filepathname, GENERIC_READ, FILE_SHARE_READ, NULL,
+                       OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, 0 );
     if ( file == INVALID_HANDLE_VALUE )
     {
       FT_ERROR(( "FT_Stream_Open:" ));
