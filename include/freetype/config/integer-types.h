@@ -174,12 +174,16 @@
 #endif
 
 
-  /* determine whether we have a 64-bit `int` type for platforms without */
-  /* Autoconf                                                            */
+  /* determine whether we have a 64-bit integer type */
 #if FT_SIZEOF_LONG == ( 64 / FT_CHAR_BIT )
 
 #define FT_INT64   long
 #define FT_UINT64  unsigned long
+
+#elif defined( __STDC_VERSION__ ) && __STDC_VERSION__ >= 199901L
+
+#define FT_INT64   long long int
+#define FT_UINT64  unsigned long long int
 
   /**************************************************************************
    *
@@ -190,12 +194,7 @@
    */
 #elif !defined( __STDC__ ) || defined( FT_CONFIG_OPTION_FORCE_INT64 )
 
-#if defined( __STDC_VERSION__ ) && __STDC_VERSION__ >= 199901L
-
-#define FT_INT64   long long int
-#define FT_UINT64  unsigned long long int
-
-#elif defined( _MSC_VER ) && _MSC_VER >= 900 /* Visual C++ (and Intel C++) */
+#if defined( _MSC_VER ) && _MSC_VER >= 900 /* Visual C++ (and Intel C++) */
 
   /* this compiler provides the `__int64` type */
 #define FT_INT64   __int64
@@ -225,7 +224,7 @@
 #define FT_INT64   long long int
 #define FT_UINT64  unsigned long long int
 
-#endif /* __STDC_VERSION__ >= 199901L */
+#endif /* !__STDC__ */
 
 #endif /* FT_SIZEOF_LONG == (64 / FT_CHAR_BIT) */
 
