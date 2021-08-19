@@ -843,7 +843,7 @@
 
     /* Format byte used here to be able to upgrade ClipList for >16bit */
     /* glyph ids; for now we can expect it to be 0. */
-    if ( !( clip_list_format == 0 ) )
+    if ( !( clip_list_format == 1 ) )
       return 0;
 
     num_clip_boxes = FT_NEXT_ULONG( p );
