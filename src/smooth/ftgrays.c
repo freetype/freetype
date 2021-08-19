@@ -625,7 +625,7 @@ typedef ptrdiff_t  FT_PtrDist;
   }
 
 
-#ifndef FT_LONG64
+#ifndef FT_INT64
 
   /**************************************************************************
    *
@@ -1015,11 +1015,11 @@ typedef ptrdiff_t  FT_PtrDist;
 
   /*
    * For now, the code that depends on `BEZIER_USE_DDA` requires `FT_Int64`
-   * to be defined.  If `FT_LONG64` is not defined, meaning there is no
+   * to be defined.  If `FT_INT64` is not defined, meaning there is no
    * 64-bit type available, disable it to avoid compilation errors.  See for
    * example https://gitlab.freedesktop.org/freetype/freetype/-/issues/1071.
    */
-#if !defined( FT_LONG64 )
+#if !defined( FT_INT64 )
 #  undef BEZIER_USE_DDA
 #  define BEZIER_USE_DDA  0
 #endif
