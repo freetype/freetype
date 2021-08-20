@@ -60,6 +60,18 @@
 
 #endif /* !defined(FT_SIZEOF_LONG) */
 
+#ifndef FT_SIZEOF_LONG_LONG
+
+  /* The size of a `long long` type if available*/
+#if defined( FT_ULLONG_MAX ) && FT_ULLONG_MAX >= 0xFFFFFFFFFFFFFFFFULL
+#define FT_SIZEOF_LONG_LONG  ( 64 / FT_CHAR_BIT )
+#else
+#define FT_SIZEOF_LONG_LONG  0
+#endif
+
+#endif /* !defined(FT_SIZEOF_LONG_LONG) */
+
+
   /**************************************************************************
    *
    * @section:
@@ -180,7 +192,7 @@
 #define FT_INT64   long
 #define FT_UINT64  unsigned long
 
-#elif defined( __STDC_VERSION__ ) && __STDC_VERSION__ >= 199901L
+#elif FT_SIZEOF_LONG_LONG >= ( 64 / FT_CHAR_BIT )
 
 #define FT_INT64   long long int
 #define FT_UINT64  unsigned long long int
