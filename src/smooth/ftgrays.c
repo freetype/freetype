@@ -375,12 +375,12 @@ typedef ptrdiff_t  FT_PtrDist;
 
   /* These macros speed up repetitive divisions by replacing them */
   /* with multiplications and right shifts.                       */
-#define FT_UDIVPREP( c, b )                                        \
-  long  b ## _r = c ? (long)( FT_ULONG_MAX >> PIXEL_BITS ) / ( b ) \
+#define FT_UDIVPREP( c, b )                                                 \
+  FT_Int64  b ## _r = c ? (FT_Int64)( ~(FT_UInt64)0 >> PIXEL_BITS ) / ( b ) \
                     : 0
-#define FT_UDIV( a, b )                                                \
-  (TCoord)( ( (unsigned long)( a ) * (unsigned long)( b ## _r ) ) >>   \
-            ( sizeof( long ) * FT_CHAR_BIT - PIXEL_BITS ) )
+#define FT_UDIV( a, b )                                         \
+  (TCoord)( ( (FT_UInt64)( a ) * (FT_UInt64)( b ## _r ) ) >>    \
+            ( sizeof( FT_UInt64 ) * FT_CHAR_BIT - PIXEL_BITS ) )
 
 
   /* Scale area and apply fill rule to calculate the coverage byte. */
@@ -921,7 +921,7 @@ typedef ptrdiff_t  FT_PtrDist;
     }
     else                                  /* any other line */
     {
-      TPos  prod = dx * (TPos)fy1 - dy * (TPos)fx1;
+      FT_Int64  prod = dx * (FT_Int64)fy1 - dy * (FT_Int64)fx1;
       FT_UDIVPREP( ex1 != ex2, dx );
       FT_UDIVPREP( ey1 != ey2, dy );
 
