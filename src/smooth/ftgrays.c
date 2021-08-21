@@ -479,13 +479,10 @@ typedef ptrdiff_t  FT_PtrDist;
 
     PCell       cell;        /* current cell                             */
     PCell       cell_free;   /* call allocation next free slot           */
-    PCell       cell_limit;  /* cell allocation limit                    */
+    PCell       cell_null;   /* last cell, used as dumpster and limit    */
 
     PCell*      ycells;      /* array of cell linked-lists; one per      */
                              /* vertical coordinate in the current band  */
-
-    PCell       cells;       /* cell storage area     */
-    FT_PtrDist  max_cells;   /* cell storage capacity */
 
     TPos        x,  y;       /* last point position */
 
@@ -507,21 +504,9 @@ typedef ptrdiff_t  FT_PtrDist;
   static gray_TWorker  ras;
 #endif
 
-  /*
-   * Return a pointer to the 'null cell', used as a sentinel at the end of
-   * all `ycells` linked lists.  Its x coordinate should be maximal to
-   * ensure no NULL checks are necessary when looking for an insertion point
-   * in `gray_set_cell`.  Other loops should check the cell pointer with
-   * CELL_IS_NULL() to detect the end of the list.
-   */
-#define NULL_CELL_PTR( ras )  (ras).cells
-
   /* The |x| value of the null cell.  Must be the largest possible */
   /* integer value stored in a `TCell.x` field.                    */
 #define CELL_MAX_X_VALUE    INT_MAX
-
-  /* Return true iff |cell| points to the null cell. */
-#define CELL_IS_NULL( cell )  ( (cell)->x == CELL_MAX_X_VALUE )
 
 
 #define FT_INTEGRATE( ras, a, b )                                       \
@@ -553,7 +538,7 @@ typedef ptrdiff_t  FT_PtrDist;
 
       printf( "%3d:", y );
 
-      for ( ; !CELL_IS_NULL( cell ); cell = cell->next )
+      for ( ; cell != ras.cell_null; cell = cell->next )
         printf( " (%3d, c:%4d, a:%6d)",
                 cell->x, cell->cover, cell->area );
       printf( "\n" );
@@ -572,7 +557,7 @@ typedef ptrdiff_t  FT_PtrDist;
                           TCoord  ey )
   {
     /* Move the cell pointer to a new position in the linked list. We use  */
-    /* NULL to indicate that the cell is outside of the clipping region    */
+    /* a dumpster null cell for everything outside of the clipping region  */
     /* during the render phase.  This means that:                          */
     /*                                                                     */
     /* . the new vertical position must be within min_ey..max_ey-1.        */
@@ -585,7 +570,7 @@ typedef ptrdiff_t  FT_PtrDist;
 
 
     if ( ey_index < 0 || ey_index >= ras.count_ey || ex >= ras.max_ex )
-      ras.cell = NULL_CELL_PTR( ras );
+      ras.cell = ras.cell_null;
     else
     {
       PCell*  pcell = ras.ycells + ey_index;
@@ -609,7 +594,7 @@ typedef ptrdiff_t  FT_PtrDist;
 
       /* insert new cell */
       cell = ras.cell_free++;
-      if ( cell >= ras.cell_limit )
+      if ( cell >= ras.cell_null )
         ft_longjmp( ras.jump_buffer, 1 );
 
       cell->x     = ex;
@@ -1483,7 +1468,7 @@ typedef ptrdiff_t  FT_PtrDist;
       unsigned char*  line = ras.target.origin - ras.target.pitch * y;
 
 
-      for ( ; !CELL_IS_NULL( cell ); cell = cell->next )
+      for ( ; cell != ras.cell_null; cell = cell->next )
       {
         TArea  area;
 
@@ -1534,7 +1519,7 @@ typedef ptrdiff_t  FT_PtrDist;
       TArea   cover = 0;
 
 
-      for ( ; !CELL_IS_NULL( cell ); cell = cell->next )
+      for ( ; cell != ras.cell_null; cell = cell->next )
       {
         TArea  area;
 
@@ -1914,11 +1899,11 @@ typedef ptrdiff_t  FT_PtrDist;
       if ( continued )
         FT_Trace_Enable();
 
-      FT_TRACE7(( "band [%d..%d]: %ld cell%s\n",
+      FT_TRACE7(( "band [%d..%d]: %ld cell%s remaining/\n",
                   ras.min_ey,
                   ras.max_ey,
-                  ras.cell_free - ras.cells,
-                  ras.cell_free - ras.cells == 1 ? "" : "s" ));
+                  ras.cell_null - ras.cell_free,
+                  ras.cell_null - ras.cell_free == 1 ? "" : "s" ));
     }
     else
     {
@@ -1948,30 +1933,22 @@ typedef ptrdiff_t  FT_PtrDist;
     int  continued = 0;
 
 
+    /* Initialize the null cell at the end of the poll. */
+    ras.cell_null        = buffer + FT_MAX_GRAY_POOL - 1;
+    ras.cell_null->x     = CELL_MAX_X_VALUE;
+    ras.cell_null->area  = 0;
+    ras.cell_null->cover = 0;
+    ras.cell_null->next  = NULL;;
+
     /* set up vertical bands */
+    ras.ycells     = (PCell*)buffer;
+
     if ( height > n )
     {
       /* two divisions rounded up */
       n       = ( height + n - 1 ) / n;
       height  = ( height + n - 1 ) / n;
     }
-
-    /* memory management */
-    n = ( height * sizeof ( PCell ) + sizeof ( TCell ) - 1 ) / sizeof ( TCell );
-
-    ras.cells      = buffer + n;
-    ras.max_cells  = (FT_PtrDist)( FT_MAX_GRAY_POOL - n );
-    ras.cell_limit = ras.cells + ras.max_cells;
-    ras.ycells     = (PCell*)buffer;
-
-    /* Initialize the null cell at the start of the `cells` array.    */
-    /* Note that this requires `ras.cell_free` initialization to skip */
-    /* over the first entry in the array.                             */
-    PCell null_cell  = NULL_CELL_PTR( ras );
-    null_cell->x     = CELL_MAX_X_VALUE;
-    null_cell->area  = 0;
-    null_cell->cover = 0;
-    null_cell->next  = NULL;;
 
     for ( y = yMin; y < yMax; )
     {
@@ -1991,10 +1968,14 @@ typedef ptrdiff_t  FT_PtrDist;
 
 
         for ( w = 0; w < width; ++w )
-          ras.ycells[w] = null_cell;
+          ras.ycells[w] = ras.cell_null;
 
-        ras.cell_free = ras.cells + 1;  /* NOTE: Skip over the null cell. */
-        ras.cell      = null_cell;
+        /* memory management: skip ycells */
+        n = ( width * sizeof ( PCell ) + sizeof ( TCell ) - 1 ) /
+                      sizeof ( TCell );
+
+        ras.cell_free = buffer + n;
+        ras.cell      = ras.cell_null;
         ras.min_ey    = band[1];
         ras.max_ey    = band[0];
         ras.count_ey  = width;
