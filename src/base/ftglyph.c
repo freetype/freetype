@@ -453,9 +453,9 @@
   /* documentation is in ftglyph.h */
 
   FT_EXPORT_DEF( FT_Error )
-  FT_Glyph_Transform( FT_Glyph    glyph,
-                      FT_Matrix*  matrix,
-                      FT_Vector*  delta )
+  FT_Glyph_Transform( FT_Glyph          glyph,
+                      const FT_Matrix*  matrix,
+                      const FT_Vector*  delta )
   {
     FT_Error  error = FT_Err_Ok;
 
@@ -533,10 +533,10 @@
   /* documentation is in ftglyph.h */
 
   FT_EXPORT_DEF( FT_Error )
-  FT_Glyph_To_Bitmap( FT_Glyph*       the_glyph,
-                      FT_Render_Mode  render_mode,
-                      FT_Vector*      origin,
-                      FT_Bool         destroy )
+  FT_Glyph_To_Bitmap( FT_Glyph*         the_glyph,
+                      FT_Render_Mode    render_mode,
+                      const FT_Vector*  origin,
+                      FT_Bool           destroy )
   {
     FT_GlyphSlotRec           dummy;
     FT_GlyphSlot_InternalRec  dummy_internal;
