@@ -55,7 +55,7 @@
 	* tests/issue-1063/main.c (main): Fix uninitialized variable.
 
 	I tried running `meson test` but the test just crashed and gdb
-	reported that the face argument to `FT_Get_Char_Index` was nonsense. 
+	reported that the face argument to `FT_Get_Char_Index` was nonsense.
 	With this change the test prints 'Could not open file: ' as it
 	should.
 

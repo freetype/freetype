@@ -62,7 +62,7 @@
 
 #ifndef FT_SIZEOF_LONG_LONG
 
-  /* The size of a `long long` type if available*/
+  /* The size of a `long long` type if available */
 #if defined( FT_ULLONG_MAX ) && FT_ULLONG_MAX >= 0xFFFFFFFFFFFFFFFFULL
 #define FT_SIZEOF_LONG_LONG  ( 64 / FT_CHAR_BIT )
 #else

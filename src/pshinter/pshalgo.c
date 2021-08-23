@@ -869,7 +869,7 @@
       return;
     }
 
-#endif /* DEBUG_HINTER*/
+#endif /* DEBUG_HINTER */
 
     hint  = table->hints;
     count = table->max_hints;
