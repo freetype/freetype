@@ -1023,10 +1023,9 @@ typedef ptrdiff_t  FT_PtrDist;
                               const FT_Vector*  to )
   {
     FT_Vector  p0, p1, p2;
-    TPos       dx, dy;
+    TPos       ax, ay, bx, by, dx, dy;
     int        shift;
 
-    FT_Int64  ax, ay, bx, by;
     FT_Int64  rx, ry;
     FT_Int64  qx, qy;
     FT_Int64  px, py;
@@ -1054,8 +1053,13 @@ typedef ptrdiff_t  FT_PtrDist;
       return;
     }
 
-    dx = FT_ABS( p0.x + p2.x - 2 * p1.x );
-    dy = FT_ABS( p0.y + p2.y - 2 * p1.y );
+    bx = p1.x - p0.x;
+    by = p1.y - p0.y;
+    ax = p2.x - p1.x - bx;  /* p0.x + p2.x - 2 * p1.x */
+    ay = p2.y - p1.y - by;  /* p0.y + p2.y - 2 * p1.y */
+
+    dx = FT_ABS( ax );
+    dy = FT_ABS( ay );
     if ( dx < dy )
       dx = dy;
 
@@ -1144,10 +1148,10 @@ typedef ptrdiff_t  FT_PtrDist;
       __m128i  p;
 
 
-      u.i.ax = p0.x + p2.x - 2 * p1.x;
-      u.i.ay = p0.y + p2.y - 2 * p1.y;
-      u.i.bx = p1.x - p0.x;
-      u.i.by = p1.y - p0.y;
+      u.i.ax = ax;
+      u.i.ay = ay;
+      u.i.bx = bx;
+      u.i.by = by;
 
       a = _mm_load_si128( &u.vec.a );
       b = _mm_load_si128( &u.vec.b );
@@ -1165,7 +1169,7 @@ typedef ptrdiff_t  FT_PtrDist;
 
       p = _mm_load_si128( &v.vec );
 
-      for ( count = ( 1U << shift ); count > 0; count-- )
+      for ( count = 1U << shift; count > 0; count-- )
       {
         p = _mm_add_epi64( p, q );
         q = _mm_add_epi64( q, r );
@@ -1178,11 +1182,6 @@ typedef ptrdiff_t  FT_PtrDist;
       return;
     }
 #endif  /* __SSE2__ */
-
-    ax = p0.x + p2.x - 2 * p1.x;
-    ay = p0.y + p2.y - 2 * p1.y;
-    bx = p1.x - p0.x;
-    by = p1.y - p0.y;
 
     rx = LEFT_SHIFT( ax, 33 - 2 * shift );
     ry = LEFT_SHIFT( ay, 33 - 2 * shift );
