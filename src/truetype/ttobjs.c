@@ -156,7 +156,7 @@
     unsigned int  i;
 
 
-    if ( name[6] != '+' )
+    if ( ft_strlen( name ) < 8 || name[6] != '+' )
       return name;
 
     for ( i = 0; i < 6; i++ )
