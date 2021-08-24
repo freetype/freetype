@@ -175,7 +175,7 @@
   {
 
 #define TRICK_NAMES_MAX_CHARACTERS  19
-#define TRICK_NAMES_COUNT           26
+#define TRICK_NAMES_COUNT           28
 
     static const char trick_names[TRICK_NAMES_COUNT]
                                  [TRICK_NAMES_MAX_CHARACTERS + 1] =
@@ -195,6 +195,7 @@
       "DFGirl-W6-WIN-BF",   /* dftt-h6.ttf; version 1.00, 1993 */
       "DFGothic-EB",        /* DynaLab Inc. 1992-1995 */
       "DFGyoSho-Lt",        /* DynaLab Inc. 1992-1995 */
+      "DFHei",              /* DynaLab Inc. 1992-1995 [DFHei-Bd-WIN-HK-BF] */
       "DFHei-Md-HK-BF",     /* maybe DynaLab Inc. */
       "DFHSGothic-W5",      /* DynaLab Inc. 1992-1995 */
       "DFHSMincho-W3",      /* DynaLab Inc. 1992-1995 */
@@ -203,6 +204,7 @@
       "DFKaiShu",
       "DFKaiShu-Md-HK-BF",  /* maybe DynaLab Inc. */
       "DFKai-SB",           /* kaiu.ttf; version 3.00, 1998 [DFKaiShu-SB-Estd-BF] */
+      "DFMing",             /* DynaLab Inc. 1992-1995 [DFMing-Md-WIN-HK-BF] */
       "DFMing-Bd-HK-BF",    /* maybe DynaLab Inc. */
       "DLC",                /* dftt-m7.ttf; version 1.00, 1993 [DLCMingBold] */
                             /* dftt-f5.ttf; version 1.00, 1993 [DLCFongSung] */
