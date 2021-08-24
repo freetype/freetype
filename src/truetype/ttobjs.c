@@ -143,6 +143,30 @@
 #endif /* TT_USE_BYTECODE_INTERPRETER */
 
 
+  /* The fonts embedded in PDF changes their family names
+   * by the randomization tag. PDF Reference 5.5.3 "Font
+   * Subsets" defines its format as 6 uppercase letters and
+   * '+' sign.  For safety, we do not skip the tag violating
+   * this rule.
+   */
+
+  static const FT_String*
+  tt_skip_pdffont_random_tag( const FT_String*  name )
+  {
+    unsigned int  i;
+
+
+    if ( name[6] != '+' )
+      return name;
+
+    for ( i = 0; i < 6; i++ )
+      if ( !ft_isupper( name[i] ) )
+        return name;
+
+    FT_TRACE7(( "name without randomization tag: %s\n", name + 7 ));
+    return name + 7;
+  }
+
   /* Compare the face with a list of well-known `tricky' fonts. */
   /* This list shall be expanded as we find more of them.       */
 
@@ -199,10 +223,12 @@
     };
 
     int  nn;
+    const FT_String*  name_without_tag;
 
 
+    name_without_tag = tt_skip_pdffont_random_tag( name );
     for ( nn = 0; nn < TRICK_NAMES_COUNT; nn++ )
-      if ( ft_strstr( name, trick_names[nn] ) )
+      if ( ft_strstr( name_without_tag, trick_names[nn] ) )
         return TRUE;
 
     return FALSE;
