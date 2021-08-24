@@ -277,7 +277,7 @@
   tt_check_trickyness_sfnt_ids( TT_Face  face )
   {
 #define TRICK_SFNT_IDS_PER_FACE   3
-#define TRICK_SFNT_IDS_NUM_FACES  29
+#define TRICK_SFNT_IDS_NUM_FACES  31
 
     static const tt_sfnt_id_rec sfnt_id[TRICK_SFNT_IDS_NUM_FACES]
                                        [TRICK_SFNT_IDS_PER_FACE] = {
@@ -430,6 +430,16 @@
         { 0x00170003UL, 0x00000060UL }, /* cvt  */
         { 0xDBB4306EUL, 0x000058AAUL }, /* fpgm */
         { 0xD643482AUL, 0x00000035UL }  /* prep */
+      },
+        { /* DFHei-Bd-WIN-HK-BF, issue #1087 */
+        { 0x1269EB58UL, 0x00000350UL }, /* cvt  */
+        { 0x5CD5957AUL, 0x00006A4EUL }, /* fpgm */
+        { 0xF758323AUL, 0x00000380UL }  /* prep */
+      },
+        { /* DFMing-Md-WIN-HK-BF, issue #1087 */
+        { 0x122FEB0BUL, 0x00000350UL }, /* cvt  */
+        { 0x7F10919AUL, 0x000070A9UL }, /* fpgm */
+        { 0x7CD7E7B7UL, 0x0000025CUL }  /* prep */
       }
     };
 
@@ -510,13 +520,21 @@
     /* For first, check the face name for quick check. */
     if ( face->family_name                               &&
          tt_check_trickyness_family( face->family_name ) )
+    {
+      FT_TRACE3(( "found as a tricky font by "
+                  "its family name: %s\n", face->family_name ));
       return TRUE;
+    }
 
     /* Type42 fonts may lack `name' tables, we thus try to identify */
     /* tricky fonts by checking the checksums of Type42-persistent  */
     /* sfnt tables (`cvt', `fpgm', and `prep').                     */
     if ( tt_check_trickyness_sfnt_ids( (TT_Face)face ) )
+    {
+      FT_TRACE3(( "found as a tricky font by "
+                  "its cvt/fpgm/prep table checksum\n" ));
       return TRUE;
+    }
 
     return FALSE;
   }
