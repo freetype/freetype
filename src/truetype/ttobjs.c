@@ -175,7 +175,7 @@
   {
 
 #define TRICK_NAMES_MAX_CHARACTERS  19
-#define TRICK_NAMES_COUNT           28
+#define TRICK_NAMES_COUNT           20
 
     static const char trick_names[TRICK_NAMES_COUNT]
                                  [TRICK_NAMES_MAX_CHARACTERS + 1] =
@@ -196,23 +196,27 @@
       "DFGothic-EB",        /* DynaLab Inc. 1992-1995 */
       "DFGyoSho-Lt",        /* DynaLab Inc. 1992-1995 */
       "DFHei",              /* DynaLab Inc. 1992-1995 [DFHei-Bd-WIN-HK-BF] */
-      "DFHei-Md-HK-BF",     /* maybe DynaLab Inc. */
+                            /* covers "DFHei-Md-HK-BF" maybe DynaLab Inc. */
+
       "DFHSGothic-W5",      /* DynaLab Inc. 1992-1995 */
       "DFHSMincho-W3",      /* DynaLab Inc. 1992-1995 */
       "DFHSMincho-W7",      /* DynaLab Inc. 1992-1995 */
       "DFKaiSho-SB",        /* dfkaisb.ttf */
-      "DFKaiShu",
-      "DFKaiShu-Md-HK-BF",  /* maybe DynaLab Inc. */
+      "DFKaiShu",           /* covers "DFKaiShu-Md-HK-BF", maybe DynaLab Inc. */
       "DFKai-SB",           /* kaiu.ttf; version 3.00, 1998 [DFKaiShu-SB-Estd-BF] */
+
       "DFMing",             /* DynaLab Inc. 1992-1995 [DFMing-Md-WIN-HK-BF] */
-      "DFMing-Bd-HK-BF",    /* maybe DynaLab Inc. */
+                            /* covers "DFMing-Bd-HK-BF", maybe DynaLab Inc. */
+
       "DLC",                /* dftt-m7.ttf; version 1.00, 1993 [DLCMingBold] */
                             /* dftt-f5.ttf; version 1.00, 1993 [DLCFongSung] */
-      "DLCHayMedium",       /* dftt-b5.ttf; version 1.00, 1993 */
-      "DLCHayBold",         /* dftt-b7.ttf; version 1.00, 1993 */
-      "DLCKaiMedium",       /* dftt-k5.ttf; version 1.00, 1992 */
-      "DLCLiShu",           /* dftt-l5.ttf; version 1.00, 1992 */
-      "DLCRoundBold",       /* dftt-r7.ttf; version 1.00, 1993 */
+                            /* covers following */
+                            /* "DLCHayMedium", dftt-b5.ttf; version 1.00, 1993 */
+                            /* "DLCHayBold",   dftt-b7.ttf; version 1.00, 1993 */
+                            /* "DLCKaiMedium", dftt-k5.ttf; version 1.00, 1992 */
+                            /* "DLCLiShu",     dftt-l5.ttf; version 1.00, 1992 */
+                            /* "DLCRoundBold", dftt-r7.ttf; version 1.00, 1993 */
+
       "HuaTianKaiTi?",      /* htkt2.ttf */
       "HuaTianSongTi?",     /* htst3.ttf */
       "Ming(for ISO10646)", /* hkscsiic.ttf; version 0.12, 2007 [Ming] */
