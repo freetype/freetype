@@ -373,8 +373,13 @@ typedef ptrdiff_t  FT_PtrDist;
 #endif /* __arm__ */
 
 
-  /* These macros speed up repetitive divisions by replacing them */
-  /* with multiplications and right shifts.                       */
+  /* Calculating coverages for a slanted line requires a division each */
+  /* time the line crosses from cell to cell.  These macros speed up   */
+  /* the repetitive divisions by replacing them with multiplications   */
+  /* and right shifts so that at most two divisions are performed for  */
+  /* each slanted line.  Nevertheless, these divisions are noticeable  */
+  /* in the overall performance because flattened curves produce a     */
+  /* very large number of slanted lines.                               */
 #define FT_UDIVPREP( c, b )                                                 \
   FT_Int64  b ## _r = c ? (FT_Int64)( ~(FT_UInt64)0 >> PIXEL_BITS ) / ( b ) \
                     : 0
