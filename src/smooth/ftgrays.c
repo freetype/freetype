@@ -999,10 +999,17 @@ typedef ptrdiff_t  FT_PtrDist;
    *
    * For other cases, using binary splits is actually slightly faster.
    */
-#if defined( __SSE2__ )    || \
-    defined( __x86_64__ )  || \
+#if defined( __SSE2__ )                          || \
+    defined( __x86_64__ )                        || \
+    defined( _M_AMD64 )                          || \
+    ( defined( _M_IX86_FP ) && _M_IX86_FP >= 2 )
+#  define FT_SSE2 1
+#else
+#  define FT_SSE2 0
+#endif
+
+#if FT_SSE2                || \
     defined( __aarch64__ ) || \
-    defined( _M_AMD64 )    || \
     defined( _M_ARM64 )
 #  define BEZIER_USE_DDA  1
 #else
@@ -1022,7 +1029,7 @@ typedef ptrdiff_t  FT_PtrDist;
 
 #if BEZIER_USE_DDA
 
-#ifdef __SSE2__
+#if FT_SSE2
 #  include <emmintrin.h>
 #endif
 
@@ -1135,7 +1142,7 @@ typedef ptrdiff_t  FT_PtrDist;
      *             = (B << (33 - N)) + (A << (32 - 2*N))
      */
 
-#ifdef __SSE2__
+#if FT_SSE2
     /* Experience shows that for small shift values, */
     /* SSE2 is actually slower.                      */
     if ( shift > 2 )
@@ -1192,7 +1199,7 @@ typedef ptrdiff_t  FT_PtrDist;
 
       return;
     }
-#endif  /* __SSE2__ */
+#endif  /* FT_SSE2 */
 
     rx = LEFT_SHIFT( ax, 33 - 2 * shift );
     ry = LEFT_SHIFT( ay, 33 - 2 * shift );
