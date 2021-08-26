@@ -380,6 +380,12 @@ typedef ptrdiff_t  FT_PtrDist;
   /* each slanted line.  Nevertheless, these divisions are noticeable  */
   /* in the overall performance because flattened curves produce a     */
   /* very large number of slanted lines.                               */
+  /*                                                                   */
+  /* The division results here are always within ONE_PIXEL.  Therefore */
+  /* the shift magnitude should be at least PIXEL_BITS wider than the  */
+  /* divisors to provide sufficient accuracy of the multiply-shift.    */
+  /* It should not exceed (64 - PIXEL_BITS) to prevent overflowing and */
+  /* leave enough room for 64-bit unsigned multiplication however.     */
 #define FT_UDIVPREP( c, b )                                                 \
   FT_Int64  b ## _r = c ? (FT_Int64)( ~(FT_UInt64)0 >> PIXEL_BITS ) / ( b ) \
                     : 0
