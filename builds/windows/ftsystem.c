@@ -288,7 +288,7 @@
       {
         FT_ERROR(( "FT_Stream_Open:" ));
         FT_ERROR(( " could not `alloc' memory\n" ));
-        goto Fail_Map;
+        goto Fail_Open;
       }
 
       total_read_count = 0;
@@ -329,9 +329,6 @@
 
   Fail_Read:
     ft_free( NULL, stream->base );
-
-  Fail_Map:
-    CloseHandle( file );
 
   Fail_Open:
     CloseHandle( file );
