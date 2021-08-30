@@ -386,12 +386,10 @@ typedef ptrdiff_t  FT_PtrDist;
   /* divisors to provide sufficient accuracy of the multiply-shift.    */
   /* It should not exceed (64 - PIXEL_BITS) to prevent overflowing and */
   /* leave enough room for 64-bit unsigned multiplication however.     */
-#define FT_UDIVPREP( c, b )                                                 \
-  FT_Int64  b ## _r = c ? (FT_Int64)( ~(FT_UInt64)0 >> PIXEL_BITS ) / ( b ) \
-                    : 0
-#define FT_UDIV( a, b )                                         \
-  (TCoord)( ( (FT_UInt64)( a ) * (FT_UInt64)( b ## _r ) ) >>    \
-            ( sizeof( FT_UInt64 ) * FT_CHAR_BIT - PIXEL_BITS ) )
+#define FT_UDIVPREP( c, b )                                \
+  FT_Int64  b ## _r = c ? (FT_Int64)0xFFFFFFFF / ( b ) : 0
+#define FT_UDIV( a, b )                                           \
+  (TCoord)( ( (FT_UInt64)( a ) * (FT_UInt64)( b ## _r ) ) >> 32 )
 
 
   /* Scale area and apply fill rule to calculate the coverage byte. */
