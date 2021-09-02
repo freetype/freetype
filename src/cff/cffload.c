@@ -622,7 +622,7 @@
     FT_Byte*    bytes;
     FT_ULong    byte_len;
     FT_Error    error;
-    FT_String*  name = 0;
+    FT_String*  name = NULL;
 
 
     if ( !idx->stream )  /* CFF2 does not include a name index */
