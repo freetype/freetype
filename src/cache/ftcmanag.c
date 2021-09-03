@@ -357,7 +357,7 @@
   {
     FT_Error     error;
     FT_Memory    memory;
-    FTC_Manager  manager = 0;
+    FTC_Manager  manager;
 
 
     if ( !library )
@@ -368,7 +368,7 @@
 
     memory = library->memory;
 
-    if ( FT_NEW( manager ) )
+    if ( FT_QNEW( manager ) )
       goto Exit;
 
     if ( max_faces == 0 )
@@ -398,6 +398,9 @@
                       max_sizes,
                       manager,
                       memory );
+
+    manager->num_nodes  = 0;
+    manager->num_caches = 0;
 
     *amanager = manager;
 
