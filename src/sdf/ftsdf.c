@@ -204,7 +204,7 @@
   {
     FT_Memory  memory;
 
-  } SDF_TRaster;
+  } SDF_TRaster, *SDF_PRaster;
 
 
   /**************************************************************************
@@ -3706,25 +3706,19 @@
    */
 
   static FT_Error
-  sdf_raster_new( FT_Memory   memory,
-                  FT_Raster*  araster)
+  sdf_raster_new( FT_Memory     memory,
+                  SDF_PRaster*  araster )
   {
-    FT_Error      error  = FT_Err_Ok;
-    SDF_TRaster*  raster = NULL;
-    FT_Int        line   = __LINE__;
-
-    /* in non-debugging mode this is not used */
-    FT_UNUSED( line );
+    FT_Error     error;
+    SDF_PRaster  raster;
 
 
-    *araster = 0;
-    if ( !FT_ALLOC( raster, sizeof ( SDF_TRaster ) ) )
-    {
+    if ( !FT_NEW( raster ) )
       raster->memory = memory;
-      *araster       = (FT_Raster)raster;
-    }
 
-    return error;
+    *araster = raster;
+
+   return error;
   }
 
 

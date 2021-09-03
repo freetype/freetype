@@ -3133,13 +3133,6 @@
   }
 
 
-  static void
-  ft_black_init( black_PRaster  raster )
-  {
-    FT_UNUSED( raster );
-  }
-
-
   /**** RASTER OBJECT CREATION: In standalone mode, we simply use *****/
   /****                         a static object.                  *****/
 
@@ -3157,7 +3150,6 @@
 
      *araster = (FT_Raster)&the_raster;
      FT_ZERO( &the_raster );
-     ft_black_init( &the_raster );
 
      return 0;
   }
@@ -3179,17 +3171,13 @@
                 black_PRaster  *araster )
   {
     FT_Error       error;
-    black_PRaster  raster = NULL;
+    black_PRaster  raster;
 
 
-    *araster = 0;
     if ( !FT_NEW( raster ) )
-    {
       raster->memory = memory;
-      ft_black_init( raster );
 
-      *araster = raster;
-    }
+    *araster = raster;
 
     return error;
   }

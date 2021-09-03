@@ -2147,19 +2147,17 @@ typedef ptrdiff_t  FT_PtrDist;
 #else /* !STANDALONE_ */
 
   static int
-  gray_raster_new( FT_Memory   memory,
-                   FT_Raster*  araster )
+  gray_raster_new( FT_Memory      memory,
+                   gray_PRaster*  araster )
   {
     FT_Error      error;
-    gray_PRaster  raster = NULL;
+    gray_PRaster  raster;
 
 
-    *araster = 0;
-    if ( !FT_ALLOC( raster, sizeof ( gray_TRaster ) ) )
-    {
+    if ( !FT_NEW( raster ) )
       raster->memory = memory;
-      *araster       = (FT_Raster)raster;
-    }
+
+    *araster = raster;
 
     return error;
   }
