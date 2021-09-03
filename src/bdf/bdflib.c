@@ -1924,7 +1924,7 @@
       p->font = font;
 
       font->memory = p->memory;
-      p->memory    = 0;
+      p->memory    = NULL;
 
       { /* setup */
         size_t           i;

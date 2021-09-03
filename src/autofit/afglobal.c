@@ -477,7 +477,7 @@
             /* IMPORTANT: Clear the error code, see
              * https://gitlab.freedesktop.org/freetype/freetype/-/issues/1063
              */
-            error = 0;
+            error = FT_Err_Ok;
             goto Again;
           }
 
