@@ -585,7 +585,7 @@
 #if 1
     /* if `origin' is set, translate the glyph image */
     if ( origin )
-      FT_Glyph_Transform( glyph, 0, origin );
+      FT_Glyph_Transform( glyph, NULL, origin );
 #else
     FT_UNUSED( origin );
 #endif
@@ -603,7 +603,7 @@
 
       v.x = -origin->x;
       v.y = -origin->y;
-      FT_Glyph_Transform( glyph, 0, &v );
+      FT_Glyph_Transform( glyph, NULL, &v );
     }
 #endif
 

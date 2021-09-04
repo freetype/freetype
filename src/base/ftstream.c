@@ -61,7 +61,7 @@
 
     if ( stream->read )
     {
-      if ( stream->read( stream, pos, 0, 0 ) )
+      if ( stream->read( stream, pos, NULL, 0 ) )
       {
         FT_ERROR(( "FT_Stream_Seek:"
                    " invalid i/o; pos = 0x%lx, size = 0x%lx\n",
