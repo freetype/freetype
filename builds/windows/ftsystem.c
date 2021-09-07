@@ -25,10 +25,9 @@
 #include <freetype/fttypes.h>
 #include <freetype/internal/ftstream.h>
 
-  /* memory-mapping includes and definitions */
+  /* memory mapping and allocation includes and definitions */
+#define WIN32_LEAN_AND_MEAN
 #include <windows.h>
-
-#include <stdlib.h>
 
 
   /**************************************************************************
@@ -69,9 +68,7 @@
   ft_alloc( FT_Memory  memory,
             long       size )
   {
-    FT_UNUSED( memory );
-
-    return malloc( size );
+    return HeapAlloc( memory->user, 0, size );
   }
 
 
@@ -105,10 +102,9 @@
               long       new_size,
               void*      block )
   {
-    FT_UNUSED( memory );
     FT_UNUSED( cur_size );
 
-    return realloc( block, new_size );
+    return HeapReAlloc( memory->user, 0, block, new_size );
   }
 
 
@@ -131,9 +127,7 @@
   ft_free( FT_Memory  memory,
            void*      block )
   {
-    FT_UNUSED( memory );
-
-    free( block );
+    HeapFree( memory->user, 0, block );
   }
 
 
@@ -357,13 +351,17 @@
   FT_BASE_DEF( FT_Memory )
   FT_New_Memory( void )
   {
+    HANDLE     heap;
     FT_Memory  memory;
 
 
-    memory = (FT_Memory)malloc( sizeof ( *memory ) );
+    heap   = GetProcessHeap();
+    memory = heap ? (FT_Memory)HeapAlloc( heap, 0, sizeof ( *memory ) )
+                  : NULL;
+
     if ( memory )
     {
-      memory->user    = NULL;
+      memory->user    = heap;
       memory->alloc   = ft_alloc;
       memory->realloc = ft_realloc;
       memory->free    = ft_free;
