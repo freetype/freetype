@@ -310,8 +310,6 @@
     FT_Long  leaks      = 0;
 
 
-    FT_DumpMemory( table->memory );
-
     /* remove all blocks from the table, revealing leaked ones */
     for ( i = 0; i < table->size; i++ )
     {
@@ -862,6 +860,8 @@
       FT_MemTable  table = (FT_MemTable)memory->user;
 
 
+      FT_DumpMemory( memory );
+
       ft_mem_table_destroy( table );
 
       memory->free    = table->free;
@@ -894,11 +894,9 @@
   extern void
   FT_DumpMemory( FT_Memory  memory )
   {
-    FT_MemTable  table = (FT_MemTable)memory->user;
-
-
-    if ( table )
+    if ( memory->free == ft_mem_debug_free )
     {
+      FT_MemTable    table = (FT_MemTable)memory->user;
       FT_MemSource*  bucket = table->sources;
       FT_MemSource*  limit  = bucket + FT_MEM_SOURCE_BUCKETS;
       FT_MemSource*  sources;
