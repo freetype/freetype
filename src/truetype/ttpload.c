@@ -548,8 +548,8 @@
     record_size = FT_NEXT_ULONG( p );
 
     /* The maximum number of bytes in an hdmx device record is the */
-    /* maximum number of glyphs + 2; this is 0xFFFF + 2, thus      */
-    /* explaining why `record_size' is a long (which we read as    */
+    /* maximum number of glyphs + 2 + 32-bit padding, or 0x10004,  */
+    /* that is why `record_size' is a long (which we read as       */
     /* unsigned long for convenience).  In practice, two bytes are */
     /* sufficient to hold the size value.                          */
     /*                                                             */
@@ -562,10 +562,10 @@
       record_size &= 0xFFFFU;
 
     /* The limit for `num_records' is a heuristic value. */
-    if ( num_records > 255              ||
-         ( num_records > 0            &&
-           ( record_size > 0x10001L ||
-             record_size < 4        ) ) )
+    if ( num_records > 255               ||
+         ( num_records > 0             &&
+           ( record_size > 0x10004UL ||
+             record_size & 3         ) ) )
     {
       error = FT_THROW( Invalid_File_Format );
       goto Fail;
