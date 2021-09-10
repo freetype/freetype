@@ -98,28 +98,15 @@
       goto Exit;
     }
 
-    if ( face->header.Index_To_Loc_Format != 0 )
-    {
-      shift = 2;
+    shift = face->header.Index_To_Loc_Format != 0 ? 2 : 1;
 
-      if ( table_len >= 0x40000L )
-      {
-        FT_TRACE2(( "table too large\n" ));
-        table_len = 0x3FFFFL;
-      }
-      face->num_locations = table_len >> shift;
-    }
-    else
+    if ( table_len > 0x10000UL << shift )
     {
-      shift = 1;
-
-      if ( table_len >= 0x20000L )
-      {
-        FT_TRACE2(( "table too large\n" ));
-        table_len = 0x1FFFFL;
-      }
-      face->num_locations = table_len >> shift;
+      FT_TRACE2(( "table too large\n" ));
+      table_len = 0x10000UL << shift;
     }
+
+    face->num_locations = table_len >> shift;
 
     if ( face->num_locations != (FT_ULong)face->root.num_glyphs + 1 )
     {
@@ -127,7 +114,7 @@
                   face->num_locations - 1, face->root.num_glyphs ));
 
       /* we only handle the case where `maxp' gives a larger value */
-      if ( face->num_locations <= (FT_ULong)face->root.num_glyphs )
+      if ( face->num_locations < (FT_ULong)face->root.num_glyphs + 1 )
       {
         FT_ULong  new_loca_len =
                     ( (FT_ULong)face->root.num_glyphs + 1 ) << shift;
