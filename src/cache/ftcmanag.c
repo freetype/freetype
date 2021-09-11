@@ -399,6 +399,7 @@
                       manager,
                       memory );
 
+    manager->nodes_list = NULL;
     manager->num_nodes  = 0;
     manager->num_caches = 0;
 
