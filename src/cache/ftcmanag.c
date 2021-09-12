@@ -597,7 +597,7 @@
         goto Exit;
       }
 
-      if ( !FT_ALLOC( cache, clazz->cache_size ) )
+      if ( !FT_QALLOC( cache, clazz->cache_size ) )
       {
         cache->manager   = manager;
         cache->memory    = memory;
