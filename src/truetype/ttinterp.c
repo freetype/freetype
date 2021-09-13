@@ -375,7 +375,7 @@
 
     if ( *size < new_max )
     {
-      if ( FT_REALLOC( *pbuff, *size * multiplier, new_max * multiplier ) )
+      if ( FT_QREALLOC( *pbuff, *size * multiplier, new_max * multiplier ) )
         return error;
       *size = new_max;
     }

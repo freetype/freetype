@@ -571,7 +571,7 @@
       goto Fail;
     }
 
-    if ( FT_NEW_ARRAY( face->hdmx_record_sizes, num_records ) )
+    if ( FT_QNEW_ARRAY( face->hdmx_record_sizes, num_records ) )
       goto Fail;
 
     for ( nn = 0; nn < num_records; nn++ )
