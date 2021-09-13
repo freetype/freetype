@@ -237,7 +237,7 @@
                    FTC_MruNode  *anode )
   {
     FT_Error     error;
-    FTC_MruNode  node   = NULL;
+    FTC_MruNode  node;
     FT_Memory    memory = list->memory;
 
 
