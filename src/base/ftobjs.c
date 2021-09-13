@@ -3753,7 +3753,7 @@
     face   = charmap->face;
     memory = FT_FACE_MEMORY( face );
 
-    if ( !FT_QALLOC( cmap, clazz->size ) )
+    if ( !FT_ALLOC( cmap, clazz->size ) )
     {
       cmap->charmap = *charmap;
       cmap->clazz   = clazz;
