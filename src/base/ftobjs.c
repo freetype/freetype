@@ -2610,7 +2610,7 @@
     FT_TRACE4(( "FT_Open_Face: New face object, adding to list\n" ));
 
     /* add the face object to its driver's list */
-    if ( FT_NEW( node ) )
+    if ( FT_QNEW( node ) )
       goto Fail;
 
     node->data = face;
@@ -2895,7 +2895,7 @@
     memory = face->memory;
 
     /* Allocate new size object and perform basic initialisation */
-    if ( FT_ALLOC( size, clazz->size_object_size ) || FT_NEW( node ) )
+    if ( FT_ALLOC( size, clazz->size_object_size ) || FT_QNEW( node ) )
       goto Exit;
 
     size->face = face;
@@ -3707,9 +3707,9 @@
           FT_CharMap  last_charmap = face->charmaps[face->num_charmaps - 1];
 
 
-          if ( FT_RENEW_ARRAY( face->charmaps,
-                               face->num_charmaps,
-                               face->num_charmaps - 1 ) )
+          if ( FT_QRENEW_ARRAY( face->charmaps,
+                                face->num_charmaps,
+                                face->num_charmaps - 1 ) )
             return;
 
           /* remove it from our list of charmaps */
@@ -3741,10 +3741,10 @@
                FT_CharMap     charmap,
                FT_CMap       *acmap )
   {
-    FT_Error   error = FT_Err_Ok;
+    FT_Error   error;
     FT_Face    face;
     FT_Memory  memory;
-    FT_CMap    cmap = NULL;
+    FT_CMap    cmap;
 
 
     if ( !clazz || !charmap || !charmap->face )
@@ -3753,7 +3753,7 @@
     face   = charmap->face;
     memory = FT_FACE_MEMORY( face );
 
-    if ( !FT_ALLOC( cmap, clazz->size ) )
+    if ( !FT_QALLOC( cmap, clazz->size ) )
     {
       cmap->charmap = *charmap;
       cmap->clazz   = clazz;
@@ -3766,9 +3766,9 @@
       }
 
       /* add it to our list of charmaps */
-      if ( FT_RENEW_ARRAY( face->charmaps,
-                           face->num_charmaps,
-                           face->num_charmaps + 1 ) )
+      if ( FT_QRENEW_ARRAY( face->charmaps,
+                            face->num_charmaps,
+                            face->num_charmaps + 1 ) )
         goto Fail;
 
       face->charmaps[face->num_charmaps++] = (FT_CharMap)cmap;
@@ -4459,10 +4459,10 @@
     FT_Library   library = module->library;
     FT_Memory    memory  = library->memory;
     FT_Error     error;
-    FT_ListNode  node    = NULL;
+    FT_ListNode  node;
 
 
-    if ( FT_NEW( node ) )
+    if ( FT_QNEW( node ) )
       goto Exit;
 
     {
