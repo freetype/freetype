@@ -503,9 +503,8 @@
     FT_Error  error = FT_Err_Ok;
 
 
-    /* the inner loop stops when the unsigned index wraps around */
-    /* after reaching 0.                                         */
-    for ( index1 = table->num_masks - 1; index1 > 0; index1-- )
+    /* the loops stop when unsigned indices wrap around after 0 */
+    for ( index1 = table->num_masks - 1; index1 < table->num_masks; index1-- )
     {
       for ( index2 = index1 - 1; index2 < index1; index2-- )
       {
