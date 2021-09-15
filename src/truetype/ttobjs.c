@@ -1240,11 +1240,11 @@
     /* rescale CVT when needed */
     if ( size->cvt_ready < 0 )
     {
-      FT_UInt  i;
+      FT_UShort  i;
 
 
       /* all twilight points are originally zero */
-      for ( i = 0; i < (FT_UInt)size->twilight.n_points; i++ )
+      for ( i = 0; i < size->twilight.n_points; i++ )
       {
         size->twilight.org[i].x = 0;
         size->twilight.org[i].y = 0;
@@ -1253,7 +1253,7 @@
       }
 
       /* clear storage area */
-      for ( i = 0; i < (FT_UInt)size->storage_size; i++ )
+      for ( i = 0; i < size->storage_size; i++ )
         size->storage[i] = 0;
 
       size->GS = tt_default_graphics_state;
