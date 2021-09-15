@@ -535,7 +535,7 @@
     else
       slot->internal->flags |= FT_GLYPH_OWN_BITMAP;
 
-    (void)FT_ALLOC( slot->bitmap.buffer, size );
+    FT_MEM_ALLOC( slot->bitmap.buffer, size );
     return error;
   }
 

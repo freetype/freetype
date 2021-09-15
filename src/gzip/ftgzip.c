@@ -132,7 +132,7 @@
 
 
     /* allocate and zero out */
-    (void)FT_ALLOC( p, sz );
+    FT_MEM_ALLOC( p, sz );
     return p;
   }
 

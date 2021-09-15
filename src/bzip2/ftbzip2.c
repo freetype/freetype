@@ -70,7 +70,7 @@
     FT_Pointer  p  = NULL;
 
 
-    (void)FT_QALLOC( p, sz );
+    FT_MEM_QALLOC( p, sz );
     return p;
   }
 
