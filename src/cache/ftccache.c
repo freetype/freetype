@@ -90,15 +90,14 @@
   ftc_get_top_node_for_hash( FTC_Cache  cache,
                              FT_Offset  hash )
   {
-    FTC_Node*  pnode;
     FT_Offset  idx;
 
 
     idx = hash & cache->mask;
     if ( idx < cache->p )
       idx = hash & ( 2 * cache->mask + 1 );
-    pnode = cache->buckets + idx;
-    return pnode;
+
+    return cache->buckets + idx;
   }
 
 #endif /* !FTC_INLINE */
@@ -360,7 +359,7 @@
 
       for ( i = 0; i < count; i++ )
       {
-        FTC_Node  *pnode = cache->buckets + i, next, node = *pnode;
+        FTC_Node  node = cache->buckets[i], next;
 
 
         while ( node )
@@ -417,7 +416,7 @@
                  FTC_Node   node )
   {
     node->hash        = hash;
-    node->cache_index = (FT_UInt16)cache->index;
+    node->cache_index = (FT_UShort)cache->index;
     node->ref_count   = 0;
 
     ftc_node_hash_link( node, cache );
