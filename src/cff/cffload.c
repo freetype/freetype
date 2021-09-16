@@ -771,8 +771,7 @@
 
     case 3:
       /* first, compare to the cache */
-      if ( (FT_UInt)( glyph_index - fdselect->cache_first ) <
-                        fdselect->cache_count )
+      if ( glyph_index - fdselect->cache_first < fdselect->cache_count )
       {
         fd = fdselect->cache_fd;
         break;
