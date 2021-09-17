@@ -215,9 +215,21 @@
                        NULL, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, 0 );
     if ( file == INVALID_HANDLE_VALUE )
     {
-      FT_ERROR(( "FT_Stream_Open:" ));
-      FT_ERROR(( " could not open `%s'\n", filepathname ));
-      return FT_THROW( Cannot_Open_Resource );
+      /* fall back on the alernative interface */
+#ifdef UNICODE
+      file = CreateFileA( (LPCSTR)filepathname, GENERIC_READ, FILE_SHARE_READ,
+                          NULL, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, 0 );
+#else
+      file = CreateFileW( (LPCWSTR)filepathname, GENERIC_READ, FILE_SHARE_READ,
+                          NULL, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, 0 );
+#endif
+
+      if ( file == INVALID_HANDLE_VALUE )
+      {
+        FT_ERROR(( "FT_Stream_Open:" ));
+        FT_ERROR(( " could not open `%s'\n", filepathname ));
+        return FT_THROW( Cannot_Open_Resource );
+      }
     }
 
 #if defined _WIN32_WCE || defined _WIN32_WINDOWS || \
