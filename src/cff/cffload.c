@@ -1818,7 +1818,8 @@
         /* Construct code to GID mapping from code to SID mapping */
         /* and charset.                                           */
 
-        encoding->count = 0;
+        encoding->offset = offset; /* used in cff_face_init */
+        encoding->count  = 0;
 
         error = cff_charset_compute_cids( charset, num_glyphs,
                                           stream->memory );
