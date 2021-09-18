@@ -527,7 +527,7 @@
           goto NewNode;
         }
         else
-          pnode = &((*pnode)->link);
+          pnode = &(*pnode)->link;
       }
     }
 
@@ -570,8 +570,7 @@
     count = cache->p + cache->mask + 1;
     for ( i = 0; i < count; i++ )
     {
-      FTC_Node*  bucket = cache->buckets + i;
-      FTC_Node*  pnode  = bucket;
+      FTC_Node*  pnode = cache->buckets + i;
 
 
       for (;;)
