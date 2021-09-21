@@ -1609,7 +1609,7 @@
       if ( error )
         goto Exit;
 
-      glyph->swidth = (unsigned short)_bdf_atoul( p->list.field[1] );
+      glyph->swidth = _bdf_atous( p->list.field[1] );
       p->flags |= BDF_SWIDTH_;
 
       goto Exit;
@@ -1622,7 +1622,7 @@
       if ( error )
         goto Exit;
 
-      glyph->dwidth = (unsigned short)_bdf_atoul( p->list.field[1] );
+      glyph->dwidth = _bdf_atous( p->list.field[1] );
 
       if ( !( p->flags & BDF_SWIDTH_ ) )
       {
@@ -2084,7 +2084,7 @@
         unsigned short bpp;
 
 
-        bpp = (unsigned short)_bdf_atos( p->list.field[4] );
+        bpp = _bdf_atous( p->list.field[4] );
 
         /* Only values 1, 2, 4, 8 are allowed for greymap fonts. */
         if ( bpp > 4 )
