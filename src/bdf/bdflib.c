@@ -1615,7 +1615,7 @@
       goto Exit;
     }
 
-    /* Expect the DWIDTH (scalable width) field next. */
+    /* Expect the DWIDTH (device width) field next. */
     if ( _bdf_strncmp( line, "DWIDTH", 6 ) == 0 )
     {
       error = _bdf_list_split( &p->list, " +", line, linelen );
