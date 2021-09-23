@@ -2186,6 +2186,10 @@ FT_BEGIN_HEADER
    *   FreeType error code.  0~means success.
    *
    * @note:
+   *   The `pathname` string should be reconizable as such by a standard
+   *   `fopen()` call on your system.  If that is not sufficient to address
+   *   all file name possiblities, you can use @FT_Open_Face.
+   *
    *   Use @FT_Done_Face to destroy the created @FT_Face object (along with
    *   its slot and sizes).
    */
