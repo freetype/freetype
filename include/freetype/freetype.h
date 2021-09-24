@@ -2100,7 +2100,7 @@ FT_BEGIN_HEADER
    *
    *   pathname ::
    *     A pointer to an 8-bit file pathname, which must be a C~string (i.e.,
-   *     no NULL bytes except at the very end).  The pointer is not owned by
+   *     no null bytes except at the very end).  The pointer is not owned by
    *     FreeType.
    *
    *   stream ::
@@ -2189,7 +2189,7 @@ FT_BEGIN_HEADER
    * @note:
    *   The `pathname` string should be recognizable as such by a standard
    *   `fopen` call on your system; in particular, this means that `pathname`
-   *   must not contain NULL bytes.  If that is not sufficient to address all
+   *   must not contain null bytes.  If that is not sufficient to address all
    *   file name possibilities (for example, to handle wide character file
    *   names on Windows in UTF-16 encoding) you might use @FT_Open_Face to
    *   pass a memory array or a stream object instead.
