@@ -949,7 +949,7 @@
     cp = font->comments + font->comments_len;
 
     FT_MEM_COPY( cp, comment, len );
-    cp[len] = '\n';
+    cp[len] = '\0';
 
     font->comments_len += len + 1;
 
@@ -1304,15 +1304,18 @@
     /* Check for a comment. */
     if ( _bdf_strncmp( line, "COMMENT", 7 ) == 0 )
     {
-      linelen -= 7;
-
-      s = line + 7;
-      if ( *s != 0 )
+      if ( p->opts->keep_comments )
       {
-        s++;
-        linelen--;
+        linelen -= 7;
+
+        s = line + 7;
+        if ( *s != 0 )
+        {
+          s++;
+          linelen--;
+        }
+        error = _bdf_add_comment( p->font, s, linelen );
       }
-      error = _bdf_add_comment( p->font, s, linelen );
       goto Exit;
     }
 
@@ -1894,13 +1897,8 @@
           s++;
           linelen--;
         }
-
         error = _bdf_add_comment( p->font, s, linelen );
-        if ( error )
-          goto Exit;
-        /* here font is not defined! */
       }
-
       goto Exit;
     }
 
@@ -2269,20 +2267,7 @@
       }
     }
 
-    if ( p->font )
-    {
-      /* Make sure the comments are null terminated if they exist. */
-      if ( p->font->comments_len > 0 )
-      {
-        if ( FT_QRENEW_ARRAY( p->font->comments,
-                              p->font->comments_len,
-                              p->font->comments_len + 1 ) )
-          goto Fail;
-
-        p->font->comments[p->font->comments_len] = 0;
-      }
-    }
-    else if ( !error )
+    if ( !p->font && !error )
       error = FT_THROW( Invalid_File_Format );
 
     *font = p->font;
