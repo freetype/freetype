@@ -897,9 +897,10 @@
 
       font->family_name[family_size] = '\0';
 
-      if ( FT_REALLOC( font->family_name,
-                       family_size,
-                       ft_strlen( font->family_name ) + 1 ) )
+      /* shrink it to the actual length */
+      if ( FT_QREALLOC( font->family_name,
+                        family_size + 1,
+                        ft_strlen( font->family_name ) + 1 ) )
         goto Fail;
 
       root->family_name = font->family_name;
