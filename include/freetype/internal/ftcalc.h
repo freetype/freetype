@@ -370,8 +370,7 @@ FT_BEGIN_HEADER
 
 #define FT_MSB( x )  ( 31 - __builtin_clzl( x ) )
 
-#endif /* __GNUC__ */
-
+#endif
 
 #elif defined( _MSC_VER ) && ( _MSC_VER >= 1400 )
 
@@ -395,10 +394,22 @@ FT_BEGIN_HEADER
 
 #endif
 
-#endif /* _MSC_VER */
+#elif defined( __DECC ) || defined( __DECCXX )
 
+#include <builtins.h>
+
+#define FT_MSB( x )  (FT_Int)( 63 - _leadz( x ) )
+
+#elif defined( _CRAYC )
+
+#include <intrinsics.h>
+
+#define FT_MSB( x )  (FT_Int)( 31 - _leadz32( x ) )
+
+#endif /* FT_MSB macro definitions */
 
 #endif /* !FT_CONFIG_OPTION_NO_ASSEMBLER */
+
 
 #ifndef FT_MSB
 
