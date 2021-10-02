@@ -37,7 +37,8 @@ variables:
   before_script:
     # Make sure meson is up to date, so we don't need to rebuild the image
     # with each release.
-    - pip3 install -U meson ninja
+    - pip3 install meson==0.59.1
+    - pip3 install -U ninja
   script:
     # For some reason, options are separated by newlines instead of spaces,
     # so we have to replace them first.
