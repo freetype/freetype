@@ -1434,46 +1434,43 @@
       else if ( PSH_DIR_COMPARE( point->dir_out, major_dir ) )
         point_dir = point->dir_out;
 
-      if ( point_dir )
+      if ( point_dir == major_dir )
       {
-        if ( point_dir == major_dir )
+        FT_UInt  nn;
+
+
+        for ( nn = 0; nn < num_hints; nn++ )
         {
-          FT_UInt  nn;
+          PSH_Hint  hint = sort[nn];
+          FT_Pos    d    = org_u - hint->org_pos;
 
 
-          for ( nn = 0; nn < num_hints; nn++ )
+          if ( d < threshold && -d < threshold )
           {
-            PSH_Hint  hint = sort[nn];
-            FT_Pos    d    = org_u - hint->org_pos;
-
-
-            if ( d < threshold && -d < threshold )
-            {
-              psh_point_set_strong( point );
-              point->flags2 |= PSH_POINT_EDGE_MIN;
-              point->hint    = hint;
-              break;
-            }
+            psh_point_set_strong( point );
+            point->flags2 |= PSH_POINT_EDGE_MIN;
+            point->hint    = hint;
+            break;
           }
         }
-        else if ( point_dir == -major_dir )
+      }
+      else if ( point_dir == -major_dir )
+      {
+        FT_UInt  nn;
+
+
+        for ( nn = 0; nn < num_hints; nn++ )
         {
-          FT_UInt  nn;
+          PSH_Hint  hint = sort[nn];
+          FT_Pos    d    = org_u - hint->org_pos - hint->org_len;
 
 
-          for ( nn = 0; nn < num_hints; nn++ )
+          if ( d < threshold && -d < threshold )
           {
-            PSH_Hint  hint = sort[nn];
-            FT_Pos    d    = org_u - hint->org_pos - hint->org_len;
-
-
-            if ( d < threshold && -d < threshold )
-            {
-              psh_point_set_strong( point );
-              point->flags2 |= PSH_POINT_EDGE_MAX;
-              point->hint    = hint;
-              break;
-            }
+            psh_point_set_strong( point );
+            point->flags2 |= PSH_POINT_EDGE_MAX;
+            point->hint    = hint;
+            break;
           }
         }
       }
