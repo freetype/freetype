@@ -1050,7 +1050,7 @@
   }
 
 
-  static int
+  static PSH_Dir
   psh_compute_dir( FT_Pos  dx,
                    FT_Pos  dy )
   {
@@ -1234,12 +1234,12 @@
         dxi = vec[n].x - vec[n_prev].x;
         dyi = vec[n].y - vec[n_prev].y;
 
-        point->dir_in = (FT_Char)psh_compute_dir( dxi, dyi );
+        point->dir_in = psh_compute_dir( dxi, dyi );
 
         dxo = vec[n_next].x - vec[n].x;
         dyo = vec[n_next].y - vec[n].y;
 
-        point->dir_out = (FT_Char)psh_compute_dir( dxo, dyo );
+        point->dir_out = psh_compute_dir( dxo, dyo );
 
         /* detect smooth points */
         if ( point->flags & PSH_POINT_OFF )
@@ -1404,16 +1404,13 @@
   }
 
 
-  /* major_dir is the direction for points on the bottom/left of the stem; */
-  /* Points on the top/right of the stem will have a direction of          */
-  /* -major_dir.                                                           */
-
+  /* the min and max are based on contour orientation and fill rule */
   static void
   psh_hint_table_find_strong_points( PSH_Hint_Table  table,
                                      PSH_Point       point,
                                      FT_UInt         count,
                                      FT_Int          threshold,
-                                     FT_Int          major_dir )
+                                     PSH_Dir         major_dir )
   {
     PSH_Hint*  sort      = table->sort;
     FT_UInt    num_hints = table->num_hints;
@@ -1421,20 +1418,20 @@
 
     for ( ; count > 0; count--, point++ )
     {
-      FT_Int  point_dir = 0;
-      FT_Pos  org_u     = point->org_u;
+      PSH_Dir  point_dir = PSH_DIR_NONE;
+      FT_Pos   org_u     = point->org_u;
 
 
       if ( psh_point_is_strong( point ) )
         continue;
 
-      if ( PSH_DIR_COMPARE( point->dir_in, major_dir ) )
+      if ( point->dir_in & major_dir )
         point_dir = point->dir_in;
 
-      else if ( PSH_DIR_COMPARE( point->dir_out, major_dir ) )
+      else if ( point->dir_out & major_dir )
         point_dir = point->dir_out;
 
-      if ( point_dir == major_dir )
+      if ( point_dir & ( PSH_DIR_DOWN | PSH_DIR_RIGHT ) )
       {
         FT_UInt  nn;
 
@@ -1454,7 +1451,7 @@
           }
         }
       }
-      else if ( point_dir == -major_dir )
+      else if ( point_dir & ( PSH_DIR_UP | PSH_DIR_LEFT ) )
       {
         FT_UInt  nn;
 
@@ -1569,7 +1566,7 @@
     PS_Mask         mask      = table->hint_masks->masks;
     FT_UInt         num_masks = table->hint_masks->num_masks;
     FT_UInt         first     = 0;
-    FT_Int          major_dir = ( dimension == 0 ) ? PSH_DIR_VERTICAL
+    PSH_Dir         major_dir = ( dimension == 0 ) ? PSH_DIR_VERTICAL
                                                    : PSH_DIR_HORIZONTAL;
     PSH_Dimension   dim       = &glyph->globals->dimension[dimension];
     FT_Fixed        scale     = dim->scale_mult;
@@ -1654,8 +1651,8 @@
 
 
       /* check tangents */
-      if ( !PSH_DIR_COMPARE( point->dir_in,  PSH_DIR_HORIZONTAL ) &&
-           !PSH_DIR_COMPARE( point->dir_out, PSH_DIR_HORIZONTAL ) )
+      if ( !( point->dir_in  & PSH_DIR_HORIZONTAL ) &&
+           !( point->dir_out & PSH_DIR_HORIZONTAL ) )
         continue;
 
       /* skip strong points */
