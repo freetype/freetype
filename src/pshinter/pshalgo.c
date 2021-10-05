@@ -1418,18 +1418,14 @@
 
     for ( ; count > 0; count--, point++ )
     {
-      PSH_Dir  point_dir = PSH_DIR_NONE;
-      FT_Pos   org_u     = point->org_u;
+      PSH_Dir  point_dir;
+      FT_Pos   org_u = point->org_u;
 
 
       if ( psh_point_is_strong( point ) )
         continue;
 
-      if ( point->dir_in & major_dir )
-        point_dir = point->dir_in;
-
-      else if ( point->dir_out & major_dir )
-        point_dir = point->dir_out;
+      point_dir = ( point->dir_in | point->dir_out ) & major_dir;
 
       if ( point_dir & ( PSH_DIR_DOWN | PSH_DIR_RIGHT ) )
       {

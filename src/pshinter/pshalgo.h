@@ -195,10 +195,6 @@ FT_BEGIN_HEADER
     PSH_Globals        globals;
     PSH_Hint_TableRec  hint_tables[2];
 
-    FT_Bool            vertical;
-    FT_Int             major_dir;
-    FT_Int             minor_dir;
-
     FT_Bool            do_horz_hints;
     FT_Bool            do_vert_hints;
     FT_Bool            do_horz_snapping;
