@@ -182,17 +182,19 @@ copy_submodule_files ()
   cp $DLG_SRC_DIR/* src/dlg
 }
 
-DLG_INC_DIR=subprojects/dlg/include/dlg
-DLG_SRC_DIR=subprojects/dlg/src/dlg
+if test -d ".git"; then
+  DLG_INC_DIR=subprojects/dlg/include/dlg
+  DLG_SRC_DIR=subprojects/dlg/src/dlg
 
-if test -d "$DLG_INC_DIR"; then
-  :
-else
-  echo "Checking out submodule in \`subprojects/dlg':"
-  git submodule init
-  git submodule update
+  if test -d "$DLG_INC_DIR"; then
+    :
+  else
+    echo "Checking out submodule in \`subprojects/dlg':"
+    git submodule init
+    git submodule update
+  fi
+
+  copy_submodule_files
 fi
-
-copy_submodule_files
 
 # EOF
