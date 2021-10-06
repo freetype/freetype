@@ -391,7 +391,7 @@ gen_docs = custom_target('freetype2 reference documentation',
   command: [python_exe,
     files('builds/meson/generate_reference_docs.py'),
     '--version=' + meson.project_version(),
-    '--input-dir=' + meson.source_root(),
+    '--input-dir=' + meson.current_source_dir(),
     '--output-dir=@OUTPUT@'
   ],
 )
