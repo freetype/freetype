@@ -1392,7 +1392,7 @@
            FT_READ_USHORT( n_ins )           )
         return error;
 
-      FT_TRACE5(( "  Instructions size = %d\n", n_ins ));
+      FT_TRACE5(( "  Instructions size = %hu\n", n_ins ));
 
       /* check it */
       max_ins = loader->face->max_profile.maxSizeOfInstructions;
@@ -1400,10 +1400,10 @@
       {
         /* don't trust `maxSizeOfInstructions'; */
         /* only do a rough safety check         */
-        if ( (FT_Int)n_ins > loader->byte_len )
+        if ( n_ins > loader->byte_len )
         {
           FT_TRACE1(( "TT_Process_Composite_Glyph:"
-                      " too many instructions (%d) for glyph with length %d\n",
+                      " too many instructions (%hu) for glyph with length %u\n",
                       n_ins, loader->byte_len ));
           return FT_THROW( Too_Many_Hints );
         }
@@ -1686,7 +1686,7 @@
       FT_ZERO( &inc_stream );
       FT_Stream_OpenMemory( &inc_stream,
                             glyph_data.pointer,
-                            (FT_ULong)glyph_data.length );
+                            glyph_data.length );
 
       loader->stream = &inc_stream;
     }
@@ -1694,8 +1694,7 @@
 
 #endif /* FT_CONFIG_OPTION_INCREMENTAL */
 
-      offset = tt_face_get_location( face, glyph_index,
-                                     (FT_UInt*)&loader->byte_len );
+      offset = tt_face_get_location( face, glyph_index, &loader->byte_len );
 
     if ( loader->byte_len > 0 )
     {
@@ -1714,7 +1713,7 @@
 
       error = face->access_glyph_frame( loader, glyph_index,
                                         face->glyf_offset + offset,
-                                        (FT_UInt)loader->byte_len );
+                                        loader->byte_len );
       if ( error )
         goto Exit;
 
@@ -1849,7 +1848,7 @@
     /* (which consists of 10 bytes)                            */
     error = face->access_glyph_frame( loader, glyph_index,
                                       face->glyf_offset + offset + 10,
-                                      (FT_UInt)loader->byte_len - 10 );
+                                      loader->byte_len - 10 );
     if ( error )
       goto Exit;
 
@@ -2105,7 +2104,7 @@
         FT_UInt      num_base_subgs = gloader->base.num_subglyphs;
 
         FT_Stream    old_stream     = loader->stream;
-        FT_Int       old_byte_len   = loader->byte_len;
+        FT_UInt      old_byte_len   = loader->byte_len;
 
 
         FT_GlyphLoader_Add( gloader );

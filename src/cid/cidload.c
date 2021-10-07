@@ -41,7 +41,7 @@
   /* read a single offset */
   FT_LOCAL_DEF( FT_ULong )
   cid_get_offset( FT_Byte*  *start,
-                  FT_Byte    offsize )
+                  FT_UInt    offsize )
   {
     FT_ULong  result;
     FT_Byte*  p = *start;
@@ -833,10 +833,10 @@
 
     /* sanity tests */
 
-    if ( cid->fd_bytes < 0 || cid->gd_bytes < 1 )
+    if ( cid->gd_bytes == 0 )
     {
       FT_ERROR(( "cid_face_open:"
-                 " Invalid `FDBytes' or `GDBytes' value\n" ));
+                 " Invalid `GDBytes' value\n" ));
       error = FT_THROW( Invalid_File_Format );
       goto Exit;
     }
@@ -853,7 +853,7 @@
     }
 
     binary_length = face->cid_stream->size - cid->data_offset;
-    entry_len     = (FT_ULong)( cid->fd_bytes + cid->gd_bytes );
+    entry_len     = cid->fd_bytes + cid->gd_bytes;
 
     for ( n = 0; n < cid->num_dicts; n++ )
     {

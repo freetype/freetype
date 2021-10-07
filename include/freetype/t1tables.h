@@ -415,8 +415,8 @@ FT_BEGIN_HEADER
     FT_ULong        xuid[16];
 
     FT_ULong        cidmap_offset;
-    FT_Int          fd_bytes;
-    FT_Int          gd_bytes;
+    FT_UInt         fd_bytes;
+    FT_UInt         gd_bytes;
     FT_ULong        cid_count;
 
     FT_Int          num_dicts;
