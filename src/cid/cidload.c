@@ -902,11 +902,10 @@
         goto Exit;
       }
 
-      /* `num_subrs' is scanned as a signed integer */
-      if ( (FT_Int)dict->num_subrs < 0                                     ||
-           ( dict->sd_bytes                                              &&
-             dict->num_subrs > ( binary_length - dict->subrmap_offset ) /
-                                 dict->sd_bytes                          ) )
+      /* The first condition prevents the multiplication overflow */
+      if ( dict->num_subrs > UINT_MAX / 4         ||
+           dict->num_subrs * dict->sd_bytes >
+             binary_length - dict->subrmap_offset )
       {
         FT_ERROR(( "cid_face_open: Invalid `SubrCount' value\n" ));
         error = FT_THROW( Invalid_File_Format );
