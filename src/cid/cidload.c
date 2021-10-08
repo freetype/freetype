@@ -41,7 +41,7 @@
   /* read a single offset */
   FT_LOCAL_DEF( FT_ULong )
   cid_get_offset( FT_Byte*  *start,
-                  FT_Byte    offsize )
+                  FT_UInt    offsize )
   {
     FT_ULong  result;
     FT_Byte*  p = *start;
@@ -275,7 +275,7 @@
     if ( (FT_ULong)num_dicts > stream->size / 100 )
     {
       FT_TRACE0(( "parse_fd_array: adjusting FDArray size"
-                  " (from %ld to %ld)\n",
+                  " (from %ld to %lu)\n",
                   num_dicts,
                   stream->size / 100 ));
       num_dicts = (FT_Long)( stream->size / 100 );
@@ -560,12 +560,12 @@
 
       /* read the subrmap's offsets */
       if ( FT_STREAM_SEEK( cid->data_offset + dict->subrmap_offset )     ||
-           FT_FRAME_ENTER( ( num_subrs + 1 ) * (FT_UInt)dict->sd_bytes ) )
+           FT_FRAME_ENTER( ( num_subrs + 1 ) * dict->sd_bytes ) )
         goto Fail;
 
       p = (FT_Byte*)stream->cursor;
       for ( count = 0; count <= num_subrs; count++ )
-        offsets[count] = cid_get_offset( &p, (FT_Byte)dict->sd_bytes );
+        offsets[count] = cid_get_offset( &p, dict->sd_bytes );
 
       FT_FRAME_EXIT();
 
@@ -805,7 +805,7 @@
              face->root.stream->size - parser->data_offset )
       {
         FT_TRACE0(( "cid_face_open: adjusting length of binary data\n" ));
-        FT_TRACE0(( "               (from %ld to %ld bytes)\n",
+        FT_TRACE0(( "               (from %lu to %lu bytes)\n",
                     parser->binary_length,
                     face->root.stream->size - parser->data_offset ));
         parser->binary_length = face->root.stream->size -
@@ -833,10 +833,10 @@
 
     /* sanity tests */
 
-    if ( cid->fd_bytes < 0 || cid->gd_bytes < 1 )
+    if ( cid->gd_bytes == 0 )
     {
       FT_ERROR(( "cid_face_open:"
-                 " Invalid `FDBytes' or `GDBytes' value\n" ));
+                 " Invalid `GDBytes' value\n" ));
       error = FT_THROW( Invalid_File_Format );
       goto Exit;
     }
@@ -853,7 +853,7 @@
     }
 
     binary_length = face->cid_stream->size - cid->data_offset;
-    entry_len     = (FT_ULong)( cid->fd_bytes + cid->gd_bytes );
+    entry_len     = cid->fd_bytes + cid->gd_bytes;
 
     for ( n = 0; n < cid->num_dicts; n++ )
     {
@@ -879,8 +879,7 @@
         dict->private_dict.blue_fuzz = 1;
       }
 
-      if ( dict->sd_bytes < 0                        ||
-           ( dict->num_subrs && dict->sd_bytes < 1 ) )
+      if ( dict->num_subrs && dict->sd_bytes == 0 )
       {
         FT_ERROR(( "cid_face_open: Invalid `SDBytes' value\n" ));
         error = FT_THROW( Invalid_File_Format );
@@ -907,7 +906,7 @@
       if ( (FT_Int)dict->num_subrs < 0                                     ||
            ( dict->sd_bytes                                              &&
              dict->num_subrs > ( binary_length - dict->subrmap_offset ) /
-                                 (FT_UInt)dict->sd_bytes                 ) )
+                                 dict->sd_bytes                          ) )
       {
         FT_ERROR(( "cid_face_open: Invalid `SubrCount' value\n" ));
         error = FT_THROW( Invalid_File_Format );

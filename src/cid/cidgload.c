@@ -63,7 +63,7 @@
 #endif
 
 
-    FT_TRACE1(( "cid_load_glyph: glyph index %d\n", glyph_index ));
+    FT_TRACE1(( "cid_load_glyph: glyph index %u\n", glyph_index ));
 
 #ifdef FT_CONFIG_OPTION_INCREMENTAL
 
@@ -80,11 +80,11 @@
         goto Exit;
 
       p         = (FT_Byte*)glyph_data.pointer;
-      fd_select = cid_get_offset( &p, (FT_Byte)cid->fd_bytes );
+      fd_select = cid_get_offset( &p, cid->fd_bytes );
 
       if ( glyph_data.length != 0 )
       {
-        glyph_length = (FT_ULong)( glyph_data.length - cid->fd_bytes );
+        glyph_length = glyph_data.length - cid->fd_bytes;
 
         if ( !FT_QALLOC( charstring, glyph_length ) )
           FT_MEM_COPY( charstring, glyph_data.pointer + cid->fd_bytes,
@@ -104,7 +104,7 @@
     /* For ordinary fonts read the CID font dictionary index */
     /* and charstring offset from the CIDMap.                */
     {
-      FT_UInt   entry_len = (FT_UInt)( cid->fd_bytes + cid->gd_bytes );
+      FT_UInt   entry_len = cid->fd_bytes + cid->gd_bytes;
       FT_ULong  off1, off2;
 
 
@@ -114,10 +114,10 @@
         goto Exit;
 
       p         = (FT_Byte*)stream->cursor;
-      fd_select = cid_get_offset( &p, (FT_Byte)cid->fd_bytes );
-      off1      = cid_get_offset( &p, (FT_Byte)cid->gd_bytes );
+      fd_select = cid_get_offset( &p, cid->fd_bytes );
+      off1      = cid_get_offset( &p, cid->gd_bytes );
       p        += cid->fd_bytes;
-      off2      = cid_get_offset( &p, (FT_Byte)cid->gd_bytes );
+      off2      = cid_get_offset( &p, cid->gd_bytes );
       FT_FRAME_EXIT();
 
       if ( fd_select >= (FT_ULong)cid->num_dicts ||

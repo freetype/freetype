@@ -1,3 +1,15 @@
+CHANGES BETWEEN 2.11.0 and 2.11.1
+
+  I. IMPORTANT CHANGES
+
+    - Some  fields  in  the  `CID_FaceDictRec`, `CID_FaceInfoRec`, and
+      `FT_Data` structures  have been changed  from signed to unsigned
+      type,  which  better reflects  the actual usage.  It is also  an
+      additional means to protect against malformed input.
+
+
+======================================================================
+
 CHANGES BETWEEN 2.10.4 and 2.11.0
 
   I. IMPORTANT CHANGES

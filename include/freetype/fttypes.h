@@ -413,7 +413,7 @@ FT_BEGIN_HEADER
   typedef struct  FT_Data_
   {
     const FT_Byte*  pointer;
-    FT_Int          length;
+    FT_UInt         length;
 
   } FT_Data;
 
