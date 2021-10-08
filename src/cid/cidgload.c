@@ -76,20 +76,17 @@
 
       error = inc->funcs->get_glyph_data( inc->object,
                                           glyph_index, &glyph_data );
-      if ( error )
+      if ( error || glyph_data.length < cid->fd_bytes )
         goto Exit;
 
       p         = (FT_Byte*)glyph_data.pointer;
       fd_select = cid_get_offset( &p, cid->fd_bytes );
 
-      if ( glyph_data.length != 0 )
-      {
-        glyph_length = glyph_data.length - cid->fd_bytes;
+      glyph_length = glyph_data.length - cid->fd_bytes;
 
-        if ( !FT_QALLOC( charstring, glyph_length ) )
-          FT_MEM_COPY( charstring, glyph_data.pointer + cid->fd_bytes,
-                       glyph_length );
-      }
+      if ( !FT_QALLOC( charstring, glyph_length ) )
+        FT_MEM_COPY( charstring, glyph_data.pointer + cid->fd_bytes,
+                     glyph_length );
 
       inc->funcs->free_glyph_data( inc->object, &glyph_data );
 
