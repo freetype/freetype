@@ -776,7 +776,6 @@
     CID_FaceInfo  cid = &face->cid;
 
     FT_ULong  binary_length;
-    FT_ULong  entry_len;
 
 
     cid_init_loader( &loader, face );
@@ -853,7 +852,24 @@
     }
 
     binary_length = face->cid_stream->size - cid->data_offset;
-    entry_len     = cid->fd_bytes + cid->gd_bytes;
+
+    if ( cid->cidmap_offset > binary_length )
+    {
+      FT_ERROR(( "cid_face_open: Invalid `CIDMapOffset' value\n" ));
+      error = FT_THROW( Invalid_File_Format );
+      goto Exit;
+    }
+
+    /* the initial pre-check prevents the multiplication overflow */
+    if ( cid->cid_count > FT_ULONG_MAX / 8                    ||
+         cid->cid_count * ( cid->fd_bytes + cid->gd_bytes ) >
+           binary_length - cid->cidmap_offset                 )
+    {
+      FT_ERROR(( "cid_face_open: Invalid `CIDCount' value\n" ));
+      error = FT_THROW( Invalid_File_Format );
+      goto Exit;
+    }
+
 
     for ( n = 0; n < cid->num_dicts; n++ )
     {
@@ -902,8 +918,8 @@
         goto Exit;
       }
 
-      /* The first condition prevents the multiplication overflow */
-      if ( dict->num_subrs > UINT_MAX / 4         ||
+      /* the initial pre-check prevents the multiplication overflow */
+      if ( dict->num_subrs > FT_UINT_MAX / 4      ||
            dict->num_subrs * dict->sd_bytes >
              binary_length - dict->subrmap_offset )
       {
@@ -911,22 +927,6 @@
         error = FT_THROW( Invalid_File_Format );
         goto Exit;
       }
-    }
-
-    if ( cid->cidmap_offset > binary_length )
-    {
-      FT_ERROR(( "cid_face_open: Invalid `CIDMapOffset' value\n" ));
-      error = FT_THROW( Invalid_File_Format );
-      goto Exit;
-    }
-
-    if ( entry_len                                            &&
-         cid->cid_count >
-           ( binary_length - cid->cidmap_offset ) / entry_len )
-    {
-      FT_ERROR(( "cid_face_open: Invalid `CIDCount' value\n" ));
-      error = FT_THROW( Invalid_File_Format );
-      goto Exit;
     }
 
     /* we can now safely proceed */
