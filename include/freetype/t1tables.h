@@ -419,7 +419,7 @@ FT_BEGIN_HEADER
     FT_UInt         gd_bytes;
     FT_ULong        cid_count;
 
-    FT_Int          num_dicts;
+    FT_UInt         num_dicts;
     CID_FaceDict    font_dicts;
 
     FT_ULong        data_offset;

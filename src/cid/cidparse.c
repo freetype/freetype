@@ -181,7 +181,7 @@
     parser->root.base      = parser->postscript;
     parser->root.cursor    = parser->postscript;
     parser->root.limit     = parser->root.cursor + ps_len;
-    parser->num_dict       = -1;
+    parser->num_dict       = FT_UINT_MAX;
 
     /* Finally, we check whether `StartData' or `/sfnts' was real --  */
     /* it could be in a comment or string.  We also get the arguments */
