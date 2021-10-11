@@ -1356,7 +1356,7 @@
 
     if ( cur < limit && ft_isdigit( *cur ) )
     {
-      FT_Long  s = T1_ToInt( parser );
+      FT_ULong  s = (FT_ULong)T1_ToInt( parser );
 
 
       T1_Skip_PS_Token( parser );   /* `RD' or `-|' or something else */
@@ -1365,10 +1365,10 @@
       /* `RD' or `-|' token                          */
       *base = parser->root.cursor + 1;
 
-      if ( s >= 0 && s < limit - *base )
+      if ( s < (FT_ULong)( limit - *base ) )
       {
         parser->root.cursor += s + 1;
-        *size = (FT_ULong)s;
+        *size = s;
         return !parser->root.error;
       }
     }
