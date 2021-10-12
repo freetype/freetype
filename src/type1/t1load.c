@@ -1336,7 +1336,7 @@
 
   static int
   read_binary_data( T1_Parser  parser,
-                    FT_ULong*  size,
+                    FT_Long*   size,
                     FT_Byte**  base,
                     FT_Bool    incremental )
   {
@@ -1356,7 +1356,7 @@
 
     if ( cur < limit && ft_isdigit( *cur ) )
     {
-      FT_ULong  s = (FT_ULong)T1_ToInt( parser );
+      FT_Long  s = T1_ToInt( parser );
 
 
       T1_Skip_PS_Token( parser );   /* `RD' or `-|' or something else */
@@ -1365,7 +1365,7 @@
       /* `RD' or `-|' token                          */
       *base = parser->root.cursor + 1;
 
-      if ( s < (FT_ULong)( limit - *base ) )
+      if ( s >= 0 && s < limit - *base )
       {
         parser->root.cursor += s + 1;
         *size = s;
@@ -1793,7 +1793,7 @@
     for ( count = 0; ; count++ )
     {
       FT_Long   idx;
-      FT_ULong  size;
+      FT_Long   size;
       FT_Byte*  base;
 
 
@@ -1851,7 +1851,7 @@
         /* some fonts define empty subr records -- this is not totally */
         /* compliant to the specification (which says they should at   */
         /* least contain a `return'), but we support them anyway       */
-        if ( size < (FT_ULong)face->type1.private_dict.lenIV )
+        if ( size < face->type1.private_dict.lenIV )
         {
           error = FT_THROW( Invalid_File_Format );
           goto Fail;
@@ -1862,7 +1862,7 @@
           goto Fail;
         FT_MEM_COPY( temp, base, size );
         psaux->t1_decrypt( temp, size, 4330 );
-        size -= (FT_ULong)face->type1.private_dict.lenIV;
+        size -= face->type1.private_dict.lenIV;
         error = T1_Add_Table( table, (FT_Int)idx,
                               temp + face->type1.private_dict.lenIV, size );
         FT_FREE( temp );
@@ -1967,7 +1967,7 @@
 
     for (;;)
     {
-      FT_ULong  size;
+      FT_Long   size;
       FT_Byte*  base;
 
 
@@ -2061,7 +2061,7 @@
           FT_Byte*  temp = NULL;
 
 
-          if ( size <= (FT_ULong)face->type1.private_dict.lenIV )
+          if ( size <= face->type1.private_dict.lenIV )
           {
             error = FT_THROW( Invalid_File_Format );
             goto Fail;
@@ -2072,7 +2072,7 @@
             goto Fail;
           FT_MEM_COPY( temp, base, size );
           psaux->t1_decrypt( temp, size, 4330 );
-          size -= (FT_ULong)face->type1.private_dict.lenIV;
+          size -= face->type1.private_dict.lenIV;
           error = T1_Add_Table( code_table, n,
                                 temp + face->type1.private_dict.lenIV, size );
           FT_FREE( temp );
@@ -2324,7 +2324,7 @@
       else if ( *cur == 'R' && cur + 6 < limit && *(cur + 1) == 'D' &&
                 have_integer )
       {
-        FT_ULong  s;
+        FT_Long   s;
         FT_Byte*  b;
 
 
@@ -2337,7 +2337,7 @@
       else if ( *cur == '-' && cur + 6 < limit && *(cur + 1) == '|' &&
                 have_integer )
       {
-        FT_ULong  s;
+        FT_Long   s;
         FT_Byte*  b;
 
 
