@@ -23,6 +23,11 @@ variables:
   image: 'registry.freedesktop.org/freetype/docker-images/debian:latest'
   stage: 'build'
 
+.build macos common:
+  stage: 'build'
+  tags:
+    - 'gst-macos-11.1'
+
 .build windows meson:
   extends: '.build windows common'
   variables:
@@ -142,3 +147,37 @@ linux cmake libs:
                    -D FT_REQUIRE_ZLIB=TRUE
 
     cmake --build build --target install
+
+macos autotools:
+  extends: '.build macos common'
+  before_script:
+    - '/bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install.sh)"'
+  script:
+    - brew install autoconf automake libtool
+    - ./autogen.sh
+    - ./configure
+    - 'make -j$(sysctl -n hw.logicalcpu)'
+    - make install
+
+macos autotools clang:
+  extends: '.build macos common'
+  before_script:
+    - '/bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install.sh)"'
+  script:
+    - brew install autoconf automake libtool
+    - ./autogen.sh
+    - './configure CC=clang'
+    - 'make -j$(sysctl -n hw.logicalcpu)'
+    - make install
+
+macos meson:
+  extends: '.build macos common'
+  script:
+    - pip3 install --upgrade pip
+    - pip3 install -U meson
+    - pip3 install --upgrade certifi
+    - pip3 install -U ninja
+    
+    - meson setup build
+    - meson compile --verbose -C build
+    - sudo meson install -C build
