@@ -244,12 +244,17 @@
     FT_Memory     memory = face->root.memory;
     FT_Stream     stream = parser->stream;
     FT_Error      error  = FT_Err_Ok;
-    FT_UInt       num_dicts, max_dicts;
+    FT_Long       num_dicts, max_dicts;
 
 
-    num_dicts = (FT_UInt)cid_parser_to_int( parser );
+    num_dicts = cid_parser_to_int( parser );
+    if ( num_dicts < 0 || num_dicts > FT_INT_MAX )
+    {
+      FT_ERROR(( "parse_fd_array: invalid number of dictionaries\n" ));
+      goto Exit;
+    }
 
-    FT_TRACE4(( " %u\n", num_dicts ));
+    FT_TRACE4(( " %ld\n", num_dicts ));
 
     /*
      * A single entry in the FDArray must (at least) contain the following
@@ -267,11 +272,11 @@
      * need a `dup X' at the very beginning and a `put' at the end, so a
      * rough guess using 100 bytes as the minimum is justified.
      */
-    max_dicts = (FT_UInt)( stream->size / 100 );
+    max_dicts = (FT_Long)( stream->size / 100 );
     if ( num_dicts > max_dicts )
     {
       FT_TRACE0(( "parse_fd_array: adjusting FDArray size"
-                  " (from %u to %u)\n",
+                  " (from %ld to %ld)\n",
                   num_dicts, max_dicts ));
       num_dicts = max_dicts;
     }
