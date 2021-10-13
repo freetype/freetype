@@ -86,7 +86,8 @@ linux autotools:
                 --with-bzip2=no \
                 --with-harfbuzz=no \
                 --with-png=no \
-                --with-zlib=no
+                --with-zlib=no \
+                CC=gcc
 
     make -j$(nproc) && make install
 
@@ -98,7 +99,21 @@ linux autotools libs:
                 --with-bzip2=yes \
                 --with-harfbuzz=yes \
                 --with-png=yes \
-                --with-zlib=yes
+                --with-zlib=yes \
+                CC=gcc
+
+    make -j$(nproc) && make install
+
+linux autotools libs clang:
+  extends: '.build linux common'
+  script: |
+    ./autogen.sh
+    ./configure --with-brotli=yes \
+                --with-bzip2=yes \
+                --with-harfbuzz=yes \
+                --with-png=yes \
+                --with-zlib=yes \
+                CC=clang
 
     make -j$(nproc) && make install
 
