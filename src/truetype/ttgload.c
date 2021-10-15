@@ -2717,6 +2717,9 @@
         error = tt_size_run_prep( size, pedantic );
         if ( error )
           return error;
+        error = TT_Load_Context( exec, face, size );
+        if ( error )
+          return error;
       }
 
       /* check whether the cvt program has disabled hinting */
