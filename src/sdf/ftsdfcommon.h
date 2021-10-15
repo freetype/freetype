@@ -48,7 +48,8 @@ FT_BEGIN_HEADER
 #define MIN_SPREAD      2
   /* maximum spread supported by the renderer */
 #define MAX_SPREAD      32
-
+  /* pixel size in 26.6 */
+#define ONE_PIXEL       ( 1 << 6 )
 
   /**************************************************************************
    *
