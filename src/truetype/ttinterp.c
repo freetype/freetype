@@ -350,6 +350,8 @@
    *
    * @Note:
    *   Only the glyph loader and debugger should call this function.
+   *
+   *   Note that not all members of `TT_ExecContext` get initialized.
    */
   FT_LOCAL_DEF( FT_Error )
   TT_Load_Context( TT_ExecContext  exec,
