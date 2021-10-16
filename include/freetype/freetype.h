@@ -3399,6 +3399,11 @@ FT_BEGIN_HEADER
    *      output due to limited availability of pixel grid to store distance
    *      information.
    *
+   *   4. Since the output buffer is normalized, precision at smaller spread
+   *      will be greater than precision at larger spread values, because the
+   *      output range of [0 .. 255] will be mapped to a smaller sdf range.
+   *      A spread of 2 should be sufficient in most cases.
+   *
    *   Point (1) and (2) can be avoided by using `bsdf` and overall it is
    *   more stable than the `sdf` rasterizer.
    *
