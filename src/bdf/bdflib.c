@@ -852,7 +852,7 @@
     p = font->user_props + font->nuser_props;
 
     n = ft_strlen( name ) + 1;
-    if ( n > FT_ULONG_MAX )
+    if ( n > FT_LONG_MAX )
       return FT_THROW( Invalid_Argument );
 
     if ( FT_QALLOC( p->name, n ) )
@@ -860,8 +860,9 @@
 
     FT_MEM_COPY( (char *)p->name, name, n );
 
-    p->format  = format;
-    p->builtin = 0;
+    p->format     = format;
+    p->builtin    = 0;
+    p->value.atom = NULL;  /* nothing is ever stored here */
 
     n = _num_bdf_properties + font->nuser_props;
 
@@ -1181,7 +1182,7 @@
     switch ( prop->format )
     {
     case BDF_ATOM:
-      fp->value.atom = 0;
+      fp->value.atom = NULL;
       if ( value && value[0] )
       {
         if ( FT_STRDUP( fp->value.atom, value ) )
@@ -2351,11 +2352,7 @@
     /* Free up the user defined properties. */
     for ( prop = font->user_props, i = 0;
           i < font->nuser_props; i++, prop++ )
-    {
       FT_FREE( prop->name );
-      if ( prop->format == BDF_ATOM )
-        FT_FREE( prop->value.atom );
-    }
 
     FT_FREE( font->user_props );
 
