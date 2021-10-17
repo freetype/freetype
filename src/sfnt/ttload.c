@@ -939,6 +939,9 @@
             /* invalid entry; ignore it */
             entry->stringLength = 0;
           }
+
+          /* mark the string as not yet loaded */
+          entry->string = NULL;
         }
       }
 
