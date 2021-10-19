@@ -73,7 +73,11 @@
 
     /* first of all, check the font format in the header */
     if ( FT_FRAME_ENTER( 31 ) )
+    {
+      FT_TRACE2(( "  not a CID-keyed font\n" ));
+      error = FT_THROW( Unknown_File_Format );
       goto Exit;
+    }
 
     if ( ft_strncmp( (char *)stream->cursor,
                      "%!PS-Adobe-3.0 Resource-CIDFont", 31 ) )

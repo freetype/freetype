@@ -581,8 +581,14 @@
       /* or even resizing it                                       */
       if ( end >= avail )
       {
-        if ( bytes == 0 )  /* last line in file doesn't end in \r or \n */
-          break;           /* ignore it then exit                       */
+        if ( bytes == 0 )
+        {
+          /* last line in file doesn't end in \r or \n; */
+          /* ignore it then exit                        */
+          if ( lineno == 1 )
+            error = FT_THROW( Missing_Startfont_Field );
+          break;
+        }
 
         if ( start == 0 )
         {
@@ -593,8 +599,13 @@
 
           if ( buf_size >= 65536UL )  /* limit ourselves to 64KByte */
           {
-            FT_ERROR(( "_bdf_readstream: " ERRMSG6, lineno ));
-            error = FT_THROW( Invalid_Argument );
+            if ( lineno == 1 )
+              error = FT_THROW( Missing_Startfont_Field );
+            else
+            {
+              FT_ERROR(( "_bdf_readstream: " ERRMSG6, lineno ));
+              error = FT_THROW( Invalid_Argument );
+            }
             goto Exit;
           }
 
@@ -2169,7 +2180,7 @@
     unsigned long  lineno = 0; /* make compiler happy */
     _bdf_parse_t   *p     = NULL;
 
-    FT_Error   error  = FT_Err_Ok;
+    FT_Error  error = FT_Err_Ok;
 
 
     if ( FT_NEW( p ) )
