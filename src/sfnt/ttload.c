@@ -1434,7 +1434,7 @@
     FT_Memory  memory = stream->memory;
 
     FT_UInt        j,num_ranges;
-    TT_GaspRange   gaspranges = NULL;
+    TT_GaspRange   gasp_ranges = NULL;
 
 
     /* the gasp table is optional */
@@ -1445,8 +1445,8 @@
     if ( FT_FRAME_ENTER( 4L ) )
       goto Exit;
 
-    face->gasp.version   = FT_GET_USHORT();
-    face->gasp.numRanges = FT_GET_USHORT();
+    face->gasp.version = FT_GET_USHORT();
+    num_ranges         = FT_GET_USHORT();
 
     FT_FRAME_EXIT();
 
@@ -1458,29 +1458,31 @@
       goto Exit;
     }
 
-    num_ranges = face->gasp.numRanges;
     FT_TRACE3(( "numRanges: %u\n", num_ranges ));
 
-    if ( FT_QNEW_ARRAY( face->gasp.gaspRanges, num_ranges ) ||
-         FT_FRAME_ENTER( num_ranges * 4L )                  )
+    if ( FT_QNEW_ARRAY( gasp_ranges, num_ranges ) ||
+         FT_FRAME_ENTER( num_ranges * 4L )        )
       goto Exit;
-
-    gaspranges = face->gasp.gaspRanges;
 
     for ( j = 0; j < num_ranges; j++ )
     {
-      gaspranges[j].maxPPEM  = FT_GET_USHORT();
-      gaspranges[j].gaspFlag = FT_GET_USHORT();
+      gasp_ranges[j].maxPPEM  = FT_GET_USHORT();
+      gasp_ranges[j].gaspFlag = FT_GET_USHORT();
 
       FT_TRACE3(( "gaspRange %d: rangeMaxPPEM %5d, rangeGaspBehavior 0x%x\n",
                   j,
-                  gaspranges[j].maxPPEM,
-                  gaspranges[j].gaspFlag ));
+                  gasp_ranges[j].maxPPEM,
+                  gasp_ranges[j].gaspFlag ));
     }
+
+    face->gasp.gaspRanges = gasp_ranges;
+    gasp_ranges = NULL;
+    face->gasp.numRanges = num_ranges;
 
     FT_FRAME_EXIT();
 
   Exit:
+    FT_FREE( gasp_ranges );
     return error;
   }
 
