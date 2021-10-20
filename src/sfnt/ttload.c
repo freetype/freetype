@@ -837,6 +837,8 @@
     FT_ULong      table_pos, table_len;
     FT_ULong      storage_start, storage_limit;
     TT_NameTable  table;
+    TT_Name       names = NULL;
+    TT_LangTag    langTags = NULL;
 
     static const FT_Frame_Field  name_table_fields[] =
     {
@@ -917,13 +919,13 @@
       storage_start += 2 + 4 * table->numLangTagRecords;
 
       /* allocate language tag records array */
-      if ( FT_QNEW_ARRAY( table->langTags, table->numLangTagRecords ) ||
-           FT_FRAME_ENTER( table->numLangTagRecords * 4 )             )
+      if ( FT_QNEW_ARRAY( langTags, table->numLangTagRecords ) ||
+           FT_FRAME_ENTER( table->numLangTagRecords * 4 )      )
         goto Exit;
 
       /* load language tags */
       {
-        TT_LangTag  entry = table->langTags;
+        TT_LangTag  entry = langTags;
         TT_LangTag  limit = FT_OFFSET( entry, table->numLangTagRecords );
 
 
@@ -943,6 +945,9 @@
           /* mark the string as not yet loaded */
           entry->string = NULL;
         }
+
+        table->langTags = langTags;
+        langTags = NULL;
       }
 
       FT_FRAME_EXIT();
@@ -951,13 +956,13 @@
     }
 
     /* allocate name records array */
-    if ( FT_QNEW_ARRAY( table->names, table->numNameRecords ) ||
-         FT_FRAME_ENTER( table->numNameRecords * 12 )         )
+    if ( FT_QNEW_ARRAY( names, table->numNameRecords ) ||
+         FT_FRAME_ENTER( table->numNameRecords * 12 )  )
       goto Exit;
 
     /* load name records */
     {
-      TT_Name  entry = table->names;
+      TT_Name  entry = names;
       FT_UInt  count = table->numNameRecords;
       FT_UInt  valid = 0;
 
@@ -1000,9 +1005,11 @@
       }
 
       /* reduce array size to the actually used elements */
-      FT_MEM_QRENEW_ARRAY( table->names,
+      FT_MEM_QRENEW_ARRAY( names,
                            table->numNameRecords,
                            valid );
+      table->names = names;
+      names = NULL;
       table->numNameRecords = valid;
     }
 
@@ -1012,6 +1019,8 @@
     face->num_names = (FT_UShort)table->numNameRecords;
 
   Exit:
+    FT_FREE( names );
+    FT_FREE( langTags );
     return error;
   }
 
