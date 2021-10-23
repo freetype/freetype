@@ -167,7 +167,7 @@
       <Culture>0x0409</Culture>
     </ResourceCompile>
     <Lib>
-      <TargetMachine>MachineX86</TargetMachine>
+      <TargetMachine>MachineARM64</TargetMachine>
       <AdditionalLibraryDirectories>$(UserLibraryDirectories);%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <AdditionalDependencies>$(UserDependencies);%(AdditionalDependencies)</AdditionalDependencies>
     </Lib>
@@ -338,7 +338,7 @@
     </ResourceCompile>
     <Lib>
       <LinkTimeCodeGeneration>true</LinkTimeCodeGeneration>
-      <TargetMachine>MachineX86</TargetMachine>
+      <TargetMachine>MachineARM64</TargetMachine>
       <AdditionalLibraryDirectories>$(UserLibraryDirectories);%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <AdditionalDependencies>$(UserDependencies);%(AdditionalDependencies)</AdditionalDependencies>
     </Lib>
