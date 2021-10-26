@@ -75,9 +75,9 @@
 #undef  OS_INLINE
 #define OS_INLINE   static __inline__
 #endif
-#include <CoreServices/CoreServices.h>
-#include <ApplicationServices/ApplicationServices.h>
-#include <sys/syslimits.h> /* PATH_MAX */
+// #include <CoreServices/CoreServices.h>
+// #include <ApplicationServices/ApplicationServices.h>
+// #include <sys/syslimits.h> /* PATH_MAX */
 #else
 #include <Resources.h>
 #include <Fonts.h>
