@@ -133,9 +133,9 @@
 
 
         /* allocate the blend `private' and `font_info' dictionaries */
-        if ( FT_QNEW_ARRAY( blend->font_infos[1], num_designs ) ||
-             FT_QNEW_ARRAY( blend->privates  [1], num_designs ) ||
-             FT_QNEW_ARRAY( blend->bboxes    [1], num_designs ) )
+        if ( FT_NEW_ARRAY( blend->font_infos[1], num_designs ) ||
+             FT_NEW_ARRAY( blend->privates  [1], num_designs ) ||
+             FT_NEW_ARRAY( blend->bboxes    [1], num_designs ) )
           goto Exit;
 
         blend->font_infos[0] = &face->type1.font_info;
