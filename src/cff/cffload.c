@@ -1162,8 +1162,8 @@
       }
 
       /* read top level fields */
-      if ( FT_READ_ULONG( regionListOffset )   ||
-           FT_READ_USHORT( dataCount ) )
+      if ( FT_READ_ULONG( regionListOffset ) ||
+           FT_READ_USHORT( dataCount )       )
         goto Exit;
 
       /* make temporary copy of item variation data offsets; */

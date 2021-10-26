@@ -837,7 +837,7 @@
     FT_ULong      table_pos, table_len;
     FT_ULong      storage_start, storage_limit;
     TT_NameTable  table;
-    TT_Name       names = NULL;
+    TT_Name       names    = NULL;
     TT_LangTag    langTags = NULL;
 
     static const FT_Frame_Field  name_table_fields[] =
@@ -947,7 +947,7 @@
         }
 
         table->langTags = langTags;
-        langTags = NULL;
+        langTags        = NULL;
       }
 
       FT_FRAME_EXIT();
@@ -1008,8 +1008,8 @@
       FT_MEM_QRENEW_ARRAY( names,
                            table->numNameRecords,
                            valid );
-      table->names = names;
-      names = NULL;
+      table->names          = names;
+      names                 = NULL;
       table->numNameRecords = valid;
     }
 
@@ -1476,8 +1476,8 @@
     }
 
     face->gasp.gaspRanges = gasp_ranges;
-    gasp_ranges = NULL;
-    face->gasp.numRanges = num_ranges;
+    gasp_ranges           = NULL;
+    face->gasp.numRanges  = num_ranges;
 
     FT_FRAME_EXIT();
 
