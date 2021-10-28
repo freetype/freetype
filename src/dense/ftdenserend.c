@@ -19,122 +19,7 @@
 #undef FT_COMPONENT
 #define FT_COMPONENT dense
 
-/**************************************************************************
- *
- * macros and default property values
- *
- */
-#define DENSE_RENDERER( rend ) ( (DENSE_Renderer)rend )
 
-/**************************************************************************
- *
- * for setting properties
- *
- */
-
-/* property setter function */
-static FT_Error
-dense_property_set( FT_Module   module,
-                    const char* property_name,
-                    const void* value,
-                    FT_Bool     value_is_string )
-{
-  FT_Error       error  = FT_Err_Ok;
-  DENSE_Renderer render = DENSE_RENDERER( FT_RENDERER( module ) );
-
-  FT_UNUSED( value_is_string );
-
-  if ( ft_strcmp( property_name, "spread" ) == 0 )
-  {
-    // FT_Int val = *(const FT_Int*)value;
-    // if ( val > MAX_SPREAD || val < MIN_SPREAD )
-    // {
-    //   FT_TRACE0(
-    //       ( "[sdf] dense_property_set:"
-    //         " the `spread' property can have a value\n" ) );
-    //   FT_TRACE0(
-    //       ( "                       "
-    //         " within range [%d, %d] (value provided: %d)\n",
-    //         MIN_SPREAD, MAX_SPREAD, val ) );
-    //
-    //   error = FT_THROW( Invalid_Argument );
-    //   goto Exit;
-    // }
-    //
-    // render->spread = (FT_UInt)val;
-    // FT_TRACE7(
-    //     ( "[sdf] dense_property_set:"
-    //       " updated property `spread' to %d\n",
-    //       val ) );
-  }
-
-  else if ( ft_strcmp( property_name, "flip_sign" ) == 0 )
-  {
-    ;
-  }
-
-  else
-  {
-    FT_TRACE0(
-        ( "[dense] dense_property_set:"
-          " missing property `%s'\n",
-          property_name ) );
-    error = FT_THROW( Missing_Property );
-  }
-
-Exit:
-  return error;
-}
-
-/* property getter function */
-static FT_Error
-dense_property_get( FT_Module module, const char* property_name, void* value )
-{
-  FT_Error       error  = FT_Err_Ok;
-  DENSE_Renderer render = DENSE_RENDERER( FT_RENDERER( module ) );
-
-  if ( ft_strcmp( property_name, "spread" ) == 0 )
-  {
-    // FT_Int* val = (FT_Int*)value;
-
-    // *val = render->spread;
-  }
-
-  else if ( ft_strcmp( property_name, "flip_sign" ) == 0 )
-  {
-    ;
-  }
-
-  else
-  {
-    FT_TRACE0(
-        ( "[dense] dense_property_get:"
-          " missing property `%s'\n",
-          property_name ) );
-    error = FT_THROW( Missing_Property );
-  }
-
-  return error;
-}
-
-FT_DEFINE_SERVICE_PROPERTIESREC(
-    dense_service_properties,
-
-    (FT_Properties_SetFunc)dense_property_set,  /* set_property */
-    (FT_Properties_GetFunc)dense_property_get ) /* get_property */
-
-FT_DEFINE_SERVICEDESCREC1( dense_services,
-
-                           FT_SERVICE_ID_PROPERTIES,
-                           &dense_service_properties )
-
-static FT_Module_Interface
-ft_dense_requester( FT_Renderer render, const char* module_interface )
-{
-  FT_UNUSED( render );
-
-  return ft_service_list_lookup( dense_services, module_interface );
-}
 
 /**************************************************************************
  *
@@ -145,7 +30,7 @@ ft_dense_requester( FT_Renderer render, const char* module_interface )
 static FT_Error
 ft_dense_init( FT_Renderer render )
 {
-  DENSE_Renderer dense_render = DENSE_RENDERER( render );
+  FT_Renderer dense_render = render;
 
   //   dense_render->spread    = 0;
   //   dense_render->flip_sign = 0;
@@ -161,9 +46,9 @@ ft_dense_done( FT_Renderer render )
   FT_UNUSED( render );
 }
 
-/* generate signed distance field from a glyph's slot image */
+/* generate bitmap from a glyph's slot image */
 static FT_Error
-ft_dense_render( FT_Renderer      module,
+ft_dense_render( FT_Renderer      render,
                  FT_GlyphSlot     slot,
                  FT_Render_Mode   mode,
                  const FT_Vector* origin )
@@ -172,19 +57,11 @@ ft_dense_render( FT_Renderer      module,
   FT_Outline* outline = &slot->outline;
   FT_Bitmap*  bitmap  = &slot->bitmap;
   FT_Memory   memory  = NULL;
-  FT_Renderer render  = NULL;
 
   FT_Pos x_shift = 0;
   FT_Pos y_shift = 0;
 
-  FT_Pos x_pad = 0;
-  FT_Pos y_pad = 0;
-
-  DENSE_Raster_Params params;
-  DENSE_Renderer      dense_module = DENSE_RENDERER( module );
-
-  render = &dense_module->root;
-  memory = render->root.memory;
+  FT_Raster_Params params;
 
   /* check whether slot format is correct before rendering */
   if ( slot->format != render->glyph_format )
@@ -193,16 +70,6 @@ ft_dense_render( FT_Renderer      module,
     goto Exit;
   }
 
-  /* check whether render mode is correct */
-  if ( mode != FT_RENDER_MODE_NORMAL )
-  {
-    FT_ERROR(
-        ( "[dense] ft_dense_render:"
-          " sdf module only render when"
-          " using `FT_RENDER_MODE_NORMAL'\n" ) );
-    error = FT_THROW( Cannot_Render_Glyph );
-    goto Exit;
-  }
 
   /* deallocate the previously allocated bitmap */
   if ( slot->internal->flags & FT_GLYPH_OWN_BITMAP )
@@ -212,9 +79,7 @@ ft_dense_render( FT_Renderer      module,
   }
 
   /* preset the bitmap using the glyph's outline;         */
-  /* the sdf bitmap is similar to an antialiased bitmap   */
-  /* with a slightly bigger size and different pixel mode */
-  if ( ft_glyphslot_preset_bitmap( slot, FT_RENDER_MODE_NORMAL, origin ) )
+  if ( ft_glyphslot_preset_bitmap( slot, mode, origin ) )
   {
     error = FT_THROW( Raster_Overflow );
     goto Exit;
@@ -223,27 +88,22 @@ ft_dense_render( FT_Renderer      module,
   if ( !bitmap->rows || !bitmap->pitch )
     goto Exit;
 
-  /* the padding will simply be equal to the `spread' */
-  x_pad = dense_module->spread;
-  y_pad = dense_module->spread;
-
-  /* apply the padding; will be in all the directions */
-  bitmap->rows += y_pad * 2;
-  bitmap->width += x_pad * 2;
-
   /* ignore the pitch, pixel mode and set custom */
   bitmap->pixel_mode = FT_PIXEL_MODE_GRAY;
   bitmap->pitch      = bitmap->width;
   bitmap->num_grays  = 255;
 
-  /* allocate new buffer */
+
+  /* allocate new one */
   if ( FT_ALLOC_MULT( bitmap->buffer, bitmap->rows, bitmap->pitch ) )
     goto Exit;
+  /* the padding will simply be equal to the `spread' */
+  x_shift = 64 * -slot->bitmap_left;
+  y_shift = 64 * -slot->bitmap_top;
+
+
 
   slot->internal->flags |= FT_GLYPH_OWN_BITMAP;
-
-  x_shift = 64 * -( slot->bitmap_left - x_pad );
-  y_shift = 64 * -( slot->bitmap_top + y_pad );
   y_shift += 64 * (FT_Int)bitmap->rows;
 
   if ( origin )
@@ -257,13 +117,8 @@ ft_dense_render( FT_Renderer      module,
     FT_Outline_Translate( outline, x_shift, y_shift );
 
   /* set up parameters */
-  params.root.target = bitmap;
-  params.root.source = outline;
-  params.root.flags  = FT_RASTER_FLAG_DEFAULT;
-  params.spread      = dense_module->spread;
-  params.flip_sign   = dense_module->flip_sign;
-  params.flip_y      = dense_module->flip_y;
-  params.overlaps    = dense_module->overlaps;
+  params.target = bitmap;
+  params.source = outline;
 
   /* render the outline */
   error =
@@ -335,7 +190,7 @@ FT_DEFINE_RENDERER(
     ft_dense_renderer_class,
 
     FT_MODULE_RENDERER,
-    sizeof( DENSE_Renderer_Module ),
+    sizeof( FT_RendererRec ),
 
     "dense",
     0x10000L,
@@ -345,7 +200,7 @@ FT_DEFINE_RENDERER(
 
     (FT_Module_Constructor)ft_dense_init,
     (FT_Module_Destructor)ft_dense_done,
-    (FT_Module_Requester)ft_dense_requester,
+    (FT_Module_Requester)NULL,
 
     FT_GLYPH_FORMAT_OUTLINE,
 

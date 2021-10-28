@@ -3,11 +3,11 @@
 #undef FT_COMPONENT
 #define FT_COMPONENT dense
 
+#include "ftdense.h"
 #include <freetype/ftoutln.h>
 #include <freetype/internal/ftcalc.h>
 #include <freetype/internal/ftdebug.h>
 #include <freetype/internal/ftobjs.h>
-#include "ftdense.h"
 
 #include "ftdenseerrs.h"
 
@@ -29,18 +29,20 @@ Lerp( float aT, RasterFP_Point aP0, RasterFP_Point aP1 )
 static int
 dense_move_to( const FT_Vector* to, RasterFP* aRasterFP )
 {
-
-  RasterFP_Point lp = {to->x, to->y};
+  RasterFP_Point lp = { to->x, to->y };
 
   aRasterFP->last_point = lp;
   return 0;
 }
 
+
+
+
 static int
 dense_line_to( const FT_Vector* to, RasterFP* aRasterFP )
 {
-  RasterFP_Point tp = {to->x, to->y};
-  RasterFP_DrawLine(aRasterFP, aRasterFP->last_point, tp);
+  RasterFP_Point tp = { to->x, to->y };
+  RasterFP_DrawLine( aRasterFP, aRasterFP->last_point, tp );
   return 0;
 }
 
@@ -201,14 +203,15 @@ RasterFP_DrawLine( RasterFP* aRasterFP, RasterFP_Point aP0, RasterFP_Point aP1 )
 
 
 
+
 static int
 dense_conic_to( const FT_Vector* control,
-               const FT_Vector* to,
-               RasterFP* aRasterFP)
+                const FT_Vector* to,
+                RasterFP*        aRasterFP )
 {
-  RasterFP_Point controlP = {control->x, control->y};
-  RasterFP_Point toP = {to->x, to->y};
-  RasterFP_DrawQuadratic( aRasterFP, aRasterFP->last_point,  controlP, toP );
+  RasterFP_Point controlP = { control->x, control->y };
+  RasterFP_Point toP      = { to->x, to->y };
+  RasterFP_DrawQuadratic( aRasterFP, aRasterFP->last_point, controlP, toP );
   return 0;
 }
 
@@ -271,17 +274,17 @@ RasterFP_DrawQuadratic( RasterFP*      aRasterFP,
 
 
 
+
+
 static int
 dense_cubic_to( const FT_Vector* control1,
-               const FT_Vector* control2,
-               const FT_Vector* to,
-               RasterFP* aRasterFP )
+                const FT_Vector* control2,
+                const FT_Vector* to,
+                RasterFP*        aRasterFP )
 {
-
-  RasterFP_Point ap1 = {control1->x, control1->y};
-  RasterFP_Point ap2 = {control2->x, control2->y};
-  RasterFP_Point ap3 = {to->x, to->y};
-
+  RasterFP_Point ap1 = { control1->x, control1->y };
+  RasterFP_Point ap2 = { control2->x, control2->y };
+  RasterFP_Point ap3 = { to->x, to->y };
 
   RasterFP_DrawCubic( aRasterFP, aRasterFP->last_point, ap1, ap2, ap3 );
   return 0;
@@ -328,13 +331,10 @@ RasterFP_DrawCubic( RasterFP*      aRasterFP,
   RasterFP_DrawLine( aRasterFP, p, aP3 );
 }
 
-
-
-
 static int
 dense_raster_new( FT_Memory memory, dense_PRaster* araster )
 {
-  FT_Error     error;
+  FT_Error      error;
   dense_PRaster raster;
 
   if ( !FT_NEW( raster ) )
@@ -353,11 +353,10 @@ dense_raster_done( FT_Raster raster )
   FT_FREE( raster );
 }
 
-
 static void
 dense_raster_reset( FT_Raster      raster,
-                   unsigned char* pool_base,
-                   unsigned long  pool_size )
+                    unsigned char* pool_base,
+                    unsigned long  pool_size )
 {
   FT_UNUSED( raster );
   FT_UNUSED( pool_base );
@@ -374,143 +373,43 @@ dense_raster_set_mode( FT_Raster raster, unsigned long mode, void* args )
   return 0; /* nothing to do */
 }
 
-FT_DEFINE_OUTLINE_FUNCS(
-    func_interface,
+FT_DEFINE_OUTLINE_FUNCS( dense_decompose_funcs,
 
-    (FT_Outline_MoveTo_Func)dense_move_to,   /* move_to  */
-    (FT_Outline_LineTo_Func)dense_line_to,   /* line_to  */
-    (FT_Outline_ConicTo_Func)dense_conic_to, /* conic_to */
-    (FT_Outline_CubicTo_Func)dense_cubic_to, /* cubic_to */
+                         (FT_Outline_MoveTo_Func)dense_move_to,   /* move_to  */
+                         (FT_Outline_LineTo_Func)dense_line_to,   /* line_to  */
+                         (FT_Outline_ConicTo_Func)dense_conic_to, /* conic_to */
+                         (FT_Outline_CubicTo_Func)dense_cubic_to, /* cubic_to */
 
-    0, /* shift    */
-    0  /* delta    */
+                         0, /* shift    */
+                         0  /* delta    */
 )
 
-
-
-
-
-
-
-
 static int
-gray_convert_glyph_inner( RAS_ARG, int continued )
+dense_render_glyph( RasterFP* aRasterFP, FT_Bitmap* target )
 {
-  int error;
+  FT_Error error = FT_Outline_Decompose( aRasterFP->outline,
+                                         &dense_decompose_funcs, aRasterFP );
 
-  if ( ft_setjmp( ras.jump_buffer ) == 0 )
+  // Render into bitmap
+  const float*   source   = aRasterFP->m_a;
+  unsigned char* dest     = target->buffer;
+  unsigned char* dest_end = target->buffer + aRasterFP->m_w * aRasterFP->m_h;
+  float          value    = 0.0f;
+  while ( dest < dest_end )
   {
-    if ( continued )
-      FT_Trace_Disable();
-    error = FT_Outline_Decompose( &ras.outline, &func_interface, &ras );
-    if ( continued )
-      FT_Trace_Enable();
-
-    FT_TRACE7( ( "band [%d..%d]: %ld cell%s remaining/\n", ras.min_ey,
-                 ras.max_ey, ras.cell_null - ras.cell_free,
-                 ras.cell_null - ras.cell_free == 1 ? "" : "s" ) );
-  }
-  else
-  {
-    error = FT_THROW( Raster_Overflow );
-
-    FT_TRACE7( ( "band [%d..%d]: to be bisected\n", ras.min_ey, ras.max_ey ) );
-  }
-
-  return error;
-}
-
-static int gray_convert_glyph( RAS_ARG )
-{
-  const TCoord yMin = ras.min_ey;
-  const TCoord yMax = ras.max_ey;
-
-  TCell   buffer[FT_MAX_GRAY_POOL];
-  size_t  height = (size_t)( yMax - yMin );
-  size_t  n      = FT_MAX_GRAY_POOL / 8;
-  TCoord  y;
-  TCoord  bands[32]; /* enough to accommodate bisections */
-  TCoord* band;
-
-  int continued = 0;
-
-  /* Initialize the null cell at the end of the poll. */
-  ras.cell_null        = buffer + FT_MAX_GRAY_POOL - 1;
-  ras.cell_null->x     = CELL_MAX_X_VALUE;
-  ras.cell_null->area  = 0;
-  ras.cell_null->cover = 0;
-  ras.cell_null->next  = NULL;
-
-  /* set up vertical bands */
-  ras.ycells = (PCell*)buffer;
-
-  if ( height > n )
-  {
-    /* two divisions rounded up */
-    n      = ( height + n - 1 ) / n;
-    height = ( height + n - 1 ) / n;
-  }
-
-  for ( y = yMin; y < yMax; )
-  {
-    ras.min_ey = y;
-    y += height;
-    ras.max_ey = FT_MIN( y, yMax );
-
-    band    = bands;
-    band[1] = ras.min_ey;
-    band[0] = ras.max_ey;
-
-    do
+    value += *source++;
+    if ( value > 0.0f )
     {
-      TCoord width = band[0] - band[1];
-      TCoord w;
-      int    error;
-
-      for ( w = 0; w < width; ++w )
-        ras.ycells[w] = ras.cell_null;
-
-      /* memory management: skip ycells */
-      n = ( width * sizeof( PCell ) + sizeof( TCell ) - 1 ) / sizeof( TCell );
-
-      ras.cell_free = buffer + n;
-      ras.cell      = ras.cell_null;
-      ras.min_ey    = band[1];
-      ras.max_ey    = band[0];
-      ras.count_ey  = width;
-
-      error     = gray_convert_glyph_inner( RAS_VAR, continued );
-      continued = 1;
-
-      if ( !error )
-      {
-        if ( ras.render_span ) /* for FT_RASTER_FLAG_DIRECT only */
-          gray_sweep_direct( RAS_VAR );
-        else
-          gray_sweep( RAS_VAR );
-        band--;
-        continue;
-      }
-      else if ( error != Smooth_Err_Raster_Overflow )
-        return error;
-
-      /* render pool overflow; we will reduce the render band by half */
-      width >>= 1;
-
-      /* this should never happen even with tiny rendering pool */
-      if ( width == 0 )
-      {
-        FT_TRACE7( ( "gray_convert_glyph: rotten glyph\n" ) );
-        return FT_THROW( Raster_Overflow );
-      }
-
-      band++;
-      band[1] = band[0];
-      band[0] += width;
-    } while ( band >= bands );
+      int n = (int)( fabs( value ) * 255.0f + 0.5f );
+      if ( n > 255 )
+        n = 255;
+      *dest = (unsigned char)n;
+    }
+    else
+      *dest = 0;
+    dest++;
   }
-
-  return Smooth_Err_Ok;
+  return error;
 }
 
 static int
@@ -519,93 +418,38 @@ dense_raster_render( FT_Raster raster, const FT_Raster_Params* params )
   const FT_Outline* outline    = (const FT_Outline*)params->source;
   const FT_Bitmap*  target_map = params->target;
 
-#ifndef FT_STATIC_RASTER
-  gray_TWorker worker[1];
-#endif
+  RasterFP* aRasterFP = malloc( sizeof( RasterFP ) );
 
   if ( !raster )
     return FT_THROW( Invalid_Argument );
 
-  /* this version does not support monochrome rendering */
-  if ( !( params->flags & FT_RASTER_FLAG_AA ) )
-    return FT_THROW( Cannot_Render_Glyph );
-
   if ( !outline )
     return FT_THROW( Invalid_Outline );
 
-  /* return immediately if the outline is empty */
-  if ( outline->n_points == 0 || outline->n_contours <= 0 )
-    return Smooth_Err_Ok;
+  aRasterFP->outline = outline;
 
-  if ( !outline->contours || !outline->points )
-    return FT_THROW( Invalid_Outline );
+  if ( !target_map )
+    return FT_THROW( Invalid_Argument );
 
-  if ( outline->n_points != outline->contours[outline->n_contours - 1] + 1 )
-    return FT_THROW( Invalid_Outline );
+  /* nothing to do */
+  if ( !target_map->width || !target_map->rows )
+    return 0;
 
-  ras.outline = *outline;
+  if ( !target_map->buffer )
+    return FT_THROW( Invalid_Argument );
 
-  if ( params->flags & FT_RASTER_FLAG_DIRECT )
-  {
-    if ( !params->gray_spans )
-      return Smooth_Err_Ok;
-
-    ras.render_span      = (FT_Raster_Span_Func)params->gray_spans;
-    ras.render_span_data = params->user;
-
-    ras.min_ex = params->clip_box.xMin;
-    ras.min_ey = params->clip_box.yMin;
-    ras.max_ex = params->clip_box.xMax;
-    ras.max_ey = params->clip_box.yMax;
-  }
-  else
-  {
-    /* if direct mode is not set, we must have a target bitmap */
-    if ( !target_map )
-      return FT_THROW( Invalid_Argument );
-
-    /* nothing to do */
-    if ( !target_map->width || !target_map->rows )
-      return Smooth_Err_Ok;
-
-    if ( !target_map->buffer )
-      return FT_THROW( Invalid_Argument );
-
-    if ( target_map->pitch < 0 )
-      ras.target.origin = target_map->buffer;
-    else
-      ras.target.origin =
-          target_map->buffer +
-          ( target_map->rows - 1 ) * (unsigned int)target_map->pitch;
-
-    ras.target.pitch = target_map->pitch;
-
-    ras.render_span      = (FT_Raster_Span_Func)NULL;
-    ras.render_span_data = NULL;
-
-    ras.min_ex = 0;
-    ras.min_ey = 0;
-    ras.max_ex = (FT_Pos)target_map->width;
-    ras.max_ey = (FT_Pos)target_map->rows;
-  }
+  aRasterFP->m_origin_x = 0;
+  aRasterFP->m_origin_y = 0;
+  aRasterFP->m_w        = (float)target_map->width;
+  aRasterFP->m_h        = (float)target_map->rows;
 
   /* exit if nothing to do */
-  if ( ras.max_ex <= ras.min_ex || ras.max_ey <= ras.min_ey )
-    return Smooth_Err_Ok;
+  if ( aRasterFP->m_w <= aRasterFP->m_origin_x ||
+       aRasterFP->m_h <= aRasterFP->m_origin_y )
+    return 0;
 
-  return gray_convert_glyph( RAS_VAR );
+  return dense_render_glyph( aRasterFP, target_map );
 }
-
-
-
-
-
-
-
-
-
-
-
 
 FT_DEFINE_RASTER_FUNCS(
     ft_dense_raster,

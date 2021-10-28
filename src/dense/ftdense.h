@@ -7,7 +7,6 @@
 #include FT_CONFIG_CONFIG_H
 #include <freetype/ftimage.h>
 
-
 FT_BEGIN_HEADER
 
 /**************************************************************************
@@ -52,17 +51,11 @@ FT_BEGIN_HEADER
  *   exception is `overlaps`, which gets ignored by the 'bsdf' renderer.
  *
  */
-typedef struct DENSE_Raster_Params_
-{
-  FT_Raster_Params root;
-  FT_UInt          spread;
-  FT_Bool          flip_sign;
-  FT_Bool          flip_y;
-  FT_Bool          overlaps;
-
-} DENSE_Raster_Params;
 
 /* rasterizer to convert outline to SDF */
+#ifndef FT_EXPORT_VAR
+#define FT_EXPORT_VAR( x ) extern x
+#endif
 FT_EXPORT_VAR( const FT_Raster_Funcs ) ft_dense_raster;
 
 /**
@@ -114,6 +107,8 @@ extern "C"
     int m_origin_y;
 
     RasterFP_Point last_point;
+
+    FT_Outline *outline;
   } RasterFP;
 
   void RasterFP_Create( RasterFP* aRasterFP );
