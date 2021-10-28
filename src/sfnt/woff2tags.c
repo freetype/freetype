@@ -28,10 +28,10 @@
    *
    * for details.
    */
-  FT_LOCAL_DEF( FT_ULong )
+  FT_LOCAL_DEF( FT_Tag )
   woff2_known_tags( FT_Byte  index )
   {
-    const FT_ULong  known_tags[63] =
+    static const FT_Tag  known_tags[63] =
     {
       FT_MAKE_TAG('c', 'm', 'a', 'p'),  /*  0  */
       FT_MAKE_TAG('h', 'e', 'a', 'd'),  /*  1  */

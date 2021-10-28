@@ -27,7 +27,7 @@
 FT_BEGIN_HEADER
 
 
-  FT_LOCAL( FT_ULong )
+  FT_LOCAL( FT_Tag )
   woff2_known_tags( FT_Byte  index );
 
 

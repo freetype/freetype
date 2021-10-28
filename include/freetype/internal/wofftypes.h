@@ -191,7 +191,7 @@ FT_BEGIN_HEADER
   typedef struct  WOFF2_TableRec_
   {
     FT_Byte   FlagByte;           /* table type and flags      */
-    FT_ULong  Tag;                /* table file offset         */
+    FT_Tag    Tag;                /* table file offset         */
     FT_ULong  dst_length;         /* uncompressed table length */
     FT_ULong  TransformLength;    /* transformed length        */
 

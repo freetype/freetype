@@ -108,8 +108,8 @@
     WOFF2_Table  table1 = *(WOFF2_Table*)a;
     WOFF2_Table  table2 = *(WOFF2_Table*)b;
 
-    FT_ULong  tag1 = table1->Tag;
-    FT_ULong  tag2 = table2->Tag;
+    FT_Tag  tag1 = table1->Tag;
+    FT_Tag  tag2 = table2->Tag;
 
 
     if ( tag1 > tag2 )
@@ -356,7 +356,7 @@
   static WOFF2_Table
   find_table( WOFF2_Table*  tables,
               FT_UShort     num_tables,
-              FT_ULong      tag )
+              FT_Tag        tag )
   {
     FT_Int  i;
 
@@ -2216,7 +2216,7 @@
     /* reject fonts that have multiple tables with the same tag */
     for ( nn = 1; nn < woff2.num_tables; nn++ )
     {
-      FT_ULong  tag = indices[nn]->Tag;
+      FT_Tag  tag = indices[nn]->Tag;
 
 
       if ( tag == indices[nn - 1]->Tag )
