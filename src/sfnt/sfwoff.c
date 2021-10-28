@@ -109,7 +109,7 @@
     FT_ULong        sfnt_offset;
 
     FT_Int          nn;
-    FT_ULong        old_tag = 0;
+    FT_Tag          old_tag = 0;
 
     static const FT_Frame_Field  woff_header_fields[] =
     {

@@ -92,7 +92,7 @@ FT_BEGIN_HEADER
    */
   typedef struct  WOFF_TableRec_
   {
-    FT_ULong  Tag;           /* table ID                  */
+    FT_Tag    Tag;           /* table ID                  */
     FT_ULong  Offset;        /* table file offset         */
     FT_ULong  CompLength;    /* compressed table length   */
     FT_ULong  OrigLength;    /* uncompressed table length */
