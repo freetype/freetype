@@ -66,6 +66,8 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
+				OptimizeReferences="2"
+				EnableCOMDATFolding="2"
 			/>
 			<Tool
 				Name="VCALinkTool"
