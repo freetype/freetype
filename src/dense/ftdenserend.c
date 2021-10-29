@@ -30,13 +30,11 @@
 static FT_Error
 ft_dense_init( FT_Renderer render )
 {
-  FT_Renderer dense_render = render;
 
   //   dense_render->spread    = 0;
   //   dense_render->flip_sign = 0;
   //   dense_render->flip_y    = 0;
   //   dense_render->overlaps  = 0;
-
   return FT_Err_Ok;
 }
 
@@ -88,33 +86,34 @@ ft_dense_render( FT_Renderer      render,
   if ( !bitmap->rows || !bitmap->pitch )
     goto Exit;
 
-  /* ignore the pitch, pixel mode and set custom */
-  bitmap->pixel_mode = FT_PIXEL_MODE_GRAY;
-  bitmap->pitch      = bitmap->width;
-  bitmap->num_grays  = 255;
-
 
   /* allocate new one */
-  if ( FT_ALLOC_MULT( bitmap->buffer, bitmap->rows, bitmap->pitch ) )
-    goto Exit;
-  /* the padding will simply be equal to the `spread' */
-  x_shift = 64 * -slot->bitmap_left;
-  y_shift = 64 * -slot->bitmap_top;
 
+  // if ( FT_ALLOC_MULT( bitmap->buffer, bitmap->rows, bitmap->pitch ) )
+  //   goto Exit;
+
+  // For whatever reason, it segfaults if the above is used for allocation
+  bitmap->buffer = realloc(bitmap->buffer, sizeof(int) * bitmap->rows * bitmap->pitch);
+
+
+
+  /* the padding will simply be equal to the `spread' */
+  // x_shift = 64 * -slot->bitmap_left;
+  // y_shift = 64 * -slot->bitmap_top;
 
 
   slot->internal->flags |= FT_GLYPH_OWN_BITMAP;
-  y_shift += 64 * (FT_Int)bitmap->rows;
+  // y_shift += 64 * (FT_Int)bitmap->rows;
 
-  if ( origin )
-  {
-    x_shift += origin->x;
-    y_shift += origin->y;
-  }
+  // if ( origin )
+  // {
+  //   x_shift += origin->x;
+  //   y_shift += origin->y;
+  // }
 
-  /* translate outline to render it into the bitmap */
-  if ( x_shift || y_shift )
-    FT_Outline_Translate( outline, x_shift, y_shift );
+  // /* translate outline to render it into the bitmap */
+  // if ( x_shift || y_shift )
+  //   FT_Outline_Translate( outline, x_shift, y_shift );
 
   /* set up parameters */
   params.target = bitmap;

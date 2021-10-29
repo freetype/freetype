@@ -108,15 +108,10 @@ extern "C"
 
     RasterFP_Point last_point;
 
-    FT_Outline *outline;
+    FT_Outline outline;
   } RasterFP;
 
   void RasterFP_Create( RasterFP* aRasterFP );
-  void RasterFP_StartRasterizing( RasterFP* aRasterFP,
-                                  int       aOriginX,
-                                  int       aOriginY,
-                                  int       aWidth,
-                                  int       aHeight );
   void RasterFP_Destroy( RasterFP* aRasterFP );
   void RasterFP_DrawLine( RasterFP*      aRasterFP,
                           RasterFP_Point aP0,
