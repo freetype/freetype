@@ -4,8 +4,13 @@
 /*                                                                         */
 /*    Amiga-specific FreeType module selection.                            */
 /*                                                                         */
+<<<<<<< HEAD
 /*  Copyright (C) 2005-2022 by                                             */
 /*  Werner Lemberg and Detlef Würkner.                                     */
+=======
+/*  Copyright (C) 2005-2021 by                                             */
+/*  Werner Lemberg and Detlef Wï¿½rkner.                                     */
+>>>>>>> d9fdb2202 (Compilation fix attempt #1)
 /*                                                                         */
 /*  This file is part of the FreeType project, and may only be used,       */
 /*  modified, and distributed under the terms of the FreeType project      */
@@ -133,6 +138,10 @@ FT_USE_MODULE( FT_Renderer_Class, ft_raster1_renderer_class )
 
 #ifdef FT_USE_SFNT
 FT_USE_MODULE( FT_Module_Class, sfnt_module_class )
+#endif
+
+#ifdef FT_USE_DENSE
+FT_USE_MODULE( FT_Renderer_Class, ft_dense_renderer_class )
 #endif
 
 #ifdef FT_USE_SMOOTH

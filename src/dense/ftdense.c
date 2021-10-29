@@ -49,7 +49,7 @@ dense_line_to( const FT_Vector* to, RasterFP* aRasterFP )
 void
 RasterFP_DrawLine( RasterFP* aRasterFP, RasterFP_Point aP0, RasterFP_Point aP1 )
 {
-  assert( aRasterFP );
+  // assert( aRasterFP );
   if ( aP0.m_y == aP1.m_y )
     return;
 
@@ -221,7 +221,7 @@ RasterFP_DrawQuadratic( RasterFP*      aRasterFP,
                         RasterFP_Point aP1,
                         RasterFP_Point aP2 )
 {
-  assert( aRasterFP );
+  // assert( aRasterFP );
 
   /*
   Calculate devsq as the square of four times the
@@ -297,7 +297,7 @@ RasterFP_DrawCubic( RasterFP*      aRasterFP,
                     RasterFP_Point aP2,
                     RasterFP_Point aP3 )
 {
-  assert( aRasterFP );
+  // assert( aRasterFP );
 
   float devx   = aP0.m_x - aP1.m_x - aP1.m_x + aP2.m_x;
   float devy   = aP0.m_y - aP1.m_y - aP1.m_y + aP2.m_y;
