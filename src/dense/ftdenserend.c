@@ -98,22 +98,22 @@ ft_dense_render( FT_Renderer      render,
 
 
   /* the padding will simply be equal to the `spread' */
-  // x_shift = 64 * -slot->bitmap_left;
-  // y_shift = 64 * -slot->bitmap_top;
+  x_shift = 64 * -slot->bitmap_left;
+  y_shift = 64 * -slot->bitmap_top;
 
 
   slot->internal->flags |= FT_GLYPH_OWN_BITMAP;
-  // y_shift += 64 * (FT_Int)bitmap->rows;
+  y_shift += 64 * (FT_Int)bitmap->rows;
 
-  // if ( origin )
-  // {
-  //   x_shift += origin->x;
-  //   y_shift += origin->y;
-  // }
+  if ( origin )
+  {
+    x_shift += origin->x;
+    y_shift += origin->y;
+  }
 
-  // /* translate outline to render it into the bitmap */
-  // if ( x_shift || y_shift )
-  //   FT_Outline_Translate( outline, x_shift, y_shift );
+  /* translate outline to render it into the bitmap */
+  if ( x_shift || y_shift )
+    FT_Outline_Translate( outline, x_shift, y_shift );
 
   /* set up parameters */
   params.target = bitmap;

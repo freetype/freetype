@@ -1,6 +1,7 @@
 {
     "files.associations": {
         "ftoutln.h": "c",
-        "svprop.h": "c"
+        "svprop.h": "c",
+        "ftdebug.h": "c"
     }
 }

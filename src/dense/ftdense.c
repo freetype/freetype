@@ -12,6 +12,16 @@
 #include <math.h>
 #include "ftdenseerrs.h"
 
+#define PIXEL_BITS 8
+
+#define ONE_PIXEL  ( 1 << PIXEL_BITS )
+#define TRUNC( x ) ( int )( ( x ) >> PIXEL_BITS )
+#define FRACT( x ) ( int )( ( x ) & ( ONE_PIXEL - 1 ) )
+
+#define UPSCALE( x )   ( ( x ) * ( ONE_PIXEL >> 6 ) )
+#define DOWNSCALE( x ) ( ( x ) >> ( PIXEL_BITS - 6 ) )
+
+
 typedef struct dense_TRaster_
 {
   void* memory;
@@ -30,19 +40,23 @@ Lerp( float aT, RasterFP_Point aP0, RasterFP_Point aP1 )
 static int
 dense_move_to( const FT_Vector* to, RasterFP* aRasterFP )
 {
-  RasterFP_Point lp = { to->x, to->y };
-  aRasterFP->last_point = lp;
+  FT_Pos x, y;
+
+  x                 = UPSCALE( to->x );
+  y                 = UPSCALE( to->y );
+  aRasterFP->prev_x = x;
+  aRasterFP->prev_y = y;
+  //printf( "last point is {%f, %f}", lp.m_x, lp.m_y );
   return 0;
 }
-
-
-
 
 static int
 dense_line_to( const FT_Vector* to, RasterFP* aRasterFP )
 {
-  RasterFP_Point tp = { to->x, to->y };
-  RasterFP_DrawLine( aRasterFP, aRasterFP->last_point, tp );
+  RasterFP_Point tp = {UPSCALE(to->x), UPSCALE(to->y)};
+  RasterFP_Point lp = {aRasterFP->prev_x, aRasterFP->prev_y};
+  RasterFP_DrawLine( aRasterFP, lp, tp );
+  dense_move_to( to, aRasterFP );
   return 0;
 }
 
@@ -54,11 +68,18 @@ RasterFP_DrawLine( RasterFP* aRasterFP, RasterFP_Point aP0, RasterFP_Point aP1 )
   // assert( aRasterFP );
   if ( aP0.m_y == aP1.m_y )
     return;
+  // aP0.m_x -= aRasterFP->m_origin_x;
+  // aP0.m_y -= aRasterFP->m_origin_y;
+  // aP1.m_x -= aRasterFP->m_origin_x;
+  // aP1.m_y -= aRasterFP->m_origin_y;
 
-  aP0.m_x -= aRasterFP->m_origin_x;
-  aP0.m_y -= aRasterFP->m_origin_y;
-  aP1.m_x -= aRasterFP->m_origin_x;
-  aP1.m_y -= aRasterFP->m_origin_y;
+  aP0.m_x = TRUNC((int)aP0.m_x );
+  aP0.m_y = TRUNC((int)aP0.m_y );
+  aP1.m_x = TRUNC((int)aP1.m_x );
+  aP1.m_y = TRUNC((int)aP1.m_y );
+
+  // printf( "Drawing a line from {%f, %f} to {%f, %f}\n", aP0.m_x, aP0.m_y,
+  //         aP1.m_x, aP1.m_y );
 
   float dir;
   if ( aP0.m_y < aP1.m_y )
@@ -146,8 +167,8 @@ RasterFP_DrawLine( RasterFP* aRasterFP, RasterFP_Point aP0, RasterFP_Point aP1 )
   // printf( "%d\n", y0 );
   // printf( "%d\n", y_limit );
   // printf( "%p\n", m_a );
-
-
+  // printf( "Drawing line from {%f, %f} to {%f, %f}\n", aP0.m_x, aP0.m_y, aP1.m_x,
+  //         aP1.m_y );
   for ( int y = y0; y < y_limit; y++ )
   {
     int   linestart = y * aRasterFP->m_w;
@@ -206,22 +227,17 @@ RasterFP_DrawLine( RasterFP* aRasterFP, RasterFP_Point aP0, RasterFP_Point aP1 )
     }
     x = xnext;
   }
-
 }
-
-
-
-
-
 
 static int
 dense_conic_to( const FT_Vector* control,
                 const FT_Vector* to,
                 RasterFP*        aRasterFP )
 {
-  RasterFP_Point controlP = { control->x, control->y };
-  RasterFP_Point toP      = { to->x, to->y };
-  RasterFP_DrawQuadratic( aRasterFP, aRasterFP->last_point, controlP, toP );
+  RasterFP_Point controlP = { UPSCALE(control->x), UPSCALE(control->y) };
+  RasterFP_Point toP      = { UPSCALE(to->x), UPSCALE(to->y) };
+  RasterFP_Point lP      = { aRasterFP->prev_x, aRasterFP->prev_y };
+  RasterFP_DrawQuadratic( aRasterFP, lP, controlP, toP );
   return 0;
 }
 
@@ -280,23 +296,19 @@ RasterFP_DrawQuadratic( RasterFP*      aRasterFP,
   RasterFP_DrawLine( aRasterFP, p, aP2 );
 }
 
-
-
-
-
-
-
 static int
 dense_cubic_to( const FT_Vector* control1,
                 const FT_Vector* control2,
                 const FT_Vector* to,
                 RasterFP*        aRasterFP )
 {
-  RasterFP_Point ap1 = { control1->x, control1->y };
-  RasterFP_Point ap2 = { control2->x, control2->y };
-  RasterFP_Point ap3 = { to->x, to->y };
+  RasterFP_Point ap1 = { UPSCALE(control1->x), UPSCALE(control1->y) };
+  RasterFP_Point ap2 = { UPSCALE(control2->x), UPSCALE(control2->y) };
+  RasterFP_Point ap3 = { UPSCALE(to->x), UPSCALE(to->y) };
 
-  RasterFP_DrawCubic( aRasterFP, aRasterFP->last_point, ap1, ap2, ap3 );
+  RasterFP_Point lP = {aRasterFP->prev_x, aRasterFP->prev_y};
+
+  RasterFP_DrawCubic( aRasterFP, lP, ap1, ap2, ap3 );
   return 0;
 }
 
@@ -396,11 +408,49 @@ FT_DEFINE_OUTLINE_FUNCS( dense_decompose_funcs,
 static int
 dense_render_glyph( RasterFP* aRasterFP, const FT_Bitmap* target )
 {
-  FT_Error error = FT_Outline_Decompose( &(aRasterFP->outline),
+  FT_Error error = FT_Outline_Decompose( &( aRasterFP->outline ),
                                          &dense_decompose_funcs, aRasterFP );
-
   // Render into bitmap
-  const float*   source   = aRasterFP->m_a;
+  const float* source = aRasterFP->m_a;
+
+
+// for (int i = 0; i < aRasterFP->m_h; i++)
+// {
+//   printf("%f\n", *(source+i));
+// }
+
+  // printf("pulu %d\n", aRasterFP->m_h);
+  printf( "Outputting bitmap\n" );
+  for ( int i = 0; i < aRasterFP->m_h; i++ )
+  {
+    printf( "\n" );
+    for ( int j = 0; j < aRasterFP->m_w; j++ )
+    {
+      float strength = *( source + ( i * aRasterFP->m_w + j ) );
+      if ( strength > 0.90 )
+      {
+        printf( "@|" );
+      }
+      else if ( strength > 0.70 )
+      {
+        printf( "#|" );
+      }
+      else if ( strength > 0.45 )
+      {
+        printf( "+|" );
+      }
+      else if ( strength > 0.20 )
+      {
+        printf( "*|" );
+      }
+      else
+      {
+        printf( ".|" );
+      }
+    }
+  }
+  printf( "\n" );
+
   unsigned char* dest     = target->buffer;
   unsigned char* dest_end = target->buffer + aRasterFP->m_w * aRasterFP->m_h;
   float          value    = 0.0f;
@@ -427,8 +477,6 @@ dense_raster_render( FT_Raster raster, const FT_Raster_Params* params )
   const FT_Outline* outline    = (const FT_Outline*)params->source;
   const FT_Bitmap*  target_map = params->target;
 
-  printf( "Rasterizing glyph" );
-
   RasterFP* aRasterFP = malloc( sizeof( RasterFP ) );
 
   if ( !raster )
@@ -449,7 +497,6 @@ dense_raster_render( FT_Raster raster, const FT_Raster_Params* params )
   if ( !target_map->buffer )
     return FT_THROW( Invalid_Argument );
 
-
   aRasterFP->m_origin_x = 0;
   aRasterFP->m_origin_y = 0;
   aRasterFP->m_w        = target_map->pitch;
@@ -457,19 +504,16 @@ dense_raster_render( FT_Raster raster, const FT_Raster_Params* params )
 
   int size = aRasterFP->m_w * aRasterFP->m_h + 4;
 
-  aRasterFP->m_a = realloc(aRasterFP, sizeof(float) * size);
-  if ( aRasterFP->m_a == NULL )
-  {
-    memset( aRasterFP, 0, sizeof( RasterFP ) );
-  }
+  aRasterFP->m_a      = malloc( sizeof( float ) * size );
   aRasterFP->m_a_size = size;
 
-  memset( aRasterFP->m_a, 0, sizeof( float ) * size );
-
+  memset( aRasterFP->m_a, 0, ( sizeof( float ) * size ) );
   /* exit if nothing to do */
   if ( aRasterFP->m_w <= aRasterFP->m_origin_x ||
        aRasterFP->m_h <= aRasterFP->m_origin_y )
+  {
     return 0;
+  }
   return dense_render_glyph( aRasterFP, target_map );
 }
 

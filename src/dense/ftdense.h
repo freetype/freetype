@@ -106,7 +106,7 @@ extern "C"
     /** The y origin of the raster. */
     int m_origin_y;
 
-    RasterFP_Point last_point;
+    FT_Pos prev_x, prev_y;
 
     FT_Outline outline;
   } RasterFP;
