@@ -5,3 +5,5 @@ src/dlg/dlg.c
 subprojects/*
 !subprojects/*.wrap
 /tests/data/*
+.cache/*
+compile_commands.json
