@@ -139,6 +139,7 @@ RasterFP_DrawLine( RasterFP* aRasterFP, RasterFP_Point aP0, RasterFP_Point aP1 )
   }
   if ( recursive )
   {
+    printf("Recursive shit\n");
     aP0.m_x += aRasterFP->m_origin_x;
     aP0.m_y += aRasterFP->m_origin_y;
     aP1.m_x += aRasterFP->m_origin_x;
@@ -420,36 +421,36 @@ dense_render_glyph( RasterFP* aRasterFP, const FT_Bitmap* target )
 // }
 
   // printf("pulu %d\n", aRasterFP->m_h);
-  printf( "Outputting bitmap\n" );
-  for ( int i = 0; i < aRasterFP->m_h; i++ )
-  {
-    printf( "\n" );
-    for ( int j = 0; j < aRasterFP->m_w; j++ )
-    {
-      float strength = *( source + ( i * aRasterFP->m_w + j ) );
-      if ( strength > 0.90 )
-      {
-        printf( "@|" );
-      }
-      else if ( strength > 0.70 )
-      {
-        printf( "#|" );
-      }
-      else if ( strength > 0.45 )
-      {
-        printf( "+|" );
-      }
-      else if ( strength > 0.20 )
-      {
-        printf( "*|" );
-      }
-      else
-      {
-        printf( ".|" );
-      }
-    }
-  }
-  printf( "\n" );
+  //printf( "Outputting bitmap\n" );
+  // for ( int i = 0; i < aRasterFP->m_h; i++ )
+  // {
+  //   printf( "\n" );
+  //   for ( int j = 0; j < aRasterFP->m_w; j++ )
+  //   {
+  //     float strength = *( source + ( i * aRasterFP->m_w + j ) );
+  //     if ( strength > 0.90 )
+  //     {
+  //       printf( "@|" );
+  //     }
+  //     else if ( strength > 0.70 )
+  //     {
+  //       printf( "#|" );
+  //     }
+  //     else if ( strength > 0.45 )
+  //     {
+  //       printf( "+|" );
+  //     }
+  //     else if ( strength > 0.20 )
+  //     {
+  //       printf( "*|" );
+  //     }
+  //     else
+  //     {
+  //       printf( ".|" );
+  //     }
+  //   }
+  // }
+  // printf( "\n" );
 
   unsigned char* dest     = target->buffer;
   unsigned char* dest_end = target->buffer + aRasterFP->m_w * aRasterFP->m_h;

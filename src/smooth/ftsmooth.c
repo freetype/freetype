@@ -493,8 +493,6 @@
     /* translate outline to render it into the bitmap */
     if ( x_shift || y_shift )
       FT_Outline_Translate( outline, x_shift, y_shift );
-    printf( "x_shift is %li\n", x_shift );
-    printf( "y_shift is %li\n", y_shift );
 
     if ( mode == FT_RENDER_MODE_NORMAL ||
          mode == FT_RENDER_MODE_LIGHT  )

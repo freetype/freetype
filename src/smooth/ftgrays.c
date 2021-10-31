@@ -876,12 +876,12 @@ typedef ptrdiff_t  FT_PtrDist;
     TCoord  fx1, fy1, fx2, fy2;
     TCoord  ex1, ey1, ex2, ey2;
 
-    printf( "Line from {%li, %li} to {%li, %li}, with a maximum dimensions of %d by %d\n", ras.x, ras.y, to_x,
-            to_y, ras.max_ex, ras.max_ey );
+    // printf( "Line from {%li, %li} to {%li, %li}, with a maximum dimensions of %d by %d\n", ras.x, ras.y, to_x,
+    //         to_y, ras.max_ex, ras.max_ey );
     ey1 = TRUNC( ras.y );
     ey2 = TRUNC( to_y );
 
-    printf("Truncation reduced prev y from %ld to %d\n", ras.y, ey1);
+    // printf("Truncation reduced prev y from %ld to %d\n", ras.y, ey1);
 
     /* perform vertical clipping */
     if ( ( ey1 >= ras.max_ey && ey2 >= ras.max_ey ) ||
