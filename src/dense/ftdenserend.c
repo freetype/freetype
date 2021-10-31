@@ -27,34 +27,43 @@
  *
  */
 
+/* @QUES: So, I think this is used for setting up the
+initial properties of the renderer ??? */
 static FT_Error
 ft_dense_init( FT_Renderer render )
 {
-
-  //   dense_render->spread    = 0;
-  //   dense_render->flip_sign = 0;
-  //   dense_render->flip_y    = 0;
-  //   dense_render->overlaps  = 0;
+  printf( "ft_dense_init\n" );
   return FT_Err_Ok;
 }
 
+/* @QUES: A destructor probably. The smooth renderer doesn't have this
+so, I guess this is unnecessary ??? */
 static void
 ft_dense_done( FT_Renderer render )
 {
+  printf( "ft_dense_done\n" );
   FT_UNUSED( render );
 }
 
 /* generate bitmap from a glyph's slot image */
+
+/* @QUES: This method allocates the bitmap buffer, shifts the outlines
+as required (Why exactly is shifting required?), and finally calls 
+raster_render interface methods with correct params */
 static FT_Error
 ft_dense_render( FT_Renderer      render,
                  FT_GlyphSlot     slot,
                  FT_Render_Mode   mode,
                  const FT_Vector* origin )
 {
+  printf( "ft_dense_render\n" );
   FT_Error    error   = FT_Err_Ok;
   FT_Outline* outline = &slot->outline;
   FT_Bitmap*  bitmap  = &slot->bitmap;
-  FT_Memory   memory  = NULL;
+
+/* @QUES: You know, it should be a bit more clear that FT_FREE and FT_ALLOC_MULT macros
+take a variable named `memory`. It can only be known if you follow the macros 3 level deep.*/
+  FT_Memory   memory  = render->root.memory;
 
   FT_Pos x_shift = 0;
   FT_Pos y_shift = 0;
@@ -88,20 +97,14 @@ ft_dense_render( FT_Renderer      render,
 
 
   /* allocate new one */
+  if ( FT_ALLOC_MULT( bitmap->buffer, bitmap->rows, bitmap->pitch ) )
+    goto Exit;
 
-  // if ( FT_ALLOC_MULT( bitmap->buffer, bitmap->rows, bitmap->pitch ) )
-  //   goto Exit;
-
-  // For whatever reason, it segfaults if the above is used for allocation
-  bitmap->buffer = realloc(bitmap->buffer, sizeof(int) * bitmap->rows * bitmap->pitch);
-
-
-
-  /* the padding will simply be equal to the `spread' */
+  /* @QUES: Where can I read more about why x and y shift are required */
   x_shift = 64 * -slot->bitmap_left;
   y_shift = 64 * -slot->bitmap_top;
 
-
+  /* @QUES: What does this flag mean ?*/
   slot->internal->flags |= FT_GLYPH_OWN_BITMAP;
   y_shift += 64 * (FT_Int)bitmap->rows;
 
@@ -118,6 +121,8 @@ ft_dense_render( FT_Renderer      render,
   /* set up parameters */
   params.target = bitmap;
   params.source = outline;
+
+  /* @QUES: Why is my final bitmap upside down ??🤔*/
 
   /* render the outline */
   error =
@@ -142,12 +147,16 @@ Exit:
 }
 
 /* transform the glyph using matrix and/or delta */
+/* @QUES: This mthod isn't called, atleast in normal ftlint execution.
+What is it for ?*/
 static FT_Error
 ft_dense_transform( FT_Renderer      render,
                     FT_GlyphSlot     slot,
                     const FT_Matrix* matrix,
                     const FT_Vector* delta )
 {
+  printf( "ft_dense_transform\n" );
+
   FT_Error error = FT_Err_Ok;
 
   if ( slot->format != render->glyph_format )
@@ -167,9 +176,12 @@ Exit:
 }
 
 /* return the control box of a glyph's outline */
+/* @QUES: This method isn't called either in normal ftlint execution*/
 static void
 ft_dense_get_cbox( FT_Renderer render, FT_GlyphSlot slot, FT_BBox* cbox )
 {
+  printf( "ft_dense_get_cbox\n" );
+
   FT_ZERO( cbox );
 
   if ( slot->format == render->glyph_format )
@@ -177,6 +189,7 @@ ft_dense_get_cbox( FT_Renderer render, FT_GlyphSlot slot, FT_BBox* cbox )
 }
 
 /* set render specific modes or attributes */
+/* @QUES: Isn't called in normal ftlint execution*/
 static FT_Error
 ft_dense_set_mode( FT_Renderer render, FT_ULong mode_tag, FT_Pointer data )
 {

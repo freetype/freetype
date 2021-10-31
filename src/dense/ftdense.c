@@ -1,5 +1,6 @@
 /** The rasterizer for the 'dense' renderer */
 
+#include <stdio.h>
 #undef FT_COMPONENT
 #define FT_COMPONENT dense
 
@@ -12,14 +13,16 @@
 #include <math.h>
 #include "ftdenseerrs.h"
 
+/* @QUES: Please explain all these defines. Why is PIXEL_BITS 8??*/
 #define PIXEL_BITS 8
 
 #define ONE_PIXEL  ( 1 << PIXEL_BITS )
 #define TRUNC( x ) ( int )( ( x ) >> PIXEL_BITS )
-#define FRACT( x ) ( int )( ( x ) & ( ONE_PIXEL - 1 ) )
 
 #define UPSCALE( x )   ( ( x ) * ( ONE_PIXEL >> 6 ) )
 #define DOWNSCALE( x ) ( ( x ) >> ( PIXEL_BITS - 6 ) )
+
+
 
 
 typedef struct dense_TRaster_
@@ -27,6 +30,7 @@ typedef struct dense_TRaster_
   void* memory;
 
 } dense_TRaster, *dense_PRaster;
+
 
 static RasterFP_Point
 Lerp( float aT, RasterFP_Point aP0, RasterFP_Point aP1 )
@@ -63,11 +67,10 @@ dense_line_to( const FT_Vector* to, RasterFP* aRasterFP )
 void
 RasterFP_DrawLine( RasterFP* aRasterFP, RasterFP_Point aP0, RasterFP_Point aP1 )
 {
-  // printf( "\n%f\n", aRasterFP->m_w );
-  // printf( "\n%f\n", aRasterFP->m_h );
-  // assert( aRasterFP );
   if ( aP0.m_y == aP1.m_y )
     return;
+
+  /* @QUES: What is this code that I commented out, supposed to do?*/
   // aP0.m_x -= aRasterFP->m_origin_x;
   // aP0.m_y -= aRasterFP->m_origin_y;
   // aP1.m_x -= aRasterFP->m_origin_x;
@@ -77,9 +80,6 @@ RasterFP_DrawLine( RasterFP* aRasterFP, RasterFP_Point aP0, RasterFP_Point aP1 )
   aP0.m_y = TRUNC((int)aP0.m_y );
   aP1.m_x = TRUNC((int)aP1.m_x );
   aP1.m_y = TRUNC((int)aP1.m_y );
-
-  // printf( "Drawing a line from {%f, %f} to {%f, %f}\n", aP0.m_x, aP0.m_y,
-  //         aP1.m_x, aP1.m_y );
 
   float dir;
   if ( aP0.m_y < aP1.m_y )
@@ -113,6 +113,11 @@ RasterFP_DrawLine( RasterFP* aRasterFP, RasterFP_Point aP0, RasterFP_Point aP1 )
   snapping them to the left or right edge, or, if they intersect the clip area,
   by recursive calls.
   */
+
+  /* @QUES: This code isn't present in font-rs. It was added later by graham asher
+  I have a very strong feeling that this isn't necessary.
+  Since probably the outline is already fitted in the bounding box. I tested
+  this code a little, removing it doesn't seem to make any difference*/
   RasterFP_Point intersect = { 0, 0 };
   int            recursive = 0;
   if ( aP0.m_x >= aRasterFP->m_w && aP1.m_x >= aRasterFP->m_w )
@@ -139,7 +144,6 @@ RasterFP_DrawLine( RasterFP* aRasterFP, RasterFP_Point aP0, RasterFP_Point aP1 )
   }
   if ( recursive )
   {
-    printf("Recursive shit\n");
     aP0.m_x += aRasterFP->m_origin_x;
     aP0.m_y += aRasterFP->m_origin_y;
     aP1.m_x += aRasterFP->m_origin_x;
@@ -159,17 +163,13 @@ RasterFP_DrawLine( RasterFP* aRasterFP, RasterFP_Point aP0, RasterFP_Point aP1 )
     return;
   }
 
+  /* @QUES: I am still trying to understand this code */
   float  x       = aP0.m_x;
   int    y0      = (int)aP0.m_y;
   int    y_limit = (int)ceil( aP1.m_y );
   float* m_a     = aRasterFP->m_a;
 
-  // printf( "%f\n", x );
-  // printf( "%d\n", y0 );
-  // printf( "%d\n", y_limit );
-  // printf( "%p\n", m_a );
-  // printf( "Drawing line from {%f, %f} to {%f, %f}\n", aP0.m_x, aP0.m_y, aP1.m_x,
-  //         aP1.m_y );
+
   for ( int y = y0; y < y_limit; y++ )
   {
     int   linestart = y * aRasterFP->m_w;
@@ -354,6 +354,8 @@ RasterFP_DrawCubic( RasterFP*      aRasterFP,
   RasterFP_DrawLine( aRasterFP, p, aP3 );
 }
 
+/* @QUES: This is the first method called on the module. I suspect
+this only initializes the memory for it*/
 static int
 dense_raster_new( FT_Memory memory, dense_PRaster* araster )
 {
@@ -364,12 +366,16 @@ dense_raster_new( FT_Memory memory, dense_PRaster* araster )
     raster->memory = memory;
 
   *araster = raster;
+  printf("dense_raster_new\n");
   return error;
 }
 
+/* @QUES: This is a simple method, only frees memory*/
 static void
 dense_raster_done( FT_Raster raster )
 {
+  printf( "dense_raster_done\n" );
+
   FT_Memory memory = (FT_Memory)( (dense_PRaster)raster )->memory;
 
   FT_FREE( raster );
@@ -383,8 +389,10 @@ dense_raster_reset( FT_Raster      raster,
   FT_UNUSED( raster );
   FT_UNUSED( pool_base );
   FT_UNUSED( pool_size );
+  printf("dense_raster_reset\n");
 }
 
+/* @QUES: This methodisnt't called in normal ftlint execution*/
 static int
 dense_raster_set_mode( FT_Raster raster, unsigned long mode, void* args )
 {
@@ -392,6 +400,7 @@ dense_raster_set_mode( FT_Raster raster, unsigned long mode, void* args )
   FT_UNUSED( mode );
   FT_UNUSED( args );
 
+  printf("dense_raster_set_mode\n");
   return 0; /* nothing to do */
 }
 
@@ -406,6 +415,9 @@ FT_DEFINE_OUTLINE_FUNCS( dense_decompose_funcs,
                          0  /* delta    */
 )
 
+/* @QUES: So, this calls FT_Outline_Decompose, that calls the move to, 
+line to, conic to, cubic to interface methods. The aRasterFP structure stores the
+well, stuff in its m_a and finally renders it to the target->buffer*/
 static int
 dense_render_glyph( RasterFP* aRasterFP, const FT_Bitmap* target )
 {
@@ -415,12 +427,6 @@ dense_render_glyph( RasterFP* aRasterFP, const FT_Bitmap* target )
   const float* source = aRasterFP->m_a;
 
 
-// for (int i = 0; i < aRasterFP->m_h; i++)
-// {
-//   printf("%f\n", *(source+i));
-// }
-
-  // printf("pulu %d\n", aRasterFP->m_h);
   //printf( "Outputting bitmap\n" );
   // for ( int i = 0; i < aRasterFP->m_h; i++ )
   // {
@@ -472,9 +478,13 @@ dense_render_glyph( RasterFP* aRasterFP, const FT_Bitmap* target )
   return error;
 }
 
+/* @QUES: The main rasterizing method, params.->target->buffer gets the
+rendered pixels*/
 static int
 dense_raster_render( FT_Raster raster, const FT_Raster_Params* params )
 {
+  printf( "dense_raster_render\n" );
+
   const FT_Outline* outline    = (const FT_Outline*)params->source;
   const FT_Bitmap*  target_map = params->target;
 
@@ -500,6 +510,7 @@ dense_raster_render( FT_Raster raster, const FT_Raster_Params* params )
 
   aRasterFP->m_origin_x = 0;
   aRasterFP->m_origin_y = 0;
+  /* @QUES: Why are my bitmaps upsied down 😭*/
   aRasterFP->m_w        = target_map->pitch;
   aRasterFP->m_h        = target_map->rows;
 
