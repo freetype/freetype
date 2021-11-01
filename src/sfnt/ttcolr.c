@@ -505,12 +505,16 @@
                              &apaint->u.linear_gradient.colorline ) )
         return 0;
 
-      apaint->u.linear_gradient.p0.x = FT_NEXT_SHORT( p );
-      apaint->u.linear_gradient.p0.y = FT_NEXT_SHORT( p );
-      apaint->u.linear_gradient.p1.x = FT_NEXT_SHORT( p );
-      apaint->u.linear_gradient.p1.y = FT_NEXT_SHORT( p );
-      apaint->u.linear_gradient.p2.x = FT_NEXT_SHORT( p );
-      apaint->u.linear_gradient.p2.y = FT_NEXT_SHORT( p );
+      /*
+       * In order to support variations expose these as FT_Fixed 16.16 values so
+       * that we can support fractional values after interpolation.
+       */
+      apaint->u.linear_gradient.p0.x = FT_NEXT_SHORT( p ) << 16;
+      apaint->u.linear_gradient.p0.y = FT_NEXT_SHORT( p ) << 16;
+      apaint->u.linear_gradient.p1.x = FT_NEXT_SHORT( p ) << 16;
+      apaint->u.linear_gradient.p1.y = FT_NEXT_SHORT( p ) << 16;
+      apaint->u.linear_gradient.p2.x = FT_NEXT_SHORT( p ) << 16;
+      apaint->u.linear_gradient.p2.y = FT_NEXT_SHORT( p ) << 16;
 
       return 1;
     }
@@ -521,15 +525,15 @@
                              &apaint->u.radial_gradient.colorline ) )
         return 0;
 
-      apaint->u.radial_gradient.c0.x = FT_NEXT_SHORT( p );
-      apaint->u.radial_gradient.c0.y = FT_NEXT_SHORT( p );
+      apaint->u.radial_gradient.c0.x = FT_NEXT_SHORT( p ) << 16;
+      apaint->u.radial_gradient.c0.y = FT_NEXT_SHORT( p ) << 16;
 
-      apaint->u.radial_gradient.r0 = FT_NEXT_USHORT( p );
+      apaint->u.radial_gradient.r0 = FT_NEXT_USHORT( p ) << 16;
 
-      apaint->u.radial_gradient.c1.x = FT_NEXT_SHORT( p );
-      apaint->u.radial_gradient.c1.y = FT_NEXT_SHORT( p );
+      apaint->u.radial_gradient.c1.x = FT_NEXT_SHORT( p ) << 16;
+      apaint->u.radial_gradient.c1.y = FT_NEXT_SHORT( p ) << 16;
 
-      apaint->u.radial_gradient.r1 = FT_NEXT_USHORT( p );
+      apaint->u.radial_gradient.r1 = FT_NEXT_USHORT( p ) << 16;
 
       return 1;
     }
@@ -540,8 +544,8 @@
                              &apaint->u.sweep_gradient.colorline ) )
         return 0;
 
-      apaint->u.sweep_gradient.center.x = FT_NEXT_SHORT( p );
-      apaint->u.sweep_gradient.center.y = FT_NEXT_SHORT( p );
+      apaint->u.sweep_gradient.center.x = FT_NEXT_SHORT( p ) << 16;
+      apaint->u.sweep_gradient.center.y = FT_NEXT_SHORT( p ) << 16;
 
       apaint->u.sweep_gradient.start_angle = FT_NEXT_SHORT( p ) << 2;
       apaint->u.sweep_gradient.end_angle   = FT_NEXT_SHORT( p ) << 2;
@@ -568,6 +572,10 @@
 
       p = child_table_p;
 
+      /*
+       * The following matrix coefficients are encoded as
+       * OpenType 16.16 fixed-point values.
+       */
       apaint->u.transform.affine.xx = FT_NEXT_LONG( p );
       apaint->u.transform.affine.yx = FT_NEXT_LONG( p );
       apaint->u.transform.affine.xy = FT_NEXT_LONG( p );
