@@ -26,8 +26,6 @@
 
 #include <brotli/decode.h>
 
-#endif
-
 
   /**************************************************************************
    *
@@ -316,8 +314,6 @@
                     const FT_Byte*  src,
                     FT_ULong        src_size )
   {
-#ifdef FT_CONFIG_OPTION_USE_BROTLI
-
     /* this cast is only of importance on 32bit systems; */
     /* we don't validate it                              */
     FT_Offset            uncompressed_size = (FT_Offset)dst_size;
@@ -338,18 +334,6 @@
 
     FT_TRACE2(( "woff2_decompress: Brotli stream decompressed.\n" ));
     return FT_Err_Ok;
-
-#else /* !FT_CONFIG_OPTION_USE_BROTLI */
-
-    FT_UNUSED( dst );
-    FT_UNUSED( dst_size );
-    FT_UNUSED( src );
-    FT_UNUSED( src_size );
-
-    FT_ERROR(( "woff2_decompress: Brotli support not available.\n" ));
-    return FT_THROW( Unimplemented_Feature );
-
-#endif /* !FT_CONFIG_OPTION_USE_BROTLI */
   }
 
 
@@ -2355,6 +2339,13 @@
 #undef COMPOSITE_STREAM
 #undef BBOX_STREAM
 #undef INSTRUCTION_STREAM
+
+#else /* !FT_CONFIG_OPTION_USE_BROTLI */
+
+  /* ANSI C doesn't like empty source files */
+  typedef int  _sfwoff2_dummy;
+
+#endif /* !FT_CONFIG_OPTION_USE_BROTLI */
 
 
 /* END */

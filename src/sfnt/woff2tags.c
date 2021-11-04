@@ -17,6 +17,9 @@
 
 
 #include <freetype/tttags.h>
+
+#ifdef FT_CONFIG_OPTION_USE_BROTLI
+
 #include "woff2tags.h"
 
   /*
@@ -104,6 +107,13 @@
 
     return known_tags[index];
   }
+
+#else /* !FT_CONFIG_OPTION_USE_BROTLI */
+
+  /* ANSI C doesn't like empty source files */
+  typedef int  _woff2tags_dummy;
+
+#endif /* !FT_CONFIG_OPTION_USE_BROTLI */
 
 
 /* END */
