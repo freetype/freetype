@@ -140,7 +140,6 @@
 
     return error;
   }
-#endif /* TT_USE_BYTECODE_INTERPRETER */
 
 
   /* The fonts embedded in PDF changes their family names
@@ -166,6 +165,7 @@
     FT_TRACE7(( "name without randomization tag: %s\n", name + 7 ));
     return name + 7;
   }
+
 
   /* Compare the face with a list of well-known `tricky' fonts. */
   /* This list shall be expanded as we find more of them.       */
@@ -571,6 +571,8 @@
     return FALSE;
   }
 
+#endif /* TT_USE_BYTECODE_INTERPRETER */
+
 
   /* Check whether `.notdef' is the only glyph in the `loca' table. */
   static FT_Bool
@@ -716,8 +718,10 @@
     if ( error )
       goto Exit;
 
+#ifdef TT_USE_BYTECODE_INTERPRETER
     if ( tt_check_trickyness( ttface ) )
       ttface->face_flags |= FT_FACE_FLAG_TRICKY;
+#endif
 
     error = tt_face_load_hdmx( face, stream );
     if ( error )
