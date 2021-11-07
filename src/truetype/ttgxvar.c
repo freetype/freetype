@@ -178,7 +178,7 @@
     /* in the nested loops below we increase `i' twice; */
     /* it is faster to simply allocate one more slot    */
     /* than to add another test within the loop         */
-    if ( FT_NEW_ARRAY( points, n + 1 ) )
+    if ( FT_QNEW_ARRAY( points, n + 1 ) )
       return NULL;
 
     *point_cnt = n;
@@ -271,7 +271,7 @@
     FT_UNUSED( error );
 
 
-    if ( FT_NEW_ARRAY( deltas, delta_cnt ) )
+    if ( FT_QNEW_ARRAY( deltas, delta_cnt ) )
       return NULL;
 
     i          = 0;
@@ -402,7 +402,7 @@
       goto Exit;
     }
 
-    if ( FT_NEW_ARRAY( blend->avar_segment, axisCount ) )
+    if ( FT_QNEW_ARRAY( blend->avar_segment, axisCount ) )
       goto Exit;
 
     segment = &blend->avar_segment[0];
@@ -411,8 +411,8 @@
       FT_TRACE5(( "  axis %d:\n", i ));
 
       segment->pairCount = FT_GET_USHORT();
-      if ( (FT_ULong)segment->pairCount * 4 > table_len                ||
-           FT_NEW_ARRAY( segment->correspondence, segment->pairCount ) )
+      if ( (FT_ULong)segment->pairCount * 4 > table_len                 ||
+           FT_QNEW_ARRAY( segment->correspondence, segment->pairCount ) )
       {
         /* Failure.  Free everything we have done so far.  We must do */
         /* it right now since loading the `avar' table is optional.   */
@@ -492,7 +492,7 @@
 
     /* make temporary copy of item variation data offsets; */
     /* we will parse region list first, then come back     */
-    if ( FT_NEW_ARRAY( dataOffsetArray, itemStore->dataCount ) )
+    if ( FT_QNEW_ARRAY( dataOffsetArray, itemStore->dataCount ) )
       goto Exit;
 
     for ( i = 0; i < itemStore->dataCount; i++ )
@@ -1594,7 +1594,7 @@
       goto Exit;
 
     /* offsets (one more offset than glyphs, to mark size of last) */
-    if ( FT_NEW_ARRAY( blend->glyphoffsets, gvar_head.glyphCount + 1 ) )
+    if ( FT_QNEW_ARRAY( blend->glyphoffsets, gvar_head.glyphCount + 1 ) )
       goto Fail2;
 
     if ( gvar_head.flags & 1 )
@@ -1673,8 +1673,8 @@
         goto Fail;
       }
 
-      if ( FT_NEW_ARRAY( blend->tuplecoords,
-                         gvar_head.axisCount * gvar_head.globalCoordCount ) )
+      if ( FT_QNEW_ARRAY( blend->tuplecoords,
+                          gvar_head.axisCount * gvar_head.globalCoordCount ) )
         goto Fail2;
 
       for ( i = 0; i < gvar_head.globalCoordCount; i++ )
