@@ -21,6 +21,7 @@
 
 
 #ifdef FT_DEBUG_LOGGING
+#define DLG_STATIC
 #include "dlg.c"
 #else
   /* ANSI C doesn't like empty source files */
