@@ -370,7 +370,7 @@
     face->ttc_header.version = 0;
     face->ttc_header.count   = 0;
 
-#if defined( FTCONFIG_OPTION_USE_ZLIB )    || \
+#if defined( FT_CONFIG_OPTION_USE_ZLIB )   || \
     defined( FT_CONFIG_OPTION_USE_BROTLI )
   retry:
 #endif
