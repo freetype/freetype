@@ -1054,8 +1054,8 @@
   psh_compute_dir( FT_Pos  dx,
                    FT_Pos  dy )
   {
-    FT_Pos  ax, ay;
-    int     result = PSH_DIR_NONE;
+    FT_Pos   ax, ay;
+    PSH_Dir  result = PSH_DIR_NONE;
 
 
     ax = FT_ABS( dx );
@@ -1425,7 +1425,8 @@
       if ( psh_point_is_strong( point ) )
         continue;
 
-      point_dir = ( point->dir_in | point->dir_out ) & major_dir;
+      point_dir =
+        (PSH_Dir)( ( point->dir_in | point->dir_out ) & major_dir );
 
       if ( point_dir & ( PSH_DIR_DOWN | PSH_DIR_RIGHT ) )
       {
