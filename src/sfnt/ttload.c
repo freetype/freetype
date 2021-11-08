@@ -1433,7 +1433,7 @@
     FT_Error   error;
     FT_Memory  memory = stream->memory;
 
-    FT_UInt        j,num_ranges;
+    FT_UShort      j, num_ranges;
     TT_GaspRange   gasp_ranges = NULL;
 
 
@@ -1458,7 +1458,7 @@
       goto Exit;
     }
 
-    FT_TRACE3(( "numRanges: %u\n", num_ranges ));
+    FT_TRACE3(( "numRanges: %hu\n", num_ranges ));
 
     if ( FT_QNEW_ARRAY( gasp_ranges, num_ranges ) ||
          FT_FRAME_ENTER( num_ranges * 4L )        )
