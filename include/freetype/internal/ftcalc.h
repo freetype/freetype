@@ -372,9 +372,23 @@ FT_BEGIN_HEADER
 
 #endif
 
-#elif defined( _MSC_VER ) && ( _MSC_VER >= 1400 )
+#elif defined( _MSC_VER ) && _MSC_VER >= 1400
 
-#if FT_SIZEOF_INT == 4
+#if defined( _WIN32_WCE )
+
+#include <cmnintrin.h>
+#pragma intrinsic( _CountLeadingZeros )
+
+#define FT_MSB( x )  ( 31 - _CountLeadingZeros( x ) )
+
+#elif defined( _M_ARM64 ) || defined( _M_ARM )
+
+#include <intrin.h>
+#pragma intrinsic( _CountLeadingZeros )
+
+#define FT_MSB( x )  ( 31 - _CountLeadingZeros( x ) )
+
+#elif defined( _M_IX86 ) || defined( _M_AMD64 ) || defined( _M_IA64 )
 
 #include <intrin.h>
 #pragma intrinsic( _BitScanReverse )
@@ -390,7 +404,7 @@ FT_BEGIN_HEADER
     return (FT_Int32)where;
   }
 
-#define FT_MSB( x )  ( FT_MSB_i386( x ) )
+#define FT_MSB( x )  FT_MSB_i386( x )
 
 #endif
 
