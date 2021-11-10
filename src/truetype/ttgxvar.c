@@ -1883,19 +1883,16 @@
                     " clamping\n",
                     a->minimum / 65536.0,
                     a->maximum / 65536.0 ));
-
-        if ( coord > a->maximum )
-          coord = a->maximum;
-        else
-          coord = a->minimum;
       }
 
-      if ( coord < a->def )
-        normalized[i] = -FT_DivFix( SUB_LONG( coord, a->def ),
-                                    SUB_LONG( a->minimum, a->def ) );
-      else if ( coord > a->def )
-        normalized[i] = FT_DivFix( SUB_LONG( coord, a->def ),
+      if ( coord > a->def )
+        normalized[i] = coord >= a->maximum ?  0x10000L :
+                        FT_DivFix( SUB_LONG( coord, a->def ),
                                    SUB_LONG( a->maximum, a->def ) );
+      else if ( coord < a->def )
+        normalized[i] = coord <= a->minimum ? -0x10000L :
+                        FT_DivFix( SUB_LONG( coord, a->def ),
+                                   SUB_LONG( a->def, a->minimum ) );
       else
         normalized[i] = 0;
     }
