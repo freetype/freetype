@@ -359,8 +359,8 @@ FT_BEGIN_HEADER
 
 #ifndef  FT_CONFIG_OPTION_NO_ASSEMBLER
 
-#if defined( __GNUC__ )                                          && \
-    ( __GNUC__ > 3 || ( __GNUC__ == 3 && __GNUC_MINOR__ >= 4 ) )
+#if defined( __clang__ ) || ( defined( __GNUC__ )                &&  \
+    ( __GNUC__ > 3 || ( __GNUC__ == 3 && __GNUC_MINOR__ >= 4 ) ) )
 
 #if FT_SIZEOF_INT == 4
 
