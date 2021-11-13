@@ -457,7 +457,8 @@
     FT_UShort  format;
     FT_ULong   region_offset;
     FT_UInt    i, j, k;
-    FT_UInt    shortDeltaCount;
+    FT_UInt    wordDeltaCount;
+    FT_Bool    long_words;
 
     GX_Blend        blend = face->blend;
     GX_ItemVarData  varData;
@@ -572,15 +573,18 @@
         goto Exit;
 
       if ( FT_READ_USHORT( varData->itemCount )      ||
-           FT_READ_USHORT( shortDeltaCount )         ||
+           FT_READ_USHORT( wordDeltaCount )          ||
            FT_READ_USHORT( varData->regionIdxCount ) )
         goto Exit;
 
+      long_words      = !!( wordDeltaCount & 0x8000 );
+      wordDeltaCount &= 0x7FFF;
+
       /* check some data consistency */
-      if ( shortDeltaCount > varData->regionIdxCount )
+      if ( wordDeltaCount > varData->regionIdxCount )
       {
         FT_TRACE2(( "bad short count %d or region count %d\n",
-                    shortDeltaCount,
+                    wordDeltaCount,
                     varData->regionIdxCount ));
         error = FT_THROW( Invalid_Table );
         goto Exit;
@@ -616,39 +620,52 @@
 
       /* Parse delta set.                                                */
       /*                                                                 */
-      /* On input, deltas are (shortDeltaCount + regionIdxCount) bytes   */
-      /* each; on output, deltas are expanded to `regionIdxCount' shorts */
-      /* each.                                                           */
+      /* On input, deltas are (wordDeltaCount + regionIdxCount) bytes    */
+      /* each if `long_words` isn't set, and twice as much otherwise.    */
+      /*                                                                 */
+      /* On output, deltas are expanded to `regionIdxCount` shorts each. */
       if ( FT_NEW_ARRAY( varData->deltaSet,
                          varData->regionIdxCount * varData->itemCount ) )
         goto Exit;
 
-      /* the delta set is stored as a 2-dimensional array of shorts; */
-      /* sign-extend signed bytes to signed shorts                   */
-      for ( j = 0; j < varData->itemCount * varData->regionIdxCount; )
+      /* the delta set is stored as a 2-dimensional array of shorts */
+      if ( long_words )
       {
-        for ( k = 0; k < shortDeltaCount; k++, j++ )
+        /* new in OpenType 1.9, currently for 'COLR' table only;          */
+        /* the deltas are interpreted as 16.16 fixed-point scaling values */
+
+        /* not supported yet */
+
+        error = FT_THROW( Invalid_Table );
+        goto Exit;
+      }
+      else
+      {
+        for ( j = 0; j < varData->itemCount * varData->regionIdxCount; )
         {
-          /* read the short deltas */
-          FT_Short  delta;
+          for ( k = 0; k < wordDeltaCount; k++, j++ )
+          {
+            /* read the short deltas */
+            FT_Short  delta;
 
 
-          if ( FT_READ_SHORT( delta ) )
-            goto Exit;
+            if ( FT_READ_SHORT( delta ) )
+              goto Exit;
 
-          varData->deltaSet[j] = delta;
-        }
+            varData->deltaSet[j] = delta;
+          }
 
-        for ( ; k < varData->regionIdxCount; k++, j++ )
-        {
-          /* read the (signed) byte deltas */
-          FT_Char  delta;
+          for ( ; k < varData->regionIdxCount; k++, j++ )
+          {
+            /* read the (signed) byte deltas */
+            FT_Char  delta;
 
 
-          if ( FT_READ_CHAR( delta ) )
-            goto Exit;
+            if ( FT_READ_CHAR( delta ) )
+              goto Exit;
 
-          varData->deltaSet[j] = delta;
+            varData->deltaSet[j] = delta;
+          }
         }
       }
     }
