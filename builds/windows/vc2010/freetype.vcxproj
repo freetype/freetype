@@ -11,7 +11,7 @@
   or with different appropriate switches. It also works with Visual Studio.
   Additional customization can be made in `freetype.user.props`.
 -->
-<Project DefaultTargets="Build" ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+<Project DefaultTargets="DlgCopy;Build" ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup Label="ProjectConfigurations">
     <ProjectConfiguration Include="Debug|Win32">
       <Configuration>Debug</Configuration>
@@ -508,7 +508,7 @@
     <DlgSrc Include="..\..\..\subprojects\dlg\src\dlg\dlg.c" />
     <DlgDst Include="..\..\..\src\dlg\dlg.c" />
   </ItemGroup>
-  <Target Name="DlgCopy" Inputs="@(DlgSrc)" Outputs="@(DlgDst)" BeforeTargets="PrepareForBuild">
+  <Target Name="DlgCopy" Inputs="@(DlgSrc)" Outputs="@(DlgDst)" Condition="Exists('..\..\..\subprojects\dlg\.git')">
     <Copy SourceFiles="@(DlgSrc)" DestinationFiles="@(DlgDst)" SkipUnchangedFiles="true" />
   </Target>
   <Target Name="AfterBuild">
