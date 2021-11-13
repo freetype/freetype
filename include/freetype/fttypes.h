@@ -485,12 +485,12 @@ FT_BEGIN_HEADER
    *   The produced values **must** be 32-bit integers.  Don't redefine this
    *   macro.
    */
-#define FT_MAKE_TAG( _x1, _x2, _x3, _x4 ) \
-          (FT_Tag)                        \
-          ( ( (FT_ULong)_x1 << 24 ) |     \
-            ( (FT_ULong)_x2 << 16 ) |     \
-            ( (FT_ULong)_x3 <<  8 ) |     \
-              (FT_ULong)_x4         )
+#define FT_MAKE_TAG( _x1, _x2, _x3, _x4 )                \
+          FT_STATIC_CAST( FT_Tag )                       \
+          ( ( FT_STATIC_CAST( FT_Byte )( _x1 ) << 24 ) | \
+            ( FT_STATIC_CAST( FT_Byte )( _x2 ) << 16 ) | \
+            ( FT_STATIC_CAST( FT_Byte )( _x3 ) <<  8 ) | \
+              FT_STATIC_CAST( FT_Byte )( _x4 )         )
 
 
   /*************************************************************************/
@@ -588,7 +588,7 @@ FT_BEGIN_HEADER
 
 
 #define FT_IS_EMPTY( list )  ( (list).head == 0 )
-#define FT_BOOL( x )  ( (FT_Bool)( (x) != 0 ) )
+#define FT_BOOL( x )         FT_STATIC_CAST( FT_Bool )( (x) != 0 )
 
   /* concatenate C tokens */
 #define FT_ERR_XCAT( x, y )  x ## y

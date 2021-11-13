@@ -152,6 +152,8 @@
 #define ADD_INT( a, b )                                  \
           (int)( (unsigned int)(a) + (unsigned int)(b) )
 
+#define FT_STATIC_CAST( type )  (type)
+
 
 #define ft_memset   memset
 
@@ -273,6 +275,8 @@ typedef ptrdiff_t  FT_PtrDist;
 #else /* !STANDALONE_ */
 
 
+#include <ft2build.h>
+#include FT_CONFIG_CONFIG_H
 #include "ftgrays.h"
 #include <freetype/internal/ftobjs.h>
 #include <freetype/internal/ftdebug.h>
