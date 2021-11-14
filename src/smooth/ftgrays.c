@@ -1986,8 +1986,8 @@ typedef ptrdiff_t  FT_PtrDist;
           ras.ycells[w] = ras.cell_null;
 
         /* memory management: skip ycells */
-        n = ( width * sizeof ( PCell ) + sizeof ( TCell ) - 1 ) /
-                      sizeof ( TCell );
+        n = ( (size_t)width * sizeof ( PCell ) + sizeof ( TCell ) - 1 ) /
+              sizeof ( TCell );
 
         ras.cell_free = buffer + n;
         ras.cell      = ras.cell_null;

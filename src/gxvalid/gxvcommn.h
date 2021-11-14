@@ -61,8 +61,11 @@ FT_BEGIN_HEADER
 
 #undef GXV_LOAD_UNUSED_VARS /* debug purpose */
 
-#define IS_PARANOID_VALIDATION          ( gxvalid->root->level >= FT_VALIDATE_PARANOID )
-#define GXV_SET_ERR_IF_PARANOID( err )  { if ( IS_PARANOID_VALIDATION ) ( err ); }
+#define IS_PARANOID_VALIDATION                             \
+          ( gxvalid->root->level >= FT_VALIDATE_PARANOID )
+#define GXV_SET_ERR_IF_PARANOID( err )                              \
+          do { if ( IS_PARANOID_VALIDATION ) ( err ); } while ( 0 )
+
 
   /*************************************************************************/
   /*************************************************************************/
