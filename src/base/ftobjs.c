@@ -3744,7 +3744,7 @@
     FT_Error   error;
     FT_Face    face;
     FT_Memory  memory;
-    FT_CMap    cmap;
+    FT_CMap    cmap = NULL;
 
 
     if ( !clazz || !charmap || !charmap->face )
@@ -4459,7 +4459,7 @@
     FT_Library   library = module->library;
     FT_Memory    memory  = library->memory;
     FT_Error     error;
-    FT_ListNode  node;
+    FT_ListNode  node    = NULL;
 
 
     if ( FT_QNEW( node ) )

@@ -2151,7 +2151,7 @@ typedef ptrdiff_t  FT_PtrDist;
                    gray_PRaster*  araster )
   {
     FT_Error      error;
-    gray_PRaster  raster;
+    gray_PRaster  raster = NULL;
 
 
     if ( !FT_NEW( raster ) )
