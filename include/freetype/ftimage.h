@@ -696,11 +696,11 @@ FT_BEGIN_HEADER
    */
 #ifndef FT_IMAGE_TAG
 
-#define FT_IMAGE_TAG( value, _x1, _x2, _x3, _x4 )                      \
-          value = ( ( FT_STATIC_CAST( unsigned char )( _x1 ) << 24 ) | \
-                    ( FT_STATIC_CAST( unsigned char )( _x2 ) << 16 ) | \
-                    ( FT_STATIC_CAST( unsigned char )( _x3 ) << 8  ) | \
-                      FT_STATIC_CAST( unsigned char )( _x4 )         )
+#define FT_IMAGE_TAG( value, _x1, _x2, _x3, _x4 )                         \
+          value = ( ( FT_STATIC_BYTE_CAST( unsigned long, _x1 ) << 24 ) | \
+                    ( FT_STATIC_BYTE_CAST( unsigned long, _x2 ) << 16 ) | \
+                    ( FT_STATIC_BYTE_CAST( unsigned long, _x3 ) << 8  ) | \
+                      FT_STATIC_BYTE_CAST( unsigned long, _x4 )         )
 
 #endif /* FT_IMAGE_TAG */
 

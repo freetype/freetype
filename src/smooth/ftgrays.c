@@ -152,7 +152,7 @@
 #define ADD_INT( a, b )                                  \
           (int)( (unsigned int)(a) + (unsigned int)(b) )
 
-#define FT_STATIC_CAST( type )  (type)
+#define FT_STATIC_BYTE_CAST( type, var )  (type)(unsigned char)(var)
 
 
 #define ft_memset   memset
