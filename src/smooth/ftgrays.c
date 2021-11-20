@@ -239,8 +239,11 @@ typedef ptrdiff_t  FT_PtrDist;
 #define FT_ERROR( x )   do { } while ( 0 )     /* nothing */
 #define FT_THROW( e )   FT_ERR_CAT( Smooth_Err_, e )
 
-
 #endif /* !FT_DEBUG_LEVEL_TRACE */
+
+
+#define FT_Trace_Enable()   do { } while ( 0 )  /* nothing */
+#define FT_Trace_Disable()  do { } while ( 0 )  /* nothing */
 
 
 #define FT_DEFINE_OUTLINE_FUNCS( class_,               \
