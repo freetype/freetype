@@ -485,13 +485,11 @@ FT_BEGIN_HEADER
    *   The produced values **must** be 32-bit integers.  Don't redefine this
    *   macro.
    */
-#define FT_MAKE_TAG( _x1, _x2, _x3, _x4 )                      \
-          FT_STATIC_CAST(                                      \
-            FT_Tag,                                            \
-            ( ( FT_STATIC_BYTE_CAST( FT_Tag, _x1 ) << 24 ) |   \
-              ( FT_STATIC_BYTE_CAST( FT_Tag, _x2 ) << 16 ) |   \
-              ( FT_STATIC_BYTE_CAST( FT_Tag, _x3 ) <<  8 ) |   \
-                FT_STATIC_BYTE_CAST( FT_Tag, _x4 )         ) )
+#define FT_MAKE_TAG( _x1, _x2, _x3, _x4 )                  \
+          ( ( FT_STATIC_BYTE_CAST( FT_Tag, _x1 ) << 24 ) | \
+            ( FT_STATIC_BYTE_CAST( FT_Tag, _x2 ) << 16 ) | \
+            ( FT_STATIC_BYTE_CAST( FT_Tag, _x3 ) <<  8 ) | \
+              FT_STATIC_BYTE_CAST( FT_Tag, _x4 )         )
 
 
   /*************************************************************************/
