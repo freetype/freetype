@@ -234,16 +234,18 @@ else
   ft2_sources += 'src/base/ftdebug.c'
 endif
 
+
 ft2_deps = []
+common_ldflags = []
 
 
-# Correct compatibility version for OS x
+# Correct compatibility version for OS x.
 #
 # OSX sets the compatibility_version (aka libtools version) differently from
 # the library name.
 #
 if host_machine.system() == 'darwin'
-  # Maintain compatibility with autotools on macOS
+  # maintain compatibility with autotools on macOS
   common_ldflags = [
     '-compatibility_version', ft2_pkgconfig_version.split('.')[0],
     '-current_version', ft2_pkgconfig_version
