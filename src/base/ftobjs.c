@@ -4720,7 +4720,7 @@
           renderer = FT_Lookup_Renderer( library, slot->format, &node );
         }
 
-        /* it is not an error if we cannot render a bitmat glyph */
+        /* it is not an error if we cannot render a bitmap glyph */
         if ( FT_ERR_EQ( error, Cannot_Render_Glyph ) &&
              slot->format == FT_GLYPH_FORMAT_BITMAP  )
           error = FT_Err_Ok;

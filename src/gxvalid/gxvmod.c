@@ -77,8 +77,7 @@
           FT_ULong            len_ ## _sfnt = 0
 
 #define GXV_TABLE_LOAD( _sfnt )                                       \
-          do                                                          \
-          {                                                           \
+          FT_BEGIN_STMNT                                              \
             if ( ( FT_VALIDATE_ ## _sfnt ## _INDEX < table_count ) && \
                  ( gx_flags & FT_VALIDATE_ ## _sfnt )            )    \
             {                                                         \
@@ -87,11 +86,10 @@
               if ( error )                                            \
                 goto Exit;                                            \
             }                                                         \
-          } while ( 0 )
+          FT_END_STMNT
 
 #define GXV_TABLE_VALIDATE( _sfnt )                                    \
-          do                                                           \
-          {                                                            \
+          FT_BEGIN_STMNT                                               \
             if ( _sfnt )                                               \
             {                                                          \
               ft_validator_init( &valid, _sfnt, _sfnt + len_ ## _sfnt, \
@@ -102,7 +100,7 @@
               if ( error )                                             \
                 goto Exit;                                             \
             }                                                          \
-          } while ( 0 )
+          FT_END_STMNT
 
 #define GXV_TABLE_SET( _sfnt )                                        \
           if ( FT_VALIDATE_ ## _sfnt ## _INDEX < table_count )        \

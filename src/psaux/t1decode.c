@@ -27,9 +27,11 @@
 
 #include "psauxerr.h"
 
+
 /* ensure proper sign extension */
-#define Fix2Int( f )    ( (FT_Int)(FT_Short)( (f) >> 16 ) )
+#define Fix2Int( f )   ( (FT_Int) (FT_Short)( (f) >> 16 ) )
 #define Fix2UInt( f )  ( (FT_UInt)(FT_Short)( (f) >> 16 ) )
+
 
   /**************************************************************************
    *

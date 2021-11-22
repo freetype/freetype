@@ -559,8 +559,8 @@
       }
 
       /* read the subrmap's offsets */
-      if ( FT_STREAM_SEEK( cid->data_offset + dict->subrmap_offset )     ||
-           FT_FRAME_ENTER( ( num_subrs + 1 ) * dict->sd_bytes ) )
+      if ( FT_STREAM_SEEK( cid->data_offset + dict->subrmap_offset ) ||
+           FT_FRAME_ENTER( ( num_subrs + 1 ) * dict->sd_bytes )      )
         goto Fail;
 
       p = (FT_Byte*)stream->cursor;
