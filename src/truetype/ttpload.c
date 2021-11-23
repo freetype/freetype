@@ -565,7 +565,7 @@
     if ( num_records > 255               ||
          ( num_records > 0             &&
            ( record_size > 0x10004UL ||
-             record_size & 3         ) ) )
+             record_size < 4         ) ) )
     {
       error = FT_THROW( Invalid_File_Format );
       goto Fail;
