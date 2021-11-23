@@ -501,15 +501,18 @@
   <ImportGroup Label="ExtensionTargets">
   </ImportGroup>
   <ItemGroup>
-    <DlgSrc Include="..\..\..\subprojects\dlg\include\dlg\output.h" />
-    <DlgDst Include="..\..\..\include\dlg\output.h" />
-    <DlgSrc Include="..\..\..\subprojects\dlg\include\dlg\dlg.h" />
-    <DlgDst Include="..\..\..\include\dlg\dlg.h" />
-    <DlgSrc Include="..\..\..\subprojects\dlg\src\dlg\dlg.c" />
-    <DlgDst Include="..\..\..\src\dlg\dlg.c" />
+    <DlgSrc Include="..\..\..\subprojects\dlg\include\dlg\output.h">
+      <DlgDst>..\..\..\include\dlg\output.h</DlgDst>
+    </DlgSrc>
+    <DlgSrc Include="..\..\..\subprojects\dlg\include\dlg\dlg.h">
+      <DlgDst>..\..\..\include\dlg\dlg.h</DlgDst>
+    </DlgSrc>
+    <DlgSrc Include="..\..\..\subprojects\dlg\src\dlg\dlg.c">
+      <DlgDst>..\..\..\src\dlg\dlg.c</DlgDst>
+    </DlgSrc>
   </ItemGroup>
-  <Target Name="DlgCopy" Inputs="@(DlgSrc)" Outputs="@(DlgDst)" Condition="Exists('..\..\..\subprojects\dlg\.git')">
-    <Copy SourceFiles="@(DlgSrc)" DestinationFiles="@(DlgDst)" SkipUnchangedFiles="true" />
+  <Target Name="DlgCopy" Inputs="@(DlgSrc)" Outputs="@(DlgSrc->'%(DlgDst)')" Condition="Exists('..\..\..\subprojects\dlg\.git')">
+    <Copy SourceFiles="@(DlgSrc)" DestinationFiles="@(DlgSrc->'%(DlgDst)')" />
   </Target>
   <Target Name="AfterBuild">
     <ItemGroup>
