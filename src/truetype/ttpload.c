@@ -555,7 +555,7 @@
     if ( record_size >= 0xFFFF0000UL )
       record_size &= 0xFFFFU;
 
-    FT_TRACE2(( "Hdmx ", num_records, record_size ));
+    FT_TRACE2(( "Hdmx " ));
 
     /* The limit for `num_records' is a heuristic value. */
     if ( num_records > 255 || num_records == 0 )
@@ -564,18 +564,21 @@
       goto Fail;
     }
 
-    /* Out-of-spec tables are rejected. */
-    if ( (FT_Long)record_size != ( ( face->root.num_glyphs + 5 ) & ~3 ) )
+    /* Out-of-spec tables are rejected.  The record size must be */
+    /* equal to the number of glyphs + 2 + 32-bit padding.       */
+    if ( (FT_Long)record_size != ( ( face->root.num_glyphs + 2 + 3 ) & ~3 ) )
     {
       FT_TRACE2(( "with record size off by %ld bytes rejected\n",
-                   (FT_Long)record_size -
-                     ( ( face->root.num_glyphs + 5 ) & ~3 ) ));
+                  (FT_Long)record_size -
+                    ( ( face->root.num_glyphs + 2 + 3 ) & ~3 ) ));
       goto Fail;
     }
 
     if ( FT_QNEW_ARRAY( face->hdmx_record_sizes, num_records ) )
       goto Fail;
 
+    /* XXX: We do not check if the records are sorted by ppem */
+    /* and cannot use binary search later.                    */
     for ( nn = 0; nn < num_records; nn++ )
     {
       if ( p + record_size > limit )
