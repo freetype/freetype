@@ -500,7 +500,7 @@
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
   </ImportGroup>
-  <ItemGroup>
+  <ItemGroup Condition="Exists('..\..\..\subprojects\dlg\.git')">
     <DlgSrc Include="..\..\..\subprojects\dlg\include\dlg\output.h">
       <DlgDst>..\..\..\include\dlg\output.h</DlgDst>
     </DlgSrc>
