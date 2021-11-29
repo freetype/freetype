@@ -3230,8 +3230,8 @@
 
       scaled_w = ( scaled_w + 32 ) >> 6;
       scaled_h = ( scaled_h + 32 ) >> 6;
-      if ( scaled_w > FT_USHORT_MAX ||
-           scaled_h > FT_USHORT_MAX )
+      if ( scaled_w > (FT_Long)FT_USHORT_MAX ||
+           scaled_h > (FT_Long)FT_USHORT_MAX )
       {
         FT_ERROR(( "FT_Request_Metrics: Resulting ppem size too large\n" ));
         error = FT_ERR( Invalid_Pixel_Size );
